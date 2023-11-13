@@ -1,0 +1,79 @@
+<html>
+    <head>
+        <title>IE AutoReview Bot - By Scoli290</title>
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/main_page.css') }}">
+    </head>
+    <body>
+
+        <div>Welcome to IE AutoReview Bot - By Scoli290</div>
+        <div>Last updated on: 2023-11-11 to add the Inventory Bags and Storage Chests review</div>
+        <br>
+        <div>
+            <form action="." method="POST">
+                <textarea name="characterInput" placeholder="Please enter your first IdleOn character's name"></textarea><br><br>
+                <input type="submit" value="submit">
+            </form>
+        </div>
+        <div id = "mainresults">
+            {% if output is not none %}
+            <div> {{ output[0][0][0] }} </div> <!-- IE link -->
+            <h1>General Account AutoReview</h1>
+            <div> {{ output[0][1][0] }}</div> <!-- Account Levels tier -->
+            <div> {{ output[0][1][1] }}</div> <!-- Personal Levels tier -->
+            <br>
+            <div> {{ output[0][2][0][0] }}</div> <!-- Guaranteed Candy total -->
+            <div> {{ output[0][2][0][1] }}</div> <!-- Variable Candy total -->
+            <br>
+            <div> {{ output[0][2][1] }}</div> <!-- Inventory Bags -->
+            <div> {{ output[0][2][2] }}</div> <!-- Storage Chests -->
+            <h1>World 1 AutoReview</h1>
+            <div> <b>{{ output[1][0][0] }}</b></div> <!-- Stamp tier -->
+            <div> {{ output[1][0][1] }}</div> <!-- Stamp total level advice -->
+            <div> {{ output[1][0][2] }}</div> <!-- Stamp collect advice -->
+            <div> {{ output[1][0][3] }}</div> <!-- Stamp high-prio advice -->
+            <br>
+            <div> <b>{{ output[1][1][0] }}</b></div> <!-- Bribes tier -->
+            <div> {{ output[1][1][1] }}</div> <!-- Bribes advice -->
+            <br>
+            <div> <b>{{ output[1][2][0] }}</b></div> <!-- Smithing tier -->
+            <div> {{ output[1][2][1] }}</div> <!-- Smithing Cash Points advice -->
+            <div> {{ output[1][2][2] }}</div> <!-- Smithing Monster Points advice -->
+            <div> {{ output[1][2][3] }}</div> <!-- Smithing Forge Upgrade advice -->
+            <br>
+            <h1>World 2 AutoReview</h1>
+            <div> <b>{{ output[2][0][0] }}</b></div> <!-- Alchemy Bubbles tier -->
+            <div> <b>{{ output[2][1][0] }}</b></div> <!-- Alchemy Vials tier -->
+            <div> {{ output[2][1][1] }}</div> <!-- Alchemy Vials Total Unlocked advice -->
+            <div> {{ output[2][1][2] }}</div> <!-- Alchemy Vials Total Maxed advice -->
+            <div> {{ output[2][1][3] }}</div> <!-- Alchemy Vials Particular Maxed advice -->
+            <br>
+            <h1>World 3 AutoReview</h1>
+            <div> <b>{{ output[3][0][0] }}</b></div> <!-- Construction 3D Printer tier -->
+            <div> <b>{{ output[3][1][0] }}</b></div> <!-- Construction Refinery tier -->
+            <div> {{ output[3][1][1] }}</div> <!-- Construction Refinery Autorefine Advice -->
+            <div> {{ output[3][1][2] }}</div> <!-- Construction Refinery W3 Merits Advice -->
+            <div> {{ output[3][1][3] }}</div> <!-- Construction Refinery Tab1 Advice -->
+            <div> {{ output[3][1][4] }}</div> <!-- Construction Refinery Tab2 Advice -->
+            <div> <b>{{ output[3][2][0] }}</b></div> <!-- Construction Salt Lick tier -->
+            <div> {{ output[3][2][1] }}</div> <!-- Construction Salt Lick advice -->
+            <div> <b>{{ output[3][3][0] }}</b></div> <!-- Construction DeathNote tier -->
+            <div> <b>{{ output[3][4][0] }}</b></div> <!-- Construction Buildings tier -->
+            <div> <b>{{ output[3][5][0] }}</b></div> <!-- Construction Atom Collider tier -->
+            <div> <b>{{ output[3][6][0] }}</b></div> <!-- Worship Totems tier -->
+            <div> <b>{{ output[3][7][0] }}</b></div> <!-- Worship Prayers tier -->
+            <div> <b>{{ output[3][8][0] }}</b></div> <!-- Trapping tier -->
+            <br>
+            <h1>World 4 AutoReview</h1>
+            <div> <b>{{ output[4][0][0] }}</b></div> <!-- Cooking tier -->
+            <div> <b>{{ output[4][1][0] }}</b></div> <!-- Breeding tier -->
+            <div> <b>{{ output[4][2][0] }}</b></div> <!-- Lab tier -->
+            <br>
+            <h1>World 5 AutoReview</h1>
+            <div> <b>{{ output[5][0][0] }}</b></div> <!-- Sailing tier -->
+            <div> <b>{{ output[5][1][0] }}</b></div> <!-- Gaming tier -->
+            <div> <b>{{ output[5][2][0] }}</b></div> <!-- Divinity tier -->
+
+            {% endif %}
+        </div>
+    </body>
+</html>
