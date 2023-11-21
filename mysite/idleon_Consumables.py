@@ -110,7 +110,7 @@ def getBagType(inputBagNumber):
     except:
         return ("Unknown Bag " + inputBagNumber)
 
-def parseInventoryBags(inputJSON, playerCount):
+def parseInventoryBags(inputJSON, playerCount, fromPublicIEBool):
     advice_MissingBags = ""
     currentMaxQuestBags = 7 #As of v1.91
     currentMaxDroppedBags = 4 #As of v1.91
@@ -122,10 +122,18 @@ def parseInventoryBags(inputJSON, playerCount):
     playerBagsByTypeDict = {}
     playersWithMaxBags = []
     playersMissingBags = []
-    counter = 0
-    while counter < playerCount:
-        playerBagDict[inputJSON["playerNames"][counter]] = json.loads(inputJSON['InvBagsUsed_'+str(counter)]) #yet another string pretending to be a list of lists..
-        counter += 1
+    if fromPublicIEBool == True:
+        playerNames = inputJSON['playerNames']
+        counter = 0
+        while counter < playerCount:
+            playerBagDict[playerNames[counter]] = json.loads(inputJSON['InvBagsUsed_'+str(counter)]) #yet another string pretending to be a list of lists..
+            counter += 1
+    else:
+        counter = 0
+        while counter < playerCount:
+            playerBagDict[counter+1] = json.loads(inputJSON['InvBagsUsed_'+str(counter)]) #yet another string pretending to be a list of lists..
+            counter += 1
+
     #print(playerBagDict)
     for player, bagList in playerBagDict.items():
         #print(type(player), player)
@@ -161,7 +169,7 @@ def parseInventoryBags(inputJSON, playerCount):
             playersMissingBags.append(player)
     #print(playerBagsByTypeDict)
     for player in playersMissingBags:
-        advice_MissingBags += player + " (" + str(playerBagsByTypeDict[player]['Total']) + "/"+ str(currentMaxBagsSum) + "), "
+        advice_MissingBags += str(player) + " (" + str(playerBagsByTypeDict[player]['Total']) + "/"+ str(currentMaxBagsSum) + "), "
     if advice_MissingBags != "":
         advice_MissingBags = "*Collect more inventory bags: " + advice_MissingBags[:-2]
     #print(advice_MissingBags)
@@ -176,9 +184,9 @@ def parseStorageChests(inputJSON):
         advice_MissingChests = "*Collect more storage chests: " + str(len(usedStorageChests)) + "/" + str(currentMaxChestsSum)
     return advice_MissingChests
 
-def parseConsumables(inputJSON, playerCount):
+def parseConsumables(inputJSON, playerCount, fromPublicIEBool):
     bankList = parseBank(inputJSON)
-    inventoryBagList = parseInventoryBags(inputJSON, playerCount)
+    inventoryBagList = parseInventoryBags(inputJSON, playerCount, fromPublicIEBool)
     storageChestsList = parseStorageChests(inputJSON)
     consumablesList = [bankList, inventoryBagList, storageChestsList]
     #return bankList #until the other modules are ready, only return the bank list

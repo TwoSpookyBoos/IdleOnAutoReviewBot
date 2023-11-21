@@ -58,6 +58,7 @@ def parseBribes(inputJSON):
         'W4':bribeSetW4,
         'Trash Island':bribeSetTrashIsland
         }
+    print(allBribesDict)
     return allBribesDict
 
 def setBribesProgressionTier(inputJSON, progressionTiers):
@@ -73,20 +74,26 @@ def setBribesProgressionTier(inputJSON, progressionTiers):
     sum_bribeSetW4 = 0
     sum_bribeSetTrashIsland = 0
     for bribe in allBribesDict['W1']:
-        sum_bribeSetW1 += allBribesDict['W1'][bribe]
-        sum_allBribes += allBribesDict['W1'][bribe]
+        if allBribesDict['W1'][bribe] != 0:
+            sum_bribeSetW1 += allBribesDict['W1'][bribe]
+            sum_allBribes += allBribesDict['W1'][bribe]
     for bribe in allBribesDict['W2']:
-        sum_bribeSetW2 += allBribesDict['W2'][bribe]
-        sum_allBribes += allBribesDict['W2'][bribe]
+        if allBribesDict['W2'][bribe] != 0:
+            sum_bribeSetW2 += allBribesDict['W2'][bribe]
+            sum_allBribes += allBribesDict['W2'][bribe]
     for bribe in allBribesDict['W3']:
-        sum_bribeSetW3 += allBribesDict['W3'][bribe]
-        sum_allBribes += allBribesDict['W3'][bribe]
+        if allBribesDict['W3'][bribe] != 0:
+            sum_bribeSetW3 += allBribesDict['W3'][bribe]
+            sum_allBribes += allBribesDict['W3'][bribe]
     for bribe in allBribesDict['W4']:
-        sum_bribeSetW4 += allBribesDict['W4'][bribe]
-        sum_allBribes += allBribesDict['W4'][bribe]
+        if allBribesDict['W4'][bribe] != 0:
+            sum_bribeSetW4 += allBribesDict['W4'][bribe]
+            sum_allBribes += allBribesDict['W4'][bribe]
     for bribe in allBribesDict['Trash Island']:
-        sum_bribeSetTrashIsland += allBribesDict['Trash Island'][bribe]
-        sum_allBribes += allBribesDict['Trash Island'][bribe]
+        if allBribesDict['Trash Island'][bribe] != 0:
+            sum_bribeSetTrashIsland += allBribesDict['Trash Island'][bribe]
+            sum_allBribes += allBribesDict['Trash Island'][bribe]
+    print("Bribe sums: ", sum_allBribes, sum_bribeSetW1, sum_bribeSetW2, sum_bribeSetW3, sum_bribeSetW4, sum_bribeSetTrashIsland)
     #Assess Bribe Tier
     if sum_allBribes == 33: #Max as of v1.91
         tier_BribesPurchased = 5

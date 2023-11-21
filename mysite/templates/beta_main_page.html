@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <title>IE AutoReview Bot - By Scoli290</title>
-        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/main_page.css') }}">
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/beta_main_page.css') }}">
         <style>
             .light-mode {
                 background-color: white;
@@ -24,9 +24,12 @@
         <div><a href="https://www.idleonefficiency.com/raw-data"target="_blank">IdleonEfficiency</a>: Click on Copy Raw JSON button. Paste results below.</div>
         <div><a href="https://idleontoolbox.com/data"target="_blank">IdleonToolbox</a>: Click on Raw Game JSON button. Paste results below.</div>
         <br>
+        <div>Heads up! You're on the beta-testing page. If you run into problems, try heading back to the <a href="http://ieautoreview-scoli.pythonanywhere.com/"target="_blank">Main Page</a></div>
+        <div>Currently beta testing: 2023-11-21 Nada, atm.</div>
+        <br>
         <div>
-            <form action="." method="POST">
-                <textarea name="characterInput" placeholder="Please enter your first IdleOn character's name, or Paste in your Raw Game JSON from IE/IT"></textarea><br><br>
+            <form action="/beta" method="POST">
+                <textarea name="beta_characterInput" placeholder="Please enter your first IdleOn character's name, or Paste in your Raw Game JSON from IE/IT"></textarea><br><br>
                 <input type="submit" value="submit">
             </form>
         </div>

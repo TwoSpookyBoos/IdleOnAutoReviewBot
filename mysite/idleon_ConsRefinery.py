@@ -158,13 +158,13 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers):
     overall_ConsRefineryTier = min(tier_AutoRefine, tier_W3Merits, tier_Tab1, tier_Tab2, tier_Tab3)
         #tier_Tab4, tier_Tab5, tier_Tab6, tier_Tab7) #future updates may add more tabs!
     #AutoRefine advice
-    if (tier_AutoRefine >= 17 and tier_Tab1 >= 17) or (tier_AutoRefine >= 18 and tier_Tab2 >= 18):
+    if (tier_AutoRefine >= progressionTiers[-3][0] and tier_Tab1 >= progressionTiers[-3][0]) or (tier_AutoRefine >= progressionTiers[-2][0] and tier_Tab2 >= progressionTiers[-2][0]):
         overall_ConsRefineryTier = tier_AutoRefine #Ranks 17 and 18 are hybrid
         advice_AutoRefine = "*" + progressionTiers[tier_AutoRefine][6]
-    elif tier_AutoRefine == 19:
+    elif tier_AutoRefine == progressionTiers[-1][0]:
         overall_ConsRefineryTier = tier_AutoRefine #Rank 19 is full yolo
         advice_AutoRefine = "*" + progressionTiers[tier_AutoRefine][6]
-    elif (tier_AutoRefine >= 17 and tier_Tab1 < 17):
+    elif (tier_AutoRefine >= progressionTiers[-3][0] and tier_Tab1 < progressionTiers[-3][0]):
         advice_AutoRefine = "*" + "Review your AutoRefine settings if you are trying to follow the balanced approach. (If you are in the process of intentionally leveling up Orange, Blue, Purple, or Nullo Salts, you can probably ignore this warning.)"
     #W3Merits Advice
     sum_SaltsRank2Plus = 0

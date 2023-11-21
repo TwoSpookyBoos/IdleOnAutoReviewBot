@@ -1,6 +1,7 @@
+import json
 import progressionResults
 
-def getReadableNames(inputNumber):
+def getReadableVialNames(inputNumber):
     try:
         inputNumber = int(inputNumber)
     except:
@@ -137,6 +138,229 @@ def getReadableNames(inputNumber):
         case _:
             return ("Unknown Vial " + inputNumber)
 
+def getReadableBubbleNames(inputNumber, color):
+    try:
+        inputNumber = int(inputNumber)
+    except:
+        return ("Unknown Bubble " + str(color) + str(inputNumber))
+    match color:
+        case "Orange":
+            match inputNumber:
+                case 0:
+                    return "Roid Ragin"
+                case 1:
+                    return "Warriors Rule"
+                case 2:
+                    return "Hearty Diggy"
+                case 3:
+                    return "Wyoming Blood"
+                case 4:
+                    return "Reely Smart"
+                case 5:
+                    return "Big Meaty Claws"
+                case 6:
+                    return "Sploosh Sploosh"
+                case 7:
+                    return "Stronk Tools"
+                case 8:
+                    return "FMJ"
+                case 9:
+                    return "Bappity Boopity"
+                case 10:
+                    return "Brittley Spears"
+                case 11:
+                    return "Call Me Bob"
+                case 12:
+                    return "Carpenter"
+                case 13:
+                    return "Buff Boi Talent"
+                case 14:
+                    return "Orange Bargain"
+                case 15:
+                    return "Penny of Strength"
+                case 16:
+                    return "Multorange"
+                case 17:
+                    return "Dream of Ironfish"
+                case 18:
+                    return "Shimmeron"
+                case 19:
+                    return "Bite But Not Chew"
+                case 20:
+                    return "Spear Powah"
+                case 21:
+                    return "Slabi Orefish"
+                case 22:
+                    return "Gamer at Heart"
+                case 23:
+                    return "Slabi Strength"
+                case 24:
+                    return "Power Trione"
+                case _:
+                    return ("Unknown Bubble " + str(color) + str(inputNumber))
+        case "Green":
+            match inputNumber:
+                case 0:
+                    return "Swift Steppin"
+                case 1:
+                    return "Archer or Bust"
+                case 2:
+                    return "Hammer Hammer"
+                case 3:
+                    return "Lil Big Damage"
+                case 4:
+                    return "Anvilnomics"
+                case 5:
+                    return "Quick Slap"
+                case 6:
+                    return "Sanic Tools"
+                case 7:
+                    return "Bug^2"
+                case 8:
+                    return "Shaquracy"
+                case 9:
+                    return "Cheap Shot"
+                case 10:
+                    return "Bow Jack"
+                case 11:
+                    return "Call Me Ash"
+                case 12:
+                    return "Cuz I Catch Em All"
+                case 13:
+                    return "Fast Boi Talent"
+                case 14:
+                    return "Green Bargain"
+                case 15:
+                    return "Dollar Of Agility"
+                case 16:
+                    return "Premigreen"
+                case 17:
+                    return "Fly in Mind"
+                case 18:
+                    return "Kill Per Kill"
+                case 19:
+                    return "Afk Expexp"
+                case 20:
+                    return "Bow Power"
+                case 21:
+                    return "Slabo Critterbug"
+                case 22:
+                    return "Sailor At Heart"
+                case 23:
+                    return "Slabo Agility"
+                case 24:
+                    return "Power Tritwo"
+                case _:
+                    return ("Unknown Bubble " + str(color) + str(inputNumber))
+        case "Purple":
+            match inputNumber:
+                case 0:
+                    return "Stable Jenius"
+                case 1:
+                    return "Mage is Best"
+                case 2:
+                    return "Hocus Choppus"
+                case 3:
+                    return "Molto Loggo"
+                case 4:
+                    return "Noodubble"
+                case 5:
+                    return "Name I Guess"
+                case 6:
+                    return "Le Brain Tools"
+                case 7:
+                    return "Cookin Roadkill"
+                case 8:
+                    return "Brewstachio"
+                case 9:
+                    return "All For Kill"
+                case 10:
+                    return "Matty Stafford"
+                case 11:
+                    return "Call Me Pope"
+                case 12:
+                    return "Gospel Leader"
+                case 13:
+                    return "Smart Boi Talent"
+                case 14:
+                    return "Purple Bargain"
+                case 15:
+                    return "Nickel Of Wisdom"
+                case 16:
+                    return "Severapurple"
+                case 17:
+                    return "Tree Sleeper"
+                case 18:
+                    return "Hyperswift"
+                case 19:
+                    return "Matrix Evolved"
+                case 20:
+                    return "Wand Pawur"
+                case 21:
+                    return "Slabe Logsoul"
+                case 22:
+                    return "Pious At Heart"
+                case 23:
+                    return "Slabe Wisdom"
+                case 24:
+                    return "Power Trithree"
+                case _:
+                    return ("Unknown Bubble " + str(color) + str(inputNumber))
+        case "Yellow":
+            match inputNumber:
+                case 0:
+                    return "Lotto Skills"
+                case 1:
+                    return "Droppin Loads"
+                case 2:
+                    return "Startue Exp"
+                case 3:
+                    return "Level Up Gift"
+                case 4:
+                    return "Prowesessary"
+                case 5:
+                    return "Stamp Tramp"
+                case 6:
+                    return "Undeveloped Costs"
+                case 7:
+                    return "Da Daily Drip"
+                case 8:
+                    return "Grind Time"
+                case 9:
+                    return "Laaarrrryyyy"
+                case 10:
+                    return "Cogs For Hands"
+                case 11:
+                    return "Sample It"
+                case 12:
+                    return "Big Game Hunter"
+                case 13:
+                    return "Ignore Overdues"
+                case 14:
+                    return "Yellow Bargain"
+                case 15:
+                    return "Mr Massacre"
+                case 16:
+                    return "Egg Ink"
+                case 17:
+                    return "Diamond Chef"
+                case 18:
+                    return "Card Champ"
+                case 19:
+                    return "Petting The Rift"
+                case 20:
+                    return "Boaty Bubble"
+                case 21:
+                    return "Big P"
+                case 22:
+                    return "Bit By Bit"
+                case 23:
+                    return "Gifts Abound"
+                case 24:
+                    return "Atom Split"
+                case _:
+                    return ("Unknown Bubble " + str(color) + str(inputNumber))
+
 def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
     alchemyVialsDict = inputJSON["CauldronInfo"][4]
     #print(alchemyVialsDict)
@@ -152,7 +376,7 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
             if alchemyVialsDict[vial] == 13:
                 maxedVialsList.append(vial)
             elif alchemyVialsDict[vial] != 'length':
-                unmaxedVialsList.append(getReadableNames(vial))
+                unmaxedVialsList.append(getReadableVialNames(vial))
     #print(maxedVialsList)
     tier_TotalVialsUnlocked = 0
     tier_TotalVialsMaxed = 0
@@ -177,9 +401,9 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
                 tier_TotalVialsMaxed = tier[0]
             else:
                 if len(maxedVialsList) < 27:
-                    advice_TotalVialsMaxed = "*Max some more vials: " + str(len(maxedVialsList)) + "/" + str(tier[2]) + ". 27 is the magic number needed to get the Snake Skin vial to 100% chance to double deposited statues :D"
+                    advice_TotalVialsMaxed = "*Max some more vials: " + str(len(maxedVialsList)) + "/" + str(tier[2]) + ". 27 is the magic number needed to get the Snake Skin vial to 100% chance to double deposited statues :D (This also requires Snake Skin itself be maxed lol)"
                 else:
-                    advice_TotalVialsMaxed = "*Max some more vials: " + str(len(maxedVialsList)) + "/" + str(tier[2]) + ". Thanks to the Vial Mastery bonus in W4's Rift, every maxed vial increases the bonus of EVERY vial you have unlocked!"
+                    advice_TotalVialsMaxed = "*Max some more vials: " + str(len(maxedVialsList)) + "/" + str(tier[2]) + ". Thanks to the Vial Mastery bonus in W4's Rift, every maxed vial increases the bonus of EVERY vial you have unlocked!" + tier[4]
         if tier_ParticularVialsMaxed == (tier[0]-1): #Only check if they already met previous tier
             allRequirementsMet = True
             for requiredVial in tier[3]:
@@ -188,18 +412,218 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
                     allRequirementsMet = False
                     advice_ParticularVialsMaxed += requiredVial + ", "
             if allRequirementsMet == True:
+                #print("Alch particular vial passed at tier",tier[0],tier[4])
                 tier_ParticularVialsMaxed = tier[0]
             else:
+                #print("Alch particular vial failed at tier",tier[0],tier[4])
                 advice_ParticularVialsMaxed = "*Work on maxing these particular vial(s): " + advice_ParticularVialsMaxed[:-2] #strip off the final comma and space
     overall_AlchemyVialsTier = min(tier_TotalVialsUnlocked, tier_TotalVialsMaxed, tier_ParticularVialsMaxed)
-    advice_AlchemyVialsCombined = ["Best Alchemy-Vials tier met: " + str(overall_AlchemyVialsTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended Alchemy-Vials actions:", advice_TotalVialsUnlocked, advice_TotalVialsMaxed, advice_ParticularVialsMaxed]
+    advice_AlchemyVialsCombined = [
+        "Best Alchemy-Vials tier met: " + str(overall_AlchemyVialsTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended Alchemy-Vials actions:",
+        advice_TotalVialsUnlocked,
+        advice_TotalVialsMaxed,
+        advice_ParticularVialsMaxed]
     alchemyVialsPR = progressionResults.progressionResults(overall_AlchemyVialsTier,advice_AlchemyVialsCombined,"")
     return alchemyVialsPR
 
 def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
-    tier_Template = 0
-    overall_TemplateTier = 0
-    overall_TemplateTier = min(progressionTiers[-1][-0], tier_Template)
-    advice_TemplateCombined = ["Best Template tier met: " + str(overall_TemplateTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended template actions:"]
-    templatePR = progressionResults.progressionResults(overall_TemplateTier,advice_TemplateCombined,"")
-    return templatePR
+    currentlyAvailableBubblesIndex = 24
+    tier_TotalBubblesUnlocked = 0
+    sum_TotalBubblesUnlocked = 0
+    tier_OrangeSampleBubbles = 0
+    tier_GreenSampleBubbles = 0
+    tier_PurpleSampleBubbles = 0
+    tier_UtilityBubbles = 0
+    overall_alchemyBubblesTier = 0
+
+    advice_TotalBubblesUnlocked = ""
+    advice_OrangeSampleBubbles = ""
+    advice_GreenSampleBubbles = ""
+    advice_PurpleSampleBubbles = ""
+    advice_UtilityBubbles = ""
+
+    #Get the bubble data and remove the length element
+    raw_orange_alchemyBubblesDict = inputJSON["CauldronInfo"][0]
+    del raw_orange_alchemyBubblesDict['length']
+    raw_green_alchemyBubblesDict = inputJSON["CauldronInfo"][1]
+    del raw_green_alchemyBubblesDict['length']
+    raw_purple_alchemyBubblesDict = inputJSON["CauldronInfo"][2]
+    del raw_purple_alchemyBubblesDict['length']
+    raw_yellow_alchemyBubblesDict = inputJSON["CauldronInfo"][3]
+    del raw_yellow_alchemyBubblesDict['length']
+
+    #Replace the bubble numbers with their names for readable evaluation against the the progression tiers
+    named_all_alchemyBublesDict = {}
+    for bubble in raw_orange_alchemyBubblesDict:
+        if int(bubble) <= currentlyAvailableBubblesIndex:
+            named_all_alchemyBublesDict[getReadableBubbleNames(bubble, "Orange")] = raw_orange_alchemyBubblesDict[bubble]
+    #print(named_all_alchemyBublesDict)
+    for bubble in raw_orange_alchemyBubblesDict:
+        if int(bubble) <= currentlyAvailableBubblesIndex:
+            named_all_alchemyBublesDict[getReadableBubbleNames(bubble, "Green")] = raw_green_alchemyBubblesDict[bubble]
+    #print(named_all_alchemyBublesDict)
+    for bubble in raw_purple_alchemyBubblesDict:
+        if int(bubble) <= currentlyAvailableBubblesIndex:
+            named_all_alchemyBublesDict[getReadableBubbleNames(bubble, "Purple")] = raw_purple_alchemyBubblesDict[bubble]
+    #print(named_all_alchemyBublesDict)
+    for bubble in raw_yellow_alchemyBubblesDict:
+        if int(bubble) <= currentlyAvailableBubblesIndex:
+            named_all_alchemyBublesDict[getReadableBubbleNames(bubble, "Yellow")] = raw_yellow_alchemyBubblesDict[bubble]
+    #print(named_all_alchemyBublesDict)
+
+    #Sum up unlocked bubbles (level > 0)
+    for bubble in raw_orange_alchemyBubblesDict:
+        if raw_orange_alchemyBubblesDict[bubble] > 0:
+            sum_TotalBubblesUnlocked += 1
+    for bubble in raw_green_alchemyBubblesDict:
+        if raw_green_alchemyBubblesDict[bubble] > 0:
+            sum_TotalBubblesUnlocked += 1
+    for bubble in raw_purple_alchemyBubblesDict:
+        if raw_purple_alchemyBubblesDict[bubble] > 0:
+            sum_TotalBubblesUnlocked += 1
+    for bubble in raw_yellow_alchemyBubblesDict:
+        if raw_yellow_alchemyBubblesDict[bubble] > 0:
+            sum_TotalBubblesUnlocked += 1
+    #print(sum_TotalBubblesUnlocked) #future world's pre-unlocked bubbles inflate this number
+
+    #Clean up memory by deleting the raw dictionaries
+    del raw_orange_alchemyBubblesDict
+    del raw_green_alchemyBubblesDict
+    del raw_purple_alchemyBubblesDict
+    del raw_yellow_alchemyBubblesDict
+
+    #Assess tiers
+    for tier in progressionTiers:
+        #tier[0] = int tier
+        #tier[1] = int TotalBubblesUnlocked
+        #tier[2] = dict {OrangeSampleBubbles}
+        #tier[3] = dict {GreenSampleBubbles}
+        #tier[4] = dict {PurpleSampleBubbles}
+        #tier[5] = dict {UtilityBubbles}
+        #tier[6] = str BubbleValuePercentage
+        #tier[7] = str Notes
+        #tier_TotalBubblesUnlocked
+        if tier_TotalBubblesUnlocked == (tier[0]-1): #Only check if they already met the previous tier
+            if sum_TotalBubblesUnlocked >= tier[1]:
+                tier_TotalBubblesUnlocked = tier[0]
+            else:
+                advice_TotalBubblesUnlocked = "*You have unlocked " + str(sum_TotalBubblesUnlocked) + "/" + str(tier[1]) + " of bubbles up to W" + str(int(tier[1]/20)) + ". There isn't a strict reward for unlocking future world's bubbles early, but you can do it if you want :)"
+
+        #tier_OrangeSampleBubbles
+        all_orangeRequirementsMet = True
+        if tier_OrangeSampleBubbles == (tier[0]-1): #Only check if they already met the previous tier
+            for requiredBubble in tier[2]:
+                #requiredBubble = name of the bubble
+                #tier[2][requiredBubble] = level of the bubble in the requirement
+                #named_all_alchemyBublesDict[requiredBubble] = level of the player's bubble
+                if named_all_alchemyBublesDict[requiredBubble] < tier[2][requiredBubble]:
+                    all_orangeRequirementsMet = False
+                    advice_OrangeSampleBubbles += requiredBubble + " to " + str(tier[2][requiredBubble]) + "+, "
+            if all_orangeRequirementsMet == True:
+                tier_OrangeSampleBubbles = tier[0]
+            else:
+                advice_OrangeSampleBubbles = "*Level the following Orange sample-boosting bubbles to " + progressionTiers[tier_OrangeSampleBubbles+1][6] + " bubble strength: " + advice_OrangeSampleBubbles[:-2]
+
+        #tier_GreenSampleBubbles
+        all_greenRequirementsMet = True
+        if tier_GreenSampleBubbles == (tier[0]-1): #Only check if they already met the previous tier
+            for requiredBubble in tier[3]:
+                #requiredBubble = name of the bubble
+                #tier[2][requiredBubble] = level of the bubble in the requirement
+                #named_all_alchemyBublesDict[requiredBubble] = level of the player's bubble
+
+                if named_all_alchemyBublesDict[requiredBubble] < tier[3][requiredBubble]:
+                    all_greenRequirementsMet = False
+                    advice_GreenSampleBubbles += requiredBubble + " to " + str(tier[3][requiredBubble]) + "+, "
+            if all_greenRequirementsMet == True:
+                tier_GreenSampleBubbles = tier[0]
+            else:
+                advice_GreenSampleBubbles = "*Level the following Green sample-boosting bubbles to " + progressionTiers[tier_GreenSampleBubbles+1][6] + " bubble strength: " + advice_GreenSampleBubbles[:-2]
+
+        #tier_PurpleSampleBubbles
+        all_purpleRequirementsMet = True
+        if tier_PurpleSampleBubbles == (tier[0]-1): #Only check if they already met the previous tier
+            for requiredBubble in tier[4]:
+                #requiredBubble = name of the bubble
+                #tier[3][requiredBubble] = level of the bubble in the requirement
+                #named_all_alchemyBublesDict[requiredBubble] = level of the player's bubble
+                if named_all_alchemyBublesDict[requiredBubble] < tier[4][requiredBubble]:
+                    all_purpleRequirementsMet = False
+                    advice_PurpleSampleBubbles += requiredBubble + " to " + str(tier[4][requiredBubble]) + "+, "
+            if all_purpleRequirementsMet == True:
+                tier_PurpleSampleBubbles = tier[0]
+            else:
+                advice_PurpleSampleBubbles = "*Level the following Purple sample-boosting bubbles to " + progressionTiers[tier_PurpleSampleBubbles+1][6] + " bubble strength: " + advice_PurpleSampleBubbles[:-2] + ". Purple bubbles are listed first as they are the highest priority due to Log samples being the largest producer of Atom Particles."
+
+        #tier_UtilityBubbles
+        all_utilityRequirementsMet = True
+        if tier_UtilityBubbles == (tier[0]-1): #Only check if they already met the previous tier
+            for requiredBubble in tier[5]:
+                #requiredBubble = name of the bubble
+                #tier[3][requiredBubble] = level of the bubble in the requirement
+                #named_all_alchemyBublesDict[requiredBubble] = level of the player's bubble
+                if named_all_alchemyBublesDict[requiredBubble] < tier[5][requiredBubble]:
+                    all_utilityRequirementsMet = False
+                    advice_UtilityBubbles += requiredBubble + " to " + str(tier[5][requiredBubble]) + "+, "
+            if all_utilityRequirementsMet == True:
+                tier_UtilityBubbles = tier[0]
+            else:
+                advice_UtilityBubbles = "*Level the following Utility bubbles: " + advice_UtilityBubbles[:-2] + ". " + tier[7]
+    if advice_UtilityBubbles == "":
+        advice_UtilityBubbles = progressionTiers[-1][7]
+    overall_alchemyBubblesTier = min(tier_TotalBubblesUnlocked, tier_OrangeSampleBubbles, tier_GreenSampleBubbles, tier_PurpleSampleBubbles) # tier_UtilityBubbles not included
+    #Generate advice
+    advice_alchemyBubblesCombined = [
+        "Best Alchemy-Bubbles tier met: " + str(overall_alchemyBubblesTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended Alchemy-Bubbles actions:",
+        advice_TotalBubblesUnlocked,
+        advice_PurpleSampleBubbles, #Purple highest priority
+        advice_OrangeSampleBubbles,
+        advice_GreenSampleBubbles,
+        advice_UtilityBubbles]
+    alchemyBubblesPR = progressionResults.progressionResults(overall_alchemyBubblesTier, advice_alchemyBubblesCombined,"")
+    return alchemyBubblesPR
+
+def setAlchemyP2W(inputJSON):
+    alchemyP2WList = []
+    try:
+        alchemyP2WList = json.loads(inputJSON["CauldronP2W"])
+        #print(alchemyP2WList)
+        bubbleCauldronSum = 0
+        liquidCauldronSum = 0
+        vialsSum = 0
+        p2wSum = 0
+        bubbleCauldronMax = 1500
+        liquidCauldronMax = 540 #720 including Toxic HG
+        vialsMax = 60
+        p2wEasyMax = 2040
+        p2wTrueMax = 2220 #including Toxic HG
+        for bubbleEntry in alchemyP2WList[0]:
+            bubbleCauldronSum += bubbleEntry
+        for liquidEntry in alchemyP2WList[1]:
+            if liquidEntry != -1:
+                liquidCauldronSum += liquidEntry
+        for entry in alchemyP2WList[2]:
+            vialsSum += entry
+        p2wSum = bubbleCauldronSum + liquidCauldronSum + p2wSum
+        #print("Alchemy-P2W totals: ", bubbleCauldronSum, liquidCauldronSum, vialsSum, p2wSum)
+        #Alchemy-P2W totals:  1500 720 60 2220
+        advice_alchemyP2WSums = ""
+        advice_alchemyP2WCombined = ""
+        if p2wSum == p2wTrueMax:
+            advice_alchemyP2WSums = "You've purchased all " + str(p2wTrueMax) + " upgrades in Alchemy-P2W, including 4th liquid! You super best <3"
+        elif p2wSum == p2wEasyMax:
+            advice_alchemyP2WSums = "You've purchased all " + str(p2wEasyMax) + " easy upgrades in Alchemy-P2W, excluding 4th liquid. You best <3"
+        else:
+            advice_alchemyP2WSums = "You've purchased " + str(p2wSum) + "/" + str(p2wEasyMax) + " easy upgrades in Alchemy-P2W, excluding 4th liquid. Try to finish the rest!"
+            if bubbleCauldronSum < bubbleCauldronMax:
+                advice_alchemyP2WCombined += "Bubble Cauldron upgrades " + str(bubbleCauldronSum) + "/" + str(bubbleCauldronMax) + ", "
+            if liquidCauldronSum < liquidCauldronMax:
+                advice_alchemyP2WCombined += "Liquid Cauldron upgrades " + str(liquidCauldronSum) + "/" + str(liquidCauldronMax) + ", "
+            if vialsSum < vialsMax:
+                advice_alchemyP2WCombined += "Vial upgrades " + str(vialsSum) + "/" + str(vialsMax) + ", "
+            if advice_alchemyP2WCombined != "": #shouldn't be possible to NOT hit this
+                advice_alchemyP2WCombined = "*" + advice_alchemyP2WCombined[:-2] #trim off the final comma and space
+        #print(advice_alchemyP2WSums, advice_alchemyP2WCombined)
+        return [advice_alchemyP2WSums, advice_alchemyP2WCombined]
+    except:
+        return ["Unable to retrieve Alchemy-P2W data.", "Unable to retrieve Alchemy-P2W data."]
