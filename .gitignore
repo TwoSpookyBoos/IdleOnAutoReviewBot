@@ -1,0 +1,16 @@
+/.cache
+/.ipython
+/.local
+/.ssh
+/.virtualenvs
+/__pycache__
+.bashrc
+.gitconfig
+.my.cnf
+.profile
+.pythonstartup.py
+.vimrc
+id_rsa.pub
+id_rsa.pub.pub
+README.txt
+/mysite/__pycache__
