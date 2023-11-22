@@ -14,8 +14,8 @@
         <!-- Toggle button --><div><button onclick="lightMode()">Toggle Light/Dark mode</button></div><script>function lightMode() {var element = document.body; element.classList.toggle("light-mode");}</script>
         <br>
         <div>Welcome to IE AutoReview Bot - By Scoli290</div>
-        <div>Most recent update: 2023-11-21 to add JSON imports</div>
-        <div>Previous update: 2023-11-20 to add the Worship Prayers review</div>
+        <div>Most recent update: 2023-11-22 to add Pinchy Review</div>
+        <div>Previous update: 2023-11-21 to add JSON imports</div>
         <br>
         <div>This bot will retrieve the PUBLIC profile from IdleOn Efficiency for evaluation.</div>
         <div>If you haven't uploaded your profile publicly before, head here: <a href="https://www.idleonefficiency.com/profile/upload"target="_blank">IdleonEfficiency</a></div>
@@ -25,7 +25,7 @@
         <div><a href="https://idleontoolbox.com/data"target="_blank">IdleonToolbox</a>: Click on Raw Game JSON button. Paste results below.</div>
         <br>
         <div>Heads up! You're on the beta-testing page. If you run into problems, try heading back to the <a href="http://ieautoreview-scoli.pythonanywhere.com/"target="_blank">Main Page</a></div>
-        <div>Currently beta testing: 2023-11-21 Nada, atm.</div>
+        <div>Currently beta testing: 2023-11-22 Nada, atm.</div>
         <br>
         <div>
             <form action="/beta" method="POST">
@@ -38,6 +38,12 @@
             <br>
             <div> {{ output[0][0][0] }} </div> <!-- IE link -->
             <div> {{ output[0][0][1] }} </div> <!--Last updated -->
+            <br>
+            <h1>Pinchy AutoReview <img src="https://media.discordapp.net/attachments/438216759120756737/973301920099864626/Pinch_idleM.gif" width="2%"> </h1>
+            <div> {{ output[9][0] }} </div><!-- Pinchy Expected -->
+            <div> {{ output[9][1] }} </div><!-- Pinchy Minimum -->
+            <div> {{ output[9][2] }} </div><!-- Pinchy Advice -->
+            <br>
             <h1>General Account AutoReview</h1>
             <div> {{ output[0][1][0] }}</div> <!-- Account Levels tier -->
             <div> {{ output[0][1][1] }}</div> <!-- Personal Levels tier -->
@@ -54,7 +60,7 @@
             <div> {{ output[0][3][3] }}</div> <!-- Gem Shop second unmaxed tier -->
             <div> {{ output[0][3][4] }}</div> <!-- Gem shop third unmaxed tier -->
             <br>
-            <h1>World 1 AutoReview</h1>
+            <h1><img src="https://idleon.wiki/wiki/images/1/10/BH_header.png" alt="World 1 Banner" title ="World 1 Banner"></h1>
             <div> <strong>{{ output[1][0][0] }}</strong></div> <!-- Stamp tier -->
             <div> {{ output[1][0][1] }}</div> <!-- Stamp total level advice -->
             <div> {{ output[1][0][2] }}</div> <!-- Stamp collect advice -->
@@ -68,7 +74,7 @@
             <div> {{ output[1][2][2] }}</div> <!-- Smithing Monster Points advice -->
             <div> {{ output[1][2][3] }}</div> <!-- Smithing Forge Upgrade advice -->
             <br>
-            <h1>World 2 AutoReview</h1>
+            <h1><img src="https://idleon.wiki/wiki/images/6/6a/YYD_header.png" title ="World 2 Banner"></h1>
             <div> <strong>{{ output[2][0][0] }}</strong></div> <!-- Alchemy Bubbles tier -->
             <div> {{ output[2][0][1] }}</div> <!-- Alchemy Total Unlocked Bubbles advice -->
             <div> {{ output[2][0][2] }}</div> <!-- Alchemy Purple Sample Bubble advice -->
@@ -84,7 +90,7 @@
             <div> <strong>{{ output[2][2][0] }}</strong></div> <!-- Alchemy P2W tier -->
             <div> {{ output[2][2][1] }}</div> <!-- Alchemy P2W advice -->
             <br>
-            <h1>World 3 AutoReview</h1>
+            <h1><img src="https://idleon.wiki/wiki/images/b/bc/FT_header.png" title ="World 3 Banner"></h1>
             <div> <strong>{{ output[3][0][0] }}</strong></div> <!-- Construction 3D Printer tier -->
             <br>
             <div> <strong>{{ output[3][1][0] }}</strong></div> <!-- Construction Refinery tier -->
@@ -110,20 +116,19 @@
             <br>
             <div> <strong>{{ output[3][8][0] }}</strong></div> <!-- Trapping tier -->
             <br>
-            <h1>World 4 AutoReview</h1>
+            <h1><img src="https://idleon.wiki/wiki/images/7/72/HN_header.png" title ="World 4 Banner"></h1>
             <div> <strong>{{ output[4][0][0] }}</strong></div> <!-- Cooking tier -->
             <br>
             <div> <strong>{{ output[4][1][0] }}</strong></div> <!-- Breeding tier -->
             <br>
             <div> <strong>{{ output[4][2][0] }}</strong></div> <!-- Lab tier -->
             <br>
-            <h1>World 5 AutoReview</h1>
+            <h1><img src="https://idleon.wiki/wiki/images/7/7b/SP_header.png" title ="World 5 Banner"></h1>
             <div> <strong>{{ output[5][0][0] }}</strong></div> <!-- Sailing tier -->
             <br>
             <div> <strong>{{ output[5][1][0] }}</strong></div> <!-- Gaming tier -->
             <br>
             <div> <strong>{{ output[5][2][0] }}</strong></div> <!-- Divinity tier -->
-
             {% endif %}
         </div>
     </body>

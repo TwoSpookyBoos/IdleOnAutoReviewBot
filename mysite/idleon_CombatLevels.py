@@ -152,5 +152,6 @@ def setCombatLevelsProgressionTier(inputJSON, progressionTiers, playerCount, fro
     #Print fun stuff
 
     #Generate and return the progressionResults
+    overall_CombatLevelTier = min(progressionTiers[-1][-0], tier_RequiredAccountLevels)
     combatLevelsPR = progressionResults.progressionResults(overall_CombatLevelTier, advice_CombatLevelsCombined,"")
     return combatLevelsPR

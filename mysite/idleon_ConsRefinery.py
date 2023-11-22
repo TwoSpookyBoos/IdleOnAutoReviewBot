@@ -161,8 +161,8 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers):
     if (tier_AutoRefine >= progressionTiers[-3][0] and tier_Tab1 >= progressionTiers[-3][0]) or (tier_AutoRefine >= progressionTiers[-2][0] and tier_Tab2 >= progressionTiers[-2][0]):
         overall_ConsRefineryTier = tier_AutoRefine #Ranks 17 and 18 are hybrid
         advice_AutoRefine = "*" + progressionTiers[tier_AutoRefine][6]
-    elif tier_AutoRefine == progressionTiers[-1][0]:
-        overall_ConsRefineryTier = tier_AutoRefine #Rank 19 is full yolo
+    elif tier_AutoRefine == progressionTiers[-1][0] and tier_Tab1 >= 1:
+        overall_ConsRefineryTier = tier_AutoRefine #Rank 19 is full yolo, but only if they already have Red Salts to level 2 or higher to prevent this triggering on pre-w3 accounts
         advice_AutoRefine = "*" + progressionTiers[tier_AutoRefine][6]
     elif (tier_AutoRefine >= progressionTiers[-3][0] and tier_Tab1 < progressionTiers[-3][0]):
         advice_AutoRefine = "*" + "Review your AutoRefine settings if you are trying to follow the balanced approach. (If you are in the process of intentionally leveling up Orange, Blue, Purple, or Nullo Salts, you can probably ignore this warning.)"

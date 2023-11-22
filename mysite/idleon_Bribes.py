@@ -58,7 +58,7 @@ def parseBribes(inputJSON):
         'W4':bribeSetW4,
         'Trash Island':bribeSetTrashIsland
         }
-    print(allBribesDict)
+    #print(allBribesDict)
     return allBribesDict
 
 def setBribesProgressionTier(inputJSON, progressionTiers):
@@ -93,7 +93,7 @@ def setBribesProgressionTier(inputJSON, progressionTiers):
         if allBribesDict['Trash Island'][bribe] != 0:
             sum_bribeSetTrashIsland += allBribesDict['Trash Island'][bribe]
             sum_allBribes += allBribesDict['Trash Island'][bribe]
-    print("Bribe sums: ", sum_allBribes, sum_bribeSetW1, sum_bribeSetW2, sum_bribeSetW3, sum_bribeSetW4, sum_bribeSetTrashIsland)
+    #print("Bribe sums: ", sum_allBribes, sum_bribeSetW1, sum_bribeSetW2, sum_bribeSetW3, sum_bribeSetW4, sum_bribeSetTrashIsland)
     #Assess Bribe Tier
     if sum_allBribes == 33: #Max as of v1.91
         tier_BribesPurchased = 5
