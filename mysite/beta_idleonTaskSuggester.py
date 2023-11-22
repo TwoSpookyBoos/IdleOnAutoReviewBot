@@ -341,7 +341,12 @@ def main(inputCharacterName="scoli"):
         [errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList], #w2 placeholder
         [errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList], #w3 placeholder
         [errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList], #w4 placeholder
-        [errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList]] #w5 placeholder
+        [errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList], #w5 placeholder
+        [errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList], #w6 placeholder
+        [errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList], #w7 placeholder
+        [errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList], #w8 placeholder
+        [errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList] #pinchy placeholder
+        ]
         return errorListofLists
 
     #Step 2: Set either Default or Custom progression tiers
