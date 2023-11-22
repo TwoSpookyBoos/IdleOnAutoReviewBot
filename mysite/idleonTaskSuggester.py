@@ -273,7 +273,7 @@ def setDefaultTiers():
         #Tier, PrayerDict, 	Notes
         [0, {}, ""],
         [1, {'The Royal Sampler': 5}, "Royal Sampler is an oddity. The Printer Sample Rate bonus it gives is fantastic, but a few levels (5-10) is usually enough to help you reach the 90% maximum."],
-        [2, {'Skilled Dimwit':9}, "Surprisingly, level 9 is half the maximum value for Skilled Dimwit. This prayer is MASSIVE for your 3D Printer samples!"],
+        [2, {'Skilled Dimwit':20}, "Surprisingly, level 20 is half the maximum value for Skilled Dimwit. Rush this ASAP after all characters have Ceramic Skulls or better equipped."],
         [3, {'Balance of Pain':11}, "Similar to the last tier, level 11 is half the maximum value for Balance of Pain. This prayer is crucial for farming Death Note and improving your 3D Printer samples of Monster materials. "],
         [4, {'Skilled Dimwit':17, 'Balance of Pain':20}, "This tier is roughly 75% of max prayer value for Skilled Dimwit and Balance of Pain."],
         [5, {'Midas Minded':20, 'Ruck Sack':20}, "This tier is roughly 50% max value for Midas and Ruck Sack."],
@@ -341,7 +341,12 @@ def main(inputCharacterName="scoli"):
         [errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList], #w2 placeholder
         [errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList], #w3 placeholder
         [errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList], #w4 placeholder
-        [errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList]] #w5 placeholder
+        [errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList], #w5 placeholder
+        [errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList], #w6 placeholder
+        [errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList], #w7 placeholder
+        [errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList], #w8 placeholder
+        [errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList] #pinchy placeholder
+        ]
         return errorListofLists
 
     #Step 2: Set either Default or Custom progression tiers
