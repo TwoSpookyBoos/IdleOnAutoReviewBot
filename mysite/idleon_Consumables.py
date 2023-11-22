@@ -124,6 +124,7 @@ def parseInventoryBags(inputJSON, playerCount, fromPublicIEBool):
     playersMissingBags = []
     if fromPublicIEBool == True:
         playerNames = inputJSON['playerNames']
+        print(playerNames)
         counter = 0
         while counter < playerCount:
             playerBagDict[playerNames[counter]] = json.loads(inputJSON['InvBagsUsed_'+str(counter)]) #yet another string pretending to be a list of lists..

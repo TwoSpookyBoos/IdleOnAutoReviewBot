@@ -359,6 +359,7 @@ def main(inputCharacterName="scoli"):
     playerCountAndNamesList = getPlayerCountAndNames(parsedJSON, fromPublicIEBool)
     playerCount = playerCountAndNamesList[0]
     playerNames = playerCountAndNamesList[1]
+    #print(fromPublicIEBool,playerNames)
     lastUpdatedTimeString = parseLastUpdatedTime(parsedJSON)
     #print(lastUpdatedTimeString)
     gemShopDict = idleon_GemShop.getGemShopDict(parsedJSON)
@@ -366,7 +367,7 @@ def main(inputCharacterName="scoli"):
     #print("## General Account AutoReview")
     combatLevelsPR = idleon_CombatLevels.setCombatLevelsProgressionTier(parsedJSON, progressionTiers['Combat Levels'], playerCount, fromPublicIEBool)
     #print(combatLevelsPR.nTR)
-    consumablesList = idleon_Consumables.parseConsumables(parsedJSON, playerCount, playerNames)
+    consumablesList = idleon_Consumables.parseConsumables(parsedJSON, playerCount, fromPublicIEBool)
     #print(consumablesList)
     gemShopPR = idleon_GemShop.setGemShopProgressionTier(parsedJSON, progressionTiers['Gem Shop'])
     #generalObolsPR =
