@@ -34,7 +34,7 @@ def getJSONfromAPI(url="https://scoli.idleonefficiency.com/raw-data"):
         "Content-Type": "text/json",
         "method": "GET"
         }
-    response = requests.get(f"https://cdn.idleonefficiency.com/profiles/{username.lower()}.json", headers=headers)
+    response = requests.get(f"https://cdn2.idleonefficiency.com/profiles/{username.lower()}.json", headers=headers)
     try:
         jsonvalue = response.json()
         parsed = jsonvalue
@@ -74,11 +74,11 @@ def setDefaultTiers():
     defaultTiers = {}
     defaultTiers['Bribes'] = [
         #int tier, int w1purchased, int w2purchased, int w3purchased, int w4purchased, int trashIslandpurchased, str notes
-        [0, 0, -7, -7, -6, -7, ""],
-        [1, 6, -7, -7, -6, -7, "by end of W1."],
-        [2, 6, 7, -7, -6, -7, "by end of W2."],
-        [3, 6, 7, 7, -6, -7, "by end of W3."],
-        [4, 6, 7, 7, 6, -7, "by end of W4."],
+        [0, 0, -7, -7, -6, -8, ""],
+        [1, 6, -7, -7, -6, -8, "by end of W1."],
+        [2, 6, 7, -7, -6, -8, "by end of W2."],
+        [3, 6, 7, 7, -6, -8, "by end of W3."],
+        [4, 6, 7, 7, 6, -8, "by end of W4."],
         [5, 6, 7, 7, 6, 7, "by end of W5, after unlocking the Bribe from Trash Island."], #The 8th bribe in w5 can't be purchased yet
         ]
     defaultTiers['Stamps'] = [
