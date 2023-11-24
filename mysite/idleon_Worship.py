@@ -90,7 +90,7 @@ def setWorshipPrayersProgressionTier(inputJSON, progressionTiers):
         advice_IgnorrablePrayers += badPrayer + ", "
     advice_IgnorrablePrayers = advice_IgnorrablePrayers[:-2]
 
-    overall_WorshipPrayersTier = min(progressionTiers[-2][0], tier_WorshipPrayers)
+    overall_WorshipPrayersTier = min(progressionTiers[-3][0], tier_WorshipPrayers)
     advice_WorshipPrayersCombined = ["Best Worship-Prayers tier met: " + str(overall_WorshipPrayersTier) + "/" + str(progressionTiers[-3][-0]) + ". Recommended Worship-Prayers actions:",advice_WorshipPrayers,advice_IgnorrablePrayers]
     worshipPrayersPR = progressionResults.progressionResults(overall_WorshipPrayersTier,advice_WorshipPrayersCombined,"")
     return worshipPrayersPR

@@ -145,7 +145,7 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers):
                 if consRefineryDict[key] != required_AutoRefine[key]: #This is the only comparison we want to make sure is exactly equal
                     all_AutoRefine = False
                     if consRefineryDict['Red AutoRefine'] > 0 or consRefineryDict['Green AutoRefine'] > 0:
-                        advice_AutoRefine = "The first salt per tab should always be ranking up (aka auto-refine at 0%)!"
+                        advice_AutoRefine = "*The first salt per tab should always be ranking up (aka auto-refine at 0%)! Setting max tier to 0 until this is fixed :("
             if all_AutoRefine == True:
                 tier_AutoRefine = tier[0]
         #W3 Merits check

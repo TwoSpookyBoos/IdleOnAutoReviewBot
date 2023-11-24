@@ -21,7 +21,7 @@ def setPinchyList(inputJSON, playerCount, dictOfPRs):
         "Smithing":[0,0,0,0,0,0,1,2,3,4,5,6,6,6,6,6,99],
         "Alchemy-Bubbles":[0,0,1,1,2,2,3,3,4,4,5,5,6,9,12,21,99],
         "Alchemy-Vials":[0,0,0,0,0,0,1,2,3,4,5,6,7,13,16,20,99],
-        "Construction Refinery":[0,0,0,0,1,1,1,2,2,3,3,4,5,8,10,16,99],
+        "Construction Refinery":[0,0,0,0,0,1,1,2,2,3,3,4,5,8,10,16,99],
         "Construction Salt Lick":[0,0,0,0,0,1,2,3,4,5,6,7,8,9,10,10,99],
         "Worship Prayers":[0,0,0,0,0,0,1,1,2,3,4,5,6,6,7,7,99]
         }

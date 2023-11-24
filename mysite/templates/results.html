@@ -21,8 +21,8 @@
         <div>If you haven't uploaded your profile publicly before, head here: <a href="https://www.idleonefficiency.com/profile/upload"target="_blank">IdleonEfficiency</a></div>
         <br>
         <div>Alternatively, you can provide Raw JSON data.</div>
-        <div><a href="https://www.idleonefficiency.com/raw-data"target="_blank">IdleonEfficiency</a>: Click on Copy Raw JSON button. Paste results below.</div>
-        <div><a href="https://idleontoolbox.com/data"target="_blank">IdleonToolbox</a>: Click on Raw Game JSON button. Paste results below.</div>
+        <div><a href="https://www.idleonefficiency.com/raw-data" target="_blank">IdleonEfficiency</a>: Click on Copy Raw JSON button. Paste results below.</div>
+        <div><a href="https://idleontoolbox.com/data" target="_blank">IdleonToolbox</a>: Click on Raw Game JSON button. Paste results below.</div>
         <br>
         <div>
             <form action="." method="POST">
@@ -30,7 +30,7 @@
                 <input type="submit" value="submit">
             </form>
         </div>
-                <div id = "mainresults">
+        <div id = "mainresults">
             {% if output is not none %}
             <br>
             <div> {{ output[0][0][0] }} </div> <!-- IE link -->
@@ -127,6 +127,11 @@
             <br>
             <div> <strong>{{ output[5][2][0] }}</strong></div> <!-- Divinity tier -->
             {% endif %}
+            <br>
+            <br>
+            <br>
+            <br>
+            <div>Unless otherwise noted, all image credits to <a href="https://twitter.com/lavaflame2" target="_blank">Lavaflame2</a></div>
         </div>
     </body>
 </html>
