@@ -371,6 +371,7 @@ def setStampProgressionTier(inputJSON, progressionTiers):
     #print("Tier of required skill stamps: " + str(tier_RequiredSkillStamps))
     #print("Tier of required misc stamps: " + str(tier_RequiredMiscStamps))
     #print("Tier of required specific stamps: " + str(tier_RequiredSpecificStamps))
+    #print (tier_StampLevels, tier_RequiredCombatStamps, tier_RequiredSkillStamps, tier_RequiredMiscStamps, tier_RequiredSpecificStamps, overall_StampTier)
     if advice_StampLevels == "" and advice_CollectStamps == "" and advice_SpecificStamps == "":
         advice_CombinedStamps = [
             "Best Stamp tier met: " + str(overall_StampTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended stamp actions:", "", "", "*You've reached the end of the recommendations. Let me know what important stamps you're aiming for next!"]
