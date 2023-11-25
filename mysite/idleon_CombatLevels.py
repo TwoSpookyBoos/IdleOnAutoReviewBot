@@ -132,19 +132,19 @@ def setCombatLevelsProgressionTier(inputJSON, progressionTiers, playerCount, fro
             if parsedCombatLevels['sum_AccountLevel'] >= tier[1]:
                 tier_RequiredAccountLevels = tier[0]
             else:
-                advice_AccountLevels = "*Current Family level: " + str(parsedCombatLevels['sum_AccountLevel']) + ". Next family reward at " + str(tier[1]) + " unlocks " + tier[2]
+                advice_AccountLevels = "* Tier " + str(tier_RequiredAccountLevels) + "- Current Family level: " + str(parsedCombatLevels['sum_AccountLevel']) + ". Next family reward at " + str(tier[1]) + " unlocks " + tier[2]
     if len(parsedCombatLevels['equinoxDict']['Characters Under 100']) > 0:
-        advice_PersonalLevels = "*Level the following characters to 100+ to complete Equinox Dream 3: "
+        advice_PersonalLevels = "* Level the following characters to 100+ to complete Equinox Dream 3: "
         for character in parsedCombatLevels['equinoxDict']['Characters Under 100']:
             advice_PersonalLevels += str(character) + " (" + str(parsedCombatLevels['equinoxDict']['Characters Under 100'][character]) + "), "
         advice_PersonalLevels = advice_PersonalLevels[:-2] #remove the trailing comma and space
     elif len(parsedCombatLevels['equinoxDict']['Characters Under 250']) > 0:
-        advice_PersonalLevels = "*Level the following characters to 250+ to complete Equinox Dream 11 and unlock their Personal Sparkle Obol slot: "
+        advice_PersonalLevels = "* Level the following characters to 250+ to complete Equinox Dream 11 and unlock their Personal Sparkle Obol slot: "
         for character in parsedCombatLevels['equinoxDict']['Characters Under 250']:
             advice_PersonalLevels += str(character) + " (" + str(parsedCombatLevels['equinoxDict']['Characters Under 250'][character]) + "), "
         advice_PersonalLevels = advice_PersonalLevels[:-2] #remove the trailing comma and space
     elif len(parsedCombatLevels['equinoxDict']['Characters Under 500']) > 0:
-        advice_PersonalLevels = "*Level the following characters to 500+ to complete Equinox Dream 23: "
+        advice_PersonalLevels = "* Level the following characters to 500+ to complete Equinox Dream 23: "
         for character in parsedCombatLevels['equinoxDict']['Characters Under 500']:
             advice_PersonalLevels += str(character) + " (" + str(parsedCombatLevels['equinoxDict']['Characters Under 500'][character]) + "), "
         advice_PersonalLevels = advice_PersonalLevels[:-2] #remove the trailing comma and space

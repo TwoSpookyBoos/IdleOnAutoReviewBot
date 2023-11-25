@@ -118,17 +118,17 @@ def setPinchyList(inputJSON, playerCount, dictOfPRs):
 
     #generate advice based on catchup
     if (lowestIndex >= expectedIndex):
-        pinchyAdvice = "*Your lowest sections are roughly equal with (or better than!) your highest enemy map. Keep up the good work!"
+        pinchyAdvice = " * Your lowest sections are roughly equal with (or better than!) your highest enemy map. Keep up the good work!"
     elif lowestIndex < highestIndex:
         if len(sortedResultsListofLists[lowestIndex]) == 1:
-            pinchyAdvice = "*" + progressionNamesList[lowestIndex] + " rated section: "+ sortedResultsListofLists[lowestIndex][0] + ". You can find detailed advice below in the section's World."
+            pinchyAdvice = " * " + progressionNamesList[lowestIndex] + " rated section: "+ sortedResultsListofLists[lowestIndex][0] + ". You can find detailed advice below in the section's World."
         elif len(sortedResultsListofLists[lowestIndex]) >= 2:
-            pinchyAdvice = "*" + progressionNamesList[lowestIndex] + " rated sections: "
+            pinchyAdvice = " * " + progressionNamesList[lowestIndex] + " rated sections: "
             for item in sortedResultsListofLists[lowestIndex]:
                 pinchyAdvice += item + ", "
             pinchyAdvice = pinchyAdvice[:-2] + ". You can find detailed advice below in the section's World." #trim off final comma and space
     elif (lowestIndex == highestIndex) and (highestIndex < expectedIndex):
-        pinchyAdvice = "*All sections are roughly equal in terms of their expected progression. However, they're still behind based on your highest enemy map reached."
+        pinchyAdvice = " * All sections are roughly equal in terms of their expected progression. However, they're still behind based on your highest enemy map reached."
 
     #print(sortedResultsListofLists)
     #print("Lowest:",lowestIndex," (",progressionNamesList[lowestIndex],"), Highest:",highestIndex," (",progressionNamesList[highestIndex],"), Expected:",expectedIndex," (",progressionNamesList[expectedIndex],")")

@@ -196,15 +196,15 @@ def setGemShopProgressionTier(inputJSON, progressionTiers):
     for advice in advice_TiersCombined:
         if advice != "":
             if advice_nextTier1 == "":
-                advice_nextTier1 = "*" + advice
+                advice_nextTier1 = " * " + advice
             elif advice_nextTier2 == "":
-                advice_nextTier2 = "*" + advice
+                advice_nextTier2 = " * " + advice
             elif advice_nextTier3 == "":
-                advice_nextTier3 = "*" + advice
+                advice_nextTier3 = " * " + advice
             #if all 3 next tiers are already filled, move on without any action
     overall_GemShopTier = min(progressionTiers[-1][-0], tier_GemShopPurchases)
     if advice_nextTier1 != "":
-        advice_OverallGemShopCombined = ["DISCLAIMER: Recommended Gem Shop purchases are listed in their World order. All purchases within the same Ranking are approximately the same priority. Remember that items in the Limited Shop section could be more important than these always-available upgrades! Check the Limited Shop after each new patch/update.", "Recommended Permanent/Non-Gamba Gem Shop purchases (up to 3 tiers shown to account for personal preferences):",advice_nextTier1, advice_nextTier2, advice_nextTier3]
+        advice_OverallGemShopCombined = ["DISCLAIMER: Recommended Gem Shop purchases are listed in their World order. All purchases within the same Ranking are approximately the same priority. Remember that items in the Limited Shop section could be more important than these always-available upgrades! Check the Limited Shop after each new patch/update.", "### Recommended Permanent/Non-Gamba Gem Shop purchases (up to 3 tiers shown to account for personal preferences):",advice_nextTier1, advice_nextTier2, advice_nextTier3]
     else:
         advice_OverallGemShopCombined = ["", "", "", "", ""]
     gemShopPR = progressionResults.progressionResults(overall_GemShopTier,advice_OverallGemShopCombined,"")

@@ -48,16 +48,16 @@ def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount):
     overall_SmithingTier = min(tier_CashPoints, tier_MonsterPoints, tier_ForgeTotals)
     #Generate advice statement
     if advice_CashPoints != "":
-        advice_CashPoints = "*" + advice_CashPoints
+        advice_CashPoints = " * Tier " + str(tier_CashPoints) + "- " + advice_CashPoints
     if advice_MonsterPoints != "":
-        advice_MonsterPoints = "*" + advice_MonsterPoints
+        advice_MonsterPoints = " * Tier " + str(tier_MonsterPoints) + "- " + advice_MonsterPoints
     if advice_ForgeUpgrades != "":
-        advice_ForgeUpgrades = "*" + advice_ForgeUpgrades
+        advice_ForgeUpgrades = " * Tier " + str(tier_ForgeTotals) + "- " + advice_ForgeUpgrades
     #Print out all the final smithing info
     if overall_SmithingTier == progressionTiers[-1][-0]:
-        advice_CombinedSmithing = ["Best Smithing tier met: " + str(overall_SmithingTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended Smithing actions:", "*Nada. You best <3", "", ""]
+        advice_CombinedSmithing = ["### Best Smithing tier met: " + str(overall_SmithingTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended Smithing actions:", " * Nada. You best <3", "", ""]
     else:
-        advice_CombinedSmithing = ["Best Smithing tier met: " + str(overall_SmithingTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended Smithing actions:",advice_CashPoints,advice_MonsterPoints,advice_ForgeUpgrades]
+        advice_CombinedSmithing = ["### Best Smithing tier met: " + str(overall_SmithingTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended Smithing actions:",advice_CashPoints,advice_MonsterPoints,advice_ForgeUpgrades]
     #print("Determined lowest Smithing tier met to be: " + str(overall_SmithingTier) + "/" + str(highest_SmithingTier))
     #print("Recommended Smithing actions:\n" + advice_CombinedSmithing)
     #print(advice_CombinedSmithing)

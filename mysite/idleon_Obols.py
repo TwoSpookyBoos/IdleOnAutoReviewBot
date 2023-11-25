@@ -1,15 +1,15 @@
 import json
 import progressionResults
 
-def parseJSONtoLists(inputJSON):
-    obolsList = json.loads(inputJSON["Obols"])
-    return obolsList
+def parseObolValuestoDict(inputSection):
+    obolsDict = json.loads(inputSection)
+    return obolsDict
 
 def getAllObols(inputJSON, playerCount):
     properlyRolledObolsDict = {}
     notRolledObolsDict = {}
     familyObolNames = inputJSON["ObolEqO1"]
-    familyObolValues = json.loads(inputJSON["ObolEqMAPz1"])
+    familyObolValues = parseObolValuestoDict(inputJSON["ObolEqMAPz1"])
     #print(type(familyObolNames), type(familyObolValues))
     return [properlyRolledObolsDict, notRolledObolsDict]
 

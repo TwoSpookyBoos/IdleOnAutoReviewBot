@@ -285,7 +285,7 @@ def setDefaultTiers():
         [6, {'Skilled Dimwit (Forest Soul)':50, 'Midas Minded (Dune Soul)':50, 'Ruck Sack (Rooted Soul)':50, 'Balance of Pain (Squishy Soul)':30}, "Finish maxing these prayers next! They're the best from each Totem."],
         [7, {'Shiny Snitch (Forest Soul)':50, 'Zerg Rushogen (Forest Soul)':20, 'Jawbreaker (Dune Soul)':50}, "These are the last group of important prayers to max."],
         [8, {'Unending Energy (Forest Soul)':50, 'Big Brain Time (Forest Soul)':50, 'Antifun Spirit (Rooted Soul)':10, 'Fibers of Absence (Frigid Soul)':50, 'Beefy For Real (Frigid Soul)':40}, "These are niche use prayers. You can level them if you like. Some players choose to ignore them."],
-        [9, {'Tachion of the Titans (Dune Soul)':1, 'Balance of Precision (Dune Soul)':1, 'Circular Criticals (Rooted Soul)':1, 'Vacuous Tissue (Frigid Soul)':1, 'Glitterbug (Squishy Soul)':1}, "*Sidenote! The prayers in this bottom tier can stay at level 1 as of v1.91: "],
+        [9, {'Tachion of the Titans (Dune Soul)':1, 'Balance of Precision (Dune Soul)':1, 'Circular Criticals (Rooted Soul)':1, 'Vacuous Tissue (Frigid Soul)':1, 'Glitterbug (Squishy Soul)':1}, " * Sidenote! The prayers in this bottom tier can stay at level 1 as of v1.91: "],
         ]
     return defaultTiers
 
