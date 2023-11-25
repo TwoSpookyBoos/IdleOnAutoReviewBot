@@ -4,43 +4,43 @@ import progressionResults
 def getReadablePrayerNames(inputNumber):
     match inputNumber:
         case 0:
-            return "Big Brain Time"
+            return "Big Brain Time (Forest Soul)"
         case 1:
-            return "Skilled Dimwit"
+            return "Skilled Dimwit (Forest Soul)"
         case 2:
-            return "Unending Energy"
+            return "Unending Energy (Forest Soul)"
         case 3:
-            return "Shiny Snitch"
+            return "Shiny Snitch (Forest Soul)"
         case 4:
-            return "Zerg Rushogen"
+            return "Zerg Rushogen (Forest Soul)"
         case 5:
-            return "Tachion of the Titans"
+            return "Tachion of the Titans (Dune Soul)"
         case 6:
-            return "Balance of Precision"
+            return "Balance of Precision (Dune Soul)"
         case 7:
-            return "Midas Minded"
+            return "Midas Minded (Dune Soul)"
         case 8:
-            return "Jawbreaker"
+            return "Jawbreaker (Dune Soul)"
         case 9:
-            return "The Royal Sampler"
+            return "The Royal Sampler (Rooted Soul)"
         case 10:
-            return "Antifun Spirit"
+            return "Antifun Spirit (Rooted Soul)"
         case 11:
-            return "Circular Criticals"
+            return "Circular Criticals (Rooted Soul)"
         case 12:
-            return "Ruck Sack"
+            return "Ruck Sack (Rooted Soul)"
         case 13:
-            return "Fibers of Absence"
+            return "Fibers of Absence (Frigid Soul)"
         case 14:
-            return "Vacuous Tissue"
+            return "Vacuous Tissue (Frigid Soul)"
         case 15:
-            return "Beefy For Real"
+            return "Beefy For Real (Frigid Soul)"
         case 16:
-            return "Balance of Pain"
+            return "Balance of Pain (Squishy Soul)"
         case 17:
-            return "Balance of Proficiency"
+            return "Balance of Proficiency (Squishy Soul)"
         case 18:
-            return "Glitterbug"
+            return "Glitterbug (Squishy Soul)"
         case _:
             return ("UnknownPrayer"+str(inputNumber))
 
