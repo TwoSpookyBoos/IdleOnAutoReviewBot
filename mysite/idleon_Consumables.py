@@ -5,7 +5,7 @@ def parseBank(inputJSON):
 
     #Standard Time Candies: 1hr - 72hr
     guaranteedCandyHours = 0
-    guaranteedCandyString = "*You have no guaranteed candy in your bank. Wow."
+    guaranteedCandyString = " * You have no guaranteed candy in your bank. Wow."
     if 'Timecandy1' in inputJSON["ChestOrder"]:
         TC1Index = inputJSON["ChestOrder"].index('Timecandy1')
         guaranteedCandyHours += 1*(inputJSON["ChestQuantity"][TC1Index])
@@ -25,9 +25,9 @@ def parseBank(inputJSON):
         TC6Index = inputJSON["ChestOrder"].index('Timecandy6')
         guaranteedCandyHours += (72*inputJSON["ChestQuantity"][TC6Index])
     if guaranteedCandyHours >= 1000:
-        guaranteedCandyString = "*You have " + str(guaranteedCandyHours) + " hours (" + "{:.2f}".format(guaranteedCandyHours/24) + " days) of guaranteed candy in your bank. Don't forget about them!"
+        guaranteedCandyString = " * You have " + str(guaranteedCandyHours) + " hours (" + "{:.2f}".format(guaranteedCandyHours/24) + " days) of guaranteed candy in your bank. Don't forget about them!"
     elif guaranteedCandyHours != 0:
-        guaranteedCandyString = "*You have " + str(guaranteedCandyHours) + " hours (" + "{:.2f}".format(guaranteedCandyHours/24) + " days) of guaranteed candy in your bank."
+        guaranteedCandyString = " * You have " + str(guaranteedCandyHours) + " hours (" + "{:.2f}".format(guaranteedCandyHours/24) + " days) of guaranteed candy in your bank."
 
     #Variable Time Candies: Steamy, Spooky, Cosmic
     variableCandyMinutesMin = 0
@@ -45,7 +45,7 @@ def parseBank(inputJSON):
         variableCandyMinutesMin += 300*(inputJSON["ChestQuantity"][TC9Index])
         variableCandyMinutesMax += 30000*(inputJSON["ChestQuantity"][TC9Index])
     if variableCandyMinutesMin != 0:
-        variableCandyString = ("*You have somewhere between " + "{:.2f}".format(variableCandyMinutesMin/60)
+        variableCandyString = (" * You have somewhere between " + "{:.2f}".format(variableCandyMinutesMin/60)
             + " - " + "{:.2f}".format(variableCandyMinutesMax/60) + " hours (" + "{:.2f}".format(variableCandyMinutesMin/1440)
             + " - " + "{:.2f}".format(variableCandyMinutesMax/1440) + " days) of variable candy in your bank.")
     else:
@@ -172,7 +172,7 @@ def parseInventoryBags(inputJSON, playerCount, fromPublicIEBool):
     for player in playersMissingBags:
         advice_MissingBags += str(player) + " (" + str(playerBagsByTypeDict[player]['Total']) + "/"+ str(currentMaxBagsSum) + "), "
     if advice_MissingBags != "":
-        advice_MissingBags = "*Collect more inventory bags: " + advice_MissingBags[:-2]
+        advice_MissingBags = " * Collect more inventory bags: " + advice_MissingBags[:-2]
     #print(advice_MissingBags)
     return advice_MissingBags
 
@@ -182,7 +182,7 @@ def parseStorageChests(inputJSON):
     usedStorageChests = json.loads(inputJSON['InvStorageUsed'])
     #print(len(usedStorageChests), usedStorageChests)
     if len(usedStorageChests) != currentMaxChestsSum:
-        advice_MissingChests = "*Collect more storage chests: " + str(len(usedStorageChests)) + "/" + str(currentMaxChestsSum)
+        advice_MissingChests = " * Collect more storage chests: " + str(len(usedStorageChests)) + "/" + str(currentMaxChestsSum)
     return advice_MissingChests
 
 def parseConsumables(inputJSON, playerCount, fromPublicIEBool):
