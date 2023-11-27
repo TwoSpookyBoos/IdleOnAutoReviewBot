@@ -59,6 +59,7 @@ def getTrashObols():
     #This is going to include Obols you usually only make for Slab, then trash
     return [""]
 
+
 def getAllObols(inputJSON, playerCount):
     properlyRolledObolsDict = {}
     notRolledObolsDict = {}
@@ -68,7 +69,7 @@ def getAllObols(inputJSON, playerCount):
     obolIndex = -4
     while obolIndex < len(obolSaveDataNamesList):
         #ISSUE: SOMETHING WRONG HERE. THE NAMES AND VALUES DON'T ALWAYS MATCH UP.
-        #Lexagraphical sorting issue: (1,11,12,2,23,3,etc.) in names, but not in values.
+        #Lexagraphical sorting issue: (1,11,12,2,23,3,etc.)
         if obolIndex < 0:
             print("Loading Obol data from inventory:",obolIndex+4)
             obolValuesDict = parseObolValuestoDict(inputJSON["ObolInvMAP_"+str(obolIndex+4)]) #expected type of dict
