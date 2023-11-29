@@ -30,6 +30,7 @@ def parseConsSaltLick(inputJSON):
 
 def setConsSaltLickProgressionTier(inputJSON, progressionTiers):
     saltLickDict = parseConsSaltLick(inputJSON)
+    #print(saltLickDict)
     tier_RequiredSaltLickUpgrades = 0
     sum_TotalMaxedSaltLickUpgrades = 0
     overall_ConsSaltLickTier = 0
@@ -41,15 +42,16 @@ def setConsSaltLickProgressionTier(inputJSON, progressionTiers):
         requiredSaltLickUpgrades = tier[1]
         all_RequiredSaltLickUpgrades = True
         for key, value in requiredSaltLickUpgrades.items():
+            #print("If ",saltLickDict[key]," < ",requiredSaltLickUpgrades[key]," - ", (saltLickDict[key] < requiredSaltLickUpgrades[key]))
             if saltLickDict[key] < requiredSaltLickUpgrades[key]:
                 all_RequiredSaltLickUpgrades = False
                 if advice_RequiredSaltLickUpgrades == "":
                     advice_RequiredSaltLickUpgrades = (" * The next best/cheapest bonus to max is probably " + str(key) + " which requires " + tier[2])
                 #else #don't write out new advice, only want the lowest.
-        if all_RequiredSaltLickUpgrades == True:
-            sum_TotalMaxedSaltLickUpgrades += 1
-        if tier_RequiredSaltLickUpgrades == (tier[0]-1) and all_RequiredSaltLickUpgrades == True:
-            tier_RequiredSaltLickUpgrades = tier[0]
+            if all_RequiredSaltLickUpgrades == True:
+                sum_TotalMaxedSaltLickUpgrades += 1
+            if tier_RequiredSaltLickUpgrades == (tier[0]-1) and all_RequiredSaltLickUpgrades == True:
+                tier_RequiredSaltLickUpgrades = tier[0]
     overall_ConsSaltLickTier = min(10, sum_TotalMaxedSaltLickUpgrades) #Looks silly, but may get more evaluations in the future
     #Generate advice statement
     if overall_ConsSaltLickTier == 10:
