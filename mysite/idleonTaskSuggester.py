@@ -1,3 +1,4 @@
+#idleonTaskSuggester.py
 import re
 import requests
 import json
@@ -14,6 +15,7 @@ import idleon_Bribes
 import idleon_Smithing
 #w2
 import idleon_Alchemy
+#import idleon_Obols
 #w3
 #import idleon_Sampling
 import idleon_ConsRefinery
@@ -39,32 +41,32 @@ def getJSONfromAPI(url="https://scoli.idleonefficiency.com/raw-data"):
         jsonvalue = response.json()
         parsed = jsonvalue
     except Exception as reason:
-        print("Error retrieving data from IE!")
-        print(response, reason)
+        print("idleonTaskSuggester.getJSONfromAPI~ Error retrieving data from IE!")
+        print("idleonTaskSuggester.getJSONfromAPI~",response, reason)
         parsed = []
     #print("parsed is a ",type(parsed))
     return parsed
 
 def getJSONfromText(rawJSON):
     parsed = []
-    print("Input type:", type(rawJSON))
+    #print("idleonTaskSuggester.getJSONfromText~ Input type:", type(rawJSON))
     if isinstance(rawJSON, dict): #Console testing
         try:
             jsonString = json.dumps(rawJSON)
-            print("Type after json.dumps (expecting str):", type(jsonString))
+            #print("idleonTaskSuggester.getJSONfromText~ Type after json.dumps (expecting str):", type(jsonString))
             parsed = json.loads(jsonString)
-            print("Type after json.loads (excepting dict):", type(parsed))
+            #print("idleonTaskSuggester.getJSONfromText~ Type after json.loads (excepting dict):", type(parsed))
         except Exception as reason:
-            print("Error parsing JSON data from console input!")
-            print("Exception reason: ", reason)
+            print("idleonTaskSuggester.getJSONfromText~ Error parsing JSON data from console input!")
+            print("idleonTaskSuggester.getJSONfromText~ Exception reason: ", reason)
             parsed = []
     elif isinstance(rawJSON, str): #Input from the actual website
         try:
             parsed = json.loads(rawJSON)
-            print("Type after json.loads (excepting dict):", type(parsed))
+            #print("idleonTaskSuggester.getJSONfromText~ Type after json.loads (excepting dict):", type(parsed))
         except Exception as reason:
-            print("Error parsing JSON data from website input!")
-            print("Exception reason: ", reason)
+            print("idleonTaskSuggester.getJSONfromText~ Error parsing JSON data from website input!")
+            print("idleonTaskSuggester.getJSONfromText~ Exception reason: ", reason)
             parsed = []
     #print("parsed is a ",type(parsed))
     return parsed
@@ -93,11 +95,11 @@ def setDefaultTiers():
         [7, 400, "10,12,19", "8,9", "", {'Pickaxe':35,'Hatchet':35}, ""],
         [8, 500, "15,21", "10,17,23", "14,19", {'Drippy Drop':30}, ""],
         [9, 600, "27", "11,24,26", "1,2", {'Mason Jar':12}, ""],
-        [10, 700, "22,26", "12,20,22", "18", {'Drippy Drop':40,'Matty Bag':50}, ""],
+        [10, 700, "22", "12,20,22", "18", {'Drippy Drop':40,'Matty Bag':50}, ""],
         [11, 800, "28,30", "29,30,37,40", "", {'Pickaxe':45,'Hatchet':45,'Mason Jar':24,}, ""],
         [12, 900, "23,24", "13,46", "8", {'Drippy Drop':50}, ""],
         [13, 1000, "31", "19,21,36", "13", {'Pickaxe':55,'Hatchet':55,'Card':50}, ""],
-        [14, 1500, "", "33,35,39", "21", {'Matty Bag':100,'Crystallin':60}, ""],
+        [14, 1500, "26", "33,35,39", "21", {'Matty Bag':100,'Crystallin':60}, ""],
         [15, 2000, "25,29", "41", "6,20", {'Pickaxe':65,'Hatchet':65,'Card':100}, ""],
         [16, 2500, "32,33,34", "38,42", "15", {'Golden Apple':28}, ""],
         [17, 3000, "36", "43,44,45", "", {'Bugsack':80,'Bag o Heads':80},  ""],
@@ -182,6 +184,9 @@ def setDefaultTiers():
         [20, 63, 55, ['Bloat Draft (Blobfish)', 'Barley Brew (Iron Bar)', 'Oozie Ooblek (Oozie Soul)'], " This is the last tier possible as of v1.91"],
         [21, 63, 60, ['Poison Tincture (Poison Froge)', 'Red Malt (Redox Salts)', 'Orange Malt (Explosive Salts)', 'Shaved Ice (Purple Salt)', 'Dreadnog (Dreadlo Bar)'], " This tier is impossible as of v1.91"],
         [22, 63, 64, ['Pickle Jar (BobJoePickle)', 'Ball Pickle Jar (BallJoePickle)', 'Pearl Seltzer (Pearler Shell)', 'Hampter Drippy (Hampter)'], " This tier is super impossible as of v1.91"]
+        ]
+    defaultTiers['Obols'] = [
+        [0,""]
         ]
     defaultTiers['Construction Printer'] = []
     defaultTiers['Construction Refinery'] = [
@@ -323,13 +328,28 @@ def getPlayerCountAndNames(inputJSON, fromPublicIE):
 
 def getRoastableStatus(playerNames):
     roastworthyBool = False
-    roastworthyList = ["weebgasm"]
+    roastworthyList = ["scoli","weebgasm","herusx","rashaken","trickzbunny","redpaaaaanda"]
     for name in playerNames:
         if name.lower() in roastworthyList:
             roastworthyBool = True
     return roastworthyBool
 
 def main(inputCharacterName="scoli"):
+    empty = "          "
+    emptyList = [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty]
+    errorStatement = "Unable to retrieve data for this character name. Please check your spelling and make sure you have uploaded your account publicly."
+    errorList = [errorStatement,empty,empty,empty,empty,empty,empty,empty,empty,empty]
+    errorListofLists = [[errorList,empty,empty,empty,empty,empty,empty,empty,empty,empty], #general placeholder
+    [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty], #w1 placeholder
+    [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty], #w2 placeholder
+    [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty], #w3 placeholder
+    [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty], #w4 placeholder
+    [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty], #w5 placeholder
+    [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty], #w6 placeholder
+    [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty], #w7 placeholder
+    [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty], #w8 placeholder
+    [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty] #pinchy placeholder
+    ]
     #Step 1: Retrieve data from public IdleonEfficiency website or from file
     if len(inputCharacterName) < 16:
         print("~~~~~~~~~~~~~~~ Starting up PROD main at",datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),"for",inputCharacterName,"~~~~~~~~~~~~~~~")
@@ -343,19 +363,6 @@ def main(inputCharacterName="scoli"):
         fromPublicIEBool = False
         ieLinkString = "Searching for character data from direct JSON paste. IN THIS MODE, I CAN'T PROVIDE CHARACTER NAMES- ONLY NUMBER ORDER."
     if parsedJSON == []:
-        errorStatement = "Unable to retrieve data for this character name. Please check your spelling and make sure you have uploaded your account publicly."
-        errorList = [errorStatement,errorStatement,errorStatement,errorStatement,errorStatement,errorStatement,errorStatement,errorStatement,errorStatement,errorStatement]
-        errorListofLists = [[errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList], #general placeholder
-        [errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList], #w1 placeholder
-        [errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList], #w2 placeholder
-        [errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList], #w3 placeholder
-        [errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList], #w4 placeholder
-        [errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList], #w5 placeholder
-        [errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList], #w6 placeholder
-        [errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList], #w7 placeholder
-        [errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList], #w8 placeholder
-        [errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList,errorList] #pinchy placeholder
-        ]
         return errorListofLists
 
     #Step 2: Set either Default or Custom progression tiers
@@ -369,6 +376,10 @@ def main(inputCharacterName="scoli"):
     playerCount = playerCountAndNamesList[0]
     playerNames = playerCountAndNamesList[1]
     roastworthyBool = getRoastableStatus(playerNames)
+    if fromPublicIEBool:
+        print("idleonTaskSuggester.main~ From public IE, found " + str(playerCount) + " characters: ",playerNames)
+    else:
+        print("idleonTaskSuggester.main~ From direct JSON, found " + str(playerCount) + " characters: ",playerNames)
     #print(fromPublicIEBool,playerNames)
     lastUpdatedTimeString = parseLastUpdatedTime(parsedJSON)
     #print(lastUpdatedTimeString)
@@ -394,6 +405,7 @@ def main(inputCharacterName="scoli"):
     alchVialsPR = idleon_Alchemy.setAlchemyVialsProgressionTier(parsedJSON, progressionTiers['Alchemy Vials'])
     #print(alchVialsPR.nTR)
     alchP2WList = idleon_Alchemy.setAlchemyP2W(parsedJSON)
+    #obolsPR = idleon_Obols.setObolsProgressionTier(parsedJSON, playerCount, progressionTiers['Obols'], fromPublicIEBool)
     #print("## World 3 AutoReview")
     #consPrinterPR =
     #print(consRefineryPR.nTR)
@@ -418,7 +430,8 @@ def main(inputCharacterName="scoli"):
 
     generalList = [[ieLinkString, lastUpdatedTimeString], combatLevelsPR.nTR, consumablesList, gemShopPR.nTR] #len(combatLevelsPR.nTR) = 2, len(consumablesList) = 2, len(
     w1list = [stampPR.nTR, bribesPR.nTR, smithingPR.nTR] #len(stampPR) = 4, len(bribesPR.nTR) = 2, len(smithingPR.nTR) = 4
-    w2list = [alchBubblesPR.nTR,alchVialsPR.nTR,alchP2WList] #len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 4
+    w2list = [alchBubblesPR.nTR,alchVialsPR.nTR,alchP2WList, emptyList] #len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 4
+    #w2list = [alchBubblesPR.nTR,alchVialsPR.nTR,alchP2WList, obolsPR.nTR] #len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 4, len(obolsPR.nTR) = 4
     w3list = [["Construction 3D Printer coming soon!"], consRefineryPR.nTR, consSaltLickPR.nTR, ["Construction Death Note coming soon!"],
         ["Construction Buildings coming soon!"], ["Construction Atom Collider coming soon!"], ["Worship Totems coming soon!"], worshipPrayersPR.nTR, ["Trapping coming soon!"]] #len(consRefineryPR.nTR) = 5, len(consSaltLickPR.nTR) = 2
     w4list = [["Cooking coming soon!"],["Breeding coming soon!"],["Lab coming soon!"]]
