@@ -1,6 +1,5 @@
 from flask import Flask, redirect, render_template, request, url_for
 import idleonTaskSuggester
-import beta_idleonTaskSuggester
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
@@ -14,8 +13,8 @@ def index():
     if request.method == "POST":
         capturedCharacterInput = request.form["characterInput"]
         if capturedCharacterInput != "":
-            output = autoReviewBot(capturedCharacterInput)
-            return render_template("results.html", output=output)
+            pythonOutput = autoReviewBot(capturedCharacterInput)
+            return render_template("results.html", htmlInput = pythonOutput)
         else:
             return render_template("main_page.html")
 
@@ -29,29 +28,15 @@ def autoReviewBot(capturedCharacterInput):
     #Do review stuff function, passinto array
     return reviewInfo
 
-@app.route("/beta", methods=["GET", "POST"])
-def betaIndex():
-    if request.method == "GET":
-        return render_template("beta_main_page.html")
-    if request.method == "POST":
-        capturedCharacterInput = request.form["beta_characterInput"]
-        if capturedCharacterInput != "":
-            beta_output = beta_autoReviewBot(capturedCharacterInput)
-            return render_template("beta_results.html", output=beta_output)
-        else:
-            return render_template("beta_main_page.html")
-    #return redirect(url_for('beta_results')) #
-
-#@app.route("/beta_results", methods=["GET"])
-def beta_autoReviewBot(capturedCharacterInput):
-
-    beta_reviewInfo = ""
-    if not capturedCharacterInput:
-        beta_reviewInfo = ["placeholder"]
-    else:
-        beta_reviewInfo = beta_idleonTaskSuggester.main(capturedCharacterInput)
-    #Do review stuff function, passinto array
-    return beta_reviewInfo
+@app.errorhandler(404)
+def page_not_found(e):
+    try:
+        if len(request.path) <= 16:
+            capturedCharacterInput = request.path[1:]
+            pythonOutput = autoReviewBot(capturedCharacterInput)
+            return render_template("results.html", htmlInput = pythonOutput)
+    except:
+        return render_template("main_page.html")
 
 if __name__ == '__main__':
     app.run()

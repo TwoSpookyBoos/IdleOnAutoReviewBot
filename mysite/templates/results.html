@@ -8,7 +8,22 @@
                 background-color: white;
                 color: black;
             }
+            .banner {
+                cursor: pointer;
+            }
+            .world-content {
+                display: block;
+            }
+            .is-visible {
+                display: none;
+           }
         </style>
+        <script type="text/javascript">
+            var toggle = function (id) {
+                var elem = document.getElementById(id);
+                elem.classList.toggle('is-visible');
+            };
+        </script>
     </head>
     <body>
         <!-- Toggle button --><div><button onclick="lightMode()">Toggle Light/Dark mode</button></div><script>function lightMode() {var element = document.body; element.classList.toggle("light-mode");}</script>
@@ -31,108 +46,118 @@
             </form>
         </div>
         <div id = "mainresults">
-            {% if output is not none %}
+            {% if htmlInput is not none %}
             <br>
-            <div> {{ output[0][0][0] }} </div> <!-- IE link -->
-            <div> {{ output[0][0][1] }} </div> <!--Last updated -->
+            <div> {{ htmlInput[0][0][0] }} </div> <!-- IE link -->
+            <div> {{ htmlInput[0][0][1] }} </div> <!--Last updated -->
             <br>
             <h1>Pinchy AutoReview <img src="https://media.discordapp.net/attachments/438216759120756737/973301920099864626/Pinch_idleM.gif" width="2%"> </h1>
-            <div> {{ output[9][0] }} </div><!-- Pinchy Expected -->
-            <div> {{ output[9][1] }} </div><!-- Pinchy Minimum -->
-            <div> {{ output[9][2] }} </div><!-- Pinchy Advice -->
+            <div> {{ htmlInput[9][0] }} </div><!-- Pinchy Expected -->
+            <div> {{ htmlInput[9][1] }} </div><!-- Pinchy Minimum -->
+            <div> {{ htmlInput[9][2] }} </div><!-- Pinchy Advice -->
             <br>
             <h1>General Account AutoReview</h1>
-            <div> {{ output[0][1][0] }}</div> <!-- Account Levels tier -->
-            <div> {{ output[0][1][1] }}</div> <!-- Personal Levels tier -->
+            <div> {{ htmlInput[0][1][0] }}</div> <!-- Account Levels tier -->
+            <div> {{ htmlInput[0][1][1] }}</div> <!-- Personal Levels tier -->
             <br>
-            <div> {{ output[0][2][0][0] }}</div> <!-- Guaranteed Candy total -->
-            <div> {{ output[0][2][0][1] }}</div> <!-- Variable Candy total -->
+            <div> {{ htmlInput[0][2][0][0] }}</div> <!-- Guaranteed Candy total -->
+            <div> {{ htmlInput[0][2][0][1] }}</div> <!-- Variable Candy total -->
             <br>
-            <div> {{ output[0][2][1] }}</div> <!-- Inventory Bags -->
-            <div> {{ output[0][2][2] }}</div> <!-- Storage Chests -->
+            <div> {{ htmlInput[0][2][1] }}</div> <!-- Inventory Bags -->
+            <div> {{ htmlInput[0][2][2] }}</div> <!-- Storage Chests -->
             <br>
-            <div> <em>{{ output[0][3][0] }}</em></div> <!-- Gem Shop FOMO Disclaimer -->
-            <div> {{ output[0][3][1] }}</div> <!-- Gem Shop header -->
-            <div> {{ output[0][3][2] }}</div> <!-- Gem Shop first unmaxed tier -->
-            <div> {{ output[0][3][3] }}</div> <!-- Gem Shop second unmaxed tier -->
-            <div> {{ output[0][3][4] }}</div> <!-- Gem shop third unmaxed tier -->
+            <div> <em>{{ htmlInput[0][3][0] }}</em></div> <!-- Gem Shop FOMO Disclaimer -->
+            <div> {{ htmlInput[0][3][1] }}</div> <!-- Gem Shop header -->
+            <div> {{ htmlInput[0][3][2] }}</div> <!-- Gem Shop first unmaxed tier -->
+            <div> {{ htmlInput[0][3][3] }}</div> <!-- Gem Shop second unmaxed tier -->
+            <div> {{ htmlInput[0][3][4] }}</div> <!-- Gem shop third unmaxed tier -->
             <br>
-            <h1><img src="https://idleon.wiki/wiki/images/1/10/BH_header.png" alt="World 1 Banner" title ="World 1 Banner"></h1>
-            <div> <strong>{{ output[1][0][0] }}</strong></div> <!-- Stamp tier -->
-            <div> {{ output[1][0][1] }}</div> <!-- Stamp total level advice -->
-            <div> {{ output[1][0][2] }}</div> <!-- Stamp collect combat advice -->
-            <div> {{ output[1][0][3] }}</div> <!-- Stamp collect skill advice -->
-            <div> {{ output[1][0][4] }}</div> <!-- Stamp collect misc advice -->
-            <div> {{ output[1][0][5] }}</div> <!-- Stamp high-prio advice -->
-            <br>
-            <div> <strong>{{ output[1][1][0] }}</strong></div> <!-- Bribes tier -->
-            <div> {{ output[1][1][1] }}</div> <!-- Bribes advice -->
-            <br>
-            <div> <strong>{{ output[1][2][0] }}</strong></div> <!-- Smithing tier -->
-            <div> {{ output[1][2][1] }}</div> <!-- Smithing Cash Points advice -->
-            <div> {{ output[1][2][2] }}</div> <!-- Smithing Monster Points advice -->
-            <div> {{ output[1][2][3] }}</div> <!-- Smithing Forge Upgrade advice -->
-            <br>
-            <h1><img src="https://idleon.wiki/wiki/images/6/6a/YYD_header.png" title ="World 2 Banner"></h1>
-            <div> <strong>{{ output[2][0][0] }}</strong></div> <!-- Alchemy Bubbles tier -->
-            <div> {{ output[2][0][1] }}</div> <!-- Alchemy Total Unlocked Bubbles advice -->
-            <div> {{ output[2][0][2] }}</div> <!-- Alchemy Purple Sample Bubble advice -->
-            <div> {{ output[2][0][3] }}</div> <!-- Alchemy Orange Sample Bubble advice -->
-            <div> {{ output[2][0][4] }}</div> <!-- Alchemy Green Sample Bubble advice -->
-            <div> {{ output[2][0][5] }}</div> <!-- Alchemy Utility Bubble advice -->
-            <br>
-            <div> <strong>{{ output[2][1][0] }}</strong></div> <!-- Alchemy Vials tier -->
-            <div> {{ output[2][1][1] }}</div> <!-- Alchemy Vials Total Unlocked advice -->
-            <div> {{ output[2][1][2] }}</div> <!-- Alchemy Vials Total Maxed advice -->
-            <div> {{ output[2][1][3] }}</div> <!-- Alchemy Vials Particular Maxed advice -->
-            <br>
-            <div> <strong>{{ output[2][2][0] }}</strong></div> <!-- Alchemy P2W tier -->
-            <div> {{ output[2][2][1] }}</div> <!-- Alchemy P2W advice -->
-            <br>
-            <div> <strong>{{ output[2][3][0] }}</strong></div> <!-- Obols tier -->
-            <div> {{ output[2][3][1] }}</div> <!-- Obols Good DR  -->
-            <div> {{ output[2][3][2] }}</div> <!-- Obols Bad DR  -->
-            <div> {{ output[2][3][3] }}</div> <!-- Obols Unrolled DR  -->
-            <br>
-            <h1><img src="https://idleon.wiki/wiki/images/b/bc/FT_header.png" title ="World 3 Banner"></h1>
-            <div> <strong>{{ output[3][0][0] }}</strong></div> <!-- Construction 3D Printer tier -->
-            <br>
-            <div> <strong>{{ output[3][1][0] }}</strong></div> <!-- Construction Refinery tier -->
-            <div> {{ output[3][1][1] }}</div> <!-- Construction Refinery Autorefine Advice -->
-            <div> {{ output[3][1][2] }}</div> <!-- Construction Refinery W3 Merits Advice -->
-            <div> {{ output[3][1][3] }}</div> <!-- Construction Refinery Tab1 Advice -->
-            <div> {{ output[3][1][4] }}</div> <!-- Construction Refinery Tab2 Advice -->
-            <br>
-            <div> <strong>{{ output[3][2][0] }}</strong></div> <!-- Construction Salt Lick tier -->
-            <div> {{ output[3][2][1] }}</div> <!-- Construction Salt Lick advice -->
-            <br>
-            <div> <strong>{{ output[3][3][0] }}</strong></div> <!-- Construction DeathNote tier -->
-            <br>
-            <div> <strong>{{ output[3][4][0] }}</strong></div> <!-- Construction Buildings tier -->
-            <br>
-            <div> <strong>{{ output[3][5][0] }}</strong></div> <!-- Construction Atom Collider tier -->
-            <br>
-            <div> <strong>{{ output[3][6][0] }}</strong></div> <!-- Worship Totems tier -->
-            <br>
-            <div> <strong>{{ output[3][7][0] }}</strong></div> <!-- Worship Prayers tier -->
-            <div> {{ output[3][7][1] }}</div> <!-- Worship Prayers advice -->
-            <div> {{ output[3][7][2] }}</div> <!-- Worship Prayers to ignore advice -->
-            <br>
-            <div> <strong>{{ output[3][8][0] }}</strong></div> <!-- Trapping tier -->
-            <br>
-            <h1><img src="https://idleon.wiki/wiki/images/7/72/HN_header.png" title ="World 4 Banner"></h1>
-            <div> <strong>{{ output[4][0][0] }}</strong></div> <!-- Cooking tier -->
-            <br>
-            <div> <strong>{{ output[4][1][0] }}</strong></div> <!-- Breeding tier -->
-            <br>
-            <div> <strong>{{ output[4][2][0] }}</strong></div> <!-- Lab tier -->
-            <br>
-            <h1><img src="https://idleon.wiki/wiki/images/7/7b/SP_header.png" title ="World 5 Banner"></h1>
-            <div> <strong>{{ output[5][0][0] }}</strong></div> <!-- Sailing tier -->
-            <br>
-            <div> <strong>{{ output[5][1][0] }}</strong></div> <!-- Gaming tier -->
-            <br>
-            <div> <strong>{{ output[5][2][0] }}</strong></div> <!-- Divinity tier -->
+            <h1><img src="https://idleon.wiki/wiki/images/1/10/BH_header.png" alt="World 1 Banner" title ="World 1 Banner" onclick="toggle('w1-content')" class="banner"></h1>
+            <div class="world-content" id="w1-content">
+                <div> <strong>{{ htmlInput[1][0][0] }}</strong></div> <!-- Stamp tier -->
+                <div> {{ htmlInput[1][0][1] }}</div> <!-- Stamp total level advice -->
+                <div> {{ htmlInput[1][0][2] }}</div> <!-- Stamp collect combat advice -->
+                <div> {{ htmlInput[1][0][3] }}</div> <!-- Stamp collect skill advice -->
+                <div> {{ htmlInput[1][0][4] }}</div> <!-- Stamp collect misc advice -->
+                <div> {{ htmlInput[1][0][5] }}</div> <!-- Stamp high-prio advice -->
+                <br>
+                <div> <strong>{{ htmlInput[1][1][0] }}</strong></div> <!-- Bribes tier -->
+                <div> {{ htmlInput[1][1][1] }}</div> <!-- Bribes advice -->
+                <br>
+                <div> <strong>{{ htmlInput[1][2][0] }}</strong></div> <!-- Smithing tier -->
+                <div> {{ htmlInput[1][2][1] }}</div> <!-- Smithing Cash Points advice -->
+                <div> {{ htmlInput[1][2][2] }}</div> <!-- Smithing Monster Points advice -->
+                <div> {{ htmlInput[1][2][3] }}</div> <!-- Smithing Forge Upgrade advice -->
+                <br>
+            </div>
+            <h1><img src="https://idleon.wiki/wiki/images/6/6a/YYD_header.png" title ="World 2 Banner" onclick="toggle('w2-content')" class="banner"></h1>
+            <div class="world-content" id="w2-content">
+                <div> <strong>{{ htmlInput[2][0][0] }}</strong></div> <!-- Alchemy Bubbles tier -->
+                <div> {{ htmlInput[2][0][1] }}</div> <!-- Alchemy Total Unlocked Bubbles advice -->
+                <div> {{ htmlInput[2][0][2] }}</div> <!-- Alchemy Purple Sample Bubble advice -->
+                <div> {{ htmlInput[2][0][3] }}</div> <!-- Alchemy Orange Sample Bubble advice -->
+                <div> {{ htmlInput[2][0][4] }}</div> <!-- Alchemy Green Sample Bubble advice -->
+                <div> {{ htmlInput[2][0][5] }}</div> <!-- Alchemy Utility Bubble advice -->
+                <br>
+                <div> <strong>{{ htmlInput[2][1][0] }}</strong></div> <!-- Alchemy Vials tier -->
+                <div> {{ htmlInput[2][1][1] }}</div> <!-- Alchemy Vials Total Unlocked advice -->
+                <div> {{ htmlInput[2][1][2] }}</div> <!-- Alchemy Vials Total Maxed advice -->
+                <div> {{ htmlInput[2][1][3] }}</div> <!-- Alchemy Vials Particular Maxed advice -->
+                <br>
+                <div> <strong>{{ htmlInput[2][2][0] }}</strong></div> <!-- Alchemy P2W tier -->
+                <div> {{ htmlInput[2][2][1] }}</div> <!-- Alchemy P2W advice -->
+                <br>
+                <div> <strong>{{ htmlInput[2][3][0] }}</strong></div> <!-- Obols tier -->
+                <div> {{ htmlInput[2][3][1] }}</div> <!-- Obols Good DR  -->
+                <div> {{ htmlInput[2][3][2] }}</div> <!-- Obols Bad DR  -->
+                <div> {{ htmlInput[2][3][3] }}</div> <!-- Obols Unrolled DR  -->
+                <br>
+            </div>
+            <h1><img src="https://idleon.wiki/wiki/images/b/bc/FT_header.png" title ="World 3 Banner" onclick="toggle('w3-content')" class="banner"></h1>
+            <div class="world-content" id="w3-content">
+                <div> <strong>{{ htmlInput[3][0][0] }}</strong></div> <!-- Construction 3D Printer tier -->
+                <br>
+                <div> <strong>{{ htmlInput[3][1][0] }}</strong></div> <!-- Construction Refinery tier -->
+                <div> {{ htmlInput[3][1][1] }}</div> <!-- Construction Refinery Autorefine Advice -->
+                <div> {{ htmlInput[3][1][2] }}</div> <!-- Construction Refinery W3 Merits Advice -->
+                <div> {{ htmlInput[3][1][3] }}</div> <!-- Construction Refinery Tab1 Advice -->
+                <div> {{ htmlInput[3][1][4] }}</div> <!-- Construction Refinery Tab2 Advice -->
+                <br>
+                <div> <strong>{{ htmlInput[3][2][0] }}</strong></div> <!-- Construction Salt Lick tier -->
+                <div> {{ htmlInput[3][2][1] }}</div> <!-- Construction Salt Lick advice -->
+                <br>
+                <div> <strong>{{ htmlInput[3][3][0] }}</strong></div> <!-- Construction DeathNote tier -->
+                <br>
+                <div> <strong>{{ htmlInput[3][4][0] }}</strong></div> <!-- Construction Buildings tier -->
+                <br>
+                <div> <strong>{{ htmlInput[3][5][0] }}</strong></div> <!-- Construction Atom Collider tier -->
+                <br>
+                <div> <strong>{{ htmlInput[3][6][0] }}</strong></div> <!-- Worship Totems tier -->
+                <br>
+                <div> <strong>{{ htmlInput[3][7][0] }}</strong></div> <!-- Worship Prayers tier -->
+                <div> {{ htmlInput[3][7][1] }}</div> <!-- Worship Prayers advice -->
+                <div> {{ htmlInput[3][7][2] }}</div> <!-- Worship Prayers to ignore advice -->
+                <br>
+                <div> <strong>{{ htmlInput[3][8][0] }}</strong></div> <!-- Trapping tier -->
+                <br>
+            </div>
+            <h1><img src="https://idleon.wiki/wiki/images/7/72/HN_header.png" title ="World 4 Banner" onclick="toggle('w4-content')" class="banner"></h1>
+            <div class="world-content" id="w4-content">
+                <div> <strong>{{ htmlInput[4][0][0] }}</strong></div> <!-- Cooking tier -->
+                <br>
+                <div> <strong>{{ htmlInput[4][1][0] }}</strong></div> <!-- Breeding tier -->
+                <br>
+                <div> <strong>{{ htmlInput[4][2][0] }}</strong></div> <!-- Lab tier -->
+                <br>
+            </div>
+            <h1><img src="https://idleon.wiki/wiki/images/7/7b/SP_header.png" title ="World 5 Banner" onclick="toggle('w5-content')" class="banner"></h1>
+            <div class="world-content" id="w5-content">
+                <div> <strong>{{ htmlInput[5][0][0] }}</strong></div> <!-- Sailing tier -->
+                <br>
+                <div> <strong>{{ htmlInput[5][1][0] }}</strong></div> <!-- Gaming tier -->
+                <br>
+                <div> <strong>{{ htmlInput[5][2][0] }}</strong></div> <!-- Divinity tier -->
+            </div>
             {% endif %}
             <br>
             <br>
