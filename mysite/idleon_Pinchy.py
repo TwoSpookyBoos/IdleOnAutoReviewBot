@@ -15,8 +15,8 @@ def setPinchyList(inputJSON, playerCount, dictOfPRs):
     maxExpectedIndex = 13 #13 is the highest map evaluated, Tremor Wurms.
     progressionTiersVsWorlds = {
         #[0,0,0,0,0,0,0,0,0,0,0,0,0,99] #template
-        "Combat Levels":[0,3,7,8,10,14,15,16,17,18,19,25,28,28,29,30,99],
-        "Stamps":[0,1,2,3,4,5,7,8,9,10,12,14,17,24,31,36,99],
+        "Combat Levels":[0,3,7,8,10,14,15,16,17,18,19,25,28,28,29,29,99],
+        "Stamps":[0,1,2,3,4,5,6,7,8,9,10,11,15,22,28,36,99],
         "Bribes":[0,1,1,1,2,2,3,3,3,4,4,4,5,5,5,5,99],
         "Smithing":[0,0,0,0,0,0,1,2,3,4,5,6,6,6,6,6,99],
         "Alchemy-Bubbles":[0,0,0,1,1,1,1,2,2,2,3,4,5,7,12,18,99],
