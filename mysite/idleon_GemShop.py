@@ -1,6 +1,42 @@
 import json
 import progressionResults
 
+def getGemShopExclusions(inputJSON, playerCount):
+    exclusionList = []
+    sum_LabLevels = 0
+    counter = 0
+    while counter < playerCount: #not 0 based
+        try:
+            sum_LabLevels += int(inputJSON['Lv0_'+str(counter)][12])
+        except Exception as reason:
+            print("GemShop~ EXCEPTION Unable to get player lab level",counter,playerCount,reason)
+        counter += 1
+    if sum_LabLevels >= 180:
+        exclusionList.append("Souped Up Tube")
+
+    #0 through 95 are cogs placed on the board
+    #96-98 are gray cog-making characters
+    #99-101 are yellow cog-making
+    #102-104 are red cog-making
+    #105-106 are purple cog-making
+    cogBlanks = 0
+    cogList = inputJSON["CogO"][0:95] #expected to be a list
+    for cog in cogList:
+        if cog == "Blank":
+            cogBlanks += 1
+    if cogBlanks <= 60:
+        exclusionList.append("Fluorescent Flaggies")
+
+
+    try:
+        autoArmLevel = json.loads(inputJSON["Tower"])[7]
+    except Exception as reason:
+        print("GemShop~ EXCEPTION Unable to get Automatin Arm level",reason)
+        autoArmLevel = 0
+    if autoArmLevel >= 5:
+        exclusionList.append("Burning Bad Books")
+    return exclusionList
+
 def getGemShopDict(inputJSON):
     parsedList = json.loads(inputJSON["GemItemsPurchased"])
     gemShopDict = {
@@ -125,12 +161,19 @@ def getGemShopDict(inputJSON):
             'FOMO-8': parsedList[94]
             }
     except Exception as reason:
-        print("Unable to parse Gem Shop: " , reason)
+        print("GemShop~ EXCEPTION Unable to parse Gem Shop: " , reason)
     #print(gemShopDict)
     return gemShopDict
 
-def setGemShopProgressionTier(inputJSON, progressionTiers):
+def setGemShopProgressionTier(inputJSON, progressionTiers, playerCount):
     gemShopDict = getGemShopDict(inputJSON)
+    gemShopExclusions = getGemShopExclusions(inputJSON, playerCount)
+    if len(gemShopExclusions) > 0:
+        for exclusion in gemShopExclusions:
+            try:
+                gemShopDict[exclusion] += 99
+            except Exception as reason:
+                print("Gemshop~ EXCEPTION: Unable to handle Exclusion",exclusion,reason)
     tier_GemShopPurchases = 0
     overall_GemShopTier = 0
     advice_SS = ""

@@ -46,7 +46,11 @@ def setConsSaltLickProgressionTier(inputJSON, progressionTiers):
             if saltLickDict[key] < requiredSaltLickUpgrades[key]:
                 all_RequiredSaltLickUpgrades = False
                 if advice_RequiredSaltLickUpgrades == "":
-                    advice_RequiredSaltLickUpgrades = (" * The next best/cheapest bonus to max is probably " + str(key) + " which requires " + tier[2])
+                    if sum_TotalMaxedSaltLickUpgrades < 9:
+                        advice_RequiredSaltLickUpgrades = (" * The next best/cheapest bonus to max is probably " + str(key) + " which requires " + tier[2])
+                    else:
+                        advice_RequiredSaltLickUpgrades = (" * The last bonus to max is definitely " + str(key) + " which requires " + tier[2])
+
                 #else #don't write out new advice, only want the lowest.
             if all_RequiredSaltLickUpgrades == True:
                 sum_TotalMaxedSaltLickUpgrades += 1
