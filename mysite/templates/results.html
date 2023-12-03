@@ -26,147 +26,152 @@
         </script>
     </head>
     <body>
-        <!-- Toggle button --><div><button onclick="lightMode()">Toggle Light/Dark mode</button></div><script>function lightMode() {var element = document.body; element.classList.toggle("light-mode");}</script>
-        <br>
-        <div>Welcome to IE AutoReview Bot - By Scoli290</div>
-        <div>Most recent update: 2023-11-22 to add Pinchy Review</div>
-        <div>Previous update: 2023-11-21 to add JSON imports</div>
-        <br>
-        <div>This bot will retrieve the PUBLIC profile from IdleOn Efficiency for evaluation.</div>
-        <div>If you haven't uploaded your profile publicly before, head here: <a href="https://www.idleonefficiency.com/profile/upload"target="_blank">IdleonEfficiency</a></div>
-        <br>
-        <div>Alternatively, you can provide Raw JSON data.</div>
-        <div><a href="https://www.idleonefficiency.com/raw-data" target="_blank">IdleonEfficiency</a>: Click on Copy Raw JSON button. Paste results below.</div>
-        <div><a href="https://idleontoolbox.com/data" target="_blank">IdleonToolbox</a>: Click on Raw Game JSON button. Paste results below.</div>
-        <br>
-        <div>All tier requirements are listed in the <a href="https://docs.google.com/spreadsheets/d/16I-rURrVeyvltK2wxcQSiPgO07QY015RVNG4MAgUsGw/edit?usp=sharing" target="_blank">Spreadsheet</a> for reference!</div>
-        <br>
-        <div>
-            <form action="." method="POST">
-                <textarea name="characterInput" placeholder="Please enter your first IdleOn character's name, or Paste in your Raw Game JSON from IE/IT"></textarea><br><br>
-                <input type="submit" value="submit">
-            </form>
+        <div class="sticky header">
+           <!-- Toggle button --><div><button onclick="lightMode()">Toggle Light/Dark mode</button></div><script>function lightMode() {var element = document.body; element.classList.toggle("light-mode");}</script>
+           <a href="https://discord.gg/VB57Jqah"><img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a69f118df70ad7828d4_icon_clyde_blurple_RGB.svg" width="30px" /></a>
         </div>
-        <div id = "mainresults">
-            {% if htmlInput is not none %}
+        <div class="content">
             <br>
-            <div> {{ htmlInput[0][0][0] }} </div> <!-- IE link -->
-            <div> {{ htmlInput[0][0][1] }} </div> <!--Last updated -->
+            <div>Welcome to IE AutoReview Bot - By Scoli290</div>
+            <div>Most recent update: 2023-11-22 to add Pinchy Review</div>
+            <div>Previous update: 2023-11-21 to add JSON imports</div>
             <br>
-            <h1>Pinchy AutoReview <img src="https://media.discordapp.net/attachments/438216759120756737/973301920099864626/Pinch_idleM.gif" width="2%"> </h1>
-            <div> {{ htmlInput[9][0] }} </div><!-- Pinchy Expected -->
-            <div> {{ htmlInput[9][1] }} </div><!-- Pinchy Minimum -->
-            <div> {{ htmlInput[9][2] }} </div><!-- Pinchy Advice -->
+            <div>This bot will retrieve the PUBLIC profile from IdleOn Efficiency for evaluation.</div>
+            <div>If you haven't uploaded your profile publicly before, head here: <a href="https://www.idleonefficiency.com/profile/upload"target="_blank">IdleonEfficiency</a></div>
             <br>
-            <h1>General Account AutoReview</h1>
-            <div> {{ htmlInput[0][1][0] }}</div> <!-- Account Levels tier -->
-            <div> {{ htmlInput[0][1][1] }}</div> <!-- Personal Levels tier -->
+            <div>Alternatively, you can provide Raw JSON data.</div>
+            <div><a href="https://www.idleonefficiency.com/raw-data" target="_blank">IdleonEfficiency</a>: Click on Copy Raw JSON button. Paste results below.</div>
+            <div><a href="https://idleontoolbox.com/data" target="_blank">IdleonToolbox</a>: Click on Raw Game JSON button. Paste results below.</div>
             <br>
-            <div> {{ htmlInput[0][2][0][0] }}</div> <!-- Guaranteed Candy total -->
-            <div> {{ htmlInput[0][2][0][1] }}</div> <!-- Variable Candy total -->
+            <div>All tier requirements are listed in the <a href="https://docs.google.com/spreadsheets/d/16I-rURrVeyvltK2wxcQSiPgO07QY015RVNG4MAgUsGw/edit?usp=sharing" target="_blank">Spreadsheet</a> for reference!</div>
             <br>
-            <div> {{ htmlInput[0][2][1] }}</div> <!-- Inventory Bags -->
-            <div> {{ htmlInput[0][2][2] }}</div> <!-- Storage Chests -->
-            <br>
-            <div> <em>{{ htmlInput[0][3][0] }}</em></div> <!-- Gem Shop FOMO Disclaimer -->
-            <div> {{ htmlInput[0][3][1] }}</div> <!-- Gem Shop header -->
-            <div> {{ htmlInput[0][3][2] }}</div> <!-- Gem Shop first unmaxed tier -->
-            <div> {{ htmlInput[0][3][3] }}</div> <!-- Gem Shop second unmaxed tier -->
-            <div> {{ htmlInput[0][3][4] }}</div> <!-- Gem shop third unmaxed tier -->
-            <br>
-            <h1><img src="https://idleon.wiki/wiki/images/1/10/BH_header.png" alt="World 1 Banner" title ="World 1 Banner" onclick="toggle('w1-content')" class="banner"></h1>
-            <div class="world-content" id="w1-content">
-                <div> <strong>{{ htmlInput[1][0][0] }}</strong></div> <!-- Stamp tier -->
-                <div> {{ htmlInput[1][0][1] }}</div> <!-- Stamp total level advice -->
-                <div> {{ htmlInput[1][0][2] }}</div> <!-- Stamp collect combat advice -->
-                <div> {{ htmlInput[1][0][3] }}</div> <!-- Stamp collect skill advice -->
-                <div> {{ htmlInput[1][0][4] }}</div> <!-- Stamp collect misc advice -->
-                <div> {{ htmlInput[1][0][5] }}</div> <!-- Stamp high-prio advice -->
-                <br>
-                <div> <strong>{{ htmlInput[1][1][0] }}</strong></div> <!-- Bribes tier -->
-                <div> {{ htmlInput[1][1][1] }}</div> <!-- Bribes advice -->
-                <br>
-                <div> <strong>{{ htmlInput[1][2][0] }}</strong></div> <!-- Smithing tier -->
-                <div> {{ htmlInput[1][2][1] }}</div> <!-- Smithing Cash Points advice -->
-                <div> {{ htmlInput[1][2][2] }}</div> <!-- Smithing Monster Points advice -->
-                <div> {{ htmlInput[1][2][3] }}</div> <!-- Smithing Forge Upgrade advice -->
-                <br>
+            <div>
+                <form action="." method="POST">
+                    <textarea name="characterInput" placeholder="Please enter your first IdleOn character's name, or Paste in your Raw Game JSON from IE/IT"></textarea><br><br>
+                    <input type="submit" value="submit">
+                </form>
             </div>
-            <h1><img src="https://idleon.wiki/wiki/images/6/6a/YYD_header.png" title ="World 2 Banner" onclick="toggle('w2-content')" class="banner"></h1>
-            <div class="world-content" id="w2-content">
-                <div> <strong>{{ htmlInput[2][0][0] }}</strong></div> <!-- Alchemy Bubbles tier -->
-                <div> {{ htmlInput[2][0][1] }}</div> <!-- Alchemy Total Unlocked Bubbles advice -->
-                <div> {{ htmlInput[2][0][2] }}</div> <!-- Alchemy Purple Sample Bubble advice -->
-                <div> {{ htmlInput[2][0][3] }}</div> <!-- Alchemy Orange Sample Bubble advice -->
-                <div> {{ htmlInput[2][0][4] }}</div> <!-- Alchemy Green Sample Bubble advice -->
-                <div> {{ htmlInput[2][0][5] }}</div> <!-- Alchemy Utility Bubble advice -->
+            <div id = "mainresults">
+                {% if htmlInput is not none %}
                 <br>
-                <div> <strong>{{ htmlInput[2][1][0] }}</strong></div> <!-- Alchemy Vials tier -->
-                <div> {{ htmlInput[2][1][1] }}</div> <!-- Alchemy Vials Total Unlocked advice -->
-                <div> {{ htmlInput[2][1][2] }}</div> <!-- Alchemy Vials Total Maxed advice -->
-                <div> {{ htmlInput[2][1][3] }}</div> <!-- Alchemy Vials Particular Maxed advice -->
+                <div> {{ htmlInput[0][0][0] }} </div> <!-- IE link -->
+                <div> {{ htmlInput[0][0][1] }} </div> <!--Last updated -->
                 <br>
-                <div> <strong>{{ htmlInput[2][2][0] }}</strong></div> <!-- Alchemy P2W tier -->
-                <div> {{ htmlInput[2][2][1] }}</div> <!-- Alchemy P2W advice -->
+                <h1>Pinchy AutoReview <img src="https://media.discordapp.net/attachments/438216759120756737/973301920099864626/Pinch_idleM.gif" width="2%"> </h1>
+                <div> {{ htmlInput[9][0] }} </div><!-- Pinchy Expected -->
+                <div> {{ htmlInput[9][1] }} </div><!-- Pinchy Minimum -->
+                <div> {{ htmlInput[9][2] }} </div><!-- Pinchy Advice -->
                 <br>
-                <div> <strong>{{ htmlInput[2][3][0] }}</strong></div> <!-- Obols tier -->
-                <div> {{ htmlInput[2][3][1] }}</div> <!-- Obols Good DR  -->
-                <div> {{ htmlInput[2][3][2] }}</div> <!-- Obols Bad DR  -->
-                <div> {{ htmlInput[2][3][3] }}</div> <!-- Obols Unrolled DR  -->
+                <h1>General Account AutoReview</h1>
+                <div> {{ htmlInput[0][1][0] }}</div> <!-- Account Levels tier -->
+                <div> {{ htmlInput[0][1][1] }}</div> <!-- Personal Levels tier -->
                 <br>
+                <div> {{ htmlInput[0][2][0][0] }}</div> <!-- Guaranteed Candy total -->
+                <div> {{ htmlInput[0][2][0][1] }}</div> <!-- Variable Candy total -->
+                <br>
+                <div> {{ htmlInput[0][2][1] }}</div> <!-- Inventory Bags -->
+                <div> {{ htmlInput[0][2][2] }}</div> <!-- Storage Chests -->
+                <br>
+                <div> <em>{{ htmlInput[0][3][0] }}</em></div> <!-- Gem Shop FOMO Disclaimer -->
+                <div> {{ htmlInput[0][3][1] }}</div> <!-- Gem Shop header -->
+                <div> {{ htmlInput[0][3][2] }}</div> <!-- Gem Shop first unmaxed tier -->
+                <div> {{ htmlInput[0][3][3] }}</div> <!-- Gem Shop second unmaxed tier -->
+                <div> {{ htmlInput[0][3][4] }}</div> <!-- Gem shop third unmaxed tier -->
+                <br>
+                <h1><img src="https://idleon.wiki/wiki/images/1/10/BH_header.png" alt="World 1 Banner" title ="World 1 Banner" onclick="toggle('w1-content')" class="banner"></h1>
+                <div class="world-content" id="w1-content">
+                    <div> <strong>{{ htmlInput[1][0][0] }}</strong></div> <!-- Stamp tier -->
+                    <div> {{ htmlInput[1][0][1] }}</div> <!-- Stamp total level advice -->
+                    <div> {{ htmlInput[1][0][2] }}</div> <!-- Stamp collect combat advice -->
+                    <div> {{ htmlInput[1][0][3] }}</div> <!-- Stamp collect skill advice -->
+                    <div> {{ htmlInput[1][0][4] }}</div> <!-- Stamp collect misc advice -->
+                    <div> {{ htmlInput[1][0][5] }}</div> <!-- Stamp high-prio advice -->
+                    <br>
+                    <div> <strong>{{ htmlInput[1][1][0] }}</strong></div> <!-- Bribes tier -->
+                    <div> {{ htmlInput[1][1][1] }}</div> <!-- Bribes advice -->
+                    <br>
+                    <div> <strong>{{ htmlInput[1][2][0] }}</strong></div> <!-- Smithing tier -->
+                    <div> {{ htmlInput[1][2][1] }}</div> <!-- Smithing Cash Points advice -->
+                    <div> {{ htmlInput[1][2][2] }}</div> <!-- Smithing Monster Points advice -->
+                    <div> {{ htmlInput[1][2][3] }}</div> <!-- Smithing Forge Upgrade advice -->
+                    <br>
+                </div>
+                <h1><img src="https://idleon.wiki/wiki/images/6/6a/YYD_header.png" title ="World 2 Banner" onclick="toggle('w2-content')" class="banner"></h1>
+                <div class="world-content" id="w2-content">
+                    <div> <strong>{{ htmlInput[2][0][0] }}</strong></div> <!-- Alchemy Bubbles tier -->
+                    <div> {{ htmlInput[2][0][1] }}</div> <!-- Alchemy Total Unlocked Bubbles advice -->
+                    <div> {{ htmlInput[2][0][2] }}</div> <!-- Alchemy Purple Sample Bubble advice -->
+                    <div> {{ htmlInput[2][0][3] }}</div> <!-- Alchemy Orange Sample Bubble advice -->
+                    <div> {{ htmlInput[2][0][4] }}</div> <!-- Alchemy Green Sample Bubble advice -->
+                    <div> {{ htmlInput[2][0][5] }}</div> <!-- Alchemy Utility Bubble advice -->
+                    <br>
+                    <div> <strong>{{ htmlInput[2][1][0] }}</strong></div> <!-- Alchemy Vials tier -->
+                    <div> {{ htmlInput[2][1][1] }}</div> <!-- Alchemy Vials Total Unlocked advice -->
+                    <div> {{ htmlInput[2][1][2] }}</div> <!-- Alchemy Vials Total Maxed advice -->
+                    <div> {{ htmlInput[2][1][3] }}</div> <!-- Alchemy Vials Particular Maxed advice -->
+                    <br>
+                    <div> <strong>{{ htmlInput[2][2][0] }}</strong></div> <!-- Alchemy P2W tier -->
+                    <div> {{ htmlInput[2][2][1] }}</div> <!-- Alchemy P2W advice -->
+                    <br>
+                    <div> <strong>{{ htmlInput[2][3][0] }}</strong></div> <!-- Obols tier -->
+                    <div> {{ htmlInput[2][3][1] }}</div> <!-- Obols Good DR  -->
+                    <div> {{ htmlInput[2][3][2] }}</div> <!-- Obols Bad DR  -->
+                    <div> {{ htmlInput[2][3][3] }}</div> <!-- Obols Unrolled DR  -->
+                    <br>
+                </div>
+                <h1><img src="https://idleon.wiki/wiki/images/b/bc/FT_header.png" title ="World 3 Banner" onclick="toggle('w3-content')" class="banner"></h1>
+                <div class="world-content" id="w3-content">
+                    <div> <strong>{{ htmlInput[3][0][0] }}</strong></div> <!-- Construction 3D Printer tier -->
+                    <br>
+                    <div> <strong>{{ htmlInput[3][1][0] }}</strong></div> <!-- Construction Refinery tier -->
+                    <div> {{ htmlInput[3][1][1] }}</div> <!-- Construction Refinery Autorefine Advice -->
+                    <div> {{ htmlInput[3][1][2] }}</div> <!-- Construction Refinery W3 Merits Advice -->
+                    <div> {{ htmlInput[3][1][3] }}</div> <!-- Construction Refinery Tab1 Advice -->
+                    <div> {{ htmlInput[3][1][4] }}</div> <!-- Construction Refinery Tab2 Advice -->
+                    <br>
+                    <div> <strong>{{ htmlInput[3][2][0] }}</strong></div> <!-- Construction Salt Lick tier -->
+                    <div> {{ htmlInput[3][2][1] }}</div> <!-- Construction Salt Lick advice -->
+                    <br>
+                    <div> <strong>{{ htmlInput[3][3][0] }}</strong></div> <!-- Construction DeathNote tier -->
+                    <br>
+                    <div> <strong>{{ htmlInput[3][4][0] }}</strong></div> <!-- Construction Buildings tier -->
+                    <br>
+                    <div> <strong>{{ htmlInput[3][5][0] }}</strong></div> <!-- Construction Atom Collider tier -->
+                    <br>
+                    <div> <strong>{{ htmlInput[3][6][0] }}</strong></div> <!-- Worship Totems tier -->
+                    <br>
+                    <div> <strong>{{ htmlInput[3][7][0] }}</strong></div> <!-- Worship Prayers tier -->
+                    <div> {{ htmlInput[3][7][1] }}</div> <!-- Worship Prayers advice -->
+                    <div> {{ htmlInput[3][7][2] }}</div> <!-- Worship Prayers to ignore advice -->
+                    <br>
+                    <div> <strong>{{ htmlInput[3][8][0] }}</strong></div> <!-- Trapping tier -->
+                    <br>
+                </div>
+                <h1><img src="https://idleon.wiki/wiki/images/7/72/HN_header.png" title ="World 4 Banner" onclick="toggle('w4-content')" class="banner"></h1>
+                <div class="world-content" id="w4-content">
+                    <div> <strong>{{ htmlInput[4][0][0] }}</strong></div> <!-- Cooking tier -->
+                    <br>
+                    <div> <strong>{{ htmlInput[4][1][0] }}</strong></div> <!-- Breeding tier -->
+                    <br>
+                    <div> <strong>{{ htmlInput[4][2][0] }}</strong></div> <!-- Lab tier -->
+                    <br>
+                </div>
+                <h1><img src="https://idleon.wiki/wiki/images/7/7b/SP_header.png" title ="World 5 Banner" onclick="toggle('w5-content')" class="banner"></h1>
+                <div class="world-content" id="w5-content">
+                    <div> <strong>{{ htmlInput[5][0][0] }}</strong></div> <!-- Sailing tier -->
+                    <br>
+                    <div> <strong>{{ htmlInput[5][1][0] }}</strong></div> <!-- Gaming tier -->
+                    <br>
+                    <div> <strong>{{ htmlInput[5][2][0] }}</strong></div> <!-- Divinity tier -->
+                </div>
+                {% endif %}
+                <br>
+                <br>
+                <br>
+                <div>Whoa, there is a <a href="https://discord.gg/ZmEkqzfjmJ" target="_blank">Discord</a> for feedback on this tool now!</div>
+                <br>
+                <div>Unless otherwise noted, all image credits to <a href="https://twitter.com/lavaflame2" target="_blank">Lavaflame2</a></div>
             </div>
-            <h1><img src="https://idleon.wiki/wiki/images/b/bc/FT_header.png" title ="World 3 Banner" onclick="toggle('w3-content')" class="banner"></h1>
-            <div class="world-content" id="w3-content">
-                <div> <strong>{{ htmlInput[3][0][0] }}</strong></div> <!-- Construction 3D Printer tier -->
-                <br>
-                <div> <strong>{{ htmlInput[3][1][0] }}</strong></div> <!-- Construction Refinery tier -->
-                <div> {{ htmlInput[3][1][1] }}</div> <!-- Construction Refinery Autorefine Advice -->
-                <div> {{ htmlInput[3][1][2] }}</div> <!-- Construction Refinery W3 Merits Advice -->
-                <div> {{ htmlInput[3][1][3] }}</div> <!-- Construction Refinery Tab1 Advice -->
-                <div> {{ htmlInput[3][1][4] }}</div> <!-- Construction Refinery Tab2 Advice -->
-                <br>
-                <div> <strong>{{ htmlInput[3][2][0] }}</strong></div> <!-- Construction Salt Lick tier -->
-                <div> {{ htmlInput[3][2][1] }}</div> <!-- Construction Salt Lick advice -->
-                <br>
-                <div> <strong>{{ htmlInput[3][3][0] }}</strong></div> <!-- Construction DeathNote tier -->
-                <br>
-                <div> <strong>{{ htmlInput[3][4][0] }}</strong></div> <!-- Construction Buildings tier -->
-                <br>
-                <div> <strong>{{ htmlInput[3][5][0] }}</strong></div> <!-- Construction Atom Collider tier -->
-                <br>
-                <div> <strong>{{ htmlInput[3][6][0] }}</strong></div> <!-- Worship Totems tier -->
-                <br>
-                <div> <strong>{{ htmlInput[3][7][0] }}</strong></div> <!-- Worship Prayers tier -->
-                <div> {{ htmlInput[3][7][1] }}</div> <!-- Worship Prayers advice -->
-                <div> {{ htmlInput[3][7][2] }}</div> <!-- Worship Prayers to ignore advice -->
-                <br>
-                <div> <strong>{{ htmlInput[3][8][0] }}</strong></div> <!-- Trapping tier -->
-                <br>
-            </div>
-            <h1><img src="https://idleon.wiki/wiki/images/7/72/HN_header.png" title ="World 4 Banner" onclick="toggle('w4-content')" class="banner"></h1>
-            <div class="world-content" id="w4-content">
-                <div> <strong>{{ htmlInput[4][0][0] }}</strong></div> <!-- Cooking tier -->
-                <br>
-                <div> <strong>{{ htmlInput[4][1][0] }}</strong></div> <!-- Breeding tier -->
-                <br>
-                <div> <strong>{{ htmlInput[4][2][0] }}</strong></div> <!-- Lab tier -->
-                <br>
-            </div>
-            <h1><img src="https://idleon.wiki/wiki/images/7/7b/SP_header.png" title ="World 5 Banner" onclick="toggle('w5-content')" class="banner"></h1>
-            <div class="world-content" id="w5-content">
-                <div> <strong>{{ htmlInput[5][0][0] }}</strong></div> <!-- Sailing tier -->
-                <br>
-                <div> <strong>{{ htmlInput[5][1][0] }}</strong></div> <!-- Gaming tier -->
-                <br>
-                <div> <strong>{{ htmlInput[5][2][0] }}</strong></div> <!-- Divinity tier -->
-            </div>
-            {% endif %}
-            <br>
-            <br>
-            <br>
-            <div>Whoa, there is a <a href="https://discord.gg/ZmEkqzfjmJ" target="_blank">Discord</a> for feedback on this tool now!</div>
-            <br>
-            <div>Unless otherwise noted, all image credits to <a href="https://twitter.com/lavaflame2" target="_blank">Lavaflame2</a></div>
         </div>
     </body>
 </html>
