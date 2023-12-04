@@ -126,11 +126,11 @@ def setDefaultTiers():
     defaultTiers['Smithing'] = [
         #int tier, int Cash Points Purchased, int Monster Points Purchased, int Forge Totals, str Notes
         [0,0,0,0,""],
-        [1,100,85,60,"all W1 enemies."],
-        [2,200,150,120,"early W2 enemies, up through Pincermin."],
-        [3,300,225,180,"all W2 enemies."],
-        [4,400,350,240,"most W3 enemies, excluding Dedotated Rams."],
-        [5,500,500,291,"early W4 enemies, up through Soda Cans."],
+        [1,20,85,60,"all W1 enemies."],
+        [2,60,150,120,"early W2 enemies, up through Pincermin."],
+        [3,100,225,180,"all W2 enemies."],
+        [4,150,350,240,"most W3 enemies, excluding Dedotated Rams."],
+        [5,200,500,291,"early W4 enemies, up through Soda Cans."],
         [6,600,700,291,"all W4 enemies."]
         ]
     defaultTiers['Alchemy Bubbles'] = [
