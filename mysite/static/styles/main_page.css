@@ -18,27 +18,11 @@ a:visited {
     background-color: transparent;
     text-decoration: underline;
 }
-.content {
-    padding: 25px;
-    color: white;
-}
 body {
+    padding: 25px;
+/*    background-color: black; */
     background-color: #38444d;
-    position: sticky;
-    top: 0;
-}
-.sticky {
-    position: sticky;
-    top: 0;
-}
-.header {
-    background-color: #38444d;
-    padding-left: 25px;
-    padding-top: 10px;
-    padding-bottom: 5px;
-    border-bottom: solid grey 1px;
-    display: flex;
-    gap: 10px;
+    color: white;
 }
 textarea {
   resize: none;

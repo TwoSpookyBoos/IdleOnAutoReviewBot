@@ -83,16 +83,17 @@ def parseCombatLevelsFromDirectJSON(inputJSON, playerCount):
         try:
             combatLevels.append(inputJSON['Lv0_'+str(counter)][0])
             playerLevels[counter+1] = (inputJSON['Lv0_'+str(counter)][0])
+            #['Character'+str(counter+1)]
             #playerClasses[inputJSON["playerNames"][counter]] = (inputJSON['CharacterClass_'+str(counter)])
             if (inputJSON['Lv0_'+str(counter)][0]) < 100: #player under level 100, add to all 3
-                equinox3_charactersUnder100[counter+1] = (inputJSON['Lv0_'+str(counter)][0])
-                equinox11_charactersUnder250[counter+1] = (inputJSON['Lv0_'+str(counter)][0])
-                equinox23_charactersUnder500[counter+1] = (inputJSON['Lv0_'+str(counter)][0])
+                equinox3_charactersUnder100['Character'+str(counter+1)] = (inputJSON['Lv0_'+str(counter)][0])
+                equinox11_charactersUnder250['Character'+str(counter+1)] = (inputJSON['Lv0_'+str(counter)][0])
+                equinox23_charactersUnder500['Character'+str(counter+1)] = (inputJSON['Lv0_'+str(counter)][0])
             elif (inputJSON['Lv0_'+str(counter)][0]) < 250: #player under level 250, add to 2
-                equinox11_charactersUnder250[counter+1] = (inputJSON['Lv0_'+str(counter)][0])
-                equinox23_charactersUnder500[counter+1] = (inputJSON['Lv0_'+str(counter)][0])
+                equinox11_charactersUnder250['Character'+str(counter+1)] = (inputJSON['Lv0_'+str(counter)][0])
+                equinox23_charactersUnder500['Character'+str(counter+1)] = (inputJSON['Lv0_'+str(counter)][0])
             elif (inputJSON['Lv0_'+str(counter)][0]) < 500: #player under level 500, add to 1
-                equinox23_charactersUnder500[counter+1] = (inputJSON['Lv0_'+str(counter)][0])
+                equinox23_charactersUnder500['Character'+str(counter+1)] = (inputJSON['Lv0_'+str(counter)][0])
             counter +=1
         except Exception as reason:
             print("CombatLevelsFromJSON: Unable to access 'Lv0_" + str(counter) + "' when playerCount = " + str(playerCount), reason)

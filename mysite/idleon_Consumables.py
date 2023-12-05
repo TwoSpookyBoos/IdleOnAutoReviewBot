@@ -61,51 +61,13 @@ def getBagType(inputBagNumber):
     try:
         inputBagNumber = int(inputBagNumber)
         match inputBagNumber:
-            case 0:
+            case 0 | 1 | 2 | 3 | 4 | 5 | 7:
                 return "Quest"
-            case 1:
-                return "Quest"
-            case 2:
-                return "Quest"
-            case 3:
-                return "Quest"
-            case 4:
-                return "Quest"
-            case 5:
-                return "Quest"
-            case 7:
-                return "Quest"
-            case 6:
+            case 6 | 100 | 101 | 110 :
                 return "Dropped"
-            case 100:
-                return "Dropped"
-            case 101:
-                return "Dropped"
-            case 110:
-                return "Dropped"
-            case 104:
+            case 104 | 105 | 106 | 107 | 108 | 109:
                 return "Vendor"
-            case 105:
-                return "Vendor"
-            case 106:
-                return "Vendor"
-            case 107:
-                return "Vendor"
-            case 108:
-                return "Vendor"
-            case 109:
-                return "Vendor"
-            case 20:
-                return "GemShop"
-            case 21:
-                return "GemShop"
-            case 22:
-                return "GemShop"
-            case 23:
-                return "GemShop"
-            case 24:
-                return "GemShop"
-            case 25:
+            case 20 | 21 | 22 | 23 | 24 | 25:
                 return "GemShop"
     except:
         return ("Unknown Bag " + inputBagNumber)
@@ -132,7 +94,7 @@ def parseInventoryBags(inputJSON, playerCount, fromPublicIEBool):
     else:
         counter = 0
         while counter < playerCount:
-            playerBagDict[counter+1] = json.loads(inputJSON['InvBagsUsed_'+str(counter)]) #yet another string pretending to be a list of lists..
+            playerBagDict['Character'+str(counter+1)] = json.loads(inputJSON['InvBagsUsed_'+str(counter)]) #yet another string pretending to be a list of lists..
             counter += 1
 
     #print(playerBagDict)

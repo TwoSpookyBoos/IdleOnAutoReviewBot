@@ -9,6 +9,7 @@
 .my.cnf
 .profile
 .pythonstartup.py
+.python_history
 .vimrc
 id_rsa.pub
 id_rsa.pub.pub
