@@ -444,7 +444,7 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
                 advice_ParticularVialsMaxed = " * Tier " + str(tier_ParticularVialsMaxed) + "- Work on maxing these particular vial(s): " + advice_ParticularVialsMaxed[:-2] #strip off the final comma and space
     overall_AlchemyVialsTier = min(tier_TotalVialsUnlocked, tier_TotalVialsMaxed, tier_ParticularVialsMaxed)
     advice_AlchemyVialsCombined = [
-        "### Best Alchemy-Vials tier met: " + str(overall_AlchemyVialsTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended Alchemy-Vials actions:",
+        "### Best Alchemy-Vials tier met: " + str(overall_AlchemyVialsTier) + "/" + str(progressionTiers[-3][0]) + ". Recommended Alchemy-Vials actions:",
         advice_TotalVialsUnlocked,
         advice_TotalVialsMaxed,
         advice_ParticularVialsMaxed]
@@ -526,11 +526,12 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
             sum_TotalBubblesUnlocked += 1
             yellowBubblesUnlocked += 1
 
-    bubbleUnlockListByWorld = ["placeholder",0,0,0,0,0,0,0,0]
+    bubbleUnlockListByWorld = ["placeholder",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0] #this will break if they've unlocked more than 100 bubbles lmao
 
     #orange
     worldCounter = 1
     while orangeBubblesUnlocked >= 5:
+        #print("Alchemy-SamplingBubbles~ ",orangeBubblesUnlocked,worldCounter)
         bubbleUnlockListByWorld[worldCounter] += 5
         orangeBubblesUnlocked -= 5
         worldCounter += 1

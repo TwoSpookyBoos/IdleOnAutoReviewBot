@@ -411,7 +411,15 @@ def getDeathNoteKills(inputJSON, playerCount, playerNames, fromPublicIEBool):
     #calculate skull type per enemy and count toward next
     dnSkullRequirementList = [0,25000,100000,250000,500000,1000000,5000000,100000000,1000000000]
     dnSkullValueList = [0,1,2,3,4,5,7,10,20]
-
+    #"MapName":[
+    #[0] = int Portal Requirement
+    #[1] = int Kills
+    #[2] = str ZOW difficulty
+    #[3] = str CHOW difficulty
+    #[4] = str Meow difficulty
+    #[5] = int Skull rating (mk value)
+    #[6] = int Count to next skull
+    #[7] = float Percent to next skull
     for key in w1DeathNoteDict:
         if (w1DeathNoteDict[key][1] >= dnSkullRequirementList[8]) and (w1DeathNoteDict[key][5] < dnSkullValueList[8]):
             w1DeathNoteDict[key][5] = dnSkullValueList[8]
@@ -614,23 +622,23 @@ def getDeathNoteKills(inputJSON, playerCount, playerNames, fromPublicIEBool):
     #w8LowestSkull = dnSkullValueList[-1]
     for key in w1DeathNoteDict:
         if (w1DeathNoteDict[key][5] < w1LowestSkull):
-            #print("ConsDeathNote~ Updating W1 Lowest Skull from " + str(w1LowestSkull) + " to " + str(w1DeathNoteDict[key][5]))
+            #print("ConsDeathNote~ Updating W1 Lowest Skull from " + str(w1LowestSkull) + " to " + str(w1DeathNoteDict[key][5]),key)
             w1LowestSkull = w1DeathNoteDict[key][5]
     for key in w2DeathNoteDict:
         if (w2DeathNoteDict[key][5] < w2LowestSkull):
-            #print("ConsDeathNote~ Updating W2 Lowest Skull from " + str(w2LowestSkull) + " to " + str(w2DeathNoteDict[key][5]))
+            #print("ConsDeathNote~ Updating W2 Lowest Skull from " + str(w2LowestSkull) + " to " + str(w2DeathNoteDict[key][5]),key)
             w2LowestSkull = w2DeathNoteDict[key][5]
     for key in w3DeathNoteDict:
         if (w3DeathNoteDict[key][5] < w3LowestSkull):
-            #print("ConsDeathNote~ Updating W3 Lowest Skull from " + str(w3LowestSkull) + " to " + str(w3DeathNoteDict[key][5]))
+            #print("ConsDeathNote~ Updating W3 Lowest Skull from " + str(w3LowestSkull) + " to " + str(w3DeathNoteDict[key][5]),key)
             w3LowestSkull = w3DeathNoteDict[key][5]
     for key in w4DeathNoteDict:
         if (w4DeathNoteDict[key][5] < w4LowestSkull):
-            #print("ConsDeathNote~ Updating W4 Lowest Skull from " + str(w4LowestSkull) + " to " + str(w4DeathNoteDict[key][5]))
+            #print("ConsDeathNote~ Updating W4 Lowest Skull from " + str(w4LowestSkull) + " to " + str(w4DeathNoteDict[key][5]),key)
             w4LowestSkull = w4DeathNoteDict[key][5]
     for key in w5DeathNoteDict:
         if (w5DeathNoteDict[key][5] < w5LowestSkull):
-            #print("ConsDeathNote~ Updating W5 Lowest Skull from " + str(w5LowestSkull) + " to " + str(w5DeathNoteDict[key][5]))
+            #print("ConsDeathNote~ Updating W5 Lowest Skull from " + str(w5LowestSkull) + " to " + str(w5DeathNoteDict[key][5]),key)
             w5LowestSkull = w5DeathNoteDict[key][5]
 
     #Calculate closest enemy to next skull
@@ -729,7 +737,7 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, playerCount, pl
             else:
                 advice_w1DeathNoteSkulls = "Kill more W1 enemies until the minimum skull is the " + getSkullNames(tier[1])
                 if fullDeathNoteDict["w1"][1][0] != "":
-                    advice_w1DeathNoteSkulls += ". The enemy closest to the next skull is " + getEnemyNameFromMap(fullDeathNoteDict["w1"][1][0]) + ", requires " + str(fullDeathNoteDict["w1"][1][1]) + " more kills, and is " + str(fullDeathNoteDict["w1"][1][2]) +"% completed."
+                    advice_w1DeathNoteSkulls += ". The enemy closest to the next skull is " + getEnemyNameFromMap(fullDeathNoteDict["w1"][1][0]) + ", requires " + '{:,}'.format(fullDeathNoteDict["w1"][1][1]) + " more kills, and is " + str(fullDeathNoteDict["w1"][1][2]) +"% completed."
         #World2
         if tier_w2DeathNoteSkulls >= (tier[0]-1): #Only evaluate if they already met the previous tier's requirement
             if fullDeathNoteDict["w2"][0] >= tier[2]:
@@ -737,7 +745,7 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, playerCount, pl
             else:
                 advice_w2DeathNoteSkulls = "Kill more W2 enemies until the minimum skull is the " + getSkullNames(tier[2])
                 if fullDeathNoteDict["w2"][1][0] != "":
-                    advice_w2DeathNoteSkulls += ". The enemy closest to the next skull is " + getEnemyNameFromMap(fullDeathNoteDict["w2"][1][0]) + ", requires " + str(fullDeathNoteDict["w2"][1][1]) + " more kills, and is " + str(fullDeathNoteDict["w2"][1][2]) +"% completed."
+                    advice_w2DeathNoteSkulls += ". The enemy closest to the next skull is " + getEnemyNameFromMap(fullDeathNoteDict["w2"][1][0]) + ", requires " + '{:,}'.format(fullDeathNoteDict["w2"][1][1]) + " more kills, and is " + str(fullDeathNoteDict["w2"][1][2]) +"% completed."
         #World3
         if tier_w3DeathNoteSkulls >= (tier[0]-1): #Only evaluate if they already met the previous tier's requirement
             if fullDeathNoteDict["w3"][0] >= tier[3]:
@@ -745,7 +753,7 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, playerCount, pl
             else:
                 advice_w3DeathNoteSkulls = "Kill more W3 enemies until the minimum skull is the " + getSkullNames(tier[3])
                 if fullDeathNoteDict["w3"][1][0] != "":
-                    advice_w3DeathNoteSkulls += ". The enemy closest to the next skull is " + getEnemyNameFromMap(fullDeathNoteDict["w3"][1][0]) + ", requires " + str(fullDeathNoteDict["w3"][1][1]) + " more kills, and is " + str(fullDeathNoteDict["w3"][1][2]) +"% completed."
+                    advice_w3DeathNoteSkulls += ". The enemy closest to the next skull is " + getEnemyNameFromMap(fullDeathNoteDict["w3"][1][0]) + ", requires " + '{:,}'.format(fullDeathNoteDict["w3"][1][1]) + " more kills, and is " + str(fullDeathNoteDict["w3"][1][2]) +"% completed."
         #World4
         if tier_w4DeathNoteSkulls >= (tier[0]-1): #Only evaluate if they already met the previous tier's requirement
             if fullDeathNoteDict["w4"][0] >= tier[4]:
@@ -753,7 +761,7 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, playerCount, pl
             else:
                 advice_w4DeathNoteSkulls = "Kill more W4 enemies until the minimum skull is the " + getSkullNames(tier[4])
                 if fullDeathNoteDict["w4"][1][0] != "":
-                    advice_w4DeathNoteSkulls += ". The enemy closest to the next skull is " + getEnemyNameFromMap(fullDeathNoteDict["w4"][1][0]) + ", requires " + str(fullDeathNoteDict["w4"][1][1]) + " more kills, and is " + str(fullDeathNoteDict["w4"][1][2]) +"% completed."
+                    advice_w4DeathNoteSkulls += ". The enemy closest to the next skull is " + getEnemyNameFromMap(fullDeathNoteDict["w4"][1][0]) + ", requires " + '{:,}'.format(fullDeathNoteDict["w4"][1][1]) + " more kills, and is " + str(fullDeathNoteDict["w4"][1][2]) +"% completed."
         #World5
         if tier_w5DeathNoteSkulls >= (tier[0]-1): #Only evaluate if they already met the previous tier's requirement
             if fullDeathNoteDict["w5"][0] >= tier[5]:
@@ -761,7 +769,7 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, playerCount, pl
             else:
                 advice_w5DeathNoteSkulls = "Kill more W5 enemies until the minimum skull is the " + getSkullNames(tier[5])
                 if fullDeathNoteDict["w5"][1][0] != "":
-                    advice_w5DeathNoteSkulls += ". The enemy closest to the next skull is " + getEnemyNameFromMap(fullDeathNoteDict["w5"][1][0]) + ", requires " + str(fullDeathNoteDict["w5"][1][1]) + " more kills, and is " + str(fullDeathNoteDict["w5"][1][2]) +"% completed."
+                    advice_w5DeathNoteSkulls += ". The enemy closest to the next skull is " + getEnemyNameFromMap(fullDeathNoteDict["w5"][1][0]) + ", requires " + '{:,}'.format(fullDeathNoteDict["w5"][1][1]) + " more kills, and is " + str(fullDeathNoteDict["w5"][1][2]) +"% completed."
         #World6
         #World7
         #World8
