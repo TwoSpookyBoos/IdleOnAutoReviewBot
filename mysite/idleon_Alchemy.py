@@ -667,9 +667,9 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
             if all_utilityRequirementsMet == True:
                 tier_UtilityBubbles = tier[0]
             else:
-                advice_UtilityBubbles = " * Tier " + str(tier_UtilityBubbles) + "- Level the following Utility bubbles: " + advice_UtilityBubbles[:-2] + ". " + tier[7]
+                advice_UtilityBubbles = " * Informational Tier " + str(tier_UtilityBubbles) + "- Level the following Utility bubbles: " + advice_UtilityBubbles[:-2] + ". " + tier[7]
     if advice_UtilityBubbles == "":
-        advice_UtilityBubbles = progressionTiers[-1][7]
+        advice_UtilityBubbles = " " + progressionTiers[-1][7]
     overall_alchemyBubblesTier = min(tier_TotalBubblesUnlocked, tier_OrangeSampleBubbles, tier_GreenSampleBubbles, tier_PurpleSampleBubbles) # tier_UtilityBubbles not included
     #Generate advice
     advice_alchemyBubblesCombined = [
