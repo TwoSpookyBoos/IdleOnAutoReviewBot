@@ -180,7 +180,7 @@ def getEnemyNameFromMap(inputMap):
             return "Tremor Wurms"
         #Default
         case _:
-            return ("UnknownEnemy"+inputMap)
+            return ("UnknownEnemy"+str(inputMap))
 
 def getApocalypseCharactersDict(inputJSON, playerCount, playerNames, fromPublicIEBool):
     #get classes, find Barbarian and BB
@@ -873,7 +873,9 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, playerCount, pl
                     advice_meows += fullDeathNoteDict["apoc"][bb][0][0] + " (" + str(fullDeathNoteDict["apoc"][bb][0][3]) + "/" + str(tier[11]) + "), "
                 advice_meows = advice_meows[:-2] #trim off trailing comma and space
     #overall_DeathNoteTier = min(progressionTiers[-1][0], tier_w1DeathNoteSkulls)
-    overall_DeathNoteTier = min(progressionTiers[-1][0], tier_w1DeathNoteSkulls, tier_w2DeathNoteSkulls, tier_w3DeathNoteSkulls, tier_w4DeathNoteSkulls, tier_w5DeathNoteSkulls)
+    overall_DeathNoteTier = min(progressionTiers[-1][0], tier_w1DeathNoteSkulls, tier_w2DeathNoteSkulls, tier_w3DeathNoteSkulls, tier_w4DeathNoteSkulls, tier_w5DeathNoteSkulls,
+                                #tier_w6DeathNoteSkulls, tier_w7DeathNoteSkulls, tier_w8DeathNoteSkulls,
+                                tier_zows, tier_chows, tier_meows)
 
     #Generate advice statements
     if advice_w1DeathNoteSkulls != "":
@@ -893,11 +895,11 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, playerCount, pl
     if advice_w8DeathNoteSkulls != "":
         advice_w8DeathNoteSkulls = " * Tier " + str(tier_w8DeathNoteSkulls) + "- " + advice_w8DeathNoteSkulls
     if advice_zows != "":
-        advice_zows = " * Informational Tier " + str(tier_zows) + "- " + advice_zows
+        advice_zows = " * Tier " + str(tier_zows) + "- " + advice_zows
     if advice_chows != "":
-        advice_chows = " * Informational Tier " + str(tier_chows) + "- " + advice_chows
+        advice_chows = " * Tier " + str(tier_chows) + "- " + advice_chows
     if advice_meows != "":
-        advice_meows = " * Informational Tier " + str(tier_meows) + "- " + advice_meows
+        advice_meows = " * Tier " + str(tier_meows) + "- " + advice_meows
     if overall_DeathNoteTier == progressionTiers[-1][0]:
         advice_w1DeathNoteSkulls = " * Nada. You best <3"
 
