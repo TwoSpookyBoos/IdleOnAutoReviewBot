@@ -1,6 +1,19 @@
 import json
 import progressionResults
 
+def getHighestAlchemyLevel(inputJSON, playerCount):
+    highestAlchLevel = 0
+    counter = 0
+    while counter < playerCount:
+        try:
+            if highestAlchLevel < inputJSON['Lv0_'+str(counter)][5]:
+                highestAlchLevel = inputJSON['Lv0_'+str(counter)][5]
+        except Exception as reason:
+            print("Alchemy~ EXCEPTION Could not retrieve alchemy level for playerCount of ",playerCount, reason)
+        counter += 1
+    #print("Alchemy~ OUTPUT highestAlchLevel:",highestAlchLevel)
+    return highestAlchLevel
+
 def getReadableVialNames(inputNumber):
     try:
         inputNumber = int(inputNumber)
@@ -682,7 +695,8 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
     alchemyBubblesPR = progressionResults.progressionResults(overall_alchemyBubblesTier, advice_alchemyBubblesCombined,"")
     return alchemyBubblesPR
 
-def setAlchemyP2W(inputJSON):
+def setAlchemyP2W(inputJSON, playerCount):
+    highestAlchemyLevel = getHighestAlchemyLevel(inputJSON, playerCount)
     alchemyP2WList = []
     try:
         alchemyP2WList = json.loads(inputJSON["CauldronP2W"])

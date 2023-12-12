@@ -149,6 +149,8 @@ def setCombatLevelsProgressionTier(inputJSON, progressionTiers, playerCount, fro
         for character in parsedCombatLevels['equinoxDict']['Characters Under 500']:
             advice_PersonalLevels += str(character) + " (" + str(parsedCombatLevels['equinoxDict']['Characters Under 500'][character]) + "), "
         advice_PersonalLevels = advice_PersonalLevels[:-2] #remove the trailing comma and space
+    if advice_AccountLevels == "":
+        advice_AccountLevels = " * Your total family level is " + str(parsedCombatLevels['sum_AccountLevel']) + ". The last reward was back at 5k. Still... Pretty neat :)"
     advice_CombatLevelsCombined = [advice_AccountLevels, advice_PersonalLevels]
     #Print fun stuff
 
