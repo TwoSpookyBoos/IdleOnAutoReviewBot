@@ -23,7 +23,7 @@ def setPinchyList(inputJSON, playerCount, dictOfPRs):
         [],[],[], #[13] = Early W6 Prep, [14] = Solid W6 Prep, [15] = w6 waiting room
         [],[] #[16] = max for v1.91, #[17] = placeholder
         ]
-    progressionNamesList = ["W1", "Early W2", "Mid W2", "Late W2", "Early W3", "Mid W3", "Late W3", "Early W4", "Mid W4", "Late W4", "Early W5", "Mid W5", "Late W5", "Early W6 Prep", "Solid W6 Prep", "W6 Waiting Room", "Max for v1.91"]
+    progressionNamesList = ["W1", "Early W2", "Mid W2", "Late W2", "Early W3", "Mid W3", "Late W3", "Early W4", "Mid W4", "Late W4", "Early W5", "Mid W5", "Late W5", "Early W6 Prep", "Solid W6 Prep", "W6 Waiting Room", "Max for v1.91", "Placeholder"]
     maxWorldTiers = len(sortedResultsListofLists)-1
     maxExpectedIndexFromMaps = 13 #13 is the highest map evaluated, Tremor Wurms.
     progressionTiersVsWorlds = {
@@ -35,7 +35,7 @@ def setPinchyList(inputJSON, playerCount, dictOfPRs):
         "Alchemy-Bubbles":          [0,0,0,1,1,     1,1,2,2,2,      3,4,5,7,12,     18,23,99],
         "Alchemy-Vials":            [0,0,0,0,0,     0,0,1,2,3,      4,5,6,7,16,     19,20,99],
         "Construction Refinery":    [0,0,0,0,0,     1,1,2,2,3,      3,4,5,8,9,      10,19,99],
-        "Construction Salt Lick":   [0,0,0,0,0,     1,2,3,4,5,      6,7,8,9,9,      10,10,99],
+        "Construction Salt Lick":   [0,0,0,0,0,     0,0,0,0,1,      2,3,4,5,6,      7,10,99],
         "Worship Prayers":          [0,0,0,0,0,     0,1,1,2,3,      4,5,6,6,6,      7,7,99],
         "Construction Death Note":  [0,0,0,0,0,     0,0,0,0,0,      0,4,5,12,15,    19,23,99]
         }
@@ -95,50 +95,54 @@ def setPinchyList(inputJSON, playerCount, dictOfPRs):
     playerCounter = 0
     if expectedIndex == 0:
         #print("Pinchy~ INFO Starting to review map kill counts per player because DeathNote tier < 15: ",dictOfPRs["Construction Death Note"])
-        while playerCounter < playerCount:
-            if expectedIndex < maxExpectedIndexFromMaps:
-                playerKillsList = json.loads(inputJSON['KLA_'+str(playerCounter)]) #String pretending to be a list of lists yet again
-                #print(type(playerKillsList), playerKillsList) #Expected to be a list
-                if playerKillsList[213][0] < 60000:
-                    if expectedIndex < 13:
-                        expectedIndex = 13
-                elif playerKillsList[210][0] < 3000000:
-                    if expectedIndex < 12:
-                        expectedIndex = 12
-                elif playerKillsList[205][0] < 125000:
-                    if expectedIndex < 11:
-                        expectedIndex = 11
-                elif playerKillsList[201][0] < 25000:
-                    if expectedIndex < 10:
-                        expectedIndex = 10
-                elif playerKillsList[160][0] < 190000:
-                    if expectedIndex < 9:
-                        expectedIndex = 9
-                elif playerKillsList[155][0] < 40000:
-                    if expectedIndex < 8:
-                        expectedIndex = 8
-                elif playerKillsList[151][0] < 5000:
-                    if expectedIndex < 7:
-                        expectedIndex = 7
-                elif playerKillsList[110][0] < 18000:
-                    if expectedIndex < 6:
-                        expectedIndex = 6
-                elif playerKillsList[106][0] < 6000:
-                    if expectedIndex < 5:
-                        expectedIndex = 5
-                elif playerKillsList[101][0] < 1000:
-                    if expectedIndex < 4:
-                        expectedIndex = 4
-                elif playerKillsList[62][0] < 3000:
-                    if expectedIndex < 3:
-                        expectedIndex = 3
-                elif playerKillsList[57][0] < 1200:
-                    if expectedIndex < 2:
-                        expectedIndex = 2
-                elif playerKillsList[51][0] < 250:
-                    if expectedIndex < 1:
-                        expectedIndex = 1
-            playerCounter += 1
+        try:
+            while playerCounter < playerCount:
+                if expectedIndex < maxExpectedIndexFromMaps:
+                    playerKillsList = json.loads(inputJSON['KLA_'+str(playerCounter)]) #String pretending to be a list of lists yet again
+                    #print(type(playerKillsList), playerKillsList) #Expected to be a list
+                    if playerKillsList[213][0] < 60000:
+                        if expectedIndex < 13:
+                            expectedIndex = 13
+                    elif playerKillsList[210][0] < 3000000:
+                        if expectedIndex < 12:
+                            expectedIndex = 12
+                    elif playerKillsList[205][0] < 125000:
+                        if expectedIndex < 11:
+                            expectedIndex = 11
+                    elif playerKillsList[201][0] < 25000:
+                        if expectedIndex < 10:
+                            expectedIndex = 10
+                    elif playerKillsList[160][0] < 190000:
+                        if expectedIndex < 9:
+                            expectedIndex = 9
+                    elif playerKillsList[155][0] < 40000:
+                        if expectedIndex < 8:
+                            expectedIndex = 8
+                    elif playerKillsList[151][0] < 5000:
+                        if expectedIndex < 7:
+                            expectedIndex = 7
+                    elif playerKillsList[110][0] < 18000:
+                        if expectedIndex < 6:
+                            expectedIndex = 6
+                    elif playerKillsList[106][0] < 6000:
+                        if expectedIndex < 5:
+                            expectedIndex = 5
+                    elif playerKillsList[101][0] < 1000:
+                        if expectedIndex < 4:
+                            expectedIndex = 4
+                    elif playerKillsList[62][0] < 3000:
+                        if expectedIndex < 3:
+                            expectedIndex = 3
+                    elif playerKillsList[57][0] < 1200:
+                        if expectedIndex < 2:
+                            expectedIndex = 2
+                    elif playerKillsList[51][0] < 250:
+                        if expectedIndex < 1:
+                            expectedIndex = 1
+                playerCounter += 1
+        except Exception as reason:
+            print("Pinchy~ EXCEPTION Unable to find kills in playerKillsList. Setting expectedIndex to max",reason)
+            expectedIndex = len(progressionNamesList)-1
 
     #generate advice based on catchup
     if (lowestIndex >= expectedIndex):
@@ -156,7 +160,10 @@ def setPinchyList(inputJSON, playerCount, dictOfPRs):
 
     #print("Pinchy~ OUTPUT sortedResultsListofLists:",sortedResultsListofLists)
     #print("Lowest:",lowestIndex," (",progressionNamesList[lowestIndex],"), Highest:",highestIndex," (",progressionNamesList[highestIndex],"), Expected:",expectedIndex," (",progressionNamesList[expectedIndex],")")
-    pinchyHeader = "Expected Progression, based on highest enemy map: " + progressionNamesList[expectedIndex] + "."
+    if expectedIndex == len(progressionNamesList)-1:
+        pinchyHeader = "Huh. Something went a little wrong here. You landed in the Placeholder tier somehow. If you weren't expecting this, tell Scoli about it! O.o"
+    else:
+        pinchyHeader = "Expected Progression, based on highest enemy map: " + progressionNamesList[expectedIndex] + "."
     pinchyMin = "Minimum Progression, based on weakest ranked review: " + progressionNamesList[lowestIndex] + "."
     #print(pinchyAdvice)
     return [pinchyHeader, pinchyMin, pinchyAdvice]

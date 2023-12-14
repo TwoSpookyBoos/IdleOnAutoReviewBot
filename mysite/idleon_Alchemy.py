@@ -389,7 +389,11 @@ def getBubbleColorFromName(inputName):
 
 def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
     alchemyVialsDict = inputJSON["CauldronInfo"][4]
-    #print(alchemyVialsDict)
+    try:
+        del alchemyVialsDict["length"]
+    except Exception as reason:
+        print("Alchemy~ EXCPTION Unable to delete 'length' element from alchemyVialsDict:",reason)
+    #print("Alchemy~ OUTPUT alchemyVialsDict:",len(alchemyVialsDict), alchemyVialsDict)
     try:
         highestCompletedRift = inputJSON["Rift"][0]
         if highestCompletedRift >= 35:
