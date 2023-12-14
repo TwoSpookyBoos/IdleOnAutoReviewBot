@@ -186,7 +186,7 @@ def setTrappingProgressionTier(inputJSON, playerCount, playerNames, fromPublicIE
             if fromPublicIEBool:
                 advice_BeginnerNatures += playerNames[characterIndex] + " has " + str(secretCharacterNotUsingNatureTrapsDict[characterIndex]) + " non-Nature traps, "
             else:
-                advice_BeginnerNatures += "Character" + str(characterIndex) + " " + secretCharacterNotUsingNatureTrapsDict[characterIndex] + ", "
+                advice_BeginnerNatures += "Character" + str(characterIndex) + " has " + str(secretCharacterNotUsingNatureTrapsDict[characterIndex]) + "non-Nature traps, "
         advice_BeginnerNatures = advice_BeginnerNatures[:-2] + ". Nature EXP-only traps are recommended because the Maestro and Voidwalker classes both get important buffs based on their Trapping level. You will get ZERO critters from Nature Traps, but the bonus EXP is worth it!" #trim off trailing comma and space
     #print("Trapping.setTrappingProgressionTier~ OUTPUT advice_BeginnerNatures:",advice_BeginnerNatures)
 
