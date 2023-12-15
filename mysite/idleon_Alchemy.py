@@ -412,17 +412,18 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
     unlockedVials = 0
     for vial in alchemyVialsDict:
         if alchemyVialsDict[vial] == 0:
-            lockedVialsList = []
+            lockedVialsList.append(vial)
         else:
             unlockedVials += 1
+            if alchemyVialsDict[vial] >= 4:
+                virileVialsList.append(getReadableVialNames(vial))
             if alchemyVialsDict[vial] >= 13:
-                maxedVialsList.append(vial)
-                virileVialsList.append(vial)
-            elif alchemyVialsDict[vial] >= 4:
-                virileVialsList.append(vial)
+                maxedVialsList.append(getReadableVialNames(vial))
             elif alchemyVialsDict[vial] != 'length':
                 unmaxedVialsList.append(getReadableVialNames(vial))
-    #print(maxedVialsList)
+
+    #print("Alchemy.setAlchemyVialsProgressionTier~ OUTPUT maxedVialsList:",len(maxedVialsList),maxedVialsList)
+    #print("Alchemy.setAlchemyVialsProgressionTier~ OUTPUT virileVialsList:",len(virileVialsList),virileVialsList)
     tier_TotalVialsUnlocked = 0
     tier_TotalVialsMaxed = 0
     tier_ParticularVialsMaxed = 0
