@@ -403,17 +403,23 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
     except Exception as reason:
         print("Alchemy~ EXCEPTION Unable to retrieve highest rift level.",reason)
         highestCompletedRift = 0
+    virileVialsList = []
+    maxExpectedVV = 62 #Excludes both pickle vials
     maxedVialsList = []
     unmaxedVialsList = []
     lockedVialsList = []
+
     unlockedVials = 0
     for vial in alchemyVialsDict:
         if alchemyVialsDict[vial] == 0:
             lockedVialsList = []
         else:
             unlockedVials += 1
-            if alchemyVialsDict[vial] == 13:
+            if alchemyVialsDict[vial] >= 13:
                 maxedVialsList.append(vial)
+                virileVialsList.append(vial)
+            elif alchemyVialsDict[vial] >= 4:
+                virileVialsList.append(vial)
             elif alchemyVialsDict[vial] != 'length':
                 unmaxedVialsList.append(getReadableVialNames(vial))
     #print(maxedVialsList)
@@ -424,6 +430,7 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
     advice_TotalVialsUnlocked = ""
     advice_TotalVialsMaxed = ""
     advice_ParticularVialsMaxed = ""
+    advice_VirileVials = ""
 
     for tier in progressionTiers:
         #tier[0] = int tier
@@ -460,11 +467,14 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
                 #print("Alch particular vial failed at tier",tier[0],tier[4])
                 advice_ParticularVialsMaxed = " * Tier " + str(tier_ParticularVialsMaxed) + "- Work on maxing these particular vial(s): " + advice_ParticularVialsMaxed[:-2] #strip off the final comma and space
     overall_AlchemyVialsTier = min(tier_TotalVialsUnlocked, tier_TotalVialsMaxed, tier_ParticularVialsMaxed)
+    if len(virileVialsList) < maxExpectedVV:
+        advice_VirileVials = " * Informational- You have " + str(len(virileVialsList)) + "/" + str(maxExpectedVV) + " vials up to level 4, giving damage to Shaman's Virile Vials talent :)"
     advice_AlchemyVialsCombined = [
         "### Best Alchemy-Vials tier met: " + str(overall_AlchemyVialsTier) + "/" + str(progressionTiers[-3][0]) + ". Recommended Alchemy-Vials actions:",
         advice_TotalVialsUnlocked,
         advice_TotalVialsMaxed,
-        advice_ParticularVialsMaxed]
+        advice_ParticularVialsMaxed,
+        advice_VirileVials]
     alchemyVialsPR = progressionResults.progressionResults(overall_AlchemyVialsTier,advice_AlchemyVialsCombined,"")
     return alchemyVialsPR
 

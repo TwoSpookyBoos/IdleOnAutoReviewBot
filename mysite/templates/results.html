@@ -31,8 +31,8 @@
         <div>Welcome to IE AutoReview Bot - By Scoli290</div>
         <br>
         <div>Join the <a href="https://discord.gg/ZmEkqzfjmJ" target="_blank">Discord</a> for the detailed patch notes!</div>
-        <div>Most recent update 2023-12-13: Added W3 Trapping review. Reordered Alchemy-Bubbles to match their in-game order. Salt Lick requirements reduced within Pinchy.</div>
-        <div>Previous update 2023-12-11: Tweaks to Alchemy-Vial tiers 10-12. Added 2 more reachable Pinchy Expected Progression tiers.</div>
+        <div>Most recent update 2023-12-15: Added Missable Quest Greenstacks to General Account Review. Added Virile Vials count to Alchemy-Vials.</div>
+        <div>Previous update 2023-12-13: Added W3 Trapping review. Reordered Alchemy-Bubbles to match their in-game order. Salt Lick requirements reduced within Pinchy.</div>
         <br>
         <div>This bot will retrieve the PUBLIC profile from IdleOn Efficiency for evaluation.</div>
         <div>If you haven't uploaded your profile publicly before, head here: <a href="https://www.idleonefficiency.com/profile/upload" target="_blank">IdleonEfficiency</a></div>
@@ -78,6 +78,12 @@
             <div> {{ htmlInput[0][3][3] }}</div> <!-- Gem Shop second unmaxed tier -->
             <div> {{ htmlInput[0][3][4] }}</div> <!-- Gem shop third unmaxed tier -->
             <br>
+            <div> <img src="/static/imgs/Greenstack.png" width=4%> </div>
+            <div> <strong>### Missable Greenstacks from Quest Items</strong></div>
+            <div> {{ htmlInput[0][4][0] }}</div> <!-- Missable Quest GStack - Obtained -->
+            <div> {{ htmlInput[0][4][2] }}</div> <!-- Missable Quest GStack - Endangered -->
+            <div> {{ htmlInput[0][4][1] }}</div> <!-- Missable Quest GStack - Already Missed -->
+            <br>
             <h1><img src="/static/imgs/w1banner.png" alt="World 1 Banner" title ="World 1 Banner" onclick="toggle('w1-content')" class="banner"></h1>
             <div class="world-content" id="w1-content">
                 <div> <img src="/static/imgs/Stamps_Mr_Pigibank.gif" alt="Stamps and Bribes" width="4%"> </div>
@@ -108,11 +114,12 @@
                 <div> {{ htmlInput[2][0][4] }}</div> <!-- Alchemy Green Sample Bubble advice -->
                 <div> {{ htmlInput[2][0][5] }}</div> <!-- Alchemy Utility Bubble advice -->
                 <br>
-                <div> <img src="/static/imgs/Alchemy_Vial-level-1.png" alt="Alchemy Vials" width="4%"> <img src="/static/imgs/Alchemy_Vial-level-4.png" alt="Alchemy Vials" width="4%"> <img src="/static/imgs/Virile_Vials.png" alt="Shaman's Virile Vials" width="4%"> <img src="/static/imgs/Alchemy_Vial-level-13.png" alt="Alchemy Vials" width="4%"> </div>
+                <div> <img src="/static/imgs/Alchemy_Vial-level-1.png" alt="Alchemy Unlocked Vials" width="4%"> <img src="/static/imgs/Virile_Vials.png" alt="Shaman's Virile Vials talent" width="4%"> <img src="/static/imgs/Alchemy_Vial-level-13.png" alt="Alchemy Maxed Vials" width="4%"> </div>
                 <div> <strong>{{ htmlInput[2][1][0] }}</strong></div> <!-- Alchemy Vials tier -->
                 <div> {{ htmlInput[2][1][1] }}</div> <!-- Alchemy Vials Total Unlocked advice -->
                 <div> {{ htmlInput[2][1][2] }}</div> <!-- Alchemy Vials Total Maxed advice -->
                 <div> {{ htmlInput[2][1][3] }}</div> <!-- Alchemy Vials Particular Maxed advice -->
+                <div> {{ htmlInput[2][1][4] }}</div> <!-- Alchemy Vials Shaman's Virile Vials advice -->
                 <br>
                 <div> <strong>{{ htmlInput[2][2][0] }}</strong></div> <!-- Alchemy P2W tier -->
                 <div> {{ htmlInput[2][2][1] }}</div> <!-- Alchemy P2W advice -->

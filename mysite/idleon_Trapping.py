@@ -175,7 +175,7 @@ def setTrappingProgressionTier(inputJSON, playerCount, playerNames, fromPublicIE
             if fromPublicIEBool:
                 advice_UnusedTrapSlots += playerNames[characterIndex] + " " + unplacedTrapsDict[characterIndex] + ", "
             else:
-                advice_UnusedTrapSlots += "Character" + str(characterIndex) + " " + unplacedTrapsDict[characterIndex] + ", "
+                advice_UnusedTrapSlots += "Character" + str(characterIndex+1) + " " + unplacedTrapsDict[characterIndex] + ", "
         advice_UnusedTrapSlots = advice_UnusedTrapSlots[:-2] #trim off trailing comma and space
     #print("Trapping.setTrappingProgressionTier~ OUTPUT advice_UnusedTrapSlots:",advice_UnusedTrapSlots)
 
@@ -186,7 +186,7 @@ def setTrappingProgressionTier(inputJSON, playerCount, playerNames, fromPublicIE
             if fromPublicIEBool:
                 advice_BeginnerNatures += playerNames[characterIndex] + " has " + str(secretCharacterNotUsingNatureTrapsDict[characterIndex]) + " non-Nature traps, "
             else:
-                advice_BeginnerNatures += "Character" + str(characterIndex) + " has " + str(secretCharacterNotUsingNatureTrapsDict[characterIndex]) + "non-Nature traps, "
+                advice_BeginnerNatures += "Character" + str(characterIndex+1) + " has " + str(secretCharacterNotUsingNatureTrapsDict[characterIndex]) + " non-Nature traps, "
         advice_BeginnerNatures = advice_BeginnerNatures[:-2] + ". Nature EXP-only traps are recommended because the Maestro and Voidwalker classes both get important buffs based on their Trapping level. You will get ZERO critters from Nature Traps, but the bonus EXP is worth it!" #trim off trailing comma and space
     #print("Trapping.setTrappingProgressionTier~ OUTPUT advice_BeginnerNatures:",advice_BeginnerNatures)
 
@@ -196,7 +196,7 @@ def setTrappingProgressionTier(inputJSON, playerCount, playerNames, fromPublicIE
     advice_MetaEXPTraps = ""
     advice_Disclaimer = ""
     goodTrapTypeList = [0,1,3,6]
-    goodTrapDurationList = [1200,3600,28800,36000,72000,144000]
+    goodTrapDurationList = [1200,3600,28800,36000,72000,144000,604800]
     nonMetaTrapDict = {}
     for playerIndex in placedTrapsDict:
         for trapData in placedTrapsDict[playerIndex]:
@@ -215,9 +215,9 @@ def setTrappingProgressionTier(inputJSON, playerCount, playerNames, fromPublicIE
             if fromPublicIEBool:
                 advice_nonMetaTraps += playerNames[characterIndex] + " (" + str(nonMetaTrapDict[characterIndex]) + "), "
             else:
-                advice_nonMetaTraps += "Character" + str(characterIndex) + " (" + str(nonMetaTrapDict[characterIndex]) + "), "
+                advice_nonMetaTraps += "Character" + str(characterIndex+1) + " (" + str(nonMetaTrapDict[characterIndex]) + "), "
         advice_nonMetaTraps = advice_nonMetaTraps[:-2] + "."
-        advice_MetaCritterTraps = " * For the highest Critter gains, Set traps with your Beast Master equipped with as much Trapping Efficiency as possible. The most efficient Critter traps in order are: Royal 20min, Royal 1hr, Cardboard 20min, Royal 10hrs, Cardboard 1hr, and Royal 40hrs."
+        advice_MetaCritterTraps = " * For the highest Critter gains, Set traps with your Beast Master equipped with as much Trapping Efficiency as possible. The most efficient Critter traps for MANUAL CLAIMS are: Royal 20min, Royal 1hr, Cardboard 20min, Royal 10hrs, Cardboard 1hr, Cardboard 8hrs. If you want to let the Rift Trap Vaccuum handle all trap collections, the recommended traps are Royal 40hrs, Royal 10hrs, or Cardboard 20hrs if you don't have Royals unlocked. You could even use Royal 7day traps for minor critter gains, but you'll get less than half as many Cards."
         advice_MetaShinyTraps = " * Shiny chance is calculated when Collecting traps, not Setting them. The only way to increase the number of Shiny critters per trap is by equipping the Shiny Snitch prayer when Collecting. The highest Shiny chance increasing traps are: Royal 20min, Royal 1hr, Silkskin 20min, Silkskin 1hr, and Royal 10hrs."
         advice_MetaEXPTraps = " * For the highest pure EXP gains, Set Nature traps with your Maestro/Voidwalker equipped with as much Trapping EXP as possible. Efficiency doesn't matter at all for Nature Traps! The highest EXP traps are: Nature 8hrs and Nature 20hrs."
         advice_Disclaimer = " * If you are intentionally using a different combination to suite your playstyle, feel free to ignore the below recommendations! They require an active playstyle that isn't for everyone."
