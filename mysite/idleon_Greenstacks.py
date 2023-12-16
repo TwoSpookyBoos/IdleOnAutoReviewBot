@@ -74,6 +74,6 @@ def getMissableGStacks(inputJSON, playerCount):
 
 
     #print("GreenStacks.getMissableGStacks~ OUTPUT advice_ObtainedQuestGStacks:", advice_ObtainedQuestGStacks)
-    #print("GreenStacks.getMissableGStacks~ OUTPUT advice_MissedQuestGStacks:", advice_MissedQuestGStacks)
     #print("GreenStacks.getMissableGStacks~ OUTPUT advice_EndangeredQuestGStacks:", advice_EndangeredQuestGStacks)
-    return [advice_ObtainedQuestGStacks, advice_MissedQuestGStacks, advice_EndangeredQuestGStacks]
+    #print("GreenStacks.getMissableGStacks~ OUTPUT advice_MissedQuestGStacks:", advice_MissedQuestGStacks)
+    return [advice_ObtainedQuestGStacks, advice_EndangeredQuestGStacks, advice_MissedQuestGStacks]
