@@ -27,6 +27,16 @@ def getHumanReadableClasses(classNumber):
     except:
         return "Unknown class: " + str(classNumber)
 
+def getCombatLevelsList(inputJSON, playerCount):
+    counter = 0
+    combatLevels = []
+    while counter < playerCount: #playerCount is not 0 based
+        try:
+            combatLevels.append(inputJSON['Lv0_'+str(counter)][0])
+        except Exception as reason:
+            print("CombatLevels.getCombatLevelsList: Unable to access 'Lv0_" + str(counter) + "' when playerCount = " + str(playerCount), reason)
+    return combatLevels
+
 def parseCombatLevelsFromPublicIE(inputJSON, playerCount):
     counter = 0
     sum_AccountLevel = 0
@@ -133,24 +143,24 @@ def setCombatLevelsProgressionTier(inputJSON, progressionTiers, playerCount, fro
             if parsedCombatLevels['sum_AccountLevel'] >= tier[1]:
                 tier_RequiredAccountLevels = tier[0]
             else:
-                advice_AccountLevels = "* Tier " + str(tier_RequiredAccountLevels) + "- Current Family level: " + str(parsedCombatLevels['sum_AccountLevel']) + ". Next family reward at " + str(tier[1]) + " unlocks " + tier[2]
+                advice_AccountLevels = "Tier " + str(tier_RequiredAccountLevels) + "- Current Family level: " + str(parsedCombatLevels['sum_AccountLevel']) + ". Next family reward at " + str(tier[1]) + " unlocks " + tier[2]
     if len(parsedCombatLevels['equinoxDict']['Characters Under 100']) > 0:
-        advice_PersonalLevels = "* Level the following characters to 100+ to complete Equinox Dream 3: "
+        advice_PersonalLevels = "Level the following characters to 100+ to complete Equinox Dream 3: "
         for character in parsedCombatLevels['equinoxDict']['Characters Under 100']:
             advice_PersonalLevels += str(character) + " (" + str(parsedCombatLevels['equinoxDict']['Characters Under 100'][character]) + "), "
         advice_PersonalLevels = advice_PersonalLevels[:-2] #remove the trailing comma and space
     elif len(parsedCombatLevels['equinoxDict']['Characters Under 250']) > 0:
-        advice_PersonalLevels = "* Level the following characters to 250+ to complete Equinox Dream 11 and unlock their Personal Sparkle Obol slot: "
+        advice_PersonalLevels = "Level the following characters to 250+ to complete Equinox Dream 11 and unlock their Personal Sparkle Obol slot: "
         for character in parsedCombatLevels['equinoxDict']['Characters Under 250']:
             advice_PersonalLevels += str(character) + " (" + str(parsedCombatLevels['equinoxDict']['Characters Under 250'][character]) + "), "
         advice_PersonalLevels = advice_PersonalLevels[:-2] #remove the trailing comma and space
     elif len(parsedCombatLevels['equinoxDict']['Characters Under 500']) > 0:
-        advice_PersonalLevels = "* Level the following characters to 500+ to complete Equinox Dream 23: "
+        advice_PersonalLevels = "Level the following characters to 500+ to complete Equinox Dream 23: "
         for character in parsedCombatLevels['equinoxDict']['Characters Under 500']:
             advice_PersonalLevels += str(character) + " (" + str(parsedCombatLevels['equinoxDict']['Characters Under 500'][character]) + "), "
         advice_PersonalLevels = advice_PersonalLevels[:-2] #remove the trailing comma and space
     if advice_AccountLevels == "":
-        advice_AccountLevels = " * Your total family level is " + str(parsedCombatLevels['sum_AccountLevel']) + ". The last reward was back at 5k. Still... Pretty neat :)"
+        advice_AccountLevels = "Your total family level is " + str(parsedCombatLevels['sum_AccountLevel']) + ". The last reward was back at 5k. Still... Pretty neat :)"
     advice_CombatLevelsCombined = [advice_AccountLevels, advice_PersonalLevels]
     #Print fun stuff
 

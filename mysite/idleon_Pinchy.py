@@ -9,7 +9,7 @@ def getHighestPrint(inputJSON):
             if item > highestPrintFound:
                 #print("Pinchy~ INFO Replacing highest print value from ", highestPrintFound,"to",item)
                 highestPrintFound = item
-    #print("Pinchy~ INFO Final highest print value found: ", highestPrintFound)
+    #print("Pinchy~ OUTPUT Final highest print value found: ", highestPrintFound)
     return highestPrintFound
 
 def setPinchyList(inputJSON, playerCount, dictOfPRs):
@@ -31,12 +31,12 @@ def setPinchyList(inputJSON, playerCount, dictOfPRs):
         "Combat Levels":            [0,3,7,8,10,    14,15,16,17,18, 19,25,28,28,29, 29,29,99],
         "Stamps":                   [0,1,2,3,4,     5,6,7,8,9,10,   11,15,22,28,    34,36,99],
         "Bribes":                   [0,1,1,1,2,     2,3,3,3,4,      4,4,4,5,5,      5,5,99],
-        "Smithing":                 [0,0,0,0,0,     0,1,2,3,4,      5,5,6,6,6,      6,6,99],
+        "Smithing":                 [0,0,0,0,0,     0,0,0,0,0,      1,2,3,4,5,      6,6,99],
         "Alchemy-Bubbles":          [0,0,0,1,1,     1,1,2,2,2,      3,4,5,7,12,     18,23,99],
         "Alchemy-Vials":            [0,0,0,0,0,     0,0,1,2,3,      4,5,6,7,16,     19,20,99],
-        "Construction Refinery":    [0,0,0,0,0,     1,1,2,2,3,      3,4,5,8,9,      10,19,99],
+        "Construction Refinery":    [0,0,0,0,0,     1,1,1,1,1,      2,2,3,4,5,      6,19,99],
         "Construction Salt Lick":   [0,0,0,0,0,     0,0,0,0,1,      2,3,4,5,6,      7,10,99],
-        "Worship Prayers":          [0,0,0,0,0,     0,1,1,2,3,      4,5,6,6,6,      7,7,99],
+        "Worship Prayers":          [0,0,0,0,0,     0,1,1,2,3,      3,4,5,5,6,      7,7,99],
         "Construction Death Note":  [0,0,0,0,0,     0,0,0,0,0,      0,4,5,12,15,    19,23,99]
         }
     for review in dictOfPRs:
@@ -86,7 +86,7 @@ def setPinchyList(inputJSON, playerCount, dictOfPRs):
     #Until W6 drops, Solid W6 prep = DeathNote tier 15+
     #Until W6 drops, W6 waiting room = DeathNote tier 19+
     expectedIndex = 0
-    if highestPrint >= 1000000000:
+    if highestPrint >= 999000000:
         expectedIndex = 16
     elif dictOfPRs["Construction Death Note"] >= 19:
         expectedIndex = 15
@@ -146,17 +146,17 @@ def setPinchyList(inputJSON, playerCount, dictOfPRs):
 
     #generate advice based on catchup
     if (lowestIndex >= expectedIndex):
-        pinchyAdvice = " * Your lowest sections are roughly equal with (or better than!) your highest enemy map. Keep up the good work!"
+        pinchyAdvice = "Your lowest sections are roughly equal with (or better than!) your highest enemy map. Keep up the good work!"
     elif lowestIndex < highestIndex:
         if len(sortedResultsListofLists[lowestIndex]) == 1:
-            pinchyAdvice = " * " + progressionNamesList[lowestIndex] + " rated section: "+ sortedResultsListofLists[lowestIndex][0] + ". You can find detailed advice below in the section's World."
+            pinchyAdvice = progressionNamesList[lowestIndex] + " rated section: "+ sortedResultsListofLists[lowestIndex][0] + ". You can find detailed advice below in the section's World."
         elif len(sortedResultsListofLists[lowestIndex]) >= 2:
-            pinchyAdvice = " * " + progressionNamesList[lowestIndex] + " rated sections: "
+            pinchyAdvice = progressionNamesList[lowestIndex] + " rated sections: "
             for item in sortedResultsListofLists[lowestIndex]:
                 pinchyAdvice += item + ", "
             pinchyAdvice = pinchyAdvice[:-2] + ". You can find detailed advice below in the section's World." #trim off final comma and space
     elif (lowestIndex == highestIndex) and (highestIndex < expectedIndex):
-        pinchyAdvice = " * All sections are roughly equal in terms of their expected progression. However, they're still behind based on your highest enemy map reached."
+        pinchyAdvice = "All sections are roughly equal in terms of their expected progression. However, they're still behind based on your highest enemy map reached."
 
     #print("Pinchy~ OUTPUT sortedResultsListofLists:",sortedResultsListofLists)
     #print("Lowest:",lowestIndex," (",progressionNamesList[lowestIndex],"), Highest:",highestIndex," (",progressionNamesList[highestIndex],"), Expected:",expectedIndex," (",progressionNamesList[expectedIndex],")")

@@ -67,7 +67,8 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
         try:
             progressionTiersPostBuffs[2][2].remove(6) #Remove Trapper Drone from S Tier
             progressionTiersPostBuffs[5][2].append(6) #Add Trapper Drone to C tier
-            maxLevelList[6] = 45
+            if hasBuffs:
+                maxLevelList[6] = 45
             #print("ConsBuildings~ INFO Successfully moved Trapper Drone from PostBuff S to C tier and changed level from 20 to 45")
         except Exception as reason:
             print("ConsBuildings~ EXCEPTION Could not remove Trapper Drone from PostBuff S tier:",reason)
@@ -87,7 +88,8 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
         try:
             progressionTiersPostBuffs[2][2].remove(1) #Remove from S tier
             progressionTiersPostBuffs[5][2].append(1) #Add to C tier
-            maxLevelList[1] = 201
+            if hasBuffs:
+                maxLevelList[1] = 201
             #print("ConsBuildings~ INFO Successfully moved 101+ Talent Library Book from PostBuff A to C tier.")
         except Exception as reason:
             print("ConsBuildings~ EXCEPTION Could not move 101+ Talent Library Book from PostBuff A tier to C tier:",reason)
@@ -97,7 +99,8 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
             try:
                 progressionTiersPostBuffs[3][2].remove(towerIndex) #Remove from A tier
                 progressionTiersPostBuffs[5][2].append(towerIndex) #Add to C tier
-                maxLevelList[towerIndex] = 140
+                if hasBuffs:
+                    maxLevelList[towerIndex] = 140
                 #print("ConsBuildings~ INFO Successfully moved 70+ basic tower from PostBuff A to C tier:",getBuildingNameFromIndex(towerIndex))
             except Exception as reason:
                 print("ConsBuildings~ EXCEPTION Could not move 70+ basic tower from PostBuff A tier to C tier:",getBuildingNameFromIndex(towerIndex),reason)
@@ -106,7 +109,8 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
             try:
                 progressionTiersPostBuffs[2][2].remove(towerIndex) #Remove from S tier
                 progressionTiersPostBuffs[5][2].append(towerIndex) #Add to C tier
-                maxLevelList[towerIndex] = 140
+                if hasBuffs:
+                    maxLevelList[towerIndex] = 140
                 #print("ConsBuildings~ INFO Successfully moved 75+ fancy tower from PostBuff S to C tier:",getBuildingNameFromIndex(towerIndex))
             except Exception as reason:
                 print("ConsBuildings~ EXCEPTION Could not move 75+ fancy tower from PostBuff S tier to C tier:",getBuildingNameFromIndex(towerIndex),reason)
@@ -116,7 +120,8 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
             progressionTiersPreBuffs[5][2].append(17) #Add to C tier
             progressionTiersPostBuffs[3][2].remove(17) #Remove from PostBuff A tier
             progressionTiersPostBuffs[5][2].append(17) #Add to C tier
-            maxLevelList[17] = 140
+            if hasBuffs:
+                maxLevelList[17] = 140
             #print("ConsBuildings~ INFO Successfully moved 30+ Voidinator from A/B to C tier in both tierlists")
         except Exception as reason:
             print("ConsBuildings~ EXCEPTION Could not move 30+ Voidinator from A/B to C tier in both tierlists:",reason)
@@ -155,12 +160,12 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
     for adviceString in adviceComboList:
         if adviceString != "":
             index = adviceComboList.index(adviceString)
-            adviceComboList[index] = " * " + progressionTiers[index][1] + " Tier: " + adviceComboList[index][:-2] #trim off final comma and space
+            adviceComboList[index] = progressionTiers[index][1] + " Tier: " + adviceComboList[index][:-2] #trim off final comma and space
 
     tier_ConsBuildings = 0
     overall_ConsBuildingsTier = 0
     advice_ConsBuildings1 = ""
     overall_ConsBuildingsTier = min(progressionTiers[-1][-0], tier_ConsBuildings)
-    advice_ConsBuildingsCombined = ["### Recommended Construction Buildings priorities for Trimmed Slots:", adviceComboList[1], adviceComboList[2], adviceComboList[3], adviceComboList[4], adviceComboList[5], adviceComboList[6], adviceComboList[7]]
+    advice_ConsBuildingsCombined = ["Recommended Construction Buildings priorities for Trimmed Slots:", adviceComboList[1], adviceComboList[2], adviceComboList[3], adviceComboList[4], adviceComboList[5], adviceComboList[6], adviceComboList[7]]
     consBuildingsPR = progressionResults.progressionResults(overall_ConsBuildingsTier,advice_ConsBuildingsCombined,"")
     return consBuildingsPR

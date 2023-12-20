@@ -879,32 +879,32 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, playerCount, pl
 
     #Generate advice statements
     if advice_w1DeathNoteSkulls != "":
-        advice_w1DeathNoteSkulls = " * Tier " + str(tier_w1DeathNoteSkulls) + "- " + advice_w1DeathNoteSkulls
+        advice_w1DeathNoteSkulls = "Tier " + str(tier_w1DeathNoteSkulls) + "- " + advice_w1DeathNoteSkulls
     if advice_w2DeathNoteSkulls != "":
-        advice_w2DeathNoteSkulls = " * Tier " + str(tier_w2DeathNoteSkulls) + "- " + advice_w2DeathNoteSkulls
+        advice_w2DeathNoteSkulls = "Tier " + str(tier_w2DeathNoteSkulls) + "- " + advice_w2DeathNoteSkulls
     if advice_w3DeathNoteSkulls != "":
-        advice_w3DeathNoteSkulls = " * Tier " + str(tier_w3DeathNoteSkulls) + "- " + advice_w3DeathNoteSkulls
+        advice_w3DeathNoteSkulls = "Tier " + str(tier_w3DeathNoteSkulls) + "- " + advice_w3DeathNoteSkulls
     if advice_w4DeathNoteSkulls != "":
-        advice_w4DeathNoteSkulls = " * Tier " + str(tier_w4DeathNoteSkulls) + "- " + advice_w4DeathNoteSkulls
+        advice_w4DeathNoteSkulls = "Tier " + str(tier_w4DeathNoteSkulls) + "- " + advice_w4DeathNoteSkulls
     if advice_w5DeathNoteSkulls != "":
-        advice_w5DeathNoteSkulls = " * Tier " + str(tier_w5DeathNoteSkulls) + "- " + advice_w5DeathNoteSkulls
+        advice_w5DeathNoteSkulls = "Tier " + str(tier_w5DeathNoteSkulls) + "- " + advice_w5DeathNoteSkulls
     if advice_w6DeathNoteSkulls != "":
-        advice_w6DeathNoteSkulls = " * Tier " + str(tier_w6DeathNoteSkulls) + "- " + advice_w6DeathNoteSkulls
+        advice_w6DeathNoteSkulls = "Tier " + str(tier_w6DeathNoteSkulls) + "- " + advice_w6DeathNoteSkulls
     if advice_w7DeathNoteSkulls != "":
-        advice_w7DeathNoteSkulls = " * Tier " + str(tier_w7DeathNoteSkulls) + "- " + advice_w7DeathNoteSkulls
+        advice_w7DeathNoteSkulls = "Tier " + str(tier_w7DeathNoteSkulls) + "- " + advice_w7DeathNoteSkulls
     if advice_w8DeathNoteSkulls != "":
-        advice_w8DeathNoteSkulls = " * Tier " + str(tier_w8DeathNoteSkulls) + "- " + advice_w8DeathNoteSkulls
+        advice_w8DeathNoteSkulls = "Tier " + str(tier_w8DeathNoteSkulls) + "- " + advice_w8DeathNoteSkulls
     if advice_zows != "":
-        advice_zows = " * Tier " + str(tier_zows) + "- " + advice_zows
+        advice_zows = "Tier " + str(tier_zows) + "- " + advice_zows
     if advice_chows != "":
-        advice_chows = " * Tier " + str(tier_chows) + "- " + advice_chows
+        advice_chows = "Tier " + str(tier_chows) + "- " + advice_chows
     if advice_meows != "":
-        advice_meows = " * Tier " + str(tier_meows) + "- " + advice_meows
+        advice_meows = "Tier " + str(tier_meows) + "- " + advice_meows
     if overall_DeathNoteTier == progressionTiers[-1][0]:
-        advice_w1DeathNoteSkulls = " * Nada. You best <3"
+        advice_w1DeathNoteSkulls = "Nada. You best <3"
 
 
-    advice_DeathNoteCombined = ["### Best DeathNote tier met: " + str(overall_DeathNoteTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended DeathNote actions:",
+    advice_DeathNoteCombined = ["Best DeathNote tier met: " + str(overall_DeathNoteTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended DeathNote actions:",
         advice_w1DeathNoteSkulls, advice_w2DeathNoteSkulls, advice_w3DeathNoteSkulls, advice_w4DeathNoteSkulls,
         advice_w5DeathNoteSkulls, advice_w6DeathNoteSkulls, advice_w7DeathNoteSkulls, advice_w8DeathNoteSkulls,
         advice_zows, advice_chows, advice_meows]

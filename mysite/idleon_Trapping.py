@@ -165,12 +165,12 @@ def setTrappingProgressionTier(inputJSON, playerCount, playerNames, fromPublicIE
 
     advice_UnlockCritters = ""
     if highestUnlockedCritter[0] != highestUnlockedCritter[1]: #playerHighest vs current highest possible
-        advice_UnlockCritters = " * Continue unlocking new critter types from quests (" + str(highestUnlockedCritter[0]) + "/" + str(highestUnlockedCritter[1])+ ")! Check the Wiki for exact unlock requirements."
+        advice_UnlockCritters = "Continue unlocking new critter types from quests (" + str(highestUnlockedCritter[0]) + "/" + str(highestUnlockedCritter[1])+ ")! Check the Wiki for exact unlock requirements."
         #print("Trapping.setTrappingProgressionTier~ OUTPUT advice_UnlockCritters:",advice_UnlockCritters)
 
     advice_UnusedTrapSlots = ""
     if len(unplacedTrapsDict) > 0:
-        advice_UnusedTrapSlots = " * Place remaining Traps (may require equipping a better trap tool!): "
+        advice_UnusedTrapSlots = "Place remaining Traps (may require equipping a better trap tool!): "
         for characterIndex in unplacedTrapsDict:
             if fromPublicIEBool:
                 advice_UnusedTrapSlots += playerNames[characterIndex] + " " + unplacedTrapsDict[characterIndex] + ", "
@@ -181,7 +181,7 @@ def setTrappingProgressionTier(inputJSON, playerCount, playerNames, fromPublicIE
 
     advice_BeginnerNatures = ""
     if len(secretCharacterNotUsingNatureTrapsDict) > 0:
-        advice_BeginnerNatures = " * "
+        advice_BeginnerNatures = ""
         for characterIndex in secretCharacterNotUsingNatureTrapsDict:
             if fromPublicIEBool:
                 advice_BeginnerNatures += playerNames[characterIndex] + " has " + str(secretCharacterNotUsingNatureTrapsDict[characterIndex]) + " non-Nature traps, "
@@ -208,24 +208,24 @@ def setTrappingProgressionTier(inputJSON, playerCount, playerNames, fromPublicIE
     if len(nonMetaTrapDict) > 0:
         #print("Trapping.setTrappingProgressionTier~ OUTPUT nonMetaTrapDict:",nonMetaTrapDict)
         if len(nonMetaTrapDict) == 1:
-            advice_nonMetaTraps = " * The following character has placed traps that aren't of a recommended Trap Type or Duration: "
+            advice_nonMetaTraps = "The following character has placed traps that aren't of a recommended Trap Type or Duration: "
         else:
-            advice_nonMetaTraps = " * The following characters have placed traps that aren't of a recommended Trap Type or Duration: "
+            advice_nonMetaTraps = "The following characters have placed traps that aren't of a recommended Trap Type or Duration: "
         for characterIndex in nonMetaTrapDict:
             if fromPublicIEBool:
                 advice_nonMetaTraps += playerNames[characterIndex] + " (" + str(nonMetaTrapDict[characterIndex]) + "), "
             else:
                 advice_nonMetaTraps += "Character" + str(characterIndex+1) + " (" + str(nonMetaTrapDict[characterIndex]) + "), "
         advice_nonMetaTraps = advice_nonMetaTraps[:-2] + "."
-        advice_MetaCritterTraps = " * For the highest Critter gains, Set traps with your Beast Master equipped with as much Trapping Efficiency as possible. The most efficient Critter traps for MANUAL CLAIMS are: Royal 20min, Royal 1hr, Cardboard 20min, Royal 10hrs, Cardboard 1hr, Cardboard 8hrs. If you want to let the Rift Trap Vaccuum handle all trap collections, the recommended traps are Royal 40hrs, Royal 10hrs, or Cardboard 20hrs if you don't have Royals unlocked. You could even use Royal 7day traps for minor critter gains, but you'll get less than half as many Cards."
-        advice_MetaShinyTraps = " * Shiny chance is calculated when Collecting traps, not Setting them. The only way to increase the number of Shiny critters per trap is by equipping the Shiny Snitch prayer when Collecting. The highest Shiny chance increasing traps are: Royal 20min, Royal 1hr, Silkskin 20min, Silkskin 1hr, and Royal 10hrs."
-        advice_MetaEXPTraps = " * For the highest pure EXP gains, Set Nature traps with your Maestro/Voidwalker equipped with as much Trapping EXP as possible. Efficiency doesn't matter at all for Nature Traps! The highest EXP traps are: Nature 8hrs and Nature 20hrs."
-        advice_Disclaimer = " * If you are intentionally using a different combination to suite your playstyle, feel free to ignore the below recommendations! They require an active playstyle that isn't for everyone."
+        advice_MetaCritterTraps = "For the highest Critter gains, Set traps with your Beast Master equipped with as much Trapping Efficiency as possible. The most efficient Critter traps for MANUAL CLAIMS are: Royal 20min, Royal 1hr, Cardboard 20min, Royal 10hrs, Cardboard 1hr, Cardboard 8hrs. If you want to let the Rift Trap Vaccuum handle all trap collections, the recommended traps are Royal 40hrs, Royal 10hrs, or Cardboard 20hrs if you don't have Royals unlocked. You could even use Royal 7day traps for minor critter gains, but you'll get less than half as many Cards."
+        advice_MetaShinyTraps = "Shiny chance is calculated when Collecting traps, not Setting them. The only way to increase the number of Shiny critters per trap is by equipping the Shiny Snitch prayer when Collecting. The highest Shiny chance increasing traps are: Royal 20min, Royal 1hr, Silkskin 20min, Silkskin 1hr, and Royal 10hrs."
+        advice_MetaEXPTraps = "For the highest pure EXP gains, Set Nature traps with your Maestro/Voidwalker equipped with as much Trapping EXP as possible. Efficiency doesn't matter at all for Nature Traps! The highest EXP traps are: Nature 8hrs and Nature 20hrs."
+        advice_Disclaimer = "If you are intentionally using a different combination to suite your playstyle, feel free to ignore the below recommendations! They require an active playstyle that isn't for everyone."
 
     advice_TrappingTarget = ""
 
     if advice_UnlockCritters == "" and advice_UnusedTrapSlots == "" and advice_BeginnerNatures == "" and advice_TrappingTarget == "" and advice_Disclaimer == "":
-        advice_UnlockCritters = " * Nada. You look like you're on the right track! :D"
-    advice_TrappingCombined = ["### Recommended Trapping actions:", advice_UnlockCritters, advice_UnusedTrapSlots, advice_BeginnerNatures, advice_Disclaimer, advice_nonMetaTraps, advice_MetaCritterTraps, advice_MetaShinyTraps, advice_MetaEXPTraps]
+        advice_UnlockCritters = "Nada. You look like you're on the right track! :D"
+    advice_TrappingCombined = ["Recommended Trapping actions:", advice_UnlockCritters, advice_UnusedTrapSlots, advice_BeginnerNatures, advice_Disclaimer, advice_nonMetaTraps, advice_MetaCritterTraps, advice_MetaShinyTraps, advice_MetaEXPTraps]
     trappingPR = progressionResults.progressionResults(0,advice_TrappingCombined,"")
     return trappingPR

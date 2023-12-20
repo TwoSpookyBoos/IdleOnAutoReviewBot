@@ -64,13 +64,13 @@ def getMissableGStacks(inputJSON, playerCount):
             obtainedMissableGStacks += 1
     if advice_ObtainedQuestGStacks != "":
         if obtainedMissableGStacks == len(missableGStacksDict):
-            advice_ObtainedQuestGStacks = " * You have obtained all " + str(len(missableGStacksDict)) + " missable quest item Greensacks! Way to go, you best <3"
+            advice_ObtainedQuestGStacks = "You have obtained all " + str(len(missableGStacksDict)) + " missable quest item Greensacks! Way to go, you best <3"
         else:
-            advice_ObtainedQuestGStacks = " * You have obtained " + str(obtainedMissableGStacks) + "/" + str(len(missableGStacksDict)) + " missable quest item Greenstacks: " + advice_ObtainedQuestGStacks[:-2] + "."
+            advice_ObtainedQuestGStacks = "You have obtained " + str(obtainedMissableGStacks) + "/" + str(len(missableGStacksDict)) + " missable quest item Greenstacks: " + advice_ObtainedQuestGStacks[:-2] + "."
     if advice_MissedQuestGStacks != "":
-        advice_MissedQuestGStacks = " * You have already missed " + str(missedMissableGStacks) + "/" + str(len(missableGStacksDict)) + " missable quest item Greenstacks. You're locked out of these until you get more character slots :( " + advice_MissedQuestGStacks[:-2] + "."
+        advice_MissedQuestGStacks = "You have already missed " + str(missedMissableGStacks) + "/" + str(len(missableGStacksDict)) + " missable quest item Greenstacks. You're locked out of these until you get more character slots :( " + advice_MissedQuestGStacks[:-2] + "."
     if advice_EndangeredQuestGStacks != "":
-        advice_EndangeredQuestGStacks = " * You can still obtain " + str(endangeredMissableGStacks) + "/" + str(len(missableGStacksDict)) + " missable quest item Greenstacks. Be sure not to turn in their quests until GStacking them: " + advice_EndangeredQuestGStacks[:-2] + "."
+        advice_EndangeredQuestGStacks = "You can still obtain " + str(endangeredMissableGStacks) + "/" + str(len(missableGStacksDict)) + " missable quest item Greenstacks. Be sure not to turn in their quests until GStacking them: " + advice_EndangeredQuestGStacks[:-2] + "."
 
 
     #print("GreenStacks.getMissableGStacks~ OUTPUT advice_ObtainedQuestGStacks:", advice_ObtainedQuestGStacks)

@@ -24,6 +24,9 @@ body {
     background-color: #38444d;
     color: white;
 }
+li {
+  margin-left: 20px;
+}
 textarea {
   resize: none;
   width: 400px;

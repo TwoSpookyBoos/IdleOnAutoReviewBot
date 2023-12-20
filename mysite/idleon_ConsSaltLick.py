@@ -47,9 +47,9 @@ def setConsSaltLickProgressionTier(inputJSON, progressionTiers):
                 all_RequiredSaltLickUpgrades = False
                 if advice_RequiredSaltLickUpgrades == "":
                     if sum_TotalMaxedSaltLickUpgrades < 9:
-                        advice_RequiredSaltLickUpgrades = (" * The next best/cheapest bonus to max is probably " + str(key) + " which requires " + tier[2])
+                        advice_RequiredSaltLickUpgrades = ("The next best/cheapest bonus to max is probably " + str(key) + " which requires " + tier[2])
                     else:
-                        advice_RequiredSaltLickUpgrades = (" * The last bonus to max is definitely " + str(key) + " which requires " + tier[2])
+                        advice_RequiredSaltLickUpgrades = ("The last bonus to max is definitely " + str(key) + " which requires " + tier[2])
 
                 #else #don't write out new advice, only want the lowest.
             if all_RequiredSaltLickUpgrades == True:
@@ -59,8 +59,8 @@ def setConsSaltLickProgressionTier(inputJSON, progressionTiers):
     overall_ConsSaltLickTier = min(10, sum_TotalMaxedSaltLickUpgrades) #Looks silly, but may get more evaluations in the future
     #Generate advice statement
     if overall_ConsSaltLickTier == 10:
-        advice_RequiredSaltLickUpgrades = " * Nada. You best <3"
-    advice_ConsSaltLickCombined = ["### Maxed Salt Lick Upgrades: " + str(overall_ConsSaltLickTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended Salt Lick action:", advice_RequiredSaltLickUpgrades]
+        advice_RequiredSaltLickUpgrades = "Nada. You best <3"
+    advice_ConsSaltLickCombined = ["Maxed Salt Lick Upgrades: " + str(overall_ConsSaltLickTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended Salt Lick action:", advice_RequiredSaltLickUpgrades]
     #Print fun stuff
     #print(advice_ConsSaltLickCombined)
     consSaltLickPR = progressionResults.progressionResults(overall_ConsSaltLickTier,advice_ConsSaltLickCombined,"")

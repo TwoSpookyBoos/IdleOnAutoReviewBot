@@ -358,17 +358,17 @@ def setStampProgressionTier(inputJSON, progressionTiers):
     overall_StampTier = min(tier_StampLevels, tier_RequiredCombatStamps, tier_RequiredSkillStamps, tier_RequiredMiscStamps, tier_RequiredSpecificStamps)
     #Generate advice statement
     if advice_StampLevels != "":
-        advice_StampLevels = (" * Tier " + str(tier_StampLevels) + "- Improve your total stamp levels to " + str(advice_StampLevels) + "+")
+        advice_StampLevels = ("Tier " + str(tier_StampLevels) + "- Improve your total stamp levels to " + str(advice_StampLevels) + "+")
     if advice_CollectCombatStamps != "":
-        advice_CollectCombatStamps = (" * Tier " + str(tier_RequiredCombatStamps) + "- Collect the following Combat stamp(s): " + str(advice_CollectCombatStamps[:-2]))
+        advice_CollectCombatStamps = ("Tier " + str(tier_RequiredCombatStamps) + "- Collect the following Combat stamp(s): " + str(advice_CollectCombatStamps[:-2]))
     if advice_CollectSkillStamps != "":
-        advice_CollectSkillStamps = ("  * Tier " + str(tier_RequiredSkillStamps) + "- Collect the following Skill stamp(s): " + str(advice_CollectSkillStamps[:-2]))
+        advice_CollectSkillStamps = ("Tier " + str(tier_RequiredSkillStamps) + "- Collect the following Skill stamp(s): " + str(advice_CollectSkillStamps[:-2]))
     if advice_CollectMiscStamps != "":
-        advice_CollectMiscStamps = ("   * Tier " + str(tier_RequiredMiscStamps) + "- Collect the following Misc stamp(s): " + str(advice_CollectMiscStamps[:-2]))
+        advice_CollectMiscStamps = ("Tier " + str(tier_RequiredMiscStamps) + "- Collect the following Misc stamp(s): " + str(advice_CollectMiscStamps[:-2]))
     #if advice_CollectStamps != "":
-    #    advice_CollectStamps = (" * Collect the following stamp(s): " + str(advice_CollectStamps[:-2]))
+    #    advice_CollectStamps = ("Collect the following stamp(s): " + str(advice_CollectStamps[:-2]))
     if advice_SpecificStamps != "":
-        advice_SpecificStamps = ("  * Tier " + str(tier_RequiredSpecificStamps) + "- Improve these high-priority stamp(s): "+ str(advice_SpecificStamps[:-2]))
+        advice_SpecificStamps = ("Tier " + str(tier_RequiredSpecificStamps) + "- Improve these high-priority stamp(s): "+ str(advice_SpecificStamps[:-2]))
     #Print out all the final stamp info
     #print("Stamp levels: "
     #    + str(totalCombatStampLevels) + ", "
@@ -386,10 +386,10 @@ def setStampProgressionTier(inputJSON, progressionTiers):
     #print (tier_StampLevels, tier_RequiredCombatStamps, tier_RequiredSkillStamps, tier_RequiredMiscStamps, tier_RequiredSpecificStamps, overall_StampTier)
     if advice_StampLevels == "" and advice_CollectStamps == "" and advice_SpecificStamps == "":
         advice_CombinedStamps = [
-            "### Best Stamp tier met: " + str(overall_StampTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended stamp actions:", "", "", " * You've reached the end of the recommendations. Let me know what important stamps you're aiming for next!"]
+            "Best Stamp tier met: " + str(overall_StampTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended stamp actions:", "", "", "You've reached the end of the recommendations. Let me know what important stamps you're aiming for next!"]
     else:
         advice_CombinedStamps = [
-            "### Best Stamp tier met: " + str(overall_StampTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended stamp actions:",
+            "Best Stamp tier met: " + str(overall_StampTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended stamp actions:",
             advice_StampLevels,
             advice_CollectCombatStamps,
             advice_CollectSkillStamps,

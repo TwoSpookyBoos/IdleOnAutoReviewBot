@@ -97,15 +97,15 @@ def setBribesProgressionTier(inputJSON, progressionTiers):
     #Assess Bribe Tier
     if sum_allBribes == 33: #Max as of v1.91
         tier_BribesPurchased = 5
-        advice_BribesPurchased = " * Nada. You best <3"
+        advice_BribesPurchased = "Nada. You best <3"
     else:
         for tier in progressionTiers:
             if sum_bribeSetW1 < tier[1] or sum_bribeSetW2 < tier[2] or sum_bribeSetW3 < tier[3] or sum_bribeSetW4 < tier[4] or sum_bribeSetTrashIsland < tier[5]:
-                advice_BribesPurchased = " * Finish purchasing Set " + str(tier_BribesPurchased+1) + " of Bribes. You should be able to afford them " + progressionTiers[tier_BribesPurchased+1][6]
+                advice_BribesPurchased = "Finish purchasing Set " + str(tier_BribesPurchased+1) + " of Bribes. You should be able to afford them " + progressionTiers[tier_BribesPurchased+1][6]
             else:
                 tier_BribesPurchased = tier[0]
     overall_BribesTier = min(5, tier_BribesPurchased)
     #Generate advice statement
-    advice_BribesCombined = ["### Best Bribe tier met: " + str(overall_BribesTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended Bribe actions:", advice_BribesPurchased]
+    advice_BribesCombined = ["Best Bribe tier met: " + str(overall_BribesTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended Bribe actions:", advice_BribesPurchased]
     bribesPR = progressionResults.progressionResults(overall_BribesTier, advice_BribesCombined, "")
     return bribesPR

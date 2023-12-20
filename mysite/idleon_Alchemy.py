@@ -443,15 +443,15 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
             if unlockedVials >= tier[1]:
                 tier_TotalVialsUnlocked = tier[0]
             else:
-                advice_TotalVialsUnlocked = " * Tier " + str(tier_TotalVialsUnlocked) + "- Unlock some more vials: " + str(unlockedVials) + "/" + str(tier[1]) + tier[4] + "For the most unlock chances per day, rapidly drop multiple stacks of items on the cauldron!"
+                advice_TotalVialsUnlocked = "Tier " + str(tier_TotalVialsUnlocked) + "- Unlock some more vials: " + str(unlockedVials) + "/" + str(tier[1]) + tier[4] + "For the most unlock chances per day, rapidly drop multiple stacks of items on the cauldron!"
         if tier_TotalVialsMaxed == (tier[0]-1): #Only check if they already met previous tier
             if len(maxedVialsList) >= tier[2]:
                 tier_TotalVialsMaxed = tier[0]
             else:
                 if len(maxedVialsList) < 27 and highestCompletedRift >= 35:
-                    advice_TotalVialsMaxed = " * Tier " + str(tier_TotalVialsMaxed) + "- Max some more vials: " + str(len(maxedVialsList)) + "/" + str(tier[2]) + "." + advice_SnakeskinRiftVialMastery
+                    advice_TotalVialsMaxed = "Tier " + str(tier_TotalVialsMaxed) + "- Max some more vials: " + str(len(maxedVialsList)) + "/" + str(tier[2]) + "." + advice_SnakeskinRiftVialMastery
                 else:
-                    advice_TotalVialsMaxed = " * Tier " + str(tier_TotalVialsMaxed) + "- Max some more vials: " + str(len(maxedVialsList)) + "/" + str(tier[2]) + ". Thanks to the Vial Mastery bonus in W4's Rift, every maxed vial increases the bonus of EVERY vial you have unlocked!"
+                    advice_TotalVialsMaxed = "Tier " + str(tier_TotalVialsMaxed) + "- Max some more vials: " + str(len(maxedVialsList)) + "/" + str(tier[2]) + ". Thanks to the Vial Mastery bonus in W4's Rift, every maxed vial increases the bonus of EVERY vial you have unlocked!"
                     if tier_TotalVialsMaxed >= 20:
                         advice_TotalVialsMaxed += tier[4]
         if tier_ParticularVialsMaxed == (tier[0]-1): #Only check if they already met previous tier
@@ -466,12 +466,12 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
                 tier_ParticularVialsMaxed = tier[0]
             else:
                 #print("Alch particular vial failed at tier",tier[0],tier[4])
-                advice_ParticularVialsMaxed = " * Tier " + str(tier_ParticularVialsMaxed) + "- Work on maxing these particular vial(s): " + advice_ParticularVialsMaxed[:-2] #strip off the final comma and space
+                advice_ParticularVialsMaxed = "Tier " + str(tier_ParticularVialsMaxed) + "- Work on maxing these particular vial(s): " + advice_ParticularVialsMaxed[:-2] #strip off the final comma and space
     overall_AlchemyVialsTier = min(tier_TotalVialsUnlocked, tier_TotalVialsMaxed, tier_ParticularVialsMaxed)
     if len(virileVialsList) < maxExpectedVV:
-        advice_VirileVials = " * Informational- You have " + str(len(virileVialsList)) + "/" + str(maxExpectedVV) + " vials up to level 4, giving damage to Shaman's Virile Vials talent :)"
+        advice_VirileVials = "Informational- You have " + str(len(virileVialsList)) + "/" + str(maxExpectedVV) + " vials up to level 4, giving damage to Shaman's Virile Vials talent :)"
     advice_AlchemyVialsCombined = [
-        "### Best Alchemy-Vials tier met: " + str(overall_AlchemyVialsTier) + "/" + str(progressionTiers[-3][0]) + ". Recommended Alchemy-Vials actions:",
+        "Best Alchemy-Vials tier met: " + str(overall_AlchemyVialsTier) + "/" + str(progressionTiers[-3][0]) + ". Recommended Alchemy-Vials actions:",
         advice_TotalVialsUnlocked,
         advice_TotalVialsMaxed,
         advice_ParticularVialsMaxed,
@@ -618,23 +618,23 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
                 tier_TotalBubblesUnlocked = tier[0]
             else:
                 if tier[1] >= 160:
-                    advice_TotalBubblesUnlocked = " * Tier " + str(tier_TotalBubblesUnlocked) + "- You have unlocked " + str(bubbleUnlockListByWorld[8]) + "/20 of W8 bubbles with a final per-bubble cost of 986m per unlock attempt."
+                    advice_TotalBubblesUnlocked = "Tier " + str(tier_TotalBubblesUnlocked) + "- You have unlocked " + str(bubbleUnlockListByWorld[8]) + "/20 of W8 bubbles with a final per-bubble cost of 986m per unlock attempt."
                 elif tier[1] >= 140:
-                    advice_TotalBubblesUnlocked = " * Tier " + str(tier_TotalBubblesUnlocked) + "- You have unlocked " + str(bubbleUnlockListByWorld[7]) + "/20 of W7 bubbles with a final per-bubble cost of 197m per unlock attempt, and " + str(sum_TotalBubblesUnlocked) + "/160 total bubbles up to W8."
+                    advice_TotalBubblesUnlocked = "Tier " + str(tier_TotalBubblesUnlocked) + "- You have unlocked " + str(bubbleUnlockListByWorld[7]) + "/20 of W7 bubbles with a final per-bubble cost of 197m per unlock attempt, and " + str(sum_TotalBubblesUnlocked) + "/160 total bubbles up to W8."
                 elif tier[1] >= 120:
-                    advice_TotalBubblesUnlocked = " * Tier " + str(tier_TotalBubblesUnlocked) + "- You have unlocked " + str(bubbleUnlockListByWorld[6]) + "/20 of W6 bubbles with a final per-bubble cost of 37.3m per unlock attempt, and " + str(sum_TotalBubblesUnlocked) + "/160 total bubbles up to W8."
+                    advice_TotalBubblesUnlocked = "Tier " + str(tier_TotalBubblesUnlocked) + "- You have unlocked " + str(bubbleUnlockListByWorld[6]) + "/20 of W6 bubbles with a final per-bubble cost of 37.3m per unlock attempt, and " + str(sum_TotalBubblesUnlocked) + "/160 total bubbles up to W8."
                 elif tier[1] >= 100:
-                    advice_TotalBubblesUnlocked = " * Tier " + str(tier_TotalBubblesUnlocked) + "- You have unlocked " + str(bubbleUnlockListByWorld[5]) + "/20 of W5 bubbles, and " + str(sum_TotalBubblesUnlocked) + "/160 total bubbles up to W8."
+                    advice_TotalBubblesUnlocked = "Tier " + str(tier_TotalBubblesUnlocked) + "- You have unlocked " + str(bubbleUnlockListByWorld[5]) + "/20 of W5 bubbles, and " + str(sum_TotalBubblesUnlocked) + "/160 total bubbles up to W8."
                 elif tier[1] >= 80:
-                    advice_TotalBubblesUnlocked = " * Tier " + str(tier_TotalBubblesUnlocked) + "- You have unlocked " + str(bubbleUnlockListByWorld[4]) + "/20 of W4 bubbles."
+                    advice_TotalBubblesUnlocked = "Tier " + str(tier_TotalBubblesUnlocked) + "- You have unlocked " + str(bubbleUnlockListByWorld[4]) + "/20 of W4 bubbles."
                 elif tier[1] >= 60:
-                    advice_TotalBubblesUnlocked = " * Tier " + str(tier_TotalBubblesUnlocked) + "- You have unlocked " + str(bubbleUnlockListByWorld[3]) + "/20 of W3 bubbles."
+                    advice_TotalBubblesUnlocked = "Tier " + str(tier_TotalBubblesUnlocked) + "- You have unlocked " + str(bubbleUnlockListByWorld[3]) + "/20 of W3 bubbles."
                 elif tier[1] >= 40:
-                    advice_TotalBubblesUnlocked = " * Tier " + str(tier_TotalBubblesUnlocked) + "- You have unlocked " + str(bubbleUnlockListByWorld[2]) + "/20 of W2 bubbles."
+                    advice_TotalBubblesUnlocked = "Tier " + str(tier_TotalBubblesUnlocked) + "- You have unlocked " + str(bubbleUnlockListByWorld[2]) + "/20 of W2 bubbles."
                 else:
-                    advice_TotalBubblesUnlocked = " * Tier " + str(tier_TotalBubblesUnlocked) + "- You have unlocked " + str(bubbleUnlockListByWorld[1]) + "/20 of W1 bubbles."
+                    advice_TotalBubblesUnlocked = "Tier " + str(tier_TotalBubblesUnlocked) + "- You have unlocked " + str(bubbleUnlockListByWorld[1]) + "/20 of W1 bubbles."
 
-                #advice_TotalBubblesUnlocked = " * Tier " + str(tier_TotalBubblesUnlocked) + "- You have unlocked " + str(sum_TotalBubblesUnlocked) + "/" + str(tier[1]) + " of total bubbles. This can go up to 160 if you pre-unlock all the way up to W8 bubbles :o"
+                #advice_TotalBubblesUnlocked = "Tier " + str(tier_TotalBubblesUnlocked) + "- You have unlocked " + str(sum_TotalBubblesUnlocked) + "/" + str(tier[1]) + " of total bubbles. This can go up to 160 if you pre-unlock all the way up to W8 bubbles :o"
 
         #tier_OrangeSampleBubbles
         all_orangeRequirementsMet = True
@@ -649,7 +649,7 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
             if all_orangeRequirementsMet == True:
                 tier_OrangeSampleBubbles = tier[0]
             else:
-                advice_OrangeSampleBubbles = " * Tier " + str(tier_OrangeSampleBubbles) + "- Level the following Orange sample-boosting bubbles to " + progressionTiers[tier_OrangeSampleBubbles+1][6] + " of their maximum possible value: " + advice_OrangeSampleBubbles[:-2]
+                advice_OrangeSampleBubbles = "Tier " + str(tier_OrangeSampleBubbles) + "- Level the following Orange sample-boosting bubbles to " + progressionTiers[tier_OrangeSampleBubbles+1][6] + " of their maximum possible value: " + advice_OrangeSampleBubbles[:-2]
 
         #tier_GreenSampleBubbles
         all_greenRequirementsMet = True
@@ -665,7 +665,7 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
             if all_greenRequirementsMet == True:
                 tier_GreenSampleBubbles = tier[0]
             else:
-                advice_GreenSampleBubbles = " * Tier " + str(tier_GreenSampleBubbles) + "- Level the following Green sample-boosting bubbles to " + progressionTiers[tier_GreenSampleBubbles+1][6] + " of their maximum possible value: " + advice_GreenSampleBubbles[:-2]
+                advice_GreenSampleBubbles = "Tier " + str(tier_GreenSampleBubbles) + "- Level the following Green sample-boosting bubbles to " + progressionTiers[tier_GreenSampleBubbles+1][6] + " of their maximum possible value: " + advice_GreenSampleBubbles[:-2]
 
         #tier_PurpleSampleBubbles
         all_purpleRequirementsMet = True
@@ -680,7 +680,7 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
             if all_purpleRequirementsMet == True:
                 tier_PurpleSampleBubbles = tier[0]
             else:
-                advice_PurpleSampleBubbles = " * Tier " + str(tier_PurpleSampleBubbles) + "- Level the following Purple sample-boosting bubbles to " + progressionTiers[tier_PurpleSampleBubbles+1][6] + " of their maximum possible value: " + advice_PurpleSampleBubbles[:-2] + ". Purple bubbles are listed first as they are the highest priority due to Log samples being the largest producer of Atom Particles."
+                advice_PurpleSampleBubbles = "Tier " + str(tier_PurpleSampleBubbles) + "- Level the following Purple sample-boosting bubbles to " + progressionTiers[tier_PurpleSampleBubbles+1][6] + " of their maximum possible value: " + advice_PurpleSampleBubbles[:-2] + ". Purple bubbles are listed first as they are the highest priority due to Log samples being the largest producer of Atom Particles."
 
         #tier_UtilityBubbles
         all_utilityRequirementsMet = True
@@ -695,13 +695,13 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
             if all_utilityRequirementsMet == True:
                 tier_UtilityBubbles = tier[0]
             else:
-                advice_UtilityBubbles = " * Informational Tier " + str(tier_UtilityBubbles) + "- Level the following Utility bubbles: " + advice_UtilityBubbles[:-2] + ". " + tier[7]
+                advice_UtilityBubbles = "Informational Tier " + str(tier_UtilityBubbles) + "- Level the following Utility bubbles: " + advice_UtilityBubbles[:-2] + ". " + tier[7]
     if advice_UtilityBubbles == "":
         advice_UtilityBubbles = " " + progressionTiers[-1][7]
     overall_alchemyBubblesTier = min(tier_TotalBubblesUnlocked, tier_OrangeSampleBubbles, tier_GreenSampleBubbles, tier_PurpleSampleBubbles) # tier_UtilityBubbles not included
     #Generate advice
     advice_alchemyBubblesCombined = [
-        "### Best Alchemy-Bubbles tier met: " + str(overall_alchemyBubblesTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended Alchemy-Bubbles actions:",
+        "Best Alchemy-Bubbles tier met: " + str(overall_alchemyBubblesTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended Alchemy-Bubbles actions:",
         advice_TotalBubblesUnlocked,
         advice_PurpleSampleBubbles, #Purple highest priority
         advice_OrangeSampleBubbles,
@@ -750,7 +750,7 @@ def setAlchemyP2W(inputJSON, playerCount):
             if vialsSum < vialsMax:
                 advice_alchemyP2WCombined += "Vial upgrades " + str(vialsSum) + "/" + str(vialsMax) + ", "
             if advice_alchemyP2WCombined != "": #shouldn't be possible to NOT hit this
-                advice_alchemyP2WCombined = " * " + advice_alchemyP2WCombined[:-2] #trim off the final comma and space
+                advice_alchemyP2WCombined = advice_alchemyP2WCombined[:-2] #trim off the final comma and space
         #print(advice_alchemyP2WSums, advice_alchemyP2WCombined)
         return [advice_alchemyP2WSums, advice_alchemyP2WCombined]
     except:

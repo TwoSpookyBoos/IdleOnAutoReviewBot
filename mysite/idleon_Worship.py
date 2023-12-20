@@ -82,15 +82,15 @@ def setWorshipPrayersProgressionTier(inputJSON, progressionTiers):
                     tier_WorshipPrayers = tier[0]
 
     if advice_WorshipPrayers == "":
-        advice_WorshipPrayers = " * Nada. You best <3"
+        advice_WorshipPrayers = "Nada. You best <3"
     else:
-        advice_WorshipPrayers = " * Tier " + str(tier_WorshipPrayers) + "- Level the following prayers: " + advice_WorshipPrayers[:-2] + ". " + progressionTiers[tier_WorshipPrayers+1][2] #strip off the trailing comma and space"
+        advice_WorshipPrayers = "Tier " + str(tier_WorshipPrayers) + "- Level the following prayers: " + advice_WorshipPrayers[:-2] + ". " + progressionTiers[tier_WorshipPrayers+1][2] #strip off the trailing comma and space"
 
     for badPrayer in progressionTiers[-1][1]:
         advice_IgnorrablePrayers += badPrayer + ", "
     advice_IgnorrablePrayers = advice_IgnorrablePrayers[:-2]
 
     overall_WorshipPrayersTier = min(progressionTiers[-3][0], tier_WorshipPrayers)
-    advice_WorshipPrayersCombined = ["### Best Worship-Prayers tier met: " + str(overall_WorshipPrayersTier) + "/" + str(progressionTiers[-3][-0]) + ". Recommended Worship-Prayers actions:",advice_WorshipPrayers,advice_IgnorrablePrayers]
+    advice_WorshipPrayersCombined = ["Best Worship-Prayers tier met: " + str(overall_WorshipPrayersTier) + "/" + str(progressionTiers[-3][-0]) + ". Recommended Worship-Prayers actions:",advice_WorshipPrayers,advice_IgnorrablePrayers]
     worshipPrayersPR = progressionResults.progressionResults(overall_WorshipPrayersTier,advice_WorshipPrayersCombined,"")
     return worshipPrayersPR
