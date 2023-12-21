@@ -48,10 +48,11 @@ def getHandsStatus(inputJSON, playerCount, playerNames, fromPublicIEBool):
             rightHandsString = handsCharactersDict[handsCharacter][0] + " is not the highest level in " + str(len(handsCharactersDict[handsCharacter][2])) + "/" + str(len(skillsToReview_RightHand)) + " Right Hand skills: "
             for skill in handsCharactersDict[handsCharacter][2]:
                 rightHandsString += skill + handsCharactersDict[handsCharacter][2][skill] + ", "
-
         else:
             rightHandsString = handsCharactersDict[handsCharacter][0] + " is the highest level in all " + str(len(skillsToReview_RightHand)) + " Right Hand skills! They best <3  "
         rightHandsString = rightHandsString[:-2]
+        if rightHandsString.find("Worship") != -1:
+            rightHandsString += ". Worship matters moreso for Species Epoch than Right Hand. Don't steal charge away from this character!"
         advice_RightHands.append(rightHandsString)
     #print("MaestroHands.getHandsStatus~ OUTPUT advice_LeftHands:",advice_LeftHands)
     #print("MaestroHands.getHandsStatus~ OUTPUT advice_RightHands:",advice_RightHands)
