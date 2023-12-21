@@ -540,7 +540,7 @@ def main(inputCharacterName="scoli"):
     pinchyList = idleon_Pinchy.setPinchyList(parsedJSON, playerCount, biggoleProgressionTiersDict)
     biggoleAdviceList = [generalList, w1list, w2list, w3list, w4list, w5list, w6list, w7list, w8list, pinchyList]
     #print("idleonTaskSuggester.main~ OUTPUT biggoleAdviceList: ",biggoleAdviceList)
-    print("Main~ OUTPUT maestroHandsListOfLists: ", maestroHandsListOfLists)
+    #print("Main~ OUTPUT maestroHandsListOfLists: ", maestroHandsListOfLists)
     return biggoleAdviceList
 
 #main run with a username to look up in IE

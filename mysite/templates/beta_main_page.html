@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>IE AutoReview Bot - By Scoli290</title>
-        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/beta_main_page.css') }}">
+        <title>IE AutoReview Tool - By Scoli290</title>
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/main_page.css') }}">
+        <link rel= "shortcut icon" href="/static/imgs/blank.png">
+        <link rel= "icon" href="/static/imgs/blank.png">
+        <link rel= "apple-touch-icon" href="/static/imgs/blank.png">
+        <meta name="robots" content="noindex">
         <style>
             .light-mode {
                 background-color: white;
@@ -13,23 +17,27 @@
     <body>
         <!-- Toggle button <div><button onclick="lightMode()">Toggle Light/Dark mode</button></div><script>function lightMode() {var element = document.body; element.classList.toggle("light-mode");}</script> -->
         <br>
-        <div>Welcome to IE AutoReview Bot - By Scoli290</div>
-        <div>Most recent update: 2023-11-22 to add Pinchy Review</div>
-        <div>Previous update: 2023-11-21 to add JSON imports</div>
+        <div>Welcome to <a href="http://ieautoreview-scoli.pythonanywhere.com/beta">IE AutoReview Tool - By Scoli290</a></div>
         <br>
-        <div>This bot will retrieve the PUBLIC profile from IdleOn Efficiency for evaluation.</div>
-        <div>If you haven't uploaded your profile publicly before, head here: <a href="https://www.idleonefficiency.com/profile/upload"target="_blank">IdleonEfficiency</a></div>
+        <div>Join the <a href="https://discord.gg/ZmEkqzfjmJ" target="_blank">Discord</a> for the detailed patch notes!</div>
+        <div>Most recent update 2023-12-20: Added Maestro's Right Hand Review to the General section.</div>
+        <div>Previous update 2023-12-15: Added Missable Quest Greenstacks to General Account Review. Added Virile Vials count to Alchemy-Vials. Reduced Pinchy requirements on Smithing and Refinery.</div>
+        <br>
+        <div>This tool will retrieve the PUBLIC profile from IdleOn Efficiency for evaluation.</div>
+        <div>If you haven't uploaded your profile publicly before, head here: <a href="https://www.idleonefficiency.com/profile/upload" target="_blank">IdleonEfficiency</a></div>
         <br>
         <div>Alternatively, you can provide Raw JSON data.</div>
-        <div><a href="https://www.idleonefficiency.com/raw-data"target="_blank">IdleonEfficiency</a>: Click on Copy Raw JSON button. Paste results below.</div>
-        <div><a href="https://idleontoolbox.com/data"target="_blank">IdleonToolbox</a>: Click on Raw Game JSON button. Paste results below.</div>
+        <div><a href="https://www.idleonefficiency.com/raw-data" target="_blank">IdleonEfficiency</a>: Click on Copy Raw JSON button. Paste results below.</div>
+        <div><a href="https://idleontoolbox.com/data" target="_blank">IdleonToolbox</a>: Click on Raw Game JSON button. Paste results below.</div>
         <br>
-        <div>Heads up! You're on the beta-testing page. If you run into problems, try heading back to the <a href="http://ieautoreview-scoli.pythonanywhere.com/"target="_blank">Main Page</a></div>
-        <div>Currently beta testing: 2023-11-25 Obols</div>
+        <div>All tier requirements are listed in the <a href="https://docs.google.com/spreadsheets/d/16I-rURrVeyvltK2wxcQSiPgO07QY015RVNG4MAgUsGw/edit?usp=sharing" target="_blank">Spreadsheet</a> for reference!</div>
+        <br>
+        <div>Heads up! You're on the beta-testing page. If you run into problems, try heading back to the <a href="http://ieautoreview-scoli.pythonanywhere.com/" target="_blank">Main Page</a></div>
+        <div>Currently beta testing: 2023-12-21 URL redirects to include searched Character Name for Public IE searches</div>
         <br>
         <div>
-            <form action="/beta" method="POST">
-                <textarea name="beta_characterInput" placeholder="Please enter your first IdleOn character's name, or Paste in your Raw Game JSON from IE/IT"></textarea><br><br>
+            <form action="." method="POST">
+                <textarea name="characterInput" placeholder="Please enter your first IdleOn character's name, or Paste in your Raw Game JSON from IE/IT"></textarea><br><br>
                 <input type="submit" value="submit">
             </form>
         </div>
