@@ -1,0 +1,118 @@
+<article id="pinchy" class="general-content">
+    <picture class="banner"></picture>
+    <div class="content-wrapper">
+        <section>
+            <h3 class="subheading">
+                <img src="{{ img('Pinchy.gif') }}" alt="Pinchy">
+                <span>Pinchy AutoReview</span>
+            </h3>
+            <span id="pinchy-expected" class="advice">{{ htmlInput[9][0] }}</span>
+            <span id="pinchy-minimum" class="advice">{{ htmlInput[9][1] }}</span>
+            <ul>
+                <li id="pinchy-advice" class="advice">{{ htmlInput[9][2] }}</li>
+            </ul>
+        </section>
+    </div>
+</article>
+
+<article id="general" class="general-content">
+    <picture class="banner"></picture>
+    <div class="content-wrapper">
+        <section>
+            <h3 class="subheading">
+                <img src="" alt="">
+                <span>General Account AutoReview</span>
+            </h3>
+
+            <span id="pinchy-expected" class="advice">{{ htmlInput[9][0] }}</span>
+            <span id="pinchy-minimum" class="advice">{{ htmlInput[9][1] }}</span>
+            {% if htmlInput[0][1] %}
+                <ul id="account-levels">
+                    {% for line in htmlInput[0][1] %}
+                        {% if line %}
+                            <li class="advice">{{ line }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </section>
+
+        <section>
+            <h3 class="subheading">
+                <img src="{{ img('Maestro.png') }}" alt="Maestro">
+                <img src="{{ img('Maestro_Right_Hand_of_Action.png') }}" alt="Right Hand of Action">
+            </h3>
+
+            <ul id="maestro-right-hands">
+                {% for line in htmlInput[0][5] %}
+                    {% if line %}
+                        <li class="advice">{{ line }}</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </section>
+
+        <section>
+            <h3 class="subheading">
+                <img src="{{ img('Candy_1hr.png') }}" alt="1 HR Time Candy">
+                <img src="{{ img('Candy_Cosmic.png') }}" alt="Cosmic Time Candy">
+            </h3>
+
+            <ul id="candy-totals">
+                {% for line in htmlInput[0][2][0] %}
+                    {% if line %}
+                        <li class="advice">{{ line }}</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </section>
+
+        <section>
+            {% if htmlInput[0][2][1] or htmlInput[0][2][2] %}
+                <h3 class="subheading">
+                    <img src="{{ img('Inventory_Peeper_Pouch.png') }}" alt="Peeper Pouch">
+                    <img src="{{ img('Storage_Chest_25.png') }}" alt="Storage Chest 25">
+                </h3>
+
+            {% endif %}
+            <ul id="inventory-bags-and-storage-chests">
+                {% for line in htmlInput[0][2][1:] %}
+                    {% if line %}
+                        <li class="advice">{{ line }}</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </section>
+
+        <section>
+            <h3 class="subheading">
+                <img src="{{ img('Gem_Shop.png') }}" alt="Gem Shop">
+            </h3>
+
+            <em id="gem-shop-fomo-disclaimer">{{ htmlInput[0][3][0] }}</em>
+            <strong id="gem-shop-header">{{ htmlInput[0][3][1] }}</strong>
+            <ul id="gem-shop">
+                {% for line in htmlInput[0][3][2:] %}
+                    {% if line %}
+                        <li class="advice">{{ line }}</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </section>
+
+        <section>
+            <h3 class="subheading">
+                <img src="{{ img('Greenstack.png') }}" alt="Greenstack">
+            </h3>
+
+            <strong>Missable Greenstacks from Quest Items</strong>
+            <ul id="greenstacks">
+                {% for line in htmlInput[0][4] %}
+                    {% if line %}
+                        <li class="advice">{{ line }}</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </section>
+    </div>
+</article>
