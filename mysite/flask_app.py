@@ -36,7 +36,7 @@ def betaIndex():
     if request.method == "GET":
         try:
             capturedCharacterInput = request.args.get('player')
-            #print("FlaskApp.index~ OUTPUT request.args.get('player'):",type(capturedCharacterInput),capturedCharacterInput)
+            #print("FlaskApp.betaIndex~ OUTPUT request.args.get('player'):",type(capturedCharacterInput),capturedCharacterInput)
             if isinstance(capturedCharacterInput, str) and capturedCharacterInput != "":
                 pythonOutput = autoReviewBot(capturedCharacterInput)
                 return render_template("beta_results.html", htmlInput = pythonOutput)

@@ -15,7 +15,7 @@ def getMissableGStacks(inputJSON, playerCount):
         "Strange Rock":         [0,"Quest7",    "Stiltzcho2", "Stiltzcho: No Stone Unturned","https://idleon.wiki/wiki/Strange_Rock", "Active ES or time candy.",0],
         "Time Thingy":          [0,"Quest21",   "Funguy3", "Funguy: Partycrastination","https://idleon.wiki/wiki/Time_Thingy", "Active ES or time candy.",0],
         "Employment Statistics":[0,"Quest14",   "TP_Pete2", "TP Pete: The Rats are to Blame!","https://idleon.wiki/wiki/Employment_Statistics", "Active ES or time candy.",0],
-        "Corporate Sub":        [0,"Quest22",   "Mutton4", "Mutton: 7 Figure Followers","https://idleon.wiki/wiki/Corporatube_Sub", "Active ES or time candy.",0],
+        "Corporatube Sub":      [0,"Quest22",   "Mutton4", "Mutton: 7 Figure Followers","https://idleon.wiki/wiki/Corporatube_Sub", "Active ES or time candy.",0],
         "Instablab Follower":   [0,"Quest23",   "Mutton4", "Mutton: 7 Figure Followers","https://idleon.wiki/wiki/Instablab_Follower", "Active ES or time candy.",0],
         "Cloudsound Follower":  [0,"Quest24",   "Mutton4", "Mutton: 7 Figure Followers","https://idleon.wiki/wiki/Cloudsound_Follower", "Active ES or time candy.",0],
         "Casual Confidante":    [0,"GoldricP1", "Goldric3", "Goldric: Only Winners have Portraits","https://idleon.wiki/wiki/Casual_Confidante", "Active ES or time candy.",0],
