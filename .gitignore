@@ -4,6 +4,7 @@
 /.ssh
 /.virtualenvs
 /__pycache__
+.idea
 .bashrc
 .gitconfig
 .my.cnf
@@ -16,3 +17,5 @@ id_rsa.pub.pub
 README.txt
 /mysite/__pycache__
 /mysite/logging
+
+encodings.xml
