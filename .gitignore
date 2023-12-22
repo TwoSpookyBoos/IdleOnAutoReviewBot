@@ -5,6 +5,7 @@
 /.virtualenvs
 /__pycache__
 .idea
+.venv
 .bashrc
 .gitconfig
 .my.cnf
