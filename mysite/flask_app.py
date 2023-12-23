@@ -10,7 +10,7 @@ capturedCharacterInput = ""
 def index():
     if request.method == "GET":
         try:
-            capturedCharacterInput = str.strip(request.args.get('player'))
+            capturedCharacterInput = request.args.get('player').strip()
             #print("FlaskApp.index~ OUTPUT request.args.get('player'):",type(capturedCharacterInput),capturedCharacterInput)
             if isinstance(capturedCharacterInput, str) and capturedCharacterInput != "":
                 pythonOutput = autoReviewBot(capturedCharacterInput)
@@ -26,7 +26,7 @@ def index():
             pythonOutput = autoReviewBot(capturedCharacterInput)
             return render_template("results.html", htmlInput = pythonOutput)
         else:
-            capturedCharacterInput = str.strip(request.form["characterInput"]).replace(" ", "_").lower()
+            capturedCharacterInput = request.form["characterInput"].strip().replace(" ", "_").lower()
             return redirect(url_for('index', player = capturedCharacterInput))
         return render_template("main_page.html")
     else: #shouldn't ever happen. Every instance should be a GET or a POST
@@ -36,7 +36,7 @@ def index():
 def betaIndex():
     if request.method == "GET":
         try:
-            capturedCharacterInput = str.strip(request.args.get('player'))
+            capturedCharacterInput = request.args.get('player').strip()
             #print("FlaskApp.betaIndex~ OUTPUT request.args.get('player'):",type(capturedCharacterInput),capturedCharacterInput)
             if isinstance(capturedCharacterInput, str) and capturedCharacterInput != "":
                 pythonOutput = autoReviewBot(capturedCharacterInput)
@@ -52,7 +52,7 @@ def betaIndex():
             pythonOutput = autoReviewBot(capturedCharacterInput)
             return render_template("beta_results.html", htmlInput = pythonOutput)
         else:
-            capturedCharacterInput = str.strip(request.form["characterInput"]).replace(" ", "_").lower()
+            capturedCharacterInput = request.form["characterInput"].strip().replace(" ", "_").lower()
             return redirect(url_for('betaIndex', player = capturedCharacterInput))
         return render_template("beta_main_page.html")
     else: #shouldn't ever happen. Every instance should be a GET or a POST
@@ -72,7 +72,7 @@ def autoReviewBot(capturedCharacterInput):
 def page_not_found(e):
     try:
         if len(request.path) < 16:
-            capturedCharacterInput = str.strip(request.path[1:]).replace(" ", "_").lower()
+            capturedCharacterInput = request.path[1:].strip().replace(" ", "_").lower()
             if capturedCharacterInput.find(".") == -1:
                 return redirect(url_for('index', player = capturedCharacterInput))
             else:

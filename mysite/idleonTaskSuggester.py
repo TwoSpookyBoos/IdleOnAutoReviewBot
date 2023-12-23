@@ -429,7 +429,7 @@ def main(inputCharacterName="scoli"):
     [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty] #pinchy placeholder
     ]
     if isinstance(inputCharacterName, str):
-        inputCharacterName = str.strip(inputCharacterName) #remove leading and trailing whitespaces
+        inputCharacterName = inputCharacterName.strip() #remove leading and trailing whitespaces
     #Step 1: Retrieve data from public IdleonEfficiency website or from file
     if len(inputCharacterName) < 16:
         print("~~~~~~~~~~~~~~~ Starting up PROD main at",datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),"for",inputCharacterName,"~~~~~~~~~~~~~~~")
