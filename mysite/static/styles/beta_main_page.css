@@ -24,8 +24,12 @@ body {
     background-color: #38444d;
     color: white;
 }
+ul {
+    padding-left: 22px;
+}
 li {
-  margin-left: 0px;
+    margin-left: 0px;
+    padding: 0px;
 }
 textarea {
   resize: none;

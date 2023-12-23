@@ -43,8 +43,9 @@
         </script>
     </head>
     <body>
-        {% include 'header.html' %}
         {% include 'sidebar.html' %}
+        <br>
+        {% include 'header.html' %}
         <main id="mainresults">
             {% if htmlInput is not none and ensure_data(htmlInput[0][0][0]) %}
                 {% include 'card_pinchy_and_general.html' %}
