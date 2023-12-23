@@ -44,7 +44,7 @@ def betaIndex():
             else:
                 return render_template("beta_main_page.html")
         except Exception as reason:
-            print("FlaskApp.betaIndex~ Could not get Player from Request Args:",reason)
+            print("FlaskApp.betaIndex~ Could not get Player from Request Args:", reason)
         return render_template("beta_main_page.html")
     elif request.method == "POST":
         capturedCharacterInput = request.form["characterInput"]
@@ -83,7 +83,10 @@ def page_not_found(e):
         return redirect(url_for('index')) #Probably should get a real 404 page at some point
 
 
-def ensure_data(msg: str):
+def ensure_data(results: dict):
+    if not (results or results[0] or results[0][0]):
+        return False
+    msg: str = results[0][0][0]
     error: str = "Unable to retrieve data for this character name. Please check your spelling and make sure you have uploaded your account publicly."
     return msg != error
 

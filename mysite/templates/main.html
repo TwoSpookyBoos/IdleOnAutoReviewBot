@@ -1,0 +1,24 @@
+<main id="mainresults">
+        {% include 'card_pinchy_and_general.html' %}
+        {% include 'world_1.html' %}
+        {% include 'world_2.html' %}
+        {% include 'world_3.html' %}
+
+        <h1><img src="/static/imgs/w4banner.png" title ="World 4 Banner" onclick="toggle('w4-content')" class="banner"></h1>
+        <div class="world-content" id="w4-content">
+            <div> <strong>{{ htmlInput[4][0][0] }}</strong></div> <!-- Cooking tier -->
+            <br>
+            <div> <strong>{{ htmlInput[4][1][0] }}</strong></div> <!-- Breeding tier -->
+            <br>
+            <div> <strong>{{ htmlInput[4][2][0] }}</strong></div> <!-- Lab tier -->
+            <br>
+        </div>
+        <h1><img src="/static/imgs/w5banner.png" title ="World 5 Banner" onclick="toggle('w5-content')" class="banner"></h1>
+        <div class="world-content" id="w5-content">
+            <div> <strong>{{ htmlInput[5][0][0] }}</strong></div> <!-- Sailing tier -->
+            <br>
+            <div> <strong>{{ htmlInput[5][1][0] }}</strong></div> <!-- Gaming tier -->
+            <br>
+            <div> <strong>{{ htmlInput[5][2][0] }}</strong></div> <!-- Divinity tier -->
+        </div>
+</main>
