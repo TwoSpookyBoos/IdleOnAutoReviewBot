@@ -80,5 +80,18 @@ def page_not_found(e):
     except:
         return redirect(url_for('index')) #Probably should get a real 404 page at some point
 
+
+def ensure_data(msg: str):
+    error: str = "Unable to retrieve data for this character name. Please check your spelling and make sure you have uploaded your account publicly."
+    return msg != error
+
+
+def img(filename):
+    return url_for('static', filename=f'imgs/{filename}')
+
+
+app.jinja_env.globals['ensure_data'] = ensure_data
+app.jinja_env.globals['img'] = img
+
 if __name__ == '__main__':
     app.run()
