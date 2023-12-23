@@ -10,7 +10,7 @@ capturedCharacterInput = ""
 def index():
     if request.method == "GET":
         try:
-            capturedCharacterInput = request.args.get('player')
+            capturedCharacterInput = str.strip(request.args.get('player'))
             #print("FlaskApp.index~ OUTPUT request.args.get('player'):",type(capturedCharacterInput),capturedCharacterInput)
             if isinstance(capturedCharacterInput, str) and capturedCharacterInput != "":
                 pythonOutput = autoReviewBot(capturedCharacterInput)
@@ -21,7 +21,7 @@ def index():
             print("FlaskApp.index~ Could not get Player from Request Args:",reason)
         return render_template("main_page.html")
     elif request.method == "POST":
-        capturedCharacterInput = request.form["characterInput"]
+        capturedCharacterInput = str.strip(request.form["characterInput"]).replace(" ", "_").lower()
         if len(capturedCharacterInput) > 15:
             pythonOutput = autoReviewBot(capturedCharacterInput)
             return render_template("results.html", htmlInput = pythonOutput)
@@ -35,7 +35,7 @@ def index():
 def betaIndex():
     if request.method == "GET":
         try:
-            capturedCharacterInput = request.args.get('player')
+            capturedCharacterInput = str.strip(request.args.get('player'))
             #print("FlaskApp.betaIndex~ OUTPUT request.args.get('player'):",type(capturedCharacterInput),capturedCharacterInput)
             if isinstance(capturedCharacterInput, str) and capturedCharacterInput != "":
                 pythonOutput = autoReviewBot(capturedCharacterInput)
@@ -46,7 +46,7 @@ def betaIndex():
             print("FlaskApp.betaIndex~ Could not get Player from Request Args:",reason)
         return render_template("beta_main_page.html")
     elif request.method == "POST":
-        capturedCharacterInput = request.form["characterInput"]
+        capturedCharacterInput = str.strip(request.form["characterInput"]).replace(" ", "_").lower()
         if len(capturedCharacterInput) > 15:
             pythonOutput = autoReviewBot(capturedCharacterInput)
             return render_template("beta_results.html", htmlInput = pythonOutput)
@@ -70,7 +70,7 @@ def autoReviewBot(capturedCharacterInput):
 def page_not_found(e):
     try:
         if len(request.path) < 16:
-            capturedCharacterInput = request.path[1:]
+            capturedCharacterInput = str.strip(request.path[1:]).replace(" ", "_").lower()
             if capturedCharacterInput.find(".") == -1:
                 return redirect(url_for('index', player = capturedCharacterInput))
             else:
