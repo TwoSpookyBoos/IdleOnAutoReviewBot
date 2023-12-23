@@ -36,8 +36,8 @@
         <div>Welcome to <a href="http://ieautoreview-scoli.pythonanywhere.com/">IE AutoReview Tool - By Scoli290</a></div>
         <br>
         <div>Join the <a href="https://discord.gg/ZmEkqzfjmJ" target="_blank">Discord</a> for the detailed patch notes!</div>
-        <div>Most recent update 2023-12-20: Added Maestro's Right Hand Review to the General section.</div>
-        <div>Previous update 2023-12-15: Added Missable Quest Greenstacks to General Account Review. Added Virile Vials count to Alchemy-Vials. Reduced Pinchy requirements on Smithing and Refinery.</div>
+        <div>Most recent update 2023-12-23: Several small tweaks to Pinchy, Alchemy P2W, Gem Shop, and Construction Buildings.</div>
+        <div>Previous update 2023-12-20: Added Maestro's Right Hand Review to the General section.</div>
         <br>
         <div>This tool will retrieve the PUBLIC profile from IdleOn Efficiency for evaluation.</div>
         <div>If you haven't uploaded your profile publicly before, head here: <a href="https://www.idleonefficiency.com/profile/upload" target="_blank">IdleonEfficiency</a></div>
@@ -163,7 +163,7 @@
                         {% endfor %}
                         <br>
                         <div> <strong>{{ htmlInput[2][2][0] }}</strong></div> <!-- Alchemy P2W tier -->
-                        {% for line in htmlInput[2][2][1:] %}
+                        {% for line in htmlInput[2][2][1] %}
                             {% if line != "" %}
                                 <li> {{ line }} </li>
                             {% endif %}

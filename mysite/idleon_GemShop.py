@@ -27,14 +27,25 @@ def getGemShopExclusions(inputJSON, playerCount):
     if cogBlanks <= 60:
         exclusionList.append("Fluorescent Flaggies")
 
-
     try:
         autoArmLevel = json.loads(inputJSON["Tower"])[7]
     except Exception as reason:
-        print("GemShop~ EXCEPTION Unable to get Automatin Arm level",reason)
+        print("GemShop~ EXCEPTION Unable to get Automation Arm level",reason)
         autoArmLevel = 0
     if autoArmLevel >= 5:
         exclusionList.append("Burning Bad Books")
+
+    currentArtifactsCount = 30 #as of v1.91
+    currentArtifactTiers = 3 #as of v1.91
+
+    try:
+        sum_sailingArtifacts = sum(json.loads(inputJSON["Sailing"])[3])
+        #print("GemShop.getGemShopExclusions~ OUTPUT sum_sailingArtifacts:",sum_sailingArtifacts)
+        if sum_sailingArtifacts == (currentArtifactsCount*currentArtifactTiers): #30 artifacts times 3 tiers each = 90 for v1.91
+            exclusionList.append("Chest Sluggo")
+    except Exception as reason:
+        print("GemShop~ EXCEPTION Unable to get Sailing Artifacts:",reason)
+
     return exclusionList
 
 def getGemShopDict(inputJSON):
