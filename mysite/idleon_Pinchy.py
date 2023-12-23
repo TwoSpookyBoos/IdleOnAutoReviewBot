@@ -44,7 +44,7 @@ def setPinchyList(inputJSON, playerCount, dictOfPRs):
         prPlaced = False
         while counter < maxWorldTiers:
             if counter == maxWorldTiers-1 and prPlaced == False:
-                #counter of 15 vs maxWorldTiers of 16 and still not placed
+                #counter is equal to the highest non-placeholder tier vs maxWorldTiers of 16 and still not placed
                 if (dictOfPRs[review] >= progressionTiersVsWorlds[review][counter]):
                     #print("Placing",review,"into final tier because",dictOfPRs[review],">=",progressionTiersVsWorlds[review][counter])
                     sortedResultsListofLists[counter+1].append(review)
@@ -52,7 +52,7 @@ def setPinchyList(inputJSON, playerCount, dictOfPRs):
                     sortedResultsListofLists[counter].append(review)
             elif (dictOfPRs[review] >= progressionTiersVsWorlds[review][counter]) and (dictOfPRs[review] < progressionTiersVsWorlds[review][counter+1]):
                 #print(review, dictOfPRs[review], progressionTiersVsWorlds[review][counter], progressionTiersVsWorlds[review][counter+1])
-                sortedResultsListofLists[counter].append(review)
+                sortedResultsListofLists[counter].append(review + " (Next: Tier " + str(progressionTiersVsWorlds[review][counter+1]) + ")")
                 prPlaced = True
             counter += 1
     #find lowest and highest index with an entry
@@ -141,7 +141,7 @@ def setPinchyList(inputJSON, playerCount, dictOfPRs):
                             expectedIndex = 1
                 playerCounter += 1
         except Exception as reason:
-            print("Pinchy~ EXCEPTION Unable to find kills in playerKillsList. Setting expectedIndex to max",reason)
+            print("Pinchy~ EXCEPTION Unable to find kills in playerKillsList. Setting expectedIndex to max.",reason)
             expectedIndex = len(progressionNamesList)-1
 
     #generate advice based on catchup

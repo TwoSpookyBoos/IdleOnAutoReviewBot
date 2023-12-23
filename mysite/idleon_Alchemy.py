@@ -715,43 +715,61 @@ def setAlchemyP2W(inputJSON, playerCount):
     alchemyP2WList = []
     try:
         alchemyP2WList = json.loads(inputJSON["CauldronP2W"])
-        #print(alchemyP2WList)
-        bubbleCauldronSum = 0
-        liquidCauldronSum = 0
-        vialsSum = 0
-        p2wSum = 0
-        bubbleCauldronMax = 1500
-        liquidCauldronMax = 540 #720 including Toxic HG
-        vialsMax = 60
-        p2wEasyMax = 2040
-        p2wTrueMax = 2220 #including Toxic HG
-        for bubbleEntry in alchemyP2WList[0]:
-            bubbleCauldronSum += bubbleEntry
-        for liquidEntry in alchemyP2WList[1]:
-            if liquidEntry != -1:
-                liquidCauldronSum += liquidEntry
-        for entry in alchemyP2WList[2]:
-            vialsSum += entry
-        p2wSum = bubbleCauldronSum + liquidCauldronSum + p2wSum
-        #print("Alchemy-P2W totals: ", bubbleCauldronSum, liquidCauldronSum, vialsSum, p2wSum)
-        #Alchemy-P2W totals:  1500 720 60 2220
-        advice_alchemyP2WSums = ""
-        advice_alchemyP2WCombined = ""
-        if p2wSum == p2wTrueMax:
-            advice_alchemyP2WSums = "You've purchased all " + str(p2wTrueMax) + " upgrades in Alchemy-P2W, including 4th liquid! You super best <3"
-        elif p2wSum == p2wEasyMax:
-            advice_alchemyP2WSums = "You've purchased all " + str(p2wEasyMax) + " easy upgrades in Alchemy-P2W, excluding 4th liquid. You best <3"
-        else:
-            advice_alchemyP2WSums = "You've purchased " + str(p2wSum) + "/" + str(p2wEasyMax) + " easy upgrades in Alchemy-P2W, excluding 4th liquid. Try to finish the rest before Mid W5!"
-            if bubbleCauldronSum < bubbleCauldronMax:
-                advice_alchemyP2WCombined += "Bubble Cauldron upgrades " + str(bubbleCauldronSum) + "/" + str(bubbleCauldronMax) + ", "
-            if liquidCauldronSum < liquidCauldronMax:
-                advice_alchemyP2WCombined += "Liquid Cauldron upgrades " + str(liquidCauldronSum) + "/" + str(liquidCauldronMax) + ", "
-            if vialsSum < vialsMax:
-                advice_alchemyP2WCombined += "Vial upgrades " + str(vialsSum) + "/" + str(vialsMax) + ", "
-            if advice_alchemyP2WCombined != "": #shouldn't be possible to NOT hit this
-                advice_alchemyP2WCombined = advice_alchemyP2WCombined[:-2] #trim off the final comma and space
-        #print(advice_alchemyP2WSums, advice_alchemyP2WCombined)
-        return [advice_alchemyP2WSums, advice_alchemyP2WCombined]
     except:
         return ["Unable to retrieve Alchemy-P2W data.", "Unable to retrieve Alchemy-P2W data."]
+    bubbleCauldronSum = 0
+    liquidCauldronSum = 0
+    vialsSum = 0
+    playerSum = 0
+    p2wSum = 0
+    liquidCauldronsUnlocked = 1
+
+    if highestAlchemyLevel >= 120:
+        liquidCauldronsUnlocked = 4 #includes Toxic HG
+    elif highestAlchemyLevel >= 35:
+        liquidCauldronsUnlocked = 3 #includes Trench Seawater
+    elif liquidCauldronsUnlocked >= 20:
+        liquidCauldronMax = 2 #includes Liquid Nitrogen
+    else:
+        liquidCauldronsUnlocked = 1 #only Water Droplets
+
+    bubbleCauldronMax = 4*375 #4 cauldrons, 375 upgrades each
+    liquidCauldronMax = 180*liquidCauldronsUnlocked
+    vialsMax = 15+45 #15 attempts, 45 RNG
+
+
+    bubbleCauldronSum = sum(alchemyP2WList[0])
+    vialsSum = sum(alchemyP2WList[2])
+    playerSum = sum(alchemyP2WList[3])
+    for liquidEntry in alchemyP2WList[1]: #Liquids are different. Any locked liquid cauldrons are stored as -1 which would throw off a simple sum
+        if liquidEntry != -1:
+            liquidCauldronSum += liquidEntry
+
+    p2wSum = bubbleCauldronSum + liquidCauldronSum + p2wSum
+    p2wEasyMax = 2040 + (highestAlchemyLevel*2)
+    p2wTrueMax = 2220 + (highestAlchemyLevel*2) #including Toxic HG
+    advice_alchemyP2WSums = ""
+    advice_alchemyP2WBubbleCauldrons = ""
+    advice_alchemyP2WLiquidCauldrons = ""
+    advice_alchemyP2WVials = ""
+    advice_alchemyP2WPlayer = ""
+    advice_alchemyP2WCombined = []
+    if highestAlchemyLevel >= 120 and p2wSum >= p2wTrueMax:
+        advice_alchemyP2WSums = "You've purchased all " + str(p2wTrueMax) + " upgrades in Alchemy-P2W, including 4th liquid! You for real real best now <3"
+    elif highestAlchemyLevel < 120 and p2wSum >= p2wEasyMax:
+        advice_alchemyP2WSums = "You've purchased all " + str(p2wEasyMax) + " easy upgrades in Alchemy. Keep an eye out for the 4th liquid that unlocks at 120 Alchemy. You best until then <3"
+    else:
+        advice_alchemyP2WSums = "You've purchased " + str(p2wSum) + "/" + str(p2wEasyMax) + " easy upgrades in Alchemy. Keep an eye out for the 4th liquid that unlocks at 120 Alchemy. Try to purchase the rest before Mid W5!"
+        if bubbleCauldronSum < bubbleCauldronMax:
+            advice_alchemyP2WBubbleCauldrons += "Bubble Cauldron upgrades: " + str(bubbleCauldronSum) + "/" + str(bubbleCauldronMax)
+        if liquidCauldronSum < liquidCauldronMax:
+            advice_alchemyP2WLiquidCauldrons += "Liquid Cauldron upgrades: " + str(liquidCauldronSum) + "/" + str(liquidCauldronMax)
+        if vialsSum < vialsMax:
+            advice_alchemyP2WVials += "Vial upgrades: " + str(vialsSum) + "/" + str(vialsMax)
+        if playerSum < highestAlchemyLevel*2:
+            advice_alchemyP2WPlayer += "Player upgrades: " + str(playerSum) + "/" + str(highestAlchemyLevel*2)
+
+    advice_alchemyP2WCombined = [advice_alchemyP2WBubbleCauldrons, advice_alchemyP2WLiquidCauldrons, advice_alchemyP2WVials, advice_alchemyP2WPlayer]
+    #print(advice_alchemyP2WSums, advice_alchemyP2WCombined)
+    return [advice_alchemyP2WSums, advice_alchemyP2WCombined]
+
