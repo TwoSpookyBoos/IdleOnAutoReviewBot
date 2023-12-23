@@ -1,0 +1,112 @@
+<article id="w3" class="world-content">
+    <h1>
+        <img src="{{ img('w3banner.png') }}" alt="World 3 Banner" title="World 3 Banner" onclick="toggle('w3-content')" class="banner">
+    </h1>
+    <div class="content-wrapper">
+        <!-- <strong>{{ htmlInput[3][0][0] }}</strong> Construction 3D Printer tier -->
+        <section>
+            <h3 class="subheading">
+                <img src="{{ img('Construction_Refinery.gif') }}" alt="Construction Refinery">
+            </h3>
+
+            <strong>{{ htmlInput[3][1][0] }}</strong>
+            <ul id="construction-refinery-tier">
+            {% for line in htmlInput[3][1][1:] %}
+                {% if line %}
+                    <li class="advice">{{ line }}</li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+        </section>
+
+        <section>
+            <h3 class="subheading">
+                <img src="{{ img('Construction_Salt_Lick.png') }}" alt="Construction Salt Lick">
+            </h3>
+
+            <strong>{{ htmlInput[3][2][0] }}</strong>
+            <ul id="construction-salt-lick-tier">
+            {% for line in htmlInput[3][2][1:] %}
+                {% if line %}
+                    <li class="advice">{{ line }}</li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+        </section>
+
+        <section>
+            <h3 class="subheading">
+                <img src="{{ img('Construction_Death_Note.png') }}" alt="Construction Death Note">
+            </h3>
+
+            <strong>{{ htmlInput[3][3][0] }}</strong>
+            <ul id="construction-deathnote-tier">
+            {% for line in htmlInput[3][3][1:] %}
+                {% if line %}
+                    <li class="advice">{{ line }}</li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+        </section>
+
+        <section>
+            <h3 class="subheading">
+                <img src="{{ img('Construction_Table.gif') }}" alt="Construction Table Buildings">
+            </h3>
+
+            <strong>{{ htmlInput[3][4][0] }}</strong>
+            <ul id="construction-buildings-tier">
+            {% for line in htmlInput[3][4][1:] %}
+                {% if line %}
+                    <li class="advice">{{ line }}</li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+        </section>
+
+        <!-- <strong>{{ htmlInput[3][5][0] }}</strong> Construction Atom Collider tier -->
+        <!-- <strong>{{ htmlInput[3][6][0] }}</strong> Worship Totems tier -->
+
+        <section>
+            <h3 class="subheading">
+                <img src="{{ img('Prayer_Stone.gif') }}" alt="Worship Prayers" width="4%">
+            </h3>
+
+            <strong>{{ htmlInput[3][7][0] }}</strong>
+            <ul id="worship-prayers-tier">
+            {% for line in htmlInput[3][7][1:] %}
+                {% if line %}
+                    <li class="advice">{{ line }}</li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+        </section>
+
+        <section>
+            <h3 class="subheading">
+                <img src="{{ img('Trapping_Cardboard_Traps.png') }}" alt="Traps">
+                <img src="{{ img('Trapping_Froge.png') }}" alt="Froge">
+                <img src="{{ img('Trapping_Egalitarian_Royal_Traps.png') }}" alt="Traps">
+                <img src="{{ img('Trapping_Blobfish.png') }}" alt="Blobfish">
+            </h3>
+
+            <strong>{{ htmlInput[3][8][0] }}</strong>
+            <ul id="trapping-tier">
+            {% for line in htmlInput[3][8][1:4] %}
+                {% if line %}
+                    <li class="advice">{{ line }}</li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+
+            <em>{{ htmlInput[3][8][4] }}</em>
+            <ul id="trapping-advanced-tier">
+            {% for line in htmlInput[3][8][5:] %}
+                {% if line %}
+                    <li class="advice">{{ line }}</li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+        </section>
+    </div>
+</article>

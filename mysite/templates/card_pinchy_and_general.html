@@ -3,7 +3,7 @@
     <div class="content-wrapper">
         <section>
             <h3 class="subheading">
-                <img src="{{ img('Pinchy.gif') }}" alt="Pinchy">
+            <img src="{{ img('Pinchy.gif') }}" alt="Pinchy">
                 <span>Pinchy AutoReview</span>
             </h3>
             <span id="pinchy-expected" class="advice">{{ htmlInput[9][0] }}</span>
@@ -24,8 +24,6 @@
                 <span>General Account AutoReview</span>
             </h3>
 
-            <span id="pinchy-expected" class="advice">{{ htmlInput[9][0] }}</span>
-            <span id="pinchy-minimum" class="advice">{{ htmlInput[9][1] }}</span>
             {% if htmlInput[0][1] %}
                 <ul id="account-levels">
                     {% for line in htmlInput[0][1] %}
