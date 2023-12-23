@@ -25,7 +25,7 @@ body {
     color: white;
 }
 li {
-  margin-left: 20px;
+  margin-left: 0px;
 }
 textarea {
   resize: none;

@@ -43,7 +43,7 @@ def betaIndex():
             else:
                 return render_template("beta_main_page.html")
         except Exception as reason:
-            print("FlaskApp.index~ Could not get Player from Request Args:",reason)
+            print("FlaskApp.betaIndex~ Could not get Player from Request Args:",reason)
         return render_template("beta_main_page.html")
     elif request.method == "POST":
         capturedCharacterInput = request.form["characterInput"]
