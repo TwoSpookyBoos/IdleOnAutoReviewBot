@@ -448,7 +448,7 @@ def main(inputCharacterName="scoli"):
         fromPublicIEBool = False
         ieLinkString = "Searching for character data from direct JSON paste. IN THIS MODE, I CAN'T PROVIDE CHARACTER NAMES- ONLY NUMBER ORDER."
     if parsedJSON == []:
-        return errorListofLists
+        raise ValueError(f"data for {inputCharacterName} not found")
 
     #Step 2: Set either Default or Custom progression tiers
     if True == True:
