@@ -745,21 +745,21 @@ def setAlchemyP2W(inputJSON, playerCount):
         if liquidEntry != -1:
             liquidCauldronSum += liquidEntry
 
-    p2wSum = bubbleCauldronSum + liquidCauldronSum + p2wSum
-    p2wEasyMax = 2040 + (highestAlchemyLevel*2)
-    p2wTrueMax = 2220 + (highestAlchemyLevel*2) #including Toxic HG
+
+    p2wSum = bubbleCauldronSum + liquidCauldronSum + vialsSum + playerSum
+    p2wMax = bubbleCauldronMax + liquidCauldronMax + vialsMax + (highestAlchemyLevel*2)
+    print("Alchemy.setAlchemyP2W~ OUTPUT bubbleCauldronSum, liquidCauldronSum, vialsSum, playerSum:",bubbleCauldronSum, liquidCauldronSum, vialsSum, playerSum)
+    print("Alchemy.setAlchemyP2W~ OUTPUT p2wSum, p2wMax, p2wTrueMax:",p2wSum, p2wMax)
     advice_alchemyP2WSums = ""
     advice_alchemyP2WBubbleCauldrons = ""
     advice_alchemyP2WLiquidCauldrons = ""
     advice_alchemyP2WVials = ""
     advice_alchemyP2WPlayer = ""
     advice_alchemyP2WCombined = []
-    if highestAlchemyLevel >= 120 and p2wSum >= p2wTrueMax:
-        advice_alchemyP2WSums = "You've purchased all " + str(p2wTrueMax) + " upgrades in Alchemy-P2W, including 4th liquid! You for real real best now <3"
-    elif highestAlchemyLevel < 120 and p2wSum >= p2wEasyMax:
-        advice_alchemyP2WSums = "You've purchased all " + str(p2wEasyMax) + " easy upgrades in Alchemy. Keep an eye out for the 4th liquid that unlocks at 120 Alchemy. You best until then <3"
+    if p2wSum >= p2wMax:
+        advice_alchemyP2WSums = "You've purchased all " + str(p2wMax) + " upgrades in Alchemy-P2W! You best <3"
     else:
-        advice_alchemyP2WSums = "You've purchased " + str(p2wSum) + "/" + str(p2wEasyMax) + " easy upgrades in Alchemy. Keep an eye out for the 4th liquid that unlocks at 120 Alchemy. Try to purchase the rest before Mid W5!"
+        advice_alchemyP2WSums = "You've purchased " + str(p2wSum) + "/" + str(p2wMax) + " upgrades in Alchemy P2W. Try to purchase the basic updates before Mid W5, and Player upgrades after each level up!"
         if bubbleCauldronSum < bubbleCauldronMax:
             advice_alchemyP2WBubbleCauldrons += "Bubble Cauldron upgrades: " + str(bubbleCauldronSum) + "/" + str(bubbleCauldronMax)
         if liquidCauldronSum < liquidCauldronMax:
