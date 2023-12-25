@@ -1,3 +1,6 @@
+import json
+from json import JSONDecodeError
+
 from flask import Flask, render_template, request, url_for, redirect
 import idleonTaskSuggester
 
@@ -11,11 +14,21 @@ def format_character_name(name: str) -> str:
     return name
 
 
-def get_character_name() -> str:
-    name: str = request.args.get('player', '') or request.form["player"]
-    name = format_character_name(name)
+def get_character_input() -> str:
+    data: str = request.args.get('player') or request.form.get("player", '')
 
-    return name
+    try:
+        parsed = json.loads(data)
+    except JSONDecodeError:
+        parsed = data
+
+    if isinstance(parsed, str):
+        parsed = format_character_name(parsed)
+
+    if not isinstance(parsed, (str, dict)):
+        raise ValueError('Submitted data neither player name nor raw data.', parsed)
+
+    return parsed
 
 
 @app.route("/review", defaults=dict(main_or_beta=""), methods=["GET", "POST"])
@@ -26,13 +39,11 @@ def index(main_or_beta: str) -> str:
     pythonOutput: list | None = None
 
     try:
-        capturedCharacterInput: str = get_character_name()
+
+        capturedCharacterInput: str | dict = get_character_input()
         # print("FlaskApp.index~ OUTPUT request.args.get('player'):",type(capturedCharacterInput),capturedCharacterInput)
         if capturedCharacterInput:
             pythonOutput = autoReviewBot(capturedCharacterInput)
-
-        if len(capturedCharacterInput) > 15:
-            page = 'beta_results.html'
 
     except Exception as reason:
         print("FlaskApp.index~ Could not get Player from Request Args:", reason)
