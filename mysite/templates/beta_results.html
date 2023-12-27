@@ -3,57 +3,25 @@
 <html lang="en">
     <head>
         <title>IE AutoReview Tool - By Scoli290</title>
-        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='styles/beta_main_page.css') }}">
-        <link rel= "shortcut icon" href="/static/imgs/blank.png">
-        <link rel= "icon" href="/static/imgs/blank.png">
-        <link rel= "apple-touch-icon" href="/static/imgs/blank.png">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/beta_main_page.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/sidebar.css') }}">
+        <link rel="icon" href="{{ img('blank.png') }}" type="image/png">
+        <link rel="apple-touch-icon" href="{{ img('imgs/blank.png') }}" type="image/png">
+        <script src="/static/scripts/main.js"></script>
         <meta name="robots" content="noindex">
-        <style>
-            .light-mode {
-                background-color: white;
-                color: black;
-            }
-            .banner {
-                cursor: pointer;
-            }
-            .world-content {
-                display: block;
-            }
-            .is-visible {
-                display: none;
-            }
-            .subheading > img {
-                width: 4%;
-            }
-            section {
-                display: flex;
-                flex-direction: column;
-            }
-            aside {
-                padding-bottom: 10px;
-            }
-            header {
-                padding-top: 10px;
-                border-top: 1px solid grey;
-            }
-        </style>
-        <script type="text/javascript">
-            var toggle = function (id) {
-                var elem = document.getElementById(id);
-                elem.classList.toggle('is-visible');
-            };
-
-            function lightMode() {
-                var element = document.body;
-                element.classList.toggle("light-mode");
-            }
-        </script>
     </head>
     <body>
+        <button id="drawer-handle"></button>
         {% include 'sidebar.html' %}
-        {% include 'header.html' %}
-        {% if ensure_data(htmlInput) %}
-        {% include 'main.html' %}
+        {% if error %}
+            <span class="error">
+                Unable to retrieve data for this character name.
+                Please check your spelling and make sure you have
+                uploaded your account publicly.
+            </span>
+        {% elif ensure_data(htmlInput) %}
+            {% include 'header.html' %}
+            {% include 'main.html' %}
         {% endif %}
         {% include 'footer.html' %}
     </body>
