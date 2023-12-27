@@ -9,9 +9,9 @@ def getHighestAlchemyLevel(inputJSON, playerCount):
             if highestAlchLevel < inputJSON['Lv0_'+str(counter)][5]:
                 highestAlchLevel = inputJSON['Lv0_'+str(counter)][5]
         except Exception as reason:
-            print("Alchemy~ EXCEPTION Could not retrieve alchemy level for playerCount of ",playerCount, reason)
+            print("Alchemy.getHighestAlchemyLevel~ EXCEPTION Could not retrieve alchemy level for playerCount of ",playerCount, reason)
         counter += 1
-    #print("Alchemy~ OUTPUT highestAlchLevel:",highestAlchLevel)
+    #print("Alchemy.getHighestAlchemyLevel~ OUTPUT highestAlchLevel:",highestAlchLevel)
     return highestAlchLevel
 
 def getReadableVialNames(inputNumber):
@@ -748,8 +748,8 @@ def setAlchemyP2W(inputJSON, playerCount):
 
     p2wSum = bubbleCauldronSum + liquidCauldronSum + vialsSum + playerSum
     p2wMax = bubbleCauldronMax + liquidCauldronMax + vialsMax + (highestAlchemyLevel*2)
-    print("Alchemy.setAlchemyP2W~ OUTPUT bubbleCauldronSum, liquidCauldronSum, vialsSum, playerSum:",bubbleCauldronSum, liquidCauldronSum, vialsSum, playerSum)
-    print("Alchemy.setAlchemyP2W~ OUTPUT p2wSum, p2wMax, p2wTrueMax:",p2wSum, p2wMax)
+    #print("Alchemy.setAlchemyP2W~ OUTPUT bubbleCauldronSum, liquidCauldronSum, vialsSum, playerSum:",bubbleCauldronSum, liquidCauldronSum, vialsSum, playerSum)
+    #print("Alchemy.setAlchemyP2W~ OUTPUT p2wSum, p2wMax, p2wTrueMax:",p2wSum, p2wMax)
     advice_alchemyP2WSums = ""
     advice_alchemyP2WBubbleCauldrons = ""
     advice_alchemyP2WLiquidCauldrons = ""

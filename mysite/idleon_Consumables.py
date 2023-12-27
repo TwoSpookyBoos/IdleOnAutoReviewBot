@@ -72,7 +72,7 @@ def getBagType(inputBagNumber):
     except:
         return ("Unknown Bag " + inputBagNumber)
 
-def parseInventoryBags(inputJSON, playerCount, fromPublicIEBool):
+def parseInventoryBagsCount(inputJSON, playerCount, playerNames):
     advice_MissingBags = ""
     currentMaxQuestBags = 7 #As of v1.91
     currentMaxDroppedBags = 4 #As of v1.91
@@ -84,18 +84,14 @@ def parseInventoryBags(inputJSON, playerCount, fromPublicIEBool):
     playerBagsByTypeDict = {}
     playersWithMaxBags = []
     playersMissingBags = []
-    if fromPublicIEBool == True:
-        playerNames = inputJSON['playerNames']
-        #print("Consumables.parseInventoryBags~",playerNames)
-        counter = 0
-        while counter < playerCount:
+
+    counter = 0
+    while counter < playerCount:
+        try:
             playerBagDict[playerNames[counter]] = json.loads(inputJSON['InvBagsUsed_'+str(counter)]) #yet another string pretending to be a list of lists..
-            counter += 1
-    else:
-        counter = 0
-        while counter < playerCount:
-            playerBagDict['Character'+str(counter+1)] = json.loads(inputJSON['InvBagsUsed_'+str(counter)]) #yet another string pretending to be a list of lists..
-            counter += 1
+        except Exception as reason:
+            print("Consumables.parseInventoryBagsCount~ EXCEPTION Unable to retrieve Inventory Bags Used for: ", playerNames[counter], "because:", reason)
+        counter += 1
 
     #print(playerBagDict)
     for player, bagList in playerBagDict.items():
@@ -138,6 +134,84 @@ def parseInventoryBags(inputJSON, playerCount, fromPublicIEBool):
     #print(advice_MissingBags)
     return advice_MissingBags
 
+###################################################WIP##########################
+def parseInventoryBagSlots(inputJSON, playerCount, playerNames):
+    advice_MissingBagSlots = ""
+    currentMaxInventorySlots = 83 #As of v1.91
+    currentMaxUsableInventorySlots = 80 #As of v1.91
+    playerBagDict = {}
+    playerBagSlotsDict = {}
+    playersWithMaxBagSlots = []
+    playersMissingBagSlots = []
+    w1MeritLevelUnlocked = 0
+    w1MeritMaxDict = {
+        "1": 1, #Inventory Bag B
+        "2": 1, #Inventory Bag C
+        "4": 2, #Inventory Bag E
+        "5": 2, #Inventory Bag F
+        "7": 2  #Inventory Bag H
+        }
+    w1MeritDict = {}
+
+    #W1 Merit applies bags BCEFH if your 1st character has it
+    try:
+        w1MeritLevelUnlocked = json.loads(inputJSON["TaskZZ2"])[0][0]
+        print("Consumables.parseInventoryBagSlots~ OUTPUT w1MeritLevelUnlocked", w1MeritLevelUnlocked)
+    except Exception as reason:
+        print("Consumables.parseInventoryBagSlots~ EXCEPTION Unable to retrieve number of levels purchased for W1 Bag Merit: ", reason)
+    if w1MeritLevelUnlocked >= 5:
+        w1MeritDict = w1MeritMaxDict
+    else:
+        if w1MeritLevelUnlocked >= 1:
+            w1MeritDict["1"] = 1
+        if w1MeritLevelUnlocked >= 2:
+            w1MeritDict["2"] = 1
+        if w1MeritLevelUnlocked >= 3:
+            w1MeritDict["4"] = 2
+        if w1MeritLevelUnlocked >= 4:
+            w1MeritDict["5"] = 2
+
+    counter = 0
+    while counter < playerCount:
+        try:
+            playerBagDict[playerNames[counter]] = json.loads(inputJSON['InvBagsUsed_'+str(counter)]) #yet another string pretending to be a list of lists..
+        except Exception as reason:
+            print("Consumables.parseInventoryBagSlots~ EXCEPTION Unable to retrieve Inventory Bags Used for: ", playerNames[counter], "because:", reason)
+        counter += 1
+
+    #If the merit is purchased, but player1 doesn't have the bag, nobody else gets it :(
+    bagsToBeRemoved = []
+    #print("Consumables.parseInventoryBagSlots~ OUTPUT w1MeritDict before comparing to Character1", w1MeritDict)
+    for key in w1MeritDict:
+        if key not in playerBagDict[playerNames[0]]:
+            bagsToBeRemoved.append(key)
+    for bag in bagsToBeRemoved:
+        del w1MeritDict[bag]
+    #print("Consumables.parseInventoryBagSlots~ OUTPUT w1MeritDict after comparing to Character1", w1MeritDict)
+    for player in playerBagDict:
+        playerBagDict[player].update(w1MeritDict)
+        #print("Consumables.parseInventoryBagSlots~ INFO w1MeritDict added to playerBagDict for", player, ": ", w1MeritDict)
+
+
+    for player, bagList in playerBagDict.items():
+        sumSlots = 0
+        for bag in bagList:
+            sumSlots += int(bagList[bag])
+        playerBagSlotsDict[player] = {"Total":sumSlots}
+        if sumSlots == currentMaxUsableInventorySlots:
+            playersWithMaxBagSlots.append(player)
+        else:
+            playersMissingBagSlots.append(player)
+    print("Consumables.parseInventoryBagSlots~ OUTPUT playerBagDict: ", playerBagDict)
+    print("Consumables.parseInventoryBagSlots~ OUTPUT playersMissingBagSlots", playersMissingBagSlots)
+    for player in playersMissingBagSlots:
+        advice_MissingBagSlots += str(player) + " (" + str(playerBagSlotsDict[player]['Total']) + "/"+ str(currentMaxUsableInventorySlots) + "), "
+    if advice_MissingBagSlots != "":
+        advice_MissingBagSlots = "Collect more inventory slots: " + advice_MissingBagSlots[:-2]
+    print("Consumables.parseInventoryBagSlots~ OUTPUT advice_MissingBagSlots", advice_MissingBagSlots)
+    return advice_MissingBagSlots
+###################################################WIP##########################
+
 def parseStorageChests(inputJSON):
     advice_MissingChests = ""
     currentMaxChestsSum = 40
@@ -147,10 +221,11 @@ def parseStorageChests(inputJSON):
         advice_MissingChests = "Collect more storage chests: " + str(len(usedStorageChests)) + "/" + str(currentMaxChestsSum)
     return advice_MissingChests
 
-def parseConsumables(inputJSON, playerCount, fromPublicIEBool):
+def parseConsumables(inputJSON, playerCount, playerNames):
     bankList = parseBank(inputJSON)
-    inventoryBagList = parseInventoryBags(inputJSON, playerCount, fromPublicIEBool)
+    inventoryBagsList = parseInventoryBagsCount(inputJSON, playerCount, playerNames)
+    #inventorySlotsList = parseInventoryBagSlots(inputJSON, playerCount, playerNames)
     storageChestsList = parseStorageChests(inputJSON)
-    consumablesList = [bankList, inventoryBagList, storageChestsList]
+    consumablesList = [bankList, inventoryBagsList, storageChestsList]
     #return bankList #until the other modules are ready, only return the bank list
     return consumablesList

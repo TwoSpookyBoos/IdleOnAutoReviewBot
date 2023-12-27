@@ -1,7 +1,7 @@
 import json
 import idleon_SkillLevels
 
-def getHandsStatus(inputJSON, playerCount, playerNames, fromPublicIEBool):
+def getHandsStatus(inputJSON, playerCount, playerNames):
     skillsToReview_RightHand = ["Mining", "Choppin", "Fishing", "Catching", "Trapping", "Worship"]
     skillsToReview_LeftHand = ["Smithing"]
     handsClasses = [3,4,5,6] #Includes the placeholder numbers after Vman
@@ -9,12 +9,13 @@ def getHandsStatus(inputJSON, playerCount, playerNames, fromPublicIEBool):
     characterClassesList = []
     classCounter = 0
     while classCounter < playerCount:
-        characterClassesList.append(idleon_SkillLevels.getHumanReadableClasses(inputJSON['CharacterClass_'+str(classCounter)]))
-        if inputJSON['CharacterClass_'+str(classCounter)] in handsClasses:
-            if fromPublicIEBool:
+        try:
+            characterClassesList.append(idleon_SkillLevels.getHumanReadableClasses(inputJSON['CharacterClass_'+str(classCounter)]))
+            if inputJSON['CharacterClass_'+str(classCounter)] in handsClasses:
                 handsCharactersDict[classCounter] = [(playerNames[classCounter] + " the " + idleon_SkillLevels.getHumanReadableClasses(inputJSON['CharacterClass_'+str(classCounter)])), {}, {}]
-            else:
-                handsCharactersDict[classCounter] = ["Character"+str(classCounter+1) + " the " + idleon_SkillLevels.getHumanReadableClasses(inputJSON['CharacterClass_'+str(classCounter)]), {}, {}]
+        except Exception as reason:
+            print("MaestroHands.getHandsStatus~ EXCEPTION Unable to get Class name for character", classCounter, "because:", reason)
+            characterClassesList.append("Unknown")
         classCounter += 1
     #print("MaestroHands.getHandsStatus~ OUTPUT characterClassesList:",characterClassesList)
     #print("MaestroHands.getHandsStatus~ OUTPUT handsCharactersDict:",handsCharactersDict)
