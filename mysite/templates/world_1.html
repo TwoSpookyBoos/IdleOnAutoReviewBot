@@ -1,6 +1,6 @@
 <article id="w1" class="world-content">
-    <h1>
-        <img src="{{ img('w1banner.png') }}" alt="World 1 Banner" title="World 1 Banner" onclick="toggle('w1-content')" class="banner">
+    <h1 class="banner">
+        <img src="{{ img('w1banner.png') }}" alt="World 1 Banner" title="World 1 Banner">
     </h1>
     <div class="content-wrapper">
         <section>
@@ -8,14 +8,16 @@
                 <img src="{{ img('Stamps_Mr_Pigibank.gif') }}" alt="Stamps and Bribes">
             </h3>
 
-            <strong>{{ htmlInput[1][0][0] }}</strong>
-            <ul id="stamps-tier">
-            {% for line in htmlInput[1][0][1:] %}
-                {% if line %}
-                    <li class="advice">{{ line }}</li>
-                {% endif %}
-            {% endfor %}
-            </ul>
+            <div class=".advice-wrapper">
+                <strong>{{ htmlInput[1][0][0] }}</strong>
+                <ul id="stamps-tier">
+                    {% for line in htmlInput[1][0][1:] %}
+                        {% if line %}
+                            <li class="advice">{{ line }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
         </section>
 
         <section>
@@ -23,14 +25,16 @@
                 <img src="{{ img('Stat_Graph_Stamp.png') }}" alt="Stat Graph Stamp">
             </h3>
 
-            <strong>{{ htmlInput[1][1][0] }}</strong>
-            <ul id="bribes-tier">
-            {% for line in htmlInput[1][1][1:] %}
-                {% if line %}
-                    <li class="advice">{{ line }}</li>
-                {% endif %}
-            {% endfor %}
-            </ul>
+            <div class="advice-wrapper">
+                <strong>{{ htmlInput[1][1][0] }}</strong>
+                <ul id="bribes-tier">
+                {% for line in htmlInput[1][1][1:] %}
+                    {% if line %}
+                        <li class="advice">{{ line }}</li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+            </div>
         </section>
 
         <section>
@@ -39,14 +43,16 @@
                 <img src="{{ img('Smithing_Forge.gif') }}" alt="Smithing Forge">
             </h3>
 
-            <strong>{{ htmlInput[1][2][0] }}</strong>
-            <ul id="smithing-tier">
-            {% for line in htmlInput[1][2][1:] %}
-                {% if line %}
-                    <li class="advice">{{ line }}</li>
-                {% endif %}
-            {% endfor %}
-            </ul>
+            <div class="advice-wrapper">
+                <strong>{{ htmlInput[1][2][0] }}</strong>
+                <ul id="smithing-tier">
+                {% for line in htmlInput[1][2][1:] %}
+                    {% if line %}
+                        <li class="advice">{{ line }}</li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+            </div>
         </section>
     </div>
 </article>

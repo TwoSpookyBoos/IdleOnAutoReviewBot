@@ -1,6 +1,6 @@
 <article id="w2" class="world-content">
-    <h1>
-        <img src="{{ img('w2banner.png') }}" alt="World 2 Banner" title="World 2 Banner" onclick="toggle('w2-content')" class="banner">
+    <h1 class="banner">
+        <img src="{{ img('w2banner.png') }}" alt="World 2 Banner" title="World 2 Banner">
     </h1>
     <div class="content-wrapper">
         <section>
@@ -11,14 +11,16 @@
                 <img src="{{ img('Alchemy_BubbleYellow.gif') }}" alt="Alchemy Yellow Bubbles">
             </h3>
 
-            <strong>{{ htmlInput[2][0][0] }}</strong>
-            <ul id="alchemy-bubbles-tier">
-            {% for line in htmlInput[2][0][1:] %}
-                {% if line %}
-                    <li class="advice">{{ line }}</li>
-                {% endif %}
-            {% endfor %}
-            </ul>
+            <div class="advice-wrapper">
+                <strong>{{ htmlInput[2][0][0] }}</strong>
+                <ul id="alchemy-bubbles-tier">
+                {% for line in htmlInput[2][0][1:] %}
+                    {% if line %}
+                        <li class="advice">{{ line }}</li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+            </div>
         </section>
 
         <section>
@@ -28,14 +30,16 @@
                 <img src="{{ img('Alchemy_Vial-level-13.png') }}" alt="Alchemy Maxed Vials">
             </h3>
 
-            <strong>{{ htmlInput[2][1][0] }}</strong>
-            <ul id="alchemy-vials-tier">
-            {% for line in htmlInput[2][1][1:] %}
-                {% if line %}
-                    <li class="advice">{{ line }}</li>
-                {% endif %}
-            {% endfor %}
-            </ul>
+            <div class="advice-wrapper">
+                <strong>{{ htmlInput[2][1][0] }}</strong>
+                <ul id="alchemy-vials-tier">
+                {% for line in htmlInput[2][1][1:] %}
+                    {% if line %}
+                        <li class="advice">{{ line }}</li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+            </div>
         </section>
 
         <section>
@@ -43,14 +47,16 @@
                 <img src="" alt="Alchemy P2W Tier">
             </h3>
 
-            <strong>{{ htmlInput[2][2][0] }}</strong>
-            <ul id="alchemy-p2w-tier">
-            {% for line in htmlInput[2][2][1:] %}
-                {% if line %}
-                    <li class="advice">{{ line }}</li>
-                {% endif %}
-            {% endfor %}
-            </ul>
+            <div class="advice-wrapper">
+                <strong>{{ htmlInput[2][2][0] }}</strong>
+                <ul id="alchemy-p2w-tier">
+                {% for line in htmlInput[2][2][1] %}
+                    {% if line %}
+                        <li class="advice">{{ line }}</li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+            </div>
         </section>
     </div>
 </article>
