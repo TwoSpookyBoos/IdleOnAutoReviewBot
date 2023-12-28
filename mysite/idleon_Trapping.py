@@ -163,7 +163,7 @@ def getSecretClassTrapStatus(inputJSON, trappingLevelsList, placedTrapsDict, pla
 def setTrappingProgressionTier(inputJSON, playerCount, playerNames):
     trappingLevelsList = getTrappingLevelsList(inputJSON, playerCount)
     if max(trappingLevelsList) < 1:
-        trappingPR = progressionResults.progressionResults(0,["### Recommended Trapping actions:","Come back after unlocking the Trapping skill in World 3!"],"")
+        trappingPR = progressionResults.progressionResults(0,["Recommended Trapping actions:","Come back after unlocking the Trapping skill in World 3!"],"")
         return trappingPR
     highestUnlockedCritter = getUnlockedCritterStatus(inputJSON, playerCount)
     placedTrapsDict = getPlacedTrapsDict(inputJSON, playerCount)

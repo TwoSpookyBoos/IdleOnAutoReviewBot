@@ -67,7 +67,16 @@
                     <h1>Pinchy AutoReview <img src="/static/imgs/Pinchy.gif" width="2%"> </h1>
                     <div> {{ htmlInput[9][0] }} </div><!-- Pinchy Expected -->
                     <div> {{ htmlInput[9][1] }} </div><!-- Pinchy Minimum -->
-                    <li> {{ htmlInput[9][2] }} </li><!-- Pinchy Advice -->
+                    {% for line in htmlInput[9][2] %} <!-- Pinchy Equal/Advice -->
+                        {% if line != "" %}
+                            <li> {{ line }} </li>
+                        {% endif %}
+                    {% endfor %}
+                    {% for line in htmlInput[9][3][0:2] %} <!-- Pinchy Peek Ahead Advice -->
+                        {% if line != "" %}
+                            <li> {{ line }} </li>
+                        {% endif %}
+                    {% endfor %}
                     <br>
                     <h1>General Account AutoReview</h1>
                     {% for line in htmlInput[0][1] %} <!-- Account Levels -->
