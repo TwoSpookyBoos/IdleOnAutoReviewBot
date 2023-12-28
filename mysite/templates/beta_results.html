@@ -3,10 +3,9 @@
 <html lang="en">
     <head>
         <title>IE AutoReview Tool - By Scoli290</title>
-        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='styles/beta_main_page.css') }}">
-        <link rel= "shortcut icon" href="/static/imgs/blank.png">
-        <link rel= "icon" href="/static/imgs/blank.png">
-        <link rel= "apple-touch-icon" href="/static/imgs/blank.png">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/beta_main_page.css') }}">
+        <link rel="icon" href="{{ img('blank.png') }}" type="image/png">
+        <link rel="apple-touch-icon" href="{{ img('imgs/blank.png') }}" type="image/png">
         <meta name="robots" content="noindex">
         <style>
             .light-mode {
@@ -29,6 +28,25 @@
                 display: flex;
                 flex-direction: column;
             }
+            aside {
+                padding-bottom: 10px;
+            }
+            header {
+                padding-top: 10px;
+                border-top: 1px solid grey;
+            }
+            footer {
+                position: absolute;
+                bottom: 0;
+            }
+            .error {
+                display: block;
+                padding: 20px;
+                color: #7A0D0DFF;
+                border: 1px solid darkred;
+                background-color: #f19c9c;
+                width: fit-content;
+            }
         </style>
         <script type="text/javascript">
             var toggle = function (id) {
@@ -44,34 +62,12 @@
     </head>
     <body>
         {% include 'sidebar.html' %}
-        <br>
-        {% include 'header.html' %}
-        <main id="mainresults">
-            {% if htmlInput is not none and ensure_data(htmlInput[0][0][0]) %}
-                {% include 'card_pinchy_and_general.html' %}
-                {% include 'world_1.html' %}
-                {% include 'world_2.html' %}
-                {% include 'world_3.html' %}
-
-                <h1><img src="/static/imgs/w4banner.png" title ="World 4 Banner" onclick="toggle('w4-content')" class="banner"></h1>
-                <div class="world-content" id="w4-content">
-                    <div> <strong>{{ htmlInput[4][0][0] }}</strong></div> <!-- Cooking tier -->
-                    <br>
-                    <div> <strong>{{ htmlInput[4][1][0] }}</strong></div> <!-- Breeding tier -->
-                    <br>
-                    <div> <strong>{{ htmlInput[4][2][0] }}</strong></div> <!-- Lab tier -->
-                    <br>
-                </div>
-                <h1><img src="/static/imgs/w5banner.png" title ="World 5 Banner" onclick="toggle('w5-content')" class="banner"></h1>
-                <div class="world-content" id="w5-content">
-                    <div> <strong>{{ htmlInput[5][0][0] }}</strong></div> <!-- Sailing tier -->
-                    <br>
-                    <div> <strong>{{ htmlInput[5][1][0] }}</strong></div> <!-- Gaming tier -->
-                    <br>
-                    <div> <strong>{{ htmlInput[5][2][0] }}</strong></div> <!-- Divinity tier -->
-                </div>
-            {% endif %}
-        </main>
+        {% if error %}
+            <span class="error">Unable to retrieve data for this character name. Please check your spelling and make sure you have uploaded your account publicly.</span>
+        {% elif ensure_data(htmlInput) %}
+            {% include 'header.html' %}
+            {% include 'main.html' %}
+        {% endif %}
         {% include 'footer.html' %}
     </body>
 </html>
