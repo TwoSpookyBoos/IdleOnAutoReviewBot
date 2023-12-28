@@ -1,6 +1,6 @@
 import json
 import progressionResults
-from idleon_CombatLevels import getHumanReadableClasses
+from idleon_SkillLevels import getHumanReadableClasses
 
 def getUnlockedCritterStatus(inputJSON, playerCount):
     #critterIndexList = ["None", "Froge", "Crabbo", "Scorpie", "Mousey", "Owlio", "Pingy", "Bunny", "Dung Beat", "Honker", "Blobfish"]
@@ -76,8 +76,12 @@ def getTrappingLevelsList(inputJSON, playerCount):
     trappingLevelsList = []
     counter = 0
     while counter < playerCount:
-        playerTrappingLevel = inputJSON["Lv0_"+str(counter)][7]
-        #print("Trapping.getTrappingLevelsList~ OUTPUT playerTrappingLevel=",playerTrappingLevel,"when player=",counter)
+        try:
+            playerTrappingLevel = inputJSON["Lv0_"+str(counter)][7]
+            #print("Trapping.getTrappingLevelsList~ OUTPUT playerTrappingLevel=", playerTrappingLevel, "when player=", counter)
+        except Exception as reason:
+            print("Trapping.getTrappingLevelsList~ EXCEPTION Unable to get playerTrappingLevel when player=", counter, "because:", reason)
+            playerTrappingLevel = 0
         trappingLevelsList.append(playerTrappingLevel)
         counter += 1
     #print("Trapping.getTrappingLevelsList~ OUTPUT trappingLevelsList:",trappingLevelsList)
@@ -140,20 +144,23 @@ def getSecretClassTrapStatus(inputJSON, trappingLevelsList, placedTrapsDict, pla
     expectedSecretClassNumber = [2,3,4]
     characterIndex = 0
     while characterIndex < playerCount:
-        if inputJSON['CharacterClass_'+str(characterIndex)] in expectedSecretClassNumber:
-            if trappingLevelsList[characterIndex] >= 25: #the level required to wear Nature Traps
-                for trapData in placedTrapsDict[characterIndex]:
-                    #print("Trapping.getSecretClassTrapStatus~ OUTPUT trapData:",trapData)
-                    if trapData[0] != -1 and trapData[5] != 3:
-                        if characterIndex in secretCharacterNotUsingNatureTrapsDict.keys():
-                            secretCharacterNotUsingNatureTrapsDict[characterIndex] += 1
-                        else:
-                            secretCharacterNotUsingNatureTrapsDict[characterIndex] = 1
+        try:
+            if inputJSON['CharacterClass_'+str(characterIndex)] in expectedSecretClassNumber:
+                if trappingLevelsList[characterIndex] >= 25: #the level required to wear Nature Traps
+                    for trapData in placedTrapsDict[characterIndex]:
+                        #print("Trapping.getSecretClassTrapStatus~ OUTPUT trapData:",trapData)
+                        if trapData[0] != -1 and trapData[5] != 3:
+                            if characterIndex in secretCharacterNotUsingNatureTrapsDict.keys():
+                                secretCharacterNotUsingNatureTrapsDict[characterIndex] += 1
+                            else:
+                                secretCharacterNotUsingNatureTrapsDict[characterIndex] = 1
+        except Exception as reason:
+            print("Trapping.getSecretClassTrapStatus~ EXCPETION Could not retrieve class for Character", characterIndex, "because:", reason)
         characterIndex += 1
     #print("Trapping.getSecretClassTrapStatus~ OUTPUT secretCharacterNotUsingNatureTrapsDict:",secretCharacterNotUsingNatureTrapsDict)
     return secretCharacterNotUsingNatureTrapsDict
 
-def setTrappingProgressionTier(inputJSON, playerCount, playerNames, fromPublicIEBool):
+def setTrappingProgressionTier(inputJSON, playerCount, playerNames):
     trappingLevelsList = getTrappingLevelsList(inputJSON, playerCount)
     if max(trappingLevelsList) < 1:
         trappingPR = progressionResults.progressionResults(0,["### Recommended Trapping actions:","Come back after unlocking the Trapping skill in World 3!"],"")
@@ -172,10 +179,7 @@ def setTrappingProgressionTier(inputJSON, playerCount, playerNames, fromPublicIE
     if len(unplacedTrapsDict) > 0:
         advice_UnusedTrapSlots = "Place remaining Traps (may require equipping a better trap tool!): "
         for characterIndex in unplacedTrapsDict:
-            if fromPublicIEBool:
-                advice_UnusedTrapSlots += playerNames[characterIndex] + " " + unplacedTrapsDict[characterIndex] + ", "
-            else:
-                advice_UnusedTrapSlots += "Character" + str(characterIndex+1) + " " + unplacedTrapsDict[characterIndex] + ", "
+            advice_UnusedTrapSlots += playerNames[characterIndex] + " " + unplacedTrapsDict[characterIndex] + ", "
         advice_UnusedTrapSlots = advice_UnusedTrapSlots[:-2] #trim off trailing comma and space
     #print("Trapping.setTrappingProgressionTier~ OUTPUT advice_UnusedTrapSlots:",advice_UnusedTrapSlots)
 
@@ -183,10 +187,7 @@ def setTrappingProgressionTier(inputJSON, playerCount, playerNames, fromPublicIE
     if len(secretCharacterNotUsingNatureTrapsDict) > 0:
         advice_BeginnerNatures = ""
         for characterIndex in secretCharacterNotUsingNatureTrapsDict:
-            if fromPublicIEBool:
-                advice_BeginnerNatures += playerNames[characterIndex] + " has " + str(secretCharacterNotUsingNatureTrapsDict[characterIndex]) + " non-Nature traps, "
-            else:
-                advice_BeginnerNatures += "Character" + str(characterIndex+1) + " has " + str(secretCharacterNotUsingNatureTrapsDict[characterIndex]) + " non-Nature traps, "
+            advice_BeginnerNatures += playerNames[characterIndex] + " has " + str(secretCharacterNotUsingNatureTrapsDict[characterIndex]) + " non-Nature traps, "
         advice_BeginnerNatures = advice_BeginnerNatures[:-2] + ". Nature EXP-only traps are recommended because the Maestro and Voidwalker classes both get important buffs based on their Trapping level. You will get ZERO critters from Nature Traps, but the bonus EXP is worth it!" #trim off trailing comma and space
     #print("Trapping.setTrappingProgressionTier~ OUTPUT advice_BeginnerNatures:",advice_BeginnerNatures)
 
@@ -212,10 +213,7 @@ def setTrappingProgressionTier(inputJSON, playerCount, playerNames, fromPublicIE
         else:
             advice_nonMetaTraps = "The following characters have placed traps that aren't of a recommended Trap Type or Duration: "
         for characterIndex in nonMetaTrapDict:
-            if fromPublicIEBool:
-                advice_nonMetaTraps += playerNames[characterIndex] + " (" + str(nonMetaTrapDict[characterIndex]) + "), "
-            else:
-                advice_nonMetaTraps += "Character" + str(characterIndex+1) + " (" + str(nonMetaTrapDict[characterIndex]) + "), "
+            advice_nonMetaTraps += playerNames[characterIndex] + " (" + str(nonMetaTrapDict[characterIndex]) + "), "
         advice_nonMetaTraps = advice_nonMetaTraps[:-2] + "."
         advice_MetaCritterTraps = "For the highest Critter gains, Set traps with your Beast Master equipped with as much Trapping Efficiency as possible. The most efficient Critter traps for MANUAL CLAIMS are: Royal 20min, Royal 1hr, Cardboard 20min, Royal 10hrs, Cardboard 1hr, Cardboard 8hrs. If you want to let the Rift Trap Vaccuum handle all trap collections, the recommended traps are Royal 40hrs, Royal 10hrs, or Cardboard 20hrs if you don't have Royals unlocked. You could even use Royal 7day traps for minor critter gains, but you'll get less than half as many Cards."
         advice_MetaShinyTraps = "Shiny chance is calculated when Collecting traps, not Setting them. The only way to increase the number of Shiny critters per trap is by equipping the Shiny Snitch prayer when Collecting. The highest Shiny chance increasing traps are: Royal 20min, Royal 1hr, Silkskin 20min, Silkskin 1hr, and Royal 10hrs."

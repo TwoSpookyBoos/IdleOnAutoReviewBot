@@ -9,6 +9,58 @@
         <link rel="apple-touch-icon" href="{{ img('imgs/blank.png') }}" type="image/png">
         <script src="/static/scripts/main.js"></script>
         <meta name="robots" content="noindex">
+        <style>
+            .light-mode {
+                background-color: white;
+                color: black;
+            }
+            .banner {
+                cursor: pointer;
+            }
+            .world-content {
+                display: block;
+            }
+            .is-visible {
+                display: none;
+            }
+            .subheading > img {
+                width: 4%;
+            }
+            section {
+                display: flex;
+                flex-direction: column;
+            }
+            aside {
+                padding-bottom: 10px;
+            }
+            header {
+                padding-top: 10px;
+                border-top: 1px solid grey;
+            }
+            footer {
+                position: absolute;
+                bottom: 0;
+            }
+            .error {
+                display: block;
+                padding: 20px;
+                color: #7A0D0DFF;
+                border: 1px solid darkred;
+                background-color: #f19c9c;
+                width: fit-content;
+            }
+        </style>
+        <script type="text/javascript">
+            var toggle = function (id) {
+                var elem = document.getElementById(id);
+                elem.classList.toggle('is-visible');
+            };
+
+            function lightMode() {
+                var element = document.body;
+                element.classList.toggle("light-mode");
+            }
+        </script>
     </head>
     <body>
         <button id="drawer-handle"></button>
@@ -19,6 +71,7 @@
                 Please check your spelling and make sure you have
                 uploaded your account publicly.
             </span>
+
         {% elif ensure_data(htmlInput) %}
             {% include 'header.html' %}
             {% include 'main.html' %}

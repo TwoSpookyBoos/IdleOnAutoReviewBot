@@ -1,73 +1,31 @@
 import progressionResults
+import idleon_SkillLevels
 
-def getHumanReadableClasses(classNumber):
-    humanReadableClasses = {
-        1:"Beginner",
-        2:"Journeyman",
-        3:"Maestro",
-        4:"Voidwalker",
-        7:"Warrior",
-        8:"Barbarian",
-        9:"Squire",
-        10:"Blood Berserker",
-        12:"Divine Knight",
-        19:"Archer",
-        20:"Bowman",
-        21:"Hunter",
-        22:"Siege Breaker",
-        25:"Beast Master",
-        31:"Mage",
-        32:"Wizard",
-        33:"Shaman",
-        34:"Elemental Sorcerer",
-        36:"Bubonic Conjuror",
-        }
-    try:
-        return humanReadableClasses[classNumber]
-    except:
-        return "Unknown class: " + str(classNumber)
-
-def getCombatLevelsList(inputJSON, playerCount):
-    counter = 0
-    combatLevels = []
-    while counter < playerCount: #playerCount is not 0 based
-        try:
-            combatLevels.append(inputJSON['Lv0_'+str(counter)][0])
-        except Exception as reason:
-            print("CombatLevels.getCombatLevelsList: Unable to access 'Lv0_" + str(counter) + "' when playerCount = " + str(playerCount), reason)
-    return combatLevels
-
-def parseCombatLevelsFromPublicIE(inputJSON, playerCount):
+def parseCombatLevels(inputJSON, playerCount, playerNames):
     counter = 0
     sum_AccountLevel = 0
-    combatLevels = []
+    combatLevels = idleon_SkillLevels.getSpecificSkillLevelsList(inputJSON, playerCount, "Combat")
     playerLevels = {}
-    playerClasses = {}
     equinoxDict = {}
     equinox3_charactersUnder100 = {}
     equinox11_charactersUnder250 = {}
     equinox23_charactersUnder500= {}
     parsedCombatLevels = {}
-    while counter < playerCount: #playerCount is not 0 based
-        try:
-            combatLevels.append(inputJSON['Lv0_'+str(counter)][0])
-            playerLevels[inputJSON["playerNames"][counter]] = (inputJSON['Lv0_'+str(counter)][0])
-            playerClasses[inputJSON["playerNames"][counter]] = (inputJSON['CharacterClass_'+str(counter)])
-            if (inputJSON['Lv0_'+str(counter)][0]) < 100: #player under level 100, add to all 3
-                equinox3_charactersUnder100[inputJSON["playerNames"][counter]] = (inputJSON['Lv0_'+str(counter)][0])
-                equinox11_charactersUnder250[inputJSON["playerNames"][counter]] = (inputJSON['Lv0_'+str(counter)][0])
-                equinox23_charactersUnder500[inputJSON["playerNames"][counter]] = (inputJSON['Lv0_'+str(counter)][0])
-            elif (inputJSON['Lv0_'+str(counter)][0]) < 250: #player under level 250, add to 2
-                equinox11_charactersUnder250[inputJSON["playerNames"][counter]] = (inputJSON['Lv0_'+str(counter)][0])
-                equinox23_charactersUnder500[inputJSON["playerNames"][counter]] = (inputJSON['Lv0_'+str(counter)][0])
-            elif (inputJSON['Lv0_'+str(counter)][0]) < 500: #player under level 500, add to 1
-                equinox23_charactersUnder500[inputJSON["playerNames"][counter]] = (inputJSON['Lv0_'+str(counter)][0])
-            counter +=1
-        except Exception as reason:
-            print("CombatLevelsFromIE: Unable to access 'Lv0_" + str(counter) + "' when playerCount = " + str(playerCount), reason)
-            counter +=1
+
+    counter = 0
     for playerLevel in combatLevels:
+        if (playerLevel) < 100: #player under level 100, add to all 3
+            equinox3_charactersUnder100[playerNames[counter]] = (playerLevel)
+            equinox11_charactersUnder250[playerNames[counter]] = (playerLevel)
+            equinox23_charactersUnder500[playerNames[counter]] = (playerLevel)
+        elif (playerLevel) < 250: #player under level 250, add to 2
+            equinox11_charactersUnder250[playerNames[counter]] = (playerLevel)
+            equinox23_charactersUnder500[playerNames[counter]] = (playerLevel)
+        elif (playerLevel) < 500: #player under level 500, add to 1
+            equinox23_charactersUnder500[playerNames[counter]] = (playerLevel)
         sum_AccountLevel += playerLevel
+        counter += 1
+
     equinoxDict['Characters Under 100'] = equinox3_charactersUnder100
     equinoxDict['Characters Under 250'] = equinox11_charactersUnder250
     equinoxDict['Characters Under 500'] = equinox23_charactersUnder500
@@ -75,56 +33,11 @@ def parseCombatLevelsFromPublicIE(inputJSON, playerCount):
     parsedCombatLevels['sum_AccountLevel'] = sum_AccountLevel
     parsedCombatLevels['playerLevels'] = playerLevels
     parsedCombatLevels['equinoxDict'] = equinoxDict
-    parsedCombatLevels['playerClasses'] = playerClasses
+    #parsedCombatLevels['playerClasses'] = playerClasses
     return parsedCombatLevels
 
-def parseCombatLevelsFromDirectJSON(inputJSON, playerCount):
-    counter = 0
-    sum_AccountLevel = 0
-    combatLevels = []
-    playerLevels = {}
-    playerClasses = {}
-    equinoxDict = {}
-    equinox3_charactersUnder100 = {}
-    equinox11_charactersUnder250 = {}
-    equinox23_charactersUnder500= {}
-    parsedCombatLevels = {}
-    while counter < playerCount: #playerCount is not 0 based
-        try:
-            combatLevels.append(inputJSON['Lv0_'+str(counter)][0])
-            playerLevels[counter+1] = (inputJSON['Lv0_'+str(counter)][0])
-            #['Character'+str(counter+1)]
-            #playerClasses[inputJSON["playerNames"][counter]] = (inputJSON['CharacterClass_'+str(counter)])
-            if (inputJSON['Lv0_'+str(counter)][0]) < 100: #player under level 100, add to all 3
-                equinox3_charactersUnder100['Character'+str(counter+1)] = (inputJSON['Lv0_'+str(counter)][0])
-                equinox11_charactersUnder250['Character'+str(counter+1)] = (inputJSON['Lv0_'+str(counter)][0])
-                equinox23_charactersUnder500['Character'+str(counter+1)] = (inputJSON['Lv0_'+str(counter)][0])
-            elif (inputJSON['Lv0_'+str(counter)][0]) < 250: #player under level 250, add to 2
-                equinox11_charactersUnder250['Character'+str(counter+1)] = (inputJSON['Lv0_'+str(counter)][0])
-                equinox23_charactersUnder500['Character'+str(counter+1)] = (inputJSON['Lv0_'+str(counter)][0])
-            elif (inputJSON['Lv0_'+str(counter)][0]) < 500: #player under level 500, add to 1
-                equinox23_charactersUnder500['Character'+str(counter+1)] = (inputJSON['Lv0_'+str(counter)][0])
-            counter +=1
-        except Exception as reason:
-            print("CombatLevelsFromJSON: Unable to access 'Lv0_" + str(counter) + "' when playerCount = " + str(playerCount), reason)
-            counter +=1
-    for playerLevel in combatLevels:
-        sum_AccountLevel += playerLevel
-    equinoxDict['Characters Under 100'] = equinox3_charactersUnder100
-    equinoxDict['Characters Under 250'] = equinox11_charactersUnder250
-    equinoxDict['Characters Under 500'] = equinox23_charactersUnder500
-    #print(sum_AccountLevel, playerLevels)
-    parsedCombatLevels['sum_AccountLevel'] = sum_AccountLevel
-    parsedCombatLevels['playerLevels'] = playerLevels
-    parsedCombatLevels['equinoxDict'] = equinoxDict
-    parsedCombatLevels['playerClasses'] = playerClasses
-    return parsedCombatLevels
-
-def setCombatLevelsProgressionTier(inputJSON, progressionTiers, playerCount, fromPublicIEBool):
-    if fromPublicIEBool == True:
-        parsedCombatLevels = parseCombatLevelsFromPublicIE(inputJSON, playerCount)
-    else:
-        parsedCombatLevels = parseCombatLevelsFromDirectJSON(inputJSON, playerCount)
+def setCombatLevelsProgressionTier(inputJSON, progressionTiers, playerCount, playerNames):
+    parsedCombatLevels = parseCombatLevels(inputJSON, playerCount, playerNames)
     tier_RequiredAccountLevels = 0
     tier_RequiredPersonalLevels = 0
     overall_CombatLevelTier = 0

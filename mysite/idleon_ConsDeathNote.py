@@ -1,5 +1,5 @@
 import json
-from idleon_CombatLevels import getHumanReadableClasses
+from idleon_SkillLevels import getHumanReadableClasses
 from math import floor
 from math import ceil
 import progressionResults
@@ -189,19 +189,25 @@ def getApocalypseCharactersDict(inputJSON, playerCount, playerNames, fromPublicI
     classCounter = 0
     if fromPublicIEBool:
         while classCounter < playerCount:
-            characterClass = getHumanReadableClasses(inputJSON['CharacterClass_'+str(classCounter)])
-            characterNameAndClass = playerNames[classCounter] + " the " + characterClass
-            if characterClass == "Barbarian" or characterClass == "Blood Berserker":
-                apocCharactersDict[classCounter] = [[characterNameAndClass,0,0,0],[]]
-            playerClassesList.append(characterNameAndClass)
+            try:
+                characterClass = getHumanReadableClasses(inputJSON['CharacterClass_'+str(classCounter)])
+                characterNameAndClass = playerNames[classCounter] + " the " + characterClass
+                if characterClass == "Barbarian" or characterClass == "Blood Berserker":
+                    apocCharactersDict[classCounter] = [[characterNameAndClass,0,0,0],[]]
+                playerClassesList.append(characterNameAndClass)
+            except Exception as reason:
+                print("ConsDeathNote.getApocalypseCharactersDict~ EXCEPTION Unable to find class name for Character", classCounter, "while fromPublicIEBool=", fromPublicIEBool, "because:", reason)
             classCounter += 1
     else:
         while classCounter < playerCount:
-            characterClass = getHumanReadableClasses(inputJSON['CharacterClass_'+str(classCounter)])
-            characterNameAndClass = "Character" + str(classCounter+1) + " the " + getHumanReadableClasses(inputJSON['CharacterClass_'+str(classCounter)])
-            if characterClass == "Barbarian" or characterClass == "Blood Berserker":
-                apocCharactersDict[classCounter] = [[characterNameAndClass,0,0,0],[]]
-            playerClassesList.append(characterNameAndClass)
+            try:
+                characterClass = getHumanReadableClasses(inputJSON['CharacterClass_'+str(classCounter)])
+                characterNameAndClass = "Character" + str(classCounter+1) + " the " + getHumanReadableClasses(inputJSON['CharacterClass_'+str(classCounter)])
+                if characterClass == "Barbarian" or characterClass == "Blood Berserker":
+                    apocCharactersDict[classCounter] = [[characterNameAndClass,0,0,0],[]]
+                playerClassesList.append(characterNameAndClass)
+            except Exception as reason:
+                print("ConsDeathNote.getApocalypseCharactersDict~ EXCEPTION Unable to find class name for Character", classCounter, "while fromPublicIEBool=", fromPublicIEBool, "because:", reason)
             classCounter += 1
 
     #print("ConsDeathNote~ playerClassesList: ",playerClassesList[1:])
@@ -311,7 +317,12 @@ def getDeathNoteKills(inputJSON, playerCount, playerNames, fromPublicIEBool):
     #total up all kills across characters
     playerCounter = 0
     while playerCounter < playerCount:
-        playerKillsList = json.loads(inputJSON['KLA_'+str(playerCounter)]) #String pretending to be a list of lists yet again
+        try:
+            playerKillsList = json.loads(inputJSON['KLA_'+str(playerCounter)]) #String pretending to be a list of lists yet again
+        except Exception as reason:
+            print("ConsDeathNote.getDeathNoteKills~ EXCEPTION Unable to retrieve kill list for Character", playerCounter, "because:", reason)
+            playerKillsList = []
+
         killCounter = 0
         #try to adjust when kill count is stored as a String in scientific notation
         while killCounter < len(playerKillsList):

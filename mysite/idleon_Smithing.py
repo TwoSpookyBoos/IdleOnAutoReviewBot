@@ -15,8 +15,11 @@ def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount):
     #Total up all of the purchases across all current characters
     counter = 0
     while counter < playerCount:
-        sum_CashPoints += int(inputJSON["AnvilPAstats_"+str(counter)][1])
-        sum_MonsterPoints += int(inputJSON["AnvilPAstats_"+str(counter)][2])
+        try:
+            sum_CashPoints += int(inputJSON["AnvilPAstats_"+str(counter)][1])
+            sum_MonsterPoints += int(inputJSON["AnvilPAstats_"+str(counter)][2])
+        except Exception as reason:
+            print("Smithing.setSmithingProgressionTier~ EXCEPTION Unable to read Anvil stats for Character", counter, "because:", reason)
         counter += 1
     #Total up all of the forge purchases, including the stinky Forge EXP
     for upgrade in inputJSON["ForgeLV"]:

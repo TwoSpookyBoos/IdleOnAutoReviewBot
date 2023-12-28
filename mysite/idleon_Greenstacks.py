@@ -42,16 +42,20 @@ def getMissableGStacks(inputJSON, playerCount):
                 if missableGStacksDict[questItem][1] in inputJSON[storageNamesList[listCounter]]:
                     missableGStacksDict[questItem][0] += inputJSON[storageQuantityList[listCounter]][inputJSON[storageNamesList[listCounter]].index(missableGStacksDict[questItem][1])]
             except Exception as reason:
-                print("Greenstacks.getMissableGStacks~ EXCEPTION Unable to look in inputJSON[storageNamesList[listCounter]] while listCounter=",listCounter,"and playerCount=",playerCount,"because:",reason)
+                print("Greenstacks.getMissableGStacks~ EXCEPTION Unable to look in inputJSON[storageNamesList[listCounter]] while listCounter=", listCounter, "and playerCount=", playerCount, "because:", reason)
             listCounter += 1
         #after totaling up all instances of the quest, if less than a greenstack, see how many characters can still complete this quest
         if missableGStacksDict[questItem][0] < greenStackAmount:
             playerIndex = 0
             while playerIndex < playerCount:
-                if missableGStacksDict[questItem][2] in inputJSON["QuestComplete_"+str(playerIndex)]:
-                    if json.loads(inputJSON["QuestComplete_"+str(playerIndex)])[missableGStacksDict[questItem][2]] != 1:
-                        #print("GreenStacks.getMissableGStacks~ OUTPUT Character",playerIndex+1,"has not completed quest:",missableGStacksDict[questItem][2])
-                        missableGStacksDict[questItem][6] += 1
+                try:
+                    if missableGStacksDict[questItem][2] in inputJSON["QuestComplete_"+str(playerIndex)]:
+                        if json.loads(inputJSON["QuestComplete_"+str(playerIndex)])[missableGStacksDict[questItem][2]] != 1:
+                            #print("GreenStacks.getMissableGStacks~ OUTPUT Character",playerIndex+1,"has not completed quest:",missableGStacksDict[questItem][2])
+                            missableGStacksDict[questItem][6] += 1
+
+                except Exception as reason:
+                    print("Greenstacks.getMissableGStacks~ EXCEPTION Unable to check if Character", playerIndex+1, "has not completed quest:", missableGStacksDict[questItem][2], "because:", reason)
                 playerIndex += 1
             if missableGStacksDict[questItem][6] == 0:
                 missedMissableGStacks += 1
