@@ -1,16 +1,363 @@
 import json
 import progressionResults
 
-def parseJSONtoLists(inputJSON):
-    breedingList = json.loads(inputJSON["Breeding"])
-    return breedingList
+def getShinyLevelFromDays(days):
+    shinyDaysList = [0, 3, 11, 33, 85, 200, 448, 964, 2013, 4107]
+    highestExceeded = 0
+    for requirement in shinyDaysList:
+        if float(days) > requirement:
+            highestExceeded += 1
+    return highestExceeded
+
+def getShinyExclusions(inputJSON):
+    currentArtifactsCount = 30
+    currentArtifactTiers = 3
+    shinyExclusionsDict = {
+        "Exclude-InfiniteStarSigns": True,
+        "Exclude-ArtifactChance": False
+        }
+
+    #if Infinite Star Signs are unlocked, set False (as in False, the recommendation should NOT be excluded), otherwise default True
+    try:
+        highestCompletedRift = inputJSON["Rift"][0]
+        if highestCompletedRift >= 11:
+            shinyExclusionsDict["Exclude-InfiniteStarSigns"] = False
+    except Exception as reason:
+        print("Breeding.getShinyExclusions~ EXCEPTION Unable to retrieve highest rift level:",reason)
+
+    #if all artifacts are Eldritch tier, append True (as in True, the recommendation SHOULD be excluded), otherwise False
+    try:
+        sum_sailingArtifacts = sum(json.loads(inputJSON["Sailing"])[3])
+        if sum_sailingArtifacts == (currentArtifactsCount*currentArtifactTiers): #30 artifacts times 3 tiers each = 90 for v1.91
+            shinyExclusionsDict["Exclude-ArtifactChance"] = True
+    except Exception as reason:
+        print("Breeding.getShinyExclusions~ EXCEPTION Unable to get Sailing Artifacts:",reason)
+
+    return shinyExclusionsDict
+
+def getTerritoryName(index):
+    territoryNames = ["", "Grasslands", "Jungle", "Encroaching Forest", "Tree Interior", "Stinky Sewers", "Desert Oasis", "Beach Docks", "Coarse Mountains",
+        "Twilight Desert", "The Crypt", "Frosty Peaks", "Tundra Outback", "Crystal Caverns", "Pristalle Lake", "Nebulon Mantle", "Starfield Skies",
+        "Shores of Eternity", "Molten Bay", "Smokey Lake", "Wurm Catacombs"]
+    try:
+        return territoryNames[int(index)]
+    except:
+        return "Unknown Territory" + str(index)
+
+def parseJSONtoBreedingDict(inputJSON):
+    breedingList = []
+    try:
+        breedingList = json.loads(inputJSON["Breeding"])
+        #print("Breeding.parseJSON~ OUTPUT unlockedPets:", type(breedingList[1]), breedingList[1])
+    except Exception as reason:
+        print("Breeding.parseJSON~ EXCEPTION Could not load \"Breeding\" from JSON:", reason)
+        return {}
+
+    territoriesList = []
+    try:
+        territoriesList = json.loads(inputJSON["Territory"])
+        #print("Breeding.parseJSON~ OUTPUT territoriesList:", type(territoriesList), territoriesList)
+    except Exception as reason:
+        print("Breeding.parseJSON~ EXCEPTION Could not load \"Territory\" from JSON:", reason)
+        return {}
+
+    arenaMaxWave = 0
+    petSlotsUnlocked = 2
+    try:
+        arenaMaxWave = inputJSON["OptLacc"][89]
+        slotUnlockWavesList = [2, 15, 50, 125]
+        for requirement in slotUnlockWavesList:
+            if arenaMaxWave > requirement:
+                petSlotsUnlocked += 1
+        #print("Breeding.parseJSON~ OUTPUT arenaMaxWave:", arenaMaxWave)
+        #print("Breeding.parseJSON~ OUTPUT petSlotsUnlocked:", petSlotsUnlocked)
+    except Exception as reason:
+        print("Breeding.parseJSON~ EXCEPTION Could not load \"OptLacc\" from JSON to get Arena Max Wave:", reason)
+
+    parsedBreedingDict = {}
+    if breedingList != []:
+        #Straight data grabs
+        parsedBreedingDict = {
+            "W1 Unlocked Count": breedingList[1][0],
+            "W2 Unlocked Count": breedingList[1][1],
+            "W3 Unlocked Count": breedingList[1][2],
+            "W4 Unlocked Count": breedingList[1][3],
+            "W5 Unlocked Count": breedingList[1][4],
+            "W6 Unlocked Count": breedingList[1][5],
+            "W7 Unlocked Count": breedingList[1][6],
+            "W8 Unlocked Count": breedingList[1][7],
+            "Abilities": {},
+            "Species": {},
+            "Shinies": {
+                "W1 Shiny Days": breedingList[22],
+                "W2 Shiny Days": breedingList[23],
+                "W3 Shiny Days": breedingList[24],
+                "W4 Shiny Days": breedingList[25],
+                "W5 Shiny Days": breedingList[26],
+                "W6 Shiny Days": breedingList[27],
+                "W7 Shiny Days": breedingList[28],
+                "W8 Shiny Days": breedingList[29],
+                "Total Shiny Levels": {},
+                "Grouped Bonus": {}
+                },
+            "Highest Arena Wave": arenaMaxWave,
+            "Pet Slots Unlocked": petSlotsUnlocked
+            }
+
+        #print("Breeding.parseJSON~ OUTPUT parsedBreedingDict[\"Shinies\"]:", parsedBreedingDict["Shinies"])
+        #print("Breeding.parseJSON~ OUTPUT length of each [Shinies][WX Shiny Days]:",
+        #    len(parsedBreedingDict["Shinies"]["W1 Shiny Days"]), len(parsedBreedingDict["Shinies"]["W2 Shiny Days"]),
+        #    len(parsedBreedingDict["Shinies"]["W3 Shiny Days"]), len(parsedBreedingDict["Shinies"]["W4 Shiny Days"]),
+        #    len(parsedBreedingDict["Shinies"]["W5 Shiny Days"]), len(parsedBreedingDict["Shinies"]["W6 Shiny Days"]),
+        #    len(parsedBreedingDict["Shinies"]["W7 Shiny Days"]), len(parsedBreedingDict["Shinies"]["W8 Shiny Days"]), )
+
+        #Data needing some logic behind it
+        parsedBreedingDict["Total Unlocked Count"] = parsedBreedingDict["W1 Unlocked Count"] + parsedBreedingDict["W2 Unlocked Count"] + parsedBreedingDict["W3 Unlocked Count"] + parsedBreedingDict["W4 Unlocked Count"]
+        # + parsedBreedingDict["W5 Unlocked Count"] + parsedBreedingDict["W6 Unlocked Count"] + parsedBreedingDict["W7 Unlocked Count"] + parsedBreedingDict["W8 Unlocked Count"]
+
+        abilitiesList = ["Fighter", "Defender", "Forager", "Fleeter", "Breeder", "Special", "Mercenary", "Boomer", "Sniper", "Amplifier", "Tsar", "Rattler", "Cursory",
+        "Fastidious", "Flashy", "Opticular", "Monolithic", "Alchemic", "Badumdum", "Defstone", "Targeter", "Looter", "Refiller", "Eggshell", "Lazarus", "Trasher", "Miasma",
+        "Converter", "Heavyweight", "Fastihoop", "Ninja", "Superboomer", "Peapeapod", "Borger"]
+        for ability in abilitiesList:
+            parsedBreedingDict["Abilities"][ability] = False
+        #print("Breeding.parseJSON~ OUTPUT parsedBreedingDict[\"Abilities\"]:", parsedBreedingDict["Abilities"])
+
+        shinyBonusList = ["Faster Shiny Pet Lv Up Rate", "Infinite Star Signs", "Total Damage", "Drop Rate", "Base Efficiency for All Skills",
+            "Base WIS", "Base STR", "Base AGI", "Base LUK", "Class EXP", "Skill EXP",
+            "Tab 1 Talent Pts", "Tab 2 Talent Pts", "Tab 3 Talent Pts", "Tab 4 Talent Pts", "Star Talent Pts",
+            "Faster Refinery Speed", "Base Critter Per Trap", "Multikill Per Tier",
+            "Bonuses from All Meals", "Line Width in Lab",
+            "Higher Artifact Find Chance", "Sail Captain EXP Gain", "Lower Mininmum Travel Time for Sailing",
+            "World 6...?"]
+        for bonus in shinyBonusList:
+            parsedBreedingDict["Shinies"]["Total Shiny Levels"][bonus] = 0
+
+        speciesDict = {
+            "W1 Unlocked Species": {
+                "Green Mushroom": ["Fighter", parsedBreedingDict["W1 Unlocked Count"]>=1, "Faster Shiny Pet Lv Up Rate", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W1 Shiny Days"][0]), parsedBreedingDict["Shinies"]["W1 Shiny Days"][0]],
+                "Squirrel": ["Forager", parsedBreedingDict["W1 Unlocked Count"]>=2, "Infinite Star Signs", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W1 Shiny Days"][1]), parsedBreedingDict["Shinies"]["W1 Shiny Days"][1]],
+                "Frog": ["Boomer", parsedBreedingDict["W1 Unlocked Count"]>=3, "Total Damage", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W1 Shiny Days"][2]), parsedBreedingDict["Shinies"]["W1 Shiny Days"][2]],
+                "Bored Bean": ["Fleeter", parsedBreedingDict["W1 Unlocked Count"]>=4, "Faster Refinery Speed", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W1 Shiny Days"][3]), parsedBreedingDict["Shinies"]["W1 Shiny Days"][3]],
+                "Red Mushroom": ["Fighter", parsedBreedingDict["W1 Unlocked Count"]>=5, "Bonuses from All Meals", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W1 Shiny Days"][4]), parsedBreedingDict["Shinies"]["W1 Shiny Days"][4]],
+                "Slime": ["Cursory", parsedBreedingDict["W1 Unlocked Count"]>=6, "Drop Rate", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W1 Shiny Days"][5]), parsedBreedingDict["Shinies"]["W1 Shiny Days"][5]],
+                "Piggo": ["Amplifier", parsedBreedingDict["W1 Unlocked Count"]>=7, "Infinite Star Signs", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W1 Shiny Days"][6]), parsedBreedingDict["Shinies"]["W1 Shiny Days"][6]],
+                "Baby Boa": ["Targeter", parsedBreedingDict["W1 Unlocked Count"]>=8, "Multikill Per Tier", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W1 Shiny Days"][7]), parsedBreedingDict["Shinies"]["W1 Shiny Days"][7]],
+                "Carrotman": ["Mercenary", parsedBreedingDict["W1 Unlocked Count"]>=9, "Base Efficiency for All Skills", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W1 Shiny Days"][8]), parsedBreedingDict["Shinies"]["W1 Shiny Days"][8]],
+                "Glublin": ["Refiller", parsedBreedingDict["W1 Unlocked Count"]>=10, "Infinite Star Signs", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W1 Shiny Days"][9]), parsedBreedingDict["Shinies"]["W1 Shiny Days"][9]],
+                "Wode Board": ["Miasma", parsedBreedingDict["W1 Unlocked Count"]>=11, "Faster Shiny Pet Lv Up Rate", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W1 Shiny Days"][10]), parsedBreedingDict["Shinies"]["W1 Shiny Days"][10]],
+                "Gigafrog": ["Amplifier", parsedBreedingDict["W1 Unlocked Count"]>=12, "Base Efficiency for All Skills", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W1 Shiny Days"][11]), parsedBreedingDict["Shinies"]["W1 Shiny Days"][11]],
+                "Wild Boar": ["Heavyweight", parsedBreedingDict["W1 Unlocked Count"]>=13, "Base AGI", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W1 Shiny Days"][12]), parsedBreedingDict["Shinies"]["W1 Shiny Days"][12]],
+                "Walking Stick": ["Refiller", parsedBreedingDict["W1 Unlocked Count"]>=14, "Base Critter Per Trap", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W1 Shiny Days"][13]), parsedBreedingDict["Shinies"]["W1 Shiny Days"][13]],
+                "Nutto": ["Borger", parsedBreedingDict["W1 Unlocked Count"]>=15, "Total Damage", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W1 Shiny Days"][14]), parsedBreedingDict["Shinies"]["W1 Shiny Days"][14]],
+                "Poop": ["Tsar", parsedBreedingDict["W1 Unlocked Count"]>=16, "World 6...?", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W1 Shiny Days"][15]), parsedBreedingDict["Shinies"]["W1 Shiny Days"][15]],
+                "Rat": ["Monolithic", parsedBreedingDict["W1 Unlocked Count"]>=17, "Multikill Per Tier", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W1 Shiny Days"][16]), parsedBreedingDict["Shinies"]["W1 Shiny Days"][16]]
+                },
+            "W2 Unlocked Species": {
+                "Sandy Pot": ["Looter", parsedBreedingDict["W2 Unlocked Count"]>=1, "Class EXP", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W2 Shiny Days"][0]), parsedBreedingDict["Shinies"]["W2 Shiny Days"][0]],
+                "Mimic": ["Defender", parsedBreedingDict["W2 Unlocked Count"]>=2, "Tab 1 Talent Pts", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W2 Shiny Days"][1]), parsedBreedingDict["Shinies"]["W2 Shiny Days"][1]],
+                "Crabcake": ["Fleeter", parsedBreedingDict["W2 Unlocked Count"]>=3, "Skill EXP", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W2 Shiny Days"][2]), parsedBreedingDict["Shinies"]["W2 Shiny Days"][2]],
+                "Mafioso": ["Forager", parsedBreedingDict["W2 Unlocked Count"]>=4, "Tab 2 Talent Pts", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W2 Shiny Days"][3]), parsedBreedingDict["Shinies"]["W2 Shiny Days"][3]],
+                "Mallay": ["Opticular", parsedBreedingDict["W2 Unlocked Count"]>=5, "Line Width in Lab", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W2 Shiny Days"][4]), parsedBreedingDict["Shinies"]["W2 Shiny Days"][4]],
+                "Sand Castle": ["Defstone", parsedBreedingDict["W2 Unlocked Count"]>=6, "Base STR", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W2 Shiny Days"][5]), parsedBreedingDict["Shinies"]["W2 Shiny Days"][5]],
+                "Pincermin": ["Fighter", parsedBreedingDict["W2 Unlocked Count"]>=7, "Total Damage", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W2 Shiny Days"][6]), parsedBreedingDict["Shinies"]["W2 Shiny Days"][6]],
+                "Mashed Potato": ["Amplifier", parsedBreedingDict["W2 Unlocked Count"]>=8, "Base Efficiency for All Skills", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W2 Shiny Days"][7]), parsedBreedingDict["Shinies"]["W2 Shiny Days"][7]],
+                "Tyson": ["Fastidious", parsedBreedingDict["W2 Unlocked Count"]>=9, "Higher Artifact Find Chance", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W2 Shiny Days"][8]), parsedBreedingDict["Shinies"]["W2 Shiny Days"][8]],
+                "Whale": ["Badumdum", parsedBreedingDict["W2 Unlocked Count"]>=10, "Faster Refinery Speed", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W2 Shiny Days"][9]), parsedBreedingDict["Shinies"]["W2 Shiny Days"][9]],
+                "Moonmoon": ["Mercenary", parsedBreedingDict["W2 Unlocked Count"]>=11, "Base WIS", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W2 Shiny Days"][10]), parsedBreedingDict["Shinies"]["W2 Shiny Days"][10]],
+                "Sand Giant": ["Rattler", parsedBreedingDict["W2 Unlocked Count"]>=12, "Base Efficiency for All Skills", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W2 Shiny Days"][11]), parsedBreedingDict["Shinies"]["W2 Shiny Days"][11]],
+                "Snelbie": ["Monolithic", parsedBreedingDict["W2 Unlocked Count"]>=13, "Tab 4 Talent Pts", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W2 Shiny Days"][12]), parsedBreedingDict["Shinies"]["W2 Shiny Days"][12]],
+                "Dig Doug": ["Lazarus", parsedBreedingDict["W2 Unlocked Count"]>=14, "World 6...?", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W2 Shiny Days"][13]), parsedBreedingDict["Shinies"]["W2 Shiny Days"][13]],
+                "Beefie": ["Trasher", parsedBreedingDict["W2 Unlocked Count"]>=15, "Base LUK", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W2 Shiny Days"][14]), parsedBreedingDict["Shinies"]["W2 Shiny Days"][14]],
+                "Crescent Spud": ["Monolithic", parsedBreedingDict["W2 Unlocked Count"]>=16, "Faster Shiny Pet Lv Up Rate", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W2 Shiny Days"][15]), parsedBreedingDict["Shinies"]["W2 Shiny Days"][15]],
+                "Chippy": ["Eggshell", parsedBreedingDict["W2 Unlocked Count"]>=17, "World 6...?", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W2 Shiny Days"][16]), parsedBreedingDict["Shinies"]["W2 Shiny Days"][16]]
+                },
+            "W3 Unlocked Species": {
+                "Sheepie": ["Sniper", parsedBreedingDict["W3 Unlocked Count"]>=1, "Bonuses from All Meals", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W3 Shiny Days"][0]), parsedBreedingDict["Shinies"]["W3 Shiny Days"][0]],
+                "Frost Flake": ["Ninja", parsedBreedingDict["W3 Unlocked Count"]>=2, "Tab 3 Talent Pts", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W3 Shiny Days"][1]), parsedBreedingDict["Shinies"]["W3 Shiny Days"][1]],
+                "Sir Stache": ["Eggshell", parsedBreedingDict["W3 Unlocked Count"]>=3, "Infinite Star Signs", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W3 Shiny Days"][2]), parsedBreedingDict["Shinies"]["W3 Shiny Days"][2]],
+                "Xylobone": ["Opticular", parsedBreedingDict["W3 Unlocked Count"]>=4, "Drop Rate", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W3 Shiny Days"][3]), parsedBreedingDict["Shinies"]["W3 Shiny Days"][3]],
+                "Bunny": ["Flashy", parsedBreedingDict["W3 Unlocked Count"]>=5, "Base LUK", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W3 Shiny Days"][4]), parsedBreedingDict["Shinies"]["W3 Shiny Days"][4]],
+                "Bloque": ["Alchemic", parsedBreedingDict["W3 Unlocked Count"]>=6, "Multikill Per Tier", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W3 Shiny Days"][5]), parsedBreedingDict["Shinies"]["W3 Shiny Days"][5]],
+                "Mamooth": ["Looter", parsedBreedingDict["W3 Unlocked Count"]>=7, "Higher Artifact Find Chance", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W3 Shiny Days"][6]), parsedBreedingDict["Shinies"]["W3 Shiny Days"][6]],
+                "Snowman": ["Defstone", parsedBreedingDict["W3 Unlocked Count"]>=8, "Class EXP", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W3 Shiny Days"][7]), parsedBreedingDict["Shinies"]["W3 Shiny Days"][7]],
+                "Penguin": ["Fastidious", parsedBreedingDict["W3 Unlocked Count"]>=9, "Infinite Star Signs", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W3 Shiny Days"][8]), parsedBreedingDict["Shinies"]["W3 Shiny Days"][8]],
+                "Thermister": ["Sniper", parsedBreedingDict["W3 Unlocked Count"]>=10, "Skill EXP", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W3 Shiny Days"][9]), parsedBreedingDict["Shinies"]["W3 Shiny Days"][9]],
+                "Quenchie": ["Boomer", parsedBreedingDict["W3 Unlocked Count"]>=11, "Faster Shiny Pet Lv Up Rate", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W3 Shiny Days"][10]), parsedBreedingDict["Shinies"]["W3 Shiny Days"][10]],
+                "Cryosnake": ["Eggshell", parsedBreedingDict["W3 Unlocked Count"]>=12, "Star Talent Pts", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W3 Shiny Days"][11]), parsedBreedingDict["Shinies"]["W3 Shiny Days"][11]],
+                "Mecho Mouse": ["Trasher", parsedBreedingDict["W3 Unlocked Count"]>=13, "Base STR", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W3 Shiny Days"][12]), parsedBreedingDict["Shinies"]["W3 Shiny Days"][12]],
+                "Bop Box": ["Converter", parsedBreedingDict["W3 Unlocked Count"]>=14, "Base WIS", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W3 Shiny Days"][13]), parsedBreedingDict["Shinies"]["W3 Shiny Days"][13]],
+                "Neyeptune": ["Lazarus", parsedBreedingDict["W3 Unlocked Count"]>=15, "World 6...?", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W3 Shiny Days"][14]), parsedBreedingDict["Shinies"]["W3 Shiny Days"][14]],
+                "Dedotated Ram": ["Amplifier", parsedBreedingDict["W3 Unlocked Count"]>=16, "Multikill Per Tier", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W3 Shiny Days"][15]), parsedBreedingDict["Shinies"]["W3 Shiny Days"][15]],
+                "Bloodbone": ["Targeter", parsedBreedingDict["W3 Unlocked Count"]>=17, "World 6...?", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W3 Shiny Days"][16]), parsedBreedingDict["Shinies"]["W3 Shiny Days"][16]],
+                "Panda": ["Converter", parsedBreedingDict["W3 Unlocked Count"]>=18, "Total Damage", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W3 Shiny Days"][17]), parsedBreedingDict["Shinies"]["W3 Shiny Days"][17]]
+                },
+            "W4 Unlocked Species": {
+                "Purp Mushroom": ["Tsar", parsedBreedingDict["W4 Unlocked Count"]>=1, "World 6...?", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W4 Shiny Days"][0]), parsedBreedingDict["Shinies"]["W4 Shiny Days"][0]],
+                "TV": ["Rattler", parsedBreedingDict["W4 Unlocked Count"]>=2, "Sail Captain EXP Gain", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W4 Shiny Days"][1]), parsedBreedingDict["Shinies"]["W4 Shiny Days"][1]],
+                "Donut": ["Flashy", parsedBreedingDict["W4 Unlocked Count"]>=3, "World 6...?", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W4 Shiny Days"][2]), parsedBreedingDict["Shinies"]["W4 Shiny Days"][2]],
+                "Demon Genie": ["Superboomer", parsedBreedingDict["W4 Unlocked Count"]>=4, "Faster Refinery Speed", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W4 Shiny Days"][3]), parsedBreedingDict["Shinies"]["W4 Shiny Days"][3]],
+                "Flying Worm": ["Borger", parsedBreedingDict["W4 Unlocked Count"]>=5, "Base AGI", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W4 Shiny Days"][4]), parsedBreedingDict["Shinies"]["W4 Shiny Days"][4]],
+                "Dog": ["Peapeapod", parsedBreedingDict["W4 Unlocked Count"]>=6, "Lower Mininmum Travel Time for Sailing", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W4 Shiny Days"][5]), parsedBreedingDict["Shinies"]["W4 Shiny Days"][5]],
+                "Soda Can": ["Fastihoop", parsedBreedingDict["W4 Unlocked Count"]>=7, "Higher Artifact Find Chance", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W4 Shiny Days"][6]), parsedBreedingDict["Shinies"]["W4 Shiny Days"][6]],
+                "Gelatinous Cuboid": ["Flashy", parsedBreedingDict["W4 Unlocked Count"]>=8, "Total Damage", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W4 Shiny Days"][7]), parsedBreedingDict["Shinies"]["W4 Shiny Days"][7]],
+                "Choccie": ["Superboomer", parsedBreedingDict["W4 Unlocked Count"]>=9, "Drop Rate", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W4 Shiny Days"][8]), parsedBreedingDict["Shinies"]["W4 Shiny Days"][8]],
+                "Biggole Wurm": ["Tsar", parsedBreedingDict["W4 Unlocked Count"]>=10, "Class EXP", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W4 Shiny Days"][9]), parsedBreedingDict["Shinies"]["W4 Shiny Days"][9]],
+                "Cool Bird": ["Borger", parsedBreedingDict["W4 Unlocked Count"]>=11, "Base STR", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W4 Shiny Days"][10]), parsedBreedingDict["Shinies"]["W4 Shiny Days"][10]],
+                "Clammie": ["Mercenary", parsedBreedingDict["W4 Unlocked Count"]>=12, "Skill EXP", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W4 Shiny Days"][11]), parsedBreedingDict["Shinies"]["W4 Shiny Days"][11]],
+                "Octodar": ["Cursory", parsedBreedingDict["W4 Unlocked Count"]>=13, "Base Critter Per Trap", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W4 Shiny Days"][12]), parsedBreedingDict["Shinies"]["W4 Shiny Days"][12]],
+                "Flombeige": ["Trasher", parsedBreedingDict["W4 Unlocked Count"]>=14, "Base AGI", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W4 Shiny Days"][13]), parsedBreedingDict["Shinies"]["W4 Shiny Days"][13]],
+                "Stilted Seeker": ["Borger", parsedBreedingDict["W4 Unlocked Count"]>=15, "Base WIS", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W4 Shiny Days"][14]), parsedBreedingDict["Shinies"]["W4 Shiny Days"][14]],
+                "Hedgehog": ["Peapeapod", parsedBreedingDict["W4 Unlocked Count"]>=16, "Base LUK", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W4 Shiny Days"][15]), parsedBreedingDict["Shinies"]["W4 Shiny Days"][15]]
+                }
+            }
+
+        parsedBreedingDict["Species"] = speciesDict
+        for world in speciesDict:
+            #print("Breeding.parseJSON~ OUTPUT world in speciesDict:", world)
+            for species in speciesDict[world]:
+                #print("Breeding.parseJSON~ OUTPUT species in speciesDict:", species)
+                if speciesDict[world][species][1] == True and parsedBreedingDict["Abilities"][speciesDict[world][species][0]] == False:
+                    parsedBreedingDict["Abilities"][speciesDict[world][species][0]] = True
+                if speciesDict[world][species][3] > 0:
+                    #print("Breeding.parseJSON~ INFO From", species, ", increasing total level of", speciesDict[world][species][2], "by", speciesDict[world][species][3])
+                    #print("Old value:", parsedBreedingDict["Shinies"]["Total Shiny Levels"][speciesDict[world][species][2]])
+                    parsedBreedingDict["Shinies"]["Total Shiny Levels"][speciesDict[world][species][2]] += speciesDict[world][species][3]
+                if speciesDict[world][species][2] in parsedBreedingDict["Shinies"]["Grouped Bonus"].keys():
+                    parsedBreedingDict["Shinies"]["Grouped Bonus"][speciesDict[world][species][2]].append((species, speciesDict[world][species][3], speciesDict[world][species][4]))
+                else:
+                    parsedBreedingDict["Shinies"]["Grouped Bonus"][speciesDict[world][species][2]] = [(species, speciesDict[world][species][3], speciesDict[world][species][4])]
+        for groupedBonus in parsedBreedingDict["Shinies"]["Grouped Bonus"]:
+            parsedBreedingDict["Shinies"]["Grouped Bonus"][groupedBonus].sort(key = lambda x: float(x[2]))
+
+        #print("Breeding.parseJSON~ OUTPUT parsedBreedingDict[\"Abilities\"]:", parsedBreedingDict["Abilities"])
+        #print("Breeding.parseJSON~ OUTPUT parsedBreedingDict[\"Shinies\"][\"Total Shiny Levels\"]:", parsedBreedingDict["Shinies"]["Total Shiny Levels"])
+        #print("Breeding.parseJSON~ OUTPUT parsedBreedingDict[\"Shinies\"][\"Grouped Bonus\"]:", parsedBreedingDict["Shinies"]["Grouped Bonus"])
+        #print("Breeding.parseJSON~ OUTPUT Sorted by lowest level per:", parsedBreedingDict["Shinies"]["Grouped Bonus"])
+
+        parsedBreedingDict["Territories Unlocked Count"] = 0
+        for territory in territoriesList:
+            if territory[0] > 0: #This will only be above 0 for territories which have had a pet added and progress started
+                parsedBreedingDict["Territories Unlocked Count"] += 1
+        #print("Breeding.parseJSON~ OUTPUT parsedBreedingDict[\"Territories Unlocked Count\"]:", parsedBreedingDict["Territories Unlocked Count"])
+    else:
+        return {}
+
+    #for element in parsedBreedingDict:
+        #print("Breeding.parseJSON~ OUTPUT parsedBreedingDict[\"", element, "\"]:", parsedBreedingDict[element])
+    return parsedBreedingDict
 
 def setBreedingProgressionTier(inputJSON, progressionTiers):
-    tier_Breeding = 0
+    maxBreedingTier = max(progressionTiers.keys())
+    tier_UnlockedTerritories = 0
+    tier_MaxArenaWave = 0
+    tier_ShinyLevels = 0
     overall_BreedingTier = 0
-    advice_Breeding1 = ""
-    overall_BreedingTier = min(progressionTiers[-1][-0], tier_Breeding)
-    advice_BreedingCombined = ["Best Breeding tier met: " + str(overall_BreedingTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended Breeding actions:", advice_Breeding1]
+    advice_UnlockedTerritories = ""
+    recommendedTerritoryCompsList = [ "",
+        "Mercenary, Next Highest Power",
+        "Mercenary, Cursory, Defender or Highest Power",
+        "Rattler, Cursory, Refiller, Defender",
+        "Rattler, Monolithic, Refiller, Defender, Refiller",
+        "Rattler, Looter, Monolithic, Refiller, Defender, Refiller" ]
+    recommendedArenaCompsList = [
+        "Mercenary or Fighter, Next Highest Power",                 #2-pet comp used to beat Wave 3
+        "Mercenary, Cursory, Defender or Highest Power",            #3-pet comp used to beat Wave 15
+        "Rattler, Monolithic, Refiller, Borger or Defender",        #4-pet comp used to beat Wave 50
+        "Rattler, Monolithic, Badumdum, Refiller, Borger",          #5-pet comp used to beat Wave 125
+        "Rattler, Defender, Looter, Refiller, Badumdum, Borger"    #6-pet comp used to beat Wave 200
+        ]
+    advice_TerritoryComp = ""
+    advice_ArenaComp = ""
+    failedShinyRequirements = []
+    failedShinyBonus = {}
+    advice_ShinyLevels = ""
+    advice_ShinyPets = []
+    breedingDict = parseJSONtoBreedingDict(inputJSON)
+    if breedingDict == {}:
+        breedingPR = progressionResults.progressionResults(0, "Come back after unlocking Breeding in W4!", "")
+        return breedingPR
+    else:
+        for tier in progressionTiers:
+            #print("Breeding.setBreedingProgressionTier~ INFO Starting review of Tier:", tier)
+            #Unlocked Territories
+            if tier_UnlockedTerritories >= (tier-1):
+                if breedingDict["Territories Unlocked Count"] >= progressionTiers[tier]["TerritoriesUnlocked"]:
+                    tier_UnlockedTerritories = tier
+                    #print("Breeding.setBreedingProgressionTier~ INFO Territory requirement met!", breedingDict["Territories Unlocked Count"], ">=", progressionTiers[tier]["TerritoriesUnlocked"])
+                else:
+                    advice_UnlockedTerritories = ("Unlock more Spice Territories (" + str(breedingDict["Territories Unlocked Count"])
+                        + "/" + str(progressionTiers[tier]["TerritoriesUnlocked"]) + " through " + getTerritoryName(progressionTiers[tier]["TerritoriesUnlocked"]) + ").")
+                    #print("Breeding.setBreedingProgressionTier~ INFO Territory requirement failed for tier", tier, "because", breedingDict["Territories Unlocked Count"], "<", progressionTiers[tier]["TerritoriesUnlocked"])
+
+            #Arena Waves to unlock Pet Slots
+            if tier_MaxArenaWave >= (tier-1):
+                if breedingDict["Highest Arena Wave"] >= progressionTiers[tier]["ArenaWaves"]:
+                    tier_MaxArenaWave = tier
+                else:
+                    advice_ArenaComp = "Recommended team for Arena Wave " + str(progressionTiers[tier]["ArenaWaves"]) + " (from left to right): " + recommendedArenaCompsList[tier_MaxArenaWave]
+                    #print("Breeding.setBreedingProgressionTier~ INFO Arena Wave requirement failed for tier", tier, "because", breedingDict["Highest Arena Wave"], "<", progressionTiers[tier]["ArenaWaves"])
+
+            #Shinies
+            if tier_ShinyLevels >= (tier-1):
+                if len(progressionTiers[tier]["Shinies"]) == 0:
+                    #free pass
+                    tier_ShinyLevels = tier
+                    #print("Breeding.setBreedingProgressionTier~ INFO Shiny requirement freebie!")
+                else:
+                    #if there are actual level requirements
+                    allRequirementsMet = True
+                    for requiredShinyBonusType in progressionTiers[tier]["Shinies"]:
+                        if breedingDict["Shinies"]["Total Shiny Levels"][requiredShinyBonusType] < progressionTiers[tier]["Shinies"][requiredShinyBonusType]:
+                            allRequirementsMet = False
+                            failedShinyRequirements.append(requiredShinyBonusType + " (" + str(breedingDict["Shinies"]["Total Shiny Levels"][requiredShinyBonusType]) + "/" + str(progressionTiers[tier]["Shinies"][requiredShinyBonusType]) + ")")
+                            failedShinyBonus[requiredShinyBonusType] = breedingDict["Shinies"]["Grouped Bonus"][requiredShinyBonusType]
+                            #print("Breeding.setBreedingProgressionTier~ INFO Shiny requirement failed on tier", tier, "because", requiredShinyBonusType, breedingDict["Shinies"]["Total Shiny Levels"][requiredShinyBonusType], "<", progressionTiers[tier]["Shinies"][requiredShinyBonusType])
+                    if allRequirementsMet == True:
+                        tier_ShinyLevels = tier
+                        #print("Breeding.setBreedingProgressionTier~ INFO Shiny requirement met!")
+                    else:
+                        if len(failedShinyRequirements) == 1:
+                            advice_ShinyLevels = "Level the following Shiny bonus: " + failedShinyRequirements[0]
+                        else:
+                            advice_ShinyLevels = "Level the following Shiny bonuses: "
+                            for failedRequirement in failedShinyRequirements:
+                                advice_ShinyLevels += failedRequirement + ", "
+                            advice_ShinyLevels = advice_ShinyLevels[:-2] #trim off final space and comma
+
+                        advice_perShinyBonus = ""
+                        for shinyBonus in failedShinyBonus:
+                            #print("Breeding.setBreedingProgressionTier~ INFO shinyBonus:", shinyBonus)
+                            advice_perShinyBonus = shinyBonus + " pets: "
+                            for pet in failedShinyBonus[shinyBonus]:
+                                #print("Breeding.setBreedingProgressionTier~ INFO pet:", pet)
+                                advice_perShinyBonus += "Lv" + str(pet[1]) + " " + pet[0] + ", "
+                            advice_perShinyBonus = advice_perShinyBonus[:-2] #trim off final space and comma
+                            advice_ShinyPets.append(advice_perShinyBonus)
+                        #advice_ShinyPets = "Shiny pets for each bonus, sorted by lowest whole level:"
+                        #print("Breeding.setBreedingProgressionTier~ OUTPUT advice_ShinyPets:", advice_ShinyPets)
+
+    #Pretty up advice statements
+    overall_BreedingTier = min(maxBreedingTier, tier_UnlockedTerritories, tier_ShinyLevels)
+    if overall_BreedingTier == maxBreedingTier:
+        advice_UnlockedTerritories = "Fantastic job unlocking all of the spice territories!"
+        advice_ShinyLevels = "You've got the basic Shiny levels down now. Choose to either futureproof by leveling the W6 buffs and Infinite Star Signs before release, or continue leveling already strong buffs for guaranteed value now."
+        advice_ShinyPets = [
+            "Best IMO: Faster Shiny Pet Lv Up Rate, Bonuses from All Meals, Base Efficiency for All Skills, Base Critter Per Trap",
+            "Second best: Drop Rate, Multikill Per Tier, Total Damage, Base WIS, Base STR, Base AGI",
+            "Futureproof: W6...?, Infinite Star Signs",
+            "Middle of the pack, helpful to Lv5 at least: Base LUK, Faster Refinery Speed, Higher Artifact Find Chance",
+            "Meh: Lower Mininmum Travel Time for Sailing, Sail Captain EXP Gain, Skill EXP",
+            "Ignorable: Class EXP, Line Width in Lab"]
+    else:
+        if advice_UnlockedTerritories != "":
+            advice_UnlockedTerritories = "Tier " + str(tier_UnlockedTerritories) + "- " + advice_UnlockedTerritories
+            advice_TerritoryComp = "Recommend team for these Territory battles (from left to right): " + recommendedTerritoryCompsList[tier_UnlockedTerritories+1]
+        else:
+            advice_UnlockedTerritories = "Fantastic job unlocking all of the spice territories!"
+        if advice_ShinyLevels != "":
+            advice_ShinyLevels = "Tier " + str(tier_ShinyLevels) + "- " + advice_ShinyLevels
+
+    advice_BreedingCombined = ["Best Breeding tier met: " + str(overall_BreedingTier) + "/" + str(maxBreedingTier) + ". Recommended Breeding actions:", advice_UnlockedTerritories, advice_TerritoryComp, advice_ArenaComp, advice_ShinyLevels, advice_ShinyPets]
     breedingPR = progressionResults.progressionResults(overall_BreedingTier,advice_BreedingCombined,"")
     return breedingPR
 
@@ -20,38 +367,7 @@ def setBreedingProgressionTier(inputJSON, progressionTiers):
     #2b) Maybe a recommended order to spend Dead DNA? Does such a list exist
 #3) Spice collecting meta setups. I'm not sure I agree with all of them since I don't follow them.
 
-#"Breeding" - Scoli
-#[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0], #20 long: 15 1s, 5 0s. Is this somehow spices?
-#[17,17,18,16,1,0,0,0], #Number of unlocked pets per world, I think?
-#[22,17,5,7,10,9,7,4,2,5,6,2,0], #Upgrades to buy with Dead DNA
-#[21141.5709903892,1021818.97364565,2097037.99208773,390.247777185068,0,0,0,0,1134.3082191807812], #DNA. W1-W8 DNA Spirals, then Dead DNA
-#[0,0,0,0,0,0,3,5,4,10,62,10,5,0,42,32,50], #W1 DNA-upgrades, out of 100
-#[0,0,0,0,0,0,0,0,0,0,0,0,0,16,33,37,0], #W2 DNA-upgrades
-#[0,0,0,0,0,0,0,0,0,0,0,0,0,28,2,0,0,0], #W3 DNA-upgrades
-#[0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,0], #W4 DNA-upgrades
-#[0], #W5 DNA-upgrades
-#[0], #W6 DNA-upgrades
-#[0], #W7 DNA-upgrades
-#[0], #W8 DNA-upgrades
-#[0], #W9 / Placeholder?
-#[0,0,0,0,0,0,8.54542145544896,9.67669382236569,13.9186275318536,56.8838868925486,108.12959046347,17.7275208448953,428.250412152119,188.17696756662,533.637843188357,31.6947627578853,50.6309737233113], #W1 Breedability
-#[0,69.6907387579612,36.8624747405442,42.619881976793,90.5887539141593,75.2953835158683,53.3276501946464,43.9653587970605,3.17308787999769,73.3571867703604,107.662438825258,60.616056483778,329.151037257164,612.005139442894,145.895286055577,183.145416782817,0], #W2 Breedability
-#[103.040564979713,58.2568256691571,19.0606882755539,102.131258957944,170.070554986395,375.639671436722,492.018925272567,64.6609049775532,68.6318514931719,7.54784574450273,15.6091679626235,19.3914401528672,90.6720479304566,504.047297646569,82.8581180135961,50.3331402195651,51.8917665295114,0], #W3 Breedability
-#[580.255857513367,283.248552628347,30.6135018833672,64.8798289308786,228.18513297356,197.31242935006,61.2364786210382,7.06284071452882,37.9240819188968,23.3026988248251,17.5876022491411,23.3987263792769,5.01756845138902,28.9874174297304,77.8406287947309,0], #W4 Breedability
-#[0], #W5 Breedability
-#[0], #W6 Breedability
-#[0], #W7 Breedability
-#[0], #W8 Breedability
-#[0], #W9 / Placeholder?
-#[967.6427531949479,200.850893997598,85.379905938739,88.6166372329163,449.5572214705597,85.3663230190753,211.7990207825749,151.28916066805976,459.51795577433506,203.2772533291009,965.7539663269783,448.6740839737442,88.48767896451032,200.87007201094087,87.7725235235931,267.3716241429878,136.74041856337135], #W1 shiny days
-#[0.000462793981481479,89.3440758688517,85.58850406897812,85.4332982674152,0.000172796296296296,87.73902741288245,88.6456760094775,452.3115661811872,92.3514901852824,89.9778021185147,85.2502114033624,462.86156186628796,85.538540037469,266.4501648625571,88.39219685848585,969.8143969797454,205.6059705825701], #W2 shiny days
-#[450.0216154722705,89.3439221038063,202.02724103880504,85.4267015944297,88.39121962121693,85.1091190727122,92.3513852825045,"4.18055555555556e-05",206.74087635835951,96.1591280737122,965.7179840078996,89.3440375065843,87.73777363510344,85.250171355909,224.83373765861742,85.1081353944701,221.8178901809632,88.7116939265482], #W3 shiny days
-#[221.81835044716334,85.363978772235,200.4110125337882,87.6787722774939,87.7998735219069,85.4740287918881,92.3409251808435,131.98556202420357,88.1560091621406,0.00018269675925926,87.73742329482216,96.15882007371248,200.9672410938143,87.79872637260169,85.5644422736844,87.1930508112687], #W4 shiny days
-#[0], #W5 shiny days, probably
-#[0], #W6 shiny days, probably
-#[0], #W7 shiny days, probably
-#[0], #W8 shiny days, probably
-#[0] #W9 / Placeholder?
+
 #
 #"Pets" : First 27 = fenceyard, rest = spicebattles
 #["carrotO", #pet name/type as string

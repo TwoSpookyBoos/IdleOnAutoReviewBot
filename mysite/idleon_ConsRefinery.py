@@ -192,6 +192,8 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers):
             advice_Tab1 += ", Blue: " + str(consRefineryDict['Blue Rank']) + "/" + str(progressionTiers[tier_Tab1+1][1]['Blue Rank']) + " (Overleveled!)"
         else:
             advice_Tab1 += ", Blue: " + str(consRefineryDict['Blue Rank']) + "/" + str(progressionTiers[tier_Tab1+1][1]['Blue Rank'])
+        if tier_Tab1 >= 8:
+            advice_Tab1 += ". After your Red Salt reaches rank 22, consider setting all of Tab1 to 0% auto-refine and infinitely ranking up!"
     #Tab2 Advice
     if tier_Tab2 < 16 and tier_AutoRefine < 19 :
         advice_Tab2 = ("Tier " + str(tier_Tab2) + "- Next Tab2 Balanced tier needs "
@@ -204,6 +206,8 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers):
             advice_Tab2 += ", Nullo: " + str(consRefineryDict['Nullo Rank']) + "/" + str(progressionTiers[tier_Tab2+1][2]['Nullo Rank']) + " (Overleveled!)"
         else:
             advice_Tab2 += ", Nullo: " + str(consRefineryDict['Nullo Rank']) + "/" + str(progressionTiers[tier_Tab2+1][2]['Nullo Rank'])
+        if tier_Tab2 >= 9:
+            advice_Tab1 += ". After your Green Salt reaches rank 22, consider setting all of Tab2 to 0% auto-refine and infinitely ranking up!"
     #Tab3 Advice
     #Tab4 Advice
     #Tab5 Advice

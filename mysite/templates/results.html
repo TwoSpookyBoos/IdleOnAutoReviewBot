@@ -36,15 +36,15 @@
         <div>Welcome to <a href="http://ieautoreview-scoli.pythonanywhere.com/">IE AutoReview Tool - By Scoli290</a></div>
         <br>
         <div>Join the <a href="https://discord.gg/ZmEkqzfjmJ" target="_blank">Discord</a> for the detailed patch notes!</div>
-        <div>Most recent update 2023-12-29: Added support for IdleonToolbox JSON imports. Add W1 Smithing notice for empty ore slots.</div>
-        <div>Previous update 2023-12-28: Pinchy expanded to include two Sneak Peek placements, and now always shows your lowest section too.</div>
+        <div>Most recent update 2024-01-02: Added W4 Breeding Review.</div>
+        <div>Previous update 2023-12-29: Added support for IdleonToolbox JSON imports. Add W1 Smithing notice for empty ore slots.</div>
         <br>
         <div>This tool will retrieve the PUBLIC profile from IdleOn Efficiency for evaluation.</div>
         <div>If you haven't uploaded your profile publicly before, head here: <a href="https://www.idleonefficiency.com/profile/upload" target="_blank">IdleonEfficiency</a></div>
         <br>
         <div>Alternatively, you can provide Raw JSON data.</div>
         <div><a href="https://www.idleonefficiency.com/raw-data" target="_blank">IdleonEfficiency</a>: Click on "Copy Raw JSON" button. Paste results below.</div>
-        <div><a href="https://idleontoolbox.com/data" target="_blank">IdleonToolbox</a>: Click on "IdleonToolbox JSON" button. Paste results below.</div>
+        <div><a href="https://idleontoolbox.com/data" target="_blank">IdleonToolbox</a>: Click on <strong>"IdleonToolbox JSON"</strong> button. Paste results below.</div>
         <br>
         <div>All tier requirements are listed in the <a href="https://docs.google.com/spreadsheets/d/16I-rURrVeyvltK2wxcQSiPgO07QY015RVNG4MAgUsGw/edit?usp=sharing" target="_blank">Spreadsheet</a> for reference!</div>
         <br>
@@ -243,11 +243,23 @@
                     </div>
                     <h1><img src="/static/imgs/w4banner.png" title ="World 4 Banner" onclick="toggle('w4-content')" class="banner"></h1>
                     <div class="world-content" id="w4-content">
-                        <div> <strong>{{ htmlInput[4][0][0] }}</strong></div> <!-- Cooking tier -->
-                        <br>
-                        <div> <strong>{{ htmlInput[4][1][0] }}</strong></div> <!-- Breeding tier -->
-                        <br>
-                        <div> <strong>{{ htmlInput[4][2][0] }}</strong></div> <!-- Lab tier -->
+                        <div> <img src="/static/imgs/Breeding.png" alt="Breeding" width="4%"> </div>
+                        <div> <strong>{{ htmlInput[4][0][0] }}</strong></div> <!-- Breeding tier -->
+                        <li>{{ htmlInput[4][0][1] }}</li> <!-- Breeding Spice Territory Unlock advice -->
+                        {% if htmlInput[4][0][1] != "Fantastic job unlocking all of the spice territories!" %}
+                            <ul><li> {{ htmlInput[4][0][2] }} </li></ul> <!-- Breeding Spice Territory Team advice -->
+                        {% endif %}
+                        {% if htmlInput[4][0][3] != "" %}
+                            <ul><li> {{ htmlInput[4][0][3] }} </li></ul> <!-- Breeding Arena Team advice -->
+                        {% endif %}
+                        <li> {{ htmlInput[4][0][4] }} </li> <!-- Breeding Shiny Levels tier -->
+                        <ul>
+                            {% for line in htmlInput[4][0][5] %}
+                                {% if line != "" %}
+                                    <li> {{ line }} </li> <!-- Breeding Shiny Levels infinite tierlist advice -->
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
                         <br>
                     </div>
                     <h1><img src="/static/imgs/w5banner.png" title ="World 5 Banner" onclick="toggle('w5-content')" class="banner"></h1>
@@ -258,6 +270,8 @@
                         <br>
                         <div> <strong>{{ htmlInput[5][2][0] }}</strong></div> <!-- Divinity tier -->
                     </div>
+                    <br>
+                    <a href='https://ko-fi.com/W7W4SRUK5' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi4.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
                     <br>
                     <div>Unless otherwise noted, all image credits to <a href="https://twitter.com/lavaflame2" target="_blank">Lavaflame2</a></div>
                 {% endif %}

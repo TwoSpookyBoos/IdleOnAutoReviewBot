@@ -182,41 +182,28 @@ def getEnemyNameFromMap(inputMap):
         case _:
             return ("UnknownEnemy"+str(inputMap))
 
-def getApocalypseCharactersDict(inputJSON, playerCount, playerNames, fromPublicIEBool):
+def getApocalypseCharactersDict(inputJSON, playerCount, playerNames):
     #get classes, find Barbarian and BB
     playerClassesList = ["placeholder"]
     apocCharactersDict = {}
     classCounter = 0
-    if fromPublicIEBool:
-        while classCounter < playerCount:
-            try:
-                characterClass = getHumanReadableClasses(inputJSON['CharacterClass_'+str(classCounter)])
-                characterNameAndClass = playerNames[classCounter] + " the " + characterClass
-                if characterClass == "Barbarian" or characterClass == "Blood Berserker":
-                    apocCharactersDict[classCounter] = [[characterNameAndClass,0,0,0],[]]
-                playerClassesList.append(characterNameAndClass)
-            except Exception as reason:
-                print("ConsDeathNote.getApocalypseCharactersDict~ EXCEPTION Unable to find class name for Character", classCounter, "while fromPublicIEBool=", fromPublicIEBool, "because:", reason)
-            classCounter += 1
-    else:
-        while classCounter < playerCount:
-            try:
-                characterClass = getHumanReadableClasses(inputJSON['CharacterClass_'+str(classCounter)])
-                characterNameAndClass = "Character" + str(classCounter+1) + " the " + getHumanReadableClasses(inputJSON['CharacterClass_'+str(classCounter)])
-                if characterClass == "Barbarian" or characterClass == "Blood Berserker":
-                    apocCharactersDict[classCounter] = [[characterNameAndClass,0,0,0],[]]
-                playerClassesList.append(characterNameAndClass)
-            except Exception as reason:
-                print("ConsDeathNote.getApocalypseCharactersDict~ EXCEPTION Unable to find class name for Character", classCounter, "while fromPublicIEBool=", fromPublicIEBool, "because:", reason)
-            classCounter += 1
-
+    while classCounter < playerCount:
+        try:
+            characterClass = getHumanReadableClasses(inputJSON['CharacterClass_'+str(classCounter)])
+            characterNameAndClass = playerNames[classCounter] + " the " + characterClass
+            if characterClass == "Barbarian" or characterClass == "Blood Berserker":
+                apocCharactersDict[classCounter] = [[characterNameAndClass,0,0,0],[]]
+            playerClassesList.append(characterNameAndClass)
+        except Exception as reason:
+            print("ConsDeathNote.getApocalypseCharactersDict~ EXCEPTION Unable to find class name for Character", classCounter, "because:", reason)
+        classCounter += 1
     #print("ConsDeathNote~ playerClassesList: ",playerClassesList[1:])
     #print("ConsDeathNote~ apocCharactersDict: ",apocCharactersDict)
     return apocCharactersDict
 
 
-def getDeathNoteKills(inputJSON, playerCount, playerNames, fromPublicIEBool):
-    apocCharactersDict = getApocalypseCharactersDict(inputJSON, playerCount, playerNames, fromPublicIEBool)
+def getDeathNoteKills(inputJSON, playerCount, playerNames):
+    apocCharactersDict = getApocalypseCharactersDict(inputJSON, playerCount, playerNames)
     apocableMapIndexList = [1, 2, 14, 17, 16, 13, 18, 31, 19, 24, 26, 27, 28, 8, 15, 30, 9, 38, 51, 52, 53, 57, 58, 59, 60, 62, 63, 64, 65, 69, 101, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 116, 117, 120, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 166, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213]
     apocableMapPortalRequirementList = [11, 15, 40, 0, 60, 2500, 5000, 0, 125, 100, 150, 30, 0, 20000, 35000, 0, 0, 0, 250, 600, 1000, 1200, 1600, 2000, 2500, 3000, 4000, 5000, 1, 0, 1000, 2000, 3000, 4000, 6000, 8000, 11000, 15000, 18000, 22000, 35000, 120000, 250000, 0, 0, 5000, 12000, 18000, 25000, 40000, 60000, 90000, 120000, 150000, 190000, 250000, 300000, 350000, 100, 25000, 30000, 50000, 75000, 125000, 300000, 500000, 1000000, 2000000, 3000000, 6000000, 10000000, 60000]
     #set maps with portal requirements, 0 kills default
@@ -745,8 +732,8 @@ def getDeathNoteKills(inputJSON, playerCount, playerNames, fromPublicIEBool):
     #print("ConsDeathNote~ apocCharactersDict: ",apocCharactersDict)
     return fullDeathNoteDict
 
-def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, playerCount, playerNames, fromPublicIEBool):
-    fullDeathNoteDict = getDeathNoteKills(inputJSON, playerCount, playerNames, fromPublicIEBool)
+def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, playerCount, playerNames):
+    fullDeathNoteDict = getDeathNoteKills(inputJSON, playerCount, playerNames)
     tier_w1DeathNoteSkulls = 0
     tier_w2DeathNoteSkulls = 0
     tier_w3DeathNoteSkulls = 0
