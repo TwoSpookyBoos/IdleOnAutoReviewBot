@@ -7,6 +7,7 @@ def getHandsStatus(inputJSON, playerCount, playerNames):
     handsClasses = [3,4,5,6] #Includes the placeholder numbers after Vman
     handsCharactersDict = {}
     characterClassesList = []
+
     classCounter = 0
     while classCounter < playerCount:
         try:
@@ -35,23 +36,40 @@ def getHandsStatus(inputJSON, playerCount, playerNames):
     leftHandsString = ""
     advice_RightHands = []
     rightHandsString = ""
+
+    bestLeftName = ""
+    bestRightName = ""
+    #Set bests
+    for handsCharacter in handsCharactersDict:
+        if len(handsCharactersDict[handsCharacter][1]) == 0:
+            bestLeftName = handsCharactersDict[handsCharacter][0]
+        if len(handsCharactersDict[handsCharacter][2]) == 0:
+            bestRightName = handsCharactersDict[handsCharacter][0]
+
     for handsCharacter in handsCharactersDict:
         if len(handsCharactersDict[handsCharacter][1]) > 0: #if the character has at least 1 LeftHand skill they aren't first in
-            leftHandsString = handsCharactersDict[handsCharacter][0] + " is not the highest level in " + str(len(handsCharactersDict[handsCharacter][1])) + "/" + str(len(skillsToReview_LeftHand)) + " Left Hand skills: "
-            for skill in handsCharactersDict[handsCharacter][1]:
-                leftHandsString += skill + handsCharactersDict[handsCharacter][1][skill] + ", "
+            if bestLeftName != "":
+                leftHandsString = handsCharactersDict[handsCharacter][0] + " cheers on " + bestLeftName + " from the sidelines.  "
+            else:
+                leftHandsString = handsCharactersDict[handsCharacter][0] + " is not the highest level in " + str(len(handsCharactersDict[handsCharacter][1])) + "/" + str(len(skillsToReview_LeftHand)) + " Left Hand skills: "
+                for skill in handsCharactersDict[handsCharacter][1]:
+                    leftHandsString += skill + handsCharactersDict[handsCharacter][1][skill] + ", "
         else:
             leftHandsString = handsCharactersDict[handsCharacter][0] + " is the highest level in all " + str(len(skillsToReview_LeftHand)) + " Left Hand skills! They best <3  "
         leftHandsString = leftHandsString[:-2]
         advice_LeftHands.append(leftHandsString)
 
         if len(handsCharactersDict[handsCharacter][2]) > 0: #if the character has at least 1 RightHand skill they aren't first in
-            rightHandsString = handsCharactersDict[handsCharacter][0] + " is not the highest level in " + str(len(handsCharactersDict[handsCharacter][2])) + "/" + str(len(skillsToReview_RightHand)) + " Right Hand skills: "
-            for skill in handsCharactersDict[handsCharacter][2]:
-                rightHandsString += skill + handsCharactersDict[handsCharacter][2][skill] + ", "
+            if bestRightName != "":
+                rightHandsString = handsCharactersDict[handsCharacter][0] + " cheers on " + bestLeftName + " from the sidelines.  "
+            else:
+                rightHandsString = handsCharactersDict[handsCharacter][0] + " is not the highest level in " + str(len(handsCharactersDict[handsCharacter][2])) + "/" + str(len(skillsToReview_RightHand)) + " Right Hand skills: "
+                for skill in handsCharactersDict[handsCharacter][2]:
+                    rightHandsString += skill + handsCharactersDict[handsCharacter][2][skill] + ", "
         else:
             rightHandsString = handsCharactersDict[handsCharacter][0] + " is the highest level in all " + str(len(skillsToReview_RightHand)) + " Right Hand skills! They best <3  "
         rightHandsString = rightHandsString[:-2]
+
         if rightHandsString.find("Worship") != -1:
             rightHandsString += ". Worship matters moreso for Species Epoch than Right Hand. Don't steal charge away from this character!"
         advice_RightHands.append(rightHandsString)

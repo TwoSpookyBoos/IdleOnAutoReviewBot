@@ -361,7 +361,7 @@ def setDefaultTiers():
             "Shinies": {
                 "Multikill Per Tier": 20,
                 "Total Damage": 25,
-                "World 6...?": 30
+                "World 6...?": 35
                 },
             "ShinyNotes": ""
             },

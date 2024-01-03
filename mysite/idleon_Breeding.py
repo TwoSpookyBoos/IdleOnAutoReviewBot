@@ -273,11 +273,17 @@ def setBreedingProgressionTier(inputJSON, progressionTiers):
     advice_ShinyLevels = ""
     advice_ShinyPets = []
     breedingDict = parseJSONtoBreedingDict(inputJSON)
+    shinyExclusionsDict = getShinyExclusions(inputJSON)
     if breedingDict == {}:
         breedingPR = progressionResults.progressionResults(0, "Come back after unlocking Breeding in W4!", "")
         return breedingPR
     else:
         for tier in progressionTiers:
+            if "Infinite Star Signs" in progressionTiers[tier]["Shinies"] and shinyExclusionsDict["Exclude-InfiniteStarSigns"] == True:
+                progressionTiers[tier]["Shinies"]["Infinite Star Signs"] = 0
+            if "Higher Artifact Find Chance" in progressionTiers[tier]["Shinies"] and shinyExclusionsDict["Exclude-ArtifactChance"] == True:
+                progressionTiers[tier]["Shinies"]["Higher Artifact Find Chance"] = 0
+
             #print("Breeding.setBreedingProgressionTier~ INFO Starting review of Tier:", tier)
             #Unlocked Territories
             if tier_UnlockedTerritories >= (tier-1):
