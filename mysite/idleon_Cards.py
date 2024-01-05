@@ -1,5 +1,19 @@
 import json
 
+def getSortedCardSet(cardSetDict):
+    #print("Cards.getSortedCardSet~ OUTPUT cardSetDict:", type(cardSetDict), cardSetDict)
+    if isinstance(cardSetDict, dict):
+        sortedCards = sorted(cardSetDict.items(), key=getCardsToNextLevel)
+        #print("Cards.getCardsToNextLevel~ OUTPUT sortedCards:", type(sortedCards), sortedCards)
+            #cardSetDict["CardsToNextLevel"]
+        return dict(sortedCards)
+    else:
+        return 99999999999
+
+def getCardsToNextLevel(card):
+    #print("Cards.getCardsToNextLevel~ OUTPUT card:", card)
+    return card[1]["CardsToNextLevel"]
+
 def getCardSetReview(inputJSON):
     cardRequirementsDict = {
         "Blunder Hills": {
@@ -9,25 +23,26 @@ def getCardSetReview(inputJSON):
             "beanG": ["Bored Bean",7,21,35,112,3213],
             "slimeG": ["Slime", 8,24,40,128,3672],
             "snakeG": ["Baby Boa",9,27,45,144,4131],
-            "carrot0": ["Carrot",10,30,50,160,4590],
-            "goblinG": ["Goblin",10,30,50,160,4590],
-            "plank": ["Plank",10,30,50,160,4590],
-            "frogBIG": ["Giga Frog",10,30,50,160,4590],
+            "carrotO": ["Carrotman",10,30,50,160,4590],
+            "goblinG": ["Glublin",10,30,50,160,4590],
+            "plank": ["Wode Board",10,30,50,160,4590],
+            "frogBIG": ["Gigafrog",10,30,50,160,4590],
             "poopSmall": ["Poop",10,30,50,160,4590],
             "ratB": ["Rat",10,30,50,160,4590],
-            "branch": ["Stick",10,30,50,160,4590],
-            "acorn": ["Acorn",10,30,50,160,4590],
+            "branch": ["Walking Stick",10,30,50,160,4590],
+            "acorn": ["Nutto",10,30,50,160,4590],
             "Crystal0": ["Crystal Carrot",3,9,15,48,1377],
             "mushW": ["Wood Mushroom",10,30,50,160,4590]
         },
         "Yum-Yum Desert": {
             "jarSand": ["Sandy Pot",10,30,50,160,4590],
             "mimicA": ["Mimic",10,30,50,160,4590],
-            "crapcake": ["Crabcake",10,30,50,160,4590],
+            "crabcake": ["Crabcake",10,30,50,160,4590],
             "coconut": ["Mafioso",10,30,50,160,4590],
             "sandcastle": ["Sandcastle",10,30,50,160,4590],
             "pincermin": ["Pincermin",10,30,50,160,4590],
             "potato": ["Mashed Potato",10,30,50,160,4590],
+            "steak": ["Tyson",10,30,50,160,4590],
             "moonman": ["Moonman",10,30,50,160,4590],
             "sandgiant": ["Sand Giant",10,30,50,160,4590],
             "snailZ": ["Snelbie",10,30,50,160,4590],
@@ -61,8 +76,8 @@ def getCardSetReview(inputJSON):
             "Fish4": ["Bloach",10,30,50,160,4590],
             "Bug3": ["Senient Cereal",10,30,50,160,4590],
             "Bug4": ["Fruitfly",10,30,50,160,4590],
-            "SoulCard1": ["Forest Soul",39,15,48,1377],
-            "SoulCard2": ["Dune Soul",39,15,48,1377],
+            "SoulCard1": ["Forest Soul",3,9,15,48,1377],
+            "SoulCard2": ["Dune Soul",3,9,15,48,1377],
             "CritterCard1": ["Froge",4,12,20,64,1836],
             "CritterCard2": ["Crabbo",4,12,20,64,1836],
             "CritterCard3": ["Scorpie",4,12,20,64,1836]
@@ -70,12 +85,12 @@ def getCardSetReview(inputJSON):
         "Frostbite Tundra": {
             "sheep": ["Sheepie",11,33,55,176,5049],
             "flake": ["Snow Flake",12,36,60,192,5508],
-            "stache": ["Stache",13,39,65,208,5967],
+            "stache": ["Sir Stache",13,39,65,208,5967],
             "bloque": ["Bloque",14,42,70,224,6426],
-            "mamoth": ["Mammoth",15,24,75,240,6885],
-            "snowball": ["Snowball",15,45,75,240,6885],
+            "mamoth": ["Mammooth",15,24,75,240,6885],
+            "snowball": ["Snowman",15,45,75,240,6885],
             "penguin": ["Penguin",15,45,75,240,6885],
-            "thermostat": ["Thermo",15,45,75,240,6885],
+            "thermostat": ["Thermister",15,45,75,240,6885],
             "glass": ["Quenchie",17,51,85,272,7803],
             "snakeB": ["CryoSnake",17,51,85,272,7803],
             "speaker": ["Bop Box",17,51,85,272,7803],
@@ -111,7 +126,7 @@ def getCardSetReview(inputJSON):
             "CritterCard7": ["Bunny",6,18,30,96,2754],
             "CritterCard8": ["Dung Beat",7,21,35,112,3213],
             "CritterCard9": ["Honker",9,27,45,144,4131],
-            "CritterCard10": ["Blobfish",12,36,60,192,],
+            "CritterCard10": ["Blobfish",12,36,60,192,5508],
             "SoulCard3": ["Rooted Soul",3,9,15,48,1377],
             "SoulCard4": ["Frigid Soul",4,12,20,64,1836],
             "SoulCard5": ["Squishy Soul",5,15,25,80,2295],
@@ -142,12 +157,12 @@ def getCardSetReview(inputJSON):
             "w5a2": ["Maccie",28,84,140,448,12852],
             "w5a3": ["Mister Brightside",32,96,160,512,14688],
             "w5a4": ["Cheese Nub",35,105,175,560,16065],
-            "w5a5": ["Stiltmole",45,135,225,720,20655],
+            "w5a5": ["Stiltmole",45,135,225,720,21781],
             "w5b1": ["Molti",48,144,240,768,22032],
             "w5b2": ["Puragtory Stalker",52,156,260,832,23868],
             "w5b3": ["Citringe",60,180,300,960,27540],
             "w5b4": ["Lampar",65,195,325,1040,29835],
-            "w5b5": ["Fire Spirit",70,2210,350,1120,32130],
+            "w5b5": ["Fire Spirit",70,210,350,1120,32130],
             "w5b6": ["Biggole Mole",75,225,375,1200,34425],
             "w5c1": ["Crawler",80,240,400,1280,36720],
             "w5c2": ["Tremor Wurms",100,300,500,1600,45900],
@@ -224,62 +239,138 @@ def getCardSetReview(inputJSON):
             "fallEvent1": ["Falloween Pumpkin",3,9,15,48,1377]
         }
     }
-    rawCardsData = inputJSON["Cards0"]
-    playerCardsToNextLevelDict = {
-        }
-    print("Cards.getCardSetReview~ INFO rawCardsData:", type(rawCardsData))
+    rawCardsData = json.loads(inputJSON["Cards0"])
+    playerCardsToNextLevelDict = {}
+    closestCardsPerSet = {}
+    playerCardSetTotalsDict = {}
+    cardSetBonusRequirements = {}
+    playerCardSetBonuses = {}
+    #print("Cards.getCardSetReview~ INFO rawCardsData:", type(rawCardsData))
 
     #Build playerCard cardSets
     for cardSet in cardRequirementsDict:
-        playerCardsToNextLevelDict[cardSet] = {"Total": 0}
+        playerCardSetTotalsDict[cardSet] = 0
+        playerCardsToNextLevelDict[cardSet] = {}
+        cardSetBonusRequirements[cardSet] = []
+        playerCardSetBonuses[cardSet] = ""
+        closestCardsPerSet[cardSet] = {}
         for card in cardRequirementsDict[cardSet]:
             playerCardsToNextLevelDict[cardSet][card] = {
-                "CardName": cardRequirementsDict[card][0],
+                "CardName": cardRequirementsDict[cardSet][card][0],
                 "CardsToNextLevel": 1,
                 "CardLevel": 0,
-                "NextLevelName": "Normal"}
+                "NextLevelName": "Unlocked"}
 
+    #Fill out cardSetBonusRequirements
+    numberOfCardRanks = 6
+    for cardSet in cardSetBonusRequirements:
+        for cardRank in range(1, numberOfCardRanks+1):
+            cardSetBonusRequirements[cardSet].append(cardRank * len(cardRequirementsDict[cardSet]))
+    #print("Cards.getCardSetReview~ INFO cardSetBonusRequirements:", cardSetBonusRequirements)
+
+    safetyRange = 1
+    #Parse player cards to determine card levels
     for card in rawCardsData:
         #card {"stache":18612}
         for cardSet in cardRequirementsDict:
             #cardSet "Frostbite Tundra": {"stache": {...}, ...}
             if card in cardRequirementsDict[cardSet]:
                 #if card already Ruby:
-                if rawCardsData[cardSet][card] >= cardRequirementsDict[card][5]:
+                #print(cardSet, card, rawCardsData[card], "vs Ruby requirement of", cardRequirementsDict[cardSet][card][5] + cardRequirementsDict[cardSet][card][4] + cardRequirementsDict[cardSet][card][3] + cardRequirementsDict[cardSet][card][2] + cardRequirementsDict[cardSet][card][1])
+                if rawCardsData[card] >= cardRequirementsDict[cardSet][card][5] + cardRequirementsDict[cardSet][card][4] + cardRequirementsDict[cardSet][card][3] + cardRequirementsDict[cardSet][card][2] + cardRequirementsDict[cardSet][card][1] - safetyRange:
                     playerCardsToNextLevelDict[cardSet][card]["CardsToNextLevel"] = 0
                     playerCardsToNextLevelDict[cardSet][card]["NextLevelName"] = "None"
                     playerCardsToNextLevelDict[cardSet][card]["CardLevel"] = 6
-                    playerCardsToNextLevelDict[cardSet]["Total"] += 6
+                    playerCardSetTotalsDict[cardSet] += 6
                 #if card already Platinum:
-                elif rawCardsData[cardSet][card] >= cardRequirementsDict[card][4]:
-                    playerCardsToNextLevelDict[cardSet][card]["CardsToNextLevel"] = cardRequirementsDict[card][5]-rawCardsData[cardSet][card]
+                elif rawCardsData[card] >= cardRequirementsDict[cardSet][card][4] + cardRequirementsDict[cardSet][card][3] + cardRequirementsDict[cardSet][card][2] + cardRequirementsDict[cardSet][card][1] - safetyRange:
+                    playerCardsToNextLevelDict[cardSet][card]["CardsToNextLevel"] = cardRequirementsDict[cardSet][card][5] + cardRequirementsDict[cardSet][card][4] + cardRequirementsDict[cardSet][card][3] + cardRequirementsDict[cardSet][card][2] + cardRequirementsDict[cardSet][card][1] - rawCardsData[card]
                     playerCardsToNextLevelDict[cardSet][card]["NextLevelName"] = "Ruby"
                     playerCardsToNextLevelDict[cardSet][card]["CardLevel"] = 5
-                    playerCardsToNextLevelDict[cardSet]["Total"] += 5
+                    playerCardSetTotalsDict[cardSet] += 5
                 #if card already Gold:
-                elif rawCardsData[cardSet][card] >= cardRequirementsDict[card][3]:
-                    playerCardsToNextLevelDict[cardSet][card]["CardsToNextLevel"] = cardRequirementsDict[card][4]-rawCardsData[cardSet][card]
+                elif rawCardsData[card] >= cardRequirementsDict[cardSet][card][3] + cardRequirementsDict[cardSet][card][2] + cardRequirementsDict[cardSet][card][1] - safetyRange:
+                    playerCardsToNextLevelDict[cardSet][card]["CardsToNextLevel"] = cardRequirementsDict[cardSet][card][4] + cardRequirementsDict[cardSet][card][3] + cardRequirementsDict[cardSet][card][2] + cardRequirementsDict[cardSet][card][1] - rawCardsData[card]
                     playerCardsToNextLevelDict[cardSet][card]["NextLevelName"] = "Platinum"
                     playerCardsToNextLevelDict[cardSet][card]["CardLevel"] = 4
-                    playerCardsToNextLevelDict[cardSet]["Total"] += 4
+                    playerCardSetTotalsDict[cardSet] += 4
                 #if card already Silver:
-                elif rawCardsData[cardSet][card] >= cardRequirementsDict[card][2]:
-                    playerCardsToNextLevelDict[cardSet][card]["CardsToNextLevel"] = cardRequirementsDict[card][3]-rawCardsData[cardSet][card]
+                elif rawCardsData[card] >= cardRequirementsDict[cardSet][card][2] + cardRequirementsDict[cardSet][card][1] - safetyRange:
+                    playerCardsToNextLevelDict[cardSet][card]["CardsToNextLevel"] = cardRequirementsDict[cardSet][card][3] + cardRequirementsDict[cardSet][card][2] + cardRequirementsDict[cardSet][card][1] - rawCardsData[card]
                     playerCardsToNextLevelDict[cardSet][card]["NextLevelName"] = "Gold"
                     playerCardsToNextLevelDict[cardSet][card]["CardLevel"] = 3
-                    playerCardsToNextLevelDict[cardSet]["Total"] += 3
+                    playerCardSetTotalsDict[cardSet] += 3
                 #if card already Bronze:
-                elif rawCardsData[cardSet][card] >= cardRequirementsDict[card][1]:
-                    playerCardsToNextLevelDict[cardSet][card]["CardsToNextLevel"] = cardRequirementsDict[card][2]-rawCardsData[cardSet][card]
+                elif rawCardsData[card] >= cardRequirementsDict[cardSet][card][1]:
+                    playerCardsToNextLevelDict[cardSet][card]["CardsToNextLevel"] = cardRequirementsDict[cardSet][card][2] + cardRequirementsDict[cardSet][card][1] - rawCardsData[card]
                     playerCardsToNextLevelDict[cardSet][card]["NextLevelName"] = "Silver"
                     playerCardsToNextLevelDict[cardSet][card]["CardLevel"] = 2
-                    playerCardsToNextLevelDict[cardSet]["Total"] += 2
+                    playerCardSetTotalsDict[cardSet] += 2
                 #if card already Normal:
-                elif rawCardsData[cardSet][card] >= 1:
-                    playerCardsToNextLevelDict[cardSet][card]["CardsToNextLevel"] = cardRequirementsDict[card][1]-rawCardsData[cardSet][card]
+                elif rawCardsData[card] >= 1:
+                    playerCardsToNextLevelDict[cardSet][card]["CardsToNextLevel"] = cardRequirementsDict[cardSet][card][1] - rawCardsData[card]
                     playerCardsToNextLevelDict[cardSet][card]["NextLevelName"] = "Bronze"
                     playerCardsToNextLevelDict[cardSet][card]["CardLevel"] = 1
-                    playerCardsToNextLevelDict[cardSet]["Total"] += 1
+                    playerCardSetTotalsDict[cardSet] += 1
 
+    #Sort each Card Set by the lowest cards needed
+    #print("Cards.getCardSetReview~ OUTPUT CardSet Pre-sorted:", playerCardsToNextLevelDict["Dungeons"])
     for cardSet in playerCardsToNextLevelDict:
-        print("Cards.getCardSetReview~ OUTPUT CardSet Totals:", cardSet, playerCardsToNextLevelDict[cardSet]["Total"])
+        #print("Cards.getCardSetReview~ OUTPUT CardSet Total:", cardSet, playerCardSetTotalsDict[cardSet])
+        playerCardsToNextLevelDict[cardSet] = getSortedCardSet(playerCardsToNextLevelDict[cardSet])
+    #print("Cards.getCardSetReview~ OUTPUT CardSet Post-sorted:", playerCardsToNextLevelDict.keys())
+
+    #Determine which card set bonus they have
+    for cardSet in cardSetBonusRequirements:
+        nextCardSetBonusTierRequirement = 0
+        nextBonusTierNameList = ["Unlocked", "Bronze", "Silver", "Gold", "Platinum", "Ruby"]
+        playerNextBonusTierName = ""
+        for counter in range(0, len(cardSetBonusRequirements[cardSet])):
+            #print("Cards.getCardSetReview~ OUTPUT: Player has", cardSet, playerCardSetTotalsDict[cardSet], "cards, and next Set Bonus requires", cardSetBonusRequirements[cardSet][counter])
+            if playerCardSetTotalsDict[cardSet] < cardSetBonusRequirements[cardSet][counter] and nextCardSetBonusTierRequirement == 0:
+                nextCardSetBonusTierRequirement = cardSetBonusRequirements[cardSet][counter]
+                playerNextBonusTierName = nextBonusTierNameList[counter]
+            elif counter == len(cardSetBonusRequirements[cardSet])-1 and nextCardSetBonusTierRequirement == 0:
+                nextCardSetBonusTierRequirement = cardSetBonusRequirements[cardSet][counter]
+                playerNextBonusTierName = nextBonusTierNameList[-1]
+        playerCardSetBonuses[cardSet] = str(playerCardSetTotalsDict[cardSet]) + "/" + str(nextCardSetBonusTierRequirement) + " for " + playerNextBonusTierName
+
+    #Group by lowest cards needed
+    for cardSet in playerCardsToNextLevelDict:
+        for card in playerCardsToNextLevelDict[cardSet]:
+            if playerCardsToNextLevelDict[cardSet][card]["CardsToNextLevel"] in closestCardsPerSet[cardSet]:
+                closestCardsPerSet[cardSet][playerCardsToNextLevelDict[cardSet][card]["CardsToNextLevel"]].append(playerCardsToNextLevelDict[cardSet][card]["CardName"] + " (" + playerCardsToNextLevelDict[cardSet][card]["NextLevelName"] + ")")
+            else:
+                closestCardsPerSet[cardSet][playerCardsToNextLevelDict[cardSet][card]["CardsToNextLevel"]] = [playerCardsToNextLevelDict[cardSet][card]["CardName"] + " (" + playerCardsToNextLevelDict[cardSet][card]["NextLevelName"] + ")"]
+        if 0 in closestCardsPerSet[cardSet].keys():
+            del closestCardsPerSet[cardSet][0]
+    #print("Cards.getCardSetReview~ OUTPUT Grouped closestCardsPerSet after removing 0s:", closestCardsPerSet.keys())
+
+    #Generate Advice, excluding Events for now
+    cards_combinedAdvice = []
+    excludeCardSetList = ["Events", "Dungeons"]
+    for cardSet in closestCardsPerSet:
+        if cardSet not in excludeCardSetList:
+            print("Reviewing CardSet:", cardSet)
+            if len(closestCardsPerSet[cardSet]) == 0:
+                adviceHeader = str(cardSet) + " Set: " + playerCardSetBonuses[cardSet] + " = All finished! You best <3"
+                adviceDetailsList = [""]
+            else:
+                valuesListed = 0
+                adviceHeader = str(cardSet) + " Set: " + playerCardSetBonuses[cardSet]
+                adviceDetails = ""
+                adviceDetailsList = []
+                for cardAmount in closestCardsPerSet[cardSet]:
+                    if valuesListed < 2:
+                        adviceDetails = str(cardAmount) + " cards needed for level up: "
+                        for card in closestCardsPerSet[cardSet][cardAmount]:
+                            adviceDetails += card + ", "
+                        valuesListed += 1
+                        if adviceDetails.endswith(", "):
+                            adviceDetails = adviceDetails[:-2] #trim off the final comma and space
+                        adviceDetailsList.append(adviceDetails)
+            print("Appending CardSet:", adviceHeader)
+            cards_combinedAdvice.append([adviceHeader, adviceDetailsList])
+    #print("Cards.getCardSetReview~ OUTPUT cards_combinedAdvice:", cards_combinedAdvice)
+
+    return cards_combinedAdvice

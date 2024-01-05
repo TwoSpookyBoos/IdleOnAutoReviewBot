@@ -14,11 +14,13 @@ import idleon_Consumables
 import idleon_GemShop
 import idleon_Greenstacks
 import idleon_MaestroHands
+import idleon_Cards
 
 #w1
 import idleon_Stamps
 import idleon_Bribes
 import idleon_Smithing
+
 
 #w2
 import idleon_Alchemy
@@ -40,7 +42,7 @@ import idleon_Breeding
 
 
 #Step 1: Retrieve data from public IdleonEfficiency website or from file
-def getJSONfromAPI(url="https://scoli.idleonefficiency.com/raw-data"):
+def getJSONfromAPI(runType, url="https://scoli.idleonefficiency.com/raw-data"):
     result = re.search('https://(.*?).idleonefficiency.com', url)
     username = result.group(1)
     username = username.lower()
@@ -54,32 +56,42 @@ def getJSONfromAPI(url="https://scoli.idleonefficiency.com/raw-data"):
     try:
         jsonvalue = response.json()
         parsed = jsonvalue
+        return parsed
     except Exception as reason:
-        print("idleonTaskSuggester.getJSONfromAPI~ Error retrieving data from IE!", response, reason)
-        parsed = []
-    #print("parsed is a ", type(parsed))
-    return parsed
+        if runType == "web":
+            print("idleonTaskSuggester.getJSONfromAPI~ Error retrieving data from IE!", response, reason)
+            parsed = []
+            return parsed
+        elif runType == "consoleTest":
+            return "PublicIEProfileNotFound"
 
-def getJSONfromText(rawJSON):
+def getJSONfromText(runType, rawJSON):
     parsed = []
-    #print("idleonTaskSuggester.getJSONfromText~ Input type:", type(rawJSON))
+    #print("idleonTaskSuggester.getJSONfromText~ Input type and Length:", type(rawJSON), len(rawJSON))
     if isinstance(rawJSON, dict): #Console testing
-        #Check to see if this is Toolbox JSON
-        if "lastUpdated" in rawJSON:
+        if "lastUpdated" in rawJSON: #Check to see if this is Toolbox JSON
             parsed = rawJSON["data"]
             parsed["charNames"] = rawJSON["charNames"]
             parsed["companion"] = rawJSON["companion"]
+            #print("idleonTaskSuggester.getJSONfromText~ Return Point 1: DICT Toolbox JSON found.")
             return parsed
-        else:
+        else: #Non-Toolbox JSON
             try:
                 jsonString = json.dumps(rawJSON)
                 #print("idleonTaskSuggester.getJSONfromText~ Type after json.dumps (expecting str):", type(jsonString))
                 parsed = json.loads(jsonString)
                 #print("idleonTaskSuggester.getJSONfromText~ Type after json.loads (excepting dict):", type(parsed))
+                #print("idleonTaskSuggester.getJSONfromText~ Return Point 2: Non-Toolbox JSON found.")
+                return parsed
             except Exception as reason:
-                print("idleonTaskSuggester.getJSONfromText~ Error parsing JSON data from console input!")
-                print("idleonTaskSuggester.getJSONfromText~ Exception reason: ", reason)
-                parsed = []
+                if runType == "web":
+                    print("idleonTaskSuggester.getJSONfromText~ EXCEPTION Parsing JSON data from console input!", reason)
+                    print("idleonTaskSuggester.getJSONfromText~ EXCEPTION Return Point 3: Non-Toolbox JSON found, failed to parse. Returning empty list:", reason)
+                    return []
+                elif runType == "consoleTest":
+                    #print("idleonTaskSuggester.getJSONfromText~ Return Point 4: Non-Toolbox JSON found, failed to parse. Returning 'JSONParseFail-DictException'")
+                    print("idleonTaskSuggester.getJSONfromText~ EXCEPTION Parsing JSON data from console input!", reason)
+                    return "JSONParseFail-DictException"
     elif isinstance(rawJSON, str): #Input from the actual website
         #Check to see if this is Toolbox JSON
             if rawJSON.find("lastUpdated") != -1:
@@ -87,15 +99,25 @@ def getJSONfromText(rawJSON):
                 parsed = toolboxParsed["data"]
                 parsed["charNames"] = toolboxParsed["charNames"]
                 parsed["companion"] = toolboxParsed["companion"]
+                #print("idleonTaskSuggester.getJSONfromText~ Return Point 5: STRING Toolbox JSON found.")
+                return parsed
             else:
                 try:
                     parsed = json.loads(rawJSON)
                     #print("idleonTaskSuggester.getJSONfromText~ Type after json.loads (excepting dict):", type(parsed))
+                    #print("idleonTaskSuggester.getJSONfromText~ Return Point 6: STRING Non-Toolbox JSON found.")
+                    return parsed
                 except Exception as reason:
-                    print("idleonTaskSuggester.getJSONfromText~ Error parsing JSON data from website input!")
-                    print("idleonTaskSuggester.getJSONfromText~ Exception reason: ", reason)
-                    parsed = []
+                    if runType == "web":
+                        print("idleonTaskSuggester.getJSONfromText~ Error parsing JSON data from website input!")
+                        print("idleonTaskSuggester.getJSONfromText~ Exception reason: ", reason)
+                        #print("idleonTaskSuggester.getJSONfromText~ Return Point 7: STRING Non-Toolbox JSON found, failed to parse. Returning empty list.")
+                        return []
+                    elif runType == "consoleTest":
+                        #print("idleonTaskSuggester.getJSONfromText~ Return Point 8: STRING Non-Toolbox JSON found, failed to parse. Returning 'JSONParseFail-StringException'")
+                        return "JSONParseFail-StringException"
     #print("parsed is a ", type(parsed))
+    #print("idleonTaskSuggester.getJSONfromText~ Return Point 9: End of getJSONfromText reached. Returning results.")
     return parsed
 
 def getLastUpdatedTime(inputJSON):
@@ -114,19 +136,21 @@ def getLastUpdatedTime(inputJSON):
     except:
         return "Unable to parse last updated time, sorry :("
 
-def getPlayerCountAndNames(inputJSON):
+def getPlayerCountAndNames(inputJSON, runType):
     playerCount = 0
     playerNames = []
     if "playerNames" in inputJSON.keys():
         #Present in Public IE and JSON copied from IE
         playerNames = inputJSON['playerNames']
         playerCount = len(playerNames)
-        print("idleonTaskSuggester.getPlayerCountAndNames~ INFO From Public IE, found " + str(playerCount) + " characters: ", playerNames)
+        if runType == "web":
+            print("idleonTaskSuggester.getPlayerCountAndNames~ INFO From Public IE, found " + str(playerCount) + " characters: ", playerNames)
     elif "charNames" in inputJSON.keys():
         #Present in Toolbox JSON copies
         playerNames = inputJSON['charNames']
         playerCount = len(playerNames)
-        print("idleonTaskSuggester.getPlayerCountAndNames~ INFO From Toolbox JSON, found " + str(playerCount) + " characters: ", playerNames)
+        if runType == "web":
+            print("idleonTaskSuggester.getPlayerCountAndNames~ INFO From Toolbox JSON, found " + str(playerCount) + " characters: ", playerNames)
     else:
         try:
             #this produces an unsorted list of names
@@ -136,9 +160,11 @@ def getPlayerCountAndNames(inputJSON):
                 if item.startswith("Player_"):
                     playerCount +=1
                     playerNames.append(item[7:])
-            print("idleonTaskSuggester.getPlayerCountAndNames~ INFO From IE JSON or Toolbox Raw Game JSON, found " + str(playerCount) + " characters: ", playerNames)
+            if runType == "web":
+                print("idleonTaskSuggester.getPlayerCountAndNames~ INFO From IE JSON or Toolbox Raw Game JSON, found " + str(playerCount) + " characters: ", playerNames)
         except Exception as reason:
-            print("idleonTaskSuggester.getPlayerCountAndNames~ EXCEPTION Couldn't load Cog data for this account to get the unsorted list of names. Oh well:", reason)
+            if runType == "web":
+                print("idleonTaskSuggester.getPlayerCountAndNames~ EXCEPTION Couldn't load Cog data for this account to get the unsorted list of names. Oh well:", reason)
 
         #Produce a "sorted" list of generic Character names
         counter = 0
@@ -160,7 +186,7 @@ def getRoastableStatus(playerNames):
             roastworthyBool = True
     return roastworthyBool
 
-def main(inputData="scoli"):
+def main(inputData, runType="web"):
     bannedAccountsList = ["thedyl", "wooddyl", "3boyy", "4minez", "5arch5", "6knight6", "7maestro7", "bowboy8", "8barb8", "10es10", "favicon.ico", "robots.txt"]
     empty = ""
     emptyList = [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty]
@@ -200,21 +226,39 @@ def main(inputData="scoli"):
         inputData = inputData.replace(" ", "_") #IE expects underscores instead of spaces in names
         #print("inputData:'" + inputData + "' found in the banned list?", (inputData in bannedAccountsList))
         if inputData.lower() in bannedAccountsList:
-            print("idleonTaskSuggester~ PETTY BITCH MODE ACTIVATED. Banned name entered:", inputData)
-            return bannedListofLists
+            if runType == "web":
+                print("idleonTaskSuggester~ PETTY BITCH MODE ACTIVATED. Banned name entered:", inputData)
+                return bannedListofLists
+            elif runType == "consoleTest":
+                return "Banned"
         else:
-            parsedJSON = getJSONfromAPI("https://" + inputData + ".idleonefficiency.com/raw-data")
-            fromPublicIEBool = True
+            parsedJSON = getJSONfromAPI(runType, "https://" + inputData + ".idleonefficiency.com/raw-data")
+            if parsedJSON == "PublicIEProfileNotFound" and runType == "consoleTest":
+                return "PublicIEProfileNotFound"
             ieLinkString = "Searching for character data from: https://" + inputData.lower() + ".idleonefficiency.com"
             ieLinkList = ["Searching for character data from: ", "https://" + inputData.lower() + ".idleonefficiency.com"]
     else:
-        print("~~~~~~~~~~~~~~~ Starting up PROD main at", datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "for direct web JSON input.~~~~~~~~~~~~~~~")
-        parsedJSON = getJSONfromText(inputData)
-        fromPublicIEBool = False
+        if runType == "web":
+            print("~~~~~~~~~~~~~~~ Starting up PROD main at", datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "for direct web JSON input.~~~~~~~~~~~~~~~")
+        parsedJSON = getJSONfromText(runType, inputData)
         ieLinkString = "Searching for character data from direct JSON paste. "
         ieLinkList = ["Searching for character data from direct JSON paste. ", ""]
-    if parsedJSON == []:
-        return errorListofLists
+
+    if isinstance(parsedJSON, str):
+        if parsedJSON.startswith("JSONParseFail"):
+            return parsedJSON
+    elif parsedJSON is None:
+        if runType == "web":
+            return errorListofLists
+            #raise ValueError(f"data for {inputData} not found")
+        elif runType == "consoleTest":
+            return "JSONParseFail-NoneType"
+    elif parsedJSON == []:
+        if runType == "web":
+            #raise ValueError(f"data for {inputData} not found")
+            return errorListofLists
+        elif runType == "consoleTest":
+            return "JSONParseFail-EmptyList"
         #raise ValueError(f"data for {inputData} not found")
 
     #Step 2: Set either Default or Custom progression tiers
@@ -224,14 +268,17 @@ def main(inputData="scoli"):
         progressionTiers = idleon_ProgressionTiers.setCustomTiers(filename)
 
     #Step 3: Send that data off to all the different analyzers
-    playerCountAndNamesList = getPlayerCountAndNames(parsedJSON)
+    playerCountAndNamesList = getPlayerCountAndNames(parsedJSON, runType)
     playerCount = playerCountAndNamesList[0]
     playerNames = playerCountAndNamesList[1]
     for name in playerNames:
         #print("Checking for name in bannedAccountsList:", name.lower(),  (name.lower() in bannedAccountsList))
         if name.lower() in bannedAccountsList:
-            print("idleonTaskSuggester~ WARNING! PETTY BITCH MODE ACTIVATED. Banned name entered:", name)
-            return bannedListofLists
+            if runType == "web":
+                print("idleonTaskSuggester~ WARNING! PETTY BITCH MODE ACTIVATED. Banned name entered:", name)
+                return bannedListofLists
+            elif runType == "consoleTest":
+                return "Banned"
     roastworthyBool = getRoastableStatus(playerNames)
 
     if ieLinkString.endswith("JSON paste. "):
@@ -244,12 +291,17 @@ def main(inputData="scoli"):
 
     #General
     lastUpdatedTimeString = getLastUpdatedTime(parsedJSON)
-    print("idleonTaskSuggester.main~ INFO lastUpdatedTimeString", lastUpdatedTimeString)
+    if runType == "web":
+        print("idleonTaskSuggester.main~ INFO lastUpdatedTimeString", lastUpdatedTimeString)
     combatLevelsPR = idleon_CombatLevels.setCombatLevelsProgressionTier(parsedJSON, progressionTiers['Combat Levels'], playerCount, playerNames)
     consumablesList = idleon_Consumables.parseConsumables(parsedJSON, playerCount, playerNames)
     gemShopPR = idleon_GemShop.setGemShopProgressionTier(parsedJSON, progressionTiers['Gem Shop'], playerCount)
     missableGStacksList = idleon_Greenstacks.getMissableGStacks(parsedJSON, playerCount)
     maestroHandsListOfLists = idleon_MaestroHands.getHandsStatus(parsedJSON, playerCount, playerNames)
+    try:
+        cardsList = idleon_Cards.getCardSetReview(parsedJSON)
+    except Exception as reason:
+        cardsList = [["Unable to evaluate card sets :(",str(reason)]]
 
     #World 1
     stampPR = idleon_Stamps.setStampProgressionTier(parsedJSON, progressionTiers['Stamps'])
@@ -282,7 +334,7 @@ def main(inputData="scoli"):
     #gamingPR =
     #divinityPR =
 
-    generalList = [[ieLinkString, lastUpdatedTimeString], combatLevelsPR.nTR, consumablesList, gemShopPR.nTR, missableGStacksList, maestroHandsListOfLists] #len(combatLevelsPR.nTR) = 2, len(consumablesList) = 2, len(gemShopPR.nTR) = 5, len(missableGStacksList) = 3, len(maestroHandsList) = 1
+    generalList = [[ieLinkString, lastUpdatedTimeString], combatLevelsPR.nTR, consumablesList, gemShopPR.nTR, missableGStacksList, maestroHandsListOfLists, cardsList] #len(combatLevelsPR.nTR) = 2, len(consumablesList) = 2, len(gemShopPR.nTR) = 5, len(missableGStacksList) = 3, len(maestroHandsList) = 1
     w1list = [stampPR.nTR, bribesPR.nTR, smithingPR.nTR] #len(stampPR) = 4, len(bribesPR.nTR) = 2, len(smithingPR.nTR) = 4
     w2list = [alchBubblesPR.nTR,alchVialsPR.nTR,alchP2WList, emptyList] #len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 5
     #w2list = [alchBubblesPR.nTR,alchVialsPR.nTR,alchP2WList, obolsPR.nTR] #len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 4, len(obolsPR.nTR) = 4
@@ -352,4 +404,7 @@ def main(inputData="scoli"):
     #print("idleonTaskSuggester.main~ OUTPUT biggoleAdviceList: ", biggoleAdviceList)
     #print("idleonTaskSuggester.main~ OUTPUT biggoleAdviceDict: ", biggoleAdviceDict)
     #print("idleonTaskSuggester.main~ OUTPUT biggoleAdviceDict section: ", biggoleAdviceDict["General"]["IE Link"])
-    return biggoleAdviceList
+    if runType == "consoleTest":
+        return "Pass"
+    else:
+        return biggoleAdviceList

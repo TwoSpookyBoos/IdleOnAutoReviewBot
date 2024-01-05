@@ -100,6 +100,16 @@ def getGemShopDict(inputJSON):
             'Golden Sprinkler': 0,
             'Lava Sprouts': 0,
 
+            #World 6
+            'W6-Placeholder1': 0,
+            'W6-Placeholder2': 0,
+            'W6-Placeholder3': 0,
+            'W6-Placeholder4': 0,
+            'W6-Placeholder5': 0,
+            'W6-Placeholder6': 0,
+            'W6-Placeholder7': 0,
+            'W6-Placeholder8': 0,
+
             #Fomo
             'FOMO-1': 0,
             'FOMO-2': 0,
@@ -160,6 +170,16 @@ def getGemShopDict(inputJSON):
             'Divinity Sparkie': parsedList[130],
             'Golden Sprinkler': parsedList[131],
             'Lava Sprouts': parsedList[133],
+
+            #World 6
+            'W6-Placeholder1': 0,
+            'W6-Placeholder2': 0,
+            'W6-Placeholder3': 0,
+            'W6-Placeholder4': 0,
+            'W6-Placeholder5': 0,
+            'W6-Placeholder6': 0,
+            'W6-Placeholder7': 0,
+            'W6-Placeholder8': 0,
 
             #Fomo
             'FOMO-1': parsedList[87],

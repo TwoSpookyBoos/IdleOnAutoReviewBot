@@ -9,7 +9,7 @@
         <meta name="robots" content="noindex">
         <style>
             .light-mode {
-                background-color: white;
+                background-color: #fafafa;
                 color: black;
             }
             .banner {
@@ -36,8 +36,8 @@
         <div>Welcome to <a href="http://ieautoreview-scoli.pythonanywhere.com/">IE AutoReview Tool - By Scoli290</a></div>
         <br>
         <div>Join the <a href="https://discord.gg/ZmEkqzfjmJ" target="_blank">Discord</a> for the detailed patch notes!</div>
-        <div>Most recent update 2024-01-02: Added W4 Breeding Review.</div>
-        <div>Previous update 2023-12-29: Added support for IdleonToolbox JSON imports. Add W1 Smithing notice for empty ore slots.</div>
+        <div>Most recent update 2024-01-05: Added General Card Sets. This displays the closest cards to leveling up per set.</div>
+        <div>Previous update 2024-01-02: Added W4 Breeding Review.</div>
         <br>
         <div>This tool will retrieve the PUBLIC profile from IdleOn Efficiency for evaluation.</div>
         <div>If you haven't uploaded your profile publicly before, head here: <a href="https://www.idleonefficiency.com/profile/upload" target="_blank">IdleonEfficiency</a></div>
@@ -78,55 +78,133 @@
                         {% endif %}
                     {% endfor %}
                     <br>
-                    <h1>General Account AutoReview</h1>
-                    {% for line in htmlInput[0][1] %} <!-- Account Levels -->
-                        {% if line != "" %}
-                            <li> {{ line }} </li>
+                    <h1><img src="/static/imgs/general_banner.jpg" alt="General Account Banner" title ="General Account Banner" onclick="toggle('general-content')" class="banner"></h1>
+                    <div class="world-content" id="general-content">
+                        {% for line in htmlInput[0][1] %} <!-- Account Levels -->
+                            {% if line != "" %}
+                                <li> {{ line }} </li>
+                            {% endif %}
+                        {% endfor %}
+                        <br>
+                        {% if htmlInput[0][5][0] != "" %}
+                            <div> <img src="/static/imgs/Maestro.png" width=4%> <img src="/static/imgs/Maestro_Right_Hand_of_Action.png" width=4%> </div>
                         {% endif %}
-                    {% endfor %}
-                    <br>
-                    {% if htmlInput[0][5][0] != "" %}
-                        <div> <img src="/static/imgs/Maestro.png" width=4%> <img src="/static/imgs/Maestro_Right_Hand_of_Action.png" width=4%> </div>
-                    {% endif %}
-                    {% for line in htmlInput[0][5] %} <!-- Maestro Right Hands -->
-                        {% if line != "" %}
-                            <li> {{ line }} </li>
+                        {% for line in htmlInput[0][5] %} <!-- Maestro Right Hands -->
+                            {% if line != "" %}
+                                <li> {{ line }} </li>
+                            {% endif %}
+                        {% endfor %}
+                        <br>
+                        <div> <img src="/static/imgs/Candy_1hr.png" width=4%> <img src="/static/imgs/Candy_Cosmic.png" width=4%> </div>
+                        {% for line in htmlInput[0][2][0] %} <!-- Guaranteed Candy and Variable Candy totals -->
+                            {% if line != "" %}
+                                <li> {{ line }} </li>
+                            {% endif %}
+                        {% endfor %}
+                        <br>
+                        {% if htmlInput[0][2][1] != "" or htmlInput[0][2][2] != "" %}
+                            <div> <img src="/static/imgs/Inventory_Peeper_Pouch.png" width=4%> <img src="/static/imgs/Storage_Chest_25.png " width=4%> </div>
                         {% endif %}
-                    {% endfor %}
-                    <br>
-                    <div> <img src="/static/imgs/Candy_1hr.png" width=4%> <img src="/static/imgs/Candy_Cosmic.png" width=4%> </div>
-                    {% for line in htmlInput[0][2][0] %} <!-- Guaranteed Candy and Variable Candy totals -->
-                        {% if line != "" %}
-                            <li> {{ line }} </li>
-                        {% endif %}
-                    {% endfor %}
-                    <br>
-                    {% if htmlInput[0][2][1] != "" or htmlInput[0][2][2] != "" %}
-                        <div> <img src="/static/imgs/Inventory_Peeper_Pouch.png" width=4%> <img src="/static/imgs/Storage_Chest_25.png " width=4%> </div>
-                    {% endif %}
-                    {% for line in htmlInput[0][2][1:] %} <!-- Inventory Bags and Storage Chests -->
-                        {% if line != "" %}
-                            <li> {{ line }} </li>
-                        {% endif %}
-                    {% endfor %}
-                    <br>
-                    <div> <img src="/static/imgs/Gem_Shop.png" width=4%> </div>
-                    <div> <em>{{ htmlInput[0][3][0] }}</em></div> <!-- Gem Shop FOMO Disclaimer -->
-                    <div> <strong>{{ htmlInput[0][3][1] }}</strong></div> <!-- Gem Shop header -->
-                    {% for line in htmlInput[0][3][2:] %}
-                        {% if line != "" %}
-                            <li> {{ line }} </li>
-                        {% endif %}
-                    {% endfor %}
-                    <br>
-                    <div> <img src="/static/imgs/Greenstack.png" width=4%> </div>
-                    <div> <strong>Missable Greenstacks from Quest Items</strong></div>
-                    {% for line in htmlInput[0][4] %}
-                        {% if line != "" %}
-                            <li> {{ line }} </li>
-                        {% endif %}
-                    {% endfor %}
-                    <br>
+                        {% for line in htmlInput[0][2][1:] %} <!-- Inventory Bags and Storage Chests -->
+                            {% if line != "" %}
+                                <li> {{ line }} </li>
+                            {% endif %}
+                        {% endfor %}
+                        <br>
+                        <div> <img src="/static/imgs/Gem_Shop.png" width=4%> </div>
+                        <div> <em>{{ htmlInput[0][3][0] }}</em></div> <!-- Gem Shop FOMO Disclaimer -->
+                        <div> <strong>{{ htmlInput[0][3][1] }}</strong></div> <!-- Gem Shop header -->
+                        {% for line in htmlInput[0][3][2:] %}
+                            {% if line != "" %}
+                                <li> {{ line }} </li>
+                            {% endif %}
+                        {% endfor %}
+                        <br>
+                        <div> <img src="/static/imgs/Greenstack.png" width=4%> </div>
+                        <div> <strong>Missable Greenstacks from Quest Items</strong></div>
+                        <div> <em>These items are currently recommended for players trying to complete the endgame Equinox Dream to collect 200 greenstacks. If you're nowhere near that, don't worry about collecting them right away. Simply leave the quest uncompleted on your Wizard/Elemental Sorcerer and your Squire/Divine Knight to clean up later!</em></div>
+                        {% for line in htmlInput[0][4] %}
+                            {% if line != "" %}
+                                <li> {{ line }} </li>
+                            {% endif %}
+                        {% endfor %}
+                        <br>
+                        <div> <!-- Card Sets -->
+                            <img src="/static/imgs/CardSets.png">
+                            {% if htmlInput[0][6][0][0] != "" %}
+                                <div><strong> {{ htmlInput[0][6][0][0] }} </strong></div> <!-- Blunder Hills card set -->
+                                {% for line in htmlInput[0][6][0][1] %}
+                                    {% if line != "" %}
+                                        <li> {{ line }} </li>
+                                    {% endif %}
+                            {% endfor %}
+                            {% endif %}
+                            {% if htmlInput[0][6][1][0] != "" %}
+                                <div><strong> {{ htmlInput[0][6][1][0] }} </strong></div> <!-- Yum-Yum Desert card set -->
+                                {% for line in htmlInput[0][6][1][1] %}
+                                    {% if line != "" %}
+                                        <li> {{ line }} </li>
+                                    {% endif %}
+                            {% endfor %}
+                            {% endif %}
+                            {% if htmlInput[0][6][2][0] != "" %}
+                                <div><strong> {{ htmlInput[0][6][2][0] }} </strong></div> <!-- Easy Resources card set -->
+                                {% for line in htmlInput[0][6][2][1] %}
+                                    {% if line != "" %}
+                                        <li> {{ line }} </li>
+                                    {% endif %}
+                            {% endfor %}
+                            {% endif %}
+                            {% if htmlInput[0][6][3][0] != "" %}
+                                <div><strong> {{ htmlInput[0][6][3][0] }} </strong></div> <!-- Medium Resources card set -->
+                                {% for line in htmlInput[0][6][3][1] %}
+                                    {% if line != "" %}
+                                        <li> {{ line }} </li>
+                                    {% endif %}
+                            {% endfor %}
+                            {% endif %}
+                            {% if htmlInput[0][6][4][0] != "" %}
+                                <div><strong> {{ htmlInput[0][6][4][0] }} </strong></div> <!-- Frostbite Tundra card set -->
+                                {% for line in htmlInput[0][6][4][1] %}
+                                    {% if line != "" %}
+                                        <li> {{ line }} </li>
+                                    {% endif %}
+                            {% endfor %}
+                            {% endif %}
+                            {% if htmlInput[0][6][5][0] != "" %}
+                                <div><strong> {{ htmlInput[0][6][5][0] }} </strong></div> <!-- Hard Resources card set -->
+                                {% for line in htmlInput[0][6][5][1] %}
+                                    {% if line != "" %}
+                                        <li> {{ line }} </li>
+                                    {% endif %}
+                            {% endfor %}
+                            {% endif %}
+                            {% if htmlInput[0][6][6][0] != "" %}
+                                <div><strong> {{ htmlInput[0][6][6][0] }} </strong></div> <!-- Hyperion Nebula card set -->
+                                {% for line in htmlInput[0][6][6][1] %}
+                                    {% if line != "" %}
+                                        <li> {{ line }} </li>
+                                    {% endif %}
+                            {% endfor %}
+                            {% endif %}
+                            {% if htmlInput[0][6][7][0] != "" %}
+                                <div><strong> {{ htmlInput[0][6][7][0] }} </strong></div> <!-- Smolderin' Plateau card set -->
+                                {% for line in htmlInput[0][6][7][1] %}
+                                    {% if line != "" %}
+                                        <li> {{ line }} </li>
+                                    {% endif %}
+                            {% endfor %}
+                            {% endif %}
+                            {% if htmlInput[0][6][8][0] != "" %}
+                                <div><strong> {{ htmlInput[0][6][8][0] }} </strong></div> <!-- Bosses n Nightmares card set -->
+                                {% for line in htmlInput[0][6][8][1] %}
+                                    {% if line != "" %}
+                                        <li> {{ line }} </li>
+                                    {% endif %}
+                            {% endfor %}
+                            {% endif %}
+                        </div> <!-- Card Sets -->
+                    </div>
                     <h1><img src="/static/imgs/w1banner.png" alt="World 1 Banner" title ="World 1 Banner" onclick="toggle('w1-content')" class="banner"></h1>
                     <div class="world-content" id="w1-content">
                         <div> <img src="/static/imgs/Stamps_Mr_Pigibank.gif" alt="Stamps and Bribes" width="4%"> </div>

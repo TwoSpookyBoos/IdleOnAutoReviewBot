@@ -1,30 +1,76 @@
 import json
 from idleonTaskSuggester import main
 
-#main run with raw data copied from IE or IT. COMMENT OUT BEFORE PUBLISHING
-
 def getDataFromFile(filePath):
     with open(filePath, 'r') as inputFile:
         jsonData = json.load(inputFile)
+        #print("Console_Tester.getDataFromFile~ OUTPUT jsonData:", type(jsonData), len(jsonData))
     inputFile.close()
     return jsonData
 
-itRawJSONpath =  '/home/Scoli/mysite/testing-data/idleonefficiency_PublicProfileJSON.json' #NO sorted list expected
-itToolboxJSONpath = '/home/Scoli/mysite/testing-data/idleontoolbox_ToolboxJSON.json' #Sorted list expected
-ieRawJSONpath = '/home/Scoli/mysite/testing-data/idleontoolbox_RawGameJSON.json' #Sorted list expected if they copy their JSON from the public profile, but not from their local profile
+def fullListPrint(listName):
+    for item in listName:
+        for item in range(0, len(listName)):
+            print("Console_Tester.fullListPrint~ [", item, "]", listName[item])
 
-#results = main(getDataFromFile(jsonData))
-results = main("wantonsky") #main run with a username to look up in IE
+def fullTest():
+    itRawJSONpath =  '/home/Scoli/mysite/testing-data/idleonefficiency_PublicProfileJSON.json' #NO sorted list expected
+    itToolboxJSONpath = '/home/Scoli/mysite/testing-data/idleontoolbox_ToolboxJSON.json' #Sorted list expected
+    ieRawJSONpath = '/home/Scoli/mysite/testing-data/idleontoolbox_RawGameJSON.json' #Sorted list expected if they copy their JSON from the public profile, but not from their local profile
 
+    jsonTestResults = {}
+    jsonTestList = [itRawJSONpath, itToolboxJSONpath, ieRawJSONpath]
+    for testProfile in jsonTestList:
+        #print("Console_Tester~ INFO Testing with JSON data from file:", testProfile)
+        singleResult = main(getDataFromFile(testProfile), "consoleTest")
+        if singleResult in jsonTestResults:
+            jsonTestResults[singleResult] += 1
+        else:
+            jsonTestResults[singleResult] = 1
 
-#biggoleAdviceList = [generalList, w1list, w2list, w3list, w4list, w5list, w6list, w7list, w8list, pinchyList]
-#print(results[0][5])
-#print(results[1])
-#print(results[2])
-#print(results[3])
-print(results[4][0])
-#print(results[5])
-#print(results[6])
-#print(results[7])
-#print(results[8])
-#print(results[9])
+    goodPublicIETestResults = {}
+    goodPublicIETestList = [
+        "talentlessss", "dork1444", "vini07", "elandra_k", "redpaaaaanda", "tjsh11", "treason75", "pneumatus", "scolioli", "chalalaa", "gt35t3q4gta", "buffikun", "ocsisnarf", "ktnbtn", "sataneide", "shadoowz", "icyfoxkiller", "sythius", "scoli", "herusx", "campz", "gwuam", "weebgasm", "canabuddha", "rashaken", "nerfus", "soatok", "poppercone", "hockeyd14", "clevon", "dootn006"
+        ]
+    for testProfile in goodPublicIETestList:
+        #print("Console_Tester~ INFO Testing with Public IE:", testProfile)
+        try:
+            singleResult = main(testProfile, "consoleTest")
+        except Exception as reason:
+            print("Console_Tester~ EXCEPTION Encountered during eval of testProfile:", testProfile, reason)
+            singleResult = "ExceptionFail"
+        if singleResult in goodPublicIETestResults:
+            goodPublicIETestResults[singleResult] += 1
+        else:
+            goodPublicIETestResults[singleResult] = 1
+
+    badPublicIETestResults = {}
+    badPublicIETestList = [
+        "thedyl", "test"
+        ]
+    for testProfile in badPublicIETestList:
+        #print("Console_Tester~ INFO Testing with Public IE:", testProfile)
+        try:
+            singleResult = main(testProfile, "consoleTest")
+        except Exception as reason:
+            print("Console_Tester~ EXCEPTION Encountered during eval of testProfile:", testProfile, reason)
+            singleResult = "ExceptionFail"
+        if singleResult in badPublicIETestResults:
+            badPublicIETestResults[singleResult] += 1
+        else:
+            badPublicIETestResults[singleResult] = 1
+
+    fullTestResults = {
+        "JSON Tests": jsonTestResults,
+        "Good Public IE Tests": goodPublicIETestResults,
+        "Bad Public IE Tests": badPublicIETestResults
+        }
+
+    for testType in fullTestResults:
+        print("Console_Tester.fullTestResults", testType, ":", fullTestResults[testType])
+
+#fullTest()
+#main("redpaaaaanda", "web")
+#print(main("scoli", "web")[0][6])
+fullListPrint(main("redpaaaaanda", "web"))
+#print(main("scoli", "consoleTest"))

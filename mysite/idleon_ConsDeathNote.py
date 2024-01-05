@@ -313,6 +313,13 @@ def getDeathNoteKills(inputJSON, playerCount, playerNames):
         killCounter = 0
         #try to adjust when kill count is stored as a String in scientific notation
         while killCounter < len(playerKillsList):
+            #print("ConsDeathNote.getDeathNoteKills~ INFO playerKillsList[killCounter]:", playerCounter, killCounter, playerKillsList[killCounter])
+            if isinstance(playerKillsList[killCounter], int):
+                try:
+                    playerKillsList[killCounter] =[playerKillsList[killCounter]]
+                except Exception as reason:
+                    print("ConsDeathNote~ EXCEPTION Unable to convert INT to LIST", playerCounter, killCounter, playerKillsList[killCounter], reason)
+
             if isinstance(playerKillsList[killCounter][0], str):
                 try:
                     #print("ConsDeathNote~ Trying to Convert string to Float: ", type(playerKillsList[killCounter][0]), playerKillsList[killCounter][0])
