@@ -48,6 +48,40 @@ def getGemShopExclusions(inputJSON, playerCount):
 
     return exclusionList
 
+def getBonusSectionName(bonusName):
+    match bonusName:
+        case 'Item Backpack Space' | 'Storage Chest Space' | 'Carry Capacity' | 'Food Slot' | 'More Storage Space' | 'Card Presets':
+            return "Inventory and Storage"
+
+        case 'Daily Teleports' | 'Daily Minigame Plays':
+            return "Dailies N' Resets"
+
+        case 'Extra Card Slot':
+            return "Cards"
+
+        case 'Weekly Dungeon Boosters':
+            return "Goods & Services"
+
+        case 'Infinity Hammer' | 'Brimstone Forge Slot' | 'Ivory Bubble Cauldrons' | 'Bleach Liquid Cauldrons' | 'Obol Storage Space' | 'Sigil Supercharge':
+            return "W1&2"
+
+        case 'Crystal 3d Printer' | 'More Sample Spaces' | 'Burning Bad Books' | 'Prayer Slots' | 'Zen Cogs' | 'Cog Inventory Space' | 'Tower Building Slots' | 'Fluorescent Flaggies':
+            return "W3"
+
+        case 'Royal Egg Cap' | 'Richelin Kitchen' | 'Souped Up Tube' | 'Pet Storage' | 'Fenceyard Space':
+            return "W4"
+
+        case 'Chest Sluggo' | 'Divinity Sparkie' | 'Golden Sprinkler' | 'Lava Sprouts':
+            return "W5"
+
+        case 'W6-Placeholder1' | 'W6-Placeholder2' | 'W6-Placeholder3' | 'W6-Placeholder4' | 'W6-Placeholder5' | 'W6-Placeholder6' | 'W6-Placeholder7' | 'W6-Placeholder8':
+            return "W6"
+
+        case 'FOMO-1' | 'FOMO-2' | 'FOMO-3' | 'FOMO-4' | 'FOMO-5' | 'FOMO-6' | 'FOMO-7' | 'FOMO-8':
+            return "Limited Shop"
+        case _:
+            return "UnknownShop"
+
 def getGemShopDict(inputJSON):
     parsedList = json.loads(inputJSON["GemItemsPurchased"])
     gemShopDict = {
@@ -226,28 +260,28 @@ def setGemShopProgressionTier(inputJSON, progressionTiers, playerCount):
     #progressionTiers[tier][3] = str notes
     for recommendedPurchase in progressionTiers[1][2]:
         if progressionTiers[1][2][recommendedPurchase] > gemShopDict[recommendedPurchase]:
-            advice_SS += str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[1][2][recommendedPurchase]) + "), "
+            advice_SS += getBonusSectionName(recommendedPurchase) + "-" + str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[1][2][recommendedPurchase]) + "), "
     for recommendedPurchase in progressionTiers[2][2]:
         if progressionTiers[2][2][recommendedPurchase] > gemShopDict[recommendedPurchase]:
-            advice_S += str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[2][2][recommendedPurchase]) + "), "
+            advice_S += getBonusSectionName(recommendedPurchase) + "-" + str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[2][2][recommendedPurchase]) + "), "
     for recommendedPurchase in progressionTiers[3][2]:
         if progressionTiers[3][2][recommendedPurchase] > gemShopDict[recommendedPurchase]:
-            advice_A += str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[3][2][recommendedPurchase]) + "), "
+            advice_A += getBonusSectionName(recommendedPurchase) + "-" + str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[3][2][recommendedPurchase]) + "), "
     for recommendedPurchase in progressionTiers[4][2]:
         if progressionTiers[4][2][recommendedPurchase] > gemShopDict[recommendedPurchase]:
-            advice_B += str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[4][2][recommendedPurchase]) + "), "
+            advice_B += getBonusSectionName(recommendedPurchase) + "-" + str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[4][2][recommendedPurchase]) + "), "
     for recommendedPurchase in progressionTiers[5][2]:
         if progressionTiers[5][2][recommendedPurchase] > gemShopDict[recommendedPurchase]:
-            advice_C += str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[5][2][recommendedPurchase]) + "), "
+            advice_C += getBonusSectionName(recommendedPurchase) + "-" + str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[5][2][recommendedPurchase]) + "), "
     for recommendedPurchase in progressionTiers[6][2]:
         if progressionTiers[6][2][recommendedPurchase] > gemShopDict[recommendedPurchase]:
-            advice_D += str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[6][2][recommendedPurchase]) + "), "
+            advice_D += getBonusSectionName(recommendedPurchase) + "-" + str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[6][2][recommendedPurchase]) + "), "
     for recommendedPurchase in progressionTiers[7][2]:
         if progressionTiers[7][2][recommendedPurchase] > gemShopDict[recommendedPurchase]:
-            advice_PracticalMax += str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[7][2][recommendedPurchase]) + "), "
+            advice_PracticalMax += getBonusSectionName(recommendedPurchase) + "-" + str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[7][2][recommendedPurchase]) + "), "
     for recommendedPurchase in progressionTiers[8][2]:
         if progressionTiers[8][2][recommendedPurchase] > gemShopDict[recommendedPurchase]:
-            advice_TrueMax += str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[8][2][recommendedPurchase]) + "), "
+            advice_TrueMax += getBonusSectionName(recommendedPurchase) + "-" + str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[8][2][recommendedPurchase]) + "), "
     #Fix up advice statements
     if advice_SS != "":
         advice_SS = "SS: " + advice_SS[:-2] + progressionTiers[1][3]

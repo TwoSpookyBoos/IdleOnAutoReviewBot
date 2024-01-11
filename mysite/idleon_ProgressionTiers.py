@@ -84,7 +84,7 @@ def setDefaultTiers():
         [20, 100, {'Roid Ragin': 880,  'Warriors Rule': 1617, 'Hearty Diggy': 3234, 'Wyoming Blood': 138, 'Sploosh Sploosh': 138, 'Stronk Tools': 630, 'Multorange': 970,  'Dream of Ironfish': 270},   {'Swift Steppin': 880, 'Archer or Bust': 1617, 'Sanic Tools': 630, 'Bug^2': 138,'Premigreen': 970,  'Fly in Mind': 360}, {'Stable Jenius': 880, 'Mage is Best': 1617, 'Hocus Choppus': 1900, 'Molto Loggo': 138, 'Le Brain Tools': 630,  'Severapurple': 970,  'Tree Sleeper': 360}, {}, "97%", ""],
         [21, 120, {'Roid Ragin': 900,  'Warriors Rule': 2450, 'Hearty Diggy': 4900, 'Wyoming Blood': 138, 'Sploosh Sploosh': 138, 'Stronk Tools': 630, 'Multorange': 1470, 'Dream of Ironfish': 270},   {'Swift Steppin': 900, 'Archer or Bust': 2450, 'Sanic Tools': 630, 'Bug^2': 138,'Premigreen': 1470, 'Fly in Mind': 360}, {'Stable Jenius': 900, 'Mage is Best': 2450, 'Hocus Choppus': 1900, 'Molto Loggo': 138, 'Le Brain Tools': 630,  'Severapurple': 1470, 'Tree Sleeper': 360}, {}, "98%", ""],
         [22, 140, {'Roid Ragin': 950,  'Warriors Rule': 4950, 'Hearty Diggy': 9900, 'Wyoming Blood': 138, 'Sploosh Sploosh': 138, 'Stronk Tools': 630, 'Multorange': 2970, 'Dream of Ironfish': 270},   {'Swift Steppin': 950, 'Archer or Bust': 4950, 'Sanic Tools': 630, 'Bug^2': 138,'Premigreen': 2970, 'Fly in Mind': 360}, {'Stable Jenius': 950, 'Mage is Best': 4950, 'Hocus Choppus': 1900, 'Molto Loggo': 138, 'Le Brain Tools': 630,  'Severapurple': 2970, 'Tree Sleeper': 360}, {}, "99%", "* You've tackled the big important Utility bubbles, way to go! All previously mentioned bubbles are still great targets to level higher: Larry, Cookin Roadkill, Diamond Chef, Carpenter, Call Me Bob, Big P, Mr Massacre, Big Game Hunter, FMJ, Shaquracy, Hammer Hammer, and more!"],
-        [23, 160, {'Roid Ragin': 1000, 'Stronk Tools': 6930,  'Dream of Ironfish': 2970, 'Slabi Orefish':5940, 'Slabi Strength':5940},                                                                  {'Swift Steppin': 1000, 'Sanic Tools': 6930, 'Fly in Mind': 3960, 'Slabo Critterbug':5940, 'Slabo Agility':5940},        {'Stable Jenius': 1000, 'Hocus Choppus': 9900, 'Le Brain Tools': 6930, 'Tree Sleeper': 3960, 'Slabe Logsoul':5940, 'Slabe Wisdom':5940},                                           {}, "99% catchup", "You've tackled the big important Utility bubbles, way to go! All previously mentioned bubbles are still great targets to level higher: Larry, Cookin Roadkill, Diamond Chef, Carpenter, Call Me Bob, Big P, Mr Massacre, Big Game Hunter, FMJ, Shaquracy, Hammer Hammer, and more!"],
+        [23, 160, {'Roid Ragin': 1000, 'Stronk Tools': 6930,  'Dream of Ironfish': 2970, 'Slabi Orefish':5940, 'Slabi Strength':5940},                                                                  {'Swift Steppin': 1000, 'Sanic Tools': 6930, 'Fly in Mind': 3960, 'Slabo Critterbug':5940, 'Slabo Agility':5940},        {'Stable Jenius': 1000, 'Hocus Choppus': 9900, 'Le Brain Tools': 6930, 'Tree Sleeper': 3960, 'Slabe Logsoul':5940, 'Slabe Wisdom':5940},                    {}, "99% catchup", "You've tackled the big important Utility bubbles, way to go! All previously mentioned bubbles are still great targets to level higher: Larry, Cookin Roadkill, Diamond Chef, Carpenter, Call Me Bob, Big P, Mr Massacre, Big Game Hunter, FMJ, Shaquracy, Hammer Hammer, and more!"],
         ]
     defaultTiers['Alchemy Vials'] = [
         #int tier, int TotalVialsUnlocked, int TotalVialsMaxed, list ParticularVials, str Notes
@@ -377,9 +377,128 @@ def setDefaultTiers():
                 "Base AGI": 15,
                 },
             "ShinyNotes": ""
-            },
+            }
         }
-
+    defaultTiers['Greenstacks'] = {
+        0: {},
+        1: {
+            "Base Monster Materials": [
+                "Grasslands1", "Grasslands2"],
+            "Printable Skilling Resources": [
+                "OakTree", "BirchTree", "JungleTree", "ForestTree", "ToiletTree", "PalmTree", "StumpTree", "SaharanFoal", "Tree7",
+                "Copper", "Iron", "Gold", "Plat", "Dementia", "Void", "Lustre",
+                "Fish1", "Fish2", "Fish3",
+                "Bug1", "Bug2"],
+            "Other Skilling Resources": [
+                "CraftMat1", "CraftMat5"]
+            },
+        2: {
+            "Base Monster Materials": [
+                "Grasslands4", "Grasslands3", "Jungle1", "Jungle2", "Jungle3", "Forest1", "Forest2", "Forest3", "Sewers1", "Sewers2", "TreeInterior1", "TreeInterior2",
+                "DesertA1", "DesertA2", "DesertA3", "DesertB1", "DesertB2", "DesertB3", "DesertB4", "DesertC1", "DesertC2", "DesertC3", "DesertC4",
+                "SnowA1", "SnowA2", "SnowA3", "SnowB1", "SnowB2", "SnowB5", "SnowB3", "SnowB4", "SnowC1", "SnowC2", "SnowC3", "SnowC4"],
+            "Printable Skilling Resources": [
+                "AlienTree", "Tree8", "Tree9", "Tree11", "Tree10",
+                "Starfire", "Marble", "Dreadlo",
+                "Fish4", "Fish5", "Fish6", "Fish7", "Fish8",
+                "Bug3", "Bug4", "Bug5", "Bug6", "Bug7", "Bug8"],
+            "Other Skilling Resources": ["CraftMat6", "CraftMat7", "CraftMat9"],
+            "Vendor Shops": ["FoodHealth14", "FoodHealth15", "FoodHealth12", "FoodHealth13"]
+            },
+        3: {
+            "Base Monster Materials": [
+                "SnowA4", "SnowC5",
+                "GalaxyA1", "GalaxyA2", "GalaxyA3", "GalaxyA4", "GalaxyB1",  "GalaxyB2", "GalaxyB3", "GalaxyB4", "GalaxyB5", "GalaxyC1", "GalaxyC2", "GalaxyC3", "GalaxyC4"],
+            "Printable Skilling Resources": [
+                "Fish9", "Fish10", "Fish11", "Fish13",
+                "Bug9", "Bug11", "Bug10"],
+            "Other Skilling Resources": [
+                "CraftMat8", "CraftMat10", "CraftMat11",
+                "Critter1", "Critter2", "Critter3",
+                "Soul1",
+                "CopperBar"],
+            "Vendor Shops": ["FoodPotOr4", "FoodPotGr4", "FoodPotRe4", "FoodPotYe4"]
+            },
+        4: {
+            "Base Monster Materials": ["LavaA1", "LavaA2", "LavaA3", "LavaA4", "LavaA5", "LavaB1", "LavaB2", "LavaB3", "LavaB4", "LavaB5", "LavaB6",  "LavaC1", "LavaC2"],
+            "Crystal Enemy Drops": ["FoodPotMana1", "FoodPotMana2", "FoodPotGr1", "FoodPotOr1", "FoodPotOr2", "FoodHealth1", "FoodHealth3", "FoodHealth2", "Leaf1"],
+            "Printable Skilling Resources": ["Fish12"],
+            "Other Skilling Resources": [
+                "CraftMat12", "CraftMat13",
+                "Critter4", "Critter5", "Critter6",
+                "Soul2",
+                "IronBar"],
+            "Missable Quest Items": ["Quest3", "Quest4", "Quest7", "Quest12"]
+            },
+        5: {
+            "Crystal Enemy Drops": ["FoodHealth6", "FoodHealth7", "FoodPotGr2", "FoodPotRe3", "Leaf2"],
+            "Other Skilling Resources": [
+                "CraftMat14",
+                "Critter7", "Critter8",
+                "Soul3",
+                "GoldBar"],
+            "Vendor Shops": ["OilBarrel6"],
+            "Missable Quest Items": ["Quest21"]
+            },
+        6: {
+            "Crystal Enemy Drops": ["FoodHealth10", "FoodPotOr3", "FoodPotYe2", "Leaf3"],
+            "Other Skilling Resources": [
+                "Critter9", "Critter10",
+                "Soul4",
+                "PlatBar",
+                "FoodMining1", "FoodFish1", "FoodCatch1"]
+            },
+        7: {
+            "Crystal Enemy Drops": ["FoodPotMana4", "Leaf4"],
+            "Other Skilling Resources": [
+                "Soul5",
+                "DementiaBar",
+                "Peanut"],
+            "Missable Quest Items": ["Quest14", "Quest22", "Quest23", "Quest24", "GoldricP1", "GoldricP2"]
+            },
+        8: {
+            "Crystal Enemy Drops": ["FoodPotYe5", "Leaf5"],
+            "Other Skilling Resources": [
+                "Soul6",
+                "VoidBar",
+                "Bullet", "BulletB"],
+            "Missable Quest Items": ["GoldricP3"]
+            },
+        9: {
+            "Other Skilling Resources": [
+                "LustreBar",
+                "Quest68"], #I really hate that the Slush Bucket is listed as Quest68
+            "Missable Quest Items": ["Quest32"],
+            "Crystal Enemy Drops": ["EquipmentStatues2", "EquipmentStatues3", "EquipmentStatues4"],
+            },
+        10: {
+            "Base Monster Materials": ["Sewers3"],
+            "Other Skilling Resources": [
+                "StarfireBar",
+                "Bullet3", "FoodChoppin1"],
+            "Crystal Enemy Drops": ["EquipmentStatues7", "EquipmentStatues14"],
+            "Misc": ["FoodPotMana3", "FoodPotGr3", "FoodPotRe1"],
+            "Vendor Shops": ["FoodHealth9"]
+            },
+        11: {
+            "Base Monster Materials": ["Quest15", "Hgg"],
+            "Crystal Enemy Drops": [
+                "EquipmentStatues1", "EquipmentStatues5",
+                "rtt0", "StoneZ1", "StoneT1", "StoneW1", "StoneA1"],
+            "Other Skilling Resources": [
+                "DreadloBar",
+                "EquipmentSmithingTabs2"
+                "Refinery1"],
+            "Vendor Shops": ["FoodHealth4", "FoodHealth11"],
+            "Misc": ["FoodPotRe2", "ButterBar"]
+            },
+        12: {
+            "Other Skilling Resources": [
+                "Refinery2", "Refinery3", "Refinery4",
+                "Critter1A", "Critter2A","Critter3A", "Critter4A", "Critter5A", "Critter6A", "Critter7A", "Critter8A", "Critter9A", "Critter10A"],
+            "Vendor Shops": ["Quest19"]
+            }
+        }
     return defaultTiers
 
 def setCustomTiers(filename="input.csv"):

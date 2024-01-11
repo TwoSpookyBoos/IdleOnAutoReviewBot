@@ -21,13 +21,14 @@ def index():
             print("FlaskApp.index~ Could not get Player from Request Args:",reason)
         return render_template("main_page.html")
     elif request.method == "POST":
-        capturedCharacterInput = request.form["characterInput"]
-        if len(capturedCharacterInput) > 15:
-            pythonOutput = autoReviewBot(capturedCharacterInput)
-            return render_template("results.html", htmlInput = pythonOutput)
-        else:
-            capturedCharacterInput = request.form["characterInput"].strip().replace(" ", "_").lower()
-            return redirect(url_for('index', player = capturedCharacterInput))
+        capturedCharacterInput = request.form.get("characterInput")
+        if capturedCharacterInput is not None:
+            if len(capturedCharacterInput) > 15:
+                pythonOutput = autoReviewBot(capturedCharacterInput)
+                return render_template("results.html", htmlInput = pythonOutput)
+            else:
+                capturedCharacterInput = request.form["characterInput"].strip().replace(" ", "_").lower()
+                return redirect(url_for('index', player = capturedCharacterInput))
         return render_template("main_page.html")
     else: #shouldn't ever happen. Every instance should be a GET or a POST
         return render_template("main_page.html")
@@ -44,16 +45,18 @@ def betaIndex():
             else:
                 return render_template("beta_main_page.html")
         except Exception as reason:
-            print("FlaskApp.betaIndex~ Could not get Player from Request Args:", reason)
+            if request.args.get('player') is not None:
+                print("FlaskApp.betaIndex~ Could not get Player from Request Args:", reason)
         return render_template("beta_main_page.html")
     elif request.method == "POST":
-        capturedCharacterInput = request.form["characterInput"]
-        if len(capturedCharacterInput) > 15:
-            pythonOutput = autoReviewBot(capturedCharacterInput)
-            return render_template("beta_results.html", htmlInput = pythonOutput)
-        else:
-            capturedCharacterInput = request.form["characterInput"].strip().replace(" ", "_").lower()
-            return redirect(url_for('betaIndex', player = capturedCharacterInput))
+        capturedCharacterInput = request.form.get("characterInput")
+        if capturedCharacterInput is not None:
+            if len(capturedCharacterInput) > 15:
+                pythonOutput = autoReviewBot(capturedCharacterInput)
+                return render_template("beta_results.html", htmlInput = pythonOutput)
+            else:
+                capturedCharacterInput = request.form["characterInput"].strip().replace(" ", "_").lower()
+                return redirect(url_for('betaIndex', player = capturedCharacterInput))
         return render_template("beta_main_page.html")
     else: #shouldn't ever happen. Every instance should be a GET or a POST
         return render_template("beta_main_page.html")

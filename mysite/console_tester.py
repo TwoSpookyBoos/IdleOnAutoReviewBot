@@ -13,7 +13,7 @@ def fullListPrint(listName):
         for item in range(0, len(listName)):
             print("Console_Tester.fullListPrint~ [", item, "]", listName[item])
 
-def fullTest():
+def fullTest(testType):
     itRawJSONpath =  '/home/Scoli/mysite/testing-data/idleonefficiency_PublicProfileJSON.json' #NO sorted list expected
     itToolboxJSONpath = '/home/Scoli/mysite/testing-data/idleontoolbox_ToolboxJSON.json' #Sorted list expected
     ieRawJSONpath = '/home/Scoli/mysite/testing-data/idleontoolbox_RawGameJSON.json' #Sorted list expected if they copy their JSON from the public profile, but not from their local profile
@@ -30,12 +30,12 @@ def fullTest():
 
     goodPublicIETestResults = {}
     goodPublicIETestList = [
-        "talentlessss", "dork1444", "vini07", "elandra_k", "redpaaaaanda", "tjsh11", "treason75", "pneumatus", "scolioli", "chalalaa", "gt35t3q4gta", "buffikun", "ocsisnarf", "ktnbtn", "sataneide", "shadoowz", "icyfoxkiller", "sythius", "scoli", "herusx", "campz", "gwuam", "weebgasm", "canabuddha", "rashaken", "nerfus", "soatok", "poppercone", "hockeyd14", "clevon", "dootn006"
+        "talentlessss", "dork1444", "vini07", "elandra_k", "redpaaaaanda", "tjsh11", "treason75", "pneumatus", "scolioli", "chalalaa", "gt35t3q4gta", "buffikun", "johs", "usernamebrand", "ocsisnarf", "ktnbtn", "sataneide", "shadoowz", "icyfoxkiller", "sythius", "scoli", "herusx", "campz", "gwuam", "weebgasm", "canabuddha", "rashaken", "nerfus", "soatok", "poppercone", "hockeyd14", "clevon", "dootn006"
         ]
     for testProfile in goodPublicIETestList:
         #print("Console_Tester~ INFO Testing with Public IE:", testProfile)
         try:
-            singleResult = main(testProfile, "consoleTest")
+            singleResult = main(testProfile, testType)
         except Exception as reason:
             print("Console_Tester~ EXCEPTION Encountered during eval of testProfile:", testProfile, reason)
             singleResult = "ExceptionFail"
@@ -51,7 +51,7 @@ def fullTest():
     for testProfile in badPublicIETestList:
         #print("Console_Tester~ INFO Testing with Public IE:", testProfile)
         try:
-            singleResult = main(testProfile, "consoleTest")
+            singleResult = main(testProfile, testType)
         except Exception as reason:
             print("Console_Tester~ EXCEPTION Encountered during eval of testProfile:", testProfile, reason)
             singleResult = "ExceptionFail"
@@ -66,11 +66,11 @@ def fullTest():
         "Bad Public IE Tests": badPublicIETestResults
         }
 
-    for testType in fullTestResults:
-        print("Console_Tester.fullTestResults", testType, ":", fullTestResults[testType])
+    for testGroup in fullTestResults:
+        print("Console_Tester.fullTestResults", testGroup, ":", fullTestResults[testGroup])
 
-#fullTest()
-#main("redpaaaaanda", "web")
-#print(main("scoli", "web")[0][6])
-fullListPrint(main("redpaaaaanda", "web"))
+#fullTest("consoleTest")
+#main("xayayah", "web")
+print(main("scolioli", "web")[0][3][2:])
+#fullListPrint(main("usernamebrand", "web"))
 #print(main("scoli", "consoleTest"))

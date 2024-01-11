@@ -21,7 +21,6 @@ import idleon_Stamps
 import idleon_Bribes
 import idleon_Smithing
 
-
 #w2
 import idleon_Alchemy
 #import idleon_Obols
@@ -69,11 +68,13 @@ def getJSONfromText(runType, rawJSON):
     parsed = []
     #print("idleonTaskSuggester.getJSONfromText~ Input type and Length:", type(rawJSON), len(rawJSON))
     if isinstance(rawJSON, dict): #Console testing
-        if "lastUpdated" in rawJSON: #Check to see if this is Toolbox JSON
+        if "data" in rawJSON: #Check to see if this is Toolbox JSON
             parsed = rawJSON["data"]
-            parsed["charNames"] = rawJSON["charNames"]
-            parsed["companion"] = rawJSON["companion"]
-            #print("idleonTaskSuggester.getJSONfromText~ Return Point 1: DICT Toolbox JSON found.")
+            if "charNames" in rawJSON:
+                parsed["charNames"] = rawJSON["charNames"]
+            if "companion" in rawJSON:
+                parsed["companion"] = rawJSON["companion"]
+                #print("idleonTaskSuggester.getJSONfromText~ Return Point 1: DICT Toolbox JSON found.")
             return parsed
         else: #Non-Toolbox JSON
             try:
@@ -97,8 +98,10 @@ def getJSONfromText(runType, rawJSON):
             if rawJSON.find("lastUpdated") != -1:
                 toolboxParsed = json.loads(rawJSON)
                 parsed = toolboxParsed["data"]
-                parsed["charNames"] = toolboxParsed["charNames"]
-                parsed["companion"] = toolboxParsed["companion"]
+                if "charNames" in rawJSON:
+                    parsed["charNames"] = toolboxParsed["charNames"]
+                if "companion" in rawJSON:
+                    parsed["companion"] = toolboxParsed["companion"]
                 #print("idleonTaskSuggester.getJSONfromText~ Return Point 5: STRING Toolbox JSON found.")
                 return parsed
             else:
@@ -296,7 +299,8 @@ def main(inputData, runType="web"):
     combatLevelsPR = idleon_CombatLevels.setCombatLevelsProgressionTier(parsedJSON, progressionTiers['Combat Levels'], playerCount, playerNames)
     consumablesList = idleon_Consumables.parseConsumables(parsedJSON, playerCount, playerNames)
     gemShopPR = idleon_GemShop.setGemShopProgressionTier(parsedJSON, progressionTiers['Gem Shop'], playerCount)
-    missableGStacksList = idleon_Greenstacks.getMissableGStacks(parsedJSON, playerCount)
+    #missableGStacksList = idleon_Greenstacks.getMissableGStacks(parsedJSON, playerCount)
+    allGStacksList = idleon_Greenstacks.setGStackProgressionTier(parsedJSON, playerCount, progressionTiers["Greenstacks"])
     maestroHandsListOfLists = idleon_MaestroHands.getHandsStatus(parsedJSON, playerCount, playerNames)
     try:
         cardsList = idleon_Cards.getCardSetReview(parsedJSON)
@@ -334,7 +338,8 @@ def main(inputData, runType="web"):
     #gamingPR =
     #divinityPR =
 
-    generalList = [[ieLinkString, lastUpdatedTimeString], combatLevelsPR.nTR, consumablesList, gemShopPR.nTR, missableGStacksList, maestroHandsListOfLists, cardsList] #len(combatLevelsPR.nTR) = 2, len(consumablesList) = 2, len(gemShopPR.nTR) = 5, len(missableGStacksList) = 3, len(maestroHandsList) = 1
+    #generalList = [[ieLinkString, lastUpdatedTimeString], combatLevelsPR.nTR, consumablesList, gemShopPR.nTR, missableGStacksList, maestroHandsListOfLists, cardsList] #len(combatLevelsPR.nTR) = 2, len(consumablesList) = 2, len(gemShopPR.nTR) = 5, len(missableGStacksList) = 3, len(maestroHandsList) = 1
+    generalList = [[ieLinkString, lastUpdatedTimeString], combatLevelsPR.nTR, consumablesList, gemShopPR.nTR, allGStacksList, maestroHandsListOfLists, cardsList]
     w1list = [stampPR.nTR, bribesPR.nTR, smithingPR.nTR] #len(stampPR) = 4, len(bribesPR.nTR) = 2, len(smithingPR.nTR) = 4
     w2list = [alchBubblesPR.nTR,alchVialsPR.nTR,alchP2WList, emptyList] #len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 5
     #w2list = [alchBubblesPR.nTR,alchVialsPR.nTR,alchP2WList, obolsPR.nTR] #len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 4, len(obolsPR.nTR) = 4
@@ -369,7 +374,7 @@ def main(inputData, runType="web"):
             "Combat Levels": combatLevelsPR.nTR,
             "Consumables": consumablesList,
             "Gem Shop": gemShopPR.nTR,
-            "Missable Greenstacks": missableGStacksList,
+            #"Missable Greenstacks": missableGStacksList,
             "Maestro Hands": maestroHandsListOfLists
             },
         "World 1": {

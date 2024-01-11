@@ -377,15 +377,15 @@ def getReadableBubbleNames(inputNumber, color):
 def getBubbleColorFromName(inputName):
     match inputName:
         case "FMJ" | "Call Me Bob" | "Carpenter":
-            return str(" (Orange)")
+            return str(" (Orange")
         case "Hammer Hammer" | "Shaquracy":
-            return str(" (Green)")
+            return str(" (Green")
         case "Cookin Roadkill":
-            return str(" (Purple)")
+            return str(" (Purple")
         case "Prowesessary" | "Laaarrrryyyy" | "Startue Exp" | "Droppin Loads" | "Diamond Chef" | "Big P" | "Big Game Hunter" | "Mr Massacre" | "Grind Time":
-            return str(" (Yellow)")
+            return str(" (Yellow")
         case _:
-            return str(" (Unknown)")
+            return str(" (Unknown")
 
 def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
     alchemyVialsDict = inputJSON["CauldronInfo"][4]
@@ -554,7 +554,7 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
             sum_TotalBubblesUnlocked += 1
             yellowBubblesUnlocked += 1
 
-    bubbleUnlockListByWorld = ["placeholder",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0] #this will break if they've unlocked more than 100 bubbles lmao
+    bubbleUnlockListByWorld = [20,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0] #this will break if they've unlocked more than 100 bubbles lmao
 
     #orange
     worldCounter = 1
@@ -612,29 +612,18 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
         #tier[5] = dict {UtilityBubbles}
         #tier[6] = str BubbleValuePercentage
         #tier[7] = str Notes
+
         #tier_TotalBubblesUnlocked
         if tier_TotalBubblesUnlocked == (tier[0]-1): #Only check if they already met the previous tier
             if sum_TotalBubblesUnlocked >= tier[1]:
-                tier_TotalBubblesUnlocked = tier[0]
+                    tier_TotalBubblesUnlocked = tier[0]
             else:
-                if tier[1] >= 160:
-                    advice_TotalBubblesUnlocked = "Tier " + str(tier_TotalBubblesUnlocked) + "- You have unlocked " + str(bubbleUnlockListByWorld[8]) + "/20 of W8 bubbles with a final per-bubble cost of 986m per unlock attempt."
-                elif tier[1] >= 140:
-                    advice_TotalBubblesUnlocked = "Tier " + str(tier_TotalBubblesUnlocked) + "- You have unlocked " + str(bubbleUnlockListByWorld[7]) + "/20 of W7 bubbles with a final per-bubble cost of 197m per unlock attempt, and " + str(sum_TotalBubblesUnlocked) + "/160 total bubbles up to W8."
-                elif tier[1] >= 120:
-                    advice_TotalBubblesUnlocked = "Tier " + str(tier_TotalBubblesUnlocked) + "- You have unlocked " + str(bubbleUnlockListByWorld[6]) + "/20 of W6 bubbles with a final per-bubble cost of 37.3m per unlock attempt, and " + str(sum_TotalBubblesUnlocked) + "/160 total bubbles up to W8."
-                elif tier[1] >= 100:
-                    advice_TotalBubblesUnlocked = "Tier " + str(tier_TotalBubblesUnlocked) + "- You have unlocked " + str(bubbleUnlockListByWorld[5]) + "/20 of W5 bubbles, and " + str(sum_TotalBubblesUnlocked) + "/160 total bubbles up to W8."
-                elif tier[1] >= 80:
-                    advice_TotalBubblesUnlocked = "Tier " + str(tier_TotalBubblesUnlocked) + "- You have unlocked " + str(bubbleUnlockListByWorld[4]) + "/20 of W4 bubbles."
-                elif tier[1] >= 60:
-                    advice_TotalBubblesUnlocked = "Tier " + str(tier_TotalBubblesUnlocked) + "- You have unlocked " + str(bubbleUnlockListByWorld[3]) + "/20 of W3 bubbles."
-                elif tier[1] >= 40:
-                    advice_TotalBubblesUnlocked = "Tier " + str(tier_TotalBubblesUnlocked) + "- You have unlocked " + str(bubbleUnlockListByWorld[2]) + "/20 of W2 bubbles."
-                else:
-                    advice_TotalBubblesUnlocked = "Tier " + str(tier_TotalBubblesUnlocked) + "- You have unlocked " + str(bubbleUnlockListByWorld[1]) + "/20 of W1 bubbles."
-
-                #advice_TotalBubblesUnlocked = "Tier " + str(tier_TotalBubblesUnlocked) + "- You have unlocked " + str(sum_TotalBubblesUnlocked) + "/" + str(tier[1]) + " of total bubbles. This can go up to 160 if you pre-unlock all the way up to W8 bubbles :o"
+                advice_TotalBubblesUnlocked = "Tier " + str(tier_TotalBubblesUnlocked)
+                highestFullyUnlockedWorld = 0
+                for world in range(0, len(bubbleUnlockListByWorld)):
+                    if bubbleUnlockListByWorld[world] == 20:
+                        highestFullyUnlockedWorld += 1
+                advice_TotalBubblesUnlocked+= "- You have unlocked " + str(bubbleUnlockListByWorld[highestFullyUnlockedWorld]) + "/20 of W" + str(highestFullyUnlockedWorld) + " bubbles."
 
         #tier_OrangeSampleBubbles
         all_orangeRequirementsMet = True
@@ -645,7 +634,7 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
                 #named_all_alchemyBublesDict[requiredBubble] = level of the player's bubble
                 if named_all_alchemyBublesDict[requiredBubble] < tier[2][requiredBubble]:
                     all_orangeRequirementsMet = False
-                    advice_OrangeSampleBubbles += requiredBubble + " to " + str(tier[2][requiredBubble]) + "+, "
+                    advice_OrangeSampleBubbles += requiredBubble + " (" + str(named_all_alchemyBublesDict[requiredBubble]) + "/" + str(tier[2][requiredBubble]) + "), "
             if all_orangeRequirementsMet == True:
                 tier_OrangeSampleBubbles = tier[0]
             else:
@@ -661,7 +650,7 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
 
                 if named_all_alchemyBublesDict[requiredBubble] < tier[3][requiredBubble]:
                     all_greenRequirementsMet = False
-                    advice_GreenSampleBubbles += requiredBubble + " to " + str(tier[3][requiredBubble]) + "+, "
+                    advice_GreenSampleBubbles += requiredBubble + " (" + str(named_all_alchemyBublesDict[requiredBubble]) + "/" + str(tier[3][requiredBubble]) + "), "
             if all_greenRequirementsMet == True:
                 tier_GreenSampleBubbles = tier[0]
             else:
@@ -676,7 +665,7 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
                 #named_all_alchemyBublesDict[requiredBubble] = level of the player's bubble
                 if named_all_alchemyBublesDict[requiredBubble] < tier[4][requiredBubble]:
                     all_purpleRequirementsMet = False
-                    advice_PurpleSampleBubbles += requiredBubble + " to " + str(tier[4][requiredBubble]) + "+, "
+                    advice_PurpleSampleBubbles += requiredBubble + " (" + str(named_all_alchemyBublesDict[requiredBubble]) + "/" + str(tier[4][requiredBubble]) + "), "
             if all_purpleRequirementsMet == True:
                 tier_PurpleSampleBubbles = tier[0]
             else:
@@ -691,7 +680,7 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
                 #named_all_alchemyBublesDict[requiredBubble] = level of the player's bubble
                 if named_all_alchemyBublesDict[requiredBubble] < tier[5][requiredBubble]:
                     all_utilityRequirementsMet = False
-                    advice_UtilityBubbles += requiredBubble + getBubbleColorFromName(requiredBubble) + " to " + str(tier[5][requiredBubble]) + "+, "
+                    advice_UtilityBubbles += requiredBubble + getBubbleColorFromName(requiredBubble) + " " + str(named_all_alchemyBublesDict[requiredBubble]) + "/" + str(tier[5][requiredBubble]) + "), "
             if all_utilityRequirementsMet == True:
                 tier_UtilityBubbles = tier[0]
             else:
