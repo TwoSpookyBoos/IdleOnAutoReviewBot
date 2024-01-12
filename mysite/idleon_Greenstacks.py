@@ -350,8 +350,11 @@ def setGStackProgressionTier(inputJSON, playerCount, progressionTiers):
         firstAdvice = dict(itertools.islice(combinedAdvice.items(), 1))
 
     #print("Dream Advice:", dreamAdvice)
-    #for tier in first3Advice:
+    #for tier in combinedAdvice:
         #if tier != "":
-            #print("GStack Advice:", tier, first3Advice[tier])
+            #print("GStack All Tiers Advice:", tier, combinedAdvice[tier])
+    #for tier in firstAdvice:
+        #if tier != "":
+            #print("GStack All Tiers Advice:", tier, firstAdvice[tier])
 
     return [dreamAdvice, missedQuestItemsDict["Advice"], firstAdvice]

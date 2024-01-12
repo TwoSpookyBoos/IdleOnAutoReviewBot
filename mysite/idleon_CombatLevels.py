@@ -1,5 +1,28 @@
+import json
 import progressionResults
 import idleon_SkillLevels
+
+def getEquinoxDreams(inputJSON):
+    try:
+        rawDreams = json.loads(inputJSON["WeeklyBoss"])
+    except Exception as reason:
+        print("CombatLevels.getEquinoxDreams~ EXCEPTION Unable to access WeeklyBoss data from JSON:", reason)
+    results = {
+        "Dream3": False,
+        "Dream11": False,
+        "Dream23": False
+        }
+    if "d_2" in rawDreams:
+        if rawDreams["d_2"] == -1:
+            results["Dream3"] = True
+    if "d_10" in rawDreams:
+        if rawDreams["d_10"] == -1:
+            results["Dream11"] = True
+    if "d_22" in rawDreams:
+        if rawDreams["d_22"] == -1:
+            results["Dream23"] = True
+    #print("Greenstacks.getEquinoxDreams~ OUTPUT results:", results)
+    return results
 
 def parseCombatLevels(inputJSON, playerCount, playerNames):
     counter = 0
@@ -38,6 +61,7 @@ def parseCombatLevels(inputJSON, playerCount, playerNames):
 
 def setCombatLevelsProgressionTier(inputJSON, progressionTiers, playerCount, playerNames):
     parsedCombatLevels = parseCombatLevels(inputJSON, playerCount, playerNames)
+    equinoxDreamStatus = getEquinoxDreams(inputJSON)
     tier_RequiredAccountLevels = 0
     tier_RequiredPersonalLevels = 0
     overall_CombatLevelTier = 0
@@ -57,17 +81,17 @@ def setCombatLevelsProgressionTier(inputJSON, progressionTiers, playerCount, pla
                 tier_RequiredAccountLevels = tier[0]
             else:
                 advice_AccountLevels = "Tier " + str(tier_RequiredAccountLevels) + "- Current Family level: " + str(parsedCombatLevels['sum_AccountLevel']) + ". Next family reward at " + str(tier[1]) + " unlocks " + tier[2]
-    if len(parsedCombatLevels['equinoxDict']['Characters Under 100']) > 0:
+    if len(parsedCombatLevels['equinoxDict']['Characters Under 100']) > 0 and equinoxDreamStatus["Dream3"] == False:
         advice_PersonalLevels = "Level the following characters to 100+ to complete Equinox Dream 3: "
         for character in parsedCombatLevels['equinoxDict']['Characters Under 100']:
             advice_PersonalLevels += str(character) + " (" + str(parsedCombatLevels['equinoxDict']['Characters Under 100'][character]) + "), "
         advice_PersonalLevels = advice_PersonalLevels[:-2] #remove the trailing comma and space
-    elif len(parsedCombatLevels['equinoxDict']['Characters Under 250']) > 0:
+    elif len(parsedCombatLevels['equinoxDict']['Characters Under 250']) > 0 and equinoxDreamStatus["Dream11"] == False:
         advice_PersonalLevels = "Level the following characters to 250+ to complete Equinox Dream 11 and unlock their Personal Sparkle Obol slot: "
         for character in parsedCombatLevels['equinoxDict']['Characters Under 250']:
             advice_PersonalLevels += str(character) + " (" + str(parsedCombatLevels['equinoxDict']['Characters Under 250'][character]) + "), "
         advice_PersonalLevels = advice_PersonalLevels[:-2] #remove the trailing comma and space
-    elif len(parsedCombatLevels['equinoxDict']['Characters Under 500']) > 0:
+    elif len(parsedCombatLevels['equinoxDict']['Characters Under 500']) > 0 and equinoxDreamStatus["Dream23"] == False:
         advice_PersonalLevels = "Level the following characters to 500+ to complete Equinox Dream 23: "
         for character in parsedCombatLevels['equinoxDict']['Characters Under 500']:
             advice_PersonalLevels += str(character) + " (" + str(parsedCombatLevels['equinoxDict']['Characters Under 500'][character]) + "), "

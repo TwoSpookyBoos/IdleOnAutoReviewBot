@@ -104,6 +104,7 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers):
         #tier[4] = dict All-tab AutoRefine
         #tier[5] = int W3Merits purchased
         #tier[6] = str Notes
+
         #Tab1 checks
         if tier_Tab1 == (tier[0]-1): #Only check if they already met previous tier
             required_Tab1 = tier[1]
@@ -114,6 +115,7 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers):
                     advice_Tab1 = "" #TODO
             if all_Tab1 == True:
                 tier_Tab1 = tier[0]
+
         #Tab2 checks
         if tier_Tab2 == (tier[0]-1): #Only check if they already met previous tier
             required_Tab2 = tier[2]
@@ -123,6 +125,7 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers):
                     all_Tab2 = False
             if all_Tab2 == True:
                 tier_Tab2 = tier[0]
+
         #Tab3 checks
         if tier_Tab3 == (tier[0]-1): #Only check if they already met previous tier
             required_Tab3 = tier[3]
@@ -137,6 +140,7 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers):
         #Tab5 checks
         #Tab6 checks
         #Tab7 checks
+
         #AutoRefine checks
         if tier_AutoRefine == (tier[0]-1): #Only check if they already met previous tier
             required_AutoRefine = tier[4]
@@ -146,8 +150,12 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers):
                     all_AutoRefine = False
                     if consRefineryDict['Red AutoRefine'] > 0 or consRefineryDict['Green AutoRefine'] > 0:
                         advice_AutoRefine = "Tier 0- The first salt per tab should always be ranking up (aka auto-refine at 0%)! Setting max tier to 0 until this is fixed :("
+                else:
+                    all_AutoRefine = True #for clarity lol. Being equal is the desired outcome. This value should already be true from before. Being unequal is the bad outcome that would result in it turning False.
             if all_AutoRefine == True:
                 tier_AutoRefine = tier[0]
+
+
         #W3 Merits check
         if tier_W3Merits == (tier[0]-1):
             required_W3Merits = tier[5]
@@ -157,19 +165,6 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers):
     #Generate all the advice
     overall_ConsRefineryTier = min(progressionTiers[-1][0], tier_AutoRefine, tier_W3Merits, tier_Tab1, tier_Tab2, tier_Tab3)
         #tier_Tab4, tier_Tab5, tier_Tab6, tier_Tab7) #future updates may add more tabs!
-
-    #AutoRefine advice
-    if tier_AutoRefine == progressionTiers[-1][0] and consRefineryDict['Red Rank'] >= 2:
-        overall_ConsRefineryTier = tier_AutoRefine #Rank 19 is full yolo, but only if they already have Red Salts to level 2 or higher to prevent this triggering on pre-w3 accounts
-        advice_AutoRefine = "Tier " + str(tier_AutoRefine) + "- You've got all Salts set to 0% auto-refine, the infinite-scaling portion of Refinery."
-        if consRefineryDict['Red Rank'] >= 22:
-            advice_Tab1 += "Red is already rank 22+ where ranks become faster instead of slower. Tab1 should be relatively smooth sailing <3"
-        else:
-            advice_Tab1 += "Tab1 still has scaling time because Red Salt's rank is under 22 :( Pay attention to Tab1 salt requirements for upcoming crafting and building in advance to avoid long delays."
-        if consRefineryDict['Green Rank'] >= 22:
-            advice_Tab2 += "Green is already rank 22+ where ranks become faster instead of slower. Tab2 should be relatively smooth sailing <3"
-        else:
-            advice_Tab2 += "Tab2 still has scaling time because Green Salt's rank is under 22 :( Pay attention to Tab2 salt requirements for upcoming crafting and building in advance to avoid long delays."
 
     #W3Merits Advice
     sum_SaltsRank2Plus = 0
@@ -187,7 +182,7 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers):
         advice_W3Merits = "Tier " + str(tier_W3Merits) + "- Invest more points into the W3 Salt Merit to reduce your salt consumption! Currently " + str(consRefineryDict['Salt Merit']) + "/" + str(sum_SaltsRank2Plus)
 
     #Tab1 Advice
-    if tier_AutoRefine < 19:
+    if consRefineryDict['Combustion AutoRefine'] > 0:
         if tier_Tab1 < 16:
             #Red Salt
             advice_Tab1 = ("Tier " + str(tier_Tab1) + "- Next Tab1 Balanced tier needs "
@@ -207,9 +202,17 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers):
                 advice_Tab1 += ". After your Red Salt reaches rank 22, consider setting all of Tab1 to 0% auto-refine and infinitely ranking up! (I recommend this and will bump your Tab1 to Tier 17+)"
         elif tier_Tab1 >= 17:
             advice_Tab1 = "Tier " + str(tier_Tab1) + "- " + progressionTiers[17][6]
+    elif consRefineryDict['Combustion AutoRefine'] == 0:
+        if consRefineryDict['Red Rank'] >= 22:
+            tier_Tab1 = progressionTiers[-1][0] #19 currently
+            advice_Tab1 += "Tier " + str(tier_Tab1) + "- Red is already rank 22+ where ranks become faster instead of slower, and all Tab1 salts are set to 0% AutoRefine. Tab1 should be relatively smooth sailing <3"
+
+        else:
+            tier_Tab1 = progressionTiers[-3][0] #17 currently
+            advice_Tab1 += "Tier " + str(tier_Tab1) + "- Tab1 still has scaling time because Red Salt's rank is under 22, and all Tab1 salts are set to 0% AutoRefine :( Pay attention to Tab1 salt requirements for upcoming crafting and building in advance to avoid long delays."
 
     #Tab2 Advice
-    if tier_AutoRefine < 19:
+    if consRefineryDict['Synthesis AutoRefine'] > 0:
         if tier_Tab2 < 16:
             advice_Tab2 = ("Tier " + str(tier_Tab2) + "- Next Tab2 Balanced tier needs "
             + "Green: " + str(consRefineryDict['Green Rank']) + "/" + str(progressionTiers[tier_Tab2+1][2]['Green Rank']))
@@ -225,6 +228,23 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers):
                 advice_Tab2 += ". After your Green Salt reaches rank 22, consider setting all of Tab2 to 0% auto-refine and infinitely ranking up! (I recommend this and will bump your Tab2 to Tier 18+)"
         elif tier_Tab2 >= 17:
             advice_Tab2 = "Tier " + str(tier_Tab2) + "- " + progressionTiers[18][6]
+    elif consRefineryDict['Synthesis AutoRefine'] == 0:
+        if consRefineryDict['Green Rank'] >= 22:
+            tier_Tab2 = progressionTiers[-1][0] #19 currently
+            advice_Tab2 += "Tier " + str(tier_Tab2) + "- Green is already rank 22+ where ranks become faster instead of slower, and all Tab2 salts are set to 0% AutoRefine. Tab2 should be relatively smooth sailing <3"
+
+        else:
+            tier_Tab2 = progressionTiers[-2][0] #18 currently
+            advice_Tab2 += "Tier " + str(tier_Tab2) + "- Tab2 still has scaling time because Green Salt's rank is under 22, and all Tab2 salts are set to 0% AutoRefine :( Pay attention to Tab2 salt requirements for upcoming crafting and building in advance to avoid long delays."
+
+
+    #AutoRefine advice
+    if tier_AutoRefine == progressionTiers[-1][0] and consRefineryDict['Red Rank'] >= 2:
+        overall_ConsRefineryTier = tier_AutoRefine #Rank 19 is full yolo, but only if they already have Red Salts to level 2 or higher to prevent this triggering on pre-w3 accounts
+        advice_AutoRefine = "Tier " + str(tier_AutoRefine) + "- You've got all Salts set to 0% auto-refine, the infinite-scaling portion of Refinery."
+        #Another comment for clarity. I only want AutoRefine advice to show up in the extreme cases of Tier0 or Max tier. Anything inbetween doesn't need advice.
+        if tier_Tab1 == progressionTiers[-1][0] and tier_Tab2 == progressionTiers[-1][0]:
+            advice_AutoRefine += " You best <3"
 
     #Tab3 Advice
     #Tab4 Advice
@@ -233,9 +253,8 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers):
     #Tab7 Advice
     #Generate advice statement
     advice_ConsRefineryCombined = ["Best Refinery tier met: " + str(overall_ConsRefineryTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended refinery actions:", advice_AutoRefine, advice_W3Merits, advice_Tab1, advice_Tab2]
-#TODO
-    #print("Test print:", progressionTiers[tier_Tab1+1][1]['Red Rank'])
-    #print("Tiers: Overall",overall_ConsRefineryTier, "AutoRefine", tier_AutoRefine, "Merits", tier_W3Merits, "Tab1", tier_Tab1, "Tab2", tier_Tab2, "Tab3", tier_Tab3)
+    #TODO
+    #print("Tiers: Overall",overall_ConsRefineryTier, ", AutoRefine", tier_AutoRefine, ", Merits", tier_W3Merits, ", Tab1", tier_Tab1, ", Tab2", tier_Tab2, ", Tab3", tier_Tab3)
     #print("Determined lowest refinery tier met to be: " + str(overall_ConsRefineryTier) + "/19")
     #print(advice_ConsRefineryCombined)
     consRefineryPR = progressionResults.progressionResults(overall_ConsRefineryTier,advice_ConsRefineryCombined,"")

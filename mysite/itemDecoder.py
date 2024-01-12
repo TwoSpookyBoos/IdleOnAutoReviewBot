@@ -1054,7 +1054,7 @@ def getItemDisplayName(itemName):
         "TalentPoint2": {"displayName": "Talent_Point_Tab_2"},
         "TalentPoint3": {"displayName": "Talent_Point_Tab_3"},
         "TalentPoint4": {"displayName": "Talent_Point_Tab_4"},
-        "TalentPoint5": {"displayName": "Talent_Point_Tab_4"},
+        "TalentPoint5": {"displayName": "Talent_Point_Tab_5"},
         "TalentPoint6": {"displayName": "Talent_Point_Special_Tab"},
         "Line1": {"displayName": "Copper_Twine"},
         "Line2": {"displayName": "Silver_Twine"},

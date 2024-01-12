@@ -137,8 +137,8 @@ def setDefaultTiers():
         [14, {'Red Rank':40, 'Orange Rank':23, 'Blue Rank':13}, {'Green Rank':36, 'Purple Rank':21, 'Nullo Rank':12}, {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
         [15, {'Red Rank':45, 'Orange Rank':26, 'Blue Rank':15}, {'Green Rank':40, 'Purple Rank':23, 'Nullo Rank':13}, {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
         [16, {'Red Rank':45, 'Orange Rank':26, 'Blue Rank':15}, {'Green Rank':42, 'Purple Rank':24, 'Nullo Rank':14}, {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
-        [17, {'Red Rank':22}, {}, {}, {'Combustion AutoRefine':0}, 5, "Red has reached 22+, ranks start becoming faster instead of slower! Tab1 Ranks go Brrrr now!"],
-        [18, {}, {'Green Rank':22}, {}, {'Synthesis AutoRefine':0}, 5, "Green has reached 22+, ranks start becoming faster instead of slower! Tab2 Ranks go Brrrr now! Be careful with Nullo salts though. They'll decimate your Void Bar supply very quickly."],
+        [17, {'Red Rank':2}, {}, {}, {'Combustion AutoRefine':0}, 5, "Red has reached 22+, ranks start becoming faster instead of slower! Tab1 Ranks go Brrrr now!"],
+        [18, {'Red Rank':2}, {'Green Rank':2}, {}, {'Synthesis AutoRefine':0}, 5, "Green has reached 22+, ranks start becoming faster instead of slower! Tab2 Ranks go Brrrr now! Be careful with Nullo salts though. They'll decimate your Void Bar supply very quickly."],
         [19, {'Red Rank':2}, {}, {}, {'Sum AutoRefine':0}, 5, "You've got all Salts set to 0% auto-refine, the infinite-scaling portion of Refinery. This might leave you dry without salts for days or weeks at a time to begin, but will correct itself over time."],
         ]
     defaultTiers['Construction Salt Lick'] = [
@@ -469,14 +469,13 @@ def setDefaultTiers():
                 "LustreBar",
                 "Quest68"], #I really hate that the Slush Bucket is listed as Quest68
             "Missable Quest Items": ["Quest32"],
-            "Crystal Enemy Drops": ["EquipmentStatues2", "EquipmentStatues3", "EquipmentStatues4"],
             },
         10: {
             "Base Monster Materials": ["Sewers3"],
             "Other Skilling Resources": [
                 "StarfireBar",
                 "Bullet3", "FoodChoppin1"],
-            "Crystal Enemy Drops": ["EquipmentStatues7", "EquipmentStatues14"],
+            "Crystal Enemy Drops": ["EquipmentStatues2", "EquipmentStatues3", "EquipmentStatues4", "EquipmentStatues7", "EquipmentStatues14"],
             "Misc": ["FoodPotMana3", "FoodPotGr3", "FoodPotRe1"],
             "Vendor Shops": ["FoodHealth9"]
             },

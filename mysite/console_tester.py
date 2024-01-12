@@ -71,6 +71,6 @@ def fullTest(testType):
 
 #fullTest("consoleTest")
 #main("xayayah", "web")
-print(main("scolioli", "web")[0][3][2:])
+print(main("ocsisnarf", "web")[3][1])
 #fullListPrint(main("usernamebrand", "web"))
 #print(main("scoli", "consoleTest"))
