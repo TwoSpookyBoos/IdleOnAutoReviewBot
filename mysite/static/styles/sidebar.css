@@ -1,6 +1,5 @@
 :root {
     --sidebar-width: 650px;
-    --toggle-style-icon: url('https://idleon.wiki/wiki/images/6/60/Lightmode-Icon.png');
 }
 
 aside {
@@ -20,12 +19,12 @@ aside {
 
     overflow-x: hidden;
 
-    transition: left .5s ease-out, box-shadow .5s ease-out;
+    transition: left .5s ease-out, box-shadow .5s ease-out, background-color .5s ease-in-out, color .5s ease-in-out;
     z-index: 1;
 
-    /*font-family: 'Chakra Petch', sans-serif;*/
+    font-family: 'Chakra Petch', sans-serif;
     line-height: 1.6rem;
-    /*letter-spacing: .5px;*/
+    letter-spacing: 1px;
 
     box-shadow: none;
 }
@@ -33,35 +32,6 @@ aside {
 aside.sidebar-open {
     left: 0;
     box-shadow: 37px 0 90px 56px hsl(0 0% 0% / 75%);
-}
-
-#light-switch {
-    height: 40px;
-    width: 40px;
-    background: transparent var(--toggle-style-icon);
-    background-size: contain;
-    border-style: none;
-}
-
-#drawer-handle {
-    position: fixed;
-    left: 0;
-    top: 0;
-
-    height: 40px;
-    width: 40px;
-
-    border: 3px solid yellow;
-    border-radius: 3px;
-    background-color: #22272b;
-    color: yellow;
-
-    transition: left .5s ease-out;
-    z-index: 1;
-}
-
-#drawer-handle.sidebar-open {
-    left: var(--sidebar-width);
 }
 
 form {

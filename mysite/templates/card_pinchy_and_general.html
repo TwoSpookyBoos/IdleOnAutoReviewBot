@@ -1,6 +1,6 @@
 <article id="pinchy" class="general-content">
-    <h1 class="banner">
-        <img src="" alt="Pinchy AutoReview">
+    <h1 class="banner no-collapse">
+        Pinchy AutoReview
     </h1>
 
     <div class="content-wrapper">
@@ -13,7 +13,16 @@
                 <span id="pinchy-expected" class="advice">{{ htmlInput[9][0] }}</span>
                 <span id="pinchy-minimum" class="advice">{{ htmlInput[9][1] }}</span>
                 <ul>
-                    <li id="pinchy-advice" class="advice">{{ htmlInput[9][2] }}</li>
+                {% for line in htmlInput[9][2] %}
+                    {% if line %}
+                    <li id="pinchy-advice" class="advice">{{ line }}</li>
+                    {% endif %}
+                {% endfor %}
+                {% for line in htmlInput[9][3][:2] %}
+                    {% if line %}
+                    <li id="pinchy-advice" class="advice">{{ line }}</li>
+                    {% endif %}
+                {% endfor %}
                 </ul>
             </div>
         </section>
@@ -22,13 +31,13 @@
 
 <article id="general" class="general-content">
     <h1 class="banner">
-        <img src="" alt="General Account AutoReview">
+        <img src="{{ img('general_banner.jpg') }}" alt="General Account AutoReview">
     </h1>
 
     <div class="content-wrapper">
         <section>
             <h3 class="subheading">
-                <img src="" alt="General">
+                <img src="{{ img('family.png') }}" alt="General">
             </h3>
 
             {% if htmlInput[0][1] %}
@@ -102,7 +111,7 @@
 
         <section>
             <h3 class="subheading">
-                <img src="{{ img('Gem_Shop.png') }}" alt="Gem Shop">
+                <img src="{{ img('gemshop.png') }}" alt="Gem Shop">
             </h3>
 
             <div class="advice-wrapper">
@@ -134,5 +143,25 @@
                 </ul>
             </div>
         </section>
+
+        {% for cardset in htmlInput[0][6] %}
+        <section>
+            <h3 class="subheading">
+                <img src="{{ cards(cardset[2]) }}" alt="Greenstack">
+            </h3>
+
+            <div class="advice-wrapper">
+                <strong>{{ cardset[0] }}</strong>
+                <ul id="greenstacks">
+                    {% for line in cardset[1] %}
+                        {% if line %}
+                            <li class="advice">{{ line }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </section>
+        {% endfor %}
+
     </div>
 </article>
