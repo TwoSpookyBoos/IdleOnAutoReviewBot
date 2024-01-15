@@ -1,5 +1,18 @@
 document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll('.banner:not(.no-collapse), .subheading').forEach((banner) => banner.onclick = (e) => e.currentTarget.nextElementSibling.classList.toggle('folded'))
+    document.querySelectorAll('.banner:not(.no-collapse)').forEach((banner) => banner.onclick = (e) => e.currentTarget.parentElement.querySelectorAll('.content-wrapper').forEach(ul => ul.classList.toggle('folded')))
+    document.querySelectorAll('.subheading:not(.no-collapse)').forEach((picture) => picture.onclick = (e) => {
+        e.currentTarget.nextElementSibling.querySelectorAll('ul, em').forEach(ul => ul.classList.toggle('folded'))
+        e.currentTarget.querySelector('img').classList.toggle('folded')
+    })
+    document.querySelectorAll('strong').forEach((title) => title.onclick = (e) => e.currentTarget.parentElement.querySelectorAll('ul').forEach(e => e.classList.toggle('folded')))
+    document.querySelectorAll('strong:first-child').forEach((title) => title.onclick = (e) => {
+        e.currentTarget.parentElement.querySelectorAll('ul').forEach(e => e.classList.toggle('folded'))
+        e.currentTarget.parentElement.parentElement.querySelector('.subheading > img').classList.toggle('folded')
+        let notice = e.currentTarget.querySelector('em')
+        if (notice !== null) {
+            notice.classList.toggle('folded')
+        }
+    })
     document.querySelector('#light-switch').onclick = (e) => {
         document.body.classList.toggle('light-mode')
         e.currentTarget.classList.toggle('on')
@@ -24,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
         lightSwitch.classList.add(isLightMode ? 'on' : 'off')
     })
 
-    if (document.querySelector('main') === null) {
+    if (document.querySelectorAll('main, .error').length === 0) {
         let button = document.getElementById('handle-image');
         let clickEvent = new MouseEvent('click', {
             'view': window,

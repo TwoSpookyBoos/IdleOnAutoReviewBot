@@ -23,6 +23,8 @@
 .light-mode nav,
 .light-mode aside {
     background-color: white !important;
+}
+.light-mode nav {
     transition: color .5s ease-in-out, background-color .5s ease-in-out;
 }
 .light-mode .hamburger .bar {
@@ -46,6 +48,7 @@ body {
     background-color: #38444d;
     color: white;
     transition: all .5s ease-in-out;
+    min-height: 100vh;
 }
 ul {
     padding-left: 22px;
@@ -73,6 +76,7 @@ textarea {
 }
 h1, strong {
     color: goldenrod;
+    cursor: pointer;
 }
 section {
     display: flex;
@@ -87,6 +91,7 @@ header {
     border-bottom: 1px solid grey;
 }
 footer {
+    margin-top: auto; /*always sticks to the bottom of the page*/
     padding: 20px;
     border-top: 1px solid grey;
     display: flex;
@@ -102,15 +107,20 @@ footer {
     width: fit-content;
 }
 .subheading {
-    display: grid;
-    grid-template-rows: repeat(2, 50px);
-    grid-template-columns: repeat(2, 50px);
+    display: block;
 }
 .subheading img {
-    width: 100%;
-    height: auto;
+    width: 80px;
+    height: 80px;
     object-fit: contain;
 }
+.subheading img.folded {
+    display: block !important;
+    width: 80px;
+    height: 1em;
+    object-fit: contain;
+}
+
 .advice-wrapper {
     display: flex;
     flex-direction: column;
@@ -126,4 +136,11 @@ main {
     flex-direction: column;
     padding: 0 25px;
     row-gap: 15px;
+}
+em {
+    font-weight: normal;
+    color: white;
+}
+.indent-1 {
+    margin-left: 17px;
 }

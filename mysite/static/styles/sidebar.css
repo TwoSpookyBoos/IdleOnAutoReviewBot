@@ -62,3 +62,11 @@ form textarea::placeholder {
     padding-top: 5px;
 }
 
+#ko-fi {
+    display: block;
+    height: 34px;
+    width: 133px;
+    background-image: url(https://storage.ko-fi.com/cdn/kofi4.png?v=3);
+    background-repeat: no-repeat;
+    background-size: contain;
+}

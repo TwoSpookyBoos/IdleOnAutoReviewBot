@@ -49,7 +49,7 @@ def index(main_or_beta: str) -> str:
         print("FlaskApp.index~ Could not get Player from Request Args:", reason)
         error = True
 
-    return render_template(page, htmlInput=pythonOutput, error=error)
+    return render_template(page, htmlInput=pythonOutput, error=error, beta=main_or_beta)
 
 
 # @app.route("/")
