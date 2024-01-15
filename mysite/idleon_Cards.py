@@ -157,7 +157,7 @@ def getCardSetReview(inputJSON):
             "w5a2": ["Maccie",28,84,140,448,12852],
             "w5a3": ["Mister Brightside",32,96,160,512,14688],
             "w5a4": ["Cheese Nub",35,105,175,560,16065],
-            "w5a5": ["Stiltmole",45,135,225,720,21781],
+            "w5a5": ["Stiltmole",45,135,225,720,20655],
             "w5b1": ["Molti",48,144,240,768,22032],
             "w5b2": ["Puragtory Stalker",52,156,260,832,23868],
             "w5b3": ["Citringe",60,180,300,960,27540],
@@ -368,7 +368,7 @@ def getCardSetReview(inputJSON):
                         if adviceDetails.endswith(", "):
                             adviceDetails = adviceDetails[:-2] #trim off the final comma and space
                         adviceDetailsList.append(adviceDetails)
-            print("Appending CardSet:", adviceHeader)
+            #print("Appending CardSet:", adviceHeader)
             cards_combinedAdvice.append([adviceHeader, adviceDetailsList, cardSet])
     #print("Cards.getCardSetReview~ OUTPUT cards_combinedAdvice:", cards_combinedAdvice)
 
