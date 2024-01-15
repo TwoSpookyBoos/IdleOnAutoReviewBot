@@ -1,5 +1,6 @@
 import json
 import progressionResults
+from math import floor
 
 def getHighestAlchemyLevel(inputJSON, playerCount):
     highestAlchLevel = 0
@@ -387,6 +388,21 @@ def getBubbleColorFromName(inputName):
         case _:
             return str(" (Unknown")
 
+def getSumUnlockedBubbles(colorDict, colorString):
+    bubblesUnlocked = 0
+    for bubble in colorDict:
+        if isinstance(colorDict[bubble], str):
+            print("Alchemy.getSumUnlockedBubbles~ BUBBLE VALUE FOUND TO BE STRING! ATTEMPTING TO CONVERT:", colorString, bubble, colorDict[bubble])
+            try:
+                colorDict[bubble] = int(floor(float(colorDict[bubble])))
+            except Exception as reason:
+                print("Alchemy.getSumUnlockedBubbles~ EXCEPTION Could not convert Bubble string to int :( Skipping by setting bubble to 0. Reason:", reason)
+        if isinstance(colorDict[bubble], int) or isinstance(colorDict[bubble], float):
+            if colorDict[bubble] > 0:
+                    bubblesUnlocked += 1
+    return bubblesUnlocked
+
+
 def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
     alchemyVialsDict = inputJSON["CauldronInfo"][4]
     try:
@@ -537,22 +553,17 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
     #print(named_all_alchemyBublesDict)
 
     #Sum up unlocked bubbles (level > 0)
-    for bubble in raw_orange_alchemyBubblesDict:
-        if raw_orange_alchemyBubblesDict[bubble] > 0:
-            sum_TotalBubblesUnlocked += 1
-            orangeBubblesUnlocked += 1
-    for bubble in raw_green_alchemyBubblesDict:
-        if raw_green_alchemyBubblesDict[bubble] > 0:
-            sum_TotalBubblesUnlocked += 1
-            greenBubblesUnlocked += 1
-    for bubble in raw_purple_alchemyBubblesDict:
-        if raw_purple_alchemyBubblesDict[bubble] > 0:
-            sum_TotalBubblesUnlocked += 1
-            purpleBubblesUnlocked += 1
-    for bubble in raw_yellow_alchemyBubblesDict:
-        if raw_yellow_alchemyBubblesDict[bubble] > 0:
-            sum_TotalBubblesUnlocked += 1
-            yellowBubblesUnlocked += 1
+    orangeBubblesUnlocked = getSumUnlockedBubbles(raw_orange_alchemyBubblesDict, "Orange")
+    greenBubblesUnlocked = getSumUnlockedBubbles(raw_green_alchemyBubblesDict, "Green")
+    purpleBubblesUnlocked = getSumUnlockedBubbles(raw_purple_alchemyBubblesDict, "Purple")
+    yellowBubblesUnlocked = getSumUnlockedBubbles(raw_yellow_alchemyBubblesDict, "Yellow")
+    sum_TotalBubblesUnlocked += orangeBubblesUnlocked + greenBubblesUnlocked + purpleBubblesUnlocked + yellowBubblesUnlocked
+
+    #Old style, replaced by getSumUnlockedBubbles due to finding String values for bubble levels
+    #for bubble in raw_orange_alchemyBubblesDict:
+        #if raw_orange_alchemyBubblesDict[bubble] > 0:
+            #sum_TotalBubblesUnlocked += 1
+            #orangeBubblesUnlocked += 1
 
     bubbleUnlockListByWorld = [20,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0] #this will break if they've unlocked more than 100 bubbles lmao
 

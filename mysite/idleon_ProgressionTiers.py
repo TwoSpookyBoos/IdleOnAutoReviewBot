@@ -438,7 +438,6 @@ def setDefaultTiers():
                 "Soul3",
                 "GoldBar"],
             "Vendor Shops": ["OilBarrel6"],
-            "Missable Quest Items": ["Quest21"]
             },
         6: {
             "Crystal Enemy Drops": ["FoodHealth10", "FoodPotOr3", "FoodPotYe2", "Leaf3"],
@@ -472,6 +471,7 @@ def setDefaultTiers():
             },
         10: {
             "Base Monster Materials": ["Sewers3"],
+            "Missable Quest Items": ["Quest21"],
             "Other Skilling Resources": [
                 "StarfireBar",
                 "Bullet3", "FoodChoppin1"],

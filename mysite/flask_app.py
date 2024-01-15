@@ -18,7 +18,8 @@ def index():
             else:
                 return render_template("main_page.html")
         except Exception as reason:
-            print("FlaskApp.index~ Could not get Player from Request Args:",reason)
+            #print("FlaskApp.index~ Could not get Player from Request Args:",reason)
+            pass
         return render_template("main_page.html")
     elif request.method == "POST":
         capturedCharacterInput = request.form.get("characterInput")
@@ -45,8 +46,9 @@ def betaIndex():
             else:
                 return render_template("beta_main_page.html")
         except Exception as reason:
-            if request.args.get('player') is not None:
-                print("FlaskApp.betaIndex~ Could not get Player from Request Args:", reason)
+            #if request.args.get('player') is not None:
+                #print("FlaskApp.betaIndex~ Could not get Player from Request Args:", reason)
+            pass
         return render_template("beta_main_page.html")
     elif request.method == "POST":
         capturedCharacterInput = request.form.get("characterInput")

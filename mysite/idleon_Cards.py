@@ -277,32 +277,32 @@ def getCardSetReview(inputJSON):
             if card in cardRequirementsDict[cardSet]:
                 #if card already Ruby:
                 #print(cardSet, card, rawCardsData[card], "vs Ruby requirement of", cardRequirementsDict[cardSet][card][5] + cardRequirementsDict[cardSet][card][4] + cardRequirementsDict[cardSet][card][3] + cardRequirementsDict[cardSet][card][2] + cardRequirementsDict[cardSet][card][1])
-                if rawCardsData[card] >= cardRequirementsDict[cardSet][card][5] + cardRequirementsDict[cardSet][card][4] + cardRequirementsDict[cardSet][card][3] + cardRequirementsDict[cardSet][card][2] + cardRequirementsDict[cardSet][card][1] - safetyRange:
+                if rawCardsData[card] >= cardRequirementsDict[cardSet][card][5] + cardRequirementsDict[cardSet][card][4] + cardRequirementsDict[cardSet][card][3] + cardRequirementsDict[cardSet][card][2] + cardRequirementsDict[cardSet][card][1]:
                     playerCardsToNextLevelDict[cardSet][card]["CardsToNextLevel"] = 0
                     playerCardsToNextLevelDict[cardSet][card]["NextLevelName"] = "None"
                     playerCardsToNextLevelDict[cardSet][card]["CardLevel"] = 6
                     playerCardSetTotalsDict[cardSet] += 6
                 #if card already Platinum:
-                elif rawCardsData[card] >= cardRequirementsDict[cardSet][card][4] + cardRequirementsDict[cardSet][card][3] + cardRequirementsDict[cardSet][card][2] + cardRequirementsDict[cardSet][card][1] - safetyRange:
-                    playerCardsToNextLevelDict[cardSet][card]["CardsToNextLevel"] = cardRequirementsDict[cardSet][card][5] + cardRequirementsDict[cardSet][card][4] + cardRequirementsDict[cardSet][card][3] + cardRequirementsDict[cardSet][card][2] + cardRequirementsDict[cardSet][card][1] - rawCardsData[card]
+                elif rawCardsData[card] >= cardRequirementsDict[cardSet][card][4] + cardRequirementsDict[cardSet][card][3] + cardRequirementsDict[cardSet][card][2] + cardRequirementsDict[cardSet][card][1]:
+                    playerCardsToNextLevelDict[cardSet][card]["CardsToNextLevel"] = cardRequirementsDict[cardSet][card][5] + cardRequirementsDict[cardSet][card][4] + cardRequirementsDict[cardSet][card][3] + cardRequirementsDict[cardSet][card][2] + cardRequirementsDict[cardSet][card][1] + safetyRange - rawCardsData[card]
                     playerCardsToNextLevelDict[cardSet][card]["NextLevelName"] = "Ruby"
                     playerCardsToNextLevelDict[cardSet][card]["CardLevel"] = 5
                     playerCardSetTotalsDict[cardSet] += 5
                 #if card already Gold:
-                elif rawCardsData[card] >= cardRequirementsDict[cardSet][card][3] + cardRequirementsDict[cardSet][card][2] + cardRequirementsDict[cardSet][card][1] - safetyRange:
-                    playerCardsToNextLevelDict[cardSet][card]["CardsToNextLevel"] = cardRequirementsDict[cardSet][card][4] + cardRequirementsDict[cardSet][card][3] + cardRequirementsDict[cardSet][card][2] + cardRequirementsDict[cardSet][card][1] - rawCardsData[card]
+                elif rawCardsData[card] >= cardRequirementsDict[cardSet][card][3] + cardRequirementsDict[cardSet][card][2] + cardRequirementsDict[cardSet][card][1]:
+                    playerCardsToNextLevelDict[cardSet][card]["CardsToNextLevel"] = cardRequirementsDict[cardSet][card][4] + cardRequirementsDict[cardSet][card][3] + cardRequirementsDict[cardSet][card][2] + cardRequirementsDict[cardSet][card][1] + safetyRange - rawCardsData[card]
                     playerCardsToNextLevelDict[cardSet][card]["NextLevelName"] = "Platinum"
                     playerCardsToNextLevelDict[cardSet][card]["CardLevel"] = 4
                     playerCardSetTotalsDict[cardSet] += 4
                 #if card already Silver:
-                elif rawCardsData[card] >= cardRequirementsDict[cardSet][card][2] + cardRequirementsDict[cardSet][card][1] - safetyRange:
-                    playerCardsToNextLevelDict[cardSet][card]["CardsToNextLevel"] = cardRequirementsDict[cardSet][card][3] + cardRequirementsDict[cardSet][card][2] + cardRequirementsDict[cardSet][card][1] - rawCardsData[card]
+                elif rawCardsData[card] >= cardRequirementsDict[cardSet][card][2] + cardRequirementsDict[cardSet][card][1]:
+                    playerCardsToNextLevelDict[cardSet][card]["CardsToNextLevel"] = cardRequirementsDict[cardSet][card][3] + cardRequirementsDict[cardSet][card][2] + cardRequirementsDict[cardSet][card][1] + safetyRange - rawCardsData[card]
                     playerCardsToNextLevelDict[cardSet][card]["NextLevelName"] = "Gold"
                     playerCardsToNextLevelDict[cardSet][card]["CardLevel"] = 3
                     playerCardSetTotalsDict[cardSet] += 3
                 #if card already Bronze:
                 elif rawCardsData[card] >= cardRequirementsDict[cardSet][card][1]:
-                    playerCardsToNextLevelDict[cardSet][card]["CardsToNextLevel"] = cardRequirementsDict[cardSet][card][2] + cardRequirementsDict[cardSet][card][1] - rawCardsData[card]
+                    playerCardsToNextLevelDict[cardSet][card]["CardsToNextLevel"] = cardRequirementsDict[cardSet][card][2] + cardRequirementsDict[cardSet][card][1] + safetyRange - rawCardsData[card]
                     playerCardsToNextLevelDict[cardSet][card]["NextLevelName"] = "Silver"
                     playerCardsToNextLevelDict[cardSet][card]["CardLevel"] = 2
                     playerCardSetTotalsDict[cardSet] += 2

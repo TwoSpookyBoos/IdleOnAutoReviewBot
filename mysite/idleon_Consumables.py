@@ -5,7 +5,7 @@ def parseBank(inputJSON):
 
     #Standard Time Candies: 1hr - 72hr
     guaranteedCandyHours = 0
-    guaranteedCandyString = " * You have no guaranteed candy in your bank. Wow."
+    guaranteedCandyString = "You have no guaranteed candy in your bank. Wow."
     if 'Timecandy1' in inputJSON["ChestOrder"]:
         TC1Index = inputJSON["ChestOrder"].index('Timecandy1')
         guaranteedCandyHours += 1*(inputJSON["ChestQuantity"][TC1Index])
