@@ -6,6 +6,7 @@
 /__pycache__
 .idea
 .venv
+/venv
 .bashrc
 .gitconfig
 .my.cnf

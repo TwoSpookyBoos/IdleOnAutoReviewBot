@@ -70,7 +70,7 @@ def fullTest(testType):
         print("Console_Tester.fullTestResults", testGroup, ":", fullTestResults[testGroup])
 
 #fullTest("consoleTest")
-#main("xayayah", "web")
-print(main("ocsisnarf", "web")[3][1])
+#main("clevon", "web")
+print(main("clevon", "web")[2][0])
 #fullListPrint(main("usernamebrand", "web"))
 #print(main("scoli", "consoleTest"))

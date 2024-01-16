@@ -3,15 +3,16 @@ import progressionResults
 import idleon_SkillLevels
 
 def getEquinoxDreams(inputJSON):
-    try:
-        rawDreams = json.loads(inputJSON["WeeklyBoss"])
-    except Exception as reason:
-        print("CombatLevels.getEquinoxDreams~ EXCEPTION Unable to access WeeklyBoss data from JSON:", reason)
     results = {
         "Dream3": False,
         "Dream11": False,
         "Dream23": False
         }
+    try:
+        rawDreams = json.loads(inputJSON["WeeklyBoss"])
+    except Exception as reason:
+        print("CombatLevels.getEquinoxDreams~ EXCEPTION Unable to access WeeklyBoss data from JSON:", reason)
+        return results
     if "d_2" in rawDreams:
         if rawDreams["d_2"] == -1:
             results["Dream3"] = True

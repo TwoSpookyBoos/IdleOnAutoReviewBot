@@ -4,15 +4,16 @@ from math import floor
 import itertools
 
 def getEquinoxDreams(inputJSON):
-    try:
-        rawDreams = json.loads(inputJSON["WeeklyBoss"])
-    except Exception as reason:
-        print("Greenstacks.getEquinoxDreams~ EXCEPTION Unable to access WeeklyBoss data from JSON:", reason)
     results = {
         "Dream1": False,
         "Dream12": False,
         "Dream29": False
         }
+    try:
+        rawDreams = json.loads(inputJSON["WeeklyBoss"])
+    except Exception as reason:
+        print("Greenstacks.getEquinoxDreams~ EXCEPTION Unable to access WeeklyBoss data from JSON:", reason)
+        return results
     if "d_0" in rawDreams:
         if rawDreams["d_0"] == -1:
             results["Dream1"] = True
@@ -206,15 +207,24 @@ def setGStackProgressionTier(inputJSON, playerCount, progressionTiers):
             "FoodPotMana3", "FoodPotGr3", "ButterBar", "FoodPotRe1", "FoodPotRe2",
             ],
         "Cheater": [
+            "Sewers1b", "TreeInterior1b", "BabaYagaETC", "JobApplication", #W1 Rare Drops
+            "DesertA1b", "DesertA3b", "DesertC2b", "MidnightCookie", #W2 Rare Drops
+            "SnowA2a", "SnowB2a", "SnowC4a", #W3 Rare Drops
+            "GalaxyA2b", "GalaxyC1b", #W4 Rare Drops
+            "LavaA1b", "LavaA5b", "LavaB3b", #W5 Rare Drops
+            "Quest17", "Quest29", "EfauntDrop1", "EfauntDrop2", "Chiz0", "Chiz1", "TrollPart", "KrukPart", "KrukPart2", #World Boss Materials
+            "CraftMat2", "CraftMat3",
             "Refinery5", "Refinery6", #Purple and Nullo Salts
             "OilBarrel1", "OilBarrel2", "OilBarrel3", "OilBarrel4", "OilBarrel5", #Oil Barrels
             "PureWater", "PureWater2", #Alchemy waters
-            "Godshard", "GodshardBar" #Unreleased
+            "Godshard", "GodshardBar", "MarbleBar",
             "Quest1", "Quest2", "Quest5", "Quest6", "Quest8", "Quest10", "Quest11", "Quest13", "Quest16", "Quest17", "Quest18", "Quest20", "Quest25",
             "Quest26", "Quest27", "Quest28", "Quest29", "Quest30", "Quest31", "Quest33", "Quest34", "Quest36", "Quest37", "Quest38", "Quest39", "Quest40",
             "Quest41", "Quest42", "Quest43", "Quest44", "Quest45", "Quest46", "Quest47", "Quest48", "Quest49", "Quest50",  "Quest9",
             "Mayo", "Trash1", "Trash2", "Trash3",  #Treasure Hunt rewards
+            "FoodTrapping1", "FoodWorship1", #Crafted
             "Meatloaf", "FoodHealth5", "FoodHealth8", "FoodPotYe3", "BobJoePickle", "BallJoePickle",
+            "FoodPotYe1", "FoodPotYe3", #EXP 1 and 3
             "FoodEvent1", "FoodEvent2", "FoodEvent3", "FoodEvent4", "FoodEvent5", "FoodEvent6", "FoodEvent7", "FoodEvent8" #Event Foods
             "Pearl1", "Pearl2", "Pearl3", "Pearl4", "Pearl5", "Pearl6" #Skilling Speed Pearls, EXP pearls
             "ExpBalloon1", "ExpBalloon2", "ExpBalloon3", #Experience Balloons
@@ -224,6 +234,8 @@ def setGStackProgressionTier(inputJSON, playerCount, progressionTiers):
             "EquipmentStatues8", "EquipmentStatues9", "EquipmentStatues10", "EquipmentStatues11", "EquipmentStatues12", "EquipmentStatues13", #W2 Statues
             "EquipmentStatues16", "EquipmentStatues17", "EquipmentStatues18", "EquipmentStatues19", #W3 Statues
             "EquipmentStatues20", "EquipmentStatues21", "EquipmentStatues22", "EquipmentStatues23", "EquipmentStatues24", "EquipmentStatues25" #W4 and W5 Statues
+            "PeanutG", "FoodG1", "FoodG2", "FoodG3", "FoodG4", "FoodG5", "FoodG6", "FoodG7", "FoodG8", "FoodG9", "FoodG10" #Gold Foods
+            "ResetFrag", "ResetCompleted", "ResetCompletedS", "ClassSwap", "ClassSwapB", "ResetBox",
             ]
         }
     #if len(missedQuestItemsDict["ItemNames"]) > 0:
@@ -282,8 +294,10 @@ def setGStackProgressionTier(inputJSON, playerCount, progressionTiers):
         todoGStacksCount += len(todoGStacks[itemCategory])
 
     #print("Greenstacks.getUniqueGStacksInStorage~ Player has finished", uniqueGStacksCount, "out of max possible", expectedStackablesCount, "GStacks")
-    if len(uniqueGStacksDict["Unexpected"]) > 0:
-        print("Greenstacks.getUniqueGStacksInStorage~ FOUND UNEXPECTED GSTACKS!!", uniqueGStacksDict["Unexpected"])
+    #if len(uniqueGStacksDict["Unexpected"]) > 0:
+        #print("Greenstacks.getUniqueGStacksInStorage~ FOUND UNEXPECTED GSTACKS!!", uniqueGStacksDict["Unexpected"])
+    #if len(uniqueGStacksDict["Cheater"]) > 0:
+        #print("Greenstacks.getUniqueGStacksInStorage~ FOUND KNOWN CHEATER GSTACKS!!", uniqueGStacksDict["Cheater"])
 
     #Troubleshooting prints
     #for itemCategory in expectedStackables:
