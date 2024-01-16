@@ -1,7 +1,7 @@
 import json
 from json import JSONDecodeError
 
-from flask import Flask, render_template, request, url_for, redirect
+from flask import Flask, render_template, request, url_for, redirect, Response
 import idleonTaskSuggester
 
 app = Flask(__name__)
@@ -33,15 +33,17 @@ def get_character_input() -> str:
 
 @app.route("/review", defaults=dict(main_or_beta=""), methods=["GET", "POST"])
 @app.route("/review/<main_or_beta>", methods=["GET", "POST"])
-def index(main_or_beta: str) -> str:
+def index(main_or_beta: str) -> Response | str:
     page: str = 'beta_results.html' if main_or_beta == 'beta' else 'results.html'
     error: bool = False
     pythonOutput: list | None = None
 
     try:
-
         capturedCharacterInput: str | dict = get_character_input()
         # print("FlaskApp.index~ OUTPUT request.args.get('player'):",type(capturedCharacterInput),capturedCharacterInput)
+        if request.method == 'POST' and isinstance(capturedCharacterInput, str):
+            return redirect(url_for('index', player=capturedCharacterInput))
+
         if capturedCharacterInput:
             pythonOutput = autoReviewBot(capturedCharacterInput)
 

@@ -1,8 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+@import url(https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap);
 
 :root {
-    --icon-light-on: url('../imgs/light-on.png');
-    --icon-light-off: url('../imgs/light-off.png');
+    --icon-light-on: url(../imgs/light-on.png);
+    --icon-light-off: url(../imgs/light-off.png);
     --drawer-image-width: 30px;
     --drawer-image-height: 30px;
     --nav-padding: 15px;
