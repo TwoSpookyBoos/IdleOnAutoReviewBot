@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
 :root {
     --icon-light-on: url('../imgs/light-on.png');
     --icon-light-off: url('../imgs/light-off.png');
@@ -40,7 +42,9 @@ nav {
 }
 
 .nav-wrapper li {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .nav-wrapper ul > li > a {
     display: block;
@@ -165,4 +169,34 @@ nav {
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
+}
+#discord, #spreadsheet, #ko-fi {
+    display: block;
+    height: 34px;
+    width: 150px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+}
+#discord {
+    background-image: url(../imgs/discord-logo-blue.png);
+}
+#spreadsheet {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    width: 175px;
+    background-image: url(../imgs/Google_Sheets.svg);
+    background-position: left;
+    color: #8ed1b1;
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+}
+#ko-fi {
+    background-image: url(https://storage.ko-fi.com/cdn/kofi4.png?v=3);
+}
+.light-mode #spreadsheet {
+    color: #1da261;
+    text-decoration: none;
 }

@@ -15,11 +15,12 @@ aside {
     width: var(--sidebar-width);
     height: 100%;
 
+    color: white;
     background: #22272b;
 
     overflow-x: hidden;
 
-    transition: left .5s ease-out, box-shadow .5s ease-out, background-color .5s ease-in-out, color .5s ease-in-out;
+    transition: all .5s ease-out;
     z-index: 1;
 
     font-family: 'Chakra Petch', sans-serif;
@@ -28,10 +29,19 @@ aside {
 
     box-shadow: none;
 }
+.light-mode aside {
+    color: black;
+    background: white;
+    transition: all .5s ease-out;
+}
 
 aside.sidebar-open {
     left: 0;
-    box-shadow: 37px 0 90px 56px hsl(0 0% 0% / 75%);
+    box-shadow: 9px 0 51px 21px hsla(0, 0%, 8%, .75);
+}
+
+.light-mode aside.sidebar-open {
+    box-shadow: 9px 0 51px 21px hsla(0, 0%, 39%, .75);
 }
 
 form {
@@ -43,30 +53,40 @@ form {
 form input {
     flex-grow: 1;
     border: none;
+    border-radius: 0 10px 10px 0;
     color: lightgray;
     background: mediumseagreen;
-    border-radius: 0 10px 10px 0;
+}
+.light-mode aside form input {
+    color: white;
+    background: forestgreen;
 }
 
 form textarea {
     border: none;
     flex-grow: 4;
     padding: 5px;
-    background: #595959;
     border-radius: 10px 0 0 10px;
-}
-
-form textarea::placeholder {
     color: lightgray;
+    background: #595959;
+}
+.light-mode aside form textarea {
+    color: #303941;
+    background: #e3e3e3;
+}
+form textarea::placeholder {
     padding-left: 5px;
     padding-top: 5px;
+    color: lightgray;
 }
-
-#ko-fi {
-    display: block;
-    height: 34px;
-    width: 133px;
-    background-image: url(https://storage.ko-fi.com/cdn/kofi4.png?v=3);
-    background-repeat: no-repeat;
-    background-size: contain;
+.light-mode aside form textarea::placeholder {
+    color: #303941;
+}
+form input,
+form textarea,
+form textarea::placeholder,
+.light-mode aside form input,
+.light-mode aside form textarea,
+.light-mode aside form textarea::placeholder {
+    transition: background-color .5s ease-in-out, color .5s ease-in-out;
 }

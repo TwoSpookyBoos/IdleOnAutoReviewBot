@@ -6,26 +6,22 @@
 .light-mode {
     background-color: white !important;
     color: black !important;
-    transition: all .5s ease-in-out;
 }
 .light-mode a:link {
     color: blue;
     background-color: transparent;
     text-decoration: underline;
-    transition: all .5s ease-in-out;
 }
 .light-mode a:visited {
     color: blue;
     background-color: transparent;
     text-decoration: underline;
-    transition: all .5s ease-in-out;
 }
 .light-mode nav,
 .light-mode aside {
     background-color: white !important;
 }
 .light-mode nav {
-    transition: color .5s ease-in-out, background-color .5s ease-in-out;
 }
 .light-mode .hamburger .bar {
     background-color: #93781d;
@@ -34,21 +30,29 @@ a:link {
     color: deepskyblue;
     background-color: transparent;
     text-decoration: underline;
-    transition: all .5s ease-in-out;
 }
 a:visited {
     color: deepskyblue;
     background-color: transparent;
     text-decoration: underline;
-    transition: all .5s ease-in-out;
 }
 body {
     display: flex;
     flex-direction: column;
     background-color: #38444d;
     color: white;
-    transition: all .5s ease-in-out;
     min-height: 100vh;
+}
+.light-mode,
+.light-mode a:link,
+.light-mode a:visited,
+.light-mode nav,
+.light-mode h1,
+.light-mode strong,
+a:link,
+a:visited,
+body {
+    transition: color .5s ease-in-out, background-color .5s ease-in-out;
 }
 ul {
     padding-left: 22px;
@@ -77,6 +81,10 @@ textarea {
 h1, strong {
     color: goldenrod;
     cursor: pointer;
+}
+.light-mode h1,
+.light-mode strong {
+    color: #287649;
 }
 section {
     display: flex;
