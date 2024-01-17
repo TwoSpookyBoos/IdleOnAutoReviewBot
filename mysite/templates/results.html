@@ -1,366 +1,39 @@
 <!DOCTYPE html>
+<!-- Beta Results -->
 <html lang="en">
     <head>
         <title>IE AutoReview Tool - By Scoli290</title>
-        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/main_page.css') }}">
-        <link rel= "shortcut icon" href="/static/imgs/blank.png">
-        <link rel= "icon" href="/static/imgs/blank.png">
-        <link rel= "apple-touch-icon" href="/static/imgs/blank.png">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/results.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/sidebar.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/nav.css') }}">
+        <link rel="icon" href="{{ img('blank.png') }}" type="image/png">
+        <link rel="apple-touch-icon" href="{{ img('blank.png') }}" type="image/png">
+        <script src="{{ url_for('static', filename='scripts/main.js') }}"></script>
         <meta name="robots" content="noindex">
-        <style>
-            .light-mode {
-                background-color: #fafafa;
-                color: black;
-            }
-            .banner {
-                cursor: pointer;
-            }
-            .world-content {
-                display: block;
-            }
-            .is-visible {
-                display: none;
-           }
-        </style>
-        <script type="text/javascript">
-            var toggle = function (id) {
-                var elem = document.getElementById(id);
-                elem.classList.toggle('is-visible');
-            };
-        </script>
-
     </head>
     <body>
-        <!-- Toggle button --><div><button onclick="lightMode()">Toggle Light/Dark mode</button></div><script>function lightMode() {var element = document.body; element.classList.toggle("light-mode");}</script>
-        <br>
-        <div>Welcome to <a href="http://ieautoreview-scoli.pythonanywhere.com/">IE AutoReview Tool - By Scoli290</a></div>
-        <br>
-        <div>Join the <a href="https://discord.gg/ZmEkqzfjmJ" target="_blank">Discord</a> for the detailed patch notes!</div>
-        <div>Most recent update 2024-01-10: Expanded the General-Greenstacks section with a Tier system to help guide toward 200 Greenstacks.</div>
-        <div>Previous update 2024-01-05: Added General Card Sets. This displays the closest cards to leveling up per set.</div>
-        <br>
-        <div>This tool will retrieve the PUBLIC profile from IdleOn Efficiency for evaluation.</div>
-        <div>If you haven't uploaded your profile publicly before, head here: <a href="https://www.idleonefficiency.com/profile/upload" target="_blank">IdleonEfficiency</a></div>
-        <br>
-        <div>Alternatively, you can provide Raw JSON data.</div>
-        <div><a href="https://www.idleonefficiency.com/raw-data" target="_blank">IdleonEfficiency</a>: Click on "Copy Raw JSON" button. Paste results below.</div>
-        <div><a href="https://idleontoolbox.com/data" target="_blank">IdleonToolbox</a>: Click on <strong>"IdleonToolbox JSON"</strong> button. Paste results below.</div>
-        <br>
-        <div>All tier requirements are listed in the <a href="https://docs.google.com/spreadsheets/d/16I-rURrVeyvltK2wxcQSiPgO07QY015RVNG4MAgUsGw/edit?usp=sharing" target="_blank">Spreadsheet</a> for reference!</div>
-        <br>
-        <div>
-            <form action="." method="POST">
-                <textarea name="characterInput" placeholder="Please enter your first IdleOn character's name, or Paste in your Raw Game JSON from IE/IT"></textarea><br><br>
-                <input type="submit" value="submit">
-            </form>
-        </div>
-        <div id = "mainresults">
-            {% if htmlInput is not none %}
-                <br>
-                {% for line in htmlInput[0][0] %} <!-- IE Link and Timestamp-->
-                    {% if line != "" %}
-                        <div> {{ line }} </div>
-                    {% endif %}
-                {% endfor %}
-                <br>
-                {% if htmlInput[0][0][0] != "Unable to retrieve data for this character name. Please check your spelling and make sure you have uploaded your account publicly." %}
-                    <h1>Pinchy AutoReview <img src="/static/imgs/Pinchy.gif" width="2%"> </h1>
-                    <div> {{ htmlInput[9][0] }} </div><!-- Pinchy Expected -->
-                    <div> {{ htmlInput[9][1] }} </div><!-- Pinchy Minimum -->
-                    {% for line in htmlInput[9][2] %} <!-- Pinchy Equal/Advice -->
-                        {% if line != "" %}
-                            <li> {{ line }} </li>
-                        {% endif %}
-                    {% endfor %}
-                    {% for line in htmlInput[9][3][0:2] %} <!-- Pinchy Peek Ahead Advice -->
-                        {% if line != "" %}
-                            <li> {{ line }} </li>
-                        {% endif %}
-                    {% endfor %}
-                    <br>
-                    <h1><img src="/static/imgs/general_banner.jpg" alt="General Account Banner" title ="General Account Banner" onclick="toggle('general-content')" class="banner"></h1>
-                    <div class="world-content" id="general-content">
-                        {% for line in htmlInput[0][1] %} <!-- Account Levels -->
-                            {% if line != "" %}
-                                <li> {{ line }} </li>
-                            {% endif %}
-                        {% endfor %}
-                        <br>
-                        {% if htmlInput[0][5][0] != "" %}
-                            <div> <img src="/static/imgs/Maestro.png" width=4%> <img src="/static/imgs/Maestro_Right_Hand_of_Action.png" width=4%> </div>
-                        {% endif %}
-                        {% for line in htmlInput[0][5] %} <!-- Maestro Right Hands -->
-                            {% if line != "" %}
-                                <li> {{ line }} </li>
-                            {% endif %}
-                        {% endfor %}
-                        <br>
-                        <div> <img src="/static/imgs/Candy_1hr.png" width=4%> <img src="/static/imgs/Candy_Cosmic.png" width=4%> </div>
-                        {% for line in htmlInput[0][2][0] %} <!-- Guaranteed Candy and Variable Candy totals -->
-                            {% if line != "" %}
-                                <li> {{ line }} </li>
-                            {% endif %}
-                        {% endfor %}
-                        <br>
-                        {% if htmlInput[0][2][1] != "" or htmlInput[0][2][2] != "" %}
-                            <div> <img src="/static/imgs/Inventory_Peeper_Pouch.png" width=4%> <img src="/static/imgs/Storage_Chest_25.png " width=4%> </div>
-                        {% endif %}
-                        {% for line in htmlInput[0][2][1:] %} <!-- Inventory Bags and Storage Chests -->
-                            {% if line != "" %}
-                                <li> {{ line }} </li>
-                            {% endif %}
-                        {% endfor %}
-                        <br>
-                        <div> <img src="/static/imgs/Gem_Shop.png" width=4%> </div>
-                        <div> <em>{{ htmlInput[0][3][0] }}</em></div> <!-- Gem Shop FOMO Disclaimer -->
-                        <div> <strong>{{ htmlInput[0][3][1] }}</strong></div> <!-- Gem Shop header -->
-                        {% for line in htmlInput[0][3][2:] %}
-                            {% if line != "" %}
-                                <li> {{ line }} </li>
-                            {% endif %}
-                        {% endfor %}
-                        <br>
-                        <div> <!-- Greenstacks -->
-                            <div> <img src="/static/imgs/Greenstack.png" width=4%> </div>
-                            <div> <strong>{{ htmlInput[0][4][0] }}</strong></div> <!-- Greenstack header -->
-                            <div> <em>These items are currently recommended for players trying to complete the endgame Equinox Dreams to collect 20, 75, and 200 greenstacks. If you're nowhere near that, don't worry about collecting them right away. Simply leave the quest uncompleted on your Wizard/Elemental Sorcerer and your Squire/Divine Knight to clean up later!</em></div>
-                            {% if htmlInput[0][4][1] != "" %}
-                                <li> {{ htmlInput[0][4][1] }} </li> <!-- Greenstack Endangered Quest Items advice -->
-                            {% endif %}
-                            {% for tier in htmlInput[0][4][2] %}
-                                <strong>Tier {{ tier }} items to Greenstack</strong>
-                                {% for category in htmlInput[0][4][2][tier] %}
-                                    <li> {{ category }}</li> <!-- Greenstack tiers advice -->
-                                {% endfor %}
-                            {% endfor %}
-                            <br>
-                        </div>
-                        <div> <!-- Card Sets -->
-                            <img src="/static/imgs/CardSets.png">
-                            <div>Card counts may be off by 1 or 2, due to rounding :( Sorry. I'm trying to find a more accurate list of requirements.</div>
-                            {% if htmlInput[0][6][0][0] != "" %}
-                                <div><strong> {{ htmlInput[0][6][0][0] }} </strong></div> <!-- Blunder Hills card set -->
-                                {% for line in htmlInput[0][6][0][1] %}
-                                    {% if line != "" %}
-                                        <li> {{ line }} </li>
-                                    {% endif %}
-                                {% endfor %}
-                            {% endif %}
-                            {% if htmlInput[0][6][1][0] != "" %}
-                                <div><strong> {{ htmlInput[0][6][1][0] }} </strong></div> <!-- Yum-Yum Desert card set -->
-                                {% for line in htmlInput[0][6][1][1] %}
-                                    {% if line != "" %}
-                                        <li> {{ line }} </li>
-                                    {% endif %}
-                            {% endfor %}
-                            {% endif %}
-                            {% if htmlInput[0][6][2][0] != "" %}
-                                <div><strong> {{ htmlInput[0][6][2][0] }} </strong></div> <!-- Easy Resources card set -->
-                                {% for line in htmlInput[0][6][2][1] %}
-                                    {% if line != "" %}
-                                        <li> {{ line }} </li>
-                                    {% endif %}
-                            {% endfor %}
-                            {% endif %}
-                            {% if htmlInput[0][6][3][0] != "" %}
-                                <div><strong> {{ htmlInput[0][6][3][0] }} </strong></div> <!-- Medium Resources card set -->
-                                {% for line in htmlInput[0][6][3][1] %}
-                                    {% if line != "" %}
-                                        <li> {{ line }} </li>
-                                    {% endif %}
-                            {% endfor %}
-                            {% endif %}
-                            {% if htmlInput[0][6][4][0] != "" %}
-                                <div><strong> {{ htmlInput[0][6][4][0] }} </strong></div> <!-- Frostbite Tundra card set -->
-                                {% for line in htmlInput[0][6][4][1] %}
-                                    {% if line != "" %}
-                                        <li> {{ line }} </li>
-                                    {% endif %}
-                            {% endfor %}
-                            {% endif %}
-                            {% if htmlInput[0][6][5][0] != "" %}
-                                <div><strong> {{ htmlInput[0][6][5][0] }} </strong></div> <!-- Hard Resources card set -->
-                                {% for line in htmlInput[0][6][5][1] %}
-                                    {% if line != "" %}
-                                        <li> {{ line }} </li>
-                                    {% endif %}
-                            {% endfor %}
-                            {% endif %}
-                            {% if htmlInput[0][6][6][0] != "" %}
-                                <div><strong> {{ htmlInput[0][6][6][0] }} </strong></div> <!-- Hyperion Nebula card set -->
-                                {% for line in htmlInput[0][6][6][1] %}
-                                    {% if line != "" %}
-                                        <li> {{ line }} </li>
-                                    {% endif %}
-                            {% endfor %}
-                            {% endif %}
-                            {% if htmlInput[0][6][7][0] != "" %}
-                                <div><strong> {{ htmlInput[0][6][7][0] }} </strong></div> <!-- Smolderin' Plateau card set -->
-                                {% for line in htmlInput[0][6][7][1] %}
-                                    {% if line != "" %}
-                                        <li> {{ line }} </li>
-                                    {% endif %}
-                            {% endfor %}
-                            {% endif %}
-                            {% if htmlInput[0][6][8][0] != "" %}
-                                <div><strong> {{ htmlInput[0][6][8][0] }} </strong></div> <!-- Bosses n Nightmares card set -->
-                                {% for line in htmlInput[0][6][8][1] %}
-                                    {% if line != "" %}
-                                        <li> {{ line }} </li>
-                                    {% endif %}
-                            {% endfor %}
-                            {% endif %}
-                        </div> <!-- Card Sets -->
-                    </div>
-                    <h1><img src="/static/imgs/w1banner.png" alt="World 1 Banner" title ="World 1 Banner" onclick="toggle('w1-content')" class="banner"></h1>
-                    <div class="world-content" id="w1-content">
-                        <div> <img src="/static/imgs/Stamps_Mr_Pigibank.gif" alt="Stamps and Bribes" width="4%"> </div>
-                        <div> <strong>{{ htmlInput[1][0][0] }}</strong></div> <!-- Stamp tier -->
-                        {% for line in htmlInput[1][0][1:] %}
-                            {% if line != "" %}
-                                <li> {{ line }} </li>
-                            {% endif %}
-                        {% endfor %}
-                        <br>
-                        <div> <strong>{{ htmlInput[1][1][0] }}</strong></div> <!-- Bribes tier -->
-                        {% for line in htmlInput[1][1][1:] %}
-                            {% if line != "" %}
-                                <li> {{ line }} </li>
-                            {% endif %}
-                        {% endfor %}
-                        <br>
-                        <div> <img src="/static/imgs/Smithing_Infinity_Hammer.png" alt="Smithing Anvil" width="4%"> <img src="/static/imgs/Smithing_Forge.gif" alt="Smithing Forge" width="4%"> </div>
-                        <div> <strong>{{ htmlInput[1][2][0] }}</strong></div> <!-- Smithing tier -->
-                        {% for line in htmlInput[1][2][1:] %}
-                            {% if line != "" %}
-                                <li> {{ line }} </li>
-                            {% endif %}
-                        {% endfor %}
-                        <br>
-                    </div>
-                    <h1><img src="/static/imgs/w2banner.png" title ="World 2 Banner" onclick="toggle('w2-content')" class="banner"></h1>
-                    <div class="world-content" id="w2-content">
-                        <div> <img src="/static/imgs/Alchemy_BubbleOrange.gif" alt="Alchemy Orange Bubbles" width="4%"> <img src="/static/imgs/Alchemy_BubbleGreen.gif" alt="Alchemy Green Bubbles" width="4%"> <img src="/static/imgs/Alchemy_BubblePurple.gif" alt="Alchemy Purple Bubbles" width="4%"> <img src="/static/imgs/Alchemy_BubbleYellow.gif" alt="Alchemy Yellow Bubbles" width="4%"> </div>
-                        <div> <strong>{{ htmlInput[2][0][0] }}</strong></div> <!-- Alchemy Bubbles tier -->
-                        {% for line in htmlInput[2][0][1:] %}
-                            {% if line != "" %}
-                                <li> {{ line }} </li>
-                            {% endif %}
-                        {% endfor %}
-                        <br>
-                        <div> <img src="/static/imgs/Alchemy_Vial-level-1.png" alt="Alchemy Unlocked Vials" width="4%"> <img src="/static/imgs/Virile_Vials.png" alt="Shaman's Virile Vials talent" width="4%"> <img src="/static/imgs/Alchemy_Vial-level-13.png" alt="Alchemy Maxed Vials" width="4%"> </div>
-                        <div> <strong>{{ htmlInput[2][1][0] }}</strong></div> <!-- Alchemy Vials tier -->
-                        {% for line in htmlInput[2][1][1:] %}
-                            {% if line != "" %}
-                                <li> {{ line }} </li>
-                            {% endif %}
-                        {% endfor %}
-                        <br>
-                        <div> <strong>{{ htmlInput[2][2][0] }}</strong></div> <!-- Alchemy P2W tier -->
-                        {% for line in htmlInput[2][2][1] %}
-                            {% if line != "" %}
-                                <li> {{ line }} </li>
-                            {% endif %}
-                        {% endfor %}
-                        <br>
-                    </div>
-                    <h1><img src="/static/imgs/w3banner.png" title ="World 3 Banner" onclick="toggle('w3-content')" class="banner"></h1>
-                    <div class="world-content" id="w3-content">
-        <!--                <div> <strong>{{ htmlInput[3][0][0] }}</strong></div> Construction 3D Printer tier -->
-                        <div> <img src="/static/imgs/Construction_Refinery.gif" alt="Construction Refinery" width="4%"> </div>
-                        <div> <strong>{{ htmlInput[3][1][0] }}</strong></div> <!-- Construction Refinery tier -->
-                        {% for line in htmlInput[3][1][1:] %}
-                            {% if line != "" %}
-                                <li> {{ line }} </li>
-                            {% endif %}
-                        {% endfor %}
-                        <br>
-                        <div> <img src="/static/imgs/Construction_Salt_Lick.png" alt="Construction Salt Lick" width="4%"> </div>
-                        <div> <strong>{{ htmlInput[3][2][0] }}</strong></div> <!-- Construction Salt Lick tier -->
-                        {% for line in htmlInput[3][2][1:] %}
-                            {% if line != "" %}
-                                <li> {{ line }} </li>
-                            {% endif %}
-                        {% endfor %}
-                        <br>
-                        <div> <img src="/static/imgs/Construction_Death_Note.png" alt="Construction Death Note" width="4%">  <img src="/static/imgs/Apocalypse_Zow.png" alt="Apocalypse_Zow" width="4%"> <img src="/static/imgs/Apocalypse_Chow.png" alt="Apocalypse_Chow" width="4%"> </div>
-                        <div> <strong>{{ htmlInput[3][3][0] }}</strong></div> <!-- Construction DeathNote tier -->
-                        {% for line in htmlInput[3][3][1:] %}
-                            {% if line != "" %}
-                                <li> {{ line }} </li>
-                            {% endif %}
-                        {% endfor %}
-                        <br>
-                        <div> <img src="/static/imgs/Construction_Table.gif" alt="Construction Table Buildings" width="5%"> </div>
-                        <div> <strong>{{ htmlInput[3][4][0] }}</strong></div> <!-- Construction Buildings header -->
-                        {% for line in htmlInput[3][4][1:] %}
-                            {% if line != "" %}
-                                <li> {{ line }} </li>
-                            {% endif %}
-                        {% endfor %}
-                        <br>
-        <!--                <div> <strong>{{ htmlInput[3][5][0] }}</strong></div> Construction Atom Collider tier -->
-        <!--                <div> <strong>{{ htmlInput[3][6][0] }}</strong></div>  Worship Totems tier -->
+        <input type="checkbox" id="drawer-handle" class="visuallyHidden">
+        <label id="handle-image" for="drawer-handle">
+            <div class="hamburger">
+                <span class="bar bar1"></span>
+                <span class="bar bar2"></span>
+                <span class="bar bar3"></span>
+                <span class="bar bar4"></span>
+            </div>
+        </label>
+        {% include 'sidebar.html' %}
+        {% include 'nav.html' %}
+        {% if error %}
+            <span class="error">
+                Unable to retrieve data for this character name.
+                Please check your spelling and make sure you have
+                uploaded your account publicly.
+            </span>
 
-                        <div> <img src="/static/imgs/Prayer_Stone.gif" alt="Worship Prayers" width="4%"> </div>
-                        <div> <strong>{{ htmlInput[3][7][0] }}</strong></div> <!-- Worship Prayers tier -->
-                        {% for line in htmlInput[3][7][1:] %}
-                            {% if line != "" %}
-                                <li> {{ line }} </li>
-                            {% endif %}
-                        {% endfor %}
-                        <br>
-                        <div> <img src="/static/imgs/Trapping_Cardboard_Traps.png" alt="Traps" width="4%"> <img src="/static/imgs/Trapping_Froge.png" alt="Critters" width="4%"> <img src="/static/imgs/Trapping_Egalitarian_Royal_Traps.png" alt="Traps" width="4%"> <img src="/static/imgs/Trapping_Blobfish.png" alt="Critters" width="4%"></div>
-                        <div> <strong>{{ htmlInput[3][8][0] }}</strong></div> <!-- Trapping header -->
-                        {% for line in htmlInput[3][8][1:4] %}
-                            {% if line != "" %}
-                                <li> {{ line }} </li>
-                            {% endif %}
-                        {% endfor %}
-                        <br>
-                        <div> <em>{{ htmlInput[3][8][4] }}</em></div> <!-- Trapping efficiency disclaimer -->
-                        {% for line in htmlInput[3][8][5:] %}
-                            {% if line != "" %}
-                                <li> {{ line }} </li>
-                            {% endif %}
-                        {% endfor %}
-                        <br>
-                    </div>
-                    <h1><img src="/static/imgs/w4banner.png" title ="World 4 Banner" onclick="toggle('w4-content')" class="banner"></h1>
-                    <div class="world-content" id="w4-content">
-                        <div> <img src="/static/imgs/Breeding.png" alt="Breeding" width="4%"> </div>
-                        <div> <strong>{{ htmlInput[4][0][0] }}</strong></div> <!-- Breeding tier -->
-                        <li>{{ htmlInput[4][0][1] }}</li> <!-- Breeding Spice Territory Unlock advice -->
-                        {% if htmlInput[4][0][1] != "Fantastic job unlocking all of the spice territories!" %}
-                            <ul><li> {{ htmlInput[4][0][2] }} </li></ul> <!-- Breeding Spice Territory Team advice -->
-                        {% endif %}
-                        {% if htmlInput[4][0][3] != "" %}
-                            <ul><li> {{ htmlInput[4][0][3] }} </li></ul> <!-- Breeding Arena Team advice -->
-                        {% endif %}
-                        <li> {{ htmlInput[4][0][4] }} </li> <!-- Breeding Shiny Levels tier -->
-                        <ul>
-                            {% for line in htmlInput[4][0][5] %}
-                                {% if line != "" %}
-                                    <li> {{ line }} </li> <!-- Breeding Shiny Levels infinite tierlist advice -->
-                                {% endif %}
-                            {% endfor %}
-                        </ul>
-                        <br>
-                    </div>
-                    <h1><img src="/static/imgs/w5banner.png" title ="World 5 Banner" onclick="toggle('w5-content')" class="banner"></h1>
-                    <div class="world-content" id="w5-content">
-                        <div> <strong>{{ htmlInput[5][0][0] }}</strong></div> <!-- Sailing tier -->
-                        <br>
-                        <div> <strong>{{ htmlInput[5][1][0] }}</strong></div> <!-- Gaming tier -->
-                        <br>
-                        <div> <strong>{{ htmlInput[5][2][0] }}</strong></div> <!-- Divinity tier -->
-                    </div>
-                    <br>
-                    <a href='https://ko-fi.com/W7W4SRUK5' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi4.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
-                    <br>
-                    <div>Unless otherwise noted, all image credits to <a href="https://twitter.com/lavaflame2" target="_blank">Lavaflame2</a></div>
-                {% endif %}
-            {% endif %}
-        </div>
+        {% elif ensure_data(htmlInput) %}
+            {% include 'header.html' %}
+            {% include 'main.html' %}
+        {% endif %}
+        {% include 'footer.html' %}
     </body>
 </html>

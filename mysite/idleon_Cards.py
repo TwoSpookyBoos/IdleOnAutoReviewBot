@@ -368,7 +368,8 @@ def getCardSetReview(inputJSON):
                         if adviceDetails.endswith(", "):
                             adviceDetails = adviceDetails[:-2] #trim off the final comma and space
                         adviceDetailsList.append(adviceDetails)
-            cards_combinedAdvice.append([adviceHeader, adviceDetailsList])
+            #print("Appending CardSet:", adviceHeader)
+            cards_combinedAdvice.append([adviceHeader, adviceDetailsList, cardSet])
     #print("Cards.getCardSetReview~ OUTPUT cards_combinedAdvice:", cards_combinedAdvice)
 
     return cards_combinedAdvice

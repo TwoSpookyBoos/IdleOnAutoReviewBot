@@ -252,14 +252,14 @@ def main(inputData, runType="web"):
             return parsedJSON
     elif parsedJSON is None:
         if runType == "web":
-            return errorListofLists
-            #raise ValueError(f"data for {inputData} not found")
+            # return errorListofLists
+            raise ValueError(f"data for {inputData} not found")
         elif runType == "consoleTest":
             return "JSONParseFail-NoneType"
     elif parsedJSON == []:
         if runType == "web":
-            #raise ValueError(f"data for {inputData} not found")
-            return errorListofLists
+            raise ValueError(f"data for {inputData} not found")
+            # return errorListofLists
         elif runType == "consoleTest":
             return "JSONParseFail-EmptyList"
         #raise ValueError(f"data for {inputData} not found")

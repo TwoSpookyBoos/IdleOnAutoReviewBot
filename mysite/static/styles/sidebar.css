@@ -1,6 +1,5 @@
 :root {
     --sidebar-width: 650px;
-    --toggle-style-icon: url('https://idleon.wiki/wiki/images/6/60/Lightmode-Icon.png');
 }
 
 aside {
@@ -16,52 +15,33 @@ aside {
     width: var(--sidebar-width);
     height: 100%;
 
+    color: white;
     background: #22272b;
 
     overflow-x: hidden;
 
-    transition: left .5s ease-out, box-shadow .5s ease-out;
+    transition: all .5s ease-out;
     z-index: 1;
 
-    /*font-family: 'Chakra Petch', sans-serif;*/
+    font-family: 'Chakra Petch', sans-serif;
     line-height: 1.6rem;
-    /*letter-spacing: .5px;*/
+    letter-spacing: 1px;
 
     box-shadow: none;
+}
+.light-mode aside {
+    color: black;
+    background: white;
+    transition: all .5s ease-out;
 }
 
 aside.sidebar-open {
     left: 0;
-    box-shadow: 37px 0 90px 56px hsl(0 0% 0% / 75%);
+    box-shadow: 9px 0 51px 21px hsla(0, 0%, 8%, .75);
 }
 
-#light-switch {
-    height: 40px;
-    width: 40px;
-    background: transparent var(--toggle-style-icon);
-    background-size: contain;
-    border-style: none;
-}
-
-#drawer-handle {
-    position: fixed;
-    left: 0;
-    top: 0;
-
-    height: 40px;
-    width: 40px;
-
-    border: 3px solid yellow;
-    border-radius: 3px;
-    background-color: #22272b;
-    color: yellow;
-
-    transition: left .5s ease-out;
-    z-index: 1;
-}
-
-#drawer-handle.sidebar-open {
-    left: var(--sidebar-width);
+.light-mode aside.sidebar-open {
+    box-shadow: 9px 0 51px 21px hsla(0, 0%, 39%, .75);
 }
 
 form {
@@ -73,22 +53,40 @@ form {
 form input {
     flex-grow: 1;
     border: none;
+    border-radius: 0 10px 10px 0;
     color: lightgray;
     background: mediumseagreen;
-    border-radius: 0 10px 10px 0;
+}
+.light-mode aside form input {
+    color: white;
+    background: forestgreen;
 }
 
 form textarea {
     border: none;
     flex-grow: 4;
     padding: 5px;
-    background: #595959;
     border-radius: 10px 0 0 10px;
-}
-
-form textarea::placeholder {
     color: lightgray;
+    background: #595959;
+}
+.light-mode aside form textarea {
+    color: #303941;
+    background: #e3e3e3;
+}
+form textarea::placeholder {
     padding-left: 5px;
     padding-top: 5px;
+    color: lightgray;
 }
-
+.light-mode aside form textarea::placeholder {
+    color: #303941;
+}
+form input,
+form textarea,
+form textarea::placeholder,
+.light-mode aside form input,
+.light-mode aside form textarea,
+.light-mode aside form textarea::placeholder {
+    transition: background-color .5s ease-in-out, color .5s ease-in-out;
+}

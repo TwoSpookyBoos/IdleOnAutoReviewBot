@@ -1,38 +1,54 @@
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
-
+.light-mode {
+    background-color: white !important;
+    color: black !important;
+    transition: all .5s ease-in-out;
+}
 .light-mode a:link {
     color: blue;
     background-color: transparent;
     text-decoration: underline;
+    transition: all .5s ease-in-out;
 }
 .light-mode a:visited {
     color: blue;
     background-color: transparent;
     text-decoration: underline;
+    transition: all .5s ease-in-out;
+}
+.light-mode nav,
+.light-mode aside {
+    background-color: white !important;
+}
+.light-mode nav {
+    transition: color .5s ease-in-out, background-color .5s ease-in-out;
+}
+.light-mode .hamburger .bar {
+    background-color: #93781d;
 }
 a:link {
     color: deepskyblue;
     background-color: transparent;
     text-decoration: underline;
+    transition: all .5s ease-in-out;
 }
 a:visited {
     color: deepskyblue;
     background-color: transparent;
     text-decoration: underline;
+    transition: all .5s ease-in-out;
 }
 body {
     display: flex;
     flex-direction: column;
-    row-gap: 50px;
-    padding: 25px;
     background-color: #38444d;
     color: white;
-}
-.light-mode {
-    background-color: white !important;
-    color: black !important;
+    transition: all .5s ease-in-out;
+    min-height: 100vh;
 }
 ul {
     padding-left: 22px;
@@ -47,17 +63,20 @@ textarea {
   height: 50px;
 }
 .banner {
-    cursor: pointer;
+    cursor: n-resize;
 }
 .folded {
     display: none !important;
     overflow: hidden;
 }
 .world-content {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
 }
 h1, strong {
     color: goldenrod;
+    cursor: n-resize;
 }
 section {
     display: flex;
@@ -68,13 +87,16 @@ aside {
     padding-bottom: 10px;
 }
 header {
-    padding: 10px 0;
-    border-top: 1px solid grey;
+    padding: 25px;
     border-bottom: 1px solid grey;
 }
 footer {
+    margin-top: auto; /*always sticks to the bottom of the page*/
     padding: 20px;
     border-top: 1px solid grey;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .error {
     display: block;
@@ -85,17 +107,40 @@ footer {
     width: fit-content;
 }
 .subheading {
-    display: grid;
-    grid-template-rows: repeat(2, 50px);
-    grid-template-columns: repeat(2, 50px);
+    display: block;
 }
 .subheading img {
-    width: 100%;
-    height: auto;
+    width: 80px;
+    height: 80px;
     object-fit: contain;
 }
+.subheading img.folded {
+    display: block !important;
+    width: 80px;
+    height: 1em;
+    object-fit: contain;
+}
+
 .advice-wrapper {
     display: flex;
     flex-direction: column;
     row-gap: 5px;
+}
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+    row-gap: 15px;
+}
+main {
+    display: flex;
+    flex-direction: column;
+    padding: 0 25px;
+    row-gap: 15px;
+}
+em {
+    font-weight: normal;
+    color: white;
+}
+.indent-1 {
+    margin-left: 17px;
 }
