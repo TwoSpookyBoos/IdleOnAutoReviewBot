@@ -39,8 +39,8 @@ def get_character_input() -> str:
     return parsed
 
 
-@app.route("/review", defaults=dict(main_or_beta=""), methods=["GET", "POST"])
-@app.route("/review/<main_or_beta>", methods=["GET", "POST"])
+@app.route("/", defaults=dict(main_or_beta=""), methods=["GET", "POST"])
+@app.route("/<main_or_beta>", methods=["GET", "POST"])
 def index(main_or_beta: str) -> Response | str:
     page: str = 'beta_results.html' if main_or_beta == 'beta' else 'results.html'
     error: bool = False
