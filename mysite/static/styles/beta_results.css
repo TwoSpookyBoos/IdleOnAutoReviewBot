@@ -63,7 +63,7 @@ textarea {
   height: 50px;
 }
 .banner {
-    cursor: pointer;
+    cursor: n-resize;
 }
 .folded {
     display: none !important;
@@ -76,7 +76,7 @@ textarea {
 }
 h1, strong {
     color: goldenrod;
-    cursor: pointer;
+    cursor: n-resize;
 }
 section {
     display: flex;

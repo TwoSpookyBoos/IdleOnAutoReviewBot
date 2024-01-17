@@ -67,7 +67,7 @@ textarea {
   height: 50px;
 }
 .banner {
-    cursor: pointer;
+    cursor: n-resize;
 }
 .folded {
     display: none !important;
@@ -80,7 +80,7 @@ textarea {
 }
 h1, strong {
     color: goldenrod;
-    cursor: pointer;
+    cursor: n-resize;
 }
 .light-mode h1,
 .light-mode strong {
@@ -116,6 +116,7 @@ footer {
 }
 .subheading {
     display: block;
+    cursor: n-resize;
 }
 .subheading img {
     width: 80px;
