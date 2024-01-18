@@ -445,7 +445,7 @@ def setDefaultTiers():
                 "Critter9", "Critter10",
                 "Soul4",
                 "PlatBar",
-                "FoodMining1", "FoodFish1", "FoodCatch1", "Bullet", "BulletB"]
+                "Bullet", "BulletB", "FoodMining1", "FoodFish1", "FoodCatch1"]
             },
         7: {
             "Crystal Enemy Drops": ["FoodPotMana4", "Leaf4"],
@@ -474,7 +474,7 @@ def setDefaultTiers():
             "Other Skilling Resources": [
                 "StarfireBar",
                 "Bullet3", "FoodChoppin1"],
-            "Crystal Enemy Drops": ["EquipmentStatues2", "EquipmentStatues3", "EquipmentStatues4", "EquipmentStatues7", "EquipmentStatues14"],
+            "Crystal Enemy Drops": ["EquipmentStatues7", "EquipmentStatues3", "EquipmentStatues2", "EquipmentStatues4", "EquipmentStatues14"],
             "Misc": ["FoodPotMana3", "FoodPotGr3", "FoodPotRe1"],
             "Vendor Shops": ["FoodHealth9"]
             },
