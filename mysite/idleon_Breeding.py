@@ -1,4 +1,6 @@
 import json
+from typing import List
+
 import progressionResults
 
 def getShinyLevelFromDays(days):
@@ -17,7 +19,7 @@ def getShinyExclusions(inputJSON):
         "Exclude-ArtifactChance": False
         }
 
-    #if Infinite Star Signs are unlocked, set False (as in False, the recommendation should NOT be excluded), otherwise default True
+    # if Infinite Star Signs are unlocked, set False (as in False, the recommendation should NOT be excluded), otherwise default True
     try:
         highestCompletedRift = inputJSON["Rift"][0]
         if highestCompletedRift >= 11:
@@ -25,10 +27,10 @@ def getShinyExclusions(inputJSON):
     except Exception as reason:
         print("Breeding.getShinyExclusions~ EXCEPTION Unable to retrieve highest rift level:",reason)
 
-    #if all artifacts are Eldritch tier, append True (as in True, the recommendation SHOULD be excluded), otherwise False
+    # if all artifacts are Eldritch tier, append True (as in True, the recommendation SHOULD be excluded), otherwise False
     try:
         sum_sailingArtifacts = sum(json.loads(inputJSON["Sailing"])[3])
-        if sum_sailingArtifacts == (currentArtifactsCount*currentArtifactTiers): #30 artifacts times 3 tiers each = 90 for v1.91
+        if sum_sailingArtifacts == (currentArtifactsCount*currentArtifactTiers): # 30 artifacts times 3 tiers each = 90 for v1.91
             shinyExclusionsDict["Exclude-ArtifactChance"] = True
     except Exception as reason:
         print("Breeding.getShinyExclusions~ EXCEPTION Unable to get Sailing Artifacts:",reason)
@@ -45,21 +47,47 @@ def getTerritoryName(index):
         return "Unknown Territory" + str(index)
 
 def parseJSONtoBreedingDict(inputJSON):
-    breedingList = []
+    maxNumberOfTerritories = 20 # as of v1.91
+    indexFirstTerritoryAssignedPet = 28
+    rawBreedingList: list = []
     try:
-        breedingList = json.loads(inputJSON["Breeding"])
-        #print("Breeding.parseJSON~ OUTPUT unlockedPets:", type(breedingList[1]), breedingList[1])
+        rawBreedingList = json.loads(inputJSON["Breeding"])
     except Exception as reason:
         print("Breeding.parseJSON~ EXCEPTION Could not load \"Breeding\" from JSON:", reason)
         return {}
 
-    territoriesList = []
+    rawTerritoriesList: list = []
     try:
-        territoriesList = json.loads(inputJSON["Territory"])
-        #print("Breeding.parseJSON~ OUTPUT territoriesList:", type(territoriesList), territoriesList)
+        rawTerritoriesList = json.loads(inputJSON["Territory"])
     except Exception as reason:
         print("Breeding.parseJSON~ EXCEPTION Could not load \"Territory\" from JSON:", reason)
         return {}
+
+    rawPets: list = []
+    anyPetsAssignedPerTerritory: list[bool] = []
+    try:
+        rawPets = json.loads(inputJSON["Pets"])
+    except Exception as reason:
+        print("Breeding.parseJSON~ EXCEPTION Could not load \"Pets\" from JSON:", reason)
+        # Can use the spice progress instead later on. Not absolutely required.
+
+    if rawPets != []:
+        territoryIndex: int = 0
+        for territoryIndex in range(0, maxNumberOfTerritories):
+            try:
+                if rawPets[indexFirstTerritoryAssignedPet + 0 + (territoryIndex * 4)][0] != "none":
+                    anyPetsAssignedPerTerritory.append(True)
+                elif rawPets[indexFirstTerritoryAssignedPet + 1 + (territoryIndex * 4)][0] != "none":
+                    anyPetsAssignedPerTerritory.append(True)
+                elif rawPets[indexFirstTerritoryAssignedPet + 2 + (territoryIndex * 4)][0] != "none":
+                    anyPetsAssignedPerTerritory.append(True)
+                elif rawPets[indexFirstTerritoryAssignedPet + 3 + (territoryIndex * 4)][0] != "none":
+                    anyPetsAssignedPerTerritory.append(True)
+                else:
+                    anyPetsAssignedPerTerritory.append(False)
+            except:
+                print("Breeding.parseJSON~ Could not retrieve assigned pet name. Setting territory to no")
+                anyPetsAssignedPerTerritory.append(False)
 
     arenaMaxWave = 0
     petSlotsUnlocked = 2
@@ -69,34 +97,32 @@ def parseJSONtoBreedingDict(inputJSON):
         for requirement in slotUnlockWavesList:
             if arenaMaxWave > requirement:
                 petSlotsUnlocked += 1
-        #print("Breeding.parseJSON~ OUTPUT arenaMaxWave:", arenaMaxWave)
-        #print("Breeding.parseJSON~ OUTPUT petSlotsUnlocked:", petSlotsUnlocked)
     except Exception as reason:
         print("Breeding.parseJSON~ EXCEPTION Could not load \"OptLacc\" from JSON to get Arena Max Wave:", reason)
 
     parsedBreedingDict = {}
-    if breedingList != []:
-        #Straight data grabs
+    if rawBreedingList != []:
+        # Straight data grabs
         parsedBreedingDict = {
-            "W1 Unlocked Count": breedingList[1][0],
-            "W2 Unlocked Count": breedingList[1][1],
-            "W3 Unlocked Count": breedingList[1][2],
-            "W4 Unlocked Count": breedingList[1][3],
-            "W5 Unlocked Count": breedingList[1][4],
-            "W6 Unlocked Count": breedingList[1][5],
-            "W7 Unlocked Count": breedingList[1][6],
-            "W8 Unlocked Count": breedingList[1][7],
+            "W1 Unlocked Count": rawBreedingList[1][0],
+            "W2 Unlocked Count": rawBreedingList[1][1],
+            "W3 Unlocked Count": rawBreedingList[1][2],
+            "W4 Unlocked Count": rawBreedingList[1][3],
+            "W5 Unlocked Count": rawBreedingList[1][4],
+            "W6 Unlocked Count": rawBreedingList[1][5],
+            "W7 Unlocked Count": rawBreedingList[1][6],
+            "W8 Unlocked Count": rawBreedingList[1][7],
             "Abilities": {},
             "Species": {},
             "Shinies": {
-                "W1 Shiny Days": breedingList[22],
-                "W2 Shiny Days": breedingList[23],
-                "W3 Shiny Days": breedingList[24],
-                "W4 Shiny Days": breedingList[25],
-                "W5 Shiny Days": breedingList[26],
-                "W6 Shiny Days": breedingList[27],
-                "W7 Shiny Days": breedingList[28],
-                "W8 Shiny Days": breedingList[29],
+                "W1 Shiny Days": rawBreedingList[22],
+                "W2 Shiny Days": rawBreedingList[23],
+                "W3 Shiny Days": rawBreedingList[24],
+                "W4 Shiny Days": rawBreedingList[25],
+                "W5 Shiny Days": rawBreedingList[26],
+                "W6 Shiny Days": rawBreedingList[27],
+                "W7 Shiny Days": rawBreedingList[28],
+                "W8 Shiny Days": rawBreedingList[29],
                 "Total Shiny Levels": {},
                 "Grouped Bonus": {}
                 },
@@ -104,30 +130,25 @@ def parseJSONtoBreedingDict(inputJSON):
             "Pet Slots Unlocked": petSlotsUnlocked
             }
 
-        #print("Breeding.parseJSON~ OUTPUT parsedBreedingDict[\"Shinies\"]:", parsedBreedingDict["Shinies"])
-        #print("Breeding.parseJSON~ OUTPUT length of each [Shinies][WX Shiny Days]:",
-        #    len(parsedBreedingDict["Shinies"]["W1 Shiny Days"]), len(parsedBreedingDict["Shinies"]["W2 Shiny Days"]),
-        #    len(parsedBreedingDict["Shinies"]["W3 Shiny Days"]), len(parsedBreedingDict["Shinies"]["W4 Shiny Days"]),
-        #    len(parsedBreedingDict["Shinies"]["W5 Shiny Days"]), len(parsedBreedingDict["Shinies"]["W6 Shiny Days"]),
-        #    len(parsedBreedingDict["Shinies"]["W7 Shiny Days"]), len(parsedBreedingDict["Shinies"]["W8 Shiny Days"]), )
-
-        #Data needing some logic behind it
+        # Data needing some logic behind it
         parsedBreedingDict["Total Unlocked Count"] = parsedBreedingDict["W1 Unlocked Count"] + parsedBreedingDict["W2 Unlocked Count"] + parsedBreedingDict["W3 Unlocked Count"] + parsedBreedingDict["W4 Unlocked Count"]
         # + parsedBreedingDict["W5 Unlocked Count"] + parsedBreedingDict["W6 Unlocked Count"] + parsedBreedingDict["W7 Unlocked Count"] + parsedBreedingDict["W8 Unlocked Count"]
 
-        abilitiesList = ["Fighter", "Defender", "Forager", "Fleeter", "Breeder", "Special", "Mercenary", "Boomer", "Sniper", "Amplifier", "Tsar", "Rattler", "Cursory",
-        "Fastidious", "Flashy", "Opticular", "Monolithic", "Alchemic", "Badumdum", "Defstone", "Targeter", "Looter", "Refiller", "Eggshell", "Lazarus", "Trasher", "Miasma",
-        "Converter", "Heavyweight", "Fastihoop", "Ninja", "Superboomer", "Peapeapod", "Borger"]
+        abilitiesList = ["Fighter", "Defender", "Forager", "Fleeter", "Breeder", "Special", "Mercenary", "Boomer",
+                         "Sniper", "Amplifier", "Tsar", "Rattler", "Cursory", "Fastidious", "Flashy", "Opticular",
+                         "Monolithic", "Alchemic", "Badumdum", "Defstone", "Targeter", "Looter", "Refiller", "Eggshell",
+                         "Lazarus", "Trasher", "Miasma", "Converter", "Heavyweight", "Fastihoop", "Ninja",
+                         "Superboomer", "Peapeapod", "Borger"]
         for ability in abilitiesList:
             parsedBreedingDict["Abilities"][ability] = False
-        #print("Breeding.parseJSON~ OUTPUT parsedBreedingDict[\"Abilities\"]:", parsedBreedingDict["Abilities"])
 
-        shinyBonusList = ["Faster Shiny Pet Lv Up Rate", "Infinite Star Signs", "Total Damage", "Drop Rate", "Base Efficiency for All Skills",
+        shinyBonusList = [
+            "Faster Shiny Pet Lv Up Rate", "Infinite Star Signs", "Total Damage", "Drop Rate", "Base Efficiency for All Skills",
             "Base WIS", "Base STR", "Base AGI", "Base LUK", "Class EXP", "Skill EXP",
             "Tab 1 Talent Pts", "Tab 2 Talent Pts", "Tab 3 Talent Pts", "Tab 4 Talent Pts", "Star Talent Pts",
             "Faster Refinery Speed", "Base Critter Per Trap", "Multikill Per Tier",
             "Bonuses from All Meals", "Line Width in Lab",
-            "Higher Artifact Find Chance", "Sail Captain EXP Gain", "Lower Mininmum Travel Time for Sailing",
+            "Higher Artifact Find Chance", "Sail Captain EXP Gain", "Lower Minimum Travel Time for Sailing",
             "World 6...?"]
         for bonus in shinyBonusList:
             parsedBreedingDict["Shinies"]["Total Shiny Levels"][bonus] = 0
@@ -197,7 +218,7 @@ def parseJSONtoBreedingDict(inputJSON):
                 "Donut": ["Flashy", parsedBreedingDict["W4 Unlocked Count"]>=3, "World 6...?", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W4 Shiny Days"][2]), parsedBreedingDict["Shinies"]["W4 Shiny Days"][2]],
                 "Demon Genie": ["Superboomer", parsedBreedingDict["W4 Unlocked Count"]>=4, "Faster Refinery Speed", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W4 Shiny Days"][3]), parsedBreedingDict["Shinies"]["W4 Shiny Days"][3]],
                 "Flying Worm": ["Borger", parsedBreedingDict["W4 Unlocked Count"]>=5, "Base AGI", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W4 Shiny Days"][4]), parsedBreedingDict["Shinies"]["W4 Shiny Days"][4]],
-                "Dog": ["Peapeapod", parsedBreedingDict["W4 Unlocked Count"]>=6, "Lower Mininmum Travel Time for Sailing", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W4 Shiny Days"][5]), parsedBreedingDict["Shinies"]["W4 Shiny Days"][5]],
+                "Dog": ["Peapeapod", parsedBreedingDict["W4 Unlocked Count"]>=6, "Lower Minimum Travel Time for Sailing", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W4 Shiny Days"][5]), parsedBreedingDict["Shinies"]["W4 Shiny Days"][5]],
                 "Soda Can": ["Fastihoop", parsedBreedingDict["W4 Unlocked Count"]>=7, "Higher Artifact Find Chance", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W4 Shiny Days"][6]), parsedBreedingDict["Shinies"]["W4 Shiny Days"][6]],
                 "Gelatinous Cuboid": ["Flashy", parsedBreedingDict["W4 Unlocked Count"]>=8, "Total Damage", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W4 Shiny Days"][7]), parsedBreedingDict["Shinies"]["W4 Shiny Days"][7]],
                 "Choccie": ["Superboomer", parsedBreedingDict["W4 Unlocked Count"]>=9, "Drop Rate", getShinyLevelFromDays(parsedBreedingDict["Shinies"]["W4 Shiny Days"][8]), parsedBreedingDict["Shinies"]["W4 Shiny Days"][8]],
@@ -213,14 +234,10 @@ def parseJSONtoBreedingDict(inputJSON):
 
         parsedBreedingDict["Species"] = speciesDict
         for world in speciesDict:
-            #print("Breeding.parseJSON~ OUTPUT world in speciesDict:", world)
             for species in speciesDict[world]:
-                #print("Breeding.parseJSON~ OUTPUT species in speciesDict:", species)
                 if speciesDict[world][species][1] == True and parsedBreedingDict["Abilities"][speciesDict[world][species][0]] == False:
                     parsedBreedingDict["Abilities"][speciesDict[world][species][0]] = True
                 if speciesDict[world][species][3] > 0:
-                    #print("Breeding.parseJSON~ INFO From", species, ", increasing total level of", speciesDict[world][species][2], "by", speciesDict[world][species][3])
-                    #print("Old value:", parsedBreedingDict["Shinies"]["Total Shiny Levels"][speciesDict[world][species][2]])
                     parsedBreedingDict["Shinies"]["Total Shiny Levels"][speciesDict[world][species][2]] += speciesDict[world][species][3]
                 if speciesDict[world][species][2] in parsedBreedingDict["Shinies"]["Grouped Bonus"].keys():
                     parsedBreedingDict["Shinies"]["Grouped Bonus"][speciesDict[world][species][2]].append((species, speciesDict[world][species][3], speciesDict[world][species][4]))
@@ -229,16 +246,11 @@ def parseJSONtoBreedingDict(inputJSON):
         for groupedBonus in parsedBreedingDict["Shinies"]["Grouped Bonus"]:
             parsedBreedingDict["Shinies"]["Grouped Bonus"][groupedBonus].sort(key = lambda x: float(x[2]))
 
-        #print("Breeding.parseJSON~ OUTPUT parsedBreedingDict[\"Abilities\"]:", parsedBreedingDict["Abilities"])
-        #print("Breeding.parseJSON~ OUTPUT parsedBreedingDict[\"Shinies\"][\"Total Shiny Levels\"]:", parsedBreedingDict["Shinies"]["Total Shiny Levels"])
-        #print("Breeding.parseJSON~ OUTPUT parsedBreedingDict[\"Shinies\"][\"Grouped Bonus\"]:", parsedBreedingDict["Shinies"]["Grouped Bonus"])
-        #print("Breeding.parseJSON~ OUTPUT Sorted by lowest level per:", parsedBreedingDict["Shinies"]["Grouped Bonus"])
-
         parsedBreedingDict["Territories Unlocked Count"] = 0
-        for territory in territoriesList:
-            if territory[0] > 0: #This will only be above 0 for territories which have had a pet added and progress started
+        for index in range(0, maxNumberOfTerritories):
+            # Spice Progress above 0 or any pet assigned to territory
+            if rawTerritoriesList[index][0] > 0 or anyPetsAssignedPerTerritory[index] == True:
                 parsedBreedingDict["Territories Unlocked Count"] += 1
-        #print("Breeding.parseJSON~ OUTPUT parsedBreedingDict[\"Territories Unlocked Count\"]:", parsedBreedingDict["Territories Unlocked Count"])
     else:
         return {}
 
@@ -260,11 +272,11 @@ def setBreedingProgressionTier(inputJSON, progressionTiers):
         "Rattler, Monolithic, Refiller, Defender, Refiller",
         "Rattler, Looter, Monolithic, Refiller, Defender, Refiller" ]
     recommendedArenaCompsList = [
-        "Mercenary or Fighter, Next Highest Power",                 #2-pet comp used to beat Wave 3
-        "Mercenary, Cursory, Defender or Highest Power",            #3-pet comp used to beat Wave 15
-        "Rattler, Monolithic, Refiller, Borger or Defender",        #4-pet comp used to beat Wave 50
-        "Rattler, Monolithic, Badumdum, Refiller, Borger",          #5-pet comp used to beat Wave 125
-        "Rattler, Defender, Looter, Refiller, Badumdum, Borger"    #6-pet comp used to beat Wave 200
+        "Mercenary or Fighter, Next Highest Power",                 # 2-pet comp used to beat Wave 3
+        "Mercenary, Cursory, Defender or Highest Power",            # 3-pet comp used to beat Wave 15
+        "Rattler, Monolithic, Refiller, Borger or Defender",        # 4-pet comp used to beat Wave 50
+        "Rattler, Monolithic, Badumdum, Refiller, Borger",          # 5-pet comp used to beat Wave 125
+        "Rattler, Defender, Looter, Refiller, Badumdum, Borger"     # 6-pet comp used to beat Wave 200
         ]
     advice_TerritoryComp = ""
     advice_ArenaComp = ""
@@ -289,11 +301,9 @@ def setBreedingProgressionTier(inputJSON, progressionTiers):
             if tier_UnlockedTerritories >= (tier-1):
                 if breedingDict["Territories Unlocked Count"] >= progressionTiers[tier]["TerritoriesUnlocked"]:
                     tier_UnlockedTerritories = tier
-                    #print("Breeding.setBreedingProgressionTier~ INFO Territory requirement met!", breedingDict["Territories Unlocked Count"], ">=", progressionTiers[tier]["TerritoriesUnlocked"])
                 else:
                     advice_UnlockedTerritories = ("Unlock more Spice Territories (" + str(breedingDict["Territories Unlocked Count"])
                         + "/" + str(progressionTiers[tier]["TerritoriesUnlocked"]) + " through " + getTerritoryName(progressionTiers[tier]["TerritoriesUnlocked"]) + ").")
-                    #print("Breeding.setBreedingProgressionTier~ INFO Territory requirement failed for tier", tier, "because", breedingDict["Territories Unlocked Count"], "<", progressionTiers[tier]["TerritoriesUnlocked"])
 
             #Arena Waves to unlock Pet Slots
             if tier_MaxArenaWave >= (tier-1):
@@ -301,26 +311,22 @@ def setBreedingProgressionTier(inputJSON, progressionTiers):
                     tier_MaxArenaWave = tier
                 else:
                     advice_ArenaComp = "Recommended team for Arena Wave " + str(progressionTiers[tier]["ArenaWaves"]) + " (from left to right): " + recommendedArenaCompsList[tier_MaxArenaWave]
-                    #print("Breeding.setBreedingProgressionTier~ INFO Arena Wave requirement failed for tier", tier, "because", breedingDict["Highest Arena Wave"], "<", progressionTiers[tier]["ArenaWaves"])
 
             #Shinies
             if tier_ShinyLevels >= (tier-1):
                 if len(progressionTiers[tier]["Shinies"]) == 0:
-                    #free pass
+                    # free pass
                     tier_ShinyLevels = tier
-                    #print("Breeding.setBreedingProgressionTier~ INFO Shiny requirement freebie!")
                 else:
-                    #if there are actual level requirements
+                    # if there are actual level requirements
                     allRequirementsMet = True
                     for requiredShinyBonusType in progressionTiers[tier]["Shinies"]:
                         if breedingDict["Shinies"]["Total Shiny Levels"][requiredShinyBonusType] < progressionTiers[tier]["Shinies"][requiredShinyBonusType]:
                             allRequirementsMet = False
                             failedShinyRequirements.append(requiredShinyBonusType + " (" + str(breedingDict["Shinies"]["Total Shiny Levels"][requiredShinyBonusType]) + "/" + str(progressionTiers[tier]["Shinies"][requiredShinyBonusType]) + ")")
                             failedShinyBonus[requiredShinyBonusType] = breedingDict["Shinies"]["Grouped Bonus"][requiredShinyBonusType]
-                            #print("Breeding.setBreedingProgressionTier~ INFO Shiny requirement failed on tier", tier, "because", requiredShinyBonusType, breedingDict["Shinies"]["Total Shiny Levels"][requiredShinyBonusType], "<", progressionTiers[tier]["Shinies"][requiredShinyBonusType])
                     if allRequirementsMet == True:
                         tier_ShinyLevels = tier
-                        #print("Breeding.setBreedingProgressionTier~ INFO Shiny requirement met!")
                     else:
                         if len(failedShinyRequirements) == 1:
                             advice_ShinyLevels = "Level the following Shiny bonus: " + failedShinyRequirements[0]
@@ -328,21 +334,17 @@ def setBreedingProgressionTier(inputJSON, progressionTiers):
                             advice_ShinyLevels = "Level the following Shiny bonuses: "
                             for failedRequirement in failedShinyRequirements:
                                 advice_ShinyLevels += failedRequirement + ", "
-                            advice_ShinyLevels = advice_ShinyLevels[:-2] #trim off final space and comma
+                            advice_ShinyLevels = advice_ShinyLevels[:-2] # trim off final space and comma
 
                         advice_perShinyBonus = ""
                         for shinyBonus in failedShinyBonus:
-                            #print("Breeding.setBreedingProgressionTier~ INFO shinyBonus:", shinyBonus)
                             advice_perShinyBonus = shinyBonus + " pets: "
                             for pet in failedShinyBonus[shinyBonus]:
-                                #print("Breeding.setBreedingProgressionTier~ INFO pet:", pet)
                                 advice_perShinyBonus += "Lv" + str(pet[1]) + " " + pet[0] + ", "
-                            advice_perShinyBonus = advice_perShinyBonus[:-2] #trim off final space and comma
+                            advice_perShinyBonus = advice_perShinyBonus[:-2] # trim off final space and comma
                             advice_ShinyPets.append(advice_perShinyBonus)
-                        #advice_ShinyPets = "Shiny pets for each bonus, sorted by lowest whole level:"
-                        #print("Breeding.setBreedingProgressionTier~ OUTPUT advice_ShinyPets:", advice_ShinyPets)
 
-    #Pretty up advice statements
+    # Pretty up advice statements
     overall_BreedingTier = min(maxBreedingTier, tier_UnlockedTerritories, tier_ShinyLevels)
     if overall_BreedingTier == maxBreedingTier:
         advice_UnlockedTerritories = "Fantastic job unlocking all of the spice territories!"
@@ -352,7 +354,7 @@ def setBreedingProgressionTier(inputJSON, progressionTiers):
             "Second best: Drop Rate, Multikill Per Tier, Total Damage, Base WIS, Base STR, Base AGI",
             "Futureproof: W6...?, Infinite Star Signs",
             "Middle of the pack, helpful to Lv5 at least: Base LUK, Faster Refinery Speed, Higher Artifact Find Chance",
-            "Meh: Lower Mininmum Travel Time for Sailing, Sail Captain EXP Gain, Skill EXP",
+            "Meh: Lower Minimum Travel Time for Sailing, Sail Captain EXP Gain, Skill EXP",
             "Ignorable: Class EXP, Line Width in Lab"]
     else:
         if advice_UnlockedTerritories != "":
@@ -366,30 +368,3 @@ def setBreedingProgressionTier(inputJSON, progressionTiers):
     advice_BreedingCombined = ["Best Breeding tier met: " + str(overall_BreedingTier) + "/" + str(maxBreedingTier) + ". Recommended Breeding actions:", advice_UnlockedTerritories, advice_TerritoryComp, advice_ArenaComp, advice_ShinyLevels, advice_ShinyPets]
     breedingPR = progressionResults.progressionResults(overall_BreedingTier,advice_BreedingCombined,"")
     return breedingPR
-
-#1) If not all Pets unlocked, recommend next high priority
-#2) If not all Arena Pet slots unlocked, or not all Territories unlocked, recommend what to aim for unlocking based on Abiltiy / meta teams.
-    #2a) Possibly list sources of pet chance? Splicing and other dead dna bonsues, vial, stamp, meals, whatever else
-    #2b) Maybe a recommended order to spend Dead DNA? Does such a list exist
-#3) Spice collecting meta setups. I'm not sure I agree with all of them since I don't follow them.
-
-
-#
-#"Pets" : First 27 = fenceyard, rest = spicebattles
-#["carrotO", #pet name/type as string
-#4, #pet ability? 4 = Breedability, 5 = Shiny
-#219.653862318461, #Pet power
-#0] # Shiny color? I see 0 all on non-shinies. Shiny pets seem to be multiples of 60 up to 300.
-#
-#"PetsStored" for those in the inventory. Same data as within Pets.
-#
-#"Territory" seems to hold spice info
-#[7130.1609064918075, #Progress toward next spice
-#232, #Unknown, but seems to be increasing over time
-#0, #Unknown
-#"CookingSpice0", #Type of spice being collected, 0 through 19. Can be "Blank" even if unlocked.
-#583, #Spices ready to be collected
-#"Blank", #Unused / Placeholder
-#0, #Unused / Placeholder
-#"Blank", #Unused / Placeholder
-#0] #Unused / Placeholder

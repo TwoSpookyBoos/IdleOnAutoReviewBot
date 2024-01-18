@@ -85,7 +85,7 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
             progressionTiersPostBuffs[2][2].remove(6) #Remove Trapper Drone from S Tier
             progressionTiersPostBuffs[5][2].append(6) #Add Trapper Drone to C tier
             if hasBuffs:
-                maxLevelList[6] = 45
+                maxLevelList[6] = 50
             #print("ConsBuildings.setConsBuildingsProgressionTier~ INFO Successfully moved Trapper Drone from PostBuff S to C tier and changed level from 20 to 45")
         except Exception as reason:
             print("ConsBuildings.setConsBuildingsProgressionTier~ EXCEPTION Could not remove Trapper Drone from PostBuff S tier:",reason)

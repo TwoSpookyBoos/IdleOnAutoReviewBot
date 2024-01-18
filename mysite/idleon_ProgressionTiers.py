@@ -21,7 +21,7 @@ def setDefaultTiers():
         [7, 400, "", "8", "", {'Pickaxe':35,'Hatchet':35}, ""],
         [8, 500, "15,16,21", "14,17", "14,19", {'Drippy Drop':30}, ""],
         [9, 600, "27", "10", "1,2", {'Mason Jar':12}, ""],
-        [10, 700, "22", "4,6,9,11,12,15,22,24,26", "", {'Drippy Drop':40,'Matty Bag':50}, ""],
+        [10, 700, "", "4,6,9,11,12,15,22,24,26", "", {'Drippy Drop':40,'Matty Bag':50}, ""],
         [11, 800, "10,12", "29,37,40", "", {'Pickaxe':45,'Hatchet':45,'Mason Jar':24,}, ""],
         [12, 900, "23,24", "13,20,30,46", "8", {'Drippy Drop':50}, ""],
         [13, 1000, "28", "19,21,36", "13", {'Pickaxe':55,'Hatchet':55,'Card':50}, ""],
@@ -47,7 +47,7 @@ def setDefaultTiers():
         [33, 9400, "", "", "", {'Bugsack':184,'Bag o Heads':184}, ""],
         [34, 9600, "", "", "", {'Golden Apple':100,'Multitool':210}, ""],
         [35, 9800, "37", "", "", {'Golden Sixes':150}, ""],
-        [36, 10000, "38", "31", "", {'Golden Sixes':190}, ""]
+        [36, 10000, "38, 22", "31", "", {'Golden Sixes':190}, ""]
         ]
     defaultTiers['Smithing'] = [
         #int tier, int Cash Points Purchased, int Monster Points Purchased, int Forge Totals, str Notes
@@ -445,7 +445,7 @@ def setDefaultTiers():
                 "Critter9", "Critter10",
                 "Soul4",
                 "PlatBar",
-                "FoodMining1", "FoodFish1", "FoodCatch1"]
+                "Bullet", "BulletB", "FoodMining1", "FoodFish1", "FoodCatch1"]
             },
         7: {
             "Crystal Enemy Drops": ["FoodPotMana4", "Leaf4"],
@@ -459,8 +459,7 @@ def setDefaultTiers():
             "Crystal Enemy Drops": ["FoodPotYe5", "Leaf5"],
             "Other Skilling Resources": [
                 "Soul6",
-                "VoidBar",
-                "Bullet", "BulletB"],
+                "VoidBar"],
             "Missable Quest Items": ["GoldricP3"]
             },
         9: {
@@ -475,7 +474,7 @@ def setDefaultTiers():
             "Other Skilling Resources": [
                 "StarfireBar",
                 "Bullet3", "FoodChoppin1"],
-            "Crystal Enemy Drops": ["EquipmentStatues2", "EquipmentStatues3", "EquipmentStatues4", "EquipmentStatues7", "EquipmentStatues14"],
+            "Crystal Enemy Drops": ["EquipmentStatues7", "EquipmentStatues3", "EquipmentStatues2", "EquipmentStatues4", "EquipmentStatues14"],
             "Misc": ["FoodPotMana3", "FoodPotGr3", "FoodPotRe1"],
             "Vendor Shops": ["FoodHealth9"]
             },
