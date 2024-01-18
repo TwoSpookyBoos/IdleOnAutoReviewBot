@@ -445,7 +445,7 @@ def setDefaultTiers():
                 "Critter9", "Critter10",
                 "Soul4",
                 "PlatBar",
-                "FoodMining1", "FoodFish1", "FoodCatch1"]
+                "FoodMining1", "FoodFish1", "FoodCatch1", "Bullet", "BulletB"]
             },
         7: {
             "Crystal Enemy Drops": ["FoodPotMana4", "Leaf4"],
@@ -459,8 +459,7 @@ def setDefaultTiers():
             "Crystal Enemy Drops": ["FoodPotYe5", "Leaf5"],
             "Other Skilling Resources": [
                 "Soul6",
-                "VoidBar",
-                "Bullet", "BulletB"],
+                "VoidBar"],
             "Missable Quest Items": ["GoldricP3"]
             },
         9: {
