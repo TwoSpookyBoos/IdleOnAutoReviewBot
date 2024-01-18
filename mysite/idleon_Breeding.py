@@ -1,4 +1,6 @@
 import json
+from typing import List
+
 import progressionResults
 
 def getShinyLevelFromDays(days):
@@ -45,30 +47,47 @@ def getTerritoryName(index):
         return "Unknown Territory" + str(index)
 
 def parseJSONtoBreedingDict(inputJSON):
-    breedingList = []
+    maxNumberOfTerritories = 20 # as of v1.91
+    indexFirstTerritoryAssignedPet = 28
+    rawBreedingList: list = []
     try:
-        breedingList = json.loads(inputJSON["Breeding"])
-        #print("Breeding.parseJSON~ OUTPUT unlockedPets:", type(breedingList[1]), breedingList[1])
+        rawBreedingList = json.loads(inputJSON["Breeding"])
     except Exception as reason:
         print("Breeding.parseJSON~ EXCEPTION Could not load \"Breeding\" from JSON:", reason)
         return {}
 
-    territoriesList = []
+    rawTerritoriesList: list = []
     try:
-        territoriesList = json.loads(inputJSON["Territory"])
-        #print("Breeding.parseJSON~ OUTPUT territoriesList:", type(territoriesList), territoriesList)
+        rawTerritoriesList = json.loads(inputJSON["Territory"])
     except Exception as reason:
         print("Breeding.parseJSON~ EXCEPTION Could not load \"Territory\" from JSON:", reason)
         return {}
 
-    territoriesPetsAssigned = []
+    rawPets: list = []
+    anyPetsAssignedPerTerritory: list[bool] = []
     try:
-        territoriesPetsAssigned = json.loads(inputJSON["Pets"])
+        rawPets = json.loads(inputJSON["Pets"])
     except Exception as reason:
         print("Breeding.parseJSON~ EXCEPTION Could not load \"Pets\" from JSON:", reason)
-        return {}
+        # Can use the spice progress instead later on. Not absolutely required.
 
-    
+    if rawPets != []:
+        territoryIndex: int = 0
+        for territoryIndex in range(0, maxNumberOfTerritories):
+            try:
+                if rawPets[indexFirstTerritoryAssignedPet + 0 + (territoryIndex * 4)][0] != "none":
+                    anyPetsAssignedPerTerritory.append(True)
+                elif rawPets[indexFirstTerritoryAssignedPet + 1 + (territoryIndex * 4)][0] != "none":
+                    anyPetsAssignedPerTerritory.append(True)
+                elif rawPets[indexFirstTerritoryAssignedPet + 2 + (territoryIndex * 4)][0] != "none":
+                    anyPetsAssignedPerTerritory.append(True)
+                elif rawPets[indexFirstTerritoryAssignedPet + 3 + (territoryIndex * 4)][0] != "none":
+                    anyPetsAssignedPerTerritory.append(True)
+                else:
+                    anyPetsAssignedPerTerritory.append(False)
+            except:
+                print("Breeding.parseJSON~ Could not retrieve assigned pet name. Setting territory to no")
+                anyPetsAssignedPerTerritory.append(False)
 
     arenaMaxWave = 0
     petSlotsUnlocked = 2
@@ -78,34 +97,32 @@ def parseJSONtoBreedingDict(inputJSON):
         for requirement in slotUnlockWavesList:
             if arenaMaxWave > requirement:
                 petSlotsUnlocked += 1
-        #print("Breeding.parseJSON~ OUTPUT arenaMaxWave:", arenaMaxWave)
-        #print("Breeding.parseJSON~ OUTPUT petSlotsUnlocked:", petSlotsUnlocked)
     except Exception as reason:
         print("Breeding.parseJSON~ EXCEPTION Could not load \"OptLacc\" from JSON to get Arena Max Wave:", reason)
 
     parsedBreedingDict = {}
-    if breedingList != []:
-        #Straight data grabs
+    if rawBreedingList != []:
+        # Straight data grabs
         parsedBreedingDict = {
-            "W1 Unlocked Count": breedingList[1][0],
-            "W2 Unlocked Count": breedingList[1][1],
-            "W3 Unlocked Count": breedingList[1][2],
-            "W4 Unlocked Count": breedingList[1][3],
-            "W5 Unlocked Count": breedingList[1][4],
-            "W6 Unlocked Count": breedingList[1][5],
-            "W7 Unlocked Count": breedingList[1][6],
-            "W8 Unlocked Count": breedingList[1][7],
+            "W1 Unlocked Count": rawBreedingList[1][0],
+            "W2 Unlocked Count": rawBreedingList[1][1],
+            "W3 Unlocked Count": rawBreedingList[1][2],
+            "W4 Unlocked Count": rawBreedingList[1][3],
+            "W5 Unlocked Count": rawBreedingList[1][4],
+            "W6 Unlocked Count": rawBreedingList[1][5],
+            "W7 Unlocked Count": rawBreedingList[1][6],
+            "W8 Unlocked Count": rawBreedingList[1][7],
             "Abilities": {},
             "Species": {},
             "Shinies": {
-                "W1 Shiny Days": breedingList[22],
-                "W2 Shiny Days": breedingList[23],
-                "W3 Shiny Days": breedingList[24],
-                "W4 Shiny Days": breedingList[25],
-                "W5 Shiny Days": breedingList[26],
-                "W6 Shiny Days": breedingList[27],
-                "W7 Shiny Days": breedingList[28],
-                "W8 Shiny Days": breedingList[29],
+                "W1 Shiny Days": rawBreedingList[22],
+                "W2 Shiny Days": rawBreedingList[23],
+                "W3 Shiny Days": rawBreedingList[24],
+                "W4 Shiny Days": rawBreedingList[25],
+                "W5 Shiny Days": rawBreedingList[26],
+                "W6 Shiny Days": rawBreedingList[27],
+                "W7 Shiny Days": rawBreedingList[28],
+                "W8 Shiny Days": rawBreedingList[29],
                 "Total Shiny Levels": {},
                 "Grouped Bonus": {}
                 },
@@ -124,7 +141,6 @@ def parseJSONtoBreedingDict(inputJSON):
                          "Superboomer", "Peapeapod", "Borger"]
         for ability in abilitiesList:
             parsedBreedingDict["Abilities"][ability] = False
-        #print("Breeding.parseJSON~ OUTPUT parsedBreedingDict[\"Abilities\"]:", parsedBreedingDict["Abilities"])
 
         shinyBonusList = [
             "Faster Shiny Pet Lv Up Rate", "Infinite Star Signs", "Total Damage", "Drop Rate", "Base Efficiency for All Skills",
@@ -231,8 +247,9 @@ def parseJSONtoBreedingDict(inputJSON):
             parsedBreedingDict["Shinies"]["Grouped Bonus"][groupedBonus].sort(key = lambda x: float(x[2]))
 
         parsedBreedingDict["Territories Unlocked Count"] = 0
-        for territory in territoriesList:
-            if territory[0] > 0: # This will only be above 0 for territories which have had a pet added and progress started
+        for index in range(0, maxNumberOfTerritories):
+            # Spice Progress above 0 or any pet assigned to territory
+            if rawTerritoriesList[index][0] > 0 or anyPetsAssignedPerTerritory[index] == True:
                 parsedBreedingDict["Territories Unlocked Count"] += 1
     else:
         return {}
