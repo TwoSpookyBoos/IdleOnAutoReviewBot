@@ -26,6 +26,9 @@
 .light-mode .hamburger .bar {
     background-color: #93781d;
 }
+.light-mode em {
+    color: black;
+}
 a:link {
     color: deepskyblue;
     background-color: transparent;
