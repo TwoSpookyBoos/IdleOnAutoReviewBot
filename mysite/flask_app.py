@@ -1,16 +1,16 @@
 import json
 import sys
 from json import JSONDecodeError
-import coloredlogs
+#import coloredlogs
 from flask import Flask, render_template, request, url_for, redirect, Response
 import idleonTaskSuggester
 
-coloredlogs.DEFAULT_FIELD_STYLES['levelname']['color'] = 'white'
-coloredlogs.install(
-    level='DEBUG',
-    fmt='[%(levelname)s] %(asctime)s | %(name)s | %(module)s.%(funcName)s:%(lineno)d ~ %(message)s',
-    stream=sys.stdout,
-)
+#coloredlogs.DEFAULT_FIELD_STYLES['levelname']['color'] = 'white'
+#coloredlogs.install(
+#    level='DEBUG',
+#    fmt='[%(levelname)s] %(asctime)s | %(name)s | %(module)s.%(funcName)s:%(lineno)d ~ %(message)s',
+#    stream=sys.stdout,
+#)
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
@@ -48,7 +48,7 @@ def index(main_or_beta: str) -> Response | str:
 
     try:
         capturedCharacterInput: str | dict = get_character_input()
-        app.logger.info("request.args.get('player'): %s %s", type(capturedCharacterInput), capturedCharacterInput)
+        #app.logger.info("request.args.get('player'): %s %s", type(capturedCharacterInput), capturedCharacterInput)
         if request.method == 'POST' and isinstance(capturedCharacterInput, str):
             return redirect(url_for('index', player=capturedCharacterInput))
 
@@ -56,7 +56,7 @@ def index(main_or_beta: str) -> Response | str:
             pythonOutput = autoReviewBot(capturedCharacterInput)
 
     except Exception as reason:
-        app.logger.error('Could not get Player from Request Args: %s', reason)
+        #app.logger.error('Could not get Player from Request Args: %s', reason)
         error = True
 
     return render_template(page, htmlInput=pythonOutput, error=error, beta=main_or_beta)
