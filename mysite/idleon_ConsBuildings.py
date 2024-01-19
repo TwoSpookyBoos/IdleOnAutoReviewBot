@@ -46,7 +46,7 @@ def getInfluencers(inputJSON):
             atomCarbon = True
     except Exception as reason:
         print("ConsBuildings.getInfluencers~ EXCEPTION: getBuffs Unable to find Atom Collider Carbon level: ", reason)
-    results = [(consMastery and atomCarbon), honkerVialLevel, poisonicLevel]
+    results = [(consMastery or atomCarbon), honkerVialLevel, poisonicLevel]
     #print("ConsBuildings.getInfluencers~ INFO results: ", "BothBuffs:",results[0], ", Honker Vial Level:", results[1], ", Poisonic Tower Level:", results[2])
     return results
 
@@ -55,8 +55,8 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
     influencers = getInfluencers(inputJSON)
     hasBuffs = influencers[0]
     if hasBuffs:
-        #maxLevelList = [10, 201, 51, 10, 25, 60, 45, 5, 200,    140, 140, 140, 140, 140, 140, 140, 140, 140,   200, 200, 200, 200, 200, 200, 200, 200, 200] #these are true max, not recommended max
-        maxLevelList = [10, 101, 51, 10, 25, 60, 20, 5, 200,    70, 70, 70, 70, 70, 70, 75, 75, 30,             200, 200, 200, 200, 200, 200, 200, 200, 200] #the old recommended maxes
+        #maxLevelList = [10, 201, 51, 10, 25, 60, 45, 5, 200,    140, 140, 140, 140, 140, 140, 140, 140, 140,   200, 200, 200, 200, 200, 200, 200, 200, 200] # these are true max, not recommended max
+        maxLevelList = [10, 101, 51, 10, 25, 60, 20, 5, 200,    70, 70, 70, 70, 70, 70, 75, 75, 30,             200, 200, 200, 200, 200, 200, 200, 200, 200] # the recommended maxes
         #print("ConsBuilding.setConsBuildingsProgressionTiers~ INFO Both Construction Mastery and Wizard Atom found. Setting maxLevelList to PostBuff.")
     else:
         maxLevelList = [10, 101, 51, 10, 25, 60, 15, 5, 200,    50, 50, 50, 50, 50, 50, 50, 50, 30,             100, 100, 100, 100, 100, 100, 100, 100, 100]
