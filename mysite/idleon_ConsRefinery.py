@@ -199,7 +199,10 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers):
                 advice_Tab1 += ", Blue: " + str(consRefineryDict['Blue Rank']) + "/" + str(progressionTiers[tier_Tab1+1][1]['Blue Rank'])
             #Tab1 trailing auto-refine
             if tier_Tab1 >= 8:
-                advice_Tab1 += ". After your Red Salt reaches rank 22, consider setting all of Tab1 to 0% auto-refine and infinitely ranking up! (I recommend this and will bump your Tab1 to Tier 17+)"
+                if consRefineryDict['Red Rank'] < 22:
+                    advice_Tab1 += ". After your Red Salt reaches rank 22, consider setting all of Tab1 to 0% auto-refine and infinitely ranking up! (I recommend this and will bump your Tab1 to Tier 17+. This style isn't for everyone though!)"
+                else:
+                    advice_Tab1 += ". Now that your Red Salt is rank 22+, consider setting all of Tab1 to 0% auto-refine and infinitely ranking up! (I recommend this and will bump your Tab1 to Tier 17+. This style isn't for everyone though!)"
         elif tier_Tab1 >= 17:
             advice_Tab1 = "Tier " + str(tier_Tab1) + "- " + progressionTiers[17][6]
     elif consRefineryDict['Combustion AutoRefine'] == 0:
@@ -225,7 +228,10 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers):
             else:
                 advice_Tab2 += ", Nullo: " + str(consRefineryDict['Nullo Rank']) + "/" + str(progressionTiers[tier_Tab2+1][2]['Nullo Rank'])
             if tier_Tab2 >= 9:
-                advice_Tab2 += ". After your Green Salt reaches rank 22, consider setting all of Tab2 to 0% auto-refine and infinitely ranking up! (I recommend this and will bump your Tab2 to Tier 18+)"
+                if consRefineryDict['Green Rank'] < 22:
+                    advice_Tab2 += ". After your Green Salt reaches rank 22, consider setting all of Tab2 to 0% auto-refine and infinitely ranking up! (I recommend this and will bump your Tab2 to Tier 18+. This style isn't for everyone though!)"
+                else:
+                    advice_Tab2 += ". Now that your Green Salt is rank 22+, consider setting all of Tab2 to 0% auto-refine and infinitely ranking up! (I recommend this and will bump your Tab2 to Tier 18+. This style isn't for everyone though!)"
         elif tier_Tab2 >= 17:
             advice_Tab2 = "Tier " + str(tier_Tab2) + "- " + progressionTiers[18][6]
     elif consRefineryDict['Synthesis AutoRefine'] == 0:
