@@ -47,7 +47,7 @@ def getInfluencers(inputJSON):
     except Exception as reason:
         print("ConsBuildings.getInfluencers~ EXCEPTION: getBuffs Unable to find Atom Collider Carbon level: ", reason)
     results = [(consMastery or atomCarbon), honkerVialLevel, poisonicLevel]
-    #print("ConsBuildings.getInfluencers~ INFO results: ", "BothBuffs:",results[0], ", Honker Vial Level:", results[1], ", Poisonic Tower Level:", results[2])
+    #print("ConsBuildings.getInfluencers~ INFO results: ", "EitherBuff:",results[0], ", Honker Vial Level:", results[1], ", Poisonic Tower Level:", results[2])
     return results
 
 def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progressionTiersPostBuffs, playerCount):
@@ -62,8 +62,8 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
         maxLevelList = [10, 101, 51, 10, 25, 60, 15, 5, 200,    50, 50, 50, 50, 50, 50, 50, 50, 30,             100, 100, 100, 100, 100, 100, 100, 100, 100]
         #print("ConsBuildings.setConsBuildingsProgressionTier~ INFO Setting maxLevelList to PreBuff.")
 
-    #make adjustments to tiers based on other influencers
-    #1) If any building is level 0, it gets promoted to SS tier
+    # Make adjustments to tiers based on other influencers
+    # 1) If any building is level 0, it gets promoted to SS tier
     buildingCounter = 0
     while buildingCounter < len(maxLevelList):
         if playerBuildings[buildingCounter] == 0:
@@ -79,7 +79,8 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
                     progressionTiersPreBuffs[1][2].append(buildingCounter)
                     #print("ConsBuildings.setConsBuildingsProgressionTier~ INFO Level 0 building detected. Removing",getBuildingNameFromIndex(buildingCounter),"from PreBuff",tier[1],"and adding to SS with max level 1 instead.")
         buildingCounter += 1
-    #2) Honker vial is 12+ OR Trapper Drone is 20+, drop Trapper Drone priority
+
+    # 2) Honker vial is 12+ OR Trapper Drone is 20+, drop Trapper Drone priority
     if influencers[1] >= 12 or playerBuildings[6] >= 20:
         try:
             progressionTiersPostBuffs[2][2].remove(6) #Remove Trapper Drone from S Tier
@@ -89,7 +90,8 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
             #print("ConsBuildings.setConsBuildingsProgressionTier~ INFO Successfully moved Trapper Drone from PostBuff S to C tier and changed level from 20 to 45")
         except Exception as reason:
             print("ConsBuildings.setConsBuildingsProgressionTier~ EXCEPTION Could not remove Trapper Drone from PostBuff S tier:",reason)
-    #3) #Poisonic level 20+, drop Boulder Roller priority
+
+    # 3) #Poisonic level 20+, drop Boulder Roller priority
     if influencers[2] >= 20:
         try:
             #PreBuffs
@@ -102,7 +104,8 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
             #print("ConsBuildings.setConsBuildingsProgressionTier~ INFO Successfully moved Boulder Roller from PostBuff S to A tier because Poisonic 20+")
         except Exception as reason:
             print("ConsBuildings.setConsBuildingsProgressionTier~ EXCEPTION Could not move Boulder Roller from S tier in one or both tierlists:",reason)
-    #4) Talent Library Book 101+, drop priority
+
+    # 4) Talent Library Book 101+, drop priority
     if playerBuildings[1] >= 101:
         try:
             progressionTiersPostBuffs[2][2].remove(1) #Remove from S tier
@@ -112,7 +115,8 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
             #print("ConsBuildings.setConsBuildingsProgressionTier~ INFO Successfully moved 101+ Talent Library Book from PostBuff A to C tier.")
         except Exception as reason:
             print("ConsBuildings.setConsBuildingsProgressionTier~ EXCEPTION Could not move 101+ Talent Library Book from PostBuff A tier to C tier:",reason)
-    #5) #Basic Towers to 70, drop priority
+
+    # 5) #Basic Towers to 70, drop priority
     for towerIndex in [9,10,11,12,13,14]:
         if playerBuildings[towerIndex] >= 70:
             try:
@@ -123,7 +127,8 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
                 #print("ConsBuildings~ INFO Successfully moved 70+ basic tower from PostBuff A to C tier:",getBuildingNameFromIndex(towerIndex))
             except Exception as reason:
                 print("ConsBuildings.setConsBuildingsProgressionTier~ EXCEPTION Could not move 70+ basic tower from PostBuff A tier to C tier:",getBuildingNameFromIndex(towerIndex),reason)
-    #6) Fancy Towers to 75, drop priority
+
+    # 6) Fancy Towers to 75, drop priority
     for towerIndex in [15,16]:
         if playerBuildings[towerIndex] >= 75:
             try:
@@ -134,7 +139,8 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
                 #print("ConsBuildings.setConsBuildingsProgressionTier~ INFO Successfully moved 75+ fancy tower from PostBuff S to C tier:",getBuildingNameFromIndex(towerIndex))
             except Exception as reason:
                 print("ConsBuildings.setConsBuildingsProgressionTier~ EXCEPTION Could not move 75+ fancy tower from PostBuff S tier to C tier:",getBuildingNameFromIndex(towerIndex),reason)
-    #7) Voidinator to 30, drop priority
+
+    # 7) Voidinator to 30, drop priority
     if playerBuildings[17] >= 30: #Voidinator scaling is very bad
         try:
             progressionTiersPreBuffs[4][2].remove(17) #Remove from PreBuff B tier
@@ -147,10 +153,10 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
         except Exception as reason:
             print("ConsBuildings.setConsBuildingsProgressionTier~ EXCEPTION Could not move 30+ Voidinator from A/B to C tier in both tierlists:",reason)
 
-    #decide which tierset to use
-    if influencers[0] == True: #Has both Construction Mastery and the Wizard atom
+    # Decide which tierset to use
+    if influencers[0] == True: #Has either Construction Mastery or the Wizard atom
         progressionTiers = progressionTiersPostBuffs
-        #print("ConsBuildings.setConsBuildingsProgressionTier~ INFO Both Construction Mastery and Wizard Atom found. Setting ProgressionTiers to PostBuff.")
+        #print("ConsBuildings.setConsBuildingsProgressionTier~ INFO Either Construction Mastery or Wizard Atom found. Setting ProgressionTiers to PostBuff.")
     else:
         progressionTiers = progressionTiersPreBuffs
         #print("ConsBuildings.setConsBuildingsProgressionTier~ INFO Setting ProgressionTiers to PreBuff.")
