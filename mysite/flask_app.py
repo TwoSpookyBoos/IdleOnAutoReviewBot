@@ -62,6 +62,12 @@ def index(main_or_beta: str) -> Response | str:
     return render_template(page, htmlInput=pythonOutput, error=error, beta=main_or_beta)
 
 
+@app.route("/logtest", methods=["GET"])
+def logtest():
+    app.logger.info("Logging works")
+    return "Hello, World!"
+
+
 # @app.route("/")
 def autoReviewBot(capturedCharacterInput) -> list | None:
     reviewInfo: list | None = None

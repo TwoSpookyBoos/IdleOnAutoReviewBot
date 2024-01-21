@@ -12,15 +12,14 @@
         <meta name="robots" content="noindex">
     </head>
     <body>
-        <input type="checkbox" id="drawer-handle" class="visuallyHidden">
-        <label id="handle-image" for="drawer-handle">
+        <div id="drawer-handle">
             <div class="hamburger">
                 <span class="bar bar1"></span>
                 <span class="bar bar2"></span>
                 <span class="bar bar3"></span>
                 <span class="bar bar4"></span>
             </div>
-        </label>
+        </div>
         {% include 'sidebar.html' %}
         {% include 'nav.html' %}
         {% if error %}

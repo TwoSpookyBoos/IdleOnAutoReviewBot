@@ -19,3 +19,4 @@ id_rsa.pub.pub
 README.txt
 /mysite/__pycache__
 /mysite/logging
+**/.DS_Store
