@@ -1,7 +1,14 @@
+@font-face {
+    font-family: 'Idleon';
+    src: url(../fonts/Idleon.woff2) format('woff2'), url(../fonts/Idleon.woff) format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    /*font-family: 'Idleon', sans-serif;*/
 }
 .light-mode {
     background-color: white !important;
