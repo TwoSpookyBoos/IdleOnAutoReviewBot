@@ -110,16 +110,15 @@
             </section>
         {% endif %}
 
+        <em id="gem-shop-fomo-disclaimer">{{ htmlInput[0][3][0] }}</em>
+
         <section>
             <h3 class="subheading">
                 <img src="{{ img('gemshop.png') }}" alt="Gem Shop">
             </h3>
 
             <div class="advice-wrapper">
-                <strong id="gem-shop-header">
-                    {{ htmlInput[0][3][1] }}<br>
-                    <em id="gem-shop-fomo-disclaimer">{{ htmlInput[0][3][0] }}</em>
-                </strong>
+                <strong id="gem-shop-header">{{ htmlInput[0][3][1] }}</strong>
                 <ul id="gem-shop">
                     {% for line in htmlInput[0][3][2:] %}
                         {% if line %}
@@ -130,19 +129,18 @@
             </div>
         </section>
 
+        <em>These items are currently recommended for players trying to complete the endgame Equinox Dreams to
+            collect 20, 75, and 200 greenstacks. If you're nowhere near that, don't worry about collecting
+            them right away. Simply leave the quest uncompleted on your Wizard/Elemental Sorcerer and your
+            Squire/Divine Knight to clean up later!</em>
+
         <section>
             <h3 class="subheading">
                 <img src="{{ img('Greenstack.png') }}" alt="Greenstack">
             </h3>
 
             <div class="advice-wrapper">
-                <strong>
-                    {{ htmlInput[0][4][0] }}<br>
-                    <em>These items are currently recommended for players trying to complete the endgame Equinox Dreams to
-                        collect 20, 75, and 200 greenstacks. If you're nowhere near that, don't worry about collecting
-                        them right away. Simply leave the quest uncompleted on your Wizard/Elemental Sorcerer and your
-                        Squire/Divine Knight to clean up later!</em>
-                </strong>
+                <strong>{{ htmlInput[0][4][0] }}</strong>
                 {% if htmlInput[0][4][1] %}
                 <div class="advice-section-wrapper">
                     <strong>Missable quest item Greenstacks</strong>

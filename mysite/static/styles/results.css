@@ -8,7 +8,14 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+<<<<<<< Updated upstream
     /*font-family: 'Idleon', sans-serif;*/
+=======
+    display: block;
+}
+aside > * > * {
+    display: inline;
+>>>>>>> Stashed changes
 }
 .light-mode {
     background-color: white !important;
@@ -76,9 +83,6 @@ textarea {
   width: 400px;
   height: 50px;
 }
-.banner {
-    cursor: n-resize;
-}
 .folded {
     display: none !important;
     overflow: hidden;
@@ -90,11 +94,28 @@ textarea {
 }
 h1, strong {
     color: goldenrod;
-    cursor: n-resize;
 }
 .light-mode h1,
 .light-mode strong {
     color: #287649;
+}
+.subheading,
+.banner,
+strong {
+    width: fit-content;
+    height: fit-content;
+}
+.subheading:not(.no-collapse),
+.banner:not(.no-collapse),
+strong {
+    cursor: pointer;
+    transition: filter .1s ease-out;
+}
+.subheading:not(.no-collapse):hover,
+.banner:not(.no-collapse):hover,
+strong:hover {
+    filter: brightness(120%);
+    transition: filter .1s ease-out;
 }
 section {
     display: flex;
@@ -126,7 +147,6 @@ footer {
 }
 .subheading {
     display: block;
-    cursor: n-resize;
 }
 .subheading img {
     width: 80px;
@@ -159,6 +179,7 @@ main {
 em {
     font-weight: normal;
     color: white;
+    transform: none;
 }
 .indent-1 {
     margin-left: 17px;
