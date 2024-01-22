@@ -367,49 +367,7 @@ def main(inputData, runType="web"):
         }
     pinchyList = idleon_Pinchy.setPinchyList(parsedJSON, playerCount, biggoleProgressionTiersDict)
     biggoleAdviceList = [generalList, w1list, w2list, w3list, w4list, w5list, w6list, w7list, w8list, pinchyList]
-    biggoleAdviceDict = {
-        "General": {
-            "Pinchy": pinchyList,
-            "IE Link": ieLinkList,
-            "Last Updated": lastUpdatedTimeString,
-            "Combat Levels": combatLevelsPR.nTR,
-            "Consumables": consumablesList,
-            "Gem Shop": gemShopPR.nTR,
-            #"Missable Greenstacks": missableGStacksList,
-            "Maestro Hands": maestroHandsListOfLists
-            },
-        "World 1": {
-            "Stamps": stampAdviceSection["PR"].nTR,
-            "Bribes": bribesPR.nTR,
-            "Smithing": smithingPR.nTR
-            },
-        "World 2": {
-            "Alchemy Bubbles": alchBubblesPR.nTR,
-            "Alchemy Vials": alchVialsPR.nTR,
-            "Alchemy P2W": alchP2WList,
-            #"Obols": emptyList
-            },
-        "World 3": {
-            #"3D Printer": ["Construction 3D Printer coming soon!"],
-            "Construction Refinery": consRefineryPR.nTR,
-            "Construction Salt Lick": consSaltLickPR.nTR,
-            "Construction Death Note": consDeathNotePR.nTR,
-            "Construction Buildings": consBuildingsPR.nTR,
-            #"Construction Atom Collider": ["Construction Atom Collider coming soon!"],
-            #"Worship Totems": ["Worship Totems coming soon!"],
-            "Worship Prayers": worshipPrayersPR.nTR,
-            "Trapping": trappingPR.nTR},
-        "World 4": {
-            "Breeding": breedingPR.nTR},
-        "World 5": {},
-        "World 6": {},
-        "World 7": {},
-        "World 8": {}
-        }
 
-    #print("idleonTaskSuggester.main~ OUTPUT biggoleAdviceList: ", biggoleAdviceList)
-    #print("idleonTaskSuggester.main~ OUTPUT biggoleAdviceDict: ", biggoleAdviceDict)
-    #print("idleonTaskSuggester.main~ OUTPUT biggoleAdviceDict section: ", biggoleAdviceDict["General"]["IE Link"])
     if runType == "consoleTest":
         return "Pass"
     else:

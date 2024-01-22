@@ -22,3 +22,11 @@ class AdviceGroup:
         self.pre_string: str = pre_string  # "Tier 17- Do these things
         self.advice_list: list[Advice] = advice_list  # Each Advice on its own row within the same Group
         self.post_string: str = post_string  # Trailing advice
+
+class AdviceSection:
+    def __init__(self, default_collapsed: bool, section_name: str, section_tier: str, section_header: str, advicegroup_list: list[AdviceGroup]):
+        self.default_collapsed: bool = default_collapsed  # true, false
+        self.section_name: str = section_name  # "Stamps", "Bribes"
+        self.section_tier: str = section_tier  # Not always present. X/Y style, such as "17/36"
+        self.section_header: str = section_header  # "Best Stamp tier met: 17/36. Recommended stamp actions", "Maestro Right Hands"
+        self.advicegroup_list: list = advicegroup_list  # Each AdviceGroup separated into its own box + background color
