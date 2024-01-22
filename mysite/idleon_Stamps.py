@@ -306,7 +306,6 @@ def setStampProgressionTier(inputJSON, progressionTiers):
     advice_CollectMiscStamps = ""
     advice_CollectStamps = ""
     advice_SpecificStamps = ""
-    advice_CombinedStamps = ""
     stamp_AdviceDict = {
         "StampLevels": [],
         "CombatStamps": [],
@@ -314,6 +313,8 @@ def setStampProgressionTier(inputJSON, progressionTiers):
         "MiscStamps": [],
         "SpecificStamps": [],
     }
+    stamp_AdviceGroupDict = {}
+
     for tier in progressionTiers:
         # TotalLevelStamps
         if tier_StampLevels == (tier[0] - 1):
@@ -322,7 +323,13 @@ def setStampProgressionTier(inputJSON, progressionTiers):
             else:
                 advice_StampLevels = tier[1]
                 stamp_AdviceDict["StampLevels"].append(
-                    Advice("Total Stamp Levels", "stat-graph-stamp", totalAllStampLevels, tier[1], ""))
+                    Advice(
+                        label="Total Stamp Levels",
+                        item_name="stat-graph-stamp",
+                        progression=totalAllStampLevels,
+                        goal=tier[1],
+                        unit=""))
+
         # CombatStamps
         if tier_RequiredCombatStamps == (tier[0] - 1):  # Only check if they already met previous tier
             allCombatStamps = True
@@ -334,11 +341,17 @@ def setStampProgressionTier(inputJSON, progressionTiers):
                     advice_CollectStamps += (getReadableStampName(int(rStamp), "Combat") + ", ")
                     advice_CollectCombatStamps += (getReadableStampName(int(rStamp), "Combat") + ", ")
                     stamp_AdviceDict["CombatStamps"].append(
-                        Advice(getReadableStampName(int(rStamp), "Combat"),
-                               getReadableStampName(int(rStamp), "Combat"),
-                               "0", "1", ""))
+                        Advice(
+                            label=getReadableStampName(int(rStamp), "Combat"),
+                            item_name=getReadableStampName(int(rStamp), "Combat"),
+                            progression="0",
+                            goal="1",
+                            unit=""
+                        )
+                    )
             if allCombatStamps == True:
                 tier_RequiredCombatStamps = tier[0]
+
         # SkillStamps
         if tier_RequiredSkillStamps == (tier[0] - 1):  # Only check if they already met previous tier
             allSkillStamps = True
@@ -350,11 +363,17 @@ def setStampProgressionTier(inputJSON, progressionTiers):
                     advice_CollectStamps += (getReadableStampName(int(rStamp), "Skill") + ", ")
                     advice_CollectSkillStamps += (getReadableStampName(int(rStamp), "Skill") + ", ")
                     stamp_AdviceDict["SkillStamps"].append(
-                        Advice(getReadableStampName(int(rStamp), "Skill"),
-                               getReadableStampName(int(rStamp), "Skill"),
-                               "0", "1", ""))
+                        Advice(
+                            label=getReadableStampName(int(rStamp), "Skill"),
+                            item_name=getReadableStampName(int(rStamp), "Skill"),
+                            progression="0",
+                            goal="1",
+                            unit=""
+                        )
+                    )
             if allSkillStamps == True:
                 tier_RequiredSkillStamps = tier[0]
+
         # MiscStamps
         if tier_RequiredMiscStamps == (tier[0] - 1):  # Only check if they already met previous tier
             allMiscStamps = True
@@ -365,11 +384,17 @@ def setStampProgressionTier(inputJSON, progressionTiers):
                     advice_CollectStamps += (getReadableStampName(int(rStamp), "Misc") + ", ")
                     advice_CollectMiscStamps += (getReadableStampName(int(rStamp), "Misc") + ", ")
                     stamp_AdviceDict["MiscStamps"].append(
-                        Advice(getReadableStampName(int(rStamp), "Misc"),
-                               getReadableStampName(int(rStamp), "Misc"),
-                               "0", "1", ""))
+                        Advice(
+                            label=getReadableStampName(int(rStamp), "Misc"),
+                            item_name=getReadableStampName(int(rStamp), "Misc"),
+                            progression="0",
+                            goal="1",
+                            unit=""
+                        )
+                    )
             if allMiscStamps == True:
                 tier_RequiredMiscStamps = tier[0]
+
         # SpecificStampLevels
         if tier_RequiredSpecificStamps == (tier[0] - 1):  # Only check if they already met previous tier
             requiredSpecificStamps = tier[5]  # dictionary
@@ -380,48 +405,82 @@ def setStampProgressionTier(inputJSON, progressionTiers):
                     allSpecificStamps = False
                     advice_SpecificStamps += (str(key) + " to " + str(value) + "+, ")
                     stamp_AdviceDict["SpecificStamps"].append(
-                        Advice(str(key), str(key), playerPriorityStamps[key], requiredSpecificStamps[key], ""))
+                        Advice(
+                            label=str(key),
+                            item_name=str(key),
+                            progression=playerPriorityStamps[key],
+                            goal=requiredSpecificStamps[key],
+                            unit=""
+                        )
+                    )
             if allSpecificStamps == True:
                 tier_RequiredSpecificStamps = tier[0]
+
     overall_StampTier = min(tier_StampLevels, tier_RequiredCombatStamps, tier_RequiredSkillStamps,
                             tier_RequiredMiscStamps, tier_RequiredSpecificStamps)
+
     # Generate advice statement
+
     if advice_StampLevels != "":
         advice_StampLevels = ("Tier " + str(tier_StampLevels) + "- Improve your total stamp levels to " + str(
             advice_StampLevels) + "+")
+        stamp_AdviceGroupDict["StampLevels"] = AdviceGroup(
+            formatting="",
+            default_collapsed=False,
+            tier=str(tier_StampLevels),
+            pre_string="Tier " + str(tier_StampLevels) + "- Improve your total stamp levels to ",
+            advice_list=stamp_AdviceDict["StampLevels"],
+            post_string=""
+        )
     if advice_CollectCombatStamps != "":
         advice_CollectCombatStamps = (
             "Tier " + str(tier_RequiredCombatStamps) + "- Collect the following Combat stamp(s): " + str(
             advice_CollectCombatStamps[:-2]))
+        stamp_AdviceGroupDict["CombatStamps"] = AdviceGroup(
+            formatting="",
+            default_collapsed=False,
+            tier=str(tier_RequiredCombatStamps),
+            pre_string="Tier " + str(tier_RequiredCombatStamps) + "- Collect the following Combat stamp(s)",
+            advice_list=stamp_AdviceDict["CombatStamps"],
+            post_string=""
+        )
     if advice_CollectSkillStamps != "":
         advice_CollectSkillStamps = (
             "Tier " + str(tier_RequiredSkillStamps) + "- Collect the following Skill stamp(s): " + str(
             advice_CollectSkillStamps[:-2]))
+        stamp_AdviceGroupDict["SkillStamps"] = AdviceGroup(
+            formatting="",
+            default_collapsed=False,
+            tier=str(tier_RequiredSkillStamps),
+            pre_string="Tier " + str(tier_RequiredSkillStamps) + "- Collect the following Skill stamp(s)",
+            advice_list=stamp_AdviceDict["SkillStamps"],
+            post_string=""
+        )
     if advice_CollectMiscStamps != "":
         advice_CollectMiscStamps = (
             "Tier " + str(tier_RequiredMiscStamps) + "- Collect the following Misc stamp(s): " + str(
             advice_CollectMiscStamps[:-2]))
-    # if advice_CollectStamps != "":
-    #    advice_CollectStamps = ("Collect the following stamp(s): " + str(advice_CollectStamps[:-2]))
+        stamp_AdviceGroupDict["MiscStamps"] = AdviceGroup(
+            formatting="",
+            default_collapsed=False,
+            tier=str(tier_RequiredMiscStamps),
+            pre_string="Tier " + str(tier_RequiredMiscStamps) + "- Collect the following Misc stamp(s)",
+            advice_list=stamp_AdviceDict["MiscStamps"],
+            post_string=""
+        )
     if advice_SpecificStamps != "":
         advice_SpecificStamps = (
             "Tier " + str(tier_RequiredSpecificStamps) + "- Improve these high-priority stamp(s): " + str(
             advice_SpecificStamps[:-2]))
-    # Print out all the final stamp info
-    # print("Stamp levels: "
-    #    + str(totalCombatStampLevels) + ", "
-    #    + str(totalSkillStampLevels) + ", "
-    #    + str(totalMiscStampLevels) + ", "
-    #    + str(totalAllStampLevels) + " total.")
-    # print("Missing combat stamps: " + str(missingCombatStamps))
-    # print("Missing skill stamps: " + str(missingSkillStamps))
-    # print("Missing misc stamps: " + str(missingMiscStamps))
-    # print("Tier of total stamp levels: " + str(tier_StampLevels))
-    # print("Tier of required combat stamps: " + str(tier_RequiredCombatStamps))
-    # print("Tier of required skill stamps: " + str(tier_RequiredSkillStamps))
-    # print("Tier of required misc stamps: " + str(tier_RequiredMiscStamps))
-    # print("Tier of required specific stamps: " + str(tier_RequiredSpecificStamps))
-    # print (tier_StampLevels, tier_RequiredCombatStamps, tier_RequiredSkillStamps, tier_RequiredMiscStamps, tier_RequiredSpecificStamps, overall_StampTier)
+        stamp_AdviceGroupDict["SpecificStamps"] = AdviceGroup(
+            formatting="",
+            default_collapsed=False,
+            tier=str(tier_RequiredSpecificStamps),
+            pre_string="Tier " + str(tier_RequiredSpecificStamps) + "- Improve these high-priority stamp(s)",
+            advice_list=stamp_AdviceDict["SpecificStamps"],
+            post_string=""
+        )
+
     if advice_StampLevels == "" and advice_CollectStamps == "" and advice_SpecificStamps == "":
         advice_CombinedStamps = [
             "Best Stamp tier met: " + str(overall_StampTier) + "/" + str(
@@ -438,4 +497,4 @@ def setStampProgressionTier(inputJSON, progressionTiers):
             advice_SpecificStamps]
     # print(advice_CombinedStamps)
     stampPR = progressionResults.progressionResults(overall_StampTier, advice_CombinedStamps, "")
-    return {"PR": stampPR, "Advice": stamp_AdviceDict}
+    return {"PR": stampPR, "AdviceGroups": stamp_AdviceGroupDict}
