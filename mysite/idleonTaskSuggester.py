@@ -267,8 +267,8 @@ def main(inputData, runType="web"):
     #Step 2: Set either Default or Custom progression tiers
     if True == True:
         progressionTiers = idleon_ProgressionTiers.setDefaultTiers()
-    else:
-        progressionTiers = idleon_ProgressionTiers.setCustomTiers(filename)
+    #else:
+        #progressionTiers = idleon_ProgressionTiers.setCustomTiers(filename)
 
     #Step 3: Send that data off to all the different analyzers
     playerCountAndNamesList = getPlayerCountAndNames(parsedJSON, runType)
@@ -309,6 +309,7 @@ def main(inputData, runType="web"):
 
     #World 1
     stampPR = idleon_Stamps.setStampProgressionTier(parsedJSON, progressionTiers['Stamps'])
+    stampAdviceSection = idleon_Stamps.setStampProgressionTier(parsedJSON, progressionTiers['Stamps'])
     bribesPR = idleon_Bribes.setBribesProgressionTier(parsedJSON, progressionTiers['Bribes'])
     smithingPR = idleon_Smithing.setSmithingProgressionTier(parsedJSON, progressionTiers['Smithing'], playerCount)
 
@@ -340,7 +341,7 @@ def main(inputData, runType="web"):
 
     #generalList = [[ieLinkString, lastUpdatedTimeString], combatLevelsPR.nTR, consumablesList, gemShopPR.nTR, missableGStacksList, maestroHandsListOfLists, cardsList] #len(combatLevelsPR.nTR) = 2, len(consumablesList) = 2, len(gemShopPR.nTR) = 5, len(missableGStacksList) = 3, len(maestroHandsList) = 1
     generalList = [[ieLinkString, lastUpdatedTimeString], combatLevelsPR.nTR, consumablesList, gemShopPR.nTR, allGStacksList, maestroHandsListOfLists, cardsList]
-    w1list = [stampPR.nTR, bribesPR.nTR, smithingPR.nTR] #len(stampPR) = 4, len(bribesPR.nTR) = 2, len(smithingPR.nTR) = 4
+    w1list = [stampAdviceSection["PR"].nTR, bribesPR.nTR, smithingPR.nTR] #len(stampPR) = 4, len(bribesPR.nTR) = 2, len(smithingPR.nTR) = 4
     w2list = [alchBubblesPR.nTR,alchVialsPR.nTR,alchP2WList, emptyList] #len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 5
     #w2list = [alchBubblesPR.nTR,alchVialsPR.nTR,alchP2WList, obolsPR.nTR] #len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 4, len(obolsPR.nTR) = 4
     w3list = [["Construction 3D Printer coming soon!"], consRefineryPR.nTR, consSaltLickPR.nTR, consDeathNotePR.nTR, #len(consRefineryPR.nTR) = 5, len(consSaltLickPR.nTR) = 2, len(consDeathNotePR.nTR) = 12)
@@ -354,7 +355,7 @@ def main(inputData, runType="web"):
     w8list = [["w8 mechanic 1 placeholder"], ["w8 mechanic 2 placeholder"], ["w8 mechanic 3 placeholder"]]
     biggoleProgressionTiersDict = {
         "Combat Levels":combatLevelsPR.cT,
-        "Stamps":stampPR.cT,
+        "Stamps":stampAdviceSection["PR"].cT,
         "Bribes":bribesPR.cT,
         "Smithing":smithingPR.cT,
         "Alchemy-Bubbles":alchBubblesPR.cT,
@@ -378,7 +379,7 @@ def main(inputData, runType="web"):
             "Maestro Hands": maestroHandsListOfLists
             },
         "World 1": {
-            "Stamps": stampPR.nTR,
+            "Stamps": stampAdviceSection["PR"].nTR,
             "Bribes": bribesPR.nTR,
             "Smithing": smithingPR.nTR
             },
