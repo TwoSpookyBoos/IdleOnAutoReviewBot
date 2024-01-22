@@ -30,3 +30,8 @@ class AdviceSection:
         self.section_tier: str = section_tier  # Not always present. X/Y style, such as "17/36"
         self.section_header: str = section_header  # "Best Stamp tier met: 17/36. Recommended stamp actions", "Maestro Right Hands"
         self.advicegroup_list: list = advicegroup_list  # Each AdviceGroup separated into its own box + background color
+
+class AdviceWorld:
+    def __init__(self, default_collapsed: bool, advicesections_list: list[AdviceSection]):
+        self.default_collapsed: bool = default_collapsed  # true, false
+        self.advicesections_list: list = advicesections_list

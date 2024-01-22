@@ -4,7 +4,8 @@ import requests
 import json
 import datetime
 
-#general.. stuff that makes this file too big if I include directly
+#general stuff that makes this file too big if I include directly
+from models import AdviceWorld
 import idleon_ProgressionTiers
 
 #general autoreview
@@ -51,7 +52,7 @@ def getJSONfromAPI(runType, url="https://scoli.idleonefficiency.com/raw-data"):
         "Content-Type": "text/json",
         "method": "GET"
         }
-    response = requests.get(f"https://cdn2.idleonefficiency.com/profiles/{username.lower()}.json", headers=headers)
+        response = requests.get(f"https://cdn2.idleonefficiency.com/profiles/{username.lower()}.json", headers=headers)
     try:
         jsonvalue = response.json()
         parsed = jsonvalue
@@ -309,7 +310,7 @@ def main(inputData, runType="web"):
 
     #World 1
     stampPR = idleon_Stamps.setStampProgressionTier(parsedJSON, progressionTiers['Stamps'])
-    stampAdviceSection = idleon_Stamps.setStampProgressionTier(parsedJSON, progressionTiers['Stamps'])
+    stamps_AdviceSection = idleon_Stamps.setStampProgressionTier(parsedJSON, progressionTiers['Stamps'])
     bribesPR = idleon_Bribes.setBribesProgressionTier(parsedJSON, progressionTiers['Bribes'])
     smithingPR = idleon_Smithing.setSmithingProgressionTier(parsedJSON, progressionTiers['Smithing'], playerCount)
 
@@ -341,7 +342,7 @@ def main(inputData, runType="web"):
 
     #generalList = [[ieLinkString, lastUpdatedTimeString], combatLevelsPR.nTR, consumablesList, gemShopPR.nTR, missableGStacksList, maestroHandsListOfLists, cardsList] #len(combatLevelsPR.nTR) = 2, len(consumablesList) = 2, len(gemShopPR.nTR) = 5, len(missableGStacksList) = 3, len(maestroHandsList) = 1
     generalList = [[ieLinkString, lastUpdatedTimeString], combatLevelsPR.nTR, consumablesList, gemShopPR.nTR, allGStacksList, maestroHandsListOfLists, cardsList]
-    w1list = [stampAdviceSection["PR"].nTR, bribesPR.nTR, smithingPR.nTR] #len(stampPR) = 4, len(bribesPR.nTR) = 2, len(smithingPR.nTR) = 4
+    w1list = [stamps_AdviceSection["PR"].nTR, bribesPR.nTR, smithingPR.nTR] #len(stampPR) = 4, len(bribesPR.nTR) = 2, len(smithingPR.nTR) = 4
     w2list = [alchBubblesPR.nTR,alchVialsPR.nTR,alchP2WList, emptyList] #len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 5
     #w2list = [alchBubblesPR.nTR,alchVialsPR.nTR,alchP2WList, obolsPR.nTR] #len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 4, len(obolsPR.nTR) = 4
     w3list = [["Construction 3D Printer coming soon!"], consRefineryPR.nTR, consSaltLickPR.nTR, consDeathNotePR.nTR, #len(consRefineryPR.nTR) = 5, len(consSaltLickPR.nTR) = 2, len(consDeathNotePR.nTR) = 12)
@@ -355,7 +356,7 @@ def main(inputData, runType="web"):
     w8list = [["w8 mechanic 1 placeholder"], ["w8 mechanic 2 placeholder"], ["w8 mechanic 3 placeholder"]]
     biggoleProgressionTiersDict = {
         "Combat Levels":combatLevelsPR.cT,
-        "Stamps":stampAdviceSection["PR"].cT,
+        "Stamps":stamps_AdviceSection["PR"].cT,
         "Bribes":bribesPR.cT,
         "Smithing":smithingPR.cT,
         "Alchemy-Bubbles":alchBubblesPR.cT,
@@ -367,6 +368,11 @@ def main(inputData, runType="web"):
         }
     pinchyList = idleon_Pinchy.setPinchyList(parsedJSON, playerCount, biggoleProgressionTiersDict)
     biggoleAdviceList = [generalList, w1list, w2list, w3list, w4list, w5list, w6list, w7list, w8list, pinchyList]
+
+    w1Review = AdviceWorld(
+        default_collapsed=False,
+        advicesections_list=[stamps_AdviceSection]
+    )
 
     if runType == "consoleTest":
         return "Pass"
