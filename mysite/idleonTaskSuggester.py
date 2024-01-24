@@ -370,8 +370,8 @@ def main(inputData, runType="web"):
     biggoleAdviceList = [generalList, w1list, w2list, w3list, w4list, w5list, w6list, w7list, w8list, pinchyList]
 
     w1Review = AdviceWorld(
-        default_collapsed=False,
-        advicesections_list=[stamps_AdviceSection]
+        collapse=False,
+        sections=[stamps_AdviceSection]
     )
 
     if runType == "consoleTest":
