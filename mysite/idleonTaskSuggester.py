@@ -5,7 +5,7 @@ import json
 import datetime
 
 #general stuff that makes this file too big if I include directly
-from models import AdviceWorld
+from models import AdviceWorld, WorldName
 import idleon_ProgressionTiers
 
 #general autoreview
@@ -370,9 +370,12 @@ def main(inputData, runType="web"):
     biggoleAdviceList = [generalList, w1list, w2list, w3list, w4list, w5list, w6list, w7list, w8list, pinchyList]
 
     w1Review = AdviceWorld(
+        name=WorldName.WORLD1,
         collapse=False,
-        sections=[stamps_AdviceSection]
+        sections=[stamps_AdviceSection["AdviceSection"]],
+        banner="w1banner.png"
     )
+    biggoleAdviceList.append(w1Review)
 
     if runType == "consoleTest":
         return "Pass"
