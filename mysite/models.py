@@ -23,7 +23,7 @@ class AdviceBase:
     Args:
         **extra (dict): a dict of extra information that hasn't been accounted for yet
     """
-    _children = ""
+    _children = "_true"
     _collapse = None
     _true = [True]
     name = ""
@@ -55,8 +55,6 @@ class Advice(AdviceBase):
         goal: the target level or amount of the advice
         unit (str): if there is one, usually "%"
     """
-    _children = "_true"
-
     def __init__(self, label: str, item_name: str, progression: Any = "", goal: Any = "", unit: str = "", **extra):
         super().__init__(**extra)
 
