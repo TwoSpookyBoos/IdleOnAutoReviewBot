@@ -25,6 +25,7 @@ class AdviceBase:
     """
     _children = ""
     _collapse = None
+    _true = [True]
     name = ""
 
     def __init__(self, **extra):
@@ -42,7 +43,7 @@ class AdviceBase:
     @property
     def collapse(self) -> bool:
         children = getattr(self, self._children, list())
-        return self._collapse if self._collapse is not None else bool(children)
+        return self._collapse if self._collapse is not None else not bool(children)
 
 
 class Advice(AdviceBase):
@@ -54,6 +55,7 @@ class Advice(AdviceBase):
         goal: the target level or amount of the advice
         unit (str): if there is one, usually "%"
     """
+    _children = "_true"
 
     def __init__(self, label: str, item_name: str, progression: Any = "", goal: Any = "", unit: str = "", **extra):
         super().__init__(**extra)
