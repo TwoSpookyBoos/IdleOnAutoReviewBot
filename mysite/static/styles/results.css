@@ -160,11 +160,18 @@ em {
 .indent-1 {
     margin-left: 17px;
 }
-h1,
-strong,
-.banner,
-.subheading {
+h1:not(.no-collapse),
+strong:not(.no-collapse),
+.banner:not(.no-collapse),
+.subheading:not(.no-collapse) {
     cursor: pointer;
+}
+h1:not(.no-collapse):hover,
+strong:not(.no-collapse):hover,
+.banner:not(.no-collapse):hover,
+.subheading:not(.no-collapse):hover {
+    filter: brightness(130%);
+    transition: filter .2s ease-in
 }
 #stamps {
     display: flex;
