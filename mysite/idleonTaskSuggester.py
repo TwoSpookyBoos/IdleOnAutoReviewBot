@@ -4,7 +4,8 @@ import requests
 import json
 import datetime
 
-#general.. stuff that makes this file too big if I include directly
+#general stuff that makes this file too big if I include directly
+from models import AdviceWorld, WorldName
 import idleon_ProgressionTiers
 
 #general autoreview
@@ -51,7 +52,7 @@ def getJSONfromAPI(runType, url="https://scoli.idleonefficiency.com/raw-data"):
         "Content-Type": "text/json",
         "method": "GET"
         }
-    response = requests.get(f"https://cdn2.idleonefficiency.com/profiles/{username.lower()}.json", headers=headers)
+        response = requests.get(f"https://cdn2.idleonefficiency.com/profiles/{username.lower()}.json", headers=headers)
     try:
         jsonvalue = response.json()
         parsed = jsonvalue
@@ -267,8 +268,8 @@ def main(inputData, runType="web"):
     #Step 2: Set either Default or Custom progression tiers
     if True == True:
         progressionTiers = idleon_ProgressionTiers.setDefaultTiers()
-    else:
-        progressionTiers = idleon_ProgressionTiers.setCustomTiers(filename)
+    #else:
+        #progressionTiers = idleon_ProgressionTiers.setCustomTiers(filename)
 
     #Step 3: Send that data off to all the different analyzers
     playerCountAndNamesList = getPlayerCountAndNames(parsedJSON, runType)
@@ -309,6 +310,7 @@ def main(inputData, runType="web"):
 
     #World 1
     stampPR = idleon_Stamps.setStampProgressionTier(parsedJSON, progressionTiers['Stamps'])
+    stamps_AdviceSection = idleon_Stamps.setStampProgressionTier(parsedJSON, progressionTiers['Stamps'])
     bribesPR = idleon_Bribes.setBribesProgressionTier(parsedJSON, progressionTiers['Bribes'])
     smithingPR = idleon_Smithing.setSmithingProgressionTier(parsedJSON, progressionTiers['Smithing'], playerCount)
 
@@ -340,7 +342,7 @@ def main(inputData, runType="web"):
 
     #generalList = [[ieLinkString, lastUpdatedTimeString], combatLevelsPR.nTR, consumablesList, gemShopPR.nTR, missableGStacksList, maestroHandsListOfLists, cardsList] #len(combatLevelsPR.nTR) = 2, len(consumablesList) = 2, len(gemShopPR.nTR) = 5, len(missableGStacksList) = 3, len(maestroHandsList) = 1
     generalList = [[ieLinkString, lastUpdatedTimeString], combatLevelsPR.nTR, consumablesList, gemShopPR.nTR, allGStacksList, maestroHandsListOfLists, cardsList]
-    w1list = [stampPR.nTR, bribesPR.nTR, smithingPR.nTR] #len(stampPR) = 4, len(bribesPR.nTR) = 2, len(smithingPR.nTR) = 4
+    w1list = [stamps_AdviceSection["PR"].nTR, bribesPR.nTR, smithingPR.nTR] #len(stampPR) = 4, len(bribesPR.nTR) = 2, len(smithingPR.nTR) = 4
     w2list = [alchBubblesPR.nTR,alchVialsPR.nTR,alchP2WList, emptyList] #len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 5
     #w2list = [alchBubblesPR.nTR,alchVialsPR.nTR,alchP2WList, obolsPR.nTR] #len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 4, len(obolsPR.nTR) = 4
     w3list = [["Construction 3D Printer coming soon!"], consRefineryPR.nTR, consSaltLickPR.nTR, consDeathNotePR.nTR, #len(consRefineryPR.nTR) = 5, len(consSaltLickPR.nTR) = 2, len(consDeathNotePR.nTR) = 12)
@@ -354,7 +356,7 @@ def main(inputData, runType="web"):
     w8list = [["w8 mechanic 1 placeholder"], ["w8 mechanic 2 placeholder"], ["w8 mechanic 3 placeholder"]]
     biggoleProgressionTiersDict = {
         "Combat Levels":combatLevelsPR.cT,
-        "Stamps":stampPR.cT,
+        "Stamps":stamps_AdviceSection["PR"].cT,
         "Bribes":bribesPR.cT,
         "Smithing":smithingPR.cT,
         "Alchemy-Bubbles":alchBubblesPR.cT,
@@ -366,49 +368,15 @@ def main(inputData, runType="web"):
         }
     pinchyList = idleon_Pinchy.setPinchyList(parsedJSON, playerCount, biggoleProgressionTiersDict)
     biggoleAdviceList = [generalList, w1list, w2list, w3list, w4list, w5list, w6list, w7list, w8list, pinchyList]
-    biggoleAdviceDict = {
-        "General": {
-            "Pinchy": pinchyList,
-            "IE Link": ieLinkList,
-            "Last Updated": lastUpdatedTimeString,
-            "Combat Levels": combatLevelsPR.nTR,
-            "Consumables": consumablesList,
-            "Gem Shop": gemShopPR.nTR,
-            #"Missable Greenstacks": missableGStacksList,
-            "Maestro Hands": maestroHandsListOfLists
-            },
-        "World 1": {
-            "Stamps": stampPR.nTR,
-            "Bribes": bribesPR.nTR,
-            "Smithing": smithingPR.nTR
-            },
-        "World 2": {
-            "Alchemy Bubbles": alchBubblesPR.nTR,
-            "Alchemy Vials": alchVialsPR.nTR,
-            "Alchemy P2W": alchP2WList,
-            #"Obols": emptyList
-            },
-        "World 3": {
-            #"3D Printer": ["Construction 3D Printer coming soon!"],
-            "Construction Refinery": consRefineryPR.nTR,
-            "Construction Salt Lick": consSaltLickPR.nTR,
-            "Construction Death Note": consDeathNotePR.nTR,
-            "Construction Buildings": consBuildingsPR.nTR,
-            #"Construction Atom Collider": ["Construction Atom Collider coming soon!"],
-            #"Worship Totems": ["Worship Totems coming soon!"],
-            "Worship Prayers": worshipPrayersPR.nTR,
-            "Trapping": trappingPR.nTR},
-        "World 4": {
-            "Breeding": breedingPR.nTR},
-        "World 5": {},
-        "World 6": {},
-        "World 7": {},
-        "World 8": {}
-        }
 
-    #print("idleonTaskSuggester.main~ OUTPUT biggoleAdviceList: ", biggoleAdviceList)
-    #print("idleonTaskSuggester.main~ OUTPUT biggoleAdviceDict: ", biggoleAdviceDict)
-    #print("idleonTaskSuggester.main~ OUTPUT biggoleAdviceDict section: ", biggoleAdviceDict["General"]["IE Link"])
+    w1Review = AdviceWorld(
+        name=WorldName.WORLD1,
+        collapse=False,
+        sections=[stamps_AdviceSection["AdviceSection"]],
+        banner="w1banner.png"
+    )
+    biggoleAdviceList.append(w1Review)
+
     if runType == "consoleTest":
         return "Pass"
     else:

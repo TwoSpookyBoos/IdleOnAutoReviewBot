@@ -57,8 +57,8 @@ def fullTest(testType):
     for testGroup in fullTestResults:
         print("Console_Tester.fullTestResults", testGroup, ":", fullTestResults[testGroup])
 
-fullTest("consoleTest")
+#fullTest("consoleTest")
 #main("clevon", "web")
-#print(main("scolioli", "web")[4][0])
+print(main("scolioli", "web")[1])
 #fullListPrint(main("usernamebrand", "web"))
 #print(main("scoli", "consoleTest"))
