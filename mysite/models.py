@@ -24,6 +24,7 @@ class AdviceBase:
         **extra (dict): a dict of extra information that hasn't been accounted for yet
     """
     _children = ""
+    _collapse = None
     name = ""
 
     def __init__(self, **extra):
@@ -32,10 +33,16 @@ class AdviceBase:
             setattr(self, k, v)
 
     def __bool__(self) -> bool:
-        return bool(getattr(self, self._children, list()))
+        children = getattr(self, self._children, list())
+        return any(filter(bool, children))
 
     def __str__(self) -> str:
         return self.name
+
+    @property
+    def collapse(self) -> bool:
+        children = getattr(self, self._children, list())
+        return self._collapse if self._collapse is not None else bool(children)
 
 
 class Advice(AdviceBase):
@@ -48,7 +55,7 @@ class Advice(AdviceBase):
         unit (str): if there is one, usually "%"
     """
 
-    def __init__(self, label: str, item_name: str, progression: Any, goal: Any = "", unit: str = "", **extra):
+    def __init__(self, label: str, item_name: str, progression: Any = "", goal: Any = "", unit: str = "", **extra):
         super().__init__(**extra)
 
         self.label: str = label
@@ -72,24 +79,24 @@ class AdviceGroup(AdviceBase):
     Contains a list of `Advice` objects
 
     Args:
-        formatting (str): HTML tag name (e.g. strong, em)
-        collapsed (bool): should the group be collapsed on load?
         tier (str): alphanumeric tier of this group's advices (e.g. 17, S)
         pre_string (str): the start of the group title
-        advices (list<Advice>): a list of `Advice` objects, each advice on a separate line
         post_string (str): trailing advice
+        formatting (str): HTML tag name (e.g. strong, em)
+        collapsed (bool): should the group be collapsed on load?
+        advices (list<Advice>): a list of `Advice` objects, each advice on a separate line
     """
     _children = "advices"
 
-    def __init__(self, formatting: str, collapse: bool, tier: str, pre_string: str, advices: list[Advice], post_string: str, **extra):
+    def __init__(self, tier: str, pre_string: str, post_string: str = "", formatting: str = "", collapse: bool | None = None, advices: list[Advice] = [], **extra):
         super().__init__(**extra)
 
-        self.formatting: str = formatting
-        self.collapse: bool = collapse
         self.tier: str = tier
         self.pre_string: str = pre_string
-        self.advices: list[Advice] = advices
         self.post_string: str = post_string
+        self.formatting: str = formatting
+        self._collapse: bool | None = collapse
+        self.advices: list[Advice] = advices
 
     def __str__(self) -> str:
         return ', '.join(map(str, self.advices))
@@ -112,23 +119,24 @@ class AdviceSection(AdviceBase):
     Contains a list of `AdviceGroup` objects
 
     Args:
-        collapse (bool): should the section be collapsed on load?
         name (str): the name of the section (e.g. Stamps, Bribes)
         tier (str): alphanumeric tier of this section (e.g. 17/36), not always present
-        raw_header (str): text of the section title (e.g "Best Stamp tier met: 17/36. Recommended stamp actions", "Maestro Right Hands")
+        header (str): text of the section title (e.g "Best Stamp tier met: 17/36. Recommended stamp actions", "Maestro Right Hands")
+        picture (str): image file name to use as header icon
+        collapse (bool | None): should the section be collapsed on load?
         groups (list<AdviceGroup>): a list of `AdviceGroup` objects, each in its own box and bg colour
-        header (str): either `raw_header` or `raw_header` with the tier part wrapped in `<span>`, if exists
+        pinchy_rating (str): Pinchy rating for this section
     """
     _children = "groups"
 
-    def __init__(self, collapse: bool, picture: str, name: str, tier: str, header: str, groups: list[AdviceGroup], pinchy_rating: str = "", **extra):
+    def __init__(self, name: str, tier: str, header: str, picture: str, collapse: bool | None = None, groups: list[AdviceGroup] = [], pinchy_rating: str = "", **extra):
         super().__init__(**extra)
 
-        self.collapse: bool = collapse
         self.name: str = name
-        self.picture: str = picture
         self.tier: str = tier
         self._raw_header: str = header
+        self.picture: str = picture
+        self._collapse: bool | None = collapse
         self.groups: list[AdviceGroup] = groups
         self.pinchy_rating: str = pinchy_rating
 
@@ -164,11 +172,10 @@ class AdviceWorld(AdviceBase):
     """
     _children = "sections"
 
-    def __init__(self, name: WorldName, collapse: bool, sections: list[AdviceSection], banner: str = "", **extra):
+    def __init__(self, name: WorldName, collapse: bool = None, sections: list[AdviceSection] = [], banner: str = "", **extra):
         super().__init__(**extra)
 
         self.name: str = name.value
-        self.collapse: bool = collapse
+        self._collapse: bool | None = collapse
         self.sections: list[AdviceSection] = sections
         self.banner: str = banner
-        self.children: list[AdviceBase] = self.sections

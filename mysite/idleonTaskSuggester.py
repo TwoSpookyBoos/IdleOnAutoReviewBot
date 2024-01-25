@@ -371,7 +371,6 @@ def main(inputData, runType="web"):
 
     w1Review = AdviceWorld(
         name=WorldName.WORLD1,
-        collapse=False,
         sections=[stamps_AdviceSection["AdviceSection"]],
         banner="w1banner.png"
     )
