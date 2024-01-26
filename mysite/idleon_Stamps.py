@@ -478,14 +478,14 @@ def setStampProgressionTier(inputJSON, progressionTiers):
             advices=stamp_AdviceDict["SpecificStamps"]
         )
 
-    tier_section = f"{overall_StampTier}/{progressionTiers[-1][-0]}"
+    tier_section = f"{overall_StampTier}/{progressionTiers[-1][0]}"
     if advice_StampLevels == "" and advice_CollectStamps == "" and advice_SpecificStamps == "":
         advice_CombinedStamps = [
             f"Best Stamp tier met: {tier_section}. Recommended stamp actions:", "", "",
             "You've reached the end of the recommendations. Let me know what important stamps you're aiming for next!"]
         stamp_AdviceSection.default_collapsed = True
         stamp_AdviceSection.tier = tier_section
-        stamp_AdviceSection._raw_header = f"Best Stamp tier met: {tier_section}. You've reached the end of the recommendations. Let me know what important stamps you're aiming for next!"
+        stamp_AdviceSection.header = f"Best Stamp tier met: {tier_section}. You've reached the end of the recommendations. Let me know what important stamps you're aiming for next!"
     else:
         advice_CombinedStamps = [
             f"Best Stamp tier met: {tier_section}. Recommended stamp actions:",
@@ -495,7 +495,7 @@ def setStampProgressionTier(inputJSON, progressionTiers):
             advice_CollectMiscStamps,
             advice_SpecificStamps]
         stamp_AdviceSection.tier = tier_section
-        stamp_AdviceSection._raw_header = f"Best Stamp tier met: {tier_section}. Recommended stamp actions:"
+        stamp_AdviceSection.header = f"Best Stamp tier met: {tier_section}. Recommended stamp actions:"
         stamp_AdviceSection.groups = [
             stamp_AdviceGroupDict.get("StampLevels"),
             stamp_AdviceGroupDict.get("CombatStamps"),

@@ -45,6 +45,9 @@ class AdviceBase:
         children = getattr(self, self._children, list())
         return self._collapse if self._collapse is not None else not bool(children)
 
+    @collapse.setter
+    def collapse(self, _value: bool):
+        self._collapse = _value
 
 class Advice(AdviceBase):
     """
@@ -158,7 +161,6 @@ class AdviceSection(AdviceBase):
     @header.setter
     def header(self, raw_header: str):
         self._raw_header = raw_header
-
 
 class AdviceWorld(AdviceBase):
     """

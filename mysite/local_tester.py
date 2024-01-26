@@ -2,9 +2,9 @@ from console_tester import getDataFromFile
 from idleonTaskSuggester import main
 
 def fullTest(testType):
-    itRawJSONpath =  './testing-data/idleonefficiency_PublicProfileJSON.json' #NO sorted list expected
-    itToolboxJSONpath = './testing-data/idleontoolbox_ToolboxJSON.json' #Sorted list expected
-    ieRawJSONpath = './testing-data/idleontoolbox_RawGameJSON.json' #Sorted list expected if they copy their JSON from the public profile, but not from their local profile
+    itRawJSONpath = './testing-data/idleonefficiency_PublicProfileJSON.json'  # NO sorted list expected
+    itToolboxJSONpath = './testing-data/idleontoolbox_ToolboxJSON.json'  # Sorted list expected
+    ieRawJSONpath = './testing-data/idleontoolbox_RawGameJSON.json'  # Sorted list expected if they copy their JSON from the public profile, but not from their local profile
 
     jsonTestResults = {}
     jsonTestList = [itRawJSONpath, itToolboxJSONpath, ieRawJSONpath]
@@ -58,7 +58,7 @@ def fullTest(testType):
         print("Console_Tester.fullTestResults", testGroup, ":", fullTestResults[testGroup])
 
 #fullTest("consoleTest")
-#main("clevon", "web")
-print(main("scolioli", "web")[1])
+main("scolioli", "web")
+#print(main("scolioli", "web")[0])
 #fullListPrint(main("usernamebrand", "web"))
 #print(main("scoli", "consoleTest"))

@@ -309,9 +309,10 @@ def main(inputData, runType="web"):
         cardsList = [["Unable to evaluate card sets :(",str(reason)]]
 
     #World 1
-    stampPR = idleon_Stamps.setStampProgressionTier(parsedJSON, progressionTiers['Stamps'])
+    #stampPR = idleon_Stamps.setStampProgressionTier(parsedJSON, progressionTiers['Stamps'])
+    #bribesPR = idleon_Bribes.setBribesProgressionTier(parsedJSON, progressionTiers['Bribes'])
     stamps_AdviceSection = idleon_Stamps.setStampProgressionTier(parsedJSON, progressionTiers['Stamps'])
-    bribesPR = idleon_Bribes.setBribesProgressionTier(parsedJSON, progressionTiers['Bribes'])
+    bribes_ActiveSection = idleon_Bribes.setBribesProgressionTier(parsedJSON, progressionTiers['Bribes'])
     smithingPR = idleon_Smithing.setSmithingProgressionTier(parsedJSON, progressionTiers['Smithing'], playerCount)
 
     #World 2
@@ -342,7 +343,7 @@ def main(inputData, runType="web"):
 
     #generalList = [[ieLinkString, lastUpdatedTimeString], combatLevelsPR.nTR, consumablesList, gemShopPR.nTR, missableGStacksList, maestroHandsListOfLists, cardsList] #len(combatLevelsPR.nTR) = 2, len(consumablesList) = 2, len(gemShopPR.nTR) = 5, len(missableGStacksList) = 3, len(maestroHandsList) = 1
     generalList = [[ieLinkString, lastUpdatedTimeString], combatLevelsPR.nTR, consumablesList, gemShopPR.nTR, allGStacksList, maestroHandsListOfLists, cardsList]
-    w1list = [stamps_AdviceSection["PR"].nTR, bribesPR.nTR, smithingPR.nTR] #len(stampPR) = 4, len(bribesPR.nTR) = 2, len(smithingPR.nTR) = 4
+    w1list = [stamps_AdviceSection["PR"].nTR, bribes_ActiveSection["PR"].nTR, smithingPR.nTR] #len(stampPR) = 4, len(bribesPR.nTR) = 2, len(smithingPR.nTR) = 4
     w2list = [alchBubblesPR.nTR,alchVialsPR.nTR,alchP2WList, emptyList] #len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 5
     #w2list = [alchBubblesPR.nTR,alchVialsPR.nTR,alchP2WList, obolsPR.nTR] #len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 4, len(obolsPR.nTR) = 4
     w3list = [["Construction 3D Printer coming soon!"], consRefineryPR.nTR, consSaltLickPR.nTR, consDeathNotePR.nTR, #len(consRefineryPR.nTR) = 5, len(consSaltLickPR.nTR) = 2, len(consDeathNotePR.nTR) = 12)
@@ -357,7 +358,7 @@ def main(inputData, runType="web"):
     biggoleProgressionTiersDict = {
         "Combat Levels":combatLevelsPR.cT,
         "Stamps":stamps_AdviceSection["PR"].cT,
-        "Bribes":bribesPR.cT,
+        "Bribes":bribes_ActiveSection["PR"].cT,
         "Smithing":smithingPR.cT,
         "Alchemy-Bubbles":alchBubblesPR.cT,
         "Alchemy-Vials":alchVialsPR.cT,
@@ -371,7 +372,7 @@ def main(inputData, runType="web"):
 
     w1Review = AdviceWorld(
         name=WorldName.WORLD1,
-        sections=[stamps_AdviceSection["AdviceSection"]],
+        sections=[stamps_AdviceSection["AdviceSection"], bribes_ActiveSection["AdviceSection"]],
         banner="w1banner.png"
     )
     biggoleAdviceList.append(w1Review)
