@@ -1,6 +1,7 @@
 import json
 import sys
 from json import JSONDecodeError
+from config import app
 #import coloredlogs
 from flask import Flask, render_template, request, url_for, redirect, Response
 import idleonTaskSuggester
@@ -11,9 +12,6 @@ import idleonTaskSuggester
 #    fmt='[%(levelname)s] %(asctime)s | %(name)s | %(module)s.%(funcName)s:%(lineno)d ~ %(message)s',
 #    stream=sys.stdout,
 #)
-
-app = Flask(__name__)
-app.config["DEBUG"] = True
 
 
 def format_character_name(name: str) -> str:
@@ -39,6 +37,14 @@ def get_character_input() -> str:
     return parsed
 
 
+def load_user_preferences(request):
+    app.config.update(
+        {
+            'order_tiers': request.args.get('order_tiers', False)
+        }
+    )
+
+
 @app.route("/", defaults=dict(main_or_beta=""), methods=["GET", "POST"])
 @app.route("/<main_or_beta>", methods=["GET", "POST"])
 def index(main_or_beta: str) -> Response | str:
@@ -51,6 +57,8 @@ def index(main_or_beta: str) -> Response | str:
         #app.logger.info("request.args.get('player'): %s %s", type(capturedCharacterInput), capturedCharacterInput)
         if request.method == 'POST' and isinstance(capturedCharacterInput, str):
             return redirect(url_for('index', player=capturedCharacterInput))
+
+        load_user_preferences(request)
 
         if capturedCharacterInput:
             pythonOutput = autoReviewBot(capturedCharacterInput)
