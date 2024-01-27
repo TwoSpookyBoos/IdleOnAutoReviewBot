@@ -204,6 +204,15 @@ strong:not(.no-collapse):hover,
         display: flex;
         flex-wrap: wrap;
         flex-direction: row;
+        /*display: grid;*/
+        /*grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));*/
+        .advice-group {
+            flex: 1 0 200px; /* Flex-grow, flex-shrink, flex-basis */
+            max-width: max-content;
+            min-width: max-content;
+            /*max-width: max-content;*/
+            /*min-width: max-content;*/
+        }
     }
 
     .advice-group {

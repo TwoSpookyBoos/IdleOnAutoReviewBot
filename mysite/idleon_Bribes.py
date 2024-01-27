@@ -232,8 +232,6 @@ def setBribesProgressionTier(inputJSON, progressionTiers):
             bribe_AdviceGroupDict.get('W4'),
             bribe_AdviceGroupDict.get('Trash Island')
         ]
-        # filters out empty groups by checking if group has no advices
-        bribe_AdviceSection.groups = [g for g in bribe_AdviceSection.groups if g]
 
     bribesPR = progressionResults.progressionResults(overall_BribesTier, advice_BribesCombined, "")
     return {"PR": bribesPR, "AdviceSection": bribe_AdviceSection}

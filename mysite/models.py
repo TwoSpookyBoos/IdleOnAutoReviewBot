@@ -49,6 +49,7 @@ class AdviceBase:
     def collapse(self, _value: bool):
         self._collapse = _value
 
+
 class Advice(AdviceBase):
     """
     Args:
@@ -140,7 +141,7 @@ class AdviceSection(AdviceBase):
         self._raw_header: str = header
         self.picture: str = picture
         self._collapse: bool | None = collapse
-        self.groups: list[AdviceGroup] = groups
+        self._groups: list[AdviceGroup] = groups
         self.pinchy_rating: str = pinchy_rating
 
     @property
@@ -161,6 +162,16 @@ class AdviceSection(AdviceBase):
     @header.setter
     def header(self, raw_header: str):
         self._raw_header = raw_header
+
+    @property
+    def groups(self):
+        return self._groups
+
+    @groups.setter
+    def groups(self, groups: list[AdviceGroup]):
+        # filters out empty groups by checking if group has no advices
+        self._groups = [g for g in groups if g]
+
 
 class AdviceWorld(AdviceBase):
     """
