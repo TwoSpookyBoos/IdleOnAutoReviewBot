@@ -4,14 +4,14 @@
         <img src="{{ img(world.banner) }}" alt="{{ world.name }}" title="{{ world.name }}">
     </h1>
     <div class="content-wrapper{% if world.collapse %} folded{% endif %}">
-        {% set section = world.sections[0] %}
-        <section id="stamps">
+        {% for section in world.sections %}
+        <section id="{{ section.name.lower() }}" class="new">
             <h3 class="subheading">
                 <img src="{{ img(section.picture) }}" alt="{{ section.name }}">
                 <span>{{ section.header|safe }}</span>
             </h3>
             <ul class="advice-section{% if section.collapse %} folded{% endif %}">
-                <li id="stamps-tier">
+                <li id="{{ section.name.lower() }}-tier">
                     {% for group in section.groups %}
                         <div class="advice-group">
                             <span>Tier {{ group.tier }} - {{ group.pre_string }}:</span>
@@ -32,23 +32,24 @@
                 </li>
             </ul>
         </section>
+        {% endfor %}
 
-        <section>
-            <h3 class="subheading">
-                <img src="{{ img('Stat_Graph_Stamp.png') }}" alt="Stat Graph Stamp">
-            </h3>
-
-            <div class="advice-wrapper">
-                <strong>{{ htmlInput[1][1][0] }}</strong>
-                <ul id="bribes-tier">
-                {% for line in htmlInput[1][1][1:] %}
-                    {% if line %}
-                        <li class="advice">{{ line }}</li>
-                    {% endif %}
-                {% endfor %}
-                </ul>
-            </div>
-        </section>
+{#        <section>#}
+{#            <h3 class="subheading">#}
+{#                <img src="{{ img('Stat_Graph_Stamp.png') }}" alt="Stat Graph Stamp">#}
+{#            </h3>#}
+{##}
+{#            <div class="advice-wrapper">#}
+{#                <strong>{{ htmlInput[1][1][0] }}</strong>#}
+{#                <ul id="bribes-tier">#}
+{#                {% for line in htmlInput[1][1][1:] %}#}
+{#                    {% if line %}#}
+{#                        <li class="advice">{{ line }}</li>#}
+{#                    {% endif %}#}
+{#                {% endfor %}#}
+{#                </ul>#}
+{#            </div>#}
+{#        </section>#}
 
         <section>
             <h3 class="subheading">

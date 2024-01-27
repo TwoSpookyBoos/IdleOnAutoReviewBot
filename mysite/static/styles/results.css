@@ -173,7 +173,7 @@ strong:not(.no-collapse):hover,
     filter: brightness(130%);
     transition: filter .2s ease-in
 }
-#stamps {
+.new {
     display: flex;
     flex-direction: column;
 
@@ -182,7 +182,7 @@ strong:not(.no-collapse):hover,
 
     & ul {
         list-style-type: none;
-        padding: 20px 0;
+        padding: 20px 0 0 0;
     }
 
     .subheading {
@@ -208,7 +208,7 @@ strong:not(.no-collapse):hover,
 
     .advice-group {
         padding: 20px;
-        flex-basis: calc(100% / 3);
+        /*flex-basis: calc(100% / 3);*/
 
         &:nth-child(odd) {
             background-color: rgba(142, 209, 177, 0.3);

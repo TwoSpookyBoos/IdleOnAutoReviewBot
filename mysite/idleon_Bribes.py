@@ -88,7 +88,7 @@ def setBribesProgressionTier(inputJSON, progressionTiers):
         name="Bribes",
         tier="Not Yet Evaluated",
         header="Best Bribe tier met: Not Yet Evaluated. Recommended Bribe actions",
-        picture="Stamps_Mr_Pigibank.gif"
+        picture="Stat_Graph_Stamp.png"
     )
 
     # W1 Bribes
@@ -220,11 +220,11 @@ def setBribesProgressionTier(inputJSON, progressionTiers):
     #Generate advice statement
     advice_BribesCombined = ["Best Bribe tier met: " + str(overall_BribesTier) + "/" + str(max_tier)
                              + ". Recommended Bribe actions:", advice_BribesPurchased]
-    bribe_AdviceSection.tier = tier_BribesPurchased
+    bribe_AdviceSection.tier = f"{tier_BribesPurchased}/{max_tier}"
     if tier_BribesPurchased == max_tier:
-        bribe_AdviceSection.header = f"Best Bribe tier met: {max_tier}/{max_tier}. You best <3"
+        bribe_AdviceSection.header = f"Best Bribe tier met: {bribe_AdviceSection.tier}. You best <3"
     else:
-        bribe_AdviceSection.header = f"Best Bribe tier met: {tier_BribesPurchased}/{max_tier}. Recommended Bribe actions"
+        bribe_AdviceSection.header = f"Best Bribe tier met: {bribe_AdviceSection.tier}. Recommended Bribe actions"
         bribe_AdviceSection.groups = [
             bribe_AdviceGroupDict.get('W1'),
             bribe_AdviceGroupDict.get('W2'),

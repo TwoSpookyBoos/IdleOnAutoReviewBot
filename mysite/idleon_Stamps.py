@@ -503,7 +503,6 @@ def setStampProgressionTier(inputJSON, progressionTiers):
             stamp_AdviceGroupDict.get("MiscStamps"),
             stamp_AdviceGroupDict.get("SpecificStamps")
         ]
-        stamp_AdviceSection.groups = [g for g in stamp_AdviceSection.groups if g]
 
     stampPR = progressionResults.progressionResults(overall_StampTier, advice_CombinedStamps, "")
     return {"PR": stampPR, "AdviceSection": stamp_AdviceSection}
