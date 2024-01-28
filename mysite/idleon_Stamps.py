@@ -306,6 +306,7 @@ def setStampProgressionTier(inputJSON, progressionTiers):
     tier_RequiredSkillStamps = 0
     tier_RequiredMiscStamps = 0
     tier_RequiredSpecificStamps = 0
+    max_tier = progressionTiers[-1][0]
     advice_StampLevels = ""
     advice_CollectCombatStamps = ""
     advice_CollectSkillStamps = ""
@@ -425,7 +426,7 @@ def setStampProgressionTier(inputJSON, progressionTiers):
             if allSpecificStamps == True:
                 tier_RequiredSpecificStamps = tier[0]
 
-    overall_StampTier = min(tier_StampLevels, tier_RequiredCombatStamps, tier_RequiredSkillStamps,
+    overall_StampTier = min(max_tier, tier_StampLevels, tier_RequiredCombatStamps, tier_RequiredSkillStamps,
                             tier_RequiredMiscStamps, tier_RequiredSpecificStamps)
 
     # Generate advice statements
@@ -478,13 +479,13 @@ def setStampProgressionTier(inputJSON, progressionTiers):
             advices=stamp_AdviceDict["SpecificStamps"]
         )
 
-    tier_section = f"{overall_StampTier}/{progressionTiers[-1][0]}"
-    if advice_StampLevels == "" and advice_CollectStamps == "" and advice_SpecificStamps == "":
+    tier_section = f"{overall_StampTier}/{max_tier}"
+    stamp_AdviceSection.tier = tier_section
+    if overall_StampTier == max_tier:
         advice_CombinedStamps = [
             f"Best Stamp tier met: {tier_section}. Recommended stamp actions:", "", "",
             "You've reached the end of the recommendations. Let me know what important stamps you're aiming for next!"]
-        stamp_AdviceSection.default_collapsed = True
-        stamp_AdviceSection.tier = tier_section
+
         stamp_AdviceSection.header = f"Best Stamp tier met: {tier_section}. You've reached the end of the recommendations. Let me know what important stamps you're aiming for next!"
     else:
         advice_CombinedStamps = [
@@ -494,7 +495,6 @@ def setStampProgressionTier(inputJSON, progressionTiers):
             advice_CollectSkillStamps,
             advice_CollectMiscStamps,
             advice_SpecificStamps]
-        stamp_AdviceSection.tier = tier_section
         stamp_AdviceSection.header = f"Best Stamp tier met: {tier_section}. Recommended stamp actions:"
         stamp_AdviceSection.groups = [
             stamp_AdviceGroupDict.get("StampLevels"),

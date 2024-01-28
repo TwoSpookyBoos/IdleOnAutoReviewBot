@@ -3,6 +3,10 @@ from models import AdviceGroup
 from models import Advice
 import progressionResults
 
+def pl(_list: list, suffix_singular: str = "", suffix_plural: str = 's') -> str:
+    """Pluralize"""
+    return suffix_plural if len(_list) > 1 else suffix_singular
+
 def parseBribes(inputJSON):
     parsedBribes = inputJSON["BribeStatus"]
     #print(parsedBribes)
@@ -51,8 +55,18 @@ def parseBribes(inputJSON):
             'Star Scraper': parsedBribes[32],
             'The Art of the Grail': parsedBribes[33]
             }
-    except:
-        bribeSetTrashIsland = {}
+    except Exception as reason:
+        print("Bribes.parseBribes~ EXCEPTION Unable to retrieve Trash Island Bribes. Defaulting to unpurchased:", reason)
+        bribeSetTrashIsland = {
+            'The Art of the Bail': 0,
+            'Random Garbage': 0,
+            'Godlier Creation': 0,
+            'Fishermaster': 0,
+            'Muscles on Muscles': 0,
+            'Bottle Service': 0,
+            'Star Scraper': 0,
+            'The Art of the Grail': 0
+        }
     allBribesDict = {
         'W1': bribeSetW1,
         'W2': bribeSetW2,
@@ -108,8 +122,8 @@ def setBribesProgressionTier(inputJSON, progressionTiers):
             )
     bribe_AdviceGroupDict['W1'] = AdviceGroup(
         tier="0",
-        pre_string="Purchase the remaining W1 Bribes",
-        advices=bribe_AdviceDict["W1Bribes"],
+        pre_string=f"Purchase the remaining W1 Bribe{pl(bribe_AdviceDict['W1Bribes'])}",
+        advices=bribe_AdviceDict['W1Bribes'],
         post_string="You should be able to afford them by the end of W1."
     )
 
@@ -130,8 +144,8 @@ def setBribesProgressionTier(inputJSON, progressionTiers):
             )
     bribe_AdviceGroupDict['W2'] = AdviceGroup(
         tier="1",
-        pre_string="Purchase the remaining W2 Bribes",
-        advices=bribe_AdviceDict["W2Bribes"],
+        pre_string=f"Purchase the remaining W2 Bribe{pl(bribe_AdviceDict['W2Bribes'])}",
+        advices=bribe_AdviceDict['W2Bribes'],
         post_string="You should be able to afford them by the end of W2."
     )
 
@@ -152,8 +166,8 @@ def setBribesProgressionTier(inputJSON, progressionTiers):
             )
     bribe_AdviceGroupDict['W3'] = AdviceGroup(
         tier="2",
-        pre_string="Purchase the remaining W3 Bribes",
-        advices=bribe_AdviceDict["W3Bribes"],
+        pre_string=f"Purchase the remaining W3 Bribe{pl(bribe_AdviceDict['W3Bribes'])}",
+        advices=bribe_AdviceDict['W3Bribes'],
         post_string="You should be able to afford them by the end of W3."
     )
 
@@ -174,8 +188,8 @@ def setBribesProgressionTier(inputJSON, progressionTiers):
             )
     bribe_AdviceGroupDict['W4'] = AdviceGroup(
         tier="3",
-        pre_string="Purchase the remaining W4 Bribes",
-        advices=bribe_AdviceDict["W4Bribes"],
+        pre_string=f"Purchase the remaining W4 Bribe{pl(bribe_AdviceDict['W4Bribes'])}",
+        advices=bribe_AdviceDict['W4Bribes'],
         post_string="You should be able to afford them by the end of W4."
     )
 
@@ -196,8 +210,8 @@ def setBribesProgressionTier(inputJSON, progressionTiers):
             )
     bribe_AdviceGroupDict['Trash Island'] = AdviceGroup(
         tier="4",
-        pre_string="Purchase the remaining Trash Island Bribes",
-        advices=bribe_AdviceDict["TrashIslandBribes"],
+        pre_string=f"Purchase the remaining Trash Island Bribe{pl(bribe_AdviceDict['TrashIslandBribes'])}",
+        advices=bribe_AdviceDict['TrashIslandBribes'],
         post_string="You should be able to afford them by the end of W5, after unlocking the Bribes from Trash Island."
     )
     #print("Bribe sums: ", sum_allBribes, sum_bribeSetW1, sum_bribeSetW2, sum_bribeSetW3, sum_bribeSetW4, sum_bribeSetTrashIsland)
@@ -216,15 +230,15 @@ def setBribesProgressionTier(inputJSON, progressionTiers):
                 tier_BribesPurchased = tier[0]
 
     overall_BribesTier = min(max_tier, tier_BribesPurchased)
-
+    tier_section = f"{overall_BribesTier}/{max_tier}"
+    bribe_AdviceSection.tier = tier_section
     #Generate advice statement
     advice_BribesCombined = ["Best Bribe tier met: " + str(overall_BribesTier) + "/" + str(max_tier)
                              + ". Recommended Bribe actions:", advice_BribesPurchased]
-    bribe_AdviceSection.tier = f"{tier_BribesPurchased}/{max_tier}"
-    if tier_BribesPurchased == max_tier:
-        bribe_AdviceSection.header = f"Best Bribe tier met: {bribe_AdviceSection.tier}. You best <3"
+    if overall_BribesTier == max_tier:
+        bribe_AdviceSection.header = f"Best Bribe tier met: {tier_section}. You best <3"
     else:
-        bribe_AdviceSection.header = f"Best Bribe tier met: {bribe_AdviceSection.tier}. Recommended Bribe actions"
+        bribe_AdviceSection.header = f"Best Bribe tier met: {tier_section}. Recommended Bribe actions"
         bribe_AdviceSection.groups = [
             bribe_AdviceGroupDict.get('W1'),
             bribe_AdviceGroupDict.get('W2'),

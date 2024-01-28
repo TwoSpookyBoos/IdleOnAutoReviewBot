@@ -6,6 +6,34 @@ from typing import Any
 from flask import g
 
 
+class Character:
+    def __init__(self, character_index: int, character_name: str, class_name: str, base_class: str, sub_class: str, elite_class: str, all_skill_levels: dict):
+        self.character_index: int = character_index
+        self.character_name: str = character_name
+        self.class_name: str = class_name
+        self.class_name_icon: str = class_name + "-class-icon"
+        self.base_class: str = base_class
+        self.sub_class: str = sub_class
+        self.elite_class: str = elite_class
+        self.combat_level: int = all_skill_levels['Combat']
+        self.mining_level: int = all_skill_levels['Mining']
+        self.smithing_level: int = all_skill_levels['Smithing']
+        self.choppin_level: int = all_skill_levels['Choppin']
+        self.fishing_level: int = all_skill_levels['Fishing']
+        self.alchemy_level: int = all_skill_levels['Alchemy']
+        self.catching_level: int = all_skill_levels['Catching']
+        self.trapping_level: int = all_skill_levels['Trapping']
+        self.construction_level: int = all_skill_levels['Construction']
+        self.worship_level: int = all_skill_levels['Worship']
+        self.cooking_level: int = all_skill_levels['Cooking']
+        self.breeding_level: int = all_skill_levels['Breeding']
+        self.lab_level: int = all_skill_levels['Lab']
+        self.sailing_level: int = all_skill_levels['Sailing']
+        self.divinity_level: int = all_skill_levels['Divinity']
+        self.gaming_level: int = all_skill_levels['Gaming']
+
+
+
 class WorldName(Enum):
     PINCHY = "Pinchy"
     GENERAL = "General"
