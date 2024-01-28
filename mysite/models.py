@@ -1,6 +1,9 @@
+import functools
 import re
 from enum import Enum
 from typing import Any
+
+from flask import g
 
 
 class WorldName(Enum):
@@ -78,6 +81,7 @@ class Advice(AdviceBase):
         return self.label
 
 
+@functools.total_ordering
 class AdviceGroup(AdviceBase):
     """
     Contains a list of `Advice` objects
@@ -91,11 +95,12 @@ class AdviceGroup(AdviceBase):
         advices (list<Advice>): a list of `Advice` objects, each advice on a separate line
     """
     _children = "advices"
+    __compare_by = ["tier"]
 
     def __init__(self, tier: str, pre_string: str, post_string: str = "", formatting: str = "", collapse: bool | None = None, advices: list[Advice] = [], **extra):
         super().__init__(**extra)
 
-        self.tier: str = tier
+        self.tier: str = str(tier)
         self.pre_string: str = pre_string
         self.post_string: str = post_string
         self.formatting: str = formatting
@@ -116,6 +121,27 @@ class AdviceGroup(AdviceBase):
     @property
     def show_goal(self) -> bool:
         return any(advice.goal for advice in self.advices)
+
+    def _is_valid_operand(self, other):
+        return all(hasattr(other, field) for field in self.__compare_by)
+
+    def __eq__(self, other):
+        if not self._is_valid_operand(other):
+            return NotImplemented
+
+        return all(
+            getattr(self, field) == getattr(other, field)
+            for field in self.__compare_by
+        )
+
+    def __lt__(self, other):
+        if not self._is_valid_operand(other):
+            return NotImplemented
+
+        return all(
+            getattr(self, field) < getattr(other, field)
+            for field in self.__compare_by
+        )
 
 
 class AdviceSection(AdviceBase):
@@ -170,7 +196,10 @@ class AdviceSection(AdviceBase):
     @groups.setter
     def groups(self, groups: list[AdviceGroup]):
         # filters out empty groups by checking if group has no advices
-        self._groups = [g for g in groups if g]
+        self._groups = [group for group in groups if group]
+
+        if g.order_tiers:
+            self._groups = sorted(self._groups)
 
 
 class AdviceWorld(AdviceBase):
