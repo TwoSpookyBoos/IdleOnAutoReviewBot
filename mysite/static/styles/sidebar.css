@@ -1,5 +1,6 @@
 :root {
     --sidebar-width: 650px;
+    --sidebar-width-mobile: 100vw;
 }
 
 aside {
@@ -90,4 +91,24 @@ form textarea::placeholder,
 .light-mode aside form textarea,
 .light-mode aside form textarea::placeholder {
     transition: background-color .5s ease-in-out, color .5s ease-in-out;
+}
+
+@media (max-width: 600px) {
+    aside {
+        width: var(--sidebar-width-mobile);
+        padding-bottom: var(--drawer-image-height);
+
+        form {
+            flex-direction: column;
+            textarea {
+                width: 100%;
+                height: 10em;
+                border-radius: 10px 10px 0 0;
+            }
+            input[type="submit"] {
+                border-radius: 0 0 10px 10px;
+                height: 4em;
+            }
+        }
+    }
 }

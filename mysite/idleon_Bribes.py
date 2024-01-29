@@ -23,7 +23,7 @@ def parseBribes(inputJSON):
         'Double EXP Scheme': parsedBribes[7],
         'Tagged Indicators': parsedBribes[8],
         'Fossil Fuel Legislation': parsedBribes[9],
-        'Fice Aces in the Deck': parsedBribes[10],
+        'Five Aces in the Deck': parsedBribes[10],
         'Fake Teleport Tickets': parsedBribes[11],
         'The Art of the Steal': parsedBribes[12]
         }

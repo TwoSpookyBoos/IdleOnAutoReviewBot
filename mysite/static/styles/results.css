@@ -4,6 +4,12 @@
     font-weight: normal;
     font-style: normal;
 }
+@font-face {
+    font-family: 'Space Mono';
+    src: url(../fonts/SpaceMono-Regular.ttf) format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
 
 * {
     /*font-family: 'Idleon', sans-serif;*/
@@ -81,7 +87,7 @@ textarea {
 .world-content {
     display: flex;
     flex-direction: column;
-    row-gap: 10px;
+    row-gap: 20px;
 }
 h1, strong {
     color: goldenrod;
@@ -177,7 +183,8 @@ strong:not(.no-collapse):hover,
     display: flex;
     flex-direction: column;
 
-    font-family: 'Idleon', sans-serif;
+    font-family: 'Space Mono', sans-serif;
+    font-variant-ligatures: none;
     text-shadow: 1px 1px black;
 
     & ul {
@@ -201,23 +208,13 @@ strong:not(.no-collapse):hover,
     }
 
     .advice-section > li {
-        display: flex;
-        flex-wrap: wrap;
-        flex-direction: row;
-        /*display: grid;*/
-        /*grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));*/
-        .advice-group {
-            flex: 1 0 200px; /* Flex-grow, flex-shrink, flex-basis */
-            max-width: max-content;
-            min-width: max-content;
-            /*max-width: max-content;*/
-            /*min-width: max-content;*/
-        }
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
     }
 
     .advice-group {
+        width: fit-content;
         padding: 20px;
-        /*flex-basis: calc(100% / 3);*/
 
         &:nth-child(odd) {
             background-color: rgba(142, 209, 177, 0.3);
@@ -235,6 +232,10 @@ strong:not(.no-collapse):hover,
             display: flex;
             align-items: center;
             column-gap: 7px;
+
+            &:not(.advice) {
+                justify-content: center;
+            }
         }
     }
     .advice {
@@ -244,12 +245,21 @@ strong:not(.no-collapse):hover,
         &::before {
             display: block;
             content: '';
-            height: 30px;
-            width: 30px;
+            height: 40px;
+            min-width: 40px;
 
             background-size: contain;
             background-position: center;
             background-repeat: no-repeat;
         }
+
+        /*&:nth-child(n+1) {*/
+        /*    justify-content: center;*/
+        /*}*/
+    }
+}
+@media (max-width: 600px) {
+    .advice-section > li {
+        grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
     }
 }

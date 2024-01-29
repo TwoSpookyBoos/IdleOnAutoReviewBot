@@ -32,34 +32,26 @@ nav {
     align-items: center;
 }
 
-.nav-wrapper ul {
+.nav-links {
     width: 100%;
     display: flex;
     justify-content: space-evenly;
     padding: 10px 5px;
     list-style-type: none;
     flex-grow: 2;
-}
 
-.nav-wrapper li {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.nav-wrapper ul > li > a {
-    display: block;
-    color: lightgray;
-    text-decoration: none;
-    font-size: 1.5rem;
-}
+    & > li {
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
-.visuallyHidden {
-    display: none;
-    position: absolute;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    height: 1px; width: 1px;
-    margin: -1px; padding: 0; border: 0;
+        & > a {
+            display: block;
+            color: lightgray;
+            text-decoration: none;
+            font-size: 1.5rem;
+        }
+    }
 }
 
 .hamburger {
@@ -152,7 +144,7 @@ nav {
 
 #light-switch {
     height: 40px;
-    width: 40px;
+    min-width: 40px;
     border-style: none;
 }
 
@@ -201,4 +193,40 @@ nav {
 .light-mode #spreadsheet {
     color: #1da261;
     text-decoration: none;
+}
+
+@media (max-width: 600px) {
+    .nav-links {
+        padding: 10px 5px;
+    }
+    #discord, #ko-fi, #spreadsheet {
+        --dim: 20px;
+        height: calc(var(--dim) * 2);
+        width: calc(var(--dim) * 2);
+    }
+    #discord {
+        background-image: url(../imgs/discord-icon-svgrepo-com.svg);
+    }
+    #ko-fi {
+        background-image: url(../imgs/kofi_logo.svg);
+        background-size: cover;
+        background-position: center;
+        border-radius: var(--dim);
+        background-color: #13c3ff;
+    }
+    #spreadsheet {
+        text-indent: -9999px;
+        background-position: center;
+    }
+
+    #drawer-handle {
+        left: unset;
+        top: unset;
+        bottom: var(--nav-padding);
+        right: calc(((var(--nav-height) + var(--nav-padding) * 2) - var(--drawer-image-height)) / 2);
+
+        &.sidebar-open {
+            left: unset;
+        }
+    }
 }

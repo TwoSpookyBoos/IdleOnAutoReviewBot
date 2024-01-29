@@ -44,7 +44,7 @@ a {
 
 
     /* Sets the thickness as a percentage of the font size */
-    text-decoration-thickness: 8;
+    text-decoration-thickness: 8%;
 }
 
 :focus:not(:focus-visible) {
