@@ -1,4 +1,15 @@
 @import "vars";
+@import "bubbles";
+@import "classes";
+@import "construction";
+@import "gem-shop";
+@import "prayers";
+@import "skill-icons";
+@import "skulls";
+@import "slab-items";
+@import "talents";
+@import "vials";
+@import "world-contents";
 
 $subheadings: (
 	pinchy: (
@@ -48,6 +59,7 @@ $advices: (
 	quest-gstacks-missed: $greenstack,
 
 	smithing-forge-upgrade-advice: $forge,
+	forge: $forge,
 
 	alchemy-total-unlocked-bubbles-advice: $alchemy,
 	alchemy-purple-sample-bubble-advice: $cauldron-p,
@@ -232,6 +244,7 @@ $id-map: (
 
 	infinity-hammer: $infinity-hammer,
 	brimstone-forge-slot: $brimstone-forge-slot,
+	forge: $forge,
 
 	ivory-bubble-cauldrons: $ivory-bubble-cauldrons,
 	bleach-liquid-cauldrons: $bleach-liquid-cauldrons,

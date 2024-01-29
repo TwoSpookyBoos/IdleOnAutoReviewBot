@@ -5,10 +5,7 @@
     font-style: normal;
 }
 
-body, body * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+* {
     /*font-family: 'Idleon', sans-serif;*/
 }
 .light-mode {
@@ -122,17 +119,20 @@ footer {
     background-color: #f19c9c;
     width: 100%;
 }
+.banner img {
+    width: 100%;
+}
 .subheading {
     display: block;
 }
 .subheading img {
-    width: 80px;
+    min-width: 80px;
     height: 80px;
     object-fit: contain;
 }
 .subheading img.folded {
     display: block !important;
-    width: 80px;
+    max-width: 80px;
     height: 1em;
     object-fit: contain;
 }

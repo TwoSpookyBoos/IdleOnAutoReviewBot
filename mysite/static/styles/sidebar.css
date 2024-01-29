@@ -23,6 +23,7 @@ aside {
     transition: all .5s ease-out;
     z-index: 1;
 
+    /*font-size: 1.6rem;*/
     font-family: 'Chakra Petch', sans-serif;
     line-height: 1.6rem;
     letter-spacing: 1px;

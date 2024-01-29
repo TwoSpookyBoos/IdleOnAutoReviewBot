@@ -59,7 +59,7 @@ def index(main_or_beta: str) -> Response | str:
             pythonOutput = autoReviewBot(capturedCharacterInput)
 
     except Exception as reason:
-        # app.logger.error('Could not get Player from Request Args: %s', reason)
+        app.logger.error('Could not get Player from Request Args: %s', reason)
         error = True
 
     return render_template(page, htmlInput=pythonOutput, error=error, beta=main_or_beta)

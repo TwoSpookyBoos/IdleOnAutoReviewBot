@@ -115,6 +115,7 @@ nav {
     z-index: 999;
     display: flex;
     align-items: center;
+    cursor: pointer;
 }
 
 #drawer-handle.sidebar-open {
@@ -190,6 +191,7 @@ nav {
     background-position: left;
     color: #8ed1b1;
     font-family: "Open Sans", sans-serif;
+    /*font-size: 2.3rem;*/
     font-optical-sizing: auto;
     font-weight: 500;
 }
