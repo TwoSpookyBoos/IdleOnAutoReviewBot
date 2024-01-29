@@ -80,12 +80,7 @@ def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, charact
         "ForgeUpgrades": [],
         "EmptyForgeSlots": []
     }
-    smithing_AdviceGroupDict = {
-        "CashPoints": [],
-        "MonsterPoints": [],
-        "ForgeUpgrades": [],
-        "EmptyForgeSlots": []
-    }
+    smithing_AdviceGroupDict = {}
     smithing_AdviceSection = AdviceSection(
         name="Smithing",
         tier="Not Yet Evaluated",
@@ -160,14 +155,13 @@ def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, charact
                 tier_CashPoints = tier[0]
             else:
                 advice_CashPoints = "Purchase the first " + str(tier[1]) + " cash points on all characters. You're currently at (total): " + str(sum_CashPoints) + "/" + str(tier[1]*playerCount)
-                smithing_AdviceGroupDict["CashPoints"].append(
-                    AdviceGroup(
-                        tier=str(tier_CashPoints),
-                        pre_string=f"Purchase the first {tier[1]} Anvil Points with Cash on the following character{pl(smithing_AdviceDict['CashPoints'])}",
-                        advices=smithing_AdviceDict["CashPoints"],
-                        post_string=""
-                    )
+                smithing_AdviceGroupDict["CashPoints"] = AdviceGroup(
+                    tier=str(tier_CashPoints),
+                    pre_string=f"Purchase the first {tier[1]} Anvil Points with Cash on the following character{pl(smithing_AdviceDict['CashPoints'])}",
+                    advices=smithing_AdviceDict["CashPoints"],
+                    post_string=""
                 )
+
 
         #Monster Points
         if tier_MonsterPoints == (tier[0]-1):  # Only check if they already met previous tier
@@ -191,13 +185,11 @@ def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, charact
             else:
                 advice_MonsterPoints = ("Purchase the first " + str(tier[2]) + " monster points on all characters, which includes drops from "
                 + tier[4] + " You're currently at (total): " + str(sum_MonsterPoints) + "/" + str(tier[2]*playerCount))
-                smithing_AdviceGroupDict["MonsterPoints"].append(
-                    AdviceGroup(
-                        tier=str(tier_CashPoints),
-                        pre_string=f"Purchase the first {tier[2]} Anvil Points with Monster Materials on the following character{pl(smithing_AdviceDict['MonsterPoints'])}",
-                        advices=smithing_AdviceDict["MonsterPoints"],
-                        post_string=f"The final Monster Material for this tier is {tier[4]}"
-                    )
+                smithing_AdviceGroupDict["MonsterPoints"] = AdviceGroup(
+                    tier=str(tier_CashPoints),
+                    pre_string=f"Purchase the first {tier[2]} Anvil Points with Monster Materials on the following character{pl(smithing_AdviceDict['MonsterPoints'])}",
+                    advices=smithing_AdviceDict["MonsterPoints"],
+                    post_string=f"The final Monster Material for this tier is {tier[4]}"
                 )
 
         #Forge Upgrades
@@ -207,27 +199,29 @@ def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, charact
             else:
                 advice_ForgeUpgrades = ("Purchase " + str(tier[3] - sum_ForgeUpgrades) + " more Forge upgrades. You're currently at (total): "
                 + str(sum_ForgeUpgrades) + "/" + str(tier[3]) + ". (As of v1.91, Forge EXP Gain does absolutely nothing. Feel free to avoid it!)")
-                smithing_AdviceGroupDict["ForgeUpgrades"].append(
-                    AdviceGroup(
-                        tier=str(tier_CashPoints),
-                        pre_string=f"Purchase any {tier[3] - sum_ForgeUpgrades} additional Forge Upgrades.",
-                        advices=smithing_AdviceDict["ForgeUpgrades"],
-                        post_string="As of v1.91, Forge EXP Gain does absolutely nothing. Feel free to skip it!"
-                    )
+                smithing_AdviceGroupDict["ForgeUpgrades"] = AdviceGroup(
+                    tier=str(tier_CashPoints),
+                    pre_string=f"Purchase any {tier[3] - sum_ForgeUpgrades} additional Forge Upgrades.",
+                    advices=smithing_AdviceDict["ForgeUpgrades"],
+                    post_string="As of v1.91, Forge EXP Gain does absolutely nothing. Feel free to skip it!"
                 )
 
     #Check for any unused Forge slots
     unusedForgeSlots = getUnusedForgeSlotsCount(inputJSON)
     if unusedForgeSlots > 0:
         advice_UnusedForgeSlots = "Informational- You have " + str(unusedForgeSlots) + " empty ore slot in your Forge!"
-        smithing_AdviceGroupDict["EmptyForgeSlots"].append(
-            AdviceGroup(
-                tier="",
-                pre_string=f"Informational- You have {unusedForgeSlots} empty ore slot{pl(['']*unusedForgeSlots)} in your Forge!",
-                advices=smithing_AdviceDict["EmptyForgeSlots"],
-                post_string=""
-            )
+        smithing_AdviceGroupDict["EmptyForgeSlots"] = AdviceGroup(
+            tier="",
+            pre_string=f"Informational - Fill the Forge",
+            advices=[
+                Advice(
+                    label=f"You have {unusedForgeSlots} empty ore slot{pl(['']*unusedForgeSlots)} in your Forge!",
+                    item_name="forge"
+                )
+            ],
+            post_string=""
         )
+
     elif unusedForgeSlots > 1:
         advice_UnusedForgeSlots = "Informational- You have " + str(unusedForgeSlots) + " empty ore slots in your Forge!"
 
@@ -249,11 +243,6 @@ def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, charact
     else:
         advice_CombinedSmithing = ["Best Smithing tier met: " + str(overall_SmithingTier) + "/" + str(max_tier) + ". Recommended Smithing actions:", advice_CashPoints, advice_MonsterPoints, advice_ForgeUpgrades, advice_UnusedForgeSlots]
         smithing_AdviceSection.header = f"Best Smithing tier met: {tier_section}. Recommended Smithing actions"
-        smithing_AdviceSection.groups = [
-            smithing_AdviceGroupDict.get("CashPoints"),
-            smithing_AdviceGroupDict.get("MonsterPoints"),
-            smithing_AdviceGroupDict.get("ForgeUpgrades"),
-            smithing_AdviceGroupDict.get("EmptyForgeSlots")
-        ]
+        smithing_AdviceSection.groups = smithing_AdviceGroupDict.values()
     smithingPR = progressionResults.progressionResults(overall_SmithingTier, advice_CombinedSmithing, "")
     return {"PR": smithingPR, "AdviceSection": smithing_AdviceSection}
