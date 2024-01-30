@@ -19,7 +19,7 @@ def getReadableVialNames(inputNumber):
     try:
         inputNumber = int(inputNumber)
     except:
-        return ("Unknown Vial " + inputNumber)
+        return "Unknown Vial " + str(inputNumber)
     match inputNumber:
         case 0:
             return "Copper Corona (Copper Ore)"
@@ -150,13 +150,13 @@ def getReadableVialNames(inputNumber):
         case 63:
             return "Dreamy Drink (Dream Particulate)"
         case _:
-            return ("Unknown Vial " + inputNumber)
+            return "Unknown Vial " + str(inputNumber)
 
 def getReadableBubbleNames(inputNumber, color):
     try:
         inputNumber = int(inputNumber)
     except:
-        return ("Unknown Bubble " + str(color) + str(inputNumber))
+        return "Unknown Bubble " + str(color) + str(inputNumber)
     match color:
         case "Orange":
             match inputNumber:
@@ -211,7 +211,7 @@ def getReadableBubbleNames(inputNumber, color):
                 case 24:
                     return "Power Trione"
                 case _:
-                    return ("Unknown Bubble " + str(color) + str(inputNumber))
+                    return "Unknown Orange Bubble " + str(color) + str(inputNumber)
         case "Green":
             match inputNumber:
                 case 0:
@@ -265,7 +265,7 @@ def getReadableBubbleNames(inputNumber, color):
                 case 24:
                     return "Power Tritwo"
                 case _:
-                    return ("Unknown Bubble " + str(color) + str(inputNumber))
+                    return "Unknown Green Bubble " + str(color) + str(inputNumber)
         case "Purple":
             match inputNumber:
                 case 0:
@@ -319,7 +319,7 @@ def getReadableBubbleNames(inputNumber, color):
                 case 24:
                     return "Power Trithree"
                 case _:
-                    return ("Unknown Bubble " + str(color) + str(inputNumber))
+                    return ("Unknown Purple Bubble " + str(color) + str(inputNumber))
         case "Yellow":
             match inputNumber:
                 case 0:
@@ -373,7 +373,7 @@ def getReadableBubbleNames(inputNumber, color):
                 case 24:
                     return "Atom Split"
                 case _:
-                    return ("Unknown Bubble " + str(color) + str(inputNumber))
+                    return "Unknown Yellow Bubble " + str(color) + str(inputNumber)
 
 def getBubbleColorFromName(inputName):
     match inputName:
@@ -386,7 +386,7 @@ def getBubbleColorFromName(inputName):
         case "Prowesessary" | "Laaarrrryyyy" | "Startue Exp" | "Droppin Loads" | "Diamond Chef" | "Big P" | "Big Game Hunter" | "Mr Massacre" | "Grind Time":
             return str(" (Yellow")
         case _:
-            return str(" (Unknown")
+            return str(" (Unknown-" + str(inputName))
 
 def getSumUnlockedBubbles(colorDict, colorString):
     bubblesUnlocked = 0
