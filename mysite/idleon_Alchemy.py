@@ -757,7 +757,7 @@ def setAlchemyP2W(inputJSON, playerCount):
     advice_alchemyP2WPlayer = ""
     advice_alchemyP2WCombined = []
     if p2wSum >= p2wMax:
-        advice_alchemyP2WSums = "You've purchased all " + str(p2wMax) + " upgrades in Alchemy-P2W! You best <3"
+        advice_alchemyP2WSums = "You've purchased all " + str(p2wMax) + " upgrades in Alchemy-P2W! You best ❤️"
     else:
         advice_alchemyP2WSums = "You've purchased " + str(p2wSum) + "/" + str(p2wMax) + " upgrades in Alchemy P2W. Try to purchase the basic updates before Mid W5, and Player upgrades after each level up!"
         if bubbleCauldronSum < bubbleCauldronMax:

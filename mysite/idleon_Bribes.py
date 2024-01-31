@@ -217,7 +217,7 @@ def setBribesProgressionTier(inputJSON, progressionTiers):
     #Assess Overall Bribe Tier
     if sum_allBribes == max_allBribes:
         tier_BribesPurchased = max_tier
-        advice_BribesPurchased = "Nada. You best <3"
+        advice_BribesPurchased = "Nada. You best ❤️"
     else:
         for tier in progressionTiers:
             if sum_bribeSetW1 < tier[1] or sum_bribeSetW2 < tier[2] or sum_bribeSetW3 < tier[3] or sum_bribeSetW4 < tier[4] or sum_bribeSetTrashIsland < tier[5]:
@@ -234,7 +234,7 @@ def setBribesProgressionTier(inputJSON, progressionTiers):
     advice_BribesCombined = ["Best Bribe tier met: " + str(overall_BribesTier) + "/" + str(max_tier)
                              + ". Recommended Bribe actions:", advice_BribesPurchased]
     if overall_BribesTier == max_tier:
-        bribe_AdviceSection.header = f"Best Bribe tier met: {tier_section}. You best <3"
+        bribe_AdviceSection.header = f"Best Bribe tier met: {tier_section}. You best ❤️"
     else:
         bribe_AdviceSection.header = f"Best Bribe tier met: {tier_section}. Recommended Bribe actions"
         bribe_AdviceSection.groups = [

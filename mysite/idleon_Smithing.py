@@ -236,7 +236,7 @@ def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, charact
     smithing_AdviceSection.tier = tier_section
     if overall_SmithingTier == max_tier:
         advice_CombinedSmithing = ["Best Smithing tier met: " + str(overall_SmithingTier) + "/" + str(max_tier) + ". Recommended Smithing actions:", "Nada. You best <3", "", "", advice_UnusedForgeSlots]
-        smithing_AdviceSection.header = f"Best Smithing tier met: {tier_section}. You best <3"
+        smithing_AdviceSection.header = f"Best Smithing tier met: {tier_section}. You best ❤️"
     else:
         advice_CombinedSmithing = ["Best Smithing tier met: " + str(overall_SmithingTier) + "/" + str(max_tier) + ". Recommended Smithing actions:", advice_CashPoints, advice_MonsterPoints, advice_ForgeUpgrades, advice_UnusedForgeSlots]
         smithing_AdviceSection.header = f"Best Smithing tier met: {tier_section}. Recommended Smithing actions"
