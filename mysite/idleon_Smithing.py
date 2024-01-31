@@ -2,6 +2,8 @@ from models import AdviceSection
 from models import AdviceGroup
 from models import Advice
 import progressionResults
+from utils import pl
+
 
 def getUnusedForgeSlotsCount(inputJSON):
     unusedForgeSlotsCount = 0
