@@ -200,6 +200,7 @@ class AdviceSection(AdviceBase):
 
     @property
     def header(self) -> str:
+        self._raw_header = self._raw_header.replace(".", ".<br>")
         if not self.tier:
             return self._raw_header
 
@@ -207,7 +208,9 @@ class AdviceSection(AdviceBase):
         parts = re.split(pattern, self._raw_header)
 
         if self.tier in parts:
-            parts[1] = f"""<span class="tier-progress">{parts[1]}</span>"""
+            prog, goal = self.tier.split("/")
+            colour = " style=\"color: springgreen\"" if prog == goal else ""
+            parts[1] = f"""<span class="tier-progress"{colour}>{parts[1]}</span>"""
 
         header_markedup = ''.join(parts)
 

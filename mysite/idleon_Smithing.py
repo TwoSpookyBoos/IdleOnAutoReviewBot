@@ -19,9 +19,6 @@ def getUnusedForgeSlotsCount(inputJSON):
     #print("Smithing.getUnusedForgeSlotsCount~ OUTPUT unusedForgeSlotsCount/forgeOreSlotsPurchased:", unusedForgeSlotsCount, "/", forgeOreSlotsPurchased)
     return unusedForgeSlotsCount
 
-def pl(_list: list, suffix_singular: str = "", suffix_plural: str = 's') -> str:
-    """Pluralize"""
-    return suffix_plural if len(_list) > 1 else suffix_singular
 
 def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, characterDict):
     tier_CashPoints = 0

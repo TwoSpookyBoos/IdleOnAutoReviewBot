@@ -2,6 +2,7 @@ import progressionResults
 from models import AdviceSection
 from models import AdviceGroup
 from models import Advice
+from utils import pl
 
 
 # Stamp p1
@@ -284,11 +285,6 @@ def getReadableStampName(stampNumber, stampType):
                     return "Refinery Stamp"
                 case _:
                     return "Unknown Misc stamp: " + str(stampNumber)
-
-
-def pl(_list: list, suffix_singular: str = "", suffix_plural: str = 's') -> str:
-    """Pluralize"""
-    return suffix_plural if len(_list) > 1 else suffix_singular
 
 
 # Stamp meta

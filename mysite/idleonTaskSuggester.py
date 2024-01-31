@@ -41,8 +41,10 @@ import idleon_Trapping
 
 #w4
 import idleon_Breeding
+from utils import get_logger
 
 #Global variables
+logger = get_logger(__name__)
 
 
 #Step 1: Retrieve data from public IdleonEfficiency website or from file
@@ -202,8 +204,7 @@ def getCharacterDetails(inputJSON, runType):
         playerNames = inputJSON['playerNames']
         playerCount = len(playerNames)
         if runType == "web":
-            print("idleonTaskSuggester.getPlayerCountAndNames~ INFO From Public IE, found " + str(
-                playerCount) + " characters: ", playerNames)
+            logger.info("From Public IE, found %s characters: %s", playerCount, ', '.join(playerNames))
     elif "charNames" in inputJSON.keys():
         # Present in Toolbox JSON copies
         playerNames = inputJSON['charNames']
@@ -353,7 +354,7 @@ def main(inputData, runType="web"):
     #General
     lastUpdatedTimeString = getLastUpdatedTime(parsedJSON)
     if runType == "web":
-        print("idleonTaskSuggester.main~ INFO lastUpdatedTimeString", lastUpdatedTimeString)
+        logger.info(f"{lastUpdatedTimeString = }")
     combatLevelsPR = idleon_CombatLevels.setCombatLevelsProgressionTier(parsedJSON, progressionTiers['Combat Levels'], playerCount, playerNames)
     consumablesList = idleon_Consumables.parseConsumables(parsedJSON, playerCount, playerNames)
     gemShopPR = idleon_GemShop.setGemShopProgressionTier(parsedJSON, progressionTiers['Gem Shop'], playerCount)

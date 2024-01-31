@@ -2,10 +2,8 @@ from models import AdviceSection
 from models import AdviceGroup
 from models import Advice
 import progressionResults
+from utils import pl
 
-def pl(_list: list, suffix_singular: str = "", suffix_plural: str = 's') -> str:
-    """Pluralize"""
-    return suffix_plural if len(_list) > 1 else suffix_singular
 
 def parseBribes(inputJSON):
     parsedBribes = inputJSON["BribeStatus"]
