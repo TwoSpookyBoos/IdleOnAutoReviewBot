@@ -259,7 +259,40 @@ strong:not(.no-collapse):hover,
     }
 }
 @media (max-width: 600px) {
-    .advice-section > li {
-        grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+    main {
+        padding: 0;
+    }
+    article.new {
+        .banner img {
+            margin-left: -5vw;
+            width: unset;
+            max-width: unset;
+            height: fit-content;
+        }
+
+        section.new {
+            .advice-section > li {
+                grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+            }
+
+            .subheading, .advice-group {
+                padding-left: 5vw;
+                padding-right: 5vw;
+            }
+
+            .subheading {
+                font-size: 0.8em;
+
+                img {
+                    min-width: 60px;
+                    height: 60px;
+                }
+            }
+
+            .advice-group {
+                width: 100%;
+                font-size: 0.8em;
+            }
+        }
     }
 }
