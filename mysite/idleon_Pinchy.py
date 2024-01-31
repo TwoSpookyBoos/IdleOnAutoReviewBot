@@ -1,17 +1,15 @@
 import json
 from models import Advice
+from utils import pl
 
 
 def getHighestPrint(inputJSON):
     awfulPrinterList = json.loads(inputJSON["Print"])
     # print("Pinchy~ OUTPUT awfulPrinterList: ", type(awfulPrinterList), awfulPrinterList)
-    highestPrintFound = 0
-    for item in awfulPrinterList:
-        if isinstance(item, int):
-            if item > highestPrintFound:
-                # print("Pinchy~ INFO Replacing highest print value from ", highestPrintFound,"to",item)
-                highestPrintFound = item
+    goodPrinterList = [p for p in awfulPrinterList if isinstance(p, int)]
+    highestPrintFound = max(goodPrinterList)
     # print("Pinchy~ OUTPUT Final highest print value found: ", highestPrintFound)
+
     return highestPrintFound
 
 
@@ -24,13 +22,13 @@ def setPinchyList(inputJSON, playerCount, dictOfPRs):
         [], [], [],  # [7] = early w4, [8] = mid w4, [9] = late w4
         [], [], [],  # [10] = early w5, [11] = mid w5, [12] = late w5
         [], [], [],  # [13] = Early W6 Prep, [14] = Solid W6 Prep, [15] = w6 waiting room
-        [], []  # [16] = max for v1.91, #[17] = placeholder
+        [], []  # [16] = max for v1.91, [17] = placeholder
     ]
     progressionNamesList = ["W1", "Early W2", "Mid W2", "Late W2", "Early W3",
                             "Mid W3", "Late W3", "Early W4", "Mid W4", "Late W4",
                             "Early W5", "Mid W5", "Late W5", "Early W6 Prep", "Solid W6 Prep",
                             "W6 Waiting Room", "Max for v1.91", "Placeholder"]
-    maxWorldTiers = len(sortedResultsListofLists) - 1
+    maxWorldTiers = len(progressionNamesList) - 1
     maxExpectedIndexFromMaps = 13  # 13 is the highest map evaluated, Tremor Wurms.
     progressionTiersVsWorlds = {
         # [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,99] #template
@@ -46,37 +44,23 @@ def setPinchyList(inputJSON, playerCount, dictOfPRs):
         "Worship Prayers":          [0, 0, 0, 0,    0, 0, 1,        1, 2, 3,        3, 4, 5,        5, 6, 7,        7, 99],
         "Construction Death Note":  [0, 0, 0, 0,    0, 0, 0,        0, 0, 0,        0, 4, 5,        12, 15, 19,     23, 99]
     }
+    for name, pinchy_tier in dictOfPRs.items():
+        tiers = progressionTiersVsWorlds[name][:-1]
+        i, tier_next = next(((i - 1, tier_next) for i, tier_next in enumerate(tiers) if pinchy_tier < tier_next), (-1, 99))
 
-    for review in dictOfPRs:
-        counter = 0
-        prPlaced = False
-        while counter < maxWorldTiers:
-            if counter == maxWorldTiers - 1 and prPlaced == False:
-                # counter is equal to the highest non-placeholder tier vs maxWorldTiers of 16 and still not placed
-                if dictOfPRs[review] >= progressionTiersVsWorlds[review][counter]:
-                    # print("Placing",review,"into final tier because",dictOfPRs[review],">=",progressionTiersVsWorlds[review][counter])
-                    sortedResultsListofLists[counter + 1].append(review)
-                else:
-                    sortedResultsListofLists[counter].append(review)
-            elif (dictOfPRs[review] >= progressionTiersVsWorlds[review][counter]) and (
-                    dictOfPRs[review] < progressionTiersVsWorlds[review][counter + 1]):
-                # print(review, dictOfPRs[review], progressionTiersVsWorlds[review][counter], progressionTiersVsWorlds[review][counter+1])
-                sortedResultsListofLists[counter].append(
-                    review + " (Next: Tier " + str(progressionTiersVsWorlds[review][counter + 1]) + ")")
-                prPlaced = True
-            counter += 1
+        # if pinchy review tier has reached final threshold tier
+        if i == -1:
+            # print(f"Placing '{name}' into final tier because {pinchy_level} >= {tiers[i]}")
+            text = name
+        else:
+            # print(name, pinchy_tier, tiers[i], tier_next)
+            text = f"{name} (Next: Tier {tier_next})"
+
+        sortedResultsListofLists[i].append(text)
 
     # find lowest and highest index with an entry
-    lowestIndex = maxWorldTiers
-    highestIndex = 0
-    counter = 0
-    for index in sortedResultsListofLists:
-        if len(index) > 0:
-            if counter > highestIndex:
-                highestIndex = counter
-            if counter < lowestIndex:
-                lowestIndex = counter
-        counter += 1
+    lowestIndex = next((i for i, lst in enumerate(sortedResultsListofLists) if lst != []), 0)
+    highestIndex = next((maxWorldTiers - i for i, lst in enumerate(reversed(sortedResultsListofLists)) if lst != []), maxWorldTiers)
 
     # find highest enemy killed or world unlocked to compare to
     # https://idleon.wiki/wiki/Portal_Requirements
@@ -96,6 +80,21 @@ def setPinchyList(inputJSON, playerCount, dictOfPRs):
     # Until W6 drops, Solid W6 prep = DeathNote tier 15+
     # Until W6 drops, W6 waiting room = DeathNote tier 19+
     # Until W6 drops, Max = 1b+ sample
+    monsterPortalKills = [
+        (13, (213, 60000)),
+        (12, (210, 3000000)),
+        (11, (205, 125000)),
+        (10, (201, 25000)),
+        (9, (160, 190000)),
+        (8, (155, 40000)),
+        (7, (151, 5000)),
+        (6, (110, 18000)),
+        (5, (106, 6000)),
+        (4, (101, 1000)),
+        (3, (62, 3000)),
+        (2, (57, 1200)),
+        (1, (51, 250)),
+    ]
     expectedIndex = 0
     if highestPrint >= 999000000:
         expectedIndex = 16
@@ -103,104 +102,48 @@ def setPinchyList(inputJSON, playerCount, dictOfPRs):
         expectedIndex = 15
     elif dictOfPRs["Construction Death Note"] >= 15:
         expectedIndex = 14
-    playerCounter = 0
-    if expectedIndex == 0:
-        # print("Pinchy.setPinchyList~ INFO Starting to review map kill counts per player because expectedIndex still 0: ", dictOfPRs["Construction Death Note"])
-        while playerCounter < playerCount:
-            try:
-                if expectedIndex < maxExpectedIndexFromMaps:
-                    playerKillsList = json.loads(
-                        inputJSON['KLA_' + str(playerCounter)])  # String pretending to be a list of lists yet again
-                    # print(type(playerKillsList), playerKillsList) #Expected to be a list
-                    if playerKillsList[213][0] < 60000:
-                        if expectedIndex < 13:
-                            expectedIndex = 13
-                    elif playerKillsList[210][0] < 3000000:
-                        if expectedIndex < 12:
-                            expectedIndex = 12
-                    elif playerKillsList[205][0] < 125000:
-                        if expectedIndex < 11:
-                            expectedIndex = 11
-                    elif playerKillsList[201][0] < 25000:
-                        if expectedIndex < 10:
-                            expectedIndex = 10
-                    elif playerKillsList[160][0] < 190000:
-                        if expectedIndex < 9:
-                            expectedIndex = 9
-                    elif playerKillsList[155][0] < 40000:
-                        if expectedIndex < 8:
-                            expectedIndex = 8
-                    elif playerKillsList[151][0] < 5000:
-                        if expectedIndex < 7:
-                            expectedIndex = 7
-                    elif playerKillsList[110][0] < 18000:
-                        if expectedIndex < 6:
-                            expectedIndex = 6
-                    elif playerKillsList[106][0] < 6000:
-                        if expectedIndex < 5:
-                            expectedIndex = 5
-                    elif playerKillsList[101][0] < 1000:
-                        if expectedIndex < 4:
-                            expectedIndex = 4
-                    elif playerKillsList[62][0] < 3000:
-                        if expectedIndex < 3:
-                            expectedIndex = 3
-                    elif playerKillsList[57][0] < 1200:
-                        if expectedIndex < 2:
-                            expectedIndex = 2
-                    elif playerKillsList[51][0] < 250:
-                        if expectedIndex < 1:
-                            expectedIndex = 1
-            except Exception as reason:
-                if playerCounter == (playerCount - 1) and expectedIndex == 0:
-                    print(
-                        "Pinchy.setPinchyList~ EXCEPTION Unable to find kills in playerKillsList. Setting expectedIndex to max.",
-                        reason)
-                    expectedIndex = len(progressionNamesList) - 1
-            playerCounter += 1
+    else:
+        # print(f"Pinchy.setPinchyList~ INFO Starting to review map kill counts per player because expectedIndex still 0: {dictOfPRs["Construction Death Note"]}")
+        for playerCounter in range(0, playerCount):
+            playerKillsList = json.loads(inputJSON['KLA_' + str(playerCounter)])  # String pretending to be a list of lists yet again
+            # print(type(playerKillsList), playerKillsList)  # Expected to be a list
+            mobKills = [
+                (i, playerKillsList[monster][0] < portalKC if len(playerKillsList) > monster else False)
+                for i, (monster, portalKC)
+                in monsterPortalKills
+            ]
+            expectedIndex = next((index for index, portalOpened in mobKills if portalOpened), 0)
+            if expectedIndex >= maxExpectedIndexFromMaps:
+                break
 
     # Generate advice based on catchup
     equalSnippet = ""
     if lowestIndex >= expectedIndex:
         equalSnippet = "Your lowest sections are roughly equal with (or better than!) your highest enemy map. Keep up the good work!"
 
-    pinchyAdvice = ""
-    if len(sortedResultsListofLists[lowestIndex]) == 1:
-        pinchyAdvice = (
-                    progressionNamesList[lowestIndex] + " rated section: " + sortedResultsListofLists[lowestIndex][0]
-                    + ". You can find detailed advice below in the section's World.")
-    elif len(sortedResultsListofLists[lowestIndex]) >= 2:
-        pinchyAdvice = progressionNamesList[lowestIndex] + " rated sections: "
-        for item in sortedResultsListofLists[lowestIndex]:
-            pinchyAdvice += item + ", "
-        pinchyAdvice = pinchyAdvice[
-                       :-2] + ". You can find detailed advice below in the section's World."  # trim off final comma and space
+    lowSectionName = progressionNamesList[lowestIndex]
+    lowSections = sortedResultsListofLists[lowestIndex]
+    pinchyAdvice = (f"{lowSectionName} rated section{pl(lowSectionName)}: {', '.join(lowSections)}. "
+                    f"You can find detailed advice below in the section's World.")
 
     # Generate sneak peek advice
-    peekAdvice = ""
     peekList = []
-    peekIndex = lowestIndex + 1
-    while peekIndex <= len(sortedResultsListofLists) - 2:
+    for peekIndex, peekSections in enumerate(sortedResultsListofLists[lowestIndex + 1:-1], start=lowestIndex + 1):
         try:
-            if len(sortedResultsListofLists[peekIndex]) == 1:
-                peekAdvice = "Sneak peek: " + progressionNamesList[peekIndex] + " rated section: " + \
-                             sortedResultsListofLists[peekIndex][0] + "."
-            elif len(sortedResultsListofLists[peekIndex]) >= 2:
-                peekAdvice = "Sneak peek: " + progressionNamesList[peekIndex] + " rated sections: "
-                for item in sortedResultsListofLists[peekIndex]:
-                    peekAdvice += item + ", "
-                peekAdvice = peekAdvice[:-2] + "."  # trim off final comma and space
-        except Exception as reason:
-            print("Pinchy.setPinchyList~ EXCEPTION Unable to generate Pinchy Peek advice: ", reason)
-        peekIndex += 1
-        if peekAdvice != "":
-            peekList.append(peekAdvice)
-            peekAdvice = ""
+            peekSectionName = progressionNamesList[peekIndex]
 
-    if expectedIndex == len(progressionNamesList) - 1:
-        pinchyHeader = "Huh. Something went a little wrong here. You landed in the Placeholder tier somehow. If you weren't expecting this, tell Scoli about it! O.o"
+            if peekSections:
+                peekAdvice = f"Sneak peek: {peekSectionName} rated section{pl(peekSections)}: {', '.join(peekSections)}."
+                peekList.append(peekAdvice)
+
+        except IndexError as reason:
+            print("Pinchy.setPinchyList~ EXCEPTION Unable to generate Pinchy Peek advice: ", reason)
+
+    if expectedIndex == maxWorldTiers:
+        pinchyHeader = ("Huh. Something went a little wrong here. You landed in the Placeholder tier somehow. "
+                        "If you weren't expecting this, tell Scoli about it! O.o")
     else:
-        pinchyHeader = "Expected Progression, based on highest enemy map: " + progressionNamesList[expectedIndex] + "."
-    pinchyMin = "Minimum Progression, based on weakest ranked review: " + progressionNamesList[lowestIndex] + "."
+        pinchyHeader = f"Expected Progression, based on highest enemy map: {progressionNamesList[expectedIndex]}."
+    pinchyMin = f"Minimum Progression, based on weakest ranked review: {progressionNamesList[lowestIndex]}."
 
     return [pinchyHeader, pinchyMin, [equalSnippet, pinchyAdvice], peekList]
