@@ -35,8 +35,8 @@ def getGemShopExclusions(inputJSON, playerCount):
     if autoArmLevel >= 5:
         exclusionList.append("Burning Bad Books")
 
-    currentArtifactsCount = 30 #as of v1.91
-    currentArtifactTiers = 3 #as of v1.91
+    currentArtifactsCount = 33  #as of w6 launch
+    currentArtifactTiers = 4  #as of w6 launch
 
     try:
         sum_sailingArtifacts = sum(json.loads(inputJSON["Sailing"])[3])
