@@ -8,6 +8,7 @@ from utils import get_logger
 
 logger = get_logger(__name__)
 
+
 def format_character_name(name: str) -> str:
     name = name.strip().lower().replace(' ', '_')
 
@@ -86,7 +87,7 @@ def page_not_found(e):
                 return redirect(url_for('index')) # Probably should get a real 404 page at some point
         else:
             return redirect(url_for('index')) # Probably should get a real 404 page at some point
-    except:
+    except:  # noqa
         return redirect(url_for('index')) # Probably should get a real 404 page at some point
 
 

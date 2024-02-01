@@ -35,12 +35,16 @@ nav {
 .nav-links {
     width: 100%;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
     padding: 10px 5px;
     list-style-type: none;
     flex-grow: 2;
 
     & > li {
+        &:first-child {
+            width: 40px;
+        }
+
         display: flex;
         align-items: center;
         justify-content: center;
@@ -78,7 +82,8 @@ nav {
 
 .bar2,
 .bar3 {
-    top: 13.5px;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .bar3 {
@@ -108,38 +113,37 @@ nav {
     display: flex;
     align-items: center;
     cursor: pointer;
-}
 
-#drawer-handle.sidebar-open {
-    left: calc(var(--sidebar-width) - var(--drawer-image-width) - var(--nav-padding));
-}
+    &.sidebar-open {
+        left: calc(var(--sidebar-width) - var(--drawer-image-width) - var(--nav-padding));
 
-#drawer-handle, #drawer-handle.sidebar-open {
+        .bar1 {
+            transform: rotate(45deg);
+            height: 3px;
+            width: 42px;
+        }
+
+        .bar3 {
+            transform: rotate(45deg);
+            height: 3px;
+            background-color: transparent;
+        }
+        .bar2 {
+            transform: rotate(-45deg);
+            height: 3px;
+            background-color: transparent;
+        }
+
+        .bar4 {
+            transform: rotate(-45deg);
+            height: 3px;
+            width: 42px;
+        }
+    }
+
+    &, &.sidebar-open {
         transition: all .5s ease-out;
-}
-
-#drawer-handle.sidebar-open .bar1 {
-    transform: rotate(45deg);
-    height: 3px;
-    width: 42px;
-}
-
-#drawer-handle.sidebar-open .bar3 {
-    transform: rotate(45deg);
-    height: 3px;
-    background-color: transparent;
-}
-
-#drawer-handle.sidebar-open .bar2 {
-    transform: rotate(-45deg);
-    height: 3px;
-    background-color: transparent;
-}
-
-#drawer-handle.sidebar-open .bar4 {
-    transform: rotate(-45deg);
-    height: 3px;
-    width: 42px;
+    }
 }
 
 #light-switch {
@@ -196,8 +200,23 @@ nav {
 }
 
 @media (max-width: 600px) {
-    .nav-links {
-        padding: 10px 5px;
+    body {
+        flex-direction: column-reverse;
+    }
+    nav {
+        border-bottom: unset;
+        border-top: 1px solid gray;
+        padding-left: 0;
+        padding-right: 0;
+
+        .nav-wrapper {
+            padding: 0;
+
+            .nav-links {
+                flex-direction: row-reverse;
+                padding: 10px 5px;
+            }
+        }
     }
     #discord, #ko-fi, #spreadsheet {
         --dim: 20px;

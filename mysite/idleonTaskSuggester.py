@@ -300,13 +300,13 @@ def main(inputData, runType="web"):
             if parsedJSON == "PublicIEProfileNotFound" and runType == "consoleTest":
                 return "PublicIEProfileNotFound"
             ieLinkString = "Searching for character data from: https://" + inputData.lower() + ".idleonefficiency.com"
-            ieLinkList = ["Searching for character data from: ", "https://" + inputData.lower() + ".idleonefficiency.com"]
+            ieLinkList = ["Searching for character data from:", "https://" + inputData.lower() + ".idleonefficiency.com"]
     else:
         if runType == "web":
             print("~~~~~~~~~~~~~~~ Starting up PROD main at", datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "for direct web JSON input.~~~~~~~~~~~~~~~")
         parsedJSON = getJSONfromText(runType, inputData)
         ieLinkString = "Searching for character data from direct JSON paste. "
-        ieLinkList = ["Searching for character data from direct JSON paste. ", ""]
+        ieLinkList = ["Searching for character data from direct JSON paste."]
 
     if isinstance(parsedJSON, str):
         if parsedJSON.startswith("JSONParseFail"):
@@ -346,10 +346,10 @@ def main(inputData, runType="web"):
     if ieLinkString.endswith("JSON paste. "):
         if playerNames[0] == "Character1":
             ieLinkString += "NO SORTED LIST OF CHARACTER NAMES FOUND IN DATA. REPLACING WITH GENERIC NUMBER ORDER."
-            ieLinkList[1] = "NO SORTED LIST OF CHARACTER NAMES FOUND IN DATA. REPLACING WITH GENERIC NUMBER ORDER."
+            ieLinkList.append("NO SORTED LIST OF CHARACTER NAMES FOUND IN DATA. REPLACING WITH GENERIC NUMBER ORDER.")
         else:
             ieLinkString += "First character name found: " + playerNames[0]
-            ieLinkList[1] = "First character name found: " + playerNames[0]
+            ieLinkList.append("First character name found: " + playerNames[0])
 
     #General
     lastUpdatedTimeString = getLastUpdatedTime(parsedJSON)
@@ -399,7 +399,7 @@ def main(inputData, runType="web"):
     #gamingPR =
     #divinityPR =
 
-    generalList = [[ieLinkString, lastUpdatedTimeString], combatLevelsPR.nTR, consumablesList, gemShopPR.nTR, allGStacksList, maestroHandsListOfLists, cardsList]
+    generalList = [[ieLinkList, lastUpdatedTimeString], combatLevelsPR.nTR, consumablesList, gemShopPR.nTR, allGStacksList, maestroHandsListOfLists, cardsList]
     w1list = [stamps_AdviceSection["PR"].nTR, bribes_ActiveSection["PR"].nTR, smithing_AdviceSection["PR"].nTR]  # len(stampPR) = 4, len(bribesPR.nTR) = 2, len(smithingPR.nTR) = 4
     w2list = [alchBubblesPR.nTR, alchVialsPR.nTR, alchP2WList, emptyList]  # len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 5
     #w2list = [alchBubblesPR.nTR,alchVialsPR.nTR,alchP2WList, obolsPR.nTR]  # len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 4, len(obolsPR.nTR) = 4
