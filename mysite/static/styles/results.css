@@ -141,6 +141,7 @@ footer {
     display: block;
 }
 .subheading img {
+    min-width: 80px;
     max-width: 80px;
     height: 80px;
     object-fit: contain;
