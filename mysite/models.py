@@ -209,8 +209,8 @@ class AdviceSection(AdviceBase):
 
         if self.tier in parts:
             prog, goal = self.tier.split("/")
-            colour = " style=\"color: springgreen\"" if prog == goal else ""
-            parts[1] = f"""<span class="tier-progress"{colour}>{parts[1]}</span>"""
+            finished = " finished" if prog == goal else ""
+            parts[1] = f"""<span class="tier-progress{finished}">{parts[1]}</span>"""
 
         header_markedup = ''.join(parts)
 

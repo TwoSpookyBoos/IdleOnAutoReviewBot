@@ -196,7 +196,10 @@ strong:not(.no-collapse):hover,
 .banner:not(.no-collapse):hover,
 .subheading:not(.no-collapse):hover {
     filter: brightness(130%);
-    transition: filter .2s ease-in
+    transition: filter .2s ease-in;
+    .light-mode & {
+        filter: brightness(70%);
+    }
 }
 
 #w1.new {
@@ -204,10 +207,42 @@ strong:not(.no-collapse):hover,
         background: rgba(187, 255, 189, 0.1);
         & > span {
             color: darkseagreen;
+            .tier-progress {
+                color: lightgoldenrodyellow;
+                &.finished {
+                    color: limegreen;
+                }
+            }
+            .light-mode & {
+                color: #287649;
+                text-shadow: none;
+                .tier-progress {
+                    color: hsla(42.66, 87.53%, 38.08%, 1);
+                    &.finished {
+                        color: #02a928;
+                    }
+                }
+            }
         }
     }
     .advice-group {
         color: #ebffeb;
+        &:nth-child(odd) {
+            background-color: hsla(151, 42%, 69%, 0.3);
+            .light-mode & {
+                background-color: hsla(153, 52%, 53%, 0.28);
+                color: black;
+                text-shadow: none;
+            }
+        }
+        &:nth-child(even) {
+            background-color: hsla(142, 52%, 73%, 0.6);
+            .light-mode & {
+                background-color: hsla(151, 53%, 53%, 0.43);
+                color: black;
+                text-shadow: none;
+            }
+        }
     }
 }
 
@@ -234,13 +269,17 @@ strong:not(.no-collapse):hover,
         align-items: center;
         column-gap: 20px;
         padding: 20px;
-        border-bottom: 1px solid rgba(142, 209, 177, 0.1);
+        border-bottom: 1px solid hsla(151, 42%, 69%, 0.1);
 
         span {
             color: goldenrod;
 
+
             &.tier-progress {
                 color: lightgoldenrodyellow;
+                .light-mode & {
+                    color: hsla(42.66, 87.53%, 38.08%, 1);
+                }
             }
         }
     }
@@ -262,13 +301,6 @@ strong:not(.no-collapse):hover,
     .advice-group {
         width: fit-content;
         padding: 20px;
-
-        &:nth-child(odd) {
-            background-color: rgba(142, 209, 177, 0.3);
-        }
-        &:nth-child(even) {
-            background-color: rgba(151, 222, 177, 0.6);
-        }
     }
     .table {
         display: grid;
@@ -299,10 +331,6 @@ strong:not(.no-collapse):hover,
             background-position: center;
             background-repeat: no-repeat;
         }
-
-        /*&:nth-child(n+1) {*/
-        /*    justify-content: center;*/
-        /*}*/
     }
 }
 
