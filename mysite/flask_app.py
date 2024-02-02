@@ -39,7 +39,9 @@ def store_user_preferences():
 @app.route("/", defaults=dict(main_or_beta=""), methods=["GET", "POST"])
 @app.route("/<main_or_beta>", methods=["GET", "POST"])
 def index(main_or_beta: str) -> Response | str:
-    page: str = 'beta_results.html' if main_or_beta == 'beta' else 'results.html'
+    beta = main_or_beta == 'beta'
+    g.beta = beta
+    page: str = 'beta/results.html' if beta else 'results.html'
     error: bool = False
     pythonOutput: list | None = None
 
@@ -95,8 +97,21 @@ def ensure_data(results: list):
     return bool(results)
 
 
+def get_resource(dir_: str, filename: str) -> str:
+    beta = "beta" if g.beta else ""
+    return url_for('static', filename=f'{beta}/{dir_}/{filename}')
+
+
+def style(filename: str):
+    return get_resource("styles", filename)
+
+
+def script(filename: str):
+    return get_resource("scripts", filename)
+
+
 def img(filename: str):
-    return url_for('static', filename=f'imgs/{filename}')
+    return get_resource("imgs", filename)
 
 
 def cards(filename: str):
@@ -106,6 +121,8 @@ def cards(filename: str):
 app.jinja_env.globals['ensure_data'] = ensure_data
 app.jinja_env.globals['img'] = img
 app.jinja_env.globals['cards'] = cards
+app.jinja_env.globals['style'] = style
+app.jinja_env.globals['script'] = script
 
 if __name__ == '__main__':
     app.run()

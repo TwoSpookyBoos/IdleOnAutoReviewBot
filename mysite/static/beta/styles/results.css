@@ -145,6 +145,7 @@ footer {
 }
 .subheading img {
     max-width: 80px;
+    min-width: 80px;
     height: 80px;
     object-fit: contain;
 }
@@ -196,9 +197,6 @@ strong:not(.no-collapse):hover,
 
 #w1.new {
     .subheading {
-        img {
-            min-width: 80px;
-        }
         background: rgba(187, 255, 189, 0.1);
         & > span {
             color: darkseagreen;

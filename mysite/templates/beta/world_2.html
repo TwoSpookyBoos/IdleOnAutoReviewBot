@@ -1,0 +1,57 @@
+<article id="w2" class="world-content">
+    <h1 class="banner">
+        <img src="{{ img('w2banner.png') }}" alt="World 2 Banner" title="World 2 Banner">
+    </h1>
+    <div class="content-wrapper">
+        <section>
+            <h3 class="subheading">
+                <img src="{{ img('Alchemy_BubbleOrange.gif') }}" alt="Alchemy Orange Bubbles">
+            </h3>
+
+            <div class="advice-wrapper">
+                <strong>{{ htmlInput[2][0][0] }}</strong>
+                <ul id="alchemy-bubbles-tier">
+                {% for line in htmlInput[2][0][1:] %}
+                    {% if line %}
+                        <li class="advice">{{ line }}</li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <h3 class="subheading">
+                <img src="{{ img('Alchemy_Vial-level-1.png') }}" alt="Alchemy Unlocked Vials">
+            </h3>
+
+            <div class="advice-wrapper">
+                <strong>{{ htmlInput[2][1][0] }}</strong>
+                <ul id="alchemy-vials-tier">
+                {% for line in htmlInput[2][1][1:] %}
+                    {% if line %}
+                        <li class="advice">{{ line }}</li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <h3 class="subheading">
+                <img src="{{ img('pay2win.png') }}" alt="Alchemy P2W Tier">
+            </h3>
+
+            <div class="advice-wrapper">
+                <strong>{{ htmlInput[2][2][0] }}</strong>
+                <ul id="alchemy-p2w-tier">
+                {% for line in htmlInput[2][2][1] %}
+                    {% if line %}
+                        <li class="advice">{{ line }}</li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+            </div>
+        </section>
+    </div>
+</article>
