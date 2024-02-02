@@ -32,30 +32,34 @@ nav {
     align-items: center;
 }
 
-.nav-links {
+.nav-wrapper ul {
     width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     padding: 10px 5px;
     list-style-type: none;
     flex-grow: 2;
+}
 
-    & > li {
-        &:first-child {
-            width: 40px;
-        }
+.nav-wrapper li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.nav-wrapper ul > li > a {
+    display: block;
+    color: lightgray;
+    text-decoration: none;
+    font-size: 1.5rem;
+}
 
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        & > a {
-            display: block;
-            color: lightgray;
-            text-decoration: none;
-            font-size: 1.5rem;
-        }
-    }
+.visuallyHidden {
+    display: none;
+    position: absolute;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    height: 1px; width: 1px;
+    margin: -1px; padding: 0; border: 0;
 }
 
 .hamburger {
@@ -82,8 +86,7 @@ nav {
 
 .bar2,
 .bar3 {
-    top: 50%;
-    transform: translateY(-50%);
+    top: 13.5px;
 }
 
 .bar3 {
@@ -112,43 +115,43 @@ nav {
     z-index: 999;
     display: flex;
     align-items: center;
-    cursor: pointer;
+}
 
-    &.sidebar-open {
-        left: calc(var(--sidebar-width) - var(--drawer-image-width) - var(--nav-padding));
+#drawer-handle.sidebar-open {
+    left: calc(var(--sidebar-width) - var(--drawer-image-width) - var(--nav-padding));
+}
 
-        .bar1 {
-            transform: rotate(45deg);
-            height: 3px;
-            width: 42px;
-        }
-
-        .bar3 {
-            transform: rotate(45deg);
-            height: 3px;
-            background-color: transparent;
-        }
-        .bar2 {
-            transform: rotate(-45deg);
-            height: 3px;
-            background-color: transparent;
-        }
-
-        .bar4 {
-            transform: rotate(-45deg);
-            height: 3px;
-            width: 42px;
-        }
-    }
-
-    &, &.sidebar-open {
+#drawer-handle, #drawer-handle.sidebar-open {
         transition: all .5s ease-out;
-    }
+}
+
+#drawer-handle.sidebar-open .bar1 {
+    transform: rotate(45deg);
+    height: 3px;
+    width: 42px;
+}
+
+#drawer-handle.sidebar-open .bar3 {
+    transform: rotate(45deg);
+    height: 3px;
+    background-color: transparent;
+}
+
+#drawer-handle.sidebar-open .bar2 {
+    transform: rotate(-45deg);
+    height: 3px;
+    background-color: transparent;
+}
+
+#drawer-handle.sidebar-open .bar4 {
+    transform: rotate(-45deg);
+    height: 3px;
+    width: 42px;
 }
 
 #light-switch {
     height: 40px;
-    min-width: 40px;
+    width: 40px;
     border-style: none;
 }
 
@@ -187,7 +190,6 @@ nav {
     background-position: left;
     color: #8ed1b1;
     font-family: "Open Sans", sans-serif;
-    /*font-size: 2.3rem;*/
     font-optical-sizing: auto;
     font-weight: 500;
 }
@@ -197,55 +199,4 @@ nav {
 .light-mode #spreadsheet {
     color: #1da261;
     text-decoration: none;
-}
-
-@media (max-width: 600px) {
-    body {
-        flex-direction: column-reverse;
-    }
-    nav {
-        border-bottom: unset;
-        border-top: 1px solid gray;
-        padding-left: 0;
-        padding-right: 0;
-
-        .nav-wrapper {
-            padding: 0;
-
-            .nav-links {
-                flex-direction: row-reverse;
-                padding: 10px 5px;
-            }
-        }
-    }
-    #discord, #ko-fi, #spreadsheet {
-        --dim: 20px;
-        height: calc(var(--dim) * 2);
-        width: calc(var(--dim) * 2);
-    }
-    #discord {
-        background-image: url(../imgs/discord-icon-svgrepo-com.svg);
-    }
-    #ko-fi {
-        background-image: url(../imgs/kofi_logo.svg);
-        background-size: cover;
-        background-position: center;
-        border-radius: var(--dim);
-        background-color: #13c3ff;
-    }
-    #spreadsheet {
-        text-indent: -9999px;
-        background-position: center;
-    }
-
-    #drawer-handle {
-        left: unset;
-        top: unset;
-        bottom: var(--nav-padding);
-        right: calc(((var(--nav-height) + var(--nav-padding) * 2) - var(--drawer-image-height)) / 2);
-
-        &.sidebar-open {
-            left: unset;
-        }
-    }
 }

@@ -1,7 +1,8 @@
 <header>
-<span>
-    <span>{{ htmlInput[0][0][0][0] }}&nbsp</span>
-    <a href="{{ htmlInput[0][0][0][1] }}" target="_blank">{{ htmlInput[0][0][0][1].replace("https://", "") }}</a>
-</span>
-<span>{{ htmlInput[0][0][1] }}</span>
+<!-- IE Link and Timestamp-->
+{% for line in htmlInput[0][0] %}
+    {% if line %}
+        <span> {{ line }} </span>
+    {% endif %}
+{% endfor %}
 </header>

@@ -1,17 +1,15 @@
 <!DOCTYPE html>
+<!-- Beta Results -->
 <html lang="en">
     <head>
         <title>IE AutoReview Tool - By Scoli290</title>
-        <link rel="stylesheet" type="text/css" href="{{ style("boilerplate.css") }}">
-        <link rel="stylesheet" type="text/css" href="{{ style("results.css") }}">
-        <link rel="stylesheet" type="text/css" href="{{ style("sidebar.css") }}">
-        <link rel="stylesheet" type="text/css" href="{{ style("nav.css") }}">
-        <link rel="stylesheet" type="text/css" href="{{ style("main.css") }}">
-        <link rel="icon" href="{{ img("blank.png") }}" type="image/png">
-        <link rel="apple-touch-icon" href="{{ img("blank.png") }}" type="image/png">
-        <script src="{{ script("main.js") }}"></script>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/results.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/sidebar.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/nav.css') }}">
+        <link rel="icon" href="{{ img('blank.png') }}" type="image/png">
+        <link rel="apple-touch-icon" href="{{ img('blank.png') }}" type="image/png">
+        <script src="{{ url_for('static', filename='scripts/main.js') }}"></script>
         <meta name="robots" content="noindex">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
         <div id="drawer-handle">
@@ -24,19 +22,17 @@
         </div>
         {% include 'sidebar.html' %}
         {% include 'nav.html' %}
-        <div class="main-wrapper">
-            {% if error %}
-                <span class="error">
-                    Unable to retrieve data for this character name.
-                    Please check your spelling and make sure you have
-                    uploaded your account publicly.
-                </span>
+        {% if error %}
+            <span class="error">
+                Unable to retrieve data for this character name.
+                Please check your spelling and make sure you have
+                uploaded your account publicly.
+            </span>
 
-            {% elif ensure_data(htmlInput) %}
-                {% include 'header.html' %}
-                {% include 'main.html' %}
-            {% endif %}
-            {% include 'footer.html' %}
-        </div>
+        {% elif ensure_data(htmlInput) %}
+            {% include 'header.html' %}
+            {% include 'main.html' %}
+        {% endif %}
+        {% include 'footer.html' %}
     </body>
 </html>
