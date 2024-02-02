@@ -11,9 +11,6 @@
     font-style: normal;
 }
 
-* {
-    /*font-family: 'Idleon', sans-serif;*/
-}
 .light-mode {
     background-color: white !important;
     color: black !important;
