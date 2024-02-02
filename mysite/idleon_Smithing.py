@@ -200,7 +200,7 @@ def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, charact
                 + str(sum_ForgeUpgrades) + "/" + str(tier[3]) + ". (As of v1.91, Forge EXP Gain does absolutely nothing. Feel free to avoid it!)")
                 smithing_AdviceGroupDict["ForgeUpgrades"] = AdviceGroup(
                     tier=str(tier_CashPoints),
-                    pre_string=f"Purchase any {tier[3] - sum_ForgeUpgrades} additional Forge Upgrades.",
+                    pre_string=f"Purchase any {tier[3] - sum_ForgeUpgrades} additional Forge Upgrades",
                     advices=smithing_AdviceDict["ForgeUpgrades"],
                     post_string="As of v1.91, Forge EXP Gain does absolutely nothing. Feel free to skip it!"
                 )
