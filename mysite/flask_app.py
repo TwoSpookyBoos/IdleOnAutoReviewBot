@@ -49,7 +49,7 @@ def index(main_or_beta: str) -> Response | str:
         capturedCharacterInput: str | dict = get_character_input()
         logger.info("request.args.get('player'): %s %s", type(capturedCharacterInput), capturedCharacterInput)
         if request.method == 'POST' and isinstance(capturedCharacterInput, str):
-            return redirect(url_for('index', player=capturedCharacterInput))
+            return redirect(url_for('index', player=capturedCharacterInput, main_or_beta=main_or_beta))
 
         store_user_preferences()
 
