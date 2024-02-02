@@ -165,6 +165,10 @@ footer {
     display: flex;
     flex-direction: column;
     row-gap: 15px;
+
+    & > em {
+        padding: 0 20px;
+    }
 }
 .main-wrapper {
     overflow-y: auto;
@@ -217,6 +221,11 @@ strong:not(.no-collapse):hover,
 
     &.world-content, .content-wrapper {
         row-gap: 0;
+    }
+    .content-wrapper {
+        & > em {
+            padding: 0 5vw;
+        }
     }
 
     .subheading {
