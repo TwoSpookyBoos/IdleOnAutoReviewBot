@@ -404,6 +404,7 @@ def getSumUnlockedBubbles(colorDict, colorString):
 
 
 def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
+    advice_SnakeskinRiftVialMastery = ""
     alchemyVialsDict = inputJSON["CauldronInfo"][4]
     try:
         del alchemyVialsDict["length"]
@@ -414,8 +415,6 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
         highestCompletedRift = inputJSON["Rift"][0]
         if highestCompletedRift >= 35:
             advice_SnakeskinRiftVialMastery = " 27 is the magic number needed to get the Snake Skin vial to 100% chance to double deposited statues :D (This also requires Snake Skin itself be maxed lol)"
-        else:
-            advice_SnakeskinRiftVialMastery = ""
     except Exception as reason:
         print("Alchemy~ EXCEPTION Unable to retrieve highest rift level.",reason)
         highestCompletedRift = 0
