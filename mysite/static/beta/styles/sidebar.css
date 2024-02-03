@@ -96,7 +96,7 @@ form textarea::placeholder,
 @media (max-width: 600px) {
     aside {
         width: var(--sidebar-width-mobile);
-        padding-bottom: var(--drawer-image-height);
+        padding-bottom: calc(var(--drawer-image-height) + var(--nav-padding) * 2);
 
         form {
             flex-direction: column;

@@ -179,7 +179,6 @@ footer {
 main {
     display: flex;
     flex-direction: column;
-    row-gap: 15px;
 }
 em {
     font-weight: normal;
@@ -213,7 +212,7 @@ strong:not(.no-collapse):hover,
             .tier-progress {
                 color: lightgoldenrodyellow;
                 &.finished {
-                    color: limegreen;
+                    color: springgreen;
                 }
             }
             .light-mode & {
