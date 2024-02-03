@@ -155,7 +155,7 @@ def getSecretClassTrapStatus(inputJSON, trappingLevelsList, placedTrapsDict, pla
                             else:
                                 secretCharacterNotUsingNatureTrapsDict[characterIndex] = 1
         except Exception as reason:
-            print("Trapping.getSecretClassTrapStatus~ EXCPETION Could not retrieve class for Character", characterIndex, "because:", reason)
+            print("Trapping.getSecretClassTrapStatus~ EXCEPTION Could not retrieve class for Character", characterIndex, "because:", reason)
         characterIndex += 1
     #print("Trapping.getSecretClassTrapStatus~ OUTPUT secretCharacterNotUsingNatureTrapsDict:",secretCharacterNotUsingNatureTrapsDict)
     return secretCharacterNotUsingNatureTrapsDict

@@ -82,7 +82,7 @@ def setWorshipPrayersProgressionTier(inputJSON, progressionTiers):
                     tier_WorshipPrayers = tier[0]
 
     if advice_WorshipPrayers == "":
-        advice_WorshipPrayers = "Nada. You best <3"
+        advice_WorshipPrayers = "Nada. You best ❤️"
     else:
         advice_WorshipPrayers = "Tier " + str(tier_WorshipPrayers) + "- Level the following prayers: " + advice_WorshipPrayers[:-2] + ". " + progressionTiers[tier_WorshipPrayers+1][2] #strip off the trailing comma and space"
 

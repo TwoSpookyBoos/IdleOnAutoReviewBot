@@ -120,7 +120,7 @@ def getMissableGStacks(inputJSON, playerCount):
             obtainedMissableGStacks += 1
     if advice_ObtainedQuestGStacks != "":
         if obtainedMissableGStacks == len(missableGStacksDict):
-            advice_ObtainedQuestGStacks = "You have obtained all " + str(len(missableGStacksDict)) + " missable quest item Greensacks! Way to go, you best <3"
+            advice_ObtainedQuestGStacks = "You have obtained all " + str(len(missableGStacksDict)) + " missable quest item Greensacks! Way to go, you best ❤️"
         else:
             advice_ObtainedQuestGStacks = "You have obtained " + str(obtainedMissableGStacks) + "/" + str(len(missableGStacksDict)) + " missable quest item Greenstacks: " + advice_ObtainedQuestGStacks[:-2] + "."
     if advice_MissedQuestGStacks != "":
@@ -351,7 +351,7 @@ def setGStackProgressionTier(inputJSON, playerCount, progressionTiers):
 
     dreamAdvice = "You currently have " + str(uniqueGStacksCount) + " out of max possible " + str(expectedStackablesCount) + " GStacks."
     if uniqueGStacksCount >= 200 or equinoxDreamsStatus["Dream29"] == True:
-        dreamAdvice += " You best <3 (until Lava adds further Dream tasks) Other possible targets are still listed below."
+        dreamAdvice += " You best ❤️ (until Lava adds further Dream tasks) Other possible targets are still listed below."
         firstAdvice = dict(itertools.islice(combinedAdvice.items(), 3))
     elif uniqueGStacksCount >= 75 or equinoxDreamsStatus["Dream12"] == True:
         dreamAdvice += " Equinox Dream 29 requires 200. Aim for items up through Tier 10! There are a few extras included for flexibility."

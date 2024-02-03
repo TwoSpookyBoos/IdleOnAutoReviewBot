@@ -1,0 +1,35 @@
+<aside id="drawer">
+    <p>
+        Welcome to <a href="/{% if beta %}beta{% endif %}">IE AutoReview Tool - By Scoli290</a><br>
+        Join the <a href="https://discord.gg/ZmEkqzfjmJ" target="_blank">Discord</a> for the detailed patch notes!
+    </p>
+    {% if beta %}
+    <p>
+        <strong>Heads up! You're on the beta-testing page. If you run into problems, try heading back to the <a href="/" target="_blank">Main Page</a></strong>
+        <br>
+        Currently beta testing: 2024-02-02 Frontend revamp for W1
+    </p>
+    {% endif %}
+    <p>
+        Most recent update 2024-02-02: Several small frontend QoL. Green Alchemy sample bubble requirements heavily reduced.<br>
+        Previous update 2024-01-18: 2024-01-21: Front-end QoL updates.
+    </p>
+    <p>
+        This tool will retrieve the PUBLIC profile from <a href="https://www.idleonefficiency.com/" target="_blank">IdleOn Efficiency</a> for evaluation.<br>
+        If you haven't uploaded your profile publicly before, <a href="https://www.idleonefficiency.com/profile/upload" target="_blank">do it here</a>.
+    </p>
+    <p>
+        Alternatively, you can provide Raw JSON data.<br>
+        <a href="https://www.idleonefficiency.com/raw-data" target="_blank">IdleonEfficiency</a>: Click on the Copy Raw JSON button. Paste results below.<br>
+        <a href="https://idleontoolbox.com/data" target="_blank">IdleonToolbox</a>: Click on the <strong>IdleonToolbox JSON</strong> button. Paste results below.
+    </p>
+    <span>All tier requirements are listed in the <a
+            href="https://docs.google.com/spreadsheets/d/16I-rURrVeyvltK2wxcQSiPgO07QY015RVNG4MAgUsGw/edit?usp=sharing"
+            target="_blank">Spreadsheet</a> for reference!</span>
+    <form action="/{% if beta %}beta{% endif %}" method="POST">
+        <textarea name="player"
+                  placeholder="Please enter your first IdleOn character's name, or Paste in your Raw Game JSON from IE/IT"></textarea>
+        <input type="submit" value="submit">
+    </form>
+
+</aside>

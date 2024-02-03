@@ -1,19 +1,12 @@
 import json
-import sys
 from json import JSONDecodeError
-#import coloredlogs
-from flask import Flask, render_template, request, url_for, redirect, Response
+from config import app
+from flask import g, render_template, request, url_for, redirect, Response
 import idleonTaskSuggester
 
-#coloredlogs.DEFAULT_FIELD_STYLES['levelname']['color'] = 'white'
-#coloredlogs.install(
-#    level='DEBUG',
-#    fmt='[%(levelname)s] %(asctime)s | %(name)s | %(module)s.%(funcName)s:%(lineno)d ~ %(message)s',
-#    stream=sys.stdout,
-#)
+from utils import get_logger
 
-app = Flask(__name__)
-app.config["DEBUG"] = True
+logger = get_logger(__name__)
 
 
 def format_character_name(name: str) -> str:
@@ -39,24 +32,32 @@ def get_character_input() -> str:
     return parsed
 
 
+def store_user_preferences():
+    g.order_tiers = request.args.get('order_tiers', False) == 'true'
+
+
 @app.route("/", defaults=dict(main_or_beta=""), methods=["GET", "POST"])
 @app.route("/<main_or_beta>", methods=["GET", "POST"])
 def index(main_or_beta: str) -> Response | str:
-    page: str = 'beta_results.html' if main_or_beta == 'beta' else 'results.html'
+    beta = main_or_beta == 'beta'
+    g.beta = beta
+    page: str = 'beta/results.html' if beta else 'results.html'
     error: bool = False
     pythonOutput: list | None = None
 
     try:
         capturedCharacterInput: str | dict = get_character_input()
-        #app.logger.info("request.args.get('player'): %s %s", type(capturedCharacterInput), capturedCharacterInput)
+        logger.info("request.args.get('player'): %s %s", type(capturedCharacterInput), capturedCharacterInput)
         if request.method == 'POST' and isinstance(capturedCharacterInput, str):
-            return redirect(url_for('index', player=capturedCharacterInput))
+            return redirect(url_for('index', player=capturedCharacterInput, main_or_beta=main_or_beta))
+
+        store_user_preferences()
 
         if capturedCharacterInput:
             pythonOutput = autoReviewBot(capturedCharacterInput)
 
     except Exception as reason:
-        #app.logger.error('Could not get Player from Request Args: %s', reason)
+        logger.error('Could not get Player from Request Args: %s', reason)
         error = True
 
     return render_template(page, htmlInput=pythonOutput, error=error, beta=main_or_beta)
@@ -64,7 +65,7 @@ def index(main_or_beta: str) -> Response | str:
 
 @app.route("/logtest", methods=["GET"])
 def logtest():
-    app.logger.info("Logging works")
+    logger.info("Logging works")
     return "Hello, World!"
 
 
@@ -88,7 +89,7 @@ def page_not_found(e):
                 return redirect(url_for('index')) # Probably should get a real 404 page at some point
         else:
             return redirect(url_for('index')) # Probably should get a real 404 page at some point
-    except:
+    except:  # noqa
         return redirect(url_for('index')) # Probably should get a real 404 page at some point
 
 
@@ -96,8 +97,21 @@ def ensure_data(results: list):
     return bool(results)
 
 
+def get_resource(dir_: str, filename: str) -> str:
+    beta = "beta" if g.beta else ""
+    return url_for('static', filename=f'{beta}/{dir_}/{filename}')
+
+
+def style(filename: str):
+    return get_resource("styles", filename)
+
+
+def script(filename: str):
+    return get_resource("scripts", filename)
+
+
 def img(filename: str):
-    return url_for('static', filename=f'imgs/{filename}')
+    return get_resource("imgs", filename)
 
 
 def cards(filename: str):
@@ -107,6 +121,8 @@ def cards(filename: str):
 app.jinja_env.globals['ensure_data'] = ensure_data
 app.jinja_env.globals['img'] = img
 app.jinja_env.globals['cards'] = cards
+app.jinja_env.globals['style'] = style
+app.jinja_env.globals['script'] = script
 
 if __name__ == '__main__':
     app.run()

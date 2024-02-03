@@ -208,7 +208,7 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers):
     elif consRefineryDict['Combustion AutoRefine'] == 0:
         if consRefineryDict['Red Rank'] >= 22:
             tier_Tab1 = progressionTiers[-1][0] #19 currently
-            advice_Tab1 += "Tier " + str(tier_Tab1) + "- Red is already rank 22+ where ranks become faster instead of slower, and all Tab1 salts are set to 0% AutoRefine. Tab1 should be relatively smooth sailing <3"
+            advice_Tab1 += "Tier " + str(tier_Tab1) + "- Red is already rank 22+ where ranks become faster instead of slower, and all Tab1 salts are set to 0% AutoRefine. Tab1 should be relatively smooth sailing ❤️"
 
         else:
             tier_Tab1 = progressionTiers[-3][0] #17 currently
@@ -237,7 +237,7 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers):
     elif consRefineryDict['Synthesis AutoRefine'] == 0:
         if consRefineryDict['Green Rank'] >= 22:
             tier_Tab2 = progressionTiers[-1][0] #19 currently
-            advice_Tab2 += "Tier " + str(tier_Tab2) + "- Green is already rank 22+ where ranks become faster instead of slower, and all Tab2 salts are set to 0% AutoRefine. Tab2 should be relatively smooth sailing <3"
+            advice_Tab2 += "Tier " + str(tier_Tab2) + "- Green is already rank 22+ where ranks become faster instead of slower, and all Tab2 salts are set to 0% AutoRefine. Tab2 should be relatively smooth sailing ❤️"
 
         else:
             tier_Tab2 = progressionTiers[-2][0] #18 currently
@@ -250,7 +250,7 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers):
         advice_AutoRefine = "Tier " + str(tier_AutoRefine) + "- You've got all Salts set to 0% auto-refine, the infinite-scaling portion of Refinery."
         #Another comment for clarity. I only want AutoRefine advice to show up in the extreme cases of Tier0 or Max tier. Anything inbetween doesn't need advice.
         if tier_Tab1 == progressionTiers[-1][0] and tier_Tab2 == progressionTiers[-1][0]:
-            advice_AutoRefine += " You best <3"
+            advice_AutoRefine += " You best ❤️"
 
     #Tab3 Advice
     #Tab4 Advice

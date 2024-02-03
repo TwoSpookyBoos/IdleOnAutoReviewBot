@@ -9,7 +9,7 @@
     margin: 0;
     padding: 0;
     /*font-family: 'Idleon', sans-serif;*/
-    display: block;
+    /*display: block;*/
 }
 aside > * > * {
     display: inline;
@@ -125,6 +125,8 @@ aside {
 header {
     padding: 25px;
     border-bottom: 1px solid grey;
+    display: flex;
+    flex-direction: column;
 }
 footer {
     margin-top: auto; /*always sticks to the bottom of the page*/
