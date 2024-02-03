@@ -39,7 +39,7 @@ def setDefaultTiers():
         [25, 7000, "35", "", "", {'Pickaxe':95,'Hatchet':95,'Golden Apple':60,'Multitool':100}, ""],
         [26, 7500, "", "", "", {'Ladle':180}, ""],
         [27, 8000, "", "", "", {'Matty Bag':280,'Multitool':150}, ""],
-        [28, 8400, "", "", "", {'Pickaxe':105,'Hatchet':105,'Mason Jar':88,'Crystallin':200,'Bugsack':152,'Bag o Heads':152,}, ""],
+        [28, 8400, "", "", "", {'Pickaxe':105,'Hatchet':105,'Mason Jar':92,'Crystallin':200,'Bugsack':152,'Bag o Heads':152,}, ""],
         [29, 8600, "", "", "", {'Drippy Drop':110,'Matty Bag':310}, ""],
         [30, 8800, "", "", "", {'Card':200,'Crystallin':250}, ""],
         [31, 9000, "", "", "", {'Golden Apple':80}, "Guaranteed daily Gilded Stamp at 10k"],
