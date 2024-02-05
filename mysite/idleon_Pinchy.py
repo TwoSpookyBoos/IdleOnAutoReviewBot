@@ -296,7 +296,7 @@ def setPinchyList(inputJSON, playerCount, dictOfPRs):
     pinchy_all = AdviceSection(
         name="Pinchy all",
         tier=sections_maxed,
-        header=f"Activities maxed: {sections_maxed}",
+        header=f"Activities maxed: {sections_maxed}. Recommended general activity actions:",
         picture="Pinchy.gif",
         groups=advice_groups
     )

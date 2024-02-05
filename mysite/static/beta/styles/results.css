@@ -248,6 +248,19 @@ strong:not(.no-collapse):hover,
     }
 }
 
+#pinchy.new {
+    background: linear-gradient(to right, hsla(34deg, 100%, 50%, 20%), hsla(52deg, 100%, 50%, 20%));
+    .banner {
+        background: linear-gradient(to right, hsla(0, 0%, 0%, 0.45), hsla(0, 0%, 0%, 0.2));
+        padding: 20px;
+    }
+    .advice-group {
+        &:nth-child(even) {
+            background: hsla(0, 0%, 0%, 0.15);
+        }
+    }
+}
+
 .new {
     display: flex;
     flex-direction: column;
