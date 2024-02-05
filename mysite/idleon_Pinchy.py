@@ -137,42 +137,28 @@ def activities_to_threshold_tiers(dictOfPRs) -> dict[str, list[tuple[str, int, T
 
 
 # https://idleon.wiki/wiki/Portal_Requirements
-# W2 Sandy Pots = [51][0], starts at 250
-# W2 Mafiosos = [57][0], starts at 1200
-# W2 Tysons = [62][0], starts at 3000
-# W3 Sheepies = [101][0], starts at 1000
-# W3 Mamooths = [106][0], starts at 6000
-# W3 Quenchies = [110][0], starts at 18000
-# W4 Purp Mushroom = [151][0], starts at 5000
-# W4 Soda Can = [155][0], starts at 40000
-# W4 Clammies = [160][0], starts at 190000
-# W5 Suggma = [201][0], starts at 25000
-# W5 Stiltmole = [205][0], starts at 125000
-# W5 Fire Spirit = [210][0], starts at 3000000
-# W5 Tremor Wurms = [213][0], starts at 60000
-# Until W6 drops, Solid W6 prep = DeathNote tier 15+
-# Until W6 drops, W6 waiting room = DeathNote tier 19+
-# Until W6 drops, Max = 1b+ sample
-
 portalOpeningKills = [
-    # (Threshold.LATE_W6,       260, 8000000),
-    # (Threshold.MID_W6,        256,  400000),
-    # (Threshold.EARLY_W6,      251,   30000),
-    (Threshold.EARLY_W6_PREP, 213,   60000),
-    (Threshold.LATE_W5,       210, 3000000),
-    (Threshold.MID_W5,        205,  125000),
-    (Threshold.EARLY_W5,      201,   25000),
-    (Threshold.LATE_W4,       160,  190000),
-    (Threshold.MID_W4,        155,   40000),
-    (Threshold.EARLY_W4,      151,    5000),
-    (Threshold.LATE_W3,       110,   18000),
-    (Threshold.MID_W3,        106,    6000),
-    (Threshold.EARLY_W3,      101,    1000),
-    (Threshold.LATE_W2,        62,    3000),
-    (Threshold.MID_W2,         57,    1200),
-    (Threshold.EARLY_W2,       51,     250),
+    # (Threshold.LATE_W6,       260, 8000000),  # W6 Sprout Spirits
+    # (Threshold.MID_W6,        256,  400000),  # W6 Bamboo Spirits
+    # (Threshold.EARLY_W6,      251,   30000),  # W6 Ceramic Spirits
+    # Until W6 drops, Max = 1b+ sample
+    # Until W6 drops, W6 waiting room = DeathNote tier 19+
+    # Until W6 drops, Solid W6 prep = DeathNote tier 15+
+    (Threshold.EARLY_W6_PREP, 213,   60000),  # W5 Tremor Wurms
+    (Threshold.LATE_W5,       210, 3000000),  # W5 Fire Spirit
+    (Threshold.MID_W5,        205,  125000),  # W5 Stiltmole
+    (Threshold.EARLY_W5,      201,   25000),  # W5 Suggma
+    (Threshold.LATE_W4,       160,  190000),  # W4 Clammies
+    (Threshold.MID_W4,        155,   40000),  # W4 Soda Can
+    (Threshold.EARLY_W4,      151,    5000),  # W4 Purp Mushroom
+    (Threshold.LATE_W3,       110,   18000),  # W3 Quenchies
+    (Threshold.MID_W3,        106,    6000),  # W3 Mamooths
+    (Threshold.EARLY_W3,      101,    1000),  # W3 Sheepies
+    (Threshold.LATE_W2,        62,    3000),  # W2 Tysons
+    (Threshold.MID_W2,         57,    1200),  # W2 Mafiosos
+    (Threshold.EARLY_W2,       51,     250),  # W2 Sandy Pots
 ]
-maxExpectedThresholdFromMaps = portalOpeningKills[0][0]  # The Worm Nest (Tremor Wurms) corresponds to "Late W5".
+maxExpectedThresholdFromMaps = portalOpeningKills[0][0]  # The Worm Nest (Tremor Wurms) corresponds to "Early W6 Prep"
 
 
 def is_portal_opened(mobKills, monster, portalKC):
