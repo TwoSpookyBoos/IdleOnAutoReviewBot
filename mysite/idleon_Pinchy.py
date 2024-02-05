@@ -23,6 +23,9 @@ class Threshold:
     EARLY_W6_PREP = "Early W6 Prep"
     SOLID_W6_PREP = "Solid W6 Prep"
     W6_WAITING_ROOM = "W6 Waiting Room"
+    # EARLY_W6 = "Early W6"
+    # MID_W6 = "Mid W6"
+    # LATE_W6 = "Late W6"
     MAX_TIER = "Max for v1.91"
     PLACEHOLDER = "Placeholder"
 
@@ -33,6 +36,7 @@ class Threshold:
         EARLY_W4, MID_W4, LATE_W4,
         EARLY_W5, MID_W5, LATE_W5,
         EARLY_W6_PREP, SOLID_W6_PREP, W6_WAITING_ROOM,
+        # EARLY_W6, MID_W6, LATE_W6,
         MAX_TIER,
         PLACEHOLDER
     ]
@@ -151,19 +155,22 @@ def activities_to_threshold_tiers(dictOfPRs) -> dict[str, list[tuple[str, int, T
 # Until W6 drops, Max = 1b+ sample
 
 portalOpeningKills = [
-    (Threshold.EARLY_W6_PREP, 213, 60000),
-    (Threshold.LATE_W5, 210, 3000000),
-    (Threshold.MID_W5, 205, 125000),
-    (Threshold.EARLY_W5, 201, 25000),
-    (Threshold.LATE_W4, 160, 190000),
-    (Threshold.MID_W4, 155, 40000),
-    (Threshold.EARLY_W4, 151, 5000),
-    (Threshold.LATE_W3, 110, 18000),
-    (Threshold.MID_W3, 106, 6000),
-    (Threshold.EARLY_W3, 101, 1000),
-    (Threshold.LATE_W2, 62, 3000),
-    (Threshold.MID_W2, 57, 1200),
-    (Threshold.EARLY_W2, 51, 250),
+    # (Threshold.LATE_W6,       260, 8000000),
+    # (Threshold.MID_W6,        256,  400000),
+    # (Threshold.EARLY_W6,      251,   30000),
+    (Threshold.EARLY_W6_PREP, 213,   60000),
+    (Threshold.LATE_W5,       210, 3000000),
+    (Threshold.MID_W5,        205,  125000),
+    (Threshold.EARLY_W5,      201,   25000),
+    (Threshold.LATE_W4,       160,  190000),
+    (Threshold.MID_W4,        155,   40000),
+    (Threshold.EARLY_W4,      151,    5000),
+    (Threshold.LATE_W3,       110,   18000),
+    (Threshold.MID_W3,        106,    6000),
+    (Threshold.EARLY_W3,      101,    1000),
+    (Threshold.LATE_W2,        62,    3000),
+    (Threshold.MID_W2,         57,    1200),
+    (Threshold.EARLY_W2,       51,     250),
 ]
 maxExpectedThresholdFromMaps = portalOpeningKills[0][0]  # The Worm Nest (Tremor Wurms) corresponds to "Late W5".
 
