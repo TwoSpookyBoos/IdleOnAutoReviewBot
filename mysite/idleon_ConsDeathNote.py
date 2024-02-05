@@ -202,9 +202,9 @@ def getEnemyNameFromMap(inputMap):
             return "Skydoggie Spirit"
         case "Yolkrock Basin":
             return "Royal Egg"
-        case "W6-Placeholder13":
+        case "Chieftain Stairway":
             return "Minichief Spirit"
-        case "W6-Placeholder14":
+        case "Emporer's Castle Doorstep":
             return "Samurai Guardian"
 
         #Default
@@ -342,8 +342,8 @@ def getDeathNoteKills(inputJSON, playerCount, playerNames):
         "Sleepy Skyline": [10000000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
         "Dozey Dogpark": [20000000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
         "Yolkrock Basin": [50000000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
-        "W6-Placeholder13": [100000000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
-        "W6-Placeholder14": [100, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00]
+        "Chieftain Stairway": [100000000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
+        "Emporer's Castle Doorstep": [100, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00]
     }
 
     #total up all kills across characters
