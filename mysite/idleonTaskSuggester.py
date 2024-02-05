@@ -418,12 +418,12 @@ def main(inputData, runType="web"):
         "Stamps": stamps_AdviceSection["PR"].cT,
         "Bribes": bribes_ActiveSection["PR"].cT,
         "Smithing": smithing_AdviceSection["PR"].cT,
-        "Alchemy-Bubbles": alchBubblesPR.cT,
-        "Alchemy-Vials": alchVialsPR.cT,
-        "Construction Refinery": consRefineryPR.cT,
-        "Construction Salt Lick": consSaltLickPR.cT,
-        "Construction Death Note": consDeathNotePR.cT,
-        "Worship Prayers": worshipPrayersPR.cT
+        "Bubbles": alchBubblesPR.cT,
+        "Vials": alchVialsPR.cT,
+        "Refinery": consRefineryPR.cT,
+        "Salt Lick": consSaltLickPR.cT,
+        "Death Note": consDeathNotePR.cT,
+        "Prayers": worshipPrayersPR.cT
         }
     pinchyList = idleon_Pinchy.setPinchyList(parsedJSON, playerCount, biggoleProgressionTiersDict)
     biggoleAdviceList = [generalList, w1list, w2list, w3list, w4list, w5list, w6list, w7list, w8list, pinchyList]

@@ -99,6 +99,10 @@ class Advice(AdviceBase):
         self.goal: str = str(goal)
         self.unit: str = unit
 
+        if hasattr(self, "value_format"):
+            self.progression = self.value_format.format(value=self.progression, unit=self.unit)
+            self.goal = self.value_format.format(value=self.goal, unit=self.unit)
+
     @property
     def css_class(self) -> str:
         name = self.item_name.replace(' ', '-').lower()
