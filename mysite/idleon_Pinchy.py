@@ -270,7 +270,7 @@ def setPinchyList(inputJSON, playerCount, dictOfPRs):
             "If you weren't expecting this, tell Scoli about it! O.o"
         )
     else:
-        pinchyExpected = f"Expected Progression, based on highest enemy map: {expectedThreshold}."
+        pinchyExpected = f"Expected Progression, based on highest enemy map: {expectedThreshold}"
 
     sections_maxed_count = (
             len(activitiesByThreshold.get(Threshold.thresholdNames[-1], list())) +
@@ -289,14 +289,14 @@ def setPinchyList(inputJSON, playerCount, dictOfPRs):
     pinchy_low = AdviceSection(
         name="Pinchy low",
         tier=lowestThresholdReached,
-        header=f"Minimum Progression, based on weakest ranked review: {lowestThresholdReached}.",
+        header=f"Minimum Progression, based on weakest ranked review: {lowestThresholdReached}",
         collapse=True
     )
 
     pinchy_all = AdviceSection(
         name="Pinchy all",
         tier=sections_maxed,
-        header=f"Activities maxed: {sections_maxed}.",
+        header=f"Activities maxed: {sections_maxed}",
         picture="Pinchy.gif",
         groups=advice_groups
     )
