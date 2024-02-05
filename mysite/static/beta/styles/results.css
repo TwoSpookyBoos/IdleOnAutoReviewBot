@@ -249,14 +249,32 @@ strong:not(.no-collapse):hover,
 }
 
 #pinchy.new {
-    background: linear-gradient(to right, hsla(34deg, 100%, 50%, 20%), hsla(52deg, 100%, 50%, 20%));
+    --bg-pinchy: linear-gradient(to right, hsla(34deg, 100%, 50%, 20%), hsla(52deg, 100%, 50%, 20%));
+    --bg-pinchy-banner: linear-gradient(to right, hsla(0deg, 0%, 0%, 45%), hsla(0deg, 0%, 0%, 20%));
+    --bg-pinchy-group-odd: hsla(0deg, 0%, 100%, 5%);
+    --bg-pinchy-group-even: hsla(0deg, 0%, 0%, 10%);
+    --fg-pinchy-subheading: hsla(41deg, 98.23%, 90.3%, 100%);
+    --fg-pinchy-subheading-accent: hsla(44deg, 100%, 50%, 100%);
+
+    background: var(--bg-pinchy);
     .banner {
-        background: linear-gradient(to right, hsla(0, 0%, 0%, 0.45), hsla(0, 0%, 0%, 0.2));
+        background: var(--bg-pinchy-banner);
         padding: 20px;
+    }
+    .subheading {
+        span {
+            color: var(--fg-pinchy-subheading);
+            span {
+                color: var(--fg-pinchy-subheading-accent);
+            }
+        }
     }
     .advice-group {
         &:nth-child(even) {
-            background: hsla(0, 0%, 0%, 0.15);
+            background: var(--bg-pinchy-group-even);
+        }
+        &:nth-child(odd) {
+            background: var(--bg-pinchy-group-odd);
         }
     }
 }

@@ -209,7 +209,7 @@ def tier_from_monster_kills(dictOfPRs, inputJSON, playerCount) -> str:
             # logger.info("%s, %s", type(playerKillsList), playerKillsList)  # Expected to be a list
             expectedThreshold = threshold_for_highest_portal_opened(mobKills)
 
-            if expectedThreshold >= maxExpectedThresholdFromMaps:
+            if Threshold.thresholdNames.index(expectedThreshold) >= Threshold.thresholdNames.index(maxExpectedThresholdFromMaps):
                 break
 
     return expectedThreshold
