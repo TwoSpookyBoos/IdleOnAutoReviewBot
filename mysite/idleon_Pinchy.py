@@ -145,12 +145,12 @@ portalOpeningKills = [
     # Until W6 drops, W6 waiting room = DeathNote tier 19+
     # Until W6 drops, Solid W6 prep = DeathNote tier 15+
     (Threshold.EARLY_W6_PREP, 213,   60000),  # W5 Tremor Wurms
-    (Threshold.LATE_W5,       210, 3000000),  # W5 Fire Spirit
-    (Threshold.MID_W5,        205,  125000),  # W5 Stiltmole
-    (Threshold.EARLY_W5,      201,   25000),  # W5 Suggma
+    (Threshold.LATE_W5,       210, 3000000),  # W5 Fire Spirits
+    (Threshold.MID_W5,        205,  125000),  # W5 Stiltmoles
+    (Threshold.EARLY_W5,      201,   25000),  # W5 Suggmas
     (Threshold.LATE_W4,       160,  190000),  # W4 Clammies
-    (Threshold.MID_W4,        155,   40000),  # W4 Soda Can
-    (Threshold.EARLY_W4,      151,    5000),  # W4 Purp Mushroom
+    (Threshold.MID_W4,        155,   40000),  # W4 Soda Cans
+    (Threshold.EARLY_W4,      151,    5000),  # W4 Purp Mushrooms
     (Threshold.LATE_W3,       110,   18000),  # W3 Quenchies
     (Threshold.MID_W3,        106,    6000),  # W3 Mamooths
     (Threshold.EARLY_W3,      101,    1000),  # W3 Sheepies
