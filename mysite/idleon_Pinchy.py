@@ -189,6 +189,7 @@ def tier_from_monster_kills(dictOfPRs, inputJSON, playerCount) -> str:
     expectedThreshold = Threshold.W1
 
     highestPrint = getHighestPrint(inputJSON)
+    mobKillThresholds = []
     if highestPrint >= 999000000:
         expectedThreshold = Threshold.W6_WAITING_ROOM
     elif dictOfPRs["Death Note"] >= 19:
@@ -198,12 +199,14 @@ def tier_from_monster_kills(dictOfPRs, inputJSON, playerCount) -> str:
     else:
         # logger.info(f"Starting to review map kill counts per player because expectedIndex still W1: {dictOfPRs['Construction Death Note']}")
         for playerCounter in range(0, playerCount):
+
             mobKills = json.loads(inputJSON['KLA_' + str(playerCounter)])  # String pretending to be a list of lists yet again
             # logger.info("%s, %s", type(playerKillsList), playerKillsList)  # Expected to be a list
-            expectedThreshold = threshold_for_highest_portal_opened(mobKills)
+            threshold = threshold_for_highest_portal_opened(mobKills)
+            mobKillThresholds.append(threshold)
 
-            if Threshold.thresholdNames.index(expectedThreshold) >= Threshold.thresholdNames.index(maxExpectedThresholdFromMaps):
-                break
+    highestKillThreshold = max(mobKillThresholds, key=lambda t: Threshold.thresholdNames.index(t))
+    expectedThreshold = max([expectedThreshold, highestKillThreshold], key=lambda t: Threshold.thresholdNames.index(t))
 
     return expectedThreshold
 
