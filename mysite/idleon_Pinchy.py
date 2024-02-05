@@ -112,7 +112,9 @@ def setPinchyList(inputJSON, playerCount, dictOfPRs):
                 for i, (monster, portalKC)
                 in monsterPortalKills
             ]
-            expectedIndex = next((index for index, portalOpened in mobKills if portalOpened), 0)
+            bestMobKills = next((index for index, portalOpened in mobKills if portalOpened), 0)
+            expectedIndex = max(bestMobKills, expectedIndex)
+
             if expectedIndex >= maxExpectedIndexFromMaps:
                 break
 
