@@ -33,7 +33,6 @@ class Character:
         self.gaming_level: int = all_skill_levels['Gaming']
 
 
-
 class WorldName(Enum):
     PINCHY = "Pinchy"
     GENERAL = "General"
@@ -52,7 +51,7 @@ class WorldName(Enum):
 class AdviceBase:
     """
     Args:
-        **extra (dict): a dict of extra information that hasn't been accounted for yet
+        **extra: a dict of extra information that hasn't been accounted for yet
     """
     _children = "_true"
     _collapse = None
@@ -98,10 +97,6 @@ class Advice(AdviceBase):
         self.progression: str = str(progression)
         self.goal: str = str(goal)
         self.unit: str = unit
-
-        if hasattr(self, "value_format"):
-            self.progression = self.value_format.format(value=self.progression, unit=self.unit)
-            self.goal = self.value_format.format(value=self.goal, unit=self.unit)
 
     @property
     def css_class(self) -> str:
@@ -154,6 +149,10 @@ class AdviceGroup(AdviceBase):
     def show_goal(self) -> bool:
         return any(advice.goal for advice in self.advices)
 
+    @property
+    def heading(self) -> str:
+        return (f"Tier {self.tier} - " if self.tier else "") + self.pre_string
+
     def _is_valid_operand(self, other):
         return all(hasattr(other, field) for field in self.__compare_by)
 
@@ -191,7 +190,7 @@ class AdviceSection(AdviceBase):
     """
     _children = "groups"
 
-    def __init__(self, name: str, tier: str, header: str, picture: str, collapse: bool | None = None, groups: list[AdviceGroup] = [], pinchy_rating: str = "", **extra):
+    def __init__(self, name: str, tier: str, header: str, picture: str | None = None, collapse: bool | None = None, groups: list[AdviceGroup] = [], pinchy_rating: str = "", **extra):
         super().__init__(**extra)
 
         self.name: str = name
@@ -212,8 +211,12 @@ class AdviceSection(AdviceBase):
         parts = re.split(pattern, self._raw_header)
 
         if self.tier in parts:
-            prog, goal = self.tier.split("/")
-            finished = " finished" if prog == goal else ""
+            finished = ""
+
+            if "/" in self.tier:
+                prog, goal = self.tier.split("/")
+                finished = " finished" if prog == goal else ""
+
             parts[1] = f"""<span class="tier-progress{finished}">{parts[1]}</span>"""
 
         header_markedup = ''.join(parts)
