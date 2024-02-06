@@ -98,10 +98,6 @@ class Threshold:
     def __repr__(self):
         return f"<{self.__class__.__name__}: {self.name}, {self.tier}>"
 
-    @property
-    def previous_name(self):
-        return self.thresholdNames[self.index - 1] if self.index > 0 else None
-
     def next(self):
         return self.parent.next(self)
 
