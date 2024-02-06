@@ -139,6 +139,7 @@ def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, charact
             characterIndex = 0
             for upgradeCount in playerCashPoints:
                 if upgradeCount < tier[1]:
+                    advice_CashPoints += characterDict[characterIndex].character_name + " (" + str(upgradeCount) + "/" + str(tier[1]) + "), "
                     allRequirementsMet = False
                     smithing_AdviceDict["CashPoints"].append(
                         Advice(
@@ -153,7 +154,7 @@ def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, charact
             if allRequirementsMet == True:
                 tier_CashPoints = tier[0]
             else:
-                advice_CashPoints = "Purchase the first " + str(tier[1]) + " cash points on all characters. You're currently at (total): " + str(sum_CashPoints) + "/" + str(tier[1]*playerCount)
+                advice_CashPoints = "Purchase the first " + str(tier[1]) + " cash points on the following characters: " + advice_CashPoints[:-2]
                 smithing_AdviceGroupDict["CashPoints"] = AdviceGroup(
                     tier=str(tier_CashPoints),
                     pre_string=f"Purchase the first {tier[1]} Anvil Points with Cash on the following character{pl(smithing_AdviceDict['CashPoints'])}",
@@ -161,13 +162,13 @@ def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, charact
                     post_string=""
                 )
 
-
         #Monster Points
         if tier_MonsterPoints == (tier[0]-1):  # Only check if they already met previous tier
             allRequirementsMet = True
             characterIndex = 0
             for upgradeCount in playerMonsterPoints:
                 if upgradeCount < tier[2]:
+                    advice_MonsterPoints += characterDict[characterIndex].character_name + " (" + str(upgradeCount) + "/" + str(tier[2]) + "), "
                     allRequirementsMet = False
                     smithing_AdviceDict["MonsterPoints"].append(
                         Advice(
@@ -182,8 +183,7 @@ def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, charact
             if allRequirementsMet == True:
                 tier_MonsterPoints = tier[0]
             else:
-                advice_MonsterPoints = ("Purchase the first " + str(tier[2]) + " monster points on all characters, which includes drops from "
-                + tier[4] + " You're currently at (total): " + str(sum_MonsterPoints) + "/" + str(tier[2]*playerCount))
+                advice_MonsterPoints = "Purchase the first " + str(tier[2]) + " monster points on all characters, which includes drops from " + tier[4] + ": " + advice_MonsterPoints[:-2]
                 smithing_AdviceGroupDict["MonsterPoints"] = AdviceGroup(
                     tier=str(tier_CashPoints),
                     pre_string=f"Purchase the first {tier[2]} Anvil Points with Monster Materials on the following character{pl(smithing_AdviceDict['MonsterPoints'])}",
