@@ -57,6 +57,9 @@ def index(main_or_beta: str) -> Response | str:
             pythonOutput = autoReviewBot(capturedCharacterInput)
 
     except Exception as reason:
+        import os
+        if os.environ.get("USER") == 'niko':
+            raise reason
         logger.error('Could not get Player from Request Args: %s', reason)
         error = True
 

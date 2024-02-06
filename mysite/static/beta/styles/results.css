@@ -175,6 +175,7 @@ footer {
     flex-direction: column;
     height: 100vh;
     overflow-y: auto;
+    max-width: 120em;  /*1920px*/
 }
 main {
     display: flex;
@@ -439,5 +440,11 @@ strong:not(.no-collapse):hover,
 @media (max-width: 400px) {
     footer {
         flex-direction: column;
+    }
+}
+
+@media (min-width: 120em) {
+    .main-wrapper {
+        margin: 0 auto;
     }
 }
