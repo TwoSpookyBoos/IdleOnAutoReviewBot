@@ -383,21 +383,19 @@ def setStampProgressionTier(inputJSON, progressionTiers):
             splitRequiredSkillStamps = tier[3].split(",")  # string of numbers, no spaces
             for rStamp in splitRequiredSkillStamps:
                 # print(rStamp, missingSkillStamps, (rStamp in missingSkillStamps))
-                if rStamp in capacityExclusionsDict:
-                    if capacityExclusionsDict[rStamp] is False:
-                        if rStamp in missingSkillStamps:
-                            allSkillStamps = False
-                            advice_CollectStamps += (getReadableStampName(int(rStamp), "Skill") + ", ")
-                            advice_CollectSkillStamps += (getReadableStampName(int(rStamp), "Skill") + ", ")
-                            stamp_AdviceDict["SkillStamps"].append(
-                                Advice(
-                                    label=getReadableStampName(int(rStamp), "Skill"),
-                                    item_name=getReadableStampName(int(rStamp), "Skill"),
-                                    progression="",
-                                    goal="",
-                                    unit=""
-                                )
-                            )
+                if rStamp in missingSkillStamps:
+                    allSkillStamps = False
+                    advice_CollectStamps += (getReadableStampName(int(rStamp), "Skill") + ", ")
+                    advice_CollectSkillStamps += (getReadableStampName(int(rStamp), "Skill") + ", ")
+                    stamp_AdviceDict["SkillStamps"].append(
+                        Advice(
+                            label=getReadableStampName(int(rStamp), "Skill"),
+                            item_name=getReadableStampName(int(rStamp), "Skill"),
+                            progression="",
+                            goal="",
+                            unit=""
+                        )
+                    )
             if allSkillStamps == True:
                 tier_RequiredSkillStamps = tier[0]
 
@@ -428,18 +426,20 @@ def setStampProgressionTier(inputJSON, progressionTiers):
             allSpecificStamps = True
             for key, value in requiredSpecificStamps.items():
                 # print(tier[0], playerPriorityStamps[key], requiredSpecificStamps[key], playerPriorityStamps[key] >= requiredSpecificStamps[key])
-                if playerPriorityStamps[key] < requiredSpecificStamps[key]:
-                    allSpecificStamps = False
-                    advice_SpecificStamps += (str(key) + " to " + str(value) + "+, ")
-                    stamp_AdviceDict["SpecificStamps"].append(
-                        Advice(
-                            label=str(key),
-                            item_name=str(key),
-                            progression=playerPriorityStamps[key],
-                            goal=requiredSpecificStamps[key],
-                            unit=""
-                        )
-                    )
+                if key in capacityExclusionsDict:
+                    if capacityExclusionsDict[key] is False:
+                        if playerPriorityStamps[key] < requiredSpecificStamps[key]:
+                            allSpecificStamps = False
+                            advice_SpecificStamps += (str(key) + " to " + str(value) + "+, ")
+                            stamp_AdviceDict["SpecificStamps"].append(
+                                Advice(
+                                    label=str(key),
+                                    item_name=str(key),
+                                    progression=playerPriorityStamps[key],
+                                    goal=requiredSpecificStamps[key],
+                                    unit=""
+                                )
+                            )
             if allSpecificStamps == True:
                 tier_RequiredSpecificStamps = tier[0]
 
