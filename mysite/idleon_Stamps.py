@@ -54,19 +54,20 @@ def setPriorityStamps(inputJSON):
 
 def getCapacityExclusions(priorityStampsDict: dict):
     exclusionsDict = {
-        'Materials': False,
-        'Foods': False,
-        'Ores': False,
-        'Logs': False,
-        'Fish': False,
-        'Bugs': False,
-        'Critters': False,
-        'Souls': False
+        'Matty Bag Stamp': False,  # Materials
+        'Foods': False,  # Doesn't exist currently, placeholder
+        "Lil' Mining Baggy Stamp": False,  # Mining Ores
+        "Choppin' Bag Stamp": False,  # Choppin Logs
+        'Bag o Heads Stamp': False,  # Fish
+        'Bugsack Stamp': False,  # Catching Bugs
+        'Critters': False,  # Doesn't exist currently, placeholder
+        'Souls': False  # Doesn't exist currently, placeholder
     }
-    if priorityStampsDict['Crystallin'] >= 250:
-        exclusionsDict['Materials'] = True
-    if priorityStampsDict['Multitool Stamp'] >= 210:
-        exclusionsDict['Bugs'] = True
+    if priorityStampsDict['Crystallin'] >= 250:  # Max as of v1.91
+        exclusionsDict['Matty Bag Stamp'] = True
+    if priorityStampsDict['Multitool Stamp'] >= 210:  # Max as of v1.91
+        exclusionsDict['Bugsack Stamp'] = True
+        exclusionsDict['Bag o Heads Stamp'] = True
     return exclusionsDict
 
 # Stamp p4
