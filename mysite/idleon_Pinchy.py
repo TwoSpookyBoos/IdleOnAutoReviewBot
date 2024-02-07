@@ -310,7 +310,7 @@ def tier_from_monster_kills(dictOfPRs, inputJSON, playerCount) -> Threshold:
             threshold = threshold_for_highest_portal_opened(mobKills)
             mobKillThresholds.append(threshold)
 
-    expectedThreshold = max(expectedThreshold, *mobKillThresholds)
+    expectedThreshold = max((expectedThreshold, *mobKillThresholds))
 
     return expectedThreshold
 
