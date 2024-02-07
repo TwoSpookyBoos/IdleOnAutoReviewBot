@@ -24,18 +24,20 @@
         </div>
         {% include 'beta/sidebar.html' %}
         {% include 'beta/nav.html' %}
-        <div class="main-wrapper">
-            {% if error %}
-                <span class="error">
-                    Unable to retrieve data for this character name.
-                    Please check your spelling and make sure you have
-                    uploaded your account publicly.
-                </span>
+        <div class="container-fluid">
+            <div class="main-wrapper">
+                {% if error %}
+                    <span class="error">
+                        Unable to retrieve data for this character name.
+                        Please check your spelling and make sure you have
+                        uploaded your account publicly.
+                    </span>
 
-            {% elif ensure_data(htmlInput) %}
-                {% include 'beta/header.html' %}
-                {% include 'beta/main.html' %}
-            {% endif %}
+                {% elif ensure_data(htmlInput) %}
+                    {% include 'beta/header.html' %}
+                    {% include 'beta/main.html' %}
+                {% endif %}
+            </div>
             {% include 'beta/footer.html' %}
         </div>
     </body>

@@ -18,6 +18,7 @@ nav, .nav-wrapper, nav ul {
 nav {
     position: sticky;
     top: 0;
+    width: 100%;
     padding: var(--nav-padding);
     background-color: #303941;
     border-bottom: 1px solid grey;
