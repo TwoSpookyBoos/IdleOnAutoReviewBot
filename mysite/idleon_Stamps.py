@@ -425,10 +425,10 @@ def setStampProgressionTier(inputJSON, progressionTiers):
             requiredSpecificStamps = tier[5]  # dictionary
             allSpecificStamps = True
             for key, value in requiredSpecificStamps.items():
-                # print(tier[0], playerPriorityStamps[key], requiredSpecificStamps[key], playerPriorityStamps[key] >= requiredSpecificStamps[key])
-                if key in capacityExclusionsDict:
-                    if capacityExclusionsDict[key] is False:
-                        if playerPriorityStamps[key] < requiredSpecificStamps[key]:
+                #print(tier[0], playerPriorityStamps[key], requiredSpecificStamps[key], playerPriorityStamps[key] >= requiredSpecificStamps[key])
+                if playerPriorityStamps[key] < requiredSpecificStamps[key]:
+                    if key in capacityExclusionsDict:
+                        if capacityExclusionsDict[key] is False:
                             allSpecificStamps = False
                             advice_SpecificStamps += (str(key) + " to " + str(value) + "+, ")
                             stamp_AdviceDict["SpecificStamps"].append(
@@ -440,6 +440,20 @@ def setStampProgressionTier(inputJSON, progressionTiers):
                                     unit=""
                                 )
                             )
+                        #elif capacityExclusionsDict[key] is True:
+                           #print("Stamps.HighPrio~ Skipping because it is TRUE in capacityExclusionsDict:", key)
+                    else:
+                        allSpecificStamps = False
+                        advice_SpecificStamps += (str(key) + " to " + str(value) + "+, ")
+                        stamp_AdviceDict["SpecificStamps"].append(
+                            Advice(
+                                label=str(key),
+                                item_name=str(key),
+                                progression=playerPriorityStamps[key],
+                                goal=requiredSpecificStamps[key],
+                                unit=""
+                            )
+                        )
             if allSpecificStamps == True:
                 tier_RequiredSpecificStamps = tier[0]
 
