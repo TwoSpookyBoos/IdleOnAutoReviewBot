@@ -1,4 +1,5 @@
 import json
+import os
 from json import JSONDecodeError
 from config import app
 from flask import g, render_template, request, url_for, redirect, Response
@@ -7,6 +8,8 @@ import idleonTaskSuggester
 from utils import get_logger
 
 logger = get_logger(__name__)
+FQDN = "ieautoreview-scoli.pythonanywhere.com"
+FQDN_BETA = f"beta-{FQDN}"
 
 
 def format_character_name(name: str) -> str:
@@ -36,20 +39,19 @@ def store_user_preferences():
     g.order_tiers = request.args.get('order_tiers', False) == 'true'
 
 
-@app.route("/", defaults=dict(main_or_beta=""), methods=["GET", "POST"])
-@app.route("/<main_or_beta>", methods=["GET", "POST"])
-def index(main_or_beta: str) -> Response | str:
-    beta = main_or_beta == 'beta'
-    g.beta = beta
-    page: str = 'beta/results.html' if beta else 'results.html'
+@app.route("/", methods=["GET", "POST"])
+def index() -> Response | str:
+    page: str = 'results.html'
     error: bool = False
     pythonOutput: list | None = None
+    is_beta = FQDN_BETA in request.host
+    logger.info(request.host)
 
     try:
         capturedCharacterInput: str | dict = get_character_input()
         logger.info("request.args.get('player'): %s %s", type(capturedCharacterInput), capturedCharacterInput)
         if request.method == 'POST' and isinstance(capturedCharacterInput, str):
-            return redirect(url_for('index', player=capturedCharacterInput, main_or_beta=main_or_beta))
+            return redirect(url_for('index', player=capturedCharacterInput, beta=is_beta))
 
         store_user_preferences()
 
@@ -63,7 +65,19 @@ def index(main_or_beta: str) -> Response | str:
         logger.error('Could not get Player from Request Args: %s', reason)
         error = True
 
-    return render_template(page, htmlInput=pythonOutput, error=error, beta=main_or_beta)
+    return render_template(page, htmlInput=pythonOutput, error=error, beta=is_beta)
+
+
+@app.route("/live", methods=["GET", "POST"])
+def live() -> Response:
+    link = f"https://{FQDN}?" + '&'.join(f"{k}={v}" for k, v in request.args.items())
+    return redirect(link)
+
+
+@app.route("/beta", methods=["GET", "POST"])
+def beta() -> Response:
+    link = f"https://{FQDN_BETA}?" + '&'.join(f"{k}={v}" for k, v in request.args.items())
+    return redirect(link)
 
 
 @app.route("/logtest", methods=["GET"])
@@ -101,8 +115,7 @@ def ensure_data(results: list):
 
 
 def get_resource(dir_: str, filename: str) -> str:
-    beta = "beta" if g.beta else ""
-    return url_for('static', filename=f'{beta}/{dir_}/{filename}')
+    return url_for('static', filename=f'/{dir_}/{filename}')
 
 
 def style(filename: str):

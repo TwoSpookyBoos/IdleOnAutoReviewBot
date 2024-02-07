@@ -254,196 +254,84 @@
   background-image: url("https://idleon.wiki/wiki/images/5/5c/Dream_Particulate.png");
 }
 
-.beginner-class-icon::before {
-  background-image: url("https://idleon.wiki/wiki/images/0/0f/Beginner_Class_Icon.png");
-}
-
-.journeyman-class-icon::before {
-  background-image: url("https://idleon.wiki/wiki/images/7/7e/Journeyman_Class_Icon.png");
-}
-
-.maestro-class-icon::before {
-  background-image: url("https://idleon.wiki/wiki/images/6/63/Maestro_Class_Icon.png");
-}
-
-.voidwalker-class-icon::before {
-  background-image: url("https://idleon.wiki/wiki/images/2/21/Voidwalker_Class_Icon.png");
-}
-
-.infinilyte-class-icon::before {
-  background-image: url("https://idleon.wiki/wiki/images/1/14/Infinilyte_Class_Icon.png");
-}
-
-.rage-class-icon::before {
-  background-image: url("https://idleon.wiki/wiki/images/0/08/Rage_Class_Icon.png");
-}
-
-.warrior-class-icon::before {
-  background-image: url("https://idleon.wiki/wiki/images/e/ea/Warrior_Class_Icon.png");
-}
-
-.barbarian-class-icon::before {
-  background-image: url("https://idleon.wiki/wiki/images/a/a8/Barbarian_Class_Icon.png");
-}
-
-.blood-berserker-class-icon::before {
+.nikokoni::before {
   background-image: url("https://idleon.wiki/wiki/images/d/d2/Blood_Berserker_Class_Icon.png");
 }
 
-.squire-class-icon::before {
-  background-image: url("https://idleon.wiki/wiki/images/5/55/Squire_Class_Icon.png");
-}
-
-.divine-knight-class-icon::before {
-  background-image: url("https://idleon.wiki/wiki/images/1/16/Divine_Knight_Class_Icon.png");
-}
-
-.death-bringer-class-icon::before {
-  background-image: url("https://idleon.wiki/wiki/images/a/a9/Death_Bringer_Class_Icon.png");
-}
-
-.royal-guardian-class-icon::before {
-  background-image: url("https://idleon.wiki/wiki/images/0/0c/Royal_Guardian_Class_Icon.png");
-}
-
-.calm-class-icon::before {
-  background-image: url("https://idleon.wiki/wiki/images/8/89/Calm_Class_Icon.png");
-}
-
-.archer-class-icon::before {
-  background-image: url("https://idleon.wiki/wiki/images/b/b6/Archer_Class_Icon.png");
-}
-
-.bowman-class-icon::before {
-  background-image: url("https://idleon.wiki/wiki/images/8/87/Bowman_Class_Icon.png");
-}
-
-.siege-breaker-class-icon::before {
+.nikokoni2::before {
   background-image: url("https://idleon.wiki/wiki/images/a/ab/Siege_Breaker_Class_Icon.png");
 }
 
-.hunter-class-icon::before {
-  background-image: url("https://idleon.wiki/wiki/images/a/ab/Hunter_Class_Icon.png");
-}
-
-.beast-master-class-icon::before {
-  background-image: url("https://idleon.wiki/wiki/images/6/64/Beast_Master_Class_Icon.png");
-}
-
-.mayheim-class-icon::before {
-  background-image: url("https://idleon.wiki/wiki/images/thumb/c/c0/Coming_Soon.png/38px-Coming_Soon.png");
-}
-
-.arcane-cultist-class-icon::before {
-  background-image: url("https://idleon.wiki/wiki/images/4/4f/Arcane_Cultist_Class_Icon.png");
-}
-
-.savvy-class-icon::before {
-  background-image: url("https://idleon.wiki/wiki/images/5/58/Savvy_Class_Icon.png");
-}
-
-.mage-class-icon::before {
-  background-image: url("https://idleon.wiki/wiki/images/5/5e/Mage_Class_Icon.png");
-}
-
-.wizard-class-icon::before {
-  background-image: url("https://idleon.wiki/wiki/images/f/f9/Wizard_Class_Icon.png");
-}
-
-.elemental-sorcerer-class-icon::before {
-  background-image: url("https://idleon.wiki/wiki/images/7/75/Elemental_Sorcerer_Class_Icon.png");
-}
-
-.shaman-class-icon::before {
-  background-image: url("https://idleon.wiki/wiki/images/b/b4/Shaman_Class_Icon.png");
-}
-
-.bubonic-conjuror-class-icon::before {
+.charoleeja::before {
   background-image: url("https://idleon.wiki/wiki/images/b/b3/Bubonic_Conjuror_Class_Icon.png");
 }
 
-.wind-walker-class-icon::before {
-  background-image: url("https://idleon.wiki/wiki/images/2/2a/Wind_Walker_Class_Icon.png");
+.armyofme::before {
+  background-image: url("https://idleon.wiki/wiki/images/1/16/Divine_Knight_Class_Icon.png");
 }
 
-.spiritual-monk-class-icon::before {
-  background-image: url("https://idleon.wiki/wiki/images/thumb/c/c0/Coming_Soon.png/38px-Coming_Soon.png");
+.luckylarree::before {
+  background-image: url("https://idleon.wiki/wiki/images/6/64/Beast_Master_Class_Icon.png");
 }
 
-.warrior::before {
-  background-image: url("https://idleon.wiki/wiki/images/9/97/Warrior.png");
+.wise_old_woman::before {
+  background-image: url("https://idleon.wiki/wiki/images/7/75/Elemental_Sorcerer_Class_Icon.png");
 }
 
-.barbarian::before {
-  background-image: url("https://idleon.wiki/wiki/images/b/b6/Barbarian.png");
+.noleafclover::before {
+  background-image: url("https://idleon.wiki/wiki/images/2/21/Voidwalker_Class_Icon.png");
 }
 
-.squire::before {
-  background-image: url("https://idleon.wiki/wiki/images/0/00/Squire.png");
+.krkenzi::before {
+  background-image: url("https://idleon.wiki/wiki/images/1/16/Divine_Knight_Class_Icon.png");
 }
 
-.blood-berserker::before {
-  background-image: url("https://idleon.wiki/wiki/images/f/f9/Blood_Berserker.png");
+.coprnjak::before {
+  background-image: url("https://idleon.wiki/wiki/images/b/b3/Bubonic_Conjuror_Class_Icon.png");
 }
 
-.divine-knight::before {
-  background-image: url("https://idleon.wiki/wiki/images/d/d4/Divine_Knight.png");
+.xtendix::before {
+  background-image: url("https://idleon.wiki/wiki/images/a/ab/Siege_Breaker_Class_Icon.png");
 }
 
-.archer::before {
-  background-image: url("https://idleon.wiki/wiki/images/2/29/Archer.png");
+.nikokoni-the-blood-berserker::before {
+  background-image: url("https://idleon.wiki/wiki/images/d/d2/Blood_Berserker_Class_Icon.png");
 }
 
-.bowman::before {
-  background-image: url("https://idleon.wiki/wiki/images/3/30/Bowman.png");
+.nikokoni2-the-siege-breaker::before {
+  background-image: url("https://idleon.wiki/wiki/images/a/ab/Siege_Breaker_Class_Icon.png");
 }
 
-.hunter::before {
-  background-image: url("https://idleon.wiki/wiki/images/4/4b/Hunter.png");
+.charoleeja-the-bubonic-conjuror::before {
+  background-image: url("https://idleon.wiki/wiki/images/b/b3/Bubonic_Conjuror_Class_Icon.png");
 }
 
-.siege-breaker::before {
-  background-image: url("https://idleon.wiki/wiki/images/4/4f/Siege_Breaker.png");
+.armyofme-the-divine-knight::before {
+  background-image: url("https://idleon.wiki/wiki/images/1/16/Divine_Knight_Class_Icon.png");
 }
 
-.beast-master::before {
-  background-image: url("https://idleon.wiki/wiki/images/0/04/Beast_Master.png");
+.luckylarree-the-beast-master::before {
+  background-image: url("https://idleon.wiki/wiki/images/6/64/Beast_Master_Class_Icon.png");
 }
 
-.mage::before {
-  background-image: url("https://idleon.wiki/wiki/images/2/20/Mage.png");
+.wise_old_woman-the-elemental-sorcerer::before {
+  background-image: url("https://idleon.wiki/wiki/images/7/75/Elemental_Sorcerer_Class_Icon.png");
 }
 
-.shaman::before {
-  background-image: url("https://idleon.wiki/wiki/images/5/56/Shaman.png");
+.noleafclover-the-voidwalker::before {
+  background-image: url("https://idleon.wiki/wiki/images/2/21/Voidwalker_Class_Icon.png");
 }
 
-.wizard::before {
-  background-image: url("https://idleon.wiki/wiki/images/c/c7/Wizard.png");
+.krkenzi-the-divine-knight::before {
+  background-image: url("https://idleon.wiki/wiki/images/1/16/Divine_Knight_Class_Icon.png");
 }
 
-.bubonic-conjuror::before {
-  background-image: url("https://idleon.wiki/wiki/images/c/cc/Bubonic_Conjuror.png");
+.coprnjak-the-bubonic-conjuror::before {
+  background-image: url("https://idleon.wiki/wiki/images/b/b3/Bubonic_Conjuror_Class_Icon.png");
 }
 
-.elemental-sorcerer::before {
-  background-image: url("https://idleon.wiki/wiki/images/e/e6/Elemental_Sorcerer.png");
-}
-
-.beginner::before {
-  background-image: url("https://idleon.wiki/wiki/images/0/09/Beginner.png");
-}
-
-.journeyman::before {
-  background-image: url("https://idleon.wiki/wiki/images/a/a4/Journeyman.png");
-}
-
-.maestro::before {
-  background-image: url("https://idleon.wiki/wiki/images/f/fa/Maestro.png");
-}
-
-.voidwalker::before {
-  background-image: url("https://idleon.wiki/wiki/images/b/b1/Voidwalker.png");
+.xtendix-the-siege-breaker::before {
+  background-image: url("https://idleon.wiki/wiki/images/a/ab/Siege_Breaker_Class_Icon.png");
 }
 
 .mining::before {
@@ -596,10 +484,6 @@
 
 .brimstone-forge-slot::before {
   background-image: url("https://idleon.wiki/wiki/images/8/8a/Brimstone_Forge_Slot.png");
-}
-
-.forge::before {
-  background-image: url("https://idleon.wiki/wiki/images/6/60/Forge.gif");
 }
 
 .ivory-bubble-cauldrons::before {
@@ -5010,6 +4894,18 @@
   background-image: url("https://idleon.wiki/wiki/images/9/96/Conjocharmo_Stamp.png");
 }
 
+.dementia-sword-stamp::before {
+  background-image: url("https://idleon.wiki/wiki/images//4/4d/Dementia_Sword_Stamp.png");
+}
+
+.golden-sixes-stamp::before {
+  background-image: url("https://idleon.wiki/wiki/images/2/2d/Golden_Sixes_Stamp.png");
+}
+
+.stat-wallstreet-stamp::before {
+  background-image: url("https://idleon.wiki/wiki/images/1/16/Stat_Wallstreet_Stamp.png");
+}
+
 .pickaxe-stamp::before {
   background-image: url("https://idleon.wiki/wiki/images/1/18/Pickaxe_Stamp.png");
 }
@@ -6414,4 +6310,4 @@
   background-image: url("https://idleon.wiki/wiki/images/8/82/Rift_Bonus_4.png");
 }
 
-/*# sourceMappingURL=main.css.map */
+/*# sourceMappingURL=image-mapping.css.map */

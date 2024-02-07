@@ -1,9 +1,6 @@
 import progressionResults
-from models import AdviceSection
-from models import AdviceGroup
-from models import Advice
+from models import AdviceSection, AdviceGroup, Advice
 from utils import pl
-
 
 # Stamp p1
 def setStampLevels(inputJSON, inputIndex):
@@ -26,25 +23,28 @@ def setMissingStamps(inputJSON, inputIndex):
 # Stamp p3
 def setPriorityStamps(inputJSON):
     priorityStampsDict = {
-        'Golden Sixes': 0,
-        'Stat Wallstreet': 0,
-        'Pickaxe': inputJSON["StampLv"][1]['0'],
-        'Hatchet': inputJSON["StampLv"][1]['1'],
-        'Matty Bag': inputJSON["StampLv"][1]['7'],
-        'Drippy Drop': inputJSON["StampLv"][1]['14'],
-        'Bag o Heads': inputJSON["StampLv"][1]['20'],
-        'Bugsack': inputJSON["StampLv"][1]['22'],
-        'Skelefish': 0,
-        'Ladle': inputJSON["StampLv"][1]['38'],
-        'Multitool': inputJSON["StampLv"][1]['45'],
-        'Mason Jar': inputJSON["StampLv"][2]['1'],
+        'Maxo Slappo Stamp': inputJSON["StampLv"][0]['32'],
+        'Sashe Sidestamp': inputJSON["StampLv"][0]['33'],
+        'Intellectostampo': inputJSON["StampLv"][0]['34'],
+        'Golden Sixes Stamp': 0,
+        'Stat Wallstreet Stamp': 0,
+        'Pickaxe Stamp': inputJSON["StampLv"][1]['0'],
+        'Hatchet Stamp': inputJSON["StampLv"][1]['1'],
+        'Matty Bag Stamp': inputJSON["StampLv"][1]['7'],
+        'Drippy Drop Stamp': inputJSON["StampLv"][1]['14'],
+        'Bag o Heads Stamp': inputJSON["StampLv"][1]['20'],
+        'Bugsack Stamp': inputJSON["StampLv"][1]['22'],
+        'Skelefish Stamp': 0,
+        'Ladle Stamp': inputJSON["StampLv"][1]['38'],
+        'Multitool Stamp': inputJSON["StampLv"][1]['45'],
+        'Mason Jar Stamp': inputJSON["StampLv"][2]['1'],
         'Crystallin': inputJSON["StampLv"][2]['2'],
-        'Golden Apple': inputJSON["StampLv"][2]['6'],
-        'Card': inputJSON["StampLv"][2]['8']
+        'Golden Apple Stamp': inputJSON["StampLv"][2]['6'],
+        'Card Stamp': inputJSON["StampLv"][2]['8']
     }
     # These are newer stamps from the Island Expedition update.
     if '37' in inputJSON["StampLv"][0]:
-        priorityStampsDict['Golden Sixes'] = inputJSON["StampLv"][0]['37']
+        priorityStampsDict['Golden Sixes Stamp'] = inputJSON["StampLv"][0]['37']
     if '38' in inputJSON["StampLv"][0]:
         priorityStampsDict['Stat Wallstreet'] = inputJSON["StampLv"][0]['38']
     if '37' in inputJSON["StampLv"][1]:
@@ -52,6 +52,23 @@ def setPriorityStamps(inputJSON):
 
     return priorityStampsDict
 
+def getCapacityExclusions(priorityStampsDict: dict):
+    exclusionsDict = {
+        'Matty Bag Stamp': False,  # Materials
+        'Foods': False,  # Doesn't exist currently, placeholder
+        "Lil' Mining Baggy Stamp": False,  # Mining Ores
+        "Choppin' Bag Stamp": False,  # Choppin Logs
+        'Bag o Heads Stamp': False,  # Fish
+        'Bugsack Stamp': False,  # Catching Bugs
+        'Critters': False,  # Doesn't exist currently, placeholder
+        'Souls': False  # Doesn't exist currently, placeholder
+    }
+    if priorityStampsDict['Crystallin'] >= 250:  # Max as of v1.91
+        exclusionsDict['Matty Bag Stamp'] = True
+    if priorityStampsDict['Multitool Stamp'] >= 210:  # Max as of v1.91
+        exclusionsDict['Bugsack Stamp'] = True
+        exclusionsDict['Bag o Heads Stamp'] = True
+    return exclusionsDict
 
 # Stamp p4
 def getReadableStampName(stampNumber, stampType):
@@ -297,6 +314,7 @@ def setStampProgressionTier(inputJSON, progressionTiers):
     missingSkillStamps = setMissingStamps(inputJSON, 1)
     missingMiscStamps = setMissingStamps(inputJSON, 2)
     playerPriorityStamps = setPriorityStamps(inputJSON)
+    capacityExclusionsDict = getCapacityExclusions(playerPriorityStamps)
     tier_StampLevels = 0
     tier_RequiredCombatStamps = 0
     tier_RequiredSkillStamps = 0
@@ -323,6 +341,7 @@ def setStampProgressionTier(inputJSON, progressionTiers):
         header="Best Stamp tier met: Not Yet Evaluated. Recommended stamp actions:",
         picture="Stamps_Mr_Pigibank.gif"
     )
+
     for tier in progressionTiers:
         # TotalLevelStamps
         if tier_StampLevels == (tier[0] - 1):
@@ -407,18 +426,20 @@ def setStampProgressionTier(inputJSON, progressionTiers):
             allSpecificStamps = True
             for key, value in requiredSpecificStamps.items():
                 # print(tier[0], playerPriorityStamps[key], requiredSpecificStamps[key], playerPriorityStamps[key] >= requiredSpecificStamps[key])
-                if playerPriorityStamps[key] < requiredSpecificStamps[key]:
-                    allSpecificStamps = False
-                    advice_SpecificStamps += (str(key) + " to " + str(value) + "+, ")
-                    stamp_AdviceDict["SpecificStamps"].append(
-                        Advice(
-                            label=str(key) + " Stamp",
-                            item_name=str(key) + " Stamp",
-                            progression=playerPriorityStamps[key],
-                            goal=requiredSpecificStamps[key],
-                            unit=""
-                        )
-                    )
+                if key in capacityExclusionsDict:
+                    if capacityExclusionsDict[key] is False:
+                        if playerPriorityStamps[key] < requiredSpecificStamps[key]:
+                            allSpecificStamps = False
+                            advice_SpecificStamps += (str(key) + " to " + str(value) + "+, ")
+                            stamp_AdviceDict["SpecificStamps"].append(
+                                Advice(
+                                    label=str(key),
+                                    item_name=str(key),
+                                    progression=playerPriorityStamps[key],
+                                    goal=requiredSpecificStamps[key],
+                                    unit=""
+                                )
+                            )
             if allSpecificStamps == True:
                 tier_RequiredSpecificStamps = tier[0]
 
