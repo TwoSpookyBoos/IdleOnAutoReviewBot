@@ -7,18 +7,18 @@ logger = get_logger(__name__)
 
 
 class Tier:
-    def __init__(self, tier: int, activity: str = None, current: 'Threshold' = None, previous: 'Threshold' = None, next: 'Threshold' = None):
+    def __init__(self, tier: int, section: str = None, current: 'Threshold' = None, previous: 'Threshold' = None, next: 'Threshold' = None):
         self.tier = tier
-        self.activity = activity
+        self.section = section
         self.current = current
         self.previous = previous
         self.next = next
 
     def __str__(self):
-        return f"{self.activity}: T{self.tier}"
+        return f"{self.section}: T{self.tier}"
 
     def __repr__(self):
-        return f"<{self.__class__.__name__}: {self.activity}, T{self.tier}>"
+        return f"<{self.__class__.__name__}: {self.section}, T{self.tier}>"
 
 
 class Threshold:
@@ -129,14 +129,14 @@ class Placements(dict):
     SALT_LICK = "Salt Lick"
     PRAYERS = "Prayers"
     DEATH_NOTE = "Death Note"
-    activities = [
+    sections = [
         COMBAT_LEVELS,
         STAMPS, BRIBES, SMITHING,
         BUBBLES, VIALS,
         REFINERY, SALT_LICK, PRAYERS, DEATH_NOTE,
     ]
 
-    activityThresholds = {
+    sectionThresholds = {
         # [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,99] #template
         #               W1   W2          W3              W4              W5              W6              Max   Placeholder
         COMBAT_LEVELS: [0,   3, 7, 8,    10, 14, 15,     16, 17, 18,     19, 21, 23,     25, 27, 28,     29,   99],
@@ -150,7 +150,7 @@ class Placements(dict):
         PRAYERS:       [0,   0, 0, 0,    0,  0,  1,      1,  2,  3,      3,  4,  5,      5,  6,  7,      7,    99],
         DEATH_NOTE:    [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  4,  5,      12, 15, 19,     23,   99],
     }
-    activity_count = len(activityThresholds)
+    section_count = len(sectionThresholds)
 
     def __init__(self):
         super().__init__()
@@ -158,7 +158,7 @@ class Placements(dict):
         for name in Threshold.thresholdNames:
             self[name] = list()
 
-        for name, thresholds in self.activityThresholds.items():
+        for name, thresholds in self.sectionThresholds.items():
             self[name] = Thresholds(thresholds)
 
         self.final = dict()
@@ -172,8 +172,8 @@ class Placements(dict):
             raise TypeError(f"{item} is not a Threshold or string")
 
     def place(self, tier: Tier):
-        activity_thresholds: Thresholds = self[tier.activity]
-        placement: Threshold = activity_thresholds.place(tier)
+        section_thresholds: Thresholds = self[tier.section]
+        placement: Threshold = section_thresholds.place(tier)
         self[placement].append(tier)
 
     @property
@@ -213,10 +213,10 @@ class Thresholds(dict):
         placement = next((t.previous() for t in self._thresholds if t > tier), threshold_max)
         # if pinchy review tier flew off the grid somehow
         if placement == placeholder:
-            logger.info(f"Placing '{tier.activity}' into final tier because {tier.tier} >= {threshold_max}")
+            logger.info(f"Placing '{tier.section}' into final tier because {tier.tier} >= {threshold_max}")
             placement = threshold_max
         else:
-            logger.info("%s | %s | %s | %s", tier.activity, tier.tier, placement, placement.next())
+            logger.info("%s | %s | %s | %s", tier.section, tier.tier, placement, placement.next())
 
         previous_threshold = placement.previous()
         next_threshold = placement.next()
@@ -230,8 +230,8 @@ class Thresholds(dict):
 def sort_pinchy_reviews(dictOfPRs) -> Placements:
     placements = Placements()
 
-    for activity, pinchy_tier in dictOfPRs.items():
-        tier = Tier(pinchy_tier, activity)
+    for section, pinchy_tier in dictOfPRs.items():
+        tier = Tier(pinchy_tier, section)
         placements.place(tier)
 
     placements.finalise()
@@ -315,16 +315,16 @@ def tier_from_monster_kills(dictOfPRs, inputJSON, playerCount) -> Threshold:
     return expectedThreshold
 
 
-def generate_advice_list(activities: list[Tier], threshold: Threshold):
+def generate_advice_list(sections: list[Tier], threshold: Threshold):
     advices = [
         Advice(
-            label=activity.activity,
-            item_name=activity.activity,
-            progression=activity.tier,
-            goal=activity.next.tier,
+            label=section.section,
+            item_name=section.section,
+            progression=section.tier,
+            goal=section.next.tier,
             unit="T",
             value_format="{unit} {value}"
-        ) for activity in activities
+        ) for section in sections
     ]
     if threshold == Threshold.fromname(Threshold.MAX_TIER):
         for advice in advices:
@@ -335,10 +335,10 @@ def generate_advice_list(activities: list[Tier], threshold: Threshold):
     return advices
 
 
-def generate_advice_groups(activitiesByThreshold: dict):
+def generate_advice_groups(sectionsByThreshold: dict):
     advice_groups = []
-    for threshold, activities in activitiesByThreshold.items():
-        advices = generate_advice_list(activities, Threshold.fromname(threshold))
+    for threshold, sections in sectionsByThreshold.items():
+        advices = generate_advice_list(sections, Threshold.fromname(threshold))
 
         advice_group = AdviceGroup(
             tier="",
@@ -351,9 +351,9 @@ def generate_advice_groups(activitiesByThreshold: dict):
 
 
 def setPinchyList(inputJSON, playerCount, dictOfPRs):
-    activityPlacements: Placements = sort_pinchy_reviews(dictOfPRs)
+    sectionPlacements: Placements = sort_pinchy_reviews(dictOfPRs)
     expectedThreshold: Threshold = tier_from_monster_kills(dictOfPRs, inputJSON, playerCount)
-    lowestThresholdReached: Threshold = activityPlacements.lowest
+    lowestThresholdReached: Threshold = sectionPlacements.lowest
 
     # Generate advice based on catchup
     equalSnippet = ""
@@ -370,10 +370,10 @@ def setPinchyList(inputJSON, playerCount, dictOfPRs):
     else:
         pinchyExpected = f"Expected Progression, based on highest enemy map: {expectedThreshold}"
 
-    advice_groups = generate_advice_groups(activityPlacements.final)
+    advice_groups = generate_advice_groups(sectionPlacements.final)
 
-    sections_maxed_count = activityPlacements.maxed_count
-    sections_total = Placements.activity_count
+    sections_maxed_count = sectionPlacements.maxed_count
+    sections_total = Placements.section_count
     sections_maxed = f"{sections_maxed_count}/{sections_total}"
 
     pinchy_high = AdviceSection(
@@ -393,7 +393,7 @@ def setPinchyList(inputJSON, playerCount, dictOfPRs):
     pinchy_all = AdviceSection(
         name="Pinchy all",
         tier=sections_maxed,
-        header=f"Activities maxed: {sections_maxed}. Recommended general activity actions:",
+        header=f"Sections maxed: {sections_maxed}. Recommended general section actions:",
         picture="Pinchy.gif",
         groups=advice_groups
     )
