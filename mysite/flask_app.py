@@ -8,8 +8,8 @@ import idleonTaskSuggester
 from utils import get_logger
 
 logger = get_logger(__name__)
-HOSTNAME = "https://ieautoreview-scoli.pythonanywhere.com"
-HOSTNAME_BETA = f"https://beta-ieautoreview-scoli.pythonanywhere.com"
+FQDN = "ieautoreview-scoli.pythonanywhere.com"
+FQDN_BETA = f"beta-{FQDN}"
 
 
 def format_character_name(name: str) -> str:
@@ -44,13 +44,14 @@ def index() -> Response | str:
     page: str = 'results.html'
     error: bool = False
     pythonOutput: list | None = None
-    beta = HOSTNAME_BETA in request.host
+    is_beta = FQDN_BETA in request.host
+    logger.info(request.host)
 
     try:
         capturedCharacterInput: str | dict = get_character_input()
         logger.info("request.args.get('player'): %s %s", type(capturedCharacterInput), capturedCharacterInput)
         if request.method == 'POST' and isinstance(capturedCharacterInput, str):
-            return redirect(url_for('index', player=capturedCharacterInput, beta=beta))
+            return redirect(url_for('index', player=capturedCharacterInput, beta=is_beta))
 
         store_user_preferences()
 
@@ -61,18 +62,18 @@ def index() -> Response | str:
         logger.error('Could not get Player from Request Args: %s', reason)
         error = True
 
-    return render_template(page, htmlInput=pythonOutput, error=error, beta=beta)
+    return render_template(page, htmlInput=pythonOutput, error=error, beta=is_beta)
 
 
 @app.route("/live", methods=["GET", "POST"])
 def live() -> Response:
-    link = f"{HOSTNAME}?" + '&'.join(f"{k}={v}" for k, v in request.args.items())
+    link = f"https://{FQDN}?" + '&'.join(f"{k}={v}" for k, v in request.args.items())
     return redirect(link)
 
 
 @app.route("/beta", methods=["GET", "POST"])
 def beta() -> Response:
-    link = f"{HOSTNAME_BETA}?" + '&'.join(f"{k}={v}" for k, v in request.args.items())
+    link = f"https://{FQDN_BETA}?" + '&'.join(f"{k}={v}" for k, v in request.args.items())
     return redirect(link)
 
 
