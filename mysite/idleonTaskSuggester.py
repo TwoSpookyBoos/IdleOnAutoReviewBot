@@ -284,6 +284,14 @@ def main(inputData, runType="web"):
     if isinstance(inputData, str):
         inputData = inputData.strip()  # remove leading and trailing whitespaces
 
+    ieLinkList = dict(
+        direct_json="",
+        ie_link="",
+        link_text="",
+        first_name="",
+        json_error="",
+        last_update=""
+    )
     #Step 1: Retrieve data from public IdleonEfficiency website or from file
     if len(inputData) < 16 and isinstance(inputData, str):
         #print("~~~~~~~~~~~~~~~ Starting up PROD main at", datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "for", inputData, "~~~~~~~~~~~~~~~")
@@ -300,13 +308,14 @@ def main(inputData, runType="web"):
             if parsedJSON == "PublicIEProfileNotFound" and runType == "consoleTest":
                 return "PublicIEProfileNotFound"
             ieLinkString = "Searching for character data from: https://" + inputData.lower() + ".idleonefficiency.com"
-            ieLinkList = ["Searching for character data from:", "https://" + inputData.lower() + ".idleonefficiency.com"]
+            ieLinkList["ie_link"] = f"https://{inputData.lower()}.idleonefficiency.com"
+            ieLinkList["link_text"] = f"{inputData.lower()}.idleonefficiency.com"
     else:
         if runType == "web":
             print("~~~~~~~~~~~~~~~ Starting up PROD main at", datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "for direct web JSON input.~~~~~~~~~~~~~~~")
         parsedJSON = getJSONfromText(runType, inputData)
         ieLinkString = "Searching for character data from direct JSON paste. "
-        ieLinkList = ["Searching for character data from direct JSON paste."]
+        ieLinkList["direct_json"] = " direct JSON paste"
 
     if isinstance(parsedJSON, str):
         if parsedJSON.startswith("JSONParseFail"):
@@ -346,13 +355,16 @@ def main(inputData, runType="web"):
     if ieLinkString.endswith("JSON paste. "):
         if playerNames[0] == "Character1":
             ieLinkString += "NO SORTED LIST OF CHARACTER NAMES FOUND IN DATA. REPLACING WITH GENERIC NUMBER ORDER."
-            ieLinkList.append("NO SORTED LIST OF CHARACTER NAMES FOUND IN DATA. REPLACING WITH GENERIC NUMBER ORDER.")
+            ieLinkList["json_error"] = "NO SORTED LIST OF CHARACTER NAMES FOUND IN DATA. REPLACING WITH GENERIC NUMBER ORDER."
         else:
             ieLinkString += "First character name found: " + playerNames[0]
-            ieLinkList.append("First character name found: " + playerNames[0])
+            ieLinkList["first_name"] = playerNames[0]
+            ieLinkList["link_text"] = f"{playerNames[0]}.idleonefficiency.com"
+            ieLinkList["ie_link"] = f"https://{playerNames[0]}.idleonefficiency.com"
 
     #General
     lastUpdatedTimeString = getLastUpdatedTime(parsedJSON)
+    ieLinkList["last_update"] = lastUpdatedTimeString
     if runType == "web":
         logger.info(f"{lastUpdatedTimeString = }")
     combatLevelsPR = idleon_CombatLevels.setCombatLevelsProgressionTier(parsedJSON, progressionTiers['Combat Levels'], playerCount, playerNames)
