@@ -3,7 +3,7 @@ import itemDecoder
 from math import floor
 from models import AdviceSection, AdviceGroup, Advice
 from utils import pl
-#import itertools
+import itertools
 
 def getEquinoxDreams(inputJSON):
     results = {
@@ -352,19 +352,19 @@ def setGStackProgressionTier(inputJSON, playerCount, progressionTiers):
     dreamAdvice = "You currently have " + str(uniqueGStacksCount) + " out of max possible " + str(expectedStackablesCount) + " GStacks."
     if uniqueGStacksCount >= 200 or equinoxDreamsStatus["Dream29"] == True:
         dreamAdvice += " You best ❤️ (until Lava adds further Dream tasks) Other possible targets are still listed below."
-        #firstAdvice = dict(itertools.islice(combinedAdvice.items(), 4))
+        firstAdvice = dict(itertools.islice(combinedAdvice.items(), 12))
         #During Advice refactor, collapse any tiers after 4th
     elif uniqueGStacksCount >= 75 or equinoxDreamsStatus["Dream12"] == True:
         dreamAdvice += " Equinox Dream 29 requires 200. Aim for items up through Tier 10! There are a few extras included for flexibility."
-        #firstAdvice = dict(itertools.islice(combinedAdvice.items(), 4))
+        firstAdvice = dict(itertools.islice(combinedAdvice.items(), 5))
         # During Advice refactor, collapse any tiers after 4th
     elif uniqueGStacksCount >= 20 or equinoxDreamsStatus["Dream1"] == True:
         dreamAdvice += " Equinox Dream 12 requires 75. Aim for items up through Tier 2! There are a few extras included for flexibility."
-        #firstAdvice = dict(itertools.islice(combinedAdvice.items(), 3))
+        firstAdvice = dict(itertools.islice(combinedAdvice.items(), 4))
         # During Advice refactor, collapse any tiers after 3rd
     elif uniqueGStacksCount < 20 and equinoxDreamsStatus["Dream1"] == False:
         dreamAdvice += " Equinox Dream 1 requires 20. Aim for items in Tier 1! There are a few extras included for flexibility."
-        #firstAdvice = dict(itertools.islice(combinedAdvice.items(), 2))
+        firstAdvice = dict(itertools.islice(combinedAdvice.items(), 3))
         # During Advice refactor, collapse any tiers after 2nd
 
     #print("Dream Advice:", dreamAdvice)
@@ -375,4 +375,4 @@ def setGStackProgressionTier(inputJSON, playerCount, progressionTiers):
         #if tier != "":
             #print("GStack All Tiers Advice:", tier, firstAdvice[tier])
 
-    return [dreamAdvice, missedQuestItemsDict["Advice"], combinedAdvice]
+    return [dreamAdvice, missedQuestItemsDict["Advice"], firstAdvice]
