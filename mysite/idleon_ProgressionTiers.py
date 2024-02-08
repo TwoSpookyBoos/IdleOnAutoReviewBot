@@ -381,7 +381,22 @@ def setDefaultTiers():
             }
         }
     defaultTiers['Greenstacks'] = {
-        0: {},
+        0: {  # The timegated tier
+            "Vendor Shops": [
+                "FoodHealth14", "FoodHealth15",  # Previously Tier2
+                "FoodHealth12", "FoodHealth13",  # Previously Tier2
+                "FoodPotOr4", "FoodPotGr4", "FoodPotRe4", "FoodPotYe4",  # Previously Tier3
+                "OilBarrel6",  # Previously Tier5
+                "FoodHealth9",  # Previously Tier10
+                "FoodHealth4", "FoodHealth11",  # Previously Tier11
+                "Quest19"  # Previously Tier12
+
+            ],
+            "Misc": [
+                "FoodPotMana3", "FoodPotGr3", "FoodPotRe1",  # Previously Tier10
+                "FoodPotRe2"  # Previously Tier11
+            ]
+        },
         1: {
             "Base Monster Materials": [
                 "Grasslands1", "Grasslands2"],
@@ -403,8 +418,8 @@ def setDefaultTiers():
                 "Starfire", "Marble", "Dreadlo",
                 "Fish4", "Fish5", "Fish6", "Fish7", "Fish8",
                 "Bug3", "Bug4", "Bug5", "Bug6", "Bug7", "Bug8"],
-            "Other Skilling Resources": ["CraftMat6", "CraftMat7", "CraftMat9"],
-            "Vendor Shops": ["FoodHealth14", "FoodHealth15", "FoodHealth12", "FoodHealth13"]
+            "Other Skilling Resources": ["CraftMat6", "CraftMat7", "CraftMat9"]
+            #"Vendor Shops": ["FoodHealth14", "FoodHealth15", "FoodHealth12", "FoodHealth13"]
             },
         3: {
             "Base Monster Materials": [
@@ -417,8 +432,8 @@ def setDefaultTiers():
                 "CraftMat8", "CraftMat10", "CraftMat11",
                 "Critter1", "Critter2", "Critter3",
                 "Soul1",
-                "CopperBar"],
-            "Vendor Shops": ["FoodPotOr4", "FoodPotGr4", "FoodPotRe4", "FoodPotYe4"]
+                "CopperBar"]
+            #"Vendor Shops": ["FoodPotOr4", "FoodPotGr4", "FoodPotRe4", "FoodPotYe4"]
             },
         4: {
             "Base Monster Materials": ["LavaA1", "LavaA2", "LavaA3", "LavaA4", "LavaA5", "LavaB1", "LavaB2", "LavaB3", "LavaB4", "LavaB5", "LavaB6",  "LavaC1", "LavaC2"],
@@ -438,7 +453,7 @@ def setDefaultTiers():
                 "Critter7", "Critter8",
                 "Soul3",
                 "GoldBar"],
-            "Vendor Shops": ["OilBarrel6"],
+            #"Vendor Shops": ["OilBarrel6"],
             },
         6: {
             "Crystal Enemy Drops": ["FoodHealth10", "FoodPotOr3", "FoodPotYe2", "Leaf3"],
@@ -475,9 +490,9 @@ def setDefaultTiers():
             "Other Skilling Resources": [
                 "StarfireBar",
                 "Bullet3", "FoodChoppin1"],
-            "Crystal Enemy Drops": ["EquipmentStatues7", "EquipmentStatues3", "EquipmentStatues2", "EquipmentStatues4", "EquipmentStatues14"],
-            "Misc": ["FoodPotMana3", "FoodPotGr3", "FoodPotRe1"],
-            "Vendor Shops": ["FoodHealth9"]
+            "Crystal Enemy Drops": ["EquipmentStatues7", "EquipmentStatues3", "EquipmentStatues2", "EquipmentStatues4", "EquipmentStatues14"]
+            #"Misc": ["FoodPotMana3", "FoodPotGr3", "FoodPotRe1"]
+            #"Vendor Shops": ["FoodHealth9"]
             },
         11: {
             "Base Monster Materials": ["Quest15", "Hgg"],
@@ -488,14 +503,16 @@ def setDefaultTiers():
                 "DreadloBar",
                 "EquipmentSmithingTabs2"
                 "Refinery1"],
-            "Vendor Shops": ["FoodHealth4", "FoodHealth11"],
-            "Misc": ["FoodPotRe2", "ButterBar"]
+            #"Vendor Shops": ["FoodHealth4", "FoodHealth11"],
+            "Misc": [
+                #"FoodPotRe2",
+                "ButterBar"]
             },
         12: {
             "Other Skilling Resources": [
                 "Refinery2", "Refinery3", "Refinery4",
                 "Critter1A", "Critter2A","Critter3A", "Critter4A", "Critter5A", "Critter6A", "Critter7A", "Critter8A", "Critter9A", "Critter10A"],
-            "Vendor Shops": ["Quest19"]
+            #"Vendor Shops": ["Quest19"]
             }
         }
     return defaultTiers
