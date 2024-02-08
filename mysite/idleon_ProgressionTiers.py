@@ -390,11 +390,14 @@ def setDefaultTiers():
                 "FoodHealth9",  # Previously Tier10
                 "FoodHealth4", "FoodHealth11",  # Previously Tier11
                 "Quest19"  # Previously Tier12
-
             ],
             "Misc": [
                 "FoodPotMana3", "FoodPotGr3", "FoodPotRe1",  # Previously Tier10
                 "FoodPotRe2"  # Previously Tier11
+            ],
+            "Other Skilling Resources": [
+                "Refinery1",  # Previously Tier11
+                "Refinery2", "Refinery3", "Refinery4"  # Previously Tier12
             ]
         },
         1: {
@@ -502,7 +505,8 @@ def setDefaultTiers():
             "Other Skilling Resources": [
                 "DreadloBar",
                 "EquipmentSmithingTabs2"
-                "Refinery1"],
+                #"Refinery1"
+            ],
             #"Vendor Shops": ["FoodHealth4", "FoodHealth11"],
             "Misc": [
                 #"FoodPotRe2",
@@ -510,7 +514,7 @@ def setDefaultTiers():
             },
         12: {
             "Other Skilling Resources": [
-                "Refinery2", "Refinery3", "Refinery4",
+                #"Refinery2", "Refinery3", "Refinery4",
                 "Critter1A", "Critter2A","Critter3A", "Critter4A", "Critter5A", "Critter6A", "Critter7A", "Critter8A", "Critter9A", "Critter10A"],
             #"Vendor Shops": ["Quest19"]
             }
