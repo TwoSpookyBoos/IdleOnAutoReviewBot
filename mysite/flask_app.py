@@ -44,14 +44,17 @@ def index() -> Response | str:
     page: str = 'results.html'
     error: bool = False
     pythonOutput: list | None = None
-    is_beta = FQDN_BETA in request.host
+    is_beta: bool = FQDN_BETA in request.host
     logger.info(request.host)
+    url_params = request.query_string.decode("utf-8")
+    live_link = f"live?{url_params}"
+    beta_link = f"beta?{url_params}"
 
     try:
         capturedCharacterInput: str | dict = get_character_input()
         logger.info("request.args.get('player'): %s %s", type(capturedCharacterInput), capturedCharacterInput)
         if request.method == 'POST' and isinstance(capturedCharacterInput, str):
-            return redirect(url_for('index', player=capturedCharacterInput, beta=is_beta))
+            return redirect(url_for('index', player=capturedCharacterInput))
 
         store_user_preferences()
 
@@ -65,7 +68,7 @@ def index() -> Response | str:
         logger.error('Could not get Player from Request Args: %s', reason)
         error = True
 
-    return render_template(page, htmlInput=pythonOutput, error=error, beta=is_beta)
+    return render_template(page, htmlInput=pythonOutput, error=error, beta=is_beta, live_link=live_link, beta_link=beta_link)
 
 
 @app.route("/live", methods=["GET", "POST"])
@@ -115,7 +118,7 @@ def ensure_data(results: list):
 
 
 def get_resource(dir_: str, filename: str) -> str:
-    return url_for('static', filename=f'/{dir_}/{filename}')
+    return url_for('static', filename=f'{dir_}/{filename}')
 
 
 def style(filename: str):
