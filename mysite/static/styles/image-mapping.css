@@ -1,3 +1,15 @@
+.vials::before {
+  background-image: url("/static/imgs/Alchemy_Vial-level-1.png");
+}
+
+.prayers::before {
+  background-image: url("https://idleon.wiki/wiki/images/9/9b/Prayer_Stone.gif");
+}
+
+.bubbles::before {
+  background-image: url("https://idleon.wiki/wiki/images/archive/4/42/20230111134826%21OrangeBubble13.png");
+}
+
 .copper-corona::before {
   background-image: url("https://idleon.wiki/wiki/images/7/78/Copper_Ore.png");
 }

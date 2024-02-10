@@ -93,6 +93,8 @@ class Advice(AdviceBase):
         super().__init__(**extra)
 
         self.label: str = label
+        if item_name and item_name[0].isdigit():
+            item_name = f"x{item_name}"
         self.item_name: str = item_name
         self.progression: str = str(progression)
         self.goal: str = str(goal)
