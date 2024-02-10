@@ -163,12 +163,21 @@
                 {% for tier, categories in htmlInput[0][4][2].items() %}
                     {% if categories %}
                         <div class="advice-section-wrapper">
-                            <strong>Tier {{ tier }} items to Greenstack</strong>
-                            <ul id="greenstacks-{{ tier }}">
-                                {% for category in categories %}
-                                    <li> {{ category }}</li> <!-- Greenstack tiers advice -->
-                                {% endfor %}
-                            </ul>
+                            {% if tier == 0 %}
+                                <strong>Timegated items to Greenstack (May take months!)</strong>
+                                    <ul id="greenstacks-{{ tier }}">
+                                    {% for category in categories %}
+                                        <li> {{ category }}</li> <!-- Greenstack tiers advice -->
+                                    {% endfor %}
+                                        </ul>
+                            {% else %}
+                                <strong>Tier {{ tier }} items to Greenstack</strong>
+                                <ul id="greenstacks-{{ tier }}">
+                                    {% for category in categories %}
+                                        <li> {{ category }}</li> <!-- Greenstack tiers advice -->
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
                         </div>
                     {% endif %}
                 {% endfor %}
