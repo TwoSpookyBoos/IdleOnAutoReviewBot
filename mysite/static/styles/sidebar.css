@@ -1,6 +1,30 @@
 :root {
     --sidebar-width: 650px;
     --sidebar-width-mobile: 100vw;
+
+    --fg-sidebar: white;
+    --bg-sidebar: hsl(208, 15%, 22%);
+
+    --fg-submit: lightgray;
+    --bg-submit: mediumseagreen;
+
+    --fg-textbox: lightgray;
+    --bg-textbox: hsl(0, 0%, 35%);
+
+    --fg-text-placeholder: lightgray;
+}
+
+:root.light-mode {
+    --fg-sidebar: black;
+    --bg-sidebar: hsl(0, 0%, 73%);
+
+    --fg-submit: white;
+    --bg-submit: forestgreen;
+
+    --fg-textbox: hsl(208, 15%, 22%);
+    --bg-textbox: hsl(0, 0%, 89%);
+
+    --fg-text-placeholder: hsl(208, 15%, 22%);
 }
 
 aside {
@@ -16,8 +40,8 @@ aside {
     width: var(--sidebar-width);
     height: 100%;
 
-    color: white;
-    background: #22272b;
+    color: var(--fg-sidebar);
+    background: var(--bg-sidebar);
 
     overflow-x: hidden;
 
@@ -30,20 +54,19 @@ aside {
     letter-spacing: 1px;
 
     box-shadow: none;
-}
-.light-mode aside {
-    color: black;
-    background: white;
-    transition: all .5s ease-out;
-}
 
-aside.sidebar-open {
-    left: 0;
-    box-shadow: 9px 0 51px 21px hsla(0, 0%, 8%, .75);
-}
+    .light-mode & {
+        transition: all .5s ease-out;
+    }
 
-.light-mode aside.sidebar-open {
-    box-shadow: 9px 0 51px 21px hsla(0, 0%, 39%, .75);
+    &.sidebar-open {
+        left: 0;
+        box-shadow: 9px 0 51px 21px hsla(0, 0%, 8%, .75);
+
+        .light-mode & {
+            box-shadow: 9px 0 51px 21px hsla(0, 0%, 39%, .75);
+        }
+    }
 }
 
 form {
@@ -52,38 +75,30 @@ form {
     align-items: stretch;
 }
 
-form input {
-    flex-grow: 1;
-    border: none;
-    border-radius: 0 10px 10px 0;
-    color: lightgray;
-    background: mediumseagreen;
-}
-.light-mode aside form input {
-    color: white;
-    background: forestgreen;
+form {
+    input[type="submit"] {
+        flex-grow: 1;
+        border: none;
+        border-radius: 0 10px 10px 0;
+        color: var(--fg-submit);
+        background: var(--bg-submit);
+    }
+    textarea {
+        border: none;
+        flex-grow: 4;
+        padding: 5px;
+        border-radius: 10px 0 0 10px;
+        color: var(--fg-textbox);
+        background: var(--bg-textbox);
+
+        &::placeholder {
+            padding-left: 5px;
+            padding-top: 5px;
+            color: var(--fg-text-placeholder);
+        }
+    }
 }
 
-form textarea {
-    border: none;
-    flex-grow: 4;
-    padding: 5px;
-    border-radius: 10px 0 0 10px;
-    color: lightgray;
-    background: #595959;
-}
-.light-mode aside form textarea {
-    color: #303941;
-    background: #e3e3e3;
-}
-form textarea::placeholder {
-    padding-left: 5px;
-    padding-top: 5px;
-    color: lightgray;
-}
-.light-mode aside form textarea::placeholder {
-    color: #303941;
-}
 form input,
 form textarea,
 form textarea::placeholder,

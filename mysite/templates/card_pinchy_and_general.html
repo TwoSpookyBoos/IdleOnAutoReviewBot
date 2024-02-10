@@ -6,7 +6,7 @@
     <div class="content-wrapper{% if world.collapse %} folded{% endif %}">
         {% for section in world.sections %}
             <section id="{{ section.name.lower() }}" class="new">
-                <h3 class="subheading no-collapse">
+                <h3 class="subheading no-collapse{% if section.collapse %} folded{% endif %}">
                     {% if section.picture %}
                         <img src="{{ img(section.picture) }}" alt="{{ section.name }}">
                     {% endif %}

@@ -34,10 +34,11 @@ document.addEventListener("DOMContentLoaded", () => {
         let subh = e.currentTarget
         let section = subh.parentElement
         if (section.classList.contains("new")) {
-            e.currentTarget.nextElementSibling.classList.toggle("folded")
+            subh.nextElementSibling.classList.toggle("folded")
+            subh.classList.toggle("folded")
         } else {
-            e.currentTarget.nextElementSibling.querySelectorAll('ul, em').forEach(ul => ul.classList.toggle('folded'))
-            e.currentTarget.querySelector('img').classList.toggle('folded')
+            subh.nextElementSibling.querySelectorAll('ul, em').forEach(ul => ul.classList.toggle('folded'))
+            subh.querySelector('img').classList.toggle('folded')
         }
     })
 
