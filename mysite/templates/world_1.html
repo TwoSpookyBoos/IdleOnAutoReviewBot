@@ -14,7 +14,7 @@
                 <li id="{{ section.name.lower() }}-tier">
                     {% for group in section.groups %}
                         <div class="advice-group">
-                            <span>Tier {{ group.tier }} - {{ group.pre_string }}:</span>
+                            <span>{{ group.heading }}:</span>
                             <ul class="table {% if group.collapse %} folded{% endif %}">
                             {% if group.show_table_header %}
                               <li></li>

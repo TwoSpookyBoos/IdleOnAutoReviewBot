@@ -85,7 +85,7 @@ class Threshold:
     def __ge__(self, other):
         if isinstance(other, Tier):
             return self.tier > other.tier
-        return self.index > other.index
+        return self.index >= other.index
 
     def __eq__(self, other):
         if isinstance(other, Tier):
@@ -358,7 +358,7 @@ def setPinchyList(inputJSON, playerCount, dictOfPRs):
     # Generate advice based on catchup
     equalSnippet = ""
     if lowestThresholdReached >= expectedThreshold:
-        equalSnippet = "Your lowest sections are roughly equal with (or better than!) your highest enemy map. Keep up the good work!"
+        equalSnippet = ". Your lowest sections are roughly equal with (or better than!) your highest enemy map. Keep up the good work!"
 
     if expectedThreshold.name == Threshold.PLACEHOLDER:
         pinchyExpected = (
@@ -386,7 +386,7 @@ def setPinchyList(inputJSON, playerCount, dictOfPRs):
     pinchy_low = AdviceSection(
         name="Pinchy low",
         tier=lowestThresholdReached.name,
-        header=f"Minimum Progression, based on weakest ranked review: {lowestThresholdReached}",
+        header=f"Minimum Progression, based on weakest ranked review: {lowestThresholdReached}{equalSnippet}",
         collapse=True
     )
 
@@ -401,7 +401,6 @@ def setPinchyList(inputJSON, playerCount, dictOfPRs):
     pinchy = AdviceWorld(
         name=WorldName.PINCHY,
         sections=[pinchy_high, pinchy_low, pinchy_all],
-        equalSnippet=equalSnippet
     )
 
     return pinchy

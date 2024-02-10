@@ -31,6 +31,7 @@
     --fg-subheading-progress: lightgoldenrodyellow;
     --fg-subheading-finished: springgreen;
     --bg-subheading: rgba(255, 255, 255, 0.1);
+    --border-subheading: hsla(0deg, 100%, 100%, 0.3);
 
     --bg-pinchy: linear-gradient(to right, hsla(34deg, 100%, 50%, 20%), hsla(52deg, 100%, 50%, 20%));
     --bg-pinchy-banner: linear-gradient(to right, hsla(0deg, 0%, 0%, 45%), hsla(0deg, 0%, 0%, 20%));
@@ -68,6 +69,7 @@
     --fg-subheading: hsl(43, 94%, 19%);
     --fg-subheading-progress: hsla(42.66, 87.53%, 38.08%, 1);
     --fg-subheading-finished: hsl(134, 98%, 34%);
+    --border-subheading: hsla(0deg, 100%, 0%, 0.3);
 
     --fg-pinchy-title: hsl(43.94deg 93.41% 59.54%);
     --bg-pinchy-group-odd: hsla(0, 0%, 100%, 0.5);
@@ -346,7 +348,7 @@ strong:not(.no-collapse):hover,
         padding: 20px;
 
         &.folded {
-            border-bottom: 1px solid hsla(0deg, 100%, 100%, 0.3);
+            border-bottom: 1px solid var(--border-subheading);
         }
 
         span {
@@ -386,7 +388,6 @@ strong:not(.no-collapse):hover,
     }
 
     .advice-group {
-        /*width: fit-content;*/
         padding: 20px;
         border-radius: 20px;
     }

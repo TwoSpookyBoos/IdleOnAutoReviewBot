@@ -17,7 +17,7 @@
 }
 
 :root.light-mode {
-    --bg-nav: hsl(0, 0%, 73%);
+    --bg-nav: hsl(0deg, 3%, 84%);
     --fg-nav-links: hsl(205deg, 16%, 27%);
     --fg-spreadsheet: hsl(151deg, 70.55%, 31.75%);
     --burger: hsl(46deg, 67%, 35%);
