@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     })
     document.querySelector('#light-switch').onclick = (e) => {
-        document.body.classList.toggle('light-mode')
+        document.documentElement.classList.toggle('light-mode')
         e.currentTarget.classList.toggle('on')
         e.currentTarget.classList.toggle('off')
     }
@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
         query.addEventListener('change', (event) => fn(event.matches))
     }
 
-    const body = document.body.classList
+    const body = document.documentElement.classList
     const cls = 'light-mode'
     runColorMode((isLightMode) => {
         let lightSwitch = document.querySelector('#light-switch')
