@@ -1,0 +1,61 @@
+:root {
+  --knob-height: 20px;
+  --shaft-padding: calc(var(--knob-height) / 6);
+  --shaft-height: calc(var(--knob-height) + 2 * var(--shaft-padding));
+  --shaft-width: calc(var(--knob-height) * 2 + 2 * var(--shaft-padding));
+  --shaft-radius: calc(var(--shaft-height) / 2);
+}
+
+.slider {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: fit-content;
+  background: transparent;
+}
+.slider[for=handedness] > .shaft.off {
+  background: oldlace;
+}
+.slider[for=handedness] > .shaft.off .knob {
+  background: forestgreen;
+}
+.slider .shaft {
+  display: flex;
+  height: var(--shaft-height);
+  width: var(--shaft-width);
+  padding: var(--shaft-padding);
+  border-radius: var(--shaft-radius);
+  background: oldlace;
+}
+.slider .shaft.on {
+  flex-direction: row;
+}
+.slider .shaft.on .knob {
+  background: forestgreen;
+}
+.slider .shaft.off {
+  background-color: gray;
+  flex-direction: row-reverse;
+}
+.slider .shaft.off .knob {
+  background: #343434;
+}
+.slider .shaft .knob {
+  display: block;
+  height: var(--knob-height);
+  width: var(--knob-height);
+  border-radius: 50%;
+}
+.slider .shaft .knob:before {
+  content: "";
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+}
+
+/*# sourceMappingURL=slider.css.map */

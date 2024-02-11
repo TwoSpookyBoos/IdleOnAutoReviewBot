@@ -36,8 +36,41 @@ def get_character_input() -> str:
 
 
 def store_user_preferences():
-    g.order_tiers = request.args.get('order_tiers', False) == 'true'
+    if request.method == 'POST':
+        args = request.form
+    elif request.method == 'GET':
+        args = request.args
+    else:
+        raise ValueError(f'Unknown request method: {request.method}')
+    g.autoloot = args.get('autoloot', False) in ['on', "True"]
+    g.sheepie = args.get('sheepie', False) in ['on', "True"]
+    g.doot = args.get('doot', False) in ['on', "True"]
+    g.order_tiers = args.get('order_tiers', False) in ['on', "True"]
+    g.handedness = args.get('handedness', False) in ['on', "True"]
 
+
+def get_user_preferences():
+    return dict(
+        autoloot=g.autoloot,
+        sheepie=g.sheepie,
+        doot=g.doot,
+        order_tiers=g.order_tiers,
+        handedness=g.handedness,
+    )
+
+
+def switches():
+    vals = [
+        ("Autoloot purchased", "autoloot", "", ""),
+        ("Sheepie pet acquired", "sheepie", "", ""),
+        ("Doot pet acquired", "doot", "", ""),
+        ("Order groups by tier", "order_tiers", "", ""),
+        ("Handedness", "handedness", "L", "R"),
+    ]
+    return [
+        (label, name, on, off, ("on" if get_user_preferences()[name] else "off"))
+        for label, name, on, off in vals
+    ]
 
 @app.route("/", methods=["GET", "POST"])
 def index() -> Response | str:
@@ -50,13 +83,13 @@ def index() -> Response | str:
     live_link = f"live?{url_params}"
     beta_link = f"beta?{url_params}"
 
+    store_user_preferences()
+
     try:
         capturedCharacterInput: str | dict = get_character_input()
         logger.info("request.args.get('player'): %s %s", type(capturedCharacterInput), capturedCharacterInput)
         if request.method == 'POST' and isinstance(capturedCharacterInput, str):
-            return redirect(url_for('index', player=capturedCharacterInput))
-
-        store_user_preferences()
+            return redirect(url_for('index', player=capturedCharacterInput, **get_user_preferences()))
 
         if capturedCharacterInput:
             pythonOutput = autoReviewBot(capturedCharacterInput)
@@ -68,7 +101,12 @@ def index() -> Response | str:
         logger.error('Could not get Player from Request Args: %s', reason)
         error = True
 
-    return render_template(page, htmlInput=pythonOutput, error=error, beta=is_beta, live_link=live_link, beta_link=beta_link)
+    return render_template(
+        page,
+        htmlInput=pythonOutput, error=error, beta=is_beta,
+        live_link=live_link, beta_link=beta_link,
+        switches=switches()
+    )
 
 
 @app.route("/live", methods=["GET", "POST"])
@@ -122,11 +160,11 @@ def get_resource(dir_: str, filename: str) -> str:
 
 
 def style(filename: str):
-    return get_resource("styles", filename)
+    return get_resource("styles", f"{filename}.css")
 
 
 def script(filename: str):
-    return get_resource("scripts", filename)
+    return get_resource("scripts", f"{filename}.js")
 
 
 def img(filename: str):

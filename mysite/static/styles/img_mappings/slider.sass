@@ -1,0 +1,66 @@
+\:root
+    --knob-height: 20px
+    --shaft-padding: calc(var(--knob-height) / 6)
+    --shaft-height: calc(var(--knob-height) + 2 * var(--shaft-padding))
+    --shaft-width: calc(var(--knob-height) * 2 + 2 * var(--shaft-padding))
+    --shaft-radius: calc(var(--shaft-height) / 2)
+
+.slider
+
+    display: flex
+    flex-direction: row
+
+    justify-content: space-between
+    align-items: center
+
+    width: 100%
+    height: fit-content
+
+    background: transparent
+
+    &[for="handedness"] > .shaft.off
+        background: oldlace
+
+        .knob
+            background: forestgreen
+
+    .shaft
+
+        display: flex
+        height: var(--shaft-height)
+        width: var(--shaft-width)
+
+        padding: var(--shaft-padding)
+        border-radius: var(--shaft-radius)
+
+        background: oldlace
+
+        &.on
+            flex-direction: row
+
+            .knob
+                background: forestgreen
+        &.off
+            background-color: gray
+            flex-direction: row-reverse
+
+            .knob
+                background: #343434
+
+        .knob
+            display: block
+            height: var(--knob-height)
+            width: var(--knob-height)
+            border-radius: 50%
+
+            &:before
+                content: ''
+
+                height: 100%
+                width: 100%
+
+                display: flex
+                align-items: center
+                justify-content: center
+
+                background-color: transparent

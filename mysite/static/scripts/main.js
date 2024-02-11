@@ -90,4 +90,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (document.querySelectorAll('main, .error').length === 0) {
         toggleSidebar()
     }
+
+    document.querySelectorAll('#switchbox label').forEach(label => label.onclick = e => {
+        const lbl = e.currentTarget
+        const knob = lbl.querySelector(".knob")
+        const shaft = lbl.querySelector(".shaft")
+        shaft.classList.toggle("on")
+        shaft.classList.toggle("off")
+    })
 });
