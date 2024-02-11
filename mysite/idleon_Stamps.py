@@ -136,6 +136,12 @@ def getReadableStampName(stampNumber, stampType):
                     return "Golden Sixes Stamp"
                 case 38:
                     return "Stat Wallstreet Stamp"
+                #case 39:
+                    #return "Unknown Combat stamp: 39"
+                #case 40:
+                    #return "Unknown Combat stamp: 40"
+                case 41:
+                    return "Capitalist Stats Stamp"
                 case _:
                     return "Unknown Combat stamp: " + str(stampNumber)
         case "Skill":
@@ -234,6 +240,17 @@ def getReadableStampName(stampNumber, stampType):
                     return "Multitool Stamp"
                 case 46:
                     return "Skelefish Stamp"
+                #case 47:
+                case 48:
+                    return "Sneaky Peeky Stamp"
+                case 49:
+                    return "Jade Mint Stamp"
+                #case 50:
+                case 51:
+                    return "White Essence Stamp"
+                #case 52:
+                case 53:
+                    return "Dark Triad Essence Stamp"
                 case _:
                     return "Unknown Skill stamp: " + str(stampNumber)
         case "Misc":
@@ -256,12 +273,12 @@ def getReadableStampName(stampNumber, stampType):
                     return "Ball Timer Stamp"
                 case 8:
                     return "Card Stamp"
-                # case 9:
-                #    return "Blue Hatchet Stamp"
-                # case 10:
-                #    return "Red Sword Stamp"
-                # case 11:
-                #    return "Blue Sword Stamp"
+                case 9:
+                    return "Forge Stamp"
+                case 10:
+                    return "Vendor Stamp"
+                case 11:
+                    return "Sigil Stamp"
                 case 12:
                     return "Talent I Stamp"
                 case 13:
@@ -282,6 +299,8 @@ def getReadableStampName(stampNumber, stampType):
                     return "DNA Stamp"
                 case 21:
                     return "Refinery Stamp"
+                case 22:
+                    return "Atomic Stamp"
                 case _:
                     return "Unknown Misc stamp: " + str(stampNumber)
 
