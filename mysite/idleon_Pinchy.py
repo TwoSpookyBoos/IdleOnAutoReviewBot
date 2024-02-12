@@ -350,7 +350,7 @@ def generate_advice_groups(sectionsByThreshold: dict):
     return advice_groups
 
 
-def setPinchyList(inputJSON, playerCount, dictOfPRs):
+def generatePinchyWorld(inputJSON, playerCount, dictOfPRs):
     sectionPlacements: Placements = sort_pinchy_reviews(dictOfPRs)
     expectedThreshold: Threshold = tier_from_monster_kills(dictOfPRs, inputJSON, playerCount)
     lowestThresholdReached: Threshold = sectionPlacements.lowest

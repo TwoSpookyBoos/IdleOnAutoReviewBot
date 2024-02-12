@@ -437,8 +437,8 @@ def main(inputData, runType="web"):
         "Death Note": consDeathNotePR.cT,
         "Prayers": worshipPrayersPR.cT
         }
-    pinchyList = idleon_Pinchy.setPinchyList(parsedJSON, playerCount, biggoleProgressionTiersDict)
-    biggoleAdviceList = [generalList, w1list, w2list, w3list, w4list, w5list, w6list, w7list, w8list, pinchyList]
+    pinchy = idleon_Pinchy.generatePinchyWorld(parsedJSON, playerCount, biggoleProgressionTiersDict)
+    biggoleAdviceList = [generalList, w1list, w2list, w3list, w4list, w5list, w6list, w7list, w8list, pinchy]
 
     w1Review = AdviceWorld(
         name=WorldName.WORLD1,
