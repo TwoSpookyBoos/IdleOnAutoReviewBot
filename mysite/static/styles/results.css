@@ -394,21 +394,29 @@ strong:not(.no-collapse):hover,
     }
 
     .advice-group {
+        display: flex;
+        flex-direction: column;
+        row-gap: 15px;
         padding: 20px;
         border-radius: 20px;
+        color: var(--fg);
     }
     .table {
         display: grid;
         grid-template-columns: repeat(3, minmax(min-content, max-content));
         gap: 10px;
 
-        li {
+        li, li a {
             display: flex;
             align-items: center;
             column-gap: 7px;
 
             &:not(.advice) {
                 justify-content: center;
+            }
+            a {
+                width: 100%;
+                color: var(--fg);
             }
         }
     }

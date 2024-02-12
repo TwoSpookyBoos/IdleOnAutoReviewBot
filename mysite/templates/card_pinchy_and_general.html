@@ -17,14 +17,14 @@
                         {% for group in section.groups %}
                             <div class="advice-group">
                                 <span>{{ group.heading }}:</span>
-                                <ul class="table {% if group.collapse %} folded{% endif %}">
+                                <ul class="table{% if group.collapse %} folded{% endif %}">
                                 {% if group.show_table_header %}
                                     <li></li>
                                     <li>{% if group.show_progression %}current{% endif %}</li>
                                     <li>{% if group.show_goal %}goal{% endif %}</li>
                                 {% endif %}
                                 {% for advice in group.advices %}
-                                    <li class="advice {{ advice.css_class }}">{{ advice.label }}</li>
+                                    <li><a href="#{{ advice.css_class }}" class="advice {{ advice.css_class }}">{{ advice.label }}</a></li>
                                     <li>{{ advice.progression }}</li>
                                     <li>{{ advice.goal }}</li>
                                 {% endfor %}
@@ -44,7 +44,7 @@
     </h1>
 
     <div class="content-wrapper">
-        <section>
+        <section id="combat-levels">
             <h3 class="subheading">
                 <img src="{{ img('family.png') }}" alt="General">
             </h3>
