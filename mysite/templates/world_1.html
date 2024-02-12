@@ -3,14 +3,14 @@
     <h1 class="banner">
         <img src="{{ img(world.banner) }}" alt="{{ world.name }}" title="{{ world.name }}">
     </h1>
-    <div class="content-wrapper{% if world.collapse %} folded{% endif %}">
+    <div class="content-wrapper{% if not world.sections %} no-collapse folded{% endif %}{% if world.collapse %} folded{% endif %}">
         {% for section in world.sections %}
         <section id="{{ section.name.lower() }}" class="new">
             <h3 class="subheading{% if not section.groups %} no-collapse{% endif %}{% if section.collapse %} folded{% endif %}">
-                <img src="{{ img(section.picture) }}" alt="{{ section.name }}">
+                <img src="{{ section.picture | img }}" alt="{{ section.name }}">
                 <span>{{ section.header|safe }}</span>
             </h3>
-            <ul class="advice-section{% if section.collapse %} folded{% endif %}">
+            <ul class="advice-section{% if not section.groups %} no-collapse{% endif %}{% if section.collapse %} folded{% endif %}">
                 <li id="{{ section.name.lower() }}-tier">
                     {% for group in section.groups %}
                         <div class="advice-group">

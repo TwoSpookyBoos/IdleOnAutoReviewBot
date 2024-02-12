@@ -1,3 +1,4 @@
+import hashlib
 import json
 import os
 from json import JSONDecodeError
@@ -71,6 +72,7 @@ def switches():
         (label, name, on, off, ("on" if get_user_preferences()[name] else "off"))
         for label, name, on, off in vals
     ]
+
 
 @app.route("/", methods=["GET", "POST"])
 def index() -> Response | str:
@@ -151,35 +153,47 @@ def page_not_found(e):
         return redirect(url_for('index')) # Probably should get a real 404 page at some point
 
 
-def ensure_data(results: list):
-    return bool(results)
+def get_resource(dir_: str, filename: str, autoversion: bool = False) -> str:
+    path = f'{dir_}/{filename}'
+    suffix = ''
+
+    # cache invalidation
+    if autoversion:
+        full_path = os.path.join(app.root_path, 'static', path)
+        mtime = os.path.getmtime(full_path)
+        suffix = hashlib.md5(str(mtime).encode()).hexdigest()[:8]
+        suffix = f"?v={suffix}"
+
+    return url_for('static', filename=f"{path}") + suffix
 
 
-def get_resource(dir_: str, filename: str) -> str:
-    return url_for('static', filename=f'{dir_}/{filename}')
-
-
+@app.template_filter("style")
 def style(filename: str):
-    return get_resource("styles", f"{filename}.css")
+    return get_resource("styles", f"{filename}.css", True)
 
 
+@app.template_filter("script")
 def script(filename: str):
-    return get_resource("scripts", f"{filename}.js")
+    return get_resource("scripts", f"{filename}.js", True)
 
 
+@app.template_filter("img")
 def img(filename: str):
     return get_resource("imgs", filename)
 
 
+@app.template_filter("cards")
 def cards(filename: str):
     return img(f"cards/{filename}.png")
 
 
-app.jinja_env.globals['ensure_data'] = ensure_data
+@app.template_filter("ensure_data")
+def ensure_data(results: list):
+    return bool(results)
+
+
 app.jinja_env.globals['img'] = img
-app.jinja_env.globals['cards'] = cards
-app.jinja_env.globals['style'] = style
-app.jinja_env.globals['script'] = script
+
 
 if __name__ == '__main__':
     app.run()

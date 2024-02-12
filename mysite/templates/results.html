@@ -2,15 +2,15 @@
 <html lang="en">
     <head>
         <title>IE AutoReview Tool - By Scoli290</title>
-        <link rel="stylesheet" type="text/css" href="{{ style("boilerplate") }}">
-        <link rel="stylesheet" type="text/css" href="{{ style("results") }}">
-        <link rel="stylesheet" type="text/css" href="{{ style("sidebar") }}">
-        <link rel="stylesheet" type="text/css" href="{{ style("nav") }}">
-        <link rel="stylesheet" type="text/css" href="{{ style("image-mapping") }}">
-        <link rel="stylesheet" type="text/css" href="{{ style("slider") }}">
-        <link rel="icon" href="{{ img("blank.png") }}" type="image/png">
-        <link rel="apple-touch-icon" href="{{ img("blank.png") }}" type="image/png">
-        <script src="{{ script("main") }}"></script>
+        <link rel="stylesheet" type="text/css" href="{{ "boilerplate"|style }}">
+        <link rel="stylesheet" type="text/css" href="{{ "results"|style }}">
+        <link rel="stylesheet" type="text/css" href="{{ "sidebar"|style }}">
+        <link rel="stylesheet" type="text/css" href="{{ "nav"|style }}">
+        <link rel="stylesheet" type="text/css" href="{{ "image-mapping"|style }}">
+        <link rel="stylesheet" type="text/css" href="{{ "slider"|style }}">
+        <link rel="icon" href="{{ "blank.png"|img }}" type="image/png">
+        <link rel="apple-touch-icon" href="{{ "blank.png"|img }}" type="image/png">
+        <script src="{{ "main"|script }}"></script>
         <meta name="robots" content="noindex">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
@@ -34,7 +34,7 @@
                         uploaded your account publicly.
                     </span>
 
-                {% elif ensure_data(htmlInput) %}
+                {% elif htmlInput | ensure_data %}
                     {% include 'header.html' %}
                     {% include 'main.html' %}
                 {% endif %}

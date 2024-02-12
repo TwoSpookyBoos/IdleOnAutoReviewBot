@@ -8,7 +8,7 @@
             <section id="{{ section.name.lower() }}" class="new">
                 <h3 class="subheading no-collapse{% if section.collapse %} folded{% endif %}">
                     {% if section.picture %}
-                        <img src="{{ img(section.picture) }}" alt="{{ section.name }}">
+                        <img src="{{ section.picture | img }}" alt="{{ section.name }}">
                     {% endif %}
                     <span>{{ section.header|safe }}</span>
                 </h3>
@@ -190,7 +190,7 @@
         {% for cardset in htmlInput[0][6] %}
         <section>
             <h3 class="subheading">
-                <img src="{{ cards(cardset[2]) }}" alt="Card Set {{ cardset[2] }}">
+                <img src="{{ cardset[2] | cards }}" alt="Card Set {{ cardset[2] }}">
             </h3>
 
             <div class="advice-wrapper">
