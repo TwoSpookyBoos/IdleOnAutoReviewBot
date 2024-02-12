@@ -23,44 +23,58 @@
 
         .knob
             background: forestgreen
+            &:before
+                color: white
 
     .shaft
-
+        position: relative
         display: flex
+        flex-direction: row
+
         height: var(--shaft-height)
         width: var(--shaft-width)
 
         padding: var(--shaft-padding)
         border-radius: var(--shaft-radius)
 
-        background: oldlace
-
         &.on
-            flex-direction: row
-
+            background-color: oldlace
             .knob
-                background: forestgreen
+                background-color: forestgreen
+                left: var(--shaft-padding)
         &.off
             background-color: gray
-            flex-direction: row-reverse
-
             .knob
                 background: #343434
+                left: calc(var(--shaft-padding) + var(--knob-height))
+                &:before
+                    color: darkgray
 
         .knob
+            position: absolute
             display: block
             height: var(--knob-height)
             width: var(--knob-height)
             border-radius: 50%
+            transition: left .5s ease
 
             &:before
                 content: ''
 
+                //margin-left: -0.3px
+                //margin-top: 0.8px
                 height: 100%
                 width: 100%
+                font-size: 0.8em
+                letter-spacing: normal
 
                 display: flex
                 align-items: center
                 justify-content: center
 
                 background-color: transparent
+
+
+@media (max-width: 600px)
+    .slider.lefty
+        flex-direction: row-reverse

@@ -2,6 +2,8 @@
     --sidebar-width: 650px;
     --sidebar-width-mobile: 100vw;
 
+    --sidebar-height-mobile: calc(100% - (var(--nav-height) + var(--nav-padding) * 2));
+
     --fg-sidebar: white;
     --bg-sidebar: hsl(208, 15%, 22%);
 
@@ -126,10 +128,15 @@ form textarea::placeholder,
 
 @media (max-width: 600px) {
     aside {
+        height: var(--sidebar-height-mobile);
         width: var(--sidebar-width-mobile);
-        padding-bottom: calc(var(--drawer-image-height) + var(--nav-padding) * 2);
+        /*padding-bottom: calc(var(--drawer-image-height) + var(--nav-padding) * 2);*/
 
-        form {
+        &.sidebar-open {
+            box-shadow: none;
+        }
+
+        #form {
             flex-direction: column;
             textarea {
                 width: 100%;
