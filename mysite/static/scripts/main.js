@@ -98,4 +98,9 @@ document.addEventListener("DOMContentLoaded", () => {
         shaft.classList.toggle("on")
         shaft.classList.toggle("off")
     })
+    document.querySelector('#handedness').onclick = e => {
+        const lefty = 'lefty'
+        const checkbox = e.currentTarget
+        document.querySelectorAll('.slider, .nav-links, #drawer-handle').forEach(s => s.classList.toggle(lefty))
+    }
 });

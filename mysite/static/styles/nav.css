@@ -224,6 +224,9 @@ nav {
             .nav-links {
                 flex-direction: row-reverse;
                 padding: 10px 5px;
+                &.lefty {
+                    flex-direction: row;
+                }
             }
         }
     }
@@ -254,6 +257,14 @@ nav {
 
         &.sidebar-open {
             left: unset;
+        }
+
+        &.lefty {
+            right: unset;
+            left: var(--nav-padding);
+            &.sidebar-open {
+                right: unset;
+            }
         }
     }
 }

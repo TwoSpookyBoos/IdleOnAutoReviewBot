@@ -105,7 +105,7 @@ def index() -> Response | str:
         page,
         htmlInput=pythonOutput, error=error, beta=is_beta,
         live_link=live_link, beta_link=beta_link,
-        switches=switches()
+        switches=switches(), **get_user_preferences()
     )
 
 
