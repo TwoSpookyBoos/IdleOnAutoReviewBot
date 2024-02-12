@@ -221,6 +221,9 @@ footer {
     display: flex;
     flex-direction: column;
     row-gap: 5px;
+    ul.folded {
+        display: none;
+    }
 }
 .content-wrapper {
     display: flex;
@@ -229,6 +232,9 @@ footer {
 
     & > em {
         padding: 0 20px;
+    }
+    &.folded {
+        display: none;
     }
 }
 .container-fluid {

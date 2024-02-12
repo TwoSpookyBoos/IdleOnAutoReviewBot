@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (world.classList.contains("new")) {
             e.currentTarget.nextElementSibling.classList.toggle("folded")
         } else {
-            e.currentTarget.parentElement.querySelectorAll('.content-wrapper').forEach(ul => ul.classList.toggle('folded'))
+            e.currentTarget.parentElement.querySelectorAll('ul, .content-wrapper').forEach(ul => ul.classList.toggle('folded'))
         }
     })
     document.querySelectorAll('strong').forEach((title) => title.onclick = (e) => e.currentTarget.parentElement.querySelectorAll('ul').forEach(e => e.classList.toggle('folded')))
@@ -93,14 +93,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.querySelectorAll('#switchbox label').forEach(label => label.onclick = e => {
         const lbl = e.currentTarget
-        const knob = lbl.querySelector(".knob")
         const shaft = lbl.querySelector(".shaft")
         shaft.classList.toggle("on")
         shaft.classList.toggle("off")
     })
-    document.querySelector('#handedness').onclick = e => {
-        const lefty = 'lefty'
-        const checkbox = e.currentTarget
-        document.querySelectorAll('.slider, .nav-links, #drawer-handle').forEach(s => s.classList.toggle(lefty))
-    }
+    document.querySelector('#handedness').onclick = () => document.querySelectorAll('.slider, .nav-links, #drawer-handle').forEach(s => s.classList.toggle('lefty'))
 });
