@@ -399,7 +399,7 @@ def getSumUnlockedBubbles(colorDict, colorString):
 
 
 def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
-    max_tier = progressionTiers[-1][0]
+    max_tier = progressionTiers[-3][0]
     vial_AdviceDict = {
         "UnlockVials": [],
         "TotalMaxVials": [],
