@@ -399,20 +399,38 @@ def getSumUnlockedBubbles(colorDict, colorString):
 
 
 def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
-    advice_SnakeskinRiftVialMastery = ""
-    alchemyVialsDict = inputJSON["CauldronInfo"][4]
+    max_tier = progressionTiers[-1][0]
+    vial_AdviceDict = {
+        "UnlockVials": [],
+        "TotalMaxVials": [],
+        "SpecificMaxVials": [],
+        "VirileVials": []
+    }
+    vial_AdviceGroupDict = {}
+    vial_AdviceSection = AdviceSection(
+        name="Vials",
+        tier="Not Yet Evaluated",
+        header="Best Vial tier met: Not Yet Evaluated. Recommended vial actions:",
+        picture="Alchemy_Vial-level-1.png"
+    )
+
+
+    alchemyVialsDict = {}
     try:
+        alchemyVialsDict = inputJSON["CauldronInfo"][4]
         del alchemyVialsDict["length"]
     except Exception as reason:
-        print("Alchemy~ EXCPTION Unable to delete 'length' element from alchemyVialsDict:", reason)
+        print("Alchemy~ EXCEPTION Unable to retrieve alchemyVialsDict from JSON:", reason)
     #print("Alchemy~ OUTPUT alchemyVialsDict:",len(alchemyVialsDict), alchemyVialsDict)
+
+    highestCompletedRift = 0
     try:
         highestCompletedRift = inputJSON["Rift"][0]
         if highestCompletedRift >= 35:
-            advice_SnakeskinRiftVialMastery = " 27 is the magic number needed to get the Snake Skin vial to 100% chance to double deposited statues :D (This also requires Snake Skin itself be maxed lol)"
+            advice_TrailingMaxedVials = " 27 is the magic number needed to get the Snake Skin vial to 100% chance to double deposited statues :D (This also requires Snake Skin itself be maxed lol)"
     except Exception as reason:
         print("Alchemy~ EXCEPTION Unable to retrieve highest rift level.",reason)
-        highestCompletedRift = 0
+
     virileVialsList = []
     maxExpectedVV = 62  # Excludes both pickle vials
     maxedVialsList = []
@@ -443,27 +461,67 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
     advice_ParticularVialsMaxed = ""
     advice_VirileVials = ""
 
+    if highestCompletedRift >= 35:
+        if len(maxedVialsList) < 27:
+            advice_TrailingMaxedVials = " 27 is the magic number needed to get the Snake Skin vial to 100% chance to double deposited statues :D (This also requires Snake Skin itself be maxed lol)"
+        else:
+            advice_TrailingMaxedVials = ". Thanks to the Vial Mastery bonus in W4's Rift, every maxed vial increases the bonus of EVERY vial you have unlocked!"
+    else:
+        advice_TrailingMaxedVials = ""
+
     for tier in progressionTiers:
         #tier[0] = int tier
         #tier[1] = int TotalVialsUnlocked
         #tier[2] = int TotalVialsMaxed
         #tier[3] = list ParticularVialsMaxed
         #tier[4] = str Notes
+
+        #Total Vials Unlocked
         if tier_TotalVialsUnlocked == (tier[0]-1):  # Only check if they already met previous tier
             if unlockedVials >= tier[1]:
                 tier_TotalVialsUnlocked = tier[0]
             else:
                 advice_TotalVialsUnlocked = "Tier " + str(tier_TotalVialsUnlocked) + "- Unlock some more vials: " + str(unlockedVials) + "/" + str(tier[1]) + tier[4] + "For the most unlock chances per day, rapidly drop multiple stacks of items on the cauldron!"
+                vial_AdviceDict["UnlockVials"].append(
+                    Advice(
+                        label="Unlock more vials",
+                        item_name="TODO",
+                        progression=str(unlockedVials),
+                        goal=str(tier[1]),
+
+                    )
+                )
+                vial_AdviceGroupDict["UnlockVials"] = AdviceGroup(
+                    tier=str(tier_TotalVialsUnlocked),
+                    pre_string="Unlock more Vials",
+                    post_string=tier[4] + "For the most unlock chances per day, rapidly drop multiple stacks of items on the cauldron!",
+                    advices=vial_AdviceDict["UnlockVials"]
+                )
+
+        #Total Vials Maxed
         if tier_TotalVialsMaxed == (tier[0]-1):  # Only check if they already met previous tier
             if len(maxedVialsList) >= tier[2]:
                 tier_TotalVialsMaxed = tier[0]
             else:
-                if len(maxedVialsList) < 27 and highestCompletedRift >= 35:
-                    advice_TotalVialsMaxed = "Tier " + str(tier_TotalVialsMaxed) + "- Max some more vials: " + str(len(maxedVialsList)) + "/" + str(tier[2]) + "." + advice_SnakeskinRiftVialMastery
-                else:
-                    advice_TotalVialsMaxed = "Tier " + str(tier_TotalVialsMaxed) + "- Max some more vials: " + str(len(maxedVialsList)) + "/" + str(tier[2]) + ". Thanks to the Vial Mastery bonus in W4's Rift, every maxed vial increases the bonus of EVERY vial you have unlocked!"
-                    if tier_TotalVialsMaxed >= 20:
-                        advice_TotalVialsMaxed += tier[4]
+                if tier_TotalVialsMaxed >= 20:
+                    advice_TrailingMaxedVials += tier[4]
+                advice_TotalVialsMaxed = "Tier " + str(tier_TotalVialsMaxed) + "- Max some more vials: " + str(len(maxedVialsList)) + "/" + str(tier[2]) + "." + advice_TrailingMaxedVials
+                vial_AdviceDict["TotalMaxVials"].append(
+                    Advice(
+                        label="Maxed vials",
+                        item_name="TODO",
+                        progression=str(len(maxedVialsList)),
+                        goal=str(tier[2])
+                    )
+                )
+                vial_AdviceGroupDict["TotalMaxVials"] = AdviceGroup(
+                    tier=str(tier_TotalVialsMaxed),
+                    pre_string=f"Max more Vials",
+                    post_string=advice_TrailingMaxedVials,
+                    advices=vial_AdviceDict["TotalMaxVials"]
+                )
+
+        #Particular Vials Maxed
         if tier_ParticularVialsMaxed == (tier[0]-1):  # Only check if they already met previous tier
             allRequirementsMet = True
             for requiredVial in tier[3]:
@@ -471,23 +529,50 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
                 if requiredVial in unmaxedVialsList:
                     allRequirementsMet = False
                     advice_ParticularVialsMaxed += requiredVial + ", "
+                    vial_AdviceDict["SpecificMaxVials"].append(
+                        Advice(
+                            label=requiredVial,
+                            item_name=requiredVial,
+                            progression="",
+                            goal="",
+                        )
+                    )
             if allRequirementsMet == True:
                 #print("Alch particular vial passed at tier",tier[0],tier[4])
                 tier_ParticularVialsMaxed = tier[0]
             else:
                 #print("Alch particular vial failed at tier",tier[0],tier[4])
                 advice_ParticularVialsMaxed = "Tier " + str(tier_ParticularVialsMaxed) + "- Work on maxing these particular vial(s): " + advice_ParticularVialsMaxed[:-2]  # strip off the final comma and space
+                vial_AdviceGroupDict["SpecificMaxVials"] = AdviceGroup(
+                    tier=str(tier_ParticularVialsMaxed),
+                    pre_string=f"Work toward maxing th{pl(vial_AdviceDict['SpecificMaxVials'],'is','ese')} particular Vial{pl(vial_AdviceDict['SpecificMaxVials'],'','s')}",
+                    post_string=advice_TrailingMaxedVials,
+                    advices=vial_AdviceDict["SpecificMaxVials"]
+                )
+
     overall_AlchemyVialsTier = min(tier_TotalVialsUnlocked, tier_TotalVialsMaxed, tier_ParticularVialsMaxed)
     if len(virileVialsList) < maxExpectedVV:
         advice_VirileVials = "Informational- You have " + str(len(virileVialsList)) + "/" + str(maxExpectedVV) + " vials up to level 4, giving damage to Shaman's Virile Vials talent :)"
     advice_AlchemyVialsCombined = [
-        "Best Alchemy-Vials tier met: " + str(overall_AlchemyVialsTier) + "/" + str(progressionTiers[-3][0]) + ". Recommended Alchemy-Vials actions:",
+        "Best Vials tier met: " + str(overall_AlchemyVialsTier) + "/" + str(progressionTiers[-3][0]) + ". Recommended Vials actions:",
         advice_TotalVialsUnlocked,
         advice_TotalVialsMaxed,
         advice_ParticularVialsMaxed,
         advice_VirileVials]
-    alchemyVialsPR = progressionResults.progressionResults(overall_AlchemyVialsTier,advice_AlchemyVialsCombined,"")
-    return alchemyVialsPR
+    tier_section = f"{overall_AlchemyVialsTier}/{max_tier}"
+    vial_AdviceSection.tier = tier_section
+    if overall_AlchemyVialsTier == max_tier:
+        advice_CombinedStamps = [
+            f"Best Vial tier met: {tier_section}. You best ❤️", "", "",
+            "You've reached the end of the recommendations. Let me know what important stamps you're aiming for next!"
+        ]
+        vial_AdviceSection.header = f"Best Vial tier met: {tier_section}. You best ❤️"
+    else:
+        vial_AdviceSection.header = f"Best Vial tier met: {tier_section}. Recommended vial actions:"
+        vial_AdviceSection.groups = vial_AdviceGroupDict.values()
+
+    alchemyVialsPR = progressionResults.progressionResults(overall_AlchemyVialsTier, advice_AlchemyVialsCombined, "")
+    return {"PR": alchemyVialsPR, "AdviceSection": vial_AdviceSection}
 
 def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
     currentlyAvailableBubblesIndex = 24

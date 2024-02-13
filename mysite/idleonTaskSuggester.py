@@ -375,7 +375,8 @@ def main(inputData, runType="web"):
 
     #World 2
     alchBubblesPR = idleon_Alchemy.setAlchemyBubblesProgressionTier(parsedJSON, progressionTiers['Alchemy Bubbles'])
-    alchVialsPR = idleon_Alchemy.setAlchemyVialsProgressionTier(parsedJSON, progressionTiers['Alchemy Vials'])
+    alchVials_AdviceSection = idleon_Alchemy.setAlchemyVialsProgressionTier(parsedJSON, progressionTiers['Alchemy Vials'])
+    #alchVialsPR = idleon_Alchemy.setAlchemyVialsProgressionTier(parsedJSON, progressionTiers['Alchemy Vials'])
     alchP2WList = idleon_Alchemy.setAlchemyP2W(parsedJSON, playerCount)
     #obolsPR = idleon_Obols.setObolsProgressionTier(parsedJSON, playerCount, progressionTiers['Obols'], fromPublicIEBool)
 
@@ -401,7 +402,7 @@ def main(inputData, runType="web"):
 
     generalList = [[ieLinkList, lastUpdatedTimeString], combatLevelsPR.nTR, consumablesList, gemShopPR.nTR, allGStacksList, maestroHandsListOfLists, cardsList]
     w1list = [stamps_AdviceSection["PR"].nTR, bribes_ActiveSection["PR"].nTR, smithing_AdviceSection["PR"].nTR]  # len(stampPR) = 4, len(bribesPR.nTR) = 2, len(smithingPR.nTR) = 4
-    w2list = [alchBubblesPR.nTR, alchVialsPR.nTR, alchP2WList, emptyList]  # len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 5
+    w2list = [alchBubblesPR.nTR, alchVials_AdviceSection["PR"].nTR, alchP2WList, emptyList]  # len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 5
     #w2list = [alchBubblesPR.nTR,alchVialsPR.nTR,alchP2WList, obolsPR.nTR]  # len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 4, len(obolsPR.nTR) = 4
     w3list = [
         ["Construction 3D Printer coming soon!"], consRefineryPR.nTR, consSaltLickPR.nTR, consDeathNotePR.nTR,  # len(consRefineryPR.nTR) = 5, len(consSaltLickPR.nTR) = 2, len(consDeathNotePR.nTR) = 12)
@@ -419,7 +420,7 @@ def main(inputData, runType="web"):
         "Bribes": bribes_ActiveSection["PR"].cT,
         "Smithing": smithing_AdviceSection["PR"].cT,
         "Alchemy-Bubbles": alchBubblesPR.cT,
-        "Alchemy-Vials": alchVialsPR.cT,
+        "Alchemy-Vials": alchVials_AdviceSection["PR"].cT,
         "Construction Refinery": consRefineryPR.cT,
         "Construction Salt Lick": consSaltLickPR.cT,
         "Construction Death Note": consDeathNotePR.cT,
@@ -433,7 +434,13 @@ def main(inputData, runType="web"):
         sections=[stamps_AdviceSection["AdviceSection"], bribes_ActiveSection["AdviceSection"], smithing_AdviceSection["AdviceSection"]],
         banner="w1banner.png"
     )
+    w2Review = AdviceWorld(
+        name=WorldName.WORLD2,
+        sections=[alchVials_AdviceSection["AdviceSection"]],
+        banner="w2banner.png"
+    )
     biggoleAdviceList.append(w1Review)
+    biggoleAdviceList.append(w2Review)
 
     if runType == "consoleTest":
         return "Pass"
