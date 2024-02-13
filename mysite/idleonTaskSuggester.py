@@ -262,6 +262,18 @@ def getRoastableStatus(playerNames):
             roastworthyBool = True
     return roastworthyBool
 
+
+class HeaderData:
+    def __init__(self):
+        self.direct_json = ""
+        self.ie_link = ""
+        self.link_text = ""
+        self.first_name = ""
+        self.json_error = ""
+        self.last_update = ""
+
+
+
 def main(inputData, runType="web"):
     bannedAccountsList = ["thedyl", "wooddyl", "3boyy", "4minez", "5arch5", "6knight6", "7maestro7", "bowboy8", "8barb8", "10es10", "favicon.ico", "robots.txt"]
     empty = ""
@@ -284,14 +296,7 @@ def main(inputData, runType="web"):
     if isinstance(inputData, str):
         inputData = inputData.strip()  # remove leading and trailing whitespaces
 
-    ieLinkList = dict(
-        direct_json="",
-        ie_link="",
-        link_text="",
-        first_name="",
-        json_error="",
-        last_update=""
-    )
+    headerData = HeaderData()
     #Step 1: Retrieve data from public IdleonEfficiency website or from file
     if len(inputData) < 16 and isinstance(inputData, str):
         #print("~~~~~~~~~~~~~~~ Starting up PROD main at", datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "for", inputData, "~~~~~~~~~~~~~~~")
@@ -307,15 +312,13 @@ def main(inputData, runType="web"):
             parsedJSON = getJSONfromAPI(runType, "https://" + inputData + ".idleonefficiency.com/raw-data")
             if parsedJSON == "PublicIEProfileNotFound" and runType == "consoleTest":
                 return "PublicIEProfileNotFound"
-            ieLinkString = "Searching for character data from: https://" + inputData.lower() + ".idleonefficiency.com"
-            ieLinkList["ie_link"] = f"https://{inputData.lower()}.idleonefficiency.com"
-            ieLinkList["link_text"] = f"{inputData.lower()}.idleonefficiency.com"
+            headerData.ie_link = f"https://{inputData.lower()}.idleonefficiency.com"
+            headerData.link_text = f"{inputData.lower()}.idleonefficiency.com"
     else:
         if runType == "web":
             print("~~~~~~~~~~~~~~~ Starting up PROD main at", datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "for direct web JSON input.~~~~~~~~~~~~~~~")
         parsedJSON = getJSONfromText(runType, inputData)
-        ieLinkString = "Searching for character data from direct JSON paste. "
-        ieLinkList["direct_json"] = " direct JSON paste"
+        headerData.direct_json = " direct JSON paste"
 
     if isinstance(parsedJSON, str):
         if parsedJSON.startswith("JSONParseFail"):
@@ -352,22 +355,21 @@ def main(inputData, runType="web"):
                 return "Banned"
     roastworthyBool = getRoastableStatus(playerNames)
 
-    if ieLinkString.endswith("JSON paste. "):
+    if headerData.direct_json:
         if playerNames[0] == "Character1":
-            ieLinkString += "NO SORTED LIST OF CHARACTER NAMES FOUND IN DATA. REPLACING WITH GENERIC NUMBER ORDER."
-            ieLinkList["json_error"] = "NO SORTED LIST OF CHARACTER NAMES FOUND IN DATA. REPLACING WITH GENERIC NUMBER ORDER."
+            headerData.json_error = "NO SORTED LIST OF CHARACTER NAMES FOUND IN DATA. REPLACING WITH GENERIC NUMBER ORDER."
         else:
-            ieLinkString += "First character name found: " + playerNames[0]
-            ieLinkList["first_name"] = playerNames[0]
-            ieLinkList["link_text"] = f"{playerNames[0]}.idleonefficiency.com"
-            ieLinkList["ie_link"] = f"https://{playerNames[0]}.idleonefficiency.com"
+            headerData.first_name = playerNames[0]
+            headerData.link_text = f"{playerNames[0]}.idleonefficiency.com"
+            headerData.ie_link = f"https://{playerNames[0]}.idleonefficiency.com"
 
     #General
-    lastUpdatedTimeString = getLastUpdatedTime(parsedJSON)
-    ieLinkList["last_update"] = lastUpdatedTimeString
+    headerData.last_update = getLastUpdatedTime(parsedJSON)
+
     if runType == "web":
-        logger.info(f"{lastUpdatedTimeString = }")
-    combatLevelsPR = idleon_CombatLevels.setCombatLevelsProgressionTier(parsedJSON, progressionTiers['Combat Levels'], playerCount, playerNames)
+        logger.info(f'{headerData.last_update = }')
+
+    combatLevelsPR, group_combatLevels, combat_tier = idleon_CombatLevels.setCombatLevelsProgressionTier(parsedJSON, progressionTiers['Combat Levels'], playerCount, playerNames)
     consumablesList = idleon_Consumables.parseConsumables(parsedJSON, playerCount, playerNames)
     gemShopPR = idleon_GemShop.setGemShopProgressionTier(parsedJSON, progressionTiers['Gem Shop'], playerCount)
     allGStacksList = idleon_Greenstacks.setGStackProgressionTier(parsedJSON, playerCount, progressionTiers['Greenstacks'])
@@ -378,12 +380,9 @@ def main(inputData, runType="web"):
         cardsList = [["Unable to evaluate card sets :(", str(reason)]]
 
     #World 1
-    #stampPR = idleon_Stamps.setStampProgressionTier(parsedJSON, progressionTiers['Stamps'])
-    #bribesPR = idleon_Bribes.setBribesProgressionTier(parsedJSON, progressionTiers['Bribes'])
-    #smithingPR = idleon_Smithing.setSmithingProgressionTier(parsedJSON, progressionTiers['Smithing'], playerCount)
-    stamps_AdviceSection = idleon_Stamps.setStampProgressionTier(parsedJSON, progressionTiers['Stamps'])
-    bribes_ActiveSection = idleon_Bribes.setBribesProgressionTier(parsedJSON, progressionTiers['Bribes'])
-    smithing_AdviceSection = idleon_Smithing.setSmithingProgressionTier(parsedJSON, progressionTiers['Smithing'], playerCount, characterDict)
+    stamps_section = idleon_Stamps.setStampProgressionTier(parsedJSON, progressionTiers['Stamps'])
+    bribes_section = idleon_Bribes.setBribesProgressionTier(parsedJSON, progressionTiers['Bribes'])
+    smithing_section = idleon_Smithing.setSmithingProgressionTier(parsedJSON, progressionTiers['Smithing'], playerCount, characterDict)
 
     #World 2
     alchBubblesPR = idleon_Alchemy.setAlchemyBubblesProgressionTier(parsedJSON, progressionTiers['Alchemy Bubbles'])
@@ -411,8 +410,8 @@ def main(inputData, runType="web"):
     #gamingPR =
     #divinityPR =
 
-    generalList = [[ieLinkList, lastUpdatedTimeString], combatLevelsPR.nTR, consumablesList, gemShopPR.nTR, allGStacksList, maestroHandsListOfLists, cardsList]
-    w1list = [stamps_AdviceSection["PR"].nTR, bribes_ActiveSection["PR"].nTR, smithing_AdviceSection["PR"].nTR]  # len(stampPR) = 4, len(bribesPR.nTR) = 2, len(smithingPR.nTR) = 4
+    generalList = [headerData, combatLevelsPR.nTR, consumablesList, gemShopPR.nTR, allGStacksList, maestroHandsListOfLists, cardsList]
+    w1list = [stamps_section["PR"].nTR, bribes_section["PR"].nTR, smithing_section["PR"].nTR]  # len(stampPR) = 4, len(bribesPR.nTR) = 2, len(smithingPR.nTR) = 4
     w2list = [alchBubblesPR.nTR, alchVialsPR.nTR, alchP2WList, emptyList]  # len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 5
     #w2list = [alchBubblesPR.nTR,alchVialsPR.nTR,alchP2WList, obolsPR.nTR]  # len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 4, len(obolsPR.nTR) = 4
     w3list = [
@@ -426,10 +425,10 @@ def main(inputData, runType="web"):
     w7list = [["w7 mechanic 1 placeholder"], ["w7 mechanic 2 placeholder"], ["w7 mechanic 3 placeholder"]]
     w8list = [["w8 mechanic 1 placeholder"], ["w8 mechanic 2 placeholder"], ["w8 mechanic 3 placeholder"]]
     biggoleProgressionTiersDict = {
-        "Combat Levels": combatLevelsPR.cT,
-        "Stamps": stamps_AdviceSection["PR"].cT,
-        "Bribes": bribes_ActiveSection["PR"].cT,
-        "Smithing": smithing_AdviceSection["PR"].cT,
+        "Combat Levels": combat_tier,
+        "Stamps": stamps_section["PR"].cT,
+        "Bribes": bribes_section["PR"].cT,
+        "Smithing": smithing_section["PR"].cT,
         "Bubbles": alchBubblesPR.cT,
         "Vials": alchVialsPR.cT,
         "Refinery": consRefineryPR.cT,
@@ -438,14 +437,19 @@ def main(inputData, runType="web"):
         "Prayers": worshipPrayersPR.cT
         }
     pinchy = idleon_Pinchy.generatePinchyWorld(parsedJSON, playerCount, biggoleProgressionTiersDict)
-    biggoleAdviceList = [generalList, w1list, w2list, w3list, w4list, w5list, w6list, w7list, w8list, pinchy]
+    generalReview = AdviceWorld(
+        name=WorldName.GENERAL,
+        sections=[group_combatLevels],
+        banner="general_banner.jpg"
+    )
 
     w1Review = AdviceWorld(
         name=WorldName.WORLD1,
-        sections=[stamps_AdviceSection["AdviceSection"], bribes_ActiveSection["AdviceSection"], smithing_AdviceSection["AdviceSection"]],
+        sections=[stamps_section["AdviceSection"], bribes_section["AdviceSection"], smithing_section["AdviceSection"]],
         banner="w1banner.png"
     )
-    biggoleAdviceList.append(w1Review)
+    biggoleAdviceList = [generalList, w1list, w2list, w3list, w4list, w5list, w6list, w7list, w8list, w1Review, generalReview, pinchy]
+
 
     if runType == "consoleTest":
         return "Pass"

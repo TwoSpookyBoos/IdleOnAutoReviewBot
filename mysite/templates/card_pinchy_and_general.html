@@ -1,4 +1,4 @@
-{% set world = htmlInput[-2] %}
+{% set world = htmlInput.pop() %}
 <article id="pinchy" class="general-content new">
     <h1 class="banner no-collapse">
         Pinchy AutoReview
@@ -38,10 +38,42 @@
     </div>
 </article>
 
-<article id="general" class="general-content">
+{% set world = htmlInput.pop() %}
+<article id="general" class="general-content new">
     <h1 class="banner">
-        <img src="{{ img('general_banner.jpg') }}" alt="General Account AutoReview">
+        <img src="{{ world.banner | img }}" alt="{{ world.name }}" title="{{ world.name }}">
     </h1>
+    <div class="content-wrapper{% if not world.sections %} no-collapse folded{% endif %}{% if world.collapse %} folded{% endif %}">
+        {% for section in world.sections %}
+        <section id="{{ section.name.lower() }}" class="new">
+            <h3 class="subheading{% if not section.groups %} no-collapse{% endif %}{% if section.collapse %} folded{% endif %}">
+                <img src="{{ section.picture | img }}" alt="{{ section.name }}">
+                <span>{{ section.header | safe }}</span>
+            </h3>
+            <ul class="advice-section{% if not section.groups %} no-collapse{% endif %}{% if section.collapse %} folded{% endif %}">
+                <li id="{{ section.name.lower() }}-tier">
+                    {% for group in section.groups %}
+                        <div class="advice-group">
+                            <span>{{ group.heading }}:</span>
+                            <ul class="table {% if group.collapse %} folded{% endif %}">
+                            {% if group.show_table_header %}
+                              <li></li>
+                              <li>{% if group.show_progression %}current{% endif %}</li>
+                              <li>{% if group.show_goal %}goal{% endif %}</li>
+                            {% endif %}
+                            {% for advice in group.advices %}
+                                <li class="advice {{ advice.css_class }}">{{ advice.label }}</li>
+                                <li>{{ advice.progression }}</li>
+                                <li>{{ advice.goal }}</li>
+                            {% endfor %}
+                            </ul>
+                        </div>
+                    {% endfor %}
+                </li>
+            </ul>
+        </section>
+        {% endfor %}
+    </div>
 
     <div class="content-wrapper">
         <section id="combat-levels">

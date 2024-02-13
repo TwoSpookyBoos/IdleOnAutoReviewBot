@@ -209,7 +209,7 @@ class AdviceSection(AdviceBase):
 
     @property
     def header(self) -> str:
-        self._raw_header = self._raw_header.replace(".", ".<br>")
+        self._raw_header = self._raw_header.replace(".", ".<br>", 1)
         if not self.tier:
             return self._raw_header
 
