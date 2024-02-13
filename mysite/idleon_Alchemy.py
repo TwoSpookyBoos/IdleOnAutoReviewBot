@@ -850,7 +850,7 @@ def setAlchemyP2W(inputJSON, playerCount):
             p2w_AdviceDict["Pay2Win"].append(
                 Advice(
                     label="Bubble Cauldron Upgrades",
-                    item_name="Alchemy_Bubble_All.gif",
+                    item_name="cauldron-a",
                     progression=str(bubbleCauldronSum),
                     goal=str(bubbleCauldronMax),
                 )
