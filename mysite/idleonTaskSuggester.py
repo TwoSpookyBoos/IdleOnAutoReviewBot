@@ -369,7 +369,7 @@ def main(inputData, runType="web"):
     if runType == "web":
         logger.info(f'{headerData.last_update = }')
 
-    combatLevelsPR, group_combatLevels, combat_tier = idleon_CombatLevels.setCombatLevelsProgressionTier(parsedJSON, progressionTiers['Combat Levels'], playerCount, playerNames)
+    combatLevelsPR, group_combatLevels, combat_tier = idleon_CombatLevels.setCombatLevelsProgressionTier(parsedJSON, progressionTiers['Combat Levels'], playerCount, playerNames, playerClasses)
     consumablesList = idleon_Consumables.parseConsumables(parsedJSON, playerCount, playerNames)
     gemShopPR = idleon_GemShop.setGemShopProgressionTier(parsedJSON, progressionTiers['Gem Shop'], playerCount)
     allGStacksList = idleon_Greenstacks.setGStackProgressionTier(parsedJSON, playerCount, progressionTiers['Greenstacks'])

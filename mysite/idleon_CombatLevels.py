@@ -58,7 +58,7 @@ def parseCombatLevels(inputJSON, playerCount, playerNames):
     return parsedCombatLevels
 
 
-def setCombatLevelsProgressionTier(inputJSON, progressionTiers, playerCount, playerNames) -> progressionResults:
+def setCombatLevelsProgressionTier(inputJSON, progressionTiers, playerCount, playerNames, playerClasses) -> progressionResults:
     parsedCombatLevels = parseCombatLevels(inputJSON, playerCount, playerNames)
     equinoxDreamStatus = getEquinoxDreams(inputJSON)
 
@@ -107,7 +107,7 @@ def setCombatLevelsProgressionTier(inputJSON, progressionTiers, playerCount, pla
     lvlup_advices = [
         Advice(
             label=character,
-            item_name=character,
+            item_name=playerClasses[playerNames.index(character)] + '-icon',
             progression=level,
             goal=goal
         )
