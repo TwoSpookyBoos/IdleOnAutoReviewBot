@@ -485,7 +485,7 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
                 vial_AdviceDict["UnlockVials"].append(
                     Advice(
                         label="Unlock more vials",
-                        item_name="TODO",
+                        item_name="vials",
                         progression=str(unlockedVials),
                         goal=str(tier[1]),
 
