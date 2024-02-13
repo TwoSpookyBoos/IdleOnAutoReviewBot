@@ -474,6 +474,10 @@
   background-image: url("https://idleon.wiki/wiki/images/3/39/Dragonic_Liquid_Cauldron.png");
 }
 
+.cauldron-a::before {
+  background-image: url("/static/imgs/Alchemy_Bubble_all.gif");
+}
+
 .cardifier-5-star::before {
   background-image: url("https://idleon.wiki/wiki/images/8/85/5_Star_Cardifier.png");
 }

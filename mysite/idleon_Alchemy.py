@@ -860,7 +860,7 @@ def setAlchemyP2W(inputJSON, playerCount):
             p2w_AdviceDict["Pay2Win"].append(
                 Advice(
                     label="Liquid Cauldron Upgrades",
-                    item_name="",
+                    item_name="dragonic-liquid-cauldron",
                     progression=str(liquidCauldronSum),
                     goal=str(liquidCauldronMax),
                 )
