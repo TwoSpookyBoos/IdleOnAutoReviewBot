@@ -2,7 +2,7 @@
     <h1 class="banner">
         <img src="{{ img('w5banner.png') }}" alt="World 5 Banner" title="World 5 Banner">
     </h1>
-    <div class="content-wrapper">
+    <div class="content-wrapper no-collapse folded">
 
         {% if htmlInput[5][0][0] %}
         <section>
@@ -10,7 +10,7 @@
                 <img src="" alt="">
             </h3>
 
-            <div class="advice-wrapper">
+            <div class="advice-wrapper no-collapse folded">
                 <strong>{{ htmlInput[5][0][0] }}</strong>
                 <ul id="">
                     {% for line in htmlInput[5][0] %}

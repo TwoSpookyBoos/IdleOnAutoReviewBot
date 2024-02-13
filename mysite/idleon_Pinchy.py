@@ -1,6 +1,271 @@
 import json
-from models import Advice
-from utils import pl
+from models import Advice, AdviceWorld, WorldName, AdviceSection, AdviceGroup
+from utils import pl, get_logger
+
+
+logger = get_logger(__name__)
+
+
+class Tier:
+    def __init__(self, tier: int, section: str = None, current: 'Threshold' = None, previous: 'Threshold' = None, next: 'Threshold' = None):
+        self.tier = tier
+        self.section = section
+        self.current = current
+        self.previous = previous
+        self.next = next
+
+    def __str__(self):
+        return f"{self.section}: T{self.tier}"
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__}: {self.section}, T{self.tier}>"
+
+
+class Threshold:
+    W1 = "W1"
+    EARLY_W2 = "Early W2"
+    MID_W2 = "Mid W2"
+    LATE_W2 = "Late W2"
+    EARLY_W3 = "Early W3"
+    MID_W3 = "Mid W3"
+    LATE_W3 = "Late W3"
+    EARLY_W4 = "Early W4"
+    MID_W4 = "Mid W4"
+    LATE_W4 = "Late W4"
+    EARLY_W5 = "Early W5"
+    MID_W5 = "Mid W5"
+    LATE_W5 = "Late W5"
+    EARLY_W6_PREP = "Early W6 Prep"
+    SOLID_W6_PREP = "Solid W6 Prep"
+    W6_WAITING_ROOM = "W6 Waiting Room"
+    # EARLY_W6 = "Early W6"
+    # MID_W6 = "Mid W6"
+    # LATE_W6 = "Late W6"
+    MAX_TIER = "Max for v1.91"
+    PLACEHOLDER = "Placeholder"
+
+    thresholdNames = [
+        W1,
+        EARLY_W2, MID_W2, LATE_W2,
+        EARLY_W3, MID_W3, LATE_W3,
+        EARLY_W4, MID_W4, LATE_W4,
+        EARLY_W5, MID_W5, LATE_W5,
+        EARLY_W6_PREP, SOLID_W6_PREP, W6_WAITING_ROOM,
+        # EARLY_W6, MID_W6, LATE_W6,
+        MAX_TIER,
+        PLACEHOLDER
+    ]
+
+    name_count = len(thresholdNames)
+
+    def __init__(self, tier: int, index: int | None = None, name: str | None = None, parent: 'Thresholds' = None):
+        if index is not None and index > len(self.thresholdNames):
+            raise IndexError(f"There's less thresholds than you'd want: {index} > {len(self.thresholdNames)}.")
+        if name is not None and name not in self.thresholdNames:
+            raise ValueError(f"That's not a threshold name: {name}. Available names: {', '.join(self.thresholdNames)}")
+
+        self.tier: int = tier
+        self.index: int = index
+        self.name: str = name
+        self.parent: Thresholds = parent
+
+        if index is None and not name:
+            raise ValueError("Either `index` or `name` must be provided.")
+
+        if index is None:
+            self.index = self.thresholdNames.index(name)
+        elif not name:
+            self.name: str = self.thresholdNames[index]
+
+    def __gt__(self, other):
+        if isinstance(other, Tier):
+            return self.tier > other.tier
+        return self.index > other.index
+
+    def __ge__(self, other):
+        if isinstance(other, Tier):
+            return self.tier > other.tier
+        return self.index >= other.index
+
+    def __eq__(self, other):
+        if isinstance(other, Tier):
+            return self.tier == other.tier
+        return all([self.tier == other.tier, self.index == other.index, self.name == other.name])
+
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__}: {self.name}, {self.tier}>"
+
+    def next(self):
+        return self.parent.next(self)
+
+    def previous(self):
+        return self.parent.previous(self)
+
+    @classmethod
+    def placeholder(cls):
+        return cls(99, -1)
+
+
+    @classmethod
+    def none(cls):
+        return cls(0, 0)
+
+    @classmethod
+    def fromname(cls, name: str):
+        return cls(None, name=name)
+
+
+class Placements(dict):
+    COMBAT_LEVELS = "Combat Levels"
+    STAMPS = "Stamps"
+    BRIBES = "Bribes"
+    SMITHING = "Smithing"
+    BUBBLES = "Bubbles"
+    VIALS = "Vials"
+    REFINERY = "Refinery"
+    SALT_LICK = "Salt Lick"
+    PRAYERS = "Prayers"
+    DEATH_NOTE = "Death Note"
+    sections = [
+        COMBAT_LEVELS,
+        STAMPS, BRIBES, SMITHING,
+        BUBBLES, VIALS,
+        REFINERY, SALT_LICK, PRAYERS, DEATH_NOTE,
+    ]
+
+    sectionThresholds = {
+        # [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,99] #template
+        #               W1   W2          W3              W4              W5              W6              Max   Placeholder
+        COMBAT_LEVELS: [0,   3, 7, 8,    10, 14, 15,     16, 17, 18,     19, 21, 23,     25, 27, 28,     29,   99],
+        STAMPS:        [0,   1, 2, 3,    4,  5,  6,      7,  8,  9,      10, 11, 15,     22, 28, 34,     36,   99],
+        BRIBES:        [0,   1, 1, 1,    2,  2,  3,      3,  3,  3,      4,  4,  4,      5,  5,  5,      5,    99],
+        SMITHING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  2,  3,      4,  5,  6,      6,    99],
+        BUBBLES:       [0,   0, 0, 1,    1,  1,  1,      2,  2,  2,      3,  4,  5,      7,  12, 18,     23,   99],
+        VIALS:         [0,   0, 0, 0,    0,  0,  0,      1,  2,  3,      4,  5,  6,      7,  16, 19,     20,   99],
+        REFINERY:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  1,  2,      3,  4,  5,      6,    99],
+        SALT_LICK:     [0,   0, 0, 0,    0,  0,  0,      0,  0,  1,      2,  3,  4,      5,  6,  7,      10,   99],
+        PRAYERS:       [0,   0, 0, 0,    0,  0,  1,      1,  2,  3,      3,  4,  5,      5,  6,  7,      7,    99],
+        DEATH_NOTE:    [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  4,  5,      12, 15, 19,     23,   99],
+    }
+    section_count = len(sectionThresholds)
+
+    def __init__(self):
+        super().__init__()
+
+        for name in Threshold.thresholdNames:
+            self[name] = list()
+
+        for name, thresholds in self.sectionThresholds.items():
+            self[name] = Thresholds(thresholds)
+
+        self.final = dict()
+
+    def __getitem__(self, item):
+        if isinstance(item, str):
+            return super().__getitem__(item)
+        if isinstance(item, Threshold):
+            return super().__getitem__(item.name)
+        else:
+            raise TypeError(f"{item} is not a Threshold or string")
+
+    def place(self, tier: Tier):
+        section_thresholds: Thresholds = self[tier.section]
+        placement: Threshold = section_thresholds.place(tier)
+        self[placement].append(tier)
+
+    @property
+    def lowest(self):
+        return next((Threshold.fromname(k) for k in self.final.keys()), Threshold.none())
+
+    @property
+    def maxed_count(self):
+        return len(self.final.get(Threshold.MAX_TIER, list()))
+
+    def finalise(self):
+        for name in Threshold.thresholdNames:
+            if len(self[name]) > 0:
+                self.final[name] = self[name]
+
+        return self.final
+
+
+class Thresholds(dict):
+    def __init__(self, t_list: list):
+        super().__init__()
+        self._thresholds = [Threshold(tier=t, index=i, parent=self) for i, t in enumerate(t_list)]
+
+    def previous(self, threshold):
+        return self._thresholds[threshold.index - 1] if threshold.index > 0 else threshold
+
+    def next(self, threshold):
+        return self._thresholds[threshold.index + 1] if self._thresholds.index(threshold) > 0 else threshold
+
+    @property
+    def placeholder(self):
+        return self._thresholds[-1]
+
+    def place(self, tier: Tier):
+        placeholder = self.placeholder
+        threshold_max = placeholder.previous()
+        placement = next((t.previous() for t in self._thresholds if t > tier), threshold_max)
+        # if pinchy review tier flew off the grid somehow
+        if placement == placeholder:
+            logger.info(f"Placing '{tier.section}' into final tier because {tier.tier} >= {threshold_max}")
+            placement = threshold_max
+        else:
+            logger.info("%s | %s | %s | %s", tier.section, tier.tier, placement, placement.next())
+
+        previous_threshold = placement.previous()
+        next_threshold = placement.next()
+        tier.previous = previous_threshold
+        tier.current = placement
+        tier.next = next_threshold
+
+        return placement
+
+
+def sort_pinchy_reviews(dictOfPRs) -> Placements:
+    placements = Placements()
+
+    for section, pinchy_tier in dictOfPRs.items():
+        tier = Tier(pinchy_tier, section)
+        placements.place(tier)
+
+    placements.finalise()
+
+    return placements
+
+
+# https://idleon.wiki/wiki/Portal_Requirements
+portalOpeningKills = [
+    # (Threshold.LATE_W6,       260, 8000000),  # W6 Sprout Spirits
+    # (Threshold.MID_W6,        256,  400000),  # W6 Bamboo Spirits
+    # (Threshold.EARLY_W6,      251,   30000),  # W6 Ceramic Spirits
+    # Until W6 drops, Max = 1b+ sample
+    # Until W6 drops, W6 waiting room = DeathNote tier 19+
+    # Until W6 drops, Solid W6 prep = DeathNote tier 15+
+    (Threshold.EARLY_W6_PREP, 213,   60000),  # W5 Tremor Wurms
+    (Threshold.LATE_W5,       210, 3000000),  # W5 Fire Spirits
+    (Threshold.MID_W5,        205,  125000),  # W5 Stiltmoles
+    (Threshold.EARLY_W5,      201,   25000),  # W5 Suggmas
+    (Threshold.LATE_W4,       160,  190000),  # W4 Clammies
+    (Threshold.MID_W4,        155,   40000),  # W4 Soda Cans
+    (Threshold.EARLY_W4,      151,    5000),  # W4 Purp Mushrooms
+    (Threshold.LATE_W3,       110,   18000),  # W3 Quenchies
+    (Threshold.MID_W3,        106,    6000),  # W3 Mamooths
+    (Threshold.EARLY_W3,      101,    1000),  # W3 Sheepies
+    (Threshold.LATE_W2,        62,    3000),  # W2 Tysons
+    (Threshold.MID_W2,         57,    1200),  # W2 Mafiosos
+    (Threshold.EARLY_W2,       51,     250),  # W2 Sandy Pots
+]
+maxExpectedThresholdFromMaps = portalOpeningKills[0][0]
+
+
+def is_portal_opened(mobKills, monster, portalKC):
+    return mobKills[monster][0] < portalKC if len(mobKills) > monster else False
 
 
 def getHighestPrint(inputJSON):
@@ -13,139 +278,129 @@ def getHighestPrint(inputJSON):
     return highestPrintFound
 
 
-def setPinchyList(inputJSON, playerCount, dictOfPRs):
+def threshold_for_highest_portal_opened(mobKills):
+    threshold = next((
+        threshold
+        for threshold, monster, portalKC
+        in portalOpeningKills
+        if is_portal_opened(mobKills, monster, portalKC)
+    ), Threshold.W1)
+
+    return Threshold.fromname(threshold)
+
+
+def tier_from_monster_kills(dictOfPRs, inputJSON, playerCount) -> Threshold:
+    """find highest enemy killed or world unlocked to compare to"""
+    expectedThreshold = Threshold.fromname(Threshold.W1)
+
     highestPrint = getHighestPrint(inputJSON)
-    sortedResultsListofLists = [
-        [],  # [0] = w1/placeholder
-        [], [], [],  # [1] = early w2, [2] = mid w2, [3] = late w2
-        [], [], [],  # [4] = early w3, [5] = mid w3, [6] = late w3
-        [], [], [],  # [7] = early w4, [8] = mid w4, [9] = late w4
-        [], [], [],  # [10] = early w5, [11] = mid w5, [12] = late w5
-        [], [], [],  # [13] = Early W6 Prep, [14] = Solid W6 Prep, [15] = w6 waiting room
-        [], []  # [16] = max for v1.91, [17] = placeholder
-    ]
-    progressionNamesList = ["W1", "Early W2", "Mid W2", "Late W2", "Early W3",
-                            "Mid W3", "Late W3", "Early W4", "Mid W4", "Late W4",
-                            "Early W5", "Mid W5", "Late W5", "Early W6 Prep", "Solid W6 Prep",
-                            "W6 Waiting Room", "Max for v1.91", "Placeholder"]
-    maxWorldTiers = len(progressionNamesList) - 1
-    maxExpectedIndexFromMaps = 13  # 13 is the highest map evaluated, Tremor Wurms.
-    progressionTiersVsWorlds = {
-        # [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,99] #template
-        #                           W1/W2           W3              W4              W5              W6              Max/Placeholder
-        "Combat Levels":            [0, 3, 7, 8,    10, 14, 15,     16, 17, 18,     19, 21, 23,     25, 27, 28,     29, 99],
-        "Stamps":                   [0, 1, 2, 3,    4, 5, 6,        7, 8, 9,        10, 11, 15,     22, 28, 34,     36, 99],
-        "Bribes":                   [0, 1, 1, 1,    2, 2, 3,        3, 3, 3,        4, 4, 4,        5, 5, 5,        5, 99],
-        "Smithing":                 [0, 0, 0, 0,    0, 0, 0,        0, 0, 0,        1, 2, 3,        4, 5, 6,        6, 99],
-        "Alchemy-Bubbles":          [0, 0, 0, 1,    1, 1, 1,        2, 2, 2,        3, 4, 5,        7, 12, 18,      23, 99],
-        "Alchemy-Vials":            [0, 0, 0, 0,    0, 0, 0,        1, 2, 3,        4, 5, 6,        7, 16, 19,      20, 99],
-        "Construction Refinery":    [0, 0, 0, 0,    0, 0, 0,        0, 0, 0,        1, 1, 2,        3, 4, 5,        6, 99],
-        "Construction Salt Lick":   [0, 0, 0, 0,    0, 0, 0,        0, 0, 1,        2, 3, 4,        5, 6, 7,        10, 99],
-        "Worship Prayers":          [0, 0, 0, 0,    0, 0, 1,        1, 2, 3,        3, 4, 5,        5, 6, 7,        7, 99],
-        "Construction Death Note":  [0, 0, 0, 0,    0, 0, 0,        0, 0, 0,        0, 4, 5,        12, 15, 19,     23, 99]
-    }
-    for name, pinchy_tier in dictOfPRs.items():
-        tiers = progressionTiersVsWorlds[name][:-1]
-        i, tier_next = next(((i - 1, tier_next) for i, tier_next in enumerate(tiers) if pinchy_tier < tier_next), (-1, 99))
-
-        # if pinchy review tier has reached final threshold tier
-        if i == -1:
-            # print(f"Placing '{name}' into final tier because {pinchy_level} >= {tiers[i]}")
-            text = name
-        else:
-            # print(name, pinchy_tier, tiers[i], tier_next)
-            text = f"{name} (Next: Tier {tier_next})"
-
-        sortedResultsListofLists[i].append(text)
-
-    # find lowest and highest index with an entry
-    lowestIndex = next((i for i, lst in enumerate(sortedResultsListofLists) if lst != []), 0)
-    highestIndex = next((maxWorldTiers - i for i, lst in enumerate(reversed(sortedResultsListofLists)) if lst != []), maxWorldTiers)
-
-    # find highest enemy killed or world unlocked to compare to
-    # https://idleon.wiki/wiki/Portal_Requirements
-    # W2 Sandy Pots = [51][0], starts at 250
-    # W2 Mafiosos = [57][0], starts at 1200
-    # W2 Tysons = [62][0], starts at 3000
-    # W3 Sheepies = [101][0], starts at 1000
-    # W3 Mamooths = [106][0], starts at 6000
-    # W3 Quenchies = [110][0], starts at 18000
-    # W4 Purp Mushroom = [151][0], starts at 5000
-    # W4 Soda Can = [155][0], starts at 40000
-    # W4 Clammies = [160][0], starts at 190000
-    # W5 Suggma = [201][0], starts at 25000
-    # W5 Stiltmole = [205][0], starts at 125000
-    # W5 Fire Spirit = [210][0], starts at 3000000
-    # W5 Tremor Wurms = [213][0], starts at 60000
-    # Until W6 drops, Solid W6 prep = DeathNote tier 15+
-    # Until W6 drops, W6 waiting room = DeathNote tier 19+
-    # Until W6 drops, Max = 1b+ sample
-    monsterPortalKills = [
-        (13, (213, 60000)),
-        (12, (210, 3000000)),
-        (11, (205, 125000)),
-        (10, (201, 25000)),
-        (9, (160, 190000)),
-        (8, (155, 40000)),
-        (7, (151, 5000)),
-        (6, (110, 18000)),
-        (5, (106, 6000)),
-        (4, (101, 1000)),
-        (3, (62, 3000)),
-        (2, (57, 1200)),
-        (1, (51, 250)),
-    ]
-    expectedIndex = 0
+    mobKillThresholds = []
     if highestPrint >= 999000000:
-        expectedIndex = 16
-    elif dictOfPRs["Construction Death Note"] >= 19:
-        expectedIndex = 15
-    elif dictOfPRs["Construction Death Note"] >= 15:
-        expectedIndex = 14
+        expectedThreshold = Threshold.fromname(Threshold.W6_WAITING_ROOM)
+    elif dictOfPRs[Placements.DEATH_NOTE] >= 19:
+        expectedThreshold = Threshold.fromname(Threshold.SOLID_W6_PREP)
+    elif dictOfPRs[Placements.DEATH_NOTE] >= 15:
+        expectedThreshold = Threshold.fromname(Threshold.EARLY_W6_PREP)
     else:
-        # print(f"Pinchy.setPinchyList~ INFO Starting to review map kill counts per player because expectedIndex still 0: {dictOfPRs["Construction Death Note"]}")
+        # logger.info(f"Starting to review map kill counts per player because expectedIndex still W1: {dictOfPRs['Construction Death Note']}")
         for playerCounter in range(0, playerCount):
-            playerKillsList = json.loads(inputJSON['KLA_' + str(playerCounter)])  # String pretending to be a list of lists yet again
-            # print(type(playerKillsList), playerKillsList)  # Expected to be a list
-            mobKills = [
-                (i, playerKillsList[monster][0] < portalKC if len(playerKillsList) > monster else False)
-                for i, (monster, portalKC)
-                in monsterPortalKills
-            ]
-            bestMobKills = next((index for index, portalOpened in mobKills if portalOpened), 0)
-            expectedIndex = max(bestMobKills, expectedIndex)
 
-            if expectedIndex >= maxExpectedIndexFromMaps:
-                break
+            mobKills = json.loads(inputJSON['KLA_' + str(playerCounter)])  # String pretending to be a list of lists yet again
+            # logger.info("%s, %s", type(playerKillsList), playerKillsList)  # Expected to be a list
+            threshold = threshold_for_highest_portal_opened(mobKills)
+            mobKillThresholds.append(threshold)
+
+    expectedThreshold = max((expectedThreshold, *mobKillThresholds))
+
+    return expectedThreshold
+
+
+def generate_advice_list(sections: list[Tier], threshold: Threshold):
+    advices = [
+        Advice(
+            label=section.section,
+            item_name=section.section,
+            progression=section.tier,
+            goal=section.next.tier,
+            unit="T",
+            value_format="{unit} {value}"
+        ) for section in sections
+    ]
+    if threshold == Threshold.fromname(Threshold.MAX_TIER):
+        for advice in advices:
+            advice.progression = ""
+            advice.goal = ""
+            advice.unit = ""
+
+    return advices
+
+
+def generate_advice_groups(sectionsByThreshold: dict):
+    advice_groups = []
+    for threshold, sections in sectionsByThreshold.items():
+        advices = generate_advice_list(sections, Threshold.fromname(threshold))
+
+        advice_group = AdviceGroup(
+            tier="",
+            pre_string=f"{threshold} rated activit{pl(advices, 'y', 'ies')}",
+            advices=advices
+        )
+
+        advice_groups.append(advice_group)
+    return advice_groups
+
+
+def generatePinchyWorld(inputJSON, playerCount, dictOfPRs):
+    sectionPlacements: Placements = sort_pinchy_reviews(dictOfPRs)
+    expectedThreshold: Threshold = tier_from_monster_kills(dictOfPRs, inputJSON, playerCount)
+    lowestThresholdReached: Threshold = sectionPlacements.lowest
 
     # Generate advice based on catchup
     equalSnippet = ""
-    if lowestIndex >= expectedIndex:
-        equalSnippet = "Your lowest sections are roughly equal with (or better than!) your highest enemy map. Keep up the good work!"
+    if lowestThresholdReached >= expectedThreshold:
+        equalSnippet = ". Your lowest sections are roughly equal with (or better than!) your highest enemy map. Keep up the good work!"
 
-    lowSectionName = progressionNamesList[lowestIndex]
-    lowSections = sortedResultsListofLists[lowestIndex]
-    pinchyAdvice = (f"{lowSectionName} rated section{pl(lowSectionName)}: {', '.join(lowSections)}. "
-                    f"You can find detailed advice below in the section's World.")
-
-    # Generate sneak peek advice
-    peekList = []
-    for peekIndex, peekSections in enumerate(sortedResultsListofLists[lowestIndex + 1:-1], start=lowestIndex + 1):
-        try:
-            peekSectionName = progressionNamesList[peekIndex]
-
-            if peekSections:
-                peekAdvice = f"Sneak peek: {peekSectionName} rated section{pl(peekSections)}: {', '.join(peekSections)}."
-                peekList.append(peekAdvice)
-
-        except IndexError as reason:
-            print("Pinchy.setPinchyList~ EXCEPTION Unable to generate Pinchy Peek advice: ", reason)
-
-    if expectedIndex == maxWorldTiers:
-        pinchyHeader = ("Huh. Something went a little wrong here. You landed in the Placeholder tier somehow. "
-                        "If you weren't expecting this, tell Scoli about it! O.o")
+    if expectedThreshold.name == Threshold.PLACEHOLDER:
+        pinchyExpected = (
+            "Huh. Something went a little wrong here. You landed in the Placeholder tier somehow. "
+            "If you weren't expecting this, tell Scoli about it! O.o"
+        )
+        logger.warning("this really should not happen...")
+        logger.warning(pinchyExpected)
     else:
-        pinchyHeader = f"Expected Progression, based on highest enemy map: {progressionNamesList[expectedIndex]}."
-    pinchyMin = f"Minimum Progression, based on weakest ranked review: {progressionNamesList[lowestIndex]}."
+        pinchyExpected = f"Expected Progression, based on highest enemy map: {expectedThreshold}"
 
-    return [pinchyHeader, pinchyMin, [equalSnippet, pinchyAdvice], peekList]
+    advice_groups = generate_advice_groups(sectionPlacements.final)
+
+    sections_maxed_count = sectionPlacements.maxed_count
+    sections_total = Placements.section_count
+    sections_maxed = f"{sections_maxed_count}/{sections_total}"
+
+    pinchy_high = AdviceSection(
+        name="Pinchy high",
+        tier=expectedThreshold.name,
+        header=pinchyExpected,
+        collapse=True
+    )
+
+    pinchy_low = AdviceSection(
+        name="Pinchy low",
+        tier=lowestThresholdReached.name,
+        header=f"Minimum Progression, based on weakest ranked review: {lowestThresholdReached}{equalSnippet}",
+        collapse=True
+    )
+
+    pinchy_all = AdviceSection(
+        name="Pinchy all",
+        tier=sections_maxed,
+        header=f"Sections maxed: {sections_maxed}. Recommended general section actions:",
+        picture="Pinchy.gif",
+        groups=advice_groups
+    )
+
+    pinchy = AdviceWorld(
+        name=WorldName.PINCHY,
+        sections=[pinchy_high, pinchy_low, pinchy_all],
+    )
+
+    return pinchy
