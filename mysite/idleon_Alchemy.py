@@ -465,7 +465,7 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
         if len(maxedVialsList) < 27:
             advice_TrailingMaxedVials = " 27 is the magic number needed to get the Snake Skin vial to 100% chance to double deposited statues :D (This also requires Snake Skin itself be maxed lol)"
         else:
-            advice_TrailingMaxedVials = ". Thanks to the Vial Mastery bonus in W4's Rift, every maxed vial increases the bonus of EVERY vial you have unlocked!"
+            advice_TrailingMaxedVials = " Thanks to the Vial Mastery bonus in W4's Rift, every maxed vial increases the bonus of EVERY vial you have unlocked!"
     else:
         advice_TrailingMaxedVials = ""
 
@@ -532,7 +532,7 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
                     vial_AdviceDict["SpecificMaxVials"].append(
                         Advice(
                             label=requiredVial,
-                            item_name=requiredVial,
+                            item_name=requiredVial.split("(")[0].strip(),
                             progression="",
                             goal="",
                         )
@@ -562,10 +562,6 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
     tier_section = f"{overall_AlchemyVialsTier}/{max_tier}"
     vial_AdviceSection.tier = tier_section
     if overall_AlchemyVialsTier == max_tier:
-        advice_CombinedStamps = [
-            f"Best Vial tier met: {tier_section}. You best ❤️", "", "",
-            "You've reached the end of the recommendations. Let me know what important stamps you're aiming for next!"
-        ]
         vial_AdviceSection.header = f"Best Vial tier met: {tier_section}. You best ❤️"
     else:
         vial_AdviceSection.header = f"Best Vial tier met: {tier_section}. Recommended vial actions:"
