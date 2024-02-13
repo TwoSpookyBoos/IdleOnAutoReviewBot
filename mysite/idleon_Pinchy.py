@@ -265,7 +265,7 @@ maxExpectedThresholdFromMaps = portalOpeningKills[0][0]
 
 
 def is_portal_opened(mobKills, monster, portalKC):
-    return mobKills[monster][0] < portalKC if len(mobKills) > monster else False
+    return float(mobKills[monster][0] < portalKC) if len(mobKills) > monster else False
 
 
 def getHighestPrint(inputJSON):
