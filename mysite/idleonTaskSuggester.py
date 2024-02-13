@@ -439,7 +439,6 @@ def main(inputData, runType="web"):
         "Prayers": worshipPrayersPR.cT
         }
     pinchy = idleon_Pinchy.generatePinchyWorld(parsedJSON, playerCount, biggoleProgressionTiersDict)
-    biggoleAdviceList = [generalList, w1list, w2list, w3list, w4list, w5list, w6list, w7list, w8list, pinchy]
 
     w1Review = AdviceWorld(
         name=WorldName.WORLD1,
@@ -451,8 +450,8 @@ def main(inputData, runType="web"):
         sections=[alchVials_AdviceSection["AdviceSection"]],
         banner="w2banner.png"
     )
-    biggoleAdviceList.append(w1Review)
-    biggoleAdviceList.append(w2Review)
+
+    biggoleAdviceList = [generalList, w1list, w2list, w3list, w4list, w5list, w6list, w7list, w8list, w2Review, w1Review, pinchy]
 
     if runType == "consoleTest":
         return "Pass"

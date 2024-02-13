@@ -509,7 +509,7 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
                 vial_AdviceDict["TotalMaxVials"].append(
                     Advice(
                         label="Maxed vials",
-                        item_name="TODO",
+                        item_name="vial-max",
                         progression=str(len(maxedVialsList)),
                         goal=str(tier[2])
                     )
