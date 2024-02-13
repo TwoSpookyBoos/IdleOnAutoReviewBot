@@ -481,7 +481,7 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
         advice_SnakeskinRiftVialMastery = ""
         highestCompletedRift = 0
     virileVialsList = []
-    maxExpectedVV = 62 #Excludes both pickle vials
+    maxExpectedVV = 72 #Excludes both pickle vials
     maxedVialsList = []
     unmaxedVialsList = []
     lockedVialsList = []
