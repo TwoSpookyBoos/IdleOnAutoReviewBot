@@ -812,6 +812,17 @@ def setAlchemyP2W(inputJSON, playerCount):
     liquidCauldronMax = 180 * liquidCauldronsUnlocked
     vialsMax = 15 + 45  # 15 attempts, 45 RNG
 
+    p2w_AdviceDict = {
+        "Pay2Win": []
+    }
+    p2w_AdviceGroupDict = {}
+    p2w_AdviceSection = AdviceSection(
+        name="Pay2Win",
+        tier="Not Yet Evaluated",
+        header="Best P2W tier met: Not Yet Evaluated. Recommended P2W actions:",
+        picture="pay2win.png"
+    )
+
     bubbleCauldronSum = sum(alchemyP2WList[0])
     vialsSum = sum(alchemyP2WList[2])
     playerSum = sum(alchemyP2WList[3])
@@ -821,6 +832,8 @@ def setAlchemyP2W(inputJSON, playerCount):
 
     p2wSum = bubbleCauldronSum + liquidCauldronSum + vialsSum + playerSum
     p2wMax = bubbleCauldronMax + liquidCauldronMax + vialsMax + (highestAlchemyLevel*2)
+    p2wSumWithoutPlayer = bubbleCauldronSum + liquidCauldronSum + vialsSum
+    p2wMaxWithoutPlayer = bubbleCauldronMax + liquidCauldronMax + vialsMax
     #print("Alchemy.setAlchemyP2W~ OUTPUT bubbleCauldronSum, liquidCauldronSum, vialsSum, playerSum:",bubbleCauldronSum, liquidCauldronSum, vialsSum, playerSum)
     #print("Alchemy.setAlchemyP2W~ OUTPUT p2wSum, p2wMax, p2wTrueMax:",p2wSum, p2wMax)
     advice_alchemyP2WSums = ""
@@ -829,19 +842,69 @@ def setAlchemyP2W(inputJSON, playerCount):
     advice_alchemyP2WVials = ""
     advice_alchemyP2WPlayer = ""
     advice_alchemyP2WCombined = []
+
+    if p2wSumWithoutPlayer >= p2wMaxWithoutPlayer:
+        p2w_AdviceSection.pinchy_rating = 1
+    else:
+        p2w_AdviceSection.pinchy_rating = 0
+
     if p2wSum >= p2wMax:
         advice_alchemyP2WSums = "You've purchased all " + str(p2wMax) + " upgrades in Alchemy-P2W! You best ❤️"
+        p2w_AdviceSection.header = f"You've purchased all {p2wMax} upgrades in Alchemy-P2W! You best ❤️"
     else:
-        advice_alchemyP2WSums = "You've purchased " + str(p2wSum) + "/" + str(p2wMax) + " upgrades in Alchemy P2W. Try to purchase the basic updates before Mid W5, and Player upgrades after each level up!"
+        advice_alchemyP2WSums = "You've purchased " + str(p2wSum) + "/" + str(p2wMax) + " upgrades in Alchemy P2W. Try to purchase the basic upgrades before Mid W5, and Player upgrades after each level up!"
         if bubbleCauldronSum < bubbleCauldronMax:
             advice_alchemyP2WBubbleCauldrons += "Bubble Cauldron upgrades: " + str(bubbleCauldronSum) + "/" + str(bubbleCauldronMax)
+            p2w_AdviceDict["Pay2Win"].append(
+                Advice(
+                    label="Bubble Cauldron Upgrades",
+                    item_name="cauldron-a",
+                    progression=str(bubbleCauldronSum),
+                    goal=str(bubbleCauldronMax),
+                )
+            )
         if liquidCauldronSum < liquidCauldronMax:
             advice_alchemyP2WLiquidCauldrons += "Liquid Cauldron upgrades: " + str(liquidCauldronSum) + "/" + str(liquidCauldronMax)
+            p2w_AdviceDict["Pay2Win"].append(
+                Advice(
+                    label="Liquid Cauldron Upgrades",
+                    item_name="bleach-liquid-cauldrons",
+                    progression=str(liquidCauldronSum),
+                    goal=str(liquidCauldronMax),
+                )
+            )
         if vialsSum < vialsMax:
             advice_alchemyP2WVials += "Vial upgrades: " + str(vialsSum) + "/" + str(vialsMax)
+            p2w_AdviceDict["Pay2Win"].append(
+                Advice(
+                    label="Vial Upgrades",
+                    item_name="vials",
+                    progression=str(vialsSum),
+                    goal=str(vialsMax),
+                )
+            )
         if playerSum < highestAlchemyLevel*2:
             advice_alchemyP2WPlayer += "Player upgrades: " + str(playerSum) + "/" + str(highestAlchemyLevel*2)
+            p2w_AdviceDict["Pay2Win"].append(
+                Advice(
+                    label="Player Upgrades",
+                    item_name="p2w-player",
+                    progression=str(playerSum),
+                    goal=str(highestAlchemyLevel*2),
+                )
+            )
+    p2w_AdviceGroupDict["Pay2Win"] = AdviceGroup(
+        tier="",
+        pre_string="Remaining Pay2Win upgrades to purchase",
+        post_string="",
+        advices=p2w_AdviceDict["Pay2Win"]
+    )
+    tier_section = f"{p2wSum}/{p2wMax}"
+    p2w_AdviceSection.tier = tier_section
+    if p2wSum < p2wMax:
+        p2w_AdviceSection.header = f"You've purchased {tier_section} upgrades in Alchemy P2W. Try to purchase the basic upgrades before Mid W5, and Player upgrades after each level up!"
+        p2w_AdviceSection.groups = p2w_AdviceGroupDict.values()
 
     advice_alchemyP2WCombined = [advice_alchemyP2WBubbleCauldrons, advice_alchemyP2WLiquidCauldrons, advice_alchemyP2WVials, advice_alchemyP2WPlayer]
     #print(advice_alchemyP2WSums, advice_alchemyP2WCombined)
-    return [advice_alchemyP2WSums, advice_alchemyP2WCombined]
+    return {'Header':advice_alchemyP2WSums, 'OldAdvice':advice_alchemyP2WCombined, 'AdviceSection':p2w_AdviceSection}
