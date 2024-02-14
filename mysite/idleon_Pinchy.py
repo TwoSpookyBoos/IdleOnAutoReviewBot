@@ -125,7 +125,7 @@ class Placements(dict):
     SMITHING = "Smithing"
     BUBBLES = "Bubbles"
     VIALS = "Vials"
-    P2W = "P2W"
+    P2W = "Pay2Win"
     REFINERY = "Refinery"
     SALT_LICK = "Salt Lick"
     PRAYERS = "Prayers"

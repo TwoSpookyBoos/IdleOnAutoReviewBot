@@ -817,7 +817,7 @@ def setAlchemyP2W(inputJSON, playerCount):
     }
     p2w_AdviceGroupDict = {}
     p2w_AdviceSection = AdviceSection(
-        name="P2Win",
+        name="Pay2Win",
         tier="Not Yet Evaluated",
         header="Best P2W tier met: Not Yet Evaluated. Recommended P2W actions:",
         picture="pay2win.png"

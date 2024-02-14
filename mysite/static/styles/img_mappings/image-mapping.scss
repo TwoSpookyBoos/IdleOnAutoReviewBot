@@ -1,4 +1,5 @@
 @import "vars";
+@import "bribes";
 @import "bubbles";
 @import "classes";
 @import "construction";
@@ -2033,12 +2034,14 @@ $extra: (
 	prayers: $prayer-stone,
 	bubbles: $bubbles,
 	bribes: $bribes,
+	pay2win: $pay2win
 );
 
 $id-map: map-merge($skill-icons, $id-map);
 $id-map: map-merge($character-classes, $id-map);
 $id-map: map-merge($vials, $id-map);
 $id-map: map-merge($extra, $id-map);
+$id-map: map-merge($bribes-map, $id-map);
 
 @each $class, $link in $id-map {
 	.#{$class}::before {

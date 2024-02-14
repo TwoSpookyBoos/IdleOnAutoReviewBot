@@ -21,6 +21,8 @@ import idleon_Greenstacks
 import idleon_MaestroHands
 import idleon_Cards
 
+from idleon_Pinchy import Placements
+
 #w1
 import idleon_Stamps
 import idleon_Bribes
@@ -428,17 +430,17 @@ def main(inputData, runType="web"):
     w7list = [["w7 mechanic 1 placeholder"], ["w7 mechanic 2 placeholder"], ["w7 mechanic 3 placeholder"]]
     w8list = [["w8 mechanic 1 placeholder"], ["w8 mechanic 2 placeholder"], ["w8 mechanic 3 placeholder"]]
     biggoleProgressionTiersDict = {
-        "Combat Levels": combatLevelsPR.cT,
-        "Stamps": stamps_AdviceSection["PR"].cT,
-        "Bribes": bribes_ActiveSection["PR"].cT,
-        "Smithing": smithing_AdviceSection["PR"].cT,
-        "Bubbles": alchBubblesPR.cT,
-        "Vials": alchVials_AdviceSection["PR"].cT,
-        "P2W": alchP2W_AdviceSection['AdviceSection'].pinchy_rating,
-        "Refinery": consRefineryPR.cT,
-        "Salt Lick": consSaltLickPR.cT,
-        "Death Note": consDeathNotePR.cT,
-        "Prayers": worshipPrayersPR.cT
+        Placements.COMBAT_LEVELS: combatLevelsPR.cT,
+        Placements.STAMPS: stamps_AdviceSection["PR"].cT,
+        Placements.BRIBES: bribes_ActiveSection["PR"].cT,
+        Placements.SMITHING: smithing_AdviceSection["PR"].cT,
+        Placements.BUBBLES: alchBubblesPR.cT,
+        Placements.VIALS: alchVials_AdviceSection["PR"].cT,
+        Placements.P2W: alchP2W_AdviceSection['AdviceSection'].pinchy_rating,
+        Placements.REFINERY: consRefineryPR.cT,
+        Placements.SALT_LICK: consSaltLickPR.cT,
+        Placements.DEATH_NOTE: consDeathNotePR.cT,
+        Placements.PRAYERS: worshipPrayersPR.cT
         }
     pinchy = idleon_Pinchy.generatePinchyWorld(parsedJSON, playerCount, biggoleProgressionTiersDict)
 
