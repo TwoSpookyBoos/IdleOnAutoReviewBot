@@ -230,6 +230,7 @@ def setBribesProgressionTier(inputJSON, progressionTiers):
     overall_BribesTier = min(max_tier, tier_BribesPurchased)
     tier_section = f"{overall_BribesTier}/{max_tier}"
     bribe_AdviceSection.tier = tier_section
+    bribe_AdviceSection.picture = 'Bribes.png'
     #Generate advice statement
     advice_BribesCombined = ["Best Bribe tier met: " + str(overall_BribesTier) + "/" + str(max_tier)
                              + ". Recommended Bribe actions:", advice_BribesPurchased]

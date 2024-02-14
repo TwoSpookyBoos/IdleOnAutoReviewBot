@@ -68,6 +68,7 @@ $id-map: (
 	falloween-treat: $falloween-treat,
 	dragonic-liquid-cauldron: $dragonic-liquid-cauldron,
 	cauldron-a: $cauldron-a,
+	p2w-player: $p2w-player,
 	cardifier-5-star: $cardifier-5-star,
 
 	borzoi-topper: $borzoi-topper,
@@ -2031,6 +2032,7 @@ $extra: (
 	vial-max: $vial-max,
 	prayers: $prayer-stone,
 	bubbles: $bubbles,
+	bribes: $bribes,
 );
 
 $id-map: map-merge($skill-icons, $id-map);

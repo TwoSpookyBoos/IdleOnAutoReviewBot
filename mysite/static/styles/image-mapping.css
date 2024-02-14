@@ -14,6 +14,10 @@
   background-image: url("https://idleon.wiki/wiki/images/archive/4/42/20230111134826%21OrangeBubble13.png");
 }
 
+.bribes::before {
+  background-image: url("/static/imgs/Bribes.png");
+}
+
 .copper-corona::before {
   background-image: url("https://idleon.wiki/wiki/images/7/78/Copper_Ore.png");
 }
@@ -476,6 +480,10 @@
 
 .cauldron-a::before {
   background-image: url("/static/imgs/Alchemy_Bubble_all.gif");
+}
+
+.p2w-player::before {
+  background-image: url("/static/imgs/P2W_Player.png");
 }
 
 .cardifier-5-star::before {
