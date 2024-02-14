@@ -870,7 +870,7 @@ def setAlchemyP2W(inputJSON, playerCount):
             p2w_AdviceDict["Pay2Win"].append(
                 Advice(
                     label="Vial Upgrades",
-                    item_name="",
+                    item_name="vials",
                     progression=str(vialsSum),
                     goal=str(vialsMax),
                 )
