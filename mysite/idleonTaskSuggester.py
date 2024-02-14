@@ -415,7 +415,7 @@ def main(inputData, runType="web"):
 
     generalList = [[ieLinkList, lastUpdatedTimeString], combatLevelsPR.nTR, consumablesList, gemShopPR.nTR, allGStacksList, maestroHandsListOfLists, cardsList]
     w1list = [stamps_AdviceSection["PR"].nTR, bribes_ActiveSection["PR"].nTR, smithing_AdviceSection["PR"].nTR]  # len(stampPR) = 4, len(bribesPR.nTR) = 2, len(smithingPR.nTR) = 4
-    w2list = [alchBubblesPR.nTR, alchVials_AdviceSection["PR"].nTR, [alchP2W_AdviceSection['Sums'], alchP2W_AdviceSection['OldAdvice']], emptyList]  # len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 5
+    w2list = [alchBubblesPR.nTR, alchVials_AdviceSection["PR"].nTR, [alchP2W_AdviceSection['Header'], alchP2W_AdviceSection['OldAdvice']], emptyList]  # len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 5
     #w2list = [alchBubblesPR.nTR,alchVialsPR.nTR,alchP2WList, obolsPR.nTR]  # len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 4, len(obolsPR.nTR) = 4
     w3list = [
         ["Construction 3D Printer coming soon!"], consRefineryPR.nTR, consSaltLickPR.nTR, consDeathNotePR.nTR,  # len(consRefineryPR.nTR) = 5, len(consSaltLickPR.nTR) = 2, len(consDeathNotePR.nTR) = 12)
@@ -434,6 +434,7 @@ def main(inputData, runType="web"):
         "Smithing": smithing_AdviceSection["PR"].cT,
         "Bubbles": alchBubblesPR.cT,
         "Vials": alchVials_AdviceSection["PR"].cT,
+        "P2W": alchP2W_AdviceSection['AdviceSection'].pinchy_rating,
         "Refinery": consRefineryPR.cT,
         "Salt Lick": consSaltLickPR.cT,
         "Death Note": consDeathNotePR.cT,

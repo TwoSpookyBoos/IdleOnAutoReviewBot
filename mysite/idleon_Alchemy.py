@@ -832,6 +832,8 @@ def setAlchemyP2W(inputJSON, playerCount):
 
     p2wSum = bubbleCauldronSum + liquidCauldronSum + vialsSum + playerSum
     p2wMax = bubbleCauldronMax + liquidCauldronMax + vialsMax + (highestAlchemyLevel*2)
+    p2wSumWithoutPlayer = bubbleCauldronSum + liquidCauldronSum + vialsSum
+    p2wMaxWithoutPlayer = bubbleCauldronMax + liquidCauldronMax + vialsMax
     #print("Alchemy.setAlchemyP2W~ OUTPUT bubbleCauldronSum, liquidCauldronSum, vialsSum, playerSum:",bubbleCauldronSum, liquidCauldronSum, vialsSum, playerSum)
     #print("Alchemy.setAlchemyP2W~ OUTPUT p2wSum, p2wMax, p2wTrueMax:",p2wSum, p2wMax)
     advice_alchemyP2WSums = ""
@@ -840,6 +842,12 @@ def setAlchemyP2W(inputJSON, playerCount):
     advice_alchemyP2WVials = ""
     advice_alchemyP2WPlayer = ""
     advice_alchemyP2WCombined = []
+
+    if p2wSumWithoutPlayer >= p2wMaxWithoutPlayer:
+        p2w_AdviceSection.pinchy_rating = 1
+    else:
+        p2w_AdviceSection.pinchy_rating = 0
+
     if p2wSum >= p2wMax:
         advice_alchemyP2WSums = "You've purchased all " + str(p2wMax) + " upgrades in Alchemy-P2W! You best ❤️"
         p2w_AdviceSection.header = f"You've purchased all {p2wMax} upgrades in Alchemy-P2W! You best ❤️"
@@ -899,4 +907,4 @@ def setAlchemyP2W(inputJSON, playerCount):
 
     advice_alchemyP2WCombined = [advice_alchemyP2WBubbleCauldrons, advice_alchemyP2WLiquidCauldrons, advice_alchemyP2WVials, advice_alchemyP2WPlayer]
     #print(advice_alchemyP2WSums, advice_alchemyP2WCombined)
-    return {'Sums':advice_alchemyP2WSums, 'OldAdvice':advice_alchemyP2WCombined, 'AdviceSection':p2w_AdviceSection}
+    return {'Header':advice_alchemyP2WSums, 'OldAdvice':advice_alchemyP2WCombined, 'AdviceSection':p2w_AdviceSection}
