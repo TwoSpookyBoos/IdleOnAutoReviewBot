@@ -86,18 +86,17 @@ def setCombatLevelsProgressionTier(inputJSON, progressionTiers, playerCount, pla
             goal=next_tier[1],
         )]
     )
-    advice_AccountLevels = "Tier " + str(next_tier[0]) + "- Current Family level: " + str(total_combat_level) + ". Next family reward at " + str(next_tier[1]) + " unlocks " + next_tier[2]
 
     if len(parsedCombatLevels['equinoxDict']['under100']) > 0 and equinoxDreamStatus["Dream3"] is False:
-        advice_PersonalLevels = "Level the following characters to 100+ to complete Equinox Dream 3:"
+        advice_PersonalLevels = "Level the following characters to 100+ to complete Equinox Dream 3"
         goal = 100
 
     elif len(parsedCombatLevels['equinoxDict']['under250']) > 0 and equinoxDreamStatus["Dream11"] is False:
-        advice_PersonalLevels = "Level the following characters to 250+ to complete Equinox Dream 11 and unlock their Personal Sparkle Obol slot:"
+        advice_PersonalLevels = "Level the following characters to 250+ to complete Equinox Dream 11 and unlock their Personal Sparkle Obol slot"
         goal = 250
 
     elif len(parsedCombatLevels['equinoxDict']['under500']) > 0 and equinoxDreamStatus["Dream23"] is False:
-        advice_PersonalLevels = "Level the following characters to 500+ to complete Equinox Dream 23:"
+        advice_PersonalLevels = "Level the following characters to 500+ to complete Equinox Dream 23"
         goal = 500
 
     else:
@@ -131,8 +130,4 @@ def setCombatLevelsProgressionTier(inputJSON, progressionTiers, playerCount, pla
         groups=[total_level_group, lvlup_group]
     )
 
-    advice_CombatLevelsCombined = [advice_AccountLevels, advice_PersonalLevels]
-
-    #Generate and return the progressionResults
-    combatLevelsPR = progressionResults.progressionResults(overall_CombatLevelTier, advice_CombatLevelsCombined,"")
-    return combatLevelsPR, combat_section, overall_CombatLevelTier
+    return combat_section, overall_CombatLevelTier
