@@ -392,8 +392,8 @@ def setDefaultTiers():
                 "Quest19"  # Previously Tier12
             ],
             "Misc": [
-                "FoodPotMana3", "FoodPotGr3", "FoodPotRe1",  # Previously Tier10
-                "FoodPotRe2"  # Previously Tier11
+                "FoodPotGr3",  # Previously Tier10
+                "FoodPotRe2"   # Previously Tier11
             ],
             "Other Skilling Resources": [
                 "Refinery1",  # Previously Tier11
@@ -493,8 +493,8 @@ def setDefaultTiers():
             "Other Skilling Resources": [
                 "StarfireBar",
                 "Bullet3", "FoodChoppin1"],
-            "Crystal Enemy Drops": ["EquipmentStatues7", "EquipmentStatues3", "EquipmentStatues2", "EquipmentStatues4", "EquipmentStatues14"]
-            #"Misc": ["FoodPotMana3", "FoodPotGr3", "FoodPotRe1"]
+            "Crystal Enemy Drops": ["EquipmentStatues7", "EquipmentStatues3", "EquipmentStatues2", "EquipmentStatues4", "EquipmentStatues14"],
+            "Misc": [],
             #"Vendor Shops": ["FoodHealth9"]
             },
         11: {
@@ -509,7 +509,10 @@ def setDefaultTiers():
             ],
             #"Vendor Shops": ["FoodHealth4", "FoodHealth11"],
             "Misc": [
-                #"FoodPotRe2",
+                #"FoodPotGr3",  # Sold in shops as well as dropped from Sir Stache
+                "FoodPotRe1",  # Technically sold in W1 shop, but so few that it barely matters
+                "FoodPotRe2",
+                "FoodPotMana3",
                 "ButterBar"]
             },
         12: {

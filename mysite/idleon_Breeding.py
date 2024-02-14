@@ -353,8 +353,8 @@ def setBreedingProgressionTier(inputJSON, progressionTiers):
             "Best IMO: Faster Shiny Pet Lv Up Rate, Bonuses from All Meals, Base Efficiency for All Skills, Base Critter Per Trap",
             "Second best: Drop Rate, Multikill Per Tier, Total Damage, Base WIS, Base STR, Base AGI",
             "Futureproof: W6...?, Infinite Star Signs",
-            "Middle of the pack, helpful to Lv5 at least: Base LUK, Faster Refinery Speed, Higher Artifact Find Chance",
-            "Meh: Lower Minimum Travel Time for Sailing, Sail Captain EXP Gain, Skill EXP",
+            "Middle of the pack, helpful to Lv5 at least: Base LUK, Faster Refinery Speed, Higher Artifact Find Chance, Star Talent Pts",
+            "Meh: Lower Minimum Travel Time for Sailing, Sail Captain EXP Gain, Skill EXP, Tab 1, 2, 3, 4 Talent Pts",
             "Ignorable: Class EXP, Line Width in Lab"]
     else:
         if advice_UnlockedTerritories != "":
