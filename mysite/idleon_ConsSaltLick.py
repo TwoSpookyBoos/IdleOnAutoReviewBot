@@ -59,7 +59,7 @@ def setConsSaltLickProgressionTier(inputJSON, progressionTiers):
     overall_ConsSaltLickTier = min(10, sum_TotalMaxedSaltLickUpgrades) #Looks silly, but may get more evaluations in the future
     #Generate advice statement
     if overall_ConsSaltLickTier == 10:
-        advice_RequiredSaltLickUpgrades = "Nada. You best <3"
+        advice_RequiredSaltLickUpgrades = "Nada. You best ❤️"
     advice_ConsSaltLickCombined = ["Maxed Salt Lick Upgrades: " + str(overall_ConsSaltLickTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended Salt Lick action:", advice_RequiredSaltLickUpgrades]
     #Print fun stuff
     #print(advice_ConsSaltLickCombined)

@@ -55,7 +55,7 @@ def getHandsStatus(inputJSON, playerCount, playerNames):
                 for skill in handsCharactersDict[handsCharacter][1]:
                     leftHandsString += skill + handsCharactersDict[handsCharacter][1][skill] + ", "
         else:
-            leftHandsString = handsCharactersDict[handsCharacter][0] + " is the highest level in all " + str(len(skillsToReview_LeftHand)) + " Left Hand skills! They best <3  "
+            leftHandsString = handsCharactersDict[handsCharacter][0] + " is the highest level in all " + str(len(skillsToReview_LeftHand)) + " Left Hand skills! They best ❤️  "
         leftHandsString = leftHandsString[:-2]
         advice_LeftHands.append(leftHandsString)
 
@@ -67,7 +67,7 @@ def getHandsStatus(inputJSON, playerCount, playerNames):
                 for skill in handsCharactersDict[handsCharacter][2]:
                     rightHandsString += skill + handsCharactersDict[handsCharacter][2][skill] + ", "
         else:
-            rightHandsString = handsCharactersDict[handsCharacter][0] + " is the highest level in all " + str(len(skillsToReview_RightHand)) + " Right Hand skills! They best <3  "
+            rightHandsString = handsCharactersDict[handsCharacter][0] + " is the highest level in all " + str(len(skillsToReview_RightHand)) + " Right Hand skills! They best ❤️  "
         rightHandsString = rightHandsString[:-2]
 
         if rightHandsString.find("Worship") != -1:

@@ -16,75 +16,76 @@ def setDefaultTiers():
         [2, 100, "", "", "", {}, "Just level up any stamp you can afford!"],
         [3, 150, "2,3,4,5,11", "5", "", {}, "W1 town and W1 Tiki shop both sell stamps!"],
         [4, 200, "8,13,14", "3,16,18", "17", {}, "Expected progression roughly near the start of World 3. Some of these required stamps are drops from enemies or quest rewards. Use the Wiki to find their sources!"],
-        [5, 250, "6,7,9", "2,7", "0", {'Pickaxe':25,'Hatchet':25}, ""],
+        [5, 250, "6,7,9", "2,7", "0", {'Pickaxe Stamp':25, 'Hatchet Stamp':25}, ""],
         [6, 300, "17,18,20", "25", "5", {}, ""],
-        [7, 400, "", "8", "", {'Pickaxe':35,'Hatchet':35}, ""],
-        [8, 500, "15,16,21", "14,17", "14,19", {'Drippy Drop':30}, ""],
-        [9, 600, "27", "10", "1,2", {'Mason Jar':12}, ""],
-        [10, 700, "", "4,6,9,11,12,15,22,24,26", "", {'Drippy Drop':40,'Matty Bag':50}, ""],
-        [11, 800, "10,12", "29,37,40", "", {'Pickaxe':45,'Hatchet':45,'Mason Jar':24,}, ""],
-        [12, 900, "23,24", "13,20,30,46", "8", {'Drippy Drop':50}, ""],
-        [13, 1000, "28", "19,21,36", "13", {'Pickaxe':55,'Hatchet':55,'Card':50}, ""],
-        [14, 1500, "31", "35,39", "21", {'Matty Bag':100,'Crystallin':60}, ""],
-        [15, 2000, "25,29", "41", "6,20", {'Pickaxe':65,'Hatchet':65,'Card':100}, ""],
-        [16, 2500, "33", "38,42", "15", {'Golden Apple':28}, ""],
-        [17, 3000, "36", "43,44,45", "", {'Bugsack':80,'Bag o Heads':80},  ""],
-        [18, 3500, "", "", "", {'Pickaxe':75,'Hatchet':75,'Drippy Drop':90,'Crystallin':100}, ""],
-        [19, 4000, "", "", "", {'Matty Bag':150}, ""],
-        [20, 4500, "", "", "18", {'Card':150,'Ladle':100}, ""],
-        [21, 5000, "30,32", "23", "", {'Pickaxe':85,'Hatchet':85,'Mason Jar':52,'Golden Apple':40}, ""],
-        [22, 5500, "", "", "", {'Bugsack':120,'Bag o Heads':120}, ""],
-        [23, 6000, "19,26,34", "33", "", {'Matty Bag':200,'Crystallin':150}, ""],
-        [24, 6500, "36", "", "", {'Drippy Drop':100,'Ladle':150}, ""],
-        [25, 7000, "35", "", "", {'Pickaxe':95,'Hatchet':95,'Golden Apple':60,'Multitool':100}, ""],
-        [26, 7500, "", "", "", {'Ladle':180}, ""],
-        [27, 8000, "", "", "", {'Matty Bag':280,'Multitool':150}, ""],
-        [28, 8400, "", "", "", {'Pickaxe':105,'Hatchet':105,'Mason Jar':88,'Crystallin':200,'Bugsack':152,'Bag o Heads':152,}, ""],
-        [29, 8600, "", "", "", {'Drippy Drop':110,'Matty Bag':310}, ""],
-        [30, 8800, "", "", "", {'Card':200,'Crystallin':250}, ""],
-        [31, 9000, "", "", "", {'Golden Apple':80}, "Guaranteed daily Gilded Stamp at 10k"],
-        [32, 9200, "", "", "", {'Mason Jar':124}, ""],
-        [33, 9400, "", "", "", {'Bugsack':184,'Bag o Heads':184}, ""],
-        [34, 9600, "", "", "", {'Golden Apple':100,'Multitool':210}, ""],
-        [35, 9800, "37", "", "", {'Golden Sixes':150}, ""],
-        [36, 10000, "38, 22", "31", "", {'Golden Sixes':190}, ""]
+        [7, 400, "", "8", "", {'Pickaxe Stamp':35, 'Hatchet Stamp':35}, ""],
+        [8, 500, "15,16,21", "14,17", "14,19", {'Drippy Drop Stamp':30}, ""],
+        [9, 600, "27", "10", "1,2", {'Mason Jar Stamp':12}, ""],
+        [10, 700, "", "4,6,9,11,12,15,22,24,26", "", {'Drippy Drop Stamp':40, 'Matty Bag Stamp':50}, ""],
+        [11, 800, "10,12", "29,37,40", "", {'Pickaxe Stamp':45, 'Hatchet Stamp':45, 'Mason Jar Stamp':24,}, ""],
+        [12, 900, "23,24", "13,20,30,46", "8", {'Drippy Drop Stamp':50}, ""],
+        [13, 1000, "28", "19,21,36", "13", {'Pickaxe Stamp':55, 'Hatchet Stamp':55, 'Card Stamp':50}, ""],
+        [14, 1500, "31", "35,39", "21", {'Matty Bag Stamp':100, 'Crystallin':60}, ""],
+        [15, 2000, "25,29", "41", "6,20", {'Pickaxe Stamp':65, 'Hatchet Stamp':65, 'Card Stamp':100}, ""],
+        [16, 2500, "33", "38,42", "15", {'Golden Apple Stamp':28}, ""],
+        [17, 3000, "36", "43,44,45", "", {'Bugsack Stamp':80, 'Bag o Heads Stamp':80},  ""],
+        [18, 3500, "", "", "", {'Pickaxe Stamp':75, 'Hatchet Stamp':75, 'Drippy Drop Stamp':90, 'Crystallin':100}, ""],
+        [19, 4000, "", "", "", {'Matty Bag Stamp':150}, ""],
+        [20, 4500, "", "", "18", {'Card Stamp':150, 'Ladle Stamp':100}, ""],
+        [21, 5000, "30,32", "23", "", {'Pickaxe Stamp':85, 'Hatchet Stamp':85, 'Mason Jar Stamp':52, 'Golden Apple Stamp':40}, ""],
+        [22, 5500, "", "", "", {'Bugsack Stamp':120, 'Bag o Heads Stamp':120}, ""],
+        [23, 6000, "19,26,34", "33", "", {'Matty Bag Stamp':200, 'Crystallin':150}, ""],
+        [24, 6500, "36", "", "", {'Drippy Drop Stamp':100, 'Ladle Stamp':150}, ""],
+        [25, 7000, "35", "", "", {'Pickaxe Stamp':95, 'Hatchet Stamp':95, 'Golden Apple Stamp':60, 'Multitool Stamp':100}, ""],
+        [26, 7500, "", "", "", {'Ladle Stamp':180}, ""],
+        [27, 8000, "", "", "", {'Matty Bag Stamp':280, 'Multitool Stamp':150}, ""],
+        [28, 8400, "", "", "", {'Pickaxe Stamp':105, 'Hatchet Stamp':105, 'Mason Jar Stamp':92, 'Crystallin':200, 'Bugsack Stamp':152, 'Bag o Heads Stamp':152,}, ""],
+        [29, 8600, "", "", "", {'Drippy Drop Stamp':110, 'Matty Bag Stamp':310}, ""],
+        [30, 8800, "", "", "", {'Card Stamp':200, 'Crystallin':250}, ""],
+        [31, 9000, "", "", "", {'Golden Apple Stamp':80}, "Guaranteed daily Gilded Stamp at 10k"],
+        [32, 9200, "", "", "", {'Mason Jar Stamp':124}, ""],
+        [33, 9400, "", "", "", {'Bugsack Stamp':184, 'Bag o Heads Stamp':184}, ""],
+        [34, 9600, "", "", "", {'Golden Apple Stamp':100, 'Multitool Stamp':210}, ""],
+        [35, 9800, "37", "", "", {'Golden Sixes Stamp':150}, ""],
+        [36, 10000, "38, 22", "31", "", {'Golden Sixes Stamp':190}, ""],
+        [37, 11000, "", "", "", {'Maxo Slappo Stamp':98, 'Sashe Sidestamp':98, 'Intellectostampo':98}, ""]
         ]
     defaultTiers['Smithing'] = [
         #int tier, int Cash Points Purchased, int Monster Points Purchased, int Forge Totals, str Notes
         [0, 0,   0,   0,   ""],
-        [1, 20,  85,  60,  "all W1 enemies."],
-        [2, 60,  150, 120, "early W2 enemies, up through Pincermin."],
-        [3, 100, 225, 180, "all W2 enemies."],
-        [4, 150, 350, 240, "most W3 enemies, excluding Dedotated Rams."],
-        [5, 200, 500, 291, "early W4 enemies, up through Soda Cans."],
-        [6, 600, 700, 291, "all W4 enemies."]
+        [1, 20,  85,  60,  "all W1 enemies"],
+        [2, 60,  150, 120, "early W2 enemies through Pincermin"],
+        [3, 100, 225, 180, "all W2 enemies"],
+        [4, 150, 350, 240, "most W3 enemies, excluding Dedotated Rams"],
+        [5, 200, 500, 291, "early W4 enemies through Soda Cans"],
+        [6, 600, 700, 291, "all W4 enemies"]
         ]
     defaultTiers['Alchemy Bubbles'] = [
         #int tier, int TotalBubblesUnlocked, dict {OrangeSampleBubbles}, dict {GreenSampleBubbles}, dict {PurpleSampleBubbles}, dict {UtilityBubbles}, str BubbleValuePercentage, str Notes
         [0,  0, {}, {}, {}, {}, "0%", ""],
-        [1,  10,  {'Roid Ragin': 12,   'Warriors Rule': 6,    'Hearty Diggy': 12,   'Wyoming Blood': 6,   'Sploosh Sploosh': 6,   'Stronk Tools': 8},                                                   {'Swift Steppin': 12,  'Archer or Bust': 6,    'Sanic Tools': 8,   'Bug^2': 6},                                          {'Stable Jenius': 12,  'Mage is Best': 6,    'Hocus Choppus': 12,   'Molto Loggo': 6,   'Le Brain Tools': 8},                                               {'FMJ':5, 'Shaquracy':5, 'Prowesessary':7, 'Hammer Hammer':6}, "10%", "These are MINIMUM recommended Utility bubbles for closing out W2. The goal for Prowesessary is an eventual 2x (or 200%) for all sources combined."],
-        [2,  20,  {'Roid Ragin': 25,   'Warriors Rule': 13,   'Hearty Diggy': 25,   'Wyoming Blood': 13,  'Sploosh Sploosh': 13,  'Stronk Tools': 18},                                                  {'Swift Steppin': 25,  'Archer or Bust': 13,   'Sanic Tools': 18,  'Bug^2': 13},                                         {'Stable Jenius': 25,  'Mage is Best': 13,   'Hocus Choppus': 25,   'Molto Loggo': 13,  'Le Brain Tools': 18},                                              {'FMJ':10, 'Shaquracy':10, 'Prowesessary':15, 'Hammer Hammer':14}, "20%", "These are MINIMUM recommended Utility bubbles for starting the W3 push. The goal for Prowesessary is an eventual 2x (or 200%) for all sources combined."],
-        [3,  40,  {'Roid Ragin': 67,   'Warriors Rule': 34,   'Hearty Diggy': 67,   'Wyoming Blood': 20,  'Sploosh Sploosh': 20,  'Stronk Tools': 47},                                                  {'Swift Steppin': 67,  'Archer or Bust': 34,   'Sanic Tools': 47,  'Bug^2': 20},                                         {'Stable Jenius': 67,  'Mage is Best': 34,   'Hocus Choppus': 67,   'Molto Loggo': 20,  'Le Brain Tools': 47},                                              {'FMJ':20, 'Shaquracy':20, 'Prowesessary':40, 'Hammer Hammer':41}, "40%", "These are MINIMUM recommended Utility bubbles for starting the W4 push. The goal for Prowesessary is an eventual 2x (or 200%) for all sources combined."],
-        [4,  60,  {'Roid Ragin': 100,  'Warriors Rule': 50,   'Hearty Diggy': 100,  'Wyoming Blood': 30,  'Sploosh Sploosh': 30,  'Stronk Tools': 70},                                                  {'Swift Steppin': 100, 'Archer or Bust': 50,   'Sanic Tools': 70,  'Bug^2': 30},                                         {'Stable Jenius': 100, 'Mage is Best': 50,   'Hocus Choppus': 100,  'Molto Loggo': 30,  'Le Brain Tools': 70},                                              {'FMJ':30, 'Shaquracy':30, 'Prowesessary':60, 'Hammer Hammer':65}, "50%", "These are MINIMUM recommended Utility bubbles for starting the W5 push. The goal for Prowesessary is an eventual 2x (or 200%) for all sources combined, and you should be hitting it right about now!"],
-        [5,  80,  {'Roid Ragin': 150,  'Warriors Rule': 75,   'Hearty Diggy': 150,  'Wyoming Blood': 45,  'Sploosh Sploosh': 45,  'Stronk Tools': 105, 'Multorange': 45,   'Dream of Ironfish': 45},    {'Swift Steppin': 150, 'Archer or Bust': 75,   'Sanic Tools': 105, 'Bug^2': 45, 'Premigreen': 45,   'Fly in Mind': 60},  {'Stable Jenius': 150, 'Mage is Best': 75,   'Hocus Choppus': 150,  'Molto Loggo': 45,  'Le Brain Tools': 105,  'Severapurple': 45,   'Tree Sleeper': 60},  {'FMJ':50, 'Shaquracy':50, 'Hammer Hammer':105}, "60%", "These are MINIMUM recommended Utility bubbles for pushing Citringes and beyond. Keep watch of your No Bubble Left Behind list (from W4 Lab) to keep cheap/easy bubbles off when possible!"],
-        [6,  100, {'Roid Ragin': 234,  'Warriors Rule': 117,  'Hearty Diggy': 234,  'Wyoming Blood': 70,  'Sploosh Sploosh': 70,  'Stronk Tools': 164, 'Multorange': 70,   'Dream of Ironfish': 70},    {'Swift Steppin': 234, 'Archer or Bust': 117,  'Sanic Tools': 164, 'Bug^2': 70, 'Premigreen': 70,   'Fly in Mind': 94},  {'Stable Jenius': 234, 'Mage is Best': 117,  'Hocus Choppus': 234,  'Molto Loggo': 70,  'Le Brain Tools': 164,  'Severapurple': 70,   'Tree Sleeper': 94},  {'Cookin Roadkill': 105}, "70%", "Cookin Roadkill 105 = 60% bubble strength. You likely can't use Cranium Cooking very often yet, but this is a prerequisite for doing so."],
-        [7,  100, {'Roid Ragin': 400,  'Warriors Rule': 200,  'Hearty Diggy': 400,  'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 280, 'Multorange': 120,  'Dream of Ironfish': 120},   {'Swift Steppin': 400, 'Archer or Bust': 200,  'Sanic Tools': 280, 'Bug^2': 120,'Premigreen': 120,  'Fly in Mind': 160}, {'Stable Jenius': 400, 'Mage is Best': 200,  'Hocus Choppus': 400,  'Molto Loggo': 120, 'Le Brain Tools': 280,  'Severapurple': 120,  'Tree Sleeper': 160}, {'Laaarrrryyyy': 150}, "80%", "Larry at 150 = 72% chance for +2 levels. Somewhere around level 125-150, this bubble should pass 100m Dementia Ore cost and be available to level with Boron upgrades from the W3 Atom Collider in Construction.  It should be, in my opinion, the ONLY Utility Bubble you spend these daily clicks on until it reaches 501. If you cannot afford the Particles needed to level Larry, invest into Sampling Bubbles."],
-        [8,  100, {'Roid Ragin': 567,  'Warriors Rule': 284,  'Hearty Diggy': 567,  'Wyoming Blood': 138, 'Sploosh Sploosh': 138, 'Stronk Tools': 397, 'Multorange': 170,  'Dream of Ironfish': 170},   {'Swift Steppin': 567, 'Archer or Bust': 284,  'Sanic Tools': 397, 'Bug^2': 138,'Premigreen': 170,  'Fly in Mind': 227}, {'Stable Jenius': 567, 'Mage is Best': 284,  'Hocus Choppus': 567,  'Molto Loggo': 138, 'Le Brain Tools': 397,  'Severapurple': 170,  'Tree Sleeper': 227}, {'Laaarrrryyyy': 501}, "85%", "Larry at 501 = 100% chance for +2 levels. This can be leveled with a combination of prints as well as daily Boron upgrades from the Atom Collider."],
-        [9,  100, {'Roid Ragin': 615,  'Warriors Rule': 308,  'Hearty Diggy': 615,  'Wyoming Blood': 138, 'Sploosh Sploosh': 138, 'Stronk Tools': 430, 'Multorange': 185,  'Dream of Ironfish': 185},   {'Swift Steppin': 615, 'Archer or Bust': 308,  'Sanic Tools': 430, 'Bug^2': 138,'Premigreen': 185,  'Fly in Mind': 246}, {'Stable Jenius': 615, 'Mage is Best': 308,  'Hocus Choppus': 615,  'Molto Loggo': 138, 'Le Brain Tools': 430,  'Severapurple': 185,  'Tree Sleeper': 246}, {'Cookin Roadkill': 630}, "86%", "Cooking Roadkill 630 = 90% bubble strength. Try to tackle the cheap levels with prints, and add Atom Clicks as needed. This will help your Bubo's Cranium Cooking really pick up in value."],
-        [10, 100, {'Roid Ragin': 670,  'Warriors Rule': 335,  'Hearty Diggy': 670,  'Wyoming Blood': 138, 'Sploosh Sploosh': 138, 'Stronk Tools': 469, 'Multorange': 201,  'Dream of Ironfish': 201},   {'Swift Steppin': 670, 'Archer or Bust': 335,  'Sanic Tools': 469, 'Bug^2': 138,'Premigreen': 201,  'Fly in Mind': 268}, {'Stable Jenius': 670, 'Mage is Best': 335,  'Hocus Choppus': 670,  'Molto Loggo': 138, 'Le Brain Tools': 469,  'Severapurple': 201,  'Tree Sleeper': 268}, {'Startue Exp': 240}, "87%", "Startue Exp 240 = 80% bubble strength. This can be leveled with Vman prints. You'll also likely get quite a lot of Pocket Sand while farming for Glass Shards for your Mason Jar stamp. Try to at least get this 80% threshold by the time you're farming Onyx Statues."],
-        [11, 100, {'Roid Ragin': 700,  'Warriors Rule': 367,  'Hearty Diggy': 734,  'Wyoming Blood': 138, 'Sploosh Sploosh': 138, 'Stronk Tools': 514, 'Multorange': 220,  'Dream of Ironfish': 220},   {'Swift Steppin': 700, 'Archer or Bust': 367,  'Sanic Tools': 514, 'Bug^2': 138,'Premigreen': 220,  'Fly in Mind': 294}, {'Stable Jenius': 700, 'Mage is Best': 367,  'Hocus Choppus': 734,  'Molto Loggo': 138, 'Le Brain Tools': 514,  'Severapurple': 220,  'Tree Sleeper': 294}, {'Droppin Loads': 280}, "88%", "Droppin Loads 280 = 80% bubble strength. Ideally, this should be leveled with prints but Fishing prints tend to struggle in the beginning. A few Boron upgrades won't hurt."],
-        [12, 100, {'Roid Ragin': 720,  'Warriors Rule': 405,  'Hearty Diggy': 810,  'Wyoming Blood': 138, 'Sploosh Sploosh': 138, 'Stronk Tools': 567, 'Multorange': 243,  'Dream of Ironfish': 243},   {'Swift Steppin': 720, 'Archer or Bust': 405,  'Sanic Tools': 567, 'Bug^2': 138,'Premigreen': 243,  'Fly in Mind': 324}, {'Stable Jenius': 720, 'Mage is Best': 405,  'Hocus Choppus': 810,  'Molto Loggo': 138, 'Le Brain Tools': 567,  'Severapurple': 243,  'Tree Sleeper': 324}, {'Call Me Bob': 200}, "89%", "Call Me Bob is a linear Construction EXP bubble, so the early levels are the most impactful to your account. Vman prints can help get this into Atom range. Afterwards, it is a very valid Atom Click target"],
-        [13, 100, {'Roid Ragin': 740,  'Warriors Rule': 450,  'Hearty Diggy': 900,  'Wyoming Blood': 138, 'Sploosh Sploosh': 138, 'Stronk Tools': 630, 'Multorange': 270,  'Dream of Ironfish': 270},   {'Swift Steppin': 740, 'Archer or Bust': 450,  'Sanic Tools': 630, 'Bug^2': 138,'Premigreen': 270,  'Fly in Mind': 360}, {'Stable Jenius': 740, 'Mage is Best': 450,  'Hocus Choppus': 900,  'Molto Loggo': 138, 'Le Brain Tools': 630,  'Severapurple': 270,  'Tree Sleeper': 360}, {'Diamond Chef': 31, 'Big P': 140, 'Big Game Hunter': 70, 'Mr Massacre': 117}, "90%", "70% broad on Utility bubbles. Many of these may not be within range to use Atom Clicks on yet. To help them level faster, try to level other cheap bubbles which will ensure No Bubble Left Behind targets these expensive bubbles instead."],
-        [14, 100, {'Roid Ragin': 760,  'Warriors Rule': 506,  'Hearty Diggy': 1012, 'Wyoming Blood': 138, 'Sploosh Sploosh': 138, 'Stronk Tools': 630, 'Multorange': 304,  'Dream of Ironfish': 270},   {'Swift Steppin': 760, 'Archer or Bust': 506,  'Sanic Tools': 630, 'Bug^2': 138,'Premigreen': 304,  'Fly in Mind': 360}, {'Stable Jenius': 760, 'Mage is Best': 506,  'Hocus Choppus': 1012, 'Molto Loggo': 138, 'Le Brain Tools': 630,  'Severapurple': 304,  'Tree Sleeper': 360}, {'Diamond Chef': 52, 'Big P': 240, 'Big Game Hunter': 120, 'Mr Massacre': 200}, "91%", "80% broad on Utility bubbles. Some of these may not be within range to use Atom Clicks on yet. To help them level faster, try to level other cheap bubbles which will ensure No Bubble Left Behind targets these expensive bubbles instead."],
-        [15, 100, {'Roid Ragin': 780,  'Warriors Rule': 575,  'Hearty Diggy': 1150, 'Wyoming Blood': 138, 'Sploosh Sploosh': 138, 'Stronk Tools': 630, 'Multorange': 345,  'Dream of Ironfish': 270},   {'Swift Steppin': 780, 'Archer or Bust': 575,  'Sanic Tools': 630, 'Bug^2': 138,'Premigreen': 345,  'Fly in Mind': 360}, {'Stable Jenius': 780, 'Mage is Best': 575,  'Hocus Choppus': 1150, 'Molto Loggo': 138, 'Le Brain Tools': 630,  'Severapurple': 345,  'Tree Sleeper': 360}, {'Diamond Chef': 74, 'Big P': 340, 'Carpenter': 284, 'Big Game Hunter': 170, 'Mr Massacre': 284}, "92%", "85% broad on Utility bubbles. A few of these may not be within range to use Atom Clicks on yet. To help them level faster, try to level other cheap bubbles which will ensure No Bubble Left Behind targets these expensive bubbles instead."],
-        [16, 100, {'Roid Ragin': 800,  'Warriors Rule': 665,  'Hearty Diggy': 1329, 'Wyoming Blood': 138, 'Sploosh Sploosh': 138, 'Stronk Tools': 630, 'Multorange': 399,  'Dream of Ironfish': 270},   {'Swift Steppin': 800, 'Archer or Bust': 665,  'Sanic Tools': 630, 'Bug^2': 138,'Premigreen': 399,  'Fly in Mind': 360}, {'Stable Jenius': 800, 'Mage is Best': 665,  'Hocus Choppus': 1329, 'Molto Loggo': 138, 'Le Brain Tools': 630,  'Severapurple': 399,  'Tree Sleeper': 360}, {'Laaarrrryyyy': 900, 'Diamond Chef': 117, 'Big P': 540, 'Carpenter': 450, 'Big Game Hunter': 270, 'Mr Massacre': 450}, "93%", "90% broad on Utility bubbles. These should all be within Atom Range now. Try not to go too crazy on these until your Sampling Bubbles are all 90% first."],
-        [17, 100, {'Roid Ragin': 820,  'Warriors Rule': 784,  'Hearty Diggy': 1567, 'Wyoming Blood': 138, 'Sploosh Sploosh': 138, 'Stronk Tools': 630, 'Multorange': 470,  'Dream of Ironfish': 270},   {'Swift Steppin': 820, 'Archer or Bust': 784,  'Sanic Tools': 630, 'Bug^2': 138,'Premigreen': 470,  'Fly in Mind': 360}, {'Stable Jenius': 820, 'Mage is Best': 784,  'Hocus Choppus': 1567, 'Molto Loggo': 138, 'Le Brain Tools': 630,  'Severapurple': 470,  'Tree Sleeper': 360}, {}, "94%", ""],
-        [18, 100, {'Roid Ragin': 840,  'Warriors Rule': 950,  'Hearty Diggy': 1900, 'Wyoming Blood': 138, 'Sploosh Sploosh': 138, 'Stronk Tools': 630, 'Multorange': 570,  'Dream of Ironfish': 270},   {'Swift Steppin': 840, 'Archer or Bust': 950,  'Sanic Tools': 630, 'Bug^2': 138,'Premigreen': 570,  'Fly in Mind': 360}, {'Stable Jenius': 840, 'Mage is Best': 950,  'Hocus Choppus': 1900, 'Molto Loggo': 138, 'Le Brain Tools': 630,  'Severapurple': 570,  'Tree Sleeper': 360}, {}, "95%", ""],
-        [19, 100, {'Roid Ragin': 860,  'Warriors Rule': 1200, 'Hearty Diggy': 2400, 'Wyoming Blood': 138, 'Sploosh Sploosh': 138, 'Stronk Tools': 630, 'Multorange': 720,  'Dream of Ironfish': 270},   {'Swift Steppin': 860, 'Archer or Bust': 1200, 'Sanic Tools': 630, 'Bug^2': 138,'Premigreen': 720,  'Fly in Mind': 360}, {'Stable Jenius': 860, 'Mage is Best': 1200, 'Hocus Choppus': 1900, 'Molto Loggo': 138, 'Le Brain Tools': 630,  'Severapurple': 720,  'Tree Sleeper': 360}, {}, "96%", ""],
-        [20, 100, {'Roid Ragin': 880,  'Warriors Rule': 1617, 'Hearty Diggy': 3234, 'Wyoming Blood': 138, 'Sploosh Sploosh': 138, 'Stronk Tools': 630, 'Multorange': 970,  'Dream of Ironfish': 270},   {'Swift Steppin': 880, 'Archer or Bust': 1617, 'Sanic Tools': 630, 'Bug^2': 138,'Premigreen': 970,  'Fly in Mind': 360}, {'Stable Jenius': 880, 'Mage is Best': 1617, 'Hocus Choppus': 1900, 'Molto Loggo': 138, 'Le Brain Tools': 630,  'Severapurple': 970,  'Tree Sleeper': 360}, {}, "97%", ""],
-        [21, 120, {'Roid Ragin': 900,  'Warriors Rule': 2450, 'Hearty Diggy': 4900, 'Wyoming Blood': 138, 'Sploosh Sploosh': 138, 'Stronk Tools': 630, 'Multorange': 1470, 'Dream of Ironfish': 270},   {'Swift Steppin': 900, 'Archer or Bust': 2450, 'Sanic Tools': 630, 'Bug^2': 138,'Premigreen': 1470, 'Fly in Mind': 360}, {'Stable Jenius': 900, 'Mage is Best': 2450, 'Hocus Choppus': 1900, 'Molto Loggo': 138, 'Le Brain Tools': 630,  'Severapurple': 1470, 'Tree Sleeper': 360}, {}, "98%", ""],
-        [22, 140, {'Roid Ragin': 950,  'Warriors Rule': 4950, 'Hearty Diggy': 9900, 'Wyoming Blood': 138, 'Sploosh Sploosh': 138, 'Stronk Tools': 630, 'Multorange': 2970, 'Dream of Ironfish': 270},   {'Swift Steppin': 950, 'Archer or Bust': 4950, 'Sanic Tools': 630, 'Bug^2': 138,'Premigreen': 2970, 'Fly in Mind': 360}, {'Stable Jenius': 950, 'Mage is Best': 4950, 'Hocus Choppus': 1900, 'Molto Loggo': 138, 'Le Brain Tools': 630,  'Severapurple': 2970, 'Tree Sleeper': 360}, {}, "99%", "* You've tackled the big important Utility bubbles, way to go! All previously mentioned bubbles are still great targets to level higher: Larry, Cookin Roadkill, Diamond Chef, Carpenter, Call Me Bob, Big P, Mr Massacre, Big Game Hunter, FMJ, Shaquracy, Hammer Hammer, and more!"],
-        [23, 160, {'Roid Ragin': 1000, 'Stronk Tools': 6930,  'Dream of Ironfish': 2970, 'Slabi Orefish':5940, 'Slabi Strength':5940},                                                                  {'Swift Steppin': 1000, 'Sanic Tools': 6930, 'Fly in Mind': 3960, 'Slabo Critterbug':5940, 'Slabo Agility':5940},        {'Stable Jenius': 1000, 'Hocus Choppus': 9900, 'Le Brain Tools': 6930, 'Tree Sleeper': 3960, 'Slabe Logsoul':5940, 'Slabe Wisdom':5940},                    {}, "99% catchup", "You've tackled the big important Utility bubbles, way to go! All previously mentioned bubbles are still great targets to level higher: Larry, Cookin Roadkill, Diamond Chef, Carpenter, Call Me Bob, Big P, Mr Massacre, Big Game Hunter, FMJ, Shaquracy, Hammer Hammer, and more!"],
+        [1,  10,  {'Roid Ragin': 12,   'Warriors Rule': 6,    'Hearty Diggy': 12,   'Wyoming Blood': 6,   'Sploosh Sploosh': 6,   'Stronk Tools': 8},                                                   {'Swift Steppin': 12,  'Archer or Bust': 6,   'Sanic Tools': 8,  'Bug^2': 6},                                                           {'Stable Jenius': 12,  'Mage is Best': 6,    'Hocus Choppus': 12,   'Molto Loggo': 6,   'Le Brain Tools': 8},                                               {'FMJ':5, 'Shaquracy':5, 'Prowesessary':7, 'Hammer Hammer':6}, "10%", "These are MINIMUM recommended Utility bubbles for closing out W2. The goal for Prowesessary is an eventual 2x (or 200%) for all sources combined."],
+        [2,  20,  {'Roid Ragin': 25,   'Warriors Rule': 13,   'Hearty Diggy': 25,   'Wyoming Blood': 13,  'Sploosh Sploosh': 13,  'Stronk Tools': 18},                                                  {'Swift Steppin': 25,  'Archer or Bust': 13,  'Sanic Tools': 18, 'Bug^2': 13},                                                          {'Stable Jenius': 25,  'Mage is Best': 13,   'Hocus Choppus': 25,   'Molto Loggo': 13,  'Le Brain Tools': 18},                                              {'FMJ':10, 'Shaquracy':10, 'Prowesessary':15, 'Hammer Hammer':14}, "20%", "These are MINIMUM recommended Utility bubbles for starting the W3 push. The goal for Prowesessary is an eventual 2x (or 200%) for all sources combined."],
+        [3,  40,  {'Roid Ragin': 67,   'Warriors Rule': 34,   'Hearty Diggy': 67,   'Wyoming Blood': 20,  'Sploosh Sploosh': 20,  'Stronk Tools': 47},                                                  {'Swift Steppin': 67,  'Archer or Bust': 34,  'Sanic Tools': 47, 'Bug^2': 20},                                                          {'Stable Jenius': 67,  'Mage is Best': 34,   'Hocus Choppus': 67,   'Molto Loggo': 20,  'Le Brain Tools': 47},                                              {'FMJ':15, 'Shaquracy':15, 'Prowesessary':40, 'Hammer Hammer':41}, "40%", "These are MINIMUM recommended Utility bubbles for starting the W4 push. The goal for Prowesessary is an eventual 2x (or 200%) for all sources combined."],
+        [4,  60,  {'Roid Ragin': 100,  'Warriors Rule': 50,   'Hearty Diggy': 100,  'Wyoming Blood': 30,  'Sploosh Sploosh': 30,  'Stronk Tools': 70},                                                  {'Swift Steppin': 100, 'Archer or Bust': 50,  'Sanic Tools': 70, 'Bug^2': 30},                                                          {'Stable Jenius': 100, 'Mage is Best': 50,   'Hocus Choppus': 100,  'Molto Loggo': 30,  'Le Brain Tools': 70},                                              {'FMJ':20, 'Shaquracy':20, 'Prowesessary':60, 'Hammer Hammer':65}, "50%", "These are MINIMUM recommended Utility bubbles for starting the W5 push. The goal for Prowesessary is an eventual 2x (or 200%) for all sources combined, and you should be hitting it right about now!"],
+        [5,  80,  {'Roid Ragin': 150,  'Warriors Rule': 75,   'Hearty Diggy': 150,  'Wyoming Blood': 45,  'Sploosh Sploosh': 45,  'Stronk Tools': 105, 'Multorange': 45,   'Dream of Ironfish': 45},    {'Swift Steppin': 150, 'Archer or Bust': 75,  'Sanic Tools': 70, 'Bug^2': 45, 'Premigreen': 45, 'Fly in Mind': 60},                     {'Stable Jenius': 150, 'Mage is Best': 75,   'Hocus Choppus': 150,  'Molto Loggo': 45,  'Le Brain Tools': 105,  'Severapurple': 45,   'Tree Sleeper': 60},  {'FMJ':30, 'Shaquracy':30, 'Hammer Hammer':105}, "60%", "These are MINIMUM recommended Utility bubbles for starting the W6 push. Keep watch of your No Bubble Left Behind list (from W4 Lab) to keep cheap/easy bubbles off when possible!"],
+        [6,  100, {'Roid Ragin': 234,  'Warriors Rule': 117,  'Hearty Diggy': 234,  'Wyoming Blood': 70,  'Sploosh Sploosh': 70,  'Stronk Tools': 164, 'Multorange': 70,   'Dream of Ironfish': 70},    {'Swift Steppin': 234, 'Archer or Bust': 117, 'Sanic Tools': 70, 'Bug^2': 70, 'Premigreen': 70},                                        {'Stable Jenius': 234, 'Mage is Best': 117,  'Hocus Choppus': 234,  'Molto Loggo': 70,  'Le Brain Tools': 164,  'Severapurple': 70,   'Tree Sleeper': 94},  {'Cookin Roadkill': 105}, "70%", "Cookin Roadkill 105 = 60% bubble strength. You likely can't use Cranium Cooking very often yet, but this is a prerequisite for doing so."],
+        [7,  100, {'Roid Ragin': 400,  'Warriors Rule': 200,  'Hearty Diggy': 400,  'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 280, 'Multorange': 120,  'Dream of Ironfish': 120},   {'Swift Steppin': 400, 'Archer or Bust': 200, 'Sanic Tools': 70, 'Bug^2': 120,'Premigreen': 120},                                       {'Stable Jenius': 400, 'Mage is Best': 200,  'Hocus Choppus': 400,  'Molto Loggo': 120, 'Le Brain Tools': 280,  'Severapurple': 120,  'Tree Sleeper': 160}, {'Laaarrrryyyy': 150}, "80%", "Larry at 150 = 72% chance for +2 levels. Somewhere around level 125-150, this bubble should pass 100m Dementia Ore cost and be available to level with Boron upgrades from the W3 Atom Collider in Construction.  It should be, in my opinion, the ONLY Utility Bubble you spend these daily clicks on until it reaches 501. If you cannot afford the Particles needed to level Larry, invest into Sampling Bubbles."],
+        [8,  100, {'Roid Ragin': 567,  'Warriors Rule': 284,  'Hearty Diggy': 567,  'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 397, 'Multorange': 170,  'Dream of Ironfish': 170},   {'Swift Steppin': 567, 'Archer or Bust': 284, 'Sanic Tools': 70, 'Bug^2': 120,'Premigreen': 170},                                       {'Stable Jenius': 567, 'Mage is Best': 284,  'Hocus Choppus': 567,  'Molto Loggo': 120, 'Le Brain Tools': 397,  'Severapurple': 170,  'Tree Sleeper': 227}, {'Laaarrrryyyy': 501}, "85%", "Larry at 501 = 100% chance for +2 levels. This can be leveled with a combination of prints as well as daily Boron upgrades from the Atom Collider."],
+        [9,  100, {'Roid Ragin': 615,  'Warriors Rule': 308,  'Hearty Diggy': 615,  'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 430, 'Multorange': 185,  'Dream of Ironfish': 185},   {'Swift Steppin': 615, 'Archer or Bust': 308, 'Sanic Tools': 70, 'Bug^2': 120,'Premigreen': 185},                                       {'Stable Jenius': 615, 'Mage is Best': 308,  'Hocus Choppus': 615,  'Molto Loggo': 120, 'Le Brain Tools': 430,  'Severapurple': 185,  'Tree Sleeper': 246}, {'Cookin Roadkill': 630}, "86%", "Cooking Roadkill 630 = 90% bubble strength. Try to tackle the cheap levels with prints, and add Atom Clicks as needed. This will help your Bubo's Cranium Cooking really pick up in value."],
+        [10, 100, {'Roid Ragin': 670,  'Warriors Rule': 335,  'Hearty Diggy': 670,  'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 469, 'Multorange': 201,  'Dream of Ironfish': 201},   {'Swift Steppin': 670, 'Archer or Bust': 335, 'Sanic Tools': 70, 'Bug^2': 120,'Premigreen': 201},                                       {'Stable Jenius': 670, 'Mage is Best': 335,  'Hocus Choppus': 670,  'Molto Loggo': 120, 'Le Brain Tools': 469,  'Severapurple': 201,  'Tree Sleeper': 268}, {'Startue Exp': 240}, "87%", "Startue Exp 240 = 80% bubble strength. This can be leveled with Vman prints. You'll also likely get quite a lot of Pocket Sand while farming for Glass Shards for your Mason Jar stamp. Try to at least get this 80% threshold by the time you're farming Onyx Statues."],
+        [11, 100, {'Roid Ragin': 700,  'Warriors Rule': 367,  'Hearty Diggy': 734,  'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 514, 'Multorange': 220,  'Dream of Ironfish': 220},   {'Swift Steppin': 700, 'Archer or Bust': 367, 'Sanic Tools': 70, 'Bug^2': 120,'Premigreen': 220},                                       {'Stable Jenius': 700, 'Mage is Best': 367,  'Hocus Choppus': 734,  'Molto Loggo': 120, 'Le Brain Tools': 514,  'Severapurple': 220,  'Tree Sleeper': 294}, {'Droppin Loads': 280}, "88%", "Droppin Loads 280 = 80% bubble strength. Ideally, this should be leveled with prints but Fishing prints tend to struggle in the beginning. A few Boron upgrades won't hurt."],
+        [12, 100, {'Roid Ragin': 720,  'Warriors Rule': 405,  'Hearty Diggy': 810,  'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 567, 'Multorange': 243,  'Dream of Ironfish': 243},   {'Swift Steppin': 720, 'Archer or Bust': 405, 'Sanic Tools': 70, 'Bug^2': 120,'Premigreen': 243},                                       {'Stable Jenius': 720, 'Mage is Best': 405,  'Hocus Choppus': 810,  'Molto Loggo': 120, 'Le Brain Tools': 567,  'Severapurple': 243,  'Tree Sleeper': 324}, {'Call Me Bob': 200}, "89%", "Call Me Bob is a linear Construction EXP bubble, so the early levels are the most impactful to your account. Vman prints can help get this into Atom range. Afterwards, it is a very valid Atom Click target"],
+        [13, 100, {'Roid Ragin': 740,  'Warriors Rule': 450,  'Hearty Diggy': 900,  'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 630, 'Multorange': 270,  'Dream of Ironfish': 270},   {'Swift Steppin': 740, 'Archer or Bust': 450, 'Sanic Tools': 70, 'Bug^2': 120,'Premigreen': 270},                                       {'Stable Jenius': 740, 'Mage is Best': 450,  'Hocus Choppus': 900,  'Molto Loggo': 120, 'Le Brain Tools': 630,  'Severapurple': 270,  'Tree Sleeper': 360}, {'Diamond Chef': 31, 'Big P': 140, 'Big Game Hunter': 70, 'Mr Massacre': 117}, "90%", "70% broad on Utility bubbles. Many of these may not be within range to use Atom Clicks on yet. To help them level faster, try to level other cheap bubbles which will ensure No Bubble Left Behind targets these expensive bubbles instead."],
+        [14, 100, {'Roid Ragin': 760,  'Warriors Rule': 506,  'Hearty Diggy': 1012, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 630, 'Multorange': 304,  'Dream of Ironfish': 270},   {'Swift Steppin': 760, 'Archer or Bust': 506, 'Sanic Tools': 70, 'Bug^2': 120,'Premigreen': 304},                                       {'Stable Jenius': 760, 'Mage is Best': 506,  'Hocus Choppus': 1012, 'Molto Loggo': 120, 'Le Brain Tools': 630,  'Severapurple': 304,  'Tree Sleeper': 360}, {'Diamond Chef': 52, 'Big P': 240, 'Big Game Hunter': 120, 'Mr Massacre': 200}, "91%", "80% broad on Utility bubbles. Some of these may not be within range to use Atom Clicks on yet. To help them level faster, try to level other cheap bubbles which will ensure No Bubble Left Behind targets these expensive bubbles instead."],
+        [15, 100, {'Roid Ragin': 780,  'Warriors Rule': 575,  'Hearty Diggy': 1150, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 630, 'Multorange': 345,  'Dream of Ironfish': 270},   {'Swift Steppin': 780, 'Archer or Bust': 575, 'Sanic Tools': 70, 'Bug^2': 120,'Premigreen': 345},                                       {'Stable Jenius': 780, 'Mage is Best': 575,  'Hocus Choppus': 1150, 'Molto Loggo': 120, 'Le Brain Tools': 630,  'Severapurple': 345,  'Tree Sleeper': 360}, {'Diamond Chef': 74, 'Big P': 340, 'Carpenter': 284, 'Big Game Hunter': 170, 'Mr Massacre': 284}, "92%", "85% broad on Utility bubbles. A few of these may not be within range to use Atom Clicks on yet. To help them level faster, try to level other cheap bubbles which will ensure No Bubble Left Behind targets these expensive bubbles instead."],
+        [16, 100, {'Roid Ragin': 800,  'Warriors Rule': 665,  'Hearty Diggy': 1329, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 630, 'Multorange': 399,  'Dream of Ironfish': 270},   {'Swift Steppin': 800, 'Archer or Bust': 665, 'Sanic Tools': 70, 'Bug^2': 120,'Premigreen': 399},                                       {'Stable Jenius': 800, 'Mage is Best': 665,  'Hocus Choppus': 1329, 'Molto Loggo': 120, 'Le Brain Tools': 630,  'Severapurple': 399,  'Tree Sleeper': 360}, {'Laaarrrryyyy': 900, 'Diamond Chef': 117, 'Big P': 540, 'Carpenter': 450, 'Big Game Hunter': 270, 'Mr Massacre': 450}, "93%", "90% broad on Utility bubbles. These should all be within Atom Range now. Try not to go too crazy on these until your Sampling Bubbles are all 90% first."],
+        [17, 100, {'Roid Ragin': 820,  'Warriors Rule': 784,  'Hearty Diggy': 1567, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 630, 'Multorange': 470,  'Dream of Ironfish': 270},   {'Swift Steppin': 820, 'Archer or Bust': 784, 'Sanic Tools': 70, 'Bug^2': 120,'Premigreen': 470},                                       {'Stable Jenius': 820, 'Mage is Best': 784,  'Hocus Choppus': 1567, 'Molto Loggo': 120, 'Le Brain Tools': 630,  'Severapurple': 470,  'Tree Sleeper': 360}, {}, "94%", ""],
+        [18, 100, {'Roid Ragin': 840,  'Warriors Rule': 950,  'Hearty Diggy': 1900, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 630, 'Multorange': 570,  'Dream of Ironfish': 270},   {'Swift Steppin': 840, 'Archer or Bust': 950, 'Sanic Tools': 70, 'Bug^2': 120,'Premigreen': 570},                                       {'Stable Jenius': 840, 'Mage is Best': 950,  'Hocus Choppus': 1900, 'Molto Loggo': 120, 'Le Brain Tools': 630,  'Severapurple': 570,  'Tree Sleeper': 360}, {}, "95%", ""],
+        [19, 100, {'Roid Ragin': 860,  'Warriors Rule': 1200, 'Hearty Diggy': 2400, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 630, 'Multorange': 720,  'Dream of Ironfish': 270},   {'Swift Steppin': 860, 'Archer or Bust': 1200, 'Sanic Tools': 70, 'Bug^2': 120,'Premigreen': 570},                                      {'Stable Jenius': 860, 'Mage is Best': 1200, 'Hocus Choppus': 1900, 'Molto Loggo': 120, 'Le Brain Tools': 630,  'Severapurple': 720,  'Tree Sleeper': 360}, {}, "96%", ""],
+        [20, 100, {'Roid Ragin': 880,  'Warriors Rule': 1617, 'Hearty Diggy': 3234, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 630, 'Multorange': 970,  'Dream of Ironfish': 270},   {'Swift Steppin': 880, 'Archer or Bust': 1617, 'Sanic Tools': 70, 'Bug^2': 120,'Premigreen': 570},                                      {'Stable Jenius': 880, 'Mage is Best': 1617, 'Hocus Choppus': 1900, 'Molto Loggo': 120, 'Le Brain Tools': 630,  'Severapurple': 970,  'Tree Sleeper': 360}, {}, "97%", ""],
+        [21, 120, {'Roid Ragin': 900,  'Warriors Rule': 2450, 'Hearty Diggy': 4900, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 630, 'Multorange': 1470, 'Dream of Ironfish': 270},   {'Swift Steppin': 900, 'Archer or Bust': 2450, 'Sanic Tools': 70, 'Bug^2': 120,'Premigreen': 570},                                      {'Stable Jenius': 900, 'Mage is Best': 2450, 'Hocus Choppus': 1900, 'Molto Loggo': 120, 'Le Brain Tools': 630,  'Severapurple': 1470, 'Tree Sleeper': 360}, {}, "98%", ""],
+        [22, 140, {'Roid Ragin': 950,  'Warriors Rule': 4950, 'Hearty Diggy': 9900, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 630, 'Multorange': 2970, 'Dream of Ironfish': 270},   {'Swift Steppin': 950, 'Archer or Bust': 4950, 'Sanic Tools': 70, 'Bug^2': 120,'Premigreen': 570},                                      {'Stable Jenius': 950, 'Mage is Best': 4950, 'Hocus Choppus': 1900, 'Molto Loggo': 120, 'Le Brain Tools': 630,  'Severapurple': 2970, 'Tree Sleeper': 360}, {}, "99%", "* You've tackled the big important Utility bubbles, way to go! All previously mentioned bubbles are still great targets to level higher: Larry, Cookin Roadkill, Diamond Chef, Carpenter, Call Me Bob, Big P, Mr Massacre, Big Game Hunter, FMJ, Hammer Hammer, and more!"],
+        [23, 160, {'Roid Ragin': 1000, 'Stronk Tools': 6930,  'Dream of Ironfish': 2970, 'Slabi Orefish':5940, 'Slabi Strength':5940},                                                                  {'Swift Steppin': 1000, 'Sanic Tools': 6930, 'Premigreen': 2970, 'Fly in Mind': 3960, 'Slabo Critterbug':5940, 'Slabo Agility':5940},   {'Stable Jenius': 1000, 'Hocus Choppus': 9900, 'Le Brain Tools': 6930, 'Tree Sleeper': 3960, 'Slabe Logsoul':5940, 'Slabe Wisdom':5940}, {}, "99% catchup", "You've tackled the big important Utility bubbles, way to go! All previously mentioned bubbles are still great targets to level higher: Larry, Cookin Roadkill, Diamond Chef, Carpenter, Call Me Bob, Big P, Mr Massacre, Big Game Hunter, FMJ, Hammer Hammer, and more!"],
         ]
     defaultTiers['Alchemy Vials'] = [
         #int tier, int TotalVialsUnlocked, int TotalVialsMaxed, list ParticularVials, str Notes
@@ -380,7 +381,25 @@ def setDefaultTiers():
             }
         }
     defaultTiers['Greenstacks'] = {
-        0: {},
+        0: {  # The timegated tier
+            "Vendor Shops": [
+                "FoodHealth14", "FoodHealth15",  # Previously Tier2
+                "FoodHealth12", "FoodHealth13",  # Previously Tier2
+                "FoodPotOr4", "FoodPotGr4", "FoodPotRe4", "FoodPotYe4",  # Previously Tier3
+                "OilBarrel6",  # Previously Tier5
+                "FoodHealth9",  # Previously Tier10
+                "FoodHealth4", "FoodHealth11",  # Previously Tier11
+                "Quest19"  # Previously Tier12
+            ],
+            "Misc": [
+                "FoodPotGr3",  # Previously Tier10
+                "FoodPotRe2"   # Previously Tier11
+            ],
+            "Other Skilling Resources": [
+                "Refinery1",  # Previously Tier11
+                "Refinery2", "Refinery3", "Refinery4"  # Previously Tier12
+            ]
+        },
         1: {
             "Base Monster Materials": [
                 "Grasslands1", "Grasslands2"],
@@ -402,8 +421,8 @@ def setDefaultTiers():
                 "Starfire", "Marble", "Dreadlo",
                 "Fish4", "Fish5", "Fish6", "Fish7", "Fish8",
                 "Bug3", "Bug4", "Bug5", "Bug6", "Bug7", "Bug8"],
-            "Other Skilling Resources": ["CraftMat6", "CraftMat7", "CraftMat9"],
-            "Vendor Shops": ["FoodHealth14", "FoodHealth15", "FoodHealth12", "FoodHealth13"]
+            "Other Skilling Resources": ["CraftMat6", "CraftMat7", "CraftMat9"]
+            #"Vendor Shops": ["FoodHealth14", "FoodHealth15", "FoodHealth12", "FoodHealth13"]
             },
         3: {
             "Base Monster Materials": [
@@ -416,8 +435,8 @@ def setDefaultTiers():
                 "CraftMat8", "CraftMat10", "CraftMat11",
                 "Critter1", "Critter2", "Critter3",
                 "Soul1",
-                "CopperBar"],
-            "Vendor Shops": ["FoodPotOr4", "FoodPotGr4", "FoodPotRe4", "FoodPotYe4"]
+                "CopperBar"]
+            #"Vendor Shops": ["FoodPotOr4", "FoodPotGr4", "FoodPotRe4", "FoodPotYe4"]
             },
         4: {
             "Base Monster Materials": ["LavaA1", "LavaA2", "LavaA3", "LavaA4", "LavaA5", "LavaB1", "LavaB2", "LavaB3", "LavaB4", "LavaB5", "LavaB6",  "LavaC1", "LavaC2"],
@@ -437,7 +456,7 @@ def setDefaultTiers():
                 "Critter7", "Critter8",
                 "Soul3",
                 "GoldBar"],
-            "Vendor Shops": ["OilBarrel6"],
+            #"Vendor Shops": ["OilBarrel6"],
             },
         6: {
             "Crystal Enemy Drops": ["FoodHealth10", "FoodPotOr3", "FoodPotYe2", "Leaf3"],
@@ -475,8 +494,8 @@ def setDefaultTiers():
                 "StarfireBar",
                 "Bullet3", "FoodChoppin1"],
             "Crystal Enemy Drops": ["EquipmentStatues7", "EquipmentStatues3", "EquipmentStatues2", "EquipmentStatues4", "EquipmentStatues14"],
-            "Misc": ["FoodPotMana3", "FoodPotGr3", "FoodPotRe1"],
-            "Vendor Shops": ["FoodHealth9"]
+            "Misc": [],
+            #"Vendor Shops": ["FoodHealth9"]
             },
         11: {
             "Base Monster Materials": ["Quest15", "Hgg"],
@@ -486,15 +505,21 @@ def setDefaultTiers():
             "Other Skilling Resources": [
                 "DreadloBar",
                 "EquipmentSmithingTabs2"
-                "Refinery1"],
-            "Vendor Shops": ["FoodHealth4", "FoodHealth11"],
-            "Misc": ["FoodPotRe2", "ButterBar"]
+                #"Refinery1"
+            ],
+            #"Vendor Shops": ["FoodHealth4", "FoodHealth11"],
+            "Misc": [
+                #"FoodPotGr3",  # Sold in shops as well as dropped from Sir Stache
+                "FoodPotRe1",  # Technically sold in W1 shop, but so few that it barely matters
+                "FoodPotRe2",
+                "FoodPotMana3",
+                "ButterBar"]
             },
         12: {
             "Other Skilling Resources": [
-                "Refinery2", "Refinery3", "Refinery4",
+                #"Refinery2", "Refinery3", "Refinery4",
                 "Critter1A", "Critter2A","Critter3A", "Critter4A", "Critter5A", "Critter6A", "Critter7A", "Critter8A", "Critter9A", "Critter10A"],
-            "Vendor Shops": ["Quest19"]
+            #"Vendor Shops": ["Quest19"]
             }
         }
     return defaultTiers

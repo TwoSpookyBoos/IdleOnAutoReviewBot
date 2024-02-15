@@ -1,18 +1,20 @@
 <aside id="drawer">
     <p>
-        Welcome to <a href="/{% if beta %}beta{% endif %}">IE AutoReview Tool - By Scoli290</a><br>
+        Welcome to <a href="/">IE AutoReview Tool - By Scoli290</a><br>
         Join the <a href="https://discord.gg/ZmEkqzfjmJ" target="_blank">Discord</a> for the detailed patch notes!
     </p>
+    <p>
     {% if beta %}
-    <p>
-        <strong>Heads up! You're on the beta-testing page. If you run into problems, try heading back to the <a href="/" target="_blank">Main Page</a></strong>
+        <strong>Heads up! You're on the beta-testing page. If you run into problems, try heading back to the <a href="/live" target="_blank">Live Page</a></strong>
         <br>
-        Currently beta testing: 2023-12-22 Frontend updates
-    </p>
+        Currently beta testing: 2024-02-07 Frontend revamp for Pinchy + W1
+    {% else %}
+        <strong>To try out the beta site, head to the <a href="/beta" target="_blank">Beta Page</a></strong>
     {% endif %}
+    </p>
     <p>
-        Most recent update 2024-01-21: Front-end QoL updates.<br>
-        Previous update 2024-01-18: Bugfix in W4 Breeding and W3 Construction Buildings. Pinchy+Tier tweaks for Greenstacks, Stamps, and Refinery.
+        Most recent update 2024-02-14: Bugfixes to Gstacks, Gemshop, Inventory/Storage slots, and Breeding's Shiny list.<br>
+        Previous update 2024-02-08: Moved Timegated GStacks into their own Tier, and show more GStack Tiers at once.
     </p>
     <p>
         This tool will retrieve the PUBLIC profile from <a href="https://www.idleonefficiency.com/" target="_blank">IdleOn Efficiency</a> for evaluation.<br>
@@ -26,7 +28,7 @@
     <span>All tier requirements are listed in the <a
             href="https://docs.google.com/spreadsheets/d/16I-rURrVeyvltK2wxcQSiPgO07QY015RVNG4MAgUsGw/edit?usp=sharing"
             target="_blank">Spreadsheet</a> for reference!</span>
-    <form action="/{% if beta %}beta{% endif %}" method="POST">
+    <form action="/" method="POST">
         <textarea name="player"
                   placeholder="Please enter your first IdleOn character's name, or Paste in your Raw Game JSON from IE/IT"></textarea>
         <input type="submit" value="submit">

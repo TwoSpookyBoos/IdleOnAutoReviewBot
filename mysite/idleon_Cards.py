@@ -388,7 +388,7 @@ def getCardSetReview(inputJSON):
     for cardSet in closestCardsPerSet:
         if cardSet not in excludeCardSetList:
             if len(closestCardsPerSet[cardSet]) == 0:
-                adviceHeader = str(cardSet) + " Set: " + playerCardSetBonuses[cardSet] + " = All finished! You best <3"
+                adviceHeader = str(cardSet) + " Set: " + playerCardSetBonuses[cardSet] + " = All finished! You best ❤️"
                 adviceDetailsList = [""]
             else:
                 valuesListed = 0

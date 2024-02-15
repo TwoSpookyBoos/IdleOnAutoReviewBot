@@ -1,0 +1,42 @@
+import logging
+import os
+import sys
+
+
+def pl(_list: list, suffix_singular: str = "", suffix_plural: str = 's') -> str:
+    """Pluralize"""
+    return suffix_plural if len(_list) > 1 else suffix_singular
+
+
+def get_logger(name: str) -> logging.Logger:
+    logger = logging.getLogger(name)
+    logger.setLevel(logging.DEBUG)
+
+    if not _try_colorise(logger):
+        _set_regular_logger(logger)
+
+    return logger
+
+
+def _try_colorise(logger):
+    is_local_instance = os.environ.get('PYTHONANYWHERE_DOMAIN', None) is None
+    if is_local_instance:
+        import coloredlogs
+
+        coloredlogs.DEFAULT_FIELD_STYLES['levelname']['color'] = 'white'
+        coloredlogs.install(
+            level='DEBUG',
+            fmt='%(asctime)s | %(name)s | %(funcName)s:%(lineno)d~ [%(levelname)s] %(message)s',
+            stream=sys.stdout,
+            logger=logger
+        )
+    return is_local_instance
+
+
+def _set_regular_logger(logger: logging.Logger):
+    formatter = logging.Formatter('%(asctime)s | %(name)s | %(funcName)s:%(lineno)d~ [%(levelname)s] %(message)s')
+    handler = logging.StreamHandler(stream=sys.stderr)
+    handler.setLevel(logging.DEBUG)
+    handler.setFormatter(formatter)
+
+    logger.addHandler(handler)

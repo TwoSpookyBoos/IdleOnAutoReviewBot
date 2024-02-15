@@ -259,28 +259,28 @@ def setGemShopProgressionTier(inputJSON, progressionTiers, playerCount):
     #progressionTiers[tier][2] = dict recommendedPurchases
     #progressionTiers[tier][3] = str notes
     for recommendedPurchase in progressionTiers[1][2]:
-        if progressionTiers[1][2][recommendedPurchase] > gemShopDict[recommendedPurchase]:
+        if progressionTiers[1][2][recommendedPurchase] > float(gemShopDict[recommendedPurchase]):
             advice_SS += getBonusSectionName(recommendedPurchase) + "-" + str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[1][2][recommendedPurchase]) + "), "
     for recommendedPurchase in progressionTiers[2][2]:
-        if progressionTiers[2][2][recommendedPurchase] > gemShopDict[recommendedPurchase]:
+        if progressionTiers[2][2][recommendedPurchase] > float(gemShopDict[recommendedPurchase]):
             advice_S += getBonusSectionName(recommendedPurchase) + "-" + str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[2][2][recommendedPurchase]) + "), "
     for recommendedPurchase in progressionTiers[3][2]:
-        if progressionTiers[3][2][recommendedPurchase] > gemShopDict[recommendedPurchase]:
+        if progressionTiers[3][2][recommendedPurchase] > float(gemShopDict[recommendedPurchase]):
             advice_A += getBonusSectionName(recommendedPurchase) + "-" + str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[3][2][recommendedPurchase]) + "), "
     for recommendedPurchase in progressionTiers[4][2]:
-        if progressionTiers[4][2][recommendedPurchase] > gemShopDict[recommendedPurchase]:
+        if progressionTiers[4][2][recommendedPurchase] > float(gemShopDict[recommendedPurchase]):
             advice_B += getBonusSectionName(recommendedPurchase) + "-" + str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[4][2][recommendedPurchase]) + "), "
     for recommendedPurchase in progressionTiers[5][2]:
-        if progressionTiers[5][2][recommendedPurchase] > gemShopDict[recommendedPurchase]:
+        if progressionTiers[5][2][recommendedPurchase] > float(gemShopDict[recommendedPurchase]):
             advice_C += getBonusSectionName(recommendedPurchase) + "-" + str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[5][2][recommendedPurchase]) + "), "
     for recommendedPurchase in progressionTiers[6][2]:
-        if progressionTiers[6][2][recommendedPurchase] > gemShopDict[recommendedPurchase]:
+        if progressionTiers[6][2][recommendedPurchase] > float(gemShopDict[recommendedPurchase]):
             advice_D += getBonusSectionName(recommendedPurchase) + "-" + str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[6][2][recommendedPurchase]) + "), "
     for recommendedPurchase in progressionTiers[7][2]:
-        if progressionTiers[7][2][recommendedPurchase] > gemShopDict[recommendedPurchase]:
+        if progressionTiers[7][2][recommendedPurchase] > float(gemShopDict[recommendedPurchase]):
             advice_PracticalMax += getBonusSectionName(recommendedPurchase) + "-" + str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[7][2][recommendedPurchase]) + "), "
     for recommendedPurchase in progressionTiers[8][2]:
-        if progressionTiers[8][2][recommendedPurchase] > gemShopDict[recommendedPurchase]:
+        if progressionTiers[8][2][recommendedPurchase] > float(gemShopDict[recommendedPurchase]):
             advice_TrueMax += getBonusSectionName(recommendedPurchase) + "-" + str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[8][2][recommendedPurchase]) + "), "
     #Fix up advice statements
     if advice_SS != "":

@@ -1,4 +1,15 @@
 @import "vars";
+@import "bubbles";
+@import "classes";
+@import "construction";
+@import "gem-shop";
+@import "prayers";
+@import "skill-icons";
+@import "skulls";
+@import "slab-items";
+@import "talents";
+@import "vials";
+@import "world-contents";
 
 $subheadings: (
 	pinchy: (
@@ -1653,7 +1664,9 @@ $id-map: (
 				sashe-sidestamp: $sashe-sidestamp,
 				intellectostampo: $intellectostampo,
 				conjocharmo-stamp: $conjocharmo-stamp,
-	// dementia sword
+	            dementia-sword-stamp: $dementia-sword-stamp,
+	            golden-sixes-stamp: $golden-sixes-stamp,
+	            stat-wallstreet-stamp: $stat-wallstreet-stamp,
 				pickaxe-stamp: $pickaxe-stamp,
 				hatchet-stamp: $hatchet-stamp,
 				anvil-zoomer-stamp: $anvil-zoomer-stamp,
@@ -2168,5 +2181,15 @@ $monsters: (
 	crawler: $crawler,
 	tremor-wurm: $tremor-wurm,
 
-	kattlecruk: $kattlecruk-boss,
-)
+	kattlecruk: $kattlecruk-boss
+);
+
+$id-map: map-merge($skill-icons, $id-map);
+$id-map: map-merge($character-classes, $id-map);
+$id-map: map-merge($vials, $id-map);
+
+@each $class, $link in $id-map {
+	.#{$class}::before {
+		background-image: $link;
+	}
+}

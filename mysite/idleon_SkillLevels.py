@@ -30,9 +30,9 @@ def getHumanReadableClasses(classNumber):
         36: "Bubonic Conjuror",
         37: "Arcane Cultist"
     }
-    try:
+    if classNumber in humanReadableClasses:
         return humanReadableClasses[classNumber]
-    except:
+    else:
         return "Unknown class: " + str(classNumber)
 
 
@@ -71,12 +71,13 @@ def getAllSkillLevelsDict(inputJSON, playerCount):
     skillIndexList = ["Combat", "Mining", "Smithing", "Choppin", "Fishing", "Alchemy", "Catching", "Trapping",
                       "Construction", "Worship", "Cooking", "Breeding", "Lab", "Sailing", "Divinity", "Gaming",
                       "Farming", "Sneaking", "Summoning"]
+    for playerCounter in range(0, playerCount):
+        allSkillsDict[playerCounter] = {}
     while skillCounter < len(skillIndexList):
         allSkillsDict[skillIndexList[skillCounter]] = []
         skillCounter += 1
     # print("SkillLevels~ OUTPUT allSkillsDict:",allSkillsDict)
 
-    # add each character to every skill
     while characterCounter < playerCount:  # playerCount is not 0 based
         skillCounter = 0
         while skillCounter < len(skillIndexList):

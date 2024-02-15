@@ -1,6 +1,37 @@
+import functools
 import re
 from enum import Enum
 from typing import Any
+
+from flask import g
+
+
+class Character:
+    def __init__(self, character_index: int, character_name: str, class_name: str, base_class: str, sub_class: str, elite_class: str, all_skill_levels: dict):
+        self.character_index: int = character_index
+        self.character_name: str = character_name
+        self.class_name: str = class_name
+        self.class_name_icon: str = class_name + "-class-icon"
+        self.base_class: str = base_class
+        self.sub_class: str = sub_class
+        self.elite_class: str = elite_class
+        self.combat_level: int = all_skill_levels['Combat']
+        self.mining_level: int = all_skill_levels['Mining']
+        self.smithing_level: int = all_skill_levels['Smithing']
+        self.choppin_level: int = all_skill_levels['Choppin']
+        self.fishing_level: int = all_skill_levels['Fishing']
+        self.alchemy_level: int = all_skill_levels['Alchemy']
+        self.catching_level: int = all_skill_levels['Catching']
+        self.trapping_level: int = all_skill_levels['Trapping']
+        self.construction_level: int = all_skill_levels['Construction']
+        self.worship_level: int = all_skill_levels['Worship']
+        self.cooking_level: int = all_skill_levels['Cooking']
+        self.breeding_level: int = all_skill_levels['Breeding']
+        self.lab_level: int = all_skill_levels['Lab']
+        self.sailing_level: int = all_skill_levels['Sailing']
+        self.divinity_level: int = all_skill_levels['Divinity']
+        self.gaming_level: int = all_skill_levels['Gaming']
+
 
 
 class WorldName(Enum):
@@ -23,7 +54,9 @@ class AdviceBase:
     Args:
         **extra (dict): a dict of extra information that hasn't been accounted for yet
     """
-    _children = ""
+    _children = "_true"
+    _collapse = None
+    _true = [True]
     name = ""
 
     def __init__(self, **extra):
@@ -32,10 +65,20 @@ class AdviceBase:
             setattr(self, k, v)
 
     def __bool__(self) -> bool:
-        return bool(getattr(self, self._children, list()))
+        children = getattr(self, self._children, list())
+        return any(filter(bool, children))
 
     def __str__(self) -> str:
         return self.name
+
+    @property
+    def collapse(self) -> bool:
+        children = getattr(self, self._children, list())
+        return self._collapse if self._collapse is not None else not bool(children)
+
+    @collapse.setter
+    def collapse(self, _value: bool):
+        self._collapse = _value
 
 
 class Advice(AdviceBase):
@@ -47,8 +90,7 @@ class Advice(AdviceBase):
         goal: the target level or amount of the advice
         unit (str): if there is one, usually "%"
     """
-
-    def __init__(self, label: str, item_name: str, progression: Any, goal: Any = "", unit: str = "", **extra):
+    def __init__(self, label: str, item_name: str, progression: Any = "", goal: Any = "", unit: str = "", **extra):
         super().__init__(**extra)
 
         self.label: str = label
@@ -67,29 +109,31 @@ class Advice(AdviceBase):
         return self.label
 
 
+@functools.total_ordering
 class AdviceGroup(AdviceBase):
     """
     Contains a list of `Advice` objects
 
     Args:
-        formatting (str): HTML tag name (e.g. strong, em)
-        collapsed (bool): should the group be collapsed on load?
         tier (str): alphanumeric tier of this group's advices (e.g. 17, S)
         pre_string (str): the start of the group title
-        advices (list<Advice>): a list of `Advice` objects, each advice on a separate line
         post_string (str): trailing advice
+        formatting (str): HTML tag name (e.g. strong, em)
+        collapsed (bool): should the group be collapsed on load?
+        advices (list<Advice>): a list of `Advice` objects, each advice on a separate line
     """
     _children = "advices"
+    __compare_by = ["tier"]
 
-    def __init__(self, formatting: str, collapse: bool, tier: str, pre_string: str, advices: list[Advice], post_string: str, **extra):
+    def __init__(self, tier: str, pre_string: str, post_string: str = "", formatting: str = "", collapse: bool | None = None, advices: list[Advice] = [], **extra):
         super().__init__(**extra)
 
-        self.formatting: str = formatting
-        self.collapse: bool = collapse
-        self.tier: str = tier
+        self.tier: str = str(tier)
         self.pre_string: str = pre_string
-        self.advices: list[Advice] = advices
         self.post_string: str = post_string
+        self.formatting: str = formatting
+        self._collapse: bool | None = collapse
+        self.advices: list[Advice] = advices
 
     def __str__(self) -> str:
         return ', '.join(map(str, self.advices))
@@ -106,34 +150,57 @@ class AdviceGroup(AdviceBase):
     def show_goal(self) -> bool:
         return any(advice.goal for advice in self.advices)
 
+    def _is_valid_operand(self, other):
+        return all(hasattr(other, field) for field in self.__compare_by)
+
+    def __eq__(self, other):
+        if not self._is_valid_operand(other):
+            return NotImplemented
+
+        return all(
+            getattr(self, field) == getattr(other, field)
+            for field in self.__compare_by
+        )
+
+    def __lt__(self, other):
+        if not self._is_valid_operand(other):
+            return NotImplemented
+
+        return all(
+            getattr(self, field) < getattr(other, field)
+            for field in self.__compare_by
+        )
+
 
 class AdviceSection(AdviceBase):
     """
     Contains a list of `AdviceGroup` objects
 
     Args:
-        collapse (bool): should the section be collapsed on load?
         name (str): the name of the section (e.g. Stamps, Bribes)
         tier (str): alphanumeric tier of this section (e.g. 17/36), not always present
-        raw_header (str): text of the section title (e.g "Best Stamp tier met: 17/36. Recommended stamp actions", "Maestro Right Hands")
+        header (str): text of the section title (e.g "Best Stamp tier met: 17/36. Recommended stamp actions", "Maestro Right Hands")
+        picture (str): image file name to use as header icon
+        collapse (bool | None): should the section be collapsed on load?
         groups (list<AdviceGroup>): a list of `AdviceGroup` objects, each in its own box and bg colour
-        header (str): either `raw_header` or `raw_header` with the tier part wrapped in `<span>`, if exists
+        pinchy_rating (str): Pinchy rating for this section
     """
     _children = "groups"
 
-    def __init__(self, collapse: bool, picture: str, name: str, tier: str, header: str, groups: list[AdviceGroup], pinchy_rating: str = "", **extra):
+    def __init__(self, name: str, tier: str, header: str, picture: str, collapse: bool | None = None, groups: list[AdviceGroup] = [], pinchy_rating: str = "", **extra):
         super().__init__(**extra)
 
-        self.collapse: bool = collapse
         self.name: str = name
-        self.picture: str = picture
         self.tier: str = tier
         self._raw_header: str = header
-        self.groups: list[AdviceGroup] = groups
+        self.picture: str = picture
+        self._collapse: bool | None = collapse
+        self._groups: list[AdviceGroup] = groups
         self.pinchy_rating: str = pinchy_rating
 
     @property
     def header(self) -> str:
+        self._raw_header = self._raw_header.replace(".", ".<br>")
         if not self.tier:
             return self._raw_header
 
@@ -141,7 +208,9 @@ class AdviceSection(AdviceBase):
         parts = re.split(pattern, self._raw_header)
 
         if self.tier in parts:
-            parts[1] = f"""<span class="tier-progress">{parts[1]}</span>"""
+            prog, goal = self.tier.split("/")
+            finished = " finished" if prog == goal else ""
+            parts[1] = f"""<span class="tier-progress{finished}">{parts[1]}</span>"""
 
         header_markedup = ''.join(parts)
 
@@ -150,6 +219,18 @@ class AdviceSection(AdviceBase):
     @header.setter
     def header(self, raw_header: str):
         self._raw_header = raw_header
+
+    @property
+    def groups(self):
+        return self._groups
+
+    @groups.setter
+    def groups(self, groups: list[AdviceGroup]):
+        # filters out empty groups by checking if group has no advices
+        self._groups = [group for group in groups if group]
+
+        if g.order_tiers:
+            self._groups = sorted(self._groups)
 
 
 class AdviceWorld(AdviceBase):
@@ -164,11 +245,10 @@ class AdviceWorld(AdviceBase):
     """
     _children = "sections"
 
-    def __init__(self, name: WorldName, collapse: bool, sections: list[AdviceSection], banner: str = "", **extra):
+    def __init__(self, name: WorldName, collapse: bool = None, sections: list[AdviceSection] = [], banner: str = "", **extra):
         super().__init__(**extra)
 
         self.name: str = name.value
-        self.collapse: bool = collapse
+        self._collapse: bool | None = collapse
         self.sections: list[AdviceSection] = sections
         self.banner: str = banner
-        self.children: list[AdviceBase] = self.sections

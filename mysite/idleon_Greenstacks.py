@@ -1,6 +1,8 @@
 import json
 import itemDecoder
 from math import floor
+from models import AdviceSection, AdviceGroup, Advice
+from utils import pl
 import itertools
 
 def getEquinoxDreams(inputJSON):
@@ -42,6 +44,7 @@ def getPlayerItems(inputJSON, playerCount):
         except Exception as reason:
             print("Greenstacks.getPlayerItems~ EXCEPTION Unable to access", storageNamesList[locationIndex], reason)
             locationItemNames = []
+            locationItemQuantities = []
         for itemIndex in range(0, len(locationItemNames)):
             if locationItemNames[itemIndex] not in playerItemsDict:
                 playerItemsDict[locationItemNames[itemIndex]] = locationItemQuantities[itemIndex]
@@ -120,7 +123,7 @@ def getMissableGStacks(inputJSON, playerCount):
             obtainedMissableGStacks += 1
     if advice_ObtainedQuestGStacks != "":
         if obtainedMissableGStacks == len(missableGStacksDict):
-            advice_ObtainedQuestGStacks = "You have obtained all " + str(len(missableGStacksDict)) + " missable quest item Greensacks! Way to go, you best <3"
+            advice_ObtainedQuestGStacks = "You have obtained all " + str(len(missableGStacksDict)) + " missable quest item Greensacks! Way to go, you best ❤️"
         else:
             advice_ObtainedQuestGStacks = "You have obtained " + str(obtainedMissableGStacks) + "/" + str(len(missableGStacksDict)) + " missable quest item Greenstacks: " + advice_ObtainedQuestGStacks[:-2] + "."
     if advice_MissedQuestGStacks != "":
@@ -285,7 +288,7 @@ def setGStackProgressionTier(inputJSON, playerCount, progressionTiers):
                 else: #Item found, but not gstacked
                     todoGStacks[itemCategory][item] = playerCombinedItems[item]
             else: #Player has 0 of this item, but it is in the expectedStackables
-                    todoGStacks[itemCategory][item] = 0
+                todoGStacks[itemCategory][item] = 0
 
     #Check for items the play has GStacked that I wasn't expecting
     expectedFlatList = []
@@ -329,8 +332,6 @@ def setGStackProgressionTier(inputJSON, playerCount, progressionTiers):
     #print("Greenstacks.getUniqueGStacksInStorage~ Tiers in remainingToDoGStacksByTier:", remainingToDoGStacksByTier.keys())
     #print("Already missed:", missedQuestItemsDict)
 
-
-
     #tiers
     combinedAdvice = {}
     for tier in progressionTiers: #tier = int
@@ -342,7 +343,6 @@ def setGStackProgressionTier(inputJSON, playerCount, progressionTiers):
                     if requiredItem in todoGStacks[category]:
                         #print("Setting remainingToDoGStacksByTier[", category, "][", tier, "][", requiredItem, "] equal to: ", ((todoGStacks[category][requiredItem]/greenStackAmount)*100))
                         remainingToDoGStacksByTier[tier][category][itemDecoder.getItemDisplayName(requiredItem)] = floor((todoGStacks[category][requiredItem]/greenStackAmount)*100) #Display a percentage
-
 
     for tier in remainingToDoGStacksByTier:
         #print("Greenstacks.getUniqueGStacksInStorage~ remainingToDoGStacksByTier: Tier ", tier, "- ", remainingToDoGStacksByTier[tier])
@@ -367,17 +367,21 @@ def setGStackProgressionTier(inputJSON, playerCount, progressionTiers):
 
     dreamAdvice = "You currently have " + str(uniqueGStacksCount) + " out of max possible " + str(expectedStackablesCount) + " GStacks."
     if uniqueGStacksCount >= 200 or equinoxDreamsStatus["Dream29"] == True:
-        dreamAdvice += " You best <3 (until Lava adds further Dream tasks) Other possible targets are still listed below."
-        firstAdvice = dict(itertools.islice(combinedAdvice.items(), 3))
+        dreamAdvice += " You best ❤️ (until Lava adds further Dream tasks) Other possible targets are still listed below."
+        firstAdvice = dict(itertools.islice(combinedAdvice.items(), 12))
+        #During Advice refactor, collapse any tiers after 4th
     elif uniqueGStacksCount >= 75 or equinoxDreamsStatus["Dream12"] == True:
         dreamAdvice += " Equinox Dream 29 requires 200. Aim for items up through Tier 10! There are a few extras included for flexibility."
-        firstAdvice = dict(itertools.islice(combinedAdvice.items(), 3))
+        firstAdvice = dict(itertools.islice(combinedAdvice.items(), 5))
+        # During Advice refactor, collapse any tiers after 4th
     elif uniqueGStacksCount >= 20 or equinoxDreamsStatus["Dream1"] == True:
         dreamAdvice += " Equinox Dream 12 requires 75. Aim for items up through Tier 2! There are a few extras included for flexibility."
-        firstAdvice = dict(itertools.islice(combinedAdvice.items(), 2))
+        firstAdvice = dict(itertools.islice(combinedAdvice.items(), 4))
+        # During Advice refactor, collapse any tiers after 3rd
     elif uniqueGStacksCount < 20 and equinoxDreamsStatus["Dream1"] == False:
         dreamAdvice += " Equinox Dream 1 requires 20. Aim for items in Tier 1! There are a few extras included for flexibility."
-        firstAdvice = dict(itertools.islice(combinedAdvice.items(), 1))
+        firstAdvice = dict(itertools.islice(combinedAdvice.items(), 3))
+        # During Advice refactor, collapse any tiers after 2nd
 
     #print("Dream Advice:", dreamAdvice)
     #for tier in combinedAdvice:

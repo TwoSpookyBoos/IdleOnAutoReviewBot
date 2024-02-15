@@ -992,7 +992,7 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, playerCount, pl
     if advice_meows != "":
         advice_meows = "Tier " + str(tier_meows) + "- " + advice_meows
     if overall_DeathNoteTier == progressionTiers[-1][0]:
-        advice_w1DeathNoteSkulls = "Nada. You best <3"
+        advice_w1DeathNoteSkulls = "Nada. You best ❤️"
 
 
     advice_DeathNoteCombined = ["Best DeathNote tier met: " + str(overall_DeathNoteTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended DeathNote actions:",

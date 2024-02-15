@@ -446,7 +446,7 @@ def getBubbleColorFromName(inputName):
         case "Prowesessary" | "Laaarrrryyyy" | "Startue Exp" | "Droppin Loads" | "Diamond Chef" | "Big P" | "Big Game Hunter" | "Mr Massacre" | "Grind Time":
             return str(" (Yellow")
         case _:
-            return str(" (Unknown")
+            return str(" (Unknown-" + str(inputName))
 
 def getSumUnlockedBubbles(colorDict, colorString):
     bubblesUnlocked = 0
@@ -464,6 +464,7 @@ def getSumUnlockedBubbles(colorDict, colorString):
 
 
 def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
+    advice_SnakeskinRiftVialMastery = ""
     alchemyVialsDict = inputJSON["CauldronInfo"][4]
     try:
         del alchemyVialsDict["length"]
@@ -474,8 +475,6 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
         highestCompletedRift = inputJSON["Rift"][0]
         if highestCompletedRift >= 35:
             advice_SnakeskinRiftVialMastery = " 27 is the magic number needed to get the Snake Skin vial to 100% chance to double deposited statues :D (This also requires Snake Skin itself be maxed lol)"
-        else:
-            advice_SnakeskinRiftVialMastery = ""
     except Exception as reason:
         print("Alchemy~ EXCEPTION Unable to retrieve highest rift level.", reason)
         advice_SnakeskinRiftVialMastery = ""
@@ -816,7 +815,7 @@ def setAlchemyP2W(inputJSON, playerCount):
     advice_alchemyP2WPlayer = ""
     advice_alchemyP2WCombined = []
     if p2wSum >= p2wMax:
-        advice_alchemyP2WSums = "You've purchased all " + str(p2wMax) + " upgrades in Alchemy-P2W! You best <3"
+        advice_alchemyP2WSums = "You've purchased all " + str(p2wMax) + " upgrades in Alchemy-P2W! You best ❤️"
     else:
         advice_alchemyP2WSums = "You've purchased " + str(p2wSum) + "/" + str(p2wMax) + " upgrades in Alchemy P2W. Try to purchase the basic updates before Mid W5, and Player upgrades after each level up!"
         if bubbleCauldronSum < bubbleCauldronMax:
