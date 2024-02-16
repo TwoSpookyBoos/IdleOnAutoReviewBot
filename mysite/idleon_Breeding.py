@@ -12,8 +12,8 @@ def getShinyLevelFromDays(days):
     return highestExceeded
 
 def getShinyExclusions(inputJSON):
-    currentArtifactsCount = 30
-    currentArtifactTiers = 3
+    currentArtifactsCount = 33  # as of w6 launch
+    currentArtifactTiers = 4  # as of w6 launch
     shinyExclusionsDict = {
         "Exclude-InfiniteStarSigns": True,
         "Exclude-ArtifactChance": False
@@ -40,14 +40,14 @@ def getShinyExclusions(inputJSON):
 def getTerritoryName(index):
     territoryNames = ["", "Grasslands", "Jungle", "Encroaching Forest", "Tree Interior", "Stinky Sewers", "Desert Oasis", "Beach Docks", "Coarse Mountains",
         "Twilight Desert", "The Crypt", "Frosty Peaks", "Tundra Outback", "Crystal Caverns", "Pristalle Lake", "Nebulon Mantle", "Starfield Skies",
-        "Shores of Eternity", "Molten Bay", "Smokey Lake", "Wurm Catacombs"]
+        "Shores of Eternity", "Molten Bay", "Smokey Lake", "Wurm Catacombs", "Spirit Fields", "Bamboo Forest", "W6-Spice3", "W6-Spice4"]  #TODO
     try:
         return territoryNames[int(index)]
     except:
         return "Unknown Territory" + str(index)
 
 def parseJSONtoBreedingDict(inputJSON):
-    maxNumberOfTerritories = 20 # as of v1.91
+    maxNumberOfTerritories = 24  # as of w6 launch
     indexFirstTerritoryAssignedPet = 28
     rawBreedingList: list = []
     try:

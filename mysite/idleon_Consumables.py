@@ -214,7 +214,7 @@ def parseInventoryBagSlots(inputJSON, playerCount, playerNames):
 
 def parseStorageChests(inputJSON):
     advice_MissingChests = ""
-    currentMaxChestsSum = 40  # As of v1.91
+    currentMaxChestsSum = 44  # As of v2.0
     usedStorageChests = json.loads(inputJSON['InvStorageUsed'])
     #print(len(usedStorageChests), usedStorageChests)
     if len(usedStorageChests) < currentMaxChestsSum:
