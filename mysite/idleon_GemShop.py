@@ -207,15 +207,14 @@ def getGemShopDict(inputJSON):
             'Lava Sprouts': parsedList[133],
 
             #World 6
-            'W6-Placeholder1': 0,  # TODO: DELETE ME AFTER UPDATING GEMSHOP RECOMMENDATIONS
-            'Plot of Land': 0,
-            'Pristine Charm': 0,
-            'Shroom Familiar': 0,
-            'Sand of Time': 0,
-            'Instagrow Generator': 0,
-            'Life Refill': 0,
-            'Compost Bag': 0,
-            'Summoner Stone': 0,
+            'Plot of Land': parsedList[135],
+            'Pristine Charm': parsedList[136],
+            'Shroom Familiar': parsedList[137],
+            'Sand of Time': parsedList[138],
+            'Instagrow Generator': parsedList[139],
+            'Life Refill': parsedList[140],
+            'Compost Bag': parsedList[141],
+            'Summoner Stone': parsedList[142],
 
             #Fomo
             'FOMO-1': parsedList[87],

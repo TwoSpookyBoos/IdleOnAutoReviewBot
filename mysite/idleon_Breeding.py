@@ -40,14 +40,14 @@ def getShinyExclusions(inputJSON):
 def getTerritoryName(index):
     territoryNames = ["", "Grasslands", "Jungle", "Encroaching Forest", "Tree Interior", "Stinky Sewers", "Desert Oasis", "Beach Docks", "Coarse Mountains",
         "Twilight Desert", "The Crypt", "Frosty Peaks", "Tundra Outback", "Crystal Caverns", "Pristalle Lake", "Nebulon Mantle", "Starfield Skies",
-        "Shores of Eternity", "Molten Bay", "Smokey Lake", "Wurm Catacombs", "Spirit Fields"]
+        "Shores of Eternity", "Molten Bay", "Smokey Lake", "Wurm Catacombs", "Spirit Fields", "Bamboo Forest", "W6-Spice3", "W6-Spice4"]  #TODO
     try:
         return territoryNames[int(index)]
     except:
         return "Unknown Territory" + str(index)
 
 def parseJSONtoBreedingDict(inputJSON):
-    maxNumberOfTerritories = 21 # as of w6 launch
+    maxNumberOfTerritories = 24  # as of w6 launch
     indexFirstTerritoryAssignedPet = 28
     rawBreedingList: list = []
     try:

@@ -331,18 +331,18 @@ def getDeathNoteKills(inputJSON, playerCount, playerNames):
         }
     w6DeathNoteDict = {
         "Gooble Goop Creek": [30000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
-        "Picnic Bridgeways": [45000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
-        "Irrigation Station": [70000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
-        "Troll Playground": [90000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
-        "Edge of the Valley": [100000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
-        "Bamboo Laboredge": [400000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
-        "Lightway Path": [1000000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
-        "Troll Broodnest": [2000000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
-        "Above the Clouds": [5000000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
-        "Sleepy Skyline": [10000000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
-        "Dozey Dogpark": [20000000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
-        "Yolkrock Basin": [50000000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
-        "Chieftain Stairway": [100000000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
+        "Picnic Bridgeways": [50000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
+        "Irrigation Station": [100000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
+        "Troll Playground": [250000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
+        "Edge of the Valley": [400000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
+        "Bamboo Laboredge": [1100000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
+        "Lightway Path": [3200000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
+        "Troll Broodnest": [8000000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
+        "Above the Clouds": [12000000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
+        "Sleepy Skyline": [25000000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
+        "Dozey Dogpark": [70000000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
+        "Yolkrock Basin": [100000000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
+        "Chieftain Stairway": [150000000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
         "Emporer's Castle Doorstep": [100, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00]
     }
 
@@ -505,10 +505,10 @@ def getDeathNoteKills(inputJSON, playerCount, playerNames):
                         += abs(playerKillsList[261][0] - w6DeathNoteDict['Dozey Dogpark'][0])
                     w6DeathNoteDict['Yolkrock Basin'][1] \
                         += abs(playerKillsList[262][0] - w6DeathNoteDict['Yolkrock Basin'][0])
-                    w6DeathNoteDict['W6-Placeholder13'][1] \
-                        += abs(playerKillsList[263][0] - w6DeathNoteDict['W6-Placeholder13'][0])
-                    w6DeathNoteDict['W6-Placeholder14'][1] \
-                        += abs(playerKillsList[264][0] - w6DeathNoteDict['W6-Placeholder14'][0])
+                    w6DeathNoteDict['Chieftain Stairway'][1] \
+                        += abs(playerKillsList[263][0] - w6DeathNoteDict['Chieftain Stairway'][0])
+                    w6DeathNoteDict["Emporer's Castle Doorstep"][1] \
+                        += abs(playerKillsList[264][0] - w6DeathNoteDict["Emporer's Castle Doorstep"][0])
                 except Exception as reason:
                     print("ConsDeathNote~ EXCEPTION Unable to increase kill count in w6DeathNoteDict", playerCounter, playerCount, reason)
 

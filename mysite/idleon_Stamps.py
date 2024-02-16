@@ -154,10 +154,10 @@ def getReadableStampName(stampNumber, stampType):
                     return "Golden Sixes Stamp"
                 case 38:
                     return "Stat Wallstreet Stamp"
-                #case 39:
-                    #return "Unknown Combat stamp: 39"
-                #case 40:
-                    #return "Unknown Combat stamp: 40"
+                case 39:
+                    return "Void Sword Stamp"
+                case 40:
+                    return "Void Axe Stamp"
                 case 41:
                     return "Capitalist Stats Stamp"
                 case _:
@@ -258,15 +258,18 @@ def getReadableStampName(stampNumber, stampType):
                     return "Multitool Stamp"
                 case 46:
                     return "Skelefish Stamp"
-                #case 47:
+                case 47:
+                    return "Crop Evo Stamp"
                 case 48:
                     return "Sneaky Peeky Stamp"
                 case 49:
                     return "Jade Mint Stamp"
-                #case 50:
+                case 50:
+                    return "Summoner Stone Stamp"
                 case 51:
                     return "White Essence Stamp"
-                #case 52:
+                case 52:
+                    return "Triad Essence Stamp"
                 case 53:
                     return "Dark Triad Essence Stamp"
                 case _:

@@ -451,13 +451,13 @@ def getBubbleColorFromName(inputName):
 def getSumUnlockedBubbles(colorDict, colorString):
     bubblesUnlocked = 0
     for bubble in colorDict:
-        if isinstance(colorDict[bubble], str):
-            print("Alchemy.getSumUnlockedBubbles~ BUBBLE VALUE FOUND TO BE STRING! ATTEMPTING TO CONVERT:", colorString, bubble, colorDict[bubble])
+        if not isinstance(colorDict[bubble], int):
+            print("Alchemy.getSumUnlockedBubbles~ BUBBLE VALUE FOUND TO BE NON-INT! ATTEMPTING TO CONVERT:", colorString, bubble, type(colorDict[bubble]), colorDict[bubble])
             try:
                 colorDict[bubble] = int(floor(float(colorDict[bubble])))
             except Exception as reason:
                 print("Alchemy.getSumUnlockedBubbles~ EXCEPTION Could not convert Bubble string to int :( Skipping by setting bubble to 0. Reason:", reason)
-        if isinstance(colorDict[bubble], int) or isinstance(colorDict[bubble], float):
+        else:
             if colorDict[bubble] > 0:
                 bubblesUnlocked += 1
     return bubblesUnlocked
@@ -597,19 +597,19 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
     named_all_alchemyBublesDict = {}
     for bubble in raw_orange_alchemyBubblesDict:
         if int(bubble) <= currentlyAvailableBubblesIndex:
-            named_all_alchemyBublesDict[getReadableBubbleNames(bubble, "Orange")] = raw_orange_alchemyBubblesDict[bubble]
+            named_all_alchemyBublesDict[getReadableBubbleNames(bubble, "Orange")] = int(raw_orange_alchemyBubblesDict[bubble])
     #print(named_all_alchemyBublesDict)
     for bubble in raw_orange_alchemyBubblesDict:
         if int(bubble) <= currentlyAvailableBubblesIndex:
-            named_all_alchemyBublesDict[getReadableBubbleNames(bubble, "Green")] = raw_green_alchemyBubblesDict[bubble]
+            named_all_alchemyBublesDict[getReadableBubbleNames(bubble, "Green")] = int(raw_green_alchemyBubblesDict[bubble])
     #print(named_all_alchemyBublesDict)
     for bubble in raw_purple_alchemyBubblesDict:
         if int(bubble) <= currentlyAvailableBubblesIndex:
-            named_all_alchemyBublesDict[getReadableBubbleNames(bubble, "Purple")] = raw_purple_alchemyBubblesDict[bubble]
+            named_all_alchemyBublesDict[getReadableBubbleNames(bubble, "Purple")] = int(raw_purple_alchemyBubblesDict[bubble])
     #print(named_all_alchemyBublesDict)
     for bubble in raw_yellow_alchemyBubblesDict:
         if int(bubble) <= currentlyAvailableBubblesIndex:
-            named_all_alchemyBublesDict[getReadableBubbleNames(bubble, "Yellow")] = raw_yellow_alchemyBubblesDict[bubble]
+            named_all_alchemyBublesDict[getReadableBubbleNames(bubble, "Yellow")] = int(raw_yellow_alchemyBubblesDict[bubble])
     #print(named_all_alchemyBublesDict)
 
     #Sum up unlocked bubbles (level > 0)

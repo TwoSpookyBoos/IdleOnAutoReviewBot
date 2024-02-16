@@ -84,8 +84,9 @@ def getAllSkillLevelsDict(inputJSON, playerCount):
             # print("SkillLevels.getAllSkillLevelsDict~ OUTPUT allSkillsDict[skillIndexList[skillCounter]]",allSkillsDict[skillIndexList[skillCounter]])
             # print("SkillLevels.getAllSkillLevelsDict~ OUTPUT inputJSON['Lv0_'+str(characterCounter)][skillCounter]",inputJSON['Lv0_'+str(characterCounter)][skillCounter])
             try:
-                allSkillsDict[skillIndexList[skillCounter]].append(
-                    inputJSON['Lv0_' + str(characterCounter)][skillCounter])
+                characterSkillLevel = inputJSON['Lv0_' + str(characterCounter)][skillCounter]
+                allSkillsDict[characterCounter][skillIndexList[skillCounter]] = characterSkillLevel
+                allSkillsDict[skillIndexList[skillCounter]].append(inputJSON['Lv0_' + str(characterCounter)][skillCounter])
             except Exception as reason:
                 allSkillsDict[skillIndexList[skillCounter]].append(0)
                 print("SkillLevels.getAllSkillLevelsDict~ EXCEPTION Unable to access 'Lv0_", characterCounter,

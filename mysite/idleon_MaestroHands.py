@@ -78,5 +78,5 @@ def getHandsStatus(inputJSON, playerCount, playerNames):
     if advice_RightHands != []:
         return advice_RightHands
     else:
-        return [""]
+        return ["Come back when you have a Maestro class character!"]
 
