@@ -73,18 +73,18 @@ def setPinchyList(inputJSON, playerCount, dictOfPRs):
     # W4 Purp Mushroom = [151][0], starts at 5000
     # W4 Soda Can = [155][0], starts at 40000
     # W4 Clammies = [160][0], starts at 190000
-    # W5 Suggma = [201][0], starts at 25000
-    # W5 Stiltmole = [205][0], starts at 125000
-    # W5 Fire Spirit = [210][0], starts at 3000000
+    # W5 Suggma = [201][0], starts at 15000 (Previously 25000 in W5)
+    # W5 Stiltmole = [205][0], starts at 75000 (Previously 125000 in W5)
+    # W5 Fire Spirit = [210][0], starts at 600000 (Previously 3000000 in W5)
     # W5 Tremor Wurms = [213][0], starts at 60000
     # Until W6 drops, Solid W6 prep = DeathNote tier 15+
     # Until W6 drops, W6 waiting room = DeathNote tier 19+
     # Until W6 drops, Max = 1b+ sample
     monsterPortalKills = [
         (13, (213, 60000)),
-        (12, (210, 3000000)),
-        (11, (205, 125000)),
-        (10, (201, 25000)),
+        (12, (210, 600000)),
+        (11, (205, 75000)),
+        (10, (201, 15000)),
         (9, (160, 190000)),
         (8, (155, 40000)),
         (7, (151, 5000)),
