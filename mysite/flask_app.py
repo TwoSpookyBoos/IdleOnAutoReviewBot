@@ -100,7 +100,7 @@ def index() -> Response | str:
         import os
         if os.environ.get("USER") == 'niko':
             raise reason
-        logger.error('Could not get Player from Request Args: %s', reason)
+        logger.exception('Could not get Player from Request Args: %s', reason, exc_info=reason)
         error = True
 
     return render_template(
