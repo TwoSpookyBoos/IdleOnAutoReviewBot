@@ -144,6 +144,26 @@ def getReadableVialNames(inputNumber):
             return "Shinyfin Stew (Equinox Fish)"
         case 63:
             return "Dreamy Drink (Dream Particulate)"
+        case 64:
+            return "Ricecakeorade (Rice Cake)"
+        case 65:
+            return "Ladybug Serum (Ladybug) "
+        case 66:
+            return "Greenleaf Tea(Leafy Branch)"
+        case 67:
+            return "Flavorgil (Caulifish)"
+        case 68:
+            return "Firefly Grog (Firefly)"
+        case 69:
+            return "Dabar Special (Godshard Bar)"
+        case 70:
+            return "Refreshment (Breezy Soul)"
+        case 71:
+            return "Gibbed Drink (Eviscerated Horn)"
+        case 72:
+            return "Ded Sap (Effervescent Log)"
+        case 73:
+            return "Royale Cola (Royal Headpiece)"
         case _:
             return "Unknown Vial " + str(inputNumber)
 
@@ -205,8 +225,18 @@ def getReadableBubbleNames(inputNumber, color):
                     return "Slabi Strength"
                 case 24:
                     return "Power Trione"
+                case 25:
+                    return "Farquad Force"
+                case 26:
+                    return "Endgame Eff I"
+                case 27:
+                    return "Tome Strength"
+                case 28:
+                    return "Essence Boost"
+                case 29:
+                    return "Crop Chapter"
                 case _:
-                    return "Unknown Orange Bubble " + str(color) + str(inputNumber)
+                    return "Unknown Bubble " + str(color) + str(inputNumber)
         case "Green":
             match inputNumber:
                 case 0:
@@ -259,8 +289,18 @@ def getReadableBubbleNames(inputNumber, color):
                     return "Slabo Agility"
                 case 24:
                     return "Power Tritwo"
+                case 25:
+                    return "Quickdraw Quiver"
+                case 26:
+                    return "Essence Boost"
+                case 27:
+                    return "Endgame Eff II"
+                case 28:
+                    return "Tome Agility"
+                case 29:
+                    return "Stealth Chapter"
                 case _:
-                    return "Unknown Green Bubble " + str(color) + str(inputNumber)
+                    return "Unknown Bubble " + str(color) + str(inputNumber)
         case "Purple":
             match inputNumber:
                 case 0:
@@ -313,8 +353,18 @@ def getReadableBubbleNames(inputNumber, color):
                     return "Slabe Wisdom"
                 case 24:
                     return "Power Trithree"
+                case 25:
+                    return "Smarter Spells"
+                case 26:
+                    return "Endgame Eff III"
+                case 27:
+                    return "Essence Boost"
+                case 28:
+                    return "Tome Wisdom"
+                case 29:
+                    return "Essence Chapter"
                 case _:
-                    return "Unknown Purple Bubble " + str(color) + str(inputNumber)
+                    return "Unknown Bubble " + str(color) + str(inputNumber)
         case "Yellow":
             match inputNumber:
                 case 0:
@@ -367,8 +417,18 @@ def getReadableBubbleNames(inputNumber, color):
                     return "Gifts Abound"
                 case 24:
                     return "Atom Split"
+                case 25:
+                    return "Cropius Mapper"
+                case 26:
+                    return "Essence Boost"
+                case 27:
+                    return "Hinge Buster"
+                case 28:
+                    return "Ninja Looter"
+                case 29:
+                    return "Lo Cost Mo Jade"
                 case _:
-                    return "Unknown Yellow Bubble " + str(color) + str(inputNumber)
+                    return "Unknown Bubble " + str(color) + str(inputNumber)
 
 def getBubbleColorFromName(inputName):
     match inputName:
@@ -386,17 +446,17 @@ def getBubbleColorFromName(inputName):
 def getSumUnlockedBubbles(colorDict, colorString):
     bubblesUnlocked = 0
     for bubble in colorDict:
-        if isinstance(colorDict[bubble], str):
-            print("Alchemy.getSumUnlockedBubbles~ BUBBLE VALUE FOUND TO BE STRING! ATTEMPTING TO CONVERT:", colorString, bubble, colorDict[bubble])
+        if not isinstance(colorDict[bubble], int):
+            print("Alchemy.getSumUnlockedBubbles~ BUBBLE VALUE FOUND TO BE NON-INT! ATTEMPTING TO CONVERT:", colorString, bubble, type(colorDict[bubble]), colorDict[bubble])
             try:
                 colorDict[bubble] = int(floor(float(colorDict[bubble])))
             except Exception as reason:
-                print("Alchemy.getSumUnlockedBubbles~ EXCEPTION Could not convert Bubble string to int :( Skipping by setting bubble to 0. Reason:", reason)
-        if isinstance(colorDict[bubble], int) or isinstance(colorDict[bubble], float):
+                print("Alchemy.getSumUnlockedBubbles~ EXCEPTION Could not convert Bubble value to int :( Skipping by setting bubble to 0. Reason:", reason)
+                colorDict[bubble] = 0
+        else:
             if colorDict[bubble] > 0:
                 bubblesUnlocked += 1
     return bubblesUnlocked
-
 
 def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
     max_tier = progressionTiers[-3][0]
@@ -414,7 +474,6 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
         picture="Alchemy_Vial-level-1.png"
     )
 
-
     alchemyVialsDict = {}
     try:
         alchemyVialsDict = inputJSON["CauldronInfo"][4]
@@ -423,16 +482,14 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
         print("Alchemy~ EXCEPTION Unable to retrieve alchemyVialsDict from JSON:", reason)
     #print("Alchemy~ OUTPUT alchemyVialsDict:",len(alchemyVialsDict), alchemyVialsDict)
 
-    highestCompletedRift = 0
     try:
         highestCompletedRift = inputJSON["Rift"][0]
-        if highestCompletedRift >= 35:
-            advice_TrailingMaxedVials = " 27 is the magic number needed to get the Snake Skin vial to 100% chance to double deposited statues :D (This also requires Snake Skin itself be maxed lol)"
     except Exception as reason:
-        print("Alchemy~ EXCEPTION Unable to retrieve highest rift level.",reason)
+        print("Alchemy~ EXCEPTION Unable to retrieve highest rift level.", reason)
+        highestCompletedRift = 0
 
     virileVialsList = []
-    maxExpectedVV = 62  # Excludes both pickle vials
+    maxExpectedVV = 72  # Excludes both pickle vials
     maxedVialsList = []
     unmaxedVialsList = []
     lockedVialsList = []
@@ -488,7 +545,6 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
                         item_name="vials",
                         progression=str(unlockedVials),
                         goal=str(tier[1]),
-
                     )
                 )
                 vial_AdviceGroupDict["UnlockVials"] = AdviceGroup(
@@ -571,20 +627,12 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
     return {"PR": alchemyVialsPR, "AdviceSection": vial_AdviceSection}
 
 def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
-    currentlyAvailableBubblesIndex = 24
+    currentlyAvailableBubblesIndex = 29
     tier_TotalBubblesUnlocked = 0
     orangeBubblesUnlocked = 0
     greenBubblesUnlocked = 0
     purpleBubblesUnlocked = 0
     yellowBubblesUnlocked = 0
-    w1BubblesUnlocked = 0
-    w2BubblesUnlocked = 0
-    w3BubblesUnlocked = 0
-    w4BubblesUnlocked = 0
-    w5BubblesUnlocked = 0
-    w6BubblesUnlocked = 0
-    w7BubblesUnlocked = 0
-    w8BubblesUnlocked = 0
     sum_TotalBubblesUnlocked = 0
     tier_OrangeSampleBubbles = 0
     tier_GreenSampleBubbles = 0
@@ -597,6 +645,20 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
     advice_GreenSampleBubbles = ""
     advice_PurpleSampleBubbles = ""
     advice_UtilityBubbles = ""
+    bubbles_AdviceDict = {
+        "TotalBubblesUnlocked": [],
+        "PurpleSampleBubbles": [],
+        "OrangeSampleBubbles": [],
+        "GreenSampleBubbles": [],
+        "UtilityBubbles": []
+    }
+    bubbles_AdviceGroupDict = {}
+    bubbles_AdviceSection = AdviceSection(
+        name="Bubbles",
+        tier="Not Yet Evaluated",
+        header="Best Bubbles tier met: Not Yet Evaluated. Recommended Bubbles actions:",
+        picture="cauldron-a"
+    )
 
     #Get the bubble data and remove the length element
     raw_orange_alchemyBubblesDict = inputJSON["CauldronInfo"][0]
@@ -609,23 +671,23 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
     del raw_yellow_alchemyBubblesDict['length']
 
     #Replace the bubble numbers with their names for readable evaluation against the progression tiers
-    named_all_alchemyBublesDict = {}
+    named_all_alchemyBubblesDict = {}
     for bubble in raw_orange_alchemyBubblesDict:
         if int(bubble) <= currentlyAvailableBubblesIndex:
-            named_all_alchemyBublesDict[getReadableBubbleNames(bubble, "Orange")] = raw_orange_alchemyBubblesDict[bubble]
-    #print(named_all_alchemyBublesDict)
+            named_all_alchemyBubblesDict[getReadableBubbleNames(bubble, "Orange")] = int(raw_orange_alchemyBubblesDict[bubble])
+    #print(named_all_alchemyBubblesDict)
     for bubble in raw_orange_alchemyBubblesDict:
         if int(bubble) <= currentlyAvailableBubblesIndex:
-            named_all_alchemyBublesDict[getReadableBubbleNames(bubble, "Green")] = raw_green_alchemyBubblesDict[bubble]
-    #print(named_all_alchemyBublesDict)
+            named_all_alchemyBubblesDict[getReadableBubbleNames(bubble, "Green")] = int(raw_green_alchemyBubblesDict[bubble])
+    #print(named_all_alchemyBubblesDict)
     for bubble in raw_purple_alchemyBubblesDict:
         if int(bubble) <= currentlyAvailableBubblesIndex:
-            named_all_alchemyBublesDict[getReadableBubbleNames(bubble, "Purple")] = raw_purple_alchemyBubblesDict[bubble]
-    #print(named_all_alchemyBublesDict)
+            named_all_alchemyBubblesDict[getReadableBubbleNames(bubble, "Purple")] = int(raw_purple_alchemyBubblesDict[bubble])
+    #print(named_all_alchemyBubblesDict)
     for bubble in raw_yellow_alchemyBubblesDict:
         if int(bubble) <= currentlyAvailableBubblesIndex:
-            named_all_alchemyBublesDict[getReadableBubbleNames(bubble, "Yellow")] = raw_yellow_alchemyBubblesDict[bubble]
-    #print(named_all_alchemyBublesDict)
+            named_all_alchemyBubblesDict[getReadableBubbleNames(bubble, "Yellow")] = int(raw_yellow_alchemyBubblesDict[bubble])
+    #print(named_all_alchemyBubblesDict)
 
     #Sum up unlocked bubbles (level > 0)
     orangeBubblesUnlocked = getSumUnlockedBubbles(raw_orange_alchemyBubblesDict, "Orange")
@@ -634,59 +696,23 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
     yellowBubblesUnlocked = getSumUnlockedBubbles(raw_yellow_alchemyBubblesDict, "Yellow")
     sum_TotalBubblesUnlocked += orangeBubblesUnlocked + greenBubblesUnlocked + purpleBubblesUnlocked + yellowBubblesUnlocked
 
-    #Old style, replaced by getSumUnlockedBubbles due to finding String values for bubble levels
-    #for bubble in raw_orange_alchemyBubblesDict:
-        #if raw_orange_alchemyBubblesDict[bubble] > 0:
-            #sum_TotalBubblesUnlocked += 1
-            #orangeBubblesUnlocked += 1
-
-    bubbleUnlockListByWorld = [20,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]  # this will break if they've unlocked more than 100 bubbles lmao
-
-    #orange
-    worldCounter = 1
-    while orangeBubblesUnlocked >= 5:
-        #print("Alchemy-SamplingBubbles~ ",orangeBubblesUnlocked,worldCounter)
-        bubbleUnlockListByWorld[worldCounter] += 5
-        orangeBubblesUnlocked -= 5
-        worldCounter += 1
-    if orangeBubblesUnlocked > 0:
-        bubbleUnlockListByWorld[worldCounter] += orangeBubblesUnlocked
-        orangeBubblesUnlocked = 0
-    #green
-    worldCounter = 1
-    while greenBubblesUnlocked >= 5:
-        bubbleUnlockListByWorld[worldCounter] += 5
-        greenBubblesUnlocked -= 5
-        worldCounter += 1
-    if greenBubblesUnlocked > 0:
-        bubbleUnlockListByWorld[worldCounter] += greenBubblesUnlocked
-        greenBubblesUnlocked = 0
-    #purple
-    worldCounter = 1
-    while purpleBubblesUnlocked >= 5:
-        bubbleUnlockListByWorld[worldCounter] += 5
-        purpleBubblesUnlocked -= 5
-        worldCounter += 1
-    if purpleBubblesUnlocked > 0:
-        bubbleUnlockListByWorld[worldCounter] += purpleBubblesUnlocked
-        purpleBubblesUnlocked = 0
-    #yellow
-    worldCounter = 1
-    while yellowBubblesUnlocked >= 5:
-        bubbleUnlockListByWorld[worldCounter] += 5
-        yellowBubblesUnlocked -= 5
-        worldCounter += 1
-    if yellowBubblesUnlocked > 0:
-        bubbleUnlockListByWorld[worldCounter] += yellowBubblesUnlocked
-        yellowBubblesUnlocked = 0
+    bubbleUnlockListByWorld = [20,0,0,0,0,0,0,0,0]
+    combined_BubblesList = [orangeBubblesUnlocked, greenBubblesUnlocked, purpleBubblesUnlocked, yellowBubblesUnlocked]
+    for bubbleColorCount in combined_BubblesList:
+        worldCounter = 1
+        while bubbleColorCount >= 5 and worldCounter <= len(bubbleUnlockListByWorld):
+            bubbleUnlockListByWorld[worldCounter] += 5
+            bubbleColorCount -= 5
+            worldCounter += 1
+        if bubbleColorCount > 0:
+            bubbleUnlockListByWorld[worldCounter] += bubbleColorCount
+            bubbleColorCount = 0
     #print(bubbleUnlockListByWorld)
     #print(sum_TotalBubblesUnlocked) #future world's pre-unlocked bubbles inflate this number
-
-    #Clean up memory by deleting the raw dictionaries
-    del raw_orange_alchemyBubblesDict
-    del raw_green_alchemyBubblesDict
-    del raw_purple_alchemyBubblesDict
-    del raw_yellow_alchemyBubblesDict
+    highestFullyUnlockedWorld = 0
+    for world in range(0, len(bubbleUnlockListByWorld)):
+        if bubbleUnlockListByWorld[world] == 20:
+            highestFullyUnlockedWorld += 1
 
     #Assess tiers
     for tier in progressionTiers:
@@ -705,10 +731,6 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
                 tier_TotalBubblesUnlocked = tier[0]
             else:
                 advice_TotalBubblesUnlocked = "Tier " + str(tier_TotalBubblesUnlocked)
-                highestFullyUnlockedWorld = 0
-                for world in range(0, len(bubbleUnlockListByWorld)):
-                    if bubbleUnlockListByWorld[world] == 20:
-                        highestFullyUnlockedWorld += 1
                 advice_TotalBubblesUnlocked += "- You have unlocked " + str(bubbleUnlockListByWorld[highestFullyUnlockedWorld]) + "/20 of W" + str(highestFullyUnlockedWorld) + " bubbles."
 
         #tier_OrangeSampleBubbles
@@ -717,10 +739,10 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
             for requiredBubble in tier[2]:
                 #requiredBubble = name of the bubble
                 #tier[2][requiredBubble] = level of the bubble in the requirement
-                #named_all_alchemyBublesDict[requiredBubble] = level of the player's bubble
-                if named_all_alchemyBublesDict[requiredBubble] < tier[2][requiredBubble]:
+                #named_all_alchemyBubblesDict[requiredBubble] = level of the player's bubble
+                if named_all_alchemyBubblesDict[requiredBubble] < tier[2][requiredBubble]:
                     all_orangeRequirementsMet = False
-                    advice_OrangeSampleBubbles += requiredBubble + " (" + str(named_all_alchemyBublesDict[requiredBubble]) + "/" + str(tier[2][requiredBubble]) + "), "
+                    advice_OrangeSampleBubbles += requiredBubble + " (" + str(named_all_alchemyBubblesDict[requiredBubble]) + "/" + str(tier[2][requiredBubble]) + "), "
             if all_orangeRequirementsMet == True:
                 tier_OrangeSampleBubbles = tier[0]
             else:
@@ -732,11 +754,11 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
             for requiredBubble in tier[3]:
                 #requiredBubble = name of the bubble
                 #tier[2][requiredBubble] = level of the bubble in the requirement
-                #named_all_alchemyBublesDict[requiredBubble] = level of the player's bubble
+                #named_all_alchemyBubblesDict[requiredBubble] = level of the player's bubble
 
-                if named_all_alchemyBublesDict[requiredBubble] < tier[3][requiredBubble]:
+                if named_all_alchemyBubblesDict[requiredBubble] < tier[3][requiredBubble]:
                     all_greenRequirementsMet = False
-                    advice_GreenSampleBubbles += requiredBubble + " (" + str(named_all_alchemyBublesDict[requiredBubble]) + "/" + str(tier[3][requiredBubble]) + "), "
+                    advice_GreenSampleBubbles += requiredBubble + " (" + str(named_all_alchemyBubblesDict[requiredBubble]) + "/" + str(tier[3][requiredBubble]) + "), "
             if all_greenRequirementsMet == True:
                 tier_GreenSampleBubbles = tier[0]
             else:
@@ -748,10 +770,10 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
             for requiredBubble in tier[4]:
                 #requiredBubble = name of the bubble
                 #tier[3][requiredBubble] = level of the bubble in the requirement
-                #named_all_alchemyBublesDict[requiredBubble] = level of the player's bubble
-                if named_all_alchemyBublesDict[requiredBubble] < tier[4][requiredBubble]:
+                #named_all_alchemyBubblesDict[requiredBubble] = level of the player's bubble
+                if named_all_alchemyBubblesDict[requiredBubble] < tier[4][requiredBubble]:
                     all_purpleRequirementsMet = False
-                    advice_PurpleSampleBubbles += requiredBubble + " (" + str(named_all_alchemyBublesDict[requiredBubble]) + "/" + str(tier[4][requiredBubble]) + "), "
+                    advice_PurpleSampleBubbles += requiredBubble + " (" + str(named_all_alchemyBubblesDict[requiredBubble]) + "/" + str(tier[4][requiredBubble]) + "), "
             if all_purpleRequirementsMet == True:
                 tier_PurpleSampleBubbles = tier[0]
             else:
@@ -763,10 +785,10 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
             for requiredBubble in tier[5]:
                 #requiredBubble = name of the bubble
                 #tier[3][requiredBubble] = level of the bubble in the requirement
-                #named_all_alchemyBublesDict[requiredBubble] = level of the player's bubble
-                if named_all_alchemyBublesDict[requiredBubble] < tier[5][requiredBubble]:
+                #named_all_alchemyBubblesDict[requiredBubble] = level of the player's bubble
+                if named_all_alchemyBubblesDict[requiredBubble] < tier[5][requiredBubble]:
                     all_utilityRequirementsMet = False
-                    advice_UtilityBubbles += requiredBubble + getBubbleColorFromName(requiredBubble) + " " + str(named_all_alchemyBublesDict[requiredBubble]) + "/" + str(tier[5][requiredBubble]) + "), "
+                    advice_UtilityBubbles += requiredBubble + getBubbleColorFromName(requiredBubble) + " " + str(named_all_alchemyBubblesDict[requiredBubble]) + "/" + str(tier[5][requiredBubble]) + "), "
             if all_utilityRequirementsMet == True:
                 tier_UtilityBubbles = tier[0]
             else:
@@ -783,7 +805,7 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
         advice_GreenSampleBubbles,
         advice_UtilityBubbles]
     alchemyBubblesPR = progressionResults.progressionResults(overall_alchemyBubblesTier, advice_alchemyBubblesCombined,"")
-    return alchemyBubblesPR
+    return {'PR': alchemyBubblesPR, 'AdviceSection': bubbles_AdviceSection}
 
 def setAlchemyP2W(inputJSON, playerCount):
     highestAlchemyLevel = getHighestAlchemyLevel(inputJSON, playerCount)
@@ -845,8 +867,10 @@ def setAlchemyP2W(inputJSON, playerCount):
 
     if p2wSumWithoutPlayer >= p2wMaxWithoutPlayer:
         p2w_AdviceSection.pinchy_rating = 1
+        p2w_AdviceSection.tier = '1/1'
     else:
         p2w_AdviceSection.pinchy_rating = 0
+        p2w_AdviceSection.tier = '0/1'
 
     if p2wSum >= p2wMax:
         advice_alchemyP2WSums = "You've purchased all " + str(p2wMax) + " upgrades in Alchemy-P2W! You best ❤️"
