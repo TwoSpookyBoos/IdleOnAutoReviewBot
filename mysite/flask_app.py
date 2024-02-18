@@ -98,7 +98,6 @@ def index() -> Response | str:
             pythonOutput = autoReviewBot(capturedCharacterInput)
 
     except Exception as reason:
-        traceback.print_exc()
         if os.environ.get("USER") == 'niko':
             raise reason
         logger.exception('Could not get Player from Request Args: %s', reason, exc_info=reason)
