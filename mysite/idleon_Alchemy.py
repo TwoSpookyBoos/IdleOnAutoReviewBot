@@ -556,7 +556,7 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
     return alchemyVialsPR
 
 def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
-    currentlyAvailableBubblesIndex = 24
+    currentlyAvailableBubblesIndex = 29  # As of v2.0
     tier_TotalBubblesUnlocked = 0
     orangeBubblesUnlocked = 0
     greenBubblesUnlocked = 0
@@ -594,23 +594,23 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
     del raw_yellow_alchemyBubblesDict['length']
 
     #Replace the bubble numbers with their names for readable evaluation against the the progression tiers
-    named_all_alchemyBublesDict = {}
+    named_all_alchemyBubblesDict = {}
     for bubble in raw_orange_alchemyBubblesDict:
         if int(bubble) <= currentlyAvailableBubblesIndex:
-            named_all_alchemyBublesDict[getReadableBubbleNames(bubble, "Orange")] = int(raw_orange_alchemyBubblesDict[bubble])
-    #print(named_all_alchemyBublesDict)
+            named_all_alchemyBubblesDict[getReadableBubbleNames(bubble, "Orange")] = int(raw_orange_alchemyBubblesDict[bubble])
+    #print(named_all_alchemyBubblesDict)
     for bubble in raw_orange_alchemyBubblesDict:
         if int(bubble) <= currentlyAvailableBubblesIndex:
-            named_all_alchemyBublesDict[getReadableBubbleNames(bubble, "Green")] = int(raw_green_alchemyBubblesDict[bubble])
-    #print(named_all_alchemyBublesDict)
+            named_all_alchemyBubblesDict[getReadableBubbleNames(bubble, "Green")] = int(raw_green_alchemyBubblesDict[bubble])
+    #print(named_all_alchemyBubblesDict)
     for bubble in raw_purple_alchemyBubblesDict:
         if int(bubble) <= currentlyAvailableBubblesIndex:
-            named_all_alchemyBublesDict[getReadableBubbleNames(bubble, "Purple")] = int(raw_purple_alchemyBubblesDict[bubble])
-    #print(named_all_alchemyBublesDict)
+            named_all_alchemyBubblesDict[getReadableBubbleNames(bubble, "Purple")] = int(raw_purple_alchemyBubblesDict[bubble])
+    #print(named_all_alchemyBubblesDict)
     for bubble in raw_yellow_alchemyBubblesDict:
         if int(bubble) <= currentlyAvailableBubblesIndex:
-            named_all_alchemyBublesDict[getReadableBubbleNames(bubble, "Yellow")] = int(raw_yellow_alchemyBubblesDict[bubble])
-    #print(named_all_alchemyBublesDict)
+            named_all_alchemyBubblesDict[getReadableBubbleNames(bubble, "Yellow")] = int(raw_yellow_alchemyBubblesDict[bubble])
+    #print(named_all_alchemyBubblesDict)
 
     #Sum up unlocked bubbles (level > 0)
     orangeBubblesUnlocked = getSumUnlockedBubbles(raw_orange_alchemyBubblesDict, "Orange")
@@ -702,10 +702,10 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
             for requiredBubble in tier[2]:
                 #requiredBubble = name of the bubble
                 #tier[2][requiredBubble] = level of the bubble in the requirement
-                #named_all_alchemyBublesDict[requiredBubble] = level of the player's bubble
-                if named_all_alchemyBublesDict[requiredBubble] < tier[2][requiredBubble]:
+                #named_all_alchemyBubblesDict[requiredBubble] = level of the player's bubble
+                if named_all_alchemyBubblesDict[requiredBubble] < tier[2][requiredBubble]:
                     all_orangeRequirementsMet = False
-                    advice_OrangeSampleBubbles += requiredBubble + " (" + str(named_all_alchemyBublesDict[requiredBubble]) + "/" + str(tier[2][requiredBubble]) + "), "
+                    advice_OrangeSampleBubbles += requiredBubble + " (" + str(named_all_alchemyBubblesDict[requiredBubble]) + "/" + str(tier[2][requiredBubble]) + "), "
             if all_orangeRequirementsMet == True:
                 tier_OrangeSampleBubbles = tier[0]
             else:
@@ -717,11 +717,11 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
             for requiredBubble in tier[3]:
                 #requiredBubble = name of the bubble
                 #tier[2][requiredBubble] = level of the bubble in the requirement
-                #named_all_alchemyBublesDict[requiredBubble] = level of the player's bubble
+                #named_all_alchemyBubblesDict[requiredBubble] = level of the player's bubble
 
-                if named_all_alchemyBublesDict[requiredBubble] < tier[3][requiredBubble]:
+                if named_all_alchemyBubblesDict[requiredBubble] < tier[3][requiredBubble]:
                     all_greenRequirementsMet = False
-                    advice_GreenSampleBubbles += requiredBubble + " (" + str(named_all_alchemyBublesDict[requiredBubble]) + "/" + str(tier[3][requiredBubble]) + "), "
+                    advice_GreenSampleBubbles += requiredBubble + " (" + str(named_all_alchemyBubblesDict[requiredBubble]) + "/" + str(tier[3][requiredBubble]) + "), "
             if all_greenRequirementsMet == True:
                 tier_GreenSampleBubbles = tier[0]
             else:
@@ -733,10 +733,10 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
             for requiredBubble in tier[4]:
                 #requiredBubble = name of the bubble
                 #tier[3][requiredBubble] = level of the bubble in the requirement
-                #named_all_alchemyBublesDict[requiredBubble] = level of the player's bubble
-                if named_all_alchemyBublesDict[requiredBubble] < tier[4][requiredBubble]:
+                #named_all_alchemyBubblesDict[requiredBubble] = level of the player's bubble
+                if named_all_alchemyBubblesDict[requiredBubble] < tier[4][requiredBubble]:
                     all_purpleRequirementsMet = False
-                    advice_PurpleSampleBubbles += requiredBubble + " (" + str(named_all_alchemyBublesDict[requiredBubble]) + "/" + str(tier[4][requiredBubble]) + "), "
+                    advice_PurpleSampleBubbles += requiredBubble + " (" + str(named_all_alchemyBubblesDict[requiredBubble]) + "/" + str(tier[4][requiredBubble]) + "), "
             if all_purpleRequirementsMet == True:
                 tier_PurpleSampleBubbles = tier[0]
             else:
@@ -748,10 +748,10 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
             for requiredBubble in tier[5]:
                 #requiredBubble = name of the bubble
                 #tier[3][requiredBubble] = level of the bubble in the requirement
-                #named_all_alchemyBublesDict[requiredBubble] = level of the player's bubble
-                if named_all_alchemyBublesDict[requiredBubble] < tier[5][requiredBubble]:
+                #named_all_alchemyBubblesDict[requiredBubble] = level of the player's bubble
+                if named_all_alchemyBubblesDict[requiredBubble] < tier[5][requiredBubble]:
                     all_utilityRequirementsMet = False
-                    advice_UtilityBubbles += requiredBubble + getBubbleColorFromName(requiredBubble) + " " + str(named_all_alchemyBublesDict[requiredBubble]) + "/" + str(tier[5][requiredBubble]) + "), "
+                    advice_UtilityBubbles += requiredBubble + getBubbleColorFromName(requiredBubble) + " " + str(named_all_alchemyBubblesDict[requiredBubble]) + "/" + str(tier[5][requiredBubble]) + "), "
             if all_utilityRequirementsMet == True:
                 tier_UtilityBubbles = tier[0]
             else:
