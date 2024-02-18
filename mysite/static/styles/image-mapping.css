@@ -1,3 +1,159 @@
+.insider-trading::before {
+  background-image: url("/static/imgs/bribe_pigi.png");
+}
+
+.tracking-chips::before {
+  background-image: url("/static/imgs/bribe_pigi.png");
+}
+
+.mandatory-fire-sale::before {
+  background-image: url("/static/imgs/bribe_moneybag.png");
+}
+
+.sleeping-on-the-job::before {
+  background-image: url("/static/imgs/bribe_pigi.png");
+}
+
+.artificial-demand::before {
+  background-image: url("/static/imgs/bribe_moneybag.png");
+}
+
+.the-art-of-the-deal::before {
+  background-image: url("/static/imgs/bribe_pigi.png");
+}
+
+.overstock-regulations::before {
+  background-image: url("/static/imgs/bribe_moneybag.png");
+}
+
+.double-exp-scheme::before {
+  background-image: url("/static/imgs/bribe_zzz.png");
+}
+
+.tagged-indicators::before {
+  background-image: url("/static/imgs/bribe_pigi.png");
+}
+
+.fossil-fuel-legislation::before {
+  background-image: url("/static/imgs/bribe_anvil.png");
+}
+
+.five-aces-in-the-deck::before {
+  background-image: url("/static/imgs/bribe_zzz.png");
+}
+
+.fake-teleport-tickets::before {
+  background-image: url("/static/imgs/bribe_pigi.png");
+}
+
+.the-art-of-the-steal::before {
+  background-image: url("/static/imgs/bribe_pigi.png");
+}
+
+.counterfeit-telepassports::before {
+  background-image: url("/static/imgs/bribe_pigi.png");
+}
+
+.weighted-marbles::before {
+  background-image: url("/static/imgs/bribe_mountain.png");
+}
+
+.changing-the-code::before {
+  background-image: url("/static/imgs/bribe_pigi.png");
+}
+
+.taxidermied-cog-pouches::before {
+  background-image: url("/static/imgs/bribe_mountain.png");
+}
+
+.guild-vip-fraud::before {
+  background-image: url("/static/imgs/bribe_zzz.png");
+}
+
+.library-double-agent::before {
+  background-image: url("/static/imgs/bribe_mountain.png");
+}
+
+.the-art-of-the-fail::before {
+  background-image: url("/static/imgs/bribe_pigi.png");
+}
+
+.photoshopped-dmg-range::before {
+  background-image: url("/static/imgs/bribe_pigi.png");
+}
+
+.glitched-acc-formula::before {
+  background-image: url("/static/imgs/bribe_pigi.png");
+}
+
+.firewalled-defence::before {
+  background-image: url("/static/imgs/bribe_pigi.png");
+}
+
+.bottomless-bags::before {
+  background-image: url("/static/imgs/bribe_pigi.png");
+}
+
+.afkeylogging::before {
+  background-image: url("/static/imgs/bribe_zzz.png");
+}
+
+.guild-gp-hack::before {
+  background-image: url("/static/imgs/bribe_zzz.png");
+}
+
+.the-art-of-the-bail::before {
+  background-image: url("/static/imgs/bribe_trash_tuna.png");
+}
+
+.random-garbage::before {
+  background-image: url("/static/imgs/bribe_trash_tuna.png");
+}
+
+.godlier-creation::before {
+  background-image: url("/static/imgs/bribe_anvil.png");
+}
+
+.fishermaster::before {
+  background-image: url("/static/imgs/bribe_trash_tuna.png");
+}
+
+.muscles-on-muscles::before {
+  background-image: url("/static/imgs/bribe_pigi.png");
+}
+
+.bottle-service::before {
+  background-image: url("/static/imgs/bribe_trash_tuna.png");
+}
+
+.star-scraper::before {
+  background-image: url("/static/imgs/bribe_pigi.png");
+}
+
+.vials::before {
+  background-image: url("/static/imgs/Alchemy_Vial-level-1.png");
+}
+
+.vial-max::before {
+  background-image: url("/static/imgs/Alchemy_Vial-level-13.png");
+}
+
+.prayers::before {
+  background-image: url("https://idleon.wiki/wiki/images/9/9b/Prayer_Stone.gif");
+}
+
+.bubbles::before {
+  background-image: url("https://idleon.wiki/wiki/images/archive/4/42/20230111134826%21OrangeBubble13.png");
+}
+
+.bribes::before {
+  background-image: url("/static/imgs/Bribes.png");
+}
+
+.pay2win::before {
+  background-image: url("/static/imgs/pay2win.png");
+}
+
 .copper-corona::before {
   background-image: url("https://idleon.wiki/wiki/images/7/78/Copper_Ore.png");
 }
@@ -456,6 +612,14 @@
 
 .dragonic-liquid-cauldron::before {
   background-image: url("https://idleon.wiki/wiki/images/3/39/Dragonic_Liquid_Cauldron.png");
+}
+
+.cauldron-a::before {
+  background-image: url("/static/imgs/Alchemy_Bubble_all.gif");
+}
+
+.p2w-player::before {
+  background-image: url("/static/imgs/P2W_Player.png");
 }
 
 .cardifier-5-star::before {

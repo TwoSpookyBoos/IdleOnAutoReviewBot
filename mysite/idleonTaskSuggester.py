@@ -21,6 +21,8 @@ import idleon_Greenstacks
 import idleon_MaestroHands
 import idleon_Cards
 
+from idleon_Pinchy import Placements
+
 #w1
 import idleon_Stamps
 import idleon_Bribes
@@ -284,6 +286,14 @@ def main(inputData, runType="web"):
     if isinstance(inputData, str):
         inputData = inputData.strip()  # remove leading and trailing whitespaces
 
+    ieLinkList = dict(
+        direct_json="",
+        ie_link="",
+        link_text="",
+        first_name="",
+        json_error="",
+        last_update=""
+    )
     #Step 1: Retrieve data from public IdleonEfficiency website or from file
     if len(inputData) < 16 and isinstance(inputData, str):
         #print("~~~~~~~~~~~~~~~ Starting up PROD main at", datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "for", inputData, "~~~~~~~~~~~~~~~")
@@ -300,13 +310,14 @@ def main(inputData, runType="web"):
             if parsedJSON == "PublicIEProfileNotFound" and runType == "consoleTest":
                 return "PublicIEProfileNotFound"
             ieLinkString = "Searching for character data from: https://" + inputData.lower() + ".idleonefficiency.com"
-            ieLinkList = ["Searching for character data from:", "https://" + inputData.lower() + ".idleonefficiency.com"]
+            ieLinkList["ie_link"] = f"https://{inputData.lower()}.idleonefficiency.com"
+            ieLinkList["link_text"] = f"{inputData.lower()}.idleonefficiency.com"
     else:
         if runType == "web":
             print("~~~~~~~~~~~~~~~ Starting up PROD main at", datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "for direct web JSON input.~~~~~~~~~~~~~~~")
         parsedJSON = getJSONfromText(runType, inputData)
         ieLinkString = "Searching for character data from direct JSON paste. "
-        ieLinkList = ["Searching for character data from direct JSON paste."]
+        ieLinkList["direct_json"] = " direct JSON paste"
 
     if isinstance(parsedJSON, str):
         if parsedJSON.startswith("JSONParseFail"):
@@ -346,13 +357,16 @@ def main(inputData, runType="web"):
     if ieLinkString.endswith("JSON paste. "):
         if playerNames[0] == "Character1":
             ieLinkString += "NO SORTED LIST OF CHARACTER NAMES FOUND IN DATA. REPLACING WITH GENERIC NUMBER ORDER."
-            ieLinkList.append("NO SORTED LIST OF CHARACTER NAMES FOUND IN DATA. REPLACING WITH GENERIC NUMBER ORDER.")
+            ieLinkList["json_error"] = "NO SORTED LIST OF CHARACTER NAMES FOUND IN DATA. REPLACING WITH GENERIC NUMBER ORDER."
         else:
             ieLinkString += "First character name found: " + playerNames[0]
-            ieLinkList.append("First character name found: " + playerNames[0])
+            ieLinkList["first_name"] = playerNames[0]
+            ieLinkList["link_text"] = f"{playerNames[0]}.idleonefficiency.com"
+            ieLinkList["ie_link"] = f"https://{playerNames[0]}.idleonefficiency.com"
 
     #General
     lastUpdatedTimeString = getLastUpdatedTime(parsedJSON)
+    ieLinkList["last_update"] = lastUpdatedTimeString
     if runType == "web":
         logger.info(f"{lastUpdatedTimeString = }")
     combatLevelsPR = idleon_CombatLevels.setCombatLevelsProgressionTier(parsedJSON, progressionTiers['Combat Levels'], playerCount, playerNames)
@@ -374,9 +388,11 @@ def main(inputData, runType="web"):
     smithing_AdviceSection = idleon_Smithing.setSmithingProgressionTier(parsedJSON, progressionTiers['Smithing'], playerCount, characterDict)
 
     #World 2
+    # alchVialsPR = idleon_Alchemy.setAlchemyVialsProgressionTier(parsedJSON, progressionTiers['Alchemy Vials'])
+    # alchP2WList = idleon_Alchemy.setAlchemyP2W(parsedJSON, playerCount)
     alchBubblesPR = idleon_Alchemy.setAlchemyBubblesProgressionTier(parsedJSON, progressionTiers['Alchemy Bubbles'])
-    alchVialsPR = idleon_Alchemy.setAlchemyVialsProgressionTier(parsedJSON, progressionTiers['Alchemy Vials'])
-    alchP2WList = idleon_Alchemy.setAlchemyP2W(parsedJSON, playerCount)
+    alchVials_AdviceSection = idleon_Alchemy.setAlchemyVialsProgressionTier(parsedJSON, progressionTiers['Alchemy Vials'])
+    alchP2W_AdviceSection = idleon_Alchemy.setAlchemyP2W(parsedJSON, playerCount)
     #obolsPR = idleon_Obols.setObolsProgressionTier(parsedJSON, playerCount, progressionTiers['Obols'], fromPublicIEBool)
 
     #World 3
@@ -401,7 +417,7 @@ def main(inputData, runType="web"):
 
     generalList = [[ieLinkList, lastUpdatedTimeString], combatLevelsPR.nTR, consumablesList, gemShopPR.nTR, allGStacksList, maestroHandsListOfLists, cardsList]
     w1list = [stamps_AdviceSection["PR"].nTR, bribes_ActiveSection["PR"].nTR, smithing_AdviceSection["PR"].nTR]  # len(stampPR) = 4, len(bribesPR.nTR) = 2, len(smithingPR.nTR) = 4
-    w2list = [alchBubblesPR.nTR, alchVialsPR.nTR, alchP2WList, emptyList]  # len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 5
+    w2list = [alchBubblesPR.nTR, alchVials_AdviceSection["PR"].nTR, [alchP2W_AdviceSection['Header'], alchP2W_AdviceSection['OldAdvice']], emptyList]  # len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 5
     #w2list = [alchBubblesPR.nTR,alchVialsPR.nTR,alchP2WList, obolsPR.nTR]  # len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 4, len(obolsPR.nTR) = 4
     w3list = [
         ["Construction 3D Printer coming soon!"], consRefineryPR.nTR, consSaltLickPR.nTR, consDeathNotePR.nTR,  # len(consRefineryPR.nTR) = 5, len(consSaltLickPR.nTR) = 2, len(consDeathNotePR.nTR) = 12)
@@ -414,26 +430,32 @@ def main(inputData, runType="web"):
     w7list = [["w7 mechanic 1 placeholder"], ["w7 mechanic 2 placeholder"], ["w7 mechanic 3 placeholder"]]
     w8list = [["w8 mechanic 1 placeholder"], ["w8 mechanic 2 placeholder"], ["w8 mechanic 3 placeholder"]]
     biggoleProgressionTiersDict = {
-        "Combat Levels": combatLevelsPR.cT,
-        "Stamps": stamps_AdviceSection["PR"].cT,
-        "Bribes": bribes_ActiveSection["PR"].cT,
-        "Smithing": smithing_AdviceSection["PR"].cT,
-        "Alchemy-Bubbles": alchBubblesPR.cT,
-        "Alchemy-Vials": alchVialsPR.cT,
-        "Construction Refinery": consRefineryPR.cT,
-        "Construction Salt Lick": consSaltLickPR.cT,
-        "Construction Death Note": consDeathNotePR.cT,
-        "Worship Prayers": worshipPrayersPR.cT
+        Placements.COMBAT_LEVELS: combatLevelsPR.cT,
+        Placements.STAMPS: stamps_AdviceSection["PR"].cT,
+        Placements.BRIBES: bribes_ActiveSection["PR"].cT,
+        Placements.SMITHING: smithing_AdviceSection["PR"].cT,
+        Placements.BUBBLES: alchBubblesPR.cT,
+        Placements.VIALS: alchVials_AdviceSection["PR"].cT,
+        Placements.P2W: alchP2W_AdviceSection['AdviceSection'].pinchy_rating,
+        Placements.REFINERY: consRefineryPR.cT,
+        Placements.SALT_LICK: consSaltLickPR.cT,
+        Placements.DEATH_NOTE: consDeathNotePR.cT,
+        Placements.PRAYERS: worshipPrayersPR.cT
         }
-    pinchyList = idleon_Pinchy.setPinchyList(parsedJSON, playerCount, biggoleProgressionTiersDict)
-    biggoleAdviceList = [generalList, w1list, w2list, w3list, w4list, w5list, w6list, w7list, w8list, pinchyList]
+    pinchy = idleon_Pinchy.generatePinchyWorld(parsedJSON, playerCount, biggoleProgressionTiersDict)
 
     w1Review = AdviceWorld(
         name=WorldName.WORLD1,
         sections=[stamps_AdviceSection["AdviceSection"], bribes_ActiveSection["AdviceSection"], smithing_AdviceSection["AdviceSection"]],
         banner="w1banner.png"
     )
-    biggoleAdviceList.append(w1Review)
+    w2Review = AdviceWorld(
+        name=WorldName.WORLD2,
+        sections=[alchVials_AdviceSection["AdviceSection"], alchP2W_AdviceSection["AdviceSection"]],
+        banner="w2banner.png"
+    )
+
+    biggoleAdviceList = [generalList, w1list, w2list, w3list, w4list, w5list, w6list, w7list, w8list, w2Review, w1Review, pinchy]
 
     if runType == "consoleTest":
         return "Pass"

@@ -1,6 +1,7 @@
 @import url(https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap);
 
-:root {
+:root,
+:root.dark-mode {
     --icon-light-on: url(../imgs/light-on.png);
     --icon-light-off: url(../imgs/light-off.png);
     --drawer-image-width: 30px;
@@ -8,6 +9,19 @@
     --nav-padding: 15px;
     --nav-height: 30px;
 
+    --bg-nav: hsl(208deg, 15%, 22%);
+    --fg-nav-links: hsl(0deg, 0%, 83%);
+    --fg-spreadsheet: hsl(151deg, 42%, 69%);
+    --burger: hsl(60deg, 100%, 50%);
+    --bg-kofi: hsl(195deg, 100%, 54%);
+}
+
+:root.light-mode {
+    --bg-nav: hsl(0deg, 3%, 84%);
+    --fg-nav-links: hsl(205deg, 16%, 27%);
+    --fg-spreadsheet: hsl(151deg, 70.55%, 31.75%);
+    --burger: hsl(46deg, 67%, 35%);
+    --bg-kofi: var(--bg-nav);
 }
 
 nav, .nav-wrapper, nav ul {
@@ -18,94 +32,48 @@ nav, .nav-wrapper, nav ul {
 nav {
     position: sticky;
     top: 0;
+    width: 100%;
     padding: var(--nav-padding);
-    background-color: #303941;
+    background-color: var(--bg-nav);
     border-bottom: 1px solid grey;
     transition: all .5s ease-in-out;
-}
 
-.nav-wrapper {
-    height: var(--nav-height);
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
+    .nav-wrapper {
+        height: var(--nav-height);
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
 
-.nav-wrapper ul {
-    width: 100%;
-    display: flex;
-    justify-content: space-evenly;
-    padding: 10px 5px;
-    list-style-type: none;
-    flex-grow: 2;
-}
+        .nav-links {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 5px;
+            list-style-type: none;
+            flex-grow: 2;
 
-.nav-wrapper li {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.nav-wrapper ul > li > a {
-    display: block;
-    color: lightgray;
-    text-decoration: none;
-    font-size: 1.5rem;
-}
+            & > li {
+                &:first-child {
+                    width: 40px;
+                }
 
-.visuallyHidden {
-    display: none;
-    position: absolute;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    height: 1px; width: 1px;
-    margin: -1px; padding: 0; border: 0;
-}
+                display: flex;
+                align-items: center;
+                justify-content: center;
 
-.hamburger {
-    margin: 0 auto;
-    width: 30px;
-    height: 30px;
-    position: relative;
-}
-
-.hamburger .bar {
-    padding: 0;
-    width: 30px;
-    height: 4px;
-    background-color: yellow;
-    display: block;
-    border-radius: 4px;
-    transition: all .5s ease-in-out;
-    position: absolute;
-}
-
-.bar1 {
-    top: 0;
-}
-
-.bar2,
-.bar3 {
-    top: 13.5px;
-}
-
-.bar3 {
-    right: 0;
-}
-
-.bar4 {
-    bottom: 0;
+                & > a {
+                    display: block;
+                    color: lightgray;
+                    text-decoration: none;
+                    font-size: 1.5rem;
+                }
+            }
+        }
+    }
 }
 
 /* HAMBURGER */
-
-.hamburger .bar1 {
-    transform-origin: 5%;
-}
-
-.hamburger .bar4 {
-    transform-origin: 5%;
-}
 
 #drawer-handle {
     position: fixed;
@@ -115,61 +83,99 @@ nav {
     z-index: 999;
     display: flex;
     align-items: center;
-}
+    cursor: pointer;
 
-#drawer-handle.sidebar-open {
-    left: calc(var(--sidebar-width) - var(--drawer-image-width) - var(--nav-padding));
-}
+    .hamburger {
+        margin: 0 auto;
+        width: 30px;
+        height: 30px;
+        position: relative;
 
-#drawer-handle, #drawer-handle.sidebar-open {
+        .bar {
+            padding: 0;
+            width: 30px;
+            height: 4px;
+            background-color: var(--burger);
+            display: block;
+            border-radius: 4px;
+            transition: all .5s ease-in-out;
+            position: absolute;
+        }
+
+        .bar1 {
+            top: 0;
+        }
+
+        .bar3 {
+            right: 0;
+        }
+
+        .bar4 {
+            bottom: 0;
+        }
+
+        .bar2, .bar3 {
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .bar1, .bar4 {
+            transform-origin: 5%;
+        }
+    }
+
+    &.sidebar-open {
+        left: calc(var(--sidebar-width) - var(--drawer-image-width) - var(--nav-padding));
+
+        .bar1 {
+            transform: rotate(45deg);
+            height: 3px;
+            width: 42px;
+        }
+
+        .bar3 {
+            transform: rotate(45deg);
+            height: 3px;
+            background-color: transparent;
+        }
+        .bar2 {
+            transform: rotate(-45deg);
+            height: 3px;
+            background-color: transparent;
+        }
+
+        .bar4 {
+            transform: rotate(-45deg);
+            height: 3px;
+            width: 42px;
+        }
+    }
+
+    &, &.sidebar-open {
         transition: all .5s ease-out;
-}
-
-#drawer-handle.sidebar-open .bar1 {
-    transform: rotate(45deg);
-    height: 3px;
-    width: 42px;
-}
-
-#drawer-handle.sidebar-open .bar3 {
-    transform: rotate(45deg);
-    height: 3px;
-    background-color: transparent;
-}
-
-#drawer-handle.sidebar-open .bar2 {
-    transform: rotate(-45deg);
-    height: 3px;
-    background-color: transparent;
-}
-
-#drawer-handle.sidebar-open .bar4 {
-    transform: rotate(-45deg);
-    height: 3px;
-    width: 42px;
+    }
 }
 
 #light-switch {
     height: 40px;
-    width: 40px;
+    min-width: 40px;
     border-style: none;
-}
 
-#light-switch.on {
     background-color: transparent;
-    background-image: var(--icon-light-off);
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
+
+    &.on {
+        filter: drop-shadow(0px 0px 2px black);
+        background-image: var(--icon-light-off);
+    }
+
+    &.off {
+        background-image: var(--icon-light-on);
+    }
 }
 
-#light-switch.off {
-    background-color: transparent;
-    background-image: var(--icon-light-on);
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
-}
 #discord, #spreadsheet, #ko-fi {
     display: block;
     height: 34px;
@@ -188,15 +194,77 @@ nav {
     width: 175px;
     background-image: url(../imgs/Google_Sheets.svg);
     background-position: left;
-    color: #8ed1b1;
+    color: var(--fg-spreadsheet);
     font-family: "Open Sans", sans-serif;
+    /*font-size: 2.3rem;*/
     font-optical-sizing: auto;
     font-weight: 500;
 }
 #ko-fi {
     background-image: url(https://storage.ko-fi.com/cdn/kofi4.png?v=3);
+
+    .light-mode & {
+        filter: brightness(95%);
+    }
 }
-.light-mode #spreadsheet {
-    color: #1da261;
-    text-decoration: none;
+
+@media (max-width: 600px) {
+    body {
+        flex-direction: column-reverse;
+    }
+    nav {
+        border-bottom: unset;
+        border-top: 1px solid gray;
+        padding-left: 0;
+        padding-right: 0;
+
+        .nav-wrapper {
+            padding: 0;
+
+            .nav-links {
+                flex-direction: row-reverse;
+                padding: 10px 5px;
+                &.lefty {
+                    flex-direction: row;
+                }
+            }
+        }
+    }
+    #discord, #ko-fi, #spreadsheet {
+        --dim: 20px;
+        height: calc(var(--dim) * 2);
+        width: calc(var(--dim) * 2);
+    }
+    #discord {
+        background-image: url(../imgs/discord-icon-svgrepo-com.svg);
+    }
+    #ko-fi {
+        background-image: url(../imgs/kofi_logo.svg);
+        background-size: cover;
+        background-position: center;
+        border-radius: var(--dim);
+    }
+    #spreadsheet {
+        text-indent: -9999px;
+        background-position: center;
+    }
+
+    #drawer-handle {
+        left: unset;
+        top: unset;
+        bottom: var(--nav-padding);
+        right: calc(((var(--nav-height) + var(--nav-padding) * 2) - var(--drawer-image-height)) / 2);
+
+        &.sidebar-open {
+            left: unset;
+        }
+
+        &.lefty {
+            right: unset;
+            left: var(--nav-padding);
+            &.sidebar-open {
+                right: unset;
+            }
+        }
+    }
 }

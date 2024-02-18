@@ -8,6 +8,9 @@ def pl(_list: list, suffix_singular: str = "", suffix_plural: str = 's') -> str:
     return suffix_plural if len(_list) > 1 else suffix_singular
 
 
+DEFAULT_FORMAT = '%(asctime)s | %(name)s | %(funcName)s:%(lineno)d~ [%(levelname)s] %(message)s'
+
+
 def get_logger(name: str) -> logging.Logger:
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)
@@ -26,7 +29,7 @@ def _try_colorise(logger):
         coloredlogs.DEFAULT_FIELD_STYLES['levelname']['color'] = 'white'
         coloredlogs.install(
             level='DEBUG',
-            fmt='%(asctime)s | %(name)s | %(funcName)s:%(lineno)d~ [%(levelname)s] %(message)s',
+            fmt=DEFAULT_FORMAT,
             stream=sys.stdout,
             logger=logger
         )
@@ -34,8 +37,8 @@ def _try_colorise(logger):
 
 
 def _set_regular_logger(logger: logging.Logger):
-    formatter = logging.Formatter('%(asctime)s | %(name)s | %(funcName)s:%(lineno)d~ [%(levelname)s] %(message)s')
-    handler = logging.StreamHandler(stream=sys.stderr)
+    formatter = logging.Formatter(DEFAULT_FORMAT)
+    handler = logging.StreamHandler(stream=sys.stdout)
     handler.setLevel(logging.DEBUG)
     handler.setFormatter(formatter)
 
