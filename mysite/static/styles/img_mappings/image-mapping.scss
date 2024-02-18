@@ -7,6 +7,7 @@
 @import "skill-icons";
 @import "skulls";
 @import "slab-items";
+@import "storage-items";
 @import "talents";
 @import "vials";
 @import "world-contents";
@@ -2059,8 +2060,10 @@ $character-classes: (
 );
 
 $id-map: map-merge($skill-icons, $id-map);
-$id-map: map-merge($character-classes, $id-map);
+$id-map: map-merge($storage-items, $id-map);
 $id-map: map-merge($vials, $id-map);
+
+$id-map: map-merge($character-classes, $id-map);
 $id-map: map-merge($extra, $id-map);
 
 @each $class, $link in $id-map {

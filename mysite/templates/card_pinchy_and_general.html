@@ -81,44 +81,6 @@
     <div class="content-wrapper">
         <section>
             <h3 class="subheading">
-{#                <img src="{{ img('Candy_1hr.png') }}" alt="1 HR Time Candy">#}
-                <img src="{{ img('Candy_Cosmic.png') }}" alt="Cosmic Time Candy">
-            </h3>
-
-            <div class="advice-wrapper">
-                <strong>Candy AFK Time Remaining</strong>
-                <ul id="candy-totals">
-                    {% for line in htmlInput[0][1][0] %}
-                        {% if line %}
-                            <li class="advice">{{ line }}</li>
-                        {% endif %}
-                    {% endfor %}
-                </ul>
-            </div>
-        </section>
-
-        {% if htmlInput[0][1][1] or htmlInput[0][1][2] %}
-            <section>
-                <h3 class="subheading">
-{#                    <img src="{{ img('Inventory_Peeper_Pouch.png') }}" alt="Peeper Pouch">#}
-                    <img src="{{ img('Storage_Chest_25.png') }}" alt="Storage Chest 25">
-                </h3>
-
-                <div class="advice-wrapper">
-                    <strong>Inventory Bags and Storage Chests</strong>
-                    <ul id="inventory-bags-and-storage-chests">
-                        {% for line in htmlInput[0][2][1:] %}
-                            {% if line %}
-                                <li class="advice">{{ line }}</li>
-                            {% endif %}
-                        {% endfor %}
-                    </ul>
-                </div>
-            </section>
-        {% endif %}
-
-        <section>
-            <h3 class="subheading">
                 <img src="{{ img('gemshop.png') }}" alt="Gem Shop">
             </h3>
 

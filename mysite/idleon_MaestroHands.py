@@ -26,7 +26,7 @@ class Beginner:
         return self.jankiness == 0
 
     @property
-    def is_the_most_pious(self):
+    def should_be_more_pious(self):
         return "Worship" in (e[0] for e in self.janky_skills)
 
 
@@ -59,7 +59,7 @@ def getHandsStatus(inputJSON, playerCount, playerNames):
             beginners_skill_level = skill_levels[beginner.index]
 
             if beginners_skill_level < best_level:
-                logger.info("Adding skill to %s's Right Hand skills because their %s level of %s is less than max of %s", beginner.name, beginners_skill_level, best_level)
+                logger.info("Adding skill to %s's Right Hand skills because their %s level of %s is less than max of %s", beginner.name, skill, beginners_skill_level, best_level)
                 beginner.janky_skills.append((skill, beginners_skill_level, best_level))
     #print("MaestroHands.getHandsStatus~ OUTPUT handsCharactersDict:",handsCharactersDict)
 
@@ -76,7 +76,7 @@ def getHandsStatus(inputJSON, playerCount, playerNames):
         header = f"{main_beginner.fullname} is not the highest level in {tier} Right Hand skills:"
 
     post_string = ""
-    if main_beginner and main_beginner.is_the_most_pious:
+    if main_beginner and main_beginner.should_be_more_pious:
         post_string = "Worship matters moreso for Species Epoch than Right Hand. Don't steal charge away from this character!"
 
     advices = [
