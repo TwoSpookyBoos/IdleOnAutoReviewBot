@@ -63,14 +63,14 @@ def getBagType(inputBagNumber):
         match inputBagNumber:
             case 0 | 1 | 2 | 3 | 4 | 5 | 7:
                 return "Quest"
-            case 6 | 100 | 101 | 110 :
+            case 6 | 100 | 101 | 110:
                 return "Dropped"
             case 104 | 105 | 106 | 107 | 108 | 109:
                 return "Vendor"
             case 20 | 21 | 22 | 23 | 24 | 25:
                 return "GemShop"
     except:
-        return ("Unknown Bag " + inputBagNumber)
+        return "Unknown Bag " + inputBagNumber
 
 def parseInventoryBagsCount(inputJSON, playerCount, playerNames):
     advice_MissingBags = ""
@@ -122,7 +122,7 @@ def parseInventoryBagsCount(inputJSON, playerCount, playerNames):
             "GemShop":gemshopBags,
             "Total":sumBags
             }
-        if sumBags == currentMaxBagsSum:
+        if sumBags >= currentMaxBagsSum:
             playersWithMaxBags.append(player)
         else:
             playersMissingBags.append(player)
@@ -214,10 +214,10 @@ def parseInventoryBagSlots(inputJSON, playerCount, playerNames):
 
 def parseStorageChests(inputJSON):
     advice_MissingChests = ""
-    currentMaxChestsSum = 40
+    currentMaxChestsSum = 44  # As of v2.0
     usedStorageChests = json.loads(inputJSON['InvStorageUsed'])
     #print(len(usedStorageChests), usedStorageChests)
-    if len(usedStorageChests) != currentMaxChestsSum:
+    if len(usedStorageChests) < currentMaxChestsSum:
         advice_MissingChests = "Collect more storage chests: " + str(len(usedStorageChests)) + "/" + str(currentMaxChestsSum)
     return advice_MissingChests
 

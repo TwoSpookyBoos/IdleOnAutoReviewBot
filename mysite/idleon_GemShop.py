@@ -35,8 +35,8 @@ def getGemShopExclusions(inputJSON, playerCount):
     if autoArmLevel >= 5:
         exclusionList.append("Burning Bad Books")
 
-    currentArtifactsCount = 30 #as of v1.91
-    currentArtifactTiers = 3 #as of v1.91
+    currentArtifactsCount = 33  #as of w6 launch
+    currentArtifactTiers = 4  #as of w6 launch
 
     try:
         sum_sailingArtifacts = sum(json.loads(inputJSON["Sailing"])[3])
@@ -74,7 +74,7 @@ def getBonusSectionName(bonusName):
         case 'Chest Sluggo' | 'Divinity Sparkie' | 'Golden Sprinkler' | 'Lava Sprouts':
             return "W5"
 
-        case 'W6-Placeholder1' | 'W6-Placeholder2' | 'W6-Placeholder3' | 'W6-Placeholder4' | 'W6-Placeholder5' | 'W6-Placeholder6' | 'W6-Placeholder7' | 'W6-Placeholder8':
+        case 'Plot of Land' | 'Pristine Charm' | 'Shroom Familiar' | 'Sand of Time' | 'Instagrow Generator' | 'Life Refill' | 'Compost Bag' | 'Summoner Stone':
             return "W6"
 
         case 'FOMO-1' | 'FOMO-2' | 'FOMO-3' | 'FOMO-4' | 'FOMO-5' | 'FOMO-6' | 'FOMO-7' | 'FOMO-8':
@@ -86,74 +86,75 @@ def getGemShopDict(inputJSON):
     parsedList = json.loads(inputJSON["GemItemsPurchased"])
     gemShopDict = {
         #Inventory and Storage
-            'Item Backpack Space': 0,
-            'Storage Chest Space': 0,
-            'Carry Capacity': 0,
-            'Food Slot': 0,
-            'More Storage Space': 0,
-            'Card Presets': 0,
+        'Item Backpack Space': 0,
+        'Storage Chest Space': 0,
+        'Carry Capacity': 0,
+        'Food Slot': 0,
+        'More Storage Space': 0,
+        'Card Presets': 0,
 
-            #Dailies N' Resets
-            'Daily Teleports': 0,
-            'Daily Minigame Plays': 0,
+        #Dailies N' Resets
+        'Daily Teleports': 0,
+        'Daily Minigame Plays': 0,
 
-            #Cards
-            'Extra Card Slot': 0,
+        #Cards
+        'Extra Card Slot': 0,
 
-            #Goods & Services
-            'Weekly Dungeon Boosters': 0,
+        #Goods & Services
+        'Weekly Dungeon Boosters': 0,
 
-            #World 1&2
-            'Infinity Hammer': 0,
-            'Brimstone Forge Slot': 0,
-            'Ivory Bubble Cauldrons': 0,
-            'Bleach Liquid Cauldrons': 0,
-            'Obol Storage Space': 0,
-            'Sigil Supercharge': 0,
+        #World 1&2
+        'Infinity Hammer': 0,
+        'Brimstone Forge Slot': 0,
+        'Ivory Bubble Cauldrons': 0,
+        'Bleach Liquid Cauldrons': 0,
+        'Obol Storage Space': 0,
+        'Sigil Supercharge': 0,
 
-            #World 3
-            'Crystal 3d Printer': 0,
-            'More Sample Spaces': 0,
-            'Burning Bad Books': 0,
-            'Prayer Slots': 0,
-            'Zen Cogs': 0,
-            'Cog Inventory Space': 0,
-            'Tower Building Slots': 0,
-            'Fluorescent Flaggies': 0,
+        #World 3
+        'Crystal 3d Printer': 0,
+        'More Sample Spaces': 0,
+        'Burning Bad Books': 0,
+        'Prayer Slots': 0,
+        'Zen Cogs': 0,
+        'Cog Inventory Space': 0,
+        'Tower Building Slots': 0,
+        'Fluorescent Flaggies': 0,
 
-            #World 4
-            'Royal Egg Cap': 0,
-            'Richelin Kitchen': 0,
-            'Souped Up Tube': 0,
-            'Pet Storage': 0,
-            'Fenceyard Space': 0,
+        #World 4
+        'Royal Egg Cap': 0,
+        'Richelin Kitchen': 0,
+        'Souped Up Tube': 0,
+        'Pet Storage': 0,
+        'Fenceyard Space': 0,
 
-            #World 5
-            'Chest Sluggo': 0,
-            'Divinity Sparkie': 0,
-            'Golden Sprinkler': 0,
-            'Lava Sprouts': 0,
+        #World 5
+        'Chest Sluggo': 0,
+        'Divinity Sparkie': 0,
+        'Golden Sprinkler': 0,
+        'Lava Sprouts': 0,
 
-            #World 6
-            'W6-Placeholder1': 0,
-            'W6-Placeholder2': 0,
-            'W6-Placeholder3': 0,
-            'W6-Placeholder4': 0,
-            'W6-Placeholder5': 0,
-            'W6-Placeholder6': 0,
-            'W6-Placeholder7': 0,
-            'W6-Placeholder8': 0,
+        #World 6
+        'W6-Placeholder1': 0,  # TODO: DELETE ME AFTER UPDATING GEMSHOP RECOMMENDATIONS
+        'Plot of Land': 0,
+        'Pristine Charm': 0,
+        'Shroom Familiar': 0,
+        'Sand of Time': 0,
+        'Instagrow Generator': 0,
+        'Life Refill': 0,
+        'Compost Bag': 0,
+        'Summoner Stone': 0,
 
-            #Fomo
-            'FOMO-1': 0,
-            'FOMO-2': 0,
-            'FOMO-3': 0,
-            'FOMO-4': 0,
-            'FOMO-5': 0,
-            'FOMO-6': 0,
-            'FOMO-7': 0,
-            'FOMO-8': 0
-            } #Default 0s
+        #Fomo
+        'FOMO-1': 0,
+        'FOMO-2': 0,
+        'FOMO-3': 0,
+        'FOMO-4': 0,
+        'FOMO-5': 0,
+        'FOMO-6': 0,
+        'FOMO-7': 0,
+        'FOMO-8': 0
+    }  # Default 0s
     try:
         gemShopDict = {
             #Inventory and Storage
@@ -206,14 +207,14 @@ def getGemShopDict(inputJSON):
             'Lava Sprouts': parsedList[133],
 
             #World 6
-            'W6-Placeholder1': 0,
-            'W6-Placeholder2': 0,
-            'W6-Placeholder3': 0,
-            'W6-Placeholder4': 0,
-            'W6-Placeholder5': 0,
-            'W6-Placeholder6': 0,
-            'W6-Placeholder7': 0,
-            'W6-Placeholder8': 0,
+            'Plot of Land': parsedList[135],
+            'Pristine Charm': parsedList[136],
+            'Shroom Familiar': parsedList[137],
+            'Sand of Time': parsedList[138],
+            'Instagrow Generator': parsedList[139],
+            'Life Refill': parsedList[140],
+            'Compost Bag': parsedList[141],
+            'Summoner Stone': parsedList[142],
 
             #Fomo
             'FOMO-1': parsedList[87],
@@ -224,9 +225,9 @@ def getGemShopDict(inputJSON):
             'FOMO-6': parsedList[92],
             'FOMO-7': parsedList[93],
             'FOMO-8': parsedList[94]
-            }
+        }
     except Exception as reason:
-        print("GemShop~ EXCEPTION Unable to parse Gem Shop: " , reason)
+        print("GemShop~ EXCEPTION Unable to parse Gem Shop: ", reason)
     #print(gemShopDict)
     return gemShopDict
 
@@ -259,28 +260,28 @@ def setGemShopProgressionTier(inputJSON, progressionTiers, playerCount):
     #progressionTiers[tier][2] = dict recommendedPurchases
     #progressionTiers[tier][3] = str notes
     for recommendedPurchase in progressionTiers[1][2]:
-        if progressionTiers[1][2][recommendedPurchase] > gemShopDict[recommendedPurchase]:
+        if progressionTiers[1][2][recommendedPurchase] > float(gemShopDict[recommendedPurchase]):
             advice_SS += getBonusSectionName(recommendedPurchase) + "-" + str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[1][2][recommendedPurchase]) + "), "
     for recommendedPurchase in progressionTiers[2][2]:
-        if progressionTiers[2][2][recommendedPurchase] > gemShopDict[recommendedPurchase]:
+        if progressionTiers[2][2][recommendedPurchase] > float(gemShopDict[recommendedPurchase]):
             advice_S += getBonusSectionName(recommendedPurchase) + "-" + str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[2][2][recommendedPurchase]) + "), "
     for recommendedPurchase in progressionTiers[3][2]:
-        if progressionTiers[3][2][recommendedPurchase] > gemShopDict[recommendedPurchase]:
+        if progressionTiers[3][2][recommendedPurchase] > float(gemShopDict[recommendedPurchase]):
             advice_A += getBonusSectionName(recommendedPurchase) + "-" + str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[3][2][recommendedPurchase]) + "), "
     for recommendedPurchase in progressionTiers[4][2]:
-        if progressionTiers[4][2][recommendedPurchase] > gemShopDict[recommendedPurchase]:
+        if progressionTiers[4][2][recommendedPurchase] > float(gemShopDict[recommendedPurchase]):
             advice_B += getBonusSectionName(recommendedPurchase) + "-" + str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[4][2][recommendedPurchase]) + "), "
     for recommendedPurchase in progressionTiers[5][2]:
-        if progressionTiers[5][2][recommendedPurchase] > gemShopDict[recommendedPurchase]:
+        if progressionTiers[5][2][recommendedPurchase] > float(gemShopDict[recommendedPurchase]):
             advice_C += getBonusSectionName(recommendedPurchase) + "-" + str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[5][2][recommendedPurchase]) + "), "
     for recommendedPurchase in progressionTiers[6][2]:
-        if progressionTiers[6][2][recommendedPurchase] > gemShopDict[recommendedPurchase]:
+        if progressionTiers[6][2][recommendedPurchase] > float(gemShopDict[recommendedPurchase]):
             advice_D += getBonusSectionName(recommendedPurchase) + "-" + str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[6][2][recommendedPurchase]) + "), "
     for recommendedPurchase in progressionTiers[7][2]:
-        if progressionTiers[7][2][recommendedPurchase] > gemShopDict[recommendedPurchase]:
+        if progressionTiers[7][2][recommendedPurchase] > float(gemShopDict[recommendedPurchase]):
             advice_PracticalMax += getBonusSectionName(recommendedPurchase) + "-" + str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[7][2][recommendedPurchase]) + "), "
     for recommendedPurchase in progressionTiers[8][2]:
-        if progressionTiers[8][2][recommendedPurchase] > gemShopDict[recommendedPurchase]:
+        if progressionTiers[8][2][recommendedPurchase] > float(gemShopDict[recommendedPurchase]):
             advice_TrueMax += getBonusSectionName(recommendedPurchase) + "-" + str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[8][2][recommendedPurchase]) + "), "
     #Fix up advice statements
     if advice_SS != "":

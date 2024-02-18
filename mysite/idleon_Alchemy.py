@@ -473,19 +473,18 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
         header="Best Vial tier met: Not Yet Evaluated. Recommended vial actions:",
         picture="Alchemy_Vial-level-1.png"
     )
-
-    alchemyVialsDict = {}
+    
     try:
         alchemyVialsDict = inputJSON["CauldronInfo"][4]
         del alchemyVialsDict["length"]
     except Exception as reason:
-        print("Alchemy~ EXCEPTION Unable to retrieve alchemyVialsDict from JSON:", reason)
-    #print("Alchemy~ OUTPUT alchemyVialsDict:",len(alchemyVialsDict), alchemyVialsDict)
+        alchemyVialsDict = {}
+        print("Alchemy~ EXCEPTION Unable to retrieve alchemyVialsDict from JSON. Creating an empty Dict. Reason:", reason)
 
     try:
         highestCompletedRift = inputJSON["Rift"][0]
     except Exception as reason:
-        print("Alchemy~ EXCEPTION Unable to retrieve highest rift level.", reason)
+        print("Alchemy~ EXCEPTION Unable to retrieve highest rift level. Defaulting to 0. Reason:", reason)
         highestCompletedRift = 0
 
     virileVialsList = []
@@ -821,8 +820,8 @@ def setAlchemyP2W(inputJSON, playerCount):
     p2wSum = 0
     liquidCauldronsUnlocked = 1
 
-    if highestAlchemyLevel >= 120:
-        liquidCauldronsUnlocked = 4  # includes Toxic HG
+    if highestAlchemyLevel >= 80:
+        liquidCauldronsUnlocked = 4 #includes Toxic HG
     elif highestAlchemyLevel >= 35:
         liquidCauldronsUnlocked = 3  # includes Trench Seawater
     elif liquidCauldronsUnlocked >= 20:

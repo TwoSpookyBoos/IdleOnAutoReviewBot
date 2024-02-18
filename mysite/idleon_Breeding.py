@@ -12,8 +12,8 @@ def getShinyLevelFromDays(days):
     return highestExceeded
 
 def getShinyExclusions(inputJSON):
-    currentArtifactsCount = 30
-    currentArtifactTiers = 3
+    currentArtifactsCount = 33  # as of w6 launch
+    currentArtifactTiers = 4  # as of w6 launch
     shinyExclusionsDict = {
         "Exclude-InfiniteStarSigns": True,
         "Exclude-ArtifactChance": False
@@ -40,14 +40,14 @@ def getShinyExclusions(inputJSON):
 def getTerritoryName(index):
     territoryNames = ["", "Grasslands", "Jungle", "Encroaching Forest", "Tree Interior", "Stinky Sewers", "Desert Oasis", "Beach Docks", "Coarse Mountains",
         "Twilight Desert", "The Crypt", "Frosty Peaks", "Tundra Outback", "Crystal Caverns", "Pristalle Lake", "Nebulon Mantle", "Starfield Skies",
-        "Shores of Eternity", "Molten Bay", "Smokey Lake", "Wurm Catacombs"]
+        "Shores of Eternity", "Molten Bay", "Smokey Lake", "Wurm Catacombs", "Spirit Fields", "Bamboo Forest", "Lullaby Airways", "W6-Spice4"]  #TODO
     try:
         return territoryNames[int(index)]
     except:
         return "Unknown Territory" + str(index)
 
 def parseJSONtoBreedingDict(inputJSON):
-    maxNumberOfTerritories = 20 # as of v1.91
+    maxNumberOfTerritories = 24  # as of w6 launch
     indexFirstTerritoryAssignedPet = 28
     rawBreedingList: list = []
     try:
@@ -353,8 +353,8 @@ def setBreedingProgressionTier(inputJSON, progressionTiers):
             "Best IMO: Faster Shiny Pet Lv Up Rate, Bonuses from All Meals, Base Efficiency for All Skills, Base Critter Per Trap",
             "Second best: Drop Rate, Multikill Per Tier, Total Damage, Base WIS, Base STR, Base AGI",
             "Futureproof: W6...?, Infinite Star Signs",
-            "Middle of the pack, helpful to Lv5 at least: Base LUK, Faster Refinery Speed, Higher Artifact Find Chance",
-            "Meh: Lower Minimum Travel Time for Sailing, Sail Captain EXP Gain, Skill EXP",
+            "Middle of the pack, helpful to Lv5 at least: Base LUK, Faster Refinery Speed, Higher Artifact Find Chance, Star Talent Pts",
+            "Meh: Lower Minimum Travel Time for Sailing, Sail Captain EXP Gain, Skill EXP, Tab 1, 2, 3, 4 Talent Pts",
             "Ignorable: Class EXP, Line Width in Lab"]
     else:
         if advice_UnlockedTerritories != "":

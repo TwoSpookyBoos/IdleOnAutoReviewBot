@@ -178,9 +178,38 @@ def getEnemyNameFromMap(inputMap):
             return "Crawlers"
         case "The Worm Nest":
             return "Tremor Wurms"
+        case "Gooble Goop Creek":
+            return "Sprout Spirit"
+        case "Picnic Bridgeways":
+            return "Ricecake"
+        case "Irrigation Station":
+            return "River Spirit"
+        case "Troll Playground":
+            return "Baby Troll"
+        case "Edge of the Valley":
+            return "Woodlin Spirit"
+        case "Bamboo Laboredge":
+            return "Bamboo Spirit"
+        case "Lightway Path":
+            return "Lantern Spirit"
+        case "Troll Broodnest":
+            return "Mama Troll"
+        case "Above the Clouds":
+            return "Leek Spirit"
+        case "Sleepy Skyline":
+            return "Ceramic Spirit"
+        case "Dozey Dogpark":
+            return "Skydoggie Spirit"
+        case "Yolkrock Basin":
+            return "Royal Egg"
+        case "Chieftain Stairway":
+            return "Minichief Spirit"
+        case "Emporer's Castle Doorstep":
+            return "Samurai Guardian"
+
         #Default
         case _:
-            return ("UnknownEnemy"+str(inputMap))
+            return "UnknownEnemy"+str(inputMap)
 
 def getApocalypseCharactersDict(inputJSON, playerCount, playerNames):
     #get classes, find Barbarian and BB
@@ -217,89 +246,105 @@ def getDeathNoteKills(inputJSON, playerCount, playerNames):
     #[6] = int Count to next skull
     #[7] = float Percent to next skull
     apocDeathNoteDict = {
-        'The Roots':[0,0,'Easy cleanup', 'Easy Cleanup', 'Medium Cleanup',0,0,0.00],
-        'The Office':[0,0,'Easy cleanup', 'Easy Cleanup', 'Easy Cleanup',0,0,0.00],
-        "Meel's Crypt":[0,0,'Easy cleanup', 'Difficult Cleanup', 'Difficult Cleanup',0,0,0.00],
-        'Mummy Memorial':[0,0,'Difficult Cleanup', 'Difficult Cleanup', 'Difficult Cleanup',0,0,0.00],
-        'Equinox Valley':[0,0,'Easy cleanup', 'Medium Cleanup', 'Difficult Cleanup',0,0,0.00],
-        'The Rift':[100,0,'Easy cleanup', 'Medium Cleanup', 'Medium Cleanup',0,0,0.00],
+        'The Roots': [0,0,'Easy cleanup', 'Easy Cleanup', 'Medium Cleanup',0,0,0.00],
+        'The Office': [0,0,'Easy cleanup', 'Easy Cleanup', 'Easy Cleanup',0,0,0.00],
+        "Meel's Crypt": [0,0,'Easy cleanup', 'Difficult Cleanup', 'Difficult Cleanup',0,0,0.00],
+        'Mummy Memorial': [0,0,'Difficult Cleanup', 'Difficult Cleanup', 'Difficult Cleanup',0,0,0.00],
+        'Equinox Valley': [0,0,'Easy cleanup', 'Medium Cleanup', 'Difficult Cleanup',0,0,0.00],
+        'The Rift': [100,0,'Easy cleanup', 'Medium Cleanup', 'Medium Cleanup',0,0,0.00],
         }
     w1DeathNoteDict = {
-        'Spore Meadows':[11,0,'Basic W1 Enemies', 'Basic W1 Enemies', 'Basic W1 Enemies',0,0,0.00],
-        'Froggy Fields':[15,0,'Basic W1 Enemies', 'Basic W1 Enemies', 'Basic W1 Enemies',0,0,0.00],
-        'Valley of the Beans':[40,0,'Basic W1 Enemies', 'Basic W1 Enemies', 'Basic W1 Enemies',0,0,0.00],
-        'Birch Enclave':[0,0,'Basic W1 Enemies', 'Basic W1 Enemies', 'Basic W1 Enemies',0,0,0.00],
-        'Jungle Perimeter':[60,0,'Basic W1 Enemies', 'Basic W1 Enemies', 'Basic W1 Enemies',0,0,0.00],
-        'The Base of the Bark':[2500,0,'Basic W1 Enemies', 'Basic W1 Enemies', 'Basic W1 Enemies',0,0,0.00],
-        'Hollowed Trunk':[5000,0,'Basic W1 Enemies', 'Basic W1 Enemies', 'Basic W1 Enemies',0,0,0.00],
-        'Where the Branches End':[0,0,'Basic W1 Enemies', 'Basic W1 Enemies', 'Basic W1 Enemies',0,0,0.00],
-        'Winding Willows':[125,0,'Basic W1 Enemies', 'Basic W1 Enemies', 'Basic W1 Enemies',0,0,0.00],
-        'Vegetable Patch':[100,0,'Basic W1 Enemies', 'Basic W1 Enemies', 'Basic W1 Enemies',0,0,0.00],
-        'Forest Outskirts':[150,0,'Basic W1 Enemies', 'Basic W1 Enemies', 'Basic W1 Enemies',0,0,0.00],
-        'Encroaching Forest Villa':[30,0,'Basic W1 Enemies', 'Basic W1 Enemies', 'Basic W1 Enemies',0,0,0.00],
-        'Tucked Away':[0,0,'Basic W1 Enemies', 'Basic W1 Enemies', 'Basic W1 Enemies',0,0,0.00],
-        'Poopy Sewers':[20000,0,'Basic W1 Enemies', 'Basic W1 Enemies', 'Basic W1 Enemies',0,0,0.00],
-        'Rats Nest':[35000,0,'Basic W1 Enemies', 'Basic W1 Enemies', 'Basic W1 Enemies',0,0,0.00],
+        'Spore Meadows': [11,0,'Basic W1 Enemies', 'Basic W1 Enemies', 'Basic W1 Enemies',0,0,0.00],
+        'Froggy Fields': [15,0,'Basic W1 Enemies', 'Basic W1 Enemies', 'Basic W1 Enemies',0,0,0.00],
+        'Valley of the Beans': [40,0,'Basic W1 Enemies', 'Basic W1 Enemies', 'Basic W1 Enemies',0,0,0.00],
+        'Birch Enclave': [0,0,'Basic W1 Enemies', 'Basic W1 Enemies', 'Basic W1 Enemies',0,0,0.00],
+        'Jungle Perimeter': [60,0,'Basic W1 Enemies', 'Basic W1 Enemies', 'Basic W1 Enemies',0,0,0.00],
+        'The Base of the Bark': [2500,0,'Basic W1 Enemies', 'Basic W1 Enemies', 'Basic W1 Enemies',0,0,0.00],
+        'Hollowed Trunk': [5000,0,'Basic W1 Enemies', 'Basic W1 Enemies', 'Basic W1 Enemies',0,0,0.00],
+        'Where the Branches End': [0,0,'Basic W1 Enemies', 'Basic W1 Enemies', 'Basic W1 Enemies',0,0,0.00],
+        'Winding Willows': [125,0,'Basic W1 Enemies', 'Basic W1 Enemies', 'Basic W1 Enemies',0,0,0.00],
+        'Vegetable Patch': [100,0,'Basic W1 Enemies', 'Basic W1 Enemies', 'Basic W1 Enemies',0,0,0.00],
+        'Forest Outskirts': [150,0,'Basic W1 Enemies', 'Basic W1 Enemies', 'Basic W1 Enemies',0,0,0.00],
+        'Encroaching Forest Villa': [30,0,'Basic W1 Enemies', 'Basic W1 Enemies', 'Basic W1 Enemies',0,0,0.00],
+        'Tucked Away': [0,0,'Basic W1 Enemies', 'Basic W1 Enemies', 'Basic W1 Enemies',0,0,0.00],
+        'Poopy Sewers': [20000,0,'Basic W1 Enemies', 'Basic W1 Enemies', 'Basic W1 Enemies',0,0,0.00],
+        'Rats Nest': [35000,0,'Basic W1 Enemies', 'Basic W1 Enemies', 'Basic W1 Enemies',0,0,0.00],
         }
     w2DeathNoteDict = {
-        'Jar Bridge':[250,0,'Basic W2 Enemies', 'Basic W2 Enemies', 'Basic W2 Enemies',0,0,0.00],
-        'The Mimic Hole':[600,0,'Basic W2 Enemies', 'Basic W2 Enemies', 'Basic W2 Enemies',0,0,0.00],
-        'Dessert Dunes':[1000,0,'Basic W2 Enemies', 'Basic W2 Enemies', 'Basic W2 Enemies',0,0,0.00],
-        'The Grandioso Canyon':[1200,0,'Basic W2 Enemies', 'Basic W2 Enemies', 'Basic W2 Enemies',0,0,0.00],
-        'Shifty Sandbox':[1600,0,'Basic W2 Enemies', 'Basic W2 Enemies', 'Basic W2 Enemies',0,0,0.00],
-        'Pincer Plateau':[2000,0,'Basic W2 Enemies', 'Basic W2 Enemies', 'Basic W2 Enemies',0,0,0.00],
-        'Slamabam Straightaway':[2500,0,'Basic W2 Enemies', 'Basic W2 Enemies', 'Basic W2 Enemies',0,0,0.00],
-        'The Ring':[3000,0,'Basic W2 Enemies', 'Basic W2 Enemies', 'Basic W2 Enemies',0,0,0.00],
-        'Up Up Down Down':[4000,0,'Basic W2 Enemies', 'Basic W2 Enemies', 'Basic W2 Enemies',0,0,0.00],
-        'Sands of Time':[5000,0,'Basic W2 Enemies', 'Basic W2 Enemies', 'Basic W2 Enemies',0,0,0.00],
-        'Djonnuttown':[1,0,'Basic W2 Enemies', 'Basic W2 Enemies', 'Basic W2 Enemies',0,0,0.00],
+        'Jar Bridge': [250,0,'Basic W2 Enemies', 'Basic W2 Enemies', 'Basic W2 Enemies',0,0,0.00],
+        'The Mimic Hole': [600,0,'Basic W2 Enemies', 'Basic W2 Enemies', 'Basic W2 Enemies',0,0,0.00],
+        'Dessert Dunes': [1000,0,'Basic W2 Enemies', 'Basic W2 Enemies', 'Basic W2 Enemies',0,0,0.00],
+        'The Grandioso Canyon': [1200,0,'Basic W2 Enemies', 'Basic W2 Enemies', 'Basic W2 Enemies',0,0,0.00],
+        'Shifty Sandbox': [1600,0,'Basic W2 Enemies', 'Basic W2 Enemies', 'Basic W2 Enemies',0,0,0.00],
+        'Pincer Plateau': [2000,0,'Basic W2 Enemies', 'Basic W2 Enemies', 'Basic W2 Enemies',0,0,0.00],
+        'Slamabam Straightaway': [2500,0,'Basic W2 Enemies', 'Basic W2 Enemies', 'Basic W2 Enemies',0,0,0.00],
+        'The Ring': [3000,0,'Basic W2 Enemies', 'Basic W2 Enemies', 'Basic W2 Enemies',0,0,0.00],
+        'Up Up Down Down': [4000,0,'Basic W2 Enemies', 'Basic W2 Enemies', 'Basic W2 Enemies',0,0,0.00],
+        'Sands of Time': [5000,0,'Basic W2 Enemies', 'Basic W2 Enemies', 'Basic W2 Enemies',0,0,0.00],
+        'Djonnuttown': [1,0,'Basic W2 Enemies', 'Basic W2 Enemies', 'Basic W2 Enemies',0,0,0.00],
         }
     w3DeathNoteDict = {
-        'Steep Sheep Ledge':[1000,0,'Basic W3 Enemies', 'Basic W3 Enemies', 'Basic W3 Enemies',0,0,0.00],
-        'Snowfield Outskirts':[2000,0,'Basic W3 Enemies', 'Basic W3 Enemies', 'Basic W3 Enemies',0,0,0.00],
-        'The Stache Split':[3000,0,'Basic W3 Enemies', 'Basic W3 Enemies', 'Basic W3 Enemies',0,0,0.00],
-        'Refrigeration Station':[4000,0,'Basic W3 Enemies', 'Basic W3 Enemies', 'Basic W3 Enemies',0,0,0.00],
-        'Mamooooth Mountain':[6000,0,'Basic W3 Enemies', 'Basic W3 Enemies', 'Basic W3 Enemies',0,0,0.00],
-        "Rollin' Tundra":[8000,0,'Basic W3 Enemies', 'Basic W3 Enemies', 'Basic W3 Enemies',0,0,0.00],
-        'Signature Slopes':[11000,0,'Basic W3 Enemies', 'Basic W3 Enemies', 'Basic W3 Enemies',0,0,0.00],
-        'Thermonuclear Climb':[15000,0,'Basic W3 Enemies', 'Basic W3 Enemies', 'Basic W3 Enemies',0,0,0.00],
-        'Waterlogged Entrance':[18000,0,'Basic W3 Enemies', 'Basic W3 Enemies', 'Basic W3 Enemies',0,0,0.00],
-        'Cryo Catacombs':[22000,0,'Basic W3 Enemies', 'Basic W3 Enemies', 'Basic W3 Enemies',0,0,0.00],
-        'Overpass of Sound':[35000,0,'Basic W3 Enemies', 'Basic W3 Enemies', 'Basic W3 Enemies',0,0,0.00],
-        'Crystal Basecamp':[120000,0,'Basic W3 Enemies', 'Basic W3 Enemies', 'Basic W3 Enemies',0,0,0.00],
-        'Wam Wonderland':[250000,0,'Basic W3 Enemies', 'Basic W3 Enemies', 'Basic W3 Enemies',0,0,0.00],
-        'Hell Hath Frozen Over':[0,0,'Basic W3 Enemies', 'Basic W3 Enemies', 'Basic W3 Enemies',0,0,0.00],
+        'Steep Sheep Ledge': [1000,0,'Basic W3 Enemies', 'Basic W3 Enemies', 'Basic W3 Enemies',0,0,0.00],
+        'Snowfield Outskirts': [2000,0,'Basic W3 Enemies', 'Basic W3 Enemies', 'Basic W3 Enemies',0,0,0.00],
+        'The Stache Split': [3000,0,'Basic W3 Enemies', 'Basic W3 Enemies', 'Basic W3 Enemies',0,0,0.00],
+        'Refrigeration Station': [4000,0,'Basic W3 Enemies', 'Basic W3 Enemies', 'Basic W3 Enemies',0,0,0.00],
+        'Mamooooth Mountain': [6000,0,'Basic W3 Enemies', 'Basic W3 Enemies', 'Basic W3 Enemies',0,0,0.00],
+        "Rollin' Tundra": [8000,0,'Basic W3 Enemies', 'Basic W3 Enemies', 'Basic W3 Enemies',0,0,0.00],
+        'Signature Slopes': [11000,0,'Basic W3 Enemies', 'Basic W3 Enemies', 'Basic W3 Enemies',0,0,0.00],
+        'Thermonuclear Climb': [15000,0,'Basic W3 Enemies', 'Basic W3 Enemies', 'Basic W3 Enemies',0,0,0.00],
+        'Waterlogged Entrance': [18000,0,'Basic W3 Enemies', 'Basic W3 Enemies', 'Basic W3 Enemies',0,0,0.00],
+        'Cryo Catacombs': [22000,0,'Basic W3 Enemies', 'Basic W3 Enemies', 'Basic W3 Enemies',0,0,0.00],
+        'Overpass of Sound': [35000,0,'Basic W3 Enemies', 'Basic W3 Enemies', 'Basic W3 Enemies',0,0,0.00],
+        'Crystal Basecamp': [120000,0,'Basic W3 Enemies', 'Basic W3 Enemies', 'Basic W3 Enemies',0,0,0.00],
+        'Wam Wonderland': [250000,0,'Basic W3 Enemies', 'Basic W3 Enemies', 'Basic W3 Enemies',0,0,0.00],
+        'Hell Hath Frozen Over': [0,0,'Basic W3 Enemies', 'Basic W3 Enemies', 'Basic W3 Enemies',0,0,0.00],
         }
     w4DeathNoteDict = {
-        'Spaceway Raceway':[5000,0,'Basic W4 Enemies', 'Basic W4 Enemies', 'Basic W4 Enemies',0,0,0.00],
-        'TV Outpost':[12000,0,'Basic W4 Enemies', 'Basic W4 Enemies', 'Basic W4 Enemies',0,0,0.00],
-        'Donut Drive-In':[18000,0,'Basic W4 Enemies', 'Basic W4 Enemies', 'Basic W4 Enemies',0,0,0.00],
-        'Outskirts of Fallstar Isle':[25000,0,'Basic W4 Enemies', 'Basic W4 Enemies', 'Basic W4 Enemies',0,0,0.00],
-        'Mountainous Deugh':[40000,0,'Basic W4 Enemies', 'Basic W4 Enemies', 'Basic W4 Enemies',0,0,0.00],
-        'Wurm Highway':[60000,0,'Basic W4 Enemies', 'Basic W4 Enemies', 'Basic W4 Enemies',0,0,0.00],
-        'Jelly Cube Bridge':[90000,0,'Basic W4 Enemies', 'Basic W4 Enemies', 'Basic W4 Enemies',0,0,0.00],
-        'Cocoa Tunnel':[120000,0,'Basic W4 Enemies', 'Basic W4 Enemies', 'Basic W4 Enemies',0,0,0.00],
-        'Standstill Plains':[150000,0,'Basic W4 Enemies', 'Basic W4 Enemies', 'Basic W4 Enemies',0,0,0.00],
-        'Shelled Shores':[190000,0,'Basic W4 Enemies', 'Basic W4 Enemies', 'Basic W4 Enemies',0,0,0.00],
-        'The Untraveled Octopath':[250000,0,'Basic W4 Enemies', 'Basic W4 Enemies', 'Basic W4 Enemies',0,0,0.00],
-        'Flamboyant Bayou':[300000,0,'Basic W4 Enemies', 'Basic W4 Enemies', 'Basic W4 Enemies',0,0,0.00],
-        'Enclave of Eyes':[350000,0,'Basic W4 Enemies', 'Basic W4 Enemies', 'Basic W4 Enemies',0,0,0.00],
+        'Spaceway Raceway': [5000,0,'Basic W4 Enemies', 'Basic W4 Enemies', 'Basic W4 Enemies',0,0,0.00],
+        'TV Outpost': [12000,0,'Basic W4 Enemies', 'Basic W4 Enemies', 'Basic W4 Enemies',0,0,0.00],
+        'Donut Drive-In': [18000,0,'Basic W4 Enemies', 'Basic W4 Enemies', 'Basic W4 Enemies',0,0,0.00],
+        'Outskirts of Fallstar Isle': [25000,0,'Basic W4 Enemies', 'Basic W4 Enemies', 'Basic W4 Enemies',0,0,0.00],
+        'Mountainous Deugh': [40000,0,'Basic W4 Enemies', 'Basic W4 Enemies', 'Basic W4 Enemies',0,0,0.00],
+        'Wurm Highway': [60000,0,'Basic W4 Enemies', 'Basic W4 Enemies', 'Basic W4 Enemies',0,0,0.00],
+        'Jelly Cube Bridge': [90000,0,'Basic W4 Enemies', 'Basic W4 Enemies', 'Basic W4 Enemies',0,0,0.00],
+        'Cocoa Tunnel': [120000,0,'Basic W4 Enemies', 'Basic W4 Enemies', 'Basic W4 Enemies',0,0,0.00],
+        'Standstill Plains': [150000,0,'Basic W4 Enemies', 'Basic W4 Enemies', 'Basic W4 Enemies',0,0,0.00],
+        'Shelled Shores': [190000,0,'Basic W4 Enemies', 'Basic W4 Enemies', 'Basic W4 Enemies',0,0,0.00],
+        'The Untraveled Octopath': [250000,0,'Basic W4 Enemies', 'Basic W4 Enemies', 'Basic W4 Enemies',0,0,0.00],
+        'Flamboyant Bayou': [300000,0,'Basic W4 Enemies', 'Basic W4 Enemies', 'Basic W4 Enemies',0,0,0.00],
+        'Enclave of Eyes': [350000,0,'Basic W4 Enemies', 'Basic W4 Enemies', 'Basic W4 Enemies',0,0,0.00],
         }
     w5DeathNoteDict = {
-        'Naut Sake Perimeter':[25000,0,'Basic W5 Enemies', 'Basic W5 Enemies', 'Basic W5 Enemies',0,0,0.00],
-        'Niagrilled Falls':[30000,0,'Basic W5 Enemies', 'Basic W5 Enemies', 'Basic W5 Enemies',0,0,0.00],
-        'The Killer Roundabout':[50000,0,'Basic W5 Enemies', 'Basic W5 Enemies', 'Basic W5 Enemies',0,0,0.00],
-        'Cracker Jack Lake':[75000,0,'Basic W5 Enemies', 'Basic W5 Enemies', 'Basic W5 Enemies',0,0,0.00],
-        'The Great Molehill':[125000,0,'Basic W5 Enemies', 'Basic W5 Enemies', 'Basic W5 Enemies',0,0,0.00],
-        'Erruption River':[300000,0,'Basic W5 Enemies', 'Basic W5 Enemies', 'Basic W5 Enemies',0,0,0.00],
-        'Mount Doomish':[500000,0,'Basic W5 Enemies', 'Basic W5 Enemies', 'Basic W5 Enemies',0,0,0.00],
-        'OJ Bay':[1000000,0,'Basic W5 Enemies', 'Basic W5 Enemies', 'Basic W5 Enemies',0,0,0.00],
-        'Lampar Lake':[2000000,0,'Basic W5 Enemies', 'Basic W5 Enemies', 'Basic W5 Enemies',0,0,0.00],
-        'Spitfire River':[3000000,0,'Basic W5 Enemies', 'Basic W5 Enemies', 'Basic W5 Enemies',0,0,0.00],
-        'Miner Mole Outskirts':[6000000,0,'Basic W5 Enemies', 'Basic W5 Enemies', 'Basic W5 Enemies',0,0,0.00],
-        'Crawly Catacombs':[10000000,0,'Basic W5 Enemies', 'Basic W5 Enemies', 'Basic W5 Enemies',0,0,0.00],
-        'The Worm Nest':[60000,0,'Basic W5 Enemies', 'Basic W5 Enemies', 'Basic W5 Enemies',0,0,0.00],
+        'Naut Sake Perimeter': [15000,0,'Basic W5 Enemies', 'Basic W5 Enemies', 'Basic W5 Enemies',0,0,0.00],
+        'Niagrilled Falls': [25000,0,'Basic W5 Enemies', 'Basic W5 Enemies', 'Basic W5 Enemies',0,0,0.00],
+        'The Killer Roundabout': [40000,0,'Basic W5 Enemies', 'Basic W5 Enemies', 'Basic W5 Enemies',0,0,0.00],
+        'Cracker Jack Lake': [50000,0,'Basic W5 Enemies', 'Basic W5 Enemies', 'Basic W5 Enemies',0,0,0.00],
+        'The Great Molehill': [75000,0,'Basic W5 Enemies', 'Basic W5 Enemies', 'Basic W5 Enemies',0,0,0.00],
+        'Erruption River': [100000,0,'Basic W5 Enemies', 'Basic W5 Enemies', 'Basic W5 Enemies',0,0,0.00],
+        'Mount Doomish': [200000,0,'Basic W5 Enemies', 'Basic W5 Enemies', 'Basic W5 Enemies',0,0,0.00],
+        'OJ Bay': [300000,0,'Basic W5 Enemies', 'Basic W5 Enemies', 'Basic W5 Enemies',0,0,0.00],
+        'Lampar Lake': [450000,0,'Basic W5 Enemies', 'Basic W5 Enemies', 'Basic W5 Enemies',0,0,0.00],
+        'Spitfire River': [600000,0,'Basic W5 Enemies', 'Basic W5 Enemies', 'Basic W5 Enemies',0,0,0.00],
+        'Miner Mole Outskirts': [1000000,0,'Basic W5 Enemies', 'Basic W5 Enemies', 'Basic W5 Enemies',0,0,0.00],
+        'Crawly Catacombs': [3000000,0,'Basic W5 Enemies', 'Basic W5 Enemies', 'Basic W5 Enemies',0,0,0.00],
+        'The Worm Nest': [60000,0,'Basic W5 Enemies', 'Basic W5 Enemies', 'Basic W5 Enemies',0,0,0.00],
         }
+    w6DeathNoteDict = {
+        "Gooble Goop Creek": [30000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
+        "Picnic Bridgeways": [50000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
+        "Irrigation Station": [100000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
+        "Troll Playground": [250000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
+        "Edge of the Valley": [400000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
+        "Bamboo Laboredge": [1100000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
+        "Lightway Path": [3200000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
+        "Troll Broodnest": [8000000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
+        "Above the Clouds": [12000000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
+        "Sleepy Skyline": [25000000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
+        "Dozey Dogpark": [70000000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
+        "Yolkrock Basin": [100000000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
+        "Chieftain Stairway": [150000000, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00],
+        "Emporer's Castle Doorstep": [100, 0, 'Basic W6 Enemies', 'Basic W6 Enemies', 'Basic W6 Enemies',0,0,0.00]
+    }
 
     #total up all kills across characters
     playerCounter = 0
@@ -316,7 +361,7 @@ def getDeathNoteKills(inputJSON, playerCount, playerNames):
             #print("ConsDeathNote.getDeathNoteKills~ INFO playerKillsList[killCounter]:", playerCounter, killCounter, playerKillsList[killCounter])
             if isinstance(playerKillsList[killCounter], int):
                 try:
-                    playerKillsList[killCounter] =[playerKillsList[killCounter]]
+                    playerKillsList[killCounter] = [playerKillsList[killCounter]]
                 except Exception as reason:
                     print("ConsDeathNote~ EXCEPTION Unable to convert INT to LIST", playerCounter, killCounter, playerKillsList[killCounter], reason)
 
@@ -340,6 +385,7 @@ def getDeathNoteKills(inputJSON, playerCount, playerNames):
                 #apocDeathNoteDict['The Rift'][1] += abs(playerKillsList[166][0]-apocDeathNoteDict['The Rift'][0])
             #except Exception as reason:
                 #print("ConsDeathNote~ EXCEPTION Unable to increase kill count in apocDeathNoteDict",playerCounter, playerCount, reason)
+
             #w1 dn
             try:
                 w1DeathNoteDict['Spore Meadows'][1] += abs(playerKillsList[1][0]-w1DeathNoteDict['Spore Meadows'][0])
@@ -358,7 +404,8 @@ def getDeathNoteKills(inputJSON, playerCount, playerNames):
                 w1DeathNoteDict['Poopy Sewers'][1] += abs(playerKillsList[8][0]-w1DeathNoteDict['Poopy Sewers'][0])
                 w1DeathNoteDict['Rats Nest'][1] += abs(playerKillsList[15][0]-w1DeathNoteDict['Rats Nest'][0])
             except Exception as reason:
-                print("ConsDeathNote~ EXCEPTION Unable to increase kill count in w1DeathNoteDict",playerCounter, playerCount, reason)
+                print("ConsDeathNote~ EXCEPTION Unable to increase kill count in w1DeathNoteDict", playerCounter, playerCount, reason)
+
             #w2 dn
             try:
                 w2DeathNoteDict['Jar Bridge'][1] += abs(playerKillsList[51][0]-w2DeathNoteDict['Jar Bridge'][0])
@@ -373,7 +420,8 @@ def getDeathNoteKills(inputJSON, playerCount, playerNames):
                 w2DeathNoteDict['Sands of Time'][1] += abs(playerKillsList[64][0]-w2DeathNoteDict['Sands of Time'][0])
                 w2DeathNoteDict['Djonnuttown'][1] += abs(playerKillsList[65][0]-w2DeathNoteDict['Djonnuttown'][0])
             except Exception as reason:
-                print("ConsDeathNote~ EXCEPTION Unable to increase kill count in w2DeathNoteDict",playerCounter, playerCount, reason)
+                print("ConsDeathNote~ EXCEPTION Unable to increase kill count in w2DeathNoteDict", playerCounter, playerCount, reason)
+
             #w3 dn
             try:
                 w3DeathNoteDict['Steep Sheep Ledge'][1] += abs(playerKillsList[101][0]-w3DeathNoteDict['Steep Sheep Ledge'][0])
@@ -391,7 +439,8 @@ def getDeathNoteKills(inputJSON, playerCount, playerNames):
                 w3DeathNoteDict['Wam Wonderland'][1] += abs(playerKillsList[116][0]-w3DeathNoteDict['Wam Wonderland'][0])
                 w3DeathNoteDict['Hell Hath Frozen Over'][1] += abs(playerKillsList[117][0]-w3DeathNoteDict['Hell Hath Frozen Over'][0])
             except Exception as reason:
-                print("ConsDeathNote~ EXCEPTION Unable to increase kill count in w3DeathNoteDict",playerCounter, playerCount, reason)
+                print("ConsDeathNote~ EXCEPTION Unable to increase kill count in w3DeathNoteDict", playerCounter, playerCount, reason)
+
             #w4 dn
             try:
                 w4DeathNoteDict['Spaceway Raceway'][1] += abs(playerKillsList[151][0]-w4DeathNoteDict['Spaceway Raceway'][0])
@@ -408,24 +457,61 @@ def getDeathNoteKills(inputJSON, playerCount, playerNames):
                 w4DeathNoteDict['Flamboyant Bayou'][1] += abs(playerKillsList[162][0]-w4DeathNoteDict['Flamboyant Bayou'][0])
                 w4DeathNoteDict['Enclave of Eyes'][1] += abs(playerKillsList[163][0]-w4DeathNoteDict['Enclave of Eyes'][0])
             except Exception as reason:
-                print("ConsDeathNote~ EXCEPTION Unable to increase kill count in w4DeathNoteDict",playerCounter, playerCount, reason)
+                print("ConsDeathNote~ EXCEPTION Unable to increase kill count in w4DeathNoteDict", playerCounter, playerCount, reason)
+
             #w5 dn
-            try:
-                w5DeathNoteDict['Naut Sake Perimeter'][1] += abs(playerKillsList[201][0]-w5DeathNoteDict['Naut Sake Perimeter'][0])
-                w5DeathNoteDict['Niagrilled Falls'][1] += abs(playerKillsList[202][0]-w5DeathNoteDict['Niagrilled Falls'][0])
-                w5DeathNoteDict['The Killer Roundabout'][1] += abs(playerKillsList[203][0]-w5DeathNoteDict['The Killer Roundabout'][0])
-                w5DeathNoteDict['Cracker Jack Lake'][1] += abs(playerKillsList[204][0]-w5DeathNoteDict['Cracker Jack Lake'][0])
-                w5DeathNoteDict['The Great Molehill'][1] += abs(playerKillsList[205][0]-w5DeathNoteDict['The Great Molehill'][0])
-                w5DeathNoteDict['Erruption River'][1] += abs(playerKillsList[206][0]-w5DeathNoteDict['Erruption River'][0])
-                w5DeathNoteDict['Mount Doomish'][1] += abs(playerKillsList[207][0]-w5DeathNoteDict['Mount Doomish'][0])
-                w5DeathNoteDict['OJ Bay'][1] += abs(playerKillsList[208][0]-w5DeathNoteDict['OJ Bay'][0])
-                w5DeathNoteDict['Lampar Lake'][1] += abs(playerKillsList[209][0]-w5DeathNoteDict['Lampar Lake'][0])
-                w5DeathNoteDict['Spitfire River'][1] += abs(playerKillsList[210][0]-w5DeathNoteDict['Spitfire River'][0])
-                w5DeathNoteDict['Miner Mole Outskirts'][1] += abs(playerKillsList[211][0]-w5DeathNoteDict['Miner Mole Outskirts'][0])
-                w5DeathNoteDict['Crawly Catacombs'][1] += abs(playerKillsList[212][0]-w5DeathNoteDict['Crawly Catacombs'][0])
-                w5DeathNoteDict['The Worm Nest'][1] += abs(playerKillsList[213][0]-w5DeathNoteDict['The Worm Nest'][0])
-            except Exception as reason:
-                print("ConsDeathNote~ EXCEPTION Unable to increase kill count in w5DeathNoteDict",playerCounter, playerCount, reason)
+            if len(playerKillsList) >= 264:
+                try:
+                    w5DeathNoteDict['Naut Sake Perimeter'][1] += abs(playerKillsList[201][0] - w5DeathNoteDict['Naut Sake Perimeter'][0])
+                    w5DeathNoteDict['Niagrilled Falls'][1] += abs(playerKillsList[202][0] - w5DeathNoteDict['Niagrilled Falls'][0])
+                    w5DeathNoteDict['The Killer Roundabout'][1] += abs(playerKillsList[203][0] - w5DeathNoteDict['The Killer Roundabout'][0])
+                    w5DeathNoteDict['Cracker Jack Lake'][1] += abs(playerKillsList[204][0] - w5DeathNoteDict['Cracker Jack Lake'][0])
+                    w5DeathNoteDict['The Great Molehill'][1] += abs(playerKillsList[205][0]-w5DeathNoteDict['The Great Molehill'][0])
+                    w5DeathNoteDict['Erruption River'][1] += abs(playerKillsList[206][0]-w5DeathNoteDict['Erruption River'][0])
+                    w5DeathNoteDict['Mount Doomish'][1] += abs(playerKillsList[207][0]-w5DeathNoteDict['Mount Doomish'][0])
+                    w5DeathNoteDict['OJ Bay'][1] += abs(playerKillsList[208][0]-w5DeathNoteDict['OJ Bay'][0])
+                    w5DeathNoteDict['Lampar Lake'][1] += abs(playerKillsList[209][0]-w5DeathNoteDict['Lampar Lake'][0])
+                    w5DeathNoteDict['Spitfire River'][1] += abs(playerKillsList[210][0]-w5DeathNoteDict['Spitfire River'][0])
+                    w5DeathNoteDict['Miner Mole Outskirts'][1] += abs(playerKillsList[211][0]-w5DeathNoteDict['Miner Mole Outskirts'][0])
+                    w5DeathNoteDict['Crawly Catacombs'][1] += abs(playerKillsList[212][0]-w5DeathNoteDict['Crawly Catacombs'][0])
+                    w5DeathNoteDict['The Worm Nest'][1] += abs(playerKillsList[213][0]-w5DeathNoteDict['The Worm Nest'][0])
+                except Exception as reason:
+                    print("ConsDeathNote~ EXCEPTION Unable to increase kill count in w5DeathNoteDict", playerCounter, playerCount, reason)
+
+            #w6 dn
+            if len(playerKillsList) >= 264:
+                try:
+                    w6DeathNoteDict['Gooble Goop Creek'][1] \
+                        += abs(playerKillsList[251][0] - w6DeathNoteDict['Gooble Goop Creek'][0])
+                    w6DeathNoteDict['Picnic Bridgeways'][1] \
+                        += abs(playerKillsList[252][0] - w6DeathNoteDict['Picnic Bridgeways'][0])
+                    w6DeathNoteDict['Irrigation Station'][1] \
+                        += abs(playerKillsList[253][0] - w6DeathNoteDict['Irrigation Station'][0])
+                    w6DeathNoteDict['Troll Playground'][1] \
+                        += abs(playerKillsList[254][0] - w6DeathNoteDict['Troll Playground'][0])
+                    w6DeathNoteDict['Edge of the Valley'][1] \
+                        += abs(playerKillsList[255][0] - w6DeathNoteDict['Edge of the Valley'][0])
+                    w6DeathNoteDict['Bamboo Laboredge'][1] \
+                        += abs(playerKillsList[256][0] - w6DeathNoteDict['Bamboo Laboredge'][0])
+                    w6DeathNoteDict['Lightway Path'][1] \
+                        += abs(playerKillsList[257][0] - w6DeathNoteDict['Lightway Path'][0])
+                    w6DeathNoteDict['Troll Broodnest'][1] \
+                        += abs(playerKillsList[258][0] - w6DeathNoteDict['Troll Broodnest'][0])
+                    w6DeathNoteDict['Above the Clouds'][1] \
+                        += abs(playerKillsList[259][0] - w6DeathNoteDict['Above the Clouds'][0])
+                    w6DeathNoteDict['Sleepy Skyline'][1] \
+                        += abs(playerKillsList[260][0] - w6DeathNoteDict['Sleepy Skyline'][0])
+                    w6DeathNoteDict['Dozey Dogpark'][1] \
+                        += abs(playerKillsList[261][0] - w6DeathNoteDict['Dozey Dogpark'][0])
+                    w6DeathNoteDict['Yolkrock Basin'][1] \
+                        += abs(playerKillsList[262][0] - w6DeathNoteDict['Yolkrock Basin'][0])
+                    w6DeathNoteDict['Chieftain Stairway'][1] \
+                        += abs(playerKillsList[263][0] - w6DeathNoteDict['Chieftain Stairway'][0])
+                    w6DeathNoteDict["Emporer's Castle Doorstep"][1] \
+                        += abs(playerKillsList[264][0] - w6DeathNoteDict["Emporer's Castle Doorstep"][0])
+                except Exception as reason:
+                    print("ConsDeathNote~ EXCEPTION Unable to increase kill count in w6DeathNoteDict", playerCounter, playerCount, reason)
+
         #apoc counts for Barbarians and Blood Berserkers only
         if playerCounter in apocCharactersDict.keys():
             mapIndexCounter = 0
@@ -662,23 +748,23 @@ def getDeathNoteKills(inputJSON, playerCount, playerNames):
     #w7LowestSkull = dnSkullValueList[-1]
     #w8LowestSkull = dnSkullValueList[-1]
     for key in w1DeathNoteDict:
-        if (w1DeathNoteDict[key][5] < w1LowestSkull):
+        if w1DeathNoteDict[key][5] < w1LowestSkull:
             #print("ConsDeathNote~ Updating W1 Lowest Skull from " + str(w1LowestSkull) + " to " + str(w1DeathNoteDict[key][5]),key)
             w1LowestSkull = w1DeathNoteDict[key][5]
     for key in w2DeathNoteDict:
-        if (w2DeathNoteDict[key][5] < w2LowestSkull):
+        if w2DeathNoteDict[key][5] < w2LowestSkull:
             #print("ConsDeathNote~ Updating W2 Lowest Skull from " + str(w2LowestSkull) + " to " + str(w2DeathNoteDict[key][5]),key)
             w2LowestSkull = w2DeathNoteDict[key][5]
     for key in w3DeathNoteDict:
-        if (w3DeathNoteDict[key][5] < w3LowestSkull):
+        if w3DeathNoteDict[key][5] < w3LowestSkull:
             #print("ConsDeathNote~ Updating W3 Lowest Skull from " + str(w3LowestSkull) + " to " + str(w3DeathNoteDict[key][5]),key)
             w3LowestSkull = w3DeathNoteDict[key][5]
     for key in w4DeathNoteDict:
-        if (w4DeathNoteDict[key][5] < w4LowestSkull):
+        if w4DeathNoteDict[key][5] < w4LowestSkull:
             #print("ConsDeathNote~ Updating W4 Lowest Skull from " + str(w4LowestSkull) + " to " + str(w4DeathNoteDict[key][5]),key)
             w4LowestSkull = w4DeathNoteDict[key][5]
     for key in w5DeathNoteDict:
-        if (w5DeathNoteDict[key][5] < w5LowestSkull):
+        if w5DeathNoteDict[key][5] < w5LowestSkull:
             #print("ConsDeathNote~ Updating W5 Lowest Skull from " + str(w5LowestSkull) + " to " + str(w5DeathNoteDict[key][5]),key)
             w5LowestSkull = w5DeathNoteDict[key][5]
 
@@ -839,7 +925,7 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, playerCount, pl
                 else:
                     advice_zows = "Complete more ZOW stacks on at least 1 Barb/BB: "
                 for bb in fullDeathNoteDict["apoc"]:
-                    advice_zows += fullDeathNoteDict["apoc"][bb][0][0] + " (" + str(fullDeathNoteDict["apoc"][bb][0][1]) + "/" + str(tier[9]) + "), "
+                    advice_zows += str(fullDeathNoteDict["apoc"][bb][0][0]) + " (" + str(fullDeathNoteDict["apoc"][bb][0][1]) + "/" + str(tier[9]) + "), "
                 advice_zows = advice_zows[:-2] #trim off trailing comma and space
         #CHOW
         chowRequirementMet = False
