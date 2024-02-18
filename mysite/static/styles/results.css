@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&display=swap');
+
+
 @font-face {
     font-family: 'Idleon';
     src: url(../fonts/Idleon.woff2) format('woff2'), url(../fonts/Idleon.woff) format('woff');
@@ -355,7 +358,8 @@ strong:not(.no-collapse):hover,
     display: flex;
     flex-direction: column;
 
-    font-family: 'Space Mono', sans-serif;
+    font-family: 'Kode Mono', sans-serif;
+    font-weight: 700;
     font-variant-ligatures: none;
     text-shadow: 1px 1px black;
 
