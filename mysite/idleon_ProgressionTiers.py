@@ -244,7 +244,7 @@ def setDefaultTiers():
         [1, "SS", {'Infinity Hammer':1, 'Bleach Liquid Cauldrons':1, 'Crystal 3d Printer':1, 'Richelin Kitchen':1, 'Golden Sprinkler':1}, ". These are the highest priority as 1st purchase per world."],
         [2, "S", {'Extra Card Slot':4, 'Brimstone Forge Slot':1}, ""],
         [3, "A", {'Item Backpack Space':1, 'Storage Chest Space':4, 'Carry Capacity':2, 'Weekly Dungeon Boosters':3, 'Brimstone Forge Slot':4, 'Bleach Liquid Cauldrons':2, 'Zen Cogs':2, 'Tower Building Slots':1, 'Royal Egg Cap':3, 'Richelin Kitchen':3, 'Souped Up Tube':1, 'Chest Sluggo':3, 'Divinity Sparkie':2, 'Lava Sprouts':2}, ""],
-        [4, "B", {'Item Backpack Space':2, 'Storage Chest Space':8, 'Carry Capacity':4, 'Food Slot':1, 'Bleach Liquid Cauldrons':3, 'More Sample Spaces':2, 'Zen Cogs':4, 'Tower Building Slots':2, 'Royal Egg Cap':5, 'Fenceyard Space':2, 'Chest Sluggo':6, 'Lava Sprouts':4, 'W6-Placeholder1': 1}, ". Placeholder for W6 added as a reminder to save/farm Gems before W6 launch!"],
+        [4, "B", {'Item Backpack Space':2, 'Storage Chest Space':8, 'Carry Capacity':4, 'Food Slot':1, 'Bleach Liquid Cauldrons':3, 'More Sample Spaces':2, 'Zen Cogs':4, 'Tower Building Slots':2, 'Royal Egg Cap':5, 'Fenceyard Space':2, 'Chest Sluggo':6, 'Lava Sprouts':4, 'Plot of Land': 1, 'Shroom Familiar': 1, 'Instagrow Generator': 1}, ""],
         [5, "C", {'Item Backpack Space':3, 'Storage Chest Space':12, 'Carry Capacity':6, 'Food Slot':2, 'More Sample Spaces':4, 'Burning Bad Books':2, 'Tower Building Slots':4, 'Fenceyard Space':4, 'Chest Sluggo':9, 'Golden Sprinkler':2, 'Lava Sprouts':6}, ""],
         [6, "D", {'Item Backpack Space':4, 'Carry Capacity':8, 'More Storage Space':5, 'Brimstone Forge Slot':8, 'Ivory Bubble Cauldrons':4, 'Obol Storage Space':3, 'More Sample Spaces':6, 'Burning Bad Books':4, 'Zen Cogs':8, 'Souped Up Tube':3, 'Fenceyard Space':6, 'Chest Sluggo':12}, ""],
         [7, "Practical Max", {'Item Backpack Space':6, 'Carry Capacity':10, 'More Storage Space':10, 'Card Presets':1, 'Brimstone Forge Slot':16, 'Sigil Supercharge':10, 'Fluorescent Flaggies':2, 'Golden Sprinkler':4}, ". I wouldn't recommend going any further as of v1.91. This tier is for the dedicated Gem Farmers from Colo and Normal-difficulty World Bosses."],
@@ -392,8 +392,8 @@ def setDefaultTiers():
                 "Quest19"  # Previously Tier12
             ],
             "Misc": [
-                "FoodPotMana3", "FoodPotGr3", "FoodPotRe1",  # Previously Tier10
-                "FoodPotRe2"  # Previously Tier11
+                "FoodPotGr3",  # Previously Tier10
+                "FoodPotRe2"   # Previously Tier11
             ],
             "Other Skilling Resources": [
                 "Refinery1",  # Previously Tier11
@@ -493,8 +493,8 @@ def setDefaultTiers():
             "Other Skilling Resources": [
                 "StarfireBar",
                 "Bullet3", "FoodChoppin1"],
-            "Crystal Enemy Drops": ["EquipmentStatues7", "EquipmentStatues3", "EquipmentStatues2", "EquipmentStatues4", "EquipmentStatues14"]
-            #"Misc": ["FoodPotMana3", "FoodPotGr3", "FoodPotRe1"]
+            "Crystal Enemy Drops": ["EquipmentStatues7", "EquipmentStatues3", "EquipmentStatues2", "EquipmentStatues4", "EquipmentStatues14"],
+            "Misc": [],
             #"Vendor Shops": ["FoodHealth9"]
             },
         11: {
@@ -509,7 +509,10 @@ def setDefaultTiers():
             ],
             #"Vendor Shops": ["FoodHealth4", "FoodHealth11"],
             "Misc": [
-                #"FoodPotRe2",
+                #"FoodPotGr3",  # Sold in shops as well as dropped from Sir Stache
+                "FoodPotRe1",  # Technically sold in W1 shop, but so few that it barely matters
+                "FoodPotRe2",
+                "FoodPotMana3",
                 "ButterBar"]
             },
         12: {

@@ -5,6 +5,7 @@ from json import JSONDecodeError
 from config import app
 from flask import g, render_template, request, url_for, redirect, Response
 import idleonTaskSuggester
+import traceback
 
 from utils import get_logger
 
@@ -97,7 +98,6 @@ def index() -> Response | str:
             pythonOutput = autoReviewBot(capturedCharacterInput)
 
     except Exception as reason:
-        import os
         if os.environ.get("USER") == 'niko':
             raise reason
         logger.exception('Could not get Player from Request Args: %s', reason, exc_info=reason)
