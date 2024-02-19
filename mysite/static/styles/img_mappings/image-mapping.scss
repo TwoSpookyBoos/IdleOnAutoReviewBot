@@ -68,7 +68,6 @@ $id-map: (
 	biggy-arcade-balls: $biggy-arcade-balls,
 	falloween-treat: $falloween-treat,
 	dragonic-liquid-cauldron: $dragonic-liquid-cauldron,
-	cauldron-a: $cauldron-a,
 	p2w-player: $p2w-player,
 	cardifier-5-star: $cardifier-5-star,
 
@@ -1747,118 +1746,6 @@ $id-map: (
 	resource-coupon: $resource-coupon,
 	really-really-resource-coupon: $really-really-resource-coupon,
 
-// Power Cauldron
-
-	roid-ragin: $roid-ragin,
-	warriors-rule: $warriors-rule,
-	hearty-diggy: $hearty-diggy,
-	wyoming-blood: $wyoming-blood,
-	reely-smart: $reely-smart,
-	big-meaty-claws: $big-meaty-claws,
-	sploosh-sploosh: $sploosh-sploosh,
-	stronk-tools: $stronk-tools,
-	fmj: $fmj,
-	bappity-boopity: $bappity-boopity,
-	brittley-spears: $brittley-spears,
-	call-me-bob: $call-me-bob,
-	carpenter: $carpenter,
-	buff-boi-talent: $buff-boi-talent,
-	orange-bargain: $orange-bargain,
-	penny-of-strength: $penny-of-strength,
-	multorange: $multorange,
-	dream-of-ironfish: $dream-of-ironfish,
-	shimmeron: $shimmeron,
-	bite-but-not-chew: $bite-but-not-chew,
-	spear-powah: $spear-powah,
-	slabi-orefish: $slabi-orefish,
-	gamer-at-heart: $gamer-at-heart,
-	slabi-strength: $slabi-strength,
-	power-trione: $power-trione,
-
-// Quicc Cauldron
-
-	swift-steppin: $swift-steppin,
-	archer-or-bust: $archer-or-bust,
-	hammer-hammer: $hammer-hammer,
-	lil-big-damage: $lil-big-damage,
-	anvilnomics: $anvilnomics,
-	quick-slap: $quick-slap,
-	sanic-tools: $sanic-tools,
-	bug-: $bug-,
-	shaquracy: $shaquracy,
-	cheap-shot: $cheap-shot,
-	bow-jack: $bow-jack,
-	call-me-ash: $call-me-ash,
-	cuz-i-catch-em-all: $cuz-i-catch-em-all,
-	fast-boi-talent: $fast-boi-talent,
-	green-bargain: $green-bargain,
-	dollar-of-agility: $dollar-of-agility,
-	premigreen: $premigreen,
-	fly-in-mind: $fly-in-mind,
-	kill-per-kill: $kill-per-kill,
-	afk-expexp: $afk-expexp,
-	bow-power: $bow-power,
-	slabo-critterbug: $slabo-critterbug,
-	sailor-at-heart: $sailor-at-heart,
-	slabo-agility: $slabo-agility,
-	power-tritwo: $power-tritwo,
-
-// High-IQ Cauldron
-
-	stable-jenius: $stable-jenius,
-	mage-is-best: $mage-is-best,
-	hocus-choppus: $hocus-choppus,
-	molto-loggo: $molto-loggo,
-	noodubble: $noodubble,
-	name-i-guess: $name-i-guess,
-	le-brain-tools: $le-brain-tools,
-	cookin-roadkill: $cookin-roadkill,
-	brewstachio: $brewstachio,
-	all-for-kill: $all-for-kill,
-	matty-stafford: $matty-stafford,
-	call-me-pope: $call-me-pope,
-	gospel-leader: $gospel-leader,
-	smart-boi-talent: $smart-boi-talent,
-	purple-bargain: $purple-bargain,
-	nickel-of-wisdom: $nickel-of-wisdom,
-	severapurple: $severapurple,
-	tree-sleeper: $tree-sleeper,
-	hyperswift: $hyperswift,
-	matrix-evolved: $matrix-evolved,
-	wand-pawur: $wand-pawur,
-	slabe-logsoul: $slabe-logsoul,
-	pious-at-heart: $pious-at-heart,
-	slabe-wisdom: $slabe-wisdom,
-	power-trithree: $power-trithree,
-
-// Kazam Cauldron
-
-	lotto-skills: $lotto-skills,
-	droppin-loads: $droppin-loads,
-	startue-exp: $startue-exp,
-	level-up-gift: $level-up-gift,
-	prowesessary: $prowesessary,
-	stamp-tramp: $stamp-tramp,
-	undeveloped-costs: $undeveloped-costs,
-	da-daily-drip: $da-daily-drip,
-	grind-time: $grind-time,
-	laaarrrryyyy: $laaarrrryyyy,
-	cogs-for-hands: $cogs-for-hands,
-	sample-it: $sample-it,
-	big-game-hunter: $big-game-hunter,
-	ignore-overdues: $ignore-overdues,
-	yellow-bargain: $yellow-bargain,
-	mr-massacre: $mr-massacre,
-	egg-ink: $egg-ink,
-	diamond-chef: $diamond-chef,
-	card-champ: $card-champ,
-	petting-the-rift: $petting-the-rift,
-	boaty-bubble: $boaty-bubble,
-	big-p: $big-p,
-	bit-by-bit: $bit-by-bit,
-	gifts-abound: $gifts-abound,
-	atom-split: $atom-split,
-
 // Shrines
 
 	woodular-shrine: $woodular-shrine,
@@ -2032,7 +1919,6 @@ $extra: (
 	vials: $vial-l1,
 	vial-max: $vial-max,
 	prayers: $prayer-stone,
-	bubbles: $bubbles,
 	bribes: $bribes,
 	pay2win: $pay2win
 );
@@ -2042,6 +1928,7 @@ $id-map: map-merge($character-classes, $id-map);
 $id-map: map-merge($vials, $id-map);
 $id-map: map-merge($extra, $id-map);
 $id-map: map-merge($bribes-map, $id-map);
+$id-map: map-merge($bubbles-map, $id-map);
 
 @each $class, $link in $id-map {
 	.#{$class}::before {
