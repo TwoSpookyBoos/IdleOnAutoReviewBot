@@ -449,8 +449,13 @@ def main(inputData, runType="web"):
         sections=[alchBubbles_AdviceSection["AdviceSection"], alchVials_AdviceSection["AdviceSection"], alchP2W_AdviceSection["AdviceSection"]],
         banner="w2banner.png"
     )
+    w3Review = AdviceWorld(
+        name=WorldName.WORLD3,
+        sections=[],
+        banner="w3banner.png"
+    )
 
-    biggoleAdviceList = [generalList, w1list, w2list, w3list, w4list, w5list, w6list, w7list, w8list, w2Review, w1Review, pinchy]
+    biggoleAdviceList = [generalList, w1list, w2list, w3list, w4list, w5list, w6list, w7list, w8list, w3Review, w2Review, w1Review, pinchy]
 
     if runType == "consoleTest":
         return "Pass"
