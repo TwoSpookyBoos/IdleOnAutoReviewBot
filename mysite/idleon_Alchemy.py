@@ -864,7 +864,11 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
     agdPost_strings = [
         "", "", "",
         "Choppin Log samples are the largest producers of Atom Particles and should be given priority.",
-        progressionTiers[tier_UtilityBubbles+1][7]]
+    ]
+    if tier_UtilityBubbles == max_tier:
+        agdPost_strings.append(progressionTiers[tier_UtilityBubbles][7])
+    else:
+        agdPost_strings.append(progressionTiers[tier_UtilityBubbles+1][7])
     for counter in range(0, len(agdNames)):
         bubbles_AdviceGroupDict[agdNames[counter]] = AdviceGroup(
             tier=agdTiers[counter],
