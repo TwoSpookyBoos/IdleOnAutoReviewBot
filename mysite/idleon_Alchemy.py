@@ -759,7 +759,7 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
                     bubbles_AdviceDict["OrangeSampleBubbles"].append(
                         Advice(
                             label=str(requiredBubble),
-                            item_name=str(named_all_alchemyBubblesDict[requiredBubble]),
+                            item_name=str(requiredBubble),
                             progression=str(named_all_alchemyBubblesDict[requiredBubble]),
                             goal=str(tier[2][requiredBubble]),
                         )
@@ -782,7 +782,7 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
                     bubbles_AdviceDict["GreenSampleBubbles"].append(
                         Advice(
                             label=str(requiredBubble),
-                            item_name=str(named_all_alchemyBubblesDict[requiredBubble]),
+                            item_name=str(requiredBubble),
                             progression=str(named_all_alchemyBubblesDict[requiredBubble]),
                             goal=str(tier[3][requiredBubble]),
                         )
@@ -805,7 +805,7 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
                     bubbles_AdviceDict["PurpleSampleBubbles"].append(
                         Advice(
                             label=str(requiredBubble),
-                            item_name=str(named_all_alchemyBubblesDict[requiredBubble]),
+                            item_name=str(requiredBubble),
                             progression=str(named_all_alchemyBubblesDict[requiredBubble]),
                             goal=str(tier[4][requiredBubble]),
                         )
@@ -828,7 +828,7 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
                     bubbles_AdviceDict["UtilityBubbles"].append(
                         Advice(
                             label=str(requiredBubble),
-                            item_name=str(named_all_alchemyBubblesDict[requiredBubble]),
+                            item_name=str(requiredBubble),
                             progression=str(named_all_alchemyBubblesDict[requiredBubble]),
                             goal=str(tier[5][requiredBubble]),
                         )
