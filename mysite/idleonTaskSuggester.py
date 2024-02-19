@@ -380,17 +380,12 @@ def main(inputData, runType="web"):
         cardsList = [["Unable to evaluate card sets :(", str(reason)]]
 
     #World 1
-    #stampPR = idleon_Stamps.setStampProgressionTier(parsedJSON, progressionTiers['Stamps'])
-    #bribesPR = idleon_Bribes.setBribesProgressionTier(parsedJSON, progressionTiers['Bribes'])
-    #smithingPR = idleon_Smithing.setSmithingProgressionTier(parsedJSON, progressionTiers['Smithing'], playerCount)
     stamps_AdviceSection = idleon_Stamps.setStampProgressionTier(parsedJSON, progressionTiers['Stamps'])
     bribes_ActiveSection = idleon_Bribes.setBribesProgressionTier(parsedJSON, progressionTiers['Bribes'])
     smithing_AdviceSection = idleon_Smithing.setSmithingProgressionTier(parsedJSON, progressionTiers['Smithing'], playerCount, characterDict)
 
     #World 2
-    # alchVialsPR = idleon_Alchemy.setAlchemyVialsProgressionTier(parsedJSON, progressionTiers['Alchemy Vials'])
-    # alchP2WList = idleon_Alchemy.setAlchemyP2W(parsedJSON, playerCount)
-    alchBubblesPR = idleon_Alchemy.setAlchemyBubblesProgressionTier(parsedJSON, progressionTiers['Alchemy Bubbles'])
+    alchBubbles_AdviceSection = idleon_Alchemy.setAlchemyBubblesProgressionTier(parsedJSON, progressionTiers['Alchemy Bubbles'])
     alchVials_AdviceSection = idleon_Alchemy.setAlchemyVialsProgressionTier(parsedJSON, progressionTiers['Alchemy Vials'])
     alchP2W_AdviceSection = idleon_Alchemy.setAlchemyP2W(parsedJSON, playerCount)
     #obolsPR = idleon_Obols.setObolsProgressionTier(parsedJSON, playerCount, progressionTiers['Obols'], fromPublicIEBool)
@@ -417,7 +412,7 @@ def main(inputData, runType="web"):
 
     generalList = [[ieLinkList, lastUpdatedTimeString], combatLevelsPR.nTR, consumablesList, gemShopPR.nTR, allGStacksList, maestroHandsListOfLists, cardsList]
     w1list = [stamps_AdviceSection["PR"].nTR, bribes_ActiveSection["PR"].nTR, smithing_AdviceSection["PR"].nTR]  # len(stampPR) = 4, len(bribesPR.nTR) = 2, len(smithingPR.nTR) = 4
-    w2list = [alchBubblesPR.nTR, alchVials_AdviceSection["PR"].nTR, [alchP2W_AdviceSection['Header'], alchP2W_AdviceSection['OldAdvice']], emptyList]  # len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 5
+    w2list = [alchBubbles_AdviceSection["PR"].nTR, alchVials_AdviceSection["PR"].nTR, [alchP2W_AdviceSection['Header'], alchP2W_AdviceSection['OldAdvice']], emptyList]  # len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 5
     #w2list = [alchBubblesPR.nTR,alchVialsPR.nTR,alchP2WList, obolsPR.nTR]  # len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 4, len(obolsPR.nTR) = 4
     w3list = [
         ["Construction 3D Printer coming soon!"], consRefineryPR.nTR, consSaltLickPR.nTR, consDeathNotePR.nTR,  # len(consRefineryPR.nTR) = 5, len(consSaltLickPR.nTR) = 2, len(consDeathNotePR.nTR) = 12)
@@ -434,7 +429,7 @@ def main(inputData, runType="web"):
         Placements.STAMPS: stamps_AdviceSection["PR"].cT,
         Placements.BRIBES: bribes_ActiveSection["PR"].cT,
         Placements.SMITHING: smithing_AdviceSection["PR"].cT,
-        Placements.BUBBLES: alchBubblesPR.cT,
+        Placements.BUBBLES: alchBubbles_AdviceSection["PR"].cT,
         Placements.VIALS: alchVials_AdviceSection["PR"].cT,
         Placements.P2W: alchP2W_AdviceSection['AdviceSection'].pinchy_rating,
         Placements.REFINERY: consRefineryPR.cT,
@@ -451,7 +446,7 @@ def main(inputData, runType="web"):
     )
     w2Review = AdviceWorld(
         name=WorldName.WORLD2,
-        sections=[alchVials_AdviceSection["AdviceSection"], alchP2W_AdviceSection["AdviceSection"]],
+        sections=[alchBubbles_AdviceSection["AdviceSection"], alchVials_AdviceSection["AdviceSection"], alchP2W_AdviceSection["AdviceSection"]],
         banner="w2banner.png"
     )
 
