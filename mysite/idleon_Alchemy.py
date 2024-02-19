@@ -657,7 +657,7 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
         name="Bubbles",
         tier="Not Yet Evaluated",
         header="Best Bubbles tier met: Not Yet Evaluated. Recommended Bubbles actions:",
-        picture="cauldron-a"
+        picture="Alchemy_Bubble_all.gif"
     )
 
     #Get the bubble data and remove the length element
