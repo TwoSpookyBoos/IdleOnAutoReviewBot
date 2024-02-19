@@ -897,8 +897,8 @@ def setAlchemyP2W(inputJSON, playerCount):
     p2wSum = 0
     liquidCauldronsUnlocked = 1
 
-    if highestAlchemyLevel >= 120:
-        liquidCauldronsUnlocked = 4  # includes Toxic HG
+    if highestAlchemyLevel >= 80:
+        liquidCauldronsUnlocked = 4 #includes Toxic HG
     elif highestAlchemyLevel >= 35:
         liquidCauldronsUnlocked = 3  # includes Trench Seawater
     elif liquidCauldronsUnlocked >= 20:
