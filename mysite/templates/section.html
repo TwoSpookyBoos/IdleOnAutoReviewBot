@@ -1,0 +1,38 @@
+<section id="{{ section.css_class }}" class="new">
+    <h3 class="subheading{% if not section.groups %} no-collapse{% endif %}{% if section.collapse %} folded{% endif %}">
+        {% if section.picture %}
+            <img src="{{ section.picture | img }}" alt="{{ section.name }}">
+        {% endif %}
+        <span>{{ section.header | safe }}</span>
+    </h3>
+    <ul class="advice-section{% if not section.groups %} no-collapse{% endif %}{% if section.collapse %} folded{% endif %}">
+        <li id="{{ section.css_class }}-tier">
+            {% for group in section.groups %}
+            {% if group %}
+                <div class="advice-group">
+                    <span>{{ group.heading }}:</span>
+                    <ul class="table{% if group.collapse %} folded{% endif %}">
+                    {% for advice in group.advices %}
+
+                        {% if advice.as_link %}
+                            <li><a href="#{{ advice.css_class }}" class="advice {{ advice.css_class }}">{{ advice.label }}</a></li>
+                        {% else %}
+                            <li class="advice {{ advice.css_class }}">{{ advice.label }}</li>
+                        {% endif %}
+
+                        <li>{{ advice.progression }}</li>
+                        {% if advice.progression and advice.goal %}
+                        <li class="arrow"></li>
+                        {% else %}
+                        <li></li>
+                        {% endif %}
+                        <li>{{ advice.goal }}</li>
+                    {% endfor %}
+                    </ul>
+                    <span class="post-string">{{ group.post_string }}</span>
+                </div>
+            {% endif %}
+            {% endfor %}
+        </li>
+    </ul>
+</section>

@@ -323,7 +323,8 @@ def generate_advice_list(sections: list[Tier], threshold: Threshold):
             progression=section.tier,
             goal=section.next.tier,
             unit="T",
-            value_format="{unit} {value}"
+            value_format="{unit} {value}",
+            as_link=True
         ) for section in sections
     ]
     if threshold == Threshold.fromname(Threshold.MAX_TIER):

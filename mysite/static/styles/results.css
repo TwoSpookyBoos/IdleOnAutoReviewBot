@@ -431,7 +431,7 @@ strong:not(.no-collapse):hover,
     }
     .table {
         display: grid;
-        grid-template-columns: repeat(3, minmax(min-content, max-content));
+        grid-template-columns: repeat(4, minmax(min-content, max-content));
         gap: 10px;
 
         li, li a {
@@ -451,6 +451,7 @@ strong:not(.no-collapse):hover,
     .advice {
         display: flex;
         align-items: center;
+        margin-right: 20px;
 
         &::before {
             display: block;
@@ -462,6 +463,14 @@ strong:not(.no-collapse):hover,
             background-position: center;
             background-repeat: no-repeat;
         }
+    }
+    .arrow {
+        height: 0;
+        width: 0;
+        border-top: 5px solid transparent;
+        border-left: 10px solid white;
+        border-bottom: 5px solid transparent;
+        margin: auto 10px;
     }
 }
 

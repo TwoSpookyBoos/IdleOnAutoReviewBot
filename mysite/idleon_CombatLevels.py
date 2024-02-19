@@ -71,20 +71,24 @@ def setCombatLevelsProgressionTier(inputJSON, progressionTiers, playerCount, pla
     # tier[3] = int PlayerLevels
     # tier[4] = str PL reward
     # tier[5] = str notes
-    next_tier = next((tier for tier in progressionTiers if total_combat_level < tier[1]), progressionTiers[-1])
-    curr_tier = progressionTiers[(progressionTiers.index(next_tier) - 1) if next_tier[0] > 0 else 0]
+    next_tier = next((tier for tier in progressionTiers if total_combat_level < tier[1]), None)
+    curr_tier = next((tier for tier in reversed(progressionTiers) if total_combat_level >= tier[1]), progressionTiers[0])
 
     overall_CombatLevelTier = curr_tier[0]
 
-    total_level_group = AdviceGroup(
-        tier=overall_CombatLevelTier,
-        pre_string=f"Increase the total family level to unlock the next reward",
-        advices=[Advice(
+    advices = [
+        Advice(
             label=next_tier[2],
             item_name="total-level",
             progression=total_combat_level,
             goal=next_tier[1],
-        )]
+        )
+    ] if next_tier else []
+
+    total_level_group = AdviceGroup(
+        tier=overall_CombatLevelTier,
+        pre_string=f"Increase the total family level to unlock the next reward",
+        advices=advices
     )
 
     if len(parsedCombatLevels['equinoxDict']['under100']) > 0 and equinoxDreamStatus["Dream3"] is False:
@@ -110,7 +114,7 @@ def setCombatLevelsProgressionTier(inputJSON, progressionTiers, playerCount, pla
             progression=level,
             goal=goal
         )
-        for character, level in parsedCombatLevels['equinoxDict'][f'under{goal}'].items()
+        for character, level in parsedCombatLevels['equinoxDict'].get(f'under{goal}', dict()).items()
     ]
 
     lvlup_group = AdviceGroup(
@@ -121,7 +125,11 @@ def setCombatLevelsProgressionTier(inputJSON, progressionTiers, playerCount, pla
 
     max_tier = progressionTiers[-1][0]
     tier = f"{overall_CombatLevelTier}/{max_tier}"
-    header = f"Optimal family class level tier met: {tier}. Recommended actions:"
+    header = f"Optimal family class level tier met: {tier}. "
+    if overall_CombatLevelTier == max_tier:
+        header += f"No more rewards for you, bad warmonger! ... 💪💪💪"
+    else:
+        header += "Recommended actions:"
     combat_section = AdviceSection(
         name="Class Levels",
         tier=tier,

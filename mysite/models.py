@@ -208,9 +208,10 @@ class AdviceSection(AdviceBase):
 
     @property
     def header(self) -> str:
-        self._raw_header = self._raw_header.replace(".", ".<br>", 1)
+        if not hasattr(self, "header_extra"):
+            self._raw_header = self._raw_header.replace(".", ".<br>", 1)
         if not self.tier:
-            return self._raw_header
+            return self._raw_header + (("<br>" + getattr(self, "header_extra")) if hasattr(self, "header_extra") else "")
 
         pattern = f"({re.escape(self.tier)})"
         parts = re.split(pattern, self._raw_header)
@@ -226,11 +227,15 @@ class AdviceSection(AdviceBase):
 
         header_markedup = ''.join(parts)
 
-        return header_markedup
+        return header_markedup + (("<br>" + getattr(self, "header_extra")) if hasattr(self, "header_extra") else "")
 
     @header.setter
     def header(self, raw_header: str):
         self._raw_header = raw_header
+
+    @property
+    def css_class(self):
+        return self.name.lower().replace(" ", "-")
 
     @property
     def groups(self):
