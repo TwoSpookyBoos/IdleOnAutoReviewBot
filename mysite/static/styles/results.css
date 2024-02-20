@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&display=swap');
+
+
 @font-face {
     font-family: 'Idleon';
     src: url(../fonts/Idleon.woff2) format('woff2'), url(../fonts/Idleon.woff) format('woff');
@@ -14,23 +17,23 @@
 :root,
 :root.dark-mode {
     --fg: white;
-    --bg: hsl(206deg, 16%, 26%);
+    --bg: hsla(206deg, 16%, 26%, 1);
 
-    --fg-em: hsl(0deg, 2%, 82%);
-    --fg-link: hsl(195deg, 100%, 50%);
-    --fg-link-visited: hsl(271deg, 100%, 77%);
+    --fg-em: hsla(0deg, 2%, 82%, 1);
+    --fg-link: hsla(195deg, 100%, 50%, 1);
+    --fg-link-visited: hsla(271deg, 100%, 77%, 1);
     --fg-title: goldenrod;
 
     --border: 1px solid gray;
 
-    --fg-error: hsl(0deg, 81%, 26%);
-    --bg-error: hsl(0deg, 75%, 78%);
+    --fg-error: hsla(0deg, 81%, 26%, 1);
+    --bg-error: hsla(0deg, 75%, 78%, 1);
     --border-error: 1px solid darkred;
 
     --fg-subheading: goldenrod;
     --fg-subheading-progress: lightgoldenrodyellow;
     --fg-subheading-finished: springgreen;
-    --bg-subheading: rgba(255, 255, 255, 0.1);
+    --bg-subheading: hsla(0deg, 0%, 100%, 0.1);
     --border-subheading: hsla(0deg, 100%, 100%, 0.3);
 
     --bg-pinchy: linear-gradient(to right, hsla(34deg, 100%, 50%, 20%), hsla(52deg, 100%, 50%, 20%));
@@ -41,12 +44,20 @@
     --fg-pinchy-subheading: hsla(41deg, 98.23%, 90.3%, 100%);
     --fg-pinchy-subheading-accent: hsla(44deg, 100%, 50%, 100%);
 
-    --w1-fg-subheading: darkseagreen;
-    --w1-bg-subheading: rgba(187, 255, 189, 0.1);
+    --bg-general: linear-gradient(to bottom, hsla(312deg, 95%, 7%, 1), hsla(326deg, 91%, 21%, 1), hsla(8deg, 69%, 45%, 1));
+    --general-fg-subheading: hsla(15deg, 25%, 65%, 1);
+    --general-bg-subheading: hsla(15deg, 100%, 87%, 0.1);
 
-    --w1-fg-advice-group: hsl(120, 100%, 96%);
-    --w1-bg-advice-group-odd: hsla(151, 42%, 69%, 0.3);
-    --w1-bg-advice-group-even: hsla(142, 52%, 73%, 0.5);
+    --general-fg-advice-group: hsla(15deg, 100%, 96%, 1);
+    --general-bg-advice-group-odd: hsla(15deg, 42%, 69%, 0.3);
+    --general-bg-advice-group-even: hsla(15deg, 52%, 73%, 0.6);
+
+    --w1-fg-subheading: darkseagreen;
+    --w1-bg-subheading: hsla(122deg, 100%, 87%, 0.1);
+
+    --w1-fg-advice-group: hsl(120deg, 100%, 96%);
+    --w1-bg-advice-group-odd: hsla(151deg, 42%, 69%, 0.3);
+    --w1-bg-advice-group-even: hsla(142deg, 52%, 73%, 0.6);
 
     --w2-fg-subheading: hsl(50, 25%, 65%);
     --w2-bg-subheading: hsla(50, 100%, 86%, 0.1);
@@ -60,33 +71,42 @@
 
 :root.light-mode {
     --fg: black;
-    --bg: hsl(0, 0%, 89%);
+    --bg: hsla(0deg, 0%, 89%);
 
     --fg-em: black;
-    --fg-link: hsl(221, 100%, 54%);
-    --fg-link-visited: hsl(271, 100%, 54%);
-    --fg-title: hsl(145, 49%, 31%);
+    --fg-link: hsla(221deg, 100%, 54%);
+    --fg-link-visited: hsla(271deg, 100%, 54%);
+    --fg-title: hsla(145deg, 49%, 31%);
 
     --bg-aside: white;
     --bg-link: transparent;
     --bg-link-visited: transparent;
 
-    --fg-subheading: hsl(43, 94%, 19%);
-    --fg-subheading-progress: hsla(42.66, 87.53%, 38.08%, 1);
-    --fg-subheading-finished: hsl(134, 98%, 34%);
+    --fg-subheading: hsla(43deg, 94%, 19%);
+    --fg-subheading-progress: hsla(42.66deg, 87.53%, 38.08%, 1);
+    --fg-subheading-finished: hsla(134deg, 98%, 34%);
     --border-subheading: hsla(0deg, 100%, 0%, 0.3);
 
-    --fg-pinchy-title: hsl(43.94deg 93.41% 59.54%);
-    --bg-pinchy-group-odd: hsla(0, 0%, 100%, 0.5);
-    --bg-pinchy-group-even: hsla(0deg, 0%, 0%, 20%);
-    --fg-pinchy-subheading: hsl(42, 62%, 23%);
-    --fg-pinchy-subheading-accent: hsl(44, 97%, 36%);
+    --fg-pinchy-title: hsla(43.94deg 93.41% 59.54%);
+    --fg-pinchy-subheading: hsla(42deg, 62%, 23%);
+    --fg-pinchy-subheading-accent: hsla(44deg, 97%, 36%);
 
-    --w1-fg-subheading: hsl(145, 50%, 29%);
+    --bg-pinchy-group-odd: hsla(0deg, 0%, 100%, 0.5);
+    --bg-pinchy-group-even: hsla(0deg, 0%, 0%, 20%);
+
+    --bg-general: linear-gradient(to bottom, hsla(0deg, 95%, 90%, 1), hsla(8deg, 95%, 90%, 1), hsla(16deg, 95%, 90%, 1));
+    --general-fg-subheading: hsla(0deg, 25%, 15%, 1);
+    --general-bg-subheading: hsla(0deg, 100%, 87%, 0.1);
+
+    --general-fg-advice-group: black;
+    --general-bg-advice-group-odd: hsla(15deg, 42%, 69%, 0.3);
+    --general-bg-advice-group-even: hsla(15deg, 52%, 73%, 0.5);
+
+    --w1-fg-subheading: hsla(145deg, 50%, 29%);
 
     --w1-fg-advice-group: black;
-    --w1-bg-advice-group-odd: hsla(153, 52%, 53%, 0.28);
-    --w1-bg-advice-group-even: hsla(151, 53%, 53%, 0.43);
+    --w1-bg-advice-group-odd: hsla(153deg, 52%, 53%, 0.28);
+    --w1-bg-advice-group-even: hsla(151deg, 53%, 53%, 0.43);
 
     --w2-fg-subheading: hsl(50, 50%, 29%);
     --w2-bg-subheading: hsla(50, 100%, 86%, 0.1);
@@ -343,8 +363,8 @@ strong:not(.no-collapse):hover,
         padding: 20px;
     }
     .subheading {
-        background-color: hsla(255, 100%, 100%, 0.1);
-        span {
+        background-color: hsla(255deg, 100%, 100%, 0.1);
+        & > span {
             color: var(--fg-pinchy-subheading);
             span {
                 color: var(--fg-pinchy-subheading-accent);
@@ -361,11 +381,49 @@ strong:not(.no-collapse):hover,
     }
 }
 
+#general.new {
+    background: var(--bg-general);
+    .subheading {
+        background:var(--general-bg-subheading);
+        & > span {
+            color: var(--general-fg-subheading);
+        }
+    }
+    .advice-group {
+        color: var(--general-fg-advice-group);
+        &:nth-child(odd) {
+            background-color: var(--general-bg-advice-group-odd);
+        }
+        &:nth-child(even) {
+            background-color: var(--general-bg-advice-group-even);
+        }
+    }
+}
+
+#w1.new {
+    .subheading {
+        background:var(--w1-bg-subheading);
+        & > span {
+            color: var(--w1-fg-subheading);
+        }
+    }
+    .advice-group {
+        color: var(--w1-fg-advice-group);
+        &:nth-child(odd) {
+            background-color: var(--w1-bg-advice-group-odd);
+        }
+        &:nth-child(even) {
+            background-color: var(--w1-bg-advice-group-even);
+        }
+    }
+}
+
 .new {
     display: flex;
     flex-direction: column;
 
-    font-family: 'Space Mono', sans-serif;
+    font-family: 'Kode Mono', sans-serif;
+    font-weight: 700;
     font-variant-ligatures: none;
     text-shadow: 1px 1px black;
 
@@ -395,11 +453,10 @@ strong:not(.no-collapse):hover,
         span {
             color: goldenrod;
 
-
-            &.tier-progress {
-                color: lightgoldenrodyellow;
-                .light-mode & {
-                    color: hsla(42.66, 87.53%, 38.08%, 1);
+            .tier-progress {
+                color: var(--fg-subheading-progress);
+                &.finished {
+                    color: var(--fg-subheading-finished);
                 }
             }
         }
@@ -438,7 +495,7 @@ strong:not(.no-collapse):hover,
     }
     .table {
         display: grid;
-        grid-template-columns: repeat(3, minmax(min-content, max-content));
+        grid-template-columns: repeat(4, minmax(min-content, max-content));
         gap: 10px;
 
         li, li a {
@@ -458,6 +515,7 @@ strong:not(.no-collapse):hover,
     .advice {
         display: flex;
         align-items: center;
+        margin-right: 20px;
 
         &::before {
             display: block;
@@ -469,6 +527,14 @@ strong:not(.no-collapse):hover,
             background-position: center;
             background-repeat: no-repeat;
         }
+    }
+    .arrow {
+        height: 0;
+        width: 0;
+        border-top: 5px solid transparent;
+        border-left: 10px solid white;
+        border-bottom: 5px solid transparent;
+        margin: auto 10px;
     }
 }
 

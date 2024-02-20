@@ -5,120 +5,23 @@
     </h1>
     <div class="content-wrapper{% if world.collapse %} folded{% endif %}">
         {% for section in world.sections %}
-            <section id="{{ section.name.lower() }}" class="new">
-                <h3 class="subheading no-collapse{% if section.collapse %} folded{% endif %}">
-                    {% if section.picture %}
-                        <img src="{{ section.picture | img }}" alt="{{ section.name }}">
-                    {% endif %}
-                    <span>{{ section.header|safe }}</span>
-                </h3>
-                <ul class="advice-section{% if section.collapse %} folded{% endif %}">
-                    <li id="{{ section.name.lower() }}-tier">
-                        {% for group in section.groups %}
-                            <div class="advice-group">
-                                <span>{{ group.heading }}:</span>
-                                <ul class="table{% if group.collapse %} folded{% endif %}">
-                                {% if group.show_table_header %}
-                                    <li></li>
-                                    <li>{% if group.show_progression %}current{% endif %}</li>
-                                    <li>{% if group.show_goal %}goal{% endif %}</li>
-                                {% endif %}
-                                {% for advice in group.advices %}
-                                    <li><a href="#{{ advice.css_class }}" class="advice {{ advice.css_class }}">{{ advice.label }}</a></li>
-                                    <li>{{ advice.progression }}</li>
-                                    <li>{{ advice.goal }}</li>
-                                {% endfor %}
-                                </ul>
-                            </div>
-                        {% endfor %}
-                    </li>
-                </ul>
-            </section>
+        {% include 'section.html' %}
         {% endfor %}
     </div>
 </article>
 
-<article id="general" class="general-content">
+{% set world = htmlInput.pop() %}
+<article id="general" class="general-content new">
     <h1 class="banner">
-        <img src="{{ img('general_banner.jpg') }}" alt="General Account AutoReview">
+        <img src="{{ world.banner | img }}" alt="{{ world.name }}" title="{{ world.name }}">
     </h1>
+    <div class="content-wrapper{% if not world.sections %} no-collapse folded{% endif %}{% if world.collapse %} folded{% endif %}">
+        {% for section in world.sections %}
+            {% include 'section.html' %}
+        {% endfor %}
+    </div>
 
     <div class="content-wrapper">
-        <section id="combat-levels">
-            <h3 class="subheading">
-                <img src="{{ img('family.png') }}" alt="General">
-            </h3>
-
-            {% if htmlInput[0][1] %}
-                <div class="advice-wrapper">
-                    <strong>Account Levels</strong>
-                    <ul id="account-levels">
-                        {% for line in htmlInput[0][1] %}
-                            {% if line %}
-                                <li class="advice">{{ line }}</li>
-                            {% endif %}
-                        {% endfor %}
-                    </ul>
-                </div>
-            {% endif %}
-        </section>
-
-        <section>
-            <h3 class="subheading">
-                <img src="{{ img('Maestro.png') }}" alt="Maestro">
-{#                <img src="{{ img('Maestro_Right_Hand_of_Action.png') }}" alt="Right Hand of Action">#}
-            </h3>
-
-            <div class="advice-wrapper">
-                <strong>Maestro Right Hands</strong>
-                <ul id="maestro-right-hands">
-                    {% for line in htmlInput[0][5] %}
-                        {% if line %}
-                            <li class="advice">{{ line }}</li>
-                        {% endif %}
-                    {% endfor %}
-                </ul>
-            </div>
-        </section>
-
-        <section>
-            <h3 class="subheading">
-{#                <img src="{{ img('Candy_1hr.png') }}" alt="1 HR Time Candy">#}
-                <img src="{{ img('Candy_Cosmic.png') }}" alt="Cosmic Time Candy">
-            </h3>
-
-            <div class="advice-wrapper">
-                <strong>Candy AFK Time Remaining</strong>
-                <ul id="candy-totals">
-                    {% for line in htmlInput[0][2][0] %}
-                        {% if line %}
-                            <li class="advice">{{ line }}</li>
-                        {% endif %}
-                    {% endfor %}
-                </ul>
-            </div>
-        </section>
-
-        {% if htmlInput[0][2][1] or htmlInput[0][2][2] %}
-            <section>
-                <h3 class="subheading">
-{#                    <img src="{{ img('Inventory_Peeper_Pouch.png') }}" alt="Peeper Pouch">#}
-                    <img src="{{ img('Storage_Chest_25.png') }}" alt="Storage Chest 25">
-                </h3>
-
-                <div class="advice-wrapper">
-                    <strong>Inventory Bags and Storage Chests</strong>
-                    <ul id="inventory-bags-and-storage-chests">
-                        {% for line in htmlInput[0][2][1:] %}
-                            {% if line %}
-                                <li class="advice">{{ line }}</li>
-                            {% endif %}
-                        {% endfor %}
-                    </ul>
-                </div>
-            </section>
-        {% endif %}
-
         <section>
             <h3 class="subheading">
                 <img src="{{ img('gemshop.png') }}" alt="Gem Shop">
@@ -126,11 +29,11 @@
 
             <div class="advice-wrapper">
                 <strong id="gem-shop-header">
-                    {{ htmlInput[0][3][1] }}<br>
-                    <em id="gem-shop-fomo-disclaimer">{{ htmlInput[0][3][0] }}</em>
+                    {{ htmlInput[0][2][1] }}<br>
+                    <em id="gem-shop-fomo-disclaimer">{{ htmlInput[0][2][0] }}</em>
                 </strong>
                 <ul id="gem-shop">
-                    {% for line in htmlInput[0][3][2:] %}
+                    {% for line in htmlInput[0][2][2:] %}
                         {% if line %}
                             <li class="advice">{{ line }}</li>
                         {% endif %}
@@ -146,21 +49,21 @@
 
             <div class="advice-wrapper">
                 <strong>
-                    {{ htmlInput[0][4][0] }}<br>
+                    {{ htmlInput[0][3][0] }}<br>
                     <em>These items are currently recommended for players trying to complete the endgame Equinox Dreams to
                         collect 20, 75, and 200 greenstacks. If you're nowhere near that, don't worry about collecting
                         them right away. Simply leave the quest uncompleted on your Wizard/Elemental Sorcerer and your
                         Squire/Divine Knight to clean up later!</em>
                 </strong>
-                {% if htmlInput[0][4][1] %}
+                {% if htmlInput[0][3][1] %}
                 <div class="advice-section-wrapper">
                     <strong>Missable quest item Greenstacks</strong>
                     <ul id="greenstacks">
-                        <li class="advice">{{ htmlInput[0][4][1] }}</li>
+                        <li class="advice">{{ htmlInput[0][3][1] }}</li>
                     </ul>
                 </div>
                 {% endif %}
-                {% for tier, categories in htmlInput[0][4][2].items() %}
+                {% for tier, categories in htmlInput[0][3][2].items() %}
                     {% if categories %}
                         <div class="advice-section-wrapper">
                             {% if tier == 0 %}
@@ -187,7 +90,7 @@
 
         <em>Card counts may be off by 1 or 2, due to rounding :( Sorry. I'm trying to find a more accurate list of requirements.</em>
 
-        {% for cardset in htmlInput[0][6] %}
+        {% for cardset in htmlInput[0][4] %}
         <section>
             <h3 class="subheading">
                 <img src="{{ cardset[2] | cards }}" alt="Card Set {{ cardset[2] }}">

@@ -39,7 +39,7 @@ def _try_colorise(logger):
 def _set_regular_logger(logger: logging.Logger):
     formatter = logging.Formatter(DEFAULT_FORMAT)
     handler = logging.StreamHandler(stream=sys.stdout)
-    handler.setLevel(logging.DEBUG)
+    handler.setLevel(logging.WARNING)
     handler.setFormatter(formatter)
 
     logger.addHandler(handler)

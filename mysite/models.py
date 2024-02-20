@@ -58,8 +58,9 @@ class AdviceBase:
     _true = [True]
     name = ""
 
-    def __init__(self, **extra):
+    def __init__(self, collapse: bool | None = None, **extra):
         # assign all extra kwargs as a field on the object
+        self._collapse: bool | None = collapse
         for k, v in extra.items():
             setattr(self, k, v)
 
@@ -73,7 +74,7 @@ class AdviceBase:
     @property
     def collapse(self) -> bool:
         children = getattr(self, self._children, list())
-        return self._collapse if self._collapse is not None else not bool(children)
+        return self._collapse if self._collapse is not None else not any(bool(c) for c in children)
 
     @collapse.setter
     def collapse(self, _value: bool):
@@ -131,13 +132,12 @@ class AdviceGroup(AdviceBase):
     __compare_by = ["tier"]
 
     def __init__(self, tier: str, pre_string: str, post_string: str = "", formatting: str = "", collapse: bool | None = None, advices: list[Advice] = [], **extra):
-        super().__init__(**extra)
+        super().__init__(collapse, **extra)
 
         self.tier: str = str(tier)
         self.pre_string: str = pre_string
         self.post_string: str = post_string
         self.formatting: str = formatting
-        self._collapse: bool | None = collapse
         self.advices: list[Advice] = advices
 
     def __str__(self) -> str:
@@ -197,21 +197,22 @@ class AdviceSection(AdviceBase):
     _children = "groups"
 
     def __init__(self, name: str, tier: str, header: str, picture: str | None = None, collapse: bool | None = None, groups: list[AdviceGroup] = [], pinchy_rating: str = "", **extra):
-        super().__init__(**extra)
+        super().__init__(collapse, **extra)
 
         self.name: str = name
         self.tier: str = tier
         self._raw_header: str = header
         self.picture: str = picture
-        self._collapse: bool | None = collapse
         self._groups: list[AdviceGroup] = groups
         self.pinchy_rating: str = pinchy_rating
 
     @property
     def header(self) -> str:
-        self._raw_header = self._raw_header.replace(".", ".<br>")
+        # TODO: header_extra needs proper handling
+        if not hasattr(self, "header_extra"):
+            self._raw_header = self._raw_header.replace(".", ".<br>", 1)
         if not self.tier:
-            return self._raw_header
+            return self._raw_header + (("<br>" + getattr(self, "header_extra")) if hasattr(self, "header_extra") else "")
 
         pattern = f"({re.escape(self.tier)})"
         parts = re.split(pattern, self._raw_header)
@@ -227,11 +228,15 @@ class AdviceSection(AdviceBase):
 
         header_markedup = ''.join(parts)
 
-        return header_markedup
+        return header_markedup + (("<br>" + getattr(self, "header_extra")) if hasattr(self, "header_extra") else "")
 
     @header.setter
     def header(self, raw_header: str):
         self._raw_header = raw_header
+
+    @property
+    def css_class(self):
+        return self.name.lower().replace(" ", "-")
 
     @property
     def groups(self):
@@ -258,10 +263,9 @@ class AdviceWorld(AdviceBase):
     """
     _children = "sections"
 
-    def __init__(self, name: WorldName, collapse: bool = None, sections: list[AdviceSection] = [], banner: str = "", **extra):
-        super().__init__(**extra)
+    def __init__(self, name: WorldName, collapse: bool | None = None, sections: list[AdviceSection] = list(), banner: str = "", **extra):
+        super().__init__(collapse, **extra)
 
         self.name: str = name.value
-        self._collapse: bool | None = collapse
         self.sections: list[AdviceSection] = sections
         self.banner: str = banner
