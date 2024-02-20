@@ -208,6 +208,7 @@ class AdviceSection(AdviceBase):
 
     @property
     def header(self) -> str:
+        # TODO: header_extra needs proper handling
         if not hasattr(self, "header_extra"):
             self._raw_header = self._raw_header.replace(".", ".<br>", 1)
         if not self.tier:
