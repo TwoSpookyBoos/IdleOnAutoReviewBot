@@ -394,7 +394,9 @@ def main(inputData, runType="web"):
 
     #World 3
     #consPrinterPR =
-    consRefineryPR = idleon_ConsRefinery.setConsRefineryProgressionTier(parsedJSON, progressionTiers['Construction Refinery'])
+    refinery_AdviceSection = dict()
+    refinery_AdviceSection['PR'] = idleon_ConsRefinery.OLDsetConsRefineryProgressionTier(parsedJSON, progressionTiers['Construction Refinery'])
+    refinery_AdviceSection['AdviceSection'] = idleon_ConsRefinery.setConsRefineryProgressionTier(parsedJSON, progressionTiers['Construction Refinery'])
     consSaltLickPR = idleon_ConsSaltLick.setConsSaltLickProgressionTier(parsedJSON, progressionTiers['Construction Salt Lick'])
     consDeathNotePR = idleon_ConsDeathNote.setConsDeathNoteProgressionTier(parsedJSON, progressionTiers['Construction Death Note'], playerCount, playerNames)
     consBuildingsPR = idleon_ConsBuildings.setConsBuildingsProgressionTier(parsedJSON, progressionTiers['Construction Buildings Pre-Buffs'], progressionTiers['Construction Buildings Post-Buffs'], playerCount)
@@ -417,7 +419,7 @@ def main(inputData, runType="web"):
     w2list = [alchBubbles_AdviceSection["PR"].nTR, alchVials_AdviceSection["PR"].nTR, [alchP2W_AdviceSection['Header'], alchP2W_AdviceSection['OldAdvice']], emptyList]  # len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 5
     #w2list = [alchBubblesPR.nTR,alchVialsPR.nTR,alchP2WList, obolsPR.nTR]  # len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 4, len(obolsPR.nTR) = 4
     w3list = [
-        ["Construction 3D Printer coming soon!"], consRefineryPR.nTR, consSaltLickPR.nTR, consDeathNotePR.nTR,  # len(consRefineryPR.nTR) = 5, len(consSaltLickPR.nTR) = 2, len(consDeathNotePR.nTR) = 12)
+        ["Construction 3D Printer coming soon!"], refinery_AdviceSection["PR"].nTR, consSaltLickPR.nTR, consDeathNotePR.nTR,  # len(refinery_AdviceSection.nTR) = 5, len(consSaltLickPR.nTR) = 2, len(consDeathNotePR.nTR) = 12)
         consBuildingsPR.nTR, ["Construction Atom Collider coming soon!"], ["Worship Totems coming soon!"], worshipPrayersPR.nTR, trappingPR.nTR]  # len(consBuildingsPR.nTR) = 8, len(trappingPR.nTR) = 9
     w4list = [breedingPR.nTR, [""], [""]]
     w5list = [[""], [""], [""]]
@@ -434,7 +436,7 @@ def main(inputData, runType="web"):
         Placements.BUBBLES: alchBubbles_AdviceSection["PR"].cT,
         Placements.VIALS: alchVials_AdviceSection["PR"].cT,
         Placements.P2W: alchP2W_AdviceSection['AdviceSection'].pinchy_rating,
-        Placements.REFINERY: consRefineryPR.cT,
+        Placements.REFINERY: refinery_AdviceSection["PR"].cT,
         Placements.SALT_LICK: consSaltLickPR.cT,
         Placements.DEATH_NOTE: consDeathNotePR.cT,
         Placements.PRAYERS: worshipPrayersPR.cT
@@ -458,11 +460,12 @@ def main(inputData, runType="web"):
     )
     w3Review = AdviceWorld(
         name=WorldName.WORLD3,
-        sections=[],
+        sections=[refinery_AdviceSection['AdviceSection']],
         banner="w3banner.png"
     )
 
-    biggoleAdviceList = [generalList, w1list, w2list, w3list, w4list, w5list, w6list, w7list, w8list, w3Review, w2Review, w1Review, pinchy]
+    biggoleAdviceList = [generalList, w1list, w2list, w3list, w4list, w5list, w6list, w7list, w8list, w3Review, w2Review, w1Review, generalReview, pinchy]
+    #biggoleAdviceList = [generalList, w1list, w2list, w3list, w4list, w5list, w6list, w7list, w8list, w2Review, w1Review, generalReview, pinchy]
 
     if runType == "consoleTest":
         return "Pass"
