@@ -8,33 +8,10 @@
 @import "skill-icons";
 @import "skulls";
 @import "slab-items";
+@import "storage-items";
 @import "talents";
 @import "vials";
 @import "world-contents";
-
-$character-classes: (
-	nikokoni: $blood-berserker-class-icon,
-	nikokoni2: $siege-breaker-class-icon,
-	charoleeja: $bubonic-conjuror-class-icon,
-	armyofme: $divine-knight-class-icon,
-	luckylarree: $beast-master-class-icon,
-	wise_old_woman: $elemental-sorcerer-class-icon,
-	noleafclover: $voidwalker-class-icon,
-	krkenzi: $divine-knight-class-icon,
-	coprnjak: $bubonic-conjuror-class-icon,
-	xtendix: $siege-breaker-class-icon,
-
-	nikokoni-the-blood-berserker: $blood-berserker-class-icon,
-	nikokoni2-the-siege-breaker: $siege-breaker-class-icon,
-	charoleeja-the-bubonic-conjuror: $bubonic-conjuror-class-icon,
-	armyofme-the-divine-knight: $divine-knight-class-icon,
-	luckylarree-the-beast-master: $beast-master-class-icon,
-	wise_old_woman-the-elemental-sorcerer: $elemental-sorcerer-class-icon,
-	noleafclover-the-voidwalker: $voidwalker-class-icon,
-	krkenzi-the-divine-knight: $divine-knight-class-icon,
-	coprnjak-the-bubonic-conjuror: $bubonic-conjuror-class-icon,
-	xtendix-the-siege-breaker: $siege-breaker-class-icon
-);
 
 $id-map: (
 	inventory-bag-u: $inventory-bag-u,
@@ -1923,9 +1900,62 @@ $extra: (
 	pay2win: $pay2win
 );
 
+$character-classes: (
+	beginner-icon:  $beginner-icon,
+	journeyman-icon:  $journeyman-icon,
+	maestro-icon:  $maestro-icon,
+	voidwalker-icon:  $voidwalker-icon,
+	infinilyte-icon:  $infinilyte-icon,
+	rage-icon:  $rage-icon,
+	warrior-icon:  $warrior-icon,
+	barbarian-icon:  $barbarian-icon,
+	blood-berserker-icon:  $blood-berserker-icon,
+	squire-icon:  $squire-icon,
+	divine-knight-icon:  $divine-knight-icon,
+	death-bringer-icon:  $death-bringer-icon,
+	royal-guardian-icon:  $royal-guardian-icon,
+	calm-icon:  $calm-icon,
+	archer-icon:  $archer-icon,
+	bowman-icon:  $bowman-icon,
+	siege-breaker-icon:  $siege-breaker-icon,
+	hunter-icon:  $hunter-icon,
+	beast-master-icon:  $beast-master-icon,
+	mayheim-icon:  $mayheim-icon,
+	arcane-cultist-icon:  $arcane-cultist-icon,
+	savvy-icon:  $savvy-icon,
+	mage-icon:  $mage-icon,
+	wizard-icon:  $wizard-icon,
+	elemental-sorcerer-icon:  $elemental-sorcerer-icon,
+	shaman-icon:  $shaman-icon,
+	bubonic-conjuror-icon:  $bubonic-conjuror-icon,
+	wind-walker-icon:  $wind-walker-icon,
+	spiritual-monk-icon:  $spiritual-monk-icon,
+	beginner-picture:  $beginner-picture,
+	warrior-picture:  $warrior-picture,
+	barbarian-picture:  $barbarian-picture,
+	squire-picture:  $squire-picture,
+	blood-berserker-picture:  $blood-berserker-picture,
+	divine-knight-picture:  $divine-knight-picture,
+	archer-picture:  $archer-picture,
+	bowman-picture:  $bowman-picture,
+	hunter-picture:  $hunter-picture,
+	siege-breaker-picture:  $siege-breaker-picture,
+	beast-master-picture:  $beast-master-picture,
+	mage-picture:  $mage-picture,
+	shaman-picture:  $shaman-picture,
+	wizard-picture:  $wizard-picture,
+	bubonic-conjuror-picture:  $bubonic-conjuror-picture,
+	elemental-sorcerer-picture:  $elemental-sorcerer-picture,
+	journeyman-picture:  $journeyman-picture,
+	maestro-picture:  $maestro-picture,
+	voidwalker-picture:  $voidwalker-picture,
+);
+
 $id-map: map-merge($skill-icons, $id-map);
-$id-map: map-merge($character-classes, $id-map);
+$id-map: map-merge($storage-items, $id-map);
 $id-map: map-merge($vials, $id-map);
+
+$id-map: map-merge($character-classes, $id-map);
 $id-map: map-merge($extra, $id-map);
 $id-map: map-merge($bribes-map, $id-map);
 $id-map: map-merge($bubbles-map, $id-map);

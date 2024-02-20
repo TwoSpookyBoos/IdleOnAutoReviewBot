@@ -1,82 +1,112 @@
-import json
 import idleon_SkillLevels
+from models import AdviceSection, AdviceGroup, Advice
+from utils import get_logger
+
+
+logger = get_logger(__name__)
+
+
+class Beginner:
+    def __init__(self, char_index: int, name: str, class_index: int):
+        self.index: int = char_index
+        self.name: str = name
+        self.classname: str = idleon_SkillLevels.getHumanReadableClasses(class_index)
+        self.janky_skills: list[tuple] = list()
+
+    @property
+    def fullname(self):
+        return f"{self.name} the {self.classname}"
+
+    @property
+    def jankiness(self):
+        return len(self.janky_skills)
+
+    @property
+    def is_jack_of_trades(self):
+        return self.jankiness == 0
+
+    @property
+    def should_be_more_pious(self):
+        return "Worship" in (e[0] for e in self.janky_skills)
+
 
 def getHandsStatus(inputJSON, playerCount, playerNames):
     skillsToReview_RightHand = ["Mining", "Choppin", "Fishing", "Catching", "Trapping", "Worship"]
-    skillsToReview_LeftHand = ["Smithing"]
-    handsClasses = [3,4,5,6] #Includes the placeholder numbers after Vman
-    handsCharactersDict = {}
-    characterClassesList = []
+    class_indices = [3, 4, 5, 6]  # Includes the placeholder numbers after Vman
+    beginners: list[Beginner] = list()
 
-    classCounter = 0
-    while classCounter < playerCount:
+    for char_index, charname in enumerate(playerNames):
         try:
-            characterClassesList.append(idleon_SkillLevels.getHumanReadableClasses(inputJSON['CharacterClass_'+str(classCounter)]))
-            if inputJSON['CharacterClass_'+str(classCounter)] in handsClasses:
-                handsCharactersDict[classCounter] = [(playerNames[classCounter] + " the " + idleon_SkillLevels.getHumanReadableClasses(inputJSON['CharacterClass_'+str(classCounter)])), {}, {}]
+            class_index = inputJSON['CharacterClass_'+str(char_index)]
+
+            if class_index not in class_indices:
+                continue
+
+            beginners.append(Beginner(char_index, charname, class_index))
+
         except Exception as reason:
-            print("MaestroHands.getHandsStatus~ EXCEPTION Unable to get Class name for character", classCounter, "because:", reason)
-            characterClassesList.append("Unknown")
-        classCounter += 1
+            logger.error("Unable to get Class name for character %s because: %s", char_index, reason)
+
     #print("MaestroHands.getHandsStatus~ OUTPUT characterClassesList:",characterClassesList)
     #print("MaestroHands.getHandsStatus~ OUTPUT handsCharactersDict:",handsCharactersDict)
+
     allSkillsDict = idleon_SkillLevels.getAllSkillLevelsDict(inputJSON, playerCount)
-    for handsCharacter in handsCharactersDict: #int, the index of the character
-        for skill in skillsToReview_LeftHand: #string, the name of the skill
-            if allSkillsDict[skill][handsCharacter] < max(allSkillsDict[skill]):
-                #print("MaestroHands.getHandsStatus~ INFO Increasing LeftHands counter by 1 for",handsCharactersDict[handsCharacter][0],"because their",skill,"level of",allSkillsDict[skill][handsCharacter],"is less than max of",max(allSkillsDict[skill]))
-                handsCharactersDict[handsCharacter][1][skill] = " (" + str(allSkillsDict[skill][handsCharacter]) + "/" + str(max(allSkillsDict[skill])+1) + ")"
-        for skill in skillsToReview_RightHand: #string, the name of the skill
-            if allSkillsDict[skill][handsCharacter] < max(allSkillsDict[skill]):
-                #print("MaestroHands.getHandsStatus~ INFO Increasing RightHands counter by 1 for",handsCharactersDict[handsCharacter][0],"because their",skill,"level of",allSkillsDict[skill][handsCharacter],"is less than max of",max(allSkillsDict[skill]))
-                handsCharactersDict[handsCharacter][2][skill] = " (" + str(allSkillsDict[skill][handsCharacter]) + "/" + str(max(allSkillsDict[skill])+1) + ")"
+
+    for beginner in beginners:
+        for skill in skillsToReview_RightHand:  # string, the name of the skill
+            skill_levels = allSkillsDict[skill]
+            best_level = max(skill_levels)
+            beginners_skill_level = skill_levels[beginner.index]
+
+            if beginners_skill_level < best_level:
+                logger.info("Adding skill to %s's Right Hand skills because their %s level of %s is less than max of %s", beginner.name, skill, beginners_skill_level, best_level)
+                beginner.janky_skills.append((skill, beginners_skill_level, best_level))
     #print("MaestroHands.getHandsStatus~ OUTPUT handsCharactersDict:",handsCharactersDict)
 
-    advice_LeftHands = []
-    leftHandsString = ""
-    advice_RightHands = []
-    rightHandsString = ""
+    # in case some unfortunate soul or an absolute madlad chose to have more than one beginner, choose the one that's the most skilled
+    main_beginner = min(beginners, key=lambda b: b.jankiness)
 
-    bestLeftName = ""
-    bestRightName = ""
-    #Set bests
-    for handsCharacter in handsCharactersDict:
-        if len(handsCharactersDict[handsCharacter][1]) == 0:
-            bestLeftName = handsCharactersDict[handsCharacter][0]
-        if len(handsCharactersDict[handsCharacter][2]) == 0:
-            bestRightName = handsCharactersDict[handsCharacter][0]
+    tier = f"{main_beginner.jankiness or 6}/{len(skillsToReview_RightHand)}" if main_beginner else ""
 
-    for handsCharacter in handsCharactersDict:
-        if len(handsCharactersDict[handsCharacter][1]) > 0: #if the character has at least 1 LeftHand skill they aren't first in
-            if bestLeftName != "":
-                leftHandsString = handsCharactersDict[handsCharacter][0] + " cheers on " + bestLeftName + " from the sidelines.  "
-            else:
-                leftHandsString = handsCharactersDict[handsCharacter][0] + " is not the highest level in " + str(len(handsCharactersDict[handsCharacter][1])) + "/" + str(len(skillsToReview_LeftHand)) + " Left Hand skills: "
-                for skill in handsCharactersDict[handsCharacter][1]:
-                    leftHandsString += skill + handsCharactersDict[handsCharacter][1][skill] + ", "
-        else:
-            leftHandsString = handsCharactersDict[handsCharacter][0] + " is the highest level in all " + str(len(skillsToReview_LeftHand)) + " Left Hand skills! They best ❤️  "
-        leftHandsString = leftHandsString[:-2]
-        advice_LeftHands.append(leftHandsString)
+    if not main_beginner:
+        header = "Gosh golly, I'm jealous, So many nice things ahead of you! Check this section again once you've acquired a Maestro"
+    elif main_beginner.is_jack_of_trades:
+        header = f"{main_beginner.fullname} is the highest level in all {tier} Right Hand skills! A Jack of trades, this one! ❤️"
+    else:
+        header = f"{main_beginner.fullname} is not the highest level in {tier} Right Hand skills:"
 
-        if len(handsCharactersDict[handsCharacter][2]) > 0: #if the character has at least 1 RightHand skill they aren't first in
-            if bestRightName != "":
-                rightHandsString = handsCharactersDict[handsCharacter][0] + " cheers on " + bestLeftName + " from the sidelines.  "
-            else:
-                rightHandsString = handsCharactersDict[handsCharacter][0] + " is not the highest level in " + str(len(handsCharactersDict[handsCharacter][2])) + "/" + str(len(skillsToReview_RightHand)) + " Right Hand skills: "
-                for skill in handsCharactersDict[handsCharacter][2]:
-                    rightHandsString += skill + handsCharactersDict[handsCharacter][2][skill] + ", "
-        else:
-            rightHandsString = handsCharactersDict[handsCharacter][0] + " is the highest level in all " + str(len(skillsToReview_RightHand)) + " Right Hand skills! They best ❤️  "
-        rightHandsString = rightHandsString[:-2]
+    post_string = ""
+    if main_beginner and main_beginner.should_be_more_pious:
+        post_string = "Worship matters moreso for Species Epoch than Right Hand. Don't steal charge away from this character!"
 
-        if rightHandsString.find("Worship") != -1:
-            rightHandsString += ". Worship matters moreso for Species Epoch than Right Hand. Don't steal charge away from this character!"
-        advice_RightHands.append(rightHandsString)
+    advices = [
+        Advice(
+            label=skill,
+            item_name=skill,
+            progression=progression,
+            goal=goal
+        )
+        for skill, progression, goal in (main_beginner.janky_skills if main_beginner else [])
+    ]
+
+    groups = [
+        AdviceGroup(
+            tier="",
+            pre_string="Get grindin'",
+            post_string=post_string,
+            advices=advices
+        )
+    ]
+
+    maestro = AdviceSection(
+        name="Maestro Right Hands",
+        tier=tier,
+        header=header,
+        picture="Maestro.png",
+        groups=groups,
+    )
+
     #print("MaestroHands.getHandsStatus~ OUTPUT advice_LeftHands:",advice_LeftHands)
     #print("MaestroHands.getHandsStatus~ OUTPUT advice_RightHands:",advice_RightHands)
-    if advice_RightHands != []:
-        return advice_RightHands
-    else:
-        return ["Come back when you have a Maestro class character!"]
 
+    return maestro
