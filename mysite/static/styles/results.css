@@ -418,6 +418,31 @@ strong:not(.no-collapse):hover,
     }
 }
 
+#w2.new {
+    .subheading {
+        background:var(--w2-bg-subheading);
+        & > span {
+            color: var(--w2-fg-subheading);
+            .tier-progress {
+                color: var(--fg-subheading-progress);
+                &.finished {
+                    color: var(--fg-subheading-finished);
+                }
+            }
+
+        }
+    }
+    .advice-group {
+        color: var(--w2-fg-advice-group);
+        &:nth-child(odd) {
+            background-color: var(--w2-bg-advice-group-odd);
+        }
+        &:nth-child(even) {
+            background-color: var(--w2-bg-advice-group-even);
+        }
+    }
+}
+
 .new {
     display: flex;
     flex-direction: column;

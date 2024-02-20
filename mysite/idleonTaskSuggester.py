@@ -457,7 +457,7 @@ def main(inputData, runType="web"):
         banner="w2banner.png"
     )
 
-    biggoleAdviceList = [generalList, w1list, w2list, w3list, w4list, w5list, w6list, w7list, w8list, w2Review, w1Review, pinchy]
+    biggoleAdviceList = [generalList, w1list, w2list, w3list, w4list, w5list, w6list, w7list, w8list, w2Review, w1Review, generalReview, pinchy]
 
     if runType == "consoleTest":
         return "Pass"
