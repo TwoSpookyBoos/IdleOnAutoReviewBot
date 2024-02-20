@@ -135,7 +135,8 @@ def setCombatLevelsProgressionTier(inputJSON, progressionTiers, playerCount, pla
         tier=tier,
         header=header,
         picture="family.png",
-        groups=[total_level_group, lvlup_group]
+        groups=[total_level_group, lvlup_group],
+        pinchy_rating=overall_CombatLevelTier
     )
 
-    return combat_section, overall_CombatLevelTier
+    return combat_section

@@ -371,7 +371,7 @@ def main(inputData, runType="web"):
     if runType == "web":
         logger.info(f'{headerData.last_update = }')
 
-    section_combatLevels, combat_tier = idleon_CombatLevels.setCombatLevelsProgressionTier(parsedJSON, progressionTiers['Combat Levels'], playerCount, playerNames, playerClasses)
+    section_combatLevels = idleon_CombatLevels.setCombatLevelsProgressionTier(parsedJSON, progressionTiers['Combat Levels'], playerCount, playerNames, playerClasses)
     section_consumables = idleon_Consumables.parseConsumables(parsedJSON, playerCount, playerNames)
     gemShopPR = idleon_GemShop.setGemShopProgressionTier(parsedJSON, progressionTiers['Gem Shop'], playerCount)
     allGStacksList = idleon_Greenstacks.setGStackProgressionTier(parsedJSON, playerCount, progressionTiers['Greenstacks'])
@@ -427,7 +427,7 @@ def main(inputData, runType="web"):
     w7list = [["w7 mechanic 1 placeholder"], ["w7 mechanic 2 placeholder"], ["w7 mechanic 3 placeholder"]]
     w8list = [["w8 mechanic 1 placeholder"], ["w8 mechanic 2 placeholder"], ["w8 mechanic 3 placeholder"]]
     biggoleProgressionTiersDict = {
-        Placements.COMBAT_LEVELS: combat_tier,
+        Placements.COMBAT_LEVELS: section_combatLevels.pinchy_rating,
         Placements.STAMPS: stamps_section["PR"].cT,
         Placements.BRIBES: bribes_section["PR"].cT,
         Placements.SMITHING: smithing_section["PR"].cT,
