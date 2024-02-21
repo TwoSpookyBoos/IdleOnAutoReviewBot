@@ -435,6 +435,7 @@ def main(inputData, runType="web"):
         Placements.BUBBLES: alchBubbles_AdviceSection["PR"].cT,
         Placements.VIALS: alchVials_AdviceSection["PR"].cT,
         Placements.P2W: alchP2W_AdviceSection['AdviceSection'].pinchy_rating,
+        Placements.REFINERY: int(refinery_AdviceSection['AdviceSection'].tier.split('/')[0]),
         Placements.SALT_LICK: consSaltLickPR.cT,
         Placements.DEATH_NOTE: consDeathNotePR.cT,
         Placements.PRAYERS: worshipPrayersPR.cT
