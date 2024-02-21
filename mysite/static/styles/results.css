@@ -305,56 +305,6 @@ strong:not(.no-collapse):hover,
     }
 }
 
-#w1.new {
-    .subheading {
-        background:var(--w1-bg-subheading);
-        & > span {
-            color: var(--w1-fg-subheading);
-            .tier-progress {
-                color: var(--fg-subheading-progress);
-                &.finished {
-                    color: var(--fg-subheading-finished);
-                }
-            }
-
-        }
-    }
-    .advice-group {
-        color: var(--w1-fg-advice-group);
-        &:nth-child(odd) {
-            background-color: var(--w1-bg-advice-group-odd);
-        }
-        &:nth-child(even) {
-            background-color: var(--w1-bg-advice-group-even);
-        }
-    }
-}
-
-#w2.new {
-    .subheading {
-        background:var(--w2-bg-subheading);
-        & > span {
-            color: var(--w2-fg-subheading);
-            .tier-progress {
-                color: var(--fg-subheading-progress);
-                &.finished {
-                    color: var(--fg-subheading-finished);
-                }
-            }
-
-        }
-    }
-    .advice-group {
-        color: var(--w2-fg-advice-group);
-        &:nth-child(odd) {
-            background-color: var(--w2-bg-advice-group-odd);
-        }
-        &:nth-child(even) {
-            background-color: var(--w2-bg-advice-group-even);
-        }
-    }
-}
-
 #pinchy.new {
     background: var(--bg-pinchy);
     .banner {
@@ -439,6 +389,31 @@ strong:not(.no-collapse):hover,
         }
         &:nth-child(even) {
             background-color: var(--w2-bg-advice-group-even);
+        }
+    }
+}
+
+#w3.new {
+    .subheading {
+        background:var(--w3-bg-subheading);
+        & > span {
+            color: var(--w3-fg-subheading);
+            .tier-progress {
+                color: var(--fg-subheading-progress);
+                &.finished {
+                    color: var(--fg-subheading-finished);
+                }
+            }
+
+        }
+    }
+    .advice-group {
+        color: var(--w3-fg-advice-group);
+        &:nth-child(odd) {
+            background-color: var(--w3-bg-advice-group-odd);
+        }
+        &:nth-child(even) {
+            background-color: var(--w3-bg-advice-group-even);
         }
     }
 }

@@ -64,7 +64,7 @@ def getHandsStatus(inputJSON, playerCount, playerNames):
     #print("MaestroHands.getHandsStatus~ OUTPUT handsCharactersDict:",handsCharactersDict)
 
     # in case some unfortunate soul or an absolute madlad chose to have more than one beginner, choose the one that's the most skilled
-    main_beginner = min(beginners, key=lambda b: b.jankiness)
+    main_beginner = min(beginners, key=lambda b: b.jankiness, default=None)
 
     tier = f"{main_beginner.jankiness or 6}/{len(skillsToReview_RightHand)}" if main_beginner else ""
 

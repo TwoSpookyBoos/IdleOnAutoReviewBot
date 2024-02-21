@@ -574,6 +574,10 @@
   background-image: url("/static/imgs/pay2win.png");
 }
 
+.iceland-irwin::before {
+  background-image: url("https://idleon.wiki/wiki/images/a/ad/Iceland_Irwin.gif");
+}
+
 .beginner-icon::before {
   background-image: url("https://idleon.wiki/wiki/images/0/0f/Beginner_Class_Icon.png");
 }

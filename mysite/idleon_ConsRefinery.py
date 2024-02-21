@@ -15,11 +15,16 @@ saltValuesDict = {
 }
 
 class Salt:
-    def __init__(self, salt_name: str, auto_refine: int, salt_rank: int, next_salt_rank: int, previousSalt):
+    def __init__(self, salt_name: str, auto_refine: int, salt_rank: int, next_salt_rank: int, previousSalt, merit_purchased: bool = True):
         self.salt_name: str = salt_name
         self.salt_rank: int = salt_rank
         self.auto_refine: int = auto_refine
         self.max_rank_with_excess: int = salt_rank
+        self.merit_purchased: bool = merit_purchased
+        if self.merit_purchased is True:
+            self.salt_consumption_scaling: float = 1.3
+        else:
+            self.salt_consumption_scaling: float = 1.5
         if salt_name in saltValuesDict:
             self.image: str = saltValuesDict[salt_name][0]
             self.cycles_per_Synthesis_cycle: int = saltValuesDict[salt_name][1]
@@ -27,7 +32,7 @@ class Salt:
             self.next_salt_cycles_per_Synthesis_cycle: int = saltValuesDict[salt_name][3]
             self.output: int = int(floor(self.salt_rank ** 1.3)) * self.cycles_per_Synthesis_cycle
             if next_salt_rank != 0:
-                self.consumed: int = int(floor(next_salt_rank ** 1.3) * self.next_salt_consumption * self.next_salt_cycles_per_Synthesis_cycle)
+                self.consumed: int = int(floor(next_salt_rank ** self.salt_consumption_scaling) * self.next_salt_consumption * self.next_salt_cycles_per_Synthesis_cycle)
             else:
                 self.consumed: int = 0
             self.excess: bool = self.output >= self.consumed
@@ -41,7 +46,7 @@ class Salt:
                     if next_salt_rank != 0:
                         self.max_rank_with_excess: int = int(
                             floor(
-                                ((previousSalt.output-1)/(self.next_salt_consumption * self.cycles_per_Synthesis_cycle)) ** (1/1.3)
+                                ((previousSalt.output-1)/(self.next_salt_consumption * self.cycles_per_Synthesis_cycle)) ** (1/self.salt_consumption_scaling)
                             )
                         )
             if self.max_rank_with_excess >= salt_rank:
@@ -86,42 +91,48 @@ def parseConsRefinery(inputJSON):
         auto_refine=consRefineryDict['Red AutoRefine'],
         salt_rank=consRefineryDict['Red Rank'],
         next_salt_rank=consRefineryDict['Orange Rank'],
-        previousSalt=None
+        previousSalt=None,
+        merit_purchased=consRefineryDict["Salt Merit"] >= 1
     )
     consRefineryDict["OrangeSalt"] = Salt(
         salt_name="Orange",
         auto_refine=consRefineryDict['Orange AutoRefine'],
         salt_rank=consRefineryDict["Orange Rank"],
         next_salt_rank=consRefineryDict["Blue Rank"],
-        previousSalt=consRefineryDict["RedSalt"]
+        previousSalt=consRefineryDict["RedSalt"],
+        merit_purchased=consRefineryDict["Salt Merit"] >= 2
     )
     consRefineryDict["BlueSalt"] = Salt(
         salt_name="Blue",
         auto_refine=consRefineryDict['Blue AutoRefine'],
         salt_rank=consRefineryDict["Blue Rank"],
         next_salt_rank=consRefineryDict["Green Rank"],
-        previousSalt=consRefineryDict["OrangeSalt"]
+        previousSalt=consRefineryDict["OrangeSalt"],
+        merit_purchased=consRefineryDict["Salt Merit"] >= 3
     )
     consRefineryDict["GreenSalt"] = Salt(
         salt_name="Green",
         auto_refine=consRefineryDict['Green AutoRefine'],
         salt_rank=consRefineryDict["Green Rank"],
         next_salt_rank=consRefineryDict["Purple Rank"],
-        previousSalt=consRefineryDict["BlueSalt"]
+        previousSalt=consRefineryDict["BlueSalt"],
+        merit_purchased=consRefineryDict["Salt Merit"] >= 4
     )
     consRefineryDict["PurpleSalt"] = Salt(
         salt_name="Purple",
         auto_refine=consRefineryDict['Purple AutoRefine'],
         salt_rank=consRefineryDict["Purple Rank"],
         next_salt_rank=consRefineryDict["Nullo Rank"],
-        previousSalt=consRefineryDict["GreenSalt"]
+        previousSalt=consRefineryDict["GreenSalt"],
+        merit_purchased=consRefineryDict["Salt Merit"] >= 5
     )
     consRefineryDict["NulloSalt"] = Salt(
         salt_name="Nullo",
         auto_refine=consRefineryDict['Nullo AutoRefine'],
         salt_rank=consRefineryDict["Nullo Rank"],
         next_salt_rank=0,
-        previousSalt=consRefineryDict["PurpleSalt"]
+        previousSalt=consRefineryDict["PurpleSalt"],
+        merit_purchased=consRefineryDict["Salt Merit"] >= 6
     )
     #print(consRefineryDict)
     return consRefineryDict
@@ -167,7 +178,8 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers):
                 item_name=consRefineryDict['GreenSalt'].image,
                 progression=consRefineryDict['GreenSalt'].auto_refine,
                 goal=0,
-                unit="%"
+                unit="%",
+                value_format="{value}{unit}"
             )
         )
 
@@ -194,48 +206,48 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers):
             )
         )
 
-    #Excess and Deficits Advice
-    refinery_AdviceDict["ExcessAndDeficits"].append(
-        Advice(
-            label=f"Red Salt {consRefineryDict['RedSalt'].excess_or_deficit}",
-            item_name=consRefineryDict['RedSalt'].image,
-            progression=consRefineryDict['RedSalt'].excess_amount)
-    )
-    refinery_AdviceDict["ExcessAndDeficits"].append(
-        Advice(
-            label=f"Orange Salt {consRefineryDict['OrangeSalt'].excess_or_deficit}",
-            item_name=consRefineryDict['OrangeSalt'].image,
-            progression=consRefineryDict['OrangeSalt'].excess_amount)
-    )
-    refinery_AdviceDict["ExcessAndDeficits"].append(
-        Advice(
-            label=f"Blue Salt {consRefineryDict['BlueSalt'].excess_or_deficit}",
-            item_name=consRefineryDict['BlueSalt'].image,
-            progression=consRefineryDict['BlueSalt'].excess_amount)
-    )
-    refinery_AdviceDict["ExcessAndDeficits"].append(
-        Advice(
-            label=f"Green Salt {consRefineryDict['GreenSalt'].excess_or_deficit}",
-            item_name=consRefineryDict['GreenSalt'].image,
-            progression=consRefineryDict['GreenSalt'].excess_amount)
-    )
-    refinery_AdviceDict["ExcessAndDeficits"].append(
-        Advice(
-            label=f"Purple Salt {consRefineryDict['PurpleSalt'].excess_or_deficit}",
-            item_name=consRefineryDict['PurpleSalt'].image,
-            progression=consRefineryDict['PurpleSalt'].excess_amount)
-    )
-    refinery_AdviceDict["ExcessAndDeficits"].append(
-        Advice(
-            label=f"Nullo Salt {consRefineryDict['NulloSalt'].excess_or_deficit}",
-            item_name=consRefineryDict['NulloSalt'].image,
-            progression=consRefineryDict['NulloSalt'].excess_amount)
-    )
+    # #Excess and Deficits Advice
+    # refinery_AdviceDict["ExcessAndDeficits"].append(
+    #     Advice(
+    #         label=f"Red Salt {consRefineryDict['RedSalt'].excess_or_deficit}",
+    #         item_name=consRefineryDict['RedSalt'].image,
+    #         progression=consRefineryDict['RedSalt'].excess_amount)
+    # )
+    # refinery_AdviceDict["ExcessAndDeficits"].append(
+    #     Advice(
+    #         label=f"Orange Salt {consRefineryDict['OrangeSalt'].excess_or_deficit}",
+    #         item_name=consRefineryDict['OrangeSalt'].image,
+    #         progression=consRefineryDict['OrangeSalt'].excess_amount)
+    # )
+    # refinery_AdviceDict["ExcessAndDeficits"].append(
+    #     Advice(
+    #         label=f"Blue Salt {consRefineryDict['BlueSalt'].excess_or_deficit}",
+    #         item_name=consRefineryDict['BlueSalt'].image,
+    #         progression=consRefineryDict['BlueSalt'].excess_amount)
+    # )
+    # refinery_AdviceDict["ExcessAndDeficits"].append(
+    #     Advice(
+    #         label=f"Green Salt {consRefineryDict['GreenSalt'].excess_or_deficit}",
+    #         item_name=consRefineryDict['GreenSalt'].image,
+    #         progression=consRefineryDict['GreenSalt'].excess_amount)
+    # )
+    # refinery_AdviceDict["ExcessAndDeficits"].append(
+    #     Advice(
+    #         label=f"Purple Salt {consRefineryDict['PurpleSalt'].excess_or_deficit}",
+    #         item_name=consRefineryDict['PurpleSalt'].image,
+    #         progression=consRefineryDict['PurpleSalt'].excess_amount)
+    # )
+    # refinery_AdviceDict["ExcessAndDeficits"].append(
+    #     Advice(
+    #         label=f"Nullo Salt {consRefineryDict['NulloSalt'].excess_or_deficit}",
+    #         item_name=consRefineryDict['NulloSalt'].image,
+    #         progression=consRefineryDict['NulloSalt'].excess_amount)
+    # )
 
     # Ranks Advice
     refinery_AdviceDict["Ranks"].append(
         Advice(
-            label="Red Salt always",
+            label="Red Salt",
             item_name=consRefineryDict['RedSalt'].image,
             progression=consRefineryDict['RedSalt'].salt_rank,
             goal="∞")
@@ -259,7 +271,7 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers):
             label="Green Salt",
             item_name=consRefineryDict['GreenSalt'].image,
             progression=consRefineryDict['GreenSalt'].salt_rank,
-            goal=consRefineryDict['GreenSalt'].max_rank_with_excess)
+            goal="∞")
     )
     refinery_AdviceDict["Ranks"].append(
         Advice(
@@ -298,9 +310,9 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers):
     )
     refinery_AdviceGroupDict['Ranks'] = AdviceGroup(
         tier="",
-        pre_string="Max Ranks without causing a Deficit",
+        pre_string="Recommended Ranks without causing a Salt Deficit",
         advices=refinery_AdviceDict['Ranks'],
-        post_string=""
+        post_string="Or just YOLO rank up everything if balancing is too much of a pain ¯\_(ツ)_/¯"
     )
 
     # Generate AdviceSection
