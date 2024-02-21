@@ -90,7 +90,7 @@ class Advice(AdviceBase):
         goal: the target level or amount of the advice
         unit (str): if there is one, usually "%"
     """
-    def __init__(self, label: str, item_name: str, progression: Any = "", goal: Any = "", unit: str = "", **extra):
+    def __init__(self, label: str, item_name: str, progression: Any = "", goal: Any = "", unit: str = "", value_format: str = "{value}{unit}", **extra):
         super().__init__(**extra)
 
         self.label: str = label
@@ -100,8 +100,9 @@ class Advice(AdviceBase):
         self.progression: str = str(progression)
         self.goal: str = str(goal)
         self.unit: str = unit
+        self.value_format: str = value_format
 
-        if hasattr(self, "value_format"):
+        if self.unit:
             self.progression = self.value_format.format(value=self.progression, unit=self.unit)
             self.goal = self.value_format.format(value=self.goal, unit=self.unit)
 
