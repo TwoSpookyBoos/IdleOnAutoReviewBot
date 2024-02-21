@@ -142,7 +142,8 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers):
         name="Refinery",
         tier="Not Yet Evaluated",
         header="Best Refinery tier met: Not Yet Evaluated. Recommended Refinery actions:",
-        picture="Construction_Refinery.gif"
+        picture="Construction_Refinery.gif",
+        collapse=False
     )
     consRefineryDict = parseConsRefinery(inputJSON)
 
@@ -306,12 +307,12 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers):
     overall_ConsRefineryTier = min(max_tier, tier_AutoRefine, tier_W3Merits)
     tier_section = f"{overall_ConsRefineryTier}/{max_tier}"
     refinery_AdviceSection.tier = tier_section
+    refinery_AdviceSection.groups = refinery_AdviceGroupDict.values()
     if overall_ConsRefineryTier == max_tier:
         refinery_AdviceSection.header = f"Best Refinery tier met: {tier_section}. You best ❤️"
 
     else:
         refinery_AdviceSection.header = f"Best Refinery tier met: {tier_section}. Recommended Refinery actions"
-        refinery_AdviceSection.groups = refinery_AdviceGroupDict.values()
     return refinery_AdviceSection
 
 def OLDsetConsRefineryProgressionTier(inputJSON, progressionTiers):
