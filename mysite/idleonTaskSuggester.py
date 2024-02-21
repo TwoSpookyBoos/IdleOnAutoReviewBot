@@ -429,13 +429,13 @@ def main(inputData, runType="web"):
     w8list = [["w8 mechanic 1 placeholder"], ["w8 mechanic 2 placeholder"], ["w8 mechanic 3 placeholder"]]
     biggoleProgressionTiersDict = {
         Placements.COMBAT_LEVELS: combat_tier,
-        Placements.STAMPS: stamps_section["PR"].cT,
-        Placements.BRIBES: bribes_section["PR"].cT,
-        Placements.SMITHING: smithing_section["PR"].cT,
-        Placements.BUBBLES: alchBubbles_AdviceSection["PR"].cT,
-        Placements.VIALS: alchVials_AdviceSection["PR"].cT,
+        Placements.STAMPS: stamps_section['AdviceSection'].pinchy_rating,
+        Placements.BRIBES: bribes_section['AdviceSection'].pinchy_rating,
+        Placements.SMITHING: smithing_section['AdviceSection'].pinchy_rating,
+        Placements.BUBBLES: alchBubbles_AdviceSection['AdviceSection'].pinchy_rating,
+        Placements.VIALS: alchVials_AdviceSection['AdviceSection'].pinchy_rating,
         Placements.P2W: alchP2W_AdviceSection['AdviceSection'].pinchy_rating,
-        Placements.REFINERY: int(refinery_AdviceSection['AdviceSection'].tier.split('/')[0]),
+        Placements.REFINERY: refinery_AdviceSection['AdviceSection'].pinchy_rating,
         Placements.SALT_LICK: consSaltLickPR.cT,
         Placements.DEATH_NOTE: consDeathNotePR.cT,
         Placements.PRAYERS: worshipPrayersPR.cT

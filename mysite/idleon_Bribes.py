@@ -229,6 +229,7 @@ def setBribesProgressionTier(inputJSON, progressionTiers):
 
     overall_BribesTier = min(max_tier, tier_BribesPurchased)
     tier_section = f"{overall_BribesTier}/{max_tier}"
+    bribe_AdviceSection.pinchy_rating = overall_BribesTier
     bribe_AdviceSection.tier = tier_section
     bribe_AdviceSection.picture = 'Bribes.png'
     #Generate advice statement

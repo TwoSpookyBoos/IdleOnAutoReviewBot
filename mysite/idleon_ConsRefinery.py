@@ -319,6 +319,7 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers):
     overall_ConsRefineryTier = min(max_tier, tier_AutoRefine, tier_W3Merits)
     tier_section = f"{overall_ConsRefineryTier}/{max_tier}"
     refinery_AdviceSection.tier = tier_section
+    refinery_AdviceSection.pinchy_rating = overall_ConsRefineryTier
     refinery_AdviceSection.groups = refinery_AdviceGroupDict.values()
     if overall_ConsRefineryTier == max_tier:
         refinery_AdviceSection.header = f"Best Refinery tier met: {tier_section}. You best ❤️"

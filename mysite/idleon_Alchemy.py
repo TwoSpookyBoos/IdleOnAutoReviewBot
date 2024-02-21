@@ -616,6 +616,7 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers):
         advice_VirileVials]
     tier_section = f"{overall_AlchemyVialsTier}/{max_tier}"
     vial_AdviceSection.tier = tier_section
+    vial_AdviceSection.pinchy_rating = overall_AlchemyVialsTier
     if overall_AlchemyVialsTier == max_tier:
         vial_AdviceSection.header = f"Best Vial tier met: {tier_section}. You best ❤️"
     else:
@@ -880,6 +881,7 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers):
     #Generate AdviceSection
     tier_section = f"{overall_alchemyBubblesTier}/{max_tier}"
     bubbles_AdviceSection.tier = tier_section
+    bubbles_AdviceSection.pinchy_rating = overall_alchemyBubblesTier
     if overall_alchemyBubblesTier == max_tier:
         bubbles_AdviceSection.header = f"Best Bubbles tier met: {tier_section}. You best ❤️"
     else:

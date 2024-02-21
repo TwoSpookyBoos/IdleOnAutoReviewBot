@@ -533,6 +533,7 @@ def setStampProgressionTier(inputJSON, progressionTiers):
         )
 
     tier_section = f"{overall_StampTier}/{max_tier}"
+    stamp_AdviceSection.pinchy_rating = overall_StampTier
     stamp_AdviceSection.tier = tier_section
     if overall_StampTier == max_tier:
         advice_CombinedStamps = [
