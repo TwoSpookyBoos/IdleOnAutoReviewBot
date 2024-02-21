@@ -209,7 +209,7 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
     #Generate AdviceGroups
     for tierKey in building_AdviceDict.keys():
         building_AdviceGroupDict[tierKey] = AdviceGroup(
-            tier=str(tierKey),
+            tier="",
             pre_string=str(tierNamesList[tierKey]),
             advices=building_AdviceDict[tierKey],
             post_string=""
