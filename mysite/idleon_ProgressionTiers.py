@@ -128,16 +128,16 @@ def setDefaultTiers():
     ]
     defaultTiers['Construction Salt Lick'] = [
         [0, {}, ""],
-        [1, {'Obol Storage':8}, "Froges"],
-        [2, {'Printer Sample Size':20}, "Red Salts"],
-        [3, {'Refinery Speed':10}, "Orange Salts"],
-        [4, {'Max Book':10}, "Blue Salts"],
-        [5, {'Movespeed':1}, "Blue Souls"], #This buff only works under 170% move speed, so can become useless quite quickly.
-        [6, {'TD Points':10}, "Green Salts"],
-        [7, {'Multikill':10}, "Purple Salts"],
-        [8, {'EXP':100}, "Yellow Souls"],
-        [9, {'Alchemy Liquids':100}, "Mouseys"],
-        [10, {'Damage':250}, "Pingys"]
+        [1, {'Obol Storage':8}, "Froge"],
+        [2, {'Printer Sample Size':20}, "Redox Salts"],
+        [3, {'Refinery Speed':10}, "Explosive Salts"],
+        [4, {'Max Book':10}, "Spontaneity Salts"],
+        [5, {'Movespeed':1}, "Frigid Soul"],  #This buff only works under 170% move speed, so can become useless quite quickly.
+        [6, {'TD Points':10}, "Dioxide Synthesis"],
+        [7, {'Multikill':10}, "Purple Salt"],
+        [8, {'EXP':100}, "Dune Soul"],
+        [9, {'Alchemy Liquids':100}, "Mousey"],
+        [10, {'Damage':250}, "Pingy"]
         ]
     defaultTiers['Construction Death Note'] = [
         #0-4 int tier. int w1LowestSkull, int w2LowestSkull, int w3LowestSkull, int w4LowestSkull,
