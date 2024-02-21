@@ -126,7 +126,6 @@ class Placements(dict):
     BUBBLES = "Bubbles"
     VIALS = "Vials"
     P2W = "Pay2Win"
-    REFINERY = "Refinery"
     SALT_LICK = "Salt Lick"
     PRAYERS = "Prayers"
     DEATH_NOTE = "Death Note"
@@ -134,7 +133,7 @@ class Placements(dict):
         COMBAT_LEVELS,
         STAMPS, BRIBES, SMITHING,
         BUBBLES, VIALS, P2W,
-        REFINERY, SALT_LICK, PRAYERS, DEATH_NOTE,
+        SALT_LICK, PRAYERS, DEATH_NOTE,
     ]
 
     sectionThresholds = {
@@ -147,7 +146,6 @@ class Placements(dict):
         BUBBLES:       [0,   0, 0, 1,    1,  1,  1,      2,  2,  2,      3,  4,  5,      7,  12, 18,     23,   99],
         VIALS:         [0,   0, 0, 0,    0,  0,  0,      1,  2,  3,      4,  5,  6,      7,  16, 19,     20,   99],
         P2W:           [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  1,      1,  1,  1,      1,    99],
-        REFINERY:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  1,  2,      3,  4,  5,      6,    99],
         SALT_LICK:     [0,   0, 0, 0,    0,  0,  0,      0,  0,  1,      2,  3,  4,      5,  6,  7,      10,   99],
         PRAYERS:       [0,   0, 0, 0,    0,  0,  1,      1,  2,  3,      3,  4,  5,      5,  6,  7,      7,    99],
         DEATH_NOTE:    [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  4,  5,      12, 15, 19,     23,   99],

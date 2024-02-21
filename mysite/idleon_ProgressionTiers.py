@@ -118,30 +118,14 @@ def setDefaultTiers():
         ]
     defaultTiers['Construction Printer'] = []
     defaultTiers['Construction Refinery'] = [
-        #int tier, dict Tab1 Ranks, dict Tab2 Ranks, dict Tab3, dict All-tab AutoRefine, int W3Merits purchased, str Notes
-        [0,  {'Red Rank':0,  'Orange Rank':0,  'Blue Rank':0},  {'Green Rank':0,  'Purple Rank':0,  'Nullo Rank':0},  {}, {}, 0,""],
-        [1,  {'Red Rank':6,  'Orange Rank':3,  'Blue Rank':1},  {'Green Rank':0,  'Purple Rank':0,  'Nullo Rank':0},  {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 0, ""],
-        [2,  {'Red Rank':8,  'Orange Rank':4,  'Blue Rank':2},  {'Green Rank':2,  'Purple Rank':0,  'Nullo Rank':0},  {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 2, ""],
-        [3,  {'Red Rank':11, 'Orange Rank':6,  'Blue Rank':3},  {'Green Rank':6,  'Purple Rank':3,  'Nullo Rank':1},  {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
-        [4,  {'Red Rank':11, 'Orange Rank':6,  'Blue Rank':3},  {'Green Rank':8,  'Purple Rank':4,  'Nullo Rank':2},  {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
-        [5,  {'Red Rank':14, 'Orange Rank':8,  'Blue Rank':4},  {'Green Rank':11, 'Purple Rank':6,  'Nullo Rank':3},  {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
-        [6,  {'Red Rank':16, 'Orange Rank':9,  'Blue Rank':5},  {'Green Rank':14, 'Purple Rank':8,  'Nullo Rank':4},  {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
-        [7,  {'Red Rank':19, 'Orange Rank':11, 'Blue Rank':6},  {'Green Rank':17, 'Purple Rank':10, 'Nullo Rank':5},  {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
-        [8,  {'Red Rank':21, 'Orange Rank':12, 'Blue Rank':7},  {'Green Rank':19, 'Purple Rank':11, 'Nullo Rank':6},  {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
-        [9,  {'Red Rank':24, 'Orange Rank':14, 'Blue Rank':8},  {'Green Rank':21, 'Purple Rank':12, 'Nullo Rank':7},  {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
-        [10, {'Red Rank':28, 'Orange Rank':16, 'Blue Rank':9},  {'Green Rank':24, 'Purple Rank':14, 'Nullo Rank':8},  {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
-        [11, {'Red Rank':33, 'Orange Rank':19, 'Blue Rank':11}, {'Green Rank':28, 'Purple Rank':16, 'Nullo Rank':9},  {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
-        [12, {'Red Rank':37, 'Orange Rank':21, 'Blue Rank':12}, {'Green Rank':29, 'Purple Rank':17, 'Nullo Rank':10}, {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
-        #[12, {'Red Rank':33, 'Orange Rank':19, 'Blue Rank':11}, {'Green Rank':29, 'Purple Rank':17, 'Nullo Rank':10}, {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
-        #Blue 12 eats more salts than Orange 19 produces. This line in the guide looks to be wrong, so I am skipping it after feedback. Copied tab1 t13 to t12.
-        [13, {'Red Rank':37, 'Orange Rank':21, 'Blue Rank':12}, {'Green Rank':29, 'Purple Rank':17, 'Nullo Rank':11}, {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
-        [14, {'Red Rank':40, 'Orange Rank':23, 'Blue Rank':13}, {'Green Rank':36, 'Purple Rank':21, 'Nullo Rank':12}, {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
-        [15, {'Red Rank':45, 'Orange Rank':26, 'Blue Rank':15}, {'Green Rank':40, 'Purple Rank':23, 'Nullo Rank':13}, {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
-        [16, {'Red Rank':45, 'Orange Rank':26, 'Blue Rank':15}, {'Green Rank':42, 'Purple Rank':24, 'Nullo Rank':14}, {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
-        [17, {'Red Rank':2}, {}, {}, {'Combustion AutoRefine':0}, 5, "Red has reached 22+, ranks start becoming faster instead of slower! Tab1 Ranks go Brrrr now!"],
-        [18, {'Red Rank':2}, {'Green Rank':2}, {}, {'Synthesis AutoRefine':0}, 5, "Green has reached 22+, ranks start becoming faster instead of slower! Tab2 Ranks go Brrrr now! Be careful with Nullo salts though. They'll decimate your Void Bar supply very quickly."],
-        [19, {'Red Rank':2}, {}, {}, {'Sum AutoRefine':0}, 5, "You've got all Salts set to 0% auto-refine, the infinite-scaling portion of Refinery. This might leave you dry without salts for days or weeks at a time to begin, but will correct itself over time."],
-        ]
+        # int tier, dict All-tab AutoRefine, int W3Merits purchased, str Notes
+        [0, {}, 0, ""],
+        [1, {'Red AutoRefine': 0, 'Green AutoRefine': 0}, 1, ""],
+        [2, {'Red AutoRefine': 0, 'Green AutoRefine': 0}, 2, ""],
+        [3, {'Red AutoRefine': 0, 'Green AutoRefine': 0}, 3, ""],
+        [4, {'Red AutoRefine': 0, 'Green AutoRefine': 0}, 4, ""],
+        [5, {'Red AutoRefine': 0, 'Green AutoRefine': 0}, 5, ""]
+    ]
     defaultTiers['Construction Salt Lick'] = [
         [0, {}, ""],
         [1, {'Obol Storage':8}, "Froges"],
