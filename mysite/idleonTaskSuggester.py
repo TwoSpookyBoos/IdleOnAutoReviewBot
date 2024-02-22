@@ -362,8 +362,6 @@ def main(inputData, runType="web"):
             headerData.json_error = "NO SORTED LIST OF CHARACTER NAMES FOUND IN DATA. REPLACING WITH GENERIC NUMBER ORDER."
         else:
             headerData.first_name = playerNames[0]
-            headerData.link_text = f"{playerNames[0].lower()}.idleonefficiency.com"
-            headerData.ie_link = f"https://{playerNames[0]}.idleonefficiency.com"
 
     #General
     headerData.last_update = getLastUpdatedTime(parsedJSON)
