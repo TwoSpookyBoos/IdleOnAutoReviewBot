@@ -1,4 +1,5 @@
 import json
+from idleon_SkillLevels import getSpecificSkillLevelsList
 from models import AdviceSection, AdviceGroup, Advice
 from utils import pl
 
@@ -62,7 +63,7 @@ def getInfluencers(inputJSON):
     #print("ConsBuildings.getInfluencers~ INFO results: ", "EitherBuff:",results[0], ", Honker Vial Level:", results[1], ", Poisonic Tower Level:", results[2])
     return results
 
-def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progressionTiersPostBuffs):
+def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progressionTiersPostBuffs, characterDict):
     building_AdviceDict = {}
     building_AdviceGroupDict = {}
     building_AdviceSection = AdviceSection(
@@ -72,6 +73,11 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
         picture="Construction_Table.gif",
         collapse=False
     )
+    constructionLevelsList = getSpecificSkillLevelsList(inputJSON, len(characterDict), "Construction")
+    if max(constructionLevelsList) < 1:
+        building_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
+        return building_AdviceSection
+
     playerBuildings = parseConsBuildingstoLists(inputJSON)
     influencers = getInfluencers(inputJSON)
     hasBuffs = influencers[0]
@@ -210,7 +216,7 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
     for tierKey in building_AdviceDict.keys():
         building_AdviceGroupDict[tierKey] = AdviceGroup(
             tier="",
-            pre_string=str(tierNamesList[tierKey]),
+            pre_string=f"{str(tierNamesList[tierKey])} Tier",
             advices=building_AdviceDict[tierKey],
             post_string=""
         )

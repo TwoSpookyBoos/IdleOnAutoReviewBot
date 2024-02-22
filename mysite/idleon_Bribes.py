@@ -75,19 +75,7 @@ def parseBribes(inputJSON):
     #print(allBribesDict)
     return allBribesDict
 
-def setBribesProgressionTier(inputJSON, progressionTiers):
-    allBribesDict = parseBribes(inputJSON)
-    tier_BribesPurchased = 0
-    sum_allBribes = 0
-    sum_bribeSetW1 = 0
-    sum_bribeSetW2 = 0
-    sum_bribeSetW3 = 0
-    sum_bribeSetW4 = 0
-    sum_bribeSetTrashIsland = 0
-    max_allBribes = 33  # Max as of v1.91
-    unpurchasableBribes = ["The Art of the Grail"]  # These bribes are in the game, but cannot be purchased as of v1.91
-    max_tier = progressionTiers[-1][0]
-    advice_BribesPurchased = []
+def setBribesProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
     bribe_AdviceDict = {
         "W1Bribes": [],
         "W2Bribes": [],
@@ -102,6 +90,19 @@ def setBribesProgressionTier(inputJSON, progressionTiers):
         header="Best Bribe tier met: Not Yet Evaluated. Recommended Bribe actions",
         picture="Stat_Graph_Stamp.png"
     )
+
+    allBribesDict = parseBribes(inputJSON)
+    tier_BribesPurchased = 0
+    sum_allBribes = 0
+    sum_bribeSetW1 = 0
+    sum_bribeSetW2 = 0
+    sum_bribeSetW3 = 0
+    sum_bribeSetW4 = 0
+    sum_bribeSetTrashIsland = 0
+    max_allBribes = 33  # Max as of v1.91
+    unpurchasableBribes = ["The Art of the Grail"]  # These bribes are in the game, but cannot be purchased as of v1.91
+    max_tier = progressionTiers[-1][0]
+    advice_BribesPurchased = []
 
     # W1 Bribes
     for bribe in allBribesDict['W1']:
@@ -248,4 +249,4 @@ def setBribesProgressionTier(inputJSON, progressionTiers):
         ]
 
     bribesPR = progressionResults.progressionResults(overall_BribesTier, advice_BribesCombined, "")
-    return {"PR": bribesPR, "AdviceSection": bribe_AdviceSection}
+    return bribe_AdviceSection

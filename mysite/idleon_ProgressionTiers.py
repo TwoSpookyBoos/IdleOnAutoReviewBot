@@ -90,13 +90,13 @@ def setDefaultTiers():
     defaultTiers['Alchemy Vials'] = [
         #int tier, int TotalVialsUnlocked, int TotalVialsMaxed, list ParticularVials, str Notes
         [0, 10, 0, [], ""],
-        [1, 14, 0, [], ". This is the number of vials requiring an unlock roll of 75 or less. "],
-        [2, 19, 0, [], ". This is the number of vials requiring an unlock roll of 85 or less. "],
-        [3, 27, 0, [], ". This is the number of vials requiring an unlock roll of 90 or less. "],
-        [4, 33, 0, [], ". This is the number of vials requiring an unlock roll of 95 or less. "],
-        [5, 38, 0, [], ". This is the number of vials requiring an unlock roll of 98 or less. "],
-        [6, 51, 0, [], ". This is all vials up through W4, excluding the Arcade Pickle. "],
-        [7, 63, 4, ['Copper Corona (Copper Ore)', 'Sippy Splinters (Oak Logs)', 'Jungle Juice (Jungle Logs)', 'Tea With Pea (Potty Rolls)'], ". This is all vials up through W5, excluding the Arcade Pickle. "],
+        [1, 14, 0, [], "This is the number of vials requiring an unlock roll of 75 or less. "],
+        [2, 19, 0, [], "This is the number of vials requiring an unlock roll of 85 or less. "],
+        [3, 27, 0, [], "This is the number of vials requiring an unlock roll of 90 or less. "],
+        [4, 33, 0, [], "This is the number of vials requiring an unlock roll of 95 or less. "],
+        [5, 38, 0, [], "This is the number of vials requiring an unlock roll of 98 or less. "],
+        [6, 51, 0, [], "This is all vials up through W4, excluding the Arcade Pickle. "],
+        [7, 63, 4, ['Copper Corona (Copper Ore)', 'Sippy Splinters (Oak Logs)', 'Jungle Juice (Jungle Logs)', 'Tea With Pea (Potty Rolls)'], "This is all vials up through W5, excluding the Arcade Pickle. "],
         [8, 63, 8, ['Gold Guzzle (Gold Ore)', 'Seawater (Goldfish)', 'Fly In My Drink (Fly)', 'Blue Flav (Platinum Ore)'], ""],
         [9, 63, 12, ['Slug Slurp (Hermit Can)', 'Void Vial (Void Ore)', 'Ew Gross Gross (Mosquisnow)', 'The Spanish Sahara (Tundra Logs)'], ""],
         [10, 63, 16, ['Mushroom Soup (Spore Cap)', 'Maple Syrup (Maple Logs)', 'Marble Mocha (Marble Ore)', 'Skinny 0 Cal (Snake Skin)'], ""],
@@ -109,9 +109,9 @@ def setDefaultTiers():
         [17, 63, 44, ['Calcium Carbonate (Tongue Bone)', 'Spool Sprite (Thread)', 'Choco Milkshake (Crumpled Wrapper)', 'Electrolyte (Condensed Zap)'], ""],
         [18, 63, 48, ['Ash Agua (Suggma Ashes)', 'Venison Malt (Mongo Worm Slices)', 'Thumb Pow (Trusty Nails)', 'Slowergy Drink (Frigid Soul)'], ""],
         [19, 63, 52, ['Bunny Brew (Bunny)', 'Oj Jooce (Orange Slice)', 'Spook Pint (Squishy Soul)', 'Barium Mixture (Copper Bar)'], ""],
-        [20, 63, 55, ['Bloat Draft (Blobfish)', 'Barley Brew (Iron Bar)', 'Oozie Ooblek (Oozie Soul)'], " This is the last tier possible as of v1.91"],
-        [21, 63, 60, ['Poison Tincture (Poison Froge)', 'Red Malt (Redox Salts)', 'Orange Malt (Explosive Salts)', 'Shaved Ice (Purple Salt)', 'Dreadnog (Dreadlo Bar)'], " This tier is impossible as of v1.91"],
-        [22, 63, 64, ['Pickle Jar (BobJoePickle)', 'Ball Pickle Jar (BallJoePickle)', 'Pearl Seltzer (Pearler Shell)', 'Hampter Drippy (Hampter)'], " This tier is super impossible as of v1.91"]
+        [20, 63, 55, ['Bloat Draft (Blobfish)', 'Barley Brew (Iron Bar)', 'Oozie Ooblek (Oozie Soul)'], "This is the last tier possible as of v1.91"],
+        [21, 63, 60, ['Poison Tincture (Poison Froge)', 'Red Malt (Redox Salts)', 'Orange Malt (Explosive Salts)', 'Shaved Ice (Purple Salt)', 'Dreadnog (Dreadlo Bar)'], "This tier is impossible as of v1.91"],
+        [22, 63, 64, ['Pickle Jar (BobJoePickle)', 'Ball Pickle Jar (BallJoePickle)', 'Pearl Seltzer (Pearler Shell)', 'Hampter Drippy (Hampter)'], "This tier is super impossible as of v1.91"]
         ]
     defaultTiers['Obols'] = [
         [0,""]

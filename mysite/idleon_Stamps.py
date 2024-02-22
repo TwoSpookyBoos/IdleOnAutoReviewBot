@@ -327,7 +327,22 @@ def getReadableStampName(stampNumber, stampType):
 
 
 # Stamp meta
-def setStampProgressionTier(inputJSON, progressionTiers):
+def setStampProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
+    stamp_AdviceDict = {
+        "StampLevels": [],
+        "CombatStamps": [],
+        "SkillStamps": [],
+        "MiscStamps": [],
+        "SpecificStamps": [],
+    }
+    stamp_AdviceGroupDict = {}
+    stamp_AdviceSection = AdviceSection(
+        name="Stamps",
+        tier="Not Yet Evaluated",
+        header="Best Stamp tier met: Not Yet Evaluated. Recommended stamp actions:",
+        picture="Stamps_Mr_Pigibank.gif"
+    )
+
     totalCombatStampLevels = setStampLevels(inputJSON, 0)
     totalSkillStampLevels = setStampLevels(inputJSON, 1)
     totalMiscStampLevels = setStampLevels(inputJSON, 2)
@@ -349,20 +364,6 @@ def setStampProgressionTier(inputJSON, progressionTiers):
     advice_CollectMiscStamps = ""
     advice_CollectStamps = ""
     advice_SpecificStamps = ""
-    stamp_AdviceDict = {
-        "StampLevels": [],
-        "CombatStamps": [],
-        "SkillStamps": [],
-        "MiscStamps": [],
-        "SpecificStamps": [],
-    }
-    stamp_AdviceGroupDict = {}
-    stamp_AdviceSection = AdviceSection(
-        name="Stamps",
-        tier="Not Yet Evaluated",
-        header="Best Stamp tier met: Not Yet Evaluated. Recommended stamp actions:",
-        picture="Stamps_Mr_Pigibank.gif"
-    )
 
     for tier in progressionTiers:
         # TotalLevelStamps
@@ -559,4 +560,4 @@ def setStampProgressionTier(inputJSON, progressionTiers):
         ]
 
     stampPR = progressionResults.progressionResults(overall_StampTier, advice_CombinedStamps, "")
-    return {"PR": stampPR, "AdviceSection": stamp_AdviceSection}
+    return stamp_AdviceSection

@@ -1,4 +1,5 @@
 import json
+from idleon_SkillLevels import getSpecificSkillLevelsList
 from models import AdviceSection, AdviceGroup, Advice
 from utils import pl
 
@@ -114,7 +115,7 @@ def parseJSONPrayers(inputJSON) -> dict:
             print("Worship.parseJSONPrayers~ EXCEPTION Unable to add prayer: ", index, reason)
     return worshipPrayersDict
 
-def setWorshipPrayersProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
+def setWorshipPrayersProgressionTier(inputJSON, progressionTiers, characterDict) -> AdviceSection:
     worshipPrayersDict = parseJSONPrayers(inputJSON)
     max_tier = progressionTiers[-3][0]  # Final tier is ignorable, second to final is optional
     tier_WorshipPrayers = 0
@@ -132,6 +133,10 @@ def setWorshipPrayersProgressionTier(inputJSON, progressionTiers) -> AdviceSecti
         header="Best Prayers tier met: Not Yet Evaluated. Recommended prayer actions:",
         picture="Prayer_Stone.gif"
     )
+    worshipLevelsList = getSpecificSkillLevelsList(inputJSON, len(characterDict), "Worship")
+    if max(worshipLevelsList) < 1:
+        prayers_AdviceSection.header = "Come back after unlocking the Worship skill in World 3!"
+        return prayers_AdviceSection
 
     #Check Recommended Prayers
     for tier in progressionTiers[:-2]:

@@ -1,4 +1,5 @@
 import json
+from idleon_SkillLevels import getSpecificSkillLevelsList
 from models import AdviceSection, AdviceGroup, Advice
 from utils import pl
 
@@ -29,16 +30,7 @@ def parseConsSaltLick(inputJSON):
     #print(saltLickDict)
     return saltLickDict
 
-def setConsSaltLickProgressionTier(inputJSON, progressionTiers):
-    max_tier = progressionTiers[-1][0]
-    tier_RequiredSaltLickUpgrades = 0
-    sum_TotalMaxedSaltLickUpgrades = 0
-    overall_ConsSaltLickTier = 0
-    advice_RequiredSaltLickUpgrades = ""
-    advice_ConsSaltLickCombined = ""
-    saltLickDict = parseConsSaltLick(inputJSON)
-
-    #Advice classes
+def setConsSaltLickProgressionTier(inputJSON, progressionTiers, characterDict) -> AdviceSection:
     saltlick_AdviceDict = {
         "UnmaxedUpgrades": []
     }
@@ -50,6 +42,21 @@ def setConsSaltLickProgressionTier(inputJSON, progressionTiers):
         picture="Construction_Salt_Lick.png",
         collapse=False
     )
+    constructionLevelsList = getSpecificSkillLevelsList(inputJSON, len(characterDict), "Construction")
+    if max(constructionLevelsList) < 1:
+        saltlick_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
+        return saltlick_AdviceSection
+    elif json.loads(inputJSON["Tower"])[3] < 1:
+        saltlick_AdviceSection.header = "Come back after unlocking the Salt Lick within the Construction skill in World 3!"
+        return saltlick_AdviceSection
+
+    max_tier = progressionTiers[-1][0]
+    tier_RequiredSaltLickUpgrades = 0
+    sum_TotalMaxedSaltLickUpgrades = 0
+    overall_ConsSaltLickTier = 0
+    advice_RequiredSaltLickUpgrades = ""
+    advice_ConsSaltLickCombined = ""
+    saltLickDict = parseConsSaltLick(inputJSON)
 
     #Assess tiers
     for tier in progressionTiers:

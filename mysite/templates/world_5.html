@@ -1,27 +1,11 @@
-<article id="w5" class="world-content">
+{% set world = htmlInput.pop() %}
+<article id="w5" class="world-content new">
     <h1 class="banner">
-        <img src="{{ img('w5banner.png') }}" alt="World 5 Banner" title="World 5 Banner">
+        <img src="{{ img(world.banner) }}" alt="{{ world.name }}" title="{{ world.name }}">
     </h1>
-    <div class="content-wrapper no-collapse folded">
-
-        {% if htmlInput[5][0][0] %}
-        <section>
-            <h3 class="subheading">
-                <img src="" alt="">
-            </h3>
-
-            <div class="advice-wrapper no-collapse folded">
-                <strong>{{ htmlInput[5][0][0] }}</strong>
-                <ul id="">
-                    {% for line in htmlInput[5][0] %}
-                        {% if line %}
-                            <li class="advice">{{ line }}</li>
-                        {% endif %}
-                    {% endfor %}
-                </ul>
-            </div>
-        </section>
-        {% endif %}
-
+    <div class="content-wrapper{% if not world.sections %} no-collapse folded{% endif %}{% if world.collapse %} folded{% endif %}">
+        {% for section in world.sections %}
+            {% include 'section.html' %}
+        {% endfor %}
     </div>
 </article>

@@ -1,5 +1,6 @@
 import json
 import progressionResults
+from idleon_SkillLevels import getSpecificSkillLevelsList
 from models import AdviceSection, AdviceGroup, Advice
 from utils import pl
 from math import floor
@@ -137,11 +138,7 @@ def parseConsRefinery(inputJSON):
     #print(consRefineryDict)
     return consRefineryDict
 
-def setConsRefineryProgressionTier(inputJSON, progressionTiers):
-    max_tier = progressionTiers[-1][0]
-    tier_AutoRefine = max_tier
-    tier_W3Merits = 0
-
+def setConsRefineryProgressionTier(inputJSON, progressionTiers, characterDict):
     refinery_AdviceDict = {
         "AutoRefine": [],
         "Merits": [],
@@ -156,6 +153,14 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers):
         picture="Construction_Refinery.gif",
         collapse=False
     )
+    constructionLevelsList = getSpecificSkillLevelsList(inputJSON, len(characterDict), "Construction")
+    if max(constructionLevelsList) < 1:
+        refinery_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
+        return refinery_AdviceSection
+
+    max_tier = progressionTiers[-1][0]
+    tier_AutoRefine = max_tier
+    tier_W3Merits = 0
     consRefineryDict = parseConsRefinery(inputJSON)
 
     # AutoRefine Advice
