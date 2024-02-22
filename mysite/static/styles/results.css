@@ -511,9 +511,16 @@ strong:not(.no-collapse):hover,
             margin: 0 10px 10px;
             padding: 20px 0;
             cursor: pointer;
+            border-radius: 20px;
             &:hover {
                 background: hsla(0, 0%, 15%, 0.5);
             }
+        }
+        .note {
+            color: #fde5c0;
+            background-color: rgba(215, 178, 84, 0.62);
+            margin: 0;
+            /*border-radius: 0 0 20px 20px;*/
         }
     }
 

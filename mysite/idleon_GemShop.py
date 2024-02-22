@@ -317,7 +317,7 @@ def setGemShopProgressionTier(inputJSON, progressionTiers, playerCount):
         header=section_title,
         picture="gemshop.png",
         groups=groups,
-        disclaimer=disclaimer
+        note=disclaimer
     )
 
     return section
