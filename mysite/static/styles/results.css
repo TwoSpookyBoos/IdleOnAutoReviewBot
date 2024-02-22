@@ -503,20 +503,31 @@ strong:not(.no-collapse):hover,
             row-gap: 10px;
             column-gap: 10px;
             padding: 10px;
-
-            .advice-group {
-                width: 100%;
+        }
+        .show-more {
+            display: none;
+            text-align: center;
+            background: hsla(0deg, 0%, 0%, 0.4);
+            margin: 0 10px 10px;
+            padding: 20px 0;
+            cursor: pointer;
+            &:hover {
+                background: hsla(0, 0%, 15%, 0.5);
             }
         }
     }
 
     .advice-group {
+        width: 100%;
         display: flex;
         flex-direction: column;
         row-gap: 15px;
         padding: 20px;
         border-radius: 20px;
         color: var(--fg);
+        &.hidden {
+            display: none;
+        }
     }
     .table {
         display: grid;

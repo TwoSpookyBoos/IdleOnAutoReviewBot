@@ -112,4 +112,19 @@ document.addEventListener("DOMContentLoaded", () => {
         target.parentElement.classList.remove('folded')
         target.querySelectorAll('*:not(.no-collapse)').forEach(c => c.classList.remove('folded'))
     })
+    const gemShopAdviceSection = document.querySelector("#gem-shop .advice-section")
+    const gemShopGroups = document.querySelector("#gem-shop-tier")
+    gemShopAdviceSection.querySelector(".show-more").onclick = e => {
+        const showMoreButton = e.currentTarget
+        const groups = gemShopGroups.querySelectorAll(".hidden")
+            groups[0].classList.remove("hidden")
+        if (groups.length === 1) {
+            showMoreButton.style.display = "none"
+        }
+
+    }
+    if (gemShopGroups.children.length > 3) {
+        gemShopAdviceSection.querySelector(".show-more").style.display = "block"
+    }
+
 });

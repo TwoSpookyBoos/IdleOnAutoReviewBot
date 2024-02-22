@@ -255,69 +255,52 @@ def setGemShopProgressionTier(inputJSON, progressionTiers, playerCount):
     boughtItems = getBoughtGemShopItems(inputJSON)
     gemShopExclusions = getGemShopExclusions(inputJSON, playerCount)
 
+    recommended_stock = {item: count for tier in progressionTiers for item, count in tier[2].items()}
+
     for exclusion in gemShopExclusions:
         boughtItems.pop(exclusion, None)
+        recommended_stock.pop(exclusion, None)
+
+    recommended_total = sum(recommended_stock.values())
+
+    recommended_stock_bought = {k: min(v, boughtItems.get(k, 0)) for k, v in recommended_stock.items()}
+    recommended_total_bought = sum(recommended_stock_bought.values())
 
     #Review all tiers
     #progressionTiers[tier][0] = int tier
     #progressionTiers[tier][1] = str tierName
     #progressionTiers[tier][2] = dict recommendedPurchases
     #progressionTiers[tier][3] = str notes
-    groups = []
-    for i, tier in enumerate(["SS", *"SABCD", "Practical Max", "True Max"], start=1):
-        advices = []
-        for name, qty in progressionTiers[i][2].items():
-            if name in boughtItems and qty < float(boughtItems[name]):
-                advices.append(
-                    Advice(
-                        label=f"{name} ({getBonusSectionName(name)})",
-                        item_name=name,
-                        progression=boughtItems[name],
-                        goal=qty
-                    )
-                )
-        group = AdviceGroup(
-            tier=tier,
-            pre_string="",
-            post_string=progressionTiers[i][3],
-            advices=advices
-        )
-        groups.append(group)
 
+    all_groups = ["SS", *"SABCD", "Practical Max", "True Max"]
     groups = [
         AdviceGroup(
-            tier=tier,
-            pre_string="",
+            tier="",
+            pre_string=tier,
             post_string=progressionTiers[i][3],
+            hide=False,
             advices=[
                 Advice(
                     label=f"{name} ({getBonusSectionName(name)})",
                     item_name=name,
-                    progression=boughtItems[name],
-                    goal=qty
+                    progression=int(prog),
+                    goal=int(goal)
                 )
                 for name, qty in progressionTiers[i][2].items()
-                if name in boughtItems and qty < float(boughtItems[name])
+                if name in recommended_stock_bought
+                and (prog := float(recommended_stock_bought[name])) < (goal := float(qty))
             ]
         )
-        for i, tier in enumerate(["SS", *"SABCD", "Practical Max", "True Max"], start=1)
+        for i, tier in enumerate(all_groups, start=1)
     ]
 
     groups = [g for g in groups if g]
-
     # show only first 3 groups
     for group in groups[3:]:
-        group.collapse = True
+        group.hide = True
 
-    section_title = "Recommended Permanent/Non-Gamba Gem Shop purchases (up to 3 tiers shown to account for personal preferences):"
-    section = AdviceSection(
-        name="Gem Shop",
-        tier="",
-        header=section_title,
-        groups=groups
-    )
-
-    # overall_GemShopTier = min(progressionTiers[-1][-0], tier_GemShopPurchases)
+    tier = f"{recommended_total_bought}/{recommended_total}"
+    section_title = f"Bought {tier} Recommended Permanent/Non-Gamba Gem Shop purchases (up to 3 tiers shown to account for personal preferences):"
     disclaimer = (
         "DISCLAIMER: Recommended Gem Shop purchases are listed in their World order. "
         "All purchases within the same Ranking are approximately the same priority. "
@@ -325,6 +308,13 @@ def setGemShopProgressionTier(inputJSON, progressionTiers, playerCount):
         "these always-available upgrades! Check the Limited Shop after each new "
         "patch/update."
     )
-    # gemShopPR = progressionResults.progressionResults(overall_GemShopTier,advice_OverallGemShopCombined,"")
-    #print(gemShopPR.nTR)
-    return gemShopPR
+    section = AdviceSection(
+        name="Gem Shop",
+        tier=tier,
+        header=section_title,
+        picture="gemshop.png",
+        groups=groups,
+        disclaimer=disclaimer
+    )
+
+    return section

@@ -24,26 +24,6 @@
     <div class="content-wrapper">
         <section>
             <h3 class="subheading">
-                <img src="{{ img('gemshop.png') }}" alt="Gem Shop">
-            </h3>
-
-            <div class="advice-wrapper">
-                <strong id="gem-shop-header">
-                    {{ htmlInput[0][2][1] }}<br>
-                    <em id="gem-shop-fomo-disclaimer">{{ htmlInput[0][2][0] }}</em>
-                </strong>
-                <ul id="gem-shop">
-                    {% for line in htmlInput[0][2][2:] %}
-                        {% if line %}
-                            <li class="advice">{{ line }}</li>
-                        {% endif %}
-                    {% endfor %}
-                </ul>
-            </div>
-        </section>
-
-        <section>
-            <h3 class="subheading">
                 <img src="{{ img('Greenstack.png') }}" alt="Greenstack">
             </h3>
 

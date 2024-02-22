@@ -9,9 +9,9 @@
         <li id="{{ section.css_class }}-tier">
             {% for group in section.groups %}
             {% if group %}
-                <div class="advice-group">
+                <div class="advice-group{% if group.hide %} hidden{% endif %}">
                     <span>{{ group.heading }}:</span>
-                    <ul class="table{% if group.collapse %} folded{% endif %}">
+                    <ul class="table">
                     {% for advice in group.advices %}
 
                         {% if advice.as_link %}
@@ -34,5 +34,6 @@
             {% endif %}
             {% endfor %}
         </li>
+        <li class="show-more">Show Next Tier ▼</li>
     </ul>
 </section>
