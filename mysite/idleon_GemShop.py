@@ -300,7 +300,10 @@ def setGemShopProgressionTier(inputJSON, progressionTiers, playerCount):
         group.hide = True
 
     tier = f"{recommended_total_bought}/{recommended_total}"
-    section_title = f"Bought {tier} Recommended Permanent/Non-Gamba Gem Shop purchases (up to 3 tiers shown to account for personal preferences):"
+    if not groups:
+        section_title = f"You bought all {tier} Recommended Permanent/Non-Gamba Gem Shop purchases. The shine of your diamond-studded belly blinds me, you dragon! 💎"
+    else:
+        section_title = f"Bought {tier} Recommended Permanent/Non-Gamba Gem Shop purchases. Recommended investments:"
     disclaimer = (
         "DISCLAIMER: Recommended Gem Shop purchases are listed in their World order. "
         "All purchases within the same Ranking are approximately the same priority. "
