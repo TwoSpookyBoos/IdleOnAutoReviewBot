@@ -400,7 +400,7 @@ def main(inputData, runType="web"):
     buildings_AdviceSection = {'AdviceSection': idleon_ConsBuildings.setConsBuildingsProgressionTier(parsedJSON, progressionTiers['Construction Buildings Pre-Buffs'], progressionTiers['Construction Buildings Post-Buffs'])}
     #consAtomColliderPR =
     #worshipTotemsPR =
-    worshipPrayersPR = idleon_Worship.setWorshipPrayersProgressionTier(parsedJSON, progressionTiers['Worship Prayers'])
+    prayers_AdviceSection = {'AdviceSection': idleon_Worship.setWorshipPrayersProgressionTier(parsedJSON, progressionTiers['Worship Prayers'])}
     trappingPR = idleon_Trapping.setTrappingProgressionTier(parsedJSON, playerCount, playerNames)
 
     #World 4
@@ -418,7 +418,7 @@ def main(inputData, runType="web"):
     #w2list = [alchBubblesPR.nTR,alchVialsPR.nTR,alchP2WList, obolsPR.nTR]  # len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 4, len(obolsPR.nTR) = 4
     w3list = [
         ["Construction 3D Printer coming soon!"], ["Old Refinery Gone"]*10, ["Old Salt Lick Gone"]*10, consDeathNotePR.nTR,  # len(refinery_AdviceSection.nTR) = 5, len(consSaltLickPR.nTR) = 2, len(consDeathNotePR.nTR) = 12)
-        ["Old Buildings Gone"]*10, ["Construction Atom Collider coming soon!"], ["Worship Totems coming soon!"], worshipPrayersPR.nTR, trappingPR.nTR]  # len(consBuildingsPR.nTR) = 8, len(trappingPR.nTR) = 9
+        ["Old Buildings Gone"]*10, ["Construction Atom Collider coming soon!"], ["Worship Totems coming soon!"], ["Old Worship Gone"]*10, trappingPR.nTR]  # len(consBuildingsPR.nTR) = 8, len(trappingPR.nTR) = 9
     w4list = [breedingPR.nTR, [""], [""]]
     w5list = [[""], [""], [""]]
     #w4list = [["Cooking coming soon!"], ["Breeding coming soon!"], ["Lab coming soon!"]]
@@ -437,7 +437,7 @@ def main(inputData, runType="web"):
         Placements.REFINERY: refinery_AdviceSection['AdviceSection'].pinchy_rating,
         Placements.SALT_LICK: saltlick_AdviceSection['AdviceSection'].pinchy_rating,
         Placements.DEATH_NOTE: consDeathNotePR.cT,
-        Placements.PRAYERS: worshipPrayersPR.cT
+        Placements.PRAYERS: prayers_AdviceSection['AdviceSection'].pinchy_rating
         }
     pinchy = idleon_Pinchy.generatePinchyWorld(parsedJSON, playerCount, biggoleProgressionTiersDict)
     generalReview = AdviceWorld(
@@ -458,7 +458,8 @@ def main(inputData, runType="web"):
     )
     w3Review = AdviceWorld(
         name=WorldName.WORLD3,
-        sections=[refinery_AdviceSection['AdviceSection'], saltlick_AdviceSection['AdviceSection'], buildings_AdviceSection['AdviceSection']],
+        sections=[refinery_AdviceSection['AdviceSection'], saltlick_AdviceSection['AdviceSection'], buildings_AdviceSection['AdviceSection'],
+                  prayers_AdviceSection['AdviceSection']],
         banner="w3banner.png"
     )
 

@@ -237,15 +237,15 @@ def setDefaultTiers():
     defaultTiers['Worship Prayers'] = [
         #Tier, PrayerDict, 	Notes
         [0, {}, ""],
-        [1, {'The Royal Sampler (Rooted Soul)': 5}, "Royal Sampler is an oddity. The Printer Sample Rate bonus it gives is fantastic, but a few levels (5-10) is usually enough to help you reach the 90% maximum."],
-        [2, {'Skilled Dimwit (Forest Soul)':20}, "Surprisingly, level 20 is half the maximum value for Skilled Dimwit. Rush this ASAP after all characters have Ceramic Skulls or better equipped."],
-        [3, {'Balance of Pain (Squishy Soul)':11}, "Similar to the last tier, level 11 is half the maximum value for Balance of Pain. This prayer is crucial for farming Death Note and improving your 3D Printer samples of Monster materials. "],
-        [4, {'Skilled Dimwit (Forest Soul)':35, 'Balance of Pain (Squishy Soul)':20}, "This tier is roughly 75% of max prayer value for Skilled Dimwit and Balance of Pain."],
-        [5, {'Midas Minded (Dune Soul)':20}, "This tier is roughly 50% max value for Midas. This prayer is great to use when you start farming older content, like Crystal Mobs for statues."],
-        [6, {'Skilled Dimwit (Forest Soul)':50, 'Midas Minded (Dune Soul)':50, 'Balance of Pain (Squishy Soul)':30}, "Finish maxing these prayers next! They're the best from each Totem."],
-        [7, {'Shiny Snitch (Forest Soul)':50, 'Zerg Rushogen (Forest Soul)':20, 'Jawbreaker (Dune Soul)':50, 'Ruck Sack (Rooted Soul)':50, 'Balance of Proficiency (Squishy Soul)':50}, "These are the last group of important prayers to max."],
-        [8, {'Unending Energy (Forest Soul)':50, 'Big Brain Time (Forest Soul)':50, 'Antifun Spirit (Rooted Soul)':10, 'Fibers of Absence (Frigid Soul)':50, 'Beefy For Real (Frigid Soul)':40}, "These are niche use prayers. You can level them if you like. Some players choose to ignore them."],
-        [9, {'Tachion of the Titans (Dune Soul)':1, 'Balance of Precision (Dune Soul)':1, 'Circular Criticals (Rooted Soul)':1, 'Vacuous Tissue (Frigid Soul)':1, 'Glitterbug (Squishy Soul)':1}, "Sidenote! The prayers in this bottom tier can stay at level 1 as of v1.91: "],
+        [1, {'The Royal Sampler (Rooted Soul)': 5}, ""],
+        [2, {'Skilled Dimwit (Forest Soul)':20}, ""],
+        [3, {'Balance of Pain (Squishy Soul)':11}, ""],
+        [4, {'Skilled Dimwit (Forest Soul)':35, 'Balance of Pain (Squishy Soul)':20}, ""],
+        [5, {'Midas Minded (Dune Soul)':20}, ""],
+        [6, {'Skilled Dimwit (Forest Soul)':50, 'Midas Minded (Dune Soul)':50, 'Balance of Pain (Squishy Soul)':30}, ""],
+        [7, {'Shiny Snitch (Forest Soul)':50, 'Zerg Rushogen (Forest Soul)':20, 'Jawbreaker (Dune Soul)':50, 'Ruck Sack (Rooted Soul)':50, 'Balance of Proficiency (Squishy Soul)':50}, ""],
+        [8, {'Unending Energy (Forest Soul)':50, 'Big Brain Time (Forest Soul)':50, 'Antifun Spirit (Rooted Soul)':10, 'Fibers of Absence (Frigid Soul)':50, 'Beefy For Real (Frigid Soul)':40}, ""],
+        [9, {'Tachion of the Titans (Dune Soul)':1, 'Balance of Precision (Dune Soul)':1, 'Circular Criticals (Rooted Soul)':1, 'Vacuous Tissue (Frigid Soul)':1, 'Glitterbug (Squishy Soul)':1}, ""],
         ]
     defaultTiers['Breeding'] = {
         0: {
