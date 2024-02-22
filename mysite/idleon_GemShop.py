@@ -301,7 +301,7 @@ def setGemShopProgressionTier(inputJSON, progressionTiers, playerCount):
 
     tier = f"{recommended_total_bought}/{recommended_total}"
     if not groups:
-        section_title = f"You bought all {tier} Recommended Permanent/Non-Gamba Gem Shop purchases. The shine of your diamond-studded belly blinds me, you dragon! 💎"
+        section_title = f"You bought all {tier} Recommended Permanent/Non-Gamba Gem Shop purchases. Your shine blinds me, you diamond-donned dragon! 💎"
     else:
         section_title = f"Bought {tier} Recommended Permanent/Non-Gamba Gem Shop purchases. Recommended investments:"
     disclaimer = (
