@@ -546,7 +546,7 @@ strong:not(.no-collapse):hover,
             align-items: center;
             column-gap: 7px;
 
-            &:not(.advice) {
+            &:not(.advice, .advice-title) {
                 justify-content: center;
             }
             a {
@@ -554,6 +554,11 @@ strong:not(.no-collapse):hover,
                 color: var(--fg);
             }
         }
+    }
+    .advice-title {
+        grid-column: 1 / span 4;
+        background: hsla(0deg, 0%, 0%, 0.4);
+        padding: 5px 10px;
     }
     .advice {
         display: flex;
@@ -579,6 +584,15 @@ strong:not(.no-collapse):hover,
         border-bottom: 5px solid transparent;
         margin: auto 10px;
     }
+}
+#obtained-greenstacks img {
+    filter: saturate(3);
+}
+#endangered-greenstacks img {
+    filter: hue-rotate(-50deg) saturate(3);
+}
+#missed-greenstacks img {
+    filter: hue-rotate(-110deg) saturate(3);
 }
 
 ::-webkit-scrollbar {

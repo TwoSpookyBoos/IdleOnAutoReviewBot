@@ -22,52 +22,6 @@
     </div>
 
     <div class="content-wrapper">
-        <section>
-            <h3 class="subheading">
-                <img src="{{ img('Greenstack.png') }}" alt="Greenstack">
-            </h3>
-
-            <div class="advice-wrapper">
-                <strong>
-                    {{ htmlInput[0][3][0] }}<br>
-                    <em>These items are currently recommended for players trying to complete the endgame Equinox Dreams to
-                        collect 20, 75, and 200 greenstacks. If you're nowhere near that, don't worry about collecting
-                        them right away. Simply leave the quest uncompleted on your Wizard/Elemental Sorcerer and your
-                        Squire/Divine Knight to clean up later!</em>
-                </strong>
-                {% if htmlInput[0][3][1] %}
-                <div class="advice-section-wrapper">
-                    <strong>Missable quest item Greenstacks</strong>
-                    <ul id="greenstacks">
-                        <li class="advice">{{ htmlInput[0][3][1] }}</li>
-                    </ul>
-                </div>
-                {% endif %}
-                {% for tier, categories in htmlInput[0][3][2].items() %}
-                    {% if categories %}
-                        <div class="advice-section-wrapper">
-                            {% if tier == 0 %}
-                                <strong>Timegated items to Greenstack (May take months!)</strong>
-                                    <ul id="greenstacks-{{ tier }}">
-                                    {% for category in categories %}
-                                        <li> {{ category }}</li> <!-- Greenstack tiers advice -->
-                                    {% endfor %}
-                                        </ul>
-                            {% else %}
-                                <strong>Tier {{ tier }} items to Greenstack</strong>
-                                <ul id="greenstacks-{{ tier }}">
-                                    {% for category in categories %}
-                                        <li> {{ category }}</li> <!-- Greenstack tiers advice -->
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
-                        </div>
-                    {% endif %}
-                {% endfor %}
-
-            </div>
-        </section>
-
         <em>Card counts may be off by 1 or 2, due to rounding :( Sorry. I'm trying to find a more accurate list of requirements.</em>
 
         {% for cardset in htmlInput[0][4] %}

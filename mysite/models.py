@@ -11,7 +11,7 @@ class Character:
         self.character_index: int = character_index
         self.character_name: str = character_name
         self.class_name: str = class_name
-        self.class_name_icon: str = class_name + "-class-icon"
+        self.class_name_icon: str = class_name + "-icon"
         self.base_class: str = base_class
         self.sub_class: str = sub_class
         self.elite_class: str = elite_class
@@ -66,7 +66,7 @@ class AdviceBase:
 
     def __bool__(self) -> bool:
         children = getattr(self, self._children, list())
-        return any(filter(bool, children))
+        return any(filter(bool, children if isinstance(children, list) else children.values()))
 
     def __str__(self) -> str:
         return self.name
@@ -90,7 +90,7 @@ class Advice(AdviceBase):
         goal: the target level or amount of the advice
         unit (str): if there is one, usually "%"
     """
-    def __init__(self, label: str, item_name: str, progression: Any = "", goal: Any = "", unit: str = "", **extra):
+    def __init__(self, label: str, item_name: str, progression: Any = "", goal: Any = "", unit: str = "", value_format: str = "{value}{unit}", **extra):
         super().__init__(**extra)
 
         self.label: str = label
@@ -100,10 +100,13 @@ class Advice(AdviceBase):
         self.progression: str = str(progression)
         self.goal: str = str(goal)
         self.unit: str = unit
+        self.value_format: str = value_format
 
-        if hasattr(self, "value_format"):
-            self.progression = self.value_format.format(value=self.progression, unit=self.unit)
-            self.goal = self.value_format.format(value=self.goal, unit=self.unit)
+        if self.unit:
+            if self.progression:
+                self.progression = self.value_format.format(value=self.progression, unit=self.unit)
+            if self.goal:
+                self.goal = self.value_format.format(value=self.goal, unit=self.unit)
 
     @property
     def css_class(self) -> str:
@@ -131,14 +134,18 @@ class AdviceGroup(AdviceBase):
     _children = "advices"
     __compare_by = ["tier"]
 
-    def __init__(self, tier: str, pre_string: str, post_string: str = "", formatting: str = "", collapse: bool | None = None, advices: list[Advice] = [], **extra):
+    def __init__(
+            self, tier: str, pre_string: str, post_string: str = "",
+            formatting: str = "", collapse: bool | None = None,
+            advices: list[Advice] | dict[str, list[Advice]] = [], **extra
+    ):
         super().__init__(collapse, **extra)
 
         self.tier: str = str(tier)
         self.pre_string: str = pre_string
         self.post_string: str = post_string
         self.formatting: str = formatting
-        self.advices: list[Advice] = advices
+        self.advices: list[Advice] | dict[str, list[Advice]] = {"default": advices} if isinstance(advices, list) else advices
 
     def __str__(self) -> str:
         return ', '.join(map(str, self.advices))
@@ -157,7 +164,16 @@ class AdviceGroup(AdviceBase):
 
     @property
     def heading(self) -> str:
-        return (f"Tier {self.tier} - " if self.tier else "") + self.pre_string
+        text = ""
+        if self.tier:
+            text += f"Tier {self.tier}"
+            if self.pre_string:
+                text += " - "
+        text += self.pre_string
+        if text:
+            text += ":"
+
+        return text
 
     def _is_valid_operand(self, other):
         return all(hasattr(other, field) for field in self.__compare_by)

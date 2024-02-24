@@ -90,12 +90,12 @@ def setDefaultTiers():
     defaultTiers['Alchemy Vials'] = [
         #int tier, int TotalVialsUnlocked, int TotalVialsMaxed, list ParticularVials, str Notes
         [0, 10, 0, [], ""],
-        [1, 14, 0, [], ". This is the number of vials requiring an unlock roll of 75 or less. "],
-        [2, 19, 0, [], ". This is the number of vials requiring an unlock roll of 85 or less. "],
-        [3, 27, 0, [], ". This is the number of vials requiring an unlock roll of 90 or less. "],
-        [4, 33, 0, [], ". This is the number of vials requiring an unlock roll of 95 or less. "],
-        [5, 38, 0, [], ". This is the number of vials requiring an unlock roll of 98 or less. "],
-        [6, 51, 0, [], ". This is all vials up through W4, excluding the Arcade Pickle. "],
+        [1, 14, 0, [], "This is the number of vials requiring an unlock roll of 75 or less. "],
+        [2, 19, 0, [], "This is the number of vials requiring an unlock roll of 85 or less. "],
+        [3, 27, 0, [], "This is the number of vials requiring an unlock roll of 90 or less. "],
+        [4, 33, 0, [], "This is the number of vials requiring an unlock roll of 95 or less. "],
+        [5, 38, 0, [], "This is the number of vials requiring an unlock roll of 98 or less. "],
+        [6, 51, 0, [], "This is all vials up through W4, excluding the Arcade Pickle. "],
         [7, 63, 4, ['Copper Corona (Copper Ore)', 'Sippy Splinters (Oak Logs)', 'Jungle Juice (Jungle Logs)', 'Tea With Pea (Potty Rolls)'], ". This is all vials up through W5, excluding the Arcade Pickle. "],
         [8, 63, 8, ['Gold Guzzle (Gold Ore)', 'Seawater (Goldfish)', 'Fly In My Drink (Fly)', 'Blue Flav (Platinum Ore)'], ""],
         [9, 63, 12, ['Slug Slurp (Hermit Can)', 'Void Vial (Void Ore)', 'Ew Gross Gross (Mosquisnow)', 'The Spanish Sahara (Tundra Logs)'], ""],

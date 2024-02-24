@@ -372,7 +372,7 @@ def main(inputData, runType="web"):
     section_combatLevels = idleon_CombatLevels.setCombatLevelsProgressionTier(parsedJSON, progressionTiers['Combat Levels'], playerCount, playerNames, playerClasses)
     section_consumables = idleon_Consumables.parseConsumables(parsedJSON, playerCount, playerNames)
     section_gemShop = idleon_GemShop.setGemShopProgressionTier(parsedJSON, progressionTiers['Gem Shop'], playerCount)
-    allGStacksList = idleon_Greenstacks.setGStackProgressionTier(parsedJSON, playerCount, progressionTiers['Greenstacks'])
+    sections_quest_gstacks, section_regular_gstacks = idleon_Greenstacks.setGStackProgressionTier(parsedJSON, playerCount, progressionTiers['Greenstacks'])
     section_maestro = idleon_MaestroHands.getHandsStatus(parsedJSON, playerCount, playerNames)
     try:
         cardsList = idleon_Cards.getCardSetReview(parsedJSON)
@@ -410,7 +410,7 @@ def main(inputData, runType="web"):
     #gamingPR =
     #divinityPR =
 
-    generalList = [headerData, None, None, allGStacksList, cardsList]
+    generalList = [headerData, None, None, None, cardsList]
     w1list = [stamps_section["PR"].nTR, bribes_section["PR"].nTR, smithing_section["PR"].nTR]  # len(stampPR) = 4, len(bribesPR.nTR) = 2, len(smithingPR.nTR) = 4
     w2list = [alchBubbles_AdviceSection["PR"].nTR, alchVials_AdviceSection["PR"].nTR, [alchP2W_AdviceSection['Header'], alchP2W_AdviceSection['OldAdvice']], emptyList]  # len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 5
     #w2list = [alchBubblesPR.nTR,alchVialsPR.nTR,alchP2WList, obolsPR.nTR]  # len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 4, len(obolsPR.nTR) = 4
@@ -440,7 +440,7 @@ def main(inputData, runType="web"):
     pinchy = idleon_Pinchy.generatePinchyWorld(parsedJSON, playerCount, biggoleProgressionTiersDict)
     generalReview = AdviceWorld(
         name=WorldName.GENERAL,
-        sections=[section_combatLevels, section_maestro, *section_consumables, section_gemShop],
+        sections=[section_combatLevels, section_maestro, *section_consumables, section_gemShop, *sections_quest_gstacks, section_regular_gstacks],
         banner="general_banner.jpg"
     )
 
