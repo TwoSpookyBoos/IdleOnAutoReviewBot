@@ -288,7 +288,7 @@ def getMissableGStacks(inputJSON, playerCount, owned_stuff: Assets):
     quest_completed = [
         name
         for name in quest_names
-        if all(quests[name] == 0 for quests in quest_statuses_per_player)
+        if all(quests[name] == 1 for quests in quest_statuses_per_player)
         # Quest value one of (-1, 0, 1). -1 means not started.
     ]
 
