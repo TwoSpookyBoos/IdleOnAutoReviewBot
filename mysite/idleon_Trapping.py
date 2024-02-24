@@ -149,18 +149,18 @@ def getUnmaxedCritterVialStatus(inputJSON):
 
 def getStaticCritterTrapAdviceList(highestTrapset: int, highestCompletedRift: int) -> list:
     adviceList = []
-    numOfVaccuumSuggestions = 3
+    numOfVaccuumSuggestions = 4
     adviceList.append(Advice(
         label="Efficiency for Manually Claimed traps",
         item_name="",
         progression="",
         goal=""))
-    critterTrapsLabelList = ["Royal 20 Minutes", "Royal 1 Hour", "Cardboard 20 Minutes", "Royal 10 Hours", "Cardboard 1 Hour", "Royal 40 Hours",
-                             "Royal 10 Hours", "Cardboard 20 Hours"]
-    critterTrapsItemNameList = ["royal-traps", "royal-traps", "cardboard-traps", "royal-traps", "cardboard-traps", "royal-traps", "royal-traps",
+    critterTrapsLabelList = ["Royal 20 Minutes", "Royal 1 Hour", "Cardboard 20 Minutes", "Royal 10 Hours", "Cardboard 1 Hour", "Wooden 5 Day 200x Critter",
+                             "Royal 40 Hours", "Royal 10 Hours", "Cardboard 20 Hours"]
+    critterTrapsItemNameList = ["royal-traps", "royal-traps", "cardboard-traps", "royal-traps", "cardboard-traps", "royal-traps", "wooden-traps", "royal-traps",
                                 "cardboard-traps"]
-    critterTrapsRequiredTrapIndexList = [6, 6, 0, 6, 0, 6, 6, 0]
-    critterTrapsEffPerHourList = ["6x/hr", "4x/hr", "3x/hr", "2.1x/hr", "2x/hr", "1.46x/hr", "1.05x/hr", "1x/hr"]
+    critterTrapsRequiredTrapIndexList = [6, 6, 0, 6, 0, 2, 6, 6, 0]
+    critterTrapsEffPerHourList = ["6x/hr", "4x/hr", "3x/hr", "2.1x/hr", "2x/hr", "1.67x/hr", "1.46x/hr", "1.05x/hr", "1x/hr"]
     for counter in range(0, len(critterTrapsLabelList) - numOfVaccuumSuggestions):
         if highestTrapset >= critterTrapsRequiredTrapIndexList[counter]:
             adviceList.append(Advice(
@@ -188,7 +188,7 @@ def getStaticCritterTrapAdviceList(highestTrapset: int, highestCompletedRift: in
 
 def getStaticShinyTrapAdviceList(highestTrapset: int, highestCompletedRift: int) -> list:
     adviceList = []
-    numOfVaccuumSuggestions = 1
+    numOfVaccuumSuggestions = 2
     adviceList.append(Advice(
         label="Shiny Chance Multi for Manually Claimed traps",
         item_name="",
@@ -339,7 +339,7 @@ def setTrappingProgressionTier(inputJSON, characterDict):
     goodTrapDict = {
         0: [1200, 3600, 28800, 72000],  #Cardboard Traps
         1: [1200, 3600, 28800, 72000],  #Silkskin Traps. 14400 is excluded.
-        #2: [432000],  #Wooden Traps. Only 5 days 0xp is good, and only if they still have Vials to complete
+        2: [432000],  #Wooden Traps. Only 5 days 0xp is good, and only if they still have Vials to complete
         3: [28800, 72000],  #Natural Traps. 8hr and 20hr are good, other options are bad.
         6: [1200, 3600, 36000, 144000, 604800]  #Royal Traps. All but the 28day are good.
     }
