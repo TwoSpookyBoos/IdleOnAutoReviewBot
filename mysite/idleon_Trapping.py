@@ -339,7 +339,7 @@ def setTrappingProgressionTier(inputJSON, characterDict):
     goodTrapDict = {
         0: [1200, 3600, 28800, 72000],  #Cardboard Traps
         1: [1200, 3600, 28800, 72000],  #Silkskin Traps. 14400 is excluded.
-        2: [432000],  #Wooden Traps. Only 5 days 0xp is good, and only if they still have Vials to complete
+        #2: [432000],  #Wooden Traps. Only 5 days 0xp is good, and only if they still have Vials to complete
         3: [28800, 72000],  #Natural Traps. 8hr and 20hr are good, other options are bad.
         6: [1200, 3600, 36000, 144000, 604800]  #Royal Traps. All but the 28day are good.
     }
@@ -412,7 +412,7 @@ def setTrappingProgressionTier(inputJSON, characterDict):
     )
     trapping_AdviceGroupDict["NonMetaTraps"] = AdviceGroup(
         tier="",
-        pre_string=f"Non-Meta Trap Types or Durations",
+        pre_string=f"Inefficient Trap Types or Durations",
         advices=trapping_AdviceDict["NonMetaTraps"],
         post_string=""
     )
