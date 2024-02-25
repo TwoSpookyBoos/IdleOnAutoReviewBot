@@ -460,7 +460,7 @@ def getDeathNoteKills(inputJSON, playerCount, playerNames):
                 print("ConsDeathNote~ EXCEPTION Unable to increase kill count in w4DeathNoteDict", playerCounter, playerCount, reason)
 
             #w5 dn
-            if len(playerKillsList) >= 264:
+            if len(playerKillsList) >= 216:
                 try:
                     w5DeathNoteDict['Naut Sake Perimeter'][1] += abs(playerKillsList[201][0] - w5DeathNoteDict['Naut Sake Perimeter'][0])
                     w5DeathNoteDict['Niagrilled Falls'][1] += abs(playerKillsList[202][0] - w5DeathNoteDict['Niagrilled Falls'][0])
