@@ -1,10 +1,85 @@
 import json
-from idleon_SkillLevels import getHumanReadableClasses
 from math import floor
 from math import ceil
-import progressionResults
+from idleon_SkillLevels import getSpecificSkillLevelsList
+from models import AdviceSection, AdviceGroup, Advice
+from utils import pl
 
-def getSkullNames(mkValue):
+dnSkullRequirementList = [0, 25000, 100000, 250000, 500000, 1000000, 5000000, 100000000, 1000000000]
+dnSkullValueList = [0, 1, 2, 3, 4, 5, 7, 10, 20]
+
+class EnemyMap:
+    def __init__(self, mapname: str, monstername: str, mapindex: int, portalrequirement: int, zowrating: int, chowrating: int, meowrating: int, monsterimage: str = ""):
+        self.map_name: str = mapname
+        self.map_index: int = mapindex
+        self.monster_name: str = monstername
+        self.portal_requirement: int = portalrequirement
+        self.zow_rating: int = zowrating
+        self.chow_rating: int = chowrating
+        self.meow_rating: int = meowrating
+        self.kill_count: float = 0
+        self.skull_mk_value: int = 0
+        self.skull_name: str = "None"
+        self.percent_toward_next_skull: float = 0.00
+        self.apocDict = {}
+        if monsterimage:
+            self.monster_image = monsterimage
+        else:
+            self.monster_image = monstername
+
+    def __str__(self):
+        return self.map_name
+
+    def addKills(self, additionalKills: float):
+        self.kill_count += additionalKills
+
+    def generateSkullValue(self):
+        skullValue = 0
+        for counter in range(0, len(dnSkullRequirementList)):
+            if self.kill_count >= dnSkullRequirementList[counter]:
+                skullValue = dnSkullValueList[counter]
+        self.skull_mk_value = skullValue
+        self.skull_name = getSkullNames(self.skull_mk_value)
+
+def getJSONDataFromFile(filePath):
+    with open(filePath, 'r') as inputFile:
+        jsonData = json.load(inputFile)
+    inputFile.close()
+    return jsonData
+
+def buildMaps() -> dict:
+    mapDict = {
+        1: {},
+        2: {},
+        3: {},
+        4: {},
+        5: {},
+        6: {},
+        7: {},
+        8: {}
+    }
+    rawMaps = getJSONDataFromFile('./static/enemy-maps.json')
+    for mapData in rawMaps["mapData"]:
+        #["Spore Meadows", 1, "Green Mushroom", 11, "Basic W1 Enemies", "Basic W1 Enemies", "Basic W1 Enemies"],
+        #mapData[0]: str = map name
+        #mapData[1]: int = map index
+        #mapData[2]: str = enemy name
+        #mapData[3]: int = portal requirement
+        #mapData[4]: str = zow rating
+        #mapData[5]: str = chow rating
+        #mapData[6]: str = meow rating
+        world = floor(mapData[1]/50)+1
+        mapDict[world][mapData[1]] = EnemyMap(
+            mapname=mapData[0],
+            mapindex=mapData[1],
+            monstername=mapData[2],
+            portalrequirement=mapData[3],
+            zowrating=mapData[4],
+            chowrating=mapData[5],
+            meowrating=mapData[6])
+    return mapDict
+
+def getSkullNames(mkValue: int) -> str:
     match mkValue:
         case 0:
             return "None"
@@ -25,159 +100,159 @@ def getSkullNames(mkValue):
         case 20:
             return "Eclipse Skull"
         case _:
-            return ("Unknown"+str(mkValue)+" Skull")
+            return "Unknown"+str(mkValue)+" Skull"
 
-def getEnemyNameFromMap(inputMap):
+def getEnemyNameFromMap(inputMap: str) -> str:
     match inputMap:
         #W1 Maps
         case "Spore Meadows":
-            return "Green Mushrooms"
+            return "Green Mushroom"
         case "Froggy Fields":
-            return "Frogs"
+            return "Frog"
         case "Valley of the Beans":
-            return "Bored Beans"
+            return "Bored Bean"
         case "Birch Enclave":
-            return "Red Mushrooms"
+            return "Red Mushroom"
         case "Jungle Perimeter":
-            return "Slimes"
+            return "Slime"
         case "The Base of the Bark":
-            return "Sticks"
+            return "Stick"
         case "Hollowed Trunk":
-            return "Nuttos"
+            return "Nutto"
         case "Where the Branches End":
-            return "Wood Mushrooms"
+            return "Wood Mushroom"
         case "Winding Willows":
-            return "Baby Boas"
+            return "Baby Boa"
         case "Vegetable Patch":
             return "Carrotmen"
         case "Forest Outskirts":
-            return "Glublins"
+            return "Glublin"
         case "Encroaching Forest Villa":
-            return "Wode Boards"
+            return "Wode Board"
         case "Tucked Away":
-            return "Gigafrogs"
+            return "Gigafrog"
         case "Poopy Sewers":
-            return "Poops"
+            return "Poop"
         case "Rats Nest":
-            return "Rats"
+            return "Rat"
         case "The Roots":
             return "Special- Single Nutto at WorshipTD map"
         case "The Office":
             return "Special- Poops surrounding Dr. Def"
         case "Meel's Crypt":
-            return "Special- Boops"
+            return "Special- Boop"
         #W2 Maps
         case "Jar Bridge":
-            return "Sandy Pots"
+            return "Sandy Pot"
         case "The Mimic Hole":
-            return "Mimics"
+            return "Mimic"
         case "Dessert Dunes":
-            return "Crabcakes"
+            return "Crabcake"
         case "The Grandioso Canyon":
-            return "Mafiosos"
+            return "Mafioso"
         case "Shifty Sandbox":
-            return "Sand Castles"
+            return "Sand Castle"
         case "Pincer Plateau":
             return "Pincermin"
         case "Slamabam Straightaway":
             return "Mashed Potato"
         case "The Ring":
-            return "Tysons"
+            return "Tyson"
         case "Up Up Down Down":
-            return "Moonmoons"
+            return "Moonmoon"
         case "Sands of Time":
-            return "Sand Giants"
+            return "Sand Giant"
         case "Djonnuttown":
-            return "Snelbies"
+            return "Snelbie"
         case "Mummy Memorial":
             return "Special- Invisible Green Mushroom inside King Doot's map"
         #W3 Maps
         case "Steep Sheep Ledge":
-            return "Sheepies"
+            return "Sheepie"
         case "Snowfield Outskirts":
-            return "Frost Flakes"
+            return "Frost Flake"
         case "The Stache Split":
-            return "Sir Staches"
+            return "Sir Stache"
         case "Refrigeration Station":
-            return "Bloques"
+            return "Bloque"
         case "Mamooooth Mountain":
-            return "Mamooths"
+            return "Mamooth"
         case "Rollin' Tundra":
             return "Snowmen"
         case "Signature Slopes":
-            return "Penguins"
+            return "Penguin"
         case "Thermonuclear Climb":
-            return "Thermisters"
+            return "Thermister"
         case "Waterlogged Entrance":
-            return "Quenchies"
+            return "Quenchie"
         case "Cryo Catacombs":
             return "Cryosnake"
         case "Overpass of Sound":
-            return "Bop Boxes"
+            return "Bop Box"
         case "Crystal Basecamp":
-            return "Neyeptunes"
+            return "Neyeptune"
         case "Wam Wonderland":
-            return "Dedotated Rams"
+            return "Dedotated Ram"
         case "Hell Hath Frozen Over":
-            return "Bloodbones"
+            return "Bloodbone"
         case "Equinox Valley":
-            return "Special- AFK only Dedotated Rams"
+            return "Special- AFK only Dedotated Ram"
         #W4 Maps
         case "Spaceway Raceway":
-            return "Purp Mushrooms"
+            return "Purp Mushroom"
         case "TV Outpost":
-            return "TVs"
+            return "TV"
         case "Donut Drive-In":
-            return "Donuts"
+            return "Donut"
         case "Outskirts of Fallstar Isle":
-            return "Demon Genies"
+            return "Demon Genie"
         case "Mountainous Deugh":
-            return "Soda Cans"
+            return "Soda Can"
         case "Wurm Highway":
-            return "Flying Worms"
+            return "Flying Worm"
         case "Jelly Cube Bridge":
-            return "Gelatinous Cuboids"
+            return "Gelatinous Cuboid"
         case "Cocoa Tunnel":
-            return "Choccies"
+            return "Choccie"
         case "Standstill Plains":
-            return "Biggole Wurms"
+            return "Biggole Wurm"
         case "Shelled Shores":
-            return "Clammies"
+            return "Clammie"
         case "The Untraveled Octopath":
-            return "Octodars"
+            return "Octodar"
         case "Flamboyant Bayou":
-            return "Flombs"
+            return "Flombeige"
         case "Enclave of Eyes":
-            return "Stilted Seekers"
+            return "Stilted Seeker"
         case "The Rift":
             return "Rift Monsters"
         #W5 Maps
         case "Naut Sake Perimeter":
-            return "Suggmas"
+            return "Suggma"
         case "Niagrilled Falls":
-            return "Maccies"
+            return "Maccie"
         case "The Killer Roundabout":
-            return "Mister Brightsides"
+            return "Mister Brightside"
         case "Cracker Jack Lake":
-            return "Cheese Nubs"
+            return "Cheese Nub"
         case "The Great Molehill":
-            return "Stiltmoles"
+            return "Stiltmole"
         case "Erruption River":
-            return "Moltis"
+            return "Molti"
         case "Mount Doomish":
-            return "Purgatory Stalkers"
+            return "Purgatory Stalker"
         case "OJ Bay":
-            return "Citringes"
+            return "Citringe"
         case "Lampar Lake":
-            return "Lampars"
+            return "Lampar"
         case "Spitfire River":
-            return "Fire Spirits"
+            return "Fire Spirit"
         case "Miner Mole Outskirts":
-            return "Biggole Moles"
+            return "Biggole Mole"
         case "Crawly Catacombs":
-            return "Crawlers"
+            return "Crawler"
         case "The Worm Nest":
-            return "Tremor Wurms"
+            return "Tremor Wurm"
         case "Gooble Goop Creek":
             return "Sprout Spirit"
         case "Picnic Bridgeways":
@@ -211,30 +286,34 @@ def getEnemyNameFromMap(inputMap):
         case _:
             return "UnknownEnemy"+str(inputMap)
 
-def getApocalypseCharactersDict(inputJSON, playerCount, playerNames):
+def getapocCharactersIndexList(characterDict: dict) -> list:
     #get classes, find Barbarian and BB
-    playerClassesList = ["placeholder"]
-    apocCharactersDict = {}
-    classCounter = 0
-    while classCounter < playerCount:
-        try:
-            characterClass = getHumanReadableClasses(inputJSON['CharacterClass_'+str(classCounter)])
-            characterNameAndClass = playerNames[classCounter] + " the " + characterClass
-            if characterClass == "Barbarian" or characterClass == "Blood Berserker":
-                apocCharactersDict[classCounter] = [[characterNameAndClass,0,0,0],[]]
-            playerClassesList.append(characterNameAndClass)
-        except Exception as reason:
-            print("ConsDeathNote.getApocalypseCharactersDict~ EXCEPTION Unable to find class name for Character", classCounter, "because:", reason)
-        classCounter += 1
-    #print("ConsDeathNote~ playerClassesList: ",playerClassesList[1:])
-    #print("ConsDeathNote~ apocCharactersDict: ",apocCharactersDict)
-    return apocCharactersDict
+    apocCharactersIndexList = []
+    for character in characterDict:
+        if character.sub_class == "Barbarian":
+            apocCharactersIndexList.append(character.character_index)
+    return apocCharactersIndexList
 
-
-def getDeathNoteKills(inputJSON, playerCount, playerNames):
-    apocCharactersDict = getApocalypseCharactersDict(inputJSON, playerCount, playerNames)
-    apocableMapIndexList = [1, 2, 14, 17, 16, 13, 18, 31, 19, 24, 26, 27, 28, 8, 15, 30, 9, 38, 51, 52, 53, 57, 58, 59, 60, 62, 63, 64, 65, 69, 101, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 116, 117, 120, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 166, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213]
-    apocableMapPortalRequirementList = [11, 15, 40, 0, 60, 2500, 5000, 0, 125, 100, 150, 30, 0, 20000, 35000, 0, 0, 0, 250, 600, 1000, 1200, 1600, 2000, 2500, 3000, 4000, 5000, 1, 0, 1000, 2000, 3000, 4000, 6000, 8000, 11000, 15000, 18000, 22000, 35000, 120000, 250000, 0, 0, 5000, 12000, 18000, 25000, 40000, 60000, 90000, 120000, 150000, 190000, 250000, 300000, 350000, 100, 25000, 30000, 50000, 75000, 125000, 300000, 500000, 1000000, 2000000, 3000000, 6000000, 10000000, 60000]
+def getDeathNoteKills(inputJSON, characterDict):
+    apocCharactersIndexList = getapocCharactersIndexList(characterDict)
+    apocableMapIndexDict = {
+        0: [30, 9, 38, 69, 120, 166],  #Barbarian only, not in regular DeathNote
+        1: [1, 2, 14, 17, 16, 13, 18, 31, 19, 24, 26, 27, 28, 8, 15],
+        2: [51, 52, 53, 57, 58, 59, 60, 62, 63, 64, 65],
+        3: [101, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 116, 117],
+        4: [151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163],
+        5: [201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213],
+        6: [251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264]
+    }
+    apocableMapIndexList = [
+        1, 2, 14, 17, 16, 13, 18, 31, 19, 24, 26, 27, 28, 8, 15, 30, 9, 38,
+        51, 52, 53, 57, 58, 59, 60, 62, 63, 64, 65, 69,
+        101, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 116, 117, 120,
+        151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 166,
+        201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213
+    ]
+    apocableMapPortalRequirementList = [
+        11, 15, 40, 0, 60, 2500, 5000, 0, 125, 100, 150, 30, 0, 20000, 35000, 0, 0, 0, 250, 600, 1000, 1200, 1600, 2000, 2500, 3000, 4000, 5000, 1, 0, 1000, 2000, 3000, 4000, 6000, 8000, 11000, 15000, 18000, 22000, 35000, 120000, 250000, 0, 0, 5000, 12000, 18000, 25000, 40000, 60000, 90000, 120000, 150000, 190000, 250000, 300000, 350000, 100, 25000, 30000, 50000, 75000, 125000, 300000, 500000, 1000000, 2000000, 3000000, 6000000, 10000000, 60000]
     #set maps with portal requirements, 0 kills default
     #"MapName":[
     #[0] = int Portal Requirement
@@ -347,197 +426,197 @@ def getDeathNoteKills(inputJSON, playerCount, playerNames):
     }
 
     #total up all kills across characters
-    playerCounter = 0
-    while playerCounter < playerCount:
+
+    #playerCounter = 0
+    #while playerCounter < len(characterDict):
+    for characterIndex in range(0, len(characterDict)):
         try:
-            playerKillsList = json.loads(inputJSON['KLA_'+str(playerCounter)]) #String pretending to be a list of lists yet again
+            characterKillsList = json.loads(inputJSON['KLA_'+str(characterIndex)])  #String pretending to be a list of lists yet again
         except Exception as reason:
-            print("ConsDeathNote.getDeathNoteKills~ EXCEPTION Unable to retrieve kill list for Character", playerCounter, "because:", reason)
-            playerKillsList = []
+            print("ConsDeathNote.getDeathNoteKills~ EXCEPTION Unable to retrieve kill list for Character", characterIndex, "because:", reason)
+            characterKillsList = []
 
         killCounter = 0
         #try to adjust when kill count is stored as a String in scientific notation
-        while killCounter < len(playerKillsList):
-            #print("ConsDeathNote.getDeathNoteKills~ INFO playerKillsList[killCounter]:", playerCounter, killCounter, playerKillsList[killCounter])
-            if isinstance(playerKillsList[killCounter], int):
+        while killCounter < len(characterKillsList):
+            #print("ConsDeathNote.getDeathNoteKills~ INFO characterKillsList[killCounter]:", playerCounter, killCounter, characterKillsList[killCounter])
+            if isinstance(characterKillsList[killCounter], int):
                 try:
-                    playerKillsList[killCounter] = [playerKillsList[killCounter]]
+                    characterKillsList[killCounter] = [characterKillsList[killCounter]]
                 except Exception as reason:
-                    print("ConsDeathNote~ EXCEPTION Unable to convert INT to LIST", playerCounter, killCounter, playerKillsList[killCounter], reason)
+                    print("ConsDeathNote~ EXCEPTION Unable to convert INT to LIST", characterIndex, killCounter, characterKillsList[killCounter], reason)
 
-            if isinstance(playerKillsList[killCounter][0], str):
+            if isinstance(characterKillsList[killCounter][0], str):
                 try:
-                    #print("ConsDeathNote~ Trying to Convert string to Float: ", type(playerKillsList[killCounter][0]), playerKillsList[killCounter][0])
-                    playerKillsList[killCounter][0] = float(playerKillsList[killCounter][0])
-                    #print("ConsDeathNote~ HURRAY Converted string to Float: ", type(playerKillsList[killCounter][0]), playerKillsList[killCounter][0])
+                    #print("ConsDeathNote~ Trying to Convert string to Float: ", type(characterKillsList[killCounter][0]), characterKillsList[killCounter][0])
+                    characterKillsList[killCounter][0] = float(characterKillsList[killCounter][0])
+                    #print("ConsDeathNote~ HURRAY Converted string to Float: ", type(characterKillsList[killCounter][0]), characterKillsList[killCounter][0])
                 except Exception as reason:
-                    print("ConsDeathNote~ EXCEPTION Unable to convert String to Float",playerKillsList[killCounter][0], reason)
+                    print("ConsDeathNote~ EXCEPTION Unable to convert String to Float",characterKillsList[killCounter][0], reason)
             killCounter += 1
         #just for the sake of minimizing DeathNote counts
         if True == True:
             #apoc only, not in the real deathnote
             #try:
-                #apocDeathNoteDict['The Roots'][1] += abs(playerKillsList[30][0]-apocDeathNoteDict['The Roots'][0])
-                #apocDeathNoteDict['The Office'][1] += abs(playerKillsList[9][0]-apocDeathNoteDict['The Office'][0])
-                #apocDeathNoteDict["Meel's Crypt"][1] += abs(playerKillsList[38][0]-apocDeathNoteDict["Meel's Crypt"][0])
-                #apocDeathNoteDict['Mummy Memorial'][1] += abs(playerKillsList[69][0]-apocDeathNoteDict['Mummy Memorial'][0])
-                #apocDeathNoteDict['Equinox Valley'][1] += abs(playerKillsList[120][0]-apocDeathNoteDict['Equinox Valley'][0])
-                #apocDeathNoteDict['The Rift'][1] += abs(playerKillsList[166][0]-apocDeathNoteDict['The Rift'][0])
+                #apocDeathNoteDict['The Roots'][1] += abs(characterKillsList[30][0]-apocDeathNoteDict['The Roots'][0])
+                #apocDeathNoteDict['The Office'][1] += abs(characterKillsList[9][0]-apocDeathNoteDict['The Office'][0])
+                #apocDeathNoteDict["Meel's Crypt"][1] += abs(characterKillsList[38][0]-apocDeathNoteDict["Meel's Crypt"][0])
+                #apocDeathNoteDict['Mummy Memorial'][1] += abs(characterKillsList[69][0]-apocDeathNoteDict['Mummy Memorial'][0])
+                #apocDeathNoteDict['Equinox Valley'][1] += abs(characterKillsList[120][0]-apocDeathNoteDict['Equinox Valley'][0])
+                #apocDeathNoteDict['The Rift'][1] += abs(characterKillsList[166][0]-apocDeathNoteDict['The Rift'][0])
             #except Exception as reason:
-                #print("ConsDeathNote~ EXCEPTION Unable to increase kill count in apocDeathNoteDict",playerCounter, playerCount, reason)
+                #print("ConsDeathNote~ EXCEPTION Unable to increase kill count in apocDeathNoteDict",playerCounter, len(characterDict), reason)
 
             #w1 dn
             try:
-                w1DeathNoteDict['Spore Meadows'][1] += abs(playerKillsList[1][0]-w1DeathNoteDict['Spore Meadows'][0])
-                w1DeathNoteDict['Froggy Fields'][1] += abs(playerKillsList[2][0]-w1DeathNoteDict['Froggy Fields'][0])
-                w1DeathNoteDict['Valley of the Beans'][1] += abs(playerKillsList[14][0]-w1DeathNoteDict['Valley of the Beans'][0])
-                w1DeathNoteDict['Birch Enclave'][1] += abs(playerKillsList[17][0]-w1DeathNoteDict['Birch Enclave'][0])
-                w1DeathNoteDict['Jungle Perimeter'][1] += abs(playerKillsList[16][0]-w1DeathNoteDict['Jungle Perimeter'][0])
-                w1DeathNoteDict['The Base of the Bark'][1] += abs(playerKillsList[13][0]-w1DeathNoteDict['The Base of the Bark'][0])
-                w1DeathNoteDict['Hollowed Trunk'][1] += abs(playerKillsList[18][0]-w1DeathNoteDict['Hollowed Trunk'][0])
-                w1DeathNoteDict['Where the Branches End'][1] += abs(playerKillsList[31][0]-w1DeathNoteDict['Where the Branches End'][0])
-                w1DeathNoteDict['Winding Willows'][1] += abs(playerKillsList[19][0]-w1DeathNoteDict['Winding Willows'][0])
-                w1DeathNoteDict['Vegetable Patch'][1] += abs(playerKillsList[24][0]-w1DeathNoteDict['Vegetable Patch'][0])
-                w1DeathNoteDict['Forest Outskirts'][1] += abs(playerKillsList[26][0]-w1DeathNoteDict['Forest Outskirts'][0])
-                w1DeathNoteDict['Encroaching Forest Villa'][1] += abs(playerKillsList[27][0]-w1DeathNoteDict['Encroaching Forest Villa'][0])
-                w1DeathNoteDict['Tucked Away'][1] += abs(playerKillsList[28][0]-w1DeathNoteDict['Tucked Away'][0])
-                w1DeathNoteDict['Poopy Sewers'][1] += abs(playerKillsList[8][0]-w1DeathNoteDict['Poopy Sewers'][0])
-                w1DeathNoteDict['Rats Nest'][1] += abs(playerKillsList[15][0]-w1DeathNoteDict['Rats Nest'][0])
+                w1DeathNoteDict['Spore Meadows'][1] += abs(characterKillsList[1][0]-w1DeathNoteDict['Spore Meadows'][0])
+                w1DeathNoteDict['Froggy Fields'][1] += abs(characterKillsList[2][0]-w1DeathNoteDict['Froggy Fields'][0])
+                w1DeathNoteDict['Valley of the Beans'][1] += abs(characterKillsList[14][0]-w1DeathNoteDict['Valley of the Beans'][0])
+                w1DeathNoteDict['Birch Enclave'][1] += abs(characterKillsList[17][0]-w1DeathNoteDict['Birch Enclave'][0])
+                w1DeathNoteDict['Jungle Perimeter'][1] += abs(characterKillsList[16][0]-w1DeathNoteDict['Jungle Perimeter'][0])
+                w1DeathNoteDict['The Base of the Bark'][1] += abs(characterKillsList[13][0]-w1DeathNoteDict['The Base of the Bark'][0])
+                w1DeathNoteDict['Hollowed Trunk'][1] += abs(characterKillsList[18][0]-w1DeathNoteDict['Hollowed Trunk'][0])
+                w1DeathNoteDict['Where the Branches End'][1] += abs(characterKillsList[31][0]-w1DeathNoteDict['Where the Branches End'][0])
+                w1DeathNoteDict['Winding Willows'][1] += abs(characterKillsList[19][0]-w1DeathNoteDict['Winding Willows'][0])
+                w1DeathNoteDict['Vegetable Patch'][1] += abs(characterKillsList[24][0]-w1DeathNoteDict['Vegetable Patch'][0])
+                w1DeathNoteDict['Forest Outskirts'][1] += abs(characterKillsList[26][0]-w1DeathNoteDict['Forest Outskirts'][0])
+                w1DeathNoteDict['Encroaching Forest Villa'][1] += abs(characterKillsList[27][0]-w1DeathNoteDict['Encroaching Forest Villa'][0])
+                w1DeathNoteDict['Tucked Away'][1] += abs(characterKillsList[28][0]-w1DeathNoteDict['Tucked Away'][0])
+                w1DeathNoteDict['Poopy Sewers'][1] += abs(characterKillsList[8][0]-w1DeathNoteDict['Poopy Sewers'][0])
+                w1DeathNoteDict['Rats Nest'][1] += abs(characterKillsList[15][0]-w1DeathNoteDict['Rats Nest'][0])
             except Exception as reason:
-                print("ConsDeathNote~ EXCEPTION Unable to increase kill count in w1DeathNoteDict", playerCounter, playerCount, reason)
+                print("ConsDeathNote~ EXCEPTION Unable to increase kill count in w1DeathNoteDict", characterIndex, len(characterDict), reason)
 
             #w2 dn
             try:
-                w2DeathNoteDict['Jar Bridge'][1] += abs(playerKillsList[51][0]-w2DeathNoteDict['Jar Bridge'][0])
-                w2DeathNoteDict['The Mimic Hole'][1] += abs(playerKillsList[52][0]-w2DeathNoteDict['The Mimic Hole'][0])
-                w2DeathNoteDict['Dessert Dunes'][1] += abs(playerKillsList[53][0]-w2DeathNoteDict['Dessert Dunes'][0])
-                w2DeathNoteDict['The Grandioso Canyon'][1] += abs(playerKillsList[57][0]-w2DeathNoteDict['The Grandioso Canyon'][0])
-                w2DeathNoteDict['Shifty Sandbox'][1] += abs(playerKillsList[58][0]-w2DeathNoteDict['Shifty Sandbox'][0])
-                w2DeathNoteDict['Pincer Plateau'][1] += abs(playerKillsList[59][0]-w2DeathNoteDict['Pincer Plateau'][0])
-                w2DeathNoteDict['Slamabam Straightaway'][1] += abs(playerKillsList[60][0]-w2DeathNoteDict['Slamabam Straightaway'][0])
-                w2DeathNoteDict['The Ring'][1] += abs(playerKillsList[62][0]-w2DeathNoteDict['The Ring'][0])
-                w2DeathNoteDict['Up Up Down Down'][1] += abs(playerKillsList[63][0]-w2DeathNoteDict['Up Up Down Down'][0])
-                w2DeathNoteDict['Sands of Time'][1] += abs(playerKillsList[64][0]-w2DeathNoteDict['Sands of Time'][0])
-                w2DeathNoteDict['Djonnuttown'][1] += abs(playerKillsList[65][0]-w2DeathNoteDict['Djonnuttown'][0])
+                w2DeathNoteDict['Jar Bridge'][1] += abs(characterKillsList[51][0]-w2DeathNoteDict['Jar Bridge'][0])
+                w2DeathNoteDict['The Mimic Hole'][1] += abs(characterKillsList[52][0]-w2DeathNoteDict['The Mimic Hole'][0])
+                w2DeathNoteDict['Dessert Dunes'][1] += abs(characterKillsList[53][0]-w2DeathNoteDict['Dessert Dunes'][0])
+                w2DeathNoteDict['The Grandioso Canyon'][1] += abs(characterKillsList[57][0]-w2DeathNoteDict['The Grandioso Canyon'][0])
+                w2DeathNoteDict['Shifty Sandbox'][1] += abs(characterKillsList[58][0]-w2DeathNoteDict['Shifty Sandbox'][0])
+                w2DeathNoteDict['Pincer Plateau'][1] += abs(characterKillsList[59][0]-w2DeathNoteDict['Pincer Plateau'][0])
+                w2DeathNoteDict['Slamabam Straightaway'][1] += abs(characterKillsList[60][0]-w2DeathNoteDict['Slamabam Straightaway'][0])
+                w2DeathNoteDict['The Ring'][1] += abs(characterKillsList[62][0]-w2DeathNoteDict['The Ring'][0])
+                w2DeathNoteDict['Up Up Down Down'][1] += abs(characterKillsList[63][0]-w2DeathNoteDict['Up Up Down Down'][0])
+                w2DeathNoteDict['Sands of Time'][1] += abs(characterKillsList[64][0]-w2DeathNoteDict['Sands of Time'][0])
+                w2DeathNoteDict['Djonnuttown'][1] += abs(characterKillsList[65][0]-w2DeathNoteDict['Djonnuttown'][0])
             except Exception as reason:
-                print("ConsDeathNote~ EXCEPTION Unable to increase kill count in w2DeathNoteDict", playerCounter, playerCount, reason)
+                print("ConsDeathNote~ EXCEPTION Unable to increase kill count in w2DeathNoteDict", characterIndex, len(characterDict), reason)
 
             #w3 dn
             try:
-                w3DeathNoteDict['Steep Sheep Ledge'][1] += abs(playerKillsList[101][0]-w3DeathNoteDict['Steep Sheep Ledge'][0])
-                w3DeathNoteDict['Snowfield Outskirts'][1] += abs(playerKillsList[103][0]-w3DeathNoteDict['Snowfield Outskirts'][0])
-                w3DeathNoteDict['The Stache Split'][1] += abs(playerKillsList[104][0]-w3DeathNoteDict['The Stache Split'][0])
-                w3DeathNoteDict['Refrigeration Station'][1] += abs(playerKillsList[105][0]-w3DeathNoteDict['Refrigeration Station'][0])
-                w3DeathNoteDict['Mamooooth Mountain'][1] += abs(playerKillsList[106][0]-w3DeathNoteDict['Mamooooth Mountain'][0])
-                w3DeathNoteDict["Rollin' Tundra"][1] += abs(playerKillsList[107][0]-w3DeathNoteDict["Rollin' Tundra"][0])
-                w3DeathNoteDict['Signature Slopes'][1] += abs(playerKillsList[108][0]-w3DeathNoteDict['Signature Slopes'][0])
-                w3DeathNoteDict['Thermonuclear Climb'][1] += abs(playerKillsList[109][0]-w3DeathNoteDict['Thermonuclear Climb'][0])
-                w3DeathNoteDict['Waterlogged Entrance'][1] += abs(playerKillsList[110][0]-w3DeathNoteDict['Waterlogged Entrance'][0])
-                w3DeathNoteDict['Cryo Catacombs'][1] += abs(playerKillsList[111][0]-w3DeathNoteDict['Cryo Catacombs'][0])
-                w3DeathNoteDict['Overpass of Sound'][1] += abs(playerKillsList[112][0]-w3DeathNoteDict['Overpass of Sound'][0])
-                w3DeathNoteDict['Crystal Basecamp'][1] += abs(playerKillsList[113][0]-w3DeathNoteDict['Crystal Basecamp'][0])
-                w3DeathNoteDict['Wam Wonderland'][1] += abs(playerKillsList[116][0]-w3DeathNoteDict['Wam Wonderland'][0])
-                w3DeathNoteDict['Hell Hath Frozen Over'][1] += abs(playerKillsList[117][0]-w3DeathNoteDict['Hell Hath Frozen Over'][0])
+                w3DeathNoteDict['Steep Sheep Ledge'][1] += abs(characterKillsList[101][0]-w3DeathNoteDict['Steep Sheep Ledge'][0])
+                w3DeathNoteDict['Snowfield Outskirts'][1] += abs(characterKillsList[103][0]-w3DeathNoteDict['Snowfield Outskirts'][0])
+                w3DeathNoteDict['The Stache Split'][1] += abs(characterKillsList[104][0]-w3DeathNoteDict['The Stache Split'][0])
+                w3DeathNoteDict['Refrigeration Station'][1] += abs(characterKillsList[105][0]-w3DeathNoteDict['Refrigeration Station'][0])
+                w3DeathNoteDict['Mamooooth Mountain'][1] += abs(characterKillsList[106][0]-w3DeathNoteDict['Mamooooth Mountain'][0])
+                w3DeathNoteDict["Rollin' Tundra"][1] += abs(characterKillsList[107][0]-w3DeathNoteDict["Rollin' Tundra"][0])
+                w3DeathNoteDict['Signature Slopes'][1] += abs(characterKillsList[108][0]-w3DeathNoteDict['Signature Slopes'][0])
+                w3DeathNoteDict['Thermonuclear Climb'][1] += abs(characterKillsList[109][0]-w3DeathNoteDict['Thermonuclear Climb'][0])
+                w3DeathNoteDict['Waterlogged Entrance'][1] += abs(characterKillsList[110][0]-w3DeathNoteDict['Waterlogged Entrance'][0])
+                w3DeathNoteDict['Cryo Catacombs'][1] += abs(characterKillsList[111][0]-w3DeathNoteDict['Cryo Catacombs'][0])
+                w3DeathNoteDict['Overpass of Sound'][1] += abs(characterKillsList[112][0]-w3DeathNoteDict['Overpass of Sound'][0])
+                w3DeathNoteDict['Crystal Basecamp'][1] += abs(characterKillsList[113][0]-w3DeathNoteDict['Crystal Basecamp'][0])
+                w3DeathNoteDict['Wam Wonderland'][1] += abs(characterKillsList[116][0]-w3DeathNoteDict['Wam Wonderland'][0])
+                w3DeathNoteDict['Hell Hath Frozen Over'][1] += abs(characterKillsList[117][0]-w3DeathNoteDict['Hell Hath Frozen Over'][0])
             except Exception as reason:
-                print("ConsDeathNote~ EXCEPTION Unable to increase kill count in w3DeathNoteDict", playerCounter, playerCount, reason)
+                print("ConsDeathNote~ EXCEPTION Unable to increase kill count in w3DeathNoteDict", characterIndex, len(characterDict), reason)
 
             #w4 dn
             try:
-                w4DeathNoteDict['Spaceway Raceway'][1] += abs(playerKillsList[151][0]-w4DeathNoteDict['Spaceway Raceway'][0])
-                w4DeathNoteDict['TV Outpost'][1] += abs(playerKillsList[152][0]-w4DeathNoteDict['TV Outpost'][0])
-                w4DeathNoteDict['Donut Drive-In'][1] += abs(playerKillsList[153][0]-w4DeathNoteDict['Donut Drive-In'][0])
-                w4DeathNoteDict['Outskirts of Fallstar Isle'][1] += abs(playerKillsList[154][0]-w4DeathNoteDict['Outskirts of Fallstar Isle'][0])
-                w4DeathNoteDict['Mountainous Deugh'][1] += abs(playerKillsList[155][0]-w4DeathNoteDict['Mountainous Deugh'][0])
-                w4DeathNoteDict['Wurm Highway'][1] += abs(playerKillsList[156][0]-w4DeathNoteDict['Wurm Highway'][0])
-                w4DeathNoteDict['Jelly Cube Bridge'][1] += abs(playerKillsList[157][0]-w4DeathNoteDict['Jelly Cube Bridge'][0])
-                w4DeathNoteDict['Cocoa Tunnel'][1] += abs(playerKillsList[158][0]-w4DeathNoteDict['Cocoa Tunnel'][0])
-                w4DeathNoteDict['Standstill Plains'][1] += abs(playerKillsList[159][0]-w4DeathNoteDict['Standstill Plains'][0])
-                w4DeathNoteDict['Shelled Shores'][1] += abs(playerKillsList[160][0]-w4DeathNoteDict['Shelled Shores'][0])
-                w4DeathNoteDict['The Untraveled Octopath'][1] += abs(playerKillsList[161][0]-w4DeathNoteDict['The Untraveled Octopath'][0])
-                w4DeathNoteDict['Flamboyant Bayou'][1] += abs(playerKillsList[162][0]-w4DeathNoteDict['Flamboyant Bayou'][0])
-                w4DeathNoteDict['Enclave of Eyes'][1] += abs(playerKillsList[163][0]-w4DeathNoteDict['Enclave of Eyes'][0])
+                w4DeathNoteDict['Spaceway Raceway'][1] += abs(characterKillsList[151][0]-w4DeathNoteDict['Spaceway Raceway'][0])
+                w4DeathNoteDict['TV Outpost'][1] += abs(characterKillsList[152][0]-w4DeathNoteDict['TV Outpost'][0])
+                w4DeathNoteDict['Donut Drive-In'][1] += abs(characterKillsList[153][0]-w4DeathNoteDict['Donut Drive-In'][0])
+                w4DeathNoteDict['Outskirts of Fallstar Isle'][1] += abs(characterKillsList[154][0]-w4DeathNoteDict['Outskirts of Fallstar Isle'][0])
+                w4DeathNoteDict['Mountainous Deugh'][1] += abs(characterKillsList[155][0]-w4DeathNoteDict['Mountainous Deugh'][0])
+                w4DeathNoteDict['Wurm Highway'][1] += abs(characterKillsList[156][0]-w4DeathNoteDict['Wurm Highway'][0])
+                w4DeathNoteDict['Jelly Cube Bridge'][1] += abs(characterKillsList[157][0]-w4DeathNoteDict['Jelly Cube Bridge'][0])
+                w4DeathNoteDict['Cocoa Tunnel'][1] += abs(characterKillsList[158][0]-w4DeathNoteDict['Cocoa Tunnel'][0])
+                w4DeathNoteDict['Standstill Plains'][1] += abs(characterKillsList[159][0]-w4DeathNoteDict['Standstill Plains'][0])
+                w4DeathNoteDict['Shelled Shores'][1] += abs(characterKillsList[160][0]-w4DeathNoteDict['Shelled Shores'][0])
+                w4DeathNoteDict['The Untraveled Octopath'][1] += abs(characterKillsList[161][0]-w4DeathNoteDict['The Untraveled Octopath'][0])
+                w4DeathNoteDict['Flamboyant Bayou'][1] += abs(characterKillsList[162][0]-w4DeathNoteDict['Flamboyant Bayou'][0])
+                w4DeathNoteDict['Enclave of Eyes'][1] += abs(characterKillsList[163][0]-w4DeathNoteDict['Enclave of Eyes'][0])
             except Exception as reason:
-                print("ConsDeathNote~ EXCEPTION Unable to increase kill count in w4DeathNoteDict", playerCounter, playerCount, reason)
+                print("ConsDeathNote~ EXCEPTION Unable to increase kill count in w4DeathNoteDict", characterIndex, len(characterDict), reason)
 
             #w5 dn
-            if len(playerKillsList) >= 264:
+            if len(characterKillsList) >= 249:
                 try:
-                    w5DeathNoteDict['Naut Sake Perimeter'][1] += abs(playerKillsList[201][0] - w5DeathNoteDict['Naut Sake Perimeter'][0])
-                    w5DeathNoteDict['Niagrilled Falls'][1] += abs(playerKillsList[202][0] - w5DeathNoteDict['Niagrilled Falls'][0])
-                    w5DeathNoteDict['The Killer Roundabout'][1] += abs(playerKillsList[203][0] - w5DeathNoteDict['The Killer Roundabout'][0])
-                    w5DeathNoteDict['Cracker Jack Lake'][1] += abs(playerKillsList[204][0] - w5DeathNoteDict['Cracker Jack Lake'][0])
-                    w5DeathNoteDict['The Great Molehill'][1] += abs(playerKillsList[205][0]-w5DeathNoteDict['The Great Molehill'][0])
-                    w5DeathNoteDict['Erruption River'][1] += abs(playerKillsList[206][0]-w5DeathNoteDict['Erruption River'][0])
-                    w5DeathNoteDict['Mount Doomish'][1] += abs(playerKillsList[207][0]-w5DeathNoteDict['Mount Doomish'][0])
-                    w5DeathNoteDict['OJ Bay'][1] += abs(playerKillsList[208][0]-w5DeathNoteDict['OJ Bay'][0])
-                    w5DeathNoteDict['Lampar Lake'][1] += abs(playerKillsList[209][0]-w5DeathNoteDict['Lampar Lake'][0])
-                    w5DeathNoteDict['Spitfire River'][1] += abs(playerKillsList[210][0]-w5DeathNoteDict['Spitfire River'][0])
-                    w5DeathNoteDict['Miner Mole Outskirts'][1] += abs(playerKillsList[211][0]-w5DeathNoteDict['Miner Mole Outskirts'][0])
-                    w5DeathNoteDict['Crawly Catacombs'][1] += abs(playerKillsList[212][0]-w5DeathNoteDict['Crawly Catacombs'][0])
-                    w5DeathNoteDict['The Worm Nest'][1] += abs(playerKillsList[213][0]-w5DeathNoteDict['The Worm Nest'][0])
+                    w5DeathNoteDict['Naut Sake Perimeter'][1] += abs(characterKillsList[201][0] - w5DeathNoteDict['Naut Sake Perimeter'][0])
+                    w5DeathNoteDict['Niagrilled Falls'][1] += abs(characterKillsList[202][0] - w5DeathNoteDict['Niagrilled Falls'][0])
+                    w5DeathNoteDict['The Killer Roundabout'][1] += abs(characterKillsList[203][0] - w5DeathNoteDict['The Killer Roundabout'][0])
+                    w5DeathNoteDict['Cracker Jack Lake'][1] += abs(characterKillsList[204][0] - w5DeathNoteDict['Cracker Jack Lake'][0])
+                    w5DeathNoteDict['The Great Molehill'][1] += abs(characterKillsList[205][0]-w5DeathNoteDict['The Great Molehill'][0])
+                    w5DeathNoteDict['Erruption River'][1] += abs(characterKillsList[206][0]-w5DeathNoteDict['Erruption River'][0])
+                    w5DeathNoteDict['Mount Doomish'][1] += abs(characterKillsList[207][0]-w5DeathNoteDict['Mount Doomish'][0])
+                    w5DeathNoteDict['OJ Bay'][1] += abs(characterKillsList[208][0]-w5DeathNoteDict['OJ Bay'][0])
+                    w5DeathNoteDict['Lampar Lake'][1] += abs(characterKillsList[209][0]-w5DeathNoteDict['Lampar Lake'][0])
+                    w5DeathNoteDict['Spitfire River'][1] += abs(characterKillsList[210][0]-w5DeathNoteDict['Spitfire River'][0])
+                    w5DeathNoteDict['Miner Mole Outskirts'][1] += abs(characterKillsList[211][0]-w5DeathNoteDict['Miner Mole Outskirts'][0])
+                    w5DeathNoteDict['Crawly Catacombs'][1] += abs(characterKillsList[212][0]-w5DeathNoteDict['Crawly Catacombs'][0])
+                    w5DeathNoteDict['The Worm Nest'][1] += abs(characterKillsList[213][0]-w5DeathNoteDict['The Worm Nest'][0])
                 except Exception as reason:
-                    print("ConsDeathNote~ EXCEPTION Unable to increase kill count in w5DeathNoteDict", playerCounter, playerCount, reason)
+                    print("ConsDeathNote~ EXCEPTION Unable to increase kill count in w5DeathNoteDict", characterIndex, len(characterDict), reason)
 
             #w6 dn
-            if len(playerKillsList) >= 264:
+            if len(characterKillsList) >= 299:
                 try:
                     w6DeathNoteDict['Gooble Goop Creek'][1] \
-                        += abs(playerKillsList[251][0] - w6DeathNoteDict['Gooble Goop Creek'][0])
+                        += abs(characterKillsList[251][0] - w6DeathNoteDict['Gooble Goop Creek'][0])
                     w6DeathNoteDict['Picnic Bridgeways'][1] \
-                        += abs(playerKillsList[252][0] - w6DeathNoteDict['Picnic Bridgeways'][0])
+                        += abs(characterKillsList[252][0] - w6DeathNoteDict['Picnic Bridgeways'][0])
                     w6DeathNoteDict['Irrigation Station'][1] \
-                        += abs(playerKillsList[253][0] - w6DeathNoteDict['Irrigation Station'][0])
+                        += abs(characterKillsList[253][0] - w6DeathNoteDict['Irrigation Station'][0])
                     w6DeathNoteDict['Troll Playground'][1] \
-                        += abs(playerKillsList[254][0] - w6DeathNoteDict['Troll Playground'][0])
+                        += abs(characterKillsList[254][0] - w6DeathNoteDict['Troll Playground'][0])
                     w6DeathNoteDict['Edge of the Valley'][1] \
-                        += abs(playerKillsList[255][0] - w6DeathNoteDict['Edge of the Valley'][0])
+                        += abs(characterKillsList[255][0] - w6DeathNoteDict['Edge of the Valley'][0])
                     w6DeathNoteDict['Bamboo Laboredge'][1] \
-                        += abs(playerKillsList[256][0] - w6DeathNoteDict['Bamboo Laboredge'][0])
+                        += abs(characterKillsList[256][0] - w6DeathNoteDict['Bamboo Laboredge'][0])
                     w6DeathNoteDict['Lightway Path'][1] \
-                        += abs(playerKillsList[257][0] - w6DeathNoteDict['Lightway Path'][0])
+                        += abs(characterKillsList[257][0] - w6DeathNoteDict['Lightway Path'][0])
                     w6DeathNoteDict['Troll Broodnest'][1] \
-                        += abs(playerKillsList[258][0] - w6DeathNoteDict['Troll Broodnest'][0])
+                        += abs(characterKillsList[258][0] - w6DeathNoteDict['Troll Broodnest'][0])
                     w6DeathNoteDict['Above the Clouds'][1] \
-                        += abs(playerKillsList[259][0] - w6DeathNoteDict['Above the Clouds'][0])
+                        += abs(characterKillsList[259][0] - w6DeathNoteDict['Above the Clouds'][0])
                     w6DeathNoteDict['Sleepy Skyline'][1] \
-                        += abs(playerKillsList[260][0] - w6DeathNoteDict['Sleepy Skyline'][0])
+                        += abs(characterKillsList[260][0] - w6DeathNoteDict['Sleepy Skyline'][0])
                     w6DeathNoteDict['Dozey Dogpark'][1] \
-                        += abs(playerKillsList[261][0] - w6DeathNoteDict['Dozey Dogpark'][0])
+                        += abs(characterKillsList[261][0] - w6DeathNoteDict['Dozey Dogpark'][0])
                     w6DeathNoteDict['Yolkrock Basin'][1] \
-                        += abs(playerKillsList[262][0] - w6DeathNoteDict['Yolkrock Basin'][0])
+                        += abs(characterKillsList[262][0] - w6DeathNoteDict['Yolkrock Basin'][0])
                     w6DeathNoteDict['Chieftain Stairway'][1] \
-                        += abs(playerKillsList[263][0] - w6DeathNoteDict['Chieftain Stairway'][0])
+                        += abs(characterKillsList[263][0] - w6DeathNoteDict['Chieftain Stairway'][0])
                     w6DeathNoteDict["Emporer's Castle Doorstep"][1] \
-                        += abs(playerKillsList[264][0] - w6DeathNoteDict["Emporer's Castle Doorstep"][0])
+                        += abs(characterKillsList[264][0] - w6DeathNoteDict["Emporer's Castle Doorstep"][0])
                 except Exception as reason:
-                    print("ConsDeathNote~ EXCEPTION Unable to increase kill count in w6DeathNoteDict", playerCounter, playerCount, reason)
+                    print("ConsDeathNote~ EXCEPTION Unable to increase kill count in w6DeathNoteDict", characterIndex, len(characterDict), reason)
 
         #apoc counts for Barbarians and Blood Berserkers only
-        if playerCounter in apocCharactersDict.keys():
+        if characterIndex in apocCharactersIndexList:
             mapIndexCounter = 0
             while mapIndexCounter < len(apocableMapIndexList):
                 try:
-                    apocCharactersDict[playerCounter][1].append(abs(playerKillsList[apocableMapIndexList[mapIndexCounter]][0]-apocableMapPortalRequirementList[mapIndexCounter]))
+                    apocCharactersDict[characterIndex][1].append(abs(characterKillsList[apocableMapIndexList[mapIndexCounter]][0]-apocableMapPortalRequirementList[mapIndexCounter]))
                 except Exception as reason:
-                    print("ConsDeathNote~ EXCEPTION Unable to append kill count to apocDeathNoteDict for Character",playerCounter, "and MapIndexCouter",mapIndexCounter, reason)
+                    print("ConsDeathNote~ EXCEPTION Unable to append kill count to apocDeathNoteDict for Character", characterIndex, "and MapIndexCouter", mapIndexCounter, reason)
                 mapIndexCounter += 1
-            for killCount in apocCharactersDict[playerCounter][1]:
+            for killCount in apocCharactersDict[characterIndex][1]:
                 if killCount >= 100000000:
-                    apocCharactersDict[playerCounter][0][1] += 1
-                    apocCharactersDict[playerCounter][0][2] += 1
-                    apocCharactersDict[playerCounter][0][3] += 1
+                    apocCharactersDict[characterIndex][0][1] += 1
+                    apocCharactersDict[characterIndex][0][2] += 1
+                    apocCharactersDict[characterIndex][0][3] += 1
                 elif killCount >= 1000000:
-                    apocCharactersDict[playerCounter][0][1] += 1
-                    apocCharactersDict[playerCounter][0][2] += 1
+                    apocCharactersDict[characterIndex][0][1] += 1
+                    apocCharactersDict[characterIndex][0][2] += 1
                 elif killCount >= 100000:
-                    apocCharactersDict[playerCounter][0][1] += 1
+                    apocCharactersDict[characterIndex][0][1] += 1
 
         #all enemies finished, increase counter to access next character's kills
-        playerCounter += 1
+        #playerCounter += 1
 
     #calculate skull type per enemy and count toward next
-    dnSkullRequirementList = [0,25000,100000,250000,500000,1000000,5000000,100000000,1000000000]
-    dnSkullValueList = [0,1,2,3,4,5,7,10,20]
     #"MapName":[
     #[0] = int Portal Requirement
     #[1] = int Kills
@@ -825,8 +904,35 @@ def getDeathNoteKills(inputJSON, playerCount, playerNames):
     #print("ConsDeathNote~ apocCharactersDict: ",apocCharactersDict)
     return fullDeathNoteDict
 
-def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, playerCount, playerNames):
-    fullDeathNoteDict = getDeathNoteKills(inputJSON, playerCount, playerNames)
+def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, characterDict):
+    enemyMaps = buildMaps()
+    deathnote_AdviceDict = {
+        "W1": [],
+        "W2": [],
+        "W3": [],
+        "W4": [],
+        "W5": [],
+        "W6": [],
+        "ZOW": [],
+        "CHOW": [],
+        "MEOW": []
+    }
+    deathnote_AdviceGroupDict = {}
+    deathnote_AdviceSection = AdviceSection(
+        name="Death Note",
+        tier="",
+        header="Recommended Death Note actions",
+        picture="Construction_Death_Note.png"
+    )
+    constructionLevelsList = getSpecificSkillLevelsList(inputJSON, len(characterDict), "Construction")
+    if max(constructionLevelsList) < 1:
+        deathnote_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
+        return deathnote_AdviceSection
+    elif json.loads(inputJSON["Tower"])[3] < 1:
+        deathnote_AdviceSection.header = "Come back after unlocking the Salt Lick within the Construction skill in World 3!"
+        return deathnote_AdviceSection
+
+    fullDeathNoteDict = getDeathNoteKills(inputJSON, characterDict)
     tier_w1DeathNoteSkulls = 0
     tier_w2DeathNoteSkulls = 0
     tier_w3DeathNoteSkulls = 0
@@ -838,6 +944,7 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, playerCount, pl
     tier_zows = 0
     tier_chows = 0
     tier_meows = 0
+    max_tier = progressionTiers[-1][0]
     overall_DeathNoteTier = 0
     advice_w1DeathNoteSkulls = ""
     advice_w2DeathNoteSkulls = ""
@@ -867,13 +974,13 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, playerCount, pl
         #tier[11] = int meowCount
         #tier[12] = str Notes
         #World1
-        if tier_w1DeathNoteSkulls >= (tier[0]-1): #Only evaluate if they already met the previous tier's requirement
+        if tier_w1DeathNoteSkulls >= (tier[0]-1):  #Only evaluate if they already met the previous tier's requirement
             if fullDeathNoteDict["w1"][0] >= tier[1]:
                 tier_w1DeathNoteSkulls = tier[0]
             else:
                 advice_w1DeathNoteSkulls = "Kill more W1 enemies until the minimum skull is the " + getSkullNames(tier[1])
                 if fullDeathNoteDict["w1"][1][0] != "":
-                    advice_w1DeathNoteSkulls += ". The enemy closest to the next skull is " + getEnemyNameFromMap(fullDeathNoteDict["w1"][1][0]) + ", requires " + '{:,}'.format(fullDeathNoteDict["w1"][1][1]) + " more kills, and is " + str(fullDeathNoteDict["w1"][1][2]) +"% completed."
+                    advice_w1DeathNoteSkulls += ". The enemy closest to the next skull is " + getEnemyNameFromMap(fullDeathNoteDict["w1"][1][0]) + ", requires " + '{:,}'.format(fullDeathNoteDict["w1"][1][1]) + " more kills, and is " + str(fullDeathNoteDict["w1"][1][2]) + "% completed."
         #World2
         if tier_w2DeathNoteSkulls >= (tier[0]-1): #Only evaluate if they already met the previous tier's requirement
             if fullDeathNoteDict["w2"][0] >= tier[2]:
@@ -881,7 +988,7 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, playerCount, pl
             else:
                 advice_w2DeathNoteSkulls = "Kill more W2 enemies until the minimum skull is the " + getSkullNames(tier[2])
                 if fullDeathNoteDict["w2"][1][0] != "":
-                    advice_w2DeathNoteSkulls += ". The enemy closest to the next skull is " + getEnemyNameFromMap(fullDeathNoteDict["w2"][1][0]) + ", requires " + '{:,}'.format(fullDeathNoteDict["w2"][1][1]) + " more kills, and is " + str(fullDeathNoteDict["w2"][1][2]) +"% completed."
+                    advice_w2DeathNoteSkulls += ". The enemy closest to the next skull is " + getEnemyNameFromMap(fullDeathNoteDict["w2"][1][0]) + ", requires " + '{:,}'.format(fullDeathNoteDict["w2"][1][1]) + " more kills, and is " + str(fullDeathNoteDict["w2"][1][2]) + "% completed."
         #World3
         if tier_w3DeathNoteSkulls >= (tier[0]-1): #Only evaluate if they already met the previous tier's requirement
             if fullDeathNoteDict["w3"][0] >= tier[3]:
@@ -889,7 +996,7 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, playerCount, pl
             else:
                 advice_w3DeathNoteSkulls = "Kill more W3 enemies until the minimum skull is the " + getSkullNames(tier[3])
                 if fullDeathNoteDict["w3"][1][0] != "":
-                    advice_w3DeathNoteSkulls += ". The enemy closest to the next skull is " + getEnemyNameFromMap(fullDeathNoteDict["w3"][1][0]) + ", requires " + '{:,}'.format(fullDeathNoteDict["w3"][1][1]) + " more kills, and is " + str(fullDeathNoteDict["w3"][1][2]) +"% completed."
+                    advice_w3DeathNoteSkulls += ". The enemy closest to the next skull is " + getEnemyNameFromMap(fullDeathNoteDict["w3"][1][0]) + ", requires " + '{:,}'.format(fullDeathNoteDict["w3"][1][1]) + " more kills, and is " + str(fullDeathNoteDict["w3"][1][2]) + "% completed."
         #World4
         if tier_w4DeathNoteSkulls >= (tier[0]-1): #Only evaluate if they already met the previous tier's requirement
             if fullDeathNoteDict["w4"][0] >= tier[4]:
@@ -897,7 +1004,7 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, playerCount, pl
             else:
                 advice_w4DeathNoteSkulls = "Kill more W4 enemies until the minimum skull is the " + getSkullNames(tier[4])
                 if fullDeathNoteDict["w4"][1][0] != "":
-                    advice_w4DeathNoteSkulls += ". The enemy closest to the next skull is " + getEnemyNameFromMap(fullDeathNoteDict["w4"][1][0]) + ", requires " + '{:,}'.format(fullDeathNoteDict["w4"][1][1]) + " more kills, and is " + str(fullDeathNoteDict["w4"][1][2]) +"% completed."
+                    advice_w4DeathNoteSkulls += ". The enemy closest to the next skull is " + getEnemyNameFromMap(fullDeathNoteDict["w4"][1][0]) + ", requires " + '{:,}'.format(fullDeathNoteDict["w4"][1][1]) + " more kills, and is " + str(fullDeathNoteDict["w4"][1][2]) + "% completed."
         #World5
         if tier_w5DeathNoteSkulls >= (tier[0]-1): #Only evaluate if they already met the previous tier's requirement
             if fullDeathNoteDict["w5"][0] >= tier[5]:
@@ -905,7 +1012,7 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, playerCount, pl
             else:
                 advice_w5DeathNoteSkulls = "Kill more W5 enemies until the minimum skull is the " + getSkullNames(tier[5])
                 if fullDeathNoteDict["w5"][1][0] != "":
-                    advice_w5DeathNoteSkulls += ". The enemy closest to the next skull is " + getEnemyNameFromMap(fullDeathNoteDict["w5"][1][0]) + ", requires " + '{:,}'.format(fullDeathNoteDict["w5"][1][1]) + " more kills, and is " + str(fullDeathNoteDict["w5"][1][2]) +"% completed."
+                    advice_w5DeathNoteSkulls += ". The enemy closest to the next skull is " + getEnemyNameFromMap(fullDeathNoteDict["w5"][1][0]) + ", requires " + '{:,}'.format(fullDeathNoteDict["w5"][1][1]) + " more kills, and is " + str(fullDeathNoteDict["w5"][1][2]) + "% completed."
         #World6
         #World7
         #World8
@@ -963,41 +1070,40 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, playerCount, pl
                 for bb in fullDeathNoteDict["apoc"]:
                     advice_meows += fullDeathNoteDict["apoc"][bb][0][0] + " (" + str(fullDeathNoteDict["apoc"][bb][0][3]) + "/" + str(tier[11]) + "), "
                 advice_meows = advice_meows[:-2] #trim off trailing comma and space
-    #overall_DeathNoteTier = min(progressionTiers[-1][0], tier_w1DeathNoteSkulls)
-    overall_DeathNoteTier = min(progressionTiers[-1][0], tier_w1DeathNoteSkulls, tier_w2DeathNoteSkulls, tier_w3DeathNoteSkulls, tier_w4DeathNoteSkulls, tier_w5DeathNoteSkulls,
+    overall_DeathNoteTier = min(max_tier, tier_w1DeathNoteSkulls, tier_w2DeathNoteSkulls, tier_w3DeathNoteSkulls, tier_w4DeathNoteSkulls, tier_w5DeathNoteSkulls,
                                 #tier_w6DeathNoteSkulls, tier_w7DeathNoteSkulls, tier_w8DeathNoteSkulls,
                                 tier_zows, tier_chows, tier_meows)
 
     #Generate advice statements
-    if advice_w1DeathNoteSkulls != "":
-        advice_w1DeathNoteSkulls = "Tier " + str(tier_w1DeathNoteSkulls) + "- " + advice_w1DeathNoteSkulls
-    if advice_w2DeathNoteSkulls != "":
-        advice_w2DeathNoteSkulls = "Tier " + str(tier_w2DeathNoteSkulls) + "- " + advice_w2DeathNoteSkulls
-    if advice_w3DeathNoteSkulls != "":
-        advice_w3DeathNoteSkulls = "Tier " + str(tier_w3DeathNoteSkulls) + "- " + advice_w3DeathNoteSkulls
-    if advice_w4DeathNoteSkulls != "":
-        advice_w4DeathNoteSkulls = "Tier " + str(tier_w4DeathNoteSkulls) + "- " + advice_w4DeathNoteSkulls
-    if advice_w5DeathNoteSkulls != "":
-        advice_w5DeathNoteSkulls = "Tier " + str(tier_w5DeathNoteSkulls) + "- " + advice_w5DeathNoteSkulls
-    if advice_w6DeathNoteSkulls != "":
-        advice_w6DeathNoteSkulls = "Tier " + str(tier_w6DeathNoteSkulls) + "- " + advice_w6DeathNoteSkulls
-    if advice_w7DeathNoteSkulls != "":
-        advice_w7DeathNoteSkulls = "Tier " + str(tier_w7DeathNoteSkulls) + "- " + advice_w7DeathNoteSkulls
-    if advice_w8DeathNoteSkulls != "":
-        advice_w8DeathNoteSkulls = "Tier " + str(tier_w8DeathNoteSkulls) + "- " + advice_w8DeathNoteSkulls
-    if advice_zows != "":
-        advice_zows = "Tier " + str(tier_zows) + "- " + advice_zows
-    if advice_chows != "":
-        advice_chows = "Tier " + str(tier_chows) + "- " + advice_chows
-    if advice_meows != "":
-        advice_meows = "Tier " + str(tier_meows) + "- " + advice_meows
-    if overall_DeathNoteTier == progressionTiers[-1][0]:
-        advice_w1DeathNoteSkulls = "Nada. You best ❤️"
+    # if advice_w1DeathNoteSkulls != "":
+    #     advice_w1DeathNoteSkulls = "Tier " + str(tier_w1DeathNoteSkulls) + "- " + advice_w1DeathNoteSkulls
+    # if advice_w2DeathNoteSkulls != "":
+    #     advice_w2DeathNoteSkulls = "Tier " + str(tier_w2DeathNoteSkulls) + "- " + advice_w2DeathNoteSkulls
+    # if advice_w3DeathNoteSkulls != "":
+    #     advice_w3DeathNoteSkulls = "Tier " + str(tier_w3DeathNoteSkulls) + "- " + advice_w3DeathNoteSkulls
+    # if advice_w4DeathNoteSkulls != "":
+    #     advice_w4DeathNoteSkulls = "Tier " + str(tier_w4DeathNoteSkulls) + "- " + advice_w4DeathNoteSkulls
+    # if advice_w5DeathNoteSkulls != "":
+    #     advice_w5DeathNoteSkulls = "Tier " + str(tier_w5DeathNoteSkulls) + "- " + advice_w5DeathNoteSkulls
+    # if advice_w6DeathNoteSkulls != "":
+    #     advice_w6DeathNoteSkulls = "Tier " + str(tier_w6DeathNoteSkulls) + "- " + advice_w6DeathNoteSkulls
+    # if advice_w7DeathNoteSkulls != "":
+    #     advice_w7DeathNoteSkulls = "Tier " + str(tier_w7DeathNoteSkulls) + "- " + advice_w7DeathNoteSkulls
+    # if advice_w8DeathNoteSkulls != "":
+    #     advice_w8DeathNoteSkulls = "Tier " + str(tier_w8DeathNoteSkulls) + "- " + advice_w8DeathNoteSkulls
+    # if advice_zows != "":
+    #     advice_zows = "Tier " + str(tier_zows) + "- " + advice_zows
+    # if advice_chows != "":
+    #     advice_chows = "Tier " + str(tier_chows) + "- " + advice_chows
+    # if advice_meows != "":
+    #     advice_meows = "Tier " + str(tier_meows) + "- " + advice_meows
+    # if overall_DeathNoteTier == max_tier:
+    #     advice_w1DeathNoteSkulls = "Nada. You best ❤️"
 
 
-    advice_DeathNoteCombined = ["Best DeathNote tier met: " + str(overall_DeathNoteTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended DeathNote actions:",
-        advice_w1DeathNoteSkulls, advice_w2DeathNoteSkulls, advice_w3DeathNoteSkulls, advice_w4DeathNoteSkulls,
-        advice_w5DeathNoteSkulls, advice_w6DeathNoteSkulls, advice_w7DeathNoteSkulls, advice_w8DeathNoteSkulls,
-        advice_zows, advice_chows, advice_meows]
-    consDeathNotePR = progressionResults.progressionResults(overall_DeathNoteTier,advice_DeathNoteCombined,"")
-    return consDeathNotePR
+    # advice_DeathNoteCombined = ["Best DeathNote tier met: " + str(overall_DeathNoteTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended DeathNote actions:",
+    #     advice_w1DeathNoteSkulls, advice_w2DeathNoteSkulls, advice_w3DeathNoteSkulls, advice_w4DeathNoteSkulls,
+    #     advice_w5DeathNoteSkulls, advice_w6DeathNoteSkulls, advice_w7DeathNoteSkulls, advice_w8DeathNoteSkulls,
+    #     advice_zows, advice_chows, advice_meows]
+    # consDeathNotePR = progressionResults.progressionResults(overall_DeathNoteTier,advice_DeathNoteCombined,"")
+    return deathnote_AdviceSection

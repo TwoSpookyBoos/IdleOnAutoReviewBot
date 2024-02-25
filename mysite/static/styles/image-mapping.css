@@ -6582,11 +6582,11 @@
   background-image: url("https://idleon.wiki/wiki/images/6/6d/Status_Skull0.png");
 }
 
-.bronze-skull::before {
+.copper-skull::before {
   background-image: url("https://idleon.wiki/wiki/images/3/3d/Status_Skull1.png");
 }
 
-.silver-skull::before {
+.iron-skull::before {
   background-image: url("https://idleon.wiki/wiki/images/d/de/Status_Skull2.png");
 }
 
