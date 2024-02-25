@@ -1,3 +1,11 @@
+.spore-meadows::before {
+  background-image: url("https://idleon.wiki/wiki/images/4/4b/Green_Mushroom_Idle.gif");
+}
+
+.froggy-fields::before {
+  background-image: url("https://idleon.wiki/wiki/images/d/d5/Frog_Idle.gif");
+}
+
 .bubbles::before {
   background-image: url("https://idleon.wiki/wiki/images/archive/4/42/20230111134826%21OrangeBubble13.png");
 }

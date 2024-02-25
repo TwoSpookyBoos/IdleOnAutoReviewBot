@@ -12,6 +12,7 @@
 @import "talents";
 @import "vials";
 @import "world-contents";
+@import "monster-maps";
 
 $id-map: (
 	inventory-bag-u: $inventory-bag-u,
@@ -1960,6 +1961,7 @@ $id-map: map-merge($character-classes, $id-map);
 $id-map: map-merge($extra, $id-map);
 $id-map: map-merge($bribes-map, $id-map);
 $id-map: map-merge($bubbles-map, $id-map);
+$id-map: map-merge($map-monsters, $id-map);
 
 @each $class, $link in $id-map {
 	.#{$class}::before {
