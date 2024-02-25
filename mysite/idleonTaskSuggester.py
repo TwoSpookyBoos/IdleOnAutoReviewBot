@@ -392,7 +392,7 @@ def main(inputData, runType="web"):
     #consPrinterPR =
     refinery_AdviceSection = idleon_ConsRefinery.setConsRefineryProgressionTier(parsedJSON, progressionTiers['Construction Refinery'], characterDict)
     saltlick_AdviceSection = idleon_ConsSaltLick.setConsSaltLickProgressionTier(parsedJSON, progressionTiers['Construction Salt Lick'], characterDict)
-    consDeathNotePR = idleon_ConsDeathNote.setConsDeathNoteProgressionTier(parsedJSON, progressionTiers['Construction Death Note'], characterDict)
+    deathnote_AdviceSection = idleon_ConsDeathNote.setConsDeathNoteProgressionTier(parsedJSON, progressionTiers['Construction Death Note'], characterDict)
     buildings_AdviceSection = idleon_ConsBuildings.setConsBuildingsProgressionTier(parsedJSON, progressionTiers['Construction Buildings Pre-Buffs'], progressionTiers['Construction Buildings Post-Buffs'], characterDict)
     #consAtomColliderPR =
     #worshipTotemsPR =
@@ -432,7 +432,7 @@ def main(inputData, runType="web"):
         Placements.P2W: alchP2W_AdviceSection.pinchy_rating,
         Placements.REFINERY: refinery_AdviceSection.pinchy_rating,
         Placements.SALT_LICK: saltlick_AdviceSection.pinchy_rating,
-        Placements.DEATH_NOTE: consDeathNotePR.cT,
+        Placements.DEATH_NOTE: deathnote_AdviceSection.pinchy_rating,
         Placements.PRAYERS: prayers_AdviceSection.pinchy_rating
         }
     pinchy = idleon_Pinchy.generatePinchyWorld(parsedJSON, playerCount, biggoleProgressionTiersDict)
@@ -454,7 +454,7 @@ def main(inputData, runType="web"):
     )
     w3Review = AdviceWorld(
         name=WorldName.WORLD3,
-        sections=[refinery_AdviceSection, buildings_AdviceSection, saltlick_AdviceSection, prayers_AdviceSection, trapping_AdviceSection],
+        sections=[refinery_AdviceSection, buildings_AdviceSection, saltlick_AdviceSection, deathnote_AdviceSection, prayers_AdviceSection, trapping_AdviceSection],
         banner="w3banner.png"
     )
     w4Review = AdviceWorld(
