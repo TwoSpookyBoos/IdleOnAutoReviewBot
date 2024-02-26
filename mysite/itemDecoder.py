@@ -1,3 +1,6 @@
+from utils import get_logger
+
+
 ITEM_NAME_DICT = {
     "FillerMaterial": {"displayName": "Not_Yet"},
     "Blank": {"displayName": "Blank"},
@@ -15,6 +18,7 @@ ITEM_NAME_DICT = {
     "Marble": {"displayName": "Marble_Ore"},
     "Dreadlo": {"displayName": "Dreadlo_Ore"},
     "Godshard": {"displayName": "Godshard_Ore"},
+    "MarbleOre": {"displayName": "Marble_Ore"},
     "CopperBar": {"displayName": "Copper_Bar"},
     "IronBar": {"displayName": "Iron_Bar"},
     "GoldBar": {"displayName": "Gold_Bar"},
@@ -25,6 +29,7 @@ ITEM_NAME_DICT = {
     "StarfireBar": {"displayName": "Starfire_Bar"},
     "DreadloBar": {"displayName": "Dreadlo_Bar"},
     "GodshardBar": {"displayName": "Godshard_Bar"},
+    "MarbleBar": {"displayName": "Marble_Bar"},
     "OilBarrel1": {"displayName": "Crude_Oil"},
     "OilBarrel2": {"displayName": "Toxic_Sludge"},
     "OilBarrel3": {"displayName": "Radioactive_Waste"},
@@ -266,6 +271,8 @@ ITEM_NAME_DICT = {
     "Quest68": {"displayName": "Bucket_of_Slush"},
     "Quest78": {"displayName": "Equinox_Mirror"},
     "Pearl4": {"displayName": "Black_Pearl"},
+    "Pearl5": {"displayName": "Holy_Pearl"},
+    "Pearl6": {"displayName": "Divinity_Pearl"},
     "NPCtoken8": {"displayName": "FILLER"},
     "BadgeG1": {"displayName": "Blunderhills_NPC_Completion_Token"},
     "BadgeG2": {"displayName": "Blunder_Skills_Completion_Token"},
@@ -949,7 +956,7 @@ ITEM_NAME_DICT = {
     "GalaxyB2": {"displayName": "Wurm_Tail"},
     "GalaxyB3": {"displayName": "Tongue_Bone"},
     "GalaxyB4": {"displayName": "Crumpled_Wrapper"},
-    "GalaxyB5": {"displayName": "Smol_Wurm"},
+    "GalaxyB5": {"displayName": "Smol_Worm"},
     "GalaxyC1": {"displayName": "Empty_Oyster_Shell"},
     "GalaxyC1b": {"displayName": "Pearler_Shell"},
     "GalaxyC2": {"displayName": "Wriggly_Ball"},
@@ -1020,6 +1027,8 @@ ITEM_NAME_DICT = {
     "Timecandy5": {"displayName": "24_HR_Time_Candy"},
     "Timecandy6": {"displayName": "72_HR_Time_Candy"},
     "Timecandy7": {"displayName": "Steamy_Time_Candy"},
+    "Timecandy8": {"displayName": "Spooky_Time_Candy"},
+    "Timecandy9": {"displayName": "Cosmic_Time_Candy"},
     "InvBag1": {"displayName": "Inventory_Bag_A"},
     "InvBag2": {"displayName": "Inventory_Bag_B"},
     "InvBag3": {"displayName": "Inventory_Bag_C"},
@@ -1123,6 +1132,7 @@ ITEM_NAME_DICT = {
     "Weight12": {"displayName": "Triple_Threat"},
     "Weight13": {"displayName": "Crash_Box"},
     "Weight14": {"displayName": "Fat_Albert"},
+    "Ladle": {"displayName": "Cooking_Ladle"},
     "CardsA0": {"displayName": "CardsA0"},
     "CardsA1": {"displayName": "CardsA1"},
     "CardsA2": {"displayName": "DONTFILL"},
@@ -1275,11 +1285,30 @@ ITEM_NAME_DICT = {
     "GemQ9": {"displayName": "Infinite_Forge"},
 }
 
-def getItemDisplayName(itemName):
+logger = get_logger(__name__)
 
-    #"": {"displayName": ""},
-    try:
-        return ITEM_NAME_DICT[itemName]["displayName"].replace("_", " ")
-    except Exception as reason:
-        print("itemDecoder~ Unknown item name found:", itemName)
-        return str("Unknown-"+itemName.replace("_", " "))
+
+def getItemDisplayName(itemCodeName):
+    display_name = (
+        ITEM_NAME_DICT
+        .get(itemCodeName, {})
+        .get("displayName", f"Unknown-{itemCodeName}")
+        .replace("_", " ")
+    )
+    if display_name.startswith("Unknown-"):
+        logger.warning("Unknown item: %s", itemCodeName)
+
+    return display_name
+
+
+def getItemCodeName(itemName):
+    code_name = next((
+        key
+        for key, value in ITEM_NAME_DICT.items()
+        if value["displayName"] == itemName),
+        f"Unknown-{itemName}"
+    )
+    if code_name.startswith("Unknown-"):
+        logger.warning("Unknown item: %s", itemName)
+
+    return code_name

@@ -123,7 +123,7 @@ class AdviceBase:
 
     def __bool__(self) -> bool:
         children = getattr(self, self._children, list())
-        return any(filter(bool, children))
+        return any(filter(bool, children if isinstance(children, list) else children.values()))
 
     def __str__(self) -> str:
         return self.name
@@ -160,8 +160,10 @@ class Advice(AdviceBase):
         self.value_format: str = value_format
 
         if self.unit:
-            self.progression = self.value_format.format(value=self.progression, unit=self.unit)
-            self.goal = self.value_format.format(value=self.goal, unit=self.unit)
+            if self.progression:
+                self.progression = self.value_format.format(value=self.progression, unit=self.unit)
+            if self.goal:
+                self.goal = self.value_format.format(value=self.goal, unit=self.unit)
 
     @property
     def css_class(self) -> str:
@@ -189,14 +191,18 @@ class AdviceGroup(AdviceBase):
     _children = "advices"
     __compare_by = ["tier"]
 
-    def __init__(self, tier: str, pre_string: str, post_string: str = "", formatting: str = "", collapse: bool | None = None, advices: list[Advice] = [], **extra):
+    def __init__(
+            self, tier: str, pre_string: str, post_string: str = "",
+            formatting: str = "", collapse: bool | None = None,
+            advices: list[Advice] | dict[str, list[Advice]] = [], **extra
+    ):
         super().__init__(collapse, **extra)
 
         self.tier: str = str(tier)
         self.pre_string: str = pre_string
         self.post_string: str = post_string
         self.formatting: str = formatting
-        self.advices: list[Advice] = advices
+        self.advices: list[Advice] | dict[str, list[Advice]] = {"default": advices} if isinstance(advices, list) else advices
 
     def __str__(self) -> str:
         return ', '.join(map(str, self.advices))
@@ -215,7 +221,16 @@ class AdviceGroup(AdviceBase):
 
     @property
     def heading(self) -> str:
-        return (f"Tier {self.tier} - " if self.tier else "") + self.pre_string
+        text = ""
+        if self.tier:
+            text += f"Tier {self.tier}"
+            if self.pre_string:
+                text += " - "
+        text += self.pre_string
+        if text:
+            text += ":"
+
+        return text
 
     def _is_valid_operand(self, other):
         return all(hasattr(other, field) for field in self.__compare_by)

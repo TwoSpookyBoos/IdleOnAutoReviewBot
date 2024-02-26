@@ -1,52 +1,71 @@
 import json
-import progressionResults
+from collections import defaultdict
 
-def getGemShopExclusions(inputJSON, playerCount):
-    exclusionList = []
-    sum_LabLevels = 0
-    counter = 0
-    while counter < playerCount: #not 0 based
-        try:
-            sum_LabLevels += int(inputJSON['Lv0_'+str(counter)][12])
-        except Exception as reason:
-            print("GemShop~ EXCEPTION Unable to get player lab level",counter,playerCount,reason)
-        counter += 1
+import progressionResults
+from models import Advice, AdviceGroup, AdviceSection
+from utils import get_logger
+
+
+logger = get_logger(__name__)
+
+
+def try_exclude_SoupedUpTube(inputJSON, exclusionList, playerCount):
+    empty = [0] * 13
+    sum_LabLevels = sum(inputJSON.get(f"Lv0_{i}", empty)[12] for i in range(playerCount))
+
     if sum_LabLevels >= 180:
         exclusionList.append("Souped Up Tube")
 
-    #0 through 95 are cogs placed on the board
-    #96-98 are gray cog-making characters
-    #99-101 are yellow cog-making
-    #102-104 are red cog-making
-    #105-106 are purple cog-making
-    cogBlanks = 0
-    cogList = inputJSON["CogO"][0:95] #expected to be a list
-    for cog in cogList:
-        if cog == "Blank":
-            cogBlanks += 1
+
+def try_exclude_FluorescentFlaggies(inputJSON, exclusionList):
+    """
+    0 through 95 are cogs placed on the board
+    96-98 are gray cog-making characters
+    99-101 are yellow cog-making
+    102-104 are red cog-making
+    105-107 are purple cog-making
+    """
+    cogList = inputJSON["CogO"]
+    if isinstance(cogList, str):
+        cogList = json.loads(cogList)
+
+    cogBlanks = sum(1 for cog in cogList[0:95] if cog == "Blank")
     if cogBlanks <= 60:
         exclusionList.append("Fluorescent Flaggies")
 
-    try:
-        autoArmLevel = json.loads(inputJSON["Tower"])[7]
-    except Exception as reason:
-        print("GemShop~ EXCEPTION Unable to get Automation Arm level",reason)
-        autoArmLevel = 0
-    if autoArmLevel >= 5:
+
+def try_exclude_BurningBadBooks(inputJSON, exclusionList):
+    empty = str([0] * 8)
+    autoArmLevel = json.loads(inputJSON.get("Tower", empty))[7]
+
+    if int(autoArmLevel) >= 5:
         exclusionList.append("Burning Bad Books")
 
-    currentArtifactsCount = 33  #as of w6 launch
-    currentArtifactTiers = 4  #as of w6 launch
 
-    try:
-        sum_sailingArtifacts = sum(json.loads(inputJSON["Sailing"])[3])
-        #print("GemShop.getGemShopExclusions~ OUTPUT sum_sailingArtifacts:",sum_sailingArtifacts)
-        if sum_sailingArtifacts == (currentArtifactsCount*currentArtifactTiers): #30 artifacts times 3 tiers each = 90 for v1.91
-            exclusionList.append("Chest Sluggo")
-    except Exception as reason:
-        print("GemShop~ EXCEPTION Unable to get Sailing Artifacts:",reason)
+def try_exclude_ChestSluggo(inputJSON, exclusionList):
+    artifactsCount = 33  # as of w6 launch
+    maxTier = 4  # as of w6 launch
+
+    artifact_tiers = json.loads(inputJSON["Sailing"])
+    if isinstance(artifact_tiers, str):
+        artifact_tiers = json.loads(artifact_tiers)
+
+    sum_artifactTiers = sum(artifact_tiers[3]) if artifact_tiers and len(artifact_tiers) >= 4 else 0
+
+    logger.debug(f"{sum_artifactTiers}")
+    if sum_artifactTiers == artifactsCount * maxTier:  # 33 artifacts times 4 tiers each = 132 for v2.00
+        exclusionList.append("Chest Sluggo")
+
+
+def getGemShopExclusions(inputJSON, playerCount):
+    exclusionList = []
+    try_exclude_SoupedUpTube(inputJSON, exclusionList, playerCount)
+    try_exclude_FluorescentFlaggies(inputJSON, exclusionList)
+    try_exclude_BurningBadBooks(inputJSON, exclusionList)
+    try_exclude_ChestSluggo(inputJSON, exclusionList)
 
     return exclusionList
+
 
 def getBonusSectionName(bonusName):
     match bonusName:
@@ -82,7 +101,7 @@ def getBonusSectionName(bonusName):
         case _:
             return "UnknownShop"
 
-def getGemShopDict(inputJSON):
+def getBoughtGemShopItems(inputJSON):
     parsedList = json.loads(inputJSON["GemItemsPurchased"])
     gemShopDict = {
         #Inventory and Storage
@@ -227,95 +246,78 @@ def getGemShopDict(inputJSON):
             'FOMO-8': parsedList[94]
         }
     except Exception as reason:
-        print("GemShop~ EXCEPTION Unable to parse Gem Shop: ", reason)
-    #print(gemShopDict)
+        logger.exception("Unable to parse Gem Shop:", exc_info=reason)
+    logger.debug(gemShopDict)
     return gemShopDict
 
+
 def setGemShopProgressionTier(inputJSON, progressionTiers, playerCount):
-    gemShopDict = getGemShopDict(inputJSON)
+    boughtItems = getBoughtGemShopItems(inputJSON)
     gemShopExclusions = getGemShopExclusions(inputJSON, playerCount)
-    if len(gemShopExclusions) > 0:
-        for exclusion in gemShopExclusions:
-            try:
-                gemShopDict[exclusion] += 99
-            except Exception as reason:
-                print("Gemshop~ EXCEPTION: Unable to handle Exclusion",exclusion,reason)
-    tier_GemShopPurchases = 0
-    overall_GemShopTier = 0
-    advice_SS = ""
-    advice_S = ""
-    advice_A = ""
-    advice_B = ""
-    advice_C = ""
-    advice_D = ""
-    advice_PracticalMax = ""
-    advice_TrueMax = ""
-    advice_TiersCombined = []
-    advice_nextTier1 = ""
-    advice_nextTier2 = ""
-    advice_nextTier3 = ""
+
+    recommended_stock = {item: count for tier in progressionTiers for item, count in tier[2].items()}
+
+    for exclusion in gemShopExclusions:
+        boughtItems.pop(exclusion, None)
+        recommended_stock.pop(exclusion, None)
+
+    recommended_total = sum(recommended_stock.values())
+
+    recommended_stock_bought = {k: min(v, boughtItems.get(k, 0)) for k, v in recommended_stock.items()}
+    recommended_total_bought = sum(recommended_stock_bought.values())
+
     #Review all tiers
     #progressionTiers[tier][0] = int tier
     #progressionTiers[tier][1] = str tierName
     #progressionTiers[tier][2] = dict recommendedPurchases
     #progressionTiers[tier][3] = str notes
-    for recommendedPurchase in progressionTiers[1][2]:
-        if progressionTiers[1][2][recommendedPurchase] > float(gemShopDict[recommendedPurchase]):
-            advice_SS += getBonusSectionName(recommendedPurchase) + "-" + str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[1][2][recommendedPurchase]) + "), "
-    for recommendedPurchase in progressionTiers[2][2]:
-        if progressionTiers[2][2][recommendedPurchase] > float(gemShopDict[recommendedPurchase]):
-            advice_S += getBonusSectionName(recommendedPurchase) + "-" + str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[2][2][recommendedPurchase]) + "), "
-    for recommendedPurchase in progressionTiers[3][2]:
-        if progressionTiers[3][2][recommendedPurchase] > float(gemShopDict[recommendedPurchase]):
-            advice_A += getBonusSectionName(recommendedPurchase) + "-" + str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[3][2][recommendedPurchase]) + "), "
-    for recommendedPurchase in progressionTiers[4][2]:
-        if progressionTiers[4][2][recommendedPurchase] > float(gemShopDict[recommendedPurchase]):
-            advice_B += getBonusSectionName(recommendedPurchase) + "-" + str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[4][2][recommendedPurchase]) + "), "
-    for recommendedPurchase in progressionTiers[5][2]:
-        if progressionTiers[5][2][recommendedPurchase] > float(gemShopDict[recommendedPurchase]):
-            advice_C += getBonusSectionName(recommendedPurchase) + "-" + str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[5][2][recommendedPurchase]) + "), "
-    for recommendedPurchase in progressionTiers[6][2]:
-        if progressionTiers[6][2][recommendedPurchase] > float(gemShopDict[recommendedPurchase]):
-            advice_D += getBonusSectionName(recommendedPurchase) + "-" + str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[6][2][recommendedPurchase]) + "), "
-    for recommendedPurchase in progressionTiers[7][2]:
-        if progressionTiers[7][2][recommendedPurchase] > float(gemShopDict[recommendedPurchase]):
-            advice_PracticalMax += getBonusSectionName(recommendedPurchase) + "-" + str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[7][2][recommendedPurchase]) + "), "
-    for recommendedPurchase in progressionTiers[8][2]:
-        if progressionTiers[8][2][recommendedPurchase] > float(gemShopDict[recommendedPurchase]):
-            advice_TrueMax += getBonusSectionName(recommendedPurchase) + "-" + str(recommendedPurchase) + " (" + str(gemShopDict[recommendedPurchase]) + "/" + str(progressionTiers[8][2][recommendedPurchase]) + "), "
-    #Fix up advice statements
-    if advice_SS != "":
-        advice_SS = "SS: " + advice_SS[:-2] + progressionTiers[1][3]
-    if advice_S != "":
-        advice_S = "S: " + advice_S[:-2] + progressionTiers[2][3]
-    if advice_A != "":
-        advice_A = "A: " + advice_A[:-2] + progressionTiers[3][3]
-    if advice_B != "":
-        advice_B = "B: " + advice_B[:-2] + progressionTiers[4][3]
-    if advice_C != "":
-        advice_C = "C: " + advice_C[:-2] + progressionTiers[5][3]
-    if advice_D != "":
-        advice_D = "D: " + advice_D[:-2] + progressionTiers[6][3]
-    if advice_PracticalMax != "":
-        advice_PracticalMax = "Practical Max: " + advice_PracticalMax[:-2] + progressionTiers[7][3]
-    if advice_TrueMax != "":
-        advice_TrueMax = "True Max: " + advice_TrueMax[:-2] + progressionTiers[8][3]
-    #Find highest 3 tiers not met, copy them to nextTier advices.
-    advice_TiersCombined = [advice_SS, advice_S, advice_A, advice_B, advice_C, advice_D, advice_PracticalMax, advice_TrueMax]
-    for advice in advice_TiersCombined:
-        if advice != "":
-            if advice_nextTier1 == "":
-                advice_nextTier1 = advice
-            elif advice_nextTier2 == "":
-                advice_nextTier2 = advice
-            elif advice_nextTier3 == "":
-                advice_nextTier3 = advice
-            #if all 3 next tiers are already filled, move on without any action
-    overall_GemShopTier = min(progressionTiers[-1][-0], tier_GemShopPurchases)
-    if advice_nextTier1 != "":
-        advice_OverallGemShopCombined = ["DISCLAIMER: Recommended Gem Shop purchases are listed in their World order. All purchases within the same Ranking are approximately the same priority. Remember that items in the Limited Shop section could be more important than these always-available upgrades! Check the Limited Shop after each new patch/update.", "Recommended Permanent/Non-Gamba Gem Shop purchases (up to 3 tiers shown to account for personal preferences):",advice_nextTier1, advice_nextTier2, advice_nextTier3]
+
+    all_groups = ["SS", *"SABCD", "Practical Max", "True Max"]
+    groups = [
+        AdviceGroup(
+            tier="",
+            pre_string=tier,
+            post_string=progressionTiers[i][3],
+            hide=False,
+            advices=[
+                Advice(
+                    label=f"{name} ({getBonusSectionName(name)})",
+                    item_name=name,
+                    progression=int(prog),
+                    goal=int(goal)
+                )
+                for name, qty in progressionTiers[i][2].items()
+                if name in recommended_stock_bought
+                and (prog := float(recommended_stock_bought[name])) < (goal := float(qty))
+            ]
+        )
+        for i, tier in enumerate(all_groups, start=1)
+    ]
+
+    groups = [g for g in groups if g]
+    # show only first 3 groups
+    for group in groups[3:]:
+        group.hide = True
+
+    tier = f"{recommended_total_bought}/{recommended_total}"
+    if not groups:
+        section_title = f"You bought all {tier} Recommended Permanent/Non-Gamba Gem Shop purchases. Your shine blinds me, you diamond-donned dragon! 💎"
     else:
-        advice_OverallGemShopCombined = ["", "", "", "", ""]
-    gemShopPR = progressionResults.progressionResults(overall_GemShopTier,advice_OverallGemShopCombined,"")
-    #print(gemShopPR.nTR)
-    return gemShopPR
+        section_title = f"Bought {tier} Recommended Permanent/Non-Gamba Gem Shop purchases. Recommended investments:"
+    disclaimer = (
+        "DISCLAIMER: Recommended Gem Shop purchases are listed in their World order. "
+        "All purchases within the same Ranking are approximately the same priority. "
+        "Remember that items in the Limited Shop section could be more important than "
+        "these always-available upgrades! Check the Limited Shop after each new "
+        "patch/update."
+    )
+    section = AdviceSection(
+        name="Gem Shop",
+        tier=tier,
+        header=section_title,
+        picture="gemshop.png",
+        groups=groups,
+        note=disclaimer
+    )
+
+    return section

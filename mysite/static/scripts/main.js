@@ -112,4 +112,22 @@ document.addEventListener("DOMContentLoaded", () => {
         target.parentElement.classList.remove('folded')
         target.querySelectorAll('*:not(.no-collapse)').forEach(c => c.classList.remove('folded'))
     })
+    const expandableSections = document.querySelectorAll("#gem-shop .advice-section, #greenstacks .advice-section")
+    expandableSections.forEach(section => {
+        const expandableGroups = section.querySelector(".groups")
+        const showMoreButton = section.querySelector(".show-more")
+        showMoreButton.onclick = e => {
+            const button = e.currentTarget
+            const groups = expandableGroups.querySelectorAll(".hidden")
+
+            groups[0].classList.remove("hidden")
+            if (groups.length === 1) {
+                button.style.display = "none"
+            }
+
+        }
+        if (expandableGroups.children.length > 3) {
+            showMoreButton.style.display = "block"
+        }
+    })
 });

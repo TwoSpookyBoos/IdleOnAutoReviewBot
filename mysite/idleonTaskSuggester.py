@@ -48,6 +48,7 @@ from utils import get_logger
 #Global variables
 logger = get_logger(__name__)
 
+
 #Step 1: Retrieve data from public IdleonEfficiency website or from file
 def getJSONfromAPI(runType, url="https://scoli.idleonefficiency.com/raw-data"):
     result = re.search('https://(.*?).idleonefficiency.com', url)
@@ -263,6 +264,7 @@ def getRoastableStatus(playerNames):
             roastworthyBool = True
     return roastworthyBool
 
+
 class HeaderData:
     def __init__(self):
         self.direct_json = ""
@@ -271,6 +273,7 @@ class HeaderData:
         self.first_name = ""
         self.json_error = ""
         self.last_update = ""
+
 
 def main(inputData, runType="web"):
     bannedAccountsList = ["thedyl", "wooddyl", "3boyy", "4minez", "5arch5", "6knight6", "7maestro7", "bowboy8", "8barb8", "10es10", "favicon.ico", "robots.txt"]
@@ -358,8 +361,6 @@ def main(inputData, runType="web"):
             headerData.json_error = "NO SORTED LIST OF CHARACTER NAMES FOUND IN DATA. REPLACING WITH GENERIC NUMBER ORDER."
         else:
             headerData.first_name = playerNames[0]
-            headerData.link_text = f"{playerNames[0].lower()}.idleonefficiency.com"
-            headerData.ie_link = f"https://{playerNames[0]}.idleonefficiency.com"
 
     #General
     headerData.last_update = getLastUpdatedTime(parsedJSON)
@@ -367,10 +368,10 @@ def main(inputData, runType="web"):
     if runType == "web":
         logger.info(f'{headerData.last_update = }')
 
-    section_combatLevels, combat_tier = idleon_CombatLevels.setCombatLevelsProgressionTier(parsedJSON, progressionTiers['Combat Levels'], playerCount, playerNames, playerClasses)
+    section_combatLevels = idleon_CombatLevels.setCombatLevelsProgressionTier(parsedJSON, progressionTiers['Combat Levels'], playerCount, playerNames, playerClasses)
     section_consumables = idleon_Consumables.parseConsumables(parsedJSON, playerCount, playerNames)
-    gemShopPR = idleon_GemShop.setGemShopProgressionTier(parsedJSON, progressionTiers['Gem Shop'], playerCount)
-    allGStacksList = idleon_Greenstacks.setGStackProgressionTier(parsedJSON, playerCount, progressionTiers['Greenstacks'])
+    section_gemShop = idleon_GemShop.setGemShopProgressionTier(parsedJSON, progressionTiers['Gem Shop'], playerCount)
+    sections_quest_gstacks, section_regular_gstacks = idleon_Greenstacks.setGStackProgressionTier(parsedJSON, playerCount, progressionTiers['Greenstacks'])
     section_maestro = idleon_MaestroHands.getHandsStatus(parsedJSON, playerCount, playerNames)
     try:
         cardsList = idleon_Cards.getCardSetReview(parsedJSON)
@@ -408,7 +409,7 @@ def main(inputData, runType="web"):
     #gamingPR =
     #divinityPR =
 
-    generalList = [headerData, None, gemShopPR.nTR, allGStacksList, cardsList]
+    generalList = [headerData, None, None, None, cardsList]
     #w1list = [stamps_AdviceSection["PR"].nTR, bribes_AdviceSection["PR"].nTR, smithing_AdviceSection["PR"].nTR]  # len(stampPR) = 4, len(bribesPR.nTR) = 2, len(smithingPR.nTR) = 4
     #w2list = [["Old Bubbles Gone"]*10, ["Old Vials Gone"]*10, ["Old P2W Gone"]*10, ["Old P2W Gone"]*10], ["Obols"]*10  # len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 5
     #w2list = [alchBubblesPR.nTR,alchVialsPR.nTR,alchP2WList, obolsPR.nTR]  # len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 4, len(obolsPR.nTR) = 4
@@ -423,7 +424,7 @@ def main(inputData, runType="web"):
     #w7list = [["w7 mechanic 1 placeholder"], ["w7 mechanic 2 placeholder"], ["w7 mechanic 3 placeholder"]]
     #w8list = [["w8 mechanic 1 placeholder"], ["w8 mechanic 2 placeholder"], ["w8 mechanic 3 placeholder"]]
     biggoleProgressionTiersDict = {
-        Placements.COMBAT_LEVELS: combat_tier,
+        Placements.COMBAT_LEVELS: section_combatLevels.pinchy_rating,
         Placements.STAMPS: stamps_AdviceSection.pinchy_rating,
         Placements.BRIBES: bribes_AdviceSection.pinchy_rating,
         Placements.SMITHING: smithing_AdviceSection.pinchy_rating,
@@ -438,7 +439,7 @@ def main(inputData, runType="web"):
     pinchy = idleon_Pinchy.generatePinchyWorld(parsedJSON, playerCount, biggoleProgressionTiersDict)
     generalReview = AdviceWorld(
         name=WorldName.GENERAL,
-        sections=[section_combatLevels, section_maestro, *section_consumables],
+        sections=[section_combatLevels, section_maestro, *section_consumables, section_gemShop, *sections_quest_gstacks, section_regular_gstacks],
         banner="general_banner.jpg"
     )
 
