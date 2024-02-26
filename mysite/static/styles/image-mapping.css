@@ -1026,6 +1026,54 @@
   background-image: url("https://idleon.wiki/wiki/images/b/b8/Cosmic_Storage_Chest.png");
 }
 
+.storage-chest-90::before {
+  background-image: url("https://idleon.wiki/wiki/images/d/d1/Storage_Chest_90.png");
+}
+
+.storage-chest-91::before {
+  background-image: url("https://idleon.wiki/wiki/images/b/b3/Storage_Chest_91.png");
+}
+
+.storage-chest-92::before {
+  background-image: url("https://idleon.wiki/wiki/images/5/5d/Storage_Chest_92.png");
+}
+
+.storage-chest-93::before {
+  background-image: url("https://idleon.wiki/wiki/images/b/b2/Storage_Chest_93.png");
+}
+
+.storage-chest-94::before {
+  background-image: url("https://idleon.wiki/wiki/images/7/77/Storage_Chest_94.png");
+}
+
+.storage-chest-95::before {
+  background-image: url("https://idleon.wiki/wiki/images/9/97/Storage_Chest_95.png");
+}
+
+.storage-chest-96::before {
+  background-image: url("https://idleon.wiki/wiki/images/6/6f/Storage_Chest_96.png");
+}
+
+.storage-chest-97::before {
+  background-image: url("https://idleon.wiki/wiki/images/6/6a/Storage_Chest_97.png");
+}
+
+.storage-chest-98::before {
+  background-image: url("https://idleon.wiki/wiki/images/a/ab/Storage_Chest_98.png");
+}
+
+.storage-chest-99::before {
+  background-image: url("https://idleon.wiki/wiki/images/8/8f/Storage_Chest_99.png");
+}
+
+.storage-chest-99b::before {
+  background-image: url("https://idleon.wiki/wiki/images/a/a4/Storage_Chest_99B.png");
+}
+
+.storage-chest-99c::before {
+  background-image: url("https://idleon.wiki/wiki/images/d/da/Storage_Chest_99C.png");
+}
+
 .woodlin-chest::before {
   background-image: url("/static/imgs/Woodlin_Chest.png");
 }
@@ -1092,10 +1140,6 @@
 
 .inventory-bag-u::before {
   background-image: url("https://idleon.wiki/wiki/images/f/fd/Inventory_Bag_U.png");
-}
-
-.storage-chest-90::before {
-  background-image: url("https://idleon.wiki/wiki/images/d/d1/Storage_Chest_90.png");
 }
 
 .carry-capacity::before {
@@ -1358,6 +1402,10 @@
   background-image: url("https://idleon.wiki/wiki/images/0/0f/Godshard_Ore.png");
 }
 
+.marble-ore::before {
+  background-image: url("https://idleon.wiki/wiki/images/2/25/Marble_Ore.png");
+}
+
 .copper-bar::before {
   background-image: url("https://idleon.wiki/wiki/images/f/f1/Copper_Bar.png");
 }
@@ -1396,6 +1444,10 @@
 
 .godshard-bar::before {
   background-image: url("https://idleon.wiki/wiki/images/0/02/Godshard_Bar.png");
+}
+
+.marble-bar::before {
+  background-image: url("https://idleon.wiki/wiki/images/4/4e/Marble_Bar.png");
 }
 
 .oak-logs::before {
@@ -1450,6 +1502,10 @@
   background-image: url("https://idleon.wiki/wiki/images/0/0f/Dandielogs.png");
 }
 
+.willow-logs::before {
+  background-image: url("https://idleon.wiki/wiki/images/8/89/Willow_Logs.png");
+}
+
 .grass-leaf::before {
   background-image: url("https://idleon.wiki/wiki/images/c/cf/Grass_Leaf.png");
 }
@@ -1502,6 +1558,26 @@
   background-image: url("https://idleon.wiki/wiki/images/d/d3/Kraken.png");
 }
 
+.equinox-fish::before {
+  background-image: url("https://idleon.wiki/wiki/images/5/52/Equinox_Fish.png");
+}
+
+.icefish::before {
+  background-image: url("https://idleon.wiki/wiki/images/c/ca/Icefish.png");
+}
+
+.shellfish::before {
+  background-image: url("https://idleon.wiki/wiki/images/8/8e/Shellfish.png");
+}
+
+.jumbo-shrimp::before {
+  background-image: url("https://idleon.wiki/wiki/images/Jumbo_Shrimp.png");
+}
+
+.caulifish::before {
+  background-image: url("https://idleon.wiki/wiki/images/3/3c/Caulifish.png");
+}
+
 .fly::before {
   background-image: url("https://idleon.wiki/wiki/images/0/0c/Fly.png");
 }
@@ -1540,6 +1616,10 @@
 
 .dust-mote::before {
   background-image: url("https://idleon.wiki/wiki/images/1/10/Dust_Mote.png");
+}
+
+.dream-particulate::before {
+  background-image: url("https://idleon.wiki/wiki/images/5/5c/Dream_Particulate.png");
 }
 
 .froge::before {
