@@ -1922,10 +1922,6 @@
   background-image: url("https://idleon.wiki/wiki/images/5/5c/Dream_Particulate.png");
 }
 
-.froge::before {
-  background-image: url("https://idleon.wiki/wiki/images/0/01/Froge.png");
-}
-
 .poison-froge::before {
   background-image: url("https://idleon.wiki/wiki/images/3/36/Poison_Froge.png");
 }
