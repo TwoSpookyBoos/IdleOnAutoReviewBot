@@ -3,8 +3,9 @@ from math import floor
 from math import ceil
 from idleon_SkillLevels import getSpecificSkillLevelsList
 from models import AdviceSection, AdviceGroup, Advice
-from utils import pl
+from utils import pl, get_logger
 
+logger = get_logger(__name__)
 dnSkullRequirementList = [0, 25000, 100000, 250000, 500000, 1000000, 5000000, 100000000, 1000000000]
 dnSkullValueList = [0, 1, 2, 3, 4, 5, 7, 10, 20]
 reversed_dnSkullRequirementList = dnSkullRequirementList[::-1]
@@ -44,14 +45,14 @@ class EnemyWorld:
 
 
 class EnemyMap:
-    def __init__(self, mapname: str, monstername: str, mapindex: int, portalrequirement: int, zowrating: int, chowrating: int, meowrating: int, monsterimage: str = ""):
+    def __init__(self, mapname: str, monstername: str, mapindex: int, portalrequirement: int, zowrating: str, chowrating: str, meowrating: str, monsterimage: str = ""):
         self.map_name: str = mapname
         self.map_index: int = mapindex
         self.monster_name: str = monstername
         self.portal_requirement: int = portalrequirement
-        self.zow_rating: int = zowrating
-        self.chow_rating: int = chowrating
-        self.meow_rating: int = meowrating
+        self.zow_rating: str = zowrating
+        self.chow_rating: str = chowrating
+        self.meow_rating: str = meowrating
         self.kill_count: float = 0
         self.skull_mk_value: int = 0
         self.skull_name: str = "None"
@@ -69,7 +70,7 @@ class EnemyMap:
     def updateZOWDict(self, characterIndex: int, KLAValue: float):
         if characterIndex not in self.zow_dict:
             self.zow_dict[characterIndex] = {}
-        self.zow_dict[characterIndex][self.map_index] = abs(float(KLAValue) - self.portal_requirement)
+        self.zow_dict[characterIndex] = int(abs(float(KLAValue) - self.portal_requirement))
 
     def addRawKLA(self, additionalKills: float):
         try:
@@ -375,6 +376,8 @@ def getapocCharactersIndexList(characterDict: dict) -> list:
     return apocCharactersIndexList
 
 def getDeathNoteKills(inputJSON, characterDict):
+    apocAmountsList = [100000, 1000000, 100000000]
+    apocNamesList = ["ZOW", "CHOW", "MEOW"]
     enemyMaps = buildMaps()
     apocCharactersIndexList = getapocCharactersIndexList(characterDict)
     apocableMapIndexDict = {
@@ -392,24 +395,26 @@ def getDeathNoteKills(inputJSON, characterDict):
         try:
             characterKillsList = json.loads(inputJSON['KLA_'+str(characterIndex)])  #String pretending to be a list of lists yet again
         except Exception as reason:
-            print("ConsDeathNote.getDeathNoteKills~ EXCEPTION Unable to retrieve kill list for Character", characterIndex, "because:", reason)
+            logger.warning(f"Unable to retrieve kill list for Character{characterIndex} because:{reason}")
+            #print("ConsDeathNote.getDeathNoteKills~ EXCEPTION Unable to retrieve kill list for Character", characterIndex, "because:", reason)
             continue
 
         #If the character's subclass is Barbarian, add their special Apoc-Only kills to EnemyMap's zow_dict
         if characterIndex in apocCharactersIndexList:
-            for mapIndex in apocableMapIndexDict[0]:
-                if len(characterKillsList) >= mapIndex:
-                    enemyMaps[0][mapIndex].updateZOWDict(characterIndex, characterKillsList[mapIndex][0])
-                else:
-                    print("ConsDeathNote.getDeathNoteKills~ INFO Barbarian with characterIndex", characterIndex, "kill list has no data for mapIndex", mapIndex, ", len(characterKillsList)=", len(characterKillsList))
+            for worldIndex in range(0, len(apocableMapIndexDict)):
+                for mapIndex in apocableMapIndexDict[worldIndex]:
+                    if len(characterKillsList) >= mapIndex:
+                        enemyMaps[worldIndex][mapIndex].updateZOWDict(characterIndex, characterKillsList[mapIndex][0])
+                    #else:
+                        #print("ConsDeathNote.getDeathNoteKills~ INFO Barbarian with characterIndex", characterIndex, "kill list has no data for mapIndex", mapIndex, ", len(characterKillsList)=", len(characterKillsList))
 
         #Regardless of class, for each map within each world, add this player's kills to EnemyMap's kill_count
         for worldIndex in range(1, len(apocableMapIndexDict)):
             for mapIndex in apocableMapIndexDict[worldIndex]:
                 if len(characterKillsList) >= mapIndex:
                     enemyMaps[worldIndex][mapIndex].addRawKLA(characterKillsList[mapIndex][0])
-                else:
-                    print("ConsDeathNote.getDeathNoteKills~ INFO characterIndex", characterIndex, "kill list has no data for mapIndex", mapIndex, ", len(characterKillsList)=", len(characterKillsList))
+                #else:
+                    #print("ConsDeathNote.getDeathNoteKills~ INFO characterIndex", characterIndex, "kill list has no data for mapIndex", mapIndex, ", len(characterKillsList)=", len(characterKillsList))
 
     deathnote_EnemyWorlds = {}
     #Barbarian Only in 0
@@ -422,11 +427,32 @@ def getDeathNoteKills(inputJSON, characterDict):
         #After each Map in that World has its Skull Info, create the corresponding EnemyWorld
         deathnote_EnemyWorlds[worldIndex] = EnemyWorld(worldIndex, enemyMaps[worldIndex])
 
+    for barbCharacterIndex in apocCharactersIndexList:
+        for worldIndex in range(0, len(enemyMaps)):
+            for enemy_map in enemyMaps[worldIndex]:
+                if barbCharacterIndex in enemyMaps[worldIndex][enemy_map].zow_dict:
+                    #print("DN~ INFO barbCharacterIndex", barbCharacterIndex, "found in worldIndex", worldIndex, "enemy_map", enemy_map)
+                    kill_count = enemyMaps[worldIndex][enemy_map].zow_dict[barbCharacterIndex]
+                    for apocIndex in range(0, len(apocAmountsList)):
+                        if kill_count < apocAmountsList[apocIndex]:
+                            #characterDict[barbCharacterIndex].apoc_dict[apocNamesList[apocIndex]][enemyMaps[worldIndex][enemy_map].zow_rating].append([
+                            characterDict[barbCharacterIndex].addUnmetApoc(
+                                apocNamesList[apocIndex], enemyMaps[worldIndex][enemy_map].zow_rating,
+                                [
+                                    enemyMaps[worldIndex][enemy_map].map_name,  #map name
+                                    apocAmountsList[apocIndex] - kill_count,  #kills short of zow/chow/meow
+                                    floor((kill_count / apocAmountsList[apocIndex]) * 100),  #percent toward zow/chow/meow
+                                    enemyMaps[worldIndex][enemy_map].monster_image  #monster image
+                                ]
+                            )
+                        else:
+                            characterDict[barbCharacterIndex].increaseApocTotal(apocNamesList[apocIndex])
+                #else:
+                    #print("DN~ INFO barbCharacterIndex", barbCharacterIndex, "NOT found in worldIndex", worldIndex, "enemy_map", enemy_map)
+
     return deathnote_EnemyWorlds
 
 def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, characterDict):
-    currentMaxWorld = 6
-    maxEnemiesPerGroup = 10
     deathnote_AdviceDict = {
         "W1": [],
         "W2": [],
@@ -453,6 +479,9 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, characterDict):
         deathnote_AdviceSection.header = "Come back after unlocking the Salt Lick within the Construction skill in World 3!"
         return deathnote_AdviceSection
 
+    currentMaxWorld = 6
+    maxEnemiesPerGroup = 10
+    apocCharactersIndexList = getapocCharactersIndexList(characterDict)
     fullDeathNoteDict = getDeathNoteKills(inputJSON, characterDict)
 
     tier_zows = 0
@@ -498,6 +527,12 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, characterDict):
                         else:
                             break
 
+        # ZOW
+        #for barbIndex in apocCharactersIndexList:
+
+        # CHOW
+        # MEOW
+
     #Generate Advice Groups
     #Basic Worlds
     for worldIndex in worldIndexes:
@@ -507,9 +542,13 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, characterDict):
             advices=deathnote_AdviceDict[f"W{worldIndex}"],
             post_string=f"Up to {maxEnemiesPerGroup} remaining enemies shown, sorted by completion %"
         )
+    # ZOW
+    # CHOW
+    # MEOW
 
     #Generate Advice Section
-    overall_DeathNoteTier = min(max_tier, *tier_combo)  #tier_zows, tier_chows, tier_meows
+    overall_DeathNoteTier = min(max_tier, tier_combo[1], tier_combo[2], tier_combo[3],
+                                tier_combo[4], tier_combo[5], tier_combo[6])  #tier_zows, tier_chows, tier_meows
     tier_section = f"{overall_DeathNoteTier}/{max_tier}"
     deathnote_AdviceSection.tier = tier_section
     deathnote_AdviceSection.pinchy_rating = overall_DeathNoteTier

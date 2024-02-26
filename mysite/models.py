@@ -34,6 +34,50 @@ class Character:
         self.gaming_level: int = all_skill_levels['Farming']
         self.gaming_level: int = all_skill_levels['Sneaking']
         self.gaming_level: int = all_skill_levels['Summoning']
+        self.apoc_dict: dict = {
+            "ZOW": {
+                "Basic W1 Enemies": [],
+                "Basic W2 Enemies": [],
+                "Basic W3 Enemies": [],
+                "Basic W4 Enemies": [],
+                "Basic W5 Enemies": [],
+                "Basic W6 Enemies": [],
+                "Easy Cleanup": [],
+                "Medium Cleanup": [],
+                "Difficult Cleanup": [],
+                "Total": 0
+            },
+            "CHOW": {
+                "Basic W1 Enemies": [],
+                "Basic W2 Enemies": [],
+                "Basic W3 Enemies": [],
+                "Basic W4 Enemies": [],
+                "Basic W5 Enemies": [],
+                "Basic W6 Enemies": [],
+                "Easy Cleanup": [],
+                "Medium Cleanup": [],
+                "Difficult Cleanup": [],
+                "Total": 0
+            },
+            "MEOW": {
+                "Basic W1 Enemies": [],
+                "Basic W2 Enemies": [],
+                "Basic W3 Enemies": [],
+                "Basic W4 Enemies": [],
+                "Basic W5 Enemies": [],
+                "Basic W6 Enemies": [],
+                "Easy Cleanup": [],
+                "Medium Cleanup": [],
+                "Difficult Cleanup": [],
+                "Total": 0
+            }
+        }
+
+    def addUnmetApoc(self, apocType: str, apocRating: str, mapInfoList: list):
+        self.apoc_dict[apocType][apocRating].append(mapInfoList)
+
+    def increaseApocTotal(self, apocType: str):
+        self.apoc_dict[apocType]["Total"] += 1
 
     def __str__(self):
         return self.character_name

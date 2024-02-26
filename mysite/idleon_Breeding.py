@@ -86,7 +86,7 @@ def parseJSONtoBreedingDict(inputJSON):
                 else:
                     anyPetsAssignedPerTerritory.append(False)
             except:
-                print("Breeding.parseJSON~ Could not retrieve assigned pet name. Setting territory to no")
+                print("Breeding.parseJSON~ Could not retrieve assigned pet name. Setting territoryIndex", territoryIndex, getTerritoryName(territoryIndex), "to not unlocked")
                 anyPetsAssignedPerTerritory.append(False)
 
     arenaMaxWave = 0
