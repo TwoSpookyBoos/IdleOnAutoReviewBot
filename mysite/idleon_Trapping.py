@@ -147,14 +147,11 @@ def getUnmaxedCritterVialStatus(inputJSON):
             unmaxedCritterVialsCount += 1
     return unmaxedCritterVialsCount != 0
 
-def getStaticCritterTrapAdviceList(highestTrapset: int, highestCompletedRift: int) -> list:
-    adviceList = []
+def getStaticCritterTrapAdviceList(highestTrapset: int, highestCompletedRift: int) -> dict[str, list[Advice]]:
+    adviceDict = {
+        "Efficiency for Manually Claimed traps": [],
+    }
     numOfVaccuumSuggestions = 4
-    adviceList.append(Advice(
-        label="Efficiency for Manually Claimed traps",
-        item_name="",
-        progression="",
-        goal=""))
     critterTrapsLabelList = ["Royal 20 Minutes", "Royal 1 Hour", "Cardboard 20 Minutes", "Royal 10 Hours", "Cardboard 1 Hour", "Wooden 5 Day 200x Critter",
                              "Royal 40 Hours", "Royal 10 Hours", "Cardboard 20 Hours"]
     critterTrapsItemNameList = ["royal-traps", "royal-traps", "cardboard-traps", "royal-traps", "cardboard-traps", "royal-traps", "wooden-traps", "royal-traps",
@@ -163,7 +160,7 @@ def getStaticCritterTrapAdviceList(highestTrapset: int, highestCompletedRift: in
     critterTrapsEffPerHourList = ["6x/hr", "4x/hr", "3x/hr", "2.1x/hr", "2x/hr", "1.67x/hr", "1.46x/hr", "1.05x/hr", "1x/hr"]
     for counter in range(0, len(critterTrapsLabelList) - numOfVaccuumSuggestions):
         if highestTrapset >= critterTrapsRequiredTrapIndexList[counter]:
-            adviceList.append(Advice(
+            adviceDict["Efficiency for Manually Claimed traps"].append(Advice(
                 label=critterTrapsLabelList[counter],
                 item_name=critterTrapsItemNameList[counter],
                 progression=critterTrapsEffPerHourList[counter],
@@ -171,29 +168,22 @@ def getStaticCritterTrapAdviceList(highestTrapset: int, highestCompletedRift: in
                 unit=""))
 
     if highestCompletedRift >= 5:
-        adviceList.append(Advice(
-            label="Efficiency for Rift's Daily traps",
-            item_name="",
-            progression="",
-            goal=""))
+        adviceDict["Efficiency for Rift's Daily traps"] = []
         for counter in range(len(critterTrapsLabelList) - numOfVaccuumSuggestions, len(critterTrapsLabelList)):
             if highestTrapset >= critterTrapsRequiredTrapIndexList[counter]:
-                adviceList.append(Advice(
+                adviceDict["Efficiency for Rift's Daily traps"].append(Advice(
                     label=critterTrapsLabelList[counter],
                     item_name=critterTrapsItemNameList[counter],
                     progression=critterTrapsEffPerHourList[counter],
                     goal="",
                     unit=""))
-    return adviceList
+    return adviceDict
 
-def getStaticShinyTrapAdviceList(highestTrapset: int, highestCompletedRift: int) -> list:
-    adviceList = []
+def getStaticShinyTrapAdviceList(highestTrapset: int, highestCompletedRift: int) -> dict[str, list[Advice]]:
+    adviceDict = {
+        "Shiny Chance Multi for Manually Claimed traps": []
+    }
     numOfVaccuumSuggestions = 2
-    adviceList.append(Advice(
-        label="Shiny Chance Multi for Manually Claimed traps",
-        item_name="",
-        progression="",
-        goal=""))
     #"The highest Shiny chance increasing traps are: Royal 20min, Royal 1hr, Silkskin 20min, Silkskin 1hr, and Royal 10hrs."
     shinyTrapsLabelList = ["Royal 20 Minutes", "Royal 1 Hour", "Silkskin 20 Minutes", "Silkskin 1 Hour", "Royal 10 Hours", "Silkskin 20 Hours", "Royal 40 Hours"]
     shinyTrapsItemNameList = ["royal-traps", "royal-traps", "silkskin-traps", "silkskin-traps", "royal-traps", "silkskin-traps", "royal-traps"]
@@ -201,7 +191,7 @@ def getStaticShinyTrapAdviceList(highestTrapset: int, highestCompletedRift: int)
     shinyTrapsEffPerHourList = ["12x/hr", "8x/hr", "3x/hr", "2.1x/hr", "3.8x/hr", "1.5x/hr", "3.13x/hr"]
     for counter in range(0, len(shinyTrapsLabelList) - numOfVaccuumSuggestions):
         if highestTrapset >= shinyTrapsRequiredTrapIndexList[counter]:
-            adviceList.append(Advice(
+            adviceDict["Shiny Chance Multi for Manually Claimed traps"].append(Advice(
                 label=shinyTrapsLabelList[counter],
                 item_name=shinyTrapsItemNameList[counter],
                 progression=shinyTrapsEffPerHourList[counter],
@@ -209,29 +199,22 @@ def getStaticShinyTrapAdviceList(highestTrapset: int, highestCompletedRift: int)
                 unit=""))
 
     if highestCompletedRift >= 5:
-        adviceList.append(Advice(
-            label="Shiny Chance Multi for Rift's Daily traps",
-            item_name="",
-            progression="",
-            goal=""))
+        adviceDict["Shiny Chance Multi for Rift's Daily traps"] = []
         for counter in range(len(shinyTrapsLabelList) - numOfVaccuumSuggestions, len(shinyTrapsLabelList)):
             if highestTrapset >= shinyTrapsRequiredTrapIndexList[counter]:
-                adviceList.append(Advice(
+                adviceDict["Shiny Chance Multi for Rift's Daily traps"].append(Advice(
                     label=shinyTrapsLabelList[counter],
                     item_name=shinyTrapsItemNameList[counter],
                     progression=shinyTrapsEffPerHourList[counter],
                     goal="",
                     unit=""))
-    return adviceList
+    return adviceDict
 
-def getStaticEXPTrapAdviceList(highestTrapset, highestCompletedRift):
-    adviceList = []
+def getStaticEXPTrapAdviceList(highestTrapset, highestCompletedRift) -> dict[str, list[Advice]]:
+    adviceDict = {
+        "Best Experience for Manually Claimed traps": []
+    }
     numOfVaccuumSuggestions = 1
-    adviceList.append(Advice(
-        label="Best Experience for Manually Claimed traps",
-        item_name="",
-        progression="",
-        goal=""))
     # The highest EXP traps are: Nature 8hrs and Nature 20hrs.
     expTrapsLabelList = ["Natural 8 Hours", "Natural 20 Hours"]
     expTrapsItemNameList = ["natural-traps", "natural-traps"]
@@ -239,7 +222,7 @@ def getStaticEXPTrapAdviceList(highestTrapset, highestCompletedRift):
     expTrapsEffPerHourList = ["5x/hr", "3.75x/hr"]
     for counter in range(0, len(expTrapsLabelList) - numOfVaccuumSuggestions):
         if highestTrapset >= expTrapsRequiredTrapIndexList[counter]:
-            adviceList.append(Advice(
+            adviceDict["Best Experience for Manually Claimed traps"].append(Advice(
                 label=expTrapsLabelList[counter],
                 item_name=expTrapsItemNameList[counter],
                 progression=expTrapsEffPerHourList[counter],
@@ -247,20 +230,16 @@ def getStaticEXPTrapAdviceList(highestTrapset, highestCompletedRift):
                 unit=""))
 
     if highestCompletedRift >= 5:
-        adviceList.append(Advice(
-            label="Best Experience for Rift's Daily traps",
-            item_name="",
-            progression="",
-            goal=""))
+        adviceDict["Best Experience for Rift's Daily traps"] = []
         for counter in range(len(expTrapsLabelList) - numOfVaccuumSuggestions, len(expTrapsLabelList)):
             if highestTrapset >= expTrapsRequiredTrapIndexList[counter]:
-                adviceList.append(Advice(
+                adviceDict["Best Experience for Rift's Daily traps"].append(Advice(
                     label=expTrapsLabelList[counter],
                     item_name=expTrapsItemNameList[counter],
                     progression=expTrapsEffPerHourList[counter],
                     goal="",
                     unit=""))
-    return adviceList
+    return adviceDict
 
 def setTrappingProgressionTier(inputJSON, characterDict):
     trapping_AdviceDict = {
