@@ -294,12 +294,12 @@ def tier_from_monster_kills(dictOfPRs, inputJSON, playerCount) -> Threshold:
 
     highestPrint = getHighestPrint(inputJSON)
     mobKillThresholds = []
-    if highestPrint >= 999000000:
-        expectedThreshold = Threshold.fromname(Threshold.W6_WAITING_ROOM)
-    elif dictOfPRs[Placements.DEATH_NOTE] >= 19:
-        expectedThreshold = Threshold.fromname(Threshold.SOLID_W6_PREP)
-    elif dictOfPRs[Placements.DEATH_NOTE] >= 15:
-        expectedThreshold = Threshold.fromname(Threshold.EARLY_W6_PREP)
+    if highestPrint >= 9999000000:
+        expectedThreshold = Threshold.fromname(Threshold.W7_WAITING_ROOM)
+    elif dictOfPRs[Placements.DEATH_NOTE] >= 24:
+        expectedThreshold = Threshold.fromname(Threshold.SOLID_W7_PREP)
+    elif dictOfPRs[Placements.DEATH_NOTE] >= 21:
+        expectedThreshold = Threshold.fromname(Threshold.EARLY_W7_PREP)
     else:
         # logger.info(f"Starting to review map kill counts per player because expectedIndex still W1: {dictOfPRs['Construction Death Note']}")
         for playerCounter in range(0, playerCount):
