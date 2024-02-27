@@ -84,7 +84,7 @@ def getHandsStatus(inputJSON, playerCount, playerNames):
             label=skill,
             item_name=skill,
             progression=progression,
-            goal=goal
+            goal=goal+1
         )
         for skill, progression, goal in (main_beginner.janky_skills if main_beginner else [])
     ]

@@ -1,3 +1,363 @@
+.green-mushroom::before {
+  background-image: url("https://idleon.wiki/wiki/images/4/4b/Green_Mushroom_Idle.gif");
+}
+
+.frog::before {
+  background-image: url("https://idleon.wiki/wiki/images/d/d5/Frog_Idle.gif");
+}
+
+.bored-bean::before {
+  background-image: url("https://idleon.wiki/wiki/images/0/02/Bored_Bean_Idle.gif");
+}
+
+.red-mushroom::before {
+  background-image: url("https://idleon.wiki/wiki/images/c/c7/Red_Mushroom_Idle.gif");
+}
+
+.slime::before {
+  background-image: url("https://idleon.wiki/wiki/images/5/5b/Slime_Idle.gif");
+}
+
+.froge::before {
+  background-image: url("https://idleon.wiki/wiki/images/0/01/Froge.png");
+}
+
+.baby-boa::before {
+  background-image: url("https://idleon.wiki/wiki/images/f/ff/Baby_Boa_Idle.gif");
+}
+
+.carrotman::before {
+  background-image: url("https://idleon.wiki/wiki/images/9/91/Carrotman_Idle.gif");
+}
+
+.glublin::before {
+  background-image: url("https://idleon.wiki/wiki/images/0/0d/Glublin_Idle.gif");
+}
+
+.wode-board::before {
+  background-image: url("https://idleon.wiki/wiki/images/0/08/Wode_Board_Idle.gif");
+}
+
+.gigafrog::before {
+  background-image: url("https://idleon.wiki/wiki/images/9/94/Gigafrog_Idle.gif");
+}
+
+.walking-stick::before {
+  background-image: url("https://idleon.wiki/wiki/images/d/dc/Walking_Stick_Idle.gif");
+}
+
+.nutto::before {
+  background-image: url("https://idleon.wiki/wiki/images/7/70/Nutto_Idle.gif");
+}
+
+.wood-mushroom::before {
+  background-image: url("https://idleon.wiki/wiki/images/3/3f/Wood_Mushroom_Idle.gif");
+}
+
+.poop::before {
+  background-image: url("https://idleon.wiki/wiki/images/c/cc/Poop_Idle.gif");
+}
+
+.rat::before {
+  background-image: url("https://idleon.wiki/wiki/images/e/ed/Rat_Idle.gif");
+}
+
+.boop::before {
+  background-image: url("https://idleon.wiki/wiki/images/f/f8/Boop_Idle.gif");
+}
+
+.dr-defecaus::before {
+  background-image: url("https://idleon.wiki/wiki/images/5/5c/Dr_Defecaus_Idle.gif");
+}
+
+.baba-yaga::before {
+  background-image: url("https://idleon.wiki/wiki/images/6/67/Baba_Yaga_Idle.gif");
+}
+
+.amarok::before {
+  background-image: url("https://idleon.wiki/wiki/images/1/1a/Amarok_%28boss%29.png");
+}
+
+.sandy-pot::before {
+  background-image: url("https://idleon.wiki/wiki/images/c/c9/Sandy_Pot_Idle.gif");
+}
+
+.mimic::before {
+  background-image: url("https://idleon.wiki/wiki/images/a/a7/Mimic_Idle.gif");
+}
+
+.crabcake::before {
+  background-image: url("https://idleon.wiki/wiki/images/1/15/Crabcake_Idle.gif");
+}
+
+.mafioso::before {
+  background-image: url("https://idleon.wiki/wiki/images/d/dc/Mafioso_Idle.gif");
+}
+
+.sand-castle::before {
+  background-image: url("https://idleon.wiki/wiki/images/e/e8/Sand_Castle_Idle.gif");
+}
+
+.pincermin::before {
+  background-image: url("https://idleon.wiki/wiki/images/f/f8/Pincermin_Idle.gif");
+}
+
+.mashed-potato::before {
+  background-image: url("https://idleon.wiki/wiki/images/5/50/Mashed_Potato_Idle.gif");
+}
+
+.tyson::before {
+  background-image: url("https://idleon.wiki/wiki/images/a/ab/Tyson_Idle.gif");
+}
+
+.moonmoon::before {
+  background-image: url("https://idleon.wiki/wiki/images/a/a2/Moonmoon_Idle.gif");
+}
+
+.sand-giant::before {
+  background-image: url("https://idleon.wiki/wiki/images/2/29/Sand_Giant_Idle.gif");
+}
+
+.snelbie::before {
+  background-image: url("https://idleon.wiki/wiki/images/e/e7/Snelbie_Idle.gif");
+}
+
+.efaunt::before {
+  background-image: url("https://idleon.wiki/wiki/images/6/6a/Efaunt_%28boss%29.png");
+}
+
+.sheepie::before {
+  background-image: url("https://idleon.wiki/wiki/images/7/71/Sheepie_Idle.gif");
+}
+
+.frost-flake::before {
+  background-image: url("https://idleon.wiki/wiki/images/4/49/Frost_Flake_Idle.gif");
+}
+
+.sir-stache::before {
+  background-image: url("https://idleon.wiki/wiki/images/2/2b/Sir_Stache_Idle.gif");
+}
+
+.bloque::before {
+  background-image: url("https://idleon.wiki/wiki/images/6/6b/Bloque_Idle.gif");
+}
+
+.mamooth::before {
+  background-image: url("https://idleon.wiki/wiki/images/e/e5/Mamooth_Idle.gif");
+}
+
+.snowman::before {
+  background-image: url("https://idleon.wiki/wiki/images/4/4c/Snowman_Idle.gif");
+}
+
+.penguin::before {
+  background-image: url("https://idleon.wiki/wiki/images/5/5b/Penguin_Idle.gif");
+}
+
+.thermister::before {
+  background-image: url("https://idleon.wiki/wiki/images/9/92/Thermister_Idle.gif");
+}
+
+.quenchie::before {
+  background-image: url("https://idleon.wiki/wiki/images/6/69/Quenchie_Idle.gif");
+}
+
+.cryosnake::before {
+  background-image: url("https://idleon.wiki/wiki/images/3/37/Cryosnake_Idle.gif");
+}
+
+.bop-box::before {
+  background-image: url("https://idleon.wiki/wiki/images/9/91/Bop_Box_Idle.gif");
+}
+
+.neyeptune::before {
+  background-image: url("https://idleon.wiki/wiki/images/3/3f/Neyeptune_Idle.gif");
+}
+
+.dedotated-ram::before {
+  background-image: url("https://idleon.wiki/wiki/images/9/91/Dedotated_Ram_Idle.gif");
+}
+
+.bloodbone::before {
+  background-image: url("https://idleon.wiki/wiki/images/f/ff/Bloodbone_Idle.gif");
+}
+
+.chizoar::before {
+  background-image: url("https://idleon.wiki/wiki/images/5/59/Chizoar_%28boss%29.png");
+}
+
+.purp-mushroom::before {
+  background-image: url("https://idleon.wiki/wiki/images/7/75/Purp_Mushroom_Idle.gif");
+}
+
+.mutated-mush::before {
+  background-image: url("https://idleon.wiki/wiki/images/0/05/Mutated_Mush_Idle.gif");
+}
+
+.tv::before {
+  background-image: url("https://idleon.wiki/wiki/images/1/12/TV_Idle.gif");
+}
+
+.donut::before {
+  background-image: url("https://idleon.wiki/wiki/images/3/35/Donut_Idle.gif");
+}
+
+.demon-genie::before {
+  background-image: url("https://idleon.wiki/wiki/images/1/16/Demon_Genie_Idle.gif");
+}
+
+.soda-can::before {
+  background-image: url("https://idleon.wiki/wiki/images/b/bb/Soda_Can_Idle.gif");
+}
+
+.flying-worm::before {
+  background-image: url("https://idleon.wiki/wiki/images/5/54/Flying_Worm_Idle.gif");
+}
+
+.gelatinous-cuboid::before {
+  background-image: url("https://idleon.wiki/wiki/images/3/35/Gelatinous_Cuboid_Idle.gif");
+}
+
+.choccie::before {
+  background-image: url("https://idleon.wiki/wiki/images/e/e7/Choccie_Idle.gif");
+}
+
+.biggole-wurm::before {
+  background-image: url("https://idleon.wiki/wiki/images/8/8d/Biggole_Wurm_Idle.gif");
+}
+
+.clammie::before {
+  background-image: url("https://idleon.wiki/wiki/images/5/58/Clammie_Idle.gif");
+}
+
+.octodar::before {
+  background-image: url("https://idleon.wiki/wiki/images/0/0d/Octodar_Idle.gif");
+}
+
+.flombeige::before {
+  background-image: url("https://idleon.wiki/wiki/images/c/c8/Flombeige_Idle.gif");
+}
+
+.stilted-seeker::before {
+  background-image: url("https://idleon.wiki/wiki/images/e/ef/Stilted_Seeker_Idle.gif");
+}
+
+.massive-troll::before {
+  background-image: url("https://idleon.wiki/wiki/images/5/5a/Massive_Troll_%28boss%29.png");
+}
+
+.suggma::before {
+  background-image: url("https://idleon.wiki/wiki/images/5/53/Suggma_Idle.gif");
+}
+
+.maccie::before {
+  background-image: url("https://idleon.wiki/wiki/images/c/cb/Maccie_Idle.gif");
+}
+
+.mister-brightside::before {
+  background-image: url("https://idleon.wiki/wiki/images/e/e6/Mister_Brightside_Idle.gif");
+}
+
+.cheese-nub::before {
+  background-image: url("https://idleon.wiki/wiki/images/c/c2/Cheese_Nub_Idle.gif");
+}
+
+.stiltmole::before {
+  background-image: url("https://idleon.wiki/wiki/images/b/be/Stiltmole_Idle.gif");
+}
+
+.molti::before {
+  background-image: url("https://idleon.wiki/wiki/images/4/44/Molti_Idle.gif");
+}
+
+.purgatory-stalker::before {
+  background-image: url("https://idleon.wiki/wiki/images/0/08/Purgatory_Stalker_Idle.gif");
+}
+
+.citringe::before {
+  background-image: url("https://idleon.wiki/wiki/images/f/f5/Citringe_Idle.gif");
+}
+
+.lampar::before {
+  background-image: url("https://idleon.wiki/wiki/images/c/c1/Lampar_Idle.gif");
+}
+
+.fire-spirit::before {
+  background-image: url("https://idleon.wiki/wiki/images/d/d0/Fire_Spirit_Idle.gif");
+}
+
+.biggole-mole::before {
+  background-image: url("https://idleon.wiki/wiki/images/f/f4/Biggole_Mole_Idle.gif");
+}
+
+.crawler::before {
+  background-image: url("https://idleon.wiki/wiki/images/1/13/Crawler_Idle.gif");
+}
+
+.tremor-wurm::before {
+  background-image: url("https://idleon.wiki/wiki/images/0/01/Tremor_Wurm_Idle.gif");
+}
+
+.kattlecruk::before {
+  background-image: url("https://idleon.wiki/wiki/images/d/d0/Kattlecruk_%28boss%29.png");
+}
+
+.sprout-spirit::before {
+  background-image: url("https://idleon.wiki/wiki/images/4/4c/Sprout_Spirit_Card.png");
+}
+
+.ricecake::before {
+  background-image: url("https://idleon.wiki/wiki/images/c/c5/Ricecake_Card.png");
+}
+
+.river-spirit::before {
+  background-image: url("https://idleon.wiki/wiki/images//f/f1/River_Spirit_Card.png");
+}
+
+.baby-troll::before {
+  background-image: url("https://idleon.wiki/wiki/images/9/97/Baby_Troll_Card.png");
+}
+
+.woodlin-spirit::before {
+  background-image: url("https://idleon.wiki/wiki/images/0/04/Woodlin_Spirit_Card.png");
+}
+
+.bamboo-spirit::before {
+  background-image: url("https://idleon.wiki/wiki/images/b/b8/Bamboo_Spirit_Card.png");
+}
+
+.lantern-spirit::before {
+  background-image: url("https://idleon.wiki/wiki/images/4/48/Lantern_Spirit_Card.png");
+}
+
+.mama-troll::before {
+  background-image: url("https://idleon.wiki/wiki/images/c/c0/Mama_Troll_Card.png");
+}
+
+.leek-spirit::before {
+  background-image: url("https://idleon.wiki/wiki/images/c/c6/Leek_Spirit_Card.png");
+}
+
+.ceramic-spirit::before {
+  background-image: url("https://idleon.wiki/wiki/images/b/b6/Ceramic_Spirit_Card.png");
+}
+
+.skydoggie-spirit::before {
+  background-image: url("https://idleon.wiki/wiki/images/4/47/Skydoggie_Spirit_Card.png");
+}
+
+.royal-egg::before {
+  background-image: url("https://idleon.wiki/wiki/images/0/0d/Royal_Egg_Card.png");
+}
+
+.minichief-spirit::before {
+  background-image: url("https://idleon.wiki/wiki/images/8/80/Minichief_Spirit_Card.png");
+}
+
+.samurai-guardian::before {
+  background-image: url("https://idleon.wiki/wiki/images/7/74/Samurai_Guardian_Card.png");
+}
+
 .bubbles::before {
   background-image: url("https://idleon.wiki/wiki/images/archive/4/42/20230111134826%21OrangeBubble13.png");
 }
@@ -572,6 +932,10 @@
 
 .pay2win::before {
   background-image: url("/static/imgs/pay2win.png");
+}
+
+.iceland-irwin::before {
+  background-image: url("https://idleon.wiki/wiki/images/a/ad/Iceland_Irwin.gif");
 }
 
 .beginner-icon::before {
@@ -1620,10 +1984,6 @@
 
 .dream-particulate::before {
   background-image: url("https://idleon.wiki/wiki/images/5/5c/Dream_Particulate.png");
-}
-
-.froge::before {
-  background-image: url("https://idleon.wiki/wiki/images/0/01/Froge.png");
 }
 
 .poison-froge::before {
@@ -6658,11 +7018,11 @@
   background-image: url("https://idleon.wiki/wiki/images/6/6d/Status_Skull0.png");
 }
 
-.bronze-skull::before {
+.copper-skull::before {
   background-image: url("https://idleon.wiki/wiki/images/3/3d/Status_Skull1.png");
 }
 
-.silver-skull::before {
+.iron-skull::before {
   background-image: url("https://idleon.wiki/wiki/images/d/de/Status_Skull2.png");
 }
 

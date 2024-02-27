@@ -275,7 +275,6 @@ class HeaderData:
         self.last_update = ""
 
 
-
 def main(inputData, runType="web"):
     bannedAccountsList = ["thedyl", "wooddyl", "3boyy", "4minez", "5arch5", "6knight6", "7maestro7", "bowboy8", "8barb8", "10es10", "favicon.ico", "robots.txt"]
     empty = ""
@@ -283,16 +282,16 @@ def main(inputData, runType="web"):
     banned = "This account has been banned from lookups."
     bannedList = [banned,empty,empty,empty,empty,empty,empty,empty,empty,empty]
     bannedListofLists = [
-        [bannedList,empty,empty,empty,empty,empty,empty,empty,empty,empty], #general placeholder
-        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty], #w1 placeholder
-        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty], #w2 placeholder
-        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty], #w3 placeholder
-        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty], #w4 placeholder
-        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty], #w5 placeholder
-        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty], #w6 placeholder
-        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty], #w7 placeholder
-        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty], #w8 placeholder
-        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty] #pinchy placeholder
+        [bannedList,empty,empty,empty,empty,empty,empty,empty,empty,empty],  #general placeholder
+        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],  #w1 placeholder
+        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],  #w2 placeholder
+        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],  #w3 placeholder
+        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],  #w4 placeholder
+        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],  #w5 placeholder
+        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],  #w6 placeholder
+        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],  #w7 placeholder
+        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],  #w8 placeholder
+        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty]  #pinchy placeholder
     ]
 
     if isinstance(inputData, str):
@@ -380,26 +379,26 @@ def main(inputData, runType="web"):
         cardsList = [["Unable to evaluate card sets :(", str(reason)]]
 
     #World 1
-    stamps_section = idleon_Stamps.setStampProgressionTier(parsedJSON, progressionTiers['Stamps'])
-    bribes_section = idleon_Bribes.setBribesProgressionTier(parsedJSON, progressionTiers['Bribes'])
-    smithing_section = idleon_Smithing.setSmithingProgressionTier(parsedJSON, progressionTiers['Smithing'], playerCount, characterDict)
+    stamps_AdviceSection = idleon_Stamps.setStampProgressionTier(parsedJSON, progressionTiers['Stamps'])
+    bribes_AdviceSection = idleon_Bribes.setBribesProgressionTier(parsedJSON, progressionTiers['Bribes'])
+    smithing_AdviceSection = idleon_Smithing.setSmithingProgressionTier(parsedJSON, progressionTiers['Smithing'], playerCount, characterDict)
 
     #World 2
-    alchBubbles_AdviceSection = idleon_Alchemy.setAlchemyBubblesProgressionTier(parsedJSON, progressionTiers['Alchemy Bubbles'])
-    alchVials_AdviceSection = idleon_Alchemy.setAlchemyVialsProgressionTier(parsedJSON, progressionTiers['Alchemy Vials'])
-    alchP2W_AdviceSection = idleon_Alchemy.setAlchemyP2W(parsedJSON, playerCount)
+    alchBubbles_AdviceSection = idleon_Alchemy.setAlchemyBubblesProgressionTier(parsedJSON, progressionTiers['Alchemy Bubbles'], characterDict)
+    alchVials_AdviceSection = idleon_Alchemy.setAlchemyVialsProgressionTier(parsedJSON, progressionTiers['Alchemy Vials'], characterDict)
+    alchP2W_AdviceSection = idleon_Alchemy.setAlchemyP2W(parsedJSON, characterDict)
     #obolsPR = idleon_Obols.setObolsProgressionTier(parsedJSON, playerCount, progressionTiers['Obols'], fromPublicIEBool)
 
     #World 3
     #consPrinterPR =
-    consRefineryPR = idleon_ConsRefinery.setConsRefineryProgressionTier(parsedJSON, progressionTiers['Construction Refinery'])
-    consSaltLickPR = idleon_ConsSaltLick.setConsSaltLickProgressionTier(parsedJSON, progressionTiers['Construction Salt Lick'])
-    consDeathNotePR = idleon_ConsDeathNote.setConsDeathNoteProgressionTier(parsedJSON, progressionTiers['Construction Death Note'], playerCount, playerNames)
-    consBuildingsPR = idleon_ConsBuildings.setConsBuildingsProgressionTier(parsedJSON, progressionTiers['Construction Buildings Pre-Buffs'], progressionTiers['Construction Buildings Post-Buffs'], playerCount)
+    refinery_AdviceSection = idleon_ConsRefinery.setConsRefineryProgressionTier(parsedJSON, progressionTiers['Construction Refinery'], characterDict)
+    saltlick_AdviceSection = idleon_ConsSaltLick.setConsSaltLickProgressionTier(parsedJSON, progressionTiers['Construction Salt Lick'], characterDict)
+    deathnote_AdviceSection = idleon_ConsDeathNote.setConsDeathNoteProgressionTier(parsedJSON, progressionTiers['Construction Death Note'], characterDict)
+    buildings_AdviceSection = idleon_ConsBuildings.setConsBuildingsProgressionTier(parsedJSON, progressionTiers['Construction Buildings Pre-Buffs'], progressionTiers['Construction Buildings Post-Buffs'], characterDict)
     #consAtomColliderPR =
     #worshipTotemsPR =
-    worshipPrayersPR = idleon_Worship.setWorshipPrayersProgressionTier(parsedJSON, progressionTiers['Worship Prayers'])
-    trappingPR = idleon_Trapping.setTrappingProgressionTier(parsedJSON, playerCount, playerNames)
+    prayers_AdviceSection = idleon_Worship.setWorshipPrayersProgressionTier(parsedJSON, progressionTiers['Worship Prayers'], characterDict)
+    trapping_AdviceSection = idleon_Trapping.setTrappingProgressionTier(parsedJSON, characterDict)
 
     #World 4
     #cookingPR =
@@ -411,31 +410,31 @@ def main(inputData, runType="web"):
     #divinityPR =
 
     generalList = [headerData, None, None, None, cardsList]
-    w1list = [stamps_section["PR"].nTR, bribes_section["PR"].nTR, smithing_section["PR"].nTR]  # len(stampPR) = 4, len(bribesPR.nTR) = 2, len(smithingPR.nTR) = 4
-    w2list = [alchBubbles_AdviceSection["PR"].nTR, alchVials_AdviceSection["PR"].nTR, [alchP2W_AdviceSection['Header'], alchP2W_AdviceSection['OldAdvice']], emptyList]  # len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 5
+    #w1list = [stamps_AdviceSection["PR"].nTR, bribes_AdviceSection["PR"].nTR, smithing_AdviceSection["PR"].nTR]  # len(stampPR) = 4, len(bribesPR.nTR) = 2, len(smithingPR.nTR) = 4
+    #w2list = [["Old Bubbles Gone"]*10, ["Old Vials Gone"]*10, ["Old P2W Gone"]*10, ["Old P2W Gone"]*10], ["Obols"]*10  # len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 5
     #w2list = [alchBubblesPR.nTR,alchVialsPR.nTR,alchP2WList, obolsPR.nTR]  # len(alchBubblesPR.nTR) = 6, len(alchVialsPR.nTR) = 4, len(obolsPR.nTR) = 4
-    w3list = [
-        ["Construction 3D Printer coming soon!"], consRefineryPR.nTR, consSaltLickPR.nTR, consDeathNotePR.nTR,  # len(consRefineryPR.nTR) = 5, len(consSaltLickPR.nTR) = 2, len(consDeathNotePR.nTR) = 12)
-        consBuildingsPR.nTR, ["Construction Atom Collider coming soon!"], ["Worship Totems coming soon!"], worshipPrayersPR.nTR, trappingPR.nTR]  # len(consBuildingsPR.nTR) = 8, len(trappingPR.nTR) = 9
-    w4list = [breedingPR.nTR, [""], [""]]
-    w5list = [[""], [""], [""]]
+    #w3list = [
+    #    ["Construction 3D Printer coming soon!"], ["Old Refinery Gone"]*10, ["Old Salt Lick Gone"]*10, consDeathNotePR.nTR,  # len(refinery_AdviceSection.nTR) = 5, len(consSaltLickPR.nTR) = 2, len(consDeathNotePR.nTR) = 12)
+    #    ["Old Buildings Gone"]*10, ["Construction Atom Collider coming soon!"], ["Worship Totems coming soon!"], ["Old Worship Gone"]*10, ["Old Trapping Gone"]*10,]  # len(consBuildingsPR.nTR) = 8, len(trappingPR.nTR) = 9
+    #w4list = [breedingPR.nTR, [""], [""]]
+    #w5list = [[""], [""], [""]]
     #w4list = [["Cooking coming soon!"], ["Breeding coming soon!"], ["Lab coming soon!"]]
     #w5list = [["Sailing coming soon!"], ["Gaming coming soon!"], ["Divinity coming soon!"]]
-    w6list = [["w6 mechanic 1 placeholder"], ["w6 mechanic 2 placeholder"], ["w6 mechanic 3 placeholder"]]
-    w7list = [["w7 mechanic 1 placeholder"], ["w7 mechanic 2 placeholder"], ["w7 mechanic 3 placeholder"]]
-    w8list = [["w8 mechanic 1 placeholder"], ["w8 mechanic 2 placeholder"], ["w8 mechanic 3 placeholder"]]
+    #w6list = [["w6 mechanic 1 placeholder"], ["w6 mechanic 2 placeholder"], ["w6 mechanic 3 placeholder"]]
+    #w7list = [["w7 mechanic 1 placeholder"], ["w7 mechanic 2 placeholder"], ["w7 mechanic 3 placeholder"]]
+    #w8list = [["w8 mechanic 1 placeholder"], ["w8 mechanic 2 placeholder"], ["w8 mechanic 3 placeholder"]]
     biggoleProgressionTiersDict = {
         Placements.COMBAT_LEVELS: section_combatLevels.pinchy_rating,
-        Placements.STAMPS: stamps_section["PR"].cT,
-        Placements.BRIBES: bribes_section["PR"].cT,
-        Placements.SMITHING: smithing_section["PR"].cT,
-        Placements.BUBBLES: alchBubbles_AdviceSection["PR"].cT,
-        Placements.VIALS: alchVials_AdviceSection["PR"].cT,
-        Placements.P2W: alchP2W_AdviceSection['AdviceSection'].pinchy_rating,
-        Placements.REFINERY: consRefineryPR.cT,
-        Placements.SALT_LICK: consSaltLickPR.cT,
-        Placements.DEATH_NOTE: consDeathNotePR.cT,
-        Placements.PRAYERS: worshipPrayersPR.cT
+        Placements.STAMPS: stamps_AdviceSection.pinchy_rating,
+        Placements.BRIBES: bribes_AdviceSection.pinchy_rating,
+        Placements.SMITHING: smithing_AdviceSection.pinchy_rating,
+        Placements.BUBBLES: alchBubbles_AdviceSection.pinchy_rating,
+        Placements.VIALS: alchVials_AdviceSection.pinchy_rating,
+        Placements.P2W: alchP2W_AdviceSection.pinchy_rating,
+        Placements.REFINERY: refinery_AdviceSection.pinchy_rating,
+        Placements.SALT_LICK: saltlick_AdviceSection.pinchy_rating,
+        Placements.DEATH_NOTE: deathnote_AdviceSection.pinchy_rating,
+        Placements.PRAYERS: prayers_AdviceSection.pinchy_rating
         }
     pinchy = idleon_Pinchy.generatePinchyWorld(parsedJSON, playerCount, biggoleProgressionTiersDict)
     generalReview = AdviceWorld(
@@ -446,16 +445,32 @@ def main(inputData, runType="web"):
 
     w1Review = AdviceWorld(
         name=WorldName.WORLD1,
-        sections=[stamps_section["AdviceSection"], bribes_section["AdviceSection"], smithing_section["AdviceSection"]],
+        sections=[stamps_AdviceSection, bribes_AdviceSection, smithing_AdviceSection],
         banner="w1banner.png"
     )
     w2Review = AdviceWorld(
         name=WorldName.WORLD2,
-        sections=[alchBubbles_AdviceSection["AdviceSection"], alchVials_AdviceSection["AdviceSection"], alchP2W_AdviceSection["AdviceSection"]],
+        sections=[alchBubbles_AdviceSection, alchVials_AdviceSection, alchP2W_AdviceSection],
         banner="w2banner.png"
     )
+    w3Review = AdviceWorld(
+        name=WorldName.WORLD3,
+        sections=[refinery_AdviceSection, buildings_AdviceSection, saltlick_AdviceSection, deathnote_AdviceSection, prayers_AdviceSection, trapping_AdviceSection],
+        banner="w3banner.png"
+    )
+    w4Review = AdviceWorld(
+        name=WorldName.WORLD4,
+        sections=[],
+        banner="w4banner.png"
+    )
+    w5Review = AdviceWorld(
+        name=WorldName.WORLD5,
+        sections=[],
+        banner="w5banner.png"
+    )
 
-    biggoleAdviceList = [generalList, w1list, w2list, w3list, w4list, w5list, w6list, w7list, w8list, w2Review, w1Review, generalReview, pinchy]
+    biggoleAdviceList = [generalList, w5Review, w4Review, w3Review, w2Review, w1Review, generalReview, pinchy]
+    #biggoleAdviceList = [generalList, w1list, w2list, w3list, w4list, w5list, w6list, w7list, w8list, w2Review, w1Review, generalReview, pinchy]
 
     if runType == "consoleTest":
         return "Pass"

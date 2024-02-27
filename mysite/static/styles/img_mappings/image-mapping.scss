@@ -1795,8 +1795,8 @@ $id-map: (
 	glitterbug: $glitterbug,
 
 	normal-skull: $normal-skull,
-	bronze-skull: $bronze-skull,
-	silver-skull: $silver-skull,
+	copper-skull: $copper-skull,
+	iron-skull: $iron-skull,
 	gold-skull: $gold-skull,
 	platinum-skull: $platinum-skull,
 	dementia-skull: $dementia-skull,
@@ -1823,6 +1823,7 @@ $monsters: (
 	wood-mushroom: $wood-mushroom,
 	poop: $poop,
 	rat: $rat,
+	boop: $boop,
 
 	dr-defecaus: $dr-defecaus,
 	baba-yaga: $baba-yaga,
@@ -1837,6 +1838,7 @@ $monsters: (
 	mafioso: $mafioso,
 	sand-castle: $sand-castle,
 	pincermin: $pincermin,
+	mashed-potato: $mashed-potato,
 	tyson: $tyson,
 	moonmoon: $moonmoon,
 	sand-giant: $sand-giant,
@@ -1898,7 +1900,23 @@ $monsters: (
 	crawler: $crawler,
 	tremor-wurm: $tremor-wurm,
 
-	kattlecruk: $kattlecruk-boss
+	kattlecruk: $kattlecruk-boss,
+
+// W6
+    sprout-spirit: $sprout-sprit,
+    ricecake: $ricecake,
+    river-spirit: $river-spirit,
+    baby-troll: $baby-troll,
+    woodlin-spirit: $woodlin-spirit,
+    bamboo-spirit: $bamboo-spirit,
+    lantern-spirit: $lantern-spirit,
+    mama-troll: $mama-troll,
+    leek-spirit: $leek-spirit,
+    ceramic-spirit: $ceramic-spirit,
+    skydoggie-spirit: $skydoggie-spirit,
+    royal-egg: $royal-egg,
+    minichief-spirit: $minichief-spirit,
+    samurai-guardian: $samurai-guardian
 );
 
 $extra: (
@@ -1906,7 +1924,8 @@ $extra: (
 	vial-max: $vial-max,
 	prayers: $prayer-stone,
 	bribes: $bribes,
-	pay2win: $pay2win
+	pay2win: $pay2win,
+	iceland-irwin: $iceland-irwin
 );
 
 $character-classes: (
@@ -1968,6 +1987,7 @@ $id-map: map-merge($character-classes, $id-map);
 $id-map: map-merge($extra, $id-map);
 $id-map: map-merge($bribes-map, $id-map);
 $id-map: map-merge($bubbles-map, $id-map);
+$id-map: map-merge($monsters, $id-map);
 
 @each $class, $link in $id-map {
 	.#{$class}::before {

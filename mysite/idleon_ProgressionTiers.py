@@ -96,7 +96,7 @@ def setDefaultTiers():
         [4, 33, 0, [], "This is the number of vials requiring an unlock roll of 95 or less. "],
         [5, 38, 0, [], "This is the number of vials requiring an unlock roll of 98 or less. "],
         [6, 51, 0, [], "This is all vials up through W4, excluding the Arcade Pickle. "],
-        [7, 63, 4, ['Copper Corona (Copper Ore)', 'Sippy Splinters (Oak Logs)', 'Jungle Juice (Jungle Logs)', 'Tea With Pea (Potty Rolls)'], ". This is all vials up through W5, excluding the Arcade Pickle. "],
+        [7, 63, 4, ['Copper Corona (Copper Ore)', 'Sippy Splinters (Oak Logs)', 'Jungle Juice (Jungle Logs)', 'Tea With Pea (Potty Rolls)'], "This is all vials up through W5, excluding the Arcade Pickle. "],
         [8, 63, 8, ['Gold Guzzle (Gold Ore)', 'Seawater (Goldfish)', 'Fly In My Drink (Fly)', 'Blue Flav (Platinum Ore)'], ""],
         [9, 63, 12, ['Slug Slurp (Hermit Can)', 'Void Vial (Void Ore)', 'Ew Gross Gross (Mosquisnow)', 'The Spanish Sahara (Tundra Logs)'], ""],
         [10, 63, 16, ['Mushroom Soup (Spore Cap)', 'Maple Syrup (Maple Logs)', 'Marble Mocha (Marble Ore)', 'Skinny 0 Cal (Snake Skin)'], ""],
@@ -109,51 +109,35 @@ def setDefaultTiers():
         [17, 63, 44, ['Calcium Carbonate (Tongue Bone)', 'Spool Sprite (Thread)', 'Choco Milkshake (Crumpled Wrapper)', 'Electrolyte (Condensed Zap)'], ""],
         [18, 63, 48, ['Ash Agua (Suggma Ashes)', 'Venison Malt (Mongo Worm Slices)', 'Thumb Pow (Trusty Nails)', 'Slowergy Drink (Frigid Soul)'], ""],
         [19, 63, 52, ['Bunny Brew (Bunny)', 'Oj Jooce (Orange Slice)', 'Spook Pint (Squishy Soul)', 'Barium Mixture (Copper Bar)'], ""],
-        [20, 63, 55, ['Bloat Draft (Blobfish)', 'Barley Brew (Iron Bar)', 'Oozie Ooblek (Oozie Soul)'], " This is the last tier possible as of v1.91"],
-        [21, 63, 60, ['Poison Tincture (Poison Froge)', 'Red Malt (Redox Salts)', 'Orange Malt (Explosive Salts)', 'Shaved Ice (Purple Salt)', 'Dreadnog (Dreadlo Bar)'], " This tier is impossible as of v1.91"],
-        [22, 63, 64, ['Pickle Jar (BobJoePickle)', 'Ball Pickle Jar (BallJoePickle)', 'Pearl Seltzer (Pearler Shell)', 'Hampter Drippy (Hampter)'], " This tier is super impossible as of v1.91"]
+        [20, 63, 55, ['Bloat Draft (Blobfish)', 'Barley Brew (Iron Bar)', 'Oozie Ooblek (Oozie Soul)'], "This is the last tier possible as of v1.91"],
+        [21, 63, 60, ['Poison Tincture (Poison Froge)', 'Red Malt (Redox Salts)', 'Orange Malt (Explosive Salts)', 'Shaved Ice (Purple Salt)', 'Dreadnog (Dreadlo Bar)'], "This tier is impossible as of v1.91"],
+        [22, 63, 64, ['Pickle Jar (BobJoePickle)', 'Ball Pickle Jar (BallJoePickle)', 'Pearl Seltzer (Pearler Shell)', 'Hampter Drippy (Hampter)'], "This tier is super impossible as of v1.91"]
         ]
     defaultTiers['Obols'] = [
         [0,""]
         ]
     defaultTiers['Construction Printer'] = []
     defaultTiers['Construction Refinery'] = [
-        #int tier, dict Tab1 Ranks, dict Tab2 Ranks, dict Tab3, dict All-tab AutoRefine, int W3Merits purchased, str Notes
-        [0,  {'Red Rank':0,  'Orange Rank':0,  'Blue Rank':0},  {'Green Rank':0,  'Purple Rank':0,  'Nullo Rank':0},  {}, {}, 0,""],
-        [1,  {'Red Rank':6,  'Orange Rank':3,  'Blue Rank':1},  {'Green Rank':0,  'Purple Rank':0,  'Nullo Rank':0},  {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 0, ""],
-        [2,  {'Red Rank':8,  'Orange Rank':4,  'Blue Rank':2},  {'Green Rank':2,  'Purple Rank':0,  'Nullo Rank':0},  {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 2, ""],
-        [3,  {'Red Rank':11, 'Orange Rank':6,  'Blue Rank':3},  {'Green Rank':6,  'Purple Rank':3,  'Nullo Rank':1},  {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
-        [4,  {'Red Rank':11, 'Orange Rank':6,  'Blue Rank':3},  {'Green Rank':8,  'Purple Rank':4,  'Nullo Rank':2},  {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
-        [5,  {'Red Rank':14, 'Orange Rank':8,  'Blue Rank':4},  {'Green Rank':11, 'Purple Rank':6,  'Nullo Rank':3},  {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
-        [6,  {'Red Rank':16, 'Orange Rank':9,  'Blue Rank':5},  {'Green Rank':14, 'Purple Rank':8,  'Nullo Rank':4},  {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
-        [7,  {'Red Rank':19, 'Orange Rank':11, 'Blue Rank':6},  {'Green Rank':17, 'Purple Rank':10, 'Nullo Rank':5},  {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
-        [8,  {'Red Rank':21, 'Orange Rank':12, 'Blue Rank':7},  {'Green Rank':19, 'Purple Rank':11, 'Nullo Rank':6},  {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
-        [9,  {'Red Rank':24, 'Orange Rank':14, 'Blue Rank':8},  {'Green Rank':21, 'Purple Rank':12, 'Nullo Rank':7},  {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
-        [10, {'Red Rank':28, 'Orange Rank':16, 'Blue Rank':9},  {'Green Rank':24, 'Purple Rank':14, 'Nullo Rank':8},  {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
-        [11, {'Red Rank':33, 'Orange Rank':19, 'Blue Rank':11}, {'Green Rank':28, 'Purple Rank':16, 'Nullo Rank':9},  {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
-        [12, {'Red Rank':37, 'Orange Rank':21, 'Blue Rank':12}, {'Green Rank':29, 'Purple Rank':17, 'Nullo Rank':10}, {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
-        #[12, {'Red Rank':33, 'Orange Rank':19, 'Blue Rank':11}, {'Green Rank':29, 'Purple Rank':17, 'Nullo Rank':10}, {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
-        #Blue 12 eats more salts than Orange 19 produces. This line in the guide looks to be wrong, so I am skipping it after feedback. Copied tab1 t13 to t12.
-        [13, {'Red Rank':37, 'Orange Rank':21, 'Blue Rank':12}, {'Green Rank':29, 'Purple Rank':17, 'Nullo Rank':11}, {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
-        [14, {'Red Rank':40, 'Orange Rank':23, 'Blue Rank':13}, {'Green Rank':36, 'Purple Rank':21, 'Nullo Rank':12}, {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
-        [15, {'Red Rank':45, 'Orange Rank':26, 'Blue Rank':15}, {'Green Rank':40, 'Purple Rank':23, 'Nullo Rank':13}, {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
-        [16, {'Red Rank':45, 'Orange Rank':26, 'Blue Rank':15}, {'Green Rank':42, 'Purple Rank':24, 'Nullo Rank':14}, {}, {'Red AutoRefine':0, 'Green AutoRefine':0}, 5, ""],
-        [17, {'Red Rank':2}, {}, {}, {'Combustion AutoRefine':0}, 5, "Red has reached 22+, ranks start becoming faster instead of slower! Tab1 Ranks go Brrrr now!"],
-        [18, {'Red Rank':2}, {'Green Rank':2}, {}, {'Synthesis AutoRefine':0}, 5, "Green has reached 22+, ranks start becoming faster instead of slower! Tab2 Ranks go Brrrr now! Be careful with Nullo salts though. They'll decimate your Void Bar supply very quickly."],
-        [19, {'Red Rank':2}, {}, {}, {'Sum AutoRefine':0}, 5, "You've got all Salts set to 0% auto-refine, the infinite-scaling portion of Refinery. This might leave you dry without salts for days or weeks at a time to begin, but will correct itself over time."],
-        ]
+        # int tier, dict All-tab AutoRefine, int W3Merits purchased, str Notes
+        [0, {}, 0, ""],
+        [1, {'Red AutoRefine': 0, 'Green AutoRefine': 0}, 1, ""],
+        [2, {'Red AutoRefine': 0, 'Green AutoRefine': 0}, 2, ""],
+        [3, {'Red AutoRefine': 0, 'Green AutoRefine': 0}, 3, ""],
+        [4, {'Red AutoRefine': 0, 'Green AutoRefine': 0}, 4, ""],
+        [5, {'Red AutoRefine': 0, 'Green AutoRefine': 0}, 5, ""]
+    ]
     defaultTiers['Construction Salt Lick'] = [
         [0, {}, ""],
-        [1, {'Obol Storage':8}, "Froges"],
-        [2, {'Printer Sample Size':20}, "Red Salts"],
-        [3, {'Refinery Speed':10}, "Orange Salts"],
-        [4, {'Max Book':10}, "Blue Salts"],
-        [5, {'Movespeed':1}, "Blue Souls"], #This buff only works under 170% move speed, so can become useless quite quickly.
-        [6, {'TD Points':10}, "Green Salts"],
-        [7, {'Multikill':10}, "Purple Salts"],
-        [8, {'EXP':100}, "Yellow Souls"],
-        [9, {'Alchemy Liquids':100}, "Mouseys"],
-        [10, {'Damage':250}, "Pingys"]
+        [1, {'Obol Storage':8}, "Froge"],
+        [2, {'Printer Sample Size':20}, "Redox Salts"],
+        [3, {'Refinery Speed':10}, "Explosive Salts"],
+        [4, {'Max Book':10}, "Spontaneity Salts"],
+        [5, {'Movespeed':1}, "Frigid Soul"],  #This buff only works under 170% move speed, so can become useless quite quickly.
+        [6, {'TD Points':10}, "Dioxide Synthesis"],
+        [7, {'Multikill':10}, "Purple Salt"],
+        [8, {'EXP':100}, "Dune Soul"],
+        [9, {'Alchemy Liquids':100}, "Mousey"],
+        [10, {'Damage':250}, "Pingy"]
         ]
     defaultTiers['Construction Death Note'] = [
         #0-4 int tier. int w1LowestSkull, int w2LowestSkull, int w3LowestSkull, int w4LowestSkull,
@@ -171,18 +155,21 @@ def setDefaultTiers():
         [9, 10, 10, 10,  5,   3,   0,0,0,   40,40,0,    ""],
         [10,10, 10, 10,  7,   4,   0,0,0,   53,53,0,    ""],
         [11,10, 10, 10,  10,  5,   0,0,0,   53,53,0,    "Complete Lava Skull, then BB Super CHOW, before you start working on Eclipse Skulls. "],
-        [12,20, 10, 10,  10,  7,   0,0,0,   66,66,15,   "The recommendation for Super CHOWs is 24hrs or less (4m+ KPH)"],
-        [13,20, 20, 10,  10,  10,  0,0,0,   66,66,26,   ""],
-        [14,20, 20, 20,  10,  10,  0,0,0,   66,66,40,   ""],
-        [15,20, 20, 20,  20,  10,  0,0,0,   66,66,53,   ""],
-        [16,20, 20, 20,  20,  20,  0,0,0,   66,66,66,   ""],
-        [17,20, 20, 20,  20,  20,  0,0,0,   70,66,66,   ""],
-        [18,20, 20, 20,  20,  20,  0,0,0,   70,68,66,   ""],
-        [19,20, 20, 20,  20,  20,  0,0,0,   70,68,67,   ""],
-        [20,20, 20, 20,  20,  20,  0,0,0,   71,68,67,   ""],
-        [21,20, 20, 20,  20,  20,  0,0,0,   71,70,67,   ""],
-        [22,20, 20, 20,  20,  20,  0,0,0,   72,70,69,   ""],
-        [23,20, 20, 20,  20,  20,  0,0,0,   72,72,71,   "As of v1.91, completing a Super CHOW on Boops is impossible."],
+        [12,10, 10, 10,  10,  7,   0,0,0,   66,66,15,   "The recommendation for Super CHOWs is 24hrs or less (4m+ KPH)"],
+        [13,10, 10, 10,  10,  10,  0,0,0,   66,66,26,   ""],
+        [14,10, 10, 10,  10,  10,  0,0,0,   66,66,40,   ""],
+        [15,20, 10, 10,  10,  10,  0,0,0,   66,66,53,   ""],
+        [16,20, 20, 10,  10,  10,  0,0,0,   73,66,66,   ""],
+        [17,20, 20, 20,  10,  10,  1,0,0,   73,73,66,   ""],
+        [18,20, 20, 20,  20,  10,  2,0,0,   73,73,73,   ""],
+        [19,20, 20, 20,  20,  20,  3,0,0,   80,73,73,   ""],
+        [20,20, 20, 20,  20,  20,  4,0,0,   80,80,73,   ""],
+        [21,20, 20, 20,  20,  20,  5,0,0,   84,80,80,   ""],
+        [22,20, 20, 20,  20,  20,  7,0,0,   84,82,80,   ""],
+        [23,20, 20, 20,  20,  20,  10,0,0,   85,84,80,   ""],
+        [24,20, 20, 20,  20,  20,  20,0,0,   85,84,82,   ""],
+        [25,20, 20, 20,  20,  20,  20,0,0,   86,86,83,   ""],
+        [26,20, 20, 20,  20,  20,  20,0,0,   86,86,85,   "As of v2.01, completing a Super CHOW on Boops is impossible."],
         ]
     defaultTiers['Construction Buildings Post-Buffs'] = [
         [0, "Default", [], "", ""],
@@ -253,15 +240,15 @@ def setDefaultTiers():
     defaultTiers['Worship Prayers'] = [
         #Tier, PrayerDict, 	Notes
         [0, {}, ""],
-        [1, {'The Royal Sampler (Rooted Soul)': 5}, "Royal Sampler is an oddity. The Printer Sample Rate bonus it gives is fantastic, but a few levels (5-10) is usually enough to help you reach the 90% maximum."],
-        [2, {'Skilled Dimwit (Forest Soul)':20}, "Surprisingly, level 20 is half the maximum value for Skilled Dimwit. Rush this ASAP after all characters have Ceramic Skulls or better equipped."],
-        [3, {'Balance of Pain (Squishy Soul)':11}, "Similar to the last tier, level 11 is half the maximum value for Balance of Pain. This prayer is crucial for farming Death Note and improving your 3D Printer samples of Monster materials. "],
-        [4, {'Skilled Dimwit (Forest Soul)':35, 'Balance of Pain (Squishy Soul)':20}, "This tier is roughly 75% of max prayer value for Skilled Dimwit and Balance of Pain."],
-        [5, {'Midas Minded (Dune Soul)':20}, "This tier is roughly 50% max value for Midas. This prayer is great to use when you start farming older content, like Crystal Mobs for statues."],
-        [6, {'Skilled Dimwit (Forest Soul)':50, 'Midas Minded (Dune Soul)':50, 'Balance of Pain (Squishy Soul)':30}, "Finish maxing these prayers next! They're the best from each Totem."],
-        [7, {'Shiny Snitch (Forest Soul)':50, 'Zerg Rushogen (Forest Soul)':20, 'Jawbreaker (Dune Soul)':50, 'Ruck Sack (Rooted Soul)':50, 'Balance of Proficiency (Squishy Soul)':50}, "These are the last group of important prayers to max."],
-        [8, {'Unending Energy (Forest Soul)':50, 'Big Brain Time (Forest Soul)':50, 'Antifun Spirit (Rooted Soul)':10, 'Fibers of Absence (Frigid Soul)':50, 'Beefy For Real (Frigid Soul)':40}, "These are niche use prayers. You can level them if you like. Some players choose to ignore them."],
-        [9, {'Tachion of the Titans (Dune Soul)':1, 'Balance of Precision (Dune Soul)':1, 'Circular Criticals (Rooted Soul)':1, 'Vacuous Tissue (Frigid Soul)':1, 'Glitterbug (Squishy Soul)':1}, "Sidenote! The prayers in this bottom tier can stay at level 1 as of v1.91: "],
+        [1, {'The Royal Sampler (Rooted Soul)': 5}, ""],
+        [2, {'Skilled Dimwit (Forest Soul)':20}, ""],
+        [3, {'Balance of Pain (Squishy Soul)':11}, ""],
+        [4, {'Skilled Dimwit (Forest Soul)':35, 'Balance of Pain (Squishy Soul)':20}, ""],
+        [5, {'Midas Minded (Dune Soul)':20}, ""],
+        [6, {'Skilled Dimwit (Forest Soul)':50, 'Midas Minded (Dune Soul)':50, 'Balance of Pain (Squishy Soul)':30}, ""],
+        [7, {'Shiny Snitch (Forest Soul)':50, 'Zerg Rushogen (Forest Soul)':20, 'Jawbreaker (Dune Soul)':50, 'Ruck Sack (Rooted Soul)':50, 'Balance of Proficiency (Squishy Soul)':50}, ""],
+        [8, {'Unending Energy (Forest Soul)':50, 'Big Brain Time (Forest Soul)':50, 'Antifun Spirit (Rooted Soul)':10, 'Fibers of Absence (Frigid Soul)':50, 'Beefy For Real (Frigid Soul)':40}, ""],
+        [9, {'Tachion of the Titans (Dune Soul)':1, 'Balance of Precision (Dune Soul)':1, 'Circular Criticals (Rooted Soul)':1, 'Vacuous Tissue (Frigid Soul)':1, 'Glitterbug (Squishy Soul)':1}, ""],
         ]
     defaultTiers['Breeding'] = {
         0: {

@@ -34,8 +34,6 @@ humanReadableClasses = {
 def getHumanReadableClasses(classNumber):
     return humanReadableClasses.get(classNumber, f"Unknown class: {classNumber}")
 
-
-
 def getSpecificSkillLevelsList(inputJSON, playerCount, desiredSkill):
     counter = 0
     skillLevelsList = []

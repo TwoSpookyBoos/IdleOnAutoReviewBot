@@ -22,7 +22,21 @@ def getUnusedForgeSlotsCount(inputJSON):
     return unusedForgeSlotsCount
 
 
-def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, characterDict):
+def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, characterDict) -> AdviceSection:
+    smithing_AdviceDict = {
+        "CashPoints": [],
+        "MonsterPoints": [],
+        "ForgeUpgrades": [],
+        "EmptyForgeSlots": []
+    }
+    smithing_AdviceGroupDict = {}
+    smithing_AdviceSection = AdviceSection(
+        name="Smithing",
+        tier="Not Yet Evaluated",
+        header="Best Smithing tier met: Not Yet Evaluated. Recommended Smithing actions",
+        picture="Smithing_Infinity_Hammer.png"
+    )
+
     tier_CashPoints = 0
     tier_MonsterPoints = 0
     tier_ForgeTotals = 0
@@ -73,23 +87,9 @@ def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, charact
     advice_CombinedSmithing = ""
     advice_UnusedForgeSlots = ""
 
-    smithing_AdviceDict = {
-        "CashPoints": [],
-        "MonsterPoints": [],
-        "ForgeUpgrades": [],
-        "EmptyForgeSlots": []
-    }
-    smithing_AdviceGroupDict = {}
-    smithing_AdviceSection = AdviceSection(
-        name="Smithing",
-        tier="Not Yet Evaluated",
-        header="Best Smithing tier met: Not Yet Evaluated. Recommended Smithing actions",
-        picture="Smithing_Infinity_Hammer.png"
-    )
-
     #Total up all of the purchases across all current characters
     counter = 0
-    while counter < playerCount:
+    while counter < len(characterDict):
         try:
             playerCashPoints.append(int(inputJSON["AnvilPAstats_"+str(counter)][1]))
             playerMonsterPoints.append(int(inputJSON["AnvilPAstats_" + str(counter)][2]))
@@ -235,6 +235,7 @@ def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, charact
     #Print out all the final smithing info
     overall_SmithingTier = min(tier_CashPoints, tier_MonsterPoints, tier_ForgeTotals)
     tier_section = f"{overall_SmithingTier}/{max_tier}"
+    smithing_AdviceSection.pinchy_rating = overall_SmithingTier
     smithing_AdviceSection.tier = tier_section
     if overall_SmithingTier == max_tier:
         advice_CombinedSmithing = ["Best Smithing tier met: " + str(overall_SmithingTier) + "/" + str(max_tier) + ". Recommended Smithing actions:", "Nada. You best ❤️", "", "", advice_UnusedForgeSlots]
@@ -244,4 +245,4 @@ def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, charact
         smithing_AdviceSection.header = f"Best Smithing tier met: {tier_section}. Recommended Smithing actions"
         smithing_AdviceSection.groups = smithing_AdviceGroupDict.values()
     smithingPR = progressionResults.progressionResults(overall_SmithingTier, advice_CombinedSmithing, "")
-    return {"PR": smithingPR, "AdviceSection": smithing_AdviceSection}
+    return smithing_AdviceSection

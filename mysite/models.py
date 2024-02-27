@@ -11,7 +11,7 @@ class Character:
         self.character_index: int = character_index
         self.character_name: str = character_name
         self.class_name: str = class_name
-        self.class_name_icon: str = class_name + "-icon"
+        self.class_name_icon: str = class_name.replace(" ", "-") + "-icon"
         self.base_class: str = base_class
         self.sub_class: str = sub_class
         self.elite_class: str = elite_class
@@ -31,7 +31,74 @@ class Character:
         self.sailing_level: int = all_skill_levels['Sailing']
         self.divinity_level: int = all_skill_levels['Divinity']
         self.gaming_level: int = all_skill_levels['Gaming']
+        self.gaming_level: int = all_skill_levels['Farming']
+        self.gaming_level: int = all_skill_levels['Sneaking']
+        self.gaming_level: int = all_skill_levels['Summoning']
+        self.apoc_dict: dict = {
+            "ZOW": {
+                "Basic W1 Enemies": [],
+                "Basic W2 Enemies": [],
+                "Basic W3 Enemies": [],
+                "Basic W4 Enemies": [],
+                "Basic W5 Enemies": [],
+                "Basic W6 Enemies": [],
+                "Easy Extras": [],
+                "Medium Extras": [],
+                "Difficult Extras": [],
+                "Impossible": [],
+                "Total": 0
+            },
+            "CHOW": {
+                "Basic W1 Enemies": [],
+                "Basic W2 Enemies": [],
+                "Basic W3 Enemies": [],
+                "Basic W4 Enemies": [],
+                "Basic W5 Enemies": [],
+                "Basic W6 Enemies": [],
+                "Easy Extras": [],
+                "Medium Extras": [],
+                "Difficult Extras": [],
+                "Impossible": [],
+                "Total": 0
+            },
+            "MEOW": {
+                "Basic W1 Enemies": [],
+                "Basic W2 Enemies": [],
+                "Basic W3 Enemies": [],
+                "Basic W4 Enemies": [],
+                "Basic W5 Enemies": [],
+                "Basic W6 Enemies": [],
+                "Easy Extras": [],
+                "Medium Extras": [],
+                "Difficult Extras": [],
+                "Impossible": [],
+                "Total": 0
+            }
+        }
 
+    def addUnmetApoc(self, apocType: str, apocRating: str, mapInfoList: list):
+        self.apoc_dict[apocType][apocRating].append(mapInfoList)
+
+    def increaseApocTotal(self, apocType: str):
+        self.apoc_dict[apocType]["Total"] += 1
+
+    def sortApocByProgression(self):
+        for apocType in self.apoc_dict:
+            for difficulty in self.apoc_dict[apocType]:
+                if difficulty != "Total":
+                    if len(self.apoc_dict[apocType][difficulty]) > 0:
+                        self.apoc_dict[apocType][difficulty] = sorted(self.apoc_dict[apocType][difficulty], key=lambda item: item[2], reverse=True)
+
+    def __str__(self):
+        return self.character_name
+
+    def __int__(self):
+        return self.character_index
+
+    def __bool__(self):
+        #If someone creates a character but never logs into them, that character will have no levels available in the JSON.
+        #The code to find combat and skill levels defaults to 0s when that scenario happens. This will make sure the character has been logged into before.
+        return self.combat_level >= 1
 
 class WorldName(Enum):
     PINCHY = "Pinchy"
@@ -208,11 +275,12 @@ class AdviceSection(AdviceBase):
         picture (str): image file name to use as header icon
         collapse (bool | None): should the section be collapsed on load?
         groups (list<AdviceGroup>): a list of `AdviceGroup` objects, each in its own box and bg colour
-        pinchy_rating (str): Pinchy rating for this section
+        pinchy_rating (int): Tier to pass into Pinchy for this section
+        pinchy_placement (str): Placement determined by Pinchy, based on pinchy_rating
     """
     _children = "groups"
 
-    def __init__(self, name: str, tier: str, header: str, picture: str | None = None, collapse: bool | None = None, groups: list[AdviceGroup] = [], pinchy_rating: str = "", **extra):
+    def __init__(self, name: str, tier: str, header: str, picture: str | None = None, collapse: bool | None = None, groups: list[AdviceGroup] = [], pinchy_rating: int = 0, **extra):
         super().__init__(collapse, **extra)
 
         self.name: str = name
@@ -220,7 +288,7 @@ class AdviceSection(AdviceBase):
         self._raw_header: str = header
         self.picture: str = picture
         self._groups: list[AdviceGroup] = groups
-        self.pinchy_rating: str = pinchy_rating
+        self.pinchy_rating: int = pinchy_rating
 
     @property
     def header(self) -> str:

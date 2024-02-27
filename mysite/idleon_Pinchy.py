@@ -35,13 +35,13 @@ class Threshold:
     EARLY_W5 = "Early W5"
     MID_W5 = "Mid W5"
     LATE_W5 = "Late W5"
-    EARLY_W6_PREP = "Early W6 Prep"
-    SOLID_W6_PREP = "Solid W6 Prep"
-    W6_WAITING_ROOM = "W6 Waiting Room"
-    # EARLY_W6 = "Early W6"
-    # MID_W6 = "Mid W6"
-    # LATE_W6 = "Late W6"
-    MAX_TIER = "Max for v1.91"
+    EARLY_W6 = "Early W6"
+    MID_W6 = "Mid W6"
+    LATE_W6 = "Late W6"
+    EARLY_W7_PREP = "Early W7 Prep"
+    SOLID_W7_PREP = "Solid W7 Prep"
+    W7_WAITING_ROOM = "W7 Waiting Room"
+    MAX_TIER = "Max for v2.01"
     PLACEHOLDER = "Placeholder"
 
     thresholdNames = [
@@ -50,8 +50,8 @@ class Threshold:
         EARLY_W3, MID_W3, LATE_W3,
         EARLY_W4, MID_W4, LATE_W4,
         EARLY_W5, MID_W5, LATE_W5,
-        EARLY_W6_PREP, SOLID_W6_PREP, W6_WAITING_ROOM,
-        # EARLY_W6, MID_W6, LATE_W6,
+        EARLY_W6, MID_W6, LATE_W6,
+        EARLY_W7_PREP, SOLID_W7_PREP, W7_WAITING_ROOM,
         MAX_TIER,
         PLACEHOLDER
     ]
@@ -139,18 +139,18 @@ class Placements(dict):
 
     sectionThresholds = {
         # [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,99] #template
-        #               W1   W2          W3              W4              W5              W6              Max   Placeholder
-        COMBAT_LEVELS: [0,   3, 7, 8,    10, 14, 15,     16, 17, 18,     19, 21, 23,     25, 27, 28,     29,   99],
-        STAMPS:        [0,   1, 2, 3,    4,  5,  6,      7,  8,  9,      10, 11, 15,     22, 28, 34,     36,   99],
-        BRIBES:        [0,   1, 1, 1,    2,  2,  3,      3,  3,  3,      4,  4,  4,      5,  5,  5,      5,    99],
-        SMITHING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  2,  3,      4,  5,  6,      6,    99],
-        BUBBLES:       [0,   0, 0, 1,    1,  1,  1,      2,  2,  2,      3,  4,  5,      7,  12, 18,     23,   99],
-        VIALS:         [0,   0, 0, 0,    0,  0,  0,      1,  2,  3,      4,  5,  6,      7,  16, 19,     20,   99],
-        P2W:           [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  1,      1,  1,  1,      1,    99],
-        REFINERY:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  1,  2,      3,  4,  5,      6,    99],
-        SALT_LICK:     [0,   0, 0, 0,    0,  0,  0,      0,  0,  1,      2,  3,  4,      5,  6,  7,      10,   99],
-        PRAYERS:       [0,   0, 0, 0,    0,  0,  1,      1,  2,  3,      3,  4,  5,      5,  6,  7,      7,    99],
-        DEATH_NOTE:    [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  4,  5,      12, 15, 19,     23,   99],
+        #               W1   W2          W3              W4              W5              W6              W7              Max   Placeholder
+        COMBAT_LEVELS: [0,   3, 7, 8,    10, 14, 15,     16, 17, 18,     19, 21, 23,     24, 25, 27,     28, 29, 29,     29,   99],
+        STAMPS:        [0,   1, 2, 3,    4,  5,  6,      7,  8,  9,      10, 11, 13,     16, 19, 22,     26, 30, 34,     36,   99],
+        BRIBES:        [0,   1, 1, 1,    2,  2,  2,      3,  3,  3,      4,  4,  4,      5,  5,  5,      5, 5, 5,        5,    99],
+        SMITHING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  2,  3,      4,  5,  6,      6, 6, 6,        6,    99],
+        BUBBLES:       [0,   0, 0, 0,    0,  1,  1,      2,  2,  2,      3,  4,  5,      7,  9, 14,      17, 19, 21,     23,   99],
+        VIALS:         [0,   0, 0, 0,    0,  0,  0,      1,  2,  3,      4,  4,  5,      6,  6, 7,       14, 16, 19,     20,   99],
+        P2W:           [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  1,      1,  1,  1,      1, 1, 1,        1,    99],
+        REFINERY:      [0,   0, 0, 0,    0,  0,  0,      1,  1,  2,      3,  4,  5,      5,  5,  5,      5, 5, 5,        5,    99],
+        SALT_LICK:     [0,   0, 0, 0,    0,  0,  0,      0,  0,  1,      2,  3,  4,      5,  5,  6,      7, 8, 9,        10,   99],
+        PRAYERS:       [0,   0, 0, 0,    0,  0,  1,      1,  2,  2,      3,  3,  4,      4,  5,  6,      7, 7, 7,        7,    99],
+        DEATH_NOTE:    [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  4,  5,      7, 9, 11,       17, 21, 24,     26,   99],
     }
     section_count = len(sectionThresholds)
 
@@ -243,25 +243,22 @@ def sort_pinchy_reviews(dictOfPRs) -> Placements:
 
 # https://idleon.wiki/wiki/Portal_Requirements
 portalOpeningKills = [
-    # (Threshold.LATE_W6,       260, 8000000),  # W6 Sprout Spirits
-    # (Threshold.MID_W6,        256,  400000),  # W6 Bamboo Spirits
-    # (Threshold.EARLY_W6,      251,   30000),  # W6 Ceramic Spirits
-    # Until W6 drops, Max = 1b+ sample
-    # Until W6 drops, W6 waiting room = DeathNote tier 19+
-    # Until W6 drops, Solid W6 prep = DeathNote tier 15+
-    (Threshold.EARLY_W6_PREP, 213,   60000),  # W5 Tremor Wurms
-    (Threshold.LATE_W5,       210, 3000000),  # W5 Fire Spirits
-    (Threshold.MID_W5,        205,  125000),  # W5 Stiltmoles
-    (Threshold.EARLY_W5,      201,   25000),  # W5 Suggmas
-    (Threshold.LATE_W4,       160,  190000),  # W4 Clammies
-    (Threshold.MID_W4,        155,   40000),  # W4 Soda Cans
-    (Threshold.EARLY_W4,      151,    5000),  # W4 Purp Mushrooms
-    (Threshold.LATE_W3,       110,   18000),  # W3 Quenchies
-    (Threshold.MID_W3,        106,    6000),  # W3 Mamooths
-    (Threshold.EARLY_W3,      101,    1000),  # W3 Sheepies
-    (Threshold.LATE_W2,        62,    3000),  # W2 Tysons
-    (Threshold.MID_W2,         57,    1200),  # W2 Mafiosos
-    (Threshold.EARLY_W2,       51,     250),  # W2 Sandy Pots
+    (Threshold.EARLY_W7_PREP, 264,      100),  #W6 Samurai Spirits
+    (Threshold.LATE_W6,       260, 25000000),  # W6 Ceramic Spirits
+    (Threshold.MID_W6,        256,  1100000),  # W6 Bamboo Spirits
+    (Threshold.EARLY_W6,      251,    30000),  # W6 Sprout Spirits
+    (Threshold.LATE_W5,       210,  3000000),  # W5 Fire Spirits
+    (Threshold.MID_W5,        205,   125000),  # W5 Stiltmoles
+    (Threshold.EARLY_W5,      201,    25000),  # W5 Suggmas
+    (Threshold.LATE_W4,       160,   190000),  # W4 Clammies
+    (Threshold.MID_W4,        155,    40000),  # W4 Soda Cans
+    (Threshold.EARLY_W4,      151,     5000),  # W4 Purp Mushrooms
+    (Threshold.LATE_W3,       110,    18000),  # W3 Quenchies
+    (Threshold.MID_W3,        106,     6000),  # W3 Mamooths
+    (Threshold.EARLY_W3,      101,     1000),  # W3 Sheepies
+    (Threshold.LATE_W2,        62,     3000),  # W2 Tysons
+    (Threshold.MID_W2,         57,     1200),  # W2 Mafiosos
+    (Threshold.EARLY_W2,       51,      250),  # W2 Sandy Pots
 ]
 maxExpectedThresholdFromMaps = portalOpeningKills[0][0]
 
@@ -297,12 +294,12 @@ def tier_from_monster_kills(dictOfPRs, inputJSON, playerCount) -> Threshold:
 
     highestPrint = getHighestPrint(inputJSON)
     mobKillThresholds = []
-    if highestPrint >= 999000000:
-        expectedThreshold = Threshold.fromname(Threshold.W6_WAITING_ROOM)
-    elif dictOfPRs[Placements.DEATH_NOTE] >= 19:
-        expectedThreshold = Threshold.fromname(Threshold.SOLID_W6_PREP)
-    elif dictOfPRs[Placements.DEATH_NOTE] >= 15:
-        expectedThreshold = Threshold.fromname(Threshold.EARLY_W6_PREP)
+    if highestPrint >= 9999000000:
+        expectedThreshold = Threshold.fromname(Threshold.W7_WAITING_ROOM)
+    elif dictOfPRs[Placements.DEATH_NOTE] >= 24:
+        expectedThreshold = Threshold.fromname(Threshold.SOLID_W7_PREP)
+    elif dictOfPRs[Placements.DEATH_NOTE] >= 21:
+        expectedThreshold = Threshold.fromname(Threshold.EARLY_W7_PREP)
     else:
         # logger.info(f"Starting to review map kill counts per player because expectedIndex still W1: {dictOfPRs['Construction Death Note']}")
         for playerCounter in range(0, playerCount):
