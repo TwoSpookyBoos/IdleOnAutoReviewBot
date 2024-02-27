@@ -317,7 +317,7 @@ def setDefaultTiers():
             "Tier": 6,
             "TerritoriesUnlocked": 20,
             "ArenaWaves": 200,
-            "Shinies": { "Faster Shiny Pet Lv Up Rate": 24 },
+            "Shinies": { "Faster Shiny Pet Lv Up Rate": 24},
             "ShinyNotes": "Start by focusing on pets that increase Shiny Speed rate. This will decrease the amount of time needed to level up pets in the future."
             },
         7: {
@@ -328,7 +328,7 @@ def setDefaultTiers():
                 "Bonuses from All Meals": 10,
                 "Infinite Star Signs": 25,
                 "Base Efficiency for All Skills": 20,
-                "Base Critter Per Trap": 10 },
+                "Base Critter Per Trap": 10},
             "ShinyNotes": ""
             },
         8: {
@@ -349,7 +349,6 @@ def setDefaultTiers():
             "Shinies": {
                 "Multikill Per Tier": 20,
                 "Total Damage": 25,
-                "World 6...?": 35
                 },
             "ShinyNotes": ""
             },
@@ -359,10 +358,7 @@ def setDefaultTiers():
             "ArenaWaves": 200,
             "Shinies": {
                 "Faster Shiny Pet Lv Up Rate": 28,
-                "Infinite Star Signs": 26,
-                "Base WIS": 15,
-                "Base STR": 15,
-                "Base AGI": 15,
+                "Infinite Star Signs": 38,
                 },
             "ShinyNotes": ""
             }
