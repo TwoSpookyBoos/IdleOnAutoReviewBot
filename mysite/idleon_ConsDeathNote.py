@@ -488,10 +488,13 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, characterDict):
         "W4": [],
         "W5": [],
         "W6": [],
-        "ZOW": [],
-        "CHOW": [],
-        "MEOW": []
+        "ZOW": {},
+        "CHOW": {},
+        "MEOW": {}
     }
+    zow_TotalAdvices = 0
+    chow_TotalAdvices = 0
+    meow_TotalAdvices = 0
     deathnote_AdviceGroupDict = {}
     deathnote_AdviceSection = AdviceSection(
         name="Death Note",
@@ -624,20 +627,17 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, characterDict):
                     apocToNextTier['ZOW'] = tier[9] - highestZOWCount
                     for difficultyName in apocDifficultyNameList:
                         if len(characterDict[highestZOWCountIndex].apoc_dict['ZOW'][difficultyName]) > 0:
-                            if len(deathnote_AdviceDict['ZOW']) < maxEnemiesPerGroup - 1:
-                                deathnote_AdviceDict["ZOW"].append(Advice(
-                                    label=difficultyName,
-                                    item_name="",
-                                    progression=apocDifficultyCountDict['ZOW'][difficultyName] - len(characterDict[highestZOWCountIndex].apoc_dict['ZOW'][difficultyName]),
-                                    goal=apocDifficultyCountDict['ZOW'][difficultyName])
-                                )
+                            if zow_TotalAdvices < maxEnemiesPerGroup - 1:
+                                if difficultyName not in deathnote_AdviceDict['ZOW']:
+                                    deathnote_AdviceDict['ZOW'][difficultyName] = []
                                 for enemy in characterDict[highestZOWCountIndex].apoc_dict['ZOW'][difficultyName]:
-                                    if len(deathnote_AdviceDict["ZOW"]) < maxEnemiesPerGroup:
-                                        deathnote_AdviceDict["ZOW"].append(Advice(
+                                    if zow_TotalAdvices < maxEnemiesPerGroup:
+                                        deathnote_AdviceDict["ZOW"][difficultyName].append(Advice(
                                             label=enemy[0],
                                             item_name=enemy[3],
                                             progression=f"{enemy[2]}%"),
                                         )
+                                        zow_TotalAdvices += 1
                                     else:
                                         if 'ZOW' not in maxedGroupsList:
                                             maxedGroupsList.append('ZOW')
@@ -654,20 +654,17 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, characterDict):
                     apocToNextTier['CHOW'] = tier[10] - highestCHOWCount
                     for difficultyName in apocDifficultyNameList:
                         if len(characterDict[highestCHOWCountIndex].apoc_dict['CHOW'][difficultyName]) > 0:
-                            if len(deathnote_AdviceDict['CHOW']) < maxEnemiesPerGroup - 1:
-                                deathnote_AdviceDict["CHOW"].append(Advice(
-                                    label=difficultyName,
-                                    item_name="",
-                                    progression=apocDifficultyCountDict['CHOW'][difficultyName] - len(characterDict[highestCHOWCountIndex].apoc_dict['CHOW'][difficultyName]),
-                                    goal=apocDifficultyCountDict['CHOW'][difficultyName])
-                                )
+                            if chow_TotalAdvices < maxEnemiesPerGroup - 1:
+                                if difficultyName not in deathnote_AdviceDict['CHOW']:
+                                    deathnote_AdviceDict['CHOW'][difficultyName] = []
                                 for enemy in characterDict[highestCHOWCountIndex].apoc_dict['CHOW'][difficultyName]:
-                                    if len(deathnote_AdviceDict["CHOW"]) < maxEnemiesPerGroup:
-                                        deathnote_AdviceDict["CHOW"].append(Advice(
+                                    if chow_TotalAdvices < maxEnemiesPerGroup:
+                                        deathnote_AdviceDict["CHOW"][difficultyName].append(Advice(
                                             label=enemy[0],
                                             item_name=enemy[3],
                                             progression=f"{enemy[2]}%"),
                                         )
+                                        chow_TotalAdvices += 1
                                     else:
                                         if 'CHOW' not in maxedGroupsList:
                                             maxedGroupsList.append('CHOW')
@@ -685,20 +682,17 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, characterDict):
                     #for difficultyIndex in range(0, len(apocDifficultyNameList)):
                     for difficultyName in apocDifficultyNameList:
                         if len(characterDict[meowBBIndex].apoc_dict['MEOW'][difficultyName]) > 0:
-                            if len(deathnote_AdviceDict["MEOW"]) < maxEnemiesPerGroup - 1:
-                                deathnote_AdviceDict["MEOW"].append(Advice(
-                                    label=difficultyName,
-                                    item_name="",
-                                    progression=apocDifficultyCountDict['MEOW'][difficultyName] - len(characterDict[meowBBIndex].apoc_dict['MEOW'][difficultyName]),
-                                    goal=apocDifficultyCountDict['MEOW'][difficultyName])
-                                )
+                            if meow_TotalAdvices < maxEnemiesPerGroup - 1:
+                                if difficultyName not in deathnote_AdviceDict['MEOW']:
+                                    deathnote_AdviceDict['MEOW'][difficultyName] = []
                                 for enemy in characterDict[meowBBIndex].apoc_dict['MEOW'][difficultyName]:
-                                    if len(deathnote_AdviceDict["MEOW"]) < maxEnemiesPerGroup:
-                                        deathnote_AdviceDict["MEOW"].append(Advice(
+                                    if meow_TotalAdvices < maxEnemiesPerGroup:
+                                        deathnote_AdviceDict["MEOW"][difficultyName].append(Advice(
                                             label=enemy[0],
                                             item_name=enemy[3],
                                             progression=f"{enemy[2]}%"),
                                         )
+                                        meow_TotalAdvices += 1
                                     else:
                                         if 'MEOW' not in maxedGroupsList:
                                             maxedGroupsList.append('MEOW')
