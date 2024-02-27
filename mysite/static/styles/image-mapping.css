@@ -62,6 +62,10 @@
   background-image: url("https://idleon.wiki/wiki/images/e/ed/Rat_Idle.gif");
 }
 
+.boop::before {
+  background-image: url("https://idleon.wiki/wiki/images/f/f8/Boop_Idle.gif");
+}
+
 .dr-defecaus::before {
   background-image: url("https://idleon.wiki/wiki/images/5/5c/Dr_Defecaus_Idle.gif");
 }
@@ -96,6 +100,10 @@
 
 .pincermin::before {
   background-image: url("https://idleon.wiki/wiki/images/f/f8/Pincermin_Idle.gif");
+}
+
+.mashed-potato::before {
+  background-image: url("https://idleon.wiki/wiki/images/5/50/Mashed_Potato_Idle.gif");
 }
 
 .tyson::before {
@@ -292,6 +300,62 @@
 
 .kattlecruk::before {
   background-image: url("https://idleon.wiki/wiki/images/d/d0/Kattlecruk_%28boss%29.png");
+}
+
+.sprout-spirit::before {
+  background-image: url("https://idleon.wiki/wiki/images/4/4c/Sprout_Spirit_Card.png");
+}
+
+.ricecake::before {
+  background-image: url("https://idleon.wiki/wiki/images/c/c5/Ricecake_Card.png");
+}
+
+.river-spirit::before {
+  background-image: url("https://idleon.wiki/wiki/images//f/f1/River_Spirit_Card.png");
+}
+
+.baby-troll::before {
+  background-image: url("https://idleon.wiki/wiki/images/9/97/Baby_Troll_Card.png");
+}
+
+.woodlin-spirit::before {
+  background-image: url("https://idleon.wiki/wiki/images/0/04/Woodlin_Spirit_Card.png");
+}
+
+.bamboo-spirit::before {
+  background-image: url("https://idleon.wiki/wiki/images/b/b8/Bamboo_Spirit_Card.png");
+}
+
+.lantern-spirit::before {
+  background-image: url("https://idleon.wiki/wiki/images/4/48/Lantern_Spirit_Card.png");
+}
+
+.mama-troll::before {
+  background-image: url("https://idleon.wiki/wiki/images/c/c0/Mama_Troll_Card.png");
+}
+
+.leek-spirit::before {
+  background-image: url("https://idleon.wiki/wiki/images/c/c6/Leek_Spirit_Card.png");
+}
+
+.ceramic-spirit::before {
+  background-image: url("https://idleon.wiki/wiki/images/b/b6/Ceramic_Spirit_Card.png");
+}
+
+.skydoggie-spirit::before {
+  background-image: url("https://idleon.wiki/wiki/images/4/47/Skydoggie_Spirit_Card.png");
+}
+
+.royal-egg::before {
+  background-image: url("https://idleon.wiki/wiki/images/0/0d/Royal_Egg_Card.png");
+}
+
+.minichief-spirit::before {
+  background-image: url("https://idleon.wiki/wiki/images/8/80/Minichief_Spirit_Card.png");
+}
+
+.samurai-guardian::before {
+  background-image: url("https://idleon.wiki/wiki/images/7/74/Samurai_Guardian_Card.png");
 }
 
 .bubbles::before {

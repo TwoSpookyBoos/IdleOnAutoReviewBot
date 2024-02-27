@@ -42,9 +42,10 @@ class Character:
                 "Basic W4 Enemies": [],
                 "Basic W5 Enemies": [],
                 "Basic W6 Enemies": [],
-                "Easy Cleanup": [],
-                "Medium Cleanup": [],
-                "Difficult Cleanup": [],
+                "Easy Extras": [],
+                "Medium Extras": [],
+                "Difficult Extras": [],
+                "Impossible": [],
                 "Total": 0
             },
             "CHOW": {
@@ -54,9 +55,10 @@ class Character:
                 "Basic W4 Enemies": [],
                 "Basic W5 Enemies": [],
                 "Basic W6 Enemies": [],
-                "Easy Cleanup": [],
-                "Medium Cleanup": [],
-                "Difficult Cleanup": [],
+                "Easy Extras": [],
+                "Medium Extras": [],
+                "Difficult Extras": [],
+                "Impossible": [],
                 "Total": 0
             },
             "MEOW": {
@@ -66,9 +68,10 @@ class Character:
                 "Basic W4 Enemies": [],
                 "Basic W5 Enemies": [],
                 "Basic W6 Enemies": [],
-                "Easy Cleanup": [],
-                "Medium Cleanup": [],
-                "Difficult Cleanup": [],
+                "Easy Extras": [],
+                "Medium Extras": [],
+                "Difficult Extras": [],
+                "Impossible": [],
                 "Total": 0
             }
         }
@@ -78,6 +81,13 @@ class Character:
 
     def increaseApocTotal(self, apocType: str):
         self.apoc_dict[apocType]["Total"] += 1
+
+    def sortApocByProgression(self):
+        for apocType in self.apoc_dict:
+            for difficulty in self.apoc_dict[apocType]:
+                if difficulty != "Total":
+                    if len(self.apoc_dict[apocType][difficulty]) > 0:
+                        self.apoc_dict[apocType][difficulty] = sorted(self.apoc_dict[apocType][difficulty], key=lambda item: item[2], reverse=True)
 
     def __str__(self):
         return self.character_name
