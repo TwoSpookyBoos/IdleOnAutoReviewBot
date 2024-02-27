@@ -688,7 +688,7 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers, characterDict)
         if int(bubble) <= currentlyAvailableBubblesIndex:
             named_all_alchemyBubblesDict[getReadableBubbleNames(bubble, "Orange")] = int(raw_orange_alchemyBubblesDict[bubble])
     #print(named_all_alchemyBubblesDict)
-    for bubble in raw_orange_alchemyBubblesDict:
+    for bubble in raw_green_alchemyBubblesDict:
         if int(bubble) <= currentlyAvailableBubblesIndex:
             named_all_alchemyBubblesDict[getReadableBubbleNames(bubble, "Green")] = int(raw_green_alchemyBubblesDict[bubble])
     #print(named_all_alchemyBubblesDict)
