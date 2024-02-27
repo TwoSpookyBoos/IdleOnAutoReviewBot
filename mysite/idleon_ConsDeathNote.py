@@ -514,12 +514,10 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, characterDict):
     meowBBIndex = getMEOWBBIndex(bbCharactersIndexList)
     fullDeathNoteDict = getDeathNoteKills(inputJSON, characterDict)
 
-    tier_zows = 0
-    tier_chows = 0
-    tier_meows = 0
     max_tier = progressionTiers[-1][0]
     overall_DeathNoteTier = 0
     worldIndexes = []
+    maxedGroupsList = []
     tier_combo = {}
     for number in range(1, currentMaxWorld + 1):
         worldIndexes.append(number)
@@ -614,7 +612,8 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, characterDict):
                                 progression=f"{enemy[2]}%")
                             )
                         else:
-                            break
+                            if worldIndex not in maxedGroupsList:
+                                maxedGroupsList.append(worldIndex)
 
         # ZOW
         if tier_combo['ZOW'] >= (tier[0] - 1):  # Only evaluate if they already met the previous tier's requirement
@@ -639,6 +638,12 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, characterDict):
                                             item_name=enemy[3],
                                             progression=f"{enemy[2]}%"),
                                         )
+                                    else:
+                                        if 'ZOW' not in maxedGroupsList:
+                                            maxedGroupsList.append('ZOW')
+                            else:
+                                if 'ZOW' not in maxedGroupsList:
+                                    maxedGroupsList.append('ZOW')
 
         # CHOW
         if tier_combo['CHOW'] >= (tier[0] - 1):  # Only evaluate if they already met the previous tier's requirement
@@ -663,6 +668,12 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, characterDict):
                                             item_name=enemy[3],
                                             progression=f"{enemy[2]}%"),
                                         )
+                                    else:
+                                        if 'CHOW' not in maxedGroupsList:
+                                            maxedGroupsList.append('CHOW')
+                            else:
+                                if 'CHOW' not in maxedGroupsList:
+                                    maxedGroupsList.append('CHOW')
 
         # MEOW
         if tier_combo['MEOW'] >= (tier[0] - 1):  # Only evaluate if they already met the previous tier's requirement
@@ -688,6 +699,12 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, characterDict):
                                             item_name=enemy[3],
                                             progression=f"{enemy[2]}%"),
                                         )
+                                    else:
+                                        if 'MEOW' not in maxedGroupsList:
+                                            maxedGroupsList.append('MEOW')
+                            else:
+                                if 'MEOW' not in maxedGroupsList:
+                                    maxedGroupsList.append('MEOW')
 
     #Generate Advice Groups
     #Basic Worlds
@@ -696,8 +713,10 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, characterDict):
             tier=str(tier_combo[worldIndex]),
             pre_string=f"Kill more W{worldIndex} enemies to reach a minimum skull of {fullDeathNoteDict[worldIndex].next_lowest_skull_name}",
             advices=deathnote_AdviceDict[f"W{worldIndex}"],
-            post_string=f"Up to {maxEnemiesPerGroup} remaining enemies shown, sorted by completion %"
+            post_string=""
         )
+        if worldIndex in maxedGroupsList:
+            deathnote_AdviceGroupDict[f"W{worldIndex}"].post_string = f"Up to {maxEnemiesPerGroup} remaining enemies shown, sorted by completion %"
 
     # ZOW
     if highestZOWCountIndex is not None:
@@ -705,24 +724,30 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, characterDict):
             tier=str(tier_combo['ZOW']),
             pre_string=f"Complete {apocToNextTier['ZOW']} more ZOW{pl(['dummy'] * apocToNextTier['ZOW'])} with {characterDict[highestZOWCountIndex].character_name}",
             advices=deathnote_AdviceDict['ZOW'],
-            post_string=f"Up to {maxEnemiesPerGroup} remaining enemies shown, sorted by completion %"
+            post_string=""
         )
+        if 'ZOW' in maxedGroupsList:
+            deathnote_AdviceGroupDict['ZOW'].post_string = f"Up to {maxEnemiesPerGroup} remaining enemies shown, sorted by completion %"
     # CHOW
     if highestCHOWCountIndex is not None:
         deathnote_AdviceGroupDict['CHOW'] = AdviceGroup(
             tier=str(tier_combo['CHOW']),
             pre_string=f"Complete {apocToNextTier['CHOW']} more CHOW{pl(['dummy'] * apocToNextTier['CHOW'])} with {characterDict[highestCHOWCountIndex].character_name}",
             advices=deathnote_AdviceDict['CHOW'],
-            post_string=f"Up to {maxEnemiesPerGroup} remaining enemies shown, sorted by completion %"
+            post_string=""
         )
+        if 'CHOW' in maxedGroupsList:
+            deathnote_AdviceGroupDict['CHOW'].post_string = f"Up to {maxEnemiesPerGroup} remaining enemies shown, sorted by completion %"
     # MEOW
     if meowBBIndex is not None:
         deathnote_AdviceGroupDict['MEOW'] = AdviceGroup(
             tier=str(tier_combo['MEOW']),
             pre_string=f"Complete {apocToNextTier['MEOW']} more Super CHOW{pl(['dummy']*apocToNextTier['MEOW'])} with {characterDict[meowBBIndex].character_name}",
             advices=deathnote_AdviceDict['MEOW'],
-            post_string=f"Up to {maxEnemiesPerGroup} remaining enemies shown, sorted by completion %"
+            post_string=""
         )
+        if 'MEOW' in maxedGroupsList:
+            deathnote_AdviceGroupDict['MEOW'].post_string = f"Up to {maxEnemiesPerGroup} remaining enemies shown, sorted by completion %"
 
     #Generate Advice Section
     overall_DeathNoteTier = min(max_tier, tier_combo[1], tier_combo[2], tier_combo[3],

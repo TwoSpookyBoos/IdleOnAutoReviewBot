@@ -78,6 +78,7 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
         building_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
         return building_AdviceSection
 
+    maxBuildingsPerGroup = 10
     playerBuildings = parseConsBuildingstoLists(inputJSON)
     influencers = getInfluencers(inputJSON)
     hasBuffs = influencers[0]
@@ -201,13 +202,14 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
             for recommendedBuilding in progressionTiers[counter][2]:
                 #print("ConsBuildings.setConsBuildingsProgressionTier~ ", recommendedBuilding, getBuildingNameFromIndex(recommendedBuilding), playerBuildings[recommendedBuilding], maxLevelList[recommendedBuilding], "Cleared=", (maxLevelList[recommendedBuilding] <= playerBuildings[recommendedBuilding]))
                 if maxLevelList[recommendedBuilding] > playerBuildings[recommendedBuilding]:
-                    building_AdviceDict[counter].append(Advice(
-                        label=getBuildingNameFromIndex(recommendedBuilding),
-                        item_name=getBuildingImageNameFromIndex(recommendedBuilding),
-                        progression=str(playerBuildings[recommendedBuilding]),
-                        goal=str(maxLevelList[recommendedBuilding])
+                    if len(building_AdviceDict[counter]) < maxBuildingsPerGroup:
+                        building_AdviceDict[counter].append(Advice(
+                            label=getBuildingNameFromIndex(recommendedBuilding),
+                            item_name=getBuildingImageNameFromIndex(recommendedBuilding),
+                            progression=str(playerBuildings[recommendedBuilding]),
+                            goal=str(maxLevelList[recommendedBuilding])
+                            )
                         )
-                    )
         except Exception as reason:
             print("ConsBuildings.setConsBuildingsProgressionTier~ EXCEPTION ProgressionTier evaluation error. Counter = ", counter, ", recommendedBuilding = ", recommendedBuilding, ", and Reason:", reason)
         counter += 1
@@ -220,6 +222,8 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
             advices=building_AdviceDict[tierKey],
             post_string=""
         )
+        if len(building_AdviceDict[tierKey]) == maxBuildingsPerGroup:
+            building_AdviceGroupDict[tierKey].post_string = f"Up to {maxBuildingsPerGroup} remaining buildings shown"
 
     #Generate AdviceSection
     building_AdviceSection.groups = building_AdviceGroupDict.values()
