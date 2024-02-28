@@ -25,6 +25,7 @@
     --fg-title: goldenrod;
 
     --border: 1px solid gray;
+    --arrow-border: white;
 
     --fg-error: hsla(0deg, 81%, 26%, 1);
     --bg-error: hsla(0deg, 75%, 78%, 1);
@@ -40,9 +41,7 @@
     --bg-pinchy-banner: linear-gradient(to right, hsla(0deg, 0%, 0%, 45%), hsla(0deg, 0%, 0%, 20%));
     --fg-pinchy-title: var(--fg-title);
     --bg-pinchy-group-odd: hsl(71.54deg 13.68% 37.25%);
-    --bg-pinchy-group-odd-fade: hsl(71.54deg 13.68% 37.25%);
     --bg-pinchy-group-even: hsl(70deg 15.38% 30.59%);
-    --bg-pinchy-group-even-fade: hsl(70deg 15.38% 30.59%);
     --fg-pinchy-subheading: hsla(41deg, 98.23%, 90.3%, 100%);
     --fg-pinchy-subheading-accent: hsla(44deg, 100%, 50%, 100%);
 
@@ -59,29 +58,24 @@
 
     --w1-fg-advice-group: hsl(120deg, 100%, 96%);
     --w1-bg-advice-group-odd: hsl(173.79deg 15.18% 37.45%);
-    --w1-bg-advice-group-odd-fade: hsl(173.79deg 15.18% 37.45%);
     --w1-bg-advice-group-even: hsl(148.75deg 20.34% 53.73%);
-    --w1-bg-advice-group-even-fade: hsl(148.75deg 20.34% 53.73%);
 
     --w2-fg-subheading: hsl(50, 25%, 65%);
     --w2-bg-subheading: hsla(50, 100%, 86%, 0.1);
 
     --w2-fg-advice-group: hsl(50, 100%, 96%);
     --w2-bg-advice-group-odd: hsl(93.33deg 4.43% 39.8%);
-    --w2-bg-advice-group-odd-fade: hsl(93.33deg 4.43% 39.8%);
     --w2-bg-advice-group-even: hsl(60deg 9.45% 49.8%);
-    --w2-bg-advice-group-even-fade: hsl(60deg 9.45% 49.8%);
 
     --w3-fg-subheading: hsl(200, 25%, 65%);
     --w3-bg-subheading: hsla(200, 100%, 86%, 0.1);
 
     --w3-fg-advice-group: hsl(200, 100%, 96%);
     --w3-bg-advice-group-odd: hsl(202.29deg 17.77% 38.63%);
-    --w3-bg-advice-group-odd-fade: hsl(202.29deg 17.77% 38.63%);
     --w3-bg-advice-group-even: hsl(201.7deg 18.58% 49.61%);
-    --w3-bg-advice-group-even-fade: hsl(201.7deg 18.58% 49.61%);
 
     --bg-scrollbar-thumb: gray;
+    --scrollbar-thumb-color: rgba(255, 255, 255, 0.7);
 }
 
 :root.light-mode {
@@ -91,7 +85,9 @@
     --fg-em: black;
     --fg-link: hsla(221deg, 100%, 54%);
     --fg-link-visited: hsla(271deg, 100%, 54%);
-    --fg-title: hsla(145deg, 49%, 31%);
+    --fg-title: green;
+
+    --arrow-border: black;
 
     --bg-aside: white;
     --bg-link: transparent;
@@ -106,8 +102,8 @@
     --fg-pinchy-subheading: hsla(42deg, 62%, 23%);
     --fg-pinchy-subheading-accent: hsla(44deg, 97%, 36%);
 
-    --bg-pinchy-group-odd: hsla(0deg, 0%, 100%, 0.5);
-    --bg-pinchy-group-even: hsla(0deg, 0%, 0%, 20%);
+    --bg-pinchy-group-odd: hsl(44.21deg 46.34% 91.96%);
+    --bg-pinchy-group-even: hsl(48.75deg 20.25% 69.02%);
 
     --bg-general: linear-gradient(to bottom, hsla(0deg, 95%, 90%, 1), hsla(8deg, 95%, 90%, 1), hsla(16deg, 95%, 90%, 1));
     --general-fg-subheading: hsla(0deg, 25%, 15%, 1);
@@ -120,22 +116,24 @@
     --w1-fg-subheading: hsla(145deg, 50%, 29%);
 
     --w1-fg-advice-group: black;
-    --w1-bg-advice-group-odd: hsla(153deg, 52%, 53%, 0.28);
-    --w1-bg-advice-group-even: hsla(151deg, 53%, 53%, 0.43);
+    --w1-bg-advice-group-odd: hsl(151.76deg 32.69% 79.61%);
+    --w1-bg-advice-group-even: hsl(151.15deg 39.39% 74.12%);
 
     --w2-fg-subheading: hsl(50, 50%, 29%);
     --w2-bg-subheading: hsla(50, 100%, 86%, 0.1);
 
     --w2-fg-advice-group: black;
-    --w2-bg-advice-group-odd: hsla(50, 52%, 53%, 0.28);
-    --w2-bg-advice-group-even: hsla(50, 53%, 53%, 0.43);
+    --w2-bg-advice-group-odd: hsl(50deg 29.41% 80%);
+    --w2-bg-advice-group-even: hsl(49.2deg 38.46% 74.51%);
 
     --w3-fg-subheading: hsl(200, 50%, 29%);
     --w3-bg-subheading: hsla(200, 100%, 86%, 0.1);
 
     --w3-fg-advice-group: black;
-    --w3-bg-advice-group-odd: hsla(200, 52%, 53%, 0.28);
-    --w3-bg-advice-group-even: hsla(200, 53%, 53%, 0.43);
+    --w3-bg-advice-group-odd: hsl(201.18deg 32.69% 79.61%);
+    --w3-bg-advice-group-even: hsl(201.18deg 38.93% 74.31%);
+
+    --scrollbar-thumb-color: rgba(0, 0, 0, 0.4);
 
     * {
         text-shadow: none;
@@ -358,19 +356,19 @@ strong:not(.no-collapse):hover,
         &:nth-child(even) {
             background: var(--bg-pinchy-group-even);
             .table::before {
-                background: linear-gradient(to top, transparent, var(--bg-pinchy-group-even-fade));
+                background: linear-gradient(to top, transparent, var(--bg-pinchy-group-even));
             }
             .table::after {
-                background: linear-gradient(to bottom, transparent, var(--bg-pinchy-group-even-fade));
+                background: linear-gradient(to bottom, transparent, var(--bg-pinchy-group-even));
             }
         }
         &:nth-child(odd) {
             background: var(--bg-pinchy-group-odd);
             .table::before {
-                background: linear-gradient(to top, transparent, var(--bg-pinchy-group-odd-fade));
+                background: linear-gradient(to top, transparent, var(--bg-pinchy-group-odd));
             }
             .table::after {
-                background: linear-gradient(to bottom, transparent, var(--bg-pinchy-group-odd-fade));
+                background: linear-gradient(to bottom, transparent, var(--bg-pinchy-group-odd));
             }
         }
     }
@@ -407,19 +405,19 @@ strong:not(.no-collapse):hover,
         &:nth-child(odd) {
             background-color: var(--w1-bg-advice-group-odd);
             .table::before {
-                background: linear-gradient(to top, transparent, var(--w1-bg-advice-group-odd-fade));
+                background: linear-gradient(to top, transparent, var(--w1-bg-advice-group-odd));
             }
             .table::after {
-                background: linear-gradient(to bottom, transparent, var(--w1-bg-advice-group-odd-fade));
+                background: linear-gradient(to bottom, transparent, var(--w1-bg-advice-group-odd));
             }
         }
         &:nth-child(even) {
             background-color: var(--w1-bg-advice-group-even);
             .table::before {
-                background: linear-gradient(to top, transparent, var(--w1-bg-advice-group-even-fade));
+                background: linear-gradient(to top, transparent, var(--w1-bg-advice-group-even));
             }
             .table::after {
-                background: linear-gradient(to bottom, transparent, var(--w1-bg-advice-group-even-fade));
+                background: linear-gradient(to bottom, transparent, var(--w1-bg-advice-group-even));
             }
         }
     }
@@ -444,19 +442,19 @@ strong:not(.no-collapse):hover,
         &:nth-child(odd) {
             background-color: var(--w2-bg-advice-group-odd);
             .table::before {
-                background: linear-gradient(to top, transparent, var(--w2-bg-advice-group-odd-fade));
+                background: linear-gradient(to top, transparent, var(--w2-bg-advice-group-odd));
             }
             .table::after {
-                background: linear-gradient(to bottom, transparent, var(--w2-bg-advice-group-odd-fade));
+                background: linear-gradient(to bottom, transparent, var(--w2-bg-advice-group-odd));
             }
         }
         &:nth-child(even) {
             background-color: var(--w2-bg-advice-group-even);
             .table::before {
-                background: linear-gradient(to top, transparent, var(--w2-bg-advice-group-even-fade));
+                background: linear-gradient(to top, transparent, var(--w2-bg-advice-group-even));
             }
             .table::after {
-                background: linear-gradient(to bottom, transparent, var(--w2-bg-advice-group-even-fade));
+                background: linear-gradient(to bottom, transparent, var(--w2-bg-advice-group-even));
             }
         }
     }
@@ -481,19 +479,19 @@ strong:not(.no-collapse):hover,
         &:nth-child(odd) {
             background-color: var(--w3-bg-advice-group-odd);
             .table::before {
-                background: linear-gradient(to top, transparent, var(--w3-bg-advice-group-odd-fade));
+                background: linear-gradient(to top, transparent, var(--w3-bg-advice-group-odd));
             }
             .table::after {
-                background: linear-gradient(to bottom, transparent, var(--w3-bg-advice-group-odd-fade));
+                background: linear-gradient(to bottom, transparent, var(--w3-bg-advice-group-odd));
             }
         }
         &:nth-child(even) {
             background-color: var(--w3-bg-advice-group-even);
             .table::before {
-                background: linear-gradient(to top, transparent, var(--w3-bg-advice-group-even-fade));
+                background: linear-gradient(to top, transparent, var(--w3-bg-advice-group-even));
             }
             .table::after {
-                background: linear-gradient(to bottom, transparent, var(--w3-bg-advice-group-even-fade));
+                background: linear-gradient(to bottom, transparent, var(--w3-bg-advice-group-even));
             }
         }
     }
@@ -624,7 +622,7 @@ strong:not(.no-collapse):hover,
         }
 
         &::-webkit-scrollbar-thumb {
-            background-color: rgba(255, 255, 255, 0.7);
+            background-color: var(--scrollbar-thumb-color);
         }
 
         li, li a {
@@ -645,6 +643,11 @@ strong:not(.no-collapse):hover,
         grid-column: 1 / span 4;
         background: hsla(0deg, 0%, 0%, 0.4);
         padding: 5px 10px;
+
+        strong {
+            color: white;
+        }
+
     }
     .advice {
         display: flex;
@@ -667,7 +670,7 @@ strong:not(.no-collapse):hover,
         height: 0;
         width: 0;
         border-top: 5px solid transparent;
-        border-left: 10px solid white;
+        border-left: 10px solid var(--arrow-border);
         border-bottom: 5px solid transparent;
         margin: auto 10px;
     }
