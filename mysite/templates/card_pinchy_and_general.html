@@ -23,12 +23,14 @@
         </div>
     </div>
     <div class="collapse-wrapper">
+        <h3 class="subheading collapse-cards">Cards</h3>
+
         <div class="sections">
             <em>Card counts may be off by 1 or 2, due to rounding :( Sorry. I'm trying to find a more accurate list of requirements.</em>
 
             {% for cardset in htmlInput[0][4] %}
             <section>
-                <h3 class="subheading">
+                <h3 class="subheading collapse-cards">
                     <img src="{{ cardset[2] | cards }}" alt="Card Set {{ cardset[2] }}">
                 </h3>
 

@@ -130,4 +130,14 @@ document.addEventListener("DOMContentLoaded", () => {
             showMoreButton.style.display = "block"
         }
     })
+
+    document.querySelectorAll('.collapse-cards').forEach(title => title.onclick = e => {
+        const t = e.currentTarget
+        const siblings = Array.from(t.parentElement.children)
+        const index = siblings.indexOf(t)
+        siblings.forEach(sib => {
+            if (sib === t) return
+            sib.classList.toggle('folded')
+        })
+    })
 });
