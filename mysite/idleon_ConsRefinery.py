@@ -6,13 +6,13 @@ from utils import pl
 from math import floor
 
 saltValuesDict = {
-    # "salt": [advice image name, cycles per Synth cycle, next salt consumption, next salt cycles per Synth cycle]
-    "Red": ["redox-salts", 4, 2, 4],
-    "Orange": ["explosive-salts", 4, 2, 4],
-    "Blue": ["spontaneity-salts", 4, 1, 1],
-    "Green": ["dioxide-synthesis", 1, 2, 1],
-    "Purple": ["purple-salt", 1, 2, 1],
-    "Nullo": ["nullo-salt", 1, 0, 0]
+    # "salt": [advice image name, cycles per Synth cycle, consumption of previous salt, next salt consumption, next salt cycles per Synth cycle]
+    "Red": ["redox-salts", 4, 0, 2, 4],
+    "Orange": ["explosive-salts", 4, 2, 2, 4],
+    "Blue": ["spontaneity-salts", 4, 2, 1, 1],
+    "Green": ["dioxide-synthesis", 1, 1, 2, 1],
+    "Purple": ["purple-salt", 1, 2, 2, 1],
+    "Nullo": ["nullo-salt", 1, 2, 0, 0]
 }
 
 class Salt:
@@ -29,8 +29,9 @@ class Salt:
         if salt_name in saltValuesDict:
             self.image: str = saltValuesDict[salt_name][0]
             self.cycles_per_Synthesis_cycle: int = saltValuesDict[salt_name][1]
-            self.next_salt_consumption: int = saltValuesDict[salt_name][2]
-            self.next_salt_cycles_per_Synthesis_cycle: int = saltValuesDict[salt_name][3]
+            self.consumption_of_previous_salt: int = saltValuesDict[salt_name][2]
+            self.next_salt_consumption: int = saltValuesDict[salt_name][3]
+            self.next_salt_cycles_per_Synthesis_cycle: int = saltValuesDict[salt_name][4]
             self.output: int = int(floor(self.salt_rank ** 1.3)) * self.cycles_per_Synthesis_cycle
             if next_salt_rank != 0:
                 self.consumed: int = int(floor(next_salt_rank ** self.salt_consumption_scaling) * self.next_salt_consumption * self.next_salt_cycles_per_Synthesis_cycle)
@@ -47,13 +48,18 @@ class Salt:
                     if next_salt_rank != 0:
                         self.max_rank_with_excess: int = int(
                             floor(
-                                ((previousSalt.output-1)/(self.next_salt_consumption * self.cycles_per_Synthesis_cycle)) ** (1/self.salt_consumption_scaling)
+                                ((previousSalt.output-1)/(self.consumption_of_previous_salt * self.cycles_per_Synthesis_cycle)) ** (1/self.salt_consumption_scaling)
                             )
                         )
-            if self.max_rank_with_excess >= salt_rank:
-                self.canBeLeveled = True
-            else:
-                self.canBeLeveled = False
+                    if self.max_rank_with_excess >= salt_rank:
+                        self.canBeLeveled = True
+                    else:
+                        self.max_rank_with_excess = salt_rank
+                        self.canBeLeveled = False
+                else:
+                    self.max_rank_with_excess = salt_rank
+                    self.canBeLeveled = False
+
 
     def __str__(self) -> str:
         return self.salt_name
