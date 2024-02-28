@@ -3,7 +3,7 @@
     <h1 class="banner no-collapse">
         Pinchy AutoReview
     </h1>
-    <div class="content-wrapper{% if world.collapse %} folded{% endif %}">
+    <div class="sections{% if world.collapse %} folded{% endif %}">
         {% for section in world.sections %}
         {% include 'section.html' %}
         {% endfor %}
@@ -15,33 +15,35 @@
     <h1 class="banner">
         <img src="{{ world.banner | img }}" alt="{{ world.name }}" title="{{ world.name }}">
     </h1>
-    <div class="content-wrapper{% if not world.sections %} no-collapse folded{% endif %}{% if world.collapse %} folded{% endif %}">
-        {% for section in world.sections %}
-            {% include 'section.html' %}
-        {% endfor %}
+    <div class="collapse-wrapper">
+        <div class="sections{% if not world.sections %} no-collapse folded{% endif %}{% if world.collapse %} folded{% endif %}">
+            {% for section in world.sections %}
+                {% include 'section.html' %}
+            {% endfor %}
+        </div>
     </div>
+    <div class="collapse-wrapper">
+        <div class="sections">
+            <em>Card counts may be off by 1 or 2, due to rounding :( Sorry. I'm trying to find a more accurate list of requirements.</em>
 
-    <div class="content-wrapper">
-        <em>Card counts may be off by 1 or 2, due to rounding :( Sorry. I'm trying to find a more accurate list of requirements.</em>
+            {% for cardset in htmlInput[0][4] %}
+            <section>
+                <h3 class="subheading">
+                    <img src="{{ cardset[2] | cards }}" alt="Card Set {{ cardset[2] }}">
+                </h3>
 
-        {% for cardset in htmlInput[0][4] %}
-        <section>
-            <h3 class="subheading">
-                <img src="{{ cardset[2] | cards }}" alt="Card Set {{ cardset[2] }}">
-            </h3>
-
-            <div class="advice-wrapper">
-                <strong>{{ cardset[0] }}</strong>
-                <ul id="cardset-{{ cardset[2] }}">
-                    {% for line in cardset[1] %}
-                        {% if line %}
-                            <li class="advice">{{ line }}</li>
-                        {% endif %}
-                    {% endfor %}
-                </ul>
-            </div>
-        </section>
-        {% endfor %}
-
+                <div class="advice-wrapper">
+                    <strong>{{ cardset[0] }}</strong>
+                    <ul id="cardset-{{ cardset[2] }}">
+                        {% for line in cardset[1] %}
+                            {% if line %}
+                                <li class="advice">{{ line }}</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </section>
+            {% endfor %}
+        </div>
     </div>
 </article>

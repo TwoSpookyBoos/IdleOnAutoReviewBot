@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (world.classList.contains("new")) {
             e.currentTarget.nextElementSibling.classList.toggle("folded")
         } else {
-            e.currentTarget.parentElement.querySelectorAll('ul, .content-wrapper').forEach(ul => ul.classList.toggle('folded'))
+            e.currentTarget.parentElement.querySelectorAll('ul, .sections').forEach(ul => ul.classList.toggle('folded'))
         }
     })
     // set event listeners for folding sections

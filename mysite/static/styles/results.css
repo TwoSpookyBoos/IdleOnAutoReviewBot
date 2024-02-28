@@ -36,11 +36,13 @@
     --bg-subheading: hsla(0deg, 0%, 100%, 0.1);
     --border-subheading: hsla(0deg, 100%, 100%, 0.3);
 
-    --bg-pinchy: linear-gradient(to right, hsla(34deg, 100%, 50%, 20%), hsla(52deg, 100%, 50%, 20%));
+    --bg-pinchy: hsla(52deg, 100%, 50%, 20%);
     --bg-pinchy-banner: linear-gradient(to right, hsla(0deg, 0%, 0%, 45%), hsla(0deg, 0%, 0%, 20%));
     --fg-pinchy-title: var(--fg-title);
-    --bg-pinchy-group-odd: hsla(0deg, 0%, 100%, 5%);
-    --bg-pinchy-group-even: hsla(0deg, 0%, 0%, 10%);
+    --bg-pinchy-group-odd: hsl(71.54deg 13.68% 37.25%);
+    --bg-pinchy-group-odd-fade: hsl(71.54deg 13.68% 37.25%);
+    --bg-pinchy-group-even: hsl(70deg 15.38% 30.59%);
+    --bg-pinchy-group-even-fade: hsl(70deg 15.38% 30.59%);
     --fg-pinchy-subheading: hsla(41deg, 98.23%, 90.3%, 100%);
     --fg-pinchy-subheading-accent: hsla(44deg, 100%, 50%, 100%);
 
@@ -56,22 +58,28 @@
     --w1-bg-subheading: hsla(122deg, 100%, 87%, 0.1);
 
     --w1-fg-advice-group: hsl(120deg, 100%, 96%);
-    --w1-bg-advice-group-odd: hsla(151deg, 42%, 69%, 0.3);
-    --w1-bg-advice-group-even: hsla(142deg, 52%, 73%, 0.6);
+    --w1-bg-advice-group-odd: hsl(173.79deg 15.18% 37.45%);
+    --w1-bg-advice-group-odd-fade: hsl(173.79deg 15.18% 37.45%);
+    --w1-bg-advice-group-even: hsl(148.75deg 20.34% 53.73%);
+    --w1-bg-advice-group-even-fade: hsl(148.75deg 20.34% 53.73%);
 
     --w2-fg-subheading: hsl(50, 25%, 65%);
     --w2-bg-subheading: hsla(50, 100%, 86%, 0.1);
 
     --w2-fg-advice-group: hsl(50, 100%, 96%);
-    --w2-bg-advice-group-odd: hsla(50, 42%, 69%, 0.3);
-    --w2-bg-advice-group-even: hsla(50, 52%, 73%, 0.5);
+    --w2-bg-advice-group-odd: hsl(93.33deg 4.43% 39.8%);
+    --w2-bg-advice-group-odd-fade: hsl(93.33deg 4.43% 39.8%);
+    --w2-bg-advice-group-even: hsl(60deg 9.45% 49.8%);
+    --w2-bg-advice-group-even-fade: hsl(60deg 9.45% 49.8%);
 
     --w3-fg-subheading: hsl(200, 25%, 65%);
     --w3-bg-subheading: hsla(200, 100%, 86%, 0.1);
 
     --w3-fg-advice-group: hsl(200, 100%, 96%);
-    --w3-bg-advice-group-odd: hsla(200, 42%, 69%, 0.3);
-    --w3-bg-advice-group-even: hsla(200, 52%, 73%, 0.5);
+    --w3-bg-advice-group-odd: hsl(202.29deg 17.77% 38.63%);
+    --w3-bg-advice-group-odd-fade: hsl(202.29deg 17.77% 38.63%);
+    --w3-bg-advice-group-even: hsl(201.7deg 18.58% 49.61%);
+    --w3-bg-advice-group-even-fade: hsl(201.7deg 18.58% 49.61%);
 
     --bg-scrollbar-thumb: gray;
 }
@@ -269,10 +277,20 @@ footer {
         display: none;
     }
 }
-.content-wrapper {
+.collapse-wrapper {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: grid-template-rows 0.5s ease;
+
+    &.folded {
+        grid-template-rows: 0fr;
+    }
+}
+.sections {
     display: flex;
     flex-direction: column;
     row-gap: 15px;
+    overflow: hidden;
 
     & > em {
         padding: 0 20px;
@@ -336,11 +354,24 @@ strong:not(.no-collapse):hover,
         }
     }
     .advice-group {
+        --color-fade: white;
         &:nth-child(even) {
             background: var(--bg-pinchy-group-even);
+            .table::before {
+                background: linear-gradient(to top, transparent, var(--bg-pinchy-group-even-fade));
+            }
+            .table::after {
+                background: linear-gradient(to bottom, transparent, var(--bg-pinchy-group-even-fade));
+            }
         }
         &:nth-child(odd) {
             background: var(--bg-pinchy-group-odd);
+            .table::before {
+                background: linear-gradient(to top, transparent, var(--bg-pinchy-group-odd-fade));
+            }
+            .table::after {
+                background: linear-gradient(to bottom, transparent, var(--bg-pinchy-group-odd-fade));
+            }
         }
     }
 }
@@ -375,9 +406,21 @@ strong:not(.no-collapse):hover,
         color: var(--w1-fg-advice-group);
         &:nth-child(odd) {
             background-color: var(--w1-bg-advice-group-odd);
+            .table::before {
+                background: linear-gradient(to top, transparent, var(--w1-bg-advice-group-odd-fade));
+            }
+            .table::after {
+                background: linear-gradient(to bottom, transparent, var(--w1-bg-advice-group-odd-fade));
+            }
         }
         &:nth-child(even) {
             background-color: var(--w1-bg-advice-group-even);
+            .table::before {
+                background: linear-gradient(to top, transparent, var(--w1-bg-advice-group-even-fade));
+            }
+            .table::after {
+                background: linear-gradient(to bottom, transparent, var(--w1-bg-advice-group-even-fade));
+            }
         }
     }
 }
@@ -400,9 +443,21 @@ strong:not(.no-collapse):hover,
         color: var(--w2-fg-advice-group);
         &:nth-child(odd) {
             background-color: var(--w2-bg-advice-group-odd);
+            .table::before {
+                background: linear-gradient(to top, transparent, var(--w2-bg-advice-group-odd-fade));
+            }
+            .table::after {
+                background: linear-gradient(to bottom, transparent, var(--w2-bg-advice-group-odd-fade));
+            }
         }
         &:nth-child(even) {
             background-color: var(--w2-bg-advice-group-even);
+            .table::before {
+                background: linear-gradient(to top, transparent, var(--w2-bg-advice-group-even-fade));
+            }
+            .table::after {
+                background: linear-gradient(to bottom, transparent, var(--w2-bg-advice-group-even-fade));
+            }
         }
     }
 }
@@ -425,9 +480,21 @@ strong:not(.no-collapse):hover,
         color: var(--w3-fg-advice-group);
         &:nth-child(odd) {
             background-color: var(--w3-bg-advice-group-odd);
+            .table::before {
+                background: linear-gradient(to top, transparent, var(--w3-bg-advice-group-odd-fade));
+            }
+            .table::after {
+                background: linear-gradient(to bottom, transparent, var(--w3-bg-advice-group-odd-fade));
+            }
         }
         &:nth-child(even) {
             background-color: var(--w3-bg-advice-group-even);
+            .table::before {
+                background: linear-gradient(to top, transparent, var(--w3-bg-advice-group-even-fade));
+            }
+            .table::after {
+                background: linear-gradient(to bottom, transparent, var(--w3-bg-advice-group-even-fade));
+            }
         }
     }
 }
@@ -441,10 +508,10 @@ strong:not(.no-collapse):hover,
     font-variant-ligatures: none;
     text-shadow: 1px 1px black;
 
-    &.world-content, .content-wrapper {
+    &.world-content, .sections {
         row-gap: 0;
     }
-    .content-wrapper {
+    .sections {
         &.folded {
             display: none;
         }
@@ -482,6 +549,7 @@ strong:not(.no-collapse):hover,
     }
 
     .advice-section {
+        overflow: hidden;
         &.folded {
             display: none;
         }
@@ -514,21 +582,50 @@ strong:not(.no-collapse):hover,
     }
 
     .advice-group {
-        width: 100%;
         display: flex;
         flex-direction: column;
-        row-gap: 15px;
+        row-gap: 5px;
+
+        width: 100%;
+        max-height: 400px;
+
         padding: 20px;
         border-radius: 20px;
+
         color: var(--fg);
         &.hidden {
             display: none;
         }
     }
     .table {
+        width: 100%;
+        position: relative;
         display: grid;
         grid-template-columns: repeat(4, minmax(min-content, max-content));
         gap: 10px;
+        overflow-y: scroll;
+        padding-right: 10px;
+
+        &::before, &::after {
+            position: sticky;
+            display: block;
+            content: '';
+            height: 20px;
+            width: 100%;
+            grid-column: 1 / span 4;
+        }
+
+        &::before {
+            top: 0;
+        }
+
+        &::after {
+            bottom: 0;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.7);
+        }
 
         li, li a {
             display: flex;
@@ -552,7 +649,8 @@ strong:not(.no-collapse):hover,
     .advice {
         display: flex;
         align-items: center;
-        margin-right: 20px;
+        padding-right: 20px;
+        word-break: break-word;
 
         &::before {
             display: block;

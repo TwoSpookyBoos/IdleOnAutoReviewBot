@@ -3,9 +3,11 @@
     <h1 class="banner">
         <img src="{{ world.banner | img }}" alt="{{ world.name }}" title="{{ world.name }}">
     </h1>
-    <div class="content-wrapper{% if not world.sections %} no-collapse folded{% endif %}{% if world.collapse %} folded{% endif %}">
-        {% for section in world.sections %}
-            {% include 'section.html' %}
-        {% endfor %}
+    <div class="collapse-wrapper">
+        <div class="sections{% if not world.sections %} no-collapse folded{% endif %}{% if world.collapse %} folded{% endif %}">
+            {% for section in world.sections %}
+                {% include 'section.html' %}
+            {% endfor %}
+        </div>
     </div>
 </article>
