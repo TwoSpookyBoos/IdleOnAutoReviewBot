@@ -112,10 +112,10 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
     if influencers[1] >= 12 or playerBuildings[6] >= 20:
         try:
             progressionTiersPostBuffs[2][2].remove(6)  #Remove Trapper Drone from S Tier
-            progressionTiersPostBuffs[5][2].append(6)  #Add Trapper Drone to C tier
+            progressionTiersPostBuffs[6][2].append(6)  #Add Trapper Drone to D tier
             if hasBuffs:
                 maxLevelList[6] = 50
-            #print("ConsBuildings.setConsBuildingsProgressionTier~ INFO Successfully moved Trapper Drone from PostBuff S to C tier and changed level from 20 to 45")
+            #print("ConsBuildings.setConsBuildingsProgressionTier~ INFO Successfully moved Trapper Drone from PostBuff S to D tier and changed level from 20 to 50")
         except Exception as reason:
             print("ConsBuildings.setConsBuildingsProgressionTier~ EXCEPTION Could not remove Trapper Drone from PostBuff S tier:",reason)
 
@@ -161,12 +161,12 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
         if playerBuildings[towerIndex] >= 75:
             try:
                 progressionTiersPostBuffs[2][2].remove(towerIndex)  #Remove from S tier
-                progressionTiersPostBuffs[5][2].append(towerIndex)  #Add to C tier
+                progressionTiersPostBuffs[4][2].append(towerIndex)  #Add to B tier
                 if hasBuffs:
                     maxLevelList[towerIndex] = 140
-                #print("ConsBuildings.setConsBuildingsProgressionTier~ INFO Successfully moved 75+ fancy tower from PostBuff S to C tier:",getBuildingNameFromIndex(towerIndex))
+                #print("ConsBuildings.setConsBuildingsProgressionTier~ INFO Successfully moved 75+ fancy tower from PostBuff S to B tier:",getBuildingNameFromIndex(towerIndex))
             except Exception as reason:
-                print("ConsBuildings.setConsBuildingsProgressionTier~ EXCEPTION Could not move 75+ fancy tower from PostBuff S tier to C tier:",getBuildingNameFromIndex(towerIndex),reason)
+                print("ConsBuildings.setConsBuildingsProgressionTier~ EXCEPTION Could not move 75+ fancy tower from PostBuff S tier to B tier:",getBuildingNameFromIndex(towerIndex),reason)
 
     # 7) Voidinator to 30, drop priority
     if playerBuildings[17] >= 30:  #Voidinator scaling is very bad

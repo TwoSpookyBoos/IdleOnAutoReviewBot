@@ -127,7 +127,7 @@ def setCombatLevelsProgressionTier(inputJSON, progressionTiers, playerCount, pla
     tier = f"{overall_CombatLevelTier}/{max_tier}"
     header = f"Optimal family class level tier met: {tier}. "
     if overall_CombatLevelTier == max_tier:
-        header += f"No more rewards for you. Do you, like, live off of genocidal energy or something? ... jk 💪💪💪"
+        header += f"Your family class level is {total_combat_level}, no more rewards for you. Do you, like, live off of genocidal energy or something? ... jk 💪💪💪"
     else:
         header += "Recommended actions:"
     combat_section = AdviceSection(

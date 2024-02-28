@@ -20,14 +20,18 @@
 }
 .slider[for=handedness] > .shaft.off .knob {
   background: forestgreen;
+  left: calc(var(--shaft-padding) + var(--knob-height));
 }
 .slider[for=handedness] > .shaft.off .knob:before {
   color: white;
 }
+.slider[for=handedness] > .shaft.on .knob {
+  left: var(--shaft-padding);
+}
 .slider .shaft {
   position: relative;
   display: flex;
-  flex-direction: row;
+  flex-direction: row-reverse;
   height: var(--shaft-height);
   width: var(--shaft-width);
   padding: var(--shaft-padding);
@@ -38,14 +42,14 @@
 }
 .slider .shaft.on .knob {
   background-color: forestgreen;
-  left: var(--shaft-padding);
+  left: calc(var(--shaft-padding) + var(--knob-height));
 }
 .slider .shaft.off {
   background-color: gray;
 }
 .slider .shaft.off .knob {
   background: #343434;
-  left: calc(var(--shaft-padding) + var(--knob-height));
+  left: var(--shaft-padding);
 }
 .slider .shaft.off .knob:before {
   color: darkgray;

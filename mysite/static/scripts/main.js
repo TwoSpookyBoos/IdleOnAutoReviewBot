@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (world.classList.contains("new")) {
             e.currentTarget.nextElementSibling.classList.toggle("folded")
         } else {
-            e.currentTarget.parentElement.querySelectorAll('ul, .content-wrapper').forEach(ul => ul.classList.toggle('folded'))
+            e.currentTarget.parentElement.querySelectorAll('ul, .sections').forEach(ul => ul.classList.toggle('folded'))
         }
     })
     // set event listeners for folding sections
@@ -129,5 +129,15 @@ document.addEventListener("DOMContentLoaded", () => {
         if (expandableGroups.children.length > 3) {
             showMoreButton.style.display = "block"
         }
+    })
+
+    document.querySelectorAll('.collapse-cards').forEach(title => title.onclick = e => {
+        const t = e.currentTarget
+        const siblings = Array.from(t.parentElement.children)
+        const index = siblings.indexOf(t)
+        siblings.forEach(sib => {
+            if (sib === t) return
+            sib.classList.toggle('folded')
+        })
     })
 });

@@ -133,15 +133,16 @@ class AdviceBase:
 
     def __bool__(self) -> bool:
         children = getattr(self, self._children, list())
-        return any(filter(bool, children if isinstance(children, list) else children.values()))
+        if isinstance(children, dict):
+            children = sum(children.values(), list())
+        return any(filter(bool, children))
 
     def __str__(self) -> str:
         return self.name
 
     @property
     def collapse(self) -> bool:
-        children = getattr(self, self._children, list())
-        return self._collapse if self._collapse is not None else not any(bool(c) for c in children)
+        return self._collapse if self._collapse is not None else not bool(self)
 
     @collapse.setter
     def collapse(self, _value: bool):

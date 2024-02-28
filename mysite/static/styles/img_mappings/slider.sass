@@ -18,18 +18,26 @@
 
     background: transparent
 
-    &[for="handedness"] > .shaft.off
-        background: oldlace
+    &[for="handedness"]
+        & > .shaft
+            &.off
+                background: oldlace
 
-        .knob
-            background: forestgreen
-            &:before
-                color: white
+                .knob
+                    background: forestgreen
+                    left: calc(var(--shaft-padding) + var(--knob-height))
+                    &:before
+                        color: white
+
+            &.on
+                .knob
+                    left: var(--shaft-padding)
+
 
     .shaft
         position: relative
         display: flex
-        flex-direction: row
+        flex-direction: row-reverse
 
         height: var(--shaft-height)
         width: var(--shaft-width)
@@ -41,12 +49,12 @@
             background-color: oldlace
             .knob
                 background-color: forestgreen
-                left: var(--shaft-padding)
+                left: calc(var(--shaft-padding) + var(--knob-height))
         &.off
             background-color: gray
             .knob
                 background: #343434
-                left: calc(var(--shaft-padding) + var(--knob-height))
+                left: var(--shaft-padding)
                 &:before
                     color: darkgray
 

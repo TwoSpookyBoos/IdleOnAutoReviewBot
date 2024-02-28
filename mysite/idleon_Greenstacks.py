@@ -24,8 +24,7 @@ expectedStackables = {
         "GalaxyA1", "GalaxyA2", "GalaxyA3", "GalaxyA4", "GalaxyB1", "GalaxyB2", "GalaxyB3", "GalaxyB4", "GalaxyB5", "GalaxyC1", "GalaxyC2",
         "GalaxyC3", "GalaxyC4",  # W4
         "LavaA1", "LavaA2", "LavaA3", "LavaA4", "LavaA5", "LavaB1", "LavaB2", "LavaB3", "LavaB4", "LavaB5", "LavaB6", "LavaC1", "LavaC2",  # W5
-        "SpiA1", "SpiA2", "SpiA3", "SpiA4", "SpiA5", "SpiB1", "SpiB2", "SpiB3", "SpiB4", "SpiC1", "SpiC2", "SpiC3", "SpiC4", "SpiC5,  "  # W6
-                                                                                                                             "Sewers3", "Quest15",
+        "SpiA1", "SpiA2", "SpiA3", "SpiA4", "SpiA5", "SpiB1", "SpiB2", "SpiB3", "SpiB4", "SpiC1", "SpiC2", "SpiC3", "SpiC4", "SpiC5", "Sewers3", "Quest15",  # W6
         "Hgg"  # Specialty Monster Materials
     ],
     "Crystal Enemy Drops": [
@@ -51,9 +50,9 @@ expectedStackables = {
         "Fish4", "Fish5", "Fish6", "Fish7", "Fish8",  # Tier2 Fish
         "Bug3", "Bug4", "Bug5", "Bug6", "Bug7", "Bug8",  # Tier2 Bugs
         "Fish9", "Fish10", "Fish11", "Fish13", "Fish12",  # Tier3 Fish
-        "Bug9", "Bug11", "Bug10"  # Tier3 Bugs
+        "Bug9", "Bug11", "Bug10",  # Tier3 Bugs
 
-                         "Godshard",  # W6 Ore
+        "Godshard",  # W6 Ore
         "Tree12", "Tree13",  # W6 Logs
         "Bug12", "Bug13",  # W6 Bugs
     ],
@@ -111,23 +110,23 @@ expectedStackables = {
         "Quest26", "Quest27", "Quest28", "Quest29", "Quest30", "Quest31", "Quest33", "Quest34", "Quest36", "Quest37", "Quest38", "Quest39", "Quest40",
         "Quest41", "Quest42", "Quest43", "Quest44", "Quest45", "Quest46", "Quest47", "Quest48", "Quest49", "Quest50", "Quest9",
         "Mayo", "Trash1", "Trash2", "Trash3",  # Treasure Hunt rewards
-        "Meatloaf", "FoodHealth5", "FoodHealth8", "FoodPotYe3", "BobJoePickle", "BallJoePickle", "BoneJoePickle"
+        "Meatloaf", "FoodHealth5", "FoodHealth8", "FoodPotYe3", "BobJoePickle", "BallJoePickle", "BoneJoePickle",
         "FoodPotYe1", "FoodPotYe3",  # EXP 1 and 3
-        "FoodEvent1", "FoodEvent2", "FoodEvent3", "FoodEvent4", "FoodEvent5", "FoodEvent6", "FoodEvent7", "FoodEvent8"  # Event Foods
-                                                                                                          "Pearl1", "Pearl2", "Pearl3", "Pearl4",
-        "Pearl5", "Pearl6"  # Skilling Speed Pearls, EXP pearls
-                  "ExpBalloon1", "ExpBalloon2", "ExpBalloon3",  # Experience Balloons
-        "Timecandy1", "Timecandy2", "Timecandy3", "Timecandy4", "Timecandy5", "Timecandy6", "Timecandy7", "Timecandy8", "Timecandy9"  # Time Candies
-                                                                                                                        "Silver Pen", "Ladle",
-        "PetEgg", "Whetstone", "Quest72", "Quest77", "Quest78"  # Other Time Skips
-                                                     "EquipmentStatues6", "EquipmentStatues15",  # Kachow and Bullseye
+        "FoodEvent1", "FoodEvent2", "FoodEvent3", "FoodEvent4", "FoodEvent5", "FoodEvent6", "FoodEvent7", "FoodEvent8",  # Event Foods
+        "Pearl1", "Pearl2", "Pearl3", "Pearl4",
+        "Pearl5", "Pearl6",  # Skilling Speed Pearls, EXP pearls
+        "ExpBalloon1", "ExpBalloon2", "ExpBalloon3",  # Experience Balloons
+        "Timecandy1", "Timecandy2", "Timecandy3", "Timecandy4", "Timecandy5", "Timecandy6", "Timecandy7", "Timecandy8", "Timecandy9",  # Time Candies
+        "SilverPen", "Ladle",
+        "PetEgg", "Whetstone", "Quest72", "Quest77", "Quest78",  # Other Time Skips
+        "EquipmentStatues6", "EquipmentStatues15",  # Kachow and Bullseye
         "EquipmentStatues8", "EquipmentStatues9", "EquipmentStatues10", "EquipmentStatues11", "EquipmentStatues12", "EquipmentStatues13",
         # W2 Statues
         "EquipmentStatues16", "EquipmentStatues17", "EquipmentStatues18", "EquipmentStatues19",  # W3 Statues
         "EquipmentStatues20", "EquipmentStatues21", "EquipmentStatues22", "EquipmentStatues23", "EquipmentStatues24",
-        "EquipmentStatues25"  # W4 and W5 Statues
-        "FoodG1", "FoodG2", "FoodG3", "FoodG4", "FoodG5", "FoodG6", "FoodG7", "FoodG8", "FoodG10"  # Gold Foods
-                                                                                        "ResetFrag", "ResetCompleted", "ResetCompletedS", "ClassSwap",
+        "EquipmentStatues25",  # W4 and W5 Statues
+        "FoodG1", "FoodG2", "FoodG3", "FoodG4", "FoodG5", "FoodG6", "FoodG7", "FoodG8", "FoodG10",  # Gold Foods
+        "ResetFrag", "ResetCompleted", "ResetCompletedS", "ClassSwap",
         "ClassSwapB", "ResetBox",
     ]
 }
@@ -218,11 +217,16 @@ class Assets(dict):
         for tier, categories in self.tiers.items():
             categorised = dict()
             for category, items in categories.items():
-                item_list = [self.get(item) for item in items if item in self.items_gstackable_expected]
+                item_list = [
+                    self.get(item)
+                    for item in items
+                    if item in self.items_gstackable_expected
+                    and self.get(item) not in self.quest_items_missed
+                ]
                 if item_list:
                     categorised[category] = item_list
             if categorised:
-                tiered[tier] = categorised
+                tiered["Timegated" if tier == 0 else tier] = categorised
 
         return tiered
 
@@ -318,15 +322,14 @@ def getMissableGStacks(inputJSON, playerCount, owned_stuff: Assets):
         else:
             header_obtained = f"You have obtained {tier_obtained} missable quest item Greenstacks"
 
-        sections.append(
-            AdviceSection(
-                name="Obtained Greenstacks",
-                tier=tier_obtained,
-                header=header_obtained,
-                picture="Greenstack.png",
-                note=note
-            )
+        section_obtained = AdviceSection(
+            name="Obtained Greenstacks",
+            tier=tier_obtained,
+            header=header_obtained,
+            picture="Greenstack.png",
+            note=note
         )
+        # sections.append(section_obtained)
 
     if len(advice_EndangeredQuestGStacks) > 0:
         tier_obtainable = f"{len(advice_EndangeredQuestGStacks)}/{len(missableGStacksDict)}"
@@ -359,29 +362,28 @@ def getMissableGStacks(inputJSON, playerCount, owned_stuff: Assets):
     if len(advice_MissedQuestGStacks) > 0:
         tier_missed = f"{len(advice_MissedQuestGStacks)}/{len(missableGStacksDict)}"
         header_missed = f"You have already missed {tier_missed} missable quest item Greenstacks. You're locked out of these until you get more character slots :("
-        sections.append(
-            AdviceSection(
-                name="Missed Greenstacks",
-                tier=tier_missed,
-                header=header_missed,
-                picture="Greenstack.png",
-                note=note,
-                groups=[
-                    AdviceGroup(
-                        tier="",
-                        pre_string="",
-                        advices=[
-                            Advice(
-                                label=item.name,
-                                item_name=item.name,
-                                progression=item.quest,
-                            )
-                            for item in advice_MissedQuestGStacks
-                        ]
-                    )
-                ]
-            )
+        section_missed = AdviceSection(
+            name="Missed Greenstacks",
+            tier=tier_missed,
+            header=header_missed,
+            picture="Greenstack.png",
+            note=note,
+            groups=[
+                AdviceGroup(
+                    tier="",
+                    pre_string="",
+                    advices=[
+                        Advice(
+                            label=item.name,
+                            item_name=item.name,
+                            progression=item.quest,
+                        )
+                        for item in advice_MissedQuestGStacks
+                    ]
+                )
+            ]
         )
+        # sections.append(section_missed)
 
     #print("GreenStacks.getMissableGStacks~ OUTPUT advice_ObtainedQuestGStacks:", advice_ObtainedQuestGStacks)
     #print("GreenStacks.getMissableGStacks~ OUTPUT advice_EndangeredQuestGStacks:", advice_EndangeredQuestGStacks)

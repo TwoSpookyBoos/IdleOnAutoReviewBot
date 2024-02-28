@@ -1,50 +1,52 @@
 <section id="{{ section.css_class }}" class="new">
-    <h3 class="subheading{% if not section.groups %} no-collapse{% endif %}{% if section.collapse %} folded{% endif %}">
+    <h3 class="subheading{% if not section %} no-collapse{% endif %}{% if section.collapse %} folded{% endif %}">
         {% if section.picture %}
             <img src="{{ section.picture | img }}" alt="{{ section.name }}">
         {% endif %}
         <span>{{ section.header | safe }}</span>
     </h3>
-    <ul class="advice-section{% if not section.groups %} no-collapse{% endif %}{% if section.collapse %} folded{% endif %}">
-        {% if section.note %}
-            <li class="note">{{ section.note }}</li>
-        {% endif %}
-        <li id="{{ section.css_class }}-tier" class="groups">
-            {% for group in section.groups %}
-            {% if group %}
-                <div class="advice-group{% if group.hide %} hidden{% endif %}">
-                    {% if group.heading %}
-                        <span>{{ group.heading }}</span>
-                    {% endif %}
-                    <ul class="table">
-                    {% for title, advices in group.advices.items() %}
-                        {% if title != "default" %}
-                            <li class="advice-title"><strong>{{ title }}</strong></li>
-                        {% endif %}
-                        {% for advice in advices %}
-                            {% if advice.as_link %}
-                                <li><a href="#{{ advice.css_class }}" class="advice {{ advice.css_class }}">{{ advice.label }}</a></li>
-                            {% else %}
-                                <li class="advice {{ advice.css_class }}">{{ advice.label }}</li>
-                            {% endif %}
-
-                            <li>{{ advice.progression }}</li>
-                            {% if advice.progression and advice.goal %}
-                            <li class="arrow"></li>
-                            {% else %}
-                            <li></li>
-                            {% endif %}
-                            <li>{{ advice.goal }}</li>
-                        {% endfor %}
-                    {% endfor %}
-                    </ul>
-                    {% if group.post_string %}
-                        <span class="post-string">{{ group.post_string }}</span>
-                    {% endif %}
-                </div>
+    <div class="collapse-wrapper">
+        <ul class="advice-section{% if not section %} no-collapse{% endif %}{% if section.collapse %} folded{% endif %}">
+            {% if section.note %}
+                <li class="note">{{ section.note }}</li>
             {% endif %}
-            {% endfor %}
-        </li>
-        <li class="show-more">Show Next Tier ▼</li>
-    </ul>
+            <li id="{{ section.css_class }}-tier" class="groups">
+                {% for group in section.groups %}
+                    {% if group %}
+                        <div class="advice-group{% if group.hide %} hidden{% endif %}">
+                        {% if group.heading %}
+                            <span>{{ group.heading }}</span>
+                        {% endif %}
+                        <ul class="table">
+                        {% for title, advices in group.advices.items() %}
+                            {% if title != "default" %}
+                                <li class="advice-title"><strong>{{ title }}</strong></li>
+                            {% endif %}
+                            {% for advice in advices %}
+                                {% if advice.as_link %}
+                                    <li><a href="#{{ advice.css_class }}" class="advice {{ advice.css_class }}">{{ advice.label }}</a></li>
+                                {% else %}
+                                    <li class="advice {{ advice.css_class }}">{{ advice.label }}</li>
+                                {% endif %}
+
+                                <li>{{ advice.progression }}</li>
+                                {% if advice.progression and advice.goal %}
+                                <li class="arrow"></li>
+                                {% else %}
+                                <li></li>
+                                {% endif %}
+                                <li>{{ advice.goal }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                        </ul>
+                        {% if group.post_string %}
+                            <span class="post-string">{{ group.post_string }}</span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </li>
+            <li class="show-more">Show Next Tier ▼</li>
+        </ul>
+    </div>
 </section>
