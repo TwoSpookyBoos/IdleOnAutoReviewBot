@@ -1,4 +1,5 @@
 @import "vars";
+@import "breeding";
 @import "bribes";
 @import "bubbles";
 @import "classes";
@@ -1985,6 +1986,7 @@ $id-map: map-merge($vials, $id-map);
 
 $id-map: map-merge($character-classes, $id-map);
 $id-map: map-merge($extra, $id-map);
+$id-map: map-merge($breeding-map, $id-map);
 $id-map: map-merge($bribes-map, $id-map);
 $id-map: map-merge($bubbles-map, $id-map);
 $id-map: map-merge($monsters, $id-map);

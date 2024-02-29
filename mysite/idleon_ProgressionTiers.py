@@ -7,7 +7,7 @@ def setDefaultTiers():
         [2, 6, 7, -7, -6, -8, "by end of W2."],
         [3, 6, 7, 7, -6, -8, "by end of W3."],
         [4, 6, 7, 7, 6, -8, "by end of W4."],
-        [5, 6, 7, 7, 6, 7, "by end of W5, after unlocking the Bribe from Trash Island."], #The 8th bribe in w5 can't be purchased yet
+        [5, 6, 7, 7, 6, 7, "by end of W5, after unlocking the Bribe from Trash Island."],  #The 8th bribe in w5 can't be purchased yet
         ]
     defaultTiers['Stamps'] = [
         #int Tier, int Total Stamp Level, str Required combat stamps, str Required Skill stamps, str Required Misc stamps, dict Specific stamp levels, str Notes
@@ -312,60 +312,68 @@ def setDefaultTiers():
             "ShinyNotes": ""
             },
         #0-5 are Territory/Arena focused.
-        #6+ are Shiny focused
+        #6 is blended
+        #7+ are Shiny focused
         6: {
             "Tier": 6,
-            "TerritoriesUnlocked": 20,
+            "TerritoriesUnlocked": 24,
             "ArenaWaves": 200,
-            "Shinies": { "Faster Shiny Pet Lv Up Rate": 24 },
+            "Shinies": {
+                "Faster Shiny Pet Lv Up Rate": 24,
+                "Bonuses from All Meals": 10
+            },
             "ShinyNotes": "Start by focusing on pets that increase Shiny Speed rate. This will decrease the amount of time needed to level up pets in the future."
             },
         7: {
             "Tier": 7,
-            "TerritoriesUnlocked": 20,
+            "TerritoriesUnlocked": 24,
             "ArenaWaves": 200,
             "Shinies": {
-                "Bonuses from All Meals": 10,
                 "Infinite Star Signs": 25,
-                "Base Efficiency for All Skills": 20,
-                "Base Critter Per Trap": 10 },
+                "Base Efficiency for All Skills": 20
+                },
             "ShinyNotes": ""
             },
         8: {
             "Tier": 8,
-            "TerritoriesUnlocked": 20,
+            "TerritoriesUnlocked": 24,
             "ArenaWaves": 200,
             "Shinies": {
-                "Drop Rate": 15,
-                "Faster Refinery Speed": 15,
-                "Higher Artifact Find Chance": 15
+                "Base Critter Per Trap": 10,
+                "Drop Rate": 15
                 },
             "ShinyNotes": ""
             },
         9: {
             "Tier": 9,
-            "TerritoriesUnlocked": 20,
+            "TerritoriesUnlocked": 24,
             "ArenaWaves": 200,
             "Shinies": {
-                "Multikill Per Tier": 20,
-                "Total Damage": 25,
-                "World 6...?": 35
+                "Faster Refinery Speed": 15,
+                "Higher Artifact Find Chance": 15
                 },
             "ShinyNotes": ""
             },
         10: {
             "Tier": 10,
-            "TerritoriesUnlocked": 20,
+            "TerritoriesUnlocked": 24,
+            "ArenaWaves": 200,
+            "Shinies": {
+                "Multikill Per Tier": 20,
+                "Total Damage": 25
+                },
+            "ShinyNotes": ""
+            },
+        11: {
+            "Tier": 11,
+            "TerritoriesUnlocked": 24,
             "ArenaWaves": 200,
             "Shinies": {
                 "Faster Shiny Pet Lv Up Rate": 28,
-                "Infinite Star Signs": 26,
-                "Base WIS": 15,
-                "Base STR": 15,
-                "Base AGI": 15,
-                },
+                "Infinite Star Signs": 38
+            },
             "ShinyNotes": ""
-            }
+        }
         }
     defaultTiers['Greenstacks'] = {
         0: {  # The timegated tier
@@ -471,7 +479,7 @@ def setDefaultTiers():
         9: {
             "Other Skilling Resources": [
                 "LustreBar",
-                "Quest68"], #I really hate that the Slush Bucket is listed as Quest68
+                "Quest68"],  #I really hate that the Slush Bucket is listed as Quest68
             "Missable Quest Items": ["Quest32"],
             },
         10: {

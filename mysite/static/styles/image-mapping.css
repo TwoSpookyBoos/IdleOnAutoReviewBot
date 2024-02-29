@@ -914,6 +914,154 @@
   background-image: url("/static/imgs/bribe_pigi.png");
 }
 
+.fighter::before {
+  background-image: url("https://idleon.wiki/wiki/images/6/6b/Fighter_Genetics.png");
+}
+
+.cursory::before {
+  background-image: url("https://idleon.wiki/wiki/images/0/0e/Cursory_Genetics.png");
+}
+
+.mercenary::before {
+  background-image: url("https://idleon.wiki/wiki/images/7/70/Mercenary_Genetics.png");
+}
+
+.refiller::before {
+  background-image: url("https://idleon.wiki/wiki/images/f/f6/Refiller_Genetics.png");
+}
+
+.borger::before {
+  background-image: url("https://idleon.wiki/wiki/images/e/ed/Borger_Genetics.png");
+}
+
+.monolithic::before {
+  background-image: url("https://idleon.wiki/wiki/images/8/85/Monolithic_Genetics.png");
+}
+
+.rattler::before {
+  background-image: url("https://idleon.wiki/wiki/images/e/e3/Rattler_Genetics.png");
+}
+
+.badumdum::before {
+  background-image: url("https://idleon.wiki/wiki/images/c/cb/Badumdum_Genetics.png");
+}
+
+.looter::before {
+  background-image: url("https://idleon.wiki/wiki/images/a/a0/Looter_Genetics.png");
+}
+
+.lazarus::before {
+  background-image: url("https://idleon.wiki/wiki/images/9/97/Lazarus_Genetics.png");
+}
+
+.trasher::before {
+  background-image: url("https://idleon.wiki/wiki/images/c/c1/Trasher_Genetics.png");
+}
+
+.peapeapod::before {
+  background-image: url("https://idleon.wiki/wiki/images/8/8c/Peapeapod_Genetics.png");
+}
+
+.defender::before {
+  background-image: url("https://idleon.wiki/wiki/images/8/8e/Defender_Genetics.png");
+}
+
+.grasslands-spice::before {
+  background-image: url("https://idleon.wiki/wiki/images/2/23/Grasslands_Spice.png");
+}
+
+.jungle-spice::before {
+  background-image: url("https://idleon.wiki/wiki/images/0/0c/Jungle_Spice.png");
+}
+
+.encroaching-forest-spice::before {
+  background-image: url("https://idleon.wiki/wiki/images/0/01/Encroaching_Forest_Spice.png");
+}
+
+.tree-interior-spice::before {
+  background-image: url("https://idleon.wiki/wiki/images/a/ac/Tree_Interior_Spice.png");
+}
+
+.stinky-sewers-spice::before {
+  background-image: url("https://idleon.wiki/wiki/images/e/e5/Stinky_Sewers_Spice.png");
+}
+
+.desert-oasis-spice::before {
+  background-image: url("https://idleon.wiki/wiki/images/0/03/Desert_Oasis_Spice.png");
+}
+
+.beach-docks-spice::before {
+  background-image: url("https://idleon.wiki/wiki/images/c/c8/Beach_Docks_Spice.png");
+}
+
+.coarse-mountains-spice::before {
+  background-image: url("https://idleon.wiki/wiki/images/b/b3/Coarse_Mountains_Spice.png");
+}
+
+.twilight-desert-spice::before {
+  background-image: url("https://idleon.wiki/wiki/images/9/9c/Twilight_Desert_Spice.png");
+}
+
+.the-crypt-spice::before {
+  background-image: url("https://idleon.wiki/wiki/images/f/f2/The_Crypt_Spice.png");
+}
+
+.frosty-peaks-spice::before {
+  background-image: url("https://idleon.wiki/wiki/images/d/d0/Frosty_Peaks_Spice.png");
+}
+
+.tundra-outback-spice::before {
+  background-image: url("https://idleon.wiki/wiki/images/3/32/Tundra_Outback_Spice.png");
+}
+
+.crystal-caverns-spice::before {
+  background-image: url("https://idleon.wiki/wiki/images/2/28/Crystal_Caverns_Spice.png");
+}
+
+.pristalle-lake-spice::before {
+  background-image: url("https://idleon.wiki/wiki/images/1/15/Pristalle_Lake_Spice.png");
+}
+
+.nebulon-mantle-spice::before {
+  background-image: url("https://idleon.wiki/wiki/images/4/48/Nebulon_Mantle_Spice.png");
+}
+
+.starfield-skies-spice::before {
+  background-image: url("https://idleon.wiki/wiki/images/1/15/Starfield_Skies_Spice.png");
+}
+
+.shores-of-eternity-spice::before {
+  background-image: url("https://idleon.wiki/wiki/images/c/cf/Shores_of_Eternity_Spice.png");
+}
+
+.molten-bay-spice::before {
+  background-image: url("https://idleon.wiki/wiki/images/c/c0/Molten_Bay_Spice.png");
+}
+
+.smokey-lake-spice::before {
+  background-image: url("https://idleon.wiki/wiki/images/2/27/Smokey_Lake_Spice.png");
+}
+
+.wurm-catacombs-spice::before {
+  background-image: url("https://idleon.wiki/wiki/images/5/5b/Wurm_Catacombs_Spice.png");
+}
+
+.spirit-fields-spice::before {
+  background-image: url("https://idleon.wiki/wiki/images/d/df/Spirit_Fields_Spice.png");
+}
+
+.bamboo-forest-spice::before {
+  background-image: url("https://idleon.wiki/wiki/images/6/69/Bamboo_Forest_Spice.png");
+}
+
+.lullaby-airways-spice::before {
+  background-image: url("https://idleon.wiki/wiki/images/e/ee/Lullaby_Airways_Spice.png");
+}
+
+.dharma-mesa-spice::before {
+  background-image: url("https://idleon.wiki/wiki/images/6/65/Dharma_Mesa_Spice.png");
+}
+
 .vials::before {
   background-image: url("/static/imgs/Alchemy_Vial-level-1.png");
 }
