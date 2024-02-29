@@ -93,7 +93,7 @@ def index() -> Response | str:
         if isinstance(capturedCharacterInput, str):
             logger.info("request.args.get('player'): %s %s", type(capturedCharacterInput), capturedCharacterInput)
         else:
-            logger.info("request.args.get('player'): %s %s", type(capturedCharacterInput))
+            logger.info("request.args.get('player'): %s", type(capturedCharacterInput))
         if request.method == 'POST' and isinstance(capturedCharacterInput, str):
             return redirect(url_for('index', player=capturedCharacterInput, **get_user_preferences()))
 
