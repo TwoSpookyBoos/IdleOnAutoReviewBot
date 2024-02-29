@@ -74,12 +74,12 @@
     --w3-bg-advice-group-odd: hsl(202.29deg 17.77% 38.63%);
     --w3-bg-advice-group-even: hsl(201.7deg 18.58% 49.61%);
 
-    --w4-fg-subheading: hsl(247, 50%, 80%);
-    --w4-bg-subheading: hsla(247, 100%, 86%, 0.1);
-
-    --w4-fg-advice-group: hsl(247, 100%, 96%);
-    --w4-bg-advice-group-odd: hsl(249.29deg 17.77% 38.63%);
-    --w4-bg-advice-group-even: hsl(248.7deg 18.58% 49.61%);
+   --w4-fg-subheading: hsl(247, 100%, 96%);
+   --w4-bg-subheading: hsla(282.5, 77.9%, 27.9%, .4);
+   
+   --w4-fg-advice-group: hsl(247, 100%, 96%);
+   --w4-bg-advice-group-odd: hsl(268deg 25% 48%);
+   --w4-bg-advice-group-even: hsl(265deg 24% 34%);
 
     --bg-scrollbar-thumb: gray;
     --scrollbar-thumb-color: rgba(255, 255, 255, 0.7);
@@ -140,12 +140,12 @@
     --w3-bg-advice-group-odd: hsl(201.18deg 32.69% 79.61%);
     --w3-bg-advice-group-even: hsl(201.18deg 38.93% 74.31%);
 
-    --w4-fg-subheading: hsl(247, 50%, 80%);
-    --w4-bg-subheading: hsla(247, 100%, 86%, 0.1);
+    --w4-fg-subheading: hsl(247, 45%, 40%);
+    --w4-bg-subheading: hsl(269, 50%, 86.9%);
 
-    --w4-fg-advice-group: hsl(247, 100%, 96%);
-    --w4-bg-advice-group-odd: hsl(249.29deg 17.77% 38.63%);
-    --w4-bg-advice-group-even: hsl(248.7deg 18.58% 49.61%);
+    --w4-fg-advice-group: black;
+    --w4-bg-advice-group-odd: hsl(268deg 50.4% 77%);
+    --w4-bg-advice-group-even: hsl(265deg 40% 60%);
 
     --scrollbar-thumb-color: rgba(0, 0, 0, 0.4);
 
