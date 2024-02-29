@@ -403,7 +403,7 @@ def main(inputData, runType="web"):
     #World 4
     #cookingPR =
     #labPR =
-    breedingPR = idleon_Breeding.setBreedingProgressionTier(parsedJSON, progressionTiers['Breeding'])
+    breeding_AdviceSection = idleon_Breeding.setBreedingProgressionTier(parsedJSON, progressionTiers['Breeding'], characterDict)
     #print("## World 5 AutoReview")
     #sailingPR =
     #gamingPR =
@@ -460,7 +460,7 @@ def main(inputData, runType="web"):
     )
     w4Review = AdviceWorld(
         name=WorldName.WORLD4,
-        sections=[],
+        sections=[breeding_AdviceSection],
         banner="w4banner.png"
     )
     w5Review = AdviceWorld(

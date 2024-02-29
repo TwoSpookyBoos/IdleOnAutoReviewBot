@@ -1308,7 +1308,7 @@ def getItemCodeName(itemName):
         if value["displayName"] == itemName),
         f"Unknown-{itemName}"
     )
-    if code_name.startswith("Unknown-"):
-        logger.warning("Unknown item: %s", itemName)
+    #if code_name.startswith("Unknown-"):
+        #logger.warning("Unknown item: %s", itemName)
 
     return code_name
