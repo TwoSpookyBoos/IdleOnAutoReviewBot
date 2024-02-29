@@ -444,7 +444,7 @@ def setBreedingProgressionTier(inputJSON: dict, progressionTiers: dict[int, dict
                             for possibleShinyPet in failedShinyBonus[failedRequirement[0]]:
                                 breeding_AdviceDict["ShinyLevels"][yuckyDictName].append(Advice(
                                     label=f"{possibleShinyPet[0]}: Level {possibleShinyPet[1]}",
-                                    item_name="",
+                                    item_name=possibleShinyPet[0],
                                     progression=f"{possibleShinyPet[2]:.2f} days to level",
                                     goal=""
                                 ))
@@ -476,28 +476,29 @@ def setBreedingProgressionTier(inputJSON: dict, progressionTiers: dict[int, dict
         post_string=""
     )
 
-    if tier_ShinyLevels < maxBreedingTier:
-        breeding_AdviceGroupDict["ShinyLevels"] = AdviceGroup(
-            tier=str(tier_ShinyLevels),
-            pre_string=f"Level the following Shiny {pl(breeding_AdviceDict['ShinyLevels'], 'Bonus', 'Bonuses')}",
-            advices=breeding_AdviceDict["ShinyLevels"],
-            post_string=""
-        )
-    else:
-        for shinyTier in shinyPetsTierList:
-            if shinyTier not in breeding_AdviceDict["ShinyLevelsTierList"]:
-                breeding_AdviceDict["ShinyLevelsTierList"][shinyTier] = []
-            for shinyPet in shinyPetsTierList[shinyTier]:
-                breeding_AdviceDict["ShinyLevelsTierList"][shinyTier].append(Advice(
-                    label=shinyPet,
-                    item_name="")
-                )
-        breeding_AdviceGroupDict["ShinyLevelsTierList"] = AdviceGroup(
-            tier="",
-            pre_string="Advance Shiny levels per your desires",
-            advices=breeding_AdviceDict["ShinyLevelsTierList"],
-            post_string=""
-        )
+    if max(breedingLevelsList) >= 40:
+        if tier_ShinyLevels < maxBreedingTier:
+            breeding_AdviceGroupDict["ShinyLevels"] = AdviceGroup(
+                tier=str(tier_ShinyLevels),
+                pre_string=f"Level the following Shiny {pl(breeding_AdviceDict['ShinyLevels'], 'Bonus', 'Bonuses')}",
+                advices=breeding_AdviceDict["ShinyLevels"],
+                post_string=""
+            )
+        else:
+            for shinyTier in shinyPetsTierList:
+                if shinyTier not in breeding_AdviceDict["ShinyLevelsTierList"]:
+                    breeding_AdviceDict["ShinyLevelsTierList"][shinyTier] = []
+                for shinyPet in shinyPetsTierList[shinyTier]:
+                    breeding_AdviceDict["ShinyLevelsTierList"][shinyTier].append(Advice(
+                        label=shinyPet,
+                        item_name="")
+                    )
+            breeding_AdviceGroupDict["ShinyLevelsTierList"] = AdviceGroup(
+                tier="",
+                pre_string="Advance Shiny levels per your desires",
+                advices=breeding_AdviceDict["ShinyLevelsTierList"],
+                post_string=""
+            )
 
     #Generate Advice Section
     tier_section = f"{overall_BreedingTier}/{maxBreedingTier}"
