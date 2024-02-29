@@ -1062,6 +1062,54 @@
   background-image: url("https://idleon.wiki/wiki/images/6/65/Dharma_Mesa_Spice.png");
 }
 
+.squirrel::before {
+  background-image: url("https://idleon.wiki/wiki/images/6/65/Squirrel_Idle.gif");
+}
+
+.piggo::before {
+  background-image: url("https://idleon.wiki/wiki/images/d/de/Piggo_Idle.gif");
+}
+
+.mallay::before {
+  background-image: url("https://idleon.wiki/wiki/images/0/04/Mallay_Idle.gif");
+}
+
+.whale::before {
+  background-image: url("https://idleon.wiki/wiki/images/5/5f/Whale_Idle.gif");
+}
+
+.crescent-spud::before {
+  background-image: url("https://idleon.wiki/wiki/images/6/68/Crescent_Spud_Idle.gif");
+}
+
+.chippy::before {
+  background-image: url("https://idleon.wiki/wiki/images/b/b5/Chippy_Idle.gif");
+}
+
+.bunny::before {
+  background-image: url("https://idleon.wiki/wiki/images/8/82/Bunny.png");
+}
+
+.mecho-mouse::before {
+  background-image: url("https://idleon.wiki/wiki/images/8/85/Mecho_Mouse_Idle.gif");
+}
+
+.panda::before {
+  background-image: url("https://idleon.wiki/wiki/images/8/81/Panda_Idle.gif");
+}
+
+.dog::before {
+  background-image: url("https://idleon.wiki/wiki/images/1/14/Dog_Idle.gif");
+}
+
+.cool-bird::before {
+  background-image: url("https://idleon.wiki/wiki/images/4/4f/Cool_Bird_Idle.gif");
+}
+
+.hedgehog::before {
+  background-image: url("https://idleon.wiki/wiki/images/5/55/Hedgehog_Idle.gif");
+}
+
 .vials::before {
   background-image: url("/static/imgs/Alchemy_Vial-level-1.png");
 }
@@ -2176,10 +2224,6 @@
 
 .eternal-lord-of-the-undying-ember::before {
   background-image: url("https://idleon.wiki/wiki/images/c/c9/Eternal_Lord_of_The_Undying_Ember.png");
-}
-
-.bunny::before {
-  background-image: url("https://idleon.wiki/wiki/images/8/82/Bunny.png");
 }
 
 .purbunni::before {
