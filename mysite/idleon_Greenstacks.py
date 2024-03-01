@@ -24,7 +24,7 @@ expectedStackables = {
         "GalaxyA1", "GalaxyA2", "GalaxyA3", "GalaxyA4", "GalaxyB1", "GalaxyB2", "GalaxyB3", "GalaxyB4", "GalaxyB5", "GalaxyC1", "GalaxyC2",
         "GalaxyC3", "GalaxyC4",  # W4
         "LavaA1", "LavaA2", "LavaA3", "LavaA4", "LavaA5", "LavaB1", "LavaB2", "LavaB3", "LavaB4", "LavaB5", "LavaB6", "LavaC1", "LavaC2",  # W5
-        "SpiA1", "SpiA2", "SpiA3", "SpiA4", "SpiA5", "SpiB1", "SpiB2", "SpiB3", "SpiB4", "SpiC1", "SpiC2", "SpiC3", "SpiC4", "SpiC5", "Sewers3", "Quest15",  # W6
+        "SpiA1", "SpiA2", "SpiA3", "SpiA4", "SpiA5", "SpiB1", "SpiB2", "SpiB3", "SpiB4", "SpiC1", "SpiC2", "SpiD1", "SpiD2", "SpiD3", "Sewers3", "Quest15",  # W6
         "Hgg"  # Specialty Monster Materials
     ],
     "Crystal Enemy Drops": [
@@ -96,10 +96,10 @@ expectedStackables = {
     "Cheater": [
         "Sewers1b", "TreeInterior1b", "BabaYagaETC", "JobApplication",  # W1 Rare Drops
         "DesertA1b", "DesertA3b", "MidnightCookie",  # W2 Rare Drops
-        "SnowA2a", "SnowB2a", "SnowC4a",  # W3 Rare Drops
+        "SnowA2a", "SnowB2a", "SnowC4a", "Quest78",  # W3 Rare Drops
         "GalaxyA2b", "GalaxyC1b",  # W4 Rare Drops
         "LavaA1b", "LavaA5b", "LavaB3b",  # W5 Rare Drops
-        "SpiA2b",  # W6 Rare Drops
+        "SpiA2b", "SpiB2b",  # W6 Rare Drops
         "Quest17", "Quest29", "EfauntDrop1", "EfauntDrop2", "Chiz0", "Chiz1", "TrollPart", "KrukPart", "KrukPart2",  # World Boss Materials
         "CraftMat2",  # Crimson String
         "Refinery5", "Refinery6",  # Purple and Nullo Salts
@@ -109,23 +109,26 @@ expectedStackables = {
         "Quest1", "Quest2", "Quest5", "Quest6", "Quest8", "Quest10", "Quest11", "Quest13", "Quest16", "Quest17", "Quest18", "Quest20", "Quest25",
         "Quest26", "Quest27", "Quest28", "Quest29", "Quest30", "Quest31", "Quest33", "Quest34", "Quest36", "Quest37", "Quest38", "Quest39", "Quest40",
         "Quest41", "Quest42", "Quest43", "Quest44", "Quest45", "Quest46", "Quest47", "Quest48", "Quest49", "Quest50", "Quest9",
-        "Mayo", "Trash1", "Trash2", "Trash3",  # Treasure Hunt rewards
+        "Mayo", "Trash", "Trash2", "Trash3",  # Treasure Hunt rewards
         "Meatloaf", "FoodHealth5", "FoodHealth8", "FoodPotYe3", "BobJoePickle", "BallJoePickle", "BoneJoePickle",
         "FoodPotYe1", "FoodPotYe3",  # EXP 1 and 3
         "FoodEvent1", "FoodEvent2", "FoodEvent3", "FoodEvent4", "FoodEvent5", "FoodEvent6", "FoodEvent7", "FoodEvent8",  # Event Foods
         "Pearl1", "Pearl2", "Pearl3", "Pearl4",
         "Pearl5", "Pearl6",  # Skilling Speed Pearls, EXP pearls
+        "Line1", "Line2", "Line3", "Line4", "Line5", "Line6", "Line7", "Line8", "Line9", "Line10", "Line11", "Line12", "Line13", "Line14",  # Fishing Lines
         "ExpBalloon1", "ExpBalloon2", "ExpBalloon3",  # Experience Balloons
         "Timecandy1", "Timecandy2", "Timecandy3", "Timecandy4", "Timecandy5", "Timecandy6", "Timecandy7", "Timecandy8", "Timecandy9",  # Time Candies
         "SilverPen", "Ladle",
-        "PetEgg", "Whetstone", "Quest72", "Quest77", "Quest78",  # Other Time Skips
+        "PetEgg", "Whetstone", "Quest72", "Quest73", "Quest76", "Quest77",  # Other Time Skips
+        "Quest70", "Quest71", "Quest75",  # Loot Bags
+        "Quest69", "Quest74",  # Unobtainables
         "EquipmentStatues6", "EquipmentStatues15",  # Kachow and Bullseye
         "EquipmentStatues8", "EquipmentStatues9", "EquipmentStatues10", "EquipmentStatues11", "EquipmentStatues12", "EquipmentStatues13",
         # W2 Statues
         "EquipmentStatues16", "EquipmentStatues17", "EquipmentStatues18", "EquipmentStatues19",  # W3 Statues
         "EquipmentStatues20", "EquipmentStatues21", "EquipmentStatues22", "EquipmentStatues23", "EquipmentStatues24",
         "EquipmentStatues25",  # W4 and W5 Statues
-        "FoodG1", "FoodG2", "FoodG3", "FoodG4", "FoodG5", "FoodG6", "FoodG7", "FoodG8", "FoodG10",  # Gold Foods
+        "FoodG1", "FoodG2", "FoodG3", "FoodG4", "FoodG5", "FoodG6", "FoodG7", "FoodG8", "FoodG10", "Gfoodcoupon", # Gold Foods
         "ResetFrag", "ResetCompleted", "ResetCompletedS", "ClassSwap",
         "ClassSwapB", "ResetBox",
     ]
