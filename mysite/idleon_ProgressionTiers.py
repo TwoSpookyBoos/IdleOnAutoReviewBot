@@ -14,7 +14,7 @@ def setDefaultTiers():
         [0, 0, "", "", "", {}, "Just level up any stamp you can afford!"],
         [1, 50, "", "", "", {}, "Just level up any stamp you can afford!"],
         [2, 100, "", "", "", {}, "Just level up any stamp you can afford!"],
-        [3, 150, "2,3,4,5,11", "5", "", {}, "W1 town and W1 Tiki shop both sell stamps!"],
+        [3, 150, "2,3,4,5,11", "5", "10", {}, "W1 town and W1 Tiki shop both sell stamps!"],
         [4, 200, "8,13,14", "3,16,18", "17", {}, "Expected progression roughly near the start of World 3. Some of these required stamps are drops from enemies or quest rewards. Use the Wiki to find their sources!"],
         [5, 250, "6,7,9", "2,7", "0", {'Pickaxe Stamp':25, 'Hatchet Stamp':25}, ""],
         [6, 300, "17,18,20", "25", "5", {}, ""],
@@ -22,7 +22,7 @@ def setDefaultTiers():
         [8, 500, "15,16,21", "14,17", "14,19", {'Drippy Drop Stamp':30}, ""],
         [9, 600, "27", "10", "1,2", {'Mason Jar Stamp':12}, ""],
         [10, 700, "", "4,6,9,11,12,15,22,24,26", "", {'Drippy Drop Stamp':40, 'Matty Bag Stamp':50}, ""],
-        [11, 800, "10,12", "29,37,40", "", {'Pickaxe Stamp':45, 'Hatchet Stamp':45, 'Mason Jar Stamp':24,}, ""],
+        [11, 800, "10,12", "29,37,40", "11", {'Pickaxe Stamp':45, 'Hatchet Stamp':45, 'Mason Jar Stamp':24,}, ""],
         [12, 900, "23,24", "13,20,30,46", "8", {'Drippy Drop Stamp':50}, ""],
         [13, 1000, "28", "19,21,36", "13", {'Pickaxe Stamp':55, 'Hatchet Stamp':55, 'Card Stamp':50}, ""],
         [14, 1500, "31", "35,39", "21", {'Matty Bag Stamp':100, 'Crystallin':60}, ""],
@@ -31,15 +31,15 @@ def setDefaultTiers():
         [17, 3000, "36", "43,44,45", "", {'Bugsack Stamp':80, 'Bag o Heads Stamp':80},  ""],
         [18, 3500, "", "", "", {'Pickaxe Stamp':75, 'Hatchet Stamp':75, 'Drippy Drop Stamp':90, 'Crystallin':100}, ""],
         [19, 4000, "", "", "", {'Matty Bag Stamp':150}, ""],
-        [20, 4500, "", "", "18", {'Card Stamp':150, 'Ladle Stamp':100}, ""],
+        [20, 4500, "39", "47", "18", {'Card Stamp':150, 'Ladle Stamp':100}, ""],
         [21, 5000, "30,32", "23", "", {'Pickaxe Stamp':85, 'Hatchet Stamp':85, 'Mason Jar Stamp':52, 'Golden Apple Stamp':40}, ""],
         [22, 5500, "", "", "", {'Bugsack Stamp':120, 'Bag o Heads Stamp':120}, ""],
         [23, 6000, "19,26,34", "33", "", {'Matty Bag Stamp':200, 'Crystallin':150}, ""],
-        [24, 6500, "36", "", "", {'Drippy Drop Stamp':100, 'Ladle Stamp':150}, ""],
+        [24, 6500, "36", "48,49,51", "9", {'Drippy Drop Stamp':100, 'Ladle Stamp':150}, ""],
         [25, 7000, "35", "", "", {'Pickaxe Stamp':95, 'Hatchet Stamp':95, 'Golden Apple Stamp':60, 'Multitool Stamp':100}, ""],
         [26, 7500, "", "", "", {'Ladle Stamp':180}, ""],
-        [27, 8000, "", "", "", {'Matty Bag Stamp':280, 'Multitool Stamp':150}, ""],
-        [28, 8400, "", "", "", {'Pickaxe Stamp':105, 'Hatchet Stamp':105, 'Mason Jar Stamp':92, 'Crystallin':200, 'Bugsack Stamp':152, 'Bag o Heads Stamp':152,}, ""],
+        [27, 8000, "41", "", "", {'Matty Bag Stamp':280, 'Multitool Stamp':150}, ""],
+        [28, 8400, "", "53", "22", {'Pickaxe Stamp':105, 'Hatchet Stamp':105, 'Mason Jar Stamp':92, 'Crystallin':200, 'Bugsack Stamp':152, 'Bag o Heads Stamp':152,}, ""],
         [29, 8600, "", "", "", {'Drippy Drop Stamp':110, 'Matty Bag Stamp':310}, ""],
         [30, 8800, "", "", "", {'Card Stamp':200, 'Crystallin':250}, ""],
         [31, 9000, "", "", "", {'Golden Apple Stamp':80}, "Guaranteed daily Gilded Stamp at 10k"],
@@ -48,7 +48,7 @@ def setDefaultTiers():
         [34, 9600, "", "", "", {'Golden Apple Stamp':100, 'Multitool Stamp':210}, ""],
         [35, 9800, "37", "", "", {'Golden Sixes Stamp':150}, ""],
         [36, 10000, "38, 22", "31", "", {'Golden Sixes Stamp':190}, ""],
-        [37, 11000, "", "", "", {'Maxo Slappo Stamp':98, 'Sashe Sidestamp':98, 'Intellectostampo':98}, ""]
+        [37, 11000, "40", "52,50", "", {'Maxo Slappo Stamp':98, 'Sashe Sidestamp':98, 'Intellectostampo':98}, ""]
         ]
     defaultTiers['Smithing'] = [
         #int tier, int Cash Points Purchased, int Monster Points Purchased, int Forge Totals, str Notes

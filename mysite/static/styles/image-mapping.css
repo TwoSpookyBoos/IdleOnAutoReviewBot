@@ -6234,6 +6234,18 @@
   background-image: url("https://idleon.wiki/wiki/images/1/16/Stat_Wallstreet_Stamp.png");
 }
 
+.void-sword-stamp::before {
+  background-image: url("https://idleon.wiki/wiki/images/e/ef/Void_Sword_Stamp.png");
+}
+
+.void-axe-stamp::before {
+  background-image: url("https://idleon.wiki/wiki/images/3/31/Void_Axe_Stamp.png");
+}
+
+.captalist-stats-stamp::before {
+  background-image: url("https://idleon.wiki/wiki/images/d/df/Captalist_Stats_Stamp.png");
+}
+
 .pickaxe-stamp::before {
   background-image: url("https://idleon.wiki/wiki/images/1/18/Pickaxe_Stamp.png");
 }
@@ -6418,6 +6430,38 @@
   background-image: url("https://idleon.wiki/wiki/images/c/cd/Multitool_Stamp.png");
 }
 
+.skelefish-stamp::before {
+  background-image: url("https://idleon.wiki/wiki/images/0/05/Skelefish_Stamp.png");
+}
+
+.crop-evo-stamp::before {
+  background-image: url("https://idleon.wiki/wiki/images/4/4f/Crop_Evo_Stamp.png");
+}
+
+.sneaky-peeky-stamp::before {
+  background-image: url("https://idleon.wiki/wiki/images/e/e3/Sneaky_Peeky_Stamp.png");
+}
+
+.jade-mint-stamp::before {
+  background-image: url("https://idleon.wiki/wiki/images/9/98/Jade_Mint_Stamp.png");
+}
+
+.summoner-stone-stamp::before {
+  background-image: url("https://idleon.wiki/wiki/images/f/f7/Summoner_Stone_Stamp.png");
+}
+
+.white-essence-stamp::before {
+  background-image: url("https://idleon.wiki/wiki/images/2/27/White_Essence_Stamp.png");
+}
+
+.triad-essence-stamp::before {
+  background-image: url("https://idleon.wiki/wiki/images/5/54/Triad_Essence_Stamp.png");
+}
+
+.dark-triad-essence-stamp::before {
+  background-image: url("https://idleon.wiki/wiki/images/8/81/Dark_Triad_Essence_Stamp.png");
+}
+
 .questin-stamp::before {
   background-image: url("https://idleon.wiki/wiki/images/b/bf/Questin_Stamp.png");
 }
@@ -6452,6 +6496,18 @@
 
 .card-stamp::before {
   background-image: url("https://idleon.wiki/wiki/images/b/bf/Card_Stamp.png");
+}
+
+.forge-stamp::before {
+  background-image: url("https://idleon.wiki/wiki/images/2/29/Forge_Stamp.png");
+}
+
+.vendor-stamp::before {
+  background-image: url("https://idleon.wiki/wiki/images/6/61/Vendor_Stamp.png");
+}
+
+.sigil-stamp::before {
+  background-image: url("https://idleon.wiki/wiki/images/e/ea/Sigil_Stamp.png");
 }
 
 .talent-i-stamp::before {
@@ -6492,6 +6548,10 @@
 
 .refinery-stamp::before {
   background-image: url("https://idleon.wiki/wiki/images/2/24/Refinery_Stamp.png");
+}
+
+.atomic-stamp::before {
+  background-image: url("https://idleon.wiki/wiki/images/c/cf/Atomic_Stamp.png");
 }
 
 .inventory-bag-a::before {
