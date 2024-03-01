@@ -271,11 +271,11 @@ def setBribesProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
     tier_section = f"{overall_BribesTier}/{max_tier}"
     bribe_AdviceSection.pinchy_rating = overall_BribesTier
     bribe_AdviceSection.tier = tier_section
-
+    bribe_AdviceSection.groups = bribe_AdviceGroupDict.values()
     if overall_BribesTier == max_tier:
         bribe_AdviceSection.header = f"Best Bribe tier met: {tier_section}. You best ❤️"
     else:
         bribe_AdviceSection.header = f"Best Bribe tier met: {tier_section}. Recommended Bribe actions"
-        bribe_AdviceSection.groups = bribe_AdviceGroupDict.values()
+
 
     return bribe_AdviceSection

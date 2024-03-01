@@ -12,7 +12,6 @@ def setStampLevels(inputJSON, inputIndex):
         totalStampLevels += int(stamp)
     return totalStampLevels
 
-
 # Stamp p2
 def setMissingStamps(inputJSON, inputIndex):
     missingStamps = []
@@ -20,7 +19,6 @@ def setMissingStamps(inputJSON, inputIndex):
         if value == 0:
             missingStamps.append(stamp)
     return missingStamps
-
 
 # Stamp p3
 def setPriorityStamps(inputJSON):
@@ -36,7 +34,8 @@ def setPriorityStamps(inputJSON):
             try:
                 priorityStampsDict[getReadableStampName(stampIndex, stampType)] = inputJSON["StampLv"][stampTypes.index(stampType)][str(stampIndex)]
             except:
-                logger.debug(f"Level for {stampType} {stampIndex} ({getReadableStampName(stampIndex, stampType)}) not found in Save Data")
+                logger.debug(f"Level for {stampType} {stampIndex} ({getReadableStampName(stampIndex, stampType)}) not found in Save Data. Setting to 0.")
+                priorityStampsDict[getReadableStampName(stampIndex, stampType)] = 0
 
     return priorityStampsDict
 
@@ -313,7 +312,6 @@ def getReadableStampName(stampNumber, stampType):
                 case _:
                     return "Unknown Misc stamp: " + str(stampNumber)
 
-
 # Stamp meta
 def setStampProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
     stamp_AdviceDict = {
@@ -492,10 +490,10 @@ def setStampProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
     tier_section = f"{overall_StampTier}/{max_tier}"
     stamp_AdviceSection.pinchy_rating = overall_StampTier
     stamp_AdviceSection.tier = tier_section
+    stamp_AdviceSection.groups = stamp_AdviceGroupDict.values()
     if overall_StampTier == max_tier:
         stamp_AdviceSection.header = f"Best Stamp tier met: {tier_section}. You've reached the end of the recommendations. Let me know what important stamps you're aiming for next!"
     else:
         stamp_AdviceSection.header = f"Best Stamp tier met: {tier_section}. Recommended stamp actions:"
-        stamp_AdviceSection.groups = stamp_AdviceGroupDict.values()
 
     return stamp_AdviceSection
