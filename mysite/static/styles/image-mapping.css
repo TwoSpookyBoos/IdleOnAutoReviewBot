@@ -914,6 +914,34 @@
   background-image: url("/static/imgs/bribe_pigi.png");
 }
 
+.artifact-pilfering::before {
+  background-image: url("/static/imgs/bribe_pigi.png");
+}
+
+.forge-cap-smuggling::before {
+  background-image: url("/static/imgs/bribe_pigi.png");
+}
+
+.gold-from-lead::before {
+  background-image: url("/static/imgs/bribe_pigi.png");
+}
+
+.nugget-fabrication::before {
+  background-image: url("/static/imgs/bribe_pigi.png");
+}
+
+.divine-pts-miscounting::before {
+  background-image: url("/static/imgs/bribe_pigi.png");
+}
+
+.loot-table-tampering::before {
+  background-image: url("/static/imgs/bribe_pigi.png");
+}
+
+.the-art-of-the-flail::before {
+  background-image: url("/static/imgs/bribe_pigi.png");
+}
+
 .fighter::before {
   background-image: url("https://idleon.wiki/wiki/images/6/6b/Fighter_Genetics.png");
 }

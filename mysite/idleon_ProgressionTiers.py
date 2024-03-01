@@ -1,13 +1,14 @@
 def setDefaultTiers():
     defaultTiers = {}
     defaultTiers['Bribes'] = [
-        #int tier, int w1purchased, int w2purchased, int w3purchased, int w4purchased, int trashIslandpurchased, str notes
-        [0, 0, -7, -7, -6, -8, ""],
-        [1, 6, -7, -7, -6, -8, "by end of W1."],
-        [2, 6, 7, -7, -6, -8, "by end of W2."],
-        [3, 6, 7, 7, -6, -8, "by end of W3."],
-        [4, 6, 7, 7, 6, -8, "by end of W4."],
-        [5, 6, 7, 7, 6, 7, "by end of W5, after unlocking the Bribe from Trash Island."],  #The 8th bribe in w5 can't be purchased yet
+        #int tier, int w1purchased, int w2purchased, int w3purchased, int w4purchased, int trashIslandpurchased, int w6purchased
+        [0, 0, -7, -7, -6, -8, -7],
+        [1, 6, -7, -7, -6, -8, -7],
+        [2, 6, 7, -7, -6, -8, -7],
+        [3, 6, 7, 7, -6, -8, -7],
+        [4, 6, 7, 7, 6, -8, -7],
+        [5, 6, 7, 7, 6, 8, -7],
+        [6, 6, 7, 7, 6, 8, 6, ]  #The 7th bribe in w6 can't be purchased yet
         ]
     defaultTiers['Stamps'] = [
         #int Tier, int Total Stamp Level, str Required combat stamps, str Required Skill stamps, str Required Misc stamps, dict Specific stamp levels, str Notes
