@@ -1,7 +1,9 @@
 import json
 from idleon_SkillLevels import getSpecificSkillLevelsList
 from models import AdviceSection, AdviceGroup, Advice
-from utils import pl
+from utils import pl, get_logger
+
+logger = get_logger(__name__)
 
 def getCritterName(inputNumber):
     reversedCritterIndexList = ["Blobfish", "Honker", "Dung Beat", "Bunny", "Pingy", "Owlio", "Mousey", "Scorpie", "Crabbo", "Froge", "None"]
@@ -40,15 +42,22 @@ def getUnlockedCritterStatus(inputJSON, playerCount):
                 if (questDict[reversedQuestIndexList[questIndex]] >= reversedRequiredStatusQuestIndexList[questIndex]
                 and questIndex < highestCritter):  #and the quest is better than what is already known to be the best
                     #print("Trapping.getUnlockedCritterStatus~ INFO New highest critter found on character", playerIndex, "! Changing from",highestCritter,"to",questIndex)
+                    #logger.debug(f"New highest critter available from character {playerIndex}! Changing from {reversedCritterIndexList[highestCritter]} to {reversedCritterIndexList[questIndex]}")
                     highestCritter = questIndex
                 questIndex += 1
         except Exception as reason:
-            print("Trapping.getUnlockedCritterStatus~ EXCEPTION Could not retrieve quest status:", playerIndex, questIndex, reversedQuestIndexList[questIndex], reason)
+            logger.exception(f"Could not retrieve {reversedQuestIndexList[questIndex]} status on Character{playerIndex} because {reason}")
+            #print("Trapping.getUnlockedCritterStatus~ EXCEPTION Could not retrieve quest status:", playerIndex, questIndex, reversedQuestIndexList[questIndex], reason)
         playerIndex += 1
         questIndex = 0
     #print("Trapping.getUnlockedCritterStatus~ OUTPUT highestCritter:",highestCritter, reversedCritterIndexList[highestCritter])
     try:
-        return [(len(reversedCritterIndexList)-highestCritter), len(reversedCritterIndexList), reversedCritterIndexList[highestCritter]]
+        return [
+            (len(reversedCritterIndexList)-highestCritter),  # Index of the highest unlocked critter
+            len(reversedCritterIndexList),  # Index of the highest critter possible
+            reversedCritterIndexList[highestCritter],  #Name of the highest unlocked critter
+            reversedCritterIndexList[highestCritter-1]  #Name of the next critter to be unlocked
+        ]
     except Exception as reason:
         print("Trapping.getUnlockedCritterStatus~ EXCEPTION Unable to return highestCritter name in reversedCritterIndexList at index",highestCritter,"because:",reason)
         return "UnknownCritter:"+str(highestCritter)
@@ -299,11 +308,11 @@ def setTrappingProgressionTier(inputJSON, characterDict):
     secretCharacterNotUsingNatureTrapsDict = getSecretClassTrapStatus(inputJSON, placedTrapsDict, characterDict)
 
     #UnlockCritters
-    tier_unlockCritters = highestUnlockedCritter[0] + 1
-    if highestUnlockedCritter[0] != highestUnlockedCritter[1]:  #placed vs placable
+    tier_unlockCritters = highestUnlockedCritter[0]
+    if highestUnlockedCritter[0] != highestUnlockedCritter[1]:  #unlocked not equal to the max possible to unlock
         trapping_AdviceDict["UnlockCritters"].append(Advice(
-            label=highestUnlockedCritter[2],
-            item_name=highestUnlockedCritter[2],
+            label=highestUnlockedCritter[3],
+            item_name=highestUnlockedCritter[3],
             progression="",  #str(highestUnlockedCritter[0]+1),
             goal=""  #str(highestUnlockedCritter[1]+1)
             )
@@ -377,7 +386,6 @@ def setTrappingProgressionTier(inputJSON, characterDict):
     #Generate Advice Groups
     agd_unlockcritters_post_stringsList = [
         "",
-        "",
         "Froge critters are unlocked after completing Lord of the Hunt's quest: Pelt for the Pelt God",
         "Crabbo critters are unlocked after completing Lord of the Hunt's quest: Frogecoin to the MOON!",
         "Scorpie critters are unlocked after completing Lord of the Hunt's quest: Yet another Cartoon Reference",
@@ -388,10 +396,11 @@ def setTrappingProgressionTier(inputJSON, characterDict):
         "Dung Beat critters are unlocked after completing Lord of the Hunt's quest: Bunny you Should Say That!",
         "Honker critters are unlocked after completing Lord of the Hunt's quest: Rollin' Thunder",
         "Blobfish critters are unlocked after completing Blobbo's quest: Glitter Critter",
+        ""
     ]
     trapping_AdviceGroupDict["UnlockCritters"] = AdviceGroup(
-        tier=highestUnlockedCritter[0]+1,
-        pre_string=f"{pl((['UnlockRemaining']*(12-highestUnlockedCritter[0])), 'Unlock the final Critter type', 'Continue unlocking new Critter types from quests')}",
+        tier=highestUnlockedCritter[0],
+        pre_string=f"{pl((['UnlockRemaining']*(11-highestUnlockedCritter[0])), 'Unlock the final Critter type', 'Continue unlocking new Critter types from quests')}",
         advices=trapping_AdviceDict["UnlockCritters"],
         post_string=agd_unlockcritters_post_stringsList[highestUnlockedCritter[0]]
     )
@@ -433,7 +442,7 @@ def setTrappingProgressionTier(inputJSON, characterDict):
     )
 
     #Generate AdviceSection
-    max_tier = 12
+    max_tier = highestUnlockedCritter[1]
     overall_TrappingTier = min(max_tier, tier_unlockCritters)
     tier_section = f"{overall_TrappingTier}/{max_tier}"
     trapping_AdviceSection.tier = tier_section

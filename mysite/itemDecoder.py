@@ -187,6 +187,9 @@ ITEM_NAME_DICT = {
     "FoodG11": {"displayName": "Golden_Nigiri"},
     "FoodG12": {"displayName": "Golden_Dumpling"},
     "ButterBar": {"displayName": "Butter_Bar"},
+    "Gfoodcoupon": {"displayName": "Gold_Food_Coupon"},
+    "ItemsCoupon1": {"displayName": "Resource_Coupon"},
+    "ItemsCoupon2": {"displayName": "Really_Really_Resource_Coupon"},
     "rtt0": {"displayName": "Bottled_Town_Teleport"},
     "ResetFrag": {"displayName": "Talent_Point_Reset_Fragment"},
     "ResetCompleted": {"displayName": "Talent_Point_Reset_Potion"},
@@ -269,6 +272,15 @@ ITEM_NAME_DICT = {
     "Quest49": {"displayName": "Summer_Cooler"},
     "Quest50": {"displayName": "Beach_Oyster"},
     "Quest68": {"displayName": "Bucket_of_Slush"},
+    "Quest69": {"displayName": "Killroy_Skull"},
+    "Quest70": {"displayName": "Phone_Box"},
+    "Quest71": {"displayName": "Gem_Envelope"},
+    "Quest72": {"displayName": "Bottled_Wind"},
+    "Quest73": {"displayName": "Gaming_Fertilizer"},
+    "Quest74": {"displayName": "Rift_Tear"},
+    "Quest75": {"displayName": "Spring_Baggies"},
+    "Quest76": {"displayName": "Silver_Pocketwatch"},
+    "Quest77": {"displayName": "Gold_Pocketwatch"},
     "Quest78": {"displayName": "Equinox_Mirror"},
     "Pearl4": {"displayName": "Black_Pearl"},
     "Pearl5": {"displayName": "Holy_Pearl"},
@@ -544,6 +556,7 @@ ITEM_NAME_DICT = {
     "EquipmentRings14": {"displayName": "Dooble_Goopi"},
     "EquipmentRings15": {"displayName": "Sanic_Ring"},
     "EquipmentRings16": {"displayName": "Efaunt_Trunculus"},
+    "EquipmentRings20": {"displayName": "Rex_Ring"},
     "EquipmentRingsChat1": {"displayName": "Love_Ring"},
     "EquipmentRingsChat2": {"displayName": "Leafy_Ring"},
     "EquipmentRingsChat3": {"displayName": "Wealth_Ring"},
@@ -986,6 +999,7 @@ ITEM_NAME_DICT = {
     "SpiA5": {"displayName": "Wooden_Aortic_Mass"},
     "SpiB1": {"displayName": "Leafy_Branch"},
     "SpiB2": {"displayName": "Lantern"},
+    "SpiB2b": {"displayName": "Spirit_Lantern"},
     "SpiB3": {"displayName": "Troll_Flower"},
     "SpiB4": {"displayName": "Chopped_Leek"},
     "SpiC1": {"displayName": "Shattered_Ceramic"},
@@ -1133,6 +1147,9 @@ ITEM_NAME_DICT = {
     "Weight13": {"displayName": "Crash_Box"},
     "Weight14": {"displayName": "Fat_Albert"},
     "Ladle": {"displayName": "Cooking_Ladle"},
+    "PetEgg": {"displayName": "Pet_Egg"},
+    "Whetstone": {"displayName": "Anvil_Reset_Whetstone"},
+
     "CardsA0": {"displayName": "CardsA0"},
     "CardsA1": {"displayName": "CardsA1"},
     "CardsA2": {"displayName": "DONTFILL"},
@@ -1271,6 +1288,11 @@ ITEM_NAME_DICT = {
     "EquipmentHats45": {"displayName": "Giftmas_Tree"},
     "EquipmentHats57": {"displayName": "Big_Bunny"},
     "EquipmentHats62": {"displayName": "Fluffy_Ramsy"},
+    "EquipmentHats73": {"displayName": "Real_Civil_Engineer_Helmet"},
+    "EquipmentHats85": {"displayName": "Bedsheet_with_Holes"},
+    "EquipmentHats86": {"displayName": "Carrotman_Mask"},
+    "EquipmentHats87": {"displayName": "Glublin_Mask"},
+    "EquipmentHats88": {"displayName": "Bloque_Mask"},
     "GemP1": {"displayName": "Infinite_Forge"},
     "GemP9": {"displayName": "Quality_Obol_Stack"},
     "GemP10": {"displayName": "Marvelous_Obol_Stack"},
@@ -1296,7 +1318,7 @@ def getItemDisplayName(itemCodeName):
         .replace("_", " ")
     )
     if display_name.startswith("Unknown-"):
-        logger.warning("Unknown item: %s", itemCodeName)
+        logger.debug("Unknown item: %s", itemCodeName)
 
     return display_name
 
@@ -1308,7 +1330,7 @@ def getItemCodeName(itemName):
         if value["displayName"] == itemName),
         f"Unknown-{itemName}"
     )
-    #if code_name.startswith("Unknown-"):
-        #logger.warning("Unknown item: %s", itemName)
+    if code_name.startswith("Unknown-"):
+        logger.debug("Unknown item: %s", itemName)
 
     return code_name

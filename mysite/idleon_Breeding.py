@@ -287,7 +287,7 @@ def parseJSONtoBreedingDict(inputJSON) -> dict:
             # Spice Progress above 0 or any pet assigned to territory
             if rawTerritoriesList[index][0] > 0 or anyPetsAssignedPerTerritory[index] == True:
                 parsedBreedingDict["Territories Unlocked Count"] += 1
-                logger.debug(f"Increasing Territories Unlocked Count for {getTerritoryName(index+1)}")
+                #logger.debug(f"Increasing Territories Unlocked Count for {getTerritoryName(index+1)}")
     else:
         return {}
 
