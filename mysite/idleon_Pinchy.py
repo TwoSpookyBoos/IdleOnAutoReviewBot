@@ -142,7 +142,7 @@ class Placements(dict):
         #               W1   W2          W3              W4              W5              W6              W7              Max   Placeholder
         COMBAT_LEVELS: [0,   3, 7, 8,    10, 14, 15,     16, 17, 18,     19, 21, 23,     24, 25, 27,     28, 29, 29,     29,   99],
         STAMPS:        [0,   1, 2, 3,    4,  5,  6,      7,  8,  9,      10, 11, 13,     16, 19, 22,     26, 30, 34,     36,   99],
-        BRIBES:        [0,   1, 1, 1,    2,  2,  2,      3,  3,  3,      4,  4,  4,      5,  5,  5,      5, 5, 5,        5,    99],
+        BRIBES:        [0,   1, 1, 1,    2,  2,  2,      3,  3,  3,      4,  4,  4,      5,  5,  5,      5, 5, 5,        6,    99],
         SMITHING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  2,  3,      4,  5,  6,      6, 6, 6,        6,    99],
         BUBBLES:       [0,   0, 0, 0,    0,  1,  1,      2,  2,  2,      3,  4,  5,      7,  9, 14,      17, 19, 21,     23,   99],
         VIALS:         [0,   0, 0, 0,    0,  0,  0,      1,  2,  3,      4,  4,  5,      6,  6, 7,       14, 16, 19,     20,   99],
@@ -294,12 +294,12 @@ def tier_from_monster_kills(dictOfPRs, inputJSON, playerCount) -> Threshold:
 
     highestPrint = getHighestPrint(inputJSON)
     mobKillThresholds = []
-    if highestPrint >= 9999000000:
-        expectedThreshold = Threshold.fromname(Threshold.W7_WAITING_ROOM)
+    if highestPrint >= 9500000000:  # Sites like IE/IT round up to 10B after 9.5B
+        expectedThreshold = Threshold.fromname(Threshold.MAX_TIER)
     elif dictOfPRs[Placements.DEATH_NOTE] >= 24:
-        expectedThreshold = Threshold.fromname(Threshold.SOLID_W7_PREP)
+        expectedThreshold = Threshold.fromname(Threshold.W7_WAITING_ROOM)
     elif dictOfPRs[Placements.DEATH_NOTE] >= 21:
-        expectedThreshold = Threshold.fromname(Threshold.EARLY_W7_PREP)
+        expectedThreshold = Threshold.fromname(Threshold.SOLID_W7_PREP)
     else:
         # logger.info(f"Starting to review map kill counts per player because expectedIndex still W1: {dictOfPRs['Construction Death Note']}")
         for playerCounter in range(0, playerCount):

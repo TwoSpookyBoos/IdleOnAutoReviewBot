@@ -109,7 +109,7 @@ def parseJSONtoBreedingDict(inputJSON) -> dict:
                 else:
                     anyPetsAssignedPerTerritory.append(False)
             except:
-                logger.exception(f"Could not retrieve assigned pet name. Setting territoryIndex {territoryIndex} aka {getTerritoryName(territoryIndex+1)} to locked.")
+                logger.debug(f"Unable to retrieve assigned pet name. Setting territoryIndex {territoryIndex} aka {getTerritoryName(territoryIndex+1)} to locked.")
                 anyPetsAssignedPerTerritory.append(False)
             #logger.debug(f"Result of territoryIndex {territoryIndex} aka {getTerritoryName(territoryIndex+1)}: {anyPetsAssignedPerTerritory[-1]}")
 
@@ -122,7 +122,7 @@ def parseJSONtoBreedingDict(inputJSON) -> dict:
             if arenaMaxWave > requirement:
                 petSlotsUnlocked += 1
     except Exception as reason:
-        logger.exception(f"Could not load \"OptLacc\" from JSON to get Arena Max Wave: {reason}")
+        logger.exception(f"Unable to retrieve \"OptLacc\" from JSON to get Arena Max Wave: {reason}")
 
     parsedBreedingDict = {}
     if rawBreedingList != []:
@@ -341,7 +341,7 @@ def setBreedingProgressionTier(inputJSON: dict, progressionTiers: dict[int, dict
             ['Rattler', 'Looter', 'Monolithic', 'Refiller', 'Defender', 'Refiller'],
             ['rattler', 'looter', 'monolithic', 'refiller', 'defender', 'refiller']],
         6: [
-            ['Peapeapod or Rattler', 'Looter', 'Trasher', 'Refiller', 'Refiller', 'Lazarus'],
+            ['Peapeapod or Rattler', 'Looter', 'Trasher', 'Refiller', 'Refiller', 'Lazarus or Filler'],
             ['peapeapod', 'looter', 'trasher', 'refiller', 'refiller', 'lazarus']]
     }
     recommendedArenaCompsDict: dict[int, list[list[str]]] = {
@@ -359,8 +359,8 @@ def setBreedingProgressionTier(inputJSON: dict, progressionTiers: dict[int, dict
             ['rattler', 'monolithic', 'refiller', 'borger']],
         # 5-pet comp used to beat Wave 125
         3: [
-            ['Rattler', 'Monolithic', 'Badumdum', 'Refiller', 'Borger'],
-            ['rattler', 'monolithic', 'badumdum', 'refiller', 'borger']],
+            ['Rattler', 'Monolithic', 'Looter', 'Refiller', 'Borger'],
+            ['rattler', 'monolithic', 'looter', 'refiller', 'borger']],
         # 6-pet comp used to beat Wave 200
         4: [
             ['Rattler', 'Defender', 'Looter', 'Refiller', 'Badumdum', 'Borger'],
