@@ -50,7 +50,6 @@ def parseBribes(inputJSON):
             'Muscles on Muscles': parsedBribes[30],
             'Bottle Service': parsedBribes[31],
             'Star Scraper': parsedBribes[32],
-            'The Art of the Grail': parsedBribes[33]
             }
     except:
         logger.warning(f"Unable to retrieve Trash Island Bribes. Defaulting to unpurchased.")
@@ -62,10 +61,10 @@ def parseBribes(inputJSON):
             'Muscles on Muscles': 0,
             'Bottle Service': 0,
             'Star Scraper': 0,
-            'The Art of the Grail': 0
         }
     try:
         bribeSetW6 = {
+            'The Art of the Grail': parsedBribes[33],
             'Artifact Pilfering': parsedBribes[34],
             'Forge Cap Smuggling': parsedBribes[35],
             'Gold from Lead': parsedBribes[36],
@@ -77,6 +76,7 @@ def parseBribes(inputJSON):
     except:
         logger.debug(f"Unable to retrieve W6 Bribes. Defaulting to unpurchased.")
         bribeSetW6 = {
+            'The Art of the Grail': 0,
             'Artifact Pilfering': 0,
             'Forge Cap Smuggling': 0,
             'Gold from Lead': 0,
