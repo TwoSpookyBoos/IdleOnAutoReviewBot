@@ -914,6 +914,10 @@
   background-image: url("/static/imgs/bribe_pigi.png");
 }
 
+.the-art-of-the-grail::before {
+  background-image: url("/static/imgs/bribe_pigi.png");
+}
+
 .artifact-pilfering::before {
   background-image: url("/static/imgs/bribe_pigi.png");
 }
@@ -1140,6 +1144,10 @@
 
 .vials::before {
   background-image: url("/static/imgs/Alchemy_Vial-level-1.png");
+}
+
+.vial-l4::before {
+  background-image: url("/static/imgs/Alchemy_Vial-level-4.png");
 }
 
 .vial-max::before {
@@ -1610,6 +1618,50 @@
   background-image: url("https://idleon.wiki/wiki/images/5/5c/Dream_Particulate.png");
 }
 
+.ricecakorade::before {
+  background-image: url("https://idleon.wiki/wiki/images/6/65/Rice_Cake.png");
+}
+
+.ladybug-serum::before {
+  background-image: url("https://idleon.wiki/wiki/images/3/38/Ladybug.png");
+}
+
+.flavorgil::before {
+  background-image: url("https://idleon.wiki/wiki/images/3/3c/Caulifish.png");
+}
+
+.greenleaf-tea::before {
+  background-image: url("https://idleon.wiki/wiki/images/2/20/Leafy_Branch.png");
+}
+
+.firefly-grog::before {
+  background-image: url("https://idleon.wiki/wiki/images/d/d7/Firefly.png");
+}
+
+.dabar-special::before {
+  background-image: url("https://idleon.wiki/wiki/images/0/02/Godshard_Bar.png");
+}
+
+.refreshment::before {
+  background-image: url("https://idleon.wiki/wiki/images/b/b1/Breezy_Soul.png");
+}
+
+.gibbed-drink::before {
+  background-image: url("https://idleon.wiki/wiki/images/c/c9/Eviscerated_Chunk.png");
+}
+
+.ded-sap::before {
+  background-image: url("https://idleon.wiki/wiki/images/2/2e/Effervescent_Logs.png");
+}
+
+.royale-cola::before {
+  background-image: url("https://idleon.wiki/wiki/images/e/ec/Royal_Headpiece.png");
+}
+
+.turtle-tisane::before {
+  background-image: url("https://idleon.wiki/wiki/images/0/01/Froge.png");
+}
+
 .cosmic-storage-chest::before {
   background-image: url("https://idleon.wiki/wiki/images/b/b8/Cosmic_Storage_Chest.png");
 }
@@ -1660,10 +1712,6 @@
 
 .storage-chest-99c::before {
   background-image: url("https://idleon.wiki/wiki/images/d/da/Storage_Chest_99C.png");
-}
-
-.woodlin-chest::before {
-  background-image: url("/static/imgs/Woodlin_Chest.png");
 }
 
 .mining::before {
@@ -1920,6 +1968,38 @@
 
 .lava-sprouts::before {
   background-image: url("https://idleon.wiki/wiki/images/a/a5/Lava_Sprouts.png");
+}
+
+.plot-of-land::before {
+  background-image: url("https://idleon.wiki/wiki/images/2/21/Plot_Of_Land.png");
+}
+
+.pristine-charm::before {
+  background-image: url("https://idleon.wiki/wiki/images/1/18/Pristine_Charm.png");
+}
+
+.shroom-familiar::before {
+  background-image: url("https://idleon.wiki/wiki/images/b/b9/Shroom_Familiar.png");
+}
+
+.sand-of-time::before {
+  background-image: url("https://idleon.wiki/wiki/images/a/ad/Sand_of_Time.png");
+}
+
+.instagrow-generator::before {
+  background-image: url("https://idleon.wiki/wiki/images/d/d9/Instagrow_Generator.png");
+}
+
+.life-refill::before {
+  background-image: url("https://idleon.wiki/wiki/images/4/41/Life_Refill.png");
+}
+
+.compost-bag::before {
+  background-image: url("https://idleon.wiki/wiki/images/e/e8/Compost_Bag.png");
+}
+
+.summoner-stone::before {
+  background-image: url("https://idleon.wiki/wiki/images/f/f3/Summoner_Stone.png");
 }
 
 .halloween-pumpkin::before {
@@ -6762,6 +6842,18 @@
   background-image: url("https://idleon.wiki/wiki/images/8/86/Storage_Chest_25.png");
 }
 
+.storage-chest-26::before {
+  background-image: url("https://idleon.wiki/wiki/images/6/6b/Storage_Chest_26.png");
+}
+
+.storage-chest-27::before {
+  background-image: url("https://idleon.wiki/wiki/images/9/9f/Storage_Chest_27.png");
+}
+
+.storage-chest-28::before {
+  background-image: url("https://idleon.wiki/wiki/images/c/c1/Storage_Chest_28.png");
+}
+
 .dank-paypay-chest::before {
   background-image: url("https://idleon.wiki/wiki/images/0/06/Dank_Paypay_Chest.png");
 }
@@ -6772,6 +6864,14 @@
 
 .cheesy-chest::before {
   background-image: url("https://idleon.wiki/wiki/images/e/e0/Cheesy_Chest.png");
+}
+
+.woodlin-chest::before {
+  background-image: url("https://idleon.wiki/wiki/images/f/f7/Woodlin_Chest.png");
+}
+
+.ninja-chest::before {
+  background-image: url("https://idleon.wiki/wiki/images/4/4f/Ninja_Chest.png");
 }
 
 .copper-twine::before {

@@ -75,7 +75,7 @@ def parseBribes(inputJSON):
             'The Art of the Flail': parsedBribes[40]
         }
     except:
-        logger.warning(f"Unable to retrieve Trash Island Bribes. Defaulting to unpurchased.")
+        logger.debug(f"Unable to retrieve W6 Bribes. Defaulting to unpurchased.")
         bribeSetW6 = {
             'Artifact Pilfering': 0,
             'Forge Cap Smuggling': 0,

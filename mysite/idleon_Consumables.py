@@ -94,6 +94,7 @@ class StorageChest(StorageItemMixin, IntEnum):
     GELATINOUS_CHEST = 101
     CHEESY_CHEST = 102
     WOODLIN_CHEST = 103
+    NINJA_CHEST = 104
 
     @classmethod
     def dropped(cls):
@@ -128,7 +129,7 @@ class StorageChest(StorageItemMixin, IntEnum):
     def from_quest(cls):
         return (
             cls.STORAGE_CHEST_1, cls.STORAGE_CHEST_3, cls.STORAGE_CHEST_4,
-            cls.STORAGE_CHEST_5, cls.STORAGE_CHEST_11
+            cls.STORAGE_CHEST_5, cls.STORAGE_CHEST_11, cls.NINJA_CHEST
         )
 
     @classmethod
@@ -430,6 +431,8 @@ def parseStorageChests(inputJSON):
         pre_string=f"Collect {len(missing_chests)} more storage chests for your bank",
         advices=advices
     )
+    if len(advices) == 0:
+        group.pre_string = "You've collected all current Storage Chests! You best ❤️"
 
     return group
 
@@ -448,5 +451,7 @@ def parseConsumables(inputJSON, playerCount, playerNames):
         picture="Cosmic_Storage_chest.png",
         groups=groups
     )
+    if section_storage.collapse:
+        section_storage.header = "You've collected all current Storage Chests and Inventory Bags! You best ❤️"
 
     return *sections_candy, section_storage

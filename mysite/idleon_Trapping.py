@@ -1,66 +1,81 @@
 import json
 from idleon_SkillLevels import getSpecificSkillLevelsList
 from models import AdviceSection, AdviceGroup, Advice
-from utils import pl, get_logger
+from utils import pl, get_logger, letterToNumber
 
 logger = get_logger(__name__)
+maxCritterTypes = 12
 
 def getCritterName(inputNumber):
-    reversedCritterIndexList = ["Blobfish", "Honker", "Dung Beat", "Bunny", "Pingy", "Owlio", "Mousey", "Scorpie", "Crabbo", "Froge", "None"]
+    reversedCritterIndexList = ["Tuttle", "Blobfish", "Honker", "Dung Beat", "Bunny", "Pingy", "Owlio", "Mousey", "Scorpie", "Crabbo", "Froge", "None"]
     try:
         return reversedCritterIndexList[-inputNumber]
     except:
         return "UnknownCritterName"
 
 def getUnlockedCritterStatus(inputJSON, playerCount):
-    reversedCritterIndexList = ["Blobfish", "Honker", "Dung Beat", "Bunny", "Pingy", "Owlio", "Mousey", "Scorpie", "Crabbo", "Froge", "None"]
-    reversedQuestIndexList = ["Blobbo2","Lord_of_the_Hunt10", "Lord_of_the_Hunt9", "Lord_of_the_Hunt8", "Lord_of_the_Hunt7", "Lord_of_the_Hunt6", "Lord_of_the_Hunt5", "Lord_of_the_Hunt4", "Lord_of_the_Hunt3", "Lord_of_the_Hunt2"]
-    reversedRequiredStatusQuestIndexList = [1,0,0,0,0,0,0,0,0,0,0]
-    highestCritter = (len(reversedCritterIndexList)-1)
-    #Critters available to be trapped can be found by quest status.
-    #["QuestComplete_0"] through _9 are dictionaries.
-    #Keys are "Lord_of_the_Hunt2" through 10. Values are 1 for completed, 0 for in progress I think, and -1 for not started.
-    #1 = buy a trap set quest, irrelevant
-    #Lord_of_the_Hunt2 = Froge
-    #3 = Crabbo
-    #4 = Scorpie
-    #5 = Mousey
-    #6 = Owlio
-    #7 = Pingy
-    #8 = Bunny
-    #9 = Dung Beat
-    #10 = Honker when quest is STARTED (value of 0 or 1)
-    #11 = the trophy quest, irrelevant
-    #Blobfish are unlocked after "Blobbo2" quest is completed (value of 1)
-
-    playerIndex = 0
-    questIndex = 0
-    while playerIndex < playerCount:
-        try:
-            questDict = json.loads(inputJSON[("QuestComplete_"+str(playerIndex))])
-            while questIndex < len(reversedQuestIndexList):
-                if (questDict[reversedQuestIndexList[questIndex]] >= reversedRequiredStatusQuestIndexList[questIndex]
-                and questIndex < highestCritter):  #and the quest is better than what is already known to be the best
-                    #print("Trapping.getUnlockedCritterStatus~ INFO New highest critter found on character", playerIndex, "! Changing from",highestCritter,"to",questIndex)
-                    #logger.debug(f"New highest critter available from character {playerIndex}! Changing from {reversedCritterIndexList[highestCritter]} to {reversedCritterIndexList[questIndex]}")
-                    highestCritter = questIndex
-                questIndex += 1
-        except Exception as reason:
-            logger.exception(f"Could not retrieve {reversedQuestIndexList[questIndex]} status on Character{playerIndex} because {reason}")
-            #print("Trapping.getUnlockedCritterStatus~ EXCEPTION Could not retrieve quest status:", playerIndex, questIndex, reversedQuestIndexList[questIndex], reason)
-        playerIndex += 1
-        questIndex = 0
-    #print("Trapping.getUnlockedCritterStatus~ OUTPUT highestCritter:",highestCritter, reversedCritterIndexList[highestCritter])
     try:
+        rawJadeEmporiumPurchases = json.loads(inputJSON["Ninja"])[102][9]
+    except:
+        logger.debug("Unable to retrieve Jade Emporium Upgrades to tell if Tuttle is unlocked. Defaulting to locked.")
+        rawJadeEmporiumPurchases = ""
+
+    if "D" in list(rawJadeEmporiumPurchases):  # Capital D is the value indicating the new Critter bonus has been purchased from Jade Emporium
         return [
-            (len(reversedCritterIndexList)-highestCritter),  # Index of the highest unlocked critter
-            len(reversedCritterIndexList),  # Index of the highest critter possible
-            reversedCritterIndexList[highestCritter],  #Name of the highest unlocked critter
-            reversedCritterIndexList[highestCritter-1]  #Name of the next critter to be unlocked
+            12,  # Index of the highest unlocked critter
+            maxCritterTypes,  # Index of the highest critter possible
+            "Tuttle",  # Name of the highest unlocked critter
+            "None"  # Name of the next critter to be unlocked
         ]
-    except Exception as reason:
-        print("Trapping.getUnlockedCritterStatus~ EXCEPTION Unable to return highestCritter name in reversedCritterIndexList at index",highestCritter,"because:",reason)
-        return "UnknownCritter:"+str(highestCritter)
+    else:
+        reversedCritterIndexList = ["Blobfish", "Honker", "Dung Beat", "Bunny", "Pingy", "Owlio", "Mousey", "Scorpie", "Crabbo", "Froge", "None"]
+        reversedQuestIndexList = ["Blobbo2","Lord_of_the_Hunt10", "Lord_of_the_Hunt9", "Lord_of_the_Hunt8", "Lord_of_the_Hunt7", "Lord_of_the_Hunt6", "Lord_of_the_Hunt5", "Lord_of_the_Hunt4", "Lord_of_the_Hunt3", "Lord_of_the_Hunt2"]
+        reversedRequiredStatusQuestIndexList = [1,0,0,0,0,0,0,0,0,0,0]
+        highestCritter = (len(reversedCritterIndexList)-1)
+        #Critters available to be trapped can be found by quest status, except for the current last critter of Tuttles
+        #["QuestComplete_0"] through _9 are dictionaries.
+        #Keys are "Lord_of_the_Hunt2" through 10. Values are 1 for completed, 0 for in progress I think, and -1 for not started.
+        #1 = buy a trap set quest, irrelevant
+        #Lord_of_the_Hunt2 = Froge
+        #3 = Crabbo
+        #4 = Scorpie
+        #5 = Mousey
+        #6 = Owlio
+        #7 = Pingy
+        #8 = Bunny
+        #9 = Dung Beat
+        #10 = Honker when quest is STARTED (value of 0 or 1)
+        #11 = the trophy quest, irrelevant
+        #Blobfish are unlocked after "Blobbo2" quest is completed (value of 1)
+
+        playerIndex = 0
+        questIndex = 0
+        while playerIndex < playerCount:
+            try:
+                questDict = json.loads(inputJSON[("QuestComplete_"+str(playerIndex))])
+                while questIndex < len(reversedQuestIndexList):
+                    if (questDict[reversedQuestIndexList[questIndex]] >= reversedRequiredStatusQuestIndexList[questIndex]
+                    and questIndex < highestCritter):  #and the quest is better than what is already known to be the best
+                        #print("Trapping.getUnlockedCritterStatus~ INFO New highest critter found on character", playerIndex, "! Changing from",highestCritter,"to",questIndex)
+                        #logger.debug(f"New highest critter available from character {playerIndex}! Changing from {reversedCritterIndexList[highestCritter]} to {reversedCritterIndexList[questIndex]}")
+                        highestCritter = questIndex
+                    questIndex += 1
+            except Exception as reason:
+                logger.exception(f"Could not retrieve {reversedQuestIndexList[questIndex]} status on Character{playerIndex} because {reason}")
+                #print("Trapping.getUnlockedCritterStatus~ EXCEPTION Could not retrieve quest status:", playerIndex, questIndex, reversedQuestIndexList[questIndex], reason)
+            playerIndex += 1
+            questIndex = 0
+        #print("Trapping.getUnlockedCritterStatus~ OUTPUT highestCritter:",highestCritter, reversedCritterIndexList[highestCritter])
+        try:
+            return [
+                (len(reversedCritterIndexList)-highestCritter),  # Index of the highest unlocked critter
+                maxCritterTypes,  # Index of the highest critter possible
+                getCritterName(highestCritter-1),  #Name of the highest unlocked critter
+                getCritterName(highestCritter)  #Name of the next critter to be unlocked
+            ]
+        except Exception as reason:
+            print("Trapping.getUnlockedCritterStatus~ EXCEPTION Unable to return highestCritter name in reversedCritterIndexList at index",highestCritter,"because:",reason)
+            return "UnknownCritter:"+str(highestCritter)
 
 def getPlacedTrapsDict(inputJSON, playerCount):
     placedTrapDict = {}
@@ -146,13 +161,14 @@ def getUnmaxedCritterVialStatus(inputJSON):
         37,  #Bunny
         40,  #Honker
         47,  #Blobfish
+        74,  #Tuttle
     ]
     for critterVialIndex in critterVialIndexList:
         try:
             if int(inputJSON["CauldronInfo"][4][str(critterVialIndex)]) != 13:
                 unmaxedCritterVialsCount += 1
-        except Exception as reason:
-            print("Trapping.getUnmaxedCritterVialStatus~ EXCEPTION Unable to retrieve Vial level for critterVialIndex", critterVialIndex, "because:", reason)
+        except:
+            logger.warning(f"Unable to retrieve Vial level for critterVialIndex {critterVialIndex}")
             unmaxedCritterVialsCount += 1
     return unmaxedCritterVialsCount != 0
 
@@ -309,7 +325,7 @@ def setTrappingProgressionTier(inputJSON, characterDict):
 
     #UnlockCritters
     tier_unlockCritters = highestUnlockedCritter[0]
-    if highestUnlockedCritter[0] != highestUnlockedCritter[1]:  #unlocked not equal to the max possible to unlock
+    if highestUnlockedCritter[0] != maxCritterTypes:  #unlocked not equal to the max possible to unlock.
         trapping_AdviceDict["UnlockCritters"].append(Advice(
             label=highestUnlockedCritter[3],
             item_name=highestUnlockedCritter[3],
@@ -396,6 +412,7 @@ def setTrappingProgressionTier(inputJSON, characterDict):
         "Dung Beat critters are unlocked after completing Lord of the Hunt's quest: Bunny you Should Say That!",
         "Honker critters are unlocked after completing Lord of the Hunt's quest: Rollin' Thunder",
         "Blobfish critters are unlocked after completing Blobbo's quest: Glitter Critter",
+        "Tuttle critters are unlocked in W6 Jade Emporium",
         ""
     ]
     trapping_AdviceGroupDict["UnlockCritters"] = AdviceGroup(

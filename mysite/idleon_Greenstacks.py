@@ -33,6 +33,7 @@ expectedStackables = {
         "FoodHealth10", "FoodPotOr3", "FoodPotYe2", "Leaf3",  # W3
         "FoodPotMana4", "Leaf4",  # W4
         "FoodPotYe5", "Leaf5",  # W5
+        "Leaf6",  # W6
         "EquipmentStatues7", "EquipmentStatues3", "EquipmentStatues2", "EquipmentStatues4", "EquipmentStatues14",  # Standard statues
         "EquipmentStatues1", "EquipmentStatues5",  # Plausible but time consuming
         "rtt0", "StoneZ1", "StoneT1", "StoneW1", "StoneA1"  # W1 Slow drops
@@ -64,7 +65,7 @@ expectedStackables = {
         "Critter9", "Critter10", "Soul4", "PlatBar", "FoodMining1", "FoodFish1", "FoodCatch1",  # Tier6 Critters, Souls, Bars, and Crafted
         "Soul5", "DementiaBar", "Peanut",  # Tier7 Souls, Bars, Crafted
         "Soul6", "VoidBar", "Bullet", "BulletB",  # Tier8 Souls, Bars, Crafted
-        "LustreBar", "Quest68",  # Tier9 Bars, Crafted
+        "Soul7", "LustreBar", "Quest68",  # Tier9 Bars, Crafted
         "StarfireBar", "Bullet3", "FoodChoppin1",  # Tier10 Bars, Crafted
         "DreadloBar", "EquipmentSmithingTabs2", "Refinery1",  # Tier11 Bars, Crafted, Salts
         "Critter1A", "Refinery2", "Critter2A", "Refinery3", "Critter3A", "Critter4A", "Critter5A", "Refinery4", "Critter6A", "Critter7A", "Critter8A",

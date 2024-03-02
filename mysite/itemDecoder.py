@@ -105,6 +105,8 @@ ITEM_NAME_DICT = {
     "Critter9A": {"displayName": "Diamond_Duck"},
     "Critter10": {"displayName": "Blobfish"},
     "Critter10A": {"displayName": "Voodofish"},
+    "Critter11": {"displayName": "Tuttle"},
+    "Critter11A": {"displayName": "Tottoise"},
     "Soul1": {"displayName": "Forest_Soul"},
     "Soul2": {"displayName": "Dune_Soul"},
     "Soul3": {"displayName": "Rooted_Soul"},
