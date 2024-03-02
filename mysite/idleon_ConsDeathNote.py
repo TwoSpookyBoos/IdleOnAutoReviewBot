@@ -367,7 +367,7 @@ def getEnemyNameFromMap(inputMap: str) -> str:
             return "Royal Egg"
         case "Chieftain Stairway":
             return "Minichief Spirit"
-        case "Emporer's Castle Doorstep":
+        case "Emperor's Castle Doorstep":
             return "Samurai Guardian"
 
         #Default
