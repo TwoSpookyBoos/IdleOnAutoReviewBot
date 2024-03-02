@@ -418,7 +418,7 @@ def getDeathNoteKills(inputJSON, characterDict):
         if characterIndex in apocCharactersIndexList:
             for worldIndex in range(0, len(apocableMapIndexDict)):
                 for mapIndex in apocableMapIndexDict[worldIndex]:
-                    if len(characterKillsList) >= mapIndex:
+                    if len(characterKillsList) > mapIndex:
                         enemyMaps[worldIndex][mapIndex].updateZOWDict(characterIndex, characterKillsList[mapIndex][0])
                     #else:
                         #print("ConsDeathNote.getDeathNoteKills~ INFO Barbarian with characterIndex", characterIndex, "kill list has no data for mapIndex", mapIndex, ", len(characterKillsList)=", len(characterKillsList))
@@ -426,7 +426,7 @@ def getDeathNoteKills(inputJSON, characterDict):
         #Regardless of class, for each map within each world, add this player's kills to EnemyMap's kill_count
         for worldIndex in range(1, len(apocableMapIndexDict)):
             for mapIndex in apocableMapIndexDict[worldIndex]:
-                if len(characterKillsList) >= mapIndex:
+                if len(characterKillsList) > mapIndex:
                     enemyMaps[worldIndex][mapIndex].addRawKLA(characterKillsList[mapIndex][0])
                 #else:
                     #print("ConsDeathNote.getDeathNoteKills~ INFO characterIndex", characterIndex, "kill list has no data for mapIndex", mapIndex, ", len(characterKillsList)=", len(characterKillsList))
