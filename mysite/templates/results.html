@@ -26,7 +26,7 @@
         {% include 'sidebar.html' %}
         {% include 'nav.html' %}
         <div class="container-fluid">
-            <div class="main-wrapper">
+            <div class="main-wrapper" id="top">
                 {% if error %}
                     <span class="error">
                         Unable to retrieve data for this character name.
@@ -39,6 +39,7 @@
                     {% include 'main.html' %}
                 {% endif %}
             </div>
+            <a id="scroll-to-top" href="#top"></a>
             {% include 'footer.html' %}
         </div>
     </body>
