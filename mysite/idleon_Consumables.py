@@ -448,7 +448,7 @@ def parseConsumables(inputJSON, playerCount, playerNames):
         name="Storage",
         tier="",
         header="Get more space for your bank and inventories:",
-        picture="Cosmic_Storage_chest.png",
+        picture="Cosmic_Storage_Chest.png",
         groups=groups
     )
     if section_storage.collapse:
