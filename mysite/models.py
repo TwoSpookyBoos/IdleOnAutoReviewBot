@@ -246,12 +246,18 @@ class AdviceGroup(AdviceBase):
     def _is_valid_operand(self, other):
         return all(hasattr(other, field) for field in self.__compare_by)
 
+    def _coerce_to_int(self, field):
+        try:
+            return int(getattr(self, field))
+        except ValueError:
+            return -1
+
     def __eq__(self, other):
         if not self._is_valid_operand(other):
             return NotImplemented
 
         return all(
-            getattr(self, field) == getattr(other, field)
+            self._coerce_to_int(field) == other._coerce_to_int(field)
             for field in self.__compare_by
         )
 
@@ -260,7 +266,7 @@ class AdviceGroup(AdviceBase):
             return NotImplemented
 
         return all(
-            getattr(self, field) < getattr(other, field)
+            self._coerce_to_int(field) < other._coerce_to_int(field)
             for field in self.__compare_by
         )
 
