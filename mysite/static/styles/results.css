@@ -796,6 +796,31 @@ strong:not(.no-collapse):hover,
     }
 }
 
+#scroll-to-top {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+
+    height: 40px;
+    width: 40px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 50%;
+    background-color: teal;
+
+    &::before {
+        content: '';
+        height: 10px;
+        width: 10px;
+        border-top: 2px solid white;
+        border-left: 2px solid white;
+        transform: rotate(45deg) translateY(15%) translateX(15%);
+    }
+}
+
 @media (max-width: 600px) {
     header {
         & > span:first-child {
