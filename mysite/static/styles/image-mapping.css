@@ -1,3 +1,23 @@
+.forest-villa-key::before {
+  background-image: url("https://idleon.wiki/wiki/images/b/be/Forest_Villa_Key.png");
+}
+
+.efaunts-tomb-key::before {
+  background-image: url("https://idleon.wiki/wiki/images/9/95/Efaunt's_Tomb_Key.png");
+}
+
+.chizoars-cavern-key::before {
+  background-image: url("https://idleon.wiki/wiki/images/9/9c/Chizoar's_Cavern_Key.png");
+}
+
+.trolls-enclave-key::before {
+  background-image: url("https://idleon.wiki/wiki/images/0/0f/Troll's_Enclave_Key.png");
+}
+
+.kruks-volcano-key::before {
+  background-image: url("https://idleon.wiki/wiki/images/4/49/Kruk's_Volcano_Key.png");
+}
+
 .green-mushroom::before {
   background-image: url("https://idleon.wiki/wiki/images/4/4b/Green_Mushroom_Idle.gif");
 }
@@ -2062,16 +2082,16 @@
   background-image: url("https://idleon.wiki/wiki/images/7/70/Starfire_Ore.png");
 }
 
+.marble-ore::before {
+  background-image: url("https://idleon.wiki/wiki/images/2/25/Marble_Ore.png");
+}
+
 .dreadlo-ore::before {
   background-image: url("https://idleon.wiki/wiki/images/8/8d/Dreadlo_Ore.png");
 }
 
 .godshard-ore::before {
   background-image: url("https://idleon.wiki/wiki/images/0/0f/Godshard_Ore.png");
-}
-
-.marble-ore::before {
-  background-image: url("https://idleon.wiki/wiki/images/2/25/Marble_Ore.png");
 }
 
 .copper-bar::before {
@@ -2110,12 +2130,12 @@
   background-image: url("https://idleon.wiki/wiki/images/b/b8/Dreadlo_Bar.png");
 }
 
-.godshard-bar::before {
-  background-image: url("https://idleon.wiki/wiki/images/0/02/Godshard_Bar.png");
-}
-
 .marble-bar::before {
   background-image: url("https://idleon.wiki/wiki/images/4/4e/Marble_Bar.png");
+}
+
+.godshard-bar::before {
+  background-image: url("https://idleon.wiki/wiki/images/0/02/Godshard_Bar.png");
 }
 
 .oak-logs::before {
@@ -2174,6 +2194,14 @@
   background-image: url("https://idleon.wiki/wiki/images/8/89/Willow_Logs.png");
 }
 
+.bamboo-logs::before {
+  background-image: url("https://idleon.wiki/wiki/images/9/94/Bamboo_Logs.png");
+}
+
+.effervescent-logs::before {
+  background-image: url("https://idleon.wiki/wiki/images/2/2e/Effervescent_Logs.png");
+}
+
 .grass-leaf::before {
   background-image: url("https://idleon.wiki/wiki/images/c/cf/Grass_Leaf.png");
 }
@@ -2192,6 +2220,10 @@
 
 .magma-leaf::before {
   background-image: url("https://idleon.wiki/wiki/images/d/da/Magma_Leaf.png");
+}
+
+.spirit-leaf::before {
+  background-image: url("https://idleon.wiki/wiki/images/e/ec/Spirit_Leaf.png");
 }
 
 .goldfish::before {
@@ -2239,7 +2271,7 @@
 }
 
 .jumbo-shrimp::before {
-  background-image: url("https://idleon.wiki/wiki/images/Jumbo_Shrimp.png");
+  background-image: url("https://idleon.wiki/wiki/images/3/30/Jumbo_Shrimp.png");
 }
 
 .caulifish::before {
@@ -2288,6 +2320,14 @@
 
 .dream-particulate::before {
   background-image: url("https://idleon.wiki/wiki/images/5/5c/Dream_Particulate.png");
+}
+
+.ladybug::before {
+  background-image: url("https://idleon.wiki/wiki/images/3/38/Ladybug.png");
+}
+
+.firefly::before {
+  background-image: url("https://idleon.wiki/wiki/images/d/d7/Firefly.png");
 }
 
 .poison-froge::before {
@@ -2362,6 +2402,14 @@
   background-image: url("https://idleon.wiki/wiki/images/9/9e/Voodofish.png");
 }
 
+.tuttle::before {
+  background-image: url("https://idleon.wiki/wiki/images/0/01/Froge.png");
+}
+
+.tottoise::before {
+  background-image: url("https://idleon.wiki/wiki/images/0/01/Froge.png");
+}
+
 .forest-soul::before {
   background-image: url("https://idleon.wiki/wiki/images/c/c9/Forest_Soul.png");
 }
@@ -2384,6 +2432,10 @@
 
 .oozie-soul::before {
   background-image: url("https://idleon.wiki/wiki/images/7/7d/Oozie_Soul.png");
+}
+
+.breezy-soul::before {
+  background-image: url("https://idleon.wiki/wiki/images/b/b1/Breezy_Soul.png");
 }
 
 .redox-salts::before {
@@ -2484,6 +2536,10 @@
 
 .magma-barrel::before {
   background-image: url("https://idleon.wiki/wiki/images/a/a8/Magma_Barrel.png");
+}
+
+.plasma-barrel::before {
+  background-image: url("https://idleon.wiki/wiki/images/d/d7/Plasma_Barrel.png");
 }
 
 .distilled-water::before {
@@ -2854,6 +2910,70 @@
   background-image: url("https://idleon.wiki/wiki/images/1/16/Kruk_Cavity_Tooth.png");
 }
 
+.leafy-droplet::before {
+  background-image: url("https://idleon.wiki/wiki/images/c/c7/Leafy_Droplet.png");
+}
+
+.rice-cake::before {
+  background-image: url("https://idleon.wiki/wiki/images/6/65/Rice_Cake.png");
+}
+
+.stacked-rice-cake::before {
+  background-image: url("https://idleon.wiki/wiki/images/4/47/Stacked_Rice_Cake.png");
+}
+
+.bamboo::before {
+  background-image: url("https://idleon.wiki/wiki/images/2/2a/Bamboo.png");
+}
+
+.leafy-horn::before {
+  background-image: url("https://idleon.wiki/wiki/images/3/38/Leafy_Horn.png");
+}
+
+.wooden-aortic-mass::before {
+  background-image: url("https://idleon.wiki/wiki/images/4/48/Wooden_Aortic_Mass.png");
+}
+
+.leafy-branch::before {
+  background-image: url("https://idleon.wiki/wiki/images/2/20/Leafy_Branch.png");
+}
+
+.light-lantern::before {
+  background-image: url("https://idleon.wiki/wiki/images/5/57/Light_Lantern.png");
+}
+
+.dark-lantern::before {
+  background-image: url("https://idleon.wiki/wiki/images/3/39/Dark_Lantern.png");
+}
+
+.troll-flower::before {
+  background-image: url("https://idleon.wiki/wiki/images/3/3f/Troll_Flower.png");
+}
+
+.chopped-leek::before {
+  background-image: url("https://idleon.wiki/wiki/images/6/65/Chopped_Leek.png");
+}
+
+.shattered-ceramic::before {
+  background-image: url("https://idleon.wiki/wiki/images/c/ce/Shattered_Ceramic.png");
+}
+
+.eviscerated-chunk::before {
+  background-image: url("https://idleon.wiki/wiki/images/c/c9/Eviscerated_Chunk.png");
+}
+
+.royal-yolk::before {
+  background-image: url("https://idleon.wiki/wiki/images/a/a8/Royal_Yolk.png");
+}
+
+.royal-fabric::before {
+  background-image: url("https://idleon.wiki/wiki/images/9/9e/Royal_Fabric.png");
+}
+
+.royal-headpiece::before {
+  background-image: url("https://idleon.wiki/wiki/images/e/ec/Royal_Headpiece.png");
+}
+
 .farmer-brim::before {
   background-image: url("https://idleon.wiki/wiki/images/2/26/Farmer_Brim.png");
 }
@@ -3086,6 +3206,62 @@
   background-image: url("https://idleon.wiki/wiki/images/d/de/Adornment_of_the_High_Priest.png");
 }
 
+.straw-hat::before {
+  background-image: url("https://idleon.wiki/wiki/images/b/b2/Straw_Hat.png");
+}
+
+.wig-bandana::before {
+  background-image: url("https://idleon.wiki/wiki/images/a/ac/Wig_Bandana.png");
+}
+
+.funky-hat::before {
+  background-image: url("https://idleon.wiki/wiki/images/9/90/Funky_Hat.png");
+}
+
+.reinforced-headband::before {
+  background-image: url("https://idleon.wiki/wiki/images/7/76/Reinforced_Headband.png");
+}
+
+.shogun-helmet::before {
+  background-image: url("https://idleon.wiki/wiki/images/3/37/Shogun_Helmet.png");
+}
+
+.gilded-headband::before {
+  background-image: url("https://idleon.wiki/wiki/images/4/4e/Gilded_Headband.png");
+}
+
+.bamboo-hat::before {
+  background-image: url("https://idleon.wiki/wiki/images/b/bd/Bamboo_Hat.png");
+}
+
+.festive-beast-mask::before {
+  background-image: url("https://idleon.wiki/wiki/images/1/1a/Festive_Beast_Mask.png");
+}
+
+.spirited-mane::before {
+  background-image: url("https://idleon.wiki/wiki/images/a/a0/Spirited_Mane.png");
+}
+
+.fiery-mane::before {
+  background-image: url("https://idleon.wiki/wiki/images/d/dd/Fiery_Mane.png");
+}
+
+.guardian-mane::before {
+  background-image: url("https://idleon.wiki/wiki/images/f/f7/Guardian_Mane.png");
+}
+
+.fanned-blossomage::before {
+  background-image: url("https://idleon.wiki/wiki/images/d/d8/Fanned_Blossomage.png");
+}
+
+.dainty-brim::before {
+  background-image: url("https://idleon.wiki/wiki/images/d/d2/Dainty_Brim.png");
+}
+
+.charcoal-hat::before {
+  background-image: url("https://idleon.wiki/wiki/images/8/86/Charcoal_Hat.png");
+}
+
 .boxing-gloves::before {
   background-image: url("https://idleon.wiki/wiki/images/3/3b/Boxing_Gloves.png");
 }
@@ -3120,6 +3296,14 @@
 
 .crackled-skull-destroyer::before {
   background-image: url("https://idleon.wiki/wiki/images/0/03/Crackled_Skull_Destroyer.png");
+}
+
+.pentastud-slapper::before {
+  background-image: url("https://idleon.wiki/wiki/images/5/50/Pentastud_Slapper.png");
+}
+
+.mittens-of-the-gods::before {
+  background-image: url("https://idleon.wiki/wiki/images/0/0e/Mittens_of_the_Gods.png");
 }
 
 .wooden-spear::before {
@@ -3160,6 +3344,14 @@
 
 .skull-lance::before {
   background-image: url("https://idleon.wiki/wiki/images/e/ee/Skull_Lance.png");
+}
+
+.elegant-spear::before {
+  background-image: url("https://idleon.wiki/wiki/images/4/46/Elegant_Spear.png");
+}
+
+.massive-godbreaker::before {
+  background-image: url("https://idleon.wiki/wiki/images/8/8f/Massive_Godbreaker.png");
 }
 
 .wooden-bow::before {
@@ -3206,6 +3398,14 @@
   background-image: url("https://idleon.wiki/wiki/images/b/b2/Spine_Tingler_Sniper.png");
 }
 
+.pristine-longbow::before {
+  background-image: url("https://idleon.wiki/wiki/images/f/ff/Pristine_Longbow.png");
+}
+
+.doublestring-godshooter::before {
+  background-image: url("https://idleon.wiki/wiki/images/3/3c/Doublestring_Godshooter.png");
+}
+
 .gnarled-wand::before {
   background-image: url("https://idleon.wiki/wiki/images/a/a6/Gnarled_Wand.png");
 }
@@ -3244,6 +3444,14 @@
 
 .staff-of-the-undead-plague::before {
   background-image: url("https://idleon.wiki/wiki/images/d/d3/Staff_of_the_Undead_Plague.png");
+}
+
+.sparky-marble-staff::before {
+  background-image: url("https://idleon.wiki/wiki/images/b/bd/Sparky_Marble_Staff.png");
+}
+
+.magnifique-godcaster::before {
+  background-image: url("https://idleon.wiki/wiki/images/0/0a/Magnifique_Godcaster.png");
 }
 
 .orange-tee::before {
@@ -3374,6 +3582,14 @@
   background-image: url("https://idleon.wiki/wiki/images/9/92/Serrated_Chest_of_the_Divine.png");
 }
 
+.marbiglass-tunic::before {
+  background-image: url("https://idleon.wiki/wiki/images/d/d4/Marbiglass_Tunic.png");
+}
+
+.robe-of-the-gods::before {
+  background-image: url("https://idleon.wiki/wiki/images/0/0d/Robe_of_the_Gods.png");
+}
+
 .torn-jeans::before {
   background-image: url("https://idleon.wiki/wiki/images/0/02/Torn_Jeans.png");
 }
@@ -3460,6 +3676,14 @@
 
 .spiked-leggings-of-the-divine::before {
   background-image: url("https://idleon.wiki/wiki/images/a/a5/Spiked_Leggings_of_the_Divine.png");
+}
+
+.marbiglass-legplates::before {
+  background-image: url("https://idleon.wiki/wiki/images/9/98/Marbiglass_Legplates.png");
+}
+
+.tatters-of-the-gods::before {
+  background-image: url("https://idleon.wiki/wiki/images/9/9b/Tatters_of_the_Gods.png");
 }
 
 .copper-boots::before {
@@ -3576,6 +3800,14 @@
 
 .devious-slippers-of-the-divine::before {
   background-image: url("https://idleon.wiki/wiki/images/7/7e/Devious_Slippers_of_the_Divine.png");
+}
+
+.marbiglass-soles::before {
+  background-image: url("https://idleon.wiki/wiki/images/a/a9/Marbiglass_Soles.png");
+}
+
+.drip-of-the-gods::before {
+  background-image: url("https://idleon.wiki/wiki/images/c/c3/Drip_of_the_Gods.png");
 }
 
 .little-wooden-katana::before {
@@ -3710,6 +3942,18 @@
   background-image: url("https://idleon.wiki/wiki/images/4/4c/Bejeweled_Ring.png");
 }
 
+.shallow-watering::before {
+  background-image: url("https://idleon.wiki/wiki/images/8/82/Shallow_Watering.png");
+}
+
+.oceanic-ring::before {
+  background-image: url("https://idleon.wiki/wiki/images/5/51/Oceanic_Ring.png");
+}
+
+.deepwater-trench-ring::before {
+  background-image: url("https://idleon.wiki/wiki/images/3/35/Deepwater_Trench_Ring.png");
+}
+
 .tenacity-ring::before {
   background-image: url("https://idleon.wiki/wiki/images/1/1a/Tenacity_Ring.png");
 }
@@ -3760,6 +4004,10 @@
 
 .nebula-killer-ring::before {
   background-image: url("https://idleon.wiki/wiki/images/7/70/Nebula_Killer_Ring.png");
+}
+
+.magma-killer-ring::before {
+  background-image: url("https://idleon.wiki/wiki/images/a/aa/Magma_Killer_Ring.png");
 }
 
 .meteorite-ring::before {
@@ -3816,6 +4064,10 @@
 
 .eternal-flames-of-the-divine::before {
   background-image: url("https://idleon.wiki/wiki/images/b/b5/Eternal_Flames_of_The_Divine.png");
+}
+
+.phoenix-wings::before {
+  background-image: url("https://idleon.wiki/wiki/images/5/51/Phoenix_Wings.png");
 }
 
 .simple-key-chain::before {
@@ -3998,6 +4250,10 @@
   background-image: url("https://idleon.wiki/wiki/images/1/15/One_of_the_Divine.png");
 }
 
+.master-of-nothing::before {
+  background-image: url("https://idleon.wiki/wiki/images/e/e7/Master_of_Nothing.png");
+}
+
 .riftwalker-nametag::before {
   background-image: url("https://idleon.wiki/wiki/images/5/5c/Riftwalker_Nametag.png");
 }
@@ -4008,6 +4264,22 @@
 
 .spring-flowers-nametag::before {
   background-image: url("https://idleon.wiki/wiki/images/7/72/Spring_Flowers_Nametag.png");
+}
+
+.trash-tuna-nametag::before {
+  background-image: url("https://idleon.wiki/wiki/images/c/cd/Trash_Tuna_Nametag.png");
+}
+
+.island-adventurer-nametag::before {
+  background-image: url("https://idleon.wiki/wiki/images/f/f7/Island_Adventurer_Nametag.png");
+}
+
+.summer-shovel-nametag::before {
+  background-image: url("https://idleon.wiki/wiki/images/9/96/Summer_Shovel_Nametag.png");
+}
+
+.falloween-nametag::before {
+  background-image: url("https://idleon.wiki/wiki/images/8/8f/Falloween_Nametag.png");
 }
 
 .copper-pickaxe::before {
@@ -4044,6 +4316,14 @@
 
 .dreadlo-pickolo::before {
   background-image: url("https://idleon.wiki/wiki/images/1/1f/Dreadlo_Pickolo.png");
+}
+
+.marbiglass-pickaxe::before {
+  background-image: url("https://idleon.wiki/wiki/images/3/37/Marbiglass_Pickaxe.png");
+}
+
+.destroyer-of-the-mollo-gomme::before {
+  background-image: url("https://idleon.wiki/wiki/images/d/dd/Destroyer_of_the_Mollo_Gomme.png");
 }
 
 .junk-pickaxe::before {
@@ -4092,6 +4372,10 @@
 
 .dreadlo-eviscerator::before {
   background-image: url("https://idleon.wiki/wiki/images/d/da/Dreadlo_Eviscerator.png");
+}
+
+.marbiglass-hatchet::before {
+  background-image: url("https://idleon.wiki/wiki/images/2/28/Marbiglass_Hatchet.png");
 }
 
 .annihilator-of-the-yggdrasil::before {
@@ -4146,6 +4430,14 @@
   background-image: url("https://idleon.wiki/wiki/images/d/d3/Dreadlo_Rod.png");
 }
 
+.marbiglass-rod::before {
+  background-image: url("https://idleon.wiki/wiki/images/0/04/Marbiglass_Rod.png");
+}
+
+.angler-of-the-iliunne::before {
+  background-image: url("https://idleon.wiki/wiki/images/1/1c/Angler_of_the_Iliunne.png");
+}
+
 .copper-netted-net::before {
   background-image: url("https://idleon.wiki/wiki/images/a/ab/Copper_Netted_Net.png");
 }
@@ -4182,6 +4474,14 @@
   background-image: url("https://idleon.wiki/wiki/images/0/09/Dreadlo_Matted_Netting.png");
 }
 
+.marbiglass-netting::before {
+  background-image: url("https://idleon.wiki/wiki/images/2/2b/Marbiglass_Netting.png");
+}
+
+.wrangler-of-the-qoxzul::before {
+  background-image: url("https://idleon.wiki/wiki/images/c/ca/Wrangler_of_the_Qoxzul.png");
+}
+
 .cardboard-traps::before {
   background-image: url("https://idleon.wiki/wiki/images/2/25/Cardboard_Traps.png");
 }
@@ -4212,6 +4512,14 @@
 
 .egalitarian-royal-traps::before {
   background-image: url("https://idleon.wiki/wiki/images/1/1b/Egalitarian_Royal_Traps.png");
+}
+
+.forbidden-traps::before {
+  background-image: url("https://idleon.wiki/wiki/images/f/fa/Forbidden_Traps.png");
+}
+
+.containment-of-the-zrgyios::before {
+  background-image: url("https://idleon.wiki/wiki/images/5/5f/Containment_of_the_Zrgyios.png");
 }
 
 .wax-skull::before {
@@ -4248,6 +4556,14 @@
 
 .dreadnaught-skull::before {
   background-image: url("https://idleon.wiki/wiki/images/a/ae/Dreadnaught_Skull.png");
+}
+
+.cultist-skull::before {
+  background-image: url("https://idleon.wiki/wiki/images/f/f4/Cultist_Skull.png");
+}
+
+.crystal-skull-of-esquire-vnoze::before {
+  background-image: url("https://idleon.wiki/wiki/images/7/79/Crystal_Skull_of_Esquire_Vnoze.png");
 }
 
 .sappy-dna-splicer::before {
@@ -4324,6 +4640,14 @@
 
 .grilled-cheese-nomwich::before {
   background-image: url("https://idleon.wiki/wiki/images/0/04/Grilled_Cheese_Nomwich.png");
+}
+
+.raw-nigiri::before {
+  background-image: url("https://idleon.wiki/wiki/images/b/b5/Raw_Nigiri.png");
+}
+
+.dumpling::before {
+  background-image: url("https://idleon.wiki/wiki/images/2/28/Dumpling.png");
 }
 
 .small-strength-potion::before {
@@ -4542,6 +4866,14 @@
   background-image: url("https://idleon.wiki/wiki/images/1/1b/Golden_Hampter_Gummy_Candy.png");
 }
 
+.golden-nigiri::before {
+  background-image: url("https://idleon.wiki/wiki/images/a/a7/Golden_Nigiri.png");
+}
+
+.golden-dumpling::before {
+  background-image: url("https://idleon.wiki/wiki/images/8/8b/Golden_Dumpling.png");
+}
+
 .butter-bar::before {
   background-image: url("https://idleon.wiki/wiki/images/2/28/Butter_Bar.png");
 }
@@ -4662,6 +4994,10 @@
   background-image: url("https://idleon.wiki/wiki/images/f/fb/Weapon_Upgrade_Stone_SK.png");
 }
 
+.weapon-upgrade-stone-vi::before {
+  background-image: url("https://idleon.wiki/wiki/images/5/56/Weapon_Upgrade_Stone_VI.png");
+}
+
 .easter-armor-stone::before {
   background-image: url("https://idleon.wiki/wiki/images/a/ae/Easter_Armor_Stone.png");
 }
@@ -4706,6 +5042,10 @@
   background-image: url("https://idleon.wiki/wiki/images/0/03/Armor_Upgrade_Stone_SK.png");
 }
 
+.armor-upgrade-stone-vi::before {
+  background-image: url("https://idleon.wiki/wiki/images/5/51/Armor_Upgrade_Stone_VI.png");
+}
+
 .easter-tool-upgrade-stone::before {
   background-image: url("https://idleon.wiki/wiki/images/d/d6/Easter_Tool_Upgrade_Stone.png");
 }
@@ -4740,6 +5080,10 @@
 
 .tool-upgrade-stone-sk::before {
   background-image: url("https://idleon.wiki/wiki/images/9/92/Tool_Upgrade_Stone_SK.png");
+}
+
+.tool-upgrade-stone-vi::before {
+  background-image: url("https://idleon.wiki/wiki/images/7/75/Tool_Upgrade_Stone_VI.png");
 }
 
 .helmet-upgrade-stone-i::before {
@@ -4888,6 +5232,10 @@
 
 .magma-geode::before {
   background-image: url("https://idleon.wiki/wiki/images/8/89/Magma_Geode.png");
+}
+
+.spirit-diamond::before {
+  background-image: url("https://idleon.wiki/wiki/images/b/bd/Spirit_Diamond.png");
 }
 
 .stone-peanut::before {
@@ -5086,6 +5434,10 @@
   background-image: url("https://idleon.wiki/wiki/images/a/ae/Bucket_of_Slush.png");
 }
 
+.equinox-mirror::before {
+  background-image: url("https://idleon.wiki/wiki/images/d/d8/Equinox_Mirror.png");
+}
+
 .phone-box::before {
   background-image: url("https://idleon.wiki/wiki/images/3/3d/Phone_Box.png");
 }
@@ -5120,6 +5472,10 @@
 
 .balljoepickle::before {
   background-image: url("https://idleon.wiki/wiki/images/e/e4/BallJoePickle.png");
+}
+
+.bonejoepickle::before {
+  background-image: url("https://idleon.wiki/wiki/images/0/0d/BoneJoePickle.png");
 }
 
 .woodsman-token::before {
@@ -5422,6 +5778,18 @@
   background-image: url("https://idleon.wiki/wiki/images/3/39/Boat_Statue.png");
 }
 
+.compost-statue::before {
+  background-image: url("https://idleon.wiki/wiki/images/a/ac/Compost_Statue.png");
+}
+
+.stealth-statue::before {
+  background-image: url("https://idleon.wiki/wiki/images/2/20/Stealth_Statue.png");
+}
+
+.essence-statue::before {
+  background-image: url("https://idleon.wiki/wiki/images/d/d8/Essence_Statue.png");
+}
+
 .anvil-tab-1::before {
   background-image: url("https://idleon.wiki/wiki/images/a/a5/Anvil_Tab_1.png");
 }
@@ -5464,6 +5832,10 @@
 
 .adept-recipe::before {
   background-image: url("https://idleon.wiki/wiki/images/9/94/Adept_Recipe.png");
+}
+
+.master-recipe::before {
+  background-image: url("https://idleon.wiki/wiki/images/d/dc/Master_Recipe.png");
 }
 
 .special-talent-book::before {
@@ -5526,6 +5898,14 @@
   background-image: url("https://idleon.wiki/wiki/images/4/49/Colossal_Mining_Pouch.png");
 }
 
+.gargantuan-mining-pouch::before {
+  background-image: url("https://idleon.wiki/wiki/images/2/2e/Gargantuan_Mining_Pouch.png");
+}
+
+.herculean-mining-pouch::before {
+  background-image: url("https://idleon.wiki/wiki/images/9/93/Herculean_Mining_Pouch.png");
+}
+
 .miniature-choppin-pouch::before {
   background-image: url("https://idleon.wiki/wiki/images/1/1c/Miniature_Choppin_Pouch.png");
 }
@@ -5564,6 +5944,14 @@
 
 .colossal-chopping-pouch::before {
   background-image: url("https://idleon.wiki/wiki/images/2/2f/Colossal_Chopping_Pouch.png");
+}
+
+.gargantuan-chopping-pouch::before {
+  background-image: url("https://idleon.wiki/wiki/images/e/e4/Gargantuan_Chopping_Pouch.png");
+}
+
+.herculean-chopping-pouch::before {
+  background-image: url("https://idleon.wiki/wiki/images/9/95/Herculean_Chopping_Pouch.png");
 }
 
 .miniscule-food-pouch::before {
@@ -5606,6 +5994,14 @@
   background-image: url("https://idleon.wiki/wiki/images/1/1f/Colossal_Food_Pouch.png");
 }
 
+.gargantuan-food-pouch::before {
+  background-image: url("https://idleon.wiki/wiki/images/5/53/Gargantuan_Food_Pouch.png");
+}
+
+.herculean-food-pouch::before {
+  background-image: url("https://idleon.wiki/wiki/images/b/be/Herculean_Food_Pouch.png");
+}
+
 .mini-materials-pouch::before {
   background-image: url("https://idleon.wiki/wiki/images/b/b5/Mini_Materials_Pouch.png");
 }
@@ -5646,6 +6042,14 @@
   background-image: url("https://idleon.wiki/wiki/images/8/87/Colossal_Matty_Pouch.png");
 }
 
+.gargantuan-matty-pouch::before {
+  background-image: url("https://idleon.wiki/wiki/images/b/bc/Gargantuan_Matty_Pouch.png");
+}
+
+.herculean-matty-pouch::before {
+  background-image: url("https://idleon.wiki/wiki/images/0/03/Herculean_Matty_Pouch.png");
+}
+
 .cramped-fish-pouch::before {
   background-image: url("https://idleon.wiki/wiki/images/d/df/Cramped_Fish_Pouch.png");
 }
@@ -5680,6 +6084,14 @@
 
 .colossal-fish-pouch::before {
   background-image: url("https://idleon.wiki/wiki/images/0/09/Colossal_Fish_Pouch.png");
+}
+
+.gargantuan-fish-pouch::before {
+  background-image: url("https://idleon.wiki/wiki/images/d/da/Gargantuan_Fish_Pouch.png");
+}
+
+.herculean-fish-pouch::before {
+  background-image: url("https://idleon.wiki/wiki/images/8/81/Herculean_Fish_Pouch.png");
 }
 
 .cramped-bug-pouch::before {
@@ -5718,6 +6130,14 @@
   background-image: url("https://idleon.wiki/wiki/images/6/61/Colossal_Bug_Pouch.png");
 }
 
+.gargantuan-bug-pouch::before {
+  background-image: url("https://idleon.wiki/wiki/images/6/6d/Gargantuan_Bug_Pouch.png");
+}
+
+.herculean-bug-pouch::before {
+  background-image: url("https://idleon.wiki/wiki/images/2/25/Herculean_Bug_Pouch.png");
+}
+
 .small-critter-pouch::before {
   background-image: url("https://idleon.wiki/wiki/images/9/9d/Small_Critter_Pouch.png");
 }
@@ -5746,6 +6166,14 @@
   background-image: url("https://idleon.wiki/wiki/images/1/1e/Colossal_Critta_Pouch.png");
 }
 
+.gargantuan-critta-pouch::before {
+  background-image: url("https://idleon.wiki/wiki/images/3/3b/Gargantuan_Critta_Pouch.png");
+}
+
+.herculean-critta-pouch::before {
+  background-image: url("https://idleon.wiki/wiki/images/5/5a/Herculean_Critta_Pouch.png");
+}
+
 .small-soul-pouch::before {
   background-image: url("https://idleon.wiki/wiki/images/a/a9/Small_Soul_Pouch.png");
 }
@@ -5772,6 +6200,14 @@
 
 .colossal-soul-pouch::before {
   background-image: url("https://idleon.wiki/wiki/images/e/e9/Colossal_Soul_Pouch.png");
+}
+
+.gargantuan-soul-pouch::before {
+  background-image: url("https://idleon.wiki/wiki/images/3/34/Gargantuan_Soul_Pouch.png");
+}
+
+.herculean-soul-pouch::before {
+  background-image: url("https://idleon.wiki/wiki/images/c/c7/Herculean_Soul_Pouch.png");
 }
 
 .bronze-str-obol::before {
@@ -7042,6 +7478,10 @@
   background-image: url("https://idleon.wiki/wiki/images/9/9c/Smolderin_Card_Pack.png");
 }
 
+.spirit-card-pack::before {
+  background-image: url("https://idleon.wiki/wiki/images/d/d2/Spirit_Card_Pack.png");
+}
+
 .dungeon-credits-flurbo-edition::before {
   background-image: url("https://idleon.wiki/wiki/images/6/65/Dungeon_Credits_Flurbo_Edition.png");
 }
@@ -7124,10 +7564,6 @@
 
 .the-crow-perch::before {
   background-image: url("https://idleon.wiki/wiki/images/3/3e/The_Crow_Perch.png");
-}
-
-.forest-villa-key::before {
-  background-image: url("https://idleon.wiki/wiki/images/b/be/Forest_Villa_Key.png");
 }
 
 .efaunt-s-tomb-key::before {

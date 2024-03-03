@@ -19,13 +19,12 @@ expectedStackables = {
         "Grasslands1", "Grasslands2", "Grasslands4", "Grasslands3", "Jungle1", "Jungle2", "Jungle3", "Forest1", "Forest2", "Forest3", "Sewers1",
         "Sewers2", "TreeInterior1", "TreeInterior2",  # W1
         "DesertA1", "DesertA2", "DesertA3", "DesertB1", "DesertB2", "DesertB3", "DesertB4", "DesertC1", "DesertC2", "DesertC3", "DesertC4",  # W2
-        "SnowA1", "SnowA2", "SnowA3", "SnowB1", "SnowB2", "SnowB5", "SnowB3", "SnowB4", "SnowC1", "SnowC2", "SnowC3", "SnowC4", "SnowA4", "SnowC5",
-        # W3
+        "SnowA1", "SnowA2", "SnowA3", "SnowB1", "SnowB2", "SnowB5", "SnowB3", "SnowB4", "SnowC1", "SnowC2", "SnowC3", "SnowC4", "SnowA4", "SnowC5",  # W3
         "GalaxyA1", "GalaxyA2", "GalaxyA3", "GalaxyA4", "GalaxyB1", "GalaxyB2", "GalaxyB3", "GalaxyB4", "GalaxyB5", "GalaxyC1", "GalaxyC2",
         "GalaxyC3", "GalaxyC4",  # W4
         "LavaA1", "LavaA2", "LavaA3", "LavaA4", "LavaA5", "LavaB1", "LavaB2", "LavaB3", "LavaB4", "LavaB5", "LavaB6", "LavaC1", "LavaC2",  # W5
-        "SpiA1", "SpiA2", "SpiA3", "SpiA4", "SpiA5", "SpiB1", "SpiB2", "SpiB3", "SpiB4", "SpiC1", "SpiC2", "SpiD1", "SpiD2", "SpiD3", "Sewers3", "Quest15",  # W6
-        "Hgg"  # Specialty Monster Materials
+        "SpiA1", "SpiA2", "SpiA3", "SpiA4", "SpiA5", "SpiB1", "SpiB2", "SpiB3", "SpiB4", "SpiC1", "SpiC2", "SpiD1", "SpiD2", "SpiD3",  # W6
+        "Sewers3", "Quest15", "Hgg"  # Specialty Monster Materials
     ],
     "Crystal Enemy Drops": [
         "FoodPotMana1", "FoodPotMana2", "FoodPotGr1", "FoodPotOr1", "FoodPotOr2", "FoodHealth1", "FoodHealth3", "FoodHealth2", "Leaf1",  # W1
@@ -36,44 +35,45 @@ expectedStackables = {
         "Leaf6",  # W6
         "EquipmentStatues7", "EquipmentStatues3", "EquipmentStatues2", "EquipmentStatues4", "EquipmentStatues14",  # Standard statues
         "EquipmentStatues1", "EquipmentStatues5",  # Plausible but time consuming
-        "rtt0", "StoneZ1", "StoneT1", "StoneW1", "StoneA1"  # W1 Slow drops
+        "rtt0", "StoneZ1", "StoneT1", "StoneW1", "StoneA1",  #W1 Slow drops = Town TP + Stones
+        "StoneT2", "StoneW2", "StoneA2", "StoneZ2",  # W2 upgrade stones and Mystery2
+        "PureWater",  #W3 Slow drops = Distilled Water
+        "FoodG9",  #W5 Slow drops = Golden W5 Sammy
     ],
     "Printable Skilling Resources": [
-        "OakTree", "BirchTree", "JungleTree", "ForestTree", "ToiletTree",  # Tier1 Easy Logs
-        "Copper", "Iron", "Gold", "Plat", "Dementia", "Void", "Lustre",  # Tier1 Slow Ores
-        "Fish1", "Fish2", "Fish3",  # Tier1 Fish
-        "Bug1", "Bug2",  # Tier1 Bugs
+        "OakTree", "BirchTree", "JungleTree", "ForestTree", "ToiletTree", "PalmTree", "StumpTree", "SaharanFoal",  # Logs1
+        "Tree7", "AlienTree", "Tree8", "Tree9", "Tree11", "Tree10", "Tree12", "Tree13",  # Logs2
 
-        "PalmTree", "StumpTree", "SaharanFoal", "Tree7",  # Tier1 Slow Logs
+        "Copper", "Iron", "Gold", "Plat", "Dementia", "Void", "Lustre",  # Ores1
+        "Starfire", "Marble", "Dreadlo", "Godshard",  # Ores2
 
-        "AlienTree", "Tree8", "Tree9", "Tree11", "Tree10",  # Tier2 Logs
-        "Starfire", "Marble", "Dreadlo",  # Tier2 Ores
-        "Fish4", "Fish5", "Fish6", "Fish7", "Fish8",  # Tier2 Fish
-        "Bug3", "Bug4", "Bug5", "Bug6", "Bug7", "Bug8",  # Tier2 Bugs
-        "Fish9", "Fish10", "Fish11", "Fish13", "Fish12",  # Tier3 Fish
-        "Bug9", "Bug11", "Bug10",  # Tier3 Bugs
+        "Fish1", "Fish2", "Fish3", "Fish4", # Small Fish
+        "Fish5", "Fish6", "Fish7", "Fish8",  # Medium Fish
+        "Fish9", "Fish10", "Fish11", "Fish13", "Fish12",  # Large Fish
 
-        "Godshard",  # W6 Ore
-        "Tree12", "Tree13",  # W6 Logs
-        "Bug12", "Bug13",  # W6 Bugs
+        "Bug1", "Bug2", "Bug3", "Bug4",  # W2 Bugs
+        "Bug5", "Bug6", "Bug7", "Bug8",  # W3-4 Bugs
+        "Bug9", "Bug11", "Bug10", "Bug12", "Bug13",  # W5-6 Bugs
     ],
     "Other Skilling Resources": [
-        "CraftMat1", "CraftMat5", "CraftMat6", "CraftMat7", "CraftMat8", "CraftMat9", "CraftMat10", "CraftMat11",  # Tier1, 2, and 3 Anvil
-        "Critter1", "Critter2", "Critter3", "Soul1", "CopperBar",  # Tier3 Critters, Souls, Bars
-        "CraftMat12", "CraftMat13", "Critter4", "Critter5", "Critter6", "Soul2", "IronBar",  # Tier4 Anvil, Critters, Souls, Bars
-        "CraftMat14", "Critter7", "Critter8", "Soul3", "GoldBar",  # Tier5 Anvil, Critters, Souls, Bars
-        "Critter9", "Critter10", "Soul4", "PlatBar", "FoodMining1", "FoodFish1", "FoodCatch1",  # Tier6 Critters, Souls, Bars, and Crafted
-        "Soul5", "DementiaBar", "Peanut",  # Tier7 Souls, Bars, Crafted
-        "Soul6", "VoidBar", "Bullet", "BulletB",  # Tier8 Souls, Bars, Crafted
-        "Soul7", "LustreBar", "Quest68",  # Tier9 Bars, Crafted
-        "StarfireBar", "Bullet3", "FoodChoppin1",  # Tier10 Bars, Crafted
-        "DreadloBar", "EquipmentSmithingTabs2", "Refinery1",  # Tier11 Bars, Crafted, Salts
-        "Critter1A", "Refinery2", "Critter2A", "Refinery3", "Critter3A", "Critter4A", "Critter5A", "Refinery4", "Critter6A", "Critter7A", "Critter8A",
-        "Critter9A", "Critter10A"  # Tier12 Salts, Shiny Critters
+        "CraftMat1", "CraftMat5", "CraftMat6", "CraftMat7", "CraftMat8", "CraftMat9", "CraftMat10", "CraftMat11", "CraftMat12", "CraftMat13",  #Anvil1
+        "CraftMat14",
+        "Critter1", "Critter2", "Critter3", "Critter4", "Critter5", "Critter6",  #Critter1
+        "Critter7", "Critter8", "Critter9", "Critter10", "Critter11",
+        "Critter1A", "Critter2A",  "Critter3A", "Critter4A", "Critter5A", "Critter6A", "Critter7A", "Critter8A",  #ShinyCritter1
+        "Critter9A", "Critter10A", "Critter11A",  #ShinyCritter2
+        "Soul1", "Soul2", "Soul3", "Soul4", "Soul5", "Soul6", "Soul7",  #WorshipSouls
+        "CopperBar", "IronBar", "GoldBar", "PlatBar", "DementiaBar", "VoidBar", "LustreBar",  #SmeltedBars1
+        "StarfireBar", "DreadloBar", "MarbleBar", "GodshardBar",  #SmeltedBars2
+        "Bullet", "BulletB", "FoodMining1", "FoodFish1", "FoodCatch1", "Peanut",  #Crafted1
+        "Quest68", "Bullet3", "FoodChoppin1", "EquipmentSmithingTabs2",  #Crafted2
+        "PeanutG",  #Gold Peanut Crafted
+        "FoodTrapping1", "FoodWorship1",  # Critter Numnums and Soulble Gum Crafted
+        "Refinery1", "Refinery2", "Refinery3", "Refinery4", "Refinery5", "Refinery6"
     ],
     "Vendor Shops": [
         "FoodHealth14", "FoodHealth15", "FoodHealth16", "FoodHealth17", "FoodHealth12", "FoodHealth13", "FoodPotOr4", "FoodPotGr4", "FoodPotRe4",
-        "FoodPotYe4", "OilBarrel6", "OilBarrel7", "FoodHealth4", "FoodHealth9", "FoodHealth11", "Quest19"  # Sorted by daily quantity
+        "FoodPotYe4", "OilBarrel6", "OilBarrel7", "FoodHealth4", "FoodHealth9", "FoodHealth11", "Quest19", "CraftMat3",  # Sorted by daily quantity
         # "FoodHealth4", "Quest19", #W2
         # "FoodHealth11", "FoodHealth9", "FoodPotGr3", #W3
         # "FoodHealth12", "FoodHealth13", "FoodPotOr4", "FoodPotGr4", "FoodPotRe4", "FoodPotYe4", #W4
@@ -81,55 +81,50 @@ expectedStackables = {
         # "FoodHealth16", "FoodHealth17", "OilBarrel7", #W6 Shop
     ],
     "Misc": [
-        "FoodPotMana3", "FoodPotGr3", "ButterBar", "FoodPotRe1", "FoodPotRe2",
-    ],
-    "W6 Probably": [
+        "FoodPotGr3",  #Decent Speed from W3 Shop + Sir Stache
+        "FoodPotRe2",  #Average Life Potion from W2 Shop + Gigafrogs
+
+        "FoodPotRe1",  #Small Life Potion from W1 Sewers and Tree mobs, not crystals
+        "ButterBar",  #Catching Butterflies
+        "FoodPotMana3",  #Decent Mana Potion from Bloques
         "OilBarrel2",  # Slime Barrel, 1 in 3334
         "DesertC2b",  # Ghost, 1 in 2k
         "Quest78",  # Equinox Mirror
-        "PureWater",  # First Alchemy water
-        "FoodTrapping1", "FoodWorship1",  # Critter Numnums and Soulble Gum
-        "PeanutG", "FoodG9",  # Golden Peanuts and Golden W5 Sammy
-        "CraftMat3",  # Cue Tape
-        "StoneT2", "StoneW2", "StoneA2", "StoneZ2",  # W2 upgrade stones and Mystery2
         "Key2", "Key3"  # Efaunt and Chizoar keys
     ],
     "Cheater": [
+        "SilverPen", "Ladle",
         "Sewers1b", "TreeInterior1b", "BabaYagaETC", "JobApplication",  # W1 Rare Drops
         "DesertA1b", "DesertA3b", "MidnightCookie",  # W2 Rare Drops
-        "SnowA2a", "SnowB2a", "SnowC4a", "Quest78",  # W3 Rare Drops
+        "SnowA2a", "SnowB2a", "SnowC4a",  # W3 Rare Drops
         "GalaxyA2b", "GalaxyC1b",  # W4 Rare Drops
         "LavaA1b", "LavaA5b", "LavaB3b",  # W5 Rare Drops
         "SpiA2b", "SpiB2b",  # W6 Rare Drops
-        "Quest17", "Quest29", "EfauntDrop1", "EfauntDrop2", "Chiz0", "Chiz1", "TrollPart", "KrukPart", "KrukPart2",  # World Boss Materials
+        "EfauntDrop1", "EfauntDrop2", "Chiz0", "Chiz1", "TrollPart", "KrukPart", "KrukPart2",  # World Boss Materials
         "CraftMat2",  # Crimson String
-        "Refinery5", "Refinery6",  # Purple and Nullo Salts
         "OilBarrel1", "OilBarrel3", "OilBarrel4", "OilBarrel5",  # Oil Barrels
         "PureWater2",  # Alchemy Dense water
-        "GodshardBar", "MarbleBar",
         "Quest1", "Quest2", "Quest5", "Quest6", "Quest8", "Quest10", "Quest11", "Quest13", "Quest16", "Quest17", "Quest18", "Quest20", "Quest25",
         "Quest26", "Quest27", "Quest28", "Quest29", "Quest30", "Quest31", "Quest33", "Quest34", "Quest36", "Quest37", "Quest38", "Quest39", "Quest40",
         "Quest41", "Quest42", "Quest43", "Quest44", "Quest45", "Quest46", "Quest47", "Quest48", "Quest49", "Quest50", "Quest9",
         "Mayo", "Trash", "Trash2", "Trash3",  # Treasure Hunt rewards
-        "Meatloaf", "FoodHealth5", "FoodHealth8", "FoodPotYe3", "BobJoePickle", "BallJoePickle", "BoneJoePickle",
+        "Meatloaf", "FoodHealth5",  #Small quantity foods
+        "BobJoePickle", "BallJoePickle", "BoneJoePickle",  #Pickles
         "FoodPotYe1", "FoodPotYe3",  # EXP 1 and 3
         "FoodEvent1", "FoodEvent2", "FoodEvent3", "FoodEvent4", "FoodEvent5", "FoodEvent6", "FoodEvent7", "FoodEvent8",  # Event Foods
-        "Pearl1", "Pearl2", "Pearl3", "Pearl4",
-        "Pearl5", "Pearl6",  # Skilling Speed Pearls, EXP pearls
+        "Pearl1", "Pearl2", "Pearl3", "Pearl4", "Pearl5", "Pearl6",  # Skilling Speed Pearls, EXP pearls
         "Line1", "Line2", "Line3", "Line4", "Line5", "Line6", "Line7", "Line8", "Line9", "Line10", "Line11", "Line12", "Line13", "Line14",  # Fishing Lines
         "ExpBalloon1", "ExpBalloon2", "ExpBalloon3",  # Experience Balloons
         "Timecandy1", "Timecandy2", "Timecandy3", "Timecandy4", "Timecandy5", "Timecandy6", "Timecandy7", "Timecandy8", "Timecandy9",  # Time Candies
-        "SilverPen", "Ladle",
         "PetEgg", "Whetstone", "Quest72", "Quest73", "Quest76", "Quest77",  # Other Time Skips
-        "Quest70", "Quest71", "Quest75",  # Loot Bags
-        "Quest69", "Quest74",  # Unobtainables
+        "Quest70", "Quest71", "Quest75", "Gfoodcoupon", "ItemsCoupon1", "ItemsCoupon2",  # Loot Bags
+        "FoodHealth8", "Quest69", "Quest74",  # Unobtainables
         "EquipmentStatues6", "EquipmentStatues15",  # Kachow and Bullseye
-        "EquipmentStatues8", "EquipmentStatues9", "EquipmentStatues10", "EquipmentStatues11", "EquipmentStatues12", "EquipmentStatues13",
-        # W2 Statues
+        "EquipmentStatues8", "EquipmentStatues9", "EquipmentStatues10", "EquipmentStatues11", "EquipmentStatues12", "EquipmentStatues13",  # W2 Statues
         "EquipmentStatues16", "EquipmentStatues17", "EquipmentStatues18", "EquipmentStatues19",  # W3 Statues
         "EquipmentStatues20", "EquipmentStatues21", "EquipmentStatues22", "EquipmentStatues23", "EquipmentStatues24",
         "EquipmentStatues25",  # W4 and W5 Statues
-        "FoodG1", "FoodG2", "FoodG3", "FoodG4", "FoodG5", "FoodG6", "FoodG7", "FoodG8", "FoodG10", "Gfoodcoupon", # Gold Foods
+        "FoodG1", "FoodG2", "FoodG3", "FoodG4", "FoodG5", "FoodG6", "FoodG7", "FoodG8", "FoodG10",  # Gold Foods
         "ResetFrag", "ResetCompleted", "ResetCompletedS", "ClassSwap",
         "ClassSwapB", "ResetBox",
     ]
@@ -454,13 +449,13 @@ def setGStackProgressionTier(inputJSON, playerCount, progressionTiers):
         header += " You best ❤️ (until Lava adds further Dream tasks) Other possible targets are still listed below."
         show_limit = 4
     elif expectedGStacksCount >= 75 or equinoxDreamsStatus["Dream12"] == True:
-        header += " Equinox Dream 29 requires 200. Aim for items up through Tier 10! There are a few extras included for flexibility."
+        header += " Equinox Dream 29 requires 200. Aim for items up through Tier 10! Tiers 11-14 are optional without much extra benefit to collecting than +1 GStack."
         show_limit = 3
     elif expectedGStacksCount >= 20 or equinoxDreamsStatus["Dream1"] == True:
-        header += " Equinox Dream 12 requires 75. Aim for items up through Tier 2! There are a few extras included for flexibility."
+        header += " Equinox Dream 12 requires 75. Aim for items up through Tier 4! Continue buying those Timegated items too :)"
         show_limit = 2
     elif expectedGStacksCount < 20 and equinoxDreamsStatus["Dream1"] == False:
-        header += " Equinox Dream 1 requires 20. Aim for items in Tier 1! There are a few extras included for flexibility."
+        header += " Equinox Dream 1 requires 20. Aim for items in Tier 1, and start buying items listed in the Timegated tier from shops every day!"
         show_limit = 2
 
     for group in groups[show_limit:]:
