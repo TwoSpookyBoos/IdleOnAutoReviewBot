@@ -1,10 +1,10 @@
 import json
-import progressionResults
+from math import floor
 from idleon_SkillLevels import getSpecificSkillLevelsList
 from models import AdviceSection, AdviceGroup, Advice
-from utils import pl
-from math import floor
+from utils import pl, get_logger
 
+logger = get_logger(__name__)
 
 def getHighestAlchemyLevel(inputJSON, playerCount):
     alchemySkillLevelsList = getSpecificSkillLevelsList(inputJSON, playerCount, "Alchemy")
@@ -15,7 +15,7 @@ def getReadableVialNames(inputNumber):
     try:
         inputNumber = int(inputNumber)
     except:
-        return "Unknown Vial " + str(inputNumber)
+        return f"Unknown Vial {inputNumber}"
     match inputNumber:
         case 0:
             return "Copper Corona (Copper Ore)"
@@ -148,11 +148,11 @@ def getReadableVialNames(inputNumber):
         case 64:
             return "Ricecakeorade (Rice Cake)"
         case 65:
-            return "Ladybug Serum (Ladybug) "
+            return "Ladybug Serum (Ladybug)"
         case 66:
-            return "Greenleaf Tea(Leafy Branch)"
-        case 67:
             return "Flavorgil (Caulifish)"
+        case 67:
+            return "Greenleaf Tea (Leafy Branch)"
         case 68:
             return "Firefly Grog (Firefly)"
         case 69:
@@ -165,14 +165,16 @@ def getReadableVialNames(inputNumber):
             return "Ded Sap (Effervescent Log)"
         case 73:
             return "Royale Cola (Royal Headpiece)"
+        case 74:
+            return "Turtle Tisane (Tuttle)"
         case _:
-            return "Unknown Vial " + str(inputNumber)
+            return f"Unknown Vial {inputNumber}"
 
 def getReadableBubbleNames(inputNumber, color):
     try:
         inputNumber = int(inputNumber)
     except:
-        return "Unknown Bubble " + str(color) + str(inputNumber)
+        return f"Unknown Bubble {color} {inputNumber}"
     match color:
         case "Orange":
             match inputNumber:
@@ -237,7 +239,7 @@ def getReadableBubbleNames(inputNumber, color):
                 case 29:
                     return "Crop Chapter"
                 case _:
-                    return "Unknown Bubble " + str(color) + str(inputNumber)
+                    return f"Unknown Bubble {color} {inputNumber}"
         case "Green":
             match inputNumber:
                 case 0:
@@ -301,7 +303,7 @@ def getReadableBubbleNames(inputNumber, color):
                 case 29:
                     return "Stealth Chapter"
                 case _:
-                    return "Unknown Bubble " + str(color) + str(inputNumber)
+                    return f"Unknown Bubble {color} {inputNumber}"
         case "Purple":
             match inputNumber:
                 case 0:
@@ -323,7 +325,7 @@ def getReadableBubbleNames(inputNumber, color):
                 case 8:
                     return "Brewstachio"
                 case 9:
-                    return "All For Kill"
+                    return "All for Kill"
                 case 10:
                     return "Matty Stafford"
                 case 11:
@@ -365,7 +367,7 @@ def getReadableBubbleNames(inputNumber, color):
                 case 29:
                     return "Essence Chapter"
                 case _:
-                    return "Unknown Bubble " + str(color) + str(inputNumber)
+                    return f"Unknown Bubble {color} {inputNumber}"
         case "Yellow":
             match inputNumber:
                 case 0:
@@ -429,30 +431,30 @@ def getReadableBubbleNames(inputNumber, color):
                 case 29:
                     return "Lo Cost Mo Jade"
                 case _:
-                    return "Unknown Bubble " + str(color) + str(inputNumber)
+                    return f"Unknown Bubble {color} {inputNumber}"
 
 def getBubbleColorFromName(inputName):
     match inputName:
         case "FMJ" | "Call Me Bob" | "Carpenter", "Shimmeron":
-            return str(" (Orange")
+            return " (Orange"
         case "Hammer Hammer" | "Shaquracy":
-            return str(" (Green")
+            return " (Green"
         case "Cookin Roadkill", "All For Kill":
-            return str(" (Purple")
+            return " (Purple"
         case "Prowesessary" | "Laaarrrryyyy" | "Startue Exp" | "Droppin Loads" | "Diamond Chef" | "Big P" | "Big Game Hunter" | "Mr Massacre" | "Grind Time":
-            return str(" (Yellow")
+            return " (Yellow"
         case _:
-            return str(" (Unknown-" + str(inputName))
+            return f" (Unknown- {inputName}"
 
 def getSumUnlockedBubbles(colorDict, colorString):
     bubblesUnlocked = 0
     for bubble in colorDict:
         if not isinstance(colorDict[bubble], int):
-            print("Alchemy.getSumUnlockedBubbles~ BUBBLE VALUE FOUND TO BE NON-INT! ATTEMPTING TO CONVERT:", colorString, bubble, type(colorDict[bubble]), colorDict[bubble])
+            logger.warning(f"Non-Integer Bubble value found. Attempting to convert: {colorString} {bubble} {type(colorDict[bubble])} {colorDict[bubble]}")
             try:
                 colorDict[bubble] = int(floor(float(colorDict[bubble])))
-            except Exception as reason:
-                print("Alchemy.getSumUnlockedBubbles~ EXCEPTION Could not convert Bubble value to int :( Skipping by setting bubble to 0. Reason:", reason)
+            except:
+                logger.exception("Could not convert Bubble value to int :( Setting bubble to level 0")
                 colorDict[bubble] = 0
         else:
             if colorDict[bubble] > 0:
@@ -461,10 +463,14 @@ def getSumUnlockedBubbles(colorDict, colorString):
 
 def setAlchemyVialsProgressionTier(inputJSON, progressionTiers, characterDict) -> AdviceSection:
     vial_AdviceDict = {
-        "UnlockVials": [],
-        "TotalMaxVials": [],
-        "SpecificMaxVials": [],
-        "VirileVials": []
+        "EarlyVials": {
+            "Total Unlocked Vials": [],
+            "Shaman's Virile Vials": []
+        },
+        "MaxVials": {
+            "Total Maxed Vials": [],
+            "Vials to max next": [],
+        },
     }
     vial_AdviceGroupDict = {}
     vial_AdviceSection = AdviceSection(
@@ -478,30 +484,35 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers, characterDict) -
         vial_AdviceSection.header = "Come back after unlocking the Alchemy skill in World 2!"
         return vial_AdviceSection
 
-    max_tier = progressionTiers[-3][0]
-    try:
-        alchemyVialsDict = inputJSON["CauldronInfo"][4]
-        del alchemyVialsDict["length"]
-    except Exception as reason:
-        alchemyVialsDict = {}
-        print("Alchemy~ EXCEPTION Unable to retrieve alchemyVialsDict from JSON. Creating an empty Dict. Reason:", reason)
-
-    try:
-        highestCompletedRift = inputJSON["Rift"][0]
-    except Exception as reason:
-        print("Alchemy~ EXCEPTION Unable to retrieve highest rift level. Defaulting to 0. Reason:", reason)
-        highestCompletedRift = 0
-
+    max_IndexOfVials = 75
+    manualVialsAdded = 0
     virileVialsList = []
-    maxExpectedVV = 72  # Excludes both pickle vials
+    maxExpectedVV = max_IndexOfVials-4  # Exclude both pickle and both rare drop vials
     maxedVialsList = []
     unmaxedVialsList = []
     lockedVialsList = []
+
+    try:
+        alchemyVialsDict = inputJSON["CauldronInfo"][4]
+        del alchemyVialsDict["length"]
+        while len(alchemyVialsDict) < max_IndexOfVials:
+            alchemyVialsDict[str(max_IndexOfVials-manualVialsAdded)] = 0
+            manualVialsAdded += 1
+    except:
+        alchemyVialsDict = {}
+        logger.exception("Unable to retrieve alchemyVialsDict from JSON. Creating an empty Dict.")
+
+    try:
+        highestCompletedRift = inputJSON["Rift"][0]
+    except:
+        logger.exception("Unable to retrieve highest rift level. Defaulting to 0.")
+        highestCompletedRift = 0
 
     unlockedVials = 0
     for vial in alchemyVialsDict:
         if alchemyVialsDict[vial] == 0:
             lockedVialsList.append(vial)
+            unmaxedVialsList.append(getReadableVialNames(vial))
         else:
             unlockedVials += 1
             if alchemyVialsDict[vial] >= 4:
@@ -511,16 +522,21 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers, characterDict) -
             elif alchemyVialsDict[vial] != 'length':
                 unmaxedVialsList.append(getReadableVialNames(vial))
 
-    #print("Alchemy.setAlchemyVialsProgressionTier~ OUTPUT maxedVialsList:",len(maxedVialsList),maxedVialsList)
-    #print("Alchemy.setAlchemyVialsProgressionTier~ OUTPUT virileVialsList:",len(virileVialsList),virileVialsList)
+    if len(virileVialsList) < maxExpectedVV:
+        vial_AdviceDict["EarlyVials"]["Shaman's Virile Vials"].append(
+            Advice(
+                label="Total level 4+ Vials",
+                item_name="vial-l4",
+                progression=len(virileVialsList),
+                goal=maxExpectedVV
+            )
+        )
+
     tier_TotalVialsUnlocked = 0
     tier_TotalVialsMaxed = 0
-    tier_ParticularVialsMaxed = 0
     overall_AlchemyVialsTier = 0
-    advice_TotalVialsUnlocked = ""
-    advice_TotalVialsMaxed = ""
-    advice_ParticularVialsMaxed = ""
-    advice_VirileVials = ""
+    max_tier = progressionTiers[-1][0]
+    maxAdvicesPerGroup = 6
 
     if highestCompletedRift >= 35:
         if len(maxedVialsList) < 27:
@@ -542,20 +558,13 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers, characterDict) -
             if unlockedVials >= tier[1]:
                 tier_TotalVialsUnlocked = tier[0]
             else:
-                advice_TotalVialsUnlocked = "Tier " + str(tier_TotalVialsUnlocked) + "- Unlock some more vials: " + str(unlockedVials) + "/" + str(tier[1]) + tier[4] + "For the most unlock chances per day, rapidly drop multiple stacks of items on the cauldron!"
-                vial_AdviceDict["UnlockVials"].append(
+                vial_AdviceDict["EarlyVials"]["Total Unlocked Vials"].append(
                     Advice(
-                        label="Unlock more vials",
+                        label=f"Unlock more vial{pl(['Placeholder']*(tier[1]-unlockedVials), '', 's')}",
                         item_name="vials",
                         progression=str(unlockedVials),
                         goal=str(tier[1]),
                     )
-                )
-                vial_AdviceGroupDict["UnlockVials"] = AdviceGroup(
-                    tier=str(tier_TotalVialsUnlocked),
-                    pre_string="Unlock more Vials",
-                    post_string=tier[4] + "For the most unlock chances per day, rapidly drop multiple stacks of items on the cauldron!",
-                    advices=vial_AdviceDict["UnlockVials"]
                 )
 
         #Total Vials Maxed
@@ -565,32 +574,20 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers, characterDict) -
             else:
                 if tier_TotalVialsMaxed >= 20:
                     advice_TrailingMaxedVials += tier[4]
-                advice_TotalVialsMaxed = "Tier " + str(tier_TotalVialsMaxed) + "- Max some more vials: " + str(len(maxedVialsList)) + "/" + str(tier[2]) + "." + advice_TrailingMaxedVials
-                vial_AdviceDict["TotalMaxVials"].append(
+                vial_AdviceDict["MaxVials"]["Total Maxed Vials"].append(
                     Advice(
-                        label="Maxed vials",
+                        label="Total Maxed Vials",
                         item_name="vial-max",
                         progression=str(len(maxedVialsList)),
                         goal=str(tier[2])
                     )
                 )
-                if highestCompletedRift >= 35:  # The push to max any vial doesn't start until Vial Mastery
-                    vial_AdviceGroupDict["TotalMaxVials"] = AdviceGroup(
-                        tier=str(tier_TotalVialsMaxed),
-                        pre_string=f"Max more Vials",
-                        post_string=advice_TrailingMaxedVials,
-                        advices=vial_AdviceDict["TotalMaxVials"]
-                    )
 
         #Particular Vials Maxed
-        if tier_ParticularVialsMaxed == (tier[0]-1):  # Only check if they already met previous tier
-            allRequirementsMet = True
-            for requiredVial in tier[3]:
-                #print("Looking for Vial ", requiredVial, " in " , unmaxedVialsList)
-                if requiredVial in unmaxedVialsList:
-                    allRequirementsMet = False
-                    advice_ParticularVialsMaxed += requiredVial + ", "
-                    vial_AdviceDict["SpecificMaxVials"].append(
+        for requiredVial in tier[3]:
+            if requiredVial in unmaxedVialsList:
+                if len(vial_AdviceDict["MaxVials"]["Vials to max next"]) < maxAdvicesPerGroup:
+                    vial_AdviceDict["MaxVials"]["Vials to max next"].append(
                         Advice(
                             label=requiredVial,
                             item_name=requiredVial.split("(")[0].strip(),
@@ -598,38 +595,38 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers, characterDict) -
                             goal="",
                         )
                     )
-            if allRequirementsMet == True:
-                #print("Alch particular vial passed at tier",tier[0],tier[4])
-                tier_ParticularVialsMaxed = tier[0]
-            else:
-                #print("Alch particular vial failed at tier",tier[0],tier[4])
-                advice_ParticularVialsMaxed = "Tier " + str(tier_ParticularVialsMaxed) + "- Work on maxing these particular vial(s): " + advice_ParticularVialsMaxed[:-2]  # strip off the final comma and space
-                vial_AdviceGroupDict["SpecificMaxVials"] = AdviceGroup(
-                    tier=str(tier_ParticularVialsMaxed),
-                    pre_string=f"Work toward maxing th{pl(vial_AdviceDict['SpecificMaxVials'],'is','ese')} particular Vial{pl(vial_AdviceDict['SpecificMaxVials'],'','s')}",
-                    post_string=advice_TrailingMaxedVials,
-                    advices=vial_AdviceDict["SpecificMaxVials"]
-                )
 
-    overall_AlchemyVialsTier = min(tier_TotalVialsUnlocked, tier_TotalVialsMaxed, tier_ParticularVialsMaxed)
-    if len(virileVialsList) < maxExpectedVV:
-        advice_VirileVials = "Informational- You have " + str(len(virileVialsList)) + "/" + str(maxExpectedVV) + " vials up to level 4, giving damage to Shaman's Virile Vials talent :)"
-    advice_AlchemyVialsCombined = [
-        "Best Vials tier met: " + str(overall_AlchemyVialsTier) + "/" + str(progressionTiers[-3][0]) + ". Recommended Vials actions:",
-        advice_TotalVialsUnlocked,
-        advice_TotalVialsMaxed,
-        advice_ParticularVialsMaxed,
-        advice_VirileVials]
+    #Generate AdviceGroups
+    vial_AdviceGroupDict["Total Unlocked Vials"] = AdviceGroup(
+        tier=str(tier_TotalVialsUnlocked),
+        pre_string="Early Vial Goals",
+        post_string="",
+        advices=vial_AdviceDict["EarlyVials"]
+    )
+    if len(vial_AdviceDict["EarlyVials"]["Total Unlocked Vials"]) > 0:
+        vial_AdviceGroupDict["Total Unlocked Vials"].post_string = "For the most unlock chances per day, rapidly drop multiple stacks of items on the cauldron!"
+    else:
+        del vial_AdviceGroupDict["Total Unlocked Vials"].advices["Total Unlocked Vials"]
+
+    #if highestCompletedRift >= 35:  # The push to max any vial doesn't start until Vial Mastery
+    vial_AdviceGroupDict["Total Maxed Vials"] = AdviceGroup(
+        tier=str(tier_TotalVialsMaxed),
+        pre_string="Late Vial Goals",
+        post_string=advice_TrailingMaxedVials,
+        advices=vial_AdviceDict["MaxVials"]  #["Total Maxed Vials"]
+    )
+
+    #Generate AdviceSection
+    overall_AlchemyVialsTier = min(tier_TotalVialsUnlocked, tier_TotalVialsMaxed)  #, tier_ParticularVialsMaxed)
     tier_section = f"{overall_AlchemyVialsTier}/{max_tier}"
     vial_AdviceSection.tier = tier_section
     vial_AdviceSection.pinchy_rating = overall_AlchemyVialsTier
+    vial_AdviceSection.groups = vial_AdviceGroupDict.values()
     if overall_AlchemyVialsTier == max_tier:
         vial_AdviceSection.header = f"Best Vial tier met: {tier_section}. You best ❤️"
     else:
         vial_AdviceSection.header = f"Best Vial tier met: {tier_section}. Recommended vial actions:"
-        vial_AdviceSection.groups = vial_AdviceGroupDict.values()
 
-    alchemyVialsPR = progressionResults.progressionResults(overall_AlchemyVialsTier, advice_AlchemyVialsCombined, "")
     return vial_AdviceSection
 
 def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers, characterDict) -> AdviceSection:
@@ -666,12 +663,6 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers, characterDict)
     max_tier = progressionTiers[-1][0]
     overall_alchemyBubblesTier = 0
 
-    advice_TotalBubblesUnlocked = ""
-    advice_OrangeSampleBubbles = ""
-    advice_GreenSampleBubbles = ""
-    advice_PurpleSampleBubbles = ""
-    advice_UtilityBubbles = ""
-
     #Get the bubble data and remove the length element
     raw_orange_alchemyBubblesDict = inputJSON["CauldronInfo"][0]
     del raw_orange_alchemyBubblesDict['length']
@@ -687,19 +678,15 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers, characterDict)
     for bubble in raw_orange_alchemyBubblesDict:
         if int(bubble) <= currentlyAvailableBubblesIndex:
             named_all_alchemyBubblesDict[getReadableBubbleNames(bubble, "Orange")] = int(raw_orange_alchemyBubblesDict[bubble])
-    #print(named_all_alchemyBubblesDict)
     for bubble in raw_green_alchemyBubblesDict:
         if int(bubble) <= currentlyAvailableBubblesIndex:
             named_all_alchemyBubblesDict[getReadableBubbleNames(bubble, "Green")] = int(raw_green_alchemyBubblesDict[bubble])
-    #print(named_all_alchemyBubblesDict)
     for bubble in raw_purple_alchemyBubblesDict:
         if int(bubble) <= currentlyAvailableBubblesIndex:
             named_all_alchemyBubblesDict[getReadableBubbleNames(bubble, "Purple")] = int(raw_purple_alchemyBubblesDict[bubble])
-    #print(named_all_alchemyBubblesDict)
     for bubble in raw_yellow_alchemyBubblesDict:
         if int(bubble) <= currentlyAvailableBubblesIndex:
             named_all_alchemyBubblesDict[getReadableBubbleNames(bubble, "Yellow")] = int(raw_yellow_alchemyBubblesDict[bubble])
-    #print(named_all_alchemyBubblesDict)
 
     #Sum up unlocked bubbles (level > 0)
     orangeBubblesUnlocked = getSumUnlockedBubbles(raw_orange_alchemyBubblesDict, "Orange")
@@ -719,8 +706,6 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers, characterDict)
         if bubbleColorCount > 0:
             bubbleUnlockListByWorld[worldCounter] += bubbleColorCount
             bubbleColorCount = 0
-    #print(bubbleUnlockListByWorld)
-    #print(sum_TotalBubblesUnlocked) #future world's pre-unlocked bubbles inflate this number
     nextWorldMissingBubbles = 0
     for world in range(0, len(bubbleUnlockListByWorld)):
         if bubbleUnlockListByWorld[world] == 20:
@@ -767,7 +752,6 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers, characterDict)
                 #named_all_alchemyBubblesDict[requiredBubble] = level of the player's bubble
                 if named_all_alchemyBubblesDict[requiredBubble] < tier[2][requiredBubble]:
                     all_orangeRequirementsMet = False
-                    advice_OrangeSampleBubbles += requiredBubble + " (" + str(named_all_alchemyBubblesDict[requiredBubble]) + "/" + str(tier[2][requiredBubble]) + "), "
                     bubbles_AdviceDict["OrangeSampleBubbles"].append(
                         Advice(
                             label=str(requiredBubble),
@@ -778,8 +762,6 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers, characterDict)
                     )
             if all_orangeRequirementsMet == True:
                 tier_OrangeSampleBubbles = tier[0]
-            else:
-                advice_OrangeSampleBubbles = "Tier " + str(tier_OrangeSampleBubbles) + "- Level the following Orange sample-boosting bubbles to " + progressionTiers[tier_OrangeSampleBubbles+1][6] + " of their maximum possible value: " + advice_OrangeSampleBubbles[:-2]
 
         #tier_GreenSampleBubbles
         all_greenRequirementsMet = True
@@ -790,7 +772,6 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers, characterDict)
                 #named_all_alchemyBubblesDict[requiredBubble] = level of the player's bubble
                 if named_all_alchemyBubblesDict[requiredBubble] < tier[3][requiredBubble]:
                     all_greenRequirementsMet = False
-                    advice_GreenSampleBubbles += requiredBubble + " (" + str(named_all_alchemyBubblesDict[requiredBubble]) + "/" + str(tier[3][requiredBubble]) + "), "
                     bubbles_AdviceDict["GreenSampleBubbles"].append(
                         Advice(
                             label=str(requiredBubble),
@@ -801,8 +782,6 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers, characterDict)
                     )
             if all_greenRequirementsMet == True:
                 tier_GreenSampleBubbles = tier[0]
-            else:
-                advice_GreenSampleBubbles = "Tier " + str(tier_GreenSampleBubbles) + "- Level the following Green sample-boosting bubbles to " + progressionTiers[tier_GreenSampleBubbles+1][6] + " of their maximum possible value: " + advice_GreenSampleBubbles[:-2]
 
         #tier_PurpleSampleBubbles
         all_purpleRequirementsMet = True
@@ -813,7 +792,6 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers, characterDict)
                 #named_all_alchemyBubblesDict[requiredBubble] = level of the player's bubble
                 if named_all_alchemyBubblesDict[requiredBubble] < tier[4][requiredBubble]:
                     all_purpleRequirementsMet = False
-                    advice_PurpleSampleBubbles += requiredBubble + " (" + str(named_all_alchemyBubblesDict[requiredBubble]) + "/" + str(tier[4][requiredBubble]) + "), "
                     bubbles_AdviceDict["PurpleSampleBubbles"].append(
                         Advice(
                             label=str(requiredBubble),
@@ -824,8 +802,6 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers, characterDict)
                     )
             if all_purpleRequirementsMet == True:
                 tier_PurpleSampleBubbles = tier[0]
-            else:
-                advice_PurpleSampleBubbles = "Tier " + str(tier_PurpleSampleBubbles) + "- Level the following Purple sample-boosting bubbles to " + progressionTiers[tier_PurpleSampleBubbles+1][6] + " of their maximum possible value: " + advice_PurpleSampleBubbles[:-2] + ". Purple bubbles are listed first as they are the highest priority due to Log samples being the largest producer of Atom Particles."
 
         #tier_UtilityBubbles
         all_utilityRequirementsMet = True
@@ -836,7 +812,6 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers, characterDict)
                 #named_all_alchemyBubblesDict[requiredBubble] = level of the player's bubble
                 if named_all_alchemyBubblesDict[requiredBubble] < tier[5][requiredBubble]:
                     all_utilityRequirementsMet = False
-                    advice_UtilityBubbles += requiredBubble + getBubbleColorFromName(requiredBubble) + " " + str(named_all_alchemyBubblesDict[requiredBubble]) + "/" + str(tier[5][requiredBubble]) + "), "
                     bubbles_AdviceDict["UtilityBubbles"].append(
                         Advice(
                             label=str(requiredBubble),
@@ -847,21 +822,8 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers, characterDict)
                     )
             if all_utilityRequirementsMet == True:
                 tier_UtilityBubbles = tier[0]
-            else:
-                advice_UtilityBubbles = "Informational Tier " + str(tier_UtilityBubbles) + "- Level the following Utility bubbles: " + advice_UtilityBubbles[:-2] + ". " + progressionTiers[tier_UtilityBubbles+1][7]
-    if advice_UtilityBubbles == "":
-        advice_UtilityBubbles = " " + progressionTiers[-1][7]
-    overall_alchemyBubblesTier = min(max_tier, tier_TotalBubblesUnlocked, tier_OrangeSampleBubbles, tier_GreenSampleBubbles, tier_PurpleSampleBubbles)  # tier_UtilityBubbles not included
 
-    #Generate progressionResults
-    advice_alchemyBubblesCombined = [
-        "Best Alchemy-Bubbles tier met: " + str(overall_alchemyBubblesTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended Alchemy-Bubbles actions:",
-        advice_TotalBubblesUnlocked,
-        advice_PurpleSampleBubbles,  # Purple highest priority
-        advice_OrangeSampleBubbles,
-        advice_GreenSampleBubbles,
-        advice_UtilityBubbles]
-    alchemyBubblesPR = progressionResults.progressionResults(overall_alchemyBubblesTier, advice_alchemyBubblesCombined,"")
+    overall_alchemyBubblesTier = min(max_tier, tier_TotalBubblesUnlocked, tier_OrangeSampleBubbles, tier_GreenSampleBubbles, tier_PurpleSampleBubbles)  # tier_UtilityBubbles not included
 
     #Generate AdviceGroups
     agdNames = ["TotalBubblesUnlocked", "OrangeSampleBubbles", "GreenSampleBubbles", "PurpleSampleBubbles", "UtilityBubbles"]
@@ -925,13 +887,11 @@ def setAlchemyP2W(inputJSON, characterDict) -> AdviceSection:
     liquidCauldronsUnlocked = 1
 
     if highestAlchemyLevel >= 80:
-        liquidCauldronsUnlocked = 4 #includes Toxic HG
+        liquidCauldronsUnlocked = 4  #includes Toxic HG
     elif highestAlchemyLevel >= 35:
         liquidCauldronsUnlocked = 3  # includes Trench Seawater
-    elif liquidCauldronsUnlocked >= 20:
-        liquidCauldronMax = 2  # includes Liquid Nitrogen
-    else:
-        liquidCauldronsUnlocked = 1  # only Water Droplets
+    elif highestAlchemyLevel >= 20:
+        liquidCauldronsUnlocked = 2  # includes Liquid Nitrogen
 
     bubbleCauldronMax = 4 * 375  # 4 cauldrons, 375 upgrades each
     liquidCauldronMax = 180 * liquidCauldronsUnlocked
@@ -947,14 +907,6 @@ def setAlchemyP2W(inputJSON, characterDict) -> AdviceSection:
     p2wMax = bubbleCauldronMax + liquidCauldronMax + vialsMax + (highestAlchemyLevel*2)
     p2wSumWithoutPlayer = bubbleCauldronSum + liquidCauldronSum + vialsSum
     p2wMaxWithoutPlayer = bubbleCauldronMax + liquidCauldronMax + vialsMax
-    #print("Alchemy.setAlchemyP2W~ OUTPUT bubbleCauldronSum, liquidCauldronSum, vialsSum, playerSum:",bubbleCauldronSum, liquidCauldronSum, vialsSum, playerSum)
-    #print("Alchemy.setAlchemyP2W~ OUTPUT p2wSum, p2wMax, p2wTrueMax:",p2wSum, p2wMax)
-    advice_alchemyP2WSums = ""
-    advice_alchemyP2WBubbleCauldrons = ""
-    advice_alchemyP2WLiquidCauldrons = ""
-    advice_alchemyP2WVials = ""
-    advice_alchemyP2WPlayer = ""
-    advice_alchemyP2WCombined = []
 
     if p2wSumWithoutPlayer >= p2wMaxWithoutPlayer:
         p2w_AdviceSection.pinchy_rating = 1
@@ -964,12 +916,9 @@ def setAlchemyP2W(inputJSON, characterDict) -> AdviceSection:
         p2w_AdviceSection.tier = '0/1'
 
     if p2wSum >= p2wMax:
-        advice_alchemyP2WSums = "You've purchased all " + str(p2wMax) + " upgrades in Alchemy-P2W! You best ❤️"
         p2w_AdviceSection.header = f"You've purchased all {p2wMax} upgrades in Alchemy-P2W! You best ❤️"
     else:
-        advice_alchemyP2WSums = "You've purchased " + str(p2wSum) + "/" + str(p2wMax) + " upgrades in Alchemy P2W. Try to purchase the basic upgrades before Mid W5, and Player upgrades after each level up!"
         if bubbleCauldronSum < bubbleCauldronMax:
-            advice_alchemyP2WBubbleCauldrons += "Bubble Cauldron upgrades: " + str(bubbleCauldronSum) + "/" + str(bubbleCauldronMax)
             p2w_AdviceDict["Pay2Win"].append(
                 Advice(
                     label="Bubble Cauldron Upgrades",
@@ -979,7 +928,6 @@ def setAlchemyP2W(inputJSON, characterDict) -> AdviceSection:
                 )
             )
         if liquidCauldronSum < liquidCauldronMax:
-            advice_alchemyP2WLiquidCauldrons += "Liquid Cauldron upgrades: " + str(liquidCauldronSum) + "/" + str(liquidCauldronMax)
             p2w_AdviceDict["Pay2Win"].append(
                 Advice(
                     label="Liquid Cauldron Upgrades",
@@ -989,7 +937,6 @@ def setAlchemyP2W(inputJSON, characterDict) -> AdviceSection:
                 )
             )
         if vialsSum < vialsMax:
-            advice_alchemyP2WVials += "Vial upgrades: " + str(vialsSum) + "/" + str(vialsMax)
             p2w_AdviceDict["Pay2Win"].append(
                 Advice(
                     label="Vial Upgrades",
@@ -999,7 +946,6 @@ def setAlchemyP2W(inputJSON, characterDict) -> AdviceSection:
                 )
             )
         if playerSum < highestAlchemyLevel*2:
-            advice_alchemyP2WPlayer += "Player upgrades: " + str(playerSum) + "/" + str(highestAlchemyLevel*2)
             p2w_AdviceDict["Pay2Win"].append(
                 Advice(
                     label="Player Upgrades",
@@ -1014,12 +960,13 @@ def setAlchemyP2W(inputJSON, characterDict) -> AdviceSection:
         post_string="",
         advices=p2w_AdviceDict["Pay2Win"]
     )
+
+    #Generate AdviceSection
     tier_section = f"{p2wSum}/{p2wMax}"
     p2w_AdviceSection.tier = tier_section
-    if p2wSum < p2wMax:
+    p2w_AdviceSection.groups = p2w_AdviceGroupDict.values()
+    if p2wSum >= p2wMax:
+        p2w_AdviceSection.header = f"You've purchased all {p2wMax} upgrades in Alchemy-P2W! You best ❤️"
+    else:
         p2w_AdviceSection.header = f"You've purchased {tier_section} upgrades in Alchemy P2W. Try to purchase the basic upgrades before Mid W5, and Player upgrades after each level up!"
-        p2w_AdviceSection.groups = p2w_AdviceGroupDict.values()
-
-    advice_alchemyP2WCombined = [advice_alchemyP2WBubbleCauldrons, advice_alchemyP2WLiquidCauldrons, advice_alchemyP2WVials, advice_alchemyP2WPlayer]
-    #print(advice_alchemyP2WSums, advice_alchemyP2WCombined)
     return p2w_AdviceSection

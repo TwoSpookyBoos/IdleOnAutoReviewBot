@@ -99,6 +99,15 @@ $id-map: (
 	//gaming-fertilizer: $gaming-fertilizer,
 	lava-sprouts: $lava-sprouts,
 
+	plot-of-land: $plot-of-land,
+    pristine-charm: $pristine-charm,
+    shroom-familiar: $shroom-familiar,
+    sand-of-time: $sand-of-time,
+    instagrow-generator: $instagrow-generator,
+    life-refill: $life-refill,
+    compost-bag: $compost-bag,
+    summoner-stone: $summoner-stone,
+
 	halloween-pumpkin: $halloween-pumpkin,
 	pardoned-turkey: $pardoned-turkey,
 	snowman-premium-helmet-: $snowman-premium-helmet-,
@@ -214,6 +223,8 @@ $id-map: (
 	diamond-duck: $diamond-duck,
 	blobfish: $blobfish,
 	voodofish: $voodofish,
+	tuttle: $tuttle,
+	tottoise: $tottoise,
 
 // Souls
 
@@ -1497,6 +1508,10 @@ $id-map: (
 	dementia-sword-stamp: $dementia-sword-stamp,
 	golden-sixes-stamp: $golden-sixes-stamp,
 	stat-wallstreet-stamp: $stat-wallstreet-stamp,
+	void-sword-stamp: $void-sword-stamp,
+	void-axe-stamp: $void-axe-stamp,
+    captalist-stats-stamp: $captalist-stats-stamp,
+
 	pickaxe-stamp: $pickaxe-stamp,
 	hatchet-stamp: $hatchet-stamp,
 	anvil-zoomer-stamp: $anvil-zoomer-stamp,
@@ -1543,6 +1558,15 @@ $id-map: (
 	gamejoy-stamp: $gamejoy-stamp,
 	divine-stamp: $divine-stamp,
 	multitool-stamp: $multitool-stamp,
+	skelefish-stamp: $skelefish-stamp,
+    crop-evo-stamp: $crop-evo-stamp,
+    sneaky-peeky-stamp: $sneaky-peeky-stamp,
+    jade-mint-stamp: $jade-mint-stamp,
+    summoner-stone-stamp: $summoner-stone-stamp,
+    white-essence-stamp: $white-essence-stamp,
+    triad-essence-stamp: $triad-essence-stamp,
+    dark-triad-essence-stamp: $dark-triad-essence-stamp,
+
 	questin-stamp: $questin-stamp,
 	mason-jar-stamp: $mason-jar-stamp,
 	crystallin: $crystallin,
@@ -1552,6 +1576,9 @@ $id-map: (
 	golden-apple-stamp: $golden-apple-stamp,
 	ball-timer-stamp: $ball-timer-stamp,
 	card-stamp: $card-stamp,
+	forge-stamp: $forge-stamp,
+	vendor-stamp: $vendor-stamp,
+	sigil-stamp: $sigil-stamp,
 	talent-i-stamp: $talent-i-stamp,
 	talent-ii-stamp: $talent-ii-stamp,
 	talent-iii-stamp: $talent-iii-stamp,
@@ -1562,6 +1589,7 @@ $id-map: (
 	biblio-stamp: $biblio-stamp,
 	dna-stamp: $dna-stamp,
 	refinery-stamp: $refinery-stamp,
+	atomic-stamp: $atomic-stamp,
 
 // inventory bags
 
@@ -1613,9 +1641,14 @@ $id-map: (
 	storage-chest-23: $storage-chest-23,
 	storage-chest-24: $storage-chest-24,
 	storage-chest-25: $storage-chest-25,
+    storage-chest-26: $storage-chest-26,
+    storage-chest-27: $storage-chest-27,
+    storage-chest-28: $storage-chest-28,
 	dank-paypay-chest: $dank-paypay-chest,
 	gelatinous-chest: $gelatinous-chest,
 	cheesy-chest: $cheesy-chest,
+	woodlin-chest: $woodlin-chest,
+	ninja-chest: $ninja-chest,
 
 // fishing - twines
 
@@ -1922,6 +1955,7 @@ $monsters: (
 
 $extra: (
 	vials: $vial-l1,
+	vial-l4: $vial-l4,
 	vial-max: $vial-max,
 	prayers: $prayer-stone,
 	bribes: $bribes,

@@ -43,3 +43,6 @@ def _set_regular_logger(logger: logging.Logger):
     handler.setFormatter(formatter)
 
     logger.addHandler(handler)
+
+def letterToNumber(inputLetter: str) -> int:
+    return "_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".index(inputLetter)
