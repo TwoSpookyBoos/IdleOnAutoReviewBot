@@ -2362,6 +2362,14 @@
   background-image: url("https://idleon.wiki/wiki/images/9/9e/Voodofish.png");
 }
 
+.tuttle::before {
+  background-image: url("https://idleon.wiki/wiki/images/0/01/Froge.png");
+}
+
+.tottoise::before {
+  background-image: url("https://idleon.wiki/wiki/images/0/01/Froge.png");
+}
+
 .forest-soul::before {
   background-image: url("https://idleon.wiki/wiki/images/c/c9/Forest_Soul.png");
 }
