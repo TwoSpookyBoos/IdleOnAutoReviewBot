@@ -9,7 +9,7 @@ maxCritterTypes = 12
 def getCritterName(inputNumber):
     reversedCritterIndexList = ["Tuttle", "Blobfish", "Honker", "Dung Beat", "Bunny", "Pingy", "Owlio", "Mousey", "Scorpie", "Crabbo", "Froge", "None"]
     try:
-        return reversedCritterIndexList[-inputNumber]
+        return reversedCritterIndexList[inputNumber]
     except:
         return "UnknownCritterName"
 
@@ -70,7 +70,7 @@ def getUnlockedCritterStatus(inputJSON, playerCount):
             return [
                 (len(reversedCritterIndexList)-highestCritter),  # Index of the highest unlocked critter
                 maxCritterTypes,  # Index of the highest critter possible
-                getCritterName(highestCritter-1),  #Name of the highest unlocked critter
+                reversedCritterIndexList[highestCritter],  #Name of the highest unlocked critter
                 getCritterName(highestCritter)  #Name of the next critter to be unlocked
             ]
         except Exception as reason:
@@ -417,7 +417,7 @@ def setTrappingProgressionTier(inputJSON, characterDict):
     ]
     trapping_AdviceGroupDict["UnlockCritters"] = AdviceGroup(
         tier=highestUnlockedCritter[0],
-        pre_string=f"{pl((['UnlockRemaining']*(11-highestUnlockedCritter[0])), 'Unlock the final Critter type', 'Continue unlocking new Critter types from quests')}",
+        pre_string=f"{pl((['UnlockRemaining']*(maxCritterTypes-highestUnlockedCritter[0])), 'Unlock the final Critter type', 'Continue unlocking new Critter types')}",
         advices=trapping_AdviceDict["UnlockCritters"],
         post_string=agd_unlockcritters_post_stringsList[highestUnlockedCritter[0]]
     )

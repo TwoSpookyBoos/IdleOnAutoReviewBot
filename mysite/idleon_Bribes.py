@@ -254,7 +254,7 @@ def setBribesProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
         tier="5",
         pre_string=f"Purchase the remaining W6 Bribe{pl(bribe_AdviceDict['W6Bribes'])}",
         advices=bribe_AdviceDict['W6Bribes'],
-        post_string="You should be able to afford them by the end of W6."
+        post_string="You should be able to afford them by the end of W6, after unlocking them from Jade Emporium."
     )
 
     #Assess Overall Bribe Tier
