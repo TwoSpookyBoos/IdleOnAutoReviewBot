@@ -282,11 +282,11 @@ def parseJSONtoBreedingDict(inputJSON) -> dict:
         for groupedBonus in parsedBreedingDict["Grouped Bonus"]:
             parsedBreedingDict["Grouped Bonus"][groupedBonus].sort(key=lambda x: float(x[2]))
 
-        parsedBreedingDict["Territories Unlocked Count"] = 0
+        parsedBreedingDict["Highest Unlocked Territory"] = 0
         for index in range(0, maxNumberOfTerritories):
             # Spice Progress above 0 or any pet assigned to territory
             if rawTerritoriesList[index][0] > 0 or anyPetsAssignedPerTerritory[index] == True:
-                parsedBreedingDict["Territories Unlocked Count"] += 1
+                parsedBreedingDict["Highest Unlocked Territory"] = index+1
                 #logger.debug(f"Increasing Territories Unlocked Count for {getTerritoryName(index+1)}")
     else:
         return {}
@@ -392,10 +392,10 @@ def setBreedingProgressionTier(inputJSON: dict, progressionTiers: dict[int, dict
 
             #Unlocked Territories
             if tier_UnlockedTerritories >= (tier-1):
-                if breedingDict["Territories Unlocked Count"] >= progressionTiers[tier]["TerritoriesUnlocked"]:
+                if breedingDict["Highest Unlocked Territory"] >= progressionTiers[tier]["TerritoriesUnlocked"]:
                     tier_UnlockedTerritories = tier
                 else:
-                    for territoryIndex in range(breedingDict["Territories Unlocked Count"]+1, progressionTiers[tier]["TerritoriesUnlocked"]+1):
+                    for territoryIndex in range(breedingDict["Highest Unlocked Territory"]+1, progressionTiers[tier]["TerritoriesUnlocked"]+1):
                         breeding_AdviceDict["UnlockedTerritories"]["Unlock more Spice Territories"].append(Advice(
                             label=getTerritoryName(territoryIndex),
                             item_name=getSpiceImage(territoryIndex),
@@ -463,7 +463,7 @@ def setBreedingProgressionTier(inputJSON: dict, progressionTiers: dict[int, dict
     if tier_UnlockedTerritories < maxBreedingTier:
         breeding_AdviceGroupDict["UnlockedTerritories"] = AdviceGroup(
             tier=str(tier_UnlockedTerritories),
-            pre_string=f"Unlock {progressionTiers[tier_UnlockedTerritories+1]['TerritoriesUnlocked'] - breedingDict['Territories Unlocked Count']} more Spice Territor{pl(breeding_AdviceDict['UnlockedTerritories'], 'y', 'ies')}",
+            pre_string=f"Unlock {progressionTiers[tier_UnlockedTerritories+1]['TerritoriesUnlocked'] - breedingDict['Highest Unlocked Territory']} more Spice Territor{pl(breeding_AdviceDict['UnlockedTerritories'], 'y', 'ies')}",
             advices=breeding_AdviceDict["UnlockedTerritories"],
             post_string=""
         )
