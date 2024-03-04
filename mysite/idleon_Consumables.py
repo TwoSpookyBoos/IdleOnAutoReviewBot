@@ -3,7 +3,7 @@ from collections import defaultdict
 from enum import IntEnum
 
 from models import AdviceGroup, Advice, AdviceSection
-from utils import get_logger
+from utils import pl, get_logger
 
 
 logger = get_logger(__name__)
@@ -428,7 +428,7 @@ def parseStorageChests(inputJSON):
 
     group = AdviceGroup(
         tier="",
-        pre_string=f"Collect {len(missing_chests)} more storage chests for your bank",
+        pre_string=f"Collect {len(missing_chests)} more storage chest{pl(['']*len(missing_chests))} for your bank",
         advices=advices
     )
     if len(advices) == 0:
@@ -447,7 +447,7 @@ def parseConsumables(inputJSON, playerCount, playerNames):
     section_storage = AdviceSection(
         name="Storage",
         tier="",
-        header="Get more space for your bank and inventories:",
+        header="Collect more space for your bank and inventories:",
         picture="Cosmic_Storage_Chest.png",
         groups=groups
     )
