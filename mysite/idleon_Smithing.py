@@ -113,7 +113,7 @@ def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, charact
                     smithing_AdviceDict["ForgeUpgrades"].append(
                         Advice(
                             label=forgeUpgradesDict[upgradeIndex]["UpgradeName"],
-                            item_name=forgeUpgradesDict[upgradeIndex]["UpgradeName"],
+                            item_name='forge-upgrades',
                             progression=forgeUpgradesDict[upgradeIndex]["Purchased"],
                             goal=forgeUpgradesDict[upgradeIndex]["MaxPurchases"],
                             unit=""
@@ -215,7 +215,7 @@ def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, charact
             advices=[
                 Advice(
                     label=f"You have {unusedForgeSlots} empty ore slot{pl(['']*unusedForgeSlots)} in your Forge!",
-                    item_name="forge"
+                    item_name="empty-forge-slot"
                 )
             ],
             post_string=""

@@ -1190,6 +1190,22 @@
   background-image: url("https://idleon.wiki/wiki/images/a/ad/Iceland_Irwin.gif");
 }
 
+.empty-forge-slot::before {
+  background-image: url("/static/imgs/Empty_Forge_Slot.png");
+}
+
+.forge-upgrades::before {
+  background-image: url("/static/imgs/Forge_Upgrades.png");
+}
+
+.stamps::before {
+  background-image: url("/static/imgs/Stamps_Header.png");
+}
+
+.combat-levels::before {
+  background-image: url("/static/imgs/Family.png");
+}
+
 .beginner-icon::before {
   background-image: url("https://idleon.wiki/wiki/images/0/0f/Beginner_Class_Icon.png");
 }
@@ -1679,7 +1695,7 @@
 }
 
 .turtle-tisane::before {
-  background-image: url("https://idleon.wiki/wiki/images/0/01/Froge.png");
+  background-image: url("/static/imgs/Tuttle.png");
 }
 
 .cosmic-storage-chest::before {
@@ -1794,8 +1810,16 @@
   background-image: url("https://idleon.wiki/wiki/images/5/5d/Divinity_Skill_Icon.png");
 }
 
-.inventory-bag-u::before {
+.item-backpack-space::before {
   background-image: url("https://idleon.wiki/wiki/images/f/fd/Inventory_Bag_U.png");
+}
+
+.storage-chest-space::before {
+  background-image: url("https://idleon.wiki/wiki/images/d/d1/Storage_Chest_90.png");
+}
+
+.more-storage-space::before {
+  background-image: url("https://idleon.wiki/wiki/images/b/b8/Cosmic_Storage_Chest.png");
 }
 
 .carry-capacity::before {
@@ -2403,11 +2427,11 @@
 }
 
 .tuttle::before {
-  background-image: url("https://idleon.wiki/wiki/images/0/01/Froge.png");
+  background-image: url("/static/imgs/Tuttle.png");
 }
 
 .tottoise::before {
-  background-image: url("https://idleon.wiki/wiki/images/0/01/Froge.png");
+  background-image: url("/static/imgs/Tottoise.png");
 }
 
 .forest-soul::before {

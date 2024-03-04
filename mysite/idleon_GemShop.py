@@ -43,8 +43,8 @@ def try_exclude_BurningBadBooks(inputJSON, exclusionList):
 
 
 def try_exclude_ChestSluggo(inputJSON, exclusionList):
-    artifactsCount = 33  # as of w6 launch
-    maxTier = 4  # as of w6 launch
+    artifactsCount = 33  # as of v2.02
+    maxTier = 4  # as of v2.02
 
     artifact_tiers = json.loads(inputJSON["Sailing"])
     if isinstance(artifact_tiers, str):

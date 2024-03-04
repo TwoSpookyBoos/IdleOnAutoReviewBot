@@ -326,7 +326,7 @@ def setStampProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
         name="Stamps",
         tier="Not Yet Evaluated",
         header="Best Stamp tier met: Not Yet Evaluated. Recommended stamp actions:",
-        picture="Stamps_Mr_Pigibank.gif"
+        picture="Stamps_Header.png"
     )
 
     totalCombatStampLevels = setStampLevels(inputJSON, 0)

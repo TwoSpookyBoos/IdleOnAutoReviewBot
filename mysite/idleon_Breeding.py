@@ -23,8 +23,8 @@ def getDaysToNextShinyLevel(days: float) -> float:
     return daysRemaining
 
 def getShinyExclusions(inputJSON):
-    currentArtifactsCount = 30  # as of w6 launch
-    currentArtifactTiers = 3  # as of w6 launch
+    currentArtifactsCount = 33  # as of v2.02
+    currentArtifactTiers = 4  # as of v2.02
     shinyExclusionsDict = {
         "Exclude-InfiniteStarSigns": True,
         "Exclude-ArtifactChance": False

@@ -16,8 +16,9 @@
 @import "boss-keys";
 
 $id-map: (
-	inventory-bag-u: $inventory-bag-u,
-	storage-chest-90: $storage-chest-90,
+	item-backpack-space: $inventory-bag-u,
+	storage-chest-space: $storage-chest-90,
+	more-storage-space: $cosmic-storage-chest,
 	carry-capacity: $carry-capacity,
 	food-slot: $food-slot,
 	cosmic-storage-chest: $cosmic-storage-chest,
@@ -2070,7 +2071,11 @@ $extra: (
 	prayers: $prayer-stone,
 	bribes: $bribes,
 	pay2win: $pay2win,
-	iceland-irwin: $iceland-irwin
+	iceland-irwin: $iceland-irwin,
+	empty-forge-slot: $empty-forge-slot,
+	forge-upgrades: $forge-upgrades,
+	stamps: $stamps,
+	combat-levels: $family
 );
 
 $character-classes: (
