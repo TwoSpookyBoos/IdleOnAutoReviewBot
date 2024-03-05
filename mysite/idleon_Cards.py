@@ -23,7 +23,7 @@ def getCardSetReview():
                 )
             )
         group_unlockable = AdviceGroup(
-            tier="0", pre_string="Unlock cards", advices=advices
+            tier="", pre_string="Unlock new cards", advices=advices
         )
         groups.append(group_unlockable)
 
@@ -51,7 +51,7 @@ def getCardSetReview():
             Advice(
                 label=card.name,
                 item_name=card.css_class,
-                progression=card.diff_to_next,
+                progression=f"{card.diff_to_next:,}",
                 goal=star_tiers[card.star + 1],
             )
             for card in cardset
@@ -69,8 +69,7 @@ def getCardSetReview():
         ""
         if session_data.data.ruby_cards_unlocked
         else (
-            "Once you reach Rift 46 your max card tier will be bumped to Ruby.<br>"
-            " Until then, I will only recommend reaching Platinum rank"
+            "Once you reach Rift 46 your max card tier will be bumped to Ruby. Until then, I will only recommend reaching Platinum rank"
         )
     )
 
