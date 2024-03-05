@@ -1,3 +1,7 @@
+.blunder-hills::before {
+  background-image: url("/static/imgs/cards/Blunder Hills.png");
+}
+
 .green-mushroom-card::before {
   background-image: url("https://idleon.wiki/wiki/images/2/23/Green_Mushroom_Card.png");
 }
@@ -62,6 +66,10 @@
   background-image: url("https://idleon.wiki/wiki/images/6/61/Wood_Mushroom_Card.png");
 }
 
+.easy-resources::before {
+  background-image: url("/static/imgs/cards/Easy Resources.png");
+}
+
 .copper-ore-card::before {
   background-image: url("https://idleon.wiki/wiki/images/0/0a/Copper_Ore_Card.png");
 }
@@ -112,6 +120,10 @@
 
 .butterfly-card::before {
   background-image: url("https://idleon.wiki/wiki/images/6/62/Butterfly_Card.png");
+}
+
+.yum-yum-desert::before {
+  background-image: url("/static/imgs/cards/Yum-Yum Desert.png");
 }
 
 .sandy-pot-card::before {
@@ -168,6 +180,10 @@
 
 .bandit-bob-card::before {
   background-image: url("https://idleon.wiki/wiki/images/a/ad/Bandit_Bob_Card.png");
+}
+
+.medium-resources::before {
+  background-image: url("/static/imgs/cards/Medium Resources.png");
 }
 
 .platinum-ore-card::before {
@@ -228,6 +244,10 @@
 
 .scorpie-card::before {
   background-image: url("https://idleon.wiki/wiki/images/b/b6/Scorpie_Card.png");
+}
+
+.frostbite-tundra::before {
+  background-image: url("/static/imgs/cards/Frostbite Tundra.png");
 }
 
 .sheepie-card::before {
@@ -292,6 +312,10 @@
 
 .crystal-cattle-card::before {
   background-image: url("https://idleon.wiki/wiki/images/b/bb/Crystal_Cattle_Card.png");
+}
+
+.hard-resources::before {
+  background-image: url("/static/imgs/cards/Hard Resources.png");
 }
 
 .lustre-ore-card::before {
@@ -454,6 +478,10 @@
   background-image: url("https://idleon.wiki/wiki/images/0/02/Caulifish_Card.png");
 }
 
+.hyperion-nebula::before {
+  background-image: url("/static/imgs/cards/Hyperion Nebula.png");
+}
+
 .purp-mushroom-card::before {
   background-image: url("https://idleon.wiki/wiki/images/e/e4/Purp_Mushroom_Card.png");
 }
@@ -510,6 +538,10 @@
   background-image: url("https://idleon.wiki/wiki/images/c/cd/Crystal_Custard_Card.png");
 }
 
+.smolderin-plateau::before {
+  background-image: url("/static/imgs/cards/Smolderin' Plateau.png");
+}
+
 .suggma-card::before {
   background-image: url("https://idleon.wiki/wiki/images/6/6f/Suggma_Card.png");
 }
@@ -564,6 +596,10 @@
 
 .crystal-capybara-card::before {
   background-image: url("https://idleon.wiki/wiki/images/d/db/Crystal_Capybara_Card.png");
+}
+
+.spirited-valley::before {
+  background-image: url("/static/imgs/cards/Spirited Valley.png");
 }
 
 .sprout-spirit-card::before {
@@ -624,6 +660,10 @@
 
 .crystal-candalight-card::before {
   background-image: url("https://idleon.wiki/wiki/images/?/??/Crystal_Candalight_Card.png");
+}
+
+.dungeons::before {
+  background-image: url("/static/imgs/cards/Dungeons.png");
 }
 
 .poisonic-frog-card::before {
@@ -716,6 +756,10 @@
 
 .caustic-glaciaxus-card::before {
   background-image: url("https://idleon.wiki/wiki/images/9/98/Caustic_Glaciaxus_Card.png");
+}
+
+.bosses-n-nightmares::before {
+  background-image: url("/static/imgs/cards/Bosses n Nightmares.png");
 }
 
 .baba-yaga-card::before {
@@ -816,6 +860,10 @@
 
 .sovereign-emperor-card::before {
   background-image: url("https://idleon.wiki/wiki/images/6/64/Sovereign_Emperor_Card.png");
+}
+
+.events::before {
+  background-image: url("/static/imgs/cards/Events.png");
 }
 
 .ghost-event-card::before {
@@ -2100,6 +2148,10 @@
 
 .combat-levels::before {
   background-image: url("/static/imgs/Family.png");
+}
+
+.cards::before {
+  background-image: url("/static/imgs/cards/Cards.png");
 }
 
 .beginner-icon::before {

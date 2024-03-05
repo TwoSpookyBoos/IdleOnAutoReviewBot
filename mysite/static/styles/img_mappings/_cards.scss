@@ -1,4 +1,5 @@
 $blunder-hills: (
+	blunder-hills: img("cards/Blunder Hills.png"),
 	green-mushroom-card: wiki("2/23/Green_Mushroom_Card.png"),
 	red-mushroom-card: wiki("2/24/Red_Mushroom_Card.png"),
 	frog-card: wiki("0/08/Frog_Card.png"),
@@ -17,6 +18,7 @@ $blunder-hills: (
 	wood-mushroom-card: wiki("6/61/Wood_Mushroom_Card.png")
 );
 $yum-yum-desert: (
+	yum-yum-desert: img("cards/Yum-Yum Desert.png"),
 	sandy-pot-card: wiki("c/c6/Sandy_Pot_Card.png"),
 	mimic-card: wiki("3/38/Mimic_Card.png"),
 	crabcake-card: wiki("1/1f/Crabcake_Card.png"),
@@ -33,6 +35,7 @@ $yum-yum-desert: (
 	bandit-bob-card: wiki("a/ad/Bandit_Bob_Card.png")
 );
 $easy-resources: (
+	easy-resources: img("cards/Easy Resources.png"),
 	copper-ore-card: wiki("0/0a/Copper_Ore_Card.png"),
 	iron-ore-card: wiki("d/d4/Iron_Ore_Card.png"),
 	gold-ore-card: wiki("8/81/Gold_Ore_Card.png"),
@@ -48,6 +51,7 @@ $easy-resources: (
 	butterfly-card: wiki("6/62/Butterfly_Card.png")
 );
 $medium-resources: (
+	medium-resources: img("cards/Medium Resources.png"),
 	platinum-ore-card: wiki("f/fc/Platinum_Ore_Card.png"),
 	dementia-ore-card: wiki("9/96/Dementia_Ore_Card.png"),
 	void-ore-card: wiki("7/7f/Void_Ore_Card.png"),
@@ -65,6 +69,7 @@ $medium-resources: (
 	scorpie-card: wiki("b/b6/Scorpie_Card.png")
 );
 $frostbite-tundra: (
+	frostbite-tundra: img("cards/Frostbite Tundra.png"),
 	sheepie-card: wiki("f/f2/Sheepie_Card.png"),
 	frost-flake-card: wiki("0/08/Frost_Flake_Card.png"),
 	sir-stache-card: wiki("e/ef/Sir_Stache_Card.png"),
@@ -83,6 +88,7 @@ $frostbite-tundra: (
 	crystal-cattle-card: wiki("b/bb/Crystal_Cattle_Card.png")
 );
 $hard-resources: (
+	hard-resources: img("cards/Hard Resources.png"),
 	lustre-ore-card: wiki("5/5e/Lustre_Ore_Card.png"),
 	starfire-ore-card: wiki("2/24/Starfire_Ore_Card.png"),
 	dreadlo-ore-card: wiki("1/11/Dreadlo_Ore_Card.png"),
@@ -125,6 +131,7 @@ $hard-resources: (
 	caulifish-card: wiki("0/02/Caulifish_Card.png")
 );
 $hyperion-nebula: (
+	hyperion-nebula: img("cards/Hyperion Nebula.png"),
 	purp-mushroom-card: wiki("e/e4/Purp_Mushroom_Card.png"),
 	tv-card: wiki("9/9a/TV_Card.png"),
 	donut-card: wiki("e/ed/Donut_Card.png"),
@@ -141,6 +148,7 @@ $hyperion-nebula: (
 	crystal-custard-card: wiki("c/cd/Crystal_Custard_Card.png")
 );
 $smolderin-plateau: (
+	smolderin-plateau: img("cards/Smolderin' Plateau.png"),
 	suggma-card: wiki("6/6f/Suggma_Card.png"),
 	maccie-card: wiki("6/61/Maccie_Card.png"),
 	mister-brightside-card: wiki("2/2b/Mister_Brightside_Card.png"),
@@ -157,6 +165,7 @@ $smolderin-plateau: (
 	crystal-capybara-card: wiki("d/db/Crystal_Capybara_Card.png")
 );
 $spirited-valley: (
+	spirited-valley: img("cards/Spirited Valley.png"),
 	sprout-spirit-card: wiki("4/4c/Sprout_Spirit_Card.png"),
 	ricecake-card: wiki("c/c5/Ricecake_Card.png"),
 	river-spirit-card: wiki("f/f1/River_Spirit_Card.png"),
@@ -174,6 +183,7 @@ $spirited-valley: (
 	crystal-candalight-card: wiki("?/??/Crystal_Candalight_Card.png")  // FIXME
 );
 $dungeons: (
+	dungeons: img("cards/Dungeons.png"),
 	poisonic-frog-card: wiki("8/81/Poisonic_Frog_Card.png"),
 	globohopper-card: wiki("a/a5/Globohopper_Card.png"),
 	king-frog-card: wiki("b/b5/King_Frog_Card.png"),
@@ -199,6 +209,7 @@ $dungeons: (
 	caustic-glaciaxus-card: wiki("9/98/Caustic_Glaciaxus_Card.png")
 );
 $bosses-n-nightmares: (
+	bosses-n-nightmares: img("cards/Bosses n Nightmares.png"),
 	baba-yaga-card: wiki("7/7e/Baba_Yaga_Card.png"),
 	dr-defecaus-card: wiki("e/e3/Dr_Defecaus_Card.png"),
 	boop-card: wiki("7/77/Boop_Card.png"),
@@ -226,6 +237,7 @@ $bosses-n-nightmares: (
 	sovereign-emperor-card: wiki("6/64/Sovereign_Emperor_Card.png")
 );
 $events: (
+	events: img("cards/Events.png"),
 	ghost-event-card: wiki("a/ae/Ghost_%28Event%29_Card.png"),
 	giftmas-blobulyte-card: wiki("b/bb/Giftmas_Blobulyte_Card.png"),
 	meaning-of-giftmas-card: wiki("f/f3/Meaning_of_Giftmas_Card.png"),

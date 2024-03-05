@@ -1,12 +1,10 @@
-import json
 from collections import defaultdict
 
 from flask import g as session_data
 
 from models import AdviceSection, AdviceGroup, Advice
 
-
-card_tiers = ["Unlock", "Bronze", "Silver", "Gold", "Platinum", "Ruby"]
+star_tiers = ["Unlock", "Bronze", "Silver", "Gold", "Platinum", "Ruby"]
 
 
 def getCardSetReview():
@@ -38,32 +36,71 @@ def getCardSetReview():
         for name, cards in cardsets.items()
     }
 
+    max_card_rank = 5 if session_data.data.ruby_cards_unlocked else 4
+    cardset_rank_total = 0
+
     for name, cardset in cardsets.items():
         cardset_stars_sum = sum(card.star + 1 for card in cardset)
         cardset_star, cardset_diff = divmod(cardset_stars_sum, len(cardset))
+        cardset_star = min(cardset_star, max_card_rank)
         cardset_star_next = (cardset_star + 1) * len(cardset)
+
+        cardset_rank_total += cardset_star
 
         advices = [
             Advice(
                 label=card.name,
                 item_name=card.css_class,
                 progression=card.diff_to_next,
-                goal=card_tiers[card.star + 1]
+                goal=star_tiers[card.star + 1],
             )
-            for card in cardset if -1 < card.star < 5
+            for card in cardset
+            if -1 < card.star < max_card_rank
         ]
         group = AdviceGroup(
             tier="",
-            pre_string=f"{name}: Collect {len(cardset) - cardset_diff} more cards for {card_tiers[cardset_star]} ({cardset_stars_sum}/{cardset_star_next})",
-            advices=advices
+            pre_string=f"{name}: Collect {len(cardset) - cardset_diff} more cards for {star_tiers[cardset_star]} ({cardset_stars_sum}/{cardset_star_next})",
+            picture_class=name,
+            advices=advices,
         )
         groups.append(group)
 
+    note = (
+        ""
+        if session_data.data.ruby_cards_unlocked
+        else (
+            "Once you reach Rift 46 your max card tier will be bumped to Ruby.<br>"
+            " Until then, I will only recommend reaching Platinum rank"
+        )
+    )
+
+    for group in [g for g in groups if g][3:]:
+        group.hide = True
+
+    max_tier = len(cardsets) * (max_card_rank + 1)
+    curr_tier = cardset_rank_total
+    tier = f"{curr_tier}/{max_tier}"
     section = AdviceSection(
         name="Cards",
-        tier="",
-        header="Get more cards",
-        groups=groups
+        tier=tier,
+        picture="cards/Cards.png",
+        header=f"You have reached {tier} cardset tiers. Keep going!",
+        groups=groups,
+        note=note,
     )
+
+    if not section:
+        if not session_data.data.ruby_cards_unlocked:
+            section.tier = f"{max_tier}/{max_tier}"
+            section.header = (
+                f"You have completed all {section.tier} cardset tiers. But... "
+                f"I'll see your Diamonds and raise you Rubies! Come back once you reach Rift 46."
+            )
+        else:
+            section.tier = f"{max_tier}/{max_tier}"
+            section.header = (
+                f"You have completed all {section.tier} cardset tiers. Too rich "
+                f"for my blood, I fold. Your sleight of hand is admirable. ♥️♠️♦️♣️"
+            )
 
     return section

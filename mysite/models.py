@@ -213,6 +213,7 @@ class AdviceGroup(AdviceBase):
         pre_string: str,
         post_string: str = "",
         formatting: str = "",
+        picture_class: str = "",
         collapse: bool | None = None,
         advices: list[Advice] | dict[str, list[Advice]] = [],
         **extra,
@@ -223,12 +224,19 @@ class AdviceGroup(AdviceBase):
         self.pre_string: str = pre_string
         self.post_string: str = post_string
         self.formatting: str = formatting
+        self._picture_class: str = picture_class
         self.advices: list[Advice] | dict[str, list[Advice]] = (
             {"default": advices} if isinstance(advices, list) else advices
         )
 
     def __str__(self) -> str:
         return ", ".join(map(str, self.advices))
+
+    @property
+    def picture_class(self) -> str:
+        name = self._picture_class.replace(" ", "-").lower()
+        name = re.sub(r"[^\w-]", "", name)
+        return name
 
     @property
     def show_table_header(self) -> bool:
@@ -592,6 +600,8 @@ class Account:
         self.characters = [Character(**char) for char in characterDict.values()]
         self.assets = self._all_owned_items()
         self.cards = self._make_cards()
+        self.rift = self.raw_data["Rift"][0]
+        self.ruby_cards_unlocked = self.rift >= 46
 
     def _make_cards(self):
         card_counts = json.loads(self.raw_data[self._key_cards])

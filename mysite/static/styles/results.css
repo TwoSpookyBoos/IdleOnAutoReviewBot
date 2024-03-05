@@ -45,7 +45,7 @@
     --fg-pinchy-subheading: hsla(41deg, 98.23%, 90.3%, 100%);
     --fg-pinchy-subheading-accent: hsla(44deg, 100%, 50%, 100%);
 
-    --bg-general: linear-gradient(to bottom, hsla(312deg, 95%, 7%, 1), hsla(326deg, 91%, 21%, 1), hsla(8deg, 69%, 45%, 1));
+    --bg-general: linear-gradient(to bottom, hsla(312deg, 95%, 7%, 1), hsla(326deg, 91%, 21%, 1), hsla(8deg, 69%, 33%, 1));
     --general-fg-subheading: hsla(15deg, 25%, 65%, 1);
     --general-bg-subheading: hsla(15deg, 100%, 87%, 0.1);
 
@@ -644,6 +644,21 @@ strong:not(.no-collapse):hover,
         color: var(--fg);
         &.hidden {
             display: none;
+        }
+        #cards & > span {
+            display: flex;
+            align-items: center;
+            column-gap: 7px;
+            &::before {
+                display: block;
+                content: '';
+                height: 40px;
+                min-width: 40px;
+
+                background-size: contain;
+                background-position: center;
+                background-repeat: no-repeat;
+            }
         }
     }
     .table {
