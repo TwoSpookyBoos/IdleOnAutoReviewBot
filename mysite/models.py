@@ -570,7 +570,7 @@ class Card:
 
         tier_coefficient = {
             # cchiz is ... special? ... who knows why...
-            5: 22 if self.name != "Boss3B" else 6,
+            5: 22 if self.name != "Chaotic Chizoar" else 6,
             4: 5,
             3: 3,
             2: 2,
