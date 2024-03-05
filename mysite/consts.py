@@ -112,7 +112,7 @@ progressionTiers = {
          "70%",
          "Cookin Roadkill 105 = 60% bubble strength. All for Kill hard-cap at 167, you're finished!"],
         [7,  100,
-         {'Roid Ragin': 400,  'Warriors Rule': 200,  'Hearty Diggy': 400,  'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 280, 'Multorange': 120,  'Dream of Ironfish': 120, 'Shimmeron': 160},
+         {'Roid Ragin': 400,  'Warriors Rule': 200,  'Hearty Diggy': 400,  'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 280, 'Multorange': 120,  'Dream of Ironfish': 120},
          {'Swift Steppin': 400, 'Archer or Bust': 200, 'Sanic Tools': 70, 'Bug^2': 120,'Premigreen': 120},
          {'Stable Jenius': 400, 'Mage is Best': 200,  'Hocus Choppus': 400,  'Molto Loggo': 120, 'Le Brain Tools': 280,  'Severapurple': 120,  'Tree Sleeper': 160},
          {'Laaarrrryyyy': 150},
@@ -501,20 +501,20 @@ progressionTiers = {
             "ArenaWaves": 200,
             "Shinies": {
                 "Faster Refinery Speed": 15,
-                "Higher Artifact Find Chance": 15
-                },
-            "ShinyNotes": ""
+                "Lower Minimum Travel Time for Sailing": 5
             },
+            "ShinyNotes": ""
+        },
         10: {
             "Tier": 10,
             "TerritoriesUnlocked": 24,
             "ArenaWaves": 200,
             "Shinies": {
                 "Multikill Per Tier": 20,
-                "Total Damage": 25
-                },
-            "ShinyNotes": ""
+                "Higher Artifact Find Chance": 15
             },
+            "ShinyNotes": ""
+        },
         11: {
             "Tier": 11,
             "TerritoriesUnlocked": 24,
