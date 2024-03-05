@@ -11,7 +11,7 @@ card_tiers = ["Unlock", "Bronze", "Silver", "Gold", "Platinum", "Ruby"]
 
 def getCardSetReview():
     cards = session_data.data.cards
-    unlockable = [card for card in cards if not card.star]
+    unlockable = [card for card in cards if card.star == -1]
 
     groups = list()
 
@@ -45,9 +45,12 @@ def getCardSetReview():
 
         advices = [
             Advice(
-                label=card.name, item_name=card.css_class, progression=card.diff_to_next, goal=card_tiers[card.star + 1]
+                label=card.name,
+                item_name=card.css_class,
+                progression=card.diff_to_next,
+                goal=card_tiers[card.star + 1]
             )
-            for card in cardset if card.star != 5
+            for card in cardset if -1 < card.star < 5
         ]
         group = AdviceGroup(
             tier="",

@@ -4,6 +4,7 @@ import re
 import sys
 from collections import defaultdict
 from enum import Enum
+from math import ceil
 from typing import Any
 
 from flask import g
@@ -529,22 +530,24 @@ class Assets(dict):
 class Card:
     def __init__(self, codename, name, cardset, count, coefficient):
         self.codename = codename
-        self.count = count
+        self.count = ceil(count)
         self.cardset = cardset
         self.name = name
         self.coefficient = coefficient
         self.star = self.getStars()
-        self.css_class = name + ' Card'
-        self.diff_to_next = (self.getCardsForStar(self.star + 1) or sys.maxsize) - self.count
+        self.css_class = name + " Card"
+        self.diff_to_next = (
+            ceil(self.getCardsForStar(self.star + 1)) or sys.maxsize
+        ) - self.count
 
     def getStars(self):
         return next(
             (
                 i
-                for i in range(5, 0, -1)
-                if self.count >= round(self.getCardsForStar(i) + 1)
+                for i in range(5, -1, -1)
+                if self.count >= round(self.getCardsForStar(i))
             ),
-            0,
+            -1,
         )
 
     def getCardsForStar(self, star):
@@ -566,7 +569,7 @@ class Card:
             1: 1,
         }.get(star, 0)
 
-        return self.coefficient * tier_coefficient**2
+        return (self.coefficient * tier_coefficient**2) + 1
 
     def __repr__(self):
         return f"[{self.__class__.__name__}: {self.name}, {self.count}, {self.star}-star]"
