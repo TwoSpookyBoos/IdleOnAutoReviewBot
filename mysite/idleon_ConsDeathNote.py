@@ -119,7 +119,7 @@ def buildMaps() -> dict[int, dict]:
         #7: {},
         #8: {}
     }
-    rawMaps = getJSONDataFromFile('./static/enemy-maps.json')
+    rawMaps = getJSONDataFromFile('static/enemy-maps.json')
     for mapData in rawMaps["mapData"]:
         #["Spore Meadows", 1, "Green Mushroom", 11, "Basic W1 Enemies", "Basic W1 Enemies", "Basic W1 Enemies"],
         #mapData[0]: str = map name
