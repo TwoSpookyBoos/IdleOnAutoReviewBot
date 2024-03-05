@@ -463,6 +463,19 @@ def getDeathNoteKills(inputJSON, characterDict):
                             )
                         else:
                             characterDict[barbCharacterIndex].increaseApocTotal(apocNamesList[apocIndex])
+                else:
+                    #This condition can be hit when reviewing data from before a World release
+                    #For example, JSON data from w5 before w6 is released hits this to populate 0% toward W6 kills
+                    for apocIndex in range(0, len(apocAmountsList)):
+                        characterDict[barbCharacterIndex].addUnmetApoc(
+                            apocNamesList[apocIndex], enemyMaps[worldIndex][enemy_map].getRating(apocNamesList[apocIndex]),
+                            [
+                                enemyMaps[worldIndex][enemy_map].map_name,  # map name
+                                apocAmountsList[apocIndex],  # kills short of zow/chow/meow
+                                0,  # percent toward zow/chow/meow
+                                enemyMaps[worldIndex][enemy_map].monster_image  # monster image
+                            ]
+                        )
         #Sort them
         characterDict[barbCharacterIndex].sortApocByProgression()
                 #else:
