@@ -1327,19 +1327,19 @@
 }
 
 .cauldron-o::before {
-  background-image: url("/static/imgs/Alchemy_BubbleOrange.gif");
+  background-image: url("https://idleon.wiki/wiki/images/5/57/BubbleOrange.gif");
 }
 
 .cauldron-g::before {
-  background-image: url("/static/imgs/Alchemy_BubbleGreen.gif");
+  background-image: url("https://idleon.wiki/wiki/images/b/b9/BubbleGreen.gif");
 }
 
 .cauldron-p::before {
-  background-image: url("/static/imgs/Alchemy_BubblePurple.gif");
+  background-image: url("https://idleon.wiki/wiki/images/5/5e/BubblePurple.gif");
 }
 
 .cauldron-y::before {
-  background-image: url("/static/imgs/Alchemy_BubbleYellow.gif");
+  background-image: url("https://idleon.wiki/wiki/images/1/1d/BubbleYellow.gif");
 }
 
 .cauldron-a::before {
