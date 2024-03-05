@@ -23,7 +23,7 @@ def getCardSetReview():
                 )
             )
         group_unlockable = AdviceGroup(
-            tier="", pre_string="Unlock new cards", advices=advices
+            tier="", pre_string="Discover new cards", advices=advices, picture_class='locked-card',
         )
         groups.append(group_unlockable)
 

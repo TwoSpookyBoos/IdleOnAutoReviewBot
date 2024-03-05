@@ -1,3 +1,7 @@
+.locked-card::before {
+  background-image: url("/static/imgs/cards/Locked_Card.png");
+}
+
 .blunder-hills::before {
   background-image: url("/static/imgs/cards/Blunder Hills.png");
 }
