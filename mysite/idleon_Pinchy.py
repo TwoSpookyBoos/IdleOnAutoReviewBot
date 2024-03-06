@@ -247,9 +247,9 @@ portalOpeningKills = [
     (Threshold.LATE_W6,       260, 25000000),  # W6 Ceramic Spirits
     (Threshold.MID_W6,        256,  1100000),  # W6 Bamboo Spirits
     (Threshold.EARLY_W6,      251,    30000),  # W6 Sprout Spirits
-    (Threshold.LATE_W5,       210,  3000000),  # W5 Fire Spirits
-    (Threshold.MID_W5,        205,   125000),  # W5 Stiltmoles
-    (Threshold.EARLY_W5,      201,    25000),  # W5 Suggmas
+    (Threshold.LATE_W5,       210,   600000),  # W5 Fire Spirits
+    (Threshold.MID_W5,        205,    75000),  # W5 Stiltmoles
+    (Threshold.EARLY_W5,      201,    15000),  # W5 Suggmas
     (Threshold.LATE_W4,       160,   190000),  # W4 Clammies
     (Threshold.MID_W4,        155,    40000),  # W4 Soda Cans
     (Threshold.EARLY_W4,      151,     5000),  # W4 Purp Mushrooms
