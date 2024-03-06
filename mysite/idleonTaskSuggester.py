@@ -1,6 +1,6 @@
 #idleonTaskSuggester.py
 import datetime
-
+import copy
 from flask import g
 
 from data_formatting import logger, getJSONfromAPI, getJSONfromText, getLastUpdatedTime, getCharacterDetails, HeaderData
@@ -143,37 +143,37 @@ def main(inputData, runType="web"):
     if runType == "web":
         logger.info(f'{headerData.last_update = }')
 
-    section_combatLevels = idleon_CombatLevels.setCombatLevelsProgressionTier(parsedJSON, progressionTiers['Combat Levels'], playerCount, playerNames, playerClasses)
+    section_combatLevels = idleon_CombatLevels.setCombatLevelsProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Combat Levels']), playerCount, playerNames, playerClasses)
     section_consumables = idleon_Consumables.parseConsumables(parsedJSON, playerCount, playerNames)
-    section_gemShop = idleon_GemShop.setGemShopProgressionTier(parsedJSON, progressionTiers['Gem Shop'], playerCount)
+    section_gemShop = idleon_GemShop.setGemShopProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Gem Shop']), playerCount)
     sections_quest_gstacks, section_regular_gstacks = idleon_Greenstacks.setGStackProgressionTier(parsedJSON, playerCount)
     section_maestro = idleon_MaestroHands.getHandsStatus(parsedJSON, playerCount, playerNames)
     section_cards = idleon_Cards.getCardSetReview()
 
     #World 1
-    stamps_AdviceSection = idleon_Stamps.setStampProgressionTier(parsedJSON, progressionTiers['Stamps'])
-    bribes_AdviceSection = idleon_Bribes.setBribesProgressionTier(parsedJSON, progressionTiers['Bribes'])
-    smithing_AdviceSection = idleon_Smithing.setSmithingProgressionTier(parsedJSON, progressionTiers['Smithing'], playerCount, characterDict)
+    stamps_AdviceSection = idleon_Stamps.setStampProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Stamps']))
+    bribes_AdviceSection = idleon_Bribes.setBribesProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Bribes']))
+    smithing_AdviceSection = idleon_Smithing.setSmithingProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Smithing']), playerCount, characterDict)
 
     #World 2
-    alchBubbles_AdviceSection = idleon_Alchemy.setAlchemyBubblesProgressionTier(parsedJSON, progressionTiers['Alchemy Bubbles'], characterDict)
-    alchVials_AdviceSection = idleon_Alchemy.setAlchemyVialsProgressionTier(parsedJSON, progressionTiers['Alchemy Vials'], characterDict)
+    alchBubbles_AdviceSection = idleon_Alchemy.setAlchemyBubblesProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Alchemy Bubbles']), characterDict)
+    alchVials_AdviceSection = idleon_Alchemy.setAlchemyVialsProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Alchemy Vials']), characterDict)
     alchP2W_AdviceSection = idleon_Alchemy.setAlchemyP2W(parsedJSON, characterDict)
     #obols_AdviceSection = idleon_Obols.setObolsProgressionTier(parsedJSON, playerCount, progressionTiers['Obols'], fromPublicIEBool)
 
     #World 3
-    refinery_AdviceSection = idleon_ConsRefinery.setConsRefineryProgressionTier(parsedJSON, progressionTiers['Construction Refinery'], characterDict)
-    saltlick_AdviceSection = idleon_ConsSaltLick.setConsSaltLickProgressionTier(parsedJSON, progressionTiers['Construction Salt Lick'], characterDict)
-    deathnote_AdviceSection = idleon_ConsDeathNote.setConsDeathNoteProgressionTier(parsedJSON, progressionTiers['Construction Death Note'], characterDict)
-    buildings_AdviceSection = idleon_ConsBuildings.setConsBuildingsProgressionTier(parsedJSON, progressionTiers['Construction Buildings Pre-Buffs'], progressionTiers['Construction Buildings Post-Buffs'], characterDict)
-    prayers_AdviceSection = idleon_Worship.setWorshipPrayersProgressionTier(parsedJSON, progressionTiers['Worship Prayers'], characterDict)
+    refinery_AdviceSection = idleon_ConsRefinery.setConsRefineryProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Construction Refinery']), characterDict)
+    saltlick_AdviceSection = idleon_ConsSaltLick.setConsSaltLickProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Construction Salt Lick']), characterDict)
+    deathnote_AdviceSection = idleon_ConsDeathNote.setConsDeathNoteProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Construction Death Note']), characterDict)
+    buildings_AdviceSection = idleon_ConsBuildings.setConsBuildingsProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Construction Buildings Pre-Buffs']), copy.deepcopy(progressionTiers['Construction Buildings Post-Buffs']), characterDict)
+    prayers_AdviceSection = idleon_Worship.setWorshipPrayersProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Worship Prayers']), characterDict)
     trapping_AdviceSection = idleon_Trapping.setTrappingProgressionTier(parsedJSON, characterDict)
     #collider_AdviceSection =
     #worship_AdviceSection =
     #printer_AdviceSection =
 
     #World 4
-    breeding_AdviceSection = idleon_Breeding.setBreedingProgressionTier(parsedJSON, progressionTiers['Breeding'], characterDict)
+    breeding_AdviceSection = idleon_Breeding.setBreedingProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Breeding']), characterDict)
     #cooking_AdviceSection =
     #lab_AdviceSection =
 
