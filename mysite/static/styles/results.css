@@ -352,6 +352,10 @@ body {
                                         row-gap: 10px;
                                         column-gap: 10px;
                                         padding: 10px;
+
+                                        &#cards-tier {
+                                            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+                                        }
                                     }
 
                                     .note {
