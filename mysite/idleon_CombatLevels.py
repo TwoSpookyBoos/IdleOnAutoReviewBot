@@ -121,7 +121,7 @@ def setCombatLevelsProgressionTier(inputJSON, progressionTiers, playerCount, pla
     else:
         header += "Recommended actions:"
     combat_section = AdviceSection(
-        name="Class Levels",
+        name="Combat Levels",
         tier=tier,
         header=header,
         picture="Family.png",
