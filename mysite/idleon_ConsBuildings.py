@@ -1,11 +1,13 @@
 import json
 from idleon_SkillLevels import getSpecificSkillLevelsList
 from models import AdviceSection, AdviceGroup, Advice
-from utils import pl
+from utils import pl, get_logger
+
+logger = get_logger(__name__)
 
 def parseConsBuildingstoLists(inputJSON):
     consBuildingsList = json.loads(inputJSON["Tower"])  #expected type of list
-    #print("ConsBuildings~ TYPE CHECK consBuildingsList: ", type(consBuildingsList), consBuildingsList)
+    #logger.debug(f"TYPE CHECK consBuildingsList: {type(consBuildingsList)}: {consBuildingsList}")
     return consBuildingsList
 
 def getBuildingNameFromIndex(inputNumber):
@@ -31,18 +33,18 @@ def getInfluencers(inputJSON):
     #Honker Vial level
     try:
         honkerVialLevel = inputJSON["CauldronInfo"][4]["40"]  #expected type of int
-        #print("ConsBuildings.getInfluencers~ TYPE CHECK honkerVialLevel: ", type(honkerVialLevel), honkerVialLevel)
+        logger.debug(f"TYPE CHECK honkerVialLevel: {type(honkerVialLevel)}: {honkerVialLevel}")
     except Exception as reason:
         honkerVialLevel = 0
-        print("ConsBuildings.getInfluencers~ EXCEPTION Unable to get honkerVialLevel: ", reason)
+        logger.exception(f"Unable to retrieve honkerVialLevel: {reason}")
 
     #Boulder Roller level
     try:
         poisonicLevel = json.loads(inputJSON["Tower"])[16]  #expected type of int
-        #print("ConsBuildings~ TYPE CHECK poisonicLevel: ", type(poisonicLevel), poisonicLevel)
+        #logger.debug(f"TYPE CHECK poisonicLevel: {type(poisonicLevel)}: poisonicLevel")
     except Exception as reason:
         poisonicLevel = 0
-        print("ConsBuildings.getInfluencers~ EXCEPTION Unable to get poisonicLevel: ", reason)
+        logger.exception(f"Unable to retrieve poisonicLevel: {reason}")
 
     #Other?
     consMastery = False
@@ -52,15 +54,15 @@ def getInfluencers(inputJSON):
         if highestCompletedRift >= 41:
             consMastery = True
     except Exception as reason:
-        print("ConsBuildings.getInfluencers~ EXCEPTION: getBuffs Unable to find highest Rift level completed: ", reason)
+        logger.exception(f"Unable to find highest Rift level completed: {reason}")
     try:
         carbonLevel = inputJSON["Atoms"][5]
         if carbonLevel >= 1:
             atomCarbon = True
     except Exception as reason:
-        print("ConsBuildings.getInfluencers~ EXCEPTION: getBuffs Unable to find Atom Collider Carbon level: ", reason)
+        logger.exception(f"Unable to find Atom Collider Carbon level: {reason}")
     results = [(consMastery or atomCarbon), honkerVialLevel, poisonicLevel]
-    #print("ConsBuildings.getInfluencers~ INFO results: ", "EitherBuff:",results[0], ", Honker Vial Level:", results[1], ", Poisonic Tower Level:", results[2])
+    #logger.debug(f"Influencer results: EitherBuff: {results[0]}, Honker Vial Level: {results[1]}, Poisonic Tower Level: {results[2]}")
     return results
 
 def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progressionTiersPostBuffs, characterDict):
@@ -85,27 +87,28 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
     if hasBuffs:
         #maxLevelList = [10, 201, 51, 10, 25, 60, 45, 5, 200,    140, 140, 140, 140, 140, 140, 140, 140, 140,   200, 200, 200, 200, 200, 200, 200, 200, 200]  # these are true max, not recommended max
         maxLevelList = [10, 101, 51, 10, 25, 60, 20, 5, 200,    70, 70, 70, 70, 70, 70, 75, 75, 30,             200, 200, 200, 200, 200, 200, 200, 200, 200]  # the recommended maxes
-        #print("ConsBuilding.setConsBuildingsProgressionTiers~ INFO Both Construction Mastery and Wizard Atom found. Setting maxLevelList to PostBuff.")
+        #logger.debug(" Either Construction Mastery and Wizard Atom found. Setting maxLevelList to PostBuff.")
     else:
         maxLevelList = [10, 101, 51, 10, 25, 60, 15, 5, 200,    50, 50, 50, 50, 50, 50, 50, 50, 30,             100, 100, 100, 100, 100, 100, 100, 100, 100]
-        #print("ConsBuildings.setConsBuildingsProgressionTier~ INFO Setting maxLevelList to PreBuff.")
+        #logger.debug("ConsBuildings.setConsBuildingsProgressionTier~ INFO Setting maxLevelList to PreBuff.")
 
     # Make adjustments to tiers based on other influencers
     # 1) If any building is level 0, it gets promoted to SS tier
     buildingCounter = 0
     while buildingCounter < len(maxLevelList):
+        #logger.debug(f"Is player level {playerBuildings[buildingCounter]} equal to 0 for Tower {buildingCounter} ({getBuildingNameFromIndex(buildingCounter)}): {playerBuildings[buildingCounter] == 0}")
         if playerBuildings[buildingCounter] == 0:
             maxLevelList[buildingCounter] = 1  #With a max recommended level of 1
             for tier in progressionTiersPostBuffs:
                 if buildingCounter in tier[2] and tier[1] != "SS":
                     tier[2].remove(buildingCounter)  #Remove that building from any other non-SS tier.
                     progressionTiersPostBuffs[1][2].append(buildingCounter)
-                    #print("ConsBuildings.setConsBuildingsProgressionTier~ INFO Level 0 building detected. Removing",getBuildingNameFromIndex(buildingCounter),"from PostBuff",tier[1],"and adding to SS with max level 1 instead.")
+                    logger.debug(f"Level 0 building detected. Removing {getBuildingNameFromIndex(buildingCounter)} from POSTBuff {tier[1]} and adding to SS with max level 1 instead.")
             for tier in progressionTiersPreBuffs:
                 if buildingCounter in tier[2] and tier[1] != "SS":
                     tier[2].remove(buildingCounter)  #Remove that building from any other non-SS tier.
                     progressionTiersPreBuffs[1][2].append(buildingCounter)
-                    #print("ConsBuildings.setConsBuildingsProgressionTier~ INFO Level 0 building detected. Removing",getBuildingNameFromIndex(buildingCounter),"from PreBuff",tier[1],"and adding to SS with max level 1 instead.")
+                    logger.debug(f"Level 0 building detected. Removing {getBuildingNameFromIndex(buildingCounter)} from PREBuff {tier[1]} and adding to SS with max level 1 instead.")
         buildingCounter += 1
 
     # 2) Honker vial is 12+ OR Trapper Drone is 20+, drop Trapper Drone priority
@@ -115,9 +118,9 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
             progressionTiersPostBuffs[6][2].append(6)  #Add Trapper Drone to D tier
             if hasBuffs:
                 maxLevelList[6] = 50
-            #print("ConsBuildings.setConsBuildingsProgressionTier~ INFO Successfully moved Trapper Drone from PostBuff S to D tier and changed level from 20 to 50")
+            #logger.debug("Successfully moved Trapper Drone from PostBuff S to D tier and changed level from 20 to 50")
         except Exception as reason:
-            print("ConsBuildings.setConsBuildingsProgressionTier~ EXCEPTION Could not remove Trapper Drone from PostBuff S tier:",reason)
+            logger.exception(f"Could not remove Trapper Drone from PostBuff S tier: {reason}")
 
     # 3) #Poisonic level 20+, drop Boulder Roller priority
     if influencers[2] >= 20:
@@ -125,13 +128,13 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
             #PreBuffs
             progressionTiersPreBuffs[2][2].remove(11)  #Remove Boulder Roller from S tier
             progressionTiersPreBuffs[6][2].append(11)  #Add Boulder Roller to D tier
-            #print("ConsBuildings.setConsBuildingsProgressionTier~ INFO Successfully moved Boulder Roller from PreBuff S to D tier because Poisonic 20+")
+            #logger.debug("Successfully moved Boulder Roller from PreBuff S to D tier because Poisonic 20+")
             #PostBuffs
             progressionTiersPostBuffs[2][2].remove(11)  #Remove Boulder Roller from S tier
             progressionTiersPostBuffs[3][2].append(11)  #Add Boulder Roller to A tier
-            #print("ConsBuildings.setConsBuildingsProgressionTier~ INFO Successfully moved Boulder Roller from PostBuff S to A tier because Poisonic 20+")
+            #logger.debug("Successfully moved Boulder Roller from PostBuff S to A tier because Poisonic 20+")
         except Exception as reason:
-            print("ConsBuildings.setConsBuildingsProgressionTier~ EXCEPTION Could not move Boulder Roller from S tier in one or both tierlists:",reason)
+            logger.exception(f"Could not move Boulder Roller from S tier in one or both tierlists: {reason}")
 
     # 4) Talent Library Book 101+, drop priority
     if playerBuildings[1] >= 101:
@@ -140,9 +143,9 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
             progressionTiersPostBuffs[5][2].append(1)  #Add to C tier
             if hasBuffs:
                 maxLevelList[1] = 201
-            #print("ConsBuildings.setConsBuildingsProgressionTier~ INFO Successfully moved 101+ Talent Library Book from PostBuff A to C tier.")
+            #logger.debug("Successfully moved 101+ Talent Library Book from PostBuff A to C tier.")
         except Exception as reason:
-            print("ConsBuildings.setConsBuildingsProgressionTier~ EXCEPTION Could not move 101+ Talent Library Book from PostBuff A tier to C tier:",reason)
+            logger.exception(f"Could not move 101+ Talent Library Book from PostBuff A tier to C tier: {reason}")
 
     # 5) #Basic Towers to 70, drop priority
     for towerIndex in [9,10,11,12,13,14]:
@@ -152,9 +155,9 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
                 progressionTiersPostBuffs[5][2].append(towerIndex)  #Add to C tier
                 if hasBuffs:
                     maxLevelList[towerIndex] = 140
-                #print("ConsBuildings~ INFO Successfully moved 70+ basic tower from PostBuff A to C tier:",getBuildingNameFromIndex(towerIndex))
+                #logger.info(f"Successfully moved 70+ basic tower from PostBuff A to C tier: {getBuildingNameFromIndex(towerIndex)})
             except Exception as reason:
-                print("ConsBuildings.setConsBuildingsProgressionTier~ EXCEPTION Could not move 70+ basic tower from PostBuff A tier to C tier:",getBuildingNameFromIndex(towerIndex),reason)
+                logger.exception(f"Could not move 70+ basic tower {getBuildingNameFromIndex(towerIndex)} from PostBuff A tier to C tier: {reason}")
 
     # 6) Fancy Towers to 75, drop priority
     for towerIndex in [15,16]:
@@ -164,9 +167,9 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
                 progressionTiersPostBuffs[4][2].append(towerIndex)  #Add to B tier
                 if hasBuffs:
                     maxLevelList[towerIndex] = 140
-                #print("ConsBuildings.setConsBuildingsProgressionTier~ INFO Successfully moved 75+ fancy tower from PostBuff S to B tier:",getBuildingNameFromIndex(towerIndex))
+                #logger.debug(f"Successfully moved 75+ fancy tower {getBuildingNameFromIndex(towerIndex)} from PostBuff S to B tier")
             except Exception as reason:
-                print("ConsBuildings.setConsBuildingsProgressionTier~ EXCEPTION Could not move 75+ fancy tower from PostBuff S tier to B tier:",getBuildingNameFromIndex(towerIndex),reason)
+                logger.exception(f"EXCEPTION Could not move 75+ fancy tower {getBuildingNameFromIndex(towerIndex)} from PostBuff S tier to B tier: {reason}")
 
     # 7) Voidinator to 30, drop priority
     if playerBuildings[17] >= 30:  #Voidinator scaling is very bad
@@ -177,17 +180,17 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
             progressionTiersPostBuffs[5][2].append(17)  #Add to C tier
             if hasBuffs:
                 maxLevelList[17] = 140
-            #print("ConsBuildings.setConsBuildingsProgressionTier~ INFO Successfully moved 30+ Voidinator from A/B to C tier in both tierlists")
+            #logger.debug("Successfully moved 30+ Voidinator from A/B to C tier in both tierlists")
         except Exception as reason:
-            print("ConsBuildings.setConsBuildingsProgressionTier~ EXCEPTION Could not move 30+ Voidinator from A/B to C tier in both tierlists:",reason)
+            logger.exception(f"Could not move 30+ Voidinator from A/B to C tier in both tierlists: {reason}")
 
     # Decide which tierset to use
     if influencers[0] == True:  #Has either Construction Mastery or the Wizard atom
         progressionTiers = progressionTiersPostBuffs
-        #print("ConsBuildings.setConsBuildingsProgressionTier~ INFO Either Construction Mastery or Wizard Atom found. Setting ProgressionTiers to PostBuff.")
+        #logger.debug("Either Construction Mastery or Wizard Atom found. Setting ProgressionTiers to PostBuff.")
     else:
         progressionTiers = progressionTiersPreBuffs
-        #print("ConsBuildings.setConsBuildingsProgressionTier~ INFO Setting ProgressionTiers to PreBuff.")
+        #logger.debug("Setting ProgressionTiers to PreBuff.")
 
     #tier[0] = int tier
     #tier[1] = str Tier name
@@ -198,19 +201,22 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
     for counter in range(0, len(progressionTiers)):
         building_AdviceDict[counter] = []
         tierNamesList.append(progressionTiers[counter][1])
-        try:
-            for recommendedBuilding in progressionTiers[counter][2]:
-                #print("ConsBuildings.setConsBuildingsProgressionTier~ ", recommendedBuilding, getBuildingNameFromIndex(recommendedBuilding), playerBuildings[recommendedBuilding], maxLevelList[recommendedBuilding], "Cleared=", (maxLevelList[recommendedBuilding] <= playerBuildings[recommendedBuilding]))
+        for recommendedBuilding in progressionTiers[counter][2]:
+            try:
+                #logger.debug(f"{progressionTiers[counter][1]} Tier: Building {recommendedBuilding} ({getBuildingNameFromIndex(recommendedBuilding)}): Cleared if {maxLevelList[recommendedBuilding]} <= {playerBuildings[recommendedBuilding]}. Cleared= {maxLevelList[recommendedBuilding] <= playerBuildings[recommendedBuilding]}")
                 if maxLevelList[recommendedBuilding] > playerBuildings[recommendedBuilding]:
                     if len(building_AdviceDict[counter]) < maxBuildingsPerGroup:
+                        logger.debug(f"Adding advice for {getBuildingNameFromIndex(recommendedBuilding)} to {counter}")
                         building_AdviceDict[counter].append(Advice(label=getBuildingNameFromIndex(recommendedBuilding),
                                                                    picture_class=getBuildingImageNameFromIndex(recommendedBuilding),
                                                                    progression=str(playerBuildings[recommendedBuilding]),
                                                                    goal=str(maxLevelList[recommendedBuilding]))
                                                             )
-        except Exception as reason:
-            print("ConsBuildings.setConsBuildingsProgressionTier~ EXCEPTION ProgressionTier evaluation error. Counter = ", counter, ", recommendedBuilding = ", recommendedBuilding, ", and Reason:", reason)
-        counter += 1
+                else:
+                    #logger.debug(f"{progressionTiers[counter][1]} Tier: Max met for {getBuildingNameFromIndex(recommendedBuilding)}, not generating Advice")
+                    continue
+            except Exception as reason:
+                logger.exception(f"ProgressionTier evaluation error. Counter = {counter}, recommendedBuilding = {recommendedBuilding}, Reason: {reason}")
 
     #Generate AdviceGroups
     for tierKey in building_AdviceDict.keys():
