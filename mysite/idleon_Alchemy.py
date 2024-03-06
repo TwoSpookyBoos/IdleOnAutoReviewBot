@@ -146,7 +146,7 @@ def getReadableVialNames(inputNumber):
         case 63:
             return "Dreamy Drink (Dream Particulate)"
         case 64:
-            return "Ricecakeorade (Rice Cake)"
+            return "Ricecakorade (Rice Cake)"
         case 65:
             return "Ladybug Serum (Ladybug)"
         case 66:
