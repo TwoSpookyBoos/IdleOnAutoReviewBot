@@ -90,6 +90,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const shaft = lbl.querySelector(".shaft")
         shaft.classList.toggle("on")
         shaft.classList.toggle("off")
+        const checkbox = lbl.previousElementSibling
+        checkbox.value = checkbox.value === "on" ? "off" : "on"
     })
 
     // handle left/right handedness switching
