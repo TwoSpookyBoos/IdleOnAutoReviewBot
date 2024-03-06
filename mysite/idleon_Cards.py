@@ -37,7 +37,7 @@ def getCardSetReview():
     cardset_rank_total = 0
 
     for name, cardset in cardsets.items():
-        cardset_stars_sum = sum(card.star + 1 for card in cardset)
+        cardset_stars_sum = sum(min(card.star, max_card_rank) + 1 for card in cardset)
         cardset_star, cardset_diff = divmod(cardset_stars_sum, len(cardset))
         cardset_star = min(cardset_star, max_card_rank)
         cardset_star_next = (cardset_star + 1) * len(cardset)

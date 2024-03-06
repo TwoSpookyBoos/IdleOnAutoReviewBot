@@ -20,14 +20,15 @@
 
     &[for="handedness"]
         & > .shaft
+            .knob:before
+                color: white
+
             &.off
                 background: oldlace
 
                 .knob
                     background: forestgreen
                     left: calc(var(--shaft-padding) + var(--knob-height))
-                    &:before
-                        color: white
 
             &.on
                 .knob
@@ -55,8 +56,8 @@
             .knob
                 background: #343434
                 left: var(--shaft-padding)
-                &:before
-                    color: darkgray
+                //&:before
+                //    color: white
 
         .knob
             position: absolute

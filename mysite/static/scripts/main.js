@@ -23,25 +23,15 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll('.banner:not(.no-collapse)').forEach((banner) => banner.onclick = (e) => {
         let ban = e.currentTarget
         let world = ban.parentElement
-        if (world.classList.contains("new")) {
-            e.currentTarget.nextElementSibling.classList.toggle("folded")
-        } else {
-            e.currentTarget.parentElement.querySelectorAll('ul, .sections').forEach(ul => ul.classList.toggle('folded'))
-        }
+        e.currentTarget.nextElementSibling.classList.toggle("folded")
     })
     // set event listeners for folding sections
     document.querySelectorAll('strong').forEach((title) => title.onclick = (e) => e.currentTarget.parentElement.querySelectorAll('ul').forEach(e => e.classList.toggle('folded')))
 
     document.querySelectorAll('.subheading:not(.no-collapse)').forEach((subheading) => subheading.onclick = (e) => {
         let subh = e.currentTarget
-        let section = subh.parentElement
-        if (section.classList.contains("new")) {
-            subh.nextElementSibling.classList.toggle("folded")
-            subh.classList.toggle("folded")
-        } else {
-            subh.nextElementSibling.querySelectorAll('ul, em').forEach(ul => ul.classList.toggle('folded'))
-            subh.querySelector('img').classList.toggle('folded')
-        }
+        subh.nextElementSibling.classList.toggle("folded")
+        subh.classList.toggle("folded")
     })
 
     document.querySelectorAll('strong:first-child').forEach((title) => title.onclick = (e) => {
