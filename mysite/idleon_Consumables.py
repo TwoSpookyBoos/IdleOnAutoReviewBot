@@ -319,12 +319,7 @@ def parseInventoryBagsCount(inputJSON, _, playerNames):
     # header = f"You collected bags on {tier} players. Collect more!"
 
     advices_MissingBags = [
-        Advice(
-            label=name,
-            item_name="",  # TODO: provide player class icon
-            progression=bagsCount,
-            goal=currentMaxBagsSum
-        ) for name, bagsCount in playersMissingBags
+        Advice(label=name, picture_class="", progression=bagsCount, goal=currentMaxBagsSum) for name, bagsCount in playersMissingBags
     ]
 
     # if not advice_MissingBags:
@@ -420,10 +415,7 @@ def parseStorageChests(inputJSON):
     missing_chests = [chest for chest in StorageChest if str(chest.value) not in usedStorageChests.keys()]
 
     advices = [
-        Advice(
-            label=chest.pretty_name,
-            item_name=chest.pretty_name,
-        ) for chest in missing_chests
+        Advice(label=chest.pretty_name, picture_class=chest.pretty_name) for chest in missing_chests
     ]
 
     group = AdviceGroup(

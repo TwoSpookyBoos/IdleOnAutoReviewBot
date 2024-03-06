@@ -429,16 +429,12 @@ def setBreedingProgressionTier(inputJSON: dict, progressionTiers: dict[int, dict
                     tier_UnlockedTerritories = tier
                 else:
                     for territoryIndex in range(breedingDict["Highest Unlocked Territory"]+1, progressionTiers[tier]["TerritoriesUnlocked"]+1):
-                        breeding_AdviceDict["UnlockedTerritories"]["Unlock more Spice Territories"].append(Advice(
-                            label=getTerritoryName(territoryIndex),
-                            item_name=getSpiceImage(territoryIndex),
-                        ))
+                        breeding_AdviceDict["UnlockedTerritories"]["Unlock more Spice Territories"].append(
+                            Advice(label=getTerritoryName(territoryIndex), picture_class=getSpiceImage(territoryIndex)))
                     for petIndex in range(0, len(recommendedTerritoryCompsList[tier][0])):
-                        breeding_AdviceDict["UnlockedTerritories"]["Recommended Territory Team (Left to Right)"].append(Advice(
-                            label=recommendedTerritoryCompsList[tier][0][petIndex],
-                            item_name=recommendedTerritoryCompsList[tier][1][petIndex]
-
-                        ))
+                        breeding_AdviceDict["UnlockedTerritories"]["Recommended Territory Team (Left to Right)"].append(
+                            Advice(label=recommendedTerritoryCompsList[tier][0][petIndex],
+                                   picture_class=recommendedTerritoryCompsList[tier][1][petIndex]))
 
             #Arena Waves to unlock Pet Slots
             if tier_MaxArenaWave >= (tier-1):
@@ -446,10 +442,9 @@ def setBreedingProgressionTier(inputJSON: dict, progressionTiers: dict[int, dict
                     tier_MaxArenaWave = tier
                 else:
                     for petIndex in range(0, len(recommendedArenaCompsDict[tier_MaxArenaWave][0])):
-                        breeding_AdviceDict["MaxArenaWave"]["Recommended Arena Team (Left to Right)"].append(Advice(
-                            label=recommendedArenaCompsDict[tier_MaxArenaWave][0][petIndex],
-                            item_name=recommendedArenaCompsDict[tier_MaxArenaWave][1][petIndex],
-                        ))
+                        breeding_AdviceDict["MaxArenaWave"]["Recommended Arena Team (Left to Right)"].append(
+                            Advice(label=recommendedArenaCompsDict[tier_MaxArenaWave][0][petIndex],
+                                   picture_class=recommendedArenaCompsDict[tier_MaxArenaWave][1][petIndex]))
 
             #Shinies
             if tier_ShinyLevels >= (tier-1):
@@ -475,12 +470,9 @@ def setBreedingProgressionTier(inputJSON: dict, progressionTiers: dict[int, dict
                             if failedRequirement[0] not in breeding_AdviceDict["ShinyLevels"]:
                                 breeding_AdviceDict["ShinyLevels"][yuckyDictName] = []
                             for possibleShinyPet in failedShinyBonus[failedRequirement[0]]:
-                                breeding_AdviceDict["ShinyLevels"][yuckyDictName].append(Advice(
-                                    label=f"{possibleShinyPet[0]}: Level {possibleShinyPet[1]}",
-                                    item_name=possibleShinyPet[0],
-                                    progression=f"{possibleShinyPet[2]:.2f} days to level",
-                                    goal=""
-                                ))
+                                breeding_AdviceDict["ShinyLevels"][yuckyDictName].append(
+                                    Advice(label=f"{possibleShinyPet[0]}: Level {possibleShinyPet[1]}", picture_class=possibleShinyPet[0],
+                                           progression=f"{possibleShinyPet[2]:.2f} days to level", goal=""))
 
                         # advice_perShinyBonus = ""
                         # for shinyBonus in failedShinyBonus:
@@ -522,10 +514,8 @@ def setBreedingProgressionTier(inputJSON: dict, progressionTiers: dict[int, dict
                 if shinyTier not in breeding_AdviceDict["ShinyLevelsTierList"]:
                     breeding_AdviceDict["ShinyLevelsTierList"][shinyTier] = []
                 for shinyPet in shinyPetsTierList[shinyTier]:
-                    breeding_AdviceDict["ShinyLevelsTierList"][shinyTier].append(Advice(
-                        label=shinyPet,
-                        item_name="")
-                    )
+                    breeding_AdviceDict["ShinyLevelsTierList"][shinyTier].append(Advice(label=shinyPet, picture_class="")
+                                                                                 )
             breeding_AdviceGroupDict["ShinyLevelsTierList"] = AdviceGroup(
                 tier="",
                 pre_string="Advance Shiny levels per your desires",

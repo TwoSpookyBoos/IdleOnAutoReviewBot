@@ -111,13 +111,9 @@ def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, charact
             if forgeUpgradesDict[upgradeIndex]["Purchased"] < forgeUpgradesDict[upgradeIndex]["MaxPurchases"]:
                 if not forgeUpgradesDict[upgradeIndex]["UpgradeName"].startswith("Forge EXP Gain"):
                     smithing_AdviceDict["ForgeUpgrades"].append(
-                        Advice(
-                            label=forgeUpgradesDict[upgradeIndex]["UpgradeName"],
-                            item_name='forge-upgrades',
-                            progression=forgeUpgradesDict[upgradeIndex]["Purchased"],
-                            goal=forgeUpgradesDict[upgradeIndex]["MaxPurchases"],
-                            unit=""
-                        )
+                        Advice(label=forgeUpgradesDict[upgradeIndex]["UpgradeName"], picture_class='forge-upgrades',
+                               progression=forgeUpgradesDict[upgradeIndex]["Purchased"], goal=forgeUpgradesDict[upgradeIndex]["MaxPurchases"],
+                               unit="")
                     )
             upgradeIndex += 1
     except Exception as reason:
@@ -142,13 +138,8 @@ def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, charact
                     advice_CashPoints += characterDict[characterIndex].character_name + " (" + str(upgradeCount) + "/" + str(tier[1]) + "), "
                     allRequirementsMet = False
                     smithing_AdviceDict["CashPoints"].append(
-                        Advice(
-                            label=characterDict[characterIndex].character_name,
-                            item_name=characterDict[characterIndex].class_name_icon,
-                            progression=upgradeCount,
-                            goal=tier[1],
-                            unit=""
-                        )
+                        Advice(label=characterDict[characterIndex].character_name, picture_class=characterDict[characterIndex].class_name_icon,
+                               progression=upgradeCount, goal=tier[1], unit="")
                     )
                 characterIndex += 1
             if allRequirementsMet == True:
@@ -171,13 +162,8 @@ def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, charact
                     advice_MonsterPoints += characterDict[characterIndex].character_name + " (" + str(upgradeCount) + "/" + str(tier[2]) + "), "
                     allRequirementsMet = False
                     smithing_AdviceDict["MonsterPoints"].append(
-                        Advice(
-                            label=characterDict[characterIndex].character_name,
-                            item_name=characterDict[characterIndex].class_name_icon,
-                            progression=upgradeCount,
-                            goal=tier[2],
-                            unit=""
-                        )
+                        Advice(label=characterDict[characterIndex].character_name, picture_class=characterDict[characterIndex].class_name_icon,
+                               progression=upgradeCount, goal=tier[2], unit="")
                     )
                 characterIndex += 1
             if allRequirementsMet == True:
@@ -213,10 +199,8 @@ def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, charact
             tier="",
             pre_string=f"Informational - Fill the Forge",
             advices=[
-                Advice(
-                    label=f"You have {unusedForgeSlots} empty ore slot{pl(['']*unusedForgeSlots)} in your Forge!",
-                    item_name="empty-forge-slot"
-                )
+                Advice(label=f"You have {unusedForgeSlots} empty ore slot{pl([''] * unusedForgeSlots)} in your Forge!",
+                       picture_class="empty-forge-slot")
             ],
             post_string=""
         )

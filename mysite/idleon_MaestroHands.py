@@ -80,12 +80,7 @@ def getHandsStatus(inputJSON, playerCount, playerNames):
         post_string = "Worship matters moreso for Species Epoch than Right Hand. Don't steal charge away from this character!"
 
     advices = [
-        Advice(
-            label=skill,
-            item_name=skill,
-            progression=progression,
-            goal=goal+1
-        )
+        Advice(label=skill, picture_class=skill, progression=progression, goal=goal + 1)
         for skill, progression, goal in (main_beginner.janky_skills if main_beginner else [])
     ]
 

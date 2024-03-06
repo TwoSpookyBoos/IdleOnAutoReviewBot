@@ -207,18 +207,16 @@ def getStaticCritterTrapAdviceList(highestTrapset: int, highestCompletedRift: in
     }
 
     for counter in range(0, len(manualCritterTrapsDict[listIndexManualAdvice][0])):
-        adviceDict["Efficiency for Manually Claimed traps"].append(Advice(
-            label=manualCritterTrapsDict[listIndexManualAdvice][0][counter],
-            item_name=f"{manualCritterTrapsDict[listIndexManualAdvice][0][counter].lower().split(' ')[0]}-traps",
-            progression=manualCritterTrapsDict[listIndexManualAdvice][1][counter]))
+        adviceDict["Efficiency for Manually Claimed traps"].append(Advice(label=manualCritterTrapsDict[listIndexManualAdvice][0][counter],
+                                                                          picture_class=f"{manualCritterTrapsDict[listIndexManualAdvice][0][counter].lower().split(' ')[0]}-traps",
+                                                                          progression=manualCritterTrapsDict[listIndexManualAdvice][1][counter]))
 
     if highestCompletedRift >= 5:
         adviceDict["Efficiency for Rift's Daily traps"] = []
         for counter in range(0, len(vaccuumCritterTrapsDict[listIndexVaccuumAdvice][0])):
-            adviceDict["Efficiency for Rift's Daily traps"].append(Advice(
-                label=vaccuumCritterTrapsDict[listIndexVaccuumAdvice][0][counter],
-                item_name=f"{vaccuumCritterTrapsDict[listIndexVaccuumAdvice][0][counter].lower().split(' ')[0]}-traps",
-                progression=vaccuumCritterTrapsDict[listIndexVaccuumAdvice][1][counter]))
+            adviceDict["Efficiency for Rift's Daily traps"].append(Advice(label=vaccuumCritterTrapsDict[listIndexVaccuumAdvice][0][counter],
+                                                                          picture_class=f"{vaccuumCritterTrapsDict[listIndexVaccuumAdvice][0][counter].lower().split(' ')[0]}-traps",
+                                                                          progression=vaccuumCritterTrapsDict[listIndexVaccuumAdvice][1][counter]))
 
     return adviceDict
 
@@ -234,23 +232,17 @@ def getStaticShinyTrapAdviceList(highestTrapset: int, highestCompletedRift: int)
     shinyTrapsEffPerHourList = ["12x/hr", "8x/hr", "3x/hr", "2.1x/hr", "3.8x/hr", "1.5x/hr", "3.13x/hr"]
     for counter in range(0, len(shinyTrapsLabelList) - numOfVaccuumSuggestions):
         if highestTrapset >= shinyTrapsRequiredTrapIndexList[counter]:
-            adviceDict["Shiny Chance Multi for Manually Claimed traps"].append(Advice(
-                label=shinyTrapsLabelList[counter],
-                item_name=shinyTrapsItemNameList[counter],
-                progression=shinyTrapsEffPerHourList[counter],
-                goal="",
-                unit=""))
+            adviceDict["Shiny Chance Multi for Manually Claimed traps"].append(
+                Advice(label=shinyTrapsLabelList[counter], picture_class=shinyTrapsItemNameList[counter],
+                       progression=shinyTrapsEffPerHourList[counter], goal="", unit=""))
 
     if highestCompletedRift >= 5:
         adviceDict["Shiny Chance Multi for Rift's Daily traps"] = []
         for counter in range(len(shinyTrapsLabelList) - numOfVaccuumSuggestions, len(shinyTrapsLabelList)):
             if highestTrapset >= shinyTrapsRequiredTrapIndexList[counter]:
-                adviceDict["Shiny Chance Multi for Rift's Daily traps"].append(Advice(
-                    label=shinyTrapsLabelList[counter],
-                    item_name=shinyTrapsItemNameList[counter],
-                    progression=shinyTrapsEffPerHourList[counter],
-                    goal="",
-                    unit=""))
+                adviceDict["Shiny Chance Multi for Rift's Daily traps"].append(
+                    Advice(label=shinyTrapsLabelList[counter], picture_class=shinyTrapsItemNameList[counter],
+                           progression=shinyTrapsEffPerHourList[counter], goal="", unit=""))
     return adviceDict
 
 def getStaticEXPTrapAdviceList(highestTrapset, highestCompletedRift) -> dict[str, list[Advice]]:
@@ -265,23 +257,17 @@ def getStaticEXPTrapAdviceList(highestTrapset, highestCompletedRift) -> dict[str
     expTrapsEffPerHourList = ["5x/hr", "3.75x/hr"]
     for counter in range(0, len(expTrapsLabelList) - numOfVaccuumSuggestions):
         if highestTrapset >= expTrapsRequiredTrapIndexList[counter]:
-            adviceDict["Best Experience for Manually Claimed traps"].append(Advice(
-                label=expTrapsLabelList[counter],
-                item_name=expTrapsItemNameList[counter],
-                progression=expTrapsEffPerHourList[counter],
-                goal="",
-                unit=""))
+            adviceDict["Best Experience for Manually Claimed traps"].append(
+                Advice(label=expTrapsLabelList[counter], picture_class=expTrapsItemNameList[counter], progression=expTrapsEffPerHourList[counter],
+                       goal="", unit=""))
 
     if highestCompletedRift >= 5:
         adviceDict["Best Experience for Rift's Daily traps"] = []
         for counter in range(len(expTrapsLabelList) - numOfVaccuumSuggestions, len(expTrapsLabelList)):
             if highestTrapset >= expTrapsRequiredTrapIndexList[counter]:
-                adviceDict["Best Experience for Rift's Daily traps"].append(Advice(
-                    label=expTrapsLabelList[counter],
-                    item_name=expTrapsItemNameList[counter],
-                    progression=expTrapsEffPerHourList[counter],
-                    goal="",
-                    unit=""))
+                adviceDict["Best Experience for Rift's Daily traps"].append(
+                    Advice(label=expTrapsLabelList[counter], picture_class=expTrapsItemNameList[counter], progression=expTrapsEffPerHourList[counter],
+                           goal="", unit=""))
     return adviceDict
 
 def setTrappingProgressionTier(inputJSON, characterDict):
@@ -326,35 +312,25 @@ def setTrappingProgressionTier(inputJSON, characterDict):
     #UnlockCritters
     tier_unlockCritters = highestUnlockedCritter[0]
     if highestUnlockedCritter[0] != maxCritterTypes:  #unlocked not equal to the max possible to unlock.
-        trapping_AdviceDict["UnlockCritters"].append(Advice(
-            label=highestUnlockedCritter[3],
-            item_name=highestUnlockedCritter[3],
-            progression="",  #str(highestUnlockedCritter[0]+1),
-            goal=""  #str(highestUnlockedCritter[1]+1)
+        trapping_AdviceDict["UnlockCritters"].append(
+            Advice(label=highestUnlockedCritter[3], picture_class=highestUnlockedCritter[3], progression="", goal="")
             )
-        )
 
     #UnusedTraps
     if len(unplacedTrapsDict) > 0:
         for characterIndex in unplacedTrapsDict:
-            trapping_AdviceDict["UnplacedTraps"].append(Advice(
-                label=str(characterDict[characterIndex]),
-                item_name=characterDict[characterIndex].class_name_icon,
-                progression=unplacedTrapsDict[characterIndex][0],
-                goal=unplacedTrapsDict[characterIndex][1]
+            trapping_AdviceDict["UnplacedTraps"].append(
+                Advice(label=str(characterDict[characterIndex]), picture_class=characterDict[characterIndex].class_name_icon,
+                       progression=unplacedTrapsDict[characterIndex][0], goal=unplacedTrapsDict[characterIndex][1])
                 )
-            )
 
     #BeginnerNatures
     if len(secretCharacterNotUsingNatureTrapsDict) > 0:
         for characterIndex in secretCharacterNotUsingNatureTrapsDict:
-            trapping_AdviceDict["BeginnerNatures"].append(Advice(
-                label=str(characterDict[characterIndex]),
-                item_name=characterDict[characterIndex].class_name_icon,
-                progression=secretCharacterNotUsingNatureTrapsDict[characterIndex],
-                goal=0
+            trapping_AdviceDict["BeginnerNatures"].append(
+                Advice(label=str(characterDict[characterIndex]), picture_class=characterDict[characterIndex].class_name_icon,
+                       progression=secretCharacterNotUsingNatureTrapsDict[characterIndex], goal=0)
                 )
-            )
 
     #NonMetaTraps
     hasUnmaxedCritterVial = getUnmaxedCritterVialStatus(inputJSON)
@@ -383,13 +359,10 @@ def setTrappingProgressionTier(inputJSON, characterDict):
             nonMetaTrapDict[playerIndex] = badTrapCount
 
     for characterIndex in nonMetaTrapDict:
-        trapping_AdviceDict["NonMetaTraps"].append(Advice(
-            label=str(characterDict[characterIndex]),
-            item_name=characterDict[characterIndex].class_name_icon,
-            progression=str(nonMetaTrapDict[characterIndex]),
-            goal=0
+        trapping_AdviceDict["NonMetaTraps"].append(
+            Advice(label=str(characterDict[characterIndex]), picture_class=characterDict[characterIndex].class_name_icon,
+                   progression=str(nonMetaTrapDict[characterIndex]), goal=0)
             )
-        )
 
     if len(trapping_AdviceDict["NonMetaTraps"]) > 0:
         trapping_AdviceDict["CritterTraps"] = getStaticCritterTrapAdviceList(highestWearableTrapset, highestCompletedRift)

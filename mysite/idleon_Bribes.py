@@ -132,13 +132,7 @@ def setBribesProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
             sum_allBribes += allBribesDict['W1'][bribe]
         elif allBribesDict['W1'][bribe] <= 0 and bribe not in unpurchasableBribes:
             bribe_AdviceDict["W1Bribes"].append(
-                Advice(
-                    label=bribe,
-                    item_name=bribe,
-                    progression="",
-                    goal="",
-                    unit=""
-                )
+                Advice(label=bribe, picture_class=bribe, progression="", goal="", unit="")
             )
     bribe_AdviceGroupDict['W1'] = AdviceGroup(
         tier="0",
@@ -154,13 +148,7 @@ def setBribesProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
             sum_allBribes += allBribesDict['W2'][bribe]
         elif allBribesDict['W2'][bribe] <= 0 and bribe not in unpurchasableBribes:
             bribe_AdviceDict["W2Bribes"].append(
-                Advice(
-                    label=bribe,
-                    item_name=bribe,
-                    progression="",
-                    goal="",
-                    unit=""
-                )
+                Advice(label=bribe, picture_class=bribe, progression="", goal="", unit="")
             )
     bribe_AdviceGroupDict['W2'] = AdviceGroup(
         tier="1",
@@ -176,13 +164,7 @@ def setBribesProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
             sum_allBribes += allBribesDict['W3'][bribe]
         elif allBribesDict['W3'][bribe] <= 0 and bribe not in unpurchasableBribes:
             bribe_AdviceDict["W3Bribes"].append(
-                Advice(
-                    label=bribe,
-                    item_name=bribe,
-                    progression="",
-                    goal="",
-                    unit=""
-                )
+                Advice(label=bribe, picture_class=bribe, progression="", goal="", unit="")
             )
     bribe_AdviceGroupDict['W3'] = AdviceGroup(
         tier="2",
@@ -198,13 +180,7 @@ def setBribesProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
             sum_allBribes += allBribesDict['W4'][bribe]
         elif allBribesDict['W4'][bribe] <= 0:
             bribe_AdviceDict["W4Bribes"].append(
-                Advice(
-                    label=bribe,
-                    item_name=bribe,
-                    progression="",
-                    goal="",
-                    unit=""
-                )
+                Advice(label=bribe, picture_class=bribe, progression="", goal="", unit="")
             )
     bribe_AdviceGroupDict['W4'] = AdviceGroup(
         tier="3",
@@ -220,13 +196,7 @@ def setBribesProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
             sum_allBribes += allBribesDict['Trash Island'][bribe]
         elif allBribesDict['Trash Island'][bribe] <= 0 and bribe not in unpurchasableBribes:
             bribe_AdviceDict["TrashIslandBribes"].append(
-                Advice(
-                    label=bribe,
-                    item_name=bribe,
-                    progression="",
-                    goal="",
-                    unit=""
-                )
+                Advice(label=bribe, picture_class=bribe, progression="", goal="", unit="")
             )
     bribe_AdviceGroupDict['Trash Island'] = AdviceGroup(
         tier="4",
@@ -242,13 +212,7 @@ def setBribesProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
             sum_allBribes += allBribesDict['W6'][bribe]
         elif allBribesDict['W6'][bribe] <= 0 and bribe not in unpurchasableBribes:
             bribe_AdviceDict["W6Bribes"].append(
-                Advice(
-                    label=bribe,
-                    item_name=bribe,
-                    progression="",
-                    goal="",
-                    unit=""
-                )
+                Advice(label=bribe, picture_class=bribe, progression="", goal="", unit="")
             )
     bribe_AdviceGroupDict['W6'] = AdviceGroup(
         tier="5",

@@ -17,10 +17,7 @@ def getCardSetReview():
         advices = defaultdict(list)
         for card in unlockable:
             advices[card.cardset].append(
-                Advice(
-                    label=card.name,
-                    item_name=card.css_class,
-                )
+                Advice(label=card.name, picture_class=card.css_class)
             )
         group_unlockable = AdviceGroup(
             tier="", pre_string="Discover new cards", advices=advices, picture_class='locked-card',
@@ -48,12 +45,7 @@ def getCardSetReview():
         cardset_rank_total += cardset_star
 
         advices = [
-            Advice(
-                label=card.name,
-                item_name=card.css_class,
-                progression=f"{card.diff_to_next:,}",
-                goal=star_tiers[card.star + 1],
-            )
+            Advice(label=card.name, picture_class=card.css_class, progression=f"{card.diff_to_next:,}", goal=star_tiers[card.star + 1])
             for card in cardset
             if -1 < card.star < max_card_rank
         ]

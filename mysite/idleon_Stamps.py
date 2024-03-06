@@ -353,12 +353,7 @@ def setStampProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
             else:
                 advice_StampLevels = tier[1]
                 stamp_AdviceDict["StampLevels"].append(
-                    Advice(
-                        label="Total Stamp Levels",
-                        item_name="stat-graph-stamp",
-                        progression=totalAllStampLevels,
-                        goal=advice_StampLevels,
-                    )
+                    Advice(label="Total Stamp Levels", picture_class="stat-graph-stamp", progression=totalAllStampLevels, goal=advice_StampLevels)
                 )
 
         # CombatStamps
@@ -370,10 +365,7 @@ def setStampProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
                 if rStamp in missingCombatStamps:
                     allCombatStamps = False
                     stamp_AdviceDict["CombatStamps"].append(
-                        Advice(
-                            label=getReadableStampName(int(rStamp), "Combat"),
-                            item_name=getReadableStampName(int(rStamp), "Combat"),
-                        )
+                        Advice(label=getReadableStampName(int(rStamp), "Combat"), picture_class=getReadableStampName(int(rStamp), "Combat"))
                     )
             if allCombatStamps == True:
                 tier_RequiredCombatStamps = tier[0]
@@ -387,13 +379,8 @@ def setStampProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
                 if rStamp in missingSkillStamps:
                     allSkillStamps = False
                     stamp_AdviceDict["SkillStamps"].append(
-                        Advice(
-                            label=getReadableStampName(int(rStamp), "Skill"),
-                            item_name=getReadableStampName(int(rStamp), "Skill"),
-                            progression="",
-                            goal="",
-                            unit=""
-                        )
+                        Advice(label=getReadableStampName(int(rStamp), "Skill"), picture_class=getReadableStampName(int(rStamp), "Skill"),
+                               progression="", goal="", unit="")
                     )
             if allSkillStamps == True:
                 tier_RequiredSkillStamps = tier[0]
@@ -407,13 +394,8 @@ def setStampProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
                 if rStamp in missingMiscStamps:
                     allMiscStamps = False
                     stamp_AdviceDict["MiscStamps"].append(
-                        Advice(
-                            label=getReadableStampName(int(rStamp), "Misc"),
-                            item_name=getReadableStampName(int(rStamp), "Misc"),
-                            progression="",
-                            goal="",
-                            unit=""
-                        )
+                        Advice(label=getReadableStampName(int(rStamp), "Misc"), picture_class=getReadableStampName(int(rStamp), "Misc"),
+                               progression="", goal="", unit="")
                     )
             if allMiscStamps == True:
                 tier_RequiredMiscStamps = tier[0]
@@ -429,24 +411,14 @@ def setStampProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
                         if capacityExclusionsDict[key] is False:
                             allSpecificStamps = False
                             stamp_AdviceDict["SpecificStamps"].append(
-                                Advice(
-                                    label=str(key),
-                                    item_name=str(key),
-                                    progression=playerPriorityStamps[key],
-                                    goal=requiredSpecificStamps[key],
-                                    unit=""
-                                )
+                                Advice(label=str(key), picture_class=str(key), progression=playerPriorityStamps[key],
+                                       goal=requiredSpecificStamps[key], unit="")
                             )
                     else:
                         allSpecificStamps = False
                         stamp_AdviceDict["SpecificStamps"].append(
-                            Advice(
-                                label=str(key),
-                                item_name=str(key),
-                                progression=playerPriorityStamps[key],
-                                goal=requiredSpecificStamps[key],
-                                unit=""
-                            )
+                            Advice(label=str(key), picture_class=str(key), progression=playerPriorityStamps[key], goal=requiredSpecificStamps[key],
+                                   unit="")
                         )
             if allSpecificStamps == True:
                 tier_RequiredSpecificStamps = tier[0]

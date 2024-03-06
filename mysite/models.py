@@ -145,28 +145,20 @@ class Advice(AdviceBase):
     """
     Args:
         label (str): the display name of the advice
-        item_name (str): CSS class to link the image icon to the advice, e.g. 'bean-slices'
+        picture_class (str): CSS class to link the image icon to the advice, e.g. 'bean-slices'
         progression: numeric (usually), how far towards the goal did the item progress?
         goal: the target level or amount of the advice
         unit (str): if there is one, usually "%"
     """
 
-    def __init__(
-        self,
-        label: str,
-        item_name: str,
-        progression: Any = "",
-        goal: Any = "",
-        unit: str = "",
-        value_format: str = "{value}{unit}",
-        **extra,
-    ):
+    def __init__(self, label: str, picture_class: str, progression: Any = "", goal: Any = "", unit: str = "", value_format: str = "{value}{unit}",
+                 **extra):
         super().__init__(**extra)
 
         self.label: str = label
-        if item_name and item_name[0].isdigit():
-            item_name = f"x{item_name}"
-        self.item_name: str = item_name
+        if picture_class and picture_class[0].isdigit():
+            picture_class = f"x{picture_class}"
+        self.picture_class: str = picture_class
         self.progression: str = str(progression)
         self.goal: str = str(goal)
         self.unit: str = unit
@@ -182,7 +174,7 @@ class Advice(AdviceBase):
 
     @property
     def css_class(self) -> str:
-        name = self.item_name.replace(" ", "-").lower()
+        name = self.picture_class.replace(" ", "-").lower()
         name = re.sub(r"[^\w-]", "", name)
         return name
 

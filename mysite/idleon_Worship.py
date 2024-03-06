@@ -148,13 +148,10 @@ def setWorshipPrayersProgressionTier(inputJSON, progressionTiers, characterDict)
             for requiredPrayer in tier[1]:
                 if worshipPrayersDict[requiredPrayer] < tier[1][requiredPrayer]:
                     allPrayersLeveled = False
-                    prayers_AdviceDict["Recommended"].append(Advice(
-                        label=requiredPrayer,
-                        item_name=getPrayerImage(requiredPrayer),
-                        progression=str(worshipPrayersDict[requiredPrayer]),
-                        goal=str(tier[1][requiredPrayer])
-                        )
-                    )
+                    prayers_AdviceDict["Recommended"].append(Advice(label=requiredPrayer, picture_class=getPrayerImage(requiredPrayer),
+                                                                    progression=str(worshipPrayersDict[requiredPrayer]),
+                                                                    goal=str(tier[1][requiredPrayer]))
+                                                             )
             if allPrayersLeveled == True:
                 tier_WorshipPrayers = tier[0]
 
@@ -162,25 +159,19 @@ def setWorshipPrayersProgressionTier(inputJSON, progressionTiers, characterDict)
     optionalTierPrayers = progressionTiers[-2][1]
     for optionalPrayer in optionalTierPrayers:
         if worshipPrayersDict[optionalPrayer] < optionalTierPrayers[optionalPrayer]:
-            prayers_AdviceDict["Optional"].append(Advice(
-                label=optionalPrayer,
-                item_name=getPrayerImage(optionalPrayer),
-                progression=str(worshipPrayersDict[optionalPrayer]),
-                goal=str(optionalTierPrayers[optionalPrayer])
+            prayers_AdviceDict["Optional"].append(
+                Advice(label=optionalPrayer, picture_class=getPrayerImage(optionalPrayer), progression=str(worshipPrayersDict[optionalPrayer]),
+                       goal=str(optionalTierPrayers[optionalPrayer]))
                 )
-            )
 
     #Check Ignorable Prayers
     ignorableTierPrayers = progressionTiers[-1][1]
     for ignorablePrayer in ignorableTierPrayers:
         if worshipPrayersDict[ignorablePrayer] < ignorableTierPrayers[ignorablePrayer]:
-            prayers_AdviceDict["Ignorable"].append(Advice(
-                label=ignorablePrayer,
-                item_name=getPrayerImage(ignorablePrayer),
-                progression=str(worshipPrayersDict[ignorablePrayer]),
-                goal=str(ignorableTierPrayers[ignorablePrayer])
+            prayers_AdviceDict["Ignorable"].append(
+                Advice(label=ignorablePrayer, picture_class=getPrayerImage(ignorablePrayer), progression=str(worshipPrayersDict[ignorablePrayer]),
+                       goal=str(ignorableTierPrayers[ignorablePrayer]))
                 )
-            )
 
 #Generate Advice Groups
     recommended_post_string_list = [

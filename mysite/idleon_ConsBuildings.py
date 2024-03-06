@@ -203,13 +203,11 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
                 #print("ConsBuildings.setConsBuildingsProgressionTier~ ", recommendedBuilding, getBuildingNameFromIndex(recommendedBuilding), playerBuildings[recommendedBuilding], maxLevelList[recommendedBuilding], "Cleared=", (maxLevelList[recommendedBuilding] <= playerBuildings[recommendedBuilding]))
                 if maxLevelList[recommendedBuilding] > playerBuildings[recommendedBuilding]:
                     if len(building_AdviceDict[counter]) < maxBuildingsPerGroup:
-                        building_AdviceDict[counter].append(Advice(
-                            label=getBuildingNameFromIndex(recommendedBuilding),
-                            item_name=getBuildingImageNameFromIndex(recommendedBuilding),
-                            progression=str(playerBuildings[recommendedBuilding]),
-                            goal=str(maxLevelList[recommendedBuilding])
-                            )
-                        )
+                        building_AdviceDict[counter].append(Advice(label=getBuildingNameFromIndex(recommendedBuilding),
+                                                                   picture_class=getBuildingImageNameFromIndex(recommendedBuilding),
+                                                                   progression=str(playerBuildings[recommendedBuilding]),
+                                                                   goal=str(maxLevelList[recommendedBuilding]))
+                                                            )
         except Exception as reason:
             print("ConsBuildings.setConsBuildingsProgressionTier~ EXCEPTION ProgressionTier evaluation error. Counter = ", counter, ", recommendedBuilding = ", recommendedBuilding, ", and Reason:", reason)
         counter += 1

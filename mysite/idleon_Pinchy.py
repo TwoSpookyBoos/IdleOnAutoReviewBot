@@ -316,15 +316,8 @@ def tier_from_monster_kills(dictOfPRs, inputJSON, playerCount) -> Threshold:
 
 def generate_advice_list(sections: list[Tier], threshold: Threshold):
     advices = [
-        Advice(
-            label=section.section,
-            item_name=section.section,
-            progression=section.tier,
-            goal=section.next.tier,
-            unit="T",
-            value_format="{unit} {value}",
-            as_link=True
-        ) for section in sections
+        Advice(label=section.section, picture_class=section.section, progression=section.tier, goal=section.next.tier, unit="T",
+               value_format="{unit} {value}", as_link=True) for section in sections
     ]
     if threshold == Threshold.fromname(Threshold.MAX_TIER):
         for advice in advices:

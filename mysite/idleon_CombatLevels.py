@@ -77,12 +77,7 @@ def setCombatLevelsProgressionTier(inputJSON, progressionTiers, playerCount, pla
     overall_CombatLevelTier = curr_tier[0]
 
     advices = [
-        Advice(
-            label=next_tier[2],
-            item_name="total-level",
-            progression=total_combat_level,
-            goal=next_tier[1],
-        )
+        Advice(label=next_tier[2], picture_class="total-level", progression=total_combat_level, goal=next_tier[1])
     ] if next_tier else []
 
     total_level_group = AdviceGroup(
@@ -108,12 +103,7 @@ def setCombatLevelsProgressionTier(inputJSON, progressionTiers, playerCount, pla
         goal = '∞'
 
     lvlup_advices = [
-        Advice(
-            label=character,
-            item_name=playerClasses[playerNames.index(character)] + '-icon',
-            progression=level,
-            goal=goal
-        )
+        Advice(label=character, picture_class=playerClasses[playerNames.index(character)] + '-icon', progression=level, goal=goal)
         for character, level in parsedCombatLevels['equinoxDict'].get(f'under{goal}', dict()).items()
     ]
 

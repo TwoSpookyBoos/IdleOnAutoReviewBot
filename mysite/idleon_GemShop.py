@@ -280,12 +280,7 @@ def setGemShopProgressionTier(inputJSON, progressionTiers, playerCount):
             post_string=progressionTiers[i][3],
             hide=False,
             advices=[
-                Advice(
-                    label=f"{name} ({getBonusSectionName(name)})",
-                    item_name=name,
-                    progression=int(prog),
-                    goal=int(goal)
-                )
+                Advice(label=f"{name} ({getBonusSectionName(name)})", picture_class=name, progression=int(prog), goal=int(goal))
                 for name, qty in progressionTiers[i][2].items()
                 if name in recommended_stock_bought
                 and (prog := float(recommended_stock_bought[name])) < (goal := float(qty))
