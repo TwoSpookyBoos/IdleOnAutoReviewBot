@@ -27,7 +27,8 @@ def getShinyExclusions(inputJSON):
     currentArtifactTiers = 4  # as of v2.02
     shinyExclusionsDict = {
         "Exclude-InfiniteStarSigns": True,
-        "Exclude-ArtifactChance": False
+        "Exclude-Sailing": False,
+        "Exclude-Critters": False,
         }
 
     # if Infinite Star Signs are unlocked, set False (as in False, the recommendation should NOT be excluded), otherwise default True
@@ -42,9 +43,27 @@ def getShinyExclusions(inputJSON):
     try:
         sum_sailingArtifacts = sum(json.loads(inputJSON["Sailing"])[3])
         if sum_sailingArtifacts >= (currentArtifactsCount*currentArtifactTiers):
-            shinyExclusionsDict["Exclude-ArtifactChance"] = True
+            shinyExclusionsDict["Exclude-Sailing"] = True
     except Exception as reason:
         logger.exception(f"Unable to get Sailing Artifacts: {reason}")
+
+    try:
+        critterVialsList = [
+            23,  #Crabbo
+            31,  #Mousey
+            37,  #Bunny
+            40,  #Honker
+            47,  #Blobfish
+            74,  #Tuttle
+        ]
+        alchemyVialsDict = inputJSON["CauldronInfo"][4]
+        for indexCounter in range(0, len(critterVialsList)):
+            if alchemyVialsDict[str(critterVialsList[indexCounter])] < 13:
+                break
+            elif indexCounter == len(critterVialsList)-1:
+                shinyExclusionsDict["Exclude-Critters"] = True
+    except:
+        logger.exception(f"Unable to get Critter Vials. Defaulting to INCLUDE Base Critter shiny pets.")
 
     return shinyExclusionsDict
 
@@ -367,12 +386,14 @@ def setBreedingProgressionTier(inputJSON: dict, progressionTiers: dict[int, dict
             ['rattler', 'defender', 'looter', 'refiller', 'badumdum', 'borger']]
     }
     shinyPetsTierList = {
-        "S": ['Faster Shiny Pet Lv Up Rate', 'Bonuses from All Meals', 'Base Efficiency for All Skills', 'Base Critter Per Trap'],
-        "A": ['Drop Rate', 'Multikill Per Tier', 'Total Damage', 'Infinite Star Signs', 'Farming EXP', 'Summoning EXP'],
-        "B": ['Base WIS', 'Base STR', 'Base AGI', 'Base LUK', 'Faster Refinery Speed', 'Higher Artifact Find Chance', 'Star Talent Pts'],
-        "C": ['Lower Minimum Travel Time for Sailing', 'Sail Captain EXP Gain', 'Skill EXP', 'Tab 1-4 Talent Pts'],
+        "S": ['Faster Shiny Pet Lv Up Rate', 'Bonuses from All Meals', 'Base Efficiency for All Skills', 'Drop Rate'],
+        "A": ['Multikill Per Tier', 'Base Critter Per Trap', 'Infinite Star Signs', 'Faster Refinery Speed', 'Farming EXP'],
+        "B": ['Lower Minimum Travel Time for Sailing', 'Higher Artifact Find Chance', 'Tab 4 Talent Pts', 'Star Talent Pts'],
+        "C": ['Skill EXP', 'Base WIS', 'Base STR', 'Base AGI', 'Base LUK'],
+        "D": ['Sail Captain EXP Gain', 'Summoning EXP', 'Total Damage', 'Tab 1-3 Talent Pts'],
         "F": ['Class EXP', 'Line Width in Lab']
     }
+
     failedShinyRequirements = []
     failedShinyBonus = {}
     #advice_ShinyPets = []
@@ -382,13 +403,25 @@ def setBreedingProgressionTier(inputJSON: dict, progressionTiers: dict[int, dict
         breeding_AdviceSection.header = "Breeding info could not be read from your save data :( Please file a bug report if you have Breeding unlocked"
         return breeding_AdviceSection
     else:
+        if shinyExclusionsDict["Exclude-Sailing"] == True:
+            shinyPetsTierList["B"].remove("Lower Minimum Travel Time for Sailing")
+            shinyPetsTierList["F"].append("Lower Minimum Travel Time for Sailing")
+            shinyPetsTierList["B"].remove("Higher Artifact Find Chance")
+            shinyPetsTierList["F"].append("Higher Artifact Find Chance")
+        if shinyExclusionsDict["Exclude-Critters"] == True:
+            shinyPetsTierList["A"].remove('Base Critter Per Trap')
+            shinyPetsTierList["F"].remove('Base Critter Per Trap')
         for tier in progressionTiers:
             if "Infinite Star Signs" in progressionTiers[tier] and shinyExclusionsDict["Exclude-InfiniteStarSigns"] == True:
                 progressionTiers[tier]["Infinite Star Signs"] = 0
                 logger.debug("Excluding Shiny- Infinite Star Signs because player does not have Rift bonus unlocked.")
-            if "Higher Artifact Find Chance" in progressionTiers[tier] and shinyExclusionsDict["Exclude-ArtifactChance"] == True:
+            if 'Lower Minimum Travel Time for Sailing' in progressionTiers[tier] and shinyExclusionsDict["Exclude-Sailing"] == True:
+                progressionTiers[tier]['Lower Minimum Travel Time for Sailing'] = 0
+                logger.debug("Excluding Shiny- Sailing Min Time because player has all Sailing Artifacts discovered.")
+            if "Higher Artifact Find Chance" in progressionTiers[tier] and shinyExclusionsDict["Exclude-Sailing"] == True:
                 progressionTiers[tier]["Higher Artifact Find Chance"] = 0
                 logger.debug("Excluding Shiny- Higher Artifact Find Chance because player has all Sailing Artifacts discovered.")
+
 
             #Unlocked Territories
             if tier_UnlockedTerritories >= (tier-1):

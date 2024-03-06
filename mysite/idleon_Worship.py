@@ -220,7 +220,6 @@ def setWorshipPrayersProgressionTier(inputJSON, progressionTiers, characterDict)
     prayers_AdviceSection.groups = prayers_AdviceGroupDict.values()
     if overall_WorshipPrayersTier == max_tier:
         prayers_AdviceSection.header = f"Best Prayer tier met: {tier_section}. You best ❤️"
-        prayers_AdviceSection.collapse = True
     else:
         prayers_AdviceSection.header = f"Best Prayer tier met: {tier_section}. Recommended prayer actions"
     return prayers_AdviceSection
