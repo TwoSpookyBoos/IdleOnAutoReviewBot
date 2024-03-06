@@ -223,6 +223,18 @@ h1, strong {
     }
 }
 
+/* Used on both worlds and sections */
+.collapse-wrapper {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: grid-template-rows 0.5s ease;
+
+    &.folded {
+        grid-template-rows: 0fr;
+    }
+
+}
+
 body {
     display: flex;
     flex-direction: column;
@@ -330,61 +342,111 @@ body {
                                 padding: 0;
                             }
 
-                            .collapse-wrapper {
-                                display: grid;
-                                grid-template-rows: 1fr;
-                                transition: grid-template-rows 0.5s ease;
+                            .advice-section {
+                                overflow: hidden;
 
                                 &.folded {
-                                    grid-template-rows: 0fr;
+                                    display: none;
                                 }
 
-                                .advice-section {
-                                    overflow: hidden;
+                                & > li {
+                                    display: grid;
+                                    grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+                                    row-gap: 10px;
+                                    column-gap: 10px;
+                                    padding: 10px;
 
-                                    &.folded {
+                                    &#cards-tier {
+                                        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+                                    }
+                                }
+
+                                .note {
+                                    color: var(--fg-note);
+                                    background-color: rgba(215, 178, 84, 0.62);
+                                    margin: 0;
+                                }
+
+                                .advice-group {
+                                    display: flex;
+                                    flex-direction: column;
+                                    row-gap: 5px;
+
+                                    width: 100%;
+                                    max-height: 400px;
+
+                                    padding: 20px;
+                                    border-radius: 20px;
+
+                                    color: var(--fg);
+
+                                    &.hidden {
                                         display: none;
                                     }
 
-                                    & > li {
-                                        display: grid;
-                                        grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
-                                        row-gap: 10px;
-                                        column-gap: 10px;
-                                        padding: 10px;
-
-                                        &#cards-tier {
-                                            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-                                        }
-                                    }
-
-                                    .note {
-                                        color: var(--fg-note);
-                                        background-color: rgba(215, 178, 84, 0.62);
-                                        margin: 0;
-                                    }
-
-                                    .advice-group {
+                                    #cards & > span {
                                         display: flex;
-                                        flex-direction: column;
-                                        row-gap: 5px;
+                                        align-items: center;
+                                        column-gap: 7px;
 
+                                        &::before {
+                                            display: block;
+                                            content: '';
+                                            height: 40px;
+                                            min-width: 40px;
+
+                                            background-size: contain;
+                                            background-position: center;
+                                            background-repeat: no-repeat;
+                                        }
+                                    }
+
+                                    .table {
                                         width: 100%;
-                                        max-height: 400px;
+                                        position: relative;
+                                        display: grid;
+                                        grid-template-columns: repeat(4, minmax(min-content, max-content));
+                                        gap: 10px;
+                                        overflow-y: scroll;
+                                        padding-right: 10px;
 
-                                        padding: 20px;
-                                        border-radius: 20px;
-
-                                        color: var(--fg);
-
-                                        &.hidden {
-                                            display: none;
+                                        &::before, &::after {
+                                            position: sticky;
+                                            display: block;
+                                            content: '';
+                                            height: 20px;
+                                            width: 100%;
+                                            grid-column: 1 / span 4;
                                         }
 
-                                        #cards & > span {
+                                        &::before {
+                                            top: 0;
+                                        }
+
+                                        &::after {
+                                            bottom: 0;
+                                        }
+
+                                        &::-webkit-scrollbar-thumb {
+                                            background-color: var(--scrollbar-thumb-color);
+                                        }
+
+                                        .advice-title {
+                                            grid-column: 1 / span 4;
+                                            background: hsla(0deg, 0%, 0%, 0.4);
+                                            padding: 5px 10px;
+
+                                            strong {
+                                                color: white;
+                                            }
+
+                                        }
+
+                                        .advice {
                                             display: flex;
                                             align-items: center;
-                                            column-gap: 7px;
+                                            padding-right: 20px;
+                                            word-break: break-word;
 
                                             &::before {
                                                 display: block;
@@ -398,104 +460,44 @@ body {
                                             }
                                         }
 
-                                        .table {
-                                            width: 100%;
-                                            position: relative;
-                                            display: grid;
-                                            grid-template-columns: repeat(4, minmax(min-content, max-content));
-                                            gap: 10px;
-                                            overflow-y: scroll;
-                                            padding-right: 10px;
+                                        .arrow {
+                                            height: 0;
+                                            width: 0;
+                                            border-top: 5px solid transparent;
+                                            border-left: 10px solid var(--arrow-border);
+                                            border-bottom: 5px solid transparent;
+                                            margin: auto 10px;
+                                        }
 
-                                            &::before, &::after {
-                                                position: sticky;
-                                                display: block;
-                                                content: '';
-                                                height: 20px;
+                                        li, li a {
+                                            display: flex;
+                                            align-items: center;
+                                            column-gap: 7px;
+
+                                            &:not(.advice, .advice-title) {
+                                                justify-content: center;
+                                            }
+
+                                            a {
                                                 width: 100%;
-                                                grid-column: 1 / span 4;
-                                            }
-
-                                            &::before {
-                                                top: 0;
-                                            }
-
-                                            &::after {
-                                                bottom: 0;
-                                            }
-
-                                            &::-webkit-scrollbar-thumb {
-                                                background-color: var(--scrollbar-thumb-color);
-                                            }
-
-                                            .advice-title {
-                                                grid-column: 1 / span 4;
-                                                background: hsla(0deg, 0%, 0%, 0.4);
-                                                padding: 5px 10px;
-
-                                                strong {
-                                                    color: white;
-                                                }
-
-                                            }
-
-                                            .advice {
-                                                display: flex;
-                                                align-items: center;
-                                                padding-right: 20px;
-                                                word-break: break-word;
-
-                                                &::before {
-                                                    display: block;
-                                                    content: '';
-                                                    height: 40px;
-                                                    min-width: 40px;
-
-                                                    background-size: contain;
-                                                    background-position: center;
-                                                    background-repeat: no-repeat;
-                                                }
-                                            }
-
-                                            .arrow {
-                                                height: 0;
-                                                width: 0;
-                                                border-top: 5px solid transparent;
-                                                border-left: 10px solid var(--arrow-border);
-                                                border-bottom: 5px solid transparent;
-                                                margin: auto 10px;
-                                            }
-
-                                            li, li a {
-                                                display: flex;
-                                                align-items: center;
-                                                column-gap: 7px;
-
-                                                &:not(.advice, .advice-title) {
-                                                    justify-content: center;
-                                                }
-
-                                                a {
-                                                    width: 100%;
-                                                    color: var(--fg);
-                                                }
+                                                color: var(--fg);
                                             }
                                         }
                                     }
+                                }
 
-                                    .show-more {
-                                        color: var(--fg-show-more);
-                                        display: none;
-                                        text-align: center;
-                                        background: hsla(0deg, 0%, 0%, 0.4);
-                                        margin: 0 10px 10px;
-                                        padding: 20px 0;
-                                        cursor: pointer;
-                                        border-radius: 20px;
+                                .show-more {
+                                    color: var(--fg-show-more);
+                                    display: none;
+                                    text-align: center;
+                                    background: hsla(0deg, 0%, 0%, 0.4);
+                                    margin: 0 10px 10px;
+                                    padding: 20px 0;
+                                    cursor: pointer;
+                                    border-radius: 20px;
 
-                                        &:hover {
-                                            background: hsla(0, 0%, 15%, 0.5);
-                                        }
+                                    &:hover {
+                                        background: hsla(0, 0%, 15%, 0.5);
                                     }
                                 }
                             }
