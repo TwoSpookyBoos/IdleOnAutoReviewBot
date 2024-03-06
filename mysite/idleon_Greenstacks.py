@@ -1,249 +1,12 @@
 import json
 from collections import defaultdict
 
-import itemDecoder
-
-from models import AdviceSection, AdviceGroup, Advice
+from consts import missableGStacksDict
+from models import AdviceSection, AdviceGroup, Advice, gstackable_codenames, gstackable_codenames_expected, Assets
 from utils import get_logger
-import itertools
+
 
 logger = get_logger(__name__)
-
-greenStackAmount = 10 ** 7
-expectedStackables = {
-    "Missable Quest Items": [
-        "Quest3", "Quest4", "Quest7", "Quest12", "Quest21", "Quest14", "Quest22", "Quest23", "Quest24", "GoldricP1", "GoldricP2", "GoldricP3",
-        "Quest32"
-    ],
-    "Base Monster Materials": [
-        "Grasslands1", "Grasslands2", "Grasslands4", "Grasslands3", "Jungle1", "Jungle2", "Jungle3", "Forest1", "Forest2", "Forest3", "Sewers1",
-        "Sewers2", "TreeInterior1", "TreeInterior2",  # W1
-        "DesertA1", "DesertA2", "DesertA3", "DesertB1", "DesertB2", "DesertB3", "DesertB4", "DesertC1", "DesertC2", "DesertC3", "DesertC4",  # W2
-        "SnowA1", "SnowA2", "SnowA3", "SnowB1", "SnowB2", "SnowB5", "SnowB3", "SnowB4", "SnowC1", "SnowC2", "SnowC3", "SnowC4", "SnowA4", "SnowC5",  # W3
-        "GalaxyA1", "GalaxyA2", "GalaxyA3", "GalaxyA4", "GalaxyB1", "GalaxyB2", "GalaxyB3", "GalaxyB4", "GalaxyB5", "GalaxyC1", "GalaxyC2",
-        "GalaxyC3", "GalaxyC4",  # W4
-        "LavaA1", "LavaA2", "LavaA3", "LavaA4", "LavaA5", "LavaB1", "LavaB2", "LavaB3", "LavaB4", "LavaB5", "LavaB6", "LavaC1", "LavaC2",  # W5
-        "SpiA1", "SpiA2", "SpiA3", "SpiA4", "SpiA5", "SpiB1", "SpiB2", "SpiB3", "SpiB4", "SpiC1", "SpiC2", "SpiD1", "SpiD2", "SpiD3",  # W6
-        "Sewers3", "Quest15", "Hgg"  # Specialty Monster Materials
-    ],
-    "Crystal Enemy Drops": [
-        "FoodPotMana1", "FoodPotMana2", "FoodPotGr1", "FoodPotOr1", "FoodPotOr2", "FoodHealth1", "FoodHealth3", "FoodHealth2", "Leaf1",  # W1
-        "FoodHealth6", "FoodHealth7", "FoodPotGr2", "FoodPotRe3", "Leaf2",  # W2
-        "FoodHealth10", "FoodPotOr3", "FoodPotYe2", "Leaf3",  # W3
-        "FoodPotMana4", "Leaf4",  # W4
-        "FoodPotYe5", "Leaf5",  # W5
-        "Leaf6",  # W6
-        "EquipmentStatues7", "EquipmentStatues3", "EquipmentStatues2", "EquipmentStatues4", "EquipmentStatues14",  # Standard statues
-        "EquipmentStatues1", "EquipmentStatues5",  # Plausible but time consuming
-        "rtt0", "StoneZ1", "StoneT1", "StoneW1", "StoneA1",  #W1 Slow drops = Town TP + Stones
-        "StoneT2", "StoneW2", "StoneA2", "StoneZ2",  # W2 upgrade stones and Mystery2
-        "PureWater",  #W3 Slow drops = Distilled Water
-        "FoodG9",  #W5 Slow drops = Golden W5 Sammy
-    ],
-    "Printable Skilling Resources": [
-        "OakTree", "BirchTree", "JungleTree", "ForestTree", "ToiletTree", "PalmTree", "StumpTree", "SaharanFoal",  # Logs1
-        "Tree7", "AlienTree", "Tree8", "Tree9", "Tree11", "Tree10", "Tree12", "Tree13",  # Logs2
-
-        "Copper", "Iron", "Gold", "Plat", "Dementia", "Void", "Lustre",  # Ores1
-        "Starfire", "Marble", "Dreadlo", "Godshard",  # Ores2
-
-        "Fish1", "Fish2", "Fish3", "Fish4", # Small Fish
-        "Fish5", "Fish6", "Fish7", "Fish8",  # Medium Fish
-        "Fish9", "Fish10", "Fish11", "Fish13", "Fish12",  # Large Fish
-
-        "Bug1", "Bug2", "Bug3", "Bug4",  # W2 Bugs
-        "Bug5", "Bug6", "Bug7", "Bug8",  # W3-4 Bugs
-        "Bug9", "Bug11", "Bug10", "Bug12", "Bug13",  # W5-6 Bugs
-    ],
-    "Other Skilling Resources": [
-        "CraftMat1", "CraftMat5", "CraftMat6", "CraftMat7", "CraftMat8", "CraftMat9", "CraftMat10", "CraftMat11", "CraftMat12", "CraftMat13",  #Anvil1
-        "CraftMat14",
-        "Critter1", "Critter2", "Critter3", "Critter4", "Critter5", "Critter6",  #Critter1
-        "Critter7", "Critter8", "Critter9", "Critter10", "Critter11",
-        "Critter1A", "Critter2A",  "Critter3A", "Critter4A", "Critter5A", "Critter6A", "Critter7A", "Critter8A",  #ShinyCritter1
-        "Critter9A", "Critter10A", "Critter11A",  #ShinyCritter2
-        "Soul1", "Soul2", "Soul3", "Soul4", "Soul5", "Soul6", "Soul7",  #WorshipSouls
-        "CopperBar", "IronBar", "GoldBar", "PlatBar", "DementiaBar", "VoidBar", "LustreBar",  #SmeltedBars1
-        "StarfireBar", "DreadloBar", "MarbleBar", "GodshardBar",  #SmeltedBars2
-        "Bullet", "BulletB", "FoodMining1", "FoodFish1", "FoodCatch1", "Peanut",  #Crafted1
-        "Quest68", "Bullet3", "FoodChoppin1", "EquipmentSmithingTabs2",  #Crafted2
-        "PeanutG",  #Gold Peanut Crafted
-        "FoodTrapping1", "FoodWorship1",  # Critter Numnums and Soulble Gum Crafted
-        "Refinery1", "Refinery2", "Refinery3", "Refinery4", "Refinery5", "Refinery6"
-    ],
-    "Vendor Shops": [
-        "FoodHealth14", "FoodHealth15", "FoodHealth16", "FoodHealth17", "FoodHealth12", "FoodHealth13", "FoodPotOr4", "FoodPotGr4", "FoodPotRe4",
-        "FoodPotYe4", "OilBarrel6", "OilBarrel7", "FoodHealth4", "FoodHealth9", "FoodHealth11", "Quest19", "CraftMat3",  # Sorted by daily quantity
-        # "FoodHealth4", "Quest19", #W2
-        # "FoodHealth11", "FoodHealth9", "FoodPotGr3", #W3
-        # "FoodHealth12", "FoodHealth13", "FoodPotOr4", "FoodPotGr4", "FoodPotRe4", "FoodPotYe4", #W4
-        # "OilBarrel6", "FoodHealth14", "FoodHealth15", #W5 shop
-        # "FoodHealth16", "FoodHealth17", "OilBarrel7", #W6 Shop
-    ],
-    "Misc": [
-        "FoodPotGr3",  #Decent Speed from W3 Shop + Sir Stache
-        "FoodPotRe2",  #Average Life Potion from W2 Shop + Gigafrogs
-
-        "FoodPotRe1",  #Small Life Potion from W1 Sewers and Tree mobs, not crystals
-        "ButterBar",  #Catching Butterflies
-        "FoodPotMana3",  #Decent Mana Potion from Bloques
-        "OilBarrel2",  # Slime Barrel, 1 in 3334
-        "DesertC2b",  # Ghost, 1 in 2k
-        "Quest78",  # Equinox Mirror
-        "Key2", "Key3"  # Efaunt and Chizoar keys
-    ],
-    "Cheater": [
-        "SilverPen", "Ladle",
-        "Sewers1b", "TreeInterior1b", "BabaYagaETC", "JobApplication",  # W1 Rare Drops
-        "DesertA1b", "DesertA3b", "MidnightCookie",  # W2 Rare Drops
-        "SnowA2a", "SnowB2a", "SnowC4a",  # W3 Rare Drops
-        "GalaxyA2b", "GalaxyC1b",  # W4 Rare Drops
-        "LavaA1b", "LavaA5b", "LavaB3b",  # W5 Rare Drops
-        "SpiA2b", "SpiB2b",  # W6 Rare Drops
-        "EfauntDrop1", "EfauntDrop2", "Chiz0", "Chiz1", "TrollPart", "KrukPart", "KrukPart2",  # World Boss Materials
-        "CraftMat2",  # Crimson String
-        "OilBarrel1", "OilBarrel3", "OilBarrel4", "OilBarrel5",  # Oil Barrels
-        "PureWater2",  # Alchemy Dense water
-        "Quest1", "Quest2", "Quest5", "Quest6", "Quest8", "Quest10", "Quest11", "Quest13", "Quest16", "Quest17", "Quest18", "Quest20", "Quest25",
-        "Quest26", "Quest27", "Quest28", "Quest29", "Quest30", "Quest31", "Quest33", "Quest34", "Quest36", "Quest37", "Quest38", "Quest39", "Quest40",
-        "Quest41", "Quest42", "Quest43", "Quest44", "Quest45", "Quest46", "Quest47", "Quest48", "Quest49", "Quest50", "Quest9",
-        "Mayo", "Trash", "Trash2", "Trash3",  # Treasure Hunt rewards
-        "Meatloaf", "FoodHealth5",  #Small quantity foods
-        "BobJoePickle", "BallJoePickle", "BoneJoePickle",  #Pickles
-        "FoodPotYe1", "FoodPotYe3",  # EXP 1 and 3
-        "FoodEvent1", "FoodEvent2", "FoodEvent3", "FoodEvent4", "FoodEvent5", "FoodEvent6", "FoodEvent7", "FoodEvent8",  # Event Foods
-        "Pearl1", "Pearl2", "Pearl3", "Pearl4", "Pearl5", "Pearl6",  # Skilling Speed Pearls, EXP pearls
-        "Line1", "Line2", "Line3", "Line4", "Line5", "Line6", "Line7", "Line8", "Line9", "Line10", "Line11", "Line12", "Line13", "Line14",  # Fishing Lines
-        "ExpBalloon1", "ExpBalloon2", "ExpBalloon3",  # Experience Balloons
-        "Timecandy1", "Timecandy2", "Timecandy3", "Timecandy4", "Timecandy5", "Timecandy6", "Timecandy7", "Timecandy8", "Timecandy9",  # Time Candies
-        "PetEgg", "Whetstone", "Quest72", "Quest73", "Quest76", "Quest77",  # Other Time Skips
-        "Quest70", "Quest71", "Quest75", "Gfoodcoupon", "ItemsCoupon1", "ItemsCoupon2",  # Loot Bags
-        "FoodHealth8", "Quest69", "Quest74",  # Unobtainables
-        "EquipmentStatues6", "EquipmentStatues15",  # Kachow and Bullseye
-        "EquipmentStatues8", "EquipmentStatues9", "EquipmentStatues10", "EquipmentStatues11", "EquipmentStatues12", "EquipmentStatues13",  # W2 Statues
-        "EquipmentStatues16", "EquipmentStatues17", "EquipmentStatues18", "EquipmentStatues19",  # W3 Statues
-        "EquipmentStatues20", "EquipmentStatues21", "EquipmentStatues22", "EquipmentStatues23", "EquipmentStatues24",
-        "EquipmentStatues25",  # W4 and W5 Statues
-        "FoodG1", "FoodG2", "FoodG3", "FoodG4", "FoodG5", "FoodG6", "FoodG7", "FoodG8", "FoodG10",  # Gold Foods
-        "ResetFrag", "ResetCompleted", "ResetCompletedS", "ClassSwap",
-        "ClassSwapB", "ResetBox",
-    ]
-}
-gstackable_codenames = [item for items in expectedStackables.values() for item in items]
-gstackable_codenames_expected = [item for items in list(expectedStackables.values())[:-1] for item in items]
-
-quest_items_codenames = expectedStackables["Missable Quest Items"]
-
-missableGStacksDict = {
-    #  ItemName               Codename     Quest Codeame          Quest Name                                          Wiki link to the item                             Recommended Class/Farming notes
-    "Dog Bone":              ["Quest12",   "Dog_Bone1",           "Dog Bone: Why he Die???",                          "https://idleon.wiki/wiki/Dog_Bone",              "Active ES or time candy."],
-    "Ketchup Bottle":        ["Quest3",    "Picnic_Stowaway2",    "Picnic Stowaway: Beating Up Frogs for some Sauce", "https://idleon.wiki/wiki/Ketchup_Bottle",        "Active ES or time candy."],
-    "Mustard Bottle":        ["Quest4",    "Picnic_Stowaway2",    "Picnic Stowaway: Beating Up Frogs for some Sauce", "https://idleon.wiki/wiki/Mustard_Bottle",        "Active ES or time candy."],
-    "Strange Rock":          ["Quest7",    "Stiltzcho2",          "Stiltzcho: No Stone Unturned",                     "https://idleon.wiki/wiki/Strange_Rock",          "Active ES or time candy."],
-    "Time Thingy":           ["Quest21",   "Funguy3",             "Funguy: Partycrastination",                        "https://idleon.wiki/wiki/Time_Thingy",           "Active ES or time candy."],
-    "Employment Statistics": ["Quest14",   "TP_Pete2",            "TP Pete: The Rats are to Blame!",                  "https://idleon.wiki/wiki/Employment_Statistics", "Active ES or time candy."],
-    "Corporatube Sub":       ["Quest22",   "Mutton4",             "Mutton: 7 Figure Followers",                       "https://idleon.wiki/wiki/Corporatube_Sub",       "Active ES or time candy."],
-    "Instablab Follower":    ["Quest23",   "Mutton4",             "Mutton: 7 Figure Followers",                       "https://idleon.wiki/wiki/Instablab_Follower",    "Active ES or time candy."],
-    "Cloudsound Follower":   ["Quest24",   "Mutton4",             "Mutton: 7 Figure Followers",                       "https://idleon.wiki/wiki/Cloudsound_Follower",   "Active ES or time candy."],
-    "Casual Confidante":     ["GoldricP1", "Goldric3",            "Goldric: Only Winners have Portraits",             "https://idleon.wiki/wiki/Casual_Confidante",     "Active ES or time candy."],
-    "Triumphant Treason":    ["GoldricP2", "Goldric3",            "Goldric: Only Winners have Portraits",             "https://idleon.wiki/wiki/Triumphant_Treason",    "Active ES or time candy."],
-    "Claiming Cashe":        ["GoldricP3", "Goldric3",            "Goldric: Only Winners have Portraits",             "https://idleon.wiki/wiki/Claiming_Cashe",        "Active ES or time candy."],
-    "Monster Rating":        ["Quest32",   "XxX_Cattleprod_XxX3", "XxX_Cattleprod_XxX: Ok, NOW it's Peak Gaming!",    "https://idleon.wiki/wiki/Monster_Rating",        "Monster Ratings can drop from Crystal enemies, making Divine Knight the better farmer for Monster Ratings."]
-}
-
-
-class Asset:
-    def __init__(self, codename: str, amount: float, name: str = ""):
-        self.name: str = name if name else itemDecoder.getItemDisplayName(codename)
-        self.codename: str = codename if codename else itemDecoder.getItemCodeName(name)
-        self.amount: float = amount
-        self.greenstacked: bool = self.amount >= greenStackAmount
-        self.progression: int = self.amount * 100 // greenStackAmount
-        self.quest: str = ""
-
-    def __eq__(self, other):
-        if isinstance(other, str):
-            return other == self.codename or other == self.name
-
-    def __str__(self):
-        return f"{self.name}: {self.amount}"
-
-    def __repr__(self):
-        return f"<class {self.__class__.__name__}: {self.__str__()}>"
-
-    def __hash__(self):
-        return str(self.__dict__).__hash__()
-
-
-class Assets(dict):
-    def __init__(self, assets: dict[str, int], tiers: dict[int, dict]):
-        self.tiers = tiers
-        super().__init__(tuple((codename, Asset(codename, count)) for codename, count in assets.items()))
-
-    def get(self, item, default=None):
-        return super().get(item, default if default else Asset(item, 0))
-
-    @property
-    def items_gstacked(self) -> dict[str, Asset]:
-        """Not used since it includes the "Cheater" group"""
-        return {asset.codename: asset for asset in self.values() if asset.greenstacked}
-
-    @property
-    def items_gstacked_expected(self) -> dict[str, Asset]:
-        return {codename: asset for codename, asset in self.items_gstacked.items() if codename in gstackable_codenames}
-
-    @property
-    def items_gstacked_cheater(self) -> dict[str, Asset]:
-        return {codename: asset for codename, asset in self.items_gstacked.items() if codename not in gstackable_codenames_expected}
-
-    @property
-    def items_gstacked_unprecedented(self) -> dict[str, Asset]:
-        return {codename: asset for codename, asset in self.items_gstacked.items() if codename not in gstackable_codenames}
-
-    @property
-    def items_gstackable(self) -> dict[str, Asset]:
-        """Not used since it includes the "Cheater" group"""
-        return {codename: asset for codename, asset in self.items() if codename in gstackable_codenames and not asset.greenstacked}
-
-    @property
-    def items_gstackable_expected(self) -> dict[str, Asset]:
-        return {codename: asset for codename, asset in self.items() if codename in gstackable_codenames_expected and not asset.greenstacked}
-
-    @property
-    def items_gstackable_tiered(self) -> dict[int, dict[str, list[Asset]]]:
-        tiered = dict()
-
-        for tier, categories in self.tiers.items():
-            categorised = dict()
-            for category, items in categories.items():
-                item_list = [
-                    self.get(item)
-                    for item in items
-                    if item in self.items_gstackable_expected
-                    and self.get(item) not in self.quest_items_missed
-                ]
-                if item_list:
-                    categorised[category] = item_list
-            if categorised:
-                tiered["Timegated" if tier == 0 else tier] = categorised
-
-        return tiered
-
-    @property
-    def quest_items(self) -> set[Asset]:
-        return {self.get(codename) for codename in quest_items_codenames}
-
-    @property
-    def quest_items_gstacked(self) -> set[Asset]:
-        return {asset for asset in self.quest_items if asset.greenstacked}
-
-    @property
-    def quest_items_gstackable(self) -> set[Asset]:
-        return self.quest_items.difference(self.quest_items_gstacked)
-
-    @property
-    def quest_items_missed(self) -> set[Asset]:
-        return self.quest_items.difference(self.quest_items_gstacked)
 
 
 def getEquinoxDreams(inputJSON) -> dict:
@@ -267,7 +30,7 @@ def getEquinoxDreams(inputJSON) -> dict:
     return results
 
 
-def all_owned_items(inputJSON: dict, playerCount: int, gstack_tiers: dict) -> Assets:
+def all_owned_items(inputJSON: dict, playerCount: int) -> Assets:
     name_quantity_key_pairs = tuple((f"InventoryOrder_{i}", f"ItemQTY_{i}") for i in range(playerCount)) + (("ChestOrder", "ChestQuantity"),)
     all_stuff_owned = defaultdict(int)
 
@@ -278,7 +41,7 @@ def all_owned_items(inputJSON: dict, playerCount: int, gstack_tiers: dict) -> As
         for name, count in zip(inputJSON[name_key], inputJSON[quantity_key]):
             all_stuff_owned[name] += count
 
-    return Assets(all_stuff_owned, gstack_tiers)
+    return Assets(all_stuff_owned)
 
 
 def getMissableGStacks(inputJSON, playerCount, owned_stuff: Assets):
@@ -392,9 +155,9 @@ def getMissableGStacks(inputJSON, playerCount, owned_stuff: Assets):
     #return [advice_ObtainedQuestGStacks, advice_EndangeredQuestGStacks, advice_MissedQuestGStacks]
 
 
-def setGStackProgressionTier(inputJSON, playerCount, progressionTiers):
+def setGStackProgressionTier(inputJSON, playerCount):
     equinoxDreamsStatus = getEquinoxDreams(inputJSON)
-    all_owned_stuff: Assets = all_owned_items(inputJSON, playerCount, progressionTiers)
+    all_owned_stuff: Assets = all_owned_items(inputJSON, playerCount)
     sections_quest_gstacks = getMissableGStacks(inputJSON, playerCount, all_owned_stuff)
 
     unprecedented_gstacks = all_owned_stuff.items_gstacked_unprecedented

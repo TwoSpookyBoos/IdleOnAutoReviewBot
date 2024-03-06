@@ -14,6 +14,7 @@
 @import "vials";
 @import "world-contents";
 @import "boss-keys";
+@import "cards";
 
 $id-map: (
 	item-backpack-space: $inventory-bag-u,
@@ -2075,7 +2076,8 @@ $extra: (
 	empty-forge-slot: $empty-forge-slot,
 	forge-upgrades: $forge-upgrades,
 	stamps: $stamps,
-	combat-levels: $family
+	combat-levels: $family,
+	cards: $cards
 );
 
 $character-classes: (
@@ -2140,6 +2142,7 @@ $id-map: map-merge($bribes-map, $id-map);
 $id-map: map-merge($bubbles-map, $id-map);
 $id-map: map-merge($monsters, $id-map);
 $id-map: map-merge($boss-keys, $id-map);
+$id-map: map-merge($all-cards, $id-map);
 
 @each $class, $link in $id-map {
 	.#{$class}::before {

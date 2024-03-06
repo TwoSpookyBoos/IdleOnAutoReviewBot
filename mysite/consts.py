@@ -1,6 +1,5 @@
-def setDefaultTiers():
-    defaultTiers = {}
-    defaultTiers['Bribes'] = [
+progressionTiers = {
+    "Bribes": [
         #int tier, int w1purchased, int w2purchased, int w3purchased, int w4purchased, int trashIslandpurchased, int w6purchased
         [0, 0, -7, -7, -6, -7, -8],
         [1, 6, -7, -7, -6, -7, -8],
@@ -9,8 +8,8 @@ def setDefaultTiers():
         [4, 6, 7, 7, 6, -7, -8],
         [5, 6, 7, 7, 6, 7, -8],  #The 8th bribe in w5 cannot be purchased until Jade Emporium
         [6, 6, 7, 7, 6, 7, 7, ]  #The 7th bribe in w6 can't be purchased yet
-        ]
-    defaultTiers['Stamps'] = [
+    ],
+    "Stamps": [
         #int Tier, int Total Stamp Level, str Required combat stamps, str Required Skill stamps, str Required Misc stamps, dict Specific stamp levels, str Notes
         [0, 0, "", "", "", {}, "Just level up any stamp you can afford!"],
         [1, 50, "", "", "", {}, "Just level up any stamp you can afford!"],
@@ -50,8 +49,8 @@ def setDefaultTiers():
         [35, 9800, "37", "", "", {'Golden Sixes Stamp':150}, ""],
         [36, 10000, "38, 22", "31", "", {'Golden Sixes Stamp':190}, ""],
         [37, 11000, "40", "52,50", "", {'Maxo Slappo Stamp':98, 'Sashe Sidestamp':98, 'Intellectostampo':98}, ""]
-        ]
-    defaultTiers['Smithing'] = [
+    ],
+    "Smithing": [
         #int tier, int Cash Points Purchased, int Monster Points Purchased, int Forge Totals, str Notes
         [0, 0,   0,   0,   ""],
         [1, 20,  85,  60,  "all W1 enemies"],
@@ -60,8 +59,8 @@ def setDefaultTiers():
         [4, 150, 350, 240, "most W3 enemies, excluding Dedotated Rams"],
         [5, 200, 500, 291, "early W4 enemies through Soda Cans"],
         [6, 600, 700, 291, "all W4 enemies"]
-        ]
-    defaultTiers['Alchemy Bubbles'] = [
+    ],
+    "Alchemy Bubbles": [
         #int tier, int TotalBubblesUnlocked,
         # dict {OrangeSampleBubbles},
         # dict {GreenSampleBubbles},
@@ -231,8 +230,8 @@ def setDefaultTiers():
          {},
          "99% catchup",
          "You've tackled the big important Utility bubbles, way to go! All previously mentioned bubbles are still great targets to level higher: Larry, Cookin Roadkill, Diamond Chef, Carpenter, Call Me Bob, Big P, Mr Massacre, Big Game Hunter, FMJ, Hammer Hammer, and more!"],
-        ]
-    defaultTiers['Alchemy Vials'] = [
+    ],
+    "Alchemy Vials": [
         #int tier, int TotalVialsUnlocked, int TotalVialsMaxed, list ParticularVials, str Notes
         [0,  0, 0,  [], ""],
         [1,  7, 0,  [], "This is the number of vials requiring an unlock roll of 75 or less. "],
@@ -264,12 +263,12 @@ def setDefaultTiers():
         #[27, 75, 69, ['Red Malt (Redox Salts)', 'Poison Tincture (Poison Froge)', 'Orange Malt (Explosive Salts)', 'Shaved Ice (Purple Salt)'], "Currently considered impossible"],
         #[28, 75, 73, ['Dreadnog (Dreadlo Bar)', 'Dabar Special (Godshard Bar)', 'Pearl Seltzer (Pearler Shell)', 'Hampter Drippy (Hampter)'], "Currently considered impossible"],
         #[29, 75, 76, ['Pickle Jar (BobJoePickle)', 'Ball Pickle Jar (BallJoePickle)'], "Currently considered impossible"],
-        ]
-    defaultTiers['Obols'] = [
+    ],
+    "Obols": [
         [0,""]
-        ]
-    defaultTiers['Construction Printer'] = []
-    defaultTiers['Construction Refinery'] = [
+    ],
+    "Construction Printer": [],
+    "Construction Refinery": [
         # int tier, dict All-tab AutoRefine, int W3Merits purchased, str Notes
         [0, {}, 0, ""],
         [1, {'Red AutoRefine': 0, 'Green AutoRefine': 0}, 1, ""],
@@ -277,8 +276,8 @@ def setDefaultTiers():
         [3, {'Red AutoRefine': 0, 'Green AutoRefine': 0}, 3, ""],
         [4, {'Red AutoRefine': 0, 'Green AutoRefine': 0}, 4, ""],
         [5, {'Red AutoRefine': 0, 'Green AutoRefine': 0}, 5, ""]
-    ]
-    defaultTiers['Construction Salt Lick'] = [
+    ],
+    "Construction Salt Lick": [
         [0, {}, ""],
         [1, {'Obol Storage':8}, "Froge"],
         [2, {'Printer Sample Size':20}, "Redox Salts"],
@@ -290,8 +289,8 @@ def setDefaultTiers():
         [8, {'EXP':100}, "Dune Soul"],
         [9, {'Alchemy Liquids':100}, "Mousey"],
         [10, {'Damage':250}, "Pingy"]
-        ]
-    defaultTiers['Construction Death Note'] = [
+    ],
+    "Construction Death Note": [
         #0-4 int tier. int w1LowestSkull, int w2LowestSkull, int w3LowestSkull, int w4LowestSkull,
         #5-9 int w5LowestSkull, int w6LowestSkull, int w7LowestSkull, int w8LowestSkull, int zowCount, int chowCount,
         #10-11 int meowCount, str Notes
@@ -322,8 +321,8 @@ def setDefaultTiers():
         [24,20, 20, 20,  20,  20,  20,0,0,   84,83,82,   ""],
         [25,20, 20, 20,  20,  20,  20,0,0,   85,85,83,   ""],
         [26,20, 20, 20,  20,  20,  20,0,0,   85,85,84,   "As of v2.02, completing a Super CHOW on Boops is impossible."],
-        ]
-    defaultTiers['Construction Buildings Post-Buffs'] = [
+    ],
+    "Construction Buildings Post-Buffs": [
         [0, "Default", [], "", ""],
         [1, "SS", [0, 5, 7], "", ""],
         [2, "S", [1, 2, 3, 6, 11, 15, 16], "", ""],
@@ -332,8 +331,8 @@ def setDefaultTiers():
         [5, "C", [8], "", ""],
         [6, "D", [], "", ""],
         [7, "F", [], "", ""]
-        ]
-    defaultTiers['Construction Buildings Pre-Buffs'] = [
+    ],
+    "Construction Buildings Pre-Buffs": [
         [0, "Default", [], "", ""],
         [1, "SS", [0, 5, 7], "", ""],
         [2, "S", [1, 2, 3, 6, 11, 15, 16], "", ""],
@@ -342,9 +341,9 @@ def setDefaultTiers():
         [5, "C", [8, 18, 19, 20, 21], "", ""],
         [6, "D", [9, 10, 23], "", ""],
         [7, "F", [26], "", ""]
-        ]
-    defaultTiers['Construction Atom Collider'] = []
-    defaultTiers['Combat Levels'] = [
+    ],
+    "Construction Atom Collider": [],
+    "Combat Levels": [
         #int tier, int TotalAccountLevel, str TAL reward, int PlayerLevels, str PL reward, str notes
         [0, 0, "", 0, "", ""],
         [1, 8, "Character 2", 25, "Personal - Circle Obol Slot 2", ""],
@@ -376,8 +375,8 @@ def setDefaultTiers():
         [27, 2500, "Family - Sparkle Obol Slot 3", 500, "Credit towards Equinox Dream 23", "As of v1.91 Equinox Valley, there are no additional rewards after Player Level 500. However, Family/Account Levels go up to 5k, so it can still be worthwhile to level easier classes over 500.", ""],
         [28, 3000, "Family - Hexagon Obol Slot 4", 500, "Credit towards Equinox Dream 23", "As of v1.91 Equinox Valley, there are no additional rewards after Player Level 500. However, Family/Account Levels go up to 5k, so it can still be worthwhile to level easier classes over 500.", ""],
         [29, 5000, "Family - Sparkle Obol Slot 4", 500, "Credit towards Equinox Dream 23", "As of v1.91 Equinox Valley, there are no additional rewards after Player Level 500. However, Family/Account Levels go up to 5k, so it can still be worthwhile to level easier classes over 500.", ""]
-        ]
-    defaultTiers['Gem Shop'] = [
+    ],
+    "Gem Shop": [
         #int tier, str tierName, dict recommendedPurchases, str notes
         [0, "", {}, ""],
         [1, "SS", {'Infinity Hammer':1, 'Bleach Liquid Cauldrons':1, 'Crystal 3d Printer':1, 'Richelin Kitchen':1, 'Golden Sprinkler':1, 'Shroom Familiar': 1}, "These are the highest priority as 1st purchase per world."],
@@ -388,8 +387,8 @@ def setDefaultTiers():
         [6, "D", {'Item Backpack Space':4, 'Carry Capacity':8, 'More Storage Space':5, 'Brimstone Forge Slot':8, 'Ivory Bubble Cauldrons':4, 'Obol Storage Space':3, 'More Sample Spaces':6, 'Burning Bad Books':4, 'Zen Cogs':8, 'Souped Up Tube':3, 'Fenceyard Space':6, 'Chest Sluggo':12, 'Plot of Land': 6, 'Instagrow Generator': 4}, ""],
         [7, "Practical Max", {'Item Backpack Space':6, 'Carry Capacity':10, 'More Storage Space':10, 'Card Presets':1, 'Brimstone Forge Slot':16, 'Sigil Supercharge':10, 'Fluorescent Flaggies':2, 'Golden Sprinkler':4, 'Plot of Land': 12, 'Instagrow Generator': 8}, "I wouldn't recommend going any further as of v2.02. This tier is for the dedicated Gem Farmers from Colo and Normal-difficulty World Bosses."],
         [8, "True Max", {'Card Presets':5, 'Daily Teleports':10, 'Daily Minigame Plays':4, 'Weekly Dungeon Boosters':11, 'Obol Storage Space':12, 'Prayer Slots':4, 'Cog Inventory Space':20, 'Fluorescent Flaggies':6, 'Richelin Kitchen':10, 'Souped Up Tube':5, 'Pet Storage':12, 'Divinity Sparkie':6}, "This final tier is for the truly depraved. Many of these bonuses are very weak or outright useless."]
-        ]
-    defaultTiers['Worship Prayers'] = [
+    ],
+    "Worship Prayers": [
         #Tier, PrayerDict, 	Notes
         [0, {}, ""],
         [1, {'The Royal Sampler (Rooted Soul)': 5}, ""],
@@ -401,8 +400,8 @@ def setDefaultTiers():
         [7, {'Shiny Snitch (Forest Soul)':50, 'Zerg Rushogen (Forest Soul)':20, 'Jawbreaker (Dune Soul)':50, 'Ruck Sack (Rooted Soul)':50, 'Balance of Proficiency (Squishy Soul)':50}, ""],
         [8, {'Unending Energy (Forest Soul)':50, 'Big Brain Time (Forest Soul)':50, 'Antifun Spirit (Rooted Soul)':10, 'Fibers of Absence (Frigid Soul)':50, 'Beefy For Real (Frigid Soul)':40}, ""],
         [9, {'Tachion of the Titans (Dune Soul)':1, 'Balance of Precision (Dune Soul)':1, 'Circular Criticals (Rooted Soul)':1, 'Vacuous Tissue (Frigid Soul)':1, 'Glitterbug (Squishy Soul)':1}, ""],
-        ]
-    defaultTiers['Breeding'] = {
+    ],
+    "Breeding": {
         0: {
             "Tier": 0,
             "TerritoriesUnlocked": 0,
@@ -505,7 +504,7 @@ def setDefaultTiers():
                 "Lower Minimum Travel Time for Sailing": 5
                 },
             "ShinyNotes": ""
-            },
+        },
         10: {
             "Tier": 10,
             "TerritoriesUnlocked": 24,
@@ -515,7 +514,7 @@ def setDefaultTiers():
                 "Higher Artifact Find Chance": 15
                 },
             "ShinyNotes": ""
-            },
+        },
         11: {
             "Tier": 11,
             "TerritoriesUnlocked": 24,
@@ -526,8 +525,8 @@ def setDefaultTiers():
             },
             "ShinyNotes": ""
         }
-        }
-    defaultTiers['Greenstacks'] = {
+    },
+    "Greenstacks": {
         0: {  # The timegated tier
             "Vendor Shops": [
                 "CraftMat3",  # W1 Cue Tape
@@ -707,8 +706,397 @@ def setDefaultTiers():
             "Misc": [
                 "Key2", "Key3"]
         },
-        }
-    return defaultTiers
+    }
+}
+
 
 def setCustomTiers(filename="input.csv"):
     return
+
+
+missableGStacksDict = {
+    #  ItemName               Codename     Quest Codeame          Quest Name                                          Wiki link to the item                             Recommended Class/Farming notes
+    "Dog Bone":              ["Quest12",   "Dog_Bone1",           "Dog Bone: Why he Die???",                          "https://idleon.wiki/wiki/Dog_Bone",              "Active ES or time candy."],
+    "Ketchup Bottle":        ["Quest3",    "Picnic_Stowaway2",    "Picnic Stowaway: Beating Up Frogs for some Sauce", "https://idleon.wiki/wiki/Ketchup_Bottle",        "Active ES or time candy."],
+    "Mustard Bottle":        ["Quest4",    "Picnic_Stowaway2",    "Picnic Stowaway: Beating Up Frogs for some Sauce", "https://idleon.wiki/wiki/Mustard_Bottle",        "Active ES or time candy."],
+    "Strange Rock":          ["Quest7",    "Stiltzcho2",          "Stiltzcho: No Stone Unturned",                     "https://idleon.wiki/wiki/Strange_Rock",          "Active ES or time candy."],
+    "Time Thingy":           ["Quest21",   "Funguy3",             "Funguy: Partycrastination",                        "https://idleon.wiki/wiki/Time_Thingy",           "Active ES or time candy."],
+    "Employment Statistics": ["Quest14",   "TP_Pete2",            "TP Pete: The Rats are to Blame!",                  "https://idleon.wiki/wiki/Employment_Statistics", "Active ES or time candy."],
+    "Corporatube Sub":       ["Quest22",   "Mutton4",             "Mutton: 7 Figure Followers",                       "https://idleon.wiki/wiki/Corporatube_Sub",       "Active ES or time candy."],
+    "Instablab Follower":    ["Quest23",   "Mutton4",             "Mutton: 7 Figure Followers",                       "https://idleon.wiki/wiki/Instablab_Follower",    "Active ES or time candy."],
+    "Cloudsound Follower":   ["Quest24",   "Mutton4",             "Mutton: 7 Figure Followers",                       "https://idleon.wiki/wiki/Cloudsound_Follower",   "Active ES or time candy."],
+    "Casual Confidante":     ["GoldricP1", "Goldric3",            "Goldric: Only Winners have Portraits",             "https://idleon.wiki/wiki/Casual_Confidante",     "Active ES or time candy."],
+    "Triumphant Treason":    ["GoldricP2", "Goldric3",            "Goldric: Only Winners have Portraits",             "https://idleon.wiki/wiki/Triumphant_Treason",    "Active ES or time candy."],
+    "Claiming Cashe":        ["GoldricP3", "Goldric3",            "Goldric: Only Winners have Portraits",             "https://idleon.wiki/wiki/Claiming_Cashe",        "Active ES or time candy."],
+    "Monster Rating":        ["Quest32",   "XxX_Cattleprod_XxX3", "XxX_Cattleprod_XxX: Ok, NOW it's Peak Gaming!",    "https://idleon.wiki/wiki/Monster_Rating",        "Monster Ratings can drop from Crystal enemies, making Divine Knight the better farmer for Monster Ratings."]
+}
+expectedStackables = {
+    "Missable Quest Items": [
+        "Quest3", "Quest4", "Quest7", "Quest12", "Quest21", "Quest14", "Quest22", "Quest23", "Quest24", "GoldricP1", "GoldricP2", "GoldricP3",
+        "Quest32"
+    ],
+    "Base Monster Materials": [
+        "Grasslands1", "Grasslands2", "Grasslands4", "Grasslands3", "Jungle1", "Jungle2", "Jungle3", "Forest1", "Forest2", "Forest3", "Sewers1",
+        "Sewers2", "TreeInterior1", "TreeInterior2",  # W1
+        "DesertA1", "DesertA2", "DesertA3", "DesertB1", "DesertB2", "DesertB3", "DesertB4", "DesertC1", "DesertC2", "DesertC3", "DesertC4",  # W2
+        "SnowA1", "SnowA2", "SnowA3", "SnowB1", "SnowB2", "SnowB5", "SnowB3", "SnowB4", "SnowC1", "SnowC2", "SnowC3", "SnowC4", "SnowA4", "SnowC5",  # W3
+        "GalaxyA1", "GalaxyA2", "GalaxyA3", "GalaxyA4", "GalaxyB1", "GalaxyB2", "GalaxyB3", "GalaxyB4", "GalaxyB5", "GalaxyC1", "GalaxyC2",
+        "GalaxyC3", "GalaxyC4",  # W4
+        "LavaA1", "LavaA2", "LavaA3", "LavaA4", "LavaA5", "LavaB1", "LavaB2", "LavaB3", "LavaB4", "LavaB5", "LavaB6", "LavaC1", "LavaC2",  # W5
+        "SpiA1", "SpiA2", "SpiA3", "SpiA4", "SpiA5", "SpiB1", "SpiB2", "SpiB3", "SpiB4", "SpiC1", "SpiC2", "SpiD1", "SpiD2", "SpiD3",  # W6
+        "Sewers3", "Quest15", "Hgg"  # Specialty Monster Materials
+    ],
+    "Crystal Enemy Drops": [
+        "FoodPotMana1", "FoodPotMana2", "FoodPotGr1", "FoodPotOr1", "FoodPotOr2", "FoodHealth1", "FoodHealth3", "FoodHealth2", "Leaf1",  # W1
+        "FoodHealth6", "FoodHealth7", "FoodPotGr2", "FoodPotRe3", "Leaf2",  # W2
+        "FoodHealth10", "FoodPotOr3", "FoodPotYe2", "Leaf3",  # W3
+        "FoodPotMana4", "Leaf4",  # W4
+        "FoodPotYe5", "Leaf5",  # W5
+        "Leaf6",  # W6
+        "EquipmentStatues7", "EquipmentStatues3", "EquipmentStatues2", "EquipmentStatues4", "EquipmentStatues14",  # Standard statues
+        "EquipmentStatues1", "EquipmentStatues5",  # Plausible but time consuming
+        "rtt0", "StoneZ1", "StoneT1", "StoneW1", "StoneA1",  #W1 Slow drops = Town TP + Stones
+        "StoneT2", "StoneW2", "StoneA2", "StoneZ2",  # W2 upgrade stones and Mystery2
+        "PureWater",  #W3 Slow drops = Distilled Water
+        "FoodG9",  #W5 Slow drops = Golden W5 Sammy
+    ],
+    "Printable Skilling Resources": [
+        "OakTree", "BirchTree", "JungleTree", "ForestTree", "ToiletTree", "PalmTree", "StumpTree", "SaharanFoal",  # Logs1
+        "Tree7", "AlienTree", "Tree8", "Tree9", "Tree11", "Tree10", "Tree12", "Tree13",  # Logs2
+
+        "Copper", "Iron", "Gold", "Plat", "Dementia", "Void", "Lustre",  # Ores1
+        "Starfire", "Marble", "Dreadlo", "Godshard",  # Ores2
+
+        "Fish1", "Fish2", "Fish3", "Fish4", # Small Fish
+        "Fish5", "Fish6", "Fish7", "Fish8",  # Medium Fish
+        "Fish9", "Fish10", "Fish11", "Fish13", "Fish12",  # Large Fish
+
+        "Bug1", "Bug2", "Bug3", "Bug4",  # W2 Bugs
+        "Bug5", "Bug6", "Bug7", "Bug8",  # W3-4 Bugs
+        "Bug9", "Bug11", "Bug10", "Bug12", "Bug13",  # W5-6 Bugs
+    ],
+    "Other Skilling Resources": [
+        "CraftMat1", "CraftMat5", "CraftMat6", "CraftMat7", "CraftMat8", "CraftMat9", "CraftMat10", "CraftMat11", "CraftMat12", "CraftMat13",  #Anvil1
+        "CraftMat14",
+        "Critter1", "Critter2", "Critter3", "Critter4", "Critter5", "Critter6",  #Critter1
+        "Critter7", "Critter8", "Critter9", "Critter10", "Critter11",
+        "Critter1A", "Critter2A",  "Critter3A", "Critter4A", "Critter5A", "Critter6A", "Critter7A", "Critter8A",  #ShinyCritter1
+        "Critter9A", "Critter10A", "Critter11A",  #ShinyCritter2
+        "Soul1", "Soul2", "Soul3", "Soul4", "Soul5", "Soul6", "Soul7",  #WorshipSouls
+        "CopperBar", "IronBar", "GoldBar", "PlatBar", "DementiaBar", "VoidBar", "LustreBar",  #SmeltedBars1
+        "StarfireBar", "DreadloBar", "MarbleBar", "GodshardBar",  #SmeltedBars2
+        "Bullet", "BulletB", "FoodMining1", "FoodFish1", "FoodCatch1", "Peanut",  #Crafted1
+        "Quest68", "Bullet3", "FoodChoppin1", "EquipmentSmithingTabs2",  #Crafted2
+        "PeanutG",  #Gold Peanut Crafted
+        "FoodTrapping1", "FoodWorship1",  # Critter Numnums and Soulble Gum Crafted
+        "Refinery1", "Refinery2", "Refinery3", "Refinery4", "Refinery5", "Refinery6"
+    ],
+    "Vendor Shops": [
+        "FoodHealth14", "FoodHealth15", "FoodHealth16", "FoodHealth17", "FoodHealth12", "FoodHealth13", "FoodPotOr4", "FoodPotGr4", "FoodPotRe4",
+        "FoodPotYe4", "OilBarrel6", "OilBarrel7", "FoodHealth4", "FoodHealth9", "FoodHealth11", "Quest19", "CraftMat3",  # Sorted by daily quantity
+        # "FoodHealth4", "Quest19", #W2
+        # "FoodHealth11", "FoodHealth9", "FoodPotGr3", #W3
+        # "FoodHealth12", "FoodHealth13", "FoodPotOr4", "FoodPotGr4", "FoodPotRe4", "FoodPotYe4", #W4
+        # "OilBarrel6", "FoodHealth14", "FoodHealth15", #W5 shop
+        # "FoodHealth16", "FoodHealth17", "OilBarrel7", #W6 Shop
+    ],
+    "Misc": [
+        "FoodPotGr3",  #Decent Speed from W3 Shop + Sir Stache
+        "FoodPotRe2",  #Average Life Potion from W2 Shop + Gigafrogs
+
+        "FoodPotRe1",  #Small Life Potion from W1 Sewers and Tree mobs, not crystals
+        "ButterBar",  #Catching Butterflies
+        "FoodPotMana3",  #Decent Mana Potion from Bloques
+        "OilBarrel2",  # Slime Barrel, 1 in 3334
+        "DesertC2b",  # Ghost, 1 in 2k
+        "Quest78",  # Equinox Mirror
+        "Key2", "Key3"  # Efaunt and Chizoar keys
+    ],
+    "Cheater": [
+        "SilverPen", "Ladle",
+        "Sewers1b", "TreeInterior1b", "BabaYagaETC", "JobApplication",  # W1 Rare Drops
+        "DesertA1b", "DesertA3b", "MidnightCookie",  # W2 Rare Drops
+        "SnowA2a", "SnowB2a", "SnowC4a",  # W3 Rare Drops
+        "GalaxyA2b", "GalaxyC1b",  # W4 Rare Drops
+        "LavaA1b", "LavaA5b", "LavaB3b",  # W5 Rare Drops
+        "SpiA2b", "SpiB2b",  # W6 Rare Drops
+        "EfauntDrop1", "EfauntDrop2", "Chiz0", "Chiz1", "TrollPart", "KrukPart", "KrukPart2",  # World Boss Materials
+        "CraftMat2",  # Crimson String
+        "OilBarrel1", "OilBarrel3", "OilBarrel4", "OilBarrel5",  # Oil Barrels
+        "PureWater2",  # Alchemy Dense water
+        "Quest1", "Quest2", "Quest5", "Quest6", "Quest8", "Quest10", "Quest11", "Quest13", "Quest16", "Quest17", "Quest18", "Quest20", "Quest25",
+        "Quest26", "Quest27", "Quest28", "Quest29", "Quest30", "Quest31", "Quest33", "Quest34", "Quest36", "Quest37", "Quest38", "Quest39", "Quest40",
+        "Quest41", "Quest42", "Quest43", "Quest44", "Quest45", "Quest46", "Quest47", "Quest48", "Quest49", "Quest50", "Quest9",
+        "Mayo", "Trash", "Trash2", "Trash3",  # Treasure Hunt rewards
+        "Meatloaf", "FoodHealth5",  #Small quantity foods
+        "BobJoePickle", "BallJoePickle", "BoneJoePickle",  #Pickles
+        "FoodPotYe1", "FoodPotYe3",  # EXP 1 and 3
+        "FoodEvent1", "FoodEvent2", "FoodEvent3", "FoodEvent4", "FoodEvent5", "FoodEvent6", "FoodEvent7", "FoodEvent8",  # Event Foods
+        "Pearl1", "Pearl2", "Pearl3", "Pearl4", "Pearl5", "Pearl6",  # Skilling Speed Pearls, EXP pearls
+        "Line1", "Line2", "Line3", "Line4", "Line5", "Line6", "Line7", "Line8", "Line9", "Line10", "Line11", "Line12", "Line13", "Line14",  # Fishing Lines
+        "ExpBalloon1", "ExpBalloon2", "ExpBalloon3",  # Experience Balloons
+        "Timecandy1", "Timecandy2", "Timecandy3", "Timecandy4", "Timecandy5", "Timecandy6", "Timecandy7", "Timecandy8", "Timecandy9",  # Time Candies
+        "PetEgg", "Whetstone", "Quest72", "Quest73", "Quest76", "Quest77",  # Other Time Skips
+        "Quest70", "Quest71", "Quest75", "Gfoodcoupon", "ItemsCoupon1", "ItemsCoupon2",  # Loot Bags
+        "FoodHealth8", "Quest69", "Quest74",  # Unobtainables
+        "EquipmentStatues6", "EquipmentStatues15",  # Kachow and Bullseye
+        "EquipmentStatues8", "EquipmentStatues9", "EquipmentStatues10", "EquipmentStatues11", "EquipmentStatues12", "EquipmentStatues13",  # W2 Statues
+        "EquipmentStatues16", "EquipmentStatues17", "EquipmentStatues18", "EquipmentStatues19",  # W3 Statues
+        "EquipmentStatues20", "EquipmentStatues21", "EquipmentStatues22", "EquipmentStatues23", "EquipmentStatues24",
+        "EquipmentStatues25",  # W4 and W5 Statues
+        "FoodG1", "FoodG2", "FoodG3", "FoodG4", "FoodG5", "FoodG6", "FoodG7", "FoodG8", "FoodG10",  # Gold Foods
+        "ResetFrag", "ResetCompleted", "ResetCompletedS", "ClassSwap",
+        "ClassSwapB", "ResetBox",
+    ]
+}
+
+card_data = {
+    "Blunder Hills": {
+        "Crystal0": ["Crystal Carrot", 3],
+        "acorn": ["Nutto", 10],
+        "beanG": ["Bored Bean", 7],
+        "branch": ["Walking Stick", 10],
+        "carrotO": ["Carrotman", 10],
+        "frogBIG": ["Gigafrog", 10],
+        "frogG": ["Frog", 6],
+        "goblinG": ["Glublin", 10],
+        "mushG": ["Green Mushroom", 5],
+        "mushR": ["Red Mushroom", 10],
+        "mushW": ["Wood Mushroom", 10],
+        "plank": ["Wode Board", 10],
+        "poopSmall": ["Poop", 10],
+        "ratB": ["Rat", 10],
+        "slimeG": ["Slime", 8],
+        "snakeG": ["Baby Boa", 9],
+    },
+    "Yum-Yum Desert": {
+        "Bandit_Bob": ["Bandit Bob", 1],
+        "Crystal1": ["Crystal Crabal", 3],
+        "coconut": ["Mafioso", 10],
+        "crabcake": ["Crabcake", 10],
+        "jarSand": ["Sandy Pot", 10],
+        "mimicA": ["Mimic", 10],
+        "moonman": ["Moonmoon", 10],
+        "pincermin": ["Pincermin", 10],
+        "potato": ["Mashed Potato", 10],
+        "sandcastle": ["Sand Castle", 10],
+        "sandgiant": ["Sand Giant", 10],
+        "shovelR": ["Dig Doug", 10],
+        "snailZ": ["Snelbie", 10],
+        "steak": ["Tyson", 10],
+    },
+    "Easy Resources": {
+        "BirchTree": ["Bleach Logs", 10],
+        "Bug1": ["Fly", 10],
+        "Bug2": ["Butterfly", 10],
+        "Copper": ["Copper Ore", 10],
+        "Fish1": ["Goldfish", 10],
+        "Fish2": ["Hermit Can", 10],
+        "Fish3": ["Jellyfish", 10],
+        "ForestTree": ["Forest Fibres", 10],
+        "ForgeA": ["Fire Forge", 10],
+        "Gold": ["Gold Ore", 10],
+        "Iron": ["Iron Ore", 10],
+        "JungleTree": ["Jungle Logs", 10],
+        "OakTree": ["Oak Logs", 10],
+    },
+    "Frostbite Tundra": {
+        "Crystal2": ["Crystal Cattle", 10],
+        "bloque": ["Bloque", 14],
+        "eye": ["Neyeptune", 17],
+        "flake": ["Frost Flake", 12],
+        "glass": ["Quenchie", 17],
+        "mamoth": ["Mamooth", 15],
+        "penguin": ["Penguin", 15],
+        "ram": ["Dedotated Ram", 20],
+        "sheep": ["Sheepie", 11],
+        "skele": ["Xylobone", 15],
+        "skele2": ["Bloodbone", 15],
+        "snakeB": ["Cryosnake", 17],
+        "snowball": ["Snowman", 15],
+        "speaker": ["Bop Box", 17],
+        "stache": ["Sir Stache", 13],
+        "thermostat": ["Thermister", 15],
+    },
+    "Hard Resources": {
+        "AlienTree": ["Alien Hive Chunk", 10],
+        "Bug10": ["Dust Mote", 15],
+        "Bug12": ["Ladybug", 15],
+        "Bug13": ["Firefly", 15],
+        "Bug5": ["Mosquisnow", 10],
+        "Bug6": ["Flycicle", 10],
+        "Bug7": ["Worker Bee", 10],
+        "Bug8": ["Fairy", 10],
+        "Bug9": ["Scarab", 12],
+        "CritterCard10": ["Blobfish", 12],
+        "CritterCard4": ["Mousey", 4],
+        "CritterCard5": ["Owlio", 4],
+        "CritterCard6": ["Pingy", 5],
+        "CritterCard7": ["Bunny", 6],
+        "CritterCard8": ["Dung Beat", 7],
+        "CritterCard9": ["Honker", 9],
+        "Dreadlo": ["Dreadlo Ore", 15],
+        "Fish10": ["Shellfish", 18],
+        "Fish11": ["Jumbo Shrimp", 24],
+        "Fish12": ["Caulifish", 30],
+        "Fish5": ["Skelefish", 8],
+        "Fish6": ["Sand Shark", 10],
+        "Fish7": ["Manta Ray", 10],
+        "Fish8": ["Kraken", 10],
+        "Fish9": ["Icefish", 15],
+        "Godshard": ["Godshard Ore", 400],
+        "Lustre": ["Lustre Ore", 10],
+        "SaharanFoal": ["Tundra Logs", 10],
+        "SoulCard3": ["Rooted Soul", 3],
+        "SoulCard4": ["Frigid Soul", 4],
+        "SoulCard5": ["Squishy Soul", 5],
+        "SoulCard6": ["Oozie Soul", 7],
+        "SoulCard7": ["Breezy Soul", 7],
+        "Starfire": ["Starfire Ore", 12],
+        "Tree10": ["Dandielogs", 15],
+        "Tree12": ["Bamboo Logs", 15],
+        "Tree13": ["Effervescent Logs", 15],
+        "Tree7": ["Wispy Lumber", 10],
+        "Tree8": ["Cubed Logs", 10],
+        "Tree9": ["Maple Logs", 12],
+    },
+    "Hyperion Nebula": {
+        "Crystal3": ["Crystal Custard", 10],
+        "demonP": ["Demon Genie", 19],
+        "mushP": ["Purp Mushroom", 15],
+        "w4a2": ["TV", 17],
+        "w4a3": ["Donut", 18],
+        "w4b1": ["Flying Worm", 21],
+        "w4b2": ["Soda Can", 20],
+        "w4b3": ["Gelatinous Cuboid", 22],
+        "w4b4": ["Choccie", 23],
+        "w4b5": ["Biggole Wurm", 24],
+        "w4c1": ["Clammie", 26],
+        "w4c2": ["Octodar", 27],
+        "w4c3": ["Flombeige", 28],
+        "w4c4": ["Stilted Seeker", 30],
+    },
+    "Medium Resources": {
+        "Bug3": ["Sentient Cereal", 10],
+        "Bug4": ["Fruitfly", 10],
+        "CritterCard1": ["Froge", 4],
+        "CritterCard2": ["Crabbo", 4],
+        "CritterCard3": ["Scorpie", 4],
+        "Dementia": ["Dementia Ore", 10],
+        "Fish4": ["Bloach", 10],
+        "ForgeB": ["Cinder Forge", 10],
+        "PalmTree": ["Tropilogs", 10],
+        "Plat": ["Platinum Ore", 10],
+        "SoulCard1": ["Forest Soul", 3],
+        "SoulCard2": ["Dune Soul", 3],
+        "StumpTree": ["Veiny Logs", 10],
+        "ToiletTree": ["Potty Rolls", 10],
+        "Void": ["Void Ore", 10],
+    },
+    "Smolderin' Plateau": {
+        "Crystal4": ["Crystal Capybara", 15],
+        "w5a1": ["Suggma", 25],
+        "w5a2": ["Maccie", 28],
+        "w5a3": ["Mister Brightside", 32],
+        "w5a4": ["Cheese Nub", 35],
+        "w5a5": ["Stiltmole", 45],
+        "w5b1": ["Molti", 48],
+        "w5b2": ["Purgatory Stalker", 52],
+        "w5b3": ["Citringe", 60],
+        "w5b4": ["Lampar", 65],
+        "w5b5": ["Fire Spirit", 70],
+        "w5b6": ["Biggole Mole", 75],
+        "w5c1": ["Crawler", 80],
+        "w5c2": ["Tremor Wurm", 100],
+    },
+    "Spirited Valley": {
+        "Crystal5": ["Crystal Candalight", 5000],
+        "w6a1": ["Sprout Spirit", 50],
+        "w6a2": ["Ricecake", 60],
+        "w6a3": ["River Spirit", 75],
+        "w6a4": ["Baby Troll", 85],
+        "w6a5": ["Woodlin Spirit", 100],
+        "w6b1": ["Bamboo Spirit", 150],
+        "w6b2": ["Lantern Spirit", 170],
+        "w6b3": ["Mama Troll", 200],
+        "w6b4": ["Leek Spirit", 250],
+        "w6c1": ["Ceramic Spirit", 400],
+        "w6c2": ["Skydoggie Spirit", 500],
+        "w6d1": ["Royal Egg", 900],
+        "w6d2": ["Minichief Spirit", 1300],
+        "w6d3": ["Samurai Guardian", 2500],
+    },
+    "Dungeons": {
+        "cactus": ["Cactopunk", 2],
+        "frogD": ["Globohopper", 2],
+        "frogGG": ["Eldritch Croaker", 5],
+        "frogGR": ["Grandfrogger", 1.5],
+        "frogGR2": ["Rotting Grandfrogger", 1.5],
+        "frogGR3": ["Forlorn Grandfrogger", 1.5],
+        "frogGR4": ["Vengeful Grandfrogger", 1],
+        "frogP": ["Poisonic Frog", 1.5],
+        "frogR": ["Lava Slimer", 2],
+        "frogW": ["Chromatium Frog", 3],
+        "frogY": ["King Frog", 2],
+        "iceBossZ": ["Glaciaxus", 2],
+        "iceBossZ2": ["Golden Glaciaxus", 1.5],
+        "iceBossZ3": ["Caustic Glaciaxus", 1.5],
+        "iceknight": ["Ice Guard", 8],
+        "potatoB": ["Crescent Spud", 5],
+        "rocky": ["Grumblo", 2],
+        "snakeZ": ["Snakenhotep", 1.5],
+        "snakeZ2": ["Enraged Snakenhotep", 1.5],
+        "snakeZ3": ["Inevitable Snakenhotep", 1.5],
+        "steakR": ["Beefie", 2],
+        "target": ["Target", 2],
+        "totem": ["Lazlo", 2],
+    },
+    "Bosses n Nightmares": {
+        "Boss2A": ["Efaunt", 1.5],
+        "Boss2B": ["Chaotic Efaunt", 1.5],
+        "Boss2C": ["Gilded Efaunt", 11],
+        "Boss3A": ["Chizoar", 1.5],
+        "Boss3B": ["Chaotic Chizoar", 1.5],
+        "Boss3C": ["Blighted Chizoar", 12],
+        "Boss4A": ["Massive Troll", 2],
+        "Boss4B": ["Chaotic Troll", 2],
+        "Boss4C": ["Blitzkrieg Troll", 4],
+        "Boss5A": ["Kattlekruk", 3],
+        "Boss5B": ["Chaotic Kattlekruk", 4],
+        "Boss5C": ["Sacrilegious Kattlekruk", 5],
+        "Boss6A": ["Emperor", 6],
+        "Boss6B": ["Chaotic Emperor", 9],
+        "Boss6C": ["Sovereign Emperor", 13],
+        "babaHour": ["Biggie Hours", 1.5],
+        "babaMummy": ["King Doot", 1.5],
+        "babayaga": ["Baba Yaga", 1.5],
+        "mini3a": ["Dilapidated Slush", 5],
+        "mini4a": ["Mutated Mush", 5],
+        "poopBig": ["Dr Defecaus", 1.5],
+        "poopD": ["Boop", 1],
+        "wolfA": ["Amarok", 1.5],
+        "wolfB": ["Chaotic Amarok", 1.5],
+        "wolfC": ["Radiant Amarok", 10],
+    },
+    "Events": {
+        "EasterEvent1": ["Egggulyte", 1.5],
+        "EasterEvent2": ["Egg Capsule", 1.5],
+        "SummerEvent1": ["Coastiolyte", 8],
+        "SummerEvent2": ["Summer Spirit", 8],
+        "crabcakeB": ["Mr Blueberry", 4],
+        "fallEvent1": ["Falloween Pumpkin", 3],
+        "ghost": ["Ghost (Event)", 2],
+        "loveEvent": ["Loveulyte", 1.5],
+        "loveEvent2": ["Chocco Box", 1.5],
+        "loveEvent3": ["Giant Rose", 1.5],
+        "sheepB": ["Floofie", 3],
+        "shovelY": ["Plasti Doug", 4],
+        "slimeR": ["Valentslime", 2],
+        "snakeY": ["Shell Snake", 3],
+        "springEvent1": ["Bubbulyte", 1],
+        "springEvent2": ["Spring Splendor", 1],
+        "xmasEvent": ["Giftmas Blobulyte", 1.5],
+        "xmasEvent2": ["Meaning of Giftmas", 1.5],
+        "xmasEvent3": ["Golden Giftmas Box", 1],
+    },
+}

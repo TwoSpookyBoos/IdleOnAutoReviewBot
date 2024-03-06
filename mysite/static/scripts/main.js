@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
         target.parentElement.classList.remove('folded')
         target.querySelectorAll('*:not(.no-collapse)').forEach(c => c.classList.remove('folded'))
     })
-    const expandableSections = document.querySelectorAll("#gem-shop .advice-section, #greenstacks .advice-section")
+    const expandableSections = document.querySelectorAll("#gem-shop .advice-section, #greenstacks .advice-section, #cards .advice-section")
     expandableSections.forEach(section => {
         const expandableGroups = section.querySelector(".groups")
         const showMoreButton = section.querySelector(".show-more")

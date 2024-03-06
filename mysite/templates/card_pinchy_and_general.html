@@ -22,30 +22,4 @@
             {% endfor %}
         </div>
     </div>
-    <div class="collapse-wrapper">
-        <h3 class="subheading collapse-cards">Cards</h3>
-
-        <div class="sections">
-            <em>Card counts may be off by 1 or 2, due to rounding :( Sorry. I'm trying to find a more accurate list of requirements.</em>
-
-            {% for cardset in htmlInput[0][4] %}
-            <section>
-                <h3 class="subheading collapse-cards">
-                    <img src="{{ cardset[2] | cards }}" alt="Card Set {{ cardset[2] }}">
-                </h3>
-
-                <div class="advice-wrapper">
-                    <strong>{{ cardset[0] }}</strong>
-                    <ul id="cardset-{{ cardset[2] }}">
-                        {% for line in cardset[1] %}
-                            {% if line %}
-                                <li class="advice">{{ line }}</li>
-                            {% endif %}
-                        {% endfor %}
-                    </ul>
-                </div>
-            </section>
-            {% endfor %}
-        </div>
-    </div>
 </article>

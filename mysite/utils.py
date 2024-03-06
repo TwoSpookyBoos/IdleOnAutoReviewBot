@@ -2,6 +2,8 @@ import logging
 import os
 import sys
 
+from flask import g
+
 
 def pl(_list: list, suffix_singular: str = "", suffix_plural: str = 's') -> str:
     """Pluralize"""
@@ -44,5 +46,14 @@ def _set_regular_logger(logger: logging.Logger):
 
     logger.addHandler(handler)
 
+
 def letterToNumber(inputLetter: str) -> int:
     return "_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".index(inputLetter)
+
+
+def session_singleton(cls):
+    def getinstance(*args, **kwargs):
+        if not hasattr(g, "data"):
+            return cls(*args, **kwargs)
+        return g.data
+    return getinstance

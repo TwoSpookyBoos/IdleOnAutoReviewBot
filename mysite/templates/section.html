@@ -15,7 +15,7 @@
                     {% if group %}
                         <div class="advice-group{% if group.hide %} hidden{% endif %}">
                         {% if group.heading %}
-                            <span>{{ group.heading }}</span>
+                            <span class="{{ group.picture_class }}">{{ group.heading }}</span>
                         {% endif %}
                         <ul class="table">
                         {% for title, advices in group.advices.items() %}
