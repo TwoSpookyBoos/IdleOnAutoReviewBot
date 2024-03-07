@@ -653,7 +653,7 @@ progressionTiers = {
             "Other Skilling Resources": [
                 "Critter10", "Critter11",
                 "Soul7",
-                "CopperBar", "IronBar"
+                "CopperBar", "IronBar",
                 "Bullet", "BulletB",],
             "Vendor Shops": [
                 "OilBarrel6", "OilBarrel7",],
