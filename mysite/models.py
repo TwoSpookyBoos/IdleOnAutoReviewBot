@@ -582,8 +582,8 @@ class Account:
         if g.autoloot:
             self.autoloot = True
         elif self.raw_data.get("AutoLoot", 0) == 1:
-                self.autoloot = True
-                g.autoloot = True
+            self.autoloot = True
+            g.autoloot = True
         else:
             self.autoloot = False
         playerCount, playerNames, playerClasses, characterDict = getCharacterDetails(

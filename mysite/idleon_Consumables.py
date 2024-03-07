@@ -339,6 +339,7 @@ def parseInventoryBagSlots(inputJSON, characterDict: dict[int, Character]) -> Ad
     inventorySlots_AdviceList = []
     currentMaxInventorySlots = 83  #As of v2.02
     currentMaxUsableInventorySlots = 80  #As of v2.02
+    currentMaxWithoutAutoloot = 78
     defaultInventorySlots = 16  # Characters have 16 inventory slots by default
     playerBagDict = {}
     playerBagSlotsDict = {}
@@ -369,6 +370,8 @@ def parseInventoryBagSlots(inputJSON, characterDict: dict[int, Character]) -> Ad
             sumSlots += int(bagList[bag])
         playerBagSlotsDict[chararacterIndex] = {"Total":sumSlots}
         if sumSlots >= currentMaxUsableInventorySlots:
+            playersWithMaxBagSlots.append(chararacterIndex)
+        elif sumSlots == currentMaxWithoutAutoloot and session_data.account.autoloot == False:
             playersWithMaxBagSlots.append(chararacterIndex)
         else:
             playersMissingBagSlots.append(chararacterIndex)
