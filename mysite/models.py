@@ -233,7 +233,7 @@ class AdviceGroup(AdviceBase):
 
     @property
     def picture_class(self) -> str:
-        name = kebab(self.picture_class)
+        name = kebab(self._picture_class)
         return name
 
     @property
