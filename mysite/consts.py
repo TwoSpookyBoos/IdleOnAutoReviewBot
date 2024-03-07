@@ -47,8 +47,8 @@ progressionTiers = {
         [33, 9400, "", "", "", {'Bugsack Stamp':184, 'Bag o Heads Stamp':184}, ""],
         [34, 9600, "", "", "", {'Golden Apple Stamp':100, 'Multitool Stamp':210}, ""],
         [35, 9800, "37", "", "", {'Golden Sixes Stamp':150}, ""],
-        [36, 10000, "38, 22", "31", "", {'Golden Sixes Stamp':190}, ""],
-        [37, 11000, "40", "52,50", "", {'Maxo Slappo Stamp':98, 'Sashe Sidestamp':98, 'Intellectostampo':98}, ""]
+        [36, 10000, "38, 22", "31", "", {'Maxo Slappo Stamp':98, 'Sashe Sidestamp':98, 'Intellectostampo':98}, ""],
+        [37, 11000, "40", "52,50", "", {'Golden Sixes Stamp':190}, ""]
     ],
     "Smithing": [
         #int tier, int Cash Points Purchased, int Monster Points Purchased, int Forge Totals, str Notes

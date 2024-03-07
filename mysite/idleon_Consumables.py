@@ -385,7 +385,7 @@ def parseInventoryBagSlots(inputJSON, characterDict: dict[int, Character]) -> Ad
             goal=currentMaxUsableInventorySlots
         ))
 
-    inventorySlots_AdviceGroup.advices = dict(default=inventorySlots_AdviceList)
+    inventorySlots_AdviceGroup.advices = inventorySlots_AdviceList
     return inventorySlots_AdviceGroup
 
 def parseStorageChests(inputJSON):
