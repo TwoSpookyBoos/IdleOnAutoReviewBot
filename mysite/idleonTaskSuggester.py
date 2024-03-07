@@ -116,7 +116,7 @@ def main(inputData, runType="web"):
         #raise ValueError(f"data for {inputData} not found")
 
     #Step 2: Make account data available throughout the session
-    g.data = Account(parsedJSON)
+    g.account = Account(parsedJSON)
 
     #Step 3: Send that data off to all the different analyzers
     playerCount, playerNames, playerClasses, characterDict = getCharacterDetails(parsedJSON, runType)

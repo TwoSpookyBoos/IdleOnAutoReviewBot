@@ -579,6 +579,13 @@ class Account:
         self.raw_data = (
             json.loads(json_data) if isinstance(json_data, str) else json_data
         )
+        if g.autoloot:
+            self.autoloot = True
+        elif self.raw_data.get("AutoLoot", 0) == 1:
+                self.autoloot = True
+                g.autoloot = True
+        else:
+            self.autoloot = False
         playerCount, playerNames, playerClasses, characterDict = getCharacterDetails(
             self.raw_data, run_type
         )

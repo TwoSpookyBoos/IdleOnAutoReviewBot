@@ -356,14 +356,15 @@ def parseInventoryBagSlots(inputJSON, characterDict: dict[int, Character]) -> Ad
         pre_string="Collect more inventory space",
         advices=[],
     )
-    if session_data.autoloot:
-        defaultInventorySlots += 5
+    if session_data.account.autoloot:
+        autoLootSlots = 5
         inventorySlots_AdviceGroup.post_string = "+5 slots from AutoLoot included."
     else:
+        autoLootSlots = 0
         inventorySlots_AdviceGroup.post_string = "AutoLoot is set to Unpurchased. This bundle gives 5 inventory slots."
 
     for chararacterIndex, bagList in playerBagDict.items():
-        sumSlots = defaultInventorySlots
+        sumSlots = defaultInventorySlots + autoLootSlots
         for bag in bagList:
             sumSlots += int(bagList[bag])
         playerBagSlotsDict[chararacterIndex] = {"Total":sumSlots}
@@ -381,7 +382,7 @@ def parseInventoryBagSlots(inputJSON, characterDict: dict[int, Character]) -> Ad
             goal=currentMaxUsableInventorySlots
         ))
 
-    inventorySlots_AdviceGroup.advices = inventorySlots_AdviceList
+    inventorySlots_AdviceGroup.advices = dict(default=inventorySlots_AdviceList)
     return inventorySlots_AdviceGroup
 
 def parseStorageChests(inputJSON):
