@@ -452,7 +452,7 @@ def getSumUnlockedBubbles(colorDict, colorString):
         if not isinstance(colorDict[bubble], int):
             #logger.warning(f"Non-Integer Bubble value found. Attempting to convert: {colorString} {bubble} {type(colorDict[bubble])} {colorDict[bubble]}")
             try:
-                colorDict[bubble] = int(floor(float(colorDict[bubble])))
+                colorDict[bubble] = int(round(float(colorDict[bubble])))
             except:
                 logger.exception(f"Could not convert [{colorString} {bubble} {type(colorDict[bubble])} {colorDict[bubble]}] to int :( Setting bubble to level 0")
                 colorDict[bubble] = 0
