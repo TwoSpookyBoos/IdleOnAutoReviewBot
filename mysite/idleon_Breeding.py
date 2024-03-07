@@ -404,13 +404,16 @@ def setBreedingProgressionTier(inputJSON: dict, progressionTiers: dict[int, dict
         return breeding_AdviceSection
     else:
         if shinyExclusionsDict["Exclude-Sailing"] == True:
-            shinyPetsTierList["B"].remove("Lower Minimum Travel Time for Sailing")
-            shinyPetsTierList["F"].append("Lower Minimum Travel Time for Sailing")
-            shinyPetsTierList["B"].remove("Higher Artifact Find Chance")
-            shinyPetsTierList["F"].append("Higher Artifact Find Chance")
+            if "Lower Minimum Travel Time for Sailing" in shinyPetsTierList["B"]:
+                shinyPetsTierList["B"].remove("Lower Minimum Travel Time for Sailing")
+                shinyPetsTierList["F"].append("Lower Minimum Travel Time for Sailing")
+            if "Higher Artifact Find Chance" in shinyPetsTierList["B"]:
+                shinyPetsTierList["B"].remove("Higher Artifact Find Chance")
+                shinyPetsTierList["F"].append("Higher Artifact Find Chance")
         if shinyExclusionsDict["Exclude-Critters"] == True:
-            shinyPetsTierList["A"].remove('Base Critter Per Trap')
-            shinyPetsTierList["F"].remove('Base Critter Per Trap')
+            if "Base Critter Per Trap" in shinyPetsTierList["A"]:
+                shinyPetsTierList["A"].remove('Base Critter Per Trap')
+                shinyPetsTierList["F"].append('Base Critter Per Trap')
         for tier in progressionTiers:
             if "Infinite Star Signs" in progressionTiers[tier] and shinyExclusionsDict["Exclude-InfiniteStarSigns"] == True:
                 progressionTiers[tier]["Infinite Star Signs"] = 0

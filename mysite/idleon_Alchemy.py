@@ -450,15 +450,14 @@ def getSumUnlockedBubbles(colorDict, colorString):
     bubblesUnlocked = 0
     for bubble in colorDict:
         if not isinstance(colorDict[bubble], int):
-            logger.warning(f"Non-Integer Bubble value found. Attempting to convert: {colorString} {bubble} {type(colorDict[bubble])} {colorDict[bubble]}")
+            #logger.warning(f"Non-Integer Bubble value found. Attempting to convert: {colorString} {bubble} {type(colorDict[bubble])} {colorDict[bubble]}")
             try:
                 colorDict[bubble] = int(floor(float(colorDict[bubble])))
             except:
-                logger.exception("Could not convert Bubble value to int :( Setting bubble to level 0")
+                logger.exception(f"Could not convert [{colorString} {bubble} {type(colorDict[bubble])} {colorDict[bubble]}] to int :( Setting bubble to level 0")
                 colorDict[bubble] = 0
-        else:
-            if colorDict[bubble] > 0:
-                bubblesUnlocked += 1
+        if colorDict[bubble] > 0:
+            bubblesUnlocked += 1
     return bubblesUnlocked
 
 def setAlchemyVialsProgressionTier(inputJSON, progressionTiers, characterDict) -> AdviceSection:
