@@ -206,7 +206,7 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
                 #logger.debug(f"{progressionTiers[counter][1]} Tier: Building {recommendedBuilding} ({getBuildingNameFromIndex(recommendedBuilding)}): Cleared if {maxLevelList[recommendedBuilding]} <= {playerBuildings[recommendedBuilding]}. Cleared= {maxLevelList[recommendedBuilding] <= playerBuildings[recommendedBuilding]}")
                 if maxLevelList[recommendedBuilding] > playerBuildings[recommendedBuilding]:
                     if len(building_AdviceDict[counter]) < maxBuildingsPerGroup:
-                        logger.debug(f"Adding advice for {getBuildingNameFromIndex(recommendedBuilding)} to {counter}")
+                        #logger.debug(f"Adding advice for {getBuildingNameFromIndex(recommendedBuilding)} to {counter}")
                         building_AdviceDict[counter].append(Advice(label=getBuildingNameFromIndex(recommendedBuilding),
                                                                    picture_class=getBuildingImageNameFromIndex(recommendedBuilding),
                                                                    progression=str(playerBuildings[recommendedBuilding]),
