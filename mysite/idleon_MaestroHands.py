@@ -1,16 +1,18 @@
-import idleon_SkillLevels
-from models import AdviceSection, AdviceGroup, Advice
+from models import AdviceSection, AdviceGroup, Advice, Character
 from utils import get_logger
 
+from flask import g as session_data
 
 logger = get_logger(__name__)
 
+skillsToReview_RightHand = ["Mining", "Choppin", "Fishing", "Catching", "Trapping", "Worship"]
 
-class Beginner:
-    def __init__(self, char_index: int, name: str, class_index: int):
-        self.index: int = char_index
-        self.name: str = name
-        self.classname: str = idleon_SkillLevels.getHumanReadableClasses(class_index)
+
+class Maestro:
+    def __init__(self, character: Character):
+        self.index: int = character.character_index
+        self.name: str = character.character_name
+        self.classname: str = character.class_name
         self.janky_skills: list[tuple] = list()
 
     @property
@@ -31,57 +33,36 @@ class Beginner:
 
 
 def getHandsStatus(inputJSON, playerCount, playerNames):
-    skillsToReview_RightHand = ["Mining", "Choppin", "Fishing", "Catching", "Trapping", "Worship"]
-    class_indices = [3, 4, 5, 6]  # Includes the placeholder numbers after Vman
-    beginners: list[Beginner] = list()
+    account = session_data.data
+    maestros: list[Character] = [toon for toon in account.all_characters if toon.sub_class == "Maestro"]
 
-    for char_index, charname in enumerate(playerNames):
-        try:
-            class_index = inputJSON['CharacterClass_'+str(char_index)]
-
-            if class_index not in class_indices:
-                continue
-
-            beginners.append(Beginner(char_index, charname, class_index))
-
-        except Exception as reason:
-            logger.error("Unable to get Class name for character %s because: %s", char_index, reason)
-
-    #print("MaestroHands.getHandsStatus~ OUTPUT characterClassesList:",characterClassesList)
-    #print("MaestroHands.getHandsStatus~ OUTPUT handsCharactersDict:",handsCharactersDict)
-
-    allSkillsDict = idleon_SkillLevels.getAllSkillLevelsDict(inputJSON, playerCount)
-
-    for beginner in beginners:
-        for skill in skillsToReview_RightHand:  # string, the name of the skill
-            skill_levels = allSkillsDict[skill]
-            best_level = max(skill_levels)
-            beginners_skill_level = skill_levels[beginner.index]
-
-            if beginners_skill_level < best_level:
-                logger.info("Adding skill to %s's Right Hand skills because their %s level of %s is less than max of %s", beginner.name, skill, beginners_skill_level, best_level)
-                beginner.janky_skills.append((skill, beginners_skill_level, best_level))
-    #print("MaestroHands.getHandsStatus~ OUTPUT handsCharactersDict:",handsCharactersDict)
-
-    # in case some unfortunate soul or an absolute madlad chose to have more than one beginner, choose the one that's the most skilled
-    main_beginner = min(beginners, key=lambda b: b.jankiness, default=None)
-
-    tier = f"{main_beginner.jankiness or 6}/{len(skillsToReview_RightHand)}" if main_beginner else ""
-
-    if not main_beginner:
-        header = "Gosh golly, I'm jealous, So many nice things ahead of you! Check this section again once you've acquired a Maestro"
-    elif main_beginner.is_jack_of_trades:
-        header = f"{main_beginner.fullname} is the highest level in all {tier} Right Hand skills! A Jack of trades, this one! ❤️"
-    else:
-        header = f"{main_beginner.fullname} is not the highest level in {tier} Right Hand skills:"
-
+    janky_skills = dict()
     post_string = ""
-    if main_beginner and main_beginner.should_be_more_pious:
-        post_string = "Worship matters moreso for Species Epoch than Right Hand. Don't steal charge away from this character!"
+    tier = ""
+    if not maestros:
+        header = "Gosh golly, I'm jealous, So many nice things ahead of you! Check this section again once you've acquired a Maestro"
+
+        if len(account.characters) == account.max_toon_count:
+            header = "Oh no... Your family is full but you haven't created any Beginners... I wish you the best of luck 😔"
+
+    else:
+        janky_skills = maestros_goal_levels(account, maestros)
+
+        tier = f"{len(janky_skills) or 6}/{len(skillsToReview_RightHand)}"
+
+        if not janky_skills:
+            if len(maestros) > 1:
+                header = "Your Maestros are a workforce to be dealt with! An arduous bunch, the lot!"
+            else:
+                header = f"{maestros[0]} is the highest level in all {tier} Right Hand skills! A Jack of trades, this one! ❤️"
+        else:
+            header = f"{maestros[0]} is not the highest level in {tier} Right Hand skills:"
+            if "Worship" in janky_skills:
+                post_string = "Worship matters moreso for Species Epoch than Right Hand. Don't steal charge away from this character!"
 
     advices = [
-        Advice(label=skill, picture_class=skill, progression=progression, goal=goal + 1)
-        for skill, progression, goal in (main_beginner.janky_skills if main_beginner else [])
+        Advice(label=skill, picture_class=skill, progression=maestro.skills[skill], goal=goal)
+        for skill, (maestro, goal) in janky_skills.items()
     ]
 
     groups = [
@@ -101,7 +82,22 @@ def getHandsStatus(inputJSON, playerCount, playerNames):
         groups=groups,
     )
 
-    #print("MaestroHands.getHandsStatus~ OUTPUT advice_LeftHands:",advice_LeftHands)
-    #print("MaestroHands.getHandsStatus~ OUTPUT advice_RightHands:",advice_RightHands)
-
     return maestro
+
+
+def maestros_goal_levels(account, maestros):
+    janky_skills = dict()
+
+    for skill in skillsToReview_RightHand:
+        chars_ordered: list[Character] = sorted(account.characters, key=lambda toon: toon.skills[skill])
+        best_maestro = next((toon for toon in chars_ordered if toon in maestros), None)
+        best_maestro_rank = chars_ordered.index(best_maestro)
+
+        if best_maestro_rank == 0:
+            # maestro is already best
+            continue
+
+        required_level = chars_ordered[best_maestro_rank - 1].skills[skill] + 1
+        janky_skills[skill] = (best_maestro, required_level)
+
+    return janky_skills
