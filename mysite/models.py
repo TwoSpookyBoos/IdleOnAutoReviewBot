@@ -12,7 +12,7 @@ from flask import g
 import itemDecoder
 from data_formatting import getCharacterDetails
 from consts import expectedStackables, progressionTiers, card_data
-from utils import session_singleton
+from utils import session_singleton, kebab
 
 
 class Character:
@@ -28,11 +28,13 @@ class Character:
     ):
         self.character_index: int = character_index
         self.character_name: str = character_name
+
         self.class_name: str = class_name
         self.class_name_icon: str = class_name.replace(" ", "-") + "-icon"
         self.base_class: str = base_class
         self.sub_class: str = sub_class
         self.elite_class: str = elite_class
+
         self.combat_level: int = all_skill_levels["Combat"]
         self.mining_level: int = all_skill_levels["Mining"]
         self.smithing_level: int = all_skill_levels["Smithing"]
@@ -52,6 +54,8 @@ class Character:
         self.gaming_level: int = all_skill_levels["Farming"]
         self.gaming_level: int = all_skill_levels["Sneaking"]
         self.gaming_level: int = all_skill_levels["Summoning"]
+        self.skills = all_skill_levels
+
         self.apoc_dict: dict = {
             name: {
                 **{f"Basic W{i} Enemies": list() for i in range(1, 7)},
@@ -86,8 +90,12 @@ class Character:
         return self.character_index
 
     def __bool__(self):
-        # If someone creates a character but never logs into them, that character will have no levels available in the JSON.
-        # The code to find combat and skill levels defaults to 0s when that scenario happens. This will make sure the character has been logged into before.
+        """
+        If someone creates a character but never logs into them,
+        that character will have no levels available in the JSON.
+        The code to find combat and skill levels defaults to 0s when that scenario happens.
+        This will make sure the character has been logged into before.
+        """
         return self.combat_level >= 1
 
 
@@ -174,8 +182,7 @@ class Advice(AdviceBase):
 
     @property
     def css_class(self) -> str:
-        name = self.picture_class.replace(" ", "-").lower()
-        name = re.sub(r"[^\w-]", "", name)
+        name = kebab(self.picture_class)
         return name
 
     def __str__(self) -> str:
@@ -226,8 +233,7 @@ class AdviceGroup(AdviceBase):
 
     @property
     def picture_class(self) -> str:
-        name = self._picture_class.replace(" ", "-").lower()
-        name = re.sub(r"[^\w-]", "", name)
+        name = kebab(self._picture_class)
         return name
 
     @property
@@ -589,11 +595,13 @@ class Account:
         self.names = playerNames
         self.playerCount = playerCount
         self.classes = playerClasses
-        self.characters = [Character(**char) for char in characterDict.values()]
+        self.all_characters = [Character(**char) for char in characterDict.values()]
+        self.characters = [char for char in self.all_characters if char]
         self.assets = self._all_owned_items()
         self.cards = self._make_cards()
         self.rift = self.raw_data["Rift"][0]
         self.ruby_cards_unlocked = self.rift >= 46
+        self.max_toon_count = 10  # OPTIMIZE: find a way to read this from somewhere
 
     def _make_cards(self):
         card_counts = json.loads(self.raw_data[self._key_cards])

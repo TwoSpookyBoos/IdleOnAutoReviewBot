@@ -8,7 +8,7 @@
     <div class="collapse-wrapper">
         <ul class="advice-section{% if not section %} no-collapse{% endif %}{% if section.collapse %} folded{% endif %}">
             {% if section.note %}
-                <li class="note">{{ section.note }}</li>
+                <li class="note">{{ section.note | safe }}</li>
             {% endif %}
             <li id="{{ section.css_class }}-tier" class="groups">
                 {% for group in section.groups %}

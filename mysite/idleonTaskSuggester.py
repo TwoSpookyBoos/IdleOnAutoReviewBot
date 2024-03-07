@@ -147,7 +147,7 @@ def main(inputData, runType="web"):
     section_consumables = idleon_Consumables.parseConsumables(parsedJSON, playerCount, playerNames)
     section_gemShop = idleon_GemShop.setGemShopProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Gem Shop']), playerCount)
     sections_quest_gstacks, section_regular_gstacks = idleon_Greenstacks.setGStackProgressionTier(parsedJSON, playerCount)
-    section_maestro = idleon_MaestroHands.getHandsStatus(parsedJSON, playerCount, playerNames)
+    section_maestro = idleon_MaestroHands.getHandsStatus()
     section_cards = idleon_Cards.getCardSetReview()
 
     #World 1

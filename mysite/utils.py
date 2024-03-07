@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 import sys
 
 from flask import g
@@ -57,3 +58,11 @@ def session_singleton(cls):
             return cls(*args, **kwargs)
         return g.data
     return getinstance
+
+
+def kebab(string: str) -> str:
+    """
+    Converts any string to kebab-case format.
+    Spaces turn to hyphens, non-word characters are removed.
+    """
+    return re.sub(r"[^\w-]", "", string.lower().replace(" ", "-"))
