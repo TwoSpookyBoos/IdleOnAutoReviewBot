@@ -10,7 +10,7 @@ skillsToReview_RightHand = ["Mining", "Choppin", "Fishing", "Catching", "Trappin
 
 def getHandsStatus():
     maestros: list[Character] = [
-        toon for toon in session_data.data.all_characters if toon.sub_class == "Maestro"
+        toon for toon in session_data.account.all_characters if toon.sub_class == "Maestro"
     ]
 
     janky_skills = maestros_goal_levels(maestros)
@@ -49,7 +49,7 @@ def getHandsStatus():
 
 
 def create_header(janky_skills, maestros, tier):
-    account = session_data.data
+    account = session_data.account
     if not maestros:
         header = "Gosh golly, I'm jealous, So many nice things ahead of you!<br>Check this section again once you've acquired a Maestro"
 
@@ -72,7 +72,7 @@ def create_header(janky_skills, maestros, tier):
 
 
 def maestros_goal_levels(maestros):
-    account = session_data.data
+    account = session_data.account
     janky_skills = dict()
 
     if not maestros:
