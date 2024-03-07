@@ -47,6 +47,9 @@ def getJSONfromText(runType, rawJSON):
             if "companion" in rawJSON:
                 parsed["companion"] = rawJSON["companion"]
                 #print("idleonTaskSuggester.getJSONfromText~ Return Point 1: DICT Toolbox JSON found.")
+            if "serverVars" in rawJSON:
+                if "AutoLoot" in rawJSON["serverVars"]:
+                    parsed["AutoLoot"] = rawJSON["serverVars"]["AutoLoot"]
             return parsed
         else:  # Non-Toolbox JSON
             try:
