@@ -116,7 +116,7 @@ def main(inputData, runType="web"):
         #raise ValueError(f"data for {inputData} not found")
 
     #Step 2: Make account data available throughout the session
-    g.data = Account(parsedJSON)
+    g.account = Account(parsedJSON)
 
     #Step 3: Send that data off to all the different analyzers
     playerCount, playerNames, playerClasses, characterDict = getCharacterDetails(parsedJSON, runType)
@@ -144,7 +144,7 @@ def main(inputData, runType="web"):
         logger.info(f'{headerData.last_update = }')
 
     section_combatLevels = idleon_CombatLevels.setCombatLevelsProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Combat Levels']), playerCount, playerNames, playerClasses)
-    section_consumables = idleon_Consumables.parseConsumables(parsedJSON, playerCount, playerNames)
+    section_consumables = idleon_Consumables.parseConsumables(parsedJSON, characterDict)
     section_gemShop = idleon_GemShop.setGemShopProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Gem Shop']), playerCount)
     sections_quest_gstacks, section_regular_gstacks = idleon_Greenstacks.setGStackProgressionTier(parsedJSON, playerCount)
     section_maestro = idleon_MaestroHands.getHandsStatus()

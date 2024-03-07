@@ -224,29 +224,25 @@ class AdviceGroup(AdviceBase):
         self.post_string: str = post_string
         self.formatting: str = formatting
         self._picture_class: str = picture_class
-        self.advices: list[Advice] | dict[str, list[Advice]] = (
-            {"default": advices} if isinstance(advices, list) else advices
-        )
+        self.advices = advices
 
     def __str__(self) -> str:
         return ", ".join(map(str, self.advices))
 
     @property
+    def advices(self):
+        return self._advices
+
+    @advices.setter
+    def advices(self, _advices):
+        self._advices = (
+            {"default": _advices} if isinstance(_advices, list) else _advices
+        )
+
+    @property
     def picture_class(self) -> str:
         name = kebab(self._picture_class)
         return name
-
-    @property
-    def show_table_header(self) -> bool:
-        return self.show_progression or self.show_goal
-
-    @property
-    def show_progression(self) -> bool:
-        return any(advice.progression for advice in self.advices)
-
-    @property
-    def show_goal(self) -> bool:
-        return any(advice.goal for advice in self.advices)
 
     @property
     def heading(self) -> str:
@@ -589,6 +585,13 @@ class Account:
         self.raw_data = (
             json.loads(json_data) if isinstance(json_data, str) else json_data
         )
+        if g.autoloot:
+            self.autoloot = True
+        elif self.raw_data.get("AutoLoot", 0) == 1:
+            self.autoloot = True
+            g.autoloot = True
+        else:
+            self.autoloot = False
         playerCount, playerNames, playerClasses, characterDict = getCharacterDetails(
             self.raw_data, run_type
         )
