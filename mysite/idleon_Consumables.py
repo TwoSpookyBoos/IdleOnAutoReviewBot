@@ -2,9 +2,9 @@ import json
 from collections import defaultdict
 from enum import IntEnum
 
-from models import AdviceGroup, Advice, AdviceSection
+from models import AdviceGroup, Advice, AdviceSection, Character
 from utils import pl, get_logger
-
+from flask import g as session_data
 
 logger = get_logger(__name__)
 
@@ -335,79 +335,54 @@ def parseInventoryBagsCount(inputJSON, _, playerNames):
     logger.debug('%s', str(group_bags))
     return group_bags
 
-###################################################WIP##########################
-def parseInventoryBagSlots(inputJSON, playerCount, playerNames):
-    advice_MissingBagSlots = ""
-    currentMaxInventorySlots = 83 #As of v1.91
-    currentMaxUsableInventorySlots = 80 #As of v1.91
+def parseInventoryBagSlots(inputJSON, characterDict: dict[int, Character]) -> AdviceGroup:
+    inventorySlots_AdviceList = []
+    currentMaxInventorySlots = 83  #As of v2.02
+    currentMaxUsableInventorySlots = 80  #As of v2.02
+    defaultInventorySlots = 16  # Characters have 16 inventory slots by default
     playerBagDict = {}
     playerBagSlotsDict = {}
     playersWithMaxBagSlots = []
     playersMissingBagSlots = []
-    w1MeritLevelUnlocked = 0
-    w1MeritMaxDict = {
-        "1": 1, #Inventory Bag B
-        "2": 1, #Inventory Bag C
-        "4": 2, #Inventory Bag E
-        "5": 2, #Inventory Bag F
-        "7": 2  #Inventory Bag H
-        }
-    w1MeritDict = {}
 
-    #W1 Merit applies bags BCEFH if your 1st character has it
-    try:
-        w1MeritLevelUnlocked = json.loads(inputJSON["TaskZZ2"])[0][0]
-        print("Consumables.parseInventoryBagSlots~ OUTPUT w1MeritLevelUnlocked", w1MeritLevelUnlocked)
-    except Exception as reason:
-        print("Consumables.parseInventoryBagSlots~ EXCEPTION Unable to retrieve number of levels purchased for W1 Bag Merit: ", reason)
-    if w1MeritLevelUnlocked >= 5:
-        w1MeritDict = w1MeritMaxDict
-    else:
-        if w1MeritLevelUnlocked >= 1:
-            w1MeritDict["1"] = 1
-        if w1MeritLevelUnlocked >= 2:
-            w1MeritDict["2"] = 1
-        if w1MeritLevelUnlocked >= 3:
-            w1MeritDict["4"] = 2
-        if w1MeritLevelUnlocked >= 4:
-            w1MeritDict["5"] = 2
-
-    counter = 0
-    while counter < playerCount:
+    for chararacterIndex in characterDict:
         try:
-            playerBagDict[playerNames[counter]] = json.loads(inputJSON['InvBagsUsed_'+str(counter)]) #yet another string pretending to be a list of lists..
-        except Exception as reason:
-            print("Consumables.parseInventoryBagSlots~ EXCEPTION Unable to retrieve Inventory Bags Used for: ", playerNames[counter], "because:", reason)
-        counter += 1
+            playerBagDict[chararacterIndex] = json.loads(inputJSON['InvBagsUsed_'+str(chararacterIndex)])  #yet another string pretending to be a list of lists
+        except:
+            logger.exception(f"Unable to retrieve InvBagsUsed for {chararacterIndex} ({characterDict[chararacterIndex].character_name})")
 
-    #If the merit is purchased, but player1 doesn't have the bag, nobody else gets it :(
-    bagsToBeRemoved = [key for key in w1MeritDict if key not in playerBagDict[playerNames[0]]]
-    #print("Consumables.parseInventoryBagSlots~ OUTPUT w1MeritDict before comparing to Character1", w1MeritDict)
-    for bag in bagsToBeRemoved:
-        del w1MeritDict[bag]
-    #print("Consumables.parseInventoryBagSlots~ OUTPUT w1MeritDict after comparing to Character1", w1MeritDict)
-    for player in playerBagDict:
-        playerBagDict[player].update(w1MeritDict)
-        #print("Consumables.parseInventoryBagSlots~ INFO w1MeritDict added to playerBagDict for", player, ": ", w1MeritDict)
+    inventorySlots_AdviceGroup = AdviceGroup(
+        tier="",
+        pre_string="Collect more inventory space",
+        advices=[],
+    )
+    if session_data.autoloot:
+        defaultInventorySlots += 5
+        inventorySlots_AdviceGroup.post_string = "+5 slots from AutoLoot included."
+    else:
+        inventorySlots_AdviceGroup.post_string = "AutoLoot is set to Unpurchased. This bundle gives 5 inventory slots."
 
-    for player, bagList in playerBagDict.items():
-        sumSlots = 0
+    for chararacterIndex, bagList in playerBagDict.items():
+        sumSlots = defaultInventorySlots
         for bag in bagList:
             sumSlots += int(bagList[bag])
-        playerBagSlotsDict[player] = {"Total":sumSlots}
-        if sumSlots == currentMaxUsableInventorySlots:
-            playersWithMaxBagSlots.append(player)
+        playerBagSlotsDict[chararacterIndex] = {"Total":sumSlots}
+        if sumSlots >= currentMaxUsableInventorySlots:
+            playersWithMaxBagSlots.append(chararacterIndex)
         else:
-            playersMissingBagSlots.append(player)
-    print("Consumables.parseInventoryBagSlots~ OUTPUT playerBagDict: ", playerBagDict)
-    print("Consumables.parseInventoryBagSlots~ OUTPUT playersMissingBagSlots", playersMissingBagSlots)
+            playersMissingBagSlots.append(chararacterIndex)
+    logger.info(f"playerBagDict: {playerBagDict}")
+    logger.info(f"playersMissingBagSlots: {playersMissingBagSlots}")
     for player in playersMissingBagSlots:
-        advice_MissingBagSlots += str(player) + " (" + str(playerBagSlotsDict[player]['Total']) + "/"+ str(currentMaxUsableInventorySlots) + "), "
-    if advice_MissingBagSlots != "":
-        advice_MissingBagSlots = "Collect more inventory slots: " + advice_MissingBagSlots[:-2]
-    print("Consumables.parseInventoryBagSlots~ OUTPUT advice_MissingBagSlots", advice_MissingBagSlots)
-    return advice_MissingBagSlots
-###################################################WIP##########################
+        inventorySlots_AdviceList.append(Advice(
+            label=characterDict[player].character_name,
+            picture_class=characterDict[player].class_name_icon,
+            progression=playerBagSlotsDict[player]["Total"],
+            goal=currentMaxUsableInventorySlots
+        ))
+
+    inventorySlots_AdviceGroup.advices = inventorySlots_AdviceList
+    return inventorySlots_AdviceGroup
 
 def parseStorageChests(inputJSON):
     currentMaxChestsSum = 45  # As of v2.0
@@ -429,9 +404,9 @@ def parseStorageChests(inputJSON):
     return group
 
 
-def parseConsumables(inputJSON, playerCount, playerNames):
+def parseConsumables(inputJSON, characterDict: dict[int, Character]):
     sections_candy = getCandyHourSections(inputJSON)
-    group_bags = parseInventoryBagsCount(inputJSON, playerCount, playerNames)
+    group_bags = parseInventoryBagSlots(inputJSON, characterDict)
     group_chests = parseStorageChests(inputJSON)
 
     groups = [group_bags, group_chests]
