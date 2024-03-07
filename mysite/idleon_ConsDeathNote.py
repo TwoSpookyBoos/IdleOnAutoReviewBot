@@ -713,8 +713,8 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, characterDict):
             advices=deathnote_AdviceDict[f"W{worldIndex}"],
             post_string=""
         )
-        if worldIndex in maxedGroupsList:
-            deathnote_AdviceGroupDict[f"W{worldIndex}"].post_string = f"Up to {maxEnemiesPerGroup} remaining enemies shown, sorted by completion %"
+        if fullDeathNoteDict[worldIndex].next_lowest_skull_name == "Eclipse Skull":
+            deathnote_AdviceGroupDict[f"W{worldIndex}"].post_string = "Complete Super CHOWs on your Blood Berserker in this window"
 
     # ZOW
     if highestZOWCountIndex is not None:
@@ -722,30 +722,26 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, characterDict):
             tier=str(tier_combo['ZOW']),
             pre_string=f"Complete {apocToNextTier['ZOW']} more ZOW{pl(['dummy'] * apocToNextTier['ZOW'])} with {characterDict[highestZOWCountIndex].character_name}",
             advices=deathnote_AdviceDict['ZOW'],
-            post_string=""
+            post_string="Aim for 12hrs or less (8k+ KPH) per enemy"
         )
-        if 'ZOW' in maxedGroupsList:
-            deathnote_AdviceGroupDict['ZOW'].post_string = f"Up to {maxEnemiesPerGroup} remaining enemies shown, sorted by completion %"
+
     # CHOW
     if highestCHOWCountIndex is not None:
         deathnote_AdviceGroupDict['CHOW'] = AdviceGroup(
             tier=str(tier_combo['CHOW']),
             pre_string=f"Complete {apocToNextTier['CHOW']} more CHOW{pl(['dummy'] * apocToNextTier['CHOW'])} with {characterDict[highestCHOWCountIndex].character_name}",
             advices=deathnote_AdviceDict['CHOW'],
-            post_string=""
+            post_string="Aim for 12hrs or less (83k+ KPH) per enemy"
         )
-        if 'CHOW' in maxedGroupsList:
-            deathnote_AdviceGroupDict['CHOW'].post_string = f"Up to {maxEnemiesPerGroup} remaining enemies shown, sorted by completion %"
+
     # MEOW
     if meowBBIndex is not None:
         deathnote_AdviceGroupDict['MEOW'] = AdviceGroup(
             tier=str(tier_combo['MEOW']),
             pre_string=f"Complete {apocToNextTier['MEOW']} more Super CHOW{pl(['dummy']*apocToNextTier['MEOW'])} with {characterDict[meowBBIndex].character_name}",
             advices=deathnote_AdviceDict['MEOW'],
-            post_string=""
+            post_string="Aim for 24hrs or less (4m+ KPH) per enemy"
         )
-        if 'MEOW' in maxedGroupsList:
-            deathnote_AdviceGroupDict['MEOW'].post_string = f"Up to {maxEnemiesPerGroup} remaining enemies shown, sorted by completion %"
 
     #Generate Advice Section
     overall_DeathNoteTier = min(max_tier, tier_combo[1], tier_combo[2], tier_combo[3],
