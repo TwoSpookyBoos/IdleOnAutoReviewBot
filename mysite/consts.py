@@ -535,7 +535,6 @@ progressionTiers = {
                 "FoodHealth12", "FoodHealth13", "FoodPotOr4", "FoodPotGr4", "FoodPotRe4", "FoodPotYe4",  #W4
                 "FoodHealth14", "FoodHealth15", "OilBarrel6",  #W5
                 "FoodHealth16", "FoodHealth17", "OilBarrel7",  #W6
-                "FoodHealth12", "FoodHealth13",
             ],
             "Misc": [
                 "FoodPotGr3",  # Previously Tier10
