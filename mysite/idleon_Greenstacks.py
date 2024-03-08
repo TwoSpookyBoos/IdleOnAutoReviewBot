@@ -49,12 +49,12 @@ def getMissableGStacks(inputJSON, playerCount, owned_stuff: Assets):
     advice_EndangeredQuestGStacks = list(owned_stuff.quest_items_gstackable)
     advice_MissedQuestGStacks = []
 
-    quest_statuses_per_player = [json.loads(inputJSON.get(f"QuestComplete_{i}", "{}")) for i in range(playerCount)]
-    quest_names = quest_statuses_per_player[0].keys()
-    quest_completed = [
+    quest_statuses_per_toon = [json.loads(inputJSON.get(f"QuestComplete_{i}", "{}")) for i in range(playerCount)]
+    quest_names = sum((list(statuses.keys()) for statuses in quest_statuses_per_toon), list())
+    quests_completed_on_all_toons = [
         name
         for name in quest_names
-        if all(quests[name] == 1 for quests in quest_statuses_per_player)
+        if all(quests.get(name, 0) == 1 for quests in quest_statuses_per_toon)
         # Quest value one of (-1, 0, 1). -1 means not started.
     ]
 
@@ -62,7 +62,7 @@ def getMissableGStacks(inputJSON, playerCount, owned_stuff: Assets):
         item_data = missableGStacksDict[quest_item.name]
         quest_codename = item_data[1]
 
-        if quest_codename in quest_completed:
+        if quest_codename in quests_completed_on_all_toons:
             quest_item.quest = item_data[2]
             advice_MissedQuestGStacks.append(quest_item)
             advice_EndangeredQuestGStacks.remove(quest_item)
