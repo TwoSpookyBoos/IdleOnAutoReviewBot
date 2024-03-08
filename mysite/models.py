@@ -603,7 +603,15 @@ class Account:
         self.assets = self._all_owned_items()
         self.cards = self._make_cards()
         self.rift = self.raw_data["Rift"][0]
-        self.ruby_cards_unlocked = self.rift >= 46
+        self.trap_box_vacuum_unlocked = self.rift >= 5
+        self.infinite_stars_unlocked = self.rift >= 10
+        self.skill_mastery_unlocked = self.rift >= 15
+        self.eclipse_skulls_unlocked = self.rift >= 20
+        self.stamp_mastery_unlocked = self.rift >= 25
+        self.eldritch_artifacts_unlocked = self.rift >= 30
+        self.vial_mastery_unlocked = self.rift >= 35
+        self.construction_mastery_unlocked = self.rift >= 40
+        self.ruby_cards_unlocked = self.rift >= 45
         self.max_toon_count = 10  # OPTIMIZE: find a way to read this from somewhere
 
     def _make_cards(self):

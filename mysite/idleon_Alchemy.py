@@ -3,6 +3,7 @@ from math import floor
 from idleon_SkillLevels import getSpecificSkillLevelsList
 from models import AdviceSection, AdviceGroup, Advice
 from utils import pl, get_logger
+from flask import g as session_data
 
 logger = get_logger(__name__)
 
@@ -501,12 +502,6 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers, characterDict) -
         alchemyVialsDict = {}
         logger.exception("Unable to retrieve alchemyVialsDict from JSON. Creating an empty Dict.")
 
-    try:
-        highestCompletedRift = inputJSON["Rift"][0]
-    except:
-        logger.exception("Unable to retrieve highest rift level. Defaulting to 0.")
-        highestCompletedRift = 0
-
     unlockedVials = 0
     for vial in alchemyVialsDict:
         if alchemyVialsDict[vial] == 0:
@@ -532,7 +527,7 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers, characterDict) -
     max_tier = progressionTiers[-1][0]
     maxAdvicesPerGroup = 6
 
-    if highestCompletedRift >= 35:
+    if session_data.account.vial_mastery_unlocked:
         if len(maxedVialsList) < 27:
             advice_TrailingMaxedVials = " 27 is the magic number needed to get the Snake Skin vial to 100% chance to double deposited statues :D (This also requires Snake Skin itself be maxed lol)"
         else:
@@ -588,7 +583,6 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers, characterDict) -
     else:
         del vial_AdviceGroupDict["Total Unlocked Vials"].advices["Total Unlocked Vials"]
 
-    #if highestCompletedRift >= 35:  # The push to max any vial doesn't start until Vial Mastery
     vial_AdviceGroupDict["Total Maxed Vials"] = AdviceGroup(
         tier=str(tier_TotalVialsMaxed),
         pre_string="Late Vial Goals",

@@ -2,6 +2,7 @@ import json
 from idleon_SkillLevels import getSpecificSkillLevelsList
 from models import AdviceSection, AdviceGroup, Advice
 from utils import pl, get_logger, letterToNumber
+from flask import g as session_data
 
 logger = get_logger(__name__)
 maxCritterTypes = 12
@@ -172,7 +173,7 @@ def getUnmaxedCritterVialStatus(inputJSON):
             unmaxedCritterVialsCount += 1
     return unmaxedCritterVialsCount != 0
 
-def getStaticCritterTrapAdviceList(highestTrapset: int, highestCompletedRift: int) -> dict[str, list[Advice]]:
+def getStaticCritterTrapAdviceList(highestTrapset: int) -> dict[str, list[Advice]]:
     adviceDict = {
         "Efficiency for Manually Claimed traps": [],
     }
@@ -211,7 +212,7 @@ def getStaticCritterTrapAdviceList(highestTrapset: int, highestCompletedRift: in
                                                                           picture_class=f"{manualCritterTrapsDict[listIndexManualAdvice][0][counter].lower().split(' ')[0]}-traps",
                                                                           progression=manualCritterTrapsDict[listIndexManualAdvice][1][counter]))
 
-    if highestCompletedRift >= 5:
+    if session_data.account.trap_box_vacuum_unlocked:
         adviceDict["Efficiency for Rift's Daily traps"] = []
         for counter in range(0, len(vaccuumCritterTrapsDict[listIndexVaccuumAdvice][0])):
             adviceDict["Efficiency for Rift's Daily traps"].append(Advice(label=vaccuumCritterTrapsDict[listIndexVaccuumAdvice][0][counter],
@@ -220,7 +221,7 @@ def getStaticCritterTrapAdviceList(highestTrapset: int, highestCompletedRift: in
 
     return adviceDict
 
-def getStaticShinyTrapAdviceList(highestTrapset: int, highestCompletedRift: int) -> dict[str, list[Advice]]:
+def getStaticShinyTrapAdviceList(highestTrapset: int) -> dict[str, list[Advice]]:
     adviceDict = {
         "Shiny Chance Multi for Manually Claimed traps": []
     }
@@ -236,7 +237,7 @@ def getStaticShinyTrapAdviceList(highestTrapset: int, highestCompletedRift: int)
                 Advice(label=shinyTrapsLabelList[counter], picture_class=shinyTrapsItemNameList[counter],
                        progression=shinyTrapsEffPerHourList[counter], goal="", unit=""))
 
-    if highestCompletedRift >= 5:
+    if session_data.account.trap_box_vacuum_unlocked:
         adviceDict["Shiny Chance Multi for Rift's Daily traps"] = []
         for counter in range(len(shinyTrapsLabelList) - numOfVaccuumSuggestions, len(shinyTrapsLabelList)):
             if highestTrapset >= shinyTrapsRequiredTrapIndexList[counter]:
@@ -245,7 +246,7 @@ def getStaticShinyTrapAdviceList(highestTrapset: int, highestCompletedRift: int)
                            progression=shinyTrapsEffPerHourList[counter], goal="", unit=""))
     return adviceDict
 
-def getStaticEXPTrapAdviceList(highestTrapset, highestCompletedRift) -> dict[str, list[Advice]]:
+def getStaticEXPTrapAdviceList(highestTrapset) -> dict[str, list[Advice]]:
     adviceDict = {
         "Best Experience for Manually Claimed traps": []
     }
@@ -261,7 +262,7 @@ def getStaticEXPTrapAdviceList(highestTrapset, highestCompletedRift) -> dict[str
                 Advice(label=expTrapsLabelList[counter], picture_class=expTrapsItemNameList[counter], progression=expTrapsEffPerHourList[counter],
                        goal="", unit=""))
 
-    if highestCompletedRift >= 5:
+    if session_data.account.trap_box_vacuum_unlocked:
         adviceDict["Best Experience for Rift's Daily traps"] = []
         for counter in range(len(expTrapsLabelList) - numOfVaccuumSuggestions, len(expTrapsLabelList)):
             if highestTrapset >= expTrapsRequiredTrapIndexList[counter]:
@@ -297,12 +298,6 @@ def setTrappingProgressionTier(inputJSON, characterDict):
     for index in range(0, len(trapsetLevelRequirementList)):
         if max(trappingLevelsList) >= trapsetLevelRequirementList[index]:
             highestWearableTrapset = index
-
-    try:
-        highestCompletedRift = inputJSON["Rift"][0]
-    except Exception as reason:
-        print("Alchemy~ EXCEPTION Unable to retrieve highest rift level. Defaulting to 0. Reason:", reason)
-        highestCompletedRift = 0
 
     highestUnlockedCritter = getUnlockedCritterStatus(inputJSON, len(characterDict))
     placedTrapsDict = getPlacedTrapsDict(inputJSON, len(characterDict))
@@ -365,9 +360,9 @@ def setTrappingProgressionTier(inputJSON, characterDict):
             )
 
     if len(trapping_AdviceDict["NonMetaTraps"]) > 0:
-        trapping_AdviceDict["CritterTraps"] = getStaticCritterTrapAdviceList(highestWearableTrapset, highestCompletedRift)
-        trapping_AdviceDict["ShinyTraps"] = getStaticShinyTrapAdviceList(highestWearableTrapset, highestCompletedRift)
-        trapping_AdviceDict["EXPTraps"] = getStaticEXPTrapAdviceList(highestWearableTrapset, highestCompletedRift)
+        trapping_AdviceDict["CritterTraps"] = getStaticCritterTrapAdviceList(highestWearableTrapset)
+        trapping_AdviceDict["ShinyTraps"] = getStaticShinyTrapAdviceList(highestWearableTrapset)
+        trapping_AdviceDict["EXPTraps"] = getStaticEXPTrapAdviceList(highestWearableTrapset)
 
     #advice_MetaEXPTraps = "
     #advice_Disclaimer = "If you are intentionally using a different combination to suite your playstyle, feel free to ignore the below recommendations! They require an active playstyle that isn't for everyone."
