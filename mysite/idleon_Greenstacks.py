@@ -165,7 +165,7 @@ def setGStackProgressionTier(inputJSON, playerCount):
     for tier, categories in remainingToDoGStacksByTier.items():
         tier_subsection = {
             category: [
-                Advice(label=item.name, picture_class=item.name, progression=item.progression, unit="%") for item in items
+                Advice(label=item.name, picture_class=item.name, progression=item.progression, unit="%") for item in sorted(items, key=lambda item: item.progression, reverse=True)
             ]
             for category, items in categories.items()
         }
