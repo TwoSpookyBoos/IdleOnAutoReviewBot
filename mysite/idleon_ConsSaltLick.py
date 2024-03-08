@@ -53,8 +53,6 @@ def setConsSaltLickProgressionTier(inputJSON, progressionTiers, characterDict) -
     tier_RequiredSaltLickUpgrades = 0
     sum_TotalMaxedSaltLickUpgrades = 0
     overall_ConsSaltLickTier = 0
-    advice_RequiredSaltLickUpgrades = ""
-    advice_ConsSaltLickCombined = ""
     saltLickDict = parseConsSaltLick(inputJSON)
 
     #Assess tiers
@@ -64,13 +62,9 @@ def setConsSaltLickProgressionTier(inputJSON, progressionTiers, characterDict) -
         #tier[2] = str Notes
         for key in tier[1].keys():
             if saltLickDict[key] < tier[1][key]:
-                if tier_RequiredSaltLickUpgrades < 9:
-                    advice_RequiredSaltLickUpgrades = ("The next best/cheapest bonus to max is probably " + str(key) + " which requires " + tier[2])
-                    saltlick_AdviceDict["UnmaxedUpgrades"].append(
-                        Advice(label=key, picture_class=tier[2], progression=saltLickDict[key], goal=tier[1][key])
-                        )
-                else:
-                    advice_RequiredSaltLickUpgrades = ("The last bonus to max is definitely " + str(key) + " which requires " + tier[2])
+                saltlick_AdviceDict["UnmaxedUpgrades"].append(
+                    Advice(label=key, picture_class=tier[2], progression=saltLickDict[key], goal=tier[1][key])
+                    )
             else:
                 sum_TotalMaxedSaltLickUpgrades += 1
                 if len(saltlick_AdviceDict["UnmaxedUpgrades"]) == 0:
