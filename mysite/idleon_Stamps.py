@@ -346,8 +346,8 @@ def setStampProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
     tier_RequiredMiscStamps = 0
     tier_RequiredSpecificStamps = 0
     max_tier = progressionTiers[-1][0]
-    adviceCountsDict = {"Combat": 0, "Skill": 0, "Misc": 0, "HighPrio": 0}
-    maxTiersPerGroup = 4
+    adviceCountsDict = {"CombatStamps": 0, "SkillStamps": 0, "MiscStamps": 0, "SpecificStamps": 0}
+    maxTiersPerGroup = 3
 
     for tier in progressionTiers:
         # TotalLevelStamps
@@ -370,8 +370,8 @@ def setStampProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
             #logger.debug(f"{rStamp} {missingCombatStamps} {rStamp in missingCombatStamps}")
             if getReadableStampName(rStamp, "Combat") in missingStampsDict:
                 allCombatStamps = False
-                if len(stamp_AdviceDict["CombatStamps"]) < maxTiersPerGroup:  # and adviceCountsDict["HighPrio"] <= maxAdvicePerGroup:
-                    adviceCountsDict["Combat"] += 1
+                if len(stamp_AdviceDict["CombatStamps"]) < maxTiersPerGroup:
+                    adviceCountsDict["CombatStamps"] += 1
                     if f"Tier {tier[0]}" not in stamp_AdviceDict["CombatStamps"]:
                         stamp_AdviceDict["CombatStamps"][f"Tier {tier[0]}"] = []
                     stamp_AdviceDict["CombatStamps"][f"Tier {tier[0]}"].append(
@@ -388,8 +388,8 @@ def setStampProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
             #logger.debug(f"{rStamp} {missingCombatStamps} {rStamp in missingSkillStamps}")
             if getReadableStampName(rStamp, "Skill") in missingStampsDict:
                 allSkillStamps = False
-                if len(stamp_AdviceDict["SkillStamps"]) < maxTiersPerGroup:  #and adviceCountsDict["HighPrio"] <= maxAdvicePerGroup:
-                    adviceCountsDict["Skill"] += 1
+                if len(stamp_AdviceDict["SkillStamps"]) < maxTiersPerGroup:
+                    adviceCountsDict["SkillStamps"] += 1
                     if f"Tier {tier[0]}" not in stamp_AdviceDict["SkillStamps"]:
                         stamp_AdviceDict["SkillStamps"][f"Tier {tier[0]}"] = []
                     stamp_AdviceDict["SkillStamps"][f"Tier {tier[0]}"].append(
@@ -397,7 +397,7 @@ def setStampProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
                             label=getReadableStampName(int(rStamp), "Skill"),
                             picture_class=getReadableStampName(int(rStamp), "Skill"))
                     )
-        if tier_RequiredSkillStamps == (tier[0] - 1) and allSkillStamps == True:  # Only check if they already met previous tier
+        if tier_RequiredSkillStamps == (tier[0] - 1) and allSkillStamps == True:  # Only update if they already met previous tier
             tier_RequiredSkillStamps = tier[0]
 
         # MiscStamps
@@ -406,8 +406,8 @@ def setStampProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
             #logger.debug(f"{rStamp} {missingCombatStamps} {rStamp in missingMiscStamps}")
             if getReadableStampName(rStamp, "Misc") in missingStampsDict:
                 allMiscStamps = False
-                if len(stamp_AdviceDict["MiscStamps"]) < maxTiersPerGroup:  #and adviceCountsDict["HighPrio"] <= maxAdvicePerGroup:
-                    adviceCountsDict["Misc"] += 1
+                if len(stamp_AdviceDict["MiscStamps"]) < maxTiersPerGroup:
+                    adviceCountsDict["MiscStamps"] += 1
                     if f"Tier {tier[0]}" not in stamp_AdviceDict["MiscStamps"]:
                         stamp_AdviceDict["MiscStamps"][f"Tier {tier[0]}"] = []
                     stamp_AdviceDict["MiscStamps"][f"Tier {tier[0]}"].append(
@@ -416,7 +416,7 @@ def setStampProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
                             picture_class=getReadableStampName(int(rStamp), "Misc"),
                             )
                     )
-        if tier_RequiredMiscStamps == (tier[0] - 1) and allMiscStamps == True:  # Only check if they already met previous tier
+        if tier_RequiredMiscStamps == (tier[0] - 1) and allMiscStamps == True:  # Only update if they already met previous tier
             tier_RequiredMiscStamps = tier[0]
 
         # SpecificStampLevels
@@ -428,7 +428,7 @@ def setStampProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
                 if capacityExclusionsDict.get(key, 0) == 0:  #Check to see if this is a capacity-increasing stamp, and if it skipping it is set to False
                     allSpecificStamps = False
                     if len(stamp_AdviceDict["SpecificStamps"]) < maxTiersPerGroup:  #and adviceCountsDict["HighPrio"] <= maxAdvicePerGroup:
-                        adviceCountsDict["HighPrio"] += 1
+                        adviceCountsDict["SpecificStamps"] += 1
                         if f"Tier {tier[0]}" not in stamp_AdviceDict["SpecificStamps"]:
                             stamp_AdviceDict["SpecificStamps"][f"Tier {tier[0]}"] = []
                         stamp_AdviceDict["SpecificStamps"][f"Tier {tier[0]}"].append(
@@ -463,25 +463,25 @@ def setStampProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
     # Combat Stamps
     stamp_AdviceGroupDict["CombatStamps"] = AdviceGroup(
         tier=str(tier_RequiredCombatStamps),
-        pre_string=f"Collect the following Combat stamp{pl([''] * adviceCountsDict['Combat'])}",
+        pre_string=f"Collect the following Combat stamp{pl([''] * adviceCountsDict['CombatStamps'])}",
         advices=stamp_AdviceDict['CombatStamps'])
 
     # Skill Stamps
     stamp_AdviceGroupDict["SkillStamps"] = AdviceGroup(
         tier=str(tier_RequiredSkillStamps),
-        pre_string=f"Collect the following Skill stamp{pl([''] * adviceCountsDict['Skill'])}",
+        pre_string=f"Collect the following Skill stamp{pl([''] * adviceCountsDict['SkillStamps'])}",
         advices=stamp_AdviceDict["SkillStamps"])
 
     # Misc Stamps
     stamp_AdviceGroupDict["MiscStamps"] = AdviceGroup(
         tier=str(tier_RequiredMiscStamps),
-        pre_string=f"Collect the following Misc stamp{pl([''] * adviceCountsDict['Misc'])}",
+        pre_string=f"Collect the following Misc stamp{pl([''] * adviceCountsDict['MiscStamps'])}",
         advices=stamp_AdviceDict["MiscStamps"])
 
     # Specific High-Priority Stamps
     stamp_AdviceGroupDict["SpecificStamps"] = AdviceGroup(
         tier=str(tier_RequiredSpecificStamps),
-        pre_string=f"Improve high-priority stamp{pl([''] * adviceCountsDict['HighPrio'])}",
+        pre_string=f"Improve high-priority stamp{pl([''] * adviceCountsDict['SpecificStamps'])}",
         advices=stamp_AdviceDict["SpecificStamps"])
 
     #Generate AdviceSection
