@@ -5,11 +5,11 @@
     </p>
     <p>
     {% if beta %}
-        <strong>Heads up! You're on the beta-testing page. If you run into problems, try heading back to the <a href="/live" target="_blank">Live Page</a></strong>
+        <strong>Heads up! You're on the beta-testing page. If you run into problems, try heading back to the <a href="{{ live_link }}" target="_blank">Live Page</a></strong>
         <br>
         Currently beta testing: 2024-02-07 Frontend revamp for Pinchy + W1
     {% else %}
-        <strong>To try out the beta site, head to the <a href="/beta" target="_blank">Beta Page</a></strong>
+        <strong>To try out the beta site, head to the <a href="{{ beta_link }}" target="_blank">Beta Page</a></strong>
     {% endif %}
     </p>
     <p>
@@ -29,9 +29,17 @@
             href="https://docs.google.com/spreadsheets/d/16I-rURrVeyvltK2wxcQSiPgO07QY015RVNG4MAgUsGw/edit?usp=sharing"
             target="_blank">Spreadsheet</a> for reference!</span>
     <form action="/" method="POST">
-        <textarea name="player"
-                  placeholder="Please enter your first IdleOn character's name, or Paste in your Raw Game JSON from IE/IT"></textarea>
-        <input type="submit" value="submit">
+        <div id="switchbox">
+            {% for text, name, on, off, initial in switches %}
+                {% include "slider_button.html" %}
+            {% endfor %}
+        </div>
+        <div id="form">
+            <label for="player" type="hidden"></label>
+            <textarea id="player" name="player"
+                      placeholder="Please enter your first IdleOn character's name, or Paste in your Raw Game JSON from IE/IT"></textarea>
+            <input type="submit" value="submit">
+        </div>
     </form>
 
 </aside>

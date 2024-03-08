@@ -1,5 +1,7 @@
 import json
-import progressionResults
+from idleon_SkillLevels import getSpecificSkillLevelsList
+from models import AdviceSection, AdviceGroup, Advice
+from utils import pl
 
 def parseConsSaltLick(inputJSON):
     saltLickList = json.loads(inputJSON["SaltLick"])
@@ -28,40 +30,62 @@ def parseConsSaltLick(inputJSON):
     #print(saltLickDict)
     return saltLickDict
 
-def setConsSaltLickProgressionTier(inputJSON, progressionTiers):
-    saltLickDict = parseConsSaltLick(inputJSON)
-    #print(saltLickDict)
+def setConsSaltLickProgressionTier(inputJSON, progressionTiers, characterDict) -> AdviceSection:
+    saltlick_AdviceDict = {
+        "UnmaxedUpgrades": []
+    }
+    saltlick_AdviceGroupDict = {}
+    saltlick_AdviceSection = AdviceSection(
+        name="Salt Lick",
+        tier="Not Yet Evaluated",
+        header="Best Salt Lick tier met: Not Yet Evaluated. Recommended salt lick actions:",
+        picture="Construction_Salt_Lick.png",
+    )
+    constructionLevelsList = getSpecificSkillLevelsList(inputJSON, len(characterDict), "Construction")
+    if max(constructionLevelsList) < 1:
+        saltlick_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
+        return saltlick_AdviceSection
+    elif json.loads(inputJSON["Tower"])[3] < 1:
+        saltlick_AdviceSection.header = "Come back after unlocking the Salt Lick within the Construction skill in World 3!"
+        return saltlick_AdviceSection
+
+    max_tier = progressionTiers[-1][0]
     tier_RequiredSaltLickUpgrades = 0
     sum_TotalMaxedSaltLickUpgrades = 0
     overall_ConsSaltLickTier = 0
-    advice_RequiredSaltLickUpgrades = ""
-    advice_ConsSaltLickCombined = ""
+    saltLickDict = parseConsSaltLick(inputJSON)
+
     #Assess tiers
     for tier in progressionTiers:
-        #int tier, #dict RequiredSaltLickUpgrades, str Notes
-        requiredSaltLickUpgrades = tier[1]
-        all_RequiredSaltLickUpgrades = True
-        for key, value in requiredSaltLickUpgrades.items():
-            #print("If ",saltLickDict[key]," < ",requiredSaltLickUpgrades[key]," - ", (saltLickDict[key] < requiredSaltLickUpgrades[key]))
-            if saltLickDict[key] < requiredSaltLickUpgrades[key]:
-                all_RequiredSaltLickUpgrades = False
-                if advice_RequiredSaltLickUpgrades == "":
-                    if sum_TotalMaxedSaltLickUpgrades < 9:
-                        advice_RequiredSaltLickUpgrades = ("The next best/cheapest bonus to max is probably " + str(key) + " which requires " + tier[2])
-                    else:
-                        advice_RequiredSaltLickUpgrades = ("The last bonus to max is definitely " + str(key) + " which requires " + tier[2])
-
-                #else #don't write out new advice, only want the lowest.
-            if all_RequiredSaltLickUpgrades == True:
+        #tier[0] = int tier,
+        #tier[1] = dict RequiredSaltLickUpgrades,
+        #tier[2] = str Notes
+        for key in tier[1].keys():
+            if saltLickDict[key] < tier[1][key]:
+                saltlick_AdviceDict["UnmaxedUpgrades"].append(
+                    Advice(label=key, picture_class=tier[2], progression=saltLickDict[key], goal=tier[1][key])
+                    )
+            else:
                 sum_TotalMaxedSaltLickUpgrades += 1
-            if tier_RequiredSaltLickUpgrades == (tier[0]-1) and all_RequiredSaltLickUpgrades == True:
-                tier_RequiredSaltLickUpgrades = tier[0]
-    overall_ConsSaltLickTier = min(10, sum_TotalMaxedSaltLickUpgrades) #Looks silly, but may get more evaluations in the future
-    #Generate advice statement
-    if overall_ConsSaltLickTier == 10:
-        advice_RequiredSaltLickUpgrades = "Nada. You best ❤️"
-    advice_ConsSaltLickCombined = ["Maxed Salt Lick Upgrades: " + str(overall_ConsSaltLickTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended Salt Lick action:", advice_RequiredSaltLickUpgrades]
-    #Print fun stuff
-    #print(advice_ConsSaltLickCombined)
-    consSaltLickPR = progressionResults.progressionResults(overall_ConsSaltLickTier,advice_ConsSaltLickCombined,"")
-    return consSaltLickPR
+                if len(saltlick_AdviceDict["UnmaxedUpgrades"]) == 0:
+                    tier_RequiredSaltLickUpgrades = tier[0]
+
+    # Generate AdviceGroups
+    saltlick_AdviceGroupDict["UnmaxedUpgrades"] = AdviceGroup(
+        tier=tier_RequiredSaltLickUpgrades,
+        pre_string=f"{pl(saltlick_AdviceDict['UnmaxedUpgrades'], 'Final Upgrade', 'Remaining Upgrades')} to max",
+        advices=saltlick_AdviceDict['UnmaxedUpgrades'],
+        post_string=f"{pl(saltlick_AdviceDict['UnmaxedUpgrades'], '', 'Shown upgrades are in Tier order.')}"
+    )
+
+    # Generate AdviceSection
+    overall_ConsSaltLickTier = min(max_tier, tier_RequiredSaltLickUpgrades)  #Looks silly, but may get more evaluations in the future
+    tier_section = f"{overall_ConsSaltLickTier}/{max_tier}"
+    saltlick_AdviceSection.tier = tier_section
+    saltlick_AdviceSection.pinchy_rating = overall_ConsSaltLickTier
+    saltlick_AdviceSection.groups = saltlick_AdviceGroupDict.values()
+    if overall_ConsSaltLickTier == max_tier:
+        saltlick_AdviceSection.header = f"Best Salt Lick tier met: {tier_section}. You best ❤️"
+    else:
+        saltlick_AdviceSection.header = f"Best Salt Lick tier met: {tier_section}. Recommended Salt Lick actions"
+    return saltlick_AdviceSection

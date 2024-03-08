@@ -1,91 +1,94 @@
 import json
-import progressionResults
-from idleon_SkillLevels import getHumanReadableClasses
+from idleon_SkillLevels import getSpecificSkillLevelsList
+from models import AdviceSection, AdviceGroup, Advice
+from utils import pl, get_logger, letterToNumber
+from flask import g as session_data
+
+logger = get_logger(__name__)
+maxCritterTypes = 12
+
+def getCritterName(inputNumber):
+    reversedCritterIndexList = ["Tuttle", "Blobfish", "Honker", "Dung Beat", "Bunny", "Pingy", "Owlio", "Mousey", "Scorpie", "Crabbo", "Froge", "None"]
+    try:
+        return reversedCritterIndexList[inputNumber]
+    except:
+        return "UnknownCritterName"
 
 def getUnlockedCritterStatus(inputJSON, playerCount):
-    #critterIndexList = ["None", "Froge", "Crabbo", "Scorpie", "Mousey", "Owlio", "Pingy", "Bunny", "Dung Beat", "Honker", "Blobfish"]
-    #questIndexList = ["Lord_of_the_Hunt2", "Lord_of_the_Hunt3", "Lord_of_the_Hunt4", "Lord_of_the_Hunt5", "Lord_of_the_Hunt6", "Lord_of_the_Hunt7", "Lord_of_the_Hunt8", "Lord_of_the_Hunt9", "Lord_of_the_Hunt10", "Blobbo2"]
-    #requiredStatusQuestIndexList = [0,0,0,0,0,0,0,0,0,0,1]
-    reversedCritterIndexList = ["Blobfish", "Honker", "Dung Beat", "Bunny", "Pingy", "Owlio", "Mousey", "Scorpie", "Crabbo", "Froge", "None"]
-    reversedQuestIndexList = ["Blobbo2","Lord_of_the_Hunt10", "Lord_of_the_Hunt9", "Lord_of_the_Hunt8", "Lord_of_the_Hunt7", "Lord_of_the_Hunt6", "Lord_of_the_Hunt5", "Lord_of_the_Hunt4", "Lord_of_the_Hunt3", "Lord_of_the_Hunt2"]
-    reversedRequiredStatusQuestIndexList = [1,0,0,0,0,0,0,0,0,0,0]
-    highestCritter = (len(reversedCritterIndexList)-1)
-    #Critters available to be trapped can be found by quest status.
-    #["QuestComplete_0"] through _9 are dictionaries.
-    #Keys are "Lord_of_the_Hunt2" through 10. Values are 1 for completed, 0 for in progress I think, and -1 for not started.
-    #1 = buy a trap set quest, irrelevant
-    #Lord_of_the_Hunt2 = Froge
-    #3 = Crabbo
-    #4 = Scorpie
-    #5 = Mousey
-    #6 = Owlio
-    #7 = Pingy
-    #8 = Bunny
-    #9 = Dung Beat
-    #10 = Honker when quest is STARTED (value of 0 or 1)
-    #11 = the trophy quest, irrelevant
-    #Blobfish are unlocked after "Blobbo2" quest is completed (value of 1)
-
-    playerIndex = 0
-    questIndex = 0
-    while playerIndex < playerCount:
-        try:
-            questDict = json.loads(inputJSON[("QuestComplete_"+str(playerIndex))])
-            while questIndex < len(reversedQuestIndexList):
-                if (questDict[reversedQuestIndexList[questIndex]] >= reversedRequiredStatusQuestIndexList[questIndex]
-                and questIndex < highestCritter): #and the quest is better than what is already known to be the best
-                    #print("Trapping.getUnlockedCritterStatus~ INFO New highest critter found on character", playerIndex, "! Changing from",highestCritter,"to",questIndex)
-                    highestCritter = questIndex
-                questIndex += 1
-        except Exception as reason:
-            print("Trapping.getUnlockedCritterStatus~ EXCEPTION Could not retrieve quest status:", playerIndex, questIndex, reversedQuestIndexList[questIndex], reason)
-        playerIndex += 1
-        questIndex = 0
-   #print("Trapping.getUnlockedCritterStatus~ OUTPUT highestCritter:",highestCritter, reversedCritterIndexList[highestCritter])
     try:
-        return [(len(reversedCritterIndexList)-highestCritter), len(reversedCritterIndexList), reversedCritterIndexList[highestCritter]]
-    except Exception as reason:
-        print("Trapping.getUnlockedCritterStatus~ EXCEPTION Unable to return highestCritter name in reversedCritterIndexList at index",highestCritter,"because:",reason)
-        return ("UnknownCritter:"+str(highestCritter))
+        rawJadeEmporiumPurchases = json.loads(inputJSON["Ninja"])[102][9]
+    except:
+        logger.debug("Unable to retrieve Jade Emporium Upgrades to tell if Tuttle is unlocked. Defaulting to locked.")
+        rawJadeEmporiumPurchases = ""
+
+    if "D" in list(rawJadeEmporiumPurchases):  # Capital D is the value indicating the new Critter bonus has been purchased from Jade Emporium
+        return [
+            12,  # Index of the highest unlocked critter
+            maxCritterTypes,  # Index of the highest critter possible
+            "Tuttle",  # Name of the highest unlocked critter
+            "None"  # Name of the next critter to be unlocked
+        ]
+    else:
+        reversedCritterIndexList = ["Blobfish", "Honker", "Dung Beat", "Bunny", "Pingy", "Owlio", "Mousey", "Scorpie", "Crabbo", "Froge", "None"]
+        reversedQuestIndexList = ["Blobbo2","Lord_of_the_Hunt10", "Lord_of_the_Hunt9", "Lord_of_the_Hunt8", "Lord_of_the_Hunt7", "Lord_of_the_Hunt6", "Lord_of_the_Hunt5", "Lord_of_the_Hunt4", "Lord_of_the_Hunt3", "Lord_of_the_Hunt2"]
+        reversedRequiredStatusQuestIndexList = [1,0,0,0,0,0,0,0,0,0,0]
+        highestCritter = (len(reversedCritterIndexList)-1)
+        #Critters available to be trapped can be found by quest status, except for the current last critter of Tuttles
+        #["QuestComplete_0"] through _9 are dictionaries.
+        #Keys are "Lord_of_the_Hunt2" through 10. Values are 1 for completed, 0 for in progress I think, and -1 for not started.
+        #1 = buy a trap set quest, irrelevant
+        #Lord_of_the_Hunt2 = Froge
+        #3 = Crabbo
+        #4 = Scorpie
+        #5 = Mousey
+        #6 = Owlio
+        #7 = Pingy
+        #8 = Bunny
+        #9 = Dung Beat
+        #10 = Honker when quest is STARTED (value of 0 or 1)
+        #11 = the trophy quest, irrelevant
+        #Blobfish are unlocked after "Blobbo2" quest is completed (value of 1)
+
+        playerIndex = 0
+        questIndex = 0
+        while playerIndex < playerCount:
+            try:
+                questDict = json.loads(inputJSON[("QuestComplete_"+str(playerIndex))])
+                while questIndex < len(reversedQuestIndexList):
+                    if (questDict[reversedQuestIndexList[questIndex]] >= reversedRequiredStatusQuestIndexList[questIndex]
+                    and questIndex < highestCritter):  #and the quest is better than what is already known to be the best
+                        #print("Trapping.getUnlockedCritterStatus~ INFO New highest critter found on character", playerIndex, "! Changing from",highestCritter,"to",questIndex)
+                        #logger.debug(f"New highest critter available from character {playerIndex}! Changing from {reversedCritterIndexList[highestCritter]} to {reversedCritterIndexList[questIndex]}")
+                        highestCritter = questIndex
+                    questIndex += 1
+            except Exception as reason:
+                logger.exception(f"Could not retrieve {reversedQuestIndexList[questIndex]} status on Character{playerIndex} because {reason}")
+                #print("Trapping.getUnlockedCritterStatus~ EXCEPTION Could not retrieve quest status:", playerIndex, questIndex, reversedQuestIndexList[questIndex], reason)
+            playerIndex += 1
+            questIndex = 0
+        #print("Trapping.getUnlockedCritterStatus~ OUTPUT highestCritter:",highestCritter, reversedCritterIndexList[highestCritter])
+        try:
+            return [
+                (len(reversedCritterIndexList)-highestCritter),  # Index of the highest unlocked critter
+                maxCritterTypes,  # Index of the highest critter possible
+                reversedCritterIndexList[highestCritter],  #Name of the highest unlocked critter
+                getCritterName(highestCritter)  #Name of the next critter to be unlocked
+            ]
+        except Exception as reason:
+            print("Trapping.getUnlockedCritterStatus~ EXCEPTION Unable to return highestCritter name in reversedCritterIndexList at index",highestCritter,"because:",reason)
+            return "UnknownCritter:"+str(highestCritter)
 
 def getPlacedTrapsDict(inputJSON, playerCount):
     placedTrapDict = {}
     counter = 0
-    try:
-        while counter < playerCount:
-            placedTrapDict[counter] = json.loads(inputJSON[("PldTraps_"+str(counter))])
-            counter += 1
-    except Exception as reason:
-        print("Trapping~ EXCEPTION Unable to read PlacedTraps when counter=",counter,"and playerCount=",playerCount,"because:",reason)
-    #print("Trapping~ OUTPUT placedTrapDict:", len(placedTrapDict), type(placedTrapDict), placedTrapDict)
-    #list of lists per character in PldTraps_0 through 9, standard character indexing.
-    #[0] I think this is critter id? -1 if no trap placed
-    #[1] no idea
-    #[2] looks like time elapsed since trap was placed
-    #[3] critter type string if placed, otherwise int 0
-    #[4] quantity of critters. My demo was 0 since it is a Nature Trap.
-    #[5] trap type. I have a 3 there for nature traps. Other instances I see are 6 which are my Royal Traps. Guessing this is just trapset in order then. 0:Cardboard, 1:Silkskin, 2:Wooden, 3:Nature, 4:Steel, 5:Meaty, 6:Royal
-    #[6] = trap duration in seconds. 72000 = 20hr
-    #[7] =
-    #[8] = Might be exp? All of my nature traps across my accounts have this same identical value. The other traps seem to increase based on higher and higher critters.
-    #[9] =
-    return placedTrapDict
-
-def getTrappingLevelsList(inputJSON, playerCount):
-    #Trapping level to determine traps they can wear is in [LV0_0]through [LV0_9] which I think is a list? Element 7 . Stored as an Int.
-    trappingLevelsList = []
-    counter = 0
     while counter < playerCount:
         try:
-            playerTrappingLevel = inputJSON["Lv0_"+str(counter)][7]
-            #print("Trapping.getTrappingLevelsList~ OUTPUT playerTrappingLevel=", playerTrappingLevel, "when player=", counter)
+            placedTrapDict[counter] = json.loads(inputJSON[("PldTraps_"+str(counter))])
         except Exception as reason:
-            print("Trapping.getTrappingLevelsList~ EXCEPTION Unable to get playerTrappingLevel when player=", counter, "because:", reason)
-            playerTrappingLevel = 0
-        trappingLevelsList.append(playerTrappingLevel)
+            print("Trapping~ EXCEPTION Unable to read PlacedTraps when counter=", counter, "and playerCount=", playerCount, "because:", reason)
+            placedTrapDict[counter] = []
         counter += 1
-    #print("Trapping.getTrappingLevelsList~ OUTPUT trappingLevelsList:",trappingLevelsList)
-    return trappingLevelsList
+    return placedTrapDict
 
 def getCharactersWithUnplacedTraps(inputJSON, trappingLevelsList, placedTrapsDict, playerCount):
     playerUnsuedTrapsDict = {}
@@ -101,7 +104,9 @@ def getCharactersWithUnplacedTraps(inputJSON, trappingLevelsList, placedTrapsDic
     #Steel = Lv35, 5 slots
     #Meaty = Lv40, 6 slots
     #Royal = LV48, 7 slots
-    #Egalitarian Royal does not give any extra slots, can be ignored.
+    #Egalitarian Royal Traps do not give any extra slots, can be ignored.
+    #Forbidden Traps do not give any extra slots, can be ignored.
+    #Containment of the Zrgyios does not give any extra slots, can be ignored.
 
     #Step 1 = Get number of expected traps
     #Bonus trap slot comes from the Call Me Ash bubble, which is an Int stored at ["CauldronInfo"][1][11]. If it is level 1 or higher, the extra trap slot is always given. Does not need to be equipped.
@@ -118,16 +123,14 @@ def getCharactersWithUnplacedTraps(inputJSON, trappingLevelsList, placedTrapsDic
                 if len(playerMaxPlacableTrapsList) <= playerCounter and trappingLevelsList[playerCounter] >= trapsetLevelRequirementList[trapListsCounter]:
                     playerMaxPlacableTrapsList.append(trapsetPlacableCountList[trapListsCounter] + bonusTrapSlot)
             except Exception as reason:
-                print("Trapping.getCharactersWithUnplacedTraps~ EXCEPTION Unable to append to playerMaxPlacableTrapsList:",reason)
+                print("Trapping.getCharactersWithUnplacedTraps~ EXCEPTION Unable to append to playerMaxPlacableTrapsList:", reason)
             trapListsCounter += 1
         if len(playerMaxPlacableTrapsList)-1 < playerCounter:
             playerMaxPlacableTrapsList.append(0)
-        playerCounter +=1
+        playerCounter += 1
         trapListsCounter = 0
-    #print("Trapping.getCharactersWithUnplacedTraps~ OUTPUT playerMaxPlacableTrapsList:",playerMaxPlacableTrapsList)
 
     #Step 2 = Get number of placed traps
-    #placedTrapsDict = getPlacedTrapsDict(inputJSON, playerCount)
     if len(placedTrapsDict) > 0:
         for playerKey in placedTrapsDict:
             playerPlacedTraps = 0
@@ -135,95 +138,303 @@ def getCharactersWithUnplacedTraps(inputJSON, trappingLevelsList, placedTrapsDic
                 if setTrap[0] != -1:
                     playerPlacedTraps += 1
             if playerMaxPlacableTrapsList[playerKey]-playerPlacedTraps > 0:
-                playerUnsuedTrapsDict[playerKey] = "(" + str(playerPlacedTraps) + "/" + str(playerMaxPlacableTrapsList[playerKey]) + ")"
-    #print("Trapping.getCharactersWithUnplacedTraps~ OUTPUT playerUnsuedTrapsDict:",playerUnsuedTrapsDict)
+                playerUnsuedTrapsDict[playerKey] = [str(playerPlacedTraps), str(playerMaxPlacableTrapsList[playerKey])]
     return playerUnsuedTrapsDict
 
-def getSecretClassTrapStatus(inputJSON, trappingLevelsList, placedTrapsDict, playerCount):
+def getSecretClassTrapStatus(inputJSON, placedTrapsDict, characterDict):
     secretCharacterNotUsingNatureTrapsDict = {}
-    expectedSecretClassNumber = [2,3,4]
-    characterIndex = 0
-    while characterIndex < playerCount:
-        try:
-            if inputJSON['CharacterClass_'+str(characterIndex)] in expectedSecretClassNumber:
-                if trappingLevelsList[characterIndex] >= 25: #the level required to wear Nature Traps
-                    for trapData in placedTrapsDict[characterIndex]:
-                        #print("Trapping.getSecretClassTrapStatus~ OUTPUT trapData:",trapData)
-                        if trapData[0] != -1 and trapData[5] != 3:
-                            if characterIndex in secretCharacterNotUsingNatureTrapsDict.keys():
-                                secretCharacterNotUsingNatureTrapsDict[characterIndex] += 1
-                            else:
-                                secretCharacterNotUsingNatureTrapsDict[characterIndex] = 1
-        except Exception as reason:
-            print("Trapping.getSecretClassTrapStatus~ EXCEPTION Could not retrieve class for Character", characterIndex, "because:", reason)
-        characterIndex += 1
-    #print("Trapping.getSecretClassTrapStatus~ OUTPUT secretCharacterNotUsingNatureTrapsDict:",secretCharacterNotUsingNatureTrapsDict)
+    for characterIndex in range(0, len(characterDict)):
+        if characterDict[characterIndex].base_class == "Journeyman" and characterDict[characterIndex].trapping_level >= 25:  #the level required to wear Nature Traps
+            for trapData in placedTrapsDict[characterIndex]:
+                #print("Trapping.getSecretClassTrapStatus~ OUTPUT trapData:",trapData)
+                if trapData[0] != -1 and trapData[5] != 3:
+                    if characterIndex in secretCharacterNotUsingNatureTrapsDict.keys():
+                        secretCharacterNotUsingNatureTrapsDict[characterIndex] += 1
+                    else:
+                        secretCharacterNotUsingNatureTrapsDict[characterIndex] = 1
     return secretCharacterNotUsingNatureTrapsDict
 
-def setTrappingProgressionTier(inputJSON, playerCount, playerNames):
-    trappingLevelsList = getTrappingLevelsList(inputJSON, playerCount)
+def getUnmaxedCritterVialStatus(inputJSON):
+    unmaxedCritterVialsCount = 0
+    critterVialIndexList = [
+        23,  #Crabbo
+        31,  #Mousey
+        37,  #Bunny
+        40,  #Honker
+        47,  #Blobfish
+        74,  #Tuttle
+    ]
+    for critterVialIndex in critterVialIndexList:
+        try:
+            if int(inputJSON["CauldronInfo"][4][str(critterVialIndex)]) != 13:
+                unmaxedCritterVialsCount += 1
+        except:
+            logger.warning(f"Unable to retrieve Vial level for critterVialIndex {critterVialIndex}")
+            unmaxedCritterVialsCount += 1
+    return unmaxedCritterVialsCount != 0
+
+def getStaticCritterTrapAdviceList(highestTrapset: int) -> dict[str, list[Advice]]:
+    adviceDict = {
+        "Efficiency for Manually Claimed traps": [],
+    }
+    if highestTrapset >= 6:
+        listIndexManualAdvice = 6
+        listIndexVaccuumAdvice = 6
+    elif highestTrapset >= 5:
+        listIndexManualAdvice = 5
+        listIndexVaccuumAdvice = 5
+    else:
+        listIndexManualAdvice = 0
+
+    if highestTrapset >= 6:
+        listIndexVaccuumAdvice = 6
+    elif highestTrapset >= 5:
+        listIndexVaccuumAdvice = 5
+    elif highestTrapset >= 2:
+        listIndexVaccuumAdvice = 2
+    else:
+        listIndexVaccuumAdvice = 0
+
+    manualCritterTrapsDict = {
+        0: [["Cardboard 20 Minutes", "Cardboard 1 Hour", "Cardboard 8 Hours", "Cardboard 20 Hours"], ["3x/hr", "2x/hr", "1.25x/hr", "1x/hr"]],
+        5: [["Cardboard 20 Minutes", "Meaty 1 Hour", "Meaty 10 Hours", "Cardboard 8 Hours", "Cardboard 20 Hours"], ["3x/hr", "3x/hr", "1.5x/hr", "1.25x/hr", "1x/hr"]],
+        6: [["Royal 20 Minutes", "Royal 1 Hour", "Royal 10 Hours", "Royal 40 Hours"], ["6x/hr", "4x/hr", "2.1x/hr", "1.75x/hr"]]
+    }
+    vaccuumCritterTrapsDict = {
+        0: [["Cardboard 20 Hours"], ["0.83x/hr"]],
+        2: [["Wooden 5 Days", "Cardboard 20 Hours"], ["1.67x/hr", "0.83x/hr"]],
+        5: [["Wooden 5 Days", "Meaty 8 Days", "Cardboard 20 Hours"],["1.67x/hr", "1.15x/hr", "0.83x/hr"]],
+        6: [["Wooden 5 Days", "Royal 40 Hours", "Meaty 8 Days", "Royal 10 Hours"], ["1.67x/hr", "1.46x/hr", "1.15x/hr", "0.88x/hr"]]
+    }
+
+    for counter in range(0, len(manualCritterTrapsDict[listIndexManualAdvice][0])):
+        adviceDict["Efficiency for Manually Claimed traps"].append(Advice(label=manualCritterTrapsDict[listIndexManualAdvice][0][counter],
+                                                                          picture_class=f"{manualCritterTrapsDict[listIndexManualAdvice][0][counter].lower().split(' ')[0]}-traps",
+                                                                          progression=manualCritterTrapsDict[listIndexManualAdvice][1][counter]))
+
+    if session_data.account.trap_box_vacuum_unlocked:
+        adviceDict["Efficiency for Rift's Daily traps"] = []
+        for counter in range(0, len(vaccuumCritterTrapsDict[listIndexVaccuumAdvice][0])):
+            adviceDict["Efficiency for Rift's Daily traps"].append(Advice(label=vaccuumCritterTrapsDict[listIndexVaccuumAdvice][0][counter],
+                                                                          picture_class=f"{vaccuumCritterTrapsDict[listIndexVaccuumAdvice][0][counter].lower().split(' ')[0]}-traps",
+                                                                          progression=vaccuumCritterTrapsDict[listIndexVaccuumAdvice][1][counter]))
+
+    return adviceDict
+
+def getStaticShinyTrapAdviceList(highestTrapset: int) -> dict[str, list[Advice]]:
+    adviceDict = {
+        "Shiny Chance Multi for Manually Claimed traps": []
+    }
+    numOfVaccuumSuggestions = 2
+    #"The highest Shiny chance increasing traps are: Royal 20min, Royal 1hr, Silkskin 20min, Silkskin 1hr, and Royal 10hrs."
+    shinyTrapsLabelList = ["Royal 20 Minutes", "Royal 1 Hour", "Silkskin 20 Minutes", "Silkskin 1 Hour", "Royal 10 Hours", "Silkskin 20 Hours", "Royal 40 Hours"]
+    shinyTrapsItemNameList = ["royal-traps", "royal-traps", "silkskin-traps", "silkskin-traps", "royal-traps", "silkskin-traps", "royal-traps"]
+    shinyTrapsRequiredTrapIndexList = [6, 6, 1, 1, 6, 1, 6]
+    shinyTrapsEffPerHourList = ["12x/hr", "8x/hr", "3x/hr", "2.1x/hr", "3.8x/hr", "1.5x/hr", "3.13x/hr"]
+    for counter in range(0, len(shinyTrapsLabelList) - numOfVaccuumSuggestions):
+        if highestTrapset >= shinyTrapsRequiredTrapIndexList[counter]:
+            adviceDict["Shiny Chance Multi for Manually Claimed traps"].append(
+                Advice(label=shinyTrapsLabelList[counter], picture_class=shinyTrapsItemNameList[counter],
+                       progression=shinyTrapsEffPerHourList[counter], goal="", unit=""))
+
+    if session_data.account.trap_box_vacuum_unlocked:
+        adviceDict["Shiny Chance Multi for Rift's Daily traps"] = []
+        for counter in range(len(shinyTrapsLabelList) - numOfVaccuumSuggestions, len(shinyTrapsLabelList)):
+            if highestTrapset >= shinyTrapsRequiredTrapIndexList[counter]:
+                adviceDict["Shiny Chance Multi for Rift's Daily traps"].append(
+                    Advice(label=shinyTrapsLabelList[counter], picture_class=shinyTrapsItemNameList[counter],
+                           progression=shinyTrapsEffPerHourList[counter], goal="", unit=""))
+    return adviceDict
+
+def getStaticEXPTrapAdviceList(highestTrapset) -> dict[str, list[Advice]]:
+    adviceDict = {
+        "Best Experience for Manually Claimed traps": []
+    }
+    numOfVaccuumSuggestions = 1
+    # The highest EXP traps are: Nature 8hrs and Nature 20hrs.
+    expTrapsLabelList = ["Natural 8 Hours", "Natural 20 Hours"]
+    expTrapsItemNameList = ["natural-traps", "natural-traps"]
+    expTrapsRequiredTrapIndexList = [3, 3]
+    expTrapsEffPerHourList = ["5x/hr", "3.75x/hr"]
+    for counter in range(0, len(expTrapsLabelList) - numOfVaccuumSuggestions):
+        if highestTrapset >= expTrapsRequiredTrapIndexList[counter]:
+            adviceDict["Best Experience for Manually Claimed traps"].append(
+                Advice(label=expTrapsLabelList[counter], picture_class=expTrapsItemNameList[counter], progression=expTrapsEffPerHourList[counter],
+                       goal="", unit=""))
+
+    if session_data.account.trap_box_vacuum_unlocked:
+        adviceDict["Best Experience for Rift's Daily traps"] = []
+        for counter in range(len(expTrapsLabelList) - numOfVaccuumSuggestions, len(expTrapsLabelList)):
+            if highestTrapset >= expTrapsRequiredTrapIndexList[counter]:
+                adviceDict["Best Experience for Rift's Daily traps"].append(
+                    Advice(label=expTrapsLabelList[counter], picture_class=expTrapsItemNameList[counter], progression=expTrapsEffPerHourList[counter],
+                           goal="", unit=""))
+    return adviceDict
+
+def setTrappingProgressionTier(inputJSON, characterDict):
+    trapping_AdviceDict = {
+        "UnlockCritters": [],
+        "UnplacedTraps": [],
+        "BeginnerNatures": [],
+        "NonMetaTraps": [],
+        "CritterTraps": [],
+        "ShinyTraps": [],
+        "EXPTraps": []
+    }
+    trapping_AdviceGroupDict = {}
+    trapping_AdviceSection = AdviceSection(
+        name="Trapping",
+        tier="",
+        header="Recommended trapping actions",
+        picture="Trapping_Cardboard_Traps.png"
+    )
+    trappingLevelsList = getSpecificSkillLevelsList(inputJSON, len(characterDict), "Trapping")
     if max(trappingLevelsList) < 1:
-        trappingPR = progressionResults.progressionResults(0,["Recommended Trapping actions:","Come back after unlocking the Trapping skill in World 3!"],"")
-        return trappingPR
-    highestUnlockedCritter = getUnlockedCritterStatus(inputJSON, playerCount)
-    placedTrapsDict = getPlacedTrapsDict(inputJSON, playerCount)
-    unplacedTrapsDict = getCharactersWithUnplacedTraps(inputJSON, trappingLevelsList, placedTrapsDict, playerCount)
-    secretCharacterNotUsingNatureTrapsDict = getSecretClassTrapStatus(inputJSON, trappingLevelsList, placedTrapsDict, playerCount)
+        trapping_AdviceSection.header = "Come back after unlocking the Trapping skill in World 3!"
+        return trapping_AdviceSection
 
-    advice_UnlockCritters = ""
-    if highestUnlockedCritter[0] != highestUnlockedCritter[1]: #playerHighest vs current highest possible
-        advice_UnlockCritters = "Continue unlocking new critter types from quests (" + str(highestUnlockedCritter[0]) + "/" + str(highestUnlockedCritter[1])+ ")! Check the Wiki for exact unlock requirements."
-        #print("Trapping.setTrappingProgressionTier~ OUTPUT advice_UnlockCritters:",advice_UnlockCritters)
+    highestWearableTrapset = 0
+    trapsetLevelRequirementList = [1, 5, 15, 25, 35, 40, 48]
+    for index in range(0, len(trapsetLevelRequirementList)):
+        if max(trappingLevelsList) >= trapsetLevelRequirementList[index]:
+            highestWearableTrapset = index
 
-    advice_UnusedTrapSlots = ""
+    highestUnlockedCritter = getUnlockedCritterStatus(inputJSON, len(characterDict))
+    placedTrapsDict = getPlacedTrapsDict(inputJSON, len(characterDict))
+    unplacedTrapsDict = getCharactersWithUnplacedTraps(inputJSON, trappingLevelsList, placedTrapsDict, len(characterDict))
+    secretCharacterNotUsingNatureTrapsDict = getSecretClassTrapStatus(inputJSON, placedTrapsDict, characterDict)
+
+    #UnlockCritters
+    tier_unlockCritters = highestUnlockedCritter[0]
+    if highestUnlockedCritter[0] != maxCritterTypes:  #unlocked not equal to the max possible to unlock.
+        trapping_AdviceDict["UnlockCritters"].append(
+            Advice(label=highestUnlockedCritter[3], picture_class=highestUnlockedCritter[3], progression="", goal="")
+            )
+
+    #UnusedTraps
     if len(unplacedTrapsDict) > 0:
-        advice_UnusedTrapSlots = "Place remaining Traps (may require equipping a better trap tool!): "
         for characterIndex in unplacedTrapsDict:
-            advice_UnusedTrapSlots += playerNames[characterIndex] + " " + unplacedTrapsDict[characterIndex] + ", "
-        advice_UnusedTrapSlots = advice_UnusedTrapSlots[:-2] #trim off trailing comma and space
-    #print("Trapping.setTrappingProgressionTier~ OUTPUT advice_UnusedTrapSlots:",advice_UnusedTrapSlots)
+            trapping_AdviceDict["UnplacedTraps"].append(
+                Advice(label=str(characterDict[characterIndex]), picture_class=characterDict[characterIndex].class_name_icon,
+                       progression=unplacedTrapsDict[characterIndex][0], goal=unplacedTrapsDict[characterIndex][1])
+                )
 
-    advice_BeginnerNatures = ""
+    #BeginnerNatures
     if len(secretCharacterNotUsingNatureTrapsDict) > 0:
-        advice_BeginnerNatures = ""
         for characterIndex in secretCharacterNotUsingNatureTrapsDict:
-            advice_BeginnerNatures += playerNames[characterIndex] + " has " + str(secretCharacterNotUsingNatureTrapsDict[characterIndex]) + " non-Nature traps, "
-        advice_BeginnerNatures = advice_BeginnerNatures[:-2] + ". Nature EXP-only traps are recommended because the Maestro and Voidwalker classes both get important buffs based on their Trapping level. You will get ZERO critters from Nature Traps, but the bonus EXP is worth it!" #trim off trailing comma and space
-    #print("Trapping.setTrappingProgressionTier~ OUTPUT advice_BeginnerNatures:",advice_BeginnerNatures)
+            trapping_AdviceDict["BeginnerNatures"].append(
+                Advice(label=str(characterDict[characterIndex]), picture_class=characterDict[characterIndex].class_name_icon,
+                       progression=secretCharacterNotUsingNatureTrapsDict[characterIndex], goal=0)
+                )
 
-    advice_nonMetaTraps = ""
-    advice_MetaCritterTraps = ""
-    advice_MetaShinyTraps = ""
-    advice_MetaEXPTraps = ""
-    advice_Disclaimer = ""
-    goodTrapTypeList = [0,1,3,6]
-    goodTrapDurationList = [1200,3600,28800,36000,72000,144000,604800]
+    #NonMetaTraps
+    hasUnmaxedCritterVial = getUnmaxedCritterVialStatus(inputJSON)
+    goodTrapDict = {
+        0: [1200, 3600, 28800, 72000],  #Cardboard Traps
+        1: [1200, 3600, 28800, 72000],  #Silkskin Traps. 14400 is excluded.
+        2: [432000],  #Wooden Traps. Only 5 days 0xp is good, and only if they still have Vials to complete
+        3: [28800, 72000],  #Natural Traps. 8hr and 20hr are good, other options are bad.
+        6: [1200, 3600, 36000, 144000, 604800]  #Royal Traps. All but the 28day are good.
+    }
+    if max(trappingLevelsList) < 48:
+        goodTrapDict[5] = [3600, 36000, 108000]  #Before being able to wear Royals, Meaty traps give more critter efficiency than Cardboard
     nonMetaTrapDict = {}
     for playerIndex in placedTrapsDict:
+        badTrapCount = 0
         for trapData in placedTrapsDict[playerIndex]:
-            if trapData[0] != -1 and (trapData[5] not in goodTrapTypeList or trapData[6] not in goodTrapDurationList):
-                if playerIndex in nonMetaTrapDict.keys():
-                    nonMetaTrapDict[playerIndex] += 1
-                else:
-                    nonMetaTrapDict[playerIndex] = 1
-    if len(nonMetaTrapDict) > 0:
-        #print("Trapping.setTrappingProgressionTier~ OUTPUT nonMetaTrapDict:",nonMetaTrapDict)
-        if len(nonMetaTrapDict) == 1:
-            advice_nonMetaTraps = "The following character has placed traps that aren't of a recommended Trap Type or Duration: "
-        else:
-            advice_nonMetaTraps = "The following characters have placed traps that aren't of a recommended Trap Type or Duration: "
-        for characterIndex in nonMetaTrapDict:
-            advice_nonMetaTraps += playerNames[characterIndex] + " (" + str(nonMetaTrapDict[characterIndex]) + "), "
-        advice_nonMetaTraps = advice_nonMetaTraps[:-2] + "."
-        advice_MetaCritterTraps = "For the highest Critter gains, Set traps with your Beast Master equipped with as much Trapping Efficiency as possible. The most efficient Critter traps for MANUAL CLAIMS are: Royal 20min, Royal 1hr, Cardboard 20min, Royal 10hrs, Cardboard 1hr, Cardboard 8hrs. If you want to let the Rift Trap Vaccuum handle all trap collections, the recommended traps are Royal 40hrs, Royal 10hrs, or Cardboard 20hrs if you don't have Royals unlocked. You could even use Royal 7day traps for minor critter gains, but you'll get less than half as many Cards."
-        advice_MetaShinyTraps = "Shiny chance is calculated when Collecting traps, not Setting them. The only way to increase the number of Shiny critters per trap is by equipping the Shiny Snitch prayer when Collecting. The highest Shiny chance increasing traps are: Royal 20min, Royal 1hr, Silkskin 20min, Silkskin 1hr, and Royal 10hrs."
-        advice_MetaEXPTraps = "For the highest pure EXP gains, Set Nature traps with your Maestro/Voidwalker equipped with as much Trapping EXP as possible. Efficiency doesn't matter at all for Nature Traps! The highest EXP traps are: Nature 8hrs and Nature 20hrs."
-        advice_Disclaimer = "If you are intentionally using a different combination to suite your playstyle, feel free to ignore the below recommendations! They require an active playstyle that isn't for everyone."
+            if trapData[0] != -1:  # -1 is an unplaced trap
+                if trapData[5] not in goodTrapDict.keys():  # Bad trap sets don't appear in goodTrapDict
+                    badTrapCount += 1
+                elif trapData[6] not in goodTrapDict[trapData[5]]:  # Bad trap set + duration combos don't appear in goodTrapDict
+                    badTrapCount += 1
+                elif int(trapData[5]) == 2 and int(trapData[6]) == 432000 and int(trapData[7]) != 0 and hasUnmaxedCritterVial is False:
+                    #Using a 5day Wooden Trap that isn't the 0exp variety without a Critter Vial to max. Would be better using Royal/Natures in this scenario.
+                    badTrapCount += 1
+        if badTrapCount != 0:
+            nonMetaTrapDict[playerIndex] = badTrapCount
 
-    advice_TrappingTarget = ""
+    for characterIndex in nonMetaTrapDict:
+        trapping_AdviceDict["NonMetaTraps"].append(
+            Advice(label=str(characterDict[characterIndex]), picture_class=characterDict[characterIndex].class_name_icon,
+                   progression=str(nonMetaTrapDict[characterIndex]), goal=0)
+            )
 
-    if advice_UnlockCritters == "" and advice_UnusedTrapSlots == "" and advice_BeginnerNatures == "" and advice_TrappingTarget == "" and advice_Disclaimer == "":
-        advice_UnlockCritters = "Nada. You look like you're on the right track! :D"
-    advice_TrappingCombined = ["Recommended Trapping actions:", advice_UnlockCritters, advice_UnusedTrapSlots, advice_BeginnerNatures, advice_Disclaimer, advice_nonMetaTraps, advice_MetaCritterTraps, advice_MetaShinyTraps, advice_MetaEXPTraps]
-    trappingPR = progressionResults.progressionResults(0,advice_TrappingCombined,"")
-    return trappingPR
+    if len(trapping_AdviceDict["NonMetaTraps"]) > 0:
+        trapping_AdviceDict["CritterTraps"] = getStaticCritterTrapAdviceList(highestWearableTrapset)
+        trapping_AdviceDict["ShinyTraps"] = getStaticShinyTrapAdviceList(highestWearableTrapset)
+        trapping_AdviceDict["EXPTraps"] = getStaticEXPTrapAdviceList(highestWearableTrapset)
+
+    #advice_MetaEXPTraps = "
+    #advice_Disclaimer = "If you are intentionally using a different combination to suite your playstyle, feel free to ignore the below recommendations! They require an active playstyle that isn't for everyone."
+
+    #Generate Advice Groups
+    agd_unlockcritters_post_stringsList = [
+        "",
+        "Froge critters are unlocked after completing Lord of the Hunt's quest: Pelt for the Pelt God",
+        "Crabbo critters are unlocked after completing Lord of the Hunt's quest: Frogecoin to the MOON!",
+        "Scorpie critters are unlocked after completing Lord of the Hunt's quest: Yet another Cartoon Reference",
+        "Mousey critters are unlocked after completing Lord of the Hunt's quest: Small Stingers, Big Owie",
+        "Owlio critters are unlocked after completing Lord of the Hunt's quest: The Mouse n the Molerat",
+        "Pingy critters are unlocked after completing Lord of the Hunt's quest: Happy Tree Friend",
+        "Bunny critters are unlocked after completing Lord of the Hunt's quest: Noot Noot!",
+        "Dung Beat critters are unlocked after completing Lord of the Hunt's quest: Bunny you Should Say That!",
+        "Honker critters are unlocked after completing Lord of the Hunt's quest: Rollin' Thunder",
+        "Blobfish critters are unlocked after completing Blobbo's quest: Glitter Critter",
+        "Tuttle critters are unlocked in W6 Jade Emporium",
+        ""
+    ]
+    trapping_AdviceGroupDict["UnlockCritters"] = AdviceGroup(
+        tier=highestUnlockedCritter[0],
+        pre_string=f"{pl((['UnlockRemaining']*(maxCritterTypes-highestUnlockedCritter[0])), 'Unlock the final Critter type', 'Continue unlocking new Critter types')}",
+        advices=trapping_AdviceDict["UnlockCritters"],
+        post_string=agd_unlockcritters_post_stringsList[highestUnlockedCritter[0]]
+    )
+    trapping_AdviceGroupDict["UnplacedTraps"] = AdviceGroup(
+        tier="",
+        pre_string=f"Place unused trap{pl(trapping_AdviceDict['UnplacedTraps'])} (may require better Trap Set!)",
+        advices=trapping_AdviceDict["UnplacedTraps"],
+        post_string=""
+    )
+    trapping_AdviceGroupDict["BeginnerNatures"] = AdviceGroup(
+        tier="",
+        pre_string=f"Place only Nature Traps on your {pl(trapping_AdviceDict['BeginnerNatures'], 'Beginner', 'Beginners')}",
+        advices=trapping_AdviceDict["BeginnerNatures"],
+        post_string="Nature EXP-only traps are recommended for Maestro's Right Hand of Action and Voidwalker's Species Epoch talents. You will get ZERO critters from Nature Traps, but the bonus critters from those 2 talents more than make up for this loss!"
+    )
+    trapping_AdviceGroupDict["NonMetaTraps"] = AdviceGroup(
+        tier="",
+        pre_string=f"Inefficient Trap Types or Durations",
+        advices=trapping_AdviceDict["NonMetaTraps"],
+        post_string=""
+    )
+    trapping_AdviceGroupDict["CritterTraps"] = AdviceGroup(
+        tier="",
+        pre_string=f"Best Critter-Focused traps",
+        advices=trapping_AdviceDict["CritterTraps"],
+        post_string="Set critter traps with your Beast Master after maximizing Trapping Efficiency"
+    )
+    trapping_AdviceGroupDict["ShinyTraps"] = AdviceGroup(
+        tier="",
+        pre_string=f"Best Shiny Chance-Focused traps",
+        advices=trapping_AdviceDict["ShinyTraps"],
+        post_string="Wear the Shiny Snitch prayer when Collecting. Shorter trap durations will earn more total Shiny Critters per day"
+    )
+    trapping_AdviceGroupDict["EXPTraps"] = AdviceGroup(
+        tier="",
+        pre_string=f"Best EXP-Focused traps",
+        advices=trapping_AdviceDict["EXPTraps"],
+        post_string="Set EXP traps with your Mman/Vman after maximizing Trapping EXP"
+    )
+
+    #Generate AdviceSection
+    max_tier = highestUnlockedCritter[1]
+    overall_TrappingTier = min(max_tier, tier_unlockCritters)
+    tier_section = f"{overall_TrappingTier}/{max_tier}"
+    trapping_AdviceSection.tier = tier_section
+    trapping_AdviceSection.groups = trapping_AdviceGroupDict.values()
+    if overall_TrappingTier == max_tier:
+        trapping_AdviceSection.header = f"Best Trapping tier met: {tier_section}. Keep it up! You're on the right track! ❤️"
+    else:
+        trapping_AdviceSection.header = f"Best Trapping tier met: {tier_section}. Recommended Trapping actions"
+
+    return trapping_AdviceSection

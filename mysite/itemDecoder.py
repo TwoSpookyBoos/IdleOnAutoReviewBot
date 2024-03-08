@@ -1,3 +1,6 @@
+from utils import get_logger
+
+
 ITEM_NAME_DICT = {
     "FillerMaterial": {"displayName": "Not_Yet"},
     "Blank": {"displayName": "Blank"},
@@ -15,6 +18,7 @@ ITEM_NAME_DICT = {
     "Marble": {"displayName": "Marble_Ore"},
     "Dreadlo": {"displayName": "Dreadlo_Ore"},
     "Godshard": {"displayName": "Godshard_Ore"},
+    "MarbleOre": {"displayName": "Marble_Ore"},
     "CopperBar": {"displayName": "Copper_Bar"},
     "IronBar": {"displayName": "Iron_Bar"},
     "GoldBar": {"displayName": "Gold_Bar"},
@@ -25,6 +29,7 @@ ITEM_NAME_DICT = {
     "StarfireBar": {"displayName": "Starfire_Bar"},
     "DreadloBar": {"displayName": "Dreadlo_Bar"},
     "GodshardBar": {"displayName": "Godshard_Bar"},
+    "MarbleBar": {"displayName": "Marble_Bar"},
     "OilBarrel1": {"displayName": "Crude_Oil"},
     "OilBarrel2": {"displayName": "Toxic_Sludge"},
     "OilBarrel3": {"displayName": "Radioactive_Waste"},
@@ -78,7 +83,7 @@ ITEM_NAME_DICT = {
     "Bug9": {"displayName": "Scarab"},
     "Bug11": {"displayName": "Dream_Particulate"},
     "Bug10": {"displayName": "Dust_Mote"},
-    "Bug12": {"displayName": "Ladybugs"},
+    "Bug12": {"displayName": "Ladybug"},
     "Bug13": {"displayName": "Firefly"},
     "Critter1": {"displayName": "Froge"},
     "Critter1A": {"displayName": "Poison_Froge"},
@@ -100,6 +105,8 @@ ITEM_NAME_DICT = {
     "Critter9A": {"displayName": "Diamond_Duck"},
     "Critter10": {"displayName": "Blobfish"},
     "Critter10A": {"displayName": "Voodofish"},
+    "Critter11": {"displayName": "Tuttle"},
+    "Critter11A": {"displayName": "Tottoise"},
     "Soul1": {"displayName": "Forest_Soul"},
     "Soul2": {"displayName": "Dune_Soul"},
     "Soul3": {"displayName": "Rooted_Soul"},
@@ -112,10 +119,12 @@ ITEM_NAME_DICT = {
     "FoodHealth2": {"displayName": "Cheezy_Pizza"},
     "Peanut": {"displayName": "Peanut"},
     "FoodHealth4": {"displayName": "Saucy_Weiner"},
+    "FoodHealth5": {"displayName": "Cranberry_Jam"},
     "FoodHealth6": {"displayName": "Kebab_Sticks"},
     "FoodHealth7": {"displayName": "Meat_Pie"},
-    "FoodHealth10": {"displayName": "Mountain_Bread"},
+    "FoodHealth8": {"displayName": "Crabby_Cake_Supreme"},
     "FoodHealth9": {"displayName": "Yeti_Ham"},
+    "FoodHealth10": {"displayName": "Mountain_Bread"},
     "FoodHealth11": {"displayName": "Sheepie_Dairy"},
     "FoodHealth12": {"displayName": "Spicy_Space_Ribs"},
     "FoodHealth13": {"displayName": "Cupcake"},
@@ -123,8 +132,6 @@ ITEM_NAME_DICT = {
     "FoodHealth15": {"displayName": "Grilled_Cheese_Nomwich"},
     "FoodHealth16": {"displayName": "Raw_Nigiri"},
     "FoodHealth17": {"displayName": "Dumpling"},
-    "FoodHealth5": {"displayName": "Cranberry_Jam"},
-    "FoodHealth8": {"displayName": "Crabby_Cake_Supreme"},
     "FoodEvent8": {"displayName": "Milk_Choco"},
     "Meatloaf": {"displayName": "Magic_Meatloaf"},
     "FoodPotOr1": {"displayName": "Small_Strength_Potion"},
@@ -182,6 +189,9 @@ ITEM_NAME_DICT = {
     "FoodG11": {"displayName": "Golden_Nigiri"},
     "FoodG12": {"displayName": "Golden_Dumpling"},
     "ButterBar": {"displayName": "Butter_Bar"},
+    "Gfoodcoupon": {"displayName": "Gold_Food_Coupon"},
+    "ItemsCoupon1": {"displayName": "Resource_Coupon"},
+    "ItemsCoupon2": {"displayName": "Really_Really_Resource_Coupon"},
     "rtt0": {"displayName": "Bottled_Town_Teleport"},
     "ResetFrag": {"displayName": "Talent_Point_Reset_Fragment"},
     "ResetCompleted": {"displayName": "Talent_Point_Reset_Potion"},
@@ -264,8 +274,19 @@ ITEM_NAME_DICT = {
     "Quest49": {"displayName": "Summer_Cooler"},
     "Quest50": {"displayName": "Beach_Oyster"},
     "Quest68": {"displayName": "Bucket_of_Slush"},
+    "Quest69": {"displayName": "Killroy_Skull"},
+    "Quest70": {"displayName": "Phone_Box"},
+    "Quest71": {"displayName": "Gem_Envelope"},
+    "Quest72": {"displayName": "Bottled_Wind"},
+    "Quest73": {"displayName": "Gaming_Fertilizer"},
+    "Quest74": {"displayName": "Rift_Tear"},
+    "Quest75": {"displayName": "Spring_Baggies"},
+    "Quest76": {"displayName": "Silver_Pocketwatch"},
+    "Quest77": {"displayName": "Gold_Pocketwatch"},
     "Quest78": {"displayName": "Equinox_Mirror"},
     "Pearl4": {"displayName": "Black_Pearl"},
+    "Pearl5": {"displayName": "Holy_Pearl"},
+    "Pearl6": {"displayName": "Divinity_Pearl"},
     "NPCtoken8": {"displayName": "FILLER"},
     "BadgeG1": {"displayName": "Blunderhills_NPC_Completion_Token"},
     "BadgeG2": {"displayName": "Blunder_Skills_Completion_Token"},
@@ -537,6 +558,7 @@ ITEM_NAME_DICT = {
     "EquipmentRings14": {"displayName": "Dooble_Goopi"},
     "EquipmentRings15": {"displayName": "Sanic_Ring"},
     "EquipmentRings16": {"displayName": "Efaunt_Trunculus"},
+    "EquipmentRings20": {"displayName": "Rex_Ring"},
     "EquipmentRingsChat1": {"displayName": "Love_Ring"},
     "EquipmentRingsChat2": {"displayName": "Leafy_Ring"},
     "EquipmentRingsChat3": {"displayName": "Wealth_Ring"},
@@ -949,7 +971,7 @@ ITEM_NAME_DICT = {
     "GalaxyB2": {"displayName": "Wurm_Tail"},
     "GalaxyB3": {"displayName": "Tongue_Bone"},
     "GalaxyB4": {"displayName": "Crumpled_Wrapper"},
-    "GalaxyB5": {"displayName": "Smol_Wurm"},
+    "GalaxyB5": {"displayName": "Smol_Worm"},
     "GalaxyC1": {"displayName": "Empty_Oyster_Shell"},
     "GalaxyC1b": {"displayName": "Pearler_Shell"},
     "GalaxyC2": {"displayName": "Wriggly_Ball"},
@@ -978,7 +1000,8 @@ ITEM_NAME_DICT = {
     "SpiA4": {"displayName": "Leafy_Horn"},
     "SpiA5": {"displayName": "Wooden_Aortic_Mass"},
     "SpiB1": {"displayName": "Leafy_Branch"},
-    "SpiB2": {"displayName": "Lantern"},
+    "SpiB2": {"displayName": "Light_Lantern"},
+    "SpiB2b": {"displayName": "Dark_Lantern"},
     "SpiB3": {"displayName": "Troll_Flower"},
     "SpiB4": {"displayName": "Chopped_Leek"},
     "SpiC1": {"displayName": "Shattered_Ceramic"},
@@ -1020,6 +1043,8 @@ ITEM_NAME_DICT = {
     "Timecandy5": {"displayName": "24_HR_Time_Candy"},
     "Timecandy6": {"displayName": "72_HR_Time_Candy"},
     "Timecandy7": {"displayName": "Steamy_Time_Candy"},
+    "Timecandy8": {"displayName": "Spooky_Time_Candy"},
+    "Timecandy9": {"displayName": "Cosmic_Time_Candy"},
     "InvBag1": {"displayName": "Inventory_Bag_A"},
     "InvBag2": {"displayName": "Inventory_Bag_B"},
     "InvBag3": {"displayName": "Inventory_Bag_C"},
@@ -1083,6 +1108,8 @@ ITEM_NAME_DICT = {
     "Key1": {"displayName": "Forest_Villa_Key"},
     "Key2": {"displayName": "Efaunt's_Tomb_Key"},
     "Key3": {"displayName": "Chizoar's_Cavern_Key"},
+    "Key4": {"displayName": "Troll's_Enclave_Key"},
+    "Key5": {"displayName": "Kruk's_Volcano_Key"},
     "ObolFrag": {"displayName": "Obol_Fragment"},
     "DoubleAFKtix": {"displayName": "Double_AFK_Gain_Ticket"},
     "TixCol": {"displayName": "Colosseum_Ticket"},
@@ -1123,6 +1150,10 @@ ITEM_NAME_DICT = {
     "Weight12": {"displayName": "Triple_Threat"},
     "Weight13": {"displayName": "Crash_Box"},
     "Weight14": {"displayName": "Fat_Albert"},
+    "Ladle": {"displayName": "Cooking_Ladle"},
+    "PetEgg": {"displayName": "Pet_Egg"},
+    "Whetstone": {"displayName": "Anvil_Reset_Whetstone"},
+
     "CardsA0": {"displayName": "CardsA0"},
     "CardsA1": {"displayName": "CardsA1"},
     "CardsA2": {"displayName": "DONTFILL"},
@@ -1261,6 +1292,11 @@ ITEM_NAME_DICT = {
     "EquipmentHats45": {"displayName": "Giftmas_Tree"},
     "EquipmentHats57": {"displayName": "Big_Bunny"},
     "EquipmentHats62": {"displayName": "Fluffy_Ramsy"},
+    "EquipmentHats73": {"displayName": "Real_Civil_Engineer_Helmet"},
+    "EquipmentHats85": {"displayName": "Bedsheet_with_Holes"},
+    "EquipmentHats86": {"displayName": "Carrotman_Mask"},
+    "EquipmentHats87": {"displayName": "Glublin_Mask"},
+    "EquipmentHats88": {"displayName": "Bloque_Mask"},
     "GemP1": {"displayName": "Infinite_Forge"},
     "GemP9": {"displayName": "Quality_Obol_Stack"},
     "GemP10": {"displayName": "Marvelous_Obol_Stack"},
@@ -1275,11 +1311,30 @@ ITEM_NAME_DICT = {
     "GemQ9": {"displayName": "Infinite_Forge"},
 }
 
-def getItemDisplayName(itemName):
+logger = get_logger(__name__)
 
-    #"": {"displayName": ""},
-    try:
-        return ITEM_NAME_DICT[itemName]["displayName"].replace("_", " ")
-    except Exception as reason:
-        print("itemDecoder~ Unknown item name found:", itemName)
-        return str("Unknown-"+itemName.replace("_", " "))
+
+def getItemDisplayName(itemCodeName):
+    display_name = (
+        ITEM_NAME_DICT
+        .get(itemCodeName, {})
+        .get("displayName", f"Unknown-{itemCodeName}")
+        .replace("_", " ")
+    )
+    if display_name.startswith("Unknown-"):
+        logger.debug("Unknown item: %s", itemCodeName)
+
+    return display_name
+
+
+def getItemCodeName(itemName):
+    code_name = next((
+        key
+        for key, value in ITEM_NAME_DICT.items()
+        if value["displayName"] == itemName),
+        f"Unknown-{itemName}"
+    )
+    if code_name.startswith("Unknown-"):
+        logger.debug("Unknown item: %s", itemName)
+
+    return code_name

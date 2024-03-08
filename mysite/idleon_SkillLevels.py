@@ -1,40 +1,38 @@
-def getHumanReadableClasses(classNumber):
-    humanReadableClasses = {
-        1: "Beginner",
-        2: "Journeyman",
-        3: "Maestro",
-        4: "Voidwalker",
-        5: "Infinilyte",
-        6: "Rage Basics",
-        7: "Warrior",
-        8: "Barbarian",
-        9: "Squire",
-        10: "Blood Berserker",
-        11: "Death Bringer",
-        12: "Divine Knight",
-        13: "Royal Guardian",
-        18: "Calm Basics",
-        19: "Archer",
-        20: "Bowman",
-        21: "Hunter",
-        22: "Siege Breaker",
-        23: "Mayheim",
-        24: "Wind Walker",
-        25: "Beast Master",
-        30: "Savvy Basics",
-        31: "Mage",
-        32: "Wizard",
-        33: "Shaman",
-        34: "Elemental Sorcerer",
-        35: "Spiritual Monk",
-        36: "Bubonic Conjuror",
-        37: "Arcane Cultist"
-    }
-    if classNumber in humanReadableClasses:
-        return humanReadableClasses[classNumber]
-    else:
-        return "Unknown class: " + str(classNumber)
+humanReadableClasses = {
+    1: "Beginner",
+    2: "Journeyman",
+    3: "Maestro",
+    4: "Voidwalker",
+    5: "Infinilyte",
+    6: "Rage Basics",
+    7: "Warrior",
+    8: "Barbarian",
+    9: "Squire",
+    10: "Blood Berserker",
+    11: "Death Bringer",
+    12: "Divine Knight",
+    13: "Royal Guardian",
+    18: "Calm Basics",
+    19: "Archer",
+    20: "Bowman",
+    21: "Hunter",
+    22: "Siege Breaker",
+    23: "Mayheim",
+    24: "Wind Walker",
+    25: "Beast Master",
+    30: "Savvy Basics",
+    31: "Mage",
+    32: "Wizard",
+    33: "Shaman",
+    34: "Elemental Sorcerer",
+    35: "Spiritual Monk",
+    36: "Bubonic Conjuror",
+    37: "Arcane Cultist"
+}
 
+
+def getHumanReadableClasses(classNumber):
+    return humanReadableClasses.get(classNumber, f"Unknown class: {classNumber}")
 
 def getSpecificSkillLevelsList(inputJSON, playerCount, desiredSkill):
     counter = 0

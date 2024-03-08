@@ -2,16 +2,20 @@
 <html lang="en">
     <head>
         <title>IE AutoReview Tool - By Scoli290</title>
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/results.css') }}">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/sidebar.css') }}">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/nav.css') }}">
-        <link rel="icon" href="{{ img('blank.png') }}" type="image/png">
-        <link rel="apple-touch-icon" href="{{ img('blank.png') }}" type="image/png">
-        <script src="{{ url_for('static', filename='scripts/main.js') }}"></script>
+        <link rel="stylesheet" type="text/css" href="{{ "boilerplate"|style }}">
+        <link rel="stylesheet" type="text/css" href="{{ "results"|style }}">
+        <link rel="stylesheet" type="text/css" href="{{ "sidebar"|style }}">
+        <link rel="stylesheet" type="text/css" href="{{ "nav"|style }}">
+        <link rel="stylesheet" type="text/css" href="{{ "image-mapping"|style }}">
+        <link rel="stylesheet" type="text/css" href="{{ "slider"|style }}">
+        <link rel="icon" href="{{ "blank.png"|img }}" type="image/png">
+        <link rel="apple-touch-icon" href="{{ "blank.png"|img }}" type="image/png">
+        <script src="{{ "main"|script }}"></script>
         <meta name="robots" content="noindex">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-        <div id="drawer-handle">
+        <div id="drawer-handle"{% if handedness %} class="lefty"{% endif %}>
             <div class="hamburger">
                 <span class="bar bar1"></span>
                 <span class="bar bar2"></span>
@@ -21,17 +25,22 @@
         </div>
         {% include 'sidebar.html' %}
         {% include 'nav.html' %}
-        {% if error %}
-            <span class="error">
-                Unable to retrieve data for this character name.
-                Please check your spelling and make sure you have
-                uploaded your account publicly.
-            </span>
+        <div class="container-fluid">
+            <div class="main-wrapper" id="top">
+                {% if error %}
+                    <span class="error">
+                        Unable to retrieve data for this character name.
+                        Please check your spelling and make sure you have
+                        uploaded your account publicly.
+                    </span>
 
-        {% elif ensure_data(htmlInput) %}
-            {% include 'header.html' %}
-            {% include 'main.html' %}
-        {% endif %}
-        {% include 'footer.html' %}
+                {% elif htmlInput | ensure_data %}
+                    {% include 'header.html' %}
+                    {% include 'main.html' %}
+                {% endif %}
+            </div>
+            <a id="scroll-to-top" href="#top"></a>
+            {% include 'footer.html' %}
+        </div>
     </body>
 </html>
