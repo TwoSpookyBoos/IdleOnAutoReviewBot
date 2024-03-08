@@ -1,0 +1,15 @@
+<article id="{{ world.id }}" class="general-content">
+    <h1 class="banner{% if world.id != "pinchy" %} toggler{% endif %}">
+        {% if world.banner %}
+            <img src="{{ world.banner | img }}" alt="{{ world.name }}" title="{{ world.name }}">
+        {% endif %}
+        {{ world.title }}
+    </h1>
+    <div class="collapse-wrapper">
+        <div class="sections{% if not world.sections or world.collapse %} folded{% endif %}">
+            {% for section in world.sections %}
+                {% include 'section.html' %}
+            {% endfor %}
+        </div>
+    </div>
+</article>

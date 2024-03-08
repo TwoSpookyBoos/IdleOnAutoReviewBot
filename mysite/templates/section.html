@@ -1,12 +1,12 @@
 <section id="{{ section.css_class }}">
-    <h3 class="subheading{% if not section %} no-collapse{% endif %}{% if section.collapse %} folded{% endif %}">
+    <h3 class="subheading{% if section %} toggler{% endif %}{% if section.collapse %} folded{% endif %}">
         {% if section.picture %}
             <img src="{{ section.picture | img }}" alt="{{ section.name }}">
         {% endif %}
         <span>{{ section.header | safe }}</span>
     </h3>
     <div class="collapse-wrapper">
-        <ul class="advice-section{% if not section %} no-collapse{% endif %}{% if section.collapse %} folded{% endif %}">
+        <ul class="advice-section{% if not section %} empty{% endif %}{% if section.collapse %} folded{% endif %}">
             {% if section.note %}
                 <li class="note">{{ section.note | safe }}</li>
             {% endif %}

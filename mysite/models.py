@@ -107,11 +107,13 @@ class WorldName(Enum):
     WORLD3 = "World 3"
     WORLD4 = "World 4"
     WORLD5 = "World 5"
+    WORLD6 = "World 6"
     BLUNDER_HILLS = "Blunder Hills"
     YUMYUM_DESERT = "Yum-Yum Desert"
     FROSTBITE_TUNDRA = "Frostbite Tundra"
     HYPERION_NEBULA = "Hyperion Nebula"
     SMOLDERIN_PLATEAU = "Smolderin' Plateau"
+    SPIRITED_VALLEY = "Spirited Valley"
 
 
 class AdviceBase:
@@ -394,6 +396,7 @@ class AdviceWorld(AdviceBase):
         collapse: bool | None = None,
         sections: list[AdviceSection] = list(),
         banner: str = "",
+        title: str = "",
         **extra,
     ):
         super().__init__(collapse, **extra)
@@ -401,6 +404,11 @@ class AdviceWorld(AdviceBase):
         self.name: str = name.value
         self.sections: list[AdviceSection] = sections
         self.banner: str = banner
+        self.title: str = title
+
+    @property
+    def id(self):
+        return kebab(self.name)
 
 
 greenStackAmount = 10**7

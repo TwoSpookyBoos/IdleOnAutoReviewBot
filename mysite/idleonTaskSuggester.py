@@ -198,7 +198,15 @@ def main(inputData, runType="web"):
         Placements.DEATH_NOTE: deathnote_AdviceSection.pinchy_rating,
         Placements.PRAYERS: prayers_AdviceSection.pinchy_rating
         }
-    pinchy = idleon_Pinchy.generatePinchyWorld(parsedJSON, playerCount, biggoleProgressionTiersDict)
+    pinchy_high, pinchy_low, pinchy_all = idleon_Pinchy.generatePinchyWorld(parsedJSON, playerCount, biggoleProgressionTiersDict)
+
+    pinchyReview = AdviceWorld(
+        name=WorldName.PINCHY,
+        sections=[pinchy_high, pinchy_low, pinchy_all],
+        collapse=False,
+        title="Pinchy AutoReview"
+    )
+
     generalReview = AdviceWorld(
         name=WorldName.GENERAL,
         sections=[section_combatLevels, section_maestro, *section_consumables, section_gemShop, *sections_quest_gstacks, section_regular_gstacks, section_cards],
@@ -206,34 +214,33 @@ def main(inputData, runType="web"):
     )
 
     w1Review = AdviceWorld(
-        name=WorldName.WORLD1,
+        name=WorldName.BLUNDER_HILLS,
         sections=[stamps_AdviceSection, bribes_AdviceSection, smithing_AdviceSection],
         banner="w1banner.png"
     )
     w2Review = AdviceWorld(
-        name=WorldName.WORLD2,
+        name=WorldName.YUMYUM_DESERT,
         sections=[alchBubbles_AdviceSection, alchVials_AdviceSection, alchP2W_AdviceSection],
         banner="w2banner.png"
     )
     w3Review = AdviceWorld(
-        name=WorldName.WORLD3,
+        name=WorldName.FROSTBITE_TUNDRA,
         sections=[refinery_AdviceSection, buildings_AdviceSection, saltlick_AdviceSection, deathnote_AdviceSection, prayers_AdviceSection, trapping_AdviceSection],
         banner="w3banner.png"
     )
     w4Review = AdviceWorld(
-        name=WorldName.WORLD4,
+        name=WorldName.HYPERION_NEBULA,
         sections=[breeding_AdviceSection],
         banner="w4banner.png"
     )
     w5Review = AdviceWorld(
-        name=WorldName.WORLD5,
-        sections=[],
+        name=WorldName.SMOLDERIN_PLATEAU,
         banner="w5banner.png"
     )
 
-    biggoleAdviceList = [w5Review, w4Review, w3Review, w2Review, w1Review, generalReview, pinchy, headerData]
+    reviews = [pinchyReview, generalReview, w1Review, w2Review, w3Review, w4Review, w5Review]
 
     if runType == "consoleTest":
         return "Pass"
     else:
-        return biggoleAdviceList
+        return reviews, headerData
