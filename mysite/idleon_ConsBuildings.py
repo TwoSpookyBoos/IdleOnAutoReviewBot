@@ -2,6 +2,7 @@ import json
 from idleon_SkillLevels import getSpecificSkillLevelsList
 from models import AdviceSection, AdviceGroup, Advice
 from utils import pl, get_logger
+from flask import g as session_data
 
 logger = get_logger(__name__)
 
@@ -47,14 +48,12 @@ def getInfluencers(inputJSON):
         logger.exception(f"Unable to retrieve poisonicLevel: {reason}")
 
     #Other?
-    consMastery = False
     atomCarbon = False
-    try:
-        highestCompletedRift = inputJSON["Rift"][0]
-        if highestCompletedRift >= 41:
-            consMastery = True
-    except Exception as reason:
-        logger.exception(f"Unable to find highest Rift level completed: {reason}")
+    if session_data.account.construction_mastery_unlocked:
+        consMastery = True
+    else:
+        consMastery = False
+
     try:
         carbonLevel = inputJSON["Atoms"][5]
         if carbonLevel >= 1:

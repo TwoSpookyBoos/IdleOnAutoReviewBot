@@ -2,6 +2,7 @@ import json
 from idleon_SkillLevels import getSpecificSkillLevelsList
 from models import AdviceSection, AdviceGroup, Advice
 from utils import pl, get_logger
+from flask import g as session_data
 
 logger = get_logger(__name__)
 shinyDaysList = [0, 3, 11, 33, 85, 200, 448, 964, 2013, 4107, 8227, 16234, 31633, 60989, 116522, 999999999]
@@ -32,12 +33,8 @@ def getShinyExclusions(inputJSON):
         }
 
     # if Infinite Star Signs are unlocked, set False (as in False, the recommendation should NOT be excluded), otherwise default True
-    try:
-        highestCompletedRift = inputJSON["Rift"][0]
-        if highestCompletedRift >= 11:
-            shinyExclusionsDict["Exclude-InfiniteStarSigns"] = False
-    except Exception as reason:
-        logger.exception(f"Unable to retrieve highest rift level: {reason}")
+    if session_data.account.infinite_stars_unlocked:
+        shinyExclusionsDict["Exclude-InfiniteStarSigns"] = False
 
     # if all artifacts are Eldritch tier, append True (as in True, the recommendation SHOULD be excluded), otherwise False
     try:
@@ -417,13 +414,13 @@ def setBreedingProgressionTier(inputJSON: dict, progressionTiers: dict[int, dict
         for tier in progressionTiers:
             if "Infinite Star Signs" in progressionTiers[tier] and shinyExclusionsDict["Exclude-InfiniteStarSigns"] == True:
                 progressionTiers[tier]["Infinite Star Signs"] = 0
-                logger.debug("Excluding Shiny- Infinite Star Signs because player does not have Rift bonus unlocked.")
+                #logger.debug("Excluding Shiny- Infinite Star Signs because player does not have Rift bonus unlocked.")
             if 'Lower Minimum Travel Time for Sailing' in progressionTiers[tier] and shinyExclusionsDict["Exclude-Sailing"] == True:
                 progressionTiers[tier]['Lower Minimum Travel Time for Sailing'] = 0
-                logger.debug("Excluding Shiny- Sailing Min Time because player has all Sailing Artifacts discovered.")
+                #logger.debug("Excluding Shiny- Sailing Min Time because player has all Sailing Artifacts discovered.")
             if "Higher Artifact Find Chance" in progressionTiers[tier] and shinyExclusionsDict["Exclude-Sailing"] == True:
                 progressionTiers[tier]["Higher Artifact Find Chance"] = 0
-                logger.debug("Excluding Shiny- Higher Artifact Find Chance because player has all Sailing Artifacts discovered.")
+                #logger.debug("Excluding Shiny- Higher Artifact Find Chance because player has all Sailing Artifacts discovered.")
 
 
             #Unlocked Territories
