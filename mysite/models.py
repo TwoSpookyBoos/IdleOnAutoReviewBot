@@ -506,7 +506,7 @@ class Assets(dict):
                     and self.get(item) not in self.quest_items_missed
                 ]
                 if item_list:
-                    categorised[category] = item_list
+                    categorised[category] = sorted(item_list, key=lambda item: item.progression, reverse=True)
             if categorised:
                 tiered["Timegated" if tier == 0 else tier] = categorised
 
