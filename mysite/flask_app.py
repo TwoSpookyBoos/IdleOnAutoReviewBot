@@ -7,6 +7,8 @@ from flask import g, render_template, request, url_for, redirect, Response
 import idleonTaskSuggester
 import traceback
 
+from data_formatting import HeaderData
+from models import AdviceWorld
 from utils import get_logger
 
 logger = get_logger(__name__)
@@ -79,7 +81,8 @@ def switches():
 def index() -> Response | str:
     page: str = 'results.html'
     error: bool = False
-    pythonOutput: list | None = None
+    reviews: list[AdviceWorld] | None = None
+    headerData: HeaderData = None
     is_beta: bool = FQDN_BETA in request.host
     logger.info(request.host)
     url_params = request.query_string.decode("utf-8")
@@ -98,7 +101,7 @@ def index() -> Response | str:
             return redirect(url_for('index', player=capturedCharacterInput, **get_user_preferences()))
 
         if capturedCharacterInput:
-            pythonOutput = autoReviewBot(capturedCharacterInput)
+            reviews, headerData = autoReviewBot(capturedCharacterInput)
 
     except Exception as reason:
         if os.environ.get("USER") == 'niko':
@@ -108,7 +111,7 @@ def index() -> Response | str:
 
     return render_template(
         page,
-        htmlInput=pythonOutput, error=error, beta=is_beta,
+        reviews=reviews, header=headerData, error=error, beta=is_beta,
         live_link=live_link, beta_link=beta_link,
         switches=switches(), **get_user_preferences()
     )
@@ -133,12 +136,14 @@ def logtest():
 
 
 # @app.route("/")
-def autoReviewBot(capturedCharacterInput) -> list | None:
-    reviewInfo: list | None = None
+def autoReviewBot(capturedCharacterInput) -> tuple[list[AdviceWorld], HeaderData] | tuple[None, None]:
+    reviewInfo: list[AdviceWorld] | None = None
+    headerData: HeaderData | None = None
+
     if capturedCharacterInput:
-        reviewInfo = idleonTaskSuggester.main(capturedCharacterInput)
-    # Do review stuff function, pass into array
-    return reviewInfo
+        reviewInfo, headerData = idleonTaskSuggester.main(capturedCharacterInput)
+
+    return reviewInfo, headerData
 
 
 @app.errorhandler(404)
