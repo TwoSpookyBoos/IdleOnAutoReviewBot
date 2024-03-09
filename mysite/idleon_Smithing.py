@@ -222,11 +222,11 @@ def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, charact
     smithing_AdviceSection.pinchy_rating = overall_SmithingTier
     smithing_AdviceSection.tier = tier_section
     if overall_SmithingTier == max_tier:
-        advice_CombinedSmithing = ["Best Smithing tier met: " + str(overall_SmithingTier) + "/" + str(max_tier) + ". Recommended Smithing actions:", "Nada. You best ❤️", "", "", advice_UnusedForgeSlots]
-        smithing_AdviceSection.header = f"Best Smithing tier met: {tier_section}. You best ❤️"
+        advice_CombinedSmithing = ["Best Smithing tier met: " + str(overall_SmithingTier) + "/" + str(max_tier), "You best ❤️", "", "", advice_UnusedForgeSlots]
+        smithing_AdviceSection.header = f"Best Smithing tier met: {tier_section}<br>You best ❤️"
     else:
-        advice_CombinedSmithing = ["Best Smithing tier met: " + str(overall_SmithingTier) + "/" + str(max_tier) + ". Recommended Smithing actions:", advice_CashPoints, advice_MonsterPoints, advice_ForgeUpgrades, advice_UnusedForgeSlots]
-        smithing_AdviceSection.header = f"Best Smithing tier met: {tier_section}. Recommended Smithing actions"
+        advice_CombinedSmithing = ["Best Smithing tier met: " + str(overall_SmithingTier) + "/" + str(max_tier), advice_CashPoints, advice_MonsterPoints, advice_ForgeUpgrades, advice_UnusedForgeSlots]
+        smithing_AdviceSection.header = f"Best Smithing tier met: {tier_section}"
         smithing_AdviceSection.groups = smithing_AdviceGroupDict.values()
     smithingPR = progressionResults.progressionResults(overall_SmithingTier, advice_CombinedSmithing, "")
     return smithing_AdviceSection

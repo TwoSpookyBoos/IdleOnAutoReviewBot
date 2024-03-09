@@ -476,7 +476,7 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers, characterDict) -
     vial_AdviceSection = AdviceSection(
         name="Vials",
         tier="Not Yet Evaluated",
-        header="Best Vial tier met: Not Yet Evaluated. Recommended vial actions:",
+        header="Best Vial tier met: Not Yet Evaluated",
         picture="Alchemy_Vial-level-1.png"
     )
     highestAlchemyLevel = getHighestAlchemyLevel(inputJSON, len(characterDict))
@@ -597,9 +597,9 @@ def setAlchemyVialsProgressionTier(inputJSON, progressionTiers, characterDict) -
     vial_AdviceSection.pinchy_rating = overall_AlchemyVialsTier
     vial_AdviceSection.groups = vial_AdviceGroupDict.values()
     if overall_AlchemyVialsTier == max_tier:
-        vial_AdviceSection.header = f"Best Vial tier met: {tier_section}. You best ❤️"
+        vial_AdviceSection.header = f"Best Vial tier met: {tier_section}<br>You best ❤️"
     else:
-        vial_AdviceSection.header = f"Best Vial tier met: {tier_section}. Recommended vial actions:"
+        vial_AdviceSection.header = f"Best Vial tier met: {tier_section}"
 
     return vial_AdviceSection
 
@@ -810,9 +810,9 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers, characterDict)
     bubbles_AdviceSection.tier = tier_section
     bubbles_AdviceSection.pinchy_rating = overall_alchemyBubblesTier
     if overall_alchemyBubblesTier == max_tier:
-        bubbles_AdviceSection.header = f"Best Bubbles tier met: {tier_section}. You best ❤️"
+        bubbles_AdviceSection.header = f"Best Bubbles tier met: {tier_section}<br>You best ❤️"
     else:
-        bubbles_AdviceSection.header = f"Best Bubbles tier met: {tier_section}. Recommended Bubble actions:"
+        bubbles_AdviceSection.header = f"Best Bubbles tier met: {tier_section}"
         bubbles_AdviceSection.groups = bubbles_AdviceGroupDict.values()
     return bubbles_AdviceSection
 

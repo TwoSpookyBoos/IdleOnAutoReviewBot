@@ -529,9 +529,9 @@ def setBreedingProgressionTier(inputJSON: dict, progressionTiers: dict[int, dict
     breeding_AdviceSection.pinchy_rating = overall_BreedingTier
     breeding_AdviceSection.groups = breeding_AdviceGroupDict.values()
     if overall_BreedingTier == maxBreedingTier:
-        breeding_AdviceSection.header = f"Best Breeding tier met: {tier_section}. You best ❤️"
+        breeding_AdviceSection.header = f"Best Breeding tier met: {tier_section}<br>You best ❤️"
 
     else:
-        breeding_AdviceSection.header = f"Best Breeding tier met: {tier_section}. Recommended breeding actions"
+        breeding_AdviceSection.header = f"Best Breeding tier met: {tier_section}"
 
     return breeding_AdviceSection

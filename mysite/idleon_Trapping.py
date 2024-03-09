@@ -433,8 +433,8 @@ def setTrappingProgressionTier(inputJSON, characterDict):
     trapping_AdviceSection.tier = tier_section
     trapping_AdviceSection.groups = trapping_AdviceGroupDict.values()
     if overall_TrappingTier == max_tier:
-        trapping_AdviceSection.header = f"Best Trapping tier met: {tier_section}. Keep it up! You're on the right track! ❤️"
+        trapping_AdviceSection.header = f"Best Trapping tier met: {tier_section}<br>Keep it up! You're on the right track! ❤️"
     else:
-        trapping_AdviceSection.header = f"Best Trapping tier met: {tier_section}. Recommended Trapping actions"
+        trapping_AdviceSection.header = f"Best Trapping tier met: {tier_section}"
 
     return trapping_AdviceSection

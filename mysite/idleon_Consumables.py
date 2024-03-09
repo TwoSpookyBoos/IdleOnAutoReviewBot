@@ -212,14 +212,13 @@ def getCandyHourSections(inputJSON):
 
     tier_regular = "no guaranteed candy"
     guaranteedCandyString = f"You have {tier_regular} in your bank. Wow."
-    header_extra = ""
 
     if guaranteedCandyHours > 0:
         tier_regular = str(guaranteedCandyHours)
         guaranteedCandyString = f"You have {guaranteedCandyHours} hours ({guaranteedCandyHours / 24:.2f} days) of guaranteed candy in your bank."
 
     if guaranteedCandyHours >= 1000:
-        header_extra = " Don't forget about them!"
+        guaranteedCandyString += "<br>Don't forget about them!"
 
     # Variable Time Candies: Steamy, Spooky, Cosmic
     variable_candy = (bank.get(f"Timecandy{i}", 0) for i in range(7, 10))
@@ -231,7 +230,6 @@ def getCandyHourSections(inputJSON):
         name="Regular Candy",
         tier=tier_regular,
         header=guaranteedCandyString,
-        header_extra=header_extra,
         picture="Candy_1hr.png"
     )
 
@@ -254,7 +252,6 @@ def getCandyHourSections(inputJSON):
         name="Variable Candy",
         tier=tier_variable,
         header=variableCandyString,
-        header_extra="",
         picture="Candy_Cosmic.png"
     )
 

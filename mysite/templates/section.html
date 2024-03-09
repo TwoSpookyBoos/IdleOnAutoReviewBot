@@ -3,7 +3,10 @@
         {% if section.picture %}
             <img src="{{ section.picture | img }}" alt="{{ section.name }}">
         {% endif %}
-        <span>{{ section.header | safe }}</span>
+        <div class="heading-wrapper">
+            <span>{{ section.header | safe }}</span>
+            <span>{{ section.pinchy_placement }}</span>
+        </div>
     </h3>
     <div class="collapse-wrapper">
         <ul class="advice-section{% if not section %} no-collapse{% endif %}{% if section.collapse %} folded{% endif %}">

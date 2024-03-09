@@ -298,9 +298,9 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers, characterDict):
     refinery_AdviceSection.pinchy_rating = overall_ConsRefineryTier
     refinery_AdviceSection.groups = refinery_AdviceGroupDict.values()
     if overall_ConsRefineryTier == max_tier:
-        refinery_AdviceSection.header = f"Best Refinery tier met: {tier_section}. You best ❤️"
+        refinery_AdviceSection.header = f"Best Refinery tier met: {tier_section}<br>You best ❤️"
     else:
-        refinery_AdviceSection.header = f"Best Refinery tier met: {tier_section}. Recommended Refinery actions"
+        refinery_AdviceSection.header = f"Best Refinery tier met: {tier_section}"
     return refinery_AdviceSection
 
 def OLDsetConsRefineryProgressionTier(inputJSON, progressionTiers):
@@ -455,7 +455,7 @@ def OLDsetConsRefineryProgressionTier(inputJSON, progressionTiers):
             advice_AutoRefine += " You best ❤️"
 
     #Generate advice statement
-    advice_ConsRefineryCombined = ["Best Refinery tier met: " + str(overall_ConsRefineryTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended refinery actions:", advice_AutoRefine, advice_W3Merits, advice_Tab1, advice_Tab2]
+    advice_ConsRefineryCombined = ["Best Refinery tier met: " + str(overall_ConsRefineryTier) + "/" + str(progressionTiers[-1][-0]), advice_AutoRefine, advice_W3Merits, advice_Tab1, advice_Tab2]
     #TODO
     #print("Tiers: Overall",overall_ConsRefineryTier, ", AutoRefine", tier_AutoRefine, ", Merits", tier_W3Merits, ", Tab1", tier_Tab1, ", Tab2", tier_Tab2, ", Tab3", tier_Tab3)
     #print("Determined lowest refinery tier met to be: " + str(overall_ConsRefineryTier) + "/19")
