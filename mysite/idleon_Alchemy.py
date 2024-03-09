@@ -673,11 +673,11 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers, characterDict)
     combined_BubblesList = [orangeBubblesUnlocked, greenBubblesUnlocked, purpleBubblesUnlocked, yellowBubblesUnlocked]
     for bubbleColorCount in combined_BubblesList:
         worldCounter = 1
-        while bubbleColorCount >= 5 and worldCounter <= len(bubbleUnlockListByWorld):
+        while bubbleColorCount >= 5 and worldCounter <= len(bubbleUnlockListByWorld)-1:
             bubbleUnlockListByWorld[worldCounter] += 5
             bubbleColorCount -= 5
             worldCounter += 1
-        if bubbleColorCount > 0:
+        if bubbleColorCount > 0 and worldCounter <= len(bubbleUnlockListByWorld)-1:
             bubbleUnlockListByWorld[worldCounter] += bubbleColorCount
             bubbleColorCount = 0
     nextWorldMissingBubbles = 0
