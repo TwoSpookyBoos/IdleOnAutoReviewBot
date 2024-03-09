@@ -364,7 +364,10 @@ def parseInventoryBagSlots(inputJSON, characterDict: dict[int, Character]) -> Ad
     for chararacterIndex, bagList in playerBagDict.items():
         sumSlots = defaultInventorySlots + autoLootSlots
         for bag in bagList:
-            sumSlots += int(bagList[bag])
+            try:
+                sumSlots += int(bagList[bag])
+            except:
+                logger.exception(f"Could not increase character {chararacterIndex}'s bagslots by {type(bagList[bag])} {bagList[bag]}")
         playerBagSlotsDict[chararacterIndex] = {"Total":sumSlots}
         if sumSlots >= currentMaxUsableInventorySlots:
             playersWithMaxBagSlots.append(chararacterIndex)
