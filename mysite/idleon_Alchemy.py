@@ -830,7 +830,7 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers, characterDict)
         bubbles_AdviceGroupDict[agdNames[counter]] = AdviceGroup(
             tier=agdTiers[counter],
             pre_string=agdPre_strings[counter],
-            post_string=agdPost_strings[counter],
+            post_string="",  #agdPost_strings[counter],
             advices=bubbles_AdviceDict[agdNames[counter]]
         )
 
