@@ -4,6 +4,7 @@ from idleon_SkillLevels import getSpecificSkillLevelsList
 from models import AdviceSection, AdviceGroup, Advice
 from utils import pl, get_logger
 from flask import g as session_data
+from consts import maxTiersPerGroup
 
 logger = get_logger(__name__)
 
@@ -637,7 +638,6 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers, characterDict)
     max_tier = progressionTiers[-1][0]
     overall_alchemyBubblesTier = 0
     adviceCountsDict = {"PurpleSampleBubbles": 0, "OrangeSampleBubbles": 0, "GreenSampleBubbles": 0, "UtilityBubbles": 0}
-    maxTiersPerGroup = 3
 
     #Get the bubble data and remove the length element
     raw_orange_alchemyBubblesDict = inputJSON["CauldronInfo"][0]

@@ -2,6 +2,7 @@ import json
 from idleon_SkillLevels import getSpecificSkillLevelsList
 from models import AdviceSection, AdviceGroup, Advice
 from utils import pl
+from consts import maxTiersPerGroup
 
 def getReadablePrayerNames(inputNumber) -> str:
     match inputNumber:
@@ -139,7 +140,6 @@ def setWorshipPrayersProgressionTier(inputJSON, progressionTiers, characterDict)
         return prayers_AdviceSection
 
     adviceCountsDict = {"Recommended": 0, "Optional": 0, "Ignorable": 0}
-    maxTiersPerGroup = 3
 
     #Check Recommended Prayers
     for tier in progressionTiers[:-2]:

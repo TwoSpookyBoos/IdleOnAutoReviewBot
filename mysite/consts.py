@@ -698,7 +698,7 @@ progressionTiers = {
         },
         14: {
             "Crystal Enemy Drops": [
-                "StoneW2", "StoneA2",],
+                "StoneW2",],  #"StoneA2",],
             "Other Skilling Resources": [
                 "DreadloBar", "MarbleBar", "GodshardBar",
                 "FoodTrapping1", "FoodWorship1",
@@ -756,7 +756,7 @@ expectedStackables = {
         "EquipmentStatues7", "EquipmentStatues3", "EquipmentStatues2", "EquipmentStatues4", "EquipmentStatues14",  # Standard statues
         "EquipmentStatues1", "EquipmentStatues5",  # Plausible but time consuming
         "rtt0", "StoneZ1", "StoneT1", "StoneW1", "StoneA1",  #W1 Slow drops = Town TP + Stones
-        "StoneT2", "StoneW2", "StoneA2", "StoneZ2",  # W2 upgrade stones and Mystery2
+        "StoneT2", "StoneA2", "StoneZ2",  #"StoneW2",  # W2 upgrade stones and Mystery2
         "PureWater",  #W3 Slow drops = Distilled Water
         "FoodG9",  #W5 Slow drops = Golden W5 Sammy
     ],
@@ -1101,3 +1101,5 @@ card_data = {
         "xmasEvent3": ["Golden Giftmas Box", 1],
     },
 }
+
+maxTiersPerGroup = 3

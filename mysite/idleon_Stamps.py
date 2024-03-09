@@ -1,5 +1,6 @@
 from models import AdviceSection, AdviceGroup, Advice
 from utils import pl, get_logger
+from consts import maxTiersPerGroup
 
 logger = get_logger(__name__)
 
@@ -347,7 +348,6 @@ def setStampProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
     tier_RequiredSpecificStamps = 0
     max_tier = progressionTiers[-1][0]
     adviceCountsDict = {"CombatStamps": 0, "SkillStamps": 0, "MiscStamps": 0, "SpecificStamps": 0}
-    maxTiersPerGroup = 3
 
     for tier in progressionTiers:
         # TotalLevelStamps
