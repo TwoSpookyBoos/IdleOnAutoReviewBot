@@ -2,6 +2,7 @@ import json
 from idleon_SkillLevels import getSpecificSkillLevelsList
 from models import AdviceSection, AdviceGroup, Advice
 from utils import pl
+from consts import maxTiersPerGroup
 
 def getReadablePrayerNames(inputNumber) -> str:
     match inputNumber:
@@ -122,7 +123,7 @@ def setWorshipPrayersProgressionTier(inputJSON, progressionTiers, characterDict)
     overall_WorshipPrayersTier = 0
 
     prayers_AdviceDict = {
-        "Recommended": [],
+        "Recommended": {},
         "Optional": [],
         "Ignorable": []
     }
@@ -138,30 +139,41 @@ def setWorshipPrayersProgressionTier(inputJSON, progressionTiers, characterDict)
         prayers_AdviceSection.header = "Come back after unlocking the Worship skill in World 3!"
         return prayers_AdviceSection
 
+    adviceCountsDict = {"Recommended": 0, "Optional": 0, "Ignorable": 0}
+
     #Check Recommended Prayers
     for tier in progressionTiers[:-2]:
         #tier[0] = int Tier
         #tier[1] = dict requiredPrayersDict
         #tier[2] = str Notes
-        if tier_WorshipPrayers == (tier[0] - 1):  # Only check if they already met previous tier
-            allPrayersLeveled = True
-            for requiredPrayer in tier[1]:
-                if worshipPrayersDict[requiredPrayer] < tier[1][requiredPrayer]:
-                    allPrayersLeveled = False
-                    prayers_AdviceDict["Recommended"].append(Advice(label=requiredPrayer, picture_class=getPrayerImage(requiredPrayer),
-                                                                    progression=str(worshipPrayersDict[requiredPrayer]),
-                                                                    goal=str(tier[1][requiredPrayer]))
-                                                             )
-            if allPrayersLeveled == True:
-                tier_WorshipPrayers = tier[0]
+        allPrayersLeveled = True
+        for requiredPrayer in tier[1]:
+            if worshipPrayersDict[requiredPrayer] < tier[1][requiredPrayer]:
+                allPrayersLeveled = False
+                if len(prayers_AdviceDict["Recommended"]) < maxTiersPerGroup:
+                    adviceCountsDict["Recommended"] += 1
+                    if f"Tier {tier[0]}" not in prayers_AdviceDict["Recommended"]:
+                        prayers_AdviceDict["Recommended"][f"Tier {tier[0]}"] = []
+                    prayers_AdviceDict["Recommended"][f"Tier {tier[0]}"].append(
+                        Advice(
+                            label=requiredPrayer,
+                            picture_class=getPrayerImage(requiredPrayer),
+                            progression=str(worshipPrayersDict[requiredPrayer]),
+                            goal=str(tier[1][requiredPrayer]))
+                    )
+        if tier_WorshipPrayers == (tier[0] - 1) and allPrayersLeveled == True:  # Only update if they already met the previous tier
+            tier_WorshipPrayers = tier[0]
 
     #Check Optional Prayers
     optionalTierPrayers = progressionTiers[-2][1]
     for optionalPrayer in optionalTierPrayers:
         if worshipPrayersDict[optionalPrayer] < optionalTierPrayers[optionalPrayer]:
             prayers_AdviceDict["Optional"].append(
-                Advice(label=optionalPrayer, picture_class=getPrayerImage(optionalPrayer), progression=str(worshipPrayersDict[optionalPrayer]),
-                       goal=str(optionalTierPrayers[optionalPrayer]))
+                Advice(
+                    label=optionalPrayer,
+                    picture_class=getPrayerImage(optionalPrayer),
+                    progression=str(worshipPrayersDict[optionalPrayer]),
+                    goal=str(optionalTierPrayers[optionalPrayer]))
                 )
 
     #Check Ignorable Prayers
@@ -169,8 +181,11 @@ def setWorshipPrayersProgressionTier(inputJSON, progressionTiers, characterDict)
     for ignorablePrayer in ignorableTierPrayers:
         if worshipPrayersDict[ignorablePrayer] < ignorableTierPrayers[ignorablePrayer]:
             prayers_AdviceDict["Ignorable"].append(
-                Advice(label=ignorablePrayer, picture_class=getPrayerImage(ignorablePrayer), progression=str(worshipPrayersDict[ignorablePrayer]),
-                       goal=str(ignorableTierPrayers[ignorablePrayer]))
+                Advice(
+                    label=ignorablePrayer,
+                    picture_class=getPrayerImage(ignorablePrayer),
+                    progression=str(worshipPrayersDict[ignorablePrayer]),
+                    goal=str(ignorableTierPrayers[ignorablePrayer]))
                 )
 
 #Generate Advice Groups
@@ -186,21 +201,21 @@ def setWorshipPrayersProgressionTier(inputJSON, progressionTiers, characterDict)
     ]
     prayers_AdviceGroupDict['Recommended'] = AdviceGroup(
         tier=tier_WorshipPrayers,
-        pre_string=f"Level the following Prayer{pl(prayers_AdviceDict['Recommended'])}",
+        pre_string=f"Recommended Prayer{pl([''] * adviceCountsDict['Recommended'])}",
         advices=prayers_AdviceDict['Recommended'],
-        post_string=recommended_post_string_list[tier_WorshipPrayers],
+        post_string="",  #recommended_post_string_list[tier_WorshipPrayers],
     )
     prayers_AdviceGroupDict['Optional'] = AdviceGroup(
         tier="",
         pre_string=f"Situational Prayer{pl(prayers_AdviceDict['Optional'])} you may consider levelling",
         advices=prayers_AdviceDict['Optional'],
-        post_string="These are niche use prayers. You can level them if you like. Some players choose to ignore them.",
+        post_string="These are niche use prayers. They have different benefits/purposes at low level and high levels",
     )
     prayers_AdviceGroupDict['Ignorable'] = AdviceGroup(
         tier="",
-        pre_string=f"Prayer{pl(prayers_AdviceDict['Ignorable'])} you can generally not level",
+        pre_string=f"Ignorable Prayer{pl(prayers_AdviceDict['Ignorable'])}",
         advices=prayers_AdviceDict['Ignorable'],
-        post_string="Prayers in this group should still be unlocked, but can stay at level 1 after that as of v1.91.",
+        post_string="Prayers in this group should still be unlocked, but can stay at level 1 after that as of v2.03.",
     )
 
     #Generate Advice Section

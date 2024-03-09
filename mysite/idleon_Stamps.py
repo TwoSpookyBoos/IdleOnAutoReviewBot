@@ -1,6 +1,6 @@
-import progressionResults
 from models import AdviceSection, AdviceGroup, Advice
 from utils import pl, get_logger
+from consts import maxTiersPerGroup
 
 logger = get_logger(__name__)
 
@@ -13,12 +13,17 @@ def setStampLevels(inputJSON, inputIndex):
     return totalStampLevels
 
 # Stamp p2
-def setMissingStamps(inputJSON, inputIndex):
-    missingStamps = []
-    for stamp, value in inputJSON["StampLvM"][inputIndex].items():
-        if value == 0:
-            missingStamps.append(stamp)
-    return missingStamps
+def setMissingStamps(playerStampsDict):
+    unavailableStampsList = [
+            'Shiny Crab Stamp', 'Gear Stamp', 'SpoOoky Stamp', 'Prayday Stamp',  #Skill
+            'Talent I Stamp', 'Talent V Stamp',  #Misc
+    ]
+    missingStampsList = []
+    for stampTypeIndex in range(0, 2):
+        for stamp, value in playerStampsDict.items():
+            if value == 0 and stamp not in unavailableStampsList:
+                missingStampsList.append(stamp)
+    return missingStampsList
 
 # Stamp p3
 def setPriorityStamps(inputJSON):
@@ -316,10 +321,10 @@ def getReadableStampName(stampNumber, stampType):
 def setStampProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
     stamp_AdviceDict = {
         "StampLevels": [],
-        "CombatStamps": [],
-        "SkillStamps": [],
-        "MiscStamps": [],
-        "SpecificStamps": [],
+        "CombatStamps": {},
+        "SkillStamps": {},
+        "MiscStamps": {},
+        "SpecificStamps": {},
     }
     stamp_AdviceGroupDict = {}
     stamp_AdviceSection = AdviceSection(
@@ -333,10 +338,8 @@ def setStampProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
     totalSkillStampLevels = setStampLevels(inputJSON, 1)
     totalMiscStampLevels = setStampLevels(inputJSON, 2)
     totalAllStampLevels = totalCombatStampLevels + totalSkillStampLevels + totalMiscStampLevels
-    missingCombatStamps = setMissingStamps(inputJSON, 0)
-    missingSkillStamps = setMissingStamps(inputJSON, 1)
-    missingMiscStamps = setMissingStamps(inputJSON, 2)
     playerPriorityStamps = setPriorityStamps(inputJSON)
+    missingStampsDict = setMissingStamps(playerPriorityStamps)
     capacityExclusionsDict = getCapacityExclusions(playerPriorityStamps)
     tier_StampLevels = 0
     tier_RequiredCombatStamps = 0
@@ -344,6 +347,7 @@ def setStampProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
     tier_RequiredMiscStamps = 0
     tier_RequiredSpecificStamps = 0
     max_tier = progressionTiers[-1][0]
+    adviceCountsDict = {"CombatStamps": 0, "SkillStamps": 0, "MiscStamps": 0, "SpecificStamps": 0}
 
     for tier in progressionTiers:
         # TotalLevelStamps
@@ -353,75 +357,97 @@ def setStampProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
             else:
                 advice_StampLevels = tier[1]
                 stamp_AdviceDict["StampLevels"].append(
-                    Advice(label="Total Stamp Levels", picture_class="stat-graph-stamp", progression=totalAllStampLevels, goal=advice_StampLevels)
+                    Advice(
+                        label="Total Stamp Levels",
+                        picture_class="stat-graph-stamp",
+                        progression=totalAllStampLevels,
+                        goal=advice_StampLevels)
                 )
 
         # CombatStamps
-        if tier_RequiredCombatStamps == (tier[0] - 1):  # Only check if they already met previous tier
-            allCombatStamps = True
-            splitRequiredCombatStamps = tier[2].split(",")  # string of numbers, no spaces
-            for rStamp in splitRequiredCombatStamps:
-                #logger.debug(f"{rStamp} {missingCombatStamps} {rStamp in missingCombatStamps}")
-                if rStamp in missingCombatStamps:
-                    allCombatStamps = False
-                    stamp_AdviceDict["CombatStamps"].append(
-                        Advice(label=getReadableStampName(int(rStamp), "Combat"), picture_class=getReadableStampName(int(rStamp), "Combat"))
+        allCombatStamps = True
+        for rStamp in tier[2]:
+            #logger.debug(f"{rStamp} {missingCombatStamps} {rStamp in missingCombatStamps}")
+            if getReadableStampName(rStamp, "Combat") in missingStampsDict:
+                allCombatStamps = False
+                if len(stamp_AdviceDict["CombatStamps"]) < maxTiersPerGroup:
+                    adviceCountsDict["CombatStamps"] += 1
+                    if f"Tier {tier[0]}" not in stamp_AdviceDict["CombatStamps"]:
+                        stamp_AdviceDict["CombatStamps"][f"Tier {tier[0]}"] = []
+                    stamp_AdviceDict["CombatStamps"][f"Tier {tier[0]}"].append(
+                        Advice(
+                            label=getReadableStampName(int(rStamp), "Combat"),
+                            picture_class=getReadableStampName(int(rStamp), "Combat"))
                     )
-            if allCombatStamps == True:
-                tier_RequiredCombatStamps = tier[0]
+        if tier_RequiredCombatStamps == (tier[0] - 1) and allCombatStamps == True:  # Only update if they already met previous tier
+            tier_RequiredCombatStamps = tier[0]
 
         # SkillStamps
-        if tier_RequiredSkillStamps == (tier[0] - 1):  # Only check if they already met previous tier
-            allSkillStamps = True
-            splitRequiredSkillStamps = tier[3].split(",")  # string of numbers, no spaces
-            for rStamp in splitRequiredSkillStamps:
-                #logger.debug(f"{rStamp} {missingCombatStamps} {rStamp in missingSkillStamps}")
-                if rStamp in missingSkillStamps:
-                    allSkillStamps = False
-                    stamp_AdviceDict["SkillStamps"].append(
-                        Advice(label=getReadableStampName(int(rStamp), "Skill"), picture_class=getReadableStampName(int(rStamp), "Skill"),
-                               progression="", goal="", unit="")
+        allSkillStamps = True
+        for rStamp in tier[3]:
+            #logger.debug(f"{rStamp} {missingCombatStamps} {rStamp in missingSkillStamps}")
+            if getReadableStampName(rStamp, "Skill") in missingStampsDict:
+                allSkillStamps = False
+                if len(stamp_AdviceDict["SkillStamps"]) < maxTiersPerGroup:
+                    adviceCountsDict["SkillStamps"] += 1
+                    if f"Tier {tier[0]}" not in stamp_AdviceDict["SkillStamps"]:
+                        stamp_AdviceDict["SkillStamps"][f"Tier {tier[0]}"] = []
+                    stamp_AdviceDict["SkillStamps"][f"Tier {tier[0]}"].append(
+                        Advice(
+                            label=getReadableStampName(int(rStamp), "Skill"),
+                            picture_class=getReadableStampName(int(rStamp), "Skill"))
                     )
-            if allSkillStamps == True:
-                tier_RequiredSkillStamps = tier[0]
+        if tier_RequiredSkillStamps == (tier[0] - 1) and allSkillStamps == True:  # Only update if they already met previous tier
+            tier_RequiredSkillStamps = tier[0]
 
         # MiscStamps
-        if tier_RequiredMiscStamps == (tier[0] - 1):  # Only check if they already met previous tier
-            allMiscStamps = True
-            splitRequiredMiscStamps = tier[4].split(",")  # string of numbers, no spaces
-            for rStamp in splitRequiredMiscStamps:
-                #logger.debug(f"{rStamp} {missingCombatStamps} {rStamp in missingMiscStamps}")
-                if rStamp in missingMiscStamps:
-                    allMiscStamps = False
-                    stamp_AdviceDict["MiscStamps"].append(
-                        Advice(label=getReadableStampName(int(rStamp), "Misc"), picture_class=getReadableStampName(int(rStamp), "Misc"),
-                               progression="", goal="", unit="")
+        allMiscStamps = True
+        for rStamp in tier[4]:
+            #logger.debug(f"{rStamp} {missingCombatStamps} {rStamp in missingMiscStamps}")
+            if getReadableStampName(rStamp, "Misc") in missingStampsDict:
+                allMiscStamps = False
+                if len(stamp_AdviceDict["MiscStamps"]) < maxTiersPerGroup:
+                    adviceCountsDict["MiscStamps"] += 1
+                    if f"Tier {tier[0]}" not in stamp_AdviceDict["MiscStamps"]:
+                        stamp_AdviceDict["MiscStamps"][f"Tier {tier[0]}"] = []
+                    stamp_AdviceDict["MiscStamps"][f"Tier {tier[0]}"].append(
+                        Advice(
+                            label=getReadableStampName(int(rStamp), "Misc"),
+                            picture_class=getReadableStampName(int(rStamp), "Misc"),
+                            )
                     )
-            if allMiscStamps == True:
-                tier_RequiredMiscStamps = tier[0]
+        if tier_RequiredMiscStamps == (tier[0] - 1) and allMiscStamps == True:  # Only update if they already met previous tier
+            tier_RequiredMiscStamps = tier[0]
 
         # SpecificStampLevels
-        if tier_RequiredSpecificStamps == (tier[0] - 1):  # Only check if they already met previous tier
-            requiredSpecificStamps = tier[5]  # dictionary
-            allSpecificStamps = True
-            for key, value in requiredSpecificStamps.items():
-                #logger.debug(f"{tier[0]}, {playerPriorityStamps[key]}, {requiredSpecificStamps[key]}, {playerPriorityStamps[key] >= requiredSpecificStamps[key]}")
-                if playerPriorityStamps[key] < requiredSpecificStamps[key]:
-                    if key in capacityExclusionsDict:
-                        if capacityExclusionsDict[key] is False:
-                            allSpecificStamps = False
-                            stamp_AdviceDict["SpecificStamps"].append(
-                                Advice(label=str(key), picture_class=str(key), progression=playerPriorityStamps[key],
-                                       goal=requiredSpecificStamps[key], unit="")
-                            )
-                    else:
-                        allSpecificStamps = False
-                        stamp_AdviceDict["SpecificStamps"].append(
-                            Advice(label=str(key), picture_class=str(key), progression=playerPriorityStamps[key], goal=requiredSpecificStamps[key],
-                                   unit="")
+        requiredSpecificStamps = tier[5]  # dictionary
+        allSpecificStamps = True
+        for key, value in requiredSpecificStamps.items():
+            #logger.debug(f"{tier[0]}, {playerPriorityStamps[key]}, {requiredSpecificStamps[key]}, {playerPriorityStamps[key] >= requiredSpecificStamps[key]}")
+            if playerPriorityStamps[key] < requiredSpecificStamps[key]:
+                if capacityExclusionsDict.get(key, 0) == 0:  #Check to see if this is a capacity-increasing stamp, and if it skipping it is set to False
+                    allSpecificStamps = False
+                    if len(stamp_AdviceDict["SpecificStamps"]) < maxTiersPerGroup:  #and adviceCountsDict["HighPrio"] <= maxAdvicePerGroup:
+                        adviceCountsDict["SpecificStamps"] += 1
+                        if f"Tier {tier[0]}" not in stamp_AdviceDict["SpecificStamps"]:
+                            stamp_AdviceDict["SpecificStamps"][f"Tier {tier[0]}"] = []
+                        stamp_AdviceDict["SpecificStamps"][f"Tier {tier[0]}"].append(
+                            Advice(
+                                label=str(key),
+                                picture_class=str(key),
+                                progression=playerPriorityStamps[key],
+                                goal=requiredSpecificStamps[key])
                         )
-            if allSpecificStamps == True:
-                tier_RequiredSpecificStamps = tier[0]
+                # else:
+                    # TODO: Feels like this probably shouldn't be here?
+                    # This condition would be hit when able to skip a stamp because it is in the capacityExclusionsDict. No reason to create Advice for that
+                    # allSpecificStamps = False
+                    # stamp_AdviceDict["SpecificStamps"].append(
+                    #     Advice(label=str(key), picture_class=str(key), progression=playerPriorityStamps[key], goal=requiredSpecificStamps[key],
+                    #            unit="")
+                    # )
+        if tier_RequiredSpecificStamps == (tier[0] - 1) and allSpecificStamps == True:
+            tier_RequiredSpecificStamps = tier[0]
 
     overall_StampTier = min(max_tier, tier_StampLevels, tier_RequiredCombatStamps, tier_RequiredSkillStamps,
                             tier_RequiredMiscStamps, tier_RequiredSpecificStamps)
@@ -437,25 +463,25 @@ def setStampProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
     # Combat Stamps
     stamp_AdviceGroupDict["CombatStamps"] = AdviceGroup(
         tier=str(tier_RequiredCombatStamps),
-        pre_string=f"Collect the following Combat stamp{pl(stamp_AdviceDict['CombatStamps'])}",
+        pre_string=f"Collect the following Combat stamp{pl([''] * adviceCountsDict['CombatStamps'])}",
         advices=stamp_AdviceDict['CombatStamps'])
 
     # Skill Stamps
     stamp_AdviceGroupDict["SkillStamps"] = AdviceGroup(
         tier=str(tier_RequiredSkillStamps),
-        pre_string=f"Collect the following Skill stamp{pl(stamp_AdviceDict['SkillStamps'])}",
+        pre_string=f"Collect the following Skill stamp{pl([''] * adviceCountsDict['SkillStamps'])}",
         advices=stamp_AdviceDict["SkillStamps"])
 
     # Misc Stamps
     stamp_AdviceGroupDict["MiscStamps"] = AdviceGroup(
         tier=str(tier_RequiredMiscStamps),
-        pre_string=f"Collect the following Misc stamp{pl(stamp_AdviceDict['MiscStamps'])}",
+        pre_string=f"Collect the following Misc stamp{pl([''] * adviceCountsDict['MiscStamps'])}",
         advices=stamp_AdviceDict["MiscStamps"])
 
     # Specific High-Priority Stamps
     stamp_AdviceGroupDict["SpecificStamps"] = AdviceGroup(
         tier=str(tier_RequiredSpecificStamps),
-        pre_string=f"Improve the following high-priority stamp{pl(stamp_AdviceDict['MiscStamps'])}",
+        pre_string=f"Improve high-priority stamp{pl([''] * adviceCountsDict['SpecificStamps'])}",
         advices=stamp_AdviceDict["SpecificStamps"])
 
     #Generate AdviceSection
