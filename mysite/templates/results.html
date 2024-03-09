@@ -34,9 +34,13 @@
                         uploaded your account publicly.
                     </span>
 
-                {% elif htmlInput | ensure_data %}
+                {% elif reviews | ensure_data %}
                     {% include 'header.html' %}
-                    {% include 'main.html' %}
+                    <main id="mainresults">
+                        {% for world in reviews %}
+                            {% include "world.html" %}
+                        {% endfor %}
+                    </main>
                 {% endif %}
             </div>
             <a id="scroll-to-top" href="#top"></a>

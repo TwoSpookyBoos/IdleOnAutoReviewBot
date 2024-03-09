@@ -492,6 +492,6 @@ def setStampProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
     if overall_StampTier == max_tier:
         stamp_AdviceSection.header = f"Best Stamp tier met: {tier_section}. You've reached the end of the recommendations. Let me know what important stamps you're aiming for next!"
     else:
-        stamp_AdviceSection.header = f"Best Stamp tier met: {tier_section}. Recommended stamp actions:"
+        stamp_AdviceSection.header = f"Best Stamp tier met: {tier_section}"
 
     return stamp_AdviceSection

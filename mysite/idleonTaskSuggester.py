@@ -185,55 +185,53 @@ def main(inputData, runType="web"):
     #w6list = [["w6 mechanic 1 placeholder"], ["w6 mechanic 2 placeholder"], ["w6 mechanic 3 placeholder"]]
     #w7list = [["w7 mechanic 1 placeholder"], ["w7 mechanic 2 placeholder"], ["w7 mechanic 3 placeholder"]]
     #w8list = [["w8 mechanic 1 placeholder"], ["w8 mechanic 2 placeholder"], ["w8 mechanic 3 placeholder"]]
-    biggoleProgressionTiersDict = {
-        Placements.COMBAT_LEVELS: section_combatLevels.pinchy_rating,
-        Placements.STAMPS: stamps_AdviceSection.pinchy_rating,
-        Placements.BRIBES: bribes_AdviceSection.pinchy_rating,
-        Placements.SMITHING: smithing_AdviceSection.pinchy_rating,
-        Placements.BUBBLES: alchBubbles_AdviceSection.pinchy_rating,
-        Placements.VIALS: alchVials_AdviceSection.pinchy_rating,
-        Placements.P2W: alchP2W_AdviceSection.pinchy_rating,
-        Placements.REFINERY: refinery_AdviceSection.pinchy_rating,
-        Placements.SALT_LICK: saltlick_AdviceSection.pinchy_rating,
-        Placements.DEATH_NOTE: deathnote_AdviceSection.pinchy_rating,
-        Placements.PRAYERS: prayers_AdviceSection.pinchy_rating
-        }
-    pinchy = idleon_Pinchy.generatePinchyWorld(parsedJSON, playerCount, biggoleProgressionTiersDict)
+    all_sections = [
+        section_combatLevels,
+        stamps_AdviceSection, bribes_AdviceSection, smithing_AdviceSection,
+        alchBubbles_AdviceSection, alchVials_AdviceSection, alchP2W_AdviceSection,
+        refinery_AdviceSection, saltlick_AdviceSection, deathnote_AdviceSection, prayers_AdviceSection,
+    ]
+    pinchy_high, pinchy_low, pinchy_all = idleon_Pinchy.generatePinchyWorld(parsedJSON, playerCount, all_sections)
+
+    pinchyReview = AdviceWorld(
+        name=WorldName.PINCHY,
+        sections=[pinchy_high, pinchy_low, pinchy_all],
+        collapse=False,
+        title="Pinchy AutoReview"
+    )
     generalReview = AdviceWorld(
         name=WorldName.GENERAL,
         sections=[section_combatLevels, section_maestro, *section_consumables, section_gemShop, *sections_quest_gstacks, section_regular_gstacks, section_cards],
         banner="general_banner.jpg"
     )
-
     w1Review = AdviceWorld(
-        name=WorldName.WORLD1,
+        name=WorldName.BLUNDER_HILLS,
         sections=[stamps_AdviceSection, bribes_AdviceSection, smithing_AdviceSection],
         banner="w1banner.png"
     )
     w2Review = AdviceWorld(
-        name=WorldName.WORLD2,
+        name=WorldName.YUMYUM_DESERT,
         sections=[alchBubbles_AdviceSection, alchVials_AdviceSection, alchP2W_AdviceSection],
         banner="w2banner.png"
     )
     w3Review = AdviceWorld(
-        name=WorldName.WORLD3,
+        name=WorldName.FROSTBITE_TUNDRA,
         sections=[refinery_AdviceSection, buildings_AdviceSection, saltlick_AdviceSection, deathnote_AdviceSection, prayers_AdviceSection, trapping_AdviceSection],
         banner="w3banner.png"
     )
     w4Review = AdviceWorld(
-        name=WorldName.WORLD4,
+        name=WorldName.HYPERION_NEBULA,
         sections=[breeding_AdviceSection],
         banner="w4banner.png"
     )
     w5Review = AdviceWorld(
-        name=WorldName.WORLD5,
-        sections=[],
+        name=WorldName.SMOLDERIN_PLATEAU,
         banner="w5banner.png"
     )
 
-    biggoleAdviceList = [w5Review, w4Review, w3Review, w2Review, w1Review, generalReview, pinchy, headerData]
+    reviews = [pinchyReview, generalReview, w1Review, w2Review, w3Review, w4Review, w5Review]
 
     if runType == "consoleTest":
         return "Pass"
     else:
-        return biggoleAdviceList
+        return reviews, headerData

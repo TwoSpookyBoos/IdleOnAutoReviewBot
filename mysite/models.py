@@ -107,11 +107,13 @@ class WorldName(Enum):
     WORLD3 = "World 3"
     WORLD4 = "World 4"
     WORLD5 = "World 5"
+    WORLD6 = "World 6"
     BLUNDER_HILLS = "Blunder Hills"
     YUMYUM_DESERT = "Yum-Yum Desert"
     FROSTBITE_TUNDRA = "Frostbite Tundra"
     HYPERION_NEBULA = "Hyperion Nebula"
     SMOLDERIN_PLATEAU = "Smolderin' Plateau"
+    SPIRITED_VALLEY = "Spirited Valley"
 
 
 class AdviceBase:
@@ -292,7 +294,7 @@ class AdviceSection(AdviceBase):
     Args:
         name (str): the name of the section (e.g. Stamps, Bribes)
         tier (str): alphanumeric tier of this section (e.g. 17/36), not always present
-        header (str): text of the section title (e.g "Best Stamp tier met: 17/36. Recommended stamp actions", "Maestro Right Hands")
+        header (str): text of the section title (e.g "Best Stamp tier met: 17/36", "Maestro Right Hands")
         picture (str): image file name to use as header icon
         collapse (bool | None): should the section be collapsed on load?
         groups (list<AdviceGroup>): a list of `AdviceGroup` objects, each in its own box and bg colour
@@ -324,15 +326,8 @@ class AdviceSection(AdviceBase):
 
     @property
     def header(self) -> str:
-        # TODO: header_extra needs proper handling
-        if not hasattr(self, "header_extra"):
-            self._raw_header = self._raw_header.replace(".", ".<br>", 1)
         if not self.tier:
-            return self._raw_header + (
-                ("<br>" + getattr(self, "header_extra"))
-                if hasattr(self, "header_extra")
-                else ""
-            )
+            return self._raw_header
 
         pattern = f"({re.escape(self.tier)})"
         parts = re.split(pattern, self._raw_header)
@@ -348,11 +343,7 @@ class AdviceSection(AdviceBase):
 
         header_markedup = "".join(parts)
 
-        return header_markedup + (
-            ("<br>" + getattr(self, "header_extra"))
-            if hasattr(self, "header_extra")
-            else ""
-        )
+        return header_markedup
 
     @header.setter
     def header(self, raw_header: str):
@@ -394,6 +385,7 @@ class AdviceWorld(AdviceBase):
         collapse: bool | None = None,
         sections: list[AdviceSection] = list(),
         banner: str = "",
+        title: str = "",
         **extra,
     ):
         super().__init__(collapse, **extra)
@@ -401,6 +393,11 @@ class AdviceWorld(AdviceBase):
         self.name: str = name.value
         self.sections: list[AdviceSection] = sections
         self.banner: str = banner
+        self.title: str = title
+
+    @property
+    def id(self):
+        return kebab(self.name)
 
 
 greenStackAmount = 10**7

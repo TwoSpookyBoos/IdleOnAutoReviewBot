@@ -14,34 +14,18 @@ document.addEventListener("click", (e) => {
 // close the sidebar if it's open and Esc key is pressed
 document.addEventListener("keydown", (e) => {
     let escPressed = e.code === "Escape"
-    // let sidebarOpeen = document.getElementById("drawer").classList.contains('sidebar-open')
     if (escPressed) toggleSidebar()
 })
 
 document.addEventListener("DOMContentLoaded", () => {
-    // set event listeners for folding worlds
-    document.querySelectorAll('.banner:not(.no-collapse)').forEach((banner) => banner.onclick = (e) => {
-        let ban = e.currentTarget
-        let world = ban.parentElement
-        e.currentTarget.nextElementSibling.classList.toggle("folded")
-    })
-    // set event listeners for folding sections
-    document.querySelectorAll('strong').forEach((title) => title.onclick = (e) => e.currentTarget.parentElement.querySelectorAll('ul').forEach(e => e.classList.toggle('folded')))
-
-    document.querySelectorAll('.subheading:not(.no-collapse)').forEach((subheading) => subheading.onclick = (e) => {
-        let subh = e.currentTarget
-        subh.nextElementSibling.classList.toggle("folded")
-        subh.classList.toggle("folded")
-    })
-
-    document.querySelectorAll('strong:first-child').forEach((title) => title.onclick = (e) => {
-        e.currentTarget.parentElement.querySelectorAll('ul').forEach(e => e.classList.toggle('folded'))
-        e.currentTarget.parentElement.parentElement.querySelector('.subheading > img').classList.toggle('folded')
-        let notice = e.currentTarget.querySelector('em')
-        if (notice !== null) {
-            notice.classList.toggle('folded')
+    // set event listeners for folding worlds and sections
+    document.querySelectorAll('.toggler').forEach(toggler => toggler.onclick = (e) => {
+        let title = e.currentTarget
+        for (const element of [title, title.nextElementSibling]) {
+            element.classList.toggle("folded")
         }
     })
+
     document.querySelector('#light-switch').onclick = (e) => {
         document.documentElement.classList.toggle('light-mode')
         e.currentTarget.classList.toggle('on')
@@ -102,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const targetId = link.getAttribute("href").slice(1)
         const target = document.querySelector(`#${targetId}`)
         target.parentElement.classList.remove('folded')
-        target.querySelectorAll('*:not(.no-collapse)').forEach(c => c.classList.remove('folded'))
+        target.querySelectorAll('*:not(.empty)').forEach(c => c.classList.remove('folded'))
     })
     const expandableSections = document.querySelectorAll("#gem-shop .advice-section, #greenstacks .advice-section, #cards .advice-section")
     expandableSections.forEach(section => {

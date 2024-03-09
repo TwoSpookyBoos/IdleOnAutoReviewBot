@@ -193,6 +193,10 @@ class Placements(dict):
 
         return self.final
 
+    def per_section(self):
+        return {tier.section: placement for placement, tiers in self.final.items() for tier in tiers}
+
+
 
 class Thresholds(dict):
     def __init__(self, t_list: list):
@@ -343,10 +347,17 @@ def generate_advice_groups(sectionsByThreshold: dict):
     return advice_groups
 
 
-def generatePinchyWorld(inputJSON, playerCount, dictOfPRs):
+def generatePinchyWorld(inputJSON, playerCount, all_sections):
+    dictOfPRs = {section.name: section.pinchy_rating for section in all_sections}
+
     sectionPlacements: Placements = sort_pinchy_reviews(dictOfPRs)
     expectedThreshold: Threshold = tier_from_monster_kills(dictOfPRs, inputJSON, playerCount)
     lowestThresholdReached: Threshold = sectionPlacements.lowest
+
+    placements_per_section = sectionPlacements.per_section()
+    for section in all_sections:
+        section.pinchy_placement = placements_per_section[section.name]
+
 
     # Generate advice based on catchup
     equalSnippet = ""
@@ -386,14 +397,9 @@ def generatePinchyWorld(inputJSON, playerCount, dictOfPRs):
     pinchy_all = AdviceSection(
         name="Pinchy all",
         tier=sections_maxed,
-        header=f"Sections maxed: {sections_maxed}. Recommended general section actions:",
+        header=f"Sections maxed: {sections_maxed}",
         picture="Pinchy.gif",
         groups=advice_groups
     )
 
-    pinchy = AdviceWorld(
-        name=WorldName.PINCHY,
-        sections=[pinchy_high, pinchy_low, pinchy_all],
-    )
-
-    return pinchy
+    return pinchy_high, pinchy_low, pinchy_all

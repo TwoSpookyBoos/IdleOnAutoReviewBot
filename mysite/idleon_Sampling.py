@@ -13,6 +13,6 @@ def setSamplingProgressionTier(inputJSON, progressionTiers):
     overall_SamplingTier = 0
     advice_Sampling1 = ""
     overall_SamplingTier = min(progressionTiers[-1][-0], tier_Sampling)
-    advice_SamplingCombined = ["Best Sampling tier met: " + str(overall_SamplingTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended Sampling actions:"]
+    advice_SamplingCombined = ["Best Sampling tier met: " + str(overall_SamplingTier) + "/" + str(progressionTiers[-1][-0])]
     samplingPR = progressionResults.progressionResults(overall_SamplingTier,advice_SamplingCombined,"")
     return samplingPR
