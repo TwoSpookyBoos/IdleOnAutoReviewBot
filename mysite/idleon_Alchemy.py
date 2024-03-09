@@ -728,9 +728,9 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers, characterDict)
                 all_orangeRequirementsMet = False
                 if len(bubbles_AdviceDict["OrangeSampleBubbles"]) < maxTiersPerGroup:
                     adviceCountsDict["OrangeSampleBubbles"] += 1
-                    if f"Tier {tier[0]}" not in bubbles_AdviceDict["OrangeSampleBubbles"]:
-                        bubbles_AdviceDict["OrangeSampleBubbles"][f"Tier {tier[0]} ({tier[6]} max value)"] = []
-                    bubbles_AdviceDict["OrangeSampleBubbles"][f"Tier {tier[0]} ({tier[6]} max value)"].append(
+                    if f"To reach Tier {tier[0]} ({tier[6]} max value)" not in bubbles_AdviceDict["OrangeSampleBubbles"]:
+                        bubbles_AdviceDict["OrangeSampleBubbles"][f"To reach Tier {tier[0]} ({tier[6]} max value)"] = []
+                    bubbles_AdviceDict["OrangeSampleBubbles"][f"To reach Tier {tier[0]} ({tier[6]} max value)"].append(
                         Advice(
                             label=str(requiredBubble),
                             picture_class=str(requiredBubble),
@@ -750,9 +750,9 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers, characterDict)
                 all_greenRequirementsMet = False
                 if len(bubbles_AdviceDict["GreenSampleBubbles"]) < maxTiersPerGroup:
                     adviceCountsDict["GreenSampleBubbles"] += 1
-                    if f"Tier {tier[0]}" not in bubbles_AdviceDict["GreenSampleBubbles"]:
-                        bubbles_AdviceDict["GreenSampleBubbles"][f"Tier {tier[0]} ({tier[6]} max value)"] = []
-                    bubbles_AdviceDict["GreenSampleBubbles"][f"Tier {tier[0]} ({tier[6]} max value)"].append(
+                    if f"To reach Tier {tier[0]} ({tier[6]} max value)" not in bubbles_AdviceDict["GreenSampleBubbles"]:
+                        bubbles_AdviceDict["GreenSampleBubbles"][f"To reach Tier {tier[0]} ({tier[6]} max value)"] = []
+                    bubbles_AdviceDict["GreenSampleBubbles"][f"To reach Tier {tier[0]} ({tier[6]} max value)"].append(
                         Advice(
                             label=str(requiredBubble),
                             picture_class=str(requiredBubble),
@@ -772,9 +772,9 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers, characterDict)
                 all_purpleRequirementsMet = False
                 if len(bubbles_AdviceDict["PurpleSampleBubbles"]) < maxTiersPerGroup:
                     adviceCountsDict["PurpleSampleBubbles"] += 1
-                    if f"Tier {tier[0]}" not in bubbles_AdviceDict["PurpleSampleBubbles"]:
-                        bubbles_AdviceDict["PurpleSampleBubbles"][f"Tier {tier[0]} ({tier[6]} max value)"] = []
-                    bubbles_AdviceDict["PurpleSampleBubbles"][f"Tier {tier[0]} ({tier[6]} max value)"].append(
+                    if f"To reach Tier {tier[0]} ({tier[6]} max value)" not in bubbles_AdviceDict["PurpleSampleBubbles"]:
+                        bubbles_AdviceDict["PurpleSampleBubbles"][f"To reach Tier {tier[0]} ({tier[6]} max value)"] = []
+                    bubbles_AdviceDict["PurpleSampleBubbles"][f"To reach Tier {tier[0]} ({tier[6]} max value)"].append(
                         Advice(
                             label=str(requiredBubble),
                             picture_class=str(requiredBubble),
@@ -794,9 +794,9 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers, characterDict)
                 all_utilityRequirementsMet = False
                 if len(bubbles_AdviceDict["UtilityBubbles"]) < maxTiersPerGroup:
                     adviceCountsDict["UtilityBubbles"] += 1
-                    if f"Tier {tier[0]}" not in bubbles_AdviceDict["UtilityBubbles"]:
-                        bubbles_AdviceDict["UtilityBubbles"][f"Tier {tier[0]}"] = []
-                    bubbles_AdviceDict["UtilityBubbles"][f"Tier {tier[0]}"].append(
+                    if f"To reach Tier {tier[0]} ({tier[6]} max value)" not in bubbles_AdviceDict["UtilityBubbles"]:
+                        bubbles_AdviceDict["UtilityBubbles"][f"To reach Tier {tier[0]} ({tier[6]} max value)"] = []
+                    bubbles_AdviceDict["UtilityBubbles"][f"To reach Tier {tier[0]} ({tier[6]} max value)"].append(
                         Advice(
                             label=str(requiredBubble),
                             picture_class=str(requiredBubble),

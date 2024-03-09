@@ -372,9 +372,9 @@ def setStampProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
                 allCombatStamps = False
                 if len(stamp_AdviceDict["CombatStamps"]) < maxTiersPerGroup:
                     adviceCountsDict["CombatStamps"] += 1
-                    if f"Tier {tier[0]}" not in stamp_AdviceDict["CombatStamps"]:
-                        stamp_AdviceDict["CombatStamps"][f"Tier {tier[0]}"] = []
-                    stamp_AdviceDict["CombatStamps"][f"Tier {tier[0]}"].append(
+                    if f"To reach Tier {tier[0]}" not in stamp_AdviceDict["CombatStamps"]:
+                        stamp_AdviceDict["CombatStamps"][f"To reach Tier {tier[0]}"] = []
+                    stamp_AdviceDict["CombatStamps"][f"To reach Tier {tier[0]}"].append(
                         Advice(
                             label=getReadableStampName(int(rStamp), "Combat"),
                             picture_class=getReadableStampName(int(rStamp), "Combat"))
@@ -390,9 +390,9 @@ def setStampProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
                 allSkillStamps = False
                 if len(stamp_AdviceDict["SkillStamps"]) < maxTiersPerGroup:
                     adviceCountsDict["SkillStamps"] += 1
-                    if f"Tier {tier[0]}" not in stamp_AdviceDict["SkillStamps"]:
-                        stamp_AdviceDict["SkillStamps"][f"Tier {tier[0]}"] = []
-                    stamp_AdviceDict["SkillStamps"][f"Tier {tier[0]}"].append(
+                    if f"To reach Tier {tier[0]}" not in stamp_AdviceDict["SkillStamps"]:
+                        stamp_AdviceDict["SkillStamps"][f"To reach Tier {tier[0]}"] = []
+                    stamp_AdviceDict["SkillStamps"][f"To reach Tier {tier[0]}"].append(
                         Advice(
                             label=getReadableStampName(int(rStamp), "Skill"),
                             picture_class=getReadableStampName(int(rStamp), "Skill"))
@@ -408,9 +408,9 @@ def setStampProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
                 allMiscStamps = False
                 if len(stamp_AdviceDict["MiscStamps"]) < maxTiersPerGroup:
                     adviceCountsDict["MiscStamps"] += 1
-                    if f"Tier {tier[0]}" not in stamp_AdviceDict["MiscStamps"]:
-                        stamp_AdviceDict["MiscStamps"][f"Tier {tier[0]}"] = []
-                    stamp_AdviceDict["MiscStamps"][f"Tier {tier[0]}"].append(
+                    if f"To reach Tier {tier[0]}" not in stamp_AdviceDict["MiscStamps"]:
+                        stamp_AdviceDict["MiscStamps"][f"To reach Tier {tier[0]}"] = []
+                    stamp_AdviceDict["MiscStamps"][f"To reach Tier {tier[0]}"].append(
                         Advice(
                             label=getReadableStampName(int(rStamp), "Misc"),
                             picture_class=getReadableStampName(int(rStamp), "Misc"),
@@ -429,9 +429,9 @@ def setStampProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
                     allSpecificStamps = False
                     if len(stamp_AdviceDict["SpecificStamps"]) < maxTiersPerGroup:  #and adviceCountsDict["HighPrio"] <= maxAdvicePerGroup:
                         adviceCountsDict["SpecificStamps"] += 1
-                        if f"Tier {tier[0]}" not in stamp_AdviceDict["SpecificStamps"]:
-                            stamp_AdviceDict["SpecificStamps"][f"Tier {tier[0]}"] = []
-                        stamp_AdviceDict["SpecificStamps"][f"Tier {tier[0]}"].append(
+                        if f"To reach Tier {tier[0]}" not in stamp_AdviceDict["SpecificStamps"]:
+                            stamp_AdviceDict["SpecificStamps"][f"To reach Tier {tier[0]}"] = []
+                        stamp_AdviceDict["SpecificStamps"][f"To reach Tier {tier[0]}"].append(
                             Advice(
                                 label=str(key),
                                 picture_class=str(key),
