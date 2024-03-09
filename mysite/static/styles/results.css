@@ -209,8 +209,7 @@ h1, strong {
     width: 100%;
 }
 
-.banner:not(.no-collapse),
-.subheading:not(.no-collapse) {
+.toggler {
     cursor: pointer;
 
     &:hover {
@@ -282,6 +281,12 @@ body {
 
                     .banner img {
                         width: 100%;
+                        @media (max-width: 600px) {
+                            margin-left: -5vw;
+                            width: unset;
+                            max-width: unset;
+                            height: fit-content;
+                        }
                     }
 
                     .world-content {
@@ -593,7 +598,7 @@ body {
                     }
                 }
 
-                #w1 {
+                #blunder-hills {
                     .subheading {
                         background: var(--w1-bg-subheading);
 
@@ -631,7 +636,7 @@ body {
                     }
                 }
 
-                #w2 {
+                #yum-yum-desert {
                     .subheading {
                         background: var(--w2-bg-subheading);
 
@@ -678,7 +683,7 @@ body {
                     }
                 }
 
-                #w3 {
+                #frostbite-tundra {
                     .subheading {
                         background: var(--w3-bg-subheading);
 
@@ -725,7 +730,7 @@ body {
                     }
                 }
 
-                #w4 {
+                #hyperion-nebula {
                     .subheading {
                         background: var(--w4-bg-subheading);
 
@@ -797,6 +802,11 @@ body {
                 border-top: 2px solid white;
                 border-left: 2px solid white;
                 transform: rotate(45deg) translateY(15%) translateX(15%);
+            }
+
+            @media (max-width: 600px) {
+                right: 10px;
+                bottom: calc(var(--nav-height) + var(--nav-padding) * 2 + 10px);
             }
         }
 

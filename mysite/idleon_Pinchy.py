@@ -402,9 +402,4 @@ def generatePinchyWorld(inputJSON, playerCount, all_sections):
         groups=advice_groups
     )
 
-    pinchy = AdviceWorld(
-        name=WorldName.PINCHY,
-        sections=[pinchy_high, pinchy_low, pinchy_all],
-    )
-
-    return pinchy
+    return pinchy_high, pinchy_low, pinchy_all
