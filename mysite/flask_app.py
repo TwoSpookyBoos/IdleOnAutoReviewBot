@@ -3,7 +3,7 @@ import json
 import os
 from json import JSONDecodeError
 from config import app
-from flask import g, render_template, request, url_for, redirect, Response
+from flask import g, render_template, request, url_for, redirect, Response, send_from_directory
 import idleonTaskSuggester
 
 from data_formatting import HeaderData
@@ -90,7 +90,7 @@ def index() -> Response | str:
     page: str = "results.html"
     error: bool = False
     reviews: list[AdviceWorld] | None = None
-    headerData: HeaderData = None
+    headerData: HeaderData | None = None
     is_beta: bool = FQDN_BETA in request.host
     logger.info(request.host)
     url_params = request.query_string.decode("utf-8")
@@ -99,12 +99,6 @@ def index() -> Response | str:
 
     log_browser_data()
     store_user_preferences()
-
-    try:
-        with open(app.config["STATIC"] / "enemy-maps.json") as enemy_maps:
-            pass
-    except Exception as e:
-        logger.exception("couldn't read enemy-maps.json!", exc_info=e)
 
     try:
         capturedCharacterInput: str | dict = get_character_input()
@@ -145,6 +139,17 @@ def index() -> Response | str:
         switches=switches(),
         **get_user_preferences(),
     )
+
+
+@app.route("/robots.txt")
+def robots_txt():
+    return send_from_directory(app.static_folder, "robots.txt")
+
+
+# Serve sitemap.xml file
+@app.route("/sitemap.xml")
+def sitemap_xml():
+    return send_from_directory(app.static_folder, "sitemap.xml")
 
 
 @app.route("/live", methods=["GET", "POST"])
@@ -207,7 +212,7 @@ def get_resource(dir_: str, filename: str, autoversion: bool = False) -> str:
 
     # cache invalidation
     if autoversion:
-        full_path = os.path.join(app.root_path, "static", path)
+        full_path = os.path.join(app.static_folder, path)
         mtime = os.path.getmtime(full_path)
         suffix = hashlib.md5(str(mtime).encode()).hexdigest()[:8]
         suffix = f"?v={suffix}"
