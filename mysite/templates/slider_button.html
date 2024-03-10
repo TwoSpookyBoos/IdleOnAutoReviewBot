@@ -1,13 +1,3 @@
-<style>
-    label[for="{{ name }}"] .shaft {
-        &.on .knob::before {
-            content: '{{ on }}'
-        }
-        &.off .knob::before {
-            content: '{{ off }}'
-        }
-    }
-</style>
 <input type="checkbox" id="{{ name }}" name="{{ name }}" value="{{ initial }}"{% if initial == "on" %} checked{% endif %}>
 <label for="{{ name }}" class="slider{% if handedness %} lefty{% endif %}">
     <span class="label">{{ text }}</span>

@@ -2,6 +2,7 @@
 <html lang="en">
     <head>
         <title>IE AutoReview Tool - By Scoli290</title>
+
         <link rel="stylesheet" type="text/css" href="{{ "boilerplate"|style }}">
         <link rel="stylesheet" type="text/css" href="{{ "results"|style }}">
         <link rel="stylesheet" type="text/css" href="{{ "sidebar"|style }}">
@@ -10,9 +11,25 @@
         <link rel="stylesheet" type="text/css" href="{{ "slider"|style }}">
         <link rel="icon" href="{{ "blank.png"|img }}" type="image/png">
         <link rel="apple-touch-icon" href="{{ "blank.png"|img }}" type="image/png">
+
         <script src="{{ "main"|script }}"></script>
+        {% if not beta %}
+        <meta name="googlebot" content="follow, index">
+        {% else %}
         <meta name="robots" content="noindex">
+        {% endif %}
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <style>
+        {% for text, name, on, off, initial in switches %}
+            label[for="{{ name }}"] .shaft.on .knob::before {
+                content: '{{ on }}'
+            }
+            label[for="{{ name }}"] .shaft.off .knob::before {
+                content: '{{ off }}'
+            }
+        {% endfor %}
+        </style>
     </head>
     <body>
         <div id="drawer-handle"{% if handedness %} class="lefty"{% endif %}>
