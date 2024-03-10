@@ -119,6 +119,7 @@ def index() -> Response | str:
         if capturedCharacterInput:
             reviews, headerData = autoReviewBot(capturedCharacterInput)
 
+        log_browser_data(headerData.first_name.lower() if headerData and headerData.first_name else (capturedCharacterInput.lower() or "init_call"))
     except Exception as reason:
         if os.environ.get("USER") == "niko":
             raise reason
@@ -127,7 +128,6 @@ def index() -> Response | str:
         )
         error = True
 
-    log_browser_data(capturedCharacterInput)
     return render_template(
         page,
         reviews=reviews,
