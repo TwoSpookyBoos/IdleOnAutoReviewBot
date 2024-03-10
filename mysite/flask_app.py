@@ -28,10 +28,9 @@ def get_character_input() -> str:
     data: str = request.args.get("player") or request.form.get("player", "")
 
     try:
-        parsed = json.loads(data)
-    except JSONDecodeError:
-        # data is probably name string
-        parsed = data
+        parsed = json.loads(data) if data.startswith("{") or data.startswith("[") else data
+    except JSONDecodeError as e:
+        raise ValueError("There is an error in the provided JSON.", e)
 
     if isinstance(parsed, str):
         parsed = format_character_name(parsed)
@@ -101,12 +100,12 @@ def index() -> Response | str:
     store_user_preferences()
 
     try:
-        name_or_data: str | dict = get_character_input()
-        logger.info(
-            "request.args.get('player'): %s %s",
-            type(name_or_data),
-            name_or_data if isinstance(name_or_data, str) else ""
-        )
+        name_or_data: str | dict = get_character_input() if request.args or request.form else None
+        # logger.info(
+        #     "request.args.get('player'): %s %s",
+        #     type(name_or_data),
+        #     name_or_data if isinstance(name_or_data, str) else ""
+        # )
 
         if request.method == "POST" and isinstance(name_or_data, str):
             return redirect(
