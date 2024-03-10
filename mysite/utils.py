@@ -91,13 +91,16 @@ def _set_regular_logger(logger: logging.Logger):
 
 
 def browser_data_logger() -> logging.Logger:
-    # create logger with 'spam_application'
     logger = logging.getLogger("browser_data")
     logger.setLevel(logging.DEBUG)
-    # create file handler which logs even debug messages
-    fh = logging.FileHandler(app.config["LOGS"] / "browser_data.log")
-    fh.setLevel(logging.DEBUG)
-    logger.addHandler(fh)
+
+    formatter = logging.Formatter("%(asctime)s | %(message)s")
+
+    handler = logging.FileHandler(app.config["LOGS"] / "browser_data.log")
+    handler.setLevel(logging.DEBUG)
+    handler.setFormatter(formatter)
+
+    logger.addHandler(handler)
 
     return logger
 

@@ -79,10 +79,10 @@ def switches():
     ]
 
 
-def log_browser_data():
+def log_browser_data(player):
     ua_string = request.headers.get("User-Agent")
     user_agent = ParsedUserAgent(ua_string)
-    user_agent_logger.info("%s - %s", user_agent.os, user_agent.browser)
+    user_agent_logger.info("%s | %s - %s", player, user_agent.os, user_agent.browser)
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -97,7 +97,6 @@ def index() -> Response | str:
     live_link = f"live?{url_params}"
     beta_link = f"beta?{url_params}"
 
-    log_browser_data()
     store_user_preferences()
 
     try:
@@ -128,6 +127,7 @@ def index() -> Response | str:
         )
         error = True
 
+    log_browser_data(capturedCharacterInput)
     return render_template(
         page,
         reviews=reviews,
