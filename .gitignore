@@ -20,3 +20,5 @@ README.txt
 /mysite/__pycache__
 /mysite/logging
 **/.DS_Store
+/mysite/logs
+/mysite/logs/*

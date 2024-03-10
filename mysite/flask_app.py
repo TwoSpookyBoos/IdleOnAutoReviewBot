@@ -30,6 +30,7 @@ def get_character_input() -> str:
     try:
         parsed = json.loads(data)
     except JSONDecodeError:
+        # data is probably name string
         parsed = data
 
     if isinstance(parsed, str):
@@ -100,26 +101,31 @@ def index() -> Response | str:
     store_user_preferences()
 
     try:
-        capturedCharacterInput: str | dict = get_character_input()
-        if isinstance(capturedCharacterInput, str):
-            logger.info(
-                "request.args.get('player'): %s %s",
-                type(capturedCharacterInput),
-                capturedCharacterInput,
-            )
-        else:
-            logger.info("request.args.get('player'): %s", type(capturedCharacterInput))
-        if request.method == "POST" and isinstance(capturedCharacterInput, str):
+        name_or_data: str | dict = get_character_input()
+        logger.info(
+            "request.args.get('player'): %s %s",
+            type(name_or_data),
+            name_or_data if isinstance(name_or_data, str) else ""
+        )
+
+        if request.method == "POST" and isinstance(name_or_data, str):
             return redirect(
                 url_for(
-                    "index", player=capturedCharacterInput, **get_user_preferences()
+                    "index", player=name_or_data, **get_user_preferences()
                 )
             )
 
-        if capturedCharacterInput:
-            reviews, headerData = autoReviewBot(capturedCharacterInput)
+        if name_or_data:
+            reviews, headerData = autoReviewBot(name_or_data)
 
-        log_browser_data(headerData.first_name.lower() if headerData and headerData.first_name else (capturedCharacterInput.lower() or "init_call"))
+        name = "index.html"
+        if isinstance(name_or_data, str):
+            name = name_or_data
+        elif isinstance(name_or_data, dict) and headerData and headerData.first_name:
+            name = headerData.first_name.lower()
+
+        log_browser_data(name)
+
     except Exception as reason:
         if os.environ.get("USER") == "niko":
             raise reason
