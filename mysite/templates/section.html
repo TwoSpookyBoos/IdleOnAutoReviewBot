@@ -1,5 +1,5 @@
 <section id="{{ section.css_class }}">
-    <h3 class="subheading{% if section %} toggler{% endif %}{% if section.collapse %} folded{% endif %}">
+    <h1 class="subheading{% if section %} toggler{% endif %}{% if section.collapse %} folded{% endif %}">
         {% if section.picture %}
             <img src="{{ section.picture | img }}" alt="{{ section.name }}">
         {% endif %}
@@ -7,7 +7,7 @@
             <span>{{ section.header | safe }}</span>
             <span>{{ section.pinchy_placement }}</span>
         </div>
-    </h3>
+    </h1>
     <div class="collapse-wrapper">
         <ul class="advice-section{% if not section %} empty{% endif %}{% if section.collapse %} folded{% endif %}">
             {% if section.note %}
