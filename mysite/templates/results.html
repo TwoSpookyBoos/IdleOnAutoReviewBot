@@ -13,8 +13,11 @@
         <link rel="apple-touch-icon" href="{{ "blank.png"|img }}" type="image/png">
 
         <script src="{{ "main"|script }}"></script>
-
+        {% if not beta %}
+        <meta name="googlebot" content="follow, index">
+        {% else %}
         <meta name="robots" content="noindex">
+        {% endif %}
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <style>
