@@ -19,13 +19,11 @@
 
         <style>
         {% for text, name, on, off, initial in switches %}
-            label[for="{{ name }}"] .shaft {
-                &.on .knob::before {
-                    content: '{{ on }}'
-                }
-                &.off .knob::before {
-                    content: '{{ off }}'
-                }
+            label[for="{{ name }}"] .shaft.on .knob::before {
+                content: '{{ on }}'
+            }
+            label[for="{{ name }}"] .shaft.off .knob::before {
+                content: '{{ off }}'
             }
         {% endfor %}
         </style>
