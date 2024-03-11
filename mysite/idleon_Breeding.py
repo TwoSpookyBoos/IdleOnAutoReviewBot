@@ -324,7 +324,7 @@ def setBreedingProgressionTier(inputJSON: dict, progressionTiers: dict[int, dict
         picture="Breeding.png",
         collapse=False
     )
-    breedingLevelsList = getSpecificSkillLevelsList(inputJSON, len(characterDict), "Breeding")
+    breedingLevelsList = getSpecificSkillLevelsList("Breeding")
     if max(breedingLevelsList) < 1:
         breeding_AdviceSection.header = "Come back after unlocking the Breeding skill in World 4!"
         return breeding_AdviceSection

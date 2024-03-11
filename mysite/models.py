@@ -589,7 +589,7 @@ class Account:
             g.autoloot = True
         else:
             self.autoloot = False
-        playerCount, playerNames, playerClasses, characterDict = getCharacterDetails(
+        playerCount, playerNames, playerClasses, characterDict, perSkillDict = getCharacterDetails(
             self.raw_data, run_type
         )
         self.names = playerNames
@@ -597,6 +597,7 @@ class Account:
         self.classes = playerClasses
         self.all_characters = [Character(**char) for char in characterDict.values()]
         self.characters = [char for char in self.all_characters if char]
+        self.all_skills = perSkillDict
         self.assets = self._all_owned_items()
         self.cards = self._make_cards()
         self.rift = self.raw_data["Rift"][0]

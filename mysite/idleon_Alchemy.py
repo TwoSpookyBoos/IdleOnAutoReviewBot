@@ -8,7 +8,7 @@ from consts import maxTiersPerGroup, getSpecificSkillLevelsList
 logger = get_logger(__name__)
 
 def getHighestAlchemyLevel(inputJSON, playerCount):
-    alchemySkillLevelsList = getSpecificSkillLevelsList(inputJSON, playerCount, "Alchemy")
+    alchemySkillLevelsList = getSpecificSkillLevelsList("Alchemy")
     highestAlchLevel = max(alchemySkillLevelsList)
     return highestAlchLevel
 

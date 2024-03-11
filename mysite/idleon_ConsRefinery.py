@@ -158,7 +158,7 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers, characterDict):
         picture="Construction_Refinery.gif",
         collapse=False
     )
-    constructionLevelsList = getSpecificSkillLevelsList(inputJSON, len(characterDict), "Construction")
+    constructionLevelsList = getSpecificSkillLevelsList("Construction")
     if max(constructionLevelsList) < 1:
         refinery_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
         return refinery_AdviceSection

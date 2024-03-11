@@ -332,7 +332,7 @@ def parseInventoryBagsCount(inputJSON, _, playerNames):
     logger.debug('%s', str(group_bags))
     return group_bags
 
-def parseInventoryBagSlots(inputJSON, characterDict: dict[int, Character]) -> AdviceGroup:
+def parseInventoryBagSlots(inputJSON, characterDict) -> AdviceGroup:
     inventorySlots_AdviceList = []
     currentMaxInventorySlots = 83  #As of v2.02
     currentMaxUsableInventorySlots = 80  #As of v2.02
@@ -377,11 +377,11 @@ def parseInventoryBagSlots(inputJSON, characterDict: dict[int, Character]) -> Ad
             playersMissingBagSlots.append(chararacterIndex)
     logger.info(f"playerBagDict: {playerBagDict}")
     logger.info(f"playersMissingBagSlots: {playersMissingBagSlots}")
-    for player in playersMissingBagSlots:
+    for playerIndex in playersMissingBagSlots:
         inventorySlots_AdviceList.append(Advice(
-            label=characterDict[player].character_name,
-            picture_class=characterDict[player].class_name_icon,
-            progression=playerBagSlotsDict[player]["Total"],
+            label=session_data.account.all_characters[playerIndex].character_name,
+            picture_class=session_data.account.all_characters[playerIndex].class_name_icon,
+            progression=playerBagSlotsDict[playerIndex]["Total"],
             goal=currentMaxUsableInventorySlots
         ))
 
@@ -408,7 +408,7 @@ def parseStorageChests(inputJSON):
     return group
 
 
-def parseConsumables(inputJSON, characterDict: dict[int, Character]):
+def parseConsumables(inputJSON, characterDict):
     sections_candy = getCandyHourSections(inputJSON)
     group_bags = parseInventoryBagSlots(inputJSON, characterDict)
     group_chests = parseStorageChests(inputJSON)

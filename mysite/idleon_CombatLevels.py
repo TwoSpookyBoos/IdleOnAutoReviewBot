@@ -29,8 +29,8 @@ def getEquinoxDreams(inputJSON) -> dict:
     return results
 
 
-def parseCombatLevels(inputJSON, playerCount, playerNames):
-    combatLevels = consts.getSpecificSkillLevelsList(inputJSON, playerCount, "Combat")
+def parseCombatLevels(playerNames):
+    combatLevels = consts.getSpecificSkillLevelsList("Combat")
     equinox3_charactersUnder100 = {}
     equinox11_charactersUnder250 = {}
     equinox23_charactersUnder500 = {}
@@ -43,7 +43,6 @@ def parseCombatLevels(inputJSON, playerCount, playerNames):
             equinox11_charactersUnder250[player_name] = playerLevel
         if playerLevel < 100:  # player under level 100, add to all 3
             equinox3_charactersUnder100[player_name] = playerLevel
-
 
     parsedCombatLevels = dict(
         sum_AccountLevel=sum(combatLevels),
@@ -59,7 +58,7 @@ def parseCombatLevels(inputJSON, playerCount, playerNames):
 
 
 def setCombatLevelsProgressionTier(inputJSON, progressionTiers, playerCount, playerNames, playerClasses) -> AdviceSection:
-    parsedCombatLevels = parseCombatLevels(inputJSON, playerCount, playerNames)
+    parsedCombatLevels = parseCombatLevels(playerNames)
     equinoxDreamStatus = getEquinoxDreams(inputJSON)
 
     total_combat_level = parsedCombatLevels['sum_AccountLevel']

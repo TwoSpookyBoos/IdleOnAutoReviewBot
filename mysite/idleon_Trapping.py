@@ -288,7 +288,7 @@ def setTrappingProgressionTier(inputJSON, characterDict):
         header="Recommended trapping actions",
         picture="Trapping_Cardboard_Traps.png"
     )
-    trappingLevelsList = getSpecificSkillLevelsList(inputJSON, len(characterDict), "Trapping")
+    trappingLevelsList = getSpecificSkillLevelsList("Trapping")
     if max(trappingLevelsList) < 1:
         trapping_AdviceSection.header = "Come back after unlocking the Trapping skill in World 3!"
         return trapping_AdviceSection

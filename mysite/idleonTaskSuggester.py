@@ -119,7 +119,7 @@ def main(inputData, runType="web"):
     g.account = Account(parsedJSON)
 
     #Step 3: Send that data off to all the different analyzers
-    playerCount, playerNames, playerClasses, characterDict = getCharacterDetails(parsedJSON, runType)
+    playerCount, playerNames, playerClasses, characterDict, skillsDict = getCharacterDetails(parsedJSON, runType)
     characterDict = {index: Character(**character) for index, character in characterDict.items()}
     for name in playerNames:
         #print("Checking for name in bannedAccountsList:", name.lower(),  (name.lower() in bannedAccountsList))

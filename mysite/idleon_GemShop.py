@@ -8,7 +8,7 @@ logger = get_logger(__name__)
 
 
 def try_exclude_SoupedUpTube(inputJSON, exclusionList, playerCount):
-    sum_LabLevels = sum(getSpecificSkillLevelsList(inputJSON, playerCount, "Lab"))
+    sum_LabLevels = sum(getSpecificSkillLevelsList("Lab"))
     if sum_LabLevels >= 180:
         exclusionList.append("Souped Up Tube")
 

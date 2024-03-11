@@ -41,7 +41,7 @@ def setConsSaltLickProgressionTier(inputJSON, progressionTiers, characterDict) -
         header="Best Salt Lick tier met: Not Yet Evaluated. Recommended salt lick actions:",
         picture="Construction_Salt_Lick.png",
     )
-    constructionLevelsList = getSpecificSkillLevelsList(inputJSON, len(characterDict), "Construction")
+    constructionLevelsList = getSpecificSkillLevelsList("Construction")
     if max(constructionLevelsList) < 1:
         saltlick_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
         return saltlick_AdviceSection

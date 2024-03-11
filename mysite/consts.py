@@ -1157,47 +1157,36 @@ skillIndexList = ["Combat",
 
 
 def getSpecificSkillLevelsList(desiredSkill: str|int) -> list[int]:
-    emptyPlayerList = [0] * 13
-    skillLevelsList = []
+    emptySkillList = [0] * 13
 
     if isinstance(desiredSkill, str):
         try:
-            desiredSkillIndex = skillIndexList.index(desiredSkill)
+            return session_data.account.all_skills[desiredSkill]
+        except:
+            logger.exception(f"Could not retrieve skill data for {desiredSkill}")
+            return emptySkillList
+    elif isinstance(desiredSkill, int):
+        try:
+            return session_data.account.all_skills[skillIndexList[desiredSkill]]
         except:
             logger.exception(f"Could not find Index for desiredSkill of {desiredSkill}")
-            for characterCounter in range(0, session_data.account.playerCount):  # session_data.account.playerCount is not 0 based
-                skillLevelsList.append(emptyPlayerList)
-            return skillLevelsList
-    else:
-        desiredSkillIndex = desiredSkill
-
-    if isinstance(desiredSkill, int):
-        for characterCounter in range(0, session_data.account.playerCount):  # session_data.account.playerCount is not 0 based
-            try:
-                skillLevelsList.append(session_data.raw_data[f'Lv0_{characterCounter}'][desiredSkillIndex])
-            except:
-                logger.exception(f"Unable to retrieve Lv0_{characterCounter}'s Skill level for {desiredSkill} when playerCount= {session_data.account.playerCount}")
-                skillLevelsList.append(emptyPlayerList)
-    else:
-        logger.exception(f"desiredSkill is not a String or Int: {type(desiredSkill)} {desiredSkill}")
-
-    return skillLevelsList
+            return emptySkillList
 
 
-def getAllSkillLevelsDict():
-    allSkillsDict = {}
-    for characterCounter in range(0, session_data.account.playerCount):
+def getAllSkillLevelsDict(inputJSON, playerCount):
+    allSkillsDict = {'Skills': {}}
+    for characterCounter in range(0, playerCount):
         if characterCounter not in allSkillsDict:
             allSkillsDict[characterCounter] = {}
-        characterSkillList = session_data.raw_data[f'Lv0_{characterCounter}']
+        characterSkillList = inputJSON[f'Lv0_{characterCounter}']
         for skillCounter in range(0, len(skillIndexList)):
-            if skillIndexList[skillCounter] not in allSkillsDict:
-                allSkillsDict[skillIndexList[skillCounter]] = []
+            if skillIndexList[skillCounter] not in allSkillsDict['Skills']:
+                allSkillsDict['Skills'][skillIndexList[skillCounter]] = []
             try:
                 allSkillsDict[characterCounter][skillIndexList[skillCounter]] = characterSkillList[skillCounter]
-                allSkillsDict[skillIndexList[skillCounter]].append(characterSkillList[skillCounter])
+                allSkillsDict['Skills'][skillIndexList[skillCounter]].append(characterSkillList[skillCounter])
             except:
                 allSkillsDict[characterCounter][skillIndexList[skillCounter]] = 0
-                allSkillsDict[skillIndexList[skillCounter]].append(0)
-                logger.exception(f"Unable to retrieve Lv0_{characterCounter}'s Skill level for {skillIndexList[skillCounter]} when playerCount= {session_data.account.playerCount}")
+                allSkillsDict['Skills'][skillIndexList[skillCounter]].append(0)
+                logger.exception(f"Unable to retrieve Lv0_{characterCounter}'s Skill level for {skillIndexList[skillCounter]} when playerCount= {playerCount}")
     return allSkillsDict

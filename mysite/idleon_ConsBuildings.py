@@ -74,7 +74,7 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
         picture="Construction_Table.gif",
         collapse=False
     )
-    constructionLevelsList = getSpecificSkillLevelsList(inputJSON, len(characterDict), "Construction")
+    constructionLevelsList = getSpecificSkillLevelsList("Construction")
     if max(constructionLevelsList) < 1:
         building_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
         return building_AdviceSection

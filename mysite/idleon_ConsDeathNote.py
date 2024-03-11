@@ -518,7 +518,7 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, characterDict):
         header="Recommended Death Note actions",
         picture="Construction_Death_Note.png"
     )
-    constructionLevelsList = getSpecificSkillLevelsList(inputJSON, len(characterDict), "Construction")
+    constructionLevelsList = getSpecificSkillLevelsList("Construction")
     if max(constructionLevelsList) < 1:
         deathnote_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
         return deathnote_AdviceSection

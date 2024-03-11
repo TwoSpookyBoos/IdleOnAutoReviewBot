@@ -134,7 +134,7 @@ def setWorshipPrayersProgressionTier(inputJSON, progressionTiers, characterDict)
         header="Best Prayers tier met: Not Yet Evaluated. Recommended prayer actions:",
         picture="Prayer_Stone.gif"
     )
-    worshipLevelsList = getSpecificSkillLevelsList(inputJSON, len(characterDict), "Worship")
+    worshipLevelsList = getSpecificSkillLevelsList("Worship")
     if max(worshipLevelsList) < 1:
         prayers_AdviceSection.header = "Come back after unlocking the Worship skill in World 3!"
         return prayers_AdviceSection
