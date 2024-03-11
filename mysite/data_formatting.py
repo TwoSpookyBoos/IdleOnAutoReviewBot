@@ -4,7 +4,7 @@ import re
 
 import requests
 
-from idleon_SkillLevels import getAllSkillLevelsDict, getHumanReadableClasses
+from consts import getHumanReadableClasses, getAllSkillLevelsDict
 
 from utils import get_logger
 

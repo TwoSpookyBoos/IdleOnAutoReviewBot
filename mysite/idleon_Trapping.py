@@ -1,5 +1,5 @@
 import json
-from idleon_SkillLevels import getSpecificSkillLevelsList
+from consts import getSpecificSkillLevelsList
 from models import AdviceSection, AdviceGroup, Advice
 from utils import pl, get_logger, letterToNumber
 from flask import g as session_data

@@ -1,5 +1,6 @@
 import json
-import idleon_SkillLevels
+
+import consts
 from mysite.models import AdviceGroup, Advice, AdviceSection
 from mysite.utils import get_logger
 
@@ -29,7 +30,7 @@ def getEquinoxDreams(inputJSON) -> dict:
 
 
 def parseCombatLevels(inputJSON, playerCount, playerNames):
-    combatLevels = idleon_SkillLevels.getSpecificSkillLevelsList(inputJSON, playerCount, "Combat")
+    combatLevels = consts.getSpecificSkillLevelsList(inputJSON, playerCount, "Combat")
     equinox3_charactersUnder100 = {}
     equinox11_charactersUnder250 = {}
     equinox23_charactersUnder500 = {}

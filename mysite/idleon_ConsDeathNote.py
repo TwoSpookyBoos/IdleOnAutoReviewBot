@@ -4,7 +4,7 @@ from math import floor
 from math import ceil
 
 from config import app
-from idleon_SkillLevels import getSpecificSkillLevelsList
+from consts import getSpecificSkillLevelsList
 from models import AdviceSection, AdviceGroup, Advice
 from utils import pl, get_logger
 

@@ -1,3 +1,8 @@
+from flask import g as session_data
+from utils import get_logger
+
+logger = get_logger(__name__)
+
 def setCustomTiers(filename="input.csv"):
     return
 
@@ -1104,3 +1109,95 @@ card_data = {
 maxTiersPerGroup = 3
 numberOfArtifacts = 33  # As of v2.03
 numberOfArtifactTiers = 4  # As of v2.03
+
+humanReadableClasses = {
+    1: "Beginner",
+    2: "Journeyman",
+    3: "Maestro",
+    4: "Voidwalker",
+    5: "Infinilyte",
+    6: "Rage Basics",
+    7: "Warrior",
+    8: "Barbarian",
+    9: "Squire",
+    10: "Blood Berserker",
+    11: "Death Bringer",
+    12: "Divine Knight",
+    13: "Royal Guardian",
+    18: "Calm Basics",
+    19: "Archer",
+    20: "Bowman",
+    21: "Hunter",
+    22: "Siege Breaker",
+    23: "Mayheim",
+    24: "Wind Walker",
+    25: "Beast Master",
+    30: "Savvy Basics",
+    31: "Mage",
+    32: "Wizard",
+    33: "Shaman",
+    34: "Elemental Sorcerer",
+    35: "Spiritual Monk",
+    36: "Bubonic Conjuror",
+    37: "Arcane Cultist"
+}
+
+
+def getHumanReadableClasses(classNumber):
+    return humanReadableClasses.get(classNumber, f"Unknown class: {classNumber}")
+
+
+skillIndexList = ["Combat",
+                  "Mining", "Smithing", "Choppin",
+                  "Fishing", "Alchemy", "Catching",
+                  "Trapping", "Construction", "Worship",
+                  "Cooking", "Breeding", "Lab",
+                  "Sailing", "Divinity", "Gaming",
+                  "Farming", "Sneaking", "Summoning"]
+
+
+def getSpecificSkillLevelsList(desiredSkill: str|int) -> list[int]:
+    emptyPlayerList = [0] * 13
+    skillLevelsList = []
+
+    if isinstance(desiredSkill, str):
+        try:
+            desiredSkillIndex = skillIndexList.index(desiredSkill)
+        except:
+            logger.exception(f"Could not find Index for desiredSkill of {desiredSkill}")
+            for characterCounter in range(0, session_data.account.playerCount):  # session_data.account.playerCount is not 0 based
+                skillLevelsList.append(emptyPlayerList)
+            return skillLevelsList
+    else:
+        desiredSkillIndex = desiredSkill
+
+    if isinstance(desiredSkill, int):
+        for characterCounter in range(0, session_data.account.playerCount):  # session_data.account.playerCount is not 0 based
+            try:
+                skillLevelsList.append(session_data.raw_data[f'Lv0_{characterCounter}'][desiredSkillIndex])
+            except:
+                logger.exception(f"Unable to retrieve Lv0_{characterCounter}'s Skill level for {desiredSkill} when playerCount= {session_data.account.playerCount}")
+                skillLevelsList.append(emptyPlayerList)
+    else:
+        logger.exception(f"desiredSkill is not a String or Int: {type(desiredSkill)} {desiredSkill}")
+
+    return skillLevelsList
+
+
+def getAllSkillLevelsDict():
+    allSkillsDict = {}
+    for characterCounter in range(0, session_data.account.playerCount):
+        if characterCounter not in allSkillsDict:
+            allSkillsDict[characterCounter] = {}
+        characterSkillList = session_data.raw_data[f'Lv0_{characterCounter}']
+        for skillCounter in range(0, len(skillIndexList)):
+            if skillIndexList[skillCounter] not in allSkillsDict:
+                allSkillsDict[skillIndexList[skillCounter]] = []
+            try:
+                allSkillsDict[characterCounter][skillIndexList[skillCounter]] = characterSkillList[skillCounter]
+                allSkillsDict[skillIndexList[skillCounter]].append(characterSkillList[skillCounter])
+            except:
+                allSkillsDict[characterCounter][skillIndexList[skillCounter]] = 0
+                allSkillsDict[skillIndexList[skillCounter]].append(0)
+                logger.exception(f"Unable to retrieve Lv0_{characterCounter}'s Skill level for {skillIndexList[skillCounter]} when playerCount= {session_data.account.playerCount}")
+    return allSkillsDict

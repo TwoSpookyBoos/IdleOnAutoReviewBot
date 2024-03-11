@@ -1,9 +1,8 @@
 import json
-from idleon_SkillLevels import getSpecificSkillLevelsList
 from models import AdviceSection, AdviceGroup, Advice
 from utils import pl, get_logger
 from flask import g as session_data
-from consts import numberOfArtifacts, numberOfArtifactTiers
+from consts import numberOfArtifacts, numberOfArtifactTiers, getSpecificSkillLevelsList
 
 logger = get_logger(__name__)
 shinyDaysList = [0, 3, 11, 33, 85, 200, 448, 964, 2013, 4107, 8227, 16234, 31633, 60989, 116522, 999999999]

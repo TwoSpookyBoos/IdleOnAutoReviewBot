@@ -1,10 +1,9 @@
 import json
 from math import floor
-from idleon_SkillLevels import getSpecificSkillLevelsList
 from models import AdviceSection, AdviceGroup, Advice
 from utils import pl, get_logger
 from flask import g as session_data
-from consts import maxTiersPerGroup
+from consts import maxTiersPerGroup, getSpecificSkillLevelsList
 
 logger = get_logger(__name__)
 

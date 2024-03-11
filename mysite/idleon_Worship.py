@@ -1,8 +1,8 @@
 import json
-from idleon_SkillLevels import getSpecificSkillLevelsList
 from models import AdviceSection, AdviceGroup, Advice
 from utils import pl
-from consts import maxTiersPerGroup
+from consts import maxTiersPerGroup, getSpecificSkillLevelsList
+
 
 def getReadablePrayerNames(inputNumber) -> str:
     match inputNumber:

@@ -1,18 +1,14 @@
 import json
 from collections import defaultdict
-
 from models import Advice, AdviceGroup, AdviceSection
 from utils import get_logger
-from consts import numberOfArtifacts, numberOfArtifactTiers
-
+from consts import numberOfArtifacts, numberOfArtifactTiers, getSpecificSkillLevelsList
 
 logger = get_logger(__name__)
 
 
 def try_exclude_SoupedUpTube(inputJSON, exclusionList, playerCount):
-    empty = [0] * 13
-    sum_LabLevels = sum(inputJSON.get(f"Lv0_{i}", empty)[12] for i in range(playerCount))
-
+    sum_LabLevels = sum(getSpecificSkillLevelsList(inputJSON, playerCount, "Lab"))
     if sum_LabLevels >= 180:
         exclusionList.append("Souped Up Tube")
 
