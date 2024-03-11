@@ -1,9 +1,9 @@
 import json
 from collections import defaultdict
 
-import progressionResults
 from models import Advice, AdviceGroup, AdviceSection
 from utils import get_logger
+from consts import numberOfArtifacts, numberOfArtifactTiers
 
 
 logger = get_logger(__name__)
@@ -43,8 +43,6 @@ def try_exclude_BurningBadBooks(inputJSON, exclusionList):
 
 
 def try_exclude_ChestSluggo(inputJSON, exclusionList):
-    artifactsCount = 33  # as of v2.02
-    maxTier = 4  # as of v2.02
 
     artifact_tiers = json.loads(inputJSON["Sailing"])
     if isinstance(artifact_tiers, str):
@@ -53,7 +51,7 @@ def try_exclude_ChestSluggo(inputJSON, exclusionList):
     sum_artifactTiers = sum(artifact_tiers[3]) if artifact_tiers and len(artifact_tiers) >= 4 else 0
 
     logger.debug(f"{sum_artifactTiers}")
-    if sum_artifactTiers == artifactsCount * maxTier:  # 33 artifacts times 4 tiers each = 132 for v2.00
+    if sum_artifactTiers == numberOfArtifacts * numberOfArtifactTiers:  # 33 artifacts times 4 tiers each = 132 for v2.00
         exclusionList.append("Chest Sluggo")
 
 
