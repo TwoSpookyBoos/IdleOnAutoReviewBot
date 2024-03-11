@@ -1,7 +1,7 @@
 #idleonTaskSuggester.py
 import datetime
 import copy
-from flask import g
+from flask import g as session_data
 
 from data_formatting import logger, getJSONfromAPI, getJSONfromText, getLastUpdatedTime, getCharacterDetails, HeaderData
 #general stuff that makes this file too big if I include directly
@@ -116,7 +116,7 @@ def main(inputData, runType="web"):
         #raise ValueError(f"data for {inputData} not found")
 
     #Step 2: Make account data available throughout the session
-    g.account = Account(parsedJSON)
+    session_data.account = Account(parsedJSON)
 
     #Step 3: Send that data off to all the different analyzers
     playerCount, playerNames, playerClasses, characterDict, skillsDict = getCharacterDetails(parsedJSON, runType)
@@ -143,10 +143,10 @@ def main(inputData, runType="web"):
     if runType == "web":
         logger.info(f'{headerData.last_update = }')
 
-    section_combatLevels = idleon_CombatLevels.setCombatLevelsProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Combat Levels']), playerCount, playerNames, playerClasses)
+    section_combatLevels = idleon_CombatLevels.setCombatLevelsProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Combat Levels']), session_data.account.playerCount, session_data.account.names, session_data.account.classes)
     section_consumables = idleon_Consumables.parseConsumables(parsedJSON, characterDict)
-    section_gemShop = idleon_GemShop.setGemShopProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Gem Shop']), playerCount)
-    sections_quest_gstacks, section_regular_gstacks = idleon_Greenstacks.setGStackProgressionTier(parsedJSON, playerCount)
+    section_gemShop = idleon_GemShop.setGemShopProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Gem Shop']), session_data.account.playerCount)
+    sections_quest_gstacks, section_regular_gstacks = idleon_Greenstacks.setGStackProgressionTier(parsedJSON, session_data.account.playerCount)
     section_maestro = idleon_MaestroHands.getHandsStatus()
     section_cards = idleon_Cards.getCardSetReview()
 
