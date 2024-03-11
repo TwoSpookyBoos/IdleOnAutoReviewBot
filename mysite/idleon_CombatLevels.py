@@ -1,5 +1,4 @@
 import json
-import progressionResults
 import idleon_SkillLevels
 from mysite.models import AdviceGroup, Advice, AdviceSection
 from mysite.utils import get_logger
@@ -58,7 +57,7 @@ def parseCombatLevels(inputJSON, playerCount, playerNames):
     return parsedCombatLevels
 
 
-def setCombatLevelsProgressionTier(inputJSON, progressionTiers, playerCount, playerNames, playerClasses) -> progressionResults:
+def setCombatLevelsProgressionTier(inputJSON, progressionTiers, playerCount, playerNames, playerClasses) -> AdviceSection:
     parsedCombatLevels = parseCombatLevels(inputJSON, playerCount, playerNames)
     equinoxDreamStatus = getEquinoxDreams(inputJSON)
 

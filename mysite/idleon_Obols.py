@@ -1,5 +1,4 @@
 import json
-import progressionResults
 import idleon_CombatLevels
 
 def parseObolValuestoDict(inputSection):
@@ -254,5 +253,5 @@ def setObolsProgressionTier(inputJSON, playerCount, progressionTiers, fromPublic
     overall_ObolsTier = min(progressionTiers[-1][-0], tier_Obols)
     #advice_ObolsCombined = ["### Best Obols tier met: " + str(overall_ObolsTier) + "/" + str(progressionTiers[-1][-0]) + ". Recommended Obols actions:", advice_GoodDropRateObols,advice_BadDropRateObols]
     advice_ObolsCombined = ["### Obols Header placeholder! Wow, such holding. Very place. 5/7.", advice_GoodDropRateObols,advice_BadDropRateObols,advice_UnrolledDropRateObols]
-    obolsPR = progressionResults.progressionResults(overall_ObolsTier,advice_ObolsCombined,"")
-    return obolsPR
+    #obolsPR = progressionResults.progressionResults(overall_ObolsTier,advice_ObolsCombined,"")
+    #return obolsPR

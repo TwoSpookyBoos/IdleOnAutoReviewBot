@@ -1,7 +1,6 @@
 from models import AdviceSection
 from models import AdviceGroup
 from models import Advice
-import progressionResults
 from utils import pl
 
 
@@ -228,5 +227,4 @@ def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, charact
         advice_CombinedSmithing = ["Best Smithing tier met: " + str(overall_SmithingTier) + "/" + str(max_tier), advice_CashPoints, advice_MonsterPoints, advice_ForgeUpgrades, advice_UnusedForgeSlots]
         smithing_AdviceSection.header = f"Best Smithing tier met: {tier_section}"
         smithing_AdviceSection.groups = smithing_AdviceGroupDict.values()
-    smithingPR = progressionResults.progressionResults(overall_SmithingTier, advice_CombinedSmithing, "")
     return smithing_AdviceSection
