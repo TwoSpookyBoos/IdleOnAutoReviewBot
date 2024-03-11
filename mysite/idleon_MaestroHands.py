@@ -12,10 +12,13 @@ def getHandsStatus():
     maestros: list[Character] = [
         toon for toon in session_data.account.all_characters if toon.sub_class == "Maestro"
     ]
+    beginners: list[Character] = [
+        toon for toon in session_data.account.all_characters if toon.base_class == "Beginner" or toon.base_class == "Journeyman"
+    ]
 
     janky_skills = maestros_goal_levels(maestros)
     tier = f"{len(janky_skills) or 6}/{len(skillsToReview_RightHand)}"
-    header = create_header(janky_skills, maestros, tier)
+    header = create_header(janky_skills, maestros, beginners, tier)
 
     post_string = ""
     if "Worship" in janky_skills:
@@ -48,13 +51,13 @@ def getHandsStatus():
     return section
 
 
-def create_header(janky_skills, maestros, tier):
+def create_header(janky_skills, maestros, beginners, tier):
     account = session_data.account
     if not maestros:
         header = "Gosh golly, I'm jealous, So many nice things ahead of you!<br>Check this section again once you've acquired a Maestro"
 
-        if len(account.characters) == account.max_toon_count:
-            header = "Oh… Oh no… Your family is full but you haven't created any Beginners…<br>I wish you the best of luck 😔"
+        if len(account.characters) == account.max_toon_count and not beginners:
+            header = "Oh… Oh no… Your family is full but I don't see any future Maestros…<br>I wish you the best of luck 😔"
 
     else:
 

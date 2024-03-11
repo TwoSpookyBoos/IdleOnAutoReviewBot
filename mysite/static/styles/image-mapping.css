@@ -2086,6 +2086,10 @@
   background-image: url("https://idleon.wiki/wiki/images/b/b5/Chippy_Idle.gif");
 }
 
+.xylobone::before {
+  background-image: url("https://idleon.wiki/wiki/images/c/c8/Xylobone_Idle.gif");
+}
+
 .bunny::before {
   background-image: url("https://idleon.wiki/wiki/images/8/82/Bunny.png");
 }

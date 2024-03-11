@@ -266,7 +266,7 @@ class AdviceGroup(AdviceBase):
         try:
             return int(getattr(self, field))
         except ValueError:
-            return -1
+            return 999
 
     def __eq__(self, other):
         if not self._is_valid_operand(other):
