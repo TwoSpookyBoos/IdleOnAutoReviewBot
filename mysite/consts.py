@@ -387,7 +387,7 @@ progressionTiers = {
         [2, "S", {'Extra Card Slot':4, 'Brimstone Forge Slot':1}, ""],
         [3, "A", {'Item Backpack Space':1, 'Storage Chest Space':4, 'Carry Capacity':2, 'Weekly Dungeon Boosters':3, 'Brimstone Forge Slot':4, 'Bleach Liquid Cauldrons':2, 'Zen Cogs':2, 'Tower Building Slots':1, 'Royal Egg Cap':3, 'Richelin Kitchen':3, 'Souped Up Tube':1, 'Chest Sluggo':3, 'Divinity Sparkie':2, 'Lava Sprouts':2, 'Plot of Land': 1}, ""],
         [4, "B", {'Item Backpack Space':2, 'Storage Chest Space':8, 'Carry Capacity':4, 'Food Slot':1, 'Bleach Liquid Cauldrons':3, 'More Sample Spaces':2, 'Zen Cogs':4, 'Tower Building Slots':2, 'Royal Egg Cap':5, 'Fenceyard Space':2, 'Chest Sluggo':6, 'Lava Sprouts':4, 'Plot of Land': 2, 'Shroom Familiar': 2, 'Instagrow Generator': 1}, ""],
-        [5, "C", {'Item Backpack Space':3, 'Storage Chest Space':12, 'Carry Capacity':6, 'Food Slot':2, 'More Sample Spaces':4, 'Burning Bad Books':2, 'Tower Building Slots':4, 'Fenceyard Space':4, 'Chest Sluggo':9, 'Golden Sprinkler':2, 'Lava Sprouts':6, 'Plot of Land': 3, 'Shroom Familiar': 3, 'Instagrow Generator': 2}, ""],
+        [5, "C", {'Item Backpack Space':3, 'Storage Chest Space':12, 'Carry Capacity':6, 'Food Slot':2, 'Bleach Liquid Cauldrons':4, 'More Sample Spaces':4, 'Burning Bad Books':2, 'Tower Building Slots':4, 'Fenceyard Space':4, 'Chest Sluggo':9, 'Golden Sprinkler':2, 'Lava Sprouts':6, 'Plot of Land': 3, 'Shroom Familiar': 3, 'Instagrow Generator': 2}, ""],
         [6, "D", {'Item Backpack Space':4, 'Carry Capacity':8, 'More Storage Space':5, 'Brimstone Forge Slot':8, 'Ivory Bubble Cauldrons':4, 'Obol Storage Space':3, 'More Sample Spaces':6, 'Burning Bad Books':4, 'Zen Cogs':8, 'Souped Up Tube':3, 'Fenceyard Space':6, 'Chest Sluggo':12, 'Plot of Land': 6, 'Instagrow Generator': 4}, ""],
         [7, "Practical Max", {'Item Backpack Space':6, 'Carry Capacity':10, 'More Storage Space':10, 'Card Presets':1, 'Brimstone Forge Slot':16, 'Sigil Supercharge':10, 'Fluorescent Flaggies':2, 'Golden Sprinkler':4, 'Plot of Land': 12, 'Instagrow Generator': 8}, "I wouldn't recommend going any further as of v2.02. This tier is for the dedicated Gem Farmers from Colo and Normal-difficulty World Bosses."],
         [8, "True Max", {'Card Presets':5, 'Daily Teleports':10, 'Daily Minigame Plays':4, 'Weekly Dungeon Boosters':11, 'Obol Storage Space':12, 'Prayer Slots':4, 'Cog Inventory Space':20, 'Fluorescent Flaggies':6, 'Richelin Kitchen':10, 'Souped Up Tube':5, 'Pet Storage':12, 'Divinity Sparkie':6}, "This final tier is for the truly depraved. Many of these bonuses are very weak or outright useless."]
@@ -585,7 +585,7 @@ progressionTiers = {
                 "Tree12",
                 "Godshard",
                 "Fish11", "Fish12", "Fish13",
-                "Bug11", "Bug12", "Bug13",],
+                "Bug12", "Bug13",],
             "Other Skilling Resources": [
                 "Soul1",],
             "Vendor Shops": [
