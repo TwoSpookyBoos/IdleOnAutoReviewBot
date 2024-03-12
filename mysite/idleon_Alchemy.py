@@ -793,9 +793,9 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers, characterDict)
                 all_utilityRequirementsMet = False
                 if len(bubbles_AdviceDict["UtilityBubbles"]) < maxTiersPerGroup:
                     adviceCountsDict["UtilityBubbles"] += 1
-                    if f"To reach Tier {tier[0]} ({tier[6]} max value)" not in bubbles_AdviceDict["UtilityBubbles"]:
-                        bubbles_AdviceDict["UtilityBubbles"][f"To reach Tier {tier[0]} ({tier[6]} max value)"] = []
-                    bubbles_AdviceDict["UtilityBubbles"][f"To reach Tier {tier[0]} ({tier[6]} max value)"].append(
+                    if f"To reach Tier {tier[0]}" not in bubbles_AdviceDict["UtilityBubbles"]:
+                        bubbles_AdviceDict["UtilityBubbles"][f"To reach Tier {tier[0]}"] = []
+                    bubbles_AdviceDict["UtilityBubbles"][f"To reach Tier {tier[0]}"].append(
                         Advice(
                             label=str(requiredBubble),
                             picture_class=str(requiredBubble),
@@ -805,7 +805,7 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers, characterDict)
         if tier_UtilityBubbles == (tier[0]-1) and all_utilityRequirementsMet == True:
             tier_UtilityBubbles = tier[0]
 
-    overall_alchemyBubblesTier = min(max_tier, tier_TotalBubblesUnlocked, tier_OrangeSampleBubbles, tier_GreenSampleBubbles, tier_PurpleSampleBubbles)  # tier_UtilityBubbles not included
+    overall_alchemyBubblesTier = min(max_tier, tier_TotalBubblesUnlocked, tier_OrangeSampleBubbles, tier_GreenSampleBubbles, tier_PurpleSampleBubbles, tier_UtilityBubbles)
 
     #Generate AdviceGroups
     agdNames = ["TotalBubblesUnlocked", "OrangeSampleBubbles", "GreenSampleBubbles", "PurpleSampleBubbles", "UtilityBubbles"]
@@ -820,6 +820,7 @@ def setAlchemyBubblesProgressionTier(inputJSON, progressionTiers, characterDict)
     agdPost_strings = [
         "", "", "",
         "Choppin Log samples are the largest producers of Atom Particles and should be given priority.",
+        "",
     ]
     if tier_UtilityBubbles == max_tier:
         agdPost_strings.append(progressionTiers[tier_UtilityBubbles][7])
