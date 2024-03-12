@@ -1109,6 +1109,7 @@ card_data = {
 maxTiersPerGroup = 3
 numberOfArtifacts = 33  # As of v2.03
 numberOfArtifactTiers = 4  # As of v2.03
+currentMaxChestsSum = 45  # As of v2.0
 
 humanReadableClasses = {
     1: "Beginner",

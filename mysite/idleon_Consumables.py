@@ -290,7 +290,7 @@ def parseInventoryBagSlots() -> AdviceGroup:
         try:
             playerBagDict[characterIndex] = json.loads(session_data.account.raw_data[f'InvBagsUsed_{characterIndex}'])  #yet another string pretending to be a list of lists
         except:
-            logger.exception(f"Unable to retrieve InvBagsUsed for {characterIndex} ({session_data.account.safe_characters[characterIndex].character_name})")
+            logger.exception(f"Unable to retrieve InvBagsUsed for {characterIndex} ({character.character_name})")
 
     inventorySlots_AdviceGroup = AdviceGroup(
         tier="",
@@ -332,7 +332,6 @@ def parseInventoryBagSlots() -> AdviceGroup:
     return inventorySlots_AdviceGroup
 
 def parseStorageChests():
-    currentMaxChestsSum = 45  # As of v2.0
     usedStorageChests = json.loads(session_data.account.raw_data['InvStorageUsed'])
     missing_chests = [chest for chest in StorageChest if str(chest.value) not in usedStorageChests.keys()]
 
@@ -345,7 +344,7 @@ def parseStorageChests():
 
     group = AdviceGroup(
         tier="",
-        pre_string=f"Collect {len(missing_chests)} more storage chest{pl(['']*len(missing_chests))} for your bank",
+        pre_string=f"Collect {len(missing_chests)} more storage chest{pl(missing_chests)} for your bank",
         advices=advices
     )
     if len(advices) == 0:

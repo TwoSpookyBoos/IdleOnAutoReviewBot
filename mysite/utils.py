@@ -49,9 +49,10 @@ class ParsedUserAgent(UserAgent):
         return f"{self.browser_name} ({self.browser_version})"
 
 
-def pl(_list: list, suffix_singular: str = "", suffix_plural: str = "s") -> str:
+def pl(_list, suffix_singular: str = "", suffix_plural: str = "s") -> str:
+    length = _list if isinstance(_list, int) else len(_list)
     """Pluralize"""
-    return suffix_plural if len(_list) > 1 else suffix_singular
+    return suffix_plural if length > 1 else suffix_singular
 
 
 DEFAULT_FORMAT = (
