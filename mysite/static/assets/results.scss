@@ -275,7 +275,13 @@ body {
                     #elapsed {
                         font-family: 'Kode Mono', sans-serif;
                         position: relative;
-
+                        &:before {
+                            content: '↻';
+                            position: absolute;
+                            left: -1.7rem;
+                            transform: translateY(-7%);
+                            font-size: 2em;
+                        }
                     }
                     #last-update {
                         position: absolute;
