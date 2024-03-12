@@ -157,9 +157,9 @@ def main(inputData, runType="web"):
     smithing_AdviceSection = idleon_Smithing.setSmithingProgressionTier()
 
     #World 2
-    alchBubbles_AdviceSection = idleon_Alchemy.setAlchemyBubblesProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Alchemy Bubbles']), characterDict)
-    alchVials_AdviceSection = idleon_Alchemy.setAlchemyVialsProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Alchemy Vials']), characterDict)
-    alchP2W_AdviceSection = idleon_Alchemy.setAlchemyP2W(parsedJSON, characterDict)
+    alchBubbles_AdviceSection = idleon_Alchemy.setAlchemyBubblesProgressionTier()
+    alchVials_AdviceSection = idleon_Alchemy.setAlchemyVialsProgressionTier()
+    alchP2W_AdviceSection = idleon_Alchemy.setAlchemyP2W()
     #obols_AdviceSection = idleon_Obols.setObolsProgressionTier(parsedJSON, playerCount, progressionTiers['Obols'], fromPublicIEBool)
 
     #World 3
