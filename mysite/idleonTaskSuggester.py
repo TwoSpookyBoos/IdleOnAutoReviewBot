@@ -78,6 +78,7 @@ def main(inputData, runType="web"):
     headerData = HeaderData()
     #Step 1: Retrieve data from public IdleonEfficiency website or from file
     if len(inputData) < 16 and isinstance(inputData, str):
+        headerData.data_source = headerData.PUBLIC
         #print("~~~~~~~~~~~~~~~ Starting up PROD main at", datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "for", inputData, "~~~~~~~~~~~~~~~")
         inputData = inputData.replace(" ", "_")  # IE expects underscores instead of spaces in names
         #print("inputData:'" + inputData + "' found in the banned list?", (inputData in bannedAccountsList))
@@ -94,10 +95,10 @@ def main(inputData, runType="web"):
             headerData.ie_link = f"https://{inputData.lower()}.idleonefficiency.com"
             headerData.link_text = f"{inputData.lower()}.idleonefficiency.com"
     else:
+        headerData.data_source = HeaderData.JSON
         if runType == "web":
             print("~~~~~~~~~~~~~~~ Starting up PROD main at", datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "for direct web JSON input.~~~~~~~~~~~~~~~")
         parsedJSON = getJSONfromText(runType, inputData)
-        headerData.direct_json = " direct JSON paste"
 
     if isinstance(parsedJSON, str):
         if parsedJSON.startswith("JSONParseFail"):
@@ -131,14 +132,14 @@ def main(inputData, runType="web"):
                 return "Banned"
     roastworthyBool = getRoastableStatus(playerNames)
 
-    if headerData.direct_json:
+    if headerData.data_source == HeaderData.JSON:
         if playerNames[0] == "Character1":
             headerData.json_error = "NO SORTED LIST OF CHARACTER NAMES FOUND IN DATA. REPLACING WITH GENERIC NUMBER ORDER."
         else:
             headerData.first_name = playerNames[0]
 
     #General
-    headerData.last_update = getLastUpdatedTime(parsedJSON)
+    getLastUpdatedTime(headerData)
 
     if runType == "web":
         logger.info(f'{headerData.last_update = }')

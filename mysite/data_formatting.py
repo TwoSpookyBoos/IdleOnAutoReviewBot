@@ -3,13 +3,30 @@ import json
 import re
 
 import requests
+from babel.dates import format_datetime
+from flask import request, g as session_data
 
-from consts import getHumanReadableClasses, getAllSkillLevelsDict, skillIndexList
+from consts import getHumanReadableClasses, getAllSkillLevelsDict
 
 from utils import get_logger
 
 
 logger = get_logger(__name__)
+
+
+class HeaderData:
+    JSON = "JSON"
+    PUBLIC = "Public Profile"
+
+    def __init__(self):
+        self.data_source = ""
+        self.direct_json = ""
+        self.ie_link = ""
+        self.link_text = ""
+        self.first_name = ""
+        self.json_error = ""
+        self.last_update = ""
+        self.elapsed = ""
 
 
 def getJSONfromAPI(runType, url="https://scoli.idleonefficiency.com/raw-data"):
@@ -84,22 +101,25 @@ def getJSONfromText(runType, rawJSON):
     return parsed
 
 
-def getLastUpdatedTime(inputJSON):
+def getLastUpdatedTime(headerData: HeaderData):
     try:
-        timeAwayDict = json.loads(inputJSON['TimeAway'])
+        timeAwayDict = json.loads(session_data.account.raw_data["TimeAway"])
         lastUpdatedTimeEpoch = timeAwayDict["GlobalTime"]
         lastUpdatedTimeUTC = datetime.datetime.utcfromtimestamp(lastUpdatedTimeEpoch)
         currentTimeUTC = datetime.datetime.utcnow()
         deltaTime = currentTimeUTC - lastUpdatedTimeUTC
-        if deltaTime.days > 0:
-            lastUpdatedString = "Save data last updated: " + lastUpdatedTimeUTC.strftime('%Y-%m-%d %H:%M:%S') + " UTC (" + str(deltaTime.days) + " days and " + "{:.1f}".format(deltaTime.seconds/3600) + " hours ago)"
-        else:
-            lastUpdatedString = "Save data last updated: " + lastUpdatedTimeUTC.strftime('%Y-%m-%d %H:%M:%S') + " UTC (" + "{:.1f}".format(deltaTime.seconds/3600) + " hours ago)"
-        #print(lastUpdatedString)
-        return lastUpdatedString
-    except:
+        days, rest = divmod(deltaTime.total_seconds(), 24 * 60 * 60)
+        hours, rest = divmod(rest, 60 * 60)
+        minutes, seconds = divmod(rest, 60)
+
+        locale = request.accept_languages.best.replace('-', '_')
+        headerData.elapsed = f"{days:02g}:{hours:02g}:{minutes:02g}:{int(seconds):02g}"
+        headerData.last_update = format_datetime(lastUpdatedTimeUTC, locale=locale) + " UTC"
+
+    except Exception as e:
         logger.warning("Unable to parse last updated time.")
-        return "Unable to parse last updated time, sorry :("
+        headerData.elapsed = "00:00:00:00"
+        headerData.last_update = "Unable to parse last updated time, sorry :("
 
 
 def getBaseClass(inputClass):
@@ -204,13 +224,3 @@ def getCharacterDetails(inputJSON, runType):
         )
 
     return [playerCount, playerNames, playerClasses, characterDict, perSkillDict]
-
-
-class HeaderData:
-    def __init__(self):
-        self.direct_json = ""
-        self.ie_link = ""
-        self.link_text = ""
-        self.first_name = ""
-        self.json_error = ""
-        self.last_update = ""
