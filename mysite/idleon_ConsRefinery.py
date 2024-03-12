@@ -1,7 +1,7 @@
 import json
-from consts import getSpecificSkillLevelsList
+from consts import progressionTiers
+from flask import g as session_data
 from models import AdviceSection, AdviceGroup, Advice
-from utils import pl
 from math import floor
 
 saltValuesDict = {
@@ -65,9 +65,9 @@ class Salt:
     def __bool__(self) -> bool:
         return self.excess
 
-def parseConsRefinery(inputJSON):
-    refineryList = json.loads(inputJSON["Refinery"])
-    meritList = json.loads(inputJSON["TaskZZ2"])
+def parseConsRefinery():
+    refineryList = json.loads(session_data.account.raw_data["Refinery"])
+    meritList = json.loads(session_data.account.raw_data["TaskZZ2"])
     consRefineryDict = {
         #Combustion = Tab1
         'Red Rank': refineryList[3][1],
@@ -142,7 +142,7 @@ def parseConsRefinery(inputJSON):
     #print(consRefineryDict)
     return consRefineryDict
 
-def setConsRefineryProgressionTier(inputJSON, progressionTiers, characterDict):
+def setConsRefineryProgressionTier():
     refinery_AdviceDict = {
         "AutoRefine": [],
         "Merits": [],
@@ -158,15 +158,15 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers, characterDict):
         picture="Construction_Refinery.gif",
         collapse=False
     )
-    constructionLevelsList = getSpecificSkillLevelsList("Construction")
-    if max(constructionLevelsList) < 1:
+    highestConstructionLevel = max(session_data.account.all_skills["Construction"])
+    if highestConstructionLevel < 1:
         refinery_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
         return refinery_AdviceSection
 
-    max_tier = progressionTiers[-1][0]
-    tier_AutoRefine = max_tier
-    tier_W3Merits = 0
-    consRefineryDict = parseConsRefinery(inputJSON)
+    max_tier = 1  #Pass or Fail
+    tier_AutoRefine = 1
+    tier_W3Merits = 1
+    consRefineryDict = parseConsRefinery()
 
     # AutoRefine Advice
     if consRefineryDict['RedSalt'].auto_refine != 0:
@@ -194,8 +194,8 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers, characterDict):
         sum_SaltsRank2Plus += 1
     if consRefineryDict['Nullo Rank'] >= 2:
         sum_SaltsRank2Plus += 1
-    tier_W3Merits = consRefineryDict['Salt Merit']
-    if tier_W3Merits != max_tier:
+    if consRefineryDict['Salt Merit'] < sum_SaltsRank2Plus:
+        tier_W3Merits = 0
         refinery_AdviceDict["Merits"].append(
             Advice(
                 label="W3 Taskboard Merits Purchased",
@@ -266,7 +266,6 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers, characterDict):
                goal=consRefineryDict['NulloSalt'].max_rank_with_excess)
     )
 
-
     # Generate AdviceGroups
     refinery_AdviceGroupDict['AutoRefine'] = AdviceGroup(
         tier=str(tier_AutoRefine),
@@ -278,12 +277,8 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers, characterDict):
         tier=str(tier_W3Merits),
         pre_string="W3 Salt Merits Purchased",
         advices=refinery_AdviceDict['Merits'],
-        post_string=""
+        post_string="Leveling this Merit would immediately decrease salt consumption."
     )
-    if consRefineryDict['Salt Merit'] < sum_SaltsRank2Plus:
-        refinery_AdviceGroupDict['Merits'].post_string = "Leveling this Merit would immediately decrease salt consumption."
-    else:
-        refinery_AdviceGroupDict['Merits'].post_string = "No immediate benefit at your current salt levels, but don't forget for the future!"
     # refinery_AdviceGroupDict['ExcessAndDeficits'] = AdviceGroup(
     #     tier="",
     #     pre_string="Salt Excess/Deficit per Synthesis Cycle",
@@ -300,7 +295,7 @@ def setConsRefineryProgressionTier(inputJSON, progressionTiers, characterDict):
         tier="",
         pre_string="Max Tab2 Ranks without causing a Salt Deficit",
         advices=refinery_AdviceDict['Tab2Ranks'],
-        post_string=""  #"Or just YOLO rank up everything if balancing is too much of a pain ¯\_(ツ)_/¯"
+        post_string=""
     )
 
     # Generate AdviceSection

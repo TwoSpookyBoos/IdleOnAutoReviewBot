@@ -1,7 +1,6 @@
 import json
-from consts import getSpecificSkillLevelsList
 from models import AdviceSection, AdviceGroup, Advice
-from utils import pl, get_logger, letterToNumber
+from utils import pl, get_logger
 from flask import g as session_data
 
 logger = get_logger(__name__)
@@ -14,9 +13,9 @@ def getCritterName(inputNumber):
     except:
         return "UnknownCritterName"
 
-def getUnlockedCritterStatus(inputJSON, playerCount):
+def getUnlockedCritterStatus():
     try:
-        rawJadeEmporiumPurchases = json.loads(inputJSON["Ninja"])[102][9]
+        rawJadeEmporiumPurchases = json.loads(session_data.account.raw_data["Ninja"])[102][9]
     except:
         logger.debug("Unable to retrieve Jade Emporium Upgrades to tell if Tuttle is unlocked. Defaulting to locked.")
         rawJadeEmporiumPurchases = ""
@@ -49,22 +48,20 @@ def getUnlockedCritterStatus(inputJSON, playerCount):
         #11 = the trophy quest, irrelevant
         #Blobfish are unlocked after "Blobbo2" quest is completed (value of 1)
 
-        playerIndex = 0
         questIndex = 0
-        while playerIndex < playerCount:
+        for characterIndex in range(0, session_data.account.playerCount):
             try:
-                questDict = json.loads(inputJSON[("QuestComplete_"+str(playerIndex))])
-                while questIndex < len(reversedQuestIndexList):
+                questDict = session_data.account.all_quests[characterIndex]
+                for questIndex in range(0, len(reversedQuestIndexList)):
                     if (questDict[reversedQuestIndexList[questIndex]] >= reversedRequiredStatusQuestIndexList[questIndex]
                     and questIndex < highestCritter):  #and the quest is better than what is already known to be the best
-                        #print("Trapping.getUnlockedCritterStatus~ INFO New highest critter found on character", playerIndex, "! Changing from",highestCritter,"to",questIndex)
-                        #logger.debug(f"New highest critter available from character {playerIndex}! Changing from {reversedCritterIndexList[highestCritter]} to {reversedCritterIndexList[questIndex]}")
+                        #print("Trapping.getUnlockedCritterStatus~ INFO New highest critter found on character", characterIndex, "! Changing from",highestCritter,"to",questIndex)
+                        #logger.debug(f"New highest critter available from character {characterIndex}! Changing from {reversedCritterIndexList[highestCritter]} to {reversedCritterIndexList[questIndex]}")
                         highestCritter = questIndex
-                    questIndex += 1
             except Exception as reason:
-                logger.exception(f"Could not retrieve {reversedQuestIndexList[questIndex]} status on Character{playerIndex} because {reason}")
-                #print("Trapping.getUnlockedCritterStatus~ EXCEPTION Could not retrieve quest status:", playerIndex, questIndex, reversedQuestIndexList[questIndex], reason)
-            playerIndex += 1
+                logger.exception(f"Could not retrieve {reversedQuestIndexList[questIndex]} status on Character{characterIndex} because {reason}")
+                #print("Trapping.getUnlockedCritterStatus~ EXCEPTION Could not retrieve quest status:", characterIndex, questIndex, reversedQuestIndexList[questIndex], reason)
+            characterIndex += 1
             questIndex = 0
         #print("Trapping.getUnlockedCritterStatus~ OUTPUT highestCritter:",highestCritter, reversedCritterIndexList[highestCritter])
         try:
@@ -78,19 +75,17 @@ def getUnlockedCritterStatus(inputJSON, playerCount):
             print("Trapping.getUnlockedCritterStatus~ EXCEPTION Unable to return highestCritter name in reversedCritterIndexList at index",highestCritter,"because:",reason)
             return "UnknownCritter:"+str(highestCritter)
 
-def getPlacedTrapsDict(inputJSON, playerCount):
+def getPlacedTrapsDict():
     placedTrapDict = {}
-    counter = 0
-    while counter < playerCount:
+    for characterIndex in range(0, session_data.account.playerCount):
         try:
-            placedTrapDict[counter] = json.loads(inputJSON[("PldTraps_"+str(counter))])
-        except Exception as reason:
-            print("Trapping~ EXCEPTION Unable to read PlacedTraps when counter=", counter, "and playerCount=", playerCount, "because:", reason)
-            placedTrapDict[counter] = []
-        counter += 1
+            placedTrapDict[characterIndex] = json.loads(session_data.account.raw_data[f"PldTraps_{characterIndex}"])
+        except:
+            logger.exception(f"Unable to retrieve 'PldTraps_{characterIndex}'")
+            placedTrapDict[characterIndex] = []
     return placedTrapDict
 
-def getCharactersWithUnplacedTraps(inputJSON, trappingLevelsList, placedTrapsDict, playerCount):
+def getCharactersWithUnplacedTraps(trappingLevelsList, placedTrapsDict):
     playerUnsuedTrapsDict = {}
     playerMaxPlacableTrapsList = []
     trapsetLevelRequirementList = [48,40,35,25,15,5,1]
@@ -111,24 +106,19 @@ def getCharactersWithUnplacedTraps(inputJSON, trappingLevelsList, placedTrapsDic
     #Step 1 = Get number of expected traps
     #Bonus trap slot comes from the Call Me Ash bubble, which is an Int stored at ["CauldronInfo"][1][11]. If it is level 1 or higher, the extra trap slot is always given. Does not need to be equipped.
     bonusTrapSlot = 0
-    if inputJSON["CauldronInfo"][1]["11"] >= 1:
+    if session_data.account.raw_data["CauldronInfo"][1]["11"] >= 1:
         bonusTrapSlot = 1
     #print("Trapping.getCharactersWithUnplacedTraps~ OUTPUT bonusTrapSlot = ",bonusTrapSlot, "because Call Me Ash level = ",inputJSON["CauldronInfo"][1]["11"])
 
-    playerCounter = 0
-    trapListsCounter = 0
-    while playerCounter < playerCount:
-        while trapListsCounter < len(trapsetLevelRequirementList):
+    for characterIndex in range(0, session_data.account.playerCount):
+        for trapListIndex in range(0, len(trapsetLevelRequirementList)):
             try:
-                if len(playerMaxPlacableTrapsList) <= playerCounter and trappingLevelsList[playerCounter] >= trapsetLevelRequirementList[trapListsCounter]:
-                    playerMaxPlacableTrapsList.append(trapsetPlacableCountList[trapListsCounter] + bonusTrapSlot)
-            except Exception as reason:
-                print("Trapping.getCharactersWithUnplacedTraps~ EXCEPTION Unable to append to playerMaxPlacableTrapsList:", reason)
-            trapListsCounter += 1
-        if len(playerMaxPlacableTrapsList)-1 < playerCounter:
+                if len(playerMaxPlacableTrapsList) <= characterIndex and trappingLevelsList[characterIndex] >= trapsetLevelRequirementList[trapListIndex]:
+                    playerMaxPlacableTrapsList.append(trapsetPlacableCountList[trapListIndex] + bonusTrapSlot)
+            except:
+                logger.exception(f"Unable to append to playerMaxPlacableTrapsList")
+        if len(playerMaxPlacableTrapsList)-1 < characterIndex:
             playerMaxPlacableTrapsList.append(0)
-        playerCounter += 1
-        trapListsCounter = 0
 
     #Step 2 = Get number of placed traps
     if len(placedTrapsDict) > 0:
@@ -141,20 +131,20 @@ def getCharactersWithUnplacedTraps(inputJSON, trappingLevelsList, placedTrapsDic
                 playerUnsuedTrapsDict[playerKey] = [str(playerPlacedTraps), str(playerMaxPlacableTrapsList[playerKey])]
     return playerUnsuedTrapsDict
 
-def getSecretClassTrapStatus(inputJSON, placedTrapsDict, characterDict):
+def getSecretClassTrapStatus(placedTrapsDict):
     secretCharacterNotUsingNatureTrapsDict = {}
-    for characterIndex in range(0, len(characterDict)):
-        if characterDict[characterIndex].base_class == "Journeyman" and characterDict[characterIndex].trapping_level >= 25:  #the level required to wear Nature Traps
-            for trapData in placedTrapsDict[characterIndex]:
+    for character in session_data.account.all_characters:
+        if character.base_class == "Journeyman" and character.trapping_level >= 25:  #the level required to wear Nature Traps
+            for trapData in placedTrapsDict[character.character_index]:
                 #print("Trapping.getSecretClassTrapStatus~ OUTPUT trapData:",trapData)
                 if trapData[0] != -1 and trapData[5] != 3:
-                    if characterIndex in secretCharacterNotUsingNatureTrapsDict.keys():
-                        secretCharacterNotUsingNatureTrapsDict[characterIndex] += 1
+                    if character.character_index in secretCharacterNotUsingNatureTrapsDict.keys():
+                        secretCharacterNotUsingNatureTrapsDict[character.character_index] += 1
                     else:
-                        secretCharacterNotUsingNatureTrapsDict[characterIndex] = 1
+                        secretCharacterNotUsingNatureTrapsDict[character.character_index] = 1
     return secretCharacterNotUsingNatureTrapsDict
 
-def getUnmaxedCritterVialStatus(inputJSON):
+def getUnmaxedCritterVialStatus():
     unmaxedCritterVialsCount = 0
     critterVialIndexList = [
         23,  #Crabbo
@@ -166,7 +156,7 @@ def getUnmaxedCritterVialStatus(inputJSON):
     ]
     for critterVialIndex in critterVialIndexList:
         try:
-            if int(inputJSON["CauldronInfo"][4][str(critterVialIndex)]) != 13:
+            if int(session_data.account.raw_data["CauldronInfo"][4][str(critterVialIndex)]) != 13:
                 unmaxedCritterVialsCount += 1
         except:
             logger.warning(f"Unable to retrieve Vial level for critterVialIndex {critterVialIndex}")
@@ -179,10 +169,8 @@ def getStaticCritterTrapAdviceList(highestTrapset: int) -> dict[str, list[Advice
     }
     if highestTrapset >= 6:
         listIndexManualAdvice = 6
-        listIndexVaccuumAdvice = 6
     elif highestTrapset >= 5:
         listIndexManualAdvice = 5
-        listIndexVaccuumAdvice = 5
     else:
         listIndexManualAdvice = 0
 
@@ -208,16 +196,22 @@ def getStaticCritterTrapAdviceList(highestTrapset: int) -> dict[str, list[Advice
     }
 
     for counter in range(0, len(manualCritterTrapsDict[listIndexManualAdvice][0])):
-        adviceDict["Efficiency for Manually Claimed traps"].append(Advice(label=manualCritterTrapsDict[listIndexManualAdvice][0][counter],
-                                                                          picture_class=f"{manualCritterTrapsDict[listIndexManualAdvice][0][counter].lower().split(' ')[0]}-traps",
-                                                                          progression=manualCritterTrapsDict[listIndexManualAdvice][1][counter]))
+        adviceDict["Efficiency for Manually Claimed traps"].append(
+            Advice(
+                label=manualCritterTrapsDict[listIndexManualAdvice][0][counter],
+                picture_class=f"{manualCritterTrapsDict[listIndexManualAdvice][0][counter].lower().split(' ')[0]}-traps",
+                progression=manualCritterTrapsDict[listIndexManualAdvice][1][counter])
+        )
 
     if session_data.account.trap_box_vacuum_unlocked:
         adviceDict["Efficiency for Rift's Daily traps"] = []
         for counter in range(0, len(vaccuumCritterTrapsDict[listIndexVaccuumAdvice][0])):
-            adviceDict["Efficiency for Rift's Daily traps"].append(Advice(label=vaccuumCritterTrapsDict[listIndexVaccuumAdvice][0][counter],
-                                                                          picture_class=f"{vaccuumCritterTrapsDict[listIndexVaccuumAdvice][0][counter].lower().split(' ')[0]}-traps",
-                                                                          progression=vaccuumCritterTrapsDict[listIndexVaccuumAdvice][1][counter]))
+            adviceDict["Efficiency for Rift's Daily traps"].append(
+                Advice(
+                    label=vaccuumCritterTrapsDict[listIndexVaccuumAdvice][0][counter],
+                    picture_class=f"{vaccuumCritterTrapsDict[listIndexVaccuumAdvice][0][counter].lower().split(' ')[0]}-traps",
+                    progression=vaccuumCritterTrapsDict[listIndexVaccuumAdvice][1][counter])
+            )
 
     return adviceDict
 
@@ -234,16 +228,22 @@ def getStaticShinyTrapAdviceList(highestTrapset: int) -> dict[str, list[Advice]]
     for counter in range(0, len(shinyTrapsLabelList) - numOfVaccuumSuggestions):
         if highestTrapset >= shinyTrapsRequiredTrapIndexList[counter]:
             adviceDict["Shiny Chance Multi for Manually Claimed traps"].append(
-                Advice(label=shinyTrapsLabelList[counter], picture_class=shinyTrapsItemNameList[counter],
-                       progression=shinyTrapsEffPerHourList[counter], goal="", unit=""))
+                Advice(
+                    label=shinyTrapsLabelList[counter],
+                    picture_class=shinyTrapsItemNameList[counter],
+                    progression=shinyTrapsEffPerHourList[counter])
+            )
 
     if session_data.account.trap_box_vacuum_unlocked:
         adviceDict["Shiny Chance Multi for Rift's Daily traps"] = []
         for counter in range(len(shinyTrapsLabelList) - numOfVaccuumSuggestions, len(shinyTrapsLabelList)):
             if highestTrapset >= shinyTrapsRequiredTrapIndexList[counter]:
                 adviceDict["Shiny Chance Multi for Rift's Daily traps"].append(
-                    Advice(label=shinyTrapsLabelList[counter], picture_class=shinyTrapsItemNameList[counter],
-                           progression=shinyTrapsEffPerHourList[counter], goal="", unit=""))
+                    Advice(
+                        label=shinyTrapsLabelList[counter],
+                        picture_class=shinyTrapsItemNameList[counter],
+                        progression=shinyTrapsEffPerHourList[counter])
+                )
     return adviceDict
 
 def getStaticEXPTrapAdviceList(highestTrapset) -> dict[str, list[Advice]]:
@@ -259,8 +259,11 @@ def getStaticEXPTrapAdviceList(highestTrapset) -> dict[str, list[Advice]]:
     for counter in range(0, len(expTrapsLabelList) - numOfVaccuumSuggestions):
         if highestTrapset >= expTrapsRequiredTrapIndexList[counter]:
             adviceDict["Best Experience for Manually Claimed traps"].append(
-                Advice(label=expTrapsLabelList[counter], picture_class=expTrapsItemNameList[counter], progression=expTrapsEffPerHourList[counter],
-                       goal="", unit=""))
+                Advice(
+                    label=expTrapsLabelList[counter],
+                    picture_class=expTrapsItemNameList[counter],
+                    progression=expTrapsEffPerHourList[counter])
+            )
 
     if session_data.account.trap_box_vacuum_unlocked:
         adviceDict["Best Experience for Rift's Daily traps"] = []
@@ -271,7 +274,7 @@ def getStaticEXPTrapAdviceList(highestTrapset) -> dict[str, list[Advice]]:
                            goal="", unit=""))
     return adviceDict
 
-def setTrappingProgressionTier(inputJSON, characterDict):
+def setTrappingProgressionTier():
     trapping_AdviceDict = {
         "UnlockCritters": [],
         "UnplacedTraps": [],
@@ -288,47 +291,56 @@ def setTrappingProgressionTier(inputJSON, characterDict):
         header="Recommended trapping actions",
         picture="Trapping_Cardboard_Traps.png"
     )
-    trappingLevelsList = getSpecificSkillLevelsList("Trapping")
-    if max(trappingLevelsList) < 1:
+    trappingLevelsList = session_data.account.all_skills["Trapping"]
+    highestTrappingLevel = max(trappingLevelsList)
+    if highestTrappingLevel < 1:
         trapping_AdviceSection.header = "Come back after unlocking the Trapping skill in World 3!"
         return trapping_AdviceSection
 
     highestWearableTrapset = 0
     trapsetLevelRequirementList = [1, 5, 15, 25, 35, 40, 48]
     for index in range(0, len(trapsetLevelRequirementList)):
-        if max(trappingLevelsList) >= trapsetLevelRequirementList[index]:
+        if highestTrappingLevel >= trapsetLevelRequirementList[index]:
             highestWearableTrapset = index
 
-    highestUnlockedCritter = getUnlockedCritterStatus(inputJSON, len(characterDict))
-    placedTrapsDict = getPlacedTrapsDict(inputJSON, len(characterDict))
-    unplacedTrapsDict = getCharactersWithUnplacedTraps(inputJSON, trappingLevelsList, placedTrapsDict, len(characterDict))
-    secretCharacterNotUsingNatureTrapsDict = getSecretClassTrapStatus(inputJSON, placedTrapsDict, characterDict)
+    highestUnlockedCritter = getUnlockedCritterStatus()
+    placedTrapsDict = getPlacedTrapsDict()
+    unplacedTrapsDict = getCharactersWithUnplacedTraps(trappingLevelsList, placedTrapsDict)
+    secretCharacterNotUsingNatureTrapsDict = getSecretClassTrapStatus(placedTrapsDict)
 
     #UnlockCritters
     tier_unlockCritters = highestUnlockedCritter[0]
     if highestUnlockedCritter[0] != maxCritterTypes:  #unlocked not equal to the max possible to unlock.
         trapping_AdviceDict["UnlockCritters"].append(
-            Advice(label=highestUnlockedCritter[3], picture_class=highestUnlockedCritter[3], progression="", goal="")
+            Advice(
+                label=highestUnlockedCritter[3],
+                picture_class=highestUnlockedCritter[3])
             )
 
     #UnusedTraps
     if len(unplacedTrapsDict) > 0:
         for characterIndex in unplacedTrapsDict:
             trapping_AdviceDict["UnplacedTraps"].append(
-                Advice(label=str(characterDict[characterIndex]), picture_class=characterDict[characterIndex].class_name_icon,
-                       progression=unplacedTrapsDict[characterIndex][0], goal=unplacedTrapsDict[characterIndex][1])
+                Advice(
+                    label=session_data.account.all_characters[characterIndex].character_name,
+                    picture_class=session_data.account.all_characters[characterIndex].class_name_icon,
+                    progression=unplacedTrapsDict[characterIndex][0],
+                    goal=unplacedTrapsDict[characterIndex][1])
                 )
 
     #BeginnerNatures
     if len(secretCharacterNotUsingNatureTrapsDict) > 0:
         for characterIndex in secretCharacterNotUsingNatureTrapsDict:
             trapping_AdviceDict["BeginnerNatures"].append(
-                Advice(label=str(characterDict[characterIndex]), picture_class=characterDict[characterIndex].class_name_icon,
-                       progression=secretCharacterNotUsingNatureTrapsDict[characterIndex], goal=0)
+                Advice(
+                    label=session_data.account.all_characters[characterIndex].character_name,
+                    picture_class=session_data.account.all_characters[characterIndex].class_name_icon,
+                    progression=secretCharacterNotUsingNatureTrapsDict[characterIndex],
+                    goal=0)
                 )
 
     #NonMetaTraps
-    hasUnmaxedCritterVial = getUnmaxedCritterVialStatus(inputJSON)
+    hasUnmaxedCritterVial = getUnmaxedCritterVialStatus()
     goodTrapDict = {
         0: [1200, 3600, 28800, 72000],  #Cardboard Traps
         1: [1200, 3600, 28800, 72000],  #Silkskin Traps. 14400 is excluded.
@@ -339,9 +351,9 @@ def setTrappingProgressionTier(inputJSON, characterDict):
     if max(trappingLevelsList) < 48:
         goodTrapDict[5] = [3600, 36000, 108000]  #Before being able to wear Royals, Meaty traps give more critter efficiency than Cardboard
     nonMetaTrapDict = {}
-    for playerIndex in placedTrapsDict:
+    for characterIndex in placedTrapsDict:
         badTrapCount = 0
-        for trapData in placedTrapsDict[playerIndex]:
+        for trapData in placedTrapsDict[characterIndex]:
             if trapData[0] != -1:  # -1 is an unplaced trap
                 if trapData[5] not in goodTrapDict.keys():  # Bad trap sets don't appear in goodTrapDict
                     badTrapCount += 1
@@ -351,12 +363,15 @@ def setTrappingProgressionTier(inputJSON, characterDict):
                     #Using a 5day Wooden Trap that isn't the 0exp variety without a Critter Vial to max. Would be better using Royal/Natures in this scenario.
                     badTrapCount += 1
         if badTrapCount != 0:
-            nonMetaTrapDict[playerIndex] = badTrapCount
+            nonMetaTrapDict[characterIndex] = badTrapCount
 
     for characterIndex in nonMetaTrapDict:
         trapping_AdviceDict["NonMetaTraps"].append(
-            Advice(label=str(characterDict[characterIndex]), picture_class=characterDict[characterIndex].class_name_icon,
-                   progression=str(nonMetaTrapDict[characterIndex]), goal=0)
+            Advice(
+                label=session_data.account.all_characters[characterIndex].character_name,
+                picture_class=session_data.account.all_characters[characterIndex].class_name_icon,
+                progression=str(nonMetaTrapDict[characterIndex]),
+                goal=0)
             )
 
     if len(trapping_AdviceDict["NonMetaTraps"]) > 0:

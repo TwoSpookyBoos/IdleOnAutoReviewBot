@@ -1,23 +1,28 @@
+import copy
 import json
-from consts import getSpecificSkillLevelsList
+
+from consts import progressionTiers
+from flask import g as session_data
 from models import AdviceSection, AdviceGroup, Advice
 from utils import pl, get_logger
-from flask import g as session_data
 
 logger = get_logger(__name__)
 
-def parseConsBuildingstoLists(inputJSON):
-    consBuildingsList = json.loads(inputJSON["Tower"])  #expected type of list
+def parseConsBuildingstoLists():
+    consBuildingsList = json.loads(session_data.account.raw_data["Tower"])  #expected type of list
     #logger.debug(f"TYPE CHECK consBuildingsList: {type(consBuildingsList)}: {consBuildingsList}")
     return consBuildingsList
 
 def getBuildingNameFromIndex(inputNumber):
-    towerList = ["3D Printer", "Talent Book Library", "Death Note", "Salt Lick", "Chest Space", "Cost Cruncher", "Trapper Drone", "Automation Arm", "Atom Collider", "Pulse Mage", "Fireball Lobber", "Boulder Roller", "Frozone Malone", "Stormcaller", "Party Starter", "Kraken Cosplayer", "Poisonic Elder", "Voidinator", "Woodular Shrine", "Isaccian Shrine", "Crystal Shrine", "Pantheon Shrine", "Clover Shrine", "Summereading Shrine", "Crescent Shrine", "Undead Shrine", "Primordial Shrine"]
+    towerList = [
+        "3D Printer", "Talent Book Library", "Death Note", "Salt Lick", "Chest Space", "Cost Cruncher", "Trapper Drone", "Automation Arm", "Atom Collider",
+        "Pulse Mage", "Fireball Lobber", "Boulder Roller", "Frozone Malone", "Stormcaller", "Party Starter", "Kraken Cosplayer", "Poisonic Elder", "Voidinator",
+        "Woodular Shrine", "Isaccian Shrine", "Crystal Shrine", "Pantheon Shrine", "Clover Shrine", "Summereading Shrine", "Crescent Shrine", "Undead Shrine", "Primordial Shrine"]
     try:
         inputNumber = int(inputNumber)
         return towerList[inputNumber]
     except:
-        return "UnknownBuilding"+str(inputNumber)
+        return f"UnknownBuilding{inputNumber}"
 
 def getBuildingImageNameFromIndex(inputNumber):
     towerImageNameList = ["three-d-printer", "talent-book-library", "death-note", "salt-lick", "chest-space", "cost-cruncher", "critter-drone",
@@ -28,34 +33,34 @@ def getBuildingImageNameFromIndex(inputNumber):
         inputNumber = int(inputNumber)
         return towerImageNameList[inputNumber]
     except:
-        return "UnknownBuilding"+str(inputNumber)
+        return f"UnknownBuilding{inputNumber}"
 
-def getInfluencers(inputJSON):
+def getInfluencers():
     #Honker Vial level
     try:
-        honkerVialLevel = inputJSON["CauldronInfo"][4]["40"]  #expected type of int
-        logger.debug(f"TYPE CHECK honkerVialLevel: {type(honkerVialLevel)}: {honkerVialLevel}")
+        honkerVialLevel = session_data.account.raw_data["CauldronInfo"][4]["40"]  #expected type of int
+        #logger.debug(f"TYPE CHECK honkerVialLevel: {type(honkerVialLevel)}: {honkerVialLevel}")
     except Exception as reason:
         honkerVialLevel = 0
         logger.exception(f"Unable to retrieve honkerVialLevel: {reason}")
 
     #Boulder Roller level
     try:
-        poisonicLevel = json.loads(inputJSON["Tower"])[16]  #expected type of int
+        poisonicLevel = json.loads(session_data.account.raw_data["Tower"])[16]  #expected type of int
         #logger.debug(f"TYPE CHECK poisonicLevel: {type(poisonicLevel)}: poisonicLevel")
     except Exception as reason:
         poisonicLevel = 0
         logger.exception(f"Unable to retrieve poisonicLevel: {reason}")
 
     #Other?
-    atomCarbon = False
     if session_data.account.construction_mastery_unlocked:
         consMastery = True
     else:
         consMastery = False
 
+    atomCarbon = False
     try:
-        carbonLevel = inputJSON["Atoms"][5]
+        carbonLevel = session_data.account.raw_data["Atoms"][5]
         if carbonLevel >= 1:
             atomCarbon = True
     except Exception as reason:
@@ -64,7 +69,7 @@ def getInfluencers(inputJSON):
     #logger.debug(f"Influencer results: EitherBuff: {results[0]}, Honker Vial Level: {results[1]}, Poisonic Tower Level: {results[2]}")
     return results
 
-def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progressionTiersPostBuffs, characterDict):
+def setConsBuildingsProgressionTier():
     building_AdviceDict = {}
     building_AdviceGroupDict = {}
     building_AdviceSection = AdviceSection(
@@ -74,14 +79,16 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
         picture="Construction_Table.gif",
         collapse=False
     )
-    constructionLevelsList = getSpecificSkillLevelsList("Construction")
-    if max(constructionLevelsList) < 1:
+    highestConstructionLevel = max(session_data.account.all_skills["Construction"])
+    if highestConstructionLevel < 1:
         building_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
         return building_AdviceSection
 
+    progressionTiersPreBuffs = copy.deepcopy(progressionTiers['Construction Buildings Pre-Buffs'])
+    progressionTiersPostBuffs = copy.deepcopy(progressionTiers['Construction Buildings Post-Buffs'])
     maxBuildingsPerGroup = 10
-    playerBuildings = parseConsBuildingstoLists(inputJSON)
-    influencers = getInfluencers(inputJSON)
+    playerBuildings = parseConsBuildingstoLists()
+    influencers = getInfluencers()
     hasBuffs = influencers[0]
     if hasBuffs:
         #maxLevelList = [10, 201, 51, 10, 25, 60, 45, 5, 200,    140, 140, 140, 140, 140, 140, 140, 140, 140,   200, 200, 200, 200, 200, 200, 200, 200, 200]  # these are true max, not recommended max
@@ -93,22 +100,20 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
 
     # Make adjustments to tiers based on other influencers
     # 1) If any building is level 0, it gets promoted to SS tier
-    buildingCounter = 0
-    while buildingCounter < len(maxLevelList):
+    for buildingCounter in range(0, len(maxLevelList)):
         #logger.debug(f"Is player level {playerBuildings[buildingCounter]} equal to 0 for Tower {buildingCounter} ({getBuildingNameFromIndex(buildingCounter)}): {playerBuildings[buildingCounter] == 0}")
         if playerBuildings[buildingCounter] == 0:
             maxLevelList[buildingCounter] = 1  #With a max recommended level of 1
             for tier in progressionTiersPostBuffs:
                 if buildingCounter in tier[2] and tier[1] != "SS":
                     tier[2].remove(buildingCounter)  #Remove that building from any other non-SS tier.
-                    progressionTiersPostBuffs[1][2].append(buildingCounter)
+                    progressionTiersPostBuffs[0][2].append(buildingCounter)
                     logger.debug(f"Level 0 building detected. Removing {getBuildingNameFromIndex(buildingCounter)} from POSTBuff {tier[1]} and adding to SS with max level 1 instead.")
             for tier in progressionTiersPreBuffs:
                 if buildingCounter in tier[2] and tier[1] != "SS":
                     tier[2].remove(buildingCounter)  #Remove that building from any other non-SS tier.
-                    progressionTiersPreBuffs[1][2].append(buildingCounter)
+                    progressionTiersPreBuffs[0][2].append(buildingCounter)
                     logger.debug(f"Level 0 building detected. Removing {getBuildingNameFromIndex(buildingCounter)} from PREBuff {tier[1]} and adding to SS with max level 1 instead.")
-        buildingCounter += 1
 
     # 2) Honker vial is 12+ OR Trapper Drone is 20+, drop Trapper Drone priority
     if influencers[1] >= 12 or playerBuildings[6] >= 20:
@@ -185,10 +190,10 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
 
     # Decide which tierset to use
     if influencers[0] == True:  #Has either Construction Mastery or the Wizard atom
-        progressionTiers = progressionTiersPostBuffs
+        progressionTiersToUse = progressionTiersPostBuffs
         #logger.debug("Either Construction Mastery or Wizard Atom found. Setting ProgressionTiers to PostBuff.")
     else:
-        progressionTiers = progressionTiersPreBuffs
+        progressionTiersToUse = progressionTiersPreBuffs
         #logger.debug("Setting ProgressionTiers to PreBuff.")
 
     #tier[0] = int tier
@@ -197,20 +202,27 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
     #tier[3] = str tower notes
     #tier[4] = str tier notes
     tierNamesList = []
-    for counter in range(0, len(progressionTiers)):
+    for counter in range(0, len(progressionTiersToUse)):
         building_AdviceDict[counter] = []
-        tierNamesList.append(progressionTiers[counter][1])
-        for recommendedBuilding in progressionTiers[counter][2]:
+        tierNamesList.append(progressionTiersToUse[counter][1])
+        for recommendedBuilding in progressionTiersToUse[counter][2]:
             try:
-                #logger.debug(f"{progressionTiers[counter][1]} Tier: Building {recommendedBuilding} ({getBuildingNameFromIndex(recommendedBuilding)}): Cleared if {maxLevelList[recommendedBuilding]} <= {playerBuildings[recommendedBuilding]}. Cleared= {maxLevelList[recommendedBuilding] <= playerBuildings[recommendedBuilding]}")
                 if maxLevelList[recommendedBuilding] > playerBuildings[recommendedBuilding]:
                     if len(building_AdviceDict[counter]) < maxBuildingsPerGroup:
-                        #logger.debug(f"Adding advice for {getBuildingNameFromIndex(recommendedBuilding)} to {counter}")
-                        building_AdviceDict[counter].append(Advice(label=getBuildingNameFromIndex(recommendedBuilding),
-                                                                   picture_class=getBuildingImageNameFromIndex(recommendedBuilding),
-                                                                   progression=str(playerBuildings[recommendedBuilding]),
-                                                                   goal=str(maxLevelList[recommendedBuilding]))
-                                                            )
+                        if progressionTiersToUse[counter][1] == "Unlock":
+                            building_AdviceDict[counter].append(
+                                Advice(
+                                    label=getBuildingNameFromIndex(recommendedBuilding),
+                                    picture_class=getBuildingImageNameFromIndex(recommendedBuilding))
+                            )
+                        else:
+                            building_AdviceDict[counter].append(
+                                Advice(
+                                    label=getBuildingNameFromIndex(recommendedBuilding),
+                                    picture_class=getBuildingImageNameFromIndex(recommendedBuilding),
+                                    progression=str(playerBuildings[recommendedBuilding]),
+                                    goal=str(maxLevelList[recommendedBuilding]))
+                            )
                 else:
                     #logger.debug(f"{progressionTiers[counter][1]} Tier: Max met for {getBuildingNameFromIndex(recommendedBuilding)}, not generating Advice")
                     continue
@@ -219,12 +231,22 @@ def setConsBuildingsProgressionTier(inputJSON, progressionTiersPreBuffs, progres
 
     #Generate AdviceGroups
     for tierKey in building_AdviceDict.keys():
-        building_AdviceGroupDict[tierKey] = AdviceGroup(
-            tier="",
-            pre_string=f"{str(tierNamesList[tierKey])} Tier",
-            advices=building_AdviceDict[tierKey],
-            post_string=""
-        )
+        if f"{str(tierNamesList[tierKey])}" == "Unlock":
+            building_AdviceGroupDict[tierKey] = AdviceGroup(
+                tier="",
+                pre_string=f"Unlock All Buildings",
+                advices=building_AdviceDict[tierKey],
+                post_string=""
+            )
+            #for building_Advice in building_AdviceGroupDict[f"{str(tierNamesList[tierKey])}"]:
+
+        else:
+            building_AdviceGroupDict[tierKey] = AdviceGroup(
+                tier="",
+                pre_string=f"{str(tierNamesList[tierKey])} Tier",
+                advices=building_AdviceDict[tierKey],
+                post_string=""
+            )
         if len(building_AdviceDict[tierKey]) == maxBuildingsPerGroup:
             building_AdviceGroupDict[tierKey].post_string = f"Up to {maxBuildingsPerGroup} remaining buildings shown"
 

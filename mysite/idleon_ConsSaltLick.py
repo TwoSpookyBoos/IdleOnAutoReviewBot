@@ -1,10 +1,11 @@
 import json
-from consts import getSpecificSkillLevelsList
+from consts import progressionTiers
+from flask import g as session_data
 from models import AdviceSection, AdviceGroup, Advice
 from utils import pl
 
-def parseConsSaltLick(inputJSON):
-    saltLickList = json.loads(inputJSON["SaltLick"])
+def parseConsSaltLick():
+    saltLickList = json.loads(session_data.account.raw_data["SaltLick"])
     saltLickDict = {
         'Printer Sample Size':saltLickList[0],
         'Obol Storage':saltLickList[1],
@@ -27,10 +28,9 @@ def parseConsSaltLick(inputJSON):
         #'Tab4-4':saltLickList[18] #Not Yet Implemented
         #'Tab4-5':saltLickList[19] #Not Yet Implemented
         }
-    #print(saltLickDict)
     return saltLickDict
 
-def setConsSaltLickProgressionTier(inputJSON, progressionTiers, characterDict) -> AdviceSection:
+def setConsSaltLickProgressionTier() -> AdviceSection:
     saltlick_AdviceDict = {
         "UnmaxedUpgrades": []
     }
@@ -41,22 +41,22 @@ def setConsSaltLickProgressionTier(inputJSON, progressionTiers, characterDict) -
         header="Best Salt Lick tier met: Not Yet Evaluated. Recommended salt lick actions:",
         picture="Construction_Salt_Lick.png",
     )
-    constructionLevelsList = getSpecificSkillLevelsList("Construction")
-    if max(constructionLevelsList) < 1:
+    highestConstructionLevel = max(session_data.account.all_skills["Construction"])
+    if highestConstructionLevel < 1:
         saltlick_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
         return saltlick_AdviceSection
-    elif json.loads(inputJSON["Tower"])[3] < 1:
+    elif json.loads(session_data.account.raw_data["Tower"])[3] < 1:
         saltlick_AdviceSection.header = "Come back after unlocking the Salt Lick within the Construction skill in World 3!"
         return saltlick_AdviceSection
 
-    max_tier = progressionTiers[-1][0]
+    max_tier = progressionTiers["Construction Salt Lick"][-1][0]
     tier_RequiredSaltLickUpgrades = 0
     sum_TotalMaxedSaltLickUpgrades = 0
     overall_ConsSaltLickTier = 0
-    saltLickDict = parseConsSaltLick(inputJSON)
+    saltLickDict = parseConsSaltLick()
 
     #Assess tiers
-    for tier in progressionTiers:
+    for tier in progressionTiers["Construction Salt Lick"]:
         #tier[0] = int tier,
         #tier[1] = dict RequiredSaltLickUpgrades,
         #tier[2] = str Notes

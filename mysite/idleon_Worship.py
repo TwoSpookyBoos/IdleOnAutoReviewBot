@@ -1,8 +1,10 @@
 import json
 from models import AdviceSection, AdviceGroup, Advice
-from utils import pl
-from consts import maxTiersPerGroup, getSpecificSkillLevelsList
+from consts import maxTiersPerGroup, progressionTiers
+from flask import g as session_data
+from utils import pl, get_logger
 
+logger = get_logger(__name__)
 
 def getReadablePrayerNames(inputNumber) -> str:
     match inputNumber:
@@ -105,8 +107,8 @@ def getPrayerMaterialImage(inputValue: str | int) -> str:
         case _:
             return "Unknown-Material"
 
-def parseJSONPrayers(inputJSON) -> dict:
-    worshipPrayersList = json.loads(inputJSON["PrayOwned"])
+def parseJSONPrayers() -> dict:
+    worshipPrayersList = json.loads(session_data.account.raw_data["PrayOwned"])
     #print(type(worshipPrayersList), worshipPrayersList)
     worshipPrayersDict = {}
     for index in range(0, len(worshipPrayersList)):
@@ -116,9 +118,9 @@ def parseJSONPrayers(inputJSON) -> dict:
             print("Worship.parseJSONPrayers~ EXCEPTION Unable to add prayer: ", index, reason)
     return worshipPrayersDict
 
-def setWorshipPrayersProgressionTier(inputJSON, progressionTiers, characterDict) -> AdviceSection:
-    worshipPrayersDict = parseJSONPrayers(inputJSON)
-    max_tier = progressionTiers[-3][0]  # Final tier is ignorable, second to final is optional
+def setWorshipPrayersProgressionTier() -> AdviceSection:
+    worshipPrayersDict = parseJSONPrayers()
+    max_tier = progressionTiers["Worship Prayers"][-3][0]  # Final tier is ignorable, second to final is optional
     tier_WorshipPrayers = 0
     overall_WorshipPrayersTier = 0
 
@@ -134,15 +136,15 @@ def setWorshipPrayersProgressionTier(inputJSON, progressionTiers, characterDict)
         header="Best Prayers tier met: Not Yet Evaluated. Recommended prayer actions:",
         picture="Prayer_Stone.gif"
     )
-    worshipLevelsList = getSpecificSkillLevelsList("Worship")
-    if max(worshipLevelsList) < 1:
+    highestWorshipLevel = max(session_data.account.all_skills["Worship"])
+    if highestWorshipLevel < 1:
         prayers_AdviceSection.header = "Come back after unlocking the Worship skill in World 3!"
         return prayers_AdviceSection
 
     adviceCountsDict = {"Recommended": 0, "Optional": 0, "Ignorable": 0}
 
     #Check Recommended Prayers
-    for tier in progressionTiers[:-2]:
+    for tier in progressionTiers["Worship Prayers"][:-2]:
         #tier[0] = int Tier
         #tier[1] = dict requiredPrayersDict
         #tier[2] = str Notes
@@ -165,7 +167,7 @@ def setWorshipPrayersProgressionTier(inputJSON, progressionTiers, characterDict)
             tier_WorshipPrayers = tier[0]
 
     #Check Optional Prayers
-    optionalTierPrayers = progressionTiers[-2][1]
+    optionalTierPrayers = progressionTiers["Worship Prayers"][-2][1]
     for optionalPrayer in optionalTierPrayers:
         if worshipPrayersDict[optionalPrayer] < optionalTierPrayers[optionalPrayer]:
             prayers_AdviceDict["Optional"].append(
@@ -177,7 +179,7 @@ def setWorshipPrayersProgressionTier(inputJSON, progressionTiers, characterDict)
                 )
 
     #Check Ignorable Prayers
-    ignorableTierPrayers = progressionTiers[-1][1]
+    ignorableTierPrayers = progressionTiers["Worship Prayers"][-1][1]
     for ignorablePrayer in ignorableTierPrayers:
         if worshipPrayersDict[ignorablePrayer] < ignorableTierPrayers[ignorablePrayer]:
             prayers_AdviceDict["Ignorable"].append(

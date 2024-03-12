@@ -50,12 +50,12 @@ def getMissableGStacks(owned_stuff: Assets):
     advice_EndangeredQuestGStacks = list(owned_stuff.quest_items_gstackable)
     advice_MissedQuestGStacks = []
 
-    quest_statuses_per_toon = [json.loads(session_data.account.raw_data.get(f"QuestComplete_{i}", "{}")) for i in range(session_data.account.playerCount)]
-    quest_names = sum((list(statuses.keys()) for statuses in quest_statuses_per_toon), list())
+    #quest_statuses_per_toon = [json.loads(session_data.account.raw_data.get(f"QuestComplete_{i}", "{}")) for i in range(session_data.account.playerCount)]
+    quest_names = sum((list(statuses.keys()) for statuses in session_data.account.all_quests), list())
     quests_completed_on_all_toons = [
         name
         for name in quest_names
-        if all(quests.get(name, 0) == 1 for quests in quest_statuses_per_toon)
+        if all(quests.get(name, 0) == 1 for quests in session_data.account.all_quests)
         # Quest value one of (-1, 0, 1). -1 means not started.
     ]
 

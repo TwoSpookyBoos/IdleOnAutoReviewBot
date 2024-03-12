@@ -332,7 +332,7 @@ progressionTiers = {
         [26,20, 20, 20,  20,  20,  20,0,0,   85,85,84,   "As of v2.02, completing a Super CHOW on Boops is impossible."],
     ],
     "Construction Buildings Post-Buffs": [
-        [0, "Default", [], "", ""],
+        [0, "Unlock", [], "", ""],
         [1, "SS", [0, 5, 7], "", ""],
         [2, "S", [1, 2, 3, 6, 11, 15, 16], "", ""],
         [3, "A", [4, 9, 10, 12, 13, 14, 17, 22, 24, 25], "", ""],
@@ -342,7 +342,7 @@ progressionTiers = {
         [7, "F", [], "", ""]
     ],
     "Construction Buildings Pre-Buffs": [
-        [0, "Default", [], "", ""],
+        [0, "Unlock", [], "", ""],
         [1, "SS", [0, 5, 7], "", ""],
         [2, "S", [1, 2, 3, 6, 11, 15, 16], "", ""],
         [3, "A", [4, 13, 14, 22, 24, 25], "", ""],

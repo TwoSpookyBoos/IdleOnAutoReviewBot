@@ -163,12 +163,12 @@ def main(inputData, runType="web"):
     #obols_AdviceSection = idleon_Obols.setObolsProgressionTier(parsedJSON, playerCount, progressionTiers['Obols'], fromPublicIEBool)
 
     #World 3
-    refinery_AdviceSection = idleon_ConsRefinery.setConsRefineryProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Construction Refinery']), characterDict)
-    saltlick_AdviceSection = idleon_ConsSaltLick.setConsSaltLickProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Construction Salt Lick']), characterDict)
-    deathnote_AdviceSection = idleon_ConsDeathNote.setConsDeathNoteProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Construction Death Note']), characterDict)
-    buildings_AdviceSection = idleon_ConsBuildings.setConsBuildingsProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Construction Buildings Pre-Buffs']), copy.deepcopy(progressionTiers['Construction Buildings Post-Buffs']), characterDict)
-    prayers_AdviceSection = idleon_Worship.setWorshipPrayersProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Worship Prayers']), characterDict)
-    trapping_AdviceSection = idleon_Trapping.setTrappingProgressionTier(parsedJSON, characterDict)
+    refinery_AdviceSection = idleon_ConsRefinery.setConsRefineryProgressionTier()
+    saltlick_AdviceSection = idleon_ConsSaltLick.setConsSaltLickProgressionTier()
+    deathnote_AdviceSection = idleon_ConsDeathNote.setConsDeathNoteProgressionTier()
+    buildings_AdviceSection = idleon_ConsBuildings.setConsBuildingsProgressionTier()
+    prayers_AdviceSection = idleon_Worship.setWorshipPrayersProgressionTier()
+    trapping_AdviceSection = idleon_Trapping.setTrappingProgressionTier()
     #collider_AdviceSection =
     #worship_AdviceSection =
     #printer_AdviceSection =

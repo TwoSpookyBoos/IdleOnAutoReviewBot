@@ -4,7 +4,8 @@ from math import floor
 from math import ceil
 
 from config import app
-from consts import getSpecificSkillLevelsList
+from consts import progressionTiers
+from flask import g as session_data
 from models import AdviceSection, AdviceGroup, Advice
 from utils import pl, get_logger
 
@@ -377,27 +378,27 @@ def getEnemyNameFromMap(inputMap: str) -> str:
         case _:
             return "UnknownEnemy"+str(inputMap)
 
-def getapocCharactersIndexList(characterDict: dict) -> list:
+def getapocCharactersIndexList() -> list:
     #get classes, find Barbarian and BB
     apocCharactersIndexList = []
-    for characterIndex in characterDict:
-        if characterDict[characterIndex].sub_class == "Barbarian":
-            apocCharactersIndexList.append(characterDict[characterIndex].character_index)
+    for character in session_data.account.safe_characters:
+        if character.sub_class == "Barbarian":
+            apocCharactersIndexList.append(character.character_index)
     return apocCharactersIndexList
 
-def getChowMeowCharactersIndexList(characterDict: dict) -> list:
+def getChowMeowCharactersIndexList() -> list:
     # get classes, find BB ONLY for Chow and Meow
     bbCharactersIndexList = []
-    for characterIndex in characterDict:
-        if characterDict[characterIndex].elite_class == "Blood Berserker":
-            bbCharactersIndexList.append(characterDict[characterIndex].character_index)
+    for character in session_data.account.safe_characters:
+        if character.elite_class == "Blood Berserker":
+            bbCharactersIndexList.append(character.character_index)
     return bbCharactersIndexList
 
-def getDeathNoteKills(inputJSON, characterDict):
+def getDeathNoteKills():
     apocAmountsList = [100000, 1000000, 100000000]
     apocNamesList = ["ZOW", "CHOW", "MEOW"]
     enemyMaps = buildMaps()
-    apocCharactersIndexList = getapocCharactersIndexList(characterDict)
+    apocCharactersIndexList = getapocCharactersIndexList()
     apocableMapIndexDict = {
         0: [30, 9, 38, 69, 120, 166],  #Barbarian only, not in regular DeathNote
         1: [1, 2, 14, 17, 16, 13, 18, 31, 19, 24, 26, 27, 28, 8, 15],
@@ -409,9 +410,9 @@ def getDeathNoteKills(inputJSON, characterDict):
     }
 
     #total up all kills across characters
-    for characterIndex in range(0, len(characterDict)):
+    for characterIndex in range(0, len(session_data.account.safe_characters)):
         try:
-            characterKillsList = json.loads(inputJSON['KLA_'+str(characterIndex)])  #String pretending to be a list of lists yet again
+            characterKillsList = json.loads(session_data.account.raw_data['KLA_'+str(characterIndex)])  #String pretending to be a list of lists yet again
         except Exception as reason:
             logger.warning(f"Unable to retrieve kill list for Character{characterIndex} because:{reason}")
             #print("ConsDeathNote.getDeathNoteKills~ EXCEPTION Unable to retrieve kill list for Character", characterIndex, "because:", reason)
@@ -436,7 +437,6 @@ def getDeathNoteKills(inputJSON, characterDict):
 
     deathnote_EnemyWorlds = {}
 
-
     #Have each EnemyMap calculate its Skull Value, Name, Count to Next, and Percent to Next now that all kills are totaled
     # Barbarian Only in worldIndex 0
     for worldIndex in range(1, len(enemyMaps)):
@@ -455,7 +455,7 @@ def getDeathNoteKills(inputJSON, characterDict):
                     for apocIndex in range(0, len(apocAmountsList)):
                         if kill_count < apocAmountsList[apocIndex]:
                             #characterDict[barbCharacterIndex].apoc_dict[apocNamesList[apocIndex]][enemyMaps[worldIndex][enemy_map].zow_rating].append([
-                            characterDict[barbCharacterIndex].addUnmetApoc(
+                            session_data.account.all_characters[barbCharacterIndex].addUnmetApoc(
                                 apocNamesList[apocIndex], enemyMaps[worldIndex][enemy_map].getRating(apocNamesList[apocIndex]),
                                 [
                                     enemyMaps[worldIndex][enemy_map].map_name,  #map name
@@ -465,12 +465,12 @@ def getDeathNoteKills(inputJSON, characterDict):
                                 ]
                             )
                         else:
-                            characterDict[barbCharacterIndex].increaseApocTotal(apocNamesList[apocIndex])
+                            session_data.account.all_characters[barbCharacterIndex].increaseApocTotal(apocNamesList[apocIndex])
                 else:
                     #This condition can be hit when reviewing data from before a World release
                     #For example, JSON data from w5 before w6 is released hits this to populate 0% toward W6 kills
                     for apocIndex in range(0, len(apocAmountsList)):
-                        characterDict[barbCharacterIndex].addUnmetApoc(
+                        session_data.account.all_characters[barbCharacterIndex].addUnmetApoc(
                             apocNamesList[apocIndex], enemyMaps[worldIndex][enemy_map].getRating(apocNamesList[apocIndex]),
                             [
                                 enemyMaps[worldIndex][enemy_map].map_name,  # map name
@@ -480,10 +480,7 @@ def getDeathNoteKills(inputJSON, characterDict):
                             ]
                         )
         #Sort them
-        characterDict[barbCharacterIndex].sortApocByProgression()
-                #else:
-                    #print("DN~ INFO barbCharacterIndex", barbCharacterIndex, "NOT found in worldIndex", worldIndex, "enemy_map", enemy_map)
-
+        session_data.account.all_characters[barbCharacterIndex].sortApocByProgression()
     return deathnote_EnemyWorlds
 
 def getMEOWBBIndex(apocCharactersIndexList):
@@ -496,7 +493,7 @@ def getMEOWBBIndex(apocCharactersIndexList):
             logger.warning(f"Could not retrieve which BB should complete MEOWs from this list: {apocCharactersIndexList}")
         return None
 
-def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, characterDict):
+def setConsDeathNoteProgressionTier():
     deathnote_AdviceDict = {
         "W1": [],
         "W2": [],
@@ -518,22 +515,22 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, characterDict):
         header="Recommended Death Note actions",
         picture="Construction_Death_Note.png"
     )
-    constructionLevelsList = getSpecificSkillLevelsList("Construction")
-    if max(constructionLevelsList) < 1:
+    highestConstructionLevel = max(session_data.account.all_skills["Construction"])
+    if highestConstructionLevel < 1:
         deathnote_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
         return deathnote_AdviceSection
-    elif json.loads(inputJSON["Tower"])[3] < 1:
+    elif json.loads(session_data.account.raw_data["Tower"])[3] < 1:
         deathnote_AdviceSection.header = "Come back after unlocking the Salt Lick within the Construction skill in World 3!"
         return deathnote_AdviceSection
 
     currentMaxWorld = 6
     maxEnemiesPerGroup = 10
-    apocCharactersIndexList = getapocCharactersIndexList(characterDict)
-    bbCharactersIndexList = getChowMeowCharactersIndexList(characterDict)
+    apocCharactersIndexList = getapocCharactersIndexList()
+    bbCharactersIndexList = getChowMeowCharactersIndexList()
     meowBBIndex = getMEOWBBIndex(bbCharactersIndexList)
-    fullDeathNoteDict = getDeathNoteKills(inputJSON, characterDict)
+    fullDeathNoteDict = getDeathNoteKills()
 
-    max_tier = progressionTiers[-1][0]
+    max_tier = progressionTiers["Construction Death Note"][-1][0]
     overall_DeathNoteTier = 0
     worldIndexes = []
     maxedGroupsList = []
@@ -594,15 +591,15 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, characterDict):
     highestCHOWCount = 0
     highestCHOWCountIndex = None
     for barbIndex in apocCharactersIndexList:
-        if characterDict[barbIndex].apoc_dict['ZOW']['Total'] > highestZOWCount:
-            highestZOWCount = characterDict[barbIndex].apoc_dict['ZOW']['Total']
+        if session_data.account.all_characters[barbIndex].apoc_dict['ZOW']['Total'] > highestZOWCount:
+            highestZOWCount = session_data.account.all_characters[barbIndex].apoc_dict['ZOW']['Total']
             highestZOWCountIndex = barbIndex
-        if characterDict[barbIndex].apoc_dict['CHOW']['Total'] > highestCHOWCount:
-            highestCHOWCount = characterDict[barbIndex].apoc_dict['CHOW']['Total']
+        if session_data.account.all_characters[barbIndex].apoc_dict['CHOW']['Total'] > highestCHOWCount:
+            highestCHOWCount = session_data.account.all_characters[barbIndex].apoc_dict['CHOW']['Total']
             highestCHOWCountIndex = barbIndex
 
     #assess tiers
-    for tier in progressionTiers:
+    for tier in progressionTiers["Construction Death Note"]:
         #tier[0] = int tier
         #tier[1] = int w1LowestSkull
         #tier[2] = int w2LowestSkull
@@ -625,8 +622,12 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, characterDict):
                 else:
                     for enemy in fullDeathNoteDict[worldIndex].lowest_skulls_dict[fullDeathNoteDict[worldIndex].lowest_skull_value]:
                         if len(deathnote_AdviceDict[f"W{worldIndex}"]) < maxEnemiesPerGroup:
-                            deathnote_AdviceDict[f"W{worldIndex}"].append(Advice(label=enemy[0], picture_class=enemy[3], progression=f"{enemy[2]}%")
-                                                                          )
+                            deathnote_AdviceDict[f"W{worldIndex}"].append(
+                                Advice(
+                                    label=enemy[0],
+                                    picture_class=enemy[3],
+                                    progression=f"{enemy[2]}%")
+                            )
                         else:
                             if worldIndex not in maxedGroupsList:
                                 maxedGroupsList.append(worldIndex)
@@ -639,15 +640,18 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, characterDict):
                 if highestZOWCountIndex is not None:
                     apocToNextTier['ZOW'] = tier[9] - highestZOWCount
                     for difficultyName in apocDifficultyNameList:
-                        if len(characterDict[highestZOWCountIndex].apoc_dict['ZOW'][difficultyName]) > 0:
+                        if len(session_data.account.all_characters[highestZOWCountIndex].apoc_dict['ZOW'][difficultyName]) > 0:
                             if zow_TotalAdvices < maxEnemiesPerGroup - 1:
                                 if difficultyName not in deathnote_AdviceDict['ZOW']:
                                     deathnote_AdviceDict['ZOW'][difficultyName] = []
-                                for enemy in characterDict[highestZOWCountIndex].apoc_dict['ZOW'][difficultyName]:
+                                for enemy in session_data.account.all_characters[highestZOWCountIndex].apoc_dict['ZOW'][difficultyName]:
                                     if zow_TotalAdvices < maxEnemiesPerGroup:
                                         deathnote_AdviceDict["ZOW"][difficultyName].append(
-                                            Advice(label=enemy[0], picture_class=enemy[3], progression=f"{enemy[2]}%"),
-                                            )
+                                            Advice(
+                                                label=enemy[0],
+                                                picture_class=enemy[3],
+                                                progression=f"{enemy[2]}%"),
+                                        )
                                         zow_TotalAdvices += 1
                                     else:
                                         if 'ZOW' not in maxedGroupsList:
@@ -664,14 +668,17 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, characterDict):
                 if highestCHOWCountIndex is not None:
                     apocToNextTier['CHOW'] = tier[10] - highestCHOWCount
                     for difficultyName in apocDifficultyNameList:
-                        if len(characterDict[highestCHOWCountIndex].apoc_dict['CHOW'][difficultyName]) > 0:
+                        if len(session_data.account.all_characters[highestCHOWCountIndex].apoc_dict['CHOW'][difficultyName]) > 0:
                             if chow_TotalAdvices < maxEnemiesPerGroup - 1:
                                 if difficultyName not in deathnote_AdviceDict['CHOW']:
                                     deathnote_AdviceDict['CHOW'][difficultyName] = []
-                                for enemy in characterDict[highestCHOWCountIndex].apoc_dict['CHOW'][difficultyName]:
+                                for enemy in session_data.account.all_characters[highestCHOWCountIndex].apoc_dict['CHOW'][difficultyName]:
                                     if chow_TotalAdvices < maxEnemiesPerGroup:
                                         deathnote_AdviceDict["CHOW"][difficultyName].append(
-                                            Advice(label=enemy[0], picture_class=enemy[3], progression=f"{enemy[2]}%"),
+                                            Advice(
+                                                label=enemy[0],
+                                                picture_class=enemy[3],
+                                                progression=f"{enemy[2]}%"),
                                             )
                                         chow_TotalAdvices += 1
                                     else:
@@ -684,20 +691,23 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, characterDict):
         # MEOW
         if tier_combo['MEOW'] >= (tier[0] - 1):  # Only evaluate if they already met the previous tier's requirement
             if meowBBIndex is not None:
-                if characterDict[meowBBIndex].apoc_dict['MEOW']['Total'] >= tier[11]:
+                if session_data.account.all_characters[meowBBIndex].apoc_dict['MEOW']['Total'] >= tier[11]:
                     tier_combo['MEOW'] = tier[0]
                 else:
-                    apocToNextTier['MEOW'] = tier[11] - characterDict[meowBBIndex].apoc_dict['MEOW']['Total']
+                    apocToNextTier['MEOW'] = tier[11] - session_data.account.all_characters[meowBBIndex].apoc_dict['MEOW']['Total']
                     #for difficultyIndex in range(0, len(apocDifficultyNameList)):
                     for difficultyName in apocDifficultyNameList:
-                        if len(characterDict[meowBBIndex].apoc_dict['MEOW'][difficultyName]) > 0:
+                        if len(session_data.account.all_characters[meowBBIndex].apoc_dict['MEOW'][difficultyName]) > 0:
                             if meow_TotalAdvices < maxEnemiesPerGroup - 1:
                                 if difficultyName not in deathnote_AdviceDict['MEOW']:
                                     deathnote_AdviceDict['MEOW'][difficultyName] = []
-                                for enemy in characterDict[meowBBIndex].apoc_dict['MEOW'][difficultyName]:
+                                for enemy in session_data.account.all_characters[meowBBIndex].apoc_dict['MEOW'][difficultyName]:
                                     if meow_TotalAdvices < maxEnemiesPerGroup:
                                         deathnote_AdviceDict["MEOW"][difficultyName].append(
-                                            Advice(label=enemy[0], picture_class=enemy[3], progression=f"{enemy[2]}%"),
+                                            Advice(
+                                                label=enemy[0],
+                                                picture_class=enemy[3],
+                                                progression=f"{enemy[2]}%"),
                                             )
                                         meow_TotalAdvices += 1
                                     else:
@@ -723,7 +733,7 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, characterDict):
     if highestZOWCountIndex is not None:
         deathnote_AdviceGroupDict['ZOW'] = AdviceGroup(
             tier=str(tier_combo['ZOW']),
-            pre_string=f"Complete {apocToNextTier['ZOW']} more ZOW{pl(['dummy'] * apocToNextTier['ZOW'])} with {characterDict[highestZOWCountIndex].character_name}",
+            pre_string=f"Complete {apocToNextTier['ZOW']} more ZOW{pl(['dummy'] * apocToNextTier['ZOW'])} with {session_data.account.all_characters[highestZOWCountIndex].character_name}",
             advices=deathnote_AdviceDict['ZOW'],
             post_string="Aim for 12hrs or less (8k+ KPH) per enemy"
         )
@@ -732,7 +742,7 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, characterDict):
     if highestCHOWCountIndex is not None:
         deathnote_AdviceGroupDict['CHOW'] = AdviceGroup(
             tier=str(tier_combo['CHOW']),
-            pre_string=f"Complete {apocToNextTier['CHOW']} more CHOW{pl(['dummy'] * apocToNextTier['CHOW'])} with {characterDict[highestCHOWCountIndex].character_name}",
+            pre_string=f"Complete {apocToNextTier['CHOW']} more CHOW{pl(['dummy'] * apocToNextTier['CHOW'])} with {session_data.account.all_characters[highestCHOWCountIndex].character_name}",
             advices=deathnote_AdviceDict['CHOW'],
             post_string="Aim for 12hrs or less (83k+ KPH) per enemy"
         )
@@ -741,7 +751,7 @@ def setConsDeathNoteProgressionTier(inputJSON, progressionTiers, characterDict):
     if meowBBIndex is not None:
         deathnote_AdviceGroupDict['MEOW'] = AdviceGroup(
             tier=str(tier_combo['MEOW']),
-            pre_string=f"Complete {apocToNextTier['MEOW']} more Super CHOW{pl(['dummy']*apocToNextTier['MEOW'])} with {characterDict[meowBBIndex].character_name}",
+            pre_string=f"Complete {apocToNextTier['MEOW']} more Super CHOW{pl(['dummy']*apocToNextTier['MEOW'])} with {session_data.account.all_characters[meowBBIndex].character_name}",
             advices=deathnote_AdviceDict['MEOW'],
             post_string="Aim for 24hrs or less (4m+ KPH) per enemy"
         )
