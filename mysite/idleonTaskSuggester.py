@@ -144,10 +144,10 @@ def main(inputData, runType="web"):
     if runType == "web":
         logger.info(f'{headerData.last_update = }')
 
-    section_combatLevels = idleon_CombatLevels.setCombatLevelsProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Combat Levels']), session_data.account.playerCount, session_data.account.names, session_data.account.classes)
-    section_consumables = idleon_Consumables.parseConsumables(parsedJSON, characterDict)
-    section_gemShop = idleon_GemShop.setGemShopProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Gem Shop']), session_data.account.playerCount)
-    sections_quest_gstacks, section_regular_gstacks = idleon_Greenstacks.setGStackProgressionTier(parsedJSON, session_data.account.playerCount)
+    section_combatLevels = idleon_CombatLevels.setCombatLevelsProgressionTier()
+    section_consumables = idleon_Consumables.parseConsumables()
+    section_gemShop = idleon_GemShop.setGemShopProgressionTier()
+    sections_quest_gstacks, section_regular_gstacks = idleon_Greenstacks.setGStackProgressionTier()
     section_maestro = idleon_MaestroHands.getHandsStatus()
     section_cards = idleon_Cards.getCardSetReview()
 

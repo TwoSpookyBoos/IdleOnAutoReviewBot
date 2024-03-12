@@ -4,14 +4,15 @@ from collections import defaultdict
 from consts import missableGStacksDict
 from models import AdviceSection, AdviceGroup, Advice, gstackable_codenames, gstackable_codenames_expected, Assets
 from utils import get_logger
+from flask import g as session_data
 
 
 logger = get_logger(__name__)
 
 
-def getEquinoxDreams(inputJSON) -> dict:
+def getEquinoxDreams() -> dict:
     try:
-        rawDreams = json.loads(inputJSON["WeeklyBoss"])
+        rawDreams = json.loads(session_data.account.raw_data["WeeklyBoss"])
     except Exception as reason:
         logger.error("Unable to access WeeklyBoss data from JSON: %s", reason)
         return dict(
@@ -30,26 +31,26 @@ def getEquinoxDreams(inputJSON) -> dict:
     return results
 
 
-def all_owned_items(inputJSON: dict, playerCount: int) -> Assets:
-    name_quantity_key_pairs = tuple((f"InventoryOrder_{i}", f"ItemQTY_{i}") for i in range(playerCount)) + (("ChestOrder", "ChestQuantity"),)
+def all_owned_items() -> Assets:
+    name_quantity_key_pairs = tuple((f"InventoryOrder_{i}", f"ItemQTY_{i}") for i in range(session_data.account.playerCount)) + (("ChestOrder", "ChestQuantity"),)
     all_stuff_owned = defaultdict(int)
 
     for codename in gstackable_codenames:
         all_stuff_owned[codename] = 0
 
     for name_key, quantity_key in name_quantity_key_pairs:
-        for name, count in zip(inputJSON[name_key], inputJSON[quantity_key]):
+        for name, count in zip(session_data.account.raw_data[name_key], session_data.account.raw_data[quantity_key]):
             all_stuff_owned[name] += count
 
     return Assets(all_stuff_owned)
 
 
-def getMissableGStacks(inputJSON, playerCount, owned_stuff: Assets):
+def getMissableGStacks(owned_stuff: Assets):
     advice_ObtainedQuestGStacks = owned_stuff.quest_items_gstacked
     advice_EndangeredQuestGStacks = list(owned_stuff.quest_items_gstackable)
     advice_MissedQuestGStacks = []
 
-    quest_statuses_per_toon = [json.loads(inputJSON.get(f"QuestComplete_{i}", "{}")) for i in range(playerCount)]
+    quest_statuses_per_toon = [json.loads(session_data.account.raw_data.get(f"QuestComplete_{i}", "{}")) for i in range(session_data.account.playerCount)]
     quest_names = sum((list(statuses.keys()) for statuses in quest_statuses_per_toon), list())
     quests_completed_on_all_toons = [
         name
@@ -146,10 +147,10 @@ def getMissableGStacks(inputJSON, playerCount, owned_stuff: Assets):
     #return [advice_ObtainedQuestGStacks, advice_EndangeredQuestGStacks, advice_MissedQuestGStacks]
 
 
-def setGStackProgressionTier(inputJSON, playerCount):
-    equinoxDreamsStatus = getEquinoxDreams(inputJSON)
-    all_owned_stuff: Assets = all_owned_items(inputJSON, playerCount)
-    sections_quest_gstacks = getMissableGStacks(inputJSON, playerCount, all_owned_stuff)
+def setGStackProgressionTier():
+    equinoxDreamsStatus = getEquinoxDreams()
+    all_owned_stuff: Assets = all_owned_items()
+    sections_quest_gstacks = getMissableGStacks(all_owned_stuff)
 
     unprecedented_gstacks = all_owned_stuff.items_gstacked_unprecedented
     if unprecedented_gstacks:

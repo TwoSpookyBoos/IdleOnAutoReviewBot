@@ -2,18 +2,19 @@ import json
 from collections import defaultdict
 from models import Advice, AdviceGroup, AdviceSection
 from utils import get_logger
-from consts import numberOfArtifacts, numberOfArtifactTiers, getSpecificSkillLevelsList
+from consts import progressionTiers, numberOfArtifacts, numberOfArtifactTiers, getSpecificSkillLevelsList
+from flask import g as session_data
 
 logger = get_logger(__name__)
 
 
-def try_exclude_SoupedUpTube(inputJSON, exclusionList, playerCount):
-    sum_LabLevels = sum(getSpecificSkillLevelsList("Lab"))
+def try_exclude_SoupedUpTube(exclusionList):
+    sum_LabLevels = sum(session_data.account.all_skills["Lab"])
     if sum_LabLevels >= 180:
         exclusionList.append("Souped Up Tube")
 
 
-def try_exclude_FluorescentFlaggies(inputJSON, exclusionList):
+def try_exclude_FluorescentFlaggies(exclusionList):
     """
     0 through 95 are cogs placed on the board
     96-98 are gray cog-making characters
@@ -21,7 +22,7 @@ def try_exclude_FluorescentFlaggies(inputJSON, exclusionList):
     102-104 are red cog-making
     105-107 are purple cog-making
     """
-    cogList = inputJSON["CogO"]
+    cogList = session_data.account.raw_data["CogO"]
     if isinstance(cogList, str):
         cogList = json.loads(cogList)
 
@@ -30,17 +31,17 @@ def try_exclude_FluorescentFlaggies(inputJSON, exclusionList):
         exclusionList.append("Fluorescent Flaggies")
 
 
-def try_exclude_BurningBadBooks(inputJSON, exclusionList):
+def try_exclude_BurningBadBooks(exclusionList):
     empty = str([0] * 8)
-    autoArmLevel = json.loads(inputJSON.get("Tower", empty))[7]
+    autoArmLevel = json.loads(session_data.account.raw_data.get("Tower", empty))[7]
 
     if int(autoArmLevel) >= 5:
         exclusionList.append("Burning Bad Books")
 
 
-def try_exclude_ChestSluggo(inputJSON, exclusionList):
+def try_exclude_ChestSluggo(exclusionList):
 
-    artifact_tiers = json.loads(inputJSON["Sailing"])
+    artifact_tiers = json.loads(session_data.account.raw_data["Sailing"])
     if isinstance(artifact_tiers, str):
         artifact_tiers = json.loads(artifact_tiers)
 
@@ -51,12 +52,12 @@ def try_exclude_ChestSluggo(inputJSON, exclusionList):
         exclusionList.append("Chest Sluggo")
 
 
-def getGemShopExclusions(inputJSON, playerCount):
+def getGemShopExclusions():
     exclusionList = []
-    try_exclude_SoupedUpTube(inputJSON, exclusionList, playerCount)
-    try_exclude_FluorescentFlaggies(inputJSON, exclusionList)
-    try_exclude_BurningBadBooks(inputJSON, exclusionList)
-    try_exclude_ChestSluggo(inputJSON, exclusionList)
+    try_exclude_SoupedUpTube(exclusionList)
+    try_exclude_FluorescentFlaggies(exclusionList)
+    try_exclude_BurningBadBooks(exclusionList)
+    try_exclude_ChestSluggo(exclusionList)
 
     return exclusionList
 
@@ -95,8 +96,8 @@ def getBonusSectionName(bonusName):
         case _:
             return "UnknownShop"
 
-def getBoughtGemShopItems(inputJSON):
-    parsedList = json.loads(inputJSON["GemItemsPurchased"])
+def getBoughtGemShopItems():
+    parsedList = json.loads(session_data.account.raw_data["GemItemsPurchased"])
     gemShopDict = {
         #Inventory and Storage
         'Item Backpack Space': 0,
@@ -245,11 +246,11 @@ def getBoughtGemShopItems(inputJSON):
     return gemShopDict
 
 
-def setGemShopProgressionTier(inputJSON, progressionTiers, playerCount):
-    boughtItems = getBoughtGemShopItems(inputJSON)
-    gemShopExclusions = getGemShopExclusions(inputJSON, playerCount)
+def setGemShopProgressionTier():
+    boughtItems = getBoughtGemShopItems()
+    gemShopExclusions = getGemShopExclusions()
 
-    recommended_stock = {item: count for tier in progressionTiers for item, count in tier[2].items()}
+    recommended_stock = {item: count for tier in progressionTiers["Gem Shop"] for item, count in tier[2].items()}
 
     for exclusion in gemShopExclusions:
         boughtItems.pop(exclusion, None)
@@ -271,11 +272,11 @@ def setGemShopProgressionTier(inputJSON, progressionTiers, playerCount):
         AdviceGroup(
             tier="",
             pre_string=tier,
-            post_string=progressionTiers[i][3],
+            post_string=progressionTiers["Gem Shop"][i][3],
             hide=False,
             advices=[
                 Advice(label=f"{name} ({getBonusSectionName(name)})", picture_class=name, progression=int(prog), goal=int(goal))
-                for name, qty in progressionTiers[i][2].items()
+                for name, qty in progressionTiers["Gem Shop"][i][2].items()
                 if name in recommended_stock_bought
                 and (prog := float(recommended_stock_bought[name])) < (goal := float(qty))
             ]

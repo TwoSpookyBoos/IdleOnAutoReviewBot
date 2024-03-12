@@ -596,7 +596,7 @@ class Account:
         self.playerCount = playerCount
         self.classes = playerClasses
         self.all_characters = [Character(**char) for char in characterDict.values()]
-        self.characters = [char for char in self.all_characters if char]
+        self.safe_characters = [char for char in self.all_characters if char]
         self.all_skills = perSkillDict
         self.assets = self._all_owned_items()
         self.cards = self._make_cards()
