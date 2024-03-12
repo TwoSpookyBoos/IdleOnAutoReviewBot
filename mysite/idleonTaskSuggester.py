@@ -152,9 +152,9 @@ def main(inputData, runType="web"):
     section_cards = idleon_Cards.getCardSetReview()
 
     #World 1
-    stamps_AdviceSection = idleon_Stamps.setStampProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Stamps']))
-    bribes_AdviceSection = idleon_Bribes.setBribesProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Bribes']))
-    smithing_AdviceSection = idleon_Smithing.setSmithingProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Smithing']), playerCount, characterDict)
+    stamps_AdviceSection = idleon_Stamps.setStampProgressionTier()
+    bribes_AdviceSection = idleon_Bribes.setBribesProgressionTier()
+    smithing_AdviceSection = idleon_Smithing.setSmithingProgressionTier()
 
     #World 2
     alchBubbles_AdviceSection = idleon_Alchemy.setAlchemyBubblesProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Alchemy Bubbles']), characterDict)
