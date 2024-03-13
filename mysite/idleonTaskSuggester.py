@@ -120,9 +120,7 @@ def main(inputData, runType="web"):
     session_data.account = Account(parsedJSON)
 
     #Step 3: Send that data off to all the different analyzers
-    playerCount, playerNames, playerClasses, characterDict, skillsDict = getCharacterDetails(parsedJSON, runType)
-    characterDict = {index: Character(**character) for index, character in characterDict.items()}
-    for name in playerNames:
+    for name in session_data.account.names:
         #print("Checking for name in bannedAccountsList:", name.lower(),  (name.lower() in bannedAccountsList))
         if name.lower() in bannedAccountsList:
             if runType == "web":
@@ -130,13 +128,13 @@ def main(inputData, runType="web"):
                 return bannedListofLists
             elif runType == "consoleTest":
                 return "Banned"
-    roastworthyBool = getRoastableStatus(playerNames)
+    roastworthyBool = getRoastableStatus(session_data.account.names)
 
     if headerData.data_source == HeaderData.JSON:
-        if playerNames[0] == "Character1":
+        if session_data.account.names[0] == "Character1":
             headerData.json_error = "NO SORTED LIST OF CHARACTER NAMES FOUND IN DATA. REPLACING WITH GENERIC NUMBER ORDER."
         else:
-            headerData.first_name = playerNames[0]
+            headerData.first_name = session_data.account.names[0]
 
     #General
     getLastUpdatedTime(headerData)
@@ -192,7 +190,7 @@ def main(inputData, runType="web"):
         alchBubbles_AdviceSection, alchVials_AdviceSection, alchP2W_AdviceSection,
         refinery_AdviceSection, saltlick_AdviceSection, deathnote_AdviceSection, prayers_AdviceSection,
     ]
-    pinchy_high, pinchy_low, pinchy_all = idleon_Pinchy.generatePinchyWorld(parsedJSON, playerCount, all_sections)
+    pinchy_high, pinchy_low, pinchy_all = idleon_Pinchy.generatePinchyWorld(all_sections)
 
     pinchyReview = AdviceWorld(
         name=WorldName.PINCHY,

@@ -1156,7 +1156,7 @@ skillIndexList = ["Combat",
                   "Sailing", "Divinity", "Gaming",
                   "Farming", "Sneaking", "Summoning"]
 
-emptySkillList = [-1] * 25
+emptySkillList = [0] * 25
 
 def getSpecificSkillLevelsList(desiredSkill: str|int) -> list[int]:
     if isinstance(desiredSkill, str):
