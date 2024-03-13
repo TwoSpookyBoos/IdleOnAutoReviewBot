@@ -212,7 +212,10 @@ def getCharacterDetails(inputJSON, runType):
     perSkillDict = characterSkillsDict['Skills']
 
     for list_index in range(0, playerCount):
-        playerClasses.append(getHumanReadableClasses(inputJSON[f'CharacterClass_{list_index}']))
+        try:
+            playerClasses.append(getHumanReadableClasses(inputJSON[f'CharacterClass_{list_index}']))
+        except:
+            playerClasses.append("Unknown")
         characterDict[list_index] = dict(
             character_index=list_index,
             character_name=playerNames[list_index],

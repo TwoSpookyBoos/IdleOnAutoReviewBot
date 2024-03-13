@@ -174,7 +174,7 @@ def main(inputData, runType="web"):
     #printer_AdviceSection =
 
     #World 4
-    breeding_AdviceSection = idleon_Breeding.setBreedingProgressionTier(parsedJSON, copy.deepcopy(progressionTiers['Breeding']), characterDict)
+    breeding_AdviceSection = idleon_Breeding.setBreedingProgressionTier()
     #cooking_AdviceSection =
     #lab_AdviceSection =
 

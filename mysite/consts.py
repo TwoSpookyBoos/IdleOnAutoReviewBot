@@ -1156,10 +1156,9 @@ skillIndexList = ["Combat",
                   "Sailing", "Divinity", "Gaming",
                   "Farming", "Sneaking", "Summoning"]
 
+emptySkillList = [-1] * 25
 
 def getSpecificSkillLevelsList(desiredSkill: str|int) -> list[int]:
-    emptySkillList = [0] * 13
-
     if isinstance(desiredSkill, str):
         try:
             return session_data.account.all_skills[desiredSkill]
@@ -1176,18 +1175,22 @@ def getSpecificSkillLevelsList(desiredSkill: str|int) -> list[int]:
 
 def getAllSkillLevelsDict(inputJSON, playerCount):
     allSkillsDict = {'Skills': {}}
-    for characterCounter in range(0, playerCount):
-        if characterCounter not in allSkillsDict:
-            allSkillsDict[characterCounter] = {}
-        characterSkillList = inputJSON[f'Lv0_{characterCounter}']
+    for characterIndex in range(0, playerCount):
+        if characterIndex not in allSkillsDict:
+            allSkillsDict[characterIndex] = {}
+        try:
+            characterSkillList = inputJSON[f'Lv0_{characterIndex}']
+        except:
+            characterSkillList = emptySkillList
+            logger.exception(f"Could not retrieve LV0_{characterIndex} from JSON. Setting character to all -1s for levels")
         for skillCounter in range(0, len(skillIndexList)):
             if skillIndexList[skillCounter] not in allSkillsDict['Skills']:
                 allSkillsDict['Skills'][skillIndexList[skillCounter]] = []
             try:
-                allSkillsDict[characterCounter][skillIndexList[skillCounter]] = characterSkillList[skillCounter]
+                allSkillsDict[characterIndex][skillIndexList[skillCounter]] = characterSkillList[skillCounter]
                 allSkillsDict['Skills'][skillIndexList[skillCounter]].append(characterSkillList[skillCounter])
             except:
-                allSkillsDict[characterCounter][skillIndexList[skillCounter]] = 0
+                allSkillsDict[characterIndex][skillIndexList[skillCounter]] = 0
                 allSkillsDict['Skills'][skillIndexList[skillCounter]].append(0)
-                logger.exception(f"Unable to retrieve Lv0_{characterCounter}'s Skill level for {skillIndexList[skillCounter]} when playerCount= {playerCount}")
+                logger.exception(f"Unable to retrieve Lv0_{characterIndex}'s Skill level for {skillIndexList[skillCounter]}")
     return allSkillsDict

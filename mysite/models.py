@@ -11,7 +11,7 @@ from flask import g
 
 import itemDecoder
 from data_formatting import getCharacterDetails
-from consts import expectedStackables, progressionTiers, card_data
+from consts import expectedStackables, progressionTiers, card_data, getAllSkillLevelsDict
 from utils import session_singleton, kebab
 
 
