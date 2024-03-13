@@ -1,14 +1,24 @@
 import hashlib
 import json
 import os
+import traceback
 from json import JSONDecodeError
+
 from config import app
-from flask import g, render_template, request, url_for, redirect, Response, send_from_directory
+from flask import (
+    g,
+    render_template,
+    request,
+    url_for,
+    redirect,
+    Response,
+    send_from_directory,
+)
 import idleonTaskSuggester
 
 from data_formatting import HeaderData
-from models import AdviceWorld
-from utils import get_logger, browser_data_logger, ParsedUserAgent
+from models import AdviceWorld, UserDataException
+from utils import get_logger, browser_data_logger, ParsedUserAgent, name_for_logging
 
 
 logger = get_logger(__name__)
@@ -24,19 +34,32 @@ def format_character_name(name: str) -> str:
     return name
 
 
-def get_character_input() -> str:
-    data: str = request.args.get("player") or request.form.get("player", "")
+def get_user_input() -> str:
+    return (request.args.get("player") or request.form.get("player", "")).strip()
 
-    try:
-        parsed = json.loads(data) if data.startswith("{") or data.startswith("[") else data
-    except JSONDecodeError as e:
-        raise ValueError("There is an error in the provided JSON.", e)
 
-    if isinstance(parsed, str):
-        parsed = format_character_name(parsed)
+def is_username(data) -> bool:
+    return isinstance(data, str) and len(data) < 16
 
-    if not isinstance(parsed, (str, dict)):
-        raise ValueError("Submitted data neither player name nor raw data.", parsed)
+
+def json_schema_valid(data) -> bool:
+    return isinstance(data, str) and data.startswith("{") and data.endswith("}")
+
+
+def parse_user_input() -> str | dict | None:
+    data = get_user_input()
+
+    if not data:
+        return
+
+    if is_username(data):
+        parsed = format_character_name(data)
+
+    elif json_schema_valid(data):
+        parsed = json.loads(data)
+
+    else:
+        raise UserDataException("Submitted data not valid.", data)
 
     return parsed
 
@@ -88,7 +111,7 @@ def log_browser_data(player):
 @app.route("/", methods=["GET", "POST"])
 def index() -> Response | str:
     page: str = "results.html"
-    error: bool = False
+    error: str = ""
     reviews: list[AdviceWorld] | None = None
     headerData: HeaderData | None = None
     is_beta: bool = FQDN_BETA in request.host
@@ -98,41 +121,71 @@ def index() -> Response | str:
     beta_link = f"beta?{url_params}"
 
     store_user_preferences()
-
+    name_or_data: str | dict = ""
     try:
-        name_or_data: str | dict = get_character_input() if request.args or request.form else None
-        # logger.info(
-        #     "request.args.get('player'): %s %s",
-        #     type(name_or_data),
-        #     name_or_data if isinstance(name_or_data, str) else ""
-        # )
+        name_or_data = parse_user_input()
 
-        if request.method == "POST" and isinstance(name_or_data, str):
+        if request.method == "POST" and is_username(name_or_data):
             return redirect(
-                url_for(
-                    "index", player=name_or_data, **get_user_preferences()
-                )
+                url_for("index", player=name_or_data, **get_user_preferences())
             )
 
         if name_or_data:
             reviews, headerData = autoReviewBot(name_or_data)
 
-        name = "index.html"
-        if isinstance(name_or_data, str):
-            name = name_or_data
-        elif isinstance(name_or_data, dict) and headerData and headerData.first_name:
-            name = headerData.first_name.lower()
-
+        name = name_for_logging(name_or_data, headerData, "index.html")
         log_browser_data(name)
 
-    except Exception as reason:
-        if os.environ.get("USER") == "niko":
-            raise reason
-        logger.exception(
-            "Could not get Player from Request Args: %s", reason, exc_info=reason
+    except UserDataException as ude:
+        logger.error(ude.msg)
+        error = (
+            "Looks like the data you submitted was neither a username nor valid data. "
+            "Check what you submitted - it must be either the first toon name or the"
+            "JSON object provided by either IdleonEfficiency or IdleonToolbox."
         )
-        error = True
 
+    except JSONDecodeError as jde:
+        filename = name_for_logging(name_or_data, headerData, timestamp=True)
+        dirpath = app.config["LOGS"] / filename
+        filemsg = dirpath / "message.log"
+        filedata = dirpath / "data.txt"
+
+        os.mkdir(dirpath)
+        with open(filemsg, "w") as user_log:
+            user_log.writelines(str(jde) + os.linesep)
+
+        with open(filedata, "w") as user_log:
+            user_log.writelines(jde.doc + os.linesep)
+
+        error = (
+            "Looks like the data you submitted is corrupted. The issue has been "
+            "reported and will be investigated. If the problem persists let us "
+            f"know in the Discord server, mention '{filename}'"
+        )
+
+    except Exception as reason:
+        filename = name_for_logging(name_or_data, headerData, timestamp=True)
+        dirpath = app.config["LOGS"] / filename
+        filemsg = dirpath / "message.log"
+        filedata = dirpath / "data.txt"
+
+        # if os.environ.get("USER") == "niko":
+        #     raise reason
+
+        os.mkdir(dirpath)
+        with open(filemsg, "w") as user_log:
+            user_log.writelines(os.linesep.join([str(reason), traceback.format_exc()]))
+
+        with open(filedata, "w") as user_log:
+            user_input = get_user_input() + os.linesep
+            user_log.writelines(user_input)
+
+        error = (
+            "Looks like something went wrong while handling your account data. "
+            "The issue has been reported and will be investigated. If the "
+            "problem persists let us know in the Discord server, mention "
+            f"'{filename}'"
+        )
     return render_template(
         page,
         reviews=reviews,

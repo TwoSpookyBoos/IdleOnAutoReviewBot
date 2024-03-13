@@ -15,6 +15,13 @@ from consts import expectedStackables, progressionTiers, card_data, getAllSkillL
 from utils import session_singleton, kebab
 
 
+class UserDataException(Exception):
+    def __init__(self, msg, data):
+        super().__init__(msg, data)
+        self.msg = msg
+        self.data = data
+
+
 class Character:
     def __init__(
         self,
