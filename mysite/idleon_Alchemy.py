@@ -723,8 +723,8 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
         for requiredBubble in tier[2]:
             #requiredBubble = name of the bubble
             #tier[2][requiredBubble] = level of the bubble in the requirement
-            #named_all_alchemyBubblesDict[requiredBubble] = level of the player's bubble
-            if named_all_alchemyBubblesDict[requiredBubble] < tier[2][requiredBubble]:
+            #named_all_alchemyBubblesDict.get(requiredBubble,0) = level of the player's bubble
+            if named_all_alchemyBubblesDict.get(requiredBubble,0) < tier[2][requiredBubble]:
                 all_orangeRequirementsMet = False
                 if len(bubbles_AdviceDict["OrangeSampleBubbles"]) < maxTiersPerGroup:
                     adviceCountsDict["OrangeSampleBubbles"] += 1
@@ -734,7 +734,7 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
                         Advice(
                             label=str(requiredBubble),
                             picture_class=str(requiredBubble),
-                            progression=str(named_all_alchemyBubblesDict[requiredBubble]),
+                            progression=str(named_all_alchemyBubblesDict.get(requiredBubble,0)),
                             goal=str(tier[2][requiredBubble]))
                     )
         if tier_OrangeSampleBubbles == (tier[0]-1) and all_orangeRequirementsMet == True:  # Only update if they already met the previous tier
@@ -745,8 +745,8 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
         for requiredBubble in tier[3]:
             #requiredBubble = name of the bubble
             #tier[2][requiredBubble] = level of the bubble in the requirement
-            #named_all_alchemyBubblesDict[requiredBubble] = level of the player's bubble
-            if named_all_alchemyBubblesDict[requiredBubble] < tier[3][requiredBubble]:
+            #named_all_alchemyBubblesDict.get(requiredBubble,0) = level of the player's bubble
+            if named_all_alchemyBubblesDict.get(requiredBubble,0) < tier[3][requiredBubble]:
                 all_greenRequirementsMet = False
                 if len(bubbles_AdviceDict["GreenSampleBubbles"]) < maxTiersPerGroup:
                     adviceCountsDict["GreenSampleBubbles"] += 1
@@ -756,7 +756,7 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
                         Advice(
                             label=str(requiredBubble),
                             picture_class=str(requiredBubble),
-                            progression=str(named_all_alchemyBubblesDict[requiredBubble]),
+                            progression=str(named_all_alchemyBubblesDict.get(requiredBubble,0)),
                             goal=str(tier[3][requiredBubble]))
                     )
         if tier_GreenSampleBubbles == (tier[0]-1) and all_greenRequirementsMet == True:  # Only update if they already met the previous tier
@@ -767,8 +767,8 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
         for requiredBubble in tier[4]:
             #requiredBubble = name of the bubble
             #tier[3][requiredBubble] = level of the bubble in the requirement
-            #named_all_alchemyBubblesDict[requiredBubble] = level of the player's bubble
-            if named_all_alchemyBubblesDict[requiredBubble] < tier[4][requiredBubble]:
+            #named_all_alchemyBubblesDict.get(requiredBubble,0) = level of the player's bubble
+            if named_all_alchemyBubblesDict.get(requiredBubble,0) < tier[4][requiredBubble]:
                 all_purpleRequirementsMet = False
                 if len(bubbles_AdviceDict["PurpleSampleBubbles"]) < maxTiersPerGroup:
                     adviceCountsDict["PurpleSampleBubbles"] += 1
@@ -778,7 +778,7 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
                         Advice(
                             label=str(requiredBubble),
                             picture_class=str(requiredBubble),
-                            progression=str(named_all_alchemyBubblesDict[requiredBubble]),
+                            progression=str(named_all_alchemyBubblesDict.get(requiredBubble,0)),
                             goal=str(tier[4][requiredBubble]))
                     )
         if tier_PurpleSampleBubbles == (tier[0]-1) and all_purpleRequirementsMet == True:  # Only update if they already met the previous tier
@@ -789,20 +789,20 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
         for requiredBubble in tier[5]:
             #requiredBubble = name of the bubble
             #tier[3][requiredBubble] = level of the bubble in the requirement
-            #named_all_alchemyBubblesDict[requiredBubble] = level of the player's bubble
-            if named_all_alchemyBubblesDict[requiredBubble] < tier[5][requiredBubble]:
-                all_utilityRequirementsMet = False
-                if len(bubbles_AdviceDict["UtilityBubbles"]) < maxTiersPerGroup:
-                    adviceCountsDict["UtilityBubbles"] += 1
-                    if f"To reach Tier {tier[0]}" not in bubbles_AdviceDict["UtilityBubbles"]:
-                        bubbles_AdviceDict["UtilityBubbles"][f"To reach Tier {tier[0]}"] = []
-                    bubbles_AdviceDict["UtilityBubbles"][f"To reach Tier {tier[0]}"].append(
-                        Advice(
-                            label=str(requiredBubble),
-                            picture_class=str(requiredBubble),
-                            progression=str(named_all_alchemyBubblesDict[requiredBubble]),
-                            goal=str(tier[5][requiredBubble]))
-                    )
+            #named_all_alchemyBubblesDict.get(requiredBubble,0) = level of the player's bubble
+                if named_all_alchemyBubblesDict.get(requiredBubble,0) < tier[5][requiredBubble]:
+                    all_utilityRequirementsMet = False
+                    if len(bubbles_AdviceDict["UtilityBubbles"]) < maxTiersPerGroup:
+                        adviceCountsDict["UtilityBubbles"] += 1
+                        if f"To reach Tier {tier[0]}" not in bubbles_AdviceDict["UtilityBubbles"]:
+                            bubbles_AdviceDict["UtilityBubbles"][f"To reach Tier {tier[0]}"] = []
+                        bubbles_AdviceDict["UtilityBubbles"][f"To reach Tier {tier[0]}"].append(
+                            Advice(
+                                label=str(requiredBubble),
+                                picture_class=str(requiredBubble),
+                                progression=str(named_all_alchemyBubblesDict.get(requiredBubble,0)),
+                                goal=str(tier[5][requiredBubble]))
+                        )
         if tier_UtilityBubbles == (tier[0]-1) and all_utilityRequirementsMet == True:
             tier_UtilityBubbles = tier[0]
 

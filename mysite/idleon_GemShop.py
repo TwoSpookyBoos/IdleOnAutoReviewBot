@@ -40,10 +40,13 @@ def try_exclude_BurningBadBooks(exclusionList):
 
 
 def try_exclude_ChestSluggo(exclusionList):
-
-    artifact_tiers = json.loads(session_data.account.raw_data["Sailing"])
-    if isinstance(artifact_tiers, str):
-        artifact_tiers = json.loads(artifact_tiers)
+    try:
+        artifact_tiers = json.loads(session_data.account.raw_data.get("Sailing", empty))
+        if isinstance(artifact_tiers, str):
+            artifact_tiers = json.loads(artifact_tiers)
+    except:
+        logger.exception(f"Could not retrieve 'Sailing' from JSON")
+        return
 
     sum_artifactTiers = sum(artifact_tiers[3]) if artifact_tiers and len(artifact_tiers) >= 4 else 0
 
