@@ -3,8 +3,10 @@ import json
 import re
 
 import requests
+from babel.dates import format_datetime
+from flask import request, g as session_data
 
-from idleon_SkillLevels import getAllSkillLevelsDict, getHumanReadableClasses
+from consts import getHumanReadableClasses, getAllSkillLevelsDict
 
 from utils import get_logger
 
@@ -12,11 +14,25 @@ from utils import get_logger
 logger = get_logger(__name__)
 
 
+class HeaderData:
+    JSON = "JSON"
+    PUBLIC = "Public Profile"
+
+    def __init__(self):
+        self.data_source = ""
+        self.direct_json = ""
+        self.ie_link = ""
+        self.link_text = ""
+        self.first_name = ""
+        self.json_error = ""
+        self.last_update = ""
+        self.elapsed = ""
+
+
 def getJSONfromAPI(runType, url="https://scoli.idleonefficiency.com/raw-data"):
     result = re.search('https://(.*?).idleonefficiency.com', url)
     username = result.group(1)
     username = username.lower()
-    #print("Searching for character data from: " + str(url[:-9]))
     if len(username) > 0:
         headers = {
             "Content-Type": "text/json",
@@ -27,9 +43,9 @@ def getJSONfromAPI(runType, url="https://scoli.idleonefficiency.com/raw-data"):
         jsonvalue = response.json()
         parsed = jsonvalue
         return parsed
-    except Exception as reason:
+    except:
         if runType == "web":
-            print("idleonTaskSuggester.getJSONfromAPI~ Error retrieving data from IE!", response, reason)
+            logger.exception(f"Error retrieving data from IE! Response: {response}")
             parsed = []
             return parsed
         elif runType == "consoleTest":
@@ -38,7 +54,6 @@ def getJSONfromAPI(runType, url="https://scoli.idleonefficiency.com/raw-data"):
 
 def getJSONfromText(runType, rawJSON):
     parsed = []
-    #print("idleonTaskSuggester.getJSONfromText~ Input type and Length:", type(rawJSON), len(rawJSON))
     if isinstance(rawJSON, dict):  # Console testing
         if "data" in rawJSON:  # Check to see if this is Toolbox JSON
             parsed = rawJSON["data"]
@@ -46,7 +61,6 @@ def getJSONfromText(runType, rawJSON):
                 parsed["charNames"] = rawJSON["charNames"]
             if "companion" in rawJSON:
                 parsed["companion"] = rawJSON["companion"]
-                #print("idleonTaskSuggester.getJSONfromText~ Return Point 1: DICT Toolbox JSON found.")
             if "serverVars" in rawJSON:
                 if "AutoLoot" in rawJSON["serverVars"]:
                     parsed["AutoLoot"] = rawJSON["serverVars"]["AutoLoot"]
@@ -54,19 +68,14 @@ def getJSONfromText(runType, rawJSON):
         else:  # Non-Toolbox JSON
             try:
                 jsonString = json.dumps(rawJSON)
-                #print("idleonTaskSuggester.getJSONfromText~ Type after json.dumps (expecting str):", type(jsonString))
                 parsed = json.loads(jsonString)
-                #print("idleonTaskSuggester.getJSONfromText~ Type after json.loads (excepting dict):", type(parsed))
-                #print("idleonTaskSuggester.getJSONfromText~ Return Point 2: Non-Toolbox JSON found.")
                 return parsed
-            except Exception as reason:
+            except:
                 if runType == "web":
-                    print("idleonTaskSuggester.getJSONfromText~ EXCEPTION Parsing JSON data from console input!", reason)
-                    print("idleonTaskSuggester.getJSONfromText~ EXCEPTION Return Point 3: Non-Toolbox JSON found, failed to parse. Returning empty list:", reason)
+                    logger.exception("Non-Toolbox JSON found during 'web' run failed to parse. Returning empty list :(")
                     return []
                 elif runType == "consoleTest":
-                    #print("idleonTaskSuggester.getJSONfromText~ Return Point 4: Non-Toolbox JSON found, failed to parse. Returning 'JSONParseFail-DictException'")
-                    print("idleonTaskSuggester.getJSONfromText~ EXCEPTION Parsing JSON data from console input!", reason)
+                    logger.debug("Non-Toolbox JSON found during 'consoleTest' run failed to parse. Returning 'JSONParseFail-DictException'")
                     return "JSONParseFail-DictException"
     elif isinstance(rawJSON, str):  # Input from the actual website
         #Check to see if this is Toolbox JSON
@@ -77,44 +86,40 @@ def getJSONfromText(runType, rawJSON):
                 parsed["charNames"] = toolboxParsed["charNames"]
             if "companion" in rawJSON:
                 parsed["companion"] = toolboxParsed["companion"]
-            #print("idleonTaskSuggester.getJSONfromText~ Return Point 5: STRING Toolbox JSON found.")
             return parsed
         else:
             try:
                 parsed = json.loads(rawJSON)
-                #print("idleonTaskSuggester.getJSONfromText~ Type after json.loads (excepting dict):", type(parsed))
-                #print("idleonTaskSuggester.getJSONfromText~ Return Point 6: STRING Non-Toolbox JSON found.")
                 return parsed
-            except Exception as reason:
+            except:
                 if runType == "web":
-                    print("idleonTaskSuggester.getJSONfromText~ Error parsing JSON data from website input!")
-                    print("idleonTaskSuggester.getJSONfromText~ Exception reason: ", reason)
-                    #print("idleonTaskSuggester.getJSONfromText~ Return Point 7: STRING Non-Toolbox JSON found, failed to parse. Returning empty list.")
+                    logger.exception("Failure during json.loads during 'web' run. Returning empty list :(")
                     return []
                 elif runType == "consoleTest":
-                    #print("idleonTaskSuggester.getJSONfromText~ Return Point 8: STRING Non-Toolbox JSON found, failed to parse. Returning 'JSONParseFail-StringException'")
+                    logger.debug("Non-Toolbox JSON found during 'consoleTest' run failed to parse. Returning 'JSONParseFail-StringException'")
                     return "JSONParseFail-StringException"
-    #print("parsed is a ", type(parsed))
-    #print("idleonTaskSuggester.getJSONfromText~ Return Point 9: End of getJSONfromText reached. Returning results.")
     return parsed
 
 
-def getLastUpdatedTime(inputJSON):
+def getLastUpdatedTime(headerData: HeaderData):
     try:
-        timeAwayDict = json.loads(inputJSON['TimeAway'])
+        timeAwayDict = json.loads(session_data.account.raw_data["TimeAway"])
         lastUpdatedTimeEpoch = timeAwayDict["GlobalTime"]
         lastUpdatedTimeUTC = datetime.datetime.utcfromtimestamp(lastUpdatedTimeEpoch)
         currentTimeUTC = datetime.datetime.utcnow()
         deltaTime = currentTimeUTC - lastUpdatedTimeUTC
-        if deltaTime.days > 0:
-            lastUpdatedString = "Save data last updated: " + lastUpdatedTimeUTC.strftime('%Y-%m-%d %H:%M:%S') + " UTC (" + str(deltaTime.days) + " days and " + "{:.1f}".format(deltaTime.seconds/3600) + " hours ago)"
-        else:
-            lastUpdatedString = "Save data last updated: " + lastUpdatedTimeUTC.strftime('%Y-%m-%d %H:%M:%S') + " UTC (" + "{:.1f}".format(deltaTime.seconds/3600) + " hours ago)"
-        #print(lastUpdatedString)
-        return lastUpdatedString
-    except Exception as reason:
-        print("idleonTaskSuggester.getLastUpdatedTime~ EXCEPTION Unable to parse last updated time:", reason)
-        return "Unable to parse last updated time, sorry :("
+        days, rest = divmod(deltaTime.total_seconds(), 24 * 60 * 60)
+        hours, rest = divmod(rest, 60 * 60)
+        minutes, seconds = divmod(rest, 60)
+
+        locale = request.accept_languages.best.replace('-', '_')
+        headerData.elapsed = f"{days:02g}:{hours:02g}:{minutes:02g}:{int(seconds):02g}"
+        headerData.last_update = format_datetime(lastUpdatedTimeUTC, locale=locale) + " UTC"
+
+    except Exception as e:
+        logger.warning("Unable to parse last updated time.")
+        headerData.elapsed = "00:00:00:00"
+        headerData.last_update = "Unable to parse last updated time, sorry :("
 
 
 def getBaseClass(inputClass):
@@ -128,9 +133,9 @@ def getBaseClass(inputClass):
         case "Journeyman" | "Maestro" | "Voidwalker":
             return "Journeyman"
         case "Beginner":
-            return "None"
+            return "Beginner"
         case _:
-            return "UnknownBaseClass" + str(inputClass)
+            return f"UnknownBaseClass-{inputClass}"
 
 
 def getSubclass(inputClass):
@@ -152,7 +157,7 @@ def getSubclass(inputClass):
         case "Beginner" | "Warrior" | "Mage" | "Archer" | "Journeyman":
             return "None"
         case _:
-            return "UnknownSubclass" + str(inputClass)
+            return f"UnknownSubclass-{inputClass}"
 
 
 def getEliteClass(inputClass):
@@ -162,7 +167,7 @@ def getEliteClass(inputClass):
         case "Beginner" | "Warrior" | "Barbarian" | "Squire" | "Mage" | "Shaman" | "Wizard" | "Archer" | "Bowman" | "Hunter" | "Journeyman" | "Maestro":
             return "None"
         case _:
-            return "UnknownSubclass" + str(inputClass)
+            return f"UnknownEliteClass-{inputClass}"
 
 
 def getCharacterDetails(inputJSON, runType):
@@ -182,8 +187,7 @@ def getCharacterDetails(inputJSON, runType):
         playerNames = inputJSON['charNames']
         playerCount = len(playerNames)
         if runType == "web":
-            print("idleonTaskSuggester.getPlayerCountAndNames~ INFO From Toolbox JSON, found " + str(
-                playerCount) + " characters: ", playerNames)
+            logger.info(f"From Toolbox JSON, found %s characters: %s", playerCount, ', '.join(playerNames))
     else:
         try:
             # this produces an unsorted list of names
@@ -194,26 +198,24 @@ def getCharacterDetails(inputJSON, runType):
                     playerCount += 1
                     playerNames.append(item[7:])
             if runType == "web":
-                print(
-                    "idleonTaskSuggester.getPlayerCountAndNames~ INFO From IE JSON or Toolbox Raw Game JSON, found " + str(
-                        playerCount) + " characters: ", playerNames)
-        except Exception as reason:
+                logger.info(f"From IE JSON or Toolbox Raw Game JSON, found {playerCount} unsorted characters: %s", ', '.join(playerNames))
+        except:
             if runType == "web":
-                print(
-                    "idleonTaskSuggester.getPlayerCountAndNames~ EXCEPTION Couldn't load Cog data for this account to get the unsorted list of names. Oh well:",
-                    reason)
+                logger.warning("Failed to load Cog data to get the unsorted list of names. Replacing with generic list.")
 
         # Produce a "sorted" list of generic Character names
-        counter = 0
         playerNames = []
-        while counter < playerCount:
-            playerNames.append("Character" + str(counter + 1))
-            counter += 1
-        # print("idleonTaskSuggester.getPlayerCountAndNames~ INFO Because that playerNames list was unsorted, replacing with generic list for deeper functions to use:", playerNames)
+        for counter in range(0, playerCount):
+            playerNames.append(f"Character{counter+1}")
 
     characterSkillsDict = getAllSkillLevelsDict(inputJSON, playerCount)
+    perSkillDict = characterSkillsDict['Skills']
+
     for list_index in range(0, playerCount):
-        playerClasses.append(getHumanReadableClasses(inputJSON['CharacterClass_'+str(list_index)]))
+        try:
+            playerClasses.append(getHumanReadableClasses(inputJSON[f'CharacterClass_{list_index}']))
+        except:
+            playerClasses.append("Unknown")
         characterDict[list_index] = dict(
             character_index=list_index,
             character_name=playerNames[list_index],
@@ -224,14 +226,4 @@ def getCharacterDetails(inputJSON, runType):
             all_skill_levels=characterSkillsDict[list_index]
         )
 
-    return [playerCount, playerNames, playerClasses, characterDict]
-
-
-class HeaderData:
-    def __init__(self):
-        self.direct_json = ""
-        self.ie_link = ""
-        self.link_text = ""
-        self.first_name = ""
-        self.json_error = ""
-        self.last_update = ""
+    return [playerCount, playerNames, playerClasses, characterDict, perSkillDict]

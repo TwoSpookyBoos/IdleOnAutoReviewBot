@@ -1,11 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&display=swap');
-
-@font-face {
-    font-family: 'Idleon';
-    src: url(../fonts/Idleon.woff2) format('woff2'), url(../fonts/Idleon.woff) format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
+@import url('https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&display=swap&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
 @font-face {
     font-family: 'Space Mono';
@@ -257,15 +250,54 @@ body {
             max-width: 120em; /*1920px*/
 
             header {
-                padding: 25px;
+                font-family: "Rubik", sans-serif;
+                font-optical-sizing: auto;
+                padding: 10px 20px;
                 border-bottom: var(--border);
                 display: flex;
-                flex-direction: column;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-between;
                 row-gap: 1em;
+                column-gap: 1em;
 
-                span:first-child {
+                &.json { background-color: #8e6c19; }
+                &.public { background-color: #76775c; }
+
+                * {
                     display: flex;
-                    flex-direction: row;
+                    align-items: center;
+                }
+                #update-time {
+                    position: relative;
+                    width: fit-content;
+
+                    #elapsed {
+                        font-family: 'Kode Mono', sans-serif;
+                        position: relative;
+                        &:before {
+                            content: '↻';
+                            position: absolute;
+                            left: -1.7rem;
+                            transform: translateY(-7%);
+                            font-size: 2em;
+                        }
+                    }
+                    #last-update {
+                        position: absolute;
+                        display: inline-block;
+                        right: 0;
+                        top: 1.7rem;
+                        z-index: 1;
+                        visibility: hidden;
+                        width: max-content;
+                        background: black;
+                        border-radius: 3px;
+                        padding: 10px;
+                    }
+                    &:hover #last-update {
+                        visibility: visible;
+                    }
                 }
             }
 
@@ -849,9 +881,26 @@ body {
 }
 
 @media (max-width: 600px) {
-    header {
-        & > span:first-child {
+    body .container-fluid .main-wrapper header {
+        flex-direction: column;
+        #update-time {
+            width: unset;
+
+            #elapsed {
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+            }
+            #last-update {
+                right: unset;
+            }
+        }
+        * {
             flex-direction: column;
+            align-items: center;
+        }
+        #data-source-text {
+            display: none;
         }
     }
 

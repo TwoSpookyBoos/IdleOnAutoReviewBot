@@ -2,11 +2,13 @@ from models import AdviceSection
 from models import AdviceGroup
 from models import Advice
 from utils import pl, get_logger
+from consts import progressionTiers
+from flask import g as session_data
 
 logger = get_logger(__name__)
 
-def parseBribes(inputJSON):
-    parsedBribes = inputJSON["BribeStatus"]
+def parseBribes():
+    parsedBribes = session_data.account.raw_data["BribeStatus"]
     bribeSetW1 = {
         'Insider Trading': parsedBribes[0],
         'Tracking Chips': parsedBribes[1],
@@ -95,7 +97,7 @@ def parseBribes(inputJSON):
         }
     return allBribesDict
 
-def setBribesProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
+def setBribesProgressionTier() -> AdviceSection:
     bribe_AdviceDict = {
         "W1Bribes": [],
         "W2Bribes": [],
@@ -112,7 +114,7 @@ def setBribesProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
         picture='Bribes.png'
     )
 
-    allBribesDict = parseBribes(inputJSON)
+    allBribesDict = parseBribes()
     tier_BribesPurchased = 0
     sum_allBribes = 0
     sum_bribeSetW1 = 0
@@ -123,7 +125,7 @@ def setBribesProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
     sum_bribeSetW6 = 0
     max_allBribes = 40  # Max as of v2.02
     unpurchasableBribes = ["The Art of the Flail"]  # These bribes are in the game, but cannot be purchased as of v2.02
-    max_tier = progressionTiers[-1][0]
+    max_tier = progressionTiers["Bribes"][-1][0]
 
     # W1 Bribes
     for bribe in allBribesDict['W1']:
@@ -132,7 +134,9 @@ def setBribesProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
             sum_allBribes += allBribesDict['W1'][bribe]
         elif allBribesDict['W1'][bribe] <= 0 and bribe not in unpurchasableBribes:
             bribe_AdviceDict["W1Bribes"].append(
-                Advice(label=bribe, picture_class=bribe, progression="", goal="", unit="")
+                Advice(
+                    label=bribe,
+                    picture_class=bribe)
             )
     bribe_AdviceGroupDict['W1'] = AdviceGroup(
         tier="0",
@@ -225,7 +229,7 @@ def setBribesProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
     if sum_allBribes == max_allBribes:
         tier_BribesPurchased = max_tier
     else:
-        for tier in progressionTiers:
+        for tier in progressionTiers["Bribes"]:
             if (sum_bribeSetW1 >= tier[1] and sum_bribeSetW2 >= tier[2] and sum_bribeSetW3 >= tier[3]
                     and sum_bribeSetW4 >= tier[4] and sum_bribeSetTrashIsland >= tier[5] and sum_bribeSetW6 >= tier[6]):
                 tier_BribesPurchased = tier[0]
@@ -240,6 +244,5 @@ def setBribesProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
         bribe_AdviceSection.header = f"Best Bribe tier met: {tier_section}<br>You best ❤️"
     else:
         bribe_AdviceSection.header = f"Best Bribe tier met: {tier_section}"
-
 
     return bribe_AdviceSection

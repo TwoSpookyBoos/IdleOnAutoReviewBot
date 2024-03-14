@@ -56,7 +56,7 @@ def create_header(janky_skills, maestros, beginners, tier):
     if not maestros:
         header = "Gosh golly, I'm jealous, So many nice things ahead of you!<br>Check this section again once you've acquired a Maestro"
 
-        if len(account.characters) == account.max_toon_count and not beginners:
+        if len(account.safe_characters) == account.max_toon_count and not beginners:
             header = "Oh… Oh no… Your family is full but I don't see any future Maestros…<br>I wish you the best of luck 😔"
 
     else:
@@ -83,7 +83,7 @@ def maestros_goal_levels(maestros):
 
     for skill in skillsToReview_RightHand:
         chars_ordered: list[Character] = sorted(
-            account.characters, key=lambda toon: toon.skills[skill], reverse=True
+            account.safe_characters, key=lambda toon: toon.skills[skill], reverse=True
         )
         best_maestro = next((toon for toon in chars_ordered if toon in maestros), None)
         best_maestro_rank = chars_ordered.index(best_maestro)

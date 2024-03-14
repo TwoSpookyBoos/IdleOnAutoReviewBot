@@ -11,8 +11,15 @@ from flask import g
 
 import itemDecoder
 from data_formatting import getCharacterDetails
-from consts import expectedStackables, progressionTiers, card_data
+from consts import expectedStackables, progressionTiers, card_data, getAllSkillLevelsDict
 from utils import session_singleton, kebab
+
+
+class UserDataException(Exception):
+    def __init__(self, msg, data):
+        super().__init__(msg, data)
+        self.msg = msg
+        self.data = data
 
 
 class Character:
@@ -51,9 +58,9 @@ class Character:
         self.sailing_level: int = all_skill_levels["Sailing"]
         self.divinity_level: int = all_skill_levels["Divinity"]
         self.gaming_level: int = all_skill_levels["Gaming"]
-        self.gaming_level: int = all_skill_levels["Farming"]
-        self.gaming_level: int = all_skill_levels["Sneaking"]
-        self.gaming_level: int = all_skill_levels["Summoning"]
+        self.farming_level: int = all_skill_levels["Farming"]
+        self.sneaking_level: int = all_skill_levels["Sneaking"]
+        self.summoning_level: int = all_skill_levels["Summoning"]
         self.skills = all_skill_levels
 
         self.apoc_dict: dict = {
@@ -589,14 +596,16 @@ class Account:
             g.autoloot = True
         else:
             self.autoloot = False
-        playerCount, playerNames, playerClasses, characterDict = getCharacterDetails(
+        playerCount, playerNames, playerClasses, characterDict, perSkillDict = getCharacterDetails(
             self.raw_data, run_type
         )
         self.names = playerNames
         self.playerCount = playerCount
         self.classes = playerClasses
         self.all_characters = [Character(**char) for char in characterDict.values()]
-        self.characters = [char for char in self.all_characters if char]
+        self.safe_characters = [char for char in self.all_characters if char]  #Use this if touching raw_data instead of all_characters
+        self.all_skills = perSkillDict
+        self.all_quests = [json.loads(self.raw_data.get(f"QuestComplete_{i}", "{}")) for i in range(self.playerCount)]
         self.assets = self._all_owned_items()
         self.cards = self._make_cards()
         self.rift = self.raw_data["Rift"][0]

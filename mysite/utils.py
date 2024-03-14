@@ -2,6 +2,8 @@ import logging
 import os
 import re
 import sys
+import uuid
+from datetime import datetime
 
 from flask import g
 from ua_parser import user_agent_parser
@@ -49,9 +51,10 @@ class ParsedUserAgent(UserAgent):
         return f"{self.browser_name} ({self.browser_version})"
 
 
-def pl(_list: list, suffix_singular: str = "", suffix_plural: str = "s") -> str:
+def pl(_list, suffix_singular: str = "", suffix_plural: str = "s") -> str:
+    length = _list if isinstance(_list, int) else len(_list)
     """Pluralize"""
-    return suffix_plural if len(_list) > 1 else suffix_singular
+    return suffix_plural if length > 1 else suffix_singular
 
 
 DEFAULT_FORMAT = (
@@ -124,3 +127,17 @@ def kebab(string: str) -> str:
     Spaces turn to hyphens, non-word characters are removed.
     """
     return re.sub(r"[^\w-]", "", string.lower().replace(" ", "-"))
+
+
+def name_for_logging(name_or_data, headerData, default=str(uuid.uuid4())[:8], timestamp=False) -> str:
+    if isinstance(name_or_data, str) and name_or_data:
+        name = name_or_data
+    elif isinstance(name_or_data, dict) and headerData and headerData.first_name:
+        name = headerData.first_name.lower()
+    else:
+        name = default
+
+    if timestamp:
+        name = datetime.now().strftime("%Y%m%d_%H%M") + f"_{name}"
+
+    return name

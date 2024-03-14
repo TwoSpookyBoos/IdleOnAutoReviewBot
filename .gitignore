@@ -22,3 +22,4 @@ README.txt
 **/.DS_Store
 /mysite/logs/
 /mysite/logs
+/mysite/static/styles/*.css

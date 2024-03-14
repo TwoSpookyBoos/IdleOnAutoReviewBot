@@ -1,28 +1,27 @@
-from models import AdviceSection
-from models import AdviceGroup
-from models import Advice
-import progressionResults
-from utils import pl
+from models import Advice, AdviceGroup, AdviceSection
+from consts import progressionTiers
+from flask import g as session_data
+from utils import pl, get_logger
 
+logger = get_logger(__name__)
 
-def getUnusedForgeSlotsCount(inputJSON):
+def getUnusedForgeSlotsCount():
     unusedForgeSlotsCount = 0
     oreSlotIndex = 0
     try:
-        forgeOreSlotsPurchased = inputJSON["ForgeLV"][0]
-        #print("Smithing.getUnusedForgeSlotsCout~ OUTPUT forgeOreSlotsPurchased:", forgeOreSlotsPurchased)
-        forgeAllItemOrderList = inputJSON["ForgeItemOrder"]
+        forgeOreSlotsPurchased = session_data.account.raw_data["ForgeLV"][0]
+        forgeAllItemOrderList = session_data.account.raw_data["ForgeItemOrder"]
         while oreSlotIndex < len(forgeAllItemOrderList) and (oreSlotIndex/3)+1 <= forgeOreSlotsPurchased:
             if forgeAllItemOrderList[oreSlotIndex] == "Blank":
                 unusedForgeSlotsCount += 1
             oreSlotIndex += 3
-    except Exception as reason:
-        print("Smithing.getUnusedForgeSlotsCount~ EXCEPTION Could not retrieve forge levels or items:", reason)
+    except:
+        logger.exception(f"Could not retrieve forge levels or items. Returning 0 unused slots.")
     #print("Smithing.getUnusedForgeSlotsCount~ OUTPUT unusedForgeSlotsCount/forgeOreSlotsPurchased:", unusedForgeSlotsCount, "/", forgeOreSlotsPurchased)
     return unusedForgeSlotsCount
 
 
-def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, characterDict) -> AdviceSection:
+def setSmithingProgressionTier() -> AdviceSection:
     smithing_AdviceDict = {
         "CashPoints": [],
         "MonsterPoints": [],
@@ -40,7 +39,7 @@ def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, charact
     tier_CashPoints = 0
     tier_MonsterPoints = 0
     tier_ForgeTotals = 0
-    max_tier = progressionTiers[-1][0]
+    max_tier = progressionTiers["Smithing"][-1][0]
     overall_SmithingTier = 0
     playerCashPoints = []
     playerMonsterPoints = []
@@ -81,47 +80,40 @@ def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, charact
     sum_CashPoints = 0
     sum_MonsterPoints = 0
     sum_ForgeUpgrades = 0
-    advice_CashPoints = ""
-    advice_MonsterPoints = ""
-    advice_ForgeUpgrades = ""
-    advice_CombinedSmithing = ""
-    advice_UnusedForgeSlots = ""
 
-    #Total up all of the purchases across all current characters
-    counter = 0
-    while counter < len(characterDict):
+    #Total up all the purchases across all current characters
+    for character in session_data.account.safe_characters:
         try:
-            playerCashPoints.append(int(inputJSON["AnvilPAstats_"+str(counter)][1]))
-            playerMonsterPoints.append(int(inputJSON["AnvilPAstats_" + str(counter)][2]))
-            sum_CashPoints += int(inputJSON["AnvilPAstats_"+str(counter)][1])
-            sum_MonsterPoints += int(inputJSON["AnvilPAstats_"+str(counter)][2])
-        except Exception as reason:
+            playerCashPoints.append(int(session_data.account.raw_data[f"AnvilPAstats_{character.character_index}"][1]))
+            playerMonsterPoints.append(int(session_data.account.raw_data[f"AnvilPAstats_{character.character_index}"][2]))
+            sum_CashPoints += int(session_data.account.raw_data[f"AnvilPAstats_{character.character_index}"][1])
+            sum_MonsterPoints += int(session_data.account.raw_data[f"AnvilPAstats_{character.character_index}"][2])
+        except:
             playerCashPoints.append(0)
             playerMonsterPoints.append(0)
-            print("Smithing.setSmithingProgressionTier~ EXCEPTION Unable to read Anvil stats for Character", counter, "because:", reason)
-        counter += 1
+            logger.exception(f"Unable to retrieve AnvilPAstats_{character.character_index}")
 
-    #Total up all of the forge purchases, including the stinky Forge EXP
+    #Total up all the forge purchases, including the stinky Forge EXP
     try:
-        playerForgeUpgrades = inputJSON["ForgeLV"]
+        playerForgeUpgrades = session_data.account.raw_data["ForgeLV"]
         upgradeIndex = 0
-        for upgrade in playerForgeUpgrades:
+        for upgradeIndex, upgrade in enumerate(playerForgeUpgrades):
             sum_ForgeUpgrades += int(upgrade)
             forgeUpgradesDict[upgradeIndex]["Purchased"] = upgrade
             if forgeUpgradesDict[upgradeIndex]["Purchased"] < forgeUpgradesDict[upgradeIndex]["MaxPurchases"]:
                 if not forgeUpgradesDict[upgradeIndex]["UpgradeName"].startswith("Forge EXP Gain"):
                     smithing_AdviceDict["ForgeUpgrades"].append(
-                        Advice(label=forgeUpgradesDict[upgradeIndex]["UpgradeName"], picture_class='forge-upgrades',
-                               progression=forgeUpgradesDict[upgradeIndex]["Purchased"], goal=forgeUpgradesDict[upgradeIndex]["MaxPurchases"],
-                               unit="")
+                        Advice(
+                            label=forgeUpgradesDict[upgradeIndex]["UpgradeName"],
+                            picture_class='forge-upgrades',
+                            progression=forgeUpgradesDict[upgradeIndex]["Purchased"],
+                            goal=forgeUpgradesDict[upgradeIndex]["MaxPurchases"])
                     )
-            upgradeIndex += 1
-    except Exception as reason:
-        #forgeUpgradesDict[upgradeIndex]["Purchased"] is defaulted to 0 already
-        print("Smithing.setSmithingProgressionTier~ EXCEPTION Unable to read Forge upgrades:", reason)
+    except:
+        logger.exception("Unable to retrieve ForgeLv")
 
     #Work out each tier individual and overall tier
-    for tier in progressionTiers:
+    for tier in progressionTiers["Smithing"]:
         #tier[0] = int tier
         #tier[1] = int Cash Points Purchased
         #tier[2] = int Monster Points Purchased
@@ -135,17 +127,18 @@ def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, charact
             characterIndex = 0
             for upgradeCount in playerCashPoints:
                 if upgradeCount < tier[1]:
-                    advice_CashPoints += characterDict[characterIndex].character_name + " (" + str(upgradeCount) + "/" + str(tier[1]) + "), "
                     allRequirementsMet = False
                     smithing_AdviceDict["CashPoints"].append(
-                        Advice(label=characterDict[characterIndex].character_name, picture_class=characterDict[characterIndex].class_name_icon,
-                               progression=upgradeCount, goal=tier[1], unit="")
+                        Advice(
+                            label=session_data.account.all_characters[characterIndex].character_name,
+                            picture_class=session_data.account.all_characters[characterIndex].class_name_icon,
+                            progression=upgradeCount,
+                            goal=tier[1])
                     )
                 characterIndex += 1
             if allRequirementsMet == True:
                 tier_CashPoints = tier[0]
             else:
-                advice_CashPoints = "Purchase the first " + str(tier[1]) + " cash points on the following characters: " + advice_CashPoints[:-2]
                 smithing_AdviceGroupDict["CashPoints"] = AdviceGroup(
                     tier=str(tier_CashPoints),
                     pre_string=f"Purchase the first {tier[1]} Anvil Points with Cash on the following character{pl(smithing_AdviceDict['CashPoints'])}",
@@ -159,17 +152,18 @@ def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, charact
             characterIndex = 0
             for upgradeCount in playerMonsterPoints:
                 if upgradeCount < tier[2]:
-                    advice_MonsterPoints += characterDict[characterIndex].character_name + " (" + str(upgradeCount) + "/" + str(tier[2]) + "), "
                     allRequirementsMet = False
                     smithing_AdviceDict["MonsterPoints"].append(
-                        Advice(label=characterDict[characterIndex].character_name, picture_class=characterDict[characterIndex].class_name_icon,
-                               progression=upgradeCount, goal=tier[2], unit="")
+                        Advice(
+                            label=session_data.account.all_characters[characterIndex].character_name,
+                            picture_class=session_data.account.all_characters[characterIndex].class_name_icon,
+                            progression=upgradeCount,
+                            goal=tier[2])
                     )
                 characterIndex += 1
             if allRequirementsMet == True:
                 tier_MonsterPoints = tier[0]
             else:
-                advice_MonsterPoints = "Purchase the first " + str(tier[2]) + " monster points on all characters, which includes drops from " + tier[4] + ": " + advice_MonsterPoints[:-2]
                 smithing_AdviceGroupDict["MonsterPoints"] = AdviceGroup(
                     tier=str(tier_CashPoints),
                     pre_string=f"Purchase the first {tier[2]} Anvil Points with Monster Materials on the following character{pl(smithing_AdviceDict['MonsterPoints'])}",
@@ -182,8 +176,6 @@ def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, charact
             if sum_ForgeUpgrades >= tier[3]:
                 tier_ForgeTotals = tier[0]
             else:
-                advice_ForgeUpgrades = ("Purchase " + str(tier[3] - sum_ForgeUpgrades) + " more Forge upgrades. You're currently at (total): "
-                + str(sum_ForgeUpgrades) + "/" + str(tier[3]) + ". (As of v1.91, Forge EXP Gain does absolutely nothing. Feel free to avoid it!)")
                 smithing_AdviceGroupDict["ForgeUpgrades"] = AdviceGroup(
                     tier=str(tier_CashPoints),
                     pre_string=f"Purchase any {tier[3] - sum_ForgeUpgrades} additional Forge Upgrades",
@@ -192,7 +184,7 @@ def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, charact
                 )
 
     #Check for any unused Forge slots
-    unusedForgeSlots = getUnusedForgeSlotsCount(inputJSON)
+    unusedForgeSlots = getUnusedForgeSlotsCount()
     if unusedForgeSlots > 0:
         advice_UnusedForgeSlots = "Informational- You have " + str(unusedForgeSlots) + " empty ore slot in your Forge!"
         smithing_AdviceGroupDict["EmptyForgeSlots"] = AdviceGroup(
@@ -205,28 +197,14 @@ def setSmithingProgressionTier(inputJSON, progressionTiers, playerCount, charact
             post_string=""
         )
 
-    elif unusedForgeSlots > 1:
-        advice_UnusedForgeSlots = "Informational- You have " + str(unusedForgeSlots) + " empty ore slots in your Forge!"
-
-    #Generate advice statement
-    if advice_CashPoints != "":
-        advice_CashPoints = "Tier " + str(tier_CashPoints) + "- " + advice_CashPoints
-    if advice_MonsterPoints != "":
-        advice_MonsterPoints = "Tier " + str(tier_MonsterPoints) + "- " + advice_MonsterPoints
-    if advice_ForgeUpgrades != "":
-        advice_ForgeUpgrades = "Tier " + str(tier_ForgeTotals) + "- " + advice_ForgeUpgrades
-
     #Print out all the final smithing info
     overall_SmithingTier = min(tier_CashPoints, tier_MonsterPoints, tier_ForgeTotals)
     tier_section = f"{overall_SmithingTier}/{max_tier}"
     smithing_AdviceSection.pinchy_rating = overall_SmithingTier
     smithing_AdviceSection.tier = tier_section
     if overall_SmithingTier == max_tier:
-        advice_CombinedSmithing = ["Best Smithing tier met: " + str(overall_SmithingTier) + "/" + str(max_tier), "You best ❤️", "", "", advice_UnusedForgeSlots]
         smithing_AdviceSection.header = f"Best Smithing tier met: {tier_section}<br>You best ❤️"
     else:
-        advice_CombinedSmithing = ["Best Smithing tier met: " + str(overall_SmithingTier) + "/" + str(max_tier), advice_CashPoints, advice_MonsterPoints, advice_ForgeUpgrades, advice_UnusedForgeSlots]
         smithing_AdviceSection.header = f"Best Smithing tier met: {tier_section}"
         smithing_AdviceSection.groups = smithing_AdviceGroupDict.values()
-    smithingPR = progressionResults.progressionResults(overall_SmithingTier, advice_CombinedSmithing, "")
     return smithing_AdviceSection

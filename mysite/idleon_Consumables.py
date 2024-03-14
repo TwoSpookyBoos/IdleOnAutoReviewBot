@@ -63,8 +63,8 @@ class StorageChest(StorageItemMixin, IntEnum):
     STORAGE_CHEST_11 = 10
     STORAGE_CHEST_12 = 11
     STORAGE_CHEST_13 = 12
-    STORAGE_CHEST_14 = 13
-    STORAGE_CHEST_15 = 14
+    STORAGE_CHEST_14 = 14
+    STORAGE_CHEST_15 = 13
     STORAGE_CHEST_16 = 15
     STORAGE_CHEST_17 = 16
     STORAGE_CHEST_18 = 17
@@ -199,8 +199,8 @@ class Bag(StorageItemMixin, IntEnum):
         return cls.BLUNDERBAG, cls.SANDY_SATCHEL, cls.SHIVERING_SACK, cls.PEEPER_POUCH
 
 
-def getCandyHourSections(inputJSON):
-    bank = dict(zip(inputJSON["ChestOrder"], inputJSON["ChestQuantity"]))
+def getCandyHourSections():
+    bank = dict(zip(session_data.account.raw_data["ChestOrder"], session_data.account.raw_data["ChestQuantity"]))
 
     # Standard Time Candies: 1hr - 72hr
     normal_candy = (bank.get(f"Timecandy{i}", 0) for i in range(1, 7))
@@ -275,64 +275,7 @@ def getStorageItemType(storageItemIndex, cls):
 
     return bag.type
 
-
-def parseInventoryBagsCount(inputJSON, _, playerNames):
-    currentMaxQuestBags = 7  # As of v2.00
-    currentMaxDroppedBags = 4  # As of v2.00
-    currentMaxCraftedBags = 4  # As of v2.00
-    currentMaxVendorBags = 5  # As of v2.00
-    currentMaxGemShopBags = 6  # As of v2.00
-    currentMaxBagsSum = currentMaxQuestBags + currentMaxDroppedBags + currentMaxCraftedBags + currentMaxVendorBags + currentMaxGemShopBags
-    playerBagDict = {}
-    playerBagsByTypeDict = {}
-    playersMissingBags = []
-
-    for counter, name in enumerate(playerNames):
-        try:
-            playerBagDict[name] = json.loads(inputJSON[f'InvBagsUsed_{counter}']) #yet another string pretending to be a list of lists..
-        except Exception as reason:
-            logger.exception("Unable to retrieve Inventory Bags Used for %s: ", name, exc_info=reason)
-
-    #print(playerBagDict)
-    for player, bagList in playerBagDict.items():
-        #print(type(player), player)
-        #print(type(bagList), bagList)
-        bagTypeCounts = defaultdict(int)
-
-        for bag in bagList:
-            thisBag = getBagType(bag)
-            #print(bag, thisBag)
-            bagTypeCounts[thisBag] += 1
-
-        playerBagsByTypeDict[player] = bagTypeCounts
-        total = sum(bagTypeCounts.values())
-
-        if total < currentMaxBagsSum:
-            playersMissingBags.append((player, total))
-
-    #print(playerBagsByTypeDict)
-
-    # tier = f"{len(playersMissingBags)}/{len(playerNames)}"
-    # header = f"You collected bags on {tier} players. Collect more!"
-
-    advices_MissingBags = [
-        Advice(label=name, picture_class="", progression=bagsCount, goal=currentMaxBagsSum) for name, bagsCount in playersMissingBags
-    ]
-
-    # if not advice_MissingBags:
-    #     tier = f"{len(playerNames)}/{len(playerNames)}"
-    #     header = f"You collected bags on all {tier} players. Enjoy your vastness of space! ❤️"
-
-    group_bags = AdviceGroup(
-        tier="",
-        pre_string="Collect inventory bags on the following players",
-        advice=advices_MissingBags
-    )
-
-    logger.debug('%s', str(group_bags))
-    return group_bags
-
-def parseInventoryBagSlots(inputJSON, characterDict: dict[int, Character]) -> AdviceGroup:
+def parseInventoryBagSlots() -> AdviceGroup:
     inventorySlots_AdviceList = []
     currentMaxInventorySlots = 83  #As of v2.02
     currentMaxUsableInventorySlots = 80  #As of v2.02
@@ -343,11 +286,11 @@ def parseInventoryBagSlots(inputJSON, characterDict: dict[int, Character]) -> Ad
     playersWithMaxBagSlots = []
     playersMissingBagSlots = []
 
-    for chararacterIndex in characterDict:
+    for characterIndex, character in enumerate(session_data.account.safe_characters):
         try:
-            playerBagDict[chararacterIndex] = json.loads(inputJSON['InvBagsUsed_'+str(chararacterIndex)])  #yet another string pretending to be a list of lists
+            playerBagDict[characterIndex] = json.loads(session_data.account.raw_data[f'InvBagsUsed_{characterIndex}'])  #yet another string pretending to be a list of lists
         except:
-            logger.exception(f"Unable to retrieve InvBagsUsed for {chararacterIndex} ({characterDict[chararacterIndex].character_name})")
+            logger.exception(f"Unable to retrieve InvBagsUsed for {characterIndex} ({character.character_name})")
 
     inventorySlots_AdviceGroup = AdviceGroup(
         tier="",
@@ -377,29 +320,31 @@ def parseInventoryBagSlots(inputJSON, characterDict: dict[int, Character]) -> Ad
             playersMissingBagSlots.append(chararacterIndex)
     logger.info(f"playerBagDict: {playerBagDict}")
     logger.info(f"playersMissingBagSlots: {playersMissingBagSlots}")
-    for player in playersMissingBagSlots:
+    for playerIndex in playersMissingBagSlots:
         inventorySlots_AdviceList.append(Advice(
-            label=characterDict[player].character_name,
-            picture_class=characterDict[player].class_name_icon,
-            progression=playerBagSlotsDict[player]["Total"],
+            label=session_data.account.all_characters[playerIndex].character_name,
+            picture_class=session_data.account.all_characters[playerIndex].class_name_icon,
+            progression=playerBagSlotsDict[playerIndex]["Total"],
             goal=currentMaxUsableInventorySlots
         ))
 
     inventorySlots_AdviceGroup.advices = inventorySlots_AdviceList
     return inventorySlots_AdviceGroup
 
-def parseStorageChests(inputJSON):
-    currentMaxChestsSum = 45  # As of v2.0
-    usedStorageChests = json.loads(inputJSON['InvStorageUsed'])
+def parseStorageChests():
+    usedStorageChests = json.loads(session_data.account.raw_data['InvStorageUsed'])
     missing_chests = [chest for chest in StorageChest if str(chest.value) not in usedStorageChests.keys()]
 
     advices = [
-        Advice(label=chest.pretty_name, picture_class=chest.pretty_name) for chest in missing_chests
+        Advice(
+            label=chest.pretty_name,
+            picture_class=chest.pretty_name)
+        for chest in missing_chests
     ]
 
     group = AdviceGroup(
         tier="",
-        pre_string=f"Collect {len(missing_chests)} more storage chest{pl(['']*len(missing_chests))} for your bank",
+        pre_string=f"Collect {len(missing_chests)} more storage chest{pl(missing_chests)} for your bank",
         advices=advices
     )
     if len(advices) == 0:
@@ -408,10 +353,10 @@ def parseStorageChests(inputJSON):
     return group
 
 
-def parseConsumables(inputJSON, characterDict: dict[int, Character]):
-    sections_candy = getCandyHourSections(inputJSON)
-    group_bags = parseInventoryBagSlots(inputJSON, characterDict)
-    group_chests = parseStorageChests(inputJSON)
+def parseConsumables():
+    sections_candy = getCandyHourSections()
+    group_bags = parseInventoryBagSlots()
+    group_chests = parseStorageChests()
 
     groups = [group_bags, group_chests]
 

@@ -45,12 +45,7 @@
         <div class="container-fluid">
             <div class="main-wrapper" id="top">
                 {% if error %}
-                    <span class="error">
-                        Unable to retrieve data for this character name.
-                        Please check your spelling and make sure you have
-                        uploaded your account publicly.
-                    </span>
-
+                    <span class="error">{{ error }}</span>
                 {% elif reviews | ensure_data %}
                     {% include 'header.html' %}
                     <main id="mainresults">
