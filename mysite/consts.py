@@ -1,3 +1,8 @@
+from flask import g as session_data
+from utils import get_logger
+
+logger = get_logger(__name__)
+
 def setCustomTiers(filename="input.csv"):
     return
 
@@ -126,79 +131,79 @@ progressionTiers = {
          {'Roid Ragin': 567,  'Warriors Rule': 284,  'Hearty Diggy': 567,  'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 397, 'Multorange': 170,  'Dream of Ironfish': 170, 'Shimmeron': 227},
          {'Swift Steppin': 567, 'Archer or Bust': 284, 'Sanic Tools': 70, 'Bug^2': 120,'Premigreen': 170},
          {'Stable Jenius': 567, 'Mage is Best': 284,  'Hocus Choppus': 567,  'Molto Loggo': 120, 'Le Brain Tools': 397,  'Severapurple': 170,  'Tree Sleeper': 227},
-         {'Laaarrrryyyy': 501},
+         {},
          "85%",
-         "Larry at 501 = 100% chance for +2 levels. This can be leveled with a combination of prints as well as daily Boron upgrades from the Atom Collider."],
+         ""],
         [9,  100,
          {'Roid Ragin': 615,  'Warriors Rule': 308,  'Hearty Diggy': 615,  'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 430, 'Multorange': 185,  'Dream of Ironfish': 185, 'Shimmeron': 246},
          {'Swift Steppin': 615, 'Archer or Bust': 308, 'Sanic Tools': 70, 'Bug^2': 120,'Premigreen': 185},
          {'Stable Jenius': 615, 'Mage is Best': 308,  'Hocus Choppus': 615,  'Molto Loggo': 120, 'Le Brain Tools': 430,  'Severapurple': 185,  'Tree Sleeper': 246},
-         {'Cookin Roadkill': 630},
+         {},
          "86%",
-         "Cooking Roadkill 630 = 90% bubble strength. Try to tackle the cheap levels with prints, and add Atom Clicks as needed. This will help your Bubo's Cranium Cooking really pick up in value."],
+         ""],
         [10, 100,
          {'Roid Ragin': 670,  'Warriors Rule': 335,  'Hearty Diggy': 670,  'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 469, 'Multorange': 201,  'Dream of Ironfish': 201, 'Shimmeron': 268},
          {'Swift Steppin': 670, 'Archer or Bust': 335, 'Sanic Tools': 70, 'Bug^2': 120,'Premigreen': 201},
          {'Stable Jenius': 670, 'Mage is Best': 335,  'Hocus Choppus': 670,  'Molto Loggo': 120, 'Le Brain Tools': 469,  'Severapurple': 201,  'Tree Sleeper': 268},
-         {'Startue Exp': 240},
+         {'Laaarrrryyyy': 501},
          "87%",
-         "Startue Exp 240 = 80% bubble strength. This can be leveled with Vman prints. You'll also likely get quite a lot of Pocket Sand while farming for Glass Shards for your Mason Jar stamp. Try to at least get this 80% threshold by the time you're farming Onyx Statues."],
+         "Larry at 501 = 100% chance for +2 levels. This can be leveled with a combination of prints as well as daily Boron upgrades from the Atom Collider."],
         [11, 100,
          {'Roid Ragin': 700,  'Warriors Rule': 367,  'Hearty Diggy': 734,  'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 514, 'Multorange': 220,  'Dream of Ironfish': 220, 'Shimmeron': 294},
          {'Swift Steppin': 700, 'Archer or Bust': 367, 'Sanic Tools': 70, 'Bug^2': 120,'Premigreen': 220},
          {'Stable Jenius': 700, 'Mage is Best': 367,  'Hocus Choppus': 734,  'Molto Loggo': 120, 'Le Brain Tools': 514,  'Severapurple': 220,  'Tree Sleeper': 294},
-         {'Droppin Loads': 280},
+         {'Cookin Roadkill': 630},
          "88%",
-         "Droppin Loads 280 = 80% bubble strength. Ideally, this should be leveled with prints but Fishing prints tend to struggle in the beginning. A few Boron upgrades won't hurt."],
+         "Cooking Roadkill 630 = 90% bubble strength. Try to tackle the cheap levels with prints, and add Atom Clicks as needed. This will help your Bubo's Cranium Cooking really pick up in value."],
         [12, 100,
          {'Roid Ragin': 720,  'Warriors Rule': 405,  'Hearty Diggy': 810,  'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 567, 'Multorange': 243,  'Dream of Ironfish': 243, 'Shimmeron': 324},
          {'Swift Steppin': 720, 'Archer or Bust': 405, 'Sanic Tools': 70, 'Bug^2': 120,'Premigreen': 243},
          {'Stable Jenius': 720, 'Mage is Best': 405,  'Hocus Choppus': 810,  'Molto Loggo': 120, 'Le Brain Tools': 567,  'Severapurple': 243,  'Tree Sleeper': 324},
-         {'Call Me Bob': 200},
+         {'Startue Exp': 240},
          "89%",
-         "Call Me Bob is a linear Construction EXP bubble, so the early levels are the most impactful to your account. Vman prints can help get this into Atom range. Afterwards, it is a very valid Atom Click target"],
+         "Startue Exp 240 = 80% bubble strength. This can be leveled with Vman prints. You'll also likely get quite a lot of Pocket Sand while farming for Glass Shards for your Mason Jar stamp. Try to at least get this 80% threshold by the time you're farming Onyx Statues."],
         [13, 100,
          {'Roid Ragin': 740,  'Warriors Rule': 450,  'Hearty Diggy': 900,  'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 630, 'Multorange': 270,  'Dream of Ironfish': 270, 'Shimmeron': 360},
          {'Swift Steppin': 740, 'Archer or Bust': 450, 'Sanic Tools': 70, 'Bug^2': 120,'Premigreen': 270},
          {'Stable Jenius': 740, 'Mage is Best': 450,  'Hocus Choppus': 900,  'Molto Loggo': 120, 'Le Brain Tools': 630,  'Severapurple': 270,  'Tree Sleeper': 360},
-         {'Diamond Chef': 31, 'Big P': 140, 'Big Game Hunter': 70, 'Mr Massacre': 117},
+         {'Droppin Loads': 280},
          "90%",
-         "70% broad on Utility bubbles. Many of these may not be within range to use Atom Clicks on yet. To help them level faster, try to level other cheap bubbles which will ensure No Bubble Left Behind targets these expensive bubbles instead."],
+         "Droppin Loads 280 = 80% bubble strength. Ideally, this should be leveled with prints but Fishing prints tend to struggle in the beginning. A few Boron upgrades won't hurt."],
         [14, 100,
          {'Roid Ragin': 760,  'Warriors Rule': 506,  'Hearty Diggy': 1012, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 630, 'Multorange': 304,  'Dream of Ironfish': 270, 'Shimmeron': 405},
          {'Swift Steppin': 760, 'Archer or Bust': 506, 'Sanic Tools': 70, 'Bug^2': 120,'Premigreen': 304},
          {'Stable Jenius': 760, 'Mage is Best': 506,  'Hocus Choppus': 1012, 'Molto Loggo': 120, 'Le Brain Tools': 630,  'Severapurple': 304,  'Tree Sleeper': 360},
-         {'Diamond Chef': 52, 'Big P': 240, 'Big Game Hunter': 120, 'Mr Massacre': 200},
+         {'Call Me Bob': 200},
          "91%",
-         "80% broad on Utility bubbles. Some of these may not be within range to use Atom Clicks on yet. To help them level faster, try to level other cheap bubbles which will ensure No Bubble Left Behind targets these expensive bubbles instead."],
+         "Call Me Bob is a linear Construction EXP bubble, so the early levels are the most impactful to your account. Vman prints can help get this into Atom range. Afterwards, it is a very valid Atom Click target"],
         [15, 100,
          {'Roid Ragin': 780,  'Warriors Rule': 575,  'Hearty Diggy': 1150, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 630, 'Multorange': 345,  'Dream of Ironfish': 270, 'Shimmeron': 460},
          {'Swift Steppin': 780, 'Archer or Bust': 575, 'Sanic Tools': 70, 'Bug^2': 120,'Premigreen': 345},
          {'Stable Jenius': 780, 'Mage is Best': 575,  'Hocus Choppus': 1150, 'Molto Loggo': 120, 'Le Brain Tools': 630,  'Severapurple': 345,  'Tree Sleeper': 360},
-         {'Diamond Chef': 74, 'Big P': 340, 'Carpenter': 284, 'Big Game Hunter': 170, 'Mr Massacre': 284},
+         {'Diamond Chef': 31, 'Big P': 140, 'Big Game Hunter': 70, 'Mr Massacre': 117},
          "92%",
-         "85% broad on Utility bubbles. A few of these may not be within range to use Atom Clicks on yet. To help them level faster, try to level other cheap bubbles which will ensure No Bubble Left Behind targets these expensive bubbles instead."],
+         "70% broad on Utility bubbles. Many of these may not be within range to use Atom Clicks on yet. To help them level faster, try to level other cheap bubbles which will ensure No Bubble Left Behind targets these expensive bubbles instead."],
         [16, 100,
          {'Roid Ragin': 800,  'Warriors Rule': 665,  'Hearty Diggy': 1329, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 630, 'Multorange': 399,  'Dream of Ironfish': 270, 'Shimmeron': 532},
          {'Swift Steppin': 800, 'Archer or Bust': 665, 'Sanic Tools': 70, 'Bug^2': 120,'Premigreen': 399},
          {'Stable Jenius': 800, 'Mage is Best': 665,  'Hocus Choppus': 1329, 'Molto Loggo': 120, 'Le Brain Tools': 630,  'Severapurple': 399,  'Tree Sleeper': 360},
-         {'Laaarrrryyyy': 900, 'Diamond Chef': 117, 'Big P': 540, 'Carpenter': 450, 'Big Game Hunter': 270, 'Mr Massacre': 450},
+         {'Diamond Chef': 52, 'Big P': 240, 'Big Game Hunter': 120, 'Mr Massacre': 200},
          "93%",
-         "90% broad on Utility bubbles. These should all be within Atom Range now. Try not to go too crazy on these until your Sampling Bubbles are all 90% first."],
+         "80% broad on Utility bubbles. Some of these may not be within range to use Atom Clicks on yet. To help them level faster, try to level other cheap bubbles which will ensure No Bubble Left Behind targets these expensive bubbles instead."],
         [17, 100,
          {'Roid Ragin': 820,  'Warriors Rule': 784,  'Hearty Diggy': 1567, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 630, 'Multorange': 470,  'Dream of Ironfish': 270, 'Shimmeron': 627},
          {'Swift Steppin': 820, 'Archer or Bust': 784, 'Sanic Tools': 70, 'Bug^2': 120,'Premigreen': 470},
          {'Stable Jenius': 820, 'Mage is Best': 784,  'Hocus Choppus': 1567, 'Molto Loggo': 120, 'Le Brain Tools': 630,  'Severapurple': 470,  'Tree Sleeper': 360},
-         {},
+         {'Diamond Chef': 74, 'Big P': 340, 'Carpenter': 284, 'Big Game Hunter': 170, 'Mr Massacre': 284},
          "94%",
-         ""],
+         "85% broad on Utility bubbles. A few of these may not be within range to use Atom Clicks on yet. To help them level faster, try to level other cheap bubbles which will ensure No Bubble Left Behind targets these expensive bubbles instead."],
         [18, 100,
          {'Roid Ragin': 840,  'Warriors Rule': 950,  'Hearty Diggy': 1900, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 630, 'Multorange': 570,  'Dream of Ironfish': 270, 'Shimmeron': 760},
          {'Swift Steppin': 840, 'Archer or Bust': 950, 'Sanic Tools': 70, 'Bug^2': 120,'Premigreen': 570},
          {'Stable Jenius': 840, 'Mage is Best': 950,  'Hocus Choppus': 1900, 'Molto Loggo': 120, 'Le Brain Tools': 630,  'Severapurple': 570,  'Tree Sleeper': 360},
-         {},
+         {'Laaarrrryyyy': 900, 'Diamond Chef': 117, 'Big P': 540, 'Carpenter': 450, 'Big Game Hunter': 270, 'Mr Massacre': 450},
          "95%",
-         ""],
+         "90% broad on Utility bubbles. These should all be within Atom Range now. Try not to go too crazy on these until your Sampling Bubbles are all 90% first."],
         [19, 100,
          {'Roid Ragin': 860,  'Warriors Rule': 1200, 'Hearty Diggy': 1900, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 630, 'Multorange': 720,  'Dream of Ironfish': 270},
          {'Swift Steppin': 860, 'Archer or Bust': 1200, 'Sanic Tools': 70, 'Bug^2': 120,'Premigreen': 570},
@@ -327,7 +332,7 @@ progressionTiers = {
         [26,20, 20, 20,  20,  20,  20,0,0,   85,85,84,   "As of v2.02, completing a Super CHOW on Boops is impossible."],
     ],
     "Construction Buildings Post-Buffs": [
-        [0, "Default", [], "", ""],
+        [0, "Unlock", [], "", ""],
         [1, "SS", [0, 5, 7], "", ""],
         [2, "S", [1, 2, 3, 6, 11, 15, 16], "", ""],
         [3, "A", [4, 9, 10, 12, 13, 14, 17, 22, 24, 25], "", ""],
@@ -337,7 +342,7 @@ progressionTiers = {
         [7, "F", [], "", ""]
     ],
     "Construction Buildings Pre-Buffs": [
-        [0, "Default", [], "", ""],
+        [0, "Unlock", [], "", ""],
         [1, "SS", [0, 5, 7], "", ""],
         [2, "S", [1, 2, 3, 6, 11, 15, 16], "", ""],
         [3, "A", [4, 13, 14, 22, 24, 25], "", ""],
@@ -1102,3 +1107,90 @@ card_data = {
 }
 
 maxTiersPerGroup = 3
+numberOfArtifacts = 33  # As of v2.03
+numberOfArtifactTiers = 4  # As of v2.03
+currentMaxChestsSum = 45  # As of v2.0
+
+humanReadableClasses = {
+    1: "Beginner",
+    2: "Journeyman",
+    3: "Maestro",
+    4: "Voidwalker",
+    5: "Infinilyte",
+    6: "Rage Basics",
+    7: "Warrior",
+    8: "Barbarian",
+    9: "Squire",
+    10: "Blood Berserker",
+    11: "Death Bringer",
+    12: "Divine Knight",
+    13: "Royal Guardian",
+    18: "Calm Basics",
+    19: "Archer",
+    20: "Bowman",
+    21: "Hunter",
+    22: "Siege Breaker",
+    23: "Mayheim",
+    24: "Wind Walker",
+    25: "Beast Master",
+    30: "Savvy Basics",
+    31: "Mage",
+    32: "Wizard",
+    33: "Shaman",
+    34: "Elemental Sorcerer",
+    35: "Spiritual Monk",
+    36: "Bubonic Conjuror",
+    37: "Arcane Cultist"
+}
+
+
+def getHumanReadableClasses(classNumber):
+    return humanReadableClasses.get(classNumber, f"Unknown class: {classNumber}")
+
+
+skillIndexList = ["Combat",
+                  "Mining", "Smithing", "Choppin",
+                  "Fishing", "Alchemy", "Catching",
+                  "Trapping", "Construction", "Worship",
+                  "Cooking", "Breeding", "Lab",
+                  "Sailing", "Divinity", "Gaming",
+                  "Farming", "Sneaking", "Summoning"]
+
+emptySkillList = [0] * 25
+
+def getSpecificSkillLevelsList(desiredSkill: str|int) -> list[int]:
+    if isinstance(desiredSkill, str):
+        try:
+            return session_data.account.all_skills[desiredSkill]
+        except:
+            logger.exception(f"Could not retrieve skill data for {desiredSkill}")
+            return emptySkillList
+    elif isinstance(desiredSkill, int):
+        try:
+            return session_data.account.all_skills[skillIndexList[desiredSkill]]
+        except:
+            logger.exception(f"Could not find Index for desiredSkill of {desiredSkill}")
+            return emptySkillList
+
+
+def getAllSkillLevelsDict(inputJSON, playerCount):
+    allSkillsDict = {'Skills': {}}
+    for characterIndex in range(0, playerCount):
+        if characterIndex not in allSkillsDict:
+            allSkillsDict[characterIndex] = {}
+        try:
+            characterSkillList = inputJSON[f'Lv0_{characterIndex}']
+        except:
+            characterSkillList = emptySkillList
+            logger.exception(f"Could not retrieve LV0_{characterIndex} from JSON. Setting character to all -1s for levels")
+        for skillCounter in range(0, len(skillIndexList)):
+            if skillIndexList[skillCounter] not in allSkillsDict['Skills']:
+                allSkillsDict['Skills'][skillIndexList[skillCounter]] = []
+            try:
+                allSkillsDict[characterIndex][skillIndexList[skillCounter]] = characterSkillList[skillCounter]
+                allSkillsDict['Skills'][skillIndexList[skillCounter]].append(characterSkillList[skillCounter])
+            except:
+                allSkillsDict[characterIndex][skillIndexList[skillCounter]] = 0
+                allSkillsDict['Skills'][skillIndexList[skillCounter]].append(0)
+                logger.exception(f"Unable to retrieve Lv0_{characterIndex}'s Skill level for {skillIndexList[skillCounter]}")
+    return allSkillsDict

@@ -1,5 +1,4 @@
 import json
-import progressionResults
 
 def parseJSONtoLists(inputJSON):
     samplingList = json.loads(inputJSON["Sampling"])
@@ -14,5 +13,5 @@ def setSamplingProgressionTier(inputJSON, progressionTiers):
     advice_Sampling1 = ""
     overall_SamplingTier = min(progressionTiers[-1][-0], tier_Sampling)
     advice_SamplingCombined = ["Best Sampling tier met: " + str(overall_SamplingTier) + "/" + str(progressionTiers[-1][-0])]
-    samplingPR = progressionResults.progressionResults(overall_SamplingTier,advice_SamplingCombined,"")
-    return samplingPR
+    #samplingPR = progressionResults.progressionResults(overall_SamplingTier,advice_SamplingCombined,"")
+    #return samplingPR

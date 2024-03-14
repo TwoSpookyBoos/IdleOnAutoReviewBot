@@ -116,4 +116,29 @@ document.addEventListener("DOMContentLoaded", () => {
             sib.classList.toggle('folded')
         })
     })
+    // data age clock
+    setInterval(() => {
+        const elapsed = document.querySelector('#elapsed')
+        const timeStr = elapsed.innerText
+        const [sec, min, hr, d] = timeStr.split(":").reverse()
+        let _sec = parseInt(sec) + 1
+        let _min = Math.floor(_sec / 60)
+        _sec = _sec % 60
+
+        _min = parseInt(min) + _min
+        let _hr = Math.floor(_min / 60)
+        _min = _min % 60
+
+        _hr = parseInt(hr) + _hr
+        let _d = Math.floor(_hr / 60)
+        _hr = _hr % 60
+
+        _d = parseInt(d) + _d
+        elapsed.innerText = [
+            _d.toString().padStart(2, "0"),
+            _hr.toString().padStart(2, "0"),
+            _min.toString().padStart(2, "0"),
+            _sec.toString().padStart(2, "0")
+        ].join(":")
+    }, 1000)
 });

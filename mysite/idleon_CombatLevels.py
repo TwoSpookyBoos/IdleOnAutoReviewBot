@@ -1,16 +1,17 @@
 import json
-import progressionResults
-import idleon_SkillLevels
+
+import consts
 from mysite.models import AdviceGroup, Advice, AdviceSection
 from mysite.utils import get_logger
+from flask import g as session_data
 
 
 logger = get_logger(__name__)
 
 
-def getEquinoxDreams(inputJSON) -> dict:
+def getEquinoxDreams() -> dict:
     try:
-        rawDreams = json.loads(inputJSON["WeeklyBoss"])
+        rawDreams = json.loads(session_data.account.raw_data["WeeklyBoss"])
     except Exception as reason:
         logger.error("Unable to access WeeklyBoss data from JSON: %s", reason)
         return dict(
@@ -29,21 +30,19 @@ def getEquinoxDreams(inputJSON) -> dict:
     return results
 
 
-def parseCombatLevels(inputJSON, playerCount, playerNames):
-    combatLevels = idleon_SkillLevels.getSpecificSkillLevelsList(inputJSON, playerCount, "Combat")
+def parseCombatLevels(playerNames):
+    combatLevels = session_data.account.all_skills["Combat"]
     equinox3_charactersUnder100 = {}
     equinox11_charactersUnder250 = {}
     equinox23_charactersUnder500 = {}
 
     for counter, playerLevel in enumerate(combatLevels):
-        player_name = playerNames[counter]
         if playerLevel < 500:  # player under level 500, add to 1
-            equinox23_charactersUnder500[player_name] = playerLevel
+            equinox23_charactersUnder500[counter] = playerLevel
         if playerLevel < 250:  # player under level 250, add to 2
-            equinox11_charactersUnder250[player_name] = playerLevel
+            equinox11_charactersUnder250[counter] = playerLevel
         if playerLevel < 100:  # player under level 100, add to all 3
-            equinox3_charactersUnder100[player_name] = playerLevel
-
+            equinox3_charactersUnder100[counter] = playerLevel
 
     parsedCombatLevels = dict(
         sum_AccountLevel=sum(combatLevels),
@@ -58,9 +57,9 @@ def parseCombatLevels(inputJSON, playerCount, playerNames):
     return parsedCombatLevels
 
 
-def setCombatLevelsProgressionTier(inputJSON, progressionTiers, playerCount, playerNames, playerClasses) -> progressionResults:
-    parsedCombatLevels = parseCombatLevels(inputJSON, playerCount, playerNames)
-    equinoxDreamStatus = getEquinoxDreams(inputJSON)
+def setCombatLevelsProgressionTier() -> AdviceSection:
+    parsedCombatLevels = parseCombatLevels(session_data.account.names)
+    equinoxDreamStatus = getEquinoxDreams()
 
     total_combat_level = parsedCombatLevels['sum_AccountLevel']
 
@@ -71,13 +70,17 @@ def setCombatLevelsProgressionTier(inputJSON, progressionTiers, playerCount, pla
     # tier[3] = int PlayerLevels
     # tier[4] = str PL reward
     # tier[5] = str notes
-    next_tier = next((tier for tier in progressionTiers if total_combat_level < tier[1]), None)
-    curr_tier = next((tier for tier in reversed(progressionTiers) if total_combat_level >= tier[1]), progressionTiers[0])
+    next_tier = next((tier for tier in consts.progressionTiers["Combat Levels"] if total_combat_level < tier[1]), None)
+    curr_tier = next((tier for tier in reversed(consts.progressionTiers["Combat Levels"]) if total_combat_level >= tier[1]), consts.progressionTiers["Combat Levels"][0])
 
     overall_CombatLevelTier = curr_tier[0]
 
     advices = [
-        Advice(label=next_tier[2], picture_class="total-level", progression=total_combat_level, goal=next_tier[1])
+        Advice(
+            label=next_tier[2],
+            picture_class="total-level",
+            progression=total_combat_level,
+            goal=next_tier[1])
     ] if next_tier else []
 
     total_level_group = AdviceGroup(
@@ -103,8 +106,12 @@ def setCombatLevelsProgressionTier(inputJSON, progressionTiers, playerCount, pla
         goal = '∞'
 
     lvlup_advices = [
-        Advice(label=character, picture_class=playerClasses[playerNames.index(character)] + '-icon', progression=level, goal=goal)
-        for character, level in parsedCombatLevels['equinoxDict'].get(f'under{goal}', dict()).items()
+        Advice(
+            label=session_data.account.all_characters[characterIndex].character_name,
+            picture_class=session_data.account.all_characters[characterIndex].class_name_icon,
+            progression=level,
+            goal=goal)
+        for characterIndex, level in parsedCombatLevels['equinoxDict'].get(f'under{goal}', dict()).items()
     ]
 
     lvlup_group = AdviceGroup(
@@ -113,7 +120,7 @@ def setCombatLevelsProgressionTier(inputJSON, progressionTiers, playerCount, pla
         advices=lvlup_advices,
     )
 
-    max_tier = progressionTiers[-1][0]
+    max_tier = consts.progressionTiers["Combat Levels"][-1][0]
     tier = f"{overall_CombatLevelTier}/{max_tier}"
     header = f"Optimal family class level tier met: {tier}. "
 

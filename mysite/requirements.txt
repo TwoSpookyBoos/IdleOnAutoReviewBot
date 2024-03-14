@@ -1,3 +1,5 @@
 flask
 requests
 #coloredlogs
+ue-parser
+babel

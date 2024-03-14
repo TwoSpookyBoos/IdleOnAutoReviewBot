@@ -1,7 +1,7 @@
 import json
 from models import Advice, AdviceWorld, WorldName, AdviceSection, AdviceGroup
 from utils import pl, get_logger
-
+from flask import g as session_data
 
 logger = get_logger(__name__)
 
@@ -147,7 +147,7 @@ class Placements(dict):
         BUBBLES:       [0,   0, 0, 0,    0,  1,  1,      2,  2,  2,      3,  4,  5,      7,  9, 14,      17, 19, 21,     23,   99],
         VIALS:         [0,   0, 0, 0,    1,  1,  2,      3,  4,  5,      6,  6,  7,      8,  9,  10,     12, 20, 25,     26,   99],
         P2W:           [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  1,      1,  1,  1,      1, 1, 1,        1,    99],
-        REFINERY:      [0,   0, 0, 0,    0,  0,  0,      1,  1,  2,      3,  4,  5,      5,  5,  5,      5, 5, 5,        5,    99],
+        REFINERY:      [0,   0, 0, 0,    0,  0,  0,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1, 1, 1,        1,    99],
         SALT_LICK:     [0,   0, 0, 0,    0,  0,  0,      0,  0,  1,      2,  3,  4,      5,  5,  6,      7, 8, 9,        10,   99],
         PRAYERS:       [0,   0, 0, 0,    0,  0,  1,      1,  2,  2,      3,  3,  4,      4,  5,  6,      7, 7, 7,        7,    99],
         DEATH_NOTE:    [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  4,  5,      7, 9, 11,       17, 21, 24,     26,   99],
@@ -195,7 +195,6 @@ class Placements(dict):
 
     def per_section(self):
         return {tier.section: placement for placement, tiers in self.final.items() for tier in tiers}
-
 
 
 class Thresholds(dict):
@@ -271,8 +270,8 @@ def is_portal_opened(mobKills, monster, portalKC):
     return float(mobKills[monster][0]) < portalKC if len(mobKills) > monster else False
 
 
-def getHighestPrint(inputJSON):
-    awfulPrinterList = json.loads(inputJSON["Print"])
+def getHighestPrint():
+    awfulPrinterList = json.loads(session_data.account.raw_data["Print"])
     # print("Pinchy~ OUTPUT awfulPrinterList: ", type(awfulPrinterList), awfulPrinterList)
     goodPrinterList = [p for p in awfulPrinterList if isinstance(p, int)]
     highestPrintFound = max(goodPrinterList)
@@ -292,11 +291,11 @@ def threshold_for_highest_portal_opened(mobKills):
     return Threshold.fromname(threshold)
 
 
-def tier_from_monster_kills(dictOfPRs, inputJSON, playerCount) -> Threshold:
+def tier_from_monster_kills(dictOfPRs) -> Threshold:
     """find highest enemy killed or world unlocked to compare to"""
     expectedThreshold = Threshold.fromname(Threshold.W1)
 
-    highestPrint = getHighestPrint(inputJSON)
+    highestPrint = getHighestPrint()
     mobKillThresholds = []
     if highestPrint >= 9500000000:  # Sites like IE/IT round up to 10B after 9.5B
         expectedThreshold = Threshold.fromname(Threshold.MAX_TIER)
@@ -306,9 +305,12 @@ def tier_from_monster_kills(dictOfPRs, inputJSON, playerCount) -> Threshold:
         expectedThreshold = Threshold.fromname(Threshold.SOLID_W7_PREP)
     else:
         # logger.info(f"Starting to review map kill counts per player because expectedIndex still W1: {dictOfPRs['Construction Death Note']}")
-        for playerCounter in range(0, playerCount):
-
-            mobKills = json.loads(inputJSON['KLA_' + str(playerCounter)])  # String pretending to be a list of lists yet again
+        for character in session_data.account.safe_characters:
+            try:
+                mobKills = json.loads(session_data.account.raw_data[f'KLA_{character.character_index}'])  # String pretending to be a list of lists yet again
+            except:
+                logger.exception(f"Could not retrieve KLA_{character.character_index} for Pinchy. Setting mobKills to empty list")
+                mobKills = []
             # logger.info("%s, %s", type(playerKillsList), playerKillsList)  # Expected to be a list
             threshold = threshold_for_highest_portal_opened(mobKills)
             mobKillThresholds.append(threshold)
@@ -347,11 +349,11 @@ def generate_advice_groups(sectionsByThreshold: dict):
     return advice_groups
 
 
-def generatePinchyWorld(inputJSON, playerCount, all_sections):
+def generatePinchyWorld(all_sections):
     dictOfPRs = {section.name: section.pinchy_rating for section in all_sections}
 
     sectionPlacements: Placements = sort_pinchy_reviews(dictOfPRs)
-    expectedThreshold: Threshold = tier_from_monster_kills(dictOfPRs, inputJSON, playerCount)
+    expectedThreshold: Threshold = tier_from_monster_kills(dictOfPRs)
     lowestThresholdReached: Threshold = sectionPlacements.lowest
 
     placements_per_section = sectionPlacements.per_section()

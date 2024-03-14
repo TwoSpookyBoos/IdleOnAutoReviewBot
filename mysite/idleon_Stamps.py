@@ -1,14 +1,15 @@
 from models import AdviceSection, AdviceGroup, Advice
 from utils import pl, get_logger
-from consts import maxTiersPerGroup
+from consts import maxTiersPerGroup, progressionTiers
+from flask import g as session_data
 
 logger = get_logger(__name__)
 
 # Stamp p1
-def setStampLevels(inputJSON, inputIndex):
+def setStampLevels(inputIndex):
     totalStampLevels = 0
-    totalStampLevels -= inputJSON["StampLv"][inputIndex]['length']
-    for stamp in inputJSON["StampLv"][inputIndex].values():
+    totalStampLevels -= session_data.account.raw_data["StampLv"][inputIndex]['length']
+    for stamp in session_data.account.raw_data["StampLv"][inputIndex].values():
         totalStampLevels += int(stamp)
     return totalStampLevels
 
@@ -26,7 +27,7 @@ def setMissingStamps(playerStampsDict):
     return missingStampsList
 
 # Stamp p3
-def setPriorityStamps(inputJSON):
+def setPriorityStamps():
     priorityStampsDict = {}
     maxExpectedStampLengths = {
         "Combat": 42,  #42 total, ranging from 0 to 41
@@ -37,7 +38,7 @@ def setPriorityStamps(inputJSON):
     for stampType in stampTypes:
         for stampIndex in range(0, maxExpectedStampLengths[stampType]):
             try:
-                priorityStampsDict[getReadableStampName(stampIndex, stampType)] = inputJSON["StampLv"][stampTypes.index(stampType)][str(stampIndex)]
+                priorityStampsDict[getReadableStampName(stampIndex, stampType)] = session_data.account.raw_data["StampLv"][stampTypes.index(stampType)][str(stampIndex)]
             except:
                 logger.debug(f"Level for {stampType} {stampIndex} ({getReadableStampName(stampIndex, stampType)}) not found in Save Data. Setting to 0.")
                 priorityStampsDict[getReadableStampName(stampIndex, stampType)] = 0
@@ -318,7 +319,7 @@ def getReadableStampName(stampNumber, stampType):
                     return "Unknown Misc stamp: " + str(stampNumber)
 
 # Stamp meta
-def setStampProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
+def setStampProgressionTier() -> AdviceSection:
     stamp_AdviceDict = {
         "StampLevels": [],
         "CombatStamps": {},
@@ -334,11 +335,11 @@ def setStampProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
         picture="Stamps_Header.png"
     )
 
-    totalCombatStampLevels = setStampLevels(inputJSON, 0)
-    totalSkillStampLevels = setStampLevels(inputJSON, 1)
-    totalMiscStampLevels = setStampLevels(inputJSON, 2)
+    totalCombatStampLevels = setStampLevels(0)
+    totalSkillStampLevels = setStampLevels(1)
+    totalMiscStampLevels = setStampLevels(2)
     totalAllStampLevels = totalCombatStampLevels + totalSkillStampLevels + totalMiscStampLevels
-    playerPriorityStamps = setPriorityStamps(inputJSON)
+    playerPriorityStamps = setPriorityStamps()
     missingStampsDict = setMissingStamps(playerPriorityStamps)
     capacityExclusionsDict = getCapacityExclusions(playerPriorityStamps)
     tier_StampLevels = 0
@@ -346,10 +347,10 @@ def setStampProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
     tier_RequiredSkillStamps = 0
     tier_RequiredMiscStamps = 0
     tier_RequiredSpecificStamps = 0
-    max_tier = progressionTiers[-1][0]
+    max_tier = progressionTiers["Stamps"][-1][0]
     adviceCountsDict = {"CombatStamps": 0, "SkillStamps": 0, "MiscStamps": 0, "SpecificStamps": 0}
 
-    for tier in progressionTiers:
+    for tier in progressionTiers["Stamps"]:
         # TotalLevelStamps
         if tier_StampLevels == (tier[0] - 1):
             if totalAllStampLevels >= tier[1]:  # int
@@ -438,14 +439,7 @@ def setStampProgressionTier(inputJSON, progressionTiers) -> AdviceSection:
                                 progression=playerPriorityStamps[key],
                                 goal=requiredSpecificStamps[key])
                         )
-                # else:
-                    # TODO: Feels like this probably shouldn't be here?
-                    # This condition would be hit when able to skip a stamp because it is in the capacityExclusionsDict. No reason to create Advice for that
-                    # allSpecificStamps = False
-                    # stamp_AdviceDict["SpecificStamps"].append(
-                    #     Advice(label=str(key), picture_class=str(key), progression=playerPriorityStamps[key], goal=requiredSpecificStamps[key],
-                    #            unit="")
-                    # )
+
         if tier_RequiredSpecificStamps == (tier[0] - 1) and allSpecificStamps == True:
             tier_RequiredSpecificStamps = tier[0]
 
