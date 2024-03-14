@@ -3,11 +3,10 @@ import datetime
 import copy
 from flask import g as session_data
 
+import idleon_Rift
 from data_formatting import getJSONfromAPI, getJSONfromText, getLastUpdatedTime, getCharacterDetails, HeaderData
 #general stuff that makes this file too big if I include directly
 from models import AdviceWorld, WorldName, Account, Character
-from consts import progressionTiers
-
 
 #general autoreview
 import idleon_Pinchy
@@ -40,6 +39,7 @@ import idleon_Trapping
 
 #w4
 import idleon_Breeding
+import idleon_Rift
 from utils import get_logger
 
 
@@ -173,6 +173,7 @@ def main(inputData, runType="web"):
     breeding_AdviceSection = idleon_Breeding.setBreedingProgressionTier()
     #cooking_AdviceSection =
     #lab_AdviceSection =
+    rift_AdviceSection = idleon_Rift.setRiftProgressionTier()
 
     #World 5
     #sailing_AdviceSection =
@@ -218,7 +219,7 @@ def main(inputData, runType="web"):
     )
     w4Review = AdviceWorld(
         name=WorldName.HYPERION_NEBULA,
-        sections=[breeding_AdviceSection],
+        sections=[breeding_AdviceSection, rift_AdviceSection],
         banner="w4banner.png"
     )
     w5Review = AdviceWorld(

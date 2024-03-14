@@ -15,6 +15,7 @@
 @import "world-contents";
 @import "boss-keys";
 @import "cards";
+@import "rift";
 
 $id-map: (
 	item-backpack-space: $inventory-bag-u,
@@ -2077,7 +2078,8 @@ $extra: (
 	forge-upgrades: $forge-upgrades,
 	stamps: $stamps,
 	combat-levels: $family,
-	cards: $cards
+	cards: $cards,
+	damage: $damage,
 );
 
 $character-classes: (
@@ -2143,6 +2145,7 @@ $id-map: map-merge($bubbles-map, $id-map);
 $id-map: map-merge($monsters, $id-map);
 $id-map: map-merge($boss-keys, $id-map);
 $id-map: map-merge($all-cards, $id-map);
+$id-map: map-merge($rift, $id-map);
 
 @each $class, $link in $id-map {
 	.#{$class}::before {
