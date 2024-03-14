@@ -1,50 +1,25 @@
-import hashlib
 import json
-import os
 import traceback
 from datetime import datetime
 from json import JSONDecodeError
 
-from flask import (
-    g,
-    render_template,
-    request,
-    url_for,
-    redirect,
-    Response,
-    send_from_directory,
-)
+from flask import g, render_template, request, redirect, Response, send_from_directory
 
 import idleonTaskSuggester
 from config import app
 from data_formatting import HeaderData
 from models import AdviceWorld, UserDataException
-from utils import get_logger, browser_data_logger, ParsedUserAgent, name_for_logging
+from utils import get_logger, name_for_logging, is_username, json_schema_valid, format_character_name, log_browser_data
+from template_filters import *
 
 
 logger = get_logger(__name__)
 FQDN = "ieautoreview-scoli.pythonanywhere.com"
 FQDN_BETA = f"beta-{FQDN}"
 
-user_agent_logger = browser_data_logger()
-
-
-def format_character_name(name: str) -> str:
-    name = name.strip().lower().replace(" ", "_")
-
-    return name
-
 
 def get_user_input() -> str:
     return (request.args.get("player") or request.form.get("player", "")).strip()
-
-
-def is_username(data) -> bool:
-    return isinstance(data, str) and len(data) < 16
-
-
-def json_schema_valid(data) -> bool:
-    return isinstance(data, str) and data.startswith("{") and data.endswith("}")
 
 
 def parse_user_input() -> str | dict | None:
@@ -97,16 +72,7 @@ def switches():
         ("Order groups by tier", "order_tiers", "", ""),
         ("Handedness", "handedness", "L", "R"),
     ]
-    return [
-        (label, name, on, off, ("on" if get_user_preferences()[name] else "off"))
-        for label, name, on, off in vals
-    ]
-
-
-def log_browser_data(player):
-    ua_string = request.headers.get("User-Agent")
-    user_agent = ParsedUserAgent(ua_string)
-    user_agent_logger.info("%s | %s - %s", player, user_agent.os, user_agent.browser)
+    return [(label, name, on, off, ("on" if get_user_preferences()[name] else "off")) for label, name, on, off in vals]
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -127,9 +93,7 @@ def index() -> Response | str:
         name_or_data = parse_user_input()
 
         if request.method == "POST" and is_username(name_or_data):
-            return redirect(
-                url_for("index", player=name_or_data, **get_user_preferences())
-            )
+            return redirect(url_for("index", player=name_or_data, **get_user_preferences()))
 
         if name_or_data:
             reviews, headerData = autoReviewBot(name_or_data)
@@ -149,9 +113,7 @@ def index() -> Response | str:
         msg = str(jde)
         data = jde.doc
 
-        dirname = create_and_populate_log_files(
-            data, headerData, msg, name_or_data, jde
-        )
+        dirname = create_and_populate_log_files(data, headerData, msg, name_or_data, jde)
 
         error = (
             "Looks like the data you submitted is corrupted. The issue has been "
@@ -163,9 +125,7 @@ def index() -> Response | str:
         msg = os.linesep.join([str(reason), "", traceback.format_exc()])
         data = get_user_input()
 
-        dirname = create_and_populate_log_files(
-            data, headerData, msg, name_or_data, reason
-        )
+        dirname = create_and_populate_log_files(data, headerData, msg, name_or_data, reason)
 
         error = (
             "Looks like something went wrong while handling your account data. "
@@ -227,9 +187,7 @@ def live() -> Response:
 
 @app.route("/beta", methods=["GET", "POST"])
 def beta() -> Response:
-    link = f"https://{FQDN_BETA}?" + "&".join(
-        f"{k}={v}" for k, v in request.args.items()
-    )
+    link = f"https://{FQDN_BETA}?" + "&".join(f"{k}={v}" for k, v in request.args.items())
     return redirect(link)
 
 
@@ -239,7 +197,6 @@ def logtest():
     return "Hello, World!"
 
 
-# @app.route("/")
 def autoReviewBot(
     capturedCharacterInput,
 ) -> tuple[list[AdviceWorld], HeaderData] | tuple[None, None]:
@@ -260,59 +217,11 @@ def page_not_found(e):
             if capturedCharacterInput.find(".") == -1:
                 return redirect(url_for("index", player=capturedCharacterInput))
             else:
-                return redirect(
-                    url_for("index")
-                )  # Probably should get a real 404 page at some point
+                return redirect(url_for("index"))  # Probably should get a real 404 page at some point
         else:
-            return redirect(
-                url_for("index")
-            )  # Probably should get a real 404 page at some point
+            return redirect(url_for("index"))  # Probably should get a real 404 page at some point
     except:  # noqa
-        return redirect(
-            url_for("index")
-        )  # Probably should get a real 404 page at some point
-
-
-def get_resource(dir_: str, filename: str, autoversion: bool = False) -> str:
-    path = f"{dir_}/{filename}"
-    suffix = ""
-
-    # cache invalidation
-    if autoversion:
-        full_path = os.path.join(app.static_folder, path)
-        mtime = os.path.getmtime(full_path)
-        suffix = hashlib.md5(str(mtime).encode()).hexdigest()[:8]
-        suffix = f"?v={suffix}"
-
-    return url_for("static", filename=f"{path}") + suffix
-
-
-@app.template_filter("style")
-def style(filename: str):
-    return get_resource("styles", f"{filename}.css", True)
-
-
-@app.template_filter("script")
-def script(filename: str):
-    return get_resource("scripts", f"{filename}.js", True)
-
-
-@app.template_filter("img")
-def img(filename: str):
-    return get_resource("imgs", filename)
-
-
-@app.template_filter("cards")
-def cards(filename: str):
-    return img(f"cards/{filename}.png")
-
-
-@app.template_filter("ensure_data")
-def ensure_data(results: list):
-    return bool(results)
-
-
-app.jinja_env.globals["img"] = img
+        return redirect(url_for("index"))  # Probably should get a real 404 page at some point
 
 
 if __name__ == "__main__":

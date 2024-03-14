@@ -3,9 +3,8 @@ import os
 import re
 import sys
 import uuid
-from datetime import datetime
 
-from flask import g
+from flask import g, request
 from ua_parser import user_agent_parser
 from werkzeug.user_agent import UserAgent
 from werkzeug.utils import cached_property
@@ -138,3 +137,26 @@ def name_for_logging(name_or_data, headerData, default=str(uuid.uuid4())[:8]) ->
         name = default
 
     return name
+
+
+def is_username(data) -> bool:
+    return isinstance(data, str) and len(data) < 16
+
+
+def json_schema_valid(data) -> bool:
+    return isinstance(data, str) and data.startswith("{") and data.endswith("}")
+
+
+def format_character_name(name: str) -> str:
+    name = name.strip().lower().replace(" ", "_")
+
+    return name
+
+
+user_agent_logger = browser_data_logger()
+
+
+def log_browser_data(player):
+    ua_string = request.headers.get("User-Agent")
+    user_agent = ParsedUserAgent(ua_string)
+    user_agent_logger.info("%s | %s - %s", player, user_agent.os, user_agent.browser)
