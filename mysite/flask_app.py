@@ -8,8 +8,22 @@ from flask import g, render_template, request, redirect, Response, send_from_dir
 import idleonTaskSuggester
 from config import app
 from data_formatting import HeaderData
-from models import AdviceWorld, UserDataException
-from utils import get_logger, name_for_logging, is_username, json_schema_valid, format_character_name, log_browser_data
+from models import AdviceWorld
+from custom_exceptions import (
+    UserDataException,
+    UsernameBanned,
+    ProfileNotFound,
+    EmptyResponse,
+    IEConnectionFailed,
+)
+from utils import (
+    get_logger,
+    name_for_logging,
+    is_username,
+    json_schema_valid,
+    format_character_name,
+    log_browser_data,
+)
 from template_filters import *
 
 
@@ -72,7 +86,10 @@ def switches():
         ("Order groups by tier", "order_tiers", "", ""),
         ("Handedness", "handedness", "L", "R"),
     ]
-    return [(label, name, on, off, ("on" if get_user_preferences()[name] else "off")) for label, name, on, off in vals]
+    return [
+        (label, name, on, off, ("on" if get_user_preferences()[name] else "off"))
+        for label, name, on, off in vals
+    ]
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -93,7 +110,9 @@ def index() -> Response | str:
         name_or_data = parse_user_input()
 
         if request.method == "POST" and is_username(name_or_data):
-            return redirect(url_for("index", player=name_or_data, **get_user_preferences()))
+            return redirect(
+                url_for("index", player=name_or_data, **get_user_preferences())
+            )
 
         if name_or_data:
             reviews, headerData = autoReviewBot(name_or_data)
@@ -103,17 +122,52 @@ def index() -> Response | str:
 
     except UserDataException as ude:
         logger.error(ude.msg)
-        error = (
-            "Looks like the data you submitted was neither a username nor valid data. "
-            "Check what you submitted - it must be either the first toon name or the"
-            "JSON object provided by either IdleonEfficiency or IdleonToolbox."
+        error = ude.msg_display
+
+    except UsernameBanned as ban:
+        msg = f"Account banned: {ban.username}"
+        data = None
+        logger.error(
+            "PETTY BITCH MODE ACTIVATED. Banned name entered: %s", ban.username
         )
+
+        create_and_populate_log_files(data, headerData, msg, name_or_data, ban)
+
+        error = "You have been banned from using this tool. Goodbye."
+
+    except ProfileNotFound as pnf:
+        msg = f"Public profile not found: {pnf.username}"
+        data = None
+
+        dirname = create_and_populate_log_files(
+            data, headerData, msg, name_or_data, pnf
+        )
+
+        error = pnf.msg_display.format(dirname)
+
+    except EmptyResponse as er:
+        msg = f"Empty response: {er.username}"
+        data = None
+
+        dirname = create_and_populate_log_files(data, headerData, msg, name_or_data, er)
+        error = er.msg_display.format(dirname)
+
+    except IEConnectionFailed as iecf:
+        msg = f"Error connecting to {iecf.url}"
+        data = iecf.stacktrace
+
+        dirname = create_and_populate_log_files(
+            data, headerData, msg, name_or_data, iecf
+        )
+        error = iecf.msg_display.format(dirname)
 
     except JSONDecodeError as jde:
         msg = str(jde)
         data = jde.doc
 
-        dirname = create_and_populate_log_files(data, headerData, msg, name_or_data, jde)
+        dirname = create_and_populate_log_files(
+            data, headerData, msg, name_or_data, jde
+        )
 
         error = (
             "Looks like the data you submitted is corrupted. The issue has been "
@@ -125,7 +179,9 @@ def index() -> Response | str:
         msg = os.linesep.join([str(reason), "", traceback.format_exc()])
         data = get_user_input()
 
-        dirname = create_and_populate_log_files(data, headerData, msg, name_or_data, reason)
+        dirname = create_and_populate_log_files(
+            data, headerData, msg, name_or_data, reason
+        )
 
         error = (
             "Looks like something went wrong while handling your account data. "
@@ -147,8 +203,8 @@ def index() -> Response | str:
 
 
 def create_and_populate_log_files(data, headerData, msg, name_or_data, reason):
-    if os.environ.get("USER") == "niko":
-        raise reason
+    # if os.environ.get("USER") == "niko":
+    #     raise reason
 
     dirname = name_for_logging(name_or_data, headerData)
     now = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -162,8 +218,9 @@ def create_and_populate_log_files(data, headerData, msg, name_or_data, reason):
     with open(filemsg, "w") as user_log:
         user_log.writelines(msg + os.linesep)
 
-    with open(filedata, "w") as user_log:
-        user_log.writelines(data + os.linesep)
+    if data:
+        with open(filedata, "w") as user_log:
+            user_log.writelines(data + os.linesep)
 
     return f"{dirname}/{now}"
 
@@ -187,7 +244,9 @@ def live() -> Response:
 
 @app.route("/beta", methods=["GET", "POST"])
 def beta() -> Response:
-    link = f"https://{FQDN_BETA}?" + "&".join(f"{k}={v}" for k, v in request.args.items())
+    link = f"https://{FQDN_BETA}?" + "&".join(
+        f"{k}={v}" for k, v in request.args.items()
+    )
     return redirect(link)
 
 
@@ -217,11 +276,17 @@ def page_not_found(e):
             if capturedCharacterInput.find(".") == -1:
                 return redirect(url_for("index", player=capturedCharacterInput))
             else:
-                return redirect(url_for("index"))  # Probably should get a real 404 page at some point
+                return redirect(
+                    url_for("index")
+                )  # Probably should get a real 404 page at some point
         else:
-            return redirect(url_for("index"))  # Probably should get a real 404 page at some point
+            return redirect(
+                url_for("index")
+            )  # Probably should get a real 404 page at some point
     except:  # noqa
-        return redirect(url_for("index"))  # Probably should get a real 404 page at some point
+        return redirect(
+            url_for("index")
+        )  # Probably should get a real 404 page at some point
 
 
 if __name__ == "__main__":

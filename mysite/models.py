@@ -11,15 +11,8 @@ from flask import g
 
 import itemDecoder
 from data_formatting import getCharacterDetails
-from consts import expectedStackables, progressionTiers, card_data, getAllSkillLevelsDict
+from consts import expectedStackables, progressionTiers, card_data
 from utils import session_singleton, kebab
-
-
-class UserDataException(Exception):
-    def __init__(self, msg, data):
-        super().__init__(msg, data)
-        self.msg = msg
-        self.data = data
 
 
 class Character:
