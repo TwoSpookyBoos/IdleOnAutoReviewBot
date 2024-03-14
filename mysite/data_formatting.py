@@ -36,7 +36,7 @@ def getJSONfromAPI(runType, username="scoli"):
         logger.info("~~~~~~~~~~~~~~~ Getting JSON from API ~~~~~~~~~~~~~~~")
 
     try:
-        url = f"https://cdn2.idleonefficiency2.com/profiles/{username}.json"
+        url = f"https://cdn2.idleonefficiency.com/profiles/{username}.json"
         headers = {"Content-Type": "text/json", "method": "GET"}
         response = requests.get(url, headers=headers)
 
