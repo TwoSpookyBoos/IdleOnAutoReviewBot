@@ -318,8 +318,8 @@ def parseInventoryBagSlots() -> AdviceGroup:
             playersWithMaxBagSlots.append(chararacterIndex)
         else:
             playersMissingBagSlots.append(chararacterIndex)
-    logger.info(f"playerBagDict: {playerBagDict}")
-    logger.info(f"playersMissingBagSlots: {playersMissingBagSlots}")
+    # logger.info(f"playerBagDict: {playerBagDict}")
+    # logger.info(f"playersMissingBagSlots: {playersMissingBagSlots}")
     for playerIndex in playersMissingBagSlots:
         inventorySlots_AdviceList.append(Advice(
             label=session_data.account.all_characters[playerIndex].character_name,

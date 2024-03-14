@@ -220,8 +220,8 @@ class Thresholds(dict):
         if placement == placeholder:
             logger.info(f"Placing '{tier.section}' into final tier because {tier.tier} >= {threshold_max}")
             placement = threshold_max
-        else:
-            logger.info("%s | %s | %s | %s", tier.section, tier.tier, placement, placement.next())
+        # else:
+        #     logger.info("%s | %s | %s | %s", tier.section, tier.tier, placement, placement.next())
 
         previous_threshold = placement.previous()
         next_threshold = placement.next()

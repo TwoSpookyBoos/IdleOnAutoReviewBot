@@ -26,7 +26,7 @@ def getEquinoxDreams() -> dict:
         Dream12=rawDreams.get("d_11") == -1,
         Dream29=rawDreams.get("d_28") == -1,
     )
-    logger.debug("OUTPUT results: %s", results)
+    # logger.debug("OUTPUT results: %s", results)
 
     return results
 

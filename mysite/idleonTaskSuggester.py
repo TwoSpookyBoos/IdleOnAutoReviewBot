@@ -3,7 +3,7 @@ import datetime
 import copy
 from flask import g as session_data
 
-from data_formatting import logger, getJSONfromAPI, getJSONfromText, getLastUpdatedTime, getCharacterDetails, HeaderData
+from data_formatting import getJSONfromAPI, getJSONfromText, getLastUpdatedTime, getCharacterDetails, HeaderData
 #general stuff that makes this file too big if I include directly
 from models import AdviceWorld, WorldName, Account, Character
 from consts import progressionTiers
@@ -40,12 +40,10 @@ import idleon_Trapping
 
 #w4
 import idleon_Breeding
+from utils import get_logger
 
 
-#Global variables
-
-
-#Step 1: Retrieve data from public IdleonEfficiency website or from file
+logger = get_logger(__name__)
 
 
 def getRoastableStatus(playerNames):

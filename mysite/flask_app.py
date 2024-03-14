@@ -116,7 +116,7 @@ def index() -> Response | str:
     reviews: list[AdviceWorld] | None = None
     headerData: HeaderData | None = None
     is_beta: bool = FQDN_BETA in request.host
-    logger.info(request.host)
+
     url_params = request.query_string.decode("utf-8")
     live_link = f"live?{url_params}"
     beta_link = f"beta?{url_params}"
