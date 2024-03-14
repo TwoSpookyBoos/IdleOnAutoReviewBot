@@ -497,17 +497,21 @@ def setAlchemyVialsProgressionTier() -> AdviceSection:
 
     unlockedVials = 0
     for vial in alchemyVialsDict:
-        if alchemyVialsDict[vial] == 0:
-            lockedVialsList.append(vial)
-            unmaxedVialsList.append(getReadableVialNames(vial))
-        else:
-            unlockedVials += 1
-            if alchemyVialsDict[vial] >= 4:
-                virileVialsList.append(getReadableVialNames(vial))
-            if alchemyVialsDict[vial] >= 13:
-                maxedVialsList.append(getReadableVialNames(vial))
-            elif alchemyVialsDict[vial] != 'length':
+        try:
+            if int(alchemyVialsDict[vial]) == 0:
+                lockedVialsList.append(vial)
                 unmaxedVialsList.append(getReadableVialNames(vial))
+            else:
+                unlockedVials += 1
+                if int(alchemyVialsDict[vial]) >= 4:
+                    virileVialsList.append(getReadableVialNames(vial))
+                if int(alchemyVialsDict[vial]) >= 13:
+                    maxedVialsList.append(getReadableVialNames(vial))
+                else:
+                    unmaxedVialsList.append(getReadableVialNames(vial))
+        except:
+            logger.exception(f"Could not coerce {type(alchemyVialsDict[vial])} {alchemyVialsDict[vial]} to Int for Vial comparison")
+            unmaxedVialsList.append(getReadableVialNames(vial))
 
     tier_TotalVialsUnlocked = 0
     tier_TotalVialsMaxed = 0
