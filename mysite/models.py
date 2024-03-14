@@ -601,16 +601,23 @@ class Account:
         self.all_quests = [json.loads(self.raw_data.get(f"QuestComplete_{i}", "{}")) for i in range(self.playerCount)]
         self.assets = self._all_owned_items()
         self.cards = self._make_cards()
-        self.rift = self.raw_data["Rift"][0]
-        self.trap_box_vacuum_unlocked = self.rift >= 5
-        self.infinite_stars_unlocked = self.rift >= 10
-        self.skill_mastery_unlocked = self.rift >= 15
-        self.eclipse_skulls_unlocked = self.rift >= 20
-        self.stamp_mastery_unlocked = self.rift >= 25
-        self.eldritch_artifacts_unlocked = self.rift >= 30
-        self.vial_mastery_unlocked = self.rift >= 35
-        self.construction_mastery_unlocked = self.rift >= 40
-        self.ruby_cards_unlocked = self.rift >= 45
+        self.rift_level = self.raw_data.get("Rift", [0])[0]
+        self.rift_unlocked = False
+        if self.rift_level > 0:
+            self.rift_unlocked = True
+        else:
+            for characterIndex in range(0, len(self.all_quests)):
+                if self.all_quests[characterIndex].get("Rift_Ripper1", 0) == 1:
+                    self.rift_unlocked = True
+        self.trap_box_vacuum_unlocked = self.rift_level >= 5
+        self.infinite_stars_unlocked = self.rift_level >= 10
+        self.skill_mastery_unlocked = self.rift_level >= 15
+        self.eclipse_skulls_unlocked = self.rift_level >= 20
+        self.stamp_mastery_unlocked = self.rift_level >= 25
+        self.eldritch_artifacts_unlocked = self.rift_level >= 30
+        self.vial_mastery_unlocked = self.rift_level >= 35
+        self.construction_mastery_unlocked = self.rift_level >= 40
+        self.ruby_cards_unlocked = self.rift_level >= 45
         self.max_toon_count = 10  # OPTIMIZE: find a way to read this from somewhere
 
     def _make_cards(self):

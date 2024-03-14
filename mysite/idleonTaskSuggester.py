@@ -5,6 +5,10 @@ from pathlib import Path
 import yaml
 from flask import g as session_data
 
+import idleon_Rift
+from data_formatting import getJSONfromAPI, getJSONfromText, getLastUpdatedTime, getCharacterDetails, HeaderData
+#general stuff that makes this file too big if I include directly
+from models import AdviceWorld, WorldName, Account, Character
 from config import app
 from data_formatting import (
     getJSONfromAPI,
@@ -49,6 +53,8 @@ import idleon_Trapping
 import idleon_Breeding
 
 from utils import get_logger, is_username
+import idleon_Rift
+from utils import get_logger
 
 
 logger = get_logger(__name__)
@@ -63,14 +69,7 @@ def maybe_ban(username, bannedAccountsList, runType):
 
 
 def getRoastableStatus(playerNames):
-    roastworthyList = [
-        "scoli",
-        "weebgasm",
-        "herusx",
-        "rashaken",
-        "trickzbunny",
-        "redpaaaaanda",
-    ]
+    roastworthyList = ["scoli", "weebgasm", "herusx", "rashaken", "trickzbunny", "redpaaaaanda"]
     return next((name.lower() in roastworthyList for name in playerNames), False)
 
 
@@ -139,6 +138,7 @@ def main(inputData, runType="web"):
     breeding_AdviceSection = idleon_Breeding.setBreedingProgressionTier()
     # cooking_AdviceSection =
     # lab_AdviceSection =
+    rift_AdviceSection = idleon_Rift.setRiftProgressionTier()
 
     # World 5
     # sailing_AdviceSection =
@@ -150,82 +150,50 @@ def main(inputData, runType="web"):
     # w8list = [["w8 mechanic 1 placeholder"], ["w8 mechanic 2 placeholder"], ["w8 mechanic 3 placeholder"]]
     all_sections = [
         section_combatLevels,
-        stamps_AdviceSection,
-        bribes_AdviceSection,
-        smithing_AdviceSection,
-        alchBubbles_AdviceSection,
-        alchVials_AdviceSection,
-        alchP2W_AdviceSection,
-        refinery_AdviceSection,
-        saltlick_AdviceSection,
-        deathnote_AdviceSection,
-        prayers_AdviceSection,
+        stamps_AdviceSection, bribes_AdviceSection, smithing_AdviceSection,
+        alchBubbles_AdviceSection, alchVials_AdviceSection, alchP2W_AdviceSection,
+        refinery_AdviceSection, saltlick_AdviceSection, deathnote_AdviceSection, prayers_AdviceSection,
+        breeding_AdviceSection, rift_AdviceSection
     ]
-    pinchy_high, pinchy_low, pinchy_all = idleon_Pinchy.generatePinchyWorld(
-        all_sections
-    )
+    pinchy_high, pinchy_low, pinchy_all = idleon_Pinchy.generatePinchyWorld(all_sections)
 
     pinchyReview = AdviceWorld(
         name=WorldName.PINCHY,
         sections=[pinchy_high, pinchy_low, pinchy_all],
         collapse=False,
-        title="Pinchy AutoReview",
+        title="Pinchy AutoReview"
     )
     generalReview = AdviceWorld(
         name=WorldName.GENERAL,
-        sections=[
-            section_combatLevels,
-            section_maestro,
-            *section_consumables,
-            section_gemShop,
-            *sections_quest_gstacks,
-            section_regular_gstacks,
-            section_cards,
-        ],
-        banner="general_banner.jpg",
+        sections=[section_combatLevels, section_maestro, *section_consumables, section_gemShop, *sections_quest_gstacks, section_regular_gstacks, section_cards],
+        banner="general_banner.jpg"
     )
     w1Review = AdviceWorld(
         name=WorldName.BLUNDER_HILLS,
         sections=[stamps_AdviceSection, bribes_AdviceSection, smithing_AdviceSection],
-        banner="w1banner.png",
+        banner="w1banner.png"
     )
     w2Review = AdviceWorld(
         name=WorldName.YUMYUM_DESERT,
-        sections=[
-            alchBubbles_AdviceSection,
-            alchVials_AdviceSection,
-            alchP2W_AdviceSection,
-        ],
-        banner="w2banner.png",
+        sections=[alchBubbles_AdviceSection, alchVials_AdviceSection, alchP2W_AdviceSection],
+        banner="w2banner.png"
     )
     w3Review = AdviceWorld(
         name=WorldName.FROSTBITE_TUNDRA,
-        sections=[
-            refinery_AdviceSection,
-            buildings_AdviceSection,
-            saltlick_AdviceSection,
-            deathnote_AdviceSection,
-            prayers_AdviceSection,
-            trapping_AdviceSection,
-        ],
-        banner="w3banner.png",
+        sections=[refinery_AdviceSection, buildings_AdviceSection, saltlick_AdviceSection, deathnote_AdviceSection, prayers_AdviceSection, trapping_AdviceSection],
+        banner="w3banner.png"
     )
     w4Review = AdviceWorld(
         name=WorldName.HYPERION_NEBULA,
-        sections=[breeding_AdviceSection],
-        banner="w4banner.png",
+        sections=[breeding_AdviceSection, rift_AdviceSection],
+        banner="w4banner.png"
     )
-    w5Review = AdviceWorld(name=WorldName.SMOLDERIN_PLATEAU, banner="w5banner.png")
+    w5Review = AdviceWorld(
+        name=WorldName.SMOLDERIN_PLATEAU,
+        banner="w5banner.png"
+    )
 
-    reviews = [
-        pinchyReview,
-        generalReview,
-        w1Review,
-        w2Review,
-        w3Review,
-        w4Review,
-        w5Review,
-    ]
+    reviews = [pinchyReview, generalReview, w1Review, w2Review, w3Review, w4Review, w5Review]
 
     if runType == "consoleTest":
         return "Pass"
