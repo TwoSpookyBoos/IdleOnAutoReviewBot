@@ -511,6 +511,7 @@ def setAlchemyVialsProgressionTier() -> AdviceSection:
                     unmaxedVialsList.append(getReadableVialNames(vial))
         except:
             logger.exception(f"Could not coerce {type(alchemyVialsDict[vial])} {alchemyVialsDict[vial]} to Int for Vial comparison")
+            lockedVialsList.append(vial)
             unmaxedVialsList.append(getReadableVialNames(vial))
 
     tier_TotalVialsUnlocked = 0
