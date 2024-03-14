@@ -2,9 +2,9 @@ import hashlib
 import json
 import os
 import traceback
+from datetime import datetime
 from json import JSONDecodeError
 
-from config import app
 from flask import (
     g,
     render_template,
@@ -14,8 +14,9 @@ from flask import (
     Response,
     send_from_directory,
 )
-import idleonTaskSuggester
 
+import idleonTaskSuggester
+from config import app
 from data_formatting import HeaderData
 from models import AdviceWorld, UserDataException
 from utils import get_logger, browser_data_logger, ParsedUserAgent, name_for_logging
@@ -145,46 +146,32 @@ def index() -> Response | str:
         )
 
     except JSONDecodeError as jde:
-        filename = name_for_logging(name_or_data, headerData, timestamp=True)
-        dirpath = app.config["LOGS"] / filename
-        filemsg = dirpath / "message.log"
-        filedata = dirpath / "data.txt"
+        msg = str(jde)
+        data = jde.doc
 
-        os.mkdir(dirpath)
-        with open(filemsg, "w") as user_log:
-            user_log.writelines(str(jde) + os.linesep)
-
-        with open(filedata, "w") as user_log:
-            user_log.writelines(jde.doc + os.linesep)
+        dirname = create_and_populate_log_files(
+            data, headerData, msg, name_or_data, jde
+        )
 
         error = (
             "Looks like the data you submitted is corrupted. The issue has been "
             "reported and will be investigated. If the problem persists let us "
-            f"know in the Discord server, mention '{filename}'"
+            f"know in the Discord server, mention '{dirname}'"
         )
 
     except Exception as reason:
-        filename = name_for_logging(name_or_data, headerData, timestamp=True)
-        dirpath = app.config["LOGS"] / filename
-        filemsg = dirpath / "message.log"
-        filedata = dirpath / "data.txt"
+        msg = os.linesep.join([str(reason), "", traceback.format_exc()])
+        data = get_user_input()
 
-        # if os.environ.get("USER") == "niko":
-        #     raise reason
-
-        os.mkdir(dirpath)
-        with open(filemsg, "w") as user_log:
-            user_log.writelines(os.linesep.join([str(reason), traceback.format_exc()]))
-
-        with open(filedata, "w") as user_log:
-            user_input = get_user_input() + os.linesep
-            user_log.writelines(user_input)
+        dirname = create_and_populate_log_files(
+            data, headerData, msg, name_or_data, reason
+        )
 
         error = (
             "Looks like something went wrong while handling your account data. "
             "The issue has been reported and will be investigated. If the "
             "problem persists let us know in the Discord server, mention "
-            f"'{filename}'"
+            f"'{dirname}'"
         )
     return render_template(
         page,
@@ -197,6 +184,28 @@ def index() -> Response | str:
         switches=switches(),
         **get_user_preferences(),
     )
+
+
+def create_and_populate_log_files(data, headerData, msg, name_or_data, reason):
+    if os.environ.get("USER") == "niko":
+        raise reason
+
+    dirname = name_for_logging(name_or_data, headerData)
+    now = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    dirpath = app.config["LOGS"] / dirname
+    filemsg = dirpath / now / "message.log"
+    filedata = dirpath / now / "data.txt"
+
+    (dirpath / now).mkdir(parents=True, exist_ok=True)
+
+    with open(filemsg, "w") as user_log:
+        user_log.writelines(msg + os.linesep)
+
+    with open(filedata, "w") as user_log:
+        user_log.writelines(data + os.linesep)
+
+    return f"{dirname}/{now}"
 
 
 @app.route("/robots.txt")

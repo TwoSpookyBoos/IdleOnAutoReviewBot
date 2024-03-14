@@ -129,15 +129,12 @@ def kebab(string: str) -> str:
     return re.sub(r"[^\w-]", "", string.lower().replace(" ", "-"))
 
 
-def name_for_logging(name_or_data, headerData, default=str(uuid.uuid4())[:8], timestamp=False) -> str:
+def name_for_logging(name_or_data, headerData, default=str(uuid.uuid4())[:8]) -> str:
     if isinstance(name_or_data, str) and name_or_data:
         name = name_or_data
     elif isinstance(name_or_data, dict) and headerData and headerData.first_name:
         name = headerData.first_name.lower()
     else:
         name = default
-
-    if timestamp:
-        name = datetime.now().strftime("%Y%m%d_%H%M") + f"_{name}"
 
     return name
