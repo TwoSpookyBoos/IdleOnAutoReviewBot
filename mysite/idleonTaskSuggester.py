@@ -1,14 +1,9 @@
-# idleonTaskSuggester.py
-import datetime
 from pathlib import Path
 
 import yaml
 from flask import g as session_data
 
-import idleon_Rift
-from data_formatting import getJSONfromAPI, getJSONfromText, getLastUpdatedTime, getCharacterDetails, HeaderData
 #general stuff that makes this file too big if I include directly
-from models import AdviceWorld, WorldName, Account, Character
 from config import app
 from data_formatting import (
     getJSONfromAPI,
@@ -51,10 +46,9 @@ import idleon_Trapping
 
 # w4
 import idleon_Breeding
+import idleon_Rift
 
 from utils import get_logger, is_username
-import idleon_Rift
-from utils import get_logger
 
 
 logger = get_logger(__name__)
