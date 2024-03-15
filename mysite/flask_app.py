@@ -5,26 +5,23 @@ from json import JSONDecodeError
 
 from flask import g, render_template, request, redirect, Response, send_from_directory
 
-import idleonTaskSuggester
-from config import app
-from data_formatting import HeaderData
-from models import AdviceWorld
-from custom_exceptions import (
+import taskSuggester
+from utils.data_formatting import HeaderData
+from models.models import AdviceWorld
+from models.custom_exceptions import (
     UserDataException,
     UsernameBanned,
     ProfileNotFound,
     EmptyResponse,
     IEConnectionFailed,
 )
-from utils import (
-    get_logger,
-    name_for_logging,
+from utils.text_formatting import (
     is_username,
     json_schema_valid,
     format_character_name,
-    log_browser_data,
 )
-from template_filters import *
+from utils.logging import get_logger, name_for_logging, log_browser_data
+from utils.template_filters import *
 
 
 logger = get_logger(__name__)
@@ -256,7 +253,7 @@ def autoReviewBot(
     headerData: HeaderData | None = None
 
     if capturedCharacterInput:
-        reviewInfo, headerData = idleonTaskSuggester.main(capturedCharacterInput)
+        reviewInfo, headerData = taskSuggester.main(capturedCharacterInput)
 
     return reviewInfo, headerData
 
