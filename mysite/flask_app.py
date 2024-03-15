@@ -166,9 +166,11 @@ def index() -> Response | str:
         )
 
     except Exception as e:
+        logger.exception("An unexpected error occurred:\n", exc_info=e)
         msg = os.linesep.join([str(e), "", traceback.format_exc()])
         data = get_user_input()
 
+        e.dirname = "other"
         dirname = create_and_populate_log_files(
             data, headerData, msg, name_or_data, e
         )
