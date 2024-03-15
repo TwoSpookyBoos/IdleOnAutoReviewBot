@@ -11,7 +11,6 @@ from models.models import AdviceWorld, WorldName, Account
 from utils.data_formatting import (
     getJSONfromAPI,
     getJSONfromText,
-    getLastUpdatedTime,
     HeaderData,
 )
 from utils.logging import get_logger
