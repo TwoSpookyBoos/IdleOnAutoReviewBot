@@ -135,52 +135,45 @@ def index() -> Response | str:
 
         error = "You have been banned from using this tool. Goodbye."
 
-    except ProfileNotFound as pnf:
-        msg = f"Public profile not found: {pnf.username}"
+    except ProfileNotFound as e:
+        msg = f"Public profile not found: {e.username}"
         data = None
 
-        dirname = create_and_populate_log_files(
-            data, headerData, msg, name_or_data, pnf
-        )
+        dirname = create_and_populate_log_files(data, headerData, msg, name_or_data, e)
+        error = e.msg_display.format(dirname)
 
-        error = pnf.msg_display.format(dirname)
-
-    except EmptyResponse as er:
-        msg = f"Empty response: {er.username}"
+    except EmptyResponse as e:
+        msg = f"Empty response: {e.username}"
         data = None
 
-        dirname = create_and_populate_log_files(data, headerData, msg, name_or_data, er)
-        error = er.msg_display.format(dirname)
+        dirname = create_and_populate_log_files(data, headerData, msg, name_or_data, e)
+        error = e.msg_display.format(dirname)
 
-    except IEConnectionFailed as iecf:
-        msg = f"Error connecting to {iecf.url}"
-        data = iecf.stacktrace
+    except IEConnectionFailed as e:
+        msg = f"Error connecting to {e.url}"
+        data = e.stacktrace
 
-        dirname = create_and_populate_log_files(
-            data, headerData, msg, name_or_data, iecf
-        )
-        error = iecf.msg_display.format(dirname)
+        dirname = create_and_populate_log_files(data, headerData, msg, name_or_data, e)
+        error = e.msg_display.format(dirname)
 
-    except JSONDecodeError as jde:
-        msg = str(jde)
-        data = jde.doc
+    except JSONDecodeError as e:
+        msg = str(e)
+        data = e.doc
 
-        dirname = create_and_populate_log_files(
-            data, headerData, msg, name_or_data, jde
-        )
-
+        setattr(e, "dirname", "faulty_data")
+        dirname = create_and_populate_log_files(data, headerData, msg, name_or_data, e)
         error = (
             "Looks like the data you submitted is corrupted. The issue has been "
             "reported and will be investigated. If the problem persists let us "
             f"know in the Discord server, mention '{dirname}'"
         )
 
-    except Exception as reason:
-        msg = os.linesep.join([str(reason), "", traceback.format_exc()])
+    except Exception as e:
+        msg = os.linesep.join([str(e), "", traceback.format_exc()])
         data = get_user_input()
 
         dirname = create_and_populate_log_files(
-            data, headerData, msg, name_or_data, reason
+            data, headerData, msg, name_or_data, e
         )
 
         error = (
@@ -202,18 +195,18 @@ def index() -> Response | str:
     )
 
 
-def create_and_populate_log_files(data, headerData, msg, name_or_data, reason):
+def create_and_populate_log_files(data, headerData, msg, name_or_data, error):
     # if os.environ.get("USER") == "niko":
-    #     raise reason
+    #     raise error
 
-    dirname = name_for_logging(name_or_data, headerData)
+    username = name_for_logging(name_or_data, headerData)
     now = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-    dirpath = app.config["LOGS"] / dirname
-    filemsg = dirpath / now / "message.log"
-    filedata = dirpath / now / "data.txt"
+    dirpath = app.config["LOGS"]/error.dirname/username
+    filemsg = dirpath/now/"message.log"
+    filedata = dirpath/now/"data.log"
 
-    (dirpath / now).mkdir(parents=True, exist_ok=True)
+    (dirpath/now).mkdir(parents=True, exist_ok=True)
 
     with open(filemsg, "w") as user_log:
         user_log.writelines(msg + os.linesep)
@@ -222,7 +215,7 @@ def create_and_populate_log_files(data, headerData, msg, name_or_data, reason):
         with open(filedata, "w") as user_log:
             user_log.writelines(data + os.linesep)
 
-    return f"{dirname}/{now}"
+    return f"{error.dirname}/{username}/{now}"
 
 
 @app.route("/robots.txt")

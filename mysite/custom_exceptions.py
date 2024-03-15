@@ -14,6 +14,7 @@ class BaseCustomException(Exception):
 
 
 class UsernameBanned(BaseCustomException):
+    dirname = "banned"
     msg_base = "You have been banned from using this tool. Goodbye."
 
     def __init__(self, username):
@@ -22,9 +23,10 @@ class UsernameBanned(BaseCustomException):
 
 
 class UserDataException(BaseCustomException):
+    dirname = "bad_submits"
     msg_base = (
         "Looks like the data you submitted was neither a username nor valid data. "
-        "Check what you submitted - it must be either the first toon name or the"
+        "Check what you submitted - it must be either the first toon name or the "
         "JSON object provided by either IdleonEfficiency or IdleonToolbox."
     )
 
@@ -35,6 +37,7 @@ class UserDataException(BaseCustomException):
 
 
 class ProfileNotFound(BaseCustomException):
+    dirname = "private_profiles"
     msg_base = (
         "Looks like you haven't made your profile public yet. Head on over to "
         "IdleonEfficiency and publish your data."
@@ -46,6 +49,7 @@ class ProfileNotFound(BaseCustomException):
 
 
 class EmptyResponse(BaseCustomException):
+    dirname = "IE"
     msg_base = (
         "Hmm, something weird is going on with your data over at IdleonEfficiency, "
         "no data has been provided to us..."
@@ -57,6 +61,7 @@ class EmptyResponse(BaseCustomException):
 
 
 class IEConnectionFailed(BaseCustomException):
+    dirname = "IE"
     msg_base = "We're having trouble connecting to IdleonEfficiency to collect data."
 
     def __init__(self, exc, trace):
