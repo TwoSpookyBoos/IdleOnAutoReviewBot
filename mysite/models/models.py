@@ -537,7 +537,7 @@ class Assets(dict):
 class Card:
     def __init__(self, codename, name, cardset, count, coefficient):
         self.codename = codename
-        self.count = ceil(count)
+        self.count = ceil(float(count))
         self.cardset = cardset
         self.name = name
         self.coefficient = coefficient
