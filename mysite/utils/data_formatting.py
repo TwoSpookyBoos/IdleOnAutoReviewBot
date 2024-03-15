@@ -20,14 +20,10 @@ class HeaderData:
     PUBLIC = "Public Profile"
 
     def __init__(self, input_data):
-        self.data_source = ""
-        self.direct_json = ""
         self.ie_link = ""
         self.link_text = ""
         self.first_name = ""
         self.json_error = ""
-        self.last_update = ""
-        self.elapsed = ""
 
         if isinstance(input_data, str) and len(input_data) < 16:
             username = input_data

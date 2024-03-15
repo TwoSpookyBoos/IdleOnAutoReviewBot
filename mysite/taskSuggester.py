@@ -6,7 +6,7 @@ from flask import g as session_data
 from config import app
 from general import combatLevels, greenstacks, pinchy, cards, maestroHands, consumables, gemShop
 from models.custom_exceptions import UsernameBanned
-# general stuff that makes this file too big if I include directly
+
 from models.models import AdviceWorld, WorldName, Account
 from utils.data_formatting import (
     getJSONfromAPI,
@@ -48,17 +48,13 @@ def main(inputData, runType="web"):
     # Step 1: Retrieve data from public IdleonEfficiency website or from file
     parsedJSON = get_or_parse_json(inputData, runType)
 
-    for name in session_data.account.names:
-        maybe_ban(name, runType)
-
     # Step 2: Make account data available throughout the session
     session_data.account = Account(parsedJSON)
 
-    # roastworthyBool = getRoastableStatus(session_data.account.names)
+    for name in session_data.account.names:
+        maybe_ban(name, runType)
 
-    headerData = HeaderData(inputData)
-    logger.info(f"{headerData.last_update = }")
-
+    roastworthyBool = getRoastableStatus(session_data.account.names)
 
     # Step 3: Send that data off to all the different analyzers
     # General
@@ -152,6 +148,10 @@ def main(inputData, runType="web"):
 
     reviews = [pinchyReview, generalReview, w1Review, w2Review, w3Review, w4Review, w5Review]
 
+    headerData = HeaderData(inputData)
+    logger.info(f"{headerData.last_update = }")
+
+
     if runType == "consoleTest":
         return "Pass"
     else:
@@ -160,7 +160,6 @@ def main(inputData, runType="web"):
 
 def get_or_parse_json(inputData, runType):
     if is_username(inputData):
-        parsedJSON = getJSONfromAPI(runType, inputData)
-    else:
-        parsedJSON = getJSONfromText(runType, inputData)
-    return parsedJSON
+        return getJSONfromAPI(runType, inputData)
+
+    return getJSONfromText(runType, inputData)
