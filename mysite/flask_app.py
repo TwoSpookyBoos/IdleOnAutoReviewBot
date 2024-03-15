@@ -160,8 +160,8 @@ def index() -> Response | str:
         msg = str(e)
         data = e.doc
 
-        setattr(e, "dirname", "faulty_data")
-        dirname = create_and_populate_log_files(data, headerData, msg, name_or_data, e)
+        e.dirname = "faulty_data"
+        dirname = create_and_populate_log_files(data, headerData, msg, name_or_data, e)  # noqa
         error = (
             "Looks like the data you submitted is corrupted. The issue has been "
             "reported and will be investigated. If the problem persists let us "
