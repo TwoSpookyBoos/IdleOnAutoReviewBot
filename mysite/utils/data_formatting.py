@@ -36,6 +36,8 @@ class HeaderData:
             self.data_source = self.JSON
             if session_data.account.names[0] == "Character1":
                 self.json_error = "NO SORTED LIST OF CHARACTER NAMES FOUND IN DATA. REPLACING WITH GENERIC NUMBER ORDER."
+            else:
+                self.first_name = session_data.account.names[0]
 
         self.__getLastUpdatedTime()
 
