@@ -592,7 +592,7 @@ progressionTiers = {
                 "Fish11", "Fish12", "Fish13",
                 "Bug12", "Bug13",],
             "Other Skilling Resources": [
-                "Soul1",],
+                "CraftMat6", "Soul1",],
             "Vendor Shops": [
                 "FoodHealth16", "FoodHealth17",
                 "FoodPotOr4", "FoodPotGr4", "FoodPotRe4", "FoodPotYe4",]
