@@ -81,7 +81,7 @@ def getCardSetReview():
     )
 
     if not section:
-        if not session_data.data.ruby_cards_unlocked:
+        if not session_data.account.ruby_cards_unlocked:
             section.tier = f"{max_tier}/{max_tier}"
             section.header = (
                 f"You have completed all {section.tier} cardset tiers. But... "
