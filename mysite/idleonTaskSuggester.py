@@ -1,15 +1,22 @@
-#idleonTaskSuggester.py
-import datetime
-import copy
+from pathlib import Path
+
+import yaml
 from flask import g as session_data
 
-from data_formatting import logger, getJSONfromAPI, getJSONfromText, getLastUpdatedTime, getCharacterDetails, HeaderData
 #general stuff that makes this file too big if I include directly
-from models import AdviceWorld, WorldName, Account, Character
-from consts import progressionTiers
+from config import app
+from data_formatting import (
+    getJSONfromAPI,
+    getJSONfromText,
+    getLastUpdatedTime,
+    HeaderData,
+)
+from custom_exceptions import UsernameBanned, ProfileNotFound
 
+# general stuff that makes this file too big if I include directly
+from models import AdviceWorld, WorldName, Account
 
-#general autoreview
+# general autoreview
 import idleon_Pinchy
 import idleon_CombatLevels
 import idleon_Consumables
@@ -18,19 +25,18 @@ import idleon_Greenstacks
 import idleon_MaestroHands
 import idleon_Cards
 
-from idleon_Pinchy import Placements
-
-#w1
+# w1
 import idleon_Stamps
 import idleon_Bribes
 import idleon_Smithing
 
-#w2
+# w2
 import idleon_Alchemy
-#import idleon_Obols
 
-#w3
-#import idleon_Sampling
+# import idleon_Obols
+
+# w3
+# import idleon_Sampling
 import idleon_ConsRefinery
 import idleon_ConsSaltLick
 import idleon_ConsDeathNote
@@ -38,14 +44,22 @@ import idleon_ConsBuildings
 import idleon_Worship
 import idleon_Trapping
 
-#w4
+# w4
 import idleon_Breeding
+import idleon_Rift
+
+from utils import get_logger, is_username
 
 
-#Global variables
+logger = get_logger(__name__)
 
 
-#Step 1: Retrieve data from public IdleonEfficiency website or from file
+def maybe_ban(username, bannedAccountsList, runType):
+    if username in bannedAccountsList:
+        if runType == "consoleTest":
+            return "Banned"
+
+        raise UsernameBanned(username)
 
 
 def getRoastableStatus(playerNames):
@@ -54,80 +68,21 @@ def getRoastableStatus(playerNames):
 
 
 def main(inputData, runType="web"):
-    bannedAccountsList = ["thedyl", "wooddyl", "3boyy", "4minez", "5arch5", "6knight6", "7maestro7", "bowboy8", "8barb8", "10es10", "favicon.ico", "robots.txt"]
-    empty = ""
-    emptyList = [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty]
-    banned = "This account has been banned from lookups."
-    bannedList = [banned,empty,empty,empty,empty,empty,empty,empty,empty,empty]
-    bannedListofLists = [
-        [bannedList,empty,empty,empty,empty,empty,empty,empty,empty,empty],  #general placeholder
-        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],  #w1 placeholder
-        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],  #w2 placeholder
-        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],  #w3 placeholder
-        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],  #w4 placeholder
-        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],  #w5 placeholder
-        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],  #w6 placeholder
-        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],  #w7 placeholder
-        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],  #w8 placeholder
-        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty]  #pinchy placeholder
-    ]
-
-    if isinstance(inputData, str):
-        inputData = inputData.strip()  # remove leading and trailing whitespaces
+    bannedAccountsList = yaml.load(
+        open(Path(app.static_folder) / "banned.yaml"), yaml.Loader
+    )
 
     headerData = HeaderData()
-    #Step 1: Retrieve data from public IdleonEfficiency website or from file
-    if len(inputData) < 16 and isinstance(inputData, str):
-        headerData.data_source = headerData.PUBLIC
-        #print("~~~~~~~~~~~~~~~ Starting up PROD main at", datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "for", inputData, "~~~~~~~~~~~~~~~")
-        inputData = inputData.replace(" ", "_")  # IE expects underscores instead of spaces in names
-        #print("inputData:'" + inputData + "' found in the banned list?", (inputData in bannedAccountsList))
-        if inputData.lower() in bannedAccountsList:
-            if runType == "web":
-                print("idleonTaskSuggester~ PETTY BITCH MODE ACTIVATED. Banned name entered:", inputData)
-                return bannedListofLists
-            elif runType == "consoleTest":
-                return "Banned"
-        else:
-            parsedJSON = getJSONfromAPI(runType, "https://" + inputData + ".idleonefficiency.com/raw-data")
-            if parsedJSON == "PublicIEProfileNotFound" and runType == "consoleTest":
-                return "PublicIEProfileNotFound"
-            headerData.ie_link = f"https://{inputData.lower()}.idleonefficiency.com"
-            headerData.link_text = f"{inputData.lower()}.idleonefficiency.com"
-    else:
-        headerData.data_source = HeaderData.JSON
-        if runType == "web":
-            print("~~~~~~~~~~~~~~~ Starting up PROD main at", datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "for direct web JSON input.~~~~~~~~~~~~~~~")
-        parsedJSON = getJSONfromText(runType, inputData)
+    # Step 1: Retrieve data from public IdleonEfficiency website or from file
+    parsedJSON = get_or_parse_json(bannedAccountsList, headerData, inputData, runType)
 
-    if isinstance(parsedJSON, str):
-        if parsedJSON.startswith("JSONParseFail"):
-            return parsedJSON
-    elif parsedJSON is None:
-        if runType == "web":
-            raise ValueError(f"data for {inputData} not found")
-        elif runType == "consoleTest":
-            return "JSONParseFail-NoneType"
-    elif parsedJSON == []:
-        if runType == "web":
-            raise ValueError(f"data for {inputData} not found")
-            # return errorListofLists
-        elif runType == "consoleTest":
-            return "JSONParseFail-EmptyList"
-        #raise ValueError(f"data for {inputData} not found")
-
-    #Step 2: Make account data available throughout the session
+    # Step 2: Make account data available throughout the session
     session_data.account = Account(parsedJSON)
 
-    #Step 3: Send that data off to all the different analyzers
+    # Step 3: Send that data off to all the different analyzers
     for name in session_data.account.names:
-        #print("Checking for name in bannedAccountsList:", name.lower(),  (name.lower() in bannedAccountsList))
-        if name.lower() in bannedAccountsList:
-            if runType == "web":
-                print("idleonTaskSuggester~ WARNING! PETTY BITCH MODE ACTIVATED. Banned name entered:", name)
-                return bannedListofLists
-            elif runType == "consoleTest":
-                return "Banned"
+        maybe_ban(name, bannedAccountsList, runType)
+
     roastworthyBool = getRoastableStatus(session_data.account.names)
 
     if headerData.data_source == HeaderData.JSON:
@@ -136,59 +91,63 @@ def main(inputData, runType="web"):
         else:
             headerData.first_name = session_data.account.names[0]
 
-    #General
+    # General
     getLastUpdatedTime(headerData)
 
     if runType == "web":
-        logger.info(f'{headerData.last_update = }')
+        logger.info(f"{headerData.last_update = }")
 
     section_combatLevels = idleon_CombatLevels.setCombatLevelsProgressionTier()
     section_consumables = idleon_Consumables.parseConsumables()
     section_gemShop = idleon_GemShop.setGemShopProgressionTier()
-    sections_quest_gstacks, section_regular_gstacks = idleon_Greenstacks.setGStackProgressionTier()
+    sections_quest_gstacks, section_regular_gstacks = (
+        idleon_Greenstacks.setGStackProgressionTier()
+    )
     section_maestro = idleon_MaestroHands.getHandsStatus()
     section_cards = idleon_Cards.getCardSetReview()
 
-    #World 1
+    # World 1
     stamps_AdviceSection = idleon_Stamps.setStampProgressionTier()
     bribes_AdviceSection = idleon_Bribes.setBribesProgressionTier()
     smithing_AdviceSection = idleon_Smithing.setSmithingProgressionTier()
 
-    #World 2
+    # World 2
     alchBubbles_AdviceSection = idleon_Alchemy.setAlchemyBubblesProgressionTier()
     alchVials_AdviceSection = idleon_Alchemy.setAlchemyVialsProgressionTier()
     alchP2W_AdviceSection = idleon_Alchemy.setAlchemyP2W()
-    #obols_AdviceSection = idleon_Obols.setObolsProgressionTier(parsedJSON, playerCount, progressionTiers['Obols'], fromPublicIEBool)
+    # obols_AdviceSection = idleon_Obols.setObolsProgressionTier(parsedJSON, playerCount, progressionTiers['Obols'], fromPublicIEBool)
 
-    #World 3
+    # World 3
     refinery_AdviceSection = idleon_ConsRefinery.setConsRefineryProgressionTier()
     saltlick_AdviceSection = idleon_ConsSaltLick.setConsSaltLickProgressionTier()
     deathnote_AdviceSection = idleon_ConsDeathNote.setConsDeathNoteProgressionTier()
     buildings_AdviceSection = idleon_ConsBuildings.setConsBuildingsProgressionTier()
     prayers_AdviceSection = idleon_Worship.setWorshipPrayersProgressionTier()
     trapping_AdviceSection = idleon_Trapping.setTrappingProgressionTier()
-    #collider_AdviceSection =
-    #worship_AdviceSection =
-    #printer_AdviceSection =
+    # collider_AdviceSection =
+    # worship_AdviceSection =
+    # printer_AdviceSection =
 
-    #World 4
+    # World 4
     breeding_AdviceSection = idleon_Breeding.setBreedingProgressionTier()
-    #cooking_AdviceSection =
-    #lab_AdviceSection =
+    # cooking_AdviceSection =
+    # lab_AdviceSection =
+    rift_AdviceSection = idleon_Rift.setRiftProgressionTier()
 
-    #World 5
-    #sailing_AdviceSection =
-    #gaming_AdviceSection =
-    #divinity_AdviceSection =
+    # World 5
+    # sailing_AdviceSection =
+    # gaming_AdviceSection =
+    # divinity_AdviceSection =
 
-    #w6list = [["w6 mechanic 1 placeholder"], ["w6 mechanic 2 placeholder"], ["w6 mechanic 3 placeholder"]]
-    #w7list = [["w7 mechanic 1 placeholder"], ["w7 mechanic 2 placeholder"], ["w7 mechanic 3 placeholder"]]
-    #w8list = [["w8 mechanic 1 placeholder"], ["w8 mechanic 2 placeholder"], ["w8 mechanic 3 placeholder"]]
+    # w6list = [["w6 mechanic 1 placeholder"], ["w6 mechanic 2 placeholder"], ["w6 mechanic 3 placeholder"]]
+    # w7list = [["w7 mechanic 1 placeholder"], ["w7 mechanic 2 placeholder"], ["w7 mechanic 3 placeholder"]]
+    # w8list = [["w8 mechanic 1 placeholder"], ["w8 mechanic 2 placeholder"], ["w8 mechanic 3 placeholder"]]
     all_sections = [
         section_combatLevels,
         stamps_AdviceSection, bribes_AdviceSection, smithing_AdviceSection,
         alchBubbles_AdviceSection, alchVials_AdviceSection, alchP2W_AdviceSection,
         refinery_AdviceSection, saltlick_AdviceSection, deathnote_AdviceSection, prayers_AdviceSection,
+        breeding_AdviceSection, rift_AdviceSection
     ]
     pinchy_high, pinchy_low, pinchy_all = idleon_Pinchy.generatePinchyWorld(all_sections)
 
@@ -220,7 +179,7 @@ def main(inputData, runType="web"):
     )
     w4Review = AdviceWorld(
         name=WorldName.HYPERION_NEBULA,
-        sections=[breeding_AdviceSection],
+        sections=[breeding_AdviceSection, rift_AdviceSection],
         banner="w4banner.png"
     )
     w5Review = AdviceWorld(
@@ -234,3 +193,21 @@ def main(inputData, runType="web"):
         return "Pass"
     else:
         return reviews, headerData
+
+
+def get_or_parse_json(bannedAccountsList, headerData, inputData, runType):
+    if is_username(inputData):
+        username = inputData
+        headerData.data_source = headerData.PUBLIC
+
+        maybe_ban(username, bannedAccountsList, runType)
+
+        parsedJSON = getJSONfromAPI(runType, username)
+
+        headerData.link_text = f"{username}.idleonefficiency.com"
+        headerData.ie_link = f"https://{headerData.link_text}"
+    else:
+        headerData.data_source = HeaderData.JSON
+
+        parsedJSON = getJSONfromText(runType, inputData)
+    return parsedJSON

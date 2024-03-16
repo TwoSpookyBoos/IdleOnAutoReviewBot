@@ -1,0 +1,1976 @@
+---
+Blank: Blank
+LockedInvSpace: Locked Inventory Space
+FillerMaterial: Not Yet
+Copper: Copper Ore
+Iron: Iron Ore
+Gold: Gold Ore
+Plat: Platinum Ore
+Dementia: Dementia Ore
+Void: Void Ore
+Lustre: Lustre Ore
+Starfire: Starfire Ore
+Dreadlo: Dreadlo Ore
+Marble: Marble Ore
+Godshard: Godshard Ore
+CopperBar: Copper Bar
+IronBar: Iron Bar
+GoldBar: Gold Bar
+PlatBar: Platinum Bar
+DementiaBar: Dementia Bar
+VoidBar: Void Bar
+LustreBar: Lustre Bar
+StarfireBar: Starfire Bar
+DreadloBar: Dreadlo Bar
+GodshardBar: Godshard Bar
+MarbleBar: Marble Bar
+OilBarrel1: Crude Oil
+OilBarrel2: Toxic Sludge
+OilBarrel3: Radioactive Waste
+OilBarrel4: Glumlee's Special Tutorial Oil
+OilBarrel5: Eco Friendly Oil
+OilBarrel6: Magma Barrel
+OilBarrel7: Plasma Barrel
+OakTree: Oak Logs
+BirchTree: Bleach Logs
+JungleTree: Jungle Logs
+ForestTree: Forest Fibres
+ToiletTree: Potty Rolls
+PalmTree: Tropilogs
+StumpTree: Veiny Logs
+SaharanFoal: Tundra Logs
+Tree7: Wispy Lumber
+AlienTree: Alien Hive Chunk
+Tree8: Cubed Logs
+Tree9: Maple Logs
+Tree10: Dandielogs
+Tree11: Willow Logs
+Tree12: Bamboo Logs
+Tree13: Effervescent Logs
+Leaf1: Grass Leaf
+Leaf2: Twisty Leaf
+Leaf3: Arctic Leaf
+Leaf4: Galactic Leaf
+Leaf5: Magma Leaf
+Leaf6: Spirit Leaf
+Fish1: Goldfish
+Fish2: Hermit Can
+Fish3: Jellyfish
+Fish4: Bloach
+Fish5: Skelefish
+Fish6: Sand Shark
+Fish7: Manta Ray
+Fish8: Kraken
+Fish9: Icefish
+Fish10: Shellfish
+Fish11: Jumbo Shrimp
+Fish12: Caulifish
+Fish13: Equinox Fish
+Bug1: Fly
+Bug2: Butterfly
+Bug3: Sentient Cereal
+Bug4: Fruitfly
+Bug5: Mosquisnow
+Bug6: Flycicle
+Bug7: Worker Bee
+Bug8: Fairy
+Bug9: Scarab
+Bug10: Dust Mote
+Bug11: Dream Particulate
+Bug12: Ladybug
+Bug13: Firefly
+Critter1: Froge
+Critter1A: Poison Froge
+Critter2: Crabbo
+Critter2A: Mutant Crabbo
+Critter3: Scorpie
+Critter3A: Crescent Scorpie
+Critter4: Mousey
+Critter4A: Nakeo Moleo
+Critter5: Owlio
+Critter5A: Minervowl
+Critter6: Pingy
+Critter6A: Eternal Lord of  The Undying Ember
+Critter7: Bunny
+Critter7A: Purbunni
+Critter8: Dung Beat
+Critter8A: Jade Scarab
+Critter9: Honker
+Critter9A: Diamond Duck
+Critter10: Blobfish
+Critter10A: Voodofish
+Critter11: Tuttle
+Critter11A: Tottoise
+Soul1: Forest Soul
+Soul2: Dune Soul
+Soul3: Rooted Soul
+Soul4: Frigid Soul
+Soul5: Squishy Soul
+Soul6: Oozie Soul
+Soul7: Breezy Soul
+EquipmentHats1: Farmer Brim
+TestObj15: Slime Cap
+EquipmentHatsBeg1: Ice Cream Sunday
+EquipmentHats61: Mark of Member
+EquipmentHats15: Leather Cap
+EquipmentHats5: White Headband
+EquipmentHats6: Green Headband
+EquipmentHats7: Red Headband
+EquipmentHats8: Purple Tupacband
+EquipmentHats9: Yellow Headband
+EquipmentHats10: Pink Headband
+EquipmentHats11: Grey Beret
+EquipmentHats12: Traffic Cone
+EquipmentHats13: Propeller Cap
+EquipmentHats14: Baseball Hat
+TestObj14: Trojan Helmet
+TestObj16: Demon Horns
+EquipmentHats4Choppin: Stump Prop
+EquipmentHats17: Copper Helmet
+EquipmentHats18: Iron Helmet
+EquipmentHats28: Gold Helmet
+EquipmentHats22: Amarok Helmet
+EquipmentHats19: Platinum Helmet
+EquipmentHats53: Dementia Helmet
+EquipmentHats52: Efaunt Helmet
+EquipmentHats54: Void Imperium Helmet
+EquipmentHats68: Chizoar Helmet
+EquipmentHats70: Lustre Veil
+EquipmentHats71: Diabolical Headcase
+EquipmentHats74: Thin Veil of The Troll
+EquipmentHats77: Magma Core Headdress
+EquipmentHats83: Skulled Helmet of the Divine
+EquipmentHats105: Marbiglass Headdress
+EquipmentHats106: Crown of the Gods
+EquipmentHats84: The Crow Perch
+EquipmentHats21: Birthday Hat
+EquipmentHats23: Farmer Brimer
+EquipmentHats24: Farmer Brimest
+EquipmentHats25: Bored Beanie
+EquipmentHats2: Royal Turban
+EquipmentHats27: Paper Boat
+EquipmentHats29: Alien Headband
+EquipmentHats30: Cowbo Galloneer
+EquipmentHats39: Grandma Disguise
+EquipmentHats42: Santa Hat
+EquipmentHats44: Jar
+EquipmentHats51: Big Pretty Bow
+EquipmentHats55: Steam Cap
+EquipmentHats56: Bunny Ears
+EquipmentHats63: Summer Shell
+EquipmentHats64: Nuget Cake Fedora
+EquipmentHats66: Honker Hat
+EquipmentHats67: Acorn Topper
+EquipmentHats72: Nondescript Game Show Host Hair
+EquipmentHats73: Real Civil Engineer Helmet
+EquipmentHats75: Apple Launch Hat
+EquipmentHats76: Funny Hat
+EquipmentHats78: Meteorhead
+EquipmentHats79: Ice Guard Helmet
+EquipmentHats20: Militia Helm
+TestObj13: Viking Cap
+EquipmentHats58: Murmillo Helm
+EquipmentHats3: Thief Hood
+EquipmentHats41: Sleek Coif
+EquipmentHats59: Conquistador Plume
+EquipmentHats16: Top Hat
+EquipmentHats26: Witch Hat
+EquipmentHats60: Adornment of the High Priest
+EquipmentPunching1: Boxing Gloves
+EquipmentPunching2: The Stingers
+EquipmentPunching3: Bandage Wraps
+EquipmentPunching4: Uninflated Glove
+EquipmentPunching5: Eclectic Ordeal
+EquipmentPunching6: Knuckle Sabers
+EquipmentPunching7: Diabolical Gauntlet
+EquipmentPunching8: Molten Core Knucklers
+EquipmentPunching9: Crackled Skull Destroyer
+EquipmentPunching10: Pentastud Slapper
+EquipmentPunching11: Mittens of the Gods
+TestObj1: Wooden Spear
+TestObj7: Steel Axe
+TestObj3: Royal Bayonet
+EquipmentSword1: Enforced Slasher
+EquipmentSword2: The Ice Breaker
+EquipmentSword3: Deuscythe
+EquipmentSword4: Slimsharp Fin
+EquipmentSword5: Diabolical Flesh Ripper
+EquipmentSword6: Magma Maul
+EquipmentSword7: Skull Lance
+EquipmentSword8: Elegant Spear
+EquipmentSword9: Massive Godbreaker
+TestObj4: Frozen Impaler
+TestObj5: Blood Screamer
+TestObj8: Flaming Katana
+TestObj9: Emerald Eizon
+TestObj10: Stalagmite
+EquipmentWeapons1: Iron Sword
+TestObj2: Steel Spear
+EquipmentBows1: Wooden Bow
+EquipmentBows3: Birch Longbow
+EquipmentBows4: Carrot Launcher
+EquipmentBows5: Spiked Menace
+EquipmentBows6: Pharaoh Bow
+EquipmentBows7: Blizzard Bow
+EquipmentBows8: Blackhole Bow
+EquipmentBows9: Shardsure Leif
+EquipmentBows10: Diabolical Continuit
+EquipmentBows11: Sediment Core Grunkler
+EquipmentBows12: Spine Tingler Sniper
+EquipmentBows13: Pristine Longbow
+EquipmentBows14: Doublestring Godshooter
+EquipmentWands1: Gnarled Wand
+EquipmentWands2: Quarterstaff
+EquipmentWands5: Starlight
+EquipmentWands6: Crows Nest
+EquipmentWands3: Spriggly Storm
+EquipmentWands7: Grey Gatsby
+EquipmentWands8: Skullslip Hallow
+EquipmentWands9: Diabolical Opticule
+EquipmentWands10: Cattle Core Soothsayer Staff
+EquipmentWands11: Staff of the Undead Plague
+EquipmentWands12: Sparky Marble Staff
+EquipmentWands13: Magnifique Godcaster
+EquipmentWands4: Microphone
+EquipmentShirts1: Orange Tee
+EquipmentShirts17: MCR Tshirt
+EquipmentShirts19: Planktop
+EquipmentShirts20: Hide Shirt
+EquipmentShirts24: Green Tee
+EquipmentShirts25: Purple Tee
+EquipmentShirts2: Blue Tee
+EquipmentShirts16: Spore Tee
+EquipmentShirts3: Black Tee
+EquipmentShirts4: Tanned Hide
+EquipmentShirts7: Molten Chest
+EquipmentShirts8: REPLACE ME
+EquipmentShirts9: REPLACE ME
+EquipmentShirts21: Tattered Cloth
+EquipmentShirts10: Fur Shirt
+EquipmentShirts11: Copper Platebody
+EquipmentShirts12: Iron Platebody
+EquipmentShirts13: Gold Platebody
+EquipmentShirts18: Amarok Bodyplate
+EquipmentShirts14: Platinum Platbody
+EquipmentShirts5: Studded Hide
+EquipmentShirts23: Feral Leathering
+EquipmentShirts22: Furled Robes
+EquipmentShirts15: Dementia Body
+EquipmentShirts26: Efaunt Ribcage
+EquipmentShirts27: Void Imperium Platebody
+EquipmentShirts31: Member Hoodie
+EquipmentShirts28: Damascus Plates
+EquipmentShirts29: Evergreen Wraps
+EquipmentShirts30: Elegantine Robes
+EquipmentShirts6: Chizoar Bodyplate
+EquipmentShirts32: Lustre Chestplate
+EquipmentShirts33: Diabolical Abdomen
+EquipmentShirts34: Trollish Garb
+EquipmentShirts35: Magma Core Wavemaille
+EquipmentShirts36: Serrated Chest of the Divine
+EquipmentShirts37: Marbiglass Tunic
+EquipmentShirts38: Robe of the Gods
+EquipmentPants1: Torn Jeans
+EquipmentPants2: Copper Platelegs
+EquipmentPants3: Iron Platelegs
+EquipmentPants4: Gold Platelegs
+EquipmentPants17: Amarok Hinds
+EquipmentPants5: Platinum Shins
+EquipmentPants6: Dementia Shins
+EquipmentPants20: Efaunt Hipilium
+EquipmentPants21: Void Imperium Shardshins
+EquipmentPants7: Gilded Pilates
+EquipmentPants10: Give Up On Life Pants
+EquipmentPants11: Yellow Belt Ninja Pants
+EquipmentPants12: Merchantile Pants
+EquipmentPants13: Ancient Leggings
+EquipmentPants14: Forensic Leggings
+EquipmentPants15: Bleached Designer Wode Patch Pants
+EquipmentPants16: Adam's Leaf
+EquipmentPants18: Dirty Coal Miner Baggy Soot Pants
+EquipmentPants19: Trimmed Rune Platelegs
+EquipmentPants22: Fishing Overalls
+EquipmentPants23: Bandito Pantaloon
+EquipmentPants9: Chizoar Scaled Leggings
+EquipmentPants24: Lustre Scales
+EquipmentPants25: Diabolical Trimed Leg Guards
+EquipmentPants8: Twisted Scales
+EquipmentPants26: Magma Core Battleskirt
+EquipmentPants27: Spiked Leggings of the Divine
+EquipmentPants29: Marbiglass Legplates
+EquipmentPants30: Tatters of the Gods
+EquipmentShoes1: Copper Boots
+EquipmentShoes9: Flip Flops
+EquipmentShoes10: Flap Flops
+EquipmentShoes11: Floop Flops
+EquipmentShoes12: Flux Flops
+EquipmentShoes15: Iron Boots
+EquipmentShoes3: Gold Boots
+EquipmentShoes20: Amarok Paws
+EquipmentShoes4: Platinum Boots
+EquipmentShoes5: Dementia Boots
+EquipmentShoes21: Efaunts Broken Ankles
+EquipmentShoes22: Void Imperium Kicks
+EquipmentShoes6: Hermes Boots
+EquipmentShoes7: Goo Galoshes
+EquipmentShoes8: Yeti Walkers
+EquipmentShoes13: Gaia Shoes
+EquipmentShoes14: Cauldrunners
+EquipmentShoes16: Cavern Trekkers
+EquipmentShoes17: Logger Heels
+EquipmentShoes18: Angler Boots
+EquipmentShoes19: Bandito Boots
+EquipmentShoes2: Eyern Boots
+EquipmentShoes23: Chizoar Walkers
+EquipmentShoes26: Rough Rockers
+EquipmentShoes27: Fiberous Footings
+EquipmentShoes28: Deep Sea Galoshes
+EquipmentShoes29: Spaggy Westerados
+EquipmentShoes30: Cooking Clogs
+EquipmentShoes31: Chef Hat Shoes
+EquipmentShoes32: Laboratory Scrubs
+EquipmentShoes33: Sheek Scrubs
+EquipmentShoes24: Lustre Shieldshoe
+EquipmentShoes25: Diabolical Toe Tips
+EquipmentShoes34: Soles of the Troll
+EquipmentShoes35: Magma Core Lavarunners
+EquipmentShoes36: Devious Slippers of the Divine
+EquipmentShoes37: Marbiglass Soles
+EquipmentShoes38: Drip of the Gods
+EquipmentPendant1: Mint Icey
+EquipmentPendant2: Strawbu Icey
+EquipmentPendant3: Rok Road Icey
+EquipmentPendant4: Rainbo Icey
+EquipmentPendant5: Chocotastic Icey
+EquipmentPendant6: Blubbery Icey
+EquipmentPendant7: Lava Icey
+EquipmentPendant8: Legends Icey
+EquipmentPendant9: Little Wooden Katana
+EquipmentPendant10: Sleek Shank
+EquipmentPendant11: Carrot Horror
+EquipmentPendant12: Tarantulight
+EquipmentPendant13: Quartz Pendant
+EquipmentPendant14: Fuscismatia
+EquipmentPendant15: Lucky Fish Head
+EquipmentPendant16: Strung Bludgeon
+EquipmentPendant17: Chaotic Amarok Pendant
+EquipmentPendant18: Strung Steamy
+EquipmentPendant19: Cedar Pendant
+EquipmentPendant20: Fishhead Pendant
+EquipmentPendant21: Deathly Cluster Pendant
+EquipmentPendant22: Hallowed Tail Pendant
+EquipmentPendant23: Persephones Bouquet
+EquipmentPendant24: Chizoars Blankie
+EquipmentPendant25: Chizoars Caustic Scarf
+EquipmentPendant26: Polished Bludgeon
+EquipmentPendant27: Skullfish Pendant
+EquipmentPendant28: Crescent Moon Pendant
+EquipmentPendant29: Strung Tooth of the Divine
+EquipmentPendant30: The Divine Scarf
+EquipmentRings1: Gold Ring
+EquipmentRings2: Copper Band
+EquipmentRings3: Steel Band
+EquipmentRings4: Molden Crust
+EquipmentRings5: Toxic Bubbles Band
+EquipmentRings6: Death Wish
+EquipmentRings7: Pugilist Demise
+EquipmentRings8: The Used Bandaid
+EquipmentRings9: Chat Ring
+EquipmentRings10: Spikeweed Ring
+EquipmentRings11: Defenders Dignity
+EquipmentRingsFishing1: Shallow Watering
+EquipmentRingsFishing2: Oceanic Ring
+EquipmentRingsFishing3: Deepwater Trench Ring
+EquipmentRings12: Frisbee Ring
+EquipmentRings13: Silver Stopwatch
+EquipmentRings14: Dooble Goopi
+EquipmentRings15: Sanic Ring
+EquipmentRings16: Efaunt Trunculus
+EquipmentRings21: Elf Twist Ring
+EquipmentRings20: Rex Ring
+EquipmentRings19: Bejeweled Ring
+EquipmentRings22: Tenacity Ring
+EquipmentRings18: The Emperor's Opal
+EquipmentRings23: Neutron Ice Ring
+EquipmentRings24: Lab Ring
+EquipmentRings25: Chef Ring
+EquipmentRings26: Serrated Rex Ring
+EquipmentRings27: Protectors Pride
+EquipmentRings28: Midnight Stopwatch
+EquipmentRings29: Dawn Stopwatch
+EquipmentRings30: Souped Lab Ring
+EquipmentRings31: Tundra Killer Ring
+EquipmentRings32: Nebula Killer Ring
+EquipmentRings33: Dune Killer Ring
+EquipmentRings34: Magma Killer Ring
+EquipmentRingsChat1: Love Ring
+EquipmentRingsChat2: Leafy Ring
+EquipmentRingsChat3: Wealth Ring
+EquipmentRingsChat4: Bob Ring
+EquipmentRingsChat5: Bubble Ring
+EquipmentRingsChat6: Cthulu's Ring
+EquipmentRingsChat8: Lava Sez Buy More Gems
+EquipmentRingsChat9: HONK Ring
+EquipmentRingsChat10: Meteorite Ring
+EquipmentRingsChat11: Equinox Ring
+EquipmentCape0: Angel Wings
+EquipmentCape1: Lava Wings
+EquipmentCape2: Easter Egg Backpack
+EquipmentCape3: Radiant Amarok Backstabber
+EquipmentCape4: Gilded Efaunt Dislodged Tusks
+EquipmentCape5: Blighted Chizoar Shard Cape
+EquipmentCape6: Cascading Scaled Cape of Krieg
+EquipmentCape7: Molten Cloak
+EquipmentCape8: Giant Rose
+EquipmentCape9: Giant Violet
+EquipmentCape10: Giant Starflower
+EquipmentCape11: Riftwalker Wings
+EquipmentCape12: Blooming Vine
+EquipmentCape13: Eternal Flames of The Divine
+EquipmentCape14: Phoenix Wings
+StampA1: Sword Stamp
+StampA2: Heart Stamp
+StampA3: Mana Stamp
+StampA4: Tomahawk Stamp
+StampA5: Target Stamp
+StampA6: Shield Stamp
+StampA7: Longsword Stamp
+StampA8: Kapow Stamp
+StampA9: Fist Stamp
+StampA10: Battleaxe Stamp
+StampA11: Agile Stamp
+StampA12: Vitality Stamp
+StampA13: Book Stamp
+StampA14: Manamoar Stamp
+StampA15: Clover Stamp
+StampA16: Scimitar Stamp
+StampA17: Bullseye Stamp
+StampA18: Feather Stamp
+StampA19: Polearm Stamp
+StampA20: Violence Stamp
+StampA21: Buckler Stamp
+StampA22: Hermes Stamp
+StampA23: Sukka Foo
+StampA24: Arcane Stamp
+StampA25: Avast Yar Stamp
+StampA26: Steve Sword
+StampA27: Blover Stamp
+StampA28: Stat Graph Stamp
+StampA29: Gilded Axe Stamp
+StampA30: Diamond Axe Stamp
+StampA31: Tripleshot Stamp
+StampA32: Blackheart Stamp
+StampA33: Maxo Slappo Stamp
+StampA34: Sashe Sidestamp
+StampA35: Intellectostampo
+StampA36: Conjocharmo Stamp
+StampA37: Dementia Sword Stamp
+StampA38: Golden Sixes Stamp
+StampA39: Stat Wallstreet Stamp
+StampA40: Void Sword Stamp
+StampA41: Void Axe Stamp
+StampA42: Captalist Stats Stamp
+StampB1: Pickaxe Stamp
+StampB2: Hatchet Stamp
+StampB3: Anvil Zoomer Stamp
+StampB4: Lil' Mining Baggy Stamp
+StampB5: Twin Ores Stamp
+StampB6: Choppin' Bag Stamp
+StampB7: Duplogs Stamp
+StampB8: Matty Bag Stamp
+StampB9: Smart Dirt Stamp
+StampB10: Cool Diggy Tool Stamp
+StampB11: High IQ Lumber Stamp
+StampB12: Swag Swingy Tool Stamp
+StampB13: Alch Go Brrr Stamp
+StampB14: Brainstew Stamps
+StampB15: Drippy Drop Stamp
+StampB16: Droplots Stamp
+StampB17: Fishing Rod Stamp
+StampB18: Fishhead Stamp
+StampB19: Catch Net Stamp
+StampB20: Fly Intel Stamp
+StampB21: Bag o Heads Stamp
+StampB22: Holy Mackerel Stamp
+StampB23: Bugsack Stamp
+StampB24: Buzz Buzz Stamp
+StampB25: Hidey Box Stamp
+StampB26: Purp Froge Stamp
+StampB27: Spikemouth Stamp
+StampB28: Shiny Crab Stamp
+StampB29: Gear Stamp
+StampB30: Stample Stamp
+StampB31: Saw Stamp
+StampB32: Amplestample Stamp
+StampB33: SpoOoky Stamp
+StampB34: Flowin Stamp
+StampB35: Prayday Stamp
+StampB36: Banked Pts Stamp
+StampB37: Cooked Meal Stamp
+StampB38: Spice Stamp
+StampB39: Ladle Stamp
+StampB40: Nest Eggs Stamp
+StampB41: Egg Stamp
+StampB42: Lab Tube Stamp
+StampB43: Sailboat Stamp
+StampB44: Gamejoy Stamp
+StampB45: Divine Stamp
+StampB46: Multitool Stamp
+StampB47: Skelefish Stamp
+StampB48: Crop Evo Stamp
+StampB49: Sneaky Peeky Stamp
+StampB50: Jade Mint Stamp
+StampB51: Summoner Stone Stamp
+StampB52: White Essence Stamp
+StampB53: Triad Essence Stamp
+StampB54: Dark Triad Essence Stamp
+StampC1: Questin Stamp
+StampC2: Mason Jar Stamp
+StampC3: Crystallin
+StampC4: Arcade Ball Stamp
+StampC5: Gold Ball Stamp
+StampC6: Potion Stamp
+StampC7: Golden Apple Stamp
+StampC8: Ball Timer Stamp
+StampC9: Card Stamp
+StampC10: Forge Stamp
+StampC11: Vendor Stamp
+StampC12: Sigil Stamp
+StampC13: Talent I Stamp
+StampC14: Talent II Stamp
+StampC15: Talent III Stamp
+StampC16: Talent IV Stamp
+StampC17: Talent V Stamp
+StampC18: Talent S Stamp
+StampC19: Multikill Stamp
+StampC20: Biblio Stamp
+StampC21: DNA Stamp
+StampC22: Refinery Stamp
+StampC23: Atomic Stamp
+StoneWe: Easter Weapon Stone
+StoneWeb: Summer Weapon Stone
+StoneW1: Weapon Upgrade Stone I
+StoneW2: Weapon Upgrade Stone II
+StoneW3: Weapon Upgrade Stone III
+StoneW3b: Weapon Upgrade Stone C
+StoneW6: Warped Weapon Upgrade Stone
+StoneW4: Weapon Upgrade Stone IV
+StoneW5: Weapon Upgrade Stone V
+StoneW7: Weapon Upgrade Stone SK
+StoneW8: Weapon Upgrade Stone VI
+StoneAe: Easter Armor Stone
+StoneAeB: Summer Armor Stone
+StoneA1: Armor Upgrade Stone I
+StoneA1b: Armor Upgrade Stone G
+StoneA2: Armor Upgrade Stone II
+StoneA2b: Armor Upgrade Stone B
+StoneA3: Armor Upgrade Stone III
+StoneA3b: Armor Upgrade Stone C
+StoneA4: Armor Upgrade Stone IV
+StoneA5: Armor Upgrade Stone V
+StoneA6: Armor Upgrade Stone SK
+StoneA7: Armor Upgrade Stone VI
+StoneTe: Easter Tool Upgrade Stone
+StoneT1: Tool Upgrade Stone I
+StoneT1e: Giftmas Tool Upgrade Stone
+StoneT1eb: Summer Tool Upgrade Stone
+StoneT2: Tool Upgrade Stone II
+StoneT3: Tool Upgrade Stone III
+StoneT4: Tool Upgrade Stone IV
+StoneT5: Tool Upgrade Stone V
+StoneT6: Tool Upgrade Stone SK
+StoneT7: Tool Upgrade Stone VI
+StoneHelm1: Helmet Upgrade Stone I
+StoneHelm6: Warped Helmet Upgrade Stone
+StoneHelm1b: Giftmas Helmet Upgrade Stone
+StoneHelm7: Helmet Upgrade Stone SK
+StoneZ1: Mystery Upgrade Stone I
+StoneZ2: Mystery Upgrade Stone II
+StoneZ3: Mystery Upgrade Stone III
+StoneZ4: Mystery Upgrade Stone IV
+StonePremSTR: Premium STR Stone
+StonePremAGI: Premium AGI Stone
+StonePremWIS: Premium WIS Stone
+StonePremLUK: Premium LUK Stone
+IceMountains2: Ice A La Crem
+Hgg: Minuteglass
+Starlight: Starlight Ore
+AlienTreetutorial: Alien Logs
+EquipmentWeapons2: Flesh Reaper
+Secretstone: Secretstone
+Timecandy1: 1 HR Time Candy
+Timecandy2: 2 HR Time Candy
+Timecandy3: 4 HR Time Candy
+Timecandy4: 12 HR Time Candy
+Timecandy5: 24 HR Time Candy
+Timecandy6: 72 HR Time Candy
+Timecandy7: Steamy Time Candy
+Timecandy8: Spooky Time Candy
+Timecandy9: Cosmic Time Candy
+InvBag1: Inventory Bag A
+InvBag2: Inventory Bag B
+InvBag3: Inventory Bag C
+InvBag4: Inventory Bag D
+InvBag5: Inventory Bag E
+InvBag6: Inventory Bag F
+InvBag7: Inventory Bag G
+InvBag8: Inventory Bag H
+InvBag9: Inventory Bag I
+InvBag21: Inventory Bag U
+InvBag22: Inventory Bag V
+InvBag23: Inventory Bag W
+InvBag24: Inventory Bag X
+InvBag25: Inventory Bag Y
+InvBag26: Inventory Bag Z
+InvBag100: Snakeskinventory Bag
+InvBag101: Totally Normal and not fake Bag
+InvBag102: Blunderbag
+InvBag103: Sandy Satchel
+InvBag104: Bummo Bag
+InvBag105: Capitalist Case
+InvBag106: Wealthy Wallet
+InvBag107: Prosperous Pouch
+InvBag108: Sack of Success
+InvBag109: Shivering Sack
+InvBag110: Mamooth Hide Bag
+InvBag111: Peeper Pouch
+InvStorage1: Storage Chest 1
+InvStorage2: Storage Chest 2
+InvStorage3: Storage Chest 3
+InvStorage4: Storage Chest 4
+InvStorage5: Storage Chest 5
+InvStorage6: Storage Chest 6
+InvStorage7: Storage Chest 7
+InvStorage8: Storage Chest 8
+InvStorage9: Storage Chest 9
+InvStorage10: Storage Chest 10
+InvStorage11: Storage Chest 11
+InvStorage12: Storage Chest 12
+InvStorage13: Storage Chest 13
+InvStorage14: Storage Chest 14
+InvStorage15: Storage Chest 15
+InvStorage16: Storage Chest 16
+InvStorage17: Storage Chest 17
+InvStorage18: Storage Chest 18
+InvStorage19: Storage Chest 19
+InvStorage20: Storage Chest 20
+InvStorage21: Storage Chest 21
+InvStorage22: Storage Chest 22
+InvStorage23: Storage Chest 23
+InvStorage24: Storage Chest 24
+InvStorage25: Storage Chest 25
+InvStorage26: Storage Chest 26
+InvStorage27: Storage Chest 27
+InvStorage28: Storage Chest 28
+InvStorage31: Storage Chest 90
+InvStorage32: Storage Chest 91
+InvStorage33: Storage Chest 92
+InvStorage34: Storage Chest 93
+InvStorage35: Storage Chest 94
+InvStorage36: Storage Chest 95
+InvStorage37: Storage Chest 96
+InvStorage38: Storage Chest 97
+InvStorage39: Storage Chest 98
+InvStorage40: Storage Chest 99
+InvStorage41: Storage Chest 99B
+InvStorage42: Storage Chest 99C
+InvStorageF: Dank Paypay Chest
+InvStorageS: Gelatinous Chest
+InvStorageC: Cheesy Chest
+InvStorageD: Woodlin Chest
+InvStorageN: Ninja Chest
+Line1: Copper Twine
+Line2: Silver Twine
+Line3: Gold Twine
+Line4: Platinum Twine
+Line5: Leafy Vines
+Line6: Fun Flags
+Line7: Electrical Wiring
+Line8: Wiener Links
+Line9: Zeus Gon Fishin
+Line10: Needledrop
+Line11: Scripticus Spoons
+Line12: Its a Boy Celebration
+Line13: Its a Girl Celebration
+Line14: Its Alright Celebration
+Weight1: Wormie Weight
+Weight2: Iron Hook
+Weight3: Basic Bobber
+Weight4: Dualhook Prongs
+Weight5: One Pound of Steel
+Weight6: One Pound of Feathers
+Weight7: Massless Unit for Physics Questions
+Weight8: Literal Elephant
+Weight9: Valve Patented Circle Thingies
+Weight10: Dynamite
+Weight11: Not Dynamite
+Weight12: Triple Threat
+Weight13: Crash Box
+Weight14: Fat Albert
+InvStorage99: Cosmic Storage Chest
+Spice0: Spice
+Spice6: Spice
+Spice9: Strung Jewels
+SailTr1: Strung Jewels
+SailTr9: Strung Jewels
+SailTr11: Strung Jewels
+SailTr13: Strung Jewels
+SailTr20: Strung Jewels
+SailTr24: Strung Jewels
+SailTr28: Strung Jewels
+Bits: Bits
+W6item0: Strung Jewels
+W6item1: Strung Jewels
+W6item2: Strung Jewels
+W6item3: Strung Jewels
+W6item4: Strung Jewels
+W6item5: Strung Jewels
+W6item6: Strung Jewels
+W6item7: Strung Jewels
+W6item8: Strung Jewels
+W6item9: Strung Jewels
+W6item10: Strung Jewels
+Ladle: Cooking Ladle
+PetEgg: Pet Egg
+Genetic0: Grassy Gene Spiral
+Genetic1: YumYumy Gene Spiral
+Genetic2: Tundric Gene Spiral
+Genetic3: Nebulous Gene Spiral
+Refinery1: Redox Salts
+Refinery2: Explosive Salts
+Refinery3: Spontaneity Salts
+Refinery4: Dioxide Synthesis
+Refinery5: Purple Salt
+Refinery6: Nullo Salt
+CraftMat1: Thread
+CraftMat2: Crimson String
+CraftMat3: Cue Tape
+CraftMat5: Trusty Nails
+CraftMat6: Boring Brick
+CraftMat7: Chain Link
+CraftMat9: Leather Hide
+CraftMat8: Pinion Spur
+CraftMat10: Lugi Bracket
+CraftMat11: Purple Screw
+CraftMat12: Thingymabob
+CraftMat13: Tangled Cords
+CraftMat14: PVC Pipe
+CraftMat15: Filler
+CraftMat16: Filler
+CraftMat17: Filler
+NPCtoken8: FILLER
+BadgeG1: Blunderhills NPC Completion Token
+BadgeG2: Blunder Skills Completion Token
+BadgeG3: Blunderhills Misc Completion Token
+BadgeD1: Yumyum Desert NPC Completion Token
+BadgeD2: Yumyum Skills Completion Token
+BadgeD3: Yumyum Misc Completion Token
+NPCtoken1: Easy Blunderhills NPC Token
+NPCtoken2: Med Blunderhills NPC Token
+NPCtoken3: Hard Blunderhills NPC Token
+NPCtoken5: Woodsman Token
+NPCtoken6: Glumlee Token
+NPCtoken4: Stiltzcho Token
+NPCtoken9: Funguy Token
+NPCtoken10: Krunk Token
+NPCtoken11: Tiki Chief Token
+NPCtoken13: Dog Bone Token
+NPCtoken7: Papua Piggea Token
+Quest9: Picnic Token
+NPCtoken15: TP Pete Token
+NPCtoken12: Sproutinald Token
+NPCtoken14: Dazey Token
+NPCtoken16: Bandit Bob Token
+NPCtoken17: Snake Jar Token
+NPCtoken18: Whattso Token
+NPCtoken19: Cowbo Jones Token
+NPCtoken20: Carpetiem Token
+NPCtoken21: Goldric Token
+NPCtoken27: Cattleprod Token
+NPCtoken22: Fishpaste Token
+NPCtoken24: Loominadi Token
+NPCtoken25: Djonnut Token
+NPCtoken26: Scubidew Token
+NPCtoken23: Wellington Token
+NPCtoken28: Easy Yumyum Dez NPC Token
+NPCtoken29: Med Yumyum Dez NPC Token
+NPCtoken30: Hard Yumyum Dez NPC Token
+NPCtoken31: Lonely Hunter Token
+NPCtoken32: Hoggi Token
+NPCtoken33: Bellows Token
+NPCtoken34: Snouts Token
+NPCtoken35: Shuvelle Token
+NPCtoken36: Yondergreen Token
+NPCtoken37: Bill Brr Token
+NPCtoken38: Crystalswine Token
+NPCtoken39: Easy FB Tundra NPC Token
+NPCtoken40: Med FB Tundra NPC Token
+NPCtoken41: Hard FB Tundra NPC Token
+BadgeI1: Tundra NPC Completion Token
+BadgeI2: Tundra Skills Completion Token
+BadgeI3: Tundra Misc Completion Token
+CardPack1: Newbie Card Pack
+CardPack2: Ancient Card Pack
+CardPack3: Eternal Card Pack
+CardPack4: Dungeon Card Pack
+CardPack5: Galaxy Card Pack
+CardPack6: Smolderin Card Pack
+CardPack7: Spirit Card Pack
+DungCredits2: Dungeon Credits Flurbo Edition
+Cash: Cash
+XP: Experience
+XPskill: Skill Experience
+DungEnhancer0: Weapon Enhancer
+DungEnhancer1: Armor Enhancer
+DungEnhancer2: Jewelry Enhancer
+DungRNG0: Common RNG Item
+DungRNG1: Uncommon RNG Item
+DungRNG2: Rare RNG Item
+DungRNG3: Epic RNG Item
+DungRNG4: Legendary RNG Item
+DungeonA1: Poisoned Leg
+DungeonA2: Minced Bluebeef
+DungeonA3: Bloated Cyst
+DungeonA4: Floppy Gizard
+DungeonA5: Molted Tail
+DungeonA6: Decomposing Skull
+DungeonA7: Giant Frog Eye
+DungeonA8: Eldritch Ripcage
+KeyFrag: Keychain Fragment
+DungCredits1: Dungeon Credits
+LootDice: Loot Dice
+Tree7D: Wispy Tree Log
+PlatD: Platinum Ore
+Fish1D: Goldfish
+Fish3D: Jellyfish
+Cashb: Ice Dollar
+Dung3Ice: Basement Cube
+Grasslands1: Spore Cap
+Grasslands2: Frog Leg
+Grasslands3: Bean Slices
+Grasslands4: Red Spore Cap
+Jungle1: Slime Sludge
+Jungle2: Snake Skin
+Jungle3: Carrot Cube
+Forest1: Glublin Ear
+Forest2: Plank
+Forest3: Bullfrog Horn
+Sewers1: Corn Kernels
+Sewers1b: Golden Plop
+Sewers2: Rats Tail
+Sewers3: Bonemeal
+TreeInterior1: Stick
+TreeInterior1b: Woodular Circle
+TreeInterior2: Acorn
+BabaYagaETC: Baba Yaga Baby Eggs
+DesertA1: Pocket Sand
+DesertA1b: Glass Shard
+DesertA2: Megalodon Tooth
+DesertA3: Crabby Cakey
+DesertA3b: Nuget Cake
+DesertB1: Coconotnotto
+DesertB2: Furled Flag
+DesertB3: Pincer Arm
+DesertB4: Potato Remains
+DesertC1: High Steaks
+DesertC2: Wakka Cherry
+DesertC2b: Ghost
+DesertC3: Singlecle
+DesertC4: Shrapshell
+SnowA1: Floof Ploof
+SnowA2: Melty Cube
+SnowA2a: Yellow Snowflake
+SnowA3: Moustache Comb
+SnowA4: Ram Wool
+SnowB1: Sticky Stick
+SnowB2: Mamooth Tusk
+SnowB2a: Ice Age 3
+SnowB5: Snow Ball
+SnowB3: Pen
+SnowB4: Cracked Glass
+SnowC1: Sippy Straw
+SnowC2: Cryosnake Skin
+SnowC3: Audio Cord
+SnowC4: Contact Lense
+SnowC4a: Black Lense
+SnowC5: Blood Bone
+GalaxyA1: Purple Mush Cap
+GalaxyA2: TV Remote
+GalaxyA2b: Lost Batteries
+GalaxyA3: Half Eaten Donut
+GalaxyA4: Genie Lamp
+GalaxyB1: Bottle Cap
+GalaxyB2: Wurm Tail
+GalaxyB3: Tongue Bone
+GalaxyB4: Crumpled Wrapper
+GalaxyB5: Smol Worm
+GalaxyC1: Empty Oyster Shell
+GalaxyC1b: Pearler Shell
+GalaxyC2: Wriggly Ball
+GalaxyC3: Gel Chunk
+GalaxyC4: Condensed Zap
+Quest17: Amarok Slab
+Quest29: Chaotic Amarok Slab
+EfauntDrop1: Ripped Tunic
+EfauntDrop2: Ribbed Tunic
+Chiz0: Chizoar Spike
+Chiz1: Chizoar Stalagmite
+TrollPart: Troll Scales
+KrukPart: Kruk Tooth
+KrukPart2: Kruk Cavity Tooth
+LavaA1: Suggma Ashes
+LavaA1b: Royal Suggma Urn
+LavaA2: Plated Crumbs
+LavaA3: Sundried Glass
+LavaA4: Cheesy Crumbs
+LavaA5: Stilt Pole
+LavaA5b: Hampter
+LavaB1: Meteorite
+LavaB2: Shattered Skull
+LavaB3: Orange Slice
+LavaB3b: OJ Juice
+LavaB4: Molten Lamp
+LavaB5: Spitfire
+LavaB6: Hard Hat
+LavaC1: Wormie Slices
+LavaC2: Mongo Worm Slices
+SpiA1: Leafy Droplet
+SpiA2: Rice Cake
+SpiA2b: Stacked Rice Cake
+SpiA3: Bamboo
+SpiA4: Leafy Horn
+SpiA5: Wooden Aortic Mass
+SpiB1: Leafy Branch
+SpiB2: Light Lantern
+SpiB2b: Dark Lantern
+SpiB3: Troll Flower
+SpiB4: Chopped Leek
+SpiC1: Shattered Ceramic
+SpiC2: Eviscerated Chunk
+SpiD1: Royal Yolk
+SpiD2: Royal Fabric
+SpiD3: Royal Headpiece
+ObolHyper0: Hyper Six Obol
+ObolHyper1: Hyper Pyre Obol
+ObolHyper2: Hyper DMG Obol
+ObolHyper3: Hyper Skull Obol
+ObolBronze0: Bronze STR Obol
+ObolSilver0: Silver STR Obol
+ObolGold0: Gold STR Obol
+ObolPlatinum0: Platinum STR Obol
+ObolPink0: Dementia STR Obol
+ObolBronze1: Bronze AGI Obol
+ObolSilver1: Silver AGI Obol
+ObolGold1: Gold AGI Obol
+ObolPlatinum1: Platinum AGI Obol
+ObolPink1: Dementia AGI Obol
+ObolBronze2: Bronze WIS Obol
+ObolSilver2: Silver WIS Obol
+ObolGold2: Gold WIS Obol
+ObolPlatinum2: Platinum WIS Obol
+ObolPink2: Dementia WIS Obol
+ObolBronze3: Bronze LUK Obol
+ObolSilver3: Silver LUK Obol
+ObolGold3: Gold LUK Obol
+ObolPlatinum3: Platinum LUK Obol
+ObolPink3: Dementia LUK Obol
+ObolBronzeDamage: Bronze Obol of Puny Damage
+ObolSilverDamage: Silver Obol of Little Damage
+ObolGoldDamage: Golden Obol of Big Boy Damage
+ObolPlatinumDamage: Platinum Obol of Lethal Damage
+ObolPinkDamage: Dementia Obol of Infinite Damage
+ObolPlatinumSpeed: Platinum Obol of Blinding Speed
+ObolSilverMoney: Silver Obol of Pocket Change
+ObolGoldMoney: Golden Obol of Plentiful Riches
+ObolBronzeMining: Bronze Obol of Small Swings
+ObolSilverMining: Silver Obol of Moderate Mining
+ObolGoldMining: Golden Obol of Diligent Digging
+ObolPlatinumMining: Platinum Obol of Dwarven Delving
+ObolPinkMining: Dementia Obol of Magisterial Metals
+ObolBronzeChoppin: Bronze Obol of Chippin Chops
+ObolSilverChoppin: Silver Obol of Big Bark
+ObolGoldChoppin: Golden Obol of Huge Hackin
+ObolPlatinumChoppin: Platinum Obol of Lumby Loggo
+ObolPinkChoppin: Dementia Obol of WOWOWOWWO
+ObolBronzeFishing: Bronze Obol of Finite Fish
+ObolSilverFishing: Silver Obol of Puny Pikes
+ObolGoldFishing: Golden Obol of Crazy Carp
+ObolPlatinumFishing: Platinum Obol of Tremendous Trout
+ObolPinkFishing: Dementia Obol of Monument Marlins
+ObolBronzeCatching: Bronze Obol of Few Flies
+ObolSilverCatching: Silver Obol of Big Bugs
+ObolGoldCatching: Golden Obol of Insane Insects
+ObolPlatinumCatching: Platinum Obol of Ample Anthropods
+ObolPinkCatching: Dementia Obol of Colossal Crawlies
+ObolSilverLuck: Silver Obol of Double Sixes
+ObolGoldLuck: Golden Obol of Triple Sixes
+ObolPlatinumLuck: Platinum Obol of Yahtzee Sixes
+ObolPinkLuck: Dementia Obol of Infinisixes
+ObolBronzePop: Bronze Obol of Pop
+ObolSilverPop: Silver Obol of Pop Pop
+ObolGoldPop: Golden Obol of Poppity Pop
+ObolPlatinumPop: Platinum Obol of Poppity Poppy
+ObolPinkPop: Dementia Obol of Pop Pop Pop Pop
+ObolBronzeKill: Bronze Obol of Multikill
+ObolSilverKill: Silver Obol of Megakill
+ObolGoldKill: Golden Obol of Ultrakill
+ObolPlatinumKill: Platinum Obol of Killimanjaro
+ObolPinkKill: Dementia Obol of Killionaire
+ObolBronzeEXP: Bronze Obol of Experience
+ObolSilverEXP: Silver Obol of Experience
+ObolGoldEXP: Golden Obol of Experience
+ObolPlatinumEXP: Platinum Obol of Experience
+ObolPinkEXP: Dementia Obol of Experience
+ObolBronzeCard: Bronze Obol of Cards
+ObolSilverCard: Silver Obol of Cards
+ObolGoldCard: Golden Obol of Cards
+ObolPlatinumCard: Platinum Obol of Cards
+ObolPinkCard: Dementia Obol of Cards
+ObolBronzeDef: Bronze Obol of Defence
+ObolSilverDef: Silver Obol of Defence
+ObolGoldDef: Golden Obol of Defence
+ObolPlatinumDef: Platinum Obol of Defense with an S
+ObolPinkDef: Dementia Obol of Defence
+ObolBronzeTrapping: Bronze Obol of Trapping
+ObolSilverTrapping: Silver Obol of Trapping
+ObolGoldTrapping: Golden Obol of Trapping
+ObolPlatinumTrapping: Platinum Obol of Trapping
+ObolPinkTrapping: Dementia Obol of Trapping
+ObolBronzeCons: Bronze Obol of Construction
+ObolSilverCons: Silver Obol of Construction
+ObolGoldCons: Golden Obol of Construction
+ObolPlatinumCons: Platinum Obol of Construction
+ObolPinkCons: Dementia Obol of Construction
+ObolBronzeWorship: Bronze Obol of Worship
+ObolSilverWorship: Silver Obol of Worship
+ObolGoldWorship: Golden Obol of Worship
+ObolPlatinumWorship: Platinum Obol of Worship
+ObolPinkWorship: Dementia Obol of Worship
+ObolAmarokA: Granite Obol of Amarok's Stare
+ObolEfauntA: Skeletal Obol of Efaunt's Gaze
+ObolChizoarA: Frozen Obol of Chizoar's Rage
+ObolSlush: Slushy Obol of Much Dilapidation
+ObolTroll: Jagged Obol of Massive Trolling
+ObolFrog: Grumpy Obol of the Grandfrogger
+ObolKnight: Vigilant Obol of Ice Guard
+ObolKruk: Molten Obol of Dead Divine
+MaxCapBagT2: Miniature Mining Pouch
+MaxCapBag1: Cramped Mining Pouch
+MaxCapBag2: Small Mining Pouch
+MaxCapBag3: Average Mining Pouch
+MaxCapBag4: Sizable Mining Pouch
+MaxCapBag5: Big Mining Pouch
+MaxCapBagMi6: Large Mining Pouch
+MaxCapBagMi7: Massive Mining Pouch
+MaxCapBagMi8: Volumetric Mining Pouch
+MaxCapBagMi9: Colossal Mining Pouch
+MaxCapBagMi10: Gargantuan Mining Pouch
+MaxCapBagMi11: Herculean Mining Pouch
+MaxCapBagT1: Miniature Choppin Pouch
+MaxCapBag7: Cramped Choppin Pouch
+MaxCapBag9: Small Choppin Pouch
+MaxCapBagT3: Average Choppin Pouch
+MaxCapBagT4: Sizable Choppin Pouch
+MaxCapBagT5: Big Choppin Pouch
+MaxCapBagT6: Large Choppin Pouch
+MaxCapBagT7: Massive Choppin Pouch
+MaxCapBagT8: Volumetric Chopping Pouch
+MaxCapBagT9: Colossal Chopping Pouch
+MaxCapBagT10: Gargantuan Chopping Pouch
+MaxCapBagT11: Herculean Chopping Pouch
+MaxCapBag6: Miniscule Food Pouch
+MaxCapBag8: Cramped Food Pouch
+MaxCapBag10: Small Food Pouch
+MaxCapBagF3: Average Food Pouch
+MaxCapBagF4: Sizable Food Pouch
+MaxCapBagF5: Big Food Pouch
+MaxCapBagF6: Large Food Pouch
+MaxCapBagF7: Massive Food Pouch
+MaxCapBagF8: Volumetric Food Pouch
+MaxCapBagF9: Colossal Food Pouch
+MaxCapBagF10: Gargantuan Food Pouch
+MaxCapBagF11: Herculean Food Pouch
+MaxCapBagM1: Mini Materials Pouch
+MaxCapBagM2: Cramped Material Pouch
+MaxCapBagM3: Small Material Pouch
+MaxCapBagM4: Average Material Pouch
+MaxCapBagM5: Sizable Materials Pouch
+MaxCapBagM6: Big Materials Pouch
+MaxCapBagM7: Large Materials Pouch
+MaxCapBagM8: Massive Materials Pouch
+MaxCapBagM9: Volumetric Matty Pouch
+MaxCapBagM10: Colossal Matty Pouch
+MaxCapBagM11: Gargantuan Matty Pouch
+MaxCapBagM12: Herculean Matty Pouch
+MaxCapBagFi0: Miniature Fish Pouch
+MaxCapBagFi1: Cramped Fish Pouch
+MaxCapBagFi2: Small Fish Pouch
+MaxCapBagFi3: Average Fish Pouch
+MaxCapBagFi4: Sizable Fish Pouch
+MaxCapBagFi5: Big Fish Pouch
+MaxCapBagFi6: Large Fish Pouch
+MaxCapBagFi7: Massive Fish Pouch
+MaxCapBagFi8: Volumetric Fish Pouch
+MaxCapBagFi9: Colossal Fish Pouch
+MaxCapBagFi10: Gargantuan Fish Pouch
+MaxCapBagFi11: Herculean Fish Pouch
+MaxCapBagB0: Miniature Bug Pouch
+MaxCapBagB1: Cramped Bug Pouch
+MaxCapBagB2: Small Bug Pouch
+MaxCapBagB3: Average Bug Pouch
+MaxCapBagB4: Sizable Bug Pouch
+MaxCapBagB5: Big Bug Pouch
+MaxCapBagB6: Large Bug Pouch
+MaxCapBagB7: Massive Bug Pouch
+MaxCapBagB8: Volumetric Bug Pouch
+MaxCapBagB9: Colossal Bug Pouch
+MaxCapBagB10: Gargantuan Bug Pouch
+MaxCapBagB11: Herculean Bug Pouch
+MaxCapBagTr0: Cramped Critter Pouch
+MaxCapBagTr1: Small Critter Pouch
+MaxCapBagTr2: Average Critter Pouch
+MaxCapBagTr3: Sizable Critter Pouch
+MaxCapBagTr4: Big Critter Pouch
+MaxCapBagTr5: Large Critter Pouch
+MaxCapBagTr6: Massive Critter Pouch
+MaxCapBagTr7: Volumetric Critta Pouch
+MaxCapBagTr8: Colossal Critta Pouch
+MaxCapBagTr9: Gargantuan Critta Pouch
+MaxCapBagTr10: Herculean Critta Pouch
+MaxCapBagS0: Cramped Soul Pouch
+MaxCapBagS1: Small Soul Pouch
+MaxCapBagS2: Average Soul Pouch
+MaxCapBagS3: Sizable Soul Pouch
+MaxCapBagS4: Big Soul Pouch
+MaxCapBagS5: Large Soul Pouch
+MaxCapBagS6: Massive Soul Pouch
+MaxCapBagS7: Volumetric Soul Pouch
+MaxCapBagS8: Colossal Soul Pouch
+MaxCapBagS9: Gargantuan Soul Pouch
+MaxCapBagS10: Herculean Soul Pouch
+Key1: Forest Villa Key
+Key2: Efaunt's Tomb Key
+Key3: Chizoar's Cavern Key
+Key4: Troll's Enclave Key
+Key5: Kruk's Volcano Key
+ObolFrag: Obol Fragment
+DoubleAFKtix: Double AFK Gain Ticket
+TixCol: Colosseum Ticket
+DeliveryBox: Delivery Box
+SilverPen: Silver Pen
+PremiumGem: Gem
+TalentPoint1: Talent Point Tab 1
+TalentPoint2: Talent Point Tab 2
+TalentPoint3: Talent Point Tab 3
+TalentPoint4: Talent Point Tab 4
+TalentPoint5: Talent Point Tab 5
+TalentPoint6: Talent Point Special Tab
+Gfoodcoupon: Gold Food Coupon
+ItemsCoupon1: Resource Coupon
+ItemsCoupon2: Really Really Resource Coupon
+EquipmentNametag1: Riftwalker Nametag
+EquipmentNametag2: Lava's Awesome Nametag
+EquipmentNametag3: Balling Nametag
+EquipmentNametag4: Vman Nametag
+EquipmentNametag5: Spring Flowers Nametag
+EquipmentNametag6b: Trash Tuna Nametag
+EquipmentNametag7: Island Adventurer Nametag
+EquipmentNametag8: Summer Shovel Nametag
+EquipmentNametag9: Falloween Nametag
+EquipmentKeychain0: Simple Key Chain
+EquipmentKeychain1: Leafy Chain
+EquipmentKeychain2: Red Sneaker Chain
+EquipmentKeychain3: Wartooth Chain
+EquipmentKeychain4: 8 Ball Chain
+EquipmentKeychain5: Piggy Chain
+EquipmentKeychain6: Dumbphone Chain
+EquipmentKeychain7: Horn Chain
+EquipmentKeychain8: Rustic Key Chain
+EquipmentKeychain9: Taco Chain
+EquipmentKeychain10: Cactus Chain
+EquipmentKeychain11: Relic Chain
+EquipmentKeychain12: Balloon Dog Chain
+EquipmentKeychain13: Frozen Tart Chain
+EquipmentKeychain14: Whatamelon Chain
+EquipmentKeychain15: 9 Ball Chain
+EquipmentKeychain16: Pincer Hand Chain
+EquipmentKeychain17: Gilded Key Chain
+EquipmentKeychain18: Sushi Chain
+EquipmentKeychain19: Time Candy Chain
+EquipmentKeychain20: Star Blobulyte Galaxy Chain
+EquipmentKeychain21: Mmm Donut Chain
+EquipmentKeychain22: Negative 7 Chain
+EquipmentKeychain23: Diamond Honker Chain
+EquipmentKeychain24: BobGoldPickle Chain
+EquipmentKeychain25: Eye Owe Ess Chain
+EquipmentKeychain26: Key to Desert Chain
+EquipmentKeychain27: Key to Mountains Chain
+EquipmentKeychain28: Key to Purgatory Chain
+Trophy1: King of Food
+Trophy2: Lucky Lad
+Trophy3: Club Member
+Trophy4: I Made This Game
+Trophy5: Dice Dynamo
+Trophy6: Blunder Hero
+Trophy7: Original Gamer
+Trophy8: Trailblazer
+Trophy9: Ultra Unboxer
+Trophy10: Critter Baron
+Trophy11: YumYum Sheriff
+Trophy12: Megalodon
+Trophy13: Club Maestro
+Trophy14: Beach Bro
+Trophy15: Frost Prince
+Trophy16: Idle Skiller
+Trophy17: One of the Divine
+Trophy18: Master of Nothing
+Trophy19: Nebula Royal
+Trophy20: Luckier Lad
+EquipmentTools1: Junk Pickaxe
+EquipmentTools2: Copper Pickaxe
+EquipmentTools3: Iron Pickaxe
+EquipmentTools5: Gold Pickaxe
+EquipmentTools6: Platinum Pickaxe
+EquipmentTools7: Dementia Pickaxe
+EquipmentTools11: Void Imperium Pik
+EquipmentTools8: Lustre Pickaxe
+EquipmentTools12: Starfire Pickaxe
+EquipmentTools9: Dreadlo Pickolo
+EquipmentTools14: Marbiglass Pickaxe
+EquipmentTools15: Destroyer of the Mollo Gomme
+EquipmentTools10: Poopy Pickaxe
+EquipmentTools13: Skewered Snek
+EquipmentToolsHatchet0: Old Hatchet
+EquipmentToolsHatchet3: Copper Chopper
+EquipmentToolsHatchet1: Iron Hatchet
+EquipmentToolsHatchet2b: Stinky Axe
+EquipmentToolsHatchet2: Golden Axe
+EquipmentToolsHatchet4: Plat Hatchet
+EquipmentToolsHatchet5: Dementia Dicer
+EquipmentToolsHatchet7: Void Imperium Axe
+EquipmentToolsHatchet6: Lustre Logger
+EquipmentToolsHatchet8: Starfire Hatchet
+EquipmentToolsHatchet9: Dreadlo Hatchet
+EquipmentToolsHatchet12: Marbiglass Hatchet
+EquipmentToolsHatchet10: Annihilator of the Yggdrasil
+EquipmentToolsHatchet11: Grumbie the Hatchet Hammer
+FishingRod1: Wood Fishing Rod
+FishingRod2: Copper Fish Rod
+FishingRod3: Iron Fishing Rod
+FishingRod4: Gold Fishing Rod
+FishingRod5: Plat Fishing Rod
+FishingRod6: Dementia Rod for Fishing
+FishingRod7: Void Imperium Rod
+FishingRod8: Lustre Rod
+FishingRod9: Starfire Rod
+FishingRod10: Dreadlo Rod
+FishingRod11: Marbiglass Rod
+FishingRod12: Angler of the Iliunne
+CatchingNet1: Bug Net
+CatchingNet2: Copper Netted Net
+CatchingNet3: Reinforced Net
+CatchingNet4: Golden Net
+CatchingNet5: Platinet
+CatchingNet6: Dementia Net
+CatchingNet7: Void Imperium Net
+CatchingNet8: Lustre Netting
+CatchingNet9: Starfire Trim Netting
+CatchingNet10: Dreadlo Matted Netting
+CatchingNet11: Marbiglass Netting
+CatchingNet12: Wrangler of the Qoxzul
+TrapBoxSet1: Cardboard Traps
+TrapBoxSet2: Silkskin Traps
+TrapBoxSet3: Wooden Traps
+TrapBoxSet4: Natural Traps
+TrapBoxSet5: Steel Traps
+TrapBoxSet6: Meaty Traps
+TrapBoxSet7: Royal Traps
+TrapBoxSet8: Egalitarian Traps
+TrapBoxSet9: Forbidden Traps
+TrapBoxSet10: Containment of the Zrgyios
+WorshipSkull1: Wax Skull
+WorshipSkull2: Ceramic Skull
+WorshipSkull3: Horned Skull
+WorshipSkull4: Prickle Skull
+WorshipSkull5: Manifested Skull
+WorshipSkull6: Glauss Skull
+WorshipSkull7: Luciferian Skull
+WorshipSkull8: Slush Skull
+WorshipSkull9: Dreadnaught Skull
+WorshipSkull10: Cultist Skull
+WorshipSkull11: Crystal Skull of Esquire Vnoze
+DNAgun0: Sappy DNA Splicer
+DNAgun1: Bolstered DNA Splicer
+DNAgun2: Double Barreled DNA Splicer
+DNAgun3: Ergonomic DNA Splicer
+FoodHealth1: Nomwich
+FoodHealth3: Hot Dog
+FoodHealth2: Cheezy Pizza
+Peanut: Peanut
+FoodHealth4: Saucy Weiner
+FoodHealth6: Kebab Sticks
+FoodHealth7: Meat Pie
+FoodHealth10: Mountain Bread
+FoodHealth9: Yeti Ham
+FoodHealth11: Sheepie Dairy
+FoodHealth13: Cupcake
+FoodHealth12: Spicy Space Ribs
+FoodHealth14: Lemon Slice
+FoodHealth15: Grilled Cheese Nomwich
+FoodHealth16: Raw Nigiri
+FoodHealth17: Dumpling
+FoodHealth5: Cranberry Jam
+FoodHealth8: Crabby Cake Supreme
+FoodEvent8: Milk Choco
+Meatloaf: Magic Meatloaf
+FoodPotOr1: Small Strength Potion
+FoodPotOr2: Average Strength Potion
+FoodPotOr3: Decent Strength Potion
+FoodPotOr4: Potent Strength Potion
+FoodPotRe1: Small Life Potion
+FoodPotRe2: Average Life Potion
+FoodPotRe3: Decent Life Potion
+FoodPotRe4: Potent Life Potion
+FoodPotGr1: Small Speed Potion
+FoodPotGr2: Average Speed Potion
+FoodPotGr3: Decent Speed Potion
+FoodPotGr4: Potent Speed Potion
+FoodEvent7: Minto Choco
+FoodPotMana1: Small Mana Potion
+FoodPotMana2: Average Mana Potion
+FoodPotMana3: Decent Mana Potion
+FoodPotMana4: Potent Mana Potion
+FoodPotYe1: Small EXP Potion
+FoodPotYe2: Average EXP Potion
+FoodPotYe3: Decent EXP Potion
+FoodPotYe4: Potent EXP Potion
+FoodPotYe5: Quotient EXP Potion
+FoodEvent6: Lemony Choco
+Pearl3: Shiny Pearl
+FoodMining1: Icing Ironbite
+FoodEvent1: Giftybread Man
+Pearl2: Stained Pearl
+FoodChoppin1: Saucy Logfries
+FoodEvent2: Chogg Nog
+FoodFish1: Slurpin Herm
+FoodEvent3: Candy Canes
+Pearl1: Aqua Pearl
+FoodCatch1: Buttered Toasted Butter
+FoodEvent4: Mistleberries
+FoodTrapping1: Critter Numnums
+FoodWorship1: Soulble Gum
+Bullet: Bullet
+BulletB: FMJ Bullet
+Bullet3: Coldseeker Bullet
+MidnightCookie: Midnight Cookie
+FoodEvent5: Cherry Choco
+PeanutG: Golden Peanut
+FoodG1: Golden Jam
+FoodG2: Golden Kebabs
+FoodG3: Golden Meat Pie
+FoodG4: Golden Nomwich
+FoodG5: Golden Ham
+FoodG6: Golden Bread
+FoodG7: Golden Ribs
+FoodG8: Golden Cheese
+FoodG9: Golden Grilled Cheese Nomwich
+FoodG10: Golden Hampter Gummy Candy
+FoodG11: Golden Nigiri
+FoodG12: Golden Dumpling
+ButterBar: Butter Bar
+rtt0: Bottled Town Teleport
+ResetFrag: Talent Point Reset Fragment
+ResetCompleted: Talent Point Reset Potion
+ResetCompletedS: Star Talent Reset Potion
+ClassSwap: Sub Class Swap Token
+ClassSwapB: Elite Class Swap Token
+ResetBox: Post Office Box Reseto Magnifico
+Ht: Hat Premiumifier
+StonePremRestore: Premium Stone Refunder
+StonePremStatswap: Premium Bonus Swapper
+ExpBalloon1: Small Experience Balloon
+ExpBalloon2: Medium Experience Balloon
+ExpBalloon3: Large Experience Balloon
+JobApplication: Job Application
+SmithingHammerChisel: Sculpting Tools
+SmithingHammerChisel2: Guilding Tools
+SmithingHammerChisel3: Onyx Tools
+BobJoePickle: BobJoePickle
+BallJoePickle: BallJoePickle
+BoneJoePickle: BoneJoePickle
+Crystal1: Desert Topaz
+Crystal2: Glacier Quartz
+Crystal3: Galaxial Amethyst
+Crystal4: Magma Geode
+Crystal5: Spirit Diamond
+PeanutS: Stone Peanut
+Quest1: Mining Certificate
+Quest2: Mining Certificate
+Quest3: Ketchup Bottle
+Quest4: Mustard Bottle
+Mayo: Mayonnaise Bottle
+Trash: Broken Weapon
+Trash2: Dried Paint Blob
+Trash3: Engraved Bullet
+Quest5: Class Certificate
+Quest6: Scouting Report
+Quest7: Strange Rock
+Quest8: Filler bc I messed up
+Quest10: Green Tea
+Quest11: Forest Villas Flyer Thingy
+Quest12: Dog Bone
+Quest13: Empty Box
+Quest14: Employment Statistics
+Quest15: Red Frisbee
+Quest16: Broken Mic
+Quest18: Loomi's Room Key
+Quest19: Golden Dubloon
+Quest20: Signed Arrest Warrant
+Quest21: Time Thingy
+Quest22: Corporatube Sub
+Quest23: Instablab Follower
+Quest24: Cloudsound Follower
+Quest25: Birthday Card
+Quest26: Pre Crime Box
+Quest27: Bag o Nuts
+Quest28: IOU one Sky Crystal
+GoldricP1: Casual Confidante
+GoldricP2: Triumphant Treason
+GoldricP3: Claiming Cashe
+Quest30: Giftmas Box
+Quest31: Gem Note
+Cutter: Bolt Cutters
+Quest32: Monster Rating
+Quest33: Player Rating With Letter P
+Quest34: Player Rating With Letter S
+Quest35: Googley Eyes
+Quest36: Dootjat Eye
+Quest37: Silver Antique
+Quest38: Guild Giftbox
+Quest39: Lovey Dovey Letter
+Quest40: Choco Box
+Quest41: Flowies
+Quest42: Egg Capsule
+Quest43: Gummy Bunny
+Quest44: Goldegg Capsule
+Quest45: Sesame Seed
+Quest46: The Bobber Challenge Scroll
+Quest47: Elderly Peanut
+Quest48: Pete the Peanut
+Quest49: Summer Cooler
+Quest50: Beach Oyster
+Quest51: Skull Coin
+Quest52: Coin
+PalmTreeD: Palm Tree Log
+Pearl4: Black Pearl
+Pearl5: Holy Pearl
+Pearl6: Divinity Pearl
+Quest53: Meat Cube
+Quest54: Sand Pile
+Quest55: Buried Treasure
+Quest56: Dootophone
+Quest57: Damaged Cog
+Quest58: Refurbished Cog
+Quest59: Shuvelle's Vote
+Quest60: Yondergreens Vote
+Quest61: Bill Brr's Vote
+Quest62: Signed Contract
+Quest63: Shovel
+Quest64: 2021 Giftmas Box
+Quest65: Pile of Processor Chips
+Quest66: Strung Jewels
+Quest67: Bottled World Town Teleport
+Whetstone: Anvil Reset Whetstone
+Quest68: Bucket of Slush
+Quest69: Skull
+Quest70: Phone Box
+Quest71: Gem Envelope
+Quest72: Bottled Wind
+Quest73: Gaming Fertilizer
+Quest74: Rift Tear
+Quest75: Spring Baggie
+Quest76: Silver Pocketwatch
+Quest77: Gold Pocketwatch
+Quest78: Equinox Mirror
+Quest79: Falloween Treat
+Quest80: Crop Transfer Ticket
+Quest81: Compost Bag
+Quest82: Summoner Stone
+EquipmentSmithingTabs2: Anvil Tab 2
+EquipmentSmithingTabs3: Anvil Tab 3
+EquipmentSmithingTabs4: Anvil Tab 4
+EquipmentSmithingTabs5: Anvil Tab 5
+EquipmentSmithingTabs6: Anvil Tab 6
+EquipmentSmithingTabs7: Anvil Tab 7
+EquipmentStatues1: Power Statue
+EquipmentStatues2: Speed Statue
+EquipmentStatues3: Mining Statue
+EquipmentStatues4: Feasty Statue
+EquipmentStatues5: Health Statue
+EquipmentStatues6: Kachow Statue
+EquipmentStatues7: Lumberbob Statue
+EquipmentStatues8: Thicc Skin Statue
+EquipmentStatues9: Oceanman Statue
+EquipmentStatues10: Ol Reliable Statue
+EquipmentStatues11: Exp Book Statue
+EquipmentStatues12: Anvil Statue
+EquipmentStatues13: Cauldron Statue
+EquipmentStatues14: Beholder Statue
+EquipmentStatues15: Bullseye Statue
+EquipmentStatues16: Box Statue
+EquipmentStatues17: Twosoul Statue
+EquipmentStatues18: EhExPee Statue
+EquipmentStatues19: Seesaw Statue
+EquipmentStatues20: Pecunia Statue
+EquipmentStatues21: Mutton Statue
+EquipmentStatues22: Egg Statue
+EquipmentStatues23: Battleaxe Statue
+EquipmentStatues24: Spiral Statue
+EquipmentStatues25: Boat Statue
+EquipmentStatues26: Compost Statue
+EquipmentStatues27: Stealth Statue
+EquipmentStatues28: Essence Statue
+PureWater: Distilled Water
+PureWater2: Dense Water
+Island0: Garbage
+Island1: Bottle
+FoodHealth1d: Nomwich
+FoodHealth2d: Hotdog
+FoodHealth3d: Big Cake
+DungWeaponPunchA1: Boxing Gloves I
+DungWeaponPunchA2: Boxing Gloves II
+DungWeaponPunchA3: Boxing Gloves III
+DungWeaponPunchA4: Boxing Gloves IV
+DungWeaponPunchA5: Boxing Gloves V
+DungWeaponPunchB1: The Stingers I
+DungWeaponPunchB2: The Stingers II
+DungWeaponPunchB3: The Stingers III
+DungWeaponPunchB4: The Stingers IV
+DungWeaponPunchB5: The Stingers V
+DungWeaponPunchC1: Bandage Wraps I
+DungWeaponPunchC2: Bandage Wraps II
+DungWeaponPunchC3: Bandage Wraps III
+DungWeaponPunchC4: Bandage Wraps IV
+DungWeaponPunchC5: Bandage Wraps V
+DungWeaponPunchD1: Uninflated Glove I
+DungWeaponPunchD2: Uninflated Glove II
+DungWeaponPunchD3: Uninflated Glove III
+DungWeaponPunchD4: Uninflated Glove IV
+DungWeaponPunchD5: Uninflated Glove V
+DungWeaponPunchE1: Eclectic Ordeal I
+DungWeaponPunchE2: Eclectic Ordeal II
+DungWeaponPunchE3: Eclectic Ordeal III
+DungWeaponPunchE4: Eclectic Ordeal IV
+DungWeaponPunchE5: Eclectic Ordeal V
+DungWeaponPunchF1: Eclectic Ordeal I
+DungWeaponPunchF2: Eclectic Ordeal II
+DungWeaponPunchF3: Eclectic Ordeal III
+DungWeaponPunchF4: Eclectic Ordeal IV
+DungWeaponPunchF5: Eclectic Ordeal V
+DungWeaponSwordA1: Wooden Spear I
+DungWeaponSwordA2: Wooden Spear II
+DungWeaponSwordA3: Wooden Spear III
+DungWeaponSwordA4: Wooden Spear IV
+DungWeaponSwordA5: Wooden Spear V
+DungWeaponSwordB1: Steel Axe I
+DungWeaponSwordB2: Steel Axe II
+DungWeaponSwordB3: Steel Axe III
+DungWeaponSwordB4: Steel Axe IV
+DungWeaponSwordB5: Steel Axe V
+DungWeaponSwordC1: Royal Bayonet I
+DungWeaponSwordC2: Royal Bayonet II
+DungWeaponSwordC3: Royal Bayonet III
+DungWeaponSwordC4: Royal Bayonet IV
+DungWeaponSwordC5: Royal Bayonet V
+DungWeaponSwordD1: Enforced Slasher I
+DungWeaponSwordD2: Enforced Slasher II
+DungWeaponSwordD3: Enforced Slasher III
+DungWeaponSwordD4: Enforced Slasher IV
+DungWeaponSwordD5: Enforced Slasher V
+DungWeaponSwordE1: The Ice Breaker I
+DungWeaponSwordE2: The Ice Breaker II
+DungWeaponSwordE3: The Ice Breaker III
+DungWeaponSwordE4: The Ice Breaker IV
+DungWeaponSwordE5: The Ice Breaker V
+DungWeaponSwordF1: Deuscythe I
+DungWeaponSwordF2: Deuscythe II
+DungWeaponSwordF3: Deuscythe III
+DungWeaponSwordF4: Deuscythe IV
+DungWeaponSwordF5: Deuscythe V
+DungWeaponBowA1: Wooden Bow I
+DungWeaponBowA2: Wooden Bow II
+DungWeaponBowA3: Wooden Bow III
+DungWeaponBowA4: Wooden Bow IV
+DungWeaponBowA5: Wooden Bow V
+DungWeaponBowB1: Birch Longbow I
+DungWeaponBowB2: Birch Longbow II
+DungWeaponBowB3: Birch Longbow III
+DungWeaponBowB4: Birch Longbow IV
+DungWeaponBowB5: Birch Longbow V
+DungWeaponBowC1: Spiked Menace I
+DungWeaponBowC2: Spiked Menace II
+DungWeaponBowC3: Spiked Menace III
+DungWeaponBowC4: Spiked Menace IV
+DungWeaponBowC5: Spiked Menace V
+DungWeaponBowD1: Pharoah Bow I
+DungWeaponBowD2: Pharoah Bow II
+DungWeaponBowD3: Pharoah Bow III
+DungWeaponBowD4: Pharoah Bow IV
+DungWeaponBowD5: Pharoah Bow V
+DungWeaponBowE1: Blizzard Bow I
+DungWeaponBowE2: Blizzard Bow II
+DungWeaponBowE3: Blizzard Bow III
+DungWeaponBowE4: Blizzard Bow IV
+DungWeaponBowE5: Blizzard Bow V
+DungWeaponBowF1: Blackhole Bow I
+DungWeaponBowF2: Blackhole Bow II
+DungWeaponBowF3: Blackhole Bow III
+DungWeaponBowF4: Blackhole Bow IV
+DungWeaponBowF5: Blackhole Bow V
+DungWeaponWandA1: Gnarled Wand I
+DungWeaponWandA2: Gnarled Wand II
+DungWeaponWandA3: Gnarled Wand III
+DungWeaponWandA4: Gnarled Wand IV
+DungWeaponWandA5: Gnarled Wand V
+DungWeaponWandB1: Quarterstaff I
+DungWeaponWandB2: Quarterstaff II
+DungWeaponWandB3: Quarterstaff III
+DungWeaponWandB4: Quarterstaff IV
+DungWeaponWandB5: Quarterstaff V
+DungWeaponWandC1: Starlight I
+DungWeaponWandC2: Starlight II
+DungWeaponWandC3: Starlight III
+DungWeaponWandC4: Starlight IV
+DungWeaponWandC5: Starlight V
+DungWeaponWandD1: Crows Nest I
+DungWeaponWandD2: Crows Nest II
+DungWeaponWandD3: Crows Nest III
+DungWeaponWandD4: Crows Nest IV
+DungWeaponWandD5: Crows Nest V
+DungWeaponWandE1: Spriggly Storm I
+DungWeaponWandE2: Spriggly Storm II
+DungWeaponWandE3: Spriggly Storm III
+DungWeaponWandE4: Spriggly Storm IV
+DungWeaponWandE5: Spriggly Storm V
+DungWeaponWandF1: Grey Gatsby I
+DungWeaponWandF2: Grey Gatsby II
+DungWeaponWandF3: Grey Gatsby III
+DungWeaponWandF4: Grey Gatsby IV
+DungWeaponWandF5: Grey Gatsby V
+DungWeaponSword1: Wooden Spear
+DungWeaponWand1: Wooden Spear
+DungWeaponBow1: Wooden Spear
+DungEquipmentHats0: Field Brim
+DungEquipmentHats1: Grassy Brim
+DungEquipmentHats2: Winter Brim
+DungEquipmentHats3: Maize Brim
+DungEquipmentHats4: The Crow Perch
+DungEquipmentShirt0: White Tee
+DungEquipmentShirt1: Green Shirt
+DungEquipmentShirt2: Blue Stripe Tee
+DungEquipmentShirt3: Purple Diagonal Striped Shirt
+DungEquipmentShirt4: Solar Shirt
+DungEquipmentPants0: Boring Jeans
+DungEquipmentPants1: Camo Jeans
+DungEquipmentPants2: Sandblasted Jeans
+DungEquipmentPants3: Royale Jeans
+DungEquipmentPants4: Pop Lock and Drop Jeans
+DungEquipmentShoes0: Dull Flops
+DungEquipmentShoes1: Flap Flops
+DungEquipmentShoes2: Floop Floops
+DungEquipmentShoes3: Fluppo Wuppos
+DungEquipmentShoes4: Flipper Snapper Slipper Floppers
+DungEquipmentPendant0: Quartz Pendant
+DungEquipmentPendant1: Shruck Stone Pendant
+DungEquipmentPendant2: Skydive Pendant
+DungEquipmentPendant3: Maegatia Pendant
+DungEquipmentPendant4: Lava Diamond Double Pendant
+DungEquipmentRings0: Silver Ring
+DungEquipmentRings1: Booger Ring
+DungEquipmentRings2: Cold Fusion Rock Ring
+DungEquipmentRings3: Creeper Peeper Ring
+DungEquipmentRings4: Jewels of the Setting Sun
+GemP9: Quality Obol Stack
+GemP10: Marvelous Obol Stack
+GemP11: Marvelous Obol Stack
+GemP12: Marvelous Obol Stack
+GemP13: Marvelous Obol Stack
+GemP14: Marvelous Obol Stack
+GemP15: Marvelous Obol Stack
+GemP16: Dungeon Loot Dice
+GemP19: Bossius Obol Stack
+GemP25: Hyper Obol Stack
+GemP30: Sand of Time
+EquipmentHats31: Smitty's Bubble Blowing Hat
+EquipmentHats32: Bandit Bob Mask
+EquipmentHats33: Paper Bag
+EquipmentHats34: Parasite
+EquipmentHats35: Diamon Horns
+EquipmentHats36: Halloween Pumpkin
+EquipmentHats40: Pardoned Turkey
+EquipmentHats37: Hotdog Hero
+EquipmentHats38: Invisible Hat
+EquipmentHats46: Strawbiggy
+EquipmentHats47: Pop Cat
+EquipmentHats48: Dairy Dunk
+EquipmentHats49: The Classic
+EquipmentHats50: Green Beanie
+EquipmentHats43: Snowman
+EquipmentHats45: Giftmas Tree
+EquipmentHats57: Big Bunny
+EquipmentHats62: Fluffy Ramsy
+EquipmentHats65: The Red Boaty
+EquipmentHats69: Giftmas Snoozy Cap
+EquipmentHats80: Corgi Topper
+EquipmentHats81: Siege Captain Cap
+EquipmentHats82: Ele Sorcerer Pointed Hat
+EquipmentHats85: Bedsheet with Holes
+EquipmentHats86: Carrotman Mask
+EquipmentHats87: Glublin Mask
+EquipmentHats88: Bloque Mask
+EquipmentHats89: Borzoi Topper
+EquipmentHats90: Straw Hat
+EquipmentHats91: Wig Bandana
+EquipmentHats92: Funky Hat
+EquipmentHats93: Reinforced Headband
+EquipmentHats94: Shogun Helmet
+EquipmentHats95: Gilded Headband
+EquipmentHats96: Bamboo Hat
+EquipmentHats97: Festive Beast Mask
+EquipmentHats98: Heiress Headdress
+EquipmentHats99: Spirited Mane
+EquipmentHats100: Fiery Mane
+EquipmentHats101: Guardian Mane
+EquipmentHats102: Fanned Blossomage
+EquipmentHats103: Dainty Brim
+EquipmentHats104: Charcoal Hat
+CardsA0: Green Mushroom Card
+CardsA1: Red Mushroom Card
+CardsA2: Frog Card
+CardsA3: Bored Bean Card
+CardsA4: Slime Card
+CardsA5: Baby Boa Card
+CardsA6: Carrotman Card
+CardsA7: Glublin Card
+CardsA8: Wode Board Card
+CardsA9: Gigafrog Card
+CardsA10: Poop Card
+CardsA11: Rat Card
+CardsA12: Walking Stick Card
+CardsA13: Nutto Card
+CardsA14: Crystal Carrot Card
+CardsA15: Boop Card
+CardsA16: Wood Mushroom Card
+CardsB1: Sandy Pot Card
+CardsB2: Mimic Card
+CardsB3: Crabcake Card
+CardsB4: Mafioso Card
+CardsB5: Sand Castle Card
+CardsB6: Pincermin Card
+CardsB7: Mashed Potato Card
+CardsB8: Tyson Card
+CardsB9: Moonmoon Card
+CardsB10: Sand Giant Card
+CardsB11: Snelbie Card
+CardsB12: Dig Doug Card
+CardsB13: Crystal Crabal Card
+CardsB14: Bandit Bob Card
+CardsC1: Copper Ore Card
+CardsC2: Iron Ore Card
+CardsC3: Gold Ore Card
+CardsC4: Oak Logs Card
+CardsC5: Bleach Logs Card
+CardsC6: Jungle Logs Card
+CardsC7: Forest Fibres Card
+CardsC8: Goldfish Card
+CardsC9: Hermit Can Card
+CardsC10: Jellyfish Card
+CardsC11: Fly Card
+CardsC12: Butterfly Card
+CardsC13: FILLER
+CardsC14: FILLER
+CardsC15: FILLER
+CardsC16: Fire Forge Card
+CardsD1: Dementia Ore Card
+CardsD2: Platinum Ore Card
+CardsD3: Void Ore Card
+CardsD4: Lustre Ore Card
+CardsD5: Potty Rolls Card
+CardsD6: Veiny Logs Card
+CardsD7: Tropilogs Card
+CardsD8: Tundra Logs Card
+CardsD9: Fruitfly Card
+CardsD10: Sentient Cereal Card
+CardsD11: Bloach Card
+CardsD12: FILLER
+CardsD13: FILLER
+CardsD16: Cinder Forge Card
+CardsD17: Forest Soul Card
+CardsD18: Dune Soul Card
+CardsD19: Froge Card
+CardsD20: Crabbo Card
+CardsD21: Scorpie Card
+CardsE0: Sheepie Card
+CardsE1: Frost Flake Card
+CardsE2: Sir Stache Card
+CardsE3: Bloque Card
+CardsE4: Mamooth Card
+CardsE5: Snowman Card
+CardsE6: Penguin Card
+CardsE7: Thermister Card
+CardsE8: Quenchie Card
+CardsE9: Cryosnake Card
+CardsE10: Bop Box Card
+CardsE11: Neyeptune Card
+CardsE12: Xylobone Card
+CardsE13: Bloodbone Card
+CardsE14: Dedotated Ram Card
+CardsE15: Crystal Cattle Card
+CardsF1: FILLER
+CardsF2: Wispy Lumber Card
+CardsF3: Rooted Soul Card
+CardsF4: Mousey Card
+CardsF5: Owlio Card
+CardsF6: Pingy Card
+CardsF7: Bunny Card
+CardsF8: Mosquisnow Card
+CardsF9: Flycicle Card
+CardsF10: Frigid Soul Card
+CardsF11: Squishy Soul Card
+CardsF12: Cubed Logs Card
+CardsF13: Alien Hive Chunk Card
+CardsF14: Worker Bee Card
+CardsF15: Fairy Card
+CardsF16: Starfire Ore Card
+CardsF17: Dung Beat Card
+CardsF18: Honker Card
+CardsF19: Blobfish Card
+CardsF20: Skelefish Card
+CardsF21: Sand Shark Card
+CardsF22: Manta Ray Card
+CardsF23: Kraken Card
+CardsF24: Maple Logs Card
+CardsF25: Dandielogs Card
+CardsF26: Scarab Card
+CardsF27: Dust Mote Card
+CardsF28: Oozie Soul Card
+CardsF29: Dreadlo Ore Card
+CardsF30: Icefish Card
+CardsF31: Shellfish Card
+CardsF32: Jumbo Shrimp Card
+CardsF33: Caulifish Card
+CardsF34: Bamboo Logs Card
+CardsF35: Effervescent Logs Card
+CardsF36: Breezy Soul Card
+CardsF37: Ladybug Card
+CardsF38: Firefly Card
+CardsF39: Godshard Ore Card
+CardsG1: Purp Mushroom Card
+CardsG2: TV Card
+CardsG3: Donut Card
+CardsG4: Demon Genie Card
+CardsG5: Flying Worm Card
+CardsG6: Soda Can Card
+CardsG7: Gelatinous Cuboid Card
+CardsG8: Choccie Card
+CardsG9: Biggole Wurm Card
+CardsG10: Clammie Card
+CardsG11: Octodar Card
+CardsG12: Flombeige Card
+CardsG13: Stilted Seeker Card
+CardsG14: Crystal Custard Card
+CardsH1: Suggma Card
+CardsH2: Maccie Card
+CardsH3: Mister Brightside Card
+CardsH4: Cheese Nub Card
+CardsH5: Stiltmole Card
+CardsH6: Molti Card
+CardsH7: Purgatory Stalker Card
+CardsH8: Citringe Card
+CardsH9: Lampar Card
+CardsH10: Fire Spirit Card
+CardsH11: Biggole Mole Card
+CardsH12: Crawler Card
+CardsH13: Tremor Wurm Card
+CardsH14: Magma Geode Card
+CardsI1: Sprout Spirit Card
+CardsI2: Ricecake Card
+CardsI3: River Spirit Card
+CardsI4: Baby Troll Card
+CardsI5: Woodlin Spirit Card
+CardsI6: Bamboo Spirit Card
+CardsI7: Lantern Spirit Card
+CardsI8: Mama Troll Card
+CardsI9: Leek Spirit Card
+CardsI10: Ceramic Spirit Card
+CardsI11: Skydoggie Spirit Card
+CardsI12: Royal Egg Card
+CardsI13: Minichief Spirit Card
+CardsI14: Samurai Guardian Card
+CardsI15: Spirit Diamond Card
+CardsX0: Poisonic Frog Card
+CardsX1: Globohopper Card
+CardsX2: King Frog Card
+CardsX3: Grandfrogger Card
+CardsX4: Rotting Grandfrogger Card
+CardsX5: Forlorn Grandfrogger Card
+CardsX21: Vengeful Grandfrogger Card
+CardsX22: Eldritch Croaker Card
+CardsX6: Target Card
+CardsX7: Grumblo Card
+CardsX8: Cactopunk Card
+CardsX9: Beefie Card
+CardsX10: Crescent Spud Card
+CardsX11: Snakenhotep Card
+CardsX12: Enraged Snakenhotep Card
+CardsX13: Inevitable Snakenhotep Card
+CardsX14: Lava Slimer Card
+CardsX15: Chromatium Frog Card
+CardsX16: Lazlo Card
+CardsX17: Ice Guard Card
+CardsX18: Glaciaxus Card
+CardsX19: Golden Glaciaxus Card
+CardsX20: Caustic Glaciaxus Card
+CardsY0: Ghost (Event) Card
+CardsY1: Giftmas Blobulyte Card
+CardsY2: Meaning of Giftmas Card
+CardsY3: Valentslime Card
+CardsY4: Loveulyte Card
+CardsY5: Chocco Box Card
+CardsY6: Floofie Card
+CardsY7: Shell Snake Card
+CardsY8: Egggulyte Card
+CardsY9: Egg Capsule Card
+CardsY10: Mr Blueberry Card
+CardsY11: Coastiolyte Card
+CardsY12: Summer Spirit Card
+CardsY13: Plasti Doug Card
+CardsY14: Golden Giftmas Box Card
+CardsY15: Giant Rose Card
+CardsY16: Bubbulyte Card
+CardsY17: Spring Splendor Card
+CardsY18: Falloween Pumpkin Card
+CardsZ0: Baba Yaga Card
+CardsZ1: Dr Defecaus Card
+CardsZ2: Amarok Card
+CardsZ3: Efaunt Card
+CardsZ4: Chaotic Amarok Card
+CardsZ5: Biggie Hours Card
+CardsZ6: King Doot Card
+CardsZ7: Chaotic Efaunt Card
+CardsZ8: Chizoar Card
+CardsZ9: Chaotic Chizoar Card
+CardsZ10: Massive Troll Card
+CardsZ11: Chaotic Troll Card
+CardsZ12: Dilapidated Slush Card
+CardsZ13: Mutated Mush Card
+CardsZ14: Radiant Amarok Card
+CardsZ15: Gilded Efaunt Card
+CardsZ16: Blighted Chizoar Card
+CardsZ17: Blitzkrieg Troll Card
+CardsZ18: Kattlekruk Card
+CardsZ19: Chaotic Kattlekruk Card
+CardsZ20: Sacrilegious Kattlekruk Card
+CardsZ21: Emperor Card
+CardsZ22: Chaotic Emperor Card
+CardsZ23: Sovereign Emperor Card

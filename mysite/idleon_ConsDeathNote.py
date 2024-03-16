@@ -431,9 +431,11 @@ def getDeathNoteKills():
         for worldIndex in range(1, len(apocableMapIndexDict)):
             for mapIndex in apocableMapIndexDict[worldIndex]:
                 if len(characterKillsList) > mapIndex:
-                    enemyMaps[worldIndex][mapIndex].addRawKLA(characterKillsList[mapIndex][0])
-                #else:
-                    #print("ConsDeathNote.getDeathNoteKills~ INFO characterIndex", characterIndex, "kill list has no data for mapIndex", mapIndex, ", len(characterKillsList)=", len(characterKillsList))
+                    try:
+                        enemyMaps[worldIndex][mapIndex].addRawKLA(characterKillsList[mapIndex][0])
+                    except:
+                        enemyMaps[worldIndex][mapIndex].addRawKLA(0)
+                        logger.exception(f"Kill list for characterIndex: {characterIndex}, worldIndex: {worldIndex}, mapIndex: {mapIndex} failed: Expecting a list, found {type(characterKillsList[mapIndex])}: {characterKillsList[mapIndex]}")
 
     deathnote_EnemyWorlds = {}
 

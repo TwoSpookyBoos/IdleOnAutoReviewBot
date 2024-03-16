@@ -40,14 +40,16 @@ def try_exclude_BurningBadBooks(exclusionList):
 
 
 def try_exclude_ChestSluggo(exclusionList):
-
-    artifact_tiers = json.loads(session_data.account.raw_data["Sailing"])
-    if isinstance(artifact_tiers, str):
-        artifact_tiers = json.loads(artifact_tiers)
+    try:
+        artifact_tiers = json.loads(session_data.account.raw_data.get("Sailing", empty))
+        if isinstance(artifact_tiers, str):
+            artifact_tiers = json.loads(artifact_tiers)
+    except:
+        logger.exception(f"Could not retrieve 'Sailing' from JSON")
+        return
 
     sum_artifactTiers = sum(artifact_tiers[3]) if artifact_tiers and len(artifact_tiers) >= 4 else 0
 
-    logger.debug(f"{sum_artifactTiers}")
     if sum_artifactTiers == numberOfArtifacts * numberOfArtifactTiers:  # 33 artifacts times 4 tiers each = 132 for v2.00
         exclusionList.append("Chest Sluggo")
 
@@ -242,7 +244,7 @@ def getBoughtGemShopItems():
         }
     except Exception as reason:
         logger.exception("Unable to parse Gem Shop:", exc_info=reason)
-    logger.debug(gemShopDict)
+    # logger.debug(gemShopDict)
     return gemShopDict
 
 

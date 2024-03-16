@@ -9,12 +9,9 @@ skillsToReview_RightHand = ["Mining", "Choppin", "Fishing", "Catching", "Trappin
 
 
 def getHandsStatus():
-    maestros: list[Character] = [
-        toon for toon in session_data.account.all_characters if toon.sub_class == "Maestro"
-    ]
-    beginners: list[Character] = [
-        toon for toon in session_data.account.all_characters if toon.base_class == "Beginner" or toon.base_class == "Journeyman"
-    ]
+    toons = session_data.account.all_characters
+    maestros: list[Character] = [toon for toon in toons if toon.sub_class == "Maestro"]
+    beginners: list[Character] = [toon for toon in toons if toon.base_class in ["Beginner", "Journeyman"]]
 
     janky_skills = maestros_goal_levels(maestros)
     tier = f"{len(janky_skills) or 6}/{len(skillsToReview_RightHand)}"
@@ -92,7 +89,7 @@ def maestros_goal_levels(maestros):
             # maestro is already best
             continue
 
-        required_level = chars_ordered[best_maestro_rank - 1].skills[skill] + 1
+        required_level = chars_ordered[0].skills[skill] + 1
         janky_skills[skill] = (best_maestro, required_level)
 
     return janky_skills

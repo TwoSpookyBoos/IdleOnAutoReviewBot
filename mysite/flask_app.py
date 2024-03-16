@@ -1,49 +1,39 @@
-import hashlib
 import json
-import os
 import traceback
+from datetime import datetime
 from json import JSONDecodeError
 
-from config import app
-from flask import (
-    g,
-    render_template,
-    request,
-    url_for,
-    redirect,
-    Response,
-    send_from_directory,
-)
-import idleonTaskSuggester
+from flask import g, render_template, request, redirect, Response, send_from_directory
 
+import idleonTaskSuggester
+from config import app
 from data_formatting import HeaderData
-from models import AdviceWorld, UserDataException
-from utils import get_logger, browser_data_logger, ParsedUserAgent, name_for_logging
+from models import AdviceWorld
+from custom_exceptions import (
+    UserDataException,
+    UsernameBanned,
+    ProfileNotFound,
+    EmptyResponse,
+    IEConnectionFailed,
+)
+from utils import (
+    get_logger,
+    name_for_logging,
+    is_username,
+    json_schema_valid,
+    format_character_name,
+    log_browser_data,
+)
+from template_filters import *
 
 
 logger = get_logger(__name__)
 FQDN = "ieautoreview-scoli.pythonanywhere.com"
 FQDN_BETA = f"beta-{FQDN}"
 
-user_agent_logger = browser_data_logger()
-
-
-def format_character_name(name: str) -> str:
-    name = name.strip().lower().replace(" ", "_")
-
-    return name
-
 
 def get_user_input() -> str:
     return (request.args.get("player") or request.form.get("player", "")).strip()
-
-
-def is_username(data) -> bool:
-    return isinstance(data, str) and len(data) < 16
-
-
-def json_schema_valid(data) -> bool:
-    return isinstance(data, str) and data.startswith("{") and data.endswith("}")
 
 
 def parse_user_input() -> str | dict | None:
@@ -102,12 +92,6 @@ def switches():
     ]
 
 
-def log_browser_data(player):
-    ua_string = request.headers.get("User-Agent")
-    user_agent = ParsedUserAgent(ua_string)
-    user_agent_logger.info("%s | %s - %s", player, user_agent.os, user_agent.browser)
-
-
 @app.route("/", methods=["GET", "POST"])
 def index() -> Response | str:
     page: str = "results.html"
@@ -115,7 +99,7 @@ def index() -> Response | str:
     reviews: list[AdviceWorld] | None = None
     headerData: HeaderData | None = None
     is_beta: bool = FQDN_BETA in request.host
-    logger.info(request.host)
+
     url_params = request.query_string.decode("utf-8")
     live_link = f"live?{url_params}"
     beta_link = f"beta?{url_params}"
@@ -138,53 +122,65 @@ def index() -> Response | str:
 
     except UserDataException as ude:
         logger.error(ude.msg)
-        error = (
-            "Looks like the data you submitted was neither a username nor valid data. "
-            "Check what you submitted - it must be either the first toon name or the"
-            "JSON object provided by either IdleonEfficiency or IdleonToolbox."
+        error = ude.msg_display
+
+    except UsernameBanned as ban:
+        msg = f"Account banned: {ban.username}"
+        data = None
+        logger.error(
+            "PETTY BITCH MODE ACTIVATED. Banned name entered: %s", ban.username
         )
 
-    except JSONDecodeError as jde:
-        filename = name_for_logging(name_or_data, headerData, timestamp=True)
-        dirpath = app.config["LOGS"] / filename
-        filemsg = dirpath / "message.log"
-        filedata = dirpath / "data.txt"
+        create_and_populate_log_files(data, headerData, msg, name_or_data, ban)
 
-        os.mkdir(dirpath)
-        with open(filemsg, "w") as user_log:
-            user_log.writelines(str(jde) + os.linesep)
+        error = "You have been banned from using this tool. Goodbye."
 
-        with open(filedata, "w") as user_log:
-            user_log.writelines(jde.doc + os.linesep)
+    except ProfileNotFound as e:
+        msg = f"Public profile not found: {e.username}"
+        data = None
 
+        dirname = create_and_populate_log_files(data, headerData, msg, name_or_data, e)
+        error = e.msg_display.format(dirname)
+
+    except EmptyResponse as e:
+        msg = f"Empty response: {e.username}"
+        data = None
+
+        dirname = create_and_populate_log_files(data, headerData, msg, name_or_data, e)
+        error = e.msg_display.format(dirname)
+
+    except IEConnectionFailed as e:
+        msg = f"Error connecting to {e.url}"
+        data = e.stacktrace
+
+        dirname = create_and_populate_log_files(data, headerData, msg, name_or_data, e)
+        error = e.msg_display.format(dirname)
+
+    except JSONDecodeError as e:
+        msg = str(e)
+        data = e.doc
+
+        e.dirname = "faulty_data"
+        dirname = create_and_populate_log_files(data, headerData, msg, name_or_data, e)  # noqa
         error = (
             "Looks like the data you submitted is corrupted. The issue has been "
             "reported and will be investigated. If the problem persists let us "
-            f"know in the Discord server, mention '{filename}'"
+            f"know in the Discord server, mention '{dirname}'"
         )
 
-    except Exception as reason:
-        filename = name_for_logging(name_or_data, headerData, timestamp=True)
-        dirpath = app.config["LOGS"] / filename
-        filemsg = dirpath / "message.log"
-        filedata = dirpath / "data.txt"
+    except Exception as e:
+        msg = os.linesep.join([str(e), "", traceback.format_exc()])
+        data = get_user_input()
 
-        # if os.environ.get("USER") == "niko":
-        #     raise reason
-
-        os.mkdir(dirpath)
-        with open(filemsg, "w") as user_log:
-            user_log.writelines(os.linesep.join([str(reason), traceback.format_exc()]))
-
-        with open(filedata, "w") as user_log:
-            user_input = get_user_input() + os.linesep
-            user_log.writelines(user_input)
+        dirname = create_and_populate_log_files(
+            data, headerData, msg, name_or_data, e
+        )
 
         error = (
             "Looks like something went wrong while handling your account data. "
             "The issue has been reported and will be investigated. If the "
             "problem persists let us know in the Discord server, mention "
-            f"'{filename}'"
+            f"'{dirname}'"
         )
     return render_template(
         page,
@@ -197,6 +193,29 @@ def index() -> Response | str:
         switches=switches(),
         **get_user_preferences(),
     )
+
+
+def create_and_populate_log_files(data, headerData, msg, name_or_data, error):
+    # if os.environ.get("USER") == "niko":
+    #     raise error
+
+    username = name_for_logging(name_or_data, headerData)
+    now = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    dirpath = app.config["LOGS"]/error.dirname/username
+    filemsg = dirpath/now/"message.log"
+    filedata = dirpath/now/"data.log"
+
+    (dirpath/now).mkdir(parents=True, exist_ok=True)
+
+    with open(filemsg, "w") as user_log:
+        user_log.writelines(msg + os.linesep)
+
+    if data:
+        with open(filedata, "w") as user_log:
+            user_log.writelines(data + os.linesep)
+
+    return f"{error.dirname}/{username}/{now}"
 
 
 @app.route("/robots.txt")
@@ -230,7 +249,6 @@ def logtest():
     return "Hello, World!"
 
 
-# @app.route("/")
 def autoReviewBot(
     capturedCharacterInput,
 ) -> tuple[list[AdviceWorld], HeaderData] | tuple[None, None]:
@@ -262,48 +280,6 @@ def page_not_found(e):
         return redirect(
             url_for("index")
         )  # Probably should get a real 404 page at some point
-
-
-def get_resource(dir_: str, filename: str, autoversion: bool = False) -> str:
-    path = f"{dir_}/{filename}"
-    suffix = ""
-
-    # cache invalidation
-    if autoversion:
-        full_path = os.path.join(app.static_folder, path)
-        mtime = os.path.getmtime(full_path)
-        suffix = hashlib.md5(str(mtime).encode()).hexdigest()[:8]
-        suffix = f"?v={suffix}"
-
-    return url_for("static", filename=f"{path}") + suffix
-
-
-@app.template_filter("style")
-def style(filename: str):
-    return get_resource("styles", f"{filename}.css", True)
-
-
-@app.template_filter("script")
-def script(filename: str):
-    return get_resource("scripts", f"{filename}.js", True)
-
-
-@app.template_filter("img")
-def img(filename: str):
-    return get_resource("imgs", filename)
-
-
-@app.template_filter("cards")
-def cards(filename: str):
-    return img(f"cards/{filename}.png")
-
-
-@app.template_filter("ensure_data")
-def ensure_data(results: list):
-    return bool(results)
-
-
-app.jinja_env.globals["img"] = img
 
 
 if __name__ == "__main__":

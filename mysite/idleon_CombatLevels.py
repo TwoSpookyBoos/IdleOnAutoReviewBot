@@ -25,7 +25,7 @@ def getEquinoxDreams() -> dict:
         Dream11=rawDreams.get("d_10") == -1,
         Dream23=rawDreams.get("d_22") == -1,
     )
-    logger.debug("OUTPUT results: %s", results)
+    # logger.debug("OUTPUT results: %s", results)
 
     return results
 
@@ -52,8 +52,7 @@ def parseCombatLevels(playerNames):
             under500=equinox23_charactersUnder500,
         )
     )
-    logger.info('%s', parsedCombatLevels["sum_AccountLevel"])
-    # parsedCombatLevels['playerClasses'] = playerClasses
+    # logger.info('%s', parsedCombatLevels["sum_AccountLevel"])
     return parsedCombatLevels
 
 

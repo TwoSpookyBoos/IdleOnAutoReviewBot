@@ -45,7 +45,7 @@ progressionTiers = {
         [22, 5500, [], [], [], {'Bugsack Stamp':120, 'Bag o Heads Stamp':120}, ""],
         [23, 6000, [19,26,34], [33], [], {'Matty Bag Stamp':200, 'Crystallin':150}, ""],
         [24, 6500, [36], [48,49,51], [9], {'Drippy Drop Stamp':100, 'Ladle Stamp':150}, ""],
-        [25, 7000, [], [], [], {'Pickaxe Stamp':95, 'Hatchet Stamp':95, 'Golden Apple Stamp':60, 'Multitool Stamp':100}, ""],
+        [25, 7000, [35], [], [], {'Pickaxe Stamp':95, 'Hatchet Stamp':95, 'Golden Apple Stamp':60, 'Multitool Stamp':100}, ""],
         [26, 7500, [], [], [], {'Ladle Stamp':180}, ""],
         [27, 8000, [], [], [], {'Matty Bag Stamp':280, 'Multitool Stamp':150}, ""],
         [28, 8400, [], [53], [22], {'Pickaxe Stamp':105, 'Hatchet Stamp':105, 'Mason Jar Stamp':92, 'Crystallin':200, 'Bugsack Stamp':152, 'Bag o Heads Stamp':152,}, ""],
@@ -715,6 +715,19 @@ progressionTiers = {
                 "Key2", "Key3"]
         },
     }
+}
+
+rift_progressionTiers = {
+    0: [0,  "",             0],
+    1: [5,  "3 to 5M",      100],
+    2: [10, "30M",          140],
+    3: [15, "68M",          160],
+    4: [20, "185M",         180],
+    5: [25, "1,120M",       180],
+    6: [30, "12B",          220],
+    7: [35, "125B",         220],
+    8: [40, "1,554B",       240],
+    9: [45, "20T",          240],
 }
 
 missableGStacksDict = {

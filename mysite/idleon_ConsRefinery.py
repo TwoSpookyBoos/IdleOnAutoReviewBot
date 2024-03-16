@@ -204,43 +204,43 @@ def setConsRefineryProgressionTier():
                 goal=5)
         )
 
-    # #Excess and Deficits Advice
-    # refinery_AdviceDict["ExcessAndDeficits"].append(
-    #     Advice(
-    #         label=f"Red Salt {consRefineryDict['RedSalt'].excess_or_deficit}",
-    #         picture_class=consRefineryDict['RedSalt'].image,
-    #         progression=consRefineryDict['RedSalt'].excess_amount)
-    # )
-    # refinery_AdviceDict["ExcessAndDeficits"].append(
-    #     Advice(
-    #         label=f"Orange Salt {consRefineryDict['OrangeSalt'].excess_or_deficit}",
-    #         picture_class=consRefineryDict['OrangeSalt'].image,
-    #         progression=consRefineryDict['OrangeSalt'].excess_amount)
-    # )
-    # refinery_AdviceDict["ExcessAndDeficits"].append(
-    #     Advice(
-    #         label=f"Blue Salt {consRefineryDict['BlueSalt'].excess_or_deficit}",
-    #         picture_class=consRefineryDict['BlueSalt'].image,
-    #         progression=consRefineryDict['BlueSalt'].excess_amount)
-    # )
-    # refinery_AdviceDict["ExcessAndDeficits"].append(
-    #     Advice(
-    #         label=f"Green Salt {consRefineryDict['GreenSalt'].excess_or_deficit}",
-    #         picture_class=consRefineryDict['GreenSalt'].image,
-    #         progression=consRefineryDict['GreenSalt'].excess_amount)
-    # )
-    # refinery_AdviceDict["ExcessAndDeficits"].append(
-    #     Advice(
-    #         label=f"Purple Salt {consRefineryDict['PurpleSalt'].excess_or_deficit}",
-    #         picture_class=consRefineryDict['PurpleSalt'].image,
-    #         progression=consRefineryDict['PurpleSalt'].excess_amount)
-    # )
-    # refinery_AdviceDict["ExcessAndDeficits"].append(
-    #     Advice(
-    #         label=f"Nullo Salt {consRefineryDict['NulloSalt'].excess_or_deficit}",
-    #         picture_class=consRefineryDict['NulloSalt'].image,
-    #         progression=consRefineryDict['NulloSalt'].excess_amount)
-    # )
+    #Excess and Deficits Advice
+    refinery_AdviceDict["ExcessAndDeficits"].append(
+        Advice(
+            label=f"Red Salt {consRefineryDict['RedSalt'].excess_or_deficit}",
+            picture_class=consRefineryDict['RedSalt'].image,
+            progression=consRefineryDict['RedSalt'].excess_amount)
+    )
+    refinery_AdviceDict["ExcessAndDeficits"].append(
+        Advice(
+            label=f"Orange Salt {consRefineryDict['OrangeSalt'].excess_or_deficit}",
+            picture_class=consRefineryDict['OrangeSalt'].image,
+            progression=consRefineryDict['OrangeSalt'].excess_amount)
+    )
+    refinery_AdviceDict["ExcessAndDeficits"].append(
+        Advice(
+            label=f"Blue Salt {consRefineryDict['BlueSalt'].excess_or_deficit}",
+            picture_class=consRefineryDict['BlueSalt'].image,
+            progression=consRefineryDict['BlueSalt'].excess_amount)
+    )
+    refinery_AdviceDict["ExcessAndDeficits"].append(
+        Advice(
+            label=f"Green Salt {consRefineryDict['GreenSalt'].excess_or_deficit}",
+            picture_class=consRefineryDict['GreenSalt'].image,
+            progression=consRefineryDict['GreenSalt'].excess_amount)
+    )
+    refinery_AdviceDict["ExcessAndDeficits"].append(
+        Advice(
+            label=f"Purple Salt {consRefineryDict['PurpleSalt'].excess_or_deficit}",
+            picture_class=consRefineryDict['PurpleSalt'].image,
+            progression=consRefineryDict['PurpleSalt'].excess_amount)
+    )
+    refinery_AdviceDict["ExcessAndDeficits"].append(
+        Advice(
+            label=f"Nullo Salt {consRefineryDict['NulloSalt'].excess_or_deficit}",
+            picture_class=consRefineryDict['NulloSalt'].image,
+            progression=consRefineryDict['NulloSalt'].excess_amount)
+    )
 
     # Ranks Advice
     refinery_AdviceDict["Tab1Ranks"].append(
@@ -279,12 +279,12 @@ def setConsRefineryProgressionTier():
         advices=refinery_AdviceDict['Merits'],
         post_string="Leveling this Merit would immediately decrease salt consumption."
     )
-    # refinery_AdviceGroupDict['ExcessAndDeficits'] = AdviceGroup(
-    #     tier="",
-    #     pre_string="Salt Excess/Deficit per Synthesis Cycle",
-    #     advices=refinery_AdviceDict['ExcessAndDeficits'],
-    #     post_string=""
-    # )
+    refinery_AdviceGroupDict['ExcessAndDeficits'] = AdviceGroup(
+        tier="",
+        pre_string="Salt Excess/Deficit per Synthesis Cycle",
+        advices=refinery_AdviceDict['ExcessAndDeficits'],
+        post_string=""
+    )
     refinery_AdviceGroupDict['Tab1Ranks'] = AdviceGroup(
         tier="",
         pre_string="Max Tab1 Ranks without causing a Salt Deficit",

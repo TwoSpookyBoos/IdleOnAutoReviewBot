@@ -79,6 +79,12 @@
 
     --fg-show-more: white;
     --fg-note: #fde5c0;
+
+    --fg-last-update: white;
+    --bg-last-update: var(--bg-nav);
+
+    --bg-header-json: #8e6c19;
+    --bg-header-public: var(--bg-pinchy);
 }
 
 :root.light-mode {
@@ -147,6 +153,12 @@
 
     --fg-show-more: white;
     --fg-note: #70590c;
+
+    --fg-last-update: black;
+    --bg-last-update: var(--bg-nav);
+
+    --bg-header-json: #d8c394;
+    --bg-header-public: var(--bg-pinchy);
 
     * {
         text-shadow: none;
@@ -261,8 +273,8 @@ body {
                 row-gap: 1em;
                 column-gap: 1em;
 
-                &.json { background-color: #8e6c19; }
-                &.public { background-color: #76775c; }
+                &.json { background-color: var(--bg-header-json); }
+                &.public { background-color:var(--bg-header-public); }
 
                 * {
                     display: flex;
@@ -291,7 +303,8 @@ body {
                         z-index: 1;
                         visibility: hidden;
                         width: max-content;
-                        background: black;
+                        color: var(--fg-last-update);
+                        background-color: var(--bg-last-update);
                         border-radius: 3px;
                         padding: 10px;
                     }
