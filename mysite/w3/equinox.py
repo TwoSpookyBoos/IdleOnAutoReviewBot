@@ -1,11 +1,17 @@
 import json
-from models import AdviceSection, AdviceGroup, Advice
-from utils import pl, get_logger
+
 from flask import g as session_data
-from consts import maxTiersPerGroup, equinox_progressionTiers
+
+import consts
+from consts import equinox_progressionTiers
+from models.models import AdviceSection, AdviceGroup, Advice
+from utils.logging import get_logger
+from utils.text_formatting import pl
+
 
 logger = get_logger(__name__)
 optionalUpgradeList = ['Shades of K', 'Laboratory Fuse']
+
 
 def getRawEquinoxValues():
     rawEquinoxBonusLevelsList = session_data.account.raw_data.get("Dream", [0]*30)
@@ -36,61 +42,33 @@ def getRawEquinoxValues():
     equinoxBonusLevelsDict["TotalUpgrades"] = [totalRecommendedUpgrades, totalOptionalUpgrades, totalMaxUpgrades]
 
     rawEquinoxDreamsDict = json.loads(session_data.account.raw_data.get("WeeklyBoss", "{}"))
-    equinoxDreamsDict = {
-        0: True,
-        1: rawEquinoxDreamsDict.get('d_0', 0) == -1,
-        2: rawEquinoxDreamsDict.get('d_1', 0) == -1,
-        3: rawEquinoxDreamsDict.get('d_2', 0) == -1,
-        4: rawEquinoxDreamsDict.get('d_3', 0) == -1,
-        5: rawEquinoxDreamsDict.get('d_4', 0) == -1,
-        6: rawEquinoxDreamsDict.get('d_5', 0) == -1,
-        7: rawEquinoxDreamsDict.get('d_6', 0) == -1,
-        8: rawEquinoxDreamsDict.get('d_7', 0) == -1,
-        9: rawEquinoxDreamsDict.get('d_8', 0) == -1,
-        10: rawEquinoxDreamsDict.get('d_9', 0) == -1,
-        11: rawEquinoxDreamsDict.get('d_10', 0) == -1,
-        12: rawEquinoxDreamsDict.get('d_11', 0) == -1,
-        13: rawEquinoxDreamsDict.get('d_12', 0) == -1,
-        14: rawEquinoxDreamsDict.get('d_13', 0) == -1,
-        15: rawEquinoxDreamsDict.get('d_14', 0) == -1,
-        16: rawEquinoxDreamsDict.get('d_15', 0) == -1,
-        17: rawEquinoxDreamsDict.get('d_16', 0) == -1,
-        18: rawEquinoxDreamsDict.get('d_17', 0) == -1,
-        19: rawEquinoxDreamsDict.get('d_18', 0) == -1,
-        20: rawEquinoxDreamsDict.get('d_19', 0) == -1,
-        21: rawEquinoxDreamsDict.get('d_20', 0) == -1,
-        22: rawEquinoxDreamsDict.get('d_21', 0) == -1,
-        23: rawEquinoxDreamsDict.get('d_22', 0) == -1,
-        24: rawEquinoxDreamsDict.get('d_23', 0) == -1,
-        25: rawEquinoxDreamsDict.get('d_24', 0) == -1,
-        26: rawEquinoxDreamsDict.get('d_25', 0) == -1,
-        27: rawEquinoxDreamsDict.get('d_26', 0) == -1,
-        28: rawEquinoxDreamsDict.get('d_27', 0) == -1,
-        29: rawEquinoxDreamsDict.get('d_28', 0) == -1,
-        30: rawEquinoxDreamsDict.get('d_29', 0) == -1,
-        31: rawEquinoxDreamsDict.get('d_30', 0) == -1,
-    }
-    equinoxDreamsDict["TotalCompleted"] = list(equinoxDreamsDict.values()).count(True)
-    return [equinoxBonusLevelsDict, equinoxDreamsDict]
+
+    dreams_statuses = [True]
+    dreams_statuses += [
+        float(rawEquinoxDreamsDict.get(f'd_{i}', 0)) == -1
+        for i in range(consts.maxDreams)
+    ]
+    return [equinoxBonusLevelsDict, dreams_statuses]
+
 
 def setEquinoxUpgradeMaxLevels(equinoxDreamsDict, recommendedBonusOrderDict):
-    if equinoxDreamsDict.get(7, False):
+    if equinoxDreamsDict[7]:
         recommendedBonusOrderDict["Liquidvestment"] += 3
-    if equinoxDreamsDict.get(13, False):
+    if equinoxDreamsDict[13]:
         recommendedBonusOrderDict["Matching Scims"] += 5
-    if equinoxDreamsDict.get(16, False):
+    if equinoxDreamsDict[16]:
         recommendedBonusOrderDict["Liquidvestment"] += 4
-    if equinoxDreamsDict.get(19, False):
+    if equinoxDreamsDict[19]:
         recommendedBonusOrderDict["Matching Scims"] += 10
-    if equinoxDreamsDict.get(22, False):
+    if equinoxDreamsDict[22]:
         recommendedBonusOrderDict["Faux Jewels"] += 5
-    if equinoxDreamsDict.get(26, False):
+    if equinoxDreamsDict[26]:
         recommendedBonusOrderDict["Food Lust"] += 4
-    if equinoxDreamsDict.get(27, False):
+    if equinoxDreamsDict[27]:
         recommendedBonusOrderDict["Faux Jewels"] += 10
-    if equinoxDreamsDict.get(31, False):
+    if equinoxDreamsDict[31]:
         recommendedBonusOrderDict["Equinox Symbols"] += 4
-    return
+
 
 def setEquinoxProgressionTier():
     equinox_AdviceDict = {
@@ -109,7 +87,8 @@ def setEquinoxProgressionTier():
     #     equinox_AdviceSection.header = "Come back after unlocking Equinox!"
     #     return equinox_AdviceSection
 
-    playerEquinoxBonusLevelsDict, playerEquinoxDreamsDict = getRawEquinoxValues()
+    playerEquinoxBonusLevelsDict, playerEquinoxDreams = getRawEquinoxValues()
+    totalDreamsCompleted = sum(playerEquinoxDreams)
     tier_TotalDreamsCompleted = 0
     tier_TotalEquinoxUpgrades = 0
     max_tier = max(equinox_progressionTiers.keys())
@@ -143,34 +122,34 @@ def setEquinoxProgressionTier():
         'Shades of K': 3,
         'Laboratory Fuse': 10,
     }
-    setEquinoxUpgradeMaxLevels(playerEquinoxDreamsDict, recommendedBonusOrderDict)
+    setEquinoxUpgradeMaxLevels(playerEquinoxDreams, recommendedBonusOrderDict)
     recommendedBonusUnlockedDict = {
-        'Equinox Dreams': True,
-        'Equinox Resources': playerEquinoxDreamsDict.get(1, False),
-        'Shades of K': playerEquinoxDreamsDict.get(3, False),
-        'Liquidvestment': playerEquinoxDreamsDict.get(6, False),
-        'Matching Scims': playerEquinoxDreamsDict.get(8, False),
-        'Slow Roast Wiz': playerEquinoxDreamsDict.get(11, False),
-        'Laboratory Fuse': playerEquinoxDreamsDict.get(14, False),
-        'Metal Detector': playerEquinoxDreamsDict.get(18, False),
-        'Faux Jewels': playerEquinoxDreamsDict.get(21, False),
-        'Food Lust': playerEquinoxDreamsDict.get(24, False),
-        'Equinox Symbols': playerEquinoxDreamsDict.get(29, False),
+        'Equinox Dreams': playerEquinoxDreams[0],
+        'Equinox Resources': playerEquinoxDreams[1],
+        'Shades of K': playerEquinoxDreams[3],
+        'Liquidvestment': playerEquinoxDreams[6],
+        'Matching Scims': playerEquinoxDreams[8],
+        'Slow Roast Wiz': playerEquinoxDreams[11],
+        'Laboratory Fuse': playerEquinoxDreams[14],
+        'Metal Detector': playerEquinoxDreams[18],
+        'Faux Jewels': playerEquinoxDreams[21],
+        'Food Lust': playerEquinoxDreams[24],
+        'Equinox Symbols': playerEquinoxDreams[29],
     }
     recommendedBonusTotal = sum(list(maxRecommendedUpgradeLevelDict.values()))
     optionalBonusTotal = sum(list(maxIgnorableUpgradeLevelDict.values()))
     currentMaxBonusTotal = recommendedBonusTotal + optionalBonusTotal
     playerBonusTotal = playerEquinoxBonusLevelsDict.get("TotalUpgrades", [0,0,0])[0] + playerEquinoxBonusLevelsDict.get("TotalUpgrades", [0,0,0])[1]
 
-    for tier, requiredDreamCompleted in equinox_progressionTiers.items():
+    for tier, (dream_number, label) in equinox_progressionTiers.items():
         #Total Dreams Completed
-        if playerEquinoxDreamsDict.get(requiredDreamCompleted[0], 0) == True:  #If the player has this dream completed
+        if playerEquinoxDreams[dream_number] == True:  #If the player has this dream completed
             tier_TotalDreamsCompleted = tier
         else:
             equinox_AdviceDict["DreamsCompleted"].append(Advice(
-                label=requiredDreamCompleted[1],
-                picture_class=requiredDreamCompleted[1][7:],
-                goal=f"Dream {requiredDreamCompleted[0]}"
+                label=label,
+                picture_class=label[7:],
+                goal=f"Dream {dream_number}"
             ))
 
     # Upgrades Purchased

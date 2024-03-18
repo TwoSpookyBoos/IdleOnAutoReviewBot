@@ -1140,6 +1140,7 @@ maxTiersPerGroup = 3
 numberOfArtifacts = 33  # As of v2.03
 numberOfArtifactTiers = 4  # As of v2.03
 currentMaxChestsSum = 45  # As of v2.0
+maxDreams = 31
 
 humanReadableClasses = {
     1: "Beginner",

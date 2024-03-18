@@ -6,18 +6,13 @@ from flask import g as session_data
 from config import app
 from general import combatLevels, greenstacks, pinchy, cards, maestroHands, consumables, gemShop
 from models.custom_exceptions import UsernameBanned
-
 from models.models import AdviceWorld, WorldName, Account
-from utils.data_formatting import (
-    getJSONfromAPI,
-    getJSONfromText,
-    HeaderData,
-)
+from utils.data_formatting import getJSONfromAPI, getJSONfromText, HeaderData
 from utils.logging import get_logger
 from utils.text_formatting import is_username
 from w1 import stamps, bribes, smithing
 from w2 import alchemy
-from w3 import trapping, consRefinery, consDeathNote, worship, consSaltLick, consBuildings
+from w3 import trapping, consRefinery, consDeathNote, worship, consSaltLick, consBuildings, equinox
 from w4 import breeding, rift
 
 
@@ -25,9 +20,7 @@ logger = get_logger(__name__)
 
 
 def maybe_ban(username, runType):
-    bannedAccountsList = yaml.load(
-        open(Path(app.static_folder) / "banned.yaml"), yaml.Loader
-    )
+    bannedAccountsList = yaml.load(open(Path(app.static_folder) / "banned.yaml"), yaml.Loader)
 
     if username in bannedAccountsList:
         if runType == "consoleTest":
@@ -37,7 +30,7 @@ def maybe_ban(username, runType):
 
 
 def getRoastableStatus(playerNames):
-    roastworthyList = ["scoli", "weebgasm", "herusx", "rashaken", "trickzbunny", "redpaaaaanda"]
+    roastworthyList = yaml.load(open(Path(app.static_folder) / "roastable.yaml"), yaml.Loader)
     return next((name.lower() in roastworthyList for name in playerNames), False)
 
 
@@ -58,99 +51,80 @@ def main(inputData, runType="web"):
 
     # Step 3: Send that data off to all the different analyzers
     # General
-    section_combatLevels = combatLevels.setCombatLevelsProgressionTier()
-    sections_consumables = consumables.parseConsumables()
-    section_gemShop = gemShop.setGemShopProgressionTier()
-    sections_gstacks = greenstacks.setGStackProgressionTier()
-    section_maestro = maestroHands.getHandsStatus()
-    section_cards = cards.getCardSetReview()
-
+    sections_general = [
+        section_combatLevels := combatLevels.setCombatLevelsProgressionTier(),
+        sections_consumables := consumables.parseConsumables(),
+        section_gemShop := gemShop.setGemShopProgressionTier(),
+        sections_gstacks := greenstacks.setGStackProgressionTier(),
+        section_maestro := maestroHands.getHandsStatus(),
+        section_cards := cards.getCardSetReview(),
+    ]
     # World 1
-    section_stamps = stamps.setStampProgressionTier()
-    section_bribes = bribes.setBribesProgressionTier()
-    section_smithing = smithing.setSmithingProgressionTier()
+    sections_1 = [
+        section_stamps := stamps.setStampProgressionTier(),
+        section_bribes := bribes.setBribesProgressionTier(),
+        section_smithing := smithing.setSmithingProgressionTier(),
+    ]
 
     # World 2
-    section_alchBubbles = alchemy.setAlchemyBubblesProgressionTier()
-    section_alchVials = alchemy.setAlchemyVialsProgressionTier()
-    section_alchP2W = alchemy.setAlchemyP2W()
-    # section_obols = idleon_Obols.setObolsProgressionTier(parsedJSON, playerCount, progressionTiers['Obols'], fromPublicIEBool)
+    sections_2 = [
+        section_alchBubbles := alchemy.setAlchemyBubblesProgressionTier(),
+        section_alchVials := alchemy.setAlchemyVialsProgressionTier(),
+        section_alchP2W := alchemy.setAlchemyP2W(),
+        # section_obols := idleon_Obols.setObolsProgressionTier()
+    ]
 
     # World 3
-    section_refinery = consRefinery.setConsRefineryProgressionTier()
-    section_saltlick = consSaltLick.setConsSaltLickProgressionTier()
-    section_deathnote = consDeathNote.setConsDeathNoteProgressionTier()
-    section_buildings = consBuildings.setConsBuildingsProgressionTier()
-    section_prayers = worship.setWorshipPrayersProgressionTier()
-    section_trapping = trapping.setTrappingProgressionTier()
-    # section_collider =
-    # section_worship =
-    # section_printer =
-
+    sections_3 = [
+        section_refinery := consRefinery.setConsRefineryProgressionTier(),
+        section_saltlick := consSaltLick.setConsSaltLickProgressionTier(),
+        section_deathnote := consDeathNote.setConsDeathNoteProgressionTier(),
+        section_buildings := consBuildings.setConsBuildingsProgressionTier(),
+        section_prayers := worship.setWorshipPrayersProgressionTier(),
+        section_trapping := trapping.setTrappingProgressionTier(),
+        section_equinox := equinox.setEquinoxProgressionTier(),
+        # section_collider =
+        # section_worship =
+        # section_printer =
+    ]
     # World 4
-    section_breeding = breeding.setBreedingProgressionTier()
-    # section_cooking =
-    # section_lab =
-    section_rift = rift.setRiftProgressionTier()
-
+    sections_4 = [
+        section_breeding := breeding.setBreedingProgressionTier(),
+        section_rift := rift.setRiftProgressionTier(),
+        # section_cooking =
+        # section_lab =
+    ]
     # World 5
-    # section_sailing =
-    # section_gaming =
-    # section_divinity =
-
+    sections_5 = [
+        # section_sailing =
+        # section_gaming =
+        # section_divinity =
+    ]
     # w6list = [["w6 mechanic 1 placeholder"], ["w6 mechanic 2 placeholder"], ["w6 mechanic 3 placeholder"]]
     # w7list = [["w7 mechanic 1 placeholder"], ["w7 mechanic 2 placeholder"], ["w7 mechanic 3 placeholder"]]
     # w8list = [["w8 mechanic 1 placeholder"], ["w8 mechanic 2 placeholder"], ["w8 mechanic 3 placeholder"]]
-    all_sections = [
+
+    pinchable_sections = [
         section_combatLevels,
         section_stamps, section_bribes, section_smithing,
         section_alchBubbles, section_alchVials, section_alchP2W,
         section_refinery, section_saltlick, section_deathnote, section_prayers,
-        section_breeding, section_rift
+        section_breeding, section_rift,
     ]
-    sections_pinchy = pinchy.generatePinchyWorld(all_sections)
+    sections_pinchy = pinchy.generatePinchyWorld(pinchable_sections)
 
-    pinchyReview = AdviceWorld(
-        name=WorldName.PINCHY,
-        sections=sections_pinchy,
-        collapse=False,
-        title="Pinchy AutoReview"
-    )
-    generalReview = AdviceWorld(
-        name=WorldName.GENERAL,
-        sections=[section_combatLevels, section_maestro, *sections_consumables, section_gemShop, *sections_gstacks, section_cards],
-        banner="general_banner.jpg"
-    )
-    w1Review = AdviceWorld(
-        name=WorldName.BLUNDER_HILLS,
-        sections=[section_stamps, section_bribes, section_smithing],
-        banner="w1banner.png"
-    )
-    w2Review = AdviceWorld(
-        name=WorldName.YUMYUM_DESERT,
-        sections=[section_alchBubbles, section_alchVials, section_alchP2W],
-        banner="w2banner.png"
-    )
-    w3Review = AdviceWorld(
-        name=WorldName.FROSTBITE_TUNDRA,
-        sections=[section_refinery, section_buildings, section_saltlick, section_deathnote, section_prayers, section_trapping],
-        banner="w3banner.png"
-    )
-    w4Review = AdviceWorld(
-        name=WorldName.HYPERION_NEBULA,
-        sections=[section_breeding, section_rift],
-        banner="w4banner.png"
-    )
-    w5Review = AdviceWorld(
-        name=WorldName.SMOLDERIN_PLATEAU,
-        banner="w5banner.png"
-    )
-
-    reviews = [pinchyReview, generalReview, w1Review, w2Review, w3Review, w4Review, w5Review]
+    reviews = [
+        AdviceWorld(name=WorldName.PINCHY, sections=sections_pinchy, title="Pinchy AutoReview", collapse=False,),
+        AdviceWorld(name=WorldName.GENERAL, sections=sections_general, banner="general_banner.jpg"),
+        AdviceWorld(name=WorldName.BLUNDER_HILLS, sections=sections_1, banner="w1banner.png"),
+        AdviceWorld(name=WorldName.YUMYUM_DESERT, sections=sections_2, banner="w2banner.png"),
+        AdviceWorld(name=WorldName.FROSTBITE_TUNDRA, sections=sections_3, banner="w3banner.png"),
+        AdviceWorld(name=WorldName.HYPERION_NEBULA, sections=sections_4, banner="w4banner.png"),
+        AdviceWorld(name=WorldName.SMOLDERIN_PLATEAU, sections=sections_5, banner="w5banner.png"),
+    ]
 
     headerData = HeaderData(inputData)
     logger.info(f"{headerData.last_update = }")
-
 
     if runType == "consoleTest":
         return "Pass"
