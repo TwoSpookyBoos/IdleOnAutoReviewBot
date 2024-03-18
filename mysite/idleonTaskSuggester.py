@@ -3,6 +3,7 @@ from pathlib import Path
 import yaml
 from flask import g as session_data
 
+import idleon_Equinox
 #general stuff that makes this file too big if I include directly
 from config import app
 from data_formatting import (
@@ -43,6 +44,7 @@ import idleon_ConsDeathNote
 import idleon_ConsBuildings
 import idleon_Worship
 import idleon_Trapping
+import idleon_Equinox
 
 # w4
 import idleon_Breeding
@@ -124,6 +126,7 @@ def main(inputData, runType="web"):
     buildings_AdviceSection = idleon_ConsBuildings.setConsBuildingsProgressionTier()
     prayers_AdviceSection = idleon_Worship.setWorshipPrayersProgressionTier()
     trapping_AdviceSection = idleon_Trapping.setTrappingProgressionTier()
+    equinox_AdviceSection = idleon_Equinox.setEquinoxProgressionTier()
     # collider_AdviceSection =
     # worship_AdviceSection =
     # printer_AdviceSection =
@@ -174,7 +177,8 @@ def main(inputData, runType="web"):
     )
     w3Review = AdviceWorld(
         name=WorldName.FROSTBITE_TUNDRA,
-        sections=[refinery_AdviceSection, buildings_AdviceSection, saltlick_AdviceSection, deathnote_AdviceSection, prayers_AdviceSection, trapping_AdviceSection],
+        sections=[refinery_AdviceSection, buildings_AdviceSection, saltlick_AdviceSection, deathnote_AdviceSection, prayers_AdviceSection,
+                  trapping_AdviceSection, equinox_AdviceSection],
         banner="w3banner.png"
     )
     w4Review = AdviceWorld(

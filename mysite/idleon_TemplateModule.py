@@ -7,7 +7,7 @@ from consts import maxTiersPerGroup, progressionTiers
 logger = get_logger(__name__)
 
 def parseJSONtoLists():
-    templateList = json.loads(session_data.account.raw_data["Template"])
+    templateList = json.loads(session_data.account.raw_data.get("Template", []))
     return templateList
 
 def setTemplateProgressionTier():

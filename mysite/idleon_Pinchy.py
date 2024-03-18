@@ -130,13 +130,14 @@ class Placements(dict):
     SALT_LICK = "Salt Lick"
     DEATH_NOTE = "Death Note"
     PRAYERS = "Prayers"
+    EQUINOX = "Equinox"
     BREEDING = "Breeding"
     RIFT = "Rift"
     sections = [
         COMBAT_LEVELS,
         STAMPS, BRIBES, SMITHING,
         BUBBLES, VIALS, P2W,
-        REFINERY, SALT_LICK, DEATH_NOTE, PRAYERS,
+        REFINERY, SALT_LICK, DEATH_NOTE, PRAYERS, EQUINOX,
         BREEDING, RIFT
     ]
 
@@ -144,7 +145,7 @@ class Placements(dict):
         # [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,99] #template
         #               W1   W2          W3              W4              W5              W6              W7              Max   Placeholder
         COMBAT_LEVELS: [0,   3, 7, 8,    10, 14, 15,     16, 17, 18,     19, 21, 23,     24, 25, 27,     28, 29, 29,     29,   99],
-        STAMPS:        [0,   1, 2, 3,    4,  5,  6,      7,  8,  9,      10, 11, 13,     16, 19, 22,     26, 30, 34,     36,   99],
+        STAMPS:        [0,   1, 2, 3,    4,  5,  6,      7,  8,  9,      10, 11, 13,     16, 19, 22,     26, 30, 34,     38,   99],
         BRIBES:        [0,   1, 1, 1,    2,  2,  2,      3,  3,  3,      4,  4,  4,      5,  5,  5,      5,  5,  5,      6,    99],
         SMITHING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  2,  3,      4,  5,  6,      6,  6,  6,      6,    99],
         BUBBLES:       [0,   0, 0, 0,    0,  1,  1,      2,  2,  2,      3,  4,  5,      7,  9,  14,     17, 19, 21,     23,   99],
@@ -154,6 +155,7 @@ class Placements(dict):
         SALT_LICK:     [0,   0, 0, 0,    0,  0,  0,      0,  0,  1,      2,  3,  4,      5,  5,  6,      7,  8,  9,      10,   99],
         DEATH_NOTE:    [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  4,  5,      7,  9,  11,     17, 21, 24,     26,   99],
         PRAYERS:       [0,   0, 0, 0,    0,  0,  1,      1,  2,  2,      3,  3,  4,      4,  5,  6,      7,  7,  7,      7,    99],
+        EQUINOX:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      11,   99],
         BREEDING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  1,      1,  2,  2,      3,  4,  5,      6,  8,  9,      11,   99],
         RIFT:          [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      9,    99],
     }

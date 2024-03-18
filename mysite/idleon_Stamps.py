@@ -54,13 +54,16 @@ def getCapacityExclusions(priorityStampsDict: dict):
         'Bag o Heads Stamp': False,  # Fish
         'Bugsack Stamp': False,  # Catching Bugs
         'Critters': False,  # Doesn't exist currently, placeholder
-        'Souls': False  # Doesn't exist currently, placeholder
+        'Souls': False,  # Doesn't exist currently, placeholder
+        'Mason Jar Stamp': False,  #All types, but less per level
     }
-    if priorityStampsDict['Crystallin'] >= 260:  # Max as of v2.01
+    if priorityStampsDict['Crystallin'] >= 250:  #Old Max Pre-W6
         exclusionsDict['Matty Bag Stamp'] = True
-    if priorityStampsDict['Multitool Stamp'] >= 220:  # Max as of v2.01
+    if priorityStampsDict['Multitool Stamp'] >= 210:  #Old Max Pre-W6
         exclusionsDict['Bugsack Stamp'] = True
         exclusionsDict['Bag o Heads Stamp'] = True
+    if priorityStampsDict['Crystallin'] >= 250 and priorityStampsDict['Multitool Stamp'] >= 210:
+        exclusionsDict['Mason Jar Stamp'] = True
     return exclusionsDict
 
 # Stamp p4
@@ -371,11 +374,12 @@ def setStampProgressionTier() -> AdviceSection:
             #logger.debug(f"{rStamp} {missingCombatStamps} {rStamp in missingCombatStamps}")
             if getReadableStampName(rStamp, "Combat") in missingStampsDict:
                 allCombatStamps = False
-                if len(stamp_AdviceDict["CombatStamps"]) < maxTiersPerGroup:
+                subgroupName = f"To reach Tier {tier[0]}"
+                if subgroupName not in stamp_AdviceDict["CombatStamps"] and len(stamp_AdviceDict["CombatStamps"]) < maxTiersPerGroup:
+                    stamp_AdviceDict["CombatStamps"][subgroupName] = []
+                if subgroupName in stamp_AdviceDict["CombatStamps"]:
                     adviceCountsDict["CombatStamps"] += 1
-                    if f"To reach Tier {tier[0]}" not in stamp_AdviceDict["CombatStamps"]:
-                        stamp_AdviceDict["CombatStamps"][f"To reach Tier {tier[0]}"] = []
-                    stamp_AdviceDict["CombatStamps"][f"To reach Tier {tier[0]}"].append(
+                    stamp_AdviceDict["CombatStamps"][subgroupName].append(
                         Advice(
                             label=getReadableStampName(int(rStamp), "Combat"),
                             picture_class=getReadableStampName(int(rStamp), "Combat"))
@@ -389,11 +393,12 @@ def setStampProgressionTier() -> AdviceSection:
             #logger.debug(f"{rStamp} {missingCombatStamps} {rStamp in missingSkillStamps}")
             if getReadableStampName(rStamp, "Skill") in missingStampsDict:
                 allSkillStamps = False
-                if len(stamp_AdviceDict["SkillStamps"]) < maxTiersPerGroup:
+                subgroupName = f"To reach Tier {tier[0]}"
+                if subgroupName not in stamp_AdviceDict["SkillStamps"] and len(stamp_AdviceDict["SkillStamps"]) < maxTiersPerGroup:
+                    stamp_AdviceDict["SkillStamps"][subgroupName] = []
+                if subgroupName in stamp_AdviceDict["SkillStamps"]:
                     adviceCountsDict["SkillStamps"] += 1
-                    if f"To reach Tier {tier[0]}" not in stamp_AdviceDict["SkillStamps"]:
-                        stamp_AdviceDict["SkillStamps"][f"To reach Tier {tier[0]}"] = []
-                    stamp_AdviceDict["SkillStamps"][f"To reach Tier {tier[0]}"].append(
+                    stamp_AdviceDict["SkillStamps"][subgroupName].append(
                         Advice(
                             label=getReadableStampName(int(rStamp), "Skill"),
                             picture_class=getReadableStampName(int(rStamp), "Skill"))
@@ -407,11 +412,12 @@ def setStampProgressionTier() -> AdviceSection:
             #logger.debug(f"{rStamp} {missingCombatStamps} {rStamp in missingMiscStamps}")
             if getReadableStampName(rStamp, "Misc") in missingStampsDict:
                 allMiscStamps = False
-                if len(stamp_AdviceDict["MiscStamps"]) < maxTiersPerGroup:
+                subgroupName = f"To reach Tier {tier[0]}"
+                if subgroupName not in stamp_AdviceDict["MiscStamps"] and len(stamp_AdviceDict["MiscStamps"]) < maxTiersPerGroup:
+                    stamp_AdviceDict["MiscStamps"][subgroupName] = []
+                if subgroupName in stamp_AdviceDict["MiscStamps"]:
                     adviceCountsDict["MiscStamps"] += 1
-                    if f"To reach Tier {tier[0]}" not in stamp_AdviceDict["MiscStamps"]:
-                        stamp_AdviceDict["MiscStamps"][f"To reach Tier {tier[0]}"] = []
-                    stamp_AdviceDict["MiscStamps"][f"To reach Tier {tier[0]}"].append(
+                    stamp_AdviceDict["MiscStamps"][subgroupName].append(
                         Advice(
                             label=getReadableStampName(int(rStamp), "Misc"),
                             picture_class=getReadableStampName(int(rStamp), "Misc"),
@@ -428,11 +434,12 @@ def setStampProgressionTier() -> AdviceSection:
             if playerPriorityStamps[key] < requiredSpecificStamps[key]:
                 if capacityExclusionsDict.get(key, 0) == 0:  #Check to see if this is a capacity-increasing stamp, and if it skipping it is set to False
                     allSpecificStamps = False
-                    if len(stamp_AdviceDict["SpecificStamps"]) < maxTiersPerGroup:  #and adviceCountsDict["HighPrio"] <= maxAdvicePerGroup:
+                    subgroupName = f"To reach Tier {tier[0]}"
+                    if subgroupName not in stamp_AdviceDict["SpecificStamps"] and len(stamp_AdviceDict["SpecificStamps"]) < maxTiersPerGroup:
+                        stamp_AdviceDict["SpecificStamps"][subgroupName] = []
+                    if subgroupName in stamp_AdviceDict["SpecificStamps"]:
                         adviceCountsDict["SpecificStamps"] += 1
-                        if f"To reach Tier {tier[0]}" not in stamp_AdviceDict["SpecificStamps"]:
-                            stamp_AdviceDict["SpecificStamps"][f"To reach Tier {tier[0]}"] = []
-                        stamp_AdviceDict["SpecificStamps"][f"To reach Tier {tier[0]}"].append(
+                        stamp_AdviceDict["SpecificStamps"][subgroupName].append(
                             Advice(
                                 label=str(key),
                                 picture_class=str(key),

@@ -152,11 +152,12 @@ def setWorshipPrayersProgressionTier() -> AdviceSection:
         for requiredPrayer in tier[1]:
             if worshipPrayersDict[requiredPrayer] < tier[1][requiredPrayer]:
                 allPrayersLeveled = False
-                if len(prayers_AdviceDict["Recommended"]) < maxTiersPerGroup:
+                subgroupName = f"To reach Tier {tier[0]}"
+                if subgroupName not in prayers_AdviceDict["Recommended"] and len(prayers_AdviceDict["Recommended"]) < maxTiersPerGroup:
+                    prayers_AdviceDict["Recommended"][subgroupName] = []
+                if subgroupName in prayers_AdviceDict["Recommended"]:
                     adviceCountsDict["Recommended"] += 1
-                    if f"To reach Tier {tier[0]}" not in prayers_AdviceDict["Recommended"]:
-                        prayers_AdviceDict["Recommended"][f"To reach Tier {tier[0]}"] = []
-                    prayers_AdviceDict["Recommended"][f"To reach Tier {tier[0]}"].append(
+                    prayers_AdviceDict["Recommended"][subgroupName].append(
                         Advice(
                             label=requiredPrayer,
                             picture_class=getPrayerImage(requiredPrayer),
