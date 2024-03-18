@@ -470,8 +470,10 @@ body {
                                         display: grid;
                                         grid-template-columns: repeat(4, minmax(min-content, max-content));
                                         gap: 10px;
-                                        overflow-y: scroll;
+                                        overflow-y: auto;
                                         padding-right: 10px;
+                                        scrollbar-width: thin;
+                                        scrollbar-color: var(--scrollbar-thumb-color) transparent;
 
                                         &::before, &::after {
                                             position: sticky;
