@@ -149,7 +149,7 @@ def main(inputData, runType="web"):
         section_combatLevels,
         stamps_AdviceSection, bribes_AdviceSection, smithing_AdviceSection,
         alchBubbles_AdviceSection, alchVials_AdviceSection, alchP2W_AdviceSection,
-        refinery_AdviceSection, saltlick_AdviceSection, deathnote_AdviceSection, prayers_AdviceSection,
+        refinery_AdviceSection, saltlick_AdviceSection, deathnote_AdviceSection, prayers_AdviceSection, equinox_AdviceSection,
         breeding_AdviceSection, rift_AdviceSection
     ]
     pinchy_high, pinchy_low, pinchy_all = idleon_Pinchy.generatePinchyWorld(all_sections)
