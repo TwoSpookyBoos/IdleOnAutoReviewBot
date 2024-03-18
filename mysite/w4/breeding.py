@@ -495,7 +495,7 @@ def setBreedingProgressionTier() -> AdviceSection:
         nextArenaWaveUnlock = progressionTiers["Breeding"][tier_MaxArenaWave+1]["ArenaWaves"]
     breeding_AdviceGroupDict["MaxArenaWave"] = AdviceGroup(
         tier=str(tier_MaxArenaWave),
-        pre_string=f"Complete Arena Wave {nextArenaWaveUnlock} to unlock another pet slot",
+        pre_string=f"Complete Arena Wave {nextArenaWaveUnlock} {pl(5-tier_MaxArenaWave, 'to unlock the final Arena bonus', 'to unlock another pet slot')}",
         advices=breeding_AdviceDict["MaxArenaWave"],
         post_string=""
     )

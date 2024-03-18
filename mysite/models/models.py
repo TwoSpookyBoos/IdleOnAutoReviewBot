@@ -631,7 +631,7 @@ class Account:
     def _make_cards(self):
         card_counts = json.loads(self.raw_data[self._key_cards])
         cards = [
-            Card(codename, name, cardset, card_counts.get(codename, 0), coefficient)
+            Card(codename, name, cardset, int(float(card_counts.get(codename, 0))), coefficient)
             for cardset, cards in card_data.items()
             for codename, (name, coefficient) in cards.items()
         ]

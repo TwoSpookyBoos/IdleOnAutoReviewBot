@@ -12,7 +12,7 @@ logger = get_logger(__name__)
 
 def getEquinoxDreams() -> dict:
     try:
-        rawDreams = json.loads(session_data.account.raw_data["WeeklyBoss"])
+        rawDreams = json.loads(session_data.account.raw_data.get("WeeklyBoss", "{}"))
     except Exception as reason:
         logger.error("Unable to access WeeklyBoss data from JSON: %s", reason)
         return dict(
@@ -193,16 +193,16 @@ def setGStackProgressionTier():
     tier = f"{expectedGStacksCount} out of max (realistic) {expectedStackablesCount}"
     header = f"You currently have {tier} GStacks."
     show_limit = len(groups)
-    if expectedGStacksCount >= 200 or equinoxDreamsStatus["Dream29"] == True:
+    if expectedGStacksCount >= 200 or equinoxDreamsStatus.get("Dream29", False) == True:
         header += " You best ❤️ (until Lava adds further Dream tasks) Other possible targets are still listed below."
         show_limit = 4
-    elif expectedGStacksCount >= 75 or equinoxDreamsStatus["Dream12"] == True:
+    elif expectedGStacksCount >= 75 or equinoxDreamsStatus.get("Dream12", False) == True:
         header += " Equinox Dream 29 requires 200. Aim for items up through Tier 10! Tiers 11-14 are optional without much extra benefit to collecting than +1 GStack."
         show_limit = 3
-    elif expectedGStacksCount >= 20 or equinoxDreamsStatus["Dream1"] == True:
+    elif expectedGStacksCount >= 20 or equinoxDreamsStatus.get("Dream1", False) == True:
         header += " Equinox Dream 12 requires 75. Aim for items up through Tier 4! Continue buying those Timegated items too :)"
         show_limit = 2
-    elif expectedGStacksCount < 20 and equinoxDreamsStatus["Dream1"] == False:
+    elif expectedGStacksCount < 20 and equinoxDreamsStatus.get("Dream1", False) == False:
         header += " Equinox Dream 1 requires 20. Aim for items in Tier 1, and start buying items listed in the Timegated tier from shops every day!"
         show_limit = 2
 

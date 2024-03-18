@@ -41,7 +41,7 @@ def try_exclude_BurningBadBooks(exclusionList):
 def try_exclude_ChestSluggo(exclusionList):
     empty = [0] * 8
     try:
-        artifact_tiers = json.loads(session_data.account.raw_data.get("Sailing", empty))
+        artifact_tiers = json.loads(session_data.account.raw_data.get("Sailing", []))
         if isinstance(artifact_tiers, str):
             artifact_tiers = json.loads(artifact_tiers)
     except:
