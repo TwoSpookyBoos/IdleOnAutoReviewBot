@@ -12,7 +12,7 @@ logger = get_logger(__name__)
 optionalUpgradeList = ['Shades of K', 'Laboratory Fuse']
 defaultOrderUpgradeList = ['Equinox Dreams', 'Equinox Resources', 'Shades of K', 'Liquidvestment', 'Matching Scims', 'Slow Roast Wiz',
                            'Laboratory Fuse', 'Metal Detector', 'Faux Jewels', 'Food Lust', 'Equinox Symbols']
-dreamsThatUnlockNewBonuses = [1, 3, 6, 9, 11, 14, 18, 21, 24, 29]
+dreamsThatUnlockNewBonuses = [1, 3, 6, 8, 11, 14, 18, 21, 24, 29]
 
 def getRawEquinoxValues():
     rawEquinoxBonusLevelsList = session_data.account.raw_data.get("Dream", [0]*30)
