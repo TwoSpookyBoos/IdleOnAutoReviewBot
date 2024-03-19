@@ -150,7 +150,9 @@ def setEquinoxProgressionTier():
     recommendedBonusTotal = sum(list(maxRecommendedUpgradeLevelDict.values()))
     optionalBonusTotal = sum(list(maxIgnorableUpgradeLevelDict.values()))
     currentMaxBonusTotal = recommendedBonusTotal + optionalBonusTotal
-    playerBonusTotal = playerEquinoxBonusLevelsDict.get("TotalUpgrades", [0,0,0])[0] + playerEquinoxBonusLevelsDict.get("TotalUpgrades", [0,0,0])[1]
+    playerRecommendedBonusTotal = playerEquinoxBonusLevelsDict.get("TotalUpgrades", [0,0,0])[0]
+    playerOptionalBonusTotal = playerEquinoxBonusLevelsDict.get("TotalUpgrades", [0,0,0])[1]
+    playerAllBonusTotal = playerRecommendedBonusTotal + playerOptionalBonusTotal
 
     if totalDreamsCompleted >= consts.maxDreams:  #If the player has completed ALL dreams, set to max tier
         tier_TotalDreamsCompleted = max_tier
@@ -173,7 +175,7 @@ def setEquinoxProgressionTier():
         ))
 
     # Upgrades Purchased
-    if playerBonusTotal < recommendedBonusTotal:
+    if playerAllBonusTotal < currentMaxBonusTotal:
         subgroupName = f"Recommended {playerEquinoxBonusLevelsDict.get('TotalUpgrades', [0, 0, 0])[0]}/{recommendedBonusTotal}"
         if subgroupName not in equinox_AdviceDict["TotalUpgrades"]:
             equinox_AdviceDict["TotalUpgrades"][subgroupName] = []
