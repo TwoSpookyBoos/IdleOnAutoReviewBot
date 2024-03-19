@@ -169,13 +169,15 @@ def setConsRefineryProgressionTier():
 
     # AutoRefine Advice
     if consRefineryDict['RedSalt'].auto_refine != 0:
-        tier_AutoRefine = 0
+        if consRefineryDict['RedSalt'].salt_rank < 100:
+            tier_AutoRefine = 0
         refinery_AdviceDict['AutoRefine'].append(
             Advice(label=consRefineryDict['RedSalt'].salt_name, picture_class=consRefineryDict['RedSalt'].image,
                    progression=consRefineryDict['RedSalt'].auto_refine, goal=0, unit="%")
         )
     if consRefineryDict['GreenSalt'].auto_refine != 0:
-        tier_AutoRefine = 0
+        if consRefineryDict['GreenSalt'].salt_rank < 30:
+            tier_AutoRefine = 0
         refinery_AdviceDict['AutoRefine'].append(
             Advice(label=consRefineryDict['GreenSalt'].salt_name, picture_class=consRefineryDict['GreenSalt'].image,
                    progression=consRefineryDict['GreenSalt'].auto_refine, goal=0, unit="%", value_format="{value}{unit}")
