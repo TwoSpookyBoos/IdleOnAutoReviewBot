@@ -375,10 +375,10 @@ def setTrappingProgressionTier():
                 goal=0)
             )
 
-    if len(trapping_AdviceDict["NonMetaTraps"]) > 0:
-        trapping_AdviceDict["CritterTraps"] = getStaticCritterTrapAdviceList(highestWearableTrapset)
-        trapping_AdviceDict["ShinyTraps"] = getStaticShinyTrapAdviceList(highestWearableTrapset)
-        trapping_AdviceDict["EXPTraps"] = getStaticEXPTrapAdviceList(highestWearableTrapset)
+    #if len(trapping_AdviceDict["NonMetaTraps"]) > 0:
+    trapping_AdviceDict["CritterTraps"] = getStaticCritterTrapAdviceList(highestWearableTrapset)
+    trapping_AdviceDict["ShinyTraps"] = getStaticShinyTrapAdviceList(highestWearableTrapset)
+    trapping_AdviceDict["EXPTraps"] = getStaticEXPTrapAdviceList(highestWearableTrapset)
 
     #advice_MetaEXPTraps = "
     #advice_Disclaimer = "If you are intentionally using a different combination to suite your playstyle, feel free to ignore the below recommendations! They require an active playstyle that isn't for everyone."
