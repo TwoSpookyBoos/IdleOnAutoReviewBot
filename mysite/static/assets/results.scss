@@ -18,7 +18,7 @@
     --fg-title: goldenrod;
 
     --border: 1px solid gray;
-    --arrow-border: white;
+    --arrow-border: #c8cac8;
 
     --fg-error: hsla(0deg, 81%, 26%, 1);
     --bg-error: hsla(0deg, 75%, 78%, 1);
@@ -96,7 +96,7 @@
     --fg-link-visited: hsla(271deg, 100%, 54%);
     --fg-title: green;
 
-    --arrow-border: black;
+    --arrow-border: #7d7d7d;
 
     --bg-aside: white;
     --bg-link: transparent;
@@ -468,8 +468,8 @@ body {
                                         width: 100%;
                                         position: relative;
                                         display: grid;
-                                        grid-template-columns: repeat(4, minmax(min-content, max-content));
-                                        gap: 10px;
+                                        grid-template-columns: 1fr repeat(3, auto);
+                                        column-gap: 10px;
                                         overflow-y: auto;
                                         padding-right: 10px;
                                         scrollbar-width: thin;
@@ -531,7 +531,7 @@ body {
                                             border-top: 5px solid transparent;
                                             border-left: 10px solid var(--arrow-border);
                                             border-bottom: 5px solid transparent;
-                                            margin: auto 10px;
+                                            margin: auto 0;
                                         }
 
                                         li, li a {

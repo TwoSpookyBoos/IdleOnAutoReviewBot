@@ -53,9 +53,9 @@ def main(inputData, runType="web"):
     # General
     sections_general = [
         section_combatLevels := combatLevels.setCombatLevelsProgressionTier(),
-        sections_consumables := consumables.parseConsumables(),
+        *(sections_consumables := consumables.parseConsumables()),
         section_gemShop := gemShop.setGemShopProgressionTier(),
-        sections_gstacks := greenstacks.setGStackProgressionTier(),
+        *(sections_gstacks := greenstacks.setGStackProgressionTier()),
         section_maestro := maestroHands.getHandsStatus(),
         section_cards := cards.getCardSetReview(),
     ]
