@@ -727,21 +727,6 @@ rift_progressionTiers = {
     9: [45, "20T",          240],
 }
 
-equinox_progressionTiers = {
-    0:  [0, ""],
-    1:  [1, "Unlock Equinox Resources"],
-    2:  [3, "Unlock Shades of K"],
-    3:  [6, "Unlock Liquidvestment"],
-    4:  [8, "Unlock Matching Scims"],
-    5:  [11, "Unlock Slow Roast Wiz"],
-    6:  [14, "Unlock Laboratory Fuse"],
-    7:  [18, "Unlock Metal Detector"],
-    8:  [21, "Unlock Faux Jewels"],
-    9:  [24, "Unlock Food Lust"],
-    10: [29, "Unlock Equinox Symbols"],
-    11: [31, "Complete the Final Dream"],
-}
-
 missableGStacksDict = {
     #  ItemName               Codename     Quest Codeame          Quest Name                                          Wiki link to the item                             Recommended Class/Farming notes
     "Dog Bone":              ["Quest12",   "Dog_Bone1",           "Dog Bone: Why he Die???",                          "https://idleon.wiki/wiki/Dog_Bone",              "Active ES or time candy."],

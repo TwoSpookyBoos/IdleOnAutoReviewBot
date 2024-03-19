@@ -3,7 +3,6 @@ import json
 from flask import g as session_data
 
 import consts
-from consts import equinox_progressionTiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
 from utils.text_formatting import pl
@@ -11,7 +10,9 @@ from utils.text_formatting import pl
 
 logger = get_logger(__name__)
 optionalUpgradeList = ['Shades of K', 'Laboratory Fuse']
-
+defaultOrderUpgradeList = ['Equinox Dreams', 'Equinox Resources', 'Shades of K', 'Liquidvestment', 'Matching Scims', 'Slow Roast Wiz',
+                           'Laboratory Fuse', 'Metal Detector', 'Faux Jewels', 'Food Lust', 'Equinox Symbols']
+dreamsThatUnlockNewBonuses = [1, 3, 6, 9, 11, 14, 18, 21, 24, 29]
 
 def getRawEquinoxValues():
     rawEquinoxBonusLevelsList = session_data.account.raw_data.get("Dream", [0]*30)
@@ -87,11 +88,9 @@ def setEquinoxProgressionTier():
     #     equinox_AdviceSection.header = "Come back after unlocking Equinox!"
     #     return equinox_AdviceSection
 
-    playerEquinoxBonusLevelsDict, playerEquinoxDreams = getRawEquinoxValues()
-    totalDreamsCompleted = sum(playerEquinoxDreams)
-    tier_TotalDreamsCompleted = 0
-    tier_TotalEquinoxUpgrades = 0
-    max_tier = max(equinox_progressionTiers.keys())
+    playerEquinoxBonusLevelsDict, playerEquinoxDreamsStatusList = getRawEquinoxValues()
+    totalDreamsCompleted = sum(playerEquinoxDreamsStatusList)
+    max_tier = len(dreamsThatUnlockNewBonuses) + 1  # 1 final tier for completing all dreams
     maxRecommendedUpgradeLevelDict = {
         'Equinox Dreams': 5,
         'Equinox Resources': 4,
@@ -122,45 +121,59 @@ def setEquinoxProgressionTier():
         'Shades of K': 3,
         'Laboratory Fuse': 10,
     }
-    setEquinoxUpgradeMaxLevels(playerEquinoxDreams, recommendedBonusOrderDict)
+    setEquinoxUpgradeMaxLevels(playerEquinoxDreamsStatusList, recommendedBonusOrderDict)
+    totalBonusesUnlocked = 0
+    playerDreamsCompleted = playerEquinoxDreamsStatusList.count(True)
+    remainingDreamsUnlockingNewBonuses = []
+    for dreamNumber in dreamsThatUnlockNewBonuses:
+        if playerEquinoxDreamsStatusList[dreamNumber] == True:
+            totalBonusesUnlocked += 1
+        else:
+            remainingDreamsUnlockingNewBonuses.append(dreamNumber)
     recommendedBonusUnlockedDict = {
-        'Equinox Dreams': playerEquinoxDreams[0],
-        'Equinox Resources': playerEquinoxDreams[1],
-        'Shades of K': playerEquinoxDreams[3],
-        'Liquidvestment': playerEquinoxDreams[6],
-        'Matching Scims': playerEquinoxDreams[8],
-        'Slow Roast Wiz': playerEquinoxDreams[11],
-        'Laboratory Fuse': playerEquinoxDreams[14],
-        'Metal Detector': playerEquinoxDreams[18],
-        'Faux Jewels': playerEquinoxDreams[21],
-        'Food Lust': playerEquinoxDreams[24],
-        'Equinox Symbols': playerEquinoxDreams[29],
+        'Equinox Dreams': True,
+        'Equinox Resources': totalBonusesUnlocked >= 1,
+        'Shades of K': totalBonusesUnlocked >= 2,
+        'Liquidvestment': totalBonusesUnlocked >= 3,
+        'Matching Scims': totalBonusesUnlocked >= 4,
+        'Slow Roast Wiz': totalBonusesUnlocked >= 5,
+        'Laboratory Fuse': totalBonusesUnlocked >= 6,
+        'Metal Detector': totalBonusesUnlocked >= 7,
+        'Faux Jewels': totalBonusesUnlocked >= 8,
+        'Food Lust': totalBonusesUnlocked >= 9,
+        'Equinox Symbols': totalBonusesUnlocked >= 10,
     }
+    remainingBonusesToBeUnlocked = []
+    for key, value in recommendedBonusUnlockedDict.items():
+        if value == False:
+            remainingBonusesToBeUnlocked.append(key)
     recommendedBonusTotal = sum(list(maxRecommendedUpgradeLevelDict.values()))
     optionalBonusTotal = sum(list(maxIgnorableUpgradeLevelDict.values()))
     currentMaxBonusTotal = recommendedBonusTotal + optionalBonusTotal
     playerBonusTotal = playerEquinoxBonusLevelsDict.get("TotalUpgrades", [0,0,0])[0] + playerEquinoxBonusLevelsDict.get("TotalUpgrades", [0,0,0])[1]
 
-    for tier, (dream_number, label) in equinox_progressionTiers.items():
-        #Total Dreams Completed
-        if playerEquinoxDreams[dream_number] == True:  #If the player has this dream completed
-            tier_TotalDreamsCompleted = tier
-        else:
+    if totalDreamsCompleted == consts.maxDreams:  #If the player has completed ALL dreams, set to max tier
+        tier_TotalDreamsCompleted = max_tier
+    else:
+        # Otherwise set to max - 1 (for completing all dreams) - however many upgrades are remaining to be unlocked
+        # 11 - 1 = t10 if all bonuses unlocked
+        # 11 - 1 - 4 = t6 if 5 remaining bonuses to be unlocked
+        tier_TotalDreamsCompleted = max_tier - 1 - len(remainingDreamsUnlockingNewBonuses)
+        for lockedBonus in remainingBonusesToBeUnlocked:
             equinox_AdviceDict["DreamsCompleted"].append(Advice(
-                label=label,
-                picture_class=label[7:],
-                goal=f"Dream {dream_number}"
+                label=lockedBonus,
+                picture_class=lockedBonus,
+                goal=f"Dream {remainingDreamsUnlockingNewBonuses[remainingBonusesToBeUnlocked.index(lockedBonus)]}"
             ))
+        equinox_AdviceDict["DreamsCompleted"].append(Advice(
+            label=f"Complete all {consts.maxDreams} Dreams",
+            picture_class="",
+            progression=totalDreamsCompleted,
+            goal=consts.maxDreams
+        ))
 
     # Upgrades Purchased
     if playerBonusTotal < recommendedBonusTotal:
-        
-        # equinox_AdviceDict["TotalUpgrades"][f"{playerEquinoxBonusLevelsDict.get("TotalUpgrades", [0,0])[0]}/{recommendedBonusTotal}"].append(Advice(
-        #     label="Total Recommended Upgrades Purchased",
-        #     picture_class="equinox",
-        #     progression=playerEquinoxBonusLevelsDict.get("TotalUpgrades", [0,0])[0],
-        #     goal=recommendedBonusTotal
-        # ))
         subgroupName = f"Recommended {playerEquinoxBonusLevelsDict.get('TotalUpgrades', [0, 0, 0])[0]}/{recommendedBonusTotal}"
         if subgroupName not in equinox_AdviceDict["TotalUpgrades"]:
             equinox_AdviceDict["TotalUpgrades"][subgroupName] = []
@@ -194,7 +207,7 @@ def setEquinoxProgressionTier():
     #Generate AdviceGroups
     equinox_AdviceGroupDict["DreamsCompleted"] = AdviceGroup(
         tier=str(tier_TotalDreamsCompleted),
-        pre_string=f"Complete {pl(max_tier-tier_TotalDreamsCompleted, 'the final Equinox goal', 'more Equinox goals')}",
+        pre_string=f"{pl(consts.maxDreams-totalDreamsCompleted, 'Complete the last Equinox Dream', 'Complete more Equinox Dreams')}",
         advices=equinox_AdviceDict.get("DreamsCompleted", []),
         post_string=""
     )
