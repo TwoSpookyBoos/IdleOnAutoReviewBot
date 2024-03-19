@@ -152,7 +152,7 @@ def setEquinoxProgressionTier():
     currentMaxBonusTotal = recommendedBonusTotal + optionalBonusTotal
     playerBonusTotal = playerEquinoxBonusLevelsDict.get("TotalUpgrades", [0,0,0])[0] + playerEquinoxBonusLevelsDict.get("TotalUpgrades", [0,0,0])[1]
 
-    if totalDreamsCompleted == consts.maxDreams:  #If the player has completed ALL dreams, set to max tier
+    if totalDreamsCompleted >= consts.maxDreams:  #If the player has completed ALL dreams, set to max tier
         tier_TotalDreamsCompleted = max_tier
     else:
         # Otherwise set to max - 1 (for completing all dreams) - however many upgrades are remaining to be unlocked
