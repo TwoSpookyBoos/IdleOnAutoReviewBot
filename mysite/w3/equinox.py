@@ -89,7 +89,7 @@ def setEquinoxProgressionTier():
     #     return equinox_AdviceSection
 
     playerEquinoxBonusLevelsDict, playerEquinoxDreamsStatusList = getRawEquinoxValues()
-    totalDreamsCompleted = sum(playerEquinoxDreamsStatusList)
+    totalDreamsCompleted = sum(playerEquinoxDreamsStatusList)-1  #Remove the placeholder in 0th index
     max_tier = len(dreamsThatUnlockNewBonuses) + 1  # 1 final tier for completing all dreams
     maxRecommendedUpgradeLevelDict = {
         'Equinox Dreams': 5,
