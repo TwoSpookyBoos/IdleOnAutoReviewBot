@@ -16,6 +16,7 @@
 @import "boss-keys";
 @import "cards";
 @import "rift";
+@import "equinox";
 
 $id-map: (
 	item-backpack-space: $inventory-bag-u,
@@ -2081,6 +2082,7 @@ $extra: (
 	cards: $cards,
 	damage: $damage,
 	rift: $rift-ripper,
+	equinox: $equinox-mirror,
 );
 
 $character-classes: (
@@ -2147,6 +2149,7 @@ $id-map: map-merge($monsters, $id-map);
 $id-map: map-merge($boss-keys, $id-map);
 $id-map: map-merge($all-cards, $id-map);
 $id-map: map-merge($rift, $id-map);
+$id-map: map-merge($equinox, $id-map);
 
 @each $class, $link in $id-map {
 	.#{$class}::before {
