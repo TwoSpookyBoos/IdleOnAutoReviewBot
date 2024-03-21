@@ -629,7 +629,9 @@ class Account:
         self.max_toon_count = 10  # OPTIMIZE: find a way to read this from somewhere
 
     def _make_cards(self):
-        card_counts = json.loads(self.raw_data[self._key_cards])
+        card_counts = self.raw_data[self._key_cards]
+        if isinstance(card_counts, str):
+            card_counts = json.loads(self.raw_data[self._key_cards])
         cards = [
             Card(codename, name, cardset, int(float(card_counts.get(codename, 0))), coefficient)
             for cardset, cards in card_data.items()

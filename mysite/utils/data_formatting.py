@@ -194,8 +194,9 @@ def getCharacterDetails(inputJSON, runType):
         try:
             # this produces an unsorted list of names
             cogDataForNames = inputJSON["CogO"]
-            cogDataList = json.loads(cogDataForNames)
-            for item in cogDataList:
+            if isinstance(cogDataForNames, str):
+                cogDataForNames = json.loads(cogDataForNames)
+            for item in cogDataForNames:
                 if item.startswith("Player_"):
                     playerCount += 1
                     playerNames.append(item[7:])

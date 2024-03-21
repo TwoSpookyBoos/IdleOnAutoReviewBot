@@ -11,7 +11,7 @@ logger = get_logger(__name__)
 
 def getEquinoxDreams() -> dict:
     try:
-        rawDreams = json.loads(session_data.account.raw_data["WeeklyBoss"])
+        rawDreams = json.loads(session_data.account.raw_data.get("WeeklyBoss", "{}"))
     except Exception as reason:
         logger.error("Unable to access WeeklyBoss data from JSON: %s", reason)
         return dict(
@@ -30,7 +30,7 @@ def getEquinoxDreams() -> dict:
     return results
 
 
-def parseCombatLevels(playerNames):
+def parseCombatLevels():
     combatLevels = session_data.account.all_skills["Combat"]
     equinox3_charactersUnder100 = {}
     equinox11_charactersUnder250 = {}
@@ -57,7 +57,7 @@ def parseCombatLevels(playerNames):
 
 
 def setCombatLevelsProgressionTier() -> AdviceSection:
-    parsedCombatLevels = parseCombatLevels(session_data.account.names)
+    parsedCombatLevels = parseCombatLevels()
     equinoxDreamStatus = getEquinoxDreams()
 
     total_combat_level = parsedCombatLevels['sum_AccountLevel']
