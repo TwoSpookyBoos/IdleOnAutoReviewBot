@@ -92,17 +92,18 @@ document.addEventListener("DOMContentLoaded", () => {
     expandableSections.forEach(section => {
         const expandableGroups = section.querySelector(".groups")
         const showMoreButton = section.querySelector(".show-more")
+        let hiddenGroups = expandableGroups.querySelectorAll(".hidden")
         showMoreButton.onclick = e => {
             const button = e.currentTarget
-            const groups = expandableGroups.querySelectorAll(".hidden")
 
-            groups[0].classList.remove("hidden")
-            if (groups.length === 1) {
+            hiddenGroups[0].classList.remove("hidden")
+            hiddenGroups[0].remove()
+
+            if (hiddenGroups.length === 0) {
                 button.style.display = "none"
             }
-
         }
-        if (expandableGroups.children.length > 3) {
+        if (hiddenGroups.length > 0) {
             showMoreButton.style.display = "block"
         }
     })
