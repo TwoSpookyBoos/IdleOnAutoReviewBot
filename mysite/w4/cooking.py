@@ -74,8 +74,8 @@ def setCookingProgressionTier():
     if len(voidwalkers) > 0 and playerTotalMealLevels >= 500:
         tier_Cooking = 4
         cooking_AdviceDict["CurrentTier"].append(Advice(
-            label="Use IE or IT's Cooking section with the sort set to 'Least Time to Cook Next'",
-            picture_class="",
+            label="Any. Voidwalker's Blood Marrow buff scales off ALL plate levels",
+            picture_class="blood-marrow",
             progression="",
             goal="",
         ))
@@ -102,12 +102,12 @@ def setCookingProgressionTier():
         ))
         cooking_AdviceDict["CurrentTier"].append(Advice(
             label="Any ol' meal is good here to prep for the next tier",
-            picture_class="",
+            picture_class="blood-marrow",
             progression="",
             goal="",
         ))
-        # 2) If Diamond Chef owned and level 5+, Speed meal or Fastest to 11.
-    elif dchefLevel >= 5:
+        # 2) If Diamond Chef owned and level 15+, Speed meal or Fastest to 11.
+    elif dchefLevel >= 15:
         tier_Cooking = 2
         cooking_AdviceDict["NextTier"].append(Advice(
             label="Unlock Fluoride - Void Plate Chef in the Atom Collider",
@@ -121,7 +121,7 @@ def setCookingProgressionTier():
         ))
         cooking_AdviceDict["CurrentTier"].append(Advice(
             label="Any ol' meal is okay here to start prepping for future tiers",
-            picture_class="",
+            picture_class="blood-marrow",
             progression="",
             goal="",
         ))
@@ -132,10 +132,10 @@ def setCookingProgressionTier():
             label="Unlock and level Diamond Chef bubble",
             picture_class="diamond-chef",
             progression=dchefLevel,
-            goal=5
+            goal=15
         ))
         cooking_AdviceDict["CurrentTier"].append(Advice(
-            label="Focus on Meal Speed meals with the least time remaining to level",
+            label="Speed meals",
             picture_class="",
             progression="",
             goal="",
