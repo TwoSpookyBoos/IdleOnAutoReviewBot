@@ -17,6 +17,7 @@
 @import "cards";
 @import "rift";
 @import "equinox";
+@import "meals";
 
 $id-map: (
 	item-backpack-space: $inventory-bag-u,
@@ -2150,6 +2151,7 @@ $id-map: map-merge($boss-keys, $id-map);
 $id-map: map-merge($all-cards, $id-map);
 $id-map: map-merge($rift, $id-map);
 $id-map: map-merge($equinox, $id-map);
+$id-map: map-merge($meals, $id-map);
 
 @each $class, $link in $id-map {
 	.#{$class}::before {

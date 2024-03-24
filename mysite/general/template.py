@@ -7,8 +7,10 @@ from consts import progressionTiers
 logger = get_logger(__name__)
 
 def parseJSONtoLists():
-    templateList = json.loads(session_data.account.raw_data.get("Template", []))
-    return templateList
+    rawTemplate = session_data.account.raw_data.get("Template", [])
+    if isinstance(rawTemplate, str):
+        rawCooking = json.loads(rawTemplate)
+    return rawTemplate
 
 def setTemplateProgressionTier():
     template_AdviceDict = {
@@ -16,7 +18,8 @@ def setTemplateProgressionTier():
     template_AdviceGroupDict = {}
     template_AdviceSection = AdviceSection(
         name="Template",
-        tier="Not Yet Evaluated",
+        tier="0",
+        pinchy_rating=0,
         header="Best Template tier met: Not Yet Evaluated",
         picture=""
     )

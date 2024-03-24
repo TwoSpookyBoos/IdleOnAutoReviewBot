@@ -13,6 +13,8 @@ def getShinyLevelFromDays(days: float) -> int:
     for requirement in shinyDaysList:
         if float(days) > requirement:
             shinyLevel += 1
+        else:
+            break
     return shinyLevel
 
 def getDaysToNextShinyLevel(days: float) -> float:
