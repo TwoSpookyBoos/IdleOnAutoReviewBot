@@ -27,7 +27,19 @@ def parseJSON():
         while len(rawMeals[sublistIndex]) < maxMeals:
             rawMeals[sublistIndex].append(0)
 
-    return [rawCooking, rawMeals]
+    #Count the number of unlocked meals, unlocked meals under 11, and unlocked meals under 30
+    mealsUnlocked = 0
+    mealsUnder11 = 0
+    mealsUnder30 = 0
+    for mealLevel in rawMeals[0]:
+        if mealLevel > 0:
+            mealsUnlocked += 1
+            if mealLevel < 11:
+                mealsUnder11 += 1
+            if mealLevel < 30:
+                mealsUnder30 += 1
+
+    return [rawCooking, rawMeals, mealsUnlocked, mealsUnder11, mealsUnder30]
 
 def setCookingProgressionTier():
     cooking_AdviceDict = {
@@ -49,9 +61,6 @@ def setCookingProgressionTier():
 
     tier_Cooking = 0
     max_tier = 4
-
-    playerCookingList, playerMealsList = parseJSON()
-    playerTotalMealLevels = sum(playerMealsList[0])
     voidwalkers = [toon for toon in session_data.account.all_characters if toon.elite_class == "Voidwalker"]
 
     try:
@@ -66,20 +75,14 @@ def setCookingProgressionTier():
         logger.exception(f"Unable to retrieve Diamond Chef bubble level. Defaulting to 0.")
         dchefLevel = 0
 
-    #Assess Tiers and Generate Advice
-    # 4) if Vman and total plates over 500: Fastest Any level
-        # If any under 11, those first
-        # Elif any under 30, those next
-        # Else whatever plate is fastest to level, with slightly more preference to Speed meals. Maybe a 1.2x buffer or something?
+    playerCookingList, playerMealsList, mealsUnlocked, mealsUnder11, mealsUnder30 = parseJSON()
+    playerTotalMealLevels = sum(playerMealsList[0])
+
+    #Assess Tiers and Generate NextTier Advice
+    # 4) if Vman and total plates over 500:
     if len(voidwalkers) > 0 and playerTotalMealLevels >= 500:
         tier_Cooking = 4
-        cooking_AdviceDict["CurrentTier"].append(Advice(
-            label="Any. Voidwalker's Blood Marrow buff scales off ALL plate levels",
-            picture_class="blood-marrow",
-            progression="",
-            goal="",
-        ))
-    # 3) if Atom Collider Flouride upgrade owned: Fastest to 30 or Speed Meal or Fastest to 11.
+    # 3) if Atom Collider Flouride upgrade owned:
     elif atomFlouride:
         tier_Cooking = 3
         if len(voidwalkers) == 0:
@@ -94,38 +97,14 @@ def setCookingProgressionTier():
                 progression=playerTotalMealLevels,
                 goal=500
             ))
-        cooking_AdviceDict["CurrentTier"].append(Advice(
-            label="Fastest out of: Fastest to 11, Fastest to 30, any Speed meals",
-            picture_class="",
-            progression="",
-            goal="",
-        ))
-        cooking_AdviceDict["CurrentTier"].append(Advice(
-            label="Any ol' meal is good here to prep for the next tier",
-            picture_class="blood-marrow",
-            progression="",
-            goal="",
-        ))
-        # 2) If Diamond Chef owned and level 15+, Speed meal or Fastest to 11.
+    # 2) if Diamond Chef owned and level 15+, Speed meal or Fastest to 11.
     elif dchefLevel >= 15:
         tier_Cooking = 2
         cooking_AdviceDict["NextTier"].append(Advice(
             label="Unlock Fluoride - Void Plate Chef in the Atom Collider",
             picture_class=""
         ))
-        cooking_AdviceDict["CurrentTier"].append(Advice(
-            label="Fastest out of: Fastest to 11, any Speed meals",
-            picture_class="",
-            progression="",
-            goal="",
-        ))
-        cooking_AdviceDict["CurrentTier"].append(Advice(
-            label="Any ol' meal is okay here to start prepping for future tiers",
-            picture_class="blood-marrow",
-            progression="",
-            goal="",
-        ))
-    # 1) Fastest Speed Meal
+    # 1) if cooking is unlocked at least
     else:
         tier_Cooking = 1
         cooking_AdviceDict["NextTier"].append(Advice(
@@ -134,9 +113,47 @@ def setCookingProgressionTier():
             progression=dchefLevel,
             goal=15
         ))
+
+    #Generate CurrentTier Advice
+    if tier_Cooking == max_tier:
+        if mealsUnlocked < maxMeals:
+            cooking_AdviceDict["CurrentTier"].append(Advice(
+                label="Total Unlocked Meals",
+                picture_class="",
+                progression=mealsUnlocked,
+                goal=maxMeals,
+            ))
+            cooking_AdviceDict["CurrentTier"].append(Advice(
+                label="Any! Voidwalker's Blood Marrow buff scales with EVERY meal level!",
+                picture_class="blood-marrow",
+                progression="",
+                goal="",
+            ))
+    if tier_Cooking < max_tier:
         cooking_AdviceDict["CurrentTier"].append(Advice(
-            label="Speed meals",
-            picture_class="",
+            label="+% Meal Cooking Speed",
+            picture_class="egg",
+            progression="",
+            goal="",
+        ))
+    if mealsUnder11 > 0 and tier_Cooking >= 2:
+        cooking_AdviceDict["CurrentTier"].append(Advice(
+            label="All unlocked plates to 11",
+            picture_class="diamond-chef",
+            progression=mealsUnder11,
+            goal=0,
+        ))
+    if mealsUnder30 > 0 and tier_Cooking >= 3:
+        cooking_AdviceDict["CurrentTier"].append(Advice(
+            label="All unlocked plates to 30",
+            picture_class="flouride",
+            progression=mealsUnder30,
+            goal=0,
+        ))
+    if tier_Cooking < max_tier:
+        cooking_AdviceDict["CurrentTier"].append(Advice(
+            label="Any fast meal to start prepping for Voidwalker's Blood Marrow",
+            picture_class="blood-marrow",
             progression="",
             goal="",
         ))
