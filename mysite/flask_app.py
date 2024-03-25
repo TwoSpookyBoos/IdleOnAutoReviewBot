@@ -62,6 +62,7 @@ def store_user_preferences():
     g.sheepie = args.get("sheepie", False) in ["on", "True"]
     g.doot = args.get("doot", False) in ["on", "True"]
     g.order_tiers = args.get("order_tiers", False) in ["on", "True"]
+    g.progress_bars = args.get("progress_bars", False) in ["on", "True"]
     g.handedness = args.get("handedness", False) in ["on", "True"]
 
 
@@ -71,6 +72,7 @@ def get_user_preferences():
         sheepie=g.sheepie,
         doot=g.doot,
         order_tiers=g.order_tiers,
+        progress_bars=g.progress_bars,
         handedness=g.handedness,
     )
 
@@ -81,6 +83,7 @@ def switches():
         ("Sheepie pet acquired", "sheepie", "", ""),
         ("Doot pet acquired", "doot", "", ""),
         ("Order groups by tier", "order_tiers", "", ""),
+        ("Show progress bars", "progress_bars", "", ""),
         ("Handedness", "handedness", "L", "R"),
     ]
     return [

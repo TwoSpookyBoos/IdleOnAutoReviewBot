@@ -17,6 +17,17 @@ document.addEventListener("keydown", (e) => {
     if (escPressed) toggleSidebar()
 })
 
+function progWidth(bar, w, p, g) {
+    const goal = g.innerText.replace(/.*?(\d+).*/, "$1")
+    const prog = p.innerText.replace(/.*?(\d+).*/, "$1")
+    const inPercentages = g.innerText.includes("%") || p.innerText.includes("%")
+    const inRatio = prog.length > 0 && goal.length > 0
+
+    if (inRatio) return [(100 * parseFloat(prog) / parseFloat(goal)), true]
+    if (inPercentages) return [parseFloat(prog) || parseFloat(goal), true]
+    return [0, (inPercentages || inRatio)]
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     // set event listeners for folding worlds and sections
     document.querySelectorAll('.toggler').forEach(toggler => toggler.onclick = (e) => {
@@ -81,6 +92,26 @@ document.addEventListener("DOMContentLoaded", () => {
     // handle left/right handedness switching
     document.querySelector('#handedness').onclick = () => document.querySelectorAll('.slider, .nav-links, #drawer-handle').forEach(s => s.classList.toggle('lefty'))
 
+    // toggle progress bars
+    document.querySelector('#progress_bars').onclick = e => {
+        const checkbox= e.currentTarget
+        document.querySelectorAll('.progress-box').forEach(box => {
+            const siblings = Array.from(box.parentElement.children)
+            const idx = siblings.indexOf(box)
+            const prog = siblings[idx + 2]
+            const goal = siblings[idx + 4]
+            const row = siblings.slice(idx + 1, idx + 5)
+            const rowWidth = row.reduce((total, curr) => total + curr.offsetWidth, 0)
+            const [_, show] = progWidth(box, rowWidth, prog, goal)
+
+            if (checkbox.value === "off") {
+                box.classList.add('hidden')
+            } else if (show) {
+                box.classList.remove('hidden')
+            }
+        })
+    }
+
     document.querySelectorAll('#pinchy .advice-group a').forEach(hyperlink => hyperlink.onclick = e => {
         const link = e.currentTarget
         const targetId = link.getAttribute("href").slice(1)
@@ -92,18 +123,18 @@ document.addEventListener("DOMContentLoaded", () => {
     expandableSections.forEach(section => {
         const expandableGroups = section.querySelector(".groups")
         const showMoreButton = section.querySelector(".show-more")
+        const groups = Array.from(expandableGroups.querySelectorAll(".advice-group.hidden"))
+
+        showMoreButton.style.display = (groups.length > 0) ? "block" : "none"
+
         showMoreButton.onclick = e => {
             const button = e.currentTarget
-            const groups = expandableGroups.querySelectorAll(".hidden")
 
-            groups[0].classList.remove("hidden")
-            if (groups.length === 1) {
+            groups.shift().classList.remove("hidden")
+
+            if (groups.length === 0) {
                 button.style.display = "none"
             }
-
-        }
-        if (expandableGroups.children.length > 3) {
-            showMoreButton.style.display = "block"
         }
     })
 
@@ -141,4 +172,26 @@ document.addEventListener("DOMContentLoaded", () => {
             _sec.toString().padStart(2, "0")
         ].join(":")
     }, 1000)
+
+    // add progress bars
+    document.querySelectorAll(".progress-box").forEach(progressBox => {
+        const progressBar = progressBox.children[0]
+        const advice = progressBox.nextElementSibling
+        const siblings = Array.from(advice.parentElement.children)
+        const idx = siblings.indexOf(advice)
+        const prog = siblings[idx + 1]
+        const goal = siblings[idx + 3]
+        const row = siblings.slice(idx, idx + 4)
+        const rowWidth = row.reduce((total, curr) => total + curr.offsetWidth, 0)
+        const rowHeight = advice.offsetHeight
+        const rowRect = advice.getBoundingClientRect()
+        const rowTop = rowRect.top - advice.parentElement.getBoundingClientRect().top
+        const [progCoefficient, show] = progWidth(progressBox, rowWidth, prog, goal)
+
+        progressBox.style.height = `${rowHeight}px`
+        progressBar.style.width = `${progCoefficient}%`
+        progressBox.style.top = `${rowTop}px`
+
+        if (!show) progressBox.classList.add("hidden")
+    })
 });
