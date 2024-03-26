@@ -60,7 +60,7 @@ def setCookingProgressionTier():
         return cooking_AdviceSection
 
     tier_Cooking = 0
-    max_tier = 4
+    max_tier = 5
     voidwalkers = [toon for toon in session_data.account.all_characters if toon.elite_class == "Voidwalker"]
 
     try:
@@ -79,8 +79,11 @@ def setCookingProgressionTier():
     playerTotalMealLevels = sum(playerMealsList[0])
 
     #Assess Tiers and Generate NextTier Advice
+    # 5) All the basics complete
+    if len(voidwalkers) > 0 and playerTotalMealLevels >= 500 and mealsUnlocked == maxMeals and mealsUnder11 == 0 and mealsUnder30 == 0:
+        tier_Cooking = 5
     # 4) if Vman and total plates over 500:
-    if len(voidwalkers) > 0 and playerTotalMealLevels >= 500:
+    elif len(voidwalkers) > 0 and playerTotalMealLevels >= 500:
         tier_Cooking = 4
     # 3) if Atom Collider Flouride upgrade owned:
     elif atomFlouride:
@@ -115,15 +118,14 @@ def setCookingProgressionTier():
         ))
 
     #Generate CurrentTier Advice
-    if tier_Cooking == max_tier:
-        if mealsUnlocked < maxMeals:
-            cooking_AdviceDict["CurrentTier"].append(Advice(
-                label="Total Unlocked Meals",
-                picture_class="taste-test",
-                progression=mealsUnlocked,
-                goal=maxMeals,
-            ))
-    if tier_Cooking < max_tier:
+    if mealsUnlocked < maxMeals:
+        cooking_AdviceDict["CurrentTier"].append(Advice(
+            label="Total Unlocked Meals",
+            picture_class="taste-test",
+            progression=mealsUnlocked,
+            goal=maxMeals,
+        ))
+    if tier_Cooking <= 3:
         cooking_AdviceDict["CurrentTier"].append(Advice(
             label="+% Meal Cooking Speed",
             picture_class="egg",
@@ -134,17 +136,17 @@ def setCookingProgressionTier():
         cooking_AdviceDict["CurrentTier"].append(Advice(
             label="All unlocked plates to 11 for Diamond Chef",
             picture_class="diamond-chef",
-            progression=mealsUnder11,
-            goal=0,
+            progression=mealsUnlocked-mealsUnder11,
+            goal=mealsUnlocked,
         ))
     if mealsUnder30 > 0 and tier_Cooking >= 3:
         cooking_AdviceDict["CurrentTier"].append(Advice(
             label="All unlocked plates to 30 for Flouride",
             picture_class="flouride",
-            progression=mealsUnder30,
-            goal=0,
+            progression=mealsUnlocked-mealsUnder30,
+            goal=mealsUnlocked,
         ))
-    if tier_Cooking >= max_tier:
+    if tier_Cooking >= 4:
         cooking_AdviceDict["CurrentTier"].append(Advice(
             label="Any! Voidwalker's Blood Marrow buff scales with EVERY meal level!",
             picture_class="blood-marrow",
@@ -153,7 +155,7 @@ def setCookingProgressionTier():
         ))
     else:  #tier_Cooking < max_tier:
         cooking_AdviceDict["CurrentTier"].append(Advice(
-            label="Any fast (5% of your Daily Ladles or less) meal to start prepping for Voidwalker's Blood Marrow",
+            label="Any fast meal to level (5% of your Daily Ladles or less)",
             picture_class="blood-marrow",
             progression="",
             goal="",
