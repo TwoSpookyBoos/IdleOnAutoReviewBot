@@ -80,13 +80,19 @@ def setCookingProgressionTier():
 
     #Assess Tiers and Generate NextTier Advice
     # 5) All the basics complete
-    if len(voidwalkers) > 0 and playerTotalMealLevels >= 500 and mealsUnlocked == maxMeals and mealsUnder11 == 0 and mealsUnder30 == 0:
+    if (mealsUnlocked == maxMeals and mealsUnder11 == 0 and mealsUnder30 == 0
+            and len(voidwalkers) > 0 and playerTotalMealLevels >= 500
+            and atomFlouride
+            and dchefLevel >= 15):
         tier_Cooking = 5
     # 4) if Vman and total plates over 500:
-    elif len(voidwalkers) > 0 and playerTotalMealLevels >= 500:
+    elif (len(voidwalkers) > 0 and playerTotalMealLevels >= 500
+          and atomFlouride
+          and dchefLevel >= 15):
         tier_Cooking = 4
     # 3) if Atom Collider Flouride upgrade owned:
-    elif atomFlouride:
+    elif (atomFlouride
+          and dchefLevel >= 15):
         tier_Cooking = 3
         if len(voidwalkers) == 0:
             cooking_AdviceDict["NextTier"].append(Advice(
