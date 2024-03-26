@@ -126,17 +126,10 @@ def setCookingProgressionTier():
     #Generate CurrentTier Advice
     if mealsUnlocked < maxMeals:
         cooking_AdviceDict["CurrentTier"].append(Advice(
-            label="Total Unlocked Meals",
+            label="Unlock All Meals",
             picture_class="taste-test",
             progression=mealsUnlocked,
             goal=maxMeals,
-        ))
-    if tier_Cooking <= 3:
-        cooking_AdviceDict["CurrentTier"].append(Advice(
-            label="+% Meal Cooking Speed",
-            picture_class="egg",
-            progression="",
-            goal="",
         ))
     if mealsUnder11 > 0 and tier_Cooking >= 2:
         cooking_AdviceDict["CurrentTier"].append(Advice(
@@ -151,6 +144,13 @@ def setCookingProgressionTier():
             picture_class="flouride",
             progression=mealsUnlocked-mealsUnder30,
             goal=mealsUnlocked,
+        ))
+    if tier_Cooking <= 3:
+        cooking_AdviceDict["CurrentTier"].append(Advice(
+            label="+% Meal Cooking Speed",
+            picture_class="egg",
+            progression="",
+            goal="",
         ))
     if tier_Cooking >= 4:
         cooking_AdviceDict["CurrentTier"].append(Advice(
@@ -176,8 +176,8 @@ def setCookingProgressionTier():
     )
 
     cooking_AdviceGroupDict["CurrentTier"] = AdviceGroup(
-        tier=str(tier_Cooking),
-        pre_string=f"Focus on the Fastest Meals {pl(cooking_AdviceDict['CurrentTier'], 'of this type', 'of these types')}",
+        tier="",
+        pre_string=f"Meal priorities for your current tier",
         advices=cooking_AdviceDict["CurrentTier"],
         post_string="",
     )
