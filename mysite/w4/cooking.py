@@ -70,7 +70,7 @@ def setCookingProgressionTier():
         atomFlouride = False
 
     try:
-        dchefLevel = session_data.account.raw_data.get("CauldronInfo")[3][17]
+        dchefLevel = session_data.account.raw_data.get("CauldronInfo")[3]["17"]
     except:
         logger.exception(f"Unable to retrieve Diamond Chef bubble level. Defaulting to 0.")
         dchefLevel = 0
