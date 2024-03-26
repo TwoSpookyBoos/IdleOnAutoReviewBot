@@ -56,7 +56,7 @@ def setCookingProgressionTier():
     )
     highestCookingSkillLevel = max(session_data.account.all_skills["Cooking"])
     if highestCookingSkillLevel < 1:
-        cooking_AdviceSection.header = "Come back after unlocking Cooking!"
+        cooking_AdviceSection.header = "Come back after unlocking the Cooking skill in World 4!"
         return cooking_AdviceSection
 
     tier_Cooking = 0
@@ -119,15 +119,9 @@ def setCookingProgressionTier():
         if mealsUnlocked < maxMeals:
             cooking_AdviceDict["CurrentTier"].append(Advice(
                 label="Total Unlocked Meals",
-                picture_class="",
+                picture_class="taste-test",
                 progression=mealsUnlocked,
                 goal=maxMeals,
-            ))
-            cooking_AdviceDict["CurrentTier"].append(Advice(
-                label="Any! Voidwalker's Blood Marrow buff scales with EVERY meal level!",
-                picture_class="blood-marrow",
-                progression="",
-                goal="",
             ))
     if tier_Cooking < max_tier:
         cooking_AdviceDict["CurrentTier"].append(Advice(
@@ -138,21 +132,28 @@ def setCookingProgressionTier():
         ))
     if mealsUnder11 > 0 and tier_Cooking >= 2:
         cooking_AdviceDict["CurrentTier"].append(Advice(
-            label="All unlocked plates to 11",
+            label="All unlocked plates to 11 for Diamond Chef",
             picture_class="diamond-chef",
             progression=mealsUnder11,
             goal=0,
         ))
     if mealsUnder30 > 0 and tier_Cooking >= 3:
         cooking_AdviceDict["CurrentTier"].append(Advice(
-            label="All unlocked plates to 30",
+            label="All unlocked plates to 30 for Flouride",
             picture_class="flouride",
             progression=mealsUnder30,
             goal=0,
         ))
-    if tier_Cooking < max_tier:
+    if tier_Cooking >= max_tier:
         cooking_AdviceDict["CurrentTier"].append(Advice(
-            label="Any fast meal to start prepping for Voidwalker's Blood Marrow",
+            label="Any! Voidwalker's Blood Marrow buff scales with EVERY meal level!",
+            picture_class="blood-marrow",
+            progression="Total Meal Levels",
+            goal=playerTotalMealLevels,
+        ))
+    else:  #tier_Cooking < max_tier:
+        cooking_AdviceDict["CurrentTier"].append(Advice(
+            label="Any fast (5% of your Daily Ladles or less) meal to start prepping for Voidwalker's Blood Marrow",
             picture_class="blood-marrow",
             progression="",
             goal="",

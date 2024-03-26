@@ -83,6 +83,7 @@ def setConsBuildingsProgressionTier():
     highestConstructionLevel = max(session_data.account.all_skills["Construction"])
     if highestConstructionLevel < 1:
         building_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
+        building_AdviceSection.collapse = True
         return building_AdviceSection
 
     progressionTiersPreBuffs = copy.deepcopy(progressionTiers['Construction Buildings Pre-Buffs'])
