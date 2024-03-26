@@ -111,7 +111,7 @@ def setCookingProgressionTier():
         tier_Cooking = 2
         cooking_AdviceDict["NextTier"].append(Advice(
             label="Unlock Fluoride - Void Plate Chef in the Atom Collider",
-            picture_class=""
+            picture_class="flouride"
         ))
     # 1) if cooking is unlocked at least
     else:
