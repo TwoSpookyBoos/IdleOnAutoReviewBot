@@ -18,8 +18,9 @@ document.addEventListener("keydown", (e) => {
 })
 
 // calculate progress bars
-function calcProgressBars(parent) {
+function calcProgressBars(parent = document) {
     parent.querySelectorAll(".progress-box").forEach(progressBox => {
+        const checkbox= document.querySelector('#progress_bars')
         const advice = progressBox.nextElementSibling
         const siblings = Array.from(advice.parentElement.children)
         const idx = siblings.indexOf(advice)
@@ -38,9 +39,10 @@ function calcProgressBars(parent) {
         progressBox.style.height = `${rowHeight}px`
         progressBox.style.top = `${rowTop}px`
 
-        if (!show) {
-            progressBox.classList.add("hidden")
-
+        if (checkbox.value === "off" || !show) {
+            progressBox.classList.add('hidden')
+        } else if (show) {
+            progressBox.classList.remove('hidden')
         }
     })
 }
@@ -57,6 +59,21 @@ function progWidth(bar, w, p, g) {
     return [0, (inPercentages || inRatio)]
 }
 
+const hideProgressBoxes = (parent = document) => parent
+    .querySelectorAll('.progress-box')
+    .forEach(box => box.classList.add("hidden"))
+
+let resizeTimer;
+window.addEventListener('resize', () => {
+    if (!resizeTimer) hideProgressBoxes()
+
+    clearTimeout(resizeTimer);
+
+    resizeTimer = setTimeout(() => {
+        calcProgressBars()
+        resizeTimer = null
+    }, 100)
+})
 document.addEventListener("DOMContentLoaded", () => {
     // set event listeners for folding worlds and sections
     document.querySelectorAll('.toggler').forEach(toggler => toggler.onclick = (e) => {
@@ -122,27 +139,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector('#handedness').onclick = () => document.querySelectorAll('.slider, .nav-links, #drawer-handle').forEach(s => s.classList.toggle('lefty'))
 
     // toggle progress bars
-    document.querySelector('#progress_bars').onclick = e => {
-        const checkbox= e.currentTarget
-        document.querySelectorAll('.progress-box').forEach(progressBox => {
-            const advice = progressBox.nextElementSibling
-            const siblings = Array.from(advice.parentElement.children)
-            const idx = siblings.indexOf(advice)
-            const prog = siblings[idx + 1]
-            const goal = siblings[idx + 3]
-            const row = siblings.slice(idx, idx + 4)
-            const rowWidth = row.reduce((total, curr) => total + curr.offsetWidth, 0)
-            const [_, show] = progWidth(progressBox, rowWidth, prog, goal)
+    document.querySelector('#progress_bars').onclick = () => calcProgressBars(document)
 
-            const progressBar = progressBox.querySelector(".progress-bar")
-
-            if (checkbox.value === "off") {
-                progressBox.classList.add('hidden')
-            } else if (show) {
-                progressBox.classList.remove('hidden')
-            }
-        })
-    }
 
     document.querySelectorAll('#pinchy .advice-group a').forEach(hyperlink => hyperlink.onclick = e => {
         const link = e.currentTarget
