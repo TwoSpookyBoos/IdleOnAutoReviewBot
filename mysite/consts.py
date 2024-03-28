@@ -1123,6 +1123,7 @@ currentMaxChestsSum = 45  # As of v2.0
 maxDreams = 31
 maxCookingTables = 10
 maxMeals = 67
+maxMealLevel = 90
 
 humanReadableClasses = {
     1: "Beginner",

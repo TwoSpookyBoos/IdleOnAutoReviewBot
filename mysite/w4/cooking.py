@@ -2,7 +2,7 @@ import json
 from models.models import Advice, AdviceGroup, AdviceSection
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import maxCookingTables, maxMeals
+from consts import maxCookingTables, maxMeals, maxMealLevel
 from utils.text_formatting import pl
 
 logger = get_logger(__name__)
@@ -156,8 +156,6 @@ def setCookingProgressionTier():
         cooking_AdviceDict["CurrentTier"].append(Advice(
             label="Any! Voidwalker's Blood Marrow buff scales with EVERY meal level!",
             picture_class="blood-marrow",
-            progression="Total Meal Levels",
-            goal=playerTotalMealLevels,
         ))
     else:  #tier_Cooking < max_tier:
         cooking_AdviceDict["CurrentTier"].append(Advice(
@@ -165,6 +163,13 @@ def setCookingProgressionTier():
             picture_class="blood-marrow",
             progression="",
             goal="",
+        ))
+    if playerTotalMealLevels < maxMeals * maxMealLevel:
+        cooking_AdviceDict["CurrentTier"].append(Advice(
+            label="Info- Total Meal Levels",
+            picture_class="turkey-a-la-thank",
+            progression=playerTotalMealLevels,
+            goal=maxMeals * maxMealLevel,
         ))
 
     # Generate Advice Groups
