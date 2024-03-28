@@ -86,7 +86,7 @@
     --bg-header-json: #8e6c19;
     --bg-header-public: var(--bg-pinchy);
 
-    --progress-color: rgba(0, 0, 0, 0.2);
+    --progress-color: rgba(0, 0, 0, 0.3);
 }
 
 :root.light-mode {
@@ -162,7 +162,7 @@
     --bg-header-json: #d8c394;
     --bg-header-public: var(--bg-pinchy);
 
-    --progress-color: rgba(255, 255, 255, 0.2);
+    --progress-color: rgba(255, 255, 255, 0.4);
 
     * {
         text-shadow: none;
