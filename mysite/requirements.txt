@@ -3,3 +3,5 @@ requests
 #coloredlogs
 ue-parser
 babel
+pyyaml
+libsass

@@ -13,7 +13,7 @@ from utils.text_formatting import is_username
 from w1 import stamps, bribes, smithing
 from w2 import alchemy
 from w3 import trapping, consRefinery, consDeathNote, worship, consSaltLick, consBuildings, equinox
-from w4 import breeding, rift
+from w4 import breeding, cooking, rift
 
 
 logger = get_logger(__name__)
@@ -90,9 +90,9 @@ def main(inputData, runType="web"):
     # World 4
     sections_4 = [
         section_breeding := breeding.setBreedingProgressionTier(),
+        section_cooking := cooking.setCookingProgressionTier(),
+        # section_lab := ,
         section_rift := rift.setRiftProgressionTier(),
-        # section_cooking =
-        # section_lab =
     ]
     # World 5
     sections_5 = [

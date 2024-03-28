@@ -17,6 +17,7 @@
 @import "cards";
 @import "rift";
 @import "equinox";
+@import "meals";
 
 $id-map: (
 	item-backpack-space: $inventory-bag-u,
@@ -1919,6 +1920,17 @@ $id-map: (
 	refinery: $refinery,
 	construction-table: $construction-table,
 	prayer-stone: $prayer-stone,
+	hydrogen: $hydrogen,
+    helium: $helium,
+    lithium: $lithium,
+    beryllium: $beryllium,
+    boron: $boron,
+    carbon: $carbon,
+    nitrogen: $nitrogen,
+    oxygen: $oxygen,
+    flouride: $flouride,
+    neon: $neon,
+    sodium: $sodium,
 
 // Prayers
 
@@ -2150,6 +2162,8 @@ $id-map: map-merge($boss-keys, $id-map);
 $id-map: map-merge($all-cards, $id-map);
 $id-map: map-merge($rift, $id-map);
 $id-map: map-merge($equinox, $id-map);
+$id-map: map-merge($meals, $id-map);
+$id-map: map-merge($talents, $id-map);
 
 @each $class, $link in $id-map {
 	.#{$class}::before {

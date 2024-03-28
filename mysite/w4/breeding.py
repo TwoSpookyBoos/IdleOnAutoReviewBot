@@ -13,6 +13,8 @@ def getShinyLevelFromDays(days: float) -> int:
     for requirement in shinyDaysList:
         if float(days) > requirement:
             shinyLevel += 1
+        else:
+            break
     return shinyLevel
 
 def getDaysToNextShinyLevel(days: float) -> float:
@@ -328,6 +330,7 @@ def setBreedingProgressionTier() -> AdviceSection:
     highestBreedingLevel = max(session_data.account.all_skills["Breeding"])
     if highestBreedingLevel < 1:
         breeding_AdviceSection.header = "Come back after unlocking the Breeding skill in World 4!"
+        breeding_AdviceSection.collapse = True
         return breeding_AdviceSection
 
     maxBreedingTier = max(progressionTiers["Breeding"].keys())
@@ -529,7 +532,6 @@ def setBreedingProgressionTier() -> AdviceSection:
     breeding_AdviceSection.groups = breeding_AdviceGroupDict.values()
     if overall_BreedingTier == maxBreedingTier:
         breeding_AdviceSection.header = f"Best Breeding tier met: {tier_section}<br>You best ❤️"
-
     else:
         breeding_AdviceSection.header = f"Best Breeding tier met: {tier_section}"
 
