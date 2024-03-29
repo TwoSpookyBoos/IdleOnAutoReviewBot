@@ -889,9 +889,10 @@ def setAlchemyP2W() -> AdviceSection:
     bubbleCauldronSum = sum(alchemyP2WList[0])
     vialsSum = sum(alchemyP2WList[2])
     playerSum = sum(alchemyP2WList[3])
-    for liquidEntry in alchemyP2WList[1]:  # Liquids are different. Any locked liquid cauldrons are stored as -1 which would throw off a simple sum
-        if liquidEntry != -1:
-            liquidCauldronSum += liquidEntry
+    if isinstance(alchemyP2WList[1], list):
+        for liquidEntry in alchemyP2WList[1]:  # Liquids are different. Any locked liquid cauldrons are stored as -1 which would throw off a simple sum
+            if liquidEntry != -1:
+                liquidCauldronSum += liquidEntry
 
     p2wSum = bubbleCauldronSum + liquidCauldronSum + vialsSum + playerSum
     p2wMax = bubbleCauldronMax + liquidCauldronMax + vialsMax + (highestAlchemyLevel*2)

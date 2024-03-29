@@ -163,7 +163,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const group = groups.shift()
             group.classList.remove("hidden")
             calcProgressBars(group)
-
             if (groups.length === 0) {
                 button.style.display = "none"
             }

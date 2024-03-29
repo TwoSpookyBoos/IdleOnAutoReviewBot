@@ -67,12 +67,12 @@ def setConsSaltLickProgressionTier() -> AdviceSection:
                     )
             else:
                 sum_TotalMaxedSaltLickUpgrades += 1
-                if len(saltlick_AdviceDict["UnmaxedUpgrades"]) == 0:
-                    tier_RequiredSaltLickUpgrades = tier[0]
+
+    tier_RequiredSaltLickUpgrades = sum_TotalMaxedSaltLickUpgrades
 
     # Generate AdviceGroups
     saltlick_AdviceGroupDict["UnmaxedUpgrades"] = AdviceGroup(
-        tier=tier_RequiredSaltLickUpgrades,
+        tier=str(tier_RequiredSaltLickUpgrades),
         pre_string=f"{pl(saltlick_AdviceDict['UnmaxedUpgrades'], 'Final Upgrade', 'Remaining Upgrades')} to max",
         advices=saltlick_AdviceDict['UnmaxedUpgrades'],
         post_string=f"{pl(saltlick_AdviceDict['UnmaxedUpgrades'], '', 'Shown upgrades are in Tier order.')}"

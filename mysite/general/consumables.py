@@ -1,6 +1,7 @@
 import json
 from enum import IntEnum
 
+from consts import expectedInventoryBagValuesDict
 from models.models import AdviceGroup, Advice, AdviceSection
 from utils.text_formatting import pl
 from utils.logging import get_logger
@@ -288,7 +289,7 @@ def parseInventoryBagSlots() -> AdviceGroup:
 
     for characterIndex, character in enumerate(session_data.account.safe_characters):
         try:
-            playerBagDict[characterIndex] = json.loads(session_data.account.raw_data[f'InvBagsUsed_{characterIndex}'])  #yet another string pretending to be a list of lists
+            playerBagDict[characterIndex] = json.loads(session_data.account.raw_data.get(f'InvBagsUsed_{characterIndex}', "{}"))
         except:
             logger.exception(f"Unable to retrieve InvBagsUsed for {characterIndex} ({character.character_name})")
 
@@ -304,13 +305,21 @@ def parseInventoryBagSlots() -> AdviceGroup:
         autoLootSlots = 0
         inventorySlots_AdviceGroup.post_string = "AutoLoot is set to Unpurchased. This bundle gives 5 inventory slots."
 
-    for chararacterIndex, bagList in playerBagDict.items():
+    for chararacterIndex, bagDict in playerBagDict.items():
         sumSlots = defaultInventorySlots + autoLootSlots
-        for bag in bagList:
-            try:
-                sumSlots += int(bagList[bag])
-            except:
-                logger.exception(f"Could not increase character {chararacterIndex}'s bagslots by {type(bagList[bag])} {bagList[bag]}")
+        for bag in bagDict:
+            if isinstance(bagDict[bag], int | float | str):
+                try:
+                    sumSlots += int(bagDict[bag])
+                except:
+                    logger.exception(f"Could not increase character {chararacterIndex}'s bagslots by {type(bagDict[bag])} {bagDict[bag]}")
+            else:
+                logger.warning(f"Funky bag value found in {chararacterIndex}'s bagsDict for bag {bag}: {type(bagDict[bag])} {bagDict[bag]}. Searching for expected value.")
+                if int(bag) in expectedInventoryBagValuesDict:
+                    logger.debug(f"Bag {bag} has a known value: {expectedInventoryBagValuesDict.get(int(bag), 0)}. All is well :)")
+                else:
+                    logger.error(f"Bag {bag} has no known value. Defaulting to 0 :(")
+                sumSlots += expectedInventoryBagValuesDict.get(int(bag), 0)
         playerBagSlotsDict[chararacterIndex] = {"Total":sumSlots}
         if sumSlots >= currentMaxUsableInventorySlots:
             playersWithMaxBagSlots.append(chararacterIndex)
@@ -332,7 +341,9 @@ def parseInventoryBagSlots() -> AdviceGroup:
     return inventorySlots_AdviceGroup
 
 def parseStorageChests():
-    usedStorageChests = json.loads(session_data.account.raw_data['InvStorageUsed'])
+    usedStorageChests = session_data.account.raw_data.get('InvStorageUsed', [])
+    if isinstance(usedStorageChests, str):
+        usedStorageChests = json.loads(usedStorageChests)
     missing_chests = [chest for chest in StorageChest if str(chest.value) not in usedStorageChests.keys()]
 
     advices = [
