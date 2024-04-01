@@ -1,7 +1,7 @@
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
 from utils.logging import get_logger
-from consts import maxTiersPerGroup, progressionTiers
+from consts import maxTiersPerGroup, stamps_progressionTiers
 from flask import g as session_data
 
 logger = get_logger(__name__)
@@ -351,10 +351,10 @@ def setStampProgressionTier() -> AdviceSection:
     tier_RequiredSkillStamps = 0
     tier_RequiredMiscStamps = 0
     tier_RequiredSpecificStamps = 0
-    max_tier = progressionTiers["Stamps"][-1][0]
+    max_tier = stamps_progressionTiers[-1][0]
     adviceCountsDict = {"CombatStamps": 0, "SkillStamps": 0, "MiscStamps": 0, "SpecificStamps": 0}
 
-    for tier in progressionTiers["Stamps"]:
+    for tier in stamps_progressionTiers:
         # TotalLevelStamps
         if tier_StampLevels == (tier[0] - 1):
             if totalAllStampLevels >= tier[1]:  # int

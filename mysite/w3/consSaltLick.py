@@ -1,5 +1,5 @@
 import json
-from consts import progressionTiers
+from consts import saltLick_progressionTiers
 from flask import g as session_data
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
@@ -49,14 +49,14 @@ def setConsSaltLickProgressionTier() -> AdviceSection:
         saltlick_AdviceSection.header = "Come back after unlocking the Salt Lick within the Construction skill in World 3!"
         return saltlick_AdviceSection
 
-    max_tier = progressionTiers["Construction Salt Lick"][-1][0]
+    max_tier = saltLick_progressionTiers[-1][0]
     tier_RequiredSaltLickUpgrades = 0
     sum_TotalMaxedSaltLickUpgrades = 0
     overall_ConsSaltLickTier = 0
     saltLickDict = parseConsSaltLick()
 
     #Assess tiers
-    for tier in progressionTiers["Construction Salt Lick"]:
+    for tier in saltLick_progressionTiers:
         #tier[0] = int tier,
         #tier[1] = dict RequiredSaltLickUpgrades,
         #tier[2] = str Notes

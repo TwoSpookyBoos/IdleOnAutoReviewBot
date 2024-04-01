@@ -3,7 +3,7 @@ from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import numberOfArtifacts, numberOfArtifactTiers, progressionTiers
+from consts import numberOfArtifacts, numberOfArtifactTiers, breeding_progressionTiers
 
 logger = get_logger(__name__)
 shinyDaysList = [0, 3, 11, 33, 85, 200, 448, 964, 2013, 4107, 8227, 16234, 31633, 60989, 116522, 999999999]
@@ -333,7 +333,7 @@ def setBreedingProgressionTier() -> AdviceSection:
         breeding_AdviceSection.collapse = True
         return breeding_AdviceSection
 
-    maxBreedingTier = max(progressionTiers["Breeding"].keys())
+    maxBreedingTier = max(breeding_progressionTiers.keys())
     tier_UnlockedTerritories = 0
     tier_MaxArenaWave = 0
     tier_ShinyLevels = 0
@@ -413,24 +413,24 @@ def setBreedingProgressionTier() -> AdviceSection:
             if "Base Critter Per Trap" in shinyPetsTierList["A"]:
                 shinyPetsTierList["A"].remove('Base Critter Per Trap')
                 shinyPetsTierList["F"].append('Base Critter Per Trap')
-        for tier in progressionTiers["Breeding"]:
-            if "Infinite Star Signs" in progressionTiers["Breeding"][tier] and shinyExclusionsDict["Exclude-InfiniteStarSigns"] == True:
-                progressionTiers["Breeding"][tier]["Infinite Star Signs"] = 0
+        for tier in breeding_progressionTiers:
+            if "Infinite Star Signs" in breeding_progressionTiers[tier] and shinyExclusionsDict["Exclude-InfiniteStarSigns"] == True:
+                breeding_progressionTiers[tier]["Infinite Star Signs"] = 0
                 #logger.debug("Excluding Shiny- Infinite Star Signs because player does not have Rift bonus unlocked.")
-            if 'Lower Minimum Travel Time for Sailing' in progressionTiers["Breeding"][tier] and shinyExclusionsDict["Exclude-Sailing"] == True:
-                progressionTiers["Breeding"][tier]['Lower Minimum Travel Time for Sailing'] = 0
+            if 'Lower Minimum Travel Time for Sailing' in breeding_progressionTiers[tier] and shinyExclusionsDict["Exclude-Sailing"] == True:
+                breeding_progressionTiers[tier]['Lower Minimum Travel Time for Sailing'] = 0
                 #logger.debug("Excluding Shiny- Sailing Min Time because player has all Sailing Artifacts discovered.")
-            if "Higher Artifact Find Chance" in progressionTiers["Breeding"][tier] and shinyExclusionsDict["Exclude-Sailing"] == True:
-                progressionTiers["Breeding"][tier]["Higher Artifact Find Chance"] = 0
+            if "Higher Artifact Find Chance" in breeding_progressionTiers[tier] and shinyExclusionsDict["Exclude-Sailing"] == True:
+                breeding_progressionTiers[tier]["Higher Artifact Find Chance"] = 0
                 #logger.debug("Excluding Shiny- Higher Artifact Find Chance because player has all Sailing Artifacts discovered.")
 
 
             #Unlocked Territories
             if tier_UnlockedTerritories >= (tier-1):
-                if breedingDict["Highest Unlocked Territory"] >= progressionTiers["Breeding"][tier]["TerritoriesUnlocked"]:
+                if breedingDict["Highest Unlocked Territory"] >= breeding_progressionTiers[tier]["TerritoriesUnlocked"]:
                     tier_UnlockedTerritories = tier
                 else:
-                    for territoryIndex in range(breedingDict["Highest Unlocked Territory"]+1, progressionTiers["Breeding"][tier]["TerritoriesUnlocked"]+1):
+                    for territoryIndex in range(breedingDict["Highest Unlocked Territory"]+1, breeding_progressionTiers[tier]["TerritoriesUnlocked"]+1):
                         breeding_AdviceDict["UnlockedTerritories"]["Unlock more Spice Territories"].append(
                             Advice(label=getTerritoryName(territoryIndex), picture_class=getSpiceImage(territoryIndex)))
                     for petIndex in range(0, len(recommendedTerritoryCompsList[tier][0])):
@@ -440,7 +440,7 @@ def setBreedingProgressionTier() -> AdviceSection:
 
             #Arena Waves to unlock Pet Slots
             if tier_MaxArenaWave >= (tier-1):
-                if breedingDict["Highest Arena Wave"] >= progressionTiers["Breeding"][tier]["ArenaWaves"]:
+                if breedingDict["Highest Arena Wave"] >= breeding_progressionTiers[tier]["ArenaWaves"]:
                     tier_MaxArenaWave = tier
                 else:
                     for petIndex in range(0, len(recommendedArenaCompsDict[tier_MaxArenaWave][0])):
@@ -450,19 +450,19 @@ def setBreedingProgressionTier() -> AdviceSection:
 
             #Shinies
             if tier_ShinyLevels >= (tier-1):
-                if len(progressionTiers["Breeding"][tier]["Shinies"]) == 0:
+                if len(breeding_progressionTiers[tier]["Shinies"]) == 0:
                     # free pass
                     tier_ShinyLevels = tier
                 else:
                     # if there are actual level requirements
                     allRequirementsMet = True
-                    for requiredShinyBonusType in progressionTiers["Breeding"][tier]["Shinies"]:
-                        if breedingDict["Total Shiny Levels"][requiredShinyBonusType] < progressionTiers["Breeding"][tier]["Shinies"][requiredShinyBonusType]:
+                    for requiredShinyBonusType in breeding_progressionTiers[tier]["Shinies"]:
+                        if breedingDict["Total Shiny Levels"][requiredShinyBonusType] < breeding_progressionTiers[tier]["Shinies"][requiredShinyBonusType]:
                             allRequirementsMet = False
                             failedShinyRequirements.append([
                                 requiredShinyBonusType,
                                 breedingDict["Total Shiny Levels"][requiredShinyBonusType],
-                                progressionTiers["Breeding"][tier]["Shinies"][requiredShinyBonusType]])
+                                breeding_progressionTiers[tier]["Shinies"][requiredShinyBonusType]])
                             failedShinyBonus[requiredShinyBonusType] = breedingDict["Grouped Bonus"][requiredShinyBonusType]
                     if allRequirementsMet == True:
                         tier_ShinyLevels = tier
@@ -490,12 +490,12 @@ def setBreedingProgressionTier() -> AdviceSection:
     if tier_UnlockedTerritories < maxBreedingTier:
         breeding_AdviceGroupDict["UnlockedTerritories"] = AdviceGroup(
             tier=str(tier_UnlockedTerritories),
-            pre_string=f"Unlock {progressionTiers['Breeding'][tier_UnlockedTerritories+1]['TerritoriesUnlocked'] - breedingDict['Highest Unlocked Territory']} more Spice Territor{pl(breeding_AdviceDict['UnlockedTerritories'], 'y', 'ies')}",
+            pre_string=f"Unlock {breeding_progressionTiers[tier_UnlockedTerritories+1]['TerritoriesUnlocked'] - breedingDict['Highest Unlocked Territory']} more Spice Territor{pl(breeding_AdviceDict['UnlockedTerritories'], 'y', 'ies')}",
             advices=breeding_AdviceDict["UnlockedTerritories"],
             post_string=""
         )
     if tier_MaxArenaWave != maxBreedingTier:
-        nextArenaWaveUnlock = progressionTiers["Breeding"][tier_MaxArenaWave+1]["ArenaWaves"]
+        nextArenaWaveUnlock = breeding_progressionTiers[tier_MaxArenaWave+1]["ArenaWaves"]
     breeding_AdviceGroupDict["MaxArenaWave"] = AdviceGroup(
         tier=str(tier_MaxArenaWave),
         pre_string=f"Complete Arena Wave {nextArenaWaveUnlock} {pl(5-tier_MaxArenaWave, 'to unlock the final Arena bonus', 'to unlock another pet slot')}",

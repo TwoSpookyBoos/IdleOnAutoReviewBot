@@ -1,7 +1,7 @@
 import json
 from models.models import Advice, AdviceGroup, AdviceSection
 from utils.logging import get_logger
-from consts import progressionTiers, numberOfArtifacts, numberOfArtifactTiers
+from consts import gemShop_progressionTiers, numberOfArtifacts, numberOfArtifactTiers
 from flask import g as session_data
 
 logger = get_logger(__name__)
@@ -297,7 +297,7 @@ def setGemShopProgressionTier():
     boughtItems = getBoughtGemShopItems()
     gemShopExclusions = getGemShopExclusions()
 
-    recommended_stock = {item: count for tier in progressionTiers["Gem Shop"] for item, count in tier[2].items()}
+    recommended_stock = {item: count for tier in gemShop_progressionTiers for item, count in tier[2].items()}
 
     for exclusion in gemShopExclusions:
         boughtItems.pop(exclusion, None)
@@ -319,11 +319,11 @@ def setGemShopProgressionTier():
         AdviceGroup(
             tier="",
             pre_string=tier,
-            post_string=progressionTiers["Gem Shop"][i][3],
+            post_string=gemShop_progressionTiers[i][3],
             hide=False,
             advices=[
                 Advice(label=f"{name} ({getBonusSectionName(name)})", picture_class=name, progression=int(prog), goal=int(goal))
-                for name, qty in progressionTiers["Gem Shop"][i][2].items()
+                for name, qty in gemShop_progressionTiers[i][2].items()
                 if name in recommended_stock_bought
                 and (prog := float(recommended_stock_bought[name])) < (goal := float(qty))
             ]
