@@ -1,5 +1,5 @@
 from models.models import Advice, AdviceGroup, AdviceSection
-from consts import progressionTiers
+from consts import smithing_progressionTiers
 from flask import g as session_data
 from utils.text_formatting import pl
 from utils.logging import get_logger
@@ -41,7 +41,7 @@ def setSmithingProgressionTier() -> AdviceSection:
     tier_CashPoints = 0
     tier_MonsterPoints = 0
     tier_ForgeTotals = 0
-    max_tier = progressionTiers["Smithing"][-1][0]
+    max_tier = smithing_progressionTiers[-1][0]
     overall_SmithingTier = 0
     playerCashPoints = []
     playerMonsterPoints = []
@@ -115,7 +115,7 @@ def setSmithingProgressionTier() -> AdviceSection:
         logger.exception("Unable to retrieve ForgeLv")
 
     #Work out each tier individual and overall tier
-    for tier in progressionTiers["Smithing"]:
+    for tier in smithing_progressionTiers:
         #tier[0] = int tier
         #tier[1] = int Cash Points Purchased
         #tier[2] = int Monster Points Purchased

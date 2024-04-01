@@ -85,6 +85,8 @@
 
     --bg-header-json: #8e6c19;
     --bg-header-public: var(--bg-pinchy);
+
+    --progress-color: rgba(0, 0, 0, 0.3);
 }
 
 :root.light-mode {
@@ -159,6 +161,8 @@
 
     --bg-header-json: #d8c394;
     --bg-header-public: var(--bg-pinchy);
+
+    --progress-color: rgba(255, 255, 255, 0.4);
 
     * {
         text-shadow: none;
@@ -237,6 +241,9 @@ h1, strong {
     }
 
 }
+
+.hidden { display: none !important; }
+
 
 body {
     display: flex;
@@ -443,10 +450,6 @@ body {
 
                                     color: var(--fg);
 
-                                    &.hidden {
-                                        display: none;
-                                    }
-
                                     #cards & > span {
                                         display: flex;
                                         align-items: center;
@@ -465,17 +468,26 @@ body {
                                     }
 
                                     .table {
+                                        --advice-icon-width: 40px;
+                                        --advice-icon-gap: 7px;
+                                        --col-gap: 10px;
+
                                         width: 100%;
                                         position: relative;
                                         display: grid;
                                         grid-template-columns: 1fr repeat(3, auto);
-                                        column-gap: 10px;
+                                        column-gap: var(--col-gap);
+                                        row-gap: 5px;
                                         overflow-y: auto;
-                                        padding-right: 10px;
                                         scrollbar-width: thin;
                                         scrollbar-color: var(--scrollbar-thumb-color) transparent;
 
+                                        & > *:not(.progress-bar) {
+                                            z-index: 1;
+                                        }
+
                                         &::before, &::after {
+                                            z-index: 2;
                                             position: sticky;
                                             display: block;
                                             content: '';
@@ -506,18 +518,33 @@ body {
                                             }
 
                                         }
+                                        .progress-box, .progress-bar {
+                                            display: block;
+                                            z-index: 0;
+                                        }
+                                        .progress-box {
+                                            position: absolute;
+                                            left: 0;
+                                            border: 3px solid var(--progress-color);
+                                            background-clip: padding-box;
+                                            width: 100%;
+                                            .progress-bar {
+                                                background: var(--progress-color);
+                                                width: calc(3 * var(--col-gap));
+                                                height: 100%;
+                                            }
+                                        }
 
                                         .advice {
                                             display: flex;
                                             align-items: center;
-                                            padding-right: 20px;
                                             word-break: break-word;
 
                                             &::before {
                                                 display: block;
                                                 content: '';
                                                 height: 40px;
-                                                min-width: 40px;
+                                                min-width: var(--advice-icon-width);
 
                                                 background-size: contain;
                                                 background-position: center;
@@ -534,10 +561,14 @@ body {
                                             margin: auto 0;
                                         }
 
+                                        .goal {
+                                            padding-right: 10px;
+                                        }
+
                                         li, li a {
                                             display: flex;
                                             align-items: center;
-                                            column-gap: 7px;
+                                            column-gap: var(--advice-icon-gap);
 
                                             &:not(.advice, .advice-title) {
                                                 justify-content: center;

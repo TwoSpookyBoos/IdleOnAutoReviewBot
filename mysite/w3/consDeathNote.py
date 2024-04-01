@@ -4,7 +4,7 @@ from math import floor
 from math import ceil
 
 from config import app
-from consts import progressionTiers
+from consts import deathNote_progressionTiers
 from flask import g as session_data
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
@@ -534,7 +534,7 @@ def setConsDeathNoteProgressionTier():
     meowBBIndex = getMEOWBBIndex(bbCharactersIndexList)
     fullDeathNoteDict = getDeathNoteKills()
 
-    max_tier = progressionTiers["Construction Death Note"][-1][0]
+    max_tier = deathNote_progressionTiers[-1][0]
     overall_DeathNoteTier = 0
     worldIndexes = []
     maxedGroupsList = []
@@ -603,7 +603,7 @@ def setConsDeathNoteProgressionTier():
             highestCHOWCountIndex = barbIndex
 
     #assess tiers
-    for tier in progressionTiers["Construction Death Note"]:
+    for tier in deathNote_progressionTiers:
         #tier[0] = int tier
         #tier[1] = int w1LowestSkull
         #tier[2] = int w2LowestSkull

@@ -69,8 +69,8 @@ def setCombatLevelsProgressionTier() -> AdviceSection:
     # tier[3] = int PlayerLevels
     # tier[4] = str PL reward
     # tier[5] = str notes
-    next_tier = next((tier for tier in consts.progressionTiers["Combat Levels"] if total_combat_level < tier[1]), None)
-    curr_tier = next((tier for tier in reversed(consts.progressionTiers["Combat Levels"]) if total_combat_level >= tier[1]), consts.progressionTiers["Combat Levels"][0])
+    next_tier = next((tier for tier in consts.combatLevels_progressionTiers if total_combat_level < tier[1]), None)
+    curr_tier = next((tier for tier in reversed(consts.combatLevels_progressionTiers) if total_combat_level >= tier[1]), consts.combatLevels_progressionTiers[0])
 
     overall_CombatLevelTier = curr_tier[0]
 
@@ -119,7 +119,7 @@ def setCombatLevelsProgressionTier() -> AdviceSection:
         advices=lvlup_advices,
     )
 
-    max_tier = consts.progressionTiers["Combat Levels"][-1][0]
+    max_tier = consts.combatLevels_progressionTiers[-1][0]
     tier = f"{overall_CombatLevelTier}/{max_tier}"
     header = f"Optimal family class level tier met: {tier}. "
 

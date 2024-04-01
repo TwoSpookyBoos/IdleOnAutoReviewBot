@@ -1,7 +1,7 @@
 import copy
 import json
 
-from consts import progressionTiers
+from consts import buildingsPostBuffs_progressionTiers, buildingsPreBuffs_progressionTiers
 from flask import g as session_data
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
@@ -86,8 +86,8 @@ def setConsBuildingsProgressionTier():
         building_AdviceSection.collapse = True
         return building_AdviceSection
 
-    progressionTiersPreBuffs = copy.deepcopy(progressionTiers['Construction Buildings Pre-Buffs'])
-    progressionTiersPostBuffs = copy.deepcopy(progressionTiers['Construction Buildings Post-Buffs'])
+    progressionTiersPreBuffs = copy.deepcopy(buildingsPreBuffs_progressionTiers)
+    progressionTiersPostBuffs = copy.deepcopy(buildingsPostBuffs_progressionTiers)
     maxBuildingsPerGroup = 10
     playerBuildings = parseConsBuildingstoLists()
     influencers = getInfluencers()

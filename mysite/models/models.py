@@ -10,7 +10,7 @@ from typing import Any
 from flask import g
 
 from utils.data_formatting import getCharacterDetails
-from consts import expectedStackables, progressionTiers, card_data
+from consts import expectedStackables, greenstack_progressionTiers, card_data
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
 
 
@@ -441,7 +441,7 @@ class Asset:
 
 class Assets(dict):
     def __init__(self, assets: dict[str, int]):
-        self.tiers = progressionTiers["Greenstacks"]
+        self.tiers = greenstack_progressionTiers
         super().__init__(
             tuple(
                 (codename, Asset(codename, count)) for codename, count in assets.items()

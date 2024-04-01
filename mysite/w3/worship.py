@@ -1,6 +1,6 @@
 import json
 from models.models import AdviceSection, AdviceGroup, Advice
-from consts import maxTiersPerGroup, progressionTiers
+from consts import maxTiersPerGroup, prayers_progressionTiers
 from flask import g as session_data
 from utils.text_formatting import pl
 from utils.logging import get_logger
@@ -122,7 +122,7 @@ def parseJSONPrayers() -> dict:
 
 def setWorshipPrayersProgressionTier() -> AdviceSection:
     worshipPrayersDict = parseJSONPrayers()
-    max_tier = progressionTiers["Worship Prayers"][-3][0]  # Final tier is ignorable, second to final is optional
+    max_tier = prayers_progressionTiers[-3][0]  # Final tier is ignorable, second to final is optional
     tier_WorshipPrayers = 0
     overall_WorshipPrayersTier = 0
 
@@ -146,7 +146,7 @@ def setWorshipPrayersProgressionTier() -> AdviceSection:
     adviceCountsDict = {"Recommended": 0, "Optional": 0, "Ignorable": 0}
 
     #Check Recommended Prayers
-    for tier in progressionTiers["Worship Prayers"][:-2]:
+    for tier in prayers_progressionTiers[:-2]:
         #tier[0] = int Tier
         #tier[1] = dict requiredPrayersDict
         #tier[2] = str Notes
@@ -170,7 +170,7 @@ def setWorshipPrayersProgressionTier() -> AdviceSection:
             tier_WorshipPrayers = tier[0]
 
     #Check Optional Prayers
-    optionalTierPrayers = progressionTiers["Worship Prayers"][-2][1]
+    optionalTierPrayers = prayers_progressionTiers[-2][1]
     for optionalPrayer in optionalTierPrayers:
         if worshipPrayersDict[optionalPrayer] < optionalTierPrayers[optionalPrayer]:
             prayers_AdviceDict["Optional"].append(
@@ -182,7 +182,7 @@ def setWorshipPrayersProgressionTier() -> AdviceSection:
                 )
 
     #Check Ignorable Prayers
-    ignorableTierPrayers = progressionTiers["Worship Prayers"][-1][1]
+    ignorableTierPrayers = prayers_progressionTiers[-1][1]
     for ignorablePrayer in ignorableTierPrayers:
         if worshipPrayersDict[ignorablePrayer] < ignorableTierPrayers[ignorablePrayer]:
             prayers_AdviceDict["Ignorable"].append(

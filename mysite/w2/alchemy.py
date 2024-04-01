@@ -3,7 +3,7 @@ from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import maxTiersPerGroup, progressionTiers
+from consts import maxTiersPerGroup, bubbles_progressionTiers, vials_progressionTiers
 
 logger = get_logger(__name__)
 
@@ -517,7 +517,7 @@ def setAlchemyVialsProgressionTier() -> AdviceSection:
     tier_TotalVialsUnlocked = 0
     tier_TotalVialsMaxed = 0
     overall_AlchemyVialsTier = 0
-    max_tier = progressionTiers["Alchemy Vials"][-1][0]
+    max_tier = vials_progressionTiers[-1][0]
     maxAdvicesPerGroup = 6
 
     if session_data.account.vial_mastery_unlocked:
@@ -528,7 +528,7 @@ def setAlchemyVialsProgressionTier() -> AdviceSection:
     else:
         advice_TrailingMaxedVials = ""
 
-    for tier in progressionTiers["Alchemy Vials"]:
+    for tier in vials_progressionTiers:
         #tier[0] = int tier
         #tier[1] = int TotalVialsUnlocked
         #tier[2] = int TotalVialsMaxed
@@ -635,7 +635,7 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
     tier_GreenSampleBubbles = 0
     tier_PurpleSampleBubbles = 0
     tier_UtilityBubbles = 0
-    max_tier = progressionTiers["Alchemy Bubbles"][-1][0]
+    max_tier = bubbles_progressionTiers[-1][0]
     overall_alchemyBubblesTier = 0
     adviceCountsDict = {"PurpleSampleBubbles": 0, "OrangeSampleBubbles": 0, "GreenSampleBubbles": 0, "UtilityBubbles": 0}
 
@@ -688,7 +688,7 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
             nextWorldMissingBubbles += 1
 
     #Assess tiers
-    for tier in progressionTiers["Alchemy Bubbles"]:
+    for tier in bubbles_progressionTiers:
         #tier[0] = int tier
         #tier[1] = int TotalBubblesUnlocked
         #tier[2] = dict {OrangeSampleBubbles}
@@ -828,9 +828,9 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
         "",
     ]
     if tier_UtilityBubbles == max_tier:
-        agdPost_strings.append(progressionTiers["Alchemy Bubbles"][tier_UtilityBubbles][7])
+        agdPost_strings.append(bubbles_progressionTiers[tier_UtilityBubbles][7])
     else:
-        agdPost_strings.append(progressionTiers["Alchemy Bubbles"][tier_UtilityBubbles+1][7])
+        agdPost_strings.append(bubbles_progressionTiers[tier_UtilityBubbles+1][7])
     for counter in range(0, len(agdNames)):
         bubbles_AdviceGroupDict[agdNames[counter]] = AdviceGroup(
             tier=agdTiers[counter],

@@ -16,7 +16,14 @@
 //     ...
 // );
 
-const getImageMap = (cssQuery) => {
+String.prototype.toKebabCase = function () {
+    return this.toLowerCase()
+        .replaceAll(" ", "-")
+        .replaceAll(/[^\w-]/g, '')
+        .replaceAll(/-+/g, '-')
+}
+
+const getImageMap = (cssQuery, mapName_) => {
     // let cssQuery = "table.sortable > tbody > tr:nth-child(1) > td:nth-child(2) > div > div > a > img"
     // this will replace the reference to that specific row the image is located in to instead fetch all rows, except the first (header) row
     cssQuery = cssQuery.replace(/tr.*? /, 'tr:not(:first-child) ')
@@ -25,14 +32,14 @@ const getImageMap = (cssQuery) => {
     // it may require change depending on the attributes of the image element.
     // some have only the `src` attribute, some don't, not sure, some have `srcset`, and some may not be matched by the regex.
     // some potentially don't have `alt`... it's not too tried and tested.
-    let records = $(cssQuery).get().map(e => {
+    const records = $(cssQuery).get().map(e => {
         const img = $(e);
         const link = img.attr('src').replace(/.*(\w+\/\w+\/\w+.png).*/, '$1')
-        const name = img.attr('alt').slice(0, -4).toLowerCase().replaceAll(" ", "-")
+        const name = img.attr('alt').slice(0, -4).toKebabCase()
         return `\t${name}: wiki("${link}")`
     })
 
-    const mapName = '$easy-resources'
+    const mapName = `$${mapName_.toKebabCase()}`
     const map = `${mapName}: (\n${records.join(',\n')}\n);`
 
     console.log(map)
@@ -43,15 +50,14 @@ const collectAllTablesOnPage = () => {
     let cssQuery = "tbody > tr:nth-child(1) > td:nth-child(2) > div > div > a > img"
     cssQuery = cssQuery.replace(/tr.*? /, 'tr ')
 
-    const x = $("table.sortable").each((_, t) => {
-        const imgs = $(t).find(cssQuery).get()
-        const records = imgs.map(e => {
+    $("table.sortable").each((_, t) => {
+        const records = $(t).find(cssQuery).get().map(e => {
             const img = $(e);
             const link = img.attr('src').replace(/.*(\w+\/\w+\/[\w%]+.png).*/, '$1')
-            const name = img.attr('alt').slice(0, -4).toLowerCase().replaceAll(" ", "-").replaceAll(/[^\w-]/g, '')
+            const name = img.attr('alt').slice(0, -4).toKebabCase()
             return `\t${name}: wiki("${link}")`
         })
-        const mapName = $(t).find('caption > span:first-child').text().replaceAll(' ', '-').replaceAll(/[^\w-]/g, '').toLowerCase()
+        const mapName = $(t).find('caption > span:first-child').text().toKebabCase()
         const map = `$${mapName}: (\n${records.join(',\n')}\n);`
         console.log(map)
     })

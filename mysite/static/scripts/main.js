@@ -17,6 +17,63 @@ document.addEventListener("keydown", (e) => {
     if (escPressed) toggleSidebar()
 })
 
+// calculate progress bars
+function calcProgressBars(parent = document) {
+    parent.querySelectorAll(".progress-box").forEach(progressBox => {
+        const checkbox= document.querySelector('#progress_bars')
+        const advice = progressBox.nextElementSibling
+        const siblings = Array.from(advice.parentElement.children)
+        const idx = siblings.indexOf(advice)
+        const prog = siblings[idx + 1]
+        const goal = siblings[idx + 3]
+        const row = siblings.slice(idx, idx + 4)
+        const rowWidth = row.reduce((total, curr) => total + curr.offsetWidth, 0)
+        const [progCoefficient, show] = progWidth(progressBox, rowWidth, prog, goal)
+
+        const rowHeight = advice.offsetHeight
+        const rowTop = advice.getBoundingClientRect().top - advice.parentElement.getBoundingClientRect().top
+
+        const progressBar = progressBox.querySelector(".progress-bar")
+        progressBar.style.width = `${progCoefficient}%`
+
+        progressBox.style.height = `${rowHeight}px`
+        progressBox.style.top = `${rowTop}px`
+
+        if (checkbox.value === "off" || !show) {
+            progressBox.classList.add('hidden')
+        } else if (show) {
+            progressBox.classList.remove('hidden')
+        }
+    })
+}
+
+function progWidth(bar, w, p, g) {
+    const goal = parseFloat(g.innerText.replace(/.*?(\d+).*/, "$1"))
+    const prog = parseFloat(p.innerText.replace(/.*?(\d+).*/, "$1"))
+    const inPercentages = g.innerText.includes("%") || p.innerText.includes("%")
+    const inRatio = !(isNaN(prog) || isNaN(goal))
+
+
+    if (inRatio) return [(100 * prog / goal), true]
+    if (inPercentages) return [[prog, goal].find(e => !isNaN(e)), true]
+    return [0, (inPercentages || inRatio)]
+}
+
+const hideProgressBoxes = (parent = document) => parent
+    .querySelectorAll('.progress-box')
+    .forEach(box => box.classList.add("hidden"))
+
+let resizeTimer;
+window.addEventListener('resize', () => {
+    if (!resizeTimer) hideProgressBoxes()
+
+    clearTimeout(resizeTimer);
+
+    resizeTimer = setTimeout(() => {
+        calcProgressBars()
+        resizeTimer = null
+    }, 100)
+})
 document.addEventListener("DOMContentLoaded", () => {
     // set event listeners for folding worlds and sections
     document.querySelectorAll('.toggler').forEach(toggler => toggler.onclick = (e) => {
@@ -81,6 +138,10 @@ document.addEventListener("DOMContentLoaded", () => {
     // handle left/right handedness switching
     document.querySelector('#handedness').onclick = () => document.querySelectorAll('.slider, .nav-links, #drawer-handle').forEach(s => s.classList.toggle('lefty'))
 
+    // toggle progress bars
+    document.querySelector('#progress_bars').onclick = () => calcProgressBars(document)
+
+
     document.querySelectorAll('#pinchy .advice-group a').forEach(hyperlink => hyperlink.onclick = e => {
         const link = e.currentTarget
         const targetId = link.getAttribute("href").slice(1)
@@ -92,17 +153,17 @@ document.addEventListener("DOMContentLoaded", () => {
     expandableSections.forEach(section => {
         const expandableGroups = section.querySelector(".groups")
         const showMoreButton = section.querySelector(".show-more")
-        let hiddenGroups = Array.from(expandableGroups.querySelectorAll(".hidden"))
+        const groups = Array.from(expandableGroups.querySelectorAll(".advice-group.hidden"))
 
-        showMoreButton.style.display = (hiddenGroups.length > 0) ? "block" : "none"
+        showMoreButton.style.display = (groups.length > 0) ? "block" : "none"
 
         showMoreButton.onclick = e => {
             const button = e.currentTarget
 
-            const group = hiddenGroups.shift()
+            const group = groups.shift()
             group.classList.remove("hidden")
-
-            if (hiddenGroups.length === 0) {
+            calcProgressBars(group)
+            if (groups.length === 0) {
                 button.style.display = "none"
             }
         }
@@ -142,4 +203,7 @@ document.addEventListener("DOMContentLoaded", () => {
             _sec.toString().padStart(2, "0")
         ].join(":")
     }, 1000)
+
+    // add progress bars
+    calcProgressBars(document)
 });
