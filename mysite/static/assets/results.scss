@@ -857,33 +857,60 @@ body {
             }
         }
 
-        #scroll-to-top {
+        #buttons-floating {
             position: absolute;
             bottom: 30px;
             right: 30px;
-
-            height: 40px;
-            width: 40px;
+            z-index: 99;
 
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: row;
+            column-gap: 5px;
 
-            border-radius: 50%;
-            background-color: teal;
+            @media (max-width: 600px) {
+                right: 10px;
+                bottom: calc(var(--nav-height) + var(--nav-padding) * 2 + 10px);
+            }
 
-            &::before {
+            #scroll-to-top, #expand-collapse {
+                height: 40px;
+                width: 40px;
+
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                border-radius: 50%;
+                background-color: teal;
+
+            }
+
+            #expand-collapse::before,
+            #expand-collapse::after,
+            #scroll-to-top::before {
                 content: '';
                 height: 10px;
                 width: 10px;
                 border-top: 2px solid white;
                 border-left: 2px solid white;
+            }
+
+            #scroll-to-top::before {
                 transform: rotate(45deg) translateY(15%) translateX(15%);
             }
 
-            @media (max-width: 600px) {
-                right: 10px;
-                bottom: calc(var(--nav-height) + var(--nav-padding) * 2 + 10px);
+            #expand-collapse {
+                background-color: #a22a45;
+                flex-direction: column-reverse;
+                &.closed {
+                    flex-direction: column;
+                }
+                &::after {
+                    transform: rotate(-135deg) translateY(2px) translateX(2px);
+                }
+                &::before {
+                    transform: rotate(45deg) translateY(2px) translateX(2px);
+                }
             }
         }
 

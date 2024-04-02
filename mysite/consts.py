@@ -1206,6 +1206,45 @@ humanReadableClasses = {
     37: "Arcane Cultist"
 }
 
+switches = [
+    {
+        "label": "Autoloot purchased",
+        "name": "autoloot",
+        "true": "",
+        "false": "",
+    },
+    {
+        "label": "Sheepie pet acquired",
+        "name": "sheepie",
+        "true": "",
+        "false": "",
+    },
+    {
+        "label": "Doot pet acquired",
+        "name": "doot",
+        "true": "",
+        "false": "",
+    },
+    {
+        "label": "Order groups by tier",
+        "name": "order_tiers",
+        "true": "",
+        "false": "",
+    },
+    {
+        "label": "Show progress bars",
+        "name": "progress_bars",
+        "true": "",
+        "false": "",
+    },
+    {
+        "label": "Handedness",
+        "name": "handedness",
+        "true": "L",
+        "false": "R",
+    },
+    # {"label": "Legacy style", "name": "legacy", "true": "", "false": ""},
+]
 
 skillIndexList = ["Combat",
                   "Mining", "Smithing", "Choppin",
