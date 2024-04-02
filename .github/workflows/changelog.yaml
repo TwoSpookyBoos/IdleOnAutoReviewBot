@@ -1,0 +1,13 @@
+name: handle-changelog
+run-name: handling release notes
+on: [push]
+#  push:
+#    branches:
+#      - main
+jobs:
+  handle-release-notes:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - run: chmod +x ./handle_changelog.bash && ./handle_changelog.bash
+      shell: bash
