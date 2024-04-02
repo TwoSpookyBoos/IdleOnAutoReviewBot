@@ -1,21 +1,13 @@
 #name: handle-changelog
 #run-name: handling release notes
-#on: [push]
+on: [push]
 ##  push:
 ##    branches:
 ##      - main
-#jobs:
-#  handle-release-notes:
-#    runs-on: ubuntu-latest
-#    steps:
-#    - uses: actions/checkout@v4
-#    - run: chmod +x ./handle_changelog.bash && ./handle_changelog.bash
-#      shell: bash
-
-on: [push]
 jobs:
-  test-test:
+  handle-release-notes:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - run: echo "test successful"
+    - uses: actions/checkout@v4
+    - run: chmod +x ./handle_changelog.bash && ./handle_changelog.bash
+      shell: bash
