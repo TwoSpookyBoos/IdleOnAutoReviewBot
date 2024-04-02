@@ -9,6 +9,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-#    - run: chmod +x ./handle_changelog.bash && ./handle_changelog.bash
-    - run: pwd; ls -la
+    - run: chmod +x .github/workflows/handle_changelog.bash && ./.github/workflows/handle_changelog.bash
       shell: bash
