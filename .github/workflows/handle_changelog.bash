@@ -1,7 +1,7 @@
 #!/bin/bash
 
 root="$(git rev-parse --show-toplevel)"
-changelog="$root/changelog/CHANGELOG.md"
+changelog="$root/changelog/CHANGELOG"
 changelog_tmp="$(mktemp)"
 release_notes="$root/changelog/release_notes.txt"
 sidebar="$root/mysite/templates/sidebar.html"
