@@ -12,8 +12,8 @@ old_notes="$(head -n +1 "$changelog")"
 [[ -s $release_notes ]] || exit
 
 cat <<- EOF >> "$changelog_tmp"
-    $new_notes
-    $(cat "$changelog")
+$new_notes
+$(cat "$changelog")
 EOF
 
 mv -f "$changelog_tmp" "$changelog"

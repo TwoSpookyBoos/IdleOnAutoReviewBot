@@ -1,9 +1,9 @@
-#name: handle-changelog
-#run-name: handling release notes
+name: handle-changelog
+run-name: handling release notes
 on: [push]
-##  push:
-##    branches:
-##      - main
+#  push:
+#    branches:
+#      - main
 jobs:
   handle-release-notes:
     runs-on: ubuntu-latest
