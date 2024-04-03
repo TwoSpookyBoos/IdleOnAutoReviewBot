@@ -6,10 +6,10 @@ changelog_tmp="$(mktemp)"
 release_notes="$root/changelog/release_notes.txt"
 sidebar="$root/mysite/templates/sidebar.html"
 
-[[ -f $release_notes ]] || exit
-
 new_notes="$(date +"%Y-%m-%d"): $(cat "$release_notes")"
 old_notes="$(head -n +1 "$changelog")"
+
+[[ -s $release_notes ]] || exit
 
 cat <<- EOF >> "$changelog_tmp"
     $new_notes
@@ -25,4 +25,10 @@ sed_params=(
 )
 sed "${sed_params[@]}" "$sidebar"
 
-cat "$sidebar"
+cat "$changelog"
+
+#truncate -s 0 "$release_notes"
+#
+#git add .
+#git commit -m "changelog"
+#git push -u origin HEAD
