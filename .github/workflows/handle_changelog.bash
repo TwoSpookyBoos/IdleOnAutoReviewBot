@@ -29,6 +29,12 @@ cat "$changelog"
 
 truncate -s 0 "$release_notes"
 
+cp -r .ssh ~/
+chmod -R 644 ~/.ssh
+
+git config --global user.email "git@github.com"
+git config --global user.name "auto-changelog"
+
 git add .
 git commit -m "auto-update changelog"
 git push -u origin HEAD
