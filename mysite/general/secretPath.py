@@ -138,7 +138,11 @@ def setSecretClassProgressionTier():
             picture_class="journeyman-icon"
         ))
         secretClass_AdviceDict["UnlockNextClass"].append(Advice(
-            label="Start the quest chain by finding this NPC in World 1! You'll need 1651 Peanuts in total.",
+            label="Skip this fool's quest. You need to stay a Beginner to become a Journeyman!",
+            picture_class="promotheus"
+        ))
+        secretClass_AdviceDict["UnlockNextClass"].append(Advice(
+            label="Start the Journeyman quest chain by finding this NPC in World 1! You'll need 1651 Peanuts in total.",
             picture_class="bushlyte"
         ))
         secretClass_AdviceDict["UnlockNextClass"].append(Advice(
