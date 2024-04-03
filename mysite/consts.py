@@ -1173,6 +1173,7 @@ maxDreams = 31
 maxCookingTables = 10
 maxMeals = 67
 maxMealLevel = 90
+numberOfSecretClasses = 3
 
 humanReadableClasses = {
     1: "Beginner",

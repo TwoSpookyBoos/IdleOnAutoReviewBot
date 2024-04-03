@@ -4,7 +4,7 @@ import yaml
 from flask import g as session_data
 
 from config import app
-from general import combatLevels, greenstacks, pinchy, cards, maestroHands, consumables, gemShop
+from general import combatLevels, greenstacks, pinchy, cards, secretPath, consumables, gemShop
 from models.custom_exceptions import UsernameBanned
 from models.models import AdviceWorld, WorldName, Account
 from utils.data_formatting import getJSONfromAPI, getJSONfromText, HeaderData
@@ -56,7 +56,7 @@ def main(inputData, runType="web"):
         *(sections_consumables := consumables.parseConsumables()),
         section_gemShop := gemShop.setGemShopProgressionTier(),
         *(sections_gstacks := greenstacks.setGStackProgressionTier()),
-        section_maestro := maestroHands.getHandsStatus(),
+        section_secretPath := secretPath.setSecretClassProgressionTier(),
         section_cards := cards.getCardSetReview(),
     ]
     # World 1
@@ -105,7 +105,7 @@ def main(inputData, runType="web"):
     # w8list = [["w8 mechanic 1 placeholder"], ["w8 mechanic 2 placeholder"], ["w8 mechanic 3 placeholder"]]
 
     pinchable_sections = [
-        section_combatLevels,
+        section_combatLevels, section_secretPath,
         section_stamps, section_bribes, section_smithing,
         section_alchBubbles, section_alchVials, section_alchP2W,
         section_refinery, section_saltlick, section_deathnote, section_prayers, section_equinox,
