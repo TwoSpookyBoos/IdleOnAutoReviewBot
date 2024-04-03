@@ -42,7 +42,7 @@ class Threshold:
     EARLY_W7_PREP = "Early W7 Prep"
     SOLID_W7_PREP = "Solid W7 Prep"
     W7_WAITING_ROOM = "W7 Waiting Room"
-    MAX_TIER = "Maxed for v2.03"
+    MAX_TIER = "Maxed for v2.05"
     PLACEHOLDER = "Placeholder"
 
     thresholdNames = [

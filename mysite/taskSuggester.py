@@ -53,10 +53,10 @@ def main(inputData, runType="web"):
     # General
     sections_general = [
         section_combatLevels := combatLevels.setCombatLevelsProgressionTier(),
+        section_secretPath := secretPath.setSecretClassProgressionTier(),
         *(sections_consumables := consumables.parseConsumables()),
         section_gemShop := gemShop.setGemShopProgressionTier(),
         *(sections_gstacks := greenstacks.setGStackProgressionTier()),
-        section_secretPath := secretPath.setSecretClassProgressionTier(),
         section_cards := cards.getCardSetReview(),
     ]
     # World 1
