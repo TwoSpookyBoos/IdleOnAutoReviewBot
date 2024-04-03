@@ -8,11 +8,11 @@ sidebar="$root/mysite/templates/sidebar.html"
 
 [[ -f $release_notes ]] || exit
 
-new_notes="$(cat "$release_notes")"
-old_notes="$(head -n +1 "changelog")"
+new_notes="$(date +"%Y-%m-%d"): $(cat "$release_notes")"
+old_notes="$(head -n +1 "$changelog")"
 
 cat <<- EOF >> "$changelog_tmp"
-    $(date +"%Y-%m-%d"): $new_notes
+    $new_notes
     $(cat "$changelog")
 EOF
 
