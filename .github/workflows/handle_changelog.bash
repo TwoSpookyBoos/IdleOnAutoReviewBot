@@ -9,7 +9,7 @@ sidebar="$root/mysite/templates/sidebar.html"
 new_notes="$(date +"%Y-%m-%d"): $(cat "$release_notes")"
 old_notes="$(head -n +1 "$changelog")"
 
-[[ -s $release_notes ]] || exit
+[[ -s $release_notes ]] || exit 0
 
 cat <<- EOF >> "$changelog_tmp"
 $new_notes
@@ -27,8 +27,8 @@ sed "${sed_params[@]}" "$sidebar"
 
 cat "$changelog"
 
-#truncate -s 0 "$release_notes"
-#
-#git add .
-#git commit -m "changelog"
-#git push -u origin HEAD
+truncate -s 0 "$release_notes"
+
+git add .
+git commit -m "auto-update changelog"
+git push -u origin HEAD
