@@ -7,14 +7,15 @@
     {% if beta %}
         <strong>Heads up! You're on the beta-testing page. If you run into problems, try heading back to the <a href="{{ live_link }}" target="_blank">Live Page</a></strong>
         <br>
-        Currently beta testing: 2024-03-27: TBD.
+        Currently beta testing: 2024-04-01: New Path to Vman section, Expand/Collapse All button
     {% else %}
         <strong>To try out the beta site, head to the <a href="{{ beta_link }}" target="_blank">Beta Page</a></strong>
     {% endif %}
     </p>
     <p>
-        Most recent update 2024-03-27: Cooking section added! <br>
-        Previous update 2024-03-19: Equinox section added!
+        Most recent update 2024-04-02: Expand/Collapse All button added
+        <br>
+        Previous update 2024-04-01: New setting for showing Progress Bars added
     </p>
     <p>
         This tool will retrieve the PUBLIC profile from <a href="https://www.idleonefficiency.com/" target="_blank">IdleOn Efficiency</a> for evaluation.<br>
@@ -25,9 +26,7 @@
         <a href="https://www.idleonefficiency.com/raw-data" target="_blank">IdleonEfficiency</a>: Click on the Copy Raw JSON button. Paste results below.<br>
         <a href="https://idleontoolbox.com/data" target="_blank">IdleonToolbox</a>: Click on the <strong>IdleonToolbox JSON</strong> button. Paste results below.
     </p>
-    <span>All tier requirements are listed in the <a
-            href="https://docs.google.com/spreadsheets/d/16I-rURrVeyvltK2wxcQSiPgO07QY015RVNG4MAgUsGw/edit?usp=sharing"
-            target="_blank">Spreadsheet</a> for reference!</span>
+    <span>Feature backlog can be found in the <a href="https://trello.com/b/CG6GYsTN/idleon-autoreview-development" target="_blank">Trello board</a>!</span>
     <form action="/" method="POST">
         <div id="switchbox">
             {% for text, name, on, off, initial in switches %}
@@ -36,8 +35,7 @@
         </div>
         <div id="form">
             <label for="player"></label>
-            <textarea id="player" name="player"
-                      placeholder="Please enter your first IdleOn character's name, or Paste in your Raw Game JSON from IE/IT"></textarea>
+            <textarea id="player" name="player" placeholder="Please enter your first IdleOn character's name, or Paste in your Raw Game JSON from IE/IT"></textarea>
             <input type="submit" value="submit">
         </div>
     </form>

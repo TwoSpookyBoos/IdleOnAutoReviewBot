@@ -5,8 +5,8 @@ function toggleSidebar() {
 // close the sidebar if clicked outside of it or not on hamburger
 document.addEventListener("click", (e) => {
     let drawer = e.target.closest("#drawer") || e.target.closest("#drawer-handle")
-    let  sidebar = document.getElementById("drawer")
-    if (drawer === null && sidebar.classList.contains("sidebar-open")) {
+    let sidebar = document.getElementById("drawer")
+    if (!drawer && sidebar.classList.contains("sidebar-open")) {
         toggleSidebar()
     }
 })
@@ -169,15 +169,17 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     })
 
-    document.querySelectorAll('.collapse-cards').forEach(title => title.onclick = e => {
-        const t = e.currentTarget
-        const siblings = Array.from(t.parentElement.children)
-        const index = siblings.indexOf(t)
-        siblings.forEach(sib => {
-            if (sib === t) return
-            sib.classList.toggle('folded')
+    document.querySelector("#expand-collapse").onclick = e => {
+        const button = e.currentTarget
+        button.classList.toggle("closed")
+        document.querySelectorAll('.toggler').forEach(e => {
+            let title = e
+            for (const element of [title, title.nextElementSibling]) {
+                button.classList.contains("closed") ? element.classList.add("folded") : element.classList.remove("folded")
+            }
         })
-    })
+    }
+
     // data age clock
     setInterval(() => {
         const elapsed = document.querySelector('#elapsed')

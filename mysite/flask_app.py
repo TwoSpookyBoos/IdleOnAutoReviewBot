@@ -5,6 +5,7 @@ from json import JSONDecodeError
 
 from flask import g, render_template, request, redirect, Response, send_from_directory
 
+import consts
 import taskSuggester
 from utils.data_formatting import HeaderData
 from models.models import AdviceWorld
@@ -58,37 +59,19 @@ def store_user_preferences():
         args = request.args
     else:
         raise ValueError(f"Unknown request method: {request.method}")
-    g.autoloot = args.get("autoloot", False) in ["on", "True"]
-    g.sheepie = args.get("sheepie", False) in ["on", "True"]
-    g.doot = args.get("doot", False) in ["on", "True"]
-    g.order_tiers = args.get("order_tiers", False) in ["on", "True"]
-    g.progress_bars = args.get("progress_bars", False) in ["on", "True"]
-    g.handedness = args.get("handedness", False) in ["on", "True"]
+
+    for switch in consts.switches:
+        setattr(g, switch["name"], args.get(switch["name"], False) in ["on", "True", "true", True])
 
 
 def get_user_preferences():
-    return dict(
-        autoloot=g.autoloot,
-        sheepie=g.sheepie,
-        doot=g.doot,
-        order_tiers=g.order_tiers,
-        progress_bars=g.progress_bars,
-        handedness=g.handedness,
-    )
+    return {switch["name"]: getattr(g, switch["name"]) for switch in consts.switches}
 
 
 def switches():
-    vals = [
-        ("Autoloot purchased", "autoloot", "", ""),
-        ("Sheepie pet acquired", "sheepie", "", ""),
-        ("Doot pet acquired", "doot", "", ""),
-        ("Order groups by tier", "order_tiers", "", ""),
-        ("Show progress bars", "progress_bars", "", ""),
-        ("Handedness", "handedness", "L", "R"),
-    ]
     return [
-        (label, name, on, off, ("on" if get_user_preferences()[name] else "off"))
-        for label, name, on, off in vals
+        (*switch.values(), ("on" if get_user_preferences()[switch["name"]] else "off"))
+        for switch in consts.switches
     ]
 
 
