@@ -869,6 +869,10 @@ def setAlchemyP2W() -> AdviceSection:
         return p2w_AdviceSection
 
     alchemyP2WList = json.loads(session_data.account.raw_data["CauldronP2W"])
+    for subElementIndex, subElementValue in enumerate(alchemyP2WList):
+        if not isinstance(subElementValue, list):
+            alchemyP2WList[subElementIndex] = [subElementValue]
+
     bubbleCauldronSum = 0
     liquidCauldronSum = 0
     vialsSum = 0
