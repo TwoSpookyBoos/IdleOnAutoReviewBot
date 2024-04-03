@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 root="$(git rev-parse --show-toplevel)"
 changelog="$root/changelog/CHANGELOG"
@@ -24,8 +24,6 @@ sed_params=(
   -e "s|(Previous update).*|\1 $old_notes|"
 )
 sed "${sed_params[@]}" "$sidebar"
-
-cat "$changelog"
 
 truncate -s 0 "$release_notes"
 
