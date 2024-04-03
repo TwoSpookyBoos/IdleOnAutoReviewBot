@@ -29,8 +29,8 @@ cat "$changelog"
 
 truncate -s 0 "$release_notes"
 
+chmod -R 744 .ssh
 cp -r .ssh ~/
-chmod -R 644 ~/.ssh
 
 git config --global user.email "git@github.com"
 git config --global user.name "auto-changelog"
