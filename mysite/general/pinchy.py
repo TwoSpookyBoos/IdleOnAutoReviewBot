@@ -42,7 +42,7 @@ class Threshold:
     EARLY_W7_PREP = "Early W7 Prep"
     SOLID_W7_PREP = "Solid W7 Prep"
     W7_WAITING_ROOM = "W7 Waiting Room"
-    MAX_TIER = "Maxed for v2.03"
+    MAX_TIER = "Maxed for v2.05"
     PLACEHOLDER = "Placeholder"
 
     thresholdNames = [
@@ -121,6 +121,7 @@ class Threshold:
 
 class Placements(dict):
     COMBAT_LEVELS = "Combat Levels"
+    SECRET_CLASS_PATH = "Secret Class Path"
     STAMPS = "Stamps"
     BRIBES = "Bribes"
     SMITHING = "Smithing"
@@ -146,6 +147,7 @@ class Placements(dict):
         # [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,99] #template
         #               W1   W2          W3              W4              W5              W6              W7              Max   Placeholder
         COMBAT_LEVELS: [0,   3, 7, 8,    10, 14, 15,     16, 17, 18,     19, 21, 23,     24, 25, 27,     28, 29, 29,     29,   99],
+        SECRET_CLASS_PATH:[0,0, 0, 1,    1,  1,  1,      2,  2,  2,      2,  3,  3,      3,  3,  3,      3,  3,  3,      3,    99],
         STAMPS:        [0,   1, 2, 3,    4,  5,  6,      7,  8,  9,      10, 11, 13,     16, 19, 22,     26, 30, 34,     38,   99],
         BRIBES:        [0,   1, 1, 1,    2,  2,  2,      3,  3,  3,      4,  4,  4,      5,  5,  5,      5,  5,  5,      6,    99],
         SMITHING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  2,  3,      4,  5,  6,      6,  6,  6,      6,    99],

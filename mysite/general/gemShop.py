@@ -196,7 +196,6 @@ def getBoughtGemShopItems():
         'Lava Sprouts': 0,
 
         #World 6
-        'W6-Placeholder1': 0,  # TODO: DELETE ME AFTER UPDATING GEMSHOP RECOMMENDATIONS
         'Plot of Land': 0,
         'Pristine Charm': 0,
         'Shroom Familiar': 0,
@@ -290,6 +289,13 @@ def getBoughtGemShopItems():
     except Exception as reason:
         logger.exception("Unable to parse Gem Shop:", exc_info=reason)
     # logger.debug(gemShopDict)
+    for k, v in gemShopDict.items():
+        if not isinstance(v, int):
+            try:
+                gemShopDict[k] = int(v)
+            except:
+                logger.warning(f"Could not force {k}'s {type(v)} {v} to int. Setting to 0.")
+                gemShopDict[k] = 0
     return gemShopDict
 
 
