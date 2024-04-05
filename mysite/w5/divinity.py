@@ -165,8 +165,12 @@ def setDivinityProgressionTier():
         ))
 
     for divDivinity in divinitiesDict:
+        if divinitiesDict[divDivinity].get('Unlocked'):
+            status = f"Blessing Level: {divinitiesDict[divDivinity].get('BlessingLevel')}/100"
+        else:
+            status = "Locked"
         divinity_AdviceDict["DivinityTester"].append(Advice(
-            label=f"{divinitiesDict[divDivinity].get('Name')} {'' if divinitiesDict[divDivinity].get('Unlocked') else '(Locked)'}",
+            label=f"{divinitiesDict[divDivinity].get('Name')} {status}",
             picture_class=divinitiesDict[divDivinity].get('Name')
         ))
     divinity_AdviceDict["DivinityTester"].append(Advice(
