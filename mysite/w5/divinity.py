@@ -245,24 +245,27 @@ def setDivinityProgressionTier():
                             label=f"Raise {character.character_name}'s Divinity level to {tierRequirements.get('MinDivLevel', 0)} {getDivLevelReason(tierRequirements.get('MinDivLevel', 0))}",
                             picture_class=f"{character.class_name_icon}",
                         ))
-        if not anyRequirementFailed:
+        if not anyRequirementFailed and tier_Divinity == tierLevel-1:
             tier_Divinity = tierLevel
 
     # Divinities Info
     for divDivinity in divinitiesDict:
         if divinitiesDict[divDivinity].get('Unlocked'):
-            status = f"Blessing Level: {divinitiesDict[divDivinity].get('BlessingLevel')}/100"
-            divinity_AdviceDict["Divinities"].append(Advice(
-                label=f"{divinitiesDict[divDivinity].get('Name')} {status}",
-                picture_class=divinitiesDict[divDivinity].get('Name')
-            ))
+            if divinitiesDict[divDivinity].get('BlessingLevel') < 100:
+                status = f"Blessing Level: {divinitiesDict[divDivinity].get('BlessingLevel')}/100"
+                divinity_AdviceDict["Divinities"].append(Advice(
+                    label=f"{divinitiesDict[divDivinity].get('Name')} Blessing",
+                    picture_class=divinitiesDict[divDivinity].get('Name'),
+                    progression=divinitiesDict[divDivinity].get('BlessingLevel'),
+                    goal=100
+                ))
         # else:
         #     status = "Locked"
-    if godsUnlocked >= 10:
-        divinity_AdviceDict["Divinities"].append(Advice(
-            label=f"God Rank: {godRank}",
-            picture_class="gods-chosen-children"
-        ))
+    # if godsUnlocked >= 10:
+    #     divinity_AdviceDict["Divinities"].append(Advice(
+    #         label=f"God Rank: {godRank}",
+    #         picture_class="gods-chosen-children"
+    #     ))
 
     #Offerings Info
     divinity_AdviceDict["Offerings"]["Available Offerings"].append(Advice(
