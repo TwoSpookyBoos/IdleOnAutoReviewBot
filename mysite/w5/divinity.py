@@ -5,6 +5,38 @@ from flask import g as session_data
 from consts import divinity_progressionTiers
 
 logger = get_logger(__name__)
+offeringsDict = {
+    0: {
+        "Name":"Olive Branch",
+        "Image":"offering-1",
+        "Chance":1,
+    },
+    1: {
+        "Name": "Incense",
+        "Image": "offering-5",
+        "Chance": 5,
+    },
+    2: {
+        "Name": "Giftbox",
+        "Image": "offering-10",
+        "Chance": 10,
+    },
+    3: {
+        "Name": "Tithe",
+        "Image": "offering-25",
+        "Chance": 25,
+    },
+    4: {
+        "Name": "Hearty Meal",
+        "Image": "offering-50",
+        "Chance": 50,
+    },
+    5: {
+        "Name": "Sacrifice",
+        "Image": "offering-100",
+        "Chance": 100,
+    },
+}
 stylesDict = {
     0: {
         "Name": "Kinesis",
@@ -107,6 +139,10 @@ divinitiesDict = {
         "BlessingLevel": 0,
     },
 }
+
+def getOfferingNameFromIndex(inputValue):
+    return offeringsDict.get(inputValue, {"Name": f"UnknownOffering{inputValue}"}).get("Name")
+
 def getStyleNameFromIndex(inputValue):
     return stylesDict.get(inputValue, {"Name": f"UnknownStyle{inputValue}"}).get("Name")
 
@@ -123,6 +159,7 @@ def parseJSONtoList():
 
 def setDivinityProgressionTier():
     divinity_AdviceDict = {
+        "OfferingsTester": [],
         "StyleTester": [],
         "DivinityTester": [],
     }
@@ -158,6 +195,12 @@ def setDivinityProgressionTier():
         except Exception as reason:
             logger.warning(f"Could not retrieve Divinity Style for Character{character.character_index} because {reason}")
 
+    for offering in offeringsDict:
+        divinity_AdviceDict["OfferingsTester"].append(Advice(
+            label=f"{offeringsDict[offering].get('Chance', 0)}% Offering: {getOfferingNameFromIndex(offering)}",
+            picture_class=offeringsDict[offering].get('Image'),
+        ))
+
     for divStyle in stylesDict:
         divinity_AdviceDict["StyleTester"].append(Advice(
             label=getStyleNameFromIndex(divStyle),
@@ -175,10 +218,15 @@ def setDivinityProgressionTier():
         ))
     divinity_AdviceDict["DivinityTester"].append(Advice(
         label=f"God Rank: {godRank}",
-        picture_class="god-rank"
+        picture_class="gods-chosen-children"
     ))
 
     #Generate AdviceGroups
+    divinity_AdviceGroupDict["OfferingsTester"] = AdviceGroup(
+        tier="",
+        pre_string="Offerings Tester",
+        advices=divinity_AdviceDict["OfferingsTester"]
+    )
     divinity_AdviceGroupDict["StyleTester"] = AdviceGroup(
         tier="",
         pre_string="Style Tester",
