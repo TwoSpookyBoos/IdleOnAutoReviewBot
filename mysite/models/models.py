@@ -63,6 +63,8 @@ class Character:
         self.sneaking_level: int = all_skill_levels["Sneaking"]
         self.summoning_level: int = all_skill_levels["Summoning"]
         self.skills = all_skill_levels
+        self.divinity_style: str = "None"
+        self.divinity_link: str = "Unlinked"
 
         self.apoc_dict: dict = {
             name: {
@@ -91,6 +93,10 @@ class Character:
                             enemies, key=lambda item: item[2], reverse=True
                         )
 
+    def setDivinityStyle(self, styleName: str):
+        self.divinity_style = styleName
+    def setDivinityLink(self, linkName: str):
+        self.divinity_link = linkName
     def __str__(self):
         return self.character_name
 

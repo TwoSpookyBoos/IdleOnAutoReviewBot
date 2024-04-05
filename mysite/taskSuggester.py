@@ -14,7 +14,7 @@ from w1 import stamps, bribes, smithing
 from w2 import alchemy
 from w3 import trapping, consRefinery, consDeathNote, worship, consSaltLick, consBuildings, equinox
 from w4 import breeding, cooking, rift
-
+from w5 import divinity
 
 logger = get_logger(__name__)
 
@@ -96,13 +96,10 @@ def main(inputData, runType="web"):
     ]
     # World 5
     sections_5 = [
+        section_divinity := divinity.setDivinityProgressionTier(),
         # section_sailing =
         # section_gaming =
-        # section_divinity =
     ]
-    # w6list = [["w6 mechanic 1 placeholder"], ["w6 mechanic 2 placeholder"], ["w6 mechanic 3 placeholder"]]
-    # w7list = [["w7 mechanic 1 placeholder"], ["w7 mechanic 2 placeholder"], ["w7 mechanic 3 placeholder"]]
-    # w8list = [["w8 mechanic 1 placeholder"], ["w8 mechanic 2 placeholder"], ["w8 mechanic 3 placeholder"]]
 
     pinchable_sections = [
         section_combatLevels, section_secretPath,

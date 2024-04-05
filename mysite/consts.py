@@ -503,6 +503,11 @@ rift_progressionTiers = {
 }
 
 ###WORLD 5 PROGRESSION TIERS###
+divinity_progressionTiers = {
+    0: [],
+    1: [],
+    2: [],
+}
 ###WORLD 6 PROGRESSION TIERS###
 
 ###GENERAL PROGRESSION TIERS###
