@@ -596,6 +596,7 @@ class Account:
         self.raw_data = (
             json.loads(json_data) if isinstance(json_data, str) else json_data
         )
+        #AutoLoot
         if g.autoloot:
             self.autoloot = True
         elif self.raw_data.get("AutoLoot", 0) == 1:
@@ -603,6 +604,21 @@ class Account:
             g.autoloot = True
         else:
             self.autoloot = False
+        #Companions
+        self.sheepie_owned = g.sheepie
+        self.doot_owned = g.doot
+        if not self.doot_owned or not self.sheepie_owned:
+            rawCompanions = self.raw_data.get('companion', [])
+            if rawCompanions:
+                for companionInfo in rawCompanions.get('l', []):
+                    companionID = int(companionInfo.split(',')[0])
+                    if companionID == 0:
+                        self.doot_owned = True
+                        g.doot = True
+                    if companionID == 4:
+                        self.sheepie_owned = True
+                        g.sheepie = True
+
         playerCount, playerNames, playerClasses, characterDict, perSkillDict = getCharacterDetails(
             self.raw_data, run_type
         )

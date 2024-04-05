@@ -504,9 +504,19 @@ rift_progressionTiers = {
 
 ###WORLD 5 PROGRESSION TIERS###
 divinity_progressionTiers = {
-    0: [],
-    1: [],
-    2: [],
+    0: {},
+    1: {"GodsUnlocked": 1},
+    2: {"GodsUnlocked": 2},
+    3: {"GodsUnlocked": 3},
+    4: {"GodsUnlocked": 4},
+    5: {"GodsUnlocked": 5},
+    6: {"GodsUnlocked": 6},
+    7: {"GodsUnlocked": 7},
+    8: {"GodsUnlocked": 8},
+    9: {"GodsUnlocked": 9},
+    10: {"GodsUnlocked": 10},
+    11: {"MaxDivLevel": 50},
+    12: {"MinDivLevel": 40}
 }
 ###WORLD 6 PROGRESSION TIERS###
 
