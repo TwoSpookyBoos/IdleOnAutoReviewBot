@@ -321,18 +321,23 @@ def setDivinityProgressionTier():
         #     ))
         if divinitiesDict[6].get("Unlocked", False):
             purrmepAssignedToAnyHighestCharacter = False
+            divLevelOfPurrmepLinkedCharacter = 0
             highestCharactersNotAssignedToPurrmep = []
             for character in session_data.account.safe_characters:
-                if character.divinity_level == highestDivinitySkillLevel:
-                    if character.divinity_link == "Purrmep":
+                if character.divinity_link == "Purrmep":
+                    divLevelOfPurrmepLinkedCharacter = character.divinity_level
+                    if character.divinity_level == highestDivinitySkillLevel:
                         purrmepAssignedToAnyHighestCharacter = True
-                    else:
+            if not purrmepAssignedToAnyHighestCharacter:
+                for character in session_data.account.safe_characters:
+                    if character.divinity_level == highestDivinitySkillLevel and character.divinity_link != "Purrmep":
                         highestCharactersNotAssignedToPurrmep.append(character)
             if not purrmepAssignedToAnyHighestCharacter:
-                divinity_AdviceDict["Dooted"].append(Advice(
-                    label=f"Relink to {pl(highestCharactersNotAssignedToPurrmep, f'{highestCharactersNotAssignedToPurrmep[0].character_name}', 'one of these characters')} to maximize Purrmep's Minor Link bonus{pl(highestCharactersNotAssignedToPurrmep, '.', ':')}",
-                    picture_class="purrmep"
-                ))
+                if highestDivinitySkillLevel < 120 and highestDivinitySkillLevel - divLevelOfPurrmepLinkedCharacter >= 10:
+                    divinity_AdviceDict["Dooted"].append(Advice(
+                        label=f"Relink to {pl(highestCharactersNotAssignedToPurrmep, f'{highestCharactersNotAssignedToPurrmep[0].character_name}', 'one of these characters')} to maximize Purrmep's Minor Link bonus by {highestDivinitySkillLevel - divLevelOfPurrmepLinkedCharacter} levels{pl(highestCharactersNotAssignedToPurrmep, '.', ':')}",
+                        picture_class="purrmep"
+                    ))
                 if len(highestCharactersNotAssignedToPurrmep) > 1:
                     for character in highestCharactersNotAssignedToPurrmep:
                         divinity_AdviceDict["Dooted"].append(Advice(
@@ -340,10 +345,11 @@ def setDivinityProgressionTier():
                             picture_class=character.class_name_icon
                         ))
         if len(divinity_AdviceDict["Dooted"]) == 1:
-            divinity_AdviceDict["Dooted"].append(Advice(
-                label=f"No Doot-related issues found. Way to be a responsible Doot owner",
-                picture_class=""
-            ))
+            divinity_AdviceDict["Dooted"] = []
+            # divinity_AdviceDict["Dooted"].append(Advice(
+            #     label=f"No Doot-related issues found. Way to be a responsible Doot owner",
+            #     picture_class=""
+            # ))
     # else:
     #     divinity_AdviceDict["Dooted"].append(Advice(
     #         label=f"Doot not owned, bummer 💔",

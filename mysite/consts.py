@@ -34,7 +34,7 @@ stamps_progressionTiers = [
     [14, 1500, [31], [35, 39], [21], {'Matty Bag Stamp': 100, 'Crystallin': 60}, ""],
     [15, 2000, [25, 29], [41], [6, 20], {'Pickaxe Stamp': 65, 'Hatchet Stamp': 65, 'Card Stamp': 100}, ""],
     [16, 2500, [33], [38, 42], [15], {'Golden Apple Stamp': 28}, ""],
-    [17, 3000, [36], [43, 44, 45], [], {'Bugsack Stamp': 80, 'Bag o Heads Stamp': 80}, ""],
+    [17, 3000, [], [43, 44, 45], [], {'Bugsack Stamp': 80, 'Bag o Heads Stamp': 80}, ""],
     [18, 3500, [], [], [], {'Pickaxe Stamp': 75, 'Hatchet Stamp': 75, 'Drippy Drop Stamp': 90, 'Crystallin': 100}, ""],
     [19, 4000, [], [], [], {'Matty Bag Stamp': 150}, ""],
     [20, 4500, [39], [47], [18], {'Card Stamp': 150, 'Ladle Stamp': 100, 'Potion Stamp': 20}, ""],
