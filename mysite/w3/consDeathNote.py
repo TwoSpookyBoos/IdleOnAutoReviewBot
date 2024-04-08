@@ -770,7 +770,7 @@ def setConsDeathNoteProgressionTier():
         )
 
     #Generate Advice Section
-    overall_DeathNoteTier = min(max_tier, tier_combo[1], tier_combo[2], tier_combo[3],
+    overall_DeathNoteTier = min(max_tier+1, tier_combo[1], tier_combo[2], tier_combo[3],
                                 tier_combo[4], tier_combo[5], tier_combo[6],
                                 tier_combo['ZOW'], tier_combo['CHOW'], tier_combo['MEOW'])  #tier_zows, tier_chows, tier_meows
 
