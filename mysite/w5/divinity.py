@@ -205,10 +205,12 @@ def setDivinityProgressionTier():
             divinitiesDict[divinityIndex]["Unlocked"] = True
         #Snake has a divinityIndex of 0, Blessing level stored in 28
         divinitiesDict[divinityIndex]["BlessingLevel"] = playerDivinityList[divinityIndex+27]
+    #troubleshooting_DivLinkDict = {}
     for character in session_data.account.safe_characters:
         try:
             character.setDivinityStyle(getStyleNameFromIndex(playerDivinityList[character.character_index]))
-            character.setDivinityLink(getDivinityNameFromIndex(playerDivinityList[character.character_index+12]))
+            character.setDivinityLink(getDivinityNameFromIndex(playerDivinityList[character.character_index+12]+1))
+            #troubleshooting_DivLinkDict[character.character_index] = getDivinityNameFromIndex(playerDivinityList[character.character_index+12]+1)
         except Exception as reason:
             logger.warning(f"Could not retrieve Divinity Style for Character{character.character_index} because {reason}")
 

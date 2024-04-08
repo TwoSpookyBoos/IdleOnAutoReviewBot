@@ -731,7 +731,7 @@ def setConsDeathNoteProgressionTier():
             post_string=""
         )
         if fullDeathNoteDict[worldIndex].next_lowest_skull_name == "Eclipse Skull":
-            deathnote_AdviceGroupDict[f"W{worldIndex}"].post_string = "Complete Super CHOWs on your Blood Berserker in this window"
+            deathnote_AdviceGroupDict[f"W{worldIndex}"].post_string = "Complete Super CHOWs with your Blood Berserker before finishing Eclipse Skulls"
 
     # ZOW
     if highestZOWCountIndex is not None:
