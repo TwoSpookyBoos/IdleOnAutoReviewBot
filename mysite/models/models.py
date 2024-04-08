@@ -72,6 +72,7 @@ class Character:
                 "Easy Extras": [],
                 "Medium Extras": [],
                 "Difficult Extras": [],
+                "Insane": [],
                 "Impossible": [],
                 "Total": 0,
             }
