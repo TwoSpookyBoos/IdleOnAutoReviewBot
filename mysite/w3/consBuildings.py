@@ -171,9 +171,9 @@ def setConsBuildingsProgressionTier():
             for tierIndex in range(0, len(progressionTiersPostBuffs)):
                 if towerIndex in progressionTiersPostBuffs[tierIndex][2]:
                     progressionTiersPostBuffs[tierIndex][2].remove(towerIndex)  #Remove from any existing tier (S for Kraken and Poison, A for Stormcaller)
-                progressionTiersPostBuffs[3][2].append(towerIndex)  #Add to A tier
-                if hasBuffs:
-                    maxLevelList[towerIndex] = 140
+            progressionTiersPostBuffs[3][2].append(towerIndex)  #Add to A tier
+            if hasBuffs:
+                maxLevelList[towerIndex] = 140
 
     # 7) Voidinator to 40, drop priority
     if playerBuildings[17] >= 40:  #Voidinator scaling is very bad
