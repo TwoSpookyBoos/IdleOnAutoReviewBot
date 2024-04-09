@@ -1,6 +1,7 @@
 import json
 from models.models import Advice, AdviceSection, AdviceGroup
 from utils.text_formatting import pl
+from utils.data_formatting import safe_loads
 from utils.logging import get_logger
 from flask import g as session_data
 
@@ -281,7 +282,7 @@ def is_portal_opened(mobKills, monster, portalKC):
 
 
 def getHighestPrint():
-    awfulPrinterList = json.loads(session_data.account.raw_data["Print"])
+    awfulPrinterList = safe_loads(session_data.account.raw_data["Print"])
     # print("Pinchy~ OUTPUT awfulPrinterList: ", type(awfulPrinterList), awfulPrinterList)
     goodPrinterList = [p for p in awfulPrinterList if isinstance(p, int)]
     highestPrintFound = max(goodPrinterList)
@@ -317,7 +318,7 @@ def tier_from_monster_kills(dictOfPRs) -> Threshold:
         # logger.info(f"Starting to review map kill counts per player because expectedIndex still W1: {dictOfPRs['Construction Death Note']}")
         for character in session_data.account.safe_characters:
             try:
-                mobKills = json.loads(session_data.account.raw_data[f'KLA_{character.character_index}'])  # String pretending to be a list of lists yet again
+                mobKills = safe_loads(session_data.account.raw_data[f'KLA_{character.character_index}'])  # String pretending to be a list of lists yet again
             except:
                 logger.exception(f"Could not retrieve KLA_{character.character_index} for Pinchy. Setting mobKills to empty list")
                 mobKills = []

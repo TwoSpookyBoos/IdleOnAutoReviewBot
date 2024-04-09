@@ -74,6 +74,20 @@
     --w4-bg-advice-group-odd: hsl(268deg 25% 48%);
     --w4-bg-advice-group-even: hsl(265deg 24% 34%);
 
+    --w5-fg-subheading: hsl(15, 100%, 96%);
+    --w5-bg-subheading: hsla(15, 78%, 28%, 0.4);
+
+    --w5-fg-advice-group: hsl(15deg, 100%, 96%);
+    --w5-bg-advice-group-odd: hsl(15deg 25% 48%);
+    --w5-bg-advice-group-even: hsl(15deg 24% 34%);
+
+    --w6-fg-subheading: hsl(165, 100%, 96%);
+    --w6-bg-subheading: hsla(155, 78%, 28%, 0.4);
+
+    --w6-fg-advice-group: hsl(167deg, 100%, 96%);
+    --w6-bg-advice-group-odd: hsl(178, 25%, 48%);
+    --w6-bg-advice-group-even: hsl(161, 24%, 34%);
+
     --bg-scrollbar-thumb: gray;
     --scrollbar-thumb-color: rgba(255, 255, 255, 0.7);
 
@@ -150,6 +164,20 @@
     --w4-fg-advice-group: black;
     --w4-bg-advice-group-odd: hsl(268deg 50.4% 77%);
     --w4-bg-advice-group-even: hsl(265deg 40% 60%);
+
+    --w5-fg-subheading: hsl(15deg, 45%, 40%);
+    --w5-bg-subheading: hsl(15deg, 49%, 87%);
+
+    --w5-fg-advice-group: black;
+    --w5-bg-advice-group-odd: hsl(15deg, 51%, 77%);
+    --w5-bg-advice-group-even: hsl(15deg, 40%, 60%);
+
+    --w6-fg-subheading: hsl(160, 45%, 40%);
+    --w6-bg-subheading: hsl(165, 48%, 86%);
+
+    --w6-fg-advice-group: black;
+    --w6-bg-advice-group-odd: hsl(160, 51%, 77%);
+    --w6-bg-advice-group-even: hsl(160, 40%, 60%);
 
     --scrollbar-thumb-color: rgba(0, 0, 0, 0.4);
 
@@ -849,6 +877,100 @@ body {
 
                             .table::after {
                                 background: linear-gradient(to bottom, transparent, var(--w4-bg-advice-group-even));
+                            }
+                        }
+                    }
+                }
+
+                #smolderin-plateau {
+                    .subheading {
+                        background: var(--w5-bg-subheading);
+
+                        & > span {
+                            color: var(--w5-fg-subheading);
+
+                            .tier-progress {
+                                color: var(--fg-subheading-progress);
+
+                                &.finished {
+                                    color: var(--fg-subheading-finished);
+                                }
+                            }
+
+                        }
+                    }
+
+                    .advice-group {
+                        color: var(--w4-fg-advice-group);
+
+                        &:nth-child(odd) {
+                            background-color: var(--w5-bg-advice-group-odd);
+
+                            .table::before {
+                                background: linear-gradient(to top, transparent, var(--w5-bg-advice-group-odd));
+                            }
+
+                            .table::after {
+                                background: linear-gradient(to bottom, transparent, var(--w5-bg-advice-group-odd));
+                            }
+                        }
+
+                        &:nth-child(even) {
+                            background-color: var(--w5-bg-advice-group-even);
+
+                            .table::before {
+                                background: linear-gradient(to top, transparent, var(--w5-bg-advice-group-even));
+                            }
+
+                            .table::after {
+                                background: linear-gradient(to bottom, transparent, var(--w5-bg-advice-group-even));
+                            }
+                        }
+                    }
+                }
+
+                #spirited-valley {
+                    .subheading {
+                        background: var(--w6-bg-subheading);
+
+                        & > span {
+                            color: var(--w6-fg-subheading);
+
+                            .tier-progress {
+                                color: var(--fg-subheading-progress);
+
+                                &.finished {
+                                    color: var(--fg-subheading-finished);
+                                }
+                            }
+
+                        }
+                    }
+
+                    .advice-group {
+                        color: var(--w6-fg-advice-group);
+
+                        &:nth-child(odd) {
+                            background-color: var(--w6-bg-advice-group-odd);
+
+                            .table::before {
+                                background: linear-gradient(to top, transparent, var(--w6-bg-advice-group-odd));
+                            }
+
+                            .table::after {
+                                background: linear-gradient(to bottom, transparent, var(--w6-bg-advice-group-odd));
+                            }
+                        }
+
+                        &:nth-child(even) {
+                            background-color: var(--w6-bg-advice-group-even);
+
+                            .table::before {
+                                background: linear-gradient(to top, transparent, var(--w6-bg-advice-group-even));
+                            }
+
+                            .table::after {
+                                background: linear-gradient(to bottom, transparent, var(--w6-bg-advice-group-even));
                             }
                         }
                     }

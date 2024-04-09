@@ -15,6 +15,7 @@ from w2 import alchemy
 from w3 import trapping, consRefinery, consDeathNote, worship, consSaltLick, consBuildings, equinox
 from w4 import breeding, cooking, rift
 from w5 import divinity
+from w6 import beanstalk
 
 logger = get_logger(__name__)
 
@@ -100,6 +101,10 @@ def main(inputData, runType="web"):
         # section_sailing =
         # section_gaming =
     ]
+    # World 6
+    sections_6 = [
+        section_beanstalk := beanstalk.section_beanstalk(),
+    ]
 
     pinchable_sections = [
         section_combatLevels, section_secretPath,
@@ -111,13 +116,14 @@ def main(inputData, runType="web"):
     sections_pinchy = pinchy.generatePinchyWorld(pinchable_sections)
 
     reviews = [
-        AdviceWorld(name=WorldName.PINCHY, sections=sections_pinchy, title="Pinchy AutoReview", collapse=False,),
+        AdviceWorld(name=WorldName.PINCHY, sections=sections_pinchy, title="Pinchy AutoReview", collapse=False),
         AdviceWorld(name=WorldName.GENERAL, sections=sections_general, banner="general_banner.jpg"),
         AdviceWorld(name=WorldName.BLUNDER_HILLS, sections=sections_1, banner="w1banner.png"),
         AdviceWorld(name=WorldName.YUMYUM_DESERT, sections=sections_2, banner="w2banner.png"),
         AdviceWorld(name=WorldName.FROSTBITE_TUNDRA, sections=sections_3, banner="w3banner.png"),
         AdviceWorld(name=WorldName.HYPERION_NEBULA, sections=sections_4, banner="w4banner.png"),
         AdviceWorld(name=WorldName.SMOLDERIN_PLATEAU, sections=sections_5, banner="w5banner.png"),
+        AdviceWorld(name=WorldName.SPIRITED_VALLEY, sections=sections_6, banner="w6banner.png"),
     ]
 
     headerData = HeaderData(inputData)

@@ -8,6 +8,7 @@ from consts import deathNote_progressionTiers
 from flask import g as session_data
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
+from utils.data_formatting import safe_loads
 from utils.logging import get_logger
 
 
@@ -414,7 +415,7 @@ def getDeathNoteKills():
     #total up all kills across characters
     for characterIndex in range(0, len(session_data.account.safe_characters)):
         try:
-            characterKillsList = json.loads(session_data.account.raw_data['KLA_'+str(characterIndex)])  #String pretending to be a list of lists yet again
+            characterKillsList = safe_loads(session_data.account.raw_data['KLA_' + str(characterIndex)])  #String pretending to be a list of lists yet again
         except Exception as reason:
             logger.warning(f"Unable to retrieve kill list for Character{characterIndex} because:{reason}")
             #print("ConsDeathNote.getDeathNoteKills~ EXCEPTION Unable to retrieve kill list for Character", characterIndex, "because:", reason)
@@ -523,7 +524,7 @@ def setConsDeathNoteProgressionTier():
     if highestConstructionLevel < 1:
         deathnote_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
         return deathnote_AdviceSection
-    elif json.loads(session_data.account.raw_data["Tower"])[3] < 1:
+    elif safe_loads(session_data.account.raw_data["Tower"])[3] < 1:
         deathnote_AdviceSection.header = "Come back after unlocking the Salt Lick within the Construction skill in World 3!"
         return deathnote_AdviceSection
 

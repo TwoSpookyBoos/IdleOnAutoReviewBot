@@ -1321,3 +1321,158 @@ expectedStorageChestValuesDict = {
     103:4,
     104:3,
 }
+
+jade_emporium = [
+  {
+    "name": "Quick Ref Access",
+    "bonus": "Adds the Sneaking skill to your QuickRef menu! Manage your Ninja Twins from anywhere!"
+  },
+  {
+    "name": "Gold Food Beanstalk",
+    "bonus": "Grows a giant beanstalk behind the ninja castle! Drop a stack of 10,000 Gold Food to add it with the beanstalk and permanently gain its bonus!"
+  },
+  {
+    "name": "Supersized Gold Beanstacking",
+    "bonus": "You can now drop a stack of 100,000 Gold Food to supersize it! This will obviously give a bigger bonus, and will even enlargen the food on the stalk!"
+  },
+  {
+    "name": "Charmed, I'm Sure",
+    "bonus": "All your Ninja Twins can now equip two of the same charm at once!"
+  },
+  {
+    "name": "Mob Cosplay Craze",
+    "bonus": "Certain monsters in World 6 will now have a rare chance to drop Ninja Hats, but only the ones you've found already from the Ninja Castle!"
+  },
+  {
+    "name": "Level Exemption",
+    "bonus": "Completely and utterly removes the UNDER-LEVELED bonus reduction of all stamps in your collection, now and forever. Amen."
+  },
+  {
+    "name": "Gaming to the MAX",
+    "bonus": "All plant types in Gaming have +1 Max Evolution, but this one is 50,000x rarer than normal and will make you wonder if evolution is even real (it is)"
+  },
+  {
+    "name": "Revenge of the Pickle",
+    "bonus": "Adds a new boss page to the left of World 1 in Deathnote. Each BoneJoePickle in your inventory counts as +1 Boss Deathnote Kill!"
+  },
+  {
+    "name": "The Artifact Matrix",
+    "bonus": "Extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to Artifact Find Chance!"
+  },
+  {
+    "name": "The Slab Matrix",
+    "bonus": "Further extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to all bonuses from the Slab!"
+  },
+  {
+    "name": "The Spirit Matrix",
+    "bonus": "Even further extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to W6 Skill exp gain!"
+  },
+  {
+    "name": "The Crop Matrix",
+    "bonus": "Yet again even further extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to Crop Depot!"
+  },
+  {
+    "name": "MSA Expander I",
+    "bonus": "Adds a new bonus type to the Miniature Soul Apparatus in World 3, specifically Farming EXP!"
+  },
+  {
+    "name": "MSA Expander II",
+    "bonus": "Adds a new bonus type to the Miniature Soul Apparatus in World 3, specifically Jade Coin Gain!"
+  },
+  {
+    "name": "MSA Expander III",
+    "bonus": "Adds a new bonus type to the Miniature Soul Apparatus in World 3, specifically All Essence Gain!"
+  },
+  {
+    "name": "Deal Sweetening",
+    "bonus": "Earn +25% more Magic Beans from the mysterious Legumulyte bean merchant found in the Troll Broodnest map."
+  },
+  {
+    "name": "No Meal Left Behind",
+    "bonus": "Every 24 hours, your lowest level Meal gets +1 Lv. This only works on Meals Lv 5 or higher, and doesn't trigger on days you don't play."
+  },
+  {
+    "name": "Jade Coin Magnetism",
+    "bonus": "Adds a new bonus of +5% Jade Coin Gain per 10 items found after 1000 items, as shown at The Slab in World 5."
+  },
+  {
+    "name": "Essence Confetti",
+    "bonus": "Adds a new bonus of +3% All Essence Gain per 10 items found after 1000 items, as shown at The Slab in World 5."
+  },
+  {
+    "name": "Shrine Collective Bargaining Agreement",
+    "bonus": "Shrines no longer lose EXP when moved around, so you can finally bring those baddies out of retirement!"
+  },
+  {
+    "name": "Papa Blob's Quality Guarantee",
+    "bonus": "Increases the Max Level of all cooking meals by +10. Better meals, better levels, Papa Blob's."
+  },
+  {
+    "name": "Chef Geustloaf's Cutting Edge Philosophy",
+    "bonus": "Increases the Max Level of all cooking meals by +10 again! But oh hoho, you sir are no Chef Geustloaf! Good luck cooking to these LVs!"
+  },
+  {
+    "name": "Crop Depot Scientist",
+    "bonus": "Employs a friendly scientist blobulyte to keep a Data Sheet of all the crops you've ever found!"
+  },
+  {
+    "name": "Science Environmentally Sourced Pencil",
+    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+15% Cash from Mobs' per crop found!"
+  },
+  {
+    "name": "Science Pen",
+    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '1.02x Plant Evolution Chance in Gaming (multiplicative)' per Crop!"
+  },
+  {
+    "name": "Science Marker",
+    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+8% Jade Coin Gain' per Crop!"
+  },
+  {
+    "name": "Science Featherpen",
+    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '1.10x Cooking Speed (multiplicative)' per Crop!"
+  },
+  {
+    "name": "Reinforced Science Pencil",
+    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+20% Total Damage' per Crop!"
+  },
+  {
+    "name": "Science Crayon",
+    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+7% Shiny Pet Lv Up Rate and Pet Breeding Rate' per Crop!"
+  },
+  {
+    "name": "Science Paintbrush",
+    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+0.1 Base Critter caught in Trapping' per Crop!"
+  },
+  {
+    "name": "New Critter",
+    "bonus": "Unlocks a new critter type to capture! These have their own very special vial in Alchemy."
+  },
+  {
+    "name": "Ionized Sigils",
+    "bonus": "Sigils can now be upgraded a 3rd time. Push past lame ol' yellow, and further increasing those sigil boosts!"
+  },
+  {
+    "name": "The Endercaptain",
+    "bonus": "Adds the Endercaptain to Recruitment pool. They're very rare, and have a hidden account-wide +25% Loot Multi and Artifact Find."
+  },
+  {
+    "name": "True Godly Blessings",
+    "bonus": "All Divinity Gods give 1.05x higher Blessing bonus per God Rank. Whats a Blessing bonus? Select a god, it's the one on the bottom, go look."
+  },
+  {
+    "name": "Brighter Lighthouse Bulb",
+    "bonus": "You can now find 3 additional Artifacts from The Edge island."
+  },
+  {
+    "name": "Sovereign Artifacts",
+    "bonus": "You can now find Sovereign Artifacts from sailing, but only if you've found the Eldritch form first."
+  },
+  {
+    "name": "New Bribes",
+    "bonus": "Mr. Pigibank is up to no good once again, and he's looking to get some funding from his favorite patron... you. Well, your wallet specifically."
+  },
+  {
+    "name": "Laboratory Bling",
+    "bonus": "Adds 3 new Jewels to unlock at the Jewel Spinner in W4 Town. Or, get one for free every 700 total Lab LV as shown in Rift Skill Mastery."
+  }
+]
