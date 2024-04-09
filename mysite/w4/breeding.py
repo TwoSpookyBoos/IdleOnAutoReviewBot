@@ -386,10 +386,10 @@ def setBreedingProgressionTier() -> AdviceSection:
             ['rattler', 'defender', 'looter', 'refiller', 'badumdum', 'borger']]
     }
     shinyPetsTierList = {
-        "S": ['Faster Shiny Pet Lv Up Rate', 'Bonuses from All Meals', 'Base Efficiency for All Skills', 'Drop Rate'],
+        "S": ['Bonuses from All Meals', 'Base Efficiency for All Skills', 'Drop Rate'],
         "A": ['Multikill Per Tier', 'Base Critter Per Trap', 'Infinite Star Signs', 'Faster Refinery Speed', 'Farming EXP'],
         "B": ['Lower Minimum Travel Time for Sailing', 'Higher Artifact Find Chance', 'Tab 4 Talent Pts', 'Star Talent Pts'],
-        "C": ['Skill EXP', 'Base WIS', 'Base STR', 'Base AGI', 'Base LUK'],
+        "C": ['Faster Shiny Pet Lv Up Rate', 'Skill EXP', 'Base WIS', 'Base STR', 'Base AGI', 'Base LUK'],
         "D": ['Sail Captain EXP Gain', 'Summoning EXP', 'Total Damage', 'Tab 1-3 Talent Pts'],
         "F": ['Class EXP', 'Line Width in Lab']
     }

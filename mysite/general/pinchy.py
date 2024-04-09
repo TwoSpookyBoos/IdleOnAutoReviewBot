@@ -135,13 +135,16 @@ class Placements(dict):
     PRAYERS = "Prayers"
     EQUINOX = "Equinox"
     BREEDING = "Breeding"
+    COOKING = "Cooking"
     RIFT = "Rift"
+    DIVINITY = "Divinity"
     sections = [
         COMBAT_LEVELS,
         STAMPS, BRIBES, SMITHING,
         BUBBLES, VIALS, P2W,
         REFINERY, SALT_LICK, DEATH_NOTE, PRAYERS, EQUINOX,
-        BREEDING, RIFT
+        BREEDING, COOKING, RIFT,
+        DIVINITY
     ]
 
     sectionThresholds = {
@@ -161,7 +164,9 @@ class Placements(dict):
         PRAYERS:       [0,   0, 0, 0,    0,  0,  1,      1,  2,  2,      3,  3,  4,      4,  5,  6,      7,  7,  7,      7,    99],
         EQUINOX:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      11,   99],
         BREEDING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  1,      1,  2,  2,      3,  4,  5,      6,  8,  9,      11,   99],
+        COOKING:       [0,   0, 0, 0,    0,  0,  0,      1,  1,  2,      2,  3,  3,      4,  4,  4,      5,  5,  5,      5,    99],
         RIFT:          [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      9,    99],
+        DIVINITY:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      3,  3,  5,      7,  8,  9,      10, 11,  12,    12,   99],
     }
     section_count = len(sectionThresholds)
 

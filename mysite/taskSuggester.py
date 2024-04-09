@@ -111,7 +111,8 @@ def main(inputData, runType="web"):
         section_stamps, section_bribes, section_smithing,
         section_alchBubbles, section_alchVials, section_alchP2W,
         section_refinery, section_saltlick, section_deathnote, section_prayers, section_equinox,
-        section_breeding, section_rift,
+        section_breeding, section_cooking, section_rift,
+        section_divinity
     ]
     sections_pinchy = pinchy.generatePinchyWorld(pinchable_sections)
 
