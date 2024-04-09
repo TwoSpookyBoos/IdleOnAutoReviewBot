@@ -591,12 +591,12 @@ def setDivinityProgressionTier():
                         label=f"Relink to {pl(highestCharactersNotAssignedToPurrmep, f'{highestCharactersNotAssignedToPurrmep[0].character_name}', 'one of these characters')} to maximize Purrmep's Minor Link bonus by {highestDivinitySkillLevel - divLevelOfPurrmepLinkedCharacter} levels{pl(highestCharactersNotAssignedToPurrmep, '.', ':')}",
                         picture_class="purrmep"
                     ))
-                if len(highestCharactersNotAssignedToPurrmep) > 1:
-                    for character in highestCharactersNotAssignedToPurrmep:
-                        divinity_AdviceDict["Dooted"].append(Advice(
-                            label=character.character_name,
-                            picture_class=character.class_name_icon
-                        ))
+                    if len(highestCharactersNotAssignedToPurrmep) > 1:
+                        for character in highestCharactersNotAssignedToPurrmep:
+                            divinity_AdviceDict["Dooted"].append(Advice(
+                                label=character.character_name,
+                                picture_class=character.class_name_icon
+                            ))
         if len(divinity_AdviceDict["Dooted"]) == 1:
             divinity_AdviceDict["Dooted"] = []
             # divinity_AdviceDict["Dooted"].append(Advice(
