@@ -3,6 +3,7 @@ from models.models import AdviceSection, AdviceGroup, Advice
 from consts import maxTiersPerGroup, prayers_progressionTiers
 from flask import g as session_data
 from utils.text_formatting import pl
+from utils.data_formatting import safe_loads
 from utils.logging import get_logger
 
 
@@ -110,7 +111,7 @@ def getPrayerMaterialImage(inputValue: str | int) -> str:
             return "Unknown-Material"
 
 def parseJSONPrayers() -> dict:
-    worshipPrayersList = json.loads(session_data.account.raw_data["PrayOwned"])
+    worshipPrayersList = safe_loads(session_data.account.raw_data["PrayOwned"])
     #print(type(worshipPrayersList), worshipPrayersList)
     worshipPrayersDict = {}
     for index in range(0, len(worshipPrayersList)):

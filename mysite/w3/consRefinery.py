@@ -3,6 +3,9 @@ from flask import g as session_data
 from models.models import AdviceSection, AdviceGroup, Advice
 from math import floor
 
+from utils.data_formatting import safe_loads
+
+
 saltValuesDict = {
     # "salt": [advice image name, cycles per Synth cycle, consumption of previous salt, next salt consumption, next salt cycles per Synth cycle]
     "Red": ["redox-salts", 4, 0, 2, 4],
@@ -65,8 +68,8 @@ class Salt:
         return self.excess
 
 def parseConsRefinery():
-    refineryList = json.loads(session_data.account.raw_data["Refinery"])
-    meritList = json.loads(session_data.account.raw_data["TaskZZ2"])
+    refineryList = safe_loads(session_data.account.raw_data["Refinery"])
+    meritList = safe_loads(session_data.account.raw_data["TaskZZ2"])
     consRefineryDict = {
         #Combustion = Tab1
         'Red Rank': refineryList[3][1],

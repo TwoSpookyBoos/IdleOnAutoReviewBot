@@ -4,14 +4,14 @@ import consts
 from models.models import AdviceGroup, Advice, AdviceSection
 from utils.logging import get_logger
 from flask import g as session_data
-
+from utils.data_formatting import safe_loads
 
 logger = get_logger(__name__)
 
 
 def getEquinoxDreams() -> dict:
     try:
-        rawDreams = json.loads(session_data.account.raw_data.get("WeeklyBoss", "{}"))
+        rawDreams = safe_loads(session_data.account.raw_data.get("WeeklyBoss", "{}"))
     except Exception as reason:
         logger.error("Unable to access WeeklyBoss data from JSON: %s", reason)
         return dict(
