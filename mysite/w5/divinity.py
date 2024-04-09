@@ -571,8 +571,6 @@ def setDivinityProgressionTier():
         #         label=f"All current characters have 2+ Divinity. Doot's bonus is active for all current characters!",
         #         picture_class="divinity"
         #     ))
-    else:
-        divinity_AdviceDict["DivinityLinks"] = divLinksDict.get(int(tier_Divinity), [])
 
         if divinitiesDict[6].get("Unlocked", False):
             purrmepAssignedToAnyHighestCharacter = False
@@ -605,7 +603,8 @@ def setDivinityProgressionTier():
             #     label=f"No Doot-related issues found. Way to be a responsible Doot owner",
             #     picture_class=""
             # ))
-    # else:
+    else:
+        divinity_AdviceDict["DivinityLinks"] = divLinksDict.get(int(tier_Divinity), [])
     #     divinity_AdviceDict["Dooted"].append(Advice(
     #         label=f"Doot not owned, bummer 💔",
     #         picture_class="king-doot"
