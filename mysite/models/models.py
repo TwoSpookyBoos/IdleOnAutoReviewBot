@@ -83,6 +83,8 @@ class Character:
         self.sneaking_level: int = all_skill_levels["Sneaking"]
         self.summoning_level: int = all_skill_levels["Summoning"]
         self.skills = all_skill_levels
+        self.divinity_style: str = "None"
+        self.divinity_link: str = "Unlinked"
 
         self.apoc_dict: dict = {
             name: {
@@ -90,6 +92,7 @@ class Character:
                 "Easy Extras": [],
                 "Medium Extras": [],
                 "Difficult Extras": [],
+                "Insane": [],
                 "Impossible": [],
                 "Total": 0,
             }
@@ -113,6 +116,10 @@ class Character:
                             enemies, key=lambda item: item[2], reverse=True
                         )
 
+    def setDivinityStyle(self, styleName: str):
+        self.divinity_style = styleName
+    def setDivinityLink(self, linkName: str):
+        self.divinity_link = linkName
     def __str__(self):
         return self.character_name
 
@@ -612,6 +619,7 @@ class Account:
         self.raw_data = (
             json.loads(json_data) if isinstance(json_data, str) else json_data
         )
+        #AutoLoot
         if g.autoloot:
             self.autoloot = True
         elif self.raw_data.get("AutoLoot", 0) == 1:
@@ -619,6 +627,21 @@ class Account:
             g.autoloot = True
         else:
             self.autoloot = False
+        #Companions
+        self.sheepie_owned = g.sheepie
+        self.doot_owned = g.doot
+        if not self.doot_owned or not self.sheepie_owned:
+            rawCompanions = self.raw_data.get('companion', [])
+            if rawCompanions:
+                for companionInfo in rawCompanions.get('l', []):
+                    companionID = int(companionInfo.split(',')[0])
+                    if companionID == 0:
+                        self.doot_owned = True
+                        g.doot = True
+                    if companionID == 4:
+                        self.sheepie_owned = True
+                        g.sheepie = True
+
         playerCount, playerNames, playerClasses, characterDict, perSkillDict = getCharacterDetails(
             self.raw_data, run_type
         )

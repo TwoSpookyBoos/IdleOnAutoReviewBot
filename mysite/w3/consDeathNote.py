@@ -535,7 +535,7 @@ def setConsDeathNoteProgressionTier():
     meowBBIndex = getMEOWBBIndex(bbCharactersIndexList)
     fullDeathNoteDict = getDeathNoteKills()
 
-    max_tier = deathNote_progressionTiers[-1][0]
+    max_tier = deathNote_progressionTiers[-2][0]
     overall_DeathNoteTier = 0
     worldIndexes = []
     maxedGroupsList = []
@@ -551,8 +551,11 @@ def setConsDeathNoteProgressionTier():
         'CHOW': 0,
         'MEOW': 0
     }
+    zowsForNextTier = 0
+    chowsForNextTier = 0
+    meowsForNextTier = 0
     apocDifficultyNameList = ['Basic W1 Enemies', 'Basic W2 Enemies', 'Basic W3 Enemies', 'Basic W4 Enemies', 'Basic W5 Enemies', 'Basic W6 Enemies',
-                              'Easy Extras', 'Medium Extras', 'Difficult Extras', 'Impossible']
+                              'Easy Extras', 'Medium Extras', 'Difficult Extras', 'Insane', 'Impossible']
     apocDifficultyCountDict = {
         'ZOW': {
             'Basic W1 Enemies': 15,
@@ -562,8 +565,9 @@ def setConsDeathNoteProgressionTier():
             'Basic W5 Enemies': 13,
             'Basic W6 Enemies': 14,
             'Easy Extras': 4,
-            'Medium Extras': 1,
+            'Medium Extras': 0,
             'Difficult Extras': 1,
+            'Insane': 1,
             'Impossible': 0
         },
         'CHOW': {
@@ -574,8 +578,9 @@ def setConsDeathNoteProgressionTier():
             'Basic W5 Enemies': 13,
             'Basic W6 Enemies': 14,
             'Easy Extras': 2,
-            'Medium Extras': 2,
+            'Medium Extras': 1,
             'Difficult Extras': 2,
+            'Insane': 1,
             'Impossible': 0
         },
         'MEOW': {
@@ -587,7 +592,8 @@ def setConsDeathNoteProgressionTier():
             'Basic W6 Enemies': 14,
             'Easy Extras': 1,
             'Medium Extras': 2,
-            'Difficult Extras': 2,
+            'Difficult Extras': 1,
+            'Insane': 1,
             'Impossible': 1
         }
     }
@@ -642,6 +648,7 @@ def setConsDeathNoteProgressionTier():
             if highestZOWCount >= tier[9]:
                 tier_combo['ZOW'] = tier[0]
             else:
+                zowsForNextTier = f"({highestZOWCount}/{tier[9]})"
                 if highestZOWCountIndex is not None:
                     apocToNextTier['ZOW'] = tier[9] - highestZOWCount
                     for difficultyName in apocDifficultyNameList:
@@ -670,6 +677,7 @@ def setConsDeathNoteProgressionTier():
             if highestCHOWCount >= tier[10]:
                 tier_combo['CHOW'] = tier[0]
             else:
+                chowsForNextTier = f"({highestCHOWCount}/{tier[10]})"
                 if highestCHOWCountIndex is not None:
                     apocToNextTier['CHOW'] = tier[10] - highestCHOWCount
                     for difficultyName in apocDifficultyNameList:
@@ -699,6 +707,7 @@ def setConsDeathNoteProgressionTier():
                 if session_data.account.all_characters[meowBBIndex].apoc_dict['MEOW']['Total'] >= tier[11]:
                     tier_combo['MEOW'] = tier[0]
                 else:
+                    meowsForNextTier = f"({session_data.account.all_characters[meowBBIndex].apoc_dict['MEOW']['Total']}/{tier[11]})"
                     apocToNextTier['MEOW'] = tier[11] - session_data.account.all_characters[meowBBIndex].apoc_dict['MEOW']['Total']
                     #for difficultyIndex in range(0, len(apocDifficultyNameList)):
                     for difficultyName in apocDifficultyNameList:
@@ -732,13 +741,13 @@ def setConsDeathNoteProgressionTier():
             post_string=""
         )
         if fullDeathNoteDict[worldIndex].next_lowest_skull_name == "Eclipse Skull":
-            deathnote_AdviceGroupDict[f"W{worldIndex}"].post_string = "Complete Super CHOWs on your Blood Berserker in this window"
+            deathnote_AdviceGroupDict[f"W{worldIndex}"].post_string = "Complete Super CHOWs with your Blood Berserker before finishing Eclipse Skulls"
 
     # ZOW
     if highestZOWCountIndex is not None:
         deathnote_AdviceGroupDict['ZOW'] = AdviceGroup(
-            tier=str(tier_combo['ZOW']),
-            pre_string=f"Complete {apocToNextTier['ZOW']} more ZOW{pl(['dummy'] * apocToNextTier['ZOW'])} with {session_data.account.all_characters[highestZOWCountIndex].character_name}",
+            tier=str(tier_combo['ZOW'] if tier_combo['ZOW'] < 27 else ""),
+            pre_string=f"{'Informational- ' if tier_combo['ZOW'] >= 27 else ''}Complete {apocToNextTier['ZOW']} more ZOW{pl(['dummy'] * apocToNextTier['ZOW'])} with {session_data.account.all_characters[highestZOWCountIndex].character_name} {zowsForNextTier}",
             advices=deathnote_AdviceDict['ZOW'],
             post_string="Aim for 12hrs or less (8k+ KPH) per enemy"
         )
@@ -746,8 +755,8 @@ def setConsDeathNoteProgressionTier():
     # CHOW
     if highestCHOWCountIndex is not None:
         deathnote_AdviceGroupDict['CHOW'] = AdviceGroup(
-            tier=str(tier_combo['CHOW']),
-            pre_string=f"Complete {apocToNextTier['CHOW']} more CHOW{pl(['dummy'] * apocToNextTier['CHOW'])} with {session_data.account.all_characters[highestCHOWCountIndex].character_name}",
+            tier=str(tier_combo['CHOW'] if tier_combo['CHOW'] < 27 else ""),
+            pre_string=f"{'Informational- ' if tier_combo['CHOW'] >= 27 else ''}Complete {apocToNextTier['CHOW']} more CHOW{pl(['dummy'] * apocToNextTier['CHOW'])} with {session_data.account.all_characters[highestCHOWCountIndex].character_name} {chowsForNextTier}",
             advices=deathnote_AdviceDict['CHOW'],
             post_string="Aim for 12hrs or less (83k+ KPH) per enemy"
         )
@@ -755,14 +764,14 @@ def setConsDeathNoteProgressionTier():
     # MEOW
     if meowBBIndex is not None:
         deathnote_AdviceGroupDict['MEOW'] = AdviceGroup(
-            tier=str(tier_combo['MEOW']),
-            pre_string=f"Complete {apocToNextTier['MEOW']} more Super CHOW{pl(['dummy']*apocToNextTier['MEOW'])} with {session_data.account.all_characters[meowBBIndex].character_name}",
+            tier=str(tier_combo['MEOW'] if tier_combo['MEOW'] < 27 else ""),
+            pre_string=f"{'Informational- ' if tier_combo['MEOW'] >= 27 else ''}Complete {apocToNextTier['MEOW']} more Super CHOW{pl(['dummy']*apocToNextTier['MEOW'])} with {session_data.account.all_characters[meowBBIndex].character_name} {meowsForNextTier}",
             advices=deathnote_AdviceDict['MEOW'],
             post_string="Aim for 24hrs or less (4m+ KPH) per enemy"
         )
 
     #Generate Advice Section
-    overall_DeathNoteTier = min(max_tier, tier_combo[1], tier_combo[2], tier_combo[3],
+    overall_DeathNoteTier = min(max_tier+1, tier_combo[1], tier_combo[2], tier_combo[3],
                                 tier_combo[4], tier_combo[5], tier_combo[6],
                                 tier_combo['ZOW'], tier_combo['CHOW'], tier_combo['MEOW'])  #tier_zows, tier_chows, tier_meows
 
