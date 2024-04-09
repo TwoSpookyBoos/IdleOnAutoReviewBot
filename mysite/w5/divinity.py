@@ -148,6 +148,251 @@ divLevelReasonsDict = {
     40: "to unlock the TranQi Style.",
     50: "to unlock the Multitool Stamp from Poigu's quest."
 }
+divLinksDict = {
+    0: [
+        Advice(
+            label="No Divinities unlocked to link to",
+            picture_class=""
+        )
+    ],
+    1: [
+        Advice(
+            label="No harm in linking everyone, as Snehebatu is your only choice",
+            picture_class="snehebatu"
+        )
+    ],
+    2: [
+        Advice(
+            label="Lab bonuses fully online",
+            picture_class="arctis"
+        ),
+        Advice(
+            label="Extra characters can link to Snake if not Meditating",
+            picture_class="snehebatu"
+        )
+    ],
+    3: [
+        Advice(
+            label="Lab bonuses fully online",
+            picture_class="arctis"
+        ),
+        Advice(
+            label="1 Map Pusher",
+            picture_class="nobisect"
+        ),
+        Advice(
+            label="Extra characters can link to Snake if not Meditating",
+            picture_class="snehebatu"
+        )
+    ],
+    4: [
+        Advice(
+            label="Lab bonuses fully online",
+            picture_class="arctis"
+        ),
+        Advice(
+            label="1 Map Pusher",
+            picture_class="nobisect"
+        ),
+        Advice(
+            label="Extra characters can link to Snake if not Meditating",
+            picture_class="snehebatu"
+        )
+    ],
+    5: [
+        Advice(
+            label="Move Meditators to Lab",
+            picture_class="goharut"
+        ),
+        Advice(
+            label="Lab bonuses fully online",
+            picture_class="arctis"
+        ),
+        Advice(
+            label="1 Map Pusher",
+            picture_class="nobisect"
+        ),
+        Advice(
+            label="Extra characters can link to Snake if not Meditating",
+            picture_class="snehebatu"
+        )
+    ],
+    6: [
+        Advice(
+            label="Move Meditators to Lab",
+            picture_class="goharut"
+        ),
+        Advice(
+            label="Lab bonuses fully online",
+            picture_class="arctis"
+        ),
+        Advice(
+            label="1 Map Pusher",
+            picture_class="nobisect"
+        ),
+        Advice(
+            label="Extra characters can link to Snake if not Meditating",
+            picture_class="snehebatu"
+        )
+    ],
+    7: [
+        Advice(
+            label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
+            picture_class="purrmep"
+        ),
+        Advice(
+            label="Meditators in Lab",
+            picture_class="goharut"
+        ),
+        Advice(
+            label="Lab bonuses fully online",
+            picture_class="arctis"
+        ),
+        Advice(
+            label="1 Map Pusher",
+            picture_class="nobisect"
+        ),
+        Advice(
+            label="Cooking BB generally wants Snake",
+            picture_class="blood-berserker-icon"
+        ),
+        Advice(
+            label="Extra characters can link to Snake if not Meditating",
+            picture_class="snehebatu"
+        ),
+
+    ],
+    8: [
+        Advice(
+            label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
+            picture_class="purrmep"
+        ),
+        Advice(
+            label="Meditators in Lab",
+            picture_class="goharut"
+        ),
+        Advice(
+            label="Lab bonuses fully online",
+            picture_class="arctis"
+        ),
+        Advice(
+            label="1 Map Pusher",
+            picture_class="nobisect"
+        ),
+        Advice(
+            label="Cooking BB generally wants Snake",
+            picture_class="blood-berserker-icon"
+        ),
+        Advice(
+            label="Extra characters can link to Snake if not Meditating",
+            picture_class="snehebatu"
+        ),
+    ],9: [
+        Advice(
+            label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
+            picture_class="purrmep"
+        ),
+        Advice(
+            label="Meditators in Lab",
+            picture_class="goharut"
+        ),
+        Advice(
+            label="Lab bonuses fully online",
+            picture_class="arctis"
+        ),
+        Advice(
+            label="1 Map Pusher",
+            picture_class="nobisect"
+        ),
+        Advice(
+            label="Cooking BB generally wants Snake",
+            picture_class="blood-berserker-icon"
+        ),
+        Advice(
+            label="Extra characters can link to Snake if not Meditating",
+            picture_class="snehebatu"
+        ),
+    ],
+    10: [
+        Advice(
+            label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
+            picture_class="purrmep"
+        ),
+        Advice(
+            label="Meditators in Lab",
+            picture_class="goharut"
+        ),
+        Advice(
+            label="Lab bonuses fully online",
+            picture_class="arctis"
+        ),
+        Advice(
+            label="1 Map Pusher",
+            picture_class="nobisect"
+        ),
+        Advice(
+            label="Cooking BB generally wants Snake",
+            picture_class="blood-berserker-icon"
+        ),
+        Advice(
+            label="Extra characters can link to Snake if not Meditating",
+            picture_class="snehebatu"
+        ),
+    ],
+    11: [
+        Advice(
+            label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
+            picture_class="purrmep"
+        ),
+        Advice(
+            label="Meditators in Lab",
+            picture_class="goharut"
+        ),
+        Advice(
+            label="Lab bonuses fully online",
+            picture_class="arctis"
+        ),
+        Advice(
+            label="1 Map Pusher",
+            picture_class="nobisect"
+        ),
+        Advice(
+            label="Cooking BB generally wants Snake",
+            picture_class="blood-berserker-icon"
+        ),
+        Advice(
+            label="Extra characters can link to Snake if not Meditating",
+            picture_class="snehebatu"
+        ),
+    ],
+    12: [
+        Advice(
+            label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
+            picture_class="purrmep"
+        ),
+        Advice(
+            label="Meditators in Lab",
+            picture_class="goharut"
+        ),
+        Advice(
+            label="Lab bonuses fully online",
+            picture_class="arctis"
+        ),
+        Advice(
+            label="1 Map Pusher",
+            picture_class="nobisect"
+        ),
+        Advice(
+            label="Cooking BB generally wants Snake",
+            picture_class="blood-berserker-icon"
+        ),
+        Advice(
+            label="Extra characters can link to Snake if not Meditating",
+            picture_class="snehebatu"
+        ),
+    ],
+
+}
 
 def getOfferingNameFromIndex(inputValue):
     return offeringsDict.get(inputValue, {"Name": f"UnknownOffering{inputValue}"}).get("Name")
@@ -160,6 +405,10 @@ def getDivinityNameFromIndex(inputValue: int) -> str:
 
 def getDivLevelReason(inputLevel: int) -> str:
     return divLevelReasonsDict.get(inputLevel, "")
+
+def getDivinityLinksOptionsAdviceList(tierNumber: int) -> list[Advice]:
+
+    return ""
 
 def parseJSONtoList():
     rawDivinity = session_data.account.raw_data.get("Divinity", [])
@@ -175,6 +424,7 @@ def setDivinityProgressionTier():
         "Offerings": {"Available Offerings": [], "Strategy": []},
         "Styles": {"Highest Points per hour": [], "Highest EXP per hour": []},
         "Divinities": [],
+        "DivinityLinks": [],
         "Dooted": [],
     }
     divinity_AdviceGroupDict = {}
@@ -321,6 +571,9 @@ def setDivinityProgressionTier():
         #         label=f"All current characters have 2+ Divinity. Doot's bonus is active for all current characters!",
         #         picture_class="divinity"
         #     ))
+    else:
+        divinity_AdviceDict["DivinityLinks"] = divLinksDict.get(int(tier_Divinity), [])
+
         if divinitiesDict[6].get("Unlocked", False):
             purrmepAssignedToAnyHighestCharacter = False
             divLevelOfPurrmepLinkedCharacter = 0
@@ -364,15 +617,20 @@ def setDivinityProgressionTier():
         pre_string="Complete objectives to reach the next Divinity tier",
         advices=divinity_AdviceDict["TieredProgress"]
     )
-    divinity_AdviceGroupDict["Divinities"] = AdviceGroup(
-        tier="",
-        pre_string="Blessings Information",
-        advices=divinity_AdviceDict["Divinities"]
-    )
     divinity_AdviceGroupDict["Offerings"] = AdviceGroup(
         tier="",
         pre_string="Offerings Information",
         advices=divinity_AdviceDict["Offerings"]
+    )
+    divinity_AdviceGroupDict["DivinityLinks"] = AdviceGroup(
+        tier="",
+        pre_string="Possible Divinity Link Setups",
+        advices=divinity_AdviceDict["DivinityLinks"]
+    )
+    divinity_AdviceGroupDict["Divinities"] = AdviceGroup(
+        tier="",
+        pre_string="Blessings Information",
+        advices=divinity_AdviceDict["Divinities"]
     )
     divinity_AdviceGroupDict["Styles"] = AdviceGroup(
         tier="",

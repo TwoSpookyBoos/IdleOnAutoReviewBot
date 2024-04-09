@@ -10,7 +10,7 @@ from typing import Any
 from flask import g
 
 from utils.data_formatting import getCharacterDetails, safe_loads
-from consts import expectedStackables, greenstack_progressionTiers, card_data
+from consts import expectedStackables, greenstack_progressionTiers, card_data, maxMeals, maxMealLevel
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
 
 
@@ -100,6 +100,8 @@ class Character:
         }
 
         self.equipment = Equipment(raw_data, character_index)
+
+
 
     def addUnmetApoc(self, apocType: str, apocRating: str, mapInfoList: list):
         self.apoc_dict[apocType][apocRating].append(mapInfoList)
@@ -671,6 +673,7 @@ class Account:
         self.vial_mastery_unlocked = self.rift_level >= 35
         self.construction_mastery_unlocked = self.rift_level >= 40
         self.ruby_cards_unlocked = self.rift_level >= 45
+        self.meals_remaining = maxMeals * maxMealLevel
         self.max_toon_count = 10  # OPTIMIZE: find a way to read this from somewhere
 
     def _make_cards(self):

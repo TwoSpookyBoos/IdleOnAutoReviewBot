@@ -413,7 +413,7 @@ def setBreedingProgressionTier() -> AdviceSection:
         if shinyExclusionsDict["Exclude-Critters"] == True:
             if "Base Critter Per Trap" in shinyPetsTierList["A"]:
                 shinyPetsTierList["A"].remove('Base Critter Per Trap')
-                shinyPetsTierList["F"].append('Base Critter Per Trap')
+                shinyPetsTierList["D"].append('Base Critter Per Trap')
         for tier in breeding_progressionTiers:
             if "Infinite Star Signs" in breeding_progressionTiers[tier] and shinyExclusionsDict["Exclude-InfiniteStarSigns"] == True:
                 breeding_progressionTiers[tier]["Infinite Star Signs"] = 0

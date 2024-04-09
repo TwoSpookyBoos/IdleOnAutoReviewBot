@@ -167,8 +167,10 @@ def setCookingProgressionTier():
             goal="",
         ))
     if playerTotalMealLevels < maxMeals * maxMealLevel:
+        remainingMeals = (maxMeals * maxMealLevel)-playerTotalMealLevels
+        session_data.account.meals_remaining = remainingMeals
         cooking_AdviceDict["CurrentTier"].append(Advice(
-            label=f"Info- Total Meal Levels ({(maxMeals * maxMealLevel)-playerTotalMealLevels} to go!)",
+            label=f"Info- Total Meal Levels ({remainingMeals} to go!)",
             picture_class="turkey-a-la-thank",
             progression=playerTotalMealLevels,
             goal=maxMeals * maxMealLevel,
