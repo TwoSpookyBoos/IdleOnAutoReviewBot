@@ -3,9 +3,10 @@ from consts import saltLick_progressionTiers
 from flask import g as session_data
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
+from utils.data_formatting import safe_loads
 
 def parseConsSaltLick():
-    saltLickList = json.loads(session_data.account.raw_data["SaltLick"])
+    saltLickList = safe_loads(session_data.account.raw_data["SaltLick"])
     saltLickDict = {
         'Printer Sample Size':saltLickList[0],
         'Obol Storage':saltLickList[1],
@@ -45,7 +46,7 @@ def setConsSaltLickProgressionTier() -> AdviceSection:
     if highestConstructionLevel < 1:
         saltlick_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
         return saltlick_AdviceSection
-    elif json.loads(session_data.account.raw_data["Tower"])[3] < 1:
+    elif safe_loads(session_data.account.raw_data["Tower"])[3] < 1:
         saltlick_AdviceSection.header = "Come back after unlocking the Salt Lick within the Construction skill in World 3!"
         return saltlick_AdviceSection
 

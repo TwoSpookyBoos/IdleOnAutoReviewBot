@@ -1,6 +1,7 @@
 import json
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
+from utils.data_formatting import safe_loads
 from utils.logging import get_logger
 from flask import g as session_data
 
@@ -16,7 +17,7 @@ def getCritterName(inputNumber):
 
 def getUnlockedCritterStatus():
     try:
-        rawJadeEmporiumPurchases = json.loads(session_data.account.raw_data["Ninja"])[102][9]
+        rawJadeEmporiumPurchases = safe_loads(session_data.account.raw_data["Ninja"])[102][9]
     except:
         logger.debug("Unable to retrieve Jade Emporium Upgrades to tell if Tuttle is unlocked. Defaulting to locked.")
         rawJadeEmporiumPurchases = ""
@@ -80,7 +81,7 @@ def getPlacedTrapsDict():
     placedTrapDict = {}
     for characterIndex in range(0, session_data.account.playerCount):
         try:
-            placedTrapDict[characterIndex] = json.loads(session_data.account.raw_data[f"PldTraps_{characterIndex}"])
+            placedTrapDict[characterIndex] = safe_loads(session_data.account.raw_data[f"PldTraps_{characterIndex}"])
         except:
             logger.exception(f"Unable to retrieve 'PldTraps_{characterIndex}'")
             placedTrapDict[characterIndex] = []

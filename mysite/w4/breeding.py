@@ -1,6 +1,7 @@
 import json
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
+from utils.data_formatting import safe_loads
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import numberOfArtifacts, numberOfArtifactTiers, breeding_progressionTiers
@@ -39,7 +40,7 @@ def getShinyExclusions():
 
     # if all artifacts are Eldritch tier, append True (as in True, the recommendation SHOULD be excluded), otherwise False
     try:
-        sum_sailingArtifacts = sum(json.loads(session_data.account.raw_data["Sailing"])[3])
+        sum_sailingArtifacts = sum(safe_loads(session_data.account.raw_data["Sailing"])[3])
         if sum_sailingArtifacts >= (numberOfArtifacts * numberOfArtifactTiers):
             shinyExclusionsDict["Exclude-Sailing"] = True
     except Exception as reason:
@@ -93,13 +94,13 @@ def parseJSONtoBreedingDict() -> dict:
     maxNumberOfTerritories = 24  # as of w6 launch
     indexFirstTerritoryAssignedPet = 28
     try:
-        rawBreedingList = json.loads(session_data.account.raw_data["Breeding"])
+        rawBreedingList = safe_loads(session_data.account.raw_data["Breeding"])
     except Exception as reason:
         logger.exception(f"Could not load \"Breeding\" from JSON: {reason}")
         return {}
 
     try:
-        rawTerritoriesList = json.loads(session_data.account.raw_data["Territory"])
+        rawTerritoriesList = safe_loads(session_data.account.raw_data["Territory"])
     except Exception as reason:
         logger.exception(f"Could not load \"Territory\" from JSON: {reason}")
         return {}
@@ -107,7 +108,7 @@ def parseJSONtoBreedingDict() -> dict:
     rawPets: list = []
     anyPetsAssignedPerTerritory: list[bool] = []
     try:
-        rawPets = json.loads(session_data.account.raw_data["Pets"])
+        rawPets = safe_loads(session_data.account.raw_data["Pets"])
     except Exception as reason:
         logger.exception(f"Could not load \"Pets\" from JSON: {reason}")
         # Can use the spice progress instead later on. Not absolutely required.
@@ -385,10 +386,10 @@ def setBreedingProgressionTier() -> AdviceSection:
             ['rattler', 'defender', 'looter', 'refiller', 'badumdum', 'borger']]
     }
     shinyPetsTierList = {
-        "S": ['Faster Shiny Pet Lv Up Rate', 'Bonuses from All Meals', 'Base Efficiency for All Skills', 'Drop Rate'],
+        "S": ['Bonuses from All Meals', 'Base Efficiency for All Skills', 'Drop Rate'],
         "A": ['Multikill Per Tier', 'Base Critter Per Trap', 'Infinite Star Signs', 'Faster Refinery Speed', 'Farming EXP'],
         "B": ['Lower Minimum Travel Time for Sailing', 'Higher Artifact Find Chance', 'Tab 4 Talent Pts', 'Star Talent Pts'],
-        "C": ['Skill EXP', 'Base WIS', 'Base STR', 'Base AGI', 'Base LUK'],
+        "C": ['Faster Shiny Pet Lv Up Rate', 'Skill EXP', 'Base WIS', 'Base STR', 'Base AGI', 'Base LUK'],
         "D": ['Sail Captain EXP Gain', 'Summoning EXP', 'Total Damage', 'Tab 1-3 Talent Pts'],
         "F": ['Class EXP', 'Line Width in Lab']
     }
@@ -412,7 +413,7 @@ def setBreedingProgressionTier() -> AdviceSection:
         if shinyExclusionsDict["Exclude-Critters"] == True:
             if "Base Critter Per Trap" in shinyPetsTierList["A"]:
                 shinyPetsTierList["A"].remove('Base Critter Per Trap')
-                shinyPetsTierList["F"].append('Base Critter Per Trap')
+                shinyPetsTierList["D"].append('Base Critter Per Trap')
         for tier in breeding_progressionTiers:
             if "Infinite Star Signs" in breeding_progressionTiers[tier] and shinyExclusionsDict["Exclude-InfiniteStarSigns"] == True:
                 breeding_progressionTiers[tier]["Infinite Star Signs"] = 0

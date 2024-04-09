@@ -12,13 +12,17 @@ logger = get_logger(__name__)
 
 
 def pl(_list, suffix_singular: str = "", suffix_plural: str = "s") -> str:
-    length = _list if isinstance(_list, int) else len(_list)
     """Pluralize"""
+    length = _list if isinstance(_list, int) else len(_list)
     return suffix_plural if length > 1 else suffix_singular
 
 
 def letterToNumber(inputLetter: str) -> int:
     return "_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".index(inputLetter)
+
+
+def numberToLetter(inputNumber: int) -> str:
+    return "_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"[inputNumber]
 
 
 def kebab(string: str) -> str:

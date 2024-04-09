@@ -14,7 +14,8 @@ from w1 import stamps, bribes, smithing
 from w2 import alchemy
 from w3 import trapping, consRefinery, consDeathNote, worship, consSaltLick, consBuildings, equinox
 from w4 import breeding, cooking, rift
-
+from w5 import divinity
+from w6 import beanstalk
 
 logger = get_logger(__name__)
 
@@ -96,31 +97,34 @@ def main(inputData, runType="web"):
     ]
     # World 5
     sections_5 = [
+        section_divinity := divinity.setDivinityProgressionTier(),
         # section_sailing =
         # section_gaming =
-        # section_divinity =
     ]
-    # w6list = [["w6 mechanic 1 placeholder"], ["w6 mechanic 2 placeholder"], ["w6 mechanic 3 placeholder"]]
-    # w7list = [["w7 mechanic 1 placeholder"], ["w7 mechanic 2 placeholder"], ["w7 mechanic 3 placeholder"]]
-    # w8list = [["w8 mechanic 1 placeholder"], ["w8 mechanic 2 placeholder"], ["w8 mechanic 3 placeholder"]]
+    # World 6
+    sections_6 = [
+        section_beanstalk := beanstalk.section_beanstalk(),
+    ]
 
     pinchable_sections = [
         section_combatLevels, section_secretPath,
         section_stamps, section_bribes, section_smithing,
         section_alchBubbles, section_alchVials, section_alchP2W,
         section_refinery, section_saltlick, section_deathnote, section_prayers, section_equinox,
-        section_breeding, section_rift,
+        section_breeding, section_cooking, section_rift,
+        section_divinity
     ]
     sections_pinchy = pinchy.generatePinchyWorld(pinchable_sections)
 
     reviews = [
-        AdviceWorld(name=WorldName.PINCHY, sections=sections_pinchy, title="Pinchy AutoReview", collapse=False,),
+        AdviceWorld(name=WorldName.PINCHY, sections=sections_pinchy, title="Pinchy AutoReview", collapse=False),
         AdviceWorld(name=WorldName.GENERAL, sections=sections_general, banner="general_banner.jpg"),
         AdviceWorld(name=WorldName.BLUNDER_HILLS, sections=sections_1, banner="w1banner.png"),
         AdviceWorld(name=WorldName.YUMYUM_DESERT, sections=sections_2, banner="w2banner.png"),
         AdviceWorld(name=WorldName.FROSTBITE_TUNDRA, sections=sections_3, banner="w3banner.png"),
         AdviceWorld(name=WorldName.HYPERION_NEBULA, sections=sections_4, banner="w4banner.png"),
         AdviceWorld(name=WorldName.SMOLDERIN_PLATEAU, sections=sections_5, banner="w5banner.png"),
+        AdviceWorld(name=WorldName.SPIRITED_VALLEY, sections=sections_6, banner="w6banner.png"),
     ]
 
     headerData = HeaderData(inputData)

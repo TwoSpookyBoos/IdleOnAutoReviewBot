@@ -6,6 +6,7 @@ import consts
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
 from utils.text_formatting import pl
+from utils.data_formatting import safe_loads
 
 
 logger = get_logger(__name__)
@@ -42,7 +43,7 @@ def getRawEquinoxValues():
         totalMaxUpgrades += valueList[1]
     equinoxBonusLevelsDict["TotalUpgrades"] = [totalRecommendedUpgrades, totalOptionalUpgrades, totalMaxUpgrades]
 
-    rawEquinoxDreamsDict = json.loads(session_data.account.raw_data.get("WeeklyBoss", "{}"))
+    rawEquinoxDreamsDict = safe_loads(session_data.account.raw_data.get("WeeklyBoss", "{}"))
 
     dreams_statuses = [True]
     dreams_statuses += [
