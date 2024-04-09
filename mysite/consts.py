@@ -54,9 +54,9 @@ stamps_progressionTiers = [
     [33, 10500, [], [], [], {'Bugsack Stamp': 168, 'Bag o Heads Stamp': 168}, ""],
     [34, 11000, [], [], [], {'Golden Apple Stamp': 100, 'Multitool Stamp': 210}, ""],
     [35, 11500, [37], [], [], {'Golden Sixes Stamp': 120}, ""],
-    [36, 12000, [38, 22], [31], [], {'Maxo Slappo Stamp': 98, 'Sashe Sidestamp': 98, 'Intellectostampo': 98}, ""],
-    [37, 12500, [40], [52, 50], [], {'Ladle Stamp': 270}, ""],
-    [38, 13000, [], [], [], {'Triad Essence Stamp': 80}, ""],
+    [36, 12000, [38], [31], [], {'Maxo Slappo Stamp': 98, 'Sashe Sidestamp': 98, 'Intellectostampo': 98}, ""],
+    [37, 12500, [], [], [], {'Ladle Stamp': 270}, ""],
+    [38, 13000, [40, 22], [52, 50], [], {'Triad Essence Stamp': 80}, ""],
 ]
 smithing_progressionTiers = [
     # int tier, int Cash Points Purchased, int Monster Points Purchased, int Forge Totals, str Notes
