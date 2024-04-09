@@ -43,7 +43,7 @@ class HeaderData:
 
     def __getLastUpdatedTime(self):
         try:
-            timeAwayDict = json.loads(session_data.account.raw_data["TimeAway"])
+            timeAwayDict = safe_loads(session_data.account.raw_data["TimeAway"])
             lastUpdatedTimeEpoch = timeAwayDict["GlobalTime"]
             lastUpdatedTimeUTC = datetime.datetime.utcfromtimestamp(lastUpdatedTimeEpoch)
             currentTimeUTC = datetime.datetime.utcnow()
@@ -279,3 +279,7 @@ def getSpecificSkillLevelsList(desiredSkill: str|int) -> list[int]:
 
 def setCustomTiers(filename="input.csv"):
     return
+
+
+def safe_loads(data):
+    return json.loads(data) if isinstance(data, str) else data
