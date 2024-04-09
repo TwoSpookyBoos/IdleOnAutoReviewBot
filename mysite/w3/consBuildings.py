@@ -5,12 +5,13 @@ from consts import buildingsPostBuffs_progressionTiers, buildingsPreBuffs_progre
 from flask import g as session_data
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
+from utils.data_formatting import safe_loads
 
 
 logger = get_logger(__name__)
 
 def parseConsBuildingstoLists():
-    consBuildingsList = json.loads(session_data.account.raw_data["Tower"])  #expected type of list
+    consBuildingsList = safe_loads(session_data.account.raw_data["Tower"])  #expected type of list
     #logger.debug(f"TYPE CHECK consBuildingsList: {type(consBuildingsList)}: {consBuildingsList}")
     return consBuildingsList
 
@@ -47,7 +48,7 @@ def getInfluencers():
 
     #Boulder Roller level
     try:
-        poisonicLevel = json.loads(session_data.account.raw_data["Tower"])[16]  #expected type of int
+        poisonicLevel = safe_loads(session_data.account.raw_data["Tower"])[16]  #expected type of int
         #logger.debug(f"TYPE CHECK poisonicLevel: {type(poisonicLevel)}: poisonicLevel")
     except Exception as reason:
         poisonicLevel = 0

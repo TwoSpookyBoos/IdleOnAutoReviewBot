@@ -9,23 +9,43 @@ from typing import Any
 
 from flask import g
 
-from utils.data_formatting import getCharacterDetails
-from consts import expectedStackables, greenstack_progressionTiers, card_data
+from utils.data_formatting import getCharacterDetails, safe_loads
+from consts import expectedStackables, greenstack_progressionTiers, card_data, maxMeals, maxMealLevel
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
 
 
 def session_singleton(cls):
     def getinstance(*args, **kwargs):
-        if not hasattr(g, "data"):
+        if not hasattr(g, "account"):
             return cls(*args, **kwargs)
-        return g.data
+        return g.account
 
     return getinstance
+
+
+class Equipment:
+    def __init__(self, raw_data, toon_index):
+        order = raw_data[f"EquipOrder_{toon_index}"]
+        quantity = raw_data[f"EquipQTY_{toon_index}"]
+        groups = list()
+        for o, q in zip(order, quantity):
+            o.pop("length", None)
+            q.pop("length", None)
+            o = dict(sorted(o.items(), key=lambda i: int(i[0]))).values()
+            q = dict(sorted(q.items(), key=lambda i: int(i[0]))).values()
+            groups.append([Asset(name, float(count)) for name, count in zip(o, q)])
+
+        equips, tools, foods = groups
+
+        self.equips = equips
+        self.tools = tools
+        self.foods = foods
 
 
 class Character:
     def __init__(
         self,
+        raw_data: dict,
         character_index: int,
         character_name: str,
         class_name: str,
@@ -63,6 +83,8 @@ class Character:
         self.sneaking_level: int = all_skill_levels["Sneaking"]
         self.summoning_level: int = all_skill_levels["Summoning"]
         self.skills = all_skill_levels
+        self.divinity_style: str = "None"
+        self.divinity_link: str = "Unlinked"
 
         self.apoc_dict: dict = {
             name: {
@@ -70,11 +92,16 @@ class Character:
                 "Easy Extras": [],
                 "Medium Extras": [],
                 "Difficult Extras": [],
+                "Insane": [],
                 "Impossible": [],
                 "Total": 0,
             }
             for name in ("ZOW", "CHOW", "MEOW")
         }
+
+        self.equipment = Equipment(raw_data, character_index)
+
+
 
     def addUnmetApoc(self, apocType: str, apocRating: str, mapInfoList: list):
         self.apoc_dict[apocType][apocRating].append(mapInfoList)
@@ -91,6 +118,10 @@ class Character:
                             enemies, key=lambda item: item[2], reverse=True
                         )
 
+    def setDivinityStyle(self, styleName: str):
+        self.divinity_style = styleName
+    def setDivinityLink(self, linkName: str):
+        self.divinity_link = linkName
     def __str__(self):
         return self.character_name
 
@@ -590,6 +621,7 @@ class Account:
         self.raw_data = (
             json.loads(json_data) if isinstance(json_data, str) else json_data
         )
+        #AutoLoot
         if g.autoloot:
             self.autoloot = True
         elif self.raw_data.get("AutoLoot", 0) == 1:
@@ -597,16 +629,31 @@ class Account:
             g.autoloot = True
         else:
             self.autoloot = False
+        #Companions
+        self.sheepie_owned = g.sheepie
+        self.doot_owned = g.doot
+        if not self.doot_owned or not self.sheepie_owned:
+            rawCompanions = self.raw_data.get('companion', [])
+            if rawCompanions:
+                for companionInfo in rawCompanions.get('l', []):
+                    companionID = int(companionInfo.split(',')[0])
+                    if companionID == 0:
+                        self.doot_owned = True
+                        g.doot = True
+                    if companionID == 4:
+                        self.sheepie_owned = True
+                        g.sheepie = True
+
         playerCount, playerNames, playerClasses, characterDict, perSkillDict = getCharacterDetails(
             self.raw_data, run_type
         )
         self.names = playerNames
         self.playerCount = playerCount
         self.classes = playerClasses
-        self.all_characters = [Character(**char) for char in characterDict.values()]
+        self.all_characters = [Character(self.raw_data, **char) for char in characterDict.values()]
         self.safe_characters = [char for char in self.all_characters if char]  #Use this if touching raw_data instead of all_characters
         self.all_skills = perSkillDict
-        self.all_quests = [json.loads(self.raw_data.get(f"QuestComplete_{i}", "{}")) for i in range(self.playerCount)]
+        self.all_quests = [safe_loads(self.raw_data.get(f"QuestComplete_{i}", "{}")) for i in range(self.playerCount)]
         self.assets = self._all_owned_items()
         self.cards = self._make_cards()
         self.rift_level = self.raw_data.get("Rift", [0])[0]
@@ -626,6 +673,7 @@ class Account:
         self.vial_mastery_unlocked = self.rift_level >= 35
         self.construction_mastery_unlocked = self.rift_level >= 40
         self.ruby_cards_unlocked = self.rift_level >= 45
+        self.meals_remaining = maxMeals * maxMealLevel
         self.max_toon_count = 10  # OPTIMIZE: find a way to read this from somewhere
 
     def _make_cards(self):

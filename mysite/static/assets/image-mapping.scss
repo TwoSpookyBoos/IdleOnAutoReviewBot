@@ -18,6 +18,7 @@
 @import "rift";
 @import "equinox";
 @import "meals";
+@import "divinity";
 
 $id-map: (
 	item-backpack-space: $inventory-bag-u,
@@ -987,6 +988,7 @@ $id-map: (
     golden-hampter-gummy-candy: $golden-hampter-gummy-candy,
     golden-nigiri: $golden-nigiri,
     golden-dumpling: $golden-dumpling,
+    golden-cake: $golden-cake,
     butter-bar: $butter-bar,
 
     // Reset Tokens
@@ -2004,6 +2006,8 @@ $monsters: (
 	sand-giant: $sand-giant,
 	snelbie: $snelbie,
 
+    biggie-hours: $biggie-hours,
+    king-doot: $king-doot,
 	efaunt: $efaunt-boss,
 
 // W3
@@ -2101,6 +2105,7 @@ $extra: (
 	goldric: $goldric,
 	cactolyte: $cactolyte,
 	nebulyte: $nebulyte,
+	divinity: $divinity,
 );
 
 $character-classes: (
@@ -2170,6 +2175,7 @@ $id-map: map-merge($rift, $id-map);
 $id-map: map-merge($equinox, $id-map);
 $id-map: map-merge($meals, $id-map);
 $id-map: map-merge($talents, $id-map);
+$id-map: map-merge($divinity-map, $id-map);
 
 @each $class, $link in $id-map {
 	.#{$class}::before {
