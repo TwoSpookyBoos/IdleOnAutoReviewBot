@@ -24,7 +24,7 @@ def __get_beanstalk_data(raw):
 
 def __beanstalk_bought(raw):
     if not (ninja_section := __get_ninja_section(raw)):
-        return False
+        return False, False
 
     jade_emporium_bought = ninja_section[-6][9]
 
