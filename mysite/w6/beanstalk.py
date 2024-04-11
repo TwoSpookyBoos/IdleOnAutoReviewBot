@@ -45,11 +45,8 @@ def __beanstalks_bought(raw):
 def section_beanstalk():
     account = Account()
     raw = account.raw_data
-    beanstalk_bought, upgrade_bought = False, False
-    # beanstalk_bought, upgrade_bought = __beanstalks_bought(raw)
-
-    beanstalk_data = False
-    # beanstalk_data = __get_beanstalk_data(raw)
+    beanstalk_bought, upgrade_bought = __beanstalks_bought(raw)
+    beanstalk_data = __get_beanstalk_data(raw)
 
     if not (beanstalk_bought or beanstalk_data):
         return AdviceSection(
