@@ -533,6 +533,7 @@ def setConsDeathNoteProgressionTier():
     apocCharactersIndexList = getapocCharactersIndexList()
     bbCharactersIndexList = getChowMeowCharactersIndexList()
     meowBBIndex = getMEOWBBIndex(bbCharactersIndexList)
+    session_data.account.meowBBIndex = meowBBIndex
     fullDeathNoteDict = getDeathNoteKills()
 
     max_tier = deathNote_progressionTiers[-2][0]
@@ -730,6 +731,15 @@ def setConsDeathNoteProgressionTier():
                             else:
                                 if 'MEOW' not in maxedGroupsList:
                                     maxedGroupsList.append('MEOW')
+
+        #Check for Rift Meow Specifically
+        if meowBBIndex is not None:
+            riftPresent = False
+            for remainingMap in session_data.account.all_characters[meowBBIndex].apoc_dict['MEOW']['Medium Extras']:
+                if remainingMap[0] == 'The Rift':
+                    riftPresent = True
+            if not riftPresent:
+                session_data.account.rift_meowed = True
 
     #Generate Advice Groups
     #Basic Worlds

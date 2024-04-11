@@ -673,6 +673,8 @@ class Account:
         self.vial_mastery_unlocked = self.rift_level >= 35
         self.construction_mastery_unlocked = self.rift_level >= 40
         self.ruby_cards_unlocked = self.rift_level >= 45
+        self.rift_meowed = False
+        self.meowBBIndex = 0
         self.meals_remaining = maxMeals * maxMealLevel
         self.max_toon_count = 10  # OPTIMIZE: find a way to read this from somewhere
 
