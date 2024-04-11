@@ -1,9 +1,9 @@
 name: handle-changelog
 run-name: handling release notes
-on: [push]
-#  push:
-#    branches:
-#      - main
+on:
+  push:
+    branches:
+      - main
 permissions:
   contents: write
 jobs:
