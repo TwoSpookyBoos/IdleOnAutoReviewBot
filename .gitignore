@@ -1,7 +1,6 @@
 /.cache
 /.ipython
 /.local
-/.ssh
 /.virtualenvs
 /__pycache__
 .idea
