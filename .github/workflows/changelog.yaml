@@ -4,6 +4,8 @@ on: [push]
 #  push:
 #    branches:
 #      - main
+permissions:
+  contents: write
 jobs:
   handle-release-notes:
     runs-on: ubuntu-latest
