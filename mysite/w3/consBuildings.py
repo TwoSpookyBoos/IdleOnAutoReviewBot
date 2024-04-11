@@ -5,12 +5,13 @@ from consts import buildingsPostBuffs_progressionTiers, buildingsPreBuffs_progre
 from flask import g as session_data
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
+from utils.data_formatting import safe_loads
 
 
 logger = get_logger(__name__)
 
 def parseConsBuildingstoLists():
-    consBuildingsList = json.loads(session_data.account.raw_data["Tower"])  #expected type of list
+    consBuildingsList = safe_loads(session_data.account.raw_data["Tower"])  #expected type of list
     #logger.debug(f"TYPE CHECK consBuildingsList: {type(consBuildingsList)}: {consBuildingsList}")
     return consBuildingsList
 
@@ -47,7 +48,7 @@ def getInfluencers():
 
     #Boulder Roller level
     try:
-        poisonicLevel = json.loads(session_data.account.raw_data["Tower"])[16]  #expected type of int
+        poisonicLevel = safe_loads(session_data.account.raw_data["Tower"])[16]  #expected type of int
         #logger.debug(f"TYPE CHECK poisonicLevel: {type(poisonicLevel)}: poisonicLevel")
     except Exception as reason:
         poisonicLevel = 0
@@ -94,10 +95,10 @@ def setConsBuildingsProgressionTier():
     hasBuffs = influencers[0]
     if hasBuffs:
         #maxLevelList = [10, 201, 51, 10, 25, 60, 45, 5, 200,    140, 140, 140, 140, 140, 140, 140, 140, 140,   200, 200, 200, 200, 200, 200, 200, 200, 200]  # these are true max, not recommended max
-        maxLevelList = [10, 101, 51, 10, 25, 60, 20, 5, 200,    70, 70, 70, 70, 70, 70, 75, 75, 30,             200, 200, 200, 200, 200, 200, 200, 200, 200]  # the recommended maxes
+        maxLevelList = [10, 101, 51, 10, 25, 60, 20, 5, 200,    70, 70, 70, 70, 90, 70, 90, 90, 40,             200, 200, 200, 200, 200, 200, 200, 200, 200]  # the recommended maxes
         #logger.debug(" Either Construction Mastery and Wizard Atom found. Setting maxLevelList to PostBuff.")
     else:
-        maxLevelList = [10, 101, 51, 10, 25, 60, 15, 5, 200,    50, 50, 50, 50, 50, 50, 50, 50, 30,             100, 100, 100, 100, 100, 100, 100, 100, 100]
+        maxLevelList = [10, 101, 51, 10, 25, 60, 15, 5, 200,    50, 50, 50, 50, 50, 50, 50, 50, 40,             100, 100, 100, 100, 100, 100, 100, 100, 100]
         #logger.debug("ConsBuildings.setConsBuildingsProgressionTier~ INFO Setting maxLevelList to PreBuff.")
 
     # Make adjustments to tiers based on other influencers
@@ -154,7 +155,7 @@ def setConsBuildingsProgressionTier():
             logger.exception(f"Could not move 101+ Talent Library Book from PostBuff A tier to C tier: {reason}")
 
     # 5) #Basic Towers to 70, drop priority
-    for towerIndex in [9,10,11,12,13,14]:
+    for towerIndex in [12,14,9,10,11]:
         if playerBuildings[towerIndex] >= 70:
             try:
                 progressionTiersPostBuffs[3][2].remove(towerIndex)  #Remove from A tier
@@ -165,20 +166,18 @@ def setConsBuildingsProgressionTier():
             except Exception as reason:
                 logger.exception(f"Could not move 70+ basic tower {getBuildingNameFromIndex(towerIndex)} from PostBuff A tier to C tier: {reason}")
 
-    # 6) Fancy Towers to 75, drop priority
-    for towerIndex in [15,16]:
-        if playerBuildings[towerIndex] >= 75:
-            try:
-                progressionTiersPostBuffs[2][2].remove(towerIndex)  #Remove from S tier
-                progressionTiersPostBuffs[4][2].append(towerIndex)  #Add to B tier
-                if hasBuffs:
-                    maxLevelList[towerIndex] = 140
-                #logger.debug(f"Successfully moved 75+ fancy tower {getBuildingNameFromIndex(towerIndex)} from PostBuff S to B tier")
-            except Exception as reason:
-                logger.exception(f"EXCEPTION Could not move 75+ fancy tower {getBuildingNameFromIndex(towerIndex)} from PostBuff S tier to B tier: {reason}")
+    # 6) Fancy Towers to 90, drop priority
+    for towerIndex in [15,16,13]:
+        if playerBuildings[towerIndex] >= 90:
+            for tierIndex in range(0, len(progressionTiersPostBuffs)):
+                if towerIndex in progressionTiersPostBuffs[tierIndex][2]:
+                    progressionTiersPostBuffs[tierIndex][2].remove(towerIndex)  #Remove from any existing tier (S for Kraken and Poison, A for Stormcaller)
+            progressionTiersPostBuffs[3][2].append(towerIndex)  #Add to A tier
+            if hasBuffs:
+                maxLevelList[towerIndex] = 140
 
-    # 7) Voidinator to 30, drop priority
-    if playerBuildings[17] >= 30:  #Voidinator scaling is very bad
+    # 7) Voidinator to 40, drop priority
+    if playerBuildings[17] >= 40:  #Voidinator scaling is very bad
         try:
             progressionTiersPreBuffs[4][2].remove(17)  #Remove from PreBuff B tier
             progressionTiersPreBuffs[5][2].append(17)  #Add to C tier

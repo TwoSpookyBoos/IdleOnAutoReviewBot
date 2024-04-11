@@ -1,5 +1,6 @@
 import json
 from models.models import Advice, AdviceGroup, AdviceSection
+from utils.data_formatting import safe_loads
 from utils.logging import get_logger
 from consts import gemShop_progressionTiers, numberOfArtifacts, numberOfArtifactTiers
 from flask import g as session_data
@@ -77,7 +78,7 @@ def try_exclude_FluorescentFlaggies(exclusionList):
 
 def try_exclude_BurningBadBooks(exclusionList):
     empty = str([0] * 8)
-    autoArmLevel = json.loads(session_data.account.raw_data.get("Tower", empty))[7]
+    autoArmLevel = safe_loads(session_data.account.raw_data.get("Tower", empty))[7]
 
     if int(autoArmLevel) >= 5:
         exclusionList.append("Burning Bad Books")
@@ -86,7 +87,7 @@ def try_exclude_BurningBadBooks(exclusionList):
 def try_exclude_ChestSluggo(exclusionList):
     empty = [0] * 8
     try:
-        artifact_tiers = json.loads(session_data.account.raw_data.get("Sailing", []))
+        artifact_tiers = safe_loads(session_data.account.raw_data.get("Sailing", []))
         if isinstance(artifact_tiers, str):
             artifact_tiers = json.loads(artifact_tiers)
     except:
@@ -144,7 +145,7 @@ def getBonusSectionName(bonusName):
             return "UnknownShop"
 
 def getBoughtGemShopItems():
-    parsedList = json.loads(session_data.account.raw_data["GemItemsPurchased"])
+    parsedList = safe_loads(session_data.account.raw_data["GemItemsPurchased"])
     gemShopDict = {
         #Inventory and Storage
         'Item Backpack Space': 0,
@@ -196,7 +197,6 @@ def getBoughtGemShopItems():
         'Lava Sprouts': 0,
 
         #World 6
-        'W6-Placeholder1': 0,  # TODO: DELETE ME AFTER UPDATING GEMSHOP RECOMMENDATIONS
         'Plot of Land': 0,
         'Pristine Charm': 0,
         'Shroom Familiar': 0,
@@ -290,6 +290,13 @@ def getBoughtGemShopItems():
     except Exception as reason:
         logger.exception("Unable to parse Gem Shop:", exc_info=reason)
     # logger.debug(gemShopDict)
+    for k, v in gemShopDict.items():
+        if not isinstance(v, int):
+            try:
+                gemShopDict[k] = int(v)
+            except:
+                logger.warning(f"Could not force {k}'s {type(v)} {v} to int. Setting to 0.")
+                gemShopDict[k] = 0
     return gemShopDict
 
 

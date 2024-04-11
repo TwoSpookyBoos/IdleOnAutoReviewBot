@@ -1,5 +1,6 @@
 import json
 from models.models import AdviceSection, AdviceGroup, Advice
+from utils.data_formatting import safe_loads
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
@@ -641,13 +642,13 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
 
     #Get the bubble data and remove the length element
     raw_orange_alchemyBubblesDict = session_data.account.raw_data["CauldronInfo"][0]
-    del raw_orange_alchemyBubblesDict['length']
+    raw_orange_alchemyBubblesDict.pop('length', None)
     raw_green_alchemyBubblesDict = session_data.account.raw_data["CauldronInfo"][1]
-    del raw_green_alchemyBubblesDict['length']
+    raw_green_alchemyBubblesDict.pop('length', None)
     raw_purple_alchemyBubblesDict = session_data.account.raw_data["CauldronInfo"][2]
-    del raw_purple_alchemyBubblesDict['length']
+    raw_purple_alchemyBubblesDict.pop('length', None)
     raw_yellow_alchemyBubblesDict = session_data.account.raw_data["CauldronInfo"][3]
-    del raw_yellow_alchemyBubblesDict['length']
+    raw_yellow_alchemyBubblesDict.pop('length', None)
 
     #Replace the bubble numbers with their names for readable evaluation against the progression tiers
     named_all_alchemyBubblesDict = {}
@@ -868,7 +869,11 @@ def setAlchemyP2W() -> AdviceSection:
         p2w_AdviceSection.header = "Come back after unlocking the Alchemy skill in World 2!"
         return p2w_AdviceSection
 
-    alchemyP2WList = json.loads(session_data.account.raw_data["CauldronP2W"])
+    alchemyP2WList = safe_loads(session_data.account.raw_data["CauldronP2W"])
+    for subElementIndex, subElementValue in enumerate(alchemyP2WList):
+        if not isinstance(subElementValue, list):
+            alchemyP2WList[subElementIndex] = [subElementValue]
+
     bubbleCauldronSum = 0
     liquidCauldronSum = 0
     vialsSum = 0

@@ -1,5 +1,6 @@
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
+from utils.data_formatting import safe_loads
 from utils.logging import get_logger
 from consts import maxTiersPerGroup, stamps_progressionTiers
 from flask import g as session_data
@@ -9,7 +10,7 @@ logger = get_logger(__name__)
 # Stamp p1
 def setStampLevels(inputIndex):
     totalStampLevels = 0
-    totalStampLevels -= session_data.account.raw_data["StampLv"][inputIndex]['length']
+    totalStampLevels -= safe_loads(session_data.account.raw_data["StampLv"])[inputIndex]['length']
     for stamp in session_data.account.raw_data["StampLv"][inputIndex].values():
         totalStampLevels += int(stamp)
     return totalStampLevels

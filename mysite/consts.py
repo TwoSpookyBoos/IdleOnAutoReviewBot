@@ -28,14 +28,14 @@ stamps_progressionTiers = [
     [8, 500, [15, 16, 21], [14, 17], [14, 19], {'Drippy Drop Stamp': 30}, ""],
     [9, 600, [27], [10], [1, 2], {'Mason Jar Stamp': 12}, ""],
     [10, 700, [], [4, 6, 9, 11, 12, 15, 22, 24, 26], [], {'Drippy Drop Stamp': 40, 'Matty Bag Stamp': 50}, ""],
-    [11, 800, [10, 12], [29, 37, 40], [11], {'Pickaxe Stamp': 45, 'Hatchet Stamp': 45, 'Mason Jar Stamp': 24, }, ""],
-    [12, 900, [23, 24], [13, 20, 30, 46], [8], {'Drippy Drop Stamp': 50}, ""],
-    [13, 1000, [28], [19, 21, 36], [13], {'Pickaxe Stamp': 55, 'Hatchet Stamp': 55, 'Card Stamp': 50}, ""],
-    [14, 1500, [31], [35, 39], [21], {'Matty Bag Stamp': 100, 'Crystallin': 60}, ""],
-    [15, 2000, [25, 29], [41], [6, 20], {'Pickaxe Stamp': 65, 'Hatchet Stamp': 65, 'Card Stamp': 100}, ""],
-    [16, 2500, [33], [38, 42], [15], {'Golden Apple Stamp': 28}, ""],
-    [17, 3000, [36], [43, 44, 45], [], {'Bugsack Stamp': 80, 'Bag o Heads Stamp': 80}, ""],
-    [18, 3500, [], [], [], {'Pickaxe Stamp': 75, 'Hatchet Stamp': 75, 'Drippy Drop Stamp': 90, 'Crystallin': 100}, ""],
+    [11, 800, [], [29, 37, 40], [11], {'Pickaxe Stamp': 45, 'Hatchet Stamp': 45, 'Mason Jar Stamp': 24, }, ""],
+    [12, 900, [], [13, 20, 30, 46], [8], {'Drippy Drop Stamp': 50}, ""],
+    [13, 1000, [10, 12], [19, 21, 36], [13], {'Pickaxe Stamp': 55, 'Hatchet Stamp': 55, 'Card Stamp': 50}, ""],
+    [14, 1500, [23, 24], [35, 39], [21], {'Matty Bag Stamp': 100, 'Crystallin': 60}, ""],
+    [15, 2000, [28], [41], [6, 20], {'Pickaxe Stamp': 65, 'Hatchet Stamp': 65, 'Card Stamp': 100}, ""],
+    [16, 2500, [31], [38, 42], [15], {'Golden Apple Stamp': 28}, ""],
+    [17, 3000, [25, 29], [43, 44, 45], [], {'Bugsack Stamp': 80, 'Bag o Heads Stamp': 80}, ""],
+    [18, 3500, [33], [], [], {'Pickaxe Stamp': 75, 'Hatchet Stamp': 75, 'Drippy Drop Stamp': 90, 'Crystallin': 100}, ""],
     [19, 4000, [], [], [], {'Matty Bag Stamp': 150}, ""],
     [20, 4500, [39], [47], [18], {'Card Stamp': 150, 'Ladle Stamp': 100, 'Potion Stamp': 20}, ""],
     [21, 5000, [30, 32], [23], [], {'Pickaxe Stamp': 85, 'Hatchet Stamp': 85, 'Mason Jar Stamp': 52, 'Golden Apple Stamp': 40}, ""],
@@ -54,9 +54,9 @@ stamps_progressionTiers = [
     [33, 10500, [], [], [], {'Bugsack Stamp': 168, 'Bag o Heads Stamp': 168}, ""],
     [34, 11000, [], [], [], {'Golden Apple Stamp': 100, 'Multitool Stamp': 210}, ""],
     [35, 11500, [37], [], [], {'Golden Sixes Stamp': 120}, ""],
-    [36, 12000, [38, 22], [31], [], {'Maxo Slappo Stamp': 98, 'Sashe Sidestamp': 98, 'Intellectostampo': 98}, ""],
-    [37, 12500, [40], [52, 50], [], {'Ladle Stamp': 270}, ""],
-    [38, 13000, [], [], [], {'Triad Essence Stamp': 80}, ""],
+    [36, 12000, [38], [31], [], {'Maxo Slappo Stamp': 98, 'Sashe Sidestamp': 98, 'Intellectostampo': 98}, ""],
+    [37, 12500, [], [], [], {'Ladle Stamp': 270}, ""],
+    [38, 13000, [40, 22], [52, 50], [], {'Triad Essence Stamp': 80}, ""],
 ]
 smithing_progressionTiers = [
     # int tier, int Cash Points Purchased, int Monster Points Purchased, int Forge Totals, str Notes
@@ -109,7 +109,7 @@ bubbles_progressionTiers = [
      "MINIMUM recommended Utility bubbles for starting W5. Prowess hard-caps at 2x, which you should be reaching now!"],
     [5, 80,
      {'Roid Ragin': 150, 'Warriors Rule': 75, 'Hearty Diggy': 150, 'Wyoming Blood': 45, 'Sploosh Sploosh': 45, 'Stronk Tools': 105, 'Multorange': 45},
-     {'Swift Steppin': 150, 'Archer or Bust': 75, 'Sanic Tools': 70, 'Bug^2': 45, 'Premigreen': 45, },
+     {'Swift Steppin': 150, 'Archer or Bust': 75, 'Bug^2': 45, 'Premigreen': 45, },
      {'Stable Jenius': 150, 'Mage is Best': 75, 'Molto Loggo': 45, 'Le Brain Tools': 105, 'Severapurple': 45, },
      {'FMJ': 30, 'Shaquracy': 30, 'Hammer Hammer': 105, 'All for Kill': 150},
      "60%",
@@ -117,7 +117,7 @@ bubbles_progressionTiers = [
     [6, 100,
      {'Roid Ragin': 234, 'Warriors Rule': 117, 'Hearty Diggy': 234, 'Wyoming Blood': 70, 'Sploosh Sploosh': 70, 'Stronk Tools': 164, 'Multorange': 70,
       'Dream of Ironfish': 70},
-     {'Swift Steppin': 234, 'Archer or Bust': 117, 'Sanic Tools': 70, 'Bug^2': 70, 'Premigreen': 70, 'Fly in Mind': 94},
+     {'Swift Steppin': 234, 'Archer or Bust': 117, 'Bug^2': 70, 'Premigreen': 70, 'Fly in Mind': 94},
      {'Stable Jenius': 234, 'Mage is Best': 117, 'Molto Loggo': 70, 'Le Brain Tools': 164, 'Severapurple': 70, 'Tree Sleeper': 94},
      {'Cookin Roadkill': 105, 'All for Kill': 167},
      "70%",
@@ -125,128 +125,113 @@ bubbles_progressionTiers = [
     [7, 100,
      {'Roid Ragin': 400, 'Warriors Rule': 200, 'Hearty Diggy': 400, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 280, 'Multorange': 120,
       'Dream of Ironfish': 120},
-     {'Swift Steppin': 400, 'Archer or Bust': 200, 'Sanic Tools': 70, 'Bug^2': 120, 'Premigreen': 120},
+     {'Swift Steppin': 400, 'Archer or Bust': 200, 'Bug^2': 120, 'Premigreen': 120},
      {'Stable Jenius': 400, 'Mage is Best': 200, 'Hocus Choppus': 400, 'Molto Loggo': 120, 'Le Brain Tools': 280, 'Severapurple': 120, 'Tree Sleeper': 160},
      {'Laaarrrryyyy': 150, 'Hammer Hammer': 150, },
      "80%",
      "Larry at 150 = 72% chance for +2 levels. Somewhere around level 125-150, this bubble should pass 100m Dementia Ore cost and be available to level with Boron upgrades from the W3 Atom Collider in Construction.  It should be, in my opinion, the ONLY Utility Bubble you spend these daily clicks on until it reaches 501. If you cannot afford the Particles needed to level Larry, invest into Sampling Bubbles."],
     [8, 100,
-     {'Roid Ragin': 567, 'Warriors Rule': 284, 'Hearty Diggy': 567, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 397, 'Multorange': 170,
-      'Dream of Ironfish': 170, 'Shimmeron': 227},
-     {'Swift Steppin': 567, 'Archer or Bust': 284, 'Sanic Tools': 70, 'Bug^2': 120, 'Premigreen': 170},
-     {'Stable Jenius': 567, 'Mage is Best': 284, 'Hocus Choppus': 567, 'Molto Loggo': 120, 'Le Brain Tools': 397, 'Severapurple': 170, 'Tree Sleeper': 227},
-     {'Hammer Hammer': 200, },
+     {'Roid Ragin': 567, 'Warriors Rule': 284, 'Hearty Diggy': 567, 'Stronk Tools': 397, 'Multorange': 170, 'Dream of Ironfish': 170, 'Shimmeron': 227},
+     {'Swift Steppin': 567, 'Archer or Bust': 284, 'Premigreen': 170},
+     {'Stable Jenius': 567, 'Mage is Best': 284, 'Hocus Choppus': 567, 'Le Brain Tools': 397, 'Severapurple': 170, 'Tree Sleeper': 227},
+     {'Hammer Hammer': 180, },
      "85%",
      ""],
     [9, 100,
-     {'Roid Ragin': 615, 'Warriors Rule': 308, 'Hearty Diggy': 615, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 430, 'Multorange': 185,
-      'Dream of Ironfish': 185, 'Shimmeron': 246},
-     {'Swift Steppin': 615, 'Archer or Bust': 308, 'Sanic Tools': 70, 'Bug^2': 120, 'Premigreen': 185},
-     {'Stable Jenius': 615, 'Mage is Best': 308, 'Hocus Choppus': 615, 'Molto Loggo': 120, 'Le Brain Tools': 430, 'Severapurple': 185, 'Tree Sleeper': 246},
-     {'Hammer Hammer': 250, },
+     {'Roid Ragin': 615, 'Warriors Rule': 308, 'Hearty Diggy': 615, 'Stronk Tools': 430, 'Multorange': 185, 'Dream of Ironfish': 185, 'Shimmeron': 246},
+     {'Swift Steppin': 615, 'Archer or Bust': 308, 'Premigreen': 185},
+     {'Stable Jenius': 615, 'Mage is Best': 308, 'Hocus Choppus': 615, 'Le Brain Tools': 430, 'Severapurple': 185, 'Tree Sleeper': 246},
+     {'Hammer Hammer': 210, },
      "86%",
      ""],
     [10, 100,
-     {'Roid Ragin': 670, 'Warriors Rule': 335, 'Hearty Diggy': 670, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 469, 'Multorange': 201,
-      'Dream of Ironfish': 201, 'Shimmeron': 268},
-     {'Swift Steppin': 670, 'Archer or Bust': 335, 'Sanic Tools': 70, 'Bug^2': 120, 'Premigreen': 201},
-     {'Stable Jenius': 670, 'Mage is Best': 335, 'Hocus Choppus': 670, 'Molto Loggo': 120, 'Le Brain Tools': 469, 'Severapurple': 201, 'Tree Sleeper': 268},
+     {'Roid Ragin': 670, 'Warriors Rule': 335, 'Hearty Diggy': 670, 'Stronk Tools': 469, 'Multorange': 201, 'Dream of Ironfish': 201, 'Shimmeron': 268},
+     {'Swift Steppin': 670, 'Archer or Bust': 335, 'Premigreen': 201},
+     {'Stable Jenius': 670, 'Mage is Best': 335, 'Hocus Choppus': 670, 'Le Brain Tools': 469, 'Severapurple': 201, 'Tree Sleeper': 268},
      {'Laaarrrryyyy': 501, },
      "87%",
      ""],
     [11, 100,
-     {'Roid Ragin': 700, 'Warriors Rule': 367, 'Hearty Diggy': 734, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 514, 'Multorange': 220,
-      'Dream of Ironfish': 220, 'Shimmeron': 294},
-     {'Swift Steppin': 700, 'Archer or Bust': 367, 'Sanic Tools': 70, 'Bug^2': 120, 'Premigreen': 220},
-     {'Stable Jenius': 700, 'Mage is Best': 367, 'Hocus Choppus': 734, 'Molto Loggo': 120, 'Le Brain Tools': 514, 'Severapurple': 220, 'Tree Sleeper': 294},
-     {'Cookin Roadkill': 630, 'Hammer Hammer': 350, },
+     {'Roid Ragin': 700, 'Warriors Rule': 367, 'Hearty Diggy': 734, 'Stronk Tools': 514, 'Multorange': 220, 'Dream of Ironfish': 220, 'Shimmeron': 294},
+     {'Swift Steppin': 700, 'Archer or Bust': 367, 'Premigreen': 220},
+     {'Stable Jenius': 700, 'Mage is Best': 367, 'Hocus Choppus': 734, 'Le Brain Tools': 514, 'Severapurple': 220, 'Tree Sleeper': 294},
+     {'Cookin Roadkill': 630, 'Hammer Hammer': 270, },
      "88%",
      ""],
     [12, 100,
-     {'Roid Ragin': 720, 'Warriors Rule': 405, 'Hearty Diggy': 810, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 567, 'Multorange': 243,
-      'Dream of Ironfish': 243, 'Shimmeron': 324},
-     {'Swift Steppin': 720, 'Archer or Bust': 405, 'Sanic Tools': 70, 'Bug^2': 120, 'Premigreen': 243},
-     {'Stable Jenius': 720, 'Mage is Best': 405, 'Hocus Choppus': 810, 'Molto Loggo': 120, 'Le Brain Tools': 567, 'Severapurple': 243, 'Tree Sleeper': 324},
-     {'Startue Exp': 240, 'Hammer Hammer': 400, },
+     {'Roid Ragin': 720, 'Warriors Rule': 405, 'Hearty Diggy': 810, 'Stronk Tools': 567, 'Multorange': 243, 'Dream of Ironfish': 243, 'Shimmeron': 324},
+     {'Swift Steppin': 720, 'Archer or Bust': 405, 'Premigreen': 243},
+     {'Stable Jenius': 720, 'Mage is Best': 405, 'Hocus Choppus': 810, 'Le Brain Tools': 567, 'Severapurple': 243, 'Tree Sleeper': 324},
+     {'Startue Exp': 240, 'Hammer Hammer': 300, },
      "89%",
      ""],
     [13, 100,
-     {'Roid Ragin': 740, 'Warriors Rule': 450, 'Hearty Diggy': 900, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 630, 'Multorange': 270,
-      'Dream of Ironfish': 270, 'Shimmeron': 360},
-     {'Swift Steppin': 740, 'Archer or Bust': 450, 'Sanic Tools': 70, 'Bug^2': 120, 'Premigreen': 270},
-     {'Stable Jenius': 740, 'Mage is Best': 450, 'Hocus Choppus': 900, 'Molto Loggo': 120, 'Le Brain Tools': 630, 'Severapurple': 270, 'Tree Sleeper': 360},
+     {'Roid Ragin': 740, 'Warriors Rule': 450, 'Hearty Diggy': 900, 'Stronk Tools': 630, 'Multorange': 270, 'Dream of Ironfish': 270, 'Shimmeron': 360},
+     {'Swift Steppin': 740, 'Archer or Bust': 450, 'Premigreen': 270},
+     {'Stable Jenius': 740, 'Mage is Best': 450, 'Hocus Choppus': 900, 'Le Brain Tools': 630, 'Severapurple': 270, 'Tree Sleeper': 360},
      {'Droppin Loads': 280},
      "90%",
      ""],
     [14, 100,
-     {'Roid Ragin': 760, 'Warriors Rule': 506, 'Hearty Diggy': 1012, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 630, 'Multorange': 304,
-      'Dream of Ironfish': 270, 'Shimmeron': 405},
-     {'Swift Steppin': 760, 'Archer or Bust': 506, 'Sanic Tools': 70, 'Bug^2': 120, 'Premigreen': 304},
-     {'Stable Jenius': 760, 'Mage is Best': 506, 'Hocus Choppus': 1012, 'Molto Loggo': 120, 'Le Brain Tools': 630, 'Severapurple': 304, 'Tree Sleeper': 360},
+     {'Roid Ragin': 760, 'Warriors Rule': 506, 'Hearty Diggy': 1012, 'Multorange': 304, 'Shimmeron': 405},
+     {'Swift Steppin': 760, 'Archer or Bust': 506, 'Premigreen': 304},
+     {'Stable Jenius': 760, 'Mage is Best': 506, 'Hocus Choppus': 1012, 'Severapurple': 304},
      {'Call Me Bob': 200},
      "91%",
      ""],
     [15, 100,
-     {'Roid Ragin': 780, 'Warriors Rule': 575, 'Hearty Diggy': 1150, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 630, 'Multorange': 345,
-      'Dream of Ironfish': 270, 'Shimmeron': 460},
-     {'Swift Steppin': 780, 'Archer or Bust': 575, 'Sanic Tools': 70, 'Bug^2': 120, 'Premigreen': 345},
-     {'Stable Jenius': 780, 'Mage is Best': 575, 'Hocus Choppus': 1150, 'Molto Loggo': 120, 'Le Brain Tools': 630, 'Severapurple': 345, 'Tree Sleeper': 360},
+     {'Roid Ragin': 780, 'Warriors Rule': 575, 'Hearty Diggy': 1150, 'Multorange': 345, 'Shimmeron': 460},
+     {'Swift Steppin': 780, 'Archer or Bust': 575, 'Premigreen': 345},
+     {'Stable Jenius': 780, 'Mage is Best': 575, 'Hocus Choppus': 1150, 'Severapurple': 345},
      {'Big P': 140, 'Big Game Hunter': 70, 'Mr Massacre': 117},
      "92%",
      ""],
     [16, 100,
-     {'Roid Ragin': 800, 'Warriors Rule': 665, 'Hearty Diggy': 1329, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 630, 'Multorange': 399,
-      'Dream of Ironfish': 270, 'Shimmeron': 532},
-     {'Swift Steppin': 800, 'Archer or Bust': 665, 'Sanic Tools': 70, 'Bug^2': 120, 'Premigreen': 399},
-     {'Stable Jenius': 800, 'Mage is Best': 665, 'Hocus Choppus': 1329, 'Molto Loggo': 120, 'Le Brain Tools': 630, 'Severapurple': 399, 'Tree Sleeper': 360},
+     {'Roid Ragin': 800, 'Warriors Rule': 665, 'Hearty Diggy': 1329, 'Multorange': 399, 'Shimmeron': 532},
+     {'Swift Steppin': 800, 'Archer or Bust': 665, 'Premigreen': 399},
+     {'Stable Jenius': 800, 'Mage is Best': 665, 'Hocus Choppus': 1329, 'Severapurple': 399},
      {'Big P': 240, 'Big Game Hunter': 120, 'Mr Massacre': 200},
      "93%",
      ""],
     [17, 100,
-     {'Roid Ragin': 820, 'Warriors Rule': 784, 'Hearty Diggy': 1567, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 630, 'Multorange': 470,
-      'Dream of Ironfish': 270, 'Shimmeron': 627},
-     {'Swift Steppin': 820, 'Archer or Bust': 784, 'Sanic Tools': 70, 'Bug^2': 120, 'Premigreen': 470},
-     {'Stable Jenius': 820, 'Mage is Best': 784, 'Hocus Choppus': 1567, 'Molto Loggo': 120, 'Le Brain Tools': 630, 'Severapurple': 470, 'Tree Sleeper': 360},
+     {'Roid Ragin': 820, 'Warriors Rule': 784, 'Hearty Diggy': 1567, 'Multorange': 470, 'Shimmeron': 627},
+     {'Swift Steppin': 820, 'Archer or Bust': 784, 'Premigreen': 470},
+     {'Stable Jenius': 820, 'Mage is Best': 784, 'Hocus Choppus': 1567, 'Severapurple': 470},
      {'Big P': 340, 'Carpenter': 284, 'Big Game Hunter': 170, 'Mr Massacre': 284},
      "94%",
      ""],
     [18, 100,
-     {'Roid Ragin': 840, 'Warriors Rule': 950, 'Hearty Diggy': 1900, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 630, 'Multorange': 570,
-      'Dream of Ironfish': 270, 'Shimmeron': 760},
-     {'Swift Steppin': 840, 'Archer or Bust': 950, 'Sanic Tools': 70, 'Bug^2': 120, 'Premigreen': 570},
-     {'Stable Jenius': 840, 'Mage is Best': 950, 'Hocus Choppus': 1900, 'Molto Loggo': 120, 'Le Brain Tools': 630, 'Severapurple': 570, 'Tree Sleeper': 360},
+     {'Roid Ragin': 840, 'Warriors Rule': 950, 'Hearty Diggy': 1900, 'Multorange': 570, 'Shimmeron': 760},
+     {'Swift Steppin': 840, 'Archer or Bust': 950, 'Premigreen': 570},
+     {'Stable Jenius': 840, 'Mage is Best': 950, 'Hocus Choppus': 1900, 'Severapurple': 570},
      {'Laaarrrryyyy': 900, 'Big P': 540, 'Call Me Bob': 500, 'Carpenter': 450, 'Big Game Hunter': 270, 'Mr Massacre': 450},
      "95%",
      ""],
     [19, 100,
-     {'Roid Ragin': 860, 'Warriors Rule': 1200, 'Hearty Diggy': 1900, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 630, 'Multorange': 720,
-      'Dream of Ironfish': 270},
-     {'Swift Steppin': 860, 'Archer or Bust': 1200, 'Sanic Tools': 70, 'Bug^2': 120, 'Premigreen': 570},
-     {'Stable Jenius': 860, 'Mage is Best': 1200, 'Hocus Choppus': 1900, 'Molto Loggo': 120, 'Le Brain Tools': 630, 'Severapurple': 720, 'Tree Sleeper': 360},
+     {'Roid Ragin': 860, 'Warriors Rule': 1200, 'Multorange': 720},
+     {'Swift Steppin': 860, 'Archer or Bust': 1200},
+     {'Stable Jenius': 860, 'Mage is Best': 1200, 'Severapurple': 720},
      {'Call Me Bob': 700},
      "96%",
      ""],
     [20, 100,
-     {'Roid Ragin': 880, 'Warriors Rule': 1617, 'Hearty Diggy': 1900, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 630, 'Multorange': 970,
-      'Dream of Ironfish': 270},
-     {'Swift Steppin': 880, 'Archer or Bust': 1617, 'Sanic Tools': 70, 'Bug^2': 120, 'Premigreen': 570},
-     {'Stable Jenius': 880, 'Mage is Best': 1617, 'Hocus Choppus': 1900, 'Molto Loggo': 120, 'Le Brain Tools': 630, 'Severapurple': 970, 'Tree Sleeper': 360},
+     {'Roid Ragin': 880, 'Warriors Rule': 1617, 'Multorange': 970},
+     {'Swift Steppin': 880, 'Archer or Bust': 1617},
+     {'Stable Jenius': 880, 'Mage is Best': 1617, 'Severapurple': 970},
      {'Laaarrrryyyy': 1900, 'Big P': 1140, 'Carpenter': 950, 'Big Game Hunter': 570, 'Mr Massacre': 950, 'Diamond Chef': 553},
      "97%",
      ""],
     [21, 120,
-     {'Roid Ragin': 900, 'Warriors Rule': 2450, 'Hearty Diggy': 1900, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 630, 'Multorange': 1470,
-      'Dream of Ironfish': 270},
-     {'Swift Steppin': 900, 'Archer or Bust': 2450, 'Sanic Tools': 70, 'Bug^2': 120, 'Premigreen': 570},
-     {'Stable Jenius': 900, 'Mage is Best': 2450, 'Hocus Choppus': 1900, 'Molto Loggo': 120, 'Le Brain Tools': 630, 'Severapurple': 1470, 'Tree Sleeper': 360},
+     {'Roid Ragin': 900, 'Warriors Rule': 2450, 'Multorange': 1470},
+     {'Swift Steppin': 900, 'Archer or Bust': 2450},
+     {'Stable Jenius': 900, 'Mage is Best': 2450, 'Severapurple': 1470},
      {'Call Me Bob': 1000, 'Diamond Chef': 890},
      "98%",
      ""],
     [22, 140,
-     {'Roid Ragin': 950, 'Warriors Rule': 4950, 'Hearty Diggy': 1900, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 630, 'Multorange': 2970,
-      'Dream of Ironfish': 270},
-     {'Swift Steppin': 950, 'Archer or Bust': 4950, 'Sanic Tools': 70, 'Bug^2': 120, 'Premigreen': 570},
-     {'Stable Jenius': 950, 'Mage is Best': 4950, 'Hocus Choppus': 1900, 'Molto Loggo': 120, 'Le Brain Tools': 630, 'Severapurple': 2970, 'Tree Sleeper': 360},
+     {'Roid Ragin': 950, 'Warriors Rule': 4950, 'Multorange': 2970},
+     {'Swift Steppin': 950, 'Archer or Bust': 4950},
+     {'Stable Jenius': 950, 'Mage is Best': 4950, 'Severapurple': 2970},
      {'Diamond Chef': 1226, 'Carpenter': 2331},
      "99%",
      ""],
@@ -323,26 +308,28 @@ deathNote_progressionTiers = [
      "The Voidwalker questline requires W1-W3 at all Plat Skulls. Aim to complete this by Mid W5 as Vman's account-wide buffs are insanely strong."],
     [6, 7, 5, 5, 4, 0, 0, 0, 0, 40, 15, 0,
      "The recommendation for CHOWs is 12hrs or less (83,333+ KPH) per enemy. If you aren't at that mark yet, don't sweat it. Come back later!"],
-    [7, 10, 7, 5, 5, 1, 0, 0, 0, 40, 26, 0, ""],
-    [8, 10, 10, 7, 5, 2, 0, 0, 0, 40, 40, 0, ""],
-    [9, 10, 10, 10, 5, 3, 0, 0, 0, 40, 40, 0, ""],
-    [10, 10, 10, 10, 7, 4, 0, 0, 0, 53, 53, 0, ""],
-    [11, 10, 10, 10, 10, 5, 0, 0, 0, 53, 53, 0, "Complete Lava Skull, then BB Super CHOW, before you start working on Eclipse Skulls. "],
-    [12, 10, 10, 10, 10, 7, 0, 0, 0, 66, 66, 15, "The recommendation for Super CHOWs is 24hrs or less (4m+ KPH)"],
-    [13, 10, 10, 10, 10, 10, 0, 0, 0, 66, 66, 26, ""],
-    [14, 10, 10, 10, 10, 10, 0, 0, 0, 66, 66, 40, ""],
-    [15, 10, 10, 10, 10, 10, 0, 0, 0, 66, 66, 53, ""],
-    [16, 20, 20, 10, 10, 10, 0, 0, 0, 73, 66, 66, ""],
-    [17, 20, 20, 20, 10, 10, 1, 0, 0, 73, 73, 66, ""],
-    [18, 20, 20, 20, 20, 10, 2, 0, 0, 73, 73, 73, ""],
-    [19, 20, 20, 20, 20, 20, 3, 0, 0, 80, 73, 73, ""],
-    [20, 20, 20, 20, 20, 20, 4, 0, 0, 80, 80, 73, ""],
-    [21, 20, 20, 20, 20, 20, 5, 0, 0, 84, 80, 80, ""],
-    [22, 20, 20, 20, 20, 20, 7, 0, 0, 84, 82, 80, ""],
-    [23, 20, 20, 20, 20, 20, 10, 0, 0, 84, 83, 80, ""],
-    [24, 20, 20, 20, 20, 20, 20, 0, 0, 84, 83, 82, ""],
-    [25, 20, 20, 20, 20, 20, 20, 0, 0, 85, 85, 83, ""],
-    [26, 20, 20, 20, 20, 20, 20, 0, 0, 85, 85, 84, "As of v2.02, completing a Super CHOW on Boops is impossible."],
+    [7,  10, 7,  5,  5,  1,  0,     0, 0, 40, 26, 0, ""],
+    [8,  10, 10, 7,  5,  2,  0,     0, 0, 40, 40, 0, ""],
+    [9,  10, 10, 10, 5,  3,  0,     0, 0, 40, 40, 0, ""],
+    [10, 10, 10, 10, 7,  4,  0,     0, 0, 53, 53, 0, ""],
+    [11, 10, 10, 10, 10, 5,  0,     0, 0, 53, 53, 0, "Complete Lava Skull, then BB Super CHOW, before you start working on Eclipse Skulls. "],
+    [12, 10, 10, 10, 10, 7,  0,     0, 0, 66, 66, 0, ""],
+    [13, 10, 10, 10, 10, 10, 0,     0, 0, 66, 66, 0, ""],
+    [14, 10, 10, 10, 10, 10, 0,     0, 0, 73, 66, 0, ""],
+    [15, 10, 10, 10, 10, 10, 0,     0, 0, 73, 73, 0, "The recommendation for Super CHOWs is 24hrs or less (4m+ KPH)"],
+    [16, 20, 10, 10, 10, 10, 0,     0, 0, 80, 73, 26, ""],
+    [17, 20, 20, 10, 10, 10, 1,     0, 0, 84, 80, 40, ""],
+    [18, 20, 20, 20, 10, 10, 2,     0, 0, 85, 80, 53, ""],
+    [19, 20, 20, 20, 20, 10, 3,     0, 0, 85, 80, 66, ""],
+    [20, 20, 20, 20, 20, 20, 4,     0, 0, 85, 82, 66, ""],
+    [21, 20, 20, 20, 20, 20, 5,     0, 0, 85, 83, 66, ""],
+    [22, 20, 20, 20, 20, 20, 7,     0, 0, 85, 83, 66, ""],
+    [23, 20, 20, 20, 20, 20, 10,    0, 0, 85, 83, 70, ""],
+    [24, 20, 20, 20, 20, 20, 10,    0, 0, 85, 83, 80, ""],
+    [25, 20, 20, 20, 20, 20, 20,    0, 0, 85, 83, 82, ""],
+    [26, 20, 20, 20, 20, 20, 20,    0, 0, 85, 83, 83, ""],
+    [27, 20, 20, 20, 20, 20, 20,    0, 0, 85, 85, 84, "As of v2.05, completing a Super CHOW on Boops is impossible."],
+    [28, 20, 20, 20, 20, 20, 20,    0, 0, 86, 86, 86, "Info only"]
 ]
 buildingsPostBuffs_progressionTiers = [
     [0, "Unlock", [], "", ""],
@@ -365,18 +352,18 @@ buildingsPreBuffs_progressionTiers = [
     [7, "F", [26], "", ""]
 ]
 prayers_progressionTiers = [
-        #Tier, PrayerDict, 	Notes
-        [0, {}, ""],
-        [1, {'The Royal Sampler (Rooted Soul)': 5}, ""],
-        [2, {'Skilled Dimwit (Forest Soul)':20}, ""],
-        [3, {'Balance of Pain (Squishy Soul)':11}, ""],
-        [4, {'Skilled Dimwit (Forest Soul)':35, 'Balance of Pain (Squishy Soul)':20}, ""],
-        [5, {'Midas Minded (Dune Soul)':20}, ""],
-        [6, {'Skilled Dimwit (Forest Soul)':50, 'Midas Minded (Dune Soul)':50, 'Balance of Pain (Squishy Soul)':30}, ""],
-        [7, {'Shiny Snitch (Forest Soul)':50, 'Zerg Rushogen (Forest Soul)':20, 'Jawbreaker (Dune Soul)':50, 'Ruck Sack (Rooted Soul)':50, 'Balance of Proficiency (Squishy Soul)':50}, ""],
-        [8, {'Unending Energy (Forest Soul)':50, 'Big Brain Time (Forest Soul)':50, 'Antifun Spirit (Rooted Soul)':10, 'Fibers of Absence (Frigid Soul)':50, 'Beefy For Real (Frigid Soul)':40}, ""],
-        [9, {'Tachion of the Titans (Dune Soul)':1, 'Balance of Precision (Dune Soul)':1, 'Circular Criticals (Rooted Soul)':1, 'Vacuous Tissue (Frigid Soul)':1, 'Glitterbug (Squishy Soul)':1}, ""],
-    ]
+    #Tier, PrayerDict, 	Notes
+    [0, {}, ""],
+    [1, {'The Royal Sampler (Rooted Soul)': 5}, ""],
+    [2, {'Skilled Dimwit (Forest Soul)':20}, ""],
+    [3, {'Balance of Pain (Squishy Soul)':11}, ""],
+    [4, {'Skilled Dimwit (Forest Soul)':35, 'Balance of Pain (Squishy Soul)':20}, ""],
+    [5, {'Midas Minded (Dune Soul)':20}, ""],
+    [6, {'Skilled Dimwit (Forest Soul)':50, 'Midas Minded (Dune Soul)':50, 'Balance of Pain (Squishy Soul)':30}, ""],
+    [7, {'Shiny Snitch (Forest Soul)':50, 'Zerg Rushogen (Forest Soul)':20, 'Jawbreaker (Dune Soul)':50, 'Ruck Sack (Rooted Soul)':50, 'Balance of Proficiency (Squishy Soul)':50}, ""],
+    [8, {'Unending Energy (Forest Soul)':50, 'Big Brain Time (Forest Soul)':50, 'Antifun Spirit (Rooted Soul)':10, 'Fibers of Absence (Frigid Soul)':50, 'Beefy For Real (Frigid Soul)':40}, ""],
+    [9, {'Tachion of the Titans (Dune Soul)':1, 'Balance of Precision (Dune Soul)':1, 'Circular Criticals (Rooted Soul)':1, 'Vacuous Tissue (Frigid Soul)':1, 'Glitterbug (Squishy Soul)':1}, ""],
+]
 
 ###WORLD 4 PROGRESSION TIERS###
 breeding_progressionTiers = {
@@ -518,6 +505,21 @@ rift_progressionTiers = {
 }
 
 ###WORLD 5 PROGRESSION TIERS###
+divinity_progressionTiers = {
+    0: {},
+    1: {"GodsUnlocked": 1},
+    2: {"GodsUnlocked": 2},
+    3: {"GodsUnlocked": 3},
+    4: {"GodsUnlocked": 4},
+    5: {"GodsUnlocked": 5},
+    6: {"GodsUnlocked": 6},
+    7: {"GodsUnlocked": 7},
+    8: {"GodsUnlocked": 8},
+    9: {"GodsUnlocked": 9},
+    10: {"GodsUnlocked": 10},
+    11: {"MaxDivLevel": 50},
+    12: {"MinDivLevel": 40}
+}
 ###WORLD 6 PROGRESSION TIERS###
 
 ###GENERAL PROGRESSION TIERS###
@@ -543,29 +545,17 @@ combatLevels_progressionTiers = [
     [17, 700, "Family - Square Obol Slot 2", 180, "Personal - Hexagon Obol Slot 2", ""],
     [18, 875, "Family - Circle Obol Slot 9", 190, "Personal - Square Obol Slot 6", ""],
     [19, 900, "Character 10 and Family - Hexagon Obol Slot 2", 210, "Personal - Circle Obol Slot 12", ""],
-    [20, 1150, "Family - Square Obol Slot 3", 250, "Personal - Sparkle Obol Slot 1 and Credit towards Equinox Dream 11", ""],
-    [21, 1200, "Family - Sparkle Obol Slot 2", 425, "Able to equip The Divine Scarf", ""],
-    [22, 1250, "Family - Circle Obol Slot 10", 450, "Able to equip One of the Divine Trophy", ""],
-    [23, 1500, "Family - Circle Obol Slot 11", 500, "Credit towards Equinox Dream 23",
-     "As of v1.91 Equinox Valley, there are no additional rewards after Player Level 500. However, Family/Account Levels go up to 5k, so it can still be worthwhile to level easier classes over 500."],
-    [24, 1750, "Family - Hexagon Obol Slot 3", 500, "Credit towards Equinox Dream 23",
-     "As of v1.91 Equinox Valley, there are no additional rewards after Player Level 500. However, Family/Account Levels go up to 5k, so it can still be worthwhile to level easier classes over 500.",
-     ""],
-    [25, 2000, "Family - Square Obol Slot 4", 500, "Credit towards Equinox Dream 23",
-     "As of v1.91 Equinox Valley, there are no additional rewards after Player Level 500. However, Family/Account Levels go up to 5k, so it can still be worthwhile to level easier classes over 500.",
-     ""],
-    [26, 2100, "Family - Circle Obol Slot 12", 500, "Credit towards Equinox Dream 23",
-     "As of v1.91 Equinox Valley, there are no additional rewards after Player Level 500. However, Family/Account Levels go up to 5k, so it can still be worthwhile to level easier classes over 500.",
-     ""],
-    [27, 2500, "Family - Sparkle Obol Slot 3", 500, "Credit towards Equinox Dream 23",
-     "As of v1.91 Equinox Valley, there are no additional rewards after Player Level 500. However, Family/Account Levels go up to 5k, so it can still be worthwhile to level easier classes over 500.",
-     ""],
-    [28, 3000, "Family - Hexagon Obol Slot 4", 500, "Credit towards Equinox Dream 23",
-     "As of v1.91 Equinox Valley, there are no additional rewards after Player Level 500. However, Family/Account Levels go up to 5k, so it can still be worthwhile to level easier classes over 500.",
-     ""],
-    [29, 5000, "Family - Sparkle Obol Slot 4", 500, "Credit towards Equinox Dream 23",
-     "As of v1.91 Equinox Valley, there are no additional rewards after Player Level 500. However, Family/Account Levels go up to 5k, so it can still be worthwhile to level easier classes over 500.",
-     ""]
+    [20, 1150, "Family - Square Obol Slot 3",   250, "Personal - Sparkle Obol Slot 1 and Credit towards Equinox Dream 11", ""],
+    [21, 1200, "Family - Sparkle Obol Slot 2",  425, "Able to equip The Divine Scarf", ""],
+    [22, 1250, "Family - Circle Obol Slot 10",  450, "Able to equip One of the Divine Trophy", ""],
+    [23, 1500, "Family - Circle Obol Slot 11",  500, "Credit towards Equinox Dream 23", ""],
+    [24, 1750, "Family - Hexagon Obol Slot 3",  500, "Credit towards Equinox Dream 23", ""],
+    [25, 2000, "Family - Square Obol Slot 4",   500, "Credit towards Equinox Dream 23",  ""],
+    [26, 2100, "Family - Circle Obol Slot 12",  500, "Credit towards Equinox Dream 23", ""],
+    [27, 2500, "Family - Sparkle Obol Slot 3",  500, "Credit towards Equinox Dream 23", ""],
+    [28, 3000, "Family - Hexagon Obol Slot 4",  500, "Credit towards Equinox Dream 23", ""],
+    [29, 5000, "Family - Sparkle Obol Slot 4",  500, "Credit towards Equinox Dream 23", ""],
+    [30, 5300, "Unlock all Tome challenges",    500, "Credit towards Equinox Dream 23", ""]
 ]
 gemShop_progressionTiers = [
     # int tier, str tierName, dict recommendedPurchases, str notes
@@ -575,16 +565,16 @@ gemShop_progressionTiers = [
     [2, "S", {'Extra Card Slot': 4, 'Brimstone Forge Slot': 1}, ""],
     [3, "A", {'Item Backpack Space': 1, 'Storage Chest Space': 4, 'Carry Capacity': 2, 'Weekly Dungeon Boosters': 3, 'Brimstone Forge Slot': 4,
               'Bleach Liquid Cauldrons': 2, 'Zen Cogs': 2, 'Tower Building Slots': 1, 'Royal Egg Cap': 3, 'Richelin Kitchen': 3, 'Souped Up Tube': 1,
-              'Chest Sluggo': 3, 'Divinity Sparkie': 2, 'Lava Sprouts': 2, 'Plot of Land': 1}, ""],
+              'Chest Sluggo': 3, 'Divinity Sparkie': 2, 'Lava Sprouts': 2, 'Plot of Land': 2}, ""],
     [4, "B", {'Item Backpack Space': 2, 'Storage Chest Space': 8, 'Carry Capacity': 4, 'Food Slot': 1, 'Bleach Liquid Cauldrons': 3, 'More Sample Spaces': 2,
-              'Zen Cogs': 4, 'Tower Building Slots': 2, 'Royal Egg Cap': 5, 'Fenceyard Space': 2, 'Chest Sluggo': 6, 'Lava Sprouts': 4, 'Plot of Land': 2,
+              'Zen Cogs': 4, 'Tower Building Slots': 2, 'Royal Egg Cap': 5, 'Fenceyard Space': 2, 'Chest Sluggo': 6, 'Lava Sprouts': 4, 'Plot of Land': 4,
               'Shroom Familiar': 2, 'Instagrow Generator': 1}, ""],
     [5, "C", {'Item Backpack Space': 3, 'Storage Chest Space': 12, 'Carry Capacity': 6, 'Food Slot': 2, 'Bleach Liquid Cauldrons': 4, 'More Sample Spaces': 4,
               'Burning Bad Books': 2, 'Tower Building Slots': 4, 'Fenceyard Space': 4, 'Chest Sluggo': 9, 'Golden Sprinkler': 2, 'Lava Sprouts': 6,
-              'Plot of Land': 3, 'Shroom Familiar': 3, 'Instagrow Generator': 2}, ""],
+              'Plot of Land': 6, 'Shroom Familiar': 3, 'Instagrow Generator': 2}, ""],
     [6, "D",
      {'Item Backpack Space': 4, 'Carry Capacity': 8, 'More Storage Space': 5, 'Brimstone Forge Slot': 8, 'Ivory Bubble Cauldrons': 4, 'Obol Storage Space': 3,
-      'More Sample Spaces': 6, 'Burning Bad Books': 4, 'Zen Cogs': 8, 'Souped Up Tube': 3, 'Fenceyard Space': 6, 'Chest Sluggo': 12, 'Plot of Land': 6,
+      'More Sample Spaces': 6, 'Burning Bad Books': 4, 'Zen Cogs': 8, 'Souped Up Tube': 3, 'Fenceyard Space': 6, 'Chest Sluggo': 12, 'Plot of Land': 8,
       'Instagrow Generator': 4}, ""],
     [7, "Practical Max",
      {'Item Backpack Space': 6, 'Carry Capacity': 10, 'More Storage Space': 10, 'Card Presets': 1, 'Brimstone Forge Slot': 16, 'Sigil Supercharge': 10,
@@ -1173,6 +1163,7 @@ maxDreams = 31
 maxCookingTables = 10
 maxMeals = 67
 maxMealLevel = 90
+numberOfSecretClasses = 3
 
 humanReadableClasses = {
     1: "Beginner",
@@ -1330,3 +1321,158 @@ expectedStorageChestValuesDict = {
     103:4,
     104:3,
 }
+
+jade_emporium = [
+  {
+    "name": "Quick Ref Access",
+    "bonus": "Adds the Sneaking skill to your QuickRef menu! Manage your Ninja Twins from anywhere!"
+  },
+  {
+    "name": "Gold Food Beanstalk",
+    "bonus": "Grows a giant beanstalk behind the ninja castle! Drop a stack of 10,000 Gold Food to add it with the beanstalk and permanently gain its bonus!"
+  },
+  {
+    "name": "Supersized Gold Beanstacking",
+    "bonus": "You can now drop a stack of 100,000 Gold Food to supersize it! This will obviously give a bigger bonus, and will even enlargen the food on the stalk!"
+  },
+  {
+    "name": "Charmed, I'm Sure",
+    "bonus": "All your Ninja Twins can now equip two of the same charm at once!"
+  },
+  {
+    "name": "Mob Cosplay Craze",
+    "bonus": "Certain monsters in World 6 will now have a rare chance to drop Ninja Hats, but only the ones you've found already from the Ninja Castle!"
+  },
+  {
+    "name": "Level Exemption",
+    "bonus": "Completely and utterly removes the UNDER-LEVELED bonus reduction of all stamps in your collection, now and forever. Amen."
+  },
+  {
+    "name": "Gaming to the MAX",
+    "bonus": "All plant types in Gaming have +1 Max Evolution, but this one is 50,000x rarer than normal and will make you wonder if evolution is even real (it is)"
+  },
+  {
+    "name": "Revenge of the Pickle",
+    "bonus": "Adds a new boss page to the left of World 1 in Deathnote. Each BoneJoePickle in your inventory counts as +1 Boss Deathnote Kill!"
+  },
+  {
+    "name": "The Artifact Matrix",
+    "bonus": "Extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to Artifact Find Chance!"
+  },
+  {
+    "name": "The Slab Matrix",
+    "bonus": "Further extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to all bonuses from the Slab!"
+  },
+  {
+    "name": "The Spirit Matrix",
+    "bonus": "Even further extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to W6 Skill exp gain!"
+  },
+  {
+    "name": "The Crop Matrix",
+    "bonus": "Yet again even further extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to Crop Depot!"
+  },
+  {
+    "name": "MSA Expander I",
+    "bonus": "Adds a new bonus type to the Miniature Soul Apparatus in World 3, specifically Farming EXP!"
+  },
+  {
+    "name": "MSA Expander II",
+    "bonus": "Adds a new bonus type to the Miniature Soul Apparatus in World 3, specifically Jade Coin Gain!"
+  },
+  {
+    "name": "MSA Expander III",
+    "bonus": "Adds a new bonus type to the Miniature Soul Apparatus in World 3, specifically All Essence Gain!"
+  },
+  {
+    "name": "Deal Sweetening",
+    "bonus": "Earn +25% more Magic Beans from the mysterious Legumulyte bean merchant found in the Troll Broodnest map."
+  },
+  {
+    "name": "No Meal Left Behind",
+    "bonus": "Every 24 hours, your lowest level Meal gets +1 Lv. This only works on Meals Lv 5 or higher, and doesn't trigger on days you don't play."
+  },
+  {
+    "name": "Jade Coin Magnetism",
+    "bonus": "Adds a new bonus of +5% Jade Coin Gain per 10 items found after 1000 items, as shown at The Slab in World 5."
+  },
+  {
+    "name": "Essence Confetti",
+    "bonus": "Adds a new bonus of +3% All Essence Gain per 10 items found after 1000 items, as shown at The Slab in World 5."
+  },
+  {
+    "name": "Shrine Collective Bargaining Agreement",
+    "bonus": "Shrines no longer lose EXP when moved around, so you can finally bring those baddies out of retirement!"
+  },
+  {
+    "name": "Papa Blob's Quality Guarantee",
+    "bonus": "Increases the Max Level of all cooking meals by +10. Better meals, better levels, Papa Blob's."
+  },
+  {
+    "name": "Chef Geustloaf's Cutting Edge Philosophy",
+    "bonus": "Increases the Max Level of all cooking meals by +10 again! But oh hoho, you sir are no Chef Geustloaf! Good luck cooking to these LVs!"
+  },
+  {
+    "name": "Crop Depot Scientist",
+    "bonus": "Employs a friendly scientist blobulyte to keep a Data Sheet of all the crops you've ever found!"
+  },
+  {
+    "name": "Science Environmentally Sourced Pencil",
+    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+15% Cash from Mobs' per crop found!"
+  },
+  {
+    "name": "Science Pen",
+    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '1.02x Plant Evolution Chance in Gaming (multiplicative)' per Crop!"
+  },
+  {
+    "name": "Science Marker",
+    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+8% Jade Coin Gain' per Crop!"
+  },
+  {
+    "name": "Science Featherpen",
+    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '1.10x Cooking Speed (multiplicative)' per Crop!"
+  },
+  {
+    "name": "Reinforced Science Pencil",
+    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+20% Total Damage' per Crop!"
+  },
+  {
+    "name": "Science Crayon",
+    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+7% Shiny Pet Lv Up Rate and Pet Breeding Rate' per Crop!"
+  },
+  {
+    "name": "Science Paintbrush",
+    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+0.1 Base Critter caught in Trapping' per Crop!"
+  },
+  {
+    "name": "New Critter",
+    "bonus": "Unlocks a new critter type to capture! These have their own very special vial in Alchemy."
+  },
+  {
+    "name": "Ionized Sigils",
+    "bonus": "Sigils can now be upgraded a 3rd time. Push past lame ol' yellow, and further increasing those sigil boosts!"
+  },
+  {
+    "name": "The Endercaptain",
+    "bonus": "Adds the Endercaptain to Recruitment pool. They're very rare, and have a hidden account-wide +25% Loot Multi and Artifact Find."
+  },
+  {
+    "name": "True Godly Blessings",
+    "bonus": "All Divinity Gods give 1.05x higher Blessing bonus per God Rank. Whats a Blessing bonus? Select a god, it's the one on the bottom, go look."
+  },
+  {
+    "name": "Brighter Lighthouse Bulb",
+    "bonus": "You can now find 3 additional Artifacts from The Edge island."
+  },
+  {
+    "name": "Sovereign Artifacts",
+    "bonus": "You can now find Sovereign Artifacts from sailing, but only if you've found the Eldritch form first."
+  },
+  {
+    "name": "New Bribes",
+    "bonus": "Mr. Pigibank is up to no good once again, and he's looking to get some funding from his favorite patron... you. Well, your wallet specifically."
+  },
+  {
+    "name": "Laboratory Bling",
+    "bonus": "Adds 3 new Jewels to unlock at the Jewel Spinner in W4 Town. Or, get one for free every 700 total Lab LV as shown in Rift Skill Mastery."
+  }
+]

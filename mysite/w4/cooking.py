@@ -14,8 +14,9 @@ def parseJSON():
     if isinstance(rawCooking, str):
         rawCooking = json.loads(rawCooking)
     for sublistIndex, value in enumerate(rawCooking):
-        while len(rawCooking[sublistIndex]) < 11:
-            rawCooking[sublistIndex].append(0)
+        if isinstance(rawCooking[sublistIndex], list):
+            while len(rawCooking[sublistIndex]) < 11:
+                rawCooking[sublistIndex].append(0)
 
     emptyMeal = [0]*maxMeals
     # Meals contains 4 lists of lists. The first 3 are as long as the number of plates. The 4th is general shorter.
@@ -24,8 +25,9 @@ def parseJSON():
     if isinstance(rawMeals, str):
         rawMeals = json.loads(rawMeals)
     for sublistIndex, value in enumerate(rawMeals):
-        while len(rawMeals[sublistIndex]) < maxMeals:
-            rawMeals[sublistIndex].append(0)
+        if isinstance(rawMeals[sublistIndex], list):
+            while len(rawMeals[sublistIndex]) < maxMeals:
+                rawMeals[sublistIndex].append(0)
 
     #Count the number of unlocked meals, unlocked meals under 11, and unlocked meals under 30
     mealsUnlocked = 0
@@ -165,8 +167,10 @@ def setCookingProgressionTier():
             goal="",
         ))
     if playerTotalMealLevels < maxMeals * maxMealLevel:
+        remainingMeals = (maxMeals * maxMealLevel)-playerTotalMealLevels
+        session_data.account.meals_remaining = remainingMeals
         cooking_AdviceDict["CurrentTier"].append(Advice(
-            label="Info- Total Meal Levels",
+            label=f"Info- Total Meal Levels ({remainingMeals} to go!)",
             picture_class="turkey-a-la-thank",
             progression=playerTotalMealLevels,
             goal=maxMeals * maxMealLevel,

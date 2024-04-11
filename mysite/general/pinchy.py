@@ -1,6 +1,7 @@
 import json
 from models.models import Advice, AdviceSection, AdviceGroup
 from utils.text_formatting import pl
+from utils.data_formatting import safe_loads
 from utils.logging import get_logger
 from flask import g as session_data
 
@@ -42,7 +43,7 @@ class Threshold:
     EARLY_W7_PREP = "Early W7 Prep"
     SOLID_W7_PREP = "Solid W7 Prep"
     W7_WAITING_ROOM = "W7 Waiting Room"
-    MAX_TIER = "Maxed for v2.03"
+    MAX_TIER = "Maxed for v2.05"
     PLACEHOLDER = "Placeholder"
 
     thresholdNames = [
@@ -121,6 +122,7 @@ class Threshold:
 
 class Placements(dict):
     COMBAT_LEVELS = "Combat Levels"
+    SECRET_CLASS_PATH = "Secret Class Path"
     STAMPS = "Stamps"
     BRIBES = "Bribes"
     SMITHING = "Smithing"
@@ -133,19 +135,23 @@ class Placements(dict):
     PRAYERS = "Prayers"
     EQUINOX = "Equinox"
     BREEDING = "Breeding"
+    COOKING = "Cooking"
     RIFT = "Rift"
+    DIVINITY = "Divinity"
     sections = [
         COMBAT_LEVELS,
         STAMPS, BRIBES, SMITHING,
         BUBBLES, VIALS, P2W,
         REFINERY, SALT_LICK, DEATH_NOTE, PRAYERS, EQUINOX,
-        BREEDING, RIFT
+        BREEDING, COOKING, RIFT,
+        DIVINITY
     ]
 
     sectionThresholds = {
         # [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,99] #template
         #               W1   W2          W3              W4              W5              W6              W7              Max   Placeholder
         COMBAT_LEVELS: [0,   3, 7, 8,    10, 14, 15,     16, 17, 18,     19, 21, 23,     24, 25, 27,     28, 29, 29,     29,   99],
+        SECRET_CLASS_PATH:[0,0, 0, 1,    1,  1,  1,      2,  2,  2,      2,  3,  3,      3,  3,  3,      3,  3,  3,      3,    99],
         STAMPS:        [0,   1, 2, 3,    4,  5,  6,      7,  8,  9,      10, 11, 13,     16, 19, 22,     26, 30, 34,     38,   99],
         BRIBES:        [0,   1, 1, 1,    2,  2,  2,      3,  3,  3,      4,  4,  4,      5,  5,  5,      5,  5,  5,      6,    99],
         SMITHING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  2,  3,      4,  5,  6,      6,  6,  6,      6,    99],
@@ -154,11 +160,13 @@ class Placements(dict):
         P2W:           [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  1,      1,  1,  1,      1,  1,  1,      1,    99],
         REFINERY:      [0,   0, 0, 0,    0,  0,  0,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,    99],
         SALT_LICK:     [0,   0, 0, 0,    0,  0,  0,      0,  0,  1,      2,  3,  4,      5,  5,  6,      7,  8,  9,      10,   99],
-        DEATH_NOTE:    [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  4,  5,      7,  9,  11,     17, 21, 24,     26,   99],
+        DEATH_NOTE:    [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      4,  5,  6,      7,  9,  11,     16, 20, 25,     27,   99],
         PRAYERS:       [0,   0, 0, 0,    0,  0,  1,      1,  2,  2,      3,  3,  4,      4,  5,  6,      7,  7,  7,      7,    99],
         EQUINOX:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      11,   99],
         BREEDING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  1,      1,  2,  2,      3,  4,  5,      6,  8,  9,      11,   99],
+        COOKING:       [0,   0, 0, 0,    0,  0,  0,      1,  1,  2,      2,  3,  3,      4,  4,  4,      5,  5,  5,      5,    99],
         RIFT:          [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      9,    99],
+        DIVINITY:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  3,  5,      7,  8,  9,      10, 11,  12,    12,   99],
     }
     section_count = len(sectionThresholds)
 
@@ -279,7 +287,7 @@ def is_portal_opened(mobKills, monster, portalKC):
 
 
 def getHighestPrint():
-    awfulPrinterList = json.loads(session_data.account.raw_data["Print"])
+    awfulPrinterList = safe_loads(session_data.account.raw_data["Print"])
     # print("Pinchy~ OUTPUT awfulPrinterList: ", type(awfulPrinterList), awfulPrinterList)
     goodPrinterList = [p for p in awfulPrinterList if isinstance(p, int)]
     highestPrintFound = max(goodPrinterList)
@@ -315,7 +323,7 @@ def tier_from_monster_kills(dictOfPRs) -> Threshold:
         # logger.info(f"Starting to review map kill counts per player because expectedIndex still W1: {dictOfPRs['Construction Death Note']}")
         for character in session_data.account.safe_characters:
             try:
-                mobKills = json.loads(session_data.account.raw_data[f'KLA_{character.character_index}'])  # String pretending to be a list of lists yet again
+                mobKills = safe_loads(session_data.account.raw_data[f'KLA_{character.character_index}'])  # String pretending to be a list of lists yet again
             except:
                 logger.exception(f"Could not retrieve KLA_{character.character_index} for Pinchy. Setting mobKills to empty list")
                 mobKills = []
