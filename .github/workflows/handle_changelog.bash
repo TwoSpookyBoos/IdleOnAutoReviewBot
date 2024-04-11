@@ -29,9 +29,10 @@ truncate -s 0 "$release_notes"
 
 chmod -R 744 .ssh
 cp -r .ssh ~/
+ls ~/.ssh
 
-git config --global user.email "git@github.com"
-git config --global user.name "auto-changelog"
+git config --global user.email "scoli@pythonanywhere.com"
+git config --global user.name "Scoli"
 
 git add .
 git commit -m "auto-update changelog"
