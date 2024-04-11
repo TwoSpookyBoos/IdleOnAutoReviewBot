@@ -22,9 +22,10 @@ def __get_beanstalk_data(raw):
     return None
 
 
-def __beanstalk_bought(raw):
+def __beanstalks_bought(raw):
     if not (ninja_section := __get_ninja_section(raw)):
-        return False
+        # no "Ninja" section in data, player hasn't reached W6 yet
+        return False, False
 
     jade_emporium_bought = ninja_section[-6][9]
 
@@ -44,12 +45,17 @@ def __beanstalk_bought(raw):
 def section_beanstalk():
     account = Account()
     raw = account.raw_data
-    beanstalk_bought, upgrade_bought = __beanstalk_bought(raw)
-
+    beanstalk_bought, upgrade_bought = __beanstalks_bought(raw)
     beanstalk_data = __get_beanstalk_data(raw)
 
     if not (beanstalk_bought or beanstalk_data):
-        return AdviceSection(name="beanstalk", tier="", header="")
+        return AdviceSection(
+            name="Giant Beanstalk",
+            tier="",
+            header="Come back once you've bought the Giant Beanstalk from the Jade Emporium",
+            picture="Jade_Vendor.gif",
+            collapse=False
+        )
 
     gfood_codes = ["PeanutG", "ButterBar", *[f"FoodG{i}" for i in range(1, 14)]]
     gold_foods = dict.fromkeys(gfood_codes, 0)
@@ -116,7 +122,7 @@ def section_beanstalk():
         advices=[
             Advice(
                 label="Buy Supersized Gold Beanstacking from the Jade Emporium",
-                picture_class=""
+                picture_class="jade-vendor"
             )
         ]
     )

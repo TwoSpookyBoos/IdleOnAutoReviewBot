@@ -254,7 +254,7 @@ divLinksDict = {
         ),
         Advice(
             label="Cooking BB generally wants Snake",
-            picture_class="ladle"
+            picture_class="cooking-ladle"
         ),
         Advice(
             label="Extra characters can link to Snake if not Meditating",
@@ -281,7 +281,7 @@ divLinksDict = {
         ),
         Advice(
             label="Cooking BB generally wants Snake",
-            picture_class="ladle"
+            picture_class="cooking-ladle"
         ),
         Advice(
             label="Extra characters can link to Snake if not Meditating",
@@ -306,7 +306,7 @@ divLinksDict = {
         ),
         Advice(
             label="Cooking BB generally wants Snake",
-            picture_class="ladle"
+            picture_class="cooking-ladle"
         ),
         Advice(
             label="Extra characters can link to Snake if not Meditating",
@@ -332,7 +332,7 @@ divLinksDict = {
         ),
         Advice(
             label="Cooking BB generally wants Snake",
-            picture_class="ladle"
+            picture_class="cooking-ladle"
         ),
         Advice(
             label="Extra characters can link to Snake if not Meditating",
@@ -358,7 +358,7 @@ divLinksDict = {
         ),
         Advice(
             label="Cooking BB generally wants Snake",
-            picture_class="ladle"
+            picture_class="cooking-ladle"
         ),
         Advice(
             label="Extra characters can link to Snake if not Meditating",
@@ -384,7 +384,7 @@ divLinksDict = {
         ),
         Advice(
             label="Cooking BB generally wants Snake",
-            picture_class="ladle"
+            picture_class="cooking-ladle"
         ),
         Advice(
             label="Extra characters can link to Snake if not Meditating",
