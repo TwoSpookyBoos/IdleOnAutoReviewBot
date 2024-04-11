@@ -27,12 +27,12 @@ sed "${sed_params[@]}" "$sidebar"
 
 truncate -s 0 "$release_notes"
 
-chmod -R 744 .ssh
-cp -r .ssh ~/
-ls ~/.ssh
+#chmod -R 744 .ssh
+#cp -r .ssh ~/
+#ls ~/.ssh
 
-git config --global user.email "scoli@pythonanywhere.com"
-git config --global user.name "Scoli"
+git config --global user.email "git@github.com"
+git config --global user.name "autochangelog"
 
 git add .
 git commit -m "auto-update changelog"
