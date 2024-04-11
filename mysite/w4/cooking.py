@@ -66,7 +66,7 @@ def setCookingProgressionTier():
     voidwalkers = [toon for toon in session_data.account.all_characters if toon.elite_class == "Voidwalker"]
 
     try:
-        atomFlouride = session_data.account.raw_data.get("Atoms", [0,0,0,0,0])[5] >= 1
+        atomFlouride = session_data.account.raw_data.get("Atoms", [0,0,0,0,0])[8] >= 1
     except:
         logger.exception(f"Unable to retrieve Atom Collider Flouride level. Defaulting to 0.")
         atomFlouride = False
