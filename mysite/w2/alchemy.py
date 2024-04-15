@@ -545,7 +545,7 @@ def setAlchemyVialsProgressionTier() -> AdviceSection:
                     vial_AdviceDict["EarlyVials"][f"To reach Tier {tier[0]}"] = []
                 vial_AdviceDict["EarlyVials"][f"To reach Tier {tier[0]}"].append(
                     Advice(
-                        label=f"Unlock more vial{pl(['Placeholder'] * (tier[1] - unlockedVials), '', 's')}",
+                        label=f"Unlock {tier[1] - unlockedVials} more vial{pl(tier[1] - unlockedVials, '', 's')}",
                         picture_class="vials",
                         progression=str(unlockedVials),
                         goal=str(tier[1]))

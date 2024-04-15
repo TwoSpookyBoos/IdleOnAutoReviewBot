@@ -28,6 +28,8 @@ def __beanstalks_bought(raw):
         return False, False
 
     jade_emporium_bought = ninja_section[-6][9]
+    if jade_emporium_bought is None:
+        jade_emporium_bought = ""
 
     name_base = "Gold Food Beanstalk"
     name_upgrade = "Supersized Gold Beanstacking"

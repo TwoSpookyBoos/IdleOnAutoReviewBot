@@ -18,6 +18,8 @@ def getCritterName(inputNumber):
 def getUnlockedCritterStatus():
     try:
         rawJadeEmporiumPurchases = safe_loads(session_data.account.raw_data["Ninja"])[102][9]
+        if rawJadeEmporiumPurchases is None:
+            rawJadeEmporiumPurchases = ""
     except:
         logger.debug("Unable to retrieve Jade Emporium Upgrades to tell if Tuttle is unlocked. Defaulting to locked.")
         rawJadeEmporiumPurchases = ""
