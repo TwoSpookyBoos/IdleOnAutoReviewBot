@@ -68,7 +68,7 @@ def setRiftProgressionTier():
 
     #Generate AdviceGroups
     meowTheRiftAdvice = ""
-    if session_data.account.rift_meowed == False:
+    if session_data.account.rift_meowed == False and session_data.account.meowBBIndex is not None:
         meowTheRiftAdvice = f"{session_data.account.all_characters[session_data.account.meowBBIndex].character_name} has not completed a Super CHOW on the Rift yet!"
         if tier_RiftBonusesUnlocked < max_tier:
             meowTheRiftAdvice += " You should aim to complete this early on while you have the damage to Multikill."
