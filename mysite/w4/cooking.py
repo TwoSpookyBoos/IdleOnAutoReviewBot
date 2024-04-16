@@ -49,6 +49,7 @@ def parseJSON():
     rawSailing = safe_loads(session_data.account.raw_data.get("Sailing", [[],[],[],[]]))
     if len(rawSailing[3]) >= 17:
         causticolumn_level = rawSailing[3][17]
+        playerMaxPlateLvl += 10 * int(causticolumn_level)
     else:
         causticolumn_level = 0
     if causticolumn_level < 1:
@@ -68,8 +69,12 @@ def parseJSON():
     #Jade Emporium Increases
     if "Papa Blob's Quality Guarantee" not in session_data.account.jade_emporium_purchases:
         playerMissingPlateUpgrades.append(("Purchase \"Papa Blob's Quality Guarantee\" from the Jade Emporium", "jade-vendor"))
+    else:
+        playerMaxPlateLvl += 10
     if "Chef Geustloaf's Cutting Edge Philosophy" not in session_data.account.jade_emporium_purchases:
         playerMissingPlateUpgrades.append(("Purchase \"Chef Geustloaf's Cutting Edge Philosophy\" from the Jade Emporium", "jade-vendor"))
+    else:
+        playerMaxPlateLvl += 10
 
     return [rawCooking, rawMeals, mealsUnlocked, mealsUnder11, mealsUnder30, playerMaxPlateLvl, playerMissingPlateUpgrades]
 
