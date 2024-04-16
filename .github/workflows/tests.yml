@@ -5,5 +5,16 @@ jobs:
   run-tests:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - run: cd mysite && make test
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Install Venv
+      run: |
+        python3 -m venv .venv
+        source .venv/bin/activate
+        pip install --upgrade pip setuptools wheel
+        pip install -r mysite/requirements.txt
+
+    - name: Run Tests
+      working-directory: mysite
+      run: make test

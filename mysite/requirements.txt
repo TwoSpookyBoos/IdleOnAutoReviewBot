@@ -5,3 +5,4 @@ ue-parser
 babel
 pyyaml
 libsass
+pytest

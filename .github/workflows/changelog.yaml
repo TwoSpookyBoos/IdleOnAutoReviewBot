@@ -10,6 +10,9 @@ jobs:
   handle-release-notes:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - run: chmod +x .github/workflows/handle_changelog.bash && ./.github/workflows/handle_changelog.bash
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Handle Changelog
       shell: bash
+      run: chmod +x .github/workflows/handle_changelog.bash && ./.github/workflows/handle_changelog.bash
