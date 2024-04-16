@@ -14,6 +14,7 @@ jobs:
         source .venv/bin/activate
         pip install --upgrade pip setuptools wheel
         pip install -r mysite/requirements.txt
+        pip install coloredlogs
 
     - name: Run Tests
       working-directory: mysite
