@@ -111,42 +111,31 @@ def setCookingProgressionTier():
     playerCookingList, playerMealsList, mealsUnlocked, mealsUnder11, mealsUnder30, playerMaxPlateLvl, playerMissingPlateUpgrades = parseJSON()
     playerTotalMealLevels = sum(playerMealsList[0])
 
-    #Assess Tiers and Generate NextTier Advice
-    # 6) All basics + max plate levels
-    if (playerMaxPlateLvl >= maxMealLevel
-            and mealsUnlocked == maxMeals and mealsUnder11 == 0 and mealsUnder30 == 0
-            and len(voidwalkers) > 0 and playerTotalMealLevels >= 500
-            and atomFlouride
-            and dchefLevel >= 15):
-        tier_Cooking = 6
-    # 5) All the basics complete
-    elif (mealsUnlocked == maxMeals and mealsUnder11 == 0 and mealsUnder30 == 0
-            and atomFlouride
-            and len(voidwalkers) > 0 and playerTotalMealLevels >= 500
-            and dchefLevel >= 15):
-        tier_Cooking = 5
-        cooking_AdviceDict["NextTier"].append(Advice(
-            label=f"Unlock max level {maxMealLevel} plates",
-            picture_class="turkey-a-la-thank",
-            progression=playerMaxPlateLvl,
-            goal=maxMealLevel
-        ))
-    # 4) if Atom Collider Flouride upgrade owned:
-    elif (atomFlouride
-          and len(voidwalkers) > 0 and playerTotalMealLevels >= 500
-          and dchefLevel >= 15):
-        tier_Cooking = 4
-    # 3) if Vman and total plates over 500:
-    elif (len(voidwalkers) > 0 and playerTotalMealLevels >= 500
-          and dchefLevel >= 15):
+    #Assess Tiers
+    if highestCookingSkillLevel >= 1:
+        tier_Cooking = 1
+    if tier_Cooking == 1 and dchefLevel >= 15:
+        tier_Cooking = 2
+    if tier_Cooking == 2 and len(voidwalkers) > 0 and playerTotalMealLevels >= 500:
         tier_Cooking = 3
+    if tier_Cooking == 3 and atomFlouride:
+        tier_Cooking = 4
+    if tier_Cooking == 4 and mealsUnlocked >= maxMeals and mealsUnder30 <= 0:
+        tier_Cooking = 5
+    if tier_Cooking == 5 and playerMaxPlateLvl >= maxMealLevel:
+        tier_Cooking = 6
+
+    #Generate NextTier Advice
+    # 1) if cooking is unlocked at least
+    if tier_Cooking == 1:
         cooking_AdviceDict["NextTier"].append(Advice(
-            label="Unlock Fluoride - Void Plate Chef in the Atom Collider",
-            picture_class="flouride"
+            label="Unlock and level Diamond Chef bubble",
+            picture_class="diamond-chef",
+            progression=dchefLevel,
+            goal=15
         ))
     # 2) if Diamond Chef owned and level 15+, Speed meal or Fastest to 11.
-    elif dchefLevel >= 15:
-        tier_Cooking = 2
+    elif tier_Cooking == 2:
         if len(voidwalkers) == 0:
             cooking_AdviceDict["NextTier"].append(Advice(
                 label="Unlock a Voidwalker",
@@ -159,15 +148,50 @@ def setCookingProgressionTier():
                 progression=playerTotalMealLevels,
                 goal=500
             ))
-    # 1) if cooking is unlocked at least
-    else:
-        tier_Cooking = 1
+    # 3) if Vman and total plates over 500:
+    elif tier_Cooking == 3:
         cooking_AdviceDict["NextTier"].append(Advice(
-            label="Unlock and level Diamond Chef bubble",
-            picture_class="diamond-chef",
-            progression=dchefLevel,
-            goal=15
+            label="Unlock Fluoride - Void Plate Chef in the Atom Collider",
+            picture_class="flouride"
         ))
+    # 4) if Atom Collider Flouride upgrade owned:
+    elif tier_Cooking == 4:
+        if mealsUnlocked < maxMeals:
+            cooking_AdviceDict["NextTier"].append(Advice(
+                label=f"Unlock the remaining {maxMeals - mealsUnlocked} {pl(maxMeals-mealsUnlocked, 'meal', 'meals')}",
+                picture_class="dharma-mesa-spice"
+            ))
+        if mealsUnder11 > 0:
+            cooking_AdviceDict["NextTier"].append(Advice(
+                label=f"Level up the remaining {mealsUnder11} unlocked {pl(mealsUnder11, 'meal', 'meals')} to 11+ for Diamond Chef",
+                picture_class="diamond-chef",
+                progression=mealsUnlocked - mealsUnder11,
+                goal=mealsUnlocked
+            ))
+        if mealsUnder30 > 0:
+            cooking_AdviceDict["NextTier"].append(Advice(
+                label=f"Level up the remaining {mealsUnder30} unlocked {pl(mealsUnder30, 'meal', 'meals')} to 30+ for Flouride",
+                picture_class="flouride",
+                progression=mealsUnlocked - mealsUnder30,
+                goal=mealsUnlocked
+            ))
+    # 5) All meals unlocked, all meals 30+
+    elif tier_Cooking == 5:
+        cooking_AdviceDict["NextTier"].append(Advice(
+            label=f"Unlock max level {maxMealLevel} plates",
+            picture_class="turkey-a-la-thank",
+            progression=playerMaxPlateLvl,
+            goal=maxMealLevel
+        ))
+    # 6) All basics + max plate levels
+    #elif tier_Cooking == 6:
+        # Finished, for now. Leaving this here for future use.
+        # cooking_AdviceDict["NextTier"].append(Advice(
+        #     label=f"",
+        #     picture_class="",
+        #     progression="",
+        #     goal=""
+        # ))
 
     #Generate CurrentTier Advice
     if mealsUnlocked < maxMeals:
