@@ -1,0 +1,9 @@
+name: tests.yml
+on: push
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - run: make test
