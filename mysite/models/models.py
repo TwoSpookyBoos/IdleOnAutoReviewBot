@@ -686,7 +686,7 @@ class Account:
                 for purchaseLetter in raw_emporium_purchases:
                     try:
                         decodedIndex = letterToNumber(purchaseLetter)
-                        self.jade_emporium_purchases.append(jade_emporium[decodedIndex].get("Name", f"Unknown Emporium Upgrade: {purchaseLetter}"))
+                        self.jade_emporium_purchases.append(jade_emporium[decodedIndex].get("name", f"Unknown Emporium Upgrade: {purchaseLetter}"))
                     except:
                         continue
         except:
