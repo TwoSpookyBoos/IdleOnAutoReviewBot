@@ -10,8 +10,8 @@ from typing import Any
 from flask import g
 
 from utils.data_formatting import getCharacterDetails, safe_loads
-from consts import expectedStackables, greenstack_progressionTiers, card_data, maxMeals, maxMealLevel
-from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
+from consts import expectedStackables, greenstack_progressionTiers, card_data, maxMeals, maxMealLevel, jade_emporium
+from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, letterToNumber
 
 
 def session_singleton(cls):
@@ -676,6 +676,22 @@ class Account:
         self.rift_meowed = False
         self.meowBBIndex = 0
         self.meals_remaining = maxMeals * maxMealLevel
+        self.jade_emporium_purchases = []
+        try:
+            raw_emporium_purchases = safe_loads(self.raw_data["Ninja"])[102][9]
+            if raw_emporium_purchases is None:
+                jade_emporium_purchases = []
+            if isinstance(raw_emporium_purchases, str):
+                raw_emporium_purchases = list(raw_emporium_purchases)
+                for purchaseLetter in raw_emporium_purchases:
+                    try:
+                        decodedIndex = letterToNumber(purchaseLetter)
+                        self.jade_emporium_purchases.append(jade_emporium[decodedIndex].get("Name", f"Unknown Emporium Upgrade: {purchaseLetter}"))
+                    except:
+                        continue
+        except:
+            jade_emporium_purchases = []
+
         self.max_toon_count = 10  # OPTIMIZE: find a way to read this from somewhere
 
     def _make_cards(self):

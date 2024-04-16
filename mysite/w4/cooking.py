@@ -1,5 +1,6 @@
 import json
 from models.models import Advice, AdviceGroup, AdviceSection
+from utils.data_formatting import safe_loads
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import maxCookingTables, maxMeals, maxMealLevel
@@ -41,12 +42,42 @@ def parseJSON():
             if mealLevel < 30:
                 mealsUnder30 += 1
 
-    return [rawCooking, rawMeals, mealsUnlocked, mealsUnder11, mealsUnder30]
+    #Calculate the player's max plate level
+    playerMaxPlateLvl = 30  #30 is the default starting point
+    playerMissingPlateUpgrades = []
+    #Sailing Artifact Increases
+    rawSailing = safe_loads(session_data.account.raw_data.get("Sailing", [[],[],[],[]]))
+    if len(rawSailing[3]) >= 17:
+        causticolumn_level = rawSailing[3][17]
+    else:
+        causticolumn_level = 0
+    if causticolumn_level < 1:
+        playerMissingPlateUpgrades.append(("Normal Causticolumn Sailing Artifact", "causticolumn"))
+    if causticolumn_level < 2:
+        playerMissingPlateUpgrades.append(("Ancient Causticolumn Sailing Artifact", "causticolumn"))
+    if causticolumn_level < 3:
+        if session_data.account.eldritch_artifacts_unlocked:
+            playerMissingPlateUpgrades.append(("Eldritch Causticolumn Sailing Artifact", "causticolumn"))
+        else:
+            playerMissingPlateUpgrades.append(("Eldritch Causticolumn Sailing Artifact. Eldritch Artifacts are unlocked by reaching Rift 31", "eldritch-artifact"))
+    if causticolumn_level < 4:
+        if "Sovereign Artifacts" in session_data.account.jade_emporium_purchases:
+            playerMissingPlateUpgrades.append(("Sovereign Causticolumn Sailing Artifact", "causticolumn"))
+        else:
+            playerMissingPlateUpgrades.append(("Sovereign Causticolumn Sailing Artifact. Sovereign Artifacts are unlocked from the Jade Emporium", "jade-vendor"))
+    #Jade Emporium Increases
+    if "Papa Blob's Quality Guarantee" not in session_data.account.jade_emporium_purchases:
+        playerMissingPlateUpgrades.append(("Purchase \"Papa Blob's Quality Guarantee\" from the Jade Emporium", "jade-vendor"))
+    if "Chef Geustloaf's Cutting Edge Philosophy" not in session_data.account.jade_emporium_purchases:
+        playerMissingPlateUpgrades.append(("Purchase \"Chef Geustloaf's Cutting Edge Philosophy\" from the Jade Emporium", "jade-vendor"))
+
+    return [rawCooking, rawMeals, mealsUnlocked, mealsUnder11, mealsUnder30, playerMaxPlateLvl, playerMissingPlateUpgrades]
 
 def setCookingProgressionTier():
     cooking_AdviceDict = {
         "NextTier": [],
         "CurrentTier": [],
+        "PlateLevels": [],
     }
     cooking_AdviceGroupDict = {}
     cooking_AdviceSection = AdviceSection(
@@ -77,7 +108,7 @@ def setCookingProgressionTier():
         logger.exception(f"Unable to retrieve Diamond Chef bubble level. Defaulting to 0.")
         dchefLevel = 0
 
-    playerCookingList, playerMealsList, mealsUnlocked, mealsUnder11, mealsUnder30 = parseJSON()
+    playerCookingList, playerMealsList, mealsUnlocked, mealsUnder11, mealsUnder30, playerMaxPlateLvl, playerMissingPlateUpgrades = parseJSON()
     playerTotalMealLevels = sum(playerMealsList[0])
 
     #Assess Tiers and Generate NextTier Advice
@@ -176,6 +207,13 @@ def setCookingProgressionTier():
             goal=maxMeals * maxMealLevel,
         ))
 
+    if playerMissingPlateUpgrades:
+        for missingUpgrade in playerMissingPlateUpgrades:
+            cooking_AdviceDict["PlateLevels"].append(Advice(
+               label=missingUpgrade[0],
+               picture_class=missingUpgrade[1],
+           ))
+
     # Generate Advice Groups
     cooking_AdviceGroupDict["NextTier"] = AdviceGroup(
         tier=str(tier_Cooking),
@@ -188,6 +226,13 @@ def setCookingProgressionTier():
         tier="",
         pre_string=f"Meal priorities for your current tier",
         advices=cooking_AdviceDict["CurrentTier"],
+        post_string="",
+    )
+
+    cooking_AdviceGroupDict["PlateLevels"] = AdviceGroup(
+        tier="",
+        pre_string=f"Each remaining upgrade gives +10 max plate levels",
+        advices=cooking_AdviceDict["PlateLevels"],
         post_string="",
     )
 
