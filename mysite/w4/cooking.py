@@ -93,7 +93,7 @@ def setCookingProgressionTier():
         return cooking_AdviceSection
 
     tier_Cooking = 0
-    max_tier = 5
+    max_tier = 6
     voidwalkers = [toon for toon in session_data.account.all_characters if toon.elite_class == "Voidwalker"]
 
     try:
@@ -112,21 +112,41 @@ def setCookingProgressionTier():
     playerTotalMealLevels = sum(playerMealsList[0])
 
     #Assess Tiers and Generate NextTier Advice
-    # 5) All the basics complete
-    if (mealsUnlocked == maxMeals and mealsUnder11 == 0 and mealsUnder30 == 0
+    # 6) All basics + max plate levels
+    if (playerMaxPlateLvl >= maxMealLevel
+            and mealsUnlocked == maxMeals and mealsUnder11 == 0 and mealsUnder30 == 0
             and len(voidwalkers) > 0 and playerTotalMealLevels >= 500
             and atomFlouride
             and dchefLevel >= 15):
+        tier_Cooking = 6
+    # 5) All the basics complete
+    elif (mealsUnlocked == maxMeals and mealsUnder11 == 0 and mealsUnder30 == 0
+            and atomFlouride
+            and len(voidwalkers) > 0 and playerTotalMealLevels >= 500
+            and dchefLevel >= 15):
         tier_Cooking = 5
-    # 4) if Vman and total plates over 500:
-    elif (len(voidwalkers) > 0 and playerTotalMealLevels >= 500
-          and atomFlouride
+        cooking_AdviceDict["NextTier"].append(Advice(
+            label=f"Unlock max level {maxMealLevel} plates",
+            picture_class="turkey-a-la-thank",
+            progression=playerMaxPlateLvl,
+            goal=maxMealLevel
+        ))
+    # 4) if Atom Collider Flouride upgrade owned:
+    elif (atomFlouride
+          and len(voidwalkers) > 0 and playerTotalMealLevels >= 500
           and dchefLevel >= 15):
         tier_Cooking = 4
-    # 3) if Atom Collider Flouride upgrade owned:
-    elif (atomFlouride
+    # 3) if Vman and total plates over 500:
+    elif (len(voidwalkers) > 0 and playerTotalMealLevels >= 500
           and dchefLevel >= 15):
         tier_Cooking = 3
+        cooking_AdviceDict["NextTier"].append(Advice(
+            label="Unlock Fluoride - Void Plate Chef in the Atom Collider",
+            picture_class="flouride"
+        ))
+    # 2) if Diamond Chef owned and level 15+, Speed meal or Fastest to 11.
+    elif dchefLevel >= 15:
+        tier_Cooking = 2
         if len(voidwalkers) == 0:
             cooking_AdviceDict["NextTier"].append(Advice(
                 label="Unlock a Voidwalker",
@@ -139,13 +159,6 @@ def setCookingProgressionTier():
                 progression=playerTotalMealLevels,
                 goal=500
             ))
-    # 2) if Diamond Chef owned and level 15+, Speed meal or Fastest to 11.
-    elif dchefLevel >= 15:
-        tier_Cooking = 2
-        cooking_AdviceDict["NextTier"].append(Advice(
-            label="Unlock Fluoride - Void Plate Chef in the Atom Collider",
-            picture_class="flouride"
-        ))
     # 1) if cooking is unlocked at least
     else:
         tier_Cooking = 1
