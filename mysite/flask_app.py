@@ -181,8 +181,8 @@ def index() -> Response | str:
 
 
 def create_and_populate_log_files(data, headerData, msg, name_or_data, error):
-    # if os.environ.get("USER") == "niko":
-    #     raise error
+    if os.environ.get("USER") == "niko":
+        raise error
 
     username = name_for_logging(name_or_data, headerData)
     now = datetime.now().strftime("%Y%m%d_%H%M%S")
