@@ -1,6 +1,4 @@
 import copy
-import json
-
 from consts import buildingsPostBuffs_progressionTiers, buildingsPreBuffs_progressionTiers
 from flask import g as session_data
 from models.models import AdviceSection, AdviceGroup, Advice
