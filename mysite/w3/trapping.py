@@ -16,15 +16,15 @@ def getCritterName(inputNumber):
         return "UnknownCritterName"
 
 def getUnlockedCritterStatus():
-    try:
-        rawJadeEmporiumPurchases = safe_loads(session_data.account.raw_data["Ninja"])[102][9]
-        if rawJadeEmporiumPurchases is None:
-            rawJadeEmporiumPurchases = ""
-    except:
-        logger.debug("Unable to retrieve Jade Emporium Upgrades to tell if Tuttle is unlocked. Defaulting to locked.")
-        rawJadeEmporiumPurchases = ""
+    # try:
+    #     rawJadeEmporiumPurchases = safe_loads(session_data.account.raw_data["Ninja"])[102][9]
+    #     if rawJadeEmporiumPurchases is None:
+    #         rawJadeEmporiumPurchases = ""
+    # except:
+    #     logger.debug("Unable to retrieve Jade Emporium Upgrades to tell if Tuttle is unlocked. Defaulting to locked.")
+    #     rawJadeEmporiumPurchases = ""
 
-    if "D" in list(rawJadeEmporiumPurchases):  # Capital D is the value indicating the new Critter bonus has been purchased from Jade Emporium
+    if "New Critter" in session_data.account.jade_emporium_purchases:
         return [
             12,  # Index of the highest unlocked critter
             maxCritterTypes,  # Index of the highest critter possible

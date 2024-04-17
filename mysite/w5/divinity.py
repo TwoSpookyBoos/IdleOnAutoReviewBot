@@ -521,20 +521,20 @@ def setDivinityProgressionTier():
 
     #Offerings Info
     divinity_AdviceDict["Offerings"]["Available Offerings"].append(Advice(
-        label=f"{offeringsDict[lowOffering].get('Chance', 0)}% Offering: {getOfferingNameFromIndex(lowOffering)}",
-        picture_class=offeringsDict[lowOffering].get('Image'),
+        label=f"{offeringsDict.get(lowOffering, {}).get('Chance', 0)}% Offering: {getOfferingNameFromIndex(lowOffering)}",
+        picture_class=offeringsDict.get(lowOffering, {}).get('Image', ''),
     ))
     divinity_AdviceDict["Offerings"]["Available Offerings"].append(Advice(
-        label=f"{offeringsDict[highOffering].get('Chance', 0)}% Offering: {getOfferingNameFromIndex(highOffering)}",
-        picture_class=offeringsDict[highOffering].get('Image'),
+        label=f"{offeringsDict.get(highOffering, {}).get('Chance', 0)}% Offering: {getOfferingNameFromIndex(highOffering)}",
+        picture_class=offeringsDict.get(highOffering, {}).get('Image', ''),
     ))
     divinity_AdviceDict["Offerings"]["Strategy"].append(Advice(
         label=f"Option 1: Choose the high offering if 100% Chance, otherwise choose low offering.",
-        picture_class=offeringsDict[5].get('Image'),
+        picture_class=offeringsDict.get(5, {}).get('Image', ''),
     ))
     divinity_AdviceDict["Offerings"]["Strategy"].append(Advice(
         label=f"Option 2: Always choose low offering and pray 🙏",
-        picture_class=offeringsDict[0].get('Image'),
+        picture_class=offeringsDict.get(0, {}).get('Image', ''),
     ))
 
     #Points Styles Info
