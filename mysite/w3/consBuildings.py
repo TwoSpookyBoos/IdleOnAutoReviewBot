@@ -38,7 +38,7 @@ def getBuildingImageNameFromIndex(inputNumber):
 def getInfluencers():
     #Honker Vial level
     try:
-        honkerVialLevel = session_data.account.raw_data["CauldronInfo"][4]["40"]  #expected type of int
+        honkerVialLevel = int(session_data.account.raw_data["CauldronInfo"][4]["40"])  #expected type of int
         #logger.debug(f"TYPE CHECK honkerVialLevel: {type(honkerVialLevel)}: {honkerVialLevel}")
     except Exception as reason:
         honkerVialLevel = 0
@@ -46,7 +46,7 @@ def getInfluencers():
 
     #Boulder Roller level
     try:
-        poisonicLevel = safe_loads(session_data.account.raw_data["Tower"])[16]  #expected type of int
+        poisonicLevel = int(safe_loads(session_data.account.raw_data["Tower"])[16])  #expected type of int
         #logger.debug(f"TYPE CHECK poisonicLevel: {type(poisonicLevel)}: poisonicLevel")
     except Exception as reason:
         poisonicLevel = 0
