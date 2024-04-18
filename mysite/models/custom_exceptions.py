@@ -6,7 +6,6 @@ class BaseCustomException(Exception):
     msg_base = None
 
     def __init__(self, *args, reportable=True):
-        print('Starting BaseCustomException.__init__()')
         super().__init__(*args)
         self.msg_display = self.msg_base
         if reportable:
