@@ -129,3 +129,10 @@ $artifacts: (
 	the-shim-lantern: wiki("5/57/The_Shim_Lantern.png"),
 	the-winz-lantern: wiki("f/f6/The_Winz_Lantern.png")
 );
+
+$all-sailing: map-merge($captains, $captains);
+$all-sailing: map-merge($all-sailing, $boats);
+$all-sailing: map-merge($all-sailing, $effects);
+$all-sailing: map-merge($all-sailing, $chests);
+$all-sailing: map-merge($all-sailing, $treasures);
+$all-sailing: map-merge($all-sailing, $artifacts);

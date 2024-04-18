@@ -2178,7 +2178,7 @@ $id-map: map-merge($equinox, $id-map);
 $id-map: map-merge($meals, $id-map);
 $id-map: map-merge($talents, $id-map);
 $id-map: map-merge($divinity-map, $id-map);
-$id-map: map-merge($sailing, $id-map);
+$id-map: map-merge($all-sailing, $id-map);
 
 @each $class, $link in $id-map {
 	.#{$class}::before {
