@@ -100,7 +100,7 @@ def section_beanstalk():
         advices=[
             Advice(
                 label="Buy \"Supersized Gold Beanstacking\" from the Jade Emporium",
-                picture_class="jade-vendor"
+                picture_class="supersized-gold-beanstacking"
             )
         ]
     )

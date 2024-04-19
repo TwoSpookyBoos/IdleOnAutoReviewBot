@@ -679,8 +679,6 @@ class Account:
         self.jade_emporium_purchases = []
         try:
             raw_emporium_purchases = safe_loads(self.raw_data["Ninja"])[102][9]
-            if raw_emporium_purchases is None:
-                jade_emporium_purchases = []
             if isinstance(raw_emporium_purchases, str):
                 raw_emporium_purchases = list(raw_emporium_purchases)
                 for purchaseLetter in raw_emporium_purchases:
@@ -690,7 +688,7 @@ class Account:
                     except:
                         continue
         except:
-            jade_emporium_purchases = []
+            pass
 
         self.max_toon_count = 10  # OPTIMIZE: find a way to read this from somewhere
 

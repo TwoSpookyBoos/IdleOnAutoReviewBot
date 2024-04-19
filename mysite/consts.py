@@ -1478,3 +1478,21 @@ jade_emporium = [
     "bonus": "Adds 3 new Jewels to unlock at the Jewel Spinner in W4 Town. Or, get one for free every 700 total Lab LV as shown in Rift Skill Mastery."
   }
 ]
+
+stamp_maxes = {
+    #Combat
+    #Skill
+    "Mason Jar Stamp": 160,
+    "Lil' Mining Baggy Stamp": 300,
+    "Choppin' Bag Stamp": 320,
+    "Matty Bag Stamp": 410,  #420 is possible but exploity
+    "Bag o Heads Stamp": 224,
+    "Bugsack Stamp": 224,
+    "Drippy Drop Stamp": 155,
+    "Cooked Meal Stamp": 465,
+    "Ladle Stamp": 320,
+    "Multitool": 220,
+    #Misc
+    "Crystallin": 270,
+    "Forge Stamp": 230,
+}

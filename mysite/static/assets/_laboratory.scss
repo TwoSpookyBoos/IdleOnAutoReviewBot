@@ -1,0 +1,14 @@
+$nodes: (
+    certified-stamp-book: wiki("2/29/Certified_Stamp_Book_Lab_Bonus.png"),
+);
+
+$jewels: (
+    pure-opal-navette: wiki('9/9a/Console_Jewel_Pure_Opal_Navette.png'),
+);
+
+$chips: (
+    silkrode-nanochip: wiki('6/6e/Lab_-_Silkrode_Nanochip.png'),
+);
+
+$all-laboratory: map-merge($nodes, $jewels);
+$all-laboratory: map-merge($all-laboratory, $chips);

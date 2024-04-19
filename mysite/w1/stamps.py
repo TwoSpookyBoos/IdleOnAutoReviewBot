@@ -1,8 +1,8 @@
-from models.models import AdviceSection, AdviceGroup, Advice
+from models.models import AdviceSection, AdviceGroup, Advice, Character
 from utils.text_formatting import pl
 from utils.data_formatting import safe_loads
 from utils.logging import get_logger
-from consts import maxTiersPerGroup, stamps_progressionTiers
+from consts import maxTiersPerGroup, stamps_progressionTiers, stamp_maxes
 from flask import g as session_data
 
 logger = get_logger(__name__)
@@ -67,6 +67,99 @@ def getCapacityExclusions(priorityStampsDict: dict):
     if priorityStampsDict['Crystallin'] >= 250 and priorityStampsDict['Multitool Stamp'] >= 210:
         exclusionsDict['Mason Jar Stamp'] = True
     return exclusionsDict
+
+def getCapacityAdviceGroup(priorityStampsDict: dict) -> AdviceGroup:
+    capacity_Advices = {"Stamps": [], "Account Wide": [], "Character Specific": []}
+    #Stamps
+    capacity_Advices["Stamps"].append(Advice(
+        label="\"Level Exemption\" from Jade Emporium",
+        picture_class="level-exemption",
+        progression=1 if "Level Exemption" in session_data.account.jade_emporium_purchases else 0,
+        goal=1
+    ))
+    capacity_Advices["Stamps"].append(Advice(
+        label="Certified Stamp Book bonus active in W4 Laboratory",
+        picture_class="certified-stamp-book",
+    ))
+    capacity_Advices["Stamps"].append(Advice(
+        label="Pure Opal Navette jewel active in W4 Laboratory",
+        picture_class="pure-opal-navette",
+    ))
+    capacity_Advices["Stamps"].append(Advice(
+        label="Liqorice Rolle Pristine Charm in W6 Sneaking",
+        picture_class="liqorice-rolle",
+    ))
+    for capStamp in ["Mason Jar Stamp", "Lil' Mining Baggy Stamp", "Choppin' Bag Stamp", "Matty Bag Stamp", "Bag o Heads Stamp", "Bugsack Stamp"]:
+        capacity_Advices["Stamps"].append(Advice(
+            label=capStamp,
+            picture_class=capStamp,
+            progression=priorityStampsDict.get(capStamp, 0),
+            goal=stamp_maxes.get(capStamp, 999)
+        ))
+
+    #Account-Wide
+    capacity_Advices["Account Wide"].append(Advice(
+        label="Guild Bonus: Rucksack",
+        picture_class="rucksack"
+    ))
+    capacity_Advices["Account Wide"].append(Advice(
+        label="Pantheon Shrine",
+        picture_class="pantheon-shrine"
+    ))
+
+    #Character Specific
+    capacity_Advices["Character Specific"].append(Advice(
+        label="80 available Inventory Slots",
+        picture_class="totally-normal-and-not-fake-bag",
+    ))
+    capacity_Advices["Character Specific"].append(Advice(
+        label="Highest Type-Specific Capacity Bag crafted",
+        picture_class="herculean-matty-pouch",
+    ))
+    capacity_Advices["Character Specific"].append(Advice(
+        label="Starsign Doubler chip: Silkrode Nanochip",
+        picture_class="silkrode-nanochip",
+    ))
+    capacity_Advices["Character Specific"].append(Advice(
+        label="Mr No Sleep Starsign: 30%",
+        picture_class="",
+    ))
+    capacity_Advices["Character Specific"].append(Advice(
+        label="Pack Mule Starsign: 10%",
+        picture_class="",
+    ))
+    capacity_Advices["Character Specific"].append(Advice(
+        label="The OG Skiller Starsign: 5%",
+        picture_class="",
+    ))
+    capacity_Advices["Character Specific"].append(Advice(
+        label="REMOVE ZERG RUSHOGEN PRAYER",
+        picture_class="zerg-rushogen",
+    ))
+    capacity_Advices["Character Specific"].append(Advice(
+        label="Max level and equip Ruck Sack Prayer",
+        picture_class="ruck-sack",
+        goal=50
+    ))
+    capacity_Advices["Character Specific"].append(Advice(
+        label="Star Talent: Telekinetic Storage",
+        picture_class="telekinetic-storage",
+        goal=50
+    ))
+    capacity_Advices["Character Specific"].append(Advice(
+        label="Jman's Extra Bags talent (Materials only)",
+        picture_class="extra-bags",
+        goal=270
+    ))
+
+    #Build the AdviceGroup
+    capacity_AdviceGroup = AdviceGroup(
+        tier="",
+        pre_string="Info- Sources of Carry Capacity",
+        advices=capacity_Advices,
+        post_string="",
+    )
+    return capacity_AdviceGroup
 
 # Stamp p4
 def getReadableStampName(stampNumber, stampType):
@@ -486,6 +579,9 @@ def setStampProgressionTier() -> AdviceSection:
         tier=str(tier_RequiredSpecificStamps),
         pre_string=f"Improve high-priority stamp{pl([''] * adviceCountsDict['SpecificStamps'])}",
         advices=stamp_AdviceDict["SpecificStamps"])
+
+    # Capacity
+    stamp_AdviceGroupDict["Capacity"] = getCapacityAdviceGroup(playerPriorityStamps)
 
     #Generate AdviceSection
     tier_section = f"{overall_StampTier}/{max_tier}"

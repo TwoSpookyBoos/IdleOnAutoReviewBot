@@ -1,0 +1,30 @@
+$detection: ();
+
+$hats: ();
+
+$knowledge: ();
+
+$emporium: (
+    level-exemption: wiki('6/69/Emporium_Level_Exemption.png'),
+    science-crayon: wiki('f/f7/Emporium_Science_Crayon.png'),
+    gold-food-beanstalk: wiki('9/9d/Emporium_Gold_Food_Beanstalk.png'),
+    supersized-gold-beanstacking: wiki('1/1b/Emporium_Supersized_Gold_Beanstacking.png'),
+    papa-blobs-quality-guarantee: wiki("5/59/Emporium_Papa_Blob's_Quality_Guarantee.png"),
+    chef-geustloafs-cutting-edge-philosophy: wiki("d/de/Emporium_Chef_Geustloaf's_Cutting_Edge_Philosophy.png"),
+    sovereign-artifacts: wiki("f/f6/Emporium_Sovereign_Artifacts.png"),
+);
+
+$weapons: ();
+
+$charms: ();
+
+$pristine-charms: (
+    liqorice-rolle: wiki('d/da/Charm_Liqorice_Rolle.png'),
+);
+
+$all-sneaking: map-merge($detection, $hats);
+$all-sneaking: map-merge($all-sneaking, $knowledge);
+$all-sneaking: map-merge($all-sneaking, $emporium);
+$all-sneaking: map-merge($all-sneaking, $weapons);
+$all-sneaking: map-merge($all-sneaking, $charms);
+$all-sneaking: map-merge($all-sneaking, $pristine-charms);
