@@ -1131,6 +1131,8 @@ card_data = {
         "wolfA": ["Amarok", 1.5],
         "wolfB": ["Chaotic Amarok", 1.5],
         "wolfC": ["Radiant Amarok", 10],
+        "mini5a": ["Domeo Magmus", 4],
+        "mini6a": ["Demented Spiritlord", 5]
     },
     "Events": {
         "EasterEvent1": ["Egggulyte", 1.5],
