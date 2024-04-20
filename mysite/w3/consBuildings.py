@@ -1,5 +1,5 @@
 import copy
-from consts import buildingsPostBuffs_progressionTiers, buildingsPreBuffs_progressionTiers
+from consts import buildingsPostBuffs_progressionTiers, buildingsPreBuffs_progressionTiers, buildingsList
 from flask import g as session_data
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
@@ -13,17 +13,6 @@ def parseConsBuildingstoLists():
     #logger.debug(f"TYPE CHECK consBuildingsList: {type(consBuildingsList)}: {consBuildingsList}")
     return consBuildingsList
 
-def getBuildingNameFromIndex(inputNumber):
-    towerList = [
-        "3D Printer", "Talent Book Library", "Death Note", "Salt Lick", "Chest Space", "Cost Cruncher", "Trapper Drone", "Automation Arm", "Atom Collider",
-        "Pulse Mage", "Fireball Lobber", "Boulder Roller", "Frozone Malone", "Stormcaller", "Party Starter", "Kraken Cosplayer", "Poisonic Elder", "Voidinator",
-        "Woodular Shrine", "Isaccian Shrine", "Crystal Shrine", "Pantheon Shrine", "Clover Shrine", "Summereading Shrine", "Crescent Shrine", "Undead Shrine", "Primordial Shrine"]
-    try:
-        inputNumber = int(inputNumber)
-        return towerList[inputNumber]
-    except:
-        return f"UnknownBuilding{inputNumber}"
-
 def getBuildingImageNameFromIndex(inputNumber):
     towerImageNameList = ["three-d-printer", "talent-book-library", "death-note", "salt-lick", "chest-space", "cost-cruncher", "critter-drone",
                           "automation-arm", "atom-collider", "pulse-mage", "fireball-lobber", "boulder-roller", "frozone-malone", "stormcaller",
@@ -36,36 +25,11 @@ def getBuildingImageNameFromIndex(inputNumber):
         return f"UnknownBuilding{inputNumber}"
 
 def getInfluencers():
-    #Honker Vial level
-    try:
-        honkerVialLevel = session_data.account.alchemy_vials.get("Goosey Glug (Honker)", 0)
-        #logger.debug(f"TYPE CHECK honkerVialLevel: {type(honkerVialLevel)}: {honkerVialLevel}")
-    except Exception as reason:
-        honkerVialLevel = 0
-        logger.exception(f"Unable to retrieve honkerVialLevel: {reason}")
-
-    #Boulder Roller level
-    try:
-        poisonicLevel = int(safe_loads(session_data.account.raw_data["Tower"])[16])  #expected type of int
-        #logger.debug(f"TYPE CHECK poisonicLevel: {type(poisonicLevel)}: poisonicLevel")
-    except Exception as reason:
-        poisonicLevel = 0
-        logger.exception(f"Unable to retrieve poisonicLevel: {reason}")
-
-    #Other?
-    if session_data.account.construction_mastery_unlocked:
-        consMastery = True
-    else:
-        consMastery = False
-
-    atomCarbon = False
-    try:
-        carbonLevel = session_data.account.raw_data["Atoms"][5]
-        if carbonLevel >= 1:
-            atomCarbon = True
-    except Exception as reason:
-        logger.exception(f"Unable to find Atom Collider Carbon level: {reason}")
-    results = [(consMastery or atomCarbon), honkerVialLevel, poisonicLevel]
+    honkerVialLevel = session_data.account.alchemy_vials.get("Goosey Glug (Honker)", 0)
+    poisonicLevel = session_data.account.construction_buildings.get("Poisonic Elder", 0)
+    consMastery = session_data.account.construction_mastery_unlocked
+    carbonUnlocked = session_data.account.atoms.get("Carbon - Wizard Maximizer", 0) >= 1
+    results = [(consMastery or carbonUnlocked), honkerVialLevel, poisonicLevel]
     #logger.debug(f"Influencer results: EitherBuff: {results[0]}, Honker Vial Level: {results[1]}, Poisonic Tower Level: {results[2]}")
     return results
 
@@ -88,41 +52,55 @@ def setConsBuildingsProgressionTier():
     progressionTiersPreBuffs = copy.deepcopy(buildingsPreBuffs_progressionTiers)
     progressionTiersPostBuffs = copy.deepcopy(buildingsPostBuffs_progressionTiers)
     maxBuildingsPerGroup = 10
-    playerBuildings = parseConsBuildingstoLists()
+    playerBuildings = session_data.account.construction_buildings
     influencers = getInfluencers()
     hasBuffs = influencers[0]
     if hasBuffs:
         #maxLevelList = [10, 201, 51, 10, 25, 60, 45, 5, 200,    140, 140, 140, 140, 140, 140, 140, 140, 140,   200, 200, 200, 200, 200, 200, 200, 200, 200]  # these are true max, not recommended max
-        maxLevelList = [10, 101, 51, 10, 25, 60, 20, 5, 200,    70, 70, 70, 70, 90, 70, 90, 90, 40,             200, 200, 200, 200, 200, 200, 200, 200, 200]  # the recommended maxes
-        #logger.debug(" Either Construction Mastery and Wizard Atom found. Setting maxLevelList to PostBuff.")
+        #maxLevelList = [10, 101, 51, 10, 25, 60, 20, 5, 200,    70, 70, 70, 70, 90, 70, 90, 90, 40,             200, 200, 200, 200, 200, 200, 200, 200, 200]  # the recommended maxes
+        maxLevelDict = {
+            "3D Printer": 10, "Talent Book Library": 101, "Death Note": 51, "Salt Lick": 10, "Chest Space": 25,
+            "Cost Cruncher": 60, "Trapper Drone": 20, "Automation Arm": 5, "Atom Collider": 200,
+            "Pulse Mage": 70, "Fireball Lobber": 70, "Boulder Roller": 70, "Frozone Malone": 70, "Stormcaller": 90,
+            "Party Starter": 70, "Kraken Cosplayer": 90, "Poisonic Elder": 90, "Voidinator": 40,
+            "Woodular Shrine": 200, "Isaccian Shrine": 200, "Crystal Shrine": 200, "Pantheon Shrine": 200, "Clover Shrine": 200,
+            "Summereading Shrine": 200, "Crescent Shrine": 200, "Undead Shrine": 200, "Primordial Shrine": 200
+        }
     else:
-        maxLevelList = [10, 101, 51, 10, 25, 60, 15, 5, 200,    50, 50, 50, 50, 50, 50, 50, 50, 40,             100, 100, 100, 100, 100, 100, 100, 100, 100]
-        #logger.debug("ConsBuildings.setConsBuildingsProgressionTier~ INFO Setting maxLevelList to PreBuff.")
+        #maxLevelList = [10, 101, 51, 10, 25, 60, 15, 5, 200,    50, 50, 50, 50, 50, 50, 50, 50, 40,             100, 100, 100, 100, 100, 100, 100, 100, 100]
+        maxLevelDict = {
+            "3D Printer": 10, "Talent Book Library": 101, "Death Note": 51, "Salt Lick": 10, "Chest Space": 25,
+            "Cost Cruncher": 60, "Trapper Drone": 15, "Automation Arm": 5, "Atom Collider": 200,
+            "Pulse Mage": 50, "Fireball Lobber": 50, "Boulder Roller": 50, "Frozone Malone": 50, "Stormcaller": 50,
+            "Party Starter": 50, "Kraken Cosplayer": 50, "Poisonic Elder": 50, "Voidinator": 40,
+            "Woodular Shrine": 100, "Isaccian Shrine": 100, "Crystal Shrine": 100, "Pantheon Shrine": 100, "Clover Shrine": 100,
+            "Summereading Shrine": 100, "Crescent Shrine": 100, "Undead Shrine": 100, "Primordial Shrine": 100
+        }
 
     # Make adjustments to tiers based on other influencers
     # 1) If any building is level 0, it gets promoted to SS tier
-    for buildingCounter in range(0, len(maxLevelList)):
+    for reccBuildingName, reccBuildingLevel in maxLevelDict.items():
         #logger.debug(f"Is player level {playerBuildings[buildingCounter]} equal to 0 for Tower {buildingCounter} ({getBuildingNameFromIndex(buildingCounter)}): {playerBuildings[buildingCounter] == 0}")
-        if playerBuildings[buildingCounter] == 0:
-            maxLevelList[buildingCounter] = 1  #With a max recommended level of 1
+        if playerBuildings[reccBuildingName] == 0:
+            maxLevelDict[reccBuildingName] = 1  #With a max recommended level of 1
             for tier in progressionTiersPostBuffs:
-                if buildingCounter in tier[2] and tier[1] != "SS":
-                    tier[2].remove(buildingCounter)  #Remove that building from any other non-SS tier.
-                    progressionTiersPostBuffs[0][2].append(buildingCounter)
-                    logger.debug(f"Level 0 building detected. Removing {getBuildingNameFromIndex(buildingCounter)} from POSTBuff {tier[1]} and adding to SS with max level 1 instead.")
+                if reccBuildingName in tier[2] and tier[1] != "SS":
+                    tier[2].remove(reccBuildingName)  #Remove that building from any other non-SS tier.
+                    progressionTiersPostBuffs[0][2].append(reccBuildingName)
+                    logger.debug(f"Level 0 building detected. Removing {reccBuildingName} from POSTBuff {tier[1]} and adding to SS with max level 1 instead.")
             for tier in progressionTiersPreBuffs:
-                if buildingCounter in tier[2] and tier[1] != "SS":
-                    tier[2].remove(buildingCounter)  #Remove that building from any other non-SS tier.
-                    progressionTiersPreBuffs[0][2].append(buildingCounter)
-                    logger.debug(f"Level 0 building detected. Removing {getBuildingNameFromIndex(buildingCounter)} from PREBuff {tier[1]} and adding to SS with max level 1 instead.")
+                if reccBuildingName in tier[2] and tier[1] != "SS":
+                    tier[2].remove(reccBuildingName)  #Remove that building from any other non-SS tier.
+                    progressionTiersPreBuffs[0][2].append(reccBuildingName)
+                    logger.debug(f"Level 0 building detected. Removing {buildingsList[reccBuildingName]} from PREBuff {tier[1]} and adding to SS with max level 1 instead.")
 
     # 2) Honker vial is 12+ OR Trapper Drone is 20+, drop Trapper Drone priority
-    if influencers[1] >= 12 or playerBuildings[6] >= 20:
+    if influencers[1] >= 12 or playerBuildings.get("Trapper Drone", 0) >= 20:
         try:
-            progressionTiersPostBuffs[2][2].remove(6)  #Remove Trapper Drone from S Tier
-            progressionTiersPostBuffs[6][2].append(6)  #Add Trapper Drone to D tier
+            progressionTiersPostBuffs[2][2].remove("Trapper Drone")  #Remove Trapper Drone from S Tier
+            progressionTiersPostBuffs[6][2].append("Trapper Drone")  #Add Trapper Drone to D tier
             if hasBuffs:
-                maxLevelList[6] = 50
+                maxLevelDict["Trapper Drone"] = 50
             #logger.debug("Successfully moved Trapper Drone from PostBuff S to D tier and changed level from 20 to 50")
         except Exception as reason:
             logger.exception(f"Could not remove Trapper Drone from PostBuff S tier: {reason}")
@@ -131,58 +109,58 @@ def setConsBuildingsProgressionTier():
     if influencers[2] >= 20:
         try:
             #PreBuffs
-            progressionTiersPreBuffs[2][2].remove(11)  #Remove Boulder Roller from S tier
-            progressionTiersPreBuffs[6][2].append(11)  #Add Boulder Roller to D tier
+            progressionTiersPreBuffs[2][2].remove("Boulder Roller")  #Remove Boulder Roller from S tier
+            progressionTiersPreBuffs[6][2].append("Boulder Roller")  #Add Boulder Roller to D tier
             #logger.debug("Successfully moved Boulder Roller from PreBuff S to D tier because Poisonic 20+")
             #PostBuffs
-            progressionTiersPostBuffs[2][2].remove(11)  #Remove Boulder Roller from S tier
-            progressionTiersPostBuffs[3][2].append(11)  #Add Boulder Roller to A tier
+            progressionTiersPostBuffs[2][2].remove("Boulder Roller")  #Remove Boulder Roller from S tier
+            progressionTiersPostBuffs[3][2].append("Boulder Roller")  #Add Boulder Roller to A tier
             #logger.debug("Successfully moved Boulder Roller from PostBuff S to A tier because Poisonic 20+")
         except Exception as reason:
             logger.exception(f"Could not move Boulder Roller from S tier in one or both tierlists: {reason}")
 
     # 4) Talent Library Book 101+, drop priority
-    if playerBuildings[1] >= 101:
+    if playerBuildings.get("Talent Book Library", 0) >= 101:
         try:
-            progressionTiersPostBuffs[2][2].remove(1)  #Remove from S tier
-            progressionTiersPostBuffs[5][2].append(1)  #Add to C tier
+            progressionTiersPostBuffs[2][2].remove("Talent Book Library")  #Remove from S tier
+            progressionTiersPostBuffs[5][2].append("Talent Book Library")  #Add to C tier
             if hasBuffs:
-                maxLevelList[1] = 201
+                maxLevelDict["Talent Book Library"] = 201
             #logger.debug("Successfully moved 101+ Talent Library Book from PostBuff A to C tier.")
         except Exception as reason:
             logger.exception(f"Could not move 101+ Talent Library Book from PostBuff A tier to C tier: {reason}")
 
     # 5) #Basic Towers to 70, drop priority
-    for towerIndex in [12,14,9,10,11]:
-        if playerBuildings[towerIndex] >= 70:
+    for towerName in ["Frozone Malone", "Party Starter", "Pulse Mage", "Fireball Lobber", "Boulder Roller"]:
+        if playerBuildings.get(towerName, 0) >= 70:
             try:
-                progressionTiersPostBuffs[3][2].remove(towerIndex)  #Remove from A tier
-                progressionTiersPostBuffs[5][2].append(towerIndex)  #Add to C tier
+                progressionTiersPostBuffs[3][2].remove(towerName)  #Remove from A tier
+                progressionTiersPostBuffs[5][2].append(towerName)  #Add to C tier
                 if hasBuffs:
-                    maxLevelList[towerIndex] = 140
+                    maxLevelDict[towerName] = 140
                 #logger.info(f"Successfully moved 70+ basic tower from PostBuff A to C tier: {getBuildingNameFromIndex(towerIndex)})
             except Exception as reason:
-                logger.exception(f"Could not move 70+ basic tower {getBuildingNameFromIndex(towerIndex)} from PostBuff A tier to C tier: {reason}")
+                logger.exception(f"Could not move 70+ basic tower {towerName} from PostBuff A tier to C tier: {reason}")
 
     # 6) Fancy Towers to 90, drop priority
-    for towerIndex in [15,16,13]:
-        if playerBuildings[towerIndex] >= 90:
+    for towerName in ["Kraken Cosplayer", "Poisonic Elder", "Stormcaller"]:
+        if playerBuildings.get(towerName, 0) >= 90:
             for tierIndex in range(0, len(progressionTiersPostBuffs)):
-                if towerIndex in progressionTiersPostBuffs[tierIndex][2]:
-                    progressionTiersPostBuffs[tierIndex][2].remove(towerIndex)  #Remove from any existing tier (S for Kraken and Poison, A for Stormcaller)
-            progressionTiersPostBuffs[3][2].append(towerIndex)  #Add to A tier
+                if towerName in progressionTiersPostBuffs[tierIndex][2]:
+                    progressionTiersPostBuffs[tierIndex][2].remove(towerName)  #Remove from any existing tier (S for Kraken and Poison, A for Stormcaller)
+            progressionTiersPostBuffs[3][2].append(towerName)  #Add to A tier
             if hasBuffs:
-                maxLevelList[towerIndex] = 140
+                maxLevelDict[towerName] = 140
 
     # 7) Voidinator to 40, drop priority
-    if playerBuildings[17] >= 40:  #Voidinator scaling is very bad
+    if playerBuildings.get("Voidinator", 0) >= 40:  #Voidinator scaling is very bad
         try:
-            progressionTiersPreBuffs[4][2].remove(17)  #Remove from PreBuff B tier
-            progressionTiersPreBuffs[5][2].append(17)  #Add to C tier
-            progressionTiersPostBuffs[3][2].remove(17)  #Remove from PostBuff A tier
-            progressionTiersPostBuffs[5][2].append(17)  #Add to C tier
+            progressionTiersPreBuffs[4][2].remove("Voidinator")  #Remove from PreBuff B tier
+            progressionTiersPreBuffs[5][2].append("Voidinator")  #Add to C tier
+            progressionTiersPostBuffs[3][2].remove("Voidinator")  #Remove from PostBuff A tier
+            progressionTiersPostBuffs[5][2].append("Voidinator")  #Add to C tier
             if hasBuffs:
-                maxLevelList[17] = 140
+                maxLevelDict["Voidinator"] = 140
             #logger.debug("Successfully moved 30+ Voidinator from A/B to C tier in both tierlists")
         except Exception as reason:
             logger.exception(f"Could not move 30+ Voidinator from A/B to C tier in both tierlists: {reason}")
@@ -206,25 +184,20 @@ def setConsBuildingsProgressionTier():
         tierNamesList.append(progressionTiersToUse[counter][1])
         for recommendedBuilding in progressionTiersToUse[counter][2]:
             try:
-                if maxLevelList[recommendedBuilding] > playerBuildings[recommendedBuilding]:
+                if maxLevelDict.get(recommendedBuilding, 999) > playerBuildings.get(recommendedBuilding, 0):
                     if len(building_AdviceDict[counter]) < maxBuildingsPerGroup:
                         if progressionTiersToUse[counter][1] == "Unlock":
-                            building_AdviceDict[counter].append(
-                                Advice(
-                                    label=getBuildingNameFromIndex(recommendedBuilding),
-                                    picture_class=getBuildingImageNameFromIndex(recommendedBuilding))
-                            )
+                            building_AdviceDict[counter].append(Advice(
+                                    label=recommendedBuilding,
+                                    picture_class=getBuildingImageNameFromIndex(buildingsList.index(recommendedBuilding))
+                            ))
                         else:
-                            building_AdviceDict[counter].append(
-                                Advice(
-                                    label=getBuildingNameFromIndex(recommendedBuilding),
-                                    picture_class=getBuildingImageNameFromIndex(recommendedBuilding),
-                                    progression=str(playerBuildings[recommendedBuilding]),
-                                    goal=str(maxLevelList[recommendedBuilding]))
-                            )
-                else:
-                    #logger.debug(f"{progressionTiers[counter][1]} Tier: Max met for {getBuildingNameFromIndex(recommendedBuilding)}, not generating Advice")
-                    continue
+                            building_AdviceDict[counter].append(Advice(
+                                    label=recommendedBuilding,
+                                    picture_class=getBuildingImageNameFromIndex(buildingsList.index(recommendedBuilding)),
+                                    progression=str(playerBuildings.get(recommendedBuilding, 0)),
+                                    goal=str(maxLevelDict.get(recommendedBuilding, 999))
+                            ))
             except Exception as reason:
                 logger.exception(f"ProgressionTier evaluation error. Counter = {counter}, recommendedBuilding = {recommendedBuilding}, Reason: {reason}")
 

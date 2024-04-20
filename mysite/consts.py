@@ -333,23 +333,23 @@ deathNote_progressionTiers = [
 ]
 buildingsPostBuffs_progressionTiers = [
     [0, "Unlock", [], "", ""],
-    [1, "SS", [0, 5, 7], "", ""],
-    [2, "S", [1, 2, 3, 6, 11, 15, 16], "", ""],
-    [3, "A", [4, 9, 10, 12, 13, 14, 17, 22, 24, 25], "", ""],
-    [4, "B", [18, 19, 20, 21, 23, 26], "", ""],
-    [5, "C", [8], "", ""],
+    [1, "SS", ["3D Printer", "Cost Cruncher", "Automation Arm"], "", ""],
+    [2, "S", ["Talent Book Library", "Death Note", "Salt Lick", "Trapper Drone", "Boulder Roller", "Kraken Cosplayer", "Poisonic Elder"], "", ""],
+    [3, "A", ["Chest Space", "Pulse Mage", "Fireball Lobber", "Frozone Malone", "Stormcaller", "Party Starter", "Voidinator", "Clover Shrine", "Crescent Shrine", "Undead Shrine"], "", ""],
+    [4, "B", ["Woodular Shrine", "Isaccian Shrine", "Crystal Shrine", "Pantheon Shrine", "Summereading Shrine", "Atom Collider"], "", ""],
+    [5, "C", ["Primordial Shrine"], "", ""],
     [6, "D", [], "", ""],
     [7, "F", [], "", ""]
 ]
 buildingsPreBuffs_progressionTiers = [
     [0, "Unlock", [], "", ""],
-    [1, "SS", [0, 5, 7], "", ""],
-    [2, "S", [1, 2, 3, 6, 11, 15, 16], "", ""],
-    [3, "A", [4, 13, 14, 22, 24, 25], "", ""],
-    [4, "B", [12, 17], "", ""],
-    [5, "C", [8, 18, 19, 20, 21], "", ""],
-    [6, "D", [9, 10, 23], "", ""],
-    [7, "F", [26], "", ""]
+    [1, "SS", ["3D Printer", "Cost Cruncher", "Automation Arm"], "", ""],
+    [2, "S", ["Talent Book Library", "Death Note", "Salt Lick", "Trapper Drone", "Boulder Roller", "Kraken Cosplayer", "Poisonic Elder"], "", ""],
+    [3, "A", ["Chest Space", "Stormcaller", "Party Starter", "Clover Shrine", 24, "Undead Shrine"], "", ""],
+    [4, "B", ["Frozone Malone", "Voidinator"], "", ""],
+    [5, "C", ["Atom Collider", "Woodular Shrine", "Isaccian Shrine", "Crystal Shrine", "Pantheon Shrine"], "", ""],
+    [6, "D", ["Pulse Mage", "Fireball Lobber", "Summereading Shrine"], "", ""],
+    [7, "F", ["Primordial Shrine"], "", ""]
 ]
 prayers_progressionTiers = [
     #Tier, PrayerDict, 	Notes
@@ -1921,3 +1921,15 @@ def getReadableBubbleNames(inputNumber, color):
                 case _:
                     return f"Unknown Bubble {color} {inputNumber}"
 
+
+buildingsList = [
+    "3D Printer", "Talent Book Library", "Death Note", "Salt Lick", "Chest Space", "Cost Cruncher", "Trapper Drone", "Automation Arm", "Atom Collider",
+    "Pulse Mage", "Fireball Lobber", "Boulder Roller", "Frozone Malone", "Stormcaller", "Party Starter", "Kraken Cosplayer", "Poisonic Elder", "Voidinator",
+    "Woodular Shrine", "Isaccian Shrine", "Crystal Shrine", "Pantheon Shrine", "Clover Shrine", "Summereading Shrine", "Crescent Shrine", "Undead Shrine", "Primordial Shrine"
+]
+
+atomsList = [
+    "Hydrogen - Stamp Decreaser", "Helium - Talent Power Stacker", "Lithium - Bubble Insta Expander", "Beryllium - Post Office Penner",
+    "Boron - Particle Upgrader", "Carbon - Wizard Maximizer", "Nitrogen - Construction Trimmer", "Oxygen - Library Booker",
+    "Fluoride - Void Plate Chef", "Neon - Damage N' Cheapener", "Sodium - Snail Kryptonite"
+]

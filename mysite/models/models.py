@@ -11,7 +11,7 @@ from flask import g
 
 from utils.data_formatting import getCharacterDetails, safe_loads
 from consts import expectedStackables, greenstack_progressionTiers, card_data, maxMeals, maxMealLevel, jade_emporium, max_IndexOfVials, getReadableVialNames, \
-    max_IndexOfBubbles, getReadableBubbleNames
+    max_IndexOfBubbles, getReadableBubbleNames, buildingsList, atomsList
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, letterToNumber
 
 def session_singleton(cls):
@@ -703,6 +703,7 @@ class Account:
                     self.star_signs[signStatus] = int(self.star_signs[signStatus])
                 except:
                     self.star_signs[signStatus] = 0
+
         self.alchemy_vials = {}
         try:
             manualVialsAdded = 0
@@ -719,6 +720,7 @@ class Account:
                     self.alchemy_vials[getReadableVialNames(vialKey)] = 0
         except:
             pass
+
         self.alchemy_bubbles = {}
         try:
             raw_orange_alchemyBubblesDict = self.raw_data.get("CauldronInfo", [{}, {}, {}, {}])[0]
@@ -743,6 +745,23 @@ class Account:
                         self.alchemy_bubbles[getReadableBubbleNames(bubbleIndex, bubbleColor)] = 0
         except:
             pass
+
+        self.construction_buildings = {}
+        raw_buildings_list = safe_loads(self.raw_data.get("Tower", []))
+        for buildingIndex, buildingName in enumerate(buildingsList):
+            try:
+                self.construction_buildings[buildingName] = int(raw_buildings_list[buildingIndex])
+            except:
+                self.construction_buildings[buildingName] = 0
+        self.atoms = {}
+        raw_atoms_list = safe_loads(self.raw_data.get("Atoms", []))
+        if len(raw_atoms_list) >= 5:
+            raw_atoms_list = raw_atoms_list[5]
+        for atomIndex, atomName in enumerate(atomsList):
+            try:
+                self.atoms[atomName] = int(raw_atoms_list[atomIndex])
+            except:
+                self.atoms[atomName] = 0
 
 
     def _make_cards(self):
