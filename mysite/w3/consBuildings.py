@@ -92,7 +92,7 @@ def setConsBuildingsProgressionTier():
                 if reccBuildingName in tier[2] and tier[1] != "SS":
                     tier[2].remove(reccBuildingName)  #Remove that building from any other non-SS tier.
                     progressionTiersPreBuffs[0][2].append(reccBuildingName)
-                    logger.debug(f"Level 0 building detected. Removing {buildingsList[reccBuildingName]} from PREBuff {tier[1]} and adding to SS with max level 1 instead.")
+                    logger.debug(f"Level 0 building detected. Removing {reccBuildingName} from PREBuff {tier[1]} and adding to SS with max level 1 instead.")
 
     # 2) Honker vial is 12+ OR Trapper Drone is 20+, drop Trapper Drone priority
     if influencers[1] >= 12 or playerBuildings.get("Trapper Drone", 0) >= 20:
