@@ -38,7 +38,7 @@ def getBuildingImageNameFromIndex(inputNumber):
 def getInfluencers():
     #Honker Vial level
     try:
-        honkerVialLevel = int(session_data.account.raw_data["CauldronInfo"][4]["40"])  #expected type of int
+        honkerVialLevel = session_data.account.alchemy_vials.get("Goosey Glug (Honker)", 0)
         #logger.debug(f"TYPE CHECK honkerVialLevel: {type(honkerVialLevel)}: {honkerVialLevel}")
     except Exception as reason:
         honkerVialLevel = 0

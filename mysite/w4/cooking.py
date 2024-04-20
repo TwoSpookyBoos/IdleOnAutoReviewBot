@@ -102,16 +102,12 @@ def setCookingProgressionTier():
     voidwalkers = [toon for toon in session_data.account.all_characters if toon.elite_class == "Voidwalker"]
 
     try:
-        atomFlouride = session_data.account.raw_data.get("Atoms", [0,0,0,0,0])[8] >= 1
+        atomFlouride = session_data.account.raw_data.get("Atoms", [0]*9)[8] >= 1
     except:
         logger.exception(f"Unable to retrieve Atom Collider Flouride level. Defaulting to 0.")
         atomFlouride = False
 
-    try:
-        dchefLevel = session_data.account.raw_data.get("CauldronInfo")[3]["17"]
-    except:
-        logger.exception(f"Unable to retrieve Diamond Chef bubble level. Defaulting to 0.")
-        dchefLevel = 0
+    dchefLevel = session_data.account.alchemy_bubbles.get("Diamond Chef", 0)
 
     playerCookingList, playerMealsList, mealsUnlocked, mealsUnder11, mealsUnder30, playerMaxPlateLvl, playerMissingPlateUpgrades = parseJSON()
     playerTotalMealLevels = sum(playerMealsList[0])

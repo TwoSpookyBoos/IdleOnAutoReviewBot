@@ -1496,3 +1496,428 @@ stamp_maxes = {
     "Crystallin": 270,
     "Forge Stamp": 230,
 }
+
+max_IndexOfVials = 75
+max_IndexOfBubbles = 29
+def getReadableVialNames(inputNumber):
+    try:
+        inputNumber = int(inputNumber)
+    except:
+        return f"Unknown Vial {inputNumber}"
+    match inputNumber:
+        case 0:
+            return "Copper Corona (Copper Ore)"
+        case 1:
+            return "Sippy Splinters (Oak Logs)"
+        case 2:
+            return "Mushroom Soup (Spore Cap)"
+        case 3:
+            return "Spool Sprite (Thread)"
+        case 4:
+            return "Barium Mixture (Copper Bar)"
+        case 5:
+            return "Dieter Drink (Bean Slices)"
+        case 6:
+            return "Skinny 0 Cal (Snake Skin)"
+        case 7:
+            return "Thumb Pow (Trusty Nails)"
+        case 8:
+            return "Jungle Juice (Jungle Logs)"
+        case 9:
+            return "Barley Brew (Iron Bar)"
+        case 10:
+            return "Anearful (Glublin Ear)"
+        case 11:
+            return "Tea With Pea (Potty Rolls)"
+        case 12:
+            return "Gold Guzzle (Gold Ore)"
+        case 13:
+            return "Ramificoction (Bullfrog Horn)"
+        case 14:
+            return "Seawater (Goldfish)"
+        case 15:
+            return "Tail Time (Rats Tail)"
+        case 16:
+            return "Fly In My Drink (Fly)"
+        case 17:
+            return "Mimicraught (Megalodon Tooth)"
+        case 18:
+            return "Blue Flav (Platinum Ore)"
+        case 19:
+            return "Slug Slurp (Hermit Can)"
+        case 20:
+            return "Pickle Jar (BobJoePickle)"
+        case 21:
+            return "Fur Refresher (Floof Ploof)"
+        case 22:
+            return "Sippy Soul (Forest Soul)"
+        case 23:
+            return "Crab Juice (Crabbo)"
+        case 24:
+            return "Void Vial (Void Ore)"
+        case 25:
+            return "Red Malt (Redox Salts)"
+        case 26:
+            return "Ew Gross Gross (Mosquisnow)"
+        case 27:
+            return "The Spanish Sahara (Tundra Logs)"
+        case 28:
+            return "Poison Tincture (Poison Froge)"
+        case 29:
+            return "Etruscan Lager (Mamooth Tusk)"
+        case 30:
+            return "Chonker Chug (Dune Soul)"
+        case 31:
+            return "Bubonic Burp (Mousey)"
+        case 32:
+            return "Visible Ink (Pen)"
+        case 33:
+            return "Orange Malt (Explosive Salts)"
+        case 34:
+            return "Snow Slurry (Snow Ball)"
+        case 35:
+            return "Slowergy Drink (Frigid Soul)"
+        case 36:
+            return "Sippy Cup (Sippy Straw)"
+        case 37:
+            return "Bunny Brew (Bunny)"
+        case 38:
+            return "40-40 Purity (Contact Lense)"
+        case 39:
+            return "Shaved Ice (Purple Salt)"
+        case 40:
+            return "Goosey Glug (Honker)"
+        case 41:
+            return "Ball Pickle Jar (BallJoePickle)"
+        case 42:
+            return "Capachino (Purple Mush Cap)"
+        case 43:
+            return "Donut Drink (Half Eaten Donut)"
+        case 44:
+            return "Long Island Tea (Sand Shark)"
+        case 45:
+            return "Spook Pint (Squishy Soul)"
+        case 46:
+            return "Calcium Carbonate (Tongue Bone)"
+        case 47:
+            return "Bloat Draft (Blobfish)"
+        case 48:
+            return "Choco Milkshake (Crumpled Wrapper)"
+        case 49:
+            return "Pearl Seltzer (Pearler Shell)"
+        case 50:
+            return "Krakenade (Kraken)"
+        case 51:
+            return "Electrolyte (Condensed Zap)"
+        case 52:
+            return "Ash Agua (Suggma Ashes)"
+        case 53:
+            return "Maple Syrup (Maple Logs)"
+        case 54:
+            return "Hampter Drippy (Hampter)"
+        case 55:
+            return "Dreadnog (Dreadlo Bar)"
+        case 56:
+            return "Dusted Drink (Dust Mote)"
+        case 57:
+            return "Oj Jooce (Orange Slice)"
+        case 58:
+            return "Oozie Ooblek (Oozie Soul)"
+        case 59:
+            return "Venison Malt (Mongo Worm Slices)"
+        case 60:
+            return "Marble Mocha (Marble Ore)"
+        case 61:
+            return "Willow Sippy (Willow Logs)"
+        case 62:
+            return "Shinyfin Stew (Equinox Fish)"
+        case 63:
+            return "Dreamy Drink (Dream Particulate)"
+        case 64:
+            return "Ricecakorade (Rice Cake)"
+        case 65:
+            return "Ladybug Serum (Ladybug)"
+        case 66:
+            return "Flavorgil (Caulifish)"
+        case 67:
+            return "Greenleaf Tea (Leafy Branch)"
+        case 68:
+            return "Firefly Grog (Firefly)"
+        case 69:
+            return "Dabar Special (Godshard Bar)"
+        case 70:
+            return "Refreshment (Breezy Soul)"
+        case 71:
+            return "Gibbed Drink (Eviscerated Horn)"
+        case 72:
+            return "Ded Sap (Effervescent Log)"
+        case 73:
+            return "Royale Cola (Royal Headpiece)"
+        case 74:
+            return "Turtle Tisane (Tuttle)"
+        case _:
+            return f"Unknown Vial {inputNumber}"
+
+def getReadableBubbleNames(inputNumber, color):
+    try:
+        inputNumber = int(inputNumber)
+    except:
+        return f"Unknown Bubble {color} {inputNumber}"
+    match color:
+        case "Orange":
+            match inputNumber:
+                case 0:
+                    return "Roid Ragin"
+                case 1:
+                    return "Warriors Rule"
+                case 2:
+                    return "Hearty Diggy"
+                case 3:
+                    return "Wyoming Blood"
+                case 4:
+                    return "Reely Smart"
+                case 5:
+                    return "Big Meaty Claws"
+                case 6:
+                    return "Sploosh Sploosh"
+                case 7:
+                    return "Stronk Tools"
+                case 8:
+                    return "FMJ"
+                case 9:
+                    return "Bappity Boopity"
+                case 10:
+                    return "Brittley Spears"
+                case 11:
+                    return "Call Me Bob"
+                case 12:
+                    return "Carpenter"
+                case 13:
+                    return "Buff Boi Talent"
+                case 14:
+                    return "Orange Bargain"
+                case 15:
+                    return "Penny of Strength"
+                case 16:
+                    return "Multorange"
+                case 17:
+                    return "Dream of Ironfish"
+                case 18:
+                    return "Shimmeron"
+                case 19:
+                    return "Bite But Not Chew"
+                case 20:
+                    return "Spear Powah"
+                case 21:
+                    return "Slabi Orefish"
+                case 22:
+                    return "Gamer at Heart"
+                case 23:
+                    return "Slabi Strength"
+                case 24:
+                    return "Power Trione"
+                case 25:
+                    return "Farquad Force"
+                case 26:
+                    return "Endgame Eff I"
+                case 27:
+                    return "Tome Strength"
+                case 28:
+                    return "Essence Boost"
+                case 29:
+                    return "Crop Chapter"
+                case _:
+                    return f"Unknown Bubble {color} {inputNumber}"
+        case "Green":
+            match inputNumber:
+                case 0:
+                    return "Swift Steppin"
+                case 1:
+                    return "Archer or Bust"
+                case 2:
+                    return "Hammer Hammer"
+                case 3:
+                    return "Lil Big Damage"
+                case 4:
+                    return "Anvilnomics"
+                case 5:
+                    return "Quick Slap"
+                case 6:
+                    return "Sanic Tools"
+                case 7:
+                    return "Bug^2"
+                case 8:
+                    return "Shaquracy"
+                case 9:
+                    return "Cheap Shot"
+                case 10:
+                    return "Bow Jack"
+                case 11:
+                    return "Call Me Ash"
+                case 12:
+                    return "Cuz I Catch Em All"
+                case 13:
+                    return "Fast Boi Talent"
+                case 14:
+                    return "Green Bargain"
+                case 15:
+                    return "Dollar Of Agility"
+                case 16:
+                    return "Premigreen"
+                case 17:
+                    return "Fly in Mind"
+                case 18:
+                    return "Kill Per Kill"
+                case 19:
+                    return "Afk Expexp"
+                case 20:
+                    return "Bow Power"
+                case 21:
+                    return "Slabo Critterbug"
+                case 22:
+                    return "Sailor At Heart"
+                case 23:
+                    return "Slabo Agility"
+                case 24:
+                    return "Power Tritwo"
+                case 25:
+                    return "Quickdraw Quiver"
+                case 26:
+                    return "Essence Boost"
+                case 27:
+                    return "Endgame Eff II"
+                case 28:
+                    return "Tome Agility"
+                case 29:
+                    return "Stealth Chapter"
+                case _:
+                    return f"Unknown Bubble {color} {inputNumber}"
+        case "Purple":
+            match inputNumber:
+                case 0:
+                    return "Stable Jenius"
+                case 1:
+                    return "Mage is Best"
+                case 2:
+                    return "Hocus Choppus"
+                case 3:
+                    return "Molto Loggo"
+                case 4:
+                    return "Noodubble"
+                case 5:
+                    return "Name I Guess"
+                case 6:
+                    return "Le Brain Tools"
+                case 7:
+                    return "Cookin Roadkill"
+                case 8:
+                    return "Brewstachio"
+                case 9:
+                    return "All for Kill"
+                case 10:
+                    return "Matty Stafford"
+                case 11:
+                    return "Call Me Pope"
+                case 12:
+                    return "Gospel Leader"
+                case 13:
+                    return "Smart Boi Talent"
+                case 14:
+                    return "Purple Bargain"
+                case 15:
+                    return "Nickel Of Wisdom"
+                case 16:
+                    return "Severapurple"
+                case 17:
+                    return "Tree Sleeper"
+                case 18:
+                    return "Hyperswift"
+                case 19:
+                    return "Matrix Evolved"
+                case 20:
+                    return "Wand Pawur"
+                case 21:
+                    return "Slabe Logsoul"
+                case 22:
+                    return "Pious At Heart"
+                case 23:
+                    return "Slabe Wisdom"
+                case 24:
+                    return "Power Trithree"
+                case 25:
+                    return "Smarter Spells"
+                case 26:
+                    return "Endgame Eff III"
+                case 27:
+                    return "Essence Boost"
+                case 28:
+                    return "Tome Wisdom"
+                case 29:
+                    return "Essence Chapter"
+                case _:
+                    return f"Unknown Bubble {color} {inputNumber}"
+        case "Yellow":
+            match inputNumber:
+                case 0:
+                    return "Lotto Skills"
+                case 1:
+                    return "Droppin Loads"
+                case 2:
+                    return "Startue Exp"
+                case 3:
+                    return "Level Up Gift"
+                case 4:
+                    return "Prowesessary"
+                case 5:
+                    return "Stamp Tramp"
+                case 6:
+                    return "Undeveloped Costs"
+                case 7:
+                    return "Da Daily Drip"
+                case 8:
+                    return "Grind Time"
+                case 9:
+                    return "Laaarrrryyyy"
+                case 10:
+                    return "Cogs For Hands"
+                case 11:
+                    return "Sample It"
+                case 12:
+                    return "Big Game Hunter"
+                case 13:
+                    return "Ignore Overdues"
+                case 14:
+                    return "Yellow Bargain"
+                case 15:
+                    return "Mr Massacre"
+                case 16:
+                    return "Egg Ink"
+                case 17:
+                    return "Diamond Chef"
+                case 18:
+                    return "Card Champ"
+                case 19:
+                    return "Petting The Rift"
+                case 20:
+                    return "Boaty Bubble"
+                case 21:
+                    return "Big P"
+                case 22:
+                    return "Bit By Bit"
+                case 23:
+                    return "Gifts Abound"
+                case 24:
+                    return "Atom Split"
+                case 25:
+                    return "Cropius Mapper"
+                case 26:
+                    return "Essence Boost"
+                case 27:
+                    return "Hinge Buster"
+                case 28:
+                    return "Ninja Looter"
+                case 29:
+                    return "Lo Cost Mo Jade"
+                case _:
+                    return f"Unknown Bubble {color} {inputNumber}"
+

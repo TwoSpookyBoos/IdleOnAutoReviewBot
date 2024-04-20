@@ -3,7 +3,9 @@ from utils.text_formatting import pl
 from utils.data_formatting import safe_loads
 from utils.logging import get_logger
 from consts import maxTiersPerGroup, stamps_progressionTiers, stamp_maxes
+from math import ceil, pow
 from flask import g as session_data
+
 
 logger = get_logger(__name__)
 
@@ -82,7 +84,7 @@ def getCapacityAdviceGroup(priorityStampsDict: dict) -> AdviceGroup:
         picture_class="certified-stamp-book",
     ))
     capacity_Advices["Stamps"].append(Advice(
-        label="Pure Opal Navette jewel active in W4 Laboratory",
+        label="Pure Opal Navette jewel active in W4 Laboratory (lol jk, this is bugged)",
         picture_class="pure-opal-navette",
     ))
     capacity_Advices["Stamps"].append(Advice(
@@ -106,6 +108,19 @@ def getCapacityAdviceGroup(priorityStampsDict: dict) -> AdviceGroup:
         label="Pantheon Shrine",
         picture_class="pantheon-shrine"
     ))
+    silkrodeMulti = 2  #If owned. Look in ["Lab"][15] and figure out which one it is
+    seraphMulti = min(3, 1.1 ** ceil((max(session_data.account.all_skills.get('Summoning', [0])) + 1) / 20))
+    seraphValue = (30+10+5)*silkrodeMulti * seraphMulti  # 30+10+5 representing the three star signs that give carry cap
+    if bool(session_data.account.star_signs.get("Seraph_Cosmos", False)):
+        capacity_Advices["Account Wide"].append(Advice(
+            label=f"Seraph Cosmos Starsign: {seraphValue:.2f}%",
+            picture_class="",
+        ))
+    else:
+        capacity_Advices["Account Wide"].append(Advice(
+            label=f"Seraph Cosmos Starsign: Locked. Would grant {seraphValue:.2f}% if unlocked.",
+            picture_class="",
+        ))
 
     #Character Specific
     capacity_Advices["Character Specific"].append(Advice(
@@ -115,10 +130,6 @@ def getCapacityAdviceGroup(priorityStampsDict: dict) -> AdviceGroup:
     capacity_Advices["Character Specific"].append(Advice(
         label="Highest Type-Specific Capacity Bag crafted",
         picture_class="herculean-matty-pouch",
-    ))
-    capacity_Advices["Character Specific"].append(Advice(
-        label="Starsign Doubler chip: Silkrode Nanochip",
-        picture_class="silkrode-nanochip",
     ))
     capacity_Advices["Character Specific"].append(Advice(
         label="Mr No Sleep Starsign: 30%",
@@ -131,6 +142,10 @@ def getCapacityAdviceGroup(priorityStampsDict: dict) -> AdviceGroup:
     capacity_Advices["Character Specific"].append(Advice(
         label="The OG Skiller Starsign: 5%",
         picture_class="",
+    ))
+    capacity_Advices["Character Specific"].append(Advice(
+        label=f"Starsign Doubler chip: Silkrode Nanochip: {30+10+5}%",
+        picture_class="silkrode-nanochip",
     ))
     capacity_Advices["Character Specific"].append(Advice(
         label="REMOVE ZERG RUSHOGEN PRAYER",

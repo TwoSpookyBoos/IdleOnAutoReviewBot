@@ -10,9 +10,9 @@ from typing import Any
 from flask import g
 
 from utils.data_formatting import getCharacterDetails, safe_loads
-from consts import expectedStackables, greenstack_progressionTiers, card_data, maxMeals, maxMealLevel, jade_emporium
+from consts import expectedStackables, greenstack_progressionTiers, card_data, maxMeals, maxMealLevel, jade_emporium, max_IndexOfVials, getReadableVialNames, \
+    max_IndexOfBubbles, getReadableBubbleNames
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, letterToNumber
-
 
 def session_singleton(cls):
     def getinstance(*args, **kwargs):
@@ -691,6 +691,59 @@ class Account:
             pass
 
         self.max_toon_count = 10  # OPTIMIZE: find a way to read this from somewhere
+        self.star_signs = self.raw_data.get("StarSg", {})
+        if not isinstance(self.star_signs, dict):
+            try:
+                self.star_signs = safe_loads(self.star_signs)
+            except:
+                self.star_signs = {}
+        for signStatus in self.star_signs:
+            if not isinstance(self.star_signs[signStatus], int):
+                try:
+                    self.star_signs[signStatus] = int(self.star_signs[signStatus])
+                except:
+                    self.star_signs[signStatus] = 0
+        self.alchemy_vials = {}
+        try:
+            manualVialsAdded = 0
+            raw_alchemy_vials = self.raw_data.get("CauldronInfo", [0,0,0,0,{}])[4]
+            if "length" in raw_alchemy_vials:
+                del raw_alchemy_vials["length"]
+            while len(raw_alchemy_vials) < max_IndexOfVials:
+                raw_alchemy_vials[int(max_IndexOfVials - manualVialsAdded)] = 0
+                manualVialsAdded += 1
+            for vialKey, vialValue in raw_alchemy_vials.items():
+                try:
+                    self.alchemy_vials[getReadableVialNames(vialKey)] = int(vialValue)
+                except:
+                    self.alchemy_vials[getReadableVialNames(vialKey)] = 0
+        except:
+            pass
+        self.alchemy_bubbles = {}
+        try:
+            raw_orange_alchemyBubblesDict = self.raw_data.get("CauldronInfo", [{}, {}, {}, {}])[0]
+            raw_orange_alchemyBubblesDict.pop('length', None)
+            raw_green_alchemyBubblesDict = self.raw_data.get("CauldronInfo", [{}, {}, {}, {}])[1]
+            raw_green_alchemyBubblesDict.pop('length', None)
+            raw_purple_alchemyBubblesDict = self.raw_data.get("CauldronInfo", [{}, {}, {}, {}])[2]
+            raw_purple_alchemyBubblesDict.pop('length', None)
+            raw_yellow_alchemyBubblesDict = self.raw_data.get("CauldronInfo", [{}, {}, {}, {}])[3]
+            raw_yellow_alchemyBubblesDict.pop('length', None)
+            for bubbleDict, bubbleColor in [
+                (raw_orange_alchemyBubblesDict, "Orange"),
+                (raw_green_alchemyBubblesDict, "Green"),
+                (raw_purple_alchemyBubblesDict, "Purple"),
+                (raw_yellow_alchemyBubblesDict, "Yellow")
+            ]:
+                for bubbleIndex in bubbleDict:
+                    try:
+                        if int(bubbleIndex) <= max_IndexOfBubbles:
+                            self.alchemy_bubbles[getReadableBubbleNames(bubbleIndex, bubbleColor)] = int(bubbleDict[bubbleIndex])
+                    except:
+                        self.alchemy_bubbles[getReadableBubbleNames(bubbleIndex, bubbleColor)] = 0
+        except:
+            pass
+
 
     def _make_cards(self):
         card_counts = self.raw_data[self._key_cards]

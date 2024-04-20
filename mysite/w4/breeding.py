@@ -4,7 +4,7 @@ from utils.text_formatting import pl
 from utils.data_formatting import safe_loads
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import numberOfArtifacts, numberOfArtifactTiers, breeding_progressionTiers
+from consts import numberOfArtifacts, numberOfArtifactTiers, breeding_progressionTiers, getReadableVialNames
 
 logger = get_logger(__name__)
 shinyDaysList = [0, 3, 11, 33, 85, 200, 448, 964, 2013, 4107, 8227, 16234, 31633, 60989, 116522, 999999999]
@@ -49,18 +49,18 @@ def getShinyExclusions():
 
     try:
         critterVialsList = [
-            23,  #Crabbo
-            31,  #Mousey
-            37,  #Bunny
-            40,  #Honker
-            47,  #Blobfish
-            74,  #Tuttle
+            getReadableVialNames(23),  #Crabbo
+            getReadableVialNames(31),  #Mousey
+            getReadableVialNames(37),  #Bunny
+            getReadableVialNames(40),  #Honker
+            getReadableVialNames(47),  #Blobfish
+            getReadableVialNames(74),  #Tuttle
         ]
-        alchemyVialsDict = session_data.account.raw_data["CauldronInfo"][4]
-        for indexCounter in range(0, len(critterVialsList)):
-            if alchemyVialsDict[str(critterVialsList[indexCounter])] < 13:
+        alchemyVialsDict = session_data.account.alchemy_vials
+        for vialName in critterVialsList:
+            if alchemyVialsDict.get(vialName, 0) < 13:
                 break
-            elif indexCounter == len(critterVialsList)-1:
+            elif vialName == critterVialsList[-1]:
                 shinyExclusionsDict["Exclude-Critters"] = True
     except:
         logger.exception(f"Unable to get Critter Vials. Defaulting to INCLUDE Base Critter shiny pets.")
