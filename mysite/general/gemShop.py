@@ -297,6 +297,7 @@ def getBoughtGemShopItems():
             except:
                 logger.warning(f"Could not force {k}'s {type(v)} {v} to int. Setting to 0.")
                 gemShopDict[k] = 0
+    session_data.account.gemshop = gemShopDict
     return gemShopDict
 
 

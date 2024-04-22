@@ -1,3 +1,4 @@
+import copy
 import functools
 import json
 import re
@@ -11,7 +12,7 @@ from flask import g
 
 from utils.data_formatting import getCharacterDetails, safe_loads
 from consts import expectedStackables, greenstack_progressionTiers, card_data, maxMeals, maxMealLevel, jade_emporium, max_IndexOfVials, getReadableVialNames, \
-    max_IndexOfBubbles, getReadableBubbleNames, buildingsList, atomsList
+    max_IndexOfBubbles, getReadableBubbleNames, buildingsList, atomsList, prayersList, labChipsList, bribesList
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, letterToNumber
 
 def session_singleton(cls):
@@ -691,23 +692,28 @@ class Account:
             pass
 
         self.max_toon_count = 10  # OPTIMIZE: find a way to read this from somewhere
-        self.star_signs = self.raw_data.get("StarSg", {})
-        if not isinstance(self.star_signs, dict):
-            try:
-                self.star_signs = safe_loads(self.star_signs)
-            except:
-                self.star_signs = {}
-        for signStatus in self.star_signs:
-            if not isinstance(self.star_signs[signStatus], int):
+
+        self.star_signs = {}
+        raw_star_signs = safe_loads(self.raw_data.get("StarSg", {}))
+        for signStatus in raw_star_signs:
+            if not isinstance(raw_star_signs[signStatus], int):
                 try:
-                    self.star_signs[signStatus] = int(self.star_signs[signStatus])
+                    self.star_signs[signStatus] = int(raw_star_signs[signStatus])
                 except:
                     self.star_signs[signStatus] = 0
+
+        self.bribes = {}
+        raw_bribes_list = safe_loads(self.raw_data.get("BribeStatus", []))
+        for bribeIndex, bribeName in enumerate(bribesList):
+            try:
+                self.bribes[bribeName] = int(raw_bribes_list[bribeIndex])
+            except:
+                self.bribes[bribeName] = -1  # -1 means unavailable for purchase, 0 means available, and 1 means purchased
 
         self.alchemy_vials = {}
         try:
             manualVialsAdded = 0
-            raw_alchemy_vials = self.raw_data.get("CauldronInfo", [0,0,0,0,{}])[4]
+            raw_alchemy_vials = safe_loads(self.raw_data.get("CauldronInfo", [0,0,0,0,{}])[4])
             if "length" in raw_alchemy_vials:
                 del raw_alchemy_vials["length"]
             while len(raw_alchemy_vials) < max_IndexOfVials:
@@ -753,6 +759,7 @@ class Account:
                 self.construction_buildings[buildingName] = int(raw_buildings_list[buildingIndex])
             except:
                 self.construction_buildings[buildingName] = 0
+
         self.atoms = {}
         raw_atoms_list = safe_loads(self.raw_data.get("Atoms", []))
         if len(raw_atoms_list) >= 5:
@@ -763,6 +770,24 @@ class Account:
             except:
                 self.atoms[atomName] = 0
 
+        self.prayers = {}
+        raw_prayers_list = safe_loads(self.raw_data.get("PrayOwned", []))
+        for prayerIndex, prayerName in enumerate(prayersList):
+            try:
+                self.prayers[prayerName] = int(raw_prayers_list[prayerIndex])
+            except:
+                self.prayers[prayerName] = 0
+
+        self.gemshop = {}
+        self.labChips = {}
+        raw_labChips_list = safe_loads(self.raw_data.get("Lab", []))
+        if len(raw_labChips_list) >= 15:
+            raw_labChips_list = raw_labChips_list[15]
+        for labChipIndex, labChipName in enumerate(labChipsList):
+            try:
+                self.labChips[labChipName] = int(raw_labChips_list[labChipIndex])
+            except:
+                self.labChips[labChipName] = 0
 
     def _make_cards(self):
         card_counts = self.raw_data[self._key_cards]

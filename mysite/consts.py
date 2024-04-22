@@ -1479,6 +1479,14 @@ jade_emporium = [
   }
 ]
 
+bribesList = [
+    "Insider Trading", "Tracking Chips", "Mandatory Fire Sale", "Sleeping On the Job", "Artificial Demand", "The Art of the Deal",
+    "Overstock Regulations", "Double EXP Scheme", "Tagged Indicators", "Fossil Fuel Legislation", "Five Aces in the Deck", "Fake Teleport Tickets", "The Art of the Steal",
+    "Counterfeit Telepassports", "Weighted Marbles", "Changing the Code", "Taxidermied Cog Pouches", "Guild VIP Fraud", "Library Double Agent", "The Art of the Fail",
+    "Photoshopped Dmg Range", "Glitched Acc Formula", "Firewalled Defence", "Bottomless Bags", "AFKeylogging", "Guild GP Hack", "The Art of the Bail",
+    "Random Garbage", "Godlier Creation", "Fishermaster", "Muscles on Muscles", "Bottle Service", "Star Scraper", "The Art of the Grail",
+    "Artifact Pilfering", "Forge Cap Smuggling", "Gold from Lead", "Nugget Fabrication", "Divine PTS Miscounting", "Loot Table Tampering", "The Art of the Flail"
+]
 stamp_maxes = {
     #Combat
     #Skill
@@ -1933,3 +1941,90 @@ atomsList = [
     "Boron - Particle Upgrader", "Carbon - Wizard Maximizer", "Nitrogen - Construction Trimmer", "Oxygen - Library Booker",
     "Fluoride - Void Plate Chef", "Neon - Damage N' Cheapener", "Sodium - Snail Kryptonite"
 ]
+
+prayersList = [
+    "Big Brain Time (Forest Soul)", "Skilled Dimwit (Forest Soul)", "Unending Energy (Forest Soul)",
+    "Shiny Snitch (Forest Soul)", "Zerg Rushogen (Forest Soul)",
+    "Tachion of the Titans (Dune Soul)", "Balance of Precision (Dune Soul)", "Midas Minded (Dune Soul)", "Jawbreaker (Dune Soul)",
+    "The Royal Sampler (Rooted Soul)", "Antifun Spirit (Rooted Soul)", "Circular Criticals (Rooted Soul)", "Ruck Sack (Rooted Soul)",
+    "Fibers of Absence (Frigid Soul)", "Vacuous Tissue (Frigid Soul)", "Beefy For Real (Frigid Soul)",
+    "Balance of Pain (Squishy Soul)", "Balance of Proficiency (Squishy Soul)","Glitterbug (Squishy Soul)",
+]
+
+labChipsList = [
+    "Grounded Nanochip", "Grounded Motherboard", "Grounded Software", "Grounded Processor", "Potato Chip",
+    "Conductive Nanochip", "Conductive Motherboard", "Conductive Software", "Conductive Processor", "Chocolatey Chip",
+    "Galvanic Nanochip", "Galvanic Motherboard", "Galvanic Software", "Galvanic Processor", "Wood Chip",
+    "Silkrode Nanochip", "Silkrode Motherboard", "Silkrode Software", "Silkrode Processor", "Poker Chip",
+    "Omega Nanochip", "Omega Motherboard"
+]
+gemShopDict = {
+    #Inventory and Storage
+    'Item Backpack Space': 0,
+    'Storage Chest Space': 0,
+    'Carry Capacity': 0,
+    'Food Slot': 0,
+    'More Storage Space': 0,
+    'Card Presets': 0,
+
+    #Dailies N' Resets
+    'Daily Teleports': 0,
+    'Daily Minigame Plays': 0,
+
+    #Cards
+    'Extra Card Slot': 0,
+
+    #Goods & Services
+    'Weekly Dungeon Boosters': 0,
+
+    #World 1&2
+    'Infinity Hammer': 0,
+    'Brimstone Forge Slot': 0,
+    'Ivory Bubble Cauldrons': 0,
+    'Bleach Liquid Cauldrons': 0,
+    'Obol Storage Space': 0,
+    'Sigil Supercharge': 0,
+
+    #World 3
+    'Crystal 3d Printer': 0,
+    'More Sample Spaces': 0,
+    'Burning Bad Books': 0,
+    'Prayer Slots': 0,
+    'Zen Cogs': 0,
+    'Cog Inventory Space': 0,
+    'Tower Building Slots': 0,
+    'Fluorescent Flaggies': 0,
+
+    #World 4
+    'Royal Egg Cap': 0,
+    'Richelin Kitchen': 0,
+    'Souped Up Tube': 0,
+    'Pet Storage': 0,
+    'Fenceyard Space': 0,
+
+    #World 5
+    'Chest Sluggo': 0,
+    'Divinity Sparkie': 0,
+    'Golden Sprinkler': 0,
+    'Lava Sprouts': 0,
+
+    #World 6
+    'Plot of Land': 0,
+    'Pristine Charm': 0,
+    'Shroom Familiar': 0,
+    'Sand of Time': 0,
+    'Instagrow Generator': 0,
+    'Life Refill': 0,
+    'Compost Bag': 0,
+    'Summoner Stone': 0,
+
+    #Fomo
+    'FOMO-1': 0,
+    'FOMO-2': 0,
+    'FOMO-3': 0,
+    'FOMO-4': 0,
+    'FOMO-5': 0,
+    'FOMO-6': 0,
+    'FOMO-7': 0,
+    'FOMO-8': 0
+    }  # Default 0s

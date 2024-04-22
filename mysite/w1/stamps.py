@@ -72,6 +72,20 @@ def getCapacityExclusions(priorityStampsDict: dict):
 
 def getCapacityAdviceGroup(priorityStampsDict: dict) -> AdviceGroup:
     capacity_Advices = {"Stamps": [], "Account Wide": [], "Character Specific": []}
+
+    if session_data.account.labChips.get('Silkrode Nanochip', 0) > 0:
+        nanoEval = f"{session_data.account.labChips.get('Silkrode Nanochip',0)} owned. Already showing doubled value."
+        silkrodeMulti = 2
+    else:
+        nanoEval = "None Owned. Would double below signs if equipped."
+        silkrodeMulti = 1
+
+    seraphMulti = min(3, 1.1 ** ceil((max(session_data.account.all_skills.get('Summoning', [0])) + 1) / 20))
+    if bool(session_data.account.star_signs.get("Seraph_Cosmos", False)):
+        seraphEval = f"Already increasing other signs by {seraphMulti:.2f}x"
+    else:
+        seraphEval = f"Locked. Would increase below signs by {seraphMulti:.2f}x if unlocked."
+
     #Stamps
     capacity_Advices["Stamps"].append(Advice(
         label="\"Level Exemption\" from Jade Emporium",
@@ -80,16 +94,18 @@ def getCapacityAdviceGroup(priorityStampsDict: dict) -> AdviceGroup:
         goal=1
     ))
     capacity_Advices["Stamps"].append(Advice(
-        label="Certified Stamp Book bonus active in W4 Laboratory",
+        label="Lab Bonus: Certified Stamp Book",
         picture_class="certified-stamp-book",
     ))
     capacity_Advices["Stamps"].append(Advice(
-        label="Pure Opal Navette jewel active in W4 Laboratory (lol jk, this is bugged)",
+        label="Lab Jewel: Pure Opal Navette (lol jk, this is bugged)",
         picture_class="pure-opal-navette",
     ))
     capacity_Advices["Stamps"].append(Advice(
-        label="Liqorice Rolle Pristine Charm in W6 Sneaking",
+        label="Pristine Charm: Liqorice Rolle",
         picture_class="liqorice-rolle",
+        progression="TBD",
+        goal=1
     ))
     for capStamp in ["Mason Jar Stamp", "Lil' Mining Baggy Stamp", "Choppin' Bag Stamp", "Matty Bag Stamp", "Bag o Heads Stamp", "Bugsack Stamp"]:
         capacity_Advices["Stamps"].append(Advice(
@@ -101,70 +117,80 @@ def getCapacityAdviceGroup(priorityStampsDict: dict) -> AdviceGroup:
 
     #Account-Wide
     capacity_Advices["Account Wide"].append(Advice(
+        label="Bribe: Bottomless Bags",
+        picture_class="bottomless-bags",
+        progression=1 if session_data.account.bribes.get("Bottomless Bags") >= 1 else 0,
+        goal=1
+    ))
+    capacity_Advices["Account Wide"].append(Advice(
         label="Guild Bonus: Rucksack",
-        picture_class="rucksack"
+        picture_class="rucksack",
+        progression="🤔",
+        goal=50
     ))
     capacity_Advices["Account Wide"].append(Advice(
         label="Pantheon Shrine",
-        picture_class="pantheon-shrine"
+        picture_class="pantheon-shrine",
+        progression="🤔",
+        goal="∞"
     ))
-    silkrodeMulti = 2  #If owned. Look in ["Lab"][15] and figure out which one it is
-    seraphMulti = min(3, 1.1 ** ceil((max(session_data.account.all_skills.get('Summoning', [0])) + 1) / 20))
-    seraphValue = (30+10+5)*silkrodeMulti * seraphMulti  # 30+10+5 representing the three star signs that give carry cap
-    if bool(session_data.account.star_signs.get("Seraph_Cosmos", False)):
-        capacity_Advices["Account Wide"].append(Advice(
-            label=f"Seraph Cosmos Starsign: {seraphValue:.2f}%",
-            picture_class="",
-        ))
-    else:
-        capacity_Advices["Account Wide"].append(Advice(
-            label=f"Seraph Cosmos Starsign: Locked. Would grant {seraphValue:.2f}% if unlocked.",
-            picture_class="",
-        ))
+    capacity_Advices["Account Wide"].append(Advice(
+        label="Gem Shop: Carry Capacity",
+        picture_class="carry-capacity",
+        progression=session_data.account.gemshop.get("Carry Capacity", 0),
+        goal=10
+    ))
+    capacity_Advices["Account Wide"].append(Advice(
+        label=f"Starsign: Seraph Cosmos: {seraphEval}",
+        picture_class="",
+    ))
 
     #Character Specific
     capacity_Advices["Character Specific"].append(Advice(
+        label=f"Lab Chip: Silkrode Nanochip: {nanoEval}",
+        picture_class="silkrode-nanochip",
+    ))
+    capacity_Advices["Character Specific"].append(Advice(
+        label=f"Starsign: Mr No Sleep: {30 * silkrodeMulti * seraphMulti:.2f}%",
+        picture_class="",
+    ))
+    capacity_Advices["Character Specific"].append(Advice(
+        label=f"Starsign: Pack Mule: {10 * silkrodeMulti * seraphMulti:.2f}%",
+        picture_class="",
+    ))
+    capacity_Advices["Character Specific"].append(Advice(
+        label=f"Starsign: The OG Skiller: {5 * silkrodeMulti * seraphMulti:.2f}%",
+        picture_class="",
+    ))
+
+    capacity_Advices["Character Specific"].append(Advice(
+        label="Jman's Extra Bags talent (Materials only)",
+        picture_class="extra-bags",
+        goal=270
+    ))
+    capacity_Advices["Character Specific"].append(Advice(
         label="80 available Inventory Slots",
-        picture_class="totally-normal-and-not-fake-bag",
+        picture_class="storage",
+        as_link=True
     ))
     capacity_Advices["Character Specific"].append(Advice(
         label="Highest Type-Specific Capacity Bag crafted",
         picture_class="herculean-matty-pouch",
     ))
     capacity_Advices["Character Specific"].append(Advice(
-        label="Mr No Sleep Starsign: 30%",
-        picture_class="",
-    ))
-    capacity_Advices["Character Specific"].append(Advice(
-        label="Pack Mule Starsign: 10%",
-        picture_class="",
-    ))
-    capacity_Advices["Character Specific"].append(Advice(
-        label="The OG Skiller Starsign: 5%",
-        picture_class="",
-    ))
-    capacity_Advices["Character Specific"].append(Advice(
-        label=f"Starsign Doubler chip: Silkrode Nanochip: {30+10+5}%",
-        picture_class="silkrode-nanochip",
-    ))
-    capacity_Advices["Character Specific"].append(Advice(
-        label="REMOVE ZERG RUSHOGEN PRAYER",
-        picture_class="zerg-rushogen",
-    ))
-    capacity_Advices["Character Specific"].append(Advice(
-        label="Max level and equip Ruck Sack Prayer",
+        label="Prayer: Ruck Sack",
         picture_class="ruck-sack",
+        progression=session_data.account.prayers.get("Ruck Sack (Rooted Soul)", 0),
         goal=50
+    ))
+    capacity_Advices["Character Specific"].append(Advice(
+        label="PRAYER: REMOVE ZERG RUSHOGEN",
+        picture_class="zerg-rushogen",
     ))
     capacity_Advices["Character Specific"].append(Advice(
         label="Star Talent: Telekinetic Storage",
         picture_class="telekinetic-storage",
         goal=50
-    ))
-    capacity_Advices["Character Specific"].append(Advice(
-        label="Jman's Extra Bags talent (Materials only)",
-        picture_class="extra-bags",
-        goal=270
     ))
 
     #Build the AdviceGroup
@@ -175,6 +201,41 @@ def getCapacityAdviceGroup(priorityStampsDict: dict) -> AdviceGroup:
         post_string="",
     )
     return capacity_AdviceGroup
+
+def getCostReductionAdviceGroup() -> AdviceGroup:
+    costReduction_Advices = {"Vials": [], "Uncapped": []}
+    costReduction_Advices["Vials"].append(Advice(
+        label="The total reduction of both Vials added together is hardcapped at 95%",
+        picture_class=""
+    ))
+    costReduction_Advices["Vials"].append(Advice(
+        label="Vial: Blue Flav (Platinum Ore)",
+        picture_class="platinum-ore",
+        progression=session_data.account.alchemy_vials.get("Blue Flav (Platinum Ore)", 0),
+        goal=13
+    ))
+    costReduction_Advices["Vials"].append(Advice(
+        label="Vial: Venison Malt (Mongo Worm Slices)",
+        picture_class="mongo-worm-slices",
+        progression=session_data.account.alchemy_vials.get("Venison Malt (Mongo Worm Slices)", 0),
+        goal=13
+    ))
+
+    costReduction_Advices["Uncapped"].append(Advice(
+        label="Sigil: Envelope Pile",
+        picture_class="envelope-pile",
+        progression="🤔",
+        goal=3
+    ))
+
+    # Build the AdviceGroup
+    costReduction_AdviceGroup = AdviceGroup(
+        tier="",
+        pre_string="Info- Sources of Stamp Cost Reduction",
+        advices=costReduction_Advices,
+        post_string="",
+    )
+    return costReduction_AdviceGroup
 
 # Stamp p4
 def getReadableStampName(stampNumber, stampType):
@@ -597,6 +658,7 @@ def setStampProgressionTier() -> AdviceSection:
 
     # Capacity
     stamp_AdviceGroupDict["Capacity"] = getCapacityAdviceGroup(playerPriorityStamps)
+    stamp_AdviceGroupDict["CostReduction"] = getCostReductionAdviceGroup()
 
     #Generate AdviceSection
     tier_section = f"{overall_StampTier}/{max_tier}"
