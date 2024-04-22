@@ -696,11 +696,10 @@ class Account:
         self.star_signs = {}
         raw_star_signs = safe_loads(self.raw_data.get("StarSg", {}))
         for signStatus in raw_star_signs:
-            if not isinstance(raw_star_signs[signStatus], int):
-                try:
-                    self.star_signs[signStatus] = int(raw_star_signs[signStatus])
-                except:
-                    self.star_signs[signStatus] = 0
+            try:
+                self.star_signs[signStatus] = int(raw_star_signs[signStatus])
+            except:
+                self.star_signs[signStatus] = 0
 
         self.bribes = {}
         raw_bribes_list = safe_loads(self.raw_data.get("BribeStatus", []))

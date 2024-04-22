@@ -1929,6 +1929,9 @@ def getReadableBubbleNames(inputNumber, color):
                 case _:
                     return f"Unknown Bubble {color} {inputNumber}"
 
+starsignsList = [
+
+]
 
 buildingsList = [
     "3D Printer", "Talent Book Library", "Death Note", "Salt Lick", "Chest Space", "Cost Cruncher", "Trapper Drone", "Automation Arm", "Atom Collider",

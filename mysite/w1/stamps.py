@@ -9,6 +9,12 @@ from flask import g as session_data
 
 logger = get_logger(__name__)
 
+def ceilUpToBase(inputValue: int, base: int) -> int:
+    toReturn = base
+    while toReturn <= inputValue:
+        toReturn += base
+    return toReturn
+
 # Stamp p1
 def setStampLevels(inputIndex):
     totalStampLevels = 0
@@ -74,17 +80,25 @@ def getCapacityAdviceGroup(priorityStampsDict: dict) -> AdviceGroup:
     capacity_Advices = {"Stamps": [], "Account Wide": [], "Character Specific": []}
 
     if session_data.account.labChips.get('Silkrode Nanochip', 0) > 0:
-        nanoEval = f"{session_data.account.labChips.get('Silkrode Nanochip',0)} owned. Already showing doubled value."
+        nanoEval = f"{session_data.account.labChips.get('Silkrode Nanochip',0)} owned. Doubles starsigns when equipped."
         silkrodeMulti = 2
     else:
-        nanoEval = "None Owned. Would double below signs if equipped."
+        nanoEval = "None Owned. Would double other signs if equipped."
         silkrodeMulti = 1
 
     seraphMulti = min(3, 1.1 ** ceil((max(session_data.account.all_skills.get('Summoning', [0])) + 1) / 20))
+    seraphGoal = min(239, ceilUpToBase(max(session_data.account.all_skills.get('Summoning', [0]))+1, 20)-1)
     if bool(session_data.account.star_signs.get("Seraph_Cosmos", False)):
-        seraphEval = f"Already increasing other signs by {seraphMulti:.2f}x"
+        seraphEval = f"Increases other signs by {seraphMulti:.2f}x."
     else:
         seraphEval = f"Locked. Would increase below signs by {seraphMulti:.2f}x if unlocked."
+    if seraphGoal < 239:
+        seraphEval += " Next multi increase at level"
+    starsignBase = 0
+    starsignBase += 30 * bool(session_data.account.star_signs.get("Mr_No_Sleep", False))
+    starsignBase += 10 * bool(session_data.account.star_signs.get("Pack_Mule", False))
+    starsignBase += 5 * bool(session_data.account.star_signs.get("The_OG_Skiller", False))
+    totalStarsignValue = starsignBase * silkrodeMulti * seraphMulti
 
     #Stamps
     capacity_Advices["Stamps"].append(Advice(
@@ -142,7 +156,9 @@ def getCapacityAdviceGroup(priorityStampsDict: dict) -> AdviceGroup:
     ))
     capacity_Advices["Account Wide"].append(Advice(
         label=f"Starsign: Seraph Cosmos: {seraphEval}",
-        picture_class="",
+        picture_class="seraph-cosmos",
+        progression=max(session_data.account.all_skills.get('Summoning', [0])),
+        goal=seraphGoal
     ))
 
     #Character Specific
@@ -151,15 +167,19 @@ def getCapacityAdviceGroup(priorityStampsDict: dict) -> AdviceGroup:
         picture_class="silkrode-nanochip",
     ))
     capacity_Advices["Character Specific"].append(Advice(
-        label=f"Starsign: Mr No Sleep: {30 * silkrodeMulti * seraphMulti:.2f}%",
-        picture_class="",
+        label=f"Starsign: Mr No Sleep: {30 * bool(session_data.account.star_signs.get('Mr_No_Sleep', False))}% base",
+        picture_class="mr-no-sleep",
     ))
     capacity_Advices["Character Specific"].append(Advice(
-        label=f"Starsign: Pack Mule: {10 * silkrodeMulti * seraphMulti:.2f}%",
-        picture_class="",
+        label=f"Starsign: Pack Mule: {10 * bool(session_data.account.star_signs.get('Pack_Mule', False))}% base",
+        picture_class="pack-mule",
     ))
     capacity_Advices["Character Specific"].append(Advice(
-        label=f"Starsign: The OG Skiller: {5 * silkrodeMulti * seraphMulti:.2f}%",
+        label=f"Starsign: The OG Skiller: {5 * bool(session_data.account.star_signs.get('The_OG_Skiller', False))}% base",
+        picture_class="the-og-skiller",
+    ))
+    capacity_Advices["Character Specific"].append(Advice(
+        label=f"Total Starsign Value: {totalStarsignValue:.2f}%",
         picture_class="",
     ))
 
@@ -226,6 +246,12 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
         picture_class="envelope-pile",
         progression="🤔",
         goal=3
+    ))
+    costReduction_Advices["Uncapped"].append(Advice(
+        label=f"Artifact: Chilled Yarn increases sigil by %x",
+        picture_class="chilled-yarn",
+        progression="🤔",
+        goal=4
     ))
 
     # Build the AdviceGroup
