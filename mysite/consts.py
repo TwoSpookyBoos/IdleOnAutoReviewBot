@@ -345,7 +345,7 @@ buildingsPreBuffs_progressionTiers = [
     [0, "Unlock", [], "", ""],
     [1, "SS", ["3D Printer", "Cost Cruncher", "Automation Arm"], "", ""],
     [2, "S", ["Talent Book Library", "Death Note", "Salt Lick", "Trapper Drone", "Boulder Roller", "Kraken Cosplayer", "Poisonic Elder"], "", ""],
-    [3, "A", ["Chest Space", "Stormcaller", "Party Starter", "Clover Shrine", 24, "Undead Shrine"], "", ""],
+    [3, "A", ["Chest Space", "Stormcaller", "Party Starter", "Clover Shrine", "Crescent Shrine", "Undead Shrine"], "", ""],
     [4, "B", ["Frozone Malone", "Voidinator"], "", ""],
     [5, "C", ["Atom Collider", "Woodular Shrine", "Isaccian Shrine", "Crystal Shrine", "Pantheon Shrine"], "", ""],
     [6, "D", ["Pulse Mage", "Fireball Lobber", "Summereading Shrine"], "", ""],
@@ -1929,23 +1929,28 @@ def getReadableBubbleNames(inputNumber, color):
                 case _:
                     return f"Unknown Bubble {color} {inputNumber}"
 
-starsignsList = [
+
+starsignsList: list[str] = [
 
 ]
 
-buildingsList = [
+buildingsList: list[str] = [
     "3D Printer", "Talent Book Library", "Death Note", "Salt Lick", "Chest Space", "Cost Cruncher", "Trapper Drone", "Automation Arm", "Atom Collider",
     "Pulse Mage", "Fireball Lobber", "Boulder Roller", "Frozone Malone", "Stormcaller", "Party Starter", "Kraken Cosplayer", "Poisonic Elder", "Voidinator",
     "Woodular Shrine", "Isaccian Shrine", "Crystal Shrine", "Pantheon Shrine", "Clover Shrine", "Summereading Shrine", "Crescent Shrine", "Undead Shrine", "Primordial Shrine"
 ]
 
-atomsList = [
+shrinesList: list[str] = [
+    "Woodular Shrine", "Isaccian Shrine", "Crystal Shrine", "Pantheon Shrine", "Clover Shrine", "Summereading Shrine", "Crescent Shrine", "Undead Shrine", "Primordial Shrine"
+]
+
+atomsList: list[str] = [
     "Hydrogen - Stamp Decreaser", "Helium - Talent Power Stacker", "Lithium - Bubble Insta Expander", "Beryllium - Post Office Penner",
     "Boron - Particle Upgrader", "Carbon - Wizard Maximizer", "Nitrogen - Construction Trimmer", "Oxygen - Library Booker",
     "Fluoride - Void Plate Chef", "Neon - Damage N' Cheapener", "Sodium - Snail Kryptonite"
 ]
 
-prayersList = [
+prayersList: list[str] = [
     "Big Brain Time (Forest Soul)", "Skilled Dimwit (Forest Soul)", "Unending Energy (Forest Soul)",
     "Shiny Snitch (Forest Soul)", "Zerg Rushogen (Forest Soul)",
     "Tachion of the Titans (Dune Soul)", "Balance of Precision (Dune Soul)", "Midas Minded (Dune Soul)", "Jawbreaker (Dune Soul)",
@@ -1954,7 +1959,7 @@ prayersList = [
     "Balance of Pain (Squishy Soul)", "Balance of Proficiency (Squishy Soul)","Glitterbug (Squishy Soul)",
 ]
 
-labChipsList = [
+labChipsList: list[str] = [
     "Grounded Nanochip", "Grounded Motherboard", "Grounded Software", "Grounded Processor", "Potato Chip",
     "Conductive Nanochip", "Conductive Motherboard", "Conductive Software", "Conductive Processor", "Chocolatey Chip",
     "Galvanic Nanochip", "Galvanic Motherboard", "Galvanic Software", "Galvanic Processor", "Wood Chip",
@@ -2031,3 +2036,47 @@ gemShopDict = {
     'FOMO-7': 0,
     'FOMO-8': 0
     }  # Default 0s
+
+pristineCharmsList: list[str] = [
+    "Sparkle Log", "Fruit Rolle", "Glowing Veil", "Cotton Candy", "Sugar Bomb",
+    "Gumm Eye", "Bubblegum Law", "Sour Wowzer", "Crystal Comb", "Rock Candy",
+    "Lollipop Law", "Taffy Disc", "Stick of Chew", "Treat Sack", "Gumm Stick",
+    "Lolly Flower", "Gumball Necklace", "Liqorice Rolle",
+]
+
+sigilsDict = {
+    "Big Muscle":       {"Index": 0,  "PlayerHours": 0, "Level": 0, "Requirements": [2, 100, 50000]},
+    "Pumped Kicks":     {"Index": 2,  "PlayerHours": 0, "Level": 0, "Requirements": [3, 150, 60000]},
+    "Odd Literarture":  {"Index": 4,  "PlayerHours": 0, "Level": 0, "Requirements": [5, 200, 70000]},
+    "Good Fortune":     {"Index": 6,  "PlayerHours": 0, "Level": 0, "Requirements": [8, 300, 90000]},
+    "Plunging Sword":   {"Index": 8,  "PlayerHours": 0, "Level": 0, "Requirements": [15, 700, 100000]},
+    "Wizardly Hat":     {"Index": 10, "PlayerHours": 0, "Level": 0, "Requirements": [24, 1250, 130000]},
+    "Envelope Pile":    {"Index": 12, "PlayerHours": 0, "Level": 0, "Requirements": [60, 2500, 160000]},
+    "Shiny Beacon":     {"Index": 14, "PlayerHours": 0, "Level": 0, "Requirements": [120, 4000, 200000]},
+    "Metal Exterior":   {"Index": 16, "PlayerHours": 0, "Level": 0, "Requirements": [250, 7000, 240000]},
+    "Two Starz":        {"Index": 18, "PlayerHours": 0, "Level": 0, "Requirements": [500, 10000, 280000]},
+    "Pipe Gauge":       {"Index": 20, "PlayerHours": 0, "Level": 0, "Requirements": [700, 12000, 320000]},
+    "Trove":            {"Index": 22, "PlayerHours": 0, "Level": 0, "Requirements": [1300, 14000, 400000]},
+    "Pea Pod":          {"Index": 24, "PlayerHours": 0, "Level": 0, "Requirements": [2100, 15000, 420000]},
+    "Tuft Of Hair":     {"Index": 26, "PlayerHours": 0, "Level": 0, "Requirements": [3000, 25000, 450000]},
+    "Emoji Veggie":     {"Index": 28, "PlayerHours": 0, "Level": 0, "Requirements": [4500, 33000, 480000]},
+    "Vip Parchment":    {"Index": 30, "PlayerHours": 0, "Level": 0, "Requirements": [6300, 42000, 520000]},
+    "Dream Catcher":    {"Index": 32, "PlayerHours": 0, "Level": 0, "Requirements": [7000, 50000, 560000]},
+    "Duster Studs":     {"Index": 34, "PlayerHours": 0, "Level": 0, "Requirements": [8000, 60000, 600000]},
+    "Garlic Glove":     {"Index": 36, "PlayerHours": 0, "Level": 0, "Requirements": [9000, 70000, 650000]},
+    "Lab Tesstube":     {"Index": 38, "PlayerHours": 0, "Level": 0, "Requirements": [12000, 80000, 700000]},
+    "Peculiar Vial":    {"Index": 40, "PlayerHours": 0, "Level": 0, "Requirements": [17000, 120000, 750000]},
+    "Loot Pile":        {"Index": 42, "PlayerHours": 0, "Level": 0, "Requirements": [23000, 160000, 900000]},
+    "Div Spiral":       {"Index": 44, "PlayerHours": 0, "Level": 0, "Requirements": [26000, 200000, 1200000]},
+    "Cool Coin":        {"Index": 46, "PlayerHours": 0, "Level": 0, "Requirements": [30000, 250000, 2000000]},
+}
+
+artifactsList = [
+    'Moai Head', 'Maneki Kat', 'Ruble Cuble', 'Fauxory Tusk', 'Gold Relic',
+    'Genie Lamp', 'Silver Ankh', 'Emerald Relic', 'Fun Hippoete', 'Arrowhead',
+    '10 AD Tablet', 'Ashen Urn', 'Amberite', 'Triagulon', 'Billcye Tri',
+    'Frost Relic', 'Chilled Yarn', 'Causticolumn', 'Jade Rock', 'Dreamcatcher',
+    'Gummy Orb', 'Fury Relic', 'Cloud Urn', 'Weatherbook', 'Giants Eye',
+    'Crystal Steak', 'Trilobite Rock', 'Opera Mask', 'Socrates', 'The True Lantern',
+    'The Onyx Lantern', 'The Shim Lantern', 'The Winz Lantern'
+]

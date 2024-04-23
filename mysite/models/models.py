@@ -12,7 +12,8 @@ from flask import g
 
 from utils.data_formatting import getCharacterDetails, safe_loads
 from consts import expectedStackables, greenstack_progressionTiers, card_data, maxMeals, maxMealLevel, jade_emporium, max_IndexOfVials, getReadableVialNames, \
-    max_IndexOfBubbles, getReadableBubbleNames, buildingsList, atomsList, prayersList, labChipsList, bribesList
+    max_IndexOfBubbles, getReadableBubbleNames, buildingsList, atomsList, prayersList, labChipsList, bribesList, shrinesList, pristineCharmsList, sigilsDict, \
+    artifactsList
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, letterToNumber
 
 def session_singleton(cls):
@@ -751,6 +752,40 @@ class Account:
         except:
             pass
 
+        self.alchemy_p2w = {
+            "Sigils": sigilsDict
+        }
+        raw_p2w_list = safe_loads(self.raw_data.get("CauldronP2W", []))
+        if raw_p2w_list:
+            for subElementIndex, subElementValue in enumerate(raw_p2w_list):
+                if not isinstance(subElementValue, list):
+                    raw_p2w_list[subElementIndex] = [subElementValue]
+            try:
+                self.alchemy_p2w["Cauldrons"] = raw_p2w_list[0]
+            except:
+                self.alchemy_p2w["Cauldrons"] = [0]*12
+            try:
+                self.alchemy_p2w["Liquids"] = raw_p2w_list[1]
+            except:
+                self.alchemy_p2w["Liquids"] = [0]*8
+            try:
+                self.alchemy_p2w["Vials"] = raw_p2w_list[2]
+            except:
+                self.alchemy_p2w["Vials"] = [0]*2
+            try:
+                self.alchemy_p2w["Player"] = raw_p2w_list[3]
+            except:
+                self.alchemy_p2w["Player"] = [0]*2
+            for sigilName in self.alchemy_p2w["Sigils"]:
+                try:
+                    self.alchemy_p2w["Sigils"][sigilName]["PlayerHours"] = float(raw_p2w_list[4][self.alchemy_p2w["Sigils"][sigilName]["Index"]])
+                    self.alchemy_p2w["Sigils"][sigilName]["Level"] = raw_p2w_list[4][self.alchemy_p2w["Sigils"][sigilName]["Index"]+1] + 1
+                    #Before the +1, -1 would mean not unlocked, 0 would mean Blue tier, 1 would be Yellow tier, and 2 would mean Red tier
+                    #After the +1, 0/1/2/3
+                except Exception as reason:
+                    print(f"{reason}")
+                    pass  #Already defaulted to 0s in consts.sigilsDict
+
         self.construction_buildings = {}
         raw_buildings_list = safe_loads(self.raw_data.get("Tower", []))
         for buildingIndex, buildingName in enumerate(buildingsList):
@@ -758,6 +793,28 @@ class Account:
                 self.construction_buildings[buildingName] = int(raw_buildings_list[buildingIndex])
             except:
                 self.construction_buildings[buildingName] = 0
+
+        self.shrines = {}
+        raw_shrines_list = safe_loads(self.raw_data.get("Shrine", []))
+        for shrineIndex, shrineName in enumerate(shrinesList):
+            try:
+                self.shrines[shrineName] = {
+                    "MapIndex": int(raw_shrines_list[shrineIndex][0]),
+                    1: int(raw_shrines_list[shrineIndex][1]),
+                    2: int(raw_shrines_list[shrineIndex][2]),
+                    "Level": int(raw_shrines_list[shrineIndex][3]),
+                    "Hours": float(raw_shrines_list[shrineIndex][4]),
+                    5: int(raw_shrines_list[shrineIndex][5])
+                }
+            except:
+                self.shrines[shrineName] = {
+                    "MapIndex": 0,
+                    1: 0,
+                    2: 0,
+                    "Level": 0,
+                    "Hours": 0.0,
+                    5: 0
+                }
 
         self.atoms = {}
         raw_atoms_list = safe_loads(self.raw_data.get("Atoms", []))
@@ -787,6 +844,27 @@ class Account:
                 self.labChips[labChipName] = int(raw_labChips_list[labChipIndex])
             except:
                 self.labChips[labChipName] = 0
+
+        self.pristine_charms = {}
+        raw_pristine_charms_list = safe_loads(self.raw_data.get("Ninja", []))
+        if raw_pristine_charms_list:
+            raw_pristine_charms_list = raw_pristine_charms_list[-1]
+        for pristineCharmIndex, pristineCharmName in enumerate(pristineCharmsList):
+            try:
+                self.pristine_charms[pristineCharmName] = bool(raw_pristine_charms_list[pristineCharmIndex])
+            except:
+                self.pristine_charms[pristineCharmName] = False
+
+        self.artifacts = {}
+        raw_artifacts_list = safe_loads(self.raw_data.get("Sailing", []))
+        raw_artifacts_list = safe_loads(raw_artifacts_list)  #Some users have needed to have data converted twice
+        self.sum_artifact_tiers = sum(raw_artifacts_list[3]) if raw_artifacts_list and len(raw_artifacts_list) >= 4 else 0
+        if raw_artifacts_list:
+            for artifactIndex, artifactName in enumerate(artifactsList):
+                try:
+                    self.artifacts[artifactName] = raw_artifacts_list[3][artifactIndex]
+                except:
+                    self.artifacts[artifactName] = 0
 
     def _make_cards(self):
         card_counts = self.raw_data[self._key_cards]

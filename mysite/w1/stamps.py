@@ -92,8 +92,9 @@ def getCapacityAdviceGroup(priorityStampsDict: dict) -> AdviceGroup:
         seraphEval = f"Increases other signs by {seraphMulti:.2f}x."
     else:
         seraphEval = f"Locked. Would increase below signs by {seraphMulti:.2f}x if unlocked."
+        seraphMulti = 1
     if seraphGoal < 239:
-        seraphEval += " Next multi increase at level"
+        seraphEval += " Next multi increase at Summoning level"
     starsignBase = 0
     starsignBase += 30 * bool(session_data.account.star_signs.get("Mr_No_Sleep", False))
     starsignBase += 10 * bool(session_data.account.star_signs.get("Pack_Mule", False))
@@ -102,7 +103,7 @@ def getCapacityAdviceGroup(priorityStampsDict: dict) -> AdviceGroup:
 
     #Stamps
     capacity_Advices["Stamps"].append(Advice(
-        label="\"Level Exemption\" from Jade Emporium",
+        label="Jade Emporium: Level Exemption",
         picture_class="level-exemption",
         progression=1 if "Level Exemption" in session_data.account.jade_emporium_purchases else 0,
         goal=1
@@ -118,7 +119,7 @@ def getCapacityAdviceGroup(priorityStampsDict: dict) -> AdviceGroup:
     capacity_Advices["Stamps"].append(Advice(
         label="Pristine Charm: Liqorice Rolle",
         picture_class="liqorice-rolle",
-        progression="TBD",
+        progression=int(session_data.account.pristine_charms.get("Liqorice Rolle", 0)),
         goal=1
     ))
     for capStamp in ["Mason Jar Stamp", "Lil' Mining Baggy Stamp", "Choppin' Bag Stamp", "Matty Bag Stamp", "Bag o Heads Stamp", "Bugsack Stamp"]:
@@ -145,7 +146,7 @@ def getCapacityAdviceGroup(priorityStampsDict: dict) -> AdviceGroup:
     capacity_Advices["Account Wide"].append(Advice(
         label="Pantheon Shrine",
         picture_class="pantheon-shrine",
-        progression="🤔",
+        progression=session_data.account.shrines.get("Pantheon Shrine", {}).get("Level", 0),
         goal="∞"
     ))
     capacity_Advices["Account Wide"].append(Advice(
@@ -207,13 +208,16 @@ def getCapacityAdviceGroup(priorityStampsDict: dict) -> AdviceGroup:
         label="PRAYER: REMOVE ZERG RUSHOGEN",
         picture_class="zerg-rushogen",
     ))
+    w3meritList = safe_loads(session_data.account.raw_data.get("TaskZZ2", []))
+    tkMaxLevel = w3meritList[2][3] * 5 if w3meritList else 0
     capacity_Advices["Character Specific"].append(Advice(
         label="Star Talent: Telekinetic Storage",
         picture_class="telekinetic-storage",
+        progression=tkMaxLevel,
         goal=50
     ))
 
-    for group_name in ["Stamps", "Account Wide"]:
+    for group_name in capacity_Advices:  #["Stamps", "Account Wide", "Character Specific"]:
         for advice in capacity_Advices[group_name]:
             mark_completed(advice)
 
@@ -256,18 +260,19 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     costReduction_Advices["Uncapped"].append(Advice(
         label="Sigil: Envelope Pile",
         picture_class="envelope-pile",
-        progression="🤔",
+        progression=session_data.account.alchemy_p2w.get("Sigils", {}).get("Envelope Pile", {}).get("Level", 0),
         goal=3
     ))
     costReduction_Advices["Uncapped"].append(Advice(
-        label=f"Artifact: Chilled Yarn increases sigil by %x",
+        label=f"Artifact: Chilled Yarn increases sigil by {1 + session_data.account.artifacts.get('Chilled Yarn', 0)}x",
         picture_class="chilled-yarn",
-        progression="🤔",
+        progression=session_data.account.artifacts.get("Chilled Yarn", 0),
         goal=4
     ))
 
-    for advice in costReduction_Advices["Vials"]:
-        mark_completed(advice)
+    for group_name in costReduction_Advices:
+        for advice in costReduction_Advices[group_name]:
+            mark_completed(advice)
 
     # Build the AdviceGroup
     costReduction_AdviceGroup = AdviceGroup(

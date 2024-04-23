@@ -444,11 +444,7 @@ def setAlchemyP2W() -> AdviceSection:
         if not isinstance(subElementValue, list):
             alchemyP2WList[subElementIndex] = [subElementValue]
 
-    bubbleCauldronSum = 0
     liquidCauldronSum = 0
-    vialsSum = 0
-    playerSum = 0
-    p2wSum = 0
     liquidCauldronsUnlocked = 1
 
     if highestAlchemyLevel >= 80:
@@ -461,11 +457,11 @@ def setAlchemyP2W() -> AdviceSection:
     bubbleCauldronMax = 4 * 375  # 4 cauldrons, 375 upgrades each
     liquidCauldronMax = 180 * liquidCauldronsUnlocked
     vialsMax = 15 + 45  # 15 attempts, 45 RNG
-    bubbleCauldronSum = sum(alchemyP2WList[0])
-    vialsSum = sum(alchemyP2WList[2])
-    playerSum = sum(alchemyP2WList[3])
-    if isinstance(alchemyP2WList[1], list):
-        for liquidEntry in alchemyP2WList[1]:  # Liquids are different. Any locked liquid cauldrons are stored as -1 which would throw off a simple sum
+    bubbleCauldronSum = sum(session_data.account.alchemy_p2w.get("Cauldrons"))
+    vialsSum = sum(session_data.account.alchemy_p2w.get("Vials"))
+    playerSum = sum(session_data.account.alchemy_p2w.get("Player"))
+    if isinstance(session_data.account.alchemy_p2w.get("Liquids"), list):
+        for liquidEntry in session_data.account.alchemy_p2w.get("Liquids"):  # Liquids are different. Any locked liquid cauldrons are stored as -1 which would throw off a simple sum
             if liquidEntry != -1:
                 liquidCauldronSum += liquidEntry
 

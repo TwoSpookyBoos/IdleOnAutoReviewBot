@@ -1,7 +1,7 @@
 @import "vars";
 @import "breeding";
 @import "bribes";
-@import "bubbles";
+@import "alchemy";
 @import "classes";
 @import "construction";
 @import "gem-shop";
@@ -11,7 +11,6 @@
 @import "slab-items";
 @import "storage-items";
 @import "talents";
-@import "vials";
 @import "world-contents";
 @import "boss-keys";
 @import "cards";
@@ -2167,13 +2166,11 @@ $character-classes: (
 
 $id-map: map-merge($skill-icons, $id-map);
 $id-map: map-merge($storage-items, $id-map);
-$id-map: map-merge($vials, $id-map);
 
 $id-map: map-merge($character-classes, $id-map);
 $id-map: map-merge($extra, $id-map);
 $id-map: map-merge($breeding-map, $id-map);
 $id-map: map-merge($bribes-map, $id-map);
-$id-map: map-merge($bubbles-map, $id-map);
 $id-map: map-merge($monsters, $id-map);
 $id-map: map-merge($boss-keys, $id-map);
 $id-map: map-merge($all-cards, $id-map);
@@ -2186,6 +2183,7 @@ $id-map: map-merge($all-sailing, $id-map);
 $id-map: map-merge($all-laboratory, $id-map);
 $id-map: map-merge($all-sneaking, $id-map);
 $id-map: map-merge($starsigns, $id-map);
+$id-map: map-merge($all-alchemy, $id-map);
 
 @each $class, $link in $id-map {
 	.#{$class}::before {
