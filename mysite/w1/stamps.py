@@ -213,6 +213,10 @@ def getCapacityAdviceGroup(priorityStampsDict: dict) -> AdviceGroup:
         goal=50
     ))
 
+    for group_name in ["Stamps", "Account Wide"]:
+        for advice in capacity_Advices[group_name]:
+            mark_completed(advice)
+
     #Build the AdviceGroup
     capacity_AdviceGroup = AdviceGroup(
         tier="",
@@ -221,6 +225,14 @@ def getCapacityAdviceGroup(priorityStampsDict: dict) -> AdviceGroup:
         post_string="",
     )
     return capacity_AdviceGroup
+
+
+def mark_completed(advice):
+    if advice.goal and advice.progression and advice.goal == advice.progression:
+        advice.progression = ""
+        advice.goal = "✔"
+        setattr(advice, "status", "complete")
+
 
 def getCostReductionAdviceGroup() -> AdviceGroup:
     costReduction_Advices = {"Vials": [], "Uncapped": []}
@@ -253,6 +265,9 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
         progression="🤔",
         goal=4
     ))
+
+    for advice in costReduction_Advices["Vials"]:
+        mark_completed(advice)
 
     # Build the AdviceGroup
     costReduction_AdviceGroup = AdviceGroup(
