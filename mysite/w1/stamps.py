@@ -150,6 +150,12 @@ def getCapacityAdviceGroup(priorityStampsDict: dict) -> AdviceGroup:
         goal="∞"
     ))
     capacity_Advices["Account Wide"].append(Advice(
+        label="Chaotic Chizoar card increases the capacity from Pantheon Shrine",
+        picture_class="chaotic-chizoar-card",
+        progression=next(c.getStars() for c in session_data.account.cards if c.name == "Chaotic Chizoar"),
+        goal=5
+    ))
+    capacity_Advices["Account Wide"].append(Advice(
         label="Gem Shop: Carry Capacity",
         picture_class="carry-capacity",
         progression=session_data.account.gemshop.get("Carry Capacity", 0),
@@ -207,6 +213,7 @@ def getCapacityAdviceGroup(priorityStampsDict: dict) -> AdviceGroup:
     capacity_Advices["Character Specific"].append(Advice(
         label="PRAYER: REMOVE ZERG RUSHOGEN",
         picture_class="zerg-rushogen",
+        goal="❌"
     ))
     w3meritList = safe_loads(session_data.account.raw_data.get("TaskZZ2", []))
     tkMaxLevel = w3meritList[2][3] * 5 if w3meritList else 0

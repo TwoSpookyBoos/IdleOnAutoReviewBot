@@ -1046,7 +1046,6 @@ card_data = {
         "w4c3": ["Flombeige", 28],
         "w4c4": ["Stilted Seeker", 30],
     },
-
     "Smolderin' Plateau": {
         "Crystal4": ["Crystal Capybara", 15],
         "w5a1": ["Suggma", 25],

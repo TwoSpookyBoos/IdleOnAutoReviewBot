@@ -866,6 +866,20 @@ class Account:
                 except:
                     self.artifacts[artifactName] = 0
 
+        # self.cardsDict = {}
+        # for cardset in card_data:  #Blunder Hills
+        #     self.cardsDict[cardset] = {}
+        #     for card in card_data[cardset]:  #Crystal0
+        #         decodedCardName = card_data[cardset][card][0]
+        #         self.cardsDict[decodedCardName] = {
+        #             "CodifiedName": card,
+        #             "CardSet": cardset,
+        #             "CardsOwned": safe_loads(self.raw_data[self._key_cards]).get(card, 0),
+        #             "LevelInt": 0,
+        #             "LevelString": "Unlock"
+        #         }
+
+
     def _make_cards(self):
         card_counts = self.raw_data[self._key_cards]
         if isinstance(card_counts, str):
