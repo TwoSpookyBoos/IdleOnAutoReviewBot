@@ -32,7 +32,7 @@ def getEquinoxDreams() -> dict:
 
 
 def all_owned_items() -> Assets:
-    name_quantity_key_pairs = tuple((f"InventoryOrder_{i}", f"ItemQTY_{i}") for i in range(session_data.account.playerCount)) + (("ChestOrder", "ChestQuantity"),)
+    name_quantity_key_pairs = tuple((f"InventoryOrder_{i}", f"ItemQTY_{i}") for i in range(session_data.account.safe_playerCount)) + (("ChestOrder", "ChestQuantity"),)
     all_stuff_owned = defaultdict(int)
 
     for codename in gstackable_codenames:

@@ -13,7 +13,7 @@ from flask import g
 from utils.data_formatting import getCharacterDetails, safe_loads
 from consts import expectedStackables, greenstack_progressionTiers, card_data, maxMeals, maxMealLevel, jade_emporium, max_IndexOfVials, getReadableVialNames, \
     max_IndexOfBubbles, getReadableBubbleNames, buildingsList, atomsList, prayersList, labChipsList, bribesList, shrinesList, pristineCharmsList, sigilsDict, \
-    artifactsList
+    artifactsList, guildBonusesList, labBonusesList
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, letterToNumber
 
 def session_singleton(cls):
@@ -27,8 +27,8 @@ def session_singleton(cls):
 
 class Equipment:
     def __init__(self, raw_data, toon_index):
-        order = raw_data[f"EquipOrder_{toon_index}"]
-        quantity = raw_data[f"EquipQTY_{toon_index}"]
+        order = raw_data.get(f"EquipOrder_{toon_index}", [])
+        quantity = raw_data.get(f"EquipQTY_{toon_index}", [])
         groups = list()
         for o, q in zip(order, quantity):
             o.pop("length", None)
@@ -100,10 +100,10 @@ class Character:
             }
             for name in ("ZOW", "CHOW", "MEOW")
         }
-
-        self.equipment = Equipment(raw_data, character_index)
-
-
+        if self.combat_level >= 1:
+            self.equipment = Equipment(raw_data, character_index)
+        else:
+            self.equipment = None
 
     def addUnmetApoc(self, apocType: str, apocRating: str, mapInfoList: list):
         self.apoc_dict[apocType][apocRating].append(mapInfoList)
@@ -122,8 +122,10 @@ class Character:
 
     def setDivinityStyle(self, styleName: str):
         self.divinity_style = styleName
+
     def setDivinityLink(self, linkName: str):
         self.divinity_link = linkName
+
     def __str__(self):
         return self.character_name
 
@@ -654,6 +656,7 @@ class Account:
         self.classes = playerClasses
         self.all_characters = [Character(self.raw_data, **char) for char in characterDict.values()]
         self.safe_characters = [char for char in self.all_characters if char]  #Use this if touching raw_data instead of all_characters
+        self.safe_playerCount = len(self.safe_characters)
         self.all_skills = perSkillDict
         self.all_quests = [safe_loads(self.raw_data.get(f"QuestComplete_{i}", "{}")) for i in range(self.playerCount)]
         self.assets = self._all_owned_items()
@@ -675,6 +678,13 @@ class Account:
         self.vial_mastery_unlocked = self.rift_level >= 35
         self.construction_mastery_unlocked = self.rift_level >= 40
         self.ruby_cards_unlocked = self.rift_level >= 45
+        self.guildBonuses = {}
+        raw_guild = self.raw_data.get('guildData', {}).get('stats', [])
+        for bonusIndex, bonusName in enumerate(guildBonusesList):
+            try:
+                self.guildBonuses[bonusName] = raw_guild[0][bonusIndex]
+            except:
+                self.guildBonuses[bonusName] = 0
         self.rift_meowed = False
         self.meowBBIndex = 0
         self.meals_remaining = maxMeals * maxMealLevel
@@ -683,12 +693,12 @@ class Account:
             raw_emporium_purchases = safe_loads(self.raw_data["Ninja"])[102][9]
             if isinstance(raw_emporium_purchases, str):
                 raw_emporium_purchases = list(raw_emporium_purchases)
-                for purchaseLetter in raw_emporium_purchases:
-                    try:
-                        decodedIndex = letterToNumber(purchaseLetter)
-                        self.jade_emporium_purchases.append(jade_emporium[decodedIndex].get("name", f"Unknown Emporium Upgrade: {purchaseLetter}"))
-                    except:
-                        continue
+            for purchaseLetter in raw_emporium_purchases:
+                try:
+                    decodedIndex = letterToNumber(purchaseLetter)
+                    self.jade_emporium_purchases.append(jade_emporium[decodedIndex].get("name", f"Unknown Emporium Upgrade: {purchaseLetter}"))
+                except:
+                    continue
         except:
             pass
 
@@ -726,6 +736,10 @@ class Account:
                     self.alchemy_vials[getReadableVialNames(vialKey)] = 0
         except:
             pass
+        self.maxed_vials = 0
+        for vialLevel in self.alchemy_vials.values():
+            if vialLevel >= 13:
+                self.maxed_vials += 1
 
         self.alchemy_bubbles = {}
         try:
@@ -844,6 +858,9 @@ class Account:
                 self.labChips[labChipName] = int(raw_labChips_list[labChipIndex])
             except:
                 self.labChips[labChipName] = 0
+        self.labBonuses = {}
+        for labBonusIndex, labBonusName in enumerate(labBonusesList):
+            self.labBonuses[labBonusName] = {"Enabled": True, "Value": 1}
 
         self.pristine_charms = {}
         raw_pristine_charms_list = safe_loads(self.raw_data.get("Ninja", []))
@@ -879,11 +896,8 @@ class Account:
         #             "LevelString": "Unlock"
         #         }
 
-
     def _make_cards(self):
-        card_counts = self.raw_data[self._key_cards]
-        if isinstance(card_counts, str):
-            card_counts = json.loads(self.raw_data[self._key_cards])
+        card_counts = safe_loads(self.raw_data.get(self._key_cards, {}))
         cards = [
             Card(codename, name, cardset, int(float(card_counts.get(codename, 0))), coefficient)
             for cardset, cards in card_data.items()
@@ -895,7 +909,7 @@ class Account:
     def _all_owned_items(self) -> Assets:
         chest_keys = (("ChestOrder", "ChestQuantity"),)
         name_quantity_key_pairs = chest_keys + tuple(
-            (f"InventoryOrder_{i}", f"ItemQTY_{i}") for i in range(self.playerCount)
+            (f"InventoryOrder_{i}", f"ItemQTY_{i}") for i in range(self.safe_playerCount)
         )
         all_stuff_owned = defaultdict(int)
 

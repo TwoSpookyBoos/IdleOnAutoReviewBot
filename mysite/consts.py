@@ -1,3 +1,5 @@
+import math
+
 from utils.logging import get_logger
 
 
@@ -1506,6 +1508,11 @@ stamp_maxes = {
 
 max_IndexOfVials = 75
 max_IndexOfBubbles = 29
+
+vialsDict = {
+    0: {"Name": "Copper Corona", "Material": "Copper Ore", "x1": 3, "x2": 0, "funcType": "add"},
+    1: {"Name": "Sippy Splinters", "Material": "Oak Log", "x1": 3, "x2": 0, "funcType": "add"},
+}
 def getReadableVialNames(inputNumber):
     try:
         inputNumber = int(inputNumber)
@@ -2079,3 +2086,39 @@ artifactsList = [
     'Crystal Steak', 'Trilobite Rock', 'Opera Mask', 'Socrates', 'The True Lantern',
     'The Onyx Lantern', 'The Shim Lantern', 'The Winz Lantern'
 ]
+
+guildBonusesList = [
+    "Guild Gifts", "Stat Runes", "Rucksack", "Power of Pow", "REM Fighting", "Make or Break",
+    "Multi Tool", "Sleepy Skiller", "Coin Supercharger", "Bonus GP for small guilds", "Gold Charm", "Star Dazzle",
+    "C2 Card Spotter", "Bestone", "Skilley Skillet", "Craps", "Anotha One", "Wait A Minute"
+]
+
+labBonusesList = [
+    "Animal Farm", "Wired In", "Gilded Cyclical Tubing", "No Bubble Left Behind", "Killer's Brightside",
+    "Shrine World Tour", "Viaduct of the Gods", "Certified Stamp Book", "Spelunker Obol", "Fungi Finger Pocketer",
+    "My 1st Chemistry Set", "Unadulterated Banking Fury", "Sigils of Olden Alchemy", "Viral Connection",
+    "Artifact Attraction", "Slab Sovereignty", "Spiritual Growth", "Depot Studies PhD"
+]
+
+def lavaFunc(funcType: str, level: int, x1: int, x2: int, roundResult=False):
+    result = 0
+    match funcType:
+        case 'add':
+            if x2 != 0:
+                result = (((x1 + x2) / x2 + 0.5 * (level - 1)) / (x1/x2)) * level * x1
+        case 'decay':
+            result = (level * x1) / (level + x2)
+        case 'intervalAdd':
+            result = x1 + math.floor(level / x2)
+        case 'decayMulti':
+            result = 1 + (level * x1) / (level + x2)
+        case 'bigBase':
+            result = x1 + x2 * level
+        case 'special1':
+            result = 100 - (level * x1) / (level + x2)
+        case _:
+            result = 0
+    if roundResult:
+        return round(result)
+    else:
+        return result

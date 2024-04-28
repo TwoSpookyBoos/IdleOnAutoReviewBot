@@ -2,7 +2,7 @@ from models.models import AdviceSection, AdviceGroup, Advice, Character
 from utils.text_formatting import pl
 from utils.data_formatting import safe_loads
 from utils.logging import get_logger
-from consts import maxTiersPerGroup, stamps_progressionTiers, stamp_maxes
+from consts import maxTiersPerGroup, stamps_progressionTiers, stamp_maxes, lavaFunc
 from math import ceil, pow
 from flask import g as session_data
 
@@ -87,7 +87,7 @@ def getCapacityAdviceGroup(priorityStampsDict: dict) -> AdviceGroup:
         silkrodeMulti = 1
 
     seraphMulti = min(3, 1.1 ** ceil((max(session_data.account.all_skills.get('Summoning', [0])) + 1) / 20))
-    seraphGoal = min(240, ceilUpToBase(max(session_data.account.all_skills.get('Summoning', [0]))+1, 20))
+    seraphGoal = min(240, ceilUpToBase(max(session_data.account.all_skills.get('Summoning', [0])), 20))
     if bool(session_data.account.star_signs.get("Seraph_Cosmos", False)):
         seraphEval = f"Increases other signs by {seraphMulti:.2f}x."
     else:
@@ -111,6 +111,8 @@ def getCapacityAdviceGroup(priorityStampsDict: dict) -> AdviceGroup:
     capacity_Advices["Stamps"].append(Advice(
         label="Lab Bonus: Certified Stamp Book",
         picture_class="certified-stamp-book",
+        progression="IDK",
+        goal=1
     ))
     capacity_Advices["Stamps"].append(Advice(
         label="Lab Jewel: Pure Opal Navette (lol jk, this is bugged)",
@@ -140,7 +142,7 @@ def getCapacityAdviceGroup(priorityStampsDict: dict) -> AdviceGroup:
     capacity_Advices["Account Wide"].append(Advice(
         label="Guild Bonus: Rucksack",
         picture_class="rucksack",
-        progression="🤔",
+        progression=f"{session_data.account.guildBonuses.get('Rucksack', 0) if session_data.account.guildBonuses.get('Rucksack', 0) > 0 else 'IDK'}",
         goal=50
     ))
     capacity_Advices["Account Wide"].append(Advice(
@@ -239,7 +241,7 @@ def getCapacityAdviceGroup(priorityStampsDict: dict) -> AdviceGroup:
 
 
 def mark_completed(advice):
-    if advice.goal and advice.progression and advice.goal == advice.progression:
+    if advice.goal and advice.progression and advice.goal >= advice.progression:
         advice.progression = ""
         advice.goal = "✔"
         setattr(advice, "status", "complete")
@@ -247,10 +249,7 @@ def mark_completed(advice):
 
 def getCostReductionAdviceGroup() -> AdviceGroup:
     costReduction_Advices = {"Vials": [], "Uncapped": []}
-    costReduction_Advices["Vials"].append(Advice(
-        label="The total reduction of both Vials added together is hardcapped at 95%",
-        picture_class=""
-    ))
+
     costReduction_Advices["Vials"].append(Advice(
         label="Vial: Blue Flav (Platinum Ore)",
         picture_class="platinum-ore",
@@ -262,6 +261,27 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
         picture_class="mongo-worm-slices",
         progression=session_data.account.alchemy_vials.get("Venison Malt (Mongo Worm Slices)", 0),
         goal=13
+    ))
+    costReduction_Advices["Vials"].append(Advice(
+        label="Lab Bonus: My 1st Chemistry Set",
+        picture_class="my-1st-chemistry-set",
+        progression="Assuming",
+        goal="On"
+    ))
+
+    blueFavReduction = lavaFunc('decay', session_data.account.alchemy_vials.get("Blue Flav (Platinum Ore)", 0), 30, 7, False)
+    venisonMaltReduction = lavaFunc('add', session_data.account.alchemy_vials.get("Venison Malt (Mongo Worm Slices)", 0), 2, 0, False)
+    totalVialReduction = blueFavReduction + venisonMaltReduction
+    if session_data.account.vial_mastery_unlocked:
+        vialMasteryMulti = 1 + (session_data.account.maxed_vials * .02)
+        totalVialReduction *= vialMasteryMulti
+    totalVialReduction *= 1 + session_data.account.labBonuses.get("My 1st Chemistry Set", {}).get("Enabled", False)
+    costReduction_Advices["Vials"].append(Advice(
+        label="Total Vial reduction is hardcapped at 95%",
+        picture_class="",
+        progression=totalVialReduction,
+        goal=95,
+        unit="%"
     ))
 
     costReduction_Advices["Uncapped"].append(Advice(
