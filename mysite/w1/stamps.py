@@ -87,7 +87,7 @@ def getCapacityAdviceGroup(priorityStampsDict: dict) -> AdviceGroup:
         silkrodeMulti = 1
 
     seraphMulti = min(3, 1.1 ** ceil((max(session_data.account.all_skills.get('Summoning', [0])) + 1) / 20))
-    seraphGoal = min(239, ceilUpToBase(max(session_data.account.all_skills.get('Summoning', [0]))+1, 20)-1)
+    seraphGoal = min(239, ceilUpToBase(max(session_data.account.all_skills.get('Summoning', [0]))+1, 20))
     if bool(session_data.account.star_signs.get("Seraph_Cosmos", False)):
         seraphEval = f"Increases other signs by {seraphMulti:.2f}x."
     else:
