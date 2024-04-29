@@ -1,3 +1,4 @@
+import copy
 import functools
 import json
 import re
@@ -10,9 +11,10 @@ from typing import Any
 from flask import g
 
 from utils.data_formatting import getCharacterDetails, safe_loads
-from consts import expectedStackables, greenstack_progressionTiers, card_data, maxMeals, maxMealLevel, jade_emporium
+from consts import expectedStackables, greenstack_progressionTiers, card_data, maxMeals, maxMealLevel, jade_emporium, max_IndexOfVials, getReadableVialNames, \
+    max_IndexOfBubbles, getReadableBubbleNames, buildingsList, atomsList, prayersList, labChipsList, bribesList, shrinesList, pristineCharmsList, sigilsDict, \
+    artifactsList, guildBonusesList, labBonusesList, lavaFunc, vialsDict
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, letterToNumber
-
 
 def session_singleton(cls):
     def getinstance(*args, **kwargs):
@@ -24,22 +26,27 @@ def session_singleton(cls):
 
 
 class Equipment:
-    def __init__(self, raw_data, toon_index):
-        order = raw_data[f"EquipOrder_{toon_index}"]
-        quantity = raw_data[f"EquipQTY_{toon_index}"]
-        groups = list()
-        for o, q in zip(order, quantity):
-            o.pop("length", None)
-            q.pop("length", None)
-            o = dict(sorted(o.items(), key=lambda i: int(i[0]))).values()
-            q = dict(sorted(q.items(), key=lambda i: int(i[0]))).values()
-            groups.append([Asset(name, float(count)) for name, count in zip(o, q)])
+    def __init__(self, raw_data, toon_index, safeStatus: bool):
+        if safeStatus:
+            order = raw_data.get(f"EquipOrder_{toon_index}", [])
+            quantity = raw_data.get(f"EquipQTY_{toon_index}", [])
+            groups = list()
+            for o, q in zip(order, quantity):
+                o.pop("length", None)
+                q.pop("length", None)
+                o = dict(sorted(o.items(), key=lambda i: int(i[0]))).values()
+                q = dict(sorted(q.items(), key=lambda i: int(i[0]))).values()
+                groups.append([Asset(name, float(count)) for name, count in zip(o, q)])
 
-        equips, tools, foods = groups
+            equips, tools, foods = groups
 
-        self.equips = equips
-        self.tools = tools
-        self.foods = foods
+            self.equips = equips
+            self.tools = tools
+            self.foods = foods
+        else:
+            self.equips = {}
+            self.tools = {}
+            self.foods = []
 
 
 class Character:
@@ -98,10 +105,7 @@ class Character:
             }
             for name in ("ZOW", "CHOW", "MEOW")
         }
-
-        self.equipment = Equipment(raw_data, character_index)
-
-
+        self.equipment = Equipment(raw_data, character_index, self.combat_level >= 1)
 
     def addUnmetApoc(self, apocType: str, apocRating: str, mapInfoList: list):
         self.apoc_dict[apocType][apocRating].append(mapInfoList)
@@ -120,8 +124,10 @@ class Character:
 
     def setDivinityStyle(self, styleName: str):
         self.divinity_style = styleName
+
     def setDivinityLink(self, linkName: str):
         self.divinity_link = linkName
+
     def __str__(self):
         return self.character_name
 
@@ -652,6 +658,7 @@ class Account:
         self.classes = playerClasses
         self.all_characters = [Character(self.raw_data, **char) for char in characterDict.values()]
         self.safe_characters = [char for char in self.all_characters if char]  #Use this if touching raw_data instead of all_characters
+        self.safe_playerIndexes = [char.character_index for char in self.all_characters if char]
         self.all_skills = perSkillDict
         self.all_quests = [safe_loads(self.raw_data.get(f"QuestComplete_{i}", "{}")) for i in range(self.playerCount)]
         self.assets = self._all_owned_items()
@@ -673,31 +680,246 @@ class Account:
         self.vial_mastery_unlocked = self.rift_level >= 35
         self.construction_mastery_unlocked = self.rift_level >= 40
         self.ruby_cards_unlocked = self.rift_level >= 45
+        self.guildBonuses = {}
+        raw_guild = self.raw_data.get('guildData', {}).get('stats', [])
+        for bonusIndex, bonusName in enumerate(guildBonusesList):
+            try:
+                self.guildBonuses[bonusName] = raw_guild[0][bonusIndex]
+            except:
+                self.guildBonuses[bonusName] = 0
         self.rift_meowed = False
         self.meowBBIndex = 0
         self.meals_remaining = maxMeals * maxMealLevel
         self.jade_emporium_purchases = []
         try:
             raw_emporium_purchases = safe_loads(self.raw_data["Ninja"])[102][9]
-            if raw_emporium_purchases is None:
-                jade_emporium_purchases = []
             if isinstance(raw_emporium_purchases, str):
                 raw_emporium_purchases = list(raw_emporium_purchases)
-                for purchaseLetter in raw_emporium_purchases:
-                    try:
-                        decodedIndex = letterToNumber(purchaseLetter)
-                        self.jade_emporium_purchases.append(jade_emporium[decodedIndex].get("name", f"Unknown Emporium Upgrade: {purchaseLetter}"))
-                    except:
-                        continue
+            for purchaseLetter in raw_emporium_purchases:
+                try:
+                    decodedIndex = letterToNumber(purchaseLetter)
+                    self.jade_emporium_purchases.append(jade_emporium[decodedIndex].get("name", f"Unknown Emporium Upgrade: {purchaseLetter}"))
+                except:
+                    continue
         except:
-            jade_emporium_purchases = []
+            pass
 
         self.max_toon_count = 10  # OPTIMIZE: find a way to read this from somewhere
 
+        self.star_signs = {}
+        raw_star_signs = safe_loads(self.raw_data.get("StarSg", {}))
+        for signStatus in raw_star_signs:
+            try:
+                self.star_signs[signStatus] = int(raw_star_signs[signStatus])
+            except:
+                self.star_signs[signStatus] = 0
+
+        self.bribes = {}
+        raw_bribes_list = safe_loads(self.raw_data.get("BribeStatus", []))
+        for bribeIndex, bribeName in enumerate(bribesList):
+            try:
+                self.bribes[bribeName] = int(raw_bribes_list[bribeIndex])
+            except:
+                self.bribes[bribeName] = -1  # -1 means unavailable for purchase, 0 means available, and 1 means purchased
+
+        self.alchemy_vials = {}
+        try:
+            manualVialsAdded = 0
+            raw_alchemy_vials = safe_loads(self.raw_data.get("CauldronInfo", [0,0,0,0,{}])[4])
+            if "length" in raw_alchemy_vials:
+                del raw_alchemy_vials["length"]
+            while len(raw_alchemy_vials) < max_IndexOfVials:
+                raw_alchemy_vials[int(max_IndexOfVials - manualVialsAdded)] = 0
+                manualVialsAdded += 1
+            for vialKey, vialValue in raw_alchemy_vials.items():
+                try:
+                    self.alchemy_vials[getReadableVialNames(vialKey)] = {
+                        "Level": int(vialValue),
+                        "Value": lavaFunc(
+                            vialsDict.get(int(vialKey)).get("funcType"),
+                            int(vialValue),
+                            vialsDict.get(int(vialKey)).get("x1"),
+                            vialsDict.get(int(vialKey)).get("x2"),
+                        )
+                    }
+                except:
+                    self.alchemy_vials[getReadableVialNames(vialKey)] = {"Level": 0, "Value": 0}
+        except:
+            pass
+        self.maxed_vials = 0
+        for vial in self.alchemy_vials.values():
+            if vial.get("Level", 0) >= 13:
+                self.maxed_vials += 1
+
+        self.alchemy_bubbles = {}
+        try:
+            raw_orange_alchemyBubblesDict = self.raw_data.get("CauldronInfo", [{}, {}, {}, {}])[0]
+            raw_orange_alchemyBubblesDict.pop('length', None)
+            raw_green_alchemyBubblesDict = self.raw_data.get("CauldronInfo", [{}, {}, {}, {}])[1]
+            raw_green_alchemyBubblesDict.pop('length', None)
+            raw_purple_alchemyBubblesDict = self.raw_data.get("CauldronInfo", [{}, {}, {}, {}])[2]
+            raw_purple_alchemyBubblesDict.pop('length', None)
+            raw_yellow_alchemyBubblesDict = self.raw_data.get("CauldronInfo", [{}, {}, {}, {}])[3]
+            raw_yellow_alchemyBubblesDict.pop('length', None)
+            for bubbleDict, bubbleColor in [
+                (raw_orange_alchemyBubblesDict, "Orange"),
+                (raw_green_alchemyBubblesDict, "Green"),
+                (raw_purple_alchemyBubblesDict, "Purple"),
+                (raw_yellow_alchemyBubblesDict, "Yellow")
+            ]:
+                for bubbleIndex in bubbleDict:
+                    try:
+                        if int(bubbleIndex) <= max_IndexOfBubbles:
+                            self.alchemy_bubbles[getReadableBubbleNames(bubbleIndex, bubbleColor)] = int(bubbleDict[bubbleIndex])
+                    except:
+                        self.alchemy_bubbles[getReadableBubbleNames(bubbleIndex, bubbleColor)] = 0
+        except:
+            pass
+
+        self.alchemy_p2w = {
+            "Sigils": sigilsDict
+        }
+        raw_p2w_list = safe_loads(self.raw_data.get("CauldronP2W", []))
+        if raw_p2w_list:
+            for subElementIndex, subElementValue in enumerate(raw_p2w_list):
+                if not isinstance(subElementValue, list):
+                    raw_p2w_list[subElementIndex] = [subElementValue]
+            try:
+                self.alchemy_p2w["Cauldrons"] = raw_p2w_list[0]
+            except:
+                self.alchemy_p2w["Cauldrons"] = [0]*12
+            try:
+                self.alchemy_p2w["Liquids"] = raw_p2w_list[1]
+            except:
+                self.alchemy_p2w["Liquids"] = [0]*8
+            try:
+                self.alchemy_p2w["Vials"] = raw_p2w_list[2]
+            except:
+                self.alchemy_p2w["Vials"] = [0]*2
+            try:
+                self.alchemy_p2w["Player"] = raw_p2w_list[3]
+            except:
+                self.alchemy_p2w["Player"] = [0]*2
+            for sigilName in self.alchemy_p2w["Sigils"]:
+                try:
+                    self.alchemy_p2w["Sigils"][sigilName]["PlayerHours"] = float(raw_p2w_list[4][self.alchemy_p2w["Sigils"][sigilName]["Index"]])
+                    self.alchemy_p2w["Sigils"][sigilName]["Level"] = raw_p2w_list[4][self.alchemy_p2w["Sigils"][sigilName]["Index"] + 1] + 1
+                    if self.alchemy_p2w["Sigils"][sigilName]["Level"] == 2:
+                        if "Ionized Sigils" in self.jade_emporium_purchases:
+                            #If you have purchased Ionized Sigils, the numbers needed to Gold get subtracted from your hours already
+                            red_Hours = self.alchemy_p2w["Sigils"][sigilName]["Requirements"][2]
+                        else:
+                            #To precharge Red sigils before buying the upgreade, you need Gold + Red hours
+                            red_Hours = self.alchemy_p2w["Sigils"][sigilName]["Requirements"][1] + self.alchemy_p2w["Sigils"][sigilName]["Requirements"][2]
+                        if self.alchemy_p2w["Sigils"][sigilName]["PlayerHours"] >= red_Hours:
+                            self.alchemy_p2w["Sigils"][sigilName]["PrechargeLevel"] = 3
+                        else:
+                            self.alchemy_p2w["Sigils"][sigilName]["PrechargeLevel"] = self.alchemy_p2w["Sigils"][sigilName]["Level"]
+
+                    #Before the +1, -1 would mean not unlocked, 0 would mean Blue tier, 1 would be Yellow tier, and 2 would mean Red tier
+                    #After the +1, 0/1/2/3
+                except Exception as reason:
+                    print(f"{reason}")
+                    pass  #Already defaulted to 0s in consts.sigilsDict
+
+        self.construction_buildings = {}
+        raw_buildings_list = safe_loads(self.raw_data.get("Tower", []))
+        for buildingIndex, buildingName in enumerate(buildingsList):
+            try:
+                self.construction_buildings[buildingName] = int(raw_buildings_list[buildingIndex])
+            except:
+                self.construction_buildings[buildingName] = 0
+
+        self.shrines = {}
+        raw_shrines_list = safe_loads(self.raw_data.get("Shrine", []))
+        for shrineIndex, shrineName in enumerate(shrinesList):
+            try:
+                self.shrines[shrineName] = {
+                    "MapIndex": int(raw_shrines_list[shrineIndex][0]),
+                    1: int(raw_shrines_list[shrineIndex][1]),
+                    2: int(raw_shrines_list[shrineIndex][2]),
+                    "Level": int(raw_shrines_list[shrineIndex][3]),
+                    "Hours": float(raw_shrines_list[shrineIndex][4]),
+                    5: int(raw_shrines_list[shrineIndex][5])
+                }
+            except:
+                self.shrines[shrineName] = {
+                    "MapIndex": 0,
+                    1: 0,
+                    2: 0,
+                    "Level": 0,
+                    "Hours": 0.0,
+                    5: 0
+                }
+
+        self.atoms = {}
+        raw_atoms_list = safe_loads(self.raw_data.get("Atoms", []))
+        if len(raw_atoms_list) >= 5:
+            raw_atoms_list = raw_atoms_list[5]
+        for atomIndex, atomName in enumerate(atomsList):
+            try:
+                self.atoms[atomName] = int(raw_atoms_list[atomIndex])
+            except:
+                self.atoms[atomName] = 0
+
+        self.prayers = {}
+        raw_prayers_list = safe_loads(self.raw_data.get("PrayOwned", []))
+        for prayerIndex, prayerName in enumerate(prayersList):
+            try:
+                self.prayers[prayerName] = int(raw_prayers_list[prayerIndex])
+            except:
+                self.prayers[prayerName] = 0
+
+        self.gemshop = {}
+        self.labChips = {}
+        raw_labChips_list = safe_loads(self.raw_data.get("Lab", []))
+        if len(raw_labChips_list) >= 15:
+            raw_labChips_list = raw_labChips_list[15]
+        for labChipIndex, labChipName in enumerate(labChipsList):
+            try:
+                self.labChips[labChipName] = int(raw_labChips_list[labChipIndex])
+            except:
+                self.labChips[labChipName] = 0
+        self.labBonuses = {}
+        for labBonusIndex, labBonusName in enumerate(labBonusesList):
+            self.labBonuses[labBonusName] = {"Enabled": True, "Value": 1}
+
+        self.pristine_charms = {}
+        raw_pristine_charms_list = safe_loads(self.raw_data.get("Ninja", []))
+        if raw_pristine_charms_list:
+            raw_pristine_charms_list = raw_pristine_charms_list[-1]
+        for pristineCharmIndex, pristineCharmName in enumerate(pristineCharmsList):
+            try:
+                self.pristine_charms[pristineCharmName] = bool(raw_pristine_charms_list[pristineCharmIndex])
+            except:
+                self.pristine_charms[pristineCharmName] = False
+
+        self.artifacts = {}
+        raw_artifacts_list = safe_loads(self.raw_data.get("Sailing", []))
+        raw_artifacts_list = safe_loads(raw_artifacts_list)  #Some users have needed to have data converted twice
+        self.sum_artifact_tiers = sum(raw_artifacts_list[3]) if raw_artifacts_list and len(raw_artifacts_list) >= 4 else 0
+        if raw_artifacts_list:
+            for artifactIndex, artifactName in enumerate(artifactsList):
+                try:
+                    self.artifacts[artifactName] = raw_artifacts_list[3][artifactIndex]
+                except:
+                    self.artifacts[artifactName] = 0
+
+        # self.cardsDict = {}
+        # for cardset in card_data:  #Blunder Hills
+        #     self.cardsDict[cardset] = {}
+        #     for card in card_data[cardset]:  #Crystal0
+        #         decodedCardName = card_data[cardset][card][0]
+        #         self.cardsDict[decodedCardName] = {
+        #             "CodifiedName": card,
+        #             "CardSet": cardset,
+        #             "CardsOwned": safe_loads(self.raw_data[self._key_cards]).get(card, 0),
+        #             "LevelInt": 0,
+        #             "LevelString": "Unlock"
+        #         }
+
     def _make_cards(self):
-        card_counts = self.raw_data[self._key_cards]
-        if isinstance(card_counts, str):
-            card_counts = json.loads(self.raw_data[self._key_cards])
+        card_counts = safe_loads(self.raw_data.get(self._key_cards, {}))
         cards = [
             Card(codename, name, cardset, int(float(card_counts.get(codename, 0))), coefficient)
             for cardset, cards in card_data.items()
@@ -709,7 +931,7 @@ class Account:
     def _all_owned_items(self) -> Assets:
         chest_keys = (("ChestOrder", "ChestQuantity"),)
         name_quantity_key_pairs = chest_keys + tuple(
-            (f"InventoryOrder_{i}", f"ItemQTY_{i}") for i in range(self.playerCount)
+            (f"InventoryOrder_{i}", f"ItemQTY_{i}") for i in self.safe_playerIndexes
         )
         all_stuff_owned = defaultdict(int)
 

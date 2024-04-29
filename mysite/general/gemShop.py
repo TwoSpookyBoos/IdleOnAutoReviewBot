@@ -77,28 +77,13 @@ def try_exclude_FluorescentFlaggies(exclusionList):
 
 
 def try_exclude_BurningBadBooks(exclusionList):
-    empty = str([0] * 8)
-    autoArmLevel = safe_loads(session_data.account.raw_data.get("Tower", empty))[7]
-
-    if int(autoArmLevel) >= 5:
+    if int(session_data.account.construction_buildings.get("Automation Arm", 0)) >= 5:
         exclusionList.append("Burning Bad Books")
 
 
 def try_exclude_ChestSluggo(exclusionList):
-    empty = [0] * 8
-    try:
-        artifact_tiers = safe_loads(session_data.account.raw_data.get("Sailing", []))
-        if isinstance(artifact_tiers, str):
-            artifact_tiers = json.loads(artifact_tiers)
-    except:
-        logger.exception(f"Could not retrieve 'Sailing' from JSON")
-        return
-
-    sum_artifactTiers = sum(artifact_tiers[3]) if artifact_tiers and len(artifact_tiers) >= 4 else 0
-
-    if sum_artifactTiers == numberOfArtifacts * numberOfArtifactTiers:  # 33 artifacts times 4 tiers each = 132 for v2.00
+    if session_data.account.sum_artifact_tiers == numberOfArtifacts * numberOfArtifactTiers:  # 33 artifacts times 4 tiers each = 132 for v2.00
         exclusionList.append("Chest Sluggo")
-
 
 def getGemShopExclusions():
     exclusionList = []
@@ -297,6 +282,7 @@ def getBoughtGemShopItems():
             except:
                 logger.warning(f"Could not force {k}'s {type(v)} {v} to int. Setting to 0.")
                 gemShopDict[k] = 0
+    session_data.account.gemshop = gemShopDict
     return gemShopDict
 
 

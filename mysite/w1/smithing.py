@@ -167,7 +167,7 @@ def setSmithingProgressionTier() -> AdviceSection:
                 tier_MonsterPoints = tier[0]
             else:
                 smithing_AdviceGroupDict["MonsterPoints"] = AdviceGroup(
-                    tier=str(tier_CashPoints),
+                    tier=str(tier_MonsterPoints),
                     pre_string=f"Purchase the first {tier[2]} Anvil Points with Monster Materials on the following character{pl(smithing_AdviceDict['MonsterPoints'])}",
                     advices=smithing_AdviceDict["MonsterPoints"],
                     post_string=f"The final Monster Material for this tier is {tier[4]}"

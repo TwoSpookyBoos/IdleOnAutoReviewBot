@@ -1,3 +1,5 @@
+import math
+
 from utils.logging import get_logger
 
 
@@ -279,7 +281,14 @@ vials_progressionTiers = [
     # [28, 75, 73, ['Dreadnog (Dreadlo Bar)', 'Dabar Special (Godshard Bar)', 'Pearl Seltzer (Pearler Shell)', 'Hampter Drippy (Hampter)'], "Currently considered impossible"],
     # [29, 75, 76, ['Pickle Jar (BobJoePickle)', 'Ball Pickle Jar (BallJoePickle)'], "Currently considered impossible"],
 ]
-
+sigils_progressionTiers = {
+    0: {"Label": "S", "Sigils":[]},
+    1: {"Label": "A", "Sigils":[]},
+    2: {"Label": "B", "Sigils":[]},
+    3: {"Label": "C", "Sigils":[]},
+    4: {"Label": "D", "Sigils":[]},
+    5: {"Label": "F", "Sigils":[]},
+}
 ###WORLD 3 PROGRESSION TIERS###
 saltLick_progressionTiers = [
     [0, {}, ""],
@@ -333,23 +342,23 @@ deathNote_progressionTiers = [
 ]
 buildingsPostBuffs_progressionTiers = [
     [0, "Unlock", [], "", ""],
-    [1, "SS", [0, 5, 7], "", ""],
-    [2, "S", [1, 2, 3, 6, 11, 15, 16], "", ""],
-    [3, "A", [4, 9, 10, 12, 13, 14, 17, 22, 24, 25], "", ""],
-    [4, "B", [18, 19, 20, 21, 23, 26], "", ""],
-    [5, "C", [8], "", ""],
+    [1, "SS", ["3D Printer", "Cost Cruncher", "Automation Arm"], "", ""],
+    [2, "S", ["Talent Book Library", "Death Note", "Salt Lick", "Trapper Drone", "Boulder Roller", "Kraken Cosplayer", "Poisonic Elder"], "", ""],
+    [3, "A", ["Chest Space", "Pulse Mage", "Fireball Lobber", "Frozone Malone", "Stormcaller", "Party Starter", "Voidinator", "Clover Shrine", "Crescent Shrine", "Undead Shrine"], "", ""],
+    [4, "B", ["Woodular Shrine", "Isaccian Shrine", "Crystal Shrine", "Pantheon Shrine", "Summereading Shrine", "Atom Collider"], "", ""],
+    [5, "C", ["Primordial Shrine"], "", ""],
     [6, "D", [], "", ""],
     [7, "F", [], "", ""]
 ]
 buildingsPreBuffs_progressionTiers = [
     [0, "Unlock", [], "", ""],
-    [1, "SS", [0, 5, 7], "", ""],
-    [2, "S", [1, 2, 3, 6, 11, 15, 16], "", ""],
-    [3, "A", [4, 13, 14, 22, 24, 25], "", ""],
-    [4, "B", [12, 17], "", ""],
-    [5, "C", [8, 18, 19, 20, 21], "", ""],
-    [6, "D", [9, 10, 23], "", ""],
-    [7, "F", [26], "", ""]
+    [1, "SS", ["3D Printer", "Cost Cruncher", "Automation Arm"], "", ""],
+    [2, "S", ["Talent Book Library", "Death Note", "Salt Lick", "Trapper Drone", "Boulder Roller", "Kraken Cosplayer", "Poisonic Elder"], "", ""],
+    [3, "A", ["Chest Space", "Stormcaller", "Party Starter", "Clover Shrine", "Crescent Shrine", "Undead Shrine"], "", ""],
+    [4, "B", ["Frozone Malone", "Voidinator"], "", ""],
+    [5, "C", ["Atom Collider", "Woodular Shrine", "Isaccian Shrine", "Crystal Shrine", "Pantheon Shrine"], "", ""],
+    [6, "D", ["Pulse Mage", "Fireball Lobber", "Summereading Shrine"], "", ""],
+    [7, "F", ["Primordial Shrine"], "", ""]
 ]
 prayers_progressionTiers = [
     #Tier, PrayerDict, 	Notes
@@ -1046,7 +1055,6 @@ card_data = {
         "w4c3": ["Flombeige", 28],
         "w4c4": ["Stilted Seeker", 30],
     },
-
     "Smolderin' Plateau": {
         "Crystal4": ["Crystal Capybara", 15],
         "w5a1": ["Suggma", 25],
@@ -1478,3 +1486,720 @@ jade_emporium = [
     "bonus": "Adds 3 new Jewels to unlock at the Jewel Spinner in W4 Town. Or, get one for free every 700 total Lab LV as shown in Rift Skill Mastery."
   }
 ]
+
+bribesList = [
+    "Insider Trading", "Tracking Chips", "Mandatory Fire Sale", "Sleeping On the Job", "Artificial Demand", "The Art of the Deal",
+    "Overstock Regulations", "Double EXP Scheme", "Tagged Indicators", "Fossil Fuel Legislation", "Five Aces in the Deck", "Fake Teleport Tickets", "The Art of the Steal",
+    "Counterfeit Telepassports", "Weighted Marbles", "Changing the Code", "Taxidermied Cog Pouches", "Guild VIP Fraud", "Library Double Agent", "The Art of the Fail",
+    "Photoshopped Dmg Range", "Glitched Acc Formula", "Firewalled Defence", "Bottomless Bags", "AFKeylogging", "Guild GP Hack", "The Art of the Bail",
+    "Random Garbage", "Godlier Creation", "Fishermaster", "Muscles on Muscles", "Bottle Service", "Star Scraper", "The Art of the Grail",
+    "Artifact Pilfering", "Forge Cap Smuggling", "Gold from Lead", "Nugget Fabrication", "Divine PTS Miscounting", "Loot Table Tampering", "The Art of the Flail"
+]
+stamp_maxes = {
+    #Combat
+    #Skill
+    "Mason Jar Stamp": 160,
+    "Lil' Mining Baggy Stamp": 300,
+    "Choppin' Bag Stamp": 320,
+    "Matty Bag Stamp": 410,  #420 is possible but exploity
+    "Bag o Heads Stamp": 224,
+    "Bugsack Stamp": 224,
+    "Drippy Drop Stamp": 155,
+    "Cooked Meal Stamp": 465,
+    "Ladle Stamp": 320,
+    "Multitool": 220,
+    #Misc
+    "Crystallin": 270,
+    "Forge Stamp": 230,
+}
+
+max_IndexOfVials = 75
+max_IndexOfBubbles = 29
+max_IndexOfSigils = 3
+
+vialsDict = {
+    0: {"Name": "Copper Corona", "Material": "Copper", "x1": 3, "x2": 0, "funcType": "add"},
+    1: {"Name": "Sippy Splinter", "Material": "OakTree", "x1": 3, "x2": 0, "funcType": "add"},
+    2: {"Name": "Mushroom Soup", "Material": "Grasslands1", "x1": 3, "x2": 0, "funcType": "add"},
+    3: {"Name": "Spool Sprite", "Material": "CraftMat1", "x1": 3, "x2": 0, "funcType": "add"},
+    4: {"Name": "Barium Mixture", "Material": "CopperBar", "x1": 3, "x2": 0, "funcType": "add"},
+    5: {"Name": "Dieter Drink", "Material": "Grasslands3", "x1": 1, "x2": 0, "funcType": "add"},
+    6: {"Name": "Skinny 0 Cal", "Material": "Jungle2", "x1": 2.5, "x2": 0, "funcType": "add"},
+    7: {"Name": "Thumb Pow", "Material": "CraftMat5", "x1": 1, "x2": 0, "funcType": "add"},
+    8: {"Name": "Jungle Juice", "Material": "JungleTree", "x1": 1, "x2": 0, "funcType": "add"},
+    9: {"Name": "Barley Brew", "Material": "IronBar", "x1": 1, "x2": 0, "funcType": "add"},
+    10: {"Name": "Anearful", "Material": "Forest1", "x1": 2, "x2": 0, "funcType": "add"},
+    11: {"Name": "Tea With Pea", "Material": "ToiletTree", "x1": 3, "x2": 0, "funcType": "add"},
+    12: {"Name": "Gold Guzzle", "Material": "Gold", "x1": 1, "x2": 0, "funcType": "add"},
+    13: {"Name": "Ramificoction", "Material": "Forest3", "x1": 1, "x2": 0, "funcType": "add"},
+    14: {"Name": "Seawater", "Material": "Fish1", "x1": 1, "x2": 0, "funcType": "add"},
+    15: {"Name": "Tail Time", "Material": "Sewers2", "x1": 0.5, "x2": 0, "funcType": "add"},
+    16: {"Name": "Fly In My Drink", "Material": "Bug1", "x1": 3, "x2": 0, "funcType": "add"},
+    17: {"Name": "Mimicraught", "Material": "DesertA2", "x1": 1, "x2": 0, "funcType": "add"},
+    18: {"Name": "Blue Flav", "Material": "Plat", "x1": 30, "x2": 7, "funcType": "decay"},
+    19: {"Name": "Slug Slurp", "Material": "Fish2", "x1": 2, "x2": 0, "funcType": "add"},
+    20: {"Name": "Pickle Jar", "Material": "BobJoePickle", "x1": 50, "x2": 0, "funcType": "add"},
+    21: {"Name": "Fur Refresher", "Material": "SnowA1", "x1": 2, "x2": 0, "funcType": "add"},
+    22: {"Name": "Sippy Soul", "Material": "Soul1", "x1": 1, "x2": 0, "funcType": "add"},
+    23: {"Name": "Crab Juice", "Material": "Critter2", "x1": 4, "x2": 0, "funcType": "add"},
+    24: {"Name": "Void Vial", "Material": "Void", "x1": 1, "x2": 0, "funcType": "add"},
+    25: {"Name": "Red Malt", "Material": "Refinery1", "x1": 1, "x2": 0, "funcType": "add"},
+    26: {"Name": "Ew Gross Gross", "Material": "Bug5", "x1": 1, "x2": 0, "funcType": "add"},
+    27: {"Name": "The Spanish Sahara", "Material": "SaharanFoal", "x1": 1, "x2": 0, "funcType": "add"},
+    28: {"Name": "Poison Tincture", "Material": "Critter1A", "x1": 3, "x2": 0, "funcType": "add"},
+    29: {"Name": "Etruscan Lager", "Material": "SnowB2", "x1": 1, "x2": 0, "funcType": "add"},
+    30: {"Name": "Chonker Chug", "Material": "Soul2", "x1": 1, "x2": 0, "funcType": "add"},
+    31: {"Name": "Bubonic Burp", "Material": "Critter4", "x1": 1, "x2": 0, "funcType": "add"},
+    32: {"Name": "Visible Ink", "Material": "SnowB3", "x1": 1, "x2": 0, "funcType": "add"},
+    33: {"Name": "Orange Malt", "Material": "Refinery2", "x1": 5, "x2": 0, "funcType": "add"},
+    34: {"Name": "Snow Slurry", "Material": "SnowB5", "x1": 0.5, "x2": 0, "funcType": "add"},
+    35: {"Name": "Slowergy Drink", "Material": "Soul4", "x1": 1, "x2": 0, "funcType": "add"},
+    36: {"Name": "Sippy Cup", "Material": "Snowc1", "x1": 1, "x2": 0, "funcType": "add"},
+    37: {"Name": "Bunny Brew", "Material": "Critter7", "x1": 1, "x2": 0, "funcType": "add"},
+    38: {"Name": "40-40 Purity", "Material": "SnowC4", "x1": 1, "x2": 0, "funcType": "add"},
+    39: {"Name": "Shaved Ice", "Material": "Refinery5", "x1": 1, "x2": 0, "funcType": "add"},
+    40: {"Name": "Goosey Glug", "Material": "Critter9", "x1": 1, "x2": 0, "funcType": "add"},
+    41: {"Name": "Ball Pickle Jar", "Material": "BallJoePickle", "x1": 25, "x2": 0, "funcType": "add"},
+    42: {"Name": "Capachino", "Material": "GalaxyA1", "x1": 4, "x2": 0, "funcType": "add"},
+    43: {"Name": "Donut Drink", "Material": "GalaxyA3", "x1": 5, "x2": 0, "funcType": "add"},
+    44: {"Name": "Long Island Tea", "Material": "Fish6", "x1": 6, "x2": 0, "funcType": "add"},
+    45: {"Name": "Spook Pint", "Material": "Soul5", "x1": 5, "x2": 0, "funcType": "add"},
+    46: {"Name": "Calcium Carbonate", "Material": "GalaxyB3", "x1": 11, "x2": 0, "funcType": "add"},
+    47: {"Name": "Bloat Draft", "Material": "Critter10", "x1": 3, "x2": 0, "funcType": "add"},
+    48: {"Name": "Choco Milkshake", "Material": "GalaxyB4", "x1": 50, "x2": 7, "funcType": "decay"},
+    49: {"Name": "Pearl Seltzer", "Material": "GalaxyC1b", "x1": 0.5, "x2": 0, "funcType": "add"},
+    50: {"Name": "Krakenade", "Material": "Fish8", "x1": 1, "x2": 0, "funcType": "add"},
+    51: {"Name": "Electrolyte", "Material": "GalaxyC4", "x1": 2, "x2": 0, "funcType": "add"},
+    52: {"Name": "Ash Agua", "Material": "LavaA1", "x1": 2, "x2": 0, "funcType": "add"},
+    53: {"Name": "Maple Syrup", "Material": "Tree9", "x1": 2, "x2": 0, "funcType": "add"},
+    54: {"Name": "Hampter Drippy", "Material": "LavaA5b", "x1": 2, "x2": 0, "funcType": "add"},
+    55: {"Name": "Dreadnog", "Material": "DreadloBar", "x1": 2, "x2": 0, "funcType": "add"},
+    56: {"Name": "Dusted Drink", "Material": "Bug10", "x1": 2, "x2": 0, "funcType": "add"},
+    57: {"Name": "Oj Jooce", "Material": "LavaB3", "x1": 2, "x2": 0, "funcType": "add"},
+    58: {"Name": "Oozie Ooblek", "Material": "Soul6", "x1": 2, "x2": 0, "funcType": "add"},
+    59: {"Name": "Venison Malt", "Material": "LavaC2", "x1": 2, "x2": 0, "funcType": "add"},
+    60: {"Name": "Marble Mocha", "Material": "Marble", "x1": 5, "x2": 0, "funcType": "add"},
+    61: {"Name": "Willow Sippy", "Material": "Tree11", "x1": 4, "x2": 0, "funcType": "add"},
+    62: {"Name": "Shinyfin Stew", "Material": "Fish13", "x1": 7, "x2": 0, "funcType": "add"},
+    63: {"Name": "Dreamy Drink", "Material": "Bug11", "x1": 3.5, "x2": 0, "funcType": "add"},
+    64: {"Name": "Ricecakorade", "Material": "SpiA2", "x1": 2, "x2": 0, "funcType": "add"},
+    65: {"Name": "Ladybug Serum", "Material": "Bug12", "x1": 4, "x2": 0, "funcType": "add"},
+    66: {"Name": "Flavorgil", "Material": "Fish12", "x1": 7, "x2": 0, "funcType": "add"},
+    67: {"Name": "Greenleaf Tea", "Material": "SpiB1", "x1": 1.5, "x2": 0, "funcType": "add"},
+    68: {"Name": "Firefly Grog", "Material": "Bug13", "x1": 5, "x2": 0, "funcType": "add"},
+    69: {"Name": "Dabar Special", "Material": "GodshardBar", "x1": 4, "x2": 0, "funcType": "add"},
+    70: {"Name": "Refreshment", "Material": "Soul7", "x1": 2, "x2": 0, "funcType": "add"},
+    71: {"Name": "Gibbed Drink", "Material": "SpiC2", "x1": 3.5, "x2": 0, "funcType": "add"},
+    72: {"Name": "Ded Sap", "Material": "Tree13", "x1": 3.5, "x2": 0, "funcType": "add"},
+    73: {"Name": "Royale Cola", "Material": "SpiD3", "x1": 3.5, "x2": 0, "funcType": "add"},
+    74: {"Name": "Turtle Tisane", "Material": "Critter11", "x1": 4, "x2": 0, "funcType": "add"},
+}
+def getReadableVialNames(inputNumber):
+    try:
+        inputNumber = int(inputNumber)
+    except:
+        return f"Unknown Vial {inputNumber}"
+    match inputNumber:
+        case 0:
+            return "Copper Corona (Copper Ore)"
+        case 1:
+            return "Sippy Splinters (Oak Logs)"
+        case 2:
+            return "Mushroom Soup (Spore Cap)"
+        case 3:
+            return "Spool Sprite (Thread)"
+        case 4:
+            return "Barium Mixture (Copper Bar)"
+        case 5:
+            return "Dieter Drink (Bean Slices)"
+        case 6:
+            return "Skinny 0 Cal (Snake Skin)"
+        case 7:
+            return "Thumb Pow (Trusty Nails)"
+        case 8:
+            return "Jungle Juice (Jungle Logs)"
+        case 9:
+            return "Barley Brew (Iron Bar)"
+        case 10:
+            return "Anearful (Glublin Ear)"
+        case 11:
+            return "Tea With Pea (Potty Rolls)"
+        case 12:
+            return "Gold Guzzle (Gold Ore)"
+        case 13:
+            return "Ramificoction (Bullfrog Horn)"
+        case 14:
+            return "Seawater (Goldfish)"
+        case 15:
+            return "Tail Time (Rats Tail)"
+        case 16:
+            return "Fly In My Drink (Fly)"
+        case 17:
+            return "Mimicraught (Megalodon Tooth)"
+        case 18:
+            return "Blue Flav (Platinum Ore)"
+        case 19:
+            return "Slug Slurp (Hermit Can)"
+        case 20:
+            return "Pickle Jar (BobJoePickle)"
+        case 21:
+            return "Fur Refresher (Floof Ploof)"
+        case 22:
+            return "Sippy Soul (Forest Soul)"
+        case 23:
+            return "Crab Juice (Crabbo)"
+        case 24:
+            return "Void Vial (Void Ore)"
+        case 25:
+            return "Red Malt (Redox Salts)"
+        case 26:
+            return "Ew Gross Gross (Mosquisnow)"
+        case 27:
+            return "The Spanish Sahara (Tundra Logs)"
+        case 28:
+            return "Poison Tincture (Poison Froge)"
+        case 29:
+            return "Etruscan Lager (Mamooth Tusk)"
+        case 30:
+            return "Chonker Chug (Dune Soul)"
+        case 31:
+            return "Bubonic Burp (Mousey)"
+        case 32:
+            return "Visible Ink (Pen)"
+        case 33:
+            return "Orange Malt (Explosive Salts)"
+        case 34:
+            return "Snow Slurry (Snow Ball)"
+        case 35:
+            return "Slowergy Drink (Frigid Soul)"
+        case 36:
+            return "Sippy Cup (Sippy Straw)"
+        case 37:
+            return "Bunny Brew (Bunny)"
+        case 38:
+            return "40-40 Purity (Contact Lense)"
+        case 39:
+            return "Shaved Ice (Purple Salt)"
+        case 40:
+            return "Goosey Glug (Honker)"
+        case 41:
+            return "Ball Pickle Jar (BallJoePickle)"
+        case 42:
+            return "Capachino (Purple Mush Cap)"
+        case 43:
+            return "Donut Drink (Half Eaten Donut)"
+        case 44:
+            return "Long Island Tea (Sand Shark)"
+        case 45:
+            return "Spook Pint (Squishy Soul)"
+        case 46:
+            return "Calcium Carbonate (Tongue Bone)"
+        case 47:
+            return "Bloat Draft (Blobfish)"
+        case 48:
+            return "Choco Milkshake (Crumpled Wrapper)"
+        case 49:
+            return "Pearl Seltzer (Pearler Shell)"
+        case 50:
+            return "Krakenade (Kraken)"
+        case 51:
+            return "Electrolyte (Condensed Zap)"
+        case 52:
+            return "Ash Agua (Suggma Ashes)"
+        case 53:
+            return "Maple Syrup (Maple Logs)"
+        case 54:
+            return "Hampter Drippy (Hampter)"
+        case 55:
+            return "Dreadnog (Dreadlo Bar)"
+        case 56:
+            return "Dusted Drink (Dust Mote)"
+        case 57:
+            return "Oj Jooce (Orange Slice)"
+        case 58:
+            return "Oozie Ooblek (Oozie Soul)"
+        case 59:
+            return "Venison Malt (Mongo Worm Slices)"
+        case 60:
+            return "Marble Mocha (Marble Ore)"
+        case 61:
+            return "Willow Sippy (Willow Logs)"
+        case 62:
+            return "Shinyfin Stew (Equinox Fish)"
+        case 63:
+            return "Dreamy Drink (Dream Particulate)"
+        case 64:
+            return "Ricecakorade (Rice Cake)"
+        case 65:
+            return "Ladybug Serum (Ladybug)"
+        case 66:
+            return "Flavorgil (Caulifish)"
+        case 67:
+            return "Greenleaf Tea (Leafy Branch)"
+        case 68:
+            return "Firefly Grog (Firefly)"
+        case 69:
+            return "Dabar Special (Godshard Bar)"
+        case 70:
+            return "Refreshment (Breezy Soul)"
+        case 71:
+            return "Gibbed Drink (Eviscerated Horn)"
+        case 72:
+            return "Ded Sap (Effervescent Log)"
+        case 73:
+            return "Royale Cola (Royal Headpiece)"
+        case 74:
+            return "Turtle Tisane (Tuttle)"
+        case _:
+            return f"Unknown Vial {inputNumber}"
+
+def getReadableBubbleNames(inputNumber, color):
+    try:
+        inputNumber = int(inputNumber)
+    except:
+        return f"Unknown Bubble {color} {inputNumber}"
+    match color:
+        case "Orange":
+            match inputNumber:
+                case 0:
+                    return "Roid Ragin"
+                case 1:
+                    return "Warriors Rule"
+                case 2:
+                    return "Hearty Diggy"
+                case 3:
+                    return "Wyoming Blood"
+                case 4:
+                    return "Reely Smart"
+                case 5:
+                    return "Big Meaty Claws"
+                case 6:
+                    return "Sploosh Sploosh"
+                case 7:
+                    return "Stronk Tools"
+                case 8:
+                    return "FMJ"
+                case 9:
+                    return "Bappity Boopity"
+                case 10:
+                    return "Brittley Spears"
+                case 11:
+                    return "Call Me Bob"
+                case 12:
+                    return "Carpenter"
+                case 13:
+                    return "Buff Boi Talent"
+                case 14:
+                    return "Orange Bargain"
+                case 15:
+                    return "Penny of Strength"
+                case 16:
+                    return "Multorange"
+                case 17:
+                    return "Dream of Ironfish"
+                case 18:
+                    return "Shimmeron"
+                case 19:
+                    return "Bite But Not Chew"
+                case 20:
+                    return "Spear Powah"
+                case 21:
+                    return "Slabi Orefish"
+                case 22:
+                    return "Gamer at Heart"
+                case 23:
+                    return "Slabi Strength"
+                case 24:
+                    return "Power Trione"
+                case 25:
+                    return "Farquad Force"
+                case 26:
+                    return "Endgame Eff I"
+                case 27:
+                    return "Tome Strength"
+                case 28:
+                    return "Essence Boost"
+                case 29:
+                    return "Crop Chapter"
+                case _:
+                    return f"Unknown Bubble {color} {inputNumber}"
+        case "Green":
+            match inputNumber:
+                case 0:
+                    return "Swift Steppin"
+                case 1:
+                    return "Archer or Bust"
+                case 2:
+                    return "Hammer Hammer"
+                case 3:
+                    return "Lil Big Damage"
+                case 4:
+                    return "Anvilnomics"
+                case 5:
+                    return "Quick Slap"
+                case 6:
+                    return "Sanic Tools"
+                case 7:
+                    return "Bug^2"
+                case 8:
+                    return "Shaquracy"
+                case 9:
+                    return "Cheap Shot"
+                case 10:
+                    return "Bow Jack"
+                case 11:
+                    return "Call Me Ash"
+                case 12:
+                    return "Cuz I Catch Em All"
+                case 13:
+                    return "Fast Boi Talent"
+                case 14:
+                    return "Green Bargain"
+                case 15:
+                    return "Dollar Of Agility"
+                case 16:
+                    return "Premigreen"
+                case 17:
+                    return "Fly in Mind"
+                case 18:
+                    return "Kill Per Kill"
+                case 19:
+                    return "Afk Expexp"
+                case 20:
+                    return "Bow Power"
+                case 21:
+                    return "Slabo Critterbug"
+                case 22:
+                    return "Sailor At Heart"
+                case 23:
+                    return "Slabo Agility"
+                case 24:
+                    return "Power Tritwo"
+                case 25:
+                    return "Quickdraw Quiver"
+                case 26:
+                    return "Essence Boost"
+                case 27:
+                    return "Endgame Eff II"
+                case 28:
+                    return "Tome Agility"
+                case 29:
+                    return "Stealth Chapter"
+                case _:
+                    return f"Unknown Bubble {color} {inputNumber}"
+        case "Purple":
+            match inputNumber:
+                case 0:
+                    return "Stable Jenius"
+                case 1:
+                    return "Mage is Best"
+                case 2:
+                    return "Hocus Choppus"
+                case 3:
+                    return "Molto Loggo"
+                case 4:
+                    return "Noodubble"
+                case 5:
+                    return "Name I Guess"
+                case 6:
+                    return "Le Brain Tools"
+                case 7:
+                    return "Cookin Roadkill"
+                case 8:
+                    return "Brewstachio"
+                case 9:
+                    return "All for Kill"
+                case 10:
+                    return "Matty Stafford"
+                case 11:
+                    return "Call Me Pope"
+                case 12:
+                    return "Gospel Leader"
+                case 13:
+                    return "Smart Boi Talent"
+                case 14:
+                    return "Purple Bargain"
+                case 15:
+                    return "Nickel Of Wisdom"
+                case 16:
+                    return "Severapurple"
+                case 17:
+                    return "Tree Sleeper"
+                case 18:
+                    return "Hyperswift"
+                case 19:
+                    return "Matrix Evolved"
+                case 20:
+                    return "Wand Pawur"
+                case 21:
+                    return "Slabe Logsoul"
+                case 22:
+                    return "Pious At Heart"
+                case 23:
+                    return "Slabe Wisdom"
+                case 24:
+                    return "Power Trithree"
+                case 25:
+                    return "Smarter Spells"
+                case 26:
+                    return "Endgame Eff III"
+                case 27:
+                    return "Essence Boost"
+                case 28:
+                    return "Tome Wisdom"
+                case 29:
+                    return "Essence Chapter"
+                case _:
+                    return f"Unknown Bubble {color} {inputNumber}"
+        case "Yellow":
+            match inputNumber:
+                case 0:
+                    return "Lotto Skills"
+                case 1:
+                    return "Droppin Loads"
+                case 2:
+                    return "Startue Exp"
+                case 3:
+                    return "Level Up Gift"
+                case 4:
+                    return "Prowesessary"
+                case 5:
+                    return "Stamp Tramp"
+                case 6:
+                    return "Undeveloped Costs"
+                case 7:
+                    return "Da Daily Drip"
+                case 8:
+                    return "Grind Time"
+                case 9:
+                    return "Laaarrrryyyy"
+                case 10:
+                    return "Cogs For Hands"
+                case 11:
+                    return "Sample It"
+                case 12:
+                    return "Big Game Hunter"
+                case 13:
+                    return "Ignore Overdues"
+                case 14:
+                    return "Yellow Bargain"
+                case 15:
+                    return "Mr Massacre"
+                case 16:
+                    return "Egg Ink"
+                case 17:
+                    return "Diamond Chef"
+                case 18:
+                    return "Card Champ"
+                case 19:
+                    return "Petting The Rift"
+                case 20:
+                    return "Boaty Bubble"
+                case 21:
+                    return "Big P"
+                case 22:
+                    return "Bit By Bit"
+                case 23:
+                    return "Gifts Abound"
+                case 24:
+                    return "Atom Split"
+                case 25:
+                    return "Cropius Mapper"
+                case 26:
+                    return "Essence Boost"
+                case 27:
+                    return "Hinge Buster"
+                case 28:
+                    return "Ninja Looter"
+                case 29:
+                    return "Lo Cost Mo Jade"
+                case _:
+                    return f"Unknown Bubble {color} {inputNumber}"
+
+
+starsignsList: list[str] = [
+
+]
+
+buildingsList: list[str] = [
+    "3D Printer", "Talent Book Library", "Death Note", "Salt Lick", "Chest Space", "Cost Cruncher", "Trapper Drone", "Automation Arm", "Atom Collider",
+    "Pulse Mage", "Fireball Lobber", "Boulder Roller", "Frozone Malone", "Stormcaller", "Party Starter", "Kraken Cosplayer", "Poisonic Elder", "Voidinator",
+    "Woodular Shrine", "Isaccian Shrine", "Crystal Shrine", "Pantheon Shrine", "Clover Shrine", "Summereading Shrine", "Crescent Shrine", "Undead Shrine", "Primordial Shrine"
+]
+
+shrinesList: list[str] = [
+    "Woodular Shrine", "Isaccian Shrine", "Crystal Shrine", "Pantheon Shrine", "Clover Shrine", "Summereading Shrine", "Crescent Shrine", "Undead Shrine", "Primordial Shrine"
+]
+
+atomsList: list[str] = [
+    "Hydrogen - Stamp Decreaser", "Helium - Talent Power Stacker", "Lithium - Bubble Insta Expander", "Beryllium - Post Office Penner",
+    "Boron - Particle Upgrader", "Carbon - Wizard Maximizer", "Nitrogen - Construction Trimmer", "Oxygen - Library Booker",
+    "Fluoride - Void Plate Chef", "Neon - Damage N' Cheapener", "Sodium - Snail Kryptonite"
+]
+
+prayersList: list[str] = [
+    "Big Brain Time (Forest Soul)", "Skilled Dimwit (Forest Soul)", "Unending Energy (Forest Soul)",
+    "Shiny Snitch (Forest Soul)", "Zerg Rushogen (Forest Soul)",
+    "Tachion of the Titans (Dune Soul)", "Balance of Precision (Dune Soul)", "Midas Minded (Dune Soul)", "Jawbreaker (Dune Soul)",
+    "The Royal Sampler (Rooted Soul)", "Antifun Spirit (Rooted Soul)", "Circular Criticals (Rooted Soul)", "Ruck Sack (Rooted Soul)",
+    "Fibers of Absence (Frigid Soul)", "Vacuous Tissue (Frigid Soul)", "Beefy For Real (Frigid Soul)",
+    "Balance of Pain (Squishy Soul)", "Balance of Proficiency (Squishy Soul)","Glitterbug (Squishy Soul)",
+]
+
+labChipsList: list[str] = [
+    "Grounded Nanochip", "Grounded Motherboard", "Grounded Software", "Grounded Processor", "Potato Chip",
+    "Conductive Nanochip", "Conductive Motherboard", "Conductive Software", "Conductive Processor", "Chocolatey Chip",
+    "Galvanic Nanochip", "Galvanic Motherboard", "Galvanic Software", "Galvanic Processor", "Wood Chip",
+    "Silkrode Nanochip", "Silkrode Motherboard", "Silkrode Software", "Silkrode Processor", "Poker Chip",
+    "Omega Nanochip", "Omega Motherboard"
+]
+gemShopDict = {
+    #Inventory and Storage
+    'Item Backpack Space': 0,
+    'Storage Chest Space': 0,
+    'Carry Capacity': 0,
+    'Food Slot': 0,
+    'More Storage Space': 0,
+    'Card Presets': 0,
+
+    #Dailies N' Resets
+    'Daily Teleports': 0,
+    'Daily Minigame Plays': 0,
+
+    #Cards
+    'Extra Card Slot': 0,
+
+    #Goods & Services
+    'Weekly Dungeon Boosters': 0,
+
+    #World 1&2
+    'Infinity Hammer': 0,
+    'Brimstone Forge Slot': 0,
+    'Ivory Bubble Cauldrons': 0,
+    'Bleach Liquid Cauldrons': 0,
+    'Obol Storage Space': 0,
+    'Sigil Supercharge': 0,
+
+    #World 3
+    'Crystal 3d Printer': 0,
+    'More Sample Spaces': 0,
+    'Burning Bad Books': 0,
+    'Prayer Slots': 0,
+    'Zen Cogs': 0,
+    'Cog Inventory Space': 0,
+    'Tower Building Slots': 0,
+    'Fluorescent Flaggies': 0,
+
+    #World 4
+    'Royal Egg Cap': 0,
+    'Richelin Kitchen': 0,
+    'Souped Up Tube': 0,
+    'Pet Storage': 0,
+    'Fenceyard Space': 0,
+
+    #World 5
+    'Chest Sluggo': 0,
+    'Divinity Sparkie': 0,
+    'Golden Sprinkler': 0,
+    'Lava Sprouts': 0,
+
+    #World 6
+    'Plot of Land': 0,
+    'Pristine Charm': 0,
+    'Shroom Familiar': 0,
+    'Sand of Time': 0,
+    'Instagrow Generator': 0,
+    'Life Refill': 0,
+    'Compost Bag': 0,
+    'Summoner Stone': 0,
+
+    #Fomo
+    'FOMO-1': 0,
+    'FOMO-2': 0,
+    'FOMO-3': 0,
+    'FOMO-4': 0,
+    'FOMO-5': 0,
+    'FOMO-6': 0,
+    'FOMO-7': 0,
+    'FOMO-8': 0
+    }  # Default 0s
+
+pristineCharmsList: list[str] = [
+    "Sparkle Log", "Fruit Rolle", "Glowing Veil", "Cotton Candy", "Sugar Bomb",
+    "Gumm Eye", "Bubblegum Law", "Sour Wowzer", "Crystal Comb", "Rock Candy",
+    "Lollipop Law", "Taffy Disc", "Stick of Chew", "Treat Sack", "Gumm Stick",
+    "Lolly Flower", "Gumball Necklace", "Liqorice Rolle",
+]
+
+sigilsDict = {
+    "Big Muscle":       {"Index": 0,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [2, 100, 50000]},
+    "Pumped Kicks":     {"Index": 2,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [3, 150, 60000]},
+    "Odd Literarture":  {"Index": 4,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [5, 200, 70000]},
+    "Good Fortune":     {"Index": 6,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [8, 300, 90000]},
+    "Plunging Sword":   {"Index": 8,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [15, 700, 100000]},
+    "Wizardly Hat":     {"Index": 10, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [24, 1250, 130000]},
+    "Envelope Pile":    {"Index": 12, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [60, 2500, 160000]},
+    "Shiny Beacon":     {"Index": 14, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [120, 4000, 200000]},
+    "Metal Exterior":   {"Index": 16, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [250, 7000, 240000]},
+    "Two Starz":        {"Index": 18, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [500, 10000, 280000]},
+    "Pipe Gauge":       {"Index": 20, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [700, 12000, 320000]},
+    "Trove":            {"Index": 22, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [1300, 14000, 400000]},
+    "Pea Pod":          {"Index": 24, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [2100, 15000, 420000]},
+    "Tuft Of Hair":     {"Index": 26, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [3000, 25000, 450000]},
+    "Emoji Veggie":     {"Index": 28, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [4500, 33000, 480000]},
+    "Vip Parchment":    {"Index": 30, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [6300, 42000, 520000]},
+    "Dream Catcher":    {"Index": 32, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [7000, 50000, 560000]},
+    "Duster Studs":     {"Index": 34, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [8000, 60000, 600000]},
+    "Garlic Glove":     {"Index": 36, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [9000, 70000, 650000]},
+    "Lab Tesstube":     {"Index": 38, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [12000, 80000, 700000]},
+    "Peculiar Vial":    {"Index": 40, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [17000, 120000, 750000]},
+    "Loot Pile":        {"Index": 42, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [23000, 160000, 900000]},
+    "Div Spiral":       {"Index": 44, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [26000, 200000, 1200000]},
+    "Cool Coin":        {"Index": 46, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [30000, 250000, 2000000]},
+}
+
+artifactsList = [
+    'Moai Head', 'Maneki Kat', 'Ruble Cuble', 'Fauxory Tusk', 'Gold Relic',
+    'Genie Lamp', 'Silver Ankh', 'Emerald Relic', 'Fun Hippoete', 'Arrowhead',
+    '10 AD Tablet', 'Ashen Urn', 'Amberite', 'Triagulon', 'Billcye Tri',
+    'Frost Relic', 'Chilled Yarn', 'Causticolumn', 'Jade Rock', 'Dreamcatcher',
+    'Gummy Orb', 'Fury Relic', 'Cloud Urn', 'Weatherbook', 'Giants Eye',
+    'Crystal Steak', 'Trilobite Rock', 'Opera Mask', 'Socrates', 'The True Lantern',
+    'The Onyx Lantern', 'The Shim Lantern', 'The Winz Lantern'
+]
+
+guildBonusesList = [
+    "Guild Gifts", "Stat Runes", "Rucksack", "Power of Pow", "REM Fighting", "Make or Break",
+    "Multi Tool", "Sleepy Skiller", "Coin Supercharger", "Bonus GP for small guilds", "Gold Charm", "Star Dazzle",
+    "C2 Card Spotter", "Bestone", "Skilley Skillet", "Craps", "Anotha One", "Wait A Minute"
+]
+
+labBonusesList = [
+    "Animal Farm", "Wired In", "Gilded Cyclical Tubing", "No Bubble Left Behind", "Killer's Brightside",
+    "Shrine World Tour", "Viaduct of the Gods", "Certified Stamp Book", "Spelunker Obol", "Fungi Finger Pocketer",
+    "My 1st Chemistry Set", "Unadulterated Banking Fury", "Sigils of Olden Alchemy", "Viral Connection",
+    "Artifact Attraction", "Slab Sovereignty", "Spiritual Growth", "Depot Studies PhD"
+]
+
+def lavaFunc(funcType: str, level: int, x1: int, x2: int, roundResult=False):
+    result = 0
+    match funcType:
+        case 'add':
+            if x2 != 0:
+                result = (((x1 + x2) / x2 + 0.5 * (level - 1)) / (x1/x2)) * level * x1
+        case 'decay':
+            result = (level * x1) / (level + x2)
+        case 'intervalAdd':
+            result = x1 + math.floor(level / x2)
+        case 'decayMulti':
+            result = 1 + (level * x1) / (level + x2)
+        case 'bigBase':
+            result = x1 + x2 * level
+        case 'special1':
+            result = 100 - (level * x1) / (level + x2)
+        case _:
+            result = 0
+    if roundResult:
+        return round(result)
+    else:
+        return result

@@ -65,14 +65,14 @@ def parseJSON():
         if "Sovereign Artifacts" in session_data.account.jade_emporium_purchases:
             playerMissingPlateUpgrades.append(("Sovereign Causticolumn Sailing Artifact", "causticolumn"))
         else:
-            playerMissingPlateUpgrades.append(("Sovereign Causticolumn Sailing Artifact. Sovereign Artifacts are unlocked from the Jade Emporium", "jade-vendor"))
+            playerMissingPlateUpgrades.append(("Sovereign Causticolumn Sailing Artifact. Sovereign Artifacts are unlocked from the Jade Emporium", "sovereign-artifacts"))
     #Jade Emporium Increases
     if "Papa Blob's Quality Guarantee" not in session_data.account.jade_emporium_purchases:
-        playerMissingPlateUpgrades.append(("Purchase \"Papa Blob's Quality Guarantee\" from the Jade Emporium", "jade-vendor"))
+        playerMissingPlateUpgrades.append(("Purchase \"Papa Blob's Quality Guarantee\" from the Jade Emporium", "papa-blobs-quality-guarantee"))
     else:
         playerMaxPlateLvl += 10
     if "Chef Geustloaf's Cutting Edge Philosophy" not in session_data.account.jade_emporium_purchases:
-        playerMissingPlateUpgrades.append(("Purchase \"Chef Geustloaf's Cutting Edge Philosophy\" from the Jade Emporium", "jade-vendor"))
+        playerMissingPlateUpgrades.append(("Purchase \"Chef Geustloaf's Cutting Edge Philosophy\" from the Jade Emporium", "chef-geustloafs-cutting-edge-philosophy"))
     else:
         playerMaxPlateLvl += 10
 
@@ -102,16 +102,12 @@ def setCookingProgressionTier():
     voidwalkers = [toon for toon in session_data.account.all_characters if toon.elite_class == "Voidwalker"]
 
     try:
-        atomFlouride = session_data.account.raw_data.get("Atoms", [0,0,0,0,0])[8] >= 1
+        atomFlouride = session_data.account.raw_data.get("Atoms", [0]*9)[8] >= 1
     except:
         logger.exception(f"Unable to retrieve Atom Collider Flouride level. Defaulting to 0.")
         atomFlouride = False
 
-    try:
-        dchefLevel = session_data.account.raw_data.get("CauldronInfo")[3]["17"]
-    except:
-        logger.exception(f"Unable to retrieve Diamond Chef bubble level. Defaulting to 0.")
-        dchefLevel = 0
+    dchefLevel = session_data.account.alchemy_bubbles.get("Diamond Chef", 0)
 
     playerCookingList, playerMealsList, mealsUnlocked, mealsUnder11, mealsUnder30, playerMaxPlateLvl, playerMissingPlateUpgrades = parseJSON()
     playerTotalMealLevels = sum(playerMealsList[0])
@@ -121,9 +117,9 @@ def setCookingProgressionTier():
         tier_Cooking = 1
     if tier_Cooking == 1 and dchefLevel >= 15:
         tier_Cooking = 2
-    if tier_Cooking == 2 and len(voidwalkers) > 0 and playerTotalMealLevels >= 500:
+    if tier_Cooking == 2 and len(voidwalkers) > 0:
         tier_Cooking = 3
-    if tier_Cooking == 3 and atomFlouride:
+    if tier_Cooking == 3 and atomFlouride and playerTotalMealLevels >= 500:
         tier_Cooking = 4
     if tier_Cooking == 4 and mealsUnlocked >= maxMeals and mealsUnder30 <= 0:
         tier_Cooking = 5
@@ -146,6 +142,12 @@ def setCookingProgressionTier():
                 label="Unlock a Voidwalker",
                 picture_class="voidwalker-icon"
             ))
+    # 3) if Vman:
+    elif tier_Cooking == 3:
+        cooking_AdviceDict["NextTier"].append(Advice(
+            label="Unlock Fluoride - Void Plate Chef in the Atom Collider",
+            picture_class="flouride"
+        ))
         if playerTotalMealLevels < 500:
             cooking_AdviceDict["NextTier"].append(Advice(
                 label="Reach 500+ total meal levels",
@@ -153,13 +155,7 @@ def setCookingProgressionTier():
                 progression=playerTotalMealLevels,
                 goal=500
             ))
-    # 3) if Vman and total plates over 500:
-    elif tier_Cooking == 3:
-        cooking_AdviceDict["NextTier"].append(Advice(
-            label="Unlock Fluoride - Void Plate Chef in the Atom Collider",
-            picture_class="flouride"
-        ))
-    # 4) if Atom Collider Flouride upgrade owned:
+    # 4) if Atom Collider Flouride upgrade owned and total plates over 500:
     elif tier_Cooking == 4:
         if mealsUnlocked < maxMeals:
             cooking_AdviceDict["NextTier"].append(Advice(

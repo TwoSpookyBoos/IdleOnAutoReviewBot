@@ -52,10 +52,13 @@ function progWidth(bar, w, p, g) {
     const prog = parseFloat(p.innerText.replace(/.*?(\d+).*/, "$1"))
     const inPercentages = g.innerText.includes("%") || p.innerText.includes("%")
     const inRatio = !(isNaN(prog) || isNaN(goal))
+    const isDone = [g.innerText, p.innerText].some(el => el === "✔")
 
 
-    if (inRatio) return [(100 * prog / goal), true]
+    if (inRatio)       return [(100 * prog / goal), true]
     if (inPercentages) return [[prog, goal].find(e => !isNaN(e)), true]
+    if (isDone)        return [100, true]
+
     return [0, (inPercentages || inRatio)]
 }
 

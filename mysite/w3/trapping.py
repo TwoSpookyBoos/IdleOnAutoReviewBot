@@ -110,7 +110,7 @@ def getCharactersWithUnplacedTraps(trappingLevelsList, placedTrapsDict):
     #Step 1 = Get number of expected traps
     #Bonus trap slot comes from the Call Me Ash bubble, which is an Int stored at ["CauldronInfo"][1][11]. If it is level 1 or higher, the extra trap slot is always given. Does not need to be equipped.
     bonusTrapSlot = 0
-    if session_data.account.raw_data["CauldronInfo"][1]["11"] >= 1:
+    if session_data.account.alchemy_bubbles.get("Call Me Ash", 0) >= 1:
         bonusTrapSlot = 1
     #print("Trapping.getCharactersWithUnplacedTraps~ OUTPUT bonusTrapSlot = ",bonusTrapSlot, "because Call Me Ash level = ",inputJSON["CauldronInfo"][1]["11"])
 
