@@ -1,7 +1,8 @@
 flask
 requests
 #coloredlogs
-ue-parser
+ua-parser
 babel
 pyyaml
 libsass
+pytest
