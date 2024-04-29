@@ -13,7 +13,7 @@ from flask import g
 from utils.data_formatting import getCharacterDetails, safe_loads
 from consts import expectedStackables, greenstack_progressionTiers, card_data, maxMeals, maxMealLevel, jade_emporium, max_IndexOfVials, getReadableVialNames, \
     max_IndexOfBubbles, getReadableBubbleNames, buildingsList, atomsList, prayersList, labChipsList, bribesList, shrinesList, pristineCharmsList, sigilsDict, \
-    artifactsList, guildBonusesList, labBonusesList
+    artifactsList, guildBonusesList, labBonusesList, lavaFunc, vialsDict
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, letterToNumber
 
 def session_singleton(cls):
@@ -26,22 +26,27 @@ def session_singleton(cls):
 
 
 class Equipment:
-    def __init__(self, raw_data, toon_index):
-        order = raw_data.get(f"EquipOrder_{toon_index}", [])
-        quantity = raw_data.get(f"EquipQTY_{toon_index}", [])
-        groups = list()
-        for o, q in zip(order, quantity):
-            o.pop("length", None)
-            q.pop("length", None)
-            o = dict(sorted(o.items(), key=lambda i: int(i[0]))).values()
-            q = dict(sorted(q.items(), key=lambda i: int(i[0]))).values()
-            groups.append([Asset(name, float(count)) for name, count in zip(o, q)])
+    def __init__(self, raw_data, toon_index, safeStatus: bool):
+        if safeStatus:
+            order = raw_data.get(f"EquipOrder_{toon_index}", [])
+            quantity = raw_data.get(f"EquipQTY_{toon_index}", [])
+            groups = list()
+            for o, q in zip(order, quantity):
+                o.pop("length", None)
+                q.pop("length", None)
+                o = dict(sorted(o.items(), key=lambda i: int(i[0]))).values()
+                q = dict(sorted(q.items(), key=lambda i: int(i[0]))).values()
+                groups.append([Asset(name, float(count)) for name, count in zip(o, q)])
 
-        equips, tools, foods = groups
+            equips, tools, foods = groups
 
-        self.equips = equips
-        self.tools = tools
-        self.foods = foods
+            self.equips = equips
+            self.tools = tools
+            self.foods = foods
+        else:
+            self.equips = {}
+            self.tools = {}
+            self.foods = []
 
 
 class Character:
@@ -100,10 +105,7 @@ class Character:
             }
             for name in ("ZOW", "CHOW", "MEOW")
         }
-        if self.combat_level >= 1:
-            self.equipment = Equipment(raw_data, character_index)
-        else:
-            self.equipment = None
+        self.equipment = Equipment(raw_data, character_index, self.combat_level >= 1)
 
     def addUnmetApoc(self, apocType: str, apocRating: str, mapInfoList: list):
         self.apoc_dict[apocType][apocRating].append(mapInfoList)
@@ -656,7 +658,7 @@ class Account:
         self.classes = playerClasses
         self.all_characters = [Character(self.raw_data, **char) for char in characterDict.values()]
         self.safe_characters = [char for char in self.all_characters if char]  #Use this if touching raw_data instead of all_characters
-        self.safe_playerCount = len(self.safe_characters)
+        self.safe_playerIndexes = [char.character_index for char in self.all_characters if char]
         self.all_skills = perSkillDict
         self.all_quests = [safe_loads(self.raw_data.get(f"QuestComplete_{i}", "{}")) for i in range(self.playerCount)]
         self.assets = self._all_owned_items()
@@ -731,14 +733,22 @@ class Account:
                 manualVialsAdded += 1
             for vialKey, vialValue in raw_alchemy_vials.items():
                 try:
-                    self.alchemy_vials[getReadableVialNames(vialKey)] = int(vialValue)
+                    self.alchemy_vials[getReadableVialNames(vialKey)] = {
+                        "Level": int(vialValue),
+                        "Value": lavaFunc(
+                            vialsDict.get(int(vialKey)).get("funcType"),
+                            int(vialValue),
+                            vialsDict.get(int(vialKey)).get("x1"),
+                            vialsDict.get(int(vialKey)).get("x2"),
+                        )
+                    }
                 except:
-                    self.alchemy_vials[getReadableVialNames(vialKey)] = 0
+                    self.alchemy_vials[getReadableVialNames(vialKey)] = {"Level": 0, "Value": 0}
         except:
             pass
         self.maxed_vials = 0
-        for vialLevel in self.alchemy_vials.values():
-            if vialLevel >= 13:
+        for vial in self.alchemy_vials.values():
+            if vial.get("Level", 0) >= 13:
                 self.maxed_vials += 1
 
         self.alchemy_bubbles = {}
@@ -793,7 +803,19 @@ class Account:
             for sigilName in self.alchemy_p2w["Sigils"]:
                 try:
                     self.alchemy_p2w["Sigils"][sigilName]["PlayerHours"] = float(raw_p2w_list[4][self.alchemy_p2w["Sigils"][sigilName]["Index"]])
-                    self.alchemy_p2w["Sigils"][sigilName]["Level"] = raw_p2w_list[4][self.alchemy_p2w["Sigils"][sigilName]["Index"]+1] + 1
+                    self.alchemy_p2w["Sigils"][sigilName]["Level"] = raw_p2w_list[4][self.alchemy_p2w["Sigils"][sigilName]["Index"] + 1] + 1
+                    if self.alchemy_p2w["Sigils"][sigilName]["Level"] == 2:
+                        if "Ionized Sigils" in self.jade_emporium_purchases:
+                            #If you have purchased Ionized Sigils, the numbers needed to Gold get subtracted from your hours already
+                            red_Hours = self.alchemy_p2w["Sigils"][sigilName]["Requirements"][2]
+                        else:
+                            #To precharge Red sigils before buying the upgreade, you need Gold + Red hours
+                            red_Hours = self.alchemy_p2w["Sigils"][sigilName]["Requirements"][1] + self.alchemy_p2w["Sigils"][sigilName]["Requirements"][2]
+                        if self.alchemy_p2w["Sigils"][sigilName]["PlayerHours"] >= red_Hours:
+                            self.alchemy_p2w["Sigils"][sigilName]["PrechargeLevel"] = 3
+                        else:
+                            self.alchemy_p2w["Sigils"][sigilName]["PrechargeLevel"] = self.alchemy_p2w["Sigils"][sigilName]["Level"]
+
                     #Before the +1, -1 would mean not unlocked, 0 would mean Blue tier, 1 would be Yellow tier, and 2 would mean Red tier
                     #After the +1, 0/1/2/3
                 except Exception as reason:
@@ -909,7 +931,7 @@ class Account:
     def _all_owned_items(self) -> Assets:
         chest_keys = (("ChestOrder", "ChestQuantity"),)
         name_quantity_key_pairs = chest_keys + tuple(
-            (f"InventoryOrder_{i}", f"ItemQTY_{i}") for i in range(self.safe_playerCount)
+            (f"InventoryOrder_{i}", f"ItemQTY_{i}") for i in self.safe_playerIndexes
         )
         all_stuff_owned = defaultdict(int)
 

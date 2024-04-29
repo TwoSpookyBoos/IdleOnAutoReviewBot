@@ -58,7 +58,7 @@ def getShinyExclusions():
         ]
         alchemyVialsDict = session_data.account.alchemy_vials
         for vialName in critterVialsList:
-            if alchemyVialsDict.get(vialName, 0) < 13:
+            if alchemyVialsDict.get(vialName, {}).get("Level", 0) < 13:
                 break
             elif vialName == critterVialsList[-1]:
                 shinyExclusionsDict["Exclude-Critters"] = True

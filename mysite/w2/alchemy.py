@@ -4,7 +4,8 @@ from utils.data_formatting import safe_loads
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import maxTiersPerGroup, bubbles_progressionTiers, vials_progressionTiers, max_IndexOfVials, getReadableBubbleNames, max_IndexOfBubbles
+from consts import maxTiersPerGroup, bubbles_progressionTiers, vials_progressionTiers, sigils_progressionTiers, max_IndexOfVials, getReadableBubbleNames, \
+    max_IndexOfBubbles, max_IndexOfSigils
 
 logger = get_logger(__name__)
 
@@ -64,27 +65,27 @@ def setAlchemyVialsProgressionTier() -> AdviceSection:
     alchemyVialsDict = session_data.account.alchemy_vials
     unlockedVials = 0
 
-    for vial in alchemyVialsDict:
+    for vialName, vialValue in alchemyVialsDict.items():
         try:
-            if int(alchemyVialsDict[vial]) == 0:
-                lockedVialsList.append(vial)
+            if int(vialValue.get("Level", 0)) == 0:
+                lockedVialsList.append(vialName)
                 #unmaxedVialsList.append(getReadableVialNames(vial))
-                unmaxedVialsList.append(vial)
+                unmaxedVialsList.append(vialName)
             else:
                 unlockedVials += 1
-                if int(alchemyVialsDict[vial]) >= 4:
+                if int(vialValue.get("Level", 0)) >= 4:
                     #virileVialsList.append(getReadableVialNames(vial))
-                    virileVialsList.append(vial)
-                if int(alchemyVialsDict[vial]) >= 13:
+                    virileVialsList.append(vialName)
+                if int(vialValue.get("Level", 0)) >= 13:
                     #maxedVialsList.append(getReadableVialNames(vial))
-                    maxedVialsList.append(vial)
+                    maxedVialsList.append(vialName)
                 else:
                     #unmaxedVialsList.append(getReadableVialNames(vial))
-                    unmaxedVialsList.append(vial)
+                    unmaxedVialsList.append(vialName)
         except:
-            logger.exception(f"Could not coerce {type(alchemyVialsDict[vial])} {alchemyVialsDict[vial]} to Int for Vial comparison")
-            lockedVialsList.append(vial)
-            unmaxedVialsList.append(vial)
+            logger.exception(f"Could not coerce vial {vialName}'s level of {type(vialValue.get('Level', 0))} {vialValue.get('Level', 0)} to Int for Vial comparison")
+            lockedVialsList.append(vialName)
+            unmaxedVialsList.append(vialName)
 
     tier_TotalVialsUnlocked = 0
     tier_TotalVialsMaxed = 0
@@ -513,3 +514,36 @@ def setAlchemyP2W() -> AdviceSection:
     else:
         p2w_AdviceSection.header = f"You've purchased {tier_section} upgrades in Alchemy P2W. Try to purchase the basic upgrades before Mid W5, and Player upgrades after each level up!"
     return p2w_AdviceSection
+
+# def setAlchemySigils() -> AdviceSection:
+#     sigils_AdviceDict = {
+#         "S": [], "A": [], "B": [], "C": [], "D": [], "F": []
+#     }
+#     sigils_AdviceGroupDict = {}
+#     sigils_AdviceSection = AdviceSection(
+#         name="Sigils",
+#         tier="Not Yet Evaluated",
+#         header="Best sigils tier met: Not Yet Evaluated. Recommended sigils actions:",
+#         picture="Sigils.png"
+#     )
+#
+#     highestLabLevel = max(session_data.account.all_skills["Laboratory"])
+#     if highestLabLevel < 1:
+#         sigils_AdviceSection.header = "Come back after unlocking the Laboratory skill in World 4!"
+#         return sigils_AdviceSection
+#
+#     alchemy_sigilsList = session_data.account.alchemy_p2w["Sigils"]
+#     sigils_AdviceDict["S"].append(Advice(
+#         label="Jade Emporium: Ionized Sigils",
+#         picture_class="ionized-sigils",
+#         progression=f"{1 if 'Ionized Sigils' in session_data.account.jade_emporium_purchases else 0}",
+#         goal=1
+#     ))
+#
+#     # for tierIndex, tierContents in sigils_progressionTiers.items():
+#     #     for sigilName in tierContents.get("Sigils", []):
+#     #         if alchemy_sigilsList.get(sigilName, {}).get("PrechargeLevel") < max_IndexOfSigils:
+#     #
+#     #
+#     # #Generate AdviceSection
+#     return sigils_AdviceSection

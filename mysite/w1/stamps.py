@@ -111,7 +111,7 @@ def getCapacityAdviceGroup(priorityStampsDict: dict) -> AdviceGroup:
     capacity_Advices["Stamps"].append(Advice(
         label="Lab Bonus: Certified Stamp Book",
         picture_class="certified-stamp-book",
-        progression="IDK",
+        progression=f"{1 if session_data.account.labBonuses.get('Certified Stamp Book', {}).get('Enabled', False) else 0}",
         goal=1
     ))
     capacity_Advices["Stamps"].append(Advice(
@@ -241,10 +241,13 @@ def getCapacityAdviceGroup(priorityStampsDict: dict) -> AdviceGroup:
 
 
 def mark_completed(advice):
-    if advice.goal and advice.progression and advice.goal >= advice.progression:
-        advice.progression = ""
-        advice.goal = "✔"
-        setattr(advice, "status", "complete")
+    try:
+        if advice.goal and advice.progression and int(advice.goal) == int(advice.progression):
+            advice.progression = ""
+            advice.goal = "✔"
+            setattr(advice, "status", "complete")
+    except:
+        pass
 
 
 def getCostReductionAdviceGroup() -> AdviceGroup:
@@ -253,41 +256,58 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     costReduction_Advices["Vials"].append(Advice(
         label="Vial: Blue Flav (Platinum Ore)",
         picture_class="platinum-ore",
-        progression=session_data.account.alchemy_vials.get("Blue Flav (Platinum Ore)", 0),
+        progression=session_data.account.alchemy_vials.get("Blue Flav (Platinum Ore)", {}).get("Level", 0),
         goal=13
     ))
     costReduction_Advices["Vials"].append(Advice(
         label="Vial: Venison Malt (Mongo Worm Slices)",
         picture_class="mongo-worm-slices",
-        progression=session_data.account.alchemy_vials.get("Venison Malt (Mongo Worm Slices)", 0),
+        progression=session_data.account.alchemy_vials.get("Venison Malt (Mongo Worm Slices)", {}).get("Level", 0),
         goal=13
     ))
     costReduction_Advices["Vials"].append(Advice(
         label="Lab Bonus: My 1st Chemistry Set",
         picture_class="my-1st-chemistry-set",
-        progression="Assuming",
-        goal="On"
+        progression=f"{1 if session_data.account.labBonuses.get('My 1st Chemistry Set', {}).get('Enabled', False) else 0}",
+        goal=1
     ))
 
-    blueFavReduction = lavaFunc('decay', session_data.account.alchemy_vials.get("Blue Flav (Platinum Ore)", 0), 30, 7, False)
-    venisonMaltReduction = lavaFunc('add', session_data.account.alchemy_vials.get("Venison Malt (Mongo Worm Slices)", 0), 2, 0, False)
+    blueFavReduction = session_data.account.alchemy_vials.get("Blue Flav (Platinum Ore)", {}).get("Value", 0)
+    venisonMaltReduction = session_data.account.alchemy_vials.get("Venison Malt (Mongo Worm Slices)", {}).get("Value", 0)
     totalVialReduction = blueFavReduction + venisonMaltReduction
-    if session_data.account.vial_mastery_unlocked:
-        vialMasteryMulti = 1 + (session_data.account.maxed_vials * .02)
-        totalVialReduction *= vialMasteryMulti
-    totalVialReduction *= 1 + session_data.account.labBonuses.get("My 1st Chemistry Set", {}).get("Enabled", False)
+    vialMasteryMulti = 1 + (session_data.account.maxed_vials * .02) if session_data.account.vial_mastery_unlocked else 1
+    totalVialReduction *= vialMasteryMulti
+    if session_data.account.labBonuses.get("My 1st Chemistry Set", {}).get("Enabled", False):
+        totalVialReduction *= 2
+    costReduction_Advices["Vials"].append(Advice(
+        label=f"Rift Bonus: Vial Mastery: {vialMasteryMulti:.2f}x",
+        picture_class="vial-mastery",
+        progression=f"{1 if session_data.account.vial_mastery_unlocked else 0}",
+        goal=1
+    ))
     costReduction_Advices["Vials"].append(Advice(
         label="Total Vial reduction is hardcapped at 95%",
         picture_class="",
-        progression=totalVialReduction,
+        progression=f"{totalVialReduction:.2f}",
         goal=95,
         unit="%"
     ))
 
     costReduction_Advices["Uncapped"].append(Advice(
-        label="Sigil: Envelope Pile",
+        label="Jade Emporium: Ionized Sigils",
+        picture_class="ionized-sigils",
+        progression=f"{1 if 'Ionized Sigils' in session_data.account.jade_emporium_purchases else 0}",
+        goal=1
+    ))
+    if (session_data.account.alchemy_p2w.get('Sigils', {}).get('Envelope Pile', {}).get('PrechargeLevel', 0)
+        > session_data.account.alchemy_p2w.get('Sigils', {}).get('Envelope Pile', {}).get('Level', 0)):
+        envelope_pile_precharged = '(Precharged)'
+    else:
+        envelope_pile_precharged = ''
+    costReduction_Advices["Uncapped"].append(Advice(
+        label=f"Sigil: Envelope Pile {envelope_pile_precharged}",
         picture_class="envelope-pile",
-        progression=session_data.account.alchemy_p2w.get("Sigils", {}).get("Envelope Pile", {}).get("Level", 0),
+        progression=session_data.account.alchemy_p2w.get("Sigils", {}).get("Envelope Pile", {}).get("PrechargeLevel", 0),
         goal=3
     ))
     costReduction_Advices["Uncapped"].append(Advice(
