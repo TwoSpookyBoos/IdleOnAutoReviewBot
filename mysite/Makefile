@@ -1,2 +1,2 @@
 test:
-	python -m pytest -p no:warnings
+	PYTHONPATH=$$(git rev-parse --show-toplevel)/mysite && cd "$$PYTHONPATH" && PYTHONPATH="$$PYTHONPATH" pytest
