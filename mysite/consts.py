@@ -2187,6 +2187,8 @@ def lavaFunc(funcType: str, level: int, x1: int, x2: int, roundResult=False):
         case 'add':
             if x2 != 0:
                 result = (((x1 + x2) / x2 + 0.5 * (level - 1)) / (x1/x2)) * level * x1
+            else:
+                result = level * x1
         case 'decay':
             result = (level * x1) / (level + x2)
         case 'intervalAdd':
