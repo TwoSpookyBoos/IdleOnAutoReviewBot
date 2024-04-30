@@ -26,7 +26,7 @@
                                 <li class="advice-title"><strong>{{ title }}</strong></li>
                             {% endif %}
                             {% for advice in advices %}
-                                <span class="progress-box{% if not progress_bars %} hidden{% endif %}">
+                                <span class="progress-box{% if not progress_bars %} hidden{% endif %} {{ advice.status }}">
                                     <span class="progress-bar"></span>
                                 </span>
                                 {% if advice.as_link %}
@@ -41,7 +41,7 @@
                                 {% else %}
                                 <li></li>
                                 {% endif %}
-                                <li class="goal">{{ advice.goal }}</li>
+                                <li class="goal {{ advice.status }}">{{ advice.goal }}</li>
                             {% endfor %}
                         {% endfor %}
                         </ul>

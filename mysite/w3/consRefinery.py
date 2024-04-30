@@ -68,28 +68,48 @@ class Salt:
         return self.excess
 
 def parseConsRefinery():
-    refineryList = safe_loads(session_data.account.raw_data["Refinery"])
-    meritList = safe_loads(session_data.account.raw_data["TaskZZ2"])
+    refineryList = safe_loads(session_data.account.raw_data.get("Refinery", []))
+    w3meritList = safe_loads(session_data.account.raw_data.get("TaskZZ2", []))
     consRefineryDict = {
-        #Combustion = Tab1
-        'Red Rank': refineryList[3][1],
-        'Red AutoRefine': refineryList[3][4],
-        'Orange Rank': refineryList[4][1],
-        'Orange AutoRefine': refineryList[4][4],
-        'Blue Rank': refineryList[5][1],
-        'Blue AutoRefine': refineryList[5][4],
+        # Combustion = Tab1
+        'Red Rank': 0,
+        'Red AutoRefine': 0,
+        'Orange Rank': 0,
+        'Orange AutoRefine': 0,
+        'Blue Rank': 0,
+        'Blue AutoRefine': 0,
+
+        # Synthesis = Tab2
+        'Green Rank': 0,
+        'Green AutoRefine': 0,
+        'Purple Rank': 0,
+        'Purple AutoRefine': 0,
+        'Nullo Rank': 0,
+        'Nullo AutoRefine': 0,
+
+        # W3 Merit
+        'Salt Merit': 0
+    }  #Default 0s
+    if refineryList:
+        # Combustion = Tab1
+        consRefineryDict['Red Rank'] = refineryList[3][1]
+        consRefineryDict['Red AutoRefine'] = refineryList[3][4]
+        consRefineryDict['Orange Rank'] = refineryList[4][1]
+        consRefineryDict['Orange AutoRefine'] = refineryList[4][4]
+        consRefineryDict['Blue Rank'] = refineryList[5][1]
+        consRefineryDict['Blue AutoRefine'] = refineryList[5][4]
 
         #Synthesis = Tab2
-        'Green Rank': refineryList[6][1],
-        'Green AutoRefine': refineryList[6][4],
-        'Purple Rank': refineryList[7][1],
-        'Purple AutoRefine': refineryList[7][4],
-        'Nullo Rank': refineryList[8][1],
-        'Nullo AutoRefine': refineryList[8][4],
-
+        consRefineryDict['Green Rank'] = refineryList[6][1]
+        consRefineryDict['Green AutoRefine'] = refineryList[6][4]
+        consRefineryDict['Purple Rank'] = refineryList[7][1]
+        consRefineryDict['Purple AutoRefine'] = refineryList[7][4]
+        consRefineryDict['Nullo Rank'] = refineryList[8][1]
+        consRefineryDict['Nullo AutoRefine'] = refineryList[8][4]
+    if w3meritList:
         #W3 Merit
-        'Salt Merit': meritList[2][6]
-    }
+        consRefineryDict['Salt Merit'] = w3meritList[2][6]
+
     consRefineryDict['Combustion AutoRefine'] = consRefineryDict['Red AutoRefine'] + consRefineryDict['Orange AutoRefine'] + consRefineryDict['Blue AutoRefine']
     consRefineryDict['Synthesis AutoRefine'] = consRefineryDict['Green AutoRefine'] + consRefineryDict['Purple AutoRefine'] + consRefineryDict['Nullo AutoRefine']
     consRefineryDict['Sum AutoRefine'] = consRefineryDict['Combustion AutoRefine'] + consRefineryDict['Synthesis AutoRefine']

@@ -99,14 +99,18 @@ def getJSONfromText(runType, rawJSON):
 
 
 def load_toolbox_data(rawJSON):
-    parsed = rawJSON["data"]
-    if "charNames" in rawJSON:
-        parsed["charNames"] = rawJSON["charNames"]
-    if "companion" in rawJSON:
-        parsed["companion"] = rawJSON["companion"]
-    if "serverVars" in rawJSON:
-        if "AutoLoot" in rawJSON["serverVars"]:
-            parsed["AutoLoot"] = rawJSON["serverVars"]["AutoLoot"]
+    parsed = rawJSON.get("data", {})
+    parsed["charNames"] = rawJSON.get("charNames", [])
+    parsed["companion"] = rawJSON.get("companion", {})
+    parsed["guildData"] = rawJSON.get("guildData", {})
+    parsed["AutoLoot"] = rawJSON.get("serverVars", {}).get("AutoLoot", 0)
+    if not isinstance(parsed.get("AutoLoot"), int):
+        try:
+            parsed["AutoLoot"] = int(parsed["AutoLoot"])
+        except:
+            logger.exception(f"Unexpected datatype found for AutoLoot: {type(parsed.get('AutoLoot'))}: {parsed.get('AutoLoot')}. Setting to 0")
+            parsed["AutoLoot"] = 0
+
     return parsed
 
 

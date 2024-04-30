@@ -561,6 +561,10 @@ body {
                                                 width: calc(3 * var(--col-gap));
                                                 height: 100%;
                                             }
+                                            &.complete {
+                                                border: 1px solid rgba(255, 217, 0, 0.4);
+                                                box-shadow: 0 0 5px 0 inset gold;
+                                            }
                                         }
 
                                         .advice {
@@ -591,6 +595,10 @@ body {
 
                                         .goal {
                                             padding-right: 10px;
+                                            &.complete {
+                                                //color: rgba(255, 217, 0, 0.6);
+                                                color: goldenrod;
+                                            }
                                         }
 
                                         li, li a {

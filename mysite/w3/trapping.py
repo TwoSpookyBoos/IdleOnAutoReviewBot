@@ -16,13 +16,15 @@ def getCritterName(inputNumber):
         return "UnknownCritterName"
 
 def getUnlockedCritterStatus():
-    try:
-        rawJadeEmporiumPurchases = safe_loads(session_data.account.raw_data["Ninja"])[102][9]
-    except:
-        logger.debug("Unable to retrieve Jade Emporium Upgrades to tell if Tuttle is unlocked. Defaulting to locked.")
-        rawJadeEmporiumPurchases = ""
+    # try:
+    #     rawJadeEmporiumPurchases = safe_loads(session_data.account.raw_data["Ninja"])[102][9]
+    #     if rawJadeEmporiumPurchases is None:
+    #         rawJadeEmporiumPurchases = ""
+    # except:
+    #     logger.debug("Unable to retrieve Jade Emporium Upgrades to tell if Tuttle is unlocked. Defaulting to locked.")
+    #     rawJadeEmporiumPurchases = ""
 
-    if "D" in list(rawJadeEmporiumPurchases):  # Capital D is the value indicating the new Critter bonus has been purchased from Jade Emporium
+    if "New Critter" in session_data.account.jade_emporium_purchases:
         return [
             12,  # Index of the highest unlocked critter
             maxCritterTypes,  # Index of the highest critter possible
@@ -108,7 +110,7 @@ def getCharactersWithUnplacedTraps(trappingLevelsList, placedTrapsDict):
     #Step 1 = Get number of expected traps
     #Bonus trap slot comes from the Call Me Ash bubble, which is an Int stored at ["CauldronInfo"][1][11]. If it is level 1 or higher, the extra trap slot is always given. Does not need to be equipped.
     bonusTrapSlot = 0
-    if session_data.account.raw_data["CauldronInfo"][1]["11"] >= 1:
+    if session_data.account.alchemy_bubbles.get("Call Me Ash", 0) >= 1:
         bonusTrapSlot = 1
     #print("Trapping.getCharactersWithUnplacedTraps~ OUTPUT bonusTrapSlot = ",bonusTrapSlot, "because Call Me Ash level = ",inputJSON["CauldronInfo"][1]["11"])
 

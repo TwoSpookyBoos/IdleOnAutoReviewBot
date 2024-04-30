@@ -1,6 +1,6 @@
 import json
 from models.models import AdviceSection, AdviceGroup, Advice
-from consts import maxTiersPerGroup, prayers_progressionTiers
+from consts import maxTiersPerGroup, prayers_progressionTiers, prayersList
 from flask import g as session_data
 from utils.text_formatting import pl
 from utils.data_formatting import safe_loads
@@ -8,49 +8,6 @@ from utils.logging import get_logger
 
 
 logger = get_logger(__name__)
-
-def getReadablePrayerNames(inputNumber) -> str:
-    match inputNumber:
-        case 0:
-            return "Big Brain Time (Forest Soul)"
-        case 1:
-            return "Skilled Dimwit (Forest Soul)"
-        case 2:
-            return "Unending Energy (Forest Soul)"
-        case 3:
-            return "Shiny Snitch (Forest Soul)"
-        case 4:
-            return "Zerg Rushogen (Forest Soul)"
-        case 5:
-            return "Tachion of the Titans (Dune Soul)"
-        case 6:
-            return "Balance of Precision (Dune Soul)"
-        case 7:
-            return "Midas Minded (Dune Soul)"
-        case 8:
-            return "Jawbreaker (Dune Soul)"
-        case 9:
-            return "The Royal Sampler (Rooted Soul)"
-        case 10:
-            return "Antifun Spirit (Rooted Soul)"
-        case 11:
-            return "Circular Criticals (Rooted Soul)"
-        case 12:
-            return "Ruck Sack (Rooted Soul)"
-        case 13:
-            return "Fibers of Absence (Frigid Soul)"
-        case 14:
-            return "Vacuous Tissue (Frigid Soul)"
-        case 15:
-            return "Beefy For Real (Frigid Soul)"
-        case 16:
-            return "Balance of Pain (Squishy Soul)"
-        case 17:
-            return "Balance of Proficiency (Squishy Soul)"
-        case 18:
-            return "Glitterbug (Squishy Soul)"
-        case _:
-            return "UnknownPrayer"+str(inputNumber)
 
 def getPrayerImage(inputValue: str | int) -> str:
     match inputValue:
@@ -110,19 +67,8 @@ def getPrayerMaterialImage(inputValue: str | int) -> str:
         case _:
             return "Unknown-Material"
 
-def parseJSONPrayers() -> dict:
-    worshipPrayersList = safe_loads(session_data.account.raw_data["PrayOwned"])
-    #print(type(worshipPrayersList), worshipPrayersList)
-    worshipPrayersDict = {}
-    for index in range(0, len(worshipPrayersList)):
-        try:
-            worshipPrayersDict[getReadablePrayerNames(index)] = worshipPrayersList[index]
-        except Exception as reason:
-            print("Worship.parseJSONPrayers~ EXCEPTION Unable to add prayer: ", index, reason)
-    return worshipPrayersDict
-
 def setWorshipPrayersProgressionTier() -> AdviceSection:
-    worshipPrayersDict = parseJSONPrayers()
+    worshipPrayersDict = session_data.account.prayers
     max_tier = prayers_progressionTiers[-3][0]  # Final tier is ignorable, second to final is optional
     tier_WorshipPrayers = 0
     overall_WorshipPrayersTier = 0

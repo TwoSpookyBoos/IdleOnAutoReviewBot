@@ -65,13 +65,28 @@ def setRiftProgressionTier():
                     picture_class="talent-book-library")
             )
             break
+
     #Generate AdviceGroups
-        rift_AdviceGroupDict["UnlockRewards"] = AdviceGroup(
-            tier=str(tier_RiftBonusesUnlocked),
-            pre_string=f"Unlock {pl(max_tier - tier_RiftBonusesUnlocked, 'the final Rift Bonus', 'more Rift bonuses')}",
-            post_string="",
-            advices=rift_AdviceDict.get("UnlockRewards", [])
+    meowTheRiftAdvice = ""
+    if session_data.account.rift_meowed == False and session_data.account.meowBBIndex is not None:
+        meowTheRiftAdvice = f"{session_data.account.all_characters[session_data.account.meowBBIndex].character_name} has not completed a Super CHOW on the Rift yet!"
+        if tier_RiftBonusesUnlocked < max_tier:
+            meowTheRiftAdvice += " You should aim to complete this early on while you have the damage to Multikill."
+        rift_AdviceDict["UnlockRewards"].append(
+            Advice(
+                label=meowTheRiftAdvice,
+                picture_class="blood-berserker-icon")
         )
+    if meowTheRiftAdvice != "" and tier_RiftBonusesUnlocked == max_tier:
+        group_pre_string = "One last thing..."
+    else:
+        group_pre_string = f"Unlock {pl(max_tier - tier_RiftBonusesUnlocked, 'the final Rift Bonus', 'more Rift bonuses')}"
+    rift_AdviceGroupDict["UnlockRewards"] = AdviceGroup(
+        tier=str(tier_RiftBonusesUnlocked),
+        pre_string=group_pre_string,
+        post_string="",
+        advices=rift_AdviceDict.get("UnlockRewards", [])
+    )
     #Generate AdviceSection
     overall_RiftTier = min(max_tier, tier_RiftBonusesUnlocked)
     tier_section = f"{overall_RiftTier}/{max_tier}"

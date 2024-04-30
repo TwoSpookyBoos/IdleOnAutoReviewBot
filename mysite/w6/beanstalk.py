@@ -3,9 +3,8 @@ import json
 from consts import jade_emporium
 from models.models import Account, AdviceSection, Advice, AdviceGroup
 from utils.data_formatting import safe_loads
-
 from utils.text_formatting import getItemDisplayName, numberToLetter
-
+from flask import g as session_data
 
 TEN_K = 1
 HUNNIT_K = 2
@@ -19,40 +18,19 @@ def __get_ninja_section(raw):
 def __get_beanstalk_data(raw):
     if ninja_section := __get_ninja_section(raw):
         return ninja_section[-4]
-    return None
-
-
-def __beanstalks_bought(raw):
-    if not (ninja_section := __get_ninja_section(raw)):
-        # no "Ninja" section in data, player hasn't reached W6 yet
-        return False, False
-
-    jade_emporium_bought = ninja_section[-6][9]
-
-    name_base = "Gold Food Beanstalk"
-    name_upgrade = "Supersized Gold Beanstacking"
-
-    upgrades_bought: list[bool] = list()
-
-    for name in [name_base, name_upgrade]:
-        index = next(i for i, upgrade in enumerate(jade_emporium) if upgrade["name"] == name)
-        letter = numberToLetter(index)
-        upgrades_bought.append(letter in jade_emporium_bought)
-
-    return upgrades_bought
-
+    else:
+        return []
 
 def section_beanstalk():
-    account = Account()
-    raw = account.raw_data
-    beanstalk_bought, upgrade_bought = __beanstalks_bought(raw)
-    beanstalk_data = __get_beanstalk_data(raw)
+    beanstalk_bought = "Gold Food Beanstalk" in session_data.account.jade_emporium_purchases
+    upgrade_bought = "Supersized Gold Beanstacking" in session_data.account.jade_emporium_purchases
+    beanstalk_data = __get_beanstalk_data(session_data.account.raw_data)
 
     if not (beanstalk_bought or beanstalk_data):
         return AdviceSection(
             name="Giant Beanstalk",
             tier="",
-            header="Come back once you've bought the Giant Beanstalk from the Jade Emporium",
+            header="Come back once you've bought the \"Gold Food Beanstalk\" from the Jade Emporium",
             picture="Jade_Vendor.gif",
             collapse=False
         )
@@ -62,9 +40,9 @@ def section_beanstalk():
     beanstalk_status = dict(zip(gfood_codes, beanstalk_data))
 
     for gfood in gfood_codes:
-        gold_foods[gfood] += account.assets.get(gfood).amount
+        gold_foods[gfood] += session_data.account.assets.get(gfood).amount
 
-    for toon in account.safe_characters:
+    for toon in session_data.account.safe_characters:
         for food in toon.equipment.foods:
             if food.codename not in beanstalk_status:
                 continue
@@ -121,8 +99,8 @@ def section_beanstalk():
         pre_string="Upgrade the Beanstalk to upgrade foods further",
         advices=[
             Advice(
-                label="Buy Supersized Gold Beanstacking from the Jade Emporium",
-                picture_class="jade-vendor"
+                label="Buy \"Supersized Gold Beanstacking\" from the Jade Emporium",
+                picture_class="supersized-gold-beanstacking"
             )
         ]
     )
