@@ -18,7 +18,5 @@ jobs:
 
     - name: Run Tests
       working-directory: mysite
-      shell: bash
       run: |
-        source ../.venv/bin/activate
         make test
