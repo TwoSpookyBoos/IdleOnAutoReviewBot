@@ -817,6 +817,8 @@ class Account:
                             self.alchemy_p2w["Sigils"][sigilName]["PrechargeLevel"] = self.alchemy_p2w["Sigils"][sigilName]["Level"]
                     elif self.alchemy_p2w["Sigils"][sigilName]["Level"] == 3:
                         self.alchemy_p2w["Sigils"][sigilName]["PrechargeLevel"] = 3
+                    else:
+                        self.alchemy_p2w["Sigils"][sigilName]["PrechargeLevel"] = self.alchemy_p2w["Sigils"][sigilName]["Level"]
                     #Before the +1, -1 would mean not unlocked, 0 would mean Blue tier, 1 would be Yellow tier, and 2 would mean Red tier
                     #After the +1, 0/1/2/3
                 except Exception as reason:
