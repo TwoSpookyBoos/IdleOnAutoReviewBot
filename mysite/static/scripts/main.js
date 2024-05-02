@@ -19,6 +19,8 @@ document.addEventListener("keydown", (e) => {
 
 // calculate progress bars
 function calcProgressBars(parent = document) {
+    const top = el => el.getBoundingClientRect().top
+
     parent.querySelectorAll(".progress-box").forEach(progressBox => {
         const checkbox= document.querySelector('#progress_bars')
         const advice = progressBox.nextElementSibling
@@ -31,7 +33,7 @@ function calcProgressBars(parent = document) {
         const [progCoefficient, show] = progWidth(progressBox, rowWidth, prog, goal)
 
         const rowHeight = advice.offsetHeight
-        const rowTop = advice.getBoundingClientRect().top - advice.parentElement.getBoundingClientRect().top
+        const rowTop = top(advice) - top(advice.parentElement) + advice.parentElement.scrollTop
 
         const progressBar = progressBox.querySelector(".progress-bar")
         progressBar.style.width = `${progCoefficient}%`
@@ -48,8 +50,9 @@ function calcProgressBars(parent = document) {
 }
 
 function progWidth(bar, w, p, g) {
-    const goal = parseFloat(g.innerText.replace(/.*?(\d+).*/, "$1"))
-    const prog = parseFloat(p.innerText.replace(/.*?(\d+).*/, "$1"))
+    const toFloat = e => parseFloat(e.innerText.replace(/.*?(\d+).*/, "$1"))
+    const goal = toFloat(g)
+    const prog = toFloat(p)
     const inPercentages = g.innerText.includes("%") || p.innerText.includes("%")
     const inRatio = !(isNaN(prog) || isNaN(goal))
     const isDone = [g.innerText, p.innerText].some(el => el === "✔")
