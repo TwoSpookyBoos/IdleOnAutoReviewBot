@@ -213,21 +213,21 @@ bubbles_progressionTiers = [
      {'Roid Ragin': 860, 'Warriors Rule': 1200, 'Multorange': 720},
      {'Swift Steppin': 860, 'Archer or Bust': 1200},
      {'Stable Jenius': 860, 'Mage is Best': 1200, 'Severapurple': 720},
-     {'Call Me Bob': 700},
+     {'Call Me Bob': 700, 'Cropius Mapper': 630, 'Lo Cost Mo Jade': 360},
      "96%",
      ""],
     [20, 100,
      {'Roid Ragin': 880, 'Warriors Rule': 1617, 'Multorange': 970},
      {'Swift Steppin': 880, 'Archer or Bust': 1617},
      {'Stable Jenius': 880, 'Mage is Best': 1617, 'Severapurple': 970},
-     {'Laaarrrryyyy': 1900, 'Big P': 1140, 'Carpenter': 950, 'Big Game Hunter': 570, 'Mr Massacre': 950, 'Diamond Chef': 553},
+     {'Laaarrrryyyy': 1900, 'Big P': 1140, 'Carpenter': 950, 'Big Game Hunter': 570, 'Mr Massacre': 950, 'Diamond Chef': 553, 'Lo Cost Mo Jade': 760},
      "97%",
      ""],
     [21, 120,
      {'Roid Ragin': 900, 'Warriors Rule': 2450, 'Multorange': 1470},
      {'Swift Steppin': 900, 'Archer or Bust': 2450},
      {'Stable Jenius': 900, 'Mage is Best': 2450, 'Severapurple': 1470},
-     {'Call Me Bob': 1000, 'Diamond Chef': 890},
+     {'Essence Boost-Orange': 400, 'Essence Boost-Green': 400, 'Call Me Bob': 1000, 'Diamond Chef': 890},
      "98%",
      ""],
     [22, 140,
@@ -1852,7 +1852,7 @@ def getReadableBubbleNames(inputNumber, color):
                 case 27:
                     return "Tome Strength"
                 case 28:
-                    return "Essence Boost"
+                    return "Essence Boost-Orange"
                 case 29:
                     return "Crop Chapter"
                 case _:
@@ -1912,7 +1912,7 @@ def getReadableBubbleNames(inputNumber, color):
                 case 25:
                     return "Quickdraw Quiver"
                 case 26:
-                    return "Essence Boost"
+                    return "Essence Boost-Green"
                 case 27:
                     return "Endgame Eff II"
                 case 28:
@@ -1978,7 +1978,7 @@ def getReadableBubbleNames(inputNumber, color):
                 case 26:
                     return "Endgame Eff III"
                 case 27:
-                    return "Essence Boost"
+                    return "Essence Boost-Purple"
                 case 28:
                     return "Tome Wisdom"
                 case 29:
@@ -2040,7 +2040,7 @@ def getReadableBubbleNames(inputNumber, color):
                 case 25:
                     return "Cropius Mapper"
                 case 26:
-                    return "Essence Boost"
+                    return "Essence Boost-Yellow"
                 case 27:
                     return "Hinge Buster"
                 case 28:

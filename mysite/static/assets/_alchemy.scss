@@ -33,6 +33,11 @@ $bubbles: (
     gamer-at-heart: wiki('thumb/b/b9/OrangeBubble23.png/64px-OrangeBubble23.png'),
     slabi-strength: wiki('thumb/7/78/OrangeBubble24.png/48px-OrangeBubble24.png'),
     power-trione: wiki('thumb/2/29/OrangeBubble25.png/48px-OrangeBubble25.png'),
+    farquad-force: wiki(''),
+    endgame-eff-i: wiki(''),
+    tome-strength: wiki(''),
+    essence-boost-orange: wiki('1/1e/OrangeBubble29.png'),
+    crop-chapter: wiki(''),
 
     // Quicc Cauldron
 
@@ -61,6 +66,11 @@ $bubbles: (
     sailor-at-heart: wiki('thumb/f/f2/GreenBubble23.png/64px-GreenBubble23.png'),
     slabo-agility: wiki('thumb/3/3a/GreenBubble24.png/48px-GreenBubble24.png'),
     power-tritwo: wiki('thumb/1/14/GreenBubble25.png/48px-GreenBubble25.png'),
+    quickdraw-quiver: wiki(''),
+    essence-boost-green: wiki('5/59/GreenBubble27.png'),
+    endgame-eff-ii: wiki(''),
+    tome-agility: wiki(''),
+    stealth-chapter: wiki(''),
 
     // High-IQ Cauldron
 
@@ -89,6 +99,11 @@ $bubbles: (
     pious-at-heart: wiki('thumb/a/ad/PurpleBubble23.png/64px-PurpleBubble23.png'),
     slabe-wisdom: wiki('thumb/9/9b/PurpleBubble24.png/48px-PurpleBubble24.png'),
     power-trithree: wiki('thumb/e/ee/PurpleBubble25.png/48px-PurpleBubble25.png'),
+    smarter-spells: wiki(''),
+    endgame-eff-iii: wiki(''),
+    essence-boost-purple: wiki(''),
+    tome-wisdom: wiki(''),
+    essence-chapter: wiki(''),
 
     // Kazam Cauldron
 
@@ -117,6 +132,11 @@ $bubbles: (
     bit-by-bit: wiki('thumb/3/32/YellowBubble23.png/48px-YellowBubble23.png'),
     gifts-abound: wiki('thumb/2/2b/YellowBubble24.png/48px-YellowBubble24.png'),
     atom-split: wiki('thumb/a/a9/YellowBubble25.png/48px-YellowBubble25.png'),
+    cropius-mapper: wiki('7/74/YellowBubble26.png'),
+    essence-boost-yellow: wiki(''),
+    hinge-buster: wiki(''),
+    ninja-looter: wiki(''),
+    lo-cost-mo-jade: wiki('5/56/YellowBubble30.png'),
 );
 
 $vials: (
@@ -198,7 +218,30 @@ $vials: (
 );
 
 $sigils: (
+    big-muscle: wiki(''),
+    pumped-kicks: wiki(''),
+    odd-literarture: wiki(''),
+    good-fortune: wiki(''),
+    plunging-sword: wiki(''),
+    wizardly-hat: wiki(''),
     envelope-pile: wiki('e/e2/Envelope_Pile_Alchemy_Sigil.png'),
+    shiny-beacon: wiki(''),
+    metal-exterior: wiki(''),
+    two-starz: wiki(''),
+    pipe-gauge: wiki(''),
+    trove: wiki(''),
+    pea-pod: wiki(''),
+    tuft-of-hair: wiki(''),
+    emoji-veggie: wiki(''),
+    vip-parchment: wiki(''),
+    dream-catcher: wiki(''),
+    duster-studs: wiki(''),
+    garlic-glove: wiki(''),
+    lab-tesstube: wiki(''),
+    peculiar-vial: wiki(''),
+    loot-pile: wiki(''),
+    div-spiral: wiki(''),
+    cool-coin: wiki(''),
 );
 
 $all-alchemy: map-merge($bubbles, $vials);
