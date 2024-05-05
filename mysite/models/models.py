@@ -13,7 +13,7 @@ from flask import g
 from utils.data_formatting import getCharacterDetails, safe_loads
 from consts import expectedStackables, greenstack_progressionTiers, card_data, maxMeals, maxMealLevel, jade_emporium, max_IndexOfVials, getReadableVialNames, \
     max_IndexOfBubbles, getReadableBubbleNames, buildingsList, atomsList, prayersList, labChipsList, bribesList, shrinesList, pristineCharmsList, sigilsDict, \
-    artifactsList, guildBonusesList, labBonusesList, lavaFunc, vialsDict
+    artifactsList, guildBonusesList, labBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesCount, sneakingGemstonesList
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, letterToNumber
 
 def session_singleton(cls):
@@ -705,7 +705,7 @@ class Account:
             pass
 
         self.max_toon_count = 10  # OPTIMIZE: find a way to read this from somewhere
-
+        raw_optlacc_list = safe_loads(self.raw_data.get("OptLacc", {}))
         self.star_signs = {}
         raw_star_signs = safe_loads(self.raw_data.get("StarSg", {}))
         for signStatus in raw_star_signs:
@@ -887,15 +887,23 @@ class Account:
         for labBonusIndex, labBonusName in enumerate(labBonusesList):
             self.labBonuses[labBonusName] = {"Enabled": True, "Value": 1}
 
-        self.pristine_charms = {}
+        self.sneaking = {
+            "PristineCharms": {},
+            "Gemstones": {}
+        }
         raw_pristine_charms_list = safe_loads(self.raw_data.get("Ninja", []))
         if raw_pristine_charms_list:
             raw_pristine_charms_list = raw_pristine_charms_list[-1]
         for pristineCharmIndex, pristineCharmName in enumerate(pristineCharmsList):
             try:
-                self.pristine_charms[pristineCharmName] = bool(raw_pristine_charms_list[pristineCharmIndex])
+                self.sneaking["PristineCharms"][pristineCharmName] = bool(raw_pristine_charms_list[pristineCharmIndex])
             except:
-                self.pristine_charms[pristineCharmName] = False
+                self.sneaking["PristineCharms"][pristineCharmName] = False
+        for gemstoneIndex, gemstoneName in enumerate(sneakingGemstonesList):
+            try:
+                self.sneaking["Gemstones"][gemstoneName] = raw_optlacc_list[sneakingGemstonesFirstIndex + gemstoneIndex]
+            except:
+                self.sneaking["Gemstones"][gemstoneName] = 0
 
         self.artifacts = {}
         raw_artifacts_list = safe_loads(self.raw_data.get("Sailing", []))

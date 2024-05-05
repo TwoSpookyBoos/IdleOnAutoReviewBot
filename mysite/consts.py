@@ -2165,6 +2165,12 @@ pristineCharmsList: list[str] = [
     "Lolly Flower", "Gumball Necklace", "Liqorice Rolle",
 ]
 
+sneakingGemstonesList: list[str] = [
+    "Aquamarine", "Emerald", "Garnet", "Starite", "Topaz", "Moissanite"
+]
+sneakingGemstonesFirstIndex = 233
+sneakingGemstonesCount = len(sneakingGemstonesList)
+
 sigilsDict = {
     "Big Muscle":       {"Index": 0,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [2, 100, 50000]},
     "Pumped Kicks":     {"Index": 2,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [3, 150, 60000]},

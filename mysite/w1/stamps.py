@@ -121,7 +121,7 @@ def getCapacityAdviceGroup(priorityStampsDict: dict) -> AdviceGroup:
     capacity_Advices["Stamps"].append(Advice(
         label="Pristine Charm: Liqorice Rolle",
         picture_class="liqorice-rolle",
-        progression=int(session_data.account.pristine_charms.get("Liqorice Rolle", 0)),
+        progression=int(session_data.account.sneaking.get("PristineCharms", {}).get("Liqorice Rolle", 0)),
         goal=1
     ))
     for capStamp in ["Mason Jar Stamp", "Lil' Mining Baggy Stamp", "Choppin' Bag Stamp", "Matty Bag Stamp", "Bag o Heads Stamp", "Bugsack Stamp"]:
