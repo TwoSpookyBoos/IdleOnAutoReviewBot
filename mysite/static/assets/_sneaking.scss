@@ -23,9 +23,19 @@ $pristine-charms: (
     liqorice-rolle: wiki('d/da/Charm_Liqorice_Rolle.png'),
 );
 
+$gemstones: (
+    aquamarine: wiki('c/c3/Gem_Aquamarine.png'),
+    emerald: wiki('8/8b/Gem_Emerald.png'),
+    garnet: wiki('4/41/Gem_Garnet.png'),
+    starite: wiki('a/a9/Gem_Starite.png'),
+    topaz: wiki('5/5f/Gem_Topaz.png'),
+    moissanite: wiki('6/60/Gem_Moissanite.png'),
+);
+
 $all-sneaking: map-merge($detection, $hats);
 $all-sneaking: map-merge($all-sneaking, $knowledge);
 $all-sneaking: map-merge($all-sneaking, $emporium);
 $all-sneaking: map-merge($all-sneaking, $weapons);
 $all-sneaking: map-merge($all-sneaking, $charms);
 $all-sneaking: map-merge($all-sneaking, $pristine-charms);
+$all-sneaking: map-merge($all-sneaking, $gemstones);

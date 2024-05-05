@@ -2170,6 +2170,36 @@ sneakingGemstonesList: list[str] = [
 ]
 sneakingGemstonesFirstIndex = 233
 sneakingGemstonesCount = len(sneakingGemstonesList)
+sneakingGemstonesMaxValueDict = {"Aquamarine": 10000, "Emerald": 5000, "Garnet": 2500, "Starite": 200, "Topaz": 1000, "Moissanite": 300}
+
+def getMoissaniteValue(moissaniteLevel: int):
+    try:
+        return 3+(300*(moissaniteLevel/(moissaniteLevel+1000)))
+    except:
+        return 0
+def getGemstoneValue(gemstoneName: str, gemstoneLevel: int, moissaniteLevel: int, moissaniteValue: float):
+    moissaniteMulti = 1 + (moissaniteValue / 100)
+    value = 0
+    if gemstoneName == "Aquamarine":
+        value = 40 + (10000 * (gemstoneLevel / (gemstoneLevel + 1000)))
+    elif gemstoneName == "Emerald":
+        value = 15 + (5000  * (gemstoneLevel / (gemstoneLevel + 1000)))
+    elif gemstoneName == "Garnet":
+        value = 12 + (2500  * (gemstoneLevel / (gemstoneLevel + 1000)))
+    elif gemstoneName == "Starite":
+        value = 5 +  (200   * (gemstoneLevel / (gemstoneLevel + 1000)))
+    elif gemstoneName == "Topaz":
+        value = 10 + (1000  * (gemstoneLevel / (gemstoneLevel + 1000)))
+
+    if moissaniteLevel > 0:
+        value *= moissaniteMulti
+    return value
+def getGemstonePercent(gemstoneName: str, gemstoneValue: float):
+    try:
+        return 100 * (gemstoneValue / sneakingGemstonesMaxValueDict[gemstoneName])
+    except Exception as reason:
+        logger.exception(f"Could not find max value for Gemstone: {gemstoneName} because: {reason}")
+    pass
 
 sigilsDict = {
     "Big Muscle":       {"Index": 0,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [2, 100, 50000]},

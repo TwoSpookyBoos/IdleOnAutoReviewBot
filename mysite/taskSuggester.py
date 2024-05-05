@@ -15,7 +15,7 @@ from w2 import alchemy
 from w3 import trapping, consRefinery, consDeathNote, worship, consSaltLick, consBuildings, equinox
 from w4 import breeding, cooking, rift
 from w5 import divinity
-from w6 import beanstalk
+from w6 import beanstalk, sneaking
 
 logger = get_logger(__name__)
 
@@ -104,6 +104,7 @@ def main(inputData, runType="web"):
     # World 6
     sections_6 = [
         section_beanstalk := beanstalk.section_beanstalk(),
+        section_sneaking := sneaking.setSneakingProgressionTier()
     ]
 
     pinchable_sections = [

@@ -13,7 +13,8 @@ from flask import g
 from utils.data_formatting import getCharacterDetails, safe_loads
 from consts import expectedStackables, greenstack_progressionTiers, card_data, maxMeals, maxMealLevel, jade_emporium, max_IndexOfVials, getReadableVialNames, \
     max_IndexOfBubbles, getReadableBubbleNames, buildingsList, atomsList, prayersList, labChipsList, bribesList, shrinesList, pristineCharmsList, sigilsDict, \
-    artifactsList, guildBonusesList, labBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesCount, sneakingGemstonesList
+    artifactsList, guildBonusesList, labBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesCount, sneakingGemstonesList, \
+    getMoissaniteValue, getGemstoneValue, getGemstonePercent
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, letterToNumber
 
 def session_singleton(cls):
@@ -900,10 +901,33 @@ class Account:
             except:
                 self.sneaking["PristineCharms"][pristineCharmName] = False
         for gemstoneIndex, gemstoneName in enumerate(sneakingGemstonesList):
+            self.sneaking["Gemstones"][gemstoneName] = {"Level": 0, "Value": 0, "Percent": 0}
             try:
-                self.sneaking["Gemstones"][gemstoneName] = raw_optlacc_list[sneakingGemstonesFirstIndex + gemstoneIndex]
+                self.sneaking["Gemstones"][gemstoneName]["Level"] = raw_optlacc_list[sneakingGemstonesFirstIndex + gemstoneIndex]
             except:
-                self.sneaking["Gemstones"][gemstoneName] = 0
+                continue
+        try:
+            self.sneaking["Gemstones"]["Moissanite"]["Value"] = getMoissaniteValue(self.sneaking["Gemstones"]["Moissanite"]["Level"])
+        except:
+            self.sneaking["Gemstones"]["Moissanite"]["Value"] = 0
+        for gemstoneName in sneakingGemstonesList[0:-1]:
+            try:
+                self.sneaking["Gemstones"][gemstoneName]["Value"] = getGemstoneValue(
+                    gemstoneName,
+                    self.sneaking["Gemstones"][gemstoneName]["Level"],
+                    self.sneaking["Gemstones"]["Moissanite"]["Level"],
+                    self.sneaking["Gemstones"]["Moissanite"]["Value"]
+                )
+            except:
+                continue
+        for gemstoneName in sneakingGemstonesList:
+            try:
+                self.sneaking["Gemstones"][gemstoneName]["Percent"] = getGemstonePercent(
+                    gemstoneName,
+                    self.sneaking["Gemstones"][gemstoneName]["Value"]
+                )
+            except:
+                continue
 
         self.artifacts = {}
         raw_artifacts_list = safe_loads(self.raw_data.get("Sailing", []))
