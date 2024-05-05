@@ -14,7 +14,7 @@ from utils.data_formatting import getCharacterDetails, safe_loads
 from consts import expectedStackables, greenstack_progressionTiers, card_data, maxMeals, maxMealLevel, jade_emporium, max_IndexOfVials, getReadableVialNames, \
     max_IndexOfBubbles, getReadableBubbleNames, buildingsList, atomsList, prayersList, labChipsList, bribesList, shrinesList, pristineCharmsList, sigilsDict, \
     artifactsList, guildBonusesList, labBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesCount, sneakingGemstonesList, \
-    getMoissaniteValue, getGemstoneValue, getGemstonePercent
+    getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, letterToNumber
 
 def session_singleton(cls):
@@ -901,9 +901,13 @@ class Account:
             except:
                 self.sneaking["PristineCharms"][pristineCharmName] = False
         for gemstoneIndex, gemstoneName in enumerate(sneakingGemstonesList):
-            self.sneaking["Gemstones"][gemstoneName] = {"Level": 0, "Value": 0, "Percent": 0}
+            self.sneaking["Gemstones"][gemstoneName] = {"Level": 0, "Value": 0, "Percent": 0, "Stat": ''}
             try:
                 self.sneaking["Gemstones"][gemstoneName]["Level"] = raw_optlacc_list[sneakingGemstonesFirstIndex + gemstoneIndex]
+            except:
+                continue
+            try:
+                self.sneaking["Gemstones"][gemstoneName]["Stat"] = sneakingGemstonesStatList[gemstoneIndex]
             except:
                 continue
         try:

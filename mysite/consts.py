@@ -2168,6 +2168,9 @@ pristineCharmsList: list[str] = [
 sneakingGemstonesList: list[str] = [
     "Aquamarine", "Emerald", "Garnet", "Starite", "Topaz", "Moissanite"
 ]
+sneakingGemstonesStatList: list[str] = [
+    "Stealth", "Jade", "Door Damage", "Gold Charm Bonus", "Sneak EXP", "Gemstone Bonuses"
+]
 sneakingGemstonesFirstIndex = 233
 sneakingGemstonesCount = len(sneakingGemstonesList)
 sneakingGemstonesMaxValueDict = {"Aquamarine": 10000, "Emerald": 5000, "Garnet": 2500, "Starite": 200, "Topaz": 1000, "Moissanite": 300}
