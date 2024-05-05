@@ -16,7 +16,7 @@ def setSneakingProgressionTier():
         tier="0",
         pinchy_rating=0,
         header="Best Sneaking tier met: Not Yet Evaluated",
-        picture="Dojo_Ghost.png"
+        picture="Dojo_Ghost.gif"
     )
     highestSneakingSkillLevel = max(session_data.account.all_skills.get("Sneaking", [0]))
     if highestSneakingSkillLevel < 1:
