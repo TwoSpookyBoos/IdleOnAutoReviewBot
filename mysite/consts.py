@@ -2174,7 +2174,10 @@ sneakingGemstonesMaxValueDict = {"Aquamarine": 10000, "Emerald": 5000, "Garnet":
 
 def getMoissaniteValue(moissaniteLevel: int):
     try:
-        return 3+(300*(moissaniteLevel/(moissaniteLevel+1000)))
+        if moissaniteLevel > 0:
+            return 3+(300*(moissaniteLevel/(moissaniteLevel+1000)))
+        else:
+            return 0
     except:
         return 0
 def getGemstoneValue(gemstoneName: str, gemstoneLevel: int, moissaniteLevel: int, moissaniteValue: float):
