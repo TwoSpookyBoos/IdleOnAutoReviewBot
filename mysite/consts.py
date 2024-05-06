@@ -213,21 +213,21 @@ bubbles_progressionTiers = [
      {'Roid Ragin': 860, 'Warriors Rule': 1200, 'Multorange': 720},
      {'Swift Steppin': 860, 'Archer or Bust': 1200},
      {'Stable Jenius': 860, 'Mage is Best': 1200, 'Severapurple': 720},
-     {'Call Me Bob': 700},
+     {'Call Me Bob': 700, 'Cropius Mapper': 630, 'Lo Cost Mo Jade': 360},
      "96%",
      ""],
     [20, 100,
      {'Roid Ragin': 880, 'Warriors Rule': 1617, 'Multorange': 970},
      {'Swift Steppin': 880, 'Archer or Bust': 1617},
      {'Stable Jenius': 880, 'Mage is Best': 1617, 'Severapurple': 970},
-     {'Laaarrrryyyy': 1900, 'Big P': 1140, 'Carpenter': 950, 'Big Game Hunter': 570, 'Mr Massacre': 950, 'Diamond Chef': 553},
+     {'Laaarrrryyyy': 1900, 'Big P': 1140, 'Carpenter': 950, 'Big Game Hunter': 570, 'Mr Massacre': 950, 'Diamond Chef': 553, 'Lo Cost Mo Jade': 760},
      "97%",
      ""],
     [21, 120,
      {'Roid Ragin': 900, 'Warriors Rule': 2450, 'Multorange': 1470},
      {'Swift Steppin': 900, 'Archer or Bust': 2450},
      {'Stable Jenius': 900, 'Mage is Best': 2450, 'Severapurple': 1470},
-     {'Call Me Bob': 1000, 'Diamond Chef': 890},
+     {'Essence Boost-Orange': 400, 'Essence Boost-Green': 400, 'Call Me Bob': 1000, 'Diamond Chef': 890},
      "98%",
      ""],
     [22, 140,
@@ -535,36 +535,70 @@ divinity_progressionTiers = {
 combatLevels_progressionTiers = [
     # int tier, int TotalAccountLevel, str TAL reward, int PlayerLevels, str PL reward, str notes
     [0, 0, "", 0, "", ""],
-    [1, 8, "Character 2", 25, "Personal - Circle Obol Slot 2", ""],
-    [2, 30, "Character 3", 32, "Personal - Square Obol Slot 1", ""],
-    [3, 60, "Character 4 and Family - Circle Obol Slot 1", 40, "Personal - Circle Obol Slot 3", ""],
-    [4, 80, "Family - Circle Obol Slot 2", 48, "Personal - Circle Obol Slot 4", ""],
-    [5, 100, "Family - Circle Obol Slot 3", 60, "Personal - Square Obol Slot 2", ""],
-    [6, 130, "Character 5", 70, "Personal - Circle Obol Slot 5", ""],
-    [7, 160, "Family - Circle Obol Slot 4", 80, "Personal - Circle Obol Slot 6", ""],
-    [8, 200, "Family - Square Obol Slot 1", 90, "Personal - Square Obol Slot 3", ""],
-    [9, 225, "Character 6", 98, "Personal - Circle Obol Slot 7", ""],
-    [10, 250, "Family - Circle Obol Slot 5", 105, "Personal - Hexagon Obol Slot 1", ""],
-    [11, 330, "Character 7", 112, "Personal - Circle Obol Slot 8", ""],
-    [12, 350, "Family - Circle Obol Slot 6", 120, "Personal - Square Obol Slot 4", ""],
-    [13, 400, "Family - Circle Obol Slot 7 and Family - Hexagon Obol Slot 1", 130, "Personal - Circle Obol Slot 9", ""],
-    [14, 470, "Character 8 and Family - Circle Obol Slot 8", 140, "Personal - Square Obol Slot 5", ""],
-    [15, 600, "Character 9", 150, "Vman Quest, if class = Mman", ""],
-    [16, 650, "Family - Sparkle Obol Slot 1", 152, "Personal - Circle Obol Slot 10", ""],
-    [17, 700, "Family - Square Obol Slot 2", 180, "Personal - Hexagon Obol Slot 2", ""],
-    [18, 875, "Family - Circle Obol Slot 9", 190, "Personal - Square Obol Slot 6", ""],
-    [19, 900, "Character 10 and Family - Hexagon Obol Slot 2", 210, "Personal - Circle Obol Slot 12", ""],
-    [20, 1150, "Family - Square Obol Slot 3",   250, "Personal - Sparkle Obol Slot 1 and Credit towards Equinox Dream 11", ""],
-    [21, 1200, "Family - Sparkle Obol Slot 2",  425, "Able to equip The Divine Scarf", ""],
-    [22, 1250, "Family - Circle Obol Slot 10",  450, "Able to equip One of the Divine Trophy", ""],
-    [23, 1500, "Family - Circle Obol Slot 11",  500, "Credit towards Equinox Dream 23", ""],
-    [24, 1750, "Family - Hexagon Obol Slot 3",  500, "Credit towards Equinox Dream 23", ""],
-    [25, 2000, "Family - Square Obol Slot 4",   500, "Credit towards Equinox Dream 23",  ""],
-    [26, 2100, "Family - Circle Obol Slot 12",  500, "Credit towards Equinox Dream 23", ""],
-    [27, 2500, "Family - Sparkle Obol Slot 3",  500, "Credit towards Equinox Dream 23", ""],
-    [28, 3000, "Family - Hexagon Obol Slot 4",  500, "Credit towards Equinox Dream 23", ""],
-    [29, 5000, "Family - Sparkle Obol Slot 4",  500, "Credit towards Equinox Dream 23", ""],
-    [30, 5300, "Unlock all Tome challenges",    500, "Credit towards Equinox Dream 23", ""]
+    [1, 8, "Character 2",
+     25, "Personal - Circle Obol Slot 2", ""],
+    [2, 30, "Character 3",
+     32, "Personal - Square Obol Slot 1", ""],
+    [3, 60, "Family - Circle Obol Slot 1",
+     40, "Personal - Circle Obol Slot 3", ""],
+    [4, 70, "Character 4 and Family - Circle Obol Slot 1",
+     48, "Personal - Circle Obol Slot 4", ""],
+    [5, 80, "Family - Circle Obol Slot 2",
+     60, "Personal - Square Obol Slot 2", ""],
+    [6, 100, "Family - Circle Obol Slot 3",
+     70, "Personal - Circle Obol Slot 5", ""],
+    [7, 150, "Character 5",
+     80, "Personal - Circle Obol Slot 6", ""],
+    [8, 160, "Family - Circle Obol Slot 4",
+     90, "Personal - Square Obol Slot 3", ""],
+    [9, 200, "Family - Square Obol Slot 1",
+     98, "Personal - Circle Obol Slot 7", ""],
+    [10, 250, "Family - Circle Obol Slot 5",
+     105, "Personal - Hexagon Obol Slot 1", ""],
+    [11, 300, "Character 6",
+     112, "Personal - Circle Obol Slot 8", ""],
+    [12, 350, "Family - Circle Obol Slot 6",
+     120, "Personal - Square Obol Slot 4", ""],
+    [13, 400, "Family - Circle Obol Slot 7 and Family - Hexagon Obol Slot 1",
+     130, "Personal - Circle Obol Slot 9", ""],
+    [14, 470, "Family - Circle Obol Slot 8",
+     140, "Personal - Square Obol Slot 5", ""],
+    [15, 500, "Character 7",
+     150, "Vman Quest, if class = Mman", ""],
+    [16, 650, "Family - Sparkle Obol Slot 1",
+     152, "Personal - Circle Obol Slot 10", ""],
+    [17, 700, "Family - Square Obol Slot 2",
+     170, "Personal - Circle Obol Slot 11", ""],
+    [18, 750, "Character 8",
+     180, "Personal - Hexagon Obol Slot 2", ""],
+    [19, 875, "Family - Circle Obol Slot 9",
+     190, "Personal - Square Obol Slot 6", ""],
+    [20, 900, "Family - Hexagon Obol Slot 2",
+     210, "Personal - Circle Obol Slot 12", ""],
+    [21, 1100, "Character 9",
+     250, "Personal - Sparkle Obol Slot 1 and Credit towards Equinox Dream 11", ""],
+    [22, 1150, "Family - Square Obol Slot 3",
+     425, "Able to equip The Divine Scarf", ""],
+    [23, 1200, "Family - Sparkle Obol Slot 2",
+     450, "Able to equip One of the Divine Trophy", ""],
+    [24, 1250, "Family - Circle Obol Slot 10",
+     500, "Credit towards Equinox Dream 23", ""],
+    [25, 1500, "Character 10 and Family - Circle Obol Slot 11",
+     500, "Credit towards Equinox Dream 23", ""],
+    [26, 1750, "Family - Hexagon Obol Slot 3",
+     500, "Credit towards Equinox Dream 23", ""],
+    [27, 2000, "Family - Square Obol Slot 4",
+     500, "Credit towards Equinox Dream 23",  ""],
+    [28, 2100, "Family - Circle Obol Slot 12",
+     500, "Credit towards Equinox Dream 23", ""],
+    [29, 2500, "Family - Sparkle Obol Slot 3",
+     500, "Credit towards Equinox Dream 23", ""],
+    [30, 3000, "Family - Hexagon Obol Slot 4",
+     500, "Credit towards Equinox Dream 23", ""],
+    [31, 5000, "Family - Sparkle Obol Slot 4",
+     500, "Credit towards Equinox Dream 23", ""],
+    [32, 5300, "Unlock all Tome challenges",
+     500, "Credit towards Equinox Dream 23", ""]
 ]
 gemShop_progressionTiers = [
     # int tier, str tierName, dict recommendedPurchases, str notes
@@ -1818,7 +1852,7 @@ def getReadableBubbleNames(inputNumber, color):
                 case 27:
                     return "Tome Strength"
                 case 28:
-                    return "Essence Boost"
+                    return "Essence Boost-Orange"
                 case 29:
                     return "Crop Chapter"
                 case _:
@@ -1878,7 +1912,7 @@ def getReadableBubbleNames(inputNumber, color):
                 case 25:
                     return "Quickdraw Quiver"
                 case 26:
-                    return "Essence Boost"
+                    return "Essence Boost-Green"
                 case 27:
                     return "Endgame Eff II"
                 case 28:
@@ -1944,7 +1978,7 @@ def getReadableBubbleNames(inputNumber, color):
                 case 26:
                     return "Endgame Eff III"
                 case 27:
-                    return "Essence Boost"
+                    return "Essence Boost-Purple"
                 case 28:
                     return "Tome Wisdom"
                 case 29:
@@ -2006,7 +2040,7 @@ def getReadableBubbleNames(inputNumber, color):
                 case 25:
                     return "Cropius Mapper"
                 case 26:
-                    return "Essence Boost"
+                    return "Essence Boost-Yellow"
                 case 27:
                     return "Hinge Buster"
                 case 28:
@@ -2130,6 +2164,49 @@ pristineCharmsList: list[str] = [
     "Lollipop Law", "Taffy Disc", "Stick of Chew", "Treat Sack", "Gumm Stick",
     "Lolly Flower", "Gumball Necklace", "Liqorice Rolle",
 ]
+
+sneakingGemstonesList: list[str] = [
+    "Aquamarine", "Emerald", "Garnet", "Starite", "Topaz", "Moissanite"
+]
+sneakingGemstonesStatList: list[str] = [
+    "Stealth", "Jade", "Door Damage", "Gold Charm Bonus", "Sneak EXP", "Gemstone Bonuses"
+]
+sneakingGemstonesFirstIndex = 233
+sneakingGemstonesCount = len(sneakingGemstonesList)
+sneakingGemstonesMaxValueDict = {"Aquamarine": 10000, "Emerald": 5000, "Garnet": 2500, "Starite": 200, "Topaz": 1000, "Moissanite": 300}
+
+def getMoissaniteValue(moissaniteLevel: int):
+    try:
+        if moissaniteLevel > 0:
+            return 3+(300*(moissaniteLevel/(moissaniteLevel+1000)))
+        else:
+            return 0
+    except:
+        return 0
+def getGemstoneValue(gemstoneName: str, gemstoneLevel: int, moissaniteLevel: int, moissaniteValue: float):
+    moissaniteMulti = 1 + (moissaniteValue / 100)
+    value = 0
+    if gemstoneLevel > 0:
+        if gemstoneName == "Aquamarine":
+            value = 40 + (10000 * (gemstoneLevel / (gemstoneLevel + 1000)))
+        elif gemstoneName == "Emerald":
+            value = 15 + (5000  * (gemstoneLevel / (gemstoneLevel + 1000)))
+        elif gemstoneName == "Garnet":
+            value = 12 + (2500  * (gemstoneLevel / (gemstoneLevel + 1000)))
+        elif gemstoneName == "Starite":
+            value = 5 +  (200   * (gemstoneLevel / (gemstoneLevel + 1000)))
+        elif gemstoneName == "Topaz":
+            value = 10 + (1000  * (gemstoneLevel / (gemstoneLevel + 1000)))
+
+    if moissaniteLevel > 0:
+        value *= moissaniteMulti
+    return value
+def getGemstonePercent(gemstoneName: str, gemstoneValue: float):
+    try:
+        return 100 * (gemstoneValue / sneakingGemstonesMaxValueDict[gemstoneName])
+    except Exception as reason:
+        logger.exception(f"Could not find max value for Gemstone: {gemstoneName} because: {reason}")
+    pass
 
 sigilsDict = {
     "Big Muscle":       {"Index": 0,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [2, 100, 50000]},

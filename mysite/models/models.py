@@ -13,7 +13,8 @@ from flask import g
 from utils.data_formatting import getCharacterDetails, safe_loads
 from consts import expectedStackables, greenstack_progressionTiers, card_data, maxMeals, maxMealLevel, jade_emporium, max_IndexOfVials, getReadableVialNames, \
     max_IndexOfBubbles, getReadableBubbleNames, buildingsList, atomsList, prayersList, labChipsList, bribesList, shrinesList, pristineCharmsList, sigilsDict, \
-    artifactsList, guildBonusesList, labBonusesList, lavaFunc, vialsDict
+    artifactsList, guildBonusesList, labBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesCount, sneakingGemstonesList, \
+    getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, letterToNumber
 
 def session_singleton(cls):
@@ -705,7 +706,7 @@ class Account:
             pass
 
         self.max_toon_count = 10  # OPTIMIZE: find a way to read this from somewhere
-
+        raw_optlacc_list = safe_loads(self.raw_data.get("OptLacc", {}))
         self.star_signs = {}
         raw_star_signs = safe_loads(self.raw_data.get("StarSg", {}))
         for signStatus in raw_star_signs:
@@ -815,7 +816,10 @@ class Account:
                             self.alchemy_p2w["Sigils"][sigilName]["PrechargeLevel"] = 3
                         else:
                             self.alchemy_p2w["Sigils"][sigilName]["PrechargeLevel"] = self.alchemy_p2w["Sigils"][sigilName]["Level"]
-
+                    elif self.alchemy_p2w["Sigils"][sigilName]["Level"] == 3:
+                        self.alchemy_p2w["Sigils"][sigilName]["PrechargeLevel"] = 3
+                    else:
+                        self.alchemy_p2w["Sigils"][sigilName]["PrechargeLevel"] = self.alchemy_p2w["Sigils"][sigilName]["Level"]
                     #Before the +1, -1 would mean not unlocked, 0 would mean Blue tier, 1 would be Yellow tier, and 2 would mean Red tier
                     #After the +1, 0/1/2/3
                 except Exception as reason:
@@ -884,15 +888,50 @@ class Account:
         for labBonusIndex, labBonusName in enumerate(labBonusesList):
             self.labBonuses[labBonusName] = {"Enabled": True, "Value": 1}
 
-        self.pristine_charms = {}
+        self.sneaking = {
+            "PristineCharms": {},
+            "Gemstones": {}
+        }
         raw_pristine_charms_list = safe_loads(self.raw_data.get("Ninja", []))
         if raw_pristine_charms_list:
             raw_pristine_charms_list = raw_pristine_charms_list[-1]
         for pristineCharmIndex, pristineCharmName in enumerate(pristineCharmsList):
             try:
-                self.pristine_charms[pristineCharmName] = bool(raw_pristine_charms_list[pristineCharmIndex])
+                self.sneaking["PristineCharms"][pristineCharmName] = bool(raw_pristine_charms_list[pristineCharmIndex])
             except:
-                self.pristine_charms[pristineCharmName] = False
+                self.sneaking["PristineCharms"][pristineCharmName] = False
+        for gemstoneIndex, gemstoneName in enumerate(sneakingGemstonesList):
+            self.sneaking["Gemstones"][gemstoneName] = {"Level": 0, "Value": 0, "Percent": 0, "Stat": ''}
+            try:
+                self.sneaking["Gemstones"][gemstoneName]["Level"] = raw_optlacc_list[sneakingGemstonesFirstIndex + gemstoneIndex]
+            except:
+                continue
+            try:
+                self.sneaking["Gemstones"][gemstoneName]["Stat"] = sneakingGemstonesStatList[gemstoneIndex]
+            except:
+                continue
+        try:
+            self.sneaking["Gemstones"]["Moissanite"]["Value"] = getMoissaniteValue(self.sneaking["Gemstones"]["Moissanite"]["Level"])
+        except:
+            self.sneaking["Gemstones"]["Moissanite"]["Value"] = 0
+        for gemstoneName in sneakingGemstonesList[0:-1]:
+            try:
+                self.sneaking["Gemstones"][gemstoneName]["Value"] = getGemstoneValue(
+                    gemstoneName,
+                    self.sneaking["Gemstones"][gemstoneName]["Level"],
+                    self.sneaking["Gemstones"]["Moissanite"]["Level"],
+                    self.sneaking["Gemstones"]["Moissanite"]["Value"]
+                )
+            except:
+                continue
+        for gemstoneName in sneakingGemstonesList:
+            try:
+                self.sneaking["Gemstones"][gemstoneName]["Percent"] = getGemstonePercent(
+                    gemstoneName,
+                    self.sneaking["Gemstones"][gemstoneName]["Value"]
+                )
+            except:
+                continue
 
         self.artifacts = {}
         raw_artifacts_list = safe_loads(self.raw_data.get("Sailing", []))

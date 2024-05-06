@@ -71,11 +71,11 @@ def getMissableGStacks(owned_stuff: Assets):
     sections = list()
 
     note = (
-        "These items are currently recommended for players trying to complete the "
-        "endgame Equinox Dreams to collect 20, 75, and 200 greenstacks. If you're "
-        "nowhere near that, don't worry about collecting them right away. Simply "
-        "leave the quest uncompleted on your Wizard/Elemental Sorcerer and your "
-        "Squire/Divine Knight to clean up later!"
+        "These items are only recommended for players trying to complete the "
+        "endgame Equinox Dream to collect 200 greenstacks. If you're nowhere "
+        "near that, simply leave the quest uncompleted on your "
+        "Wizard/Elemental Sorcerer and your Squire/Divine Knight "
+        "to clean up later!"
     )
 
     if len(advice_ObtainedQuestGStacks) > 0:
@@ -95,8 +95,19 @@ def getMissableGStacks(owned_stuff: Assets):
         # sections.append(section_obtained)
 
     if len(advice_EndangeredQuestGStacks) > 0:
-        tier_obtainable = f"{len(advice_EndangeredQuestGStacks)}/{len(missableGStacksDict)}"
-        header_obtainable = f"You can still obtain {tier_obtainable} missable quest item Greenstacks. Be sure <strong>NOT</strong> to turn in their quests until GStacking them:"
+        tier_obtainable = f"{len(advice_EndangeredQuestGStacks)}/{len(missableGStacksDict) - len(advice_ObtainedQuestGStacks)}"
+        if len(advice_EndangeredQuestGStacks) < len(missableGStacksDict) - len(advice_ObtainedQuestGStacks):
+            header_alreadymissed = f"already missed {len(missableGStacksDict) - len(advice_ObtainedQuestGStacks) - len(advice_EndangeredQuestGStacks)},<br>"
+        else:
+            header_alreadymissed = f""
+        if len(advice_ObtainedQuestGStacks) > 1:
+            header_alreadyobtained = f"already obtained {len(advice_ObtainedQuestGStacks)},<br>"
+        else:
+            header_alreadyobtained = ""
+        header_missable = f"can still obtain {len(advice_EndangeredQuestGStacks)}"
+        if header_alreadymissed != "" or header_alreadyobtained != "":
+            header_missable = "and " + header_missable
+        header_obtainable = f"You {header_alreadymissed}{header_alreadyobtained}{header_missable} missable quest item Greenstacks.<br>Be sure <strong>NOT</strong> to turn in their quests until GStacking them:"
         sections.append(
             AdviceSection(
                 name="Endangered Greenstacks",
