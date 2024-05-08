@@ -453,6 +453,10 @@ body {
                                     row-gap: 10px;
                                     column-gap: 10px;
                                     padding: 10px;
+
+                                    @media(max-width: 600px) {
+                                        grid-template-columns: 100%;
+                                    }
                                 }
 
                                 .note {
@@ -1120,10 +1124,6 @@ body {
         }
 
         section {
-            .advice-section > li {
-                grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
-            }
-
             .subheading, .advice-group {
                 padding-left: 5vw;
                 padding-right: 5vw;

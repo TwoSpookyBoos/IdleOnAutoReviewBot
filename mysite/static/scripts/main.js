@@ -50,7 +50,7 @@ function calcProgressBars(parent = document) {
 }
 
 function progWidth(bar, w, p, g) {
-    const toFloat = e => parseFloat(e.innerText.replace(/.*?(\d+).*/, "$1"))
+    const toFloat = e => parseFloat(e.innerText.replace(/.*?([\d.]+).*/, "$1"))
     const goal = toFloat(g)
     const prog = toFloat(p)
     const inPercentages = g.innerText.includes("%") || p.innerText.includes("%")
@@ -58,8 +58,8 @@ function progWidth(bar, w, p, g) {
     const isDone = [g.innerText, p.innerText].some(el => el === "✔")
 
 
-    if (inRatio)       return [(100 * prog / goal), true]
-    if (inPercentages) return [[prog, goal].find(e => !isNaN(e)), true]
+    if (inRatio)       return [(100 * Math.min(prog, goal) / goal), true]
+    if (inPercentages) return [Math.min([prog, goal].find(e => !isNaN(e)), 100), true]
     if (isDone)        return [100, true]
 
     return [0, (inPercentages || inRatio)]

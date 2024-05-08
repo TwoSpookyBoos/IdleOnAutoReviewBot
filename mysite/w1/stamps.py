@@ -242,7 +242,9 @@ def getCapacityAdviceGroup(priorityStampsDict: dict) -> AdviceGroup:
 
 def mark_completed(advice):
     try:
-        if advice.goal and advice.progression and int(advice.goal) == int(advice.progression):
+        prog = str(advice.progression).strip("%")
+        goal = str(advice.goal).strip("%")
+        if advice.goal and advice.progression and float(prog) >= float(goal):
             advice.progression = ""
             advice.goal = "✔"
             setattr(advice, "status", "complete")
@@ -286,7 +288,7 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
         goal=1
     ))
     costReduction_Advices["Vials"].append(Advice(
-        label="Total Vial reduction is hardcapped at 95%",
+        label="Total Vial reduction (95% hardcap)",
         picture_class="",
         progression=f"{totalVialReduction:.2f}",
         goal=95,
