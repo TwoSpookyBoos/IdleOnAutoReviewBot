@@ -9,13 +9,13 @@ PYTEST_CMD := pytest
 # Determine the operating system
 ifeq ($(OS),Windows_NT)
 	# If running on Windows
-	VENV_DIR := $(shell Get-ChildItem "$(PROJ_ROOT)" -Filter "*[Aa]ctivate*.ps1" | Select-Object -First 1).DirectoryName
-	SOURCE_CMD := $(VENV_DIR)/*ctivate.ps1
+    VENV_DIR := $(shell powershell "(Get-ChildItem -Path \"$(PROJ_ROOT)\" -Recurse -Filter \"activate.ps1\" -File).DirectoryName")
+	PY_PATH := $(VENV_DIR)/python.exe
 else
 	# If running on Unix-like systems
-	VENV_DIR := $(shell dirname $(shell find "$(PROJ_ROOT)" -name "[Aa]ctivate*" | head -1))
-	SOURCE_CMD := source $(VENV_DIR)/*ctivate
+	VENV_DIR := $(shell dirname $(shell find "$(PROJ_ROOT)" -name "activate" | head -1))
+	PY_PATH := $(VENV_DIR)/python
 endif
 
 test:
-	$(SOURCE_CMD) && $(PYTEST_CMD)
+	$(PY_PATH) -m $(PYTEST_CMD)
