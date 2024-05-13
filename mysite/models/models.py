@@ -858,8 +858,6 @@ class Account:
 
         self.atoms = {}
         raw_atoms_list = safe_loads(self.raw_data.get("Atoms", []))
-        if len(raw_atoms_list) >= 5:
-            raw_atoms_list = raw_atoms_list[5]
         for atomIndex, atomName in enumerate(atomsList):
             try:
                 self.atoms[atomName] = int(raw_atoms_list[atomIndex])
