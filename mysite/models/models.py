@@ -5,7 +5,7 @@ import re
 import sys
 from collections import defaultdict
 from enum import Enum
-from math import ceil
+from math import ceil, floor
 from typing import Any
 
 from flask import g
@@ -14,7 +14,7 @@ from utils.data_formatting import getCharacterDetails, safe_loads
 from consts import expectedStackables, greenstack_progressionTiers, card_data, maxMeals, maxMealLevel, jade_emporium, max_IndexOfVials, getReadableVialNames, \
     max_IndexOfBubbles, getReadableBubbleNames, buildingsList, atomsList, prayersList, labChipsList, bribesList, shrinesList, pristineCharmsList, sigilsDict, \
     artifactsList, guildBonusesList, labBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesCount, sneakingGemstonesList, \
-    getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList
+    getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampNameDict, stampTypes
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, letterToNumber
 
 def session_singleton(cls):
@@ -706,7 +706,10 @@ class Account:
             pass
 
         self.max_toon_count = 10  # OPTIMIZE: find a way to read this from somewhere
+        #General / Multiple uses
         raw_optlacc_list = safe_loads(self.raw_data.get("OptLacc", {}))
+
+        #World 1
         self.star_signs = {}
         raw_star_signs = safe_loads(self.raw_data.get("StarSg", {}))
         for signStatus in raw_star_signs:
@@ -723,6 +726,46 @@ class Account:
             except:
                 self.bribes[bribeName] = -1  # -1 means unavailable for purchase, 0 means available, and 1 means purchased
 
+        self.stamps = {}
+        self.stamp_totals = {"Total": 0}
+        for stampType in stampTypes:
+            self.stamp_totals[stampType] = 0
+        raw_stamps_list = safe_loads(self.raw_data.get("StampLv", [{}, {}, {}]))
+        raw_stamps_dict = {}
+        for stampTypeIndex, stampTypeValues in enumerate(raw_stamps_list):
+            raw_stamps_dict[int(stampTypeIndex)] = {}
+            for stampKey, stampValue in stampTypeValues.items():
+                if stampKey != "length":
+                    raw_stamps_dict[int(stampTypeIndex)][int(stampKey)] = int(stampValue)
+        raw_stamp_max_list = safe_loads(self.raw_data.get("StampLvM", {0: {}, 1: {}, 2: {}}))
+        raw_stamp_max_dict = {}
+        for stampTypeIndex, stampTypeValues in enumerate(raw_stamp_max_list):
+            raw_stamp_max_dict[int(stampTypeIndex)] = {}
+            for stampKey, stampValue in stampTypeValues.items():
+                if stampKey != "length":
+                    raw_stamp_max_dict[int(stampTypeIndex)][int(stampKey)] = int(stampValue)
+        for stampType in stampNameDict:
+            for stampIndex, stampName in stampNameDict[stampType].items():
+                try:
+                    self.stamps[stampName] = {
+                        "Index": int(stampIndex),
+                        "Level": int(floor(raw_stamps_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0))),
+                        "Max": int(floor(raw_stamp_max_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0))),
+                        "Delivered": int(floor(raw_stamp_max_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0))) > 0,
+                        "StampType": stampType
+                    }
+                    self.stamp_totals["Total"] += self.stamps[stampName]["Level"]
+                    self.stamp_totals[stampType] += self.stamps[stampName]["Level"]
+                except:
+                    self.stamps[stampName] = {
+                        "Index": stampIndex,
+                        "Level": 0,
+                        "Max": 0,
+                        "Delivered": False,
+                        "StampType": stampType
+                    }
+
+        #World 2
         self.alchemy_vials = {}
         try:
             manualVialsAdded = 0
@@ -826,6 +869,7 @@ class Account:
                     print(f"{reason}")
                     pass  #Already defaulted to 0s in consts.sigilsDict
 
+        #World 3
         self.construction_buildings = {}
         raw_buildings_list = safe_loads(self.raw_data.get("Tower", []))
         for buildingIndex, buildingName in enumerate(buildingsList):
@@ -874,6 +918,7 @@ class Account:
             except:
                 self.prayers[prayerName] = 0
 
+        #World 4
         self.gemshop = {}
         self.labChips = {}
         raw_labChips_list = safe_loads(self.raw_data.get("Lab", []))
@@ -888,6 +933,18 @@ class Account:
         for labBonusIndex, labBonusName in enumerate(labBonusesList):
             self.labBonuses[labBonusName] = {"Enabled": True, "Value": 1}
 
+        #World 5
+        self.artifacts = {}
+        raw_artifacts_list = safe_loads(self.raw_data.get("Sailing", []))
+        raw_artifacts_list = safe_loads(raw_artifacts_list)  # Some users have needed to have data converted twice
+        self.sum_artifact_tiers = sum(raw_artifacts_list[3]) if raw_artifacts_list and len(raw_artifacts_list) >= 4 else 0
+        for artifactIndex, artifactName in enumerate(artifactsList):
+            try:
+                self.artifacts[artifactName] = raw_artifacts_list[3][artifactIndex]
+            except:
+                self.artifacts[artifactName] = 0
+
+        #World 6
         self.sneaking = {
             "PristineCharms": {},
             "Gemstones": {}
@@ -933,29 +990,6 @@ class Account:
             except:
                 continue
 
-        self.artifacts = {}
-        raw_artifacts_list = safe_loads(self.raw_data.get("Sailing", []))
-        raw_artifacts_list = safe_loads(raw_artifacts_list)  #Some users have needed to have data converted twice
-        self.sum_artifact_tiers = sum(raw_artifacts_list[3]) if raw_artifacts_list and len(raw_artifacts_list) >= 4 else 0
-        if raw_artifacts_list:
-            for artifactIndex, artifactName in enumerate(artifactsList):
-                try:
-                    self.artifacts[artifactName] = raw_artifacts_list[3][artifactIndex]
-                except:
-                    self.artifacts[artifactName] = 0
-
-        # self.cardsDict = {}
-        # for cardset in card_data:  #Blunder Hills
-        #     self.cardsDict[cardset] = {}
-        #     for card in card_data[cardset]:  #Crystal0
-        #         decodedCardName = card_data[cardset][card][0]
-        #         self.cardsDict[decodedCardName] = {
-        #             "CodifiedName": card,
-        #             "CardSet": cardset,
-        #             "CardsOwned": safe_loads(self.raw_data[self._key_cards]).get(card, 0),
-        #             "LevelInt": 0,
-        #             "LevelString": "Unlock"
-        #         }
 
     def _make_cards(self):
         card_counts = safe_loads(self.raw_data.get(self._key_cards, {}))
