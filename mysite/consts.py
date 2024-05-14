@@ -2380,6 +2380,14 @@ sneakingGemstonesStatList: list[str] = [
 sneakingGemstonesFirstIndex = 233
 sneakingGemstonesCount = len(sneakingGemstonesList)
 sneakingGemstonesMaxValueDict = {"Aquamarine": 10000, "Emerald": 5000, "Garnet": 2500, "Starite": 200, "Topaz": 1000, "Moissanite": 300}
+maxFarmingCrops = 120  # Last verified as of 2.08
+marketUpgradeList = [
+    "Land Plots", "Stronger Vines", "Nutritious Soil", "Smarter Seeds",
+    "Biology Boost", "Product Doubler", "More Beenz", "Enhanced Deeds",
+    "Overgrowth", "Evolution GMO", "Speed GMO", "OG Fertilizer",
+    "EXP GMO", "Land Rank", "Value GMO", "Super GMO"]
+marketUpgradeFirstIndex = 2
+marketUpgradeLastIndex = marketUpgradeFirstIndex + len(marketUpgradeList)
 
 def getMoissaniteValue(moissaniteLevel: int):
     try:

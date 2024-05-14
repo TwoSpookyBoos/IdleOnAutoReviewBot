@@ -14,7 +14,8 @@ from utils.data_formatting import getCharacterDetails, safe_loads
 from consts import expectedStackables, greenstack_progressionTiers, card_data, maxMeals, maxMealLevel, jade_emporium, max_IndexOfVials, getReadableVialNames, \
     max_IndexOfBubbles, getReadableBubbleNames, buildingsList, atomsList, prayersList, labChipsList, bribesList, shrinesList, pristineCharmsList, sigilsDict, \
     artifactsList, guildBonusesList, labBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesCount, sneakingGemstonesList, \
-    getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampNameDict, stampTypes
+    getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampNameDict, stampTypes, marketUpgradeList, marketUpgradeFirstIndex, \
+    marketUpgradeLastIndex
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, letterToNumber
 
 def session_singleton(cls):
@@ -989,6 +990,40 @@ class Account:
                 )
             except:
                 continue
+
+        self.farming = {
+            "CropsUnlocked": 0,
+            "MarketUpgrades": {},
+            "CropStacks": {
+                "EvolutionGMO": 0,  #200
+                "SpeedGMO": 0,  #1,000
+                "ExpGMO": 0,  #2,500
+                "ValueGMO": 0,  #10,000
+                "SuperGMO": 0  #100,000
+            },
+        }
+        raw_farmcrop_dict = safe_loads(self.raw_data.get("FarmCrop", {}))
+        if isinstance(raw_farmcrop_dict, dict):
+            for cropIndexStr, cropAmountOwned in raw_farmcrop_dict.items():
+                self.farming["CropsUnlocked"] += 1  #Once discovered, crops will always appear in this dict.
+                if cropAmountOwned >= 200:
+                    self.farming["CropStacks"]["EvolutionGMO"] += 1
+                if cropAmountOwned >= 1000:
+                    self.farming["CropStacks"]["SpeedGMO"] += 1
+                if cropAmountOwned >= 2500:
+                    self.farming["CropStacks"]["ExpGMO"] += 1
+                if cropAmountOwned >= 10000:
+                    self.farming["CropStacks"]["ValueGMO"] += 1
+                if cropAmountOwned >= 100000:
+                    self.farming["CropStacks"]["SuperGMO"] += 1
+        raw_farmupg_list = safe_loads(self.raw_data.get("FarmUpg", {}))
+        if isinstance(raw_farmupg_list, list):
+            for marketUpgradeIndex, marketUpgradeName in enumerate(marketUpgradeList):
+                try:
+                    self.farming["MarketUpgrades"][marketUpgradeName] = raw_farmupg_list[marketUpgradeIndex+2]
+                except:
+                    self.farming["MarketUpgrades"][marketUpgradeName] = 0
+
 
 
     def _make_cards(self):
