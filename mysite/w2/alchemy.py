@@ -182,8 +182,8 @@ def setAlchemyVialsProgressionTier() -> AdviceSection:
 
 def getExclusions():
     exclusionsList = []
-    #If 60% of crops owned or Evolution GMO is level 8+, exclude the requirement for Cropius Mapper
-    if session_data.account.farming["CropsUnlocked"] >= floor(maxFarmingCrops * 0.6) or session_data.account.farming["MarketUpgrades"].get("Evolution GMO", 0) > 8:
+    #If all crops owned or Evolution GMO is level 10+, exclude the requirement for Cropius Mapper
+    if session_data.account.farming["CropsUnlocked"] >= maxFarmingCrops or session_data.account.farming["MarketUpgrades"].get("Evolution GMO", 0) > 10:
         exclusionsList.append("Cropius Mapper")
     return exclusionsList
 
