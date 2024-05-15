@@ -426,6 +426,7 @@ def setDivinityProgressionTier():
         "Divinities": [],
         "DivinityLinks": [],
         "Dooted": [],
+        "ArctisPoints": {}
     }
     divinity_AdviceGroupDict = {}
     divinity_AdviceSection = AdviceSection(
@@ -610,6 +611,58 @@ def setDivinityProgressionTier():
     #         picture_class="king-doot"
     #     ))
 
+    #Big P + Divinity level thresholds for Arctis minor link
+    bigPBreakpointsList = [540, 940, 1440, 1940, 2440, 2940, 5940]
+    arctisCombosDict = {
+        540:  {90: 14,  109: 15},
+        940:  {87: 14,  105: 15,  128: 16},
+        1440: {85: 14,  103: 15,  126: 16, 155: 17, 197: 18},
+        1940: {         102: 15,  124: 16, 153: 17, 194: 18},
+        2440: {         101: 15,  123: 16, 152: 17, 192: 18},
+        2940: {                   123: 16, 152: 17, 191: 18},
+        5940: {                   122: 16, 150: 17, 190: 18}
+    }
+    lowestBigPToShow = 540
+    currentLowestArctisValue = 0
+    #Find the lowest Big P threshold the account has already reached. This will be the first entry shown
+    for bigPLevel in arctisCombosDict:
+        if session_data.account.alchemy_bubbles.get("Big P", 0) >= bigPLevel:
+            lowestBigPToShow = bigPLevel
+    #Find the next Big P threshold they could meet
+    if lowestBigPToShow < session_data.account.alchemy_bubbles.get("Big P", 0):
+        try:
+            nextBigPTarget = bigPBreakpointsList[bigPBreakpointsList.index(lowestBigPToShow)+1]
+        except:
+            nextBigPTarget = 0
+    else:
+        nextBigPTarget = lowestBigPToShow
+
+    for bigPLevel in arctisCombosDict:
+        if bigPLevel >= lowestBigPToShow:
+            divinity_AdviceDict["ArctisPoints"][f"Big P level {bigPLevel}"] = []  #Create subgroup
+            #Find the Arctis Value of the lowest div-level character in the account. Don't show entries below or equal to this.
+            for divinityLevel in arctisCombosDict[bigPLevel]:
+                if lowestDivinitySkillLevel >= divinityLevel:
+                    if arctisCombosDict[bigPLevel][divinityLevel] > currentLowestArctisValue:
+                        currentLowestArctisValue = arctisCombosDict[bigPLevel][divinityLevel]
+    for bigPLevel in arctisCombosDict:
+        subgroupName = f"Big P level {bigPLevel}"
+        if subgroupName in divinity_AdviceDict["ArctisPoints"]:
+            if bigPLevel == lowestBigPToShow and nextBigPTarget != 0:
+                divinity_AdviceDict["ArctisPoints"][subgroupName].append(Advice(
+                    label=f"Current Big P bubble level",
+                    picture_class='big-p',
+                    progression=session_data.account.alchemy_bubbles.get("Big P", 0),
+                    goal=nextBigPTarget
+                ))
+            for divinityLevel in arctisCombosDict[bigPLevel]:
+                if arctisCombosDict[bigPLevel][divinityLevel] > currentLowestArctisValue:  #Strictly greater than
+                    divinity_AdviceDict["ArctisPoints"][subgroupName].append(Advice(
+                        label=f"+{arctisCombosDict[bigPLevel][divinityLevel]} at Divinity Level {divinityLevel}",
+                        picture_class='divinity',
+                        progression=lowestDivinitySkillLevel,
+                        goal=divinityLevel
+                    ))
     #Generate AdviceGroups
     divinity_AdviceGroupDict["TieredProgress"] = AdviceGroup(
         tier=str(tier_Divinity),
@@ -641,6 +694,11 @@ def setDivinityProgressionTier():
         tier="",
         pre_string="Doot-Specific Checks",
         advices=divinity_AdviceDict["Dooted"]
+    )
+    divinity_AdviceGroupDict["Dooted"] = AdviceGroup(
+        tier="",
+        pre_string="Arctis minor link bonus (+# Talent LV for all talents above Lv 1) breakpoints. Progress shown is your LOWEST divinity level",
+        advices=divinity_AdviceDict["ArctisPoints"]
     )
     
     #Generate AdviceSection

@@ -16,50 +16,144 @@ bribes_progressionTiers = [
         [5, 6, 7, 7, 6, 7, -8],  #The 8th bribe in w5 cannot be purchased until Jade Emporium
         [6, 6, 7, 7, 6, 7, 7, ]  #The 7th bribe in w6 can't be purchased yet
 ]
-stamps_progressionTiers = [
-    # int Tier, int Total Stamp Level, str Required combat stamps, str Required Skill stamps, str Required Misc stamps, dict Specific stamp levels, str Notes
-    [0, 0, [], [], [], {}, "Just level up any stamp you can afford!"],
-    [1, 50, [], [], [], {}, "Just level up any stamp you can afford!"],
-    [2, 100, [], [], [], {}, "Just level up any stamp you can afford!"],
-    [3, 150, [2, 3, 4, 5, 11], [5], [10], {}, "W1 town and W1 Tiki shop both sell stamps!"],
-    [4, 200, [8, 13, 14], [3, 16, 18], [17], {},
-     "Expected progression roughly near the start of World 3. Some of these required stamps are drops from enemies or quest rewards. Use the Wiki to find their sources!"],
-    [5, 250, [6, 7, 9], [2, 7], [0], {'Pickaxe Stamp': 25, 'Hatchet Stamp': 25}, ""],
-    [6, 300, [17, 18, 20], [25], [5], {}, ""],
-    [7, 400, [], [8], [], {'Pickaxe Stamp': 35, 'Hatchet Stamp': 35}, ""],
-    [8, 500, [15, 16, 21], [14, 17], [14, 19], {'Drippy Drop Stamp': 30}, ""],
-    [9, 600, [27], [10], [1, 2], {'Mason Jar Stamp': 12}, ""],
-    [10, 700, [], [4, 6, 9, 11, 12, 15, 22, 24, 26], [], {'Drippy Drop Stamp': 40, 'Matty Bag Stamp': 50}, ""],
-    [11, 800, [], [29, 37, 40], [11], {'Pickaxe Stamp': 45, 'Hatchet Stamp': 45, 'Mason Jar Stamp': 24, }, ""],
-    [12, 900, [], [13, 20, 30, 46], [8], {'Drippy Drop Stamp': 50}, ""],
-    [13, 1000, [10, 12], [19, 21, 36], [13], {'Pickaxe Stamp': 55, 'Hatchet Stamp': 55, 'Card Stamp': 50}, ""],
-    [14, 1500, [23, 24], [35, 39], [21], {'Matty Bag Stamp': 100, 'Crystallin': 60}, ""],
-    [15, 2000, [28], [41], [6, 20], {'Pickaxe Stamp': 65, 'Hatchet Stamp': 65, 'Card Stamp': 100}, ""],
-    [16, 2500, [31], [38, 42], [15], {'Golden Apple Stamp': 28}, ""],
-    [17, 3000, [25, 29], [43, 44, 45], [], {'Bugsack Stamp': 80, 'Bag o Heads Stamp': 80}, ""],
-    [18, 3500, [33], [], [], {'Pickaxe Stamp': 75, 'Hatchet Stamp': 75, 'Drippy Drop Stamp': 90, 'Crystallin': 100}, ""],
-    [19, 4000, [], [], [], {'Matty Bag Stamp': 150}, ""],
-    [20, 4500, [39], [47], [18], {'Card Stamp': 150, 'Ladle Stamp': 100, 'Potion Stamp': 20}, ""],
-    [21, 5000, [30, 32], [23], [], {'Pickaxe Stamp': 85, 'Hatchet Stamp': 85, 'Mason Jar Stamp': 52, 'Golden Apple Stamp': 40}, ""],
-    [22, 5500, [], [], [], {'Bugsack Stamp': 120, 'Bag o Heads Stamp': 120}, ""],
-    [23, 6000, [19, 26, 34], [33], [], {'Matty Bag Stamp': 200, 'Crystallin': 150}, ""],
-    [24, 6500, [36], [48, 49, 51], [9], {'Drippy Drop Stamp': 100, 'Ladle Stamp': 150, 'Potion Stamp': 40}, ""],
-    [25, 7000, [35], [], [], {'Pickaxe Stamp': 95, 'Hatchet Stamp': 95, 'Golden Apple Stamp': 60, 'Multitool Stamp': 100}, ""],
-    [26, 7500, [], [], [], {'Ladle Stamp': 180}, ""],
-    [27, 8000, [], [], [], {'Matty Bag Stamp': 280, 'Multitool Stamp': 150}, ""],
-    [28, 8400, [], [53], [22],
-     {'Pickaxe Stamp': 105, 'Hatchet Stamp': 105, 'Mason Jar Stamp': 80, 'Crystallin': 200, 'Bugsack Stamp': 144, 'Bag o Heads Stamp': 144, }, ""],
-    [29, 8800, [], [], [], {'Drippy Drop Stamp': 110, 'Potion Stamp': 60}, ""],
-    [30, 9200, [], [], [], {'Card Stamp': 200, 'Crystallin': 250}, ""],
-    [31, 9600, [], [], [], {'Golden Apple Stamp': 80}, "Guaranteed daily Gilded Stamp at 10k"],
-    [32, 10000, [], [], [], {'Mason Jar Stamp': 100}, ""],
-    [33, 10500, [], [], [], {'Bugsack Stamp': 168, 'Bag o Heads Stamp': 168}, ""],
-    [34, 11000, [], [], [], {'Golden Apple Stamp': 100, 'Multitool Stamp': 210}, ""],
-    [35, 11500, [37], [], [], {'Golden Sixes Stamp': 120}, ""],
-    [36, 12000, [38], [31], [], {'Maxo Slappo Stamp': 98, 'Sashe Sidestamp': 98, 'Intellectostampo': 98}, ""],
-    [37, 12500, [], [], [], {'Ladle Stamp': 270}, ""],
-    [38, 13000, [40, 22], [52, 50], [], {'Triad Essence Stamp': 80}, ""],
-]
+stamps_progressionTiers = {
+    # int Tier, int Total Stamp Level, list[int] Required combat stamps, list[int] Required Skill stamps, list[int] Required Misc stamps,
+    # dict Specific stamp levels, list IgnorableStamps
+    0: {"TotalStampLevels": 0, "Stamps": {}},
+    1: {"TotalStampLevels": 50, "Stamps": {}},
+    2: {"TotalStampLevels": 100, "Stamps": {}},
+    3: {"TotalStampLevels": 150, "Stamps": {
+        "Combat": ["Mana Stamp", "Tomahawk Stamp", "Target Stamp", "Shield Stamp", "Vitality Stamp"],
+        "Skill": ["Choppin' Bag Stamp"],
+        "Misc": ["Vendor Stamp"]}},
+    4: {"TotalStampLevels": 200, "Stamps": {
+        "Combat": ["Fist Stamp", "Manamoar Stamp"],
+        "Skill": ["Lil' Mining Baggy Stamp", "Fishing Rod Stamp", "Catch Net Stamp"],
+        "Misc": ["Talent S Stamp"],
+        "Optional": ["Clover Stamp"]}},
+    5: {"TotalStampLevels": 250, "Stamps": {
+        "Combat": ["Longsword Stamp", "Battleaxe Stamp"],
+        "Skill": ["Anvil Zoomer Stamp", "Matty Bag Stamp"],
+        "Misc": ["Questin Stamp"],
+        "Specific": {'Pickaxe Stamp': 25, 'Hatchet Stamp': 25},
+        "Optional": ["Kapow Stamp"]}},
+    6: {"TotalStampLevels": 300, "Stamps": {
+        "Combat": ["Feather Stamp", "Polearm Stamp", "Buckler Stamp"],
+        "Skill": ["Purp Froge Stamp"], "MiscStamps": ["Potion Stamp"]}},
+    7: {"TotalStampLevels": 400, "Stamps": {
+        "Specific": {'Pickaxe Stamp': 35, 'Hatchet Stamp': 35}}},
+    8: {"TotalStampLevels": 500, "Stamps": {
+        "Combat": ["Scimitar Stamp", "Bullseye Stamp", ],
+        "Skill": ["Drippy Drop Stamp", "Fishhead Stamp"],
+        "Misc": ["Biblio Stamp"],
+        "Specific": {'Drippy Drop Stamp': 30},
+        "Optional": ["Hermes Stamp", "Talent III Stamp"]}},
+    9: {"TotalStampLevels": 600, "Stamps": {
+        "Combat": ["Stat Graph Stamp"],
+        "Skill": ["High IQ Lumber Stamp"],
+        "Misc": ["Mason Jar Stamp", "Crystallin"],
+        "Specific": {'Mason Jar Stamp': 12}}},
+    10: {"TotalStampLevels": 700, "Stamps": {
+        "Skill": ["Twin Ores Stamp", "Duplogs Stamp", "Cool Diggy Tool Stamp", "Swag Swingy Tool Stamp", "Alch Go Brrr Stamp",
+                  "Droplots Stamp", "Bugsack Stamp", "Hidey Box Stamp", "Spikemouth Stamp"],
+        "Specific": {'Drippy Drop Stamp': 40, 'Matty Bag Stamp': 50}}},
+    11: {"TotalStampLevels": 800, "Stamps": {
+         "Skill": ["Stample Stamp", "Spice Stamp", "Egg Stamp"],
+         "Misc": ["Sigil Stamp"],
+         "Specific": {'Pickaxe Stamp': 45, 'Hatchet Stamp': 45, 'Mason Jar Stamp': 24}}},
+    12: {"TotalStampLevels": 900, "Stamps": {
+        "Skill": ["Brainstew Stamp", "Bag o Heads Stamp", "Skelefish Stamp"],
+        "Misc": ["Card Stamp"],
+        "Specific": {'Drippy Drop Stamp': 50},
+        "Optional": ["Saw Stamp"]}},
+    13: {"TotalStampLevels": 1000, "Stamps": {
+        "Skill": ["Fly Intel Stamp", "Holy Mackerel Stamp", "Cooked Meal Stamp"],
+        "Specific": {'Pickaxe Stamp': 55, 'Hatchet Stamp': 55, 'Card Stamp': 50},
+        "Optional": ["Agile Stamp", "Book Stamp", "Talent II Stamp"]}},
+    14: {"TotalStampLevels": 1500, "Stamps": {
+        "Combat": ["Avast Yar Stamp"],
+        "Skill": ["Banked Pts Stamp", "Nest Eggs Stamp"],
+        "Misc": ["Holy Mackerel Stamp"],
+        "Specific": {'Matty Bag Stamp': 100, 'Crystallin': 60},
+        "Optional": ["Arcane Stamp"]}},
+    15: {"TotalStampLevels": 2000, "Stamps": {
+        "Skill": ["Lab Tube Stamp"],
+        "Misc": ["Golden Apple Stamp"],
+        "Specific": {'Pickaxe Stamp': 65, 'Hatchet Stamp': 65, 'Card Stamp': 100},
+        "Optional": ["Gilded Axe Stamp", "DNA Stamp"]}},
+    16: {"TotalStampLevels": 2500, "Stamps": {
+        "Combat": ["Blackheart Stamp"],
+        "Skill": ["Ladle Stamp", "Sailboat Stamp"],
+        "Misc": ["Talent III Stamp"],
+        "Specific": {'Golden Apple Stamp': 28}}},
+    17: {"TotalStampLevels": 3000, "Stamps": {
+        "Combat": ["Steve Sword", "Diamond Axe Stamp"],
+        "Skill": ["Gamejoy Stamp", "Divine Stamp", "Multitool Stamp"],
+        "Specific": {'Bugsack Stamp': 80, 'Bag o Heads Stamp': 80}}},
+    18: {"TotalStampLevels": 3500, "Stamps": {
+        "Combat": ["Sashe Sidestamp"],
+        "Specific": {'Pickaxe Stamp': 75, 'Hatchet Stamp': 75, 'Drippy Drop Stamp': 90, 'Crystallin': 100}}},
+    19: {"TotalStampLevels": 4000, "Stamps": {
+        "Specific": {'Matty Bag Stamp': 150}}},
+    20: {"TotalStampLevels": 4500, "Stamps": {
+        "Skill": ["Crop Evo Stamp"],
+        "Misc": ["Multikill Stamp"],
+        "Specific": {'Card Stamp': 150, 'Ladle Stamp': 100, 'Potion Stamp': 20},
+        "Optional": ["Void Sword Stamp"]}},
+    21: {"TotalStampLevels": 5000, "Stamps": {
+        "Combat": ["Tripleshot Stamp", "Maxo Slappo Stamp"],
+        "Skill": ["Buzz Buzz Stamp"],
+        "Specific": {'Pickaxe Stamp': 85, 'Hatchet Stamp': 85, 'Mason Jar Stamp': 52, 'Golden Apple Stamp': 40}}},
+    22: {"TotalStampLevels": 5500, "Stamps": {
+        "Specific": {'Bugsack Stamp': 120, 'Bag o Heads Stamp': 120}}},
+    23: {"TotalStampLevels": 6000, "Stamps": {
+        "Combat": ["Violence Stamp", "Intellectostampo"],
+        "Skill": ["Flowin Stamp"],
+        "Specific": {'Matty Bag Stamp': 200, 'Crystallin': 150},
+        "Optional": ["Blover Stamp"]}},
+    24: {"TotalStampLevels": 6500, "Stamps": {
+        "Combat": ["Dementia Sword Stamp"],
+        "Skill": ["Sneaky Peeky Stamp", "Jade Mint Stamp", "White Essence Stamp"],
+        "Misc": ["Forge Stamp"],
+        "Specific": {'Drippy Drop Stamp': 100, 'Ladle Stamp': 150, 'Potion Stamp': 40}}},
+    25: {"TotalStampLevels": 7000, "Stamps": {
+        "Combat": ["Conjocharmo Stamp"],
+        "Specific": {'Pickaxe Stamp': 95, 'Hatchet Stamp': 95, 'Golden Apple Stamp': 60, 'Multitool Stamp': 100}}},
+    26: {"TotalStampLevels": 7500, "Stamps": {
+        "Specific": {'Ladle Stamp': 180}}},
+    27: {"TotalStampLevels": 8000, "Stamps": {
+        "Specific": {'Matty Bag Stamp': 280, 'Multitool Stamp': 150}}},
+    28: {"TotalStampLevels": 8400, "Stamps": {
+        "Skill": ["Dark Triad Essence Stamp"],
+        "Misc": ["Atomic Stamp"],
+        "Specific": {'Pickaxe Stamp': 105, 'Hatchet Stamp': 105, 'Mason Jar Stamp': 80, 'Crystallin': 200, 'Bugsack Stamp': 144, 'Bag o Heads Stamp': 144, }}},
+    29: {"TotalStampLevels": 8800, "Stamps": {
+        "Specific": {'Drippy Drop Stamp': 110, 'Potion Stamp': 60}}},
+    30: {"TotalStampLevels": 9200, "Stamps": {
+        "Specific": {'Card Stamp': 200, 'Crystallin': 250}}},
+    31: {"TotalStampLevels": 9600, "Stamps": {
+        "Specific": {'Golden Apple Stamp': 80}}},
+    32: {"TotalStampLevels": 10000, "Stamps": {
+        "Specific": {'Mason Jar Stamp': 100}}},
+    33: {"TotalStampLevels": 10500, "Stamps": {
+        "Specific": {'Bugsack Stamp': 168, 'Bag o Heads Stamp': 168}}},
+    34: {"TotalStampLevels": 11000, "Stamps": {
+        "Specific": {'Golden Apple Stamp': 100, 'Multitool Stamp': 210}}},
+    35: {"TotalStampLevels": 11500, "Stamps": {
+        "Combat": ["Golden Sixes Stamp"],
+        "Specific": {'Golden Sixes Stamp': 120}}},
+    36: {"TotalStampLevels": 12000, "Stamps": {
+        "Combat": ["Stat Wallstreet Stamp"],
+        "Skill": ["Amplestample Stamp"],
+        "Specific": {'Maxo Slappo Stamp': 98, 'Sashe Sidestamp': 98, 'Intellectostampo': 98}}},
+    37: {"TotalStampLevels": 12500, "Stamps": {
+        "Specific": {'Ladle Stamp': 270}}},
+    38: {"TotalStampLevels": 13000, "Stamps": {
+        "Combat": ["Sukka Foo"],
+        "Skill": ["Triad Essence Stamp", "Summoner Stone Stamp"],
+        "Specific": {'Triad Essence Stamp': 80},
+        "Optional": ["Void Axe Stamp"]}},
+}
 smithing_progressionTiers = [
     # int tier, int Cash Points Purchased, int Monster Points Purchased, int Forge Totals, str Notes
     [0, 0, 0, 0, ""],
@@ -289,6 +383,7 @@ sigils_progressionTiers = {
     4: {"Label": "D", "Sigils":[]},
     5: {"Label": "F", "Sigils":[]},
 }
+
 ###WORLD 3 PROGRESSION TIERS###
 saltLick_progressionTiers = [
     [0, {}, ""],
@@ -333,11 +428,11 @@ deathNote_progressionTiers = [
     [20, 20, 20, 20, 20, 20, 4,     0, 0, 85, 82, 66, ""],
     [21, 20, 20, 20, 20, 20, 5,     0, 0, 85, 83, 66, ""],
     [22, 20, 20, 20, 20, 20, 7,     0, 0, 85, 83, 66, ""],
-    [23, 20, 20, 20, 20, 20, 10,    0, 0, 85, 83, 70, ""],
-    [24, 20, 20, 20, 20, 20, 10,    0, 0, 85, 83, 80, ""],
-    [25, 20, 20, 20, 20, 20, 20,    0, 0, 85, 83, 82, ""],
-    [26, 20, 20, 20, 20, 20, 20,    0, 0, 85, 83, 83, ""],
-    [27, 20, 20, 20, 20, 20, 20,    0, 0, 85, 85, 84, "As of v2.05, completing a Super CHOW on Boops is impossible."],
+    [23, 20, 20, 20, 20, 20, 10,    0, 0, 85, 83, 66, ""],
+    [24, 20, 20, 20, 20, 20, 10,    0, 0, 85, 83, 73, ""],
+    [25, 20, 20, 20, 20, 20, 20,    0, 0, 85, 83, 80, ""],
+    [26, 20, 20, 20, 20, 20, 20,    0, 0, 85, 83, 82, ""],
+    [27, 20, 20, 20, 20, 20, 20,    0, 0, 85, 85, 83, "As of v2.08, completing a Super CHOW on Boops is impossible."],
     [28, 20, 20, 20, 20, 20, 20,    0, 0, 86, 86, 86, "Info only"]
 ]
 buildingsPostBuffs_progressionTiers = [
@@ -529,7 +624,9 @@ divinity_progressionTiers = {
     11: {"MaxDivLevel": 50},
     12: {"MinDivLevel": 40}
 }
+
 ###WORLD 6 PROGRESSION TIERS###
+
 
 ###GENERAL PROGRESSION TIERS###
 combatLevels_progressionTiers = [
@@ -809,6 +906,49 @@ greenstack_progressionTiers = {
         },
     }
 
+###UI CONSTS###
+maxTiersPerGroup = 3
+switches = [
+    {
+        "label": "Autoloot purchased",
+        "name": "autoloot",
+        "true": "",
+        "false": "",
+    },
+    {
+        "label": "Sheepie pet acquired",
+        "name": "sheepie",
+        "true": "",
+        "false": "",
+    },
+    {
+        "label": "Doot pet acquired",
+        "name": "doot",
+        "true": "",
+        "false": "",
+    },
+    {
+        "label": "Order groups by tier",
+        "name": "order_tiers",
+        "true": "",
+        "false": "",
+    },
+    {
+        "label": "Show progress bars",
+        "name": "progress_bars",
+        "true": "",
+        "false": "",
+    },
+    {
+        "label": "Handedness",
+        "name": "handedness",
+        "true": "L",
+        "false": "R",
+    },
+    # {"label": "Legacy style", "name": "legacy", "true": "", "false": ""},
+]
+
+###GENERAL / MULTI-USE CONSTS###
 missableGStacksDict = {
     #  ItemName               Codename     Quest Codeame          Quest Name                                          Wiki link to the item                             Recommended Class/Farming notes
     "Dog Bone":              ["Quest12",   "Dog_Bone1",           "Dog Bone: Why he Die???",                          "https://idleon.wiki/wiki/Dog_Bone",              "Active ES or time candy."],
@@ -825,7 +965,6 @@ missableGStacksDict = {
     "Claiming Cashe":        ["GoldricP3", "Goldric3",            "Goldric: Only Winners have Portraits",             "https://idleon.wiki/wiki/Claiming_Cashe",        "Active ES or time candy."],
     "Monster Rating":        ["Quest32",   "XxX_Cattleprod_XxX3", "XxX_Cattleprod_XxX: Ok, NOW it's Peak Gaming!",    "https://idleon.wiki/wiki/Monster_Rating",        "Monster Ratings can drop from Crystal enemies, making Divine Knight the better farmer for Monster Ratings."]
 }
-
 expectedStackables = {
     "Missable Quest Items": [
         "Quest3", "Quest4", "Quest7", "Quest12", "Quest21", "Quest14", "Quest22", "Quest23", "Quest24", "GoldricP1", "GoldricP2", "GoldricP3",
@@ -1199,16 +1338,7 @@ card_data = {
     },
 }
 
-maxTiersPerGroup = 3
-numberOfArtifacts = 33  # As of v2.03
-numberOfArtifactTiers = 4  # As of v2.03
-currentMaxChestsSum = 45  # As of v2.0
-maxDreams = 31
-maxCookingTables = 10
-maxMeals = 67
-maxMealLevel = 90
-numberOfSecretClasses = 3
-
+numberOfSecretClasses = 3  # Last verified as of v2.08
 humanReadableClasses = {
     1: "Beginner",
     2: "Journeyman",
@@ -1240,46 +1370,6 @@ humanReadableClasses = {
     36: "Bubonic Conjuror",
     37: "Arcane Cultist"
 }
-
-switches = [
-    {
-        "label": "Autoloot purchased",
-        "name": "autoloot",
-        "true": "",
-        "false": "",
-    },
-    {
-        "label": "Sheepie pet acquired",
-        "name": "sheepie",
-        "true": "",
-        "false": "",
-    },
-    {
-        "label": "Doot pet acquired",
-        "name": "doot",
-        "true": "",
-        "false": "",
-    },
-    {
-        "label": "Order groups by tier",
-        "name": "order_tiers",
-        "true": "",
-        "false": "",
-    },
-    {
-        "label": "Show progress bars",
-        "name": "progress_bars",
-        "true": "",
-        "false": "",
-    },
-    {
-        "label": "Handedness",
-        "name": "handedness",
-        "true": "L",
-        "false": "R",
-    },
-    # {"label": "Legacy style", "name": "legacy", "true": "", "false": ""},
-]
 
 skillIndexList = ["Combat",
                   "Mining", "Smithing", "Choppin",
@@ -1365,162 +1455,108 @@ expectedStorageChestValuesDict = {
     103:4,
     104:3,
 }
+gemShopDict = {
+    #Inventory and Storage
+    'Item Backpack Space': 0,
+    'Storage Chest Space': 0,
+    'Carry Capacity': 0,
+    'Food Slot': 0,
+    'More Storage Space': 0,
+    'Card Presets': 0,
 
-jade_emporium = [
-  {
-    "name": "Quick Ref Access",
-    "bonus": "Adds the Sneaking skill to your QuickRef menu! Manage your Ninja Twins from anywhere!"
-  },
-  {
-    "name": "Gold Food Beanstalk",
-    "bonus": "Grows a giant beanstalk behind the ninja castle! Drop a stack of 10,000 Gold Food to add it with the beanstalk and permanently gain its bonus!"
-  },
-  {
-    "name": "Supersized Gold Beanstacking",
-    "bonus": "You can now drop a stack of 100,000 Gold Food to supersize it! This will obviously give a bigger bonus, and will even enlargen the food on the stalk!"
-  },
-  {
-    "name": "Charmed, I'm Sure",
-    "bonus": "All your Ninja Twins can now equip two of the same charm at once!"
-  },
-  {
-    "name": "Mob Cosplay Craze",
-    "bonus": "Certain monsters in World 6 will now have a rare chance to drop Ninja Hats, but only the ones you've found already from the Ninja Castle!"
-  },
-  {
-    "name": "Level Exemption",
-    "bonus": "Completely and utterly removes the UNDER-LEVELED bonus reduction of all stamps in your collection, now and forever. Amen."
-  },
-  {
-    "name": "Gaming to the MAX",
-    "bonus": "All plant types in Gaming have +1 Max Evolution, but this one is 50,000x rarer than normal and will make you wonder if evolution is even real (it is)"
-  },
-  {
-    "name": "Revenge of the Pickle",
-    "bonus": "Adds a new boss page to the left of World 1 in Deathnote. Each BoneJoePickle in your inventory counts as +1 Boss Deathnote Kill!"
-  },
-  {
-    "name": "The Artifact Matrix",
-    "bonus": "Extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to Artifact Find Chance!"
-  },
-  {
-    "name": "The Slab Matrix",
-    "bonus": "Further extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to all bonuses from the Slab!"
-  },
-  {
-    "name": "The Spirit Matrix",
-    "bonus": "Even further extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to W6 Skill exp gain!"
-  },
-  {
-    "name": "The Crop Matrix",
-    "bonus": "Yet again even further extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to Crop Depot!"
-  },
-  {
-    "name": "MSA Expander I",
-    "bonus": "Adds a new bonus type to the Miniature Soul Apparatus in World 3, specifically Farming EXP!"
-  },
-  {
-    "name": "MSA Expander II",
-    "bonus": "Adds a new bonus type to the Miniature Soul Apparatus in World 3, specifically Jade Coin Gain!"
-  },
-  {
-    "name": "MSA Expander III",
-    "bonus": "Adds a new bonus type to the Miniature Soul Apparatus in World 3, specifically All Essence Gain!"
-  },
-  {
-    "name": "Deal Sweetening",
-    "bonus": "Earn +25% more Magic Beans from the mysterious Legumulyte bean merchant found in the Troll Broodnest map."
-  },
-  {
-    "name": "No Meal Left Behind",
-    "bonus": "Every 24 hours, your lowest level Meal gets +1 Lv. This only works on Meals Lv 5 or higher, and doesn't trigger on days you don't play."
-  },
-  {
-    "name": "Jade Coin Magnetism",
-    "bonus": "Adds a new bonus of +5% Jade Coin Gain per 10 items found after 1000 items, as shown at The Slab in World 5."
-  },
-  {
-    "name": "Essence Confetti",
-    "bonus": "Adds a new bonus of +3% All Essence Gain per 10 items found after 1000 items, as shown at The Slab in World 5."
-  },
-  {
-    "name": "Shrine Collective Bargaining Agreement",
-    "bonus": "Shrines no longer lose EXP when moved around, so you can finally bring those baddies out of retirement!"
-  },
-  {
-    "name": "Papa Blob's Quality Guarantee",
-    "bonus": "Increases the Max Level of all cooking meals by +10. Better meals, better levels, Papa Blob's."
-  },
-  {
-    "name": "Chef Geustloaf's Cutting Edge Philosophy",
-    "bonus": "Increases the Max Level of all cooking meals by +10 again! But oh hoho, you sir are no Chef Geustloaf! Good luck cooking to these LVs!"
-  },
-  {
-    "name": "Crop Depot Scientist",
-    "bonus": "Employs a friendly scientist blobulyte to keep a Data Sheet of all the crops you've ever found!"
-  },
-  {
-    "name": "Science Environmentally Sourced Pencil",
-    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+15% Cash from Mobs' per crop found!"
-  },
-  {
-    "name": "Science Pen",
-    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '1.02x Plant Evolution Chance in Gaming (multiplicative)' per Crop!"
-  },
-  {
-    "name": "Science Marker",
-    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+8% Jade Coin Gain' per Crop!"
-  },
-  {
-    "name": "Science Featherpen",
-    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '1.10x Cooking Speed (multiplicative)' per Crop!"
-  },
-  {
-    "name": "Reinforced Science Pencil",
-    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+20% Total Damage' per Crop!"
-  },
-  {
-    "name": "Science Crayon",
-    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+7% Shiny Pet Lv Up Rate and Pet Breeding Rate' per Crop!"
-  },
-  {
-    "name": "Science Paintbrush",
-    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+0.1 Base Critter caught in Trapping' per Crop!"
-  },
-  {
-    "name": "New Critter",
-    "bonus": "Unlocks a new critter type to capture! These have their own very special vial in Alchemy."
-  },
-  {
-    "name": "Ionized Sigils",
-    "bonus": "Sigils can now be upgraded a 3rd time. Push past lame ol' yellow, and further increasing those sigil boosts!"
-  },
-  {
-    "name": "The Endercaptain",
-    "bonus": "Adds the Endercaptain to Recruitment pool. They're very rare, and have a hidden account-wide +25% Loot Multi and Artifact Find."
-  },
-  {
-    "name": "True Godly Blessings",
-    "bonus": "All Divinity Gods give 1.05x higher Blessing bonus per God Rank. Whats a Blessing bonus? Select a god, it's the one on the bottom, go look."
-  },
-  {
-    "name": "Brighter Lighthouse Bulb",
-    "bonus": "You can now find 3 additional Artifacts from The Edge island."
-  },
-  {
-    "name": "Sovereign Artifacts",
-    "bonus": "You can now find Sovereign Artifacts from sailing, but only if you've found the Eldritch form first."
-  },
-  {
-    "name": "New Bribes",
-    "bonus": "Mr. Pigibank is up to no good once again, and he's looking to get some funding from his favorite patron... you. Well, your wallet specifically."
-  },
-  {
-    "name": "Laboratory Bling",
-    "bonus": "Adds 3 new Jewels to unlock at the Jewel Spinner in W4 Town. Or, get one for free every 700 total Lab LV as shown in Rift Skill Mastery."
-  }
+    #Dailies N' Resets
+    'Daily Teleports': 0,
+    'Daily Minigame Plays': 0,
+
+    #Cards
+    'Extra Card Slot': 0,
+
+    #Goods & Services
+    'Weekly Dungeon Boosters': 0,
+
+    #World 1&2
+    'Infinity Hammer': 0,
+    'Brimstone Forge Slot': 0,
+    'Ivory Bubble Cauldrons': 0,
+    'Bleach Liquid Cauldrons': 0,
+    'Obol Storage Space': 0,
+    'Sigil Supercharge': 0,
+
+    #World 3
+    'Crystal 3d Printer': 0,
+    'More Sample Spaces': 0,
+    'Burning Bad Books': 0,
+    'Prayer Slots': 0,
+    'Zen Cogs': 0,
+    'Cog Inventory Space': 0,
+    'Tower Building Slots': 0,
+    'Fluorescent Flaggies': 0,
+
+    #World 4
+    'Royal Egg Cap': 0,
+    'Richelin Kitchen': 0,
+    'Souped Up Tube': 0,
+    'Pet Storage': 0,
+    'Fenceyard Space': 0,
+
+    #World 5
+    'Chest Sluggo': 0,
+    'Divinity Sparkie': 0,
+    'Golden Sprinkler': 0,
+    'Lava Sprouts': 0,
+
+    #World 6
+    'Plot of Land': 0,
+    'Pristine Charm': 0,
+    'Shroom Familiar': 0,
+    'Sand of Time': 0,
+    'Instagrow Generator': 0,
+    'Life Refill': 0,
+    'Compost Bag': 0,
+    'Summoner Stone': 0,
+
+    #Fomo
+    'FOMO-1': 0,
+    'FOMO-2': 0,
+    'FOMO-3': 0,
+    'FOMO-4': 0,
+    'FOMO-5': 0,
+    'FOMO-6': 0,
+    'FOMO-7': 0,
+    'FOMO-8': 0
+    }  # Default 0s
+guildBonusesList = [
+    "Guild Gifts", "Stat Runes", "Rucksack", "Power of Pow", "REM Fighting", "Make or Break",
+    "Multi Tool", "Sleepy Skiller", "Coin Supercharger", "Bonus GP for small guilds", "Gold Charm", "Star Dazzle",
+    "C2 Card Spotter", "Bestone", "Skilley Skillet", "Craps", "Anotha One", "Wait A Minute"
 ]
+def lavaFunc(funcType: str, level: int, x1: int, x2: int, roundResult=False):
+    result = 0
+    match funcType:
+        case 'add':
+            if x2 != 0:
+                result = (((x1 + x2) / x2 + 0.5 * (level - 1)) / (x1/x2)) * level * x1
+            else:
+                result = level * x1
+        case 'decay':
+            result = (level * x1) / (level + x2)
+        case 'intervalAdd':
+            result = x1 + math.floor(level / x2)
+        case 'decayMulti':
+            result = 1 + (level * x1) / (level + x2)
+        case 'bigBase':
+            result = x1 + x2 * level
+        case 'special1':
+            result = 100 - (level * x1) / (level + x2)
+        case _:
+            result = 0
+    if roundResult:
+        return round(result)
+    else:
+        return result
 
+
+###WORLD 1 CONSTS###
 bribesList = [
     "Insider Trading", "Tracking Chips", "Mandatory Fire Sale", "Sleeping On the Job", "Artificial Demand", "The Art of the Deal",
     "Overstock Regulations", "Double EXP Scheme", "Tagged Indicators", "Fossil Fuel Legislation", "Five Aces in the Deck", "Fake Teleport Tickets", "The Art of the Steal",
@@ -1546,11 +1582,52 @@ stamp_maxes = {
     "Crystallin": 270,
     "Forge Stamp": 230,
 }
+stampNameDict = {
+    "Combat": {
+        0: "Sword Stamp", 1: "Heart Stamp", 2: "Mana Stamp", 3: "Tomahawk Stamp", 4: "Target Stamp",
+        5: "Shield Stamp", 6: "Longsword Stamp", 7: "Kapow Stamp", 8: "Fist Stamp", 9: "Battleaxe Stamp",
+        10: "Agile Stamp", 11: "Vitality Stamp", 12: "Book Stamp", 13: "Manamoar Stamp", 14: "Clover Stamp",
+        15: "Scimitar Stamp", 16: "Bullseye Stamp", 17: "Feather Stamp", 18: "Polearm Stamp", 19: "Violence Stamp",
+        20: "Buckler Stamp", 21: "Hermes Stamp", 22: "Sukka Foo", 23: "Arcane Stamp", 24: "Avast Yar Stamp",
+        25: "Steve Sword", 26: "Blover Stamp", 27: "Stat Graph Stamp", 28: "Gilded Axe Stamp",
+        29: "Diamond Axe Stamp", 30: "Tripleshot Stamp", 31: "Blackheart Stamp", 32: "Maxo Slappo Stamp", 33: "Sashe Sidestamp", 34: "Intellectostampo",
+        35: "Conjocharmo Stamp", 36: "Dementia Sword Stamp", 37: "Golden Sixes Stamp", 38: "Stat Wallstreet Stamp", 39: "Void Sword Stamp",
+        40: "Void Axe Stamp", 41: "Captalist Stats Stamp"
+    },
+    "Skill": {
+        0: "Pickaxe Stamp", 1: "Hatchet Stamp", 2: "Anvil Zoomer Stamp", 3: "Lil' Mining Baggy Stamp", 4: "Twin Ores Stamp",
+        5: "Choppin' Bag Stamp", 6: "Duplogs Stamp", 7: "Matty Bag Stamp", 8: "Smart Dirt Stamp", 9: "Cool Diggy Tool Stamp",
+        10: "High IQ Lumber Stamp", 11: "Swag Swingy Tool Stamp", 12: "Alch Go Brrr Stamp", 13: "Brainstew Stamp", 14: "Drippy Drop Stamp",
+        15: "Droplots Stamp", 16: "Fishing Rod Stamp", 17: "Fishhead Stamp", 18: "Catch Net Stamp", 19: "Fly Intel Stamp",
+        20: "Bag o Heads Stamp", 21: "Holy Mackerel Stamp", 22: "Bugsack Stamp", 23: "Buzz Buzz Stamp", 24: "Hidey Box Stamp",
+        25: "Purp Froge Stamp", 26: "Spikemouth Stamp", 27: "Shiny Crab Stamp", 28: "Gear Stamp", 29: "Stample Stamp",
+        30: "Saw Stamp", 31: "Amplestample Stamp", 32: "SpoOoky Stamp", 33: "Flowin Stamp", 34: "Prayday Stamp",
+        35: "Banked Pts Stamp", 36: "Cooked Meal Stamp", 37: "Spice Stamp", 38: "Ladle Stamp", 39: "Nest Eggs Stamp",
+        40: "Egg Stamp", 41: "Lab Tube Stamp", 42: "Sailboat Stamp", 43: "Gamejoy Stamp", 44: "Divine Stamp",
+        45: "Multitool Stamp", 46: "Skelefish Stamp", 47: "Crop Evo Stamp", 48: "Sneaky Peeky Stamp", 49: "Jade Mint Stamp",
+        50: "Summoner Stone Stamp", 51: "White Essence Stamp", 52: "Triad Essence Stamp", 53: "Dark Triad Essence Stamp"
+    },
+    "Misc": {
+        0: "Questin Stamp", 1: "Mason Jar Stamp", 2: "Crystallin", 3: "Arcade Ball Stamp", 4: "Gold Ball Stamp",
+        5: "Potion Stamp", 6: "Golden Apple Stamp", 7: "Ball Timer Stamp", 8: "Card Stamp", 9: "Forge Stamp",
+        10: "Vendor Stamp", 11: "Sigil Stamp", 12: "Talent I Stamp", 13: "Talent II Stamp", 14: "Talent III Stamp",
+        15: "Talent IV Stamp", 16: "Talent V Stamp", 17: "Talent S Stamp", 18: "Multikill Stamp", 19: "Biblio Stamp",
+        20: "DNA Stamp", 21: "Refinery Stamp", 22: "Atomic Stamp"
+    }
+}
+stampTypes = ["Combat", "Skill", "Misc"]
+unavailableStampsList = [
+    'Shiny Crab Stamp', 'Gear Stamp', 'SpoOoky Stamp', 'Prayday Stamp',  #Skill
+    'Talent I Stamp', 'Talent V Stamp',  #Misc
+]  # Last verified as of v2.08
+starsignsList: list[str] = [
 
-max_IndexOfVials = 75
-max_IndexOfBubbles = 29
-max_IndexOfSigils = 3
+]
 
+###WORLD 2 CONSTS###
+max_IndexOfVials = 75  # Last verified as of v2.08
+max_IndexOfBubbles = 29  # Last verified as of v2.08
+max_IndexOfSigils = 3  # Last verified as of v2.08
 vialsDict = {
     0: {"Name": "Copper Corona", "Material": "Copper", "x1": 3, "x2": 0, "funcType": "add"},
     1: {"Name": "Sippy Splinter", "Material": "OakTree", "x1": 3, "x2": 0, "funcType": "add"},
@@ -1627,6 +1704,32 @@ vialsDict = {
     72: {"Name": "Ded Sap", "Material": "Tree13", "x1": 3.5, "x2": 0, "funcType": "add"},
     73: {"Name": "Royale Cola", "Material": "SpiD3", "x1": 3.5, "x2": 0, "funcType": "add"},
     74: {"Name": "Turtle Tisane", "Material": "Critter11", "x1": 4, "x2": 0, "funcType": "add"},
+}
+sigilsDict = {
+    "Big Muscle":       {"Index": 0,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [2, 100, 50000]},
+    "Pumped Kicks":     {"Index": 2,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [3, 150, 60000]},
+    "Odd Literarture":  {"Index": 4,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [5, 200, 70000]},
+    "Good Fortune":     {"Index": 6,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [8, 300, 90000]},
+    "Plunging Sword":   {"Index": 8,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [15, 700, 100000]},
+    "Wizardly Hat":     {"Index": 10, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [24, 1250, 130000]},
+    "Envelope Pile":    {"Index": 12, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [60, 2500, 160000]},
+    "Shiny Beacon":     {"Index": 14, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [120, 4000, 200000]},
+    "Metal Exterior":   {"Index": 16, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [250, 7000, 240000]},
+    "Two Starz":        {"Index": 18, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [500, 10000, 280000]},
+    "Pipe Gauge":       {"Index": 20, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [700, 12000, 320000]},
+    "Trove":            {"Index": 22, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [1300, 14000, 400000]},
+    "Pea Pod":          {"Index": 24, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [2100, 15000, 420000]},
+    "Tuft Of Hair":     {"Index": 26, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [3000, 25000, 450000]},
+    "Emoji Veggie":     {"Index": 28, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [4500, 33000, 480000]},
+    "Vip Parchment":    {"Index": 30, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [6300, 42000, 520000]},
+    "Dream Catcher":    {"Index": 32, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [7000, 50000, 560000]},
+    "Duster Studs":     {"Index": 34, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [8000, 60000, 600000]},
+    "Garlic Glove":     {"Index": 36, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [9000, 70000, 650000]},
+    "Lab Tesstube":     {"Index": 38, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [12000, 80000, 700000]},
+    "Peculiar Vial":    {"Index": 40, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [17000, 120000, 750000]},
+    "Loot Pile":        {"Index": 42, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [23000, 160000, 900000]},
+    "Div Spiral":       {"Index": 44, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [26000, 200000, 1200000]},
+    "Cool Coin":        {"Index": 46, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [30000, 250000, 2000000]},
 }
 def getReadableVialNames(inputNumber):
     try:
@@ -2051,26 +2154,21 @@ def getReadableBubbleNames(inputNumber, color):
                     return f"Unknown Bubble {color} {inputNumber}"
 
 
-starsignsList: list[str] = [
-
-]
-
+###WORLD 3 CONSTS###
+maxDreams = 31  # Last verified as of v2.08
 buildingsList: list[str] = [
     "3D Printer", "Talent Book Library", "Death Note", "Salt Lick", "Chest Space", "Cost Cruncher", "Trapper Drone", "Automation Arm", "Atom Collider",
     "Pulse Mage", "Fireball Lobber", "Boulder Roller", "Frozone Malone", "Stormcaller", "Party Starter", "Kraken Cosplayer", "Poisonic Elder", "Voidinator",
     "Woodular Shrine", "Isaccian Shrine", "Crystal Shrine", "Pantheon Shrine", "Clover Shrine", "Summereading Shrine", "Crescent Shrine", "Undead Shrine", "Primordial Shrine"
 ]
-
 shrinesList: list[str] = [
     "Woodular Shrine", "Isaccian Shrine", "Crystal Shrine", "Pantheon Shrine", "Clover Shrine", "Summereading Shrine", "Crescent Shrine", "Undead Shrine", "Primordial Shrine"
 ]
-
 atomsList: list[str] = [
     "Hydrogen - Stamp Decreaser", "Helium - Talent Power Stacker", "Lithium - Bubble Insta Expander", "Beryllium - Post Office Penner",
     "Boron - Particle Upgrader", "Carbon - Wizard Maximizer", "Nitrogen - Construction Trimmer", "Oxygen - Library Booker",
     "Fluoride - Void Plate Chef", "Neon - Damage N' Cheapener", "Sodium - Snail Kryptonite"
 ]
-
 prayersList: list[str] = [
     "Big Brain Time (Forest Soul)", "Skilled Dimwit (Forest Soul)", "Unending Energy (Forest Soul)",
     "Shiny Snitch (Forest Soul)", "Zerg Rushogen (Forest Soul)",
@@ -2080,6 +2178,10 @@ prayersList: list[str] = [
     "Balance of Pain (Squishy Soul)", "Balance of Proficiency (Squishy Soul)","Glitterbug (Squishy Soul)",
 ]
 
+###WORLD 4 CONSTS###
+maxCookingTables = 10  # Last verified as of v2.08
+maxMeals = 67  # Last verified as of v2.08
+maxMealLevel = 90  # Last verified as of v2.08
 labChipsList: list[str] = [
     "Grounded Nanochip", "Grounded Motherboard", "Grounded Software", "Grounded Processor", "Potato Chip",
     "Conductive Nanochip", "Conductive Motherboard", "Conductive Software", "Conductive Processor", "Chocolatey Chip",
@@ -2087,84 +2189,188 @@ labChipsList: list[str] = [
     "Silkrode Nanochip", "Silkrode Motherboard", "Silkrode Software", "Silkrode Processor", "Poker Chip",
     "Omega Nanochip", "Omega Motherboard"
 ]
-gemShopDict = {
-    #Inventory and Storage
-    'Item Backpack Space': 0,
-    'Storage Chest Space': 0,
-    'Carry Capacity': 0,
-    'Food Slot': 0,
-    'More Storage Space': 0,
-    'Card Presets': 0,
+labBonusesList = [
+    "Animal Farm", "Wired In", "Gilded Cyclical Tubing", "No Bubble Left Behind", "Killer's Brightside",
+    "Shrine World Tour", "Viaduct of the Gods", "Certified Stamp Book", "Spelunker Obol", "Fungi Finger Pocketer",
+    "My 1st Chemistry Set", "Unadulterated Banking Fury", "Sigils of Olden Alchemy", "Viral Connection",
+    "Artifact Attraction", "Slab Sovereignty", "Spiritual Growth", "Depot Studies PhD"
+]
 
-    #Dailies N' Resets
-    'Daily Teleports': 0,
-    'Daily Minigame Plays': 0,
+###WORLD 5 CONSTS###
+numberOfArtifacts = 33  # Last verified as of v2.08
+numberOfArtifactTiers = 4  # Last verified as of v2.08
+currentMaxChestsSum = 45  # Last verified as of v2.08
+artifactsList = [
+    'Moai Head', 'Maneki Kat', 'Ruble Cuble', 'Fauxory Tusk', 'Gold Relic',
+    'Genie Lamp', 'Silver Ankh', 'Emerald Relic', 'Fun Hippoete', 'Arrowhead',
+    '10 AD Tablet', 'Ashen Urn', 'Amberite', 'Triagulon', 'Billcye Tri',
+    'Frost Relic', 'Chilled Yarn', 'Causticolumn', 'Jade Rock', 'Dreamcatcher',
+    'Gummy Orb', 'Fury Relic', 'Cloud Urn', 'Weatherbook', 'Giants Eye',
+    'Crystal Steak', 'Trilobite Rock', 'Opera Mask', 'Socrates', 'The True Lantern',
+    'The Onyx Lantern', 'The Shim Lantern', 'The Winz Lantern'
+]
 
-    #Cards
-    'Extra Card Slot': 0,
-
-    #Goods & Services
-    'Weekly Dungeon Boosters': 0,
-
-    #World 1&2
-    'Infinity Hammer': 0,
-    'Brimstone Forge Slot': 0,
-    'Ivory Bubble Cauldrons': 0,
-    'Bleach Liquid Cauldrons': 0,
-    'Obol Storage Space': 0,
-    'Sigil Supercharge': 0,
-
-    #World 3
-    'Crystal 3d Printer': 0,
-    'More Sample Spaces': 0,
-    'Burning Bad Books': 0,
-    'Prayer Slots': 0,
-    'Zen Cogs': 0,
-    'Cog Inventory Space': 0,
-    'Tower Building Slots': 0,
-    'Fluorescent Flaggies': 0,
-
-    #World 4
-    'Royal Egg Cap': 0,
-    'Richelin Kitchen': 0,
-    'Souped Up Tube': 0,
-    'Pet Storage': 0,
-    'Fenceyard Space': 0,
-
-    #World 5
-    'Chest Sluggo': 0,
-    'Divinity Sparkie': 0,
-    'Golden Sprinkler': 0,
-    'Lava Sprouts': 0,
-
-    #World 6
-    'Plot of Land': 0,
-    'Pristine Charm': 0,
-    'Shroom Familiar': 0,
-    'Sand of Time': 0,
-    'Instagrow Generator': 0,
-    'Life Refill': 0,
-    'Compost Bag': 0,
-    'Summoner Stone': 0,
-
-    #Fomo
-    'FOMO-1': 0,
-    'FOMO-2': 0,
-    'FOMO-3': 0,
-    'FOMO-4': 0,
-    'FOMO-5': 0,
-    'FOMO-6': 0,
-    'FOMO-7': 0,
-    'FOMO-8': 0
-    }  # Default 0s
-
+###WORLD 6 CONSTS###
+jade_emporium = [
+  {
+    "name": "Quick Ref Access",
+    "bonus": "Adds the Sneaking skill to your QuickRef menu! Manage your Ninja Twins from anywhere!"
+  },
+  {
+    "name": "Gold Food Beanstalk",
+    "bonus": "Grows a giant beanstalk behind the ninja castle! Drop a stack of 10,000 Gold Food to add it with the beanstalk and permanently gain its bonus!"
+  },
+  {
+    "name": "Supersized Gold Beanstacking",
+    "bonus": "You can now drop a stack of 100,000 Gold Food to supersize it! This will obviously give a bigger bonus, and will even enlargen the food on the stalk!"
+  },
+  {
+    "name": "Charmed, I'm Sure",
+    "bonus": "All your Ninja Twins can now equip two of the same charm at once!"
+  },
+  {
+    "name": "Mob Cosplay Craze",
+    "bonus": "Certain monsters in World 6 will now have a rare chance to drop Ninja Hats, but only the ones you've found already from the Ninja Castle!"
+  },
+  {
+    "name": "Level Exemption",
+    "bonus": "Completely and utterly removes the UNDER-LEVELED bonus reduction of all stamps in your collection, now and forever. Amen."
+  },
+  {
+    "name": "Gaming to the MAX",
+    "bonus": "All plant types in Gaming have +1 Max Evolution, but this one is 50,000x rarer than normal and will make you wonder if evolution is even real (it is)"
+  },
+  {
+    "name": "Revenge of the Pickle",
+    "bonus": "Adds a new boss page to the left of World 1 in Deathnote. Each BoneJoePickle in your inventory counts as +1 Boss Deathnote Kill!"
+  },
+  {
+    "name": "The Artifact Matrix",
+    "bonus": "Extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to Artifact Find Chance!"
+  },
+  {
+    "name": "The Slab Matrix",
+    "bonus": "Further extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to all bonuses from the Slab!"
+  },
+  {
+    "name": "The Spirit Matrix",
+    "bonus": "Even further extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to W6 Skill exp gain!"
+  },
+  {
+    "name": "The Crop Matrix",
+    "bonus": "Yet again even further extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to Crop Depot!"
+  },
+  {
+    "name": "MSA Expander I",
+    "bonus": "Adds a new bonus type to the Miniature Soul Apparatus in World 3, specifically Farming EXP!"
+  },
+  {
+    "name": "MSA Expander II",
+    "bonus": "Adds a new bonus type to the Miniature Soul Apparatus in World 3, specifically Jade Coin Gain!"
+  },
+  {
+    "name": "MSA Expander III",
+    "bonus": "Adds a new bonus type to the Miniature Soul Apparatus in World 3, specifically All Essence Gain!"
+  },
+  {
+    "name": "Deal Sweetening",
+    "bonus": "Earn +25% more Magic Beans from the mysterious Legumulyte bean merchant found in the Troll Broodnest map."
+  },
+  {
+    "name": "No Meal Left Behind",
+    "bonus": "Every 24 hours, your lowest level Meal gets +1 Lv. This only works on Meals Lv 5 or higher, and doesn't trigger on days you don't play."
+  },
+  {
+    "name": "Jade Coin Magnetism",
+    "bonus": "Adds a new bonus of +5% Jade Coin Gain per 10 items found after 1000 items, as shown at The Slab in World 5."
+  },
+  {
+    "name": "Essence Confetti",
+    "bonus": "Adds a new bonus of +3% All Essence Gain per 10 items found after 1000 items, as shown at The Slab in World 5."
+  },
+  {
+    "name": "Shrine Collective Bargaining Agreement",
+    "bonus": "Shrines no longer lose EXP when moved around, so you can finally bring those baddies out of retirement!"
+  },
+  {
+    "name": "Papa Blob's Quality Guarantee",
+    "bonus": "Increases the Max Level of all cooking meals by +10. Better meals, better levels, Papa Blob's."
+  },
+  {
+    "name": "Chef Geustloaf's Cutting Edge Philosophy",
+    "bonus": "Increases the Max Level of all cooking meals by +10 again! But oh hoho, you sir are no Chef Geustloaf! Good luck cooking to these LVs!"
+  },
+  {
+    "name": "Crop Depot Scientist",
+    "bonus": "Employs a friendly scientist blobulyte to keep a Data Sheet of all the crops you've ever found!"
+  },
+  {
+    "name": "Science Environmentally Sourced Pencil",
+    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+15% Cash from Mobs' per crop found!"
+  },
+  {
+    "name": "Science Pen",
+    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '1.02x Plant Evolution Chance in Gaming (multiplicative)' per Crop!"
+  },
+  {
+    "name": "Science Marker",
+    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+8% Jade Coin Gain' per Crop!"
+  },
+  {
+    "name": "Science Featherpen",
+    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '1.10x Cooking Speed (multiplicative)' per Crop!"
+  },
+  {
+    "name": "Reinforced Science Pencil",
+    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+20% Total Damage' per Crop!"
+  },
+  {
+    "name": "Science Crayon",
+    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+7% Shiny Pet Lv Up Rate and Pet Breeding Rate' per Crop!"
+  },
+  {
+    "name": "Science Paintbrush",
+    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+0.1 Base Critter caught in Trapping' per Crop!"
+  },
+  {
+    "name": "New Critter",
+    "bonus": "Unlocks a new critter type to capture! These have their own very special vial in Alchemy."
+  },
+  {
+    "name": "Ionized Sigils",
+    "bonus": "Sigils can now be upgraded a 3rd time. Push past lame ol' yellow, and further increasing those sigil boosts!"
+  },
+  {
+    "name": "The Endercaptain",
+    "bonus": "Adds the Endercaptain to Recruitment pool. They're very rare, and have a hidden account-wide +25% Loot Multi and Artifact Find."
+  },
+  {
+    "name": "True Godly Blessings",
+    "bonus": "All Divinity Gods give 1.05x higher Blessing bonus per God Rank. Whats a Blessing bonus? Select a god, it's the one on the bottom, go look."
+  },
+  {
+    "name": "Brighter Lighthouse Bulb",
+    "bonus": "You can now find 3 additional Artifacts from The Edge island."
+  },
+  {
+    "name": "Sovereign Artifacts",
+    "bonus": "You can now find Sovereign Artifacts from sailing, but only if you've found the Eldritch form first."
+  },
+  {
+    "name": "New Bribes",
+    "bonus": "Mr. Pigibank is up to no good once again, and he's looking to get some funding from his favorite patron... you. Well, your wallet specifically."
+  },
+  {
+    "name": "Laboratory Bling",
+    "bonus": "Adds 3 new Jewels to unlock at the Jewel Spinner in W4 Town. Or, get one for free every 700 total Lab LV as shown in Rift Skill Mastery."
+  }
+]
 pristineCharmsList: list[str] = [
     "Sparkle Log", "Fruit Rolle", "Glowing Veil", "Cotton Candy", "Sugar Bomb",
     "Gumm Eye", "Bubblegum Law", "Sour Wowzer", "Crystal Comb", "Rock Candy",
     "Lollipop Law", "Taffy Disc", "Stick of Chew", "Treat Sack", "Gumm Stick",
     "Lolly Flower", "Gumball Necklace", "Liqorice Rolle",
 ]
-
 sneakingGemstonesList: list[str] = [
     "Aquamarine", "Emerald", "Garnet", "Starite", "Topaz", "Moissanite"
 ]
@@ -2174,6 +2380,14 @@ sneakingGemstonesStatList: list[str] = [
 sneakingGemstonesFirstIndex = 233
 sneakingGemstonesCount = len(sneakingGemstonesList)
 sneakingGemstonesMaxValueDict = {"Aquamarine": 10000, "Emerald": 5000, "Garnet": 2500, "Starite": 200, "Topaz": 1000, "Moissanite": 300}
+maxFarmingCrops = 120  # Last verified as of 2.08
+marketUpgradeList = [
+    "Land Plots", "Stronger Vines", "Nutritious Soil", "Smarter Seeds",
+    "Biology Boost", "Product Doubler", "More Beenz", "Enhanced Deeds",
+    "Overgrowth", "Evolution GMO", "Speed GMO", "OG Fertilizer",
+    "EXP GMO", "Land Rank", "Value GMO", "Super GMO"]
+marketUpgradeFirstIndex = 2
+marketUpgradeLastIndex = marketUpgradeFirstIndex + len(marketUpgradeList)
 
 def getMoissaniteValue(moissaniteLevel: int):
     try:
@@ -2208,77 +2422,3 @@ def getGemstonePercent(gemstoneName: str, gemstoneValue: float):
         logger.exception(f"Could not find max value for Gemstone: {gemstoneName} because: {reason}")
     pass
 
-sigilsDict = {
-    "Big Muscle":       {"Index": 0,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [2, 100, 50000]},
-    "Pumped Kicks":     {"Index": 2,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [3, 150, 60000]},
-    "Odd Literarture":  {"Index": 4,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [5, 200, 70000]},
-    "Good Fortune":     {"Index": 6,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [8, 300, 90000]},
-    "Plunging Sword":   {"Index": 8,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [15, 700, 100000]},
-    "Wizardly Hat":     {"Index": 10, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [24, 1250, 130000]},
-    "Envelope Pile":    {"Index": 12, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [60, 2500, 160000]},
-    "Shiny Beacon":     {"Index": 14, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [120, 4000, 200000]},
-    "Metal Exterior":   {"Index": 16, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [250, 7000, 240000]},
-    "Two Starz":        {"Index": 18, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [500, 10000, 280000]},
-    "Pipe Gauge":       {"Index": 20, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [700, 12000, 320000]},
-    "Trove":            {"Index": 22, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [1300, 14000, 400000]},
-    "Pea Pod":          {"Index": 24, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [2100, 15000, 420000]},
-    "Tuft Of Hair":     {"Index": 26, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [3000, 25000, 450000]},
-    "Emoji Veggie":     {"Index": 28, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [4500, 33000, 480000]},
-    "Vip Parchment":    {"Index": 30, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [6300, 42000, 520000]},
-    "Dream Catcher":    {"Index": 32, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [7000, 50000, 560000]},
-    "Duster Studs":     {"Index": 34, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [8000, 60000, 600000]},
-    "Garlic Glove":     {"Index": 36, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [9000, 70000, 650000]},
-    "Lab Tesstube":     {"Index": 38, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [12000, 80000, 700000]},
-    "Peculiar Vial":    {"Index": 40, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [17000, 120000, 750000]},
-    "Loot Pile":        {"Index": 42, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [23000, 160000, 900000]},
-    "Div Spiral":       {"Index": 44, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [26000, 200000, 1200000]},
-    "Cool Coin":        {"Index": 46, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [30000, 250000, 2000000]},
-}
-
-artifactsList = [
-    'Moai Head', 'Maneki Kat', 'Ruble Cuble', 'Fauxory Tusk', 'Gold Relic',
-    'Genie Lamp', 'Silver Ankh', 'Emerald Relic', 'Fun Hippoete', 'Arrowhead',
-    '10 AD Tablet', 'Ashen Urn', 'Amberite', 'Triagulon', 'Billcye Tri',
-    'Frost Relic', 'Chilled Yarn', 'Causticolumn', 'Jade Rock', 'Dreamcatcher',
-    'Gummy Orb', 'Fury Relic', 'Cloud Urn', 'Weatherbook', 'Giants Eye',
-    'Crystal Steak', 'Trilobite Rock', 'Opera Mask', 'Socrates', 'The True Lantern',
-    'The Onyx Lantern', 'The Shim Lantern', 'The Winz Lantern'
-]
-
-guildBonusesList = [
-    "Guild Gifts", "Stat Runes", "Rucksack", "Power of Pow", "REM Fighting", "Make or Break",
-    "Multi Tool", "Sleepy Skiller", "Coin Supercharger", "Bonus GP for small guilds", "Gold Charm", "Star Dazzle",
-    "C2 Card Spotter", "Bestone", "Skilley Skillet", "Craps", "Anotha One", "Wait A Minute"
-]
-
-labBonusesList = [
-    "Animal Farm", "Wired In", "Gilded Cyclical Tubing", "No Bubble Left Behind", "Killer's Brightside",
-    "Shrine World Tour", "Viaduct of the Gods", "Certified Stamp Book", "Spelunker Obol", "Fungi Finger Pocketer",
-    "My 1st Chemistry Set", "Unadulterated Banking Fury", "Sigils of Olden Alchemy", "Viral Connection",
-    "Artifact Attraction", "Slab Sovereignty", "Spiritual Growth", "Depot Studies PhD"
-]
-
-def lavaFunc(funcType: str, level: int, x1: int, x2: int, roundResult=False):
-    result = 0
-    match funcType:
-        case 'add':
-            if x2 != 0:
-                result = (((x1 + x2) / x2 + 0.5 * (level - 1)) / (x1/x2)) * level * x1
-            else:
-                result = level * x1
-        case 'decay':
-            result = (level * x1) / (level + x2)
-        case 'intervalAdd':
-            result = x1 + math.floor(level / x2)
-        case 'decayMulti':
-            result = 1 + (level * x1) / (level + x2)
-        case 'bigBase':
-            result = x1 + x2 * level
-        case 'special1':
-            result = 100 - (level * x1) / (level + x2)
-        case _:
-            result = 0
-    if roundResult:
-        return round(result)
-    else:
-        return result
