@@ -1,7 +1,3 @@
----
-Blank: Blank
-LockedInvSpace: Locked Inventory Space
-FillerMaterial: Not Yet
 Copper: Copper Ore
 Iron: Iron Ore
 Gold: Gold Ore
@@ -53,6 +49,7 @@ Leaf3: Arctic Leaf
 Leaf4: Galactic Leaf
 Leaf5: Magma Leaf
 Leaf6: Spirit Leaf
+FillerMaterial: Not Yet
 Fish1: Goldfish
 Fish2: Hermit Can
 Fish3: Jellyfish
@@ -90,7 +87,7 @@ Critter4A: Nakeo Moleo
 Critter5: Owlio
 Critter5A: Minervowl
 Critter6: Pingy
-Critter6A: Eternal Lord of The Undying Ember
+Critter6A: Eternal Lord of  The Undying Ember
 Critter7: Bunny
 Critter7A: Purbunni
 Critter8: Dung Beat
@@ -147,6 +144,7 @@ EquipmentHats21: Birthday Hat
 EquipmentHats23: Farmer Brimer
 EquipmentHats24: Farmer Brimest
 EquipmentHats25: Bored Beanie
+EquipmentHats107: Shiny Bored Beanie
 EquipmentHats2: Royal Turban
 EquipmentHats27: Paper Boat
 EquipmentHats29: Alien Headband
@@ -156,6 +154,7 @@ EquipmentHats42: Santa Hat
 EquipmentHats44: Jar
 EquipmentHats51: Big Pretty Bow
 EquipmentHats55: Steam Cap
+EquipmentHats108: 3rd Anniversary Ice Cream Topper
 EquipmentHats56: Bunny Ears
 EquipmentHats63: Summer Shell
 EquipmentHats64: Nuget Cake Fedora
@@ -330,6 +329,7 @@ EquipmentShoes30: Cooking Clogs
 EquipmentShoes31: Chef Hat Shoes
 EquipmentShoes32: Laboratory Scrubs
 EquipmentShoes33: Sheek Scrubs
+EquipmentShoes39: Divvy Slippers
 EquipmentShoes24: Lustre Shieldshoe
 EquipmentShoes25: Diabolical Toe Tips
 EquipmentShoes34: Soles of the Troll
@@ -367,6 +367,7 @@ EquipmentPendant27: Skullfish Pendant
 EquipmentPendant28: Crescent Moon Pendant
 EquipmentPendant29: Strung Tooth of the Divine
 EquipmentPendant30: The Divine Scarf
+EquipmentPendant31: Deathbloom Flower Pendant
 EquipmentRings1: Gold Ring
 EquipmentRings2: Copper Band
 EquipmentRings3: Steel Band
@@ -403,6 +404,8 @@ EquipmentRings31: Tundra Killer Ring
 EquipmentRings32: Nebula Killer Ring
 EquipmentRings33: Dune Killer Ring
 EquipmentRings34: Magma Killer Ring
+EquipmentRings35: Zero Point Stopwatch
+EquipmentRings36: Demented Emperor Opal
 EquipmentRingsChat1: Love Ring
 EquipmentRingsChat2: Leafy Ring
 EquipmentRingsChat3: Wealth Ring
@@ -836,15 +839,6 @@ DungeonA5: Molted Tail
 DungeonA6: Decomposing Skull
 DungeonA7: Giant Frog Eye
 DungeonA8: Eldritch Ripcage
-KeyFrag: Keychain Fragment
-DungCredits1: Dungeon Credits
-LootDice: Loot Dice
-Tree7D: Wispy Tree Log
-PlatD: Platinum Ore
-Fish1D: Goldfish
-Fish3D: Jellyfish
-Cashb: Ice Dollar
-Dung3Ice: Basement Cube
 Grasslands1: Spore Cap
 Grasslands2: Frog Leg
 Grasslands3: Bean Slices
@@ -950,10 +944,15 @@ SpiC2: Eviscerated Chunk
 SpiD1: Royal Yolk
 SpiD2: Royal Fabric
 SpiD3: Royal Headpiece
+GemP35: Hyper Obol Stack Square Edition
 ObolHyper0: Hyper Six Obol
 ObolHyper1: Hyper Pyre Obol
 ObolHyper2: Hyper DMG Obol
 ObolHyper3: Hyper Skull Obol
+ObolHyperB0: Hyper Six Obol
+ObolHyperB1: Hyper Pyre Obol
+ObolHyperB2: Hyper DMG Obol
+ObolHyperB3: Hyper Skull Obol
 ObolBronze0: Bronze STR Obol
 ObolSilver0: Silver STR Obol
 ObolGold0: Gold STR Obol
@@ -1050,6 +1049,7 @@ ObolAmarokA: Granite Obol of Amarok's Stare
 ObolEfauntA: Skeletal Obol of Efaunt's Gaze
 ObolChizoarA: Frozen Obol of Chizoar's Rage
 ObolSlush: Slushy Obol of Much Dilapidation
+ObolLava: Magma Obol of Big Time Domeo
 ObolTroll: Jagged Obol of Massive Trolling
 ObolFrog: Grumpy Obol of the Grandfrogger
 ObolKnight: Vigilant Obol of Ice Guard
@@ -1168,6 +1168,30 @@ TalentPoint6: Talent Point Special Tab
 Gfoodcoupon: Gold Food Coupon
 ItemsCoupon1: Resource Coupon
 ItemsCoupon2: Really Really Resource Coupon
+Quest14: Employment Statistics
+Quest15: Red Frisbee
+Quest16: Broken Mic
+Quest18: Loomi's Room Key
+Quest19: Golden Dubloon
+Quest20: Signed Arrest Warrant
+Quest21: Time Thingy
+Quest22: Corporatube Sub
+Quest23: Instablab Follower
+Quest24: Cloudsound Follower
+Quest25: Birthday Card
+Quest26: Pre Crime Box
+Quest27: Bag o Nuts
+Quest28: IOU one Sky Crystal
+GoldricP1: Casual Confidante
+KeyFrag: Keychain Fragment
+DungCredits1: Dungeon Credits
+LootDice: Loot Dice
+Tree7D: Wispy Tree Log
+PlatD: Platinum Ore
+Fish1D: Goldfish
+Fish3D: Jellyfish
+Cashb: Ice Dollar
+Dung3Ice: Basement Cube
 EquipmentNametag1: Riftwalker Nametag
 EquipmentNametag2: Lava's Awesome Nametag
 EquipmentNametag3: Balling Nametag
@@ -1177,6 +1201,7 @@ EquipmentNametag6b: Trash Tuna Nametag
 EquipmentNametag7: Island Adventurer Nametag
 EquipmentNametag8: Summer Shovel Nametag
 EquipmentNametag9: Falloween Nametag
+EquipmentNametag10: 3rd Anniversary IdleOn Nametag
 EquipmentKeychain0: Simple Key Chain
 EquipmentKeychain1: Leafy Chain
 EquipmentKeychain2: Red Sneaker Chain
@@ -1206,6 +1231,7 @@ EquipmentKeychain25: Eye Owe Ess Chain
 EquipmentKeychain26: Key to Desert Chain
 EquipmentKeychain27: Key to Mountains Chain
 EquipmentKeychain28: Key to Purgatory Chain
+EquipmentKeychain29: Spiritlord Horn Chain
 Trophy1: King of Food
 Trophy2: Lucky Lad
 Trophy3: Club Member
@@ -1226,6 +1252,8 @@ Trophy17: One of the Divine
 Trophy18: Master of Nothing
 Trophy19: Nebula Royal
 Trophy20: Luckier Lad
+Trophy21: Baller
+Trophy22: Gladiator
 EquipmentTools1: Junk Pickaxe
 EquipmentTools2: Copper Pickaxe
 EquipmentTools3: Iron Pickaxe
@@ -1399,14 +1427,13 @@ SmithingHammerChisel3: Onyx Tools
 BobJoePickle: BobJoePickle
 BallJoePickle: BallJoePickle
 BoneJoePickle: BoneJoePickle
+Quest1: Mining Certificate
 Crystal1: Desert Topaz
 Crystal2: Glacier Quartz
 Crystal3: Galaxial Amethyst
 Crystal4: Magma Geode
 Crystal5: Spirit Diamond
 PeanutS: Stone Peanut
-Quest1: Mining Certificate
-Quest2: Mining Certificate
 Quest3: Ketchup Bottle
 Quest4: Mustard Bottle
 Mayo: Mayonnaise Bottle
@@ -1421,21 +1448,6 @@ Quest10: Green Tea
 Quest11: Forest Villas Flyer Thingy
 Quest12: Dog Bone
 Quest13: Empty Box
-Quest14: Employment Statistics
-Quest15: Red Frisbee
-Quest16: Broken Mic
-Quest18: Loomi's Room Key
-Quest19: Golden Dubloon
-Quest20: Signed Arrest Warrant
-Quest21: Time Thingy
-Quest22: Corporatube Sub
-Quest23: Instablab Follower
-Quest24: Cloudsound Follower
-Quest25: Birthday Card
-Quest26: Pre Crime Box
-Quest27: Bag o Nuts
-Quest28: IOU one Sky Crystal
-GoldricP1: Casual Confidante
 GoldricP2: Triumphant Treason
 GoldricP3: Claiming Cashe
 Quest30: Giftmas Box
@@ -1497,6 +1509,10 @@ Quest79: Falloween Treat
 Quest80: Crop Transfer Ticket
 Quest81: Compost Bag
 Quest82: Summoner Stone
+Quest83: Blue Tome Pages
+Quest84: Red Tome Pages
+Quest85: Anniversary Box
+Quest86: Basketball
 EquipmentSmithingTabs2: Anvil Tab 2
 EquipmentSmithingTabs3: Anvil Tab 3
 EquipmentSmithingTabs4: Anvil Tab 4
@@ -1975,3 +1991,5 @@ CardsZ20: Sacrilegious Kattlekruk Card
 CardsZ21: Emperor Card
 CardsZ22: Chaotic Emperor Card
 CardsZ23: Sovereign Emperor Card
+CardsZ24: Domeo Magmus Card
+CardsZ25: Demented Spiritlord Card
