@@ -403,6 +403,8 @@ EquipmentRings31: Tundra Killer Ring
 EquipmentRings32: Nebula Killer Ring
 EquipmentRings33: Dune Killer Ring
 EquipmentRings34: Magma Killer Ring
+EquipmentRings35: Zero Point Stopwatch
+EquipmentRings36: Demented Emperor Opal
 EquipmentRingsChat1: Love Ring
 EquipmentRingsChat2: Leafy Ring
 EquipmentRingsChat3: Wealth Ring
@@ -1177,6 +1179,7 @@ EquipmentNametag6b: Trash Tuna Nametag
 EquipmentNametag7: Island Adventurer Nametag
 EquipmentNametag8: Summer Shovel Nametag
 EquipmentNametag9: Falloween Nametag
+EquipmentNametag10: 3rd Anniversary IdleOn Nametag
 EquipmentKeychain0: Simple Key Chain
 EquipmentKeychain1: Leafy Chain
 EquipmentKeychain2: Red Sneaker Chain
@@ -1226,6 +1229,8 @@ Trophy17: One of the Divine
 Trophy18: Master of Nothing
 Trophy19: Nebula Royal
 Trophy20: Luckier Lad
+Trophy21: Baller
+Trophy22: Gladiator
 EquipmentTools1: Junk Pickaxe
 EquipmentTools2: Copper Pickaxe
 EquipmentTools3: Iron Pickaxe
@@ -1497,6 +1502,8 @@ Quest79: Falloween Treat
 Quest80: Crop Transfer Ticket
 Quest81: Compost Bag
 Quest82: Summoner Stone
+Quest83: Blue Tome Pages
+Quest84: Red Tome Pages
 EquipmentSmithingTabs2: Anvil Tab 2
 EquipmentSmithingTabs3: Anvil Tab 3
 EquipmentSmithingTabs4: Anvil Tab 4
@@ -1745,6 +1752,7 @@ EquipmentHats101: Guardian Mane
 EquipmentHats102: Fanned Blossomage
 EquipmentHats103: Dainty Brim
 EquipmentHats104: Charcoal Hat
+EquipmentHats108: 3rd Anniversary Ice Cream Topper
 CardsA0: Green Mushroom Card
 CardsA1: Red Mushroom Card
 CardsA2: Frog Card
