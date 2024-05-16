@@ -312,6 +312,11 @@ def scrape_slab():
 
     # Prepare the dictionary for YAML conversion
     item_dict = {internal: display for internal, display in matches}
+    # This stuff isn't exactly an item but it does show up
+    item_dict.update(dict(
+        Blank="Blank",
+        LockedInvSpace="Locked Inventory Space"
+    ))
 
     # Convert the dictionary to YAML format
     with open(Path(app.static_folder)/"items.yaml", "w+") as items_file:
