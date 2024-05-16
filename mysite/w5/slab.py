@@ -99,11 +99,11 @@ def setSlabProgressionTier():
                 continue
 
     #Just for fun. This does the opposite: Looks for items registered as owned that aren't in the expected Slab list
-    for itemName in session_data.account.registered_slab:
-        if itemName not in slabList:
-            slab_AdviceDict["Deprecated"].append(Advice(
-                label=getItemDisplayName(itemName) if itemName not in knownSlabIgnorablesList else f"{getItemDisplayName(itemName)} (Probably not counted)",
-                picture_class=getItemDisplayName(itemName) if itemName not in itemNameFindList else itemNameReplacementList[itemNameFindList.index(itemName)]))
+    # for itemName in session_data.account.registered_slab:
+    #     if itemName not in slabList:
+    #         slab_AdviceDict["Deprecated"].append(Advice(
+    #             label=getItemDisplayName(itemName) if itemName not in knownSlabIgnorablesList else f"{getItemDisplayName(itemName)} (Probably not counted)",
+    #             picture_class=getItemDisplayName(itemName) if itemName not in itemNameFindList else itemNameReplacementList[itemNameFindList.index(itemName)]))
 
     #Remove any empty subgroups. Caused by creating the subgroups in order to preserve order.
     emptyVendorSubgroups = []
