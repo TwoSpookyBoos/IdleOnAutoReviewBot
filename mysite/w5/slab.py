@@ -2,7 +2,8 @@ from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl, getItemDisplayName
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import slabList, reclaimableQuestItems, vendorItems, anvilItems
+from consts import slabList, reclaimableQuestItems, vendorItems, anvilItems, knownSlabIgnorablesList, dungeonWeaponsList, maxDungeonWeaponsAvailable, \
+    dungeonArmorsList, maxDungeonArmorsAvailable, dungeonJewelryList, maxDungeonJewelryAvailable
 
 logger = get_logger(__name__)
 
@@ -11,7 +12,9 @@ def setSlabProgressionTier():
         "Reclaims": [],
         "Storage": [],
         "Vendors": {},
-        "Anvil": {}
+        "Anvil": {},
+        "Dungeon": [],
+        "Deprecated": []
     }
     slab_AdviceGroupDict = {}
     slab_AdviceSection = AdviceSection(
@@ -37,11 +40,13 @@ def setSlabProgressionTier():
     #Assess Tiers
     for itemName in slabList:
         if itemName not in session_data.account.registered_slab:
+            #If the item is an Asset, meaning in storage, character inventory, or worn by a character
             if session_data.account.assets.get(itemName).amount > 0:
                 slab_AdviceDict["Storage"].append(Advice(
                     label=getItemDisplayName(itemName),
                     picture_class=getItemDisplayName(itemName) if itemName not in itemNameFindList else itemNameReplacementList[itemNameFindList.index(itemName)]))
-                break
+                continue
+            #If the item is a reclaimable quest item AND the quest has been completed by at least 1 character
             if itemName in reclaimableQuestItems.keys():
                 for characterIndex, characterQuests in enumerate(session_data.account.all_quests):
                     if reclaimableQuestItems[itemName].get("QuestNameCoded") in characterQuests:
@@ -50,6 +55,8 @@ def setSlabProgressionTier():
                                 label=f"{getItemDisplayName(itemName)} ({reclaimableQuestItems[itemName].get('QuestGiver')}: {reclaimableQuestItems[itemName].get('QuestName')})",
                                 picture_class=getItemDisplayName(itemName) if itemName not in itemNameFindList else itemNameReplacementList[itemNameFindList.index(itemName)]))
                             break  #Only show this once per account, not once per character
+                continue
+            #If the item is sold by a vendor
             for vendor, vendorList in vendorItems.items():
                 # If I search for the item first, these can appear out of order
                 if vendor not in slab_AdviceDict["Vendors"]:
@@ -59,6 +66,7 @@ def setSlabProgressionTier():
                         label=getItemDisplayName(itemName),
                         picture_class=getItemDisplayName(itemName) if itemName not in itemNameFindList else itemNameReplacementList[itemNameFindList.index(itemName)]))
                     break
+            #If the item is craftable at the anvil
             for anvilTab, anvilTabList in anvilItems.items():
                 # If I search for the item first, these can appear out of order
                 if anvilTab not in slab_AdviceDict["Anvil"]:
@@ -68,6 +76,34 @@ def setSlabProgressionTier():
                         label=getItemDisplayName(itemName),
                         picture_class=getItemDisplayName(itemName) if itemName not in itemNameFindList else itemNameReplacementList[itemNameFindList.index(itemName)]))
                     break
+            #If the item is a Dungeon Weapon AND the player has purchased all MaxWeapons
+            if itemName in dungeonWeaponsList and session_data.account.dungeon_upgrades.get("MaxWeapon", 0) >= maxDungeonWeaponsAvailable:
+                slab_AdviceDict["Dungeon"].append(Advice(
+                    label=getItemDisplayName(itemName),
+                    picture_class=getItemDisplayName(itemName) if itemName not in itemNameFindList else itemNameReplacementList[
+                        itemNameFindList.index(itemName)]))
+                continue
+            # If the item is a Dungeon Armor AND the player has purchased all MaxArmor
+            if itemName in dungeonArmorsList and session_data.account.dungeon_upgrades.get("MaxArmor", 0)[0] >= maxDungeonArmorsAvailable:
+                slab_AdviceDict["Dungeon"].append(Advice(
+                    label=getItemDisplayName(itemName),
+                    picture_class=getItemDisplayName(itemName) if itemName not in itemNameFindList else itemNameReplacementList[
+                        itemNameFindList.index(itemName)]))
+                continue
+                # If the item is a Dungeon Jewelry AND the player has purchased all MaxJewelry
+            if itemName in dungeonJewelryList and session_data.account.dungeon_upgrades.get("MaxJewelry", 0)[0] >= maxDungeonJewelryAvailable:
+                slab_AdviceDict["Dungeon"].append(Advice(
+                    label=getItemDisplayName(itemName),
+                    picture_class=getItemDisplayName(itemName) if itemName not in itemNameFindList else itemNameReplacementList[
+                        itemNameFindList.index(itemName)]))
+                continue
+
+    #Just for fun. This does the opposite: Looks for items registered as owned that aren't in the expected Slab list
+    for itemName in session_data.account.registered_slab:
+        if itemName not in slabList:
+            slab_AdviceDict["Deprecated"].append(Advice(
+                label=getItemDisplayName(itemName) if itemName not in knownSlabIgnorablesList else f"{getItemDisplayName(itemName)} (Probably not counted)",
+                picture_class=getItemDisplayName(itemName) if itemName not in itemNameFindList else itemNameReplacementList[itemNameFindList.index(itemName)]))
 
     #Remove any empty subgroups. Caused by creating the subgroups in order to preserve order.
     emptyVendorSubgroups = []
@@ -87,23 +123,33 @@ def setSlabProgressionTier():
     # Generate AdviceGroups
     slab_AdviceGroupDict["Storage"] = AdviceGroup(
         tier='',
-        pre_string=f"The following item{pl(slab_AdviceDict['Storage'], ' was', 's were')} found in storage or on a character, but not in Slab",
+        pre_string=f"Found in storage or on a character",
         advices=slab_AdviceDict["Storage"]
     )
     slab_AdviceGroupDict["Reclaims"] = AdviceGroup(
         tier='',
-        pre_string=f"The following item{pl(slab_AdviceDict['Reclaims'])} could be reclaimed from a quest and are not registered in The Slab",
+        pre_string=f"Could be reclaimed from a completed quest",
         advices=slab_AdviceDict["Reclaims"]
     )
     slab_AdviceGroupDict["Vendors"] = AdviceGroup(
         tier='',
-        pre_string=f"The following item{pl(slab_AdviceDict['Vendors'])} could be purchased from a Vendor",
+        pre_string=f"Could be purchased from a Vendor",
         advices=slab_AdviceDict["Vendors"]
     )
     slab_AdviceGroupDict["Anvil"] = AdviceGroup(
         tier='',
-        pre_string=f"The following item{pl(slab_AdviceDict['Anvil'])} could be crafted at the Anvil",
+        pre_string=f"Could be crafted at the Anvil",
         advices=slab_AdviceDict["Anvil"]
+    )
+    slab_AdviceGroupDict["Dungeon"] = AdviceGroup(
+        tier='',
+        pre_string=f"Could be dropped in the Dungeon",
+        advices=slab_AdviceDict["Dungeon"]
+    )
+    slab_AdviceGroupDict["Deprecated"] = AdviceGroup(
+        tier='',
+        pre_string=f"In your Owned list, but not expected in The Slab. These could cause you to go over the maximum number listed in The Slab",
+        advices=slab_AdviceDict["Deprecated"]
     )
 
     # Generate AdviceSection
