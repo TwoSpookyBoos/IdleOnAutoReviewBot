@@ -42,10 +42,11 @@ def setSlabProgressionTier():
             elif itemName in reclaimableQuestItems.keys():
                 for characterIndex, characterQuests in enumerate(session_data.account.all_quests):
                     if reclaimableQuestItems[itemName].get("QuestNameCoded") in characterQuests:
-                        slab_AdviceDict["Reclaims"].append(Advice(
-                            label=f"{getItemDisplayName(itemName)} ({reclaimableQuestItems[itemName].get('QuestGiver')}: {reclaimableQuestItems[itemName].get('QuestName')})",
-                            picture_class=getItemDisplayName(itemName) if itemName not in itemNameFindList else itemNameReplacementList[itemNameFindList.index(itemName)]))
-                        break  #Only show this once per account, not once per character
+                        if characterQuests[reclaimableQuestItems[itemName].get("QuestNameCoded")] > 0:
+                            slab_AdviceDict["Reclaims"].append(Advice(
+                                label=f"{getItemDisplayName(itemName)} ({reclaimableQuestItems[itemName].get('QuestGiver')}: {reclaimableQuestItems[itemName].get('QuestName')})",
+                                picture_class=getItemDisplayName(itemName) if itemName not in itemNameFindList else itemNameReplacementList[itemNameFindList.index(itemName)]))
+                            break  #Only show this once per account, not once per character
     # Generate AdviceGroups
     slab_AdviceGroupDict["Storage"] = AdviceGroup(
         tier='',
