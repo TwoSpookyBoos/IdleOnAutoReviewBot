@@ -933,7 +933,7 @@ class Account:
             self.labBonuses[labBonusName] = {"Enabled": True, "Value": 1}
 
         #World 5
-        self.registered_slab = safe_loads(self.raw_data.get("Cards11", []))
+        self.registered_slab = safe_loads(self.raw_data.get("Cards1", []))
         self.artifacts = {}
         raw_artifacts_list = safe_loads(self.raw_data.get("Sailing", []))
         raw_artifacts_list = safe_loads(raw_artifacts_list)  # Some users have needed to have data converted twice
