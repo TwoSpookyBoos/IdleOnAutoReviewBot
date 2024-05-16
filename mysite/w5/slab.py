@@ -68,13 +68,22 @@ def setSlabProgressionTier():
                         label=getItemDisplayName(itemName),
                         picture_class=getItemDisplayName(itemName) if itemName not in itemNameFindList else itemNameReplacementList[itemNameFindList.index(itemName)]))
                     break
+
     #Remove any empty subgroups. Caused by creating the subgroups in order to preserve order.
+    emptyVendorSubgroups = []
     for subgroup in slab_AdviceDict["Vendors"]:
-        if len(subgroup) == 0:
-            slab_AdviceDict["Vendors"].pop(subgroup)
+        if len(slab_AdviceDict["Vendors"][subgroup]) == 0:
+            emptyVendorSubgroups.append(subgroup)
+    for emptySubgroup in emptyVendorSubgroups:
+        slab_AdviceDict["Vendors"].pop(emptySubgroup)
+
+    emptyAnvilSubgroups = []
     for subgroup in slab_AdviceDict["Anvil"]:
-        if len(subgroup) == 0:
-            slab_AdviceDict["Anvil"].pop(subgroup)
+        if len(slab_AdviceDict["Anvil"][subgroup]) == 0:
+            emptyAnvilSubgroups.append(subgroup)
+    for emptySubgroup in emptyAnvilSubgroups:
+        slab_AdviceDict["Anvil"].pop(emptySubgroup)
+
     # Generate AdviceGroups
     slab_AdviceGroupDict["Storage"] = AdviceGroup(
         tier='',
