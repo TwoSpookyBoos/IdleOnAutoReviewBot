@@ -1,3 +1,24 @@
+const opts = {
+  lines: 13, // The number of lines to draw
+  length: 38, // The length of each line
+  width: 17, // The line thickness
+  radius: 45, // The radius of the inner circle
+  scale: 1, // Scales overall size of the spinner
+  corners: 1, // Corner roundness (0..1)
+  speed: 1, // Rounds per second
+  rotate: 28, // The rotation offset
+  animation: 'spinner-line-fade-default', // The CSS animation name for the lines
+  direction: 1, // 1: clockwise, -1: counterclockwise
+  color: '#ffffff', // CSS color or array of colors
+  fadeColor: 'transparent', // CSS color or array of colors
+  top: '50%', // Top position relative to parent
+  left: '50%', // Left position relative to parent
+  shadow: '0 0 1px transparent', // Box-shadow for the lines
+  zIndex: 2000000000, // The z-index (defaults to 2e9)
+  className: 'spinner', // The CSS class to assign to the spinner
+  position: 'absolute', // Element positioning
+};
+
 const defaults = {
     player: "",
     autoloot: "off",
@@ -7,6 +28,8 @@ const defaults = {
     progress_bars: "off",
     handedness: "off"
 }
+
+let spinner
 
 function toggleSidebar() {
     document.querySelectorAll('#drawer, #drawer-handle').forEach(e => e.classList.toggle('sidebar-open'))
@@ -39,6 +62,9 @@ function defineFormSubmitAction() {
         e.preventDefault()
         storeUserParams(Object.fromEntries(new FormData(e.target)))
         const data = fetchStoredUserParams()
+        const target = document.querySelector("#top")
+        target.innerHTML = ""
+        spinner.spin(target)
         fetchPlayerAdvice(data)
         toggleSidebar()
     })
@@ -275,6 +301,7 @@ function setFormValues() {
 }
 
 function loadResults(html) {
+    spinner.stop()
     const mainWrapper = document.getElementById('top');
     mainWrapper.innerHTML = html;
 }
@@ -315,7 +342,12 @@ const storeUserParams = (data) => Object
 const fetchStoredUserParams = () => Object.fromEntries(Object.entries(defaults)
     .map(([k, v]) => [k, localStorage.getItem(k) || v]))
 
-document.addEventListener("DOMContentLoaded", () => fetchPlayerAdvice(fetchStoredUserParams()))
+document.addEventListener("DOMContentLoaded", () => {
+    var target= document.querySelector('#top');
+    spinner = new Spin.Spinner(opts).spin(target);
+
+    fetchPlayerAdvice(fetchStoredUserParams())
+})
 
 function initBaseUI() {
     defineFormSubmitAction()
