@@ -263,30 +263,34 @@ function setFormValues() {
     })
 }
 
+function loadResults(html) {
+    const mainWrapper = document.getElementById('top');
+    mainWrapper.innerHTML = html;
+}
+
 function fetchPlayerAdvice(currentParams) {
+    initBaseUI()
+
     fetch("/results", {
-        method: 'POST', // Specify the method
+        method: 'POST',
         headers: {
-            'Content-Type': 'application/json' // Set the content type to JSON
+            'Content-Type': 'application/json'
         },
-        body: JSON.stringify(currentParams) // Convert the object to a JSON string
+        body: JSON.stringify(currentParams)
 
     }).then(response => {
-        initBaseUI()
         if (!response.ok) {
             throw new Error('Network response was not ok ' + response.statusText);
         }
-        return response.text(); // Get the response as text (HTML)
+        return response.text();
 
     }).then(html => {
-        // Find the element where the HTML should be inserted
-        const mainWrapper = document.getElementById('top'); // Adjust this to your target element
-        mainWrapper.innerHTML = html; // Insert the HTML content
-        if (mainWrapper.children.length === 0) return
+        if (html === "") return
+        loadResults(html);
         initResultsUI()
 
     }).catch(error => {
-        console.error('Error:', error); // Handle any errors
+        console.error('Error:', error);
     });
 }
 
