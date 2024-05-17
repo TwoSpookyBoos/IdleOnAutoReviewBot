@@ -1,3 +1,13 @@
+const defaults = {
+    player: "",
+    autoloot: "off",
+    sheepie: "off",
+    doot: "off",
+    order_tiers: "off",
+    progress_bars: "off",
+    handedness: "off"
+}
+
 function toggleSidebar() {
     document.querySelectorAll('#drawer, #drawer-handle').forEach(e => e.classList.toggle('sidebar-open'))
 }
@@ -30,6 +40,7 @@ function defineFormSubmitAction() {
         storeUserParams(Object.fromEntries(new FormData(e.target)))
         const data = fetchStoredUserParams()
         fetchPlayerAdvice(data)
+        toggleSidebar()
     })
 }
 
@@ -285,23 +296,16 @@ function fetchPlayerAdvice(currentParams) {
         return response.text();
 
     }).then(html => {
-        if (html === "") return
+        if (html === "") {
+            openSidebarIfFirstAccess()
+            return
+        }
         loadResults(html);
         initResultsUI()
 
     }).catch(error => {
         console.error('Error:', error);
     });
-}
-
-const defaults = {
-    player: "",
-    autoloot: "off",
-    sheepie: "off",
-    doot: "off",
-    order_tiers: "off",
-    progress_bars: "off",
-    handedness: "off"
 }
 
 const storeUserParams = (data) => Object
@@ -314,7 +318,6 @@ const fetchStoredUserParams = () => Object.fromEntries(Object.entries(defaults)
 document.addEventListener("DOMContentLoaded", () => fetchPlayerAdvice(fetchStoredUserParams()))
 
 function initBaseUI() {
-    openSidebarIfFirstAccess()
     defineFormSubmitAction()
     setupLightSwitch()
     setupSidebarToggling()
@@ -326,7 +329,6 @@ function initBaseUI() {
 
 function initResultsUI() {
     setFormValues()
-    toggleSidebar()
     setupFolding()
     setupPinchyHrefActions()
     applyShowMoreButton()
