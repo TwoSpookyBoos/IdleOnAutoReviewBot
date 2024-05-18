@@ -3,7 +3,7 @@ from utils.text_formatting import pl, getItemDisplayName
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import slabList, reclaimableQuestItems, vendorItems, anvilItems, knownSlabIgnorablesList, dungeonWeaponsList, maxDungeonWeaponsAvailable, \
-    dungeonArmorsList, maxDungeonArmorsAvailable, dungeonJewelryList, maxDungeonJewelryAvailable
+    dungeonArmorsList, maxDungeonArmorsAvailable, dungeonJewelryList, maxDungeonJewelryAvailable, dungeonDropsList
 
 logger = get_logger(__name__)
 
@@ -13,7 +13,11 @@ def setSlabProgressionTier():
         "Storage": [],
         "Vendors": {},
         "Anvil": {},
-        "Dungeon": [],
+        "Dungeon": {
+            "Drops": [],
+            "Weapons": [],
+            "Armor": []
+        },
         "Deprecated": []
     }
     slab_AdviceGroupDict = {}
@@ -76,23 +80,30 @@ def setSlabProgressionTier():
                         label=getItemDisplayName(itemName),
                         picture_class=getItemDisplayName(itemName) if itemName not in itemNameFindList else itemNameReplacementList[itemNameFindList.index(itemName)]))
                     break
+            # If the item is a unique Dungeon Drop:
+            if itemName in dungeonDropsList:
+                slab_AdviceDict["Dungeon"]["Drops"].append(Advice(
+                    label=getItemDisplayName(itemName),
+                    picture_class=getItemDisplayName(itemName) if itemName not in itemNameFindList else itemNameReplacementList[
+                        itemNameFindList.index(itemName)]))
+                continue
             #If the item is a Dungeon Weapon AND the player has purchased all MaxWeapons
             if itemName in dungeonWeaponsList and session_data.account.dungeon_upgrades.get("MaxWeapon", 0) >= maxDungeonWeaponsAvailable:
-                slab_AdviceDict["Dungeon"].append(Advice(
+                slab_AdviceDict["Dungeon"]["Weapons"].append(Advice(
                     label=getItemDisplayName(itemName),
                     picture_class=getItemDisplayName(itemName) if itemName not in itemNameFindList else itemNameReplacementList[
                         itemNameFindList.index(itemName)]))
                 continue
             # If the item is a Dungeon Armor AND the player has purchased all MaxArmor
             if itemName in dungeonArmorsList and session_data.account.dungeon_upgrades.get("MaxArmor", 0)[0] >= maxDungeonArmorsAvailable:
-                slab_AdviceDict["Dungeon"].append(Advice(
+                slab_AdviceDict["Dungeon"]["Armor"].append(Advice(
                     label=getItemDisplayName(itemName),
                     picture_class=getItemDisplayName(itemName) if itemName not in itemNameFindList else itemNameReplacementList[
                         itemNameFindList.index(itemName)]))
                 continue
                 # If the item is a Dungeon Jewelry AND the player has purchased all MaxJewelry
             if itemName in dungeonJewelryList and session_data.account.dungeon_upgrades.get("MaxJewelry", 0)[0] >= maxDungeonJewelryAvailable:
-                slab_AdviceDict["Dungeon"].append(Advice(
+                slab_AdviceDict["Dungeon"]["Armor"].append(Advice(
                     label=getItemDisplayName(itemName),
                     picture_class=getItemDisplayName(itemName) if itemName not in itemNameFindList else itemNameReplacementList[
                         itemNameFindList.index(itemName)]))
