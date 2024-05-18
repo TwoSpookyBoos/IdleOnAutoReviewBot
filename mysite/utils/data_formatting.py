@@ -315,7 +315,13 @@ def scrape_slab():
     # This stuff isn't exactly an item but it does show up
     item_dict.update(dict(
         Blank="Blank",
-        LockedInvSpace="Locked Inventory Space"
+        LockedInvSpace="Locked Inventory Space",
+        DungWeaponBowD1="Pharaoh Bow I",
+        DungWeaponBowD2="Pharaoh Bow II",
+        DungWeaponBowD3="Pharaoh Bow III",
+        DungWeaponBowD4="Pharaoh Bow IV",
+        DungWeaponBowD5="Pharaoh Bow V",
+        Critter6A="Eternal Lord of The Undying Ember"
     ))
 
     # Convert the dictionary to YAML format
