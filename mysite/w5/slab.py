@@ -3,7 +3,7 @@ from utils.text_formatting import pl, getItemDisplayName
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import slabList, reclaimableQuestItems, vendorItems, anvilItems, knownSlabIgnorablesList, dungeonWeaponsList, maxDungeonWeaponsAvailable, \
-    dungeonArmorsList, maxDungeonArmorsAvailable, dungeonJewelryList, maxDungeonJewelryAvailable, dungeonDropsList, anvilTabs
+    dungeonArmorsList, maxDungeonArmorsAvailable, dungeonJewelryList, maxDungeonJewelryAvailable, dungeonDropsList, anvilTabs, vendors
 
 logger = get_logger(__name__)
 
@@ -121,6 +121,9 @@ def setSlabProgressionTier():
     for subgroup in slab_AdviceDict["Vendors"]:
         if len(slab_AdviceDict["Vendors"][subgroup]) == 0:
             emptyVendorSubgroups.append(subgroup)
+    for subgroup in vendors:
+        if vendors[subgroup] not in session_data.account.registered_slab:
+            slab_AdviceDict["Vendors"][subgroup] = [Advice(label=f"{subgroup} purchases hidden until Boss Crystal registered in The Slab", picture_class=getItemDisplayName(vendors[subgroup]))]
     for emptySubgroup in emptyVendorSubgroups:
         slab_AdviceDict["Vendors"].pop(emptySubgroup)
 
