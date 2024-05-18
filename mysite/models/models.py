@@ -760,7 +760,15 @@ class Account:
             raw_stamp_max_dict[int(stampTypeIndex)] = {}
             for stampKey, stampValue in stampTypeValues.items():
                 if stampKey != "length":
-                    raw_stamp_max_dict[int(stampTypeIndex)][int(stampKey)] = int(stampValue)
+                    try:
+                        raw_stamp_max_dict[int(stampTypeIndex)][int(stampKey)] = int(stampValue)
+                    except Exception as reason:
+                        print(f"Unexpected stampTypeIndex {stampTypeIndex} or stampKey {stampKey} or stampValue: {stampValue}: {reason}")
+                        try:
+                            raw_stamp_max_dict[int(stampTypeIndex)][int(stampKey)] = 0
+                            print(f"Able to set the value of stamp {stampTypeIndex}-{stampKey} to 0. Hopefully no accuracy was lost.")
+                        except:
+                            print(f"Couldn't set the value to 0, meaning it was the Index or Key that was bad. You done messed up, cowboy.")
         for stampType in stampNameDict:
             for stampIndex, stampName in stampNameDict[stampType].items():
                 try:
