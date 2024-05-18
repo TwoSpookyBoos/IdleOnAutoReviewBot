@@ -15,8 +15,8 @@ def setSlabProgressionTier():
         "Anvil": {},
         "Dungeon": {
             "Drops": [],
-            "Weapons": [],
-            "Armor": []
+            "Armor": [],
+            "Weapons": []
         },
         "Deprecated": []
     }
@@ -124,11 +124,13 @@ def setSlabProgressionTier():
     for emptySubgroup in emptyVendorSubgroups:
         slab_AdviceDict["Vendors"].pop(emptySubgroup)
 
-    removableAnvilSubgroups = []
+    emptyAnvilSubgroups = []
     for subgroup in slab_AdviceDict["Anvil"]:
-        if len(slab_AdviceDict["Anvil"][subgroup]) == 0 or anvilTabs[subgroup] not in session_data.account.registered_slab:
-            removableAnvilSubgroups.append(subgroup)
-    for removableSubgroup in removableAnvilSubgroups:
+        if len(slab_AdviceDict["Anvil"][subgroup]) == 0:
+            emptyAnvilSubgroups.append(subgroup)
+        if anvilTabs[subgroup] not in session_data.account.registered_slab:
+            slab_AdviceDict["Anvil"][subgroup] = [Advice(label=f"{subgroup} craftables hidden until tab registered in The Slab", picture_class=subgroup)]
+    for removableSubgroup in emptyAnvilSubgroups:
         slab_AdviceDict["Anvil"].pop(removableSubgroup)
 
     emptyDungeonSubgroups = []
