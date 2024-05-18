@@ -1,8 +1,11 @@
 import datetime
 import json
+import re
 import traceback
+from pathlib import Path
 
 import requests
+import yaml
 from babel.dates import format_datetime
 from flask import request, g as session_data
 
@@ -10,6 +13,7 @@ from consts import humanReadableClasses, skillIndexList, emptySkillList
 from models.custom_exceptions import ProfileNotFound, EmptyResponse, IEConnectionFailed
 
 from .logging import get_logger
+from config import app
 
 
 logger = get_logger(__name__)
@@ -287,3 +291,50 @@ def setCustomTiers(filename="input.csv"):
 
 def safe_loads(data):
     return json.loads(data) if isinstance(data, str) else data
+
+
+def scrape_slab():
+    url_wiki_slab_raw = "https://raw.githubusercontent.com/BigCoight/IdleonWikiBot3.0/master/exported/ts/data/SpecificItemRepo.ts"
+    response = requests.get(url_wiki_slab_raw)
+    slab_file = response.text
+
+    regex = (r'''
+        "internalName":   # find the key and skip it
+        \s*               # skip any whitespace between the key and value
+        "([^"]+)"         # capture everything between, but not also, quotes
+        ,\s*              # skip the trailing comma and whitespace (newline, leading whitespace) to next line
+        "displayName":    # find the key and skip it
+        \s*               # skip any whitespace between the key and value
+        "([^"]+)"         # capture everything between, but not also, quotes
+    ''')
+    pattern = re.compile(regex, re.VERBOSE | re.DOTALL)
+    matches = pattern.findall(slab_file)
+
+    # Prepare the dictionary for YAML conversion
+    item_dict = {internal: display for internal, display in matches}
+    # This stuff isn't exactly an item but it does show up
+    item_dict.update(dict(
+        Blank="Blank",
+        LockedInvSpace="Locked Inventory Space",
+        # oah is the proper spelling for the dungeon bow, but aoh is the spelling of the normal Bow
+        DungWeaponBowD1="Pharaoh Bow I",
+        DungWeaponBowD2="Pharaoh Bow II",
+        DungWeaponBowD3="Pharaoh Bow III",
+        DungWeaponBowD4="Pharaoh Bow IV",
+        DungWeaponBowD5="Pharaoh Bow V",
+        #Similar to the bow, force consistency between 'Hotdog' and 'Hot Dog'
+        FoodHealth3="Hot Dog",
+        FoodHealth2d="Hot Dog",
+        Critter6A="Eternal Lord of The Undying Ember",  #Wiki has 2x spaces in the name "of  The"
+        Quest2="Mining Certificate"
+    ))
+
+    # Convert the dictionary to YAML format
+    with open(Path(app.static_folder)/"items.yaml", "w+") as items_file:
+        items_file.truncate()
+        yaml.dump(item_dict, items_file, sort_keys=False)
+        items_file.seek(0)
+        yaml_content = items_file.read()
+
+        # Output the YAML content
+        print(yaml_content)

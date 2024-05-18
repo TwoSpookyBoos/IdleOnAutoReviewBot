@@ -2553,10 +2553,10 @@ anvilItems = {
     "Anvil Tab VI": "EquipmentHats105 EquipmentShirts37 EquipmentPants29 EquipmentShoes37 EquipmentPunching10 EquipmentSword8 EquipmentBows13 EquipmentWands12 EquipmentTools14 MaxCapBagMi10 EquipmentToolsHatchet12 MaxCapBagT10 FishingRod11 MaxCapBagFi10 CatchingNet11 MaxCapBagB10 TrapBoxSet9 MaxCapBagTr9 WorshipSkull10 MaxCapBagS9 MaxCapBagF10 MaxCapBagM11 EquipmentRings36 FillerMaterial EquipmentHats106 EquipmentShirts38 EquipmentPants30 EquipmentShoes38 EquipmentPunching11 EquipmentSword9 EquipmentBows14 EquipmentWands13 EquipmentTools15 MaxCapBagMi11 EquipmentToolsHatchet10 MaxCapBagT11 FishingRod12 MaxCapBagFi11 CatchingNet12 MaxCapBagB11 TrapBoxSet10 MaxCapBagTr10 WorshipSkull11 MaxCapBagS10 MaxCapBagF11 MaxCapBagM12 FoodG13 EquipmentSmithingTabs7".split(" ")
 }
 anvilTabs = {
-    "Anvil Tab I": "EquipmentSmithingTabs2",
-    "Anvil Tab II": "EquipmentSmithingTabs3",
-    "Anvil Tab III": "EquipmentSmithingTabs4",
-    "Anvil Tab IV":"EquipmentSmithingTabs5",
-    "Anvil Tab V": "EquipmentSmithingTabs6",
-    "Anvil Tab VI": "EquipmentSmithingTabs7",
+    "Anvil Tab II": "EquipmentSmithingTabs2",
+    "Anvil Tab III": "EquipmentSmithingTabs3",
+    "Anvil Tab IV": "EquipmentSmithingTabs4",
+    "Anvil Tab V":"EquipmentSmithingTabs5",
+    "Anvil Tab VI": "EquipmentSmithingTabs6",
+    #"Anvil Tab VII": "EquipmentSmithingTabs7",
 }

@@ -128,6 +128,7 @@ def setSlabProgressionTier():
     for subgroup in slab_AdviceDict["Anvil"]:
         if len(slab_AdviceDict["Anvil"][subgroup]) == 0:
             emptyAnvilSubgroups.append(subgroup)
+    for subgroup in anvilTabs:
         if anvilTabs[subgroup] not in session_data.account.registered_slab:
             slab_AdviceDict["Anvil"][subgroup] = [Advice(label=f"{subgroup} craftables hidden until tab registered in The Slab", picture_class=subgroup)]
     for removableSubgroup in emptyAnvilSubgroups:
@@ -181,6 +182,6 @@ def setSlabProgressionTier():
     if len(slab_AdviceSection.groups) == 0:
         slab_AdviceSection.header = f"All currently owned items registered in The Slab<br>You best ❤️"
     else:
-        slab_AdviceSection.header = f"You're missing some easy Slab stacks!"
+        slab_AdviceSection.header = f"You're missing some obtainable Slab stacks!"
 
     return slab_AdviceSection
