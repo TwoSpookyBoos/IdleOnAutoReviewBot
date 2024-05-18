@@ -3,7 +3,7 @@ from utils.text_formatting import pl, getItemDisplayName
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import slabList, reclaimableQuestItems, vendorItems, anvilItems, knownSlabIgnorablesList, dungeonWeaponsList, maxDungeonWeaponsAvailable, \
-    dungeonArmorsList, maxDungeonArmorsAvailable, dungeonJewelryList, maxDungeonJewelryAvailable, dungeonDropsList
+    dungeonArmorsList, maxDungeonArmorsAvailable, dungeonJewelryList, maxDungeonJewelryAvailable, dungeonDropsList, anvilTabs
 
 logger = get_logger(__name__)
 
@@ -124,12 +124,19 @@ def setSlabProgressionTier():
     for emptySubgroup in emptyVendorSubgroups:
         slab_AdviceDict["Vendors"].pop(emptySubgroup)
 
-    emptyAnvilSubgroups = []
+    removableAnvilSubgroups = []
     for subgroup in slab_AdviceDict["Anvil"]:
-        if len(slab_AdviceDict["Anvil"][subgroup]) == 0:
-            emptyAnvilSubgroups.append(subgroup)
-    for emptySubgroup in emptyAnvilSubgroups:
-        slab_AdviceDict["Anvil"].pop(emptySubgroup)
+        if len(slab_AdviceDict["Anvil"][subgroup]) == 0 or anvilTabs[subgroup] not in session_data.account.registered_slab:
+            removableAnvilSubgroups.append(subgroup)
+    for removableSubgroup in removableAnvilSubgroups:
+        slab_AdviceDict["Anvil"].pop(removableSubgroup)
+
+    emptyDungeonSubgroups = []
+    for subgroup in slab_AdviceDict["Dungeon"]:
+        if len(slab_AdviceDict["Dungeon"][subgroup]) == 0:
+            emptyDungeonSubgroups.append(subgroup)
+    for emptySubgroup in emptyDungeonSubgroups:
+        slab_AdviceDict["Dungeon"].pop(emptySubgroup)
 
     # Generate AdviceGroups
     slab_AdviceGroupDict["Storage"] = AdviceGroup(
