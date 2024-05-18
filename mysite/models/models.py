@@ -710,7 +710,23 @@ class Account:
         #General / Multiple uses
         raw_optlacc_list = safe_loads(self.raw_data.get("OptLacc", {}))
 
-        #World 1
+        self.dungeon_upgrades = {}
+        raw_dungeon_upgrades = safe_loads(self.raw_data.get('DungUpg', []))
+        if raw_dungeon_upgrades:
+            try:
+                self.dungeon_upgrades["MaxWeapon"] = raw_dungeon_upgrades[3][0]
+                self.dungeon_upgrades["MaxArmor"] = [raw_dungeon_upgrades[3][4], raw_dungeon_upgrades[3][5],raw_dungeon_upgrades[3][6],raw_dungeon_upgrades[3][7]]
+                self.dungeon_upgrades["MaxJewelry"] = [raw_dungeon_upgrades[3][8], raw_dungeon_upgrades[3][9]]
+                self.dungeon_upgrades["FlurboShop"] = raw_dungeon_upgrades[5]
+                self.dungeon_upgrades["CreditShop"] = raw_dungeon_upgrades[5]
+            except:
+                self.dungeon_upgrades["MaxWeapon"]  = 0
+                self.dungeon_upgrades["MaxArmor"]   = [0, 0, 0, 0]
+                self.dungeon_upgrades["MaxJewelry"] = [0, 0]
+                self.dungeon_upgrades["FlurboShop"] = [0, 0, 0, 0, 0, 0, 0, 0]
+                self.dungeon_upgrades["CreditShop"] = [0, 0, 0, 0, 0, 0, 0, 0]
+
+                #World 1
         self.star_signs = {}
         raw_star_signs = safe_loads(self.raw_data.get("StarSg", {}))
         for signStatus in raw_star_signs:
@@ -941,6 +957,7 @@ class Account:
             self.labBonuses[labBonusName] = {"Enabled": True, "Value": 1}
 
         #World 5
+        self.registered_slab = safe_loads(self.raw_data.get("Cards1", []))
         self.artifacts = {}
         raw_artifacts_list = safe_loads(self.raw_data.get("Sailing", []))
         raw_artifacts_list = safe_loads(raw_artifacts_list)  # Some users have needed to have data converted twice

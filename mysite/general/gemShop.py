@@ -10,16 +10,12 @@ logger = get_logger(__name__)
 
 def try_exclude_DungeonTickets(exclusionList):
     #Scenario 1: All Credit and Flurbo upgrades maxed
-    rawDungeon = session_data.account.raw_data.get('DungUpg', [])
-    if isinstance(rawDungeon, str):
-        rawDungeon = json.loads(rawDungeon)
-    if rawDungeon:
-        #8 Credit Upgrades with max Rank 100 in [1]
-        #8 Flurbo Upgrades with max Rank 50 in [5]
-        if sum(rawDungeon[1]) == 100*8 and sum(rawDungeon[5] == 50*8):
-            if 'Weekly Dungeon Boosters' not in exclusionList:
-                exclusionList.append('Weekly Dungeon Boosters')
-                return
+    #8 Credit Upgrades with max Rank 100 in [1]
+    #8 Flurbo Upgrades with max Rank 50 in [5]
+    if sum(session_data.account.dungeon_upgrades.get("CreditShop", [0])) == 100*8 and sum(session_data.account.dungeon_upgrades.get("FlurboShop", [0])) == 50*8:
+        if 'Weekly Dungeon Boosters' not in exclusionList:
+            exclusionList.append('Weekly Dungeon Boosters')
+            return
 
     #Scenario 2: Over Rank 50 or 400+ tickets
     rawOptions = session_data.account.raw_data.get('OptlAcc', [])

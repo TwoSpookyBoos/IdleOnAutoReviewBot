@@ -142,6 +142,7 @@ EquipmentHats77: Magma Core Headdress
 EquipmentHats83: Skulled Helmet of the Divine
 EquipmentHats105: Marbiglass Headdress
 EquipmentHats106: Crown of the Gods
+EquipmentHats107: Shiny Bored Beanie
 EquipmentHats84: The Crow Perch
 EquipmentHats21: Birthday Hat
 EquipmentHats23: Farmer Brimer
@@ -337,6 +338,7 @@ EquipmentShoes35: Magma Core Lavarunners
 EquipmentShoes36: Devious Slippers of the Divine
 EquipmentShoes37: Marbiglass Soles
 EquipmentShoes38: Drip of the Gods
+EquipmentShoes39: Divvy Slippers
 EquipmentPendant1: Mint Icey
 EquipmentPendant2: Strawbu Icey
 EquipmentPendant3: Rok Road Icey
@@ -367,6 +369,7 @@ EquipmentPendant27: Skullfish Pendant
 EquipmentPendant28: Crescent Moon Pendant
 EquipmentPendant29: Strung Tooth of the Divine
 EquipmentPendant30: The Divine Scarf
+EquipmentPendant31: Deathbloom Flower Pendant
 EquipmentRings1: Gold Ring
 EquipmentRings2: Copper Band
 EquipmentRings3: Steel Band
@@ -403,6 +406,8 @@ EquipmentRings31: Tundra Killer Ring
 EquipmentRings32: Nebula Killer Ring
 EquipmentRings33: Dune Killer Ring
 EquipmentRings34: Magma Killer Ring
+EquipmentRings35: Zero Point Stopwatch
+EquipmentRings36: Demented Emperor Opal
 EquipmentRingsChat1: Love Ring
 EquipmentRingsChat2: Leafy Ring
 EquipmentRingsChat3: Wealth Ring
@@ -1177,6 +1182,7 @@ EquipmentNametag6b: Trash Tuna Nametag
 EquipmentNametag7: Island Adventurer Nametag
 EquipmentNametag8: Summer Shovel Nametag
 EquipmentNametag9: Falloween Nametag
+EquipmentNametag10: 3rd Anniversary IdleOn Nametag
 EquipmentKeychain0: Simple Key Chain
 EquipmentKeychain1: Leafy Chain
 EquipmentKeychain2: Red Sneaker Chain
@@ -1226,6 +1232,8 @@ Trophy17: One of the Divine
 Trophy18: Master of Nothing
 Trophy19: Nebula Royal
 Trophy20: Luckier Lad
+Trophy21: Baller
+Trophy22: Gladiator
 EquipmentTools1: Junk Pickaxe
 EquipmentTools2: Copper Pickaxe
 EquipmentTools3: Iron Pickaxe
@@ -1497,12 +1505,16 @@ Quest79: Falloween Treat
 Quest80: Crop Transfer Ticket
 Quest81: Compost Bag
 Quest82: Summoner Stone
-EquipmentSmithingTabs2: Anvil Tab 2
-EquipmentSmithingTabs3: Anvil Tab 3
-EquipmentSmithingTabs4: Anvil Tab 4
-EquipmentSmithingTabs5: Anvil Tab 5
-EquipmentSmithingTabs6: Anvil Tab 6
-EquipmentSmithingTabs7: Anvil Tab 7
+Quest83: Blue Tome Pages
+Quest84: Red Tome Pages
+Quest85: Anniversary Box
+Quest86: Basketball
+EquipmentSmithingTabs2: Anvil Tab II
+EquipmentSmithingTabs3: Anvil Tab III
+EquipmentSmithingTabs4: Anvil Tab IV
+EquipmentSmithingTabs5: Anvil Tab V
+EquipmentSmithingTabs6: Anvil Tab VI
+EquipmentSmithingTabs7: Anvil Tab VII
 EquipmentStatues1: Power Statue
 EquipmentStatues2: Speed Statue
 EquipmentStatues3: Mining Statue
@@ -1536,7 +1548,7 @@ PureWater2: Dense Water
 Island0: Garbage
 Island1: Bottle
 FoodHealth1d: Nomwich
-FoodHealth2d: Hotdog
+FoodHealth2d: Hot Dog
 FoodHealth3d: Big Cake
 DungWeaponPunchA1: Boxing Gloves I
 DungWeaponPunchA2: Boxing Gloves II
@@ -1613,11 +1625,11 @@ DungWeaponBowC2: Spiked Menace II
 DungWeaponBowC3: Spiked Menace III
 DungWeaponBowC4: Spiked Menace IV
 DungWeaponBowC5: Spiked Menace V
-DungWeaponBowD1: Pharoah Bow I
-DungWeaponBowD2: Pharoah Bow II
-DungWeaponBowD3: Pharoah Bow III
-DungWeaponBowD4: Pharoah Bow IV
-DungWeaponBowD5: Pharoah Bow V
+DungWeaponBowD1: Pharaoh Bow I
+DungWeaponBowD2: Pharaoh Bow II
+DungWeaponBowD3: Pharaoh Bow III
+DungWeaponBowD4: Pharaoh Bow IV
+DungWeaponBowD5: Pharaoh Bow V
 DungWeaponBowE1: Blizzard Bow I
 DungWeaponBowE2: Blizzard Bow II
 DungWeaponBowE3: Blizzard Bow III
@@ -1702,6 +1714,7 @@ GemP16: Dungeon Loot Dice
 GemP19: Bossius Obol Stack
 GemP25: Hyper Obol Stack
 GemP30: Sand of Time
+GemP35: Hyper Obol Stack Square Edition
 EquipmentHats31: Smitty's Bubble Blowing Hat
 EquipmentHats32: Bandit Bob Mask
 EquipmentHats33: Paper Bag
@@ -1745,6 +1758,7 @@ EquipmentHats101: Guardian Mane
 EquipmentHats102: Fanned Blossomage
 EquipmentHats103: Dainty Brim
 EquipmentHats104: Charcoal Hat
+EquipmentHats108: 3rd Anniversary Ice Cream Topper
 CardsA0: Green Mushroom Card
 CardsA1: Red Mushroom Card
 CardsA2: Frog Card
