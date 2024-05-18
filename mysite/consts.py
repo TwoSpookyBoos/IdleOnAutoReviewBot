@@ -5,532 +5,6 @@ from utils.logging import get_logger
 
 logger = get_logger(__name__)
 
-###WORLD 1 PROGRESSION TIERS###
-bribes_progressionTiers = [
-        #int tier, int w1purchased, int w2purchased, int w3purchased, int w4purchased, int trashIslandpurchased, int w6purchased
-        [0, 0, -7, -7, -6, -7, -8],
-        [1, 6, -7, -7, -6, -7, -8],
-        [2, 6, 7, -7, -6, -7, -8],
-        [3, 6, 7, 7, -6, -7, -8],
-        [4, 6, 7, 7, 6, -7, -8],
-        [5, 6, 7, 7, 6, 7, -8],  #The 8th bribe in w5 cannot be purchased until Jade Emporium
-        [6, 6, 7, 7, 6, 7, 7, ]  #The 7th bribe in w6 can't be purchased yet
-]
-stamps_progressionTiers = [
-    # int Tier, int Total Stamp Level, str Required combat stamps, str Required Skill stamps, str Required Misc stamps, dict Specific stamp levels, str Notes
-    [0, 0, [], [], [], {}, "Just level up any stamp you can afford!"],
-    [1, 50, [], [], [], {}, "Just level up any stamp you can afford!"],
-    [2, 100, [], [], [], {}, "Just level up any stamp you can afford!"],
-    [3, 150, [2, 3, 4, 5, 11], [5], [10], {}, "W1 town and W1 Tiki shop both sell stamps!"],
-    [4, 200, [8, 13, 14], [3, 16, 18], [17], {},
-     "Expected progression roughly near the start of World 3. Some of these required stamps are drops from enemies or quest rewards. Use the Wiki to find their sources!"],
-    [5, 250, [6, 7, 9], [2, 7], [0], {'Pickaxe Stamp': 25, 'Hatchet Stamp': 25}, ""],
-    [6, 300, [17, 18, 20], [25], [5], {}, ""],
-    [7, 400, [], [8], [], {'Pickaxe Stamp': 35, 'Hatchet Stamp': 35}, ""],
-    [8, 500, [15, 16, 21], [14, 17], [14, 19], {'Drippy Drop Stamp': 30}, ""],
-    [9, 600, [27], [10], [1, 2], {'Mason Jar Stamp': 12}, ""],
-    [10, 700, [], [4, 6, 9, 11, 12, 15, 22, 24, 26], [], {'Drippy Drop Stamp': 40, 'Matty Bag Stamp': 50}, ""],
-    [11, 800, [], [29, 37, 40], [11], {'Pickaxe Stamp': 45, 'Hatchet Stamp': 45, 'Mason Jar Stamp': 24, }, ""],
-    [12, 900, [], [13, 20, 30, 46], [8], {'Drippy Drop Stamp': 50}, ""],
-    [13, 1000, [10, 12], [19, 21, 36], [13], {'Pickaxe Stamp': 55, 'Hatchet Stamp': 55, 'Card Stamp': 50}, ""],
-    [14, 1500, [23, 24], [35, 39], [21], {'Matty Bag Stamp': 100, 'Crystallin': 60}, ""],
-    [15, 2000, [28], [41], [6, 20], {'Pickaxe Stamp': 65, 'Hatchet Stamp': 65, 'Card Stamp': 100}, ""],
-    [16, 2500, [31], [38, 42], [15], {'Golden Apple Stamp': 28}, ""],
-    [17, 3000, [25, 29], [43, 44, 45], [], {'Bugsack Stamp': 80, 'Bag o Heads Stamp': 80}, ""],
-    [18, 3500, [33], [], [], {'Pickaxe Stamp': 75, 'Hatchet Stamp': 75, 'Drippy Drop Stamp': 90, 'Crystallin': 100}, ""],
-    [19, 4000, [], [], [], {'Matty Bag Stamp': 150}, ""],
-    [20, 4500, [39], [47], [18], {'Card Stamp': 150, 'Ladle Stamp': 100, 'Potion Stamp': 20}, ""],
-    [21, 5000, [30, 32], [23], [], {'Pickaxe Stamp': 85, 'Hatchet Stamp': 85, 'Mason Jar Stamp': 52, 'Golden Apple Stamp': 40}, ""],
-    [22, 5500, [], [], [], {'Bugsack Stamp': 120, 'Bag o Heads Stamp': 120}, ""],
-    [23, 6000, [19, 26, 34], [33], [], {'Matty Bag Stamp': 200, 'Crystallin': 150}, ""],
-    [24, 6500, [36], [48, 49, 51], [9], {'Drippy Drop Stamp': 100, 'Ladle Stamp': 150, 'Potion Stamp': 40}, ""],
-    [25, 7000, [35], [], [], {'Pickaxe Stamp': 95, 'Hatchet Stamp': 95, 'Golden Apple Stamp': 60, 'Multitool Stamp': 100}, ""],
-    [26, 7500, [], [], [], {'Ladle Stamp': 180}, ""],
-    [27, 8000, [], [], [], {'Matty Bag Stamp': 280, 'Multitool Stamp': 150}, ""],
-    [28, 8400, [], [53], [22],
-     {'Pickaxe Stamp': 105, 'Hatchet Stamp': 105, 'Mason Jar Stamp': 80, 'Crystallin': 200, 'Bugsack Stamp': 144, 'Bag o Heads Stamp': 144, }, ""],
-    [29, 8800, [], [], [], {'Drippy Drop Stamp': 110, 'Potion Stamp': 60}, ""],
-    [30, 9200, [], [], [], {'Card Stamp': 200, 'Crystallin': 250}, ""],
-    [31, 9600, [], [], [], {'Golden Apple Stamp': 80}, "Guaranteed daily Gilded Stamp at 10k"],
-    [32, 10000, [], [], [], {'Mason Jar Stamp': 100}, ""],
-    [33, 10500, [], [], [], {'Bugsack Stamp': 168, 'Bag o Heads Stamp': 168}, ""],
-    [34, 11000, [], [], [], {'Golden Apple Stamp': 100, 'Multitool Stamp': 210}, ""],
-    [35, 11500, [37], [], [], {'Golden Sixes Stamp': 120}, ""],
-    [36, 12000, [38], [31], [], {'Maxo Slappo Stamp': 98, 'Sashe Sidestamp': 98, 'Intellectostampo': 98}, ""],
-    [37, 12500, [], [], [], {'Ladle Stamp': 270}, ""],
-    [38, 13000, [40, 22], [52, 50], [], {'Triad Essence Stamp': 80}, ""],
-]
-smithing_progressionTiers = [
-    # int tier, int Cash Points Purchased, int Monster Points Purchased, int Forge Totals, str Notes
-    [0, 0, 0, 0, ""],
-    [1, 20, 85, 60, "all W1 enemies"],
-    [2, 60, 150, 120, "early W2 enemies through Pincermin"],
-    [3, 100, 225, 180, "all W2 enemies"],
-    [4, 150, 350, 240, "most W3 enemies, excluding Dedotated Rams"],
-    [5, 200, 500, 291, "early W4 enemies through Soda Cans"],
-    [6, 600, 700, 291, "all W4 enemies"]
-]
-
-###WORLD 2 PROGRESSION TIERS###
-bubbles_progressionTiers = [
-    # int tier, int TotalBubblesUnlocked,
-    # dict {OrangeSampleBubbles},
-    # dict {GreenSampleBubbles},
-    # dict {PurpleSampleBubbles},
-    # dict {UtilityBubbles},
-    # str BubbleValuePercentage,
-    # str Notes
-    [0, 0, {}, {}, {}, {}, "0%", ""],
-    [1, 10,
-     {'Roid Ragin': 12, 'Warriors Rule': 6, 'Hearty Diggy': 12, 'Wyoming Blood': 6, 'Sploosh Sploosh': 6, 'Stronk Tools': 8},
-     {'Swift Steppin': 12, 'Archer or Bust': 6, 'Sanic Tools': 8, 'Bug^2': 6},
-     {'Stable Jenius': 12, 'Mage is Best': 6, 'Hocus Choppus': 12, 'Molto Loggo': 6, 'Le Brain Tools': 8},
-     {'FMJ': 5, 'Shaquracy': 5, 'Prowesessary': 7, 'Hammer Hammer': 6},
-     "10%",
-     "MINIMUM recommended Utility bubbles for finishing W2. Prowess hard-caps at 2x."],
-    [2, 20,
-     {'Roid Ragin': 25, 'Warriors Rule': 13, 'Hearty Diggy': 25, 'Wyoming Blood': 13, 'Sploosh Sploosh': 13, 'Stronk Tools': 18},
-     {'Swift Steppin': 25, 'Archer or Bust': 13, 'Sanic Tools': 18, 'Bug^2': 13},
-     {'Stable Jenius': 25, 'Mage is Best': 13, 'Hocus Choppus': 25, 'Molto Loggo': 13, 'Le Brain Tools': 18},
-     {'FMJ': 10, 'Shaquracy': 10, 'Prowesessary': 15, 'Hammer Hammer': 14, 'All for Kill': 25},
-     "20%",
-     "MINIMUM recommended Utility bubbles for starting W3. Prowess hard-caps at 2x."],
-    [3, 40,
-     {'Roid Ragin': 67, 'Warriors Rule': 34, 'Hearty Diggy': 67, 'Wyoming Blood': 20, 'Sploosh Sploosh': 20, 'Stronk Tools': 47},
-     {'Swift Steppin': 67, 'Archer or Bust': 34, 'Sanic Tools': 47, 'Bug^2': 20},
-     {'Stable Jenius': 67, 'Mage is Best': 34, 'Hocus Choppus': 67, 'Molto Loggo': 20, 'Le Brain Tools': 47},
-     {'FMJ': 15, 'Shaquracy': 15, 'Prowesessary': 40, 'Hammer Hammer': 41, 'All for Kill': 67},
-     "40%",
-     "MINIMUM recommended Utility bubbles for starting W4. Prowess hard-caps at 2x."],
-    [4, 60,
-     {'Roid Ragin': 100, 'Warriors Rule': 50, 'Hearty Diggy': 100, 'Wyoming Blood': 30, 'Sploosh Sploosh': 30, 'Stronk Tools': 70},
-     {'Swift Steppin': 100, 'Archer or Bust': 50, 'Sanic Tools': 70, 'Bug^2': 30},
-     {'Stable Jenius': 100, 'Mage is Best': 50, 'Hocus Choppus': 100, 'Molto Loggo': 30, 'Le Brain Tools': 70},
-     {'FMJ': 20, 'Shaquracy': 20, 'Prowesessary': 60, 'Hammer Hammer': 65, 'All for Kill': 100},
-     "50%",
-     "MINIMUM recommended Utility bubbles for starting W5. Prowess hard-caps at 2x, which you should be reaching now!"],
-    [5, 80,
-     {'Roid Ragin': 150, 'Warriors Rule': 75, 'Hearty Diggy': 150, 'Wyoming Blood': 45, 'Sploosh Sploosh': 45, 'Stronk Tools': 105, 'Multorange': 45},
-     {'Swift Steppin': 150, 'Archer or Bust': 75, 'Bug^2': 45, 'Premigreen': 45, },
-     {'Stable Jenius': 150, 'Mage is Best': 75, 'Molto Loggo': 45, 'Le Brain Tools': 105, 'Severapurple': 45, },
-     {'FMJ': 30, 'Shaquracy': 30, 'Hammer Hammer': 105, 'All for Kill': 150},
-     "60%",
-     "MINIMUM recommended Utility bubbles for starting W6 push. Keep watch of your No Bubble Left Behind list (from W4 Lab) to keep cheap/easy bubbles off when possible!"],
-    [6, 100,
-     {'Roid Ragin': 234, 'Warriors Rule': 117, 'Hearty Diggy': 234, 'Wyoming Blood': 70, 'Sploosh Sploosh': 70, 'Stronk Tools': 164, 'Multorange': 70,
-      'Dream of Ironfish': 70},
-     {'Swift Steppin': 234, 'Archer or Bust': 117, 'Bug^2': 70, 'Premigreen': 70, 'Fly in Mind': 94},
-     {'Stable Jenius': 234, 'Mage is Best': 117, 'Molto Loggo': 70, 'Le Brain Tools': 164, 'Severapurple': 70, 'Tree Sleeper': 94},
-     {'Cookin Roadkill': 105, 'All for Kill': 167},
-     "70%",
-     "Cookin Roadkill 105 = 60% bubble strength. All for Kill hard-cap at 167, you're finished!"],
-    [7, 100,
-     {'Roid Ragin': 400, 'Warriors Rule': 200, 'Hearty Diggy': 400, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 280, 'Multorange': 120,
-      'Dream of Ironfish': 120},
-     {'Swift Steppin': 400, 'Archer or Bust': 200, 'Bug^2': 120, 'Premigreen': 120},
-     {'Stable Jenius': 400, 'Mage is Best': 200, 'Hocus Choppus': 400, 'Molto Loggo': 120, 'Le Brain Tools': 280, 'Severapurple': 120, 'Tree Sleeper': 160},
-     {'Laaarrrryyyy': 150, 'Hammer Hammer': 150, },
-     "80%",
-     "Larry at 150 = 72% chance for +2 levels. Somewhere around level 125-150, this bubble should pass 100m Dementia Ore cost and be available to level with Boron upgrades from the W3 Atom Collider in Construction.  It should be, in my opinion, the ONLY Utility Bubble you spend these daily clicks on until it reaches 501. If you cannot afford the Particles needed to level Larry, invest into Sampling Bubbles."],
-    [8, 100,
-     {'Roid Ragin': 567, 'Warriors Rule': 284, 'Hearty Diggy': 567, 'Stronk Tools': 397, 'Multorange': 170, 'Dream of Ironfish': 170, 'Shimmeron': 227},
-     {'Swift Steppin': 567, 'Archer or Bust': 284, 'Premigreen': 170},
-     {'Stable Jenius': 567, 'Mage is Best': 284, 'Hocus Choppus': 567, 'Le Brain Tools': 397, 'Severapurple': 170, 'Tree Sleeper': 227},
-     {'Hammer Hammer': 180, },
-     "85%",
-     ""],
-    [9, 100,
-     {'Roid Ragin': 615, 'Warriors Rule': 308, 'Hearty Diggy': 615, 'Stronk Tools': 430, 'Multorange': 185, 'Dream of Ironfish': 185, 'Shimmeron': 246},
-     {'Swift Steppin': 615, 'Archer or Bust': 308, 'Premigreen': 185},
-     {'Stable Jenius': 615, 'Mage is Best': 308, 'Hocus Choppus': 615, 'Le Brain Tools': 430, 'Severapurple': 185, 'Tree Sleeper': 246},
-     {'Hammer Hammer': 210, },
-     "86%",
-     ""],
-    [10, 100,
-     {'Roid Ragin': 670, 'Warriors Rule': 335, 'Hearty Diggy': 670, 'Stronk Tools': 469, 'Multorange': 201, 'Dream of Ironfish': 201, 'Shimmeron': 268},
-     {'Swift Steppin': 670, 'Archer or Bust': 335, 'Premigreen': 201},
-     {'Stable Jenius': 670, 'Mage is Best': 335, 'Hocus Choppus': 670, 'Le Brain Tools': 469, 'Severapurple': 201, 'Tree Sleeper': 268},
-     {'Laaarrrryyyy': 501, },
-     "87%",
-     ""],
-    [11, 100,
-     {'Roid Ragin': 700, 'Warriors Rule': 367, 'Hearty Diggy': 734, 'Stronk Tools': 514, 'Multorange': 220, 'Dream of Ironfish': 220, 'Shimmeron': 294},
-     {'Swift Steppin': 700, 'Archer or Bust': 367, 'Premigreen': 220},
-     {'Stable Jenius': 700, 'Mage is Best': 367, 'Hocus Choppus': 734, 'Le Brain Tools': 514, 'Severapurple': 220, 'Tree Sleeper': 294},
-     {'Cookin Roadkill': 630, 'Hammer Hammer': 270, },
-     "88%",
-     ""],
-    [12, 100,
-     {'Roid Ragin': 720, 'Warriors Rule': 405, 'Hearty Diggy': 810, 'Stronk Tools': 567, 'Multorange': 243, 'Dream of Ironfish': 243, 'Shimmeron': 324},
-     {'Swift Steppin': 720, 'Archer or Bust': 405, 'Premigreen': 243},
-     {'Stable Jenius': 720, 'Mage is Best': 405, 'Hocus Choppus': 810, 'Le Brain Tools': 567, 'Severapurple': 243, 'Tree Sleeper': 324},
-     {'Startue Exp': 240, 'Hammer Hammer': 300, },
-     "89%",
-     ""],
-    [13, 100,
-     {'Roid Ragin': 740, 'Warriors Rule': 450, 'Hearty Diggy': 900, 'Stronk Tools': 630, 'Multorange': 270, 'Dream of Ironfish': 270, 'Shimmeron': 360},
-     {'Swift Steppin': 740, 'Archer or Bust': 450, 'Premigreen': 270},
-     {'Stable Jenius': 740, 'Mage is Best': 450, 'Hocus Choppus': 900, 'Le Brain Tools': 630, 'Severapurple': 270, 'Tree Sleeper': 360},
-     {'Droppin Loads': 280},
-     "90%",
-     ""],
-    [14, 100,
-     {'Roid Ragin': 760, 'Warriors Rule': 506, 'Hearty Diggy': 1012, 'Multorange': 304, 'Shimmeron': 405},
-     {'Swift Steppin': 760, 'Archer or Bust': 506, 'Premigreen': 304},
-     {'Stable Jenius': 760, 'Mage is Best': 506, 'Hocus Choppus': 1012, 'Severapurple': 304},
-     {'Call Me Bob': 200},
-     "91%",
-     ""],
-    [15, 100,
-     {'Roid Ragin': 780, 'Warriors Rule': 575, 'Hearty Diggy': 1150, 'Multorange': 345, 'Shimmeron': 460},
-     {'Swift Steppin': 780, 'Archer or Bust': 575, 'Premigreen': 345},
-     {'Stable Jenius': 780, 'Mage is Best': 575, 'Hocus Choppus': 1150, 'Severapurple': 345},
-     {'Big P': 140, 'Big Game Hunter': 70, 'Mr Massacre': 117},
-     "92%",
-     ""],
-    [16, 100,
-     {'Roid Ragin': 800, 'Warriors Rule': 665, 'Hearty Diggy': 1329, 'Multorange': 399, 'Shimmeron': 532},
-     {'Swift Steppin': 800, 'Archer or Bust': 665, 'Premigreen': 399},
-     {'Stable Jenius': 800, 'Mage is Best': 665, 'Hocus Choppus': 1329, 'Severapurple': 399},
-     {'Big P': 240, 'Big Game Hunter': 120, 'Mr Massacre': 200},
-     "93%",
-     ""],
-    [17, 100,
-     {'Roid Ragin': 820, 'Warriors Rule': 784, 'Hearty Diggy': 1567, 'Multorange': 470, 'Shimmeron': 627},
-     {'Swift Steppin': 820, 'Archer or Bust': 784, 'Premigreen': 470},
-     {'Stable Jenius': 820, 'Mage is Best': 784, 'Hocus Choppus': 1567, 'Severapurple': 470},
-     {'Big P': 340, 'Carpenter': 284, 'Big Game Hunter': 170, 'Mr Massacre': 284},
-     "94%",
-     ""],
-    [18, 100,
-     {'Roid Ragin': 840, 'Warriors Rule': 950, 'Hearty Diggy': 1900, 'Multorange': 570, 'Shimmeron': 760},
-     {'Swift Steppin': 840, 'Archer or Bust': 950, 'Premigreen': 570},
-     {'Stable Jenius': 840, 'Mage is Best': 950, 'Hocus Choppus': 1900, 'Severapurple': 570},
-     {'Laaarrrryyyy': 900, 'Big P': 540, 'Call Me Bob': 500, 'Carpenter': 450, 'Big Game Hunter': 270, 'Mr Massacre': 450},
-     "95%",
-     ""],
-    [19, 100,
-     {'Roid Ragin': 860, 'Warriors Rule': 1200, 'Multorange': 720},
-     {'Swift Steppin': 860, 'Archer or Bust': 1200},
-     {'Stable Jenius': 860, 'Mage is Best': 1200, 'Severapurple': 720},
-     {'Call Me Bob': 700, 'Cropius Mapper': 630, 'Lo Cost Mo Jade': 360},
-     "96%",
-     ""],
-    [20, 100,
-     {'Roid Ragin': 880, 'Warriors Rule': 1617, 'Multorange': 970},
-     {'Swift Steppin': 880, 'Archer or Bust': 1617},
-     {'Stable Jenius': 880, 'Mage is Best': 1617, 'Severapurple': 970},
-     {'Laaarrrryyyy': 1900, 'Big P': 1140, 'Carpenter': 950, 'Big Game Hunter': 570, 'Mr Massacre': 950, 'Diamond Chef': 553, 'Lo Cost Mo Jade': 760},
-     "97%",
-     ""],
-    [21, 120,
-     {'Roid Ragin': 900, 'Warriors Rule': 2450, 'Multorange': 1470},
-     {'Swift Steppin': 900, 'Archer or Bust': 2450},
-     {'Stable Jenius': 900, 'Mage is Best': 2450, 'Severapurple': 1470},
-     {'Essence Boost-Orange': 400, 'Essence Boost-Green': 400, 'Call Me Bob': 1000, 'Diamond Chef': 890},
-     "98%",
-     ""],
-    [22, 140,
-     {'Roid Ragin': 950, 'Warriors Rule': 4950, 'Multorange': 2970},
-     {'Swift Steppin': 950, 'Archer or Bust': 4950},
-     {'Stable Jenius': 950, 'Mage is Best': 4950, 'Severapurple': 2970},
-     {'Diamond Chef': 1226, 'Carpenter': 2331},
-     "99%",
-     ""],
-    [23, 160,
-     {'Roid Ragin': 1000, 'Hearty Diggy': 9900, 'Stronk Tools': 6930, 'Dream of Ironfish': 2970, 'Shimmeron': 3960, 'Slabi Orefish': 5940,
-      'Slabi Strength': 5940},
-     {'Swift Steppin': 1000, 'Sanic Tools': 6930, 'Premigreen': 2970, 'Fly in Mind': 3960, 'Slabo Critterbug': 5940, 'Slabo Agility': 5940},
-     {'Stable Jenius': 1000, 'Hocus Choppus': 9900, 'Le Brain Tools': 6930, 'Tree Sleeper': 3960, 'Slabe Logsoul': 5940, 'Slabe Wisdom': 5940},
-     {'Diamond Chef': 1897, 'Carpenter': 2450},
-     "99% catchup",
-     ""],
-]
-vials_progressionTiers = [
-    # int tier, int TotalVialsUnlocked, int TotalVialsMaxed, list ParticularVials, str Notes
-    [0, 0, 0, [], ""],
-    [1, 7, 0, [], "This is the number of vials requiring an unlock roll of 75 or less. "],
-    [2, 14, 0, [], "This is the number of vials requiring an unlock roll of 85 or less. "],
-    [3, 19, 0, [], "This is the number of vials requiring an unlock roll of 90 or less. "],
-    [4, 27, 0, [], "This is the number of vials requiring an unlock roll of 95 or less. "],
-    [5, 33, 0, [], "This is the number of vials requiring an unlock roll of 98 or less. "],
-    [6, 38, 0, [], "This is all vials up through W4, excluding the Arcade Pickle. "],
-    [7, 51, 0, [], "This is all vials up through W5, excluding the Arcade Pickle. "],
-    [8, 63, 0, [], "This is all vials up through W5, excluding the Arcade Pickle. "],
-    [9, 67, 0, [], "This is all vials up through W5, excluding the Arcade Pickle. "],
-    [10, 70, 0, [], "This is all vials up through W5, excluding the Arcade Pickle. "],
-    [11, 70, 4, ['Copper Corona (Copper Ore)', 'Sippy Splinters (Oak Logs)', 'Jungle Juice (Jungle Logs)', 'Tea With Pea (Potty Rolls)'],
-     "This is the first half of W6, excluding the Arcade Pickle. "],
-    [12, 70, 8, ['Gold Guzzle (Gold Ore)', 'Seawater (Goldfish)', 'Fly In My Drink (Fly)', 'Blue Flav (Platinum Ore)'], ""],
-    [13, 72, 12, ['Slug Slurp (Hermit Can)', 'Void Vial (Void Ore)', 'Ew Gross Gross (Mosquisnow)', 'The Spanish Sahara (Tundra Logs)'], ""],
-    [14, 72, 16, ['Mushroom Soup (Spore Cap)', 'Maple Syrup (Maple Logs)', 'Marble Mocha (Marble Ore)', 'Skinny 0 Cal (Snake Skin)'], ""],
-    [15, 72, 20, ['Long Island Tea (Sand Shark)', 'Anearful (Glublin Ear)', 'Willow Sippy (Willow Logs)', 'Dieter Drink (Bean Slices)'], ""],
-    [16, 72, 24, ['Shinyfin Stew (Equinox Fish)', 'Ramificoction (Bullfrog Horn)', 'Tail Time (Rats Tail)', 'Dreamy Drink (Dream Particulate)'], ""],
-    [17, 72, 28, ['Mimicraught (Megalodon Tooth)', 'Fur Refresher (Floof Ploof)', 'Etruscan Lager (Mamooth Tusk)', 'Dusted Drink (Dust Mote)'], ""],
-    [18, 72, 32, ['Ded Sap (Effervescent Log)', 'Sippy Soul (Forest Soul)', 'Visible Ink (Pen)', 'Snow Slurry (Snow Ball)'], ""],
-    [19, 72, 36, ['Sippy Cup (Sippy Straw)', 'Goosey Glug (Honker)', 'Crab Juice (Crabbo)', 'Chonker Chug (Dune Soul)'], ""],
-    [20, 72, 40, ['40-40 Purity (Contact Lense)', 'Ladybug Serum (Ladybug)', 'Bubonic Burp (Mousey)', 'Capachino (Purple Mush Cap)'], ""],
-    [21, 72, 44, ['Donut Drink (Half Eaten Donut)', 'Krakenade (Kraken)', 'Calcium Carbonate (Tongue Bone)', 'Spool Sprite (Thread)'], ""],
-    [22, 72, 48, ['Choco Milkshake (Crumpled Wrapper)', 'Electrolyte (Condensed Zap)', 'Ash Agua (Suggma Ashes)', 'Oj Jooce (Orange Slice)'], ""],
-    [23, 72, 52, ['Thumb Pow (Trusty Nails)', 'Slowergy Drink (Frigid Soul)', 'Bunny Brew (Bunny)', 'Flavorgil (Caulifish)'], ""],
-    [24, 72, 56, ['Spook Pint (Squishy Soul)', 'Firefly Grog (Firefly)', 'Barium Mixture (Copper Bar)', 'Bloat Draft (Blobfish)'], ""],
-    [25, 73, 60, ['Barley Brew (Iron Bar)', 'Oozie Ooblek (Oozie Soul)', 'Ricecakorade (Rice Cake)', 'Greenleaf Tea (Leafy Branch)'], ""],
-    [26, 74, 65, ['Venison Malt (Mongo Worm Slices)', 'Gibbed Drink (Eviscerated Horn)', 'Royale Cola (Royal Headpiece)', 'Refreshment (Breezy Soul)',
-                  'Turtle Tisane (Tuttle)'], ""],
-    # [27, 75, 69, ['Red Malt (Redox Salts)', 'Poison Tincture (Poison Froge)', 'Orange Malt (Explosive Salts)', 'Shaved Ice (Purple Salt)'], "Currently considered impossible"],
-    # [28, 75, 73, ['Dreadnog (Dreadlo Bar)', 'Dabar Special (Godshard Bar)', 'Pearl Seltzer (Pearler Shell)', 'Hampter Drippy (Hampter)'], "Currently considered impossible"],
-    # [29, 75, 76, ['Pickle Jar (BobJoePickle)', 'Ball Pickle Jar (BallJoePickle)'], "Currently considered impossible"],
-]
-sigils_progressionTiers = {
-    0: {"Label": "S", "Sigils":[]},
-    1: {"Label": "A", "Sigils":[]},
-    2: {"Label": "B", "Sigils":[]},
-    3: {"Label": "C", "Sigils":[]},
-    4: {"Label": "D", "Sigils":[]},
-    5: {"Label": "F", "Sigils":[]},
-}
-###WORLD 3 PROGRESSION TIERS###
-saltLick_progressionTiers = [
-    [0, {}, ""],
-    [1, {'Obol Storage': 8}, "Froge"],
-    [2, {'Printer Sample Size': 20}, "Redox Salts"],
-    [3, {'Refinery Speed': 10}, "Explosive Salts"],
-    [4, {'Max Book': 10}, "Spontaneity Salts"],
-    [5, {'Movespeed': 1}, "Frigid Soul"],  # This buff only works under 170% move speed, so can become useless quite quickly.
-    [6, {'TD Points': 10}, "Dioxide Synthesis"],
-    [7, {'Multikill': 10}, "Purple Salt"],
-    [8, {'EXP': 100}, "Dune Soul"],
-    [9, {'Alchemy Liquids': 100}, "Mousey"],
-    [10, {'Damage': 250}, "Pingy"]
-]
-deathNote_progressionTiers = [
-    # 0-4 int tier. int w1LowestSkull, int w2LowestSkull, int w3LowestSkull, int w4LowestSkull,
-    # 5-9 int w5LowestSkull, int w6LowestSkull, int w7LowestSkull, int w8LowestSkull, int zowCount, int chowCount,
-    # 10-11 int meowCount, str Notes
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ""],
-    [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, ""],
-    [2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, ""],
-    [3, 3, 3, 3, 1, 0, 0, 0, 0, 0, 0, 0, ""],
-    [4, 4, 4, 4, 2, 0, 0, 0, 0, 15, 0, 0,
-     "The recommendation for ZOWs is 12hrs or less (8,333+ KPH) per enemy. If you aren't at that mark yet, don't sweat it. Come back later!"],
-    [5, 5, 5, 5, 3, 0, 0, 0, 0, 26, 0, 0,
-     "The Voidwalker questline requires W1-W3 at all Plat Skulls. Aim to complete this by Mid W5 as Vman's account-wide buffs are insanely strong."],
-    [6, 7, 5, 5, 4, 0, 0, 0, 0, 40, 15, 0,
-     "The recommendation for CHOWs is 12hrs or less (83,333+ KPH) per enemy. If you aren't at that mark yet, don't sweat it. Come back later!"],
-    [7,  10, 7,  5,  5,  1,  0,     0, 0, 40, 26, 0, ""],
-    [8,  10, 10, 7,  5,  2,  0,     0, 0, 40, 40, 0, ""],
-    [9,  10, 10, 10, 5,  3,  0,     0, 0, 40, 40, 0, ""],
-    [10, 10, 10, 10, 7,  4,  0,     0, 0, 53, 53, 0, ""],
-    [11, 10, 10, 10, 10, 5,  0,     0, 0, 53, 53, 0, "Complete Lava Skull, then BB Super CHOW, before you start working on Eclipse Skulls. "],
-    [12, 10, 10, 10, 10, 7,  0,     0, 0, 66, 66, 0, ""],
-    [13, 10, 10, 10, 10, 10, 0,     0, 0, 66, 66, 0, ""],
-    [14, 10, 10, 10, 10, 10, 0,     0, 0, 73, 66, 0, ""],
-    [15, 10, 10, 10, 10, 10, 0,     0, 0, 73, 73, 0, "The recommendation for Super CHOWs is 24hrs or less (4m+ KPH)"],
-    [16, 20, 10, 10, 10, 10, 0,     0, 0, 80, 73, 26, ""],
-    [17, 20, 20, 10, 10, 10, 1,     0, 0, 84, 80, 40, ""],
-    [18, 20, 20, 20, 10, 10, 2,     0, 0, 85, 80, 53, ""],
-    [19, 20, 20, 20, 20, 10, 3,     0, 0, 85, 80, 66, ""],
-    [20, 20, 20, 20, 20, 20, 4,     0, 0, 85, 82, 66, ""],
-    [21, 20, 20, 20, 20, 20, 5,     0, 0, 85, 83, 66, ""],
-    [22, 20, 20, 20, 20, 20, 7,     0, 0, 85, 83, 66, ""],
-    [23, 20, 20, 20, 20, 20, 10,    0, 0, 85, 83, 70, ""],
-    [24, 20, 20, 20, 20, 20, 10,    0, 0, 85, 83, 80, ""],
-    [25, 20, 20, 20, 20, 20, 20,    0, 0, 85, 83, 82, ""],
-    [26, 20, 20, 20, 20, 20, 20,    0, 0, 85, 83, 83, ""],
-    [27, 20, 20, 20, 20, 20, 20,    0, 0, 85, 85, 84, "As of v2.05, completing a Super CHOW on Boops is impossible."],
-    [28, 20, 20, 20, 20, 20, 20,    0, 0, 86, 86, 86, "Info only"]
-]
-buildingsPostBuffs_progressionTiers = [
-    [0, "Unlock", [], "", ""],
-    [1, "SS", ["3D Printer", "Cost Cruncher", "Automation Arm"], "", ""],
-    [2, "S", ["Talent Book Library", "Death Note", "Salt Lick", "Trapper Drone", "Boulder Roller", "Kraken Cosplayer", "Poisonic Elder"], "", ""],
-    [3, "A", ["Chest Space", "Pulse Mage", "Fireball Lobber", "Frozone Malone", "Stormcaller", "Party Starter", "Voidinator", "Clover Shrine", "Crescent Shrine", "Undead Shrine"], "", ""],
-    [4, "B", ["Woodular Shrine", "Isaccian Shrine", "Crystal Shrine", "Pantheon Shrine", "Summereading Shrine", "Atom Collider"], "", ""],
-    [5, "C", ["Primordial Shrine"], "", ""],
-    [6, "D", [], "", ""],
-    [7, "F", [], "", ""]
-]
-buildingsPreBuffs_progressionTiers = [
-    [0, "Unlock", [], "", ""],
-    [1, "SS", ["3D Printer", "Cost Cruncher", "Automation Arm"], "", ""],
-    [2, "S", ["Talent Book Library", "Death Note", "Salt Lick", "Trapper Drone", "Boulder Roller", "Kraken Cosplayer", "Poisonic Elder"], "", ""],
-    [3, "A", ["Chest Space", "Stormcaller", "Party Starter", "Clover Shrine", "Crescent Shrine", "Undead Shrine"], "", ""],
-    [4, "B", ["Frozone Malone", "Voidinator"], "", ""],
-    [5, "C", ["Atom Collider", "Woodular Shrine", "Isaccian Shrine", "Crystal Shrine", "Pantheon Shrine"], "", ""],
-    [6, "D", ["Pulse Mage", "Fireball Lobber", "Summereading Shrine"], "", ""],
-    [7, "F", ["Primordial Shrine"], "", ""]
-]
-prayers_progressionTiers = [
-    #Tier, PrayerDict, 	Notes
-    [0, {}, ""],
-    [1, {'The Royal Sampler (Rooted Soul)': 5}, ""],
-    [2, {'Skilled Dimwit (Forest Soul)':20}, ""],
-    [3, {'Balance of Pain (Squishy Soul)':11}, ""],
-    [4, {'Skilled Dimwit (Forest Soul)':35, 'Balance of Pain (Squishy Soul)':20}, ""],
-    [5, {'Midas Minded (Dune Soul)':20}, ""],
-    [6, {'Skilled Dimwit (Forest Soul)':50, 'Midas Minded (Dune Soul)':50, 'Balance of Pain (Squishy Soul)':30}, ""],
-    [7, {'Shiny Snitch (Forest Soul)':50, 'Zerg Rushogen (Forest Soul)':20, 'Jawbreaker (Dune Soul)':50, 'Ruck Sack (Rooted Soul)':50, 'Balance of Proficiency (Squishy Soul)':50}, ""],
-    [8, {'Unending Energy (Forest Soul)':50, 'Big Brain Time (Forest Soul)':50, 'Antifun Spirit (Rooted Soul)':10, 'Fibers of Absence (Frigid Soul)':50, 'Beefy For Real (Frigid Soul)':40}, ""],
-    [9, {'Tachion of the Titans (Dune Soul)':1, 'Balance of Precision (Dune Soul)':1, 'Circular Criticals (Rooted Soul)':1, 'Vacuous Tissue (Frigid Soul)':1, 'Glitterbug (Squishy Soul)':1}, ""],
-]
-
-###WORLD 4 PROGRESSION TIERS###
-breeding_progressionTiers = {
-        0: {
-            "Tier": 0,
-            "TerritoriesUnlocked": 0,
-            "PetSlots": 2,
-            "TerritoryNotes": "",
-            "ArenaWaves": 0,
-            "ArenaNotes": "",
-            "Shinies": {},
-            "ShinyNotes": ""
-            },
-        1: {
-            "Tier": 1,
-            "TerritoriesUnlocked": 3,
-            "PetSlots": 3,
-            "TerritoryNotes": "",
-            "ArenaWaves": 3,
-            "ArenaNotes": "",
-            "Shinies": {},
-            "ShinyNotes": ""
-            },
-        2: {
-            "Tier": 2,
-            "TerritoriesUnlocked": 7,
-            "PetSlots": 4,
-            "TerritoryNotes": "",
-            "ArenaWaves": 15,
-            "ArenaNotes": "",
-            "Shinies": {},
-            "ShinyNotes": ""
-            },
-        3: {
-            "Tier": 3,
-            "TerritoriesUnlocked": 10,
-            "PetSlots": 4,
-            "TerritoryNotes": "",
-            "ArenaWaves": 50,
-            "ArenaNotes": "",
-            "Shinies": {},
-            "ShinyNotes": ""
-            },
-        4: {
-            "Tier": 4,
-            "TerritoriesUnlocked": 14,
-            "PetSlots": 5,
-            "TerritoryNotes": "",
-            "ArenaWaves": 125,
-            "ArenaNotes": "",
-            "Shinies": {},
-            "ShinyNotes": ""
-            },
-        5: {
-            "Tier": 5,
-            "TerritoriesUnlocked": 20,
-            "PetSlots": 6,
-            "TerritoryNotes": "",
-            "ArenaWaves": 200,
-            "ArenaNotes": "",
-            "Shinies": {},
-            "ShinyNotes": ""
-            },
-        #0-5 are Territory/Arena focused.
-        #6 is blended
-        #7+ are Shiny focused
-        6: {
-            "Tier": 6,
-            "TerritoriesUnlocked": 24,
-            "ArenaWaves": 200,
-            "Shinies": {
-                "Faster Shiny Pet Lv Up Rate": 24,
-                "Bonuses from All Meals": 10
-            },
-            "ShinyNotes": "Start by focusing on pets that increase Shiny Speed rate. This will decrease the amount of time needed to level up pets in the future."
-            },
-        7: {
-            "Tier": 7,
-            "TerritoriesUnlocked": 24,
-            "ArenaWaves": 200,
-            "Shinies": {
-                "Infinite Star Signs": 25,
-                "Base Efficiency for All Skills": 20
-                },
-            "ShinyNotes": ""
-            },
-        8: {
-            "Tier": 8,
-            "TerritoriesUnlocked": 24,
-            "ArenaWaves": 200,
-            "Shinies": {
-                "Base Critter Per Trap": 10,
-                "Drop Rate": 15
-                },
-            "ShinyNotes": ""
-            },
-        9: {
-            "Tier": 9,
-            "TerritoriesUnlocked": 24,
-            "ArenaWaves": 200,
-            "Shinies": {
-                "Faster Refinery Speed": 15,
-                "Lower Minimum Travel Time for Sailing": 5
-                },
-            "ShinyNotes": ""
-        },
-        10: {
-            "Tier": 10,
-            "TerritoriesUnlocked": 24,
-            "ArenaWaves": 200,
-            "Shinies": {
-                "Multikill Per Tier": 20,
-                "Higher Artifact Find Chance": 15
-                },
-            "ShinyNotes": ""
-        },
-        11: {
-            "Tier": 11,
-            "TerritoriesUnlocked": 24,
-            "ArenaWaves": 200,
-            "Shinies": {
-                "Faster Shiny Pet Lv Up Rate": 28,
-                "Infinite Star Signs": 36
-            },
-            "ShinyNotes": ""
-        }
-    }
-rift_progressionTiers = {
-    0: [0,  "",             0],
-    1: [5,  "3 to 5M",      100],
-    2: [10, "30M",          140],
-    3: [15, "68M",          160],
-    4: [20, "185M",         180],
-    5: [25, "1,120M",       180],
-    6: [30, "12B",          220],
-    7: [35, "125B",         220],
-    8: [40, "1,554B",       240],
-    9: [45, "20T",          240],
-}
-
-###WORLD 5 PROGRESSION TIERS###
-divinity_progressionTiers = {
-    0: {},
-    1: {"GodsUnlocked": 1},
-    2: {"GodsUnlocked": 2},
-    3: {"GodsUnlocked": 3},
-    4: {"GodsUnlocked": 4},
-    5: {"GodsUnlocked": 5},
-    6: {"GodsUnlocked": 6},
-    7: {"GodsUnlocked": 7},
-    8: {"GodsUnlocked": 8},
-    9: {"GodsUnlocked": 9},
-    10: {"GodsUnlocked": 10},
-    11: {"MaxDivLevel": 50},
-    12: {"MinDivLevel": 40}
-}
-###WORLD 6 PROGRESSION TIERS###
-
 ###GENERAL PROGRESSION TIERS###
 combatLevels_progressionTiers = [
     # int tier, int TotalAccountLevel, str TAL reward, int PlayerLevels, str PL reward, str notes
@@ -809,6 +283,671 @@ greenstack_progressionTiers = {
         },
     }
 
+###WORLD 1 PROGRESSION TIERS###
+bribes_progressionTiers = [
+        #int tier, int w1purchased, int w2purchased, int w3purchased, int w4purchased, int trashIslandpurchased, int w6purchased
+        [0, 0, -7, -7, -6, -7, -8],
+        [1, 6, -7, -7, -6, -7, -8],
+        [2, 6, 7, -7, -6, -7, -8],
+        [3, 6, 7, 7, -6, -7, -8],
+        [4, 6, 7, 7, 6, -7, -8],
+        [5, 6, 7, 7, 6, 7, -8],  #The 8th bribe in w5 cannot be purchased until Jade Emporium
+        [6, 6, 7, 7, 6, 7, 7, ]  #The 7th bribe in w6 can't be purchased yet
+]
+stamps_progressionTiers = {
+    # int Tier, int Total Stamp Level, list[int] Required combat stamps, list[int] Required Skill stamps, list[int] Required Misc stamps,
+    # dict Specific stamp levels, list IgnorableStamps
+    0: {"TotalStampLevels": 0, "Stamps": {}},
+    1: {"TotalStampLevels": 50, "Stamps": {}},
+    2: {"TotalStampLevels": 100, "Stamps": {}},
+    3: {"TotalStampLevels": 150, "Stamps": {
+        "Combat": ["Mana Stamp", "Tomahawk Stamp", "Target Stamp", "Shield Stamp", "Vitality Stamp"],
+        "Skill": ["Choppin' Bag Stamp"],
+        "Misc": ["Vendor Stamp"]}},
+    4: {"TotalStampLevels": 200, "Stamps": {
+        "Combat": ["Fist Stamp", "Manamoar Stamp"],
+        "Skill": ["Lil' Mining Baggy Stamp", "Fishing Rod Stamp", "Catch Net Stamp"],
+        "Misc": ["Talent S Stamp"],
+        "Optional": ["Clover Stamp"]}},
+    5: {"TotalStampLevels": 250, "Stamps": {
+        "Combat": ["Longsword Stamp", "Battleaxe Stamp"],
+        "Skill": ["Anvil Zoomer Stamp", "Matty Bag Stamp"],
+        "Misc": ["Questin Stamp"],
+        "Specific": {'Pickaxe Stamp': 25, 'Hatchet Stamp': 25},
+        "Optional": ["Kapow Stamp"]}},
+    6: {"TotalStampLevels": 300, "Stamps": {
+        "Combat": ["Feather Stamp", "Polearm Stamp", "Buckler Stamp"],
+        "Skill": ["Purp Froge Stamp"], "MiscStamps": ["Potion Stamp"]}},
+    7: {"TotalStampLevels": 400, "Stamps": {
+        "Specific": {'Pickaxe Stamp': 35, 'Hatchet Stamp': 35}}},
+    8: {"TotalStampLevels": 500, "Stamps": {
+        "Combat": ["Scimitar Stamp", "Bullseye Stamp", ],
+        "Skill": ["Drippy Drop Stamp", "Fishhead Stamp"],
+        "Misc": ["Biblio Stamp"],
+        "Specific": {'Drippy Drop Stamp': 30},
+        "Optional": ["Hermes Stamp", "Talent III Stamp"]}},
+    9: {"TotalStampLevels": 600, "Stamps": {
+        "Combat": ["Stat Graph Stamp"],
+        "Skill": ["High IQ Lumber Stamp"],
+        "Misc": ["Mason Jar Stamp", "Crystallin"],
+        "Specific": {'Mason Jar Stamp': 12}}},
+    10: {"TotalStampLevels": 700, "Stamps": {
+        "Skill": ["Twin Ores Stamp", "Duplogs Stamp", "Cool Diggy Tool Stamp", "Swag Swingy Tool Stamp", "Alch Go Brrr Stamp",
+                  "Droplots Stamp", "Bugsack Stamp", "Hidey Box Stamp", "Spikemouth Stamp"],
+        "Specific": {'Drippy Drop Stamp': 40, 'Matty Bag Stamp': 50}}},
+    11: {"TotalStampLevels": 800, "Stamps": {
+         "Skill": ["Stample Stamp", "Spice Stamp", "Egg Stamp"],
+         "Misc": ["Sigil Stamp"],
+         "Specific": {'Pickaxe Stamp': 45, 'Hatchet Stamp': 45, 'Mason Jar Stamp': 24}}},
+    12: {"TotalStampLevels": 900, "Stamps": {
+        "Skill": ["Brainstew Stamp", "Bag o Heads Stamp", "Skelefish Stamp"],
+        "Misc": ["Card Stamp"],
+        "Specific": {'Drippy Drop Stamp': 50},
+        "Optional": ["Saw Stamp"]}},
+    13: {"TotalStampLevels": 1000, "Stamps": {
+        "Skill": ["Fly Intel Stamp", "Holy Mackerel Stamp", "Cooked Meal Stamp"],
+        "Specific": {'Pickaxe Stamp': 55, 'Hatchet Stamp': 55, 'Card Stamp': 50},
+        "Optional": ["Agile Stamp", "Book Stamp", "Talent II Stamp"]}},
+    14: {"TotalStampLevels": 1500, "Stamps": {
+        "Combat": ["Avast Yar Stamp"],
+        "Skill": ["Banked Pts Stamp", "Nest Eggs Stamp"],
+        "Misc": ["Holy Mackerel Stamp"],
+        "Specific": {'Matty Bag Stamp': 100, 'Crystallin': 60},
+        "Optional": ["Arcane Stamp"]}},
+    15: {"TotalStampLevels": 2000, "Stamps": {
+        "Skill": ["Lab Tube Stamp"],
+        "Misc": ["Golden Apple Stamp"],
+        "Specific": {'Pickaxe Stamp': 65, 'Hatchet Stamp': 65, 'Card Stamp': 100},
+        "Optional": ["Gilded Axe Stamp", "DNA Stamp"]}},
+    16: {"TotalStampLevels": 2500, "Stamps": {
+        "Combat": ["Blackheart Stamp"],
+        "Skill": ["Ladle Stamp", "Sailboat Stamp"],
+        "Misc": ["Talent III Stamp"],
+        "Specific": {'Golden Apple Stamp': 28}}},
+    17: {"TotalStampLevels": 3000, "Stamps": {
+        "Combat": ["Steve Sword", "Diamond Axe Stamp"],
+        "Skill": ["Gamejoy Stamp", "Divine Stamp", "Multitool Stamp"],
+        "Specific": {'Bugsack Stamp': 80, 'Bag o Heads Stamp': 80}}},
+    18: {"TotalStampLevels": 3500, "Stamps": {
+        "Combat": ["Sashe Sidestamp"],
+        "Specific": {'Pickaxe Stamp': 75, 'Hatchet Stamp': 75, 'Drippy Drop Stamp': 90, 'Crystallin': 100}}},
+    19: {"TotalStampLevels": 4000, "Stamps": {
+        "Specific": {'Matty Bag Stamp': 150}}},
+    20: {"TotalStampLevels": 4500, "Stamps": {
+        "Skill": ["Crop Evo Stamp"],
+        "Misc": ["Multikill Stamp"],
+        "Specific": {'Card Stamp': 150, 'Ladle Stamp': 100, 'Potion Stamp': 20},
+        "Optional": ["Void Sword Stamp"]}},
+    21: {"TotalStampLevels": 5000, "Stamps": {
+        "Combat": ["Tripleshot Stamp", "Maxo Slappo Stamp"],
+        "Skill": ["Buzz Buzz Stamp"],
+        "Specific": {'Pickaxe Stamp': 85, 'Hatchet Stamp': 85, 'Mason Jar Stamp': 52, 'Golden Apple Stamp': 40}}},
+    22: {"TotalStampLevels": 5500, "Stamps": {
+        "Specific": {'Bugsack Stamp': 120, 'Bag o Heads Stamp': 120}}},
+    23: {"TotalStampLevels": 6000, "Stamps": {
+        "Combat": ["Violence Stamp", "Intellectostampo"],
+        "Skill": ["Flowin Stamp"],
+        "Specific": {'Matty Bag Stamp': 200, 'Crystallin': 150},
+        "Optional": ["Blover Stamp"]}},
+    24: {"TotalStampLevels": 6500, "Stamps": {
+        "Combat": ["Dementia Sword Stamp"],
+        "Skill": ["Sneaky Peeky Stamp", "Jade Mint Stamp", "White Essence Stamp"],
+        "Misc": ["Forge Stamp"],
+        "Specific": {'Drippy Drop Stamp': 100, 'Ladle Stamp': 150, 'Potion Stamp': 40}}},
+    25: {"TotalStampLevels": 7000, "Stamps": {
+        "Combat": ["Conjocharmo Stamp"],
+        "Specific": {'Pickaxe Stamp': 95, 'Hatchet Stamp': 95, 'Golden Apple Stamp': 60, 'Multitool Stamp': 100}}},
+    26: {"TotalStampLevels": 7500, "Stamps": {
+        "Specific": {'Ladle Stamp': 180}}},
+    27: {"TotalStampLevels": 8000, "Stamps": {
+        "Specific": {'Matty Bag Stamp': 280, 'Multitool Stamp': 150}}},
+    28: {"TotalStampLevels": 8400, "Stamps": {
+        "Skill": ["Dark Triad Essence Stamp"],
+        "Misc": ["Atomic Stamp"],
+        "Specific": {'Pickaxe Stamp': 105, 'Hatchet Stamp': 105, 'Mason Jar Stamp': 80, 'Crystallin': 200, 'Bugsack Stamp': 144, 'Bag o Heads Stamp': 144, }}},
+    29: {"TotalStampLevels": 8800, "Stamps": {
+        "Specific": {'Drippy Drop Stamp': 110, 'Potion Stamp': 60}}},
+    30: {"TotalStampLevels": 9200, "Stamps": {
+        "Specific": {'Card Stamp': 200, 'Crystallin': 250}}},
+    31: {"TotalStampLevels": 9600, "Stamps": {
+        "Specific": {'Golden Apple Stamp': 80}}},
+    32: {"TotalStampLevels": 10000, "Stamps": {
+        "Specific": {'Mason Jar Stamp': 100}}},
+    33: {"TotalStampLevels": 10500, "Stamps": {
+        "Specific": {'Bugsack Stamp': 168, 'Bag o Heads Stamp': 168}}},
+    34: {"TotalStampLevels": 11000, "Stamps": {
+        "Specific": {'Golden Apple Stamp': 100, 'Multitool Stamp': 210}}},
+    35: {"TotalStampLevels": 11500, "Stamps": {
+        "Combat": ["Golden Sixes Stamp"],
+        "Specific": {'Golden Sixes Stamp': 120}}},
+    36: {"TotalStampLevels": 12000, "Stamps": {
+        "Combat": ["Stat Wallstreet Stamp"],
+        "Skill": ["Amplestample Stamp"],
+        "Specific": {'Maxo Slappo Stamp': 98, 'Sashe Sidestamp': 98, 'Intellectostampo': 98}}},
+    37: {"TotalStampLevels": 12500, "Stamps": {
+        "Specific": {'Ladle Stamp': 270}}},
+    38: {"TotalStampLevels": 13000, "Stamps": {
+        "Combat": ["Sukka Foo"],
+        "Skill": ["Triad Essence Stamp", "Summoner Stone Stamp"],
+        "Specific": {'Triad Essence Stamp': 80},
+        "Optional": ["Void Axe Stamp"]}},
+}
+smithing_progressionTiers = [
+    # int tier, int Cash Points Purchased, int Monster Points Purchased, int Forge Totals, str Notes
+    [0, 0, 0, 0, ""],
+    [1, 20, 85, 60, "all W1 enemies"],
+    [2, 60, 150, 120, "early W2 enemies through Pincermin"],
+    [3, 100, 225, 180, "all W2 enemies"],
+    [4, 150, 350, 240, "most W3 enemies, excluding Dedotated Rams"],
+    [5, 200, 500, 291, "early W4 enemies through Soda Cans"],
+    [6, 600, 700, 291, "all W4 enemies"]
+]
+
+###WORLD 2 PROGRESSION TIERS###
+bubbles_progressionTiers = [
+    # int tier, int TotalBubblesUnlocked,
+    # dict {OrangeSampleBubbles},
+    # dict {GreenSampleBubbles},
+    # dict {PurpleSampleBubbles},
+    # dict {UtilityBubbles},
+    # str BubbleValuePercentage,
+    # str Notes
+    [0, 0, {}, {}, {}, {}, "0%", ""],
+    [1, 10,
+     {'Roid Ragin': 12, 'Warriors Rule': 6, 'Hearty Diggy': 12, 'Wyoming Blood': 6, 'Sploosh Sploosh': 6, 'Stronk Tools': 8},
+     {'Swift Steppin': 12, 'Archer or Bust': 6, 'Sanic Tools': 8, 'Bug^2': 6},
+     {'Stable Jenius': 12, 'Mage is Best': 6, 'Hocus Choppus': 12, 'Molto Loggo': 6, 'Le Brain Tools': 8},
+     {'FMJ': 5, 'Shaquracy': 5, 'Prowesessary': 7, 'Hammer Hammer': 6},
+     "10%",
+     "MINIMUM recommended Utility bubbles for finishing W2. Prowess hard-caps at 2x."],
+    [2, 20,
+     {'Roid Ragin': 25, 'Warriors Rule': 13, 'Hearty Diggy': 25, 'Wyoming Blood': 13, 'Sploosh Sploosh': 13, 'Stronk Tools': 18},
+     {'Swift Steppin': 25, 'Archer or Bust': 13, 'Sanic Tools': 18, 'Bug^2': 13},
+     {'Stable Jenius': 25, 'Mage is Best': 13, 'Hocus Choppus': 25, 'Molto Loggo': 13, 'Le Brain Tools': 18},
+     {'FMJ': 10, 'Shaquracy': 10, 'Prowesessary': 15, 'Hammer Hammer': 14, 'All for Kill': 25},
+     "20%",
+     "MINIMUM recommended Utility bubbles for starting W3. Prowess hard-caps at 2x."],
+    [3, 40,
+     {'Roid Ragin': 67, 'Warriors Rule': 34, 'Hearty Diggy': 67, 'Wyoming Blood': 20, 'Sploosh Sploosh': 20, 'Stronk Tools': 47},
+     {'Swift Steppin': 67, 'Archer or Bust': 34, 'Sanic Tools': 47, 'Bug^2': 20},
+     {'Stable Jenius': 67, 'Mage is Best': 34, 'Hocus Choppus': 67, 'Molto Loggo': 20, 'Le Brain Tools': 47},
+     {'FMJ': 15, 'Shaquracy': 15, 'Prowesessary': 40, 'Hammer Hammer': 41, 'All for Kill': 67},
+     "40%",
+     "MINIMUM recommended Utility bubbles for starting W4. Prowess hard-caps at 2x."],
+    [4, 60,
+     {'Roid Ragin': 100, 'Warriors Rule': 50, 'Hearty Diggy': 100, 'Wyoming Blood': 30, 'Sploosh Sploosh': 30, 'Stronk Tools': 70},
+     {'Swift Steppin': 100, 'Archer or Bust': 50, 'Sanic Tools': 70, 'Bug^2': 30},
+     {'Stable Jenius': 100, 'Mage is Best': 50, 'Hocus Choppus': 100, 'Molto Loggo': 30, 'Le Brain Tools': 70},
+     {'FMJ': 20, 'Shaquracy': 20, 'Prowesessary': 60, 'Hammer Hammer': 65, 'All for Kill': 100},
+     "50%",
+     "MINIMUM recommended Utility bubbles for starting W5. Prowess hard-caps at 2x, which you should be reaching now!"],
+    [5, 80,
+     {'Roid Ragin': 150, 'Warriors Rule': 75, 'Hearty Diggy': 150, 'Wyoming Blood': 45, 'Sploosh Sploosh': 45, 'Stronk Tools': 105, 'Multorange': 45},
+     {'Swift Steppin': 150, 'Archer or Bust': 75, 'Bug^2': 45, 'Premigreen': 45, },
+     {'Stable Jenius': 150, 'Mage is Best': 75, 'Molto Loggo': 45, 'Le Brain Tools': 105, 'Severapurple': 45, },
+     {'FMJ': 30, 'Shaquracy': 30, 'Hammer Hammer': 105, 'All for Kill': 150},
+     "60%",
+     "MINIMUM recommended Utility bubbles for starting W6 push. Keep watch of your No Bubble Left Behind list (from W4 Lab) to keep cheap/easy bubbles off when possible!"],
+    [6, 100,
+     {'Roid Ragin': 234, 'Warriors Rule': 117, 'Hearty Diggy': 234, 'Wyoming Blood': 70, 'Sploosh Sploosh': 70, 'Stronk Tools': 164, 'Multorange': 70,
+      'Dream of Ironfish': 70},
+     {'Swift Steppin': 234, 'Archer or Bust': 117, 'Bug^2': 70, 'Premigreen': 70, 'Fly in Mind': 94},
+     {'Stable Jenius': 234, 'Mage is Best': 117, 'Molto Loggo': 70, 'Le Brain Tools': 164, 'Severapurple': 70, 'Tree Sleeper': 94},
+     {'Cookin Roadkill': 105, 'All for Kill': 167},
+     "70%",
+     "Cookin Roadkill 105 = 60% bubble strength. All for Kill hard-cap at 167, you're finished!"],
+    [7, 100,
+     {'Roid Ragin': 400, 'Warriors Rule': 200, 'Hearty Diggy': 400, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 280, 'Multorange': 120,
+      'Dream of Ironfish': 120},
+     {'Swift Steppin': 400, 'Archer or Bust': 200, 'Bug^2': 120, 'Premigreen': 120},
+     {'Stable Jenius': 400, 'Mage is Best': 200, 'Hocus Choppus': 400, 'Molto Loggo': 120, 'Le Brain Tools': 280, 'Severapurple': 120, 'Tree Sleeper': 160},
+     {'Laaarrrryyyy': 150, 'Hammer Hammer': 150, },
+     "80%",
+     "Larry at 150 = 72% chance for +2 levels. Somewhere around level 125-150, this bubble should pass 100m Dementia Ore cost and be available to level with Boron upgrades from the W3 Atom Collider in Construction.  It should be, in my opinion, the ONLY Utility Bubble you spend these daily clicks on until it reaches 501. If you cannot afford the Particles needed to level Larry, invest into Sampling Bubbles."],
+    [8, 100,
+     {'Roid Ragin': 567, 'Warriors Rule': 284, 'Hearty Diggy': 567, 'Stronk Tools': 397, 'Multorange': 170, 'Dream of Ironfish': 170, 'Shimmeron': 227},
+     {'Swift Steppin': 567, 'Archer or Bust': 284, 'Premigreen': 170},
+     {'Stable Jenius': 567, 'Mage is Best': 284, 'Hocus Choppus': 567, 'Le Brain Tools': 397, 'Severapurple': 170, 'Tree Sleeper': 227},
+     {'Hammer Hammer': 180, },
+     "85%",
+     ""],
+    [9, 100,
+     {'Roid Ragin': 615, 'Warriors Rule': 308, 'Hearty Diggy': 615, 'Stronk Tools': 430, 'Multorange': 185, 'Dream of Ironfish': 185, 'Shimmeron': 246},
+     {'Swift Steppin': 615, 'Archer or Bust': 308, 'Premigreen': 185},
+     {'Stable Jenius': 615, 'Mage is Best': 308, 'Hocus Choppus': 615, 'Le Brain Tools': 430, 'Severapurple': 185, 'Tree Sleeper': 246},
+     {'Hammer Hammer': 210, },
+     "86%",
+     ""],
+    [10, 100,
+     {'Roid Ragin': 670, 'Warriors Rule': 335, 'Hearty Diggy': 670, 'Stronk Tools': 469, 'Multorange': 201, 'Dream of Ironfish': 201, 'Shimmeron': 268},
+     {'Swift Steppin': 670, 'Archer or Bust': 335, 'Premigreen': 201},
+     {'Stable Jenius': 670, 'Mage is Best': 335, 'Hocus Choppus': 670, 'Le Brain Tools': 469, 'Severapurple': 201, 'Tree Sleeper': 268},
+     {'Laaarrrryyyy': 501, },
+     "87%",
+     ""],
+    [11, 100,
+     {'Roid Ragin': 700, 'Warriors Rule': 367, 'Hearty Diggy': 734, 'Stronk Tools': 514, 'Multorange': 220, 'Dream of Ironfish': 220, 'Shimmeron': 294},
+     {'Swift Steppin': 700, 'Archer or Bust': 367, 'Premigreen': 220},
+     {'Stable Jenius': 700, 'Mage is Best': 367, 'Hocus Choppus': 734, 'Le Brain Tools': 514, 'Severapurple': 220, 'Tree Sleeper': 294},
+     {'Cookin Roadkill': 630, 'Hammer Hammer': 270, },
+     "88%",
+     ""],
+    [12, 100,
+     {'Roid Ragin': 720, 'Warriors Rule': 405, 'Hearty Diggy': 810, 'Stronk Tools': 567, 'Multorange': 243, 'Dream of Ironfish': 243, 'Shimmeron': 324},
+     {'Swift Steppin': 720, 'Archer or Bust': 405, 'Premigreen': 243},
+     {'Stable Jenius': 720, 'Mage is Best': 405, 'Hocus Choppus': 810, 'Le Brain Tools': 567, 'Severapurple': 243, 'Tree Sleeper': 324},
+     {'Startue Exp': 240, 'Hammer Hammer': 300, },
+     "89%",
+     ""],
+    [13, 100,
+     {'Roid Ragin': 740, 'Warriors Rule': 450, 'Hearty Diggy': 900, 'Stronk Tools': 630, 'Multorange': 270, 'Dream of Ironfish': 270, 'Shimmeron': 360},
+     {'Swift Steppin': 740, 'Archer or Bust': 450, 'Premigreen': 270},
+     {'Stable Jenius': 740, 'Mage is Best': 450, 'Hocus Choppus': 900, 'Le Brain Tools': 630, 'Severapurple': 270, 'Tree Sleeper': 360},
+     {'Droppin Loads': 280},
+     "90%",
+     ""],
+    [14, 100,
+     {'Roid Ragin': 760, 'Warriors Rule': 506, 'Hearty Diggy': 1012, 'Multorange': 304, 'Shimmeron': 405},
+     {'Swift Steppin': 760, 'Archer or Bust': 506, 'Premigreen': 304},
+     {'Stable Jenius': 760, 'Mage is Best': 506, 'Hocus Choppus': 1012, 'Severapurple': 304},
+     {'Call Me Bob': 200},
+     "91%",
+     ""],
+    [15, 100,
+     {'Roid Ragin': 780, 'Warriors Rule': 575, 'Hearty Diggy': 1150, 'Multorange': 345, 'Shimmeron': 460},
+     {'Swift Steppin': 780, 'Archer or Bust': 575, 'Premigreen': 345},
+     {'Stable Jenius': 780, 'Mage is Best': 575, 'Hocus Choppus': 1150, 'Severapurple': 345},
+     {'Big P': 140, 'Big Game Hunter': 70, 'Mr Massacre': 117},
+     "92%",
+     ""],
+    [16, 100,
+     {'Roid Ragin': 800, 'Warriors Rule': 665, 'Hearty Diggy': 1329, 'Multorange': 399, 'Shimmeron': 532},
+     {'Swift Steppin': 800, 'Archer or Bust': 665, 'Premigreen': 399},
+     {'Stable Jenius': 800, 'Mage is Best': 665, 'Hocus Choppus': 1329, 'Severapurple': 399},
+     {'Big P': 240, 'Big Game Hunter': 120, 'Mr Massacre': 200},
+     "93%",
+     ""],
+    [17, 100,
+     {'Roid Ragin': 820, 'Warriors Rule': 784, 'Hearty Diggy': 1567, 'Multorange': 470, 'Shimmeron': 627},
+     {'Swift Steppin': 820, 'Archer or Bust': 784, 'Premigreen': 470},
+     {'Stable Jenius': 820, 'Mage is Best': 784, 'Hocus Choppus': 1567, 'Severapurple': 470},
+     {'Big P': 340, 'Carpenter': 284, 'Big Game Hunter': 170, 'Mr Massacre': 284},
+     "94%",
+     ""],
+    [18, 100,
+     {'Roid Ragin': 840, 'Warriors Rule': 950, 'Hearty Diggy': 1900, 'Multorange': 570, 'Shimmeron': 760},
+     {'Swift Steppin': 840, 'Archer or Bust': 950, 'Premigreen': 570},
+     {'Stable Jenius': 840, 'Mage is Best': 950, 'Hocus Choppus': 1900, 'Severapurple': 570},
+     {'Laaarrrryyyy': 900, 'Big P': 540, 'Call Me Bob': 500, 'Carpenter': 450, 'Big Game Hunter': 270, 'Mr Massacre': 450},
+     "95%",
+     ""],
+    [19, 100,
+     {'Roid Ragin': 860, 'Warriors Rule': 1200, 'Multorange': 720},
+     {'Swift Steppin': 860, 'Archer or Bust': 1200},
+     {'Stable Jenius': 860, 'Mage is Best': 1200, 'Severapurple': 720},
+     {'Call Me Bob': 700, 'Cropius Mapper': 630, 'Lo Cost Mo Jade': 360},
+     "96%",
+     ""],
+    [20, 100,
+     {'Roid Ragin': 880, 'Warriors Rule': 1617, 'Multorange': 970},
+     {'Swift Steppin': 880, 'Archer or Bust': 1617},
+     {'Stable Jenius': 880, 'Mage is Best': 1617, 'Severapurple': 970},
+     {'Laaarrrryyyy': 1900, 'Big P': 1140, 'Carpenter': 950, 'Big Game Hunter': 570, 'Mr Massacre': 950, 'Diamond Chef': 553, 'Lo Cost Mo Jade': 760},
+     "97%",
+     ""],
+    [21, 120,
+     {'Roid Ragin': 900, 'Warriors Rule': 2450, 'Multorange': 1470},
+     {'Swift Steppin': 900, 'Archer or Bust': 2450},
+     {'Stable Jenius': 900, 'Mage is Best': 2450, 'Severapurple': 1470},
+     {'Essence Boost-Orange': 400, 'Essence Boost-Green': 400, 'Call Me Bob': 1000, 'Diamond Chef': 890},
+     "98%",
+     ""],
+    [22, 140,
+     {'Roid Ragin': 950, 'Warriors Rule': 4950, 'Multorange': 2970},
+     {'Swift Steppin': 950, 'Archer or Bust': 4950},
+     {'Stable Jenius': 950, 'Mage is Best': 4950, 'Severapurple': 2970},
+     {'Diamond Chef': 1226, 'Carpenter': 2331},
+     "99%",
+     ""],
+    [23, 160,
+     {'Roid Ragin': 1000, 'Hearty Diggy': 9900, 'Stronk Tools': 6930, 'Dream of Ironfish': 2970, 'Shimmeron': 3960, 'Slabi Orefish': 5940,
+      'Slabi Strength': 5940},
+     {'Swift Steppin': 1000, 'Sanic Tools': 6930, 'Premigreen': 2970, 'Fly in Mind': 3960, 'Slabo Critterbug': 5940, 'Slabo Agility': 5940},
+     {'Stable Jenius': 1000, 'Hocus Choppus': 9900, 'Le Brain Tools': 6930, 'Tree Sleeper': 3960, 'Slabe Logsoul': 5940, 'Slabe Wisdom': 5940},
+     {'Diamond Chef': 1897, 'Carpenter': 2450},
+     "99% catchup",
+     ""],
+]
+vials_progressionTiers = [
+    # int tier, int TotalVialsUnlocked, int TotalVialsMaxed, list ParticularVials, str Notes
+    [0, 0, 0, [], ""],
+    [1, 7, 0, [], "This is the number of vials requiring an unlock roll of 75 or less. "],
+    [2, 14, 0, [], "This is the number of vials requiring an unlock roll of 85 or less. "],
+    [3, 19, 0, [], "This is the number of vials requiring an unlock roll of 90 or less. "],
+    [4, 27, 0, [], "This is the number of vials requiring an unlock roll of 95 or less. "],
+    [5, 33, 0, [], "This is the number of vials requiring an unlock roll of 98 or less. "],
+    [6, 38, 0, [], "This is all vials up through W4, excluding the Arcade Pickle. "],
+    [7, 51, 0, [], "This is all vials up through W5, excluding the Arcade Pickle. "],
+    [8, 63, 0, [], "This is all vials up through W5, excluding the Arcade Pickle. "],
+    [9, 67, 0, [], "This is all vials up through W5, excluding the Arcade Pickle. "],
+    [10, 70, 0, [], "This is all vials up through W5, excluding the Arcade Pickle. "],
+    [11, 70, 4, ['Copper Corona (Copper Ore)', 'Sippy Splinters (Oak Logs)', 'Jungle Juice (Jungle Logs)', 'Tea With Pea (Potty Rolls)'],
+     "This is the first half of W6, excluding the Arcade Pickle. "],
+    [12, 70, 8, ['Gold Guzzle (Gold Ore)', 'Seawater (Goldfish)', 'Fly In My Drink (Fly)', 'Blue Flav (Platinum Ore)'], ""],
+    [13, 72, 12, ['Slug Slurp (Hermit Can)', 'Void Vial (Void Ore)', 'Ew Gross Gross (Mosquisnow)', 'The Spanish Sahara (Tundra Logs)'], ""],
+    [14, 72, 16, ['Mushroom Soup (Spore Cap)', 'Maple Syrup (Maple Logs)', 'Marble Mocha (Marble Ore)', 'Skinny 0 Cal (Snake Skin)'], ""],
+    [15, 72, 20, ['Long Island Tea (Sand Shark)', 'Anearful (Glublin Ear)', 'Willow Sippy (Willow Logs)', 'Dieter Drink (Bean Slices)'], ""],
+    [16, 72, 24, ['Shinyfin Stew (Equinox Fish)', 'Ramificoction (Bullfrog Horn)', 'Tail Time (Rats Tail)', 'Dreamy Drink (Dream Particulate)'], ""],
+    [17, 72, 28, ['Mimicraught (Megalodon Tooth)', 'Fur Refresher (Floof Ploof)', 'Etruscan Lager (Mamooth Tusk)', 'Dusted Drink (Dust Mote)'], ""],
+    [18, 72, 32, ['Ded Sap (Effervescent Log)', 'Sippy Soul (Forest Soul)', 'Visible Ink (Pen)', 'Snow Slurry (Snow Ball)'], ""],
+    [19, 72, 36, ['Sippy Cup (Sippy Straw)', 'Goosey Glug (Honker)', 'Crab Juice (Crabbo)', 'Chonker Chug (Dune Soul)'], ""],
+    [20, 72, 40, ['40-40 Purity (Contact Lense)', 'Ladybug Serum (Ladybug)', 'Bubonic Burp (Mousey)', 'Capachino (Purple Mush Cap)'], ""],
+    [21, 72, 44, ['Donut Drink (Half Eaten Donut)', 'Krakenade (Kraken)', 'Calcium Carbonate (Tongue Bone)', 'Spool Sprite (Thread)'], ""],
+    [22, 72, 48, ['Choco Milkshake (Crumpled Wrapper)', 'Electrolyte (Condensed Zap)', 'Ash Agua (Suggma Ashes)', 'Oj Jooce (Orange Slice)'], ""],
+    [23, 72, 52, ['Thumb Pow (Trusty Nails)', 'Slowergy Drink (Frigid Soul)', 'Bunny Brew (Bunny)', 'Flavorgil (Caulifish)'], ""],
+    [24, 72, 56, ['Spook Pint (Squishy Soul)', 'Firefly Grog (Firefly)', 'Barium Mixture (Copper Bar)', 'Bloat Draft (Blobfish)'], ""],
+    [25, 73, 60, ['Barley Brew (Iron Bar)', 'Oozie Ooblek (Oozie Soul)', 'Ricecakorade (Rice Cake)', 'Greenleaf Tea (Leafy Branch)'], ""],
+    [26, 74, 65, ['Venison Malt (Mongo Worm Slices)', 'Gibbed Drink (Eviscerated Horn)', 'Royale Cola (Royal Headpiece)', 'Refreshment (Breezy Soul)',
+                  'Turtle Tisane (Tuttle)'], ""],
+    # [27, 75, 69, ['Red Malt (Redox Salts)', 'Poison Tincture (Poison Froge)', 'Orange Malt (Explosive Salts)', 'Shaved Ice (Purple Salt)'], "Currently considered impossible"],
+    # [28, 75, 73, ['Dreadnog (Dreadlo Bar)', 'Dabar Special (Godshard Bar)', 'Pearl Seltzer (Pearler Shell)', 'Hampter Drippy (Hampter)'], "Currently considered impossible"],
+    # [29, 75, 76, ['Pickle Jar (BobJoePickle)', 'Ball Pickle Jar (BallJoePickle)'], "Currently considered impossible"],
+]
+sigils_progressionTiers = {
+    0: {"Label": "S", "Sigils":[]},
+    1: {"Label": "A", "Sigils":[]},
+    2: {"Label": "B", "Sigils":[]},
+    3: {"Label": "C", "Sigils":[]},
+    4: {"Label": "D", "Sigils":[]},
+    5: {"Label": "F", "Sigils":[]},
+}
+
+###WORLD 3 PROGRESSION TIERS###
+saltLick_progressionTiers = [
+    [0, {}, ""],
+    [1, {'Obol Storage': 8}, "Froge"],
+    [2, {'Printer Sample Size': 20}, "Redox Salts"],
+    [3, {'Refinery Speed': 10}, "Explosive Salts"],
+    [4, {'Max Book': 10}, "Spontaneity Salts"],
+    [5, {'Movespeed': 1}, "Frigid Soul"],  # This buff only works under 170% move speed, so can become useless quite quickly.
+    [6, {'TD Points': 10}, "Dioxide Synthesis"],
+    [7, {'Multikill': 10}, "Purple Salt"],
+    [8, {'EXP': 100}, "Dune Soul"],
+    [9, {'Alchemy Liquids': 100}, "Mousey"],
+    [10, {'Damage': 250}, "Pingy"]
+]
+deathNote_progressionTiers = [
+    # 0-4 int tier. int w1LowestSkull, int w2LowestSkull, int w3LowestSkull, int w4LowestSkull,
+    # 5-9 int w5LowestSkull, int w6LowestSkull, int w7LowestSkull, int w8LowestSkull, int zowCount, int chowCount,
+    # 10-11 int meowCount, str Notes
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ""],
+    [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, ""],
+    [2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, ""],
+    [3, 3, 3, 3, 1, 0, 0, 0, 0, 0, 0, 0, ""],
+    [4, 4, 4, 4, 2, 0, 0, 0, 0, 15, 0, 0,
+     "The recommendation for ZOWs is 12hrs or less (8,333+ KPH) per enemy. If you aren't at that mark yet, don't sweat it. Come back later!"],
+    [5, 5, 5, 5, 3, 0, 0, 0, 0, 26, 0, 0,
+     "The Voidwalker questline requires W1-W3 at all Plat Skulls. Aim to complete this by Mid W5 as Vman's account-wide buffs are insanely strong."],
+    [6, 7, 5, 5, 4, 0, 0, 0, 0, 40, 15, 0,
+     "The recommendation for CHOWs is 12hrs or less (83,333+ KPH) per enemy. If you aren't at that mark yet, don't sweat it. Come back later!"],
+    [7,  10, 7,  5,  5,  1,  0,     0, 0, 40, 26, 0, ""],
+    [8,  10, 10, 7,  5,  2,  0,     0, 0, 40, 40, 0, ""],
+    [9,  10, 10, 10, 5,  3,  0,     0, 0, 40, 40, 0, ""],
+    [10, 10, 10, 10, 7,  4,  0,     0, 0, 53, 53, 0, ""],
+    [11, 10, 10, 10, 10, 5,  0,     0, 0, 53, 53, 0, "Complete Lava Skull, then BB Super CHOW, before you start working on Eclipse Skulls. "],
+    [12, 10, 10, 10, 10, 7,  0,     0, 0, 66, 66, 0, ""],
+    [13, 10, 10, 10, 10, 10, 0,     0, 0, 66, 66, 0, ""],
+    [14, 10, 10, 10, 10, 10, 0,     0, 0, 73, 66, 0, ""],
+    [15, 10, 10, 10, 10, 10, 0,     0, 0, 73, 73, 0, "The recommendation for Super CHOWs is 24hrs or less (4m+ KPH)"],
+    [16, 20, 10, 10, 10, 10, 0,     0, 0, 80, 73, 26, ""],
+    [17, 20, 20, 10, 10, 10, 1,     0, 0, 84, 80, 40, ""],
+    [18, 20, 20, 20, 10, 10, 2,     0, 0, 85, 80, 53, ""],
+    [19, 20, 20, 20, 20, 10, 3,     0, 0, 85, 80, 66, ""],
+    [20, 20, 20, 20, 20, 20, 4,     0, 0, 85, 82, 66, ""],
+    [21, 20, 20, 20, 20, 20, 5,     0, 0, 85, 83, 66, ""],
+    [22, 20, 20, 20, 20, 20, 7,     0, 0, 85, 83, 66, ""],
+    [23, 20, 20, 20, 20, 20, 10,    0, 0, 85, 83, 66, ""],
+    [24, 20, 20, 20, 20, 20, 10,    0, 0, 85, 83, 73, ""],
+    [25, 20, 20, 20, 20, 20, 20,    0, 0, 85, 83, 80, ""],
+    [26, 20, 20, 20, 20, 20, 20,    0, 0, 85, 83, 82, ""],
+    [27, 20, 20, 20, 20, 20, 20,    0, 0, 85, 85, 83, "As of v2.08, completing a Super CHOW on Boops is impossible."],
+    [28, 20, 20, 20, 20, 20, 20,    0, 0, 86, 86, 86, "Info only"]
+]
+buildingsPostBuffs_progressionTiers = [
+    [0, "Unlock", [], "", ""],
+    [1, "SS", ["3D Printer", "Cost Cruncher", "Automation Arm"], "", ""],
+    [2, "S", ["Talent Book Library", "Death Note", "Salt Lick", "Trapper Drone", "Boulder Roller", "Kraken Cosplayer", "Poisonic Elder"], "", ""],
+    [3, "A", ["Chest Space", "Pulse Mage", "Fireball Lobber", "Frozone Malone", "Stormcaller", "Party Starter", "Voidinator", "Clover Shrine", "Crescent Shrine", "Undead Shrine"], "", ""],
+    [4, "B", ["Woodular Shrine", "Isaccian Shrine", "Crystal Shrine", "Pantheon Shrine", "Summereading Shrine", "Atom Collider"], "", ""],
+    [5, "C", ["Primordial Shrine"], "", ""],
+    [6, "D", [], "", ""],
+    [7, "F", [], "", ""]
+]
+buildingsPreBuffs_progressionTiers = [
+    [0, "Unlock", [], "", ""],
+    [1, "SS", ["3D Printer", "Cost Cruncher", "Automation Arm"], "", ""],
+    [2, "S", ["Talent Book Library", "Death Note", "Salt Lick", "Trapper Drone", "Boulder Roller", "Kraken Cosplayer", "Poisonic Elder"], "", ""],
+    [3, "A", ["Chest Space", "Stormcaller", "Party Starter", "Clover Shrine", "Crescent Shrine", "Undead Shrine"], "", ""],
+    [4, "B", ["Frozone Malone", "Voidinator"], "", ""],
+    [5, "C", ["Atom Collider", "Woodular Shrine", "Isaccian Shrine", "Crystal Shrine", "Pantheon Shrine"], "", ""],
+    [6, "D", ["Pulse Mage", "Fireball Lobber", "Summereading Shrine"], "", ""],
+    [7, "F", ["Primordial Shrine"], "", ""]
+]
+prayers_progressionTiers = [
+    #Tier, PrayerDict, 	Notes
+    [0, {}, ""],
+    [1, {'The Royal Sampler (Rooted Soul)': 5}, ""],
+    [2, {'Skilled Dimwit (Forest Soul)':20}, ""],
+    [3, {'Balance of Pain (Squishy Soul)':11}, ""],
+    [4, {'Skilled Dimwit (Forest Soul)':35, 'Balance of Pain (Squishy Soul)':20}, ""],
+    [5, {'Midas Minded (Dune Soul)':20}, ""],
+    [6, {'Skilled Dimwit (Forest Soul)':50, 'Midas Minded (Dune Soul)':50, 'Balance of Pain (Squishy Soul)':30}, ""],
+    [7, {'Shiny Snitch (Forest Soul)':50, 'Zerg Rushogen (Forest Soul)':20, 'Jawbreaker (Dune Soul)':50, 'Ruck Sack (Rooted Soul)':50, 'Balance of Proficiency (Squishy Soul)':50}, ""],
+    [8, {'Unending Energy (Forest Soul)':50, 'Big Brain Time (Forest Soul)':50, 'Antifun Spirit (Rooted Soul)':10, 'Fibers of Absence (Frigid Soul)':50, 'Beefy For Real (Frigid Soul)':40}, ""],
+    [9, {'Tachion of the Titans (Dune Soul)':1, 'Balance of Precision (Dune Soul)':1, 'Circular Criticals (Rooted Soul)':1, 'Vacuous Tissue (Frigid Soul)':1, 'Glitterbug (Squishy Soul)':1}, ""],
+]
+
+###WORLD 4 PROGRESSION TIERS###
+breeding_progressionTiers = {
+        0: {
+            "Tier": 0,
+            "TerritoriesUnlocked": 0,
+            "PetSlots": 2,
+            "TerritoryNotes": "",
+            "ArenaWaves": 0,
+            "ArenaNotes": "",
+            "Shinies": {},
+            "ShinyNotes": ""
+            },
+        1: {
+            "Tier": 1,
+            "TerritoriesUnlocked": 3,
+            "PetSlots": 3,
+            "TerritoryNotes": "",
+            "ArenaWaves": 3,
+            "ArenaNotes": "",
+            "Shinies": {},
+            "ShinyNotes": ""
+            },
+        2: {
+            "Tier": 2,
+            "TerritoriesUnlocked": 7,
+            "PetSlots": 4,
+            "TerritoryNotes": "",
+            "ArenaWaves": 15,
+            "ArenaNotes": "",
+            "Shinies": {},
+            "ShinyNotes": ""
+            },
+        3: {
+            "Tier": 3,
+            "TerritoriesUnlocked": 10,
+            "PetSlots": 4,
+            "TerritoryNotes": "",
+            "ArenaWaves": 50,
+            "ArenaNotes": "",
+            "Shinies": {},
+            "ShinyNotes": ""
+            },
+        4: {
+            "Tier": 4,
+            "TerritoriesUnlocked": 14,
+            "PetSlots": 5,
+            "TerritoryNotes": "",
+            "ArenaWaves": 125,
+            "ArenaNotes": "",
+            "Shinies": {},
+            "ShinyNotes": ""
+            },
+        5: {
+            "Tier": 5,
+            "TerritoriesUnlocked": 20,
+            "PetSlots": 6,
+            "TerritoryNotes": "",
+            "ArenaWaves": 200,
+            "ArenaNotes": "",
+            "Shinies": {},
+            "ShinyNotes": ""
+            },
+        #0-5 are Territory/Arena focused.
+        #6 is blended
+        #7+ are Shiny focused
+        6: {
+            "Tier": 6,
+            "TerritoriesUnlocked": 24,
+            "ArenaWaves": 200,
+            "Shinies": {
+                "Faster Shiny Pet Lv Up Rate": 24,
+                "Bonuses from All Meals": 10
+            },
+            "ShinyNotes": "Start by focusing on pets that increase Shiny Speed rate. This will decrease the amount of time needed to level up pets in the future."
+            },
+        7: {
+            "Tier": 7,
+            "TerritoriesUnlocked": 24,
+            "ArenaWaves": 200,
+            "Shinies": {
+                "Infinite Star Signs": 25,
+                "Base Efficiency for All Skills": 20
+                },
+            "ShinyNotes": ""
+            },
+        8: {
+            "Tier": 8,
+            "TerritoriesUnlocked": 24,
+            "ArenaWaves": 200,
+            "Shinies": {
+                "Base Critter Per Trap": 10,
+                "Drop Rate": 15
+                },
+            "ShinyNotes": ""
+            },
+        9: {
+            "Tier": 9,
+            "TerritoriesUnlocked": 24,
+            "ArenaWaves": 200,
+            "Shinies": {
+                "Faster Refinery Speed": 15,
+                "Lower Minimum Travel Time for Sailing": 5
+                },
+            "ShinyNotes": ""
+        },
+        10: {
+            "Tier": 10,
+            "TerritoriesUnlocked": 24,
+            "ArenaWaves": 200,
+            "Shinies": {
+                "Multikill Per Tier": 20,
+                "Higher Artifact Find Chance": 15
+                },
+            "ShinyNotes": ""
+        },
+        11: {
+            "Tier": 11,
+            "TerritoriesUnlocked": 24,
+            "ArenaWaves": 200,
+            "Shinies": {
+                "Faster Shiny Pet Lv Up Rate": 28,
+                "Infinite Star Signs": 36
+            },
+            "ShinyNotes": ""
+        }
+    }
+rift_progressionTiers = {
+    0: [0,  "",             0],
+    1: [5,  "3 to 5M",      100],
+    2: [10, "30M",          140],
+    3: [15, "68M",          160],
+    4: [20, "185M",         180],
+    5: [25, "1,120M",       180],
+    6: [30, "12B",          220],
+    7: [35, "125B",         220],
+    8: [40, "1,554B",       240],
+    9: [45, "20T",          240],
+}
+
+###WORLD 5 PROGRESSION TIERS###
+divinity_progressionTiers = {
+    0: {},
+    1: {"GodsUnlocked": 1},
+    2: {"GodsUnlocked": 2},
+    3: {"GodsUnlocked": 3},
+    4: {"GodsUnlocked": 4},
+    5: {"GodsUnlocked": 5},
+    6: {"GodsUnlocked": 6},
+    7: {"GodsUnlocked": 7},
+    8: {"GodsUnlocked": 8},
+    9: {"GodsUnlocked": 9},
+    10: {"GodsUnlocked": 10},
+    11: {"MaxDivLevel": 50},
+    12: {"MinDivLevel": 40}
+}
+
+###WORLD 6 PROGRESSION TIERS###
+
+###UI CONSTS###
+maxTiersPerGroup = 3
+switches = [
+    {
+        "label": "Autoloot purchased",
+        "name": "autoloot",
+        "true": "",
+        "false": "",
+    },
+    {
+        "label": "Sheepie pet acquired",
+        "name": "sheepie",
+        "true": "",
+        "false": "",
+    },
+    {
+        "label": "Doot pet acquired",
+        "name": "doot",
+        "true": "",
+        "false": "",
+    },
+    {
+        "label": "Order groups by tier",
+        "name": "order_tiers",
+        "true": "",
+        "false": "",
+    },
+    {
+        "label": "Show progress bars",
+        "name": "progress_bars",
+        "true": "",
+        "false": "",
+    },
+    {
+        "label": "Handedness",
+        "name": "handedness",
+        "true": "L",
+        "false": "R",
+    },
+    # {"label": "Legacy style", "name": "legacy", "true": "", "false": ""},
+]
+
+###GENERAL / MULTI-USE CONSTS###
 missableGStacksDict = {
     #  ItemName               Codename     Quest Codeame          Quest Name                                          Wiki link to the item                             Recommended Class/Farming notes
     "Dog Bone":              ["Quest12",   "Dog_Bone1",           "Dog Bone: Why he Die???",                          "https://idleon.wiki/wiki/Dog_Bone",              "Active ES or time candy."],
@@ -825,7 +964,6 @@ missableGStacksDict = {
     "Claiming Cashe":        ["GoldricP3", "Goldric3",            "Goldric: Only Winners have Portraits",             "https://idleon.wiki/wiki/Claiming_Cashe",        "Active ES or time candy."],
     "Monster Rating":        ["Quest32",   "XxX_Cattleprod_XxX3", "XxX_Cattleprod_XxX: Ok, NOW it's Peak Gaming!",    "https://idleon.wiki/wiki/Monster_Rating",        "Monster Ratings can drop from Crystal enemies, making Divine Knight the better farmer for Monster Ratings."]
 }
-
 expectedStackables = {
     "Missable Quest Items": [
         "Quest3", "Quest4", "Quest7", "Quest12", "Quest21", "Quest14", "Quest22", "Quest23", "Quest24", "GoldricP1", "GoldricP2", "GoldricP3",
@@ -1199,16 +1337,7 @@ card_data = {
     },
 }
 
-maxTiersPerGroup = 3
-numberOfArtifacts = 33  # As of v2.03
-numberOfArtifactTiers = 4  # As of v2.03
-currentMaxChestsSum = 45  # As of v2.0
-maxDreams = 31
-maxCookingTables = 10
-maxMeals = 67
-maxMealLevel = 90
-numberOfSecretClasses = 3
-
+numberOfSecretClasses = 3  # Last verified as of v2.08
 humanReadableClasses = {
     1: "Beginner",
     2: "Journeyman",
@@ -1240,46 +1369,6 @@ humanReadableClasses = {
     36: "Bubonic Conjuror",
     37: "Arcane Cultist"
 }
-
-switches = [
-    {
-        "label": "Autoloot purchased",
-        "name": "autoloot",
-        "true": "",
-        "false": "",
-    },
-    {
-        "label": "Sheepie pet acquired",
-        "name": "sheepie",
-        "true": "",
-        "false": "",
-    },
-    {
-        "label": "Doot pet acquired",
-        "name": "doot",
-        "true": "",
-        "false": "",
-    },
-    {
-        "label": "Order groups by tier",
-        "name": "order_tiers",
-        "true": "",
-        "false": "",
-    },
-    {
-        "label": "Show progress bars",
-        "name": "progress_bars",
-        "true": "",
-        "false": "",
-    },
-    {
-        "label": "Handedness",
-        "name": "handedness",
-        "true": "L",
-        "false": "R",
-    },
-    # {"label": "Legacy style", "name": "legacy", "true": "", "false": ""},
-]
 
 skillIndexList = ["Combat",
                   "Mining", "Smithing", "Choppin",
@@ -1365,162 +1454,108 @@ expectedStorageChestValuesDict = {
     103:4,
     104:3,
 }
+gemShopDict = {
+    #Inventory and Storage
+    'Item Backpack Space': 0,
+    'Storage Chest Space': 0,
+    'Carry Capacity': 0,
+    'Food Slot': 0,
+    'More Storage Space': 0,
+    'Card Presets': 0,
 
-jade_emporium = [
-  {
-    "name": "Quick Ref Access",
-    "bonus": "Adds the Sneaking skill to your QuickRef menu! Manage your Ninja Twins from anywhere!"
-  },
-  {
-    "name": "Gold Food Beanstalk",
-    "bonus": "Grows a giant beanstalk behind the ninja castle! Drop a stack of 10,000 Gold Food to add it with the beanstalk and permanently gain its bonus!"
-  },
-  {
-    "name": "Supersized Gold Beanstacking",
-    "bonus": "You can now drop a stack of 100,000 Gold Food to supersize it! This will obviously give a bigger bonus, and will even enlargen the food on the stalk!"
-  },
-  {
-    "name": "Charmed, I'm Sure",
-    "bonus": "All your Ninja Twins can now equip two of the same charm at once!"
-  },
-  {
-    "name": "Mob Cosplay Craze",
-    "bonus": "Certain monsters in World 6 will now have a rare chance to drop Ninja Hats, but only the ones you've found already from the Ninja Castle!"
-  },
-  {
-    "name": "Level Exemption",
-    "bonus": "Completely and utterly removes the UNDER-LEVELED bonus reduction of all stamps in your collection, now and forever. Amen."
-  },
-  {
-    "name": "Gaming to the MAX",
-    "bonus": "All plant types in Gaming have +1 Max Evolution, but this one is 50,000x rarer than normal and will make you wonder if evolution is even real (it is)"
-  },
-  {
-    "name": "Revenge of the Pickle",
-    "bonus": "Adds a new boss page to the left of World 1 in Deathnote. Each BoneJoePickle in your inventory counts as +1 Boss Deathnote Kill!"
-  },
-  {
-    "name": "The Artifact Matrix",
-    "bonus": "Extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to Artifact Find Chance!"
-  },
-  {
-    "name": "The Slab Matrix",
-    "bonus": "Further extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to all bonuses from the Slab!"
-  },
-  {
-    "name": "The Spirit Matrix",
-    "bonus": "Even further extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to W6 Skill exp gain!"
-  },
-  {
-    "name": "The Crop Matrix",
-    "bonus": "Yet again even further extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to Crop Depot!"
-  },
-  {
-    "name": "MSA Expander I",
-    "bonus": "Adds a new bonus type to the Miniature Soul Apparatus in World 3, specifically Farming EXP!"
-  },
-  {
-    "name": "MSA Expander II",
-    "bonus": "Adds a new bonus type to the Miniature Soul Apparatus in World 3, specifically Jade Coin Gain!"
-  },
-  {
-    "name": "MSA Expander III",
-    "bonus": "Adds a new bonus type to the Miniature Soul Apparatus in World 3, specifically All Essence Gain!"
-  },
-  {
-    "name": "Deal Sweetening",
-    "bonus": "Earn +25% more Magic Beans from the mysterious Legumulyte bean merchant found in the Troll Broodnest map."
-  },
-  {
-    "name": "No Meal Left Behind",
-    "bonus": "Every 24 hours, your lowest level Meal gets +1 Lv. This only works on Meals Lv 5 or higher, and doesn't trigger on days you don't play."
-  },
-  {
-    "name": "Jade Coin Magnetism",
-    "bonus": "Adds a new bonus of +5% Jade Coin Gain per 10 items found after 1000 items, as shown at The Slab in World 5."
-  },
-  {
-    "name": "Essence Confetti",
-    "bonus": "Adds a new bonus of +3% All Essence Gain per 10 items found after 1000 items, as shown at The Slab in World 5."
-  },
-  {
-    "name": "Shrine Collective Bargaining Agreement",
-    "bonus": "Shrines no longer lose EXP when moved around, so you can finally bring those baddies out of retirement!"
-  },
-  {
-    "name": "Papa Blob's Quality Guarantee",
-    "bonus": "Increases the Max Level of all cooking meals by +10. Better meals, better levels, Papa Blob's."
-  },
-  {
-    "name": "Chef Geustloaf's Cutting Edge Philosophy",
-    "bonus": "Increases the Max Level of all cooking meals by +10 again! But oh hoho, you sir are no Chef Geustloaf! Good luck cooking to these LVs!"
-  },
-  {
-    "name": "Crop Depot Scientist",
-    "bonus": "Employs a friendly scientist blobulyte to keep a Data Sheet of all the crops you've ever found!"
-  },
-  {
-    "name": "Science Environmentally Sourced Pencil",
-    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+15% Cash from Mobs' per crop found!"
-  },
-  {
-    "name": "Science Pen",
-    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '1.02x Plant Evolution Chance in Gaming (multiplicative)' per Crop!"
-  },
-  {
-    "name": "Science Marker",
-    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+8% Jade Coin Gain' per Crop!"
-  },
-  {
-    "name": "Science Featherpen",
-    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '1.10x Cooking Speed (multiplicative)' per Crop!"
-  },
-  {
-    "name": "Reinforced Science Pencil",
-    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+20% Total Damage' per Crop!"
-  },
-  {
-    "name": "Science Crayon",
-    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+7% Shiny Pet Lv Up Rate and Pet Breeding Rate' per Crop!"
-  },
-  {
-    "name": "Science Paintbrush",
-    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+0.1 Base Critter caught in Trapping' per Crop!"
-  },
-  {
-    "name": "New Critter",
-    "bonus": "Unlocks a new critter type to capture! These have their own very special vial in Alchemy."
-  },
-  {
-    "name": "Ionized Sigils",
-    "bonus": "Sigils can now be upgraded a 3rd time. Push past lame ol' yellow, and further increasing those sigil boosts!"
-  },
-  {
-    "name": "The Endercaptain",
-    "bonus": "Adds the Endercaptain to Recruitment pool. They're very rare, and have a hidden account-wide +25% Loot Multi and Artifact Find."
-  },
-  {
-    "name": "True Godly Blessings",
-    "bonus": "All Divinity Gods give 1.05x higher Blessing bonus per God Rank. Whats a Blessing bonus? Select a god, it's the one on the bottom, go look."
-  },
-  {
-    "name": "Brighter Lighthouse Bulb",
-    "bonus": "You can now find 3 additional Artifacts from The Edge island."
-  },
-  {
-    "name": "Sovereign Artifacts",
-    "bonus": "You can now find Sovereign Artifacts from sailing, but only if you've found the Eldritch form first."
-  },
-  {
-    "name": "New Bribes",
-    "bonus": "Mr. Pigibank is up to no good once again, and he's looking to get some funding from his favorite patron... you. Well, your wallet specifically."
-  },
-  {
-    "name": "Laboratory Bling",
-    "bonus": "Adds 3 new Jewels to unlock at the Jewel Spinner in W4 Town. Or, get one for free every 700 total Lab LV as shown in Rift Skill Mastery."
-  }
+    #Dailies N' Resets
+    'Daily Teleports': 0,
+    'Daily Minigame Plays': 0,
+
+    #Cards
+    'Extra Card Slot': 0,
+
+    #Goods & Services
+    'Weekly Dungeon Boosters': 0,
+
+    #World 1&2
+    'Infinity Hammer': 0,
+    'Brimstone Forge Slot': 0,
+    'Ivory Bubble Cauldrons': 0,
+    'Bleach Liquid Cauldrons': 0,
+    'Obol Storage Space': 0,
+    'Sigil Supercharge': 0,
+
+    #World 3
+    'Crystal 3d Printer': 0,
+    'More Sample Spaces': 0,
+    'Burning Bad Books': 0,
+    'Prayer Slots': 0,
+    'Zen Cogs': 0,
+    'Cog Inventory Space': 0,
+    'Tower Building Slots': 0,
+    'Fluorescent Flaggies': 0,
+
+    #World 4
+    'Royal Egg Cap': 0,
+    'Richelin Kitchen': 0,
+    'Souped Up Tube': 0,
+    'Pet Storage': 0,
+    'Fenceyard Space': 0,
+
+    #World 5
+    'Chest Sluggo': 0,
+    'Divinity Sparkie': 0,
+    'Golden Sprinkler': 0,
+    'Lava Sprouts': 0,
+
+    #World 6
+    'Plot of Land': 0,
+    'Pristine Charm': 0,
+    'Shroom Familiar': 0,
+    'Sand of Time': 0,
+    'Instagrow Generator': 0,
+    'Life Refill': 0,
+    'Compost Bag': 0,
+    'Summoner Stone': 0,
+
+    #Fomo
+    'FOMO-1': 0,
+    'FOMO-2': 0,
+    'FOMO-3': 0,
+    'FOMO-4': 0,
+    'FOMO-5': 0,
+    'FOMO-6': 0,
+    'FOMO-7': 0,
+    'FOMO-8': 0
+    }  # Default 0s
+guildBonusesList = [
+    "Guild Gifts", "Stat Runes", "Rucksack", "Power of Pow", "REM Fighting", "Make or Break",
+    "Multi Tool", "Sleepy Skiller", "Coin Supercharger", "Bonus GP for small guilds", "Gold Charm", "Star Dazzle",
+    "C2 Card Spotter", "Bestone", "Skilley Skillet", "Craps", "Anotha One", "Wait A Minute"
 ]
+def lavaFunc(funcType: str, level: int, x1: int, x2: int, roundResult=False):
+    result = 0
+    match funcType:
+        case 'add':
+            if x2 != 0:
+                result = (((x1 + x2) / x2 + 0.5 * (level - 1)) / (x1/x2)) * level * x1
+            else:
+                result = level * x1
+        case 'decay':
+            result = (level * x1) / (level + x2)
+        case 'intervalAdd':
+            result = x1 + math.floor(level / x2)
+        case 'decayMulti':
+            result = 1 + (level * x1) / (level + x2)
+        case 'bigBase':
+            result = x1 + x2 * level
+        case 'special1':
+            result = 100 - (level * x1) / (level + x2)
+        case _:
+            result = 0
+    if roundResult:
+        return round(result)
+    else:
+        return result
 
+
+###WORLD 1 CONSTS###
 bribesList = [
     "Insider Trading", "Tracking Chips", "Mandatory Fire Sale", "Sleeping On the Job", "Artificial Demand", "The Art of the Deal",
     "Overstock Regulations", "Double EXP Scheme", "Tagged Indicators", "Fossil Fuel Legislation", "Five Aces in the Deck", "Fake Teleport Tickets", "The Art of the Steal",
@@ -1546,11 +1581,52 @@ stamp_maxes = {
     "Crystallin": 270,
     "Forge Stamp": 230,
 }
+stampNameDict = {
+    "Combat": {
+        0: "Sword Stamp", 1: "Heart Stamp", 2: "Mana Stamp", 3: "Tomahawk Stamp", 4: "Target Stamp",
+        5: "Shield Stamp", 6: "Longsword Stamp", 7: "Kapow Stamp", 8: "Fist Stamp", 9: "Battleaxe Stamp",
+        10: "Agile Stamp", 11: "Vitality Stamp", 12: "Book Stamp", 13: "Manamoar Stamp", 14: "Clover Stamp",
+        15: "Scimitar Stamp", 16: "Bullseye Stamp", 17: "Feather Stamp", 18: "Polearm Stamp", 19: "Violence Stamp",
+        20: "Buckler Stamp", 21: "Hermes Stamp", 22: "Sukka Foo", 23: "Arcane Stamp", 24: "Avast Yar Stamp",
+        25: "Steve Sword", 26: "Blover Stamp", 27: "Stat Graph Stamp", 28: "Gilded Axe Stamp",
+        29: "Diamond Axe Stamp", 30: "Tripleshot Stamp", 31: "Blackheart Stamp", 32: "Maxo Slappo Stamp", 33: "Sashe Sidestamp", 34: "Intellectostampo",
+        35: "Conjocharmo Stamp", 36: "Dementia Sword Stamp", 37: "Golden Sixes Stamp", 38: "Stat Wallstreet Stamp", 39: "Void Sword Stamp",
+        40: "Void Axe Stamp", 41: "Captalist Stats Stamp"
+    },
+    "Skill": {
+        0: "Pickaxe Stamp", 1: "Hatchet Stamp", 2: "Anvil Zoomer Stamp", 3: "Lil' Mining Baggy Stamp", 4: "Twin Ores Stamp",
+        5: "Choppin' Bag Stamp", 6: "Duplogs Stamp", 7: "Matty Bag Stamp", 8: "Smart Dirt Stamp", 9: "Cool Diggy Tool Stamp",
+        10: "High IQ Lumber Stamp", 11: "Swag Swingy Tool Stamp", 12: "Alch Go Brrr Stamp", 13: "Brainstew Stamp", 14: "Drippy Drop Stamp",
+        15: "Droplots Stamp", 16: "Fishing Rod Stamp", 17: "Fishhead Stamp", 18: "Catch Net Stamp", 19: "Fly Intel Stamp",
+        20: "Bag o Heads Stamp", 21: "Holy Mackerel Stamp", 22: "Bugsack Stamp", 23: "Buzz Buzz Stamp", 24: "Hidey Box Stamp",
+        25: "Purp Froge Stamp", 26: "Spikemouth Stamp", 27: "Shiny Crab Stamp", 28: "Gear Stamp", 29: "Stample Stamp",
+        30: "Saw Stamp", 31: "Amplestample Stamp", 32: "SpoOoky Stamp", 33: "Flowin Stamp", 34: "Prayday Stamp",
+        35: "Banked Pts Stamp", 36: "Cooked Meal Stamp", 37: "Spice Stamp", 38: "Ladle Stamp", 39: "Nest Eggs Stamp",
+        40: "Egg Stamp", 41: "Lab Tube Stamp", 42: "Sailboat Stamp", 43: "Gamejoy Stamp", 44: "Divine Stamp",
+        45: "Multitool Stamp", 46: "Skelefish Stamp", 47: "Crop Evo Stamp", 48: "Sneaky Peeky Stamp", 49: "Jade Mint Stamp",
+        50: "Summoner Stone Stamp", 51: "White Essence Stamp", 52: "Triad Essence Stamp", 53: "Dark Triad Essence Stamp"
+    },
+    "Misc": {
+        0: "Questin Stamp", 1: "Mason Jar Stamp", 2: "Crystallin", 3: "Arcade Ball Stamp", 4: "Gold Ball Stamp",
+        5: "Potion Stamp", 6: "Golden Apple Stamp", 7: "Ball Timer Stamp", 8: "Card Stamp", 9: "Forge Stamp",
+        10: "Vendor Stamp", 11: "Sigil Stamp", 12: "Talent I Stamp", 13: "Talent II Stamp", 14: "Talent III Stamp",
+        15: "Talent IV Stamp", 16: "Talent V Stamp", 17: "Talent S Stamp", 18: "Multikill Stamp", 19: "Biblio Stamp",
+        20: "DNA Stamp", 21: "Refinery Stamp", 22: "Atomic Stamp"
+    }
+}
+stampTypes = ["Combat", "Skill", "Misc"]
+unavailableStampsList = [
+    'Shiny Crab Stamp', 'Gear Stamp', 'SpoOoky Stamp', 'Prayday Stamp',  #Skill
+    'Talent I Stamp', 'Talent V Stamp',  #Misc
+]  # Last verified as of v2.08
+starsignsList: list[str] = [
 
-max_IndexOfVials = 75
-max_IndexOfBubbles = 29
-max_IndexOfSigils = 3
+]
 
+###WORLD 2 CONSTS###
+max_IndexOfVials = 75  # Last verified as of v2.08
+max_IndexOfBubbles = 29  # Last verified as of v2.08
+max_IndexOfSigils = 3  # Last verified as of v2.08
 vialsDict = {
     0: {"Name": "Copper Corona", "Material": "Copper", "x1": 3, "x2": 0, "funcType": "add"},
     1: {"Name": "Sippy Splinter", "Material": "OakTree", "x1": 3, "x2": 0, "funcType": "add"},
@@ -1627,6 +1703,32 @@ vialsDict = {
     72: {"Name": "Ded Sap", "Material": "Tree13", "x1": 3.5, "x2": 0, "funcType": "add"},
     73: {"Name": "Royale Cola", "Material": "SpiD3", "x1": 3.5, "x2": 0, "funcType": "add"},
     74: {"Name": "Turtle Tisane", "Material": "Critter11", "x1": 4, "x2": 0, "funcType": "add"},
+}
+sigilsDict = {
+    "Big Muscle":       {"Index": 0,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [2, 100, 50000]},
+    "Pumped Kicks":     {"Index": 2,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [3, 150, 60000]},
+    "Odd Literarture":  {"Index": 4,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [5, 200, 70000]},
+    "Good Fortune":     {"Index": 6,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [8, 300, 90000]},
+    "Plunging Sword":   {"Index": 8,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [15, 700, 100000]},
+    "Wizardly Hat":     {"Index": 10, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [24, 1250, 130000]},
+    "Envelope Pile":    {"Index": 12, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [60, 2500, 160000]},
+    "Shiny Beacon":     {"Index": 14, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [120, 4000, 200000]},
+    "Metal Exterior":   {"Index": 16, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [250, 7000, 240000]},
+    "Two Starz":        {"Index": 18, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [500, 10000, 280000]},
+    "Pipe Gauge":       {"Index": 20, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [700, 12000, 320000]},
+    "Trove":            {"Index": 22, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [1300, 14000, 400000]},
+    "Pea Pod":          {"Index": 24, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [2100, 15000, 420000]},
+    "Tuft Of Hair":     {"Index": 26, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [3000, 25000, 450000]},
+    "Emoji Veggie":     {"Index": 28, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [4500, 33000, 480000]},
+    "Vip Parchment":    {"Index": 30, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [6300, 42000, 520000]},
+    "Dream Catcher":    {"Index": 32, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [7000, 50000, 560000]},
+    "Duster Studs":     {"Index": 34, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [8000, 60000, 600000]},
+    "Garlic Glove":     {"Index": 36, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [9000, 70000, 650000]},
+    "Lab Tesstube":     {"Index": 38, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [12000, 80000, 700000]},
+    "Peculiar Vial":    {"Index": 40, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [17000, 120000, 750000]},
+    "Loot Pile":        {"Index": 42, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [23000, 160000, 900000]},
+    "Div Spiral":       {"Index": 44, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [26000, 200000, 1200000]},
+    "Cool Coin":        {"Index": 46, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [30000, 250000, 2000000]},
 }
 def getReadableVialNames(inputNumber):
     try:
@@ -2051,26 +2153,21 @@ def getReadableBubbleNames(inputNumber, color):
                     return f"Unknown Bubble {color} {inputNumber}"
 
 
-starsignsList: list[str] = [
-
-]
-
+###WORLD 3 CONSTS###
+maxDreams = 31  # Last verified as of v2.08
 buildingsList: list[str] = [
     "3D Printer", "Talent Book Library", "Death Note", "Salt Lick", "Chest Space", "Cost Cruncher", "Trapper Drone", "Automation Arm", "Atom Collider",
     "Pulse Mage", "Fireball Lobber", "Boulder Roller", "Frozone Malone", "Stormcaller", "Party Starter", "Kraken Cosplayer", "Poisonic Elder", "Voidinator",
     "Woodular Shrine", "Isaccian Shrine", "Crystal Shrine", "Pantheon Shrine", "Clover Shrine", "Summereading Shrine", "Crescent Shrine", "Undead Shrine", "Primordial Shrine"
 ]
-
 shrinesList: list[str] = [
     "Woodular Shrine", "Isaccian Shrine", "Crystal Shrine", "Pantheon Shrine", "Clover Shrine", "Summereading Shrine", "Crescent Shrine", "Undead Shrine", "Primordial Shrine"
 ]
-
 atomsList: list[str] = [
     "Hydrogen - Stamp Decreaser", "Helium - Talent Power Stacker", "Lithium - Bubble Insta Expander", "Beryllium - Post Office Penner",
     "Boron - Particle Upgrader", "Carbon - Wizard Maximizer", "Nitrogen - Construction Trimmer", "Oxygen - Library Booker",
     "Fluoride - Void Plate Chef", "Neon - Damage N' Cheapener", "Sodium - Snail Kryptonite"
 ]
-
 prayersList: list[str] = [
     "Big Brain Time (Forest Soul)", "Skilled Dimwit (Forest Soul)", "Unending Energy (Forest Soul)",
     "Shiny Snitch (Forest Soul)", "Zerg Rushogen (Forest Soul)",
@@ -2080,6 +2177,10 @@ prayersList: list[str] = [
     "Balance of Pain (Squishy Soul)", "Balance of Proficiency (Squishy Soul)","Glitterbug (Squishy Soul)",
 ]
 
+###WORLD 4 CONSTS###
+maxCookingTables = 10  # Last verified as of v2.08
+maxMeals = 67  # Last verified as of v2.08
+maxMealLevel = 90  # Last verified as of v2.08
 labChipsList: list[str] = [
     "Grounded Nanochip", "Grounded Motherboard", "Grounded Software", "Grounded Processor", "Potato Chip",
     "Conductive Nanochip", "Conductive Motherboard", "Conductive Software", "Conductive Processor", "Chocolatey Chip",
@@ -2087,84 +2188,188 @@ labChipsList: list[str] = [
     "Silkrode Nanochip", "Silkrode Motherboard", "Silkrode Software", "Silkrode Processor", "Poker Chip",
     "Omega Nanochip", "Omega Motherboard"
 ]
-gemShopDict = {
-    #Inventory and Storage
-    'Item Backpack Space': 0,
-    'Storage Chest Space': 0,
-    'Carry Capacity': 0,
-    'Food Slot': 0,
-    'More Storage Space': 0,
-    'Card Presets': 0,
+labBonusesList = [
+    "Animal Farm", "Wired In", "Gilded Cyclical Tubing", "No Bubble Left Behind", "Killer's Brightside",
+    "Shrine World Tour", "Viaduct of the Gods", "Certified Stamp Book", "Spelunker Obol", "Fungi Finger Pocketer",
+    "My 1st Chemistry Set", "Unadulterated Banking Fury", "Sigils of Olden Alchemy", "Viral Connection",
+    "Artifact Attraction", "Slab Sovereignty", "Spiritual Growth", "Depot Studies PhD"
+]
 
-    #Dailies N' Resets
-    'Daily Teleports': 0,
-    'Daily Minigame Plays': 0,
+###WORLD 5 CONSTS###
+numberOfArtifacts = 33  # Last verified as of v2.08
+numberOfArtifactTiers = 4  # Last verified as of v2.08
+currentMaxChestsSum = 45  # Last verified as of v2.08
+artifactsList = [
+    'Moai Head', 'Maneki Kat', 'Ruble Cuble', 'Fauxory Tusk', 'Gold Relic',
+    'Genie Lamp', 'Silver Ankh', 'Emerald Relic', 'Fun Hippoete', 'Arrowhead',
+    '10 AD Tablet', 'Ashen Urn', 'Amberite', 'Triagulon', 'Billcye Tri',
+    'Frost Relic', 'Chilled Yarn', 'Causticolumn', 'Jade Rock', 'Dreamcatcher',
+    'Gummy Orb', 'Fury Relic', 'Cloud Urn', 'Weatherbook', 'Giants Eye',
+    'Crystal Steak', 'Trilobite Rock', 'Opera Mask', 'Socrates', 'The True Lantern',
+    'The Onyx Lantern', 'The Shim Lantern', 'The Winz Lantern'
+]
 
-    #Cards
-    'Extra Card Slot': 0,
-
-    #Goods & Services
-    'Weekly Dungeon Boosters': 0,
-
-    #World 1&2
-    'Infinity Hammer': 0,
-    'Brimstone Forge Slot': 0,
-    'Ivory Bubble Cauldrons': 0,
-    'Bleach Liquid Cauldrons': 0,
-    'Obol Storage Space': 0,
-    'Sigil Supercharge': 0,
-
-    #World 3
-    'Crystal 3d Printer': 0,
-    'More Sample Spaces': 0,
-    'Burning Bad Books': 0,
-    'Prayer Slots': 0,
-    'Zen Cogs': 0,
-    'Cog Inventory Space': 0,
-    'Tower Building Slots': 0,
-    'Fluorescent Flaggies': 0,
-
-    #World 4
-    'Royal Egg Cap': 0,
-    'Richelin Kitchen': 0,
-    'Souped Up Tube': 0,
-    'Pet Storage': 0,
-    'Fenceyard Space': 0,
-
-    #World 5
-    'Chest Sluggo': 0,
-    'Divinity Sparkie': 0,
-    'Golden Sprinkler': 0,
-    'Lava Sprouts': 0,
-
-    #World 6
-    'Plot of Land': 0,
-    'Pristine Charm': 0,
-    'Shroom Familiar': 0,
-    'Sand of Time': 0,
-    'Instagrow Generator': 0,
-    'Life Refill': 0,
-    'Compost Bag': 0,
-    'Summoner Stone': 0,
-
-    #Fomo
-    'FOMO-1': 0,
-    'FOMO-2': 0,
-    'FOMO-3': 0,
-    'FOMO-4': 0,
-    'FOMO-5': 0,
-    'FOMO-6': 0,
-    'FOMO-7': 0,
-    'FOMO-8': 0
-    }  # Default 0s
-
+###WORLD 6 CONSTS###
+jade_emporium = [
+  {
+    "name": "Quick Ref Access",
+    "bonus": "Adds the Sneaking skill to your QuickRef menu! Manage your Ninja Twins from anywhere!"
+  },
+  {
+    "name": "Gold Food Beanstalk",
+    "bonus": "Grows a giant beanstalk behind the ninja castle! Drop a stack of 10,000 Gold Food to add it with the beanstalk and permanently gain its bonus!"
+  },
+  {
+    "name": "Supersized Gold Beanstacking",
+    "bonus": "You can now drop a stack of 100,000 Gold Food to supersize it! This will obviously give a bigger bonus, and will even enlargen the food on the stalk!"
+  },
+  {
+    "name": "Charmed, I'm Sure",
+    "bonus": "All your Ninja Twins can now equip two of the same charm at once!"
+  },
+  {
+    "name": "Mob Cosplay Craze",
+    "bonus": "Certain monsters in World 6 will now have a rare chance to drop Ninja Hats, but only the ones you've found already from the Ninja Castle!"
+  },
+  {
+    "name": "Level Exemption",
+    "bonus": "Completely and utterly removes the UNDER-LEVELED bonus reduction of all stamps in your collection, now and forever. Amen."
+  },
+  {
+    "name": "Gaming to the MAX",
+    "bonus": "All plant types in Gaming have +1 Max Evolution, but this one is 50,000x rarer than normal and will make you wonder if evolution is even real (it is)"
+  },
+  {
+    "name": "Revenge of the Pickle",
+    "bonus": "Adds a new boss page to the left of World 1 in Deathnote. Each BoneJoePickle in your inventory counts as +1 Boss Deathnote Kill!"
+  },
+  {
+    "name": "The Artifact Matrix",
+    "bonus": "Extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to Artifact Find Chance!"
+  },
+  {
+    "name": "The Slab Matrix",
+    "bonus": "Further extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to all bonuses from the Slab!"
+  },
+  {
+    "name": "The Spirit Matrix",
+    "bonus": "Even further extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to W6 Skill exp gain!"
+  },
+  {
+    "name": "The Crop Matrix",
+    "bonus": "Yet again even further extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to Crop Depot!"
+  },
+  {
+    "name": "MSA Expander I",
+    "bonus": "Adds a new bonus type to the Miniature Soul Apparatus in World 3, specifically Farming EXP!"
+  },
+  {
+    "name": "MSA Expander II",
+    "bonus": "Adds a new bonus type to the Miniature Soul Apparatus in World 3, specifically Jade Coin Gain!"
+  },
+  {
+    "name": "MSA Expander III",
+    "bonus": "Adds a new bonus type to the Miniature Soul Apparatus in World 3, specifically All Essence Gain!"
+  },
+  {
+    "name": "Deal Sweetening",
+    "bonus": "Earn +25% more Magic Beans from the mysterious Legumulyte bean merchant found in the Troll Broodnest map."
+  },
+  {
+    "name": "No Meal Left Behind",
+    "bonus": "Every 24 hours, your lowest level Meal gets +1 Lv. This only works on Meals Lv 5 or higher, and doesn't trigger on days you don't play."
+  },
+  {
+    "name": "Jade Coin Magnetism",
+    "bonus": "Adds a new bonus of +5% Jade Coin Gain per 10 items found after 1000 items, as shown at The Slab in World 5."
+  },
+  {
+    "name": "Essence Confetti",
+    "bonus": "Adds a new bonus of +3% All Essence Gain per 10 items found after 1000 items, as shown at The Slab in World 5."
+  },
+  {
+    "name": "Shrine Collective Bargaining Agreement",
+    "bonus": "Shrines no longer lose EXP when moved around, so you can finally bring those baddies out of retirement!"
+  },
+  {
+    "name": "Papa Blob's Quality Guarantee",
+    "bonus": "Increases the Max Level of all cooking meals by +10. Better meals, better levels, Papa Blob's."
+  },
+  {
+    "name": "Chef Geustloaf's Cutting Edge Philosophy",
+    "bonus": "Increases the Max Level of all cooking meals by +10 again! But oh hoho, you sir are no Chef Geustloaf! Good luck cooking to these LVs!"
+  },
+  {
+    "name": "Crop Depot Scientist",
+    "bonus": "Employs a friendly scientist blobulyte to keep a Data Sheet of all the crops you've ever found!"
+  },
+  {
+    "name": "Science Environmentally Sourced Pencil",
+    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+15% Cash from Mobs' per crop found!"
+  },
+  {
+    "name": "Science Pen",
+    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '1.02x Plant Evolution Chance in Gaming (multiplicative)' per Crop!"
+  },
+  {
+    "name": "Science Marker",
+    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+8% Jade Coin Gain' per Crop!"
+  },
+  {
+    "name": "Science Featherpen",
+    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '1.10x Cooking Speed (multiplicative)' per Crop!"
+  },
+  {
+    "name": "Reinforced Science Pencil",
+    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+20% Total Damage' per Crop!"
+  },
+  {
+    "name": "Science Crayon",
+    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+7% Shiny Pet Lv Up Rate and Pet Breeding Rate' per Crop!"
+  },
+  {
+    "name": "Science Paintbrush",
+    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+0.1 Base Critter caught in Trapping' per Crop!"
+  },
+  {
+    "name": "New Critter",
+    "bonus": "Unlocks a new critter type to capture! These have their own very special vial in Alchemy."
+  },
+  {
+    "name": "Ionized Sigils",
+    "bonus": "Sigils can now be upgraded a 3rd time. Push past lame ol' yellow, and further increasing those sigil boosts!"
+  },
+  {
+    "name": "The Endercaptain",
+    "bonus": "Adds the Endercaptain to Recruitment pool. They're very rare, and have a hidden account-wide +25% Loot Multi and Artifact Find."
+  },
+  {
+    "name": "True Godly Blessings",
+    "bonus": "All Divinity Gods give 1.05x higher Blessing bonus per God Rank. Whats a Blessing bonus? Select a god, it's the one on the bottom, go look."
+  },
+  {
+    "name": "Brighter Lighthouse Bulb",
+    "bonus": "You can now find 3 additional Artifacts from The Edge island."
+  },
+  {
+    "name": "Sovereign Artifacts",
+    "bonus": "You can now find Sovereign Artifacts from sailing, but only if you've found the Eldritch form first."
+  },
+  {
+    "name": "New Bribes",
+    "bonus": "Mr. Pigibank is up to no good once again, and he's looking to get some funding from his favorite patron... you. Well, your wallet specifically."
+  },
+  {
+    "name": "Laboratory Bling",
+    "bonus": "Adds 3 new Jewels to unlock at the Jewel Spinner in W4 Town. Or, get one for free every 700 total Lab LV as shown in Rift Skill Mastery."
+  }
+]
 pristineCharmsList: list[str] = [
     "Sparkle Log", "Fruit Rolle", "Glowing Veil", "Cotton Candy", "Sugar Bomb",
     "Gumm Eye", "Bubblegum Law", "Sour Wowzer", "Crystal Comb", "Rock Candy",
     "Lollipop Law", "Taffy Disc", "Stick of Chew", "Treat Sack", "Gumm Stick",
     "Lolly Flower", "Gumball Necklace", "Liqorice Rolle",
 ]
-
 sneakingGemstonesList: list[str] = [
     "Aquamarine", "Emerald", "Garnet", "Starite", "Topaz", "Moissanite"
 ]
@@ -2174,6 +2379,14 @@ sneakingGemstonesStatList: list[str] = [
 sneakingGemstonesFirstIndex = 233
 sneakingGemstonesCount = len(sneakingGemstonesList)
 sneakingGemstonesMaxValueDict = {"Aquamarine": 10000, "Emerald": 5000, "Garnet": 2500, "Starite": 200, "Topaz": 1000, "Moissanite": 300}
+maxFarmingCrops = 120  # Last verified as of 2.08
+marketUpgradeList = [
+    "Land Plots", "Stronger Vines", "Nutritious Soil", "Smarter Seeds",
+    "Biology Boost", "Product Doubler", "More Beenz", "Enhanced Deeds",
+    "Overgrowth", "Evolution GMO", "Speed GMO", "OG Fertilizer",
+    "EXP GMO", "Land Rank", "Value GMO", "Super GMO"]
+marketUpgradeFirstIndex = 2
+marketUpgradeLastIndex = marketUpgradeFirstIndex + len(marketUpgradeList)
 
 def getMoissaniteValue(moissaniteLevel: int):
     try:
@@ -2208,77 +2421,142 @@ def getGemstonePercent(gemstoneName: str, gemstoneValue: float):
         logger.exception(f"Could not find max value for Gemstone: {gemstoneName} because: {reason}")
     pass
 
-sigilsDict = {
-    "Big Muscle":       {"Index": 0,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [2, 100, 50000]},
-    "Pumped Kicks":     {"Index": 2,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [3, 150, 60000]},
-    "Odd Literarture":  {"Index": 4,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [5, 200, 70000]},
-    "Good Fortune":     {"Index": 6,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [8, 300, 90000]},
-    "Plunging Sword":   {"Index": 8,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [15, 700, 100000]},
-    "Wizardly Hat":     {"Index": 10, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [24, 1250, 130000]},
-    "Envelope Pile":    {"Index": 12, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [60, 2500, 160000]},
-    "Shiny Beacon":     {"Index": 14, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [120, 4000, 200000]},
-    "Metal Exterior":   {"Index": 16, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [250, 7000, 240000]},
-    "Two Starz":        {"Index": 18, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [500, 10000, 280000]},
-    "Pipe Gauge":       {"Index": 20, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [700, 12000, 320000]},
-    "Trove":            {"Index": 22, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [1300, 14000, 400000]},
-    "Pea Pod":          {"Index": 24, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [2100, 15000, 420000]},
-    "Tuft Of Hair":     {"Index": 26, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [3000, 25000, 450000]},
-    "Emoji Veggie":     {"Index": 28, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [4500, 33000, 480000]},
-    "Vip Parchment":    {"Index": 30, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [6300, 42000, 520000]},
-    "Dream Catcher":    {"Index": 32, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [7000, 50000, 560000]},
-    "Duster Studs":     {"Index": 34, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [8000, 60000, 600000]},
-    "Garlic Glove":     {"Index": 36, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [9000, 70000, 650000]},
-    "Lab Tesstube":     {"Index": 38, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [12000, 80000, 700000]},
-    "Peculiar Vial":    {"Index": 40, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [17000, 120000, 750000]},
-    "Loot Pile":        {"Index": 42, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [23000, 160000, 900000]},
-    "Div Spiral":       {"Index": 44, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [26000, 200000, 1200000]},
-    "Cool Coin":        {"Index": 46, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [30000, 250000, 2000000]},
+
+#slabString last pulled from code in 2.08
+slabList = "Copper Iron Gold Plat Dementia Void Lustre Starfire Marble Dreadlo Godshard CopperBar IronBar GoldBar PlatBar DementiaBar VoidBar LustreBar StarfireBar MarbleBar DreadloBar GodshardBar OakTree BirchTree JungleTree ForestTree ToiletTree PalmTree StumpTree SaharanFoal Tree7 AlienTree Tree8 Tree9 Tree11 Tree10 Tree12 Tree13 Leaf1 Leaf2 Leaf3 Leaf4 Leaf5 Leaf6 Fish1 Fish2 Fish3 Fish4 Fish5 Fish6 Fish7 Fish8 Fish9 Fish10 Fish11 Fish12 Fish13 Bug1 Bug2 Bug3 Bug4 Bug5 Bug6 Bug7 Bug8 Bug9 Bug11 Bug10 Bug12 Bug13 Critter1 Critter1A Critter2 Critter2A Critter3 Critter3A Critter4 Critter4A Critter5 Critter5A Critter6 Critter6A Critter7 Critter7A Critter8 Critter8A Critter9 Critter9A Critter10 Critter10A Critter11 Critter11A Soul1 Soul2 Soul3 Soul4 Soul5 Soul6 Soul7 Refinery1 Refinery2 Refinery3 Refinery4 Refinery5 Refinery6 CraftMat1 CraftMat2 CraftMat3 CraftMat5 CraftMat6 CraftMat7 CraftMat9 CraftMat8 CraftMat10 CraftMat11 CraftMat12 CraftMat13 CraftMat14 OilBarrel1 OilBarrel2 OilBarrel3 OilBarrel4 OilBarrel5 OilBarrel6 OilBarrel7 PureWater PureWater2 Grasslands1 Grasslands2 Grasslands3 Grasslands4 Jungle1 Jungle2 Jungle3 Forest1 Forest2 Forest3 Sewers1 Sewers1b Sewers2 Sewers3 TreeInterior1 TreeInterior1b TreeInterior2 DesertA1 DesertA1b DesertA2 DesertA3 DesertA3b DesertB1 DesertB2 DesertB3 DesertB4 DesertC1 DesertC2 DesertC2b DesertC3 DesertC4 SnowA1 SnowA2 SnowA2a SnowA3 SnowA4 SnowB1 SnowB2 SnowB2a SnowB5 SnowB3 SnowB4 SnowC1 SnowC2 SnowC3 SnowC4 SnowC4a SnowC5 GalaxyA1 GalaxyA2 GalaxyA2b GalaxyA3 GalaxyA4 GalaxyB1 GalaxyB2 GalaxyB3 GalaxyB4 GalaxyB5 GalaxyC1 GalaxyC1b GalaxyC2 GalaxyC3 GalaxyC4 LavaA1 LavaA1b LavaA2 LavaA3 LavaA4 LavaA5 LavaA5b LavaB1 LavaB2 LavaB3 LavaB3b LavaB4 LavaB5 LavaB6 LavaC1 LavaC2 SpiA1 SpiA2 SpiA2b SpiA3 SpiA4 SpiA5 SpiB1 SpiB2 SpiB2b SpiB3 SpiB4 SpiC1 SpiC2 SpiD1 SpiD2 SpiD3 BabaYagaETC Hgg Quest17 Quest29 EfauntDrop1 EfauntDrop2 Chiz0 Chiz1 TrollPart KrukPart KrukPart2 EquipmentHats11 EquipmentHats12 EquipmentHats13 EquipmentHats14 EquipmentHats1 EquipmentHats15 EquipmentHats17 EquipmentHats20 EquipmentHats3 EquipmentHats16 EquipmentHats21 EquipmentHats18 EquipmentHats22 EquipmentHats28 EquipmentHats19 TestObj13 EquipmentHats41 EquipmentHats26 EquipmentHats52 EquipmentHats53 EquipmentHats54 EquipmentHats61 EquipmentHats58 EquipmentHats59 EquipmentHats60 EquipmentHats68 EquipmentHats70 EquipmentHats71 EquipmentHats74 EquipmentHats77 EquipmentHats83 EquipmentHats105 EquipmentHats106 EquipmentHats5 EquipmentHats6 EquipmentHats7 EquipmentHats8 EquipmentHats9 EquipmentHats10 EquipmentHats4Choppin EquipmentHats25 EquipmentHats107 EquipmentHats29 EquipmentHats39 EquipmentHats27 EquipmentHats30 EquipmentHats44 EquipmentHats2 EquipmentHats67 EquipmentHats64 EquipmentHats66 EquipmentHats79 EquipmentHats73 EquipmentHats51 EquipmentHats56 EquipmentHats63 EquipmentHats85 EquipmentHats86 EquipmentHats87 EquipmentHats88 EquipmentHats42 EquipmentHats69 EquipmentHats108 EquipmentHats55 EquipmentHats75 EquipmentHats76 EquipmentHats65 EquipmentHats80 EquipmentHats81 EquipmentHats78 EquipmentHats90 EquipmentHats91 EquipmentHats92 EquipmentHats93 EquipmentHats94 EquipmentHats95 EquipmentHats96 EquipmentHats97 EquipmentHats98 EquipmentHats99 EquipmentHats100 EquipmentHats101 EquipmentHats102 EquipmentHats103 EquipmentHats104 EquipmentPunching1 EquipmentPunching2 EquipmentPunching3 EquipmentPunching4 EquipmentPunching5 EquipmentPunching6 EquipmentPunching7 EquipmentPunching8 EquipmentPunching9 EquipmentPunching10 EquipmentPunching11 TestObj1 TestObj7 TestObj3 EquipmentSword1 EquipmentSword2 EquipmentSword3 EquipmentSword4 EquipmentSword5 EquipmentSword6 EquipmentSword7 EquipmentSword8 EquipmentSword9 EquipmentBows1 EquipmentBows3 EquipmentBows4 EquipmentBows5 EquipmentBows6 EquipmentBows7 EquipmentBows8 EquipmentBows9 EquipmentBows10 EquipmentBows11 EquipmentBows12 EquipmentBows13 EquipmentBows14 EquipmentWands1 EquipmentWands2 EquipmentWands5 EquipmentWands6 EquipmentWands3 EquipmentWands7 EquipmentWands8 EquipmentWands9 EquipmentWands10 EquipmentWands11 EquipmentWands12 EquipmentWands13 EquipmentShirts1 EquipmentShirts17 EquipmentShirts19 EquipmentShirts20 EquipmentShirts24 EquipmentShirts25 EquipmentShirts2 EquipmentShirts16 EquipmentShirts3 EquipmentShirts21 EquipmentShirts10 EquipmentShirts11 EquipmentShirts12 EquipmentShirts13 EquipmentShirts18 EquipmentShirts14 EquipmentShirts5 EquipmentShirts23 EquipmentShirts22 EquipmentShirts15 EquipmentShirts26 EquipmentShirts27 EquipmentShirts31 EquipmentShirts28 EquipmentShirts29 EquipmentShirts30 EquipmentShirts6 EquipmentShirts32 EquipmentShirts33 EquipmentShirts34 EquipmentShirts35 EquipmentShirts36 EquipmentShirts37 EquipmentShirts38 EquipmentPants1 EquipmentPants2 EquipmentPants3 EquipmentPants4 EquipmentPants17 EquipmentPants5 EquipmentPants6 EquipmentPants20 EquipmentPants21 EquipmentPants10 EquipmentPants15 EquipmentPants16 EquipmentPants18 EquipmentPants19 EquipmentPants22 EquipmentPants23 EquipmentPants9 EquipmentPants24 EquipmentPants25 EquipmentPants8 EquipmentPants26 EquipmentPants27 EquipmentPants29 EquipmentPants30 EquipmentShoes1 EquipmentShoes9 EquipmentShoes15 EquipmentShoes3 EquipmentShoes20 EquipmentShoes4 EquipmentShoes5 EquipmentShoes21 EquipmentShoes22 EquipmentShoes7 EquipmentShoes16 EquipmentShoes17 EquipmentShoes18 EquipmentShoes19 EquipmentShoes2 EquipmentShoes23 EquipmentShoes26 EquipmentShoes27 EquipmentShoes28 EquipmentShoes29 EquipmentShoes30 EquipmentShoes31 EquipmentShoes32 EquipmentShoes33 EquipmentShoes39 EquipmentShoes24 EquipmentShoes25 EquipmentShoes34 EquipmentShoes35 EquipmentShoes36 EquipmentShoes37 EquipmentShoes38 EquipmentPendant9 EquipmentPendant10 EquipmentPendant11 EquipmentPendant12 EquipmentPendant14 EquipmentPendant16 EquipmentPendant17 EquipmentPendant18 EquipmentPendant19 EquipmentPendant20 EquipmentPendant21 EquipmentPendant22 EquipmentPendant23 EquipmentPendant24 EquipmentPendant25 EquipmentPendant26 EquipmentPendant27 EquipmentPendant28 EquipmentPendant31 EquipmentPendant29 EquipmentPendant30 EquipmentRings2 EquipmentRings3 EquipmentRings6 EquipmentRings7 EquipmentRings11 EquipmentRings12 EquipmentRings13 EquipmentRings14 EquipmentRings15 EquipmentRings16 EquipmentRings21 EquipmentRings20 EquipmentRings19 EquipmentRingsFishing1 EquipmentRingsFishing2 EquipmentRingsFishing3 EquipmentRings22 EquipmentRings18 EquipmentRings36 EquipmentRings23 EquipmentRings24 EquipmentRings25 EquipmentRings26 EquipmentRings27 EquipmentRings28 EquipmentRings29 EquipmentRings35 EquipmentRings30 EquipmentRings33 EquipmentRings31 EquipmentRings32 EquipmentRings34 EquipmentRingsChat10 EquipmentCape0 EquipmentCape2 EquipmentCape3 EquipmentCape4 EquipmentCape5 EquipmentCape6 EquipmentCape7 EquipmentCape8 EquipmentCape9 EquipmentCape10 EquipmentCape11 EquipmentCape12 EquipmentCape13 EquipmentCape14 EquipmentKeychain0 EquipmentKeychain1 EquipmentKeychain2 EquipmentKeychain3 EquipmentKeychain4 EquipmentKeychain5 EquipmentKeychain6 EquipmentKeychain7 EquipmentKeychain8 EquipmentKeychain9 EquipmentKeychain10 EquipmentKeychain11 EquipmentKeychain12 EquipmentKeychain13 EquipmentKeychain14 EquipmentKeychain15 EquipmentKeychain16 EquipmentKeychain17 EquipmentKeychain18 EquipmentKeychain19 EquipmentKeychain20 EquipmentKeychain21 EquipmentKeychain22 EquipmentKeychain23 EquipmentKeychain24 EquipmentKeychain25 EquipmentKeychain26 EquipmentKeychain27 EquipmentKeychain28 EquipmentKeychain29 Trophy1 Trophy2 Trophy3 Trophy5 Trophy6 Trophy7 Trophy8 Trophy9 Trophy10 Trophy11 Trophy12 Trophy13 Trophy14 Trophy15 Trophy16 Trophy17 Trophy18 Trophy19 Trophy20 Trophy21 Trophy22 EquipmentNametag1 EquipmentNametag3 EquipmentNametag4 EquipmentNametag5 EquipmentNametag6b EquipmentNametag7 EquipmentNametag8 EquipmentNametag9 EquipmentNametag10 EquipmentTools1 EquipmentTools2 EquipmentTools3 EquipmentTools5 EquipmentTools6 EquipmentTools7 EquipmentTools11 EquipmentTools8 EquipmentTools12 EquipmentTools9 EquipmentTools14 EquipmentTools15 EquipmentTools10 EquipmentTools13 EquipmentToolsHatchet0 EquipmentToolsHatchet3 EquipmentToolsHatchet1 EquipmentToolsHatchet2b EquipmentToolsHatchet2 EquipmentToolsHatchet4 EquipmentToolsHatchet5 EquipmentToolsHatchet7 EquipmentToolsHatchet6 EquipmentToolsHatchet8 EquipmentToolsHatchet9 EquipmentToolsHatchet12 EquipmentToolsHatchet10 EquipmentToolsHatchet11 FishingRod2 FishingRod3 FishingRod4 FishingRod5 FishingRod6 FishingRod7 FishingRod8 FishingRod9 FishingRod10 FishingRod11 FishingRod12 CatchingNet2 CatchingNet3 CatchingNet4 CatchingNet5 CatchingNet6 CatchingNet7 CatchingNet8 CatchingNet9 CatchingNet10 CatchingNet11 CatchingNet12 TrapBoxSet1 TrapBoxSet2 TrapBoxSet3 TrapBoxSet4 TrapBoxSet5 TrapBoxSet6 TrapBoxSet7 TrapBoxSet8 TrapBoxSet9 TrapBoxSet10 WorshipSkull1 WorshipSkull2 WorshipSkull3 WorshipSkull4 WorshipSkull5 WorshipSkull6 WorshipSkull7 WorshipSkull8 WorshipSkull9 WorshipSkull10 WorshipSkull11 DNAgun0 DNAgun1 DNAgun2 DNAgun3 FoodHealth1 FoodHealth3 FoodHealth2 Peanut FoodHealth4 FoodHealth6 FoodHealth7 FoodHealth10 FoodHealth9 FoodHealth11 FoodHealth13 FoodHealth12 FoodHealth14 FoodHealth15 FoodHealth16 FoodHealth17 FoodHealth5 FoodEvent8 Meatloaf FoodPotOr1 FoodPotOr2 FoodPotOr3 FoodPotOr4 FoodPotRe1 FoodPotRe2 FoodPotRe3 FoodPotRe4 FoodPotGr1 FoodPotGr2 FoodPotGr3 FoodPotGr4 FoodEvent7 FoodPotMana1 FoodPotMana2 FoodPotMana3 FoodPotMana4 FoodPotYe1 FoodPotYe2 FoodPotYe3 FoodPotYe4 FoodPotYe5 FoodEvent6 Pearl3 FoodMining1 FoodEvent1 Pearl2 FoodChoppin1 FoodEvent2 FoodFish1 FoodEvent3 Pearl1 FoodCatch1 FoodEvent4 FoodTrapping1 FoodWorship1 Bullet BulletB Bullet3 MidnightCookie FoodEvent5 PeanutG FoodG1 FoodG2 FoodG3 FoodG4 FoodG5 FoodG6 FoodG7 FoodG8 FoodG9 FoodG10 FoodG11 FoodG12 FoodG13 ButterBar rtt0 ResetFrag ResetCompleted ResetCompletedS ClassSwap ClassSwapB ResetBox Ht StonePremRestore StonePremStatswap Key1 Key2 Key3 Key4 Key5 TixCol SilverPen PremiumGem TalentPoint1 TalentPoint2 TalentPoint3 TalentPoint4 TalentPoint5 TalentPoint6 Gfoodcoupon ItemsCoupon1 ItemsCoupon2 ExpBalloon1 ExpBalloon2 ExpBalloon3 Pearl4 Pearl6 Pearl5 Quest30 Quest35 Quest36 Quest38 Quest39 Quest40 Quest42 Quest43 Quest44 Quest49 Quest50 Quest70 Quest71 Quest72 Quest73 Quest75 Quest85 Quest76 Quest77 Quest79 Quest80 GemP30 Quest81 Quest82 Timecandy1 Timecandy2 Timecandy3 Timecandy4 Timecandy5 Timecandy6 Timecandy7 Timecandy8 Timecandy9 StoneWe StoneWeb StoneW1 StoneW2 StoneW3 StoneW3b StoneW6 StoneW4 StoneW5 StoneW7 StoneW8 StoneAe StoneAeB StoneA1 StoneA1b StoneA2 StoneA2b StoneA3 StoneA3b StoneA4 StoneA5 StoneA6 StoneA7 StoneTe StoneT1 StoneT1e StoneT1eb StoneT2 StoneT3 StoneT4 StoneT5 StoneT6 StoneT7 StoneHelm1 StoneHelm6 StoneHelm1b StoneHelm7 StoneZ1 StoneZ2 StoneZ3 StoneZ4 StonePremSTR StonePremAGI StonePremWIS StonePremLUK JobApplication SmithingHammerChisel SmithingHammerChisel2 SmithingHammerChisel3 BobJoePickle BallJoePickle BoneJoePickle Quest1 Crystal1 Crystal2 Crystal3 Crystal4 Crystal5 PeanutS Quest3 Quest4 Mayo Trash Trash2 Trash3 Quest5 Quest6 Quest7 Quest10 Quest11 Quest12 Quest13 Quest14 Quest15 Quest16 Quest18 Quest19 Quest20 Quest21 Quest22 Quest23 Quest24 Quest25 Quest26 Quest27 GoldricP1 GoldricP2 GoldricP3 Cutter Quest32 Quest33 Quest34 Quest37 Quest41 Quest45 Quest46 Quest47 Quest48 Quest51 Quest52 PalmTreeD Quest53 Quest54 Quest55 Quest56 Quest57 Quest58 Quest59 Quest60 Quest61 Quest62 Quest63 Quest64 Quest65 Quest66 Quest67 Whetstone Quest68 Quest69 Quest74 Quest78 Quest83 Quest84 BadgeG1 BadgeG2 BadgeG3 BadgeD1 BadgeD2 BadgeD3 NPCtoken1 NPCtoken2 NPCtoken3 NPCtoken5 NPCtoken6 NPCtoken4 NPCtoken9 NPCtoken10 NPCtoken11 NPCtoken13 NPCtoken7 Quest9 NPCtoken15 NPCtoken12 NPCtoken14 NPCtoken16 NPCtoken17 NPCtoken18 NPCtoken19 NPCtoken20 NPCtoken21 NPCtoken27 NPCtoken22 NPCtoken24 NPCtoken25 NPCtoken26 NPCtoken23 NPCtoken28 NPCtoken29 NPCtoken30 NPCtoken31 NPCtoken32 NPCtoken33 NPCtoken34 NPCtoken35 NPCtoken36 NPCtoken37 NPCtoken38 NPCtoken39 NPCtoken40 NPCtoken41 BadgeI1 BadgeI2 BadgeI3 EquipmentStatues1 EquipmentStatues2 EquipmentStatues3 EquipmentStatues4 EquipmentStatues5 EquipmentStatues6 EquipmentStatues7 EquipmentStatues8 EquipmentStatues9 EquipmentStatues10 EquipmentStatues11 EquipmentStatues12 EquipmentStatues13 EquipmentStatues14 EquipmentStatues15 EquipmentStatues16 EquipmentStatues17 EquipmentStatues18 EquipmentStatues19 EquipmentStatues20 EquipmentStatues21 EquipmentStatues22 EquipmentStatues23 EquipmentStatues24 EquipmentStatues25 EquipmentStatues26 EquipmentStatues27 EquipmentStatues28 EquipmentSmithingTabs2 EquipmentSmithingTabs3 EquipmentSmithingTabs4 EquipmentSmithingTabs5 EquipmentSmithingTabs6 SmithingRecipes1 SmithingRecipes2 SmithingRecipes3 SmithingRecipes4 SmithingRecipes5 SmithingRecipes6 TalentBook1 TalentBook2 TalentBook3 TalentBook4 TalentBook5 MaxCapBagT2 MaxCapBag1 MaxCapBag2 MaxCapBag3 MaxCapBag4 MaxCapBag5 MaxCapBagMi6 MaxCapBagMi7 MaxCapBagMi8 MaxCapBagMi9 MaxCapBagMi10 MaxCapBagMi11 MaxCapBagT1 MaxCapBag7 MaxCapBag9 MaxCapBagT3 MaxCapBagT4 MaxCapBagT5 MaxCapBagT6 MaxCapBagT7 MaxCapBagT8 MaxCapBagT9 MaxCapBagT10 MaxCapBagT11 MaxCapBag6 MaxCapBag8 MaxCapBag10 MaxCapBagF3 MaxCapBagF4 MaxCapBagF5 MaxCapBagF6 MaxCapBagF7 MaxCapBagF8 MaxCapBagF9 MaxCapBagF10 MaxCapBagF11 MaxCapBagM1 MaxCapBagM2 MaxCapBagM3 MaxCapBagM4 MaxCapBagM5 MaxCapBagM6 MaxCapBagM7 MaxCapBagM8 MaxCapBagM9 MaxCapBagM10 MaxCapBagM11 MaxCapBagM12 MaxCapBagFi1 MaxCapBagFi2 MaxCapBagFi3 MaxCapBagFi4 MaxCapBagFi5 MaxCapBagFi6 MaxCapBagFi7 MaxCapBagFi8 MaxCapBagFi9 MaxCapBagFi10 MaxCapBagFi11 MaxCapBagB1 MaxCapBagB2 MaxCapBagB3 MaxCapBagB4 MaxCapBagB5 MaxCapBagB6 MaxCapBagB7 MaxCapBagB8 MaxCapBagB9 MaxCapBagB10 MaxCapBagB11 MaxCapBagTr1 MaxCapBagTr3 MaxCapBagTr4 MaxCapBagTr5 MaxCapBagTr6 MaxCapBagTr7 MaxCapBagTr8 MaxCapBagTr9 MaxCapBagTr10 MaxCapBagS1 MaxCapBagS3 MaxCapBagS4 MaxCapBagS5 MaxCapBagS6 MaxCapBagS7 MaxCapBagS8 MaxCapBagS9 MaxCapBagS10 ObolBronze0 ObolSilver0 ObolGold0 ObolPlatinum0 ObolPink0 ObolBronze1 ObolSilver1 ObolGold1 ObolPlatinum1 ObolPink1 ObolBronze2 ObolSilver2 ObolGold2 ObolPlatinum2 ObolPink2 ObolBronze3 ObolSilver3 ObolGold3 ObolPlatinum3 ObolPink3 ObolBronzeDamage ObolSilverDamage ObolGoldDamage ObolPlatinumDamage ObolPinkDamage ObolSilverMoney ObolGoldMoney ObolBronzeMining ObolSilverMining ObolGoldMining ObolPlatinumMining ObolPinkMining ObolBronzeChoppin ObolSilverChoppin ObolGoldChoppin ObolPlatinumChoppin ObolPinkChoppin ObolBronzeFishing ObolSilverFishing ObolGoldFishing ObolPlatinumFishing ObolPinkFishing ObolBronzeCatching ObolSilverCatching ObolGoldCatching ObolPlatinumCatching ObolPinkCatching ObolSilverLuck ObolGoldLuck ObolPlatinumLuck ObolPinkLuck ObolBronzePop ObolSilverPop ObolGoldPop ObolPlatinumPop ObolPinkPop ObolBronzeKill ObolSilverKill ObolGoldKill ObolPlatinumKill ObolPinkKill ObolBronzeEXP ObolSilverEXP ObolGoldEXP ObolPlatinumEXP ObolPinkEXP ObolBronzeCard ObolSilverCard ObolGoldCard ObolPlatinumCard ObolPinkCard ObolBronzeDef ObolSilverDef ObolGoldDef ObolPlatinumDef ObolPinkDef ObolBronzeTrapping ObolSilverTrapping ObolGoldTrapping ObolPlatinumTrapping ObolPinkTrapping ObolBronzeCons ObolSilverCons ObolGoldCons ObolPlatinumCons ObolPinkCons ObolBronzeWorship ObolSilverWorship ObolGoldWorship ObolPlatinumWorship ObolPinkWorship ObolFrog ObolAmarokA ObolEfauntA ObolKnight ObolSlush ObolChizoarA ObolTroll ObolLava ObolKruk ObolHyper0 ObolHyper1 ObolHyper2 ObolHyper3 ObolHyperB0 ObolHyperB1 ObolHyperB2 ObolHyperB3 StampA1 StampA2 StampA3 StampA4 StampA5 StampA6 StampA7 StampA8 StampA9 StampA10 StampA11 StampA12 StampA13 StampA14 StampA15 StampA16 StampA17 StampA18 StampA19 StampA20 StampA21 StampA22 StampA23 StampA24 StampA25 StampA26 StampA27 StampA28 StampA29 StampA30 StampA31 StampA32 StampA33 StampA34 StampA35 StampA36 StampA37 StampA38 StampA39 StampA40 StampA41 StampA42 StampB1 StampB2 StampB3 StampB4 StampB5 StampB6 StampB7 StampB8 StampB9 StampB10 StampB11 StampB12 StampB13 StampB14 StampB15 StampB16 StampB17 StampB18 StampB19 StampB20 StampB21 StampB22 StampB23 StampB24 StampB25 StampB26 StampB27 StampB28 StampB29 StampB30 StampB31 StampB32 StampB33 StampB34 StampB35 StampB36 StampB37 StampB38 StampB39 StampB40 StampB41 StampB42 StampB43 StampB44 StampB45 StampB46 StampB47 StampB48 StampB49 StampB50 StampB51 StampB52 StampB53 StampB54 StampC1 StampC2 StampC3 StampC4 StampC5 StampC6 StampC7 StampC8 StampC9 StampC10 StampC11 StampC12 StampC13 StampC14 StampC15 StampC16 StampC17 StampC18 StampC19 StampC20 StampC21 StampC22 StampC23 InvBag1 InvBag2 InvBag3 InvBag4 InvBag5 InvBag6 InvBag7 InvBag8 InvBag100 InvBag101 InvBag102 InvBag103 InvBag104 InvBag105 InvBag106 InvBag107 InvBag108 InvBag109 InvBag110 InvBag111 InvStorage1 InvStorage2 InvStorage3 InvStorage4 InvStorage5 InvStorage6 InvStorage7 InvStorage8 InvStorage9 InvStorage10 InvStorage11 InvStorage12 InvStorage13 InvStorage14 InvStorage15 InvStorage16 InvStorage17 InvStorage18 InvStorage19 InvStorage20 InvStorage21 InvStorage22 InvStorage23 InvStorage24 InvStorage25 InvStorage26 InvStorage27 InvStorage28 InvStorageF InvStorageS InvStorageC InvStorageD InvStorageN Weight1 Weight2 Weight3 Weight4 Weight5 Weight6 Weight7 Weight8 Weight9 Weight10 Weight11 Weight12 Weight13 Weight14 Line1 Line2 Line3 Line4 Line5 Line6 Line7 Line8 Line9 Line10 Line11 Line12 Line13 Line14 Ladle PetEgg Genetic0 Genetic1 Genetic2 Genetic3 CardPack1 CardPack2 CardPack3 CardPack4 CardPack5 CardPack6 CardPack7 DungCredits2 Cash XP XPskill DungEnhancer0 DungEnhancer1 DungEnhancer2 DungRNG0 DungRNG1 DungRNG2 DungRNG3 DungRNG4 DungeonA1 DungeonA2 DungeonA3 DungeonA4 DungeonA5 DungeonA6 DungeonA7 DungeonA8 KeyFrag DungCredits1 LootDice Tree7D PlatD Fish1D Fish3D Cashb Dung3Ice FoodHealth1d FoodHealth2d FoodHealth3d DungWeaponPunchA1 DungWeaponPunchA2 DungWeaponPunchA3 DungWeaponPunchA4 DungWeaponPunchA5 DungWeaponPunchB1 DungWeaponPunchB2 DungWeaponPunchB3 DungWeaponPunchB4 DungWeaponPunchB5 DungWeaponPunchC1 DungWeaponPunchC2 DungWeaponPunchC3 DungWeaponPunchC4 DungWeaponPunchC5 DungWeaponPunchD1 DungWeaponPunchD2 DungWeaponPunchD3 DungWeaponPunchD4 DungWeaponPunchD5 DungWeaponPunchE1 DungWeaponPunchE2 DungWeaponPunchE3 DungWeaponPunchE4 DungWeaponPunchE5 DungWeaponPunchF1 DungWeaponPunchF2 DungWeaponPunchF3 DungWeaponPunchF4 DungWeaponPunchF5 DungWeaponSwordA1 DungWeaponSwordA2 DungWeaponSwordA3 DungWeaponSwordA4 DungWeaponSwordA5 DungWeaponSwordB1 DungWeaponSwordB2 DungWeaponSwordB3 DungWeaponSwordB4 DungWeaponSwordB5 DungWeaponSwordC1 DungWeaponSwordC2 DungWeaponSwordC3 DungWeaponSwordC4 DungWeaponSwordC5 DungWeaponSwordD1 DungWeaponSwordD2 DungWeaponSwordD3 DungWeaponSwordD4 DungWeaponSwordD5 DungWeaponSwordE1 DungWeaponSwordE2 DungWeaponSwordE3 DungWeaponSwordE4 DungWeaponSwordE5 DungWeaponSwordF1 DungWeaponSwordF2 DungWeaponSwordF3 DungWeaponSwordF4 DungWeaponSwordF5 DungWeaponBowA1 DungWeaponBowA2 DungWeaponBowA3 DungWeaponBowA4 DungWeaponBowA5 DungWeaponBowB1 DungWeaponBowB2 DungWeaponBowB3 DungWeaponBowB4 DungWeaponBowB5 DungWeaponBowC1 DungWeaponBowC2 DungWeaponBowC3 DungWeaponBowC4 DungWeaponBowC5 DungWeaponBowD1 DungWeaponBowD2 DungWeaponBowD3 DungWeaponBowD4 DungWeaponBowD5 DungWeaponBowE1 DungWeaponBowE2 DungWeaponBowE3 DungWeaponBowE4 DungWeaponBowE5 DungWeaponBowF1 DungWeaponBowF2 DungWeaponBowF3 DungWeaponBowF4 DungWeaponBowF5 DungWeaponWandA1 DungWeaponWandA2 DungWeaponWandA3 DungWeaponWandA4 DungWeaponWandA5 DungWeaponWandB1 DungWeaponWandB2 DungWeaponWandB3 DungWeaponWandB4 DungWeaponWandB5 DungWeaponWandC1 DungWeaponWandC2 DungWeaponWandC3 DungWeaponWandC4 DungWeaponWandC5 DungWeaponWandD1 DungWeaponWandD2 DungWeaponWandD3 DungWeaponWandD4 DungWeaponWandD5 DungWeaponWandE1 DungWeaponWandE2 DungWeaponWandE3 DungWeaponWandE4 DungWeaponWandE5 DungWeaponWandF1 DungWeaponWandF2 DungWeaponWandF3 DungWeaponWandF4 DungWeaponWandF5 DungEquipmentHats0 DungEquipmentHats1 DungEquipmentHats2 DungEquipmentHats3 DungEquipmentHats4 DungEquipmentShirt0 DungEquipmentShirt1 DungEquipmentShirt2 DungEquipmentShirt3 DungEquipmentShirt4 DungEquipmentPants0 DungEquipmentPants1 DungEquipmentPants2 DungEquipmentPants3 DungEquipmentPants4 DungEquipmentShoes0 DungEquipmentShoes1 DungEquipmentShoes2 DungEquipmentShoes3 DungEquipmentShoes4 DungEquipmentPendant0 DungEquipmentPendant1 DungEquipmentPendant2 DungEquipmentPendant3 DungEquipmentPendant4 DungEquipmentRings0 DungEquipmentRings1 DungEquipmentRings2 DungEquipmentRings3 DungEquipmentRings4".split(' ')
+knownSlabIgnorablesList = ["Mega-Rare_Drop", "Rare_Drop", "LockedInvSpace", "Blank"]
+dungeonDropsList = [
+    "Quest51", "Quest52", "PalmTreeD", "Quest53", "Quest54", "Quest55",
+    "DungCredits2", "Cash", "XP", "XPskill", "DungEnhancer0", "DungEnhancer1", "DungEnhancer2",
+    "DungRNG0", "DungRNG1", "DungRNG2", "DungRNG3", "DungRNG4",
+    "DungeonA1", "DungeonA2", "DungeonA3", "DungeonA4", "DungeonA5", "DungeonA6", "DungeonA7", "DungeonA8",
+    "KeyFrag", "DungCredits1", "LootDice", "Tree7D", "PlatD", "Fish1D", "Fish3D", "Cashb", "Dung3Ice",
+    "FoodHealth1d", "FoodHealth2d", "FoodHealth3d"
+]
+maxDungeonWeaponsAvailable = 23 #This is the value saved in the JSON, 0-23 = 24 total. Last verified in 2.08
+dungeonWeaponsList = [
+    "DungWeaponPunchA1", "DungWeaponPunchA2", "DungWeaponPunchA3", "DungWeaponPunchA4", "DungWeaponPunchA5", "DungWeaponPunchB1", "DungWeaponPunchB2", "DungWeaponPunchB3", "DungWeaponPunchB4", "DungWeaponPunchB5", "DungWeaponPunchC1", "DungWeaponPunchC2", "DungWeaponPunchC3", "DungWeaponPunchC4", "DungWeaponPunchC5", "DungWeaponPunchD1", "DungWeaponPunchD2", "DungWeaponPunchD3", "DungWeaponPunchD4", "DungWeaponPunchD5", "DungWeaponPunchE1", "DungWeaponPunchE2", "DungWeaponPunchE3", "DungWeaponPunchE4", #"DungWeaponPunchE5", "DungWeaponPunchF1", "DungWeaponPunchF2", "DungWeaponPunchF3", "DungWeaponPunchF4", "DungWeaponPunchF5",
+    "DungWeaponSwordA1", "DungWeaponSwordA2", "DungWeaponSwordA3", "DungWeaponSwordA4", "DungWeaponSwordA5", "DungWeaponSwordB1", "DungWeaponSwordB2", "DungWeaponSwordB3", "DungWeaponSwordB4", "DungWeaponSwordB5", "DungWeaponSwordC1", "DungWeaponSwordC2", "DungWeaponSwordC3", "DungWeaponSwordC4", "DungWeaponSwordC5", "DungWeaponSwordD1", "DungWeaponSwordD2", "DungWeaponSwordD3", "DungWeaponSwordD4", "DungWeaponSwordD5", "DungWeaponSwordE1", "DungWeaponSwordE2", "DungWeaponSwordE3", "DungWeaponSwordE4", #"DungWeaponSwordE5", "DungWeaponSwordF1", "DungWeaponSwordF2", "DungWeaponSwordF3", "DungWeaponSwordF4", "DungWeaponSwordF5",
+    "DungWeaponBowA1", "DungWeaponBowA2", "DungWeaponBowA3", "DungWeaponBowA4", "DungWeaponBowA5", "DungWeaponBowB1", "DungWeaponBowB2", "DungWeaponBowB3", "DungWeaponBowB4", "DungWeaponBowB5", "DungWeaponBowC1", "DungWeaponBowC2", "DungWeaponBowC3", "DungWeaponBowC4", "DungWeaponBowC5", "DungWeaponBowD1", "DungWeaponBowD2", "DungWeaponBowD3", "DungWeaponBowD4", "DungWeaponBowD5", "DungWeaponBowE1", "DungWeaponBowE2", "DungWeaponBowE3", "DungWeaponBowE4", #"DungWeaponBowE5", "DungWeaponBowF1", "DungWeaponBowF2", "DungWeaponBowF3", "DungWeaponBowF4", "DungWeaponBowF5",
+    "DungWeaponWandA1", "DungWeaponWandA2", "DungWeaponWandA3", "DungWeaponWandA4", "DungWeaponWandA5", "DungWeaponWandB1", "DungWeaponWandB2", "DungWeaponWandB3", "DungWeaponWandB4", "DungWeaponWandB5", "DungWeaponWandC1", "DungWeaponWandC2", "DungWeaponWandC3", "DungWeaponWandC4", "DungWeaponWandC5", "DungWeaponWandD1", "DungWeaponWandD2", "DungWeaponWandD3", "DungWeaponWandD4", "DungWeaponWandD5", "DungWeaponWandE1", "DungWeaponWandE2", "DungWeaponWandE3", "DungWeaponWandE4", #"DungWeaponWandE5", "DungWeaponWandF1", "DungWeaponWandF2", "DungWeaponWandF3", "DungWeaponWandF4", #"DungWeaponWandF5",
+]
+maxDungeonArmorsAvailable = 3  #This is the value saved in the JSON, 0-3 = 4 total. Last verified in 2.08
+dungeonArmorsList = [
+    "DungEquipmentHats0", "DungEquipmentHats1", "DungEquipmentHats2", "DungEquipmentHats3", #"DungEquipmentHats4",
+    "DungEquipmentShirt0", "DungEquipmentShirt1", "DungEquipmentShirt2", "DungEquipmentShirt3", #"DungEquipmentShirt4",
+    "DungEquipmentPants0", "DungEquipmentPants1", "DungEquipmentPants2", "DungEquipmentPants3", #"DungEquipmentPants4",
+    "DungEquipmentShoes0", "DungEquipmentShoes1", "DungEquipmentShoes2", "DungEquipmentShoes3", #"DungEquipmentShoes4",
+] #This list was pulled from the items.yaml file
+maxDungeonJewelryAvailable = 3   #This is the value saved in the JSON, 0-3 = 4 total. Last verified in 2.08
+dungeonJewelryList = [
+    "DungEquipmentPendant0", "DungEquipmentPendant1", "DungEquipmentPendant2", "DungEquipmentPendant3", #"DungEquipmentPendant4",
+    "DungEquipmentRings0", "DungEquipmentRings1", "DungEquipmentRings2", "DungEquipmentRings3", #"DungEquipmentRings4",
+] #This list was pulled from the items.yaml file
+
+reclaimableQuestItems = {
+    "CraftMat2": {
+        "ItemName": "Crimson String",
+        "QuestGiver": "Scripticus",
+        "QuestName": "Hardcore Gamer Status, Here I Come!",
+        "QuestNameCoded": "Scripticus2"
+    },
+    "Quest1": {
+        "ItemName": "Mining Certificate",
+        "QuestGiver": "Glumlee",
+        "QuestName": "Literally Burning Your Money",
+        "QuestNameCoded": "Glumlee3"
+    },
+    "Quest5": {
+        "ItemName": "Class Certificate",
+        "QuestGiver": "Promotheus",
+        "QuestName": "Three Right Answers",
+        "QuestNameCoded": "Promotheus2"
+    },
+    "InvBag4": {
+        "ItemName": "Inventory Bag D",
+        "QuestGiver": "Promotheus",
+        "QuestName": "The Witcher, But Not Really",
+        "QuestNameCoded": "Promotheus4"
+    },
+    "Quest6": {
+        "ItemName": "Scouting Report",
+        "QuestGiver": "Stiltzcho",
+        "QuestName": "Investigator By Day, Prankster By Night",
+        "QuestNameCoded": "Stiltzcho3"
+    },
+    "Quest20": {
+        "ItemName": "Signed Arrest Warrant",
+        "QuestGiver": "Bandit Bob",
+        "QuestName": "Bringing Bob's Boxes",
+        "QuestNameCoded": "Bandit_Bob3"
+    },
+    "Quest27": {
+        "ItemName": "Bag o' Nuts",
+        "QuestGiver": "Goldric",
+        "QuestName": "Dress To Impress",
+        "QuestNameCoded": "Goldric5"
+    },
+    "Trophy13": {
+        "ItemName": "Club Maestro",
+        "QuestGiver": "Cactolyte",
+        "QuestName": "Maestro! The Stro! Mman!",
+        "QuestNameCoded": "Cactolyte4"
+    },
+    "Quest59": {
+        "ItemName": "Shuvelle's Vote",
+        "QuestGiver": "Shuvelle",
+        "QuestName": "Mayoral Movie Taste",
+        "QuestNameCoded": "Shuvelle4"
+    },
+    "Quest60": {
+        "ItemName": "Yondergreens Vote",
+        "QuestGiver": "Yondergreen",
+        "QuestName": "Legislative Action",
+        "QuestNameCoded": "Yondergreen4"
+    },
+    "Quest61": {
+        "ItemName": "Bill Brr's Vote",
+        "QuestGiver": "Bill Brr",
+        "QuestName": "Coin Shenanigans",
+        "QuestNameCoded": "Bill_Brr4"
+    },
+    "SmithingHammerChisel3": {
+        "ItemName": "Onyx Tools",
+        "QuestGiver": "Monolith",
+        "QuestName": "Onyx Statue Crafting",
+        "QuestNameCoded": "Monolith2"
+    },
+    "EquipmentNametag4": {
+        "ItemName": "Vman Nametag",
+        "QuestGiver": "Nebulyte",
+        "QuestName": "VMAN ACHIEVED!",
+        "QuestNameCoded": "Nebulyte4"
+    }
 }
-
-artifactsList = [
-    'Moai Head', 'Maneki Kat', 'Ruble Cuble', 'Fauxory Tusk', 'Gold Relic',
-    'Genie Lamp', 'Silver Ankh', 'Emerald Relic', 'Fun Hippoete', 'Arrowhead',
-    '10 AD Tablet', 'Ashen Urn', 'Amberite', 'Triagulon', 'Billcye Tri',
-    'Frost Relic', 'Chilled Yarn', 'Causticolumn', 'Jade Rock', 'Dreamcatcher',
-    'Gummy Orb', 'Fury Relic', 'Cloud Urn', 'Weatherbook', 'Giants Eye',
-    'Crystal Steak', 'Trilobite Rock', 'Opera Mask', 'Socrates', 'The True Lantern',
-    'The Onyx Lantern', 'The Shim Lantern', 'The Winz Lantern'
-]
-
-guildBonusesList = [
-    "Guild Gifts", "Stat Runes", "Rucksack", "Power of Pow", "REM Fighting", "Make or Break",
-    "Multi Tool", "Sleepy Skiller", "Coin Supercharger", "Bonus GP for small guilds", "Gold Charm", "Star Dazzle",
-    "C2 Card Spotter", "Bestone", "Skilley Skillet", "Craps", "Anotha One", "Wait A Minute"
-]
-
-labBonusesList = [
-    "Animal Farm", "Wired In", "Gilded Cyclical Tubing", "No Bubble Left Behind", "Killer's Brightside",
-    "Shrine World Tour", "Viaduct of the Gods", "Certified Stamp Book", "Spelunker Obol", "Fungi Finger Pocketer",
-    "My 1st Chemistry Set", "Unadulterated Banking Fury", "Sigils of Olden Alchemy", "Viral Connection",
-    "Artifact Attraction", "Slab Sovereignty", "Spiritual Growth", "Depot Studies PhD"
-]
-
-def lavaFunc(funcType: str, level: int, x1: int, x2: int, roundResult=False):
-    result = 0
-    match funcType:
-        case 'add':
-            if x2 != 0:
-                result = (((x1 + x2) / x2 + 0.5 * (level - 1)) / (x1/x2)) * level * x1
-            else:
-                result = level * x1
-        case 'decay':
-            result = (level * x1) / (level + x2)
-        case 'intervalAdd':
-            result = x1 + math.floor(level / x2)
-        case 'decayMulti':
-            result = 1 + (level * x1) / (level + x2)
-        case 'bigBase':
-            result = x1 + x2 * level
-        case 'special1':
-            result = 100 - (level * x1) / (level + x2)
-        case _:
-            result = 0
-    if roundResult:
-        return round(result)
-    else:
-        return result
+#vendorItems last pulled from code in 2.08. Search for: ShopNames = function ()
+vendorItems = {
+    "W1 Town": "FoodHealth1 FoodHealth3 FoodHealth2 CraftMat3 FoodPotMana1 FoodPotOr1 FoodPotRe1 FoodPotGr1 OilBarrel1 StoneW1 StoneA1 StoneT1 EquipmentRings7 EquipmentStatues1 SmithingHammerChisel StampA5 StampA6 StampA3 InvBag104 InvStorage2 InvStorage6 InvStorage7 Quest86 rtt0 ResetFrag".split(' '),
+    "Tiki Shop": "FoodHealth3 FoodHealth2 FoodHealth5 FoodPotOr2 FoodPotYe1 StoneA2 StampA12 EquipmentPendant12 Quest37 InvBag105 InvStorage8 InvStorage12 rtt0 ResetFrag".split(' '),
+    "W2 Town": "FoodHealth6 FoodHealth7 FoodHealth4 Quest19 BobJoePickle StoneW2 StoneA2 StoneT2 FoodPotOr2 FoodPotGr2 FoodPotRe2 InvBag106 InvStorage9 InvStorage10 InvStorage13 InvStorage15 SmithingHammerChisel2 StampC11 rtt0 ResetFrag".split(' '),
+    "Faraway Piers": "Line1 Weight1 Line5 Weight5 Weight10 Line10 Weight11 StoneT1 StoneT2 StampB8 StampA15 NPCtoken27 ResetFrag".split(' '),
+    "W3 Town": "FoodHealth10 FoodHealth9 FoodHealth11 TrapBoxSet1 WorshipSkull1 StoneW3 StoneA3 StoneT3 FoodPotOr3 FoodPotGr3 FoodPotRe3 InvBag107 InvStorage16 InvStorage17 InvStorage18 InvStorage19 InvStorage20 InvStorage21 rtt0 ResetFrag Quest57 Quest67 Whetstone".split(' '),
+    "W4 Town": "Quest65 Quest66 FoodHealth13 FoodHealth12 DNAgun0 StoneW4 StoneA4 StoneT4 FoodPotOr4 FoodPotGr4 FoodPotRe4 FoodPotYe4 InvBag108 StampB41 StampB38 StampC12 Quest83".split(' '),
+    "W5 Town": "FoodHealth14 FoodHealth15 OilBarrel6 StoneW5 StoneA5 StoneT5 StampC22 Quest84".split(' '),
+    "W6 Town": "BoneJoePickle Quest80 FoodHealth16 FoodHealth17 OilBarrel7 StoneW8 StoneA7 StoneT7 StampC10 InvStorage26 InvStorage27 InvStorage28".split(' ')}
+#anvilItems last pulled from code in 2.08. Search for: ItemToCraftNAME = function ()
+anvilItems = {
+    "Anvil Tab I": "EquipmentPunching1 TestObj1 EquipmentBows1 EquipmentWands1 EquipmentHats1 EquipmentShirts1 EquipmentPants1 EquipmentShoes9 EquipmentTools2 MaxCapBag1 EquipmentToolsHatchet3 MaxCapBag7 EquipmentHats15 EquipmentPunching2 MaxCapBag8 MaxCapBagM2 EquipmentHats17 EquipmentShirts11 EquipmentPants2 EquipmentShoes1 EquipmentHats20 EquipmentHats3 EquipmentHats16 EquipmentHats21 TestObj7 EquipmentBows3 EquipmentWands2 EquipmentRings2 EquipmentTools3 MaxCapBag2 EquipmentToolsHatchet1 MaxCapBag9 EquipmentHats18 EquipmentShirts12 EquipmentPants3 EquipmentSmithingTabs2 EquipmentShirts2 EquipmentPendant10 EquipmentShoes15 EquipmentRings3 EquipmentHats8 FoodMining1 FoodChoppin1 EquipmentShoes7 EquipmentShirts10 EquipmentShirts20 OilBarrel5 EquipmentRings14 EquipmentPants15 EquipmentPants18 Peanut PeanutG InvBag102 EquipmentShirts25 EquipmentShirts24 EquipmentShirts3 BadgeG1 BadgeG2 BadgeG3 EquipmentHats67 NPCtoken1 NPCtoken2 NPCtoken3 EquipmentRings26 EquipmentHats22 EquipmentShirts18 EquipmentPants17 EquipmentShoes20 EquipmentPants22 EquipmentPants23 FillerMaterial EquipmentPendant17 FishingRod2 MaxCapBagFi1 CatchingNet2 MaxCapBagB1 FishingRod3 MaxCapBagFi2 CatchingNet3 MaxCapBagB2 TrapBoxSet2 MaxCapBagTr1 WorshipSkull2 MaxCapBagS1".split(" "),
+    "Anvil Tab II": "EquipmentHats28 EquipmentShirts13 EquipmentPants4 EquipmentShoes3 EquipmentPunching3 TestObj3 EquipmentBows5 EquipmentWands5 EquipmentTools5 MaxCapBag3 EquipmentToolsHatchet2 MaxCapBagT3 FishingRod4 MaxCapBagFi3 CatchingNet4 MaxCapBagB3 EquipmentRings11 EquipmentPendant16 MaxCapBagF3 MaxCapBagM4 EquipmentHats19 EquipmentShirts14 EquipmentPants5 EquipmentShoes4 EquipmentPendant26 EquipmentSword1 EquipmentBows6 EquipmentWands6 EquipmentTools6 MaxCapBag4 EquipmentToolsHatchet4 MaxCapBagT4 FishingRod5 MaxCapBagFi4 CatchingNet5 MaxCapBagB4 MaxCapBagF4 MaxCapBagM5 FillerMaterial EquipmentSmithingTabs3 Quest13 Quest35 Bullet BulletB EquipmentHats64 TestObj13 EquipmentHats41 EquipmentHats26 FillerMaterial EquipmentShirts5 EquipmentShirts23 EquipmentShirts22 EquipmentShoes16 EquipmentShoes18 EquipmentShoes19 EquipmentShoes17 FoodFish1 FoodCatch1 Quest36 InvBag103 EquipmentHats52 EquipmentShirts26 EquipmentPants20 EquipmentShoes21 EquipmentRings16 EquipmentRings27 EquipmentPendant27 FillerMaterial TrapBoxSet3 MaxCapBagTr3 WorshipSkull3 MaxCapBagS3 BadgeD1 BadgeD2 BadgeD3 ResetCompletedS NPCtoken28 NPCtoken29 NPCtoken30 FillerMaterial".split(" "),
+    "Anvil Tab III": "EquipmentHats53 EquipmentShirts15 EquipmentPants6 EquipmentShoes5 EquipmentPunching4 EquipmentSword2 EquipmentBows7 EquipmentWands3 EquipmentTools7 MaxCapBag5 EquipmentToolsHatchet5 MaxCapBagT5 FishingRod6 MaxCapBagFi5 CatchingNet6 MaxCapBagB5 TrapBoxSet4 MaxCapBagTr4 WorshipSkull4 MaxCapBagS4 EquipmentRings28 EquipmentRings29 MaxCapBagF5 MaxCapBagM6 EquipmentHats54 EquipmentShirts27 EquipmentPants21 EquipmentShoes22 EquipmentPunching5 EquipmentSword3 EquipmentBows8 EquipmentWands7 EquipmentTools11 MaxCapBagMi6 EquipmentToolsHatchet7 MaxCapBagT6 FishingRod7 MaxCapBagFi6 CatchingNet7 MaxCapBagB6 TrapBoxSet5 MaxCapBagTr5 WorshipSkull5 MaxCapBagS5 MaxCapBagF6 MaxCapBagM7 Trophy20 EquipmentSmithingTabs4 EquipmentHats61 EquipmentHats58 EquipmentHats59 EquipmentHats60 EquipmentShirts31 EquipmentShirts28 EquipmentShirts29 EquipmentShirts30 FoodTrapping1 FoodWorship1 InvBag109 EquipmentHats66 BadgeI1 BadgeI2 BadgeI3 Quest68 NPCtoken39 NPCtoken40 NPCtoken41 EquipmentPendant25 EquipmentHats68 EquipmentShirts6 EquipmentPants9 EquipmentShoes23".split(" "),
+    "Anvil Tab IV": "EquipmentHats70 EquipmentShirts32 EquipmentPants24 EquipmentShoes24 EquipmentPunching6 EquipmentSword4 EquipmentBows9 EquipmentWands8 EquipmentTools8 MaxCapBagMi7 EquipmentToolsHatchet6 MaxCapBagT7 FishingRod8 MaxCapBagFi7 CatchingNet8 MaxCapBagB7 TrapBoxSet6 MaxCapBagTr6 WorshipSkull6 MaxCapBagS6 EquipmentShoes26 EquipmentShoes27 EquipmentShoes28 EquipmentShoes29 EquipmentShoes31 EquipmentShoes33 MaxCapBagF7 MaxCapBagM8 EquipmentHats71 EquipmentShirts33 EquipmentPants25 EquipmentShoes25 EquipmentPunching7 EquipmentSword5 EquipmentBows10 EquipmentWands9 EquipmentTools12 MaxCapBagMi8 EquipmentToolsHatchet8 MaxCapBagT8 FishingRod9 MaxCapBagFi8 CatchingNet9 MaxCapBagB8 TrapBoxSet7 MaxCapBagTr7 WorshipSkull7 MaxCapBagS7 MaxCapBagF8 MaxCapBagM9 FillerMaterial EquipmentSmithingTabs5 InvBag111 DNAgun1 DNAgun2 DNAgun3 EquipmentRings30 FillerMaterial FillerMaterial FillerMaterial EquipmentHats74 EquipmentShirts34 EquipmentPants8 EquipmentShoes34".split(" "),
+    "Anvil Tab V": "EquipmentHats77 EquipmentShirts35 EquipmentPants26 EquipmentShoes35 EquipmentPunching8 EquipmentSword6 EquipmentBows11 EquipmentWands10 EquipmentTools9 MaxCapBagMi9 EquipmentToolsHatchet9 MaxCapBagT9 FishingRod10 MaxCapBagFi9 CatchingNet10 MaxCapBagB9 TrapBoxSet8 MaxCapBagTr8 WorshipSkull9 MaxCapBagS8 MaxCapBagF9 MaxCapBagM10 Bullet3 EquipmentSmithingTabs6 EquipmentHats83 EquipmentShirts36 EquipmentPants27 EquipmentShoes36 EquipmentPunching9 EquipmentSword7 EquipmentBows12 EquipmentWands11 EquipmentPendant30 EquipmentHats107 EquipmentShoes39 EquipmentRings35".split(" "),
+    "Anvil Tab VI": "EquipmentHats105 EquipmentShirts37 EquipmentPants29 EquipmentShoes37 EquipmentPunching10 EquipmentSword8 EquipmentBows13 EquipmentWands12 EquipmentTools14 MaxCapBagMi10 EquipmentToolsHatchet12 MaxCapBagT10 FishingRod11 MaxCapBagFi10 CatchingNet11 MaxCapBagB10 TrapBoxSet9 MaxCapBagTr9 WorshipSkull10 MaxCapBagS9 MaxCapBagF10 MaxCapBagM11 EquipmentRings36 FillerMaterial EquipmentHats106 EquipmentShirts38 EquipmentPants30 EquipmentShoes38 EquipmentPunching11 EquipmentSword9 EquipmentBows14 EquipmentWands13 EquipmentTools15 MaxCapBagMi11 EquipmentToolsHatchet10 MaxCapBagT11 FishingRod12 MaxCapBagFi11 CatchingNet12 MaxCapBagB11 TrapBoxSet10 MaxCapBagTr10 WorshipSkull11 MaxCapBagS10 MaxCapBagF11 MaxCapBagM12 FoodG13 EquipmentSmithingTabs7".split(" ")
+}
+anvilTabs = {
+    "Anvil Tab I": "EquipmentSmithingTabs2",
+    "Anvil Tab II": "EquipmentSmithingTabs3",
+    "Anvil Tab III": "EquipmentSmithingTabs4",
+    "Anvil Tab IV":"EquipmentSmithingTabs5",
+    "Anvil Tab V": "EquipmentSmithingTabs6",
+    "Anvil Tab VI": "EquipmentSmithingTabs7",
+}

@@ -24,8 +24,12 @@ def getDaysToNextShinyLevel(days: float) -> float:
         if float(days) > requirement:
             shinyLevel += 1
     #logger.debug(f"Input days of {days} found to be less than {shinyDaysList[highestExceeded]} by {shinyDaysList[highestExceeded] - float(days)} days")
-    daysRemaining = shinyDaysList[shinyLevel] - float(days)
-    return daysRemaining
+    try:
+        daysRemaining = shinyDaysList[shinyLevel] - float(days)
+        return daysRemaining
+    except Exception as reason:
+        logger.warning(f"With shinyLevel of {shinyLevel}, Defaulting Shiny days Remaining to 0. Reason: {reason}")
+        return 0
 
 def getShinyExclusions():
     shinyExclusionsDict = {
