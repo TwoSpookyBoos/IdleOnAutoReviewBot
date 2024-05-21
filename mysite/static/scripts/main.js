@@ -61,13 +61,16 @@ function openSidebarIfFirstAccess() {
 function defineFormSubmitAction() {
     document.querySelector('form').addEventListener('submit', (e) => {
         e.preventDefault()
+
         const formData = new FormData(e.target)
         formData.set('light', localStorage.getItem('light'))
         storeUserParams(Object.fromEntries(formData))
-        const data = fetchStoredUserParams()
+
         const target = document.querySelector("#top")
         target.innerHTML = ""
         spinner.spin(target)
+
+        const data = fetchStoredUserParams()
         fetchPlayerAdvice(data)
         toggleSidebar()
     })
