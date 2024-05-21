@@ -22,6 +22,8 @@
 @import "sailing";
 @import "sneaking";
 @import "starsigns";
+@import "achievements";
+@import "arcade";
 
 $id-map: (
 	item-backpack-space: $inventory-bag-u,
@@ -2413,6 +2415,8 @@ $id-map: map-merge($all-laboratory, $id-map);
 $id-map: map-merge($all-sneaking, $id-map);
 $id-map: map-merge($starsigns, $id-map);
 $id-map: map-merge($all-alchemy, $id-map);
+$id-map: map-merge($achievements, $id-map);
+$id-map: map-merge($arcade, $id-map);
 
 @each $class, $link in $id-map {
 	.#{$class}::before {
