@@ -26,11 +26,15 @@ def setSneakingProgressionTier():
     tier_Sneaking = 0
     max_tier = 0
     #Assess Gemstones
-    for gemstoneName, gemstoneLevel in session_data.account.sneaking["Gemstones"].items():
+    for gemstoneName, gemstoneData in session_data.account.sneaking["Gemstones"].items():
         sneaking_AdviceDict["Gemstones"].append(Advice(
-            label=f"{gemstoneName} (Level {session_data.account.sneaking.get('Gemstones', {}).get(gemstoneName, {}).get('Level', 0)}: +{session_data.account.sneaking.get('Gemstones', {}).get(gemstoneName, {}).get('Value', 0):.2f}% {session_data.account.sneaking.get('Gemstones', {}).get(gemstoneName, {}).get('Stat', '')})",
+            label="{} (Level {}: +{:.2f}% {})".format(
+                gemstoneName,
+                gemstoneData.get('Level', 0),
+                gemstoneData.get('Value', 0),
+                gemstoneData.get('Stat', '')),
             picture_class=gemstoneName,
-            progression=f"{session_data.account.sneaking.get('Gemstones', {}).get(gemstoneName, {}).get('Percent', 0):.2f}",
+            progression=f"{gemstoneData.get('Percent', 0):.2f}",
             goal=100,
             unit="%"
         ))

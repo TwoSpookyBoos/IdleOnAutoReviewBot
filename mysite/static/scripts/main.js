@@ -1,3 +1,36 @@
+const opts = {
+  lines: 13, // The number of lines to draw
+  length: 38, // The length of each line
+  width: 17, // The line thickness
+  radius: 45, // The radius of the inner circle
+  scale: 1, // Scales overall size of the spinner
+  corners: 1, // Corner roundness (0..1)
+  speed: 1, // Rounds per second
+  rotate: 28, // The rotation offset
+  animation: 'spinner-line-fade-default', // The CSS animation name for the lines
+  direction: 1, // 1: clockwise, -1: counterclockwise
+  color: '#ffffff', // CSS color or array of colors
+  fadeColor: 'transparent', // CSS color or array of colors
+  top: '50%', // Top position relative to parent
+  left: '50%', // Left position relative to parent
+  shadow: '0 0 1px transparent', // Box-shadow for the lines
+  zIndex: 10, // The z-index (defaults to 2e9)
+  className: 'spinner', // The CSS class to assign to the spinner
+  position: 'absolute', // Element positioning
+};
+
+const defaults = {
+    player: "",
+    autoloot: "off",
+    sheepie: "off",
+    doot: "off",
+    order_tiers: "off",
+    progress_bars: "off",
+    handedness: "off"
+}
+
+const spinner = new Spin.Spinner(opts)
+
 function toggleSidebar() {
     document.querySelectorAll('#drawer, #drawer-handle').forEach(e => e.classList.toggle('sidebar-open'))
 }
@@ -16,6 +49,26 @@ document.addEventListener("keydown", (e) => {
     let escPressed = e.code === "Escape"
     if (escPressed) toggleSidebar()
 })
+
+function openSidebarIfFirstAccess() {
+    // show sidebar if opening the page for the first time
+    if (document.querySelectorAll('main, .error').length === 0) {
+        toggleSidebar()
+    }
+}
+
+function defineFormSubmitAction() {
+    document.querySelector('form').addEventListener('submit', (e) => {
+        e.preventDefault()
+        storeUserParams(Object.fromEntries(new FormData(e.target)))
+        const data = fetchStoredUserParams()
+        const target = document.querySelector("#top")
+        target.innerHTML = ""
+        spinner.spin(target)
+        fetchPlayerAdvice(data)
+        toggleSidebar()
+    })
+}
 
 // calculate progress bars
 function calcProgressBars(parent = document) {
@@ -80,7 +133,8 @@ window.addEventListener('resize', () => {
         resizeTimer = null
     }, 100)
 })
-document.addEventListener("DOMContentLoaded", () => {
+
+function setupFolding() {
     // set event listeners for folding worlds and sections
     document.querySelectorAll('.toggler').forEach(toggler => toggler.onclick = (e) => {
         let title = e.currentTarget
@@ -88,20 +142,27 @@ document.addEventListener("DOMContentLoaded", () => {
             element.classList.toggle("folded")
         }
     })
+}
 
+function setupLightSwitch() {
     document.querySelector('#light-switch').onclick = (e) => {
         document.documentElement.classList.toggle('light-mode')
         e.currentTarget.classList.toggle('on')
         e.currentTarget.classList.toggle('off')
     }
-    document.querySelector('#drawer-handle').onclick = toggleSidebar
+}
 
+function setupSidebarToggling() {
+    document.querySelector('#drawer-handle').onclick = toggleSidebar
+}
+
+function setupSubmitKeybind() {
     // submit the form content if the text area is focused and (Ctrl|Cmd) + Enter is pressed
     document.querySelector("textarea[name='player']").addEventListener("keypress", e => {
         let ctrlCmdPressed = e.ctrlKey || e.metaKey
         let enterPressed = e.code === "Enter"
 
-        if (! (ctrlCmdPressed && enterPressed)) return
+        if (!(ctrlCmdPressed && enterPressed)) return
 
         let clickEvent = new MouseEvent('click', {
             'view': window,
@@ -110,7 +171,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         document.querySelector('input[type="submit"]').dispatchEvent(clickEvent);
     })
+}
 
+function setupColorScheme() {
     const runColorMode = (fn) => {
         if (!window.matchMedia) return
         const query = window.matchMedia('(prefers-color-scheme: light)')
@@ -125,29 +188,31 @@ document.addEventListener("DOMContentLoaded", () => {
         isLightMode ? body.add(cls) : body.remove(cls)
         lightSwitch.classList.add(isLightMode ? 'on' : 'off')
     })
+}
 
-    // show sidebar if opening the page for the first time
-    if (document.querySelectorAll('main, .error').length === 0) {
-        toggleSidebar()
-    }
-
+function setupSwitchesActions() {
     // change colour and position of switches when clicked
-    document.querySelectorAll('#switchbox label').forEach(label => label.onclick = e => {
+    document.querySelectorAll('.slider').forEach(label => label.onclick = e => {
         const lbl = e.currentTarget
         const shaft = lbl.querySelector(".shaft")
         shaft.classList.toggle("on")
         shaft.classList.toggle("off")
         const checkbox = lbl.previousElementSibling
         checkbox.value = checkbox.value === "on" ? "off" : "on"
+
+        localStorage.setItem(e.currentTarget.getAttribute("for"), checkbox.value)
     })
 
     // handle left/right handedness switching
-    document.querySelector('#handedness').onclick = () => document.querySelectorAll('.slider, .nav-links, #drawer-handle').forEach(s => s.classList.toggle('lefty'))
+    document.querySelector('#handedness').onclick = () => {
+        document.querySelectorAll('.slider, .nav-links, #drawer-handle').forEach(s => s.classList.toggle('lefty'))
+    }
 
     // toggle progress bars
     document.querySelector('#progress_bars').onclick = () => calcProgressBars(document)
+}
 
-
+function setupPinchyHrefActions() {
     document.querySelectorAll('#pinchy .advice-group a').forEach(hyperlink => hyperlink.onclick = e => {
         const link = e.currentTarget
         const targetId = link.getAttribute("href").slice(1)
@@ -155,6 +220,9 @@ document.addEventListener("DOMContentLoaded", () => {
         target.parentElement.classList.remove('folded')
         target.querySelectorAll('*:not(.empty)').forEach(c => c.classList.remove('folded'))
     })
+}
+
+function applyShowMoreButton() {
     const expandableSections = document.querySelectorAll("#gem-shop .advice-section, #greenstacks .advice-section, #cards .advice-section")
     expandableSections.forEach(section => {
         const expandableGroups = section.querySelector(".groups")
@@ -174,7 +242,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     })
+}
 
+function setupToggleAllAction() {
     document.querySelector("#expand-collapse").onclick = e => {
         const button = e.currentTarget
         button.classList.toggle("closed")
@@ -185,9 +255,12 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         })
     }
+}
 
-    // data age clock
-    setInterval(() => {
+let clockTick
+function setupDataClock() {
+    clearInterval(clockTick)
+    clockTick = setInterval(() => {
         const elapsed = document.querySelector('#elapsed')
         const timeStr = elapsed.innerText
         const [sec, min, hr, d] = timeStr.split(":").reverse()
@@ -211,7 +284,115 @@ document.addEventListener("DOMContentLoaded", () => {
             _sec.toString().padStart(2, "0")
         ].join(":")
     }, 1000)
+}
 
-    // add progress bars
+function setFormValues() {
+    const form = document.querySelector('form')
+    const userParams = fetchStoredUserParams()
+
+    Object.entries(defaults).forEach(([k, v]) => {
+        const userValue = userParams[k] || v
+        const input = form.querySelector(`[name=${k}]`)
+        if (k === "player")
+            input.innerText = userValue
+        else if (input.value.toString() !== userValue)
+            form.querySelector(`[for=${k}]`).click()
+    })
+}
+
+function loadResults(html) {
+    spinner.stop()
+    const mainWrapper = document.getElementById('top');
+    mainWrapper.innerHTML = html;
+}
+
+function fetchPlayerAdvice(currentParams) {
+    initBaseUI(currentParams)
+
+    fetch("/results", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(currentParams)
+
+    }).then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.text();
+
+    }).then(html => {
+        if (html === "") {
+            openSidebarIfFirstAccess()
+            return
+        }
+        loadResults(html);
+        initResultsUI()
+
+    }).catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+const storeUserParams = (data) => Object
+    .entries(defaults)
+    .forEach(([k, v]) => localStorage.setItem(k, data[k] || v))
+
+const fetchStoredUserParams = () => Object.fromEntries(Object.entries(defaults)
+    .map(([k, v]) => [k, localStorage.getItem(k) || v]))
+
+document.addEventListener("DOMContentLoaded", () => {
+    fetchPlayerAdvice(fetchStoredUserParams())
+})
+
+function hideSpinnerIfFirstAccess() {
+    if (localStorage.length === 0)
+        return
+    var target= document.querySelector('#top');
+    spinner.spin(target);
+}
+
+function defineCookieModalAction() {
+    const modal = document.querySelector('#cookie-policy');
+    const openModalBtn = document.querySelector('.eupopup-button_2');
+    const closeModalSpan = document.querySelector('#close-modal');
+
+    openModalBtn.setAttribute("href", "")
+
+    openModalBtn.onclick = (e) => {
+        e.preventDefault()
+        modal.classList.add('show');
+    }
+
+    closeModalSpan.onclick = () => {
+        modal.classList.remove('show');
+    }
+
+    window.onclick = (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('show');
+        }
+    }
+}
+
+function initBaseUI(storageParams) {
+    setTimeout(defineCookieModalAction, 1000)
+    hideSpinnerIfFirstAccess(storageParams)
+    defineFormSubmitAction()
+    setupLightSwitch()
+    setupSidebarToggling()
+    setupSubmitKeybind()
+    setupColorScheme()
+    setupToggleAllAction()
+    setupSwitchesActions()
+}
+
+function initResultsUI() {
+    setFormValues()
+    setupFolding()
+    setupPinchyHrefActions()
+    applyShowMoreButton()
+    setupDataClock()
     calcProgressBars(document)
-});
+}
