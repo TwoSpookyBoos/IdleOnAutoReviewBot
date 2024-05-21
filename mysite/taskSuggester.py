@@ -14,7 +14,7 @@ from w1 import stamps, bribes, smithing
 from w2 import alchemy
 from w3 import trapping, consRefinery, consDeathNote, worship, consSaltLick, consBuildings, equinox
 from w4 import breeding, cooking, rift
-from w5 import divinity
+from w5 import slab, divinity
 from w6 import beanstalk, sneaking
 
 logger = get_logger(__name__)
@@ -97,6 +97,7 @@ def main(inputData, runType="web"):
     ]
     # World 5
     sections_5 = [
+        section_slab := slab.setSlabProgressionTier(),
         section_divinity := divinity.setDivinityProgressionTier(),
         # section_sailing =
         # section_gaming =

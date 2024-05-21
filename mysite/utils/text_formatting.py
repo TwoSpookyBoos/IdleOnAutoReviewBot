@@ -9,7 +9,7 @@ from .logging import get_logger
 
 
 logger = get_logger(__name__)
-
+numeralList = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"]
 
 def pl(_list, suffix_singular: str = "", suffix_plural: str = "s") -> str:
     """Pluralize"""
@@ -66,3 +66,7 @@ def getItemDisplayName(codeName):
 
 def getItemCodeName(itemName):
     return  _get_item_name(ITEM_CODE_DICT, itemName)
+
+def numeralToNumber(numeral: str):
+    if numeral in numeralList:
+        return numeralList.index(numeral)+1

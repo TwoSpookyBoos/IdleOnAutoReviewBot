@@ -315,7 +315,18 @@ def scrape_slab():
     # This stuff isn't exactly an item but it does show up
     item_dict.update(dict(
         Blank="Blank",
-        LockedInvSpace="Locked Inventory Space"
+        LockedInvSpace="Locked Inventory Space",
+        # oah is the proper spelling for the dungeon bow, but aoh is the spelling of the normal Bow
+        DungWeaponBowD1="Pharaoh Bow I",
+        DungWeaponBowD2="Pharaoh Bow II",
+        DungWeaponBowD3="Pharaoh Bow III",
+        DungWeaponBowD4="Pharaoh Bow IV",
+        DungWeaponBowD5="Pharaoh Bow V",
+        #Similar to the bow, force consistency between 'Hotdog' and 'Hot Dog'
+        FoodHealth3="Hot Dog",
+        FoodHealth2d="Hot Dog",
+        Critter6A="Eternal Lord of The Undying Ember",  #Wiki has 2x spaces in the name "of  The"
+        Quest2="Mining Certificate"
     ))
 
     # Convert the dictionary to YAML format

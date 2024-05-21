@@ -5,6 +5,284 @@ from utils.logging import get_logger
 
 logger = get_logger(__name__)
 
+###GENERAL PROGRESSION TIERS###
+combatLevels_progressionTiers = [
+    # int tier, int TotalAccountLevel, str TAL reward, int PlayerLevels, str PL reward, str notes
+    [0, 0, "", 0, "", ""],
+    [1, 8, "Character 2",
+     25, "Personal - Circle Obol Slot 2", ""],
+    [2, 30, "Character 3",
+     32, "Personal - Square Obol Slot 1", ""],
+    [3, 60, "Family - Circle Obol Slot 1",
+     40, "Personal - Circle Obol Slot 3", ""],
+    [4, 70, "Character 4 and Family - Circle Obol Slot 1",
+     48, "Personal - Circle Obol Slot 4", ""],
+    [5, 80, "Family - Circle Obol Slot 2",
+     60, "Personal - Square Obol Slot 2", ""],
+    [6, 100, "Family - Circle Obol Slot 3",
+     70, "Personal - Circle Obol Slot 5", ""],
+    [7, 150, "Character 5",
+     80, "Personal - Circle Obol Slot 6", ""],
+    [8, 160, "Family - Circle Obol Slot 4",
+     90, "Personal - Square Obol Slot 3", ""],
+    [9, 200, "Family - Square Obol Slot 1",
+     98, "Personal - Circle Obol Slot 7", ""],
+    [10, 250, "Family - Circle Obol Slot 5",
+     105, "Personal - Hexagon Obol Slot 1", ""],
+    [11, 300, "Character 6",
+     112, "Personal - Circle Obol Slot 8", ""],
+    [12, 350, "Family - Circle Obol Slot 6",
+     120, "Personal - Square Obol Slot 4", ""],
+    [13, 400, "Family - Circle Obol Slot 7 and Family - Hexagon Obol Slot 1",
+     130, "Personal - Circle Obol Slot 9", ""],
+    [14, 470, "Family - Circle Obol Slot 8",
+     140, "Personal - Square Obol Slot 5", ""],
+    [15, 500, "Character 7",
+     150, "Vman Quest, if class = Mman", ""],
+    [16, 650, "Family - Sparkle Obol Slot 1",
+     152, "Personal - Circle Obol Slot 10", ""],
+    [17, 700, "Family - Square Obol Slot 2",
+     170, "Personal - Circle Obol Slot 11", ""],
+    [18, 750, "Character 8",
+     180, "Personal - Hexagon Obol Slot 2", ""],
+    [19, 875, "Family - Circle Obol Slot 9",
+     190, "Personal - Square Obol Slot 6", ""],
+    [20, 900, "Family - Hexagon Obol Slot 2",
+     210, "Personal - Circle Obol Slot 12", ""],
+    [21, 1100, "Character 9",
+     250, "Personal - Sparkle Obol Slot 1 and Credit towards Equinox Dream 11", ""],
+    [22, 1150, "Family - Square Obol Slot 3",
+     425, "Able to equip The Divine Scarf", ""],
+    [23, 1200, "Family - Sparkle Obol Slot 2",
+     450, "Able to equip One of the Divine Trophy", ""],
+    [24, 1250, "Family - Circle Obol Slot 10",
+     500, "Credit towards Equinox Dream 23", ""],
+    [25, 1500, "Character 10 and Family - Circle Obol Slot 11",
+     500, "Credit towards Equinox Dream 23", ""],
+    [26, 1750, "Family - Hexagon Obol Slot 3",
+     500, "Credit towards Equinox Dream 23", ""],
+    [27, 2000, "Family - Square Obol Slot 4",
+     500, "Credit towards Equinox Dream 23",  ""],
+    [28, 2100, "Family - Circle Obol Slot 12",
+     500, "Credit towards Equinox Dream 23", ""],
+    [29, 2500, "Family - Sparkle Obol Slot 3",
+     500, "Credit towards Equinox Dream 23", ""],
+    [30, 3000, "Family - Hexagon Obol Slot 4",
+     500, "Credit towards Equinox Dream 23", ""],
+    [31, 5000, "Family - Sparkle Obol Slot 4",
+     500, "Credit towards Equinox Dream 23", ""],
+    [32, 5300, "Unlock all Tome challenges",
+     500, "Credit towards Equinox Dream 23", ""]
+]
+gemShop_progressionTiers = [
+    # int tier, str tierName, dict recommendedPurchases, str notes
+    [0, "", {}, ""],
+    [1, "SS", {'Infinity Hammer': 1, 'Bleach Liquid Cauldrons': 1, 'Crystal 3d Printer': 1, 'Richelin Kitchen': 1, 'Golden Sprinkler': 1, 'Shroom Familiar': 1},
+     "These are the highest priority as 1st purchase per world."],
+    [2, "S", {'Extra Card Slot': 4, 'Brimstone Forge Slot': 1}, ""],
+    [3, "A", {'Item Backpack Space': 1, 'Storage Chest Space': 4, 'Carry Capacity': 2, 'Weekly Dungeon Boosters': 3, 'Brimstone Forge Slot': 4,
+              'Bleach Liquid Cauldrons': 2, 'Zen Cogs': 2, 'Tower Building Slots': 1, 'Royal Egg Cap': 3, 'Richelin Kitchen': 3, 'Souped Up Tube': 1,
+              'Chest Sluggo': 3, 'Divinity Sparkie': 2, 'Lava Sprouts': 2, 'Plot of Land': 2}, ""],
+    [4, "B", {'Item Backpack Space': 2, 'Storage Chest Space': 8, 'Carry Capacity': 4, 'Food Slot': 1, 'Bleach Liquid Cauldrons': 3, 'More Sample Spaces': 2,
+              'Zen Cogs': 4, 'Tower Building Slots': 2, 'Royal Egg Cap': 5, 'Fenceyard Space': 2, 'Chest Sluggo': 6, 'Lava Sprouts': 4, 'Plot of Land': 4,
+              'Shroom Familiar': 2, 'Instagrow Generator': 1}, ""],
+    [5, "C", {'Item Backpack Space': 3, 'Storage Chest Space': 12, 'Carry Capacity': 6, 'Food Slot': 2, 'Bleach Liquid Cauldrons': 4, 'More Sample Spaces': 4,
+              'Burning Bad Books': 2, 'Tower Building Slots': 4, 'Fenceyard Space': 4, 'Chest Sluggo': 9, 'Golden Sprinkler': 2, 'Lava Sprouts': 6,
+              'Plot of Land': 6, 'Shroom Familiar': 3, 'Instagrow Generator': 2}, ""],
+    [6, "D",
+     {'Item Backpack Space': 4, 'Carry Capacity': 8, 'More Storage Space': 5, 'Brimstone Forge Slot': 8, 'Ivory Bubble Cauldrons': 4, 'Obol Storage Space': 3,
+      'More Sample Spaces': 6, 'Burning Bad Books': 4, 'Zen Cogs': 8, 'Souped Up Tube': 3, 'Fenceyard Space': 6, 'Chest Sluggo': 12, 'Plot of Land': 8,
+      'Instagrow Generator': 4}, ""],
+    [7, "Practical Max",
+     {'Item Backpack Space': 6, 'Carry Capacity': 10, 'More Storage Space': 10, 'Card Presets': 1, 'Brimstone Forge Slot': 16, 'Sigil Supercharge': 10,
+      'Fluorescent Flaggies': 2, 'Golden Sprinkler': 4, 'Plot of Land': 12, 'Instagrow Generator': 8},
+     "I wouldn't recommend going any further as of v2.02. This tier is for the dedicated Gem Farmers from Colo and Normal-difficulty World Bosses."],
+    [8, "True Max",
+     {'Card Presets': 5, 'Daily Teleports': 10, 'Daily Minigame Plays': 4, 'Weekly Dungeon Boosters': 11, 'Obol Storage Space': 12, 'Prayer Slots': 4,
+      'Cog Inventory Space': 20, 'Fluorescent Flaggies': 6, 'Richelin Kitchen': 10, 'Souped Up Tube': 5, 'Pet Storage': 12, 'Divinity Sparkie': 6},
+     "This final tier is for the truly depraved. Many of these bonuses are very weak or outright useless."]
+]
+greenstack_progressionTiers = {
+        0: {  # The timegated tier
+            "Vendor Shops": [
+                "CraftMat3",  # W1 Cue Tape
+                "FoodHealth4", "Quest19",  # W2 Saucy Weiner and Gold Dubloon
+                "FoodHealth9", "FoodHealth11",  #W3
+                "FoodHealth12", "FoodHealth13", "FoodPotOr4", "FoodPotGr4", "FoodPotRe4", "FoodPotYe4",  #W4
+                "FoodHealth14", "FoodHealth15", "OilBarrel6",  #W5
+                "FoodHealth16", "FoodHealth17", "OilBarrel7",  #W6
+            ],
+            "Misc": [
+                "FoodPotGr3",  # Previously Tier10
+                "FoodPotRe2"   # Previously Tier11.
+            ],
+            "Other Skilling Resources": [
+                "Refinery1", "Refinery2", "Refinery3", "Refinery4", "Refinery5", "Refinery6"],
+        },
+        1: {
+            "Printable Skilling Resources": [
+                "OakTree", "BirchTree", "JungleTree", "ForestTree", "ToiletTree", "PalmTree", "StumpTree", "SaharanFoal",
+                "Copper", "Iron", "Gold", "Plat", "Dementia", "Void", "Lustre",
+                "Fish1", "Fish2", "Fish3",
+                "Bug1", "Bug2"],
+            },
+        2: {
+            "Printable Skilling Resources": [
+                "Tree7", "AlienTree", "Tree8", "Tree9", "Tree11",
+                "Starfire", "Marble",
+                "Fish4", "Fish5", "Fish6", "Fish7",
+                "Bug3", "Bug4", "Bug5", "Bug6", "Bug7", "Bug8"],
+            "Other Skilling Resources": [
+                "CraftMat1",],
+            "Vendor Shops": [
+                "FoodHealth14", "FoodHealth15",]
+            },
+        3: {
+            "Base Monster Materials": [
+                "Grasslands1", "Grasslands2", "Grasslands4", "Grasslands3", "Jungle1", "Jungle2", "Jungle3", "Forest1", "Forest2", "Forest3",],
+            "Printable Skilling Resources": [
+                "Tree10",
+                "Dreadlo",
+                "Fish8", "Fish9", "Fish10",
+                "Bug9", "Bug11"],
+            "Other Skilling Resources": [
+                "CraftMat5",],
+            "Vendor Shops": [
+                "FoodHealth12", "FoodHealth13",],
+            },
+        4: {
+            "Base Monster Materials": [
+                "Sewers1", "Sewers2", "TreeInterior1", "TreeInterior2",],
+            "Printable Skilling Resources": [
+                "Tree12",
+                "Godshard",
+                "Fish11", "Fish12", "Fish13",
+                "Bug12", "Bug13",],
+            "Other Skilling Resources": [
+                "CraftMat6", "Soul1",],
+            "Vendor Shops": [
+                "FoodHealth16", "FoodHealth17",
+                "FoodPotOr4", "FoodPotGr4", "FoodPotRe4", "FoodPotYe4",]
+            },
+        5: {
+                "Base Monster Materials": [
+                    "DesertA1", "DesertA2", "DesertA3", "DesertB1", "DesertB2", "DesertB3", "DesertB4", "DesertC1", "DesertC2", "DesertC3", "DesertC4",
+                    "SnowA1", "SnowA2", "SnowA3",],
+                "Printable Skilling Resources": [
+                    "Tree13",],
+                "Other Skilling Resources": [
+                    "CraftMat7", "CraftMat9",
+                    "Critter1", "Critter2",
+                    "Soul2",],
+            },
+        6: {
+            "Base Monster Materials": [
+                "SnowB1", "SnowB2", "SnowB5", "SnowB3", "SnowB4", "SnowC1", "SnowC2", "SnowC3", "SnowC4"
+                "GalaxyA1", "GalaxyA2", "GalaxyA3", "GalaxyA4", "GalaxyB1", "GalaxyB2", ],
+            "Other Skilling Resources": [
+                "CraftMat8", "CraftMat10",
+                "Critter3", "Critter4",
+                "Soul3",]
+            },
+        7: {
+            "Base Monster Materials": [
+                "SnowA4", "SnowC5",
+                "GalaxyB3", "GalaxyB4", "GalaxyB5", "GalaxyC1", "GalaxyC2", "GalaxyC3",],
+            "Crystal Enemy Drops": [
+                "FoodPotMana1", "FoodPotMana2", "FoodPotGr1", "FoodPotOr1", "FoodPotOr2", "FoodHealth1", "FoodHealth3", "FoodHealth2", "Leaf1"],
+            "Other Skilling Resources": [
+                "CraftMat11",
+                "Critter5",
+                "Soul4",],
+            },
+        8: {
+            "Base Monster Materials": [
+                "GalaxyC4",
+                "LavaA1", "LavaA2", "LavaA3", "LavaA4", "LavaA5", "LavaB1", "LavaB2", "LavaB3", "LavaB4", "LavaB5",],
+            "Crystal Enemy Drops": [
+                "FoodHealth6", "FoodHealth7", "FoodPotGr2", "FoodPotRe3", "Leaf2",],
+            "Other Skilling Resources": [
+                "CraftMat12",
+                "Critter6", "Critter7",
+                "Soul5",],
+            },
+        9: {
+            "Base Monster Materials": [
+                "LavaB6", "LavaC1", "LavaC2",  #Can beat Kruk and move to W6 without fighting these
+                "SpiA1", "SpiA2", "SpiA3", "SpiA4", "SpiA5", "SpiB1", "SpiB2", "SpiB3",],
+            "Crystal Enemy Drops": [
+                "FoodHealth10", "FoodPotOr3", "FoodPotYe2", "Leaf3"],
+            "Other Skilling Resources": [
+                "CraftMat13", "CraftMat14",
+                "Critter8", "Critter9",
+                "Soul6",],
+            },
+        10: {
+            "Base Monster Materials": [
+                "SpiB4", "SpiC1", "SpiC2", "SpiD1", "SpiD2", "SpiD3",],
+            "Crystal Enemy Drops": [
+                "FoodPotMana4", "Leaf4",
+                "FoodPotYe5", "Leaf5",
+                "Leaf6",],
+            "Printable Skilling Resources": [],
+            "Other Skilling Resources": [
+                "Critter10", "Critter11",
+                "Soul7",
+                "CopperBar", "IronBar",
+                "Bullet", "BulletB",],
+            "Vendor Shops": [
+                "OilBarrel6", "OilBarrel7",],
+            },
+        11: {
+            "Missable Quest Items": [
+                "Quest3", "Quest4", "Quest7", "Quest12"
+                "Quest14", "Quest22", "Quest23", "Quest24",
+                "Quest32",
+            ],
+            "Other Skilling Resources": [
+                "PlatBar",
+                "FoodMining1", "FoodFish1", "FoodCatch1",
+            ],
+            },
+        12: {
+            "Missable Quest Items": ["GoldricP1", "GoldricP2", "GoldricP3", "Quest21"],
+            "Base Monster Materials": ["Sewers3"],
+            "Crystal Enemy Drops": [
+                "EquipmentStatues7", "EquipmentStatues3", "EquipmentStatues2", "EquipmentStatues4", "EquipmentStatues14",
+                "rtt0", "StoneZ1", "StoneT1",],
+            "Other Skilling Resources": [
+                "GoldBar", "DementiaBar", "VoidBar", "LustreBar",
+                "Peanut", "Quest68", "Bullet3",],  #I really hate that the Slush Bucket is listed as Quest68
+            },
+        13: {
+            "Base Monster Materials": [
+                "Quest15", "Hgg"],
+            "Crystal Enemy Drops": [
+                "EquipmentStatues1", "EquipmentStatues5",
+                "StoneA1", "StoneW1",
+                "StoneZ2", "StoneT2",
+                "PureWater",
+                "FoodG9",],
+            "Other Skilling Resources": [
+                "StarfireBar",
+                "FoodChoppin1",
+                "EquipmentSmithingTabs2",
+                "PeanutG",],
+            "Misc": [
+                "FoodPotMana3", "FoodPotRe1", "ButterBar", "OilBarrel2", "Ghost", "Quest78",],
+        },
+        14: {
+            "Crystal Enemy Drops": [
+                "StoneW2",],  #"StoneA2",],
+            "Other Skilling Resources": [
+                "DreadloBar", "MarbleBar", "GodshardBar",
+                "FoodTrapping1", "FoodWorship1",
+                "Critter1A", "Critter2A", "Critter3A", "Critter4A", "Critter5A", "Critter6A", "Critter7A", "Critter8A", "Critter9A", "Critter10A", "Critter11A"],
+            "Misc": [
+                "Key2", "Key3"]
+        },
+    }
+
 ###WORLD 1 PROGRESSION TIERS###
 bribes_progressionTiers = [
         #int tier, int w1purchased, int w2purchased, int w3purchased, int w4purchased, int trashIslandpurchased, int w6purchased
@@ -626,285 +904,6 @@ divinity_progressionTiers = {
 }
 
 ###WORLD 6 PROGRESSION TIERS###
-
-
-###GENERAL PROGRESSION TIERS###
-combatLevels_progressionTiers = [
-    # int tier, int TotalAccountLevel, str TAL reward, int PlayerLevels, str PL reward, str notes
-    [0, 0, "", 0, "", ""],
-    [1, 8, "Character 2",
-     25, "Personal - Circle Obol Slot 2", ""],
-    [2, 30, "Character 3",
-     32, "Personal - Square Obol Slot 1", ""],
-    [3, 60, "Family - Circle Obol Slot 1",
-     40, "Personal - Circle Obol Slot 3", ""],
-    [4, 70, "Character 4 and Family - Circle Obol Slot 1",
-     48, "Personal - Circle Obol Slot 4", ""],
-    [5, 80, "Family - Circle Obol Slot 2",
-     60, "Personal - Square Obol Slot 2", ""],
-    [6, 100, "Family - Circle Obol Slot 3",
-     70, "Personal - Circle Obol Slot 5", ""],
-    [7, 150, "Character 5",
-     80, "Personal - Circle Obol Slot 6", ""],
-    [8, 160, "Family - Circle Obol Slot 4",
-     90, "Personal - Square Obol Slot 3", ""],
-    [9, 200, "Family - Square Obol Slot 1",
-     98, "Personal - Circle Obol Slot 7", ""],
-    [10, 250, "Family - Circle Obol Slot 5",
-     105, "Personal - Hexagon Obol Slot 1", ""],
-    [11, 300, "Character 6",
-     112, "Personal - Circle Obol Slot 8", ""],
-    [12, 350, "Family - Circle Obol Slot 6",
-     120, "Personal - Square Obol Slot 4", ""],
-    [13, 400, "Family - Circle Obol Slot 7 and Family - Hexagon Obol Slot 1",
-     130, "Personal - Circle Obol Slot 9", ""],
-    [14, 470, "Family - Circle Obol Slot 8",
-     140, "Personal - Square Obol Slot 5", ""],
-    [15, 500, "Character 7",
-     150, "Vman Quest, if class = Mman", ""],
-    [16, 650, "Family - Sparkle Obol Slot 1",
-     152, "Personal - Circle Obol Slot 10", ""],
-    [17, 700, "Family - Square Obol Slot 2",
-     170, "Personal - Circle Obol Slot 11", ""],
-    [18, 750, "Character 8",
-     180, "Personal - Hexagon Obol Slot 2", ""],
-    [19, 875, "Family - Circle Obol Slot 9",
-     190, "Personal - Square Obol Slot 6", ""],
-    [20, 900, "Family - Hexagon Obol Slot 2",
-     210, "Personal - Circle Obol Slot 12", ""],
-    [21, 1100, "Character 9",
-     250, "Personal - Sparkle Obol Slot 1 and Credit towards Equinox Dream 11", ""],
-    [22, 1150, "Family - Square Obol Slot 3",
-     425, "Able to equip The Divine Scarf", ""],
-    [23, 1200, "Family - Sparkle Obol Slot 2",
-     450, "Able to equip One of the Divine Trophy", ""],
-    [24, 1250, "Family - Circle Obol Slot 10",
-     500, "Credit towards Equinox Dream 23", ""],
-    [25, 1500, "Character 10 and Family - Circle Obol Slot 11",
-     500, "Credit towards Equinox Dream 23", ""],
-    [26, 1750, "Family - Hexagon Obol Slot 3",
-     500, "Credit towards Equinox Dream 23", ""],
-    [27, 2000, "Family - Square Obol Slot 4",
-     500, "Credit towards Equinox Dream 23",  ""],
-    [28, 2100, "Family - Circle Obol Slot 12",
-     500, "Credit towards Equinox Dream 23", ""],
-    [29, 2500, "Family - Sparkle Obol Slot 3",
-     500, "Credit towards Equinox Dream 23", ""],
-    [30, 3000, "Family - Hexagon Obol Slot 4",
-     500, "Credit towards Equinox Dream 23", ""],
-    [31, 5000, "Family - Sparkle Obol Slot 4",
-     500, "Credit towards Equinox Dream 23", ""],
-    [32, 5300, "Unlock all Tome challenges",
-     500, "Credit towards Equinox Dream 23", ""]
-]
-gemShop_progressionTiers = [
-    # int tier, str tierName, dict recommendedPurchases, str notes
-    [0, "", {}, ""],
-    [1, "SS", {'Infinity Hammer': 1, 'Bleach Liquid Cauldrons': 1, 'Crystal 3d Printer': 1, 'Richelin Kitchen': 1, 'Golden Sprinkler': 1, 'Shroom Familiar': 1},
-     "These are the highest priority as 1st purchase per world."],
-    [2, "S", {'Extra Card Slot': 4, 'Brimstone Forge Slot': 1}, ""],
-    [3, "A", {'Item Backpack Space': 1, 'Storage Chest Space': 4, 'Carry Capacity': 2, 'Weekly Dungeon Boosters': 3, 'Brimstone Forge Slot': 4,
-              'Bleach Liquid Cauldrons': 2, 'Zen Cogs': 2, 'Tower Building Slots': 1, 'Royal Egg Cap': 3, 'Richelin Kitchen': 3, 'Souped Up Tube': 1,
-              'Chest Sluggo': 3, 'Divinity Sparkie': 2, 'Lava Sprouts': 2, 'Plot of Land': 2}, ""],
-    [4, "B", {'Item Backpack Space': 2, 'Storage Chest Space': 8, 'Carry Capacity': 4, 'Food Slot': 1, 'Bleach Liquid Cauldrons': 3, 'More Sample Spaces': 2,
-              'Zen Cogs': 4, 'Tower Building Slots': 2, 'Royal Egg Cap': 5, 'Fenceyard Space': 2, 'Chest Sluggo': 6, 'Lava Sprouts': 4, 'Plot of Land': 4,
-              'Shroom Familiar': 2, 'Instagrow Generator': 1}, ""],
-    [5, "C", {'Item Backpack Space': 3, 'Storage Chest Space': 12, 'Carry Capacity': 6, 'Food Slot': 2, 'Bleach Liquid Cauldrons': 4, 'More Sample Spaces': 4,
-              'Burning Bad Books': 2, 'Tower Building Slots': 4, 'Fenceyard Space': 4, 'Chest Sluggo': 9, 'Golden Sprinkler': 2, 'Lava Sprouts': 6,
-              'Plot of Land': 6, 'Shroom Familiar': 3, 'Instagrow Generator': 2}, ""],
-    [6, "D",
-     {'Item Backpack Space': 4, 'Carry Capacity': 8, 'More Storage Space': 5, 'Brimstone Forge Slot': 8, 'Ivory Bubble Cauldrons': 4, 'Obol Storage Space': 3,
-      'More Sample Spaces': 6, 'Burning Bad Books': 4, 'Zen Cogs': 8, 'Souped Up Tube': 3, 'Fenceyard Space': 6, 'Chest Sluggo': 12, 'Plot of Land': 8,
-      'Instagrow Generator': 4}, ""],
-    [7, "Practical Max",
-     {'Item Backpack Space': 6, 'Carry Capacity': 10, 'More Storage Space': 10, 'Card Presets': 1, 'Brimstone Forge Slot': 16, 'Sigil Supercharge': 10,
-      'Fluorescent Flaggies': 2, 'Golden Sprinkler': 4, 'Plot of Land': 12, 'Instagrow Generator': 8},
-     "I wouldn't recommend going any further as of v2.02. This tier is for the dedicated Gem Farmers from Colo and Normal-difficulty World Bosses."],
-    [8, "True Max",
-     {'Card Presets': 5, 'Daily Teleports': 10, 'Daily Minigame Plays': 4, 'Weekly Dungeon Boosters': 11, 'Obol Storage Space': 12, 'Prayer Slots': 4,
-      'Cog Inventory Space': 20, 'Fluorescent Flaggies': 6, 'Richelin Kitchen': 10, 'Souped Up Tube': 5, 'Pet Storage': 12, 'Divinity Sparkie': 6},
-     "This final tier is for the truly depraved. Many of these bonuses are very weak or outright useless."]
-]
-greenstack_progressionTiers = {
-        0: {  # The timegated tier
-            "Vendor Shops": [
-                "CraftMat3",  # W1 Cue Tape
-                "FoodHealth4", "Quest19",  # W2 Saucy Weiner and Gold Dubloon
-                "FoodHealth9", "FoodHealth11",  #W3
-                "FoodHealth12", "FoodHealth13", "FoodPotOr4", "FoodPotGr4", "FoodPotRe4", "FoodPotYe4",  #W4
-                "FoodHealth14", "FoodHealth15", "OilBarrel6",  #W5
-                "FoodHealth16", "FoodHealth17", "OilBarrel7",  #W6
-            ],
-            "Misc": [
-                "FoodPotGr3",  # Previously Tier10
-                "FoodPotRe2"   # Previously Tier11.
-            ],
-            "Other Skilling Resources": [
-                "Refinery1", "Refinery2", "Refinery3", "Refinery4", "Refinery5", "Refinery6"],
-        },
-        1: {
-            "Printable Skilling Resources": [
-                "OakTree", "BirchTree", "JungleTree", "ForestTree", "ToiletTree", "PalmTree", "StumpTree", "SaharanFoal",
-                "Copper", "Iron", "Gold", "Plat", "Dementia", "Void", "Lustre",
-                "Fish1", "Fish2", "Fish3",
-                "Bug1", "Bug2"],
-            },
-        2: {
-            "Printable Skilling Resources": [
-                "Tree7", "AlienTree", "Tree8", "Tree9", "Tree11",
-                "Starfire", "Marble",
-                "Fish4", "Fish5", "Fish6", "Fish7",
-                "Bug3", "Bug4", "Bug5", "Bug6", "Bug7", "Bug8"],
-            "Other Skilling Resources": [
-                "CraftMat1",],
-            "Vendor Shops": [
-                "FoodHealth14", "FoodHealth15",]
-            },
-        3: {
-            "Base Monster Materials": [
-                "Grasslands1", "Grasslands2", "Grasslands4", "Grasslands3", "Jungle1", "Jungle2", "Jungle3", "Forest1", "Forest2", "Forest3",],
-            "Printable Skilling Resources": [
-                "Tree10",
-                "Dreadlo",
-                "Fish8", "Fish9", "Fish10",
-                "Bug9", "Bug11"],
-            "Other Skilling Resources": [
-                "CraftMat5",],
-            "Vendor Shops": [
-                "FoodHealth12", "FoodHealth13",],
-            },
-        4: {
-            "Base Monster Materials": [
-                "Sewers1", "Sewers2", "TreeInterior1", "TreeInterior2",],
-            "Printable Skilling Resources": [
-                "Tree12",
-                "Godshard",
-                "Fish11", "Fish12", "Fish13",
-                "Bug12", "Bug13",],
-            "Other Skilling Resources": [
-                "CraftMat6", "Soul1",],
-            "Vendor Shops": [
-                "FoodHealth16", "FoodHealth17",
-                "FoodPotOr4", "FoodPotGr4", "FoodPotRe4", "FoodPotYe4",]
-            },
-        5: {
-                "Base Monster Materials": [
-                    "DesertA1", "DesertA2", "DesertA3", "DesertB1", "DesertB2", "DesertB3", "DesertB4", "DesertC1", "DesertC2", "DesertC3", "DesertC4",
-                    "SnowA1", "SnowA2", "SnowA3",],
-                "Printable Skilling Resources": [
-                    "Tree13",],
-                "Other Skilling Resources": [
-                    "CraftMat7", "CraftMat9",
-                    "Critter1", "Critter2",
-                    "Soul2",],
-            },
-        6: {
-            "Base Monster Materials": [
-                "SnowB1", "SnowB2", "SnowB5", "SnowB3", "SnowB4", "SnowC1", "SnowC2", "SnowC3", "SnowC4"
-                "GalaxyA1", "GalaxyA2", "GalaxyA3", "GalaxyA4", "GalaxyB1", "GalaxyB2", ],
-            "Other Skilling Resources": [
-                "CraftMat8", "CraftMat10",
-                "Critter3", "Critter4",
-                "Soul3",]
-            },
-        7: {
-            "Base Monster Materials": [
-                "SnowA4", "SnowC5",
-                "GalaxyB3", "GalaxyB4", "GalaxyB5", "GalaxyC1", "GalaxyC2", "GalaxyC3",],
-            "Crystal Enemy Drops": [
-                "FoodPotMana1", "FoodPotMana2", "FoodPotGr1", "FoodPotOr1", "FoodPotOr2", "FoodHealth1", "FoodHealth3", "FoodHealth2", "Leaf1"],
-            "Other Skilling Resources": [
-                "CraftMat11",
-                "Critter5",
-                "Soul4",],
-            },
-        8: {
-            "Base Monster Materials": [
-                "GalaxyC4",
-                "LavaA1", "LavaA2", "LavaA3", "LavaA4", "LavaA5", "LavaB1", "LavaB2", "LavaB3", "LavaB4", "LavaB5",],
-            "Crystal Enemy Drops": [
-                "FoodHealth6", "FoodHealth7", "FoodPotGr2", "FoodPotRe3", "Leaf2",],
-            "Other Skilling Resources": [
-                "CraftMat12",
-                "Critter6", "Critter7",
-                "Soul5",],
-            },
-        9: {
-            "Base Monster Materials": [
-                "LavaB6", "LavaC1", "LavaC2",  #Can beat Kruk and move to W6 without fighting these
-                "SpiA1", "SpiA2", "SpiA3", "SpiA4", "SpiA5", "SpiB1", "SpiB2", "SpiB3",],
-            "Crystal Enemy Drops": [
-                "FoodHealth10", "FoodPotOr3", "FoodPotYe2", "Leaf3"],
-            "Other Skilling Resources": [
-                "CraftMat13", "CraftMat14",
-                "Critter8", "Critter9",
-                "Soul6",],
-            },
-        10: {
-            "Base Monster Materials": [
-                "SpiB4", "SpiC1", "SpiC2", "SpiD1", "SpiD2", "SpiD3",],
-            "Crystal Enemy Drops": [
-                "FoodPotMana4", "Leaf4",
-                "FoodPotYe5", "Leaf5",
-                "Leaf6",],
-            "Printable Skilling Resources": [],
-            "Other Skilling Resources": [
-                "Critter10", "Critter11",
-                "Soul7",
-                "CopperBar", "IronBar",
-                "Bullet", "BulletB",],
-            "Vendor Shops": [
-                "OilBarrel6", "OilBarrel7",],
-            },
-        11: {
-            "Missable Quest Items": [
-                "Quest3", "Quest4", "Quest7", "Quest12"
-                "Quest14", "Quest22", "Quest23", "Quest24",
-                "Quest32",
-            ],
-            "Other Skilling Resources": [
-                "PlatBar",
-                "FoodMining1", "FoodFish1", "FoodCatch1",
-            ],
-            },
-        12: {
-            "Missable Quest Items": ["GoldricP1", "GoldricP2", "GoldricP3", "Quest21"],
-            "Base Monster Materials": ["Sewers3"],
-            "Crystal Enemy Drops": [
-                "EquipmentStatues7", "EquipmentStatues3", "EquipmentStatues2", "EquipmentStatues4", "EquipmentStatues14",
-                "rtt0", "StoneZ1", "StoneT1",],
-            "Other Skilling Resources": [
-                "GoldBar", "DementiaBar", "VoidBar", "LustreBar",
-                "Peanut", "Quest68", "Bullet3",],  #I really hate that the Slush Bucket is listed as Quest68
-            },
-        13: {
-            "Base Monster Materials": [
-                "Quest15", "Hgg"],
-            "Crystal Enemy Drops": [
-                "EquipmentStatues1", "EquipmentStatues5",
-                "StoneA1", "StoneW1",
-                "StoneZ2", "StoneT2",
-                "PureWater",
-                "FoodG9",],
-            "Other Skilling Resources": [
-                "StarfireBar",
-                "FoodChoppin1",
-                "EquipmentSmithingTabs2",
-                "PeanutG",],
-            "Misc": [
-                "FoodPotMana3", "FoodPotRe1", "ButterBar", "OilBarrel2", "Ghost", "Quest78",],
-        },
-        14: {
-            "Crystal Enemy Drops": [
-                "StoneW2",],  #"StoneA2",],
-            "Other Skilling Resources": [
-                "DreadloBar", "MarbleBar", "GodshardBar",
-                "FoodTrapping1", "FoodWorship1",
-                "Critter1A", "Critter2A", "Critter3A", "Critter4A", "Critter5A", "Critter6A", "Critter7A", "Critter8A", "Critter9A", "Critter10A", "Critter11A"],
-            "Misc": [
-                "Key2", "Key3"]
-        },
-    }
 
 ###UI CONSTS###
 maxTiersPerGroup = 3
@@ -2422,3 +2421,142 @@ def getGemstonePercent(gemstoneName: str, gemstoneValue: float):
         logger.exception(f"Could not find max value for Gemstone: {gemstoneName} because: {reason}")
     pass
 
+
+#slabString last pulled from code in 2.08
+slabList = "Copper Iron Gold Plat Dementia Void Lustre Starfire Marble Dreadlo Godshard CopperBar IronBar GoldBar PlatBar DementiaBar VoidBar LustreBar StarfireBar MarbleBar DreadloBar GodshardBar OakTree BirchTree JungleTree ForestTree ToiletTree PalmTree StumpTree SaharanFoal Tree7 AlienTree Tree8 Tree9 Tree11 Tree10 Tree12 Tree13 Leaf1 Leaf2 Leaf3 Leaf4 Leaf5 Leaf6 Fish1 Fish2 Fish3 Fish4 Fish5 Fish6 Fish7 Fish8 Fish9 Fish10 Fish11 Fish12 Fish13 Bug1 Bug2 Bug3 Bug4 Bug5 Bug6 Bug7 Bug8 Bug9 Bug11 Bug10 Bug12 Bug13 Critter1 Critter1A Critter2 Critter2A Critter3 Critter3A Critter4 Critter4A Critter5 Critter5A Critter6 Critter6A Critter7 Critter7A Critter8 Critter8A Critter9 Critter9A Critter10 Critter10A Critter11 Critter11A Soul1 Soul2 Soul3 Soul4 Soul5 Soul6 Soul7 Refinery1 Refinery2 Refinery3 Refinery4 Refinery5 Refinery6 CraftMat1 CraftMat2 CraftMat3 CraftMat5 CraftMat6 CraftMat7 CraftMat9 CraftMat8 CraftMat10 CraftMat11 CraftMat12 CraftMat13 CraftMat14 OilBarrel1 OilBarrel2 OilBarrel3 OilBarrel4 OilBarrel5 OilBarrel6 OilBarrel7 PureWater PureWater2 Grasslands1 Grasslands2 Grasslands3 Grasslands4 Jungle1 Jungle2 Jungle3 Forest1 Forest2 Forest3 Sewers1 Sewers1b Sewers2 Sewers3 TreeInterior1 TreeInterior1b TreeInterior2 DesertA1 DesertA1b DesertA2 DesertA3 DesertA3b DesertB1 DesertB2 DesertB3 DesertB4 DesertC1 DesertC2 DesertC2b DesertC3 DesertC4 SnowA1 SnowA2 SnowA2a SnowA3 SnowA4 SnowB1 SnowB2 SnowB2a SnowB5 SnowB3 SnowB4 SnowC1 SnowC2 SnowC3 SnowC4 SnowC4a SnowC5 GalaxyA1 GalaxyA2 GalaxyA2b GalaxyA3 GalaxyA4 GalaxyB1 GalaxyB2 GalaxyB3 GalaxyB4 GalaxyB5 GalaxyC1 GalaxyC1b GalaxyC2 GalaxyC3 GalaxyC4 LavaA1 LavaA1b LavaA2 LavaA3 LavaA4 LavaA5 LavaA5b LavaB1 LavaB2 LavaB3 LavaB3b LavaB4 LavaB5 LavaB6 LavaC1 LavaC2 SpiA1 SpiA2 SpiA2b SpiA3 SpiA4 SpiA5 SpiB1 SpiB2 SpiB2b SpiB3 SpiB4 SpiC1 SpiC2 SpiD1 SpiD2 SpiD3 BabaYagaETC Hgg Quest17 Quest29 EfauntDrop1 EfauntDrop2 Chiz0 Chiz1 TrollPart KrukPart KrukPart2 EquipmentHats11 EquipmentHats12 EquipmentHats13 EquipmentHats14 EquipmentHats1 EquipmentHats15 EquipmentHats17 EquipmentHats20 EquipmentHats3 EquipmentHats16 EquipmentHats21 EquipmentHats18 EquipmentHats22 EquipmentHats28 EquipmentHats19 TestObj13 EquipmentHats41 EquipmentHats26 EquipmentHats52 EquipmentHats53 EquipmentHats54 EquipmentHats61 EquipmentHats58 EquipmentHats59 EquipmentHats60 EquipmentHats68 EquipmentHats70 EquipmentHats71 EquipmentHats74 EquipmentHats77 EquipmentHats83 EquipmentHats105 EquipmentHats106 EquipmentHats5 EquipmentHats6 EquipmentHats7 EquipmentHats8 EquipmentHats9 EquipmentHats10 EquipmentHats4Choppin EquipmentHats25 EquipmentHats107 EquipmentHats29 EquipmentHats39 EquipmentHats27 EquipmentHats30 EquipmentHats44 EquipmentHats2 EquipmentHats67 EquipmentHats64 EquipmentHats66 EquipmentHats79 EquipmentHats73 EquipmentHats51 EquipmentHats56 EquipmentHats63 EquipmentHats85 EquipmentHats86 EquipmentHats87 EquipmentHats88 EquipmentHats42 EquipmentHats69 EquipmentHats108 EquipmentHats55 EquipmentHats75 EquipmentHats76 EquipmentHats65 EquipmentHats80 EquipmentHats81 EquipmentHats78 EquipmentHats90 EquipmentHats91 EquipmentHats92 EquipmentHats93 EquipmentHats94 EquipmentHats95 EquipmentHats96 EquipmentHats97 EquipmentHats98 EquipmentHats99 EquipmentHats100 EquipmentHats101 EquipmentHats102 EquipmentHats103 EquipmentHats104 EquipmentPunching1 EquipmentPunching2 EquipmentPunching3 EquipmentPunching4 EquipmentPunching5 EquipmentPunching6 EquipmentPunching7 EquipmentPunching8 EquipmentPunching9 EquipmentPunching10 EquipmentPunching11 TestObj1 TestObj7 TestObj3 EquipmentSword1 EquipmentSword2 EquipmentSword3 EquipmentSword4 EquipmentSword5 EquipmentSword6 EquipmentSword7 EquipmentSword8 EquipmentSword9 EquipmentBows1 EquipmentBows3 EquipmentBows4 EquipmentBows5 EquipmentBows6 EquipmentBows7 EquipmentBows8 EquipmentBows9 EquipmentBows10 EquipmentBows11 EquipmentBows12 EquipmentBows13 EquipmentBows14 EquipmentWands1 EquipmentWands2 EquipmentWands5 EquipmentWands6 EquipmentWands3 EquipmentWands7 EquipmentWands8 EquipmentWands9 EquipmentWands10 EquipmentWands11 EquipmentWands12 EquipmentWands13 EquipmentShirts1 EquipmentShirts17 EquipmentShirts19 EquipmentShirts20 EquipmentShirts24 EquipmentShirts25 EquipmentShirts2 EquipmentShirts16 EquipmentShirts3 EquipmentShirts21 EquipmentShirts10 EquipmentShirts11 EquipmentShirts12 EquipmentShirts13 EquipmentShirts18 EquipmentShirts14 EquipmentShirts5 EquipmentShirts23 EquipmentShirts22 EquipmentShirts15 EquipmentShirts26 EquipmentShirts27 EquipmentShirts31 EquipmentShirts28 EquipmentShirts29 EquipmentShirts30 EquipmentShirts6 EquipmentShirts32 EquipmentShirts33 EquipmentShirts34 EquipmentShirts35 EquipmentShirts36 EquipmentShirts37 EquipmentShirts38 EquipmentPants1 EquipmentPants2 EquipmentPants3 EquipmentPants4 EquipmentPants17 EquipmentPants5 EquipmentPants6 EquipmentPants20 EquipmentPants21 EquipmentPants10 EquipmentPants15 EquipmentPants16 EquipmentPants18 EquipmentPants19 EquipmentPants22 EquipmentPants23 EquipmentPants9 EquipmentPants24 EquipmentPants25 EquipmentPants8 EquipmentPants26 EquipmentPants27 EquipmentPants29 EquipmentPants30 EquipmentShoes1 EquipmentShoes9 EquipmentShoes15 EquipmentShoes3 EquipmentShoes20 EquipmentShoes4 EquipmentShoes5 EquipmentShoes21 EquipmentShoes22 EquipmentShoes7 EquipmentShoes16 EquipmentShoes17 EquipmentShoes18 EquipmentShoes19 EquipmentShoes2 EquipmentShoes23 EquipmentShoes26 EquipmentShoes27 EquipmentShoes28 EquipmentShoes29 EquipmentShoes30 EquipmentShoes31 EquipmentShoes32 EquipmentShoes33 EquipmentShoes39 EquipmentShoes24 EquipmentShoes25 EquipmentShoes34 EquipmentShoes35 EquipmentShoes36 EquipmentShoes37 EquipmentShoes38 EquipmentPendant9 EquipmentPendant10 EquipmentPendant11 EquipmentPendant12 EquipmentPendant14 EquipmentPendant16 EquipmentPendant17 EquipmentPendant18 EquipmentPendant19 EquipmentPendant20 EquipmentPendant21 EquipmentPendant22 EquipmentPendant23 EquipmentPendant24 EquipmentPendant25 EquipmentPendant26 EquipmentPendant27 EquipmentPendant28 EquipmentPendant31 EquipmentPendant29 EquipmentPendant30 EquipmentRings2 EquipmentRings3 EquipmentRings6 EquipmentRings7 EquipmentRings11 EquipmentRings12 EquipmentRings13 EquipmentRings14 EquipmentRings15 EquipmentRings16 EquipmentRings21 EquipmentRings20 EquipmentRings19 EquipmentRingsFishing1 EquipmentRingsFishing2 EquipmentRingsFishing3 EquipmentRings22 EquipmentRings18 EquipmentRings36 EquipmentRings23 EquipmentRings24 EquipmentRings25 EquipmentRings26 EquipmentRings27 EquipmentRings28 EquipmentRings29 EquipmentRings35 EquipmentRings30 EquipmentRings33 EquipmentRings31 EquipmentRings32 EquipmentRings34 EquipmentRingsChat10 EquipmentCape0 EquipmentCape2 EquipmentCape3 EquipmentCape4 EquipmentCape5 EquipmentCape6 EquipmentCape7 EquipmentCape8 EquipmentCape9 EquipmentCape10 EquipmentCape11 EquipmentCape12 EquipmentCape13 EquipmentCape14 EquipmentKeychain0 EquipmentKeychain1 EquipmentKeychain2 EquipmentKeychain3 EquipmentKeychain4 EquipmentKeychain5 EquipmentKeychain6 EquipmentKeychain7 EquipmentKeychain8 EquipmentKeychain9 EquipmentKeychain10 EquipmentKeychain11 EquipmentKeychain12 EquipmentKeychain13 EquipmentKeychain14 EquipmentKeychain15 EquipmentKeychain16 EquipmentKeychain17 EquipmentKeychain18 EquipmentKeychain19 EquipmentKeychain20 EquipmentKeychain21 EquipmentKeychain22 EquipmentKeychain23 EquipmentKeychain24 EquipmentKeychain25 EquipmentKeychain26 EquipmentKeychain27 EquipmentKeychain28 EquipmentKeychain29 Trophy1 Trophy2 Trophy3 Trophy5 Trophy6 Trophy7 Trophy8 Trophy9 Trophy10 Trophy11 Trophy12 Trophy13 Trophy14 Trophy15 Trophy16 Trophy17 Trophy18 Trophy19 Trophy20 Trophy21 Trophy22 EquipmentNametag1 EquipmentNametag3 EquipmentNametag4 EquipmentNametag5 EquipmentNametag6b EquipmentNametag7 EquipmentNametag8 EquipmentNametag9 EquipmentNametag10 EquipmentTools1 EquipmentTools2 EquipmentTools3 EquipmentTools5 EquipmentTools6 EquipmentTools7 EquipmentTools11 EquipmentTools8 EquipmentTools12 EquipmentTools9 EquipmentTools14 EquipmentTools15 EquipmentTools10 EquipmentTools13 EquipmentToolsHatchet0 EquipmentToolsHatchet3 EquipmentToolsHatchet1 EquipmentToolsHatchet2b EquipmentToolsHatchet2 EquipmentToolsHatchet4 EquipmentToolsHatchet5 EquipmentToolsHatchet7 EquipmentToolsHatchet6 EquipmentToolsHatchet8 EquipmentToolsHatchet9 EquipmentToolsHatchet12 EquipmentToolsHatchet10 EquipmentToolsHatchet11 FishingRod2 FishingRod3 FishingRod4 FishingRod5 FishingRod6 FishingRod7 FishingRod8 FishingRod9 FishingRod10 FishingRod11 FishingRod12 CatchingNet2 CatchingNet3 CatchingNet4 CatchingNet5 CatchingNet6 CatchingNet7 CatchingNet8 CatchingNet9 CatchingNet10 CatchingNet11 CatchingNet12 TrapBoxSet1 TrapBoxSet2 TrapBoxSet3 TrapBoxSet4 TrapBoxSet5 TrapBoxSet6 TrapBoxSet7 TrapBoxSet8 TrapBoxSet9 TrapBoxSet10 WorshipSkull1 WorshipSkull2 WorshipSkull3 WorshipSkull4 WorshipSkull5 WorshipSkull6 WorshipSkull7 WorshipSkull8 WorshipSkull9 WorshipSkull10 WorshipSkull11 DNAgun0 DNAgun1 DNAgun2 DNAgun3 FoodHealth1 FoodHealth3 FoodHealth2 Peanut FoodHealth4 FoodHealth6 FoodHealth7 FoodHealth10 FoodHealth9 FoodHealth11 FoodHealth13 FoodHealth12 FoodHealth14 FoodHealth15 FoodHealth16 FoodHealth17 FoodHealth5 FoodEvent8 Meatloaf FoodPotOr1 FoodPotOr2 FoodPotOr3 FoodPotOr4 FoodPotRe1 FoodPotRe2 FoodPotRe3 FoodPotRe4 FoodPotGr1 FoodPotGr2 FoodPotGr3 FoodPotGr4 FoodEvent7 FoodPotMana1 FoodPotMana2 FoodPotMana3 FoodPotMana4 FoodPotYe1 FoodPotYe2 FoodPotYe3 FoodPotYe4 FoodPotYe5 FoodEvent6 Pearl3 FoodMining1 FoodEvent1 Pearl2 FoodChoppin1 FoodEvent2 FoodFish1 FoodEvent3 Pearl1 FoodCatch1 FoodEvent4 FoodTrapping1 FoodWorship1 Bullet BulletB Bullet3 MidnightCookie FoodEvent5 PeanutG FoodG1 FoodG2 FoodG3 FoodG4 FoodG5 FoodG6 FoodG7 FoodG8 FoodG9 FoodG10 FoodG11 FoodG12 FoodG13 ButterBar rtt0 ResetFrag ResetCompleted ResetCompletedS ClassSwap ClassSwapB ResetBox Ht StonePremRestore StonePremStatswap Key1 Key2 Key3 Key4 Key5 TixCol SilverPen PremiumGem TalentPoint1 TalentPoint2 TalentPoint3 TalentPoint4 TalentPoint5 TalentPoint6 Gfoodcoupon ItemsCoupon1 ItemsCoupon2 ExpBalloon1 ExpBalloon2 ExpBalloon3 Pearl4 Pearl6 Pearl5 Quest30 Quest35 Quest36 Quest38 Quest39 Quest40 Quest42 Quest43 Quest44 Quest49 Quest50 Quest70 Quest71 Quest72 Quest73 Quest75 Quest85 Quest76 Quest77 Quest79 Quest80 GemP30 Quest81 Quest82 Timecandy1 Timecandy2 Timecandy3 Timecandy4 Timecandy5 Timecandy6 Timecandy7 Timecandy8 Timecandy9 StoneWe StoneWeb StoneW1 StoneW2 StoneW3 StoneW3b StoneW6 StoneW4 StoneW5 StoneW7 StoneW8 StoneAe StoneAeB StoneA1 StoneA1b StoneA2 StoneA2b StoneA3 StoneA3b StoneA4 StoneA5 StoneA6 StoneA7 StoneTe StoneT1 StoneT1e StoneT1eb StoneT2 StoneT3 StoneT4 StoneT5 StoneT6 StoneT7 StoneHelm1 StoneHelm6 StoneHelm1b StoneHelm7 StoneZ1 StoneZ2 StoneZ3 StoneZ4 StonePremSTR StonePremAGI StonePremWIS StonePremLUK JobApplication SmithingHammerChisel SmithingHammerChisel2 SmithingHammerChisel3 BobJoePickle BallJoePickle BoneJoePickle Quest1 Crystal1 Crystal2 Crystal3 Crystal4 Crystal5 PeanutS Quest3 Quest4 Mayo Trash Trash2 Trash3 Quest5 Quest6 Quest7 Quest10 Quest11 Quest12 Quest13 Quest14 Quest15 Quest16 Quest18 Quest19 Quest20 Quest21 Quest22 Quest23 Quest24 Quest25 Quest26 Quest27 GoldricP1 GoldricP2 GoldricP3 Cutter Quest32 Quest33 Quest34 Quest37 Quest41 Quest45 Quest46 Quest47 Quest48 Quest51 Quest52 PalmTreeD Quest53 Quest54 Quest55 Quest56 Quest57 Quest58 Quest59 Quest60 Quest61 Quest62 Quest63 Quest64 Quest65 Quest66 Quest67 Whetstone Quest68 Quest69 Quest74 Quest78 Quest83 Quest84 BadgeG1 BadgeG2 BadgeG3 BadgeD1 BadgeD2 BadgeD3 NPCtoken1 NPCtoken2 NPCtoken3 NPCtoken5 NPCtoken6 NPCtoken4 NPCtoken9 NPCtoken10 NPCtoken11 NPCtoken13 NPCtoken7 Quest9 NPCtoken15 NPCtoken12 NPCtoken14 NPCtoken16 NPCtoken17 NPCtoken18 NPCtoken19 NPCtoken20 NPCtoken21 NPCtoken27 NPCtoken22 NPCtoken24 NPCtoken25 NPCtoken26 NPCtoken23 NPCtoken28 NPCtoken29 NPCtoken30 NPCtoken31 NPCtoken32 NPCtoken33 NPCtoken34 NPCtoken35 NPCtoken36 NPCtoken37 NPCtoken38 NPCtoken39 NPCtoken40 NPCtoken41 BadgeI1 BadgeI2 BadgeI3 EquipmentStatues1 EquipmentStatues2 EquipmentStatues3 EquipmentStatues4 EquipmentStatues5 EquipmentStatues6 EquipmentStatues7 EquipmentStatues8 EquipmentStatues9 EquipmentStatues10 EquipmentStatues11 EquipmentStatues12 EquipmentStatues13 EquipmentStatues14 EquipmentStatues15 EquipmentStatues16 EquipmentStatues17 EquipmentStatues18 EquipmentStatues19 EquipmentStatues20 EquipmentStatues21 EquipmentStatues22 EquipmentStatues23 EquipmentStatues24 EquipmentStatues25 EquipmentStatues26 EquipmentStatues27 EquipmentStatues28 EquipmentSmithingTabs2 EquipmentSmithingTabs3 EquipmentSmithingTabs4 EquipmentSmithingTabs5 EquipmentSmithingTabs6 SmithingRecipes1 SmithingRecipes2 SmithingRecipes3 SmithingRecipes4 SmithingRecipes5 SmithingRecipes6 TalentBook1 TalentBook2 TalentBook3 TalentBook4 TalentBook5 MaxCapBagT2 MaxCapBag1 MaxCapBag2 MaxCapBag3 MaxCapBag4 MaxCapBag5 MaxCapBagMi6 MaxCapBagMi7 MaxCapBagMi8 MaxCapBagMi9 MaxCapBagMi10 MaxCapBagMi11 MaxCapBagT1 MaxCapBag7 MaxCapBag9 MaxCapBagT3 MaxCapBagT4 MaxCapBagT5 MaxCapBagT6 MaxCapBagT7 MaxCapBagT8 MaxCapBagT9 MaxCapBagT10 MaxCapBagT11 MaxCapBag6 MaxCapBag8 MaxCapBag10 MaxCapBagF3 MaxCapBagF4 MaxCapBagF5 MaxCapBagF6 MaxCapBagF7 MaxCapBagF8 MaxCapBagF9 MaxCapBagF10 MaxCapBagF11 MaxCapBagM1 MaxCapBagM2 MaxCapBagM3 MaxCapBagM4 MaxCapBagM5 MaxCapBagM6 MaxCapBagM7 MaxCapBagM8 MaxCapBagM9 MaxCapBagM10 MaxCapBagM11 MaxCapBagM12 MaxCapBagFi1 MaxCapBagFi2 MaxCapBagFi3 MaxCapBagFi4 MaxCapBagFi5 MaxCapBagFi6 MaxCapBagFi7 MaxCapBagFi8 MaxCapBagFi9 MaxCapBagFi10 MaxCapBagFi11 MaxCapBagB1 MaxCapBagB2 MaxCapBagB3 MaxCapBagB4 MaxCapBagB5 MaxCapBagB6 MaxCapBagB7 MaxCapBagB8 MaxCapBagB9 MaxCapBagB10 MaxCapBagB11 MaxCapBagTr1 MaxCapBagTr3 MaxCapBagTr4 MaxCapBagTr5 MaxCapBagTr6 MaxCapBagTr7 MaxCapBagTr8 MaxCapBagTr9 MaxCapBagTr10 MaxCapBagS1 MaxCapBagS3 MaxCapBagS4 MaxCapBagS5 MaxCapBagS6 MaxCapBagS7 MaxCapBagS8 MaxCapBagS9 MaxCapBagS10 ObolBronze0 ObolSilver0 ObolGold0 ObolPlatinum0 ObolPink0 ObolBronze1 ObolSilver1 ObolGold1 ObolPlatinum1 ObolPink1 ObolBronze2 ObolSilver2 ObolGold2 ObolPlatinum2 ObolPink2 ObolBronze3 ObolSilver3 ObolGold3 ObolPlatinum3 ObolPink3 ObolBronzeDamage ObolSilverDamage ObolGoldDamage ObolPlatinumDamage ObolPinkDamage ObolSilverMoney ObolGoldMoney ObolBronzeMining ObolSilverMining ObolGoldMining ObolPlatinumMining ObolPinkMining ObolBronzeChoppin ObolSilverChoppin ObolGoldChoppin ObolPlatinumChoppin ObolPinkChoppin ObolBronzeFishing ObolSilverFishing ObolGoldFishing ObolPlatinumFishing ObolPinkFishing ObolBronzeCatching ObolSilverCatching ObolGoldCatching ObolPlatinumCatching ObolPinkCatching ObolSilverLuck ObolGoldLuck ObolPlatinumLuck ObolPinkLuck ObolBronzePop ObolSilverPop ObolGoldPop ObolPlatinumPop ObolPinkPop ObolBronzeKill ObolSilverKill ObolGoldKill ObolPlatinumKill ObolPinkKill ObolBronzeEXP ObolSilverEXP ObolGoldEXP ObolPlatinumEXP ObolPinkEXP ObolBronzeCard ObolSilverCard ObolGoldCard ObolPlatinumCard ObolPinkCard ObolBronzeDef ObolSilverDef ObolGoldDef ObolPlatinumDef ObolPinkDef ObolBronzeTrapping ObolSilverTrapping ObolGoldTrapping ObolPlatinumTrapping ObolPinkTrapping ObolBronzeCons ObolSilverCons ObolGoldCons ObolPlatinumCons ObolPinkCons ObolBronzeWorship ObolSilverWorship ObolGoldWorship ObolPlatinumWorship ObolPinkWorship ObolFrog ObolAmarokA ObolEfauntA ObolKnight ObolSlush ObolChizoarA ObolTroll ObolLava ObolKruk ObolHyper0 ObolHyper1 ObolHyper2 ObolHyper3 ObolHyperB0 ObolHyperB1 ObolHyperB2 ObolHyperB3 StampA1 StampA2 StampA3 StampA4 StampA5 StampA6 StampA7 StampA8 StampA9 StampA10 StampA11 StampA12 StampA13 StampA14 StampA15 StampA16 StampA17 StampA18 StampA19 StampA20 StampA21 StampA22 StampA23 StampA24 StampA25 StampA26 StampA27 StampA28 StampA29 StampA30 StampA31 StampA32 StampA33 StampA34 StampA35 StampA36 StampA37 StampA38 StampA39 StampA40 StampA41 StampA42 StampB1 StampB2 StampB3 StampB4 StampB5 StampB6 StampB7 StampB8 StampB9 StampB10 StampB11 StampB12 StampB13 StampB14 StampB15 StampB16 StampB17 StampB18 StampB19 StampB20 StampB21 StampB22 StampB23 StampB24 StampB25 StampB26 StampB27 StampB28 StampB29 StampB30 StampB31 StampB32 StampB33 StampB34 StampB35 StampB36 StampB37 StampB38 StampB39 StampB40 StampB41 StampB42 StampB43 StampB44 StampB45 StampB46 StampB47 StampB48 StampB49 StampB50 StampB51 StampB52 StampB53 StampB54 StampC1 StampC2 StampC3 StampC4 StampC5 StampC6 StampC7 StampC8 StampC9 StampC10 StampC11 StampC12 StampC13 StampC14 StampC15 StampC16 StampC17 StampC18 StampC19 StampC20 StampC21 StampC22 StampC23 InvBag1 InvBag2 InvBag3 InvBag4 InvBag5 InvBag6 InvBag7 InvBag8 InvBag100 InvBag101 InvBag102 InvBag103 InvBag104 InvBag105 InvBag106 InvBag107 InvBag108 InvBag109 InvBag110 InvBag111 InvStorage1 InvStorage2 InvStorage3 InvStorage4 InvStorage5 InvStorage6 InvStorage7 InvStorage8 InvStorage9 InvStorage10 InvStorage11 InvStorage12 InvStorage13 InvStorage14 InvStorage15 InvStorage16 InvStorage17 InvStorage18 InvStorage19 InvStorage20 InvStorage21 InvStorage22 InvStorage23 InvStorage24 InvStorage25 InvStorage26 InvStorage27 InvStorage28 InvStorageF InvStorageS InvStorageC InvStorageD InvStorageN Weight1 Weight2 Weight3 Weight4 Weight5 Weight6 Weight7 Weight8 Weight9 Weight10 Weight11 Weight12 Weight13 Weight14 Line1 Line2 Line3 Line4 Line5 Line6 Line7 Line8 Line9 Line10 Line11 Line12 Line13 Line14 Ladle PetEgg Genetic0 Genetic1 Genetic2 Genetic3 CardPack1 CardPack2 CardPack3 CardPack4 CardPack5 CardPack6 CardPack7 DungCredits2 Cash XP XPskill DungEnhancer0 DungEnhancer1 DungEnhancer2 DungRNG0 DungRNG1 DungRNG2 DungRNG3 DungRNG4 DungeonA1 DungeonA2 DungeonA3 DungeonA4 DungeonA5 DungeonA6 DungeonA7 DungeonA8 KeyFrag DungCredits1 LootDice Tree7D PlatD Fish1D Fish3D Cashb Dung3Ice FoodHealth1d FoodHealth2d FoodHealth3d DungWeaponPunchA1 DungWeaponPunchA2 DungWeaponPunchA3 DungWeaponPunchA4 DungWeaponPunchA5 DungWeaponPunchB1 DungWeaponPunchB2 DungWeaponPunchB3 DungWeaponPunchB4 DungWeaponPunchB5 DungWeaponPunchC1 DungWeaponPunchC2 DungWeaponPunchC3 DungWeaponPunchC4 DungWeaponPunchC5 DungWeaponPunchD1 DungWeaponPunchD2 DungWeaponPunchD3 DungWeaponPunchD4 DungWeaponPunchD5 DungWeaponPunchE1 DungWeaponPunchE2 DungWeaponPunchE3 DungWeaponPunchE4 DungWeaponPunchE5 DungWeaponPunchF1 DungWeaponPunchF2 DungWeaponPunchF3 DungWeaponPunchF4 DungWeaponPunchF5 DungWeaponSwordA1 DungWeaponSwordA2 DungWeaponSwordA3 DungWeaponSwordA4 DungWeaponSwordA5 DungWeaponSwordB1 DungWeaponSwordB2 DungWeaponSwordB3 DungWeaponSwordB4 DungWeaponSwordB5 DungWeaponSwordC1 DungWeaponSwordC2 DungWeaponSwordC3 DungWeaponSwordC4 DungWeaponSwordC5 DungWeaponSwordD1 DungWeaponSwordD2 DungWeaponSwordD3 DungWeaponSwordD4 DungWeaponSwordD5 DungWeaponSwordE1 DungWeaponSwordE2 DungWeaponSwordE3 DungWeaponSwordE4 DungWeaponSwordE5 DungWeaponSwordF1 DungWeaponSwordF2 DungWeaponSwordF3 DungWeaponSwordF4 DungWeaponSwordF5 DungWeaponBowA1 DungWeaponBowA2 DungWeaponBowA3 DungWeaponBowA4 DungWeaponBowA5 DungWeaponBowB1 DungWeaponBowB2 DungWeaponBowB3 DungWeaponBowB4 DungWeaponBowB5 DungWeaponBowC1 DungWeaponBowC2 DungWeaponBowC3 DungWeaponBowC4 DungWeaponBowC5 DungWeaponBowD1 DungWeaponBowD2 DungWeaponBowD3 DungWeaponBowD4 DungWeaponBowD5 DungWeaponBowE1 DungWeaponBowE2 DungWeaponBowE3 DungWeaponBowE4 DungWeaponBowE5 DungWeaponBowF1 DungWeaponBowF2 DungWeaponBowF3 DungWeaponBowF4 DungWeaponBowF5 DungWeaponWandA1 DungWeaponWandA2 DungWeaponWandA3 DungWeaponWandA4 DungWeaponWandA5 DungWeaponWandB1 DungWeaponWandB2 DungWeaponWandB3 DungWeaponWandB4 DungWeaponWandB5 DungWeaponWandC1 DungWeaponWandC2 DungWeaponWandC3 DungWeaponWandC4 DungWeaponWandC5 DungWeaponWandD1 DungWeaponWandD2 DungWeaponWandD3 DungWeaponWandD4 DungWeaponWandD5 DungWeaponWandE1 DungWeaponWandE2 DungWeaponWandE3 DungWeaponWandE4 DungWeaponWandE5 DungWeaponWandF1 DungWeaponWandF2 DungWeaponWandF3 DungWeaponWandF4 DungWeaponWandF5 DungEquipmentHats0 DungEquipmentHats1 DungEquipmentHats2 DungEquipmentHats3 DungEquipmentHats4 DungEquipmentShirt0 DungEquipmentShirt1 DungEquipmentShirt2 DungEquipmentShirt3 DungEquipmentShirt4 DungEquipmentPants0 DungEquipmentPants1 DungEquipmentPants2 DungEquipmentPants3 DungEquipmentPants4 DungEquipmentShoes0 DungEquipmentShoes1 DungEquipmentShoes2 DungEquipmentShoes3 DungEquipmentShoes4 DungEquipmentPendant0 DungEquipmentPendant1 DungEquipmentPendant2 DungEquipmentPendant3 DungEquipmentPendant4 DungEquipmentRings0 DungEquipmentRings1 DungEquipmentRings2 DungEquipmentRings3 DungEquipmentRings4".split(' ')
+knownSlabIgnorablesList = ["Mega-Rare_Drop", "Rare_Drop", "LockedInvSpace", "Blank"]
+dungeonDropsList = [
+    "Quest51", "Quest52", "PalmTreeD", "Quest53", "Quest54", "Quest55",
+    "DungCredits2", "Cash", "XP", "XPskill", "DungEnhancer0", "DungEnhancer1", "DungEnhancer2",
+    "DungRNG0", "DungRNG1", "DungRNG2", "DungRNG3", "DungRNG4",
+    "DungeonA1", "DungeonA2", "DungeonA3", "DungeonA4", "DungeonA5", "DungeonA6", "DungeonA7", "DungeonA8",
+    "KeyFrag", "DungCredits1", "LootDice", "Tree7D", "PlatD", "Fish1D", "Fish3D", "Cashb", "Dung3Ice",
+    "FoodHealth1d", "FoodHealth2d", "FoodHealth3d"
+]
+maxDungeonWeaponsAvailable = 23 #This is the value saved in the JSON, 0-23 = 24 total. Last verified in 2.08
+dungeonWeaponsList = [
+    "DungWeaponPunchA1", "DungWeaponPunchA2", "DungWeaponPunchA3", "DungWeaponPunchA4", "DungWeaponPunchA5", "DungWeaponPunchB1", "DungWeaponPunchB2", "DungWeaponPunchB3", "DungWeaponPunchB4", "DungWeaponPunchB5", "DungWeaponPunchC1", "DungWeaponPunchC2", "DungWeaponPunchC3", "DungWeaponPunchC4", "DungWeaponPunchC5", "DungWeaponPunchD1", "DungWeaponPunchD2", "DungWeaponPunchD3", "DungWeaponPunchD4", "DungWeaponPunchD5", "DungWeaponPunchE1", "DungWeaponPunchE2", "DungWeaponPunchE3", "DungWeaponPunchE4", #"DungWeaponPunchE5", "DungWeaponPunchF1", "DungWeaponPunchF2", "DungWeaponPunchF3", "DungWeaponPunchF4", "DungWeaponPunchF5",
+    "DungWeaponSwordA1", "DungWeaponSwordA2", "DungWeaponSwordA3", "DungWeaponSwordA4", "DungWeaponSwordA5", "DungWeaponSwordB1", "DungWeaponSwordB2", "DungWeaponSwordB3", "DungWeaponSwordB4", "DungWeaponSwordB5", "DungWeaponSwordC1", "DungWeaponSwordC2", "DungWeaponSwordC3", "DungWeaponSwordC4", "DungWeaponSwordC5", "DungWeaponSwordD1", "DungWeaponSwordD2", "DungWeaponSwordD3", "DungWeaponSwordD4", "DungWeaponSwordD5", "DungWeaponSwordE1", "DungWeaponSwordE2", "DungWeaponSwordE3", "DungWeaponSwordE4", #"DungWeaponSwordE5", "DungWeaponSwordF1", "DungWeaponSwordF2", "DungWeaponSwordF3", "DungWeaponSwordF4", "DungWeaponSwordF5",
+    "DungWeaponBowA1", "DungWeaponBowA2", "DungWeaponBowA3", "DungWeaponBowA4", "DungWeaponBowA5", "DungWeaponBowB1", "DungWeaponBowB2", "DungWeaponBowB3", "DungWeaponBowB4", "DungWeaponBowB5", "DungWeaponBowC1", "DungWeaponBowC2", "DungWeaponBowC3", "DungWeaponBowC4", "DungWeaponBowC5", "DungWeaponBowD1", "DungWeaponBowD2", "DungWeaponBowD3", "DungWeaponBowD4", "DungWeaponBowD5", "DungWeaponBowE1", "DungWeaponBowE2", "DungWeaponBowE3", "DungWeaponBowE4", #"DungWeaponBowE5", "DungWeaponBowF1", "DungWeaponBowF2", "DungWeaponBowF3", "DungWeaponBowF4", "DungWeaponBowF5",
+    "DungWeaponWandA1", "DungWeaponWandA2", "DungWeaponWandA3", "DungWeaponWandA4", "DungWeaponWandA5", "DungWeaponWandB1", "DungWeaponWandB2", "DungWeaponWandB3", "DungWeaponWandB4", "DungWeaponWandB5", "DungWeaponWandC1", "DungWeaponWandC2", "DungWeaponWandC3", "DungWeaponWandC4", "DungWeaponWandC5", "DungWeaponWandD1", "DungWeaponWandD2", "DungWeaponWandD3", "DungWeaponWandD4", "DungWeaponWandD5", "DungWeaponWandE1", "DungWeaponWandE2", "DungWeaponWandE3", "DungWeaponWandE4", #"DungWeaponWandE5", "DungWeaponWandF1", "DungWeaponWandF2", "DungWeaponWandF3", "DungWeaponWandF4", #"DungWeaponWandF5",
+]
+maxDungeonArmorsAvailable = 3  #This is the value saved in the JSON, 0-3 = 4 total. Last verified in 2.08
+dungeonArmorsList = [
+    "DungEquipmentHats0", "DungEquipmentHats1", "DungEquipmentHats2", "DungEquipmentHats3", #"DungEquipmentHats4",
+    "DungEquipmentShirt0", "DungEquipmentShirt1", "DungEquipmentShirt2", "DungEquipmentShirt3", #"DungEquipmentShirt4",
+    "DungEquipmentPants0", "DungEquipmentPants1", "DungEquipmentPants2", "DungEquipmentPants3", #"DungEquipmentPants4",
+    "DungEquipmentShoes0", "DungEquipmentShoes1", "DungEquipmentShoes2", "DungEquipmentShoes3", #"DungEquipmentShoes4",
+] #This list was pulled from the items.yaml file
+maxDungeonJewelryAvailable = 3   #This is the value saved in the JSON, 0-3 = 4 total. Last verified in 2.08
+dungeonJewelryList = [
+    "DungEquipmentPendant0", "DungEquipmentPendant1", "DungEquipmentPendant2", "DungEquipmentPendant3", #"DungEquipmentPendant4",
+    "DungEquipmentRings0", "DungEquipmentRings1", "DungEquipmentRings2", "DungEquipmentRings3", #"DungEquipmentRings4",
+] #This list was pulled from the items.yaml file
+
+reclaimableQuestItems = {
+    "CraftMat2": {
+        "ItemName": "Crimson String",
+        "QuestGiver": "Scripticus",
+        "QuestName": "Hardcore Gamer Status, Here I Come!",
+        "QuestNameCoded": "Scripticus2"
+    },
+    "Quest1": {
+        "ItemName": "Mining Certificate",
+        "QuestGiver": "Glumlee",
+        "QuestName": "Literally Burning Your Money",
+        "QuestNameCoded": "Glumlee3"
+    },
+    "Quest5": {
+        "ItemName": "Class Certificate",
+        "QuestGiver": "Promotheus",
+        "QuestName": "Three Right Answers",
+        "QuestNameCoded": "Promotheus2"
+    },
+    "InvBag4": {
+        "ItemName": "Inventory Bag D",
+        "QuestGiver": "Promotheus",
+        "QuestName": "The Witcher, But Not Really",
+        "QuestNameCoded": "Promotheus4"
+    },
+    "Quest6": {
+        "ItemName": "Scouting Report",
+        "QuestGiver": "Stiltzcho",
+        "QuestName": "Investigator By Day, Prankster By Night",
+        "QuestNameCoded": "Stiltzcho3"
+    },
+    "Quest20": {
+        "ItemName": "Signed Arrest Warrant",
+        "QuestGiver": "Bandit Bob",
+        "QuestName": "Bringing Bob's Boxes",
+        "QuestNameCoded": "Bandit_Bob3"
+    },
+    "Quest27": {
+        "ItemName": "Bag o' Nuts",
+        "QuestGiver": "Goldric",
+        "QuestName": "Dress To Impress",
+        "QuestNameCoded": "Goldric5"
+    },
+    "Trophy13": {
+        "ItemName": "Club Maestro",
+        "QuestGiver": "Cactolyte",
+        "QuestName": "Maestro! The Stro! Mman!",
+        "QuestNameCoded": "Cactolyte4"
+    },
+    "Quest59": {
+        "ItemName": "Shuvelle's Vote",
+        "QuestGiver": "Shuvelle",
+        "QuestName": "Mayoral Movie Taste",
+        "QuestNameCoded": "Shuvelle4"
+    },
+    "Quest60": {
+        "ItemName": "Yondergreens Vote",
+        "QuestGiver": "Yondergreen",
+        "QuestName": "Legislative Action",
+        "QuestNameCoded": "Yondergreen4"
+    },
+    "Quest61": {
+        "ItemName": "Bill Brr's Vote",
+        "QuestGiver": "Bill Brr",
+        "QuestName": "Coin Shenanigans",
+        "QuestNameCoded": "Bill_Brr4"
+    },
+    "SmithingHammerChisel3": {
+        "ItemName": "Onyx Tools",
+        "QuestGiver": "Monolith",
+        "QuestName": "Onyx Statue Crafting",
+        "QuestNameCoded": "Monolith2"
+    },
+    "EquipmentNametag4": {
+        "ItemName": "Vman Nametag",
+        "QuestGiver": "Nebulyte",
+        "QuestName": "VMAN ACHIEVED!",
+        "QuestNameCoded": "Nebulyte4"
+    }
+}
+#vendorItems last pulled from code in 2.08. Search for: ShopNames = function ()
+vendorItems = {
+    "W1 Town": "FoodHealth1 FoodHealth3 FoodHealth2 CraftMat3 FoodPotMana1 FoodPotOr1 FoodPotRe1 FoodPotGr1 OilBarrel1 StoneW1 StoneA1 StoneT1 EquipmentRings7 EquipmentStatues1 SmithingHammerChisel StampA5 StampA6 StampA3 InvBag104 InvStorage2 InvStorage6 InvStorage7 Quest86 rtt0 ResetFrag".split(' '),
+    "Tiki Shop": "FoodHealth3 FoodHealth2 FoodHealth5 FoodPotOr2 FoodPotYe1 StoneA2 StampA12 EquipmentPendant12 Quest37 InvBag105 InvStorage8 InvStorage12 rtt0 ResetFrag".split(' '),
+    "W2 Town": "FoodHealth6 FoodHealth7 FoodHealth4 Quest19 BobJoePickle StoneW2 StoneA2 StoneT2 FoodPotOr2 FoodPotGr2 FoodPotRe2 InvBag106 InvStorage9 InvStorage10 InvStorage13 InvStorage15 SmithingHammerChisel2 StampC11 rtt0 ResetFrag".split(' '),
+    "Faraway Piers": "Line1 Weight1 Line5 Weight5 Weight10 Line10 Weight11 StoneT1 StoneT2 StampB8 StampA15 NPCtoken27 ResetFrag".split(' '),
+    "W3 Town": "FoodHealth10 FoodHealth9 FoodHealth11 TrapBoxSet1 WorshipSkull1 StoneW3 StoneA3 StoneT3 FoodPotOr3 FoodPotGr3 FoodPotRe3 InvBag107 InvStorage16 InvStorage17 InvStorage18 InvStorage19 InvStorage20 InvStorage21 rtt0 ResetFrag Quest57 Quest67 Whetstone".split(' '),
+    "W4 Town": "Quest65 Quest66 FoodHealth13 FoodHealth12 DNAgun0 StoneW4 StoneA4 StoneT4 FoodPotOr4 FoodPotGr4 FoodPotRe4 FoodPotYe4 InvBag108 StampB41 StampB38 StampC12 Quest83".split(' '),
+    "W5 Town": "FoodHealth14 FoodHealth15 OilBarrel6 StoneW5 StoneA5 StoneT5 StampC22 Quest84".split(' '),
+    "W6 Town": "BoneJoePickle Quest80 FoodHealth16 FoodHealth17 OilBarrel7 StoneW8 StoneA7 StoneT7 StampC10 InvStorage26 InvStorage27 InvStorage28".split(' ')}
+#anvilItems last pulled from code in 2.08. Search for: ItemToCraftNAME = function ()
+anvilItems = {
+    "Anvil Tab I": "EquipmentPunching1 TestObj1 EquipmentBows1 EquipmentWands1 EquipmentHats1 EquipmentShirts1 EquipmentPants1 EquipmentShoes9 EquipmentTools2 MaxCapBag1 EquipmentToolsHatchet3 MaxCapBag7 EquipmentHats15 EquipmentPunching2 MaxCapBag8 MaxCapBagM2 EquipmentHats17 EquipmentShirts11 EquipmentPants2 EquipmentShoes1 EquipmentHats20 EquipmentHats3 EquipmentHats16 EquipmentHats21 TestObj7 EquipmentBows3 EquipmentWands2 EquipmentRings2 EquipmentTools3 MaxCapBag2 EquipmentToolsHatchet1 MaxCapBag9 EquipmentHats18 EquipmentShirts12 EquipmentPants3 EquipmentSmithingTabs2 EquipmentShirts2 EquipmentPendant10 EquipmentShoes15 EquipmentRings3 EquipmentHats8 FoodMining1 FoodChoppin1 EquipmentShoes7 EquipmentShirts10 EquipmentShirts20 OilBarrel5 EquipmentRings14 EquipmentPants15 EquipmentPants18 Peanut PeanutG InvBag102 EquipmentShirts25 EquipmentShirts24 EquipmentShirts3 BadgeG1 BadgeG2 BadgeG3 EquipmentHats67 NPCtoken1 NPCtoken2 NPCtoken3 EquipmentRings26 EquipmentHats22 EquipmentShirts18 EquipmentPants17 EquipmentShoes20 EquipmentPants22 EquipmentPants23 FillerMaterial EquipmentPendant17 FishingRod2 MaxCapBagFi1 CatchingNet2 MaxCapBagB1 FishingRod3 MaxCapBagFi2 CatchingNet3 MaxCapBagB2 TrapBoxSet2 MaxCapBagTr1 WorshipSkull2 MaxCapBagS1".split(" "),
+    "Anvil Tab II": "EquipmentHats28 EquipmentShirts13 EquipmentPants4 EquipmentShoes3 EquipmentPunching3 TestObj3 EquipmentBows5 EquipmentWands5 EquipmentTools5 MaxCapBag3 EquipmentToolsHatchet2 MaxCapBagT3 FishingRod4 MaxCapBagFi3 CatchingNet4 MaxCapBagB3 EquipmentRings11 EquipmentPendant16 MaxCapBagF3 MaxCapBagM4 EquipmentHats19 EquipmentShirts14 EquipmentPants5 EquipmentShoes4 EquipmentPendant26 EquipmentSword1 EquipmentBows6 EquipmentWands6 EquipmentTools6 MaxCapBag4 EquipmentToolsHatchet4 MaxCapBagT4 FishingRod5 MaxCapBagFi4 CatchingNet5 MaxCapBagB4 MaxCapBagF4 MaxCapBagM5 FillerMaterial EquipmentSmithingTabs3 Quest13 Quest35 Bullet BulletB EquipmentHats64 TestObj13 EquipmentHats41 EquipmentHats26 FillerMaterial EquipmentShirts5 EquipmentShirts23 EquipmentShirts22 EquipmentShoes16 EquipmentShoes18 EquipmentShoes19 EquipmentShoes17 FoodFish1 FoodCatch1 Quest36 InvBag103 EquipmentHats52 EquipmentShirts26 EquipmentPants20 EquipmentShoes21 EquipmentRings16 EquipmentRings27 EquipmentPendant27 FillerMaterial TrapBoxSet3 MaxCapBagTr3 WorshipSkull3 MaxCapBagS3 BadgeD1 BadgeD2 BadgeD3 ResetCompletedS NPCtoken28 NPCtoken29 NPCtoken30 FillerMaterial".split(" "),
+    "Anvil Tab III": "EquipmentHats53 EquipmentShirts15 EquipmentPants6 EquipmentShoes5 EquipmentPunching4 EquipmentSword2 EquipmentBows7 EquipmentWands3 EquipmentTools7 MaxCapBag5 EquipmentToolsHatchet5 MaxCapBagT5 FishingRod6 MaxCapBagFi5 CatchingNet6 MaxCapBagB5 TrapBoxSet4 MaxCapBagTr4 WorshipSkull4 MaxCapBagS4 EquipmentRings28 EquipmentRings29 MaxCapBagF5 MaxCapBagM6 EquipmentHats54 EquipmentShirts27 EquipmentPants21 EquipmentShoes22 EquipmentPunching5 EquipmentSword3 EquipmentBows8 EquipmentWands7 EquipmentTools11 MaxCapBagMi6 EquipmentToolsHatchet7 MaxCapBagT6 FishingRod7 MaxCapBagFi6 CatchingNet7 MaxCapBagB6 TrapBoxSet5 MaxCapBagTr5 WorshipSkull5 MaxCapBagS5 MaxCapBagF6 MaxCapBagM7 Trophy20 EquipmentSmithingTabs4 EquipmentHats61 EquipmentHats58 EquipmentHats59 EquipmentHats60 EquipmentShirts31 EquipmentShirts28 EquipmentShirts29 EquipmentShirts30 FoodTrapping1 FoodWorship1 InvBag109 EquipmentHats66 BadgeI1 BadgeI2 BadgeI3 Quest68 NPCtoken39 NPCtoken40 NPCtoken41 EquipmentPendant25 EquipmentHats68 EquipmentShirts6 EquipmentPants9 EquipmentShoes23".split(" "),
+    "Anvil Tab IV": "EquipmentHats70 EquipmentShirts32 EquipmentPants24 EquipmentShoes24 EquipmentPunching6 EquipmentSword4 EquipmentBows9 EquipmentWands8 EquipmentTools8 MaxCapBagMi7 EquipmentToolsHatchet6 MaxCapBagT7 FishingRod8 MaxCapBagFi7 CatchingNet8 MaxCapBagB7 TrapBoxSet6 MaxCapBagTr6 WorshipSkull6 MaxCapBagS6 EquipmentShoes26 EquipmentShoes27 EquipmentShoes28 EquipmentShoes29 EquipmentShoes31 EquipmentShoes33 MaxCapBagF7 MaxCapBagM8 EquipmentHats71 EquipmentShirts33 EquipmentPants25 EquipmentShoes25 EquipmentPunching7 EquipmentSword5 EquipmentBows10 EquipmentWands9 EquipmentTools12 MaxCapBagMi8 EquipmentToolsHatchet8 MaxCapBagT8 FishingRod9 MaxCapBagFi8 CatchingNet9 MaxCapBagB8 TrapBoxSet7 MaxCapBagTr7 WorshipSkull7 MaxCapBagS7 MaxCapBagF8 MaxCapBagM9 FillerMaterial EquipmentSmithingTabs5 InvBag111 DNAgun1 DNAgun2 DNAgun3 EquipmentRings30 FillerMaterial FillerMaterial FillerMaterial EquipmentHats74 EquipmentShirts34 EquipmentPants8 EquipmentShoes34".split(" "),
+    "Anvil Tab V": "EquipmentHats77 EquipmentShirts35 EquipmentPants26 EquipmentShoes35 EquipmentPunching8 EquipmentSword6 EquipmentBows11 EquipmentWands10 EquipmentTools9 MaxCapBagMi9 EquipmentToolsHatchet9 MaxCapBagT9 FishingRod10 MaxCapBagFi9 CatchingNet10 MaxCapBagB9 TrapBoxSet8 MaxCapBagTr8 WorshipSkull9 MaxCapBagS8 MaxCapBagF9 MaxCapBagM10 Bullet3 EquipmentSmithingTabs6 EquipmentHats83 EquipmentShirts36 EquipmentPants27 EquipmentShoes36 EquipmentPunching9 EquipmentSword7 EquipmentBows12 EquipmentWands11 EquipmentPendant30 EquipmentHats107 EquipmentShoes39 EquipmentRings35".split(" "),
+    "Anvil Tab VI": "EquipmentHats105 EquipmentShirts37 EquipmentPants29 EquipmentShoes37 EquipmentPunching10 EquipmentSword8 EquipmentBows13 EquipmentWands12 EquipmentTools14 MaxCapBagMi10 EquipmentToolsHatchet12 MaxCapBagT10 FishingRod11 MaxCapBagFi10 CatchingNet11 MaxCapBagB10 TrapBoxSet9 MaxCapBagTr9 WorshipSkull10 MaxCapBagS9 MaxCapBagF10 MaxCapBagM11 EquipmentRings36 FillerMaterial EquipmentHats106 EquipmentShirts38 EquipmentPants30 EquipmentShoes38 EquipmentPunching11 EquipmentSword9 EquipmentBows14 EquipmentWands13 EquipmentTools15 MaxCapBagMi11 EquipmentToolsHatchet10 MaxCapBagT11 FishingRod12 MaxCapBagFi11 CatchingNet12 MaxCapBagB11 TrapBoxSet10 MaxCapBagTr10 WorshipSkull11 MaxCapBagS10 MaxCapBagF11 MaxCapBagM12 FoodG13 EquipmentSmithingTabs7".split(" ")
+}
+anvilTabs = {
+    "Anvil Tab II": "EquipmentSmithingTabs2",
+    "Anvil Tab III": "EquipmentSmithingTabs3",
+    "Anvil Tab IV": "EquipmentSmithingTabs4",
+    "Anvil Tab V":"EquipmentSmithingTabs5",
+    "Anvil Tab VI": "EquipmentSmithingTabs6",
+    #"Anvil Tab VII": "EquipmentSmithingTabs7",
+}
