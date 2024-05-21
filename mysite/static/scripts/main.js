@@ -14,7 +14,7 @@ const opts = {
   top: '50%', // Top position relative to parent
   left: '50%', // Left position relative to parent
   shadow: '0 0 1px transparent', // Box-shadow for the lines
-  zIndex: 2000000000, // The z-index (defaults to 2e9)
+  zIndex: 10, // The z-index (defaults to 2e9)
   className: 'spinner', // The CSS class to assign to the spinner
   position: 'absolute', // Element positioning
 };
@@ -29,7 +29,7 @@ const defaults = {
     handedness: "off"
 }
 
-let spinner
+const spinner = new Spin.Spinner(opts)
 
 function toggleSidebar() {
     document.querySelectorAll('#drawer, #drawer-handle').forEach(e => e.classList.toggle('sidebar-open'))
@@ -307,7 +307,7 @@ function loadResults(html) {
 }
 
 function fetchPlayerAdvice(currentParams) {
-    initBaseUI()
+    initBaseUI(currentParams)
 
     fetch("/results", {
         method: 'POST',
@@ -343,13 +343,42 @@ const fetchStoredUserParams = () => Object.fromEntries(Object.entries(defaults)
     .map(([k, v]) => [k, localStorage.getItem(k) || v]))
 
 document.addEventListener("DOMContentLoaded", () => {
-    var target= document.querySelector('#top');
-    spinner = new Spin.Spinner(opts).spin(target);
-
     fetchPlayerAdvice(fetchStoredUserParams())
 })
 
-function initBaseUI() {
+function hideSpinnerIfFirstAccess() {
+    if (localStorage.length === 0)
+        return
+    var target= document.querySelector('#top');
+    spinner.spin(target);
+}
+
+function defineCookieModalAction() {
+    const modal = document.querySelector('#cookie-policy');
+    const openModalBtn = document.querySelector('.eupopup-button_2');
+    const closeModalSpan = document.querySelector('#close-modal');
+
+    openModalBtn.setAttribute("href", "")
+
+    openModalBtn.onclick = (e) => {
+        e.preventDefault()
+        modal.classList.add('show');
+    }
+
+    closeModalSpan.onclick = () => {
+        modal.classList.remove('show');
+    }
+
+    window.onclick = (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('show');
+        }
+    }
+}
+
+function initBaseUI(storageParams) {
+    setTimeout(defineCookieModalAction, 1000)
+    hideSpinnerIfFirstAccess(storageParams)
     defineFormSubmitAction()
     setupLightSwitch()
     setupSidebarToggling()
