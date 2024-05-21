@@ -56,7 +56,7 @@ def store_user_preferences():
     if request.method == "POST":
         args = json.loads(request.data)
     elif request.method == "GET":
-        args = request.args
+        args = request.args.to_dict()
     else:
         raise ValueError(f"Unknown request method: {request.method}")
 
@@ -182,6 +182,8 @@ def index() -> Response | str:
     live_link = "live"
     beta_link = "beta"
 
+    player = request.args.to_dict().get("player")
+
     store_user_preferences()
 
     return render_template(
@@ -189,6 +191,7 @@ def index() -> Response | str:
         beta=is_beta,
         live_link=live_link,
         beta_link=beta_link,
+        player=player,
         switches=switches(),
     )
 
