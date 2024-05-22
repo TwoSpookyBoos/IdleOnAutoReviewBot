@@ -428,13 +428,13 @@ def setBreedingProgressionTier() -> AdviceSection:
                 shinyPetsTierList["D"].append('Faster Shiny Pet Lv Up Rate')
 
         for tier in progressionTiersBreeding:
-            if "Infinite Star Signs" in progressionTiersBreeding[tier] and shinyExclusionsDict["Exclude-InfiniteStarSigns"] == True:
+            if "Infinite Star Signs" in progressionTiersBreeding[tier].get("Shinies", {}) and shinyExclusionsDict["Exclude-InfiniteStarSigns"] == True:
                 progressionTiersBreeding[tier]["Shinies"]["Infinite Star Signs"] = 0
                 #logger.debug("Excluding Shiny- Infinite Star Signs because player does not have Rift bonus unlocked.")
-            if 'Lower Minimum Travel Time for Sailing' in progressionTiersBreeding[tier] and shinyExclusionsDict["Exclude-Sailing"] == True:
+            if 'Lower Minimum Travel Time for Sailing' in progressionTiersBreeding[tier].get("Shinies", {}) and shinyExclusionsDict["Exclude-Sailing"] == True:
                 progressionTiersBreeding[tier]["Shinies"]['Lower Minimum Travel Time for Sailing'] = 0
                 #logger.debug("Excluding Shiny- Sailing Min Time because player has all Sailing Artifacts discovered.")
-            if "Higher Artifact Find Chance" in progressionTiersBreeding[tier] and shinyExclusionsDict["Exclude-Sailing"] == True:
+            if "Higher Artifact Find Chance" in progressionTiersBreeding[tier].get("Shinies", {}) and shinyExclusionsDict["Exclude-Sailing"] == True:
                 progressionTiersBreeding[tier]["Shinies"]["Higher Artifact Find Chance"] = 0
                 #logger.debug("Excluding Shiny- Higher Artifact Find Chance because player has all Sailing Artifacts discovered.")
             if "Faster Shiny Pet Lv Up Rate" in progressionTiersBreeding[tier].get("Shinies", {}) and shinyExclusionsDict["Exclude-ShinySpeed"] == True:
