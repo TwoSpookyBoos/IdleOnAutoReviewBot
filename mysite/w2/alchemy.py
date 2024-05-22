@@ -426,7 +426,7 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
     bubbles_AdviceSection.tier = tier_section
     bubbles_AdviceSection.pinchy_rating = overall_alchemyBubblesTier
     bubbles_AdviceSection.groups = bubbles_AdviceGroupDict.values()
-    if overall_alchemyBubblesTier == max_tier:
+    if overall_alchemyBubblesTier >= max_tier:
         bubbles_AdviceSection.header = f"Best Bubbles tier met: {tier_section}<br>You best ❤️"
     else:
         bubbles_AdviceSection.header = f"Best Bubbles tier met: {tier_section}"
