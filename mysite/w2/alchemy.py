@@ -218,7 +218,7 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
     tier_GreenSampleBubbles = 0
     tier_PurpleSampleBubbles = 0
     tier_UtilityBubbles = 0
-    max_tier = bubbles_progressionTiers[-1][0]
+    max_tier = bubbles_progressionTiers[-2][0]  #Final tier is Informational
     overall_alchemyBubblesTier = 0
     adviceCountsDict = {"PurpleSampleBubbles": 0, "OrangeSampleBubbles": 0, "GreenSampleBubbles": 0, "UtilityBubbles": 0}
     exclusionsList = getExclusions()
@@ -311,7 +311,10 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
             if requiredBubble not in exclusionsList:
                 if named_all_alchemyBubblesDict.get(requiredBubble,0) < tier[2][requiredBubble]:
                     all_orangeRequirementsMet = False
-                    subgroupName = f"To reach Tier {tier[0]} ({tier[6]} max value)"
+                    if tier[0] > max_tier:
+                        subgroupName = f"To reach Informational Tier {tier[0]} ({tier[6]} max value)"
+                    else:
+                        subgroupName = f"To reach Tier {tier[0]} ({tier[6]} max value)"
                     if subgroupName not in bubbles_AdviceDict["OrangeSampleBubbles"] and len(bubbles_AdviceDict["OrangeSampleBubbles"]) < maxTiersPerGroup:
                         bubbles_AdviceDict["OrangeSampleBubbles"][subgroupName] = []
                     if subgroupName in bubbles_AdviceDict["OrangeSampleBubbles"]:
@@ -333,7 +336,10 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
             if requiredBubble not in exclusionsList:
                 if named_all_alchemyBubblesDict.get(requiredBubble,0) < tier[3][requiredBubble] and requiredBubble not in exclusionsList:
                     all_greenRequirementsMet = False
-                    subgroupName = f"To reach Tier {tier[0]} ({tier[6]} max value)"
+                    if tier[0] > max_tier:
+                        subgroupName = f"To reach Informational Tier {tier[0]} ({tier[6]} max value)"
+                    else:
+                        subgroupName = f"To reach Tier {tier[0]} ({tier[6]} max value)"
                     if subgroupName not in bubbles_AdviceDict["GreenSampleBubbles"] and len(bubbles_AdviceDict["GreenSampleBubbles"]) < maxTiersPerGroup:
                         bubbles_AdviceDict["GreenSampleBubbles"][subgroupName] = []
                     if subgroupName in bubbles_AdviceDict["GreenSampleBubbles"]:
@@ -355,7 +361,10 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
             if requiredBubble not in exclusionsList:
                 if named_all_alchemyBubblesDict.get(requiredBubble,0) < tier[4][requiredBubble]:
                     all_purpleRequirementsMet = False
-                    subgroupName = f"To reach Tier {tier[0]} ({tier[6]} max value)"
+                    if tier[0] > max_tier:
+                        subgroupName = f"To reach Informational Tier {tier[0]} ({tier[6]} max value)"
+                    else:
+                        subgroupName = f"To reach Tier {tier[0]} ({tier[6]} max value)"
                     if subgroupName not in bubbles_AdviceDict["PurpleSampleBubbles"] and len(bubbles_AdviceDict["PurpleSampleBubbles"]) < maxTiersPerGroup:
                         bubbles_AdviceDict["PurpleSampleBubbles"][subgroupName] = []
                     if subgroupName in bubbles_AdviceDict["PurpleSampleBubbles"]:
@@ -377,7 +386,10 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
             if requiredBubble not in exclusionsList:
                 if named_all_alchemyBubblesDict.get(requiredBubble,0) < tier[5][requiredBubble]:
                     all_utilityRequirementsMet = False
-                    subgroupName = f"To reach Tier {tier[0]}"
+                    if tier[0] > max_tier:
+                        subgroupName = f"To reach Informational Tier {tier[0]} ({tier[6]} max value)"
+                    else:
+                        subgroupName = f"To reach Tier {tier[0]} ({tier[6]} max value)"
                     if subgroupName not in bubbles_AdviceDict["UtilityBubbles"] and len(bubbles_AdviceDict["UtilityBubbles"]) < maxTiersPerGroup:
                         bubbles_AdviceDict["UtilityBubbles"][subgroupName] = []
                     if subgroupName in bubbles_AdviceDict["UtilityBubbles"]:
@@ -402,20 +414,10 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
         f"Level Purple sample-boosting bubbles",
         f"Level Utility bubbles",
     ]
-    agdPost_strings = [
-        "", "", "",
-        "Choppin Log samples are the largest producers of Atom Particles and should be given priority.",
-        "",
-    ]
-    if tier_UtilityBubbles == max_tier:
-        agdPost_strings.append(bubbles_progressionTiers[tier_UtilityBubbles][7])
-    else:
-        agdPost_strings.append(bubbles_progressionTiers[tier_UtilityBubbles+1][7])
     for counter in range(0, len(agdNames)):
         bubbles_AdviceGroupDict[agdNames[counter]] = AdviceGroup(
-            tier=agdTiers[counter],
-            pre_string=agdPre_strings[counter],
-            post_string="",  #agdPost_strings[counter],
+            tier=f"{agdTiers[counter] if agdTiers[counter] < 22 else ''}",
+            pre_string=f"{'Informational- ' if agdTiers[counter] >= 22 else ''}{agdPre_strings[counter]}",
             advices=bubbles_AdviceDict[agdNames[counter]]
         )
 
