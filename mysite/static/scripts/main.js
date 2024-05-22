@@ -26,7 +26,8 @@ const defaults = {
     doot: "off",
     order_tiers: "off",
     progress_bars: "off",
-    handedness: "off"
+    handedness: "off",
+    light: "off"
 }
 
 const spinner = new Spin.Spinner(opts)
@@ -60,11 +61,16 @@ function openSidebarIfFirstAccess() {
 function defineFormSubmitAction() {
     document.querySelector('form').addEventListener('submit', (e) => {
         e.preventDefault()
-        storeUserParams(Object.fromEntries(new FormData(e.target)))
-        const data = fetchStoredUserParams()
+
+        const formData = new FormData(e.target)
+        formData.set('light', localStorage.getItem('light'))
+        storeUserParams(Object.fromEntries(formData))
+
         const target = document.querySelector("#top")
         target.innerHTML = ""
         spinner.spin(target)
+
+        const data = fetchStoredUserParams()
         fetchPlayerAdvice(data)
         toggleSidebar()
     })
@@ -149,6 +155,7 @@ function setupLightSwitch() {
         document.documentElement.classList.toggle('light-mode')
         e.currentTarget.classList.toggle('on')
         e.currentTarget.classList.toggle('off')
+        localStorage.setItem('light', e.currentTarget.classList[0])
     }
 }
 
@@ -183,11 +190,25 @@ function setupColorScheme() {
 
     const body = document.documentElement.classList
     const cls = 'light-mode'
-    runColorMode((isLightMode) => {
+
+    // Check localStorage for a saved theme preference
+    const savedTheme = localStorage.getItem('light');
+
+    if (savedTheme !== null) {
+        // Apply the saved theme preference
+        savedTheme === 'on' ? body.add(cls) : body.remove(cls)
+
+        // Update the light switch element accordingly
         let lightSwitch = document.querySelector('#light-switch')
-        isLightMode ? body.add(cls) : body.remove(cls)
-        lightSwitch.classList.add(isLightMode ? 'on' : 'off')
-    })
+        lightSwitch.classList.add(savedTheme === 'on' ? 'on' : 'off');
+    } else {
+        // If no preference is saved in localStorage, use the system preference
+        runColorMode((isLightMode) => {
+            let lightSwitch = document.querySelector('#light-switch')
+            isLightMode ? body.add(cls) : body.remove(cls)
+            lightSwitch.classList.add(isLightMode ? 'on' : 'off')
+        });
+    }
 }
 
 function setupSwitchesActions() {
@@ -342,18 +363,28 @@ const storeUserParams = (data) => Object
 const fetchStoredUserParams = () => Object.fromEntries(Object.entries(defaults)
     .map(([k, v]) => [k, localStorage.getItem(k) || v]))
 
+function storeGetParamsIfProvided() {
+    const GETData = new URLSearchParams(window.location.search).entries();
+    const truthy = [true, "True", "true", "on"]
+    const falsy = [false, "False", "false", "off"]
+    GETData.forEach(([k, v]) => localStorage.setItem(k, truthy.includes(v) ? "on" : falsy.includes(v) ? "off" : v))
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+    storeGetParamsIfProvided()
     fetchPlayerAdvice(fetchStoredUserParams())
 })
 
 function hideSpinnerIfFirstAccess() {
-    if (localStorage.length === 0)
+    if (! localStorage.getItem('player'))
         return
     var target= document.querySelector('#top');
     spinner.spin(target);
 }
 
 function defineCookieModalAction() {
+    if (document.cookie.includes("EU_COOKIE_LAW_CONSENT=true")) return
+
     const modal = document.querySelector('#cookie-policy');
     const openModalBtn = document.querySelector('.eupopup-button_2');
     const closeModalSpan = document.querySelector('#close-modal');
