@@ -425,12 +425,12 @@ def setConsDeathNoteProgressionTier():
         picture="Construction_Death_Note.png"
     )
     highestConstructionLevel = max(session_data.account.all_skills["Construction"])
-    # if highestConstructionLevel < 1:
-    #     deathnote_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
-    #     return deathnote_AdviceSection
-    # elif safe_loads(session_data.account.construction_buildings.get("Death Note")) < 1:
-    #     deathnote_AdviceSection.header = "Come back after unlocking the Death Note within the Construction skill in World 3!"
-    #     return deathnote_AdviceSection
+    if highestConstructionLevel < 1:
+        deathnote_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
+        return deathnote_AdviceSection
+    elif safe_loads(session_data.account.construction_buildings.get("Death Note")) < 1:
+        deathnote_AdviceSection.header = "Come back after unlocking the Death Note within the Construction skill in World 3!"
+        return deathnote_AdviceSection
 
     currentMaxWorld = 6
     maxEnemiesPerGroup = 10
