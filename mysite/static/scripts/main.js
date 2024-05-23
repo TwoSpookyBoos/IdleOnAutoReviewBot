@@ -1,22 +1,22 @@
 const opts = {
-  lines: 13, // The number of lines to draw
-  length: 38, // The length of each line
-  width: 17, // The line thickness
-  radius: 45, // The radius of the inner circle
-  scale: 1, // Scales overall size of the spinner
-  corners: 1, // Corner roundness (0..1)
-  speed: 1, // Rounds per second
-  rotate: 28, // The rotation offset
-  animation: 'spinner-line-fade-default', // The CSS animation name for the lines
-  direction: 1, // 1: clockwise, -1: counterclockwise
-  color: '#ffffff', // CSS color or array of colors
-  fadeColor: 'transparent', // CSS color or array of colors
-  top: '50%', // Top position relative to parent
-  left: '50%', // Left position relative to parent
-  shadow: '0 0 1px transparent', // Box-shadow for the lines
-  zIndex: 10, // The z-index (defaults to 2e9)
-  className: 'spinner', // The CSS class to assign to the spinner
-  position: 'absolute', // Element positioning
+    lines: 13, // The number of lines to draw
+    length: 38, // The length of each line
+    width: 17, // The line thickness
+    radius: 45, // The radius of the inner circle
+    scale: 1, // Scales overall size of the spinner
+    corners: 1, // Corner roundness (0..1)
+    speed: 1, // Rounds per second
+    rotate: 28, // The rotation offset
+    animation: 'spinner-line-fade-default', // The CSS animation name for the lines
+    direction: 1, // 1: clockwise, -1: counterclockwise
+    color: '#ffffff', // CSS color or array of colors
+    fadeColor: 'transparent', // CSS color or array of colors
+    top: '50%', // Top position relative to parent
+    left: '50%', // Left position relative to parent
+    shadow: '0 0 1px transparent', // Box-shadow for the lines
+    zIndex: 10, // The z-index (defaults to 2e9)
+    className: 'spinner', // The CSS class to assign to the spinner
+    position: 'absolute', // Element positioning
 };
 
 const defaults = {
@@ -35,21 +35,6 @@ const spinner = new Spin.Spinner(opts)
 function toggleSidebar() {
     document.querySelectorAll('#drawer, #drawer-handle').forEach(e => e.classList.toggle('sidebar-open'))
 }
-
-// close the sidebar if clicked outside of it or not on hamburger
-document.addEventListener("click", (e) => {
-    let drawer = e.target.closest("#drawer") || e.target.closest("#drawer-handle")
-    let sidebar = document.getElementById("drawer")
-    if (!drawer && sidebar.classList.contains("sidebar-open")) {
-        toggleSidebar()
-    }
-})
-
-// close the sidebar if it's open and Esc key is pressed
-document.addEventListener("keydown", (e) => {
-    let escPressed = e.code === "Escape"
-    if (escPressed) toggleSidebar()
-})
 
 function openSidebarIfFirstAccess() {
     // show sidebar if opening the page for the first time
@@ -70,8 +55,7 @@ function defineFormSubmitAction() {
         target.innerHTML = ""
         spinner.spin(target)
 
-        const data = fetchStoredUserParams()
-        fetchPlayerAdvice(data)
+        fetchPlayerAdvice()
         toggleSidebar()
     })
 }
@@ -81,7 +65,7 @@ function calcProgressBars(parent = document) {
     const top = el => el.getBoundingClientRect().top
 
     parent.querySelectorAll(".progress-box").forEach(progressBox => {
-        const checkbox= document.querySelector('#progress_bars')
+        const checkbox = document.querySelector('#progress_bars')
         const advice = progressBox.nextElementSibling
         const siblings = Array.from(advice.parentElement.children)
         const idx = siblings.indexOf(advice)
@@ -117,9 +101,9 @@ function progWidth(bar, w, p, g) {
     const isDone = [g.innerText, p.innerText].some(el => el === "✔")
 
 
-    if (inRatio)       return [(100 * Math.min(prog, goal) / goal), true]
+    if (inRatio) return [(100 * Math.min(prog, goal) / goal), true]
     if (inPercentages) return [Math.min([prog, goal].find(e => !isNaN(e)), 100), true]
-    if (isDone)        return [100, true]
+    if (isDone) return [100, true]
 
     return [0, (inPercentages || inRatio)]
 }
@@ -161,6 +145,21 @@ function setupLightSwitch() {
 
 function setupSidebarToggling() {
     document.querySelector('#drawer-handle').onclick = toggleSidebar
+
+    // close the sidebar if clicked outside of it or not on hamburger
+    document.addEventListener("click", (e) => {
+        let drawer = e.target.closest("#drawer") || e.target.closest("#drawer-handle")
+        let sidebar = document.getElementById("drawer")
+        if (!drawer && sidebar.classList.contains("sidebar-open")) {
+            toggleSidebar()
+        }
+    })
+
+    // close the sidebar if it's open and Esc key is pressed
+    document.addEventListener("keydown", (e) => {
+        let escPressed = e.code === "Escape"
+        if (escPressed) toggleSidebar()
+    })
 }
 
 function setupSubmitKeybind() {
@@ -269,8 +268,7 @@ function setupToggleAllAction() {
     document.querySelector("#expand-collapse").onclick = e => {
         const button = e.currentTarget
         button.classList.toggle("closed")
-        document.querySelectorAll('.toggler').forEach(e => {
-            let title = e
+        document.querySelectorAll('.toggler').forEach(title => {
             for (const element of [title, title.nextElementSibling]) {
                 button.classList.contains("closed") ? element.classList.add("folded") : element.classList.remove("folded")
             }
@@ -279,36 +277,30 @@ function setupToggleAllAction() {
 }
 
 let clockTick
+
 function setupDataClock() {
-    clearInterval(clockTick)
+    clearInterval(clockTick);
+
     clockTick = setInterval(() => {
         const elapsed = document.querySelector('#elapsed')
+        if (!elapsed) return
 
-        if (! elapsed) return
+        const timeUnits = elapsed.innerText.split(":").reverse().map(parseInt)
+        let carry = 1 // Initial increment of one second
 
-        const timeStr = elapsed.innerText
-        const [sec, min, hr, d] = timeStr.split(":").reverse()
-        let _sec = parseInt(sec) + 1
-        let _min = Math.floor(_sec / 60)
-        _sec = _sec % 60
+        // Increment time units
+        timeUnits.forEach((unit, index) => {
+            if (carry <= 0) return
+            const newUnit = unit + carry
+            carry = Math.floor(newUnit / 60)
+            timeUnits[index] = newUnit % 60
+        })
 
-        _min = parseInt(min) + _min
-        let _hr = Math.floor(_min / 60)
-        _min = _min % 60
-
-        _hr = parseInt(hr) + _hr
-        let _d = Math.floor(_hr / 60)
-        _hr = _hr % 60
-
-        _d = parseInt(d) + _d
-        elapsed.innerText = [
-            _d.toString().padStart(2, "0"),
-            _hr.toString().padStart(2, "0"),
-            _min.toString().padStart(2, "0"),
-            _sec.toString().padStart(2, "0")
-        ].join(":")
+        // Pad each unit and format the elapsed time string
+        elapsed.innerText = timeUnits.map(unit => unit.toString().padStart(2, "0")).reverse().join(":")
     }, 1000)
 }
+
 
 function setFormValues() {
     const form = document.querySelector('form')
@@ -330,15 +322,15 @@ function loadResults(html) {
     mainWrapper.innerHTML = html;
 }
 
-function fetchPlayerAdvice(currentParams) {
-    initBaseUI(currentParams)
+function fetchPlayerAdvice() {
+    initBaseUI()
 
     fetch("/results", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(currentParams)
+        body: JSON.stringify(fetchStoredUserParams())
 
     }).then(response => {
         if (!response.ok) {
@@ -370,24 +362,19 @@ function storeGetParamsIfProvided() {
     const GETData = new URLSearchParams(window.location.search);
     const truthy = [true, "True", "true", "on"]
     const falsy = [false, "False", "false", "off"]
-    const params = { ...defaults, ...Object.fromEntries(GETData.entries()) }
+    const params = {...defaults, ...Object.fromEntries(GETData.entries())}
 
-    if (! GETData.size) return
+    if (!GETData.size) return
 
     Object.entries(params).forEach(([k, v]) => {
         localStorage.setItem(k, truthy.includes(v) ? "on" : falsy.includes(v) ? "off" : v)
     })
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    storeGetParamsIfProvided()
-    fetchPlayerAdvice(fetchStoredUserParams())
-})
-
 function hideSpinnerIfFirstAccess() {
-    if (! localStorage.getItem('player'))
+    if (!localStorage.getItem('player'))
         return
-    var target= document.querySelector('#top');
+    var target = document.querySelector('#top');
     spinner.spin(target);
 }
 
@@ -416,9 +403,9 @@ function defineCookieModalAction() {
     }
 }
 
-function initBaseUI(storageParams) {
+function initBaseUI() {
     setTimeout(defineCookieModalAction, 1000)
-    hideSpinnerIfFirstAccess(storageParams)
+    hideSpinnerIfFirstAccess()
     defineFormSubmitAction()
     setupLightSwitch()
     setupSidebarToggling()
@@ -436,3 +423,8 @@ function initResultsUI() {
     setupDataClock()
     calcProgressBars(document)
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    storeGetParamsIfProvided()
+    fetchPlayerAdvice()
+})
