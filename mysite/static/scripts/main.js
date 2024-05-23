@@ -262,6 +262,9 @@ function setupDataClock() {
     clearInterval(clockTick)
     clockTick = setInterval(() => {
         const elapsed = document.querySelector('#elapsed')
+
+        if (! elapsed) return
+
         const timeStr = elapsed.innerText
         const [sec, min, hr, d] = timeStr.split(":").reverse()
         let _sec = parseInt(sec) + 1
@@ -295,7 +298,7 @@ function setFormValues() {
         const input = form.querySelector(`[name=${k}]`)
         if (k === "player")
             input.innerText = userValue
-        else if (input.value.toString() !== userValue)
+        else if (input && input.value.toString() !== userValue)
             form.querySelector(`[for=${k}]`).click()
     })
 }
