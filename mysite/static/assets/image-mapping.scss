@@ -5,9 +5,8 @@
 @import "classes";
 @import "construction";
 @import "gem-shop";
-@import "prayers";
+@import "worship";
 @import "skill-icons";
-@import "skulls";
 @import "slab-items";
 @import "storage-items";
 @import "talents";
@@ -25,110 +24,12 @@
 @import "achievements";
 @import "arcade";
 
+$id-map: ();
+
+
 $id-map: (
 	item-backpack-space: $inventory-bag-u,
-	storage-chest-space: $storage-chest-90,
-	more-storage-space: $cosmic-storage-chest,
-	carry-capacity: $carry-capacity,
-	food-slot: $food-slot,
-	cosmic-storage-chest: $cosmic-storage-chest,
-	card-presets: $card-presets,
-	daily-teleports: $daily-teleports,
-	daily-minigame-plays: $daily-minigame-plays,
-	//talent-point-reset-potion: $talent-point-reset-potion,
-	//star-talent-reset-potion: $star-talent-reset-potion,
-	//sub-class-swap-token: $sub-class-swap-token,
-	//post-office-box-reseto-magnifico: $post-office-box-reseto-magnifico,
-	//newbie-card-pack: $newbie-card-pack,
-	//ancient-card-pack: $ancient-card-pack,
-	//eternal-card-pack: $eternal-card-pack,
-	//galaxy-card-pack: $galaxy-card-pack,
-	//smolderin-card-pack: $smolderin-card-pack,
-	//spirit-card-pack: $spirit-card-pack,
-	extra-card-slot: $extra-card-slot,
-	//dungeon-card-pack: $dungeon-card-pack,
-	cardifier-4-star: $cardifier-4-star,
-	smol-arcade-balls: $smol-arcade-balls,
-	med-arcade-balls: $med-arcade-balls,
-
-	weekly-dungeon-boosters: $weekly-dungeon-boosters,
-	//simple-key-chain: $simple-key-chain,
-	//rustic-key-chain: $rustic-key-chain,
-	//gilded-key-chain: $gilded-key-chain,
-
-	biggy-arcade-balls: $biggy-arcade-balls,
-	falloween-treat: $falloween-treat,
-	dragonic-liquid-cauldron: $dragonic-liquid-cauldron,
-	p2w-player: $p2w-player,
-	cardifier-5-star: $cardifier-5-star,
-
-	borzoi-topper: $borzoi-topper,
-	trophie: $trophie,
-	gold-pocketwatch: $gold-pocketwatch,
-	silver-pocketwatch: $silver-pocketwatch,
-
-	//hat-premiumifier: $hat-premiumifier,
-	//premium-str-stone: $premium-str-stone,
-	//premium-agi-stone: $premium-agi-stone,
-	//premium-wis-stone: $premium-wis-stone,
-	//premium-luk-stone: $premium-luk-stone,
-	//premium-bonus-swapper: $premium-bonus-swapper,
-	//premium-stone-refunder: $premium-stone-refunder,
-
-	infinity-hammer: $infinity-hammer,
-	brimstone-forge-slot: $brimstone-forge-slot,
-
-	ivory-bubble-cauldrons: $ivory-bubble-cauldrons,
-	bleach-liquid-cauldrons: $bleach-liquid-cauldrons,
-	obol-storage-space: $obol-storage-space,
-	quality-obol-stack: $quality-obol-stack,
-	marvelous-obol-stack: $marvelous-obol-stack,
-	sigil-supercharge: $sigil-supercharge,
-
-	crystal-3d-printer: $crystal-3d-printer,
-	more-sample-spaces: $more-sample-spaces,
-	burning-bad-books: $burning-bad-books,
-	prayer-slots: $prayer-slots,
-	zen-cogs: $zen-cogs,
-	cog-inventory-space: $cog-inventory-space,
-	tower-building-slots: $tower-building-slots,
-	fluorescent-flaggies: $fluorescent-flaggies,
-
-	royal-egg-cap: $royal-egg-cap,
-	richelin-kitchen: $richelin-kitchen,
-	console-chip: $console-chip,
-	mainframe-jewel: $mainframe-jewel,
-	souped-up-tube: $souped-up-tube,
-	pet-storage: $pet-storage,
-	fenceyard-space: $fenceyard-space,
-	//pet-egg: $pet-egg,
-
-	miracle-chest: $miracle-chest,
-	//bottled-wind: $bottled-wind,
-	chest-sluggo: $chest-sluggo,
-	ancient-artifact: $ancient-artifact,
-	divinity-sparkie: $divinity-sparkie,
-	golden-sprinkler: $golden-sprinkler,
-	//gaming-fertilizer: $gaming-fertilizer,
-	lava-sprouts: $lava-sprouts,
-
-	plot-of-land: $plot-of-land,
-    pristine-charm: $pristine-charm,
-    shroom-familiar: $shroom-familiar,
-    sand-of-time: $sand-of-time,
-    instagrow-generator: $instagrow-generator,
-    life-refill: $life-refill,
-    compost-bag: $compost-bag,
-    summoner-stone: $summoner-stone,
-
-	halloween-pumpkin: $halloween-pumpkin,
-	pardoned-turkey: $pardoned-turkey,
-	snowman-premium-helmet-: $snowman-premium-helmet-,
-	smittys-bubble-blowing-hat: $smittys-bubble-blowing-hat,
-	bandit-bob-mask: $bandit-bob-mask,
-	hotdog-hero: $hotdog-hero,
-
-	dungeon-loot-dice: $dungeon-loot-dice,
+	//more-storage-space: $cosmic-storage-chest,
 
 // Ores
 
@@ -2116,88 +2017,6 @@ really-really-resource-coupon: $really-really-resource-coupon,
 bottle: $bottle,
 garbage: $garbage,
 basketball: $basketball,
-
-// Shrines
-
-	woodular-shrine: $woodular-shrine,
-	isaccian-shrine: $isaccian-shrine,
-	crystal-shrine: $crystal-shrine,
-	pantheon-shrine: $pantheon-shrine,
-	clover-shrine: $clover-shrine,
-	summereading-shrine: $summereading-shrine,
-	crescent-shrine: $crescent-shrine,
-	undead-shrine: $undead-shrine,
-	primordial-shrine: $primordial-shrine,
-
-// Towers
-
-	pulse-mage: $pulse-mage,
-	fireball-lobber: $fireball-lobber,
-	boulder-roller: $boulder-roller,
-	frozone-malone: $frozone-malone,
-	stormcaller: $stormcaller,
-	party-starter: $party-starter,
-	kraken-cosplayer: $kraken-cosplayer,
-	poisonic-elder: $poisonic-elder,
-	voidinator: $voidinator,
-
-// Utilities
-
-	three-d-printer: $three-d-printer,
-	talent-book-library: $talent-book-library,
-	death-note: $death-note,
-	salt-lick: $salt-lick,
-	chest-space: $chest-space,
-	cost-cruncher: $cost-cruncher,
-	critter-drone: $critter-drone,
-	automation-arm: $automation-arm,
-	ez-totem: $ez-totem,
-	atom-collider: $atom-collider,
-	refinery: $refinery,
-	construction-table: $construction-table,
-	prayer-stone: $prayer-stone,
-	hydrogen: $hydrogen,
-    helium: $helium,
-    lithium: $lithium,
-    beryllium: $beryllium,
-    boron: $boron,
-    carbon: $carbon,
-    nitrogen: $nitrogen,
-    oxygen: $oxygen,
-    flouride: $flouride,
-    neon: $neon,
-    sodium: $sodium,
-
-// Prayers
-
-	big-brain-time: $big-brain-time,
-	skilled-dimwit: $skilled-dimwit,
-	unending-energy: $unending-energy,
-	shiny-snitch: $shiny-snitch,
-	zerg-rushogen: $zerg-rushogen,
-	tachion-of-the-titans: $tachion-of-the-titans,
-	balance-of-precision: $balance-of-precision,
-	midas-minded: $midas-minded,
-	jawbreaker: $jawbreaker,
-	the-royal-sampler: $the-royal-sampler,
-	antifun-spirit: $antifun-spirit,
-	circular-criticals: $circular-criticals,
-	ruck-sack: $ruck-sack,
-	fibers-of-absence: $fibers-of-absence,
-	vacuous-tissue: $vacuous-tissue,
-	beefy-for-real: $beefy-for-real,
-	balance-of-pain: $balance-of-pain,
-	balance-of-proficiency: $balance-of-proficiency,
-	glitterbug: $glitterbug,
-
-	normal-skull: $normal-skull,
-	copper-skull: $copper-skull,
-	iron-skull: $iron-skull,
-	gold-skull: $gold-skull,
-	platinum-skull: $platinum-skull,
-	dementia-skull: $dementia-skull,
-	lava-skull: $lava-skull,
-	eclipse-skull: $eclipse-skull,
 );
 
 $monsters: (
@@ -2317,8 +2136,33 @@ $monsters: (
     samurai-guardian: $samurai-guardian
 );
 
+$id-map: map-merge($skill-icons, $id-map);
+$id-map: map-merge($storage-items, $id-map);
+$id-map: map-merge($character-classes, $id-map);
+$id-map: map-merge($breeding-map, $id-map);
+$id-map: map-merge($bribes-map, $id-map);
+$id-map: map-merge($monsters, $id-map);
+$id-map: map-merge($boss-keys, $id-map);
+$id-map: map-merge($all-cards, $id-map);
+$id-map: map-merge($rift, $id-map);
+$id-map: map-merge($equinox, $id-map);
+$id-map: map-merge($meals, $id-map);
+$id-map: map-merge($talents, $id-map);
+$id-map: map-merge($divinity-map, $id-map);
+$id-map: map-merge($all-sailing, $id-map);
+$id-map: map-merge($all-laboratory, $id-map);
+$id-map: map-merge($all-sneaking, $id-map);
+$id-map: map-merge($starsigns, $id-map);
+$id-map: map-merge($all-alchemy, $id-map);
+$id-map: map-merge($achievements, $id-map);
+$id-map: map-merge($arcade, $id-map);
+$id-map: map-merge($all-construction, $id-map);
+$id-map: map-merge($all-worship, $id-map);
+$id-map: map-merge($gem-shop, $id-map);
+
+
 $extra: (
-    storage: $cosmic-storage-chest,
+    //storage: $cosmic-storage-chest,
 	vials: $vial-l1,
 	vial-l4: $vial-l4,
 	vial-max: $vial-max,
@@ -2343,80 +2187,8 @@ $extra: (
 	divinity: $divinity,
 	jade-vendor: $jade-vendor
 );
-
-$character-classes: (
-	beginner-icon:  $beginner-icon,
-	journeyman-icon:  $journeyman-icon,
-	maestro-icon:  $maestro-icon,
-	voidwalker-icon:  $voidwalker-icon,
-	infinilyte-icon:  $infinilyte-icon,
-	rage-icon:  $rage-icon,
-	warrior-icon:  $warrior-icon,
-	barbarian-icon:  $barbarian-icon,
-	blood-berserker-icon:  $blood-berserker-icon,
-	squire-icon:  $squire-icon,
-	divine-knight-icon:  $divine-knight-icon,
-	death-bringer-icon:  $death-bringer-icon,
-	royal-guardian-icon:  $royal-guardian-icon,
-	calm-icon:  $calm-icon,
-	archer-icon:  $archer-icon,
-	bowman-icon:  $bowman-icon,
-	siege-breaker-icon:  $siege-breaker-icon,
-	hunter-icon:  $hunter-icon,
-	beast-master-icon:  $beast-master-icon,
-	mayheim-icon:  $mayheim-icon,
-	arcane-cultist-icon:  $arcane-cultist-icon,
-	savvy-icon:  $savvy-icon,
-	mage-icon:  $mage-icon,
-	wizard-icon:  $wizard-icon,
-	elemental-sorcerer-icon:  $elemental-sorcerer-icon,
-	shaman-icon:  $shaman-icon,
-	bubonic-conjuror-icon:  $bubonic-conjuror-icon,
-	wind-walker-icon:  $wind-walker-icon,
-	spiritual-monk-icon:  $spiritual-monk-icon,
-	beginner-picture:  $beginner-picture,
-	warrior-picture:  $warrior-picture,
-	barbarian-picture:  $barbarian-picture,
-	squire-picture:  $squire-picture,
-	blood-berserker-picture:  $blood-berserker-picture,
-	divine-knight-picture:  $divine-knight-picture,
-	archer-picture:  $archer-picture,
-	bowman-picture:  $bowman-picture,
-	hunter-picture:  $hunter-picture,
-	siege-breaker-picture:  $siege-breaker-picture,
-	beast-master-picture:  $beast-master-picture,
-	mage-picture:  $mage-picture,
-	shaman-picture:  $shaman-picture,
-	wizard-picture:  $wizard-picture,
-	bubonic-conjuror-picture:  $bubonic-conjuror-picture,
-	elemental-sorcerer-picture:  $elemental-sorcerer-picture,
-	journeyman-picture:  $journeyman-picture,
-	maestro-picture:  $maestro-picture,
-	voidwalker-picture:  $voidwalker-picture,
-);
-
-$id-map: map-merge($skill-icons, $id-map);
-$id-map: map-merge($storage-items, $id-map);
-
-$id-map: map-merge($character-classes, $id-map);
 $id-map: map-merge($extra, $id-map);
-$id-map: map-merge($breeding-map, $id-map);
-$id-map: map-merge($bribes-map, $id-map);
-$id-map: map-merge($monsters, $id-map);
-$id-map: map-merge($boss-keys, $id-map);
-$id-map: map-merge($all-cards, $id-map);
-$id-map: map-merge($rift, $id-map);
-$id-map: map-merge($equinox, $id-map);
-$id-map: map-merge($meals, $id-map);
-$id-map: map-merge($talents, $id-map);
-$id-map: map-merge($divinity-map, $id-map);
-$id-map: map-merge($all-sailing, $id-map);
-$id-map: map-merge($all-laboratory, $id-map);
-$id-map: map-merge($all-sneaking, $id-map);
-$id-map: map-merge($starsigns, $id-map);
-$id-map: map-merge($all-alchemy, $id-map);
-$id-map: map-merge($achievements, $id-map);
-$id-map: map-merge($arcade, $id-map);
+
 
 @each $class, $link in $id-map {
 	.#{$class}::before {
