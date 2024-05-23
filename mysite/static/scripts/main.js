@@ -367,10 +367,16 @@ const fetchStoredUserParams = () => Object.fromEntries(Object.entries(defaults)
     .map(([k, v]) => [k, localStorage.getItem(k) || v]))
 
 function storeGetParamsIfProvided() {
-    const GETData = new URLSearchParams(window.location.search).entries();
+    const GETData = new URLSearchParams(window.location.search);
     const truthy = [true, "True", "true", "on"]
     const falsy = [false, "False", "false", "off"]
-    GETData.forEach(([k, v]) => localStorage.setItem(k, truthy.includes(v) ? "on" : falsy.includes(v) ? "off" : v))
+    const params = { ...defaults, ...Object.fromEntries(GETData.entries()) }
+
+    if (! GETData.size) return
+
+    Object.entries(params).forEach(([k, v]) => {
+        localStorage.setItem(k, truthy.includes(v) ? "on" : falsy.includes(v) ? "off" : v)
+    })
 }
 
 document.addEventListener("DOMContentLoaded", () => {
