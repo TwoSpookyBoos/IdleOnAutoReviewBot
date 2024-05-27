@@ -179,6 +179,13 @@ function setupSubmitKeybind() {
     })
 }
 
+function setTextareaDefaultFocusAction() {
+    document.querySelector("#player").onclick = e => {
+        e.currentTarget.focus()
+        e.currentTarget.select()
+    }
+}
+
 function setupColorScheme() {
     const runColorMode = (fn) => {
         if (!window.matchMedia) return
@@ -410,6 +417,7 @@ function initBaseUI() {
     setupLightSwitch()
     setupSidebarToggling()
     setupSubmitKeybind()
+    setTextareaDefaultFocusAction()
     setupColorScheme()
     setupToggleAllAction()
     setupSwitchesActions()
