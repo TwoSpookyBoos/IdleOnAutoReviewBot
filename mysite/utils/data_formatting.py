@@ -33,7 +33,7 @@ class HeaderData:
             username = input_data
 
             self.data_source = self.PUBLIC
-            self.link_text = f"{username}.idleonefficiency.com"
+            self.link_text = app.config["IE_PROFILE_TEMPLATE"].format(username=username)
             self.ie_link = f"https://{self.link_text}"
             self.first_name = session_data.account.names[0]
         else:
@@ -71,7 +71,7 @@ def getJSONfromAPI(runType, username="scoli"):
         logger.info("~~~~~~~~~~~~~~~ Getting JSON from API ~~~~~~~~~~~~~~~")
 
     try:
-        url = f"https://cdn2.idleonefficiency.com/profiles/{username}.json"
+        url = app.config["IE_JSON_TEMPLATE"].format(username=username)
         headers = {"Content-Type": "text/json", "method": "GET"}
         response = requests.get(url, headers=headers)
 

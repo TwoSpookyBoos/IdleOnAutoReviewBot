@@ -3,6 +3,7 @@ import traceback
 from datetime import datetime
 from json import JSONDecodeError
 
+import requests
 from flask import g, render_template, request, redirect, Response, send_from_directory
 
 import consts
@@ -26,8 +27,6 @@ from utils.template_filters import *
 
 
 logger = get_logger(__name__)
-FQDN = "ieautoreview-scoli.pythonanywhere.com"
-FQDN_BETA = f"beta-{FQDN}"
 
 
 def get_user_input() -> str:
@@ -81,7 +80,7 @@ def index() -> Response | str:
     error: str = ""
     reviews: list[AdviceWorld] | None = None
     headerData: HeaderData | None = None
-    is_beta: bool = FQDN_BETA in request.host
+    is_beta: bool = app.config["FQDN_BETA"] in request.host
 
     url_params = request.query_string.decode("utf-8")
     live_link = f"live?{url_params}"
@@ -200,7 +199,7 @@ def create_and_populate_log_files(data, headerData, msg, name_or_data, error):
         with open(filedata, "w") as user_log:
             user_log.writelines(data + os.linesep)
 
-    return f"{error.dirname}/{username}/{now}"
+    return dirpath/now
 
 
 @app.route("/robots.txt")
@@ -214,17 +213,24 @@ def sitemap_xml():
     return send_from_directory(app.static_folder, "sitemap.xml")
 
 
+def format_uri(to_beta=False):
+    link = requests.Request(
+        "GET",
+        app.config["FQDN_BETA" if to_beta else "FQDN"],
+        params=request.args or request.form.to_dict()
+    ).prepare().url
+    return link
+
+
 @app.route("/live", methods=["GET", "POST"])
 def live() -> Response:
-    link = f"https://{FQDN}?" + "&".join(f"{k}={v}" for k, v in request.args.items())
+    link = format_uri()
     return redirect(link)
 
 
 @app.route("/beta", methods=["GET", "POST"])
 def beta() -> Response:
-    link = f"https://{FQDN_BETA}?" + "&".join(
-        f"{k}={v}" for k, v in request.args.items()
-    )
+    link = format_uri(to_beta=True)
     return redirect(link)
 
 
