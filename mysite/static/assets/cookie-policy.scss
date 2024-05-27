@@ -1,0 +1,114 @@
+.eupopup-button_2 {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#cookie-policy {
+    display: block;
+    position: fixed; /* Stay in place */
+    z-index: -10; /* go behind */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    padding: 5%;
+
+    .wrapper {
+        display: flex;
+        flex-direction: column;
+        background-color: #353535;
+        margin: 0 auto; /* 15% from the top and centered */
+        border-radius: 35px;
+        padding: 30px;
+        border: 2px solid navajowhite;
+        max-width: 768px; /* Could be more or less, depending on screen size */
+        font-family: "Open Sans", sans-serif;
+
+        height: 100%;
+
+        transform: translateY(-50px);
+        transition: transform 0.5s ease;
+
+        .header {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .inner {
+            overflow-y: auto; /* Enable scroll if needed */
+        }
+
+        h1, strong {
+            color: navajowhite;
+        }
+
+        h2 {
+            color: antiquewhite;
+        }
+
+        p, li {
+            color: oldlace;
+        }
+
+        ul, strong {
+            list-style-type: none;
+        }
+
+        p, ul {
+            display: flex;
+            flex-direction: column;
+            row-gap: 1.4em;
+            padding: 10px 30px;
+        };
+
+        p, li {
+            line-height: 1.6em;
+        }
+
+        hr {
+            border-top: 1px solid navajowhite;
+            margin: 20px 0;
+
+            &.first {
+                border-top: 2px solid navajowhite;
+                margin: 30px 0;
+            }
+        }
+        p:last-child {
+            display: block;
+        }
+    }
+}
+
+#cookie-policy.show {
+    z-index: 100;
+    opacity: 1;
+
+    transition: opacity 0.5s ease;
+
+    .wrapper {
+        transform: translateY(0);
+        transition: transform 0.5s ease;
+    }
+}
+
+
+
+#close-modal {
+    color: navajowhite;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+
+    &:hover,
+    &:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+}

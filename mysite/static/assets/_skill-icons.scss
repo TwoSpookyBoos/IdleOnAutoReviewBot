@@ -1,3 +1,4 @@
+
 $mining: wiki('2/2f/Mining_Skill_Icon.png');
 $smithing: wiki('8/84/Smithing.png');
 $choppin: wiki('9/99/Choppin_Skill_Icon.png');
@@ -13,6 +14,9 @@ $laboratory: wiki('b/b9/Laboratory_Skill_Icon.png');
 $sailing: wiki('b/ba/Sailing_Skill_Icon.png');
 $gaming: wiki('3/3d/Gaming_Skill_Icon.png');
 $divinity: wiki('5/5d/Divinity_Skill_Icon.png');
+$farming: wiki('8/82/Farming_Skill_Icon.png');
+$sneaking: wiki('9/97/Sneaking_Skill_Icon.png');
+$summoning: wiki('b/bc/Summoning_Skill_Icon.png');
 
 $skill-icons: (
     mining: $mining,
@@ -30,4 +34,7 @@ $skill-icons: (
     sailing: $sailing,
     gaming: $gaming,
     divinity: $divinity,
+    farming: $farming,
+    sneaking: $sneaking,
+    summoning: $summoning,
 );

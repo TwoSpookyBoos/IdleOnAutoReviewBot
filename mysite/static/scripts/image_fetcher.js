@@ -46,15 +46,15 @@ const getImageMap = (cssQuery, mapName_) => {
 }
 
 // this function will attempt to create multiple maps, one for each table found on the page
-const collectAllTablesOnPage = () => {
-    let cssQuery = "tbody > tr:nth-child(1) > td:nth-child(2) > div > div > a > img"
+const collectAllTablesOnPage = (query = null) => {
+    let cssQuery = query || "tbody > tr:nth-child(1) > td:nth-child(2) > div > div > a > img"
     cssQuery = cssQuery.replace(/tr.*? /, 'tr ')
 
     $("table.sortable").each((_, t) => {
         const records = $(t).find(cssQuery).get().map(e => {
             const img = $(e);
             const link = img.attr('src').replace(/.*(\w+\/\w+\/[\w%]+.png).*/, '$1')
-            const name = img.attr('alt').slice(0, -4).toKebabCase()
+            const name = img.attr('alt').slice(0, -4).toKebabCase().replace(/^(\d.*)/g, "x$1")
             return `\t${name}: wiki("${link}")`
         })
         const mapName = $(t).find('caption > span:first-child').text().toKebabCase()

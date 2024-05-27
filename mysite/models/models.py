@@ -15,7 +15,7 @@ from consts import expectedStackables, greenstack_progressionTiers, card_data, m
     max_IndexOfBubbles, getReadableBubbleNames, buildingsList, atomsList, prayersList, labChipsList, bribesList, shrinesList, pristineCharmsList, sigilsDict, \
     artifactsList, guildBonusesList, labBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesCount, sneakingGemstonesList, \
     getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampNameDict, stampTypes, marketUpgradeList, marketUpgradeFirstIndex, \
-    marketUpgradeLastIndex
+    marketUpgradeLastIndex, achievementsList, forgeUpgradesDict, arcadeBonuses
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, letterToNumber
 
 def session_singleton(cls):
@@ -726,7 +726,16 @@ class Account:
                 self.dungeon_upgrades["FlurboShop"] = [0, 0, 0, 0, 0, 0, 0, 0]
                 self.dungeon_upgrades["CreditShop"] = [0, 0, 0, 0, 0, 0, 0, 0]
 
-                #World 1
+        self.achievements = {}
+        raw_reg_achieves = safe_loads(self.raw_data.get('AchieveReg', []))
+        for achieveIndex, achieveData in enumerate(achievementsList):
+            try:
+                if achieveData[0].replace('_', ' ') != "FILLERZZZ ACH":
+                    self.achievements[achieveData[0].replace('_', ' ')] = raw_reg_achieves[achieveIndex] == -1
+            except:
+                self.achievements[achieveData[0].replace('_', ' ')] = False
+
+        #World 1
         self.star_signs = {}
         raw_star_signs = safe_loads(self.raw_data.get("StarSg", {}))
         for signStatus in raw_star_signs:
@@ -734,6 +743,14 @@ class Account:
                 self.star_signs[signStatus] = int(raw_star_signs[signStatus])
             except:
                 self.star_signs[signStatus] = 0
+
+        self.forge_upgrades = copy.deepcopy(forgeUpgradesDict)
+        raw_forge_upgrades = self.raw_data.get("ForgeLV", [])
+        for upgradeIndex, upgrade in enumerate(raw_forge_upgrades):
+            try:
+                self.forge_upgrades[upgradeIndex]["Purchased"] = upgrade
+            except:
+                continue  #already defaulted to 0
 
         self.bribes = {}
         raw_bribes_list = safe_loads(self.raw_data.get("BribeStatus", []))
@@ -893,6 +910,30 @@ class Account:
                 except Exception as reason:
                     print(f"{reason}")
                     pass  #Already defaulted to 0s in consts.sigilsDict
+
+        self.arcade = {}
+        raw_arcade_upgrades = safe_loads(self.raw_data.get("ArcadeUpg", []))
+        for upgradeIndex, upgradeLevel in enumerate(raw_arcade_upgrades):
+            try:
+                self.arcade[upgradeIndex] = {
+                    "Level": upgradeLevel,
+                    "Value": lavaFunc(
+                        arcadeBonuses.get(upgradeIndex).get("funcType"),
+                        upgradeLevel,
+                        arcadeBonuses.get(upgradeIndex).get("x1"),
+                        arcadeBonuses.get(upgradeIndex).get("x2")
+                    )
+                }
+                self.arcade[upgradeIndex]["Display"] = f"+{self.arcade[upgradeIndex]['Value']:.2f}{arcadeBonuses[upgradeIndex]['displayType']} {arcadeBonuses[upgradeIndex]['Stat']}"
+            except:
+                self.arcade[upgradeIndex] = {
+                    "Level": upgradeLevel,
+                    "Value": 0
+                }
+                try:
+                    self.arcade[upgradeIndex]["Display"] = f"+{self.arcade[upgradeIndex]['Value']}{arcadeBonuses[upgradeIndex]['displayType']} {arcadeBonuses[upgradeIndex]['Stat']}"
+                except:
+                    self.arcade[upgradeIndex]["Display"] = f"+% UnknownUpgrade{upgradeIndex}"
 
         #World 3
         self.construction_buildings = {}

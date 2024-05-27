@@ -292,6 +292,17 @@ def setCustomTiers(filename="input.csv"):
 def safe_loads(data):
     return json.loads(data) if isinstance(data, str) else data
 
+def mark_advice_completed(advice):
+    try:
+        prog = str(advice.progression).strip("%")
+        goal = str(advice.goal).strip("%")
+        if advice.goal and advice.progression and float(prog) >= float(goal):
+            advice.progression = ""
+            advice.goal = "✔"
+            setattr(advice, "status", "complete")
+    except:
+        pass
+
 
 def scrape_slab():
     url_wiki_slab_raw = "https://raw.githubusercontent.com/BigCoight/IdleonWikiBot3.0/master/exported/ts/data/SpecificItemRepo.ts"

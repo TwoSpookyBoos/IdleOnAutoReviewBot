@@ -1,6 +1,6 @@
 from models.models import AdviceSection, AdviceGroup, Advice, Character
 from utils.text_formatting import pl
-from utils.data_formatting import safe_loads
+from utils.data_formatting import safe_loads, mark_advice_completed
 from utils.logging import get_logger
 from consts import maxTiersPerGroup, stamps_progressionTiers, stamp_maxes, lavaFunc, stampNameDict, unavailableStampsList, stampTypes
 from math import ceil, pow
@@ -123,8 +123,8 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     capacity_Advices["Account Wide"].append(Advice(
         label="Chaotic Chizoar card increases the capacity from Pantheon Shrine",
         picture_class="chaotic-chizoar-card",
-        progression=next(c.getStars() for c in session_data.account.cards if c.name == "Chaotic Chizoar"),
-        goal=5
+        progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == "Chaotic Chizoar"),
+        goal=6
     ))
     capacity_Advices["Account Wide"].append(Advice(
         label="Gem Shop: Carry Capacity",
@@ -197,7 +197,7 @@ def getCapacityAdviceGroup() -> AdviceGroup:
 
     for group_name in capacity_Advices:  #["Stamps", "Account Wide", "Character Specific"]:
         for advice in capacity_Advices[group_name]:
-            mark_completed(advice)
+            mark_advice_completed(advice)
 
     #Build the AdviceGroup
     capacity_AdviceGroup = AdviceGroup(
@@ -207,18 +207,6 @@ def getCapacityAdviceGroup() -> AdviceGroup:
         post_string="",
     )
     return capacity_AdviceGroup
-
-
-def mark_completed(advice):
-    try:
-        prog = str(advice.progression).strip("%")
-        goal = str(advice.goal).strip("%")
-        if advice.goal and advice.progression and float(prog) >= float(goal):
-            advice.progression = ""
-            advice.goal = "✔"
-            setattr(advice, "status", "complete")
-    except:
-        pass
 
 
 def getCostReductionAdviceGroup() -> AdviceGroup:
@@ -290,7 +278,7 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
 
     for group_name in costReduction_Advices:
         for advice in costReduction_Advices[group_name]:
-            mark_completed(advice)
+            mark_advice_completed(advice)
 
     # Build the AdviceGroup
     costReduction_AdviceGroup = AdviceGroup(
