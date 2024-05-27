@@ -1,7 +1,7 @@
 <aside id="drawer">
     <p>
         Welcome to <a href="/">IE AutoReview Tool - By Scoli290</a><br>
-        Join the <a href="https://discord.gg/ZmEkqzfjmJ" target="_blank">Discord</a> for the detailed patch notes!
+        Join the <a href="{{ config["DISCORD"] }}" target="_blank">Discord</a> for the detailed patch notes!
     </p>
     <p>
     {% if beta %}
@@ -18,16 +18,16 @@
         Previous update 2024-05-15: Updates to Stamps, Cropius Mapper bubble requirement. Reduced final Super CHOW requirement from 84 to 83. Added new Divinity group for Arctis breakpoints.
     </p>
     <p>
-        This tool will retrieve the PUBLIC profile from <a href="https://www.idleonefficiency.com/" target="_blank">IdleOn Efficiency</a> for evaluation.<br>
-        If you haven't uploaded your profile publicly before, <a href="https://www.idleonefficiency.com/profile/upload" target="_blank">do it here</a>.
+        This tool will retrieve the PUBLIC profile from <a href="{{ config["IE"] }}" target="_blank">IdleOn Efficiency</a> for evaluation.<br>
+        If you haven't uploaded your profile publicly before, <a href="{{ config["IE_UPLOAD"] }}" target="_blank">do it here</a>.
     </p>
     <p>
         Alternatively, you can provide Raw JSON data.<br>
-        <a href="https://www.idleonefficiency.com/raw-data" target="_blank">IdleonEfficiency</a>: Click on the Copy Raw JSON button. Paste results below.<br>
-        <a href="https://idleontoolbox.com/data" target="_blank">IdleonToolbox</a>: Click on the <strong>IdleonToolbox JSON</strong> button. Paste results below.
+        <a href="{{ config["IE_DATA"] }}" target="_blank">IdleonEfficiency</a>: Click on the Copy Raw JSON button. Paste results below.<br>
+        <a href="{{ config["IT_DATA"] }}" target="_blank">IdleonToolbox</a>: Click on the <strong>IdleonToolbox JSON</strong> button. Paste results below.
     </p>
-    <span>Feature backlog can be found in the <a href="https://trello.com/b/CG6GYsTN/idleon-autoreview-development" target="_blank">Trello board</a>!</span>
-    <form action="" method="POST">
+    <span>Feature backlog can be found in the <a href="{{ config["TRELLO"] }}" target="_blank">Trello board</a>!</span>
+    <form action="/" method="POST">
         <div id="switchbox">
             {% for text, name, on, off, initial in switches %}
                 {% include "slider_button.html" %}

@@ -436,7 +436,7 @@ def setBreedingProgressionTier() -> AdviceSection:
                 #logger.debug("Excluding Shiny- Sailing Min Time because player has all Sailing Artifacts discovered.")
             if "Higher Artifact Find Chance" in progressionTiersBreeding[tier].get("Shinies", {}) and shinyExclusionsDict["Exclude-Sailing"] == True:
                 progressionTiersBreeding[tier]["Shinies"]["Higher Artifact Find Chance"] = 0
-                #logger.debug("Excluding Shiny- Higher Artifact Find Chance because player has all Sailing Artifacts discovered.")
+                # logger.debug("Excluding Shiny- Higher Artifact Find Chance because player has all Sailing Artifacts discovered.")
             if "Faster Shiny Pet Lv Up Rate" in progressionTiersBreeding[tier].get("Shinies", {}) and shinyExclusionsDict["Exclude-ShinySpeed"] == True:
                 progressionTiersBreeding[tier]["Shinies"]["Faster Shiny Pet Lv Up Rate"] = 0
 
