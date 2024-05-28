@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>IE AutoReview Tool - By Scoli290</title>
+
+        <link rel="stylesheet" type="text/css" href="{{ "boilerplate"|style }}">
+        <link rel="stylesheet" type="text/css" href="{{ "results"|style }}">
+        <link rel="stylesheet" type="text/css" href="{{ "sidebar"|style }}">
+        <link rel="stylesheet" type="text/css" href="{{ "nav"|style }}">
+        <link rel="stylesheet" type="text/css" href="{{ "image-mapping"|style }}">
+        <link rel="stylesheet" type="text/css" href="{{ "slider"|style }}">
+        <link rel="stylesheet" type="text/css" href="{{ "cookie-policy"|style }}">
+        <link rel="stylesheet" type="text/css" href="{{ "spin"|style }}">
+        <link rel="stylesheet" type="text/css" href="{{ "jquery-eu-cookie-law-popup"|style }}"/>
+
+        <link rel="icon" href="{{ "blank.png"|img }}" type="image/png">
+        <link rel="apple-touch-icon" href="{{ "blank.png"|img }}" type="image/png">
+
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="{{ "jquery-eu-cookie-law-popup"|script }}"></script>
+        <script src="{{ "spin"|script }}"></script>
+        <script src="{{ "main"|script }}"></script>
+
+        {% if beta %}
+        <meta name="robots" content="noindex">
+        {% else %}
+        <meta name="googlebot" content="follow, index">
+        {% endif %}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <style>
+        {% for text, name, on, off, initial in switches %}
+            label[for="{{ name }}"] .shaft.on .knob::before {
+                content: '{{ on }}'
+            }
+            label[for="{{ name }}"] .shaft.off .knob::before {
+                content: '{{ off }}'
+            }
+        {% endfor %}
+        </style>
+    </head>
+    <body class="eupopup eupopup-block eupopup-style-compact">
+        <div id="drawer-handle"{% if handedness %} class="lefty"{% endif %}>
+            <div class="hamburger">
+                <span class="bar bar1"></span>
+                <span class="bar bar2"></span>
+                <span class="bar bar3"></span>
+                <span class="bar bar4"></span>
+            </div>
+        </div>
+        {% include 'sidebar.html' %}
+        {% include 'nav.html' %}
+        <div class="container-fluid">
+            <div class="main-wrapper" id="top">
+            </div>
+            <div id="buttons-floating">
+                <a id="scroll-to-top" href="#top"></a>
+                <a id="expand-collapse" href="#"></a>
+            </div>
+            {% include 'footer.html' %}
+        </div>
+        {% include 'cookie_policy.html' %}
+    </body>
+</html>
