@@ -63,7 +63,7 @@ def getCapacityAdviceGroup() -> AdviceGroup:
         seraphEval = f"Locked. Would increase below signs by {seraphMulti:.2f}x if unlocked."
         seraphMulti = 1
     if seraphGoal < 240:
-        seraphEval += " Next increase at Summoning level"
+        seraphEval += " Increases every 20 Summoning levels."
     starsignBase = 0
     starsignBase += 30 * bool(session_data.account.star_signs.get("Mr_No_Sleep", False))
     starsignBase += 10 * bool(session_data.account.star_signs.get("Pack_Mule", False))
