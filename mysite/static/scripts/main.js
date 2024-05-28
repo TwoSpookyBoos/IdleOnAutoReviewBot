@@ -292,7 +292,7 @@ function setupDataClock() {
         const elapsed = document.querySelector('#elapsed')
         if (!elapsed) return
 
-        const timeUnits = elapsed.innerText.split(":").reverse().map(parseInt)
+        const timeUnits = elapsed.innerText.split(":").reverse().map(n => parseInt(n))
         let carry = 1 // Initial increment of one second
 
         // Increment time units
