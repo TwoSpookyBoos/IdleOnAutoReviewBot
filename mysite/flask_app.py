@@ -176,7 +176,7 @@ def results() -> Response | str:
 
 @app.route("/", methods=["GET"])
 def index() -> Response | str:
-    is_beta: bool = FQDN_BETA in request.host
+    is_beta: bool = app.config["FQDN_BETA"] in request.host
 
     live_link = "live"
     beta_link = "beta"
