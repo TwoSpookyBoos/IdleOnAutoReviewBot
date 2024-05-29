@@ -1,35 +1,8 @@
-import json
 from consts import saltLick_progressionTiers
 from flask import g as session_data
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
 from utils.data_formatting import safe_loads
-
-def parseConsSaltLick():
-    saltLickList = safe_loads(session_data.account.raw_data["SaltLick"])
-    saltLickDict = {
-        'Printer Sample Size':saltLickList[0],
-        'Obol Storage':saltLickList[1],
-        'Refinery Speed':saltLickList[2],
-        'EXP':saltLickList[3],
-        'Max Book':saltLickList[4],
-        'Alchemy Liquids':saltLickList[5],
-        'TD Points':saltLickList[6],
-        'Movespeed':saltLickList[7],
-        'Multikill':saltLickList[8],
-        'Damage':saltLickList[9]
-        #'Tab3-1':saltLickList[10] #Not Yet Implemented
-        #'Tab3-2':saltLickList[11] #Not Yet Implemented
-        #'Tab3-3':saltLickList[12] #Not Yet Implemented
-        #'Tab3-4':saltLickList[13] #Not Yet Implemented
-        #'Tab3-5':saltLickList[14] #Not Yet Implemented
-        #'Tab4-1':saltLickList[15] #Not Yet Implemented
-        #'Tab4-2':saltLickList[16] #Not Yet Implemented
-        #'Tab4-3':saltLickList[17] #Not Yet Implemented
-        #'Tab4-4':saltLickList[18] #Not Yet Implemented
-        #'Tab4-5':saltLickList[19] #Not Yet Implemented
-        }
-    return saltLickDict
 
 def setConsSaltLickProgressionTier() -> AdviceSection:
     saltlick_AdviceDict = {
@@ -54,7 +27,7 @@ def setConsSaltLickProgressionTier() -> AdviceSection:
     tier_RequiredSaltLickUpgrades = 0
     sum_TotalMaxedSaltLickUpgrades = 0
     overall_ConsSaltLickTier = 0
-    saltLickDict = parseConsSaltLick()
+    saltLickDict = session_data.account.saltlick
 
     #Assess tiers
     for tier in saltLick_progressionTiers:

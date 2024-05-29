@@ -15,7 +15,7 @@ from consts import expectedStackables, greenstack_progressionTiers, card_data, m
     max_IndexOfBubbles, getReadableBubbleNames, buildingsList, atomsList, prayersList, labChipsList, bribesList, shrinesList, pristineCharmsList, sigilsDict, \
     artifactsList, guildBonusesList, labBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesCount, sneakingGemstonesList, \
     getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampNameDict, stampTypes, marketUpgradeList, marketUpgradeFirstIndex, \
-    marketUpgradeLastIndex, achievementsList, forgeUpgradesDict, arcadeBonuses
+    marketUpgradeLastIndex, achievementsList, forgeUpgradesDict, arcadeBonuses, saltLickList, allMeritsDict
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, letterToNumber
 
 def session_singleton(cls):
@@ -735,6 +735,15 @@ class Account:
             except:
                 self.achievements[achieveData[0].replace('_', ' ')] = False
 
+        self.merits = copy.deepcopy(allMeritsDict)
+        raw_merits_list = safe_loads(self.raw_data.get("TaskZZ2", []))
+        for worldIndex in self.merits:
+            for meritIndex in self.merits[worldIndex]:
+                try:
+                    self.merits[worldIndex][meritIndex]["Level"] = int(raw_merits_list[worldIndex][meritIndex])
+                except:
+                    continue  #Already defaulted to 0 in Consts
+
         #World 1
         self.star_signs = {}
         raw_star_signs = safe_loads(self.raw_data.get("StarSg", {}))
@@ -750,7 +759,7 @@ class Account:
             try:
                 self.forge_upgrades[upgradeIndex]["Purchased"] = upgrade
             except:
-                continue  #already defaulted to 0
+                continue  #Already defaulted to 0 in Consts
 
         self.bribes = {}
         raw_bribes_list = safe_loads(self.raw_data.get("BribeStatus", []))
@@ -982,6 +991,14 @@ class Account:
             except:
                 self.prayers[prayerName] = 0
 
+        self.saltlick = {}
+        raw_saltlick_list = safe_loads(self.raw_data.get("SaltLick"))
+        for saltlickIndex, saltlickName in enumerate(saltLickList):
+            try:
+                self.saltlick[saltlickName] = int(raw_saltlick_list[saltlickIndex])
+            except:
+                self.saltlick[saltlickName] = 0
+
         #World 4
         self.gemshop = {}
         self.labChips = {}
@@ -1088,7 +1105,19 @@ class Account:
                 except:
                     self.farming["MarketUpgrades"][marketUpgradeName] = 0
 
-
+        self.summoning = {}
+        raw_summoning_list = safe_loads(self.raw_data.get('Summon', []))
+        try:
+            self.summoning["Upgrades"] = raw_summoning_list[0]
+        except:
+            self.summoning["Upgrades"] = [0]*69  #As of 2.09 Red/Cyan, there are exactly 69 upgrades
+        try:
+            self.summoning["BattlesWon"] = raw_summoning_list[1]
+        except:
+            self.summoning["BattlesWon"] = []
+        #raw_summoning_list[2] looks to be essence owned
+        #raw_summoning_list[3] I have no idea what this is
+        #raw_summoning_list[4] looks to be list[int] familiars in the Sanctuary, starting with Slime in [0], Vrumbi in [1], etc.
 
     def _make_cards(self):
         card_counts = safe_loads(self.raw_data.get(self._key_cards, {}))

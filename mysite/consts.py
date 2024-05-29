@@ -2055,6 +2055,87 @@ achievementsList = [
     ["FILLERZZZ_ACH", "20", "-", "*FILLERZ_&*FILLERZ_&*FILLERZ", "0"],
     ["FILLERZZZ_ACH", "20", "-", "*FILLERZ_&*FILLERZ_&*FILLERZ", "0"]
 ]
+allMeritsDict = {
+    0: {
+        0: {"Name": "Shared Inventory Bags", "Level": 0, "MaxLevel": 5},
+        1: {"Name": "W1 Respawn", "Level": 0, "MaxLevel": 10},
+        2: {"Name": "Lowest Character EXP", "Level": 0, "MaxLevel": 12},
+        3: {"Name": "Hemoglobin max level", "Level": 0, "MaxLevel": 10},
+        4: {"Name": "Boss Keys dropped", "Level": 0, "MaxLevel": 10},
+        5: {"Name": "Amarok Recipes", "Level": 0, "MaxLevel": 5},
+        6: {"Name": "W1 Star Talents", "Level": 0, "MaxLevel": 6},
+        7: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+    },  #World1
+    1: {
+        0: {"Name": "Obol Drop Rate", "Level": 0, "MaxLevel": 7},
+        1: {"Name": "W2 Respawn", "Level": 0, "MaxLevel": 10},
+        2: {"Name": "AFK Gains", "Level": 0, "MaxLevel": 10},
+        3: {"Name": "Convert Better max level", "Level": 0, "MaxLevel": 10},
+        4: {"Name": "Boss Gems dropped", "Level": 0, "MaxLevel": 8},
+        5: {"Name": "Efaunt Recipes", "Level": 0, "MaxLevel": 5},
+        6: {"Name": "W2 Star Talents", "Level": 0, "MaxLevel": 8},
+        7: {"Name": "Arcade Ball rate", "Level": 0, "MaxLevel": 5},
+    },  #World2
+    2: {
+        0: {"Name": "Build and Food slots", "Level": 0, "MaxLevel": 4},
+        1: {"Name": "W3 Respawn", "Level": 0, "MaxLevel": 10},
+        2: {"Name": "Max Book levels", "Level": 0, "MaxLevel": 5},
+        3: {"Name": "Telekinetic Storage max level", "Level": 0, "MaxLevel": 10},
+        4: {"Name": "Printer Sample Size", "Level": 0, "MaxLevel": 10},
+        5: {"Name": "Chizoar Recipes", "Level": 0, "MaxLevel": 5},
+        6: {"Name": "Refinery Salt Consumption", "Level": 0, "MaxLevel": 5},
+        7: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+    },  #World3
+    3: {
+        0: {"Name": "Daily Crystals", "Level": 0, "MaxLevel": 3},
+        1: {"Name": "W4 Respawn", "Level": 0, "MaxLevel": 10},
+        2: {"Name": "Breeding Egg Capacity", "Level": 0, "MaxLevel": 2},
+        3: {"Name": "Spice Spillage max level", "Level": 0, "MaxLevel": 5},
+        4: {"Name": "Lab Connection Range", "Level": 0, "MaxLevel": 8},
+        5: {"Name": "Troll Recipes", "Level": 0, "MaxLevel": 4},
+        6: {"Name": "Additional NBLB bubbles", "Level": 0, "MaxLevel": 3},
+        7: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+    },  #World4
+    4: {
+        0: {"Name": "Tab 4 Talent Points", "Level": 0, "MaxLevel": 20},
+        1: {"Name": "W5 Respawn", "Level": 0, "MaxLevel": 10},
+        2: {"Name": "Sailing Loot Pile Capacity", "Level": 0, "MaxLevel": 7},
+        3: {"Name": "Stat Overload max level", "Level": 0, "MaxLevel": 10},
+        4: {"Name": "W5 Skill EXP", "Level": 0, "MaxLevel": 5},
+        5: {"Name": "Kattlekruk Recipes", "Level": 0, "MaxLevel": 9},
+        6: {"Name": "Atom Upgrade cost reduction", "Level": 0, "MaxLevel": 4},
+        7: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},},  #World5
+    5: {
+        0: {"Name": "Tab 5 Talent Points", "Level": 0, "MaxLevel": 20},
+        1: {"Name": "W6 Respawn", "Level": 0, "MaxLevel": 10},
+        2: {"Name": "Farming Plots, OG, and EXP", "Level": 0, "MaxLevel": 15},
+        3: {"Name": "Jade Gain", "Level": 0, "MaxLevel": 20},
+        4: {"Name": "Summoning Winner bonuses", "Level": 0, "MaxLevel": 10},
+        5: {"Name": "Emperor Recipes", "Level": 0, "MaxLevel": 9},
+        6: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+        7: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+    },  #World6
+    6: {
+        0: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+        1: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+        2: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+        3: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+        4: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+        5: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+        6: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+        7: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+    },  #World7
+    7: {
+        0: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+        1: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+        2: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+        3: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+        4: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+        5: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+        6: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+        7: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+    },  #World8
+}
 
 def lavaFunc(funcType: str, level: int, x1: int, x2: int, roundResult=False):
     result = 0
@@ -2181,7 +2262,6 @@ forgeUpgradesDict = {
         "MaxPurchases": 60
     }
 }
-
 
 ###WORLD 2 CONSTS###
 max_IndexOfVials = 75  # Last verified as of v2.08
@@ -2776,6 +2856,13 @@ prayersList: list[str] = [
     "Fibers of Absence (Frigid Soul)", "Vacuous Tissue (Frigid Soul)", "Beefy For Real (Frigid Soul)",
     "Balance of Pain (Squishy Soul)", "Balance of Proficiency (Squishy Soul)","Glitterbug (Squishy Soul)",
 ]
+saltLickList: list[str] = [
+    'Printer Sample Size', 'Obol Storage', 'Refinery Speed', 'EXP', 'Max Book',
+    'Alchemy Liquids', 'TD Points', 'Movespeed', 'Multikill', 'Damage',
+]
+maxStaticBookLevels = 140
+maxScalingBookLevels = 30
+maxSummoningBookLevels = 29
 
 ###WORLD 4 CONSTS###
 maxCookingTables = 10  # Last verified as of v2.08
@@ -2808,6 +2895,9 @@ artifactsList = [
     'Crystal Steak', 'Trilobite Rock', 'Opera Mask', 'Socrates', 'The True Lantern',
     'The Onyx Lantern', 'The Shim Lantern', 'The Winz Lantern'
 ]
+w5meritsDict = {
+
+}
 
 ###WORLD 6 CONSTS###
 jade_emporium = [
@@ -2988,6 +3078,7 @@ marketUpgradeList = [
 marketUpgradeFirstIndex = 2
 marketUpgradeLastIndex = marketUpgradeFirstIndex + len(marketUpgradeList)
 
+
 def getMoissaniteValue(moissaniteLevel: int):
     try:
         if moissaniteLevel > 0:
@@ -3020,6 +3111,7 @@ def getGemstonePercent(gemstoneName: str, gemstoneValue: float):
     except Exception as reason:
         logger.exception(f"Could not find max value for Gemstone: {gemstoneName} because: {reason}")
     pass
+
 
 ### SLAB CONSTS ###
 #slabString last pulled from code in 2.08
