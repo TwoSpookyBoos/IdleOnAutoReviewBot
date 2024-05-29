@@ -98,10 +98,17 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
     bookLevelAdvices[summoningSubgroup] = []
     #W6 Summoning Cyan14 fight, times Winner Output bonuses
     cyan14beat = 'w6d3' in session_data.account.summoning['BattlesWon']
+    cyan14Note = ' once Cyan14 beat' if not cyan14beat else ''
     bookLevelAdvices[summoningSubgroup].append(Advice(
-        label=f"Summoning Cyan14: +{10.5 * cyan14beat}",
+        label=f"Summoning Cyan14: +{10.5 * cyan14beat}{'' if cyan14beat else '. No other multipliers apply until this is beaten.'}",
         picture_class="samurai-guardian",
         progression=1 if 'w6d3' in session_data.account.summoning['BattlesWon'] else 0,
+        goal=1
+    ))
+    bookLevelAdvices[summoningSubgroup].append(Advice(
+        label=f":Pristine Charm: Crystal Comb: {1 + (.3 * session_data.account.sneaking.get('PristineCharms', {}).get('Crystal Comb', 0))}x",
+        picture_class="crystal-comb",
+        progression=1 if session_data.account.sneaking.get("PristineCharms", {}).get('Crystal Comb', False) else 0,
         goal=1
     ))
     bookLevelAdvices[summoningSubgroup].append(Advice(
@@ -111,25 +118,19 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
         goal=4
     ))
     bookLevelAdvices[summoningSubgroup].append(Advice(
-        label=f":Pristine Charm: Crystal Comb: {1.3 * session_data.account.sneaking.get('PristineCharms', {}).get('Crystal Comb', 0)}x{' once Cyan14 beat' if not cyan14beat else ''}",
-        picture_class="crystal-comb",
-        progression=1 if session_data.account.sneaking.get("PristineCharms", {}).get('Crystal Comb', False) else 0,
-        goal=1
-    ))
-    bookLevelAdvices[summoningSubgroup].append(Advice(
-        label=f"W6 Larger Winner bonuses merit: +{session_data.account.merits[5][4]['Level']}%{' once Cyan14 beat' if not cyan14beat else ''}",
+        label=f"W6 Larger Winner bonuses merit: +{session_data.account.merits[5][4]['Level']}%",
         picture_class="",
         progression=session_data.account.merits[5][4]["Level"],
         goal=session_data.account.merits[5][4]["MaxLevel"]
     ))
     bookLevelAdvices[summoningSubgroup].append(Advice(
-        label=f"W6 Achievement: Spectre Stars: +{1 * (0 < session_data.account.achievements.get('Spectre Stars', False))}%{' once Cyan14 beat' if not cyan14beat else ''}",
+        label=f"W6 Achievement: Spectre Stars: +{1 * (0 < session_data.account.achievements.get('Spectre Stars', False))}%",
         picture_class="spectre-stars",
         progression=1 if session_data.account.achievements.get('Spectre Stars', False) else 0,
         goal=1
     ))
     bookLevelAdvices[summoningSubgroup].append(Advice(
-        label=f"W6 Achievement: Regalis My Beloved: +{1 * (0 < session_data.account.achievements.get('Regalis My Beloved', False))}%{' once Cyan14 beat' if not cyan14beat else ''}",
+        label=f"W6 Achievement: Regalis My Beloved: +{1 * (0 < session_data.account.achievements.get('Regalis My Beloved', False))}%",
         picture_class="regalis-my-beloved",
         progression=1 if session_data.account.achievements.get('Regalis My Beloved', False) else 0,
         goal=1
