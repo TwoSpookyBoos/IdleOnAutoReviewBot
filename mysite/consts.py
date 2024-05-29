@@ -393,12 +393,12 @@ stamps_progressionTiers = {
         "Combat": ["Dementia Sword Stamp"],
         "Skill": ["Sneaky Peeky Stamp", "Jade Mint Stamp", "White Essence Stamp"],
         "Misc": ["Forge Stamp"],
-        "Specific": {'Drippy Drop Stamp': 100, 'Ladle Stamp': 150, 'Potion Stamp': 40}}},
+        "Specific": {'Drippy Drop Stamp': 100, 'Ladle Stamp': 150, 'Potion Stamp': 40, 'Forge Stamp': 40}}},
     25: {"TotalStampLevels": 7000, "Stamps": {
         "Combat": ["Conjocharmo Stamp"],
         "Specific": {'Pickaxe Stamp': 95, 'Hatchet Stamp': 95, 'Golden Apple Stamp': 60, 'Multitool Stamp': 100}}},
     26: {"TotalStampLevels": 7500, "Stamps": {
-        "Specific": {'Ladle Stamp': 180}}},
+        "Specific": {'Ladle Stamp': 180, 'Forge Stamp': 100}}},
     27: {"TotalStampLevels": 8000, "Stamps": {
         "Specific": {'Matty Bag Stamp': 280, 'Multitool Stamp': 150}}},
     28: {"TotalStampLevels": 8400, "Stamps": {
@@ -419,7 +419,7 @@ stamps_progressionTiers = {
         "Specific": {'Golden Apple Stamp': 100, 'Multitool Stamp': 210}}},
     35: {"TotalStampLevels": 11500, "Stamps": {
         "Combat": ["Golden Sixes Stamp"],
-        "Specific": {'Golden Sixes Stamp': 120}}},
+        "Specific": {'Golden Sixes Stamp': 120, 'Forge Stamp': 160}}},
     36: {"TotalStampLevels": 12000, "Stamps": {
         "Combat": ["Stat Wallstreet Stamp"],
         "Skill": ["Amplestample Stamp"],
@@ -429,7 +429,7 @@ stamps_progressionTiers = {
     38: {"TotalStampLevels": 13000, "Stamps": {
         "Combat": ["Sukka Foo"],
         "Skill": ["Triad Essence Stamp", "Summoner Stone Stamp"],
-        "Specific": {'Triad Essence Stamp': 80},
+        "Specific": {'Triad Essence Stamp': 80, 'Forge Stamp': 220},
         "Optional": ["Void Axe Stamp"]}},
 }
 smithing_progressionTiers = [
