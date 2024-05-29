@@ -36,31 +36,43 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
         progression=1 if 0 < session_data.account.atoms.get('Oxygen - Library Booker', 0) else 0,
         goal=1
     ))
+    # bookLevelAdvices[staticSubgroup].append(Advice(
+    #     label=f"Sailing: Base Fury Relic: +{25 * (0 < session_data.account.artifacts.get('Fury Relic', 0))}",
+    #     picture_class="fury-relic",
+    #     progression=1 if 0 < session_data.account.artifacts.get('Fury Relic', 0) else 0,
+    #     goal=1
+    # ))
+    # bookLevelAdvices[staticSubgroup].append(Advice(
+    #     label=f"Sailing: Ancient Fury Relic: +{25 * (1 < session_data.account.artifacts.get('Fury Relic', 0))}",
+    #     picture_class="fury-relic",
+    #     progression=1 if 1 < session_data.account.artifacts.get('Fury Relic', 0) else 0,
+    #     goal=1
+    # ))
+    # eldritch_unlockNote = ". Eldritch Artifacts are unlocked by reaching Rift 31" if not session_data.account.eldritch_artifacts_unlocked else ""
+    # bookLevelAdvices[staticSubgroup].append(Advice(
+    #     label=f"Sailing: Eldritch Fury Relic: +{25 * (2 < session_data.account.artifacts.get('Fury Relic', 0))}{eldritch_unlockNote}",
+    #     picture_class="eldritch-artifact",
+    #     progression=1 if 2 < session_data.account.artifacts.get('Fury Relic', 0) else 0,
+    #     goal=1
+    # ))
+    # sov_unlockNote = ". Sovereign Artifacts are unlocked from the Jade Emporium" if "Sovereign Artifacts" not in session_data.account.jade_emporium_purchases else ""
+    # bookLevelAdvices[staticSubgroup].append(Advice(
+    #     label=f"Sailing: Sovereign Fury Relic: +{25 * (3 < session_data.account.artifacts.get('Fury Relic', 0))}{sov_unlockNote}",
+    #     picture_class="sovereign-artifacts",
+    #     progression=1 if 3 < session_data.account.artifacts.get('Fury Relic', 0) else 0,
+    #     goal=1
+    # ))
+    if not session_data.account.eldritch_artifacts_unlocked and session_data.account.artifacts.get('Fury Relic', 0) == 2:
+        furyPostString = ". Eldritch Artifacts are unlocked by reaching Rift 31"
+    elif "Sovereign Artifacts" not in session_data.account.jade_emporium_purchases and session_data.account.artifacts.get('Fury Relic', 0) == 3:
+        furyPostString = ". Sovereign Artifacts are unlocked from the Jade Emporium"
+    else:
+        furyPostString = ""
     bookLevelAdvices[staticSubgroup].append(Advice(
-        label=f"Sailing: Base Fury Relic: +{25 * (0 < session_data.account.artifacts.get('Fury Relic', 0))}",
+        label=f"Sailing: Fury Relic: +{25 * session_data.account.artifacts.get('Fury Relic', 0)}{furyPostString}",
         picture_class="fury-relic",
-        progression=1 if 0 < session_data.account.artifacts.get('Fury Relic', 0) else 0,
-        goal=1
-    ))
-    bookLevelAdvices[staticSubgroup].append(Advice(
-        label=f"Sailing: Ancient Fury Relic: +{25 * (1 < session_data.account.artifacts.get('Fury Relic', 0))}",
-        picture_class="fury-relic",
-        progression=1 if 1 < session_data.account.artifacts.get('Fury Relic', 0) else 0,
-        goal=1
-    ))
-    eldritch_unlockNote = ". Eldritch Artifacts are unlocked by reaching Rift 31" if not session_data.account.eldritch_artifacts_unlocked else ""
-    bookLevelAdvices[staticSubgroup].append(Advice(
-        label=f"Sailing: Eldritch Fury Relic: +{25 * (2 < session_data.account.artifacts.get('Fury Relic', 0))}{eldritch_unlockNote}",
-        picture_class="eldritch-artifact",
-        progression=1 if 2 < session_data.account.artifacts.get('Fury Relic', 0) else 0,
-        goal=1
-    ))
-    sov_unlockNote = ". Sovereign Artifacts are unlocked from the Jade Emporium" if "Sovereign Artifacts" not in session_data.account.jade_emporium_purchases else ""
-    bookLevelAdvices[staticSubgroup].append(Advice(
-        label=f"Sailing: Sovereign Fury Relic: +{25 * (3 < session_data.account.artifacts.get('Fury Relic', 0))}{sov_unlockNote}",
-        picture_class="sovereign-artifacts",
-        progression=1 if 3 < session_data.account.artifacts.get('Fury Relic', 0) else 0,
-        goal=1
+        progression=session_data.account.artifacts.get('Fury Relic', 0),
+        goal=4
     ))
 
     #Scaling Sources
@@ -111,8 +123,12 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
         progression=1 if session_data.account.sneaking.get("PristineCharms", {}).get('Crystal Comb', False) else 0,
         goal=1
     ))
+    if 'Brighter Lighthouse Bulb' not in session_data.account.jade_emporium_purchases:
+        winzLanternPostString = ". This artifact needs to be unlocked from the Jade Emporium"
+    else:
+        winzLanternPostString = ""
     bookLevelAdvices[summoningSubgroup].append(Advice(
-        label=f"Sailing: The Winz Lantern: {1 + (.25 * session_data.account.artifacts.get('The Winz Lantern', 0))}x",
+        label=f"Sailing: The Winz Lantern: {1 + (.25 * session_data.account.artifacts.get('The Winz Lantern', 0))}x{winzLanternPostString}",
         picture_class="the-winz-lantern",
         progression=session_data.account.artifacts.get('The Winz Lantern', 0),
         goal=4
