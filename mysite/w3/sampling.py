@@ -73,7 +73,7 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
 
     bookLevelAdvices[scalingSubgroup].append(Advice(
         label=f"W3 Max Book level Merit: +{2 * session_data.account.merits[2][2]['Level']}",
-        picture_class="",
+        picture_class="merit-2-2",
         progression=session_data.account.merits[2][2]["Level"],
         goal=session_data.account.merits[2][2]["MaxLevel"]
     ))
@@ -119,7 +119,7 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
     ))
     bookLevelAdvices[summoningSubgroup].append(Advice(
         label=f"W6 Larger Winner bonuses merit: +{session_data.account.merits[5][4]['Level']}%",
-        picture_class="",
+        picture_class="merit-5-4",
         progression=session_data.account.merits[5][4]["Level"],
         goal=session_data.account.merits[5][4]["MaxLevel"]
     ))
@@ -134,10 +134,6 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
         picture_class="regalis-my-beloved",
         progression=1 if session_data.account.achievements.get('Regalis My Beloved', False) else 0,
         goal=1
-    ))
-    bookLevelAdvices[summoningSubgroup].append(Advice(
-        label=f"TODO: Verify if this uses ceiling or rounding",
-        picture_class="",
     ))
 
     bookLevelAdviceGroup = AdviceGroup(

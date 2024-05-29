@@ -23,6 +23,7 @@
 @import "starsigns";
 @import "achievements";
 @import "arcade";
+@import "merits";
 
 $id-map: ();
 
@@ -2159,7 +2160,7 @@ $id-map: map-merge($arcade, $id-map);
 $id-map: map-merge($all-construction, $id-map);
 $id-map: map-merge($all-worship, $id-map);
 $id-map: map-merge($gem-shop, $id-map);
-
+$id-map: map-merge($merits, $id-map);
 
 $extra: (
     //storage: $cosmic-storage-chest,
