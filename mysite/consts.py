@@ -256,7 +256,7 @@ greenstack_progressionTiers = {
             },
         13: {
             "Base Monster Materials": [
-                "Quest15", "Hgg"],
+                "Quest15"],
             "Crystal Enemy Drops": [
                 "EquipmentStatues1", "EquipmentStatues5",
                 "StoneA1", "StoneW1",
@@ -269,17 +269,22 @@ greenstack_progressionTiers = {
                 "EquipmentSmithingTabs2",
                 "PeanutG",],
             "Misc": [
-                "FoodPotMana3", "FoodPotRe1", "ButterBar", "OilBarrel2", "Ghost", "Quest78",],
+                "FoodPotMana3", "FoodPotRe1", "ButterBar", ],
         },
         14: {
+            "Base Monster Materials": [
+                "Hgg"],
             "Crystal Enemy Drops": [
-                "StoneW2",],  #"StoneA2",],
+                "StoneW2", "SilverPen"],  #"StoneA2",],
             "Other Skilling Resources": [
                 "DreadloBar", "MarbleBar", "GodshardBar",
                 "FoodTrapping1", "FoodWorship1",
-                "Critter1A", "Critter2A", "Critter3A", "Critter4A", "Critter5A", "Critter6A", "Critter7A", "Critter8A", "Critter9A", "Critter10A", "Critter11A"],
+                "Critter1A", "Critter2A", "Critter3A", "Critter4A", "Critter5A", "Critter6A", "Critter7A", "Critter8A", "Critter9A", "Critter10A", "Critter11A",
+                "Ladle",
+            ],
             "Misc": [
-                "Key2", "Key3"]
+                "OilBarrel2", "DesertC2b", "Quest78",
+            ]
         },
     }
 
@@ -720,8 +725,8 @@ buildingsPostBuffs_progressionTiers = [
     [1, "SS", ["3D Printer", "Cost Cruncher", "Automation Arm"], "", ""],
     [2, "S", ["Talent Book Library", "Death Note", "Salt Lick", "Trapper Drone", "Boulder Roller", "Kraken Cosplayer", "Poisonic Elder"], "", ""],
     [3, "A", ["Chest Space", "Pulse Mage", "Fireball Lobber", "Frozone Malone", "Stormcaller", "Party Starter", "Voidinator", "Clover Shrine", "Crescent Shrine", "Undead Shrine"], "", ""],
-    [4, "B", ["Woodular Shrine", "Isaccian Shrine", "Crystal Shrine", "Pantheon Shrine", "Summereading Shrine", "Atom Collider"], "", ""],
-    [5, "C", ["Primordial Shrine"], "", ""],
+    [4, "B", ["Woodular Shrine", "Isaccian Shrine", "Crystal Shrine", "Pantheon Shrine", "Summereading Shrine"], "", ""],
+    [5, "C", ["Atom Collider", "Primordial Shrine"], "", ""],
     [6, "D", [], "", ""],
     [7, "F", [], "", ""]
 ]

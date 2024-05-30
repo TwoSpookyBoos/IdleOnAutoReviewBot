@@ -247,9 +247,8 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         label=f"Royal Sampler prayer: +TBD%",
         picture_class='the-royal-sampler',
         progression=session_data.account.prayers.get('The Royal Sampler (Rooted Soul)'),
-        goal=50
+        goal=20
     ))
-
 
     psrAdviceGroup = AdviceGroup(
         tier="",
