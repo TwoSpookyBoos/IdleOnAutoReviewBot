@@ -24,6 +24,7 @@
 @import "achievements";
 @import "arcade";
 @import "merits";
+@import "postoffice";
 
 $id-map: ();
 
@@ -2161,6 +2162,7 @@ $id-map: map-merge($all-construction, $id-map);
 $id-map: map-merge($all-worship, $id-map);
 $id-map: map-merge($gem-shop, $id-map);
 $id-map: map-merge($merits, $id-map);
+$id-map: map-merge($postoffice, $id-map);
 
 $extra: (
     //storage: $cosmic-storage-chest,

@@ -234,12 +234,11 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     blueFavReduction = session_data.account.alchemy_vials.get("Blue Flav (Platinum Ore)", {}).get("Value", 0)
     venisonMaltReduction = session_data.account.alchemy_vials.get("Venison Malt (Mongo Worm Slices)", {}).get("Value", 0)
     totalVialReduction = blueFavReduction + venisonMaltReduction
-    vialMasteryMulti = 1 + (session_data.account.maxed_vials * .02) if session_data.account.vial_mastery_unlocked else 1
-    totalVialReduction *= vialMasteryMulti
+    totalVialReduction *= session_data.account.vialMasteryMulti
     if session_data.account.labBonuses.get("My 1st Chemistry Set", {}).get("Enabled", False):
         totalVialReduction *= 2
     costReduction_Advices["Vials"].append(Advice(
-        label=f"Rift Bonus: Vial Mastery: {vialMasteryMulti:.2f}x",
+        label=f"Rift Bonus: Vial Mastery: {session_data.account.vialMasteryMulti:.2f}x",
         picture_class="vial-mastery",
         progression=f"{1 if session_data.account.vial_mastery_unlocked else 0}",
         goal=1

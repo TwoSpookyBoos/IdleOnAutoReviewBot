@@ -103,7 +103,7 @@ def getForgeCapacityAdviceGroup(playerForgeUpgrades) -> list[AdviceGroup]:
 
     #Arcade Bonus 26 gives Forge Ore Capacity
     cap_Advices["Scaling Sources"].append(Advice(
-        label=f"Arcade Bonus: {session_data.account.arcade.get(26, {}).get('Display', '')}",
+        label=f"Arcade Bonus: {session_data.account.arcade.get(26, {}).get('Display', '')} {'(50% max)' if session_data.account.arcade.get(26, {}).get('Level', 0) < 100 else ''}",
         picture_class="arcade-bonus-26",
         progression=session_data.account.arcade.get(26, {}).get("Level", 0),
         goal=100

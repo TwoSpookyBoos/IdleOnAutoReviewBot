@@ -845,6 +845,7 @@ class Account:
         for vial in self.alchemy_vials.values():
             if vial.get("Level", 0) >= 13:
                 self.maxed_vials += 1
+        self.vialMasteryMulti = 1 + (self.maxed_vials * .02) if self.vial_mastery_unlocked else 1
 
         self.alchemy_bubbles = {}
         try:
