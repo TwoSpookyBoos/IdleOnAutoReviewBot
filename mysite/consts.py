@@ -988,6 +988,7 @@ expectedStackables = {
         "Sewers3", "Quest15", "Hgg"  # Specialty Monster Materials
     ],
     "Crystal Enemy Drops": [
+        "SilverPen",
         "FoodPotMana1", "FoodPotMana2", "FoodPotGr1", "FoodPotOr1", "FoodPotOr2", "FoodHealth1", "FoodHealth3", "FoodHealth2", "Leaf1",  # W1
         "FoodHealth6", "FoodHealth7", "FoodPotGr2", "FoodPotRe3", "Leaf2",  # W2
         "FoodHealth10", "FoodPotOr3", "FoodPotYe2", "Leaf3",  # W3
@@ -1000,6 +1001,7 @@ expectedStackables = {
         "StoneT2", "StoneZ2",  "StoneW2",  #"StoneA2", # W2 upgrade stones and Mystery2
         "PureWater",  #W3 Slow drops = Distilled Water
         "FoodG9",  #W5 Slow drops = Golden W5 Sammy
+        "FoodG11", "FoodG12"
     ],
     "Printable Skilling Resources": [
         "OakTree", "BirchTree", "JungleTree", "ForestTree", "ToiletTree", "PalmTree", "StumpTree", "SaharanFoal",  # Logs1
@@ -1030,7 +1032,8 @@ expectedStackables = {
         "Quest68", "Bullet3", "FoodChoppin1", "EquipmentSmithingTabs2",  #Crafted2
         "PeanutG",  #Gold Peanut Crafted
         "FoodTrapping1", "FoodWorship1",  # Critter Numnums and Soulble Gum Crafted
-        "Refinery1", "Refinery2", "Refinery3", "Refinery4", "Refinery5", "Refinery6"
+        "Refinery1", "Refinery2", "Refinery3", "Refinery4", "Refinery5", "Refinery6",
+        "Ladle",
     ],
     "Vendor Shops": [
         "FoodHealth14", "FoodHealth15", "FoodHealth16", "FoodHealth17", "FoodHealth12", "FoodHealth13", "FoodPotOr4", "FoodPotGr4", "FoodPotRe4",
@@ -1044,7 +1047,6 @@ expectedStackables = {
     "Misc": [
         "FoodPotGr3",  #Decent Speed from W3 Shop + Sir Stache
         "FoodPotRe2",  #Average Life Potion from W2 Shop + Gigafrogs
-
         "FoodPotRe1",  #Small Life Potion from W1 Sewers and Tree mobs, not crystals
         "ButterBar",  #Catching Butterflies
         "FoodPotMana3",  #Decent Mana Potion from Bloques
@@ -1054,7 +1056,6 @@ expectedStackables = {
         "Key2", "Key3"  # Efaunt and Chizoar keys
     ],
     "Cheater": [
-        "SilverPen", "Ladle",
         "Sewers1b", "TreeInterior1b", "BabaYagaETC", "JobApplication",  # W1 Rare Drops
         "DesertA1b", "DesertA3b", "MidnightCookie",  # W2 Rare Drops
         "SnowA2a", "SnowB2a", "SnowC4a",  # W3 Rare Drops
