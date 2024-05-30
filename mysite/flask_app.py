@@ -80,7 +80,7 @@ def results() -> Response | str:
     error: str = ""
     reviews: list[AdviceWorld] | None = list()
     headerData: HeaderData | None = None
-    is_beta: bool = app.config["FQDN_BETA"] in request.host
+    is_beta: bool = request.host in app.config["FQDN_BETA"]
 
     store_user_preferences()
 
@@ -176,7 +176,7 @@ def results() -> Response | str:
 
 @app.route("/", methods=["GET"])
 def index() -> Response | str:
-    is_beta: bool = app.config["FQDN_BETA"] in request.host
+    is_beta: bool = request.host in app.config["FQDN_BETA"]
 
     live_link = "live"
     beta_link = "beta"
