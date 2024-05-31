@@ -19,7 +19,7 @@ def setConsSaltLickProgressionTier() -> AdviceSection:
     if highestConstructionLevel < 1:
         saltlick_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
         return saltlick_AdviceSection
-    elif safe_loads(session_data.account.raw_data["Tower"])[3] < 1:
+    elif session_data.account.construction_buildings.get("Salt Lick", 0) < 1:
         saltlick_AdviceSection.header = "Come back after unlocking the Salt Lick within the Construction skill in World 3!"
         return saltlick_AdviceSection
 
