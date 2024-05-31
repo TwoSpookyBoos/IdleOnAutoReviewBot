@@ -330,8 +330,6 @@ function loadResults(html) {
 }
 
 function fetchPlayerAdvice() {
-    initBaseUI()
-
     fetch("/results", {
         method: 'POST',
         headers: {
@@ -434,5 +432,6 @@ function initResultsUI() {
 
 document.addEventListener("DOMContentLoaded", () => {
     storeGetParamsIfProvided()
+    initBaseUI()
     fetchPlayerAdvice()
 })
