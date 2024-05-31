@@ -1,5 +1,5 @@
 from flask import g as session_data
-from consts import maxStaticBookLevels, maxScalingBookLevels, maxSummoningBookLevels, lavaFunc
+from consts import maxStaticBookLevels, maxScalingBookLevels, maxSummoningBookLevels, lavaFunc, maxOverallBookLevels
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
 from utils.data_formatting import safe_loads
@@ -131,7 +131,7 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
 
     bookLevelAdviceGroup = AdviceGroup(
         tier="",
-        pre_string=f"Info- Sources of Max Book Levels ({100 + static_sum + scaling_sum + summoning_sum}/{100 + maxStaticBookLevels + maxScalingBookLevels + maxSummoningBookLevels})",
+        pre_string=f"Info- Sources of Max Book Levels ({100 + static_sum + scaling_sum + summoning_sum}/{maxOverallBookLevels})",
         advices=bookLevelAdvices
     )
     session_data.account.max_book_level = 100 + static_sum + scaling_sum + summoning_sum

@@ -2999,6 +2999,7 @@ saltLickList: list[str] = [
 maxStaticBookLevels = 140
 maxScalingBookLevels = 30
 maxSummoningBookLevels = 29
+maxOverallBookLevels = 100 + maxStaticBookLevels + maxScalingBookLevels + maxSummoningBookLevels
 
 ###WORLD 4 CONSTS###
 maxCookingTables = 10  # Last verified as of v2.08
