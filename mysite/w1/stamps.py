@@ -105,7 +105,7 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     capacity_Advices["Account Wide"].append(Advice(
         label="Bribe: Bottomless Bags",
         picture_class="bottomless-bags",
-        progression=1 if session_data.account.bribes.get("Bottomless Bags") >= 1 else 0,
+        progression=1 if session_data.account.bribes["W4"].get("Bottomless Bags") >= 1 else 0,
         goal=1
     ))
     capacity_Advices["Account Wide"].append(Advice(

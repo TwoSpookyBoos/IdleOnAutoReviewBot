@@ -235,6 +235,7 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         picture_class='super-samples',
         goal=session_data.account.max_book_level
     ))
+    #bigBase, 10, 0.075
     psrAdvices["Character-Specific"].append(Advice(
         label=f"Star Talent: Printer Sampling: 17.5% at level 100",
         picture_class='printer-sampling'

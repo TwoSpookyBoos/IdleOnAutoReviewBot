@@ -12,7 +12,7 @@ from flask import g
 
 from utils.data_formatting import getCharacterDetails, safe_loads
 from consts import expectedStackables, greenstack_progressionTiers, card_data, maxMeals, maxMealLevel, jade_emporium, max_IndexOfVials, getReadableVialNames, \
-    max_IndexOfBubbles, getReadableBubbleNames, buildingsList, atomsList, prayersList, labChipsList, bribesList, shrinesList, pristineCharmsList, sigilsDict, \
+    max_IndexOfBubbles, getReadableBubbleNames, buildingsList, atomsList, prayersList, labChipsList, bribesDict, shrinesList, pristineCharmsList, sigilsDict, \
     artifactsList, guildBonusesList, labBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesCount, sneakingGemstonesList, \
     getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampNameDict, stampTypes, marketUpgradeList, marketUpgradeFirstIndex, \
     marketUpgradeLastIndex, achievementsList, forgeUpgradesDict, arcadeBonuses, saltLickList, allMeritsDict
@@ -763,11 +763,16 @@ class Account:
 
         self.bribes = {}
         raw_bribes_list = safe_loads(self.raw_data.get("BribeStatus", []))
-        for bribeIndex, bribeName in enumerate(bribesList):
-            try:
-                self.bribes[bribeName] = int(raw_bribes_list[bribeIndex])
-            except:
-                self.bribes[bribeName] = -1  # -1 means unavailable for purchase, 0 means available, and 1 means purchased
+        bribeIndex = 0
+        for bribeSet in bribesDict:
+            self.bribes[bribeSet] = {}
+            for bribeName in bribesDict[bribeSet]:
+                try:
+                    self.bribes[bribeSet][bribeName] = int(raw_bribes_list[bribeIndex])
+                except:
+                    self.bribes[bribeSet][bribeName] = -1  # -1 means unavailable for purchase, 0 means available, and 1 means purchased
+                bribeIndex += 1
+
 
         self.stamps = {}
         self.stamp_totals = {"Total": 0}
