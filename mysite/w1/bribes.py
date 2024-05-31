@@ -3,7 +3,7 @@ from models.models import AdviceGroup
 from models.models import Advice
 from utils.text_formatting import pl
 from utils.logging import get_logger
-from consts import bribes_progressionTiers
+from consts import bribes_progressionTiers, unpurchasableBribes
 from flask import g as session_data
 
 logger = get_logger(__name__)
@@ -35,7 +35,7 @@ def setBribesProgressionTier() -> AdviceSection:
     sum_bribeSetTrashIsland = 0
     sum_bribeSetW6 = 0
     max_allBribes = 40  # Max as of v2.02
-    unpurchasableBribes = ["The Art of the Flail"]  # These bribes are in the game, but cannot be purchased as of v2.02
+
     max_tier = bribes_progressionTiers[-1][0]
 
     # W1 Bribes

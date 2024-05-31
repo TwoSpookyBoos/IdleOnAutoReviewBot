@@ -2177,6 +2177,7 @@ bribesDict = {
     "Trash Island": ["Random Garbage", "Godlier Creation", "Fishermaster", "Muscles on Muscles", "Bottle Service", "Star Scraper", "The Art of the Grail"],
     "W6": ["Artifact Pilfering", "Forge Cap Smuggling", "Gold from Lead", "Nugget Fabrication", "Divine PTS Miscounting", "Loot Table Tampering", "The Art of the Flail"]
 }
+unpurchasableBribes = ["The Art of the Flail"]  # These bribes are in the game, but cannot be purchased as of v2.02
 stamp_maxes = {
     #Combat
     #Skill
