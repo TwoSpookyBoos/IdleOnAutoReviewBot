@@ -3,100 +3,10 @@ from models.models import AdviceGroup
 from models.models import Advice
 from utils.text_formatting import pl
 from utils.logging import get_logger
-from consts import bribes_progressionTiers
+from consts import bribes_progressionTiers, unpurchasableBribes
 from flask import g as session_data
 
 logger = get_logger(__name__)
-
-def parseBribes():
-    parsedBribes = session_data.account.raw_data["BribeStatus"]
-    bribeSetW1 = {
-        'Insider Trading': parsedBribes[0],
-        'Tracking Chips': parsedBribes[1],
-        'Mandatory Fire Sale': parsedBribes[2],
-        'Sleeping On the Job': parsedBribes[3],
-        'Artificial Demand': parsedBribes[4],
-        'The Art of the Deal': parsedBribes[5]
-        }
-    bribeSetW2 = {
-        'Overstock Regulations': parsedBribes[6],
-        'Double EXP Scheme': parsedBribes[7],
-        'Tagged Indicators': parsedBribes[8],
-        'Fossil Fuel Legislation': parsedBribes[9],
-        'Five Aces in the Deck': parsedBribes[10],
-        'Fake Teleport Tickets': parsedBribes[11],
-        'The Art of the Steal': parsedBribes[12]
-        }
-    bribeSetW3 = {
-        'Counterfeit Telepassports': parsedBribes[13],
-        'Weighted Marbles': parsedBribes[14],
-        'Changing the Code': parsedBribes[15],
-        'Taxidermied Cog Pouches': parsedBribes[16],
-        'Guild VIP Fraud': parsedBribes[17],
-        'Library Double Agent': parsedBribes[18],
-        'The Art of the Fail': parsedBribes[19]
-        }
-    bribeSetW4 = {
-        'Photoshopped Dmg Range': parsedBribes[20],
-        'Glitched Acc Formula': parsedBribes[21],
-        'Firewalled Defence': parsedBribes[22],
-        'Bottomless Bags': parsedBribes[23],
-        'AFKeylogging': parsedBribes[24],
-        'Guild GP Hack': parsedBribes[25]
-        }
-    try:
-        bribeSetTrashIsland = {
-            'The Art of the Bail': parsedBribes[26],
-            'Random Garbage': parsedBribes[27],
-            'Godlier Creation': parsedBribes[28],
-            'Fishermaster': parsedBribes[29],
-            'Muscles on Muscles': parsedBribes[30],
-            'Bottle Service': parsedBribes[31],
-            'Star Scraper': parsedBribes[32],
-            }
-    except:
-        logger.warning(f"Unable to retrieve Trash Island Bribes. Defaulting to unpurchased.")
-        bribeSetTrashIsland = {
-            'The Art of the Bail': 0,
-            'Random Garbage': 0,
-            'Godlier Creation': 0,
-            'Fishermaster': 0,
-            'Muscles on Muscles': 0,
-            'Bottle Service': 0,
-            'Star Scraper': 0,
-        }
-    try:
-        bribeSetW6 = {
-            'The Art of the Grail': parsedBribes[33],
-            'Artifact Pilfering': parsedBribes[34],
-            'Forge Cap Smuggling': parsedBribes[35],
-            'Gold from Lead': parsedBribes[36],
-            'Nugget Fabrication': parsedBribes[37],
-            'Divine PTS Miscounting': parsedBribes[38],
-            'Loot Table Tampering': parsedBribes[39],
-            'The Art of the Flail': parsedBribes[40]
-        }
-    except:
-        logger.debug(f"Unable to retrieve W6 Bribes. Defaulting to unpurchased.")
-        bribeSetW6 = {
-            'The Art of the Grail': 0,
-            'Artifact Pilfering': 0,
-            'Forge Cap Smuggling': 0,
-            'Gold from Lead': 0,
-            'Nugget Fabrication': 0,
-            'Divine PTS Miscounting': 0,
-            'Loot Table Tampering': 0,
-            'The Art of the Flail': 0
-        }
-    allBribesDict = {
-        'W1': bribeSetW1,
-        'W2': bribeSetW2,
-        'W3': bribeSetW3,
-        'W4': bribeSetW4,
-        'Trash Island': bribeSetTrashIsland,
-        'W6': bribeSetW6
-        }
-    return allBribesDict
 
 def setBribesProgressionTier() -> AdviceSection:
     bribe_AdviceDict = {
@@ -115,7 +25,7 @@ def setBribesProgressionTier() -> AdviceSection:
         picture='Bribes.png'
     )
 
-    allBribesDict = parseBribes()
+    allBribesDict = session_data.account.bribes
     tier_BribesPurchased = 0
     sum_allBribes = 0
     sum_bribeSetW1 = 0
@@ -125,7 +35,7 @@ def setBribesProgressionTier() -> AdviceSection:
     sum_bribeSetTrashIsland = 0
     sum_bribeSetW6 = 0
     max_allBribes = 40  # Max as of v2.02
-    unpurchasableBribes = ["The Art of the Flail"]  # These bribes are in the game, but cannot be purchased as of v2.02
+
     max_tier = bribes_progressionTiers[-1][0]
 
     # W1 Bribes

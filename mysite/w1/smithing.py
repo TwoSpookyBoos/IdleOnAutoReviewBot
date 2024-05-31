@@ -47,7 +47,7 @@ def getForgeCapacityAdviceGroup(playerForgeUpgrades) -> list[AdviceGroup]:
     ))
 
     #Bribe value of 1 means purchased
-    bribe = session_data.account.bribes.get("Forge Cap Smuggling", -1) == 1
+    bribe = session_data.account.bribes["W6"].get("Forge Cap Smuggling", -1) == 1
     bribeValue = 1.3 if bribe else 1
     cap_Advices["Static Sources"].append(Advice(
         label=f"Bribe: Forge Cap Smuggling: {bribeValue}x",

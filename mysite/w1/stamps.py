@@ -2,7 +2,7 @@ from models.models import AdviceSection, AdviceGroup, Advice, Character
 from utils.text_formatting import pl
 from utils.data_formatting import safe_loads, mark_advice_completed
 from utils.logging import get_logger
-from consts import maxTiersPerGroup, stamps_progressionTiers, stamp_maxes, lavaFunc, stampNameDict, unavailableStampsList, stampTypes
+from consts import maxTiersPerGroup, stamps_progressionTiers, stamp_maxes, lavaFunc, stampNameDict, unavailableStampsList, stampTypes, maxOverallBookLevels
 from math import ceil, pow
 from flask import g as session_data
 
@@ -105,7 +105,7 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     capacity_Advices["Account Wide"].append(Advice(
         label="Bribe: Bottomless Bags",
         picture_class="bottomless-bags",
-        progression=1 if session_data.account.bribes.get("Bottomless Bags") >= 1 else 0,
+        progression=1 if session_data.account.bribes["W4"].get("Bottomless Bags") >= 1 else 0,
         goal=1
     ))
     capacity_Advices["Account Wide"].append(Advice(
@@ -164,7 +164,7 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     capacity_Advices["Character Specific"].append(Advice(
         label="Jman's Extra Bags talent (Materials only)",
         picture_class="extra-bags",
-        goal=270
+        goal=maxOverallBookLevels
     ))
     capacity_Advices["Character Specific"].append(Advice(
         label="80 available Inventory Slots",
