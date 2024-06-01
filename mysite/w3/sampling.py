@@ -1,8 +1,6 @@
 from flask import g as session_data
 from consts import maxStaticBookLevels, maxScalingBookLevels, maxSummoningBookLevels, lavaFunc, maxOverallBookLevels
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.text_formatting import pl
-from utils.data_formatting import safe_loads
 from utils.logging import get_logger
 
 
@@ -134,6 +132,8 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
         pre_string=f"Info- Sources of Max Book Levels ({100 + static_sum + scaling_sum + summoning_sum}/{maxOverallBookLevels})",
         advices=bookLevelAdvices
     )
+
+    # TODO: This assignment should be moved, otherwise earlier sections cannot see it
     session_data.account.max_book_level = 100 + static_sum + scaling_sum + summoning_sum
     return bookLevelAdviceGroup
 
@@ -154,12 +154,10 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         progression=session_data.account.alchemy_vials.get('Snow Slurry (Snow Ball)', {}).get('Level', 0),
         goal=13
     ))
-    # TODO: Bubble calculations should move to Account singleton
-    sampleitValue = lavaFunc('decay', session_data.account.alchemy_bubbles.get('Sample It', 0), 12, 40)
     psrAdvices[accountSubgroup].append(Advice(
-        label=f"Sample It bubble: +{sampleitValue:.2f}%",
+        label=f"Sample It bubble: +{session_data.account.alchemy_bubbles['Sample It']['BaseValue']:.2f}%",
         picture_class="sample-it",
-        progression=session_data.account.alchemy_bubbles.get('Sample It', 0),
+        progression=session_data.account.alchemy_bubbles['Sample It']['Level'],
     ))
     psrAdvices[accountSubgroup].append(Advice(
         label=f"Salt Lick: +{0.5 * session_data.account.saltlick.get('Printer Sample Size', 0)}%",

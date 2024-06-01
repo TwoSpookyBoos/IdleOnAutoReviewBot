@@ -1,7 +1,7 @@
 import math
 
 from utils.logging import get_logger
-
+from utils.text_formatting import getItemDisplayName
 
 logger = get_logger(__name__)
 
@@ -460,164 +460,164 @@ bubbles_progressionTiers = [
     [0, 0, {}, {}, {}, {}, "0%", ""],
     [1, 10,
      {'Roid Ragin': 12, 'Warriors Rule': 6, 'Hearty Diggy': 12, 'Wyoming Blood': 6, 'Sploosh Sploosh': 6, 'Stronk Tools': 8},
-     {'Swift Steppin': 12, 'Archer or Bust': 6, 'Sanic Tools': 8, 'Bug^2': 6},
-     {'Stable Jenius': 12, 'Mage is Best': 6, 'Hocus Choppus': 12, 'Molto Loggo': 6, 'Le Brain Tools': 8},
-     {'FMJ': 5, 'Shaquracy': 5, 'Prowesessary': 7, 'Hammer Hammer': 6},
+     {'Swift Steppin': 12, 'Archer Or Bust': 6, 'Sanic Tools': 8, 'Bug^2': 6},
+     {'Stable Jenius': 12, 'Mage Is Best': 6, 'Hocus Choppus': 12, 'Molto Loggo': 6, 'Le Brain Tools': 8},
+     {'Fmj': 5, 'Shaquracy': 5, 'Prowesessary': 7, 'Hammer Hammer': 6},
      "10%",
      "MINIMUM recommended Utility bubbles for finishing W2. Prowess hard-caps at 2x."],
     [2, 20,
      {'Roid Ragin': 25, 'Warriors Rule': 13, 'Hearty Diggy': 25, 'Wyoming Blood': 13, 'Sploosh Sploosh': 13, 'Stronk Tools': 18},
-     {'Swift Steppin': 25, 'Archer or Bust': 13, 'Sanic Tools': 18, 'Bug^2': 13},
-     {'Stable Jenius': 25, 'Mage is Best': 13, 'Hocus Choppus': 25, 'Molto Loggo': 13, 'Le Brain Tools': 18},
-     {'FMJ': 10, 'Shaquracy': 10, 'Prowesessary': 15, 'Hammer Hammer': 14, 'All for Kill': 25},
+     {'Swift Steppin': 25, 'Archer Or Bust': 13, 'Sanic Tools': 18, 'Bug^2': 13},
+     {'Stable Jenius': 25, 'Mage Is Best': 13, 'Hocus Choppus': 25, 'Molto Loggo': 13, 'Le Brain Tools': 18},
+     {'Fmj': 10, 'Shaquracy': 10, 'Prowesessary': 15, 'Hammer Hammer': 14, 'All For Kill': 25},
      "20%",
      "MINIMUM recommended Utility bubbles for starting W3. Prowess hard-caps at 2x."],
     [3, 40,
      {'Roid Ragin': 67, 'Warriors Rule': 34, 'Hearty Diggy': 67, 'Wyoming Blood': 20, 'Sploosh Sploosh': 20, 'Stronk Tools': 47},
-     {'Swift Steppin': 67, 'Archer or Bust': 34, 'Sanic Tools': 47, 'Bug^2': 20},
-     {'Stable Jenius': 67, 'Mage is Best': 34, 'Hocus Choppus': 67, 'Molto Loggo': 20, 'Le Brain Tools': 47},
-     {'FMJ': 15, 'Shaquracy': 15, 'Prowesessary': 40, 'Hammer Hammer': 41, 'All for Kill': 67},
+     {'Swift Steppin': 67, 'Archer Or Bust': 34, 'Sanic Tools': 47, 'Bug^2': 20},
+     {'Stable Jenius': 67, 'Mage Is Best': 34, 'Hocus Choppus': 67, 'Molto Loggo': 20, 'Le Brain Tools': 47},
+     {'Fmj': 15, 'Shaquracy': 15, 'Prowesessary': 40, 'Hammer Hammer': 41, 'All For Kill': 67},
      "40%",
      "MINIMUM recommended Utility bubbles for starting W4. Prowess hard-caps at 2x."],
     [4, 60,
      {'Roid Ragin': 100, 'Warriors Rule': 50, 'Hearty Diggy': 100, 'Wyoming Blood': 30, 'Sploosh Sploosh': 30, 'Stronk Tools': 70},
-     {'Swift Steppin': 100, 'Archer or Bust': 50, 'Sanic Tools': 70, 'Bug^2': 30},
-     {'Stable Jenius': 100, 'Mage is Best': 50, 'Hocus Choppus': 100, 'Molto Loggo': 30, 'Le Brain Tools': 70},
-     {'FMJ': 20, 'Shaquracy': 20, 'Prowesessary': 60, 'Hammer Hammer': 65, 'All for Kill': 100},
+     {'Swift Steppin': 100, 'Archer Or Bust': 50, 'Sanic Tools': 70, 'Bug^2': 30},
+     {'Stable Jenius': 100, 'Mage Is Best': 50, 'Hocus Choppus': 100, 'Molto Loggo': 30, 'Le Brain Tools': 70},
+     {'Fmj': 20, 'Shaquracy': 20, 'Prowesessary': 60, 'Hammer Hammer': 65, 'All For Kill': 100},
      "50%",
      "MINIMUM recommended Utility bubbles for starting W5. Prowess hard-caps at 2x, which you should be reaching now!"],
     [5, 80,
      {'Roid Ragin': 150, 'Warriors Rule': 75, 'Hearty Diggy': 150, 'Wyoming Blood': 45, 'Sploosh Sploosh': 45, 'Stronk Tools': 105, 'Multorange': 45},
-     {'Swift Steppin': 150, 'Archer or Bust': 75, 'Bug^2': 45, 'Premigreen': 45, },
-     {'Stable Jenius': 150, 'Mage is Best': 75, 'Molto Loggo': 45, 'Le Brain Tools': 105, 'Severapurple': 45, },
-     {'FMJ': 30, 'Shaquracy': 30, 'Hammer Hammer': 105, 'All for Kill': 150},
+     {'Swift Steppin': 150, 'Archer Or Bust': 75, 'Bug^2': 45, 'Premigreen': 45, },
+     {'Stable Jenius': 150, 'Mage Is Best': 75, 'Molto Loggo': 45, 'Le Brain Tools': 105, 'Severapurple': 45, },
+     {'Fmj': 30, 'Shaquracy': 30, 'Hammer Hammer': 105, 'All For Kill': 150},
      "60%",
      "MINIMUM recommended Utility bubbles for starting W6 push. Keep watch of your No Bubble Left Behind list (from W4 Lab) to keep cheap/easy bubbles off when possible!"],
     [6, 100,
      {'Roid Ragin': 234, 'Warriors Rule': 117, 'Hearty Diggy': 234, 'Wyoming Blood': 70, 'Sploosh Sploosh': 70, 'Stronk Tools': 164, 'Multorange': 70,
-      'Dream of Ironfish': 70},
-     {'Swift Steppin': 234, 'Archer or Bust': 117, 'Bug^2': 70, 'Premigreen': 70, 'Fly in Mind': 94},
-     {'Stable Jenius': 234, 'Mage is Best': 117, 'Molto Loggo': 70, 'Le Brain Tools': 164, 'Severapurple': 70, 'Tree Sleeper': 94},
-     {'Cookin Roadkill': 105, 'All for Kill': 167},
+      'Dream Of Ironfish': 70},
+     {'Swift Steppin': 234, 'Archer Or Bust': 117, 'Bug^2': 70, 'Premigreen': 70, 'Fly In Mind': 94},
+     {'Stable Jenius': 234, 'Mage Is Best': 117, 'Molto Loggo': 70, 'Le Brain Tools': 164, 'Severapurple': 70, 'Tree Sleeper': 94},
+     {'Cookin Roadkill': 105, 'All For Kill': 167},
      "70%",
      "Cookin Roadkill 105 = 60% bubble strength. All for Kill hard-cap at 167, you're finished!"],
     [7, 100,
      {'Roid Ragin': 400, 'Warriors Rule': 200, 'Hearty Diggy': 400, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 280, 'Multorange': 120,
-      'Dream of Ironfish': 120},
-     {'Swift Steppin': 400, 'Archer or Bust': 200, 'Bug^2': 120, 'Premigreen': 120},
-     {'Stable Jenius': 400, 'Mage is Best': 200, 'Hocus Choppus': 400, 'Molto Loggo': 120, 'Le Brain Tools': 280, 'Severapurple': 120, 'Tree Sleeper': 160},
+      'Dream Of Ironfish': 120},
+     {'Swift Steppin': 400, 'Archer Or Bust': 200, 'Bug^2': 120, 'Premigreen': 120},
+     {'Stable Jenius': 400, 'Mage Is Best': 200, 'Hocus Choppus': 400, 'Molto Loggo': 120, 'Le Brain Tools': 280, 'Severapurple': 120, 'Tree Sleeper': 160},
      {'Laaarrrryyyy': 150, 'Hammer Hammer': 150, },
      "80%",
      "Larry at 150 = 72% chance for +2 levels. Somewhere around level 125-150, this bubble should pass 100m Dementia Ore cost and be available to level with Boron upgrades from the W3 Atom Collider in Construction.  It should be, in my opinion, the ONLY Utility Bubble you spend these daily clicks on until it reaches 501. If you cannot afford the Particles needed to level Larry, invest into Sampling Bubbles."],
     [8, 100,
-     {'Roid Ragin': 567, 'Warriors Rule': 284, 'Hearty Diggy': 567, 'Stronk Tools': 397, 'Multorange': 170, 'Dream of Ironfish': 170, 'Shimmeron': 227},
-     {'Swift Steppin': 567, 'Archer or Bust': 284, 'Premigreen': 170},
-     {'Stable Jenius': 567, 'Mage is Best': 284, 'Hocus Choppus': 567, 'Le Brain Tools': 397, 'Severapurple': 170, 'Tree Sleeper': 227},
+     {'Roid Ragin': 567, 'Warriors Rule': 284, 'Hearty Diggy': 567, 'Stronk Tools': 397, 'Multorange': 170, 'Dream Of Ironfish': 170, 'Shimmeron': 227},
+     {'Swift Steppin': 567, 'Archer Or Bust': 284, 'Premigreen': 170},
+     {'Stable Jenius': 567, 'Mage Is Best': 284, 'Hocus Choppus': 567, 'Le Brain Tools': 397, 'Severapurple': 170, 'Tree Sleeper': 227},
      {'Hammer Hammer': 180, },
      "85%",
      ""],
     [9, 100,
-     {'Roid Ragin': 615, 'Warriors Rule': 308, 'Hearty Diggy': 615, 'Stronk Tools': 430, 'Multorange': 185, 'Dream of Ironfish': 185, 'Shimmeron': 246},
-     {'Swift Steppin': 615, 'Archer or Bust': 308, 'Premigreen': 185},
-     {'Stable Jenius': 615, 'Mage is Best': 308, 'Hocus Choppus': 615, 'Le Brain Tools': 430, 'Severapurple': 185, 'Tree Sleeper': 246},
+     {'Roid Ragin': 615, 'Warriors Rule': 308, 'Hearty Diggy': 615, 'Stronk Tools': 430, 'Multorange': 185, 'Dream Of Ironfish': 185, 'Shimmeron': 246},
+     {'Swift Steppin': 615, 'Archer Or Bust': 308, 'Premigreen': 185},
+     {'Stable Jenius': 615, 'Mage Is Best': 308, 'Hocus Choppus': 615, 'Le Brain Tools': 430, 'Severapurple': 185, 'Tree Sleeper': 246},
      {'Hammer Hammer': 210, },
      "86%",
      ""],
     [10, 100,
-     {'Roid Ragin': 670, 'Warriors Rule': 335, 'Hearty Diggy': 670, 'Stronk Tools': 469, 'Multorange': 201, 'Dream of Ironfish': 201, 'Shimmeron': 268},
-     {'Swift Steppin': 670, 'Archer or Bust': 335, 'Premigreen': 201},
-     {'Stable Jenius': 670, 'Mage is Best': 335, 'Hocus Choppus': 670, 'Le Brain Tools': 469, 'Severapurple': 201, 'Tree Sleeper': 268},
+     {'Roid Ragin': 670, 'Warriors Rule': 335, 'Hearty Diggy': 670, 'Stronk Tools': 469, 'Multorange': 201, 'Dream Of Ironfish': 201, 'Shimmeron': 268},
+     {'Swift Steppin': 670, 'Archer Or Bust': 335, 'Premigreen': 201},
+     {'Stable Jenius': 670, 'Mage Is Best': 335, 'Hocus Choppus': 670, 'Le Brain Tools': 469, 'Severapurple': 201, 'Tree Sleeper': 268},
      {'Laaarrrryyyy': 501, },
      "87%",
      ""],
     [11, 100,
-     {'Roid Ragin': 700, 'Warriors Rule': 367, 'Hearty Diggy': 734, 'Stronk Tools': 514, 'Multorange': 220, 'Dream of Ironfish': 220, 'Shimmeron': 294},
-     {'Swift Steppin': 700, 'Archer or Bust': 367, 'Premigreen': 220},
-     {'Stable Jenius': 700, 'Mage is Best': 367, 'Hocus Choppus': 734, 'Le Brain Tools': 514, 'Severapurple': 220, 'Tree Sleeper': 294},
+     {'Roid Ragin': 700, 'Warriors Rule': 367, 'Hearty Diggy': 734, 'Stronk Tools': 514, 'Multorange': 220, 'Dream Of Ironfish': 220, 'Shimmeron': 294},
+     {'Swift Steppin': 700, 'Archer Or Bust': 367, 'Premigreen': 220},
+     {'Stable Jenius': 700, 'Mage Is Best': 367, 'Hocus Choppus': 734, 'Le Brain Tools': 514, 'Severapurple': 220, 'Tree Sleeper': 294},
      {'Cookin Roadkill': 630, 'Hammer Hammer': 270, },
      "88%",
      ""],
     [12, 100,
-     {'Roid Ragin': 720, 'Warriors Rule': 405, 'Hearty Diggy': 810, 'Stronk Tools': 567, 'Multorange': 243, 'Dream of Ironfish': 243, 'Shimmeron': 324},
-     {'Swift Steppin': 720, 'Archer or Bust': 405, 'Premigreen': 243},
-     {'Stable Jenius': 720, 'Mage is Best': 405, 'Hocus Choppus': 810, 'Le Brain Tools': 567, 'Severapurple': 243, 'Tree Sleeper': 324},
+     {'Roid Ragin': 720, 'Warriors Rule': 405, 'Hearty Diggy': 810, 'Stronk Tools': 567, 'Multorange': 243, 'Dream Of Ironfish': 243, 'Shimmeron': 324},
+     {'Swift Steppin': 720, 'Archer Or Bust': 405, 'Premigreen': 243},
+     {'Stable Jenius': 720, 'Mage Is Best': 405, 'Hocus Choppus': 810, 'Le Brain Tools': 567, 'Severapurple': 243, 'Tree Sleeper': 324},
      {'Startue Exp': 240, 'Hammer Hammer': 300, },
      "89%",
      ""],
     [13, 100,
-     {'Roid Ragin': 740, 'Warriors Rule': 450, 'Hearty Diggy': 900, 'Stronk Tools': 630, 'Multorange': 270, 'Dream of Ironfish': 270, 'Shimmeron': 360},
-     {'Swift Steppin': 740, 'Archer or Bust': 450, 'Premigreen': 270},
-     {'Stable Jenius': 740, 'Mage is Best': 450, 'Hocus Choppus': 900, 'Le Brain Tools': 630, 'Severapurple': 270, 'Tree Sleeper': 360},
+     {'Roid Ragin': 740, 'Warriors Rule': 450, 'Hearty Diggy': 900, 'Stronk Tools': 630, 'Multorange': 270, 'Dream Of Ironfish': 270, 'Shimmeron': 360},
+     {'Swift Steppin': 740, 'Archer Or Bust': 450, 'Premigreen': 270},
+     {'Stable Jenius': 740, 'Mage Is Best': 450, 'Hocus Choppus': 900, 'Le Brain Tools': 630, 'Severapurple': 270, 'Tree Sleeper': 360},
      {'Droppin Loads': 280},
      "90%",
      ""],
     [14, 100,
      {'Roid Ragin': 760, 'Warriors Rule': 506, 'Hearty Diggy': 1012, 'Multorange': 304, 'Shimmeron': 405},
-     {'Swift Steppin': 760, 'Archer or Bust': 506, 'Premigreen': 304},
-     {'Stable Jenius': 760, 'Mage is Best': 506, 'Hocus Choppus': 1012, 'Severapurple': 304},
+     {'Swift Steppin': 760, 'Archer Or Bust': 506, 'Premigreen': 304},
+     {'Stable Jenius': 760, 'Mage Is Best': 506, 'Hocus Choppus': 1012, 'Severapurple': 304},
      {'Call Me Bob': 200},
      "91%",
      ""],
     [15, 100,
      {'Roid Ragin': 780, 'Warriors Rule': 575, 'Hearty Diggy': 1150, 'Multorange': 345, 'Shimmeron': 460},
-     {'Swift Steppin': 780, 'Archer or Bust': 575, 'Premigreen': 345},
-     {'Stable Jenius': 780, 'Mage is Best': 575, 'Hocus Choppus': 1150, 'Severapurple': 345},
+     {'Swift Steppin': 780, 'Archer Or Bust': 575, 'Premigreen': 345},
+     {'Stable Jenius': 780, 'Mage Is Best': 575, 'Hocus Choppus': 1150, 'Severapurple': 345},
      {'Big P': 140, 'Big Game Hunter': 70, 'Mr Massacre': 117},
      "92%",
      ""],
     [16, 100,
      {'Roid Ragin': 800, 'Warriors Rule': 665, 'Hearty Diggy': 1329, 'Multorange': 399, 'Shimmeron': 532},
-     {'Swift Steppin': 800, 'Archer or Bust': 665, 'Premigreen': 399},
-     {'Stable Jenius': 800, 'Mage is Best': 665, 'Hocus Choppus': 1329, 'Severapurple': 399},
+     {'Swift Steppin': 800, 'Archer Or Bust': 665, 'Premigreen': 399},
+     {'Stable Jenius': 800, 'Mage Is Best': 665, 'Hocus Choppus': 1329, 'Severapurple': 399},
      {'Big P': 240, 'Big Game Hunter': 120, 'Mr Massacre': 200},
      "93%",
      ""],
     [17, 100,
      {'Roid Ragin': 820, 'Warriors Rule': 784, 'Hearty Diggy': 1567, 'Multorange': 470, 'Shimmeron': 627},
-     {'Swift Steppin': 820, 'Archer or Bust': 784, 'Premigreen': 470},
-     {'Stable Jenius': 820, 'Mage is Best': 784, 'Hocus Choppus': 1567, 'Severapurple': 470},
+     {'Swift Steppin': 820, 'Archer Or Bust': 784, 'Premigreen': 470},
+     {'Stable Jenius': 820, 'Mage Is Best': 784, 'Hocus Choppus': 1567, 'Severapurple': 470},
      {'Big P': 340, 'Carpenter': 284, 'Big Game Hunter': 170, 'Mr Massacre': 284},
      "94%",
      ""],
     [18, 100,
      {'Roid Ragin': 840, 'Warriors Rule': 950, 'Hearty Diggy': 1900, 'Multorange': 570, 'Shimmeron': 760},
-     {'Swift Steppin': 840, 'Archer or Bust': 950, 'Premigreen': 570},
-     {'Stable Jenius': 840, 'Mage is Best': 950, 'Hocus Choppus': 1900, 'Severapurple': 570},
+     {'Swift Steppin': 840, 'Archer Or Bust': 950, 'Premigreen': 570},
+     {'Stable Jenius': 840, 'Mage Is Best': 950, 'Hocus Choppus': 1900, 'Severapurple': 570},
      {'Laaarrrryyyy': 900, 'Big P': 540, 'Call Me Bob': 500, 'Carpenter': 450, 'Big Game Hunter': 270, 'Mr Massacre': 450},
      "95%",
      ""],
     [19, 100,
      {'Roid Ragin': 860, 'Warriors Rule': 1200, 'Multorange': 720},
-     {'Swift Steppin': 860, 'Archer or Bust': 1200},
-     {'Stable Jenius': 860, 'Mage is Best': 1200, 'Severapurple': 720},
+     {'Swift Steppin': 860, 'Archer Or Bust': 1200},
+     {'Stable Jenius': 860, 'Mage Is Best': 1200, 'Severapurple': 720},
      {'Call Me Bob': 700, 'Cropius Mapper': 630, 'Lo Cost Mo Jade': 360},
      "96%",
      ""],
     [20, 100,
      {'Roid Ragin': 880, 'Warriors Rule': 1617, 'Multorange': 970},
-     {'Swift Steppin': 880, 'Archer or Bust': 1617},
-     {'Stable Jenius': 880, 'Mage is Best': 1617, 'Severapurple': 970},
+     {'Swift Steppin': 880, 'Archer Or Bust': 1617},
+     {'Stable Jenius': 880, 'Mage Is Best': 1617, 'Severapurple': 970},
      {'Big P': 940, 'Laaarrrryyyy': 1900, 'Carpenter': 950, 'Big Game Hunter': 570, 'Mr Massacre': 950, 'Diamond Chef': 553, 'Lo Cost Mo Jade': 760},
      "97%",
      ""],
     [21, 120,
      {'Roid Ragin': 900, 'Warriors Rule': 2450, 'Multorange': 1470},
-     {'Swift Steppin': 900, 'Archer or Bust': 2450},
-     {'Stable Jenius': 900, 'Mage is Best': 2450, 'Severapurple': 1470},
+     {'Swift Steppin': 900, 'Archer Or Bust': 2450},
+     {'Stable Jenius': 900, 'Mage Is Best': 2450, 'Severapurple': 1470},
      {'Essence Boost-Orange': 400, 'Essence Boost-Green': 400, 'Call Me Bob': 1000, 'Diamond Chef': 890},
      "98%",
      ""],
     [22, 140,
      {'Roid Ragin': 950, 'Warriors Rule': 4950, 'Multorange': 2970},
-     {'Swift Steppin': 950, 'Archer or Bust': 4950},
-     {'Stable Jenius': 950, 'Mage is Best': 4950, 'Severapurple': 2970},
+     {'Swift Steppin': 950, 'Archer Or Bust': 4950},
+     {'Stable Jenius': 950, 'Mage Is Best': 4950, 'Severapurple': 2970},
      {'Diamond Chef': 1897, 'Carpenter': 2450, 'Big P': 1440},
      "99%",
      ""],
     [23, 160,
-     {'Roid Ragin': 10000, 'Hearty Diggy': 9900, 'Stronk Tools': 6930, 'Dream of Ironfish': 2970, 'Shimmeron': 3960,
+     {'Roid Ragin': 10000, 'Hearty Diggy': 9900, 'Stronk Tools': 6930, 'Dream Of Ironfish': 2970, 'Shimmeron': 3960,
       'Slabi Orefish': 5940, 'Slabi Strength': 5940, 'Endgame Eff I': 5940, 'Tome Strength': 5940},
-     {'Swift Steppin': 10000, 'Sanic Tools': 6930, 'Premigreen': 2970, 'Fly in Mind': 3960,
+     {'Swift Steppin': 10000, 'Sanic Tools': 6930, 'Premigreen': 2970, 'Fly In Mind': 3960,
       'Slabo Critterbug': 5940, 'Slabo Agility': 5940, 'Endgame Eff II': 5940, 'Tome Agility': 5940},
      {'Stable Jenius': 10000, 'Hocus Choppus': 9900, 'Le Brain Tools': 6930, 'Tree Sleeper': 3960,
       'Slabe Logsoul': 5940, 'Slabe Wisdom': 5940, 'Endgame Eff III': 5940, 'Tome Wisdom': 5940},
@@ -2416,6 +2416,7 @@ arcadeBonuses = {
     36: {"Stat": "Farming EXP", "x1": 30, "x2": 100, "funcType": "decay", "displayType": "%"},
     37: {"Stat": "Divinity EXP", "x1": 40, "x2": 100, "funcType": "decay", "displayType": "%"},
 }
+bubbleCauldronColorList = ['Orange', 'Green', 'Purple', 'Yellow']
 bubblesDict = {
     0: {
         0: {'Name': 'Roid Ragin', 'Material': 'OakTree', 'x1': 1, 'x2': 0, 'funcType': 'add'},
@@ -2446,7 +2447,7 @@ bubblesDict = {
         25: {'Name': 'Farquad Force', 'Material': 'W6item1', 'x1': 30, 'x2': 60, 'funcType': 'decay'},
         26: {'Name': 'Endgame Eff I', 'Material': 'SpiA2b', 'x1': 3, 'x2': 60, 'funcType': 'decay'},
         27: {'Name': 'Tome Strength', 'Material': 'W6item8', 'x1': 2.5, 'x2': 60, 'funcType': 'decay'},
-        28: {'Name': 'Essence Boost', 'Material': 'Tree13', 'x1': 50, 'x2': 60, 'funcType': 'decay'},
+        28: {'Name': 'Essence Boost-Orange', 'Material': 'Tree13', 'x1': 50, 'x2': 60, 'funcType': 'decay'},
         29: {'Name': 'Crop Chapter', 'Material': 'W6item10', 'x1': 12, 'x2': 50, 'funcType': 'decay'},
     },  #Orange Bubbles
     1: {
@@ -2476,8 +2477,8 @@ bubblesDict = {
         23: {'Name': 'Slabo Agility', 'Material': 'LavaB6', 'x1': 25, 'x2': 60, 'funcType': 'decay'},
         24: {'Name': 'Power Tritwo', 'Material': 'SailTr24', 'x1': 23, 'x2': 50, 'funcType': 'decay'},
         25: {'Name': 'Quickdraw Quiver', 'Material': 'W6item0', 'x1': 40, 'x2': 60, 'funcType': 'decay'},
-        26: {'Name': 'Essence Boost', 'Material': 'Tree12', 'x1': 50, 'x2': 60, 'funcType': 'decay'},
-        27: {'Name': 'Endgame Eff Ii', 'Material': 'W6item3', 'x1': 3, 'x2': 60, 'funcType': 'decay'},
+        26: {'Name': 'Essence Boost-Green', 'Material': 'Tree12', 'x1': 50, 'x2': 60, 'funcType': 'decay'},
+        27: {'Name': 'Endgame Eff II', 'Material': 'W6item3', 'x1': 3, 'x2': 60, 'funcType': 'decay'},
         28: {'Name': 'Tome Agility', 'Material': 'Bug13', 'x1': 2.5, 'x2': 60, 'funcType': 'decay'},
         29: {'Name': 'Stealth Chapter', 'Material': 'W6item5', 'x1': 10, 'x2': 50, 'funcType': 'decay'},
     },  #Green Bubbles
@@ -2508,8 +2509,8 @@ bubblesDict = {
         23: {'Name': 'Slabe Wisdom', 'Material': 'LavaC1', 'x1': 25, 'x2': 60, 'funcType': 'decay'},
         24: {'Name': 'Power Trithree', 'Material': 'SailTr28', 'x1': 23, 'x2': 50, 'funcType': 'decay'},
         25: {'Name': 'Smarter Spells', 'Material': 'W6item6', 'x1': 25, 'x2': 60, 'funcType': 'decay'},
-        26: {'Name': 'Endgame Eff Iii', 'Material': 'W6item7', 'x1': 3, 'x2': 60, 'funcType': 'decay'},
-        27: {'Name': 'Essence Boost', 'Material': 'Soul7', 'x1': 50, 'x2': 100, 'funcType': 'decay'},
+        26: {'Name': 'Endgame Eff III', 'Material': 'W6item7', 'x1': 3, 'x2': 60, 'funcType': 'decay'},
+        27: {'Name': 'Essence Boost-Purple', 'Material': 'Soul7', 'x1': 50, 'x2': 100, 'funcType': 'decay'},
         28: {'Name': 'Tome Wisdom', 'Material': 'W6item4', 'x1': 2.5, 'x2': 60, 'funcType': 'decay'},
         29: {'Name': 'Essence Chapter', 'Material': 'W6item0', 'x1': 15, 'x2': 50, 'funcType': 'decay'},
     },  #Purple Bubbles
@@ -2540,7 +2541,7 @@ bubblesDict = {
         23: {'Name': 'Gifts Abound', 'Material': 'Bug10', 'x1': 40, 'x2': 60, 'funcType': 'decay'},
         24: {'Name': 'Atom Split', 'Material': 'LavaC2', 'x1': 14, 'x2': 40, 'funcType': 'decay'},
         25: {'Name': 'Cropius Mapper', 'Material': 'SpiA5', 'x1': 5, 'x2': 70, 'funcType': 'decay'},
-        26: {'Name': 'Essence Boost', 'Material': 'Bug12', 'x1': 50, 'x2': 60, 'funcType': 'decay'},
+        26: {'Name': 'Essence Boost-Yellow', 'Material': 'Bug12', 'x1': 50, 'x2': 60, 'funcType': 'decay'},
         27: {'Name': 'Hinge Buster', 'Material': 'W6item2', 'x1': 100, 'x2': 70, 'funcType': 'decay'},
         28: {'Name': 'Ninja Looter', 'Material': 'W6item9', 'x1': 0.5, 'x2': 60, 'funcType': 'decayMulti'},
         29: {'Name': 'Lo Cost Mo Jade', 'Material': 'SpiD1', 'x1': 99, 'x2': 40, 'funcType': 'decay'},
@@ -2548,425 +2549,168 @@ bubblesDict = {
 }
 def getReadableVialNames(inputNumber):
     try:
-        inputNumber = int(inputNumber)
+        return f"{vialsDict[int(inputNumber)]['Name']} ({getItemDisplayName(vialsDict[int(inputNumber)]['Material'])})"
     except:
         return f"Unknown Vial {inputNumber}"
-    match inputNumber:
-        case 0:
-            return "Copper Corona (Copper Ore)"
-        case 1:
-            return "Sippy Splinters (Oak Logs)"
-        case 2:
-            return "Mushroom Soup (Spore Cap)"
-        case 3:
-            return "Spool Sprite (Thread)"
-        case 4:
-            return "Barium Mixture (Copper Bar)"
-        case 5:
-            return "Dieter Drink (Bean Slices)"
-        case 6:
-            return "Skinny 0 Cal (Snake Skin)"
-        case 7:
-            return "Thumb Pow (Trusty Nails)"
-        case 8:
-            return "Jungle Juice (Jungle Logs)"
-        case 9:
-            return "Barley Brew (Iron Bar)"
-        case 10:
-            return "Anearful (Glublin Ear)"
-        case 11:
-            return "Tea With Pea (Potty Rolls)"
-        case 12:
-            return "Gold Guzzle (Gold Ore)"
-        case 13:
-            return "Ramificoction (Bullfrog Horn)"
-        case 14:
-            return "Seawater (Goldfish)"
-        case 15:
-            return "Tail Time (Rats Tail)"
-        case 16:
-            return "Fly In My Drink (Fly)"
-        case 17:
-            return "Mimicraught (Megalodon Tooth)"
-        case 18:
-            return "Blue Flav (Platinum Ore)"
-        case 19:
-            return "Slug Slurp (Hermit Can)"
-        case 20:
-            return "Pickle Jar (BobJoePickle)"
-        case 21:
-            return "Fur Refresher (Floof Ploof)"
-        case 22:
-            return "Sippy Soul (Forest Soul)"
-        case 23:
-            return "Crab Juice (Crabbo)"
-        case 24:
-            return "Void Vial (Void Ore)"
-        case 25:
-            return "Red Malt (Redox Salts)"
-        case 26:
-            return "Ew Gross Gross (Mosquisnow)"
-        case 27:
-            return "The Spanish Sahara (Tundra Logs)"
-        case 28:
-            return "Poison Tincture (Poison Froge)"
-        case 29:
-            return "Etruscan Lager (Mamooth Tusk)"
-        case 30:
-            return "Chonker Chug (Dune Soul)"
-        case 31:
-            return "Bubonic Burp (Mousey)"
-        case 32:
-            return "Visible Ink (Pen)"
-        case 33:
-            return "Orange Malt (Explosive Salts)"
-        case 34:
-            return "Snow Slurry (Snow Ball)"
-        case 35:
-            return "Slowergy Drink (Frigid Soul)"
-        case 36:
-            return "Sippy Cup (Sippy Straw)"
-        case 37:
-            return "Bunny Brew (Bunny)"
-        case 38:
-            return "40-40 Purity (Contact Lense)"
-        case 39:
-            return "Shaved Ice (Purple Salt)"
-        case 40:
-            return "Goosey Glug (Honker)"
-        case 41:
-            return "Ball Pickle Jar (BallJoePickle)"
-        case 42:
-            return "Capachino (Purple Mush Cap)"
-        case 43:
-            return "Donut Drink (Half Eaten Donut)"
-        case 44:
-            return "Long Island Tea (Sand Shark)"
-        case 45:
-            return "Spook Pint (Squishy Soul)"
-        case 46:
-            return "Calcium Carbonate (Tongue Bone)"
-        case 47:
-            return "Bloat Draft (Blobfish)"
-        case 48:
-            return "Choco Milkshake (Crumpled Wrapper)"
-        case 49:
-            return "Pearl Seltzer (Pearler Shell)"
-        case 50:
-            return "Krakenade (Kraken)"
-        case 51:
-            return "Electrolyte (Condensed Zap)"
-        case 52:
-            return "Ash Agua (Suggma Ashes)"
-        case 53:
-            return "Maple Syrup (Maple Logs)"
-        case 54:
-            return "Hampter Drippy (Hampter)"
-        case 55:
-            return "Dreadnog (Dreadlo Bar)"
-        case 56:
-            return "Dusted Drink (Dust Mote)"
-        case 57:
-            return "Oj Jooce (Orange Slice)"
-        case 58:
-            return "Oozie Ooblek (Oozie Soul)"
-        case 59:
-            return "Venison Malt (Mongo Worm Slices)"
-        case 60:
-            return "Marble Mocha (Marble Ore)"
-        case 61:
-            return "Willow Sippy (Willow Logs)"
-        case 62:
-            return "Shinyfin Stew (Equinox Fish)"
-        case 63:
-            return "Dreamy Drink (Dream Particulate)"
-        case 64:
-            return "Ricecakorade (Rice Cake)"
-        case 65:
-            return "Ladybug Serum (Ladybug)"
-        case 66:
-            return "Flavorgil (Caulifish)"
-        case 67:
-            return "Greenleaf Tea (Leafy Branch)"
-        case 68:
-            return "Firefly Grog (Firefly)"
-        case 69:
-            return "Dabar Special (Godshard Bar)"
-        case 70:
-            return "Refreshment (Breezy Soul)"
-        case 71:
-            return "Gibbed Drink (Eviscerated Horn)"
-        case 72:
-            return "Ded Sap (Effervescent Log)"
-        case 73:
-            return "Royale Cola (Royal Headpiece)"
-        case 74:
-            return "Turtle Tisane (Tuttle)"
-        case _:
-            return f"Unknown Vial {inputNumber}"
+    # match inputNumber:
+    #     case 0:
+    #         return "Copper Corona (Copper Ore)"
+    #     case 1:
+    #         return "Sippy Splinters (Oak Logs)"
+    #     case 2:
+    #         return "Mushroom Soup (Spore Cap)"
+    #     case 3:
+    #         return "Spool Sprite (Thread)"
+    #     case 4:
+    #         return "Barium Mixture (Copper Bar)"
+    #     case 5:
+    #         return "Dieter Drink (Bean Slices)"
+    #     case 6:
+    #         return "Skinny 0 Cal (Snake Skin)"
+    #     case 7:
+    #         return "Thumb Pow (Trusty Nails)"
+    #     case 8:
+    #         return "Jungle Juice (Jungle Logs)"
+    #     case 9:
+    #         return "Barley Brew (Iron Bar)"
+    #     case 10:
+    #         return "Anearful (Glublin Ear)"
+    #     case 11:
+    #         return "Tea With Pea (Potty Rolls)"
+    #     case 12:
+    #         return "Gold Guzzle (Gold Ore)"
+    #     case 13:
+    #         return "Ramificoction (Bullfrog Horn)"
+    #     case 14:
+    #         return "Seawater (Goldfish)"
+    #     case 15:
+    #         return "Tail Time (Rats Tail)"
+    #     case 16:
+    #         return "Fly In My Drink (Fly)"
+    #     case 17:
+    #         return "Mimicraught (Megalodon Tooth)"
+    #     case 18:
+    #         return "Blue Flav (Platinum Ore)"
+    #     case 19:
+    #         return "Slug Slurp (Hermit Can)"
+    #     case 20:
+    #         return "Pickle Jar (BobJoePickle)"
+    #     case 21:
+    #         return "Fur Refresher (Floof Ploof)"
+    #     case 22:
+    #         return "Sippy Soul (Forest Soul)"
+    #     case 23:
+    #         return "Crab Juice (Crabbo)"
+    #     case 24:
+    #         return "Void Vial (Void Ore)"
+    #     case 25:
+    #         return "Red Malt (Redox Salts)"
+    #     case 26:
+    #         return "Ew Gross Gross (Mosquisnow)"
+    #     case 27:
+    #         return "The Spanish Sahara (Tundra Logs)"
+    #     case 28:
+    #         return "Poison Tincture (Poison Froge)"
+    #     case 29:
+    #         return "Etruscan Lager (Mamooth Tusk)"
+    #     case 30:
+    #         return "Chonker Chug (Dune Soul)"
+    #     case 31:
+    #         return "Bubonic Burp (Mousey)"
+    #     case 32:
+    #         return "Visible Ink (Pen)"
+    #     case 33:
+    #         return "Orange Malt (Explosive Salts)"
+    #     case 34:
+    #         return "Snow Slurry (Snow Ball)"
+    #     case 35:
+    #         return "Slowergy Drink (Frigid Soul)"
+    #     case 36:
+    #         return "Sippy Cup (Sippy Straw)"
+    #     case 37:
+    #         return "Bunny Brew (Bunny)"
+    #     case 38:
+    #         return "40-40 Purity (Contact Lense)"
+    #     case 39:
+    #         return "Shaved Ice (Purple Salt)"
+    #     case 40:
+    #         return "Goosey Glug (Honker)"
+    #     case 41:
+    #         return "Ball Pickle Jar (BallJoePickle)"
+    #     case 42:
+    #         return "Capachino (Purple Mush Cap)"
+    #     case 43:
+    #         return "Donut Drink (Half Eaten Donut)"
+    #     case 44:
+    #         return "Long Island Tea (Sand Shark)"
+    #     case 45:
+    #         return "Spook Pint (Squishy Soul)"
+    #     case 46:
+    #         return "Calcium Carbonate (Tongue Bone)"
+    #     case 47:
+    #         return "Bloat Draft (Blobfish)"
+    #     case 48:
+    #         return "Choco Milkshake (Crumpled Wrapper)"
+    #     case 49:
+    #         return "Pearl Seltzer (Pearler Shell)"
+    #     case 50:
+    #         return "Krakenade (Kraken)"
+    #     case 51:
+    #         return "Electrolyte (Condensed Zap)"
+    #     case 52:
+    #         return "Ash Agua (Suggma Ashes)"
+    #     case 53:
+    #         return "Maple Syrup (Maple Logs)"
+    #     case 54:
+    #         return "Hampter Drippy (Hampter)"
+    #     case 55:
+    #         return "Dreadnog (Dreadlo Bar)"
+    #     case 56:
+    #         return "Dusted Drink (Dust Mote)"
+    #     case 57:
+    #         return "Oj Jooce (Orange Slice)"
+    #     case 58:
+    #         return "Oozie Ooblek (Oozie Soul)"
+    #     case 59:
+    #         return "Venison Malt (Mongo Worm Slices)"
+    #     case 60:
+    #         return "Marble Mocha (Marble Ore)"
+    #     case 61:
+    #         return "Willow Sippy (Willow Logs)"
+    #     case 62:
+    #         return "Shinyfin Stew (Equinox Fish)"
+    #     case 63:
+    #         return "Dreamy Drink (Dream Particulate)"
+    #     case 64:
+    #         return "Ricecakorade (Rice Cake)"
+    #     case 65:
+    #         return "Ladybug Serum (Ladybug)"
+    #     case 66:
+    #         return "Flavorgil (Caulifish)"
+    #     case 67:
+    #         return "Greenleaf Tea (Leafy Branch)"
+    #     case 68:
+    #         return "Firefly Grog (Firefly)"
+    #     case 69:
+    #         return "Dabar Special (Godshard Bar)"
+    #     case 70:
+    #         return "Refreshment (Breezy Soul)"
+    #     case 71:
+    #         return "Gibbed Drink (Eviscerated Horn)"
+    #     case 72:
+    #         return "Ded Sap (Effervescent Log)"
+    #     case 73:
+    #         return "Royale Cola (Royal Headpiece)"
+    #     case 74:
+    #         return "Turtle Tisane (Tuttle)"
+    #     case _:
+    #         return f"Unknown Vial {inputNumber}"
 
 def getReadableBubbleNames(inputNumber, color):
     try:
-        inputNumber = int(inputNumber)
+        return bubblesDict[bubbleCauldronColorList.index(color)][inputNumber]
     except:
-        return f"Unknown Bubble {color} {inputNumber}"
-    match color:
-        case "Orange":
-            match inputNumber:
-                case 0:
-                    return "Roid Ragin"
-                case 1:
-                    return "Warriors Rule"
-                case 2:
-                    return "Hearty Diggy"
-                case 3:
-                    return "Wyoming Blood"
-                case 4:
-                    return "Reely Smart"
-                case 5:
-                    return "Big Meaty Claws"
-                case 6:
-                    return "Sploosh Sploosh"
-                case 7:
-                    return "Stronk Tools"
-                case 8:
-                    return "FMJ"
-                case 9:
-                    return "Bappity Boopity"
-                case 10:
-                    return "Brittley Spears"
-                case 11:
-                    return "Call Me Bob"
-                case 12:
-                    return "Carpenter"
-                case 13:
-                    return "Buff Boi Talent"
-                case 14:
-                    return "Orange Bargain"
-                case 15:
-                    return "Penny of Strength"
-                case 16:
-                    return "Multorange"
-                case 17:
-                    return "Dream of Ironfish"
-                case 18:
-                    return "Shimmeron"
-                case 19:
-                    return "Bite But Not Chew"
-                case 20:
-                    return "Spear Powah"
-                case 21:
-                    return "Slabi Orefish"
-                case 22:
-                    return "Gamer at Heart"
-                case 23:
-                    return "Slabi Strength"
-                case 24:
-                    return "Power Trione"
-                case 25:
-                    return "Farquad Force"
-                case 26:
-                    return "Endgame Eff I"
-                case 27:
-                    return "Tome Strength"
-                case 28:
-                    return "Essence Boost-Orange"
-                case 29:
-                    return "Crop Chapter"
-                case _:
-                    return f"Unknown Bubble {color} {inputNumber}"
-        case "Green":
-            match inputNumber:
-                case 0:
-                    return "Swift Steppin"
-                case 1:
-                    return "Archer or Bust"
-                case 2:
-                    return "Hammer Hammer"
-                case 3:
-                    return "Lil Big Damage"
-                case 4:
-                    return "Anvilnomics"
-                case 5:
-                    return "Quick Slap"
-                case 6:
-                    return "Sanic Tools"
-                case 7:
-                    return "Bug^2"
-                case 8:
-                    return "Shaquracy"
-                case 9:
-                    return "Cheap Shot"
-                case 10:
-                    return "Bow Jack"
-                case 11:
-                    return "Call Me Ash"
-                case 12:
-                    return "Cuz I Catch Em All"
-                case 13:
-                    return "Fast Boi Talent"
-                case 14:
-                    return "Green Bargain"
-                case 15:
-                    return "Dollar Of Agility"
-                case 16:
-                    return "Premigreen"
-                case 17:
-                    return "Fly in Mind"
-                case 18:
-                    return "Kill Per Kill"
-                case 19:
-                    return "Afk Expexp"
-                case 20:
-                    return "Bow Power"
-                case 21:
-                    return "Slabo Critterbug"
-                case 22:
-                    return "Sailor At Heart"
-                case 23:
-                    return "Slabo Agility"
-                case 24:
-                    return "Power Tritwo"
-                case 25:
-                    return "Quickdraw Quiver"
-                case 26:
-                    return "Essence Boost-Green"
-                case 27:
-                    return "Endgame Eff II"
-                case 28:
-                    return "Tome Agility"
-                case 29:
-                    return "Stealth Chapter"
-                case _:
-                    return f"Unknown Bubble {color} {inputNumber}"
-        case "Purple":
-            match inputNumber:
-                case 0:
-                    return "Stable Jenius"
-                case 1:
-                    return "Mage is Best"
-                case 2:
-                    return "Hocus Choppus"
-                case 3:
-                    return "Molto Loggo"
-                case 4:
-                    return "Noodubble"
-                case 5:
-                    return "Name I Guess"
-                case 6:
-                    return "Le Brain Tools"
-                case 7:
-                    return "Cookin Roadkill"
-                case 8:
-                    return "Brewstachio"
-                case 9:
-                    return "All for Kill"
-                case 10:
-                    return "Matty Stafford"
-                case 11:
-                    return "Call Me Pope"
-                case 12:
-                    return "Gospel Leader"
-                case 13:
-                    return "Smart Boi Talent"
-                case 14:
-                    return "Purple Bargain"
-                case 15:
-                    return "Nickel Of Wisdom"
-                case 16:
-                    return "Severapurple"
-                case 17:
-                    return "Tree Sleeper"
-                case 18:
-                    return "Hyperswift"
-                case 19:
-                    return "Matrix Evolved"
-                case 20:
-                    return "Wand Pawur"
-                case 21:
-                    return "Slabe Logsoul"
-                case 22:
-                    return "Pious At Heart"
-                case 23:
-                    return "Slabe Wisdom"
-                case 24:
-                    return "Power Trithree"
-                case 25:
-                    return "Smarter Spells"
-                case 26:
-                    return "Endgame Eff III"
-                case 27:
-                    return "Essence Boost-Purple"
-                case 28:
-                    return "Tome Wisdom"
-                case 29:
-                    return "Essence Chapter"
-                case _:
-                    return f"Unknown Bubble {color} {inputNumber}"
-        case "Yellow":
-            match inputNumber:
-                case 0:
-                    return "Lotto Skills"
-                case 1:
-                    return "Droppin Loads"
-                case 2:
-                    return "Startue Exp"
-                case 3:
-                    return "Level Up Gift"
-                case 4:
-                    return "Prowesessary"
-                case 5:
-                    return "Stamp Tramp"
-                case 6:
-                    return "Undeveloped Costs"
-                case 7:
-                    return "Da Daily Drip"
-                case 8:
-                    return "Grind Time"
-                case 9:
-                    return "Laaarrrryyyy"
-                case 10:
-                    return "Cogs For Hands"
-                case 11:
-                    return "Sample It"
-                case 12:
-                    return "Big Game Hunter"
-                case 13:
-                    return "Ignore Overdues"
-                case 14:
-                    return "Yellow Bargain"
-                case 15:
-                    return "Mr Massacre"
-                case 16:
-                    return "Egg Ink"
-                case 17:
-                    return "Diamond Chef"
-                case 18:
-                    return "Card Champ"
-                case 19:
-                    return "Petting The Rift"
-                case 20:
-                    return "Boaty Bubble"
-                case 21:
-                    return "Big P"
-                case 22:
-                    return "Bit By Bit"
-                case 23:
-                    return "Gifts Abound"
-                case 24:
-                    return "Atom Split"
-                case 25:
-                    return "Cropius Mapper"
-                case 26:
-                    return "Essence Boost-Yellow"
-                case 27:
-                    return "Hinge Buster"
-                case 28:
-                    return "Ninja Looter"
-                case 29:
-                    return "Lo Cost Mo Jade"
-                case _:
-                    return f"Unknown Bubble {color} {inputNumber}"
+        return f"Unknown {color} Bubble {inputNumber}"
 
 
 ###WORLD 3 CONSTS###

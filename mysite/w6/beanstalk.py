@@ -1,9 +1,6 @@
-import json
-
-from consts import jade_emporium
-from models.models import Account, AdviceSection, Advice, AdviceGroup
+from models.models import AdviceSection, Advice, AdviceGroup
 from utils.data_formatting import safe_loads
-from utils.text_formatting import getItemDisplayName, numberToLetter
+from utils.text_formatting import getItemDisplayName
 from flask import g as session_data
 
 TEN_K = 1

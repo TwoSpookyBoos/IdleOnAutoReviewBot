@@ -1,10 +1,7 @@
 import math
-from typing import List
-
 from models.models import Advice, AdviceGroup, AdviceSection
 from consts import smithing_progressionTiers, lavaFunc
 from flask import g as session_data
-
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl
 from utils.logging import get_logger

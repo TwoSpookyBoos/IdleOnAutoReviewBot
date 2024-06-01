@@ -1,5 +1,5 @@
-import json
 from models.models import AdviceSection, AdviceGroup, Advice
+from utils.data_formatting import safe_loads
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
@@ -411,9 +411,7 @@ def getDivinityLinksOptionsAdviceList(tierNumber: int) -> list[Advice]:
     return ""
 
 def parseJSONtoList():
-    rawDivinity = session_data.account.raw_data.get("Divinity", [])
-    if isinstance(rawDivinity, str):
-        rawDivinity = json.loads(rawDivinity)
+    rawDivinity = safe_loads(session_data.account.raw_data.get("Divinity", []))
     while len(rawDivinity) < 40:
         rawDivinity.append(0)
     return rawDivinity
@@ -626,10 +624,10 @@ def setDivinityProgressionTier():
     currentLowestArctisValue = 0
     #Find the lowest Big P threshold the account has already reached. This will be the first entry shown
     for bigPLevel in arctisCombosDict:
-        if session_data.account.alchemy_bubbles.get("Big P", 0) >= bigPLevel:
+        if session_data.account.alchemy_bubbles['Big P']['Level'] >= bigPLevel:
             lowestBigPToShow = bigPLevel
     #Find the next Big P threshold they could meet
-    if lowestBigPToShow < session_data.account.alchemy_bubbles.get("Big P", 0):
+    if lowestBigPToShow < session_data.account.alchemy_bubbles['Big P']['Level']:
         try:
             nextBigPTarget = bigPBreakpointsList[bigPBreakpointsList.index(lowestBigPToShow)+1]
         except:
@@ -652,7 +650,7 @@ def setDivinityProgressionTier():
                 divinity_AdviceDict["ArctisPoints"][subgroupName].append(Advice(
                     label=f"Current Big P bubble level",
                     picture_class='big-p',
-                    progression=session_data.account.alchemy_bubbles.get("Big P", 0),
+                    progression=session_data.account.alchemy_bubbles['Big P']['Level'],
                     goal=nextBigPTarget
                 ))
             for divinityLevel in arctisCombosDict[bigPLevel]:

@@ -1,4 +1,3 @@
-import json
 from flask import g as session_data
 from models.models import AdviceSection, AdviceGroup, Advice
 from math import floor

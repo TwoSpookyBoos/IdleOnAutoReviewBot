@@ -1,6 +1,4 @@
-from consts import sneakingGemstonesMaxValueDict
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
 

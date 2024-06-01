@@ -1,9 +1,9 @@
-from models.models import AdviceSection, AdviceGroup, Advice, Character
+from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
 from utils.data_formatting import safe_loads, mark_advice_completed
 from utils.logging import get_logger
-from consts import maxTiersPerGroup, stamps_progressionTiers, stamp_maxes, lavaFunc, stampNameDict, unavailableStampsList, stampTypes, maxOverallBookLevels
-from math import ceil, pow
+from consts import maxTiersPerGroup, stamps_progressionTiers, stamp_maxes, stampNameDict, unavailableStampsList, stampTypes, maxOverallBookLevels
+from math import ceil
 from flask import g as session_data
 
 
@@ -17,11 +17,12 @@ def ceilUpToBase(inputValue: int, base: int) -> int:
 
 # Stamp p2
 def setMissingStamps():
-    missingStampsList = []
-    for stampName, stampValues in session_data.account.stamps.items():
-        if stampValues.get("Delivered", False) == False and stampName not in unavailableStampsList:
-            missingStampsList.append(stampName)
-    return missingStampsList
+    # missingStampsList = []
+    # for stampName, stampValues in session_data.account.stamps.items():
+    #     if stampValues.get("Delivered", False) == False and stampName not in unavailableStampsList:
+    #         missingStampsList.append(stampName)
+    #return missingStampsList
+    return [stampName for stampName, stampValues in session_data.account.stamps.items() if stampValues.get("Delivered", False) == False and stampName not in unavailableStampsList]
 
 # Stamp p3
 def getCapacityExclusions():

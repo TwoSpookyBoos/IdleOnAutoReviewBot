@@ -1,4 +1,3 @@
-import json
 from models.models import Advice, AdviceGroup, AdviceSection
 from utils.data_formatting import safe_loads
 from utils.logging import get_logger
@@ -11,9 +10,7 @@ logger = get_logger(__name__)
 def parseJSON():
     emptyTable = [0]*11  #Some tables only have 10 fields, others have 11. Scary.
     emptyCooking = [emptyTable for table in range(maxCookingTables)]
-    rawCooking = session_data.account.raw_data.get("Cooking", emptyCooking)
-    if isinstance(rawCooking, str):
-        rawCooking = json.loads(rawCooking)
+    rawCooking = safe_loads(session_data.account.raw_data.get("Cooking", emptyCooking))
     for sublistIndex, value in enumerate(rawCooking):
         if isinstance(rawCooking[sublistIndex], list):
             while len(rawCooking[sublistIndex]) < 11:
@@ -22,9 +19,7 @@ def parseJSON():
     emptyMeal = [0]*maxMeals
     # Meals contains 4 lists of lists. The first 3 are as long as the number of plates. The 4th is general shorter.
     emptyMeals = [emptyMeal for meal in range(4)]
-    rawMeals = session_data.account.raw_data.get("Meals", emptyMeals)
-    if isinstance(rawMeals, str):
-        rawMeals = json.loads(rawMeals)
+    rawMeals = safe_loads(session_data.account.raw_data.get("Meals", emptyMeals))
     for sublistIndex, value in enumerate(rawMeals):
         if isinstance(rawMeals[sublistIndex], list):
             while len(rawMeals[sublistIndex]) < maxMeals:
@@ -107,7 +102,7 @@ def setCookingProgressionTier():
         logger.exception(f"Unable to retrieve Atom Collider Flouride level. Defaulting to 0.")
         atomFlouride = False
 
-    dchefLevel = session_data.account.alchemy_bubbles.get("Diamond Chef", 0)
+    dchefLevel = session_data.account.alchemy_bubbles['Diamond Chef']['Level']
 
     playerCookingList, playerMealsList, mealsUnlocked, mealsUnder11, mealsUnder30, playerMaxPlateLvl, playerMissingPlateUpgrades = parseJSON()
     playerTotalMealLevels = sum(playerMealsList[0])

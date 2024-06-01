@@ -2,7 +2,6 @@ from consts import saltLick_progressionTiers
 from flask import g as session_data
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
-from utils.data_formatting import safe_loads
 
 def setConsSaltLickProgressionTier() -> AdviceSection:
     saltlick_AdviceDict = {

@@ -12,10 +12,10 @@ from flask import g
 
 from utils.data_formatting import getCharacterDetails, safe_loads
 from consts import expectedStackables, greenstack_progressionTiers, card_data, maxMeals, maxMealLevel, jade_emporium, max_IndexOfVials, getReadableVialNames, \
-    max_IndexOfBubbles, getReadableBubbleNames, buildingsList, atomsList, prayersList, labChipsList, bribesDict, shrinesList, pristineCharmsList, sigilsDict, \
-    artifactsList, guildBonusesList, labBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesCount, sneakingGemstonesList, \
-    getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampNameDict, stampTypes, marketUpgradeList, marketUpgradeFirstIndex, \
-    marketUpgradeLastIndex, achievementsList, forgeUpgradesDict, arcadeBonuses, saltLickList, allMeritsDict
+    buildingsList, atomsList, prayersList, labChipsList, bribesDict, shrinesList, pristineCharmsList, sigilsDict, \
+    artifactsList, guildBonusesList, labBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesList, \
+    getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampNameDict, stampTypes, marketUpgradeList, \
+    achievementsList, forgeUpgradesDict, arcadeBonuses, saltLickList, allMeritsDict, bubblesDict
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, letterToNumber
 
 def session_singleton(cls):
@@ -839,7 +839,7 @@ class Account:
                             vialsDict.get(int(vialKey)).get("funcType"),
                             int(vialValue),
                             vialsDict.get(int(vialKey)).get("x1"),
-                            vialsDict.get(int(vialKey)).get("x2"),
+                            vialsDict.get(int(vialKey)).get("x2")
                         )
                     }
                 except:
@@ -853,27 +853,29 @@ class Account:
         self.vialMasteryMulti = 1 + (self.maxed_vials * .02) if self.vial_mastery_unlocked else 1
 
         self.alchemy_bubbles = {}
+        #Set defaults to 0
+        for cauldronIndex in bubblesDict:
+            for bubbleIndex in bubblesDict[cauldronIndex]:
+                self.alchemy_bubbles[bubblesDict[cauldronIndex][bubbleIndex]['Name']] = {
+                    "CauldronIndex": cauldronIndex,
+                    "BubbleIndex": bubbleIndex,
+                    "Level": 0,
+                    "BaseValue": 0
+                }
+        #Try to read player levels and calculate base value
         try:
-            raw_orange_alchemyBubblesDict = self.raw_data.get("CauldronInfo", [{}, {}, {}, {}])[0]
-            raw_orange_alchemyBubblesDict.pop('length', None)
-            raw_green_alchemyBubblesDict = self.raw_data.get("CauldronInfo", [{}, {}, {}, {}])[1]
-            raw_green_alchemyBubblesDict.pop('length', None)
-            raw_purple_alchemyBubblesDict = self.raw_data.get("CauldronInfo", [{}, {}, {}, {}])[2]
-            raw_purple_alchemyBubblesDict.pop('length', None)
-            raw_yellow_alchemyBubblesDict = self.raw_data.get("CauldronInfo", [{}, {}, {}, {}])[3]
-            raw_yellow_alchemyBubblesDict.pop('length', None)
-            for bubbleDict, bubbleColor in [
-                (raw_orange_alchemyBubblesDict, "Orange"),
-                (raw_green_alchemyBubblesDict, "Green"),
-                (raw_purple_alchemyBubblesDict, "Purple"),
-                (raw_yellow_alchemyBubblesDict, "Yellow")
-            ]:
-                for bubbleIndex in bubbleDict:
+            all_raw_bubbles = [self.raw_data["CauldronInfo"][0], self.raw_data["CauldronInfo"][1], self.raw_data["CauldronInfo"][2], self.raw_data["CauldronInfo"][3]]
+            for cauldronIndex in bubblesDict:
+                for bubbleIndex in bubblesDict[cauldronIndex]:
                     try:
-                        if int(bubbleIndex) <= max_IndexOfBubbles:
-                            self.alchemy_bubbles[getReadableBubbleNames(bubbleIndex, bubbleColor)] = int(bubbleDict[bubbleIndex])
+                        self.alchemy_bubbles[bubblesDict[cauldronIndex][bubbleIndex]['Name']]['Level'] = int(all_raw_bubbles[cauldronIndex][str(bubbleIndex)])
+                        self.alchemy_bubbles[bubblesDict[cauldronIndex][bubbleIndex]['Name']]['BaseValue'] = lavaFunc(
+                            bubblesDict[cauldronIndex][bubbleIndex]["funcType"],
+                            int(all_raw_bubbles[cauldronIndex][str(bubbleIndex)]),
+                            bubblesDict[cauldronIndex][bubbleIndex]["x1"],
+                            bubblesDict[cauldronIndex][bubbleIndex]["x2"])
                     except:
-                        self.alchemy_bubbles[getReadableBubbleNames(bubbleIndex, bubbleColor)] = 0
+                        continue  #Level and BaseValue already defaulted to 0 above
         except:
             pass
 

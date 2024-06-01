@@ -1,6 +1,4 @@
-from models.models import AdviceSection
-from models.models import AdviceGroup
-from models.models import Advice
+from models.models import Advice, AdviceGroup, AdviceSection
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from consts import bribes_progressionTiers, unpurchasableBribes
