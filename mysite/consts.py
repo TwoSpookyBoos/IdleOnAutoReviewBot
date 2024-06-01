@@ -611,7 +611,7 @@ bubbles_progressionTiers = [
      {'Roid Ragin': 950, 'Warriors Rule': 4950, 'Multorange': 2970},
      {'Swift Steppin': 950, 'Archer Or Bust': 4950},
      {'Stable Jenius': 950, 'Mage Is Best': 4950, 'Severapurple': 2970},
-     {'Diamond Chef': 1897, 'Carpenter': 2450, 'Big P': 1440},
+     {'Carpenter': 2450, 'Big P': 1440},
      "99%",
      ""],
     [23, 160,
