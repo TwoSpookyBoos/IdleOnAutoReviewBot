@@ -142,12 +142,31 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     }
 
     #Account-Wide
-    account_sum = 0
-    accountSubgroup = f"Account-Wide: +TBD%"
-    psrAdvices[accountSubgroup] = []
+    account_sum = 0.0
     vialBonus = session_data.account.alchemy_vials.get('Snow Slurry (Snow Ball)', {}).get('Value', 0) * session_data.account.vialMasteryMulti
     if session_data.account.labBonuses.get("My 1st Chemistry Set", {}).get("Enabled", False):
         vialBonus *= 2
+    account_sum += vialBonus
+    account_sum += session_data.account.alchemy_bubbles['Sample It']['BaseValue']
+    account_sum += 0.5 * session_data.account.saltlick.get('Printer Sample Size', 0)
+    account_sum += 0.5 * session_data.account.merits[2][4]['Level']
+    account_sum += session_data.account.family_bonuses['Maestro']['Value']
+    stampleValue = session_data.account.stamps.get('Stample Stamp', {}).get('Value', 0)
+    amplestampleValue = session_data.account.stamps.get('Amplestample Stamp', {}).get('Value', 0)
+    if session_data.account.labBonuses.get("Certified Stamp Book", {}).get("Enabled", False):
+        stampleValue *= 2
+        amplestampleValue *= 2
+    if session_data.account.sneaking.get("PristineCharms", {}).get("Liqorice Rolle", False):
+        stampleValue *= 1.25
+        amplestampleValue *= 1.25
+    account_sum += stampleValue
+    account_sum += amplestampleValue
+    account_sum += float(session_data.account.arcade.get(5, {}).get('Value', 0))
+    account_sum += session_data.account.achievements.get('Saharan Skull', False)
+    achievementStatus = session_data.account.achievements.get('Saharan Skull', False)
+    accountSubgroup = f"Account-Wide: +{account_sum:.2f}%"
+    psrAdvices[accountSubgroup] = []
+    
     psrAdvices[accountSubgroup].append(Advice(
         label=f"Snow Slurry vial: +{vialBonus:.2f}%",
         picture_class='snow-slurry',
@@ -171,20 +190,10 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         progression=session_data.account.merits[2][4]["Level"],
         goal=session_data.account.merits[2][4]["MaxLevel"]
     ))
-
     psrAdvices[accountSubgroup].append(Advice(
         label=f"Maestro Family Bonus: {session_data.account.family_bonuses['Maestro']['DisplayValue']} at Class Level {session_data.account.family_bonuses['Maestro']['Level']}",
         picture_class="maestro-icon"
     ))
-
-    stampleValue = session_data.account.stamps.get('Stample Stamp', {}).get('Value', 0)
-    amplestampleValue = session_data.account.stamps.get('Amplestample Stamp', {}).get('Value', 0)
-    if session_data.account.labBonuses.get("Certified Stamp Book", {}).get("Enabled", False):
-        stampleValue *= 2
-        amplestampleValue *= 2
-    if session_data.account.sneaking.get("PristineCharms", {}).get("Liqorice Rolle", False):
-        stampleValue *= 1.25
-        amplestampleValue *= 1.25
     psrAdvices[accountSubgroup].append(Advice(
         label=f"Amplestample Stamp: +{amplestampleValue:.3f}%",
         picture_class="amplestample-stamp",
@@ -213,7 +222,6 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         progression=session_data.account.arcade.get(5, {}).get('Level', 0),
         goal=100
     ))
-    achievementStatus = session_data.account.achievements.get('Saharan Skull', False)
     psrAdvices[accountSubgroup].append(Advice(
         label=f"W3 Achievement: Saharan Skull: {1 if achievementStatus else 0}%",
         picture_class="saharan-skull",
@@ -222,22 +230,23 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     ))
 
     #Character-Specific
-    psrAdvices["Character-Specific"] = []
-    psrAdvices["Character-Specific"].append(Advice(
+    characterSubgroup = f"Character-Specific: +TBD%"
+    psrAdvices[characterSubgroup] = []
+    psrAdvices[characterSubgroup].append(Advice(
         label=f"Squire only: Super Samples: +5.14% at level 100",
         picture_class='super-samples',
         goal=session_data.account.max_book_level
     ))
     #bigBase, 10, 0.075
-    psrAdvices["Character-Specific"].append(Advice(
+    psrAdvices[characterSubgroup].append(Advice(
         label=f"Star Talent: Printer Sampling: 17.5% at level 100",
         picture_class='printer-sampling'
     ))
-    psrAdvices["Character-Specific"].append(Advice(
+    psrAdvices[characterSubgroup].append(Advice(
         label=f"Post Office: Utilitarian Capsule: +3.33% at 400 crates",
         picture_class='utilitarian-capsule'
     ))
-    psrAdvices["Character-Specific"].append(Advice(
+    psrAdvices[characterSubgroup].append(Advice(
         label=f"Royal Sampler prayer: +TBD%",
         picture_class='the-royal-sampler',
         progression=session_data.account.prayers.get('The Royal Sampler (Rooted Soul)'),
