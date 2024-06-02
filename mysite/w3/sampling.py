@@ -171,19 +171,14 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         progression=session_data.account.merits[2][4]["Level"],
         goal=session_data.account.merits[2][4]["MaxLevel"]
     ))
-    try:
-        highestMaestroLevel = max([toon.combat_level for toon in session_data.account.safe_characters if toon.sub_class == "Maestro"])
-    except Exception as reason:
-        logger.warning(f"Could not determine highestMaestroLevel: {reason}")
-        highestMaestroLevel = 0
+
     psrAdvices[accountSubgroup].append(Advice(
-        label=f"Maestro Family Bonus: +TBD% at Class Level {highestMaestroLevel}",
-        picture_class="maestro-icon",
-        progression=highestMaestroLevel
+        label=f"Maestro Family Bonus: {session_data.account.family_bonuses['Maestro']['DisplayValue']} at Class Level {session_data.account.family_bonuses['Maestro']['Level']}",
+        picture_class="maestro-icon"
     ))
-    # TODO: Stamp calculations should move to Account singleton
-    stampleValue = lavaFunc('decay', session_data.account.stamps.get('Stample Stamp', {}).get('Level', 0), 4, 30)
-    amplestampleValue = lavaFunc('decay', session_data.account.stamps.get('Amplestample Stamp', {}).get('Level', 0), 5, 30)
+
+    stampleValue = session_data.account.stamps.get('Stample Stamp', {}).get('Value', 0)
+    amplestampleValue = session_data.account.stamps.get('Amplestample Stamp', {}).get('Value', 0)
     if session_data.account.labBonuses.get("Certified Stamp Book", {}).get("Enabled", False):
         stampleValue *= 2
         amplestampleValue *= 2
@@ -256,6 +251,21 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     )
     return psrAdviceGroup
 
+def getFamilyBonusesAdviceGroup() -> AdviceGroup:
+    fbAdvices = []
+    for className in session_data.account.family_bonuses:
+        fbAdvices.append(Advice(
+            label=f"{className}: {session_data.account.family_bonuses[className]['DisplayValue']} at Class Level {session_data.account.family_bonuses[className]['Level']}",
+            picture_class=f"{className}-icon",
+
+        ))
+    fbAdviceGroup = AdviceGroup(
+        tier="",
+        pre_string="Info- Family Bonus testing",
+        advices=fbAdvices
+    )
+    return fbAdviceGroup
+
 def setSamplingProgressionTier() -> AdviceSection:
     sampling_AdviceDict = {
         "MaxBookLevels": []
@@ -281,6 +291,7 @@ def setSamplingProgressionTier() -> AdviceSection:
     # Generate AdviceGroups
     sampling_AdviceGroupDict["MaxBookLevels"] = getBookLevelAdviceGroup()
     sampling_AdviceGroupDict["PrinterSampleRate"] = getPrinterSampleRateAdviceGroup()
+    #sampling_AdviceGroupDict["FamilyBonuses"] = getFamilyBonusesAdviceGroup()
 
     # Generate AdviceSection
     overall_SamplingTier = min(max_tier, tier_bookLevels)  #Looks silly, but may get more evaluations in the future

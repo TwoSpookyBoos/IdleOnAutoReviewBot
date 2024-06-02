@@ -2,7 +2,7 @@ from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
 from utils.data_formatting import safe_loads, mark_advice_completed
 from utils.logging import get_logger
-from consts import maxTiersPerGroup, stamps_progressionTiers, stamp_maxes, stampNameDict, unavailableStampsList, stampTypes, maxOverallBookLevels
+from consts import maxTiersPerGroup, stamps_progressionTiers, stamp_maxes, stampsDict, unavailableStampsList, stampTypes, maxOverallBookLevels
 from math import ceil
 from flask import g as session_data
 
@@ -292,7 +292,7 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
 # Stamp p4
 def getReadableStampName(stampNumber, stampType):
     # logger.debug(f"Fetching name for {stampType} + {stampNumber}")
-    return stampNameDict.get(stampType, {}).get(stampNumber, f"Unknown{stampType}{stampNumber}")
+    return stampsDict.get(stampType, {}).get(stampNumber, f"Unknown{stampType}{stampNumber}")
 
 # Stamp meta
 def setStampProgressionTier() -> AdviceSection:

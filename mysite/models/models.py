@@ -14,8 +14,8 @@ from utils.data_formatting import getCharacterDetails, safe_loads
 from consts import expectedStackables, greenstack_progressionTiers, card_data, maxMeals, maxMealLevel, jade_emporium, max_IndexOfVials, getReadableVialNames, \
     buildingsList, atomsList, prayersList, labChipsList, bribesDict, shrinesList, pristineCharmsList, sigilsDict, \
     artifactsList, guildBonusesList, labBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesList, \
-    getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampNameDict, stampTypes, marketUpgradeList, \
-    achievementsList, forgeUpgradesDict, arcadeBonuses, saltLickList, allMeritsDict, bubblesDict
+    getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampsDict, stampTypes, marketUpgradeList, \
+    achievementsList, forgeUpgradesDict, arcadeBonuses, saltLickList, allMeritsDict, bubblesDict, familyBonusesDict
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, letterToNumber
 
 def session_singleton(cls):
@@ -708,6 +708,29 @@ class Account:
 
         self.max_toon_count = 10  # OPTIMIZE: find a way to read this from somewhere
         #General / Multiple uses
+        self.family_bonuses = {}
+        for className in familyBonusesDict.keys():
+            #Create the skeleton for all current classes, with level and value of 0
+            self.family_bonuses[className] = {'Level': 0, 'Value': 0}
+        for char in self.safe_characters:
+            for className in [char.base_class, char.sub_class, char.elite_class]:
+                if className in familyBonusesDict:
+                    if char.combat_level > self.family_bonuses[className]['Level']:
+                        self.family_bonuses[className]['Level'] = char.combat_level
+        for className in self.family_bonuses.keys():
+            try:
+                self.family_bonuses[className]['Value'] = lavaFunc(
+                    familyBonusesDict[className]['funcType'],
+                    self.family_bonuses[className]['Level']-familyBonusesDict[className]['levelDiscount'],
+                    familyBonusesDict[className]['x1'],
+                    familyBonusesDict[className]['x2'])
+            except:
+                self.family_bonuses[className]['Value'] = 0
+            self.family_bonuses[className]['DisplayValue'] = (f"{'+' if familyBonusesDict[className]['PrePlus'] else ''}"
+                                                                  f"{self.family_bonuses[className]['Value']:.2f}"
+                                                                  f"{familyBonusesDict[className]['PostDisplay']}"
+                                                                  f" {familyBonusesDict[className]['Stat']}")
+
         raw_optlacc_list = safe_loads(self.raw_data.get("OptLacc", {}))
 
         self.dungeon_upgrades = {}
@@ -773,7 +796,6 @@ class Account:
                     self.bribes[bribeSet][bribeName] = -1  # -1 means unavailable for purchase, 0 means available, and 1 means purchased
                 bribeIndex += 1
 
-
         self.stamps = {}
         self.stamp_totals = {"Total": 0}
         for stampType in stampTypes:
@@ -800,25 +822,32 @@ class Account:
                             print(f"Able to set the value of stamp {stampTypeIndex}-{stampKey} to 0. Hopefully no accuracy was lost.")
                         except:
                             print(f"Couldn't set the value to 0, meaning it was the Index or Key that was bad. You done messed up, cowboy.")
-        for stampType in stampNameDict:
-            for stampIndex, stampName in stampNameDict[stampType].items():
+        for stampType in stampsDict:
+            for stampIndex, stampValuesDict in stampsDict[stampType].items():
                 try:
-                    self.stamps[stampName] = {
+                    self.stamps[stampValuesDict['Name']] = {
                         "Index": int(stampIndex),
                         "Level": int(floor(raw_stamps_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0))),
                         "Max": int(floor(raw_stamp_max_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0))),
                         "Delivered": int(floor(raw_stamp_max_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0))) > 0,
-                        "StampType": stampType
+                        "StampType": stampType,
+                        "Value": lavaFunc(
+                            stampValuesDict['funcType'],
+                            int(floor(raw_stamps_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0))),
+                            stampValuesDict['x1'],
+                            stampValuesDict['x2'],
+                        )
                     }
-                    self.stamp_totals["Total"] += self.stamps[stampName]["Level"]
-                    self.stamp_totals[stampType] += self.stamps[stampName]["Level"]
+                    self.stamp_totals["Total"] += self.stamps[stampValuesDict['Name']]["Level"]
+                    self.stamp_totals[stampType] += self.stamps[stampValuesDict['Name']]["Level"]
                 except:
-                    self.stamps[stampName] = {
+                    self.stamps[stampValuesDict['Name']] = {
                         "Index": stampIndex,
                         "Level": 0,
                         "Max": 0,
                         "Delivered": False,
-                        "StampType": stampType
+                        "StampType": stampType,
+                        "Value": 0
                     }
 
         #World 2

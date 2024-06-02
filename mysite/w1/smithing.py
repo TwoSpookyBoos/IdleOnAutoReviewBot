@@ -88,14 +88,11 @@ def getForgeCapacityAdviceGroup(playerForgeUpgrades) -> list[AdviceGroup]:
         goal=6
     ))
 
-    #Forge Stamp currently has a max of 230, unless it gets increased by the Sacred Methods bundle.
-    #TODO: Stamp calculations should move to Account singleton
-    stampValue = lavaFunc('decay', session_data.account.stamps.get('Forge Stamp', {}).get('Level', 0), 120, 250)
     cap_Advices["Scaling Sources"].append(Advice(
-        label=f"Forge Stamp: +{stampValue:.2f}% Forge Capacity",
+        label=f"Forge Stamp: +{session_data.account.stamps.get('Forge Stamp', {}).get('Value', 0):.2f}% Forge Capacity",
         picture_class="forge-stamp",
         progression=session_data.account.stamps.get("Forge Stamp", {}).get("Level", 0),
-        goal=230
+        goal=230  #Forge Stamp currently has a max of 230, unless it gets increased by the Sacred Methods bundle.
     ))
 
     #Arcade Bonus 26 gives Forge Ore Capacity
@@ -111,7 +108,7 @@ def getForgeCapacityAdviceGroup(playerForgeUpgrades) -> list[AdviceGroup]:
             mark_advice_completed(advice)
 
     groupA = 1 + (((session_data.account.arcade.get(26, {}).get("Value", 0)) + (30 * (next(c.getStars() for c in session_data.account.cards if c.name == 'Godshard Ore')+1)))/100)
-    groupB = 1 + stampValue / 100
+    groupB = 1 + session_data.account.stamps.get('Forge Stamp', {}).get('Value', 0) / 100
     groupC = bribeValue
     groupD = 1 + (50 * achievement + 25 * skillMasteryBonusBool) / 100
 
