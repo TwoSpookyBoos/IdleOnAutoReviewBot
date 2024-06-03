@@ -203,7 +203,7 @@ def getCharacterDetails(inputJSON, runType):
             # this produces an unsorted list of names
             cogDataForNames = inputJSON["CogO"]
             if isinstance(cogDataForNames, str):
-                cogDataForNames = json.loads(cogDataForNames)
+                cogDataForNames = safe_loads(cogDataForNames)
             for item in cogDataForNames:
                 if item.startswith("Player_"):
                     playerCount += 1
@@ -224,12 +224,16 @@ def getCharacterDetails(inputJSON, runType):
 
     characterSkillsDict = getAllSkillLevelsDict(inputJSON, playerCount)
     perSkillDict = characterSkillsDict["Skills"]
-
+    postOfficeList = []
     for list_index in range(0, playerCount):
         try:
             playerClasses.append(getHumanReadableClasses(inputJSON[f"CharacterClass_{list_index}"]))
         except:
-            playerClasses.append("Unknown")
+            playerClasses.append(f"UnknownClass{list_index}")
+        try:
+            postOfficeList.append(safe_loads(inputJSON[f"POu_{list_index}"]))
+        except:
+            postOfficeList.append([0]*36)
         characterDict[list_index] = dict(
             character_index=list_index,
             character_name=playerNames[list_index],
@@ -238,6 +242,7 @@ def getCharacterDetails(inputJSON, runType):
             sub_class=getSubclass(playerClasses[list_index]),
             elite_class=getEliteClass(playerClasses[list_index]),
             all_skill_levels=characterSkillsDict[list_index],
+            po_boxes=postOfficeList[list_index]
         )
 
     return [playerCount, playerNames, playerClasses, characterDict, perSkillDict]

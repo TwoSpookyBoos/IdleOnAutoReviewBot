@@ -12,10 +12,10 @@ from flask import g
 
 from utils.data_formatting import getCharacterDetails, safe_loads
 from consts import expectedStackables, greenstack_progressionTiers, card_data, maxMeals, maxMealLevel, jade_emporium, max_IndexOfVials, getReadableVialNames, \
-    buildingsList, atomsList, prayersList, labChipsList, bribesDict, shrinesList, pristineCharmsList, sigilsDict, \
+    buildingsList, atomsList, prayersDict, labChipsList, bribesDict, shrinesList, pristineCharmsList, sigilsDict, \
     artifactsList, guildBonusesList, labBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesList, \
     getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampsDict, stampTypes, marketUpgradeList, \
-    achievementsList, forgeUpgradesDict, arcadeBonuses, saltLickList, allMeritsDict, bubblesDict, familyBonusesDict
+    achievementsList, forgeUpgradesDict, arcadeBonuses, saltLickList, allMeritsDict, bubblesDict, familyBonusesDict, poBoxDict
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, letterToNumber
 
 def session_singleton(cls):
@@ -62,6 +62,7 @@ class Character:
         sub_class: str,
         elite_class: str,
         all_skill_levels: dict,
+        po_boxes: list[int]
     ):
         self.character_index: int = character_index
         self.character_name: str = character_name
@@ -94,6 +95,56 @@ class Character:
         self.skills = all_skill_levels
         self.divinity_style: str = "None"
         self.divinity_link: str = "Unlinked"
+        self.po_boxes_invested = {}
+        for poBoxIndex, poBoxValues in poBoxDict.items():
+            try:
+                self.po_boxes_invested[poBoxValues['Name']] = {
+                    'Level': po_boxes[poBoxIndex],
+                    'Bonus1Value': lavaFunc(
+                        poBoxValues['1_funcType'],
+                        po_boxes[poBoxIndex],
+                        poBoxValues['1_x1'],
+                        poBoxValues['1_x2'],
+                    ),
+                    'Bonus1String': '',
+                    'Bonus2Value': lavaFunc(
+                        poBoxValues['2_funcType'],
+                        po_boxes[poBoxIndex],
+                        poBoxValues['2_x1'],
+                        poBoxValues['2_x2'],
+                    ) if po_boxes[poBoxIndex] >= poBoxValues['2_minCount'] else 0,
+                    'Bonus2String': '',
+                    'Bonus3Value': lavaFunc(
+                        poBoxValues['3_funcType'],
+                        po_boxes[poBoxIndex],
+                        poBoxValues['3_x1'],
+                        poBoxValues['3_x2'],
+                    ) if po_boxes[poBoxIndex] >= poBoxValues['3_minCount'] else 0,
+                    'Bonus3String': '',
+                }
+                if self.po_boxes_invested[poBoxValues['Name']]['Level'] > 0:
+                    self.po_boxes_invested[poBoxValues['Name']]['Bonus1String'] = (f"{poBoxValues['1_pre']}"
+                                                                                   f"{self.po_boxes_invested[poBoxValues['Name']]['Bonus1Value']}"
+                                                                                   f"{poBoxValues['1_post']}"
+                                                                                   f" {poBoxValues['1_stat']}")
+                    self.po_boxes_invested[poBoxValues['Name']]['Bonus2String'] = (f"{poBoxValues['2_pre']}"
+                                                                                   f"{self.po_boxes_invested[poBoxValues['Name']]['Bonus2Value']}"
+                                                                                   f"{poBoxValues['2_post']}"
+                                                                                   f" {poBoxValues['2_stat']}")
+                    self.po_boxes_invested[poBoxValues['Name']]['Bonus3String'] = (f"{poBoxValues['3_pre']}"
+                                                                                   f"{self.po_boxes_invested[poBoxValues['Name']]['Bonus3Value']}"
+                                                                                   f"{poBoxValues['3_post']}"
+                                                                                   f" {poBoxValues['3_stat']}")
+            except:
+                self.po_boxes_invested[poBoxValues['Name']] = {
+                    'Level': 0,
+                    'Bonus1Value': 0,
+                    'Bonus1String': '',
+                    'Bonus2Value': 0,
+                    'Bonus2String': '',
+                    'Bonus3Value': 0,
+                    'Bonus3String': '',
+                }
 
         self.apoc_dict: dict = {
             name: {
@@ -658,9 +709,9 @@ class Account:
         self.names = playerNames
         self.playerCount = playerCount
         self.classes = playerClasses
-        self.all_characters = [Character(self.raw_data, **char) for char in characterDict.values()]
-        self.safe_characters = [char for char in self.all_characters if char]  #Use this if touching raw_data instead of all_characters
-        self.safe_playerIndexes = [char.character_index for char in self.all_characters if char]
+        self.all_characters: list[Character] = [Character(self.raw_data, **char) for char in characterDict.values()]
+        self.safe_characters: list[Character] = [char for char in self.all_characters if char]  #Use this if touching raw_data instead of all_characters
+        self.safe_playerIndexes: list[int] = [char.character_index for char in self.all_characters if char]
         self.all_skills = perSkillDict
         self.all_quests = [safe_loads(self.raw_data.get(f"QuestComplete_{i}", "{}")) for i in range(self.playerCount)]
         self.assets = self._all_owned_items()
@@ -1022,11 +1073,38 @@ class Account:
 
         self.prayers = {}
         raw_prayers_list = safe_loads(self.raw_data.get("PrayOwned", []))
-        for prayerIndex, prayerName in enumerate(prayersList):
+        for prayerIndex, prayerValuesDict in prayersDict.items():
+            self.prayers[prayerValuesDict['Name']] = {
+                'DisplayName': prayerValuesDict['Display'],
+                'Level': 0,
+                'BonusValue': 0,
+                'BonusString': f"Level at least once to receive the bonus!",
+                'CurseValue': 0,
+                'CurseString': f"Level at least once to receive the curse!"
+            }
             try:
-                self.prayers[prayerName] = int(raw_prayers_list[prayerIndex])
+                self.prayers[prayerValuesDict['Name']]['Level'] = int(raw_prayers_list[prayerIndex])
+                self.prayers[prayerValuesDict['Name']]['BonusValue'] = lavaFunc(
+                    prayerValuesDict['bonus_funcType'],
+                    self.prayers[prayerValuesDict['Name']]['Level'],
+                    prayerValuesDict['bonus_x1'],
+                    prayerValuesDict['bonus_x2']) if self.prayers[prayerValuesDict['Name']]['Level'] > 0 else 0
+                self.prayers[prayerValuesDict['Name']]['BonusString'] = (f"{prayerValuesDict['bonus_pre']}"
+                                                                         f"{self.prayers[prayerValuesDict['Name']]['BonusValue']}"
+                                                                         f"{prayerValuesDict['bonus_post']}"
+                                                                         f" {prayerValuesDict['bonus_stat']}")
+                self.prayers[prayerValuesDict['Name']]['CurseValue'] = lavaFunc(
+                    prayerValuesDict['curse_funcType'],
+                    self.prayers[prayerValuesDict['Name']]['Level'],
+                    prayerValuesDict['curse_x1'],
+                    prayerValuesDict['curse_x2']) if self.prayers[prayerValuesDict['Name']]['Level'] > 0 else 0
+                self.prayers[prayerValuesDict['Name']]['CurseString'] = (f"{prayerValuesDict['curse_pre']}"
+                                                                         f"{self.prayers[prayerValuesDict['Name']]['CurseValue']}"
+                                                                         f"{prayerValuesDict['curse_post']}"
+                                                                         f" {prayerValuesDict['curse_stat']}")
             except:
-                self.prayers[prayerName] = 0
+                pass
+
 
         self.saltlick = {}
         raw_saltlick_list = safe_loads(self.raw_data.get("SaltLick"))

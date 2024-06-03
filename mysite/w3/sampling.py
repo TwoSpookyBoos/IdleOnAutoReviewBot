@@ -164,6 +164,9 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     account_sum += float(session_data.account.arcade.get(5, {}).get('Value', 0))
     account_sum += session_data.account.achievements.get('Saharan Skull', False)
     achievementStatus = session_data.account.achievements.get('Saharan Skull', False)
+    starTalentOnePoint = lavaFunc('bigBase', 1, 10, 0.075)
+    account_sum += starTalentOnePoint
+
     accountSubgroup = f"Account-Wide: +{account_sum:.2f}%"
     psrAdvices[accountSubgroup] = []
     
@@ -228,30 +231,58 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         progression=1 if achievementStatus else 0,
         goal=1
     ))
+    psrAdvices[accountSubgroup].append(Advice(
+        label=f"Star Talent: Printer Sampling: {starTalentOnePoint:.3f}% at minimum level 1",
+        picture_class='printer-sampling'
+    ))
 
     #Character-Specific
-    characterSubgroup = f"Character-Specific: +TBD%"
+    character_sum = 0.0
+    starTalentDiffToMax = lavaFunc('bigBase', 100, 10, 0.075) - starTalentOnePoint
+    character_sum += starTalentDiffToMax
+    poBoxMax = lavaFunc('decay', 400, 5, 200)
+    character_sum += poBoxMax
+    squireSuperSamplesMaxBook = lavaFunc('decay', session_data.account.max_book_level, 9, 75)
+    characterSubgroup = f"Character-Specific: Up to +{character_sum:.3f}% or +{character_sum + squireSuperSamplesMaxBook:.2f}% for Squires"
     psrAdvices[characterSubgroup] = []
     psrAdvices[characterSubgroup].append(Advice(
-        label=f"Squire only: Super Samples: +5.14% at level 100",
-        picture_class='super-samples',
-        goal=session_data.account.max_book_level
-    ))
-    #bigBase, 10, 0.075
-    psrAdvices[characterSubgroup].append(Advice(
-        label=f"Star Talent: Printer Sampling: 17.5% at level 100",
+        label=f"Star Talent: Printer Sampling: Additional {starTalentDiffToMax:.2f}% at max level 100",
         picture_class='printer-sampling'
     ))
     psrAdvices[characterSubgroup].append(Advice(
-        label=f"Post Office: Utilitarian Capsule: +3.33% at 400 crates",
+        label=f"Post Office: Utilitarian Capsule: +3.33% at max 400 crates",
         picture_class='utilitarian-capsule'
     ))
     psrAdvices[characterSubgroup].append(Advice(
-        label=f"Royal Sampler prayer: +TBD%",
+        label=f"Squire only: Super Samples: +{squireSuperSamplesMaxBook:.2f}% at max book level {session_data.account.max_book_level}",
+        picture_class='super-samples'
+    ))
+
+    prayerSubgroup = f"Which Characters need Royal Sampler?"
+    psrAdvices[prayerSubgroup] = []
+    psrAdvices[prayerSubgroup].append(Advice(
+        label=f"Royal Sampler prayer: {session_data.account.prayers['The Royal Sampler']['BonusString']}",
         picture_class='the-royal-sampler',
-        progression=session_data.account.prayers.get('The Royal Sampler (Rooted Soul)'),
+        progression=session_data.account.prayers['The Royal Sampler']['Level'],
         goal=20
     ))
+    for toon in session_data.account.safe_characters:
+        characterTotalPSR = account_sum + starTalentDiffToMax + toon.po_boxes_invested.get('Utilitarian Capsule', {}).get('Bonus1Value', 0)
+        if toon.sub_class == 'Squire':
+            characterTotalPSR += squireSuperSamplesMaxBook
+        if 90 > characterTotalPSR:
+            shortBy = 90 - characterTotalPSR
+            prayerGain = min(shortBy, session_data.account.prayers['The Royal Sampler']['BonusValue'])
+            characterEval = f"Equip prayer for +{prayerGain:.3f}%"
+        else:
+            characterEval = f"Prayer not needed."
+        psrAdvices[prayerSubgroup].append(Advice(
+            label=f"{toon.character_name}: {characterEval}",
+            picture_class=f"{toon.class_name_icon}",
+            progression=f"{characterTotalPSR:.2f}",
+            goal=90,
+            unit="%"
+        ))
 
     psrAdviceGroup = AdviceGroup(
         tier="",

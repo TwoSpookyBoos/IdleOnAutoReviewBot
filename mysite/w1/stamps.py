@@ -179,7 +179,7 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     capacity_Advices["Character Specific"].append(Advice(
         label="Prayer: Ruck Sack",
         picture_class="ruck-sack",
-        progression=session_data.account.prayers.get("Ruck Sack (Rooted Soul)", 0),
+        progression=session_data.account.prayers.get('Ruck Sack (Rooted Soul)', {}).get('Level', 0),
         goal=50
     ))
     capacity_Advices["Character Specific"].append(Advice(
