@@ -431,6 +431,7 @@ EquipmentCape11: Riftwalker Wings
 EquipmentCape12: Blooming Vine
 EquipmentCape13: Eternal Flames of The Divine
 EquipmentCape14: Phoenix Wings
+EquipmentCape15: Giant Nightshade
 StampA1: Sword Stamp
 StampA2: Heart Stamp
 StampA3: Mana Stamp
@@ -883,6 +884,7 @@ SnowB5: Snow Ball
 SnowB3: Pen
 SnowB4: Cracked Glass
 SnowC1: Sippy Straw
+Snowc1: Sippy Straw
 SnowC2: Cryosnake Skin
 SnowC3: Audio Cord
 SnowC4: Contact Lense
@@ -1202,6 +1204,7 @@ EquipmentNametag7: Island Adventurer Nametag
 EquipmentNametag8: Summer Shovel Nametag
 EquipmentNametag9: Falloween Nametag
 EquipmentNametag10: 3rd Anniversary IdleOn Nametag
+EquipmentNametag11: Nightshade Nametag
 EquipmentKeychain0: Simple Key Chain
 EquipmentKeychain1: Leafy Chain
 EquipmentKeychain2: Red Sneaker Chain
@@ -1762,6 +1765,7 @@ EquipmentHats101: Guardian Mane
 EquipmentHats102: Fanned Blossomage
 EquipmentHats103: Dainty Brim
 EquipmentHats104: Charcoal Hat
+EquipmentHats109: Husky Hat
 CardsA0: Green Mushroom Card
 CardsA1: Red Mushroom Card
 CardsA2: Frog Card
