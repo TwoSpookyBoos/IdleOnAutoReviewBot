@@ -338,11 +338,20 @@ def getDeathNoteKills():
         for worldIndex in range(1, len(apocableMapIndexDict)):
             for mapIndex in apocableMapIndexDict[worldIndex]:
                 if len(characterKillsList) > mapIndex:
-                    try:
-                        enemyMaps[worldIndex][mapIndex].addRawKLA(characterKillsList[mapIndex][0])
-                    except:
-                        enemyMaps[worldIndex][mapIndex].addRawKLA(0)
-                        logger.exception(f"Kill list for characterIndex: {characterIndex}, worldIndex: {worldIndex}, mapIndex: {mapIndex} failed: Expecting a list, found {type(characterKillsList[mapIndex])}: {characterKillsList[mapIndex]}")
+                    if isinstance(characterKillsList[mapIndex], list):
+                        try:
+                            enemyMaps[worldIndex][mapIndex].addRawKLA(characterKillsList[mapIndex][0])
+                        except:
+                            enemyMaps[worldIndex][mapIndex].addRawKLA(0)
+                            logger.exception(f"Kill list for characterIndex: {characterIndex}, worldIndex: {worldIndex}, mapIndex: {mapIndex} failed: Expecting a list, found {type(characterKillsList[mapIndex])}: {characterKillsList[mapIndex]}")
+                    else:
+                        try:
+                            enemyMaps[worldIndex][mapIndex].addRawKLA(characterKillsList[mapIndex])
+                        except:
+                            enemyMaps[worldIndex][mapIndex].addRawKLA(0)
+                            logger.exception(
+                                f"Kill list for characterIndex: {characterIndex}, worldIndex: {worldIndex}, mapIndex: {mapIndex} failed: Knew it wasn't a list, could add {type(characterKillsList[mapIndex])}: {characterKillsList[mapIndex]}")
+
 
     deathnote_EnemyWorlds = {}
 

@@ -283,7 +283,19 @@ maxExpectedThresholdFromMaps = portalOpeningKills[0][0]
 
 
 def is_portal_opened(mobKills, monster, portalKC):
-    return float(mobKills[monster][0]) < portalKC if len(mobKills) > monster else False
+    if isinstance(mobKills[monster], list):
+        try:
+            return float(mobKills[monster][0]) < portalKC if len(mobKills) > monster else False
+        except Exception as reason:
+            logger.exception(f"Could not determine if portal is open. Given mobKills[monster] of {mobKills[monster]}, monster of {monster}, and portalKC of {portalKC} because: {reason}")
+            return False
+    else:
+        try:
+            return float(mobKills[monster]) < portalKC if len(mobKills) > monster else False
+        except Exception as reason:
+            logger.exception(
+                f"Could not determine if portal is open. Given mobKills[monster] of {mobKills[monster]}, monster of {monster}, and portalKC of {portalKC} because: {reason}")
+            return False
 
 
 def getHighestPrint():
