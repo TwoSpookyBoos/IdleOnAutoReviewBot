@@ -177,13 +177,13 @@ def getCapacityAdviceGroup() -> AdviceGroup:
         picture_class="herculean-matty-pouch",
     ))
     capacity_Advices["Character Specific"].append(Advice(
-        label="Prayer: Ruck Sack",
+        label=f"Prayer: Ruck Sack: {session_data.account.prayers['Ruck Sack']['BonusString']}",
         picture_class="ruck-sack",
-        progression=session_data.account.prayers.get('Ruck Sack (Rooted Soul)', {}).get('Level', 0),
+        progression=session_data.account.prayers['Ruck Sack']['Level'],
         goal=50
     ))
     capacity_Advices["Character Specific"].append(Advice(
-        label="PRAYER: REMOVE ZERG RUSHOGEN",
+        label=f"PRAYER: REMOVE ZERG RUSHOGEN ({session_data.account.prayers['Zerg Rushogen']['CurseString']})",
         picture_class="zerg-rushogen",
         goal="❌"
     ))
