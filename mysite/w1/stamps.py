@@ -1,9 +1,9 @@
-from models.models import AdviceSection, AdviceGroup, Advice, Character
+from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
 from utils.data_formatting import safe_loads, mark_advice_completed
 from utils.logging import get_logger
-from consts import maxTiersPerGroup, stamps_progressionTiers, stamp_maxes, lavaFunc, stampNameDict, unavailableStampsList, stampTypes
-from math import ceil, pow
+from consts import maxTiersPerGroup, stamps_progressionTiers, stamp_maxes, stampsDict, unavailableStampsList, stampTypes, maxOverallBookLevels
+from math import ceil
 from flask import g as session_data
 
 
@@ -17,11 +17,12 @@ def ceilUpToBase(inputValue: int, base: int) -> int:
 
 # Stamp p2
 def setMissingStamps():
-    missingStampsList = []
-    for stampName, stampValues in session_data.account.stamps.items():
-        if stampValues.get("Delivered", False) == False and stampName not in unavailableStampsList:
-            missingStampsList.append(stampName)
-    return missingStampsList
+    # missingStampsList = []
+    # for stampName, stampValues in session_data.account.stamps.items():
+    #     if stampValues.get("Delivered", False) == False and stampName not in unavailableStampsList:
+    #         missingStampsList.append(stampName)
+    #return missingStampsList
+    return [stampName for stampName, stampValues in session_data.account.stamps.items() if stampValues.get("Delivered", False) == False and stampName not in unavailableStampsList]
 
 # Stamp p3
 def getCapacityExclusions():
@@ -63,7 +64,7 @@ def getCapacityAdviceGroup() -> AdviceGroup:
         seraphEval = f"Locked. Would increase below signs by {seraphMulti:.2f}x if unlocked."
         seraphMulti = 1
     if seraphGoal < 240:
-        seraphEval += " Next increase at Summoning level"
+        seraphEval += " Increases every 20 Summoning levels."
     starsignBase = 0
     starsignBase += 30 * bool(session_data.account.star_signs.get("Mr_No_Sleep", False))
     starsignBase += 10 * bool(session_data.account.star_signs.get("Pack_Mule", False))
@@ -90,7 +91,7 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     capacity_Advices["Stamps"].append(Advice(
         label="Pristine Charm: Liqorice Rolle",
         picture_class="liqorice-rolle",
-        progression=int(session_data.account.sneaking.get("PristineCharms", {}).get("Liqorice Rolle", 0)),
+        progression=int(session_data.account.sneaking.get("PristineCharms", {}).get("Liqorice Rolle", False)),
         goal=1
     ))
     for capStamp in ["Mason Jar Stamp", "Lil' Mining Baggy Stamp", "Choppin' Bag Stamp", "Matty Bag Stamp", "Bag o Heads Stamp", "Bugsack Stamp"]:
@@ -105,7 +106,7 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     capacity_Advices["Account Wide"].append(Advice(
         label="Bribe: Bottomless Bags",
         picture_class="bottomless-bags",
-        progression=1 if session_data.account.bribes.get("Bottomless Bags") >= 1 else 0,
+        progression=1 if session_data.account.bribes["W4"].get("Bottomless Bags") >= 1 else 0,
         goal=1
     ))
     capacity_Advices["Account Wide"].append(Advice(
@@ -164,7 +165,7 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     capacity_Advices["Character Specific"].append(Advice(
         label="Jman's Extra Bags talent (Materials only)",
         picture_class="extra-bags",
-        goal=270
+        goal=maxOverallBookLevels
     ))
     capacity_Advices["Character Specific"].append(Advice(
         label="80 available Inventory Slots",
@@ -176,13 +177,13 @@ def getCapacityAdviceGroup() -> AdviceGroup:
         picture_class="herculean-matty-pouch",
     ))
     capacity_Advices["Character Specific"].append(Advice(
-        label="Prayer: Ruck Sack",
+        label=f"Prayer: Ruck Sack: {session_data.account.prayers['Ruck Sack']['BonusString']}",
         picture_class="ruck-sack",
-        progression=session_data.account.prayers.get("Ruck Sack (Rooted Soul)", 0),
+        progression=session_data.account.prayers['Ruck Sack']['Level'],
         goal=50
     ))
     capacity_Advices["Character Specific"].append(Advice(
-        label="PRAYER: REMOVE ZERG RUSHOGEN",
+        label=f"PRAYER: REMOVE ZERG RUSHOGEN ({session_data.account.prayers['Zerg Rushogen']['CurseString']})",
         picture_class="zerg-rushogen",
         goal="❌"
     ))
@@ -234,12 +235,11 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     blueFavReduction = session_data.account.alchemy_vials.get("Blue Flav (Platinum Ore)", {}).get("Value", 0)
     venisonMaltReduction = session_data.account.alchemy_vials.get("Venison Malt (Mongo Worm Slices)", {}).get("Value", 0)
     totalVialReduction = blueFavReduction + venisonMaltReduction
-    vialMasteryMulti = 1 + (session_data.account.maxed_vials * .02) if session_data.account.vial_mastery_unlocked else 1
-    totalVialReduction *= vialMasteryMulti
+    totalVialReduction *= session_data.account.vialMasteryMulti
     if session_data.account.labBonuses.get("My 1st Chemistry Set", {}).get("Enabled", False):
         totalVialReduction *= 2
     costReduction_Advices["Vials"].append(Advice(
-        label=f"Rift Bonus: Vial Mastery: {vialMasteryMulti:.2f}x",
+        label=f"Rift Bonus: Vial Mastery: {session_data.account.vialMasteryMulti:.2f}x",
         picture_class="vial-mastery",
         progression=f"{1 if session_data.account.vial_mastery_unlocked else 0}",
         goal=1
@@ -292,7 +292,7 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
 # Stamp p4
 def getReadableStampName(stampNumber, stampType):
     # logger.debug(f"Fetching name for {stampType} + {stampNumber}")
-    return stampNameDict.get(stampType, {}).get(stampNumber, f"Unknown{stampType}{stampNumber}")
+    return stampsDict.get(stampType, {}).get(stampNumber, f"Unknown{stampType}{stampNumber}")
 
 # Stamp meta
 def setStampProgressionTier() -> AdviceSection:

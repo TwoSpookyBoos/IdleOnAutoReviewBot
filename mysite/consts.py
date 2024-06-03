@@ -1,7 +1,7 @@
 import math
 
 from utils.logging import get_logger
-
+from utils.text_formatting import getItemDisplayName
 
 logger = get_logger(__name__)
 
@@ -256,7 +256,7 @@ greenstack_progressionTiers = {
             },
         13: {
             "Base Monster Materials": [
-                "Quest15", "Hgg"],
+                "Quest15"],
             "Crystal Enemy Drops": [
                 "EquipmentStatues1", "EquipmentStatues5",
                 "StoneA1", "StoneW1",
@@ -269,17 +269,22 @@ greenstack_progressionTiers = {
                 "EquipmentSmithingTabs2",
                 "PeanutG",],
             "Misc": [
-                "FoodPotMana3", "FoodPotRe1", "ButterBar", "OilBarrel2", "Ghost", "Quest78",],
+                "FoodPotMana3", "FoodPotRe1", "ButterBar", ],
         },
         14: {
+            "Base Monster Materials": [
+                "Hgg"],
             "Crystal Enemy Drops": [
-                "StoneW2",],  #"StoneA2",],
+                "StoneW2", "SilverPen"],  #"StoneA2",],
             "Other Skilling Resources": [
                 "DreadloBar", "MarbleBar", "GodshardBar",
                 "FoodTrapping1", "FoodWorship1",
-                "Critter1A", "Critter2A", "Critter3A", "Critter4A", "Critter5A", "Critter6A", "Critter7A", "Critter8A", "Critter9A", "Critter10A", "Critter11A"],
+                "Critter1A", "Critter2A", "Critter3A", "Critter4A", "Critter5A", "Critter6A", "Critter7A", "Critter8A", "Critter9A", "Critter10A", "Critter11A",
+                "Ladle",
+            ],
             "Misc": [
-                "Key2", "Key3"]
+                "OilBarrel2", "DesertC2b", "Quest78",
+            ]
         },
     }
 
@@ -393,12 +398,12 @@ stamps_progressionTiers = {
         "Combat": ["Dementia Sword Stamp"],
         "Skill": ["Sneaky Peeky Stamp", "Jade Mint Stamp", "White Essence Stamp"],
         "Misc": ["Forge Stamp"],
-        "Specific": {'Drippy Drop Stamp': 100, 'Ladle Stamp': 150, 'Potion Stamp': 40}}},
+        "Specific": {'Drippy Drop Stamp': 100, 'Ladle Stamp': 150, 'Potion Stamp': 40, 'Forge Stamp': 40}}},
     25: {"TotalStampLevels": 7000, "Stamps": {
         "Combat": ["Conjocharmo Stamp"],
         "Specific": {'Pickaxe Stamp': 95, 'Hatchet Stamp': 95, 'Golden Apple Stamp': 60, 'Multitool Stamp': 100}}},
     26: {"TotalStampLevels": 7500, "Stamps": {
-        "Specific": {'Ladle Stamp': 180}}},
+        "Specific": {'Ladle Stamp': 180, 'Forge Stamp': 100}}},
     27: {"TotalStampLevels": 8000, "Stamps": {
         "Specific": {'Matty Bag Stamp': 280, 'Multitool Stamp': 150}}},
     28: {"TotalStampLevels": 8400, "Stamps": {
@@ -419,7 +424,7 @@ stamps_progressionTiers = {
         "Specific": {'Golden Apple Stamp': 100, 'Multitool Stamp': 210}}},
     35: {"TotalStampLevels": 11500, "Stamps": {
         "Combat": ["Golden Sixes Stamp"],
-        "Specific": {'Golden Sixes Stamp': 120}}},
+        "Specific": {'Golden Sixes Stamp': 120, 'Forge Stamp': 160}}},
     36: {"TotalStampLevels": 12000, "Stamps": {
         "Combat": ["Stat Wallstreet Stamp"],
         "Skill": ["Amplestample Stamp"],
@@ -429,7 +434,7 @@ stamps_progressionTiers = {
     38: {"TotalStampLevels": 13000, "Stamps": {
         "Combat": ["Sukka Foo"],
         "Skill": ["Triad Essence Stamp", "Summoner Stone Stamp"],
-        "Specific": {'Triad Essence Stamp': 80},
+        "Specific": {'Triad Essence Stamp': 80, 'Forge Stamp': 220},
         "Optional": ["Void Axe Stamp"]}},
 }
 smithing_progressionTiers = [
@@ -455,164 +460,164 @@ bubbles_progressionTiers = [
     [0, 0, {}, {}, {}, {}, "0%", ""],
     [1, 10,
      {'Roid Ragin': 12, 'Warriors Rule': 6, 'Hearty Diggy': 12, 'Wyoming Blood': 6, 'Sploosh Sploosh': 6, 'Stronk Tools': 8},
-     {'Swift Steppin': 12, 'Archer or Bust': 6, 'Sanic Tools': 8, 'Bug^2': 6},
-     {'Stable Jenius': 12, 'Mage is Best': 6, 'Hocus Choppus': 12, 'Molto Loggo': 6, 'Le Brain Tools': 8},
-     {'FMJ': 5, 'Shaquracy': 5, 'Prowesessary': 7, 'Hammer Hammer': 6},
+     {'Swift Steppin': 12, 'Archer Or Bust': 6, 'Sanic Tools': 8, 'Bug^2': 6},
+     {'Stable Jenius': 12, 'Mage Is Best': 6, 'Hocus Choppus': 12, 'Molto Loggo': 6, 'Le Brain Tools': 8},
+     {'Fmj': 5, 'Shaquracy': 5, 'Prowesessary': 7, 'Hammer Hammer': 6},
      "10%",
      "MINIMUM recommended Utility bubbles for finishing W2. Prowess hard-caps at 2x."],
     [2, 20,
      {'Roid Ragin': 25, 'Warriors Rule': 13, 'Hearty Diggy': 25, 'Wyoming Blood': 13, 'Sploosh Sploosh': 13, 'Stronk Tools': 18},
-     {'Swift Steppin': 25, 'Archer or Bust': 13, 'Sanic Tools': 18, 'Bug^2': 13},
-     {'Stable Jenius': 25, 'Mage is Best': 13, 'Hocus Choppus': 25, 'Molto Loggo': 13, 'Le Brain Tools': 18},
-     {'FMJ': 10, 'Shaquracy': 10, 'Prowesessary': 15, 'Hammer Hammer': 14, 'All for Kill': 25},
+     {'Swift Steppin': 25, 'Archer Or Bust': 13, 'Sanic Tools': 18, 'Bug^2': 13},
+     {'Stable Jenius': 25, 'Mage Is Best': 13, 'Hocus Choppus': 25, 'Molto Loggo': 13, 'Le Brain Tools': 18},
+     {'Fmj': 10, 'Shaquracy': 10, 'Prowesessary': 15, 'Hammer Hammer': 14, 'All For Kill': 25},
      "20%",
      "MINIMUM recommended Utility bubbles for starting W3. Prowess hard-caps at 2x."],
     [3, 40,
      {'Roid Ragin': 67, 'Warriors Rule': 34, 'Hearty Diggy': 67, 'Wyoming Blood': 20, 'Sploosh Sploosh': 20, 'Stronk Tools': 47},
-     {'Swift Steppin': 67, 'Archer or Bust': 34, 'Sanic Tools': 47, 'Bug^2': 20},
-     {'Stable Jenius': 67, 'Mage is Best': 34, 'Hocus Choppus': 67, 'Molto Loggo': 20, 'Le Brain Tools': 47},
-     {'FMJ': 15, 'Shaquracy': 15, 'Prowesessary': 40, 'Hammer Hammer': 41, 'All for Kill': 67},
+     {'Swift Steppin': 67, 'Archer Or Bust': 34, 'Sanic Tools': 47, 'Bug^2': 20},
+     {'Stable Jenius': 67, 'Mage Is Best': 34, 'Hocus Choppus': 67, 'Molto Loggo': 20, 'Le Brain Tools': 47},
+     {'Fmj': 15, 'Shaquracy': 15, 'Prowesessary': 40, 'Hammer Hammer': 41, 'All For Kill': 67},
      "40%",
      "MINIMUM recommended Utility bubbles for starting W4. Prowess hard-caps at 2x."],
     [4, 60,
      {'Roid Ragin': 100, 'Warriors Rule': 50, 'Hearty Diggy': 100, 'Wyoming Blood': 30, 'Sploosh Sploosh': 30, 'Stronk Tools': 70},
-     {'Swift Steppin': 100, 'Archer or Bust': 50, 'Sanic Tools': 70, 'Bug^2': 30},
-     {'Stable Jenius': 100, 'Mage is Best': 50, 'Hocus Choppus': 100, 'Molto Loggo': 30, 'Le Brain Tools': 70},
-     {'FMJ': 20, 'Shaquracy': 20, 'Prowesessary': 60, 'Hammer Hammer': 65, 'All for Kill': 100},
+     {'Swift Steppin': 100, 'Archer Or Bust': 50, 'Sanic Tools': 70, 'Bug^2': 30},
+     {'Stable Jenius': 100, 'Mage Is Best': 50, 'Hocus Choppus': 100, 'Molto Loggo': 30, 'Le Brain Tools': 70},
+     {'Fmj': 20, 'Shaquracy': 20, 'Prowesessary': 60, 'Hammer Hammer': 65, 'All For Kill': 100},
      "50%",
      "MINIMUM recommended Utility bubbles for starting W5. Prowess hard-caps at 2x, which you should be reaching now!"],
     [5, 80,
      {'Roid Ragin': 150, 'Warriors Rule': 75, 'Hearty Diggy': 150, 'Wyoming Blood': 45, 'Sploosh Sploosh': 45, 'Stronk Tools': 105, 'Multorange': 45},
-     {'Swift Steppin': 150, 'Archer or Bust': 75, 'Bug^2': 45, 'Premigreen': 45, },
-     {'Stable Jenius': 150, 'Mage is Best': 75, 'Molto Loggo': 45, 'Le Brain Tools': 105, 'Severapurple': 45, },
-     {'FMJ': 30, 'Shaquracy': 30, 'Hammer Hammer': 105, 'All for Kill': 150},
+     {'Swift Steppin': 150, 'Archer Or Bust': 75, 'Bug^2': 45, 'Premigreen': 45, },
+     {'Stable Jenius': 150, 'Mage Is Best': 75, 'Molto Loggo': 45, 'Le Brain Tools': 105, 'Severapurple': 45, },
+     {'Fmj': 30, 'Shaquracy': 30, 'Hammer Hammer': 105, 'All For Kill': 150},
      "60%",
      "MINIMUM recommended Utility bubbles for starting W6 push. Keep watch of your No Bubble Left Behind list (from W4 Lab) to keep cheap/easy bubbles off when possible!"],
     [6, 100,
      {'Roid Ragin': 234, 'Warriors Rule': 117, 'Hearty Diggy': 234, 'Wyoming Blood': 70, 'Sploosh Sploosh': 70, 'Stronk Tools': 164, 'Multorange': 70,
-      'Dream of Ironfish': 70},
-     {'Swift Steppin': 234, 'Archer or Bust': 117, 'Bug^2': 70, 'Premigreen': 70, 'Fly in Mind': 94},
-     {'Stable Jenius': 234, 'Mage is Best': 117, 'Molto Loggo': 70, 'Le Brain Tools': 164, 'Severapurple': 70, 'Tree Sleeper': 94},
-     {'Cookin Roadkill': 105, 'All for Kill': 167},
+      'Dream Of Ironfish': 70},
+     {'Swift Steppin': 234, 'Archer Or Bust': 117, 'Bug^2': 70, 'Premigreen': 70, 'Fly In Mind': 94},
+     {'Stable Jenius': 234, 'Mage Is Best': 117, 'Molto Loggo': 70, 'Le Brain Tools': 164, 'Severapurple': 70, 'Tree Sleeper': 94},
+     {'Cookin Roadkill': 105, 'All For Kill': 167},
      "70%",
      "Cookin Roadkill 105 = 60% bubble strength. All for Kill hard-cap at 167, you're finished!"],
     [7, 100,
      {'Roid Ragin': 400, 'Warriors Rule': 200, 'Hearty Diggy': 400, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 280, 'Multorange': 120,
-      'Dream of Ironfish': 120},
-     {'Swift Steppin': 400, 'Archer or Bust': 200, 'Bug^2': 120, 'Premigreen': 120},
-     {'Stable Jenius': 400, 'Mage is Best': 200, 'Hocus Choppus': 400, 'Molto Loggo': 120, 'Le Brain Tools': 280, 'Severapurple': 120, 'Tree Sleeper': 160},
+      'Dream Of Ironfish': 120},
+     {'Swift Steppin': 400, 'Archer Or Bust': 200, 'Bug^2': 120, 'Premigreen': 120},
+     {'Stable Jenius': 400, 'Mage Is Best': 200, 'Hocus Choppus': 400, 'Molto Loggo': 120, 'Le Brain Tools': 280, 'Severapurple': 120, 'Tree Sleeper': 160},
      {'Laaarrrryyyy': 150, 'Hammer Hammer': 150, },
      "80%",
      "Larry at 150 = 72% chance for +2 levels. Somewhere around level 125-150, this bubble should pass 100m Dementia Ore cost and be available to level with Boron upgrades from the W3 Atom Collider in Construction.  It should be, in my opinion, the ONLY Utility Bubble you spend these daily clicks on until it reaches 501. If you cannot afford the Particles needed to level Larry, invest into Sampling Bubbles."],
     [8, 100,
-     {'Roid Ragin': 567, 'Warriors Rule': 284, 'Hearty Diggy': 567, 'Stronk Tools': 397, 'Multorange': 170, 'Dream of Ironfish': 170, 'Shimmeron': 227},
-     {'Swift Steppin': 567, 'Archer or Bust': 284, 'Premigreen': 170},
-     {'Stable Jenius': 567, 'Mage is Best': 284, 'Hocus Choppus': 567, 'Le Brain Tools': 397, 'Severapurple': 170, 'Tree Sleeper': 227},
+     {'Roid Ragin': 567, 'Warriors Rule': 284, 'Hearty Diggy': 567, 'Stronk Tools': 397, 'Multorange': 170, 'Dream Of Ironfish': 170, 'Shimmeron': 227},
+     {'Swift Steppin': 567, 'Archer Or Bust': 284, 'Premigreen': 170},
+     {'Stable Jenius': 567, 'Mage Is Best': 284, 'Hocus Choppus': 567, 'Le Brain Tools': 397, 'Severapurple': 170, 'Tree Sleeper': 227},
      {'Hammer Hammer': 180, },
      "85%",
      ""],
     [9, 100,
-     {'Roid Ragin': 615, 'Warriors Rule': 308, 'Hearty Diggy': 615, 'Stronk Tools': 430, 'Multorange': 185, 'Dream of Ironfish': 185, 'Shimmeron': 246},
-     {'Swift Steppin': 615, 'Archer or Bust': 308, 'Premigreen': 185},
-     {'Stable Jenius': 615, 'Mage is Best': 308, 'Hocus Choppus': 615, 'Le Brain Tools': 430, 'Severapurple': 185, 'Tree Sleeper': 246},
+     {'Roid Ragin': 615, 'Warriors Rule': 308, 'Hearty Diggy': 615, 'Stronk Tools': 430, 'Multorange': 185, 'Dream Of Ironfish': 185, 'Shimmeron': 246},
+     {'Swift Steppin': 615, 'Archer Or Bust': 308, 'Premigreen': 185},
+     {'Stable Jenius': 615, 'Mage Is Best': 308, 'Hocus Choppus': 615, 'Le Brain Tools': 430, 'Severapurple': 185, 'Tree Sleeper': 246},
      {'Hammer Hammer': 210, },
      "86%",
      ""],
     [10, 100,
-     {'Roid Ragin': 670, 'Warriors Rule': 335, 'Hearty Diggy': 670, 'Stronk Tools': 469, 'Multorange': 201, 'Dream of Ironfish': 201, 'Shimmeron': 268},
-     {'Swift Steppin': 670, 'Archer or Bust': 335, 'Premigreen': 201},
-     {'Stable Jenius': 670, 'Mage is Best': 335, 'Hocus Choppus': 670, 'Le Brain Tools': 469, 'Severapurple': 201, 'Tree Sleeper': 268},
+     {'Roid Ragin': 670, 'Warriors Rule': 335, 'Hearty Diggy': 670, 'Stronk Tools': 469, 'Multorange': 201, 'Dream Of Ironfish': 201, 'Shimmeron': 268},
+     {'Swift Steppin': 670, 'Archer Or Bust': 335, 'Premigreen': 201},
+     {'Stable Jenius': 670, 'Mage Is Best': 335, 'Hocus Choppus': 670, 'Le Brain Tools': 469, 'Severapurple': 201, 'Tree Sleeper': 268},
      {'Laaarrrryyyy': 501, },
      "87%",
      ""],
     [11, 100,
-     {'Roid Ragin': 700, 'Warriors Rule': 367, 'Hearty Diggy': 734, 'Stronk Tools': 514, 'Multorange': 220, 'Dream of Ironfish': 220, 'Shimmeron': 294},
-     {'Swift Steppin': 700, 'Archer or Bust': 367, 'Premigreen': 220},
-     {'Stable Jenius': 700, 'Mage is Best': 367, 'Hocus Choppus': 734, 'Le Brain Tools': 514, 'Severapurple': 220, 'Tree Sleeper': 294},
+     {'Roid Ragin': 700, 'Warriors Rule': 367, 'Hearty Diggy': 734, 'Stronk Tools': 514, 'Multorange': 220, 'Dream Of Ironfish': 220, 'Shimmeron': 294},
+     {'Swift Steppin': 700, 'Archer Or Bust': 367, 'Premigreen': 220},
+     {'Stable Jenius': 700, 'Mage Is Best': 367, 'Hocus Choppus': 734, 'Le Brain Tools': 514, 'Severapurple': 220, 'Tree Sleeper': 294},
      {'Cookin Roadkill': 630, 'Hammer Hammer': 270, },
      "88%",
      ""],
     [12, 100,
-     {'Roid Ragin': 720, 'Warriors Rule': 405, 'Hearty Diggy': 810, 'Stronk Tools': 567, 'Multorange': 243, 'Dream of Ironfish': 243, 'Shimmeron': 324},
-     {'Swift Steppin': 720, 'Archer or Bust': 405, 'Premigreen': 243},
-     {'Stable Jenius': 720, 'Mage is Best': 405, 'Hocus Choppus': 810, 'Le Brain Tools': 567, 'Severapurple': 243, 'Tree Sleeper': 324},
+     {'Roid Ragin': 720, 'Warriors Rule': 405, 'Hearty Diggy': 810, 'Stronk Tools': 567, 'Multorange': 243, 'Dream Of Ironfish': 243, 'Shimmeron': 324},
+     {'Swift Steppin': 720, 'Archer Or Bust': 405, 'Premigreen': 243},
+     {'Stable Jenius': 720, 'Mage Is Best': 405, 'Hocus Choppus': 810, 'Le Brain Tools': 567, 'Severapurple': 243, 'Tree Sleeper': 324},
      {'Startue Exp': 240, 'Hammer Hammer': 300, },
      "89%",
      ""],
     [13, 100,
-     {'Roid Ragin': 740, 'Warriors Rule': 450, 'Hearty Diggy': 900, 'Stronk Tools': 630, 'Multorange': 270, 'Dream of Ironfish': 270, 'Shimmeron': 360},
-     {'Swift Steppin': 740, 'Archer or Bust': 450, 'Premigreen': 270},
-     {'Stable Jenius': 740, 'Mage is Best': 450, 'Hocus Choppus': 900, 'Le Brain Tools': 630, 'Severapurple': 270, 'Tree Sleeper': 360},
+     {'Roid Ragin': 740, 'Warriors Rule': 450, 'Hearty Diggy': 900, 'Stronk Tools': 630, 'Multorange': 270, 'Dream Of Ironfish': 270, 'Shimmeron': 360},
+     {'Swift Steppin': 740, 'Archer Or Bust': 450, 'Premigreen': 270},
+     {'Stable Jenius': 740, 'Mage Is Best': 450, 'Hocus Choppus': 900, 'Le Brain Tools': 630, 'Severapurple': 270, 'Tree Sleeper': 360},
      {'Droppin Loads': 280},
      "90%",
      ""],
     [14, 100,
      {'Roid Ragin': 760, 'Warriors Rule': 506, 'Hearty Diggy': 1012, 'Multorange': 304, 'Shimmeron': 405},
-     {'Swift Steppin': 760, 'Archer or Bust': 506, 'Premigreen': 304},
-     {'Stable Jenius': 760, 'Mage is Best': 506, 'Hocus Choppus': 1012, 'Severapurple': 304},
+     {'Swift Steppin': 760, 'Archer Or Bust': 506, 'Premigreen': 304},
+     {'Stable Jenius': 760, 'Mage Is Best': 506, 'Hocus Choppus': 1012, 'Severapurple': 304},
      {'Call Me Bob': 200},
      "91%",
      ""],
     [15, 100,
      {'Roid Ragin': 780, 'Warriors Rule': 575, 'Hearty Diggy': 1150, 'Multorange': 345, 'Shimmeron': 460},
-     {'Swift Steppin': 780, 'Archer or Bust': 575, 'Premigreen': 345},
-     {'Stable Jenius': 780, 'Mage is Best': 575, 'Hocus Choppus': 1150, 'Severapurple': 345},
+     {'Swift Steppin': 780, 'Archer Or Bust': 575, 'Premigreen': 345},
+     {'Stable Jenius': 780, 'Mage Is Best': 575, 'Hocus Choppus': 1150, 'Severapurple': 345},
      {'Big P': 140, 'Big Game Hunter': 70, 'Mr Massacre': 117},
      "92%",
      ""],
     [16, 100,
      {'Roid Ragin': 800, 'Warriors Rule': 665, 'Hearty Diggy': 1329, 'Multorange': 399, 'Shimmeron': 532},
-     {'Swift Steppin': 800, 'Archer or Bust': 665, 'Premigreen': 399},
-     {'Stable Jenius': 800, 'Mage is Best': 665, 'Hocus Choppus': 1329, 'Severapurple': 399},
+     {'Swift Steppin': 800, 'Archer Or Bust': 665, 'Premigreen': 399},
+     {'Stable Jenius': 800, 'Mage Is Best': 665, 'Hocus Choppus': 1329, 'Severapurple': 399},
      {'Big P': 240, 'Big Game Hunter': 120, 'Mr Massacre': 200},
      "93%",
      ""],
     [17, 100,
      {'Roid Ragin': 820, 'Warriors Rule': 784, 'Hearty Diggy': 1567, 'Multorange': 470, 'Shimmeron': 627},
-     {'Swift Steppin': 820, 'Archer or Bust': 784, 'Premigreen': 470},
-     {'Stable Jenius': 820, 'Mage is Best': 784, 'Hocus Choppus': 1567, 'Severapurple': 470},
+     {'Swift Steppin': 820, 'Archer Or Bust': 784, 'Premigreen': 470},
+     {'Stable Jenius': 820, 'Mage Is Best': 784, 'Hocus Choppus': 1567, 'Severapurple': 470},
      {'Big P': 340, 'Carpenter': 284, 'Big Game Hunter': 170, 'Mr Massacre': 284},
      "94%",
      ""],
     [18, 100,
      {'Roid Ragin': 840, 'Warriors Rule': 950, 'Hearty Diggy': 1900, 'Multorange': 570, 'Shimmeron': 760},
-     {'Swift Steppin': 840, 'Archer or Bust': 950, 'Premigreen': 570},
-     {'Stable Jenius': 840, 'Mage is Best': 950, 'Hocus Choppus': 1900, 'Severapurple': 570},
+     {'Swift Steppin': 840, 'Archer Or Bust': 950, 'Premigreen': 570},
+     {'Stable Jenius': 840, 'Mage Is Best': 950, 'Hocus Choppus': 1900, 'Severapurple': 570},
      {'Laaarrrryyyy': 900, 'Big P': 540, 'Call Me Bob': 500, 'Carpenter': 450, 'Big Game Hunter': 270, 'Mr Massacre': 450},
      "95%",
      ""],
     [19, 100,
      {'Roid Ragin': 860, 'Warriors Rule': 1200, 'Multorange': 720},
-     {'Swift Steppin': 860, 'Archer or Bust': 1200},
-     {'Stable Jenius': 860, 'Mage is Best': 1200, 'Severapurple': 720},
+     {'Swift Steppin': 860, 'Archer Or Bust': 1200},
+     {'Stable Jenius': 860, 'Mage Is Best': 1200, 'Severapurple': 720},
      {'Call Me Bob': 700, 'Cropius Mapper': 630, 'Lo Cost Mo Jade': 360},
      "96%",
      ""],
     [20, 100,
      {'Roid Ragin': 880, 'Warriors Rule': 1617, 'Multorange': 970},
-     {'Swift Steppin': 880, 'Archer or Bust': 1617},
-     {'Stable Jenius': 880, 'Mage is Best': 1617, 'Severapurple': 970},
+     {'Swift Steppin': 880, 'Archer Or Bust': 1617},
+     {'Stable Jenius': 880, 'Mage Is Best': 1617, 'Severapurple': 970},
      {'Big P': 940, 'Laaarrrryyyy': 1900, 'Carpenter': 950, 'Big Game Hunter': 570, 'Mr Massacre': 950, 'Diamond Chef': 553, 'Lo Cost Mo Jade': 760},
      "97%",
      ""],
     [21, 120,
      {'Roid Ragin': 900, 'Warriors Rule': 2450, 'Multorange': 1470},
-     {'Swift Steppin': 900, 'Archer or Bust': 2450},
-     {'Stable Jenius': 900, 'Mage is Best': 2450, 'Severapurple': 1470},
+     {'Swift Steppin': 900, 'Archer Or Bust': 2450},
+     {'Stable Jenius': 900, 'Mage Is Best': 2450, 'Severapurple': 1470},
      {'Essence Boost-Orange': 400, 'Essence Boost-Green': 400, 'Call Me Bob': 1000, 'Diamond Chef': 890},
      "98%",
      ""],
     [22, 140,
      {'Roid Ragin': 950, 'Warriors Rule': 4950, 'Multorange': 2970},
-     {'Swift Steppin': 950, 'Archer or Bust': 4950},
-     {'Stable Jenius': 950, 'Mage is Best': 4950, 'Severapurple': 2970},
-     {'Diamond Chef': 1897, 'Carpenter': 2450, 'Big P': 1440},
+     {'Swift Steppin': 950, 'Archer Or Bust': 4950},
+     {'Stable Jenius': 950, 'Mage Is Best': 4950, 'Severapurple': 2970},
+     {'Carpenter': 2450, 'Big P': 1440},
      "99%",
      ""],
     [23, 160,
-     {'Roid Ragin': 10000, 'Hearty Diggy': 9900, 'Stronk Tools': 6930, 'Dream of Ironfish': 2970, 'Shimmeron': 3960,
+     {'Roid Ragin': 10000, 'Hearty Diggy': 9900, 'Stronk Tools': 6930, 'Dream Of Ironfish': 2970, 'Shimmeron': 3960,
       'Slabi Orefish': 5940, 'Slabi Strength': 5940, 'Endgame Eff I': 5940, 'Tome Strength': 5940},
-     {'Swift Steppin': 10000, 'Sanic Tools': 6930, 'Premigreen': 2970, 'Fly in Mind': 3960,
+     {'Swift Steppin': 10000, 'Sanic Tools': 6930, 'Premigreen': 2970, 'Fly In Mind': 3960,
       'Slabo Critterbug': 5940, 'Slabo Agility': 5940, 'Endgame Eff II': 5940, 'Tome Agility': 5940},
      {'Stable Jenius': 10000, 'Hocus Choppus': 9900, 'Le Brain Tools': 6930, 'Tree Sleeper': 3960,
       'Slabe Logsoul': 5940, 'Slabe Wisdom': 5940, 'Endgame Eff III': 5940, 'Tome Wisdom': 5940},
@@ -671,12 +676,11 @@ saltLick_progressionTiers = [
     [2, {'Printer Sample Size': 20}, "Redox Salts"],
     [3, {'Refinery Speed': 10}, "Explosive Salts"],
     [4, {'Max Book': 10}, "Spontaneity Salts"],
-    [5, {'Movespeed': 1}, "Frigid Soul"],  # This buff only works under 170% move speed, so can become useless quite quickly.
-    [6, {'TD Points': 10}, "Dioxide Synthesis"],
-    [7, {'Multikill': 10}, "Purple Salt"],
-    [8, {'EXP': 100}, "Dune Soul"],
-    [9, {'Alchemy Liquids': 100}, "Mousey"],
-    [10, {'Damage': 250}, "Pingy"]
+    [5, {'TD Points': 10}, "Dioxide Synthesis"],
+    [6, {'Multikill': 10}, "Purple Salt"],
+    [7, {'EXP': 100}, "Dune Soul"],
+    [8, {'Alchemy Liquids': 100}, "Mousey"],
+    [9, {'Damage': 250}, "Pingy"]
 ]
 deathNote_progressionTiers = [
     # 0-4 int tier. int w1LowestSkull, int w2LowestSkull, int w3LowestSkull, int w4LowestSkull,
@@ -720,8 +724,8 @@ buildingsPostBuffs_progressionTiers = [
     [1, "SS", ["3D Printer", "Cost Cruncher", "Automation Arm"], "", ""],
     [2, "S", ["Talent Book Library", "Death Note", "Salt Lick", "Trapper Drone", "Boulder Roller", "Kraken Cosplayer", "Poisonic Elder"], "", ""],
     [3, "A", ["Chest Space", "Pulse Mage", "Fireball Lobber", "Frozone Malone", "Stormcaller", "Party Starter", "Voidinator", "Clover Shrine", "Crescent Shrine", "Undead Shrine"], "", ""],
-    [4, "B", ["Woodular Shrine", "Isaccian Shrine", "Crystal Shrine", "Pantheon Shrine", "Summereading Shrine", "Atom Collider"], "", ""],
-    [5, "C", ["Primordial Shrine"], "", ""],
+    [4, "B", ["Woodular Shrine", "Isaccian Shrine", "Crystal Shrine", "Pantheon Shrine", "Summereading Shrine"], "", ""],
+    [5, "C", ["Atom Collider", "Primordial Shrine"], "", ""],
     [6, "D", [], "", ""],
     [7, "F", [], "", ""]
 ]
@@ -738,15 +742,15 @@ buildingsPreBuffs_progressionTiers = [
 prayers_progressionTiers = [
     #Tier, PrayerDict, 	Notes
     [0, {}, ""],
-    [1, {'The Royal Sampler (Rooted Soul)': 5}, ""],
-    [2, {'Skilled Dimwit (Forest Soul)':20}, ""],
-    [3, {'Balance of Pain (Squishy Soul)':11}, ""],
-    [4, {'Skilled Dimwit (Forest Soul)':35, 'Balance of Pain (Squishy Soul)':20}, ""],
-    [5, {'Midas Minded (Dune Soul)':20}, ""],
-    [6, {'Skilled Dimwit (Forest Soul)':50, 'Midas Minded (Dune Soul)':50, 'Balance of Pain (Squishy Soul)':30}, ""],
-    [7, {'Shiny Snitch (Forest Soul)':50, 'Zerg Rushogen (Forest Soul)':20, 'Jawbreaker (Dune Soul)':50, 'Ruck Sack (Rooted Soul)':50, 'Balance of Proficiency (Squishy Soul)':50}, ""],
-    [8, {'Unending Energy (Forest Soul)':50, 'Big Brain Time (Forest Soul)':50, 'Antifun Spirit (Rooted Soul)':10, 'Fibers of Absence (Frigid Soul)':50, 'Beefy For Real (Frigid Soul)':40}, ""],
-    [9, {'Tachion of the Titans (Dune Soul)':1, 'Balance of Precision (Dune Soul)':1, 'Circular Criticals (Rooted Soul)':1, 'Vacuous Tissue (Frigid Soul)':1, 'Glitterbug (Squishy Soul)':1}, ""],
+    [1, {'The Royal Sampler': 5}, ""],
+    [2, {'Skilled Dimwit': 20}, ""],
+    [3, {'Balance of Pain': 11}, ""],
+    [4, {'Skilled Dimwit': 35, 'Balance of Pain':20}, ""],
+    [5, {'Midas Minded':20}, ""],
+    [6, {'Skilled Dimwit': 50, 'Midas Minded': 50, 'Balance of Pain': 30}, ""],
+    [7, {'Shiny Snitch': 50, 'Zerg Rushogen': 20, 'Jawbreaker': 50, 'Ruck Sack': 50, 'Balance of Proficiency': 50}, ""],
+    [8, {'Unending Energy': 50, 'Big Brain Time': 50, 'Antifun Spirit': 10, 'Fibers of Absence': 50, 'Beefy For Real': 40}, ""],
+    [9, {'Tachion of the Titans': 1, 'Balance of Precision': 1, 'Circular Criticals': 1, 'Vacuous Tissue': 1, 'Glitterbug': 1}, ""],
 ]
 
 ###WORLD 4 PROGRESSION TIERS###
@@ -983,6 +987,7 @@ expectedStackables = {
         "Sewers3", "Quest15", "Hgg"  # Specialty Monster Materials
     ],
     "Crystal Enemy Drops": [
+        "SilverPen",
         "FoodPotMana1", "FoodPotMana2", "FoodPotGr1", "FoodPotOr1", "FoodPotOr2", "FoodHealth1", "FoodHealth3", "FoodHealth2", "Leaf1",  # W1
         "FoodHealth6", "FoodHealth7", "FoodPotGr2", "FoodPotRe3", "Leaf2",  # W2
         "FoodHealth10", "FoodPotOr3", "FoodPotYe2", "Leaf3",  # W3
@@ -995,6 +1000,7 @@ expectedStackables = {
         "StoneT2", "StoneZ2",  "StoneW2",  #"StoneA2", # W2 upgrade stones and Mystery2
         "PureWater",  #W3 Slow drops = Distilled Water
         "FoodG9",  #W5 Slow drops = Golden W5 Sammy
+        "FoodG11", "FoodG12"
     ],
     "Printable Skilling Resources": [
         "OakTree", "BirchTree", "JungleTree", "ForestTree", "ToiletTree", "PalmTree", "StumpTree", "SaharanFoal",  # Logs1
@@ -1025,7 +1031,8 @@ expectedStackables = {
         "Quest68", "Bullet3", "FoodChoppin1", "EquipmentSmithingTabs2",  #Crafted2
         "PeanutG",  #Gold Peanut Crafted
         "FoodTrapping1", "FoodWorship1",  # Critter Numnums and Soulble Gum Crafted
-        "Refinery1", "Refinery2", "Refinery3", "Refinery4", "Refinery5", "Refinery6"
+        "Refinery1", "Refinery2", "Refinery3", "Refinery4", "Refinery5", "Refinery6",
+        "Ladle",
     ],
     "Vendor Shops": [
         "FoodHealth14", "FoodHealth15", "FoodHealth16", "FoodHealth17", "FoodHealth12", "FoodHealth13", "FoodPotOr4", "FoodPotGr4", "FoodPotRe4",
@@ -1039,7 +1046,6 @@ expectedStackables = {
     "Misc": [
         "FoodPotGr3",  #Decent Speed from W3 Shop + Sir Stache
         "FoodPotRe2",  #Average Life Potion from W2 Shop + Gigafrogs
-
         "FoodPotRe1",  #Small Life Potion from W1 Sewers and Tree mobs, not crystals
         "ButterBar",  #Catching Butterflies
         "FoodPotMana3",  #Decent Mana Potion from Bloques
@@ -1049,7 +1055,6 @@ expectedStackables = {
         "Key2", "Key3"  # Efaunt and Chizoar keys
     ],
     "Cheater": [
-        "SilverPen", "Ladle",
         "Sewers1b", "TreeInterior1b", "BabaYagaETC", "JobApplication",  # W1 Rare Drops
         "DesertA1b", "DesertA3b", "MidnightCookie",  # W2 Rare Drops
         "SnowA2a", "SnowB2a", "SnowC4a",  # W3 Rare Drops
@@ -1531,6 +1536,38 @@ guildBonusesList = [
     "Multi Tool", "Sleepy Skiller", "Coin Supercharger", "Bonus GP for small guilds", "Gold Charm", "Star Dazzle",
     "C2 Card Spotter", "Bestone", "Skilley Skillet", "Craps", "Anotha One", "Wait A Minute"
 ]
+familyBonusClassTierLevelReductions = [10, 30, 70, 999]
+familyBonusesDict = {
+    #"Beginner": {'funcType': 'decay', 'x1': 0, 'x2': 0, 'Stat': '', 'PrePlus': False, 'PostDisplay': '', 'levelDiscount': familyBonusClassTierLevelReductions[0]},
+    "Journeyman": {'funcType': 'intervalAdd', 'x1': 1, 'x2': 5, 'Stat': 'Total Luck', 'PrePlus': True, 'PostDisplay': '', 'levelDiscount': familyBonusClassTierLevelReductions[0]},
+    "Maestro": {'funcType': 'decay', 'x1': 6, 'x2': 100, 'Stat': 'Printer Sample Rate', 'PrePlus': True, 'PostDisplay': '%', 'levelDiscount': familyBonusClassTierLevelReductions[1]},
+    "Voidwalker": {'funcType': 'decay', 'x1': 5, 'x2': 250, 'Stat': 'Fighting AFK Gains', 'PrePlus': True, 'PostDisplay': '%', 'levelDiscount': familyBonusClassTierLevelReductions[2]},
+    #"Infinilyte": {'funcType': 'decay', 'x1': 0, 'x2': 0, 'Stat': '', 'PrePlus': True, 'PostDisplay': '', 'levelDiscount': familyBonusClassTierLevelReductions[0]},
+    #"Rage Basics": {'funcType': 'decay', 'x1': 0, 'x2': 0, 'Stat': '', 'PrePlus': True, 'PostDisplay': '', 'levelDiscount': familyBonusClassTierLevelReductions[0]},
+    "Warrior": {'funcType': 'intervalAdd', 'x1': 1, 'x2': 5, 'Stat': 'Total Strength', 'PrePlus': True, 'PostDisplay': '', 'levelDiscount': familyBonusClassTierLevelReductions[0]},
+    "Barbarian": {'funcType': 'decay', 'x1': 25, 'x2': 100, 'Stat': 'Weapon Power', 'PrePlus': True, 'PostDisplay': '', 'levelDiscount': familyBonusClassTierLevelReductions[1]},
+    "Squire": {'funcType': 'decay', 'x1': 40, 'x2': 100, 'Stat': 'Total HP', 'PrePlus': True, 'PostDisplay': '%', 'levelDiscount': familyBonusClassTierLevelReductions[1]},
+    "Blood Berserker": {'funcType': 'decay', 'x1': 20, 'x2': 180, 'Stat': 'Total Damage', 'PrePlus': True, 'PostDisplay': '%', 'levelDiscount': familyBonusClassTierLevelReductions[2]},
+    #"Death Bringer": {'funcType': 'decay', 'x1': 0, 'x2': 0, 'Stat': '', 'PrePlus': False, 'PostDisplay': '', 'levelDiscount': familyBonusClassTierLevelReductions[0]},
+    "Divine Knight": {'funcType': 'decay', 'x1': 50, 'x2': 150, 'Stat': 'Refinery Speed', 'PrePlus': True, 'PostDisplay': '%', 'levelDiscount': familyBonusClassTierLevelReductions[2]},
+    #"Royal Guardian": {'funcType': 'decay', 'x1': 0, 'x2': 0, 'Stat': '', 'PrePlus': False, 'PostDisplay': '', 'levelDiscount': familyBonusClassTierLevelReductions[0]},
+    #"Calm Basics": {'funcType': 'decay', 'x1': 0, 'x2': 0, 'Stat': '', 'PrePlus': False, 'PostDisplay': '', 'levelDiscount': familyBonusClassTierLevelReductions[0]},
+    "Archer": {'funcType': 'intervalAdd', 'x1': 1, 'x2': 5, 'Stat': 'Total Agility', 'PrePlus': True, 'PostDisplay': '', 'levelDiscount': familyBonusClassTierLevelReductions[0]},
+    "Bowman": {'funcType': 'decay', 'x1': 38, 'x2': 100, 'Stat': 'EXP when fighting monsters actively', 'PrePlus': True, 'PostDisplay': '%', 'levelDiscount': familyBonusClassTierLevelReductions[1]},
+    "Hunter": {'funcType': 'decay', 'x1': 30, 'x2': 100, 'Stat': 'Efficiency for all skills', 'PrePlus': True, 'PostDisplay': '%', 'levelDiscount': familyBonusClassTierLevelReductions[1]},
+    "Siege Breaker": {'funcType': 'decay', 'x1': 20, 'x2': 170, 'Stat': 'Faster Minimum Boat Travel Time', 'PrePlus': True, 'PostDisplay': '%', 'levelDiscount': familyBonusClassTierLevelReductions[2]},
+    #"Mayheim": {'funcType': 'decay', 'x1': 0, 'x2': 0, 'Stat': '', 'PrePlus': False, 'PostDisplay': '', 'levelDiscount': familyBonusClassTierLevelReductions[0]},
+    #"Wind Walker": {'funcType': 'decay', 'x1': 0, 'x2': 0, 'Stat': '', 'PrePlus': False, 'PostDisplay': '', 'levelDiscount': familyBonusClassTierLevelReductions[0]},
+    "Beast Master": {'funcType': 'decay', 'x1': 5, 'x2': 180, 'Stat': 'All Skill AFK Gains', 'PrePlus': True, 'PostDisplay': '%', 'levelDiscount': familyBonusClassTierLevelReductions[2]},
+    #"Savvy Basics": {'funcType': 'decay', 'x1': 0, 'x2': 0, 'Stat': '', 'PrePlus': False, 'PostDisplay': '', 'levelDiscount': familyBonusClassTierLevelReductions[0]},
+    "Mage": {'funcType': 'intervalAdd', 'x1': 1, 'x2': 5, 'Stat': 'Total Wisdom', 'PrePlus': True, 'PostDisplay': '', 'levelDiscount': familyBonusClassTierLevelReductions[0]},
+    "Wizard": {'funcType': 'intervalAdd', 'x1': 1, 'x2': 6, 'Stat': 'Star Talent Points', 'PrePlus': True, 'PostDisplay': '', 'levelDiscount': familyBonusClassTierLevelReductions[1]},
+    "Shaman": {'funcType': 'decayMulti', 'x1': 0.4, 'x2': 100, 'Stat': 'Higher Bonuses from Golden Foods', 'PrePlus': False, 'PostDisplay': 'x', 'levelDiscount': familyBonusClassTierLevelReductions[1]},
+    "Elemental Sorcerer": {'funcType': 'decay', 'x1': 20, 'x2': 350, 'Stat': 'Lv For All Talents Above Lv 1', 'PrePlus': True, 'PostDisplay': '', 'levelDiscount': familyBonusClassTierLevelReductions[2]},
+    #"Spiritual Monk": {'funcType': 'decay', 'x1': 0, 'x2': 0, 'Stat': '', 'PrePlus': False, 'PostDisplay': '', 'levelDiscount': familyBonusClassTierLevelReductions[0]},
+    "Bubonic Conjuror": {'funcType': 'decay', 'x1': 5, 'x2': 180, 'Stat': 'All Stat. STR, AGI, WIS, LUK.', 'PrePlus': True, 'PostDisplay': '%', 'levelDiscount': familyBonusClassTierLevelReductions[2]},
+    #"Arcane Cultist": {'funcType': 'decay', 'x1': 0, 'x2': 0, 'Stat': '', 'PrePlus': False, 'PostDisplay': '', 'levelDiscount': familyBonusClassTierLevelReductions[0]},
+}
 
 #achievementsList last pulled from code in 2.08. Search for: RegAchieves = function ()
 #Replace: "], ["  with:  "],\n["  before pasting in
@@ -2055,8 +2092,89 @@ achievementsList = [
     ["FILLERZZZ_ACH", "20", "-", "*FILLERZ_&*FILLERZ_&*FILLERZ", "0"],
     ["FILLERZZZ_ACH", "20", "-", "*FILLERZ_&*FILLERZ_&*FILLERZ", "0"]
 ]
+allMeritsDict = {
+    0: {
+        0: {"Name": "Shared Inventory Bags", "Level": 0, "MaxLevel": 5},
+        1: {"Name": "W1 Respawn", "Level": 0, "MaxLevel": 10},
+        2: {"Name": "Lowest Character EXP", "Level": 0, "MaxLevel": 12},
+        3: {"Name": "Hemoglobin max level", "Level": 0, "MaxLevel": 10},
+        4: {"Name": "Boss Keys dropped", "Level": 0, "MaxLevel": 10},
+        5: {"Name": "Amarok Recipes", "Level": 0, "MaxLevel": 5},
+        6: {"Name": "W1 Star Talents", "Level": 0, "MaxLevel": 6},
+        7: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+    },  #World1
+    1: {
+        0: {"Name": "Obol Drop Rate", "Level": 0, "MaxLevel": 7},
+        1: {"Name": "W2 Respawn", "Level": 0, "MaxLevel": 10},
+        2: {"Name": "AFK Gains", "Level": 0, "MaxLevel": 10},
+        3: {"Name": "Convert Better max level", "Level": 0, "MaxLevel": 10},
+        4: {"Name": "Boss Gems dropped", "Level": 0, "MaxLevel": 8},
+        5: {"Name": "Efaunt Recipes", "Level": 0, "MaxLevel": 5},
+        6: {"Name": "W2 Star Talents", "Level": 0, "MaxLevel": 8},
+        7: {"Name": "Arcade Ball rate", "Level": 0, "MaxLevel": 5},
+    },  #World2
+    2: {
+        0: {"Name": "Build and Food slots", "Level": 0, "MaxLevel": 4},
+        1: {"Name": "W3 Respawn", "Level": 0, "MaxLevel": 10},
+        2: {"Name": "Max Book levels", "Level": 0, "MaxLevel": 5},
+        3: {"Name": "Telekinetic Storage max level", "Level": 0, "MaxLevel": 10},
+        4: {"Name": "Printer Sample Size", "Level": 0, "MaxLevel": 10},
+        5: {"Name": "Chizoar Recipes", "Level": 0, "MaxLevel": 5},
+        6: {"Name": "Refinery Salt Consumption", "Level": 0, "MaxLevel": 5},
+        7: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+    },  #World3
+    3: {
+        0: {"Name": "Daily Crystals", "Level": 0, "MaxLevel": 3},
+        1: {"Name": "W4 Respawn", "Level": 0, "MaxLevel": 10},
+        2: {"Name": "Breeding Egg Capacity", "Level": 0, "MaxLevel": 2},
+        3: {"Name": "Spice Spillage max level", "Level": 0, "MaxLevel": 5},
+        4: {"Name": "Lab Connection Range", "Level": 0, "MaxLevel": 8},
+        5: {"Name": "Troll Recipes", "Level": 0, "MaxLevel": 4},
+        6: {"Name": "Additional NBLB bubbles", "Level": 0, "MaxLevel": 3},
+        7: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+    },  #World4
+    4: {
+        0: {"Name": "Tab 4 Talent Points", "Level": 0, "MaxLevel": 20},
+        1: {"Name": "W5 Respawn", "Level": 0, "MaxLevel": 10},
+        2: {"Name": "Sailing Loot Pile Capacity", "Level": 0, "MaxLevel": 7},
+        3: {"Name": "Stat Overload max level", "Level": 0, "MaxLevel": 10},
+        4: {"Name": "W5 Skill EXP", "Level": 0, "MaxLevel": 5},
+        5: {"Name": "Kattlekruk Recipes", "Level": 0, "MaxLevel": 9},
+        6: {"Name": "Atom Upgrade cost reduction", "Level": 0, "MaxLevel": 4},
+        7: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},},  #World5
+    5: {
+        0: {"Name": "Tab 5 Talent Points", "Level": 0, "MaxLevel": 20},
+        1: {"Name": "W6 Respawn", "Level": 0, "MaxLevel": 10},
+        2: {"Name": "Farming Plots, OG, and EXP", "Level": 0, "MaxLevel": 15},
+        3: {"Name": "Jade Gain", "Level": 0, "MaxLevel": 20},
+        4: {"Name": "Summoning Winner bonuses", "Level": 0, "MaxLevel": 10},
+        5: {"Name": "Emperor Recipes", "Level": 0, "MaxLevel": 9},
+        6: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+        7: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+    },  #World6
+    6: {
+        0: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+        1: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+        2: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+        3: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+        4: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+        5: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+        6: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+        7: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+    },  #World7
+    7: {
+        0: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+        1: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+        2: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+        3: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+        4: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+        5: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+        6: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+        7: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
+    },  #World8
+}
 
-def lavaFunc(funcType: str, level: int, x1: int, x2: int, roundResult=False):
+def lavaFunc(funcType: str, level: int, x1: int | float, x2: int | float, roundResult=False):
     result = 0
     match funcType:
         case 'add':
@@ -2083,14 +2201,15 @@ def lavaFunc(funcType: str, level: int, x1: int, x2: int, roundResult=False):
 
 
 ###WORLD 1 CONSTS###
-bribesList = [
-    "Insider Trading", "Tracking Chips", "Mandatory Fire Sale", "Sleeping On the Job", "Artificial Demand", "The Art of the Deal",
-    "Overstock Regulations", "Double EXP Scheme", "Tagged Indicators", "Fossil Fuel Legislation", "Five Aces in the Deck", "Fake Teleport Tickets", "The Art of the Steal",
-    "Counterfeit Telepassports", "Weighted Marbles", "Changing the Code", "Taxidermied Cog Pouches", "Guild VIP Fraud", "Library Double Agent", "The Art of the Fail",
-    "Photoshopped Dmg Range", "Glitched Acc Formula", "Firewalled Defence", "Bottomless Bags", "AFKeylogging", "Guild GP Hack", "The Art of the Bail",
-    "Random Garbage", "Godlier Creation", "Fishermaster", "Muscles on Muscles", "Bottle Service", "Star Scraper", "The Art of the Grail",
-    "Artifact Pilfering", "Forge Cap Smuggling", "Gold from Lead", "Nugget Fabrication", "Divine PTS Miscounting", "Loot Table Tampering", "The Art of the Flail"
-]
+bribesDict = {
+    "W1": ["Insider Trading", "Tracking Chips", "Mandatory Fire Sale", "Sleeping On the Job", "Artificial Demand", "The Art of the Deal"],
+    "W2": ["Overstock Regulations", "Double EXP Scheme", "Tagged Indicators", "Fossil Fuel Legislation", "Five Aces in the Deck", "Fake Teleport Tickets", "The Art of the Steal"],
+    "W3": ["Counterfeit Telepassports", "Weighted Marbles", "Changing the Code", "Taxidermied Cog Pouches", "Guild VIP Fraud", "Library Double Agent", "The Art of the Fail"],
+    "W4": ["Photoshopped Dmg Range", "Glitched Acc Formula", "Firewalled Defence", "Bottomless Bags", "AFKeylogging", "Guild GP Hack"],
+    "Trash Island": ["The Art of the Bail", "Random Garbage", "Godlier Creation", "Fishermaster", "Muscles on Muscles", "Bottle Service", "Star Scraper"],
+    "W6": ["The Art of the Grail", "Artifact Pilfering", "Forge Cap Smuggling", "Gold from Lead", "Nugget Fabrication", "Divine PTS Miscounting", "Loot Table Tampering", "The Art of the Flail"]
+}
+unpurchasableBribes = ["The Art of the Flail"]  # These bribes are in the game, but cannot be purchased as of v2.02
 stamp_maxes = {
     #Combat
     #Skill
@@ -2108,37 +2227,131 @@ stamp_maxes = {
     "Crystallin": 270,
     "Forge Stamp": 230,
 }
-stampNameDict = {
+stampsDict = {
     "Combat": {
-        0: "Sword Stamp", 1: "Heart Stamp", 2: "Mana Stamp", 3: "Tomahawk Stamp", 4: "Target Stamp",
-        5: "Shield Stamp", 6: "Longsword Stamp", 7: "Kapow Stamp", 8: "Fist Stamp", 9: "Battleaxe Stamp",
-        10: "Agile Stamp", 11: "Vitality Stamp", 12: "Book Stamp", 13: "Manamoar Stamp", 14: "Clover Stamp",
-        15: "Scimitar Stamp", 16: "Bullseye Stamp", 17: "Feather Stamp", 18: "Polearm Stamp", 19: "Violence Stamp",
-        20: "Buckler Stamp", 21: "Hermes Stamp", 22: "Sukka Foo", 23: "Arcane Stamp", 24: "Avast Yar Stamp",
-        25: "Steve Sword", 26: "Blover Stamp", 27: "Stat Graph Stamp", 28: "Gilded Axe Stamp",
-        29: "Diamond Axe Stamp", 30: "Tripleshot Stamp", 31: "Blackheart Stamp", 32: "Maxo Slappo Stamp", 33: "Sashe Sidestamp", 34: "Intellectostampo",
-        35: "Conjocharmo Stamp", 36: "Dementia Sword Stamp", 37: "Golden Sixes Stamp", 38: "Stat Wallstreet Stamp", 39: "Void Sword Stamp",
-        40: "Void Axe Stamp", 41: "Captalist Stats Stamp"
+        0: {'Name': "Sword Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        1: {'Name': "Heart Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        2: {'Name': "Mana Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        3: {'Name': "Tomahawk Stamp", 'funcType': 'decay', 'x1': 6, 'x2': 40},
+        4: {'Name': "Target Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        5: {'Name': "Shield Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        6: {'Name': "Longsword Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0},
+        7: {'Name': "Kapow Stamp", 'funcType': 'decay', 'x1': 8, 'x2': 40},
+        8: {'Name': "Fist Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        9: {'Name': "Battleaxe Stamp", 'funcType': 'decay', 'x1': 10, 'x2': 40},
+        10: {'Name': "Agile Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        11: {'Name': "Vitality Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0},
+        12: {'Name': "Book Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        13: {'Name': "Manamoar Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        14: {'Name': "Clover Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        15: {'Name': "Scimitar Stamp", 'funcType': 'add', 'x1': 3, 'x2': 0},
+        16: {'Name': "Bullseye Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0},
+        17: {'Name': "Feather Stamp", 'funcType': 'decay', 'x1': 5, 'x2': 50},
+        18: {'Name': "Polearm Stamp", 'funcType': 'decay', 'x1': 16, 'x2': 40},
+        19: {'Name': "Violence Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        20: {'Name': "Buckler Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        21: {'Name': "Hermes Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        22: {'Name': "Sukka Foo", 'funcType': 'decay', 'x1': 20, 'x2': 60},
+        23: {'Name': "Arcane Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        24: {'Name': "Avast Yar Stamp", 'funcType': 'add', 'x1': 6, 'x2': 0},
+        25: {'Name': "Steve Sword", 'funcType': 'decay', 'x1': 20, 'x2': 60},
+        26: {'Name': "Blover Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        27: {'Name': "Stat Graph Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        28: {'Name': "Gilded Axe Stamp", 'funcType': 'add', 'x1': 8, 'x2': 0},
+        29: {'Name': "Diamond Axe Stamp", 'funcType': 'decay', 'x1': 20, 'x2': 60},
+        30: {'Name': "Tripleshot Stamp", 'funcType': 'add', 'x1': 3, 'x2': 0},
+        31: {'Name': "Blackheart Stamp", 'funcType': 'add', 'x1': 10, 'x2': 0},
+        32: {'Name': "Maxo Slappo Stamp", 'funcType': 'add', 'x1': 4, 'x2': 0},
+        33: {'Name': "Sashe Sidestamp", 'funcType': 'add', 'x1': 4, 'x2': 0},
+        34: {'Name': "Intellectostampo", 'funcType': 'add', 'x1': 4, 'x2': 0},
+        35: {'Name': "Conjocharmo Stamp", 'funcType': 'add', 'x1': 4, 'x2': 0},
+        36: {'Name': "Dementia Sword Stamp", 'funcType': 'decay', 'x1': 25, 'x2': 80},
+        37: {'Name': "Golden Sixes Stamp", 'funcType': 'decay', 'x1': 20, 'x2': 80},
+        38: {'Name': "Stat Wallstreet Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0},
+        39: {'Name': "Void Sword Stamp", 'funcType': 'add', 'x1': 12, 'x2': 0},
+        40: {'Name': "Void Axe Stamp", 'funcType': 'decay', 'x1': 35, 'x2': 200},
+        41: {'Name': "Captalist Stats Stamp", 'funcType': 'decay', 'x1': 5, 'x2': 100},
     },
     "Skill": {
-        0: "Pickaxe Stamp", 1: "Hatchet Stamp", 2: "Anvil Zoomer Stamp", 3: "Lil' Mining Baggy Stamp", 4: "Twin Ores Stamp",
-        5: "Choppin' Bag Stamp", 6: "Duplogs Stamp", 7: "Matty Bag Stamp", 8: "Smart Dirt Stamp", 9: "Cool Diggy Tool Stamp",
-        10: "High IQ Lumber Stamp", 11: "Swag Swingy Tool Stamp", 12: "Alch Go Brrr Stamp", 13: "Brainstew Stamp", 14: "Drippy Drop Stamp",
-        15: "Droplots Stamp", 16: "Fishing Rod Stamp", 17: "Fishhead Stamp", 18: "Catch Net Stamp", 19: "Fly Intel Stamp",
-        20: "Bag o Heads Stamp", 21: "Holy Mackerel Stamp", 22: "Bugsack Stamp", 23: "Buzz Buzz Stamp", 24: "Hidey Box Stamp",
-        25: "Purp Froge Stamp", 26: "Spikemouth Stamp", 27: "Shiny Crab Stamp", 28: "Gear Stamp", 29: "Stample Stamp",
-        30: "Saw Stamp", 31: "Amplestample Stamp", 32: "SpoOoky Stamp", 33: "Flowin Stamp", 34: "Prayday Stamp",
-        35: "Banked Pts Stamp", 36: "Cooked Meal Stamp", 37: "Spice Stamp", 38: "Ladle Stamp", 39: "Nest Eggs Stamp",
-        40: "Egg Stamp", 41: "Lab Tube Stamp", 42: "Sailboat Stamp", 43: "Gamejoy Stamp", 44: "Divine Stamp",
-        45: "Multitool Stamp", 46: "Skelefish Stamp", 47: "Crop Evo Stamp", 48: "Sneaky Peeky Stamp", 49: "Jade Mint Stamp",
-        50: "Summoner Stone Stamp", 51: "White Essence Stamp", 52: "Triad Essence Stamp", 53: "Dark Triad Essence Stamp"
+        0: {'Name': "Pickaxe Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        1: {'Name': "Hatchet Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        2: {'Name': "Anvil Zoomer Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        3: {'Name': "Lil' Mining Baggy Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        4: {'Name': "Twin Ores Stamp", 'funcType': 'decay', 'x1': 15, 'x2': 40},
+        5: {'Name': "Choppin' Bag Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        6: {'Name': "Duplogs Stamp", 'funcType': 'decay', 'x1': 15, 'x2': 40},
+        7: {'Name': "Matty Bag Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        8: {'Name': "Smart Dirt Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        9: {'Name': "Cool Diggy Tool Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0},
+        10: {'Name': "High IQ Lumber Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        11: {'Name': "Swag Swingy Tool Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0},
+        12: {'Name': "Alch Go Brrr Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        13: {'Name': "Brainstew Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        14: {'Name': "Drippy Drop Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        15: {'Name': "Droplots Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        16: {'Name': "Fishing Rod Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0},
+        17: {'Name': "Fishhead Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        18: {'Name': "Catch Net Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0},
+        19: {'Name': "Fly Intel Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        20: {'Name': "Bag o Heads Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        21: {'Name': "Holy Mackerel Stamp", 'funcType': 'decay', 'x1': 20, 'x2': 40},
+        22: {'Name': "Bugsack Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        23: {'Name': "Buzz Buzz Stamp", 'funcType': 'decay', 'x1': 20, 'x2': 40},
+        24: {'Name': "Hidey Box Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0},
+        25: {'Name': "Purp Froge Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        26: {'Name': "Spikemouth Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        27: {'Name': "Shiny Crab Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0},
+        28: {'Name': "Gear Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        29: {'Name': "Stample Stamp", 'funcType': 'decay', 'x1': 4, 'x2': 30},
+        30: {'Name': "Saw Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        31: {'Name': "Amplestample Stamp", 'funcType': 'decay', 'x1': 5, 'x2': 30},
+        32: {'Name': "SpoOoky Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0},
+        33: {'Name': "Flowin Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        34: {'Name': "Prayday Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        35: {'Name': "Banked Pts Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        36: {'Name': "Cooked Meal Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0},
+        37: {'Name': "Spice Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0},
+        38: {'Name': "Ladle Stamp", 'funcType': 'add', 'x1': 25, 'x2': 0},
+        39: {'Name': "Nest Eggs Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        40: {'Name': "Egg Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        41: {'Name': "Lab Tube Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        42: {'Name': "Sailboat Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        43: {'Name': "Gamejoy Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        44: {'Name': "Divine Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        45: {'Name': "Multitool Stamp", 'funcType': 'add', 'x1': 10, 'x2': 0},
+        46: {'Name': "Skelefish Stamp", 'funcType': 'decay', 'x1': 0.2, 'x2': 20},
+        47: {'Name': "Crop Evo Stamp", 'funcType': 'add', 'x1': 5, 'x2': 0},
+        48: {'Name': "Sneaky Peeky Stamp", 'funcType': 'decay', 'x1': 50, 'x2': 150},
+        49: {'Name': "Jade Mint Stamp", 'funcType': 'add', 'x1': 0.5, 'x2': 0},
+        50: {'Name': "Summoner Stone Stamp", 'funcType': 'decay', 'x1': 50, 'x2': 150},
+        51: {'Name': "White Essence Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        52: {'Name': "Triad Essence Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        53: {'Name': "Dark Triad Essence Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
     },
     "Misc": {
-        0: "Questin Stamp", 1: "Mason Jar Stamp", 2: "Crystallin", 3: "Arcade Ball Stamp", 4: "Gold Ball Stamp",
-        5: "Potion Stamp", 6: "Golden Apple Stamp", 7: "Ball Timer Stamp", 8: "Card Stamp", 9: "Forge Stamp",
-        10: "Vendor Stamp", 11: "Sigil Stamp", 12: "Talent I Stamp", 13: "Talent II Stamp", 14: "Talent III Stamp",
-        15: "Talent IV Stamp", 16: "Talent V Stamp", 17: "Talent S Stamp", 18: "Multikill Stamp", 19: "Biblio Stamp",
-        20: "DNA Stamp", 21: "Refinery Stamp", 22: "Atomic Stamp"
+        0: {'Name': "Questin Stamp", 'funcType': 'decay', 'x1': 70, 'x2': 50},
+        1: {'Name': "Mason Jar Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        2: {'Name': "Crystallin", 'funcType': 'decay', 'x1': 110, 'x2': 50},
+        3: {'Name': "Arcade Ball Stamp", 'funcType': 'decay', 'x1': 50, 'x2': 100},
+        4: {'Name': "Gold Ball Stamp", 'funcType': 'decay', 'x1': 40, 'x2': 100},
+        5: {'Name': "Potion Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        6: {'Name': "Golden Apple Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        7: {'Name': "Ball Timer Stamp", 'funcType': 'decay', 'x1': 12, 'x2': 30},
+        8: {'Name': "Card Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        9: {'Name': "Forge Stamp", 'funcType': 'decay', 'x1': 120, 'x2': 250},
+        10: {'Name': "Vendor Stamp", 'funcType': 'decay', 'x1': 35, 'x2': 100},
+        11: {'Name': "Sigil Stamp", 'funcType': 'decay', 'x1': 40, 'x2': 150},
+        12: {'Name': "Talent I Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        13: {'Name': "Talent II Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        14: {'Name': "Talent III Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        15: {'Name': "Talent IV Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        16: {'Name': "Talent V Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        17: {'Name': "Talent S Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        18: {'Name': "Multikill Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        19: {'Name': "Biblio Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        20: {'Name': "DNA Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        21: {'Name': "Refinery Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        22: {'Name': "Atomic Stamp", 'funcType': 'decay', 'x1': 20, 'x2': 80},
     }
 }
 stampTypes = ["Combat", "Skill", "Misc"]
@@ -2181,7 +2394,6 @@ forgeUpgradesDict = {
         "MaxPurchases": 60
     }
 }
-
 
 ###WORLD 2 CONSTS###
 max_IndexOfVials = 75  # Last verified as of v2.08
@@ -2330,427 +2542,248 @@ arcadeBonuses = {
     36: {"Stat": "Farming EXP", "x1": 30, "x2": 100, "funcType": "decay", "displayType": "%"},
     37: {"Stat": "Divinity EXP", "x1": 40, "x2": 100, "funcType": "decay", "displayType": "%"},
 }
+#poBoxDict last taken from code in 2.09: #PostOffUpgradeInfo = function ()
+#Translate using the Post Office tab in AR spreadsheet
+poBoxDict = {
+    0: {'Name': 'Civil War Memory Box',
+        '1_funcType': 'add', '1_x1': 1, '1_x2': 0, '1_pre': '', '1_post': '', '1_stat': 'Base Damage',
+        '2_funcType': 'decay', '2_x1': 13, '2_x2': 200, '2_pre': '', '2_post': '%', '2_stat': 'Fight AFK Gains', '2_minCount': 25,
+        '3_funcType': 'decay', '3_x1': 10, '3_x2': 200, '3_pre': '', '3_post': '%', '3_stat': 'Critical Chance', '3_minCount': 100},
+    1: {'Name': 'Locally Sourced Organs',
+        '1_funcType': 'intervalAdd', '1_x1': 1, '1_x2': 2, '1_pre': '', '1_post': '', '1_stat': 'Base Max HP',
+        '2_funcType': 'add', '2_x1': 0.1, '2_x2': 0, '2_pre': '', '2_post': '%', '2_stat': 'Max HP', '2_minCount': 25,
+        '3_funcType': 'decay', '3_x1': 30, '3_x2': 200, '3_pre': '', '3_post': '%', '3_stat': 'Faster Respawns', '3_minCount': 100},
+    2: {'Name': 'Magician Starterpack',
+        '1_funcType': 'intervalAdd', '1_x1': 1, '1_x2': 3, '1_pre': '', '1_post': '', '1_stat': 'Base Max MP',
+        '2_funcType': 'add', '2_x1': 0.1, '2_x2': 0, '2_pre': '', '2_post': '%', '2_stat': 'Max MP', '2_minCount': 25,
+        '3_funcType': 'decay', '3_x1': 17, '3_x2': 200, '3_pre': '', '3_post': '%', '3_stat': 'Faster Cooldowns', '3_minCount': 100},
+    3: {'Name': 'Box of Unwanted Stats',
+        '1_funcType': 'add', '1_x1': 0.25, '1_x2': 0, '1_pre': '', '1_post': '', '1_stat': 'Base Accuracy',
+        '2_funcType': 'add', '2_x1': 0.3, '2_x2': 0, '2_pre': '', '2_post': '', '2_stat': 'Base Defence', '2_minCount': 25,
+        '3_funcType': 'decay', '3_x1': 29, '3_x2': 170, '3_pre': '', '3_post': '%', '3_stat': 'Monster EXP', '3_minCount': 100},
+    4: {'Name': 'Dwarven Supplies',
+        '1_funcType': 'decay', '1_x1': 50, '1_x2': 200, '1_pre': '', '1_post': '%', '1_stat': 'Mining Efficiency',
+        '2_funcType': 'decay', '2_x1': 40, '2_x2': 150, '2_pre': '', '2_post': '%', '2_stat': 'Prowess Effect', '2_minCount': 25,
+        '3_funcType': 'decay', '3_x1': 15, '3_x2': 175, '3_pre': '', '3_post': '%', '3_stat': 'Mining AFK Gain', '3_minCount': 100},
+    5: {'Name': 'Blacksmith Box',
+        '1_funcType': 'decay', '1_x1': 50, '1_x2': 200, '1_pre': '', '1_post': '%', '1_stat': 'Smithing EXP',
+        '2_funcType': 'decay', '2_x1': 75, '2_x2': 200, '2_pre': '', '2_post': '%', '2_stat': 'Production Speed', '2_minCount': 25,
+        '3_funcType': 'decay', '3_x1': 30, '3_x2': 150, '3_pre': '', '3_post': '%', '3_stat': 'to Craft +1 Slot', '3_minCount': 100},
+    6: {'Name': 'Taped Up Timber',
+        '1_funcType': 'decay', '1_x1': 50, '1_x2': 200, '1_pre': '', '1_post': '%', '1_stat': 'Choppin Efficiency',
+        '2_funcType': 'decay', '2_x1': 40, '2_x2': 150, '2_pre': '', '2_post': '%', '2_stat': 'Prowess Effect', '2_minCount': 25,
+        '3_funcType': 'decay', '3_x1': 15, '3_x2': 175, '3_pre': '', '3_post': '%', '3_stat': 'Choppin AFK Gain', '3_minCount': 100},
+    7: {'Name': 'Carepack From Mum',
+        '1_funcType': 'decay', '1_x1': 23, '1_x2': 200, '1_pre': '', '1_post': '%', '1_stat': 'Not Consume Food',
+        '2_funcType': 'decay', '2_x1': 30, '2_x2': 200, '2_pre': '', '2_post': '%', '2_stat': 'Health Food Effect', '2_minCount': 25,
+        '3_funcType': 'decay', '3_x1': 30, '3_x2': 200, '3_pre': '', '3_post': '%', '3_stat': 'Boost Food Effect', '3_minCount': 100},
+    8: {'Name': 'Sealed Fishheads',
+        '1_funcType': 'decay', '1_x1': 50, '1_x2': 200, '1_pre': '', '1_post': '%', '1_stat': 'Fishin Efficiency',
+        '2_funcType': 'decay', '2_x1': 40, '2_x2': 150, '2_pre': '', '2_post': '%', '2_stat': 'Prowess Effect', '2_minCount': 25,
+        '3_funcType': 'decay', '3_x1': 15, '3_x2': 175, '3_pre': '', '3_post': '%', '3_stat': 'Fishin AFK Gain', '3_minCount': 100},
+    9: {'Name': 'Potion Package',
+        '1_funcType': 'decay', '1_x1': 70, '1_x2': 200, '1_pre': '', '1_post': '%', '1_stat': 'Brewing Speed',
+        '2_funcType': 'decay', '2_x1': 60, '2_x2': 150, '2_pre': '', '2_post': '%', '2_stat': 'Alchemy EXP', '2_minCount': 25,
+        '3_funcType': 'add', '3_x1': 0.1, '3_x2': 0, '3_pre': '', '3_post': '', '3_stat': 'Cranium Cook Time', '3_minCount': 100},
+    10: {'Name': 'Bug Hunting Supplies',
+         '1_funcType': 'decay', '1_x1': 50, '1_x2': 200, '1_pre': '', '1_post': '%', '1_stat': 'Catchin Efficiency',
+         '2_funcType': 'decay', '2_x1': 40, '2_x2': 150, '2_pre': '', '2_post': '%', '2_stat': 'Prowess Effect', '2_minCount': 25,
+         '3_funcType': 'decay', '3_x1': 15, '3_x2': 175, '3_pre': '', '3_post': '%', '3_stat': 'Catchin AFK Gain', '3_minCount': 100},
+    11: {'Name': 'Non Predatory Loot Box',
+         '1_funcType': 'decay', '1_x1': 50, '1_x2': 200, '1_pre': '', '1_post': '%', '1_stat': 'Drop Rarity',
+         '2_funcType': 'add', '2_x1': 0.25, '2_x2': 0, '2_pre': '', '2_post': '', '2_stat': 'LUK', '2_minCount': 25,
+         '3_funcType': 'decay', '3_x1': 65, '3_x2': 200, '3_pre': '', '3_post': '%', '3_stat': 'Crystal Mob Spawn', '3_minCount': 100},
+    12: {'Name': 'Deaths Storage Unit',
+         '1_funcType': 'decay', '1_x1': 22, '1_x2': 200, '1_pre': '', '1_post': '', '1_stat': 'Weapon Power',
+         '2_funcType': 'decay', '2_x1': 15, '2_x2': 150, '2_pre': '', '2_post': '%', '2_stat': 'Basic Atk Speed', '2_minCount': 25,
+         '3_funcType': 'decay', '3_x1': 15, '3_x2': 200, '3_pre': '', '3_post': '%', '3_stat': 'Total Damage', '3_minCount': 100},
+    13: {'Name': 'Utilitarian Capsule',
+         '1_funcType': 'decay', '1_x1': 5, '1_x2': 200, '1_pre': '', '1_post': '%', '1_stat': 'Printer Sample Size',
+         '2_funcType': 'decay', '2_x1': 15, '2_x2': 200, '2_pre': '', '2_post': '%', '2_stat': 'Multikill per Tier', '2_minCount': 25,
+         '3_funcType': 'decay', '3_x1': 39, '3_x2': 200, '3_pre': '', '3_post': '%', '3_stat': 'Cash from Mobs', '3_minCount': 100},
+    14: {'Name': 'Lazzzy Lootcrate',
+         '1_funcType': 'decay', '1_x1': 30, '1_x2': 200, '1_pre': '', '1_post': '%', '1_stat': '2X AFK XP chance',
+         '2_funcType': 'decay', '2_x1': 35, '2_x2': 200, '2_pre': '', '2_post': '%', '2_stat': 'AFK exp if 36hr+', '2_minCount': 25,
+         '3_funcType': 'decay', '3_x1': 35, '3_x2': 200, '3_pre': '', '3_post': '%', '3_stat': 'AFK Cash if 36hr+', '3_minCount': 100},
+    15: {'Name': 'Science Spare Parts',
+         '1_funcType': 'add', '1_x1': 4, '1_x2': 0, '1_pre': '', '1_post': '', '1_stat': 'Lab Efficiency',
+         '2_funcType': 'decay', '2_x1': 40, '2_x2': 150, '2_pre': '', '2_post': '%', '2_stat': 'Lab EXP gain', '2_minCount': 25,
+         '3_funcType': 'decay', '3_x1': 30, '3_x2': 200, '3_pre': '', '3_post': '', '3_stat': 'Base LUK', '3_minCount': 100},
+    16: {'Name': 'Trapping Lockbox',
+         '1_funcType': 'decay', '1_x1': 50, '1_x2': 200, '1_pre': '', '1_post': '%', '1_stat': 'Trapping Efficiency',
+         '2_funcType': 'decay', '2_x1': 50, '2_x2': 200, '2_pre': '', '2_post': '%', '2_stat': 'Trapping EXP', '2_minCount': 25,
+         '3_funcType': 'decay', '3_x1': 45, '3_x2': 200, '3_pre': '', '3_post': '%', '3_stat': 'Critters Trapped', '3_minCount': 100},
+    17: {'Name': 'Construction Container',
+         '1_funcType': 'add', '1_x1': 0.25, '1_x2': 0, '1_pre': '', '1_post': '%', '1_stat': 'Base Build Rate',
+         '2_funcType': 'decay', '2_x1': 75, '2_x2': 200, '2_pre': '', '2_post': '%', '2_stat': 'Shrine Charge Rate', '2_minCount': 25,
+         '3_funcType': 'add', '3_x1': 0.5, '3_x2': 0, '3_pre': '', '3_post': '%', '3_stat': 'Construction EXP', '3_minCount': 100},
+    18: {'Name': 'Crate of the Creator',
+         '1_funcType': 'decay', '1_x1': 50, '1_x2': 200, '1_pre': '', '1_post': '%', '1_stat': 'Worship Efficiency',
+         '2_funcType': 'decay', '2_x1': 200, '2_x2': 200, '2_pre': '', '2_post': '%', '2_stat': 'Max Charge', '2_minCount': 25,
+         '3_funcType': 'decay', '3_x1': 90, '3_x2': 200, '3_pre': '', '3_post': '', '3_stat': 'Starting Worship Pts', '3_minCount': 100},
+    19: {'Name': 'Chefs Essentials',
+         '1_funcType': 'add', '1_x1': 4, '1_x2': 0, '1_pre': '', '1_post': '', '1_stat': 'Cooking Efficiency',
+         '2_funcType': 'decay', '2_x1': 60, '2_x2': 200, '2_pre': '', '2_post': '%', '2_stat': 'Cooking EXP gain', '2_minCount': 25,
+         '3_funcType': 'decay', '3_x1': 88, '3_x2': 200, '3_pre': '', '3_post': '%', '3_stat': 'for 2x Ladle Drop', '3_minCount': 100},
+    20: {'Name': 'Myriad Crate',
+         '1_funcType': 'decay', '1_x1': 400, '1_x2': 20000, '1_pre': '', '1_post': '', '1_stat': 'Base All Stat',
+         '2_funcType': 'decay', '2_x1': 1000, '2_x2': 20000, '2_pre': '', '2_post': '', '2_stat': 'Base All Efficiency', '2_minCount': 100,
+         '3_funcType': 'decay', '3_x1': 100, '3_x2': 20000, '3_pre': '', '3_post': '%', '3_stat': 'All Skills exp', '3_minCount': 300},
+    21: {'Name': "Scurvy C'arr'ate",
+         '1_funcType': 'decay', '1_x1': 8, '1_x2': 400, '1_pre': '', '1_post': '%', '1_stat': 'afk counts for sailing',
+         '2_funcType': 'add', '2_x1': 0.2, '2_x2': 0, '2_pre': '', '2_post': '', '2_stat': 'AGI', '2_minCount': 50,
+         '3_funcType': 'decay', '3_x1': 25, '3_x2': 400, '3_pre': '', '3_post': '%', '3_stat': 'Total Damage', '3_minCount': 200},
+    22: {'Name': 'Box of Gosh',
+         '1_funcType': 'decay', '1_x1': 75, '1_x2': 400, '1_pre': '', '1_post': '%', '1_stat': 'Divinity EXP',
+         '2_funcType': 'add', '2_x1': 0.2, '2_x2': 0, '2_pre': '', '2_post': '', '2_stat': 'WIS', '2_minCount': 50,
+         '3_funcType': 'decay', '3_x1': 30, '3_x2': 400, '3_pre': '', '3_post': '%', '3_stat': 'Divinity Gain', '3_minCount': 200},
+    23: {'Name': 'Gaming Lootcrate',
+         '1_funcType': 'decay', '1_x1': 14, '1_x2': 400, '1_pre': '', '1_post': '%', '1_stat': 'afk counts for gaming',
+         '2_funcType': 'add', '2_x1': 0.2, '2_x2': 0, '2_pre': '', '2_post': '', '2_stat': 'STR', '2_minCount': 50,
+         '3_funcType': 'decay', '3_x1': 25, '3_x2': 400, '3_pre': '', '3_post': '%', '3_stat': 'Total Damage', '3_minCount': 200},
+}
+bubbleCauldronColorList = ['Orange', 'Green', 'Purple', 'Yellow']
+bubblesDict = {
+    0: {
+        0: {'Name': 'Roid Ragin', 'Material': 'OakTree', 'x1': 1, 'x2': 0, 'funcType': 'add'},
+        1: {'Name': 'Warriors Rule', 'Material': 'Grasslands1', 'x1': 2, 'x2': 50, 'funcType': 'decayMulti'},
+        2: {'Name': 'Hearty Diggy', 'Material': 'JungleTree', 'x1': 50, 'x2': 100, 'funcType': 'decay'},
+        3: {'Name': 'Wyoming Blood', 'Material': 'Bug1', 'x1': 23.5, 'x2': 1.5, 'funcType': 'bigBase'},
+        4: {'Name': 'Reely Smart', 'Material': 'CraftMat6', 'x1': 100, 'x2': 80, 'funcType': 'decay'},
+        5: {'Name': 'Big Meaty Claws', 'Material': 'DesertB2', 'x1': 4, 'x2': 0, 'funcType': 'add'},
+        6: {'Name': 'Sploosh Sploosh', 'Material': 'Fish2', 'x1': 23.5, 'x2': 1.5, 'funcType': 'bigBase'},
+        7: {'Name': 'Stronk Tools', 'Material': 'Plat', 'x1': 65, 'x2': 70, 'funcType': 'decay'},
+        8: {'Name': 'Fmj', 'Material': 'Bug4', 'x1': 0.5, 'x2': 0, 'funcType': 'add'},
+        9: {'Name': 'Bappity Boopity', 'Material': 'CraftMat8', 'x1': 35, 'x2': 100, 'funcType': 'decay'},
+        10: {'Name': 'Brittley Spears', 'Material': 'Critter1', 'x1': 40, 'x2': 50, 'funcType': 'decay'},
+        11: {'Name': 'Call Me Bob', 'Material': 'SnowA3', 'x1': 25, 'x2': 2.5, 'funcType': 'bigBase'},
+        12: {'Name': 'Carpenter', 'Material': 'Refinery2', 'x1': 5, 'x2': 50, 'funcType': 'decay'},
+        13: {'Name': 'Buff Boi Talent', 'Material': 'Critter4', 'x1': 5, 'x2': 1, 'funcType': 'bigBase'},
+        14: {'Name': 'Orange Bargain', 'Material': 'Soul4', 'x1': 40, 'x2': 12, 'funcType': 'decay'},
+        15: {'Name': 'Penny Of Strength', 'Material': 'Fish5', 'x1': 18, 'x2': 30, 'funcType': 'decay'},
+        16: {'Name': 'Multorange', 'Material': 'GalaxyA3', 'x1': 1.4, 'x2': 30, 'funcType': 'decayMulti'},
+        17: {'Name': 'Dream Of Ironfish', 'Material': 'CraftMat13', 'x1': 12, 'x2': 30, 'funcType': 'decay'},
+        18: {'Name': 'Shimmeron', 'Material': 'CraftMat14', 'x1': 80, 'x2': 40, 'funcType': 'decay'},
+        19: {'Name': 'Bite But Not Chew', 'Material': 'GalaxyC4', 'x1': 50, 'x2': 40, 'funcType': 'decay'},
+        20: {'Name': 'Spear Powah', 'Material': 'Bits', 'x1': 40, 'x2': 60, 'funcType': 'decay'},
+        21: {'Name': 'Slabi Orefish', 'Material': 'Soul6', 'x1': 3, 'x2': 60, 'funcType': 'decay'},
+        22: {'Name': 'Gamer At Heart', 'Material': 'SailTr9', 'x1': 20, 'x2': 60, 'funcType': 'decay'},
+        23: {'Name': 'Slabi Strength', 'Material': 'LavaB3b', 'x1': 25, 'x2': 60, 'funcType': 'decay'},
+        24: {'Name': 'Power Trione', 'Material': 'SailTr20', 'x1': 23, 'x2': 50, 'funcType': 'decay'},
+        25: {'Name': 'Farquad Force', 'Material': 'W6item1', 'x1': 30, 'x2': 60, 'funcType': 'decay'},
+        26: {'Name': 'Endgame Eff I', 'Material': 'SpiA2b', 'x1': 3, 'x2': 60, 'funcType': 'decay'},
+        27: {'Name': 'Tome Strength', 'Material': 'W6item8', 'x1': 2.5, 'x2': 60, 'funcType': 'decay'},
+        28: {'Name': 'Essence Boost-Orange', 'Material': 'Tree13', 'x1': 50, 'x2': 60, 'funcType': 'decay'},
+        29: {'Name': 'Crop Chapter', 'Material': 'W6item10', 'x1': 12, 'x2': 50, 'funcType': 'decay'},
+    },  #Orange Bubbles
+    1: {
+        0: {'Name': 'Swift Steppin', 'Material': 'Copper', 'x1': 1, 'x2': 0, 'funcType': 'add'},
+        1: {'Name': 'Archer Or Bust', 'Material': 'Grasslands1', 'x1': 2, 'x2': 50, 'funcType': 'decayMulti'},
+        2: {'Name': 'Hammer Hammer', 'Material': 'Iron', 'x1': 23, 'x2': 2, 'funcType': 'bigBase'},
+        3: {'Name': 'Lil Big Damage', 'Material': 'Fish1', 'x1': 20, 'x2': 100, 'funcType': 'decay'},
+        4: {'Name': 'Anvilnomics', 'Material': 'ForestTree', 'x1': 40, 'x2': 100, 'funcType': 'decay'},
+        5: {'Name': 'Quick Slap', 'Material': 'DesertB1', 'x1': 4, 'x2': 0, 'funcType': 'add'},
+        6: {'Name': 'Sanic Tools', 'Material': 'Jungle1', 'x1': 65, 'x2': 70, 'funcType': 'decay'},
+        7: {'Name': 'Bug^2', 'Material': 'Bug3', 'x1': 23.5, 'x2': 1.5, 'funcType': 'bigBase'},
+        8: {'Name': 'Shaquracy', 'Material': 'Fish4', 'x1': 1, 'x2': 0, 'funcType': 'add'},
+        9: {'Name': 'Cheap Shot', 'Material': 'Bug5', 'x1': 7, 'x2': 100, 'funcType': 'decay'},
+        10: {'Name': 'Bow Jack', 'Material': 'Soul1', 'x1': 40, 'x2': 50, 'funcType': 'decay'},
+        11: {'Name': 'Call Me Ash', 'Material': 'SaharanFoal', 'x1': 25, 'x2': 2, 'funcType': 'bigBase'},
+        12: {'Name': 'Cuz I Catch Em All', 'Material': 'Soul3', 'x1': 3, 'x2': 100, 'funcType': 'decayMulti'},
+        13: {'Name': 'Fast Boi Talent', 'Material': 'Bug6', 'x1': 5, 'x2': 1, 'funcType': 'bigBase'},
+        14: {'Name': 'Green Bargain', 'Material': 'Critter5', 'x1': 40, 'x2': 12, 'funcType': 'decay'},
+        15: {'Name': 'Dollar Of Agility', 'Material': 'CraftMat11', 'x1': 18, 'x2': 30, 'funcType': 'decay'},
+        16: {'Name': 'Premigreen', 'Material': 'Critter8', 'x1': 1.4, 'x2': 30, 'funcType': 'decayMulti'},
+        17: {'Name': 'Fly In Mind', 'Material': 'Bug7', 'x1': 12, 'x2': 40, 'funcType': 'decay'},
+        18: {'Name': 'Kill Per Kill', 'Material': 'Refinery4', 'x1': 70, 'x2': 40, 'funcType': 'decay'},
+        19: {'Name': 'Afk Expexp', 'Material': 'Bug8', 'x1': 40, 'x2': 40, 'funcType': 'decay'},
+        20: {'Name': 'Bow Power', 'Material': 'Bits', 'x1': 40, 'x2': 60, 'funcType': 'decay'},
+        21: {'Name': 'Slabo Critterbug', 'Material': 'Tree9', 'x1': 3, 'x2': 60, 'funcType': 'decay'},
+        22: {'Name': 'Sailor At Heart', 'Material': 'SailTr11', 'x1': 16, 'x2': 60, 'funcType': 'decay'},
+        23: {'Name': 'Slabo Agility', 'Material': 'LavaB6', 'x1': 25, 'x2': 60, 'funcType': 'decay'},
+        24: {'Name': 'Power Tritwo', 'Material': 'SailTr24', 'x1': 23, 'x2': 50, 'funcType': 'decay'},
+        25: {'Name': 'Quickdraw Quiver', 'Material': 'W6item0', 'x1': 40, 'x2': 60, 'funcType': 'decay'},
+        26: {'Name': 'Essence Boost-Green', 'Material': 'Tree12', 'x1': 50, 'x2': 60, 'funcType': 'decay'},
+        27: {'Name': 'Endgame Eff II', 'Material': 'W6item3', 'x1': 3, 'x2': 60, 'funcType': 'decay'},
+        28: {'Name': 'Tome Agility', 'Material': 'Bug13', 'x1': 2.5, 'x2': 60, 'funcType': 'decay'},
+        29: {'Name': 'Stealth Chapter', 'Material': 'W6item5', 'x1': 10, 'x2': 50, 'funcType': 'decay'},
+    },  #Green Bubbles
+    2: {
+        0: {'Name': 'Stable Jenius', 'Material': 'BirchTree', 'x1': 1, 'x2': 0, 'funcType': 'add'},
+        1: {'Name': 'Mage Is Best', 'Material': 'Grasslands1', 'x1': 2, 'x2': 50, 'funcType': 'decayMulti'},
+        2: {'Name': 'Hocus Choppus', 'Material': 'CraftMat5', 'x1': 50, 'x2': 100, 'funcType': 'decay'},
+        3: {'Name': 'Molto Loggo', 'Material': 'IronBar', 'x1': 23.5, 'x2': 1.5, 'funcType': 'bigBase'},
+        4: {'Name': 'Noodubble', 'Material': 'CraftMat7', 'x1': 100, 'x2': 60, 'funcType': 'decay'},
+        5: {'Name': 'Name I Guess', 'Material': 'Gold', 'x1': 4, 'x2': 0, 'funcType': 'add'},
+        6: {'Name': 'Le Brain Tools', 'Material': 'Bug3', 'x1': 65, 'x2': 70, 'funcType': 'decay'},
+        7: {'Name': 'Cookin Roadkill', 'Material': 'ToiletTree', 'x1': 120, 'x2': 70, 'funcType': 'decay'},
+        8: {'Name': 'Brewstachio', 'Material': 'DesertC1', 'x1': 50, 'x2': 100, 'funcType': 'decay'},
+        9: {'Name': 'All For Kill', 'Material': 'StumpTree', 'x1': 40, 'x2': 100, 'funcType': 'decay'},
+        10: {'Name': 'Matty Stafford', 'Material': 'Refinery1', 'x1': 40, 'x2': 50, 'funcType': 'decay'},
+        11: {'Name': 'Call Me Pope', 'Material': 'Critter2', 'x1': 2.4, 'x2': 70, 'funcType': 'decayMulti'},
+        12: {'Name': 'Gospel Leader', 'Material': 'Bug5', 'x1': 60, 'x2': 30, 'funcType': 'decay'},
+        13: {'Name': 'Smart Boi Talent', 'Material': 'SnowC1', 'x1': 5, 'x2': 1, 'funcType': 'bigBase'},
+        14: {'Name': 'Purple Bargain', 'Material': 'Soul1', 'x1': 40, 'x2': 12, 'funcType': 'decay'},
+        15: {'Name': 'Nickel Of Wisdom', 'Material': 'AlienTree', 'x1': 18, 'x2': 30, 'funcType': 'decay'},
+        16: {'Name': 'Severapurple', 'Material': 'Void', 'x1': 1.4, 'x2': 30, 'funcType': 'decayMulti'},
+        17: {'Name': 'Tree Sleeper', 'Material': 'Soul5', 'x1': 12, 'x2': 40, 'funcType': 'decay'},
+        18: {'Name': 'Hyperswift', 'Material': 'Fish7', 'x1': 30, 'x2': 30, 'funcType': 'decay'},
+        19: {'Name': 'Matrix Evolved', 'Material': 'Tree8', 'x1': 60, 'x2': 40, 'funcType': 'decay'},
+        20: {'Name': 'Wand Pawur', 'Material': 'Bits', 'x1': 40, 'x2': 60, 'funcType': 'decay'},
+        21: {'Name': 'Slabe Logsoul', 'Material': 'Bug9', 'x1': 3, 'x2': 60, 'funcType': 'decay'},
+        22: {'Name': 'Pious At Heart', 'Material': 'SailTr13', 'x1': 300, 'x2': 100, 'funcType': 'decay'},
+        23: {'Name': 'Slabe Wisdom', 'Material': 'LavaC1', 'x1': 25, 'x2': 60, 'funcType': 'decay'},
+        24: {'Name': 'Power Trithree', 'Material': 'SailTr28', 'x1': 23, 'x2': 50, 'funcType': 'decay'},
+        25: {'Name': 'Smarter Spells', 'Material': 'W6item6', 'x1': 25, 'x2': 60, 'funcType': 'decay'},
+        26: {'Name': 'Endgame Eff III', 'Material': 'W6item7', 'x1': 3, 'x2': 60, 'funcType': 'decay'},
+        27: {'Name': 'Essence Boost-Purple', 'Material': 'Soul7', 'x1': 50, 'x2': 100, 'funcType': 'decay'},
+        28: {'Name': 'Tome Wisdom', 'Material': 'W6item4', 'x1': 2.5, 'x2': 60, 'funcType': 'decay'},
+        29: {'Name': 'Essence Chapter', 'Material': 'W6item0', 'x1': 15, 'x2': 50, 'funcType': 'decay'},
+    },  #Purple Bubbles
+    3: {
+        0: {'Name': 'Lotto Skills', 'Material': 'CraftMat1', 'x1': 1, 'x2': 0, 'funcType': 'add'},
+        1: {'Name': 'Droppin Loads', 'Material': 'Fish1', 'x1': 40, 'x2': 70, 'funcType': 'decay'},
+        2: {'Name': 'Startue Exp', 'Material': 'DesertA1', 'x1': 25, 'x2': 60, 'funcType': 'decay'},
+        3: {'Name': 'Level Up Gift', 'Material': 'DesertA3', 'x1': 100, 'x2': 30, 'funcType': 'decay'},
+        4: {'Name': 'Prowesessary', 'Material': 'ToiletTree', 'x1': 1.5, 'x2': 60, 'funcType': 'decayMulti'},
+        5: {'Name': 'Stamp Tramp', 'Material': 'Bug2', 'x1': 1, 'x2': 0, 'funcType': 'add'},
+        6: {'Name': 'Undeveloped Costs', 'Material': 'Fish3', 'x1': 40, 'x2': 70, 'funcType': 'decay'},
+        7: {'Name': 'Da Daily Drip', 'Material': 'CraftMat9', 'x1': 30, 'x2': 100, 'funcType': 'decay'},
+        8: {'Name': 'Grind Time', 'Material': 'Liquid1', 'x1': 9.7, 'x2': 0.3, 'funcType': 'bigBase'},
+        9: {'Name': 'Laaarrrryyyy', 'Material': 'Dementia', 'x1': 120, 'x2': 100, 'funcType': 'decay'},
+        10: {'Name': 'Cogs For Hands', 'Material': 'SnowA2', 'x1': 4, 'x2': 0, 'funcType': 'add'},
+        11: {'Name': 'Sample It', 'Material': 'Soul2', 'x1': 12, 'x2': 40, 'funcType': 'decay'},
+        12: {'Name': 'Big Game Hunter', 'Material': 'Critter3', 'x1': 60, 'x2': 30, 'funcType': 'decay'},
+        13: {'Name': 'Ignore Overdues', 'Material': 'Tree7', 'x1': 100, 'x2': 60, 'funcType': 'decay'},
+        14: {'Name': 'Yellow Bargain', 'Material': 'Critter6', 'x1': 40, 'x2': 12, 'funcType': 'decay'},
+        15: {'Name': 'Mr Massacre', 'Material': 'Refinery3', 'x1': 90, 'x2': 50, 'funcType': 'decay'},
+        16: {'Name': 'Egg Ink', 'Material': 'Spice0', 'x1': 40, 'x2': 40, 'funcType': 'decay'},
+        17: {'Name': 'Diamond Chef', 'Material': 'Spice6', 'x1': 0.3, 'x2': 13, 'funcType': 'decayMulti'},
+        18: {'Name': 'Card Champ', 'Material': 'Spice9', 'x1': 100, 'x2': 40, 'funcType': 'decay'},
+        19: {'Name': 'Petting The Rift', 'Material': 'Critter10', 'x1': 15, 'x2': 50, 'funcType': 'decay'},
+        20: {'Name': 'Boaty Bubble', 'Material': 'Bits', 'x1': 135, 'x2': 70, 'funcType': 'decay'},
+        21: {'Name': 'Big P', 'Material': 'SailTr1', 'x1': 0.5, 'x2': 60, 'funcType': 'decayMulti'},
+        22: {'Name': 'Bit By Bit', 'Material': 'Tree10', 'x1': 50, 'x2': 70, 'funcType': 'decay'},
+        23: {'Name': 'Gifts Abound', 'Material': 'Bug10', 'x1': 40, 'x2': 60, 'funcType': 'decay'},
+        24: {'Name': 'Atom Split', 'Material': 'LavaC2', 'x1': 14, 'x2': 40, 'funcType': 'decay'},
+        25: {'Name': 'Cropius Mapper', 'Material': 'SpiA5', 'x1': 5, 'x2': 70, 'funcType': 'decay'},
+        26: {'Name': 'Essence Boost-Yellow', 'Material': 'Bug12', 'x1': 50, 'x2': 60, 'funcType': 'decay'},
+        27: {'Name': 'Hinge Buster', 'Material': 'W6item2', 'x1': 100, 'x2': 70, 'funcType': 'decay'},
+        28: {'Name': 'Ninja Looter', 'Material': 'W6item9', 'x1': 0.5, 'x2': 60, 'funcType': 'decayMulti'},
+        29: {'Name': 'Lo Cost Mo Jade', 'Material': 'SpiD1', 'x1': 99, 'x2': 40, 'funcType': 'decay'},
+    },  #Yellow Bubbles
+}
 def getReadableVialNames(inputNumber):
     try:
-        inputNumber = int(inputNumber)
+        return f"{vialsDict[int(inputNumber)]['Name']} ({getItemDisplayName(vialsDict[int(inputNumber)]['Material'])})"
     except:
         return f"Unknown Vial {inputNumber}"
-    match inputNumber:
-        case 0:
-            return "Copper Corona (Copper Ore)"
-        case 1:
-            return "Sippy Splinters (Oak Logs)"
-        case 2:
-            return "Mushroom Soup (Spore Cap)"
-        case 3:
-            return "Spool Sprite (Thread)"
-        case 4:
-            return "Barium Mixture (Copper Bar)"
-        case 5:
-            return "Dieter Drink (Bean Slices)"
-        case 6:
-            return "Skinny 0 Cal (Snake Skin)"
-        case 7:
-            return "Thumb Pow (Trusty Nails)"
-        case 8:
-            return "Jungle Juice (Jungle Logs)"
-        case 9:
-            return "Barley Brew (Iron Bar)"
-        case 10:
-            return "Anearful (Glublin Ear)"
-        case 11:
-            return "Tea With Pea (Potty Rolls)"
-        case 12:
-            return "Gold Guzzle (Gold Ore)"
-        case 13:
-            return "Ramificoction (Bullfrog Horn)"
-        case 14:
-            return "Seawater (Goldfish)"
-        case 15:
-            return "Tail Time (Rats Tail)"
-        case 16:
-            return "Fly In My Drink (Fly)"
-        case 17:
-            return "Mimicraught (Megalodon Tooth)"
-        case 18:
-            return "Blue Flav (Platinum Ore)"
-        case 19:
-            return "Slug Slurp (Hermit Can)"
-        case 20:
-            return "Pickle Jar (BobJoePickle)"
-        case 21:
-            return "Fur Refresher (Floof Ploof)"
-        case 22:
-            return "Sippy Soul (Forest Soul)"
-        case 23:
-            return "Crab Juice (Crabbo)"
-        case 24:
-            return "Void Vial (Void Ore)"
-        case 25:
-            return "Red Malt (Redox Salts)"
-        case 26:
-            return "Ew Gross Gross (Mosquisnow)"
-        case 27:
-            return "The Spanish Sahara (Tundra Logs)"
-        case 28:
-            return "Poison Tincture (Poison Froge)"
-        case 29:
-            return "Etruscan Lager (Mamooth Tusk)"
-        case 30:
-            return "Chonker Chug (Dune Soul)"
-        case 31:
-            return "Bubonic Burp (Mousey)"
-        case 32:
-            return "Visible Ink (Pen)"
-        case 33:
-            return "Orange Malt (Explosive Salts)"
-        case 34:
-            return "Snow Slurry (Snow Ball)"
-        case 35:
-            return "Slowergy Drink (Frigid Soul)"
-        case 36:
-            return "Sippy Cup (Sippy Straw)"
-        case 37:
-            return "Bunny Brew (Bunny)"
-        case 38:
-            return "40-40 Purity (Contact Lense)"
-        case 39:
-            return "Shaved Ice (Purple Salt)"
-        case 40:
-            return "Goosey Glug (Honker)"
-        case 41:
-            return "Ball Pickle Jar (BallJoePickle)"
-        case 42:
-            return "Capachino (Purple Mush Cap)"
-        case 43:
-            return "Donut Drink (Half Eaten Donut)"
-        case 44:
-            return "Long Island Tea (Sand Shark)"
-        case 45:
-            return "Spook Pint (Squishy Soul)"
-        case 46:
-            return "Calcium Carbonate (Tongue Bone)"
-        case 47:
-            return "Bloat Draft (Blobfish)"
-        case 48:
-            return "Choco Milkshake (Crumpled Wrapper)"
-        case 49:
-            return "Pearl Seltzer (Pearler Shell)"
-        case 50:
-            return "Krakenade (Kraken)"
-        case 51:
-            return "Electrolyte (Condensed Zap)"
-        case 52:
-            return "Ash Agua (Suggma Ashes)"
-        case 53:
-            return "Maple Syrup (Maple Logs)"
-        case 54:
-            return "Hampter Drippy (Hampter)"
-        case 55:
-            return "Dreadnog (Dreadlo Bar)"
-        case 56:
-            return "Dusted Drink (Dust Mote)"
-        case 57:
-            return "Oj Jooce (Orange Slice)"
-        case 58:
-            return "Oozie Ooblek (Oozie Soul)"
-        case 59:
-            return "Venison Malt (Mongo Worm Slices)"
-        case 60:
-            return "Marble Mocha (Marble Ore)"
-        case 61:
-            return "Willow Sippy (Willow Logs)"
-        case 62:
-            return "Shinyfin Stew (Equinox Fish)"
-        case 63:
-            return "Dreamy Drink (Dream Particulate)"
-        case 64:
-            return "Ricecakorade (Rice Cake)"
-        case 65:
-            return "Ladybug Serum (Ladybug)"
-        case 66:
-            return "Flavorgil (Caulifish)"
-        case 67:
-            return "Greenleaf Tea (Leafy Branch)"
-        case 68:
-            return "Firefly Grog (Firefly)"
-        case 69:
-            return "Dabar Special (Godshard Bar)"
-        case 70:
-            return "Refreshment (Breezy Soul)"
-        case 71:
-            return "Gibbed Drink (Eviscerated Horn)"
-        case 72:
-            return "Ded Sap (Effervescent Log)"
-        case 73:
-            return "Royale Cola (Royal Headpiece)"
-        case 74:
-            return "Turtle Tisane (Tuttle)"
-        case _:
-            return f"Unknown Vial {inputNumber}"
 
 def getReadableBubbleNames(inputNumber, color):
     try:
-        inputNumber = int(inputNumber)
+        return bubblesDict[bubbleCauldronColorList.index(color)][inputNumber]
     except:
-        return f"Unknown Bubble {color} {inputNumber}"
-    match color:
-        case "Orange":
-            match inputNumber:
-                case 0:
-                    return "Roid Ragin"
-                case 1:
-                    return "Warriors Rule"
-                case 2:
-                    return "Hearty Diggy"
-                case 3:
-                    return "Wyoming Blood"
-                case 4:
-                    return "Reely Smart"
-                case 5:
-                    return "Big Meaty Claws"
-                case 6:
-                    return "Sploosh Sploosh"
-                case 7:
-                    return "Stronk Tools"
-                case 8:
-                    return "FMJ"
-                case 9:
-                    return "Bappity Boopity"
-                case 10:
-                    return "Brittley Spears"
-                case 11:
-                    return "Call Me Bob"
-                case 12:
-                    return "Carpenter"
-                case 13:
-                    return "Buff Boi Talent"
-                case 14:
-                    return "Orange Bargain"
-                case 15:
-                    return "Penny of Strength"
-                case 16:
-                    return "Multorange"
-                case 17:
-                    return "Dream of Ironfish"
-                case 18:
-                    return "Shimmeron"
-                case 19:
-                    return "Bite But Not Chew"
-                case 20:
-                    return "Spear Powah"
-                case 21:
-                    return "Slabi Orefish"
-                case 22:
-                    return "Gamer at Heart"
-                case 23:
-                    return "Slabi Strength"
-                case 24:
-                    return "Power Trione"
-                case 25:
-                    return "Farquad Force"
-                case 26:
-                    return "Endgame Eff I"
-                case 27:
-                    return "Tome Strength"
-                case 28:
-                    return "Essence Boost-Orange"
-                case 29:
-                    return "Crop Chapter"
-                case _:
-                    return f"Unknown Bubble {color} {inputNumber}"
-        case "Green":
-            match inputNumber:
-                case 0:
-                    return "Swift Steppin"
-                case 1:
-                    return "Archer or Bust"
-                case 2:
-                    return "Hammer Hammer"
-                case 3:
-                    return "Lil Big Damage"
-                case 4:
-                    return "Anvilnomics"
-                case 5:
-                    return "Quick Slap"
-                case 6:
-                    return "Sanic Tools"
-                case 7:
-                    return "Bug^2"
-                case 8:
-                    return "Shaquracy"
-                case 9:
-                    return "Cheap Shot"
-                case 10:
-                    return "Bow Jack"
-                case 11:
-                    return "Call Me Ash"
-                case 12:
-                    return "Cuz I Catch Em All"
-                case 13:
-                    return "Fast Boi Talent"
-                case 14:
-                    return "Green Bargain"
-                case 15:
-                    return "Dollar Of Agility"
-                case 16:
-                    return "Premigreen"
-                case 17:
-                    return "Fly in Mind"
-                case 18:
-                    return "Kill Per Kill"
-                case 19:
-                    return "Afk Expexp"
-                case 20:
-                    return "Bow Power"
-                case 21:
-                    return "Slabo Critterbug"
-                case 22:
-                    return "Sailor At Heart"
-                case 23:
-                    return "Slabo Agility"
-                case 24:
-                    return "Power Tritwo"
-                case 25:
-                    return "Quickdraw Quiver"
-                case 26:
-                    return "Essence Boost-Green"
-                case 27:
-                    return "Endgame Eff II"
-                case 28:
-                    return "Tome Agility"
-                case 29:
-                    return "Stealth Chapter"
-                case _:
-                    return f"Unknown Bubble {color} {inputNumber}"
-        case "Purple":
-            match inputNumber:
-                case 0:
-                    return "Stable Jenius"
-                case 1:
-                    return "Mage is Best"
-                case 2:
-                    return "Hocus Choppus"
-                case 3:
-                    return "Molto Loggo"
-                case 4:
-                    return "Noodubble"
-                case 5:
-                    return "Name I Guess"
-                case 6:
-                    return "Le Brain Tools"
-                case 7:
-                    return "Cookin Roadkill"
-                case 8:
-                    return "Brewstachio"
-                case 9:
-                    return "All for Kill"
-                case 10:
-                    return "Matty Stafford"
-                case 11:
-                    return "Call Me Pope"
-                case 12:
-                    return "Gospel Leader"
-                case 13:
-                    return "Smart Boi Talent"
-                case 14:
-                    return "Purple Bargain"
-                case 15:
-                    return "Nickel Of Wisdom"
-                case 16:
-                    return "Severapurple"
-                case 17:
-                    return "Tree Sleeper"
-                case 18:
-                    return "Hyperswift"
-                case 19:
-                    return "Matrix Evolved"
-                case 20:
-                    return "Wand Pawur"
-                case 21:
-                    return "Slabe Logsoul"
-                case 22:
-                    return "Pious At Heart"
-                case 23:
-                    return "Slabe Wisdom"
-                case 24:
-                    return "Power Trithree"
-                case 25:
-                    return "Smarter Spells"
-                case 26:
-                    return "Endgame Eff III"
-                case 27:
-                    return "Essence Boost-Purple"
-                case 28:
-                    return "Tome Wisdom"
-                case 29:
-                    return "Essence Chapter"
-                case _:
-                    return f"Unknown Bubble {color} {inputNumber}"
-        case "Yellow":
-            match inputNumber:
-                case 0:
-                    return "Lotto Skills"
-                case 1:
-                    return "Droppin Loads"
-                case 2:
-                    return "Startue Exp"
-                case 3:
-                    return "Level Up Gift"
-                case 4:
-                    return "Prowesessary"
-                case 5:
-                    return "Stamp Tramp"
-                case 6:
-                    return "Undeveloped Costs"
-                case 7:
-                    return "Da Daily Drip"
-                case 8:
-                    return "Grind Time"
-                case 9:
-                    return "Laaarrrryyyy"
-                case 10:
-                    return "Cogs For Hands"
-                case 11:
-                    return "Sample It"
-                case 12:
-                    return "Big Game Hunter"
-                case 13:
-                    return "Ignore Overdues"
-                case 14:
-                    return "Yellow Bargain"
-                case 15:
-                    return "Mr Massacre"
-                case 16:
-                    return "Egg Ink"
-                case 17:
-                    return "Diamond Chef"
-                case 18:
-                    return "Card Champ"
-                case 19:
-                    return "Petting The Rift"
-                case 20:
-                    return "Boaty Bubble"
-                case 21:
-                    return "Big P"
-                case 22:
-                    return "Bit By Bit"
-                case 23:
-                    return "Gifts Abound"
-                case 24:
-                    return "Atom Split"
-                case 25:
-                    return "Cropius Mapper"
-                case 26:
-                    return "Essence Boost-Yellow"
-                case 27:
-                    return "Hinge Buster"
-                case 28:
-                    return "Ninja Looter"
-                case 29:
-                    return "Lo Cost Mo Jade"
-                case _:
-                    return f"Unknown Bubble {color} {inputNumber}"
+        return f"Unknown {color} Bubble {inputNumber}"
 
 
 ###WORLD 3 CONSTS###
@@ -2776,6 +2809,73 @@ prayersList: list[str] = [
     "Fibers of Absence (Frigid Soul)", "Vacuous Tissue (Frigid Soul)", "Beefy For Real (Frigid Soul)",
     "Balance of Pain (Squishy Soul)", "Balance of Proficiency (Squishy Soul)","Glitterbug (Squishy Soul)",
 ]
+prayersDict = {
+    0: {"Name": "Big Brain Time", "Material": "Forest Soul", "Display": "Big Brain Time (Forest Soul)",
+        "bonus_funcType": 'bigBase', 'bonus_x1': 27, 'bonus_x2': 3, 'bonus_stat': 'Class EXP', 'bonus_pre': '+', 'bonus_post': '%',
+        "curse_funcType": 'bigBase', 'curse_x1': 225, 'curse_x2': 25, 'curse_stat': 'Max HP for all monsters', 'curse_pre': '+', 'curse_post': '%'},
+    1: {"Name": "Skilled Dimwit", "Material": "Forest Soul", "Display": "Skilled Dimwit (Forest Soul)",
+        "bonus_funcType": 'bigBase', 'bonus_x1': 27, 'bonus_x2': 3, 'bonus_stat': 'Skill Efficiency', 'bonus_pre': '+', 'bonus_post': '%',
+        "curse_funcType": 'bigBase', 'curse_x1': 18, 'curse_x2': 2, 'curse_stat': 'Skill EXP Gain', 'curse_pre': '-', 'curse_post': '%'},
+    2: {"Name": "Unending Energy", "Material": "Forest Soul", "Display": "Unending Energy (Forest Soul)",
+        "bonus_funcType": 'bigBase', 'bonus_x1': 22.5, 'bonus_x2': 2.5, 'bonus_stat': 'Class and Skill EXP', 'bonus_pre': '+', 'bonus_post': '%',
+        "curse_funcType": 'bigBase', 'curse_x1': 1, 'curse_x2': 0, 'curse_stat': 'Max AFK time is now 10 hours. Use with caution', 'curse_pre': '', 'curse_post': ''},
+    3: {"Name": "Shiny Snitch", "Material": "Forest Soul", "Display": "Shiny Snitch (Forest Soul)",
+        "bonus_funcType": 'bigBase', 'bonus_x1': 18, 'bonus_x2': 2, 'bonus_stat': 'Shiny Critters per trap', 'bonus_pre': '+', 'bonus_post': '',
+        "curse_funcType": 'bigBase', 'curse_x1': 13.5, 'curse_x2': 1.5, 'curse_stat': 'lower', 'curse_pre': 'Your Shiny chance is now ', 'curse_post': 'x'},
+    4: {"Name": "Zerg Rushogen", "Material": "Forest Soul", "Display": "Zerg Rushogen (Forest Soul)",
+        "bonus_funcType": 'bigBase', 'bonus_x1': 4.5, 'bonus_x2': 0.5, 'bonus_stat': 'All AFK Gain Rate', 'bonus_pre': '+', 'bonus_post': '%',
+        "curse_funcType": 'bigBase', 'curse_x1': 10.8, 'curse_x2': 1.2, 'curse_stat': 'Carry Capacity', 'curse_pre': '-', 'curse_post': '%'},
+    5: {"Name": "Tachion of the Titans", "Material": "Dune Soul", "Display": "Tachion of the Titans (Dune Soul)",
+        "bonus_funcType": 'bigBase', 'bonus_x1': 1, 'bonus_x2': 0, 'bonus_stat': 'Giant Monsters can now spawn on Monster Kill', 'bonus_pre': '', 'bonus_post': '',
+        "curse_funcType": 'bigBase', 'curse_x1': 1, 'curse_x2': 0, 'curse_stat': 'Giant Monsters can now spawn...', 'curse_pre': '', 'curse_post': ''},
+    6: {"Name": "Balance of Precision", "Material": "Dune Soul", "Display": "Balance of Precision (Dune Soul)",
+        "bonus_funcType": 'bigBase', 'bonus_x1': 27, 'bonus_x2': 3, 'bonus_stat': 'Total Accuracy', 'bonus_pre': '+', 'bonus_post': '%',
+        "curse_funcType": 'bigBase', 'curse_x1': 4.5, 'curse_x2': 0.5, 'curse_stat': 'Total Damage', 'curse_pre': '-', 'curse_post': '%'},
+    7: {"Name": "Midas Minded", "Material": "Dune Soul", "Display": "Midas Minded (Dune Soul)",
+        "bonus_funcType": 'bigBase', 'bonus_x1': 18, 'bonus_x2': 2, 'bonus_stat': 'Drop Rate', 'bonus_pre': '+', 'bonus_post': '%',
+        "curse_funcType": 'bigBase', 'curse_x1': 225, 'curse_x2': 2.5, 'curse_stat': 'Max HP for all monsters', 'curse_pre': '+', 'curse_post': '%'},
+    8: {"Name": "Jawbreaker", "Material": "Dune Soul", "Display": "Jawbreaker (Dune Soul)",
+        "bonus_funcType": 'bigBase', 'bonus_x1': 36, 'bonus_x2': 4, 'bonus_stat': 'Coins from Monsters', 'bonus_pre': '+', 'bonus_post': '%',
+        "curse_funcType": 'bigBase', 'curse_x1': 180, 'curse_x2': 20, 'curse_stat': 'Max HP for all monsters', 'curse_pre': '+', 'curse_post': '%'},
+    9: {"Name": "The Royal Sampler", "Material": "Rooted Soul", "Display": "The Royal Sampler (Rooted Soul)",
+        "bonus_funcType": 'bigBase', 'bonus_x1': 13.5, 'bonus_x2': 1.5, 'bonus_stat': 'Printer Sample Rate', 'bonus_pre': '+', 'bonus_post': '%',
+        "curse_funcType": 'bigBase', 'curse_x1': 27, 'curse_x2': 3, 'curse_stat': 'All EXP gain. Remove all samples on this character to Unequip.', 'curse_pre': '-', 'curse_post': '%'},
+    10: {"Name": "Antifun Spirit", "Material": "Rooted Soul", "Display": "Antifun Spirit (Rooted Soul)",
+         "bonus_funcType": 'bigBase', 'bonus_x1': 630, 'bonus_x2': 70, 'bonus_stat': 'Minigame Reward Multi', 'bonus_pre': '+', 'bonus_post': '%',
+         "curse_funcType": 'bigBase', 'curse_x1': 8.1, 'curse_x2': 0.9, 'curse_stat': 'plays per attempt', 'curse_pre': 'Minigames cost ', 'curse_post': ''},
+    11: {"Name": "Circular Criticals", "Material": "Rooted Soul", "Display": "Circular Criticals (Rooted Soul)",
+         "bonus_funcType": 'bigBase', 'bonus_x1': 9, 'bonus_x2': 1, 'bonus_stat': 'Critical Hit Chance', 'bonus_pre': '+', 'bonus_post': '%',
+         "curse_funcType": 'bigBase', 'curse_x1': 13.5, 'curse_x2': 1.5, 'curse_stat': 'Critical Damage', 'curse_pre': '-', 'curse_post': '%'},
+    12: {"Name": "Ruck Sack", "Material": "Rooted Soul", "Display": "Ruck Sack (Rooted Soul)",
+         "bonus_funcType": 'bigBase', 'bonus_x1': 27, 'bonus_x2': 3, 'bonus_stat': 'Carry Capacity', 'bonus_pre': '+', 'bonus_post': '%',
+         "curse_funcType": 'bigBase', 'curse_x1': 13.5, 'curse_x2': 1.5, 'curse_stat': 'All AFK Gain Rate', 'curse_pre': '-', 'curse_post': '%'},
+    13: {"Name": "Fibers of Absence", "Material": "Frigid Soul", "Display": "Fibers of Absence (Frigid Soul)",
+         "bonus_funcType": 'bigBase', 'bonus_x1': 27, 'bonus_x2': 3, 'bonus_stat': 'Kills for Deathnote and opening portals', 'bonus_pre': '+', 'bonus_post': '%',
+         "curse_funcType": 'bigBase', 'curse_x1': 13.5, 'curse_x2': 1.5, 'curse_stat': 'Total Damage', 'curse_pre': '-', 'curse_post': '%'},
+    14: {"Name": "Vacuous Tissue", "Material": "Frigid Soul", "Display": "Vacuous Tissue (Frigid Soul)",
+         "bonus_funcType": 'bigBase', 'bonus_x1': 100, 'bonus_x2': 0, 'bonus_stat': 'Dungeon Credits and Flurbos from Boosted Runs', 'bonus_pre': '+', 'bonus_post': '%',
+         "curse_funcType": 'bigBase', 'curse_x1': 2, 'curse_x2': 0, 'curse_stat': 'Dungeon Passes per run', 'curse_pre': 'Use ', 'curse_post': 'x'},
+    15: {"Name": "Beefy For Real", "Material": "Frigid Soul", "Display": "Beefy For Real (Frigid Soul)",
+         "bonus_funcType": 'bigBase', 'bonus_x1': 18, 'bonus_x2': 2, 'bonus_stat': 'Total Damage', 'bonus_pre': '+', 'bonus_post': '%',
+         "curse_funcType": 'bigBase', 'curse_x1': 9, 'curse_x2': 1, 'curse_stat': 'Total Defence and Accuracy', 'curse_pre': '-', 'curse_post': '%'},
+    16: {"Name": "Balance of Pain", "Material": "Squishy Soul", "Display": "Balance of Pain (Frigid Soul)",
+         "bonus_funcType": 'bigBase', 'bonus_x1': 7.2, 'bonus_x2': 0.8, 'bonus_stat': 'Multikill per Damage Tier', 'bonus_pre': '+', 'bonus_post': '%',
+         "curse_funcType": 'bigBase', 'curse_x1': 13.5, 'curse_x2': 1.5, 'curse_stat': 'Total Defence and Accuracy', 'curse_pre': '-', 'curse_post': '%'},
+    17: {"Name": "Balance of Proficiency", "Material": "Squishy Soul", "Display": "Balance of Proficiency (Frigid Soul)",
+         "bonus_funcType": 'bigBase', 'bonus_x1': 27, 'bonus_x2': 3, 'bonus_stat': 'Skill EXP Gain', 'bonus_pre': '+', 'bonus_post': '%',
+         "curse_funcType": 'bigBase', 'curse_x1': 18, 'curse_x2': 2, 'curse_stat': 'Skill Efficiency', 'curse_pre': '-', 'curse_post': '%'},
+    18: {"Name": "Glitterbug", "Material": "Squishy Soul", "Display": "Glitterbug (Frigid Soul)",
+         "bonus_funcType": 'bigBase', 'bonus_x1': 27, 'bonus_x2': 3, 'bonus_stat': 'chance for Giant Mobs to summon 2 Crystal Mobs', 'bonus_pre': '+', 'bonus_post': '%',
+         "curse_funcType": 'bigBase', 'curse_x1': 18, 'curse_x2': 2, 'curse_stat': 'less likely to spawn', 'curse_pre': 'Giant Mobs are ', 'curse_post': '%'},
+}
+saltLickList: list[str] = [
+    'Printer Sample Size', 'Obol Storage', 'Refinery Speed', 'EXP', 'Max Book',
+    'Alchemy Liquids', 'TD Points', 'Movespeed', 'Multikill', 'Damage',
+]
+maxStaticBookLevels = 140
+maxScalingBookLevels = 30
+maxSummoningBookLevels = 29
+maxOverallBookLevels = 100 + maxStaticBookLevels + maxScalingBookLevels + maxSummoningBookLevels
 
 ###WORLD 4 CONSTS###
 maxCookingTables = 10  # Last verified as of v2.08
@@ -2808,6 +2908,9 @@ artifactsList = [
     'Crystal Steak', 'Trilobite Rock', 'Opera Mask', 'Socrates', 'The True Lantern',
     'The Onyx Lantern', 'The Shim Lantern', 'The Winz Lantern'
 ]
+w5meritsDict = {
+
+}
 
 ###WORLD 6 CONSTS###
 jade_emporium = [
@@ -2988,6 +3091,7 @@ marketUpgradeList = [
 marketUpgradeFirstIndex = 2
 marketUpgradeLastIndex = marketUpgradeFirstIndex + len(marketUpgradeList)
 
+
 def getMoissaniteValue(moissaniteLevel: int):
     try:
         if moissaniteLevel > 0:
@@ -3020,6 +3124,7 @@ def getGemstonePercent(gemstoneName: str, gemstoneValue: float):
     except Exception as reason:
         logger.exception(f"Could not find max value for Gemstone: {gemstoneName} because: {reason}")
     pass
+
 
 ### SLAB CONSTS ###
 #slabString last pulled from code in 2.08

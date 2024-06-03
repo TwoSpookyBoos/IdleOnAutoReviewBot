@@ -44,12 +44,8 @@ def getShinyExclusions():
         shinyExclusionsDict["Exclude-InfiniteStarSigns"] = False
 
     # if all artifacts are Eldritch tier, append True (as in True, the recommendation SHOULD be excluded), otherwise False
-    try:
-        sum_sailingArtifacts = sum(safe_loads(session_data.account.raw_data["Sailing"])[3])
-        if sum_sailingArtifacts >= (numberOfArtifacts * numberOfArtifactTiers):
-            shinyExclusionsDict["Exclude-Sailing"] = True
-    except Exception as reason:
-        logger.exception(f"Unable to get Sailing Artifacts: {reason}")
+    if session_data.account.sum_artifact_tiers >= (numberOfArtifacts * numberOfArtifactTiers):
+        shinyExclusionsDict["Exclude-Sailing"] = True
 
     try:
         critterVialsList = [

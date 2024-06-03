@@ -17,11 +17,13 @@ app.config.update(dict(
     SPREADSHEET="https://docs.google.com/spreadsheets/d/16I-rURrVeyvltK2wxcQSiPgO07QY015RVNG4MAgUsGw/edit?usp=sharing",
     KOFI="https://ko-fi.com/W7W4SRUK5",
     LAVA="https://twitter.com/lavaflame2",
-    FQDN="https://ieautoreview-scoli.pythonanywhere.com",
+    DOMAIN="ieautoreview-scoli.pythonanywhere.com",
 
 ))
 app.config.update(dict(
-    FQDN_BETA=app.config['FQDN'].replace("://", "://beta-"),
+    DOMAIN_BETA=f"beta-{app.config['DOMAIN']}",
+    FQDN=f"https://{app.config['DOMAIN']}",
+    FQDN_BETA=f"https://beta-{app.config['DOMAIN']}",
     LOGS=app.config["PROJECT_ROOT"] / "logs",
     IT_DATA=f"{app.config['IT']}/data",
     IE_DATA=f"{app.config['IE']}/raw-data",

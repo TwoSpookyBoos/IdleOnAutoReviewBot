@@ -12,10 +12,10 @@ from flask import g
 
 from utils.data_formatting import getCharacterDetails, safe_loads
 from consts import expectedStackables, greenstack_progressionTiers, card_data, maxMeals, maxMealLevel, jade_emporium, max_IndexOfVials, getReadableVialNames, \
-    max_IndexOfBubbles, getReadableBubbleNames, buildingsList, atomsList, prayersList, labChipsList, bribesList, shrinesList, pristineCharmsList, sigilsDict, \
-    artifactsList, guildBonusesList, labBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesCount, sneakingGemstonesList, \
-    getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampNameDict, stampTypes, marketUpgradeList, marketUpgradeFirstIndex, \
-    marketUpgradeLastIndex, achievementsList, forgeUpgradesDict, arcadeBonuses
+    buildingsList, atomsList, prayersDict, labChipsList, bribesDict, shrinesList, pristineCharmsList, sigilsDict, \
+    artifactsList, guildBonusesList, labBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesList, \
+    getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampsDict, stampTypes, marketUpgradeList, \
+    achievementsList, forgeUpgradesDict, arcadeBonuses, saltLickList, allMeritsDict, bubblesDict, familyBonusesDict, poBoxDict
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, letterToNumber
 
 def session_singleton(cls):
@@ -62,6 +62,7 @@ class Character:
         sub_class: str,
         elite_class: str,
         all_skill_levels: dict,
+        po_boxes: list[int]
     ):
         self.character_index: int = character_index
         self.character_name: str = character_name
@@ -94,6 +95,56 @@ class Character:
         self.skills = all_skill_levels
         self.divinity_style: str = "None"
         self.divinity_link: str = "Unlinked"
+        self.po_boxes_invested = {}
+        for poBoxIndex, poBoxValues in poBoxDict.items():
+            try:
+                self.po_boxes_invested[poBoxValues['Name']] = {
+                    'Level': po_boxes[poBoxIndex],
+                    'Bonus1Value': lavaFunc(
+                        poBoxValues['1_funcType'],
+                        po_boxes[poBoxIndex],
+                        poBoxValues['1_x1'],
+                        poBoxValues['1_x2'],
+                    ),
+                    'Bonus1String': '',
+                    'Bonus2Value': lavaFunc(
+                        poBoxValues['2_funcType'],
+                        po_boxes[poBoxIndex],
+                        poBoxValues['2_x1'],
+                        poBoxValues['2_x2'],
+                    ) if po_boxes[poBoxIndex] >= poBoxValues['2_minCount'] else 0,
+                    'Bonus2String': '',
+                    'Bonus3Value': lavaFunc(
+                        poBoxValues['3_funcType'],
+                        po_boxes[poBoxIndex],
+                        poBoxValues['3_x1'],
+                        poBoxValues['3_x2'],
+                    ) if po_boxes[poBoxIndex] >= poBoxValues['3_minCount'] else 0,
+                    'Bonus3String': '',
+                }
+                if self.po_boxes_invested[poBoxValues['Name']]['Level'] > 0:
+                    self.po_boxes_invested[poBoxValues['Name']]['Bonus1String'] = (f"{poBoxValues['1_pre']}"
+                                                                                   f"{self.po_boxes_invested[poBoxValues['Name']]['Bonus1Value']}"
+                                                                                   f"{poBoxValues['1_post']}"
+                                                                                   f" {poBoxValues['1_stat']}")
+                    self.po_boxes_invested[poBoxValues['Name']]['Bonus2String'] = (f"{poBoxValues['2_pre']}"
+                                                                                   f"{self.po_boxes_invested[poBoxValues['Name']]['Bonus2Value']}"
+                                                                                   f"{poBoxValues['2_post']}"
+                                                                                   f" {poBoxValues['2_stat']}")
+                    self.po_boxes_invested[poBoxValues['Name']]['Bonus3String'] = (f"{poBoxValues['3_pre']}"
+                                                                                   f"{self.po_boxes_invested[poBoxValues['Name']]['Bonus3Value']}"
+                                                                                   f"{poBoxValues['3_post']}"
+                                                                                   f" {poBoxValues['3_stat']}")
+            except:
+                self.po_boxes_invested[poBoxValues['Name']] = {
+                    'Level': 0,
+                    'Bonus1Value': 0,
+                    'Bonus1String': '',
+                    'Bonus2Value': 0,
+                    'Bonus2String': '',
+                    'Bonus3Value': 0,
+                    'Bonus3String': '',
+                }
 
         self.apoc_dict: dict = {
             name: {
@@ -658,9 +709,9 @@ class Account:
         self.names = playerNames
         self.playerCount = playerCount
         self.classes = playerClasses
-        self.all_characters = [Character(self.raw_data, **char) for char in characterDict.values()]
-        self.safe_characters = [char for char in self.all_characters if char]  #Use this if touching raw_data instead of all_characters
-        self.safe_playerIndexes = [char.character_index for char in self.all_characters if char]
+        self.all_characters: list[Character] = [Character(self.raw_data, **char) for char in characterDict.values()]
+        self.safe_characters: list[Character] = [char for char in self.all_characters if char]  #Use this if touching raw_data instead of all_characters
+        self.safe_playerIndexes: list[int] = [char.character_index for char in self.all_characters if char]
         self.all_skills = perSkillDict
         self.all_quests = [safe_loads(self.raw_data.get(f"QuestComplete_{i}", "{}")) for i in range(self.playerCount)]
         self.assets = self._all_owned_items()
@@ -708,6 +759,29 @@ class Account:
 
         self.max_toon_count = 10  # OPTIMIZE: find a way to read this from somewhere
         #General / Multiple uses
+        self.family_bonuses = {}
+        for className in familyBonusesDict.keys():
+            #Create the skeleton for all current classes, with level and value of 0
+            self.family_bonuses[className] = {'Level': 0, 'Value': 0}
+        for char in self.safe_characters:
+            for className in [char.base_class, char.sub_class, char.elite_class]:
+                if className in familyBonusesDict:
+                    if char.combat_level > self.family_bonuses[className]['Level']:
+                        self.family_bonuses[className]['Level'] = char.combat_level
+        for className in self.family_bonuses.keys():
+            try:
+                self.family_bonuses[className]['Value'] = lavaFunc(
+                    familyBonusesDict[className]['funcType'],
+                    self.family_bonuses[className]['Level']-familyBonusesDict[className]['levelDiscount'],
+                    familyBonusesDict[className]['x1'],
+                    familyBonusesDict[className]['x2'])
+            except:
+                self.family_bonuses[className]['Value'] = 0
+            self.family_bonuses[className]['DisplayValue'] = (f"{'+' if familyBonusesDict[className]['PrePlus'] else ''}"
+                                                                  f"{self.family_bonuses[className]['Value']:.2f}"
+                                                                  f"{familyBonusesDict[className]['PostDisplay']}"
+                                                                  f" {familyBonusesDict[className]['Stat']}")
+
         raw_optlacc_list = safe_loads(self.raw_data.get("OptLacc", {}))
 
         self.dungeon_upgrades = {}
@@ -735,6 +809,15 @@ class Account:
             except:
                 self.achievements[achieveData[0].replace('_', ' ')] = False
 
+        self.merits = copy.deepcopy(allMeritsDict)
+        raw_merits_list = safe_loads(self.raw_data.get("TaskZZ2", []))
+        for worldIndex in self.merits:
+            for meritIndex in self.merits[worldIndex]:
+                try:
+                    self.merits[worldIndex][meritIndex]["Level"] = int(raw_merits_list[worldIndex][meritIndex])
+                except:
+                    continue  #Already defaulted to 0 in Consts
+
         #World 1
         self.star_signs = {}
         raw_star_signs = safe_loads(self.raw_data.get("StarSg", {}))
@@ -750,15 +833,19 @@ class Account:
             try:
                 self.forge_upgrades[upgradeIndex]["Purchased"] = upgrade
             except:
-                continue  #already defaulted to 0
+                continue  #Already defaulted to 0 in Consts
 
         self.bribes = {}
         raw_bribes_list = safe_loads(self.raw_data.get("BribeStatus", []))
-        for bribeIndex, bribeName in enumerate(bribesList):
-            try:
-                self.bribes[bribeName] = int(raw_bribes_list[bribeIndex])
-            except:
-                self.bribes[bribeName] = -1  # -1 means unavailable for purchase, 0 means available, and 1 means purchased
+        bribeIndex = 0
+        for bribeSet in bribesDict:
+            self.bribes[bribeSet] = {}
+            for bribeName in bribesDict[bribeSet]:
+                try:
+                    self.bribes[bribeSet][bribeName] = int(raw_bribes_list[bribeIndex])
+                except:
+                    self.bribes[bribeSet][bribeName] = -1  # -1 means unavailable for purchase, 0 means available, and 1 means purchased
+                bribeIndex += 1
 
         self.stamps = {}
         self.stamp_totals = {"Total": 0}
@@ -786,25 +873,32 @@ class Account:
                             print(f"Able to set the value of stamp {stampTypeIndex}-{stampKey} to 0. Hopefully no accuracy was lost.")
                         except:
                             print(f"Couldn't set the value to 0, meaning it was the Index or Key that was bad. You done messed up, cowboy.")
-        for stampType in stampNameDict:
-            for stampIndex, stampName in stampNameDict[stampType].items():
+        for stampType in stampsDict:
+            for stampIndex, stampValuesDict in stampsDict[stampType].items():
                 try:
-                    self.stamps[stampName] = {
+                    self.stamps[stampValuesDict['Name']] = {
                         "Index": int(stampIndex),
                         "Level": int(floor(raw_stamps_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0))),
                         "Max": int(floor(raw_stamp_max_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0))),
                         "Delivered": int(floor(raw_stamp_max_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0))) > 0,
-                        "StampType": stampType
+                        "StampType": stampType,
+                        "Value": lavaFunc(
+                            stampValuesDict['funcType'],
+                            int(floor(raw_stamps_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0))),
+                            stampValuesDict['x1'],
+                            stampValuesDict['x2'],
+                        )
                     }
-                    self.stamp_totals["Total"] += self.stamps[stampName]["Level"]
-                    self.stamp_totals[stampType] += self.stamps[stampName]["Level"]
+                    self.stamp_totals["Total"] += self.stamps[stampValuesDict['Name']]["Level"]
+                    self.stamp_totals[stampType] += self.stamps[stampValuesDict['Name']]["Level"]
                 except:
-                    self.stamps[stampName] = {
+                    self.stamps[stampValuesDict['Name']] = {
                         "Index": stampIndex,
                         "Level": 0,
                         "Max": 0,
                         "Delivered": False,
-                        "StampType": stampType
+                        "StampType": stampType,
+                        "Value": 0
                     }
 
         #World 2
@@ -825,7 +919,7 @@ class Account:
                             vialsDict.get(int(vialKey)).get("funcType"),
                             int(vialValue),
                             vialsDict.get(int(vialKey)).get("x1"),
-                            vialsDict.get(int(vialKey)).get("x2"),
+                            vialsDict.get(int(vialKey)).get("x2")
                         )
                     }
                 except:
@@ -836,29 +930,32 @@ class Account:
         for vial in self.alchemy_vials.values():
             if vial.get("Level", 0) >= 13:
                 self.maxed_vials += 1
+        self.vialMasteryMulti = 1 + (self.maxed_vials * .02) if self.vial_mastery_unlocked else 1
 
         self.alchemy_bubbles = {}
+        #Set defaults to 0
+        for cauldronIndex in bubblesDict:
+            for bubbleIndex in bubblesDict[cauldronIndex]:
+                self.alchemy_bubbles[bubblesDict[cauldronIndex][bubbleIndex]['Name']] = {
+                    "CauldronIndex": cauldronIndex,
+                    "BubbleIndex": bubbleIndex,
+                    "Level": 0,
+                    "BaseValue": 0
+                }
+        #Try to read player levels and calculate base value
         try:
-            raw_orange_alchemyBubblesDict = self.raw_data.get("CauldronInfo", [{}, {}, {}, {}])[0]
-            raw_orange_alchemyBubblesDict.pop('length', None)
-            raw_green_alchemyBubblesDict = self.raw_data.get("CauldronInfo", [{}, {}, {}, {}])[1]
-            raw_green_alchemyBubblesDict.pop('length', None)
-            raw_purple_alchemyBubblesDict = self.raw_data.get("CauldronInfo", [{}, {}, {}, {}])[2]
-            raw_purple_alchemyBubblesDict.pop('length', None)
-            raw_yellow_alchemyBubblesDict = self.raw_data.get("CauldronInfo", [{}, {}, {}, {}])[3]
-            raw_yellow_alchemyBubblesDict.pop('length', None)
-            for bubbleDict, bubbleColor in [
-                (raw_orange_alchemyBubblesDict, "Orange"),
-                (raw_green_alchemyBubblesDict, "Green"),
-                (raw_purple_alchemyBubblesDict, "Purple"),
-                (raw_yellow_alchemyBubblesDict, "Yellow")
-            ]:
-                for bubbleIndex in bubbleDict:
+            all_raw_bubbles = [self.raw_data["CauldronInfo"][0], self.raw_data["CauldronInfo"][1], self.raw_data["CauldronInfo"][2], self.raw_data["CauldronInfo"][3]]
+            for cauldronIndex in bubblesDict:
+                for bubbleIndex in bubblesDict[cauldronIndex]:
                     try:
-                        if int(bubbleIndex) <= max_IndexOfBubbles:
-                            self.alchemy_bubbles[getReadableBubbleNames(bubbleIndex, bubbleColor)] = int(bubbleDict[bubbleIndex])
+                        self.alchemy_bubbles[bubblesDict[cauldronIndex][bubbleIndex]['Name']]['Level'] = int(all_raw_bubbles[cauldronIndex][str(bubbleIndex)])
+                        self.alchemy_bubbles[bubblesDict[cauldronIndex][bubbleIndex]['Name']]['BaseValue'] = lavaFunc(
+                            bubblesDict[cauldronIndex][bubbleIndex]["funcType"],
+                            int(all_raw_bubbles[cauldronIndex][str(bubbleIndex)]),
+                            bubblesDict[cauldronIndex][bubbleIndex]["x1"],
+                            bubblesDict[cauldronIndex][bubbleIndex]["x2"])
                     except:
-                        self.alchemy_bubbles[getReadableBubbleNames(bubbleIndex, bubbleColor)] = 0
+                        continue  #Level and BaseValue already defaulted to 0 above
         except:
             pass
 
@@ -976,11 +1073,46 @@ class Account:
 
         self.prayers = {}
         raw_prayers_list = safe_loads(self.raw_data.get("PrayOwned", []))
-        for prayerIndex, prayerName in enumerate(prayersList):
+        for prayerIndex, prayerValuesDict in prayersDict.items():
+            self.prayers[prayerValuesDict['Name']] = {
+                'DisplayName': prayerValuesDict['Display'],
+                'Level': 0,
+                'BonusValue': 0,
+                'BonusString': f"Level at least once to receive the bonus!",
+                'CurseValue': 0,
+                'CurseString': f"Level at least once to receive the curse!"
+            }
             try:
-                self.prayers[prayerName] = int(raw_prayers_list[prayerIndex])
+                self.prayers[prayerValuesDict['Name']]['Level'] = int(raw_prayers_list[prayerIndex])
+                self.prayers[prayerValuesDict['Name']]['BonusValue'] = lavaFunc(
+                    prayerValuesDict['bonus_funcType'],
+                    self.prayers[prayerValuesDict['Name']]['Level'],
+                    prayerValuesDict['bonus_x1'],
+                    prayerValuesDict['bonus_x2']) if self.prayers[prayerValuesDict['Name']]['Level'] > 0 else 0
+                self.prayers[prayerValuesDict['Name']]['BonusString'] = (f"{prayerValuesDict['bonus_pre']}"
+                                                                         f"{self.prayers[prayerValuesDict['Name']]['BonusValue']}"
+                                                                         f"{prayerValuesDict['bonus_post']}"
+                                                                         f" {prayerValuesDict['bonus_stat']}")
+                self.prayers[prayerValuesDict['Name']]['CurseValue'] = lavaFunc(
+                    prayerValuesDict['curse_funcType'],
+                    self.prayers[prayerValuesDict['Name']]['Level'],
+                    prayerValuesDict['curse_x1'],
+                    prayerValuesDict['curse_x2']) if self.prayers[prayerValuesDict['Name']]['Level'] > 0 else 0
+                self.prayers[prayerValuesDict['Name']]['CurseString'] = (f"{prayerValuesDict['curse_pre']}"
+                                                                         f"{self.prayers[prayerValuesDict['Name']]['CurseValue']}"
+                                                                         f"{prayerValuesDict['curse_post']}"
+                                                                         f" {prayerValuesDict['curse_stat']}")
             except:
-                self.prayers[prayerName] = 0
+                pass
+
+
+        self.saltlick = {}
+        raw_saltlick_list = safe_loads(self.raw_data.get("SaltLick"))
+        for saltlickIndex, saltlickName in enumerate(saltLickList):
+            try:
+                self.saltlick[saltlickName] = int(raw_saltlick_list[saltlickIndex])
+            except:
+                self.saltlick[saltlickName] = 0
 
         #World 4
         self.gemshop = {}
@@ -1088,7 +1220,19 @@ class Account:
                 except:
                     self.farming["MarketUpgrades"][marketUpgradeName] = 0
 
-
+        self.summoning = {}
+        raw_summoning_list = safe_loads(self.raw_data.get('Summon', []))
+        try:
+            self.summoning["Upgrades"] = raw_summoning_list[0]
+        except:
+            self.summoning["Upgrades"] = [0]*69  #As of 2.09 Red/Cyan, there are exactly 69 upgrades
+        try:
+            self.summoning["BattlesWon"] = raw_summoning_list[1]
+        except:
+            self.summoning["BattlesWon"] = []
+        #raw_summoning_list[2] looks to be essence owned
+        #raw_summoning_list[3] I have no idea what this is
+        #raw_summoning_list[4] looks to be list[int] familiars in the Sanctuary, starting with Slime in [0], Vrumbi in [1], etc.
 
     def _make_cards(self):
         card_counts = safe_loads(self.raw_data.get(self._key_cards, {}))

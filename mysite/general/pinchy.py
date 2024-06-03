@@ -159,7 +159,7 @@ class Placements(dict):
         VIALS:         [0,   0, 0, 0,    1,  1,  2,      3,  4,  5,      6,  6,  7,      8,  9,  10,     12, 20, 25,     26,   99],
         P2W:           [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  1,      1,  1,  1,      1,  1,  1,      1,    99],
         REFINERY:      [0,   0, 0, 0,    0,  0,  0,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,    99],
-        SALT_LICK:     [0,   0, 0, 0,    0,  0,  0,      0,  0,  1,      2,  3,  4,      5,  5,  6,      7,  8,  9,      10,   99],
+        SALT_LICK:     [0,   0, 0, 0,    0,  0,  0,      0,  0,  1,      2,  3,  4,      5,  5,  6,      7,  8,  8,      9,   99],
         DEATH_NOTE:    [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      4,  5,  6,      7,  9,  11,     16, 20, 25,     27,   99],
         PRAYERS:       [0,   0, 0, 0,    0,  0,  1,      1,  2,  2,      3,  3,  4,      4,  5,  6,      7,  7,  7,      7,    99],
         EQUINOX:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      11,   99],
@@ -283,7 +283,19 @@ maxExpectedThresholdFromMaps = portalOpeningKills[0][0]
 
 
 def is_portal_opened(mobKills, monster, portalKC):
-    return float(mobKills[monster][0]) < portalKC if len(mobKills) > monster else False
+    if isinstance(mobKills[monster], list):
+        try:
+            return float(mobKills[monster][0]) < portalKC if len(mobKills) > monster else False
+        except Exception as reason:
+            logger.exception(f"Could not determine if portal is open. Given mobKills[monster] of {mobKills[monster]}, monster of {monster}, and portalKC of {portalKC} because: {reason}")
+            return False
+    else:
+        try:
+            return float(mobKills[monster]) < portalKC if len(mobKills) > monster else False
+        except Exception as reason:
+            logger.exception(
+                f"Could not determine if portal is open. Given mobKills[monster] of {mobKills[monster]}, monster of {monster}, and portalKC of {portalKC} because: {reason}")
+            return False
 
 
 def getHighestPrint():

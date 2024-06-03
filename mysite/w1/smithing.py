@@ -1,10 +1,7 @@
 import math
-from typing import List
-
 from models.models import Advice, AdviceGroup, AdviceSection
 from consts import smithing_progressionTiers, lavaFunc
 from flask import g as session_data
-
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl
 from utils.logging import get_logger
@@ -47,7 +44,7 @@ def getForgeCapacityAdviceGroup(playerForgeUpgrades) -> list[AdviceGroup]:
     ))
 
     #Bribe value of 1 means purchased
-    bribe = session_data.account.bribes.get("Forge Cap Smuggling", -1) == 1
+    bribe = session_data.account.bribes["W6"].get("Forge Cap Smuggling", -1) == 1
     bribeValue = 1.3 if bribe else 1
     cap_Advices["Static Sources"].append(Advice(
         label=f"Bribe: Forge Cap Smuggling: {bribeValue}x",
@@ -91,19 +88,16 @@ def getForgeCapacityAdviceGroup(playerForgeUpgrades) -> list[AdviceGroup]:
         goal=6
     ))
 
-    #Forge Stamp currently has a max of 230, unless it gets increased by the Sacred Methods bundle.
-    #TODO: Stamp calculations should move to Account singleton
-    stampValue = lavaFunc('decay', session_data.account.stamps.get('Forge Stamp', {}).get('Level', 0), 120, 250)
     cap_Advices["Scaling Sources"].append(Advice(
-        label=f"Forge Stamp: +{stampValue:.2f}% Forge Capacity",
+        label=f"Forge Stamp: +{session_data.account.stamps.get('Forge Stamp', {}).get('Value', 0):.2f}% Forge Capacity",
         picture_class="forge-stamp",
         progression=session_data.account.stamps.get("Forge Stamp", {}).get("Level", 0),
-        goal=230
+        goal=230  #Forge Stamp currently has a max of 230, unless it gets increased by the Sacred Methods bundle.
     ))
 
     #Arcade Bonus 26 gives Forge Ore Capacity
     cap_Advices["Scaling Sources"].append(Advice(
-        label=f"Arcade Bonus: {session_data.account.arcade.get(26, {}).get('Display', '')}",
+        label=f"Arcade Bonus: {session_data.account.arcade.get(26, {}).get('Display', '')} {'(50% max)' if session_data.account.arcade.get(26, {}).get('Level', 0) < 100 else ''}",
         picture_class="arcade-bonus-26",
         progression=session_data.account.arcade.get(26, {}).get("Level", 0),
         goal=100
@@ -114,7 +108,7 @@ def getForgeCapacityAdviceGroup(playerForgeUpgrades) -> list[AdviceGroup]:
             mark_advice_completed(advice)
 
     groupA = 1 + (((session_data.account.arcade.get(26, {}).get("Value", 0)) + (30 * (next(c.getStars() for c in session_data.account.cards if c.name == 'Godshard Ore')+1)))/100)
-    groupB = 1 + stampValue / 100
+    groupB = 1 + session_data.account.stamps.get('Forge Stamp', {}).get('Value', 0) / 100
     groupC = bribeValue
     groupD = 1 + (50 * achievement + 25 * skillMasteryBonusBool) / 100
 
