@@ -87,45 +87,47 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
     bookLevelAdvices[summoningSubgroup] = []
     cyan14beat = 'w6d3' in session_data.account.summoning['BattlesWon']
     bookLevelAdvices[summoningSubgroup].append(Advice(
-        label=f"Summoning Cyan14: +{10.5 * cyan14beat}{'' if cyan14beat else '. No other multipliers apply until this is beaten.'}",
+        label=f"Summoning match Cyan14: +{10.5 * cyan14beat}{'' if cyan14beat else '. No other multipliers apply until this is beaten.'}",
         picture_class="samurai-guardian",
-        progression=1 if 'w6d3' in session_data.account.summoning['BattlesWon'] else 0,
+        progression=1 if cyan14beat else 0,
         goal=1
     ))
-    bookLevelAdvices[summoningSubgroup].append(Advice(
-        label=f":Pristine Charm: Crystal Comb: {1 + (.3 * session_data.account.sneaking.get('PristineCharms', {}).get('Crystal Comb', 0))}x",
-        picture_class="crystal-comb",
-        progression=1 if session_data.account.sneaking.get("PristineCharms", {}).get('Crystal Comb', False) else 0,
-        goal=1
-    ))
-    if 'Brighter Lighthouse Bulb' not in session_data.account.jade_emporium_purchases:
-        winzLanternPostString = ". This artifact needs to be unlocked from the Jade Emporium"
-    else:
-        winzLanternPostString = ""
-    bookLevelAdvices[summoningSubgroup].append(Advice(
-        label=f"Sailing: The Winz Lantern: {1 + (.25 * session_data.account.artifacts.get('The Winz Lantern', 0))}x{winzLanternPostString}",
-        picture_class="the-winz-lantern",
-        progression=session_data.account.artifacts.get('The Winz Lantern', 0),
-        goal=4
-    ))
-    bookLevelAdvices[summoningSubgroup].append(Advice(
-        label=f"W6 Larger Winner bonuses merit: +{session_data.account.merits[5][4]['Level']}%",
-        picture_class="merit-5-4",
-        progression=session_data.account.merits[5][4]["Level"],
-        goal=session_data.account.merits[5][4]["MaxLevel"]
-    ))
-    bookLevelAdvices[summoningSubgroup].append(Advice(
-        label=f"W6 Achievement: Spectre Stars: +{1 * (0 < session_data.account.achievements.get('Spectre Stars', False))}%",
-        picture_class="spectre-stars",
-        progression=1 if session_data.account.achievements.get('Spectre Stars', False) else 0,
-        goal=1
-    ))
-    bookLevelAdvices[summoningSubgroup].append(Advice(
-        label=f"W6 Achievement: Regalis My Beloved: +{1 * (0 < session_data.account.achievements.get('Regalis My Beloved', False))}%",
-        picture_class="regalis-my-beloved",
-        progression=1 if session_data.account.achievements.get('Regalis My Beloved', False) else 0,
-        goal=1
-    ))
+    for advice in session_data.account.summoning['WinnerBonusesAdvice']:
+        bookLevelAdvices[summoningSubgroup].append(advice)
+    # bookLevelAdvices[summoningSubgroup].append(Advice(
+    #     label=f":Pristine Charm: Crystal Comb: {1 + (.3 * session_data.account.sneaking.get('PristineCharms', {}).get('Crystal Comb', 0))}x",
+    #     picture_class="crystal-comb",
+    #     progression=1 if session_data.account.sneaking.get("PristineCharms", {}).get('Crystal Comb', False) else 0,
+    #     goal=1
+    # ))
+    # if 'Brighter Lighthouse Bulb' not in session_data.account.jade_emporium_purchases:
+    #     winzLanternPostString = ". This artifact needs to be unlocked from the Jade Emporium"
+    # else:
+    #     winzLanternPostString = ""
+    # bookLevelAdvices[summoningSubgroup].append(Advice(
+    #     label=f"Sailing: The Winz Lantern: {1 + (.25 * session_data.account.artifacts.get('The Winz Lantern', 0))}x{winzLanternPostString}",
+    #     picture_class="the-winz-lantern",
+    #     progression=session_data.account.artifacts.get('The Winz Lantern', 0),
+    #     goal=4
+    # ))
+    # bookLevelAdvices[summoningSubgroup].append(Advice(
+    #     label=f"W6 Larger Winner bonuses merit: +{session_data.account.merits[5][4]['Level']}%",
+    #     picture_class="merit-5-4",
+    #     progression=session_data.account.merits[5][4]["Level"],
+    #     goal=session_data.account.merits[5][4]["MaxLevel"]
+    # ))
+    # bookLevelAdvices[summoningSubgroup].append(Advice(
+    #     label=f"W6 Achievement: Spectre Stars: +{1 * (0 < session_data.account.achievements.get('Spectre Stars', False))}%",
+    #     picture_class="spectre-stars",
+    #     progression=1 if session_data.account.achievements.get('Spectre Stars', False) else 0,
+    #     goal=1
+    # ))
+    # bookLevelAdvices[summoningSubgroup].append(Advice(
+    #     label=f"W6 Achievement: Regalis My Beloved: +{1 * (0 < session_data.account.achievements.get('Regalis My Beloved', False))}%",
+    #     picture_class="regalis-my-beloved",
+    #     progression=1 if session_data.account.achievements.get('Regalis My Beloved', False) else 0,
+    #     goal=1
+    # ))
 
     bookLevelAdviceGroup = AdviceGroup(
         tier="",

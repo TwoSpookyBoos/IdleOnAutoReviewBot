@@ -3,17 +3,10 @@ from utils.text_formatting import pl
 from utils.data_formatting import safe_loads, mark_advice_completed
 from utils.logging import get_logger
 from consts import maxTiersPerGroup, stamps_progressionTiers, stamp_maxes, stampsDict, unavailableStampsList, stampTypes, maxOverallBookLevels
-from math import ceil
 from flask import g as session_data
 
 
 logger = get_logger(__name__)
-
-def ceilUpToBase(inputValue: int, base: int) -> int:
-    toReturn = base
-    while toReturn <= inputValue:
-        toReturn += base
-    return toReturn
 
 # Stamp p2
 def setMissingStamps():
@@ -49,27 +42,27 @@ def getCapacityExclusions():
 def getCapacityAdviceGroup() -> AdviceGroup:
     capacity_Advices = {"Stamps": [], "Account Wide": [], "Character Specific": []}
 
-    if session_data.account.labChips.get('Silkrode Nanochip', 0) > 0:
-        nanoEval = f"{session_data.account.labChips.get('Silkrode Nanochip',0)} owned. Doubles starsigns when equipped."
-        silkrodeMulti = 2
-    else:
-        nanoEval = "None Owned. Would double other signs if equipped."
-        silkrodeMulti = 1
+    # if session_data.account.star_sign_extras.get('DoublerOwned', False):
+    #     nanoEval = f"{session_data.account.labChips.get('Silkrode Nanochip',0)} owned. Doubles starsigns when equipped."
+    #     silkrodeMulti = 2
+    # else:
+    #     nanoEval = "None Owned. Would double other signs if equipped."
+    #     silkrodeMulti = 1
 
-    seraphMulti = min(3, 1.1 ** ceil((max(session_data.account.all_skills.get('Summoning', [0])) + 1) / 20))
-    seraphGoal = min(240, ceilUpToBase(max(session_data.account.all_skills.get('Summoning', [0])), 20))
-    if bool(session_data.account.star_signs.get("Seraph_Cosmos", False)):
-        seraphEval = f"Multis signs by {seraphMulti:.2f}x."
-    else:
-        seraphEval = f"Locked. Would increase below signs by {seraphMulti:.2f}x if unlocked."
-        seraphMulti = 1
-    if seraphGoal < 240:
-        seraphEval += " Increases every 20 Summoning levels."
+    # seraphMulti = min(3, 1.1 ** ceil((max(session_data.account.all_skills.get('Summoning', [0])) + 1) / 20))
+    # seraphGoal = min(240, ceilUpToBase(max(session_data.account.all_skills.get('Summoning', [0])), 20))
+    # if bool(session_data.account.star_signs.get("Seraph_Cosmos", False)):
+    #     seraphEval = f"Multis signs by {seraphMulti:.2f}x."
+    # else:
+    #     seraphEval = f"Locked. Would increase below signs by {seraphMulti:.2f}x if unlocked."
+    #     seraphMulti = 1
+    # if seraphGoal < 240:
+    #     seraphEval += " Increases every 20 Summoning levels."
     starsignBase = 0
-    starsignBase += 30 * bool(session_data.account.star_signs.get("Mr_No_Sleep", False))
-    starsignBase += 10 * bool(session_data.account.star_signs.get("Pack_Mule", False))
-    starsignBase += 5 * bool(session_data.account.star_signs.get("The_OG_Skiller", False))
-    totalStarsignValue = starsignBase * silkrodeMulti * seraphMulti
+    starsignBase += 30 * bool(session_data.account.star_signs.get('Mr No Sleep', {}).get('Unlocked', False))
+    starsignBase += 10 * bool(session_data.account.star_signs.get('Pack Mule', {}).get('Unlocked', False))
+    starsignBase += 5 * bool(session_data.account.star_signs.get('The OG Skiller', {}).get('Unlocked', False))
+    totalStarsignValue = starsignBase * session_data.account.star_sign_extras['SilkrodeNanoMulti'] * session_data.account.star_sign_extras['SeraphMulti']
 
     #Stamps
     capacity_Advices["Stamps"].append(Advice(
@@ -133,28 +126,20 @@ def getCapacityAdviceGroup() -> AdviceGroup:
         progression=session_data.account.gemshop.get("Carry Capacity", 0),
         goal=10
     ))
-    capacity_Advices["Account Wide"].append(Advice(
-        label=f"Starsign: Seraph Cosmos: {seraphEval}",
-        picture_class="seraph-cosmos",
-        progression=max(session_data.account.all_skills.get('Summoning', [0])),
-        goal=seraphGoal
-    ))
+    capacity_Advices["Account Wide"].append(session_data.account.star_sign_extras['SeraphAdvice'])
 
     #Character Specific
+    capacity_Advices["Character Specific"].append(session_data.account.star_sign_extras['SilkrodeNanoAdvice'])
     capacity_Advices["Character Specific"].append(Advice(
-        label=f"Lab Chip: Silkrode Nanochip: {nanoEval}",
-        picture_class="silkrode-nanochip",
-    ))
-    capacity_Advices["Character Specific"].append(Advice(
-        label=f"Starsign: Mr No Sleep: {30 * bool(session_data.account.star_signs.get('Mr_No_Sleep', False))}% base",
+        label=f"Starsign: Mr No Sleep: {30 * bool(session_data.account.star_signs.get('Mr No Sleep', {}).get('Unlocked', False))}% base",
         picture_class="mr-no-sleep",
     ))
     capacity_Advices["Character Specific"].append(Advice(
-        label=f"Starsign: Pack Mule: {10 * bool(session_data.account.star_signs.get('Pack_Mule', False))}% base",
+        label=f"Starsign: Pack Mule: {10 * bool(session_data.account.star_signs.get('Pack Mule', {}).get('Unlocked', False))}% base",
         picture_class="pack-mule",
     ))
     capacity_Advices["Character Specific"].append(Advice(
-        label=f"Starsign: The OG Skiller: {5 * bool(session_data.account.star_signs.get('The_OG_Skiller', False))}% base",
+        label=f"Starsign: The OG Skiller: {5 * bool(session_data.account.star_signs.get('The OG Skiller', {}).get('Unlocked', False))}% base",
         picture_class="the-og-skiller",
     ))
     capacity_Advices["Character Specific"].append(Advice(

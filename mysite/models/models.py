@@ -16,7 +16,7 @@ from consts import expectedStackables, greenstack_progressionTiers, card_data, m
     artifactsList, guildBonusesList, labBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesList, \
     getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampsDict, stampTypes, marketUpgradeList, \
     achievementsList, forgeUpgradesDict, arcadeBonuses, saltLickList, allMeritsDict, bubblesDict, familyBonusesDict, poBoxDict, equinoxBonusesDict, \
-    maxDreams, dreamsThatUnlockNewBonuses
+    maxDreams, dreamsThatUnlockNewBonuses, ceilUpToBase, starsignsDict
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, letterToNumber
 
 def session_singleton(cls):
@@ -822,11 +822,39 @@ class Account:
         #World 1
         self.star_signs = {}
         raw_star_signs = safe_loads(self.raw_data.get("StarSg", {}))
-        for signStatus in raw_star_signs:
+        for signIndex, signValuesDict in starsignsDict.items():
+            self.star_signs[signValuesDict['Name']] = {
+                'Unlocked': False,
+                'Index': signIndex,
+                'Passive': signValuesDict['Passive'],
+                '1_Value': signValuesDict.get('1_Value', 0),
+                '1_Stat': signValuesDict.get('1_Stat', ''),
+                '2_Value': signValuesDict.get('2_Value', 0),
+                '2_Stat': signValuesDict.get('2_Stat', ''),
+                '3_Value': signValuesDict.get('3_Value', 0),
+                '3_Stat': signValuesDict.get('3_Stat', ''),
+            }
             try:
-                self.star_signs[signStatus] = int(raw_star_signs[signStatus])
+                #Some StarSigns are saved as strings "1" to mean unlocked.
+                #The names in the JSON also have underscores instead of spaces
+                self.star_signs[signValuesDict['Name']]['Unlocked'] = int(raw_star_signs[signValuesDict['Name'].replace(" ", "_")]) > 0
             except:
-                self.star_signs[signStatus] = 0
+                pass
+        self.star_sign_extras = {}
+        self.star_sign_extras['SeraphMulti'] = min(3, 1.1 ** ceil((max(self.all_skills.get('Summoning', [0])) + 1) / 20))
+        self.star_sign_extras['SeraphGoal'] = min(240, ceilUpToBase(max(self.all_skills.get('Summoning', [0])), 20))
+        if bool(self.star_signs.get("Seraph Cosmos", {}).get('Unlocked', False)):
+            self.star_sign_extras['SeraphEval'] = f"Multis signs by {self.star_sign_extras['SeraphMulti']:.2f}x."
+        else:
+            self.star_sign_extras['SeraphEval'] = f"Locked. Would increase other signs by {self.star_sign_extras['SeraphMulti']:.2f}x if unlocked."
+            self.star_sign_extras['SeraphMulti'] = 1
+        if self.star_sign_extras['SeraphGoal'] < 240:
+            self.star_sign_extras['SeraphEval'] += " Increases every 20 Summoning levels."
+        self.star_sign_extras['SeraphAdvice'] = Advice(
+            label=f"Starsign: Seraph Cosmos: {self.star_sign_extras['SeraphEval']}",
+            picture_class="seraph-cosmos",
+            progression=max(self.all_skills.get('Summoning', [0])),
+            goal=self.star_sign_extras['SeraphGoal'])
 
         self.forge_upgrades = copy.deepcopy(forgeUpgradesDict)
         raw_forge_upgrades = self.raw_data.get("ForgeLV", [])
@@ -1164,6 +1192,17 @@ class Account:
                 self.labChips[labChipName] = int(raw_labChips_list[labChipIndex])
             except:
                 self.labChips[labChipName] = 0
+        if self.labChips.get('Silkrode Nanochip', 0) > 0:
+            self.star_sign_extras['DoublerOwned'] = True
+            self.star_sign_extras['SilkrodeNanoEval'] = f"{self.labChips.get('Silkrode Nanochip', 0)} owned. Doubles starsigns when equipped."
+            self.star_sign_extras['SilkrodeNanoMulti'] = 2
+        else:
+            self.star_sign_extras['DoublerOwned'] = False
+            self.star_sign_extras['SilkrodeNanoEval'] = "None Owned. Would double other signs if equipped."
+            self.star_sign_extras['SilkrodeNanoMulti'] = 1
+        self.star_sign_extras['SilkrodeNanoAdvice'] = Advice(
+            label=f"Lab Chip: Silkrode Nanochip: {self.star_sign_extras['SilkrodeNanoEval']}",
+            picture_class="silkrode-nanochip")
         self.labBonuses = {}
         for labBonusIndex, labBonusName in enumerate(labBonusesList):
             self.labBonuses[labBonusName] = {"Enabled": True, "Value": 1}
@@ -1272,6 +1311,41 @@ class Account:
         #raw_summoning_list[2] looks to be essence owned
         #raw_summoning_list[3] I have no idea what this is
         #raw_summoning_list[4] looks to be list[int] familiars in the Sanctuary, starting with Slime in [0], Vrumbi in [1], etc.
+        self.summoning['WinnerBonusesAdvice'] = []
+        self.summoning['WinnerBonusesAdvice'].append(Advice(
+            label=f":Pristine Charm: Crystal Comb: {1 + (.3 * self.sneaking.get('PristineCharms', {}).get('Crystal Comb', 0))}x",
+            picture_class="crystal-comb",
+            progression=1 if self.sneaking.get("PristineCharms", {}).get('Crystal Comb', False) else 0,
+            goal=1
+        ))
+        if 'Brighter Lighthouse Bulb' not in self.jade_emporium_purchases:
+            winzLanternPostString = ". This artifact needs to be unlocked from the Jade Emporium"
+        else:
+            winzLanternPostString = ""
+        self.summoning['WinnerBonusesAdvice'].append(Advice(
+            label=f"Sailing: The Winz Lantern: {1 + (.25 * self.artifacts.get('The Winz Lantern', 0))}x{winzLanternPostString}",
+            picture_class="the-winz-lantern",
+            progression=self.artifacts.get('The Winz Lantern', 0),
+            goal=4
+        ))
+        self.summoning['WinnerBonusesAdvice'].append(Advice(
+            label=f"W6 Larger Winner bonuses merit: +{self.merits[5][4]['Level']}%",
+            picture_class="merit-5-4",
+            progression=self.merits[5][4]["Level"],
+            goal=self.merits[5][4]["MaxLevel"]
+        ))
+        self.summoning['WinnerBonusesAdvice'].append(Advice(
+            label=f"W6 Achievement: Spectre Stars: +{1 * (0 < self.achievements.get('Spectre Stars', False))}%",
+            picture_class="spectre-stars",
+            progression=1 if self.achievements.get('Spectre Stars', False) else 0,
+            goal=1
+        ))
+        self.summoning['WinnerBonusesAdvice'].append(Advice(
+            label=f"W6 Achievement: Regalis My Beloved: +{1 * (0 < self.achievements.get('Regalis My Beloved', False))}%",
+            picture_class="regalis-my-beloved",
+            progression=1 if self.achievements.get('Regalis My Beloved', False) else 0,
+            goal=1
+        ))
 
     def _make_cards(self):
         card_counts = safe_loads(self.raw_data.get(self._key_cards, {}))

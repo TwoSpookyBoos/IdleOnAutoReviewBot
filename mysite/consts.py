@@ -828,7 +828,9 @@ breeding_progressionTiers = {
             "ArenaWaves": 200,
             "Shinies": {
                 "Faster Shiny Pet Lv Up Rate": 24,
-                "Bonuses from All Meals": 10
+                "Bonuses from All Meals": 10,
+                "Infinite Star Signs": 25,
+                "Base Efficiency for All Skills": 20
             },
             "ShinyNotes": "Start by focusing on pets that increase Shiny Speed rate. This will decrease the amount of time needed to level up pets in the future."
             },
@@ -837,8 +839,10 @@ breeding_progressionTiers = {
             "TerritoriesUnlocked": 24,
             "ArenaWaves": 200,
             "Shinies": {
-                "Infinite Star Signs": 25,
-                "Base Efficiency for All Skills": 20
+                "Base Critter Per Trap": 10,
+                "Drop Rate": 15,
+                "Faster Refinery Speed": 15,
+                "Lower Minimum Travel Time for Sailing": 5,
                 },
             "ShinyNotes": ""
             },
@@ -847,8 +851,11 @@ breeding_progressionTiers = {
             "TerritoriesUnlocked": 24,
             "ArenaWaves": 200,
             "Shinies": {
-                "Base Critter Per Trap": 10,
-                "Drop Rate": 15
+                "Multikill Per Tier": 20,
+                "Higher Artifact Find Chance": 15,
+                "Faster Shiny Pet Lv Up Rate": 28,
+                "Infinite Star Signs": 36,
+                "Summoning EXP": 10,
                 },
             "ShinyNotes": ""
             },
@@ -857,8 +864,8 @@ breeding_progressionTiers = {
             "TerritoriesUnlocked": 24,
             "ArenaWaves": 200,
             "Shinies": {
-                "Faster Refinery Speed": 15,
-                "Lower Minimum Travel Time for Sailing": 5
+                "Bonuses from All Meals": 26,
+                "Base Efficiency for All Skills": 48,
                 },
             "ShinyNotes": ""
         },
@@ -867,8 +874,8 @@ breeding_progressionTiers = {
             "TerritoriesUnlocked": 24,
             "ArenaWaves": 200,
             "Shinies": {
-                "Multikill Per Tier": 20,
-                "Higher Artifact Find Chance": 15
+                "Drop Rate": 36,
+                "Base Critter Per Trap": 22,
                 },
             "ShinyNotes": ""
         },
@@ -877,8 +884,9 @@ breeding_progressionTiers = {
             "TerritoriesUnlocked": 24,
             "ArenaWaves": 200,
             "Shinies": {
-                "Faster Shiny Pet Lv Up Rate": 28,
-                "Infinite Star Signs": 36
+                "Summoning EXP": 22,
+                "Faster Refinery Speed": 33,
+                "Multikill Per Tier": 44,
             },
             "ShinyNotes": ""
         }
@@ -2203,6 +2211,12 @@ def lavaFunc(funcType: str, level: int, x1: int | float, x2: int | float, roundR
     else:
         return result
 
+def ceilUpToBase(inputValue: int, base: int) -> int:
+    toReturn = base
+    while toReturn <= inputValue:
+        toReturn += base
+    return toReturn
+
 
 ###WORLD 1 CONSTS###
 bribesDict = {
@@ -2363,9 +2377,102 @@ unavailableStampsList = [
     'Shiny Crab Stamp', 'Gear Stamp', 'SpoOoky Stamp', 'Prayday Stamp',  #Skill
     'Talent I Stamp', 'Talent V Stamp',  #Misc
 ]  # Last verified as of v2.08
-starsignsList: list[str] = [
-
-]
+starsignsDict = {
+    1: {'Name': "The Buff Guy", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    2: {'Name': "Flexo Bendo", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    3: {'Name': "The Book Worm", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    4: {'Name': "The Fuzzy Dice", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    5: {'Name': "Dwarfo Beardus", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    6: {'Name': "Hipster Logger", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    7: {'Name': "Pie Seas", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    8: {'Name': "Shoe Fly", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    9: {'Name': "Blue Hedgehog", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    10: {'Name': "Gum Drop", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    11: {'Name': "Activelius", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    12: {'Name': "Pack Mule", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    13: {'Name': "Ned Kelly", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    14: {'Name': "Robinhood", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    15: {'Name': "Pirate Booty", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    16: {'Name': "Muscle Man", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    17: {'Name': "Fast Frog", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    18: {'Name': "Smart Stooge", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    19: {'Name': "Lucky Larry", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    20: {'Name': "Silly Snoozer", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    21: {'Name': "The Big Comatose", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    22: {'Name': "Miniature Game", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    23: {'Name': "Mount Eaterest", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    24: {'Name': "Bob Build Guy", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    25: {'Name': "The Big Brain", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    26: {'Name': "The OG Skiller", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    27: {'Name': "Grim Reaper", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    28: {'Name': "The Fallen Titan", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    29: {'Name': "The Forsaken", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    30: {'Name': "Mr No Sleep", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    31: {'Name': "Sir Savvy", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    32: {'Name': "All Rounder", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    33: {'Name': "Fatty Doodoo", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    34: {'Name': "Chronus Cosmos", 'Passive': True, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    35: {'Name': "All Rounderi", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    36: {'Name': "Centaurii", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    37: {'Name': "Murmollio", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    38: {'Name': "Strandissi", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    39: {'Name': "Agitagi", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    40: {'Name': "Wispommo", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    41: {'Name': "Lukiris", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    42: {'Name': "Pokaminni", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    43: {'Name': "Gor Bowzor", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    44: {'Name': "Hydron Cosmos", 'Passive': True, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    45: {'Name': "Trapezoidburg", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    46: {'Name': "Sawsaw Salala", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    47: {'Name': "Preys Bea", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    48: {'Name': "Cullingo", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    49: {'Name': "Gum Drop Major", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    50: {'Name': "Grim Reaper Major", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    51: {'Name': "Sir Savvy Major", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    52: {'Name': "The Bulwark", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    53: {'Name': "Big Brain Major", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    54: {'Name': "The Fiesty", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    55: {'Name': "The Overachiever", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    56: {'Name': "Comatose Major", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    57: {'Name': "S. Snoozer Major", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    58: {'Name': "Breedabilli", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    59: {'Name': "Gordonius Major", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    60: {'Name': "Power Bowower", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    61: {'Name': "Scienscion", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    62: {'Name': "Artifosho", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    63: {'Name': "Divividov", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    64: {'Name': "C. Shanti Minor", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    65: {'Name': "Muscle Magnus", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    66: {'Name': "Cropiovo Minor", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    67: {'Name': "Fabarmi", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    68: {'Name': "O.G. Signalais", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    69: {'Name': "Lightspeed Frog", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    70: {'Name': "Beanbie Major", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    71: {'Name': "Damarian Major", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    72: {'Name': "Lotto Larrinald", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    73: {'Name': "Intellostooge", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    74: {'Name': "S. Tealio", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    75: {'Name': "Sneekee E. X.", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    76: {'Name': "Jadaciussi", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    77: {'Name': "Druipi Major", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    78: {'Name': "Sumo Magno", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    79: {'Name': "Killian Maximus", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    80: {'Name': "Seraph Cosmos", 'Passive': True, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    81: {'Name': "Glimmer of Beyond", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    82: {'Name': "Fillerz48", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    83: {'Name': "Fillerz49", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    84: {'Name': "Fillerz50", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    85: {'Name': "Fillerz51", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    86: {'Name': "Fillerz52", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    87: {'Name': "Fillerz53", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    88: {'Name': "Fillerz54", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    89: {'Name': "Fillerz55", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    90: {'Name': "Fillerz56", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    91: {'Name': "Fillerz57", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    92: {'Name': "Fillerz58", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    93: {'Name': "Fillerz59", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    94: {'Name': "Fillerz32", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+}
 forgeUpgradesDict = {
     0: {
         "UpgradeName": "New Forge Slot",
