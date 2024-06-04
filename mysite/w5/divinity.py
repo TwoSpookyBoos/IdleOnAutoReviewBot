@@ -640,7 +640,7 @@ def setDivinityProgressionTier():
             divinity_AdviceDict["ArctisPoints"][f"Big P level {bigPLevel}"] = []  #Create subgroup
             #Find the Arctis Value of the lowest div-level character in the account. Don't show entries below or equal to this.
             for divinityLevel in arctisCombosDict[bigPLevel]:
-                if lowestDivinitySkillLevel >= divinityLevel:
+                if lowestDivinitySkillLevel >= divinityLevel and bigPLevel <= session_data.account.alchemy_bubbles['Big P']['Level']:
                     if arctisCombosDict[bigPLevel][divinityLevel] > currentLowestArctisValue:
                         currentLowestArctisValue = arctisCombosDict[bigPLevel][divinityLevel]
     for bigPLevel in arctisCombosDict:
