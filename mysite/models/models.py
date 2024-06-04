@@ -15,7 +15,8 @@ from consts import expectedStackables, greenstack_progressionTiers, card_data, m
     buildingsList, atomsList, prayersDict, labChipsList, bribesDict, shrinesList, pristineCharmsList, sigilsDict, \
     artifactsList, guildBonusesList, labBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesList, \
     getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampsDict, stampTypes, marketUpgradeList, \
-    achievementsList, forgeUpgradesDict, arcadeBonuses, saltLickList, allMeritsDict, bubblesDict, familyBonusesDict, poBoxDict
+    achievementsList, forgeUpgradesDict, arcadeBonuses, saltLickList, allMeritsDict, bubblesDict, familyBonusesDict, poBoxDict, equinoxBonusesDict, \
+    maxDreams, dreamsThatUnlockNewBonuses
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, letterToNumber
 
 def session_singleton(cls):
@@ -1033,6 +1034,45 @@ class Account:
                     self.arcade[upgradeIndex]["Display"] = f"+% UnknownUpgrade{upgradeIndex}"
 
         #World 3
+        self.equinox_unlocked = self.achievements['Equinox Visitor']
+        self.equinox_dreams = [True]
+        raw_equinox_dreams = safe_loads(self.raw_data.get("WeeklyBoss", {}))
+        self.equinox_dreams += [
+            float(raw_equinox_dreams.get(f'd_{i}', 0)) == -1
+            for i in range(maxDreams)
+        ]
+        self.total_dreams_completed = sum(self.equinox_dreams) - 1  #Remove the placeholder in 0th index
+        self.total_equinox_bonuses_unlocked = 0
+        self.remaining_equinox_dreams_unlocking_new_bonuses = []
+        for dreamNumber in dreamsThatUnlockNewBonuses:
+            if self.equinox_dreams[dreamNumber] == True:
+                self.total_equinox_bonuses_unlocked += 1
+            else:
+                self.remaining_equinox_dreams_unlocking_new_bonuses.append(dreamNumber)
+
+        self.equinox_bonuses = {}
+        raw_equinox_bonuses = safe_loads(self.raw_data.get("Dream", [0]*30))
+        for bonusIndex, bonusValueDict in equinoxBonusesDict.items():
+            upgradeName = bonusValueDict['Name']
+            self.equinox_bonuses[upgradeName] = {
+                'PlayerMaxLevel': 0,  # This will get updated in the next Try block. Do not fret, dear reader.
+                'Category': bonusValueDict['Category'],
+                'Unlocked': self.total_equinox_bonuses_unlocked >= bonusIndex - 2,
+                'FinalMaxLevel': bonusValueDict['FinalMaxLevel'],
+                'RemainingUpgrades': []
+            }
+            try:
+                self.equinox_bonuses[upgradeName]['CurrentLevel'] = int(raw_equinox_bonuses[bonusIndex])
+            except:
+                self.equinox_bonuses[upgradeName]['CurrentLevel'] = 0
+            if self.equinox_bonuses[upgradeName]['Unlocked']:
+                self.equinox_bonuses[upgradeName]['PlayerMaxLevel'] = bonusValueDict['BaseLevel']
+                for dreamIndex, bonusMaxLevelIncrease in bonusValueDict['MaxLevelIncreases'].items():
+                    if self.equinox_dreams[dreamIndex]:
+                        self.equinox_bonuses[upgradeName]['PlayerMaxLevel'] += bonusMaxLevelIncrease
+                    else:
+                        self.equinox_bonuses[upgradeName]['RemainingUpgrades'].append(dreamIndex)
+
         self.construction_buildings = {}
         raw_buildings_list = safe_loads(self.raw_data.get("Tower", []))
         for buildingIndex, buildingName in enumerate(buildingsList):
@@ -1104,7 +1144,6 @@ class Account:
                                                                          f" {prayerValuesDict['curse_stat']}")
             except:
                 pass
-
 
         self.saltlick = {}
         raw_saltlick_list = safe_loads(self.raw_data.get("SaltLick"))
