@@ -627,7 +627,7 @@ def setDivinityProgressionTier():
         if session_data.account.alchemy_bubbles['Big P']['Level'] >= bigPLevel:
             lowestBigPToShow = bigPLevel
     #Find the next Big P threshold they could meet
-    if lowestBigPToShow < session_data.account.alchemy_bubbles['Big P']['Level']:
+    if lowestBigPToShow <= session_data.account.alchemy_bubbles['Big P']['Level']:
         try:
             nextBigPTarget = bigPBreakpointsList[bigPBreakpointsList.index(lowestBigPToShow)+1]
         except:
@@ -640,7 +640,7 @@ def setDivinityProgressionTier():
             divinity_AdviceDict["ArctisPoints"][f"Big P level {bigPLevel}"] = []  #Create subgroup
             #Find the Arctis Value of the lowest div-level character in the account. Don't show entries below or equal to this.
             for divinityLevel in arctisCombosDict[bigPLevel]:
-                if lowestDivinitySkillLevel >= divinityLevel:
+                if lowestDivinitySkillLevel >= divinityLevel and bigPLevel <= session_data.account.alchemy_bubbles['Big P']['Level']:
                     if arctisCombosDict[bigPLevel][divinityLevel] > currentLowestArctisValue:
                         currentLowestArctisValue = arctisCombosDict[bigPLevel][divinityLevel]
     for bigPLevel in arctisCombosDict:

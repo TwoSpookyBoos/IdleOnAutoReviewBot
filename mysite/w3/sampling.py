@@ -1,6 +1,7 @@
 from flask import g as session_data
 from consts import maxStaticBookLevels, maxScalingBookLevels, maxSummoningBookLevels, lavaFunc, maxOverallBookLevels
 from models.models import AdviceSection, AdviceGroup, Advice
+from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 
 
@@ -87,45 +88,51 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
     bookLevelAdvices[summoningSubgroup] = []
     cyan14beat = 'w6d3' in session_data.account.summoning['BattlesWon']
     bookLevelAdvices[summoningSubgroup].append(Advice(
-        label=f"Summoning Cyan14: +{10.5 * cyan14beat}{'' if cyan14beat else '. No other multipliers apply until this is beaten.'}",
+        label=f"Summoning match Cyan14: +{10.5 * cyan14beat}{'' if cyan14beat else '. No other multipliers apply until this is beaten.'}",
         picture_class="samurai-guardian",
-        progression=1 if 'w6d3' in session_data.account.summoning['BattlesWon'] else 0,
+        progression=1 if cyan14beat else 0,
         goal=1
     ))
-    bookLevelAdvices[summoningSubgroup].append(Advice(
-        label=f":Pristine Charm: Crystal Comb: {1 + (.3 * session_data.account.sneaking.get('PristineCharms', {}).get('Crystal Comb', 0))}x",
-        picture_class="crystal-comb",
-        progression=1 if session_data.account.sneaking.get("PristineCharms", {}).get('Crystal Comb', False) else 0,
-        goal=1
-    ))
-    if 'Brighter Lighthouse Bulb' not in session_data.account.jade_emporium_purchases:
-        winzLanternPostString = ". This artifact needs to be unlocked from the Jade Emporium"
-    else:
-        winzLanternPostString = ""
-    bookLevelAdvices[summoningSubgroup].append(Advice(
-        label=f"Sailing: The Winz Lantern: {1 + (.25 * session_data.account.artifacts.get('The Winz Lantern', 0))}x{winzLanternPostString}",
-        picture_class="the-winz-lantern",
-        progression=session_data.account.artifacts.get('The Winz Lantern', 0),
-        goal=4
-    ))
-    bookLevelAdvices[summoningSubgroup].append(Advice(
-        label=f"W6 Larger Winner bonuses merit: +{session_data.account.merits[5][4]['Level']}%",
-        picture_class="merit-5-4",
-        progression=session_data.account.merits[5][4]["Level"],
-        goal=session_data.account.merits[5][4]["MaxLevel"]
-    ))
-    bookLevelAdvices[summoningSubgroup].append(Advice(
-        label=f"W6 Achievement: Spectre Stars: +{1 * (0 < session_data.account.achievements.get('Spectre Stars', False))}%",
-        picture_class="spectre-stars",
-        progression=1 if session_data.account.achievements.get('Spectre Stars', False) else 0,
-        goal=1
-    ))
-    bookLevelAdvices[summoningSubgroup].append(Advice(
-        label=f"W6 Achievement: Regalis My Beloved: +{1 * (0 < session_data.account.achievements.get('Regalis My Beloved', False))}%",
-        picture_class="regalis-my-beloved",
-        progression=1 if session_data.account.achievements.get('Regalis My Beloved', False) else 0,
-        goal=1
-    ))
+    for advice in session_data.account.summoning['WinnerBonusesAdvice']:
+        bookLevelAdvices[summoningSubgroup].append(advice)
+    # bookLevelAdvices[summoningSubgroup].append(Advice(
+    #     label=f":Pristine Charm: Crystal Comb: {1 + (.3 * session_data.account.sneaking.get('PristineCharms', {}).get('Crystal Comb', 0))}x",
+    #     picture_class="crystal-comb",
+    #     progression=1 if session_data.account.sneaking.get("PristineCharms", {}).get('Crystal Comb', False) else 0,
+    #     goal=1
+    # ))
+    # if 'Brighter Lighthouse Bulb' not in session_data.account.jade_emporium_purchases:
+    #     winzLanternPostString = ". This artifact needs to be unlocked from the Jade Emporium"
+    # else:
+    #     winzLanternPostString = ""
+    # bookLevelAdvices[summoningSubgroup].append(Advice(
+    #     label=f"Sailing: The Winz Lantern: {1 + (.25 * session_data.account.artifacts.get('The Winz Lantern', 0))}x{winzLanternPostString}",
+    #     picture_class="the-winz-lantern",
+    #     progression=session_data.account.artifacts.get('The Winz Lantern', 0),
+    #     goal=4
+    # ))
+    # bookLevelAdvices[summoningSubgroup].append(Advice(
+    #     label=f"W6 Larger Winner bonuses merit: +{session_data.account.merits[5][4]['Level']}%",
+    #     picture_class="merit-5-4",
+    #     progression=session_data.account.merits[5][4]["Level"],
+    #     goal=session_data.account.merits[5][4]["MaxLevel"]
+    # ))
+    # bookLevelAdvices[summoningSubgroup].append(Advice(
+    #     label=f"W6 Achievement: Spectre Stars: +{1 * (0 < session_data.account.achievements.get('Spectre Stars', False))}%",
+    #     picture_class="spectre-stars",
+    #     progression=1 if session_data.account.achievements.get('Spectre Stars', False) else 0,
+    #     goal=1
+    # ))
+    # bookLevelAdvices[summoningSubgroup].append(Advice(
+    #     label=f"W6 Achievement: Regalis My Beloved: +{1 * (0 < session_data.account.achievements.get('Regalis My Beloved', False))}%",
+    #     picture_class="regalis-my-beloved",
+    #     progression=1 if session_data.account.achievements.get('Regalis My Beloved', False) else 0,
+    #     goal=1
+    # ))
+
+    for group_name in bookLevelAdvices:
+        for advice in bookLevelAdvices[group_name]:
+            mark_advice_completed(advice)
 
     bookLevelAdviceGroup = AdviceGroup(
         tier="",
@@ -180,6 +187,7 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         label=f"Sample It bubble: +{session_data.account.alchemy_bubbles['Sample It']['BaseValue']:.2f}%",
         picture_class="sample-it",
         progression=session_data.account.alchemy_bubbles['Sample It']['Level'],
+        goal=200
     ))
     psrAdvices[accountSubgroup].append(Advice(
         label=f"Salt Lick: +{0.5 * session_data.account.saltlick.get('Printer Sample Size', 0)}%",
@@ -195,17 +203,21 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     ))
     psrAdvices[accountSubgroup].append(Advice(
         label=f"Maestro Family Bonus: {session_data.account.family_bonuses['Maestro']['DisplayValue']} at Class Level {session_data.account.family_bonuses['Maestro']['Level']}",
-        picture_class="maestro-icon"
+        picture_class="maestro-icon",
+        progression=session_data.account.family_bonuses['Maestro']['Level'],
+        goal=328
     ))
     psrAdvices[accountSubgroup].append(Advice(
         label=f"Amplestample Stamp: +{amplestampleValue:.3f}%",
         picture_class="amplestample-stamp",
         progression=session_data.account.stamps.get("Amplestample Stamp", {}).get("Level", 0),
+        goal=32
     ))
     psrAdvices[accountSubgroup].append(Advice(
         label=f"Stample Stamp: +{stampleValue:.3f}%",
         picture_class="stample-stamp",
         progression=session_data.account.stamps.get("Stample Stamp", {}).get("Level", 0),
+        goal=60
     ))
     psrAdvices[accountSubgroup].append(Advice(
         label=f"Lab Bonus: Certified Stamp Book: {'2x (Already applied)' if session_data.account.labBonuses.get('Certified Stamp Book', {}).get('Enabled', False) else '1x'}",
@@ -284,27 +296,17 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
             unit="%"
         ))
 
+    for group_name in psrAdvices:
+        if group_name != prayerSubgroup:
+            for advice in psrAdvices[group_name]:
+                mark_advice_completed(advice)
+
     psrAdviceGroup = AdviceGroup(
         tier="",
         pre_string=f"Info- Sources of Printer Sample Rate (90% Hardcap)",
         advices=psrAdvices
     )
     return psrAdviceGroup
-
-def getFamilyBonusesAdviceGroup() -> AdviceGroup:
-    fbAdvices = []
-    for className in session_data.account.family_bonuses:
-        fbAdvices.append(Advice(
-            label=f"{className}: {session_data.account.family_bonuses[className]['DisplayValue']} at Class Level {session_data.account.family_bonuses[className]['Level']}",
-            picture_class=f"{className}-icon",
-
-        ))
-    fbAdviceGroup = AdviceGroup(
-        tier="",
-        pre_string="Info- Family Bonus testing",
-        advices=fbAdvices
-    )
-    return fbAdviceGroup
 
 def setSamplingProgressionTier() -> AdviceSection:
     sampling_AdviceDict = {

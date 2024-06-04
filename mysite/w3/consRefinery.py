@@ -223,7 +223,7 @@ def setConsRefineryProgressionTier():
                 label="W3 Taskboard Merits Purchased",
                 picture_class="iceland-irwin",
                 progression=str(consRefineryDict['Salt Merit']),
-                goal=5)
+                goal=sum_SaltsRank2Plus)
         )
 
     #Excess and Deficits Advice
