@@ -1,6 +1,7 @@
 from flask import g as session_data
 from consts import maxStaticBookLevels, maxScalingBookLevels, maxSummoningBookLevels, lavaFunc, maxOverallBookLevels
 from models.models import AdviceSection, AdviceGroup, Advice
+from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 
 
@@ -129,6 +130,10 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
     #     goal=1
     # ))
 
+    for group_name in bookLevelAdvices:
+        for advice in bookLevelAdvices[group_name]:
+            mark_advice_completed(advice)
+
     bookLevelAdviceGroup = AdviceGroup(
         tier="",
         pre_string=f"Info- Sources of Max Book Levels ({100 + static_sum + scaling_sum + summoning_sum}/{maxOverallBookLevels})",
@@ -182,6 +187,7 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         label=f"Sample It bubble: +{session_data.account.alchemy_bubbles['Sample It']['BaseValue']:.2f}%",
         picture_class="sample-it",
         progression=session_data.account.alchemy_bubbles['Sample It']['Level'],
+        goal=200
     ))
     psrAdvices[accountSubgroup].append(Advice(
         label=f"Salt Lick: +{0.5 * session_data.account.saltlick.get('Printer Sample Size', 0)}%",
@@ -197,17 +203,21 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     ))
     psrAdvices[accountSubgroup].append(Advice(
         label=f"Maestro Family Bonus: {session_data.account.family_bonuses['Maestro']['DisplayValue']} at Class Level {session_data.account.family_bonuses['Maestro']['Level']}",
-        picture_class="maestro-icon"
+        picture_class="maestro-icon",
+        progression=session_data.account.family_bonuses['Maestro']['Level'],
+        goal=328
     ))
     psrAdvices[accountSubgroup].append(Advice(
         label=f"Amplestample Stamp: +{amplestampleValue:.3f}%",
         picture_class="amplestample-stamp",
         progression=session_data.account.stamps.get("Amplestample Stamp", {}).get("Level", 0),
+        goal=32
     ))
     psrAdvices[accountSubgroup].append(Advice(
         label=f"Stample Stamp: +{stampleValue:.3f}%",
         picture_class="stample-stamp",
         progression=session_data.account.stamps.get("Stample Stamp", {}).get("Level", 0),
+        goal=60
     ))
     psrAdvices[accountSubgroup].append(Advice(
         label=f"Lab Bonus: Certified Stamp Book: {'2x (Already applied)' if session_data.account.labBonuses.get('Certified Stamp Book', {}).get('Enabled', False) else '1x'}",
@@ -286,27 +296,17 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
             unit="%"
         ))
 
+    for group_name in psrAdvices:
+        if group_name != prayerSubgroup:
+            for advice in psrAdvices[group_name]:
+                mark_advice_completed(advice)
+
     psrAdviceGroup = AdviceGroup(
         tier="",
         pre_string=f"Info- Sources of Printer Sample Rate (90% Hardcap)",
         advices=psrAdvices
     )
     return psrAdviceGroup
-
-def getFamilyBonusesAdviceGroup() -> AdviceGroup:
-    fbAdvices = []
-    for className in session_data.account.family_bonuses:
-        fbAdvices.append(Advice(
-            label=f"{className}: {session_data.account.family_bonuses[className]['DisplayValue']} at Class Level {session_data.account.family_bonuses[className]['Level']}",
-            picture_class=f"{className}-icon",
-
-        ))
-    fbAdviceGroup = AdviceGroup(
-        tier="",
-        pre_string="Info- Family Bonus testing",
-        advices=fbAdvices
-    )
-    return fbAdviceGroup
 
 def setSamplingProgressionTier() -> AdviceSection:
     sampling_AdviceDict = {
