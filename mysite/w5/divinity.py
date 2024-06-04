@@ -627,7 +627,7 @@ def setDivinityProgressionTier():
         if session_data.account.alchemy_bubbles['Big P']['Level'] >= bigPLevel:
             lowestBigPToShow = bigPLevel
     #Find the next Big P threshold they could meet
-    if lowestBigPToShow < session_data.account.alchemy_bubbles['Big P']['Level']:
+    if lowestBigPToShow <= session_data.account.alchemy_bubbles['Big P']['Level']:
         try:
             nextBigPTarget = bigPBreakpointsList[bigPBreakpointsList.index(lowestBigPToShow)+1]
         except:
