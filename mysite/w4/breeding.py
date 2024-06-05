@@ -322,7 +322,14 @@ def setBreedingProgressionTier() -> AdviceSection:
         "MaxArenaWave": {"Recommended Arena Team (Left to Right)": []},
         "ShinyLevels": {},
         "ShinyLevelsTierList": {},
-        "ShinySpeedSources": {}
+        "ShinySpeedSources": {},
+        "ActiveBM": {
+            "Prerequisites": [],
+            "Equipment": [],
+            "Cards": [],
+            "Lab Chips": [],
+            "Active Fight": []
+        }
     }
     breeding_AdviceGroupDict = {}
     breeding_AdviceSection = AdviceSection(
@@ -497,7 +504,7 @@ def setBreedingProgressionTier() -> AdviceSection:
     # Shiny Speed Sources
     breeding_AdviceDict["ShinySpeedSources"] = {
         "Multi Group A- Summoning Winner Bonus": [],
-        "Multi Group B- Everything Else": [],
+        "Multi Group B- Everything Else": []
     }
 
     breeding_AdviceDict["ShinySpeedSources"]["Multi Group B- Everything Else"].append(Advice(
@@ -531,6 +538,126 @@ def setBreedingProgressionTier() -> AdviceSection:
     ))
     for advice in session_data.account.summoning['WinnerBonusesAdvice']:
         breeding_AdviceDict["ShinySpeedSources"]["Multi Group A- Summoning Winner Bonus"].append(advice)
+
+    #Active BM Prerequisites
+    breeding_AdviceDict["ActiveBM"]["Prerequisites"].append(Advice(
+        label="Have a Voidwalker in your family",
+        picture_class="voidwalker-icon",
+        progression=f"{1 if 'Voidwalker' in session_data.account.classes else 0}",
+        goal=1
+    ))
+    breeding_AdviceDict["ActiveBM"]["Prerequisites"].append(Advice(
+        label="Voidwalker: Enhancement Eclipse talent leveled to 150+",
+        picture_class="enhancement-eclipse",
+        goal=150
+    ))
+    breeding_AdviceDict["ActiveBM"]["Prerequisites"].append(Advice(
+        label="Have a Beast Master in your family",
+        picture_class="beast-master-icon",
+        progression=f"{1 if 'Beast Master' in session_data.account.classes else 0}",
+        goal=1
+    ))
+    breeding_AdviceDict["ActiveBM"]["Prerequisites"].append(Advice(
+        label="All ACTIVE-ONLY kills with your Beast Master now have a 50% chance to speed up progress for the Fenceyard, Spice collection, and Egg production! Crystal Mobs count 😄",
+        picture_class="whale-wallop"))
+
+    #Equipment
+    breeding_AdviceDict["ActiveBM"]["Equipment"].append(Advice(
+        label="Respawn Keychains: +6% respawn per roll (Or +10% from FOMO shop)",
+        picture_class="negative-7-chain"
+    ))
+    breeding_AdviceDict["ActiveBM"]["Equipment"].append(Advice(
+        label="The Divine Scarf: +20% respawn",
+        picture_class="the-divine-scarf"
+    ))
+    breeding_AdviceDict["ActiveBM"]["Equipment"].append(Advice(
+        label="Spinge Tingler Sniper: +12% respawn",
+        picture_class="spine-tingler-sniper"
+    ))
+    breeding_AdviceDict["ActiveBM"]["Equipment"].append(Advice(
+        label="Serrated Chest of the Divine: +8% respawn",
+        picture_class="serrated-chest-of-the-divine"
+    ))
+    breeding_AdviceDict["ActiveBM"]["Equipment"].append(Advice(
+        label="Spiked Leggings of the Divine: +4% respawn",
+        picture_class="spiked-leggings-of-the-divine"
+    ))
+    breeding_AdviceDict["ActiveBM"]["Equipment"].append(Advice(
+        label=f"Star Sign: Grim Reaper Major: +4% respawn",
+        picture_class='grim-reaper-major'
+    ))
+    breeding_AdviceDict["ActiveBM"]["Equipment"].append(Advice(
+        label=f"Star Sign: Grim Reaper: +2% respawn",
+        picture_class='grim-reaper'
+    ))
+
+    #Cards
+    breeding_AdviceDict["ActiveBM"]["Cards"].append(Advice(
+        label=f"W4 Demon Genie card: +15% Crystal Mob Spawn Chance per rank",
+        picture_class="demon-genie-card",
+        progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == "Demon Genie"),
+        goal=6
+    ))
+    breeding_AdviceDict["ActiveBM"]["Cards"].append(Advice(
+        label=f"W1 Poop card: +10% Crystal Mob Spawn Chance per rank",
+        picture_class="poop-card",
+        progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == "Poop"),
+        goal=6
+    ))
+    breeding_AdviceDict["ActiveBM"]["Cards"].append(Advice(
+        label=f"Fill the rest with: Drop Rate, Active EXP, or Damage if needed.",
+        picture_class="locked-card"))
+
+    #Lab Chips
+    breeding_AdviceDict["ActiveBM"]["Lab Chips"].append(Advice(
+        label="Chocco Chip for more Crystal Mobs",
+        picture_class="chocolatey-chip"
+    ))
+    breeding_AdviceDict["ActiveBM"]["Lab Chips"].append(Advice(
+        label="Omega Nanochip: Top Left card doubler",
+        picture_class="omega-nanochip"
+    ))
+    breeding_AdviceDict["ActiveBM"]["Lab Chips"].append(Advice(
+        label="Omega Motherboard: Bottom Right card doubler",
+        picture_class="omega-motherboard"
+    ))
+    breeding_AdviceDict["ActiveBM"]["Lab Chips"].append(Advice(
+        label="Lab Chip: Silkrode Software aka Keychain Doubler ONLY IF your top Keychain gives more than 10% total respawn",
+        picture_class="silkrode-software"
+    ))
+    breeding_AdviceDict["ActiveBM"]["Lab Chips"].append(Advice(
+        label="Lab Chip: Silkrode Processor aka Pendant Doubler ONLY IF your Pendant gives more than 10% total respawn",
+        picture_class="silkrode-processor"
+    ))
+    breeding_AdviceDict["ActiveBM"]["Lab Chips"].append(session_data.account.star_sign_extras['SilkrodeNanoAdvice'])
+    breeding_AdviceDict["ActiveBM"]["Lab Chips"].append(Advice(
+        label="Fill any remaining slots with Galvanic Nanochip: +10% respawn per chip",
+        picture_class="galvanic-nanochip"
+    ))
+
+    #Active play
+    breeding_AdviceDict["ActiveBM"]["Active Fight"].append(Advice(
+        label="Place UwU Rawrrr first on your attack talent bar. The order of the other attacks doesn't seem to matter.",
+        picture_class="uwu-rawrrr"))
+    breeding_AdviceDict["ActiveBM"]["Active Fight"].append(Advice(
+        label="Finally, Auto against Samurai Guardians",
+        picture_class="samurai-guardian"))
+    breeding_AdviceDict["ActiveBM"]["Active Fight"].append(Advice(
+        label=f"W6 Taskboard Merit: +10% W6 respawn if fighting Samurai Guardians",
+        picture_class='merit-5-1',
+        progression=session_data.account.merits[5][1]["Level"],
+        goal=10
+    ))
+
+    breeding_AdviceDict["ActiveBM"]["Active Fight"].append(Advice(
+        label="Auto against Tremor Wurms instead if not ready for Samurai Guardians",
+        picture_class="tremor-wurm"))
+    breeding_AdviceDict["ActiveBM"]["Active Fight"].append(Advice(
+        label=f"W5 Taskboard Merit: +20% W5 respawn if fighting Tremor Wurms",
+        picture_class='merit-4-1',
+        progression=session_data.account.merits[4][1]["Level"],
+        goal=10
+    ))
 
     #Generate Advice Groups
     if tier_UnlockedTerritories < maxBreedingTier:
@@ -574,8 +701,11 @@ def setBreedingProgressionTier() -> AdviceSection:
             pre_string="Info- Sources of Shiny Pet Level Rate",
             advices=breeding_AdviceDict["ShinySpeedSources"]
         )
-
-
+        breeding_AdviceGroupDict["ActiveBM"] = AdviceGroup(
+            tier="",
+            pre_string="Info- Active BM setup for around 5x shiny progress",
+            advices=breeding_AdviceDict["ActiveBM"]
+        )
 
     #Generate Advice Section
     tier_section = f"{overall_BreedingTier}/{maxBreedingTier}"
