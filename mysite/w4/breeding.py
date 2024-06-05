@@ -707,7 +707,7 @@ def setBreedingProgressionTier() -> AdviceSection:
         )
         breeding_AdviceGroupDict["ActiveBM"] = AdviceGroup(
             tier="",
-            pre_string="Info- Active BM setup for around 5x shiny progress",
+            pre_string="Info- Active BM setup for around 4-5x shiny progress",
             advices=breeding_AdviceDict["ActiveBM"]
         )
 

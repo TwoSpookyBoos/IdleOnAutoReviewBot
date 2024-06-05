@@ -854,7 +854,7 @@ breeding_progressionTiers = {
                 "Multikill Per Tier": 20,
                 "Higher Artifact Find Chance": 15,
                 "Faster Shiny Pet Lv Up Rate": 28,
-                "Infinite Star Signs": 36,
+                "Infinite Star Signs": 37,
                 "Summoning EXP": 10,
                 },
             "ShinyNotes": ""
@@ -887,6 +887,7 @@ breeding_progressionTiers = {
                 "Summoning EXP": 22,
                 "Faster Refinery Speed": 33,
                 "Multikill Per Tier": 44,
+                "Infinite Star Signs": 45,
             },
             "ShinyNotes": ""
         }
