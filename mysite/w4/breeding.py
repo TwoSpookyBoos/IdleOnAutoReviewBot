@@ -582,7 +582,7 @@ def setBreedingProgressionTier() -> AdviceSection:
         label="Spiked Leggings of the Divine: +4% respawn",
         picture_class="spiked-leggings-of-the-divine"
     ))
-    breeding_AdviceDict["ShinySpeedSources"]["Multi Group B- Everything Else"].append(Advice(
+    breeding_AdviceDict["ShinySpeedSources"]["Equipment"].append(Advice(
         label=f"Star Sign: Breedabilli: +15% Shiny Pet Level Speed",
         picture_class='breedabilli'
     ))
