@@ -582,6 +582,10 @@ def setBreedingProgressionTier() -> AdviceSection:
         label="Spiked Leggings of the Divine: +4% respawn",
         picture_class="spiked-leggings-of-the-divine"
     ))
+    breeding_AdviceDict["ShinySpeedSources"]["Multi Group B- Everything Else"].append(Advice(
+        label=f"Star Sign: Breedabilli: +15% Shiny Pet Level Speed",
+        picture_class='breedabilli'
+    ))
     breeding_AdviceDict["ActiveBM"]["Equipment"].append(Advice(
         label=f"Star Sign: Grim Reaper Major: +4% respawn",
         picture_class='grim-reaper-major'
@@ -622,11 +626,11 @@ def setBreedingProgressionTier() -> AdviceSection:
         picture_class="omega-motherboard"
     ))
     breeding_AdviceDict["ActiveBM"]["Lab Chips"].append(Advice(
-        label="Lab Chip: Silkrode Software aka Keychain Doubler ONLY IF your top Keychain gives more than 10% total respawn",
+        label="Silkrode Software aka Keychain Doubler ONLY IF your top Keychain gives more than 10% total respawn",
         picture_class="silkrode-software"
     ))
     breeding_AdviceDict["ActiveBM"]["Lab Chips"].append(Advice(
-        label="Lab Chip: Silkrode Processor aka Pendant Doubler ONLY IF your Pendant gives more than 10% total respawn",
+        label="Silkrode Processor aka Pendant Doubler ONLY IF your Pendant gives more than 10% total respawn",
         picture_class="silkrode-processor"
     ))
     breeding_AdviceDict["ActiveBM"]["Lab Chips"].append(session_data.account.star_sign_extras['SilkrodeNanoAdvice'])
