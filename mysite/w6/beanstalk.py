@@ -58,9 +58,9 @@ def section_beanstalk():
     ]
     foods_to_deposit_100k = {
         k for k, v in beanstalk_status.items() if v < HUNNIT_K and k not in foods_to_100k
-    }
+    } if upgrade_bought else {}
 
-    foods_to_deposit = foods_to_deposit_10k.union(foods_to_deposit_100k) if upgrade_bought else {}
+    foods_to_deposit = foods_to_deposit_10k.union(foods_to_deposit_100k)
 
     foods_finished = sum(beanstalk_status.values())
     tier = f"{foods_finished}/{len(gold_foods)*2}"
