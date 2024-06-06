@@ -6,6 +6,10 @@ from flask import g as session_data
 TEN_K = 1
 HUNNIT_K = 2
 
+TIER_1_GOAL = 10**4
+BASE_TIER_2_GOAL = 10**5
+COMBINED_TIER_2_GOAL = TIER_1_GOAL + BASE_TIER_2_GOAL
+
 
 def __get_ninja_section(raw):
     default = "[]"
@@ -17,6 +21,7 @@ def __get_beanstalk_data(raw):
         return ninja_section[-4]
     else:
         return []
+
 
 def section_beanstalk():
     beanstalk_bought = "Gold Food Beanstalk" in session_data.account.jade_emporium_purchases
@@ -53,8 +58,17 @@ def section_beanstalk():
         k for k, v in beanstalk_status.items() if v < TEN_K and k not in foods_to_10k
     ]
 
+    tier_2_amount_needed_by_golden_food_code: dict[str, int] = dict()
+    for golden_food_code in gold_foods:
+        # if the golden food's tier 1 goal isn't deposited yet, then use the combined tier 2 goal
+        tier_2_goal = COMBINED_TIER_2_GOAL \
+            if golden_food_code in foods_to_deposit_10k \
+            else BASE_TIER_2_GOAL
+
+        tier_2_amount_needed_by_golden_food_code[golden_food_code] = tier_2_goal
+
     foods_to_100k = [
-        k for k, v in beanstalk_status.items() if v < HUNNIT_K and gold_foods[k] < 10**5
+        k for k, v in beanstalk_status.items() if v < HUNNIT_K and gold_foods[k] < tier_2_amount_needed_by_golden_food_code[k]
     ]
     foods_to_deposit_100k = [
         k for k, v in beanstalk_status.items() if v < HUNNIT_K and k not in foods_to_100k
@@ -77,7 +91,7 @@ def section_beanstalk():
         Advice(
             label=getItemDisplayName(codename),
             picture_class=getItemDisplayName(codename),
-            progression=f"{int(gold_foods[codename]) / 10**4:.02%}",
+            progression=f"{int(gold_foods[codename]) / TIER_1_GOAL:.02%}",
         )
         for codename in foods_to_10k
     ]
@@ -86,7 +100,7 @@ def section_beanstalk():
         Advice(
             label=getItemDisplayName(codename),
             picture_class=getItemDisplayName(codename),
-            progression=f"{int(gold_foods[codename]) / 10**5:.02%}",
+            progression=f"{int(gold_foods[codename]) / tier_2_amount_needed_by_golden_food_code[codename]:.02%}",
         )
         for codename in foods_to_100k
     ]
