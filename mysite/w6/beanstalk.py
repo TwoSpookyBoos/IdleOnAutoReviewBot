@@ -116,7 +116,7 @@ def section_beanstalk():
 
     group_100k = AdviceGroup(
         tier="",
-        pre_string="Get 100,000 of these golden foods",
+        pre_string="Get another 100,000 of these golden foods",
         advices=advice_100k,
     ) if upgrade_bought else None
 
