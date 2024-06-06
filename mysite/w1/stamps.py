@@ -255,9 +255,9 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
         goal=3
     ))
     costReduction_Advices["Uncapped"].append(Advice(
-        label=f"Artifact: Chilled Yarn increases sigil by {1 + session_data.account.artifacts.get('Chilled Yarn', 0)}x",
+        label=f"Artifact: Chilled Yarn increases sigil by {1 + session_data.account.sailing['Artifacts'].get('Chilled Yarn', {}).get('Level', 0)}x",
         picture_class="chilled-yarn",
-        progression=session_data.account.artifacts.get("Chilled Yarn", 0),
+        progression=session_data.account.sailing['Artifacts'].get('Chilled Yarn', {}).get('Level', 0),
         goal=4
     ))
 

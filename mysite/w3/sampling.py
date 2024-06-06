@@ -15,7 +15,7 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
                   + (25 * (0 < session_data.account.construction_buildings.get('Talent Book Library', 0)))
                   + (5 * (0 < session_data.account.achievements.get('Checkout Takeout', False)))
                   + (10 * (0 < session_data.account.atoms.get('Oxygen - Library Booker', 0)))
-                  + (25 * session_data.account.artifacts.get('Fury Relic', 0))
+                  + (25 * session_data.account.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0))
                   )
     staticSubgroup = f"Static Sources: +{static_sum}/{maxStaticBookLevels}"
     bookLevelAdvices[staticSubgroup] = []
@@ -38,16 +38,16 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
         progression=1 if 0 < session_data.account.atoms.get('Oxygen - Library Booker', 0) else 0,
         goal=1
     ))
-    if not session_data.account.eldritch_artifacts_unlocked and session_data.account.artifacts.get('Fury Relic', 0) == 2:
+    if not session_data.account.eldritch_artifacts_unlocked and session_data.account.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0) == 2:
         furyPostString = ". Eldritch Artifacts are unlocked by reaching Rift 31"
-    elif "Sovereign Artifacts" not in session_data.account.jade_emporium_purchases and session_data.account.artifacts.get('Fury Relic', 0) == 3:
+    elif "Sovereign Artifacts" not in session_data.account.jade_emporium_purchases and session_data.account.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0) == 3:
         furyPostString = ". Sovereign Artifacts are unlocked from the Jade Emporium"
     else:
         furyPostString = ""
     bookLevelAdvices[staticSubgroup].append(Advice(
-        label=f"Sailing: Fury Relic: +{25 * session_data.account.artifacts.get('Fury Relic', 0)}{furyPostString}",
+        label=f"Sailing: Fury Relic: +{25 * session_data.account.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0)}{furyPostString}",
         picture_class="fury-relic",
-        progression=session_data.account.artifacts.get('Fury Relic', 0),
+        progression=session_data.account.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0),
         goal=4
     ))
 
@@ -73,7 +73,7 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
     ))
 
     #Summoning Sources
-    summGroupA = (1 + (.25 * session_data.account.artifacts.get('The Winz Lantern', 0))
+    summGroupA = (1 + (.25 * session_data.account.sailing['Artifacts'].get('The Winz Lantern', {}).get('Level', 0))
                     + .01 * session_data.account.merits[5][4]['Level']
                     + .01 * (0 < session_data.account.achievements.get('Spectre Stars', False))
                     + .01 * (0 < session_data.account.achievements.get('Regalis My Beloved', False))
@@ -106,9 +106,9 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
     # else:
     #     winzLanternPostString = ""
     # bookLevelAdvices[summoningSubgroup].append(Advice(
-    #     label=f"Sailing: The Winz Lantern: {1 + (.25 * session_data.account.artifacts.get('The Winz Lantern', 0))}x{winzLanternPostString}",
+    #     label=f"Sailing: The Winz Lantern: {1 + (.25 * session_data.account.sailing['Artifacts'].get('The Winz Lantern', 0))}x{winzLanternPostString}",
     #     picture_class="the-winz-lantern",
-    #     progression=session_data.account.artifacts.get('The Winz Lantern', 0),
+    #     progression=session_data.account.sailing['Artifacts'].get('The Winz Lantern', 0),
     #     goal=4
     # ))
     # bookLevelAdvices[summoningSubgroup].append(Advice(

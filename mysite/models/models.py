@@ -13,7 +13,7 @@ from flask import g
 from utils.data_formatting import getCharacterDetails, safe_loads
 from consts import expectedStackables, greenstack_progressionTiers, card_data, maxMeals, maxMealLevel, jade_emporium, max_IndexOfVials, getReadableVialNames, \
     buildingsList, atomsList, prayersDict, labChipsList, bribesDict, shrinesList, pristineCharmsList, sigilsDict, \
-    artifactsList, guildBonusesList, labBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesList, \
+    sailingDict, guildBonusesList, labBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesList, \
     getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampsDict, stampTypes, marketUpgradeList, \
     achievementsList, forgeUpgradesDict, arcadeBonuses, saltLickList, allMeritsDict, bubblesDict, familyBonusesDict, poBoxDict, equinoxBonusesDict, \
     maxDreams, dreamsThatUnlockNewBonuses, ceilUpToBase, starsignsDict
@@ -1209,15 +1209,34 @@ class Account:
 
         #World 5
         self.registered_slab = safe_loads(self.raw_data.get("Cards1", []))
-        self.artifacts = {}
-        raw_artifacts_list = safe_loads(self.raw_data.get("Sailing", []))
-        raw_artifacts_list = safe_loads(raw_artifacts_list)  # Some users have needed to have data converted twice
-        self.sum_artifact_tiers = sum(raw_artifacts_list[3]) if raw_artifacts_list and len(raw_artifacts_list) >= 4 else 0
-        for artifactIndex, artifactName in enumerate(artifactsList):
-            try:
-                self.artifacts[artifactName] = raw_artifacts_list[3][artifactIndex]
-            except:
-                self.artifacts[artifactName] = 0
+        self.sailing = {"Artifacts": {}, "Boats": {}, "Captains": {}, "Islands": {}}
+        raw_sailing_list = safe_loads(safe_loads(self.raw_data.get("Sailing", [])))  # Some users have needed to have data converted twice
+        if raw_sailing_list:
+            self.sum_artifact_tiers = sum(raw_sailing_list[3]) if raw_sailing_list and len(raw_sailing_list) >= 4 else 0
+            for islandIndex, islandValuesDict in sailingDict.items():
+                try:
+                    self.sailing['Islands'][islandValuesDict['Name']] = {
+                        'Unlocked': True if raw_sailing_list[0][islandIndex] == -1 else False,
+                        'Distance': islandValuesDict['Distance'],
+                        'NormalTreasure': islandValuesDict['NormalTreasure'],
+                        'RareTreasure': islandValuesDict['RareTreasure']
+                    }
+                except:
+                    self.sailing['Islands'][islandValuesDict['Name']] = {
+                        'Unlocked': False,
+                        'Distance': islandValuesDict['Distance'],
+                        'NormalTreasure': islandValuesDict['NormalTreasure'],
+                        'RareTreasure': islandValuesDict['RareTreasure']
+                    }
+                for artifactIndex, artifactValuesDict in islandValuesDict['Artifacts'].items():
+                    try:
+                        self.sailing['Artifacts'][artifactValuesDict['Name']] = {
+                            'Level': raw_sailing_list[3][artifactIndex]
+                        }
+                    except:
+                        self.sailing['Artifacts'][artifactValuesDict['Name']] = {
+                            'Level': 0
+                        }
 
         #World 6
         self.sneaking = {
@@ -1323,9 +1342,9 @@ class Account:
         else:
             winzLanternPostString = ""
         self.summoning['WinnerBonusesAdvice'].append(Advice(
-            label=f"Sailing: The Winz Lantern: {1 + (.25 * self.artifacts.get('The Winz Lantern', 0))}x{winzLanternPostString}",
+            label=f"Sailing: The Winz Lantern: {1 + (.25 * self.sailing['Artifacts'].get('The Winz Lantern', {}).get('Level', 0))}x{winzLanternPostString}",
             picture_class="the-winz-lantern",
-            progression=self.artifacts.get('The Winz Lantern', 0),
+            progression=self.sailing['Artifacts'].get('The Winz Lantern', {}).get('Level', 0),
             goal=4
         ))
         self.summoning['WinnerBonusesAdvice'].append(Advice(

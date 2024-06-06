@@ -921,6 +921,10 @@ divinity_progressionTiers = {
     11: {"MaxDivLevel": 50},
     12: {"MinDivLevel": 40}
 }
+sailing_progressionTiers = {
+    0: {},
+    1: {}
+}
 
 ###WORLD 6 PROGRESSION TIERS###
 
@@ -3062,8 +3066,8 @@ labBonusesList = [
 ]
 
 ###WORLD 5 CONSTS###
-numberOfArtifacts = 33  # Last verified as of v2.08
-numberOfArtifactTiers = 4  # Last verified as of v2.08
+artifactTiers = ["Base", "Ancient", "Eldritch", "Sovereign"]
+numberOfArtifactTiers = len(artifactTiers)
 currentMaxChestsSum = 45  # Last verified as of v2.08
 artifactsList = [
     'Moai Head', 'Maneki Kat', 'Ruble Cuble', 'Fauxory Tusk', 'Gold Relic',
@@ -3074,8 +3078,56 @@ artifactsList = [
     'Crystal Steak', 'Trilobite Rock', 'Opera Mask', 'Socrates', 'The True Lantern',
     'The Onyx Lantern', 'The Shim Lantern', 'The Winz Lantern'
 ]
-w5meritsDict = {
-
+numberOfArtifacts = len(artifactsList)
+sailingDict = {
+    1: {'Name': 'Safari Island', 'NormalTreasure': 'sailing-treasure-1', 'RareTreasure': 'sailing-treasure-2', 'Distance': 25, 'Artifacts': {
+        0: {'Name': 'Moai Head'},
+        1: {'Name': 'Maneki Kat'},
+        2: {'Name': 'Ruble Cuble'},
+        3: {'Name': 'Fauxory Tusk'}}},
+    2: {'Name': 'Beachy Coast', 'NormalTreasure': 'sailing-treasure-3', 'RareTreasure': 'sailing-treasure-4', 'Distance': 100, 'Artifacts': {
+        4: {'Name': 'Gold Relic'},
+        5: {'Name': 'Genie Lamp'},
+        6: {'Name': 'Silver Ankh'}}},
+    3: {'Name': 'Isolated Woods', 'NormalTreasure': 'sailing-treasure-5', 'RareTreasure': 'sailing-treasure-6', 'Distance': 250, 'Artifacts': {
+        7: {'Name': 'Emerald Relic'},
+        8: {'Name': 'Fun Hippoete'}}},
+    4: {'Name': 'Rocky Peaks', 'NormalTreasure': 'sailing-treasure-7', 'RareTreasure': 'sailing-treasure-8', 'Distance': 1000, 'Artifacts': {
+        9: {'Name': 'Arrowhead'},
+        10: {'Name': '10 AD Tablet'},
+        11: {'Name': 'Ashen Urn'}}},
+    5: {'Name': 'Stormy North', 'NormalTreasure': 'sailing-treasure-9', 'RareTreasure': 'sailing-treasure-10', 'Distance': 3000, 'Artifacts': {
+        12: {'Name': 'Amberite'},
+        13: {'Name': 'Triagulon'},
+        14: {'Name': 'Billcye Tri'}}},
+    6: {'Name': 'Snowy South', 'NormalTreasure': 'sailing-treasure-11', 'RareTreasure': 'sailing-treasure-12', 'Distance': 10000, 'Artifacts': {
+        15: {'Name': 'Frost Relic'},
+        16: {'Name': 'Chilled Yarn'}}},
+    7: {'Name': 'Toxic Bay Inc', 'NormalTreasure': 'sailing-treasure-13', 'RareTreasure': 'sailing-treasure-14', 'Distance': 25000, 'Artifacts': {
+        17: {'Name': 'Causticolumn'},
+        18: {'Name': 'Jade Rock'}}},
+    8: {'Name': 'Candied Island', 'NormalTreasure': 'sailing-treasure-15', 'RareTreasure': 'sailing-treasure-16', 'Distance': 100000, 'Artifacts': {
+        19: {'Name': 'Dreamcatcher'},
+        20: {'Name': 'Gummy Orb'}}},
+    9: {'Name': 'Fungi Meadows', 'NormalTreasure': 'sailing-treasure-17', 'RareTreasure': 'sailing-treasure-18', 'Distance': 300000, 'Artifacts': {
+        21: {'Name': 'Fury Relic'}}},
+    10: {'Name': 'Cloudy Quay', 'NormalTreasure': 'sailing-treasure-19', 'RareTreasure': 'sailing-treasure-20', 'Distance': 1000000, 'Artifacts': {
+        22: {'Name': 'Cloud Urn'},
+        23: {'Name': 'Weatherbook'}}},
+    11: {'Name': 'Dungeon Cove', 'NormalTreasure': 'sailing-treasure-21', 'RareTreasure': 'sailing-treasure-22', 'Distance': 2000000, 'Artifacts': {
+        24: {'Name': 'Giants Eye'}}},
+    12: {'Name': 'Crystal Enclave', 'NormalTreasure': 'sailing-treasure-23', 'RareTreasure': 'sailing-treasure-24', 'Distance': 5000000, 'Artifacts': {
+        25: {'Name': 'Crystal Steak'}}},
+    13: {'Name': 'Petulent Garage', 'NormalTreasure': 'sailing-treasure-25', 'RareTreasure': 'sailing-treasure-26', 'Distance': 15000000, 'Artifacts': {
+        26: {'Name': 'Trilobite Rock'}}},
+    14: {'Name': 'Isle of Note', 'NormalTreasure': 'sailing-treasure-27', 'RareTreasure': 'sailing-treasure-28', 'Distance': 40000000, 'Artifacts': {
+        27: {'Name': 'Opera Mask'},
+        28: {'Name': 'Socrates'}}},
+    15: {'Name': 'The Edge', 'NormalTreasure': 'sailing-treasure-29', 'RareTreasure': 'sailing-treasure-30', 'Distance': 100000000, 'Artifacts': {
+        29: {'Name': 'The True Lantern'},
+        30: {'Name': 'The Onyx Lantern'},
+        31: {'Name': 'The Shim Lantern'},
+        32: {'Name': 'The Winz Lantern'}}},
 }
 
 ###WORLD 6 CONSTS###
