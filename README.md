@@ -13,7 +13,8 @@ venv_dir="<venv/dir/name/here>"
 python -m venv "$venv_dir"
 source "$venv_dir"/bin/activate
 pip install --upgrade pip setuptools wheel
-pip istall -r requirements.txt
+pip install -r mysite/requirements.txt
+pip install coloredlogs  # this breaks Python Anywhere at the moment, but is needed for local dev setup to run
 ```
 <hr/>
 
