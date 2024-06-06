@@ -6,7 +6,7 @@ from flask import g as session_data
 TEN_K = 1
 HUNNIT_K = 2
 
-TIER_1_GOAL = 10**4
+TIER_1_GOAL = 10**4  # maybe rename these to beanstack and super beanstack
 BASE_TIER_2_GOAL = 10**5
 COMBINED_TIER_2_GOAL = TIER_1_GOAL + BASE_TIER_2_GOAL
 
@@ -24,17 +24,21 @@ def __get_beanstalk_data(raw):
 
 
 def section_beanstalk():
-    beanstalk_bought = "Gold Food Beanstalk" in session_data.account.jade_emporium_purchases
-    upgrade_bought = "Supersized Gold Beanstacking" in session_data.account.jade_emporium_purchases
+    beanstalk_bought = (
+        "Gold Food Beanstalk" in session_data.account.jade_emporium_purchases
+    )
+    upgrade_bought = (
+        "Supersized Gold Beanstacking" in session_data.account.jade_emporium_purchases
+    )
     beanstalk_data = __get_beanstalk_data(session_data.account.raw_data)
 
     if not (beanstalk_bought or beanstalk_data):
         return AdviceSection(
             name="Giant Beanstalk",
             tier="",
-            header="Come back once you've bought the \"Gold Food Beanstalk\" from the Jade Emporium",
+            header='Come back once you\'ve bought the "Gold Food Beanstalk" from the Jade Emporium',
             picture="Jade_Vendor.gif",
-            collapse=False
+            collapse=False,
         )
 
     gfood_codes = ["PeanutG", "ButterBar", *[f"FoodG{i}" for i in range(1, 14)]]
@@ -61,20 +65,28 @@ def section_beanstalk():
     tier_2_amount_needed_by_golden_food_code: dict[str, int] = dict()
     for golden_food_code in gold_foods:
         # if the golden food's tier 1 goal isn't deposited yet, then use the combined tier 2 goal
-        tier_2_goal = COMBINED_TIER_2_GOAL \
-            if golden_food_code in foods_to_deposit_tier_1 \
+        tier_2_goal = (
+            COMBINED_TIER_2_GOAL
+            if golden_food_code in foods_to_deposit_tier_1
             else BASE_TIER_2_GOAL
+        )
 
         tier_2_amount_needed_by_golden_food_code[golden_food_code] = tier_2_goal
 
     foods_to_tier_2 = [
-        k for k, v in beanstalk_status.items() if v < HUNNIT_K and gold_foods[k] < tier_2_amount_needed_by_golden_food_code[k]
+        k
+        for k, v in beanstalk_status.items()
+        if v < HUNNIT_K and gold_foods[k] < tier_2_amount_needed_by_golden_food_code[k]
     ]
     foods_to_deposit_tier_2 = [
-        k for k, v in beanstalk_status.items() if v < HUNNIT_K and k not in foods_to_tier_2
+        k
+        for k, v in beanstalk_status.items()
+        if v < HUNNIT_K and k not in foods_to_tier_2
     ]
 
-    foods_to_deposit = foods_to_deposit_tier_1 + foods_to_deposit_tier_2 * upgrade_bought
+    foods_to_deposit = (
+        foods_to_deposit_tier_1 + foods_to_deposit_tier_2 * upgrade_bought
+    )
 
     foods_finished = sum(beanstalk_status.values())
     tier = f"{foods_finished}/{len(gold_foods)*2}"
@@ -110,10 +122,10 @@ def section_beanstalk():
         pre_string="Upgrade the Beanstalk to upgrade foods further",
         advices=[
             Advice(
-                label="Buy \"Supersized Gold Beanstacking\" from the Jade Emporium",
-                picture_class="supersized-gold-beanstacking"
+                label='Buy "Supersized Gold Beanstacking" from the Jade Emporium',
+                picture_class="supersized-gold-beanstacking",
             )
-        ]
+        ],
     )
 
     group_deposit = AdviceGroup(
@@ -128,11 +140,15 @@ def section_beanstalk():
         advices=advice_tier_1,
     )
 
-    group_tier_2 = AdviceGroup(
-        tier="",
-        pre_string="Get another 100,000 of these golden foods",
-        advices=advice_tier_2,
-    ) if upgrade_bought else None
+    group_tier_2 = (
+        AdviceGroup(
+            tier="",
+            pre_string="Get another 100,000 of these golden foods",
+            advices=advice_tier_2,
+        )
+        if upgrade_bought
+        else None
+    )
 
     if foods_finished == len(gold_foods):
         header = "Well done, Jack! The Golden Goose took an enviably massive dump in your lap. Go pay the giants off! 🍯"
@@ -150,5 +166,5 @@ def section_beanstalk():
         tier=tier,
         header=header,
         picture="Beanstalk.png",
-        groups=groups
+        groups=groups,
     )
