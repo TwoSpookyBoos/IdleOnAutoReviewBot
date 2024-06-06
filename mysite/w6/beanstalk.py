@@ -51,30 +51,30 @@ def section_beanstalk():
 
             gold_foods[food.codename] += food.amount
 
-    foods_to_10k = [
+    foods_to_tier_1 = [
         k for k, v in beanstalk_status.items() if v < TEN_K and gold_foods[k] < 10**4
     ]
-    foods_to_deposit_10k = [
-        k for k, v in beanstalk_status.items() if v < TEN_K and k not in foods_to_10k
+    foods_to_deposit_tier_1 = [
+        k for k, v in beanstalk_status.items() if v < TEN_K and k not in foods_to_tier_1
     ]
 
     tier_2_amount_needed_by_golden_food_code: dict[str, int] = dict()
     for golden_food_code in gold_foods:
         # if the golden food's tier 1 goal isn't deposited yet, then use the combined tier 2 goal
         tier_2_goal = COMBINED_TIER_2_GOAL \
-            if golden_food_code in foods_to_deposit_10k \
+            if golden_food_code in foods_to_deposit_tier_1 \
             else BASE_TIER_2_GOAL
 
         tier_2_amount_needed_by_golden_food_code[golden_food_code] = tier_2_goal
 
-    foods_to_100k = [
+    foods_to_tier_2 = [
         k for k, v in beanstalk_status.items() if v < HUNNIT_K and gold_foods[k] < tier_2_amount_needed_by_golden_food_code[k]
     ]
-    foods_to_deposit_100k = [
-        k for k, v in beanstalk_status.items() if v < HUNNIT_K and k not in foods_to_100k
+    foods_to_deposit_tier_2 = [
+        k for k, v in beanstalk_status.items() if v < HUNNIT_K and k not in foods_to_tier_2
     ]
 
-    foods_to_deposit = foods_to_deposit_10k + foods_to_deposit_100k * upgrade_bought
+    foods_to_deposit = foods_to_deposit_tier_1 + foods_to_deposit_tier_2 * upgrade_bought
 
     foods_finished = sum(beanstalk_status.values())
     tier = f"{foods_finished}/{len(gold_foods)*2}"
@@ -87,22 +87,22 @@ def section_beanstalk():
         for codename in foods_to_deposit
     ]
 
-    advice_10k = [
+    advice_tier_1 = [
         Advice(
             label=getItemDisplayName(codename),
             picture_class=getItemDisplayName(codename),
             progression=f"{int(gold_foods[codename]) / TIER_1_GOAL:.02%}",
         )
-        for codename in foods_to_10k
+        for codename in foods_to_tier_1
     ]
 
-    advice_100k = [
+    advice_tier_2 = [
         Advice(
             label=getItemDisplayName(codename),
             picture_class=getItemDisplayName(codename),
             progression=f"{int(gold_foods[codename]) / tier_2_amount_needed_by_golden_food_code[codename]:.02%}",
         )
-        for codename in foods_to_100k
+        for codename in foods_to_tier_2
     ]
 
     group_upgrade = AdviceGroup(
@@ -122,16 +122,16 @@ def section_beanstalk():
         advices=advice_deposit,
     )
 
-    group_10k = AdviceGroup(
+    group_tier_1 = AdviceGroup(
         tier="",
         pre_string="Get 10,000 of these golden foods",
-        advices=advice_10k,
+        advices=advice_tier_1,
     )
 
-    group_100k = AdviceGroup(
+    group_tier_2 = AdviceGroup(
         tier="",
         pre_string="Get another 100,000 of these golden foods",
-        advices=advice_100k,
+        advices=advice_tier_2,
     ) if upgrade_bought else None
 
     if foods_finished == len(gold_foods):
@@ -141,8 +141,8 @@ def section_beanstalk():
 
     groups = [
         group_deposit,
-        group_10k,
-        (group_upgrade if not upgrade_bought else group_100k),
+        group_tier_1,
+        (group_tier_2 if upgrade_bought else group_upgrade),
     ]
 
     return AdviceSection(
