@@ -13,7 +13,7 @@ venv_dir="<venv/dir/name/here>"
 python -m venv "$venv_dir"
 source "$venv_dir"/bin/activate
 pip install --upgrade pip setuptools wheel
-pip istall -r requirements.txt
+pip install -r requirements.txt
 ```
 <hr/>
 
