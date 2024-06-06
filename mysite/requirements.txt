@@ -1,6 +1,6 @@
 flask
 requests
-#coloredlogs
+coloredlogs
 ua-parser
 babel
 pyyaml
