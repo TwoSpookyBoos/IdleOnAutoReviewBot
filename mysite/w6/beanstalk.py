@@ -3,9 +3,6 @@ from models.models import AdviceSection, Advice, AdviceGroup
 from utils.text_formatting import getItemDisplayName
 from flask import g as session_data
 
-TEN_K = 1
-HUNNIT_K = 2
-
 BEANSTACK_GOAL = 10**4
 SUPER_BEANSTACK_GOAL = 10**5
 
