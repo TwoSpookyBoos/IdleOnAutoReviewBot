@@ -23,12 +23,8 @@ def __get_beanstalk_data(raw):
 
 
 def section_beanstalk():
-    beanstalk_bought = (
-        "Gold Food Beanstalk" in session_data.account.jade_emporium_purchases
-    )
-    upgrade_bought = (
-        "Supersized Gold Beanstacking" in session_data.account.jade_emporium_purchases
-    )
+    beanstalk_bought = "Gold Food Beanstalk" in session_data.account.jade_emporium_purchases
+    upgrade_bought = "Supersized Gold Beanstacking" in session_data.account.jade_emporium_purchases
     beanstalk_data = __get_beanstalk_data(session_data.account.raw_data)
 
     if not (beanstalk_bought or beanstalk_data):
@@ -54,45 +50,23 @@ def section_beanstalk():
 
             gold_foods[food.codename] += food.amount
 
-    foods_to_beanstack = [
-        k for k, v in beanstalk_status.items() if v < TEN_K and gold_foods[k] < 10**4
-    ]
-    foods_to_deposit_for_beanstack = [
-        k
-        for k, v in beanstalk_status.items()
-        if v < TEN_K and k not in foods_to_beanstack
-    ]
+    foods_to_beanstack = [k for k, v in beanstalk_status.items() if v < TEN_K and gold_foods[k] < 10**4]
+    foods_to_deposit_for_beanstack = [k for k, v in beanstalk_status.items() if v < TEN_K and k not in foods_to_beanstack]
 
     super_beanstack_progress: dict[str, int] = dict()
     for gold_food_code in gold_foods:
         total_owned = gold_foods[gold_food_code]
 
         # remove 10k from the amount of gold food owned if the first 10k hasn't been collected or deposited yet
-        adjusted_total_owned = (
-            total_owned
-            if gold_food_code
-            not in (foods_to_deposit_for_beanstack + foods_to_beanstack)
-            else total_owned - BEANSTACK_GOAL
-        )
+        adjusted_total_owned = total_owned if gold_food_code not in (foods_to_deposit_for_beanstack + foods_to_beanstack) else total_owned - BEANSTACK_GOAL
 
         # mark progress as 0% if less than 10k is owned
         super_beanstack_progress[gold_food_code] = max(0, adjusted_total_owned)
 
-    foods_to_super_beanstack = [
-        k
-        for k, v in beanstalk_status.items()
-        if v < HUNNIT_K and super_beanstack_progress[k] < SUPER_BEANSTACK_GOAL
-    ]
-    foods_to_deposit_for_super_beanstack = [
-        k
-        for k, v in beanstalk_status.items()
-        if v < HUNNIT_K and k not in foods_to_super_beanstack
-    ]
+    foods_to_super_beanstack = [k for k, v in beanstalk_status.items() if v < HUNNIT_K and super_beanstack_progress[k] < SUPER_BEANSTACK_GOAL]
+    foods_to_deposit_for_super_beanstack = [k for k, v in beanstalk_status.items() if v < HUNNIT_K and k not in foods_to_super_beanstack]
 
-    foods_to_deposit = (
-        foods_to_deposit_for_beanstack
-        + foods_to_deposit_for_super_beanstack * upgrade_bought
-    )
+    foods_to_deposit = foods_to_deposit_for_beanstack + foods_to_deposit_for_super_beanstack * upgrade_bought
 
     foods_finished = sum(beanstalk_status.values())
     tier = f"{foods_finished}/{len(gold_foods)*2}"
