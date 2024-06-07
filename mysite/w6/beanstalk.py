@@ -31,7 +31,7 @@ def section_beanstalk():
         return AdviceSection(
             name="Giant Beanstalk",
             tier="",
-            header='Come back once you\'ve bought the "Gold Food Beanstalk" from the Jade Emporium',
+            header="Come back once you've bought the \"Gold Food Beanstalk\" from the Jade Emporium",
             picture="Jade_Vendor.gif",
             collapse=False,
         )
@@ -50,7 +50,7 @@ def section_beanstalk():
 
             gold_foods[food.codename] += food.amount
 
-    foods_to_beanstack = [k for k, v in beanstalk_status.items() if v < TEN_K and gold_foods[k] < 10**4]
+    foods_to_beanstack = [k for k, v in beanstalk_status.items() if v < TEN_K and gold_foods[k] < BEANSTACK_GOAL]
     foods_to_deposit_for_beanstack = [
         k for k, v in beanstalk_status.items() if v < TEN_K and k not in foods_to_beanstack
     ]
@@ -140,12 +140,11 @@ def section_beanstalk():
         else None
     )
 
-    if foods_finished == len(gold_foods):
-        header = (
-            "Well done, Jack! The Golden Goose took an enviably massive dump in your lap. Go pay the giants off! 🍯"
-        )
-    else:
-        header = f"You have upgraded the Beanstalk {tier} times"
+    header = (
+        "Well done, Jack! The Golden Goose took an enviably massive dump in your lap. Go pay the giants off! 🍯"
+        if foods_finished == len(gold_foods)
+        else f"You have upgraded the Beanstalk {tier} times"
+    )
 
     groups = [
         group_deposit,
