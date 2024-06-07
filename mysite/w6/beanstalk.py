@@ -24,19 +24,19 @@ def section_beanstalk():
 
     gold_foods = dict.fromkeys(gfood_codes, 0)
 
-    #Assets contains totals from Storage and inventories
+    # Assets contains totals from Storage and inventories
     for gfood in gfood_codes:
         gold_foods[gfood] += session_data.account.assets.get(gfood).amount
 
-    #Also include the amounts equipped on characters
+    # Also include the amounts equipped on characters
     for toon in session_data.account.safe_characters:
         for food in toon.equipment.foods:
             if food.codename in gold_foods:
                 gold_foods[food.codename] += food.amount
 
-    foods_ready_to_deposit = []  #Food ready to deposit, including a tag in the name for 10k or 100k
-    foods_to_beanstack = []  #If food is not already Beanstacked and player has less than required amount (10k)
-    foods_to_deposit_for_beanstack = []  #If food is not already Beanstacked and player has enough to do so
+    foods_ready_to_deposit = []  # Food ready to deposit, including a tag in the name for 10k or 100k
+    foods_to_beanstack = []  # If food is not already Beanstacked and player has less than required amount (10k)
+    foods_to_deposit_for_beanstack = []  # If food is not already Beanstacked and player has enough to do so
     for foodName, foodValuesDict in session_data.account.sneaking['Beanstalk'].items():
         if not foodValuesDict['Beanstacked']:
             if gold_foods[foodName] < BEANSTACK_GOAL:
@@ -46,11 +46,13 @@ def section_beanstalk():
                 foods_to_deposit_for_beanstack.append(foodName)
 
     super_beanstack_progress: dict[str, int] = dict()
-    for gold_food_code in gold_foods:
-        total_owned = gold_foods[gold_food_code]
-
-        # remove 10k from the amount of gold food owned if the first 10k hasn't been deposited yet
-        adjusted_total_owned = total_owned if session_data.account.sneaking['Beanstalk'][gold_food_code]['Beanstacked'] else total_owned - BEANSTACK_GOAL
+    for gold_food_code, total_owned in gold_foods.items():
+        # Remove 10k from the amount of gold food owned if the first 10k hasn't been deposited yet
+        adjusted_total_owned = (
+            total_owned
+            if session_data.account.sneaking['Beanstalk'][gold_food_code]['Beanstacked']
+            else total_owned - BEANSTACK_GOAL
+        )
 
         # mark progress as 0% if less than 10k is owned
         super_beanstack_progress[gold_food_code] = max(0, adjusted_total_owned)
