@@ -79,7 +79,7 @@ def setSailingProgressionTier():
 
         #Outside requirement checks should be at the top of the list
         if 'Beanstacked' in tierRequirementsDict:
-            if session_data.account.sneaking.get('Beanstalk', {}).get('FoodG10', {}).get('Beanstacked', False):
+            if not session_data.account.sneaking.get('Beanstalk', {}).get('FoodG10', {}).get('Beanstacked', False):
                 if subgroupName not in sailing_AdviceDict['Artifacts'] and len(sailing_AdviceDict['Artifacts']) < maxTiersPerGroup-1:
                     sailing_AdviceDict['Artifacts'][subgroupName] = []
                 if subgroupName in sailing_AdviceDict['Artifacts']:
@@ -88,7 +88,7 @@ def setSailingProgressionTier():
                         picture_class="golden-hampter-gummy-candy",
                     ))
         if 'SuperBeanstacked' in tierRequirementsDict:
-            if session_data.account.sneaking.get('Beanstalk', {}).get('FoodG10', {}).get('SuperBeanstacked', False):
+            if not session_data.account.sneaking.get('Beanstalk', {}).get('FoodG10', {}).get('SuperBeanstacked', False):
                 if subgroupName not in sailing_AdviceDict['Artifacts'] and len(sailing_AdviceDict['Artifacts']) < maxTiersPerGroup-1:
                     sailing_AdviceDict['Artifacts'][subgroupName] = []
                 if subgroupName in sailing_AdviceDict['Artifacts']:
