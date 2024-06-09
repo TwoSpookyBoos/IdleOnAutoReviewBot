@@ -1,134 +1,139 @@
+from consts import gfood_codes
 from models.models import AdviceSection, Advice, AdviceGroup
-from utils.data_formatting import safe_loads
 from utils.text_formatting import getItemDisplayName
 from flask import g as session_data
 
-TEN_K = 1
-HUNNIT_K = 2
+BEANSTACK_GOAL = 10**4
+SUPER_BEANSTACK_GOAL = 10**5
 
-
-def __get_ninja_section(raw):
-    default = "[]"
-    return safe_loads(raw.get("Ninja", default))
-
-
-def __get_beanstalk_data(raw):
-    if ninja_section := __get_ninja_section(raw):
-        return ninja_section[-4]
-    else:
-        return []
 
 def section_beanstalk():
-    beanstalk_bought = "Gold Food Beanstalk" in session_data.account.jade_emporium_purchases
     upgrade_bought = "Supersized Gold Beanstacking" in session_data.account.jade_emporium_purchases
-    beanstalk_data = __get_beanstalk_data(session_data.account.raw_data)
 
-    if not (beanstalk_bought or beanstalk_data):
+    if "Gold Food Beanstalk" not in session_data.account.jade_emporium_purchases:
         return AdviceSection(
             name="Giant Beanstalk",
             tier="",
             header="Come back once you've bought the \"Gold Food Beanstalk\" from the Jade Emporium",
             picture="Jade_Vendor.gif",
-            collapse=False
+            collapse=True,
         )
 
-    gfood_codes = ["PeanutG", "ButterBar", *[f"FoodG{i}" for i in range(1, 14)]]
     gold_foods = dict.fromkeys(gfood_codes, 0)
-    beanstalk_status = dict(zip(gfood_codes, beanstalk_data))
 
+    # Assets contains totals from Storage and inventories
     for gfood in gfood_codes:
         gold_foods[gfood] += session_data.account.assets.get(gfood).amount
 
+    # Also include the amounts equipped on characters
     for toon in session_data.account.safe_characters:
         for food in toon.equipment.foods:
-            if food.codename not in beanstalk_status:
-                continue
+            if food.codename in gold_foods:
+                gold_foods[food.codename] += food.amount
 
-            gold_foods[food.codename] += food.amount
+    foods_ready_to_deposit = []  # Food ready to deposit, including a tag in the name for 10k or 100k
+    foods_to_beanstack = []  # If food is not already Beanstacked and player has less than required amount (10k)
+    foods_to_deposit_for_beanstack = []  # If food is not already Beanstacked and player has enough to do so
+    for foodName, foodValuesDict in session_data.account.sneaking['Beanstalk'].items():
+        if not foodValuesDict['Beanstacked']:
+            if gold_foods[foodName] < BEANSTACK_GOAL:
+                foods_to_beanstack.append(foodName)
+            else:
+                foods_ready_to_deposit.append(f"{getItemDisplayName(foodName)}: 10k Beanstack")
+                foods_to_deposit_for_beanstack.append(foodName)
 
-    foods_to_10k = [
-        k for k, v in beanstalk_status.items() if v < TEN_K and gold_foods[k] < 10**4
-    ]
-    foods_to_deposit_10k = [
-        k for k, v in beanstalk_status.items() if v < TEN_K and k not in foods_to_10k
-    ]
+    super_beanstack_progress: dict[str, int] = dict()
+    for gold_food_code, total_owned in gold_foods.items():
+        # Remove 10k from the amount of gold food owned if the first 10k hasn't been deposited yet
+        adjusted_total_owned = (
+            total_owned
+            if session_data.account.sneaking['Beanstalk'][gold_food_code]['Beanstacked']
+            else total_owned - BEANSTACK_GOAL
+        )
 
-    foods_to_100k = [
-        k for k, v in beanstalk_status.items() if v < HUNNIT_K and gold_foods[k] < 10**5
-    ]
-    foods_to_deposit_100k = [
-        k for k, v in beanstalk_status.items() if v < HUNNIT_K and k not in foods_to_100k
-    ]
+        # mark progress as 0% if less than 10k is owned
+        super_beanstack_progress[gold_food_code] = max(0, adjusted_total_owned)
 
-    foods_to_deposit = foods_to_deposit_10k + foods_to_deposit_100k * upgrade_bought
+    foods_to_super_beanstack = []  # If food is not already Beanstacked and player has less than required amount (10k)
+    for foodName, foodValuesDict in session_data.account.sneaking['Beanstalk'].items():
+        if not foodValuesDict['SuperBeanstacked']:
+            if super_beanstack_progress[foodName] < SUPER_BEANSTACK_GOAL:
+                foods_to_super_beanstack.append(foodName)
+            else:
+                foods_ready_to_deposit.append(f"{getItemDisplayName(foodName)}: 100k Super Beanstack")
 
-    foods_finished = sum(beanstalk_status.values())
+    foods_finished = sum([v['Beanstacked'] + v['SuperBeanstacked'] for v in session_data.account.sneaking['Beanstalk'].values()])
     tier = f"{foods_finished}/{len(gold_foods)*2}"
 
     advice_deposit = [
         Advice(
-            label=getItemDisplayName(codename),
-            picture_class=getItemDisplayName(codename),
+            label=foodname,
+            picture_class=foodname.split(":")[0],
         )
-        for codename in foods_to_deposit
+        for foodname in foods_ready_to_deposit
     ]
 
-    advice_10k = [
+    advice_beanstack = [
         Advice(
             label=getItemDisplayName(codename),
             picture_class=getItemDisplayName(codename),
-            progression=f"{int(gold_foods[codename]) / 10**4:.02%}",
+            progression=f"{int(gold_foods[codename]) / BEANSTACK_GOAL:.02%}",
         )
-        for codename in foods_to_10k
+        for codename in foods_to_beanstack
     ]
 
-    advice_100k = [
+    advice_super_beanstack = [
         Advice(
             label=getItemDisplayName(codename),
             picture_class=getItemDisplayName(codename),
-            progression=f"{int(gold_foods[codename]) / 10**5:.02%}",
+            progression=f"{int(super_beanstack_progress[codename]) / SUPER_BEANSTACK_GOAL:.02%}",
         )
-        for codename in foods_to_100k
+        for codename in foods_to_super_beanstack
     ]
 
     group_upgrade = AdviceGroup(
         tier="",
-        pre_string="Upgrade the Beanstalk to upgrade foods further",
+        pre_string="Upgrade the Beanstalk to enhance Golden Food beanstacks further",
         advices=[
             Advice(
-                label="Buy \"Supersized Gold Beanstacking\" from the Jade Emporium",
-                picture_class="supersized-gold-beanstacking"
+                label='Buy "Supersized Gold Beanstacking" from the Jade Emporium',
+                picture_class="supersized-gold-beanstacking",
             )
-        ]
+        ],
     )
 
     group_deposit = AdviceGroup(
         tier="",
-        pre_string="Deposit these golden foods",
+        pre_string="Golden Foods ready for deposit",
         advices=advice_deposit,
     )
 
-    group_10k = AdviceGroup(
+    group_beanstack = AdviceGroup(
         tier="",
-        pre_string="Get 10,000 of these golden foods",
-        advices=advice_10k,
+        pre_string="Collect 10,000 of these Golden Foods",
+        advices=advice_beanstack,
     )
 
-    group_100k = AdviceGroup(
-        tier="",
-        pre_string="Get 100,000 of these golden foods",
-        advices=advice_100k,
-    ) if upgrade_bought else None
+    group_super_beanstack = (
+        AdviceGroup(
+            tier="",
+            pre_string="Collect another 100,000 of these Golden Foods",
+            advices=advice_super_beanstack,
+        )
+        if upgrade_bought
+        else None
+    )
 
-    if foods_finished == len(gold_foods):
-        header = "Well done, Jack! The Golden Goose took an enviably massive dump in your lap. Go pay the giants off! 🍯"
-    else:
-        header = f"You have upgraded the Beanstalk {tier} times"
+    header = (
+        "Well done, Jack! The Golden Goose took an enviably massive dump in your lap. Go pay the giants off! 🍯"
+        if foods_finished == len(gold_foods)
+        else f"You have upgraded the Beanstalk {tier} times"
+    )
 
     groups = [
         group_deposit,
-        group_10k,
-        (group_upgrade if not upgrade_bought else group_100k),
+        group_beanstack,
+        (group_super_beanstack if upgrade_bought else group_upgrade),
     ]
 
     return AdviceSection(
@@ -136,5 +141,5 @@ def section_beanstalk():
         tier=tier,
         header=header,
         picture="Beanstalk.png",
-        groups=groups
+        groups=groups,
     )
