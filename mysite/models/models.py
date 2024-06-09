@@ -16,7 +16,7 @@ from consts import expectedStackables, greenstack_progressionTiers, card_data, m
     sailingDict, guildBonusesList, labBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesList, \
     getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampsDict, stampTypes, marketUpgradeList, \
     achievementsList, forgeUpgradesDict, arcadeBonuses, saltLickList, allMeritsDict, bubblesDict, familyBonusesDict, poBoxDict, equinoxBonusesDict, \
-    maxDreams, dreamsThatUnlockNewBonuses, ceilUpToBase, starsignsDict
+    maxDreams, dreamsThatUnlockNewBonuses, ceilUpToBase, starsignsDict, gfood_codes
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, letterToNumber
 
 def session_singleton(cls):
@@ -1251,11 +1251,11 @@ class Account:
         #World 6
         self.sneaking = {
             "PristineCharms": {},
-            "Gemstones": {}
+            "Gemstones": {},
+            'Beanstalk': {}
         }
-        raw_pristine_charms_list = safe_loads(self.raw_data.get("Ninja", []))
-        if raw_pristine_charms_list:
-            raw_pristine_charms_list = raw_pristine_charms_list[-1]
+        raw_ninja_list = safe_loads(self.raw_data.get("Ninja", []))
+        raw_pristine_charms_list = raw_ninja_list[107] if raw_ninja_list else []
         for pristineCharmIndex, pristineCharmName in enumerate(pristineCharmsList):
             try:
                 self.sneaking["PristineCharms"][pristineCharmName] = bool(raw_pristine_charms_list[pristineCharmIndex])
@@ -1293,6 +1293,21 @@ class Account:
                 )
             except:
                 continue
+
+        raw_beanstalk_list = raw_ninja_list[104] if raw_ninja_list else []
+        for gfoodIndex, gfoodName in enumerate(gfood_codes):
+            try:
+                self.sneaking['Beanstalk'][gfoodName] = {
+                    'Name': getItemDisplayName(gfoodName),
+                    'Beanstacked': raw_beanstalk_list[gfoodIndex] > 0,
+                    'SuperBeanstacked': raw_beanstalk_list[gfoodIndex] > 1,
+                }
+            except:
+                self.sneaking['Beanstalk'][gfoodName] = {
+                    'Name': getItemDisplayName(gfoodName),
+                    'Beanstacked': False,
+                    'SuperBeanstacked': False,
+                }
 
         self.farming = {
             "CropsUnlocked": 0,
