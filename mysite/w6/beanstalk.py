@@ -62,7 +62,7 @@ def section_beanstalk():
             else:
                 foods_ready_to_deposit.append(f"{getItemDisplayName(foodName)}: 100k Super Beanstack")
 
-    foods_finished = sum([v['Beanstacked'] for v in session_data.account.sneaking['Beanstalk'].values()])
+    foods_finished = sum([v['Beanstacked'] + v['SuperBeanstacked'] for v in session_data.account.sneaking['Beanstalk'].values()])
     tier = f"{foods_finished}/{len(gold_foods)*2}"
 
     advice_deposit = [
@@ -93,7 +93,7 @@ def section_beanstalk():
 
     group_upgrade = AdviceGroup(
         tier="",
-        pre_string="Upgrade the Beanstalk to upgrade foods further",
+        pre_string="Upgrade the Beanstalk to enhance Golden Food beanstacks further",
         advices=[
             Advice(
                 label='Buy "Supersized Gold Beanstacking" from the Jade Emporium',
@@ -110,14 +110,14 @@ def section_beanstalk():
 
     group_beanstack = AdviceGroup(
         tier="",
-        pre_string="Collect 10,000 of these golden foods",
+        pre_string="Collect 10,000 of these Golden Foods",
         advices=advice_beanstack,
     )
 
     group_super_beanstack = (
         AdviceGroup(
             tier="",
-            pre_string="Collect another 100,000 of these golden foods",
+            pre_string="Collect another 100,000 of these Golden Foods",
             advices=advice_super_beanstack,
         )
         if upgrade_bought
