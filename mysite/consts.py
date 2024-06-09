@@ -1136,7 +1136,11 @@ sailing_progressionTiers = {
             'The True Lantern': 4,
             'The Onyx Lantern': 4,
             'The Shim Lantern': 4,
-            #'The Winz Lantern': 4,
+            #'The Winz Lantern': 4
+        },
+    },
+    19: {
+        'Artifacts': {
             #These last 2 are worthless, but get them anyway.
             'Giants Eye': 4,
             'Dreamcatcher': 4,
