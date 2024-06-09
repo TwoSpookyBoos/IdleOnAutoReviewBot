@@ -783,7 +783,7 @@ class Account:
                                                                   f"{familyBonusesDict[className]['PostDisplay']}"
                                                                   f" {familyBonusesDict[className]['Stat']}")
 
-        raw_optlacc_list = safe_loads(self.raw_data.get("OptLacc", {}))
+        self.raw_optlacc_list = safe_loads(self.raw_data.get("OptLacc", {}))
 
         self.dungeon_upgrades = {}
         raw_dungeon_upgrades = safe_loads(self.raw_data.get('DungUpg', []))

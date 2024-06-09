@@ -137,7 +137,7 @@ def section_beanstalk():
     ]
 
     return AdviceSection(
-        name="Giant Beanstalk",
+        name="Beanstalk",
         tier=tier,
         header=header,
         picture="Beanstalk.png",
