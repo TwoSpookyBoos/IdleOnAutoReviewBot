@@ -923,8 +923,227 @@ divinity_progressionTiers = {
 }
 sailing_progressionTiers = {
     0: {},
-    1: {}
+    1: {
+        'IslandsDiscovered': 1,
+        'CaptainsAndBoats': 3,
+        'Artifacts': {
+            'Moai Head': 1,
+            'Fauxory Tusk': 2
+        }
+    },
+    2: {
+        'IslandsDiscovered': 4,
+        'CaptainsAndBoats': 5,
+        'Artifacts': {
+            'Gold Relic': 1,
+            '10 AD Tablet': 2
+        }
+    },
+    3: {
+        'IslandsDiscovered': 5,
+        'CaptainsAndBoats': 9,
+        'Artifacts': {
+            'Maneki Kat': 1,
+            'Ruble Cuble': 1,
+            'Genie Lamp': 1,
+            'Silver Ankh': 1,
+            'Emerald Relic': 1,
+            'Fun Hippoete': 1,
+            'Arrowhead': 1,
+            'Ashen Urn': 2
+        }
+    },
+    4: {
+        'IslandsDiscovered': 6,
+        'CaptainsAndBoats': 10,
+        'Artifacts': {
+            'Amberite': 2,
+            'Gold Relic': 2,
+        }
+    },
+    5: {
+        'IslandsDiscovered': 7,
+        'CaptainsAndBoats': 11,
+        'Artifacts': {
+            'Jade Rock': 2,
+        }
+    },
+    6: {
+        'IslandsDiscovered': 8,
+        'CaptainsAndBoats': 12,
+        'Artifacts': {
+            'Triagulon': 1,
+            'Billcye Tri': 1,
+            'Frost Relic': 1,
+            'Chilled Yarn': 1,
+            'Causticolumn': 1,
+            'Dreamcatcher': 1,
+            'Gummy Orb': 1
+        }
+    },
+    7: {
+        'IslandsDiscovered': 9,
+        'CaptainsAndBoats': 13,
+        'Artifacts': {
+            'Fury Relic': 2,
+        },
+        'Beanstacked': True
+    },
+    8: {
+        'IslandsDiscovered': 12,
+        'CaptainsAndBoats': 15,
+        'Artifacts': {
+            'Crystal Steak': 2,
+        }
+    },
+    9: {
+        'IslandsDiscovered': 14,
+        'CaptainsAndBoats': 17,
+        'Artifacts': {
+            'Socrates': 2,
+        }
+    },
+    10: {
+        'IslandsDiscovered': 15,
+        'CaptainsAndBoats': 19,
+        'Artifacts': {
+            'Cloud Urn': 1,
+            'Weatherbook': 1,
+            'Trilobite Rock': 1,
+            'Opera Mask': 1,
+            'The True Lantern': 1
+        }
+    },
+    11: {
+        'CaptainsAndBoats': 20,
+        'Artifacts': {
+            'Fauxory Tusk': 3,
+            '10 AD Tablet': 3,
+            'Fury Relic': 3
+        },
+        'Eldritch': True
+    },
+    12: {
+        'Artifacts': {
+            'Crystal Steak': 3,
+            'Socrates': 3
+        }
+    },
+    13: {
+        'Artifacts': {
+            'Amberite': 3,
+            'Gold Relic': 3,
+            'Chilled Yarn': 3
+        }
+    },
+    14: {
+        'Artifacts': {
+            'Moai Head': 2,
+            'Maneki Kat': 2,
+            'Ruble Cuble': 2,
+            'Genie Lamp': 2,
+            'Silver Ankh': 2,
+            'Emerald Relic': 2,
+            'Fun Hippoete': 2,
+            'Arrowhead': 2,
+            'Ashen Urn': 2,
+            'Triagulon': 2,
+            'Billcye Tri': 2,
+            'Frost Relic': 2,
+            'Causticolumn': 2,
+            'Jade Rock': 2,
+            'Dreamcatcher': 2,
+            'Gummy Orb': 2,
+            'Cloud Urn': 2,
+            'Weatherbook': 2,
+            'Trilobite Rock': 2,
+            'Opera Mask': 2,
+            'The True Lantern': 2
+        },
+        'SuperBeanstacked': True
+    },
+    15: {
+        'Artifacts': {
+            'Moai Head': 3,
+            'Maneki Kat': 3,
+            'Ruble Cuble': 3,
+            'Genie Lamp': 3,
+            'Silver Ankh': 3,
+            'Emerald Relic': 3,
+            'Fun Hippoete': 3,
+            'Arrowhead': 3,
+            'Ashen Urn': 3,
+            'Triagulon': 3,
+            'Billcye Tri': 3,
+            'Frost Relic': 3,
+            'Causticolumn': 3,
+            'Jade Rock': 3,
+            'Gummy Orb': 3,
+            'Cloud Urn': 3,
+            'Weatherbook': 3,
+            'Trilobite Rock': 3,
+            'Opera Mask': 3,
+            'The True Lantern': 3
+        },
+    },
+    16: {
+        'Artifacts': {
+            'Fauxory Tusk': 4,
+            #'10 AD Tablet': 4,  #Still debating this one. Idk if you'll care about Speed at this point
+            'Fury Relic': 4,
+            'Gold Relic': 4,
+            'Amberite': 4
+        },
+        'Sovereign': True
+    },
+    17: {
+        'Artifacts': {
+            'The Onyx Lantern': 3,
+            #'10 AD Tablet': 4,  #Still debating this one. Idk if you'll care about Speed at this point
+            'The Winz Lantern': 4
+        },
+        'ExtraLanterns': True
+    },
+    18: {
+        'Artifacts': {
+            'Moai Head': 4,
+            'Maneki Kat': 4,
+            'Ruble Cuble': 4,
+            #'Fauxory Tusk': 4,
+            #'Gold Relic': 4,
+            'Genie Lamp': 4,
+            'Silver Ankh': 4,
+            'Emerald Relic': 4,
+            'Fun Hippoete': 4,
+            'Arrowhead': 4,
+            '10 AD Tablet': 4,
+            'Ashen Urn': 4,
+            #'Amberite': 4,
+            'Triagulon': 4,
+            'Billcye Tri': 4,
+            'Frost Relic': 4,
+            #'Chilled Yarn': 4,
+            'Causticolumn': 4,
+            'Jade Rock': 4,
+            'Gummy Orb': 4,
+            #'Fury Relic': 4,
+            'Cloud Urn': 4,
+            'Weatherbook': 4,
+            'Crystal Steak': 4,
+            'Trilobite Rock': 4,
+            'Opera Mask': 4,
+            #'Socrates': 4,
+            'The True Lantern': 4,
+            'The Onyx Lantern': 4,
+            'The Shim Lantern': 4,
+            #'The Winz Lantern': 4,
+            #These last 2 are worthless, but get them anyway.
+            'Giants Eye': 4,
+            'Dreamcatcher': 4,
+        },
+    }
 }
+
 
 ###WORLD 6 PROGRESSION TIERS###
 

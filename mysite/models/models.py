@@ -1209,7 +1209,7 @@ class Account:
 
         #World 5
         self.registered_slab = safe_loads(self.raw_data.get("Cards1", []))
-        self.sailing = {"Artifacts": {}, "Boats": {}, "Captains": {}, "Islands": {}}
+        self.sailing = {"Artifacts": {}, "Boats": {}, "Captains": {}, "Islands": {}, 'IslandsDiscovered': 1, 'CaptainsOwned': 1, 'BoatsOwned': 1}
         raw_sailing_list = safe_loads(safe_loads(self.raw_data.get("Sailing", [])))  # Some users have needed to have data converted twice
         if raw_sailing_list:
             self.sum_artifact_tiers = sum(raw_sailing_list[3]) if raw_sailing_list and len(raw_sailing_list) >= 4 else 0
@@ -1221,6 +1221,7 @@ class Account:
                         'NormalTreasure': islandValuesDict['NormalTreasure'],
                         'RareTreasure': islandValuesDict['RareTreasure']
                     }
+                    self.sailing['IslandsDiscovered'] += 1 if self.sailing['Islands'][islandValuesDict['Name']]['Unlocked'] else 0
                 except:
                     self.sailing['Islands'][islandValuesDict['Name']] = {
                         'Unlocked': False,
@@ -1237,6 +1238,15 @@ class Account:
                         self.sailing['Artifacts'][artifactValuesDict['Name']] = {
                             'Level': 0
                         }
+        raw_captains_list = safe_loads(safe_loads(self.raw_data.get('Captains', [])))
+        for captainList in raw_captains_list:
+            if captainList:
+                self.sailing['CaptainsOwned'] += 1 if captainList[0] > -1 else 0  #Unpurchased Captain Slots have a value of -1
+        raw_boats_list = safe_loads(safe_loads(self.raw_data.get('Boats', [])))
+        for boatList in raw_boats_list:
+            if boatList:
+                self.sailing['BoatsOwned'] += 1 if boatList[0] > -1 else 0  # Unpurchased Boat Slots have a value of -1
+
 
         #World 6
         self.sneaking = {
