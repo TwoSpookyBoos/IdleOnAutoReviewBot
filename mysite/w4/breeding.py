@@ -65,7 +65,7 @@ def getShinyExclusions():
     except:
         logger.exception(f"Unable to get Critter Vials. Defaulting to INCLUDE Base Critter shiny pets.")
 
-    shinyExclusionsDict["Exclude-ShinySpeed"] = "Science Crayon" in session_data.account.jade_emporium_purchases
+    shinyExclusionsDict["Exclude-ShinySpeed"] = session_data.account.sneaking['JadeEmporium']["Science Crayon"]['Obtained']
 
     return shinyExclusionsDict
 

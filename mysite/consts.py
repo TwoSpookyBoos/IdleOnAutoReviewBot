@@ -82,7 +82,7 @@ gemShop_progressionTiers = [
     [2, "S", {'Extra Card Slot': 4, 'Brimstone Forge Slot': 1}, ""],
     [3, "A", {'Item Backpack Space': 1, 'Storage Chest Space': 4, 'Carry Capacity': 2, 'Weekly Dungeon Boosters': 1, 'Brimstone Forge Slot': 4,
               'Bleach Liquid Cauldrons': 2, 'Zen Cogs': 2, 'Tower Building Slots': 1, 'Royal Egg Cap': 3, 'Richelin Kitchen': 3, 'Souped Up Tube': 1,
-              'Chest Sluggo': 3, 'Divinity Sparkie': 2, 'Lava Sprouts': 2, 'Plot of Land': 2}, ""],
+              'Chest Sluggo': 2, 'Divinity Sparkie': 2, 'Lava Sprouts': 2, 'Plot of Land': 2}, ""],
     [4, "B", {'Item Backpack Space': 2, 'Storage Chest Space': 8, 'Carry Capacity': 4, 'Weekly Dungeon Boosters': 2, 'Food Slot': 1, 'Bleach Liquid Cauldrons': 3, 'More Sample Spaces': 2,
               'Zen Cogs': 4, 'Tower Building Slots': 2, 'Royal Egg Cap': 5, 'Fenceyard Space': 2, 'Chest Sluggo': 6, 'Lava Sprouts': 4, 'Plot of Land': 4,
               'Shroom Familiar': 2, 'Instagrow Generator': 1}, ""],
@@ -98,8 +98,28 @@ gemShop_progressionTiers = [
       'Fluorescent Flaggies': 2, 'Golden Sprinkler': 4, 'Plot of Land': 12, 'Instagrow Generator': 8},
      "I wouldn't recommend going any further as of v2.02. This tier is for the dedicated Gem Farmers from Colo and Normal-difficulty World Bosses."],
     [8, "True Max",
-     {'Card Presets': 5, 'Daily Teleports': 10, 'Daily Minigame Plays': 4, 'Weekly Dungeon Boosters': 11, 'Obol Storage Space': 12, 'Prayer Slots': 4,
-      'Cog Inventory Space': 20, 'Fluorescent Flaggies': 6, 'Richelin Kitchen': 10, 'Souped Up Tube': 5, 'Pet Storage': 12, 'Divinity Sparkie': 6},
+     {
+        #Inventory and Storage
+        'Item Backpack Space': 6, 'Storage Chest Space': 12, 'Carry Capacity': 10, 'Food Slot': 2, 'More Storage Space': 10, 'Card Presets': 5,
+        #Dailies N' Resets
+        'Daily Teleports': 10, 'Daily Minigame Plays': 4,
+        #Cards
+        'Extra Card Slot': 4,
+        #Goods & Services
+        'Weekly Dungeon Boosters': 11,
+        #World 1&2
+        'Infinity Hammer': 1, 'Brimstone Forge Slot': 16, 'Ivory Bubble Cauldrons': 4, 'Bleach Liquid Cauldrons': 4,
+        'Obol Storage Space': 12, 'Sigil Supercharge': 10,
+        #World 3
+        'Crystal 3d Printer': 1, 'More Sample Spaces': 6, 'Burning Bad Books': 4, 'Prayer Slots': 4,
+        'Zen Cogs': 8, 'Cog Inventory Space': 20, 'Tower Building Slots': 4, 'Fluorescent Flaggies': 6,
+        #World 4
+        'Royal Egg Cap': 5, 'Richelin Kitchen': 10, 'Souped Up Tube': 5, 'Pet Storage': 12, 'Fenceyard Space': 6,
+        #World 5
+        'Chest Sluggo': 12, 'Divinity Sparkie': 6, 'Golden Sprinkler': 4, 'Lava Sprouts': 6,
+        #World 6
+        'Plot of Land': 12, 'Shroom Familiar': 3, 'Instagrow Generator': 8,
+     },
      "This final tier is for the truly depraved. Many of these bonuses are very weak or outright useless."]
 ]
 greenstack_progressionTiers = {
@@ -921,6 +941,233 @@ divinity_progressionTiers = {
     11: {"MaxDivLevel": 50},
     12: {"MinDivLevel": 40}
 }
+sailing_progressionTiers = {
+    0: {},
+    1: {
+        'IslandsDiscovered': 1,
+        'CaptainsAndBoats': 3,
+        'Artifacts': {
+            'Moai Head': 1,
+            'Fauxory Tusk': 2
+        }
+    },
+    2: {
+        'IslandsDiscovered': 4,
+        'CaptainsAndBoats': 5,
+        'Artifacts': {
+            'Gold Relic': 1,
+            '10 AD Tablet': 2
+        }
+    },
+    3: {
+        'IslandsDiscovered': 5,
+        'CaptainsAndBoats': 9,
+        'Artifacts': {
+            'Maneki Kat': 1,
+            'Ruble Cuble': 1,
+            'Genie Lamp': 1,
+            'Silver Ankh': 1,
+            'Emerald Relic': 1,
+            'Fun Hippoete': 1,
+            'Arrowhead': 1,
+            'Ashen Urn': 2
+        }
+    },
+    4: {
+        'IslandsDiscovered': 6,
+        'CaptainsAndBoats': 10,
+        'Artifacts': {
+            'Amberite': 2,
+            'Gold Relic': 2,
+        }
+    },
+    5: {
+        'IslandsDiscovered': 7,
+        'CaptainsAndBoats': 11,
+        'Artifacts': {
+            'Jade Rock': 2,
+        }
+    },
+    6: {
+        'IslandsDiscovered': 8,
+        'CaptainsAndBoats': 12,
+        'Artifacts': {
+            'Triagulon': 1,
+            'Billcye Tri': 1,
+            'Frost Relic': 1,
+            'Chilled Yarn': 1,
+            'Causticolumn': 1,
+            'Dreamcatcher': 1,
+            'Gummy Orb': 1
+        }
+    },
+    7: {
+        'IslandsDiscovered': 9,
+        'CaptainsAndBoats': 13,
+        'Artifacts': {
+            'Fury Relic': 2,
+        },
+        'Beanstacked': True
+    },
+    8: {
+        'IslandsDiscovered': 12,
+        'CaptainsAndBoats': 15,
+        'Artifacts': {
+            'Crystal Steak': 2,
+        }
+    },
+    9: {
+        'IslandsDiscovered': 14,
+        'CaptainsAndBoats': 17,
+        'Artifacts': {
+            'Socrates': 2,
+        }
+    },
+    10: {
+        'IslandsDiscovered': 15,
+        'CaptainsAndBoats': 19,
+        'Artifacts': {
+            'Cloud Urn': 1,
+            'Weatherbook': 1,
+            'Trilobite Rock': 1,
+            'Opera Mask': 1,
+            'The True Lantern': 1
+        }
+    },
+    11: {
+        'CaptainsAndBoats': 20,
+        'Artifacts': {
+            'Fauxory Tusk': 3,
+            '10 AD Tablet': 3,
+            'Fury Relic': 3
+        },
+        'Eldritch': True
+    },
+    12: {
+        'Artifacts': {
+            'Crystal Steak': 3,
+            'Socrates': 3
+        }
+    },
+    13: {
+        'Artifacts': {
+            'Amberite': 3,
+            'Gold Relic': 3,
+            'Chilled Yarn': 3
+        }
+    },
+    14: {
+        'Artifacts': {
+            'Moai Head': 2,
+            'Maneki Kat': 2,
+            'Ruble Cuble': 2,
+            'Genie Lamp': 2,
+            'Silver Ankh': 2,
+            'Emerald Relic': 2,
+            'Fun Hippoete': 2,
+            'Arrowhead': 2,
+            'Ashen Urn': 2,
+            'Triagulon': 2,
+            'Billcye Tri': 2,
+            'Frost Relic': 2,
+            'Causticolumn': 2,
+            'Jade Rock': 2,
+            'Dreamcatcher': 2,
+            'Gummy Orb': 2,
+            'Cloud Urn': 2,
+            'Weatherbook': 2,
+            'Trilobite Rock': 2,
+            'Opera Mask': 2,
+            'The True Lantern': 2
+        },
+        'SuperBeanstacked': True
+    },
+    15: {
+        'Artifacts': {
+            'Moai Head': 3,
+            'Maneki Kat': 3,
+            'Ruble Cuble': 3,
+            'Genie Lamp': 3,
+            'Silver Ankh': 3,
+            'Emerald Relic': 3,
+            'Fun Hippoete': 3,
+            'Arrowhead': 3,
+            'Ashen Urn': 3,
+            'Triagulon': 3,
+            'Billcye Tri': 3,
+            'Frost Relic': 3,
+            'Causticolumn': 3,
+            'Jade Rock': 3,
+            'Gummy Orb': 3,
+            'Cloud Urn': 3,
+            'Weatherbook': 3,
+            'Trilobite Rock': 3,
+            'Opera Mask': 3,
+            'The True Lantern': 3
+        },
+    },
+    16: {
+        'Artifacts': {
+            'Fauxory Tusk': 4,
+            #'10 AD Tablet': 4,  #Still debating this one. I don't know if you'll care about Speed at this point
+            'Fury Relic': 4,
+            'Gold Relic': 4,
+            'Amberite': 4
+        },
+        'Sovereign': True
+    },
+    17: {
+        'Artifacts': {
+            'The Onyx Lantern': 3,
+            #'10 AD Tablet': 4,  #Still debating this one. I don't know if you'll care about Speed at this point
+            'The Winz Lantern': 4
+        },
+        'ExtraLanterns': True
+    },
+    18: {
+        'Artifacts': {
+            'Moai Head': 4,
+            'Maneki Kat': 4,
+            'Ruble Cuble': 4,
+            #'Fauxory Tusk': 4,
+            #'Gold Relic': 4,
+            'Genie Lamp': 4,
+            'Silver Ankh': 4,
+            'Emerald Relic': 4,
+            'Fun Hippoete': 4,
+            'Arrowhead': 4,
+            '10 AD Tablet': 4,
+            'Ashen Urn': 4,
+            #'Amberite': 4,
+            'Triagulon': 4,
+            'Billcye Tri': 4,
+            'Frost Relic': 4,
+            #'Chilled Yarn': 4,
+            'Causticolumn': 4,
+            'Jade Rock': 4,
+            'Gummy Orb': 4,
+            #'Fury Relic': 4,
+            'Cloud Urn': 4,
+            'Weatherbook': 4,
+            'Crystal Steak': 4,
+            'Trilobite Rock': 4,
+            'Opera Mask': 4,
+            #'Socrates': 4,
+            'The True Lantern': 4,
+            'The Onyx Lantern': 4,
+            'The Shim Lantern': 4,
+            #'The Winz Lantern': 4
+        },
+    },
+    19: {
+        'Artifacts': {
+            #These last 2 are worthless, but get them anyway.
+            'Giants Eye': 4,
+            'Dreamcatcher': 4,
+        },
+    }
+}
+
 
 ###WORLD 6 PROGRESSION TIERS###
 
@@ -1022,7 +1269,7 @@ expectedStackables = {
         "Copper", "Iron", "Gold", "Plat", "Dementia", "Void", "Lustre",  # Ores1
         "Starfire", "Marble", "Dreadlo", "Godshard",  # Ores2
 
-        "Fish1", "Fish2", "Fish3", "Fish4", # Small Fish
+        "Fish1", "Fish2", "Fish3", "Fish4",  # Small Fish
         "Fish5", "Fish6", "Fish7", "Fish8",  # Medium Fish
         "Fish9", "Fish10", "Fish11", "Fish13", "Fish12",  # Large Fish
 
@@ -3062,8 +3309,8 @@ labBonusesList = [
 ]
 
 ###WORLD 5 CONSTS###
-numberOfArtifacts = 33  # Last verified as of v2.08
-numberOfArtifactTiers = 4  # Last verified as of v2.08
+artifactTiers = ["Base", "Ancient", "Eldritch", "Sovereign"]
+numberOfArtifactTiers = len(artifactTiers)
 currentMaxChestsSum = 45  # Last verified as of v2.08
 artifactsList = [
     'Moai Head', 'Maneki Kat', 'Ruble Cuble', 'Fauxory Tusk', 'Gold Relic',
@@ -3074,164 +3321,396 @@ artifactsList = [
     'Crystal Steak', 'Trilobite Rock', 'Opera Mask', 'Socrates', 'The True Lantern',
     'The Onyx Lantern', 'The Shim Lantern', 'The Winz Lantern'
 ]
-w5meritsDict = {
-
+numberOfArtifacts = len(artifactsList)
+sailingDict = {
+    1: {'Name': 'Safari Island', 'NormalTreasure': 'sailing-treasure-1', 'RareTreasure': 'sailing-treasure-2', 'Distance': 25, 'Artifacts': {
+        0: {'Name': 'Moai Head'},
+        1: {'Name': 'Maneki Kat'},
+        2: {'Name': 'Ruble Cuble'},
+        3: {'Name': 'Fauxory Tusk'}}},
+    2: {'Name': 'Beachy Coast', 'NormalTreasure': 'sailing-treasure-3', 'RareTreasure': 'sailing-treasure-4', 'Distance': 100, 'Artifacts': {
+        4: {'Name': 'Gold Relic'},
+        5: {'Name': 'Genie Lamp'},
+        6: {'Name': 'Silver Ankh'}}},
+    3: {'Name': 'Isolated Woods', 'NormalTreasure': 'sailing-treasure-5', 'RareTreasure': 'sailing-treasure-6', 'Distance': 250, 'Artifacts': {
+        7: {'Name': 'Emerald Relic'},
+        8: {'Name': 'Fun Hippoete'}}},
+    4: {'Name': 'Rocky Peaks', 'NormalTreasure': 'sailing-treasure-7', 'RareTreasure': 'sailing-treasure-8', 'Distance': 1000, 'Artifacts': {
+        9: {'Name': 'Arrowhead'},
+        10: {'Name': '10 AD Tablet'},
+        11: {'Name': 'Ashen Urn'}}},
+    5: {'Name': 'Stormy North', 'NormalTreasure': 'sailing-treasure-9', 'RareTreasure': 'sailing-treasure-10', 'Distance': 3000, 'Artifacts': {
+        12: {'Name': 'Amberite'},
+        13: {'Name': 'Triagulon'},
+        14: {'Name': 'Billcye Tri'}}},
+    6: {'Name': 'Snowy South', 'NormalTreasure': 'sailing-treasure-11', 'RareTreasure': 'sailing-treasure-12', 'Distance': 10000, 'Artifacts': {
+        15: {'Name': 'Frost Relic'},
+        16: {'Name': 'Chilled Yarn'}}},
+    7: {'Name': 'Toxic Bay Inc', 'NormalTreasure': 'sailing-treasure-13', 'RareTreasure': 'sailing-treasure-14', 'Distance': 25000, 'Artifacts': {
+        17: {'Name': 'Causticolumn'},
+        18: {'Name': 'Jade Rock'}}},
+    8: {'Name': 'Candied Island', 'NormalTreasure': 'sailing-treasure-15', 'RareTreasure': 'sailing-treasure-16', 'Distance': 100000, 'Artifacts': {
+        19: {'Name': 'Dreamcatcher'},
+        20: {'Name': 'Gummy Orb'}}},
+    9: {'Name': 'Fungi Meadows', 'NormalTreasure': 'sailing-treasure-17', 'RareTreasure': 'sailing-treasure-18', 'Distance': 300000, 'Artifacts': {
+        21: {'Name': 'Fury Relic'}}},
+    10: {'Name': 'Cloudy Quay', 'NormalTreasure': 'sailing-treasure-19', 'RareTreasure': 'sailing-treasure-20', 'Distance': 1000000, 'Artifacts': {
+        22: {'Name': 'Cloud Urn'},
+        23: {'Name': 'Weatherbook'}}},
+    11: {'Name': 'Dungeon Cove', 'NormalTreasure': 'sailing-treasure-21', 'RareTreasure': 'sailing-treasure-22', 'Distance': 2000000, 'Artifacts': {
+        24: {'Name': 'Giants Eye'}}},
+    12: {'Name': 'Crystal Enclave', 'NormalTreasure': 'sailing-treasure-23', 'RareTreasure': 'sailing-treasure-24', 'Distance': 5000000, 'Artifacts': {
+        25: {'Name': 'Crystal Steak'}}},
+    13: {'Name': 'Petulent Garage', 'NormalTreasure': 'sailing-treasure-25', 'RareTreasure': 'sailing-treasure-26', 'Distance': 15000000, 'Artifacts': {
+        26: {'Name': 'Trilobite Rock'}}},
+    14: {'Name': 'Isle of Note', 'NormalTreasure': 'sailing-treasure-27', 'RareTreasure': 'sailing-treasure-28', 'Distance': 40000000, 'Artifacts': {
+        27: {'Name': 'Opera Mask'},
+        28: {'Name': 'Socrates'}}},
+    15: {'Name': 'The Edge', 'NormalTreasure': 'sailing-treasure-29', 'RareTreasure': 'sailing-treasure-30', 'Distance': 100000000, 'Artifacts': {
+        29: {'Name': 'The True Lantern'},
+        30: {'Name': 'The Onyx Lantern'},
+        31: {'Name': 'The Shim Lantern'},
+        32: {'Name': 'The Winz Lantern'}}},
 }
+divinity_divinitiesDict = {
+    1: {
+        "Name": "Snehebatu",
+        "Unlocked": False,
+        "BlessingLevel": 0,
+    },
+    2: {
+        "Name": "Arctis",
+        "Unlocked": False,
+        "BlessingLevel": 0,
+    },
+    3: {
+        "Name": "Nobisect",
+        "Unlocked": False,
+        "BlessingLevel": 0,
+    },
+    4: {
+        "Name": "Harriep",
+        "Unlocked": False,
+        "BlessingLevel": 0,
+    },
+    5: {
+        "Name": "Goharut",
+        "Unlocked": False,
+        "BlessingLevel": 0,
+    },
+    6: {
+        "Name": "Omniphau",
+        "Unlocked": False,
+        "BlessingLevel": 0,
+    },
+    7: {
+        "Name": "Purrmep",
+        "Unlocked": False,
+        "BlessingLevel": 0,
+    },
+    8: {
+        "Name": "Flutterbis",
+        "Unlocked": False,
+        "BlessingLevel": 0,
+    },
+    9: {
+        "Name": "Kattlekruk",
+        "Unlocked": False,
+        "BlessingLevel": 0,
+    },
+    10: {
+        "Name": "Bagur",
+        "Unlocked": False,
+        "BlessingLevel": 0,
+    },
+    }
+divinity_offeringsDict = {
+    0: {
+        "Name":"Olive Branch",
+        "Image":"offering-1",
+        "Chance":1,
+    },
+    1: {
+        "Name": "Incense",
+        "Image": "offering-5",
+        "Chance": 5,
+    },
+    2: {
+        "Name": "Giftbox",
+        "Image": "offering-10",
+        "Chance": 10,
+    },
+    3: {
+        "Name": "Tithe",
+        "Image": "offering-25",
+        "Chance": 25,
+    },
+    4: {
+        "Name": "Hearty Meal",
+        "Image": "offering-50",
+        "Chance": 50,
+    },
+    5: {
+        "Name": "Sacrifice",
+        "Image": "offering-100",
+        "Chance": 100,
+    },
+}
+divinity_stylesDict = {
+    0: {
+        "Name": "Kinesis",
+        "UnlockLevel": 1,
+        "Points": 1,
+        "Exp": 1,
+    },
+    1: {
+        "Name": "Chakra",
+        "UnlockLevel": 5,
+        "Points": 2,
+        "Exp": 2,
+    },
+    2: {
+        "Name": "Focus",
+        "UnlockLevel": 10,
+        "Points": 4,
+        "Exp": 1,
+    },
+    3: {
+        "Name": "Mantra",
+        "UnlockLevel": 15,
+        "Points": 0,
+        "Exp": 1,
+        "Notes": "(To all characters)"
+    },
+    4: {
+        "Name": "Vitalic",
+        "UnlockLevel": 25,
+        "Points": 2,
+        "Exp": 7,
+    },
+    5: {
+        "Name": "TranQi",
+        "UnlockLevel": 40,
+        "Points": 0,
+        "Exp": 3,
+        "Notes": "(Even when not Meditating)"
+    },
+    6: {
+        "Name": "Zen",
+        "UnlockLevel": 60,
+        "Points": 8,
+        "Exp": 8,
+    },
+    7: {
+        "Name": "Mindful",
+        "UnlockLevel": 80,
+        "Points": 15,
+        "Exp": 10,
+    },
+}
+
+def getDivinityNameFromIndex(inputValue: int) -> str:
+    return divinity_divinitiesDict.get(inputValue, {"Name": f"UnknownDivinity{inputValue}"}).get("Name")
+def getOfferingNameFromIndex(inputValue):
+    return divinity_offeringsDict.get(inputValue, {"Name": f"UnknownOffering{inputValue}"}).get("Name")
+
+def getStyleNameFromIndex(inputValue: int) -> str:
+    return divinity_stylesDict.get(inputValue, {"Name": f"UnknownStyle{inputValue}"}).get("Name")
+
 
 ###WORLD 6 CONSTS###
 jade_emporium = [
-  {
-    "name": "Quick Ref Access",
-    "bonus": "Adds the Sneaking skill to your QuickRef menu! Manage your Ninja Twins from anywhere!"
-  },
-  {
-    "name": "Gold Food Beanstalk",
-    "bonus": "Grows a giant beanstalk behind the ninja castle! Drop a stack of 10,000 Gold Food to add it with the beanstalk and permanently gain its bonus!"
-  },
-  {
-    "name": "Supersized Gold Beanstacking",
-    "bonus": "You can now drop a stack of 100,000 Gold Food to supersize it! This will obviously give a bigger bonus, and will even enlargen the food on the stalk!"
-  },
-  {
-    "name": "Charmed, I'm Sure",
-    "bonus": "All your Ninja Twins can now equip two of the same charm at once!"
-  },
-  {
-    "name": "Mob Cosplay Craze",
-    "bonus": "Certain monsters in World 6 will now have a rare chance to drop Ninja Hats, but only the ones you've found already from the Ninja Castle!"
-  },
-  {
-    "name": "Level Exemption",
-    "bonus": "Completely and utterly removes the UNDER-LEVELED bonus reduction of all stamps in your collection, now and forever. Amen."
-  },
-  {
-    "name": "Gaming to the MAX",
-    "bonus": "All plant types in Gaming have +1 Max Evolution, but this one is 50,000x rarer than normal and will make you wonder if evolution is even real (it is)"
-  },
-  {
-    "name": "Revenge of the Pickle",
-    "bonus": "Adds a new boss page to the left of World 1 in Deathnote. Each BoneJoePickle in your inventory counts as +1 Boss Deathnote Kill!"
-  },
-  {
-    "name": "The Artifact Matrix",
-    "bonus": "Extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to Artifact Find Chance!"
-  },
-  {
-    "name": "The Slab Matrix",
-    "bonus": "Further extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to all bonuses from the Slab!"
-  },
-  {
-    "name": "The Spirit Matrix",
-    "bonus": "Even further extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to W6 Skill exp gain!"
-  },
-  {
-    "name": "The Crop Matrix",
-    "bonus": "Yet again even further extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to Crop Depot!"
-  },
-  {
-    "name": "MSA Expander I",
-    "bonus": "Adds a new bonus type to the Miniature Soul Apparatus in World 3, specifically Farming EXP!"
-  },
-  {
-    "name": "MSA Expander II",
-    "bonus": "Adds a new bonus type to the Miniature Soul Apparatus in World 3, specifically Jade Coin Gain!"
-  },
-  {
-    "name": "MSA Expander III",
-    "bonus": "Adds a new bonus type to the Miniature Soul Apparatus in World 3, specifically All Essence Gain!"
-  },
-  {
-    "name": "Deal Sweetening",
-    "bonus": "Earn +25% more Magic Beans from the mysterious Legumulyte bean merchant found in the Troll Broodnest map."
-  },
-  {
-    "name": "No Meal Left Behind",
-    "bonus": "Every 24 hours, your lowest level Meal gets +1 Lv. This only works on Meals Lv 5 or higher, and doesn't trigger on days you don't play."
-  },
-  {
-    "name": "Jade Coin Magnetism",
-    "bonus": "Adds a new bonus of +5% Jade Coin Gain per 10 items found after 1000 items, as shown at The Slab in World 5."
-  },
-  {
-    "name": "Essence Confetti",
-    "bonus": "Adds a new bonus of +3% All Essence Gain per 10 items found after 1000 items, as shown at The Slab in World 5."
-  },
-  {
-    "name": "Shrine Collective Bargaining Agreement",
-    "bonus": "Shrines no longer lose EXP when moved around, so you can finally bring those baddies out of retirement!"
-  },
-  {
-    "name": "Papa Blob's Quality Guarantee",
-    "bonus": "Increases the Max Level of all cooking meals by +10. Better meals, better levels, Papa Blob's."
-  },
-  {
-    "name": "Chef Geustloaf's Cutting Edge Philosophy",
-    "bonus": "Increases the Max Level of all cooking meals by +10 again! But oh hoho, you sir are no Chef Geustloaf! Good luck cooking to these LVs!"
-  },
-  {
-    "name": "Crop Depot Scientist",
-    "bonus": "Employs a friendly scientist blobulyte to keep a Data Sheet of all the crops you've ever found!"
-  },
-  {
-    "name": "Science Environmentally Sourced Pencil",
-    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+15% Cash from Mobs' per crop found!"
-  },
-  {
-    "name": "Science Pen",
-    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '1.02x Plant Evolution Chance in Gaming (multiplicative)' per Crop!"
-  },
-  {
-    "name": "Science Marker",
-    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+8% Jade Coin Gain' per Crop!"
-  },
-  {
-    "name": "Science Featherpen",
-    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '1.10x Cooking Speed (multiplicative)' per Crop!"
-  },
-  {
-    "name": "Reinforced Science Pencil",
-    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+20% Total Damage' per Crop!"
-  },
-  {
-    "name": "Science Crayon",
-    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+7% Shiny Pet Lv Up Rate and Pet Breeding Rate' per Crop!"
-  },
-  {
-    "name": "Science Paintbrush",
-    "bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+0.1 Base Critter caught in Trapping' per Crop!"
-  },
-  {
-    "name": "New Critter",
-    "bonus": "Unlocks a new critter type to capture! These have their own very special vial in Alchemy."
-  },
-  {
-    "name": "Ionized Sigils",
-    "bonus": "Sigils can now be upgraded a 3rd time. Push past lame ol' yellow, and further increasing those sigil boosts!"
-  },
-  {
-    "name": "The Endercaptain",
-    "bonus": "Adds the Endercaptain to Recruitment pool. They're very rare, and have a hidden account-wide +25% Loot Multi and Artifact Find."
-  },
-  {
-    "name": "True Godly Blessings",
-    "bonus": "All Divinity Gods give 1.05x higher Blessing bonus per God Rank. Whats a Blessing bonus? Select a god, it's the one on the bottom, go look."
-  },
-  {
-    "name": "Brighter Lighthouse Bulb",
-    "bonus": "You can now find 3 additional Artifacts from The Edge island."
-  },
-  {
-    "name": "Sovereign Artifacts",
-    "bonus": "You can now find Sovereign Artifacts from sailing, but only if you've found the Eldritch form first."
-  },
-  {
-    "name": "New Bribes",
-    "bonus": "Mr. Pigibank is up to no good once again, and he's looking to get some funding from his favorite patron... you. Well, your wallet specifically."
-  },
-  {
-    "name": "Laboratory Bling",
-    "bonus": "Adds 3 new Jewels to unlock at the Jewel Spinner in W4 Town. Or, get one for free every 700 total Lab LV as shown in Rift Skill Mastery."
-  }
+    {
+        "Name": "Quick Ref Access",
+        "Bonus": "Adds the Sneaking skill to your QuickRef menu! Manage your Ninja Twins from anywhere!",
+        "CodeString": "_"
+    },
+    {
+        "Name": "MSA Expander I",
+        "Bonus": "Adds a new bonus type to the Miniature Soul Apparatus in World 3, specifically Farming EXP!",
+        "CodeString": "l"
+    },
+    {
+        "Name": "Level Exemption",
+        "Bonus": "Completely and utterly removes the UNDER-LEVELED bonus reduction of all stamps in your collection, now and forever. Amen.",
+        "CodeString": "e"
+    },
+    {
+        "Name": "The Artifact Matrix",
+        "Bonus": "Extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to Artifact Find Chance!",
+        "CodeString": "h"
+    },
+    {
+        "Name": "Crop Depot Scientist",
+        "Bonus": "Employs a friendly scientist blobulyte to keep a Data Sheet of all the crops you've ever found!",
+        "CodeString": "v"
+    },
+    {
+        "Name": "Reinforced Science Pencil",
+        "Bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+20% Total Damage' per Crop!",
+        "CodeString": "A"
+    },
+    {
+        "Name": "Essence Confetti",
+        "Bonus": "Adds a new bonus of +3% All Essence Gain per 10 items found after 1000 items, as shown at The Slab in World 5.",
+        "CodeString": "r"
+    },
+    {
+        "Name": "Gold Food Beanstalk",
+        "Bonus": "Grows a giant beanstalk behind the ninja castle! Drop a stack of 10,000 Gold Food to add it with the beanstalk and permanently gain its bonus!",
+        "CodeString": "a"
+    },
+    {
+        "Name": "Jade Coin Magnetism",
+        "Bonus": "Adds a new bonus of +5% Jade Coin Gain per 10 items found after 1000 items, as shown at The Slab in World 5.",
+        "CodeString": "q"
+    },
+    {
+        "Name": "Science Pen",
+        "Bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '1.02x Plant Evolution Chance in Gaming (multiplicative)' per Crop!",
+        "CodeString": "x"
+    },
+    {
+        "Name": "Shrine Collective Bargaining Agreement",
+        "Bonus": "Shrines no longer lose EXP when moved around, so you can finally bring those baddies out of retirement!",
+        "CodeString": "s"
+    },
+    {
+        "Name": "Science Marker",
+        "Bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+8% Jade Coin Gain' per Crop!",
+        "CodeString": "y"
+    },
+    {
+        "Name": "MSA Expander II",
+        "Bonus": "Adds a new bonus type to the Miniature Soul Apparatus in World 3, specifically Jade Coin Gain!",
+        "CodeString": "m"
+    },
+    {
+        "Name": "No Meal Left Behind",
+        "Bonus": "Every 24 hours, your lowest level Meal gets +1 Lv. This only works on Meals Lv 5 or higher, and doesn't trigger on days you don't play.",
+        "CodeString": "p"
+    },
+    {
+        "Name": "Science Featherpen",
+        "Bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '1.10x Cooking Speed (multiplicative)' per Crop!",
+        "CodeString": "z"
+    },
+    {
+        "Name": "Revenge of the Pickle",
+        "Bonus": "Adds a new boss page to the left of World 1 in Deathnote. Each BoneJoePickle in your inventory counts as +1 Boss Deathnote Kill!",
+        "CodeString": "g"
+    },
+    {
+        "Name": "The Slab Matrix",
+        "Bonus": "Further extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to all bonuses from the Slab!",
+        "CodeString": "i"
+    },
+    {
+        "Name": "Science Environmentally Sourced Pencil",
+        "Bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+15% Cash from Mobs' per crop found!",
+        "CodeString": "w"
+    },
+    {
+        "Name": "MSA Expander III",
+        "Bonus": "Adds a new bonus type to the Miniature Soul Apparatus in World 3, specifically All Essence Gain!",
+        "CodeString": "n"
+    },
+    {
+        "Name": "Papa Blob's Quality Guarantee",
+        "Bonus": "Increases the Max Level of all cooking meals by +10. Better meals, better levels, Papa Blob's.",
+        "CodeString": "t"
+    },
+    {
+        "Name": "Science Crayon",
+        "Bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+7% Shiny Pet Lv Up Rate and Pet Breeding Rate' per Crop!",
+        "CodeString": "B"
+    },
+    {
+        "Name": "Supersized Gold Beanstacking",
+        "Bonus": "You can now drop a stack of 100,000 Gold Food to supersize it! This will obviously give a bigger bonus, and will even enlargen the food on the stalk!",
+        "CodeString": "b"
+    },
+    {
+        "Name": "Charmed, I'm Sure",
+        "Bonus": "All your Ninja Twins can now equip two of the same charm at once!",
+        "CodeString": "c"
+    },
+    {
+        "Name": "Deal Sweetening",
+        "Bonus": "Earn +25% more Magic Beans from the mysterious Legumulyte bean merchant found in the Troll Broodnest map.",
+        "CodeString": "o"
+    },
+    {
+        "Name": "The Spirit Matrix",
+        "Bonus": "Even further extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to W6 Skill exp gain!",
+        "CodeString": "j"
+    },
+    {
+        "Name": "The Crop Matrix",
+        "Bonus": "Yet again even further extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to Crop Depot!",
+        "CodeString": "k"
+    },
+    {
+        "Name": "Gaming to the MAX",
+        "Bonus": "All plant types in Gaming have +1 Max Evolution, but this one is 50,000x rarer than normal and will make you wonder if evolution is even real (it is)",
+        "CodeString": "f"
+    },
+    {
+        "Name": "Chef Geustloaf's Cutting Edge Philosophy",
+        "Bonus": "Increases the Max Level of all cooking meals by +10 again! But oh hoho, you sir are no Chef Geustloaf! Good luck cooking to these LVs!",
+        "CodeString": "u"
+    },
+    {
+        "Name": "Sovereign Artifacts",
+        "Bonus": "You can now find Sovereign Artifacts from sailing, but only if you've found the Eldritch form first.",
+        "CodeString": "I"
+    },
+    {
+        "Name": "New Critter",
+        "Bonus": "Unlocks a new critter type to capture! These have their own very special vial in Alchemy.",
+        "CodeString": "D"
+    },
+    {
+        "Name": "Brighter Lighthouse Bulb",
+        "Bonus": "You can now find 3 additional Artifacts from The Edge island.",
+        "CodeString": "H"
+    },
+    {
+        "Name": "Laboratory Bling",
+        "Bonus": "Adds 3 new Jewels to unlock at the Jewel Spinner in W4 Town. Or, get one for free every 700 total Lab LV as shown in Rift Skill Mastery.",
+        "CodeString": "K"
+    },
+    {
+        "Name": "Science Paintbrush",
+        "Bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+0.1 Base Critter caught in Trapping' per Crop!",
+        "CodeString": "C"
+    },
+    {
+        "Name": "Ionized Sigils",
+        "Bonus": "Sigils can now be upgraded a 3rd time. Push past lame ol' yellow, and further increasing those sigil boosts!",
+        "CodeString": "E"
+    },
+    {
+        "Name": "The Endercaptain",
+        "Bonus": "Adds the Endercaptain to Recruitment pool. They're very rare, and have a hidden account-wide +25% Loot Multi and Artifact Find.",
+        "CodeString": "F"
+    },
+    {
+        "Name": "Mob Cosplay Craze",
+        "Bonus": "Certain monsters in World 6 will now have a rare chance to drop Ninja Hats, but only the ones you've found already from the Ninja Castle!",
+        "CodeString": "d"
+    },
+    {
+        "Name": "New Bribes",
+        "Bonus": "Mr. Pigibank is up to no good once again, and he's looking to get some funding from his favorite patron... you. Well, your wallet specifically.",
+        "CodeString": "J"
+    },
+    {
+        "Name": "True Godly Blessings",
+        "Bonus": "All Divinity Gods give 1.05x higher Blessing bonus per God Rank. Whats a Blessing bonus? Select a god, it's the one on the bottom, go look.",
+        "CodeString": "G"
+    },
+
 ]
 gfood_codes = ["PeanutG", "ButterBar", *[f"FoodG{i}" for i in range(1, 14)]]
 pristineCharmsList: list[str] = [

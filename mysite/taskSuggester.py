@@ -14,7 +14,7 @@ from w1 import stamps, bribes, smithing
 from w2 import alchemy
 from w3 import trapping, consRefinery, consDeathNote, worship, consSaltLick, consBuildings, equinox, sampling
 from w4 import breeding, cooking, rift
-from w5 import slab, divinity
+from w5 import slab, divinity, sailing
 from w6 import beanstalk, sneaking
 
 logger = get_logger(__name__)
@@ -99,13 +99,14 @@ def main(inputData, runType="web"):
     sections_5 = [
         section_slab := slab.setSlabProgressionTier(),
         section_divinity := divinity.setDivinityProgressionTier(),
-        # section_sailing =
+        section_sailing := sailing.setSailingProgressionTier()
         # section_gaming =
     ]
     # World 6
     sections_6 = [
+        section_sneaking := sneaking.setSneakingProgressionTier(),
         section_beanstalk := beanstalk.section_beanstalk(),
-        section_sneaking := sneaking.setSneakingProgressionTier()
+
     ]
 
     pinchable_sections = [
@@ -114,7 +115,7 @@ def main(inputData, runType="web"):
         section_alchBubbles, section_alchVials, section_alchP2W,
         section_refinery, section_saltlick, section_deathnote, section_prayers, section_equinox,
         section_breeding, section_cooking, section_rift,
-        section_divinity
+        section_divinity, section_sailing
     ]
     sections_pinchy = pinchy.generatePinchyWorld(pinchable_sections)
 

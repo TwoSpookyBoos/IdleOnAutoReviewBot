@@ -66,9 +66,9 @@ def getCapacityAdviceGroup() -> AdviceGroup:
 
     #Stamps
     capacity_Advices["Stamps"].append(Advice(
-        label="Jade Emporium: Level Exemption",
+        label="{{ Jade Emporium|#sneaking }}: Level Exemption",
         picture_class="level-exemption",
-        progression=1 if "Level Exemption" in session_data.account.jade_emporium_purchases else 0,
+        progression=1 if session_data.account.sneaking['JadeEmporium']['Level Exemption']['Obtained'] else 0,
         goal=1
     ))
     capacity_Advices["Stamps"].append(Advice(
@@ -82,7 +82,7 @@ def getCapacityAdviceGroup() -> AdviceGroup:
         picture_class="pure-opal-navette",
     ))
     capacity_Advices["Stamps"].append(Advice(
-        label="Pristine Charm: Liqorice Rolle",
+        label="{{ Pristine Charm|#sneaking }}: Liqorice Rolle",
         picture_class="liqorice-rolle",
         progression=int(session_data.account.sneaking.get("PristineCharms", {}).get("Liqorice Rolle", False)),
         goal=1
@@ -97,7 +97,7 @@ def getCapacityAdviceGroup() -> AdviceGroup:
 
     #Account-Wide
     capacity_Advices["Account Wide"].append(Advice(
-        label="Bribe: Bottomless Bags",
+        label="{{ Bribe|#bribes }}: Bottomless Bags",
         picture_class="bottomless-bags",
         progression=1 if session_data.account.bribes["W4"].get("Bottomless Bags") >= 1 else 0,
         goal=1
@@ -121,7 +121,7 @@ def getCapacityAdviceGroup() -> AdviceGroup:
         goal=6
     ))
     capacity_Advices["Account Wide"].append(Advice(
-        label="Gem Shop: Carry Capacity",
+        label="{{ Gem Shop|#gem-shop }}: Carry Capacity",
         picture_class="carry-capacity",
         progression=session_data.account.gemshop.get("Carry Capacity", 0),
         goal=10
@@ -153,22 +153,21 @@ def getCapacityAdviceGroup() -> AdviceGroup:
         goal=maxOverallBookLevels
     ))
     capacity_Advices["Character Specific"].append(Advice(
-        label="80 available Inventory Slots",
-        picture_class="storage",
-        as_link=True
+        label="80 available {{ Inventory Slots|#storage }}",
+        picture_class="storage"
     ))
     capacity_Advices["Character Specific"].append(Advice(
         label="Highest Type-Specific Capacity Bag crafted",
         picture_class="herculean-matty-pouch",
     ))
     capacity_Advices["Character Specific"].append(Advice(
-        label=f"Prayer: Ruck Sack: {session_data.account.prayers['Ruck Sack']['BonusString']}",
+        label=f"{{{{ Prayer|#prayers }}}}: Ruck Sack: {session_data.account.prayers['Ruck Sack']['BonusString']}",
         picture_class="ruck-sack",
         progression=session_data.account.prayers['Ruck Sack']['Level'],
         goal=50
     ))
     capacity_Advices["Character Specific"].append(Advice(
-        label=f"PRAYER: REMOVE ZERG RUSHOGEN ({session_data.account.prayers['Zerg Rushogen']['CurseString']})",
+        label=f"{{{{ Prayer|#prayers }}}}: REMOVE ZERG RUSHOGEN ({session_data.account.prayers['Zerg Rushogen']['CurseString']})",
         picture_class="zerg-rushogen",
         goal="❌"
     ))
@@ -224,7 +223,7 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     if session_data.account.labBonuses.get("My 1st Chemistry Set", {}).get("Enabled", False):
         totalVialReduction *= 2
     costReduction_Advices["Vials"].append(Advice(
-        label=f"Rift Bonus: Vial Mastery: {session_data.account.vialMasteryMulti:.2f}x",
+        label=f"{{{{ Rift|#rift }}}} Bonus: Vial Mastery: {session_data.account.vialMasteryMulti:.2f}x",
         picture_class="vial-mastery",
         progression=f"{1 if session_data.account.vial_mastery_unlocked else 0}",
         goal=1
@@ -238,9 +237,9 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     ))
 
     costReduction_Advices["Uncapped"].append(Advice(
-        label="Jade Emporium: Ionized Sigils",
+        label="{{ Jade Emporium|#sneaking }}: Ionized Sigils",
         picture_class="ionized-sigils",
-        progression=f"{1 if 'Ionized Sigils' in session_data.account.jade_emporium_purchases else 0}",
+        progression=f"{1 if session_data.account.sneaking['JadeEmporium']['Ionized Sigils']['Obtained'] else 0}",
         goal=1
     ))
     if (session_data.account.alchemy_p2w.get('Sigils', {}).get('Envelope Pile', {}).get('PrechargeLevel', 0)
@@ -255,9 +254,9 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
         goal=3
     ))
     costReduction_Advices["Uncapped"].append(Advice(
-        label=f"Artifact: Chilled Yarn increases sigil by {1 + session_data.account.artifacts.get('Chilled Yarn', 0)}x",
+        label=f"{{{{ Artifact|#sailing }}}}: Chilled Yarn increases sigil by {1 + session_data.account.sailing['Artifacts'].get('Chilled Yarn', {}).get('Level', 0)}x",
         picture_class="chilled-yarn",
-        progression=session_data.account.artifacts.get("Chilled Yarn", 0),
+        progression=session_data.account.sailing['Artifacts'].get('Chilled Yarn', {}).get('Level', 0),
         goal=4
     ))
 

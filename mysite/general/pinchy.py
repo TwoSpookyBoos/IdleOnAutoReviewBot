@@ -43,7 +43,7 @@ class Threshold:
     EARLY_W7_PREP = "Early W7 Prep"
     SOLID_W7_PREP = "Solid W7 Prep"
     W7_WAITING_ROOM = "W7 Waiting Room"
-    MAX_TIER = "Maxed for v2.05"
+    MAX_TIER = "Maxed for v2.09"
     PLACEHOLDER = "Placeholder"
 
     thresholdNames = [
@@ -138,13 +138,14 @@ class Placements(dict):
     COOKING = "Cooking"
     RIFT = "Rift"
     DIVINITY = "Divinity"
+    SAILING = "Sailing"
     sections = [
         COMBAT_LEVELS,
         STAMPS, BRIBES, SMITHING,
         BUBBLES, VIALS, P2W,
         REFINERY, SALT_LICK, DEATH_NOTE, PRAYERS, EQUINOX,
         BREEDING, COOKING, RIFT,
-        DIVINITY
+        DIVINITY, SAILING
     ]
 
     sectionThresholds = {
@@ -159,14 +160,15 @@ class Placements(dict):
         VIALS:         [0,   0, 0, 0,    1,  1,  2,      3,  4,  5,      6,  6,  7,      8,  9,  10,     12, 20, 25,     26,   99],
         P2W:           [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  1,      1,  1,  1,      1,  1,  1,      1,    99],
         REFINERY:      [0,   0, 0, 0,    0,  0,  0,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,    99],
-        SALT_LICK:     [0,   0, 0, 0,    0,  0,  0,      0,  0,  1,      2,  3,  4,      5,  5,  6,      7,  8,  8,      9,   99],
+        SALT_LICK:     [0,   0, 0, 0,    0,  0,  0,      0,  0,  1,      2,  3,  4,      5,  5,  6,      7,  8,  8,      9,    99],
         DEATH_NOTE:    [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      4,  5,  6,      7,  9,  11,     16, 20, 25,     27,   99],
         PRAYERS:       [0,   0, 0, 0,    0,  0,  1,      1,  2,  2,      3,  3,  4,      4,  5,  6,      7,  7,  7,      7,    99],
         EQUINOX:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      11,   99],
         BREEDING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  1,      1,  2,  2,      3,  4,  5,      6,  8,  9,      11,   99],
         COOKING:       [0,   0, 0, 0,    0,  0,  0,      1,  1,  2,      2,  3,  3,      3,  4,  4,      5,  5,  6,      6,    99],
         RIFT:          [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      9,    99],
-        DIVINITY:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  3,  5,      7,  8,  9,      10, 11,  12,    12,   99],
+        DIVINITY:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  3,  5,      7,  8,  9,      10, 11, 12,     12,   99],
+        SAILING:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  2,  3,      5,  7,  9,      11, 14, 16,     18,   99],
     }
     section_count = len(sectionThresholds)
 

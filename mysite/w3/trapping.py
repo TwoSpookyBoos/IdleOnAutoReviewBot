@@ -24,7 +24,7 @@ def getUnlockedCritterStatus():
     #     logger.debug("Unable to retrieve Jade Emporium Upgrades to tell if Tuttle is unlocked. Defaulting to locked.")
     #     rawJadeEmporiumPurchases = ""
 
-    if "New Critter" in session_data.account.jade_emporium_purchases:
+    if session_data.account.sneaking['JadeEmporium']["New Critter"]['Obtained']:
         return [
             12,  # Index of the highest unlocked critter
             maxCritterTypes,  # Index of the highest critter possible

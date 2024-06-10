@@ -47,7 +47,7 @@ def getForgeCapacityAdviceGroup(playerForgeUpgrades) -> list[AdviceGroup]:
     bribe = session_data.account.bribes["W6"].get("Forge Cap Smuggling", -1) == 1
     bribeValue = 1.3 if bribe else 1
     cap_Advices["Static Sources"].append(Advice(
-        label=f"Bribe: Forge Cap Smuggling: {bribeValue}x",
+        label=f"{{{{ Bribe|#bribes }}}}: Forge Cap Smuggling: {bribeValue}x",
         picture_class='forge-cap-smuggling',
         progression="1" if bribe else "0",
         goal="1"
@@ -55,7 +55,7 @@ def getForgeCapacityAdviceGroup(playerForgeUpgrades) -> list[AdviceGroup]:
 
     #Verify Skill Mastery itself is unlocked from The Rift
     cap_Advices["Static Sources"].append(Advice(
-        label="Rift: Skill Mastery",
+        label="{{ Rift|#rift }}: Skill Mastery",
         picture_class='skill-mastery',
         progression="1" if session_data.account.skill_mastery_unlocked else "0",
         goal="1"
@@ -89,7 +89,7 @@ def getForgeCapacityAdviceGroup(playerForgeUpgrades) -> list[AdviceGroup]:
     ))
 
     cap_Advices["Scaling Sources"].append(Advice(
-        label=f"Forge Stamp: +{session_data.account.stamps.get('Forge Stamp', {}).get('Value', 0):.2f}% Forge Capacity",
+        label=f"{{{{ Forge Stamp|#stamps }}}}: +{session_data.account.stamps.get('Forge Stamp', {}).get('Value', 0):.2f}% Forge Capacity",
         picture_class="forge-stamp",
         progression=session_data.account.stamps.get("Forge Stamp", {}).get("Level", 0),
         goal=230  #Forge Stamp currently has a max of 230, unless it gets increased by the Sacred Methods bundle.

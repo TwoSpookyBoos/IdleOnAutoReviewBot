@@ -1,8 +1,7 @@
-import json
 from models.models import Advice, AdviceGroup, AdviceSection
 from utils.data_formatting import safe_loads
 from utils.logging import get_logger
-from consts import gemShop_progressionTiers, numberOfArtifacts, numberOfArtifactTiers
+from consts import gemShop_progressionTiers
 from flask import g as session_data
 
 logger = get_logger(__name__)
@@ -17,11 +16,8 @@ def try_exclude_DungeonTickets(exclusionList):
             exclusionList.append('Weekly Dungeon Boosters')
             return
 
-    #Scenario 2: Over Rank 50 or 400+ tickets
-    rawOptions = session_data.account.raw_data.get('OptlAcc', [])
-    if isinstance(rawOptions, str):
-        rawOptions = json.loads(rawOptions)
-    if rawOptions:
+    #Scenario 2: Over Rank 50 or 200+ tickets
+    if session_data.account.raw_optlacc_list:
         try:
             ##Blatantly stolen list from IE lol
             #https://github.com/Sludging/idleon-efficiency/blob/74f83dd4c0b15f399ffb1f87bc2bc8c9bc9b924c/data/domain/dungeons.tsx#L16
@@ -30,20 +26,20 @@ def try_exclude_DungeonTickets(exclusionList):
                                  275000, 325000, 400000, 490000, 600000, 725000, 875000, 1000000, 1200000, 1500000, 3000000, 5000000, 10000000, 20000000,
                                  30000000, 40000000, 50000000, 60000000, 80000000, 100000000, 999999999, 999999999, 999999999, 999999999, 999999999, 1999999999,
                                  1999999999, 1999999999, 1999999999, 1999999999]
-            playerDungeonXP = rawOptions[71]
+            playerDungeonXP = session_data.account.raw_optlacc_list[71]
             playerDungeonRank = 0
             for xpRequirement in dungeonLevelsList:
                 if playerDungeonXP >= xpRequirement:
                     playerDungeonRank += 1
-            playerCredits = rawOptions[72]
-            playerFlurbo = rawOptions[73]
-            playerBoosters = rawOptions[76] - 1  #The true value is always 1 less than JSON. Silly Lava
+            playerCredits = session_data.account.raw_optlacc_list[72]
+            playerFlurbo = session_data.account.raw_optlacc_list[73]
+            playerBoosters = session_data.account.raw_optlacc_list[76] - 1  #The true value is always 1 less than JSON. Silly Lava
         except:
             playerDungeonRank = 1
             playerCredits = 0
             playerFurbo = 0
             playerBoosters = 0
-        if playerDungeonRank >= 50 or playerBoosters >= 400:
+        if playerDungeonRank >= 50 or playerBoosters >= 200:
             if 'Weekly Dungeon Boosters' not in exclusionList:
                 exclusionList.append('Weekly Dungeon Boosters')
                 return
@@ -63,13 +59,13 @@ def try_exclude_FluorescentFlaggies(exclusionList):
     102-104 are red cog-making
     105-107 are purple cog-making
     """
-    cogList = session_data.account.raw_data["CogO"]
-    if isinstance(cogList, str):
-        cogList = json.loads(cogList)
-
-    cogBlanks = sum(1 for cog in cogList[0:95] if cog == "Blank")
-    if cogBlanks <= 60:
-        exclusionList.append("Fluorescent Flaggies")
+    try:
+        cogList = safe_loads(session_data.account.raw_data.get("CogO", []))
+        cogBlanks = sum(1 for cog in cogList[0:95] if cog == "Blank")
+        if cogBlanks <= 60:
+            exclusionList.append("Fluorescent Flaggies")
+    except:
+        pass
 
 
 def try_exclude_BurningBadBooks(exclusionList):
@@ -78,7 +74,10 @@ def try_exclude_BurningBadBooks(exclusionList):
 
 
 def try_exclude_ChestSluggo(exclusionList):
-    if session_data.account.sum_artifact_tiers == numberOfArtifacts * numberOfArtifactTiers:  # 33 artifacts times 4 tiers each = 132 for v2.00
+    # 33 artifacts times 4 tiers each = 132 for v2.09
+    # Minus the new 3 lanterns and giants eye, 29 * 2 = 58 expected count when finishing all Ancient artifacts
+    # 58/132 = 43.94% of all possibly artifacts. They know what they're getting into at that point.
+    if session_data.account.sum_artifact_tiers >= 58:  #(numberOfArtifacts * numberOfArtifactTiers) * 0.43:
         exclusionList.append("Chest Sluggo")
 
 def getGemShopExclusions():
@@ -288,10 +287,6 @@ def setGemShopProgressionTier():
 
     recommended_stock = {item: count for tier in gemShop_progressionTiers for item, count in tier[2].items()}
 
-    for exclusion in gemShopExclusions:
-        boughtItems.pop(exclusion, None)
-        recommended_stock.pop(exclusion, None)
-
     recommended_total = sum(recommended_stock.values())
 
     recommended_stock_bought = {k: min(v, boughtItems.get(k, 0)) for k, v in recommended_stock.items()}
@@ -303,7 +298,7 @@ def setGemShopProgressionTier():
     #progressionTiers[tier][2] = dict recommendedPurchases
     #progressionTiers[tier][3] = str notes
 
-    all_groups = ["SS", *"SABCD", "Practical Max", "True Max"]
+    filtered_groups = ["SS", *"SABCD", "Practical Max"]
     groups = [
         AdviceGroup(
             tier="",
@@ -314,11 +309,28 @@ def setGemShopProgressionTier():
                 Advice(label=f"{name} ({getBonusSectionName(name)})", picture_class=name, progression=int(prog), goal=int(goal))
                 for name, qty in gemShop_progressionTiers[i][2].items()
                 if name in recommended_stock_bought
+                and name not in gemShopExclusions
                 and (prog := float(recommended_stock_bought[name])) < (goal := float(qty))
             ]
         )
-        for i, tier in enumerate(all_groups, start=1)
+        for i, tier in enumerate(filtered_groups, start=1)
     ]
+
+    unfiltered_groups = ["True Max"]
+    for i, tier in enumerate(unfiltered_groups, start=8):
+        groups.append(AdviceGroup(
+                tier="",
+                pre_string=tier,
+                post_string=gemShop_progressionTiers[i][3],
+                hide=False,
+                advices=[
+                    Advice(label=f"{name} ({getBonusSectionName(name)})", picture_class=name, progression=int(prog), goal=int(goal))
+                    for name, qty in gemShop_progressionTiers[i][2].items()
+                    if name in recommended_stock_bought
+                    #and name not in gemShopExclusions  #Leaving this as a comment here to show intention. DO NOT FILTER!
+                    and (prog := float(recommended_stock_bought[name])) < (goal := float(qty))
+                ]
+        ))
 
     groups = [g for g in groups if g]
     # show only first 3 groups

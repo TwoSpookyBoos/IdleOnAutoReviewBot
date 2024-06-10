@@ -624,16 +624,11 @@ body {
                                         }
 
                                         li, li a {
-                                            display: flex;
+                                            display: inline-flex;
                                             align-items: center;
                                             column-gap: var(--advice-icon-gap);
 
-                                            &:not(.advice, .advice-title) {
-                                                justify-content: center;
-                                            }
-
                                             a {
-                                                width: 100%;
                                                 color: var(--fg);
                                             }
                                         }

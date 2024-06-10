@@ -29,12 +29,13 @@
                                 <span class="progress-box{% if not progress_bars %} hidden{% endif %} {{ advice.status }}">
                                     <span class="progress-bar"></span>
                                 </span>
+                                <li class="advice {{ advice.css_class }}">
                                 {% if advice.as_link %}
-                                    <li><a href="#{{ advice.css_class }}" class="advice {{ advice.css_class }}">{{ advice.label }}</a></li>
+                                    <a href="#{{ advice.css_class }}">{{ advice.label }}</a>
                                 {% else %}
-                                    <li class="advice {{ advice.css_class }}">{{ advice.label }}</li>
+                                    {{ advice.label | safe }}
                                 {% endif %}
-
+                                </li>
                                 <li class="prog">{{ advice.progression }}</li>
                                 {% if advice.progression and advice.goal %}
                                 <li class="arrow"></li>

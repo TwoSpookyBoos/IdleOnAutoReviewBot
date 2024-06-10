@@ -13,10 +13,10 @@ from flask import g
 from utils.data_formatting import getCharacterDetails, safe_loads
 from consts import expectedStackables, greenstack_progressionTiers, card_data, maxMeals, maxMealLevel, jade_emporium, max_IndexOfVials, getReadableVialNames, \
     buildingsList, atomsList, prayersDict, labChipsList, bribesDict, shrinesList, pristineCharmsList, sigilsDict, \
-    artifactsList, guildBonusesList, labBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesList, \
+    sailingDict, guildBonusesList, labBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesList, \
     getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampsDict, stampTypes, marketUpgradeList, \
     achievementsList, forgeUpgradesDict, arcadeBonuses, saltLickList, allMeritsDict, bubblesDict, familyBonusesDict, poBoxDict, equinoxBonusesDict, \
-    maxDreams, dreamsThatUnlockNewBonuses, ceilUpToBase, starsignsDict, gfood_codes
+    maxDreams, dreamsThatUnlockNewBonuses, ceilUpToBase, starsignsDict, gfood_codes, getStyleNameFromIndex, divinity_divinitiesDict, getDivinityNameFromIndex
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, letterToNumber
 
 def session_singleton(cls):
@@ -250,6 +250,25 @@ class AdviceBase:
         self._collapse = _value
 
 
+class LabelBuilder:
+    wrapper = "span"
+
+    def __init__(self, label):
+        matches = re.findall(r"\{\{.+?}}", label)
+
+        if not matches:
+            self.label = label
+            return
+
+        for match in matches:
+            text, url = match.strip("{} ").split("|")
+            link = f'<a href="{url}">{text}</a>'
+
+            label = label.replace(match, link)
+
+        self.label = f"<{self.wrapper}>{label}</{self.wrapper}>"
+
+
 class Advice(AdviceBase):
     """
     Args:
@@ -264,7 +283,7 @@ class Advice(AdviceBase):
                  **extra):
         super().__init__(**extra)
 
-        self.label: str = label
+        self.label: str = label if extra.get("as_link") else LabelBuilder(label).label
         if picture_class and picture_class[0].isdigit():
             picture_class = f"x{picture_class}"
         self.picture_class: str = picture_class
@@ -744,22 +763,10 @@ class Account:
         self.rift_meowed = False
         self.meowBBIndex = 0
         self.meals_remaining = maxMeals * maxMealLevel
-        self.jade_emporium_purchases = []
-        try:
-            raw_emporium_purchases = safe_loads(self.raw_data["Ninja"])[102][9]
-            if isinstance(raw_emporium_purchases, str):
-                raw_emporium_purchases = list(raw_emporium_purchases)
-            for purchaseLetter in raw_emporium_purchases:
-                try:
-                    decodedIndex = letterToNumber(purchaseLetter)
-                    self.jade_emporium_purchases.append(jade_emporium[decodedIndex].get("name", f"Unknown Emporium Upgrade: {purchaseLetter}"))
-                except:
-                    continue
-        except:
-            pass
-
         self.max_toon_count = 10  # OPTIMIZE: find a way to read this from somewhere
+
         #General / Multiple uses
+        self.gemshop = {}
         self.family_bonuses = {}
         for className in familyBonusesDict.keys():
             #Create the skeleton for all current classes, with level and value of 0
@@ -783,7 +790,7 @@ class Account:
                                                                   f"{familyBonusesDict[className]['PostDisplay']}"
                                                                   f" {familyBonusesDict[className]['Stat']}")
 
-        raw_optlacc_list = safe_loads(self.raw_data.get("OptLacc", {}))
+        self.raw_optlacc_list = safe_loads(self.raw_data.get("OptLacc", {}))
 
         self.dungeon_upgrades = {}
         raw_dungeon_upgrades = safe_loads(self.raw_data.get('DungUpg', []))
@@ -840,9 +847,10 @@ class Account:
                 self.star_signs[signValuesDict['Name']]['Unlocked'] = int(raw_star_signs[signValuesDict['Name'].replace(" ", "_")]) > 0
             except:
                 pass
-        self.star_sign_extras = {}
-        self.star_sign_extras['SeraphMulti'] = min(3, 1.1 ** ceil((max(self.all_skills.get('Summoning', [0])) + 1) / 20))
-        self.star_sign_extras['SeraphGoal'] = min(240, ceilUpToBase(max(self.all_skills.get('Summoning', [0])), 20))
+        self.star_sign_extras = {
+            'SeraphMulti': min(3, 1.1 ** ceil((max(self.all_skills.get('Summoning', [0])) + 1) / 20)),
+            'SeraphGoal': min(240, ceilUpToBase(max(self.all_skills.get('Summoning', [0])), 20))
+        }
         if bool(self.star_signs.get("Seraph Cosmos", {}).get('Unlocked', False)):
             self.star_sign_extras['SeraphEval'] = f"Multis signs by {self.star_sign_extras['SeraphMulti']:.2f}x."
         else:
@@ -1017,7 +1025,7 @@ class Account:
                     self.alchemy_p2w["Sigils"][sigilName]["PlayerHours"] = float(raw_p2w_list[4][self.alchemy_p2w["Sigils"][sigilName]["Index"]])
                     self.alchemy_p2w["Sigils"][sigilName]["Level"] = raw_p2w_list[4][self.alchemy_p2w["Sigils"][sigilName]["Index"] + 1] + 1
                     if self.alchemy_p2w["Sigils"][sigilName]["Level"] == 2:
-                        if "Ionized Sigils" in self.jade_emporium_purchases:
+                        if self.sneaking['JadeEmporium']['Ionized Sigils']['Obtained']:
                             #If you have purchased Ionized Sigils, the numbers needed to Gold get subtracted from your hours already
                             red_Hours = self.alchemy_p2w["Sigils"][sigilName]["Requirements"][2]
                         else:
@@ -1182,7 +1190,7 @@ class Account:
                 self.saltlick[saltlickName] = 0
 
         #World 4
-        self.gemshop = {}
+
         self.labChips = {}
         raw_labChips_list = safe_loads(self.raw_data.get("Lab", []))
         if len(raw_labChips_list) >= 15:
@@ -1192,40 +1200,86 @@ class Account:
                 self.labChips[labChipName] = int(raw_labChips_list[labChipIndex])
             except:
                 self.labChips[labChipName] = 0
-        if self.labChips.get('Silkrode Nanochip', 0) > 0:
-            self.star_sign_extras['DoublerOwned'] = True
-            self.star_sign_extras['SilkrodeNanoEval'] = f"{self.labChips.get('Silkrode Nanochip', 0)} owned. Doubles starsigns when equipped."
-            self.star_sign_extras['SilkrodeNanoMulti'] = 2
-        else:
-            self.star_sign_extras['DoublerOwned'] = False
-            self.star_sign_extras['SilkrodeNanoEval'] = "None Owned. Would double other signs if equipped."
-            self.star_sign_extras['SilkrodeNanoMulti'] = 1
-        self.star_sign_extras['SilkrodeNanoAdvice'] = Advice(
-            label=f"Lab Chip: Silkrode Nanochip: {self.star_sign_extras['SilkrodeNanoEval']}",
-            picture_class="silkrode-nanochip")
         self.labBonuses = {}
         for labBonusIndex, labBonusName in enumerate(labBonusesList):
             self.labBonuses[labBonusName] = {"Enabled": True, "Value": 1}
 
         #World 5
         self.registered_slab = safe_loads(self.raw_data.get("Cards1", []))
-        self.artifacts = {}
-        raw_artifacts_list = safe_loads(self.raw_data.get("Sailing", []))
-        raw_artifacts_list = safe_loads(raw_artifacts_list)  # Some users have needed to have data converted twice
-        self.sum_artifact_tiers = sum(raw_artifacts_list[3]) if raw_artifacts_list and len(raw_artifacts_list) >= 4 else 0
-        for artifactIndex, artifactName in enumerate(artifactsList):
+        self.sailing = {"Artifacts": {}, "Boats": {}, "Captains": {}, "Islands": {}, 'IslandsDiscovered': 1, 'CaptainsOwned': 1, 'BoatsOwned': 1}
+        raw_sailing_list = safe_loads(safe_loads(self.raw_data.get("Sailing", [])))  # Some users have needed to have data converted twice
+        try:
+            self.sailing['CaptainsOwned'] += raw_sailing_list[2][0]
+            self.sailing['BoatsOwned'] += raw_sailing_list[2][1]
+            self.sum_artifact_tiers = sum(raw_sailing_list[3])
+        except:
+            self.sum_artifact_tiers = 0
+        for islandIndex, islandValuesDict in sailingDict.items():
             try:
-                self.artifacts[artifactName] = raw_artifacts_list[3][artifactIndex]
+                self.sailing['Islands'][islandValuesDict['Name']] = {
+                    'Unlocked': True if raw_sailing_list[0][islandIndex] == -1 else False,
+                    'Distance': islandValuesDict['Distance'],
+                    'NormalTreasure': islandValuesDict['NormalTreasure'],
+                    'RareTreasure': islandValuesDict['RareTreasure']
+                }
+                self.sailing['IslandsDiscovered'] += 1 if self.sailing['Islands'][islandValuesDict['Name']]['Unlocked'] else 0
             except:
-                self.artifacts[artifactName] = 0
+                self.sailing['Islands'][islandValuesDict['Name']] = {
+                    'Unlocked': False,
+                    'Distance': islandValuesDict['Distance'],
+                    'NormalTreasure': islandValuesDict['NormalTreasure'],
+                    'RareTreasure': islandValuesDict['RareTreasure']
+                }
+            for artifactIndex, artifactValuesDict in islandValuesDict['Artifacts'].items():
+                try:
+                    self.sailing['Artifacts'][artifactValuesDict['Name']] = {
+                        'Level': raw_sailing_list[3][artifactIndex]
+                    }
+                except:
+                    self.sailing['Artifacts'][artifactValuesDict['Name']] = {
+                        'Level': 0
+                    }
+
+        self.divinity = {
+            'Divinities': copy.deepcopy(divinity_divinitiesDict)
+        }
+        raw_divinity_list = safe_loads(self.raw_data.get("Divinity", []))
+        while len(raw_divinity_list) < 40:
+            raw_divinity_list.append(0)
+
+        self.divinity['GodsUnlocked'] = min(10, raw_divinity_list[25])
+        self.divinity['GodRank'] = max(0, raw_divinity_list[25] - 10)
+        self.divinity['LowOffering'] = raw_divinity_list[26]
+        self.divinity['HighOffering'] = raw_divinity_list[27]
+        for divinityIndex in self.divinity['Divinities']:
+            if self.divinity['GodsUnlocked'] >= divinityIndex:
+                self.divinity['Divinities'][divinityIndex]["Unlocked"] = True
+            # Snake has a divinityIndex of 0, Blessing level stored in 28
+            self.divinity['Divinities'][divinityIndex]["BlessingLevel"] = raw_divinity_list[divinityIndex + 27]
+        for character in self.safe_characters:
+            try:
+                character.setDivinityStyle(getStyleNameFromIndex(raw_divinity_list[character.character_index]))
+                character.setDivinityLink(getDivinityNameFromIndex(raw_divinity_list[character.character_index + 12] + 1))
+            except:
+                continue
 
         #World 6
         self.sneaking = {
             "PristineCharms": {},
             "Gemstones": {},
-            'Beanstalk': {}
+            'Beanstalk': {},
+            "JadeEmporium": {},
         }
         raw_ninja_list = safe_loads(self.raw_data.get("Ninja", []))
+        raw_emporium_purchases = list(raw_ninja_list[102][9])
+        for upgradeIndex, upgradeDict in enumerate(jade_emporium):
+            try:
+                self.sneaking['JadeEmporium'][upgradeDict['Name']] = {
+                    'Obtained': upgradeDict['CodeString'] in raw_emporium_purchases,
+                    'Bonus': upgradeDict['Bonus']
+                }
+            except:
+                continue
         raw_pristine_charms_list = raw_ninja_list[107] if raw_ninja_list else []
         for pristineCharmIndex, pristineCharmName in enumerate(pristineCharmsList):
             try:
@@ -1235,7 +1289,7 @@ class Account:
         for gemstoneIndex, gemstoneName in enumerate(sneakingGemstonesList):
             self.sneaking["Gemstones"][gemstoneName] = {"Level": 0, "Value": 0, "Percent": 0, "Stat": ''}
             try:
-                self.sneaking["Gemstones"][gemstoneName]["Level"] = raw_optlacc_list[sneakingGemstonesFirstIndex + gemstoneIndex]
+                self.sneaking["Gemstones"][gemstoneName]["Level"] = self.raw_optlacc_list[sneakingGemstonesFirstIndex + gemstoneIndex]
             except:
                 continue
             try:
@@ -1327,20 +1381,60 @@ class Account:
         #raw_summoning_list[3] I have no idea what this is
         #raw_summoning_list[4] looks to be list[int] familiars in the Sanctuary, starting with Slime in [0], Vrumbi in [1], etc.
         self.summoning['WinnerBonusesAdvice'] = []
+
+        self._calculate()
+
+    def _calculate(self):
+        #General
+        #W1
+        if self.labChips.get('Silkrode Nanochip', 0) > 0:
+            self.star_sign_extras['DoublerOwned'] = True
+            self.star_sign_extras['SilkrodeNanoEval'] = f"{self.labChips.get('Silkrode Nanochip', 0)} owned. Doubles starsigns when equipped."
+            self.star_sign_extras['SilkrodeNanoMulti'] = 2
+        else:
+            self.star_sign_extras['DoublerOwned'] = False
+            self.star_sign_extras['SilkrodeNanoEval'] = "None Owned. Would double other signs if equipped."
+            self.star_sign_extras['SilkrodeNanoMulti'] = 1
+        self.star_sign_extras['SilkrodeNanoAdvice'] = Advice(
+            label=f"Lab Chip: Silkrode Nanochip: {self.star_sign_extras['SilkrodeNanoEval']}",
+            picture_class="silkrode-nanochip")
+        #W2
+        for sigilName in self.alchemy_p2w["Sigils"]:
+            if self.alchemy_p2w["Sigils"][sigilName]["Level"] == 2:
+                if self.sneaking['JadeEmporium']['Ionized Sigils']['Obtained']:
+                    # If you have purchased Ionized Sigils, the numbers needed to Gold get subtracted from your hours already
+                    red_Hours = self.alchemy_p2w["Sigils"][sigilName]["Requirements"][2]
+                else:
+                    # To precharge Red sigils before buying the upgreade, you need Gold + Red hours
+                    red_Hours = self.alchemy_p2w["Sigils"][sigilName]["Requirements"][1] + self.alchemy_p2w["Sigils"][sigilName]["Requirements"][2]
+                if self.alchemy_p2w["Sigils"][sigilName]["PlayerHours"] >= red_Hours:
+                    self.alchemy_p2w["Sigils"][sigilName]["PrechargeLevel"] = 3
+                else:
+                    self.alchemy_p2w["Sigils"][sigilName]["PrechargeLevel"] = self.alchemy_p2w["Sigils"][sigilName]["Level"]
+            elif self.alchemy_p2w["Sigils"][sigilName]["Level"] == 3:
+                self.alchemy_p2w["Sigils"][sigilName]["PrechargeLevel"] = 3
+            else:
+                self.alchemy_p2w["Sigils"][sigilName]["PrechargeLevel"] = self.alchemy_p2w["Sigils"][sigilName]["Level"]
+            # Before the +1, -1 would mean not unlocked, 0 would mean Blue tier, 1 would be Yellow tier, and 2 would mean Red tier
+            # After the +1, 0/1/2/3
+        #W3
+        #W4
+        #W5
+        #W6
         self.summoning['WinnerBonusesAdvice'].append(Advice(
-            label=f":Pristine Charm: Crystal Comb: {1 + (.3 * self.sneaking.get('PristineCharms', {}).get('Crystal Comb', 0))}x",
+            label=f"{{{{ Pristine Charm|#sneaking }}}}: Crystal Comb: {1 + (.3 * self.sneaking.get('PristineCharms', {}).get('Crystal Comb', 0))}x",
             picture_class="crystal-comb",
             progression=1 if self.sneaking.get("PristineCharms", {}).get('Crystal Comb', False) else 0,
             goal=1
         ))
-        if 'Brighter Lighthouse Bulb' not in self.jade_emporium_purchases:
-            winzLanternPostString = ". This artifact needs to be unlocked from the Jade Emporium"
+        if not self.sneaking['JadeEmporium']['Brighter Lighthouse Bulb']['Obtained']:
+            winzLanternPostString = ". This artifact needs to be unlocked from the {{ Jade Emporium|#sneaking }}"
         else:
             winzLanternPostString = ""
         self.summoning['WinnerBonusesAdvice'].append(Advice(
-            label=f"Sailing: The Winz Lantern: {1 + (.25 * self.artifacts.get('The Winz Lantern', 0))}x{winzLanternPostString}",
+            label=f"{{{{ Artifact|#sailing }}}}: The Winz Lantern: {1 + (.25 * self.sailing['Artifacts'].get('The Winz Lantern', {}).get('Level', 0))}x{winzLanternPostString}",
             picture_class="the-winz-lantern",
-            progression=self.artifacts.get('The Winz Lantern', 0),
+            progression=self.sailing['Artifacts'].get('The Winz Lantern', {}).get('Level', 0),
             goal=4
         ))
         self.summoning['WinnerBonusesAdvice'].append(Advice(
