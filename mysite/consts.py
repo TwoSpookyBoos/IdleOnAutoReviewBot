@@ -108,7 +108,7 @@ gemShop_progressionTiers = [
         #Goods & Services
         'Weekly Dungeon Boosters': 11,
         #World 1&2
-        'Infinity Hammer': 1, 'Brimstone Forge Slot': 16, 'Ivory Bubble Cauldrons': 4, 'Bleach Liquid Cauldrons': 3,
+        'Infinity Hammer': 1, 'Brimstone Forge Slot': 16, 'Ivory Bubble Cauldrons': 4, 'Bleach Liquid Cauldrons': 4,
         'Obol Storage Space': 12, 'Sigil Supercharge': 10,
         #World 3
         'Crystal 3d Printer': 1, 'More Sample Spaces': 6, 'Burning Bad Books': 4, 'Prayer Slots': 4,
