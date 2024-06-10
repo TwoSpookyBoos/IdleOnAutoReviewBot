@@ -283,7 +283,7 @@ class Advice(AdviceBase):
                  **extra):
         super().__init__(**extra)
 
-        self.label: str = LabelBuilder(label).label
+        self.label: str = label if extra.get("as_link") else LabelBuilder(label).label
         if picture_class and picture_class[0].isdigit():
             picture_class = f"x{picture_class}"
         self.picture_class: str = picture_class
