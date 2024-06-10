@@ -94,8 +94,7 @@ def setSailingProgressionTier():
                     sailing_AdviceDict['Artifacts'][subgroupName] = []
                 if subgroupName in sailing_AdviceDict['Artifacts']:
                     sailing_AdviceDict['Artifacts'][subgroupName].append(Advice(
-                        # TODO: THIS IS UGLY AS HELL
-                        label=f"<span>Deposit 10k Golden Hampters to the <a href=\"#beanstalk\" style='display: inline;'>Beanstalk</a> in W6</span>",
+                        label="Deposit 10k Golden Hampters to the {{ Beanstalk|#beanstalk }} in W6",
                         picture_class="golden-hampter-gummy-candy",
                     ))
         if 'SuperBeanstacked' in tierRequirementsDict:
@@ -104,8 +103,7 @@ def setSailingProgressionTier():
                     sailing_AdviceDict['Artifacts'][subgroupName] = []
                 if subgroupName in sailing_AdviceDict['Artifacts']:
                     sailing_AdviceDict['Artifacts'][subgroupName].append(Advice(
-                        # TODO: THIS IS UGLY AS HELL
-                        label=f"<span>Deposit 100k Golden Hampters to the <a href=\"#beanstalk\" style='display: inline;'>Beanstalk</a> in W6</span>",
+                        label="Deposit 100k Golden Hampters to the {{ Beanstalk|#beanstalk }} in W6",
                         picture_class="golden-hampter-gummy-candy",
                     ))
         if 'Eldritch' in tierRequirementsDict:

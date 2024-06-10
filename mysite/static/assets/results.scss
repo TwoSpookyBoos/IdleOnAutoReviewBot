@@ -624,7 +624,7 @@ body {
                                         }
 
                                         li, li a {
-                                            display: flex;
+                                            display: inline-flex;
                                             align-items: center;
                                             column-gap: var(--advice-icon-gap);
 

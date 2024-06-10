@@ -250,6 +250,25 @@ class AdviceBase:
         self._collapse = _value
 
 
+class LabelBuilder:
+    wrapper = "span"
+
+    def __init__(self, label):
+        matches = re.findall(r"\{\{.+?}}", label)
+
+        if not matches:
+            self.label = label
+            return
+
+        for match in matches:
+            text, url = match.strip("{} ").split("|")
+            link = f'<a href="{url}">{text}</a>'
+
+            label = label.replace(match, link)
+
+        self.label = f"<{self.wrapper}>{label}</{self.wrapper}>"
+
+
 class Advice(AdviceBase):
     """
     Args:
@@ -264,7 +283,7 @@ class Advice(AdviceBase):
                  **extra):
         super().__init__(**extra)
 
-        self.label: str = label
+        self.label: str = LabelBuilder(label).label
         if picture_class and picture_class[0].isdigit():
             picture_class = f"x{picture_class}"
         self.picture_class: str = picture_class
