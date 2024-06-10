@@ -104,8 +104,9 @@ def main(inputData, runType="web"):
     ]
     # World 6
     sections_6 = [
+        section_sneaking := sneaking.setSneakingProgressionTier(),
         section_beanstalk := beanstalk.section_beanstalk(),
-        section_sneaking := sneaking.setSneakingProgressionTier()
+
     ]
 
     pinchable_sections = [

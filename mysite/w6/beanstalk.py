@@ -8,13 +8,13 @@ SUPER_BEANSTACK_GOAL = 10**5
 
 
 def section_beanstalk():
-    upgrade_bought = "Supersized Gold Beanstacking" in session_data.account.jade_emporium_purchases
+    upgrade_bought = session_data.account.sneaking['JadeEmporium']["Supersized Gold Beanstacking"]['Obtained']
 
-    if "Gold Food Beanstalk" not in session_data.account.jade_emporium_purchases:
+    if not session_data.account.sneaking['JadeEmporium']["Gold Food Beanstalk"]['Obtained']:
         return AdviceSection(
-            name="Giant Beanstalk",
+            name="Beanstalk",
             tier="",
-            header="Come back once you've bought the \"Gold Food Beanstalk\" from the Jade Emporium",
+            header="Come back once you've bought the \"Gold Food Beanstalk\" from the {{ Jade Emporium|#sneaking }}",
             picture="Jade_Vendor.gif",
             collapse=True,
         )
@@ -96,7 +96,7 @@ def section_beanstalk():
         pre_string="Upgrade the Beanstalk to enhance Golden Food beanstacks further",
         advices=[
             Advice(
-                label='Buy "Supersized Gold Beanstacking" from the Jade Emporium',
+                label='Buy "Supersized Gold Beanstacking" from the {{ Jade Emporium|#sneaking }}',
                 picture_class="supersized-gold-beanstacking",
             )
         ],

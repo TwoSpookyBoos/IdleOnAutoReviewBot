@@ -48,28 +48,28 @@ def parseJSON():
     else:
         causticolumn_level = 0
     if causticolumn_level < 1:
-        playerMissingPlateUpgrades.append(("Normal Causticolumn Sailing Artifact", "causticolumn"))
+        playerMissingPlateUpgrades.append(("{{ Artifact|#sailing }}: Base Causticolumn", "causticolumn"))
     if causticolumn_level < 2:
-        playerMissingPlateUpgrades.append(("Ancient Causticolumn Sailing Artifact", "causticolumn"))
+        playerMissingPlateUpgrades.append(("{{ Artifact|#sailing }}: Ancient Causticolumn", "causticolumn"))
     if causticolumn_level < 3:
         if session_data.account.eldritch_artifacts_unlocked:
-            playerMissingPlateUpgrades.append(("Eldritch Causticolumn Sailing Artifact", "causticolumn"))
+            playerMissingPlateUpgrades.append(("{{ Artifact|#sailing }}: Eldritch Causticolumn", "causticolumn"))
         else:
-            playerMissingPlateUpgrades.append(("Eldritch Causticolumn Sailing Artifact. Eldritch Artifacts are unlocked by reaching Rift 31", "eldritch-artifact"))
+            playerMissingPlateUpgrades.append(("{{ Artifact|#sailing }}: Eldritch Causticolumn. Eldritch Artifacts are unlocked by completing {{ Rift|#rift }} 30", "eldritch-artifact"))
     if causticolumn_level < 4:
-        if "Sovereign Artifacts" in session_data.account.jade_emporium_purchases:
-            playerMissingPlateUpgrades.append(("Sovereign Causticolumn Sailing Artifact", "causticolumn"))
+        if session_data.account.sneaking['JadeEmporium']["Sovereign Artifacts"]['Obtained']:
+            playerMissingPlateUpgrades.append(("{{ Artifact|#sailing }}: Sovereign Causticolumn", "causticolumn"))
         else:
-            playerMissingPlateUpgrades.append(("Sovereign Causticolumn Sailing Artifact. Sovereign Artifacts are unlocked from the Jade Emporium", "sovereign-artifacts"))
+            playerMissingPlateUpgrades.append(("{{ Artifact|#sailing }}: Causticolumn Sailing Artifact. Sovereign Artifacts are unlocked from the {{ Jade Emporium|#sneaking }}", "sovereign-artifacts"))
     #Jade Emporium Increases
-    if "Papa Blob's Quality Guarantee" not in session_data.account.jade_emporium_purchases:
-        playerMissingPlateUpgrades.append(("Purchase \"Papa Blob's Quality Guarantee\" from the Jade Emporium", "papa-blobs-quality-guarantee"))
-    else:
+    if session_data.account.sneaking['JadeEmporium']["Papa Blob's Quality Guarantee"]['Obtained']:
         playerMaxPlateLvl += 10
-    if "Chef Geustloaf's Cutting Edge Philosophy" not in session_data.account.jade_emporium_purchases:
-        playerMissingPlateUpgrades.append(("Purchase \"Chef Geustloaf's Cutting Edge Philosophy\" from the Jade Emporium", "chef-geustloafs-cutting-edge-philosophy"))
     else:
+        playerMissingPlateUpgrades.append(("Purchase \"Papa Blob's Quality Guarantee\" from the {{ Jade Emporium|#sneaking }}", "papa-blobs-quality-guarantee"))
+    if session_data.account.sneaking['JadeEmporium']["Chef Geustloaf's Cutting Edge Philosophy"]['Obtained']:
         playerMaxPlateLvl += 10
+    else:
+        playerMissingPlateUpgrades.append(("Purchase \"Chef Geustloaf's Cutting Edge Philosophy\" from the {{ Jade Emporium|#sneaking }}", "chef-geustloafs-cutting-edge-philosophy"))
 
     return [rawCooking, rawMeals, mealsUnlocked, mealsUnder11, mealsUnder30, playerMaxPlateLvl, playerMissingPlateUpgrades]
 
@@ -213,7 +213,7 @@ def setCookingProgressionTier():
         ))
     if tier_Cooking <= 3:
         cooking_AdviceDict["CurrentTier"].append(Advice(
-            label="+% Meal Cooking Speed",
+            label="All +% Meal Cooking Speed meals (Egg, Corndog, Cabbage, etc.)",
             picture_class="egg",
             progression="",
             goal="",

@@ -90,7 +90,7 @@ def setSailingProgressionTier():
         #Outside requirement checks should be at the top of the list
         if 'Beanstacked' in tierRequirementsDict:
             if not session_data.account.sneaking.get('Beanstalk', {}).get('FoodG10', {}).get('Beanstacked', False):
-                if subgroupName not in sailing_AdviceDict['Artifacts'] and len(sailing_AdviceDict['Artifacts']) < maxTiersPerGroup-1:
+                if subgroupName not in sailing_AdviceDict['Artifacts'] and len(sailing_AdviceDict['Artifacts']) < maxTiersPerGroup:
                     sailing_AdviceDict['Artifacts'][subgroupName] = []
                 if subgroupName in sailing_AdviceDict['Artifacts']:
                     sailing_AdviceDict['Artifacts'][subgroupName].append(Advice(
@@ -99,7 +99,7 @@ def setSailingProgressionTier():
                     ))
         if 'SuperBeanstacked' in tierRequirementsDict:
             if not session_data.account.sneaking.get('Beanstalk', {}).get('FoodG10', {}).get('SuperBeanstacked', False):
-                if subgroupName not in sailing_AdviceDict['Artifacts'] and len(sailing_AdviceDict['Artifacts']) < maxTiersPerGroup-1:
+                if subgroupName not in sailing_AdviceDict['Artifacts'] and len(sailing_AdviceDict['Artifacts']) < maxTiersPerGroup:
                     sailing_AdviceDict['Artifacts'][subgroupName] = []
                 if subgroupName in sailing_AdviceDict['Artifacts']:
                     sailing_AdviceDict['Artifacts'][subgroupName].append(Advice(
@@ -108,29 +108,29 @@ def setSailingProgressionTier():
                     ))
         if 'Eldritch' in tierRequirementsDict:
             if not session_data.account.eldritch_artifacts_unlocked:
-                if subgroupName not in sailing_AdviceDict['Artifacts'] and len(sailing_AdviceDict['Artifacts']) < maxTiersPerGroup-1:
+                if subgroupName not in sailing_AdviceDict['Artifacts'] and len(sailing_AdviceDict['Artifacts']) < maxTiersPerGroup:
                     sailing_AdviceDict['Artifacts'][subgroupName] = []
                 if subgroupName in sailing_AdviceDict['Artifacts']:
                     sailing_AdviceDict['Artifacts'][subgroupName].append(Advice(
-                        label=f"Unlock Eldritch tier Artifacts by completing Rift 30",
+                        label="Unlock Eldritch tier Artifacts by completing {{ Rift|#rift }} 30",
                         picture_class="eldritch-artifact",
                     ))
         if 'Sovereign' in tierRequirementsDict:
-            if 'Sovereign Artifacts' not in session_data.account.jade_emporium_purchases:
-                if subgroupName not in sailing_AdviceDict['Artifacts'] and len(sailing_AdviceDict['Artifacts']) < maxTiersPerGroup-1:
+            if not session_data.account.sneaking['JadeEmporium']["Sovereign Artifacts"]['Obtained']:
+                if subgroupName not in sailing_AdviceDict['Artifacts'] and len(sailing_AdviceDict['Artifacts']) < maxTiersPerGroup:
                     sailing_AdviceDict['Artifacts'][subgroupName] = []
                 if subgroupName in sailing_AdviceDict['Artifacts']:
                     sailing_AdviceDict['Artifacts'][subgroupName].append(Advice(
-                        label=f"Purchase \"Sovereign Artifacts\" from the Jade Emporium in W6",
+                        label="Purchase \"Sovereign Artifacts\" from the {{ Jade Emporium|#sneaking }} in W6",
                         picture_class="sovereign-artifacts",
                     ))
         if 'ExtraLanterns' in tierRequirementsDict:
-            if 'Brighter Lighthouse Bulb' not in session_data.account.jade_emporium_purchases:
-                if subgroupName not in sailing_AdviceDict['Artifacts'] and len(sailing_AdviceDict['Artifacts']) < maxTiersPerGroup-1:
+            if not session_data.account.sneaking['JadeEmporium']['Brighter Lighthouse Bulb']['Obtained']:
+                if subgroupName not in sailing_AdviceDict['Artifacts'] and len(sailing_AdviceDict['Artifacts']) < maxTiersPerGroup:
                     sailing_AdviceDict['Artifacts'][subgroupName] = []
                 if subgroupName in sailing_AdviceDict['Artifacts']:
                     sailing_AdviceDict['Artifacts'][subgroupName].append(Advice(
-                        label=f"Purchase \"Brighter Lighthouse Bulb\" from the Jade Emporium in W6",
+                        label="Purchase \"Brighter Lighthouse Bulb\" from the {{ Jade Emporium|#sneaking }} in W6",
                         picture_class="brighter-lighthouse-bulb",
                     ))
         #Artifacts
@@ -138,7 +138,7 @@ def setSailingProgressionTier():
             for artifactName, artifactTier in tierRequirementsDict['Artifacts'].items():
                 if session_data.account.sailing['Artifacts'].get(artifactName, {}).get('Level', 0) < artifactTier:
                     if artifactName not in delaysDict.get(tierNumber, []):
-                        if subgroupName not in sailing_AdviceDict['Artifacts'] and len(sailing_AdviceDict['Artifacts']) < maxTiersPerGroup - 1:
+                        if subgroupName not in sailing_AdviceDict['Artifacts'] and len(sailing_AdviceDict['Artifacts']) < maxTiersPerGroup:
                             sailing_AdviceDict['Artifacts'][subgroupName] = []
                         if subgroupName in sailing_AdviceDict['Artifacts']:
                             sailing_AdviceDict['Artifacts'][subgroupName].append(Advice(

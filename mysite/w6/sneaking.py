@@ -6,7 +6,9 @@ logger = get_logger(__name__)
 
 def setSneakingProgressionTier():
     sneaking_AdviceDict = {
-        "Gemstones": []
+        "Gemstones": [],
+        "JadeEmporium": [],
+        "PristineCharms": []
     }
     sneaking_AdviceGroupDict = {}
     sneaking_AdviceSection = AdviceSection(
@@ -23,6 +25,7 @@ def setSneakingProgressionTier():
 
     tier_Sneaking = 0
     max_tier = 0
+
     #Assess Gemstones
     for gemstoneName, gemstoneData in session_data.account.sneaking["Gemstones"].items():
         sneaking_AdviceDict["Gemstones"].append(Advice(
@@ -36,12 +39,43 @@ def setSneakingProgressionTier():
             goal=100,
             unit="%"
         ))
+
+    # Assess Jade Emporium
+    for purchaseName, purchaseDict in session_data.account.sneaking["JadeEmporium"].items():
+        if not purchaseDict['Obtained']:
+            sneaking_AdviceDict['JadeEmporium'].append(Advice(
+                label=purchaseName,
+                picture_class=purchaseName,
+                progression=0,
+                goal=1
+            ))
+
+    # Assess Pristine Charms
+    for pristineCharmName, pristineCharmBool in session_data.account.sneaking["PristineCharms"].items():
+        if not pristineCharmBool:
+            sneaking_AdviceDict['PristineCharms'].append(Advice(
+                label=pristineCharmName,
+                picture_class=pristineCharmName,
+                progression=0,
+                goal=1
+            ))
+
     # Generate AdviceGroups
     sneaking_AdviceGroupDict["Gemstones"] = AdviceGroup(
         tier="",
         pre_string="Percentage of Gemstone values",
         post_string="Formulas thanks to merlinthewizard1313",
         advices=sneaking_AdviceDict["Gemstones"]
+    )
+    sneaking_AdviceGroupDict["JadeEmporium"] = AdviceGroup(
+        tier="",
+        pre_string="Purchase all upgrades from the Jade Emporium",
+        advices=sneaking_AdviceDict["JadeEmporium"]
+    )
+    sneaking_AdviceGroupDict["PristineCharms"] = AdviceGroup(
+        tier="",
+        pre_string="Collect all Pristine Charms",
+        advices=sneaking_AdviceDict["PristineCharms"]
     )
 
     # Generate AdviceSection

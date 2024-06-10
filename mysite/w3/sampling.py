@@ -39,13 +39,13 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
         goal=1
     ))
     if not session_data.account.eldritch_artifacts_unlocked and session_data.account.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0) == 2:
-        furyPostString = ". Eldritch Artifacts are unlocked by reaching Rift 31"
-    elif "Sovereign Artifacts" not in session_data.account.jade_emporium_purchases and session_data.account.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0) == 3:
-        furyPostString = ". Sovereign Artifacts are unlocked from the Jade Emporium"
+        furyPostString = ". Eldritch Artifacts are unlocked by reaching {{ Rift|#rift }} 31"
+    elif not session_data.account.sneaking['JadeEmporium']["Sovereign Artifacts"]['Obtained'] and session_data.account.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0) == 3:
+        furyPostString = ". Sovereign Artifacts are unlocked from the {{ Jade Emporium|#sneaking }}"
     else:
         furyPostString = ""
     bookLevelAdvices[staticSubgroup].append(Advice(
-        label=f"Sailing: Fury Relic: +{25 * session_data.account.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0)}{furyPostString}",
+        label=f"{{{{ Artifact|#sailing }}}}: Fury Relic: +{25 * session_data.account.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0)}{furyPostString}",
         picture_class="fury-relic",
         progression=session_data.account.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0),
         goal=4
@@ -66,7 +66,7 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
         goal=session_data.account.merits[2][2]["MaxLevel"]
     ))
     bookLevelAdvices[scalingSubgroup].append(Advice(
-        label=f"Salt Lick: +{2 * session_data.account.saltlick.get('Max Book', 0)}",
+        label=f"{{{{Salt Lick|#salt-lick }}}}: +{2 * session_data.account.saltlick.get('Max Book', 0)}",
         picture_class="salt-lick",
         progression=session_data.account.saltlick.get('Max Book', 0),
         goal=10
@@ -95,40 +95,6 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
     ))
     for advice in session_data.account.summoning['WinnerBonusesAdvice']:
         bookLevelAdvices[summoningSubgroup].append(advice)
-    # bookLevelAdvices[summoningSubgroup].append(Advice(
-    #     label=f":Pristine Charm: Crystal Comb: {1 + (.3 * session_data.account.sneaking.get('PristineCharms', {}).get('Crystal Comb', 0))}x",
-    #     picture_class="crystal-comb",
-    #     progression=1 if session_data.account.sneaking.get("PristineCharms", {}).get('Crystal Comb', False) else 0,
-    #     goal=1
-    # ))
-    # if 'Brighter Lighthouse Bulb' not in session_data.account.jade_emporium_purchases:
-    #     winzLanternPostString = ". This artifact needs to be unlocked from the Jade Emporium"
-    # else:
-    #     winzLanternPostString = ""
-    # bookLevelAdvices[summoningSubgroup].append(Advice(
-    #     label=f"Sailing: The Winz Lantern: {1 + (.25 * session_data.account.sailing['Artifacts'].get('The Winz Lantern', 0))}x{winzLanternPostString}",
-    #     picture_class="the-winz-lantern",
-    #     progression=session_data.account.sailing['Artifacts'].get('The Winz Lantern', 0),
-    #     goal=4
-    # ))
-    # bookLevelAdvices[summoningSubgroup].append(Advice(
-    #     label=f"W6 Larger Winner bonuses merit: +{session_data.account.merits[5][4]['Level']}%",
-    #     picture_class="merit-5-4",
-    #     progression=session_data.account.merits[5][4]["Level"],
-    #     goal=session_data.account.merits[5][4]["MaxLevel"]
-    # ))
-    # bookLevelAdvices[summoningSubgroup].append(Advice(
-    #     label=f"W6 Achievement: Spectre Stars: +{1 * (0 < session_data.account.achievements.get('Spectre Stars', False))}%",
-    #     picture_class="spectre-stars",
-    #     progression=1 if session_data.account.achievements.get('Spectre Stars', False) else 0,
-    #     goal=1
-    # ))
-    # bookLevelAdvices[summoningSubgroup].append(Advice(
-    #     label=f"W6 Achievement: Regalis My Beloved: +{1 * (0 < session_data.account.achievements.get('Regalis My Beloved', False))}%",
-    #     picture_class="regalis-my-beloved",
-    #     progression=1 if session_data.account.achievements.get('Regalis My Beloved', False) else 0,
-    #     goal=1
-    # ))
 
     for group_name in bookLevelAdvices:
         for advice in bookLevelAdvices[group_name]:
@@ -190,7 +156,7 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         goal=200
     ))
     psrAdvices[accountSubgroup].append(Advice(
-        label=f"Salt Lick: +{0.5 * session_data.account.saltlick.get('Printer Sample Size', 0)}%",
+        label=f"{{{{ Salt Lick|#salt-lick }}}}: +{0.5 * session_data.account.saltlick.get('Printer Sample Size', 0)}%",
         picture_class="salt-lick",
         progression=session_data.account.saltlick.get('Printer Sample Size', 0),
         goal=20
@@ -226,7 +192,7 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         goal=1
     ))
     psrAdvices[accountSubgroup].append(Advice(
-        label=f"Pristine Charm: Liqorice Rolle: {'1.25x (Already applied)' if session_data.account.sneaking.get('PristineCharms', {}).get('Liqorice Rolle', False) else '1x'}",
+        label=f"{{{{ Pristine Charm|#sneaking }}}}: Liqorice Rolle: {'1.25x (Already applied)' if session_data.account.sneaking.get('PristineCharms', {}).get('Liqorice Rolle', False) else '1x'}",
         picture_class="liqorice-rolle",
         progression=int(session_data.account.sneaking.get("PristineCharms", {}).get("Liqorice Rolle", False)),
         goal=1
@@ -273,7 +239,7 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     prayerSubgroup = f"Which Characters need Royal Sampler?"
     psrAdvices[prayerSubgroup] = []
     psrAdvices[prayerSubgroup].append(Advice(
-        label=f"Royal Sampler prayer: {session_data.account.prayers['The Royal Sampler']['BonusString']}",
+        label=f"{{{{ Prayer|#prayers }}}}: Royal Sampler: {session_data.account.prayers['The Royal Sampler']['BonusString']}",
         picture_class='the-royal-sampler',
         progression=session_data.account.prayers['The Royal Sampler']['Level'],
         goal=20
