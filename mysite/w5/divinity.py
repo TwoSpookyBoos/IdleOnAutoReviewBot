@@ -1,147 +1,12 @@
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.data_formatting import safe_loads
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import divinity_progressionTiers, maxTiersPerGroup
+from consts import maxTiersPerGroup, divinity_progressionTiers, divinity_offeringsDict, divinity_stylesDict, getOfferingNameFromIndex, getStyleNameFromIndex, \
+    getDivinityNameFromIndex
 
 logger = get_logger(__name__)
-offeringsDict = {
-    0: {
-        "Name":"Olive Branch",
-        "Image":"offering-1",
-        "Chance":1,
-    },
-    1: {
-        "Name": "Incense",
-        "Image": "offering-5",
-        "Chance": 5,
-    },
-    2: {
-        "Name": "Giftbox",
-        "Image": "offering-10",
-        "Chance": 10,
-    },
-    3: {
-        "Name": "Tithe",
-        "Image": "offering-25",
-        "Chance": 25,
-    },
-    4: {
-        "Name": "Hearty Meal",
-        "Image": "offering-50",
-        "Chance": 50,
-    },
-    5: {
-        "Name": "Sacrifice",
-        "Image": "offering-100",
-        "Chance": 100,
-    },
-}
-stylesDict = {
-    0: {
-        "Name": "Kinesis",
-        "UnlockLevel": 1,
-        "Points": 1,
-        "Exp": 1,
-    },
-    1: {
-        "Name": "Chakra",
-        "UnlockLevel": 5,
-        "Points": 2,
-        "Exp": 2,
-    },
-    2: {
-        "Name": "Focus",
-        "UnlockLevel": 10,
-        "Points": 4,
-        "Exp": 1,
-    },
-    3: {
-        "Name": "Mantra",
-        "UnlockLevel": 15,
-        "Points": 0,
-        "Exp": 1,
-        "Notes": "(To all characters)"
-    },
-    4: {
-        "Name": "Vitalic",
-        "UnlockLevel": 25,
-        "Points": 2,
-        "Exp": 7,
-    },
-    5: {
-        "Name": "TranQi",
-        "UnlockLevel": 40,
-        "Points": 0,
-        "Exp": 3,
-        "Notes": "(Even when not Meditating)"
-    },
-    6: {
-        "Name": "Zen",
-        "UnlockLevel": 60,
-        "Points": 8,
-        "Exp": 8,
-    },
-    7: {
-        "Name": "Mindful",
-        "UnlockLevel": 80,
-        "Points": 15,
-        "Exp": 10,
-    },
-}
-divinitiesDict = {
-    1: {
-        "Name": "Snehebatu",
-        "Unlocked": False,
-        "BlessingLevel": 0,
-    },
-    2: {
-        "Name": "Arctis",
-        "Unlocked": False,
-        "BlessingLevel": 0,
-    },
-    3: {
-        "Name": "Nobisect",
-        "Unlocked": False,
-        "BlessingLevel": 0,
-    },
-    4: {
-        "Name": "Harriep",
-        "Unlocked": False,
-        "BlessingLevel": 0,
-    },
-    5: {
-        "Name": "Goharut",
-        "Unlocked": False,
-        "BlessingLevel": 0,
-    },
-    6: {
-        "Name": "Omniphau",
-        "Unlocked": False,
-        "BlessingLevel": 0,
-    },
-    7: {
-        "Name": "Purrmep",
-        "Unlocked": False,
-        "BlessingLevel": 0,
-    },
-    8: {
-        "Name": "Flutterbis",
-        "Unlocked": False,
-        "BlessingLevel": 0,
-    },
-    9: {
-        "Name": "Kattlekruk",
-        "Unlocked": False,
-        "BlessingLevel": 0,
-    },
-    10: {
-        "Name": "Bagur",
-        "Unlocked": False,
-        "BlessingLevel": 0,
-    },
-}
+
 divLevelReasonsDict = {
     0: "",
     2: "to activate Doot",
@@ -287,7 +152,8 @@ divLinksDict = {
             label="Extra characters can link to Snake if not Meditating",
             picture_class="snehebatu"
         ),
-    ],9: [
+    ],
+    9: [
         Advice(
             label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
             picture_class="purrmep"
@@ -390,31 +256,16 @@ divLinksDict = {
             label="Extra characters can link to Snake if not Meditating",
             picture_class="snehebatu"
         ),
+        Advice(
+            label="Omniphau is a gamble. Refinery and 3D Printer rewards are nice- The other 4/6 are pretty meh.",
+            picture_class="omniphau"
+        ),
     ],
 
 }
 
-def getOfferingNameFromIndex(inputValue):
-    return offeringsDict.get(inputValue, {"Name": f"UnknownOffering{inputValue}"}).get("Name")
-
-def getStyleNameFromIndex(inputValue: int) -> str:
-    return stylesDict.get(inputValue, {"Name": f"UnknownStyle{inputValue}"}).get("Name")
-
-def getDivinityNameFromIndex(inputValue: int) -> str:
-    return divinitiesDict.get(inputValue, {"Name": f"UnknownDivinity{inputValue}"}).get("Name")
-
 def getDivLevelReason(inputLevel: int) -> str:
     return divLevelReasonsDict.get(inputLevel, "")
-
-def getDivinityLinksOptionsAdviceList(tierNumber: int) -> list[Advice]:
-
-    return ""
-
-def parseJSONtoList():
-    rawDivinity = safe_loads(session_data.account.raw_data.get("Divinity", []))
-    while len(rawDivinity) < 40:
-        rawDivinity.append(0)
-    return rawDivinity
 
 def setDivinityProgressionTier():
     divinity_AdviceDict = {
@@ -442,32 +293,15 @@ def setDivinityProgressionTier():
     lowestDivinitySkillLevel = min(session_data.account.all_skills.get("Divinity", [0]))
     tier_Divinity = 0
     max_tier = max(divinity_progressionTiers.keys())
-    playerDivinityList = parseJSONtoList()
-    godsUnlocked = min(10, playerDivinityList[25])
-    godRank = playerDivinityList[25]-10 if playerDivinityList[25] > 10 else 0
-    lowOffering = playerDivinityList[26]
-    highOffering = playerDivinityList[27]
-
-    for divinityIndex in divinitiesDict:
-        #playerDivinityList[25] = total number of gods unlocked. God Ranks are also included here. 13 would mean 10 gods + 3 god rank
-        if playerDivinityList[25] >= divinityIndex:
-            divinitiesDict[divinityIndex]["Unlocked"] = True
-        #Snake has a divinityIndex of 0, Blessing level stored in 28
-        divinitiesDict[divinityIndex]["BlessingLevel"] = playerDivinityList[divinityIndex+27]
-    #troubleshooting_DivLinkDict = {}
-    for character in session_data.account.safe_characters:
-        try:
-            character.setDivinityStyle(getStyleNameFromIndex(playerDivinityList[character.character_index]))
-            character.setDivinityLink(getDivinityNameFromIndex(playerDivinityList[character.character_index+12]+1))
-            #troubleshooting_DivLinkDict[character.character_index] = getDivinityNameFromIndex(playerDivinityList[character.character_index+12]+1)
-        except Exception as reason:
-            logger.warning(f"Could not retrieve Divinity Style for Character{character.character_index} because {reason}")
+    #playerDivinityList = session_data.account.divinity
+    lowOffering = session_data.account.divinity['LowOffering']
+    highOffering = session_data.account.divinity['HighOffering']
 
     #Assess Tiers
     for tierLevel, tierRequirements in divinity_progressionTiers.items():
         anyRequirementFailed = False
         subgroupName = f"To reach Tier {tierLevel}"
-        if godsUnlocked < tierRequirements.get('GodsUnlocked', 0):
+        if session_data.account.divinity['GodsUnlocked'] < tierRequirements.get('GodsUnlocked', 0):
             anyRequirementFailed = True
             if subgroupName not in divinity_AdviceDict['TieredProgress'] and len(divinity_AdviceDict['TieredProgress']) < maxTiersPerGroup:
                 divinity_AdviceDict['TieredProgress'][subgroupName] = []
@@ -500,55 +334,47 @@ def setDivinityProgressionTier():
             tier_Divinity = tierLevel
 
     # Divinities Info
-    for divDivinity in divinitiesDict:
-        if divinitiesDict[divDivinity].get('Unlocked'):
-            if divinitiesDict[divDivinity].get('BlessingLevel') < 100:
-                status = f"Blessing Level: {divinitiesDict[divDivinity].get('BlessingLevel')}/100"
+    for divDivinity in session_data.account.divinity['Divinities']:
+        if session_data.account.divinity['Divinities'][divDivinity].get('Unlocked'):
+            if session_data.account.divinity['Divinities'][divDivinity].get('BlessingLevel') < 100:
                 divinity_AdviceDict["Divinities"].append(Advice(
-                    label=f"{divinitiesDict[divDivinity].get('Name')} Blessing",
-                    picture_class=divinitiesDict[divDivinity].get('Name'),
-                    progression=divinitiesDict[divDivinity].get('BlessingLevel'),
+                    label=f"{session_data.account.divinity['Divinities'][divDivinity].get('Name')} Blessing",
+                    picture_class=session_data.account.divinity['Divinities'][divDivinity].get('Name'),
+                    progression=session_data.account.divinity['Divinities'][divDivinity].get('BlessingLevel'),
                     goal=100
                 ))
-        # else:
-        #     status = "Locked"
-    # if godsUnlocked >= 10:
-    #     divinity_AdviceDict["Divinities"].append(Advice(
-    #         label=f"God Rank: {godRank}",
-    #         picture_class="gods-chosen-children"
-    #     ))
 
     #Offerings Info
     divinity_AdviceDict["Offerings"]["Available Offerings"].append(Advice(
-        label=f"{offeringsDict.get(lowOffering, {}).get('Chance', 0)}% Offering: {getOfferingNameFromIndex(lowOffering)}",
-        picture_class=offeringsDict.get(lowOffering, {}).get('Image', ''),
+        label=f"{divinity_offeringsDict.get(lowOffering, {}).get('Chance', 0)}% Offering: {getOfferingNameFromIndex(lowOffering)}",
+        picture_class=divinity_offeringsDict.get(lowOffering, {}).get('Image', ''),
     ))
     divinity_AdviceDict["Offerings"]["Available Offerings"].append(Advice(
-        label=f"{offeringsDict.get(highOffering, {}).get('Chance', 0)}% Offering: {getOfferingNameFromIndex(highOffering)}",
-        picture_class=offeringsDict.get(highOffering, {}).get('Image', ''),
+        label=f"{divinity_offeringsDict.get(highOffering, {}).get('Chance', 0)}% Offering: {getOfferingNameFromIndex(highOffering)}",
+        picture_class=divinity_offeringsDict.get(highOffering, {}).get('Image', ''),
     ))
     divinity_AdviceDict["Offerings"]["Strategy"].append(Advice(
         label=f"Option 1: Choose the high offering if 100% Chance, otherwise choose low offering.",
-        picture_class=offeringsDict.get(5, {}).get('Image', ''),
+        picture_class=divinity_offeringsDict.get(5, {}).get('Image', ''),
     ))
     divinity_AdviceDict["Offerings"]["Strategy"].append(Advice(
         label=f"Option 2: Always choose low offering and pray 🙏",
-        picture_class=offeringsDict.get(0, {}).get('Image', ''),
+        picture_class=divinity_offeringsDict.get(0, {}).get('Image', ''),
     ))
 
     #Points Styles Info
     for divStyle in [7, 6, 2, 4, 1, 0]:
-        if highestDivinitySkillLevel >= stylesDict[divStyle].get('UnlockLevel', 0):
+        if highestDivinitySkillLevel >= divinity_stylesDict[divStyle].get('UnlockLevel', 0):
             divinity_AdviceDict["Styles"]["Highest Points per hour"].append(Advice(
-                label=f"{stylesDict[divStyle].get('Points', 0)}/hr: {getStyleNameFromIndex(divStyle)}",
+                label=f"{divinity_stylesDict[divStyle].get('Points', 0)}/hr: {getStyleNameFromIndex(divStyle)}",
                 picture_class=getStyleNameFromIndex(divStyle),
             ))
 
     #EXP Styles Info
     for divStyle in [7, 6, 4, 5, 1, 3, 2, 0]:
-        if highestDivinitySkillLevel >= stylesDict[divStyle].get('UnlockLevel', 0):
+        if highestDivinitySkillLevel >= divinity_stylesDict[divStyle].get('UnlockLevel', 0):
             divinity_AdviceDict["Styles"]["Highest EXP per hour"].append(Advice(
-                label=f"{stylesDict[divStyle].get('Exp', 0)}/hr: {getStyleNameFromIndex(divStyle)} {stylesDict[divStyle].get('Notes','')}",
+                label=f"{divinity_stylesDict[divStyle].get('Exp', 0)}/hr: {getStyleNameFromIndex(divStyle)} {divinity_stylesDict[divStyle].get('Notes','')}",
                 picture_class=getStyleNameFromIndex(divStyle),
             ))
 
@@ -571,7 +397,7 @@ def setDivinityProgressionTier():
         #         picture_class="divinity"
         #     ))
 
-        if divinitiesDict[6].get("Unlocked", False):
+        if session_data.account.divinity['Divinities'][7].get("Unlocked", False):
             purrmepAssignedToAnyHighestCharacter = False
             divLevelOfPurrmepLinkedCharacter = 0
             highestCharactersNotAssignedToPurrmep = []
@@ -614,11 +440,11 @@ def setDivinityProgressionTier():
     arctisCombosDict = {
         540:  {90: 14,  109: 15},
         940:  {87: 14,  105: 15,  128: 16},
-        1440: {85: 14,  103: 15,  126: 16, 155: 17, 197: 18},
-        1940: {         102: 15,  124: 16, 153: 17, 194: 18},
-        2440: {         101: 15,  123: 16, 152: 17, 192: 18},
-        2940: {                   123: 16, 152: 17, 191: 18},
-        5940: {                   122: 16, 150: 17, 190: 18}
+        1440: {85: 14,  103: 15,  126: 16, 156: 17, 197: 18},
+        1940:          {102: 15,  124: 16, 153: 17, 194: 18},
+        2440:          {101: 15,  123: 16, 152: 17, 193: 18},
+        2940:                    {123: 16, 152: 17, 192: 18},
+        5940:                    {122: 16, 150: 17, 189: 18}
     }
     lowestBigPToShow = 540
     currentLowestArctisValue = 0

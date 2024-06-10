@@ -1,11 +1,20 @@
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.data_formatting import safe_loads
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import numberOfArtifacts, numberOfArtifactTiers, sailing_progressionTiers, sailingDict, artifactTiers, maxTiersPerGroup
+from consts import sailing_progressionTiers, maxTiersPerGroup
 
 logger = get_logger(__name__)
+
+def getSailingDelays() -> dict:
+    delaysDict = {}
+    # If Goharut is already unlocked, delay priority on Ashen Urn
+    if session_data.account.divinity['Divinities'][5]['Unlocked']:
+        delaysDict[3] = ["Ashen Urn"]
+    # If Purrmep is already unlocked, delay priority on Jade Rock
+    if session_data.account.divinity['Divinities'][7]['Unlocked']:
+        delaysDict[5] = ["Jade Rock"]
+    return delaysDict
 
 def setSailingProgressionTier():
     sailing_AdviceDict = {
@@ -26,6 +35,7 @@ def setSailingProgressionTier():
         sailing_AdviceSection.header = "Come back after unlocking the Sailing skill in W5!"
         return sailing_AdviceSection
 
+    delaysDict = getSailingDelays()
     tier_Islands = 0
     tier_CaptainsAndBoats = 0
     tier_Artifacts = 0
@@ -38,7 +48,7 @@ def setSailingProgressionTier():
         if 'IslandsDiscovered' in tierRequirementsDict:
             if session_data.account.sailing['IslandsDiscovered'] < tierRequirementsDict['IslandsDiscovered']:
                 shortBy = tierRequirementsDict['IslandsDiscovered'] - session_data.account.sailing['IslandsDiscovered']
-                if subgroupName not in sailing_AdviceDict['IslandsDiscovered'] and len(sailing_AdviceDict['IslandsDiscovered']) < maxTiersPerGroup - 1:
+                if subgroupName not in sailing_AdviceDict['IslandsDiscovered'] and len(sailing_AdviceDict['IslandsDiscovered']) < maxTiersPerGroup:
                     sailing_AdviceDict['IslandsDiscovered'][subgroupName] = []
                 if subgroupName in sailing_AdviceDict['IslandsDiscovered']:
                     sailing_AdviceDict['IslandsDiscovered'][subgroupName].append(Advice(
@@ -127,15 +137,16 @@ def setSailingProgressionTier():
         if 'Artifacts' in tierRequirementsDict:
             for artifactName, artifactTier in tierRequirementsDict['Artifacts'].items():
                 if session_data.account.sailing['Artifacts'].get(artifactName, {}).get('Level', 0) < artifactTier:
-                    if subgroupName not in sailing_AdviceDict['Artifacts'] and len(sailing_AdviceDict['Artifacts']) < maxTiersPerGroup - 1:
-                        sailing_AdviceDict['Artifacts'][subgroupName] = []
-                    if subgroupName in sailing_AdviceDict['Artifacts']:
-                        sailing_AdviceDict['Artifacts'][subgroupName].append(Advice(
-                            label=artifactName,
-                            picture_class=artifactName,
-                            progression=session_data.account.sailing['Artifacts'].get(artifactName, {}).get('Level', 0),
-                            goal=artifactTier
-                        ))
+                    if artifactName not in delaysDict.get(tierNumber, []):
+                        if subgroupName not in sailing_AdviceDict['Artifacts'] and len(sailing_AdviceDict['Artifacts']) < maxTiersPerGroup - 1:
+                            sailing_AdviceDict['Artifacts'][subgroupName] = []
+                        if subgroupName in sailing_AdviceDict['Artifacts']:
+                            sailing_AdviceDict['Artifacts'][subgroupName].append(Advice(
+                                label=artifactName,
+                                picture_class=artifactName,
+                                progression=session_data.account.sailing['Artifacts'].get(artifactName, {}).get('Level', 0),
+                                goal=artifactTier
+                            ))
         if subgroupName not in sailing_AdviceDict['Artifacts'] and tier_Artifacts == tierNumber-1:
             tier_Artifacts = tierNumber
 

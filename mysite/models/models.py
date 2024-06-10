@@ -16,7 +16,7 @@ from consts import expectedStackables, greenstack_progressionTiers, card_data, m
     sailingDict, guildBonusesList, labBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesList, \
     getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampsDict, stampTypes, marketUpgradeList, \
     achievementsList, forgeUpgradesDict, arcadeBonuses, saltLickList, allMeritsDict, bubblesDict, familyBonusesDict, poBoxDict, equinoxBonusesDict, \
-    maxDreams, dreamsThatUnlockNewBonuses, ceilUpToBase, starsignsDict, gfood_codes
+    maxDreams, dreamsThatUnlockNewBonuses, ceilUpToBase, starsignsDict, gfood_codes, getStyleNameFromIndex, divinity_divinitiesDict, getDivinityNameFromIndex
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, letterToNumber
 
 def session_singleton(cls):
@@ -1243,7 +1243,29 @@ class Account:
                         'Level': 0
                     }
 
+        self.divinity = {
+            'Divinities': copy.deepcopy(divinity_divinitiesDict)
+        }
+        raw_divinity_list = safe_loads(self.raw_data.get("Divinity", []))
+        while len(raw_divinity_list) < 40:
+            raw_divinity_list.append(0)
 
+        self.divinity['GodsUnlocked'] = min(10, raw_divinity_list[25])
+        self.divinity['GodRank'] = max(0, raw_divinity_list[25] - 10)
+        self.divinity['LowOffering'] = raw_divinity_list[26]
+        self.divinity['HighOffering'] = raw_divinity_list[27]
+        for divinityIndex in self.divinity['Divinities']:
+            if self.divinity['GodsUnlocked'] >= divinityIndex:
+                self.divinity['Divinities'][divinityIndex]["Unlocked"] = True
+            # Snake has a divinityIndex of 0, Blessing level stored in 28
+            self.divinity['Divinities'][divinityIndex]["BlessingLevel"] = raw_divinity_list[divinityIndex + 27]
+        # troubleshooting_DivLinkDict = {}
+        for character in self.safe_characters:
+            try:
+                character.setDivinityStyle(getStyleNameFromIndex(raw_divinity_list[character.character_index]))
+                character.setDivinityLink(getDivinityNameFromIndex(raw_divinity_list[character.character_index + 12] + 1))
+            except:
+                continue
 
         #World 6
         self.sneaking = {
@@ -1261,7 +1283,7 @@ class Account:
         for gemstoneIndex, gemstoneName in enumerate(sneakingGemstonesList):
             self.sneaking["Gemstones"][gemstoneName] = {"Level": 0, "Value": 0, "Percent": 0, "Stat": ''}
             try:
-                self.sneaking["Gemstones"][gemstoneName]["Level"] = raw_optlacc_list[sneakingGemstonesFirstIndex + gemstoneIndex]
+                self.sneaking["Gemstones"][gemstoneName]["Level"] = self.raw_optlacc_list[sneakingGemstonesFirstIndex + gemstoneIndex]
             except:
                 continue
             try:

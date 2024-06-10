@@ -1109,7 +1109,7 @@ sailing_progressionTiers = {
     16: {
         'Artifacts': {
             'Fauxory Tusk': 4,
-            #'10 AD Tablet': 4,  #Still debating this one. Idk if you'll care about Speed at this point
+            #'10 AD Tablet': 4,  #Still debating this one. I don't know if you'll care about Speed at this point
             'Fury Relic': 4,
             'Gold Relic': 4,
             'Amberite': 4
@@ -1119,7 +1119,7 @@ sailing_progressionTiers = {
     17: {
         'Artifacts': {
             'The Onyx Lantern': 3,
-            #'10 AD Tablet': 4,  #Still debating this one. Idk if you'll care about Speed at this point
+            #'10 AD Tablet': 4,  #Still debating this one. I don't know if you'll care about Speed at this point
             'The Winz Lantern': 4
         },
         'ExtraLanterns': True
@@ -1269,7 +1269,7 @@ expectedStackables = {
         "Copper", "Iron", "Gold", "Plat", "Dementia", "Void", "Lustre",  # Ores1
         "Starfire", "Marble", "Dreadlo", "Godshard",  # Ores2
 
-        "Fish1", "Fish2", "Fish3", "Fish4", # Small Fish
+        "Fish1", "Fish2", "Fish3", "Fish4",  # Small Fish
         "Fish5", "Fish6", "Fish7", "Fish8",  # Medium Fish
         "Fish9", "Fish10", "Fish11", "Fish13", "Fish12",  # Large Fish
 
@@ -3372,6 +3372,151 @@ sailingDict = {
         31: {'Name': 'The Shim Lantern'},
         32: {'Name': 'The Winz Lantern'}}},
 }
+divinity_divinitiesDict = {
+    1: {
+        "Name": "Snehebatu",
+        "Unlocked": False,
+        "BlessingLevel": 0,
+    },
+    2: {
+        "Name": "Arctis",
+        "Unlocked": False,
+        "BlessingLevel": 0,
+    },
+    3: {
+        "Name": "Nobisect",
+        "Unlocked": False,
+        "BlessingLevel": 0,
+    },
+    4: {
+        "Name": "Harriep",
+        "Unlocked": False,
+        "BlessingLevel": 0,
+    },
+    5: {
+        "Name": "Goharut",
+        "Unlocked": False,
+        "BlessingLevel": 0,
+    },
+    6: {
+        "Name": "Omniphau",
+        "Unlocked": False,
+        "BlessingLevel": 0,
+    },
+    7: {
+        "Name": "Purrmep",
+        "Unlocked": False,
+        "BlessingLevel": 0,
+    },
+    8: {
+        "Name": "Flutterbis",
+        "Unlocked": False,
+        "BlessingLevel": 0,
+    },
+    9: {
+        "Name": "Kattlekruk",
+        "Unlocked": False,
+        "BlessingLevel": 0,
+    },
+    10: {
+        "Name": "Bagur",
+        "Unlocked": False,
+        "BlessingLevel": 0,
+    },
+    }
+divinity_offeringsDict = {
+    0: {
+        "Name":"Olive Branch",
+        "Image":"offering-1",
+        "Chance":1,
+    },
+    1: {
+        "Name": "Incense",
+        "Image": "offering-5",
+        "Chance": 5,
+    },
+    2: {
+        "Name": "Giftbox",
+        "Image": "offering-10",
+        "Chance": 10,
+    },
+    3: {
+        "Name": "Tithe",
+        "Image": "offering-25",
+        "Chance": 25,
+    },
+    4: {
+        "Name": "Hearty Meal",
+        "Image": "offering-50",
+        "Chance": 50,
+    },
+    5: {
+        "Name": "Sacrifice",
+        "Image": "offering-100",
+        "Chance": 100,
+    },
+}
+divinity_stylesDict = {
+    0: {
+        "Name": "Kinesis",
+        "UnlockLevel": 1,
+        "Points": 1,
+        "Exp": 1,
+    },
+    1: {
+        "Name": "Chakra",
+        "UnlockLevel": 5,
+        "Points": 2,
+        "Exp": 2,
+    },
+    2: {
+        "Name": "Focus",
+        "UnlockLevel": 10,
+        "Points": 4,
+        "Exp": 1,
+    },
+    3: {
+        "Name": "Mantra",
+        "UnlockLevel": 15,
+        "Points": 0,
+        "Exp": 1,
+        "Notes": "(To all characters)"
+    },
+    4: {
+        "Name": "Vitalic",
+        "UnlockLevel": 25,
+        "Points": 2,
+        "Exp": 7,
+    },
+    5: {
+        "Name": "TranQi",
+        "UnlockLevel": 40,
+        "Points": 0,
+        "Exp": 3,
+        "Notes": "(Even when not Meditating)"
+    },
+    6: {
+        "Name": "Zen",
+        "UnlockLevel": 60,
+        "Points": 8,
+        "Exp": 8,
+    },
+    7: {
+        "Name": "Mindful",
+        "UnlockLevel": 80,
+        "Points": 15,
+        "Exp": 10,
+    },
+}
+
+def getDivinityNameFromIndex(inputValue: int) -> str:
+    return divinity_divinitiesDict.get(inputValue, {"Name": f"UnknownDivinity{inputValue}"}).get("Name")
+def getOfferingNameFromIndex(inputValue):
+    return divinity_offeringsDict.get(inputValue, {"Name": f"UnknownOffering{inputValue}"}).get("Name")
+
+def getStyleNameFromIndex(inputValue: int) -> str:
+    return divinity_stylesDict.get(inputValue, {"Name": f"UnknownStyle{inputValue}"}).get("Name")
+
 
 ###WORLD 6 CONSTS###
 jade_emporium = [
