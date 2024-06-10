@@ -32,7 +32,7 @@
                                 {% if advice.as_link %}
                                     <li><a href="#{{ advice.css_class }}" class="advice {{ advice.css_class }}">{{ advice.label }}</a></li>
                                 {% else %}
-                                    <li class="advice {{ advice.css_class }}">{{ advice.label }}</li>
+                                    <li class="advice {{ advice.css_class }}">{{ advice.label | safe}}</li>
                                 {% endif %}
 
                                 <li class="prog">{{ advice.progression }}</li>
