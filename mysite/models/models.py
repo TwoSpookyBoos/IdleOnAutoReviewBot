@@ -1271,7 +1271,7 @@ class Account:
             "JadeEmporium": {},
         }
         raw_ninja_list = safe_loads(self.raw_data.get("Ninja", []))
-        raw_emporium_purchases = list(raw_ninja_list[102][9])
+        raw_emporium_purchases = list(raw_ninja_list[102][9]) if raw_ninja_list else []
         for upgradeIndex, upgradeDict in enumerate(jade_emporium):
             try:
                 self.sneaking['JadeEmporium'][upgradeDict['Name']] = {
