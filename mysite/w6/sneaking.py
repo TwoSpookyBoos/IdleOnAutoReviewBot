@@ -36,7 +36,7 @@ def setSneakingProgressionTier():
                 gemstoneData.get('Stat', '')),
             picture_class=gemstoneName,
             progression=f"{gemstoneData.get('Percent', 0):.2f}",
-            goal=100,
+            goal=100 if session_data.account.sneaking["Gemstones"]['Moissanite']['Level'] == 0 else 400,
             unit="%"
         ))
 
@@ -45,9 +45,7 @@ def setSneakingProgressionTier():
         if not purchaseDict['Obtained']:
             sneaking_AdviceDict['JadeEmporium'].append(Advice(
                 label=purchaseName,
-                picture_class=purchaseName,
-                progression=0,
-                goal=1
+                picture_class=purchaseName
             ))
 
     # Assess Pristine Charms
@@ -55,9 +53,7 @@ def setSneakingProgressionTier():
         if not pristineCharmBool:
             sneaking_AdviceDict['PristineCharms'].append(Advice(
                 label=pristineCharmName,
-                picture_class=pristineCharmName,
-                progression=0,
-                goal=1
+                picture_class=pristineCharmName
             ))
 
     # Generate AdviceGroups
