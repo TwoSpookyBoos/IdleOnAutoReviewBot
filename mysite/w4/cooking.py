@@ -52,7 +52,7 @@ def parseJSON():
     if causticolumn_level < 2:
         playerMissingPlateUpgrades.append(("{{ Artifact|#sailing }}: Ancient Causticolumn", "causticolumn"))
     if causticolumn_level < 3:
-        if session_data.account.eldritch_artifacts_unlocked:
+        if session_data.account.rift['EldritchArtifacts']:
             playerMissingPlateUpgrades.append(("{{ Artifact|#sailing }}: Eldritch Causticolumn", "causticolumn"))
         else:
             playerMissingPlateUpgrades.append(("{{ Artifact|#sailing }}: Eldritch Causticolumn. Eldritch Artifacts are unlocked by completing {{ Rift|#rift }} 30", "eldritch-artifact"))

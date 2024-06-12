@@ -78,7 +78,7 @@ def setAlchemyVialsProgressionTier() -> AdviceSection:
     max_tier = vials_progressionTiers[-1][0]
     maxAdvicesPerGroup = 6
 
-    if session_data.account.vial_mastery_unlocked:
+    if session_data.account.rift['VialMastery']:
         if len(maxedVialsList) < 27:
             advice_TrailingMaxedVials = " 27 is the magic number needed to get the Snake Skin vial to 100% chance to double deposited statues :D (This also requires Snake Skin itself be maxed lol)"
         else:

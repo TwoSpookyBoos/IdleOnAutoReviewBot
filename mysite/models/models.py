@@ -17,7 +17,7 @@ from consts import expectedStackables, greenstack_progressionTiers, card_data, m
     getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampsDict, stampTypes, marketUpgradeList, \
     achievementsList, forgeUpgradesDict, arcadeBonuses, saltLickList, allMeritsDict, bubblesDict, familyBonusesDict, poBoxDict, equinoxBonusesDict, \
     maxDreams, dreamsThatUnlockNewBonuses, ceilUpToBase, starsignsDict, gfood_codes, getStyleNameFromIndex, divinity_divinitiesDict, getDivinityNameFromIndex
-from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, letterToNumber
+from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
 
 def session_singleton(cls):
     def getinstance(*args, **kwargs):
@@ -700,7 +700,22 @@ class Account:
         self.raw_data = (
             json.loads(json_data) if isinstance(json_data, str) else json_data
         )
-        #AutoLoot
+        self._parse_wave_1(run_type)
+        self._calculate_wave_1()
+
+    def _parse_wave_1(self, run_type):
+        self._parse_switches()
+        self._parse_characters(run_type)
+        self._parse_general()
+        self._parse_w1()
+        self._parse_w2()
+        self._parse_w3()
+        self._parse_w4()
+        self._parse_w5()
+        self._parse_w6()
+
+    def _parse_switches(self):
+        # AutoLoot
         if g.autoloot:
             self.autoloot = True
         elif self.raw_data.get("AutoLoot", 0) == 1:
@@ -708,7 +723,8 @@ class Account:
             g.autoloot = True
         else:
             self.autoloot = False
-        #Companions
+
+        # Companions
         self.sheepie_owned = g.sheepie
         self.doot_owned = g.doot
         if not self.doot_owned or not self.sheepie_owned:
@@ -723,6 +739,7 @@ class Account:
                         self.sheepie_owned = True
                         g.sheepie = True
 
+    def _parse_characters(self, run_type):
         playerCount, playerNames, playerClasses, characterDict, perSkillDict = getCharacterDetails(
             self.raw_data, run_type
         )
@@ -730,46 +747,18 @@ class Account:
         self.playerCount = playerCount
         self.classes = playerClasses
         self.all_characters: list[Character] = [Character(self.raw_data, **char) for char in characterDict.values()]
-        self.safe_characters: list[Character] = [char for char in self.all_characters if char]  #Use this if touching raw_data instead of all_characters
+        self.safe_characters: list[Character] = [char for char in self.all_characters if char]  # Use this if touching raw_data instead of all_characters
         self.safe_playerIndexes: list[int] = [char.character_index for char in self.all_characters if char]
         self.all_skills = perSkillDict
         self.all_quests = [safe_loads(self.raw_data.get(f"QuestComplete_{i}", "{}")) for i in range(self.playerCount)]
-        self.assets = self._all_owned_items()
-        self.cards = self._make_cards()
-        self.rift_level = self.raw_data.get("Rift", [0])[0]
-        self.rift_unlocked = False
-        if self.rift_level > 0:
-            self.rift_unlocked = True
-        else:
-            for characterIndex in range(0, len(self.all_quests)):
-                if self.all_quests[characterIndex].get("Rift_Ripper1", 0) == 1:
-                    self.rift_unlocked = True
-        self.trap_box_vacuum_unlocked = self.rift_level >= 5
-        self.infinite_stars_unlocked = self.rift_level >= 10
-        self.skill_mastery_unlocked = self.rift_level >= 15
-        self.eclipse_skulls_unlocked = self.rift_level >= 20
-        self.stamp_mastery_unlocked = self.rift_level >= 25
-        self.eldritch_artifacts_unlocked = self.rift_level >= 30
-        self.vial_mastery_unlocked = self.rift_level >= 35
-        self.construction_mastery_unlocked = self.rift_level >= 40
-        self.ruby_cards_unlocked = self.rift_level >= 45
-        self.guildBonuses = {}
-        raw_guild = self.raw_data.get('guildData', {}).get('stats', [])
-        for bonusIndex, bonusName in enumerate(guildBonusesList):
-            try:
-                self.guildBonuses[bonusName] = raw_guild[0][bonusIndex]
-            except:
-                self.guildBonuses[bonusName] = 0
-        self.rift_meowed = False
-        self.meowBBIndex = 0
-        self.meals_remaining = maxMeals * maxMealLevel
         self.max_toon_count = 10  # OPTIMIZE: find a way to read this from somewhere
 
-        #General / Multiple uses
+    def _parse_general(self):
+        # General / Multiple uses
         self.gemshop = {}
         self.family_bonuses = {}
         for className in familyBonusesDict.keys():
-            #Create the skeleton for all current classes, with level and value of 0
+            # Create the skeleton for all current classes, with level and value of 0
             self.family_bonuses[className] = {'Level': 0, 'Value': 0}
         for char in self.safe_characters:
             for className in [char.base_class, char.sub_class, char.elite_class]:
@@ -780,15 +769,15 @@ class Account:
             try:
                 self.family_bonuses[className]['Value'] = lavaFunc(
                     familyBonusesDict[className]['funcType'],
-                    self.family_bonuses[className]['Level']-familyBonusesDict[className]['levelDiscount'],
+                    self.family_bonuses[className]['Level'] - familyBonusesDict[className]['levelDiscount'],
                     familyBonusesDict[className]['x1'],
                     familyBonusesDict[className]['x2'])
             except:
                 self.family_bonuses[className]['Value'] = 0
             self.family_bonuses[className]['DisplayValue'] = (f"{'+' if familyBonusesDict[className]['PrePlus'] else ''}"
-                                                                  f"{self.family_bonuses[className]['Value']:.2f}"
-                                                                  f"{familyBonusesDict[className]['PostDisplay']}"
-                                                                  f" {familyBonusesDict[className]['Stat']}")
+                                                              f"{self.family_bonuses[className]['Value']:.2f}"
+                                                              f"{familyBonusesDict[className]['PostDisplay']}"
+                                                              f" {familyBonusesDict[className]['Stat']}")
 
         self.raw_optlacc_list = safe_loads(self.raw_data.get("OptLacc", {}))
 
@@ -797,13 +786,14 @@ class Account:
         if raw_dungeon_upgrades:
             try:
                 self.dungeon_upgrades["MaxWeapon"] = raw_dungeon_upgrades[3][0]
-                self.dungeon_upgrades["MaxArmor"] = [raw_dungeon_upgrades[3][4], raw_dungeon_upgrades[3][5],raw_dungeon_upgrades[3][6],raw_dungeon_upgrades[3][7]]
+                self.dungeon_upgrades["MaxArmor"] = [raw_dungeon_upgrades[3][4], raw_dungeon_upgrades[3][5], raw_dungeon_upgrades[3][6],
+                                                     raw_dungeon_upgrades[3][7]]
                 self.dungeon_upgrades["MaxJewelry"] = [raw_dungeon_upgrades[3][8], raw_dungeon_upgrades[3][9]]
                 self.dungeon_upgrades["FlurboShop"] = raw_dungeon_upgrades[5]
                 self.dungeon_upgrades["CreditShop"] = raw_dungeon_upgrades[5]
             except:
-                self.dungeon_upgrades["MaxWeapon"]  = 0
-                self.dungeon_upgrades["MaxArmor"]   = [0, 0, 0, 0]
+                self.dungeon_upgrades["MaxWeapon"] = 0
+                self.dungeon_upgrades["MaxArmor"] = [0, 0, 0, 0]
                 self.dungeon_upgrades["MaxJewelry"] = [0, 0]
                 self.dungeon_upgrades["FlurboShop"] = [0, 0, 0, 0, 0, 0, 0, 0]
                 self.dungeon_upgrades["CreditShop"] = [0, 0, 0, 0, 0, 0, 0, 0]
@@ -824,9 +814,25 @@ class Account:
                 try:
                     self.merits[worldIndex][meritIndex]["Level"] = int(raw_merits_list[worldIndex][meritIndex])
                 except:
-                    continue  #Already defaulted to 0 in Consts
+                    continue  # Already defaulted to 0 in Consts
 
-        #World 1
+        self.assets = self._all_owned_items()
+        self.cards = self._make_cards()
+        self.guildBonuses = {}
+        raw_guild = self.raw_data.get('guildData', {}).get('stats', [])
+        for bonusIndex, bonusName in enumerate(guildBonusesList):
+            try:
+                self.guildBonuses[bonusName] = raw_guild[0][bonusIndex]
+            except:
+                self.guildBonuses[bonusName] = 0
+
+    def _parse_w1(self):
+        self._parse_w1_starsigns()
+        self._parse_w1_forge()
+        self._parse_w1_bribes()
+        self._parse_w1_stamps()
+
+    def _parse_w1_starsigns(self):
         self.star_signs = {}
         raw_star_signs = safe_loads(self.raw_data.get("StarSg", {}))
         for signIndex, signValuesDict in starsignsDict.items():
@@ -842,36 +848,22 @@ class Account:
                 '3_Stat': signValuesDict.get('3_Stat', ''),
             }
             try:
-                #Some StarSigns are saved as strings "1" to mean unlocked.
-                #The names in the JSON also have underscores instead of spaces
+                # Some StarSigns are saved as strings "1" to mean unlocked.
+                # The names in the JSON also have underscores instead of spaces
                 self.star_signs[signValuesDict['Name']]['Unlocked'] = int(raw_star_signs[signValuesDict['Name'].replace(" ", "_")]) > 0
             except:
                 pass
-        self.star_sign_extras = {
-            'SeraphMulti': min(3, 1.1 ** ceil((max(self.all_skills.get('Summoning', [0])) + 1) / 20)),
-            'SeraphGoal': min(240, ceilUpToBase(max(self.all_skills.get('Summoning', [0])), 20))
-        }
-        if bool(self.star_signs.get("Seraph Cosmos", {}).get('Unlocked', False)):
-            self.star_sign_extras['SeraphEval'] = f"Multis signs by {self.star_sign_extras['SeraphMulti']:.2f}x."
-        else:
-            self.star_sign_extras['SeraphEval'] = f"Locked. Would increase other signs by {self.star_sign_extras['SeraphMulti']:.2f}x if unlocked."
-            self.star_sign_extras['SeraphMulti'] = 1
-        if self.star_sign_extras['SeraphGoal'] < 240:
-            self.star_sign_extras['SeraphEval'] += " Increases every 20 Summoning levels."
-        self.star_sign_extras['SeraphAdvice'] = Advice(
-            label=f"Starsign: Seraph Cosmos: {self.star_sign_extras['SeraphEval']}",
-            picture_class="seraph-cosmos",
-            progression=max(self.all_skills.get('Summoning', [0])),
-            goal=self.star_sign_extras['SeraphGoal'])
 
+    def _parse_w1_forge(self):
         self.forge_upgrades = copy.deepcopy(forgeUpgradesDict)
         raw_forge_upgrades = self.raw_data.get("ForgeLV", [])
         for upgradeIndex, upgrade in enumerate(raw_forge_upgrades):
             try:
                 self.forge_upgrades[upgradeIndex]["Purchased"] = upgrade
             except:
-                continue  #Already defaulted to 0 in Consts
+                continue  # Already defaulted to 0 in Consts
 
+    def _parse_w1_bribes(self):
         self.bribes = {}
         raw_bribes_list = safe_loads(self.raw_data.get("BribeStatus", []))
         bribeIndex = 0
@@ -884,6 +876,7 @@ class Account:
                     self.bribes[bribeSet][bribeName] = -1  # -1 means unavailable for purchase, 0 means available, and 1 means purchased
                 bribeIndex += 1
 
+    def _parse_w1_stamps(self):
         self.stamps = {}
         self.stamp_totals = {"Total": 0}
         for stampType in stampTypes:
@@ -938,11 +931,17 @@ class Account:
                         "Value": 0
                     }
 
-        #World 2
+    def _parse_w2(self):
+        self._parse_w2_vials()
+        self._parse_w2_bubbles()
+        self._parse_w2_p2w()
+        self._parse_w2_arcade()
+
+    def _parse_w2_vials(self):
         self.alchemy_vials = {}
         try:
             manualVialsAdded = 0
-            raw_alchemy_vials = safe_loads(self.raw_data.get("CauldronInfo", [0,0,0,0,{}])[4])
+            raw_alchemy_vials = safe_loads(self.raw_data.get("CauldronInfo", [0, 0, 0, 0, {}])[4])
             if "length" in raw_alchemy_vials:
                 del raw_alchemy_vials["length"]
             while len(raw_alchemy_vials) < max_IndexOfVials:
@@ -967,10 +966,10 @@ class Account:
         for vial in self.alchemy_vials.values():
             if vial.get("Level", 0) >= 13:
                 self.maxed_vials += 1
-        self.vialMasteryMulti = 1 + (self.maxed_vials * .02) if self.vial_mastery_unlocked else 1
 
+    def _parse_w2_bubbles(self):
         self.alchemy_bubbles = {}
-        #Set defaults to 0
+        # Set defaults to 0
         for cauldronIndex in bubblesDict:
             for bubbleIndex in bubblesDict[cauldronIndex]:
                 self.alchemy_bubbles[bubblesDict[cauldronIndex][bubbleIndex]['Name']] = {
@@ -979,9 +978,10 @@ class Account:
                     "Level": 0,
                     "BaseValue": 0
                 }
-        #Try to read player levels and calculate base value
+        # Try to read player levels and calculate base value
         try:
-            all_raw_bubbles = [self.raw_data["CauldronInfo"][0], self.raw_data["CauldronInfo"][1], self.raw_data["CauldronInfo"][2], self.raw_data["CauldronInfo"][3]]
+            all_raw_bubbles = [self.raw_data["CauldronInfo"][0], self.raw_data["CauldronInfo"][1], self.raw_data["CauldronInfo"][2],
+                               self.raw_data["CauldronInfo"][3]]
             for cauldronIndex in bubblesDict:
                 for bubbleIndex in bubblesDict[cauldronIndex]:
                     try:
@@ -992,10 +992,11 @@ class Account:
                             bubblesDict[cauldronIndex][bubbleIndex]["x1"],
                             bubblesDict[cauldronIndex][bubbleIndex]["x2"])
                     except:
-                        continue  #Level and BaseValue already defaulted to 0 above
+                        continue  # Level and BaseValue already defaulted to 0 above
         except:
             pass
 
+    def _parse_w2_p2w(self):
         self.alchemy_p2w = {
             "Sigils": sigilsDict
         }
@@ -1007,44 +1008,28 @@ class Account:
             try:
                 self.alchemy_p2w["Cauldrons"] = raw_p2w_list[0]
             except:
-                self.alchemy_p2w["Cauldrons"] = [0]*12
+                self.alchemy_p2w["Cauldrons"] = [0] * 12
             try:
                 self.alchemy_p2w["Liquids"] = raw_p2w_list[1]
             except:
-                self.alchemy_p2w["Liquids"] = [0]*8
+                self.alchemy_p2w["Liquids"] = [0] * 8
             try:
                 self.alchemy_p2w["Vials"] = raw_p2w_list[2]
             except:
-                self.alchemy_p2w["Vials"] = [0]*2
+                self.alchemy_p2w["Vials"] = [0] * 2
             try:
                 self.alchemy_p2w["Player"] = raw_p2w_list[3]
             except:
-                self.alchemy_p2w["Player"] = [0]*2
+                self.alchemy_p2w["Player"] = [0] * 2
             for sigilName in self.alchemy_p2w["Sigils"]:
                 try:
                     self.alchemy_p2w["Sigils"][sigilName]["PlayerHours"] = float(raw_p2w_list[4][self.alchemy_p2w["Sigils"][sigilName]["Index"]])
                     self.alchemy_p2w["Sigils"][sigilName]["Level"] = raw_p2w_list[4][self.alchemy_p2w["Sigils"][sigilName]["Index"] + 1] + 1
-                    if self.alchemy_p2w["Sigils"][sigilName]["Level"] == 2:
-                        if self.sneaking['JadeEmporium']['Ionized Sigils']['Obtained']:
-                            #If you have purchased Ionized Sigils, the numbers needed to Gold get subtracted from your hours already
-                            red_Hours = self.alchemy_p2w["Sigils"][sigilName]["Requirements"][2]
-                        else:
-                            #To precharge Red sigils before buying the upgreade, you need Gold + Red hours
-                            red_Hours = self.alchemy_p2w["Sigils"][sigilName]["Requirements"][1] + self.alchemy_p2w["Sigils"][sigilName]["Requirements"][2]
-                        if self.alchemy_p2w["Sigils"][sigilName]["PlayerHours"] >= red_Hours:
-                            self.alchemy_p2w["Sigils"][sigilName]["PrechargeLevel"] = 3
-                        else:
-                            self.alchemy_p2w["Sigils"][sigilName]["PrechargeLevel"] = self.alchemy_p2w["Sigils"][sigilName]["Level"]
-                    elif self.alchemy_p2w["Sigils"][sigilName]["Level"] == 3:
-                        self.alchemy_p2w["Sigils"][sigilName]["PrechargeLevel"] = 3
-                    else:
-                        self.alchemy_p2w["Sigils"][sigilName]["PrechargeLevel"] = self.alchemy_p2w["Sigils"][sigilName]["Level"]
-                    #Before the +1, -1 would mean not unlocked, 0 would mean Blue tier, 1 would be Yellow tier, and 2 would mean Red tier
-                    #After the +1, 0/1/2/3
                 except Exception as reason:
                     print(f"{reason}")
-                    pass  #Already defaulted to 0s in consts.sigilsDict
+                    pass  # Already defaulted to 0s in consts.sigilsDict
 
+    def _parse_w2_arcade(self):
         self.arcade = {}
         raw_arcade_upgrades = safe_loads(self.raw_data.get("ArcadeUpg", []))
         for upgradeIndex, upgradeLevel in enumerate(raw_arcade_upgrades):
@@ -1058,18 +1043,34 @@ class Account:
                         arcadeBonuses.get(upgradeIndex).get("x2")
                     )
                 }
-                self.arcade[upgradeIndex]["Display"] = f"+{self.arcade[upgradeIndex]['Value']:.2f}{arcadeBonuses[upgradeIndex]['displayType']} {arcadeBonuses[upgradeIndex]['Stat']}"
+                self.arcade[upgradeIndex][
+                    "Display"] = f"+{self.arcade[upgradeIndex]['Value']:.2f}{arcadeBonuses[upgradeIndex]['displayType']} {arcadeBonuses[upgradeIndex]['Stat']}"
             except:
                 self.arcade[upgradeIndex] = {
                     "Level": upgradeLevel,
                     "Value": 0
                 }
                 try:
-                    self.arcade[upgradeIndex]["Display"] = f"+{self.arcade[upgradeIndex]['Value']}{arcadeBonuses[upgradeIndex]['displayType']} {arcadeBonuses[upgradeIndex]['Stat']}"
+                    self.arcade[upgradeIndex][
+                        "Display"] = f"+{self.arcade[upgradeIndex]['Value']}{arcadeBonuses[upgradeIndex]['displayType']} {arcadeBonuses[upgradeIndex]['Stat']}"
                 except:
                     self.arcade[upgradeIndex]["Display"] = f"+% UnknownUpgrade{upgradeIndex}"
 
-        #World 3
+    def _parse_w3(self):
+        self._parse_w3_deathnote()
+        self._parse_w3_equinox_dreams()
+        self._parse_w3_equinox_bonuses()
+        self._parse_w3_buildings()
+        self._parse_w3_shrines()
+        self._parse_w3_atoms()
+        self._parse_w3_prayers()
+        self._parse_w3_saltlick()
+
+    def _parse_w3_deathnote(self):
+        self.rift_meowed = False
+        self.meowBBIndex = 0
+
+    def _parse_w3_equinox_dreams(self):
         self.equinox_unlocked = self.achievements['Equinox Visitor']
         self.equinox_dreams = [True]
         raw_equinox_dreams = safe_loads(self.raw_data.get("WeeklyBoss", {}))
@@ -1077,7 +1078,7 @@ class Account:
             float(raw_equinox_dreams.get(f'd_{i}', 0)) == -1
             for i in range(maxDreams)
         ]
-        self.total_dreams_completed = sum(self.equinox_dreams) - 1  #Remove the placeholder in 0th index
+        self.total_dreams_completed = sum(self.equinox_dreams) - 1  # Remove the placeholder in 0th index
         self.total_equinox_bonuses_unlocked = 0
         self.remaining_equinox_dreams_unlocking_new_bonuses = []
         for dreamNumber in dreamsThatUnlockNewBonuses:
@@ -1086,8 +1087,9 @@ class Account:
             else:
                 self.remaining_equinox_dreams_unlocking_new_bonuses.append(dreamNumber)
 
+    def _parse_w3_equinox_bonuses(self):
         self.equinox_bonuses = {}
-        raw_equinox_bonuses = safe_loads(self.raw_data.get("Dream", [0]*30))
+        raw_equinox_bonuses = safe_loads(self.raw_data.get("Dream", [0] * 30))
         for bonusIndex, bonusValueDict in equinoxBonusesDict.items():
             upgradeName = bonusValueDict['Name']
             self.equinox_bonuses[upgradeName] = {
@@ -1109,6 +1111,7 @@ class Account:
                     else:
                         self.equinox_bonuses[upgradeName]['RemainingUpgrades'].append(dreamIndex)
 
+    def _parse_w3_buildings(self):
         self.construction_buildings = {}
         raw_buildings_list = safe_loads(self.raw_data.get("Tower", []))
         for buildingIndex, buildingName in enumerate(buildingsList):
@@ -1117,6 +1120,7 @@ class Account:
             except:
                 self.construction_buildings[buildingName] = 0
 
+    def _parse_w3_shrines(self):
         self.shrines = {}
         raw_shrines_list = safe_loads(self.raw_data.get("Shrine", []))
         for shrineIndex, shrineName in enumerate(shrinesList):
@@ -1139,6 +1143,7 @@ class Account:
                     5: 0
                 }
 
+    def _parse_w3_atoms(self):
         self.atoms = {}
         raw_atoms_list = safe_loads(self.raw_data.get("Atoms", []))
         for atomIndex, atomName in enumerate(atomsList):
@@ -1147,6 +1152,7 @@ class Account:
             except:
                 self.atoms[atomName] = 0
 
+    def _parse_w3_prayers(self):
         self.prayers = {}
         raw_prayers_list = safe_loads(self.raw_data.get("PrayOwned", []))
         for prayerIndex, prayerValuesDict in prayersDict.items():
@@ -1181,6 +1187,7 @@ class Account:
             except:
                 pass
 
+    def _parse_w3_saltlick(self):
         self.saltlick = {}
         raw_saltlick_list = safe_loads(self.raw_data.get("SaltLick"))
         for saltlickIndex, saltlickName in enumerate(saltLickList):
@@ -1189,10 +1196,22 @@ class Account:
             except:
                 self.saltlick[saltlickName] = 0
 
-        #World 4
+    def _parse_w4(self):
+        self._parse_w4_cooking()
+        self._parse_w4_lab()
+        self._parse_w4_rift()
 
+    def _parse_w4_cooking(self):
+        self.meals_remaining = maxMeals * maxMealLevel
+
+    def _parse_w4_lab(self):
+        raw_lab = safe_loads(self.raw_data.get("Lab", []))
+        self._parse_w4_lab_chips(raw_lab)
+        self._parse_w4_lab_bonuses(raw_lab)
+
+    def _parse_w4_lab_chips(self, raw_lab):
         self.labChips = {}
-        raw_labChips_list = safe_loads(self.raw_data.get("Lab", []))
+        raw_labChips_list = raw_lab
         if len(raw_labChips_list) >= 15:
             raw_labChips_list = raw_labChips_list[15]
         for labChipIndex, labChipName in enumerate(labChipsList):
@@ -1200,12 +1219,48 @@ class Account:
                 self.labChips[labChipName] = int(raw_labChips_list[labChipIndex])
             except:
                 self.labChips[labChipName] = 0
+
+    def _parse_w4_lab_bonuses(self, raw_lab):
+        #TODO: Actually figure out lab :(
         self.labBonuses = {}
         for labBonusIndex, labBonusName in enumerate(labBonusesList):
-            self.labBonuses[labBonusName] = {"Enabled": True, "Value": 1}
+            self.labBonuses[labBonusName] = {
+                "Enabled": True,
+                "Value": 1
+            }
 
-        #World 5
+    def _parse_w4_rift(self):
+        self.rift = {
+            'Unlocked': False,
+            'Level': self.raw_data.get("Rift", [0])[0],
+        }
+        self.rift_level = self.raw_data.get("Rift", [0])[0]
+        if self.rift['Level'] > 0:
+            self.rift['Unlocked'] = True
+        else:
+            for characterIndex in range(0, len(self.all_quests)):
+                if self.all_quests[characterIndex].get("Rift_Ripper1", 0) == 1:
+                    self.rift['Unlocked'] = True
+                    break
+        self.rift['TrapBoxVacuum'] = self.rift['Level'] >= 5
+        self.rift['InfiniteStars'] = self.rift['Level'] >= 10
+        self.rift['SkillMastery'] = self.rift['Level'] >= 15
+        self.rift['EclipseSkulls'] = self.rift['Level'] >= 20
+        self.rift['StampMastery'] = self.rift['Level'] >= 25
+        self.rift['EldritchArtifacts'] = self.rift['Level'] >= 30
+        self.rift['VialMastery'] = self.rift['Level'] >= 35
+        self.rift['ConstructionMastery'] = self.rift['Level'] >= 40
+        self.rift['RubyCards'] = self.rift['Level'] >= 45
+
+    def _parse_w5(self):
+        self._parse_w5_slab()
+        self._parse_w5_sailing()
+        self._parse_w5_divinity()
+
+    def _parse_w5_slab(self):
         self.registered_slab = safe_loads(self.raw_data.get("Cards1", []))
+
+    def _parse_w5_sailing(self):
         self.sailing = {"Artifacts": {}, "Boats": {}, "Captains": {}, "Islands": {}, 'IslandsDiscovered': 1, 'CaptainsOwned': 1, 'BoatsOwned': 1}
         raw_sailing_list = safe_loads(safe_loads(self.raw_data.get("Sailing", [])))  # Some users have needed to have data converted twice
         try:
@@ -1240,6 +1295,7 @@ class Account:
                         'Level': 0
                     }
 
+    def _parse_w5_divinity(self):
         self.divinity = {
             'Divinities': copy.deepcopy(divinity_divinitiesDict)
         }
@@ -1263,7 +1319,12 @@ class Account:
             except:
                 continue
 
-        #World 6
+    def _parse_w6(self):
+        self._parse_w6_sneaking()
+        self._parse_w6_farming()
+        self._parse_w6_summoning()
+
+    def _parse_w6_sneaking(self):
         self.sneaking = {
             "PristineCharms": {},
             "Gemstones": {},
@@ -1271,15 +1332,11 @@ class Account:
             "JadeEmporium": {},
         }
         raw_ninja_list = safe_loads(self.raw_data.get("Ninja", []))
-        raw_emporium_purchases = list(raw_ninja_list[102][9]) if raw_ninja_list else []
-        for upgradeIndex, upgradeDict in enumerate(jade_emporium):
-            try:
-                self.sneaking['JadeEmporium'][upgradeDict['Name']] = {
-                    'Obtained': upgradeDict['CodeString'] in raw_emporium_purchases,
-                    'Bonus': upgradeDict['Bonus']
-                }
-            except:
-                continue
+        self._parse_w6_gemstones(raw_ninja_list)
+        self._parse_w6_jade_emporium(raw_ninja_list)
+        self._parse_w6_beanstalk(raw_ninja_list)
+
+    def _parse_w6_gemstones(self, raw_ninja_list):
         raw_pristine_charms_list = raw_ninja_list[107] if raw_ninja_list else []
         for pristineCharmIndex, pristineCharmName in enumerate(pristineCharmsList):
             try:
@@ -1319,6 +1376,18 @@ class Account:
             except:
                 continue
 
+    def _parse_w6_jade_emporium(self, raw_ninja_list):
+        raw_emporium_purchases = list(raw_ninja_list[102][9]) if raw_ninja_list else []
+        for upgradeIndex, upgradeDict in enumerate(jade_emporium):
+            try:
+                self.sneaking['JadeEmporium'][upgradeDict['Name']] = {
+                    'Obtained': upgradeDict['CodeString'] in raw_emporium_purchases,
+                    'Bonus': upgradeDict['Bonus']
+                }
+            except:
+                continue
+
+    def _parse_w6_beanstalk(self, raw_ninja_list):
         raw_beanstalk_list = raw_ninja_list[104] if raw_ninja_list else []
         for gfoodIndex, gfoodName in enumerate(gfood_codes):
             try:
@@ -1334,21 +1403,22 @@ class Account:
                     'SuperBeanstacked': False,
                 }
 
+    def _parse_w6_farming(self):
         self.farming = {
             "CropsUnlocked": 0,
             "MarketUpgrades": {},
             "CropStacks": {
-                "EvolutionGMO": 0,  #200
-                "SpeedGMO": 0,  #1,000
-                "ExpGMO": 0,  #2,500
-                "ValueGMO": 0,  #10,000
-                "SuperGMO": 0  #100,000
+                "EvolutionGMO": 0,  # 200
+                "SpeedGMO": 0,  # 1,000
+                "ExpGMO": 0,  # 2,500
+                "ValueGMO": 0,  # 10,000
+                "SuperGMO": 0  # 100,000
             },
         }
         raw_farmcrop_dict = safe_loads(self.raw_data.get("FarmCrop", {}))
         if isinstance(raw_farmcrop_dict, dict):
             for cropIndexStr, cropAmountOwned in raw_farmcrop_dict.items():
-                self.farming["CropsUnlocked"] += 1  #Once discovered, crops will always appear in this dict.
+                self.farming["CropsUnlocked"] += 1  # Once discovered, crops will always appear in this dict.
                 if cropAmountOwned >= 200:
                     self.farming["CropStacks"]["EvolutionGMO"] += 1
                 if cropAmountOwned >= 1000:
@@ -1363,30 +1433,67 @@ class Account:
         if isinstance(raw_farmupg_list, list):
             for marketUpgradeIndex, marketUpgradeName in enumerate(marketUpgradeList):
                 try:
-                    self.farming["MarketUpgrades"][marketUpgradeName] = raw_farmupg_list[marketUpgradeIndex+2]
+                    self.farming["MarketUpgrades"][marketUpgradeName] = raw_farmupg_list[marketUpgradeIndex + 2]
                 except:
                     self.farming["MarketUpgrades"][marketUpgradeName] = 0
 
+    def _parse_w6_summoning(self):
         self.summoning = {}
         raw_summoning_list = safe_loads(self.raw_data.get('Summon', []))
         try:
             self.summoning["Upgrades"] = raw_summoning_list[0]
         except:
-            self.summoning["Upgrades"] = [0]*69  #As of 2.09 Red/Cyan, there are exactly 69 upgrades
+            self.summoning["Upgrades"] = [0] * 69  # As of 2.09 Red/Cyan, there are exactly 69 upgrades
         try:
             self.summoning["BattlesWon"] = raw_summoning_list[1]
         except:
             self.summoning["BattlesWon"] = []
-        #raw_summoning_list[2] looks to be essence owned
-        #raw_summoning_list[3] I have no idea what this is
-        #raw_summoning_list[4] looks to be list[int] familiars in the Sanctuary, starting with Slime in [0], Vrumbi in [1], etc.
+        # raw_summoning_list[2] looks to be essence owned
+        # raw_summoning_list[3] I have no idea what this is
+        # raw_summoning_list[4] looks to be list[int] familiars in the Sanctuary, starting with Slime in [0], Vrumbi in [1], etc.
+        try:
+            # [2,3,2,1,1,0,0,0,0,0,0,0,0,0]
+            self.summoning['SanctuaryTotal'] = int(raw_summoning_list[4][0])  # Gray Slimes
+            self.summoning['SanctuaryTotal'] += 3 * int(raw_summoning_list[4][1])  # Vrumbi
+            self.summoning['SanctuaryTotal'] += 4 * int(raw_summoning_list[4][2])  # Bloomie
+            self.summoning['SanctuaryTotal'] += 5 * int(raw_summoning_list[4][3])  # Tonka
+            self.summoning['SanctuaryTotal'] += 6 * int(raw_summoning_list[4][4])  # Regalis
+            # self.summoning['SanctuaryTotal'] += 7 * int(raw_summoning_list[4][5])  #Sparkie
+        except:
+            self.summoning['SanctuaryTotal'] = 0
         self.summoning['WinnerBonusesAdvice'] = []
 
-        self._calculate()
+    def _calculate_wave_1(self):
+        self._calculate_general()
+        self._calculate_w1()
+        self._calculate_w2()
+        self._calculate_w3()
+        self._calculate_w4()
+        self._calculate_w5()
+        self._calculate_w6()
 
-    def _calculate(self):
-        #General
-        #W1
+    def _calculate_general(self):
+        # General
+        pass
+
+    def _calculate_w1(self):
+        self.star_sign_extras = {
+            'SeraphMulti': min(3, 1.1 ** ceil((max(self.all_skills.get('Summoning', [0])) + 1) / 20)),
+            'SeraphGoal': min(240, ceilUpToBase(max(self.all_skills.get('Summoning', [0])), 20))
+        }
+        if bool(self.star_signs.get("Seraph Cosmos", {}).get('Unlocked', False)):
+            self.star_sign_extras['SeraphEval'] = f"Multis signs by {self.star_sign_extras['SeraphMulti']:.2f}x."
+        else:
+            self.star_sign_extras['SeraphEval'] = f"Locked. Would increase other signs by {self.star_sign_extras['SeraphMulti']:.2f}x if unlocked."
+            self.star_sign_extras['SeraphMulti'] = 1
+        if self.star_sign_extras['SeraphGoal'] < 240:
+            self.star_sign_extras['SeraphEval'] += " Increases every 20 Summoning levels."
+        self.star_sign_extras['SeraphAdvice'] = Advice(
+            label=f"Starsign: Seraph Cosmos: {self.star_sign_extras['SeraphEval']}",
+            picture_class="seraph-cosmos",
+            progression=max(self.all_skills.get('Summoning', [0])),
+            goal=self.star_sign_extras['SeraphGoal'])
+
         if self.labChips.get('Silkrode Nanochip', 0) > 0:
             self.star_sign_extras['DoublerOwned'] = True
             self.star_sign_extras['SilkrodeNanoEval'] = f"{self.labChips.get('Silkrode Nanochip', 0)} owned. Doubles starsigns when equipped."
@@ -1398,7 +1505,10 @@ class Account:
         self.star_sign_extras['SilkrodeNanoAdvice'] = Advice(
             label=f"Lab Chip: Silkrode Nanochip: {self.star_sign_extras['SilkrodeNanoEval']}",
             picture_class="silkrode-nanochip")
-        #W2
+
+    def _calculate_w2(self):
+        self.vialMasteryMulti = 1 + (self.maxed_vials * .02) if self.rift['VialMastery'] else 1
+
         for sigilName in self.alchemy_p2w["Sigils"]:
             if self.alchemy_p2w["Sigils"][sigilName]["Level"] == 2:
                 if self.sneaking['JadeEmporium']['Ionized Sigils']['Obtained']:
@@ -1417,10 +1527,17 @@ class Account:
                 self.alchemy_p2w["Sigils"][sigilName]["PrechargeLevel"] = self.alchemy_p2w["Sigils"][sigilName]["Level"]
             # Before the +1, -1 would mean not unlocked, 0 would mean Blue tier, 1 would be Yellow tier, and 2 would mean Red tier
             # After the +1, 0/1/2/3
-        #W3
-        #W4
-        #W5
-        #W6
+
+    def _calculate_w3(self):
+        pass
+
+    def _calculate_w4(self):
+        pass
+
+    def _calculate_w5(self):
+        pass
+
+    def _calculate_w6(self):
         self.summoning['WinnerBonusesAdvice'].append(Advice(
             label=f"{{{{ Pristine Charm|#sneaking }}}}: Crystal Comb: {1 + (.3 * self.sneaking.get('PristineCharms', {}).get('Crystal Comb', 0))}x",
             picture_class="crystal-comb",
@@ -1452,8 +1569,8 @@ class Account:
         self.summoning['WinnerBonusesAdvice'].append(Advice(
             label=f"W6 Achievement: Regalis My Beloved: +{1 * (0 < self.achievements.get('Regalis My Beloved', False))}%",
             picture_class="regalis-my-beloved",
-            progression=1 if self.achievements.get('Regalis My Beloved', False) else 0,
-            goal=1
+            progression=360 if self.achievements.get('Regalis My Beloved', False) else self.summoning['SanctuaryTotal'],
+            goal=360
         ))
 
     def _make_cards(self):

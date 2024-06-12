@@ -40,7 +40,7 @@ def getShinyExclusions():
         }
 
     # if Infinite Star Signs are unlocked, set False (as in False, the recommendation should NOT be excluded), otherwise default True
-    if session_data.account.infinite_stars_unlocked:
+    if session_data.account.rift['InfiniteStars']:
         shinyExclusionsDict["Exclude-InfiniteStarSigns"] = False
 
     # if all artifacts are Eldritch tier, append True (as in True, the recommendation SHOULD be excluded), otherwise False
