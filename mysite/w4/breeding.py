@@ -415,21 +415,28 @@ def setBreedingProgressionTier() -> AdviceSection:
         return breeding_AdviceSection
     else:
         if shinyExclusionsDict["Lower Minimum Travel Time for Sailing"] == True:
-            if "Lower Minimum Travel Time for Sailing" in shinyPetsTierList["B"]:
-                shinyPetsTierList["C"].remove("Lower Minimum Travel Time for Sailing")
-                shinyPetsTierList["F"].append("Lower Minimum Travel Time for Sailing")
+            for tierName, tierList in shinyPetsTierList.items():
+                if "Lower Minimum Travel Time for Sailing" in tierList:
+                    shinyPetsTierList[tierName].remove("Lower Minimum Travel Time for Sailing")
+            shinyPetsTierList["F"].append("Lower Minimum Travel Time for Sailing")
+
         if shinyExclusionsDict["Higher Artifact Find Chance"] == True:
-            if "Higher Artifact Find Chance" in shinyPetsTierList["B"]:
-                shinyPetsTierList["C"].remove("Higher Artifact Find Chance")
-                shinyPetsTierList["F"].append("Higher Artifact Find Chance")
+            for tierName, tierList in shinyPetsTierList.items():
+                if "Higher Artifact Find Chance" in tierList:
+                    shinyPetsTierList[tierName].remove("Higher Artifact Find Chance")
+            shinyPetsTierList["F"].append("Higher Artifact Find Chance")
+
         if shinyExclusionsDict["Base Critter Per Trap"] == True:
-            if "Base Critter Per Trap" in shinyPetsTierList["A"]:
-                shinyPetsTierList["A"].remove('Base Critter Per Trap')
-                shinyPetsTierList["B"].append('Base Critter Per Trap')
+            for tierName, tierList in shinyPetsTierList.items():
+                if "Base Critter Per Trap" in tierList:
+                    shinyPetsTierList[tierName].remove('Base Critter Per Trap')
+            shinyPetsTierList["B"].append('Base Critter Per Trap')
+
         if shinyExclusionsDict["Faster Shiny Pet Lv Up Rate"] == True:
-            if "Faster Shiny Pet Lv Up Rate" in shinyPetsTierList["B"]:
-                shinyPetsTierList["B"].remove('Faster Shiny Pet Lv Up Rate')
-                shinyPetsTierList["C"].append('Faster Shiny Pet Lv Up Rate')
+            for tierName, tierList in shinyPetsTierList.items():
+                if "Faster Shiny Pet Lv Up Rate" in tierList:
+                    shinyPetsTierList[tierName].remove('Faster Shiny Pet Lv Up Rate')
+            shinyPetsTierList["C"].append('Faster Shiny Pet Lv Up Rate')
 
         for tier in progressionTiersBreeding:
             #Unlocked Territories
