@@ -479,6 +479,10 @@ owl_progressionTiers = {
         "MegaFeathersOwned": 17,
         "BonusesOfOrion": 23
     },
+    4: {
+        "MegaFeathersOwned": 23,
+        "BonusesOfOrion": 29
+    },
 }
 
 ###WORLD 2 PROGRESSION TIERS###
