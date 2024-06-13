@@ -52,13 +52,13 @@ def setOwlProgressionTier() -> AdviceSection:
                             if subgroupName not in owl_AdviceDict['MegaFeathers'] and len(owl_AdviceDict['MegaFeathers']) < maxTiersPerGroup:
                                 owl_AdviceDict['MegaFeathers'][subgroupName] = []
                             if subgroupName in owl_AdviceDict['MegaFeathers']:
+                                lastMFShown = mf
                                 owl_AdviceDict['MegaFeathers'][subgroupName].append(Advice(
                                     label=f"Mega Feather {mf+1}: Complete {resets} Feather Restarts first",
                                     picture_class=f"megafeather-{mf}" if mf < 10 else "the-great-mega-reset",
-                                    progression=session_data.account.owl['FeatherRestarts'] if len(owl_AdviceDict['MegaFeathers']) == 0 else 0,
+                                    progression=session_data.account.owl['FeatherRestarts'] if session_data.account.owl['MegaFeathersOwned'] == mf else 0,
                                     goal=resets
                                 ))
-                                lastMFShown = mf
         if 'BonusesOfOrion' in tierRequirementsDict:
             if session_data.account.owl['BonusesOfOrion'] < tierRequirementsDict['BonusesOfOrion']:
                 if subgroupName not in owl_AdviceDict['MegaFeathers'] and len(owl_AdviceDict['MegaFeathers']) < maxTiersPerGroup:
