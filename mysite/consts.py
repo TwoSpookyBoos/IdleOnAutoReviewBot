@@ -480,7 +480,7 @@ owl_progressionTiers = {
         "BonusesOfOrion": 23
     },
     4: {
-        "MegaFeathersOwned": 23,
+        "MegaFeathersOwned": 24,
         "BonusesOfOrion": 29
     },
 }
