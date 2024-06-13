@@ -831,6 +831,7 @@ class Account:
         self._parse_w1_forge()
         self._parse_w1_bribes()
         self._parse_w1_stamps()
+        self._parse_w1_owl()
 
     def _parse_w1_starsigns(self):
         self.star_signs = {}
@@ -930,6 +931,20 @@ class Account:
                         "StampType": stampType,
                         "Value": 0
                     }
+
+    def _parse_w1_owl(self):
+        self.owl = {}
+        try:
+            self.owl['FeatherGeneration'] = self.raw_optlacc_list[254]
+            self.owl['BonusesOfOrion'] = self.raw_optlacc_list[255]
+            self.owl['FeatherRestarts'] = self.raw_optlacc_list[258]
+            self.owl['MegaFeathersOwned'] = self.raw_optlacc_list[262]
+        except:
+            self.owl['FeatherGeneration'] = 0
+            self.owl['BonusesOfOrion'] = 0
+            self.owl['FeatherRestarts'] = 0
+            self.owl['MegaFeathersOwned'] = 0
+
 
     def _parse_w2(self):
         self._parse_w2_vials()

@@ -10,7 +10,7 @@ from models.models import AdviceWorld, WorldName, Account
 from utils.data_formatting import getJSONfromAPI, getJSONfromText, HeaderData
 from utils.logging import get_logger
 from utils.text_formatting import is_username
-from w1 import stamps, bribes, smithing
+from w1 import stamps, bribes, smithing, owl
 from w2 import alchemy
 from w3 import trapping, consRefinery, consDeathNote, worship, consSaltLick, consBuildings, equinox, sampling
 from w4 import breeding, cooking, rift
@@ -65,6 +65,7 @@ def main(inputData, runType="web"):
         section_stamps := stamps.setStampProgressionTier(),
         section_bribes := bribes.setBribesProgressionTier(),
         section_smithing := smithing.setSmithingProgressionTier(),
+        section_owl := owl.setOwlProgressionTier()
     ]
 
     # World 2
@@ -111,7 +112,7 @@ def main(inputData, runType="web"):
 
     pinchable_sections = [
         section_combatLevels, section_secretPath,
-        section_stamps, section_bribes, section_smithing,
+        section_stamps, section_bribes, section_smithing, section_owl,
         section_alchBubbles, section_alchVials, section_alchP2W,
         section_refinery, section_saltlick, section_deathnote, section_prayers, section_equinox,
         section_breeding, section_cooking, section_rift,

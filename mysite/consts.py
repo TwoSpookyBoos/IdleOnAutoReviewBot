@@ -467,6 +467,19 @@ smithing_progressionTiers = [
     [5, 200, 500, 291, "early W4 enemies through Soda Cans"],
     [6, 600, 700, 291, "all W4 enemies"]
 ]
+owl_progressionTiers = {
+    0: {},
+    1: {
+        "FeatherGeneration": 1
+    },
+    2: {
+        "MegaFeathersOwned": 9,
+    },
+    3: {
+        "MegaFeathersOwned": 17,
+        "BonusesOfOrion": 23
+    },
+}
 
 ###WORLD 2 PROGRESSION TIERS###
 bubbles_progressionTiers = [
