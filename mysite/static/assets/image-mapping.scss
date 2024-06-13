@@ -25,6 +25,7 @@
 @import "arcade";
 @import "merits";
 @import "postoffice";
+@import "owl";
 
 $id-map: ();
 
@@ -2163,6 +2164,7 @@ $id-map: map-merge($all-worship, $id-map);
 $id-map: map-merge($gem-shop, $id-map);
 $id-map: map-merge($merits, $id-map);
 $id-map: map-merge($postoffice, $id-map);
+$id-map: map-merge($owl-map, $id-map);
 
 $extra: (
     //storage: $cosmic-storage-chest,
@@ -2188,7 +2190,8 @@ $extra: (
 	cactolyte: $cactolyte,
 	nebulyte: $nebulyte,
 	divinity: $divinity,
-	jade-vendor: $jade-vendor
+	jade-vendor: $jade-vendor,
+	owl: $owl
 );
 $id-map: map-merge($extra, $id-map);
 

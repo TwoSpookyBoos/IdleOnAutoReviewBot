@@ -27,7 +27,7 @@ def getBuildingImageNameFromIndex(inputNumber):
 def getInfluencers():
     honkerVialLevel = session_data.account.alchemy_vials.get("Goosey Glug (Honker)", {}).get("Level", 0)
     poisonicLevel = session_data.account.construction_buildings.get("Poisonic Elder", 0)
-    consMastery = session_data.account.construction_mastery_unlocked
+    consMastery = session_data.account.rift['ConstructionMastery']
     carbonUnlocked = session_data.account.atoms.get("Carbon - Wizard Maximizer", 0) >= 1
     results = [(consMastery or carbonUnlocked), honkerVialLevel, poisonicLevel]
     #logger.debug(f"Influencer results: EitherBuff: {results[0]}, Honker Vial Level: {results[1]}, Poisonic Tower Level: {results[2]}")

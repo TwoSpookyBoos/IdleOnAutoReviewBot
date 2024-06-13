@@ -35,7 +35,7 @@ def setRiftProgressionTier():
         header="Best Rift tier met: Not Yet Evaluated",
         picture="Rift_Ripper.gif"
     )
-    if not session_data.account.rift_unlocked:
+    if not session_data.account.rift['Unlocked']:
         rift_AdviceSection.header = "Come back after completing the Rift Ripper NPC's quest!"
         return rift_AdviceSection
 

@@ -52,7 +52,7 @@ def parseJSON():
     if causticolumn_level < 2:
         playerMissingPlateUpgrades.append(("{{ Artifact|#sailing }}: Ancient Causticolumn", "causticolumn"))
     if causticolumn_level < 3:
-        if session_data.account.eldritch_artifacts_unlocked:
+        if session_data.account.rift['EldritchArtifacts']:
             playerMissingPlateUpgrades.append(("{{ Artifact|#sailing }}: Eldritch Causticolumn", "causticolumn"))
         else:
             playerMissingPlateUpgrades.append(("{{ Artifact|#sailing }}: Eldritch Causticolumn. Eldritch Artifacts are unlocked by completing {{ Rift|#rift }} 30", "eldritch-artifact"))
@@ -60,7 +60,7 @@ def parseJSON():
         if session_data.account.sneaking['JadeEmporium']["Sovereign Artifacts"]['Obtained']:
             playerMissingPlateUpgrades.append(("{{ Artifact|#sailing }}: Sovereign Causticolumn", "causticolumn"))
         else:
-            playerMissingPlateUpgrades.append(("{{ Artifact|#sailing }}: Causticolumn Sailing Artifact. Sovereign Artifacts are unlocked from the {{ Jade Emporium|#sneaking }}", "sovereign-artifacts"))
+            playerMissingPlateUpgrades.append(("{{ Artifact|#sailing }}: Sovereign Causticolumn. Sovereign Artifacts are unlocked from the {{ Jade Emporium|#sneaking }}", "sovereign-artifacts"))
     #Jade Emporium Increases
     if session_data.account.sneaking['JadeEmporium']["Papa Blob's Quality Guarantee"]['Obtained']:
         playerMaxPlateLvl += 10
@@ -231,10 +231,21 @@ def setCookingProgressionTier():
             goal="",
         ))
     if playerTotalMealLevels < maxMeals * maxMealLevel:
-        remainingMeals = (maxMeals * maxMealLevel)-playerTotalMealLevels
-        session_data.account.meals_remaining = remainingMeals
+        current_maxMealLevel = maxMealLevel-10*len(playerMissingPlateUpgrades)
+        current_remainingMeals = (mealsUnlocked * current_maxMealLevel) - playerTotalMealLevels
+
+        max_remainingMeals = (maxMeals * maxMealLevel)-playerTotalMealLevels
+        session_data.account.meals_remaining = max_remainingMeals
+        if current_remainingMeals != max_remainingMeals:
+            cooking_AdviceDict["CurrentTier"].append(Advice(
+                label=f"Info- Current possible: {mealsUnlocked}/{maxMeals} meals, {current_maxMealLevel}/{maxMealLevel} plate levels ({current_remainingMeals} to go!)",
+                picture_class="turkey-a-la-thank",
+                progression=playerTotalMealLevels,
+                goal=mealsUnlocked * current_maxMealLevel,
+            ))
+
         cooking_AdviceDict["CurrentTier"].append(Advice(
-            label=f"Info- Total Meal Levels ({remainingMeals} to go!)",
+            label=f"Info- Total Meal Levels ({max_remainingMeals} to go!)",
             picture_class="turkey-a-la-thank",
             progression=playerTotalMealLevels,
             goal=maxMeals * maxMealLevel,

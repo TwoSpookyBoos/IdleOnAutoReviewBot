@@ -197,7 +197,7 @@ greenstack_progressionTiers = {
             },
         6: {
             "Base Monster Materials": [
-                "SnowB1", "SnowB2", "SnowB5", "SnowB3", "SnowB4", "SnowC1", "SnowC2", "SnowC3", "SnowC4"
+                "SnowB1", "SnowB2", "SnowB5", "SnowB3", "SnowB4", "SnowC1", "SnowC2", "SnowC3", "SnowC4",
                 "GalaxyA1", "GalaxyA2", "GalaxyA3", "GalaxyA4", "GalaxyB1", "GalaxyB2", ],
             "Other Skilling Resources": [
                 "CraftMat8", "CraftMat10",
@@ -218,7 +218,7 @@ greenstack_progressionTiers = {
         8: {
             "Base Monster Materials": [
                 "GalaxyC4",
-                "LavaA1", "LavaA2", "LavaA3", "LavaA4", "LavaA5", "LavaB1", "LavaB2", "LavaB3", "LavaB4", "LavaB5",],
+                "LavaA1", "LavaA2", "LavaA3", "LavaA4", "LavaA5", "LavaB1", "LavaB2", "LavaB3", "LavaB4", "LavaB5"],
             "Crystal Enemy Drops": [
                 "FoodHealth6", "FoodHealth7", "FoodPotGr2", "FoodPotRe3", "Leaf2",],
             "Other Skilling Resources": [
@@ -249,7 +249,7 @@ greenstack_progressionTiers = {
                 "Critter10", "Critter11",
                 "Soul7",
                 "CopperBar", "IronBar",
-                "Bullet", "BulletB",],
+                "FoodMining1", "FoodFish1", "FoodCatch1", "Bullet", "BulletB",],
             "Vendor Shops": [
                 "OilBarrel6", "OilBarrel7",],
             },
@@ -261,7 +261,7 @@ greenstack_progressionTiers = {
             ],
             "Other Skilling Resources": [
                 "PlatBar",
-                "FoodMining1", "FoodFish1", "FoodCatch1",
+
             ],
             },
         12: {
@@ -467,6 +467,23 @@ smithing_progressionTiers = [
     [5, 200, 500, 291, "early W4 enemies through Soda Cans"],
     [6, 600, 700, 291, "all W4 enemies"]
 ]
+owl_progressionTiers = {
+    0: {},
+    1: {
+        "FeatherGeneration": 1
+    },
+    2: {
+        "MegaFeathersOwned": 9,
+    },
+    3: {
+        "MegaFeathersOwned": 17,
+        "BonusesOfOrion": 23
+    },
+    4: {
+        "MegaFeathersOwned": 24,
+        "BonusesOfOrion": 29
+    },
+}
 
 ###WORLD 2 PROGRESSION TIERS###
 bubbles_progressionTiers = [

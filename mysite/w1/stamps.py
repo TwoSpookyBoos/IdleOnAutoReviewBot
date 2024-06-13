@@ -225,7 +225,7 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     costReduction_Advices["Vials"].append(Advice(
         label=f"{{{{ Rift|#rift }}}} Bonus: Vial Mastery: {session_data.account.vialMasteryMulti:.2f}x",
         picture_class="vial-mastery",
-        progression=f"{1 if session_data.account.vial_mastery_unlocked else 0}",
+        progression=f"{1 if session_data.account.rift['VialMastery'] else 0}",
         goal=1
     ))
     costReduction_Advices["Vials"].append(Advice(

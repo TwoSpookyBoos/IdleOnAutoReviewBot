@@ -107,7 +107,7 @@ def setSailingProgressionTier():
                         picture_class="golden-hampter-gummy-candy",
                     ))
         if 'Eldritch' in tierRequirementsDict:
-            if not session_data.account.eldritch_artifacts_unlocked:
+            if not session_data.account.rift['EldritchArtifacts']:
                 if subgroupName not in sailing_AdviceDict['Artifacts'] and len(sailing_AdviceDict['Artifacts']) < maxTiersPerGroup:
                     sailing_AdviceDict['Artifacts'][subgroupName] = []
                 if subgroupName in sailing_AdviceDict['Artifacts']:
