@@ -3,266 +3,10 @@ from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import maxTiersPerGroup, divinity_progressionTiers, divinity_offeringsDict, divinity_stylesDict, getOfferingNameFromIndex, getStyleNameFromIndex, \
-    getDivinityNameFromIndex
+    getDivinityNameFromIndex, divLinksDict, divLevelReasonsDict
 
 logger = get_logger(__name__)
 
-divLevelReasonsDict = {
-    0: "",
-    2: "to activate Doot",
-    40: "to unlock the TranQi Style.",
-    50: "to unlock the Multitool Stamp from Poigu's quest."
-}
-divLinksDict = {
-    0: [
-        Advice(
-            label="No Divinities unlocked to link to",
-            picture_class=""
-        )
-    ],
-    1: [
-        Advice(
-            label="No harm in linking everyone, as Snehebatu is your only choice",
-            picture_class="snehebatu"
-        )
-    ],
-    2: [
-        Advice(
-            label="Lab bonuses fully online",
-            picture_class="arctis"
-        ),
-        Advice(
-            label="Extra characters can link to Snake if not Meditating",
-            picture_class="snehebatu"
-        )
-    ],
-    3: [
-        Advice(
-            label="Lab bonuses fully online",
-            picture_class="arctis"
-        ),
-        Advice(
-            label="1 Map Pusher",
-            picture_class="nobisect"
-        ),
-        Advice(
-            label="Extra characters can link to Snake if not Meditating",
-            picture_class="snehebatu"
-        )
-    ],
-    4: [
-        Advice(
-            label="Lab bonuses fully online",
-            picture_class="arctis"
-        ),
-        Advice(
-            label="1 Map Pusher",
-            picture_class="nobisect"
-        ),
-        Advice(
-            label="Extra characters can link to Snake if not Meditating",
-            picture_class="snehebatu"
-        )
-    ],
-    5: [
-        Advice(
-            label="Move Meditators to Lab",
-            picture_class="goharut"
-        ),
-        Advice(
-            label="Lab bonuses fully online",
-            picture_class="arctis"
-        ),
-        Advice(
-            label="1 Map Pusher",
-            picture_class="nobisect"
-        ),
-        Advice(
-            label="Extra characters can link to Snake if not Meditating",
-            picture_class="snehebatu"
-        )
-    ],
-    6: [
-        Advice(
-            label="Move Meditators to Lab",
-            picture_class="goharut"
-        ),
-        Advice(
-            label="Lab bonuses fully online",
-            picture_class="arctis"
-        ),
-        Advice(
-            label="1 Map Pusher",
-            picture_class="nobisect"
-        ),
-        Advice(
-            label="Extra characters can link to Snake if not Meditating",
-            picture_class="snehebatu"
-        )
-    ],
-    7: [
-        Advice(
-            label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
-            picture_class="purrmep"
-        ),
-        Advice(
-            label="Meditators in Lab",
-            picture_class="goharut"
-        ),
-        Advice(
-            label="Lab bonuses fully online",
-            picture_class="arctis"
-        ),
-        Advice(
-            label="1 Map Pusher",
-            picture_class="nobisect"
-        ),
-        Advice(
-            label="Cooking BB generally wants Snake",
-            picture_class="cooking-ladle"
-        ),
-        Advice(
-            label="Extra characters can link to Snake if not Meditating",
-            picture_class="snehebatu"
-        ),
-
-    ],
-    8: [
-        Advice(
-            label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
-            picture_class="purrmep"
-        ),
-        Advice(
-            label="Meditators in Lab",
-            picture_class="goharut"
-        ),
-        Advice(
-            label="Lab bonuses fully online",
-            picture_class="arctis"
-        ),
-        Advice(
-            label="1 Map Pusher",
-            picture_class="nobisect"
-        ),
-        Advice(
-            label="Cooking BB generally wants Snake",
-            picture_class="cooking-ladle"
-        ),
-        Advice(
-            label="Extra characters can link to Snake if not Meditating",
-            picture_class="snehebatu"
-        ),
-    ],
-    9: [
-        Advice(
-            label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
-            picture_class="purrmep"
-        ),
-        Advice(
-            label="Meditators in Lab",
-            picture_class="goharut"
-        ),
-        Advice(
-            label="Lab bonuses fully online",
-            picture_class="arctis"
-        ),
-        Advice(
-            label="1 Map Pusher",
-            picture_class="nobisect"
-        ),
-        Advice(
-            label="Cooking BB generally wants Snake",
-            picture_class="cooking-ladle"
-        ),
-        Advice(
-            label="Extra characters can link to Snake if not Meditating",
-            picture_class="snehebatu"
-        ),
-    ],
-    10: [
-        Advice(
-            label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
-            picture_class="purrmep"
-        ),
-        Advice(
-            label="Meditators in Lab",
-            picture_class="goharut"
-        ),
-        Advice(
-            label="Lab bonuses fully online",
-            picture_class="arctis"
-        ),
-        Advice(
-            label="1 Map Pusher",
-            picture_class="nobisect"
-        ),
-        Advice(
-            label="Cooking BB generally wants Snake",
-            picture_class="cooking-ladle"
-        ),
-        Advice(
-            label="Extra characters can link to Snake if not Meditating",
-            picture_class="snehebatu"
-        ),
-    ],
-    11: [
-        Advice(
-            label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
-            picture_class="purrmep"
-        ),
-        Advice(
-            label="Meditators in Lab",
-            picture_class="goharut"
-        ),
-        Advice(
-            label="Lab bonuses fully online",
-            picture_class="arctis"
-        ),
-        Advice(
-            label="1 Map Pusher",
-            picture_class="nobisect"
-        ),
-        Advice(
-            label="Cooking BB generally wants Snake",
-            picture_class="cooking-ladle"
-        ),
-        Advice(
-            label="Extra characters can link to Snake if not Meditating",
-            picture_class="snehebatu"
-        ),
-    ],
-    12: [
-        Advice(
-            label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
-            picture_class="purrmep"
-        ),
-        Advice(
-            label="Meditators in Lab",
-            picture_class="goharut"
-        ),
-        Advice(
-            label="Lab bonuses fully online",
-            picture_class="arctis"
-        ),
-        Advice(
-            label="1 Map Pusher",
-            picture_class="nobisect"
-        ),
-        Advice(
-            label="Cooking BB generally wants Snake",
-            picture_class="cooking-ladle"
-        ),
-        Advice(
-            label="Extra characters can link to Snake if not Meditating",
-            picture_class="snehebatu"
-        ),
-        Advice(
-            label="Omniphau is a gamble. Refinery and 3D Printer rewards are nice- The other 4/6 are pretty meh.",
-            picture_class="omniphau"
-        ),
-    ],
-
-}
 
 def getDivLevelReason(inputLevel: int) -> str:
     return divLevelReasonsDict.get(inputLevel, "")
@@ -293,7 +37,6 @@ def setDivinityProgressionTier():
     lowestDivinitySkillLevel = min(session_data.account.all_skills.get("Divinity", [0]))
     tier_Divinity = 0
     max_tier = max(divinity_progressionTiers.keys())
-    #playerDivinityList = session_data.account.divinity
     lowOffering = session_data.account.divinity['LowOffering']
     highOffering = session_data.account.divinity['HighOffering']
 
@@ -379,7 +122,13 @@ def setDivinityProgressionTier():
             ))
 
     #Doot Checks Info
-    if session_data.account.doot_owned:
+    if not session_data.account.doot_owned:
+        divinity_AdviceDict["DivinityLinks"] = divLinksDict.get(int(tier_Divinity), [])
+    #     divinity_AdviceDict["Dooted"].append(Advice(
+    #         label=f"Doot not owned, bummer 💔",
+    #         picture_class="king-doot"
+    #     ))
+    else:
         divinity_AdviceDict["Dooted"].append(Advice(
             label=f"Doot owned. Congrats 🙄",
             picture_class="king-doot"
@@ -413,7 +162,11 @@ def setDivinityProgressionTier():
             if not purrmepAssignedToAnyHighestCharacter:
                 if highestDivinitySkillLevel < 120 and highestDivinitySkillLevel - divLevelOfPurrmepLinkedCharacter >= 10:
                     divinity_AdviceDict["Dooted"].append(Advice(
-                        label=f"Relink to {pl(highestCharactersNotAssignedToPurrmep, f'{highestCharactersNotAssignedToPurrmep[0].character_name}', 'one of these characters')} to maximize Purrmep's Minor Link bonus by {highestDivinitySkillLevel - divLevelOfPurrmepLinkedCharacter} levels{pl(highestCharactersNotAssignedToPurrmep, '.', ':')}",
+                        label=f"""Relink to {pl(highestCharactersNotAssignedToPurrmep,
+                                              f'{highestCharactersNotAssignedToPurrmep[0].character_name}',
+                                              'one of these characters')}"""
+                              f" to maximize Purrmep's Minor Link bonus by {highestDivinitySkillLevel - divLevelOfPurrmepLinkedCharacter} "
+                              f"levels{pl(highestCharactersNotAssignedToPurrmep, '.', ':')}",
                         picture_class="purrmep"
                     ))
                     if len(highestCharactersNotAssignedToPurrmep) > 1:
@@ -423,17 +176,13 @@ def setDivinityProgressionTier():
                                 picture_class=character.class_name_icon
                             ))
         if len(divinity_AdviceDict["Dooted"]) == 1:
+            #If the only Advice in the list is the sarcastic "Grats for owning Doot", don't show this group
             divinity_AdviceDict["Dooted"] = []
             # divinity_AdviceDict["Dooted"].append(Advice(
             #     label=f"No Doot-related issues found. Way to be a responsible Doot owner",
             #     picture_class=""
             # ))
-    else:
-        divinity_AdviceDict["DivinityLinks"] = divLinksDict.get(int(tier_Divinity), [])
-    #     divinity_AdviceDict["Dooted"].append(Advice(
-    #         label=f"Doot not owned, bummer 💔",
-    #         picture_class="king-doot"
-    #     ))
+
 
     #Big P + Divinity level thresholds for Arctis minor link
     bigPBreakpointsList = [540, 940, 1440, 1940, 2440, 2940, 5940]

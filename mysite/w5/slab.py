@@ -1,11 +1,31 @@
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.text_formatting import pl, getItemDisplayName
+from utils.text_formatting import getItemDisplayName
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import slabList, reclaimableQuestItems, vendorItems, anvilItems, knownSlabIgnorablesList, dungeonWeaponsList, maxDungeonWeaponsAvailable, \
-    dungeonArmorsList, maxDungeonArmorsAvailable, dungeonJewelryList, maxDungeonJewelryAvailable, dungeonDropsList, anvilTabs, vendors
+from consts import slabList, reclaimableQuestItems, vendorItems, anvilItems, dungeonWeaponsList, maxDungeonWeaponsAvailable, \
+    dungeonArmorsList, maxDungeonArmorsAvailable, dungeonJewelryList, maxDungeonJewelryAvailable, dungeonDropsList, anvilTabs, vendors, knownSlabIgnorablesList, \
+    slab_itemNameFindList, slab_itemNameReplacementList
 
 logger = get_logger(__name__)
+
+def getDeprecatedAdviceGroup() -> AdviceGroup:
+    dep_adviceList = []
+
+    #Just for fun. This does the opposite: Looks for items registered as owned that aren't in the expected Slab list
+    for itemName in session_data.account.registered_slab:
+        if itemName not in slabList:
+            dep_adviceList.append(Advice(
+                label=getItemDisplayName(itemName) if itemName not in knownSlabIgnorablesList else f"{getItemDisplayName(itemName)} (Probably not counted)",
+                picture_class=getItemDisplayName(itemName) if itemName not in slab_itemNameFindList else slab_itemNameReplacementList[slab_itemNameFindList.index(itemName)]))
+
+    dep_AdviceGroup = AdviceGroup(
+        tier='',
+        pre_string=f"In your Owned list, but not expected in The Slab. These could cause you to go over the maximum number listed in The Slab",
+        advices=dep_adviceList
+    )
+    return dep_AdviceGroup
+
+
 
 def setSlabProgressionTier():
     slab_AdviceDict = {
@@ -18,7 +38,6 @@ def setSlabProgressionTier():
             "Armor": [],
             "Weapons": []
         },
-        "Deprecated": []
     }
     slab_AdviceGroupDict = {}
     slab_AdviceSection = AdviceSection(
@@ -28,18 +47,9 @@ def setSlabProgressionTier():
         header="Best Slab tier met: Not Yet Evaluated",
         picture="Slab.png"
     )
-    # highestSlabSkillLevel = max(session_data.account.all_skills.get("Slab", [0]))
-    # if highestSlabSkillLevel < 1:
-    #     slab_AdviceSection.header = "Come back after unlocking the Slab in W5!"
-    #     return slab_AdviceSection
 
     tier_Slab = 0
     max_tier = 0
-
-    itemNameFindList = ["Timecandy1", "Timecandy2", "Timecandy3", "Timecandy4", "Timecandy5", "Timecandy6",
-                        "EquipmentHats108", "EquipmentNametag10"]
-    itemNameReplacementList = ["time-candy-1-hr", "time-candy-2-hr", "time-candy-4-hr", "time-candy-12-hr", "time-candy-24-hr", "time-candy-72-hr",
-                               "third-anniversary-ice-cream-topper", "third-anniversary-idleon-nametag"]
 
     #Assess Tiers
     for itemName in slabList:
@@ -48,7 +58,7 @@ def setSlabProgressionTier():
             if session_data.account.assets.get(itemName).amount > 0:
                 slab_AdviceDict["Storage"].append(Advice(
                     label=getItemDisplayName(itemName),
-                    picture_class=getItemDisplayName(itemName) if itemName not in itemNameFindList else itemNameReplacementList[itemNameFindList.index(itemName)]))
+                    picture_class=getItemDisplayName(itemName) if itemName not in slab_itemNameFindList else slab_itemNameReplacementList[slab_itemNameFindList.index(itemName)]))
                 continue
             #If the item is a reclaimable quest item AND the quest has been completed by at least 1 character
             if itemName in reclaimableQuestItems.keys():
@@ -57,7 +67,7 @@ def setSlabProgressionTier():
                         if characterQuests[reclaimableQuestItems[itemName].get("QuestNameCoded")] > 0:
                             slab_AdviceDict["Reclaims"].append(Advice(
                                 label=f"{getItemDisplayName(itemName)} ({reclaimableQuestItems[itemName].get('QuestGiver')}: {reclaimableQuestItems[itemName].get('QuestName')})",
-                                picture_class=getItemDisplayName(itemName) if itemName not in itemNameFindList else itemNameReplacementList[itemNameFindList.index(itemName)]))
+                                picture_class=getItemDisplayName(itemName) if itemName not in slab_itemNameFindList else slab_itemNameReplacementList[slab_itemNameFindList.index(itemName)]))
                             break  #Only show this once per account, not once per character
                 continue
             #If the item is sold by a vendor
@@ -68,7 +78,7 @@ def setSlabProgressionTier():
                 if itemName in vendorList:
                     slab_AdviceDict["Vendors"][vendor].append(Advice(
                         label=getItemDisplayName(itemName),
-                        picture_class=getItemDisplayName(itemName) if itemName not in itemNameFindList else itemNameReplacementList[itemNameFindList.index(itemName)]))
+                        picture_class=getItemDisplayName(itemName) if itemName not in slab_itemNameFindList else slab_itemNameReplacementList[slab_itemNameFindList.index(itemName)]))
                     break
             #If the item is craftable at the anvil
             for anvilTab, anvilTabList in anvilItems.items():
@@ -78,43 +88,36 @@ def setSlabProgressionTier():
                 if itemName in anvilTabList:
                     slab_AdviceDict["Anvil"][anvilTab].append(Advice(
                         label=getItemDisplayName(itemName),
-                        picture_class=getItemDisplayName(itemName) if itemName not in itemNameFindList else itemNameReplacementList[itemNameFindList.index(itemName)]))
+                        picture_class=getItemDisplayName(itemName) if itemName not in slab_itemNameFindList else slab_itemNameReplacementList[slab_itemNameFindList.index(itemName)]))
                     break
             # If the item is a unique Dungeon Drop:
             if itemName in dungeonDropsList:
                 slab_AdviceDict["Dungeon"]["Drops"].append(Advice(
                     label=getItemDisplayName(itemName),
-                    picture_class=getItemDisplayName(itemName) if itemName not in itemNameFindList else itemNameReplacementList[
-                        itemNameFindList.index(itemName)]))
+                    picture_class=getItemDisplayName(itemName) if itemName not in slab_itemNameFindList else slab_itemNameReplacementList[
+                        slab_itemNameFindList.index(itemName)]))
                 continue
             #If the item is a Dungeon Weapon AND the player has purchased all MaxWeapons
             if itemName in dungeonWeaponsList and session_data.account.dungeon_upgrades.get("MaxWeapon", 0) >= maxDungeonWeaponsAvailable:
                 slab_AdviceDict["Dungeon"]["Weapons"].append(Advice(
                     label=getItemDisplayName(itemName),
-                    picture_class=getItemDisplayName(itemName) if itemName not in itemNameFindList else itemNameReplacementList[
-                        itemNameFindList.index(itemName)]))
+                    picture_class=getItemDisplayName(itemName) if itemName not in slab_itemNameFindList else slab_itemNameReplacementList[
+                        slab_itemNameFindList.index(itemName)]))
                 continue
             # If the item is a Dungeon Armor AND the player has purchased all MaxArmor
             if itemName in dungeonArmorsList and session_data.account.dungeon_upgrades.get("MaxArmor", 0)[0] >= maxDungeonArmorsAvailable:
                 slab_AdviceDict["Dungeon"]["Armor"].append(Advice(
                     label=getItemDisplayName(itemName),
-                    picture_class=getItemDisplayName(itemName) if itemName not in itemNameFindList else itemNameReplacementList[
-                        itemNameFindList.index(itemName)]))
+                    picture_class=getItemDisplayName(itemName) if itemName not in slab_itemNameFindList else slab_itemNameReplacementList[
+                        slab_itemNameFindList.index(itemName)]))
                 continue
                 # If the item is a Dungeon Jewelry AND the player has purchased all MaxJewelry
             if itemName in dungeonJewelryList and session_data.account.dungeon_upgrades.get("MaxJewelry", 0)[0] >= maxDungeonJewelryAvailable:
                 slab_AdviceDict["Dungeon"]["Armor"].append(Advice(
                     label=getItemDisplayName(itemName),
-                    picture_class=getItemDisplayName(itemName) if itemName not in itemNameFindList else itemNameReplacementList[
-                        itemNameFindList.index(itemName)]))
+                    picture_class=getItemDisplayName(itemName) if itemName not in slab_itemNameFindList else slab_itemNameReplacementList[
+                        slab_itemNameFindList.index(itemName)]))
                 continue
-
-    #Just for fun. This does the opposite: Looks for items registered as owned that aren't in the expected Slab list
-    # for itemName in session_data.account.registered_slab:
-    #     if itemName not in slabList:
-    #         slab_AdviceDict["Deprecated"].append(Advice(
-    #             label=getItemDisplayName(itemName) if itemName not in knownSlabIgnorablesList else f"{getItemDisplayName(itemName)} (Probably not counted)",
-    #             picture_class=getItemDisplayName(itemName) if itemName not in itemNameFindList else itemNameReplacementList[itemNameFindList.index(itemName)]))
 
     #Remove any empty subgroups. Caused by creating the subgroups in order to preserve order.
     emptyVendorSubgroups = []
@@ -170,11 +173,9 @@ def setSlabProgressionTier():
         pre_string=f"Could be dropped in the Dungeon",
         advices=slab_AdviceDict["Dungeon"]
     )
-    slab_AdviceGroupDict["Deprecated"] = AdviceGroup(
-        tier='',
-        pre_string=f"In your Owned list, but not expected in The Slab. These could cause you to go over the maximum number listed in The Slab",
-        advices=slab_AdviceDict["Deprecated"]
-    )
+
+    #The Deprecated group is currently commented out as it was causing a lot of confusion on day one. Might bring it back later though.
+    #slab_AdviceGroupDict["Deprecated"] = getDeprecatedAdviceGroup()
 
     # Generate AdviceSection
     overall_SlabTier = min(max_tier, tier_Slab)

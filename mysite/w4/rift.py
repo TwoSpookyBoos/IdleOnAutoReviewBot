@@ -1,6 +1,5 @@
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
-from utils.data_formatting import safe_loads
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import rift_progressionTiers
@@ -19,10 +18,6 @@ riftRewardsDict = {
 
 def getRiftRewardFromLevel(inputLevel):
     return riftRewardsDict.get(inputLevel, f"UnknownRiftReward{inputLevel}")
-
-def parseJSONtoLists():
-    templateList = safe_loads(session_data.account.raw_data.get("Rift", "[0,0,'',0,0,0,0,0,0,0]"))
-    return templateList
 
 def setRiftProgressionTier():
     rift_AdviceDict = {
