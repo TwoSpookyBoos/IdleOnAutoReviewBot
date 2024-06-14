@@ -945,7 +945,6 @@ class Account:
             self.owl['FeatherRestarts'] = 0
             self.owl['MegaFeathersOwned'] = 0
 
-
     def _parse_w2(self):
         self._parse_w2_vials()
         self._parse_w2_bubbles()
@@ -991,7 +990,8 @@ class Account:
                     "CauldronIndex": cauldronIndex,
                     "BubbleIndex": bubbleIndex,
                     "Level": 0,
-                    "BaseValue": 0
+                    "BaseValue": 0,
+                    "Material": getItemDisplayName(bubblesDict[cauldronIndex][bubbleIndex]['Material'])
                 }
         # Try to read player levels and calculate base value
         try:
