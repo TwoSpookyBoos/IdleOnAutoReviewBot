@@ -163,7 +163,7 @@ def setAlchemyVialsProgressionTier() -> AdviceSection:
     return vial_AdviceSection
 
 
-def getExclusions():
+def getBubbleExclusions():
     exclusionsList = []
     #If all crops owned or Evolution GMO is level 10+, exclude the requirement for Cropius Mapper
     if session_data.account.farming["CropsUnlocked"] >= maxFarmingCrops or session_data.account.farming["MarketUpgrades"].get("Evolution GMO", 0) > 10:
@@ -200,40 +200,8 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
     max_tier = bubbles_progressionTiers[-2][0]  #Final tier is Informational
     overall_alchemyBubblesTier = 0
     adviceCountsDict = {"PurpleSampleBubbles": 0, "OrangeSampleBubbles": 0, "GreenSampleBubbles": 0, "UtilityBubbles": 0}
-    exclusionsList = getExclusions()
+    exclusionsList = getBubbleExclusions()
 
-    #Get the bubble data and remove the length element
-    # raw_orange_alchemyBubblesDict = session_data.account.raw_data["CauldronInfo"][0]
-    # raw_orange_alchemyBubblesDict.pop('length', None)
-    # raw_green_alchemyBubblesDict = session_data.account.raw_data["CauldronInfo"][1]
-    # raw_green_alchemyBubblesDict.pop('length', None)
-    # raw_purple_alchemyBubblesDict = session_data.account.raw_data["CauldronInfo"][2]
-    # raw_purple_alchemyBubblesDict.pop('length', None)
-    # raw_yellow_alchemyBubblesDict = session_data.account.raw_data["CauldronInfo"][3]
-    # raw_yellow_alchemyBubblesDict.pop('length', None)
-    #
-    # #Replace the bubble numbers with their names for readable evaluation against the progression tiers
-    # named_all_alchemyBubblesDict = {}
-    # for bubble in raw_orange_alchemyBubblesDict:
-    #     if int(bubble) <= max_IndexOfBubbles:
-    #         named_all_alchemyBubblesDict[getReadableBubbleNames(bubble, "Orange")] = int(raw_orange_alchemyBubblesDict[bubble])
-    # for bubble in raw_green_alchemyBubblesDict:
-    #     if int(bubble) <= max_IndexOfBubbles:
-    #         named_all_alchemyBubblesDict[getReadableBubbleNames(bubble, "Green")] = int(raw_green_alchemyBubblesDict[bubble])
-    # for bubble in raw_purple_alchemyBubblesDict:
-    #     if int(bubble) <= max_IndexOfBubbles:
-    #         named_all_alchemyBubblesDict[getReadableBubbleNames(bubble, "Purple")] = int(raw_purple_alchemyBubblesDict[bubble])
-    # for bubble in raw_yellow_alchemyBubblesDict:
-    #     if int(bubble) <= max_IndexOfBubbles:
-    #         named_all_alchemyBubblesDict[getReadableBubbleNames(bubble, "Yellow")] = int(raw_yellow_alchemyBubblesDict[bubble])
-    #
-    # #Sum up unlocked bubbles (level > 0)
-    # orangeBubblesUnlocked = getSumUnlockedBubbles(raw_orange_alchemyBubblesDict, "Orange")
-    # greenBubblesUnlocked = getSumUnlockedBubbles(raw_green_alchemyBubblesDict, "Green")
-    # purpleBubblesUnlocked = getSumUnlockedBubbles(raw_purple_alchemyBubblesDict, "Purple")
-    # yellowBubblesUnlocked = getSumUnlockedBubbles(raw_yellow_alchemyBubblesDict, "Yellow")
-    # sum_TotalBubblesUnlocked += orangeBubblesUnlocked + greenBubblesUnlocked + purpleBubblesUnlocked + yellowBubblesUnlocked
-    #
     perCauldronBubblesUnlocked = [0, 0, 0, 0]
     sum_TotalBubblesUnlocked = 0
     for bubbleName, bubbleValues in session_data.account.alchemy_bubbles.items():
@@ -371,9 +339,9 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
                 if session_data.account.alchemy_bubbles.get(requiredBubble, {}).get('Level', 0) < tier[5][requiredBubble]:
                     all_utilityRequirementsMet = False
                     if tier[0] > max_tier:
-                        subgroupName = f"To reach Informational Tier {tier[0]} ({tier[6]} max value)"
+                        subgroupName = f"To reach Informational Tier {tier[0]}"
                     else:
-                        subgroupName = f"To reach Tier {tier[0]} ({tier[6]} max value)"
+                        subgroupName = f"To reach Tier {tier[0]}"
                     if subgroupName not in bubbles_AdviceDict["UtilityBubbles"] and len(bubbles_AdviceDict["UtilityBubbles"]) < maxTiersPerGroup:
                         bubbles_AdviceDict["UtilityBubbles"][subgroupName] = []
                     if subgroupName in bubbles_AdviceDict["UtilityBubbles"]:
