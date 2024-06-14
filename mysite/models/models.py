@@ -16,7 +16,8 @@ from consts import expectedStackables, greenstack_progressionTiers, card_data, m
     sailingDict, guildBonusesList, labBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesList, \
     getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampsDict, stampTypes, marketUpgradeList, \
     achievementsList, forgeUpgradesDict, arcadeBonuses, saltLickList, allMeritsDict, bubblesDict, familyBonusesDict, poBoxDict, equinoxBonusesDict, \
-    maxDreams, dreamsThatUnlockNewBonuses, ceilUpToBase, starsignsDict, gfood_codes, getStyleNameFromIndex, divinity_divinitiesDict, getDivinityNameFromIndex
+    maxDreams, dreamsThatUnlockNewBonuses, ceilUpToBase, starsignsDict, gfood_codes, getStyleNameFromIndex, divinity_divinitiesDict, getDivinityNameFromIndex, \
+    maxCookingTables
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
 
 def session_singleton(cls):
@@ -1217,7 +1218,47 @@ class Account:
         self._parse_w4_rift()
 
     def _parse_w4_cooking(self):
-        self.meals_remaining = maxMeals * maxMealLevel
+        self.cooking = {
+            'MealsRemaining': maxMeals * maxMealLevel,  # This is the default value before considering the player's values
+            'MealsUnlocked': 0,
+            'MealsUnder11': 0,
+            'MealsUnder30': 0,
+            'PlayerMaxPlateLvl': 30,  # 30 is the default starting point
+            'PlayerTotalMealLevels': 0,
+            'PlayerMissingPlateUpgrades': []
+        }
+        self._parse_w4_cooking_tables()
+        self._parse_w4_cooking_meals()
+
+    def _parse_w4_cooking_tables(self):
+        emptyTable = [0] * 11  # Some tables only have 10 fields, others have 11. Scary.
+        emptyCooking = [emptyTable for table in range(maxCookingTables)]
+        raw_cooking_list = safe_loads(self.raw_data.get("Cooking", emptyCooking))
+        for sublistIndex, value in enumerate(raw_cooking_list):
+            if isinstance(raw_cooking_list[sublistIndex], list):
+                #Pads out the length of all tables to 11 entries, to be safe.
+                while len(raw_cooking_list[sublistIndex]) < 11:
+                    raw_cooking_list[sublistIndex].append(0)
+
+    def _parse_w4_cooking_meals(self):
+        emptyMeal = [0] * maxMeals
+        # Meals contains 4 lists of lists. The first 3 are as long as the number of plates. The 4th is general shorter.
+        emptyMeals = [emptyMeal for meal in range(4)]
+        raw_meals_list = safe_loads(self.raw_data.get("Meals", emptyMeals))
+        for sublistIndex, value in enumerate(raw_meals_list):
+            if isinstance(raw_meals_list[sublistIndex], list):
+                while len(raw_meals_list[sublistIndex]) < maxMeals:
+                    raw_meals_list[sublistIndex].append(0)
+
+        # Count the number of unlocked meals, unlocked meals under 11, and unlocked meals under 30
+        for mealLevel in raw_meals_list[0]:
+            if mealLevel > 0:
+                self.cooking['MealsUnlocked'] += 1
+                self.cooking['PlayerTotalMealLevels'] += mealLevel
+                if mealLevel < 11:
+                    self.cooking['MealsUnder11'] += 1
+                if mealLevel < 30:
+                    self.cooking['MealsUnder30'] += 1
 
     def _parse_w4_lab(self):
         raw_lab = safe_loads(self.raw_data.get("Lab", []))
@@ -1523,7 +1564,9 @@ class Account:
 
     def _calculate_w2(self):
         self.vialMasteryMulti = 1 + (self.maxed_vials * .02) if self.rift['VialMastery'] else 1
+        self._calculate_w2_sigils()
 
+    def _calculate_w2_sigils(self):
         for sigilName in self.alchemy_p2w["Sigils"]:
             if self.alchemy_p2w["Sigils"][sigilName]["Level"] == 2:
                 if self.sneaking['JadeEmporium']['Ionized Sigils']['Obtained']:
@@ -1547,7 +1590,37 @@ class Account:
         pass
 
     def _calculate_w4(self):
-        pass
+        self._calculate_w4_cooking_max_plate_levels()
+
+    def _calculate_w4_cooking_max_plate_levels(self):
+        # Sailing Artifact Increases
+        causticolumn_level = self.sailing['Artifacts'].get('Causticolumn', {}).get('Level', 0)
+        self.cooking['PlayerMaxPlateLvl'] += 10 * int(causticolumn_level)
+        if causticolumn_level < 1:
+            self.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Base Causticolumn", "causticolumn"))
+        if causticolumn_level < 2:
+            self.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Ancient Causticolumn", "causticolumn"))
+        if causticolumn_level < 3 and self.rift['EldritchArtifacts']:
+            self.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Eldritch Causticolumn", "causticolumn"))
+        else:
+            self.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Eldritch Causticolumn."
+                                                               " Eldritch Artifacts are unlocked by completing {{ Rift|#rift }} 30", "eldritch-artifact"))
+        if causticolumn_level < 4 and self.sneaking['JadeEmporium']["Sovereign Artifacts"]['Obtained']:
+            self.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Sovereign Causticolumn", "causticolumn"))
+        else:
+            self.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Sovereign Causticolumn. Sovereign Artifacts are unlocked from the "
+                                                               "{{ Jade Emporium|#sneaking }}", "sovereign-artifacts"))
+        # Jade Emporium Increases
+        if self.sneaking['JadeEmporium']["Papa Blob's Quality Guarantee"]['Obtained']:
+            self.cooking['PlayerMaxPlateLvl'] += 10
+        else:
+            self.cooking['PlayerMissingPlateUpgrades'].append(("Purchase \"Papa Blob's Quality Guarantee\" from the "
+                                                               "{{ Jade Emporium|#sneaking }}", "papa-blobs-quality-guarantee"))
+        if self.sneaking['JadeEmporium']["Chef Geustloaf's Cutting Edge Philosophy"]['Obtained']:
+            self.cooking['PlayerMaxPlateLvl'] += 10
+        else:
+            self.cooking['PlayerMissingPlateUpgrades'].append(("Purchase \"Chef Geustloaf's Cutting Edge Philosophy\" from the "
+                                                               "{{ Jade Emporium|#sneaking }}", "chef-geustloafs-cutting-edge-philosophy"))
 
     def _calculate_w5(self):
         pass
