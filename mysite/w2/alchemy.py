@@ -440,9 +440,7 @@ def setAlchemyP2W() -> AdviceSection:
         p2w_AdviceSection.pinchy_rating = 0
         p2w_AdviceSection.tier = '0/1'
 
-    if p2wSum >= p2wMax:
-        p2w_AdviceSection.header = f"You've purchased all {p2wMax} upgrades in Alchemy-P2W! You best ❤️"
-    else:
+    if p2wSum < p2wMax:
         if bubbleCauldronSum < bubbleCauldronMax:
             p2w_AdviceDict["Pay2Win"].append(
                 Advice(label="Bubble Cauldron Upgrades", picture_class="cauldron-a", progression=str(bubbleCauldronSum), goal=str(bubbleCauldronMax))
@@ -472,9 +470,9 @@ def setAlchemyP2W() -> AdviceSection:
     p2w_AdviceSection.tier = tier_section
     p2w_AdviceSection.groups = p2w_AdviceGroupDict.values()
     if p2wSum >= p2wMax:
-        p2w_AdviceSection.header = f"You've purchased all {p2wMax} upgrades in Alchemy-P2W! You best ❤️"
+        p2w_AdviceSection.header = f"You've purchased all {p2wMax} upgrades in Alchemy's Pay 2 Win tab!<br>You best ❤️"
     else:
-        p2w_AdviceSection.header = f"You've purchased {tier_section} upgrades in Alchemy P2W. Try to purchase the basic upgrades before Mid W5, and Player upgrades after each level up!"
+        p2w_AdviceSection.header = f"You've purchased {tier_section} upgrades in Alchemy's Pay 2 Win tab.<br>Try to purchase the basic upgrades before Mid W5, and Player upgrades after each Alchemy level up!"
     return p2w_AdviceSection
 
 # def setAlchemySigils() -> AdviceSection:
