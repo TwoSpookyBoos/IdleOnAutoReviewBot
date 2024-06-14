@@ -285,13 +285,14 @@ def setSamplingProgressionTier() -> AdviceSection:
         header="",
         picture="3D_Printer.png",
     )
-    # highestConstructionLevel = max(session_data.account.all_skills["Construction"])
-    # if highestConstructionLevel < 1:
-    #     sampling_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
-    #     return sampling_AdviceSection
-    # elif safe_loads(session_data.account.raw_data["Tower"])[3] < 1:
-    #     sampling_AdviceSection.header = "Come back after unlocking the 3D Printer within the Construction skill in World 3!"
-    #     return sampling_AdviceSection
+
+    highestConstructionLevel = max(session_data.account.all_skills["Construction"])
+    if highestConstructionLevel < 1:
+        sampling_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
+        return sampling_AdviceSection
+    elif session_data.account.construction_buildings['3D Printer'] < 1:
+        sampling_AdviceSection.header = "Come back after unlocking the 3D Printer within the Construction skill in World 3!"
+        return sampling_AdviceSection
 
     max_tier = 0
     tier_bookLevels = 0
@@ -299,7 +300,6 @@ def setSamplingProgressionTier() -> AdviceSection:
     # Generate AdviceGroups
     sampling_AdviceGroupDict["MaxBookLevels"] = getBookLevelAdviceGroup()
     sampling_AdviceGroupDict["PrinterSampleRate"] = getPrinterSampleRateAdviceGroup()
-    #sampling_AdviceGroupDict["FamilyBonuses"] = getFamilyBonusesAdviceGroup()
 
     # Generate AdviceSection
     overall_SamplingTier = min(max_tier, tier_bookLevels)  #Looks silly, but may get more evaluations in the future

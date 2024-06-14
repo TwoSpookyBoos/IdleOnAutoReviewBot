@@ -73,6 +73,8 @@ def parseJSON():
 
     return [rawCooking, rawMeals, mealsUnlocked, mealsUnder11, mealsUnder30, playerMaxPlateLvl, playerMissingPlateUpgrades]
 
+
+
 def setCookingProgressionTier():
     cooking_AdviceDict = {
         "NextTier": [],

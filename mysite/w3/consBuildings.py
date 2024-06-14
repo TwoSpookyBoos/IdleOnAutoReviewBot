@@ -3,15 +3,9 @@ from consts import buildingsPostBuffs_progressionTiers, buildingsPreBuffs_progre
 from flask import g as session_data
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
-from utils.data_formatting import safe_loads
 
 
 logger = get_logger(__name__)
-
-def parseConsBuildingstoLists():
-    consBuildingsList = safe_loads(session_data.account.raw_data["Tower"])  #expected type of list
-    #logger.debug(f"TYPE CHECK consBuildingsList: {type(consBuildingsList)}: {consBuildingsList}")
-    return consBuildingsList
 
 def getBuildingImageNameFromIndex(inputNumber):
     towerImageNameList = ["three-d-printer", "talent-book-library", "death-note", "salt-lick", "chest-space", "cost-cruncher", "critter-drone",
@@ -51,13 +45,10 @@ def setConsBuildingsProgressionTier():
 
     progressionTiersPreBuffs = copy.deepcopy(buildingsPreBuffs_progressionTiers)
     progressionTiersPostBuffs = copy.deepcopy(buildingsPostBuffs_progressionTiers)
-    maxBuildingsPerGroup = 10
     playerBuildings = session_data.account.construction_buildings
     influencers = getInfluencers()
     hasBuffs = influencers[0]
     if hasBuffs:
-        #maxLevelList = [10, 201, 51, 10, 25, 60, 45, 5, 200,    140, 140, 140, 140, 140, 140, 140, 140, 140,   200, 200, 200, 200, 200, 200, 200, 200, 200]  # these are true max, not recommended max
-        #maxLevelList = [10, 101, 51, 10, 25, 60, 20, 5, 200,    70, 70, 70, 70, 90, 70, 90, 90, 40,             200, 200, 200, 200, 200, 200, 200, 200, 200]  # the recommended maxes
         maxLevelDict = {
             "3D Printer": 10, "Talent Book Library": 101, "Death Note": 51, "Salt Lick": 10, "Chest Space": 25,
             "Cost Cruncher": 60, "Trapper Drone": 20, "Automation Arm": 5, "Atom Collider": 200,
@@ -67,7 +58,6 @@ def setConsBuildingsProgressionTier():
             "Summereading Shrine": 200, "Crescent Shrine": 200, "Undead Shrine": 200, "Primordial Shrine": 200
         }
     else:
-        #maxLevelList = [10, 101, 51, 10, 25, 60, 15, 5, 200,    50, 50, 50, 50, 50, 50, 50, 50, 40,             100, 100, 100, 100, 100, 100, 100, 100, 100]
         maxLevelDict = {
             "3D Printer": 10, "Talent Book Library": 101, "Death Note": 51, "Salt Lick": 10, "Chest Space": 25,
             "Cost Cruncher": 60, "Trapper Drone": 15, "Automation Arm": 5, "Atom Collider": 200,
@@ -185,19 +175,18 @@ def setConsBuildingsProgressionTier():
         for recommendedBuilding in progressionTiersToUse[counter][2]:
             try:
                 if maxLevelDict.get(recommendedBuilding, 999) > playerBuildings.get(recommendedBuilding, 0):
-                    if len(building_AdviceDict[counter]) < maxBuildingsPerGroup:
-                        if progressionTiersToUse[counter][1] == "Unlock":
-                            building_AdviceDict[counter].append(Advice(
-                                    label=recommendedBuilding,
-                                    picture_class=getBuildingImageNameFromIndex(buildingsList.index(recommendedBuilding))
-                            ))
-                        else:
-                            building_AdviceDict[counter].append(Advice(
-                                    label=recommendedBuilding,
-                                    picture_class=getBuildingImageNameFromIndex(buildingsList.index(recommendedBuilding)),
-                                    progression=str(playerBuildings.get(recommendedBuilding, 0)),
-                                    goal=str(maxLevelDict.get(recommendedBuilding, 999))
-                            ))
+                    if progressionTiersToUse[counter][1] == "Unlock":
+                        building_AdviceDict[counter].append(Advice(
+                                label=recommendedBuilding,
+                                picture_class=getBuildingImageNameFromIndex(buildingsList.index(recommendedBuilding))
+                        ))
+                    else:
+                        building_AdviceDict[counter].append(Advice(
+                                label=recommendedBuilding,
+                                picture_class=getBuildingImageNameFromIndex(buildingsList.index(recommendedBuilding)),
+                                progression=str(playerBuildings.get(recommendedBuilding, 0)),
+                                goal=str(maxLevelDict.get(recommendedBuilding, 999))
+                        ))
             except Exception as reason:
                 logger.exception(f"ProgressionTier evaluation error. Counter = {counter}, recommendedBuilding = {recommendedBuilding}, Reason: {reason}")
 
@@ -210,8 +199,6 @@ def setConsBuildingsProgressionTier():
                 advices=building_AdviceDict[tierKey],
                 post_string=""
             )
-            #for building_Advice in building_AdviceGroupDict[f"{str(tierNamesList[tierKey])}"]:
-
         else:
             building_AdviceGroupDict[tierKey] = AdviceGroup(
                 tier="",
@@ -219,8 +206,6 @@ def setConsBuildingsProgressionTier():
                 advices=building_AdviceDict[tierKey],
                 post_string=""
             )
-        if len(building_AdviceDict[tierKey]) == maxBuildingsPerGroup:
-            building_AdviceGroupDict[tierKey].post_string = f"Up to {maxBuildingsPerGroup} remaining buildings shown"
 
     #Generate AdviceSection
     building_AdviceSection.groups = building_AdviceGroupDict.values()

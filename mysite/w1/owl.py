@@ -1,5 +1,4 @@
 from models.models import Advice, AdviceGroup, AdviceSection
-from utils.text_formatting import pl
 from consts import owl_progressionTiers, maxTiersPerGroup
 from utils.logging import get_logger
 from flask import g as session_data
