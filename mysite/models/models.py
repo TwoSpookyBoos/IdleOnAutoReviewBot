@@ -1470,10 +1470,10 @@ class Account:
             # [2,3,2,1,1,0,0,0,0,0,0,0,0,0]
             self.summoning['SanctuaryTotal'] = int(raw_summoning_list[4][0])  # Gray Slimes
             self.summoning['SanctuaryTotal'] += 3 * int(raw_summoning_list[4][1])  # Vrumbi
-            self.summoning['SanctuaryTotal'] += 4 * int(raw_summoning_list[4][2])  # Bloomie
-            self.summoning['SanctuaryTotal'] += 5 * int(raw_summoning_list[4][3])  # Tonka
-            self.summoning['SanctuaryTotal'] += 6 * int(raw_summoning_list[4][4])  # Regalis
-            # self.summoning['SanctuaryTotal'] += 7 * int(raw_summoning_list[4][5])  #Sparkie
+            self.summoning['SanctuaryTotal'] += 12 * int(raw_summoning_list[4][2])  # Bloomie
+            self.summoning['SanctuaryTotal'] += 60 * int(raw_summoning_list[4][3])  # Tonka
+            self.summoning['SanctuaryTotal'] += 360 * int(raw_summoning_list[4][4])  # Regalis
+            # self.summoning['SanctuaryTotal'] += 2520 * int(raw_summoning_list[4][5])  #Sparkie
         except:
             self.summoning['SanctuaryTotal'] = 0
         self.summoning['WinnerBonusesAdvice'] = []
