@@ -3,7 +3,7 @@ from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import maxTiersPerGroup, divinity_progressionTiers, divinity_offeringsDict, divinity_stylesDict, getOfferingNameFromIndex, getStyleNameFromIndex, \
-    getDivinityNameFromIndex, divLinksDict, divLevelReasonsDict
+    getDivinityNameFromIndex, divLevelReasonsDict
 
 logger = get_logger(__name__)
 
@@ -123,7 +123,7 @@ def setDivinityProgressionTier():
 
     #Doot Checks Info
     if not session_data.account.doot_owned:
-        divinity_AdviceDict["DivinityLinks"] = divLinksDict.get(int(tier_Divinity), [])
+        divinity_AdviceDict["DivinityLinks"] = session_data.account.divinity['DivinityLinks'].get(int(tier_Divinity), [])
     #     divinity_AdviceDict["Dooted"].append(Advice(
     #         label=f"Doot not owned, bummer 💔",
     #         picture_class="king-doot"

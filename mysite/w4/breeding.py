@@ -100,42 +100,42 @@ def getShinySpeedSourcesAdviceGroup(fasterShinyPetTotalLevels) -> AdviceGroup:
         "Multi Group B- Everything Else": []
     }
 
-    sps_adviceDict["ShinySpeedSources"]["Multi Group B- Everything Else"].append(Advice(
+    sps_adviceDict["Multi Group B- Everything Else"].append(Advice(
         label=f"Lab Jewel: Emerald Ulthurite",
         picture_class='emerald-ulthurite'
     ))
-    sps_adviceDict["ShinySpeedSources"]["Multi Group B- Everything Else"].append(Advice(
+    sps_adviceDict["Multi Group B- Everything Else"].append(Advice(
         label=f"Faster Shiny Pet Lv Up Rate Shiny Pets: +{3 * fasterShinyPetTotalLevels}% total",
         picture_class='green-mushroom-shiny'
     ))
-    sps_adviceDict["ShinySpeedSources"]["Multi Group B- Everything Else"].append(Advice(
+    sps_adviceDict["Multi Group B- Everything Else"].append(Advice(
         label=f"Star Sign: Breedabilli: +{15 * session_data.account.star_signs.get('Breedabilli', {}).get('Unlocked', False)}%",
         picture_class='breedabilli'
     ))
-    sps_adviceDict["ShinySpeedSources"]["Multi Group B- Everything Else"].append(session_data.account.star_sign_extras['SeraphAdvice'])
-    sps_adviceDict["ShinySpeedSources"]["Multi Group B- Everything Else"].append(session_data.account.star_sign_extras['SilkrodeNanoAdvice'])
+    sps_adviceDict["Multi Group B- Everything Else"].append(session_data.account.star_sign_extras['SeraphAdvice'])
+    sps_adviceDict["Multi Group B- Everything Else"].append(session_data.account.star_sign_extras['SilkrodeNanoAdvice'])
 
     red8beat = 'w5b4' in session_data.account.summoning['BattlesWon']
     cyan13beat = 'w6d2' in session_data.account.summoning['BattlesWon']
-    sps_adviceDict["ShinySpeedSources"]["Multi Group A- Summoning Winner Bonus"].append(Advice(
+    sps_adviceDict["Multi Group A- Summoning Winner Bonus"].append(Advice(
         label=f"Summoning match Red8: +{1.88 * red8beat}{'' if red8beat else '. Not yet beaten.'}",
         picture_class="citringe",
         progression=1 if red8beat else 0,
         goal=1
     ))
-    sps_adviceDict["ShinySpeedSources"]["Multi Group A- Summoning Winner Bonus"].append(Advice(
+    sps_adviceDict["Multi Group A- Summoning Winner Bonus"].append(Advice(
         label=f"Summoning match Cyan13: +{3.45 * cyan13beat}{'' if cyan13beat else '. Not yet beaten.'}",
         picture_class="minichief-spirit",
         progression=1 if cyan13beat else 0,
         goal=1
     ))
     for advice in session_data.account.summoning['WinnerBonusesAdvice']:
-        sps_adviceDict["ShinySpeedSources"]["Multi Group A- Summoning Winner Bonus"].append(advice)
+        sps_adviceDict["Multi Group A- Summoning Winner Bonus"].append(advice)
 
     sps_AdviceGroup = AdviceGroup(
         tier="",
         pre_string="Info- Sources of Shiny Pet Level Rate",
-        advices=sps_adviceDict["ShinySpeedSources"])
+        advices=sps_adviceDict)
     return sps_AdviceGroup
 
 def getActiveBMAdviceGroup() -> AdviceGroup:

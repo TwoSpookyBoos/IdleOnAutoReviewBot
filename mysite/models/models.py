@@ -1353,7 +1353,8 @@ class Account:
 
     def _parse_w5_divinity(self):
         self.divinity = {
-            'Divinities': copy.deepcopy(divinity_divinitiesDict)
+            'Divinities': copy.deepcopy(divinity_divinitiesDict),
+            'DivinityLinks': {}
         }
         raw_divinity_list = safe_loads(self.raw_data.get("Divinity", []))
         while len(raw_divinity_list) < 40:
@@ -1624,6 +1625,257 @@ class Account:
 
     def _calculate_w5(self):
         pass
+
+    def _calculate_w5_divinity_link_advice(self):
+        self.divinity['DivinityLinks'] = {
+            0: [
+                Advice(
+                    label="No Divinities unlocked to link to",
+                    picture_class=""
+                )
+            ],
+            1: [
+                Advice(
+                    label="No harm in linking everyone, as Snehebatu is your only choice",
+                    picture_class="snehebatu"
+                )
+            ],
+            2: [
+                Advice(
+                    label="Lab bonuses fully online",
+                    picture_class="arctis"
+                ),
+                Advice(
+                    label="Extra characters can link to Snake if not Meditating",
+                    picture_class="snehebatu"
+                )
+            ],
+            3: [
+                Advice(
+                    label="Lab bonuses fully online",
+                    picture_class="arctis"
+                ),
+                Advice(
+                    label="1 Map Pusher",
+                    picture_class="nobisect"
+                ),
+                Advice(
+                    label="Extra characters can link to Snake if not Meditating",
+                    picture_class="snehebatu"
+                )
+            ],
+            4: [
+                Advice(
+                    label="Lab bonuses fully online",
+                    picture_class="arctis"
+                ),
+                Advice(
+                    label="1 Map Pusher",
+                    picture_class="nobisect"
+                ),
+                Advice(
+                    label="Extra characters can link to Snake if not Meditating",
+                    picture_class="snehebatu"
+                )
+            ],
+            5: [
+                Advice(
+                    label="Move Meditators to Lab",
+                    picture_class="goharut"
+                ),
+                Advice(
+                    label="Lab bonuses fully online",
+                    picture_class="arctis"
+                ),
+                Advice(
+                    label="1 Map Pusher",
+                    picture_class="nobisect"
+                ),
+                Advice(
+                    label="Extra characters can link to Snake if not Meditating",
+                    picture_class="snehebatu"
+                )
+            ],
+            6: [
+                Advice(
+                    label="Move Meditators to Lab",
+                    picture_class="goharut"
+                ),
+                Advice(
+                    label="Lab bonuses fully online",
+                    picture_class="arctis"
+                ),
+                Advice(
+                    label="1 Map Pusher",
+                    picture_class="nobisect"
+                ),
+                Advice(
+                    label="Extra characters can link to Snake if not Meditating",
+                    picture_class="snehebatu"
+                )
+            ],
+            7: [
+                Advice(
+                    label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
+                    picture_class="purrmep"
+                ),
+                Advice(
+                    label="Meditators in Lab",
+                    picture_class="goharut"
+                ),
+                Advice(
+                    label="Lab bonuses fully online",
+                    picture_class="arctis"
+                ),
+                Advice(
+                    label="1 Map Pusher",
+                    picture_class="nobisect"
+                ),
+                Advice(
+                    label="Cooking BB generally wants Snake",
+                    picture_class="cooking-ladle"
+                ),
+                Advice(
+                    label="Extra characters can link to Snake if not Meditating",
+                    picture_class="snehebatu"
+                ),
+
+            ],
+            8: [
+                Advice(
+                    label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
+                    picture_class="purrmep"
+                ),
+                Advice(
+                    label="Meditators in Lab",
+                    picture_class="goharut"
+                ),
+                Advice(
+                    label="Lab bonuses fully online",
+                    picture_class="arctis"
+                ),
+                Advice(
+                    label="1 Map Pusher",
+                    picture_class="nobisect"
+                ),
+                Advice(
+                    label="Cooking BB generally wants Snake",
+                    picture_class="cooking-ladle"
+                ),
+                Advice(
+                    label="Extra characters can link to Snake if not Meditating",
+                    picture_class="snehebatu"
+                ),
+            ],
+            9: [
+                Advice(
+                    label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
+                    picture_class="purrmep"
+                ),
+                Advice(
+                    label="Meditators in Lab",
+                    picture_class="goharut"
+                ),
+                Advice(
+                    label="Lab bonuses fully online",
+                    picture_class="arctis"
+                ),
+                Advice(
+                    label="1 Map Pusher",
+                    picture_class="nobisect"
+                ),
+                Advice(
+                    label="Cooking BB generally wants Snake",
+                    picture_class="cooking-ladle"
+                ),
+                Advice(
+                    label="Extra characters can link to Snake if not Meditating",
+                    picture_class="snehebatu"
+                ),
+            ],
+            10: [
+                Advice(
+                    label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
+                    picture_class="purrmep"
+                ),
+                Advice(
+                    label="Meditators in Lab",
+                    picture_class="goharut"
+                ),
+                Advice(
+                    label="Lab bonuses fully online",
+                    picture_class="arctis"
+                ),
+                Advice(
+                    label="1 Map Pusher",
+                    picture_class="nobisect"
+                ),
+                Advice(
+                    label="Cooking BB generally wants Snake",
+                    picture_class="cooking-ladle"
+                ),
+                Advice(
+                    label="Extra characters can link to Snake if not Meditating",
+                    picture_class="snehebatu"
+                ),
+            ],
+            11: [
+                Advice(
+                    label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
+                    picture_class="purrmep"
+                ),
+                Advice(
+                    label="Meditators in Lab",
+                    picture_class="goharut"
+                ),
+                Advice(
+                    label="Lab bonuses fully online",
+                    picture_class="arctis"
+                ),
+                Advice(
+                    label="1 Map Pusher",
+                    picture_class="nobisect"
+                ),
+                Advice(
+                    label="Cooking BB generally wants Snake",
+                    picture_class="cooking-ladle"
+                ),
+                Advice(
+                    label="Extra characters can link to Snake if not Meditating",
+                    picture_class="snehebatu"
+                ),
+            ],
+            12: [
+                Advice(
+                    label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
+                    picture_class="purrmep"
+                ),
+                Advice(
+                    label="Meditators in Lab",
+                    picture_class="goharut"
+                ),
+                Advice(
+                    label="Lab bonuses fully online",
+                    picture_class="arctis"
+                ),
+                Advice(
+                    label="1 Map Pusher",
+                    picture_class="nobisect"
+                ),
+                Advice(
+                    label="Cooking BB generally wants Snake",
+                    picture_class="cooking-ladle"
+                ),
+                Advice(
+                    label="Extra characters can link to Snake if not Meditating",
+                    picture_class="snehebatu"
+                ),
+                Advice(
+                    label="Omniphau is a gamble. Refinery and 3D Printer rewards are nice- The other 4/6 are pretty meh.",
+                    picture_class="omniphau"
+                ),
+            ],
+        }
 
     def _calculate_w6(self):
         self.summoning['WinnerBonusesAdvice'].append(Advice(

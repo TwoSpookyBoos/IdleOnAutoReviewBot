@@ -33,9 +33,11 @@ def setConsBuildingsProgressionTier():
     building_AdviceSection = AdviceSection(
         name="Buildings",
         tier="",
-        header="Recommended Construction Buildings priorities for Trimmed Slots",
+        header="Priority Tiers for Trimmed Building Slots",
         picture="Construction_Table.gif",
-        collapse=False
+        collapse=False,
+        note="Buildings shift around in Priority Tiers after reaching particular levels or notable account progression points."
+             " The goal levels displayed are only for that particular tier and may be beyond your personal max level."
     )
     highestConstructionLevel = max(session_data.account.all_skills["Construction"])
     if highestConstructionLevel < 1:
