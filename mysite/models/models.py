@@ -946,7 +946,6 @@ class Account:
             self.owl['FeatherRestarts'] = 0
             self.owl['MegaFeathersOwned'] = 0
 
-
     def _parse_w2(self):
         self._parse_w2_vials()
         self._parse_w2_bubbles()
@@ -1073,14 +1072,27 @@ class Account:
                     self.arcade[upgradeIndex]["Display"] = f"+% UnknownUpgrade{upgradeIndex}"
 
     def _parse_w3(self):
+        self._parse_w3_buildings()
+        self._parse_w3_library()
         self._parse_w3_deathnote()
         self._parse_w3_equinox_dreams()
         self._parse_w3_equinox_bonuses()
-        self._parse_w3_buildings()
         self._parse_w3_shrines()
         self._parse_w3_atoms()
         self._parse_w3_prayers()
         self._parse_w3_saltlick()
+
+    def _parse_w3_buildings(self):
+        self.construction_buildings = {}
+        raw_buildings_list = safe_loads(self.raw_data.get("Tower", []))
+        for buildingIndex, buildingName in enumerate(buildingsList):
+            try:
+                self.construction_buildings[buildingName] = int(raw_buildings_list[buildingIndex])
+            except:
+                self.construction_buildings[buildingName] = 0
+
+    def _parse_w3_library(self):
+        self.library = {}
 
     def _parse_w3_deathnote(self):
         self.rift_meowed = False
@@ -1126,15 +1138,6 @@ class Account:
                         self.equinox_bonuses[upgradeName]['PlayerMaxLevel'] += bonusMaxLevelIncrease
                     else:
                         self.equinox_bonuses[upgradeName]['RemainingUpgrades'].append(dreamIndex)
-
-    def _parse_w3_buildings(self):
-        self.construction_buildings = {}
-        raw_buildings_list = safe_loads(self.raw_data.get("Tower", []))
-        for buildingIndex, buildingName in enumerate(buildingsList):
-            try:
-                self.construction_buildings[buildingName] = int(raw_buildings_list[buildingIndex])
-            except:
-                self.construction_buildings[buildingName] = 0
 
     def _parse_w3_shrines(self):
         self.shrines = {}
@@ -1588,7 +1591,31 @@ class Account:
             # After the +1, 0/1/2/3
 
     def _calculate_w3(self):
-        pass
+        self._calculate_w3_library_max_book_levels()
+
+    def _calculate_w3_library_max_book_levels(self):
+        self.library['StaticSum'] = (0
+                      + (25 * (0 < self.construction_buildings.get('Talent Book Library', 0)))
+                      + (5 * (0 < self.achievements.get('Checkout Takeout', False)))
+                      + (10 * (0 < self.atoms.get('Oxygen - Library Booker', 0)))
+                      + (25 * self.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0))
+                      )
+        self.library['ScalingSum'] = (0
+                       + 2 * self.merits[2][2]['Level']
+                       + 2 * self.saltlick.get('Max Book', 0)
+                       )
+        summGroupA = (1 + (.25 * self.sailing['Artifacts'].get('The Winz Lantern', {}).get('Level', 0))
+                      + .01 * self.merits[5][4]['Level']
+                      + .01 * (0 < self.achievements.get('Spectre Stars', False))
+                      + .01 * (0 < self.achievements.get('Regalis My Beloved', False))
+                      )
+        summGroupB = 1 + (.3 * self.sneaking.get('PristineCharms', {}).get('Crystal Comb', 0))
+        self.library['SummoningSum'] = round(0
+                              + 10.5 * ('w6d3' in self.summoning['BattlesWon'])
+                              * summGroupA
+                              * summGroupB
+                              )
+        self.library['MaxBookLevel'] = 100 + self.library['StaticSum'] + self.library['ScalingSum'] + self.library['SummoningSum']
 
     def _calculate_w4(self):
         self._calculate_w4_cooking_max_plate_levels()
