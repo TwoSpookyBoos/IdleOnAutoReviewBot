@@ -1612,6 +1612,9 @@ class Account:
             for name, count in zip(
                 self.raw_data[name_key], self.raw_data[quantity_key]
             ):
-                all_stuff_owned[name] += count
+                try:
+                    all_stuff_owned[name] += int(count)
+                except Exception as reason:
+                    continue
 
         return Assets(all_stuff_owned)

@@ -40,7 +40,10 @@ def all_owned_items() -> Assets:
 
     for name_key, quantity_key in name_quantity_key_pairs:
         for name, count in zip(session_data.account.raw_data[name_key], session_data.account.raw_data[quantity_key]):
-            all_stuff_owned[name] += count
+            try:
+                all_stuff_owned[name] += int(count)
+            except:
+                continue
 
     return Assets(all_stuff_owned)
 
