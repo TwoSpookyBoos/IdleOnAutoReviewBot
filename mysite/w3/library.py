@@ -1,5 +1,7 @@
+from typing import Dict
+
 from flask import g as session_data
-from consts import maxStaticBookLevels, maxScalingBookLevels, maxSummoningBookLevels, maxOverallBookLevels
+from consts import maxStaticBookLevels, maxScalingBookLevels, maxSummoningBookLevels, maxOverallBookLevels, skill_talentsDict
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
@@ -85,6 +87,43 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
     )
     return bookLevelAdviceGroup
 
+def getSkillingBooksAdviceGroup() -> dict[str, AdviceGroup]:
+    skill_adviceList = {
+        "Choppin": {},
+        "Mining": {},
+        "Fishing": {},
+        "Catching": {},
+        "Trapping": {},
+        "Worship": {},
+        "Cooking": {},
+        "Utility": {}
+    }
+    skill_AdviceGroupDict = {}
+    for skillName in skill_adviceList.keys():
+        for talentNumber, talentDetailsDict in skill_talentsDict[skillName].items():
+            for toon in session_data.account.safe_characters:
+                if skillName == "Utility" or skillName in toon.specialized_skills:
+                    goal_level = talentDetailsDict.get('Optimal', 9999) if talentDetailsDict.get('Optimal', 9999) < session_data.account.library[
+                        'MaxBookLevel'] else session_data.account.library['MaxBookLevel']
+                    if 0 < toon.max_talents.get(str(talentNumber), 0) < goal_level:
+                        if talentDetailsDict['Name'] not in skill_adviceList[skillName]:
+                            skill_adviceList[skillName][talentDetailsDict['Name']] = [Advice(
+                                label=f"{talentDetailsDict['Tab']}: {talentDetailsDict['Name']}",
+                                picture_class=talentDetailsDict['Name']
+                            )]
+                        skill_adviceList[skillName][talentDetailsDict['Name']].append(Advice(
+                            label=toon.character_name,
+                            picture_class=toon.class_name_icon,
+                            progression=toon.max_talents.get(str(talentNumber), 0),
+                            goal=goal_level
+                        ))
+        skill_AdviceGroupDict[skillName] = AdviceGroup(
+            tier="",
+            pre_string=f"Priority Checkouts for {skillName}",
+            advices=skill_adviceList[skillName]
+        )
+    return skill_AdviceGroupDict
+
 def setLibraryProgressionTier() -> AdviceSection:
     library_AdviceDict = {
         "MaxBookLevels": [],
@@ -108,6 +147,9 @@ def setLibraryProgressionTier() -> AdviceSection:
 
     # Generate AdviceGroups
     library_AdviceGroupDict["MaxBookLevels"] = getBookLevelAdviceGroup()
+    skillCheckouts = getSkillingBooksAdviceGroup()
+    for skillName, skillAG in skillCheckouts.items():
+        library_AdviceGroupDict[skillName] = skillAG
 
     # Generate AdviceSection
     overall_SamplingTier = min(max_tier, tier_bookLevels)  # Looks silly, but may get more evaluations in the future

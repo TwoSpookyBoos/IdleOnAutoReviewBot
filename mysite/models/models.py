@@ -53,6 +53,27 @@ class Equipment:
             self.foods = []
 
 
+def getSpecializedSkills(base_class, sub_class, elite_class):
+    specializedSkillsList = []
+    if base_class == "Mage":
+        specializedSkillsList.append("Choppin")
+    elif base_class == "Warrior":
+        specializedSkillsList.append("Mining")
+
+    if sub_class == "Barbarian":
+        specializedSkillsList.append("Fishing")
+    elif sub_class == "Bowman":
+        specializedSkillsList.append("Catching")
+    elif sub_class == "Hunter":
+        specializedSkillsList.append("Trapping")
+    elif sub_class == "Wizard":
+        specializedSkillsList.append("Worship")
+
+    if elite_class == "Blood Berserker":
+        specializedSkillsList.append("Cooking")
+
+    return specializedSkillsList
+
 class Character:
     def __init__(
         self,
@@ -64,7 +85,9 @@ class Character:
         sub_class: str,
         elite_class: str,
         all_skill_levels: dict,
-        po_boxes: list[int]
+        max_talents: dict,
+        po_boxes: list[int],
+
     ):
         self.character_index: int = character_index
         self.character_name: str = character_name
@@ -74,6 +97,8 @@ class Character:
         self.base_class: str = base_class
         self.sub_class: str = sub_class
         self.elite_class: str = elite_class
+        self.max_talents: dict = max_talents
+        self.specialized_skills: list[str] = getSpecializedSkills(self.base_class, self.sub_class, self.elite_class)
 
         self.combat_level: int = all_skill_levels["Combat"]
         self.mining_level: int = all_skill_levels["Mining"]

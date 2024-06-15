@@ -399,7 +399,7 @@ def generatePinchyWorld(all_sections):
     # Generate advice based on catchup
     equalSnippet = ""
     if lowestThresholdReached >= expectedThreshold:
-        equalSnippet = ".<br>Your lowest sections are roughly equal with (or better than!) your highest enemy map. Keep up the good work!"
+        equalSnippet = ".<br>Your lowest sections are roughly equal with (or better than!) your highest enemy map.<br>Keep up the good work!"
 
     if expectedThreshold.name == Threshold.PLACEHOLDER:
         pinchyExpected = (

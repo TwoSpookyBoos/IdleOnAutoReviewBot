@@ -176,6 +176,7 @@ def getCharacterDetails(inputJSON, runType):
     playerCount = 0
     playerNames = []
     playerClasses = []
+    characterMaxTalents = {}
     characterDict: dict = {}
 
     if "playerNames" in inputJSON.keys():
@@ -234,6 +235,10 @@ def getCharacterDetails(inputJSON, runType):
             postOfficeList.append(safe_loads(inputJSON[f"POu_{list_index}"]))
         except:
             postOfficeList.append([0]*36)
+        try:
+            characterMaxTalents[list_index] = safe_loads(inputJSON[f"SM_{list_index}"])
+        except:
+            characterMaxTalents[list_index] = {}
         characterDict[list_index] = dict(
             character_index=list_index,
             character_name=playerNames[list_index],
@@ -242,6 +247,7 @@ def getCharacterDetails(inputJSON, runType):
             sub_class=getSubclass(playerClasses[list_index]),
             elite_class=getEliteClass(playerClasses[list_index]),
             all_skill_levels=characterSkillsDict[list_index],
+            max_talents=characterMaxTalents[list_index],
             po_boxes=postOfficeList[list_index]
         )
 
