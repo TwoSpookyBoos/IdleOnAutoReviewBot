@@ -2556,7 +2556,31 @@ skill_talentsDict = {
         475: {"Name": "Charge Syphon", "Tab": "Wizard"},
     }
 }
+combat_talentsDict = {
+    #Elite Classes
+    "Blood Berserker": {
+        136: {"Name": "Combustion", "Tab": "Blood Berserker"},
+    },
+    "Divine Knight": {
+        168: {"Name": "Orb of Remembrance", "Tab": "Divine Knight"},
+    },
+    "Bubonic Conjuror": {
+        525: {"Name": "Chemical Warfare", "Tab": "Bubonic Conjuror"},
+    },
+    "Elemental Sorcerer": {
+        498: {"Name": "Dimensional Wormhole", "Tab": "Elemental Sorcerer"},
+    },
+    "Siege Breaker": {
+        318: {"Name": "Pirate Flag", "Tab": "Siege Breaker"},
+    },
+    "Beast Master": {
+        362: {"Name": "Whale Wallop", "Tab": "Beast Master"},
+    },
+    "Voidwalker": {
+        46: {"Name": "Void Radius", "Tab": "Voidwalker"}
+    },
 
+}
 def lavaFunc(funcType: str, level: int, x1: int | float, x2: int | float, roundResult=False):
     result = 0
     match funcType:
