@@ -91,27 +91,28 @@ def getCharacterBooksAdviceGroups() -> dict:
     character_adviceDict = {}
     character_AdviceGroupDict = {}
 
-
     for toon in session_data.account.safe_characters:
         character_adviceDict[toon.character_name] = {}
         talentNumbersAdded = []
 
         #Skilling
         for skillName in skill_talentsDict.keys():
-            for talentNumber, talentDetailsDict in skill_talentsDict[skillName].items():
-                if skillName == "Utility" or skillName in toon.specialized_skills:
-                    goal_level = talentDetailsDict.get('Optimal', 9999) if talentDetailsDict.get('Optimal', 9999) < session_data.account.library[
-                        'MaxBookLevel'] else session_data.account.library['MaxBookLevel']
-                    if 0 < toon.max_talents.get(str(talentNumber), 0) < goal_level and talentNumber not in talentNumbersAdded:
-                        if 'Skilling' not in character_adviceDict[toon.character_name]:
-                            character_adviceDict[toon.character_name]['Skilling'] = []
-                        character_adviceDict[toon.character_name]['Skilling'].append(Advice(
-                            label=f"{talentDetailsDict['Tab']}: {talentDetailsDict['Name']}",
-                            picture_class=talentDetailsDict['Name'],
-                            progression=toon.max_talents.get(str(talentNumber), 0),
-                            goal=goal_level
-                        ))
-                        talentNumbersAdded.append(talentNumber)
+            for rating in skill_talentsDict[skillName]:
+                subgroupName = f"Skilling - {rating} Priority"
+                for talentNumber, talentDetailsDict in skill_talentsDict[skillName][rating].items():
+                    if skillName == "Utility" or skillName in toon.specialized_skills:
+                        goal_level = talentDetailsDict.get('Optimal', 9999) if talentDetailsDict.get('Optimal', 9999) < session_data.account.library[
+                            'MaxBookLevel'] else session_data.account.library['MaxBookLevel']
+                        if 0 < toon.max_talents.get(str(talentNumber), 0) < goal_level and talentNumber not in talentNumbersAdded:
+                            if subgroupName not in character_adviceDict[toon.character_name]:
+                                character_adviceDict[toon.character_name][subgroupName] = []
+                            character_adviceDict[toon.character_name][subgroupName].append(Advice(
+                                label=f"{talentDetailsDict['Tab']}: {talentDetailsDict['Name']}",
+                                picture_class=talentDetailsDict['Name'],
+                                progression=toon.max_talents.get(str(talentNumber), 0),
+                                goal=goal_level
+                            ))
+                            talentNumbersAdded.append(talentNumber)
 
         #Combat / Other
         for className in combat_talentsDict.keys():
