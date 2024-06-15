@@ -1653,15 +1653,17 @@ class Account:
             self.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Base Causticolumn", "causticolumn"))
         if causticolumn_level < 2:
             self.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Ancient Causticolumn", "causticolumn"))
-        if causticolumn_level < 3 and self.rift['EldritchArtifacts']:
-            self.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Eldritch Causticolumn", "causticolumn"))
-        else:
-            self.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Eldritch Causticolumn."
+        if causticolumn_level < 3:
+            if self.rift['EldritchArtifacts']:
+                self.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Eldritch Causticolumn", "causticolumn"))
+            else:
+                self.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Eldritch Causticolumn."
                                                                " Eldritch Artifacts are unlocked by completing {{ Rift|#rift }} 30", "eldritch-artifact"))
-        if causticolumn_level < 4 and self.sneaking['JadeEmporium']["Sovereign Artifacts"]['Obtained']:
-            self.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Sovereign Causticolumn", "causticolumn"))
-        else:
-            self.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Sovereign Causticolumn. Sovereign Artifacts are unlocked from the "
+        if causticolumn_level < 4:
+            if self.sneaking['JadeEmporium']["Sovereign Artifacts"]['Obtained']:
+                self.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Sovereign Causticolumn", "causticolumn"))
+            else:
+                self.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Sovereign Causticolumn. Sovereign Artifacts are unlocked from the "
                                                                "{{ Jade Emporium|#sneaking }}", "sovereign-artifacts"))
         # Jade Emporium Increases
         if self.sneaking['JadeEmporium']["Papa Blob's Quality Guarantee"]['Obtained']:
