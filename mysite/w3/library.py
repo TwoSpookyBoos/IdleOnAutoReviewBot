@@ -88,18 +88,11 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
     return bookLevelAdviceGroup
 
 def getSkillingBooksAdviceGroup() -> dict[str, AdviceGroup]:
-    skill_adviceList = {
-        "Choppin": {},
-        "Mining": {},
-        "Fishing": {},
-        "Catching": {},
-        "Trapping": {},
-        "Worship": {},
-        "Cooking": {},
-        "Utility": {}
-    }
+    skill_adviceList = {}
     skill_AdviceGroupDict = {}
-    for skillName in skill_adviceList.keys():
+
+    for skillName in skill_talentsDict.keys():
+        skill_adviceList[skillName] = {}
         for talentNumber, talentDetailsDict in skill_talentsDict[skillName].items():
             for toon in session_data.account.safe_characters:
                 if skillName == "Utility" or skillName in toon.specialized_skills:

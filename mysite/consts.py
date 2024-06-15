@@ -2469,6 +2469,18 @@ skill_talentsDict = {
         1: {"Name": "Mana Booster", "Tab": "Savvy Basics"},
         486: {"Name": "Occult Obols", "Tab": "Mage Subclass"},
     },
+    "Utility": {
+        43: {"Name": "Right Hand of Action", "Tab": "Maestro"},
+        32: {"Name": "Printer Go Brrr", "Tab": "Maestro"},
+        56: {"Name": "Voodoo Statufication", "Tab": "Voidwalker"},
+        59: {"Name": "Blood Marrow", "Tab": "Voidwalker"},
+        57: {"Name": "Species Epoch", "Tab": "Voidwalker"},
+        49: {"Name": "Enhancement Eclipse", "Tab": "Voidwalker", "Optimal": 225},
+        131: {"Name": "Redox Rates", "Tab": "Squire"},
+        130: {"Name": "Refinery Throttle", "Tab": "Squire"},
+        41: {"Name": "Crystal Countdown", "Tab": "Maestro"},
+        78: {"Name": "Extra Bags", "Tab": "Beginner"}
+    },
     "Mining": {
         100: {"Name": "Big Pick", "Tab": "Warrior"},
         85: {"Name": "Brute Efficiency", "Tab": "Rage Basics"},
@@ -2488,6 +2500,12 @@ skill_talentsDict = {
         92: {"Name": "Health Overdrive", "Tab": "Warrior"},
         0: {"Name": "Health Booster", "Tab": "Rage Basics"},
         111: {"Name": "Fistful of Obol", "Tab": "Warrior Subclass"},
+    },
+    "Cooking": {
+        148: {"Name": "Overflowing Ladle", "Tab": "Blood Berserker"},
+        146: {"Name": "Apocalypse Chow", "Tab": "Blood Berserker"},
+        147: {"Name": "Waiting to Cool", "Tab": "Blood Berserker"},
+        149: {"Name": "Symbols of Beyond R", "Tab": "Blood Berserker"},
     },
     "Fishing": {
         115: {"Name": "Worming Undercover", "Tab": "Barbarian"},
@@ -2536,25 +2554,7 @@ skill_talentsDict = {
         476: {"Name": "Sooouls", "Tab": "Wizard"},
         478: {"Name": "Nearby Outlet", "Tab": "Wizard"},
         475: {"Name": "Charge Syphon", "Tab": "Wizard"},
-    },
-    "Cooking": {
-        148: {"Name": "Overflowing Ladle", "Tab": "Blood Berserker"},
-        146: {"Name": "Apocalypse Chow", "Tab": "Blood Berserker"},
-        147: {"Name": "Waiting to Cool", "Tab": "Blood Berserker"},
-        149: {"Name": "Symbols of Beyond R", "Tab": "Blood Berserker"},
-    },
-    "Utility": {
-        43: {"Name": "Right Hand of Action", "Tab": "Maestro"},
-        32: {"Name": "Printer Go Brrr", "Tab": "Maestro"},
-        56: {"Name": "Voodoo Statufication", "Tab": "Voidwalker"},
-        59: {"Name": "Blood Marrow", "Tab": "Voidwalker"},
-        57: {"Name": "Species Epoch", "Tab": "Voidwalker"},
-        49: {"Name": "Enhancement Eclipse", "Tab": "Voidwalker", "Optimal": 225},
-        131: {"Name": "Redox Rates", "Tab": "Squire"},
-        130: {"Name": "Refinery Throttle", "Tab": "Squire"},
-        41: {"Name": "Crystal Countdown", "Tab": "Maestro"},
-        78: {"Name": "Extra Bags", "Tab": "Beginner"}
-    },
+    }
 }
 
 def lavaFunc(funcType: str, level: int, x1: int | float, x2: int | float, roundResult=False):
