@@ -279,7 +279,7 @@ class Advice(AdviceBase):
         unit (str): if there is one, usually "%"
     """
 
-    def __init__(self, label: str, picture_class: str, progression: Any = "", goal: Any = "", unit: str = "", value_format: str = "{value}{unit}",
+    def __init__(self, label: str, picture_class: str, progression: Any = "", goal: Any = "", unit: str = "", value_format: str = "{value}{unit}", resource: str = "",
                  **extra):
         super().__init__(**extra)
 
@@ -291,6 +291,7 @@ class Advice(AdviceBase):
         self.goal: str = str(goal)
         self.unit: str = unit
         self.value_format: str = value_format
+        self.resource: str = kebab(resource)
 
         if self.unit:
             if self.progression:
