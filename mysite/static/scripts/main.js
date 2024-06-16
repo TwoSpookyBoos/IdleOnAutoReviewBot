@@ -317,7 +317,7 @@ function setFormValues() {
         const userValue = userParams[k] || v
         const input = form.querySelector(`[name=${k}]`)
         if (k === "player")
-            input.innerText = userValue
+            input.value = userValue
         else if (input && input.value.toString() !== userValue)
             form.querySelector(`[for=${k}]`).click()
     })
