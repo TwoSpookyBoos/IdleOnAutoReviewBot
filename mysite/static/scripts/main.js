@@ -71,7 +71,7 @@ function calcProgressBars(parent = document) {
         const idx = siblings.indexOf(advice)
         const prog = siblings[idx + 2]
         const goal = siblings[idx + 4]
-        const row = siblings.slice(idx, idx + 4)
+        const row = siblings.slice(idx, idx + 5)
         const rowWidth = row.reduce((total, curr) => total + curr.offsetWidth, 0)
         const [progCoefficient, show] = progWidth(progressBox, rowWidth, prog, goal)
 
