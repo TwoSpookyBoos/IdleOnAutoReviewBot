@@ -163,7 +163,7 @@ def setAlchemyVialsProgressionTier() -> AdviceSection:
     return vial_AdviceSection
 
 
-def getExclusions():
+def getBubbleExclusions():
     exclusionsList = []
     #If all crops owned or Evolution GMO is level 10+, exclude the requirement for Cropius Mapper
     if session_data.account.farming["CropsUnlocked"] >= maxFarmingCrops or session_data.account.farming["MarketUpgrades"].get("Evolution GMO", 0) > 10:
@@ -200,40 +200,8 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
     max_tier = bubbles_progressionTiers[-2][0]  #Final tier is Informational
     overall_alchemyBubblesTier = 0
     adviceCountsDict = {"PurpleSampleBubbles": 0, "OrangeSampleBubbles": 0, "GreenSampleBubbles": 0, "UtilityBubbles": 0}
-    exclusionsList = getExclusions()
+    exclusionsList = getBubbleExclusions()
 
-    #Get the bubble data and remove the length element
-    # raw_orange_alchemyBubblesDict = session_data.account.raw_data["CauldronInfo"][0]
-    # raw_orange_alchemyBubblesDict.pop('length', None)
-    # raw_green_alchemyBubblesDict = session_data.account.raw_data["CauldronInfo"][1]
-    # raw_green_alchemyBubblesDict.pop('length', None)
-    # raw_purple_alchemyBubblesDict = session_data.account.raw_data["CauldronInfo"][2]
-    # raw_purple_alchemyBubblesDict.pop('length', None)
-    # raw_yellow_alchemyBubblesDict = session_data.account.raw_data["CauldronInfo"][3]
-    # raw_yellow_alchemyBubblesDict.pop('length', None)
-    #
-    # #Replace the bubble numbers with their names for readable evaluation against the progression tiers
-    # named_all_alchemyBubblesDict = {}
-    # for bubble in raw_orange_alchemyBubblesDict:
-    #     if int(bubble) <= max_IndexOfBubbles:
-    #         named_all_alchemyBubblesDict[getReadableBubbleNames(bubble, "Orange")] = int(raw_orange_alchemyBubblesDict[bubble])
-    # for bubble in raw_green_alchemyBubblesDict:
-    #     if int(bubble) <= max_IndexOfBubbles:
-    #         named_all_alchemyBubblesDict[getReadableBubbleNames(bubble, "Green")] = int(raw_green_alchemyBubblesDict[bubble])
-    # for bubble in raw_purple_alchemyBubblesDict:
-    #     if int(bubble) <= max_IndexOfBubbles:
-    #         named_all_alchemyBubblesDict[getReadableBubbleNames(bubble, "Purple")] = int(raw_purple_alchemyBubblesDict[bubble])
-    # for bubble in raw_yellow_alchemyBubblesDict:
-    #     if int(bubble) <= max_IndexOfBubbles:
-    #         named_all_alchemyBubblesDict[getReadableBubbleNames(bubble, "Yellow")] = int(raw_yellow_alchemyBubblesDict[bubble])
-    #
-    # #Sum up unlocked bubbles (level > 0)
-    # orangeBubblesUnlocked = getSumUnlockedBubbles(raw_orange_alchemyBubblesDict, "Orange")
-    # greenBubblesUnlocked = getSumUnlockedBubbles(raw_green_alchemyBubblesDict, "Green")
-    # purpleBubblesUnlocked = getSumUnlockedBubbles(raw_purple_alchemyBubblesDict, "Purple")
-    # yellowBubblesUnlocked = getSumUnlockedBubbles(raw_yellow_alchemyBubblesDict, "Yellow")
-    # sum_TotalBubblesUnlocked += orangeBubblesUnlocked + greenBubblesUnlocked + purpleBubblesUnlocked + yellowBubblesUnlocked
-    #
     perCauldronBubblesUnlocked = [0, 0, 0, 0]
     sum_TotalBubblesUnlocked = 0
     for bubbleName, bubbleValues in session_data.account.alchemy_bubbles.items():
@@ -371,9 +339,9 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
                 if session_data.account.alchemy_bubbles.get(requiredBubble, {}).get('Level', 0) < tier[5][requiredBubble]:
                     all_utilityRequirementsMet = False
                     if tier[0] > max_tier:
-                        subgroupName = f"To reach Informational Tier {tier[0]} ({tier[6]} max value)"
+                        subgroupName = f"To reach Informational Tier {tier[0]}"
                     else:
-                        subgroupName = f"To reach Tier {tier[0]} ({tier[6]} max value)"
+                        subgroupName = f"To reach Tier {tier[0]}"
                     if subgroupName not in bubbles_AdviceDict["UtilityBubbles"] and len(bubbles_AdviceDict["UtilityBubbles"]) < maxTiersPerGroup:
                         bubbles_AdviceDict["UtilityBubbles"][subgroupName] = []
                     if subgroupName in bubbles_AdviceDict["UtilityBubbles"]:
@@ -472,9 +440,7 @@ def setAlchemyP2W() -> AdviceSection:
         p2w_AdviceSection.pinchy_rating = 0
         p2w_AdviceSection.tier = '0/1'
 
-    if p2wSum >= p2wMax:
-        p2w_AdviceSection.header = f"You've purchased all {p2wMax} upgrades in Alchemy-P2W! You best ❤️"
-    else:
+    if p2wSum < p2wMax:
         if bubbleCauldronSum < bubbleCauldronMax:
             p2w_AdviceDict["Pay2Win"].append(
                 Advice(label="Bubble Cauldron Upgrades", picture_class="cauldron-a", progression=str(bubbleCauldronSum), goal=str(bubbleCauldronMax))
@@ -504,9 +470,9 @@ def setAlchemyP2W() -> AdviceSection:
     p2w_AdviceSection.tier = tier_section
     p2w_AdviceSection.groups = p2w_AdviceGroupDict.values()
     if p2wSum >= p2wMax:
-        p2w_AdviceSection.header = f"You've purchased all {p2wMax} upgrades in Alchemy-P2W! You best ❤️"
+        p2w_AdviceSection.header = f"You've purchased all {p2wMax} upgrades in Alchemy's Pay 2 Win tab!<br>You best ❤️"
     else:
-        p2w_AdviceSection.header = f"You've purchased {tier_section} upgrades in Alchemy P2W. Try to purchase the basic upgrades before Mid W5, and Player upgrades after each level up!"
+        p2w_AdviceSection.header = f"You've purchased {tier_section} upgrades in Alchemy's Pay 2 Win tab.<br>Try to purchase the basic upgrades before Mid W5, and Player upgrades after each Alchemy level up!"
     return p2w_AdviceSection
 
 # def setAlchemySigils() -> AdviceSection:

@@ -16,7 +16,8 @@ from consts import expectedStackables, greenstack_progressionTiers, card_data, m
     sailingDict, guildBonusesList, labBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesList, \
     getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampsDict, stampTypes, marketUpgradeList, \
     achievementsList, forgeUpgradesDict, arcadeBonuses, saltLickList, allMeritsDict, bubblesDict, familyBonusesDict, poBoxDict, equinoxBonusesDict, \
-    maxDreams, dreamsThatUnlockNewBonuses, ceilUpToBase, starsignsDict, gfood_codes, getStyleNameFromIndex, divinity_divinitiesDict, getDivinityNameFromIndex
+    maxDreams, dreamsThatUnlockNewBonuses, ceilUpToBase, starsignsDict, gfood_codes, getStyleNameFromIndex, divinity_divinitiesDict, getDivinityNameFromIndex, \
+    maxCookingTables, getNextESFamilyBreakpoint
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
 
 def session_singleton(cls):
@@ -52,6 +53,27 @@ class Equipment:
             self.foods = []
 
 
+def getSpecializedSkills(base_class, sub_class, elite_class):
+    specializedSkillsList = []
+    if base_class == "Mage":
+        specializedSkillsList.append("Choppin")
+    elif base_class == "Warrior":
+        specializedSkillsList.append("Mining")
+
+    if sub_class == "Barbarian":
+        specializedSkillsList.append("Fishing")
+    elif sub_class == "Bowman":
+        specializedSkillsList.append("Catching")
+    elif sub_class == "Hunter":
+        specializedSkillsList.append("Trapping")
+    elif sub_class == "Wizard":
+        specializedSkillsList.append("Worship")
+
+    if elite_class == "Blood Berserker":
+        specializedSkillsList.append("Cooking")
+
+    return specializedSkillsList
+
 class Character:
     def __init__(
         self,
@@ -64,8 +86,12 @@ class Character:
         elite_class: str,
         equipped_prayers: list,
         all_skill_levels: dict,
-        po_boxes: list[int]
+        max_talents: dict,
+        current_preset_talents: dict,
+        secondary_preset_talents: dict,
+        po_boxes: list[int],
     ):
+
         self.character_index: int = character_index
         self.character_name: str = character_name
 
@@ -74,6 +100,13 @@ class Character:
         self.base_class: str = base_class
         self.sub_class: str = sub_class
         self.elite_class: str = elite_class
+        self.max_talents_over_books: int = 100
+        self.symbols_of_beyond = 0
+        self.family_guy_bonus = 0
+        self.max_talents: dict = max_talents
+        self.current_preset_talents: dict = current_preset_talents
+        self.secondary_preset_talents: dict = secondary_preset_talents
+        self.specialized_skills: list[str] = getSpecializedSkills(self.base_class, self.sub_class, self.elite_class)
 
         self.combat_level: int = all_skill_levels["Combat"]
         self.mining_level: int = all_skill_levels["Mining"]
@@ -104,6 +137,8 @@ class Character:
         self.skills = all_skill_levels
         self.divinity_style: str = "None"
         self.divinity_link: str = "Unlinked"
+        self.current_polytheism_link = "Unlinked"
+        self.secondary_polytheism_link = "Unlinked"
         self.po_boxes_invested = {}
         for poBoxIndex, poBoxValues in poBoxDict.items():
             try:
@@ -169,6 +204,8 @@ class Character:
         }
         self.equipment = Equipment(raw_data, character_index, self.combat_level >= 1)
 
+        self.setPolytheismLink()
+
     def addUnmetApoc(self, apocType: str, apocRating: str, mapInfoList: list):
         self.apoc_dict[apocType][apocRating].append(mapInfoList)
 
@@ -189,6 +226,33 @@ class Character:
 
     def setDivinityLink(self, linkName: str):
         self.divinity_link = linkName
+
+    def setPolytheismLink(self):
+        if self.class_name == "Elemental Sorcerer":
+            try:
+                current_preset_level = self.current_preset_talents.get("505", 0)
+                if current_preset_level > 0:
+                    self.current_polytheism_link = divinity_divinitiesDict[(current_preset_level % 10) - 1]['Name']  #Dict starts at 1 for Snake, not 0
+            except:
+                pass
+            try:
+                secondary_preset_level = self.secondary_preset_talents.get("505", 0)
+                if secondary_preset_level > 0:
+                    self.secondary_polytheism_link = divinity_divinitiesDict[(secondary_preset_level % 10) - 1]['Name']  #Dict starts at 1 for Snake, not 0
+            except:
+                pass
+
+    def setFamilyGuyBonus(self, value: float):
+        self.family_guy_bonus = value
+
+    def setSymbolsOfBeyondMax(self, value: int):
+        self.symbols_of_beyond = 1 + value if value > 0 else 0
+
+    def increase_max_talents_over_books(self, value: int):
+        try:
+            self.max_talents_over_books += value
+        except:
+            pass
 
     def __str__(self):
         return self.character_name
@@ -412,6 +476,11 @@ class AdviceGroup(AdviceBase):
             for field in self.__compare_by
         )
 
+    def remove_empty_subgroups(self):
+        if isinstance(self.advices, list):
+            self.advices = [value for value in self.advices if value]
+        if isinstance(self.advices, dict):
+            self.advices = {key: value for key, value in self.advices.items() if value}
 
 class AdviceSection(AdviceBase):
     """
@@ -710,6 +779,7 @@ class Account:
         )
         self._parse_wave_1(run_type)
         self._calculate_wave_1()
+        self._calculate_wave_2()
 
     def _parse_wave_1(self, run_type):
         self._parse_switches()
@@ -735,7 +805,8 @@ class Account:
         # Companions
         self.sheepie_owned = g.sheepie
         self.doot_owned = g.doot
-        if not self.doot_owned or not self.sheepie_owned:
+        self.riftslug_owned = g.riftslug
+        if not self.doot_owned or not self.sheepie_owned or not self.riftslug_owned:
             rawCompanions = self.raw_data.get('companion', [])
             if rawCompanions:
                 for companionInfo in rawCompanions.get('l', []):
@@ -743,6 +814,9 @@ class Account:
                     if companionID == 0:
                         self.doot_owned = True
                         g.doot = True
+                    if companionID == 1:
+                        self.riftslug_owned = True
+                        g.riftslug = True
                     if companionID == 4:
                         self.sheepie_owned = True
                         g.sheepie = True
@@ -1079,14 +1153,27 @@ class Account:
                     self.arcade[upgradeIndex]["Display"] = f"+% UnknownUpgrade{upgradeIndex}"
 
     def _parse_w3(self):
+        self._parse_w3_buildings()
+        self._parse_w3_library()
         self._parse_w3_deathnote()
         self._parse_w3_equinox_dreams()
         self._parse_w3_equinox_bonuses()
-        self._parse_w3_buildings()
         self._parse_w3_shrines()
         self._parse_w3_atoms()
         self._parse_w3_prayers()
         self._parse_w3_saltlick()
+
+    def _parse_w3_buildings(self):
+        self.construction_buildings = {}
+        raw_buildings_list = safe_loads(self.raw_data.get("Tower", []))
+        for buildingIndex, buildingName in enumerate(buildingsList):
+            try:
+                self.construction_buildings[buildingName] = int(raw_buildings_list[buildingIndex])
+            except:
+                self.construction_buildings[buildingName] = 0
+
+    def _parse_w3_library(self):
+        self.library = {}
 
     def _parse_w3_deathnote(self):
         self.rift_meowed = False
@@ -1132,15 +1219,6 @@ class Account:
                         self.equinox_bonuses[upgradeName]['PlayerMaxLevel'] += bonusMaxLevelIncrease
                     else:
                         self.equinox_bonuses[upgradeName]['RemainingUpgrades'].append(dreamIndex)
-
-    def _parse_w3_buildings(self):
-        self.construction_buildings = {}
-        raw_buildings_list = safe_loads(self.raw_data.get("Tower", []))
-        for buildingIndex, buildingName in enumerate(buildingsList):
-            try:
-                self.construction_buildings[buildingName] = int(raw_buildings_list[buildingIndex])
-            except:
-                self.construction_buildings[buildingName] = 0
 
     def _parse_w3_shrines(self):
         self.shrines = {}
@@ -1224,7 +1302,47 @@ class Account:
         self._parse_w4_rift()
 
     def _parse_w4_cooking(self):
-        self.meals_remaining = maxMeals * maxMealLevel
+        self.cooking = {
+            'MealsRemaining': maxMeals * maxMealLevel,  # This is the default value before considering the player's values
+            'MealsUnlocked': 0,
+            'MealsUnder11': 0,
+            'MealsUnder30': 0,
+            'PlayerMaxPlateLvl': 30,  # 30 is the default starting point
+            'PlayerTotalMealLevels': 0,
+            'PlayerMissingPlateUpgrades': []
+        }
+        self._parse_w4_cooking_tables()
+        self._parse_w4_cooking_meals()
+
+    def _parse_w4_cooking_tables(self):
+        emptyTable = [0] * 11  # Some tables only have 10 fields, others have 11. Scary.
+        emptyCooking = [emptyTable for table in range(maxCookingTables)]
+        raw_cooking_list = safe_loads(self.raw_data.get("Cooking", emptyCooking))
+        for sublistIndex, value in enumerate(raw_cooking_list):
+            if isinstance(raw_cooking_list[sublistIndex], list):
+                #Pads out the length of all tables to 11 entries, to be safe.
+                while len(raw_cooking_list[sublistIndex]) < 11:
+                    raw_cooking_list[sublistIndex].append(0)
+
+    def _parse_w4_cooking_meals(self):
+        emptyMeal = [0] * maxMeals
+        # Meals contains 4 lists of lists. The first 3 are as long as the number of plates. The 4th is general shorter.
+        emptyMeals = [emptyMeal for meal in range(4)]
+        raw_meals_list = safe_loads(self.raw_data.get("Meals", emptyMeals))
+        for sublistIndex, value in enumerate(raw_meals_list):
+            if isinstance(raw_meals_list[sublistIndex], list):
+                while len(raw_meals_list[sublistIndex]) < maxMeals:
+                    raw_meals_list[sublistIndex].append(0)
+
+        # Count the number of unlocked meals, unlocked meals under 11, and unlocked meals under 30
+        for mealLevel in raw_meals_list[0]:
+            if mealLevel > 0:
+                self.cooking['MealsUnlocked'] += 1
+                self.cooking['PlayerTotalMealLevels'] += mealLevel
+                if mealLevel < 11:
+                    self.cooking['MealsUnder11'] += 1
+                if mealLevel < 30:
+                    self.cooking['MealsUnder30'] += 1
 
     def _parse_w4_lab(self):
         raw_lab = safe_loads(self.raw_data.get("Lab", []))
@@ -1319,7 +1437,8 @@ class Account:
 
     def _parse_w5_divinity(self):
         self.divinity = {
-            'Divinities': copy.deepcopy(divinity_divinitiesDict)
+            'Divinities': copy.deepcopy(divinity_divinitiesDict),
+            'DivinityLinks': {}
         }
         raw_divinity_list = safe_loads(self.raw_data.get("Divinity", []))
         while len(raw_divinity_list) < 40:
@@ -1353,6 +1472,14 @@ class Account:
             'Beanstalk': {},
             "JadeEmporium": {},
         }
+        try:
+            self.sneaking['CurrentMastery'] = self.raw_optlacc_list[231]
+        except:
+            self.sneaking['CurrentMastery'] = 0
+        try:
+            self.sneaking['MaxMastery'] = self.raw_optlacc_list[232]
+        except:
+            self.sneaking['MaxMastery'] = 0
         raw_ninja_list = safe_loads(self.raw_data.get("Ninja", []))
         self._parse_w6_gemstones(raw_ninja_list)
         self._parse_w6_jade_emporium(raw_ninja_list)
@@ -1495,7 +1622,6 @@ class Account:
         self._calculate_w6()
 
     def _calculate_general(self):
-        # General
         pass
 
     def _calculate_w1(self):
@@ -1530,7 +1656,9 @@ class Account:
 
     def _calculate_w2(self):
         self.vialMasteryMulti = 1 + (self.maxed_vials * .02) if self.rift['VialMastery'] else 1
+        self._calculate_w2_sigils()
 
+    def _calculate_w2_sigils(self):
         for sigilName in self.alchemy_p2w["Sigils"]:
             if self.alchemy_p2w["Sigils"][sigilName]["Level"] == 2:
                 if self.sneaking['JadeEmporium']['Ionized Sigils']['Obtained']:
@@ -1551,13 +1679,320 @@ class Account:
             # After the +1, 0/1/2/3
 
     def _calculate_w3(self):
-        pass
+        self._calculate_w3_library_max_book_levels()
+
+    def _calculate_w3_library_max_book_levels(self):
+        self.library['StaticSum'] = (0
+                      + (25 * (0 < self.construction_buildings.get('Talent Book Library', 0)))
+                      + (5 * (0 < self.achievements.get('Checkout Takeout', False)))
+                      + (10 * (0 < self.atoms.get('Oxygen - Library Booker', 0)))
+                      + (25 * self.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0))
+                      )
+        self.library['ScalingSum'] = (0
+                       + 2 * self.merits[2][2]['Level']
+                       + 2 * self.saltlick.get('Max Book', 0)
+                       )
+        summGroupA = (1 + (.25 * self.sailing['Artifacts'].get('The Winz Lantern', {}).get('Level', 0))
+                      + .01 * self.merits[5][4]['Level']
+                      + .01 * (0 < self.achievements.get('Spectre Stars', False))
+                      + .01 * (0 < self.achievements.get('Regalis My Beloved', False))
+                      )
+        summGroupB = 1 + (.3 * self.sneaking.get('PristineCharms', {}).get('Crystal Comb', 0))
+        self.library['SummoningSum'] = round(0
+                              + 10.5 * ('w6d3' in self.summoning['BattlesWon'])
+                              * summGroupA
+                              * summGroupB
+                              )
+        self.library['MaxBookLevel'] = 100 + self.library['StaticSum'] + self.library['ScalingSum'] + self.library['SummoningSum']
 
     def _calculate_w4(self):
-        pass
+        self._calculate_w4_cooking_max_plate_levels()
+
+    def _calculate_w4_cooking_max_plate_levels(self):
+        # Sailing Artifact Increases
+        causticolumn_level = self.sailing['Artifacts'].get('Causticolumn', {}).get('Level', 0)
+        self.cooking['PlayerMaxPlateLvl'] += 10 * int(causticolumn_level)
+        if causticolumn_level < 1:
+            self.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Base Causticolumn", "causticolumn"))
+        if causticolumn_level < 2:
+            self.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Ancient Causticolumn", "causticolumn"))
+        if causticolumn_level < 3:
+            if self.rift['EldritchArtifacts']:
+                self.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Eldritch Causticolumn", "causticolumn"))
+            else:
+                self.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Eldritch Causticolumn."
+                                                               " Eldritch Artifacts are unlocked by completing {{ Rift|#rift }} 30", "eldritch-artifact"))
+        if causticolumn_level < 4:
+            if self.sneaking['JadeEmporium']["Sovereign Artifacts"]['Obtained']:
+                self.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Sovereign Causticolumn", "causticolumn"))
+            else:
+                self.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Sovereign Causticolumn. Sovereign Artifacts unlock from "
+                                                               "{{ Jade Emporium|#sneaking }}", "sovereign-artifacts"))
+        # Jade Emporium Increases
+        if self.sneaking['JadeEmporium']["Papa Blob's Quality Guarantee"]['Obtained']:
+            self.cooking['PlayerMaxPlateLvl'] += 10
+        else:
+            self.cooking['PlayerMissingPlateUpgrades'].append(("Purchase \"Papa Blob's Quality Guarantee\" from "
+                                                               "{{ Jade Emporium|#sneaking }}", "papa-blobs-quality-guarantee"))
+        if self.sneaking['JadeEmporium']["Chef Geustloaf's Cutting Edge Philosophy"]['Obtained']:
+            self.cooking['PlayerMaxPlateLvl'] += 10
+        else:
+            self.cooking['PlayerMissingPlateUpgrades'].append(("Purchase \"Chef Geustloaf's Cutting Edge Philosophy\" from "
+                                                               "{{ Jade Emporium|#sneaking }}", "chef-geustloafs-cutting-edge-philosophy"))
 
     def _calculate_w5(self):
         pass
+
+    def _calculate_w5_divinity_link_advice(self):
+        self.divinity['DivinityLinks'] = {
+            0: [
+                Advice(
+                    label="No Divinities unlocked to link to",
+                    picture_class=""
+                )
+            ],
+            1: [
+                Advice(
+                    label="No harm in linking everyone, as Snehebatu is your only choice",
+                    picture_class="snehebatu"
+                )
+            ],
+            2: [
+                Advice(
+                    label="Lab bonuses fully online",
+                    picture_class="arctis"
+                ),
+                Advice(
+                    label="Extra characters can link to Snake if not Meditating",
+                    picture_class="snehebatu"
+                )
+            ],
+            3: [
+                Advice(
+                    label="Lab bonuses fully online",
+                    picture_class="arctis"
+                ),
+                Advice(
+                    label="1 Map Pusher",
+                    picture_class="nobisect"
+                ),
+                Advice(
+                    label="Extra characters can link to Snake if not Meditating",
+                    picture_class="snehebatu"
+                )
+            ],
+            4: [
+                Advice(
+                    label="Lab bonuses fully online",
+                    picture_class="arctis"
+                ),
+                Advice(
+                    label="1 Map Pusher",
+                    picture_class="nobisect"
+                ),
+                Advice(
+                    label="Extra characters can link to Snake if not Meditating",
+                    picture_class="snehebatu"
+                )
+            ],
+            5: [
+                Advice(
+                    label="Move Meditators to Lab",
+                    picture_class="goharut"
+                ),
+                Advice(
+                    label="Lab bonuses fully online",
+                    picture_class="arctis"
+                ),
+                Advice(
+                    label="1 Map Pusher",
+                    picture_class="nobisect"
+                ),
+                Advice(
+                    label="Extra characters can link to Snake if not Meditating",
+                    picture_class="snehebatu"
+                )
+            ],
+            6: [
+                Advice(
+                    label="Move Meditators to Lab",
+                    picture_class="goharut"
+                ),
+                Advice(
+                    label="Lab bonuses fully online",
+                    picture_class="arctis"
+                ),
+                Advice(
+                    label="1 Map Pusher",
+                    picture_class="nobisect"
+                ),
+                Advice(
+                    label="Extra characters can link to Snake if not Meditating",
+                    picture_class="snehebatu"
+                )
+            ],
+            7: [
+                Advice(
+                    label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
+                    picture_class="purrmep"
+                ),
+                Advice(
+                    label="Meditators in Lab",
+                    picture_class="goharut"
+                ),
+                Advice(
+                    label="Lab bonuses fully online",
+                    picture_class="arctis"
+                ),
+                Advice(
+                    label="1 Map Pusher",
+                    picture_class="nobisect"
+                ),
+                Advice(
+                    label="Cooking BB generally wants Snake",
+                    picture_class="cooking-ladle"
+                ),
+                Advice(
+                    label="Extra characters can link to Snake if not Meditating",
+                    picture_class="snehebatu"
+                ),
+
+            ],
+            8: [
+                Advice(
+                    label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
+                    picture_class="purrmep"
+                ),
+                Advice(
+                    label="Meditators in Lab",
+                    picture_class="goharut"
+                ),
+                Advice(
+                    label="Lab bonuses fully online",
+                    picture_class="arctis"
+                ),
+                Advice(
+                    label="1 Map Pusher",
+                    picture_class="nobisect"
+                ),
+                Advice(
+                    label="Cooking BB generally wants Snake",
+                    picture_class="cooking-ladle"
+                ),
+                Advice(
+                    label="Extra characters can link to Snake if not Meditating",
+                    picture_class="snehebatu"
+                ),
+            ],
+            9: [
+                Advice(
+                    label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
+                    picture_class="purrmep"
+                ),
+                Advice(
+                    label="Meditators in Lab",
+                    picture_class="goharut"
+                ),
+                Advice(
+                    label="Lab bonuses fully online",
+                    picture_class="arctis"
+                ),
+                Advice(
+                    label="1 Map Pusher",
+                    picture_class="nobisect"
+                ),
+                Advice(
+                    label="Cooking BB generally wants Snake",
+                    picture_class="cooking-ladle"
+                ),
+                Advice(
+                    label="Extra characters can link to Snake if not Meditating",
+                    picture_class="snehebatu"
+                ),
+            ],
+            10: [
+                Advice(
+                    label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
+                    picture_class="purrmep"
+                ),
+                Advice(
+                    label="Meditators in Lab",
+                    picture_class="goharut"
+                ),
+                Advice(
+                    label="Lab bonuses fully online",
+                    picture_class="arctis"
+                ),
+                Advice(
+                    label="1 Map Pusher",
+                    picture_class="nobisect"
+                ),
+                Advice(
+                    label="Cooking BB generally wants Snake",
+                    picture_class="cooking-ladle"
+                ),
+                Advice(
+                    label="Extra characters can link to Snake if not Meditating",
+                    picture_class="snehebatu"
+                ),
+            ],
+            11: [
+                Advice(
+                    label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
+                    picture_class="purrmep"
+                ),
+                Advice(
+                    label="Meditators in Lab",
+                    picture_class="goharut"
+                ),
+                Advice(
+                    label="Lab bonuses fully online",
+                    picture_class="arctis"
+                ),
+                Advice(
+                    label="1 Map Pusher",
+                    picture_class="nobisect"
+                ),
+                Advice(
+                    label="Cooking BB generally wants Snake",
+                    picture_class="cooking-ladle"
+                ),
+                Advice(
+                    label="Extra characters can link to Snake if not Meditating",
+                    picture_class="snehebatu"
+                ),
+            ],
+            12: [
+                Advice(
+                    label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
+                    picture_class="purrmep"
+                ),
+                Advice(
+                    label="Meditators in Lab",
+                    picture_class="goharut"
+                ),
+                Advice(
+                    label="Lab bonuses fully online",
+                    picture_class="arctis"
+                ),
+                Advice(
+                    label="1 Map Pusher",
+                    picture_class="nobisect"
+                ),
+                Advice(
+                    label="Cooking BB generally wants Snake",
+                    picture_class="cooking-ladle"
+                ),
+                Advice(
+                    label="Extra characters can link to Snake if not Meditating",
+                    picture_class="snehebatu"
+                ),
+                Advice(
+                    label="Omniphau is a gamble. Refinery and 3D Printer rewards are nice- The other 4/6 are pretty meh.",
+                    picture_class="omniphau"
+                ),
+            ],
+        }
 
     def _calculate_w6(self):
         self.summoning['WinnerBonusesAdvice'].append(Advice(
@@ -1567,7 +2002,7 @@ class Account:
             goal=1
         ))
         if not self.sneaking['JadeEmporium']['Brighter Lighthouse Bulb']['Obtained']:
-            winzLanternPostString = ". This artifact needs to be unlocked from the {{ Jade Emporium|#sneaking }}"
+            winzLanternPostString = ". Unlocked from {{ Jade Emporium|#sneaking }}"
         else:
             winzLanternPostString = ""
         self.summoning['WinnerBonusesAdvice'].append(Advice(
@@ -1594,6 +2029,97 @@ class Account:
             progression=360 if self.achievements.get('Regalis My Beloved', False) else self.summoning['SanctuaryTotal'],
             goal=360
         ))
+
+    def _calculate_wave_2(self):
+        self._calculate_general_character_over_books()
+
+    def _calculate_general_character_over_books(self):
+        self.bonus_talents = {
+            "Rift Slug": {
+                "Value": 25 * self.riftslug_owned,
+                "Image": "rift-slug",
+                "Label": f"Companion: Rift Slug: +{25 * self.riftslug_owned}",
+                "Progression": 1 if self.riftslug_owned else 0,
+                "Goal": 1
+            },
+            "ES Family": {
+                "Value": floor(self.family_bonuses["Elemental Sorcerer"]['Value']),
+                "Image": 'elemental-sorcerer-icon',
+                "Label": f"Elemental Sorcerer Family Bonus: +{floor(self.family_bonuses['Elemental Sorcerer']['Value'])}.<br>"
+                         f"Next increase at ES Class Level: ",
+                "Progression": self.family_bonuses['Elemental Sorcerer']['Level'],
+                "Goal": getNextESFamilyBreakpoint(self.family_bonuses['Elemental Sorcerer']['Level'])
+            },
+            "Equinox Symbols": {
+                "Value": self.equinox_bonuses['Equinox Symbols']['CurrentLevel'],
+                "Image": 'equinox-symbols',
+                "Label": f"{{{{ Equinox|#equinox }}}}: Equinox Symbols: +{self.equinox_bonuses['Equinox Symbols']['CurrentLevel']}",
+                "Progression": self.equinox_bonuses['Equinox Symbols']['CurrentLevel'],
+                "Goal": self.equinox_bonuses['Equinox Symbols']['FinalMaxLevel']
+            },
+            "Maroon Warship": {
+                "Value": 1 * self.achievements['Maroon Warship'],
+                "Image": "maroon-warship",
+                "Label": f"W5 Achievement: Maroon Warship: +{1 * self.achievements['Maroon Warship']}",
+                "Progression": 1 if self.achievements['Maroon Warship'] else 0,
+                "Goal": 1
+            },
+            "Sneaking Mastery": {
+                "Value": 5 if self.sneaking['MaxMastery'] >= 3 else 0,
+                "Image": "sneaking-mastery",
+                "Label": f"{{{{ Rift|#rift }}}}: Sneaking Mastery: +{5 if self.sneaking['MaxMastery'] >= 3 else 0} (Mastery III)",
+                "Progression": self.sneaking['MaxMastery'],
+                "Goal": 3
+            },
+            # If Slug is owned: +25
+            # If Sneaking Mastery 3 unlocked: +5
+        }
+        self.bonus_talents_account_wide_sum = 0
+        for bonusName, bonusValuesDict in self.bonus_talents.items():
+            try:
+                self.bonus_talents_account_wide_sum += bonusValuesDict.get('Value', 0)
+            except:
+                continue
+
+        for char in self.safe_characters:
+            character_specific_bonuses = 0
+
+            # Arctis minor link
+            if self.doot_owned or char.divinity_link == "Arctis" or char.current_polytheism_link == "Arctis" or char.secondary_polytheism_link == "Arctis":
+                bigp_value = self.alchemy_bubbles['Big P']['BaseValue']
+                div_minorlink_value = char.divinity_level / (char.divinity_level + 60)
+                arctis_base = 15
+                final_result = ceil(arctis_base * bigp_value * div_minorlink_value)
+                character_specific_bonuses += ceil(15 * self.alchemy_bubbles['Big P']['BaseValue'] * (char.divinity_level / (char.divinity_level + 60)))
+
+            # Symbols of Beyond = 1 per 20 levels
+            if char.class_name in ["Blood Berserker", "Divine Knight"]:
+                character_specific_bonuses += char.max_talents.get("149", 0) // 20  #Symbols of Beyond - Red
+                char.setSymbolsOfBeyondMax(char.max_talents.get("149", 0) // 20)
+            elif char.class_name in ["Siege Breaker", "Beast Master"]:
+                character_specific_bonuses += char.max_talents.get("374", 0) // 20  # Symbols of Beyond - Green
+                char.setSymbolsOfBeyondMax(char.max_talents.get("374", 0) // 20)
+            elif char.class_name in ["Elemental Sorcerer", "Bubonic Conjuror"]:
+                character_specific_bonuses += char.max_talents.get("539", 0) // 20  # Symbols of Beyond - Purple
+                char.setSymbolsOfBeyondMax(char.max_talents.get("539", 0) // 20)
+
+            char.max_talents_over_books = self.library['MaxBookLevel'] + self.bonus_talents_account_wide_sum + character_specific_bonuses
+
+            # If they're an ES, use max level of Family Guy to calculate floor(ES Family Value * Family Guy)
+            if char.class_name == "Elemental Sorcerer":
+                try:
+                    #TODO: Move one-off talent value calculation
+                    family_guy_bonus = lavaFunc(
+                        'decay',
+                        char.max_talents_over_books + char.max_talents.get("374", 0),
+                        40,
+                        100
+                    )
+                    family_guy_multi = 1 + (family_guy_bonus/100)
+                    char.max_talents_over_books += floor(self.family_bonuses["Elemental Sorcerer"]['Value'] * family_guy_multi)
+                    char.setFamilyGuyBonus(floor(self.family_bonuses["Elemental Sorcerer"]['Value'] * family_guy_multi) - floor(self.family_bonuses["Elemental Sorcerer"]['Value']))
+                except:
+                    pass
 
     def _make_cards(self):
         card_counts = safe_loads(self.raw_data.get(self._key_cards, {}))

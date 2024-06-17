@@ -1,4 +1,3 @@
-import json
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
 from utils.data_formatting import safe_loads
@@ -16,14 +15,6 @@ def getCritterName(inputNumber):
         return "UnknownCritterName"
 
 def getUnlockedCritterStatus():
-    # try:
-    #     rawJadeEmporiumPurchases = safe_loads(session_data.account.raw_data["Ninja"])[102][9]
-    #     if rawJadeEmporiumPurchases is None:
-    #         rawJadeEmporiumPurchases = ""
-    # except:
-    #     logger.debug("Unable to retrieve Jade Emporium Upgrades to tell if Tuttle is unlocked. Defaulting to locked.")
-    #     rawJadeEmporiumPurchases = ""
-
     if session_data.account.sneaking['JadeEmporium']["New Critter"]['Obtained']:
         return [
             12,  # Index of the highest unlocked critter
@@ -382,9 +373,6 @@ def setTrappingProgressionTier():
     trapping_AdviceDict["CritterTraps"] = getStaticCritterTrapAdviceList(highestWearableTrapset)
     trapping_AdviceDict["ShinyTraps"] = getStaticShinyTrapAdviceList(highestWearableTrapset)
     trapping_AdviceDict["EXPTraps"] = getStaticEXPTrapAdviceList(highestWearableTrapset)
-
-    #advice_MetaEXPTraps = "
-    #advice_Disclaimer = "If you are intentionally using a different combination to suite your playstyle, feel free to ignore the below recommendations! They require an active playstyle that isn't for everyone."
 
     #Generate Advice Groups
     agd_unlockcritters_post_stringsList = [

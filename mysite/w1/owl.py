@@ -1,5 +1,4 @@
 from models.models import Advice, AdviceGroup, AdviceSection
-from utils.text_formatting import pl
 from consts import owl_progressionTiers, maxTiersPerGroup
 from utils.logging import get_logger
 from flask import g as session_data
@@ -58,7 +57,7 @@ def setOwlProgressionTier() -> AdviceSection:
                             if subgroupName in owl_AdviceDict['MegaFeathers']:
                                 lastMFShown = mf
                                 owl_AdviceDict['MegaFeathers'][subgroupName].append(Advice(
-                                    label=f"Mega Feather {mf+1}: Complete {resets} Feather Restarts first",
+                                    label=f"MF{mf+1}: Restart {resets} times first",
                                     picture_class=f"megafeather-{mf}" if mf < 10 else "the-great-mega-reset",
                                     progression=session_data.account.owl['FeatherRestarts'] if session_data.account.owl['MegaFeathersOwned'] == mf else 0,
                                     goal=resets
@@ -70,7 +69,7 @@ def setOwlProgressionTier() -> AdviceSection:
                 if subgroupName in owl_AdviceDict['MegaFeathers']:
                     if len(owl_AdviceDict['MegaFeathers']) > 0:
                         owl_AdviceDict['MegaFeathers'][subgroupName].insert(-1, Advice(
-                            label=f"Before purchasing Mega Feather {tierRequirementsDict['MegaFeathersOwned']+1}, purchase level {tierRequirementsDict['BonusesOfOrion']} of Bonuses of Orion",
+                            label=f"Before MF{tierRequirementsDict['MegaFeathersOwned']+1}, purchase Bonuses of Orion {tierRequirementsDict['BonusesOfOrion']}",
                             picture_class="bonuses-of-orion",
                             progression=session_data.account.owl['BonusesOfOrion'],
                             goal=tierRequirementsDict['BonusesOfOrion']

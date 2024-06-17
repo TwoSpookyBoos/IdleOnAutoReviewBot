@@ -81,21 +81,11 @@ def setWorshipPrayersProgressionTier() -> AdviceSection:
                 )
 
 #Generate Advice Groups
-    recommended_post_string_list = [
-        "Royal Sampler is an oddity. The Printer Sample Rate bonus it gives is fantastic, but a few levels (5-10) is usually enough to help you reach the 90% maximum.",
-        "Level 20 is half the maximum value for Skilled Dimwit.Rush this ASAP after all characters have Ceramic Skulls or better equipped.",
-        "Level 11 is half the maximum value for Balance of Pain. This prayer is crucial for farming Death Note and improving your 3D Printer samples of Monster materials.",
-        "This tier is roughly 75% of max prayer value for Skilled Dimwit and Balance of Pain.",
-        "This tier is roughly 50% max value for Midas. This prayer is great to use when you start farming older content, like Crystal Mobs for statues.",
-        "These are the best Prayer from each Totem/Soul type and are worth maxing first.",
-        "These are the last group of important prayers to max.",
-        ""
-    ]
     prayers_AdviceGroupDict['Recommended'] = AdviceGroup(
         tier=tier_WorshipPrayers,
         pre_string=f"Recommended Prayer{pl([''] * adviceCountsDict['Recommended'])}",
         advices=prayers_AdviceDict['Recommended'],
-        post_string="",  #recommended_post_string_list[tier_WorshipPrayers],
+        post_string="",
     )
     prayers_AdviceGroupDict['Optional'] = AdviceGroup(
         tier="",
@@ -107,7 +97,7 @@ def setWorshipPrayersProgressionTier() -> AdviceSection:
         tier="",
         pre_string=f"Ignorable Prayer{pl(prayers_AdviceDict['Ignorable'])}",
         advices=prayers_AdviceDict['Ignorable'],
-        post_string="Prayers in this group should still be unlocked, but can stay at level 1 after that as of v2.03.",
+        post_string="Prayers in this group should still be unlocked, but can stay at level 1 after that as of v2.10.",
     )
 
     #Generate Advice Section

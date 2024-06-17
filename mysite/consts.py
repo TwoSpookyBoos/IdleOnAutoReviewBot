@@ -1,5 +1,4 @@
 import math
-
 from utils.logging import get_logger
 from utils.text_formatting import getItemDisplayName
 
@@ -391,7 +390,7 @@ stamps_progressionTiers = {
         "Specific": {'Golden Apple Stamp': 28}}},
     17: {"TotalStampLevels": 3000, "Stamps": {
         "Combat": ["Steve Sword", "Diamond Axe Stamp"],
-        "Skill": ["Gamejoy Stamp", "Divine Stamp", "Multitool Stamp"],
+        "Skill": ["Gamejoy Stamp", "Divine Stamp"],
         "Specific": {'Bugsack Stamp': 80, 'Bag o Heads Stamp': 80}}},
     18: {"TotalStampLevels": 3500, "Stamps": {
         "Combat": ["Sashe Sidestamp"],
@@ -425,6 +424,7 @@ stamps_progressionTiers = {
     26: {"TotalStampLevels": 7500, "Stamps": {
         "Specific": {'Ladle Stamp': 180, 'Forge Stamp': 100}}},
     27: {"TotalStampLevels": 8000, "Stamps": {
+        "Skill": ["Multitool Stamp"],
         "Specific": {'Matty Bag Stamp': 280, 'Multitool Stamp': 150}}},
     28: {"TotalStampLevels": 8400, "Stamps": {
         "Skill": ["Dark Triad Essence Stamp"],
@@ -864,10 +864,10 @@ breeding_progressionTiers = {
             "TerritoriesUnlocked": 24,
             "ArenaWaves": 200,
             "Shinies": {
-                "Faster Shiny Pet Lv Up Rate": 24,
-                "Bonuses from All Meals": 10,
-                "Infinite Star Signs": 25,
-                "Base Efficiency for All Skills": 20
+                "Faster Shiny Pet Lv Up Rate": [24, 6],
+                "Bonuses from All Meals": [10, 5],
+                "Infinite Star Signs": [25, 5],
+                "Base Efficiency for All Skills": [20, 5],
             },
             "ShinyNotes": "Start by focusing on pets that increase Shiny Speed rate. This will decrease the amount of time needed to level up pets in the future."
             },
@@ -876,10 +876,10 @@ breeding_progressionTiers = {
             "TerritoriesUnlocked": 24,
             "ArenaWaves": 200,
             "Shinies": {
-                "Base Critter Per Trap": 10,
-                "Drop Rate": 15,
-                "Faster Refinery Speed": 15,
-                "Lower Minimum Travel Time for Sailing": 5,
+                "Base Critter Per Trap": [10, 5],
+                "Drop Rate": [15, 5],
+                "Faster Refinery Speed": [15, 5],
+                "Lower Minimum Travel Time for Sailing": [5, 5],
                 },
             "ShinyNotes": ""
             },
@@ -888,11 +888,11 @@ breeding_progressionTiers = {
             "TerritoriesUnlocked": 24,
             "ArenaWaves": 200,
             "Shinies": {
-                "Multikill Per Tier": 20,
-                "Higher Artifact Find Chance": 15,
-                "Faster Shiny Pet Lv Up Rate": 28,
-                "Infinite Star Signs": 37,
-                "Summoning EXP": 10,
+                "Multikill Per Tier": [20, 5],
+                "Higher Artifact Find Chance": [15, 5],
+                "Faster Shiny Pet Lv Up Rate": [28, 7],
+                "Infinite Star Signs": [37, 7],
+                "Summoning EXP": [10, 5]
                 },
             "ShinyNotes": ""
             },
@@ -901,8 +901,8 @@ breeding_progressionTiers = {
             "TerritoriesUnlocked": 24,
             "ArenaWaves": 200,
             "Shinies": {
-                "Bonuses from All Meals": 26,
-                "Base Efficiency for All Skills": 48,
+                "Bonuses from All Meals": [26, 13],
+                "Base Efficiency for All Skills": [48, 12],
                 },
             "ShinyNotes": ""
         },
@@ -911,8 +911,8 @@ breeding_progressionTiers = {
             "TerritoriesUnlocked": 24,
             "ArenaWaves": 200,
             "Shinies": {
-                "Drop Rate": 36,
-                "Base Critter Per Trap": 22,
+                "Drop Rate": [36, 12],
+                "Base Critter Per Trap": [22, 11],
                 },
             "ShinyNotes": ""
         },
@@ -921,10 +921,10 @@ breeding_progressionTiers = {
             "TerritoriesUnlocked": 24,
             "ArenaWaves": 200,
             "Shinies": {
-                "Summoning EXP": 22,
-                "Faster Refinery Speed": 33,
-                "Multikill Per Tier": 44,
-                "Infinite Star Signs": 45,
+                "Summoning EXP": [22, 11],
+                "Faster Refinery Speed": [33, 11],
+                "Multikill Per Tier": [44, 11],
+                "Infinite Star Signs": [45, 8],
             },
             "ShinyNotes": ""
         }
@@ -940,6 +940,8 @@ rift_progressionTiers = {
     7: [35, "125B",         220],
     8: [40, "1,554B",       240],
     9: [45, "20T",          240],
+    10: [50, "101T",        240],
+    11: [55, "528T",        240],
 }
 
 ###WORLD 5 PROGRESSION TIERS###
@@ -1190,6 +1192,7 @@ sailing_progressionTiers = {
 
 ###UI CONSTS###
 maxTiersPerGroup = 3
+#If you add a new switch here, you need to also add a default in main.js:defaults
 switches = [
     {
         "label": "Autoloot purchased",
@@ -1198,14 +1201,20 @@ switches = [
         "false": "",
     },
     {
-        "label": "Sheepie pet acquired",
+        "label": "Sheepie acquired",
         "name": "sheepie",
         "true": "",
         "false": "",
     },
     {
-        "label": "Doot pet acquired",
+        "label": "Doot acquired",
         "name": "doot",
+        "true": "",
+        "false": "",
+    },
+    {
+        "label": "Rift Slug acquired",
+        "name": "riftslug",
         "true": "",
         "false": "",
     },
@@ -1621,7 +1630,7 @@ card_data = {
     },
 }
 
-numberOfSecretClasses = 3  # Last verified as of v2.08
+numberOfSecretClasses = 3  # Last verified as of v2.10
 humanReadableClasses = {
     1: "Beginner",
     2: "Journeyman",
@@ -1845,6 +1854,23 @@ familyBonusesDict = {
     "Bubonic Conjuror": {'funcType': 'decay', 'x1': 5, 'x2': 180, 'Stat': 'All Stat. STR, AGI, WIS, LUK.', 'PrePlus': True, 'PostDisplay': '%', 'levelDiscount': familyBonusClassTierLevelReductions[2]},
     #"Arcane Cultist": {'funcType': 'decay', 'x1': 0, 'x2': 0, 'Stat': '', 'PrePlus': False, 'PostDisplay': '', 'levelDiscount': familyBonusClassTierLevelReductions[0]},
 }
+esFamilyBonusBreakpointsList = [0, 88, 108, 131, 157, 186, 219, 258, 303, 356, 419, 497, 594, 719, 885, 1118, 1468, 2049]
+
+def getNextESFamilyBreakpoint(currentLevel: int) -> int:
+    result = -1
+    for requirement in esFamilyBonusBreakpointsList:
+        try:
+            if currentLevel > requirement:
+                result += 1
+            else:
+                break
+        except:
+            continue
+    try:
+        return esFamilyBonusBreakpointsList[result+1]
+    except:
+        return esFamilyBonusBreakpointsList[-1]
+
 
 #achievementsList last pulled from code in 2.08. Search for: RegAchieves = function ()
 #Replace: "], ["  with:  "],\n["  before pasting in
@@ -2451,6 +2477,262 @@ allMeritsDict = {
     },  #World8
 }
 
+skill_talentsDict = {
+    # Optimal is an optional list for calculating library.getJeapordyGoal
+    # [0] = the starting level
+    # [1] = the interval of levels after the starting level which provide a bonus
+    # [2] = does this talent benefit from bonuses over the max book level, True of False]
+    # Example: Symbols of Beyond gives a benefit every 20 levels and does NOT benefit from bonuses like Rift Slug of Arctis
+    # 2nd example: Apocalypse ZOW gives a bonus every 33 and DOES benefit from bonuses
+    "Choppin": {
+        "High": {
+            460: {"Name": "Log on Logs", "Tab": "Mage"},
+            445: {"Name": "Smart Efficiency", "Tab": "Savvy Basics"},
+            462: {"Name": "Deforesting All Doubt", "Tab": "Mage"},
+            461: {"Name": "Leaf Thief", "Tab": "Mage"},
+            539: {"Name": "Symbols of Beyond P", "Tab": "Elite Class", "Optimal": [0, 20, False]},
+            532: {"Name": "Skill Wiz", "Tab": "Elite Class"},
+        },
+        "Medium": {
+            533: {"Name": "Utmost Intellect", "Tab": "Elite Class"},
+            456: {"Name": "Unt-WIS-ted Robes", "Tab": "Mage"},
+            459: {"Name": "Individual Insight", "Tab": "Mage"},
+            473: {"Name": "Wis Wumbo", "Tab": "Mage Subclass"},
+            449: {"Name": "Active Afk-er", "Tab": "Savvy Basics"},
+        },
+        "Low": {
+            452: {"Name": "Mana Overdrive", "Tab": "Mage"},
+            472: {"Name": "Staring Statues", "Tab": "Wizard"},
+            487: {"Name": "Stupendous Statues", "Tab": "Shaman"},
+            1: {"Name": "Mana Booster", "Tab": "Savvy Basics"},
+            486: {"Name": "Occult Obols", "Tab": "Mage Subclass", 'Hardcap': 125},
+        },
+    },
+    "Utility": {
+        "High": {
+            43: {"Name": "Right Hand of Action", "Tab": "Maestro"},
+            32: {"Name": "Printer Go Brrr", "Tab": "Maestro", "Optimal": [0, 40, True]},
+            59: {"Name": "Blood Marrow", "Tab": "Voidwalker"},
+            57: {"Name": "Species Epoch", "Tab": "Voidwalker"},
+            49: {"Name": "Enhancement Eclipse", "Tab": "Voidwalker", "Optimal": [0, 25, False]},
+        },
+        "Medium": {
+            41: {"Name": "Crystal Countdown", "Tab": "Maestro"},
+            56: {"Name": "Voodoo Statufication", "Tab": "Voidwalker"},
+            78: {"Name": "Extra Bags", "Tab": "Beginner"},
+            131: {"Name": "Redox Rates", "Tab": "Squire"},
+        },
+        "Low": {
+            130: {"Name": "Refinery Throttle", "Tab": "Squire", "Optimal": [0, 8, True]},
+        },
+    },
+    "Mining": {
+        "High": {
+            100: {"Name": "Big Pick", "Tab": "Warrior"},
+            85: {"Name": "Brute Efficiency", "Tab": "Rage Basics"},
+            103: {"Name": "Tool Proficiency", "Tab": "Warrior"},
+            101: {"Name": "Copper Collector", "Tab": "Warrior"},
+            149: {"Name": "Symbols of Beyond R", "Tab": "Elite Class", "Optimal": [0, 20, False]},
+            142: {"Name": "Skill Strengthen", "Tab": "Elite Class"},
+        },
+        "Medium": {
+            99: {"Name": "Haungry for Gold", "Tab": "Warrior"},
+            143: {"Name": "Overblown Testosterone", "Tab": "Elite Class"},
+            96: {"Name": "-STR-ess Tested Garb", "Tab": "Warrior"},
+            94: {"Name": "Firmly Grasp It", "Tab": "Warrior"},
+            98: {"Name": "Absolute Unit", "Tab": "Warrior"},
+            113: {"Name": "Str Summore", "Tab": "Warrior Subclass"},
+            89: {"Name": "Idle Skilling", "Tab": "Rage Basics"},
+        },
+        "Low": {
+            92: {"Name": "Health Overdrive", "Tab": "Warrior"},
+            127: {"Name": "Shieldiest Statues", "Tab": "Squire", 'Hardcap': 200},
+            112: {"Name": "Strongest Statues", "Tab": "Barbarian", 'Hardcap': 200},
+            95: {"Name": "Strength in Numbers", "Tab": "Warrior"},
+            0: {"Name": "Health Booster", "Tab": "Rage Basics"},
+            111: {"Name": "Fistful of Obol", "Tab": "Warrior Subclass", 'Hardcap': 125},
+        },
+    },
+    "Cooking": {
+        "High": {
+            148: {"Name": "Overflowing Ladle", "Tab": "Blood Berserker"},
+            149: {"Name": "Symbols of Beyond R", "Tab": "Blood Berserker", "Optimal": [0, 20, False]},
+        },
+        "Medium": {
+            146: {"Name": "Apocalypse Chow", "Tab": "Blood Berserker"},
+        },
+        "Low": {
+            147: {"Name": "Waiting to Cool", "Tab": "Blood Berserker"},
+        },
+    },
+    "Fishing": {
+        "High": {
+            115: {"Name": "Worming Undercover", "Tab": "Barbarian"},
+            85: {"Name": "Brute Efficiency", "Tab": "Rage Basics"},
+            149: {"Name": "Symbols of Beyond R", "Tab": "Elite Class", "Optimal": [0, 20, False]},
+            142: {"Name": "Skill Strengthen", "Tab": "Elite Class"},
+        },
+        "Medium": {
+            99: {"Name": "Haungry for Gold", "Tab": "Warrior"},
+            143: {"Name": "Overblown Testosterone", "Tab": "Elite Class"},
+            96: {"Name": "-STR-ess Tested Garb", "Tab": "Warrior"},
+            94: {"Name": "Firmly Grasp It", "Tab": "Warrior"},
+            98: {"Name": "Absolute Unit", "Tab": "Warrior"},
+            113: {"Name": "Str Summore", "Tab": "Warrior Subclass"},
+            89: {"Name": "Idle Skilling", "Tab": "Rage Basics"},
+            118: {"Name": "Catching Some Zzz-s", "Tab": "Barbarian"},
+        },
+        "Low": {
+            112: {"Name": "Strongest Statues", "Tab": "Barbarian", 'Hardcap': 200},
+            111: {"Name": "Fistful of Obol", "Tab": "Warrior Subclass", 'Hardcap': 125},
+            116: {"Name": "Bobbin' Bobbers", "Tab": "Barbarian"},
+        },
+    },
+    "Catching": {
+        "High": {
+            263: {"Name": "Elusive Efficiency", "Tab": "Calm Basics"},
+            295: {"Name": "Teleki-net-ic Logs", "Tab": "Bowman"},
+            296: {"Name": "Briar Patch Runner", "Tab": "Bowman"},
+            374: {"Name": "Symbols of Beyond G", "Tab": "Elite Class", "Optimal": [0, 20, False]},
+            367: {"Name": "Skill Ambidexterity", "Tab": "Elite Class"},
+        },
+        "Medium": {
+            298: {"Name": "Sunset on the Hives", "Tab": "Bowman"},
+            368: {"Name": "Adaptation Revelation", "Tab": "Elite Class"},
+            276: {"Name": "Garb of Un-AGI-ng Quality", "Tab": "Archer"},
+            278: {"Name": "Sanic Speed", "Tab": "Archer"},
+            293: {"Name": "Agi Again", "Tab": "Archer Subclass"},
+        },
+        "Low": {
+            292: {"Name": "Shwifty Statues", "Tab": "Bowman"},
+            291: {"Name": "Shoeful of Obol", "Tab": "Archer Subclass", 'Hardcap': 125},
+        },
+    },
+    "Trapping": {
+        "High": {
+            263: {"Name": "Elusive Efficiency", "Tab": "Calm Basics"},
+            311: {"Name": "Invasive Species", "Tab": "Hunter"},
+            310: {"Name": "Eagle Eye", "Tab": "Hunter"},
+            374: {"Name": "Symbols of Beyond G", "Tab": "Elite Class", "Optimal": [0, 20, False]},
+            367: {"Name": "Skill Ambidexterity", "Tab": "Elite Class"},
+        },
+        "Medium": {
+            368: {"Name": "Adaptation Revelation", "Tab": "Elite Class"},
+            276: {"Name": "Garb of Un-AGI-ng Quality", "Tab": "Archer"},
+            278: {"Name": "Sanic Speed", "Tab": "Archer"},
+            293: {"Name": "Agi Again", "Tab": "Archer Subclass"},
+        },
+        "Low": {
+            291: {"Name": "Shoeful of Obol", "Tab": "Archer Subclass", 'Hardcap': 125},
+        },
+    },
+    "Worship": {
+        "High": {
+            476: {"Name": "Sooouls", "Tab": "Wizard"},
+        },
+        "Medium": {},
+        "Low": {
+            478: {"Name": "Nearby Outlet", "Tab": "Wizard"},
+            475: {"Name": "Charge Syphon", "Tab": "Wizard", 'Hardcap': 200},
+        },
+    }
+}
+combat_talentsDict = {
+    #Talents here are unique from the skill_talentsDict above
+    #Elite Classes
+    "Blood Berserker": {
+        "High": {},
+        "Medium": {},
+        "Low": {
+            109: {"Name": "Monster Decimator", "Tab": "Barbarian"},
+            135: {"Name": "Fired Up", "Tab": "Blood Berserker", "Optimal": [0, 25, True], 'Hardcap': 125},
+            136: {"Name": "Combustion", "Tab": "Blood Berserker", "Optimal": [0, 20, True], 'Hardcap': 125},
+            137: {"Name": "Serrated Swipe", "Tab": "Blood Berserker", "Optimal": [0, 50, True], 'Hardcap': 125},
+            106: {"Name": "Axe Hurl", "Tab": "Barbarian", "Optimal": [0, 50, True], 'Hardcap': 125},
+        },
+    },
+    "Divine Knight": {
+        "High": {
+            168: {"Name": "Orb of Remembrance", "Tab": "Divine Knight"},
+            120: {"Name": "Shockwave Slash", "Tab": "Squire", "Optimal": [0, 30, True]},
+            165: {"Name": "Knightly Disciple", "Tab": "Divine Knight"},  #Inconsistent levels for extra attacks per Stark. Idk, just max book it and deal with it
+            169: {"Name": "Imbued Shockwaves", "Tab": "Divine Knight"},
+            121: {"Name": "Daggerang", "Tab": "Squire", "Optimal": [0, 30, True]},
+            166: {"Name": "Mega Mongorang", "Tab": "Divine Knight", "Optimal": [0, 25, True]},
+        },
+        "Medium": {
+            178: {"Name": "King of the Remembered", "Tab": "Divine Knight"},
+            129: {"Name": "Blocky Bottles", "Tab": "Squire"},
+            97: {"Name": "Carry a Big Stick", "Tab": "Warrior"},
+            6: {"Name": "Gilded Sword", "Tab": "Rage Basics"},
+            125: {"Name": "Precision Power", "Tab": "Squire"},
+        },
+        "Low": {
+            5: {"Name": "Sharpened Axe", "Tab": "Rage Basics"},
+            91: {"Name": "Whirl", "Tab": "Warrior", "Optimal": [0, 24, True]},
+        },
+    },
+    "Bubonic Conjuror": {
+        "High": {
+            525: {"Name": "Chemical Warfare", "Tab": "Bubonic Conjuror"},
+        },
+        "Medium": {
+
+        },
+        "Low": {
+
+        },
+
+    },
+    "Elemental Sorcerer": {
+        "High": {
+            498: {"Name": "Dimensional Wormhole", "Tab": "Elemental Sorcerer"},
+        },
+        "Medium": {
+
+        },
+        "Low": {
+
+        },
+
+    },
+    "Siege Breaker": {
+        "High": {
+            318: {"Name": "Pirate Flag", "Tab": "Siege Breaker"},
+        },
+        "Medium": {
+
+        },
+        "Low": {
+
+        },
+
+    },
+    "Beast Master": {
+        "High": {
+            362: {"Name": "Whale Wallop", "Tab": "Beast Master"},
+        },
+        "Medium": {
+
+        },
+        "Low": {
+
+        },
+
+    },
+    "Voidwalker": {
+        "High": {
+            46: {"Name": "Void Radius", "Tab": "Voidwalker"}
+        },
+        "Medium": {
+
+        },
+        "Low": {
+
+        },
+    },
+}
+
 def lavaFunc(funcType: str, level: int, x1: int | float, x2: int | float, roundResult=False):
     result = 0
     match funcType:
@@ -2492,7 +2774,7 @@ bribesDict = {
     "Trash Island": ["The Art of the Bail", "Random Garbage", "Godlier Creation", "Fishermaster", "Muscles on Muscles", "Bottle Service", "Star Scraper"],
     "W6": ["The Art of the Grail", "Artifact Pilfering", "Forge Cap Smuggling", "Gold from Lead", "Nugget Fabrication", "Divine PTS Miscounting", "Loot Table Tampering", "The Art of the Flail"]
 }
-unpurchasableBribes = ["The Art of the Flail"]  # These bribes are in the game, but cannot be purchased as of v2.02
+unpurchasableBribes = ["The Art of the Flail"]  # These bribes are in the game, but cannot be purchased as of v2.10
 stamp_maxes = {
     #Combat
     #Skill
@@ -2641,7 +2923,7 @@ stampTypes = ["Combat", "Skill", "Misc"]
 unavailableStampsList = [
     'Shiny Crab Stamp', 'Gear Stamp', 'SpoOoky Stamp', 'Prayday Stamp',  #Skill
     'Talent I Stamp', 'Talent V Stamp',  #Misc
-]  # Last verified as of v2.08
+]  # Last verified as of v2.10
 starsignsDict = {
     1: {'Name': "The Buff Guy", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
     2: {'Name': "Flexo Bendo", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
@@ -2772,9 +3054,9 @@ forgeUpgradesDict = {
 }
 
 ###WORLD 2 CONSTS###
-max_IndexOfVials = 75  # Last verified as of v2.08
-max_IndexOfBubbles = 29  # Last verified as of v2.08
-max_IndexOfSigils = 3  # Last verified as of v2.08
+max_IndexOfVials = 75  # Last verified as of v2.10
+max_IndexOfBubbles = 29  # Last verified as of v2.10
+max_IndexOfSigils = 3  # Last verified as of v2.10
 vialsDict = {
     0: {"Name": "Copper Corona", "Material": "Copper", "x1": 3, "x2": 0, "funcType": "add"},
     1: {"Name": "Sippy Splinter", "Material": "OakTree", "x1": 3, "x2": 0, "funcType": "add"},
@@ -3203,7 +3485,7 @@ def getReadableBubbleNames(inputNumber, color):
 
 
 ###WORLD 3 CONSTS###
-maxDreams = 31  # Last verified as of v2.08
+maxDreams = 31  # Last verified as of v2.10
 dreamsThatUnlockNewBonuses = [1, 3, 6, 8, 11, 14, 18, 21, 24, 29]
 equinoxBonusesDict = {
     2: {'Name': 'Equinox Dreams', 'BaseLevel': 5, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 5, 'Category': 'Recommended'},
@@ -3308,9 +3590,9 @@ maxSummoningBookLevels = 29
 maxOverallBookLevels = 100 + maxStaticBookLevels + maxScalingBookLevels + maxSummoningBookLevels
 
 ###WORLD 4 CONSTS###
-maxCookingTables = 10  # Last verified as of v2.08
-maxMeals = 67  # Last verified as of v2.08
-maxMealLevel = 90  # Last verified as of v2.08
+maxCookingTables = 10  # Last verified as of v2.10
+maxMeals = 67  # Last verified as of v2.10
+maxMealLevel = 90  # Last verified as of v2.10
 labChipsList: list[str] = [
     "Grounded Nanochip", "Grounded Motherboard", "Grounded Software", "Grounded Processor", "Potato Chip",
     "Conductive Nanochip", "Conductive Motherboard", "Conductive Software", "Conductive Processor", "Chocolatey Chip",
@@ -3328,7 +3610,7 @@ labBonusesList = [
 ###WORLD 5 CONSTS###
 artifactTiers = ["Base", "Ancient", "Eldritch", "Sovereign"]
 numberOfArtifactTiers = len(artifactTiers)
-currentMaxChestsSum = 45  # Last verified as of v2.08
+currentMaxChestsSum = 45  # Last verified as of v2.10
 artifactsList = [
     'Moai Head', 'Maneki Kat', 'Ruble Cuble', 'Fauxory Tusk', 'Gold Relic',
     'Genie Lamp', 'Silver Ankh', 'Emerald Relic', 'Fun Hippoete', 'Arrowhead',
@@ -3525,6 +3807,13 @@ divinity_stylesDict = {
         "Exp": 10,
     },
 }
+divLevelReasonsDict = {
+    0: "",
+    2: "to activate Doot",
+    40: "to unlock the TranQi Style.",
+    50: "to unlock the Multitool Stamp from Poigu's quest."
+}
+
 
 def getDivinityNameFromIndex(inputValue: int) -> str:
     return divinity_divinitiesDict.get(inputValue, {"Name": f"UnknownDivinity{inputValue}"}).get("Name")
@@ -3793,6 +4082,10 @@ def getGemstonePercent(gemstoneName: str, gemstoneValue: float):
 #slabString last pulled from code in 2.08
 slabList = "Copper Iron Gold Plat Dementia Void Lustre Starfire Marble Dreadlo Godshard CopperBar IronBar GoldBar PlatBar DementiaBar VoidBar LustreBar StarfireBar MarbleBar DreadloBar GodshardBar OakTree BirchTree JungleTree ForestTree ToiletTree PalmTree StumpTree SaharanFoal Tree7 AlienTree Tree8 Tree9 Tree11 Tree10 Tree12 Tree13 Leaf1 Leaf2 Leaf3 Leaf4 Leaf5 Leaf6 Fish1 Fish2 Fish3 Fish4 Fish5 Fish6 Fish7 Fish8 Fish9 Fish10 Fish11 Fish12 Fish13 Bug1 Bug2 Bug3 Bug4 Bug5 Bug6 Bug7 Bug8 Bug9 Bug11 Bug10 Bug12 Bug13 Critter1 Critter1A Critter2 Critter2A Critter3 Critter3A Critter4 Critter4A Critter5 Critter5A Critter6 Critter6A Critter7 Critter7A Critter8 Critter8A Critter9 Critter9A Critter10 Critter10A Critter11 Critter11A Soul1 Soul2 Soul3 Soul4 Soul5 Soul6 Soul7 Refinery1 Refinery2 Refinery3 Refinery4 Refinery5 Refinery6 CraftMat1 CraftMat2 CraftMat3 CraftMat5 CraftMat6 CraftMat7 CraftMat9 CraftMat8 CraftMat10 CraftMat11 CraftMat12 CraftMat13 CraftMat14 OilBarrel1 OilBarrel2 OilBarrel3 OilBarrel4 OilBarrel5 OilBarrel6 OilBarrel7 PureWater PureWater2 Grasslands1 Grasslands2 Grasslands3 Grasslands4 Jungle1 Jungle2 Jungle3 Forest1 Forest2 Forest3 Sewers1 Sewers1b Sewers2 Sewers3 TreeInterior1 TreeInterior1b TreeInterior2 DesertA1 DesertA1b DesertA2 DesertA3 DesertA3b DesertB1 DesertB2 DesertB3 DesertB4 DesertC1 DesertC2 DesertC2b DesertC3 DesertC4 SnowA1 SnowA2 SnowA2a SnowA3 SnowA4 SnowB1 SnowB2 SnowB2a SnowB5 SnowB3 SnowB4 SnowC1 SnowC2 SnowC3 SnowC4 SnowC4a SnowC5 GalaxyA1 GalaxyA2 GalaxyA2b GalaxyA3 GalaxyA4 GalaxyB1 GalaxyB2 GalaxyB3 GalaxyB4 GalaxyB5 GalaxyC1 GalaxyC1b GalaxyC2 GalaxyC3 GalaxyC4 LavaA1 LavaA1b LavaA2 LavaA3 LavaA4 LavaA5 LavaA5b LavaB1 LavaB2 LavaB3 LavaB3b LavaB4 LavaB5 LavaB6 LavaC1 LavaC2 SpiA1 SpiA2 SpiA2b SpiA3 SpiA4 SpiA5 SpiB1 SpiB2 SpiB2b SpiB3 SpiB4 SpiC1 SpiC2 SpiD1 SpiD2 SpiD3 BabaYagaETC Hgg Quest17 Quest29 EfauntDrop1 EfauntDrop2 Chiz0 Chiz1 TrollPart KrukPart KrukPart2 EquipmentHats11 EquipmentHats12 EquipmentHats13 EquipmentHats14 EquipmentHats1 EquipmentHats15 EquipmentHats17 EquipmentHats20 EquipmentHats3 EquipmentHats16 EquipmentHats21 EquipmentHats18 EquipmentHats22 EquipmentHats28 EquipmentHats19 TestObj13 EquipmentHats41 EquipmentHats26 EquipmentHats52 EquipmentHats53 EquipmentHats54 EquipmentHats61 EquipmentHats58 EquipmentHats59 EquipmentHats60 EquipmentHats68 EquipmentHats70 EquipmentHats71 EquipmentHats74 EquipmentHats77 EquipmentHats83 EquipmentHats105 EquipmentHats106 EquipmentHats5 EquipmentHats6 EquipmentHats7 EquipmentHats8 EquipmentHats9 EquipmentHats10 EquipmentHats4Choppin EquipmentHats25 EquipmentHats107 EquipmentHats29 EquipmentHats39 EquipmentHats27 EquipmentHats30 EquipmentHats44 EquipmentHats2 EquipmentHats67 EquipmentHats64 EquipmentHats66 EquipmentHats79 EquipmentHats73 EquipmentHats51 EquipmentHats56 EquipmentHats63 EquipmentHats85 EquipmentHats86 EquipmentHats87 EquipmentHats88 EquipmentHats42 EquipmentHats69 EquipmentHats108 EquipmentHats55 EquipmentHats75 EquipmentHats76 EquipmentHats65 EquipmentHats80 EquipmentHats81 EquipmentHats78 EquipmentHats90 EquipmentHats91 EquipmentHats92 EquipmentHats93 EquipmentHats94 EquipmentHats95 EquipmentHats96 EquipmentHats97 EquipmentHats98 EquipmentHats99 EquipmentHats100 EquipmentHats101 EquipmentHats102 EquipmentHats103 EquipmentHats104 EquipmentPunching1 EquipmentPunching2 EquipmentPunching3 EquipmentPunching4 EquipmentPunching5 EquipmentPunching6 EquipmentPunching7 EquipmentPunching8 EquipmentPunching9 EquipmentPunching10 EquipmentPunching11 TestObj1 TestObj7 TestObj3 EquipmentSword1 EquipmentSword2 EquipmentSword3 EquipmentSword4 EquipmentSword5 EquipmentSword6 EquipmentSword7 EquipmentSword8 EquipmentSword9 EquipmentBows1 EquipmentBows3 EquipmentBows4 EquipmentBows5 EquipmentBows6 EquipmentBows7 EquipmentBows8 EquipmentBows9 EquipmentBows10 EquipmentBows11 EquipmentBows12 EquipmentBows13 EquipmentBows14 EquipmentWands1 EquipmentWands2 EquipmentWands5 EquipmentWands6 EquipmentWands3 EquipmentWands7 EquipmentWands8 EquipmentWands9 EquipmentWands10 EquipmentWands11 EquipmentWands12 EquipmentWands13 EquipmentShirts1 EquipmentShirts17 EquipmentShirts19 EquipmentShirts20 EquipmentShirts24 EquipmentShirts25 EquipmentShirts2 EquipmentShirts16 EquipmentShirts3 EquipmentShirts21 EquipmentShirts10 EquipmentShirts11 EquipmentShirts12 EquipmentShirts13 EquipmentShirts18 EquipmentShirts14 EquipmentShirts5 EquipmentShirts23 EquipmentShirts22 EquipmentShirts15 EquipmentShirts26 EquipmentShirts27 EquipmentShirts31 EquipmentShirts28 EquipmentShirts29 EquipmentShirts30 EquipmentShirts6 EquipmentShirts32 EquipmentShirts33 EquipmentShirts34 EquipmentShirts35 EquipmentShirts36 EquipmentShirts37 EquipmentShirts38 EquipmentPants1 EquipmentPants2 EquipmentPants3 EquipmentPants4 EquipmentPants17 EquipmentPants5 EquipmentPants6 EquipmentPants20 EquipmentPants21 EquipmentPants10 EquipmentPants15 EquipmentPants16 EquipmentPants18 EquipmentPants19 EquipmentPants22 EquipmentPants23 EquipmentPants9 EquipmentPants24 EquipmentPants25 EquipmentPants8 EquipmentPants26 EquipmentPants27 EquipmentPants29 EquipmentPants30 EquipmentShoes1 EquipmentShoes9 EquipmentShoes15 EquipmentShoes3 EquipmentShoes20 EquipmentShoes4 EquipmentShoes5 EquipmentShoes21 EquipmentShoes22 EquipmentShoes7 EquipmentShoes16 EquipmentShoes17 EquipmentShoes18 EquipmentShoes19 EquipmentShoes2 EquipmentShoes23 EquipmentShoes26 EquipmentShoes27 EquipmentShoes28 EquipmentShoes29 EquipmentShoes30 EquipmentShoes31 EquipmentShoes32 EquipmentShoes33 EquipmentShoes39 EquipmentShoes24 EquipmentShoes25 EquipmentShoes34 EquipmentShoes35 EquipmentShoes36 EquipmentShoes37 EquipmentShoes38 EquipmentPendant9 EquipmentPendant10 EquipmentPendant11 EquipmentPendant12 EquipmentPendant14 EquipmentPendant16 EquipmentPendant17 EquipmentPendant18 EquipmentPendant19 EquipmentPendant20 EquipmentPendant21 EquipmentPendant22 EquipmentPendant23 EquipmentPendant24 EquipmentPendant25 EquipmentPendant26 EquipmentPendant27 EquipmentPendant28 EquipmentPendant31 EquipmentPendant29 EquipmentPendant30 EquipmentRings2 EquipmentRings3 EquipmentRings6 EquipmentRings7 EquipmentRings11 EquipmentRings12 EquipmentRings13 EquipmentRings14 EquipmentRings15 EquipmentRings16 EquipmentRings21 EquipmentRings20 EquipmentRings19 EquipmentRingsFishing1 EquipmentRingsFishing2 EquipmentRingsFishing3 EquipmentRings22 EquipmentRings18 EquipmentRings36 EquipmentRings23 EquipmentRings24 EquipmentRings25 EquipmentRings26 EquipmentRings27 EquipmentRings28 EquipmentRings29 EquipmentRings35 EquipmentRings30 EquipmentRings33 EquipmentRings31 EquipmentRings32 EquipmentRings34 EquipmentRingsChat10 EquipmentCape0 EquipmentCape2 EquipmentCape3 EquipmentCape4 EquipmentCape5 EquipmentCape6 EquipmentCape7 EquipmentCape8 EquipmentCape9 EquipmentCape10 EquipmentCape11 EquipmentCape12 EquipmentCape13 EquipmentCape14 EquipmentKeychain0 EquipmentKeychain1 EquipmentKeychain2 EquipmentKeychain3 EquipmentKeychain4 EquipmentKeychain5 EquipmentKeychain6 EquipmentKeychain7 EquipmentKeychain8 EquipmentKeychain9 EquipmentKeychain10 EquipmentKeychain11 EquipmentKeychain12 EquipmentKeychain13 EquipmentKeychain14 EquipmentKeychain15 EquipmentKeychain16 EquipmentKeychain17 EquipmentKeychain18 EquipmentKeychain19 EquipmentKeychain20 EquipmentKeychain21 EquipmentKeychain22 EquipmentKeychain23 EquipmentKeychain24 EquipmentKeychain25 EquipmentKeychain26 EquipmentKeychain27 EquipmentKeychain28 EquipmentKeychain29 Trophy1 Trophy2 Trophy3 Trophy5 Trophy6 Trophy7 Trophy8 Trophy9 Trophy10 Trophy11 Trophy12 Trophy13 Trophy14 Trophy15 Trophy16 Trophy17 Trophy18 Trophy19 Trophy20 Trophy21 Trophy22 EquipmentNametag1 EquipmentNametag3 EquipmentNametag4 EquipmentNametag5 EquipmentNametag6b EquipmentNametag7 EquipmentNametag8 EquipmentNametag9 EquipmentNametag10 EquipmentTools1 EquipmentTools2 EquipmentTools3 EquipmentTools5 EquipmentTools6 EquipmentTools7 EquipmentTools11 EquipmentTools8 EquipmentTools12 EquipmentTools9 EquipmentTools14 EquipmentTools15 EquipmentTools10 EquipmentTools13 EquipmentToolsHatchet0 EquipmentToolsHatchet3 EquipmentToolsHatchet1 EquipmentToolsHatchet2b EquipmentToolsHatchet2 EquipmentToolsHatchet4 EquipmentToolsHatchet5 EquipmentToolsHatchet7 EquipmentToolsHatchet6 EquipmentToolsHatchet8 EquipmentToolsHatchet9 EquipmentToolsHatchet12 EquipmentToolsHatchet10 EquipmentToolsHatchet11 FishingRod2 FishingRod3 FishingRod4 FishingRod5 FishingRod6 FishingRod7 FishingRod8 FishingRod9 FishingRod10 FishingRod11 FishingRod12 CatchingNet2 CatchingNet3 CatchingNet4 CatchingNet5 CatchingNet6 CatchingNet7 CatchingNet8 CatchingNet9 CatchingNet10 CatchingNet11 CatchingNet12 TrapBoxSet1 TrapBoxSet2 TrapBoxSet3 TrapBoxSet4 TrapBoxSet5 TrapBoxSet6 TrapBoxSet7 TrapBoxSet8 TrapBoxSet9 TrapBoxSet10 WorshipSkull1 WorshipSkull2 WorshipSkull3 WorshipSkull4 WorshipSkull5 WorshipSkull6 WorshipSkull7 WorshipSkull8 WorshipSkull9 WorshipSkull10 WorshipSkull11 DNAgun0 DNAgun1 DNAgun2 DNAgun3 FoodHealth1 FoodHealth3 FoodHealth2 Peanut FoodHealth4 FoodHealth6 FoodHealth7 FoodHealth10 FoodHealth9 FoodHealth11 FoodHealth13 FoodHealth12 FoodHealth14 FoodHealth15 FoodHealth16 FoodHealth17 FoodHealth5 FoodEvent8 Meatloaf FoodPotOr1 FoodPotOr2 FoodPotOr3 FoodPotOr4 FoodPotRe1 FoodPotRe2 FoodPotRe3 FoodPotRe4 FoodPotGr1 FoodPotGr2 FoodPotGr3 FoodPotGr4 FoodEvent7 FoodPotMana1 FoodPotMana2 FoodPotMana3 FoodPotMana4 FoodPotYe1 FoodPotYe2 FoodPotYe3 FoodPotYe4 FoodPotYe5 FoodEvent6 Pearl3 FoodMining1 FoodEvent1 Pearl2 FoodChoppin1 FoodEvent2 FoodFish1 FoodEvent3 Pearl1 FoodCatch1 FoodEvent4 FoodTrapping1 FoodWorship1 Bullet BulletB Bullet3 MidnightCookie FoodEvent5 PeanutG FoodG1 FoodG2 FoodG3 FoodG4 FoodG5 FoodG6 FoodG7 FoodG8 FoodG9 FoodG10 FoodG11 FoodG12 FoodG13 ButterBar rtt0 ResetFrag ResetCompleted ResetCompletedS ClassSwap ClassSwapB ResetBox Ht StonePremRestore StonePremStatswap Key1 Key2 Key3 Key4 Key5 TixCol SilverPen PremiumGem TalentPoint1 TalentPoint2 TalentPoint3 TalentPoint4 TalentPoint5 TalentPoint6 Gfoodcoupon ItemsCoupon1 ItemsCoupon2 ExpBalloon1 ExpBalloon2 ExpBalloon3 Pearl4 Pearl6 Pearl5 Quest30 Quest35 Quest36 Quest38 Quest39 Quest40 Quest42 Quest43 Quest44 Quest49 Quest50 Quest70 Quest71 Quest72 Quest73 Quest75 Quest85 Quest76 Quest77 Quest79 Quest80 GemP30 Quest81 Quest82 Timecandy1 Timecandy2 Timecandy3 Timecandy4 Timecandy5 Timecandy6 Timecandy7 Timecandy8 Timecandy9 StoneWe StoneWeb StoneW1 StoneW2 StoneW3 StoneW3b StoneW6 StoneW4 StoneW5 StoneW7 StoneW8 StoneAe StoneAeB StoneA1 StoneA1b StoneA2 StoneA2b StoneA3 StoneA3b StoneA4 StoneA5 StoneA6 StoneA7 StoneTe StoneT1 StoneT1e StoneT1eb StoneT2 StoneT3 StoneT4 StoneT5 StoneT6 StoneT7 StoneHelm1 StoneHelm6 StoneHelm1b StoneHelm7 StoneZ1 StoneZ2 StoneZ3 StoneZ4 StonePremSTR StonePremAGI StonePremWIS StonePremLUK JobApplication SmithingHammerChisel SmithingHammerChisel2 SmithingHammerChisel3 BobJoePickle BallJoePickle BoneJoePickle Quest1 Crystal1 Crystal2 Crystal3 Crystal4 Crystal5 PeanutS Quest3 Quest4 Mayo Trash Trash2 Trash3 Quest5 Quest6 Quest7 Quest10 Quest11 Quest12 Quest13 Quest14 Quest15 Quest16 Quest18 Quest19 Quest20 Quest21 Quest22 Quest23 Quest24 Quest25 Quest26 Quest27 GoldricP1 GoldricP2 GoldricP3 Cutter Quest32 Quest33 Quest34 Quest37 Quest41 Quest45 Quest46 Quest47 Quest48 Quest51 Quest52 PalmTreeD Quest53 Quest54 Quest55 Quest56 Quest57 Quest58 Quest59 Quest60 Quest61 Quest62 Quest63 Quest64 Quest65 Quest66 Quest67 Whetstone Quest68 Quest69 Quest74 Quest78 Quest83 Quest84 BadgeG1 BadgeG2 BadgeG3 BadgeD1 BadgeD2 BadgeD3 NPCtoken1 NPCtoken2 NPCtoken3 NPCtoken5 NPCtoken6 NPCtoken4 NPCtoken9 NPCtoken10 NPCtoken11 NPCtoken13 NPCtoken7 Quest9 NPCtoken15 NPCtoken12 NPCtoken14 NPCtoken16 NPCtoken17 NPCtoken18 NPCtoken19 NPCtoken20 NPCtoken21 NPCtoken27 NPCtoken22 NPCtoken24 NPCtoken25 NPCtoken26 NPCtoken23 NPCtoken28 NPCtoken29 NPCtoken30 NPCtoken31 NPCtoken32 NPCtoken33 NPCtoken34 NPCtoken35 NPCtoken36 NPCtoken37 NPCtoken38 NPCtoken39 NPCtoken40 NPCtoken41 BadgeI1 BadgeI2 BadgeI3 EquipmentStatues1 EquipmentStatues2 EquipmentStatues3 EquipmentStatues4 EquipmentStatues5 EquipmentStatues6 EquipmentStatues7 EquipmentStatues8 EquipmentStatues9 EquipmentStatues10 EquipmentStatues11 EquipmentStatues12 EquipmentStatues13 EquipmentStatues14 EquipmentStatues15 EquipmentStatues16 EquipmentStatues17 EquipmentStatues18 EquipmentStatues19 EquipmentStatues20 EquipmentStatues21 EquipmentStatues22 EquipmentStatues23 EquipmentStatues24 EquipmentStatues25 EquipmentStatues26 EquipmentStatues27 EquipmentStatues28 EquipmentSmithingTabs2 EquipmentSmithingTabs3 EquipmentSmithingTabs4 EquipmentSmithingTabs5 EquipmentSmithingTabs6 SmithingRecipes1 SmithingRecipes2 SmithingRecipes3 SmithingRecipes4 SmithingRecipes5 SmithingRecipes6 TalentBook1 TalentBook2 TalentBook3 TalentBook4 TalentBook5 MaxCapBagT2 MaxCapBag1 MaxCapBag2 MaxCapBag3 MaxCapBag4 MaxCapBag5 MaxCapBagMi6 MaxCapBagMi7 MaxCapBagMi8 MaxCapBagMi9 MaxCapBagMi10 MaxCapBagMi11 MaxCapBagT1 MaxCapBag7 MaxCapBag9 MaxCapBagT3 MaxCapBagT4 MaxCapBagT5 MaxCapBagT6 MaxCapBagT7 MaxCapBagT8 MaxCapBagT9 MaxCapBagT10 MaxCapBagT11 MaxCapBag6 MaxCapBag8 MaxCapBag10 MaxCapBagF3 MaxCapBagF4 MaxCapBagF5 MaxCapBagF6 MaxCapBagF7 MaxCapBagF8 MaxCapBagF9 MaxCapBagF10 MaxCapBagF11 MaxCapBagM1 MaxCapBagM2 MaxCapBagM3 MaxCapBagM4 MaxCapBagM5 MaxCapBagM6 MaxCapBagM7 MaxCapBagM8 MaxCapBagM9 MaxCapBagM10 MaxCapBagM11 MaxCapBagM12 MaxCapBagFi1 MaxCapBagFi2 MaxCapBagFi3 MaxCapBagFi4 MaxCapBagFi5 MaxCapBagFi6 MaxCapBagFi7 MaxCapBagFi8 MaxCapBagFi9 MaxCapBagFi10 MaxCapBagFi11 MaxCapBagB1 MaxCapBagB2 MaxCapBagB3 MaxCapBagB4 MaxCapBagB5 MaxCapBagB6 MaxCapBagB7 MaxCapBagB8 MaxCapBagB9 MaxCapBagB10 MaxCapBagB11 MaxCapBagTr1 MaxCapBagTr3 MaxCapBagTr4 MaxCapBagTr5 MaxCapBagTr6 MaxCapBagTr7 MaxCapBagTr8 MaxCapBagTr9 MaxCapBagTr10 MaxCapBagS1 MaxCapBagS3 MaxCapBagS4 MaxCapBagS5 MaxCapBagS6 MaxCapBagS7 MaxCapBagS8 MaxCapBagS9 MaxCapBagS10 ObolBronze0 ObolSilver0 ObolGold0 ObolPlatinum0 ObolPink0 ObolBronze1 ObolSilver1 ObolGold1 ObolPlatinum1 ObolPink1 ObolBronze2 ObolSilver2 ObolGold2 ObolPlatinum2 ObolPink2 ObolBronze3 ObolSilver3 ObolGold3 ObolPlatinum3 ObolPink3 ObolBronzeDamage ObolSilverDamage ObolGoldDamage ObolPlatinumDamage ObolPinkDamage ObolSilverMoney ObolGoldMoney ObolBronzeMining ObolSilverMining ObolGoldMining ObolPlatinumMining ObolPinkMining ObolBronzeChoppin ObolSilverChoppin ObolGoldChoppin ObolPlatinumChoppin ObolPinkChoppin ObolBronzeFishing ObolSilverFishing ObolGoldFishing ObolPlatinumFishing ObolPinkFishing ObolBronzeCatching ObolSilverCatching ObolGoldCatching ObolPlatinumCatching ObolPinkCatching ObolSilverLuck ObolGoldLuck ObolPlatinumLuck ObolPinkLuck ObolBronzePop ObolSilverPop ObolGoldPop ObolPlatinumPop ObolPinkPop ObolBronzeKill ObolSilverKill ObolGoldKill ObolPlatinumKill ObolPinkKill ObolBronzeEXP ObolSilverEXP ObolGoldEXP ObolPlatinumEXP ObolPinkEXP ObolBronzeCard ObolSilverCard ObolGoldCard ObolPlatinumCard ObolPinkCard ObolBronzeDef ObolSilverDef ObolGoldDef ObolPlatinumDef ObolPinkDef ObolBronzeTrapping ObolSilverTrapping ObolGoldTrapping ObolPlatinumTrapping ObolPinkTrapping ObolBronzeCons ObolSilverCons ObolGoldCons ObolPlatinumCons ObolPinkCons ObolBronzeWorship ObolSilverWorship ObolGoldWorship ObolPlatinumWorship ObolPinkWorship ObolFrog ObolAmarokA ObolEfauntA ObolKnight ObolSlush ObolChizoarA ObolTroll ObolLava ObolKruk ObolHyper0 ObolHyper1 ObolHyper2 ObolHyper3 ObolHyperB0 ObolHyperB1 ObolHyperB2 ObolHyperB3 StampA1 StampA2 StampA3 StampA4 StampA5 StampA6 StampA7 StampA8 StampA9 StampA10 StampA11 StampA12 StampA13 StampA14 StampA15 StampA16 StampA17 StampA18 StampA19 StampA20 StampA21 StampA22 StampA23 StampA24 StampA25 StampA26 StampA27 StampA28 StampA29 StampA30 StampA31 StampA32 StampA33 StampA34 StampA35 StampA36 StampA37 StampA38 StampA39 StampA40 StampA41 StampA42 StampB1 StampB2 StampB3 StampB4 StampB5 StampB6 StampB7 StampB8 StampB9 StampB10 StampB11 StampB12 StampB13 StampB14 StampB15 StampB16 StampB17 StampB18 StampB19 StampB20 StampB21 StampB22 StampB23 StampB24 StampB25 StampB26 StampB27 StampB28 StampB29 StampB30 StampB31 StampB32 StampB33 StampB34 StampB35 StampB36 StampB37 StampB38 StampB39 StampB40 StampB41 StampB42 StampB43 StampB44 StampB45 StampB46 StampB47 StampB48 StampB49 StampB50 StampB51 StampB52 StampB53 StampB54 StampC1 StampC2 StampC3 StampC4 StampC5 StampC6 StampC7 StampC8 StampC9 StampC10 StampC11 StampC12 StampC13 StampC14 StampC15 StampC16 StampC17 StampC18 StampC19 StampC20 StampC21 StampC22 StampC23 InvBag1 InvBag2 InvBag3 InvBag4 InvBag5 InvBag6 InvBag7 InvBag8 InvBag100 InvBag101 InvBag102 InvBag103 InvBag104 InvBag105 InvBag106 InvBag107 InvBag108 InvBag109 InvBag110 InvBag111 InvStorage1 InvStorage2 InvStorage3 InvStorage4 InvStorage5 InvStorage6 InvStorage7 InvStorage8 InvStorage9 InvStorage10 InvStorage11 InvStorage12 InvStorage13 InvStorage14 InvStorage15 InvStorage16 InvStorage17 InvStorage18 InvStorage19 InvStorage20 InvStorage21 InvStorage22 InvStorage23 InvStorage24 InvStorage25 InvStorage26 InvStorage27 InvStorage28 InvStorageF InvStorageS InvStorageC InvStorageD InvStorageN Weight1 Weight2 Weight3 Weight4 Weight5 Weight6 Weight7 Weight8 Weight9 Weight10 Weight11 Weight12 Weight13 Weight14 Line1 Line2 Line3 Line4 Line5 Line6 Line7 Line8 Line9 Line10 Line11 Line12 Line13 Line14 Ladle PetEgg Genetic0 Genetic1 Genetic2 Genetic3 CardPack1 CardPack2 CardPack3 CardPack4 CardPack5 CardPack6 CardPack7 DungCredits2 Cash XP XPskill DungEnhancer0 DungEnhancer1 DungEnhancer2 DungRNG0 DungRNG1 DungRNG2 DungRNG3 DungRNG4 DungeonA1 DungeonA2 DungeonA3 DungeonA4 DungeonA5 DungeonA6 DungeonA7 DungeonA8 KeyFrag DungCredits1 LootDice Tree7D PlatD Fish1D Fish3D Cashb Dung3Ice FoodHealth1d FoodHealth2d FoodHealth3d DungWeaponPunchA1 DungWeaponPunchA2 DungWeaponPunchA3 DungWeaponPunchA4 DungWeaponPunchA5 DungWeaponPunchB1 DungWeaponPunchB2 DungWeaponPunchB3 DungWeaponPunchB4 DungWeaponPunchB5 DungWeaponPunchC1 DungWeaponPunchC2 DungWeaponPunchC3 DungWeaponPunchC4 DungWeaponPunchC5 DungWeaponPunchD1 DungWeaponPunchD2 DungWeaponPunchD3 DungWeaponPunchD4 DungWeaponPunchD5 DungWeaponPunchE1 DungWeaponPunchE2 DungWeaponPunchE3 DungWeaponPunchE4 DungWeaponPunchE5 DungWeaponPunchF1 DungWeaponPunchF2 DungWeaponPunchF3 DungWeaponPunchF4 DungWeaponPunchF5 DungWeaponSwordA1 DungWeaponSwordA2 DungWeaponSwordA3 DungWeaponSwordA4 DungWeaponSwordA5 DungWeaponSwordB1 DungWeaponSwordB2 DungWeaponSwordB3 DungWeaponSwordB4 DungWeaponSwordB5 DungWeaponSwordC1 DungWeaponSwordC2 DungWeaponSwordC3 DungWeaponSwordC4 DungWeaponSwordC5 DungWeaponSwordD1 DungWeaponSwordD2 DungWeaponSwordD3 DungWeaponSwordD4 DungWeaponSwordD5 DungWeaponSwordE1 DungWeaponSwordE2 DungWeaponSwordE3 DungWeaponSwordE4 DungWeaponSwordE5 DungWeaponSwordF1 DungWeaponSwordF2 DungWeaponSwordF3 DungWeaponSwordF4 DungWeaponSwordF5 DungWeaponBowA1 DungWeaponBowA2 DungWeaponBowA3 DungWeaponBowA4 DungWeaponBowA5 DungWeaponBowB1 DungWeaponBowB2 DungWeaponBowB3 DungWeaponBowB4 DungWeaponBowB5 DungWeaponBowC1 DungWeaponBowC2 DungWeaponBowC3 DungWeaponBowC4 DungWeaponBowC5 DungWeaponBowD1 DungWeaponBowD2 DungWeaponBowD3 DungWeaponBowD4 DungWeaponBowD5 DungWeaponBowE1 DungWeaponBowE2 DungWeaponBowE3 DungWeaponBowE4 DungWeaponBowE5 DungWeaponBowF1 DungWeaponBowF2 DungWeaponBowF3 DungWeaponBowF4 DungWeaponBowF5 DungWeaponWandA1 DungWeaponWandA2 DungWeaponWandA3 DungWeaponWandA4 DungWeaponWandA5 DungWeaponWandB1 DungWeaponWandB2 DungWeaponWandB3 DungWeaponWandB4 DungWeaponWandB5 DungWeaponWandC1 DungWeaponWandC2 DungWeaponWandC3 DungWeaponWandC4 DungWeaponWandC5 DungWeaponWandD1 DungWeaponWandD2 DungWeaponWandD3 DungWeaponWandD4 DungWeaponWandD5 DungWeaponWandE1 DungWeaponWandE2 DungWeaponWandE3 DungWeaponWandE4 DungWeaponWandE5 DungWeaponWandF1 DungWeaponWandF2 DungWeaponWandF3 DungWeaponWandF4 DungWeaponWandF5 DungEquipmentHats0 DungEquipmentHats1 DungEquipmentHats2 DungEquipmentHats3 DungEquipmentHats4 DungEquipmentShirt0 DungEquipmentShirt1 DungEquipmentShirt2 DungEquipmentShirt3 DungEquipmentShirt4 DungEquipmentPants0 DungEquipmentPants1 DungEquipmentPants2 DungEquipmentPants3 DungEquipmentPants4 DungEquipmentShoes0 DungEquipmentShoes1 DungEquipmentShoes2 DungEquipmentShoes3 DungEquipmentShoes4 DungEquipmentPendant0 DungEquipmentPendant1 DungEquipmentPendant2 DungEquipmentPendant3 DungEquipmentPendant4 DungEquipmentRings0 DungEquipmentRings1 DungEquipmentRings2 DungEquipmentRings3 DungEquipmentRings4".split(' ')
 knownSlabIgnorablesList = ["Mega-Rare_Drop", "Rare_Drop", "LockedInvSpace", "Blank"]
+#This replacement list is needed due to a restriction for the image mapping variable names not being able to start with a Number
+slab_itemNameFindList = ["Timecandy1", "Timecandy2", "Timecandy3", "Timecandy4", "Timecandy5", "Timecandy6", "EquipmentHats108", "EquipmentNametag10"]
+slab_itemNameReplacementList = ["time-candy-1-hr", "time-candy-2-hr", "time-candy-4-hr", "time-candy-12-hr", "time-candy-24-hr", "time-candy-72-hr",
+                                "third-anniversary-ice-cream-topper", "third-anniversary-idleon-nametag"]
 dungeonDropsList = [
     "Quest51", "Quest52", "PalmTreeD", "Quest53", "Quest54", "Quest55",
     "DungCredits2", "Cash", "XP", "XPskill", "DungEnhancer0", "DungEnhancer1", "DungEnhancer2",

@@ -1,6 +1,4 @@
-import json
-
-import consts
+from consts import combatLevels_progressionTiers
 from models.models import AdviceGroup, Advice, AdviceSection
 from utils.logging import get_logger
 from flask import g as session_data
@@ -69,8 +67,8 @@ def setCombatLevelsProgressionTier() -> AdviceSection:
     # tier[3] = int PlayerLevels
     # tier[4] = str PL reward
     # tier[5] = str notes
-    next_tier = next((tier for tier in consts.combatLevels_progressionTiers if total_combat_level < tier[1]), None)
-    curr_tier = next((tier for tier in reversed(consts.combatLevels_progressionTiers) if total_combat_level >= tier[1]), consts.combatLevels_progressionTiers[0])
+    next_tier = next((tier for tier in combatLevels_progressionTiers if total_combat_level < tier[1]), None)
+    curr_tier = next((tier for tier in reversed(combatLevels_progressionTiers) if total_combat_level >= tier[1]), combatLevels_progressionTiers[0])
 
     overall_CombatLevelTier = curr_tier[0]
 
@@ -119,12 +117,13 @@ def setCombatLevelsProgressionTier() -> AdviceSection:
         advices=lvlup_advices,
     )
 
-    max_tier = consts.combatLevels_progressionTiers[-1][0]
+    max_tier = combatLevels_progressionTiers[-1][0]
     tier = f"{overall_CombatLevelTier}/{max_tier}"
-    header = f"Optimal family class level tier met: {tier}. "
+    header = f"Best Family class level tier met: {tier}. "
 
     if overall_CombatLevelTier == max_tier:
-        header += f"Your family class level is {total_combat_level}, no more rewards for you. Do you, like, live off of genocidal energy or something? ... jk 💪💪💪"
+        header += f"<br>You best ❤️<br>Your Family class level is {total_combat_level}"
+        #, no more rewards for you. Do you, like, live off of genocidal energy or something? ... jk 💪💪💪"
 
     combat_section = AdviceSection(
         name="Combat Levels",

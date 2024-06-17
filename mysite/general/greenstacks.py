@@ -133,7 +133,7 @@ def getMissableGStacks(owned_stuff: Assets):
 
     if len(advice_MissedQuestGStacks) > 0:
         tier_missed = f"{len(advice_MissedQuestGStacks)}/{len(missableGStacksDict)}"
-        header_missed = f"You have already missed {tier_missed} missable quest item Greenstacks. You're locked out of these until you get more character slots :("
+        header_missed = f"You have already missed {tier_missed} missable quest item Greenstacks.<br>You're locked out of these until you get more character slots :("
         section_missed = AdviceSection(
             name="Missed Greenstacks",
             tier=tier_missed,
@@ -153,13 +153,7 @@ def getMissableGStacks(owned_stuff: Assets):
         )
         # sections.append(section_missed)
 
-    #print("GreenStacks.getMissableGStacks~ OUTPUT advice_ObtainedQuestGStacks:", advice_ObtainedQuestGStacks)
-    #print("GreenStacks.getMissableGStacks~ OUTPUT advice_EndangeredQuestGStacks:", advice_EndangeredQuestGStacks)
-    #print("GreenStacks.getMissableGStacks~ OUTPUT advice_MissedQuestGStacks:", advice_MissedQuestGStacks)
-
     return sections
-    #return [advice_ObtainedQuestGStacks, advice_EndangeredQuestGStacks, advice_MissedQuestGStacks]
-
 
 def setGStackProgressionTier():
     equinoxDreamsStatus = getEquinoxDreams()
@@ -208,16 +202,16 @@ def setGStackProgressionTier():
     header = f"You currently have {tier} GStacks."
     show_limit = len(groups)
     if expectedGStacksCount >= 200 or equinoxDreamsStatus.get("Dream29", False) == True:
-        header += " You best ❤️ (until Lava adds further Dream tasks) Other possible targets are still listed below."
+        header += "<br>You best ❤️ (until Lava adds further Dream tasks)<br>Other possible targets are still listed below."
         show_limit = 4
     elif expectedGStacksCount >= 75 or equinoxDreamsStatus.get("Dream12", False) == True:
-        header += " Equinox Dream 29 requires 200. Aim for items up through Tier 10! Tiers 11-14 are optional without much extra benefit to collecting than +1 GStack."
+        header += " Equinox Dream 29 requires 200. Aim for items up through Tier 10!<br>Tiers 11-14 are optional without much extra benefit to collecting than +1 GStack."
         show_limit = 3
     elif expectedGStacksCount >= 20 or equinoxDreamsStatus.get("Dream1", False) == True:
-        header += " Equinox Dream 12 requires 75. Aim for items up through Tier 4! Continue buying those Timegated items too :)"
+        header += " Equinox Dream 12 requires 75. Aim for items up through Tier 4!<br>Continue buying those Timegated items too :)"
         show_limit = 2
     elif expectedGStacksCount < 20 and equinoxDreamsStatus.get("Dream1", False) == False:
-        header += " Equinox Dream 1 requires 20. Aim for items in Tier 1, and start buying items listed in the Timegated tier from shops every day!"
+        header += " Equinox Dream 1 requires 20. Aim for items in Tier 1.<br>Start buying items listed in the Timegated tier from shops every day!"
         show_limit = 2
 
     for group in groups[show_limit:]:

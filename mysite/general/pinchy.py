@@ -43,7 +43,7 @@ class Threshold:
     EARLY_W7_PREP = "Early W7 Prep"
     SOLID_W7_PREP = "Solid W7 Prep"
     W7_WAITING_ROOM = "W7 Waiting Room"
-    MAX_TIER = "Maxed for v2.09"
+    MAX_TIER = "Maxed for v2.10"
     PLACEHOLDER = "Placeholder"
 
     thresholdNames = [
@@ -399,7 +399,7 @@ def generatePinchyWorld(all_sections):
     # Generate advice based on catchup
     equalSnippet = ""
     if lowestThresholdReached >= expectedThreshold:
-        equalSnippet = ". Your lowest sections are roughly equal with (or better than!) your highest enemy map. Keep up the good work!"
+        equalSnippet = ".<br>Your lowest sections are roughly equal with (or better than!) your highest enemy map.<br>Keep up the good work!"
 
     if expectedThreshold.name == Threshold.PLACEHOLDER:
         pinchyExpected = (

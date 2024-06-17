@@ -10,11 +10,7 @@ logger = get_logger(__name__)
 
 # Stamp p2
 def setMissingStamps():
-    # missingStampsList = []
-    # for stampName, stampValues in session_data.account.stamps.items():
-    #     if stampValues.get("Delivered", False) == False and stampName not in unavailableStampsList:
-    #         missingStampsList.append(stampName)
-    #return missingStampsList
+
     return [stampName for stampName, stampValues in session_data.account.stamps.items() if stampValues.get("Delivered", False) == False and stampName not in unavailableStampsList]
 
 # Stamp p3
@@ -42,22 +38,6 @@ def getCapacityExclusions():
 def getCapacityAdviceGroup() -> AdviceGroup:
     capacity_Advices = {"Stamps": [], "Account Wide": [], "Character Specific": []}
 
-    # if session_data.account.star_sign_extras.get('DoublerOwned', False):
-    #     nanoEval = f"{session_data.account.labChips.get('Silkrode Nanochip',0)} owned. Doubles starsigns when equipped."
-    #     silkrodeMulti = 2
-    # else:
-    #     nanoEval = "None Owned. Would double other signs if equipped."
-    #     silkrodeMulti = 1
-
-    # seraphMulti = min(3, 1.1 ** ceil((max(session_data.account.all_skills.get('Summoning', [0])) + 1) / 20))
-    # seraphGoal = min(240, ceilUpToBase(max(session_data.account.all_skills.get('Summoning', [0])), 20))
-    # if bool(session_data.account.star_signs.get("Seraph_Cosmos", False)):
-    #     seraphEval = f"Multis signs by {seraphMulti:.2f}x."
-    # else:
-    #     seraphEval = f"Locked. Would increase below signs by {seraphMulti:.2f}x if unlocked."
-    #     seraphMulti = 1
-    # if seraphGoal < 240:
-    #     seraphEval += " Increases every 20 Summoning levels."
     starsignBase = 0
     starsignBase += 30 * bool(session_data.account.star_signs.get('Mr No Sleep', {}).get('Unlocked', False))
     starsignBase += 10 * bool(session_data.account.star_signs.get('Pack Mule', {}).get('Unlocked', False))
@@ -373,8 +353,6 @@ def setStampProgressionTier() -> AdviceSection:
                             label=f"{rStamp} ({playerStamps.get(rStamp).get('StampType')})",
                             picture_class=rStamp))
 
-    # overall_StampTier = min(max_tier, tier_StampLevels, tier_RequiredCombatStamps, tier_RequiredSkillStamps,
-    #                         tier_RequiredMiscStamps, tier_RequiredSpecificStamps)
     overall_StampTier = min(max_tier, tier_StampLevels, tier_FindStamps["Combat"], tier_FindStamps["Skill"], tier_FindStamps["Misc"], tier_RequiredSpecificStamps)
 
     # Generate AdviceGroups
@@ -390,13 +368,6 @@ def setStampProgressionTier() -> AdviceSection:
         pre_string=f"Improve high-priority stamp{pl([''] * adviceCountsDict['Specific'])}",
         advices=stamp_AdviceDict["Specific"])
 
-    # Collect stamps are now info-only as of 2.07
-    # Combat Stamps
-    # stamp_AdviceGroupDict["FindStamps"] = AdviceGroup(
-    #     tier='',
-    #     pre_string=f"Info only- Find all stamps",
-    #     advices=stamp_AdviceDict["FindStamps"],
-    #     post_string="As of 2.07's Sacred Methods Bundle, turning in ALL stamps can be detrimental. I no longer recommend nor require you do so.")
     stamp_AdviceGroupDict["Combat"] = AdviceGroup(
         tier=str(tier_FindStamps["Combat"]),
         pre_string=f"Collect the following Combat stamp{pl([''] * adviceCountsDict['Combat'])}",
@@ -427,7 +398,7 @@ def setStampProgressionTier() -> AdviceSection:
     stamp_AdviceSection.tier = tier_section
     stamp_AdviceSection.groups = stamp_AdviceGroupDict.values()
     if overall_StampTier == max_tier:
-        stamp_AdviceSection.header = f"Best Stamp tier met: {tier_section}. You've reached the end of the recommendations. Let me know what important stamps you're aiming for next!"
+        stamp_AdviceSection.header = f"Best Stamp tier met: {tier_section}.<br>You best ❤️<br>Let me know what important stamps you're aiming for next!"
     else:
         stamp_AdviceSection.header = f"Best Stamp tier met: {tier_section}"
 

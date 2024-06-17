@@ -14,7 +14,7 @@ def section_beanstalk():
         return AdviceSection(
             name="Beanstalk",
             tier="",
-            header="Come back once you've bought the \"Gold Food Beanstalk\" from the {{ Jade Emporium|#sneaking }}",
+            header="Come back once you've bought the \"Gold Food Beanstalk\" from the Jade Emporium",
             picture="Jade_Vendor.gif",
             collapse=True,
         )

@@ -176,6 +176,9 @@ def getCharacterDetails(inputJSON, runType):
     playerCount = 0
     playerNames = []
     playerClasses = []
+    characterMaxTalents = {}
+    characterCurrentPresetTalents = {}
+    characterSecondaryPresetTalents = {}
     characterDict: dict = {}
 
     if "playerNames" in inputJSON.keys():
@@ -239,6 +242,19 @@ def getCharacterDetails(inputJSON, runType):
             equipped_prayers[list_index] = safe_loads(inputJSON[f"Prayers_{list_index}"])
         except:
             equipped_prayers[list_index] = []
+        try:
+            characterMaxTalents[list_index] = safe_loads(inputJSON[f"SM_{list_index}"])
+        except:
+            characterMaxTalents[list_index] = {}
+        try:
+            characterCurrentPresetTalents[list_index] = safe_loads(inputJSON[f"SL_{list_index}"])
+        except:
+            characterCurrentPresetTalents[list_index] = {}
+        try:
+            characterSecondaryPresetTalents[list_index] = safe_loads(inputJSON[f"SLpre_{list_index}"])
+        except:
+            characterSecondaryPresetTalents[list_index] = {}
+
         characterDict[list_index] = dict(
             character_index=list_index,
             character_name=playerNames[list_index],
@@ -248,6 +264,9 @@ def getCharacterDetails(inputJSON, runType):
             elite_class=getEliteClass(playerClasses[list_index]),
             equipped_prayers=equipped_prayers[list_index],
             all_skill_levels=characterSkillsDict[list_index],
+            max_talents=characterMaxTalents[list_index],
+            current_preset_talents=characterCurrentPresetTalents[list_index],
+            secondary_preset_talents=characterSecondaryPresetTalents[list_index],
             po_boxes=postOfficeList[list_index]
         )
 

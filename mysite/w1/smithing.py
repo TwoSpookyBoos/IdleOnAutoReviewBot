@@ -1,6 +1,6 @@
 import math
 from models.models import Advice, AdviceGroup, AdviceSection
-from consts import smithing_progressionTiers, lavaFunc
+from consts import smithing_progressionTiers
 from flask import g as session_data
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl
@@ -21,10 +21,9 @@ def getUnusedForgeSlotsCount():
             oreSlotIndex += 3
     except:
         logger.exception(f"Could not retrieve forge levels or items. Returning 0 unused slots.")
-    #print("Smithing.getUnusedForgeSlotsCount~ OUTPUT unusedForgeSlotsCount/forgeOreSlotsPurchased:", unusedForgeSlotsCount, "/", forgeOreSlotsPurchased)
     return unusedForgeSlotsCount
 
-def getForgeCapacityAdviceGroup(playerForgeUpgrades) -> list[AdviceGroup]:
+def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
     cap_Advices = {
         "Static Sources": [],
         "Scaling Sources": []
@@ -171,7 +170,6 @@ def setSmithingProgressionTier() -> AdviceSection:
     overall_SmithingTier = 0
     playerCashPoints = []
     playerMonsterPoints = []
-    playerForgeUpgrades = []
     sum_CashPoints = 0
     sum_MonsterPoints = 0
     sum_ForgeUpgrades = 0
@@ -275,7 +273,6 @@ def setSmithingProgressionTier() -> AdviceSection:
     #Check for any unused Forge slots
     unusedForgeSlots = getUnusedForgeSlotsCount()
     if unusedForgeSlots > 0:
-        advice_UnusedForgeSlots = "Informational- You have " + str(unusedForgeSlots) + " empty ore slot in your Forge!"
         smithing_AdviceGroupDict["EmptyForgeSlots"] = AdviceGroup(
             tier="",
             pre_string=f"Informational - Fill the Forge",
@@ -287,7 +284,7 @@ def setSmithingProgressionTier() -> AdviceSection:
         )
 
     #Forge Capacity calculations
-    smithing_AdviceGroupDict["OreCapacity"], smithing_AdviceGroupDict["Bars"] = getForgeCapacityAdviceGroup(playerForgeUpgrades)
+    smithing_AdviceGroupDict["OreCapacity"], smithing_AdviceGroupDict["Bars"] = getForgeCapacityAdviceGroup()
 
     #Print out all the final smithing info
     overall_SmithingTier = min(tier_CashPoints, tier_MonsterPoints, tier_ForgeTotals)
