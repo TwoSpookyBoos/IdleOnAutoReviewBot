@@ -262,8 +262,6 @@ class Character:
         return self.combat_level >= 1
 
 
-
-
 class WorldName(Enum):
     PINCHY = "Pinchy"
     GENERAL = "General"

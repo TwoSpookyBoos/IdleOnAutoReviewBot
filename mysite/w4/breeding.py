@@ -648,7 +648,7 @@ def setBreedingProgressionTier() -> AdviceSection:
                 # if there are actual level requirements
                 allRequirementsMet = True
                 for requiredShinyBonusType in progressionTiersBreeding[tier]["Shinies"]:
-                    if breedingDict["Total Shiny Levels"][requiredShinyBonusType] < progressionTiersBreeding[tier]["Shinies"][requiredShinyBonusType]:
+                    if breedingDict["Total Shiny Levels"][requiredShinyBonusType] < progressionTiersBreeding[tier]["Shinies"][requiredShinyBonusType][0]:
                         if shinyExclusionsDict.get(requiredShinyBonusType, False) == False:
                             allRequirementsMet = False
                         else:
@@ -656,7 +656,9 @@ def setBreedingProgressionTier() -> AdviceSection:
                         failedShinyRequirements.append([
                             requiredShinyBonusType,
                             breedingDict["Total Shiny Levels"][requiredShinyBonusType],
-                            progressionTiersBreeding[tier]["Shinies"][requiredShinyBonusType]])
+                            progressionTiersBreeding[tier]["Shinies"][requiredShinyBonusType][0],
+                            progressionTiersBreeding[tier]["Shinies"][requiredShinyBonusType][1]],
+                        )
                         failedShinyBonus[requiredShinyBonusType] = breedingDict["Grouped Bonus"][requiredShinyBonusType]
                 if allRequirementsMet == True:
                     tier_ShinyLevels = tier
@@ -671,8 +673,12 @@ def setBreedingProgressionTier() -> AdviceSection:
                                 breeding_AdviceDict["ShinyLevels"][shinySubgroup] = []
                             for possibleShinyPet in failedShinyBonus[failedRequirement[0]]:
                                 breeding_AdviceDict["ShinyLevels"][shinySubgroup].append(
-                                    Advice(label=f"{possibleShinyPet[0]}: Level {possibleShinyPet[1]}", picture_class=possibleShinyPet[0],
-                                           progression=f"{possibleShinyPet[2]:.2f} base days to level", goal=""))
+                                    Advice(
+                                        label=f"{possibleShinyPet[0]}: Level {possibleShinyPet[1]}"
+                                              f"<br>{possibleShinyPet[2]:.2f} base days to level",
+                                        picture_class=possibleShinyPet[0],
+                                        progression=possibleShinyPet[1],
+                                        goal=failedRequirement[3]))
 
     overall_BreedingTier = min(maxBreedingTier, tier_UnlockedTerritories, tier_ShinyLevels)
 

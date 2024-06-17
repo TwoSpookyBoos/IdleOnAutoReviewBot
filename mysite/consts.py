@@ -863,10 +863,10 @@ breeding_progressionTiers = {
             "TerritoriesUnlocked": 24,
             "ArenaWaves": 200,
             "Shinies": {
-                "Faster Shiny Pet Lv Up Rate": 24,
-                "Bonuses from All Meals": 10,
-                "Infinite Star Signs": 25,
-                "Base Efficiency for All Skills": 20
+                "Faster Shiny Pet Lv Up Rate": [24, 6],
+                "Bonuses from All Meals": [10, 5],
+                "Infinite Star Signs": [25, 5],
+                "Base Efficiency for All Skills": [20, 5],
             },
             "ShinyNotes": "Start by focusing on pets that increase Shiny Speed rate. This will decrease the amount of time needed to level up pets in the future."
             },
@@ -875,10 +875,10 @@ breeding_progressionTiers = {
             "TerritoriesUnlocked": 24,
             "ArenaWaves": 200,
             "Shinies": {
-                "Base Critter Per Trap": 10,
-                "Drop Rate": 15,
-                "Faster Refinery Speed": 15,
-                "Lower Minimum Travel Time for Sailing": 5,
+                "Base Critter Per Trap": [10, 5],
+                "Drop Rate": [15, 5],
+                "Faster Refinery Speed": [15, 5],
+                "Lower Minimum Travel Time for Sailing": [5, 5],
                 },
             "ShinyNotes": ""
             },
@@ -887,11 +887,11 @@ breeding_progressionTiers = {
             "TerritoriesUnlocked": 24,
             "ArenaWaves": 200,
             "Shinies": {
-                "Multikill Per Tier": 20,
-                "Higher Artifact Find Chance": 15,
-                "Faster Shiny Pet Lv Up Rate": 28,
-                "Infinite Star Signs": 37,
-                "Summoning EXP": 10,
+                "Multikill Per Tier": [20, 5],
+                "Higher Artifact Find Chance": [15, 5],
+                "Faster Shiny Pet Lv Up Rate": [28, 7],
+                "Infinite Star Signs": [37, 7],
+                "Summoning EXP": [10, 5]
                 },
             "ShinyNotes": ""
             },
@@ -900,8 +900,8 @@ breeding_progressionTiers = {
             "TerritoriesUnlocked": 24,
             "ArenaWaves": 200,
             "Shinies": {
-                "Bonuses from All Meals": 26,
-                "Base Efficiency for All Skills": 48,
+                "Bonuses from All Meals": [26, 13],
+                "Base Efficiency for All Skills": [48, 12],
                 },
             "ShinyNotes": ""
         },
@@ -910,8 +910,8 @@ breeding_progressionTiers = {
             "TerritoriesUnlocked": 24,
             "ArenaWaves": 200,
             "Shinies": {
-                "Drop Rate": 36,
-                "Base Critter Per Trap": 22,
+                "Drop Rate": [36, 12],
+                "Base Critter Per Trap": [22, 11],
                 },
             "ShinyNotes": ""
         },
@@ -920,10 +920,10 @@ breeding_progressionTiers = {
             "TerritoriesUnlocked": 24,
             "ArenaWaves": 200,
             "Shinies": {
-                "Summoning EXP": 22,
-                "Faster Refinery Speed": 33,
-                "Multikill Per Tier": 44,
-                "Infinite Star Signs": 45,
+                "Summoning EXP": [22, 11],
+                "Faster Refinery Speed": [33, 11],
+                "Multikill Per Tier": [44, 11],
+                "Infinite Star Signs": [45, 8],
             },
             "ShinyNotes": ""
         }
