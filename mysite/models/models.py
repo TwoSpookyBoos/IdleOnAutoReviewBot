@@ -1712,18 +1712,18 @@ class Account:
             if self.sneaking['JadeEmporium']["Sovereign Artifacts"]['Obtained']:
                 self.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Sovereign Causticolumn", "causticolumn"))
             else:
-                self.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Sovereign Causticolumn. Sovereign Artifacts are unlocked from the "
+                self.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Sovereign Causticolumn. Sovereign Artifacts unlock from "
                                                                "{{ Jade Emporium|#sneaking }}", "sovereign-artifacts"))
         # Jade Emporium Increases
         if self.sneaking['JadeEmporium']["Papa Blob's Quality Guarantee"]['Obtained']:
             self.cooking['PlayerMaxPlateLvl'] += 10
         else:
-            self.cooking['PlayerMissingPlateUpgrades'].append(("Purchase \"Papa Blob's Quality Guarantee\" from the "
+            self.cooking['PlayerMissingPlateUpgrades'].append(("Purchase \"Papa Blob's Quality Guarantee\" from "
                                                                "{{ Jade Emporium|#sneaking }}", "papa-blobs-quality-guarantee"))
         if self.sneaking['JadeEmporium']["Chef Geustloaf's Cutting Edge Philosophy"]['Obtained']:
             self.cooking['PlayerMaxPlateLvl'] += 10
         else:
-            self.cooking['PlayerMissingPlateUpgrades'].append(("Purchase \"Chef Geustloaf's Cutting Edge Philosophy\" from the "
+            self.cooking['PlayerMissingPlateUpgrades'].append(("Purchase \"Chef Geustloaf's Cutting Edge Philosophy\" from "
                                                                "{{ Jade Emporium|#sneaking }}", "chef-geustloafs-cutting-edge-philosophy"))
 
     def _calculate_w5(self):
@@ -1988,7 +1988,7 @@ class Account:
             goal=1
         ))
         if not self.sneaking['JadeEmporium']['Brighter Lighthouse Bulb']['Obtained']:
-            winzLanternPostString = ". This artifact needs to be unlocked from the {{ Jade Emporium|#sneaking }}"
+            winzLanternPostString = ". Unlocked from {{ Jade Emporium|#sneaking }}"
         else:
             winzLanternPostString = ""
         self.summoning['WinnerBonusesAdvice'].append(Advice(

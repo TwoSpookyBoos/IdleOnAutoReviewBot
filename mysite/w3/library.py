@@ -42,7 +42,7 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
     if not session_data.account.rift['EldritchArtifacts'] and session_data.account.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0) == 2:
         furyPostString = ". Eldritch Artifacts are unlocked by reaching {{ Rift|#rift }} 31"
     elif not session_data.account.sneaking['JadeEmporium']["Sovereign Artifacts"]['Obtained'] and session_data.account.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0) == 3:
-        furyPostString = ". Sovereign Artifacts are unlocked from the {{ Jade Emporium|#sneaking }}"
+        furyPostString = ". Sovereign Artifacts unlock from {{ Jade Emporium|#sneaking }}"
     else:
         furyPostString = ""
     bookLevelAdvices[staticSubgroup].append(Advice(
