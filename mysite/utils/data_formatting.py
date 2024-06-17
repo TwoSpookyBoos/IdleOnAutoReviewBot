@@ -224,6 +224,7 @@ def getCharacterDetails(inputJSON, runType):
 
     characterSkillsDict = getAllSkillLevelsDict(inputJSON, playerCount)
     perSkillDict = characterSkillsDict["Skills"]
+    equipped_prayers = {}
     postOfficeList = []
     for list_index in range(0, playerCount):
         try:
@@ -234,6 +235,10 @@ def getCharacterDetails(inputJSON, runType):
             postOfficeList.append(safe_loads(inputJSON[f"POu_{list_index}"]))
         except:
             postOfficeList.append([0]*36)
+        try:
+            equipped_prayers[list_index] = safe_loads(inputJSON[f"Prayers_{list_index}"])
+        except:
+            equipped_prayers[list_index] = []
         characterDict[list_index] = dict(
             character_index=list_index,
             character_name=playerNames[list_index],
@@ -241,6 +246,7 @@ def getCharacterDetails(inputJSON, runType):
             base_class=getBaseClass(playerClasses[list_index]),
             sub_class=getSubclass(playerClasses[list_index]),
             elite_class=getEliteClass(playerClasses[list_index]),
+            equipped_prayers=equipped_prayers[list_index],
             all_skill_levels=characterSkillsDict[list_index],
             po_boxes=postOfficeList[list_index]
         )
