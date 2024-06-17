@@ -390,7 +390,7 @@ stamps_progressionTiers = {
         "Specific": {'Golden Apple Stamp': 28}}},
     17: {"TotalStampLevels": 3000, "Stamps": {
         "Combat": ["Steve Sword", "Diamond Axe Stamp"],
-        "Skill": ["Gamejoy Stamp", "Divine Stamp", "Multitool Stamp"],
+        "Skill": ["Gamejoy Stamp", "Divine Stamp"],
         "Specific": {'Bugsack Stamp': 80, 'Bag o Heads Stamp': 80}}},
     18: {"TotalStampLevels": 3500, "Stamps": {
         "Combat": ["Sashe Sidestamp"],
@@ -424,6 +424,7 @@ stamps_progressionTiers = {
     26: {"TotalStampLevels": 7500, "Stamps": {
         "Specific": {'Ladle Stamp': 180, 'Forge Stamp': 100}}},
     27: {"TotalStampLevels": 8000, "Stamps": {
+        "Skill": ["Multitool Stamp"],
         "Specific": {'Matty Bag Stamp': 280, 'Multitool Stamp': 150}}},
     28: {"TotalStampLevels": 8400, "Stamps": {
         "Skill": ["Dark Triad Essence Stamp"],
