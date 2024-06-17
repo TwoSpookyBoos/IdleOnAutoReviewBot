@@ -1464,6 +1464,14 @@ class Account:
             'Beanstalk': {},
             "JadeEmporium": {},
         }
+        try:
+            self.sneaking['CurrentMastery'] = self.raw_optlacc_list[231]
+        except:
+            self.sneaking['CurrentMastery'] = 0
+        try:
+            self.sneaking['MaxMastery'] = self.raw_optlacc_list[232]
+        except:
+            self.sneaking['MaxMastery'] = 0
         raw_ninja_list = safe_loads(self.raw_data.get("Ninja", []))
         self._parse_w6_gemstones(raw_ninja_list)
         self._parse_w6_jade_emporium(raw_ninja_list)
@@ -2049,10 +2057,10 @@ class Account:
                 "Goal": 1
             },
             "Sneaking Mastery": {
-                "Value": "0 or 5 idk yet",
+                "Value": 5 if self.sneaking['MaxMastery'] >= 3 else 0,
                 "Image": "sneaking-mastery",
-                "Label": f"{{{{ Rift|#rift }}}}: Sneaking Mastery: +5 upon reaching Mastery 3",
-                "Progression": "IDK",
+                "Label": f"{{{{ Rift|#rift }}}}: Sneaking Mastery: +{5 if self.sneaking['MaxMastery'] >= 3 else 0} (Mastery III)",
+                "Progression": self.sneaking['MaxMastery'],
                 "Goal": 3
             },
             # If Slug is owned: +25
