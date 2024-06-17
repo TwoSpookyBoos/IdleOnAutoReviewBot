@@ -1,31 +1,45 @@
+//General
 @import "vars";
-@import "breeding";
-@import "bribes";
-@import "alchemy";
-@import "classes";
-@import "construction";
-@import "gem-shop";
-@import "worship";
 @import "skill-icons";
-@import "slab-items";
-@import "storage-items";
+@import "classes";
 @import "talents";
+@import "gem-shop";
+@import "storage-items";
 @import "world-contents";
 @import "boss-keys";
+@import "starsigns";
 @import "cards";
-@import "rift";
+@import "achievements";
+@import "merits";
+@import "companions";
+
+//W1
+@import "bribes";
+@import "owl";
+
+//W2
+@import "alchemy";
+@import "arcade";
+@import "postoffice";
+
+//W3
+@import "construction";
+@import "worship";
 @import "equinox";
+
+//W4
+@import "breeding";
+@import "rift";
 @import "meals";
 @import "laboratory";
+
+//W5
+@import "slab-items";
 @import "divinity";
 @import "sailing";
+
+//W6
 @import "sneaking";
-@import "starsigns";
-@import "achievements";
-@import "arcade";
-@import "merits";
-@import "postoffice";
-@import "owl";
 
 $id-map: ();
 
@@ -2165,6 +2179,7 @@ $id-map: map-merge($gem-shop, $id-map);
 $id-map: map-merge($merits, $id-map);
 $id-map: map-merge($postoffice, $id-map);
 $id-map: map-merge($owl-map, $id-map);
+$id-map: map-merge($companions-map, $id-map);
 
 $extra: (
     //storage: $cosmic-storage-chest,

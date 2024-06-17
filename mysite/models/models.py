@@ -17,7 +17,7 @@ from consts import expectedStackables, greenstack_progressionTiers, card_data, m
     getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampsDict, stampTypes, marketUpgradeList, \
     achievementsList, forgeUpgradesDict, arcadeBonuses, saltLickList, allMeritsDict, bubblesDict, familyBonusesDict, poBoxDict, equinoxBonusesDict, \
     maxDreams, dreamsThatUnlockNewBonuses, ceilUpToBase, starsignsDict, gfood_codes, getStyleNameFromIndex, divinity_divinitiesDict, getDivinityNameFromIndex, \
-    maxCookingTables
+    maxCookingTables, getNextESFamilyBreakpoint
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
 
 def session_singleton(cls):
@@ -86,9 +86,11 @@ class Character:
         elite_class: str,
         all_skill_levels: dict,
         max_talents: dict,
+        current_preset_talents: dict,
+        secondary_preset_talents: dict,
         po_boxes: list[int],
-
     ):
+
         self.character_index: int = character_index
         self.character_name: str = character_name
 
@@ -97,7 +99,12 @@ class Character:
         self.base_class: str = base_class
         self.sub_class: str = sub_class
         self.elite_class: str = elite_class
+        self.max_talents_over_books: int = 100
+        self.symbols_of_beyond = 0
+        self.family_guy_bonus = 0
         self.max_talents: dict = max_talents
+        self.current_preset_talents: dict = current_preset_talents
+        self.secondary_preset_talents: dict = secondary_preset_talents
         self.specialized_skills: list[str] = getSpecializedSkills(self.base_class, self.sub_class, self.elite_class)
 
         self.combat_level: int = all_skill_levels["Combat"]
@@ -122,6 +129,8 @@ class Character:
         self.skills = all_skill_levels
         self.divinity_style: str = "None"
         self.divinity_link: str = "Unlinked"
+        self.current_polytheism_link = "Unlinked"
+        self.secondary_polytheism_link = "Unlinked"
         self.po_boxes_invested = {}
         for poBoxIndex, poBoxValues in poBoxDict.items():
             try:
@@ -187,6 +196,8 @@ class Character:
         }
         self.equipment = Equipment(raw_data, character_index, self.combat_level >= 1)
 
+        self.setPolytheismLink()
+
     def addUnmetApoc(self, apocType: str, apocRating: str, mapInfoList: list):
         self.apoc_dict[apocType][apocRating].append(mapInfoList)
 
@@ -208,6 +219,33 @@ class Character:
     def setDivinityLink(self, linkName: str):
         self.divinity_link = linkName
 
+    def setPolytheismLink(self):
+        if self.class_name == "Elemental Sorcerer":
+            try:
+                current_preset_level = self.current_preset_talents.get("505", 0)
+                if current_preset_level > 0:
+                    self.current_polytheism_link = divinity_divinitiesDict[(current_preset_level % 10) - 1]['Name']  #Dict starts at 1 for Snake, not 0
+            except:
+                pass
+            try:
+                secondary_preset_level = self.secondary_preset_talents.get("505", 0)
+                if secondary_preset_level > 0:
+                    self.secondary_polytheism_link = divinity_divinitiesDict[(secondary_preset_level % 10) - 1]['Name']  #Dict starts at 1 for Snake, not 0
+            except:
+                pass
+
+    def setFamilyGuyBonus(self, value: float):
+        self.family_guy_bonus = value
+
+    def setSymbolsOfBeyondMax(self, value: int):
+        self.symbols_of_beyond = 1 + value if value > 0 else 0
+
+    def increase_max_talents_over_books(self, value: int):
+        try:
+            self.max_talents_over_books += value
+        except:
+            pass
+
     def __str__(self):
         return self.character_name
 
@@ -222,6 +260,8 @@ class Character:
         This will make sure the character has been logged into before.
         """
         return self.combat_level >= 1
+
+
 
 
 class WorldName(Enum):
@@ -430,6 +470,11 @@ class AdviceGroup(AdviceBase):
             for field in self.__compare_by
         )
 
+    def remove_empty_subgroups(self):
+        if isinstance(self.advices, list):
+            self.advices = [value for value in self.advices if value]
+        if isinstance(self.advices, dict):
+            self.advices = {key: value for key, value in self.advices.items() if value}
 
 class AdviceSection(AdviceBase):
     """
@@ -728,6 +773,7 @@ class Account:
         )
         self._parse_wave_1(run_type)
         self._calculate_wave_1()
+        self._calculate_wave_2()
 
     def _parse_wave_1(self, run_type):
         self._parse_switches()
@@ -753,7 +799,8 @@ class Account:
         # Companions
         self.sheepie_owned = g.sheepie
         self.doot_owned = g.doot
-        if not self.doot_owned or not self.sheepie_owned:
+        self.riftslug_owned = g.riftslug
+        if not self.doot_owned or not self.sheepie_owned or not self.riftslug_owned:
             rawCompanions = self.raw_data.get('companion', [])
             if rawCompanions:
                 for companionInfo in rawCompanions.get('l', []):
@@ -761,6 +808,9 @@ class Account:
                     if companionID == 0:
                         self.doot_owned = True
                         g.doot = True
+                    if companionID == 1:
+                        self.riftslug_owned = True
+                        g.riftslug = True
                     if companionID == 4:
                         self.sheepie_owned = True
                         g.sheepie = True
@@ -1558,7 +1608,6 @@ class Account:
         self._calculate_w6()
 
     def _calculate_general(self):
-        # General
         pass
 
     def _calculate_w1(self):
@@ -1966,6 +2015,97 @@ class Account:
             progression=360 if self.achievements.get('Regalis My Beloved', False) else self.summoning['SanctuaryTotal'],
             goal=360
         ))
+
+    def _calculate_wave_2(self):
+        self._calculate_general_character_over_books()
+
+    def _calculate_general_character_over_books(self):
+        self.bonus_talents = {
+            "Rift Slug": {
+                "Value": 25 * self.riftslug_owned,
+                "Image": "rift-slug",
+                "Label": f"Companion: Rift Slug: +{25 * self.riftslug_owned}",
+                "Progression": 1 if self.riftslug_owned else 0,
+                "Goal": 1
+            },
+            "ES Family": {
+                "Value": floor(self.family_bonuses["Elemental Sorcerer"]['Value']),
+                "Image": 'elemental-sorcerer-icon',
+                "Label": f"Elemental Sorcerer Family Bonus: +{floor(self.family_bonuses['Elemental Sorcerer']['Value'])}.<br>"
+                         f"Next increase at ES Class Level: ",
+                "Progression": self.family_bonuses['Elemental Sorcerer']['Level'],
+                "Goal": getNextESFamilyBreakpoint(self.family_bonuses['Elemental Sorcerer']['Level'])
+            },
+            "Equinox Symbols": {
+                "Value": self.equinox_bonuses['Equinox Symbols']['CurrentLevel'],
+                "Image": 'equinox-symbols',
+                "Label": f"{{{{ Equinox|#equinox }}}}: Equinox Symbols: +{self.equinox_bonuses['Equinox Symbols']['CurrentLevel']}",
+                "Progression": self.equinox_bonuses['Equinox Symbols']['CurrentLevel'],
+                "Goal": self.equinox_bonuses['Equinox Symbols']['FinalMaxLevel']
+            },
+            "Maroon Warship": {
+                "Value": 1 * self.achievements['Maroon Warship'],
+                "Image": "maroon-warship",
+                "Label": f"W5 Achievement: Maroon Warship: +{1 * self.achievements['Maroon Warship']}",
+                "Progression": 1 if self.achievements['Maroon Warship'] else 0,
+                "Goal": 1
+            },
+            "Sneaking Mastery": {
+                "Value": "0 or 5 idk yet",
+                "Image": "sneaking-mastery",
+                "Label": f"{{{{ Rift|#rift }}}}: Sneaking Mastery: +5 upon reaching Mastery 3",
+                "Progression": "IDK",
+                "Goal": 3
+            },
+            # If Slug is owned: +25
+            # If Sneaking Mastery 3 unlocked: +5
+        }
+        self.bonus_talents_account_wide_sum = 0
+        for bonusName, bonusValuesDict in self.bonus_talents.items():
+            try:
+                self.bonus_talents_account_wide_sum += bonusValuesDict.get('Value', 0)
+            except:
+                continue
+
+        for char in self.safe_characters:
+            character_specific_bonuses = 0
+
+            # Arctis minor link
+            if self.doot_owned or char.divinity_link == "Arctis" or char.current_polytheism_link == "Arctis" or char.secondary_polytheism_link == "Arctis":
+                bigp_value = self.alchemy_bubbles['Big P']['BaseValue']
+                div_minorlink_value = char.divinity_level / (char.divinity_level + 60)
+                arctis_base = 15
+                final_result = ceil(arctis_base * bigp_value * div_minorlink_value)
+                character_specific_bonuses += ceil(15 * self.alchemy_bubbles['Big P']['BaseValue'] * (char.divinity_level / (char.divinity_level + 60)))
+
+            # Symbols of Beyond = 1 per 20 levels
+            if char.class_name in ["Blood Berserker", "Divine Knight"]:
+                character_specific_bonuses += char.max_talents.get("149", 0) // 20  #Symbols of Beyond - Red
+                char.setSymbolsOfBeyondMax(char.max_talents.get("149", 0) // 20)
+            elif char.class_name in ["Siege Breaker", "Beast Master"]:
+                character_specific_bonuses += char.max_talents.get("374", 0) // 20  # Symbols of Beyond - Green
+                char.setSymbolsOfBeyondMax(char.max_talents.get("374", 0) // 20)
+            elif char.class_name in ["Elemental Sorcerer", "Bubonic Conjuror"]:
+                character_specific_bonuses += char.max_talents.get("539", 0) // 20  # Symbols of Beyond - Purple
+                char.setSymbolsOfBeyondMax(char.max_talents.get("539", 0) // 20)
+
+            char.max_talents_over_books = self.library['MaxBookLevel'] + self.bonus_talents_account_wide_sum + character_specific_bonuses
+
+            # If they're an ES, use max level of Family Guy to calculate floor(ES Family Value * Family Guy)
+            if char.class_name == "Elemental Sorcerer":
+                try:
+                    #TODO: Move one-off talent value calculation
+                    family_guy_bonus = lavaFunc(
+                        'decay',
+                        char.max_talents_over_books + char.max_talents.get("374", 0),
+                        40,
+                        100
+                    )
+                    family_guy_multi = 1 + (family_guy_bonus/100)
+                    char.max_talents_over_books += floor(self.family_bonuses["Elemental Sorcerer"]['Value'] * family_guy_multi)
+                    char.setFamilyGuyBonus(floor(self.family_bonuses["Elemental Sorcerer"]['Value'] * family_guy_multi) - floor(self.family_bonuses["Elemental Sorcerer"]['Value']))
+                except:
+                    pass
 
     def _make_cards(self):
         card_counts = safe_loads(self.raw_data.get(self._key_cards, {}))

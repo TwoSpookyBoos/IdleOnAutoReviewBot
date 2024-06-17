@@ -14,7 +14,9 @@ riftRewardsDict = {
     30: 'Eldritch Artifact',
     35: 'Vial Mastery',
     40: 'Construct Mastery',
-    45: 'Ruby Cards'}
+    45: 'Ruby Cards',
+    50: 'Killroy Prime',
+    55: 'Sneaking Mastery'}
 
 def getRiftRewardFromLevel(inputLevel):
     return riftRewardsDict.get(inputLevel, f"UnknownRiftReward{inputLevel}")

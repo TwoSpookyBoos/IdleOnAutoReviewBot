@@ -939,6 +939,8 @@ rift_progressionTiers = {
     7: [35, "125B",         220],
     8: [40, "1,554B",       240],
     9: [45, "20T",          240],
+    10: [50, "101T",        240],
+    11: [55, "528T",        240],
 }
 
 ###WORLD 5 PROGRESSION TIERS###
@@ -1197,14 +1199,20 @@ switches = [
         "false": "",
     },
     {
-        "label": "Sheepie pet acquired",
+        "label": "Sheepie acquired",
         "name": "sheepie",
         "true": "",
         "false": "",
     },
     {
-        "label": "Doot pet acquired",
+        "label": "Doot acquired",
         "name": "doot",
+        "true": "",
+        "false": "",
+    },
+    {
+        "label": "Rift Slug acquired",
+        "name": "riftslug",
         "true": "",
         "false": "",
     },
@@ -1620,7 +1628,7 @@ card_data = {
     },
 }
 
-numberOfSecretClasses = 3  # Last verified as of v2.08
+numberOfSecretClasses = 3  # Last verified as of v2.10
 humanReadableClasses = {
     1: "Beginner",
     2: "Journeyman",
@@ -1844,6 +1852,23 @@ familyBonusesDict = {
     "Bubonic Conjuror": {'funcType': 'decay', 'x1': 5, 'x2': 180, 'Stat': 'All Stat. STR, AGI, WIS, LUK.', 'PrePlus': True, 'PostDisplay': '%', 'levelDiscount': familyBonusClassTierLevelReductions[2]},
     #"Arcane Cultist": {'funcType': 'decay', 'x1': 0, 'x2': 0, 'Stat': '', 'PrePlus': False, 'PostDisplay': '', 'levelDiscount': familyBonusClassTierLevelReductions[0]},
 }
+esFamilyBonusBreakpointsList = [0, 88, 108, 131, 157, 186, 219, 258, 303, 356, 419, 497, 594, 719, 885, 1118, 1468, 2049]
+
+def getNextESFamilyBreakpoint(currentLevel: int) -> int:
+    result = -1
+    for requirement in esFamilyBonusBreakpointsList:
+        try:
+            if currentLevel > requirement:
+                result += 1
+            else:
+                break
+        except:
+            continue
+    try:
+        return esFamilyBonusBreakpointsList[result+1]
+    except:
+        return esFamilyBonusBreakpointsList[-1]
+
 
 #achievementsList last pulled from code in 2.08. Search for: RegAchieves = function ()
 #Replace: "], ["  with:  "],\n["  before pasting in
@@ -2451,13 +2476,19 @@ allMeritsDict = {
 }
 
 skill_talentsDict = {
+    # Optimal is an optional list for calculating library.getJeapordyGoal
+    # [0] = the starting level
+    # [1] = the interval of levels after the starting level which provide a bonus
+    # [2] = does this talent benefit from bonuses over the max book level, True of False]
+    # Example: Symbols of Beyond gives a benefit every 20 levels and does NOT benefit from bonuses like Rift Slug of Arctis
+    # 2nd example: Apocalypse ZOW gives a bonus every 33
     "Choppin": {
         "High": {
             460: {"Name": "Log on Logs", "Tab": "Mage"},
             445: {"Name": "Smart Efficiency", "Tab": "Savvy Basics"},
             462: {"Name": "Deforesting All Doubt", "Tab": "Mage"},
             461: {"Name": "Leaf Thief", "Tab": "Mage"},
-            539: {"Name": "Symbols of Beyond P", "Tab": "Elite Class"},
+            539: {"Name": "Symbols of Beyond P", "Tab": "Elite Class", "Optimal": [0, 20, False]},
             532: {"Name": "Skill Wiz", "Tab": "Elite Class"},
         },
         "Medium": {
@@ -2472,16 +2503,16 @@ skill_talentsDict = {
             472: {"Name": "Staring Statues", "Tab": "Wizard"},
             487: {"Name": "Stupendous Statues", "Tab": "Shaman"},
             1: {"Name": "Mana Booster", "Tab": "Savvy Basics"},
-            486: {"Name": "Occult Obols", "Tab": "Mage Subclass"},
+            486: {"Name": "Occult Obols", "Tab": "Mage Subclass", 'Hardcap': 125},
         },
     },
     "Utility": {
         "High": {
             43: {"Name": "Right Hand of Action", "Tab": "Maestro"},
-            32: {"Name": "Printer Go Brrr", "Tab": "Maestro"},
+            32: {"Name": "Printer Go Brrr", "Tab": "Maestro", "Optimal": [0, 40, True]},
             59: {"Name": "Blood Marrow", "Tab": "Voidwalker"},
             57: {"Name": "Species Epoch", "Tab": "Voidwalker"},
-            49: {"Name": "Enhancement Eclipse", "Tab": "Voidwalker", "Optimal": 225},
+            49: {"Name": "Enhancement Eclipse", "Tab": "Voidwalker", "Optimal": [0, 25, False]},
         },
         "Medium": {
             41: {"Name": "Crystal Countdown", "Tab": "Maestro"},
@@ -2490,7 +2521,7 @@ skill_talentsDict = {
             131: {"Name": "Redox Rates", "Tab": "Squire"},
         },
         "Low": {
-            130: {"Name": "Refinery Throttle", "Tab": "Squire"},
+            130: {"Name": "Refinery Throttle", "Tab": "Squire", "Optimal": [0, 8, True]},
         },
     },
     "Mining": {
@@ -2499,7 +2530,7 @@ skill_talentsDict = {
             85: {"Name": "Brute Efficiency", "Tab": "Rage Basics"},
             103: {"Name": "Tool Proficiency", "Tab": "Warrior"},
             101: {"Name": "Copper Collector", "Tab": "Warrior"},
-            149: {"Name": "Symbols of Beyond R", "Tab": "Elite Class"},
+            149: {"Name": "Symbols of Beyond R", "Tab": "Elite Class", "Optimal": [0, 20, False]},
             142: {"Name": "Skill Strengthen", "Tab": "Elite Class"},
         },
         "Medium": {
@@ -2513,16 +2544,17 @@ skill_talentsDict = {
         },
         "Low": {
             92: {"Name": "Health Overdrive", "Tab": "Warrior"},
-            127: {"Name": "Shieldiest Statues", "Tab": "Squire"},
-            112: {"Name": "Strongest Statues", "Tab": "Barbarian"},
+            127: {"Name": "Shieldiest Statues", "Tab": "Squire", 'Hardcap': 200},
+            112: {"Name": "Strongest Statues", "Tab": "Barbarian", 'Hardcap': 200},
+            95: {"Name": "Strength in Numbers", "Tab": "Warrior"},
             0: {"Name": "Health Booster", "Tab": "Rage Basics"},
-            111: {"Name": "Fistful of Obol", "Tab": "Warrior Subclass"},
+            111: {"Name": "Fistful of Obol", "Tab": "Warrior Subclass", 'Hardcap': 125},
         },
     },
     "Cooking": {
         "High": {
             148: {"Name": "Overflowing Ladle", "Tab": "Blood Berserker"},
-            149: {"Name": "Symbols of Beyond R", "Tab": "Blood Berserker"},
+            149: {"Name": "Symbols of Beyond R", "Tab": "Blood Berserker", "Optimal": [0, 20, False]},
         },
         "Medium": {
             146: {"Name": "Apocalypse Chow", "Tab": "Blood Berserker"},
@@ -2535,7 +2567,7 @@ skill_talentsDict = {
         "High": {
             115: {"Name": "Worming Undercover", "Tab": "Barbarian"},
             85: {"Name": "Brute Efficiency", "Tab": "Rage Basics"},
-            149: {"Name": "Symbols of Beyond R", "Tab": "Elite Class"},
+            149: {"Name": "Symbols of Beyond R", "Tab": "Elite Class", "Optimal": [0, 20, False]},
             142: {"Name": "Skill Strengthen", "Tab": "Elite Class"},
         },
         "Medium": {
@@ -2549,8 +2581,8 @@ skill_talentsDict = {
             118: {"Name": "Catching Some Zzz-s", "Tab": "Barbarian"},
         },
         "Low": {
-            112: {"Name": "Strongest Statues", "Tab": "Barbarian"},
-            111: {"Name": "Fistful of Obol", "Tab": "Warrior Subclass"},
+            112: {"Name": "Strongest Statues", "Tab": "Barbarian", 'Hardcap': 200},
+            111: {"Name": "Fistful of Obol", "Tab": "Warrior Subclass", 'Hardcap': 125},
             116: {"Name": "Bobbin' Bobbers", "Tab": "Barbarian"},
         },
     },
@@ -2559,7 +2591,7 @@ skill_talentsDict = {
             263: {"Name": "Elusive Efficiency", "Tab": "Calm Basics"},
             295: {"Name": "Teleki-net-ic Logs", "Tab": "Bowman"},
             296: {"Name": "Briar Patch Runner", "Tab": "Bowman"},
-            374: {"Name": "Symbols of Beyond G", "Tab": "Elite Class"},
+            374: {"Name": "Symbols of Beyond G", "Tab": "Elite Class", "Optimal": [0, 20, False]},
             367: {"Name": "Skill Ambidexterity", "Tab": "Elite Class"},
         },
         "Medium": {
@@ -2571,7 +2603,7 @@ skill_talentsDict = {
         },
         "Low": {
             292: {"Name": "Shwifty Statues", "Tab": "Bowman"},
-            291: {"Name": "Shoeful of Obol", "Tab": "Archer Subclass"},
+            291: {"Name": "Shoeful of Obol", "Tab": "Archer Subclass", 'Hardcap': 125},
         },
     },
     "Trapping": {
@@ -2579,7 +2611,7 @@ skill_talentsDict = {
             263: {"Name": "Elusive Efficiency", "Tab": "Calm Basics"},
             311: {"Name": "Invasive Species", "Tab": "Hunter"},
             310: {"Name": "Eagle Eye", "Tab": "Hunter"},
-            374: {"Name": "Symbols of Beyond G", "Tab": "Elite Class"},
+            374: {"Name": "Symbols of Beyond G", "Tab": "Elite Class", "Optimal": [0, 20, False]},
             367: {"Name": "Skill Ambidexterity", "Tab": "Elite Class"},
         },
         "Medium": {
@@ -2589,49 +2621,116 @@ skill_talentsDict = {
             293: {"Name": "Agi Again", "Tab": "Archer Subclass"},
         },
         "Low": {
-            291: {"Name": "Shoeful of Obol", "Tab": "Archer Subclass"},
+            291: {"Name": "Shoeful of Obol", "Tab": "Archer Subclass", 'Hardcap': 125},
         },
-
-
-
     },
     "Worship": {
         "High": {
             476: {"Name": "Sooouls", "Tab": "Wizard"},
         },
-        "Medium": {
-            478: {"Name": "Nearby Outlet", "Tab": "Wizard"},
-        },
+        #"Medium": {},  #Later code gets angy about empty dicts.
         "Low": {
-            475: {"Name": "Charge Syphon", "Tab": "Wizard"},
+            478: {"Name": "Nearby Outlet", "Tab": "Wizard"},
+            475: {"Name": "Charge Syphon", "Tab": "Wizard", 'Hardcap': 200},
         },
     }
 }
 combat_talentsDict = {
+    #Talents here are unique from the skill_talentsDict above
     #Elite Classes
     "Blood Berserker": {
-        136: {"Name": "Combustion", "Tab": "Blood Berserker"},
+        "High": {},
+        "Medium": {},
+        "Low": {
+            109: {"Name": "Monster Decimator", "Tab": "Barbarian"},
+            135: {"Name": "Fired Up", "Tab": "Blood Berserker", "Optimal": [0, 25, True], 'Hardcap': 125},
+            136: {"Name": "Combustion", "Tab": "Blood Berserker", "Optimal": [0, 20, True], 'Hardcap': 125},
+            137: {"Name": "Serrated Swipe", "Tab": "Blood Berserker", "Optimal": [0, 50, True], 'Hardcap': 125},
+            106: {"Name": "Axe Hurl", "Tab": "Barbarian", "Optimal": [0, 50, True], 'Hardcap': 125},
+        },
     },
     "Divine Knight": {
-        168: {"Name": "Orb of Remembrance", "Tab": "Divine Knight"},
+        "High": {
+            168: {"Name": "Orb of Remembrance", "Tab": "Divine Knight"},
+            120: {"Name": "Shockwave Slash", "Tab": "Squire", "Optimal": [0, 30, True]},
+            165: {"Name": "Knightly Disciple", "Tab": "Divine Knight"},  #Inconsistent levels for extra attacks per Stark. Idk, just max book it and deal with it
+            169: {"Name": "Imbued Shockwaves", "Tab": "Divine Knight"},
+            121: {"Name": "Daggerang", "Tab": "Squire", "Optimal": [0, 30, True]},
+            166: {"Name": "Mega Mongorang", "Tab": "Divine Knight", "Optimal": [0, 25, True]},
+        },
+        "Medium": {
+            178: {"Name": "King of the Remembered", "Tab": "Divine Knight"},
+            129: {"Name": "Blocky Bottles", "Tab": "Squire"},
+            97: {"Name": "Carry a Big Stick", "Tab": "Warrior"},
+            6: {"Name": "Gilded Sword", "Tab": "Rage Basics"},
+            125: {"Name": "Precision Power", "Tab": "Squire"},
+        },
+        "Low": {
+            5: {"Name": "Sharpened Axe", "Tab": "Rage Basics"},
+            91: {"Name": "Whirl", "Tab": "Warrior", "Optimal": [0, 24, True]},
+        },
     },
     "Bubonic Conjuror": {
-        525: {"Name": "Chemical Warfare", "Tab": "Bubonic Conjuror"},
+        "High": {
+            525: {"Name": "Chemical Warfare", "Tab": "Bubonic Conjuror"},
+        },
+        "Medium": {
+
+        },
+        "Low": {
+
+        },
+
     },
     "Elemental Sorcerer": {
-        498: {"Name": "Dimensional Wormhole", "Tab": "Elemental Sorcerer"},
+        "High": {
+            498: {"Name": "Dimensional Wormhole", "Tab": "Elemental Sorcerer"},
+        },
+        "Medium": {
+
+        },
+        "Low": {
+
+        },
+
     },
     "Siege Breaker": {
-        318: {"Name": "Pirate Flag", "Tab": "Siege Breaker"},
+        "High": {
+            318: {"Name": "Pirate Flag", "Tab": "Siege Breaker"},
+        },
+        "Medium": {
+
+        },
+        "Low": {
+
+        },
+
     },
     "Beast Master": {
-        362: {"Name": "Whale Wallop", "Tab": "Beast Master"},
+        "High": {
+            362: {"Name": "Whale Wallop", "Tab": "Beast Master"},
+        },
+        "Medium": {
+
+        },
+        "Low": {
+
+        },
+
     },
     "Voidwalker": {
-        46: {"Name": "Void Radius", "Tab": "Voidwalker"}
-    },
+        "High": {
+            46: {"Name": "Void Radius", "Tab": "Voidwalker"}
+        },
+        "Medium": {
 
+        },
+        "Low": {
+
+        },
+    },
 }
+
 def lavaFunc(funcType: str, level: int, x1: int | float, x2: int | float, roundResult=False):
     result = 0
     match funcType:
@@ -2673,7 +2772,7 @@ bribesDict = {
     "Trash Island": ["The Art of the Bail", "Random Garbage", "Godlier Creation", "Fishermaster", "Muscles on Muscles", "Bottle Service", "Star Scraper"],
     "W6": ["The Art of the Grail", "Artifact Pilfering", "Forge Cap Smuggling", "Gold from Lead", "Nugget Fabrication", "Divine PTS Miscounting", "Loot Table Tampering", "The Art of the Flail"]
 }
-unpurchasableBribes = ["The Art of the Flail"]  # These bribes are in the game, but cannot be purchased as of v2.02
+unpurchasableBribes = ["The Art of the Flail"]  # These bribes are in the game, but cannot be purchased as of v2.10
 stamp_maxes = {
     #Combat
     #Skill
@@ -2822,7 +2921,7 @@ stampTypes = ["Combat", "Skill", "Misc"]
 unavailableStampsList = [
     'Shiny Crab Stamp', 'Gear Stamp', 'SpoOoky Stamp', 'Prayday Stamp',  #Skill
     'Talent I Stamp', 'Talent V Stamp',  #Misc
-]  # Last verified as of v2.08
+]  # Last verified as of v2.10
 starsignsDict = {
     1: {'Name': "The Buff Guy", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
     2: {'Name': "Flexo Bendo", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
@@ -2953,9 +3052,9 @@ forgeUpgradesDict = {
 }
 
 ###WORLD 2 CONSTS###
-max_IndexOfVials = 75  # Last verified as of v2.08
-max_IndexOfBubbles = 29  # Last verified as of v2.08
-max_IndexOfSigils = 3  # Last verified as of v2.08
+max_IndexOfVials = 75  # Last verified as of v2.10
+max_IndexOfBubbles = 29  # Last verified as of v2.10
+max_IndexOfSigils = 3  # Last verified as of v2.10
 vialsDict = {
     0: {"Name": "Copper Corona", "Material": "Copper", "x1": 3, "x2": 0, "funcType": "add"},
     1: {"Name": "Sippy Splinter", "Material": "OakTree", "x1": 3, "x2": 0, "funcType": "add"},
@@ -3384,7 +3483,7 @@ def getReadableBubbleNames(inputNumber, color):
 
 
 ###WORLD 3 CONSTS###
-maxDreams = 31  # Last verified as of v2.08
+maxDreams = 31  # Last verified as of v2.10
 dreamsThatUnlockNewBonuses = [1, 3, 6, 8, 11, 14, 18, 21, 24, 29]
 equinoxBonusesDict = {
     2: {'Name': 'Equinox Dreams', 'BaseLevel': 5, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 5, 'Category': 'Recommended'},
@@ -3489,9 +3588,9 @@ maxSummoningBookLevels = 29
 maxOverallBookLevels = 100 + maxStaticBookLevels + maxScalingBookLevels + maxSummoningBookLevels
 
 ###WORLD 4 CONSTS###
-maxCookingTables = 10  # Last verified as of v2.08
-maxMeals = 67  # Last verified as of v2.08
-maxMealLevel = 90  # Last verified as of v2.08
+maxCookingTables = 10  # Last verified as of v2.10
+maxMeals = 67  # Last verified as of v2.10
+maxMealLevel = 90  # Last verified as of v2.10
 labChipsList: list[str] = [
     "Grounded Nanochip", "Grounded Motherboard", "Grounded Software", "Grounded Processor", "Potato Chip",
     "Conductive Nanochip", "Conductive Motherboard", "Conductive Software", "Conductive Processor", "Chocolatey Chip",
@@ -3509,7 +3608,7 @@ labBonusesList = [
 ###WORLD 5 CONSTS###
 artifactTiers = ["Base", "Ancient", "Eldritch", "Sovereign"]
 numberOfArtifactTiers = len(artifactTiers)
-currentMaxChestsSum = 45  # Last verified as of v2.08
+currentMaxChestsSum = 45  # Last verified as of v2.10
 artifactsList = [
     'Moai Head', 'Maneki Kat', 'Ruble Cuble', 'Fauxory Tusk', 'Gold Relic',
     'Genie Lamp', 'Silver Ankh', 'Emerald Relic', 'Fun Hippoete', 'Arrowhead',

@@ -641,7 +641,7 @@ def setBreedingProgressionTier() -> AdviceSection:
             failedShinyRequirements = []
             failedShinyBonus = {}
             #if tier_ShinyLevels >= (tier-1):
-            if len(progressionTiersBreeding[tier].get("Shinies", {})) == 0:
+            if len(progressionTiersBreeding[tier].get("Shinies", {})) == 0 and tier_ShinyLevels >= tier-1:
                 # free pass
                 tier_ShinyLevels = tier
             else:
