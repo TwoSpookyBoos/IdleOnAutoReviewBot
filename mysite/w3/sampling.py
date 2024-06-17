@@ -244,6 +244,10 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         progression=session_data.account.prayers['The Royal Sampler']['Level'],
         goal=20
     ))
+    psrAdvices[prayerSubgroup].append(Advice(
+        label=f"Character's Printer Sample Rate below is calculated WITHOUT the prayer's bonus.",
+        picture_class='',
+    ))
     for toon in session_data.account.safe_characters:
         characterTotalPSR = account_sum + starTalentDiffToMax + toon.po_boxes_invested.get('Utilitarian Capsule', {}).get('Bonus1Value', 0)
         if toon.sub_class == 'Squire':
@@ -251,9 +255,9 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         if 90 > characterTotalPSR:
             shortBy = 90 - characterTotalPSR
             prayerGain = min(shortBy, session_data.account.prayers['The Royal Sampler']['BonusValue'])
-            characterEval = f"Equip prayer for +{prayerGain:.3f}%"
+            characterEval = f"{'Keep prayer equipped' if 'The Royal Sampler' in toon.equipped_prayers else 'Equip prayer'} for +{prayerGain:.3f}%"
         else:
-            characterEval = f"Prayer not needed."
+            characterEval = f"Prayer not needed{'. You may remove if desired.' if 'The Royal Sampler' in toon.equipped_prayers else ', not worn.'}"
         psrAdvices[prayerSubgroup].append(Advice(
             label=f"{toon.character_name}: {characterEval}",
             picture_class=f"{toon.class_name_icon}",

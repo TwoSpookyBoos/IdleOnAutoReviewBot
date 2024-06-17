@@ -62,6 +62,7 @@ class Character:
         base_class: str,
         sub_class: str,
         elite_class: str,
+        equipped_prayers: list,
         all_skill_levels: dict,
         po_boxes: list[int]
     ):
@@ -93,6 +94,13 @@ class Character:
         self.farming_level: int = all_skill_levels["Farming"]
         self.sneaking_level: int = all_skill_levels["Sneaking"]
         self.summoning_level: int = all_skill_levels["Summoning"]
+        self.equipped_prayers = []
+        for prayerIndex in equipped_prayers:
+            if prayerIndex != -1:  #-1 is the placeholder value for an empty prayer slot
+                try:
+                    self.equipped_prayers.append(prayersDict[prayerIndex]['Name'])
+                except:
+                    continue
         self.skills = all_skill_levels
         self.divinity_style: str = "None"
         self.divinity_link: str = "Unlinked"
@@ -944,7 +952,6 @@ class Account:
             self.owl['BonusesOfOrion'] = 0
             self.owl['FeatherRestarts'] = 0
             self.owl['MegaFeathersOwned'] = 0
-
 
     def _parse_w2(self):
         self._parse_w2_vials()
