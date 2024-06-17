@@ -24,6 +24,7 @@ const defaults = {
     autoloot: "off",
     sheepie: "off",
     doot: "off",
+    riftslug: "off",
     order_tiers: "off",
     progress_bars: "off",
     handedness: "off",

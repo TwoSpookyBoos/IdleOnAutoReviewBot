@@ -1191,6 +1191,7 @@ sailing_progressionTiers = {
 
 ###UI CONSTS###
 maxTiersPerGroup = 3
+#If you add a new switch here, you need to also add a default in main.js:defaults
 switches = [
     {
         "label": "Autoloot purchased",
