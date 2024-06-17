@@ -13,6 +13,7 @@ app.config.update(dict(
     IT="https://idleontoolbox.com",
     TRELLO="https://trello.com/b/CG6GYsTN/idleon-autoreview-development",
     DISCORD="https://discord.gg/ZmEkqzfjmJ",
+    BUG_REPORTS="https://discord.com/channels/1174869900255313952/1174870448975130644",
     GITHUB="https://github.com/TwoSpookyBoos/IdleOnAutoReviewBot",
     SPREADSHEET="https://docs.google.com/spreadsheets/d/16I-rURrVeyvltK2wxcQSiPgO07QY015RVNG4MAgUsGw/edit?usp=sharing",
     KOFI="https://ko-fi.com/W7W4SRUK5",

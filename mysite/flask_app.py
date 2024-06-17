@@ -2,6 +2,7 @@ import json
 import traceback
 from datetime import datetime
 from json import JSONDecodeError
+from pathlib import Path
 
 import requests
 from flask import g, render_template, request, redirect, Response, send_from_directory
@@ -15,7 +16,7 @@ from models.custom_exceptions import (
     UsernameBanned,
     ProfileNotFound,
     EmptyResponse,
-    IEConnectionFailed,
+    IEConnectionFailed, BaseCustomException,
 )
 from utils.text_formatting import (
     is_username,
@@ -96,10 +97,21 @@ def results() -> Response | str:
 
         name = name_for_logging(name_or_data, headerData, "index.html")
         log_browser_data(name)
+        response = render_template(
+            page,
+            reviews=reviews,
+            header=headerData,
+            beta=is_beta,
+            live_link=live_link,
+            beta_link=beta_link,
+            switches=switches(),
+            **get_user_preferences(),
+        )
 
     except UserDataException as ude:
         logger.error(ude.msg)
         error = ude.msg_display
+        response = error, 400
 
     except UsernameBanned as ban:
         msg = f"Account banned: {ban.username}"
@@ -111,27 +123,31 @@ def results() -> Response | str:
         create_and_populate_log_files(data, headerData, msg, name_or_data, ban)
 
         error = "You have been banned from using this tool. Goodbye."
+        response = error, 403
 
     except ProfileNotFound as e:
         msg = f"Public profile not found: {e.username}"
         data = None
 
         dirname = create_and_populate_log_files(data, headerData, msg, name_or_data, e)
-        error = e.msg_display.format(dirname)
+        error = e.msg_display.format(app.config["BUG_REPORTS"], dirname)
+        response = error, 404
 
     except EmptyResponse as e:
         msg = f"Empty response: {e.username}"
         data = None
 
         dirname = create_and_populate_log_files(data, headerData, msg, name_or_data, e)
-        error = e.msg_display.format(dirname)
+        error = e.msg_display.format(app.config["BUG_REPORTS"], dirname)
+        response = error, 500
 
     except IEConnectionFailed as e:
         msg = f"Error connecting to {e.url}"
         data = e.stacktrace
 
         dirname = create_and_populate_log_files(data, headerData, msg, name_or_data, e)
-        error = e.msg_display.format(dirname)
+        error = e.msg_display.format(app.config["BUG_REPORTS"], dirname)
+        response = error, 500
 
     except JSONDecodeError as e:
         msg = str(e)
@@ -139,11 +155,12 @@ def results() -> Response | str:
 
         e.dirname = "faulty_data"
         dirname = create_and_populate_log_files(data, headerData, msg, name_or_data, e)  # noqa
+        let_us_know = BaseCustomException.let_us_know.format(app.config["BUG_REPORTS"], dirname)
         error = (
-            "Looks like the data you submitted is corrupted. The issue has been "
-            "reported and will be investigated. If the problem persists let us "
-            f"know in the Discord server, mention '{dirname}'"
+            "Looks like the data you submitted is corrupted.<br>The issue has been "
+            f"reported and will be investigated.<br>{let_us_know}"
         )
+        response = error, 400
 
     except Exception as e:
         logger.exception("An unexpected error occurred:\n", exc_info=e)
@@ -155,23 +172,14 @@ def results() -> Response | str:
             data, headerData, msg, name_or_data, e
         )
 
+        let_us_know = BaseCustomException.let_us_know.format(app.config["BUG_REPORTS"], dirname)
         error = (
-            "Looks like something went wrong while handling your account data. "
-            "The issue has been reported and will be investigated. If the "
-            "problem persists let us know in the Discord server, mention "
-            f"'{dirname}'"
+            "Looks like something went wrong while handling your account data.<br>"
+            f"The issue has been reported and will be investigated.<br>{let_us_know}"
         )
-    return render_template(
-        page,
-        reviews=reviews,
-        header=headerData,
-        error=error,
-        beta=is_beta,
-        live_link=live_link,
-        beta_link=beta_link,
-        switches=switches(),
-        **get_user_preferences(),
-    )
+        response = error, 500
+
+    return response
 
 
 @app.route("/", methods=["GET"])
@@ -202,11 +210,12 @@ def create_and_populate_log_files(data, headerData, msg, name_or_data, error):
     username = name_for_logging(name_or_data, headerData)
     now = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-    dirpath = app.config["LOGS"]/error.dirname/username
-    filemsg = dirpath/now/"message.log"
-    filedata = dirpath/now/"data.log"
+    log_subdir = Path(error.dirname)/username/now
+    dirpath = app.config["LOGS"]/log_subdir
+    filemsg = dirpath/"message.log"
+    filedata = dirpath/"data.log"
 
-    (dirpath/now).mkdir(parents=True, exist_ok=True)
+    dirpath.mkdir(parents=True, exist_ok=True)
 
     with open(filemsg, "w") as user_log:
         user_log.writelines(msg + os.linesep)
@@ -215,7 +224,7 @@ def create_and_populate_log_files(data, headerData, msg, name_or_data, error):
         with open(filedata, "w") as user_log:
             user_log.writelines(data + os.linesep)
 
-    return dirpath/now
+    return log_subdir
 
 
 @app.route("/robots.txt")

@@ -148,7 +148,7 @@ function setupSidebarToggling() {
 
     // close the sidebar if clicked outside of it or not on hamburger
     document.addEventListener("click", (e) => {
-        let drawer = e.target.closest("#drawer") || e.target.closest("#drawer-handle")
+        let drawer = e.target.closest("#drawer") || e.target.closest("#drawer-handle") || e.target.id === "close-modal-error"
         let sidebar = document.getElementById("drawer")
         if (!drawer && sidebar.classList.contains("sidebar-open")) {
             toggleSidebar()
@@ -329,6 +329,15 @@ function loadResults(html) {
     mainWrapper.innerHTML = html;
 }
 
+function loadErrorPopup(html, statusCode) {
+    spinner.stop()
+    const error = document.createElement("p")
+    error.innerHTML = html;
+    document.querySelector('#error .inner').replaceChildren(error)
+    document.querySelector('#error').classList.add("show")
+    document.querySelector('#error p a').onclick = copyErrorDataAndRedirectToDiscord
+}
+
 function fetchPlayerAdvice() {
     fetch("/results", {
         method: 'POST',
@@ -336,25 +345,32 @@ function fetchPlayerAdvice() {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(fetchStoredUserParams())
-
     }).then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
+        return response.text().then(text => [text, (response.ok ? 200 : response.status)]);
+    }).then(([html, statusCode]) => {
+        switch (statusCode) {
+            case 400:
+            case 403:
+            case 404:
+            case 500:
+                loadErrorPopup(html, statusCode)
+                break;
+            case 200:
+                if (html === "") {
+                    openSidebarIfFirstAccess();
+                    return;
+                }
+                loadResults(html);
+                initResultsUI();
+                break;
+            default:
+                throw new Error(statusCode.toString());
         }
-        return response.text();
-
-    }).then(html => {
-        if (html === "") {
-            openSidebarIfFirstAccess()
-            return
-        }
-        loadResults(html);
-        initResultsUI()
-
     }).catch(error => {
         console.error('Error:', error);
     });
 }
+
 
 const storeUserParams = (data) => Object
     .entries(defaults)
@@ -408,6 +424,50 @@ function defineCookieModalAction() {
     }
 }
 
+function setupErrorPopup() {
+    document.querySelector('#close-modal-error').onclick = () => {
+        document.querySelector('#error').classList.remove("show")
+        openSidebarIfFirstAccess()
+    }
+}
+
+function collectTextNodes(parent) {
+    const nodes = []
+
+    for (const child of parent.childNodes) {
+        if (child.nodeType === Node.TEXT_NODE) {
+            nodes.push(child.textContent)
+        } else if (child.nodeType === Node.ELEMENT_NODE) {
+            nodes.push(...collectTextNodes(child))
+        }
+    }
+
+    return nodes
+}
+
+function copyErrorDataAndRedirectToDiscord(e) {
+    e.preventDefault()
+    const error = document.querySelector('#error .wrapper');
+    const errorText = document.querySelector('#error p');
+    const errorTextBare = collectTextNodes(errorText).join(' ').replace(/ +/g, ' ');
+    const logPath = document.querySelector('#error code').innerText
+    const [type, name, timestamp] = logPath.split("/")
+
+    navigator.clipboard.writeText(`type: ${type}\nname: ${name}\ntimestamp: ${timestamp}\n\n> ${errorTextBare}`)
+
+    const copied = document.querySelector('#copied')
+    const errorPos = error.getBoundingClientRect()
+    copied.style.position = 'absolute'
+    copied.style.left = `${e.pageX - errorPos.left}px`
+    copied.style.top = `${e.pageY - errorPos.top}px`
+    copied.classList.add('show')
+    setTimeout(() => {
+        const link = e.target.href
+        window.open(link, '_blank').focus()
+        copied.classList.remove('show')
+    }, 1000)
+}
+
 function initBaseUI() {
     setTimeout(defineCookieModalAction, 1000)
     hideSpinnerIfFirstAccess()
@@ -419,6 +479,7 @@ function initBaseUI() {
     setupColorScheme()
     setupToggleAllAction()
     setupSwitchesActions()
+    setupErrorPopup()
 }
 
 function initResultsUI() {
