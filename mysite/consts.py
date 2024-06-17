@@ -2483,7 +2483,7 @@ skill_talentsDict = {
     # [1] = the interval of levels after the starting level which provide a bonus
     # [2] = does this talent benefit from bonuses over the max book level, True of False]
     # Example: Symbols of Beyond gives a benefit every 20 levels and does NOT benefit from bonuses like Rift Slug of Arctis
-    # 2nd example: Apocalypse ZOW gives a bonus every 33
+    # 2nd example: Apocalypse ZOW gives a bonus every 33 and DOES benefit from bonuses
     "Choppin": {
         "High": {
             460: {"Name": "Log on Logs", "Tab": "Mage"},
@@ -2630,7 +2630,7 @@ skill_talentsDict = {
         "High": {
             476: {"Name": "Sooouls", "Tab": "Wizard"},
         },
-        #"Medium": {},  #Later code gets angy about empty dicts.
+        "Medium": {},
         "Low": {
             478: {"Name": "Nearby Outlet", "Tab": "Wizard"},
             475: {"Name": "Charge Syphon", "Tab": "Wizard", 'Hardcap': 200},
