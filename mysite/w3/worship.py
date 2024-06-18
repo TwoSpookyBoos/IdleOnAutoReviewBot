@@ -48,11 +48,12 @@ def setWorshipPrayersProgressionTier() -> AdviceSection:
                     adviceCountsDict["Recommended"] += 1
                     prayers_AdviceDict["Recommended"][subgroupName].append(
                         Advice(
-                            label=worshipPrayersDict[requiredPrayer]['DisplayName'],
+                            label=requiredPrayer,
                             picture_class=requiredPrayer,
                             progression=str(worshipPrayersDict[requiredPrayer]['Level']),
-                            goal=str(tier[1][requiredPrayer]))
-                    )
+                            goal=str(tier[1][requiredPrayer]),
+                            resource=worshipPrayersDict[requiredPrayer]['Material']
+                        ))
         if tier_WorshipPrayers == (tier[0] - 1) and allPrayersLeveled == True:  # Only update if they already met the previous tier
             tier_WorshipPrayers = tier[0]
 
@@ -65,8 +66,9 @@ def setWorshipPrayersProgressionTier() -> AdviceSection:
                     label=optionalPrayer,
                     picture_class=optionalPrayer,
                     progression=str(worshipPrayersDict[optionalPrayer]['Level']),
-                    goal=str(optionalTierPrayers[optionalPrayer]))
-                )
+                    goal=str(optionalTierPrayers[optionalPrayer]),
+                    resource=worshipPrayersDict[optionalPrayer]['Material']
+                ))
 
     #Check Ignorable Prayers
     ignorableTierPrayers = prayers_progressionTiers[-1][1]
@@ -77,8 +79,9 @@ def setWorshipPrayersProgressionTier() -> AdviceSection:
                     label=ignorablePrayer,
                     picture_class=ignorablePrayer,
                     progression=str(worshipPrayersDict[ignorablePrayer]['Level']),
-                    goal=str(ignorableTierPrayers[ignorablePrayer]))
-                )
+                    goal=str(ignorableTierPrayers[ignorablePrayer]),
+                    resource=worshipPrayersDict[ignorablePrayer]['Material']
+                ))
 
 #Generate Advice Groups
     prayers_AdviceGroupDict['Recommended'] = AdviceGroup(

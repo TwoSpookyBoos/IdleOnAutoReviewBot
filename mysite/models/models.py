@@ -1260,6 +1260,7 @@ class Account:
         for prayerIndex, prayerValuesDict in prayersDict.items():
             self.prayers[prayerValuesDict['Name']] = {
                 'DisplayName': prayerValuesDict['Display'],
+                'Material': prayerValuesDict['Material'],
                 'Level': 0,
                 'BonusValue': 0,
                 'BonusString': f"Level at least once to receive the bonus!",
