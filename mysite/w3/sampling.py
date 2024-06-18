@@ -49,7 +49,8 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         label=f"Sample It bubble: +{session_data.account.alchemy_bubbles['Sample It']['BaseValue']:.2f}%",
         picture_class="sample-it",
         progression=session_data.account.alchemy_bubbles['Sample It']['Level'],
-        goal=200
+        goal=200,
+        resource=session_data.account.alchemy_bubbles['Sample It']['Material']
     ))
     psrAdvices[accountSubgroup].append(Advice(
         label=f"{{{{ Salt Lick|#salt-lick }}}}: +{0.5 * session_data.account.saltlick.get('Printer Sample Size', 0)}%",
@@ -73,13 +74,15 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         label=f"Amplestample Stamp: +{amplestampleValue:.3f}%",
         picture_class="amplestample-stamp",
         progression=session_data.account.stamps.get("Amplestample Stamp", {}).get("Level", 0),
-        goal=32
+        goal=32,
+        resource=session_data.account.stamps.get("Amplestample Stamp", {}).get("Material", 0),
     ))
     psrAdvices[accountSubgroup].append(Advice(
         label=f"Stample Stamp: +{stampleValue:.3f}%",
         picture_class="stample-stamp",
         progression=session_data.account.stamps.get("Stample Stamp", {}).get("Level", 0),
-        goal=60
+        goal=60,
+        resource=session_data.account.stamps.get("Stample Stamp", {}).get("Material", 0),
     ))
     psrAdvices[accountSubgroup].append(Advice(
         label=f"Lab Bonus: Certified Stamp Book: {'2x (Already applied)' if session_data.account.labBonuses.get('Certified Stamp Book', {}).get('Enabled', False) else '1x'}",

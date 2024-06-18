@@ -71,8 +71,9 @@ def getCapacityAdviceGroup() -> AdviceGroup:
         capacity_Advices["Stamps"].append(Advice(
             label=capStamp,
             picture_class=capStamp,
-            progression=session_data.account.stamps.get(capStamp, {}).get("Level", 0),
-            goal=stamp_maxes.get(capStamp, 999)
+            progression=session_data.account.stamps.get(capStamp, {}).get('Level', 0),
+            goal=stamp_maxes.get(capStamp, 999,),
+            resource=session_data.account.stamps.get(capStamp, {}).get('Material', 0),
         ))
 
     #Account-Wide
@@ -314,7 +315,9 @@ def setStampProgressionTier() -> AdviceSection:
                         stamp_AdviceDict["FindStamps"][stampType][subgroupName].append(
                             Advice(
                                 label=rStamp,
-                                picture_class=rStamp))
+                                picture_class=rStamp,
+                                resource=playerStamps.get(rStamp, {}).get('Material', ''),
+                            ))
             if tier_FindStamps[stampType] == tier - 1 and adviceCountsDict[stampType] == 0:  # Only update if they already met previous tier
                 tier_FindStamps[stampType] = tier
 
@@ -333,7 +336,9 @@ def setStampProgressionTier() -> AdviceSection:
                                 label=stampName,
                                 picture_class=stampName,
                                 progression=playerStamps.get(stampName, {}).get("Level", 0),
-                                goal=stampRequiredLevel))
+                                goal=stampRequiredLevel,
+                                resource=playerStamps.get(stampName, {}).get('Material', ''),
+                            ))
                 else:
                     logger.debug(f"Skipping {stampName} failure because it is set to True in capacityExclusionsDict")
 
@@ -351,7 +356,9 @@ def setStampProgressionTier() -> AdviceSection:
                     stamp_AdviceDict["FindStamps"]["Optional"][subgroupName].append(
                         Advice(
                             label=f"{rStamp} ({playerStamps.get(rStamp).get('StampType')})",
-                            picture_class=rStamp))
+                            picture_class=rStamp,
+                            resource=playerStamps.get(rStamp, {}).get('Material', ''),
+                        ))
 
     overall_StampTier = min(max_tier, tier_StampLevels, tier_FindStamps["Combat"], tier_FindStamps["Skill"], tier_FindStamps["Misc"], tier_RequiredSpecificStamps)
 

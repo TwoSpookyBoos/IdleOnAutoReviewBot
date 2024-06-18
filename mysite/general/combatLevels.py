@@ -72,10 +72,16 @@ def setCombatLevelsProgressionTier() -> AdviceSection:
 
     overall_CombatLevelTier = curr_tier[0]
 
+    if 'Character' in next_tier[2]:
+        character_or_obol = 'beginner-icon'
+    elif 'Obol' in next_tier[2]:
+        character_or_obol = 'silver-obol-of-pop-pop'
+    else:
+        character_or_obol = ''
     advices = [
         Advice(
             label=next_tier[2],
-            picture_class="total-level",
+            picture_class=character_or_obol,
             progression=total_combat_level,
             goal=next_tier[1])
     ] if next_tier else []
@@ -108,7 +114,7 @@ def setCombatLevelsProgressionTier() -> AdviceSection:
             picture_class=session_data.account.all_characters[characterIndex].class_name_icon,
             progression=level,
             goal=goal)
-        for characterIndex, level in parsedCombatLevels['equinoxDict'].get(f'under{goal}', dict()).items()
+        for characterIndex, level in parsedCombatLevels['equinoxDict'].get(f'under{goal}', dict()).items() if session_data.account.equinox_unlocked
     ]
 
     lvlup_group = AdviceGroup(
