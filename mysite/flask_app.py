@@ -122,7 +122,7 @@ def results() -> Response | str:
 
         create_and_populate_log_files(data, headerData, msg, name_or_data, ban)
 
-        error = "You have been banned from using this tool. Goodbye."
+        error = ban.msg_base
         response = error, 403
 
     except ProfileNotFound as e:
