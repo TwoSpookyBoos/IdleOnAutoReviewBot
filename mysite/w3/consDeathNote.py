@@ -352,7 +352,6 @@ def getDeathNoteKills():
                             logger.exception(
                                 f"Kill list for characterIndex: {characterIndex}, worldIndex: {worldIndex}, mapIndex: {mapIndex} failed: Knew it wasn't a list, could add {type(characterKillsList[mapIndex])}: {characterKillsList[mapIndex]}")
 
-
     deathnote_EnemyWorlds = {}
 
     #Have each EnemyMap calculate its Skull Value, Name, Count to Next, and Percent to Next now that all kills are totaled
@@ -442,7 +441,6 @@ def setConsDeathNoteProgressionTier():
         return deathnote_AdviceSection
 
     currentMaxWorld = 6
-    maxEnemiesPerGroup = 10
     apocCharactersIndexList = getapocCharactersIndexList()
     bbCharactersIndexList = getChowMeowCharactersIndexList()
     meowBBIndex = getMEOWBBIndex(bbCharactersIndexList)
@@ -452,7 +450,6 @@ def setConsDeathNoteProgressionTier():
     max_tier = deathNote_progressionTiers[-2][0]
     overall_DeathNoteTier = 0
     worldIndexes = []
-    maxedGroupsList = []
     tier_combo = {}
     for number in range(1, currentMaxWorld + 1):
         worldIndexes.append(number)
@@ -550,16 +547,12 @@ def setConsDeathNoteProgressionTier():
                     tier_combo[worldIndex] = tier[0]
                 else:
                     for enemy in fullDeathNoteDict[worldIndex].lowest_skulls_dict[fullDeathNoteDict[worldIndex].lowest_skull_value]:
-                        if len(deathnote_AdviceDict[f"W{worldIndex}"]) < maxEnemiesPerGroup:
-                            deathnote_AdviceDict[f"W{worldIndex}"].append(
-                                Advice(
-                                    label=enemy[0],
-                                    picture_class=enemy[3],
-                                    progression=f"{enemy[2]}%")
-                            )
-                        else:
-                            if worldIndex not in maxedGroupsList:
-                                maxedGroupsList.append(worldIndex)
+                        deathnote_AdviceDict[f"W{worldIndex}"].append(
+                            Advice(
+                                label=enemy[0],
+                                picture_class=enemy[3],
+                                progression=f"{enemy[2]}%")
+                        )
 
         # ZOW
         if tier_combo['ZOW'] >= (tier[0] - 1):  # Only evaluate if they already met the previous tier's requirement
@@ -571,24 +564,15 @@ def setConsDeathNoteProgressionTier():
                     apocToNextTier['ZOW'] = tier[9] - highestZOWCount
                     for difficultyName in apocDifficultyNameList:
                         if len(session_data.account.all_characters[highestZOWCountIndex].apoc_dict['ZOW'][difficultyName]) > 0:
-                            if zow_TotalAdvices < maxEnemiesPerGroup - 1:
-                                if difficultyName not in deathnote_AdviceDict['ZOW']:
-                                    deathnote_AdviceDict['ZOW'][difficultyName] = []
-                                for enemy in session_data.account.all_characters[highestZOWCountIndex].apoc_dict['ZOW'][difficultyName]:
-                                    if zow_TotalAdvices < maxEnemiesPerGroup:
-                                        deathnote_AdviceDict["ZOW"][difficultyName].append(
-                                            Advice(
-                                                label=enemy[0],
-                                                picture_class=enemy[3],
-                                                progression=f"{enemy[2]}%"),
-                                        )
-                                        zow_TotalAdvices += 1
-                                    else:
-                                        if 'ZOW' not in maxedGroupsList:
-                                            maxedGroupsList.append('ZOW')
-                            else:
-                                if 'ZOW' not in maxedGroupsList:
-                                    maxedGroupsList.append('ZOW')
+                            if difficultyName not in deathnote_AdviceDict['ZOW']:
+                                deathnote_AdviceDict['ZOW'][difficultyName] = []
+                            for enemy in session_data.account.all_characters[highestZOWCountIndex].apoc_dict['ZOW'][difficultyName]:
+                                deathnote_AdviceDict["ZOW"][difficultyName].append(
+                                    Advice(
+                                        label=enemy[0],
+                                        picture_class=enemy[3],
+                                        progression=f"{enemy[2]}%"),
+                                )
                 else:
                     deathnote_AdviceDict["ZOW"] = [
                         Advice(
@@ -607,24 +591,15 @@ def setConsDeathNoteProgressionTier():
                     apocToNextTier['CHOW'] = tier[10] - highestCHOWCount
                     for difficultyName in apocDifficultyNameList:
                         if len(session_data.account.all_characters[highestCHOWCountIndex].apoc_dict['CHOW'][difficultyName]) > 0:
-                            if chow_TotalAdvices < maxEnemiesPerGroup - 1:
-                                if difficultyName not in deathnote_AdviceDict['CHOW']:
-                                    deathnote_AdviceDict['CHOW'][difficultyName] = []
-                                for enemy in session_data.account.all_characters[highestCHOWCountIndex].apoc_dict['CHOW'][difficultyName]:
-                                    if chow_TotalAdvices < maxEnemiesPerGroup:
-                                        deathnote_AdviceDict["CHOW"][difficultyName].append(
-                                            Advice(
-                                                label=enemy[0],
-                                                picture_class=enemy[3],
-                                                progression=f"{enemy[2]}%"),
-                                            )
-                                        chow_TotalAdvices += 1
-                                    else:
-                                        if 'CHOW' not in maxedGroupsList:
-                                            maxedGroupsList.append('CHOW')
-                            else:
-                                if 'CHOW' not in maxedGroupsList:
-                                    maxedGroupsList.append('CHOW')
+                            if difficultyName not in deathnote_AdviceDict['CHOW']:
+                                deathnote_AdviceDict['CHOW'][difficultyName] = []
+                            for enemy in session_data.account.all_characters[highestCHOWCountIndex].apoc_dict['CHOW'][difficultyName]:
+                                deathnote_AdviceDict["CHOW"][difficultyName].append(
+                                    Advice(
+                                        label=enemy[0],
+                                        picture_class=enemy[3],
+                                        progression=f"{enemy[2]}%"),
+                                    )
                 else:
                     deathnote_AdviceDict["CHOW"] = [
                         Advice(
@@ -644,27 +619,17 @@ def setConsDeathNoteProgressionTier():
                     else:
                         meowsForNextTier = f"({session_data.account.all_characters[meowBBIndex].apoc_dict['MEOW']['Total']}/{tier[11]})"
                         apocToNextTier['MEOW'] = tier[11] - session_data.account.all_characters[meowBBIndex].apoc_dict['MEOW']['Total']
-                        #for difficultyIndex in range(0, len(apocDifficultyNameList)):
                         for difficultyName in apocDifficultyNameList:
                             if len(session_data.account.all_characters[meowBBIndex].apoc_dict['MEOW'][difficultyName]) > 0:
-                                if meow_TotalAdvices < maxEnemiesPerGroup - 1:
-                                    if difficultyName not in deathnote_AdviceDict['MEOW']:
-                                        deathnote_AdviceDict['MEOW'][difficultyName] = []
-                                    for enemy in session_data.account.all_characters[meowBBIndex].apoc_dict['MEOW'][difficultyName]:
-                                        if meow_TotalAdvices < maxEnemiesPerGroup:
-                                            deathnote_AdviceDict["MEOW"][difficultyName].append(
-                                                Advice(
-                                                    label=enemy[0],
-                                                    picture_class=enemy[3],
-                                                    progression=f"{enemy[2]}%"),
-                                                )
-                                            meow_TotalAdvices += 1
-                                        else:
-                                            if 'MEOW' not in maxedGroupsList:
-                                                maxedGroupsList.append('MEOW')
-                                else:
-                                    if 'MEOW' not in maxedGroupsList:
-                                        maxedGroupsList.append('MEOW')
+                                if difficultyName not in deathnote_AdviceDict['MEOW']:
+                                    deathnote_AdviceDict['MEOW'][difficultyName] = []
+                                for enemy in session_data.account.all_characters[meowBBIndex].apoc_dict['MEOW'][difficultyName]:
+                                    deathnote_AdviceDict["MEOW"][difficultyName].append(
+                                        Advice(
+                                            label=enemy[0],
+                                            picture_class=enemy[3],
+                                            progression=f"{enemy[2]}%"),
+                                        )
                 else:
                     deathnote_AdviceDict["MEOW"] = [
                         Advice(
@@ -675,6 +640,7 @@ def setConsDeathNoteProgressionTier():
                     ]
 
         #Check for Rift Meow Specifically
+        #TODO: Move to Account
         if meowBBIndex is not None:
             riftPresent = False
             for remainingMap in session_data.account.all_characters[meowBBIndex].apoc_dict['MEOW']['Medium Extras']:
