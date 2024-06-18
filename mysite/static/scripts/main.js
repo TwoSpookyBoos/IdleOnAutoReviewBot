@@ -476,6 +476,7 @@ function copyErrorDataAndRedirectToDiscord(e) {
 let searchTimer
 
 function searchByCriteria(criteria) {
+    criteria = criteria.toLowerCase()
     const allElements = document.querySelectorAll("article, section, .advice-group, .advice-title, .advice, .resource, .prog, .arrow, .arrow-hidden, .goal")
     allElements.forEach(el => {
         el.classList.add('search-hidden');
