@@ -2477,6 +2477,8 @@ allMeritsDict = {
     },  #World8
 }
 
+hardcap_symbols = 280
+hardcap_enhancement_eclipse = 250 #Lava might add more in the future, but there are no bonuses above 250 in v2.10
 skill_talentsDict = {
     # Optimal is an optional list for calculating library.getJeapordyGoal
     # [0] = the starting level
@@ -2490,7 +2492,7 @@ skill_talentsDict = {
             445: {"Name": "Smart Efficiency", "Tab": "Savvy Basics"},
             462: {"Name": "Deforesting All Doubt", "Tab": "Mage"},
             461: {"Name": "Leaf Thief", "Tab": "Mage"},
-            539: {"Name": "Symbols of Beyond P", "Tab": "Elite Class", "Optimal": [0, 20, False]},
+            539: {"Name": "Symbols of Beyond P", "Tab": "Elite Class", "Optimal": [0, 20, False], 'Hardcap': hardcap_symbols},
             532: {"Name": "Skill Wiz", "Tab": "Elite Class"},
         },
         "Medium": {
@@ -2514,7 +2516,7 @@ skill_talentsDict = {
             32: {"Name": "Printer Go Brrr", "Tab": "Maestro", "Optimal": [0, 40, True]},
             59: {"Name": "Blood Marrow", "Tab": "Voidwalker"},
             57: {"Name": "Species Epoch", "Tab": "Voidwalker"},
-            49: {"Name": "Enhancement Eclipse", "Tab": "Voidwalker", "Optimal": [0, 25, False]},
+            49: {"Name": "Enhancement Eclipse", "Tab": "Voidwalker", "Optimal": [0, 25, False], 'Hardcap': hardcap_enhancement_eclipse},
         },
         "Medium": {
             41: {"Name": "Crystal Countdown", "Tab": "Maestro"},
@@ -2532,7 +2534,7 @@ skill_talentsDict = {
             85: {"Name": "Brute Efficiency", "Tab": "Rage Basics"},
             103: {"Name": "Tool Proficiency", "Tab": "Warrior"},
             101: {"Name": "Copper Collector", "Tab": "Warrior"},
-            149: {"Name": "Symbols of Beyond R", "Tab": "Elite Class", "Optimal": [0, 20, False]},
+            149: {"Name": "Symbols of Beyond R", "Tab": "Elite Class", "Optimal": [0, 20, False], 'Hardcap': hardcap_symbols},
             142: {"Name": "Skill Strengthen", "Tab": "Elite Class"},
         },
         "Medium": {
@@ -2556,7 +2558,7 @@ skill_talentsDict = {
     "Cooking": {
         "High": {
             148: {"Name": "Overflowing Ladle", "Tab": "Blood Berserker"},
-            149: {"Name": "Symbols of Beyond R", "Tab": "Blood Berserker", "Optimal": [0, 20, False]},
+            149: {"Name": "Symbols of Beyond R", "Tab": "Blood Berserker", "Optimal": [0, 20, False], 'Hardcap': hardcap_symbols},
         },
         "Medium": {
             146: {"Name": "Apocalypse Chow", "Tab": "Blood Berserker"},
@@ -2569,7 +2571,7 @@ skill_talentsDict = {
         "High": {
             115: {"Name": "Worming Undercover", "Tab": "Barbarian"},
             85: {"Name": "Brute Efficiency", "Tab": "Rage Basics"},
-            149: {"Name": "Symbols of Beyond R", "Tab": "Elite Class", "Optimal": [0, 20, False]},
+            149: {"Name": "Symbols of Beyond R", "Tab": "Elite Class", "Optimal": [0, 20, False], 'Hardcap': hardcap_symbols},
             142: {"Name": "Skill Strengthen", "Tab": "Elite Class"},
         },
         "Medium": {
@@ -2593,7 +2595,7 @@ skill_talentsDict = {
             263: {"Name": "Elusive Efficiency", "Tab": "Calm Basics"},
             295: {"Name": "Teleki-net-ic Logs", "Tab": "Bowman"},
             296: {"Name": "Briar Patch Runner", "Tab": "Bowman"},
-            374: {"Name": "Symbols of Beyond G", "Tab": "Elite Class", "Optimal": [0, 20, False]},
+            374: {"Name": "Symbols of Beyond G", "Tab": "Elite Class", "Optimal": [0, 20, False], 'Hardcap': hardcap_symbols},
             367: {"Name": "Skill Ambidexterity", "Tab": "Elite Class"},
         },
         "Medium": {
@@ -2613,7 +2615,7 @@ skill_talentsDict = {
             263: {"Name": "Elusive Efficiency", "Tab": "Calm Basics"},
             311: {"Name": "Invasive Species", "Tab": "Hunter"},
             310: {"Name": "Eagle Eye", "Tab": "Hunter"},
-            374: {"Name": "Symbols of Beyond G", "Tab": "Elite Class", "Optimal": [0, 20, False]},
+            374: {"Name": "Symbols of Beyond G", "Tab": "Elite Class", "Optimal": [0, 20, False], 'Hardcap': hardcap_symbols},
             367: {"Name": "Skill Ambidexterity", "Tab": "Elite Class"},
         },
         "Medium": {
