@@ -412,7 +412,7 @@ function defineCookieModalAction() {
 let searchTimer
 
 function searchByCriteria(criteria) {
-    const allElements = document.querySelectorAll("article, section, .advice-group, .advice-title, .advice, .resource, .prog, .arrow, .goal")
+    const allElements = document.querySelectorAll("article, section, .advice-group, .advice-title, .advice, .resource, .prog, .arrow, .arrow-hidden, .goal")
     allElements.forEach(el => {
         el.classList.add('search-hidden');
     })

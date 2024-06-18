@@ -37,7 +37,7 @@
                                 {% endif %}
                                 </li>
                                 <li class="prog">{{ advice.progression }}</li>
-                                <li class="arrow{% if not advice.progression or not advice.goal %} hidden{% endif %}"></li>
+                                <li class="arrow{% if not advice.progression or not advice.goal %}-hidden{% endif %}"></li>
                                 <li class="goal {{ advice.status }}">{{ advice.goal }}</li>
                             {% endfor %}
                         {% endfor %}
