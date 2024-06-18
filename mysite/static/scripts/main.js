@@ -378,8 +378,12 @@ const storeUserParams = (data) => Object
 
 const fetchStoredUserParams = () => {
     const storedUserParams = Object.fromEntries(Object.entries(defaults).map(([k, v]) => [k, localStorage.getItem(k) || v]))
-    const queryString = new URLSearchParams(storedUserParams).toString()
-    history.pushState(null, '', `?${queryString}`)
+    const queryStringParams = new URLSearchParams(storedUserParams)
+    if (storedUserParams.player.startsWith("{")) {
+        // empty player if it's JSON
+        queryStringParams.delete("player")
+    }
+    history.pushState(null, '', `?${queryStringParams}`)
     return storedUserParams
 }
 
@@ -487,25 +491,20 @@ function searchByCriteria(criteria) {
                 el.classList.remove("search-hidden")
                 el.querySelectorAll('.search-hidden').forEach(child => child.classList.remove("search-hidden"))
             }
-            return
-        }
-        if (el.tagName.toLowerCase() === 'section') {
+        } else if (el.tagName.toLowerCase() === 'section') {
             if (el.querySelector("h1").innerHTML.toLowerCase().includes(criteria)) {
                 el.closest("article").classList.remove("search-hidden")
                 el.classList.remove("search-hidden")
                 el.querySelectorAll('.search-hidden').forEach(child => child.classList.remove("search-hidden"))
             }
-        }
-        if (el.classList.contains('advice-group')) {
+        } else if (el.classList.contains('advice-group')) {
             if (el.children.length > 0 && el.children[0].tagName.toLowerCase() === "span" && el.children[0].innerHTML.toLowerCase().includes(criteria)) {
                 el.closest("article").classList.remove("search-hidden")
                 el.closest("section").classList.remove("search-hidden")
                 el.classList.remove("search-hidden")
                 el.querySelectorAll('.search-hidden').forEach(child => child.classList.remove("search-hidden"))
             }
-            return
-        }
-        if (el.classList.contains('advice')) {
+        } else if (el.classList.contains('advice')) {
             if (el.innerHTML.toLowerCase().includes(criteria)) {
                 el.closest("article").classList.remove("search-hidden")
                 el.closest("section").classList.remove("search-hidden")
@@ -517,7 +516,6 @@ function searchByCriteria(criteria) {
                 })
                 row.toReversed().slice(row.toReversed().indexOf(el)).find(col => col.classList.contains("advice-title"))?.classList.remove("search-hidden")
             }
-            return
         }
     })
 }
@@ -526,15 +524,19 @@ function setupSearchBar() {
     const searchBar = document.querySelector('#search')
     document.querySelector('#search-clear').onclick = () => {
         searchBar.value = ""
+        hideProgressBoxes()
         document.querySelectorAll('.search-hidden').forEach(hidden => {
             hidden.classList.remove('search-hidden')
         })
+        calcProgressBars()
     }
 
     searchBar.addEventListener('input', e => {
         clearTimeout(searchTimer);
         searchTimer = setTimeout((criteria) => {
+            hideProgressBoxes()
             searchByCriteria(criteria)
+            calcProgressBars()
         }, 1000, e.target.value)
     })
 }
