@@ -81,6 +81,7 @@ class EnemyMap:
             return self.chow_rating
         elif ratingType == 'MEOW':
             return self.meow_rating
+
     def updateZOWDict(self, characterIndex: int, KLAValue: float):
         if characterIndex not in self.zow_dict:
             self.zow_dict[characterIndex] = {}
@@ -152,249 +153,152 @@ def buildMaps() -> dict[int, dict]:
     return mapDict
 
 def getSkullNames(mkValue: int) -> str:
-    match mkValue:
-        case 0:
-            return "None"
-        case 1:
-            return "Normal Skull"
-        case 2:
-            return "Copper Skull"
-        case 3:
-            return "Iron Skull"
-        case 4:
-            return "Gold Skull"
-        case 5:
-            return "Platinum Skull"
-        case 7:
-            return "Dementia Skull"
-        case 10:
-            return "Lava Skull"
-        case 20:
-            return "Eclipse Skull"
-        case _:
-            return "Unknown"+str(mkValue)+" Skull"
+    skullDict = {
+        0: "None",
+        1: "Normal Skull",
+        2: "Copper Skull",
+        3: "Iron Skull",
+        4: "Gold Skull",
+        5: "Platinum Skull",
+        7: "Dementia Skull",
+        10: "Lava Skull",
+        20: "Eclipse Skull"
+    }
+    try:
+        return skullDict.get(mkValue, f"UnknownSkull{mkValue}")
+    except Exception as reason:
+        return f"Unexpected Input received: {reason}"
 
 def getNextSkullNames(mkValue: int) -> str:
-    match mkValue:
-        case 0:
-            return "Normal Skull"
-        case 1:
-            return "Copper Skull"
-        case 2:
-            return "Iron Skull"
-        case 3:
-            return "Gold Skull"
-        case 4:
-            return "Platinum Skull"
-        case 5:
-            return "Dementia Skull"
-        case 7:
-            return "Lava Skull"
-        case 10:
-            return "Eclipse Skull"
-        case 20:
-            return "Finished!"
-        case _:
-            return "Unknown"+str(mkValue)+" Skull"
+    nextSkullDict = {
+        0: "Normal Skull",
+        1: "Copper Skull",
+        2: "Iron Skull",
+        3: "Gold Skull",
+        4: "Platinum Skull",
+        5: "Dementia Skull",
+        7: "Lava Skull",
+        10: "Eclipse Skull",
+        20: "Finished!"
+    }
+    try:
+        return nextSkullDict.get(mkValue, f"UnknownSkull{mkValue}")
+    except Exception as reason:
+        return f"Unexpected Input received: {reason}"
 
 def getEnemyNameFromMap(inputMap: str) -> str:
-    match inputMap:
-        #W1 Maps
-        case "Spore Meadows":
-            return "Green Mushroom"
-        case "Froggy Fields":
-            return "Frog"
-        case "Valley of the Beans":
-            return "Bored Bean"
-        case "Birch Enclave":
-            return "Red Mushroom"
-        case "Jungle Perimeter":
-            return "Slime"
-        case "The Base of the Bark":
-            return "Stick"
-        case "Hollowed Trunk":
-            return "Nutto"
-        case "Where the Branches End":
-            return "Wood Mushroom"
-        case "Winding Willows":
-            return "Baby Boa"
-        case "Vegetable Patch":
-            return "Carrotman"
-        case "Forest Outskirts":
-            return "Glublin"
-        case "Encroaching Forest Villa":
-            return "Wode Board"
-        case "Tucked Away":
-            return "Gigafrog"
-        case "Poopy Sewers":
-            return "Poop"
-        case "Rats Nest":
-            return "Rat"
-        case "The Roots":
-            return "Special- Single Nutto at WorshipTD map"
-        case "The Office":
-            return "Special- Poops surrounding Dr. Def"
-        case "Meel's Crypt":
-            return "Special- Boop"
-        #W2 Maps
-        case "Jar Bridge":
-            return "Sandy Pot"
-        case "The Mimic Hole":
-            return "Mimic"
-        case "Dessert Dunes":
-            return "Crabcake"
-        case "The Grandioso Canyon":
-            return "Mafioso"
-        case "Shifty Sandbox":
-            return "Sand Castle"
-        case "Pincer Plateau":
-            return "Pincermin"
-        case "Slamabam Straightaway":
-            return "Mashed Potato"
-        case "The Ring":
-            return "Tyson"
-        case "Up Up Down Down":
-            return "Moonmoon"
-        case "Sands of Time":
-            return "Sand Giant"
-        case "Djonnuttown":
-            return "Snelbie"
-        case "Mummy Memorial":
-            return "Special- Invisible Green Mushroom inside King Doot's map"
-        #W3 Maps
-        case "Steep Sheep Ledge":
-            return "Sheepie"
-        case "Snowfield Outskirts":
-            return "Frost Flake"
-        case "The Stache Split":
-            return "Sir Stache"
-        case "Refrigeration Station":
-            return "Bloque"
-        case "Mamooooth Mountain":
-            return "Mamooth"
-        case "Rollin' Tundra":
-            return "Snowmen"
-        case "Signature Slopes":
-            return "Penguin"
-        case "Thermonuclear Climb":
-            return "Thermister"
-        case "Waterlogged Entrance":
-            return "Quenchie"
-        case "Cryo Catacombs":
-            return "Cryosnake"
-        case "Overpass of Sound":
-            return "Bop Box"
-        case "Crystal Basecamp":
-            return "Neyeptune"
-        case "Wam Wonderland":
-            return "Dedotated Ram"
-        case "Hell Hath Frozen Over":
-            return "Bloodbone"
-        case "Equinox Valley":
-            return "Special- AFK only Dedotated Ram"
-        #W4 Maps
-        case "Spaceway Raceway":
-            return "Purp Mushroom"
-        case "TV Outpost":
-            return "TV"
-        case "Donut Drive-In":
-            return "Donut"
-        case "Outskirts of Fallstar Isle":
-            return "Demon Genie"
-        case "Mountainous Deugh":
-            return "Soda Can"
-        case "Wurm Highway":
-            return "Flying Worm"
-        case "Jelly Cube Bridge":
-            return "Gelatinous Cuboid"
-        case "Cocoa Tunnel":
-            return "Choccie"
-        case "Standstill Plains":
-            return "Biggole Wurm"
-        case "Shelled Shores":
-            return "Clammie"
-        case "The Untraveled Octopath":
-            return "Octodar"
-        case "Flamboyant Bayou":
-            return "Flombeige"
-        case "Enclave of Eyes":
-            return "Stilted Seeker"
-        case "The Rift":
-            return "Rift Monsters"
-        #W5 Maps
-        case "Naut Sake Perimeter":
-            return "Suggma"
-        case "Niagrilled Falls":
-            return "Maccie"
-        case "The Killer Roundabout":
-            return "Mister Brightside"
-        case "Cracker Jack Lake":
-            return "Cheese Nub"
-        case "The Great Molehill":
-            return "Stiltmole"
-        case "Erruption River":
-            return "Molti"
-        case "Mount Doomish":
-            return "Purgatory Stalker"
-        case "OJ Bay":
-            return "Citringe"
-        case "Lampar Lake":
-            return "Lampar"
-        case "Spitfire River":
-            return "Fire Spirit"
-        case "Miner Mole Outskirts":
-            return "Biggole Mole"
-        case "Crawly Catacombs":
-            return "Crawler"
-        case "The Worm Nest":
-            return "Tremor Wurm"
-        case "Gooble Goop Creek":
-            return "Sprout Spirit"
-        case "Picnic Bridgeways":
-            return "Ricecake"
-        case "Irrigation Station":
-            return "River Spirit"
-        case "Troll Playground":
-            return "Baby Troll"
-        case "Edge of the Valley":
-            return "Woodlin Spirit"
-        case "Bamboo Laboredge":
-            return "Bamboo Spirit"
-        case "Lightway Path":
-            return "Lantern Spirit"
-        case "Troll Broodnest":
-            return "Mama Troll"
-        case "Above the Clouds":
-            return "Leek Spirit"
-        case "Sleepy Skyline":
-            return "Ceramic Spirit"
-        case "Dozey Dogpark":
-            return "Skydoggie Spirit"
-        case "Yolkrock Basin":
-            return "Royal Egg"
-        case "Chieftain Stairway":
-            return "Minichief Spirit"
-        case "Emperor's Castle Doorstep":
-            return "Samurai Guardian"
+    mapNametoEnemyNameDict = {
+        # W1 Maps
+        "Spore Meadows": "Green Mushroom",
+        "Froggy Fields": "Frog",
+        "Valley of the Beans": "Bored Bean",
+        "Birch Enclave": "Red Mushroom",
+        "Jungle Perimeter": "Slime",
+        "The Base of the Bark": "Stick",
+        "Hollowed Trunk": "Nutto",
+        "Where the Branches End": "Wood Mushroom",
+        "Winding Willows": "Baby Boa",
+        "Vegetable Patch": "Carrotman",
+        "Forest Outskirts": "Glublin",
+        "Encroaching Forest Villa": "Wode Board",
+        "Tucked Away": "Gigafrog",
+        "Poopy Sewers": "Poop",
+        "Rats Nest": "Rat",
+        "The Roots": "Special - Single Nutto at WorshipTD map",
+        "The Office": "Special - Poops surrounding Dr.Def",
+        "Meel's Crypt": "Special- Boop",
 
-        #Default
-        case _:
-            return "UnknownEnemy"+str(inputMap)
+        # W2 Maps
+        "Jar Bridge": "Sandy Pot",
+        "The Mimic Hole": "Mimic",
+        "Dessert Dunes": "Crabcake",
+        "The Grandioso Canyon": "Mafioso",
+        "Shifty Sandbox": "Sand Castle",
+        "Pincer Plateau": "Pincermin",
+        "Slamabam Straightaway": "Mashed Potato",
+        "The Ring": "Tyson",
+        "Up Up Down Down": "Moonmoon",
+        "Sands of Time": "Sand Giant",
+        "Djonnuttown": "Snelbie",
+        "Mummy Memorial": "Special- Invisible Green Mushroom inside King Doot's map",
+
+        # W3 Maps
+        "Steep Sheep Ledge": "Sheepie",
+        "Snowfield Outskirts": "Frost Flake",
+        "The Stache Split": "Sir Stache",
+        "Refrigeration Station": "Bloque",
+        "Mamooooth Mountain": "Mamooth",
+        "Rollin' Tundra": "Snowmen",
+        "Signature Slopes": "Penguin",
+        "Thermonuclear Climb": "Thermister",
+        "Waterlogged Entrance": "Quenchie",
+        "Cryo Catacombs": "Cryosnake",
+        "Overpass of Sound": "Bop Box",
+        "Crystal Basecamp": "Neyeptune",
+        "Wam Wonderland": "Dedotated Ram",
+        "Hell Hath Frozen Over": "Bloodbone",
+        "Equinox Valley": "Special- AFK only Dedotated Ram",
+
+        # W4 Maps
+        "Spaceway Raceway": "Purp Mushroom",
+        "TV Outpost": "TV",
+        "Donut Drive-In": "Donut",
+        "Outskirts of Fallstar Isle": "Demon Genie",
+        "Mountainous Deugh": "Soda Can",
+        "Wurm Highway": "Flying Worm",
+        "Jelly Cube Bridge": "Gelatinous Cuboid",
+        "Cocoa Tunnel": "Choccie",
+        "Standstill Plains": "Biggole Wurm",
+        "Shelled Shores": "Clammie",
+        "The Untraveled Octopath": "Octodar",
+        "Flamboyant Bayou": "Flombeige",
+        "Enclave of Eyes": "Stilted Seeker",
+        "The Rift": "Rift Monsters",
+
+        # W5 Maps
+        "Naut Sake Perimeter": "Suggma",
+        "Niagrilled Falls": "Maccie",
+        "The Killer Roundabout": "Mister Brightside",
+        "Cracker Jack Lake": "Cheese Nub",
+        "The Great Molehill": "Stiltmole",
+        "Erruption River": "Molti",
+        "Mount Doomish": "Purgatory Stalker",
+        "OJ Bay": "Citringe",
+        "Lampar Lake": "Lampar",
+        "Spitfire River": "Fire Spirit",
+        "Miner Mole Outskirts": "Biggole Mole",
+        "Crawly Catacombs": "Crawler",
+        "The Worm Nest": "Tremor Wurm",
+
+        # W6 Maps
+        "Gooble Goop Creek": "Sprout Spirit",
+        "Picnic Bridgeways": "Ricecake",
+        "Irrigation Station": "River Spirit",
+        "Troll Playground": "Baby Troll",
+        "Edge of the Valley": "Woodlin Spirit",
+        "Bamboo Laboredge": "Bamboo Spirit",
+        "Lightway Path": "Lantern Spirit",
+        "Troll Broodnest": "Mama Troll",
+        "Above the Clouds": "Leek Spirit",
+        "Sleepy Skyline": "Ceramic Spirit",
+        "Dozey Dogpark": "Skydoggie Spirit",
+        "Yolkrock Basin": "Royal Egg",
+        "Chieftain Stairway": "Minichief Spirit",
+        "Emperor's Castle Doorstep": "Samurai Guardian",
+    }
+    try:
+        return mapNametoEnemyNameDict.get(inputMap, f"UnknownMap:{inputMap}")
+    except Exception as reason:
+        return f"Unexpected Input received: {reason}"
 
 def getapocCharactersIndexList() -> list:
     #get classes, find Barbarian and BB
-    apocCharactersIndexList = []
-    for character in session_data.account.safe_characters:
-        if character.sub_class == "Barbarian":
-            apocCharactersIndexList.append(character.character_index)
+    apocCharactersIndexList = [c.character_index for c in session_data.account.safe_characters if c.sub_class == "Barbarian"]
     return apocCharactersIndexList
 
 def getChowMeowCharactersIndexList() -> list:
     # get classes, find BB ONLY for Chow and Meow
-    bbCharactersIndexList = []
-    for character in session_data.account.safe_characters:
-        if character.elite_class == "Blood Berserker":
-            bbCharactersIndexList.append(character.character_index)
+    bbCharactersIndexList = [c.character_index for c in session_data.account.safe_characters if c.elite_class == "Blood Berserker"]
     return bbCharactersIndexList
 
 def getDeathNoteKills():
@@ -434,11 +338,20 @@ def getDeathNoteKills():
         for worldIndex in range(1, len(apocableMapIndexDict)):
             for mapIndex in apocableMapIndexDict[worldIndex]:
                 if len(characterKillsList) > mapIndex:
-                    try:
-                        enemyMaps[worldIndex][mapIndex].addRawKLA(characterKillsList[mapIndex][0])
-                    except:
-                        enemyMaps[worldIndex][mapIndex].addRawKLA(0)
-                        logger.exception(f"Kill list for characterIndex: {characterIndex}, worldIndex: {worldIndex}, mapIndex: {mapIndex} failed: Expecting a list, found {type(characterKillsList[mapIndex])}: {characterKillsList[mapIndex]}")
+                    if isinstance(characterKillsList[mapIndex], list):
+                        try:
+                            enemyMaps[worldIndex][mapIndex].addRawKLA(characterKillsList[mapIndex][0])
+                        except:
+                            enemyMaps[worldIndex][mapIndex].addRawKLA(0)
+                            logger.exception(f"Kill list for characterIndex: {characterIndex}, worldIndex: {worldIndex}, mapIndex: {mapIndex} failed: Expecting a list, found {type(characterKillsList[mapIndex])}: {characterKillsList[mapIndex]}")
+                    else:
+                        try:
+                            enemyMaps[worldIndex][mapIndex].addRawKLA(characterKillsList[mapIndex])
+                        except:
+                            enemyMaps[worldIndex][mapIndex].addRawKLA(0)
+                            logger.exception(
+                                f"Kill list for characterIndex: {characterIndex}, worldIndex: {worldIndex}, mapIndex: {mapIndex} failed: Knew it wasn't a list, could add {type(characterKillsList[mapIndex])}: {characterKillsList[mapIndex]}")
+
 
     deathnote_EnemyWorlds = {}
 
@@ -524,8 +437,8 @@ def setConsDeathNoteProgressionTier():
     if highestConstructionLevel < 1:
         deathnote_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
         return deathnote_AdviceSection
-    elif safe_loads(session_data.account.raw_data["Tower"])[3] < 1:
-        deathnote_AdviceSection.header = "Come back after unlocking the Salt Lick within the Construction skill in World 3!"
+    elif safe_loads(session_data.account.construction_buildings.get("Death Note")) < 1:
+        deathnote_AdviceSection.header = "Come back after unlocking the Death Note within the Construction skill in World 3!"
         return deathnote_AdviceSection
 
     currentMaxWorld = 6
@@ -603,6 +516,10 @@ def setConsDeathNoteProgressionTier():
     highestCHOWCount = 0
     highestCHOWCountIndex = None
     for barbIndex in apocCharactersIndexList:
+        if highestZOWCountIndex is None:
+            highestZOWCountIndex = barbIndex
+        if highestCHOWCountIndex is None:
+            highestCHOWCountIndex = barbIndex
         if session_data.account.all_characters[barbIndex].apoc_dict['ZOW']['Total'] > highestZOWCount:
             highestZOWCount = session_data.account.all_characters[barbIndex].apoc_dict['ZOW']['Total']
             highestZOWCountIndex = barbIndex
@@ -672,7 +589,14 @@ def setConsDeathNoteProgressionTier():
                             else:
                                 if 'ZOW' not in maxedGroupsList:
                                     maxedGroupsList.append('ZOW')
-
+                else:
+                    deathnote_AdviceDict["ZOW"] = [
+                        Advice(
+                            label="Create a Barbarian",
+                            picture_class="barbarian-icon",
+                            progression=0,
+                            goal=1)
+                    ]
         # CHOW
         if tier_combo['CHOW'] >= (tier[0] - 1):  # Only evaluate if they already met the previous tier's requirement
             if highestCHOWCount >= tier[10]:
@@ -701,36 +625,54 @@ def setConsDeathNoteProgressionTier():
                             else:
                                 if 'CHOW' not in maxedGroupsList:
                                     maxedGroupsList.append('CHOW')
-
+                else:
+                    deathnote_AdviceDict["CHOW"] = [
+                        Advice(
+                            label="Create a Blood Berserker",
+                            picture_class="blood-berserker-icon",
+                            progression=0,
+                            goal=1)
+                    ]
         # MEOW
         if tier_combo['MEOW'] >= (tier[0] - 1):  # Only evaluate if they already met the previous tier's requirement
-            if meowBBIndex is not None:
-                if session_data.account.all_characters[meowBBIndex].apoc_dict['MEOW']['Total'] >= tier[11]:
-                    tier_combo['MEOW'] = tier[0]
+            if tier[11] == 0:
+                tier_combo['MEOW'] = tier[0]
+            else:
+                if meowBBIndex is not None:
+                    if session_data.account.all_characters[meowBBIndex].apoc_dict['MEOW']['Total'] >= tier[11]:
+                        tier_combo['MEOW'] = tier[0]
+                    else:
+                        meowsForNextTier = f"({session_data.account.all_characters[meowBBIndex].apoc_dict['MEOW']['Total']}/{tier[11]})"
+                        apocToNextTier['MEOW'] = tier[11] - session_data.account.all_characters[meowBBIndex].apoc_dict['MEOW']['Total']
+                        #for difficultyIndex in range(0, len(apocDifficultyNameList)):
+                        for difficultyName in apocDifficultyNameList:
+                            if len(session_data.account.all_characters[meowBBIndex].apoc_dict['MEOW'][difficultyName]) > 0:
+                                if meow_TotalAdvices < maxEnemiesPerGroup - 1:
+                                    if difficultyName not in deathnote_AdviceDict['MEOW']:
+                                        deathnote_AdviceDict['MEOW'][difficultyName] = []
+                                    for enemy in session_data.account.all_characters[meowBBIndex].apoc_dict['MEOW'][difficultyName]:
+                                        if meow_TotalAdvices < maxEnemiesPerGroup:
+                                            deathnote_AdviceDict["MEOW"][difficultyName].append(
+                                                Advice(
+                                                    label=enemy[0],
+                                                    picture_class=enemy[3],
+                                                    progression=f"{enemy[2]}%"),
+                                                )
+                                            meow_TotalAdvices += 1
+                                        else:
+                                            if 'MEOW' not in maxedGroupsList:
+                                                maxedGroupsList.append('MEOW')
+                                else:
+                                    if 'MEOW' not in maxedGroupsList:
+                                        maxedGroupsList.append('MEOW')
                 else:
-                    meowsForNextTier = f"({session_data.account.all_characters[meowBBIndex].apoc_dict['MEOW']['Total']}/{tier[11]})"
-                    apocToNextTier['MEOW'] = tier[11] - session_data.account.all_characters[meowBBIndex].apoc_dict['MEOW']['Total']
-                    #for difficultyIndex in range(0, len(apocDifficultyNameList)):
-                    for difficultyName in apocDifficultyNameList:
-                        if len(session_data.account.all_characters[meowBBIndex].apoc_dict['MEOW'][difficultyName]) > 0:
-                            if meow_TotalAdvices < maxEnemiesPerGroup - 1:
-                                if difficultyName not in deathnote_AdviceDict['MEOW']:
-                                    deathnote_AdviceDict['MEOW'][difficultyName] = []
-                                for enemy in session_data.account.all_characters[meowBBIndex].apoc_dict['MEOW'][difficultyName]:
-                                    if meow_TotalAdvices < maxEnemiesPerGroup:
-                                        deathnote_AdviceDict["MEOW"][difficultyName].append(
-                                            Advice(
-                                                label=enemy[0],
-                                                picture_class=enemy[3],
-                                                progression=f"{enemy[2]}%"),
-                                            )
-                                        meow_TotalAdvices += 1
-                                    else:
-                                        if 'MEOW' not in maxedGroupsList:
-                                            maxedGroupsList.append('MEOW')
-                            else:
-                                if 'MEOW' not in maxedGroupsList:
-                                    maxedGroupsList.append('MEOW')
+                    deathnote_AdviceDict["MEOW"] = [
+                        Advice(
+                            label="Create a Blood Berserker",
+                            picture_class="blood-berserker-icon",
+                            progression=0,
+                            goal=1)
+                    ]
 
         #Check for Rift Meow Specifically
         if meowBBIndex is not None:
@@ -738,6 +680,7 @@ def setConsDeathNoteProgressionTier():
             for remainingMap in session_data.account.all_characters[meowBBIndex].apoc_dict['MEOW']['Medium Extras']:
                 if remainingMap[0] == 'The Rift':
                     riftPresent = True
+                    break
             if not riftPresent:
                 session_data.account.rift_meowed = True
 
@@ -761,6 +704,12 @@ def setConsDeathNoteProgressionTier():
             advices=deathnote_AdviceDict['ZOW'],
             post_string="Aim for 12hrs or less (8k+ KPH) per enemy"
         )
+    else:
+        deathnote_AdviceGroupDict['ZOW'] = AdviceGroup(
+            tier=str(tier_combo['ZOW'] if tier_combo['ZOW'] < 27 else ""),
+            pre_string=f"ZOW Progress unavailable until a Barbarian is found in your account",
+            advices=deathnote_AdviceDict['ZOW'],
+        )
 
     # CHOW
     if highestCHOWCountIndex is not None:
@@ -770,6 +719,12 @@ def setConsDeathNoteProgressionTier():
             advices=deathnote_AdviceDict['CHOW'],
             post_string="Aim for 12hrs or less (83k+ KPH) per enemy"
         )
+    else:
+        deathnote_AdviceGroupDict['CHOW'] = AdviceGroup(
+            tier=str(tier_combo['CHOW'] if tier_combo['CHOW'] < 27 else ""),
+            pre_string=f"CHOW Progress unavailable until a Blood Berserker is found in your account",
+            advices=deathnote_AdviceDict['CHOW'],
+        )
 
     # MEOW
     if meowBBIndex is not None:
@@ -778,6 +733,12 @@ def setConsDeathNoteProgressionTier():
             pre_string=f"{'Informational- ' if tier_combo['MEOW'] >= 27 else ''}Complete {apocToNextTier['MEOW']} more Super CHOW{pl(['dummy']*apocToNextTier['MEOW'])} with {session_data.account.all_characters[meowBBIndex].character_name} {meowsForNextTier}",
             advices=deathnote_AdviceDict['MEOW'],
             post_string="Aim for 24hrs or less (4m+ KPH) per enemy"
+        )
+    else:
+        deathnote_AdviceGroupDict['MEOW'] = AdviceGroup(
+            tier=str(tier_combo['MEOW'] if tier_combo['MEOW'] < 27 else ""),
+            pre_string=f"Super CHOW Progress unavailable until a Blood Berserker is found in your account",
+            advices=deathnote_AdviceDict['MEOW'],
         )
 
     #Generate Advice Section

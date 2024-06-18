@@ -1,32 +1,33 @@
 <aside id="drawer">
     <p>
         Welcome to <a href="/">IE AutoReview Tool - By Scoli290</a><br>
-        Join the <a href="https://discord.gg/ZmEkqzfjmJ" target="_blank">Discord</a> for the detailed patch notes!
+        Join the <a href="{{ config["DISCORD"] }}" target="_blank">Discord</a> for the detailed patch notes!
     </p>
     <p>
     {% if beta %}
         <strong>Heads up! You're on the beta-testing page. If you run into problems, try heading back to the <a href="{{ live_link }}" target="_blank">Live Page</a></strong>
         <br>
-        Currently beta testing: 2024-04-29: IDK yet
+        Currently beta testing: 2024-06-17: Talent Library section expanded with Bonus Talent Level sources and Skilling checkout recommendations per character.
     {% else %}
         <strong>To try out the beta site, head to the <a href="{{ beta_link }}" target="_blank">Beta Page</a></strong>
     {% endif %}
     </p>
     <p>
-        Most recent update 2024-04-29: added automated testing
+        Most recent update 2024-06-13: New Owl section + various minor tweaks.
         <br>
-        Previous update 2024-04-29: Added 2 new info groups in Stamps: Cost Reduction and Carry Capacity sources
+        Previous update 2024-06-10: Added Sailing section. Polished W6 Beanstalk section.
     </p>
     <p>
-        This tool will retrieve the PUBLIC profile from <a href="https://www.idleonefficiency.com/" target="_blank">IdleOn Efficiency</a> for evaluation.<br>
-        If you haven't uploaded your profile publicly before, <a href="https://www.idleonefficiency.com/profile/upload" target="_blank">do it here</a>.
+        This tool will retrieve the PUBLIC profile from <a href="{{ config["IE"] }}" target="_blank">IdleOn Efficiency</a> for evaluation.<br>
+        If you haven't uploaded your profile publicly before, <a href="{{ config["IE_UPLOAD"] }}" target="_blank">do it here</a>.
     </p>
     <p>
         Alternatively, you can provide Raw JSON data.<br>
-        <a href="https://www.idleonefficiency.com/raw-data" target="_blank">IdleonEfficiency</a>: Click on the Copy Raw JSON button. Paste results below.<br>
-        <a href="https://idleontoolbox.com/data" target="_blank">IdleonToolbox</a>: Click on the <strong>IdleonToolbox JSON</strong> button. Paste results below.
+        <a href="{{ config["IE_DATA"] }}" target="_blank">IdleonEfficiency</a>: Click on the Copy Raw JSON button. Paste results below.<br>
+        <a href="{{ config["IT_DATA"] }}" target="_blank">IdleonToolbox</a>: Click on the <strong>IdleonToolbox JSON</strong> button. Paste results below.
     </p>
-    <span>Feature backlog can be found in the <a href="https://trello.com/b/CG6GYsTN/idleon-autoreview-development" target="_blank">Trello board</a>!</span>
+    <span>Feature backlog can be found in the <a href="{{ config["TRELLO"] }}" target="_blank">Trello board</a>!</span>
+    <span>Find this app on <a href="{{ config["GITHUB"] }}" target="_blank">GitHub</a>!</span>
     <form action="/" method="POST">
         <div id="switchbox">
             {% for text, name, on, off, initial in switches %}

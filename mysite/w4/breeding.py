@@ -4,7 +4,7 @@ from utils.text_formatting import pl
 from utils.data_formatting import safe_loads
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import numberOfArtifacts, numberOfArtifactTiers, breeding_progressionTiers, getReadableVialNames
+from consts import numberOfArtifacts, numberOfArtifactTiers, breeding_progressionTiers, getReadableVialNames, maxTiersPerGroup
 
 logger = get_logger(__name__)
 shinyDaysList = [0, 3, 11, 33, 85, 200, 448, 964, 2013, 4107, 8227, 16234, 31633, 60989, 116522, 999999999]
@@ -24,28 +24,30 @@ def getDaysToNextShinyLevel(days: float) -> float:
         if float(days) > requirement:
             shinyLevel += 1
     #logger.debug(f"Input days of {days} found to be less than {shinyDaysList[highestExceeded]} by {shinyDaysList[highestExceeded] - float(days)} days")
-    daysRemaining = shinyDaysList[shinyLevel] - float(days)
-    return daysRemaining
+    try:
+        daysRemaining = shinyDaysList[shinyLevel] - float(days)
+        return daysRemaining
+    except Exception as reason:
+        logger.warning(f"With shinyLevel of {shinyLevel}, Defaulting Shiny days Remaining to 0. Reason: {reason}")
+        return 0
 
 def getShinyExclusions():
     shinyExclusionsDict = {
-        "Exclude-InfiniteStarSigns": True,
-        "Exclude-Sailing": False,
-        "Exclude-Critters": False,
-        "Exclude-ShinySpeed": False
+        "Infinite Star Signs": True,
+        "Lower Minimum Travel Time for Sailing": False,
+        "Higher Artifact Find Chance": False,
+        "Base Critter Per Trap": False,
+        "Faster Shiny Pet Lv Up Rate": False
         }
 
     # if Infinite Star Signs are unlocked, set False (as in False, the recommendation should NOT be excluded), otherwise default True
-    if session_data.account.infinite_stars_unlocked:
-        shinyExclusionsDict["Exclude-InfiniteStarSigns"] = False
+    if session_data.account.rift['InfiniteStars']:
+        shinyExclusionsDict["Infinite Star Signs"] = False
 
     # if all artifacts are Eldritch tier, append True (as in True, the recommendation SHOULD be excluded), otherwise False
-    try:
-        sum_sailingArtifacts = sum(safe_loads(session_data.account.raw_data["Sailing"])[3])
-        if sum_sailingArtifacts >= (numberOfArtifacts * numberOfArtifactTiers):
-            shinyExclusionsDict["Exclude-Sailing"] = True
-    except Exception as reason:
-        logger.exception(f"Unable to get Sailing Artifacts: {reason}")
+    if session_data.account.sum_artifact_tiers >= (numberOfArtifacts * numberOfArtifactTiers):
+        shinyExclusionsDict["Lower Minimum Travel Time for Sailing"] = True
+        shinyExclusionsDict["Higher Artifact Find Chance"] = True
 
     try:
         critterVialsList = [
@@ -56,16 +58,15 @@ def getShinyExclusions():
             getReadableVialNames(47),  #Blobfish
             getReadableVialNames(74),  #Tuttle
         ]
-        alchemyVialsDict = session_data.account.alchemy_vials
         for vialName in critterVialsList:
-            if alchemyVialsDict.get(vialName, {}).get("Level", 0) < 13:
+            if session_data.account.alchemy_vials.get(vialName, {}).get("Level", 0) < 13:
                 break
             elif vialName == critterVialsList[-1]:
-                shinyExclusionsDict["Exclude-Critters"] = True
+                shinyExclusionsDict["Base Critter Per Trap"] = True
     except:
         logger.exception(f"Unable to get Critter Vials. Defaulting to INCLUDE Base Critter shiny pets.")
 
-    shinyExclusionsDict["Exclude-ShinySpeed"] = "Science Crayon" in session_data.account.jade_emporium_purchases
+    shinyExclusionsDict["Faster Shiny Pet Lv Up Rate"] = session_data.account.sneaking['JadeEmporium']["Science Crayon"]['Obtained']
 
     return shinyExclusionsDict
 
@@ -92,6 +93,189 @@ def getSpiceImage(territoryIndex: int) -> str:
         return f"{spiceImageNames[int(territoryIndex)]}-spice"
     except:
         return "UnknownSpice" + str(territoryIndex)
+
+def getShinySpeedSourcesAdviceGroup(fasterShinyPetTotalLevels) -> AdviceGroup:
+    sps_adviceDict = {
+        "Multi Group A- Summoning Winner Bonus": [],
+        "Multi Group B- Everything Else": []
+    }
+
+    sps_adviceDict["Multi Group B- Everything Else"].append(Advice(
+        label=f"Lab Jewel: Emerald Ulthurite",
+        picture_class='emerald-ulthurite'
+    ))
+    sps_adviceDict["Multi Group B- Everything Else"].append(Advice(
+        label=f"Faster Shiny Pet Lv Up Rate Shiny Pets: +{3 * fasterShinyPetTotalLevels}% total",
+        picture_class='green-mushroom-shiny'
+    ))
+    sps_adviceDict["Multi Group B- Everything Else"].append(Advice(
+        label=f"Star Sign: Breedabilli: +{15 * session_data.account.star_signs.get('Breedabilli', {}).get('Unlocked', False)}%",
+        picture_class='breedabilli'
+    ))
+    sps_adviceDict["Multi Group B- Everything Else"].append(session_data.account.star_sign_extras['SeraphAdvice'])
+    sps_adviceDict["Multi Group B- Everything Else"].append(session_data.account.star_sign_extras['SilkrodeNanoAdvice'])
+
+    red8beat = 'w5b4' in session_data.account.summoning['BattlesWon']
+    cyan13beat = 'w6d2' in session_data.account.summoning['BattlesWon']
+    sps_adviceDict["Multi Group A- Summoning Winner Bonus"].append(Advice(
+        label=f"Summoning match Red8: +{1.88 * red8beat}{'' if red8beat else '. Not yet beaten.'}",
+        picture_class="citringe",
+        progression=1 if red8beat else 0,
+        goal=1
+    ))
+    sps_adviceDict["Multi Group A- Summoning Winner Bonus"].append(Advice(
+        label=f"Summoning match Cyan13: +{3.45 * cyan13beat}{'' if cyan13beat else '. Not yet beaten.'}",
+        picture_class="minichief-spirit",
+        progression=1 if cyan13beat else 0,
+        goal=1
+    ))
+    for advice in session_data.account.summoning['WinnerBonusesAdvice']:
+        sps_adviceDict["Multi Group A- Summoning Winner Bonus"].append(advice)
+
+    sps_AdviceGroup = AdviceGroup(
+        tier="",
+        pre_string="Info- Sources of Shiny Pet Level Rate",
+        advices=sps_adviceDict)
+    return sps_AdviceGroup
+
+def getActiveBMAdviceGroup() -> AdviceGroup:
+    abm_adviceDict = {
+        "Prerequisites": [],
+        "Equipment": [],
+        "Cards": [],
+        "Lab Chips": [],
+        "Active Fight": []
+    }
+    # Active BM Prerequisites
+    abm_adviceDict["Prerequisites"].append(Advice(
+        label="Have a Voidwalker in your family",
+        picture_class="voidwalker-icon",
+        progression=f"{1 if 'Voidwalker' in session_data.account.classes else 0}",
+        goal=1
+    ))
+    abm_adviceDict["Prerequisites"].append(Advice(
+        label="Voidwalker: Enhancement Eclipse talent leveled to 150+",
+        picture_class="enhancement-eclipse",
+        goal=150
+    ))
+    abm_adviceDict["Prerequisites"].append(Advice(
+        label="Have a Beast Master in your family",
+        picture_class="beast-master-icon",
+        progression=f"{1 if 'Beast Master' in session_data.account.classes else 0}",
+        goal=1
+    ))
+    abm_adviceDict["Prerequisites"].append(Advice(
+        label="All ACTIVE-ONLY kills with your Beast Master now have a 50% chance to speed up progress for the Fenceyard, Spice collection, and Egg production! Crystal Mobs count 😄",
+        picture_class="whale-wallop"))
+
+    # Equipment
+    abm_adviceDict["Equipment"].append(Advice(
+        label="Respawn Keychains: +6% respawn per roll (Or +10% from FOMO shop)",
+        picture_class="negative-7-chain"
+    ))
+    abm_adviceDict["Equipment"].append(Advice(
+        label="The Divine Scarf: +20% respawn",
+        picture_class="the-divine-scarf"
+    ))
+    abm_adviceDict["Equipment"].append(Advice(
+        label="Spinge Tingler Sniper: +12% respawn",
+        picture_class="spine-tingler-sniper"
+    ))
+    abm_adviceDict["Equipment"].append(Advice(
+        label="Serrated Chest of the Divine: +8% respawn",
+        picture_class="serrated-chest-of-the-divine"
+    ))
+    abm_adviceDict["Equipment"].append(Advice(
+        label="Spiked Leggings of the Divine: +4% respawn",
+        picture_class="spiked-leggings-of-the-divine"
+    ))
+    abm_adviceDict["Equipment"].append(Advice(
+        label=f"Star Sign: Breedabilli: +15% Shiny Pet Level Speed",
+        picture_class='breedabilli'
+    ))
+    abm_adviceDict["Equipment"].append(Advice(
+        label=f"Star Sign: Grim Reaper Major: +4% respawn",
+        picture_class='grim-reaper-major'
+    ))
+    abm_adviceDict["Equipment"].append(Advice(
+        label=f"Star Sign: Grim Reaper: +2% respawn",
+        picture_class='grim-reaper'
+    ))
+
+    # Cards
+    abm_adviceDict["Cards"].append(Advice(
+        label=f"W4 Demon Genie card: +15% Crystal Mob Spawn Chance per rank",
+        picture_class="demon-genie-card",
+        progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == "Demon Genie"),
+        goal=6
+    ))
+    abm_adviceDict["Cards"].append(Advice(
+        label=f"W1 Poop card: +10% Crystal Mob Spawn Chance per rank",
+        picture_class="poop-card",
+        progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == "Poop"),
+        goal=6
+    ))
+    abm_adviceDict["Cards"].append(Advice(
+        label=f"Fill the rest with: Drop Rate, Active EXP, or Damage if needed.",
+        picture_class="locked-card"))
+
+    # Lab Chips
+    abm_adviceDict["Lab Chips"].append(Advice(
+        label="Chocco Chip for more Crystal Mobs",
+        picture_class="chocolatey-chip"
+    ))
+    abm_adviceDict["Lab Chips"].append(Advice(
+        label="Omega Nanochip: Top Left card doubler",
+        picture_class="omega-nanochip"
+    ))
+    abm_adviceDict["Lab Chips"].append(Advice(
+        label="Omega Motherboard: Bottom Right card doubler",
+        picture_class="omega-motherboard"
+    ))
+    abm_adviceDict["Lab Chips"].append(Advice(
+        label="Silkrode Software aka Keychain Doubler ONLY IF your top Keychain gives more than 10% total respawn",
+        picture_class="silkrode-software"
+    ))
+    abm_adviceDict["Lab Chips"].append(Advice(
+        label="Silkrode Processor aka Pendant Doubler ONLY IF your Pendant gives more than 10% total respawn",
+        picture_class="silkrode-processor"
+    ))
+    abm_adviceDict["Lab Chips"].append(session_data.account.star_sign_extras['SilkrodeNanoAdvice'])
+    abm_adviceDict["Lab Chips"].append(Advice(
+        label="Fill any remaining slots with Galvanic Nanochip: +10% respawn per chip",
+        picture_class="galvanic-nanochip"
+    ))
+
+    # Active play
+    abm_adviceDict["Active Fight"].append(Advice(
+        label="Place UwU Rawrrr first on your attack talent bar. The order of the other attacks doesn't seem to matter.",
+        picture_class="uwu-rawrrr"))
+    abm_adviceDict["Active Fight"].append(Advice(
+        label="Finally, Auto against Samurai Guardians",
+        picture_class="samurai-guardian"))
+    abm_adviceDict["Active Fight"].append(Advice(
+        label=f"W6 Taskboard Merit: +10% W6 respawn if fighting Samurai Guardians",
+        picture_class='merit-5-1',
+        progression=session_data.account.merits[5][1]["Level"],
+        goal=10
+    ))
+
+    abm_adviceDict["Active Fight"].append(Advice(
+        label="Auto against Tremor Wurms instead if not ready for Samurai Guardians",
+        picture_class="tremor-wurm"))
+    abm_adviceDict["Active Fight"].append(Advice(
+        label=f"W5 Taskboard Merit: +20% W5 respawn if fighting Tremor Wurms",
+        picture_class='merit-4-1',
+        progression=session_data.account.merits[4][1]["Level"],
+        goal=10
+    ))
+
+    abm_AdviceGroup = AdviceGroup(
+        tier="",
+        pre_string="Info- Active BM setup for around 4-5x shiny progress",
+        advices=abm_adviceDict
+    )
+    return abm_AdviceGroup
 
 def parseJSONtoBreedingDict() -> dict:
     maxNumberOfTerritories = 24  # as of w6 launch
@@ -391,52 +575,45 @@ def setBreedingProgressionTier() -> AdviceSection:
     }
     shinyPetsTierList = {
         "S": ['Bonuses from All Meals', 'Base Efficiency for All Skills', 'Drop Rate'],
-        "A": ['Multikill Per Tier', 'Infinite Star Signs', 'Faster Refinery Speed', 'Farming EXP', 'Base Critter Per Trap'],
-        "B": ['Lower Minimum Travel Time for Sailing', 'Higher Artifact Find Chance', 'Tab 4 Talent Pts', 'Star Talent Pts', 'Faster Shiny Pet Lv Up Rate'],
-        "C": ['Skill EXP', 'Base WIS', 'Base STR', 'Base AGI', 'Base LUK'],
-        "D": ['Summoning EXP', 'Sail Captain EXP Gain', 'Total Damage', 'Tab 1-3 Talent Pts'],
+        "A": ['Base Critter Per Trap', 'Faster Refinery Speed', 'Multikill Per Tier', 'Infinite Star Signs'],
+        "B": ['Summoning EXP', 'Farming EXP', 'Faster Shiny Pet Lv Up Rate'],
+        "C": ['Lower Minimum Travel Time for Sailing', 'Higher Artifact Find Chance', 'Skill EXP', 'Base WIS', 'Base STR', 'Base AGI', 'Base LUK'],
+        "D": ['Sail Captain EXP Gain', 'Total Damage', 'Any Tab Talent Pts'],
         "F": ['Class EXP', 'Line Width in Lab']
     }
 
-    failedShinyRequirements = []
-    failedShinyBonus = {}
-    #advice_ShinyPets = []
     breedingDict = parseJSONtoBreedingDict()
     shinyExclusionsDict = getShinyExclusions()
+    shinyTiersDisplayed = []
     if breedingDict == {}:
         breeding_AdviceSection.header = "Breeding info could not be read from your save data :( Please file a bug report if you have Breeding unlocked"
         return breeding_AdviceSection
     else:
-        if shinyExclusionsDict["Exclude-Sailing"] == True:
-            if "Lower Minimum Travel Time for Sailing" in shinyPetsTierList["B"]:
-                shinyPetsTierList["B"].remove("Lower Minimum Travel Time for Sailing")
-                shinyPetsTierList["F"].append("Lower Minimum Travel Time for Sailing")
-            if "Higher Artifact Find Chance" in shinyPetsTierList["B"]:
-                shinyPetsTierList["B"].remove("Higher Artifact Find Chance")
-                shinyPetsTierList["F"].append("Higher Artifact Find Chance")
-        if shinyExclusionsDict["Exclude-Critters"] == True:
-            if "Base Critter Per Trap" in shinyPetsTierList["A"]:
-                shinyPetsTierList["A"].remove('Base Critter Per Trap')
-                shinyPetsTierList["D"].append('Base Critter Per Trap')
-        if shinyExclusionsDict["Exclude-ShinySpeed"] == True:
-            if "Faster Shiny Pet Lv Up Rate" in shinyPetsTierList["B"]:
-                shinyPetsTierList["B"].remove('Faster Shiny Pet Lv Up Rate')
-                shinyPetsTierList["D"].append('Faster Shiny Pet Lv Up Rate')
+        if shinyExclusionsDict["Lower Minimum Travel Time for Sailing"] == True:
+            for tierName, tierList in shinyPetsTierList.items():
+                if "Lower Minimum Travel Time for Sailing" in tierList:
+                    shinyPetsTierList[tierName].remove("Lower Minimum Travel Time for Sailing")
+            shinyPetsTierList["F"].append("Lower Minimum Travel Time for Sailing")
+
+        if shinyExclusionsDict["Higher Artifact Find Chance"] == True:
+            for tierName, tierList in shinyPetsTierList.items():
+                if "Higher Artifact Find Chance" in tierList:
+                    shinyPetsTierList[tierName].remove("Higher Artifact Find Chance")
+            shinyPetsTierList["F"].append("Higher Artifact Find Chance")
+
+        if shinyExclusionsDict["Base Critter Per Trap"] == True:
+            for tierName, tierList in shinyPetsTierList.items():
+                if "Base Critter Per Trap" in tierList:
+                    shinyPetsTierList[tierName].remove('Base Critter Per Trap')
+            shinyPetsTierList["B"].append('Base Critter Per Trap')
+
+        if shinyExclusionsDict["Faster Shiny Pet Lv Up Rate"] == True:
+            for tierName, tierList in shinyPetsTierList.items():
+                if "Faster Shiny Pet Lv Up Rate" in tierList:
+                    shinyPetsTierList[tierName].remove('Faster Shiny Pet Lv Up Rate')
+            shinyPetsTierList["C"].append('Faster Shiny Pet Lv Up Rate')
 
         for tier in progressionTiersBreeding:
-            if "Infinite Star Signs" in progressionTiersBreeding[tier] and shinyExclusionsDict["Exclude-InfiniteStarSigns"] == True:
-                progressionTiersBreeding[tier]["Infinite Star Signs"] = 0
-                #logger.debug("Excluding Shiny- Infinite Star Signs because player does not have Rift bonus unlocked.")
-            if 'Lower Minimum Travel Time for Sailing' in progressionTiersBreeding[tier] and shinyExclusionsDict["Exclude-Sailing"] == True:
-                progressionTiersBreeding[tier]['Lower Minimum Travel Time for Sailing'] = 0
-                #logger.debug("Excluding Shiny- Sailing Min Time because player has all Sailing Artifacts discovered.")
-            if "Higher Artifact Find Chance" in progressionTiersBreeding[tier] and shinyExclusionsDict["Exclude-Sailing"] == True:
-                progressionTiersBreeding[tier]["Higher Artifact Find Chance"] = 0
-                #logger.debug("Excluding Shiny- Higher Artifact Find Chance because player has all Sailing Artifacts discovered.")
-            if "Faster Shiny Pet Lv Up Rate" in progressionTiersBreeding[tier] and shinyExclusionsDict["Exclude-ShinySpeed"] == True:
-                progressionTiersBreeding[tier]["Faster Shiny Pet Lv Up Rate"] = 0
-
-
             #Unlocked Territories
             if tier_UnlockedTerritories >= (tier-1):
                 if breedingDict["Highest Unlocked Territory"] >= progressionTiersBreeding[tier]["TerritoriesUnlocked"]:
@@ -461,42 +638,50 @@ def setBreedingProgressionTier() -> AdviceSection:
                                    picture_class=recommendedArenaCompsDict[tier_MaxArenaWave][1][petIndex]))
 
             #Shinies
-            if tier_ShinyLevels >= (tier-1):
-                if len(progressionTiersBreeding[tier]["Shinies"]) == 0:
-                    # free pass
+            failedShinyRequirements = []
+            failedShinyBonus = {}
+            #if tier_ShinyLevels >= (tier-1):
+            if len(progressionTiersBreeding[tier].get("Shinies", {})) == 0 and tier_ShinyLevels >= tier-1:
+                # free pass
+                tier_ShinyLevels = tier
+            else:
+                # if there are actual level requirements
+                allRequirementsMet = True
+                for requiredShinyBonusType in progressionTiersBreeding[tier]["Shinies"]:
+                    if breedingDict["Total Shiny Levels"][requiredShinyBonusType] < progressionTiersBreeding[tier]["Shinies"][requiredShinyBonusType][0]:
+                        if shinyExclusionsDict.get(requiredShinyBonusType, False) == False:
+                            allRequirementsMet = False
+                        else:
+                            continue
+                        failedShinyRequirements.append([
+                            requiredShinyBonusType,
+                            breedingDict["Total Shiny Levels"][requiredShinyBonusType],
+                            progressionTiersBreeding[tier]["Shinies"][requiredShinyBonusType][0],
+                            progressionTiersBreeding[tier]["Shinies"][requiredShinyBonusType][1]],
+                        )
+                        failedShinyBonus[requiredShinyBonusType] = breedingDict["Grouped Bonus"][requiredShinyBonusType]
+                if allRequirementsMet == True:
                     tier_ShinyLevels = tier
                 else:
-                    # if there are actual level requirements
-                    allRequirementsMet = True
-                    for requiredShinyBonusType in progressionTiersBreeding[tier]["Shinies"]:
-                        if breedingDict["Total Shiny Levels"][requiredShinyBonusType] < progressionTiersBreeding[tier]["Shinies"][requiredShinyBonusType]:
-                            allRequirementsMet = False
-                            failedShinyRequirements.append([
-                                requiredShinyBonusType,
-                                breedingDict["Total Shiny Levels"][requiredShinyBonusType],
-                                progressionTiersBreeding[tier]["Shinies"][requiredShinyBonusType]])
-                            failedShinyBonus[requiredShinyBonusType] = breedingDict["Grouped Bonus"][requiredShinyBonusType]
-                    if allRequirementsMet == True:
-                        tier_ShinyLevels = tier
-                    else:
+                    if tier not in shinyTiersDisplayed:
+                        if len(shinyTiersDisplayed) < maxTiersPerGroup-1:
+                            shinyTiersDisplayed.append(tier)
+                    if tier in shinyTiersDisplayed:
                         for failedRequirement in failedShinyRequirements:
-                            yuckyDictName = f"{failedRequirement[0]}: {failedRequirement[1]}/{failedRequirement[2]}"
+                            shinySubgroup = f"Tier {tier} - {failedRequirement[0]}: {failedRequirement[1]}/{failedRequirement[2]}"
                             if failedRequirement[0] not in breeding_AdviceDict["ShinyLevels"]:
-                                breeding_AdviceDict["ShinyLevels"][yuckyDictName] = []
+                                breeding_AdviceDict["ShinyLevels"][shinySubgroup] = []
                             for possibleShinyPet in failedShinyBonus[failedRequirement[0]]:
-                                breeding_AdviceDict["ShinyLevels"][yuckyDictName].append(
-                                    Advice(label=f"{possibleShinyPet[0]}: Level {possibleShinyPet[1]}", picture_class=possibleShinyPet[0],
-                                           progression=f"{possibleShinyPet[2]:.2f} days to level", goal=""))
-
-                        # advice_perShinyBonus = ""
-                        # for shinyBonus in failedShinyBonus:
-                        #     advice_perShinyBonus = shinyBonus + " pets: "
-                        #     for pet in failedShinyBonus[shinyBonus]:
-                        #         advice_perShinyBonus += "Lv" + str(pet[1]) + " " + pet[0] + ", "
-                        #     advice_perShinyBonus = advice_perShinyBonus[:-2]  # trim off final space and comma
-                        #     advice_ShinyPets.append(advice_perShinyBonus)
+                                breeding_AdviceDict["ShinyLevels"][shinySubgroup].append(
+                                    Advice(
+                                        label=f"{possibleShinyPet[0]}: {possibleShinyPet[2]:.2f} base days to level",
+                                        picture_class=possibleShinyPet[0],
+                                        progression=possibleShinyPet[1],
+                                        goal=failedRequirement[3]))
 
     overall_BreedingTier = min(maxBreedingTier, tier_UnlockedTerritories, tier_ShinyLevels)
+
+
 
     #Generate Advice Groups
     if tier_UnlockedTerritories < maxBreedingTier:
@@ -528,14 +713,15 @@ def setBreedingProgressionTier() -> AdviceSection:
                 if shinyTier not in breeding_AdviceDict["ShinyLevelsTierList"]:
                     breeding_AdviceDict["ShinyLevelsTierList"][shinyTier] = []
                 for shinyPet in shinyPetsTierList[shinyTier]:
-                    breeding_AdviceDict["ShinyLevelsTierList"][shinyTier].append(Advice(label=shinyPet, picture_class="")
-                                                                                 )
+                    breeding_AdviceDict["ShinyLevelsTierList"][shinyTier].append(Advice(label=shinyPet, picture_class=""))
             breeding_AdviceGroupDict["ShinyLevelsTierList"] = AdviceGroup(
                 tier="",
                 pre_string="Advance Shiny levels per your desires",
                 advices=breeding_AdviceDict["ShinyLevelsTierList"],
                 post_string=""
             )
+        breeding_AdviceGroupDict["ShinySpeedSources"] = getShinySpeedSourcesAdviceGroup(breedingDict['Total Shiny Levels']['Faster Shiny Pet Lv Up Rate'])
+        breeding_AdviceGroupDict["ActiveBM"] = getActiveBMAdviceGroup()
 
     #Generate Advice Section
     tier_section = f"{overall_BreedingTier}/{maxBreedingTier}"

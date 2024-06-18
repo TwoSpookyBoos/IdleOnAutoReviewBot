@@ -43,7 +43,7 @@ class Threshold:
     EARLY_W7_PREP = "Early W7 Prep"
     SOLID_W7_PREP = "Solid W7 Prep"
     W7_WAITING_ROOM = "W7 Waiting Room"
-    MAX_TIER = "Maxed for v2.05"
+    MAX_TIER = "Maxed for v2.10"
     PLACEHOLDER = "Placeholder"
 
     thresholdNames = [
@@ -125,6 +125,7 @@ class Placements(dict):
     SECRET_CLASS_PATH = "Secret Class Path"
     STAMPS = "Stamps"
     BRIBES = "Bribes"
+    OWL = "Owl"
     SMITHING = "Smithing"
     BUBBLES = "Bubbles"
     VIALS = "Vials"
@@ -138,35 +139,38 @@ class Placements(dict):
     COOKING = "Cooking"
     RIFT = "Rift"
     DIVINITY = "Divinity"
+    SAILING = "Sailing"
     sections = [
         COMBAT_LEVELS,
         STAMPS, BRIBES, SMITHING,
         BUBBLES, VIALS, P2W,
         REFINERY, SALT_LICK, DEATH_NOTE, PRAYERS, EQUINOX,
         BREEDING, COOKING, RIFT,
-        DIVINITY
+        DIVINITY, SAILING
     ]
 
     sectionThresholds = {
         # [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,99] #template
         #               W1   W2          W3              W4              W5              W6              W7              Max   Placeholder
-        COMBAT_LEVELS: [0,   3, 7, 8,    10, 14, 15,     16, 17, 18,     19, 21, 23,     24, 25, 27,     28, 29, 30,     30,   99],
-        SECRET_CLASS_PATH:[0,0, 0, 1,    1,  1,  1,      2,  2,  2,      2,  3,  3,      3,  3,  3,      3,  3,  3,      3,    99],
+        COMBAT_LEVELS: [0,   3, 7, 8,    10, 14, 15,     16, 17, 18,     19, 21, 23,     24, 25, 27,     28, 29, 30,     32,   99],
+        SECRET_CLASS_PATH:[0,0, 0, 0,    0,  0,  0,      0,  1,  1,      2,  3,  3,      3,  3,  3,      3,  3,  3,      3,    99],
         STAMPS:        [0,   1, 2, 3,    4,  5,  6,      7,  8,  9,      10, 11, 13,     16, 19, 22,     26, 30, 34,     38,   99],
         BRIBES:        [0,   1, 1, 1,    2,  2,  2,      3,  3,  3,      4,  4,  4,      5,  5,  5,      5,  5,  5,      6,    99],
         SMITHING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  2,  3,      4,  5,  6,      6,  6,  6,      6,    99],
-        BUBBLES:       [0,   0, 0, 0,    0,  1,  1,      2,  2,  2,      3,  4,  5,      6,  8,  12,     15, 18, 20,     23,   99],
+        OWL:           [0,   0, 0, 0,    1,  1,  1,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,  1,  2,      3,    99],
+        BUBBLES:       [0,   0, 0, 0,    0,  1,  1,      2,  2,  2,      3,  4,  5,      6,  8,  12,     15, 18, 20,     22,   99],
         VIALS:         [0,   0, 0, 0,    1,  1,  2,      3,  4,  5,      6,  6,  7,      8,  9,  10,     12, 20, 25,     26,   99],
         P2W:           [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  1,      1,  1,  1,      1,  1,  1,      1,    99],
         REFINERY:      [0,   0, 0, 0,    0,  0,  0,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,    99],
-        SALT_LICK:     [0,   0, 0, 0,    0,  0,  0,      0,  0,  1,      2,  3,  4,      5,  5,  6,      7,  8,  9,      10,   99],
+        SALT_LICK:     [0,   0, 0, 0,    0,  0,  0,      0,  0,  1,      2,  3,  4,      5,  5,  6,      7,  8,  8,      9,    99],
         DEATH_NOTE:    [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      4,  5,  6,      7,  9,  11,     16, 20, 25,     27,   99],
         PRAYERS:       [0,   0, 0, 0,    0,  0,  1,      1,  2,  2,      3,  3,  4,      4,  5,  6,      7,  7,  7,      7,    99],
         EQUINOX:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      11,   99],
         BREEDING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  1,      1,  2,  2,      3,  4,  5,      6,  8,  9,      11,   99],
         COOKING:       [0,   0, 0, 0,    0,  0,  0,      1,  1,  2,      2,  3,  3,      3,  4,  4,      5,  5,  6,      6,    99],
         RIFT:          [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      9,    99],
-        DIVINITY:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  3,  5,      7,  8,  9,      10, 11,  12,    12,   99],
+        DIVINITY:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  3,  5,      7,  8,  9,      10, 11, 12,     12,   99],
+        SAILING:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  2,  3,      5,  7,  9,      11, 14, 16,     18,   99],
     }
     section_count = len(sectionThresholds)
 
@@ -283,7 +287,22 @@ maxExpectedThresholdFromMaps = portalOpeningKills[0][0]
 
 
 def is_portal_opened(mobKills, monster, portalKC):
-    return float(mobKills[monster][0]) < portalKC if len(mobKills) > monster else False
+    if len(mobKills) > monster:
+        if isinstance(mobKills[monster], list):
+            try:
+                return float(mobKills[monster][0]) < portalKC
+            except Exception as reason:
+                logger.exception(f"Could not determine if portal is open. Given mobKills[monster] of {mobKills[monster]}, monster of {monster}, and portalKC of {portalKC} because: {reason}")
+                return False
+        else:
+            try:
+                return float(mobKills[monster]) < portalKC
+            except Exception as reason:
+                logger.exception(
+                    f"Could not determine if portal is open. Given mobKills[monster] of {mobKills[monster]}, monster of {monster}, and portalKC of {portalKC} because: {reason}")
+                return False
+    else:
+        return False
 
 
 def getHighestPrint():
@@ -380,7 +399,7 @@ def generatePinchyWorld(all_sections):
     # Generate advice based on catchup
     equalSnippet = ""
     if lowestThresholdReached >= expectedThreshold:
-        equalSnippet = ". Your lowest sections are roughly equal with (or better than!) your highest enemy map. Keep up the good work!"
+        equalSnippet = ".<br>Your lowest sections are roughly equal with (or better than!) your highest enemy map.<br>Keep up the good work!"
 
     if expectedThreshold.name == Threshold.PLACEHOLDER:
         pinchyExpected = (

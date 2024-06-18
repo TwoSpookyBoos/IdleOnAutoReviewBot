@@ -1,4 +1,3 @@
-import json
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
 from utils.data_formatting import safe_loads
@@ -16,15 +15,7 @@ def getCritterName(inputNumber):
         return "UnknownCritterName"
 
 def getUnlockedCritterStatus():
-    # try:
-    #     rawJadeEmporiumPurchases = safe_loads(session_data.account.raw_data["Ninja"])[102][9]
-    #     if rawJadeEmporiumPurchases is None:
-    #         rawJadeEmporiumPurchases = ""
-    # except:
-    #     logger.debug("Unable to retrieve Jade Emporium Upgrades to tell if Tuttle is unlocked. Defaulting to locked.")
-    #     rawJadeEmporiumPurchases = ""
-
-    if "New Critter" in session_data.account.jade_emporium_purchases:
+    if session_data.account.sneaking['JadeEmporium']["New Critter"]['Obtained']:
         return [
             12,  # Index of the highest unlocked critter
             maxCritterTypes,  # Index of the highest critter possible
@@ -110,7 +101,7 @@ def getCharactersWithUnplacedTraps(trappingLevelsList, placedTrapsDict):
     #Step 1 = Get number of expected traps
     #Bonus trap slot comes from the Call Me Ash bubble, which is an Int stored at ["CauldronInfo"][1][11]. If it is level 1 or higher, the extra trap slot is always given. Does not need to be equipped.
     bonusTrapSlot = 0
-    if session_data.account.alchemy_bubbles.get("Call Me Ash", 0) >= 1:
+    if session_data.account.alchemy_bubbles['Call Me Ash']['Level'] >= 1:
         bonusTrapSlot = 1
     #print("Trapping.getCharactersWithUnplacedTraps~ OUTPUT bonusTrapSlot = ",bonusTrapSlot, "because Call Me Ash level = ",inputJSON["CauldronInfo"][1]["11"])
 
@@ -207,7 +198,7 @@ def getStaticCritterTrapAdviceList(highestTrapset: int) -> dict[str, list[Advice
                 progression=manualCritterTrapsDict[listIndexManualAdvice][1][counter])
         )
 
-    if session_data.account.trap_box_vacuum_unlocked:
+    if session_data.account.rift['TrapBoxVacuum']:
         adviceDict["Efficiency for Rift's Daily traps"] = []
         for counter in range(0, len(vaccuumCritterTrapsDict[listIndexVaccuumAdvice][0])):
             adviceDict["Efficiency for Rift's Daily traps"].append(
@@ -238,7 +229,7 @@ def getStaticShinyTrapAdviceList(highestTrapset: int) -> dict[str, list[Advice]]
                     progression=shinyTrapsEffPerHourList[counter])
             )
 
-    if session_data.account.trap_box_vacuum_unlocked:
+    if session_data.account.rift['TrapBoxVacuum']:
         adviceDict["Shiny Chance Multi for Rift's Daily traps"] = []
         for counter in range(len(shinyTrapsLabelList) - numOfVaccuumSuggestions, len(shinyTrapsLabelList)):
             if highestTrapset >= shinyTrapsRequiredTrapIndexList[counter]:
@@ -269,7 +260,7 @@ def getStaticEXPTrapAdviceList(highestTrapset) -> dict[str, list[Advice]]:
                     progression=expTrapsEffPerHourList[counter])
             )
 
-    if session_data.account.trap_box_vacuum_unlocked:
+    if session_data.account.rift['TrapBoxVacuum']:
         adviceDict["Best Experience for Rift's Daily traps"] = []
         for counter in range(len(expTrapsLabelList) - numOfVaccuumSuggestions, len(expTrapsLabelList)):
             if highestTrapset >= expTrapsRequiredTrapIndexList[counter]:
@@ -382,9 +373,6 @@ def setTrappingProgressionTier():
     trapping_AdviceDict["CritterTraps"] = getStaticCritterTrapAdviceList(highestWearableTrapset)
     trapping_AdviceDict["ShinyTraps"] = getStaticShinyTrapAdviceList(highestWearableTrapset)
     trapping_AdviceDict["EXPTraps"] = getStaticEXPTrapAdviceList(highestWearableTrapset)
-
-    #advice_MetaEXPTraps = "
-    #advice_Disclaimer = "If you are intentionally using a different combination to suite your playstyle, feel free to ignore the below recommendations! They require an active playstyle that isn't for everyone."
 
     #Generate Advice Groups
     agd_unlockcritters_post_stringsList = [

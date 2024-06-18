@@ -33,7 +33,7 @@ def getCardSetReview():
         for name, cards in cardsets.items()
     }
 
-    max_card_rank = 5 if session_data.account.ruby_cards_unlocked else 4
+    max_card_rank = 5 if session_data.account.rift['RubyCards'] else 4
     cardset_rank_total = 0
 
     for name, cardset in cardsets.items():
@@ -59,7 +59,7 @@ def getCardSetReview():
 
     note = (
         ""
-        if session_data.account.ruby_cards_unlocked
+        if session_data.account.rift['RubyCards']
         else (
             "Once you reach Rift 46 your max card tier will be bumped to Ruby. Until then, I will only recommend reaching Platinum rank"
         )
@@ -81,7 +81,7 @@ def getCardSetReview():
     )
 
     if not section:
-        if not session_data.account.ruby_cards_unlocked:
+        if not session_data.account.rift['RubyCards']:
             section.tier = f"{max_tier}/{max_tier}"
             section.header = (
                 f"You have completed all {section.tier} cardset tiers. But... "

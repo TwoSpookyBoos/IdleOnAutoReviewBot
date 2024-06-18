@@ -3,12 +3,12 @@
     <div class="nav-wrapper">
         <ul class="nav-links{% if handedness %} lefty{% endif %}">
             <li></li>
-            <li><a id="discord" href="https://discord.gg/ZmEkqzfjmJ" target="_blank"></a></li>
+            <li><a id="discord" href="{{ config["DISCORD"] }}" target="_blank"></a></li>
             <li>
-                <a id="spreadsheet" href="https://docs.google.com/spreadsheets/d/16I-rURrVeyvltK2wxcQSiPgO07QY015RVNG4MAgUsGw/edit?usp=sharing"
+                <a id="spreadsheet" href="{{ config["SPREADSHEET"] }}"
                    target="_blank">Spreadsheet</a>
             </li>
-            <li><a id="ko-fi" href='https://ko-fi.com/W7W4SRUK5' target='_blank'></a></li>
+            <li><a id="ko-fi" href="{{ config["KOFI"] }}" target='_blank'></a></li>
             <li id="light-switch"></li>
         </ul>
     </div>

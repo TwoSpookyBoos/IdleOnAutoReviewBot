@@ -360,7 +360,7 @@ def parseStorageChests():
         advices=advices
     )
     if len(advices) == 0:
-        group.pre_string = "You've collected all current Storage Chests! You best ❤️"
+        group.pre_string = "You've collected all current Storage Chests!<br>You best ❤️"
 
     return group
 
@@ -380,6 +380,6 @@ def parseConsumables():
         groups=groups
     )
     if section_storage.collapse:
-        section_storage.header = "You've collected all current Storage Chests and Inventory Bags! You best ❤️"
+        section_storage.header = "You've collected all current Storage Chests and Inventory Bags!<br>You best ❤️"
 
     return *sections_candy, section_storage

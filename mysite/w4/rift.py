@@ -1,7 +1,5 @@
-import json
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
-from utils.data_formatting import safe_loads
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import rift_progressionTiers
@@ -16,14 +14,12 @@ riftRewardsDict = {
     30: 'Eldritch Artifact',
     35: 'Vial Mastery',
     40: 'Construct Mastery',
-    45: 'Ruby Cards'}
+    45: 'Ruby Cards',
+    50: 'Killroy Prime',
+    55: 'Sneaking Mastery'}
 
 def getRiftRewardFromLevel(inputLevel):
     return riftRewardsDict.get(inputLevel, f"UnknownRiftReward{inputLevel}")
-
-def parseJSONtoLists():
-    templateList = safe_loads(session_data.account.raw_data.get("Rift", "[0,0,'',0,0,0,0,0,0,0]"))
-    return templateList
 
 def setRiftProgressionTier():
     rift_AdviceDict = {
@@ -36,7 +32,7 @@ def setRiftProgressionTier():
         header="Best Rift tier met: Not Yet Evaluated",
         picture="Rift_Ripper.gif"
     )
-    if not session_data.account.rift_unlocked:
+    if not session_data.account.rift['Unlocked']:
         rift_AdviceSection.header = "Come back after completing the Rift Ripper NPC's quest!"
         return rift_AdviceSection
 

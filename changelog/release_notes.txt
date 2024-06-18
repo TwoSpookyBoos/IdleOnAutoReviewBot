@@ -1,0 +1,1 @@
+Fixed advice width in mobile. Fixed progress bar overflow.

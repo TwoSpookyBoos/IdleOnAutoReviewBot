@@ -7,6 +7,18 @@
     font-style: normal;
 }
 
+@property --table-edge-bg-from {
+    syntax: '<color>';
+    initial-value: rgba(255, 255, 255, 1);
+    inherits: false;
+}
+
+@property --table-edge-bg-to {
+    syntax: '<color>';
+    initial-value: rgba(255, 255, 255, 0);
+    inherits: false;
+}
+
 :root,
 :root.dark-mode {
     --fg: white;
@@ -29,6 +41,7 @@
     --fg-subheading-finished: springgreen;
     --bg-subheading: hsla(0deg, 0%, 100%, 0.1);
     --border-subheading: hsla(0deg, 100%, 100%, 0.3);
+    --fg-goal-complete: goldenrod;
 
     --bg-pinchy: hsla(52deg, 100%, 50%, 20%);
     --bg-pinchy-banner: linear-gradient(to right, hsla(0deg, 0%, 0%, 45%), hsla(0deg, 0%, 0%, 20%));
@@ -118,10 +131,11 @@
     --bg-link: transparent;
     --bg-link-visited: transparent;
 
-    --fg-subheading: hsla(43deg, 94%, 19%);
-    --fg-subheading-progress: hsla(42.66deg, 87.53%, 38.08%, 1);
-    --fg-subheading-finished: hsla(134deg, 98%, 34%);
+    --fg-subheading: black;
+    --fg-subheading-progress: darkred;
+    --fg-subheading-finished: darkgreen;
     --border-subheading: hsla(0deg, 100%, 0%, 0.3);
+    --fg-goal-complete: goldenrod;
 
     --fg-pinchy-title: hsla(43.94deg 93.41% 59.54%);
     --fg-pinchy-subheading: hsla(42deg, 62%, 23%);
@@ -201,12 +215,17 @@ h1, strong, em, a,
 nav, body, form, input, textarea,
 .advice-section, .advice-group,
 .tier-progress, .finished,
-.subheading > span {
-    transition: color .5s ease-in-out, background-color .5s ease-in-out;
+.heading-wrapper > span {
+    transition: color .5s ease-in-out,
+                background-color .5s ease-in-out;
 
     .light-mode & {
-        transition: color .5s ease-in-out, background-color .5s ease-in-out;
+        transition: color .5s ease-in-out,
+                    background-color .5s ease-in-out;
     }
+}
+.arrow {
+    transition: border-left-color .5s ease-in-out;
 }
 
 a {
@@ -418,7 +437,7 @@ body {
                                         row-gap: 10px;
                                     }
                                     span {
-                                        color: goldenrod;
+                                        color: var(--fg-subheading);
                                         &:nth-child(2) {
                                             display: flex;
                                             align-items: center;
@@ -449,13 +468,13 @@ body {
 
                                 & > li {
                                     display: grid;
-                                    grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+                                    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
                                     row-gap: 10px;
                                     column-gap: 10px;
                                     padding: 10px;
 
-                                    &#cards-tier {
-                                        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+                                    @media(max-width: 600px) {
+                                        grid-template-columns: 100%;
                                     }
                                 }
 
@@ -522,14 +541,17 @@ body {
                                             height: 20px;
                                             width: 100%;
                                             grid-column: 1 / span 4;
+                                            transition: --table-edge-bg-to .5s ease-in-out;
                                         }
 
                                         &::before {
                                             top: 0;
+                                            background: linear-gradient(to top, transparent, var(--table-edge-bg-to));
                                         }
 
                                         &::after {
                                             bottom: 0;
+                                            background: linear-gradient(to bottom, transparent, var(--table-edge-bg-to));
                                         }
 
                                         &::-webkit-scrollbar-thumb {
@@ -596,22 +618,17 @@ body {
                                         .goal {
                                             padding-right: 10px;
                                             &.complete {
-                                                //color: rgba(255, 217, 0, 0.6);
-                                                color: goldenrod;
+                                                color: var(--fg-goal-complete);
+                                                font-size: 1.9em;
                                             }
                                         }
 
                                         li, li a {
-                                            display: flex;
+                                            display: inline-flex;
                                             align-items: center;
                                             column-gap: var(--advice-icon-gap);
 
-                                            &:not(.advice, .advice-title) {
-                                                justify-content: center;
-                                            }
-
                                             a {
-                                                width: 100%;
                                                 color: var(--fg);
                                             }
                                         }
@@ -664,24 +681,32 @@ body {
                         &:nth-child(even) {
                             background: var(--bg-pinchy-group-even);
 
+                            --table-edge-bg-to: var(--bg-pinchy-group-even);
+
                             .table::before {
-                                background: linear-gradient(to top, transparent, var(--bg-pinchy-group-even));
+                                //background: linear-gradient(to top, transparent, var(--table-edge-bg-to));
+                                //transition: --table-edge-bg-to .5s ease-in-out;
                             }
 
                             .table::after {
-                                background: linear-gradient(to bottom, transparent, var(--bg-pinchy-group-even));
+                                //background: linear-gradient(to bottom, transparent, var(--table-edge-bg-to));
+                                //transition: --table-edge-bg-to .5s ease-in-out;
                             }
                         }
 
                         &:nth-child(odd) {
                             background: var(--bg-pinchy-group-odd);
 
+                            --table-edge-bg-to: var(--bg-pinchy-group-odd);
+
                             .table::before {
-                                background: linear-gradient(to top, transparent, var(--bg-pinchy-group-odd));
+                                //background: linear-gradient(to top, transparent, var(--table-edge-bg-to));
+                                //transition: --table-edge-bg-to .5s ease-in-out;
                             }
 
                             .table::after {
-                                background: linear-gradient(to bottom, transparent, var(--bg-pinchy-group-odd));
+                                //background: linear-gradient(to bottom, transparent, var(--table-edge-bg-to));
+                                //transition: --table-edge-bg-to .5s ease-in-out;
                             }
                         }
                     }
@@ -726,24 +751,16 @@ body {
                         &:nth-child(odd) {
                             background-color: var(--w1-bg-advice-group-odd);
 
-                            .table::before {
-                                background: linear-gradient(to top, transparent, var(--w1-bg-advice-group-odd));
-                            }
-
-                            .table::after {
-                                background: linear-gradient(to bottom, transparent, var(--w1-bg-advice-group-odd));
+                            .table::before, .table::after {
+                                --table-edge-bg-to: var(--w1-bg-advice-group-odd);
                             }
                         }
 
                         &:nth-child(even) {
                             background-color: var(--w1-bg-advice-group-even);
 
-                            .table::before {
-                                background: linear-gradient(to top, transparent, var(--w1-bg-advice-group-even));
-                            }
-
-                            .table::after {
-                                background: linear-gradient(to bottom, transparent, var(--w1-bg-advice-group-even));
+                            .table::before, .table::after {
+                                --table-edge-bg-to: var(--w1-bg-advice-group-even);
                             }
                         }
                     }
@@ -773,24 +790,16 @@ body {
                         &:nth-child(odd) {
                             background-color: var(--w2-bg-advice-group-odd);
 
-                            .table::before {
-                                background: linear-gradient(to top, transparent, var(--w2-bg-advice-group-odd));
-                            }
-
-                            .table::after {
-                                background: linear-gradient(to bottom, transparent, var(--w2-bg-advice-group-odd));
+                            .table::before, .table::after {
+                                --table-edge-bg-to: var(--w2-bg-advice-group-odd);
                             }
                         }
 
                         &:nth-child(even) {
                             background-color: var(--w2-bg-advice-group-even);
 
-                            .table::before {
-                                background: linear-gradient(to top, transparent, var(--w2-bg-advice-group-even));
-                            }
-
-                            .table::after {
-                                background: linear-gradient(to bottom, transparent, var(--w2-bg-advice-group-even));
+                            .table::before, .table::after {
+                                --table-edge-bg-to: var(--w2-bg-advice-group-even);
                             }
                         }
                     }
@@ -820,24 +829,16 @@ body {
                         &:nth-child(odd) {
                             background-color: var(--w3-bg-advice-group-odd);
 
-                            .table::before {
-                                background: linear-gradient(to top, transparent, var(--w3-bg-advice-group-odd));
-                            }
-
-                            .table::after {
-                                background: linear-gradient(to bottom, transparent, var(--w3-bg-advice-group-odd));
+                            .table::before, .table::after {
+                                --table-edge-bg-to: var(--w3-bg-advice-group-odd);
                             }
                         }
 
                         &:nth-child(even) {
                             background-color: var(--w3-bg-advice-group-even);
 
-                            .table::before {
-                                background: linear-gradient(to top, transparent, var(--w3-bg-advice-group-even));
-                            }
-
-                            .table::after {
-                                background: linear-gradient(to bottom, transparent, var(--w3-bg-advice-group-even));
+                            .table::before, .table::after {
+                                --table-edge-bg-to: var(--w3-bg-advice-group-even);
                             }
                         }
                     }
@@ -867,24 +868,16 @@ body {
                         &:nth-child(odd) {
                             background-color: var(--w4-bg-advice-group-odd);
 
-                            .table::before {
-                                background: linear-gradient(to top, transparent, var(--w4-bg-advice-group-odd));
-                            }
-
-                            .table::after {
-                                background: linear-gradient(to bottom, transparent, var(--w4-bg-advice-group-odd));
+                            .table::before, .table::after {
+                                --table-edge-bg-to: var(--w4-bg-advice-group-odd);
                             }
                         }
 
                         &:nth-child(even) {
                             background-color: var(--w4-bg-advice-group-even);
 
-                            .table::before {
-                                background: linear-gradient(to top, transparent, var(--w4-bg-advice-group-even));
-                            }
-
-                            .table::after {
-                                background: linear-gradient(to bottom, transparent, var(--w4-bg-advice-group-even));
+                            .table::before, .table::after {
+                                --table-edge-bg-to: var(--w4-bg-advice-group-even);
                             }
                         }
                     }
@@ -914,24 +907,16 @@ body {
                         &:nth-child(odd) {
                             background-color: var(--w5-bg-advice-group-odd);
 
-                            .table::before {
-                                background: linear-gradient(to top, transparent, var(--w5-bg-advice-group-odd));
-                            }
-
-                            .table::after {
-                                background: linear-gradient(to bottom, transparent, var(--w5-bg-advice-group-odd));
+                            .table::before, .table::after {
+                                --table-edge-bg-to: var(--w5-bg-advice-group-odd);
                             }
                         }
 
                         &:nth-child(even) {
                             background-color: var(--w5-bg-advice-group-even);
 
-                            .table::before {
-                                background: linear-gradient(to top, transparent, var(--w5-bg-advice-group-even));
-                            }
-
-                            .table::after {
-                                background: linear-gradient(to bottom, transparent, var(--w5-bg-advice-group-even));
+                            .table::before, .table::after {
+                                --table-edge-bg-to: var(--w5-bg-advice-group-even);
                             }
                         }
                     }
@@ -961,24 +946,16 @@ body {
                         &:nth-child(odd) {
                             background-color: var(--w6-bg-advice-group-odd);
 
-                            .table::before {
-                                background: linear-gradient(to top, transparent, var(--w6-bg-advice-group-odd));
-                            }
-
-                            .table::after {
-                                background: linear-gradient(to bottom, transparent, var(--w6-bg-advice-group-odd));
+                            .table::before, .table::after {
+                                --table-edge-bg-to: var(--w6-bg-advice-group-odd);
                             }
                         }
 
                         &:nth-child(even) {
                             background-color: var(--w6-bg-advice-group-even);
 
-                            .table::before {
-                                background: linear-gradient(to top, transparent, var(--w6-bg-advice-group-even));
-                            }
-
-                            .table::after {
-                                background: linear-gradient(to bottom, transparent, var(--w6-bg-advice-group-even));
+                            .table::before, .table::after {
+                                --table-edge-bg-to: var(--w6-bg-advice-group-even);
                             }
                         }
                     }
@@ -1045,6 +1022,7 @@ body {
         }
 
         footer {
+            font-family: "Open Sans", sans-serif;
             width: 100%;
             margin-top: auto; /*always sticks to the bottom of the page*/
             padding: 20px;
@@ -1124,10 +1102,6 @@ body {
         }
 
         section {
-            .advice-section > li {
-                grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
-            }
-
             .subheading, .advice-group {
                 padding-left: 5vw;
                 padding-right: 5vw;

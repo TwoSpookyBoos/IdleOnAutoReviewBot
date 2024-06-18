@@ -7,8 +7,17 @@ import yaml
 from models.custom_exceptions import UserDataException, UsernameBanned
 
 
-def test_valid_input_get(client):
-    response = client.get("/", query_string=dict(player="scoli"))
+def test_index(client):
+    response = client.get("/")
+    assert response.status_code == 200
+
+
+def test_valid_input_post(client, conf):
+    response = client.post(
+        "/results",
+        data=json.dumps(dict(player="scoli")),
+        headers=conf.headers
+    )
     assert response.status_code == 200
 
 
@@ -19,36 +28,23 @@ testing_data = [
 
 @pytest.mark.parametrize("datafile", testing_data)
 def test_json(client, conf, datafile):
-    data = json.load(open(datafile))
-    response = client.post("/", data=data, headers=conf.headers)
+    with open(datafile, "r") as f:
+        data = json.load(f)
+
+    response = client.post("/results", data=json.dumps(data), headers=conf.headers)
     assert response.status_code == 200
 
 
 def test_username_too_long_post(client):
     data = dict(player="username_too_long", follow_redirects=True)
-    response = client.post("/", data=data)
+    response = client.post("/results", data=json.dumps(data))
     assert UserDataException.msg_base in response.text
 
 
 def test_username_banned_post(client, conf):
-    bannedAccountsList = yaml.load(
-        open(Path(conf.static_folder) / "banned.yaml"), yaml.Loader
-    )
+    with open(Path(conf.static_folder) / "banned.yaml") as f:
+        bannedAccountsList = yaml.load(f, yaml.Loader)
+
     data = dict(player=bannedAccountsList[0])
-    response = client.post("/", data=data, follow_redirects=True)
-    assert UsernameBanned.msg_base in response.text
-
-
-def test_username_too_long_get(client):
-    data = dict(player="username_too_long")
-    response = client.get("/", query_string=data)
-    assert UserDataException.msg_base in response.text
-
-
-def test_username_banned_get(client, conf):
-    bannedAccountsList = yaml.load(
-        open(Path(conf.static_folder) / "banned.yaml"), yaml.Loader
-    )
-    data = dict(player=bannedAccountsList[0])
-    response = client.get("/", query_string=data)
+    response = client.post("/results", data=json.dumps(data), follow_redirects=True)
     assert UsernameBanned.msg_base in response.text

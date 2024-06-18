@@ -3,6 +3,7 @@ import traceback
 from datetime import datetime
 from json import JSONDecodeError
 
+import requests
 from flask import g, render_template, request, redirect, Response, send_from_directory
 
 import consts
@@ -26,12 +27,10 @@ from utils.template_filters import *
 
 
 logger = get_logger(__name__)
-FQDN = "ieautoreview-scoli.pythonanywhere.com"
-FQDN_BETA = f"beta-{FQDN}"
 
 
 def get_user_input() -> str:
-    return (request.args.get("player") or request.form.get("player", "")).strip()
+    return (request.args.get("player") or json.loads(request.data).get("player", "")).strip()
 
 
 def parse_user_input() -> str | dict | None:
@@ -54,9 +53,9 @@ def parse_user_input() -> str | dict | None:
 
 def store_user_preferences():
     if request.method == "POST":
-        args = request.form
+        args = json.loads(request.data)
     elif request.method == "GET":
-        args = request.args
+        args = request.args.to_dict()
     else:
         raise ValueError(f"Unknown request method: {request.method}")
 
@@ -75,27 +74,22 @@ def switches():
     ]
 
 
-@app.route("/", methods=["GET", "POST"])
-def index() -> Response | str:
+@app.route("/results", methods=["POST"])
+def results() -> Response | str:
     page: str = "results.html"
     error: str = ""
-    reviews: list[AdviceWorld] | None = None
+    reviews: list[AdviceWorld] | None = list()
     headerData: HeaderData | None = None
-    is_beta: bool = FQDN_BETA in request.host
-
-    url_params = request.query_string.decode("utf-8")
-    live_link = f"live?{url_params}"
-    beta_link = f"beta?{url_params}"
+    is_beta: bool = app.config["DOMAIN_BETA"] in request.host
 
     store_user_preferences()
+
+    live_link = "live"
+    beta_link = "beta"
+
     name_or_data: str | dict = ""
     try:
         name_or_data = parse_user_input()
-
-        if request.method == "POST" and is_username(name_or_data):
-            return redirect(
-                url_for("index", player=name_or_data, **get_user_preferences())
-            )
 
         if name_or_data:
             reviews, headerData = autoReviewBot(name_or_data)
@@ -180,6 +174,27 @@ def index() -> Response | str:
     )
 
 
+@app.route("/", methods=["GET"])
+def index() -> Response | str:
+    is_beta: bool = app.config["DOMAIN_BETA"] in request.host
+
+    live_link = "live"
+    beta_link = "beta"
+
+    player = request.args.to_dict().get("player")
+
+    store_user_preferences()
+
+    return render_template(
+        "index.html",
+        beta=is_beta,
+        live_link=live_link,
+        beta_link=beta_link,
+        player=player,
+        switches=switches(),
+    )
+
+
 def create_and_populate_log_files(data, headerData, msg, name_or_data, error):
     # if os.environ.get("USER") == "niko":
     #     raise error
@@ -200,7 +215,7 @@ def create_and_populate_log_files(data, headerData, msg, name_or_data, error):
         with open(filedata, "w") as user_log:
             user_log.writelines(data + os.linesep)
 
-    return f"{error.dirname}/{username}/{now}"
+    return dirpath/now
 
 
 @app.route("/robots.txt")
@@ -214,17 +229,24 @@ def sitemap_xml():
     return send_from_directory(app.static_folder, "sitemap.xml")
 
 
+def format_uri(to_beta=False):
+    link = requests.Request(
+        "GET",
+        app.config["FQDN_BETA" if to_beta else "FQDN"],
+        params=request.args or request.form.to_dict()
+    ).prepare().url
+    return link
+
+
 @app.route("/live", methods=["GET", "POST"])
 def live() -> Response:
-    link = f"https://{FQDN}?" + "&".join(f"{k}={v}" for k, v in request.args.items())
+    link = format_uri()
     return redirect(link)
 
 
 @app.route("/beta", methods=["GET", "POST"])
 def beta() -> Response:
-    link = f"https://{FQDN_BETA}?" + "&".join(
-        f"{k}={v}" for k, v in request.args.items()
-    )
+    link = format_uri(to_beta=True)
     return redirect(link)
 
 

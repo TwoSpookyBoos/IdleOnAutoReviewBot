@@ -1,4 +1,3 @@
-import json
 from flask import g as session_data
 from models.models import AdviceSection, AdviceGroup, Advice
 from math import floor
@@ -69,7 +68,6 @@ class Salt:
 
 def parseConsRefinery():
     refineryList = safe_loads(session_data.account.raw_data.get("Refinery", []))
-    w3meritList = safe_loads(session_data.account.raw_data.get("TaskZZ2", []))
     consRefineryDict = {
         # Combustion = Tab1
         'Red Rank': 0,
@@ -106,9 +104,8 @@ def parseConsRefinery():
         consRefineryDict['Purple AutoRefine'] = refineryList[7][4]
         consRefineryDict['Nullo Rank'] = refineryList[8][1]
         consRefineryDict['Nullo AutoRefine'] = refineryList[8][4]
-    if w3meritList:
-        #W3 Merit
-        consRefineryDict['Salt Merit'] = w3meritList[2][6]
+
+    consRefineryDict['Salt Merit'] = session_data.account.merits[2][6]["Level"]
 
     consRefineryDict['Combustion AutoRefine'] = consRefineryDict['Red AutoRefine'] + consRefineryDict['Orange AutoRefine'] + consRefineryDict['Blue AutoRefine']
     consRefineryDict['Synthesis AutoRefine'] = consRefineryDict['Green AutoRefine'] + consRefineryDict['Purple AutoRefine'] + consRefineryDict['Nullo AutoRefine']
@@ -226,7 +223,7 @@ def setConsRefineryProgressionTier():
                 label="W3 Taskboard Merits Purchased",
                 picture_class="iceland-irwin",
                 progression=str(consRefineryDict['Salt Merit']),
-                goal=5)
+                goal=sum_SaltsRank2Plus)
         )
 
     #Excess and Deficits Advice

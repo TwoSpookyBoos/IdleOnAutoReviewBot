@@ -1,8 +1,11 @@
 import datetime
 import json
+import re
 import traceback
+from pathlib import Path
 
 import requests
+import yaml
 from babel.dates import format_datetime
 from flask import request, g as session_data
 
@@ -10,6 +13,7 @@ from consts import humanReadableClasses, skillIndexList, emptySkillList
 from models.custom_exceptions import ProfileNotFound, EmptyResponse, IEConnectionFailed
 
 from .logging import get_logger
+from config import app
 
 
 logger = get_logger(__name__)
@@ -29,7 +33,7 @@ class HeaderData:
             username = input_data
 
             self.data_source = self.PUBLIC
-            self.link_text = f"{username}.idleonefficiency.com"
+            self.link_text = app.config["IE_PROFILE_TEMPLATE"].format(username=username)
             self.ie_link = f"https://{self.link_text}"
             self.first_name = session_data.account.names[0]
         else:
@@ -67,7 +71,7 @@ def getJSONfromAPI(runType, username="scoli"):
         logger.info("~~~~~~~~~~~~~~~ Getting JSON from API ~~~~~~~~~~~~~~~")
 
     try:
-        url = f"https://cdn2.idleonefficiency.com/profiles/{username}.json"
+        url = app.config["IE_JSON_TEMPLATE"].format(username=username)
         headers = {"Content-Type": "text/json", "method": "GET"}
         response = requests.get(url, headers=headers)
 
@@ -172,6 +176,9 @@ def getCharacterDetails(inputJSON, runType):
     playerCount = 0
     playerNames = []
     playerClasses = []
+    characterMaxTalents = {}
+    characterCurrentPresetTalents = {}
+    characterSecondaryPresetTalents = {}
     characterDict: dict = {}
 
     if "playerNames" in inputJSON.keys():
@@ -199,7 +206,7 @@ def getCharacterDetails(inputJSON, runType):
             # this produces an unsorted list of names
             cogDataForNames = inputJSON["CogO"]
             if isinstance(cogDataForNames, str):
-                cogDataForNames = json.loads(cogDataForNames)
+                cogDataForNames = safe_loads(cogDataForNames)
             for item in cogDataForNames:
                 if item.startswith("Player_"):
                     playerCount += 1
@@ -220,12 +227,34 @@ def getCharacterDetails(inputJSON, runType):
 
     characterSkillsDict = getAllSkillLevelsDict(inputJSON, playerCount)
     perSkillDict = characterSkillsDict["Skills"]
-
+    equipped_prayers = {}
+    postOfficeList = []
     for list_index in range(0, playerCount):
         try:
             playerClasses.append(getHumanReadableClasses(inputJSON[f"CharacterClass_{list_index}"]))
         except:
-            playerClasses.append("Unknown")
+            playerClasses.append(f"UnknownClass{list_index}")
+        try:
+            postOfficeList.append(safe_loads(inputJSON[f"POu_{list_index}"]))
+        except:
+            postOfficeList.append([0]*36)
+        try:
+            equipped_prayers[list_index] = safe_loads(inputJSON[f"Prayers_{list_index}"])
+        except:
+            equipped_prayers[list_index] = []
+        try:
+            characterMaxTalents[list_index] = safe_loads(inputJSON[f"SM_{list_index}"])
+        except:
+            characterMaxTalents[list_index] = {}
+        try:
+            characterCurrentPresetTalents[list_index] = safe_loads(inputJSON[f"SL_{list_index}"])
+        except:
+            characterCurrentPresetTalents[list_index] = {}
+        try:
+            characterSecondaryPresetTalents[list_index] = safe_loads(inputJSON[f"SLpre_{list_index}"])
+        except:
+            characterSecondaryPresetTalents[list_index] = {}
+
         characterDict[list_index] = dict(
             character_index=list_index,
             character_name=playerNames[list_index],
@@ -233,7 +262,12 @@ def getCharacterDetails(inputJSON, runType):
             base_class=getBaseClass(playerClasses[list_index]),
             sub_class=getSubclass(playerClasses[list_index]),
             elite_class=getEliteClass(playerClasses[list_index]),
+            equipped_prayers=equipped_prayers[list_index],
             all_skill_levels=characterSkillsDict[list_index],
+            max_talents=characterMaxTalents[list_index],
+            current_preset_talents=characterCurrentPresetTalents[list_index],
+            secondary_preset_talents=characterSecondaryPresetTalents[list_index],
+            po_boxes=postOfficeList[list_index]
         )
 
     return [playerCount, playerNames, playerClasses, characterDict, perSkillDict]
@@ -287,3 +321,61 @@ def setCustomTiers(filename="input.csv"):
 
 def safe_loads(data):
     return json.loads(data) if isinstance(data, str) else data
+
+def mark_advice_completed(advice):
+    try:
+        prog = str(advice.progression).strip("%")
+        goal = str(advice.goal).strip("%")
+        if advice.goal and advice.progression and float(prog) >= float(goal):
+            advice.progression = ""
+            advice.goal = "✔"
+            setattr(advice, "status", "complete")
+    except:
+        pass
+
+
+def scrape_slab():
+    url_wiki_slab_raw = "https://raw.githubusercontent.com/BigCoight/IdleonWikiBot3.0/master/exported/ts/data/SpecificItemRepo.ts"
+    response = requests.get(url_wiki_slab_raw)
+    slab_file = response.text
+
+    regex = (r'''
+        "internalName":   # find the key and skip it
+        \s*               # skip any whitespace between the key and value
+        "([^"]+)"         # capture everything between, but not also, quotes
+        ,\s*              # skip the trailing comma and whitespace (newline, leading whitespace) to next line
+        "displayName":    # find the key and skip it
+        \s*               # skip any whitespace between the key and value
+        "([^"]+)"         # capture everything between, but not also, quotes
+    ''')
+    pattern = re.compile(regex, re.VERBOSE | re.DOTALL)
+    matches = pattern.findall(slab_file)
+
+    # Prepare the dictionary for YAML conversion
+    item_dict = {internal: display for internal, display in matches}
+    # This stuff isn't exactly an item but it does show up
+    item_dict.update(dict(
+        Blank="Blank",
+        LockedInvSpace="Locked Inventory Space",
+        # oah is the proper spelling for the dungeon bow, but aoh is the spelling of the normal Bow
+        DungWeaponBowD1="Pharaoh Bow I",
+        DungWeaponBowD2="Pharaoh Bow II",
+        DungWeaponBowD3="Pharaoh Bow III",
+        DungWeaponBowD4="Pharaoh Bow IV",
+        DungWeaponBowD5="Pharaoh Bow V",
+        #Similar to the bow, force consistency between 'Hotdog' and 'Hot Dog'
+        FoodHealth3="Hot Dog",
+        FoodHealth2d="Hot Dog",
+        Critter6A="Eternal Lord of The Undying Ember",  #Wiki has 2x spaces in the name "of  The"
+        Quest2="Mining Certificate"
+    ))
+
+    # Convert the dictionary to YAML format
+    with open(Path(app.static_folder)/"items.yaml", "w+") as items_file:
+        items_file.truncate()
+        yaml.dump(item_dict, items_file, sort_keys=False)
+        items_file.seek(0)
+        yaml_content = items_file.read()
+
+        # Output the YAML content
+        print(yaml_content)

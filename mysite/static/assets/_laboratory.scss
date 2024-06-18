@@ -4,11 +4,18 @@ $nodes: (
 );
 
 $jewels: (
+    emerald-ulthurite: wiki('f/f5/Console_Jewel_Emerald_Ulthurite.png'),
     pure-opal-navette: wiki('9/9a/Console_Jewel_Pure_Opal_Navette.png'),
 );
 
 $chips: (
+    chocolatey-chip: wiki('1/1a/Lab_-_Chocolatey_Chip.png'),
+    galvanic-nanochip: wiki('4/41/Lab_-_Galvanic_Nanochip.png'),
     silkrode-nanochip: wiki('6/6e/Lab_-_Silkrode_Nanochip.png'),
+    silkrode-software: wiki('1/1c/Lab_-_Silkrode_Software.png'),
+    silkrode-processor: wiki('3/3d/Lab_-_Silkrode_Processor.png'),
+    omega-nanochip: wiki('b/bc/Lab_-_Omega_Nanochip.png'),
+    omega-motherboard: wiki('3/3b/Lab_-_Omega_Motherboard.png'),
 );
 
 $all-laboratory: map-merge($nodes, $jewels);

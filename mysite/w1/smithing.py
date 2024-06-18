@@ -1,6 +1,8 @@
+import math
 from models.models import Advice, AdviceGroup, AdviceSection
 from consts import smithing_progressionTiers
 from flask import g as session_data
+from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl
 from utils.logging import get_logger
 
@@ -19,9 +21,132 @@ def getUnusedForgeSlotsCount():
             oreSlotIndex += 3
     except:
         logger.exception(f"Could not retrieve forge levels or items. Returning 0 unused slots.")
-    #print("Smithing.getUnusedForgeSlotsCount~ OUTPUT unusedForgeSlotsCount/forgeOreSlotsPurchased:", unusedForgeSlotsCount, "/", forgeOreSlotsPurchased)
     return unusedForgeSlotsCount
 
+def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
+    cap_Advices = {
+        "Static Sources": [],
+        "Scaling Sources": []
+    }
+    bar_Advices = {
+        "Total Capacity": [],
+        "Bars per Forge Slot": []
+    }
+    #Static Sources
+    #Achievement value of -1 means completed
+    achievement = session_data.account.achievements.get("Vitamin D-licious", False)
+    cap_Advices["Static Sources"].append(Advice(
+        label=f"W5 Achievement: Vitamin D-licious: +{50 if achievement else 0}%",
+        picture_class='vitamin-d-licious',
+        progression="1" if achievement else "0",
+        goal="1"
+    ))
+
+    #Bribe value of 1 means purchased
+    bribe = session_data.account.bribes["W6"].get("Forge Cap Smuggling", -1) == 1
+    bribeValue = 1.3 if bribe else 1
+    cap_Advices["Static Sources"].append(Advice(
+        label=f"{{{{ Bribe|#bribes }}}}: Forge Cap Smuggling: {bribeValue}x",
+        picture_class='forge-cap-smuggling',
+        progression="1" if bribe else "0",
+        goal="1"
+    ))
+
+    #Verify Skill Mastery itself is unlocked from The Rift
+    cap_Advices["Static Sources"].append(Advice(
+        label="{{ Rift|#rift }}: Skill Mastery",
+        picture_class='skill-mastery',
+        progression="1" if session_data.account.rift['SkillMastery'] else "0",
+        goal="1"
+    ))
+    #Account-wide total smithing levels of 300 needed to unlock the bonus
+    totalSmithingLevels = sum(session_data.account.all_skills.get("Smithing", [0]))
+    skillMasteryBonusBool = session_data.account.rift['SkillMastery'] and totalSmithingLevels >= 300
+    cap_Advices["Static Sources"].append(Advice(
+        label=f"Skill Mastery at 300 Smithing: +{25 * skillMasteryBonusBool * session_data.account.rift['SkillMastery']}%",
+        picture_class='smithing',
+        progression=totalSmithingLevels,
+        goal=300
+    ))
+
+    #Scaling Sources
+    #Forge Upgrade purchased at the forge itself with coins
+    forge_upgrades = (2 + 0.5 * (session_data.account.forge_upgrades[1]["Purchased"] - 1)) * session_data.account.forge_upgrades[1]["Purchased"] * 10
+    cap_Advices["Scaling Sources"].append(Advice(
+        label=f"Forge Upgrade: {session_data.account.forge_upgrades[1]['UpgradeName']}: +{int(forge_upgrades)}",
+        picture_class='forge-upgrades',
+        progression=session_data.account.forge_upgrades[1]["Purchased"],
+        goal=session_data.account.forge_upgrades[1]["MaxPurchases"]
+    ))
+
+    #Godshard Ore card
+    cap_Advices["Scaling Sources"].append(Advice(
+        label=f"Godshard Ore card: {30 * (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Godshard Ore'))}%",
+        picture_class="godshard-ore-card",
+        progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == "Godshard Ore"),
+        goal=6
+    ))
+
+    cap_Advices["Scaling Sources"].append(Advice(
+        label=f"{{{{ Forge Stamp|#stamps }}}}: +{session_data.account.stamps.get('Forge Stamp', {}).get('Value', 0):.2f}% Forge Capacity",
+        picture_class="forge-stamp",
+        progression=session_data.account.stamps.get("Forge Stamp", {}).get("Level", 0),
+        goal=230  #Forge Stamp currently has a max of 230, unless it gets increased by the Sacred Methods bundle.
+    ))
+
+    #Arcade Bonus 26 gives Forge Ore Capacity
+    cap_Advices["Scaling Sources"].append(Advice(
+        label=f"Arcade Bonus: {session_data.account.arcade.get(26, {}).get('Display', '')} {'(50% max)' if session_data.account.arcade.get(26, {}).get('Level', 0) < 100 else ''}",
+        picture_class="arcade-bonus-26",
+        progression=session_data.account.arcade.get(26, {}).get("Level", 0),
+        goal=100
+    ))
+
+    for group_name in cap_Advices:
+        for advice in cap_Advices[group_name]:
+            mark_advice_completed(advice)
+
+    groupA = 1 + (((session_data.account.arcade.get(26, {}).get("Value", 0)) + (30 * (next(c.getStars() for c in session_data.account.cards if c.name == 'Godshard Ore')+1)))/100)
+    groupB = 1 + session_data.account.stamps.get('Forge Stamp', {}).get('Value', 0) / 100
+    groupC = bribeValue
+    groupD = 1 + (50 * achievement + 25 * skillMasteryBonusBool) / 100
+
+    final_forgeCapacity = math.ceil(min(2e9, (20 + forge_upgrades) * groupA * groupB * groupC * groupD))
+    bar_Advices["Total Capacity"].append(Advice(
+        label=f"Total Capacity: {final_forgeCapacity:,}",
+        picture_class="empty-forge-slot"
+    ))
+    barDict = {
+        "Godshard Bar": 15000,
+        "Marble Bar": 4000,
+        "Dreadlo Bar": 1000,
+        "Starfire Bar": 500,
+        "Lustre Bar": 250,
+        "Void Bar": 100,
+        "Dementia Bar": 40,
+        "Platinum Bar": 16,
+        "Gold Bar": 7,
+        "Iron Bar": 4,
+        "Copper Bar": 2
+    }
+    for barName, oreCost in barDict.items():
+        nextBar = oreCost - (final_forgeCapacity % oreCost) if final_forgeCapacity % oreCost > 0 else oreCost
+        bar_Advices["Bars per Forge Slot"].append(Advice(
+            label=f"{math.floor(final_forgeCapacity / oreCost):,} {barName}s. {nextBar:,} capacity to next bar",
+            picture_class=barName
+        ))
+
+    cap_AdviceGroups = [
+        AdviceGroup(
+        tier='',
+        pre_string="Info- Sources of Forge Ore Capacity",
+        advices=cap_Advices),
+        AdviceGroup(
+        tier='',
+        pre_string="Info- Total Capacity and Bar thresholds",
+        advices=bar_Advices)
+    ]
+    return cap_AdviceGroups
 
 def setSmithingProgressionTier() -> AdviceSection:
     smithing_AdviceDict = {
@@ -45,40 +170,6 @@ def setSmithingProgressionTier() -> AdviceSection:
     overall_SmithingTier = 0
     playerCashPoints = []
     playerMonsterPoints = []
-    playerForgeUpgrades = []
-    forgeUpgradesDict = {
-        0: {
-            "UpgradeName": "New Forge Slot",
-            "Purchased": 0,
-            "MaxPurchases": 16
-        },
-        1: {
-            "UpgradeName": "Ore Capacity Boost",
-            "Purchased": 0,
-            "MaxPurchases": 50
-        },
-        2: {
-            "UpgradeName": "Forge Speed",
-            "Purchased": 0,
-            "MaxPurchases": 90
-        },
-        3: {
-            "UpgradeName": "Forge EXP Gain (Does Nothing!)",
-            "Purchased": 0,
-            "MaxPurchases": 85
-        },
-        4: {
-            "UpgradeName": "Bar Bonanza",
-            "Purchased": 0,
-            "MaxPurchases": 75
-        },
-        5: {
-            "UpgradeName": "Puff Puff Go",
-            "Purchased": 0,
-            "MaxPurchases": 60
-        }
-    }
-
     sum_CashPoints = 0
     sum_MonsterPoints = 0
     sum_ForgeUpgrades = 0
@@ -96,23 +187,17 @@ def setSmithingProgressionTier() -> AdviceSection:
             logger.exception(f"Unable to retrieve AnvilPAstats_{character.character_index}")
 
     #Total up all the forge purchases, including the stinky Forge EXP
-    try:
-        playerForgeUpgrades = session_data.account.raw_data["ForgeLV"]
-        upgradeIndex = 0
-        for upgradeIndex, upgrade in enumerate(playerForgeUpgrades):
-            sum_ForgeUpgrades += int(upgrade)
-            forgeUpgradesDict[upgradeIndex]["Purchased"] = upgrade
-            if forgeUpgradesDict[upgradeIndex]["Purchased"] < forgeUpgradesDict[upgradeIndex]["MaxPurchases"]:
-                if not forgeUpgradesDict[upgradeIndex]["UpgradeName"].startswith("Forge EXP Gain"):
-                    smithing_AdviceDict["ForgeUpgrades"].append(
-                        Advice(
-                            label=forgeUpgradesDict[upgradeIndex]["UpgradeName"],
-                            picture_class='forge-upgrades',
-                            progression=forgeUpgradesDict[upgradeIndex]["Purchased"],
-                            goal=forgeUpgradesDict[upgradeIndex]["MaxPurchases"])
-                    )
-    except:
-        logger.exception("Unable to retrieve ForgeLv")
+    for upgradeIndex, upgradeData in session_data.account.forge_upgrades.items():
+        sum_ForgeUpgrades += int(upgradeData["Purchased"])
+        if upgradeData["Purchased"] < upgradeData["MaxPurchases"]:
+            if not upgradeData["UpgradeName"].startswith("Forge EXP Gain"):
+                smithing_AdviceDict["ForgeUpgrades"].append(
+                    Advice(
+                        label=upgradeData["UpgradeName"],
+                        picture_class='forge-upgrades',
+                        progression=upgradeData["Purchased"],
+                        goal=upgradeData["MaxPurchases"])
+                )
 
     #Work out each tier individual and overall tier
     for tier in smithing_progressionTiers:
@@ -188,7 +273,6 @@ def setSmithingProgressionTier() -> AdviceSection:
     #Check for any unused Forge slots
     unusedForgeSlots = getUnusedForgeSlotsCount()
     if unusedForgeSlots > 0:
-        advice_UnusedForgeSlots = "Informational- You have " + str(unusedForgeSlots) + " empty ore slot in your Forge!"
         smithing_AdviceGroupDict["EmptyForgeSlots"] = AdviceGroup(
             tier="",
             pre_string=f"Informational - Fill the Forge",
@@ -198,6 +282,9 @@ def setSmithingProgressionTier() -> AdviceSection:
             ],
             post_string=""
         )
+
+    #Forge Capacity calculations
+    smithing_AdviceGroupDict["OreCapacity"], smithing_AdviceGroupDict["Bars"] = getForgeCapacityAdviceGroup()
 
     #Print out all the final smithing info
     overall_SmithingTier = min(tier_CashPoints, tier_MonsterPoints, tier_ForgeTotals)
