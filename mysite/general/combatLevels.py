@@ -72,11 +72,14 @@ def setCombatLevelsProgressionTier() -> AdviceSection:
 
     overall_CombatLevelTier = curr_tier[0]
 
-    if 'Character' in next_tier[2]:
-        character_or_obol = 'beginner-icon'
-    elif 'Obol' in next_tier[2]:
-        character_or_obol = 'silver-obol-of-pop-pop'
-    else:
+    try:
+        if 'Character' in next_tier[2]:
+            character_or_obol = 'beginner-icon'
+        elif 'Obol' in next_tier[2]:
+            character_or_obol = 'silver-obol-of-pop-pop'
+        else:
+            character_or_obol = ''
+    except:
         character_or_obol = ''
     advices = [
         Advice(
