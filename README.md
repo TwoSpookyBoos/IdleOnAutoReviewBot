@@ -66,7 +66,7 @@ To run tests, run:
 cd mysite
 pytest -p no:warnings
 ```
-or
+or, using make:
 ``` bash
 cd mysite
 make test
