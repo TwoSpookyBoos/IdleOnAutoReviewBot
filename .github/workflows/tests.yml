@@ -20,4 +20,4 @@ jobs:
       working-directory: mysite
       run: |
         source ../.venv/bin/activate
-        make test
+        pytest
