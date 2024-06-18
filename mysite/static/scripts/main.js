@@ -409,6 +409,71 @@ function defineCookieModalAction() {
     }
 }
 
+let searchTimer
+
+function searchByCriteria(criteria) {
+    const allElements = document.querySelectorAll("article, section, .advice-group, .advice-title, .advice, .resource, .prog, .arrow, .goal")
+    allElements.forEach(el => {
+        el.classList.add('search-hidden');
+    })
+    allElements.forEach(el => {
+        if (el.tagName.toLowerCase() === 'article') {
+            if (el.querySelector("h1").innerHTML.toLowerCase().includes(criteria)) {
+                el.classList.remove("search-hidden")
+                el.querySelectorAll('.search-hidden').forEach(child => child.classList.remove("search-hidden"))
+            }
+            return
+        }
+        if (el.tagName.toLowerCase() === 'section') {
+            if (el.querySelector("h1").innerHTML.toLowerCase().includes(criteria)) {
+                el.closest("article").classList.remove("search-hidden")
+                el.classList.remove("search-hidden")
+                el.querySelectorAll('.search-hidden').forEach(child => child.classList.remove("search-hidden"))
+            }
+        }
+        if (el.classList.contains('advice-group')) {
+            if (el.children.length > 0 && el.children[0].tagName.toLowerCase() === "span" && el.children[0].innerHTML.toLowerCase().includes(criteria)) {
+                el.closest("article").classList.remove("search-hidden")
+                el.closest("section").classList.remove("search-hidden")
+                el.classList.remove("search-hidden")
+                el.querySelectorAll('.search-hidden').forEach(child => child.classList.remove("search-hidden"))
+            }
+            return
+        }
+        if (el.classList.contains('advice')) {
+            if (el.innerHTML.toLowerCase().includes(criteria)) {
+                el.closest("article").classList.remove("search-hidden")
+                el.closest("section").classList.remove("search-hidden")
+                el.closest(".advice-group").classList.remove("search-hidden")
+                el.classList.remove("search-hidden")
+                const row = Array.from(el.parentElement.children)
+                row.slice(row.indexOf(el) - 1, row.indexOf(el) + 4).forEach(col => {
+                    col.classList.remove("search-hidden")
+                })
+                row.toReversed().slice(row.toReversed().indexOf(el)).find(col => col.classList.contains("advice-title"))?.classList.remove("search-hidden")
+            }
+            return
+        }
+    })
+}
+
+function setupSearchBar() {
+    const searchBar = document.querySelector('#search')
+    document.querySelector('#search-clear').onclick = () => {
+        searchBar.value = ""
+        document.querySelectorAll('.search-hidden').forEach(hidden => {
+            hidden.classList.remove('search-hidden')
+        })
+    }
+
+    searchBar.addEventListener('input', e => {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout((criteria) => {
+            searchByCriteria(criteria)
+        }, 1000, e.target.value)
+    })
+}
+
 function initBaseUI() {
     setTimeout(defineCookieModalAction, 1000)
     hideSpinnerIfFirstAccess()
@@ -420,6 +485,7 @@ function initBaseUI() {
     setupColorScheme()
     setupToggleAllAction()
     setupSwitchesActions()
+    setupSearchBar()
 }
 
 function initResultsUI() {
