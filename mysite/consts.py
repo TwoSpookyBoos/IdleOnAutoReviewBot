@@ -2499,7 +2499,7 @@ skill_talentsDict = {
             533: {"Name": "Utmost Intellect", "Tab": "Elite Class"},
             456: {"Name": "Unt-WIS-ted Robes", "Tab": "Mage"},
             459: {"Name": "Individual Insight", "Tab": "Mage"},
-            473: {"Name": "Wis Wumbo", "Tab": "Mage Subclass"},
+            488: {"Name": "Wis Wumbo", "Tab": "Mage Subclass"},
             449: {"Name": "Active Afk-er", "Tab": "Savvy Basics"},
         },
         "Low": {
@@ -2543,7 +2543,7 @@ skill_talentsDict = {
             96: {"Name": "-STR-ess Tested Garb", "Tab": "Warrior"},
             94: {"Name": "Firmly Grasp It", "Tab": "Warrior"},
             98: {"Name": "Absolute Unit", "Tab": "Warrior"},
-            113: {"Name": "Str Summore", "Tab": "Warrior Subclass"},
+            81: {"Name": "Str Summore", "Tab": "Warrior Subclass"},
             89: {"Name": "Idle Skilling", "Tab": "Rage Basics"},
         },
         "Low": {
@@ -2580,7 +2580,7 @@ skill_talentsDict = {
             96: {"Name": "-STR-ess Tested Garb", "Tab": "Warrior"},
             94: {"Name": "Firmly Grasp It", "Tab": "Warrior"},
             98: {"Name": "Absolute Unit", "Tab": "Warrior"},
-            113: {"Name": "Str Summore", "Tab": "Warrior Subclass"},
+            81: {"Name": "Str Summore", "Tab": "Warrior Subclass"},
             89: {"Name": "Idle Skilling", "Tab": "Rage Basics"},
             118: {"Name": "Catching Some Zzz-s", "Tab": "Barbarian"},
         },
