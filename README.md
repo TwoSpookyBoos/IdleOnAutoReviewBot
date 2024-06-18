@@ -23,7 +23,7 @@ pip install coloredlogs  # this breaks Python Anywhere at the moment, but is nee
 To run the app, run:
 ``` bash
 cd mysite
-export THONUNBUFFERED=1
+export PYTHONUNBUFFERED=1
 export FLASK_APP=flask_app:app
 export FLASK_ENV=development
 export FLASK_RUN_PORT=5000
