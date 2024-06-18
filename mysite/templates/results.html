@@ -1,6 +1,4 @@
-{% if error %}
-    <span class="error">{{ error }}</span>
-{% elif reviews | ensure_data %}
+{% if reviews | ensure_data %}
     {% include 'header.html' %}
     <main id="mainresults">
         {% for world in reviews %}

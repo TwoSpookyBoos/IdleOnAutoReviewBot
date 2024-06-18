@@ -4,7 +4,7 @@
     cursor: pointer;
 }
 
-#cookie-policy {
+#cookie-policy, #error {
     display: block;
     position: fixed; /* Stay in place */
     z-index: -10; /* go behind */
@@ -85,7 +85,7 @@
     }
 }
 
-#cookie-policy.show {
+#cookie-policy.show, #error.show {
     z-index: 100;
     opacity: 1;
 
@@ -99,7 +99,7 @@
 
 
 
-#close-modal {
+#close-modal, #close-modal-error {
     color: navajowhite;
     float: right;
     font-size: 28px;
