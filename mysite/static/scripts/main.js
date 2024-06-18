@@ -376,8 +376,12 @@ const storeUserParams = (data) => Object
     .entries(defaults)
     .forEach(([k, v]) => localStorage.setItem(k, data[k] || v))
 
-const fetchStoredUserParams = () => Object.fromEntries(Object.entries(defaults)
-    .map(([k, v]) => [k, localStorage.getItem(k) || v]))
+const fetchStoredUserParams = () => {
+    const storedUserParams = Object.fromEntries(Object.entries(defaults).map(([k, v]) => [k, localStorage.getItem(k) || v]))
+    const queryString = new URLSearchParams(storedUserParams).toString()
+    history.pushState(null, '', `?${queryString}`)
+    return storedUserParams
+}
 
 function storeGetParamsIfProvided() {
     const GETData = new URLSearchParams(window.location.search);
@@ -452,8 +456,9 @@ function copyErrorDataAndRedirectToDiscord(e) {
     const errorTextBare = collectTextNodes(errorText).join(' ').replace(/ +/g, ' ');
     const logPath = document.querySelector('#error code').innerText
     const [type, name, timestamp] = logPath.split("/")
+    const server = window.location.href.includes("beta-") ? "BETA" : "PROD"
 
-    navigator.clipboard.writeText(`type: ${type}\nname: ${name}\ntimestamp: ${timestamp}\n\n> ${errorTextBare}`)
+    navigator.clipboard.writeText(`server: ${server}\ntype: ${type}\nname: ${name}\ntimestamp: ${timestamp}\n\n> ${errorTextBare}`)
 
     const copied = document.querySelector('#copied')
     const errorPos = error.getBoundingClientRect()

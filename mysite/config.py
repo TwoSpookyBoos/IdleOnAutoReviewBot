@@ -22,6 +22,7 @@ app.config.update(dict(
 
 ))
 app.config.update(dict(
+    SERVER_TYPE=Path(app.config["PROJECT_ROOT"].parent.name),
     DOMAIN_BETA=f"beta-{app.config['DOMAIN']}",
     FQDN=f"https://{app.config['DOMAIN']}",
     FQDN_BETA=f"https://beta-{app.config['DOMAIN']}",

@@ -1,5 +1,9 @@
 class BaseCustomException(Exception):
-    let_us_know = 'If the problem persists let us know in the <a href="{}">Bug reports</a> on our Discord server, mention<br><code>{}</code>'
+    let_us_know = (
+        'If the problem persists let us know in the <a href="{}">Bug reports</a> '
+        'on our Discord server. <strong>Paste what\'s copied once you click the link</strong>, '
+        'or manually send<br><code>{}</code>'
+    )
     msg_base = None
 
     def __init__(self, *args, reportable=True):

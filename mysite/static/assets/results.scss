@@ -966,17 +966,17 @@ body {
 
         #buttons-floating {
             position: absolute;
-            bottom: 30px;
-            right: 30px;
-            z-index: 99;
+            bottom: 10px;
+            right: 10px;
+            z-index: 96;
 
             display: flex;
             flex-direction: row;
-            column-gap: 5px;
+            gap: 5px;
 
             @media (max-width: 600px) {
-                right: 10px;
-                bottom: calc(var(--nav-height) + var(--nav-padding) * 2 + 10px);
+                flex-direction: column;
+                bottom: calc((var(--nav-height) + var(--nav-padding) * 2) * 2 + 10px);
             }
 
             #scroll-to-top, #expand-collapse {
@@ -1123,18 +1123,11 @@ body {
         }
     }
 
-    #scroll-to-top {
-        right: 10px;
-        bottom: calc(var(--nav-height) + var(--nav-padding) * 2 + 10px);
+    footer {
+        flex-direction: column;
     }
 
     ::-webkit-scrollbar {
         width: 0.5vw;
-    }
-}
-
-@media (max-width: 400px) {
-    footer {
-        flex-direction: column;
     }
 }
