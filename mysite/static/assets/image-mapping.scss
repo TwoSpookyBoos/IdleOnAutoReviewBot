@@ -41,9 +41,6 @@
 //W6
 @import "sneaking";
 
-$id-map: ();
-
-
 $id-map: (
 	item-backpack-space: $inventory-bag-u,
 	//more-storage-space: $cosmic-storage-chest,
@@ -2212,7 +2209,7 @@ $id-map: map-merge($extra, $id-map);
 
 
 @each $class, $link in $id-map {
-	.#{$class}::before {
+	.#{$class}::before, .resource-#{$class} {
 		background-image: $link;
 	}
 }

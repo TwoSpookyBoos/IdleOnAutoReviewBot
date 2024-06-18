@@ -275,7 +275,8 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
                                 label=str(requiredBubble),
                                 picture_class=str(requiredBubble),
                                 progression=str(session_data.account.alchemy_bubbles.get(requiredBubble, {}).get('Level', 0)),
-                                goal=str(tier[2][requiredBubble])))
+                                goal=str(tier[2][requiredBubble]),
+                                resource=str(session_data.account.alchemy_bubbles.get(requiredBubble, {}).get('Material', '')))),
         if tier_OrangeSampleBubbles == (tier[0]-1) and all_orangeRequirementsMet == True:  # Only update if they already met the previous tier
             tier_OrangeSampleBubbles = tier[0]
 
@@ -300,7 +301,8 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
                                 label=str(requiredBubble),
                                 picture_class=str(requiredBubble),
                                 progression=str(session_data.account.alchemy_bubbles.get(requiredBubble, {}).get('Level', 0)),
-                                goal=str(tier[3][requiredBubble])))
+                                goal=str(tier[3][requiredBubble]),
+                                resource=str(session_data.account.alchemy_bubbles.get(requiredBubble, {}).get('Material', ''))))
         if tier_GreenSampleBubbles == (tier[0]-1) and all_greenRequirementsMet == True:  # Only update if they already met the previous tier
             tier_GreenSampleBubbles = tier[0]
 
@@ -325,7 +327,8 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
                                 label=str(requiredBubble),
                                 picture_class=str(requiredBubble),
                                 progression=str(session_data.account.alchemy_bubbles.get(requiredBubble, {}).get('Level', 0)),
-                                goal=str(tier[4][requiredBubble])))
+                                goal=str(tier[4][requiredBubble]),
+                                resource=str(session_data.account.alchemy_bubbles.get(requiredBubble, {}).get('Material', ''))))
         if tier_PurpleSampleBubbles == (tier[0]-1) and all_purpleRequirementsMet == True:  # Only update if they already met the previous tier
             tier_PurpleSampleBubbles = tier[0]
 
@@ -350,7 +353,8 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
                                 label=str(requiredBubble),
                                 picture_class=str(requiredBubble),
                                 progression=str(session_data.account.alchemy_bubbles.get(requiredBubble, {}).get('Level', 0)),
-                                goal=str(tier[5][requiredBubble])))
+                                goal=str(tier[5][requiredBubble]),
+                                resource=str(session_data.account.alchemy_bubbles.get(requiredBubble, {}).get('Material', ''))))
         if tier_UtilityBubbles == (tier[0]-1) and all_utilityRequirementsMet == True:
             tier_UtilityBubbles = tier[0]
 

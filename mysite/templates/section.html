@@ -36,6 +36,7 @@
                                     {{ advice.label | safe }}
                                 {% endif %}
                                 </li>
+                                <li class="resource{% if advice.resource %} resource-{{ advice.resource }}{% endif %}"></li>
                                 <li class="prog">{{ advice.progression }}</li>
                                 {% if advice.progression and advice.goal %}
                                 <li class="arrow"></li>

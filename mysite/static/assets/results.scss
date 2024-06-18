@@ -522,7 +522,7 @@ body {
                                         width: 100%;
                                         position: relative;
                                         display: grid;
-                                        grid-template-columns: 1fr repeat(3, auto);
+                                        grid-template-columns: 1fr repeat(4, auto);
                                         column-gap: var(--col-gap);
                                         row-gap: 5px;
                                         overflow-y: auto;
@@ -540,7 +540,7 @@ body {
                                             content: '';
                                             height: 20px;
                                             width: 100%;
-                                            grid-column: 1 / span 4;
+                                            grid-column: 1 / span 5;
                                             transition: --table-edge-bg-to .5s ease-in-out;
                                         }
 
@@ -559,7 +559,7 @@ body {
                                         }
 
                                         .advice-title {
-                                            grid-column: 1 / span 4;
+                                            grid-column: 1 / span 5;
                                             background: hsla(0deg, 0%, 0%, 0.4);
                                             padding: 5px 10px;
 
@@ -593,17 +593,17 @@ body {
                                             display: flex;
                                             align-items: center;
                                             word-break: break-word;
+                                        }
 
-                                            &::before {
-                                                display: block;
-                                                content: '';
-                                                height: 40px;
-                                                min-width: var(--advice-icon-width);
+                                        .advice::before, .resource {
+                                            display: block;
+                                            content: '';
+                                            height: 40px;
+                                            min-width: var(--advice-icon-width);
 
-                                                background-size: contain;
-                                                background-position: center;
-                                                background-repeat: no-repeat;
-                                            }
+                                            background-size: contain;
+                                            background-position: center;
+                                            background-repeat: no-repeat;
                                         }
 
                                         .arrow {
