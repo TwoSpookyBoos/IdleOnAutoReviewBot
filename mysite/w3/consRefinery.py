@@ -311,7 +311,7 @@ def setConsRefineryProgressionTier():
         tier="",
         pre_string="Max Tab1 Ranks without causing a Salt Deficit",
         advices=refinery_AdviceDict['Tab1Ranks'],
-        post_string="Or just YOLO rank up everything if balancing is too much of a pain ¯\_(ツ)_/¯"
+        post_string="Or just YOLO rank up everything if balancing is too much of a pain ¯\\_(ツ)_/¯"
     )
     refinery_AdviceGroupDict['Tab2Ranks'] = AdviceGroup(
         tier="",
