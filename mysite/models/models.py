@@ -992,6 +992,7 @@ class Account:
                 try:
                     self.stamps[stampValuesDict['Name']] = {
                         "Index": int(stampIndex),
+                        "Material": stampValuesDict['Material'],
                         "Level": int(floor(raw_stamps_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0))),
                         "Max": int(floor(raw_stamp_max_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0))),
                         "Delivered": int(floor(raw_stamp_max_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0))) > 0,

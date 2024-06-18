@@ -548,7 +548,7 @@ def setBreedingProgressionTier() -> AdviceSection:
             ['Rattler', 'Looter', 'Monolithic', 'Refiller', 'Defender', 'Refiller'],
             ['rattler', 'looter', 'monolithic', 'refiller', 'defender', 'refiller']],
         6: [
-            ['Peapeapod or Rattler', 'Looter', 'Trasher', 'Refiller', 'Refiller', 'Lazarus or Filler'],
+            ['Peapeapod or Rattler', 'Looter', 'Trasher (Manually click to delete enemy attacks!)', 'Refiller', 'Refiller', 'Lazarus or Filler'],
             ['peapeapod', 'looter', 'trasher', 'refiller', 'refiller', 'lazarus']]
     }
     recommendedArenaCompsDict: dict[int, list[list[str]]] = {

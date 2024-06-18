@@ -84,7 +84,8 @@ def setDivinityProgressionTier():
                     label=f"{session_data.account.divinity['Divinities'][divDivinity].get('Name')} Blessing",
                     picture_class=session_data.account.divinity['Divinities'][divDivinity].get('Name'),
                     progression=session_data.account.divinity['Divinities'][divDivinity].get('BlessingLevel'),
-                    goal=100
+                    goal=100,
+                    resource=session_data.account.divinity['Divinities'][divDivinity].get('BlessingMaterial')
                 ))
 
     #Offerings Info
