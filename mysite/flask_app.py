@@ -224,7 +224,7 @@ def create_and_populate_log_files(data, headerData, msg, name_or_data, error):
         with open(filedata, "w") as user_log:
             user_log.writelines(data + os.linesep)
 
-    return str(app.config["SERVER_TYPE"]/log_subdir).replace("/", " ▸ ")
+    return str(app.config["SERVER_TYPE"]/log_subdir).replace("/", " ▸ ").replace("\\", " ▸ ")
 
 
 @app.route("/robots.txt")
