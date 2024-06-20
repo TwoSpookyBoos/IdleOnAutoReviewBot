@@ -459,8 +459,7 @@ function copyErrorDataAndRedirectToDiscord(e) {
     const errorText = document.querySelector('#error p');
     const errorTextBare = collectTextNodes(errorText).join(' ').replace(/ +/g, ' ');
     const logPath = document.querySelector('#error code').innerText
-    const [type, name, timestamp] = logPath.split("/")
-    const server = window.location.href.includes("beta-") ? "BETA" : "PROD"
+    const [server, type, name, timestamp] = logPath.split(" ▸ ")
 
     navigator.clipboard.writeText(`server: ${server}\ntype: ${type}\nname: ${name}\ntimestamp: ${timestamp}\n\n> ${errorTextBare}`)
 
