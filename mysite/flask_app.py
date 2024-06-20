@@ -1,7 +1,6 @@
 import json
 import traceback
 from datetime import datetime
-from json import JSONDecodeError
 from pathlib import Path
 
 import requests
@@ -9,6 +8,7 @@ from flask import g, render_template, request, redirect, Response, send_from_dir
 
 import consts
 import taskSuggester
+from models import custom_exceptions
 from utils.data_formatting import HeaderData
 from models.models import AdviceWorld
 from models.custom_exceptions import (
@@ -16,7 +16,9 @@ from models.custom_exceptions import (
     UsernameBanned,
     ProfileNotFound,
     EmptyResponse,
-    IEConnectionFailed, BaseCustomException,
+    IEConnectionFailed,
+    BaseCustomException,
+    JSONDecodeError,
 )
 from utils.text_formatting import (
     is_username,
@@ -44,7 +46,12 @@ def parse_user_input() -> str | dict | None:
         parsed = format_character_name(data)
 
     elif json_schema_valid(data):
-        parsed = json.loads(data)
+        parsed = None
+        try:
+            parsed = json.loads(data)
+        except json.JSONDecodeError as e:
+            raise custom_exceptions.JSONDecodeError(data)
+
 
     else:
         raise UserDataException("Submitted data not valid.", data)
@@ -78,7 +85,6 @@ def switches():
 @app.route("/results", methods=["POST"])
 def results() -> Response | str:
     page: str = "results.html"
-    error: str = ""
     reviews: list[AdviceWorld] | None = list()
     headerData: HeaderData | None = None
     is_beta: bool = app.config["DOMAIN_BETA"] in request.host
@@ -96,7 +102,7 @@ def results() -> Response | str:
             reviews, headerData = autoReviewBot(name_or_data)
 
         name = name_for_logging(name_or_data, headerData, "index.html")
-        log_browser_data(name)
+        # log_browser_data(name)
         response = render_template(
             page,
             reviews=reviews,
@@ -114,52 +120,31 @@ def results() -> Response | str:
         response = error, 400
 
     except UsernameBanned as ban:
-        msg = f"Account banned: {ban.username}"
-        data = None
-        logger.error(
-            "PETTY BITCH MODE ACTIVATED. Banned name entered: %s", ban.username
-        )
+        logger.error("PETTY BITCH MODE ACTIVATED. Banned name entered: %s", ban.username)
 
-        create_and_populate_log_files(data, headerData, msg, name_or_data, ban)
+        create_and_populate_log_files(None, headerData, ban.log_msg, name_or_data, ban)
 
         error = ban.msg_base
         response = error, 403
 
     except ProfileNotFound as e:
-        msg = f"Public profile not found: {e.username}"
-        data = None
-
-        dirname = create_and_populate_log_files(data, headerData, msg, name_or_data, e)
-        error = e.msg_display.format(app.config["BUG_REPORTS"], dirname)
+        dirname = create_and_populate_log_files(None, headerData, e.log_msg, name_or_data, e)
+        error = e.msg_display.format(dirname)
         response = error, 404
 
     except EmptyResponse as e:
-        msg = f"Empty response: {e.username}"
-        data = None
-
-        dirname = create_and_populate_log_files(data, headerData, msg, name_or_data, e)
-        error = e.msg_display.format(app.config["BUG_REPORTS"], dirname)
+        dirname = create_and_populate_log_files(None, headerData, e.log_msg, name_or_data, e)
+        error = e.msg_display.format(dirname)
         response = error, 500
 
     except IEConnectionFailed as e:
-        msg = f"Error connecting to {e.url}"
-        data = e.stacktrace
-
-        dirname = create_and_populate_log_files(data, headerData, msg, name_or_data, e)
-        error = e.msg_display.format(app.config["BUG_REPORTS"], dirname)
+        dirname = create_and_populate_log_files(e.stacktrace, headerData, e.log_msg, name_or_data, e)
+        error = e.msg_display.format(dirname)
         response = error, 500
 
     except JSONDecodeError as e:
-        msg = str(e)
-        data = e.doc
-
-        e.dirname = "faulty_data"
-        dirname = create_and_populate_log_files(data, headerData, msg, name_or_data, e)  # noqa
-        let_us_know = BaseCustomException.let_us_know.format(app.config["BUG_REPORTS"], dirname)
-        error = (
-            "Looks like the data you submitted is corrupted.<br>The issue has been "
-            f"reported and will be investigated.<br>{let_us_know}"
-        )
+        dirname = create_and_populate_log_files(e.data, headerData, str(e), name_or_data, e)
+        error = e.msg_display.format(dirname)
         response = error, 400
 
     except Exception as e:
@@ -167,15 +152,13 @@ def results() -> Response | str:
         msg = os.linesep.join([str(e), "", traceback.format_exc()])
         data = get_user_input()
 
-        e.dirname = "other"
-        dirname = create_and_populate_log_files(
-            data, headerData, msg, name_or_data, e
-        )
+        setattr(e, "dirname", "other")
+        dirname = create_and_populate_log_files(data, headerData, msg, name_or_data, e)  # noqa
 
-        let_us_know = BaseCustomException.let_us_know.format(app.config["BUG_REPORTS"], dirname)
+        faq = BaseCustomException.let_us_know.format(dirname)
         error = (
             "Looks like something went wrong while handling your account data.<br>"
-            f"The issue has been reported and will be investigated.<br>{let_us_know}"
+            f"The issue has been reported and will be investigated.<br>{faq}"
         )
         response = error, 500
 

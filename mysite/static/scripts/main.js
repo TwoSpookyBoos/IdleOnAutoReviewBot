@@ -336,7 +336,10 @@ function loadErrorPopup(html, statusCode) {
     error.innerHTML = html;
     document.querySelector('#error .inner').replaceChildren(error)
     document.querySelector('#error').classList.add("show")
-    document.querySelector('#error p a').onclick = copyErrorDataAndRedirectToDiscord
+    const bugReportLink = document.querySelector('#error p a.bug')
+    if (bugReportLink) {
+        bugReportLink.onclick = copyErrorDataAndRedirectToDiscord
+    }
 }
 
 function fetchPlayerAdvice() {
