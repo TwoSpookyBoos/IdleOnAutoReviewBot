@@ -2517,15 +2517,21 @@ skill_talentsDict = {
             59: {"Name": "Blood Marrow", "Tab": "Voidwalker"},
             57: {"Name": "Species Epoch", "Tab": "Voidwalker"},
             49: {"Name": "Enhancement Eclipse", "Tab": "Voidwalker", "Optimal": [0, 25, False], 'Hardcap': hardcap_enhancement_eclipse},
+            53: {"Name": "Eternal WIS", "Tab": "Voidwalker"},
+            51: {"Name": "Eternal STR", "Tab": "Voidwalker"},
+            52: {"Name": "Eternal AGI", "Tab": "Voidwalker"},
         },
         "Medium": {
             41: {"Name": "Crystal Countdown", "Tab": "Maestro"},
             56: {"Name": "Voodoo Statufication", "Tab": "Voidwalker"},
             78: {"Name": "Extra Bags", "Tab": "Beginner"},
             131: {"Name": "Redox Rates", "Tab": "Squire"},
+            39: {"Name": "Colloquial Containers", "Tab": "Maestro"},
         },
         "Low": {
             130: {"Name": "Refinery Throttle", "Tab": "Squire", "Optimal": [0, 8, True]},
+
+            37: {"Name": "Skilliest Statue", "Tab": "Maestro", 'Hardcap': 200}
         },
     },
     "Mining": {
