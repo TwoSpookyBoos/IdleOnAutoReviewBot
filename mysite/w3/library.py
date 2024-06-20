@@ -7,12 +7,26 @@ from utils.logging import get_logger
 
 logger = get_logger(__name__)
 
-def getJeopardyGoal(start: int, interval: int, doNotExceed: int):
-    try:
-        return interval * (doNotExceed-start // interval)
-    except Exception as reason:
-        logger.exception(f"Could not find optimal target level using start {start}, interval {interval}, doNotExceed {doNotExceed} because: {reason}")
-        return doNotExceed
+def getJeopardyGoal(start: int, interval: int, talentExceedsBookLevels: bool, max_talents_over_books: int):
+    #Example1: Refinery Throttle starts 0, interval 8, talentExceedsBookLevels = True, and doNotExceed would be the max character level including bonuses over books
+    #Example2: Enhancement Eclipse starts 0, interval 25, talentExceedsBookLevels = False. Because of that, doNotExceed should be Max Book level.
+    if talentExceedsBookLevels:
+        doNotExceed = max_talents_over_books
+        optimal = interval * ((doNotExceed - start) // interval)
+        try:
+            logger.debug(f"Given {start}, {interval}, {doNotExceed}, {talentExceedsBookLevels > 0}: optimal {optimal}: Returning {optimal - (doNotExceed - session_data.account.library['MaxBookLevel'])}")
+            return optimal - (doNotExceed - session_data.account.library['MaxBookLevel'])
+        except Exception as reason:
+            logger.exception(f"Could not find optimal target level using start {start}, interval {interval}, doNotExceed {doNotExceed} because: {reason}")
+            return doNotExceed
+    else:
+        doNotExceed = session_data.account.library['MaxBookLevel']
+        optimal = interval * ((doNotExceed - start) // interval)
+        try:
+            return optimal
+        except Exception as reason:
+            logger.exception(f"Could not find optimal target level using start {start}, interval {interval}, doNotExceed {doNotExceed} because: {reason}")
+            return session_data.account.library['MaxBookLevel']
 
 def getBookLevelAdviceGroup() -> AdviceGroup:
     bookLevelAdvices = {}
@@ -164,22 +178,18 @@ def getCharacterBooksAdviceGroups() -> dict:
                     character_adviceDict[toon.character_name][subgroupName] = []
                 if skill_talentsDict[skillName][rating]:   # Trying to .items() on an empty dict gets angy- This should prevent that.
                     for talentNumber, talentDetailsDict in skill_talentsDict[skillName][rating].items():
-                        if skillName == "Utility" or skillName in toon.specialized_skills:
+                        if (skillName == "Utility" or skillName in toon.specialized_skills) and 0 < toon.max_talents.get(str(talentNumber), 0):
                             jeopardy_goal_level = 9999
                             hardcap_level = talentDetailsDict.get('Hardcap', 9999)
                             if 'Optimal' in talentDetailsDict:
-                                if talentDetailsDict['Optimal'][2]:  #Lists whether this talent goes beyond book levels or not
-                                    jeopardy_goal_level = getJeopardyGoal(
-                                        talentDetailsDict['Optimal'][0],
-                                        talentDetailsDict['Optimal'][1],
-                                        toon.max_talents_over_books)
-                                else:
-                                    jeopardy_goal_level = getJeopardyGoal(
-                                        talentDetailsDict['Optimal'][0],
-                                        talentDetailsDict['Optimal'][1],
-                                        session_data.account.library['MaxBookLevel'])
+                                jeopardy_goal_level = getJeopardyGoal(
+                                    talentDetailsDict['Optimal'][0],
+                                    talentDetailsDict['Optimal'][1],
+                                    talentDetailsDict['Optimal'][2],
+                                    toon.max_talents_over_books)
+                            logger.debug(f"{toon.character_name} {skillName} {rating} {talentDetailsDict['Name']}: min({session_data.account.library['MaxBookLevel']}, {jeopardy_goal_level}, {hardcap_level}) = {min(session_data.account.library['MaxBookLevel'], jeopardy_goal_level, hardcap_level)}")
                             goal_level = min(session_data.account.library['MaxBookLevel'], jeopardy_goal_level, hardcap_level)
-                            if 0 < toon.max_talents.get(str(talentNumber), 0) < goal_level and talentNumber not in talentNumbersAdded:
+                            if toon.max_talents.get(str(talentNumber), 0) < goal_level and talentNumber not in talentNumbersAdded:
                                 character_adviceDict[toon.character_name][subgroupName].append(Advice(
                                     label=f"{talentDetailsDict['Tab']}: {talentDetailsDict['Name']}",
                                     picture_class=talentDetailsDict['Name'],
@@ -197,19 +207,15 @@ def getCharacterBooksAdviceGroups() -> dict:
         #                 for talentNumber, talentDetailsDict in combat_talentsDict[className][rating].items():
         #                     jeopardy_goal_level = 9999
         #                     hardcap_level = talentDetailsDict.get('Hardcap', 9999)
-        #                     if talentDetailsDict.get('Optimal', None):
-        #                         if talentDetailsDict['Optimal'][2]:
+        #                     if 0 < toon.max_talents.get(str(talentNumber), 0):
+        #                         if 'Optimal' in talentDetailsDict:
         #                             jeopardy_goal_level = getJeopardyGoal(
         #                                 talentDetailsDict['Optimal'][0],
         #                                 talentDetailsDict['Optimal'][1],
-        #                                 session_data.account.library['MaxBookLevel'])
-        #                         else:
-        #                             jeopardy_goal_level = getJeopardyGoal(
-        #                                 talentDetailsDict['Optimal'][0],
-        #                                 talentDetailsDict['Optimal'][1],
+        #                                 talentDetailsDict['Optimal'][2],
         #                                 toon.max_talents_over_books)
         #                     goal_level = min(session_data.account.library['MaxBookLevel'], jeopardy_goal_level, hardcap_level)
-        #                     if 0 < toon.max_talents.get(str(talentNumber), 0) < goal_level and talentNumber not in talentNumbersAdded:
+        #                     if toon.max_talents.get(str(talentNumber), 0) < goal_level and talentNumber not in talentNumbersAdded:
         #                         if subgroupName not in character_adviceDict[toon.character_name]:
         #                             character_adviceDict[toon.character_name][subgroupName] = []
         #                         character_adviceDict[toon.character_name][subgroupName].append(Advice(

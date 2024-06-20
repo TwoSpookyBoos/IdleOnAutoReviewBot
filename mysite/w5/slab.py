@@ -155,7 +155,7 @@ def setSlabProgressionTier():
     )
     slab_AdviceGroupDict["Reclaims"] = AdviceGroup(
         tier='',
-        pre_string=f"Could be reclaimed from a completed quest",
+        pre_string=f"Could be reclaimed from a completed quest (1 per cloudsave)",
         advices=slab_AdviceDict["Reclaims"]
     )
     slab_AdviceGroupDict["Vendors"] = AdviceGroup(
