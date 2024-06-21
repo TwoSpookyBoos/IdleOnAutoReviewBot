@@ -2646,6 +2646,7 @@ skill_talentsDict = {
         },
         "Medium": {
             492: {"Name": "Bubble Breakthrough", "Tab": "Shaman"},
+            506: {"Name": "Shared Beliefs", "Tab": "Elemental Sorcerer"},
             41: {"Name": "Crystal Countdown", "Tab": "Maestro"},
             28: {"Name": "Cards Galore", "Tab": "Journeyman"},
             29: {"Name": "Rares Everywhere", "Tab": "Journeyman"},
@@ -2823,7 +2824,7 @@ combat_talentsDict = {
             490: {"Name": "Cranium Cooking", "Tab": "Shaman"},
             481: {"Name": "Auspicious Aura", "Tab": "Shaman"},
             483: {"Name": "Tenteyecle", "Tab": "Shaman"},
-            529: {"Name": "Raise Dead", "Tab": "Bubonic Conjuror"},
+            529: {"Name": "Raise Dead", "Tab": "Bubonic Conjuror", 'Hardcap': 200},
             526: {"Name": "Flatulent Spirit", "Tab": "Bubonic Conjuror"},
             525: {"Name": "Chemical Warfare", "Tab": "Bubonic Conjuror"},
         },
@@ -2849,7 +2850,7 @@ combat_talentsDict = {
             498: {"Name": "Dimensional Wormhole", "Tab": "Elemental Sorcerer"},
         },
         "Medium": {
-            178: {"Name": "Wormhole Emperor", "Tab": "Elemental Sorcerer"},
+            508: {"Name": "Wormhole Emperor", "Tab": "Elemental Sorcerer"},
             474: {"Name": "Fuscia Flasks", "Tab": "Wizard"},
             485: {"Name": "Paperwork, Great...", "Tab": "Wizard"},
             455: {"Name": "Knowledge Is Power", "Tab": "Mage"},

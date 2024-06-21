@@ -169,17 +169,17 @@ def getTalentExclusions() -> list:
         talentExclusions.append(537)
         # 537: {"Name": "Essence Transferral", "Tab": "Bubonic Conjuror"},
 
-    try:
-        if max([toon.combat_level for toon in session_data.account.safe_characters if toon.class_name == "Bubonic Conjuror"]) > 300:
-            talentExclusions.append(525)
-    except:
-        pass
+    #If you can reach max book of 200, the Bubo Aura build really takes off. Priority for damage from Poison falls off a cliff.
+    if max([toon.max_talents_over_books for toon in session_data.account.safe_characters if toon.class_name == "Bubonic Conjuror"], default=0) >= 200:
+        talentExclusions.append(525)
+        #525: {"Name": "Chemical Warfare", "Tab": "Bubonic Conjuror"},
 
     #Elite Account-Wides don't stack, can be excluded if already maxed on one character
     for talentNumber, className in {
-        178: "Divine Knight",
-        328: "Siege Breaker",
-        508: "Elemental Sorcerer"
+        178: "Divine Knight",  #178: {"Name": "King of the Remembered", "Tab": "Divine Knight"},
+        328: "Siege Breaker",  #328: {"Name": "Archlord Of The Pirates", "Tab": "Siege Breaker"},
+        508: "Elemental Sorcerer",  #506: {"Name": "Shared Beliefs", "Tab": "Elemental Sorcerer"},
+        506: "Elemental Sorcerer",  #508: {"Name": "Wormhole Emperor", "Tab": "Elemental Sorcerer"},
     }.items():
         if max([toon.max_talents.get(str(talentNumber), 0)
                for toon in session_data.account.safe_characters
@@ -195,7 +195,7 @@ def getTalentExclusions() -> list:
         # 148: {"Name": "Overflowing Ladle", "Tab": "Blood Berserker"},
         # 146: {"Name": "Apocalypse Chow", "Tab": "Blood Berserker"},
         # 147: {"Name": "Waiting to Cool", "Tab": "Blood Berserker"},
-    
+
     #if session_data.account.alchemy_bubbles
     #492: {"Name": "Bubble Breakthrough", "Tab": "Shaman"},
 
