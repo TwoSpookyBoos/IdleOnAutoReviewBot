@@ -1109,8 +1109,8 @@ class Account:
                             int(all_raw_bubbles[cauldronIndex][str(bubbleIndex)]),
                             bubblesDict[cauldronIndex][bubbleIndex]["x1"],
                             bubblesDict[cauldronIndex][bubbleIndex]["x2"])
-                        if int(all_raw_bubbles[cauldronIndex][str(bubbleIndex)]) > 0:
-                            
+                        #if int(all_raw_bubbles[cauldronIndex][str(bubbleIndex)]) > 0:
+                            #Keep track of cauldron counts
                     except:
                         continue  # Level and BaseValue already defaulted to 0 above
         except:
