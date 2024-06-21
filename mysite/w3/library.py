@@ -195,7 +195,8 @@ def getTalentExclusions() -> list:
         # 148: {"Name": "Overflowing Ladle", "Tab": "Blood Berserker"},
         # 146: {"Name": "Apocalypse Chow", "Tab": "Blood Berserker"},
         # 147: {"Name": "Waiting to Cool", "Tab": "Blood Berserker"},
-    if session_data.account.alchemy_bubbles
+    
+    #if session_data.account.alchemy_bubbles
     #492: {"Name": "Bubble Breakthrough", "Tab": "Shaman"},
 
     return talentExclusions
