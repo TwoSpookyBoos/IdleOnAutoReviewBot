@@ -17,7 +17,7 @@ from consts import expectedStackables, greenstack_progressionTiers, card_data, m
     getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampsDict, stampTypes, marketUpgradeList, \
     achievementsList, forgeUpgradesDict, arcadeBonuses, saltLickList, allMeritsDict, bubblesDict, familyBonusesDict, poBoxDict, equinoxBonusesDict, \
     maxDreams, dreamsThatUnlockNewBonuses, ceilUpToBase, starsignsDict, gfood_codes, getStyleNameFromIndex, divinity_divinitiesDict, getDivinityNameFromIndex, \
-    maxCookingTables, getNextESFamilyBreakpoint
+    maxCookingTables, getNextESFamilyBreakpoint, expected_talentsDict
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
 
 def session_singleton(cls):
@@ -52,6 +52,14 @@ class Equipment:
             self.tools = {}
             self.foods = []
 
+def getExpectedTalents(base_class, sub_class, elite_class):
+    expectedTalents = []
+    for className in [base_class, sub_class, elite_class]:
+        try:
+            expectedTalents.extend(expected_talentsDict[className])
+        except:
+            continue
+    return expectedTalents
 
 def getSpecializedSkills(base_class, sub_class, elite_class):
     specializedSkillsList = []
@@ -89,8 +97,7 @@ class Character:
         max_talents: dict,
         current_preset_talents: dict,
         secondary_preset_talents: dict,
-        po_boxes: list[int],
-    ):
+        po_boxes: list[int]):
 
         self.character_index: int = character_index
         self.character_name: str = character_name
@@ -107,6 +114,7 @@ class Character:
         self.current_preset_talents: dict = current_preset_talents
         self.secondary_preset_talents: dict = secondary_preset_talents
         self.specialized_skills: list[str] = getSpecializedSkills(self.base_class, self.sub_class, self.elite_class)
+        self.expected_talents: list[int] = getExpectedTalents(self.base_class, self.sub_class, self.elite_class)
 
         self.combat_level: int = all_skill_levels["Combat"]
         self.mining_level: int = all_skill_levels["Mining"]
