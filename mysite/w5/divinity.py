@@ -227,7 +227,8 @@ def setDivinityProgressionTier():
                     label=f"Current Big P bubble level",
                     picture_class='big-p',
                     progression=session_data.account.alchemy_bubbles['Big P']['Level'],
-                    goal=nextBigPTarget
+                    goal=nextBigPTarget,
+                    resource=session_data.account.alchemy_bubbles['Big P']['Material'],
                 ))
             for divinityLevel in arctisCombosDict[bigPLevel]:
                 if arctisCombosDict[bigPLevel][divinityLevel] > currentLowestArctisValue:  #Strictly greater than
