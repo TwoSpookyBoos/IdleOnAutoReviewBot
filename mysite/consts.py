@@ -2601,7 +2601,7 @@ expected_talentsDict = {
 
 }
 hardcap_symbols = 280
-hardcap_enhancement_eclipse = 250 #Lava might add more in the future, but there are no bonuses above 250 in v2.10
+hardcap_enhancement_eclipse = 250  #Lava might add more in the future, but there are no bonuses above 250 in v2.10
 skill_talentsDict = {
     # Optimal is an optional list for calculating library.getJeapordyGoal
     # [0] = the starting level
@@ -2645,43 +2645,24 @@ skill_talentsDict = {
             52: {"Name": "Eternal AGI", "Tab": "Voidwalker"},
         },
         "Medium": {
+            492: {"Name": "Bubble Breakthrough", "Tab": "Shaman"},
             41: {"Name": "Crystal Countdown", "Tab": "Maestro"},
+            28: {"Name": "Cards Galore", "Tab": "Journeyman"},
+            29: {"Name": "Rares Everywhere", "Tab": "Journeyman"},
+            24: {"Name": "Curse of Mr Looty Booty", "Tab": "Journeyman"},
             56: {"Name": "Voodoo Statufication", "Tab": "Voidwalker"},
             78: {"Name": "Extra Bags", "Tab": "Beginner"},
             131: {"Name": "Redox Rates", "Tab": "Squire"},
             39: {"Name": "Colloquial Containers", "Tab": "Maestro"},
         },
         "Low": {
+            537: {"Name": "Essence Transferral", "Tab": "Bubonic Conjuror"},
+            269: {"Name": "Broken Time", "Tab": "Calm Basics"},
+            281: {"Name": "Acme Anvil", "Tab": "Archer"},
+            279: {"Name": "Robbinghood", "Tab": "Archer"},
             130: {"Name": "Refinery Throttle", "Tab": "Squire", "Optimal": [0, 8, True]},
-
-            37: {"Name": "Skilliest Statue", "Tab": "Maestro", 'Hardcap': 200}
-        },
-    },
-    "Mining": {
-        "High": {
-            100: {"Name": "Big Pick", "Tab": "Warrior"},
-            85: {"Name": "Brute Efficiency", "Tab": "Rage Basics"},
-            103: {"Name": "Tool Proficiency", "Tab": "Warrior"},
-            101: {"Name": "Copper Collector", "Tab": "Warrior"},
-            149: {"Name": "Symbols of Beyond R", "Tab": "Elite Class", "Optimal": [0, 20, False], 'Hardcap': hardcap_symbols},
-            142: {"Name": "Skill Strengthen", "Tab": "Elite Class"},
-        },
-        "Medium": {
-            99: {"Name": "Haungry for Gold", "Tab": "Warrior"},
-            143: {"Name": "Overblown Testosterone", "Tab": "Elite Class"},
-            96: {"Name": "-STR-ess Tested Garb", "Tab": "Warrior"},
-            94: {"Name": "Firmly Grasp It", "Tab": "Warrior"},
-            98: {"Name": "Absolute Unit", "Tab": "Warrior"},
-            81: {"Name": "Str Summore", "Tab": "Warrior Subclass"},
-            89: {"Name": "Idle Skilling", "Tab": "Rage Basics"},
-        },
-        "Low": {
-            92: {"Name": "Health Overdrive", "Tab": "Warrior"},
-            127: {"Name": "Shieldiest Statues", "Tab": "Squire", 'Hardcap': 200},
-            112: {"Name": "Strongest Statues", "Tab": "Barbarian", 'Hardcap': 200},
-            95: {"Name": "Strength in Numbers", "Tab": "Warrior"},
-            0: {"Name": "Health Booster", "Tab": "Rage Basics"},
-            111: {"Name": "Fistful of Obol", "Tab": "Warrior Subclass", 'Hardcap': 125},
+            37: {"Name": "Skilliest Statue", "Tab": "Maestro", 'Hardcap': 200},
+            144: {"Name": "The Family Guy", "Tab": "Elite Class"},
         },
     },
     "Cooking": {
@@ -2717,6 +2698,33 @@ skill_talentsDict = {
             112: {"Name": "Strongest Statues", "Tab": "Barbarian", 'Hardcap': 200},
             111: {"Name": "Fistful of Obol", "Tab": "Warrior Subclass", 'Hardcap': 125},
             116: {"Name": "Bobbin' Bobbers", "Tab": "Barbarian"},
+        },
+    },
+    "Mining": {
+        "High": {
+            100: {"Name": "Big Pick", "Tab": "Warrior"},
+            85: {"Name": "Brute Efficiency", "Tab": "Rage Basics"},
+            103: {"Name": "Tool Proficiency", "Tab": "Warrior"},
+            101: {"Name": "Copper Collector", "Tab": "Warrior"},
+            149: {"Name": "Symbols of Beyond R", "Tab": "Elite Class", "Optimal": [0, 20, False], 'Hardcap': hardcap_symbols},
+            142: {"Name": "Skill Strengthen", "Tab": "Elite Class"},
+        },
+        "Medium": {
+            99: {"Name": "Haungry for Gold", "Tab": "Warrior"},
+            143: {"Name": "Overblown Testosterone", "Tab": "Elite Class"},
+            96: {"Name": "-STR-ess Tested Garb", "Tab": "Warrior"},
+            94: {"Name": "Firmly Grasp It", "Tab": "Warrior"},
+            98: {"Name": "Absolute Unit", "Tab": "Warrior"},
+            81: {"Name": "Str Summore", "Tab": "Warrior Subclass"},
+            89: {"Name": "Idle Skilling", "Tab": "Rage Basics"},
+        },
+        "Low": {
+            92: {"Name": "Health Overdrive", "Tab": "Warrior"},
+            127: {"Name": "Shieldiest Statues", "Tab": "Squire", 'Hardcap': 200},
+            112: {"Name": "Strongest Statues", "Tab": "Barbarian", 'Hardcap': 200},
+            95: {"Name": "Strength in Numbers", "Tab": "Warrior"},
+            0: {"Name": "Health Booster", "Tab": "Rage Basics"},
+            111: {"Name": "Fistful of Obol", "Tab": "Warrior Subclass", 'Hardcap': 125},
         },
     },
     "Catching": {
@@ -2761,7 +2769,9 @@ skill_talentsDict = {
         "High": {
             476: {"Name": "Sooouls", "Tab": "Wizard"},
         },
-        "Medium": {},
+        "Medium": {
+            303: {"Name": "Stop Right There", "Tab": "Hunter"},
+        },
         "Low": {
             478: {"Name": "Nearby Outlet", "Tab": "Wizard"},
             475: {"Name": "Charge Syphon", "Tab": "Wizard", 'Hardcap': 200},
@@ -2772,14 +2782,18 @@ combat_talentsDict = {
     #Talents here are unique from the skill_talentsDict above
     #Elite Classes
     "Blood Berserker": {
-        "High": {},
-        "Medium": {},
-        "Low": {
+        "High": {
             109: {"Name": "Monster Decimator", "Tab": "Barbarian"},
-            135: {"Name": "Fired Up", "Tab": "Blood Berserker", "Optimal": [0, 25, True], 'Hardcap': 125},
-            136: {"Name": "Combustion", "Tab": "Blood Berserker", "Optimal": [0, 20, True], 'Hardcap': 125},
-            137: {"Name": "Serrated Swipe", "Tab": "Blood Berserker", "Optimal": [0, 50, True], 'Hardcap': 125},
-            106: {"Name": "Axe Hurl", "Tab": "Barbarian", "Optimal": [0, 50, True], 'Hardcap': 125},
+        },
+        "Medium": {
+            108: {"Name": "No Pain No Gain", "Tab": "Barbarian"},
+            97: {"Name": "Carry a Big Stick", "Tab": "Warrior"},
+            6: {"Name": "Gilded Sword", "Tab": "Rage Basics"},
+        },
+        "Low": {
+            103: {"Name": "Idle Brawling", "Tab": "Rage Basics"},
+            5: {"Name": "Sharpened Axe", "Tab": "Rage Basics"},
+            141: {"Name": "Charred Skulls", "Tab": "Blood Berserker"},
         },
     },
     "Divine Knight": {
@@ -2794,73 +2808,135 @@ combat_talentsDict = {
         "Medium": {
             178: {"Name": "King of the Remembered", "Tab": "Divine Knight"},
             129: {"Name": "Blocky Bottles", "Tab": "Squire"},
+            125: {"Name": "Precision Power", "Tab": "Squire"},
             97: {"Name": "Carry a Big Stick", "Tab": "Warrior"},
             6: {"Name": "Gilded Sword", "Tab": "Rage Basics"},
-            125: {"Name": "Precision Power", "Tab": "Squire"},
         },
         "Low": {
+            103: {"Name": "Idle Brawling", "Tab": "Rage Basics"},
             5: {"Name": "Sharpened Axe", "Tab": "Rage Basics"},
-            91: {"Name": "Whirl", "Tab": "Warrior", "Optimal": [0, 24, True]},
+            141: {"Name": "Charred Skulls", "Tab": "Divine Knight"},
         },
     },
     "Bubonic Conjuror": {
         "High": {
+            490: {"Name": "Cranium Cooking", "Tab": "Shaman"},
+            481: {"Name": "Auspicious Aura", "Tab": "Shaman"},
+            483: {"Name": "Tenteyecle", "Tab": "Shaman"},
+            529: {"Name": "Raise Dead", "Tab": "Bubonic Conjuror"},
+            526: {"Name": "Flatulent Spirit", "Tab": "Bubonic Conjuror"},
             525: {"Name": "Chemical Warfare", "Tab": "Bubonic Conjuror"},
         },
         "Medium": {
-
+            485: {"Name": "Virile Vials", "Tab": "Shaman"},
+            455: {"Name": "Knowledge Is Power", "Tab": "Mage"},
+            457: {"Name": "Power Overwhelming", "Tab": "Mage"},
+            6: {"Name": "Gilded Sword", "Tab": "Savvy Basics"},
         },
         "Low": {
-
+            103: {"Name": "Idle Casting", "Tab": "Savvy Basics"},
+            5: {"Name": "Sharpened Axe", "Tab": "Savvy Basics"},
+            531: {"Name": "Memorial Skulls", "Tab": "Bubonic Conjuror"},
         },
-
     },
     "Elemental Sorcerer": {
         "High": {
+            469: {"Name": "Mana Is Life", "Tab": "Wizard"},
+            496: {"Name": "Lightning Barrage", "Tab": "Elemental Sorcerer"},
+            497: {"Name": "Radiant Chainbolt", "Tab": "Elemental Sorcerer"},
+            467: {"Name": "Tornado", "Tab": "Wizard"},
+            466: {"Name": "Floor Is Lava", "Tab": "Wizard"},
             498: {"Name": "Dimensional Wormhole", "Tab": "Elemental Sorcerer"},
         },
         "Medium": {
-
+            178: {"Name": "Wormhole Emperor", "Tab": "Elemental Sorcerer"},
+            474: {"Name": "Fuscia Flasks", "Tab": "Wizard"},
+            485: {"Name": "Paperwork, Great...", "Tab": "Wizard"},
+            455: {"Name": "Knowledge Is Power", "Tab": "Mage"},
+            457: {"Name": "Power Overwhelming", "Tab": "Mage"},
+            6: {"Name": "Gilded Sword", "Tab": "Savvy Basics"},
         },
         "Low": {
-
+            103: {"Name": "Idle Casting", "Tab": "Savvy Basics"},
+            5: {"Name": "Sharpened Axe", "Tab": "Savvy Basics"},
+            531: {"Name": "Memorial Skulls", "Tab": "Elemental Sorcerer"},
         },
-
     },
     "Siege Breaker": {
         "High": {
             318: {"Name": "Pirate Flag", "Tab": "Siege Breaker"},
+            319: {"Name": "Plunder Ye Deceased", "Tab": "Siege Breaker"},
+            316: {"Name": "Suppressing Fire", "Tab": "Siege Breaker", 'Optimal': [0, 33, True]},
+            317: {"Name": "Firebomb", "Tab": "Siege Breaker", 'Optimal': [0, 50, True]},
+            315: {"Name": "Cannonball", "Tab": "Siege Breaker"},
+            285: {"Name": "Homing Arrows", "Tab": "Bowman", 'Optimal': [0, 15, True]},
+            270: {"Name": "Piercing Arrow", "Tab": "Archer", 'Optimal': [0, 40, True]},
         },
         "Medium": {
-
+            #287: {"Name": "Flax Instastring", "Tab": "Bowman"},  #I believe this only procs single target, making it fairly useless
+            289: {"Name": "Woah, That Was Fast!", "Tab": "Bowman"},
+            286: {"Name": "Magic Shortbow", "Tab": "Bowman", 'Optimal': [0, 20, True]},
+            328: {"Name": "Archlord Of The Pirates", "Tab": "Siege Breaker"},
+            290: {"Name": "Speedna", "Tab": "Bowman"},
+            273: {"Name": "Strafe", "Tab": "Archer"},
+            284: {"Name": "Veins of the Infernal", "Tab": "Archer"},
+            276: {"Name": "High Polymer Limbs", "Tab": "Archer"},
+            6: {"Name": "Gilded Sword", "Tab": "Calm Basics"},
         },
         "Low": {
-
+            268: {"Name": "Idle Shooting", "Tab": "Calm Basics"},
+            5: {"Name": "Sharpened Axe", "Tab": "Calm Basics"},
+            366: {"Name": "Stacked Skulls", "Tab": "Siege Breaker"},
         },
-
     },
     "Beast Master": {
         "High": {
-            362: {"Name": "Whale Wallop", "Tab": "Beast Master"},
+            302: {"Name": "Uwu Rawrrr", "Tab": "Hunter"},
+            362: {"Name": "Whale Wallop", "Tab": "Beast Master", 'Optimal': [0, 17, True]},
+            301: {"Name": "Bear Trap", "Tab": "Hunter", 'Optimal': [0, 30, True]},
+            300: {"Name": "360 Noscope", "Tab": "Hunter",},
+            270: {"Name": "Piercing Arrow", "Tab": "Archer", 'Optimal': [0, 40, True]},
+            363: {"Name": "Nacho Party", "Tab": "Beast Master", 'Optimal': [0, 13, True]},
+            361: {"Name": "Boar Rush", "Tab": "Beast Master", 'Optimal': [0, 20, True]},
         },
         "Medium": {
-
+            328: {"Name": "Archlord Of The Pirates", "Tab": "Siege Breaker"},
+            290: {"Name": "Looty Mc Shooty", "Tab": "Bowman"},
+            #273: {"Name": "Strafe", "Tab": "Archer"},
+            284: {"Name": "Veins of the Infernal", "Tab": "Archer"},
+            276: {"Name": "High Polymer Limbs", "Tab": "Archer"},
+            6: {"Name": "Gilded Sword", "Tab": "Calm Basics"},
         },
         "Low": {
-
+            268: {"Name": "Idle Shooting", "Tab": "Calm Basics"},
+            5: {"Name": "Sharpened Axe", "Tab": "Calm Basics"},
+            366: {"Name": "Stacked Skulls", "Tab": "Siege Breaker"},
         },
-
     },
     "Voidwalker": {
         "High": {
-            46: {"Name": "Void Radius", "Tab": "Voidwalker"}
+            19: {"Name": "Gimme Gimme", "Tab": "Journeyman"},
+            26: {"Name": "Cmon Out Crystals", "Tab": "Journeyman"},
+            46: {"Name": "Void Radius", "Tab": "Voidwalker"},
+            45: {"Name": "Void Trial Rerun", "Tab": "Voidwalker"},
+            47: {"Name": "Bossing Vain", "Tab": "Voidwalker"},
         },
         "Medium": {
-
+            50: {"Name": "Power Orb", "Tab": "Voidwalker"},
+            48: {"Name": "Quad Jab", "Tab": "Voidwalker"},
+            33: {"Name": "Triple Jab", "Tab": "Maestro"},
+            18: {"Name": "Two Punch Man", "Tab": "Journeyman"},
+            31: {"Name": "Skillage Damage", "Tab": "Maestro"},
+            20: {"Name": "Lucky Hit", "Tab": "Journeyman"},
+            54: {"Name": "Eternal Luk", "Tab": "Voidwalker"},
+            21: {"Name": "F'luk'ey Fabrics", "Tab": "Journeyman"},
+            38: {"Name": "Bliss N Chips", "Tab": "Maestro"},
+            6: {"Name": "Gilded Sword", "Tab": "Beginner"},
         },
         "Low": {
-
-        },
+            5: {"Name": "Sharpened Axe", "Tab": "Beginner"},
+            36: {"Name": "Clever Clover Obols", "Tab": "Maestro"},
+        }
     },
 }
 

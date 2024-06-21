@@ -1039,6 +1039,7 @@ class Account:
 
     def _parse_w2(self):
         self._parse_w2_vials()
+        self._parse_w2_cauldrons()
         self._parse_w2_bubbles()
         self._parse_w2_p2w()
         self._parse_w2_arcade()
@@ -1073,8 +1074,17 @@ class Account:
             if vial.get("Level", 0) >= 13:
                 self.maxed_vials += 1
 
+    def _parse_w2_cauldrons(self):
+        self.alchemy_cauldrons = {
+            'OrangeUnlocked': 0,
+            'GreenUnlocked': 0,
+            'PurpleUnlocked': 0,
+            'YellowUnlocked': 0
+        }
+
     def _parse_w2_bubbles(self):
         self.alchemy_bubbles = {}
+
         # Set defaults to 0
         for cauldronIndex in bubblesDict:
             for bubbleIndex in bubblesDict[cauldronIndex]:
@@ -1085,6 +1095,7 @@ class Account:
                     "BaseValue": 0,
                     "Material": getItemDisplayName(bubblesDict[cauldronIndex][bubbleIndex]['Material'])
                 }
+
         # Try to read player levels and calculate base value
         try:
             all_raw_bubbles = [self.raw_data["CauldronInfo"][0], self.raw_data["CauldronInfo"][1], self.raw_data["CauldronInfo"][2],
@@ -1098,10 +1109,14 @@ class Account:
                             int(all_raw_bubbles[cauldronIndex][str(bubbleIndex)]),
                             bubblesDict[cauldronIndex][bubbleIndex]["x1"],
                             bubblesDict[cauldronIndex][bubbleIndex]["x2"])
+                        if int(all_raw_bubbles[cauldronIndex][str(bubbleIndex)]) > 0:
+                            
                     except:
                         continue  # Level and BaseValue already defaulted to 0 above
         except:
             pass
+
+
 
     def _parse_w2_p2w(self):
         self.alchemy_p2w = {
@@ -1315,12 +1330,12 @@ class Account:
 
     def _parse_w4_cooking(self):
         self.cooking = {
-            'MealsRemaining': maxMeals * maxMealLevel,  # This is the default value before considering the player's values
             'MealsUnlocked': 0,
             'MealsUnder11': 0,
             'MealsUnder30': 0,
             'PlayerMaxPlateLvl': 30,  # 30 is the default starting point
             'PlayerTotalMealLevels': 0,
+            'MaxTotalMealLevels': maxMeals * maxMealLevel,
             'PlayerMissingPlateUpgrades': []
         }
         self._parse_w4_cooking_tables()
@@ -1751,6 +1766,9 @@ class Account:
         else:
             self.cooking['PlayerMissingPlateUpgrades'].append(("Purchase \"Chef Geustloaf's Cutting Edge Philosophy\" from "
                                                                "{{ Jade Emporium|#sneaking }}", "chef-geustloafs-cutting-edge-philosophy"))
+
+        self.cooking['CurrentRemainingMeals'] = (self.cooking['MealsUnlocked'] * self.cooking['PlayerMaxPlateLvl']) - self.cooking['PlayerTotalMealLevels']
+        self.cooking['MaxRemainingMeals'] = (maxMeals * maxMealLevel) - self.cooking['PlayerTotalMealLevels']
 
     def _calculate_w5(self):
         pass
