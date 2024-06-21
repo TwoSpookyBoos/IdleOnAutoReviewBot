@@ -2852,7 +2852,7 @@ combat_talentsDict = {
         "Medium": {
             508: {"Name": "Wormhole Emperor", "Tab": "Elemental Sorcerer"},
             474: {"Name": "Fuscia Flasks", "Tab": "Wizard"},
-            485: {"Name": "Paperwork, Great...", "Tab": "Wizard"},
+            470: {"Name": "Paperwork, Great", "Tab": "Wizard"},
             455: {"Name": "Knowledge Is Power", "Tab": "Mage"},
             457: {"Name": "Power Overwhelming", "Tab": "Mage"},
             6: {"Name": "Gilded Sword", "Tab": "Savvy Basics"},
@@ -2875,7 +2875,7 @@ combat_talentsDict = {
         },
         "Medium": {
             #287: {"Name": "Flax Instastring", "Tab": "Bowman"},  #I believe this only procs single target, making it fairly useless
-            289: {"Name": "Woah, That Was Fast!", "Tab": "Bowman"},
+            289: {"Name": "Woah, That Was Fast", "Tab": "Bowman"},
             286: {"Name": "Magic Shortbow", "Tab": "Bowman", 'Optimal': [0, 20, True]},
             328: {"Name": "Archlord Of The Pirates", "Tab": "Siege Breaker"},
             290: {"Name": "Speedna", "Tab": "Bowman"},
@@ -2895,7 +2895,7 @@ combat_talentsDict = {
             302: {"Name": "Uwu Rawrrr", "Tab": "Hunter"},
             362: {"Name": "Whale Wallop", "Tab": "Beast Master", 'Optimal': [0, 17, True]},
             301: {"Name": "Bear Trap", "Tab": "Hunter", 'Optimal': [0, 30, True]},
-            300: {"Name": "360 Noscope", "Tab": "Hunter",},
+            300: {"Name": "Three-Sixty Noscope", "Tab": "Hunter",},
             270: {"Name": "Piercing Arrow", "Tab": "Archer", 'Optimal': [0, 40, True]},
             363: {"Name": "Nacho Party", "Tab": "Beast Master", 'Optimal': [0, 13, True]},
             361: {"Name": "Boar Rush", "Tab": "Beast Master", 'Optimal': [0, 20, True]},
