@@ -70,9 +70,9 @@ function calcProgressBars(parent = document) {
         const advice = progressBox.nextElementSibling
         const siblings = Array.from(advice.parentElement.children)
         const idx = siblings.indexOf(advice)
-        const prog = siblings[idx + 1]
-        const goal = siblings[idx + 3]
-        const row = siblings.slice(idx, idx + 4)
+        const prog = siblings[idx + 2]
+        const goal = siblings[idx + 4]
+        const row = siblings.slice(idx, idx + 5)
         const rowWidth = row.reduce((total, curr) => total + curr.offsetWidth, 0)
         const [progCoefficient, show] = progWidth(progressBox, rowWidth, prog, goal)
 
@@ -149,7 +149,7 @@ function setupSidebarToggling() {
 
     // close the sidebar if clicked outside of it or not on hamburger
     document.addEventListener("click", (e) => {
-        let drawer = e.target.closest("#drawer") || e.target.closest("#drawer-handle")
+        let drawer = e.target.closest("#drawer") || e.target.closest("#drawer-handle") || e.target.id === "close-modal-error"
         let sidebar = document.getElementById("drawer")
         if (!drawer && sidebar.classList.contains("sidebar-open")) {
             toggleSidebar()
@@ -318,7 +318,7 @@ function setFormValues() {
         const userValue = userParams[k] || v
         const input = form.querySelector(`[name=${k}]`)
         if (k === "player")
-            input.innerText = userValue
+            input.value = userValue
         else if (input && input.value.toString() !== userValue)
             form.querySelector(`[for=${k}]`).click()
     })
@@ -330,6 +330,18 @@ function loadResults(html) {
     mainWrapper.innerHTML = html;
 }
 
+function loadErrorPopup(html, statusCode) {
+    spinner.stop()
+    const error = document.createElement("p")
+    error.innerHTML = html;
+    document.querySelector('#error .inner').replaceChildren(error)
+    document.querySelector('#error').classList.add("show")
+    const bugReportLink = document.querySelector('#error p a.bug')
+    if (bugReportLink) {
+        bugReportLink.onclick = copyErrorDataAndRedirectToDiscord
+    }
+}
+
 function fetchPlayerAdvice() {
     fetch("/results", {
         method: 'POST',
@@ -337,21 +349,27 @@ function fetchPlayerAdvice() {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(fetchStoredUserParams())
-
     }).then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
+        return response.text().then(text => [text, (response.ok ? 200 : response.status)]);
+    }).then(([html, statusCode]) => {
+        switch (statusCode) {
+            case 400:
+            case 403:
+            case 404:
+            case 500:
+                loadErrorPopup(html, statusCode)
+                break;
+            case 200:
+                if (html === "") {
+                    openSidebarIfFirstAccess();
+                    return;
+                }
+                loadResults(html);
+                initResultsUI();
+                break;
+            default:
+                throw new Error(statusCode.toString());
         }
-        return response.text();
-
-    }).then(html => {
-        if (html === "") {
-            openSidebarIfFirstAccess()
-            return
-        }
-        loadResults(html);
-        initResultsUI()
-
     }).catch(error => {
         console.error('Error:', error);
     });
@@ -361,8 +379,16 @@ const storeUserParams = (data) => Object
     .entries(defaults)
     .forEach(([k, v]) => localStorage.setItem(k, data[k] || v))
 
-const fetchStoredUserParams = () => Object.fromEntries(Object.entries(defaults)
-    .map(([k, v]) => [k, localStorage.getItem(k) || v]))
+const fetchStoredUserParams = () => {
+    const storedUserParams = Object.fromEntries(Object.entries(defaults).map(([k, v]) => [k, localStorage.getItem(k) || v]))
+    const queryStringParams = new URLSearchParams(storedUserParams)
+    if (storedUserParams.player.startsWith("{")) {
+        // empty player if it's JSON
+        queryStringParams.delete("player")
+    }
+    history.pushState(null, '', `?${queryStringParams}`)
+    return storedUserParams
+}
 
 function storeGetParamsIfProvided() {
     const GETData = new URLSearchParams(window.location.search);
@@ -409,6 +435,114 @@ function defineCookieModalAction() {
     }
 }
 
+function setupErrorPopup() {
+    document.querySelector('#close-modal-error').onclick = () => {
+        document.querySelector('#error').classList.remove("show")
+        openSidebarIfFirstAccess()
+    }
+}
+
+function collectTextNodes(parent) {
+    const nodes = []
+
+    for (const child of parent.childNodes) {
+        if (child.nodeType === Node.TEXT_NODE) {
+            nodes.push(child.textContent)
+        } else if (child.nodeType === Node.ELEMENT_NODE) {
+            nodes.push(...collectTextNodes(child))
+        }
+    }
+
+    return nodes
+}
+
+function copyErrorDataAndRedirectToDiscord(e) {
+    e.preventDefault()
+    const error = document.querySelector('#error .wrapper');
+    const errorText = document.querySelector('#error p');
+    const errorTextBare = collectTextNodes(errorText).join(' ').replace(/ +/g, ' ');
+    const logPath = document.querySelector('#error code').innerText
+    const [server, type, name, timestamp] = logPath.split(" ▸ ")
+
+    navigator.clipboard.writeText(`server: ${server}\ntype: ${type}\nname: ${name}\ntimestamp: ${timestamp}\n\n> ${errorTextBare}`)
+
+    const copied = document.querySelector('#copied')
+    const errorPos = error.getBoundingClientRect()
+    copied.style.position = 'absolute'
+    copied.style.left = `${e.pageX - errorPos.left}px`
+    copied.style.top = `${e.pageY - errorPos.top}px`
+    copied.classList.add('show')
+    setTimeout(() => {
+        const link = e.target.href
+        window.open(link, '_blank').focus()
+        copied.classList.remove('show')
+    }, 1000)
+}
+
+let searchTimer
+
+function searchByCriteria(criteria) {
+    criteria = criteria.toLowerCase()
+    const allElements = document.querySelectorAll("article, section, .advice-group, .advice-title, .advice, .resource, .prog, .arrow, .arrow-hidden, .goal")
+    allElements.forEach(el => {
+        el.classList.add('search-hidden');
+    })
+    allElements.forEach(el => {
+        if (el.tagName.toLowerCase() === 'article') {
+            if (el.querySelector("h1").innerHTML.toLowerCase().includes(criteria)) {
+                el.classList.remove("search-hidden")
+                el.querySelectorAll('.search-hidden').forEach(child => child.classList.remove("search-hidden"))
+            }
+        } else if (el.tagName.toLowerCase() === 'section') {
+            if (el.querySelector("h1").innerHTML.toLowerCase().includes(criteria)) {
+                el.closest("article").classList.remove("search-hidden")
+                el.classList.remove("search-hidden")
+                el.querySelectorAll('.search-hidden').forEach(child => child.classList.remove("search-hidden"))
+            }
+        } else if (el.classList.contains('advice-group')) {
+            if (el.children.length > 0 && el.children[0].tagName.toLowerCase() === "span" && el.children[0].innerHTML.toLowerCase().includes(criteria)) {
+                el.closest("article").classList.remove("search-hidden")
+                el.closest("section").classList.remove("search-hidden")
+                el.classList.remove("search-hidden")
+                el.querySelectorAll('.search-hidden').forEach(child => child.classList.remove("search-hidden"))
+            }
+        } else if (el.classList.contains('advice')) {
+            if (el.innerHTML.toLowerCase().includes(criteria)) {
+                el.closest("article").classList.remove("search-hidden")
+                el.closest("section").classList.remove("search-hidden")
+                el.closest(".advice-group").classList.remove("search-hidden")
+                el.classList.remove("search-hidden")
+                const row = Array.from(el.parentElement.children)
+                row.slice(row.indexOf(el) - 1, row.indexOf(el) + 5).forEach(col => {
+                    col.classList.remove("search-hidden")
+                })
+                row.toReversed().slice(row.toReversed().indexOf(el)).find(col => col.classList.contains("advice-title"))?.classList.remove("search-hidden")
+            }
+        }
+    })
+}
+
+function setupSearchBar() {
+    const searchBar = document.querySelector('#search')
+    document.querySelector('#search-clear').onclick = () => {
+        searchBar.value = ""
+        hideProgressBoxes()
+        document.querySelectorAll('.search-hidden').forEach(hidden => {
+            hidden.classList.remove('search-hidden')
+        })
+        calcProgressBars()
+    }
+
+    searchBar.addEventListener('input', e => {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout((criteria) => {
+            hideProgressBoxes()
+            searchByCriteria(criteria)
+            calcProgressBars()
+        }, 1000, e.target.value)
+    })
+}
+
 function initBaseUI() {
     setTimeout(defineCookieModalAction, 1000)
     hideSpinnerIfFirstAccess()
@@ -420,6 +554,8 @@ function initBaseUI() {
     setupColorScheme()
     setupToggleAllAction()
     setupSwitchesActions()
+    setupErrorPopup()
+    setupSearchBar()
 }
 
 function initResultsUI() {

@@ -84,7 +84,8 @@ def setDivinityProgressionTier():
                     label=f"{session_data.account.divinity['Divinities'][divDivinity].get('Name')} Blessing",
                     picture_class=session_data.account.divinity['Divinities'][divDivinity].get('Name'),
                     progression=session_data.account.divinity['Divinities'][divDivinity].get('BlessingLevel'),
-                    goal=100
+                    goal=100,
+                    resource=session_data.account.divinity['Divinities'][divDivinity].get('BlessingMaterial')
                 ))
 
     #Offerings Info
@@ -226,7 +227,8 @@ def setDivinityProgressionTier():
                     label=f"Current Big P bubble level",
                     picture_class='big-p',
                     progression=session_data.account.alchemy_bubbles['Big P']['Level'],
-                    goal=nextBigPTarget
+                    goal=nextBigPTarget,
+                    resource=session_data.account.alchemy_bubbles['Big P']['Material'],
                 ))
             for divinityLevel in arctisCombosDict[bigPLevel]:
                 if arctisCombosDict[bigPLevel][divinityLevel] > currentLowestArctisValue:  #Strictly greater than

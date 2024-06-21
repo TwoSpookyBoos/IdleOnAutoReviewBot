@@ -17,7 +17,7 @@ from consts import expectedStackables, greenstack_progressionTiers, card_data, m
     getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampsDict, stampTypes, marketUpgradeList, \
     achievementsList, forgeUpgradesDict, arcadeBonuses, saltLickList, allMeritsDict, bubblesDict, familyBonusesDict, poBoxDict, equinoxBonusesDict, \
     maxDreams, dreamsThatUnlockNewBonuses, ceilUpToBase, starsignsDict, gfood_codes, getStyleNameFromIndex, divinity_divinitiesDict, getDivinityNameFromIndex, \
-    maxCookingTables, getNextESFamilyBreakpoint
+    maxCookingTables, getNextESFamilyBreakpoint, expected_talentsDict
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
 
 def session_singleton(cls):
@@ -52,6 +52,14 @@ class Equipment:
             self.tools = {}
             self.foods = []
 
+def getExpectedTalents(base_class, sub_class, elite_class):
+    expectedTalents = []
+    for className in [base_class, sub_class, elite_class]:
+        try:
+            expectedTalents.extend(expected_talentsDict[className])
+        except:
+            continue
+    return expectedTalents
 
 def getSpecializedSkills(base_class, sub_class, elite_class):
     specializedSkillsList = []
@@ -89,8 +97,7 @@ class Character:
         max_talents: dict,
         current_preset_talents: dict,
         secondary_preset_talents: dict,
-        po_boxes: list[int],
-    ):
+        po_boxes: list[int]):
 
         self.character_index: int = character_index
         self.character_name: str = character_name
@@ -107,6 +114,7 @@ class Character:
         self.current_preset_talents: dict = current_preset_talents
         self.secondary_preset_talents: dict = secondary_preset_talents
         self.specialized_skills: list[str] = getSpecializedSkills(self.base_class, self.sub_class, self.elite_class)
+        self.expected_talents: list[int] = getExpectedTalents(self.base_class, self.sub_class, self.elite_class)
 
         self.combat_level: int = all_skill_levels["Combat"]
         self.mining_level: int = all_skill_levels["Mining"]
@@ -351,7 +359,7 @@ class Advice(AdviceBase):
         unit (str): if there is one, usually "%"
     """
 
-    def __init__(self, label: str, picture_class: str, progression: Any = "", goal: Any = "", unit: str = "", value_format: str = "{value}{unit}",
+    def __init__(self, label: str, picture_class: str, progression: Any = "", goal: Any = "", unit: str = "", value_format: str = "{value}{unit}", resource: str = "",
                  **extra):
         super().__init__(**extra)
 
@@ -363,6 +371,7 @@ class Advice(AdviceBase):
         self.goal: str = str(goal)
         self.unit: str = unit
         self.value_format: str = value_format
+        self.resource: str = kebab(resource)
 
         if self.unit:
             if self.progression:
@@ -991,6 +1000,7 @@ class Account:
                 try:
                     self.stamps[stampValuesDict['Name']] = {
                         "Index": int(stampIndex),
+                        "Material": stampValuesDict['Material'],
                         "Level": int(floor(raw_stamps_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0))),
                         "Max": int(floor(raw_stamp_max_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0))),
                         "Delivered": int(floor(raw_stamp_max_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0))) > 0,
@@ -1029,6 +1039,7 @@ class Account:
 
     def _parse_w2(self):
         self._parse_w2_vials()
+        self._parse_w2_cauldrons()
         self._parse_w2_bubbles()
         self._parse_w2_p2w()
         self._parse_w2_arcade()
@@ -1063,8 +1074,17 @@ class Account:
             if vial.get("Level", 0) >= 13:
                 self.maxed_vials += 1
 
+    def _parse_w2_cauldrons(self):
+        self.alchemy_cauldrons = {
+            'OrangeUnlocked': 0,
+            'GreenUnlocked': 0,
+            'PurpleUnlocked': 0,
+            'YellowUnlocked': 0
+        }
+
     def _parse_w2_bubbles(self):
         self.alchemy_bubbles = {}
+
         # Set defaults to 0
         for cauldronIndex in bubblesDict:
             for bubbleIndex in bubblesDict[cauldronIndex]:
@@ -1072,8 +1092,10 @@ class Account:
                     "CauldronIndex": cauldronIndex,
                     "BubbleIndex": bubbleIndex,
                     "Level": 0,
-                    "BaseValue": 0
+                    "BaseValue": 0,
+                    "Material": getItemDisplayName(bubblesDict[cauldronIndex][bubbleIndex]['Material'])
                 }
+
         # Try to read player levels and calculate base value
         try:
             all_raw_bubbles = [self.raw_data["CauldronInfo"][0], self.raw_data["CauldronInfo"][1], self.raw_data["CauldronInfo"][2],
@@ -1087,10 +1109,14 @@ class Account:
                             int(all_raw_bubbles[cauldronIndex][str(bubbleIndex)]),
                             bubblesDict[cauldronIndex][bubbleIndex]["x1"],
                             bubblesDict[cauldronIndex][bubbleIndex]["x2"])
+                        #if int(all_raw_bubbles[cauldronIndex][str(bubbleIndex)]) > 0:
+                            #Keep track of cauldron counts
                     except:
                         continue  # Level and BaseValue already defaulted to 0 above
         except:
             pass
+
+
 
     def _parse_w2_p2w(self):
         self.alchemy_p2w = {
@@ -1258,6 +1284,7 @@ class Account:
         for prayerIndex, prayerValuesDict in prayersDict.items():
             self.prayers[prayerValuesDict['Name']] = {
                 'DisplayName': prayerValuesDict['Display'],
+                'Material': prayerValuesDict['Material'],
                 'Level': 0,
                 'BonusValue': 0,
                 'BonusString': f"Level at least once to receive the bonus!",
@@ -1303,12 +1330,12 @@ class Account:
 
     def _parse_w4_cooking(self):
         self.cooking = {
-            'MealsRemaining': maxMeals * maxMealLevel,  # This is the default value before considering the player's values
             'MealsUnlocked': 0,
             'MealsUnder11': 0,
             'MealsUnder30': 0,
             'PlayerMaxPlateLvl': 30,  # 30 is the default starting point
             'PlayerTotalMealLevels': 0,
+            'MaxTotalMealLevels': maxMeals * maxMealLevel,
             'PlayerMissingPlateUpgrades': []
         }
         self._parse_w4_cooking_tables()
@@ -1739,6 +1766,9 @@ class Account:
         else:
             self.cooking['PlayerMissingPlateUpgrades'].append(("Purchase \"Chef Geustloaf's Cutting Edge Philosophy\" from "
                                                                "{{ Jade Emporium|#sneaking }}", "chef-geustloafs-cutting-edge-philosophy"))
+
+        self.cooking['CurrentRemainingMeals'] = (self.cooking['MealsUnlocked'] * self.cooking['PlayerMaxPlateLvl']) - self.cooking['PlayerTotalMealLevels']
+        self.cooking['MaxRemainingMeals'] = (maxMeals * maxMealLevel) - self.cooking['PlayerTotalMealLevels']
 
     def _calculate_w5(self):
         pass

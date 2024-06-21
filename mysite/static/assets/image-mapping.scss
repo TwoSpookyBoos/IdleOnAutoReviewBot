@@ -37,12 +37,10 @@
 @import "slab-items";
 @import "divinity";
 @import "sailing";
+@import "gaming";
 
 //W6
 @import "sneaking";
-
-$id-map: ();
-
 
 $id-map: (
 	item-backpack-space: $inventory-bag-u,
@@ -730,6 +728,7 @@ trash-tuna-nametag: $trash-tuna-nametag,
 island-adventurer-nametag: $island-adventurer-nametag,
 summer-shovel-nametag: $summer-shovel-nametag,
 falloween-nametag: $falloween-nametag,
+balling-nametag: $balling-nametag,
 third-anniversary-idleon-nametag: $third-anniversary-idleon-nametag,
 
 // Mining Pickaxes
@@ -2115,6 +2114,7 @@ $monsters: (
 	octodar: $octodar,
 	flombeige: $flombeige,
 	stilted-seeker: $stilted-seeker,
+	rift-monsters: $rift-monsters,
 
 	massive-troll: $massive-troll,
 
@@ -2180,9 +2180,11 @@ $id-map: map-merge($merits, $id-map);
 $id-map: map-merge($postoffice, $id-map);
 $id-map: map-merge($owl-map, $id-map);
 $id-map: map-merge($companions-map, $id-map);
+$id-map: map-merge($all-gaming, $id-map);
 
 $extra: (
     //storage: $cosmic-storage-chest,
+    coins: $coins,
 	vials: $vial-l1,
 	vial-l4: $vial-l4,
 	vial-max: $vial-max,
@@ -2212,7 +2214,7 @@ $id-map: map-merge($extra, $id-map);
 
 
 @each $class, $link in $id-map {
-	.#{$class}::before {
+	.#{$class}::before, .resource-#{$class} {
 		background-image: $link;
 	}
 }

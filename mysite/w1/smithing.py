@@ -175,6 +175,7 @@ def setSmithingProgressionTier() -> AdviceSection:
     sum_ForgeUpgrades = 0
 
     #Total up all the purchases across all current characters
+    #TODO: Move this parsing to Account
     for character in session_data.account.safe_characters:
         try:
             playerCashPoints.append(int(session_data.account.raw_data[f"AnvilPAstats_{character.character_index}"][1]))
@@ -245,8 +246,9 @@ def setSmithingProgressionTier() -> AdviceSection:
                             label=session_data.account.all_characters[characterIndex].character_name,
                             picture_class=session_data.account.all_characters[characterIndex].class_name_icon,
                             progression=upgradeCount,
-                            goal=tier[2])
-                    )
+                            goal=tier[2],
+                            resource=tier[4]
+                        ))
                 characterIndex += 1
             if allRequirementsMet == True:
                 tier_MonsterPoints = tier[0]
@@ -255,7 +257,7 @@ def setSmithingProgressionTier() -> AdviceSection:
                     tier=str(tier_MonsterPoints),
                     pre_string=f"Purchase the first {tier[2]} Anvil Points with Monster Materials on the following character{pl(smithing_AdviceDict['MonsterPoints'])}",
                     advices=smithing_AdviceDict["MonsterPoints"],
-                    post_string=f"The final Monster Material for this tier is {tier[4]}"
+                    post_string=f"The final Monster Material for this tier is shown above.",
                 )
 
         #Forge Upgrades

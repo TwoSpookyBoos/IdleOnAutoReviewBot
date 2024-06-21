@@ -13,6 +13,8 @@ app.config.update(dict(
     IT="https://idleontoolbox.com",
     TRELLO="https://trello.com/b/CG6GYsTN/idleon-autoreview-development",
     DISCORD="https://discord.gg/ZmEkqzfjmJ",
+    CHANNEL_BUG_REPORTS="https://discord.com/channels/1174869900255313952/1174870448975130644",
+    CHANNEL_FAQ="https://discord.com/channels/1174869900255313952/1252965262869663825",
     GITHUB="https://github.com/TwoSpookyBoos/IdleOnAutoReviewBot",
     SPREADSHEET="https://docs.google.com/spreadsheets/d/16I-rURrVeyvltK2wxcQSiPgO07QY015RVNG4MAgUsGw/edit?usp=sharing",
     KOFI="https://ko-fi.com/W7W4SRUK5",
@@ -21,6 +23,7 @@ app.config.update(dict(
 
 ))
 app.config.update(dict(
+    SERVER_TYPE=Path(app.config["PROJECT_ROOT"].parent.name),
     DOMAIN_BETA=f"beta-{app.config['DOMAIN']}",
     FQDN=f"https://{app.config['DOMAIN']}",
     FQDN_BETA=f"https://beta-{app.config['DOMAIN']}",

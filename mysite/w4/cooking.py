@@ -158,12 +158,11 @@ def setCookingProgressionTier():
             progression="",
             goal="",
         ))
-    if session_data.account.cooking['PlayerTotalMealLevels'] < maxMeals * maxMealLevel:
+    if session_data.account.cooking['PlayerTotalMealLevels'] < session_data.account.cooking['MaxTotalMealLevels']:
+        current_remainingMeals = session_data.account.cooking['CurrentRemainingMeals']
         current_maxMealLevel = session_data.account.cooking['PlayerMaxPlateLvl']
-        current_remainingMeals = (session_data.account.cooking['MealsUnlocked'] * current_maxMealLevel) - session_data.account.cooking['PlayerTotalMealLevels']
+        max_remainingMeals = session_data.account.cooking['MaxRemainingMeals']
 
-        max_remainingMeals = (maxMeals * maxMealLevel)-session_data.account.cooking['PlayerTotalMealLevels']
-        session_data.account.cooking['MealsRemaining'] = max_remainingMeals
         if current_remainingMeals != max_remainingMeals:
             cooking_AdviceDict["CurrentTier"].append(Advice(
                 label=f"Info- Current possible: {session_data.account.cooking['MealsUnlocked']}/{maxMeals} meals, "

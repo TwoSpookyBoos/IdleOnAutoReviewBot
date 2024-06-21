@@ -460,12 +460,12 @@ stamps_progressionTiers = {
 smithing_progressionTiers = [
     # int tier, int Cash Points Purchased, int Monster Points Purchased, int Forge Totals, str Notes
     [0, 0, 0, 0, ""],
-    [1, 20, 85, 60, "all W1 enemies"],
-    [2, 60, 150, 120, "early W2 enemies through Pincermin"],
-    [3, 100, 225, 180, "all W2 enemies"],
-    [4, 150, 350, 240, "most W3 enemies, excluding Dedotated Rams"],
-    [5, 200, 500, 291, "early W4 enemies through Soda Cans"],
-    [6, 600, 700, 291, "all W4 enemies"]
+    [1, 20, 85, 60, "bullfrog-horn"],
+    [2, 60, 150, 120, "pincer-arm."],
+    [3, 100, 225, 180, "shrapshell"],
+    [4, 150, 350, 240, "sippy-straw"],
+    [5, 200, 500, 291, "bottle-cap"],
+    [6, 600, 700, 291, "condensed-zap"]
 ]
 owl_progressionTiers = {
     0: {},
@@ -2477,8 +2477,131 @@ allMeritsDict = {
     },  #World8
 }
 
+expected_talentsDict = {
+    "Beginner": [
+        0, 1, 8, 9, 5,
+        10, 11, 12, 13, 6,
+    ],
+    "Journeyman": [
+        75, 76, 77, 78, 79,  #Bottom row of extra Tab1 talents specific to Journeyman
+        15, 16, 17, 18, 19,  #Top row
+        20, 21, 22, 23, 24,  #Middle row
+        25, 26, 27, 28, 29  #Bottom row
+    ],
+    "Maestro": [
+        30, 31, 32, 33, 34,
+        35, 36, 37, 38, 39,
+        40, 41, 42, 43, 44
+    ],
+    "Voidwalker": [
+        45, 46, 47, 48, 49,
+        50, 51, 52, 53, 54,
+        55, 56, 57, 58, 59
+    ],
+    #"Infinilyte": [],
+
+    "Warrior": [
+        #All 3 rows from Tab1
+        0, 1, 8, 9, 5,
+        10, 11, 12, 13, 6,
+        85, 86, 87, 88, 89,
+        #Plus the 3 rows from Warrior Tab2
+        90, 91, 92, 93, 94,
+        95, 96, 97, 98, 99,
+        100, 101, 102, 103, 104
+    ],
+    "Barbarian": [
+        105, 106, 107, 108, 109,
+        110, 111, 112, 81, 114,
+        115, 116, 117, 118, 119
+    ],
+    "Squire": [
+        120, 121, 122, 123, 124,
+        125, 111, 127, 81, 129,
+        130, 131, 132, 133, 119
+    ],
+    "Blood Berserker": [
+        135, 136, 137, 138, 139,
+        140, 141, 142, 143, 144,
+        145, 146, 147, 148, 149
+    ],
+    #"Death Bringer": [],
+    "Divine Knight": [
+        165, 166, 167, 168, 169,
+        170, 141, 142, 143, 144,
+        175, 176, 177, 178, 149
+    ],
+    #"Royal Guardian": [],
+
+    "Archer": [
+        #All 3 rows from Tab1
+        0, 1, 8, 9, 5,
+        10, 11, 12, 13, 6,
+        263, 266, 267, 268, 269,
+        #Plus the 3 rows from Archer Tab2
+        270, 271, 272, 273, 274,
+        284, 276, 277, 278, 279,
+        280, 281, 282, 283, 265
+    ],
+    "Bowman": [
+        285, 286, 287, 288, 289,
+        290, 291, 292, 293, 294,
+        295, 296, 297, 298, 299
+    ],
+    "Hunter": [
+        300, 301, 302, 303, 304,
+        305, 291, 307, 293, 309,
+        310, 311, 312, 313, 299
+    ],
+    "Siege Breaker": [
+        360, 316, 317, 318, 319,
+        320, 366, 367, 368, 144,
+        325, 326, 327, 328, 374
+    ],
+    #"Mayheim": [],
+    #"Wind Walker": [],
+    "Beast Master": [
+        315, 361, 362, 363, 364,
+        365, 366, 367, 368, 144,
+        370, 371, 372, 373, 374
+    ],
+
+    "Mage": [
+        #All 3 rows from Tab1
+        0, 1, 8, 9, 5,
+        10, 11, 12, 13, 6,
+        445, 446, 447, 448, 449,
+        #Plus the 3 rows from Mage Tab2
+        450, 451, 452, 453, 454,
+        455, 456, 457, 458, 459,
+        460, 461, 462, 464, 463  #Not a typo, 464 is before 463
+    ],
+    "Wizard": [
+        465, 466, 467, 468, 469,
+        470, 486, 472, 488, 474,
+        475, 476, 477, 478, 494
+    ],
+    "Shaman": [
+        480, 481, 482, 483, 484,
+        485, 486, 487, 488, 489,
+        490, 491, 492, 493, 494
+    ],
+    "Elemental Sorcerer": [
+        495, 496, 497, 498, 499,
+        500, 531, 532, 533, 144,
+        505, 506, 507, 508, 539
+    ],
+    #"Spiritual Monk": [],
+    "Bubonic Conjuror": [
+        525, 526, 527, 528, 529,
+        530, 531, 532, 533, 144,
+        535, 536, 537, 538, 539
+    ],
+    #"Arcane Cultist": [],
+
+}
 hardcap_symbols = 280
-hardcap_enhancement_eclipse = 250 #Lava might add more in the future, but there are no bonuses above 250 in v2.10
+hardcap_enhancement_eclipse = 250  #Lava might add more in the future, but there are no bonuses above 250 in v2.10
 skill_talentsDict = {
     # Optimal is an optional list for calculating library.getJeapordyGoal
     # [0] = the starting level
@@ -2517,42 +2640,30 @@ skill_talentsDict = {
             59: {"Name": "Blood Marrow", "Tab": "Voidwalker"},
             57: {"Name": "Species Epoch", "Tab": "Voidwalker"},
             49: {"Name": "Enhancement Eclipse", "Tab": "Voidwalker", "Optimal": [0, 25, False], 'Hardcap': hardcap_enhancement_eclipse},
+            53: {"Name": "Eternal WIS", "Tab": "Voidwalker"},
+            51: {"Name": "Eternal STR", "Tab": "Voidwalker"},
+            52: {"Name": "Eternal AGI", "Tab": "Voidwalker"},
         },
         "Medium": {
+            492: {"Name": "Bubble Breakthrough", "Tab": "Shaman"},
+            506: {"Name": "Shared Beliefs", "Tab": "Elemental Sorcerer"},
             41: {"Name": "Crystal Countdown", "Tab": "Maestro"},
+            28: {"Name": "Cards Galore", "Tab": "Journeyman"},
+            29: {"Name": "Rares Everywhere", "Tab": "Journeyman"},
+            24: {"Name": "Curse of Mr Looty Booty", "Tab": "Journeyman"},
             56: {"Name": "Voodoo Statufication", "Tab": "Voidwalker"},
             78: {"Name": "Extra Bags", "Tab": "Beginner"},
             131: {"Name": "Redox Rates", "Tab": "Squire"},
+            39: {"Name": "Colloquial Containers", "Tab": "Maestro"},
         },
         "Low": {
+            537: {"Name": "Essence Transferral", "Tab": "Bubonic Conjuror"},
+            269: {"Name": "Broken Time", "Tab": "Calm Basics"},
+            281: {"Name": "Acme Anvil", "Tab": "Archer"},
+            279: {"Name": "Robbinghood", "Tab": "Archer"},
             130: {"Name": "Refinery Throttle", "Tab": "Squire", "Optimal": [0, 8, True]},
-        },
-    },
-    "Mining": {
-        "High": {
-            100: {"Name": "Big Pick", "Tab": "Warrior"},
-            85: {"Name": "Brute Efficiency", "Tab": "Rage Basics"},
-            103: {"Name": "Tool Proficiency", "Tab": "Warrior"},
-            101: {"Name": "Copper Collector", "Tab": "Warrior"},
-            149: {"Name": "Symbols of Beyond R", "Tab": "Elite Class", "Optimal": [0, 20, False], 'Hardcap': hardcap_symbols},
-            142: {"Name": "Skill Strengthen", "Tab": "Elite Class"},
-        },
-        "Medium": {
-            99: {"Name": "Haungry for Gold", "Tab": "Warrior"},
-            143: {"Name": "Overblown Testosterone", "Tab": "Elite Class"},
-            96: {"Name": "-STR-ess Tested Garb", "Tab": "Warrior"},
-            94: {"Name": "Firmly Grasp It", "Tab": "Warrior"},
-            98: {"Name": "Absolute Unit", "Tab": "Warrior"},
-            81: {"Name": "Str Summore", "Tab": "Warrior Subclass"},
-            89: {"Name": "Idle Skilling", "Tab": "Rage Basics"},
-        },
-        "Low": {
-            92: {"Name": "Health Overdrive", "Tab": "Warrior"},
-            127: {"Name": "Shieldiest Statues", "Tab": "Squire", 'Hardcap': 200},
-            112: {"Name": "Strongest Statues", "Tab": "Barbarian", 'Hardcap': 200},
-            95: {"Name": "Strength in Numbers", "Tab": "Warrior"},
-            0: {"Name": "Health Booster", "Tab": "Rage Basics"},
-            111: {"Name": "Fistful of Obol", "Tab": "Warrior Subclass", 'Hardcap': 125},
+            37: {"Name": "Skilliest Statue", "Tab": "Maestro", 'Hardcap': 200},
+            144: {"Name": "The Family Guy", "Tab": "Elite Class"},
         },
     },
     "Cooking": {
@@ -2588,6 +2699,33 @@ skill_talentsDict = {
             112: {"Name": "Strongest Statues", "Tab": "Barbarian", 'Hardcap': 200},
             111: {"Name": "Fistful of Obol", "Tab": "Warrior Subclass", 'Hardcap': 125},
             116: {"Name": "Bobbin' Bobbers", "Tab": "Barbarian"},
+        },
+    },
+    "Mining": {
+        "High": {
+            100: {"Name": "Big Pick", "Tab": "Warrior"},
+            85: {"Name": "Brute Efficiency", "Tab": "Rage Basics"},
+            103: {"Name": "Tool Proficiency", "Tab": "Warrior"},
+            101: {"Name": "Copper Collector", "Tab": "Warrior"},
+            149: {"Name": "Symbols of Beyond R", "Tab": "Elite Class", "Optimal": [0, 20, False], 'Hardcap': hardcap_symbols},
+            142: {"Name": "Skill Strengthen", "Tab": "Elite Class"},
+        },
+        "Medium": {
+            99: {"Name": "Haungry for Gold", "Tab": "Warrior"},
+            143: {"Name": "Overblown Testosterone", "Tab": "Elite Class"},
+            96: {"Name": "-STR-ess Tested Garb", "Tab": "Warrior"},
+            94: {"Name": "Firmly Grasp It", "Tab": "Warrior"},
+            98: {"Name": "Absolute Unit", "Tab": "Warrior"},
+            81: {"Name": "Str Summore", "Tab": "Warrior Subclass"},
+            89: {"Name": "Idle Skilling", "Tab": "Rage Basics"},
+        },
+        "Low": {
+            92: {"Name": "Health Overdrive", "Tab": "Warrior"},
+            127: {"Name": "Shieldiest Statues", "Tab": "Squire", 'Hardcap': 200},
+            112: {"Name": "Strongest Statues", "Tab": "Barbarian", 'Hardcap': 200},
+            95: {"Name": "Strength in Numbers", "Tab": "Warrior"},
+            0: {"Name": "Health Booster", "Tab": "Rage Basics"},
+            111: {"Name": "Fistful of Obol", "Tab": "Warrior Subclass", 'Hardcap': 125},
         },
     },
     "Catching": {
@@ -2632,7 +2770,9 @@ skill_talentsDict = {
         "High": {
             476: {"Name": "Sooouls", "Tab": "Wizard"},
         },
-        "Medium": {},
+        "Medium": {
+            303: {"Name": "Stop Right There", "Tab": "Hunter"},
+        },
         "Low": {
             478: {"Name": "Nearby Outlet", "Tab": "Wizard"},
             475: {"Name": "Charge Syphon", "Tab": "Wizard", 'Hardcap': 200},
@@ -2643,14 +2783,18 @@ combat_talentsDict = {
     #Talents here are unique from the skill_talentsDict above
     #Elite Classes
     "Blood Berserker": {
-        "High": {},
-        "Medium": {},
-        "Low": {
+        "High": {
             109: {"Name": "Monster Decimator", "Tab": "Barbarian"},
-            135: {"Name": "Fired Up", "Tab": "Blood Berserker", "Optimal": [0, 25, True], 'Hardcap': 125},
-            136: {"Name": "Combustion", "Tab": "Blood Berserker", "Optimal": [0, 20, True], 'Hardcap': 125},
-            137: {"Name": "Serrated Swipe", "Tab": "Blood Berserker", "Optimal": [0, 50, True], 'Hardcap': 125},
-            106: {"Name": "Axe Hurl", "Tab": "Barbarian", "Optimal": [0, 50, True], 'Hardcap': 125},
+        },
+        "Medium": {
+            108: {"Name": "No Pain No Gain", "Tab": "Barbarian"},
+            97: {"Name": "Carry a Big Stick", "Tab": "Warrior"},
+            6: {"Name": "Gilded Sword", "Tab": "Rage Basics"},
+        },
+        "Low": {
+            103: {"Name": "Idle Brawling", "Tab": "Rage Basics"},
+            5: {"Name": "Sharpened Axe", "Tab": "Rage Basics"},
+            141: {"Name": "Charred Skulls", "Tab": "Blood Berserker"},
         },
     },
     "Divine Knight": {
@@ -2665,73 +2809,135 @@ combat_talentsDict = {
         "Medium": {
             178: {"Name": "King of the Remembered", "Tab": "Divine Knight"},
             129: {"Name": "Blocky Bottles", "Tab": "Squire"},
+            125: {"Name": "Precision Power", "Tab": "Squire"},
             97: {"Name": "Carry a Big Stick", "Tab": "Warrior"},
             6: {"Name": "Gilded Sword", "Tab": "Rage Basics"},
-            125: {"Name": "Precision Power", "Tab": "Squire"},
         },
         "Low": {
+            103: {"Name": "Idle Brawling", "Tab": "Rage Basics"},
             5: {"Name": "Sharpened Axe", "Tab": "Rage Basics"},
-            91: {"Name": "Whirl", "Tab": "Warrior", "Optimal": [0, 24, True]},
+            141: {"Name": "Charred Skulls", "Tab": "Divine Knight"},
         },
     },
     "Bubonic Conjuror": {
         "High": {
+            490: {"Name": "Cranium Cooking", "Tab": "Shaman"},
+            481: {"Name": "Auspicious Aura", "Tab": "Shaman"},
+            483: {"Name": "Tenteyecle", "Tab": "Shaman"},
+            529: {"Name": "Raise Dead", "Tab": "Bubonic Conjuror", 'Hardcap': 200},
+            526: {"Name": "Flatulent Spirit", "Tab": "Bubonic Conjuror"},
             525: {"Name": "Chemical Warfare", "Tab": "Bubonic Conjuror"},
         },
         "Medium": {
-
+            485: {"Name": "Virile Vials", "Tab": "Shaman"},
+            455: {"Name": "Knowledge Is Power", "Tab": "Mage"},
+            457: {"Name": "Power Overwhelming", "Tab": "Mage"},
+            6: {"Name": "Gilded Sword", "Tab": "Savvy Basics"},
         },
         "Low": {
-
+            103: {"Name": "Idle Casting", "Tab": "Savvy Basics"},
+            5: {"Name": "Sharpened Axe", "Tab": "Savvy Basics"},
+            531: {"Name": "Memorial Skulls", "Tab": "Bubonic Conjuror"},
         },
-
     },
     "Elemental Sorcerer": {
         "High": {
+            469: {"Name": "Mana Is Life", "Tab": "Wizard"},
+            496: {"Name": "Lightning Barrage", "Tab": "Elemental Sorcerer"},
+            497: {"Name": "Radiant Chainbolt", "Tab": "Elemental Sorcerer"},
+            467: {"Name": "Tornado", "Tab": "Wizard"},
+            466: {"Name": "Floor Is Lava", "Tab": "Wizard"},
             498: {"Name": "Dimensional Wormhole", "Tab": "Elemental Sorcerer"},
         },
         "Medium": {
-
+            508: {"Name": "Wormhole Emperor", "Tab": "Elemental Sorcerer"},
+            474: {"Name": "Fuscia Flasks", "Tab": "Wizard"},
+            470: {"Name": "Paperwork, Great", "Tab": "Wizard"},
+            455: {"Name": "Knowledge Is Power", "Tab": "Mage"},
+            457: {"Name": "Power Overwhelming", "Tab": "Mage"},
+            6: {"Name": "Gilded Sword", "Tab": "Savvy Basics"},
         },
         "Low": {
-
+            103: {"Name": "Idle Casting", "Tab": "Savvy Basics"},
+            5: {"Name": "Sharpened Axe", "Tab": "Savvy Basics"},
+            531: {"Name": "Memorial Skulls", "Tab": "Elemental Sorcerer"},
         },
-
     },
     "Siege Breaker": {
         "High": {
             318: {"Name": "Pirate Flag", "Tab": "Siege Breaker"},
+            319: {"Name": "Plunder Ye Deceased", "Tab": "Siege Breaker"},
+            316: {"Name": "Suppressing Fire", "Tab": "Siege Breaker", 'Optimal': [0, 33, True]},
+            317: {"Name": "Firebomb", "Tab": "Siege Breaker", 'Optimal': [0, 50, True]},
+            315: {"Name": "Cannonball", "Tab": "Siege Breaker"},
+            285: {"Name": "Homing Arrows", "Tab": "Bowman", 'Optimal': [0, 15, True]},
+            270: {"Name": "Piercing Arrow", "Tab": "Archer", 'Optimal': [0, 40, True]},
         },
         "Medium": {
-
+            #287: {"Name": "Flax Instastring", "Tab": "Bowman"},  #I believe this only procs single target, making it fairly useless
+            289: {"Name": "Woah, That Was Fast", "Tab": "Bowman"},
+            286: {"Name": "Magic Shortbow", "Tab": "Bowman", 'Optimal': [0, 20, True]},
+            328: {"Name": "Archlord Of The Pirates", "Tab": "Siege Breaker"},
+            290: {"Name": "Speedna", "Tab": "Bowman"},
+            273: {"Name": "Strafe", "Tab": "Archer"},
+            284: {"Name": "Veins of the Infernal", "Tab": "Archer"},
+            276: {"Name": "High Polymer Limbs", "Tab": "Archer"},
+            6: {"Name": "Gilded Sword", "Tab": "Calm Basics"},
         },
         "Low": {
-
+            268: {"Name": "Idle Shooting", "Tab": "Calm Basics"},
+            5: {"Name": "Sharpened Axe", "Tab": "Calm Basics"},
+            366: {"Name": "Stacked Skulls", "Tab": "Siege Breaker"},
         },
-
     },
     "Beast Master": {
         "High": {
-            362: {"Name": "Whale Wallop", "Tab": "Beast Master"},
+            302: {"Name": "Uwu Rawrrr", "Tab": "Hunter"},
+            362: {"Name": "Whale Wallop", "Tab": "Beast Master", 'Optimal': [0, 17, True]},
+            301: {"Name": "Bear Trap", "Tab": "Hunter", 'Optimal': [0, 30, True]},
+            300: {"Name": "Three-Sixty Noscope", "Tab": "Hunter",},
+            270: {"Name": "Piercing Arrow", "Tab": "Archer", 'Optimal': [0, 40, True]},
+            363: {"Name": "Nacho Party", "Tab": "Beast Master", 'Optimal': [0, 13, True]},
+            361: {"Name": "Boar Rush", "Tab": "Beast Master", 'Optimal': [0, 20, True]},
         },
         "Medium": {
-
+            328: {"Name": "Archlord Of The Pirates", "Tab": "Siege Breaker"},
+            290: {"Name": "Looty Mc Shooty", "Tab": "Bowman"},
+            #273: {"Name": "Strafe", "Tab": "Archer"},
+            284: {"Name": "Veins of the Infernal", "Tab": "Archer"},
+            276: {"Name": "High Polymer Limbs", "Tab": "Archer"},
+            6: {"Name": "Gilded Sword", "Tab": "Calm Basics"},
         },
         "Low": {
-
+            268: {"Name": "Idle Shooting", "Tab": "Calm Basics"},
+            5: {"Name": "Sharpened Axe", "Tab": "Calm Basics"},
+            366: {"Name": "Stacked Skulls", "Tab": "Siege Breaker"},
         },
-
     },
     "Voidwalker": {
         "High": {
-            46: {"Name": "Void Radius", "Tab": "Voidwalker"}
+            19: {"Name": "Gimme Gimme", "Tab": "Journeyman"},
+            26: {"Name": "Cmon Out Crystals", "Tab": "Journeyman"},
+            46: {"Name": "Void Radius", "Tab": "Voidwalker"},
+            45: {"Name": "Void Trial Rerun", "Tab": "Voidwalker"},
+            47: {"Name": "Bossing Vain", "Tab": "Voidwalker"},
         },
         "Medium": {
-
+            50: {"Name": "Power Orb", "Tab": "Voidwalker"},
+            48: {"Name": "Quad Jab", "Tab": "Voidwalker"},
+            33: {"Name": "Triple Jab", "Tab": "Maestro"},
+            18: {"Name": "Two Punch Man", "Tab": "Journeyman"},
+            31: {"Name": "Skillage Damage", "Tab": "Maestro"},
+            20: {"Name": "Lucky Hit", "Tab": "Journeyman"},
+            54: {"Name": "Eternal Luk", "Tab": "Voidwalker"},
+            21: {"Name": "F'luk'ey Fabrics", "Tab": "Journeyman"},
+            38: {"Name": "Bliss N Chips", "Tab": "Maestro"},
+            6: {"Name": "Gilded Sword", "Tab": "Beginner"},
         },
         "Low": {
-
-        },
+            5: {"Name": "Sharpened Axe", "Tab": "Beginner"},
+            36: {"Name": "Clever Clover Obols", "Tab": "Maestro"},
+        }
     },
 }
 
@@ -2796,129 +3002,129 @@ stamp_maxes = {
 }
 stampsDict = {
     "Combat": {
-        0: {'Name': "Sword Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        1: {'Name': "Heart Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        2: {'Name': "Mana Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        3: {'Name': "Tomahawk Stamp", 'funcType': 'decay', 'x1': 6, 'x2': 40},
-        4: {'Name': "Target Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        5: {'Name': "Shield Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        6: {'Name': "Longsword Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0},
-        7: {'Name': "Kapow Stamp", 'funcType': 'decay', 'x1': 8, 'x2': 40},
-        8: {'Name': "Fist Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        9: {'Name': "Battleaxe Stamp", 'funcType': 'decay', 'x1': 10, 'x2': 40},
-        10: {'Name': "Agile Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        11: {'Name': "Vitality Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0},
-        12: {'Name': "Book Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        13: {'Name': "Manamoar Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        14: {'Name': "Clover Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        15: {'Name': "Scimitar Stamp", 'funcType': 'add', 'x1': 3, 'x2': 0},
-        16: {'Name': "Bullseye Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0},
-        17: {'Name': "Feather Stamp", 'funcType': 'decay', 'x1': 5, 'x2': 50},
-        18: {'Name': "Polearm Stamp", 'funcType': 'decay', 'x1': 16, 'x2': 40},
-        19: {'Name': "Violence Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        20: {'Name': "Buckler Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        21: {'Name': "Hermes Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        22: {'Name': "Sukka Foo", 'funcType': 'decay', 'x1': 20, 'x2': 60},
-        23: {'Name': "Arcane Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        24: {'Name': "Avast Yar Stamp", 'funcType': 'add', 'x1': 6, 'x2': 0},
-        25: {'Name': "Steve Sword", 'funcType': 'decay', 'x1': 20, 'x2': 60},
-        26: {'Name': "Blover Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        27: {'Name': "Stat Graph Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        28: {'Name': "Gilded Axe Stamp", 'funcType': 'add', 'x1': 8, 'x2': 0},
-        29: {'Name': "Diamond Axe Stamp", 'funcType': 'decay', 'x1': 20, 'x2': 60},
-        30: {'Name': "Tripleshot Stamp", 'funcType': 'add', 'x1': 3, 'x2': 0},
-        31: {'Name': "Blackheart Stamp", 'funcType': 'add', 'x1': 10, 'x2': 0},
-        32: {'Name': "Maxo Slappo Stamp", 'funcType': 'add', 'x1': 4, 'x2': 0},
-        33: {'Name': "Sashe Sidestamp", 'funcType': 'add', 'x1': 4, 'x2': 0},
-        34: {'Name': "Intellectostampo", 'funcType': 'add', 'x1': 4, 'x2': 0},
-        35: {'Name': "Conjocharmo Stamp", 'funcType': 'add', 'x1': 4, 'x2': 0},
-        36: {'Name': "Dementia Sword Stamp", 'funcType': 'decay', 'x1': 25, 'x2': 80},
-        37: {'Name': "Golden Sixes Stamp", 'funcType': 'decay', 'x1': 20, 'x2': 80},
-        38: {'Name': "Stat Wallstreet Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0},
-        39: {'Name': "Void Sword Stamp", 'funcType': 'add', 'x1': 12, 'x2': 0},
-        40: {'Name': "Void Axe Stamp", 'funcType': 'decay', 'x1': 35, 'x2': 200},
-        41: {'Name': "Captalist Stats Stamp", 'funcType': 'decay', 'x1': 5, 'x2': 100},
+        0: {'Name': "Sword Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'spore-cap'},
+        1: {'Name': "Heart Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'oak-logs'},
+        2: {'Name': "Mana Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'copper-pre'},
+        3: {'Name': "Tomahawk Stamp", 'funcType': 'decay', 'x1': 6, 'x2': 40, 'Material': 'copper-bar'},
+        4: {'Name': "Target Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'thread'},
+        5: {'Name': "Shield Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'iron-ore'},
+        6: {'Name': "Longsword Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0, 'Material': 'bean-slices'},
+        7: {'Name': "Kapow Stamp", 'funcType': 'decay', 'x1': 8, 'x2': 40, 'Material': 'trusty-nails'},
+        8: {'Name': "Fist Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'bleach-logs'},
+        9: {'Name': "Battleaxe Stamp", 'funcType': 'decay', 'x1': 10, 'x2': 40, 'Material': 'grass-leaf'},
+        10: {'Name': "Agile Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'copper-chopper'},
+        11: {'Name': "Vitality Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0, 'Material': 'snake-skin'},
+        12: {'Name': "Book Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'iron-bar'},
+        13: {'Name': "Manamoar Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'glublin-ear'},
+        14: {'Name': "Clover Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'iron-platebody'},
+        15: {'Name': "Scimitar Stamp", 'funcType': 'add', 'x1': 3, 'x2': 0, 'Material': 'goldfish'},
+        16: {'Name': "Bullseye Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0, 'Material': 'sentient-cereal'},
+        17: {'Name': "Feather Stamp", 'funcType': 'decay', 'x1': 5, 'x2': 50, 'Material': 'coconotnotto'},
+        18: {'Name': "Polearm Stamp", 'funcType': 'decay', 'x1': 16, 'x2': 40, 'Material': 'steel-axe'},
+        19: {'Name': "Violence Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'dementia-ore'},
+        20: {'Name': "Buckler Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'platinum-bar'},
+        21: {'Name': "Hermes Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'rooted-soul'},
+        22: {'Name': "Sukka Foo", 'funcType': 'decay', 'x1': 20, 'x2': 60, 'Material': 'amarok-slab'},
+        23: {'Name': "Arcane Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'gold-bar'},
+        24: {'Name': "Avast Yar Stamp", 'funcType': 'add', 'x1': 6, 'x2': 0, 'Material': 'bunny'},
+        25: {'Name': "Steve Sword", 'funcType': 'decay', 'x1': 20, 'x2': 60, 'Material': 'fruitfly'},
+        26: {'Name': "Blover Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'jellyfish'},
+        27: {'Name': "Stat Graph Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'mystery-upgrade-stone-i'},
+        28: {'Name': "Gilded Axe Stamp", 'funcType': 'add', 'x1': 8, 'x2': 0, 'Material': 'thingymabob'},
+        29: {'Name': "Diamond Axe Stamp", 'funcType': 'decay', 'x1': 20, 'x2': 60, 'Material': 'pvc-pipe'},
+        30: {'Name': "Tripleshot Stamp", 'funcType': 'add', 'x1': 3, 'x2': 0, 'Material': 'tangled-cords'},
+        31: {'Name': "Blackheart Stamp", 'funcType': 'add', 'x1': 10, 'x2': 0, 'Material': 'purple-screw'},
+        32: {'Name': "Maxo Slappo Stamp", 'funcType': 'add', 'x1': 4, 'x2': 0, 'Material': 'maple-logs'},
+        33: {'Name': "Sashe Sidestamp", 'funcType': 'add', 'x1': 4, 'x2': 0, 'Material': 'scarab'},
+        34: {'Name': "Intellectostampo", 'funcType': 'add', 'x1': 4, 'x2': 0, 'Material': 'oozie-soul'},
+        35: {'Name': "Conjocharmo Stamp", 'funcType': 'add', 'x1': 4, 'x2': 0, 'Material': 'suggma-ashes'},
+        36: {'Name': "Dementia Sword Stamp", 'funcType': 'decay', 'x1': 25, 'x2': 80, 'Material': 'dreadlo-ore'},
+        37: {'Name': "Golden Sixes Stamp", 'funcType': 'decay', 'x1': 20, 'x2': 80, 'Material': 'kraken'},
+        38: {'Name': "Stat Wallstreet Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0, 'Material': 'mystery-upgrade-stone-ii'},
+        39: {'Name': "Void Sword Stamp", 'funcType': 'add', 'x1': 12, 'x2': 0, 'Material': 'rice-cake'},
+        40: {'Name': "Void Axe Stamp", 'funcType': 'decay', 'x1': 35, 'x2': 200, 'Material': 'bamboo-logs'},
+        41: {'Name': "Captalist Stats Stamp", 'funcType': 'decay', 'x1': 5, 'x2': 100, 'Material': 'firefly'},
     },
     "Skill": {
-        0: {'Name': "Pickaxe Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        1: {'Name': "Hatchet Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        2: {'Name': "Anvil Zoomer Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        3: {'Name': "Lil' Mining Baggy Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        4: {'Name': "Twin Ores Stamp", 'funcType': 'decay', 'x1': 15, 'x2': 40},
-        5: {'Name': "Choppin' Bag Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        6: {'Name': "Duplogs Stamp", 'funcType': 'decay', 'x1': 15, 'x2': 40},
-        7: {'Name': "Matty Bag Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        8: {'Name': "Smart Dirt Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        9: {'Name': "Cool Diggy Tool Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0},
-        10: {'Name': "High IQ Lumber Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        11: {'Name': "Swag Swingy Tool Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0},
-        12: {'Name': "Alch Go Brrr Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        13: {'Name': "Brainstew Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        14: {'Name': "Drippy Drop Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        15: {'Name': "Droplots Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        16: {'Name': "Fishing Rod Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0},
-        17: {'Name': "Fishhead Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        18: {'Name': "Catch Net Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0},
-        19: {'Name': "Fly Intel Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        20: {'Name': "Bag o Heads Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        21: {'Name': "Holy Mackerel Stamp", 'funcType': 'decay', 'x1': 20, 'x2': 40},
-        22: {'Name': "Bugsack Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        23: {'Name': "Buzz Buzz Stamp", 'funcType': 'decay', 'x1': 20, 'x2': 40},
-        24: {'Name': "Hidey Box Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0},
-        25: {'Name': "Purp Froge Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        26: {'Name': "Spikemouth Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        27: {'Name': "Shiny Crab Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0},
-        28: {'Name': "Gear Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        29: {'Name': "Stample Stamp", 'funcType': 'decay', 'x1': 4, 'x2': 30},
-        30: {'Name': "Saw Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        31: {'Name': "Amplestample Stamp", 'funcType': 'decay', 'x1': 5, 'x2': 30},
-        32: {'Name': "SpoOoky Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0},
-        33: {'Name': "Flowin Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        34: {'Name': "Prayday Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        35: {'Name': "Banked Pts Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        36: {'Name': "Cooked Meal Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0},
-        37: {'Name': "Spice Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0},
-        38: {'Name': "Ladle Stamp", 'funcType': 'add', 'x1': 25, 'x2': 0},
-        39: {'Name': "Nest Eggs Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        40: {'Name': "Egg Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        41: {'Name': "Lab Tube Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        42: {'Name': "Sailboat Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        43: {'Name': "Gamejoy Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        44: {'Name': "Divine Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        45: {'Name': "Multitool Stamp", 'funcType': 'add', 'x1': 10, 'x2': 0},
-        46: {'Name': "Skelefish Stamp", 'funcType': 'decay', 'x1': 0.2, 'x2': 20},
-        47: {'Name': "Crop Evo Stamp", 'funcType': 'add', 'x1': 5, 'x2': 0},
-        48: {'Name': "Sneaky Peeky Stamp", 'funcType': 'decay', 'x1': 50, 'x2': 150},
-        49: {'Name': "Jade Mint Stamp", 'funcType': 'add', 'x1': 0.5, 'x2': 0},
-        50: {'Name': "Summoner Stone Stamp", 'funcType': 'decay', 'x1': 50, 'x2': 150},
-        51: {'Name': "White Essence Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        52: {'Name': "Triad Essence Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        53: {'Name': "Dark Triad Essence Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
+        0: {'Name': "Pickaxe Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'oak-logs'},
+        1: {'Name': "Hatchet Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'thread'},
+        2: {'Name': "Anvil Zoomer Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'copper-ore'},
+        3: {'Name': "Lil' Mining Baggy Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'jungle-logs'},
+        4: {'Name': "Twin Ores Stamp", 'funcType': 'decay', 'x1': 15, 'x2': 40, 'Material': 'thief-hoof'},
+        5: {'Name': "Choppin' Bag Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'carrot-cube'},
+        6: {'Name': "Duplogs Stamp", 'funcType': 'decay', 'x1': 15, 'x2': 40, 'Material': 'militia-helm'},
+        7: {'Name': "Matty Bag Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'cramped-material-pouch'},
+        8: {'Name': "Smart Dirt Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'plank'},
+        9: {'Name': "Cool Diggy Tool Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0, 'Material': 'iron-hatchet'},
+        10: {'Name': "High IQ Lumber Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'bullfrog-horn'},
+        11: {'Name': "Swag Swingy Tool Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0, 'Material': 'copper-pickaxe'},
+        12: {'Name': "Alch Go Brrr Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'forest-fibres'},
+        13: {'Name': "Brainstew Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'gold-ore'},
+        14: {'Name': "Drippy Drop Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'pocket-sand'},
+        15: {'Name': "Droplots Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'bloach'},
+        16: {'Name': "Fishing Rod Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0, 'Material': 'fly'},
+        17: {'Name': "Fishhead Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'megalodon-tooth'},
+        18: {'Name': "Catch Net Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0, 'Material': 'goldfish'},
+        19: {'Name': "Fly Intel Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'crabby-cakey'},
+        20: {'Name': "Bag o Heads Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'butterfly'},
+        21: {'Name': "Holy Mackerel Stamp", 'funcType': 'decay', 'x1': 20, 'x2': 40, 'Material': 'platinum-ore'},
+        22: {'Name': "Bugsack Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'hermit-can'},
+        23: {'Name': "Buzz Buzz Stamp", 'funcType': 'decay', 'x1': 20, 'x2': 40, 'Material': 'potty-rolls'},
+        24: {'Name': "Hidey Box Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0, 'Material': 'crabbo'},
+        25: {'Name': "Purp Froge Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'scorpie'},
+        26: {'Name': "Spikemouth Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'mousey'},
+        27: {'Name': "Shiny Crab Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0, 'Material': 'owlio'},
+        28: {'Name': "Gear Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'sticky-stick'},
+        29: {'Name': "Stample Stamp", 'funcType': 'decay', 'x1': 4, 'x2': 30, 'Material': 'floof-ploof'},
+        30: {'Name': "Saw Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'dementia-bar'},
+        31: {'Name': "Amplestample Stamp", 'funcType': 'decay', 'x1': 5, 'x2': 30, 'Material': 'mosquisnow'},
+        32: {'Name': "SpoOoky Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0, 'Material': 'forest-soul'},
+        33: {'Name': "Flowin Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'redox-salts'},
+        34: {'Name': "Prayday Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'cracked-glass'},
+        35: {'Name': "Banked Pts Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'dune-soul'},
+        36: {'Name': "Cooked Meal Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0, 'Material': 'skelefish'},
+        37: {'Name': "Spice Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0, 'Material': 'purple-mush-cap'},
+        38: {'Name': "Ladle Stamp", 'funcType': 'add', 'x1': 25, 'x2': 0, 'Material': 'sand-shark'},
+        39: {'Name': "Nest Eggs Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'alien-hive-chunk'},
+        40: {'Name': "Egg Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'half-eaten-donut'},
+        41: {'Name': "Lab Tube Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'bottle-cap'},
+        42: {'Name': "Sailboat Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'stilt-pole'},
+        43: {'Name': "Gamejoy Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'dandielogs'},
+        44: {'Name': "Divine Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'orange-slice'},
+        45: {'Name': "Multitool Stamp", 'funcType': 'add', 'x1': 10, 'x2': 0, 'Material': 'dust-mote'},
+        46: {'Name': "Skelefish Stamp", 'funcType': 'decay', 'x1': 0.2, 'x2': 20, 'Material': 'skelefish'},
+        47: {'Name': "Crop Evo Stamp", 'funcType': 'add', 'x1': 5, 'x2': 0, 'Material': 'icefish'},
+        48: {'Name': "Sneaky Peeky Stamp", 'funcType': 'decay', 'x1': 50, 'x2': 150, 'Material': 'leafy-horn'},
+        49: {'Name': "Jade Mint Stamp", 'funcType': 'add', 'x1': 0.5, 'x2': 0, 'Material': 'stacked-rice-cake'},
+        50: {'Name': "Summoner Stone Stamp", 'funcType': 'decay', 'x1': 50, 'x2': 150, 'Material': 'breezy-soul'},
+        51: {'Name': "White Essence Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'ladybug'},
+        52: {'Name': "Triad Essence Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'caulifish'},
+        53: {'Name': "Dark Triad Essence Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'effervescent logs'},
     },
     "Misc": {
-        0: {'Name': "Questin Stamp", 'funcType': 'decay', 'x1': 70, 'x2': 50},
-        1: {'Name': "Mason Jar Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        2: {'Name': "Crystallin", 'funcType': 'decay', 'x1': 110, 'x2': 50},
-        3: {'Name': "Arcade Ball Stamp", 'funcType': 'decay', 'x1': 50, 'x2': 100},
-        4: {'Name': "Gold Ball Stamp", 'funcType': 'decay', 'x1': 40, 'x2': 100},
-        5: {'Name': "Potion Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        6: {'Name': "Golden Apple Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        7: {'Name': "Ball Timer Stamp", 'funcType': 'decay', 'x1': 12, 'x2': 30},
-        8: {'Name': "Card Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        9: {'Name': "Forge Stamp", 'funcType': 'decay', 'x1': 120, 'x2': 250},
-        10: {'Name': "Vendor Stamp", 'funcType': 'decay', 'x1': 35, 'x2': 100},
-        11: {'Name': "Sigil Stamp", 'funcType': 'decay', 'x1': 40, 'x2': 150},
-        12: {'Name': "Talent I Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        13: {'Name': "Talent II Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        14: {'Name': "Talent III Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        15: {'Name': "Talent IV Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        16: {'Name': "Talent V Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        17: {'Name': "Talent S Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        18: {'Name': "Multikill Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        19: {'Name': "Biblio Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        20: {'Name': "DNA Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        21: {'Name': "Refinery Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0},
-        22: {'Name': "Atomic Stamp", 'funcType': 'decay', 'x1': 20, 'x2': 80},
+        0: {'Name': "Questin Stamp", 'funcType': 'decay', 'x1': 70, 'x2': 50, 'Material': 'slime-sludge'},
+        1: {'Name': "Mason Jar Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'glass-shard'},
+        2: {'Name': "Crystallin", 'funcType': 'decay', 'x1': 110, 'x2': 50, 'Material': 'boring-brick'},
+        3: {'Name': "Arcade Ball Stamp", 'funcType': 'decay', 'x1': 50, 'x2': 100, 'Material': 'copper-ore'},
+        4: {'Name': "Gold Ball Stamp", 'funcType': 'decay', 'x1': 40, 'x2': 100, 'Material': 'golfish'},
+        5: {'Name': "Potion Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'icing-ironbite'},
+        6: {'Name': "Golden Apple Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'golden-nomwich'},
+        7: {'Name': "Ball Timer Stamp", 'funcType': 'decay', 'x1': 12, 'x2': 30, 'Material': 'oak-logs'},
+        8: {'Name': "Card Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'furled-flag'},
+        9: {'Name': "Forge Stamp", 'funcType': 'decay', 'x1': 120, 'x2': 250, 'Material': 'godshard-ore'},
+        10: {'Name': "Vendor Stamp", 'funcType': 'decay', 'x1': 35, 'x2': 100, 'Material': 'cue-tape'},
+        11: {'Name': "Sigil Stamp", 'funcType': 'decay', 'x1': 40, 'x2': 150, 'Material': 'ram-wool'},
+        12: {'Name': "Talent I Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'frog-leg'},
+        13: {'Name': "Talent II Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'pincer-arm'},
+        14: {'Name': "Talent III Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'arctic-leaf'},
+        15: {'Name': "Talent IV Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'royal-suggma-urn'},
+        16: {'Name': "Talent V Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'copper-ore'},
+        17: {'Name': "Talent S Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'twisty-leaf'},
+        18: {'Name': "Multikill Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'spore-cap'},
+        19: {'Name': "Biblio Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'tundra-logs'},
+        20: {'Name': "DNA Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'worker-bee'},
+        21: {'Name': "Refinery Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'cheesy-crumbs'},
+        22: {'Name': "Atomic Stamp", 'funcType': 'decay', 'x1': 20, 'x2': 80, 'Material': 'bamboo'},
     }
 }
 stampTypes = ["Combat", "Skill", "Misc"]
@@ -3678,51 +3884,61 @@ divinity_divinitiesDict = {
         "Name": "Snehebatu",
         "Unlocked": False,
         "BlessingLevel": 0,
+        'BlessingMaterial': 'green-bits'
     },
     2: {
         "Name": "Arctis",
         "Unlocked": False,
         "BlessingLevel": 0,
+        'BlessingMaterial': 'sailing-treasure-0'
     },
     3: {
         "Name": "Nobisect",
         "Unlocked": False,
         "BlessingLevel": 0,
+        'BlessingMaterial': 'red-bits'
     },
     4: {
         "Name": "Harriep",
         "Unlocked": False,
         "BlessingLevel": 0,
+        'BlessingMaterial': 'coins'
     },
     5: {
         "Name": "Goharut",
         "Unlocked": False,
         "BlessingLevel": 0,
+        'BlessingMaterial': 'red-bits'
     },
     6: {
         "Name": "Omniphau",
         "Unlocked": False,
         "BlessingLevel": 0,
+        'BlessingMaterial': 'particles'
     },
     7: {
         "Name": "Purrmep",
         "Unlocked": False,
         "BlessingLevel": 0,
+        'BlessingMaterial': 'coins'
     },
     8: {
         "Name": "Flutterbis",
         "Unlocked": False,
         "BlessingLevel": 0,
+        'BlessingMaterial': 'particles'
     },
     9: {
         "Name": "Kattlekruk",
         "Unlocked": False,
         "BlessingLevel": 0,
+        'BlessingMaterial': 'purple-bits'
     },
     10: {
         "Name": "Bagur",
         "Unlocked": False,
         "BlessingLevel": 0,
+        'BlessingMaterial': 'particles'
     },
     }
 divinity_offeringsDict = {

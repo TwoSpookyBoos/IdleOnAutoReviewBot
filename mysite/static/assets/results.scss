@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&display=swap&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&display=swap&family=Rubik:ital,wght@0,300..900;1,300..900&family=Roboto:wght@100;400;500&display=swap');
 
 @font-face {
     font-family: 'Space Mono';
@@ -299,7 +299,7 @@ body {
     color: var(--fg);
     height: 100%;
     max-height: 100vh;
-    align-items: center;
+    align-items: stretch;
 
     .container-fluid {
         display: flex;
@@ -522,7 +522,7 @@ body {
                                         width: 100%;
                                         position: relative;
                                         display: grid;
-                                        grid-template-columns: 1fr repeat(3, auto);
+                                        grid-template-columns: 1fr repeat(4, auto);
                                         column-gap: var(--col-gap);
                                         row-gap: 5px;
                                         overflow-y: auto;
@@ -540,7 +540,7 @@ body {
                                             content: '';
                                             height: 20px;
                                             width: 100%;
-                                            grid-column: 1 / span 4;
+                                            grid-column: 1 / span 5;
                                             transition: --table-edge-bg-to .5s ease-in-out;
                                         }
 
@@ -559,7 +559,7 @@ body {
                                         }
 
                                         .advice-title {
-                                            grid-column: 1 / span 4;
+                                            grid-column: 1 / span 5;
                                             background: hsla(0deg, 0%, 0%, 0.4);
                                             padding: 5px 10px;
 
@@ -593,17 +593,17 @@ body {
                                             display: flex;
                                             align-items: center;
                                             word-break: break-word;
+                                        }
 
-                                            &::before {
-                                                display: block;
-                                                content: '';
-                                                height: 40px;
-                                                min-width: var(--advice-icon-width);
+                                        .advice::before, .resource {
+                                            display: block;
+                                            content: '';
+                                            height: 40px;
+                                            min-width: var(--advice-icon-width);
 
-                                                background-size: contain;
-                                                background-position: center;
-                                                background-repeat: no-repeat;
-                                            }
+                                            background-size: contain;
+                                            background-position: center;
+                                            background-repeat: no-repeat;
                                         }
 
                                         .arrow {
@@ -966,17 +966,17 @@ body {
 
         #buttons-floating {
             position: absolute;
-            bottom: 30px;
-            right: 30px;
-            z-index: 99;
+            bottom: 10px;
+            right: 10px;
+            z-index: 96;
 
             display: flex;
             flex-direction: row;
-            column-gap: 5px;
+            gap: 5px;
 
             @media (max-width: 600px) {
-                right: 10px;
-                bottom: calc(var(--nav-height) + var(--nav-padding) * 2 + 10px);
+                flex-direction: column;
+                bottom: calc((var(--nav-height) + var(--nav-padding) * 2) * 2 + 10px);
             }
 
             #scroll-to-top, #expand-collapse {
@@ -1123,18 +1123,11 @@ body {
         }
     }
 
-    #scroll-to-top {
-        right: 10px;
-        bottom: calc(var(--nav-height) + var(--nav-padding) * 2 + 10px);
+    footer {
+        flex-direction: column;
     }
 
     ::-webkit-scrollbar {
         width: 0.5vw;
-    }
-}
-
-@media (max-width: 400px) {
-    footer {
-        flex-direction: column;
     }
 }
