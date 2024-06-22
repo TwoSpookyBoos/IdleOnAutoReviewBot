@@ -1553,7 +1553,10 @@ class Account:
                 continue
 
     def _parse_w6_jade_emporium(self, raw_ninja_list):
-        raw_emporium_purchases = list(raw_ninja_list[102][9]) if raw_ninja_list else []
+        try:
+            raw_emporium_purchases = list(raw_ninja_list[102][9])
+        except:
+            raw_emporium_purchases = [""]
         for upgradeIndex, upgradeDict in enumerate(jade_emporium):
             try:
                 self.sneaking['JadeEmporium'][upgradeDict['Name']] = {
