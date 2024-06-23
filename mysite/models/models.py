@@ -1079,7 +1079,8 @@ class Account:
             'OrangeUnlocked': 0,
             'GreenUnlocked': 0,
             'PurpleUnlocked': 0,
-            'YellowUnlocked': 0
+            'YellowUnlocked': 0,
+            'TotalUnlocked': 0,
         }
 
     def _parse_w2_bubbles(self):
@@ -1109,14 +1110,21 @@ class Account:
                             int(all_raw_bubbles[cauldronIndex][str(bubbleIndex)]),
                             bubblesDict[cauldronIndex][bubbleIndex]["x1"],
                             bubblesDict[cauldronIndex][bubbleIndex]["x2"])
-                        #if int(all_raw_bubbles[cauldronIndex][str(bubbleIndex)]) > 0:
+                        if int(all_raw_bubbles[cauldronIndex][str(bubbleIndex)]) > 0:
+                            self.alchemy_cauldrons['TotalUnlocked'] += 1
                             #Keep track of cauldron counts
+                            if cauldronIndex == 0:
+                                self.alchemy_cauldrons['OrangeUnlocked'] += 1
+                            elif cauldronIndex == 1:
+                                self.alchemy_cauldrons['GreenUnlocked'] += 1
+                            elif cauldronIndex == 2:
+                                self.alchemy_cauldrons['PurpleUnlocked'] += 1
+                            elif cauldronIndex == 3:
+                                self.alchemy_cauldrons['YellowUnlocked'] += 1
                     except:
                         continue  # Level and BaseValue already defaulted to 0 above
         except:
             pass
-
-
 
     def _parse_w2_p2w(self):
         self.alchemy_p2w = {
@@ -1687,6 +1695,31 @@ class Account:
     def _calculate_w2(self):
         self.vialMasteryMulti = 1 + (self.maxed_vials * .02) if self.rift['VialMastery'] else 1
         self._calculate_w2_sigils()
+        self._calculate_w2_cauldrons()
+
+    def _calculate_w2_cauldrons(self):
+        perCauldronBubblesUnlocked = [
+            self.alchemy_cauldrons['OrangeUnlocked'],
+            self.alchemy_cauldrons['GreenUnlocked'],
+            self.alchemy_cauldrons['PurpleUnlocked'],
+            self.alchemy_cauldrons['YellowUnlocked']
+        ]
+        bubbleUnlockListByWorld = [20, 0, 0, 0, 0, 0, 0, 0, 0]
+        for bubbleColorCount in perCauldronBubblesUnlocked:
+            worldCounter = 1
+            while bubbleColorCount >= 5 and worldCounter <= len(bubbleUnlockListByWorld) - 1:
+                bubbleUnlockListByWorld[worldCounter] += 5
+                bubbleColorCount -= 5
+                worldCounter += 1
+            if bubbleColorCount > 0 and worldCounter <= len(bubbleUnlockListByWorld) - 1:
+                bubbleUnlockListByWorld[worldCounter] += bubbleColorCount
+                bubbleColorCount = 0
+        self.alchemy_cauldrons['BubblesPerWorld'] = bubbleUnlockListByWorld
+
+        self.alchemy_cauldrons['NextWorldMissingBubbles'] = min(
+            [cauldronValue // 5 for cauldronValue in perCauldronBubblesUnlocked],
+            default=0
+        ) + 1
 
     def _calculate_w2_sigils(self):
         for sigilName in self.alchemy_p2w["Sigils"]:

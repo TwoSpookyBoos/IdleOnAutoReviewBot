@@ -1,6 +1,6 @@
 from math import ceil
 from flask import g as session_data
-from consts import maxStaticBookLevels, maxScalingBookLevels, maxSummoningBookLevels, maxOverallBookLevels, skill_talentsDict, combat_talentsDict
+from consts import maxStaticBookLevels, maxScalingBookLevels, maxSummoningBookLevels, maxOverallBookLevels, skill_talentsDict, combat_talentsDict, currentWorld
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
@@ -8,8 +8,8 @@ from utils.logging import get_logger
 logger = get_logger(__name__)
 
 def getJeopardyGoal(start: int, interval: int, talentExceedsBookLevels: bool, max_talents_over_books: int):
-    #Example1: Refinery Throttle starts 0, interval 8, talentExceedsBookLevels = True, and doNotExceed would be the max character level including bonuses over books
-    #Example2: Enhancement Eclipse starts 0, interval 25, talentExceedsBookLevels = False. Because of that, doNotExceed should be Max Book level.
+    #Example1: Refinery Throttle starts 0, interval 8. talentExceedsBookLevels = True, so doNotExceed = max_talents_over_books.
+    #Example2: Enhancement Eclipse starts 0, interval 25. talentExceedsBookLevels = False, so doNotExceed = account-wide max book level.
     if talentExceedsBookLevels:
         doNotExceed = max_talents_over_books
         optimal = interval * ((doNotExceed - start) // interval)
@@ -190,14 +190,17 @@ def getTalentExclusions() -> list:
     if "Voidwalker" in session_data.account.classes:
         talentExclusions.append(319)
 
+    #If cooking is basically finished thanks to NMLB, exclude Cooking talents
     if session_data.account.cooking['MaxRemainingMeals'] < 300:
         talentExclusions.extend([148, 146, 147])
         # 148: {"Name": "Overflowing Ladle", "Tab": "Blood Berserker"},
         # 146: {"Name": "Apocalypse Chow", "Tab": "Blood Berserker"},
         # 147: {"Name": "Waiting to Cool", "Tab": "Blood Berserker"},
 
-    #if session_data.account.alchemy_bubbles
-    #492: {"Name": "Bubble Breakthrough", "Tab": "Shaman"},
+    #If all bubbles for current max world are unlocked, exclude Bubble Breakthrough
+    if session_data.account.alchemy_cauldrons['NextWorldMissingBubbles'] > currentWorld:
+        talentExclusions.append(492)
+        #492: {"Name": "Bubble Breakthrough", "Tab": "Shaman"},
 
     return talentExclusions
 
