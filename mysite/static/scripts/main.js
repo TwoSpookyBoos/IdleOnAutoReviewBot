@@ -567,8 +567,28 @@ function initResultsUI() {
     calcProgressBars(document)
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("load", () => {
     storeGetParamsIfProvided()
     initBaseUI()
     fetchPlayerAdvice()
 })
+
+document.addEventListener("DOMContentLoaded", () => {
+    // Define the fonts you are loading
+    const fonts = ['Kode Mono', 'Open Sans', 'Rubik', 'Roboto']
+    const loadedFonts = fonts.map(f => new FontFaceObserver(f).load())
+
+    // Wait for all fonts to be loaded
+    Promise.all(loadedFonts).then(() => {
+        // Fonts are loaded, now run your code
+        storeGetParamsIfProvided();
+        initBaseUI();
+        fetchPlayerAdvice();
+    }).catch(() => {
+        console.error('One or more fonts failed to load.');
+        // You can still run your code here or handle the error
+        storeGetParamsIfProvided();
+        initBaseUI();
+        fetchPlayerAdvice();
+    });
+});
