@@ -48,9 +48,9 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
         goal=1
     ))
     bookLevelAdvices[staticSubgroup].append(Advice(
-        label=f"Atom Collider: Oxygen: +{10 * (0 < session_data.account.atoms.get('Oxygen - Library Booker', 0))}",
+        label=f"Atom Collider: Oxygen: +{10 * (0 < session_data.account.atom_collider['Atoms']['Oxygen - Library Booker']['Level'])}",
         picture_class="oxygen",
-        progression=1 if 0 < session_data.account.atoms.get('Oxygen - Library Booker', 0) else 0,
+        progression=1 if 0 < session_data.account.atom_collider['Atoms']['Oxygen - Library Booker']['Level'] else 0,
         goal=1
     ))
     if not session_data.account.rift['EldritchArtifacts'] and session_data.account.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0) == 2:
@@ -345,6 +345,9 @@ def setLibraryProgressionTier() -> AdviceSection:
     if highestConstructionLevel < 1:
         library_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
         return library_AdviceSection
+    elif session_data.account.construction_buildings.get("Talent Book Library", 0) < 1:
+        library_AdviceSection.header = "Come back after unlocking the Talent Book Library within the Construction skill in World 3!"
+        return library_AdviceSection
 
     max_tier = 0
     tier_bookLevels = 0
@@ -357,12 +360,12 @@ def setLibraryProgressionTier() -> AdviceSection:
         library_AdviceGroupDict[characterName] = characterAG
 
     # Generate AdviceSection
-    overall_SamplingTier = min(max_tier, tier_bookLevels)  # Looks silly, but may get more evaluations in the future
-    tier_section = f"{overall_SamplingTier}/{max_tier}"
+    overall_LibraryTier = min(max_tier, tier_bookLevels)  # Looks silly, but may get more evaluations in the future
+    tier_section = f"{overall_LibraryTier}/{max_tier}"
     library_AdviceSection.tier = tier_section
-    library_AdviceSection.pinchy_rating = overall_SamplingTier
+    library_AdviceSection.pinchy_rating = overall_LibraryTier
     library_AdviceSection.groups = library_AdviceGroupDict.values()
-    if overall_SamplingTier == max_tier:
+    if overall_LibraryTier == max_tier:
         library_AdviceSection.header = f"Best Library tier met: {tier_section}<br>You best ❤️"
     else:
         library_AdviceSection.header = f"Best Library tier met: {tier_section}"

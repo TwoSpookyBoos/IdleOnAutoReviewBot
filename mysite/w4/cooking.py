@@ -29,7 +29,7 @@ def setCookingProgressionTier():
     tier_Cooking = 0
     max_tier = 6
     voidwalkers = [toon for toon in session_data.account.all_characters if toon.elite_class == "Voidwalker"]
-    atomFlouride = session_data.account.atoms.get("Fluoride - Void Plate Chef", 0) >= 1
+    atomFluoride = session_data.account.atom_collider['Atoms']['Fluoride - Void Plate Chef']['Level'] >= 1
     dchefLevel = session_data.account.alchemy_bubbles['Diamond Chef']['Level']
 
     #Assess Tiers
@@ -39,7 +39,7 @@ def setCookingProgressionTier():
         tier_Cooking = 2
     if tier_Cooking == 2 and len(voidwalkers) > 0:
         tier_Cooking = 3
-    if tier_Cooking == 3 and atomFlouride and session_data.account.cooking['PlayerTotalMealLevels'] >= 500:
+    if tier_Cooking == 3 and atomFluoride and session_data.account.cooking['PlayerTotalMealLevels'] >= 500:
         tier_Cooking = 4
     if tier_Cooking == 4 and session_data.account.cooking['MealsUnlocked'] >= maxMeals and session_data.account.cooking['MealsUnder30'] <= 0:
         tier_Cooking = 5
@@ -66,7 +66,7 @@ def setCookingProgressionTier():
     elif tier_Cooking == 3:
         cooking_AdviceDict["NextTier"].append(Advice(
             label="Unlock Fluoride - Void Plate Chef in the Atom Collider",
-            picture_class="flouride"
+            picture_class="fluoride"
         ))
         if session_data.account.cooking['PlayerTotalMealLevels'] < 500:
             cooking_AdviceDict["NextTier"].append(Advice(

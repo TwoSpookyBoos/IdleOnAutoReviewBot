@@ -17,7 +17,7 @@ def try_exclude_DungeonTickets(exclusionList):
             return
 
     #Scenario 2: Over Rank 50 or 200+ tickets
-    if session_data.account.raw_optlacc_list:
+    if session_data.account.raw_optlacc_dict:
         try:
             ##Blatantly stolen list from IE lol
             #https://github.com/Sludging/idleon-efficiency/blob/74f83dd4c0b15f399ffb1f87bc2bc8c9bc9b924c/data/domain/dungeons.tsx#L16
@@ -26,14 +26,14 @@ def try_exclude_DungeonTickets(exclusionList):
                                  275000, 325000, 400000, 490000, 600000, 725000, 875000, 1000000, 1200000, 1500000, 3000000, 5000000, 10000000, 20000000,
                                  30000000, 40000000, 50000000, 60000000, 80000000, 100000000, 999999999, 999999999, 999999999, 999999999, 999999999, 1999999999,
                                  1999999999, 1999999999, 1999999999, 1999999999]
-            playerDungeonXP = session_data.account.raw_optlacc_list[71]
+            playerDungeonXP = session_data.account.raw_optlacc_dict[71]
             playerDungeonRank = 0
             for xpRequirement in dungeonLevelsList:
                 if playerDungeonXP >= xpRequirement:
                     playerDungeonRank += 1
-            playerCredits = session_data.account.raw_optlacc_list[72]
-            playerFlurbo = session_data.account.raw_optlacc_list[73]
-            playerBoosters = session_data.account.raw_optlacc_list[76] - 1  #The true value is always 1 less than JSON. Silly Lava
+            playerCredits = session_data.account.raw_optlacc_dict[72]
+            playerFlurbo = session_data.account.raw_optlacc_dict[73]
+            playerBoosters = session_data.account.raw_optlacc_dict[76] - 1  #The true value is always 1 less than JSON. Silly Lava
         except:
             playerDungeonRank = 1
             playerCredits = 0

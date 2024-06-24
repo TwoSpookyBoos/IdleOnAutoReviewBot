@@ -3725,6 +3725,7 @@ atomsList: list[str] = [
     "Boron - Particle Upgrader", "Carbon - Wizard Maximizer", "Nitrogen - Construction Trimmer", "Oxygen - Library Booker",
     "Fluoride - Void Plate Chef", "Neon - Damage N' Cheapener", "Sodium - Snail Kryptonite"
 ]
+colliderStorageLimitList = [15, 25, 100, 250, 1050]
 prayersList: list[str] = [
     "Big Brain Time (Forest Soul)", "Skilled Dimwit (Forest Soul)", "Unending Energy (Forest Soul)",
     "Shiny Snitch (Forest Soul)", "Zerg Rushogen (Forest Soul)",
@@ -4034,6 +4035,34 @@ divLevelReasonsDict = {
     2: "to activate Doot",
     40: "to unlock the TranQi Style.",
     50: "to unlock the Multitool Stamp from Poigu's quest."
+}
+#From code, GamingUpg = function (). Last updated 2.11 Kangaroo
+gamingSuperbitsDict = {
+    #
+    0: {'Name': 'Bits per Achievement', 'BonusText': "x1.03 Bits per Achievement you've unlocked", 'Cost': 1e9, 'CodeString': '_'},
+    1: {'Name': 'Plant Evo', 'BonusText': '+1 Max Evolution for all plants. This is 20x rarer than normal evolutions', 'Cost': 30e9, 'CodeString': 'a'},
+    2: {'Name': 'Obol Stat Booster', 'BonusText': 'All obols give +40% more STR/AGI/WIS/LUK than what they say they do!', 'Cost': 0, 'CodeString': 'b'},
+    3: {'Name': 'MSA Sailing', 'BonusText': 'MSA now gives +1% bonus Sailing Speed per 10 total Waves', 'Cost': 0, 'CodeString': 'c'},
+    4: {'Name': 'Moar Bubbles', 'BonusText': '+20% chance for +1 more bubble boosted by No Bubble Left Behind', 'Cost': 0, 'CodeString': 'd'},
+    5: {'Name': 'Plant Evo II', 'BonusText': '+1 Max Evolution for all plants. This one is 5000x rarer than normal', 'Cost': 0, 'CodeString': 'e'},
+    6: {'Name': 'Worship Totem HP', 'BonusText': '+5 Max HP for Worship Totem during Tower Defence summon battle', 'Cost': 0, 'CodeString': 'f'},
+    7: {'Name': 'MSA Totalizer', 'BonusText': 'Unlock the Totalizer for the Miniature Soul Apparatus (MSA) in World 3', 'Cost': 0, 'CodeString': 'g'},
+    8: {'Name': 'Shrine Speed', 'BonusText': 'All shrines level up +50% faster than normal', 'Cost': 0, 'CodeString': 'h'},
+    9: {'Name': 'No more Praying', 'BonusText': 'If no Prayers equipped, get 1/5th bonus of all prayers, and no curses', 'Cost': 0, 'CodeString': 'i'},
+    10: {'Name': 'Double EXP', 'BonusText': '+15% chance for Double Exp whenever claiming AFK gains', 'Cost': 0, 'CodeString': 'j'},
+    11: {'Name': 'MSA Class EXP', 'BonusText': 'MSA now gives +1% bonus Class EXP per 10 total Waves', 'Cost': 0, 'CodeString': 'k'},
+    12: {'Name': 'Library Checkouts', 'BonusText': '+1% faster Library Checkout Speed per Gaming Lv.', 'Cost': 0, 'CodeString': 'l'},
+    13: {'Name': 'MSA Mealing', 'BonusText': 'MSA now gives +10% bonus Meal Cooking speed per 10 total Waves', 'Cost': 0, 'CodeString': 'm'},
+    14: {'Name': 'Spice is Nice', 'BonusText': 'All spice claimed, either manually or automatically, is worth 1.5x more.', 'Cost': 0, 'CodeString': 'n'},
+    15: {'Name': 'Worship Totem HPr', 'BonusText': '+10 Max HP for Worship Totem during Tower Defence summon battle', 'Cost': 0, 'CodeString': 'o'},
+    16: {'Name': 'MSA Skill EXP', 'BonusText': 'MSA now gives +1% bonus Skill Exp per 10 total Waves', 'Cost': 0, 'CodeString': 'p'},
+    17: {'Name': 'Spice is Nicer', 'BonusText': 'All spice claimed, either manually or automatically, is worth 2x more.', 'Cost': 0, 'CodeString': 'q'},
+    18: {'Name': 'Plant Evo III', 'BonusText': '+1 Max Evolution for all plants. This one is 250x rarer than normal', 'Cost': 0, 'CodeString': 'r'},
+    19: {'Name': 'Noobie Gains', 'BonusText': 'Your lowest Leveled character gets 1.5x Class EXP', 'Cost': 0, 'CodeString': 's'},
+    20: {'Name': 'MSA Big Bits', 'BonusText': 'MSA now gives +50% Bits for Gaming per 10 total Waves', 'Cost': 0, 'CodeString': 't'},
+    21: {'Name': 'Atom Redux', 'BonusText': 'All atom upgrading is now 10% cheaper', 'Cost': 0, 'CodeString': 'u'},
+    22: {'Name': 'Even Moar Bubbles', 'BonusText': '+30% chance for +1 more bubble boosted by No Bubble Left Behind', 'Cost': 0, 'CodeString': 'v'},
+    23: {'Name': 'Isotope Discovery', 'BonusText': 'All atoms now have +10 Max LV', 'Cost': 0, 'CodeString': 'w'},
 }
 
 

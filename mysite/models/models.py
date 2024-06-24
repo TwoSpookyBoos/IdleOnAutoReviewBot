@@ -17,7 +17,7 @@ from consts import expectedStackables, greenstack_progressionTiers, card_data, m
     getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampsDict, stampTypes, marketUpgradeList, \
     achievementsList, forgeUpgradesDict, arcadeBonuses, saltLickList, allMeritsDict, bubblesDict, familyBonusesDict, poBoxDict, equinoxBonusesDict, \
     maxDreams, dreamsThatUnlockNewBonuses, ceilUpToBase, starsignsDict, gfood_codes, getStyleNameFromIndex, divinity_divinitiesDict, getDivinityNameFromIndex, \
-    maxCookingTables, getNextESFamilyBreakpoint, expected_talentsDict
+    maxCookingTables, getNextESFamilyBreakpoint, expected_talentsDict, colliderStorageLimitList, gamingSuperbitsDict
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
 
 def session_singleton(cls):
@@ -870,7 +870,7 @@ class Account:
                                                               f"{familyBonusesDict[className]['PostDisplay']}"
                                                               f" {familyBonusesDict[className]['Stat']}")
 
-        self.raw_optlacc_list = safe_loads(self.raw_data.get("OptLacc", {}))
+        self.raw_optlacc_dict = safe_loads(self.raw_data.get("OptLacc", {}))
 
         self.dungeon_upgrades = {}
         raw_dungeon_upgrades = safe_loads(self.raw_data.get('DungUpg', []))
@@ -1027,10 +1027,10 @@ class Account:
     def _parse_w1_owl(self):
         self.owl = {}
         try:
-            self.owl['FeatherGeneration'] = self.raw_optlacc_list[254]
-            self.owl['BonusesOfOrion'] = self.raw_optlacc_list[255]
-            self.owl['FeatherRestarts'] = self.raw_optlacc_list[258]
-            self.owl['MegaFeathersOwned'] = self.raw_optlacc_list[262]
+            self.owl['FeatherGeneration'] = self.raw_optlacc_dict[254]
+            self.owl['BonusesOfOrion'] = self.raw_optlacc_dict[255]
+            self.owl['FeatherRestarts'] = self.raw_optlacc_dict[258]
+            self.owl['MegaFeathersOwned'] = self.raw_optlacc_dict[262]
         except:
             self.owl['FeatherGeneration'] = 0
             self.owl['BonusesOfOrion'] = 0
@@ -1193,7 +1193,7 @@ class Account:
         self._parse_w3_equinox_dreams()
         self._parse_w3_equinox_bonuses()
         self._parse_w3_shrines()
-        self._parse_w3_atoms()
+        self._parse_w3_atom_collider()
         self._parse_w3_prayers()
         self._parse_w3_saltlick()
 
@@ -1277,14 +1277,39 @@ class Account:
                     5: 0
                 }
 
+    def _parse_w3_atom_collider(self):
+        self.atom_collider = {}
+        try:
+            self.atom_collider['Particles'] = self.raw_data.get("Divinity", {})[39]
+        except:
+            self.atom_collider['Particles'] = "Unknown"  #0.0
+
+        try:
+            self.atom_collider['StorageLimit'] = colliderStorageLimitList[self.raw_optlacc_dict[133]]  #colliderStorageLimitList[self.raw_optlacc_dict[132]]
+        except:
+            self.atom_collider['StorageLimit'] = "Unknown"  #colliderStorageLimitList[0]
+
+        try:
+            self.atom_collider['OnOffStatus'] = bool(self.raw_optlacc_dict[132])
+        except:
+            self.atom_collider['OnOffStatus'] = True  #0
+
+        self._parse_w3_atoms()
+
     def _parse_w3_atoms(self):
-        self.atoms = {}
+        self.atom_collider['Atoms'] = {}
         raw_atoms_list = safe_loads(self.raw_data.get("Atoms", []))
         for atomIndex, atomName in enumerate(atomsList):
             try:
-                self.atoms[atomName] = int(raw_atoms_list[atomIndex])
+                self.atom_collider['Atoms'][atomName] = {
+                    'Level': int(raw_atoms_list[atomIndex]),
+                    'CostToUpgrade': 0
+                }
             except:
-                self.atoms[atomName] = 0
+                self.atom_collider['Atoms'][atomName] = {
+                    'Level': 0,
+                    'CostToUpgrade': 0
+                }
 
     def _parse_w3_prayers(self):
         self.prayers = {}
@@ -1428,9 +1453,69 @@ class Account:
         self.rift['RubyCards'] = self.rift['Level'] >= 45
 
     def _parse_w5(self):
+        self._parse_w5_gaming()
+        self._parse_w5_gaming_sprouts()
         self._parse_w5_slab()
         self._parse_w5_sailing()
         self._parse_w5_divinity()
+
+    def _parse_w5_gaming(self):
+        self.gaming = {
+            'BitsOwned': 0,
+            'FertilizerValue': 0,
+            'FertilizerSpeed': 0,
+            'FertilizerCapacity': 0,
+            'MutationsUnlocked': 0,
+            'EvolutionChance': 0,
+            'DNAOwned': 0,
+            'Nugget': 0,
+            'Acorns': 0,
+            'PoingHighscore': 0,
+            'LogbookString': "",
+            'Logbook': {},
+            'SuperBitsString': "",
+            'SuperBits': {},
+            'Envelopes': 0
+        }
+        raw_gaming_list = safe_loads(self.raw_data.get("Gaming", []))
+        if raw_gaming_list:
+            try:
+                self.gaming['BitsOwned'] = raw_gaming_list[0]
+                self.gaming['FertilizerValue'] = raw_gaming_list[1]
+                self.gaming['FertilizerSpeed'] = raw_gaming_list[2]
+                self.gaming['FertilizerCapacity'] = raw_gaming_list[3]
+                self.gaming['MutationsUnlocked'] = raw_gaming_list[4]
+                self.gaming['DNAOwned'] = raw_gaming_list[5]
+                self.gaming['EvolutionChance'] = raw_gaming_list[7]
+                self.gaming['Nugget'] = raw_gaming_list[8]
+                self.gaming['Acorns'] = raw_gaming_list[9]
+                self.gaming['EvolutionChance'] = raw_gaming_list[10]
+                self.gaming['LogbookString'] = raw_gaming_list[11]
+                self.gaming['SuperBitsString'] = raw_gaming_list[12]
+                self.gaming['Envelopes'] = raw_gaming_list[13]
+            except:
+                pass
+
+        for index, valuesDict in gamingSuperbitsDict.items():
+            self.gaming['SuperBits'][valuesDict['Name']] = {
+                'Unlocked': valuesDict['CodeString'] in self.gaming['SuperBitsString'],
+                'BonusText': valuesDict['BonusText']
+            }
+
+    def _parse_w5_gaming_sprouts(self):
+        # [0] through [24] = actual sprouts
+        # [300, 25469746.803332243, 0, 0, 655, 70],  # [25] = Sprinkler Import
+        # [315, 1335, 0, 0, 654, 383],  # [26] = Shovel Import
+        # [300, 1335, 503, 711, 429.34312394215203, 237.05230565943967],  # [27] = Squirrel Import
+        # [275, 287171, 26, 0, 82, 153],  # [28] = Seashell Import
+        # [260, 1, 0, 0, 82, 225],  # [29] = Kitsune Roxie Import
+        # [224, 1345, 0, 0, 98, 383],  # [30] = Log Import
+        # [1, 842957708.5889401, 0, 0, 83, 70],  # [31] = Poing Import
+        # [160, 23, 0, 0, 77, 295],  # [32] = Snail Import
+        # [0, 21884575.351264, 0, 0, 309, 210],  # [33] = Box9 Import
+        # [0, 842957708.5889401, 0, 0, 0, 0],  # [34] = Box10 Import
+        # raw_gaming_sprouts_list =  safe_loads(self.raw_data.get("GamingSprouts", []))
+        pass
 
     def _parse_w5_slab(self):
         self.registered_slab = safe_loads(self.raw_data.get("Cards1", []))
@@ -1508,11 +1593,11 @@ class Account:
             "JadeEmporium": {},
         }
         try:
-            self.sneaking['CurrentMastery'] = self.raw_optlacc_list[231]
+            self.sneaking['CurrentMastery'] = self.raw_optlacc_dict[231]
         except:
             self.sneaking['CurrentMastery'] = 0
         try:
-            self.sneaking['MaxMastery'] = self.raw_optlacc_list[232]
+            self.sneaking['MaxMastery'] = self.raw_optlacc_dict[232]
         except:
             self.sneaking['MaxMastery'] = 0
         raw_ninja_list = safe_loads(self.raw_data.get("Ninja", []))
@@ -1530,7 +1615,7 @@ class Account:
         for gemstoneIndex, gemstoneName in enumerate(sneakingGemstonesList):
             self.sneaking["Gemstones"][gemstoneName] = {"Level": 0, "Value": 0, "Percent": 0, "Stat": ''}
             try:
-                self.sneaking["Gemstones"][gemstoneName]["Level"] = self.raw_optlacc_list[sneakingGemstonesFirstIndex + gemstoneIndex]
+                self.sneaking["Gemstones"][gemstoneName]["Level"] = self.raw_optlacc_dict[sneakingGemstonesFirstIndex + gemstoneIndex]
             except:
                 continue
             try:
@@ -1748,7 +1833,7 @@ class Account:
         self.library['StaticSum'] = (0
                       + (25 * (0 < self.construction_buildings.get('Talent Book Library', 0)))
                       + (5 * (0 < self.achievements.get('Checkout Takeout', False)))
-                      + (10 * (0 < self.atoms.get('Oxygen - Library Booker', 0)))
+                      + (10 * (0 < self.atom_collider['Atoms']['Oxygen - Library Booker']['Level']))
                       + (25 * self.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0))
                       )
         self.library['ScalingSum'] = (0

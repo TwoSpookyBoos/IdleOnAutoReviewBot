@@ -21,6 +21,7 @@
 @import "alchemy";
 @import "arcade";
 @import "postoffice";
+@import "kangaroo";
 
 //W3
 @import "construction";
@@ -2181,6 +2182,7 @@ $id-map: map-merge($postoffice, $id-map);
 $id-map: map-merge($owl-map, $id-map);
 $id-map: map-merge($companions-map, $id-map);
 $id-map: map-merge($all-gaming, $id-map);
+$id-map: map-merge($kangaroo-map, $id-map);
 
 $extra: (
     //storage: $cosmic-storage-chest,
@@ -2208,7 +2210,8 @@ $extra: (
 	nebulyte: $nebulyte,
 	divinity: $divinity,
 	jade-vendor: $jade-vendor,
-	owl: $owl
+	owl: $owl,
+	kangaroo: $kangaroo,
 );
 $id-map: map-merge($extra, $id-map);
 
