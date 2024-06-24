@@ -266,8 +266,8 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
                             progression=str(session_data.account.alchemy_bubbles.get(requiredBubble, {}).get('Level', 0)),
                             goal=str(tier[typeIndex+2][requiredBubble]),
                             resource=str(session_data.account.alchemy_bubbles.get(requiredBubble, {}).get('Material', '')))),
-                if bubbleTiers[typeIndex] == (tier[0] - 1) and requirementsMet[typeIndex] == True:  # Only update if they already met the previous tier
-                    bubbleTiers[typeIndex] = tier[0]
+            if bubbleTiers[typeIndex] == (tier[0] - 1) and requirementsMet[typeIndex] == True:  # Only update if they already met the previous tier
+                bubbleTiers[typeIndex] = tier[0]
 
     overall_alchemyBubblesTier = min(max_tier, tier_TotalBubblesUnlocked,
                                      bubbleTiers[0], bubbleTiers[1], bubbleTiers[2], bubbleTiers[3])
