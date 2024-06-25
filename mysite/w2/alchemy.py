@@ -250,22 +250,23 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
         #Orange, Green, Purple, and Utility bubbles
         for typeIndex, bubbleType in enumerate(bubbleTypeList):
             for requiredBubble in tier[typeIndex+2]:
-                if session_data.account.alchemy_bubbles.get(requiredBubble, {}).get('Level', 0) < tier[typeIndex+2][requiredBubble]:
-                    requirementsMet[typeIndex] = False
-                    subgroupName = (f"To reach {'Informational ' if tier[0] > max_tier else ''}Tier {tier[0]}"
-                                    f"{' (' if bubbleType != 'UtilityBubbles' else ''}"
-                                    f"{tier[6] if bubbleType != 'UtilityBubbles' else ''}"
-                                    f"{')' if bubbleType != 'UtilityBubbles' else ''}")
-                    if subgroupName not in bubbles_AdviceDict[bubbleType] and len(bubbles_AdviceDict[bubbleType]) < maxTiersPerGroup:
-                        bubbles_AdviceDict[bubbleType][subgroupName] = []
-                    if subgroupName in bubbles_AdviceDict[bubbleType]:
-                        adviceCountsDict[bubbleType] += 1
-                        bubbles_AdviceDict[bubbleType][subgroupName].append(Advice(
-                            label=str(requiredBubble),
-                            picture_class=str(requiredBubble),
-                            progression=str(session_data.account.alchemy_bubbles.get(requiredBubble, {}).get('Level', 0)),
-                            goal=str(tier[typeIndex+2][requiredBubble]),
-                            resource=str(session_data.account.alchemy_bubbles.get(requiredBubble, {}).get('Material', '')))),
+                if requiredBubble not in exclusionsList:
+                    if session_data.account.alchemy_bubbles.get(requiredBubble, {}).get('Level', 0) < tier[typeIndex+2][requiredBubble]:
+                        requirementsMet[typeIndex] = False
+                        subgroupName = (f"To reach {'Informational ' if tier[0] > max_tier else ''}Tier {tier[0]}"
+                                        f"{' (' if bubbleType != 'UtilityBubbles' else ''}"
+                                        f"{tier[6] if bubbleType != 'UtilityBubbles' else ''}"
+                                        f"{')' if bubbleType != 'UtilityBubbles' else ''}")
+                        if subgroupName not in bubbles_AdviceDict[bubbleType] and len(bubbles_AdviceDict[bubbleType]) < maxTiersPerGroup:
+                            bubbles_AdviceDict[bubbleType][subgroupName] = []
+                        if subgroupName in bubbles_AdviceDict[bubbleType]:
+                            adviceCountsDict[bubbleType] += 1
+                            bubbles_AdviceDict[bubbleType][subgroupName].append(Advice(
+                                label=str(requiredBubble),
+                                picture_class=str(requiredBubble),
+                                progression=str(session_data.account.alchemy_bubbles.get(requiredBubble, {}).get('Level', 0)),
+                                goal=str(tier[typeIndex+2][requiredBubble]),
+                                resource=str(session_data.account.alchemy_bubbles.get(requiredBubble, {}).get('Material', '')))),
             if bubbleTiers[typeIndex] == (tier[0] - 1) and requirementsMet[typeIndex] == True:  # Only update if they already met the previous tier
                 bubbleTiers[typeIndex] = tier[0]
 
