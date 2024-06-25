@@ -1,26 +1,64 @@
 from flask import g as session_data
-
 from consts import colliderStorageLimitList
 from models.models import AdviceSection, AdviceGroup, Advice
+from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 
 logger = get_logger(__name__)
 
 def getColliderSettingsAdviceGroup() -> AdviceGroup:
-    settings_advice = []
+    settings_advice = {
+        'Alerts': [],
+        'Information': [],
+    }
 
-    if session_data.account.atom_collider['OnOffStatus'] == True:
-        settings_advice.append(
+    colliderData = session_data.account.atom_collider
+
+    try:
+        formatted_particlesOwned = f"{colliderData['Particles']:,.0f}"
+    except:
+        formatted_particlesOwned = f"{colliderData['Particles']}"
+
+    settings_advice['Information'].append(
+        Advice(
+            label=f"Particles Owned: {formatted_particlesOwned}",
+            picture_class="particles",
+        )
+    )
+
+    if not session_data.account.gaming['SuperBits']['Isotope Discovery']['Unlocked']:
+        settings_advice['Information'].append(
             Advice(
-                label=f"Collider switch status: {'On' if session_data.account.atom_collider['OnOffStatus'] else 'Off'}",
+                label=f"Purchasing the final SuperBit in Gaming will increase the max level of all Atoms from 20 to 30",
+                picture_class='red-bits',
+            )
+        )
+
+    for atomName, atomValues in colliderData['Atoms'].items():
+        settings_advice['Information'].append(
+            Advice(
+                label=atomName,
+                picture_class=atomName.split(' - ')[0],
+                progression=atomValues['Level'],
+                goal=atomValues['MaxLevel']
+            )
+        )
+
+    #Alerts
+    #Collider is not Off
+    if colliderData['OnOffStatus'] == True:
+        settings_advice['Alerts'].append(
+            Advice(
+                label=f"Collider switch status: {'On' if session_data.account.atom_collider['OnOffStatus'] else 'Off'}.<br>Recommended to select Off instead.",
                 picture_class="",
             )
         )
 
-    if session_data.account.atom_collider['StorageLimit'] != colliderStorageLimitList[-1]:
-        settings_advice.append(
+    #Limit not set to 1050M
+    if colliderData['StorageLimit'] != colliderStorageLimitList[-1]:
+        settings_advice['Alerts'].append(
             Advice(
-                label=f"Storage Limit: {session_data.account.atom_collider['StorageLimit']}M",
+                label=f"Storage Limit: {session_data.account.atom_collider['StorageLimit']}M<br>Recommend to select {colliderStorageLimitList[-1]}M instead.",
                 picture_class="",
                 progression=session_data.account.atom_collider['StorageLimit'],
                 goal=colliderStorageLimitList[-1],
@@ -28,121 +66,112 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
             )
         )
 
-    try:
-        formatted_particlesOwned = f"{session_data.account.atom_collider['Particles']:,.0f}"
-    except:
-        formatted_particlesOwned = f"{session_data.account.atom_collider['Particles']}"
-
-    settings_advice.append(
-        Advice(
-            label=f"Particles Owned: {formatted_particlesOwned}",
-            picture_class="particles",
+    #Sodium lower than Snail // 5
+    if colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'] < session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5:
+        settings_advice['Alerts'].append(
+            Advice(
+                label=f"Snail could reset from Rank {session_data.account.gaming['Imports']['Snail']['SnailRank']}"
+                      f" to {colliderData['Atoms']['Sodium - Snail Kryptonite']['Level']*5}!"
+                      f"<br>Level Sodium to {session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5}"
+                      f" to protect Rank {5 * (session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5)}.",
+                picture_class="sodium",
+                progression=colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'],
+                goal=session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5
+            )
         )
-    )
+
+    #Neon would cheapen the next Helium upgrade
+    for heliumLevel, neonLevel in {6: 0, 7: 2, 8: 10, 9: 21, 10: 30}.items():
+        if colliderData['Atoms']['Helium - Talent Power Stacker']['Level'] == heliumLevel-1:
+            if colliderData['Atoms']["Neon - Damage N' Cheapener"]['Level'] < neonLevel:
+                settings_advice['Alerts'].append(
+                    Advice(
+                        label=f"Neon can be increased to {neonLevel} to cheapen Helium {heliumLevel}",
+                        picture_class="neon",
+                        progression=colliderData['Atoms']["Neon - Damage N' Cheapener"]['Level'],
+                        goal=neonLevel
+                    )
+                )
 
     settings_ag = AdviceGroup(
         tier="",
-        pre_string="Sanity check for Collider Settings",
+        pre_string="Collider Alerts and General Information",
         advices=settings_advice,
-        post_string=f"Off and {colliderStorageLimitList[-1]}M are the recommended settings. It would require clicking BOTH to cause any harm."
+        post_string=f""
     )
+    settings_ag.remove_empty_subgroups()
     return settings_ag
-
-def getAtomsAdviceGroup() -> AdviceGroup:
-    atoms_advice = []
-    goal_level = 20 + (10 * session_data.account.gaming['SuperBits']['Isotope Discovery']['Unlocked'])
-    for atomName, atomValues in session_data.account.atom_collider['Atoms'].items():
-        atoms_advice.append(
-            Advice(
-                label=atomName,
-                picture_class=atomName.split(' - ')[0],
-                progression=atomValues['Level'],
-                goal=goal_level
-            )
-        )
-    atoms_ag = AdviceGroup(
-        tier="",
-        pre_string="Sanity check for Atom Upgrades",
-        advices=atoms_advice
-    )
-    return atoms_ag
 
 def getCostReductionAdviceGroup() -> AdviceGroup:
     cr_advice = []
 
     sum_cost_reduction = (1 +
-                          (
-                            7 * session_data.account.merits[4][6]['Level']
-                            + ((session_data.account.construction_buildings['Atom Collider']-1) // 10)
-                            + 1 * session_data.account.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['Level']
-                            + 10 * session_data.account.gaming['SuperBits']['Atom Redux']['Unlocked']
-                            + session_data.account.alchemy_bubbles['Atom Split']['BaseValue']
-                            + session_data.account.stamps['Atomic Stamp']['Value']
-                          )
+                              (
+                                7 * session_data.account.merits[4][6]['Level']
+                                + ((session_data.account.construction_buildings['Atom Collider']-1) // 10)  #50 doesn't give 5%, you need 51.
+                                + 1 * session_data.account.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['Level']
+                                + 10 * session_data.account.gaming['SuperBits']['Atom Redux']['Unlocked']
+                                + session_data.account.alchemy_bubbles['Atom Split']['BaseValue']
+                                + session_data.account.stamps['Atomic Stamp']['Value']
+                              )
                           / 100
                           )
 
     cr_advice.append(Advice(
-        label=f"W5 Taskboard Merit: {session_data.account.merits[4][6]['Level'] * 7}%<br>The in-game display is still wrong after a year. Blame Lava.",
+        label=f"W5 Taskboard Merit: {session_data.account.merits[4][6]['Level'] * 7}/28%"
+              f"<br>The in-game display is incorrect. Don't @ me.",
         picture_class='merit-4-6',
         progression=session_data.account.merits[4][6]['Level'],
         goal=4
     ))
 
     cr_advice.append(Advice(
-        label=f"""Neon - Damage N' Cheapener: {session_data.account.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['Level']}%""",
+        label=f"""Neon - Damage N' Cheapener: {session_data.account.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['Level']}/30%""",
         picture_class="neon",
         progression=session_data.account.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['Level'],
         goal=20 + (10 * session_data.account.gaming['SuperBits']['Isotope Discovery']['Unlocked'])
     ))
 
     cr_advice.append(Advice(
-        label=f"Superbit: Atom Redux: {10 * session_data.account.gaming['SuperBits']['Atom Redux']['Unlocked']}%",
+        label=f"Superbit: Atom Redux: {10 * session_data.account.gaming['SuperBits']['Atom Redux']['Unlocked']}/10%",
         picture_class="red-bits",
         progression=1 if session_data.account.gaming['SuperBits']['Atom Redux']['Unlocked'] else 0,
         goal=1
     ))
 
     cr_advice.append(Advice(
-        label=f"Atom Collider building: {((session_data.account.construction_buildings['Atom Collider']-1) // 10)}%",
+        label=f"Atom Collider building: {((session_data.account.construction_buildings['Atom Collider']-1) // 10)}/19%",
         picture_class="atom-collider",
         progression=session_data.account.construction_buildings['Atom Collider'],
         goal=191
     ))
 
     cr_advice.append(Advice(
-        label=f"Atom Split bubble: {session_data.account.alchemy_bubbles['Atom Split']['BaseValue']:.2f}%",
+        label=f"Atom Split bubble: {session_data.account.alchemy_bubbles['Atom Split']['BaseValue']:.2f}/14%",
         picture_class="atom-split",
         progression=session_data.account.alchemy_bubbles['Atom Split']['Level'],
         resource=session_data.account.alchemy_bubbles['Atom Split']['Material']
     ))
 
     cr_advice.append(Advice(
-        label=f"Atomic Stamp: {session_data.account.stamps['Atomic Stamp']['Value']:.3f}%",
+        label=f"Atomic Stamp: {session_data.account.stamps['Atomic Stamp']['Value']:.3f}/20%",
         picture_class="atomic-stamp",
         progression=session_data.account.stamps['Atomic Stamp']['Level'],
         resource=session_data.account.stamps['Atomic Stamp']['Material'],
     ))
 
-    # cr_advice.append(Advice(
-    #     label=f"Total cost reduction: {sum_cost_reduction-1:.2f}",
-    #     picture_class='particles',
-    # ))
-    #
-    # cr_advice.append(Advice(
-    #     label=f"Total cost divisor: {sum_cost_reduction:.2f}",
-    #     picture_class='particles',
-    # ))
-
     cr_advice.append(Advice(
-        label=f"Remaining cost: {(1/sum_cost_reduction)*100:.2f}%",
+        label=f"Remaining cost: {session_data.account.atom_collider['CostReductionMulti']*100:.2f}%",
         picture_class='particles',
     ))
 
     cr_advice.append(Advice(
-        label=f"Total cost discount: {(1 - (1 / sum_cost_reduction)) * 100:.2f}% off",
+        label=f"Total cost discount: {session_data.account.atom_collider['CostDiscount']:.2f}% off",
         picture_class='particles',
     ))
+
+    for advice in cr_advice:
+        mark_advice_completed(advice)
 
     cr_ag = AdviceGroup(
         tier="",
@@ -174,7 +203,6 @@ def setColliderProgressionTier() -> AdviceSection:
 
     # Generate AdviceGroups
     collider_AdviceGroupDict['ColliderSettings'] = getColliderSettingsAdviceGroup()
-    collider_AdviceGroupDict['AllAtoms'] = getAtomsAdviceGroup()
     collider_AdviceGroupDict['CostReduction'] = getCostReductionAdviceGroup()
 
     # Generate AdviceSection

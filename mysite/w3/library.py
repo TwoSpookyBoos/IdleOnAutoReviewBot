@@ -14,7 +14,7 @@ def getJeopardyGoal(start: int, interval: int, talentExceedsBookLevels: bool, ma
         doNotExceed = max_talents_over_books
         optimal = interval * ((doNotExceed - start) // interval)
         try:
-            logger.debug(f"Given {start}, {interval}, {doNotExceed}, {talentExceedsBookLevels > 0}: optimal {optimal}: Returning {optimal - (doNotExceed - session_data.account.library['MaxBookLevel'])}")
+            #logger.debug(f"Given {start}, {interval}, {doNotExceed}, {talentExceedsBookLevels > 0}: optimal {optimal}: Returning {optimal - (doNotExceed - session_data.account.library['MaxBookLevel'])}")
             return optimal - (doNotExceed - session_data.account.library['MaxBookLevel'])
         except Exception as reason:
             logger.exception(f"Could not find optimal target level using start {start}, interval {interval}, doNotExceed {doNotExceed} because: {reason}")
@@ -154,6 +154,9 @@ def getBonusLevelAdviceGroup() -> AdviceGroup:
                 label=f"ES Family Guy: +{char.family_guy_bonus}",
                 picture_class='the-family-guy'
             ))
+
+    for advice in bonusLevelAdvices[account_subgroupName]:
+        mark_advice_completed(advice)
 
     bonusLevelAdviceGroup = AdviceGroup(
         tier="",

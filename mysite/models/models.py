@@ -1299,16 +1299,32 @@ class Account:
     def _parse_w3_atoms(self):
         self.atom_collider['Atoms'] = {}
         raw_atoms_list = safe_loads(self.raw_data.get("Atoms", []))
-        for atomIndex, atomName in enumerate(atomsList):
+        for atomIndex, atomInfoList in enumerate(atomsList):
             try:
-                self.atom_collider['Atoms'][atomName] = {
+                self.atom_collider['Atoms'][atomInfoList[0]] = {
                     'Level': int(raw_atoms_list[atomIndex]),
-                    'CostToUpgrade': 0
+                    'MaxLevel': 20,
+                    'AtomInfo1': atomInfoList[1],
+                    'AtomInfo2': atomInfoList[2],
+                    'AtomInfo3': atomInfoList[3],
+                    'AtomInfo4': atomInfoList[4],
+                    'BaseCostToUpgrade': 0,
+                    'DiscountedCostToUpgrade': 0,
+                    'BaseCostToMax': 0,
+                    'DiscountedCostToMax': 0
                 }
             except:
-                self.atom_collider['Atoms'][atomName] = {
+                self.atom_collider['Atoms'][atomInfoList[0]] = {
                     'Level': 0,
-                    'CostToUpgrade': 0
+                    'MaxLevel': 20,
+                    'AtomInfo1': atomInfoList[1],
+                    'AtomInfo2': atomInfoList[2],
+                    'AtomInfo3': atomInfoList[3],
+                    'AtomInfo4': atomInfoList[4],
+                    'BaseCostToUpgrade': 0,
+                    'DiscountedCostToUpgrade': 0,
+                    'BaseCostToMax': 0,
+                    'DiscountedCostToMax': 0
                 }
 
     def _parse_w3_prayers(self):
@@ -1453,13 +1469,6 @@ class Account:
         self.rift['RubyCards'] = self.rift['Level'] >= 45
 
     def _parse_w5(self):
-        self._parse_w5_gaming()
-        self._parse_w5_gaming_sprouts()
-        self._parse_w5_slab()
-        self._parse_w5_sailing()
-        self._parse_w5_divinity()
-
-    def _parse_w5_gaming(self):
         self.gaming = {
             'BitsOwned': 0,
             'FertilizerValue': 0,
@@ -1475,8 +1484,16 @@ class Account:
             'Logbook': {},
             'SuperBitsString': "",
             'SuperBits': {},
-            'Envelopes': 0
+            'Envelopes': 0,
+            'Imports': {}
         }
+        self._parse_w5_gaming()
+        self._parse_w5_gaming_sprouts()
+        self._parse_w5_slab()
+        self._parse_w5_sailing()
+        self._parse_w5_divinity()
+
+    def _parse_w5_gaming(self):
         raw_gaming_list = safe_loads(self.raw_data.get("Gaming", []))
         if raw_gaming_list:
             try:
@@ -1514,8 +1531,19 @@ class Account:
         # [160, 23, 0, 0, 77, 295],  # [32] = Snail Import
         # [0, 21884575.351264, 0, 0, 309, 210],  # [33] = Box9 Import
         # [0, 842957708.5889401, 0, 0, 0, 0],  # [34] = Box10 Import
-        # raw_gaming_sprouts_list =  safe_loads(self.raw_data.get("GamingSprouts", []))
-        pass
+        raw_gaming_sprouts_list = safe_loads(self.raw_data.get("GamingSprouts", []))
+        try:
+            self.gaming['Imports'] = {
+                'Snail': {
+                    'SnailRank': raw_gaming_sprouts_list[32][1]
+                }
+            }
+        except:
+            self.gaming['Imports'] = {
+                'Snail': {
+                    'SnailRank': 0
+                }
+            }
 
     def _parse_w5_slab(self):
         self.registered_slab = safe_loads(self.raw_data.get("Cards1", []))
@@ -1828,6 +1856,8 @@ class Account:
 
     def _calculate_w3(self):
         self._calculate_w3_library_max_book_levels()
+        self._calculate_w3_collider_base_costs()
+        self._calculate_w3_collider_cost_reduction()
 
     def _calculate_w3_library_max_book_levels(self):
         self.library['StaticSum'] = (0
@@ -1852,6 +1882,55 @@ class Account:
                               * summGroupB
                               )
         self.library['MaxBookLevel'] = 100 + self.library['StaticSum'] + self.library['ScalingSum'] + self.library['SummoningSum']
+
+    def _calculate_w3_collider_base_costs(self):
+        #Formula for base cost: (AtomInfo[3] + AtomInfo[1] * AtomCurrentLevel) * POWER(AtomInfo[2], AtomCurrentLevel)
+        for atomName, atomValuesDict in self.atom_collider['Atoms'].items():
+            #Update max level from 20 to 30, if Isotope Discovery unlocked
+            if self.gaming['SuperBits']['Isotope Discovery']['Unlocked']:
+                self.atom_collider['Atoms'][atomName]['MaxLevel'] += 10
+
+            #If atom isn't already at max level:
+            if atomValuesDict['Level'] < atomValuesDict['MaxLevel']:
+                # Calculate base cost to upgrade to next level
+                self.atom_collider['Atoms'][atomName]['BaseCostToUpgrade'] = (
+                    (atomValuesDict['AtomInfo3']
+                        + (atomValuesDict['AtomInfo1'] * atomValuesDict['Level']))
+                    * pow(atomValuesDict['AtomInfo2'], atomValuesDict['Level'])
+                )
+                print(f"BaseCostToUpgrade {atomName} from {self.atom_collider['Atoms'][atomName]['Level']} to {self.atom_collider['Atoms'][atomName]['Level']+1}: {self.atom_collider['Atoms'][atomName]['BaseCostToUpgrade']:.2f}")
+                # Calculate base cost to max level
+                for level in range(self.atom_collider['Atoms'][atomName]['Level'], self.atom_collider['Atoms'][atomName]['MaxLevel']):
+                    self.atom_collider['Atoms'][atomName]['BaseCostToMax'] += (
+                        (self.atom_collider['Atoms'][atomName]['AtomInfo3']
+                            + (self.atom_collider['Atoms'][atomName]['AtomInfo1'] * level))
+                        * pow(self.atom_collider['Atoms'][atomName]['AtomInfo2'], level)
+                    )
+                print(f"BaseCostToMax {atomName} from {self.atom_collider['Atoms'][atomName]['Level']} to {self.atom_collider['Atoms'][atomName]['MaxLevel']}: {self.atom_collider['Atoms'][atomName]['BaseCostToMax']:.2f}")
+
+    def _calculate_w3_collider_cost_reduction(self):
+        self.atom_collider['CostReductionRaw'] = (1 +
+            (
+                7 * self.merits[4][6]['Level']
+                + ((self.construction_buildings['Atom Collider'] - 1) // 10)  # 50 doesn't give 5%, you need 51.
+                + 1 * self.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['Level']
+                + 10 * self.gaming['SuperBits']['Atom Redux']['Unlocked']
+                + self.alchemy_bubbles['Atom Split']['BaseValue']
+                + self.stamps['Atomic Stamp']['Value']
+            )
+            / 100
+        )
+        self.atom_collider['CostReductionMulti'] = 1 / self.atom_collider['CostReductionRaw']
+        self.atom_collider['CostReductionMulti1Higher'] = 1 / (self.atom_collider['CostReductionRaw'] + 0.01)
+        self.atom_collider['CostDiscount'] = (1 - (1 / self.atom_collider['CostReductionRaw'])) * 100
+
+        for atomName, atomValuesDict in self.atom_collider['Atoms'].items():
+            # Calculate base cost to upgrade to next level, if not max level
+            if atomValuesDict['Level'] < atomValuesDict['MaxLevel']:
+                self.atom_collider['Atoms'][atomName]['DiscountedCostToUpgrade'] = (self.atom_collider['Atoms'][atomName]['BaseCostToUpgrade']
+                                                                                    * self.atom_collider['CostReductionMulti'])
+                self.atom_collider['Atoms'][atomName]['DiscountedCostToMax'] = (self.atom_collider['Atoms'][atomName]['BaseCostToMax']
+                                                                                * self.atom_collider['CostReductionMulti'])
 
     def _calculate_w4(self):
         self._calculate_w4_cooking_max_plate_levels()
@@ -1892,7 +1971,7 @@ class Account:
         self.cooking['MaxRemainingMeals'] = (maxMeals * maxMealLevel) - self.cooking['PlayerTotalMealLevels']
 
     def _calculate_w5(self):
-        pass
+        self._calculate_w5_divinity_link_advice()
 
     def _calculate_w5_divinity_link_advice(self):
         self.divinity['DivinityLinks'] = {

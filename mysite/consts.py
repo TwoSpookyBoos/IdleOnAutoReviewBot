@@ -346,10 +346,10 @@ stamps_progressionTiers = {
         "Specific": {'Pickaxe Stamp': 35, 'Hatchet Stamp': 35}}},
     8: {"TotalStampLevels": 500, "Stamps": {
         "Combat": ["Scimitar Stamp", "Bullseye Stamp", ],
-        "Skill": ["Drippy Drop Stamp", "Fishhead Stamp"],
+        "Skill": ["Drippy Drop Stamp"],
         "Misc": ["Biblio Stamp"],
         "Specific": {'Drippy Drop Stamp': 30},
-        "Optional": ["Hermes Stamp", "Talent III Stamp"]}},
+        "Optional": ["Hermes Stamp", "Fishhead Stamp", "Talent III Stamp"]}},
     9: {"TotalStampLevels": 600, "Stamps": {
         "Combat": ["Stat Graph Stamp"],
         "Skill": ["High IQ Lumber Stamp"],
@@ -369,9 +369,9 @@ stamps_progressionTiers = {
         "Specific": {'Drippy Drop Stamp': 50},
         "Optional": ["Saw Stamp"]}},
     13: {"TotalStampLevels": 1000, "Stamps": {
-        "Skill": ["Fly Intel Stamp", "Holy Mackerel Stamp", "Cooked Meal Stamp"],
+        "Skill": ["Holy Mackerel Stamp", "Cooked Meal Stamp"],
         "Specific": {'Pickaxe Stamp': 55, 'Hatchet Stamp': 55, 'Card Stamp': 50},
-        "Optional": ["Agile Stamp", "Book Stamp", "Talent II Stamp"]}},
+        "Optional": ["Agile Stamp", "Book Stamp", "Fly Intel Stamp", "Talent II Stamp"]}},
     14: {"TotalStampLevels": 1500, "Stamps": {
         "Combat": ["Avast Yar Stamp"],
         "Skill": ["Banked Pts Stamp", "Nest Eggs Stamp"],
@@ -3720,10 +3720,19 @@ buildingsList: list[str] = [
 shrinesList: list[str] = [
     "Woodular Shrine", "Isaccian Shrine", "Crystal Shrine", "Pantheon Shrine", "Clover Shrine", "Summereading Shrine", "Crescent Shrine", "Undead Shrine", "Primordial Shrine"
 ]
-atomsList: list[str] = [
-    "Hydrogen - Stamp Decreaser", "Helium - Talent Power Stacker", "Lithium - Bubble Insta Expander", "Beryllium - Post Office Penner",
-    "Boron - Particle Upgrader", "Carbon - Wizard Maximizer", "Nitrogen - Construction Trimmer", "Oxygen - Library Booker",
-    "Fluoride - Void Plate Chef", "Neon - Damage N' Cheapener", "Sodium - Snail Kryptonite"
+#AtomInfo in code. Last pulled 2.11 Kanga
+atomsList: list[list] = [
+    ["Hydrogen - Stamp Decreaser", 1, 1.35, 2, 1, "Every day you log in, the resource cost to upgrade a stamp's max lv decreases by {% up to a max of 90%. This reduction resets back to 0% when upgrading any stamp max lv."],
+    ["Helium - Talent Power Stacker", 0, 10, 10, 1, "All talents that give more bonus per 'Power of 10 resources you own' will count +{ more powers of 10 than you actually own when giving the bonus."],
+    ["Lithium - Bubble Insta Expander", 10, 1.25, 25, 1, "No Bubble Left Behind bonus now has a 15% chance to level up the lowest bubble out of ALL bubbles, not just the first 15 of each colour. Also, +{% chance to give +1 additional Lv."],
+    ["Beryllium - Post Office Penner", 20, 1.26, 75, 7, "Every day, 1 silver pen from your Post Office will instantly convert into 1 PO Box for all characters. This conversion happens { times per day."],
+    ["Boron - Particle Upgrader", 70, 1.37, 175, 2, "When a bubble has a cost of 100M or more to upgrade, you can instead spend particles. However, you can only do this { times a day, after which the cost will return to resources."],
+    ["Carbon - Wizard Maximizer", 250, 1.27, 500, 2, "All wizard towers in construction get +{ max levels. Also, all wizards get a +2% damage bonus for each wizard tower level above 50 in construction. Total bonus: }% wizard dmg."],
+    ["Nitrogen - Construction Trimmer", 500, 1.25, 1000, 15, "Gold trimmed construction slots give +{% more build rate than before. Also, you now have 1 additional trimmed slot."],
+    ["Oxygen - Library Booker", 2000, 1.24, 3250, 2, "Increases the Checkout Refresh Speed of the Talent Library by +{%. Also, the Minimum Talent LV is increased by +<, and the Maximum Talent LV is increased by +10."],
+    ["Fluoride - Void Plate Chef", 12000, 1.23, 10000, 1, "Multiplies your cooking speed by +{% for every meal at Lv 30+. In other words, every plate with a studded black void plate. Total bonus: >% cooking speed"],
+    ["Neon - Damage N' Cheapener", 40000, 1.22, 40000, 1, "Increases your total damage by +{%. Also, reduces the cost of all atom upgrades by {% too."],
+    ["Sodium - Snail Kryptonite", 50000, 2, 50000, 5, "When you fail a snail upgrade, it's LV gets reset to the nearest 5 (Up to Lv {) instead of back to 0, like failing at Lv 7 will reset to Lv 5."],
 ]
 colliderStorageLimitList = [15, 25, 100, 250, 1050]
 prayersList: list[str] = [
