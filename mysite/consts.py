@@ -2787,9 +2787,7 @@ combat_talentsDict = {
     #Talents here are unique from the skill_talentsDict above
     #Elite Classes
     "Blood Berserker": {
-        "High": {
-            109: {"Name": "Monster Decimator", "Tab": "Barbarian"},
-        },
+        "High": {},
         "Medium": {
             108: {"Name": "No Pain No Gain", "Tab": "Barbarian"},
             97: {"Name": "Carry a Big Stick", "Tab": "Warrior"},
