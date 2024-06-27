@@ -593,12 +593,16 @@ body {
                                             display: flex;
                                             align-items: center;
                                             word-break: break-word;
+                                            padding: 10px;
+
+                                            &::before {
+                                                display: block;
+                                                content: '';
+                                                height: 40px;
+                                            }
                                         }
 
                                         .advice::before, .resource {
-                                            display: block;
-                                            content: '';
-                                            height: 40px;
                                             min-width: var(--advice-icon-width);
 
                                             background-size: contain;
@@ -616,7 +620,7 @@ body {
                                         }
 
                                         .goal {
-                                            padding-right: 10px;
+                                            padding-right: 20px;
                                             &.complete {
                                                 color: var(--fg-goal-complete);
                                                 font-size: 1.9em;
