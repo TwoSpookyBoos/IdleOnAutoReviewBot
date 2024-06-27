@@ -74,17 +74,19 @@ def setCombatLevelsProgressionTier() -> AdviceSection:
 
     try:
         if 'Character' in next_tier[2]:
-            character_or_obol = 'beginner-icon'
+            imagename = 'beginner-icon'
         elif 'Obol' in next_tier[2]:
-            character_or_obol = 'silver-obol-of-pop-pop'
+            imagename = 'silver-obol-of-pop-pop'
+        elif 'Tome' in next_tier[2]:
+            imagename = 'blue-tome-pages'
         else:
-            character_or_obol = ''
+            imagename = ''
     except:
-        character_or_obol = ''
+        imagename = ''
     advices = [
         Advice(
             label=next_tier[2],
-            picture_class=character_or_obol,
+            picture_class=imagename,
             progression=total_combat_level,
             goal=next_tier[1])
     ] if next_tier else []
