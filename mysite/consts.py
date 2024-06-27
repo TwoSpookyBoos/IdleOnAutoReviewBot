@@ -2623,7 +2623,7 @@ skill_talentsDict = {
         },
         "Medium": {
             533: {"Name": "Utmost Intellect", "Tab": "Elite Class"},
-            456: {"Name": "Unt-WIS-ted Robes", "Tab": "Mage"},
+            456: {"Name": "Unt'WIS'ted Robes", "Tab": "Mage"},
             459: {"Name": "Individual Insight", "Tab": "Mage"},
             488: {"Name": "Wis Wumbo", "Tab": "Mage Subclass"},
             449: {"Name": "Active Afk-er", "Tab": "Savvy Basics"},
@@ -2692,7 +2692,7 @@ skill_talentsDict = {
         "Medium": {
             99: {"Name": "Haungry for Gold", "Tab": "Warrior"},
             143: {"Name": "Overblown Testosterone", "Tab": "Elite Class"},
-            96: {"Name": "-STR-ess Tested Garb", "Tab": "Warrior"},
+            96: {"Name": "'STR'ess Tested Garb", "Tab": "Warrior"},
             94: {"Name": "Firmly Grasp It", "Tab": "Warrior"},
             98: {"Name": "Absolute Unit", "Tab": "Warrior"},
             81: {"Name": "Str Summore", "Tab": "Warrior Subclass"},
@@ -2717,7 +2717,7 @@ skill_talentsDict = {
         "Medium": {
             99: {"Name": "Haungry for Gold", "Tab": "Warrior"},
             143: {"Name": "Overblown Testosterone", "Tab": "Elite Class"},
-            96: {"Name": "-STR-ess Tested Garb", "Tab": "Warrior"},
+            96: {"Name": "'STR'ess Tested Garb", "Tab": "Warrior"},
             94: {"Name": "Firmly Grasp It", "Tab": "Warrior"},
             98: {"Name": "Absolute Unit", "Tab": "Warrior"},
             81: {"Name": "Str Summore", "Tab": "Warrior Subclass"},
@@ -2743,7 +2743,7 @@ skill_talentsDict = {
         "Medium": {
             298: {"Name": "Sunset on the Hives", "Tab": "Bowman"},
             368: {"Name": "Adaptation Revelation", "Tab": "Elite Class"},
-            276: {"Name": "Garb of Un-AGI-ng Quality", "Tab": "Archer"},
+            276: {"Name": "Garb of Un'AGI'ng Quality", "Tab": "Archer"},
             278: {"Name": "Sanic Speed", "Tab": "Archer"},
             293: {"Name": "Agi Again", "Tab": "Archer Subclass"},
         },
@@ -2762,7 +2762,7 @@ skill_talentsDict = {
         },
         "Medium": {
             368: {"Name": "Adaptation Revelation", "Tab": "Elite Class"},
-            276: {"Name": "Garb of Un-AGI-ng Quality", "Tab": "Archer"},
+            276: {"Name": "Garb of Un'AGI'ing Quality", "Tab": "Archer"},
             278: {"Name": "Sanic Speed", "Tab": "Archer"},
             293: {"Name": "Agi Again", "Tab": "Archer Subclass"},
         },
@@ -2932,7 +2932,7 @@ combat_talentsDict = {
             31: {"Name": "Skillage Damage", "Tab": "Maestro"},
             20: {"Name": "Lucky Hit", "Tab": "Journeyman"},
             54: {"Name": "Eternal Luk", "Tab": "Voidwalker"},
-            21: {"Name": "F-LUK-ey Fabrics", "Tab": "Journeyman"},
+            21: {"Name": "F'LUK'ey Fabrics", "Tab": "Journeyman"},
             38: {"Name": "Bliss N Chips", "Tab": "Maestro"},
             6: {"Name": "Gilded Sword", "Tab": "Beginner"},
         },
