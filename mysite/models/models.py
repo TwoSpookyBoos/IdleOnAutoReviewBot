@@ -2273,8 +2273,8 @@ class Account:
             "ES Family": {
                 "Value": floor(self.family_bonuses["Elemental Sorcerer"]['Value']),
                 "Image": 'elemental-sorcerer-icon',
-                "Label": f"Elemental Sorcerer Family Bonus: +{floor(self.family_bonuses['Elemental Sorcerer']['Value'])}.<br>"
-                         f"Next increase at ES Class Level: ",
+                "Label": f"ES Family Bonus: +{floor(self.family_bonuses['Elemental Sorcerer']['Value'])}.<br>"
+                         f"Next increase at Class Level: ",
                 "Progression": self.family_bonuses['Elemental Sorcerer']['Level'],
                 "Goal": getNextESFamilyBreakpoint(self.family_bonuses['Elemental Sorcerer']['Level'])
             },
