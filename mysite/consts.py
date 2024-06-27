@@ -2932,7 +2932,7 @@ combat_talentsDict = {
             31: {"Name": "Skillage Damage", "Tab": "Maestro"},
             20: {"Name": "Lucky Hit", "Tab": "Journeyman"},
             54: {"Name": "Eternal Luk", "Tab": "Voidwalker"},
-            21: {"Name": "F'luk'ey Fabrics", "Tab": "Journeyman"},
+            21: {"Name": "F-LUK-ey Fabrics", "Tab": "Journeyman"},
             38: {"Name": "Bliss N Chips", "Tab": "Maestro"},
             6: {"Name": "Gilded Sword", "Tab": "Beginner"},
         },

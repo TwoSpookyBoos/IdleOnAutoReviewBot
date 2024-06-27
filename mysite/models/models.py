@@ -1898,7 +1898,6 @@ class Account:
                         + (atomValuesDict['AtomInfo1'] * atomValuesDict['Level']))
                     * pow(atomValuesDict['AtomInfo2'], atomValuesDict['Level'])
                 )
-                print(f"BaseCostToUpgrade {atomName} from {self.atom_collider['Atoms'][atomName]['Level']} to {self.atom_collider['Atoms'][atomName]['Level']+1}: {self.atom_collider['Atoms'][atomName]['BaseCostToUpgrade']:.2f}")
                 # Calculate base cost to max level
                 for level in range(self.atom_collider['Atoms'][atomName]['Level'], self.atom_collider['Atoms'][atomName]['MaxLevel']):
                     self.atom_collider['Atoms'][atomName]['BaseCostToMax'] += (
@@ -1906,7 +1905,6 @@ class Account:
                             + (self.atom_collider['Atoms'][atomName]['AtomInfo1'] * level))
                         * pow(self.atom_collider['Atoms'][atomName]['AtomInfo2'], level)
                     )
-                print(f"BaseCostToMax {atomName} from {self.atom_collider['Atoms'][atomName]['Level']} to {self.atom_collider['Atoms'][atomName]['MaxLevel']}: {self.atom_collider['Atoms'][atomName]['BaseCostToMax']:.2f}")
 
     def _calculate_w3_collider_cost_reduction(self):
         self.atom_collider['CostReductionRaw'] = (1 +
