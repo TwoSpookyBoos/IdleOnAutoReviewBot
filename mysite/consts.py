@@ -1101,7 +1101,7 @@ sailing_progressionTiers = {
             'Opera Mask': 2,
             'The True Lantern': 2
         },
-        'SuperBeanstacked': True
+        #'SuperBeanstacked': True
     },
     15: {
         'Artifacts': {
@@ -3710,11 +3710,39 @@ equinoxBonusesDict = {
     11: {'Name': 'Food Lust', 'BaseLevel': 10, 'MaxLevelIncreases': {26: 4}, 'FinalMaxLevel': 14, 'Category': 'Optional'},
     12: {'Name': 'Equinox Symbols', 'BaseLevel': 5, 'MaxLevelIncreases': {31: 4}, 'FinalMaxLevel': 9, 'Category': 'Recommended'},
 }
-buildingsList: list[str] = [
-    "3D Printer", "Talent Book Library", "Death Note", "Salt Lick", "Chest Space", "Cost Cruncher", "Trapper Drone", "Automation Arm", "Atom Collider",
-    "Pulse Mage", "Fireball Lobber", "Boulder Roller", "Frozone Malone", "Stormcaller", "Party Starter", "Kraken Cosplayer", "Poisonic Elder", "Voidinator",
-    "Woodular Shrine", "Isaccian Shrine", "Crystal Shrine", "Pantheon Shrine", "Clover Shrine", "Summereading Shrine", "Crescent Shrine", "Undead Shrine", "Primordial Shrine"
-]
+buildingsDict = {
+    #Buildings
+    0: {'Name': '3D Printer', 'Image': 'three-d-printer', 'BaseMaxLevel': 10, 'Type': 'Utility'},
+    1: {'Name': 'Talent Book Library', 'Image': 'talent-book-library', 'BaseMaxLevel': 101, 'Type': 'Utility'},
+    2: {'Name': 'Death Note', 'Image': 'death-note', 'BaseMaxLevel': 51, 'Type': 'Utility'},
+    3: {'Name': 'Salt Lick', 'Image': 'salt-lick', 'BaseMaxLevel': 10, 'Type': 'Utility'},
+    4: {'Name': 'Chest Space', 'Image': 'chest-space', 'BaseMaxLevel': 25, 'Type': 'Utility'},
+    5: {'Name': 'Cost Cruncher', 'Image': 'cost-cruncher','BaseMaxLevel': 60, 'Type': 'Utility'},
+    6: {'Name': 'Trapper Drone', 'Image': 'critter-drone', 'BaseMaxLevel': 15, 'Type': 'Utility'},
+    7: {'Name': 'Automation Arm', 'Image': 'automation-arm', 'BaseMaxLevel': 5, 'Type': 'Utility'},
+    8: {'Name': 'Atom Collider', 'Image': 'atom-collider', 'BaseMaxLevel': 200, 'Type': 'Utility'},
+    #TD Towers
+    9: {'Name': 'Pulse Mage', 'Image': 'pulse-mage', 'BaseMaxLevel': 50, 'Type': 'Tower'},
+    10: {'Name': 'Fireball Lobber', 'Image': 'fireball-lobber', 'BaseMaxLevel': 50, 'Type': 'Tower'},
+    11: {'Name': 'Boulder Roller', 'Image': 'boulder-roller', 'BaseMaxLevel': 50, 'Type': 'Tower'},
+    12: {'Name': 'Frozone Malone', 'Image': 'frozone-malone', 'BaseMaxLevel': 50, 'Type': 'Tower'},
+    13: {'Name': 'Stormcaller', 'Image': 'stormcaller', 'BaseMaxLevel': 50, 'Type': 'Tower'},
+    14: {'Name': 'Party Starter', 'Image': 'party-starter', 'BaseMaxLevel': 50, 'Type': 'Tower'},
+    15: {'Name': 'Kraken Cosplayer', 'Image': 'kraken-cosplayer', 'BaseMaxLevel': 50, 'Type': 'Tower'},
+    16: {'Name': 'Poisonic Elder', 'Image': 'poisonic-elder', 'BaseMaxLevel': 50, 'Type': 'Tower'},
+    17: {'Name': 'Voidinator', 'Image': 'voidinator', 'BaseMaxLevel': 50, 'Type': 'Tower'},
+    #Shrines
+    18: {'Name': 'Woodular Shrine', 'Image': 'woodular-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine'},
+    19: {'Name': 'Isaccian Shrine', 'Image': 'isaccian-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine'},
+    20: {'Name': 'Crystal Shrine', 'Image': 'crystal-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine'},
+    21: {'Name': 'Pantheon Shrine', 'Image': 'pantheon-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine'},
+    22: {'Name': 'Clover Shrine', 'Image': 'clover-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine'},
+    23: {'Name': 'Summereading Shrine', 'Image': 'summereading-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine'},
+    24: {'Name': 'Crescent Shrine', 'Image': 'crescent-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine'},
+    25: {'Name': 'Undead Shrine', 'Image': 'undead-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine'},
+    26: {'Name': 'Primordial Shrine', 'Image': 'primordial-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine'},
+}
+buildingsTowerMaxLevel = 140
 shrinesList: list[str] = [
     "Woodular Shrine", "Isaccian Shrine", "Crystal Shrine", "Pantheon Shrine", "Clover Shrine", "Summereading Shrine", "Crescent Shrine", "Undead Shrine", "Primordial Shrine"
 ]

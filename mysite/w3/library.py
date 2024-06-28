@@ -36,9 +36,9 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
     bookLevelAdvices[staticSubgroup] = []
 
     bookLevelAdvices[staticSubgroup].append(Advice(
-        label=f"Construction: Talent Book Library built: +{25 * (0 < session_data.account.construction_buildings.get('Talent Book Library', 0))}",
+        label=f"Construction: Talent Book Library built: +{25 * (0 < session_data.account.construction_buildings['Talent Book Library']['Level'])}",
         picture_class="talent-book-library",
-        progression=min(1, session_data.account.construction_buildings.get('Talent Book Library', 0)),
+        progression=min(1, session_data.account.construction_buildings['Talent Book Library']['Level']),
         goal=1
     ))
     bookLevelAdvices[staticSubgroup].append(Advice(
@@ -348,7 +348,7 @@ def setLibraryProgressionTier() -> AdviceSection:
     if highestConstructionLevel < 1:
         library_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
         return library_AdviceSection
-    elif session_data.account.construction_buildings.get("Talent Book Library", 0) < 1:
+    elif session_data.account.construction_buildings['Talent Book Library']['Level'] < 1:
         library_AdviceSection.header = "Come back after unlocking the Talent Book Library within the Construction skill in World 3!"
         return library_AdviceSection
 

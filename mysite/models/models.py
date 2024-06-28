@@ -12,7 +12,7 @@ from flask import g
 
 from utils.data_formatting import getCharacterDetails, safe_loads
 from consts import expectedStackables, greenstack_progressionTiers, card_data, maxMeals, maxMealLevel, jade_emporium, max_IndexOfVials, getReadableVialNames, \
-    buildingsList, atomsList, prayersDict, labChipsList, bribesDict, shrinesList, pristineCharmsList, sigilsDict, \
+    buildingsDict, atomsList, prayersDict, labChipsList, bribesDict, shrinesList, pristineCharmsList, sigilsDict, \
     sailingDict, guildBonusesList, labBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesList, \
     getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampsDict, stampTypes, marketUpgradeList, \
     achievementsList, forgeUpgradesDict, arcadeBonuses, saltLickList, allMeritsDict, bubblesDict, familyBonusesDict, poBoxDict, equinoxBonusesDict, \
@@ -1200,11 +1200,21 @@ class Account:
     def _parse_w3_buildings(self):
         self.construction_buildings = {}
         raw_buildings_list = safe_loads(self.raw_data.get("Tower", []))
-        for buildingIndex, buildingName in enumerate(buildingsList):
+        for buildingIndex, buildingValuesDict in buildingsDict.items():
             try:
-                self.construction_buildings[buildingName] = int(raw_buildings_list[buildingIndex])
+                self.construction_buildings[buildingValuesDict['Name']] = {
+                    'Level': int(raw_buildings_list[buildingIndex]),
+                    'MaxLevel': buildingValuesDict['BaseMaxLevel'],
+                    'Image': buildingValuesDict['Image'],
+                    'Type': buildingValuesDict['Type'],
+                }
             except:
-                self.construction_buildings[buildingName] = 0
+                self.construction_buildings[buildingValuesDict['Name']] = {
+                    'Level': 0,
+                    'MaxLevel': buildingValuesDict['BaseMaxLevel'],
+                    'Image': buildingValuesDict['Image'],
+                    'Type': buildingValuesDict['Type'],
+                }
 
     def _parse_w3_library(self):
         self.library = {}
@@ -1855,13 +1865,30 @@ class Account:
             # After the +1, 0/1/2/3
 
     def _calculate_w3(self):
+        self._calculate_w3_tower_max_levels()
         self._calculate_w3_library_max_book_levels()
         self._calculate_w3_collider_base_costs()
         self._calculate_w3_collider_cost_reduction()
 
+    def _calculate_w3_tower_max_levels(self):
+        towers = [towerName for towerName, towerValuesDict in self.construction_buildings.items() if towerValuesDict['Type'] == 'Tower']
+        if sum(self.all_skills['Construction']) > 2500 and self.rift['SkillMastery']:
+            for towerName in towers:
+                try:
+                    self.construction_buildings[towerName]['MaxLevel'] += 30
+                except:
+                    continue
+
+        if self.atom_collider['Atoms']['Carbon - Wizard Maximizer']['Level'] > 0:
+            for towerName in towers:
+                try:
+                    self.construction_buildings[towerName]['MaxLevel'] += 2 * self.atom_collider['Atoms']['Carbon - Wizard Maximizer']['Level']
+                except:
+                    continue
+
     def _calculate_w3_library_max_book_levels(self):
         self.library['StaticSum'] = (0
-                      + (25 * (0 < self.construction_buildings.get('Talent Book Library', 0)))
+                      + (25 * (0 < self.construction_buildings['Talent Book Library']['Level']))
                       + (5 * (0 < self.achievements.get('Checkout Takeout', False)))
                       + (10 * (0 < self.atom_collider['Atoms']['Oxygen - Library Booker']['Level']))
                       + (25 * self.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0))
@@ -1910,7 +1937,7 @@ class Account:
         self.atom_collider['CostReductionRaw'] = (1 +
             (
                 7 * self.merits[4][6]['Level']
-                + ((self.construction_buildings['Atom Collider'] - 1) // 10)  # 50 doesn't give 5%, you need 51.
+                + ((self.construction_buildings['Atom Collider']['Level'] - 1) // 10)  # 50 doesn't give 5%, you need 51.
                 + 1 * self.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['Level']
                 + 10 * self.gaming['SuperBits']['Atom Redux']['Unlocked']
                 + self.alchemy_bubbles['Atom Split']['BaseValue']

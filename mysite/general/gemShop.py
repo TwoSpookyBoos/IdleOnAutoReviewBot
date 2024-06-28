@@ -69,7 +69,7 @@ def try_exclude_FluorescentFlaggies(exclusionList):
 
 
 def try_exclude_BurningBadBooks(exclusionList):
-    if int(session_data.account.construction_buildings.get("Automation Arm", 0)) >= 5:
+    if session_data.account.construction_buildings['Automation Arm']['Level'] >= 5:
         exclusionList.append("Burning Bad Books")
 
 

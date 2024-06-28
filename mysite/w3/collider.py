@@ -1,8 +1,9 @@
 from flask import g as session_data
-from consts import colliderStorageLimitList
+from consts import colliderStorageLimitList, buildingsTowerMaxLevel
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
+from utils.text_formatting import pl
 
 logger = get_logger(__name__)
 
@@ -93,6 +94,21 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
                     )
                 )
 
+    currentMaxedTowers = 0
+    for buildingName, buildingValuesDict in session_data.account.construction_buildings.items():
+        if buildingValuesDict['Type'] == 'Tower':
+            if buildingValuesDict['Level'] == buildingValuesDict['MaxLevel'] and buildingValuesDict['MaxLevel'] < buildingsTowerMaxLevel:
+                currentMaxedTowers += 1
+
+    if currentMaxedTowers > 0:
+        settings_advice['Alerts'].append(
+            Advice(
+                label=f"{currentMaxedTowers} TD Tower{pl(currentMaxedTowers)} at max level."
+                      f"<br>Level up Carbon to increase your max Tower levels.",
+                picture_class="carbon",
+            )
+        )
+
     settings_ag = AdviceGroup(
         tier="",
         pre_string="Collider Alerts and General Information",
@@ -108,7 +124,7 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     sum_cost_reduction = (1 +
                               (
                                 7 * session_data.account.merits[4][6]['Level']
-                                + ((session_data.account.construction_buildings['Atom Collider']-1) // 10)  #50 doesn't give 5%, you need 51.
+                                + ((session_data.account.construction_buildings['Atom Collider']['Level']-1) // 10)  #50 doesn't give 5%, you need 51.
                                 + 1 * session_data.account.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['Level']
                                 + 10 * session_data.account.gaming['SuperBits']['Atom Redux']['Unlocked']
                                 + session_data.account.alchemy_bubbles['Atom Split']['BaseValue']
@@ -140,9 +156,9 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     ))
 
     cr_advice.append(Advice(
-        label=f"Atom Collider building: {((session_data.account.construction_buildings['Atom Collider']-1) // 10)}/19%",
+        label=f"Atom Collider building: {((session_data.account.construction_buildings['Atom Collider']['Level']-1) // 10)}/19%",
         picture_class="atom-collider",
-        progression=session_data.account.construction_buildings['Atom Collider'],
+        progression=session_data.account.construction_buildings['Atom Collider']['Level'],
         goal=191
     ))
 
@@ -194,7 +210,7 @@ def setColliderProgressionTier() -> AdviceSection:
     if highestConstructionLevel < 1:
         collider_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
         return collider_AdviceSection
-    elif session_data.account.construction_buildings.get("Atom Collider", 0) < 1:
+    elif session_data.account.construction_buildings['Atom Collider']['Level'] < 1:
         collider_AdviceSection.header = "Come back after unlocking the Atom Collider within the Construction skill in World 3!"
         return collider_AdviceSection
 
