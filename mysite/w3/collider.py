@@ -47,7 +47,6 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
 
     #Alerts
     #Collider is not Off
-    colliderData['OnOffStatus'] = True
     if colliderData['OnOffStatus'] == True:
         settings_advice['Alerts'].append(
             Advice(
