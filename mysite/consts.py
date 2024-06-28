@@ -795,6 +795,93 @@ equinox_progressionTiers = {
     'Recommended': ['Equinox Symbols', 'Equinox Resources', 'Metal Detector', 'Slow Roast Wiz', 'Liquidvestment', 'Faux Jewels', 'Matching Scims', 'Equinox Dreams'],
     'Optional': ['Shades of K', 'Laboratory Fuse', 'Food Lust']
 }
+atoms_progressionTiers = {
+    0: {},
+    1: {
+        'Atoms': {
+            'Hydrogen - Stamp Decreaser': 5,
+            'Helium - Talent Power Stacker': 1
+        },
+    },
+    2: {
+        'Atoms': {
+            'Lithium - Bubble Insta Expander': 1,
+        },
+    },
+    3: {
+        'Atoms': {
+            'Boron - Particle Upgrader': 1,
+            'Helium - Talent Power Stacker': 2,
+        },
+    },
+    4: {
+        'Atoms': {
+            'Helium - Talent Power Stacker': 3,
+        },
+    },
+    5: {
+        'Atoms': {
+            'Nitrogen - Construction Trimmer': 1,
+            'Oxygen - Library Booker': 1,
+        },
+    },
+    6: {
+        'Atoms': {
+            'Hydrogen - Stamp Decreaser': 18,
+            'Helium - Talent Power Stacker': 4,
+        },
+    },
+    7: {
+        'Atoms': {
+            'Fluoride - Void Plate Chef': 3,
+            'Helium - Talent Power Stacker': 5,
+        },
+    },
+    8: {
+        'Atoms': {
+            'Fluoride - Void Plate Chef': 7,
+            'Helium - Talent Power Stacker': 6,
+        },
+    },
+    9: {
+        'Atoms': {
+            "Neon - Damage N' Cheapener": 2,
+            'Fluoride - Void Plate Chef': 11,
+            'Helium - Talent Power Stacker': 7,
+        },
+    },
+    10: {
+        'Atoms': {
+            "Neon - Damage N' Cheapener": 10,
+            'Fluoride - Void Plate Chef': 15,
+        },
+    },
+    11: {
+        'Atoms': {
+            'Helium - Talent Power Stacker': 8,
+        },
+    },
+    12: {
+        'Atoms': {
+            'Fluoride - Void Plate Chef': 20,
+        },
+    },
+    13: {
+        'Atoms': {
+            "Neon - Damage N' Cheapener": 20,
+            'Helium - Talent Power Stacker': 9,
+        },
+    },
+    14: {
+        'Atoms': {
+            'Boron - Particle Upgrader': 30,
+            'Hydrogen - Stamp Decreaser': 30,
+            "Neon - Damage N' Cheapener": 30,
+            'Fluoride - Void Plate Chef': 30,
+            'Helium - Talent Power Stacker': 10,
+        },
+    },
+}
 
 ###WORLD 4 PROGRESSION TIERS###
 breeding_progressionTiers = {

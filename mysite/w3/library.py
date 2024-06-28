@@ -168,7 +168,7 @@ def getBonusLevelAdviceGroup() -> AdviceGroup:
 def getTalentExclusions() -> list:
     talentExclusions = []
 
-    if sum([toon.lab_level for toon in session_data.account.safe_characters]) > 2100:
+    if sum(session_data.account.all_skills['Lab']) > 2100:
         talentExclusions.append(537)
         # 537: {"Name": "Essence Transferral", "Tab": "Bubonic Conjuror"},
 

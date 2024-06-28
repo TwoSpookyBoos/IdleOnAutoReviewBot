@@ -1,5 +1,5 @@
 from flask import g as session_data
-from consts import colliderStorageLimitList, buildingsTowerMaxLevel
+from consts import colliderStorageLimitList, buildingsTowerMaxLevel, atoms_progressionTiers, maxTiersPerGroup
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
@@ -197,8 +197,18 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     )
     return cr_ag
 
+def getAtomExclusionsList() -> list[str]:
+    exclusionsList = []
+    # If cooking is basically finished thanks to NMLB, exclude Fluoride's cooking speed
+    if session_data.account.cooking['MaxRemainingMeals'] < 300:
+        exclusionsList.append('Fluoride - Void Plate Chef')
+
+    return exclusionsList
+
 def setColliderProgressionTier() -> AdviceSection:
-    collider_AdviceDict = {}
+    collider_AdviceDict = {
+        'Atoms': {}
+    }
     collider_AdviceGroupDict = {}
     collider_AdviceSection = AdviceSection(
         name="Atom Collider",
@@ -215,12 +225,35 @@ def setColliderProgressionTier() -> AdviceSection:
         collider_AdviceSection.header = "Come back after unlocking the Atom Collider within the Construction skill in World 3!"
         return collider_AdviceSection
 
-    max_tier = 0
+    max_tier = max(atoms_progressionTiers.keys())
     tier_atomLevels = 0
+    pAtoms = session_data.account.atom_collider['Atoms']  #Player Atoms
+
+    for tier, tierRequirements in atoms_progressionTiers.items():
+        subgroupName = f"To reach Tier {tier}"
+        #Atom levels
+        for rAtom, rLevel in tierRequirements.get('Atoms', {}).items():
+            if pAtoms[rAtom]['Level'] < rLevel:
+                if subgroupName not in collider_AdviceDict['Atoms'] and len(collider_AdviceDict['Atoms']) < maxTiersPerGroup:
+                    collider_AdviceDict['Atoms'][subgroupName] = []
+                if subgroupName in collider_AdviceDict['Atoms']:
+                    collider_AdviceDict['Atoms'][subgroupName].append(Advice(
+                        label=rAtom,
+                        picture_class=rAtom.split(' - ')[0],
+                        progression=pAtoms[rAtom]['Level'],
+                        goal=rLevel
+                    ))
+        if tier_atomLevels == tier-1 and subgroupName not in collider_AdviceDict['Atoms']:
+            tier_atomLevels = tier
 
     # Generate AdviceGroups
     collider_AdviceGroupDict['ColliderSettings'] = getColliderSettingsAdviceGroup()
     collider_AdviceGroupDict['CostReduction'] = getCostReductionAdviceGroup()
+    collider_AdviceGroupDict['Atoms'] = AdviceGroup(
+        tier=tier_atomLevels,
+        pre_string="Level Priority Atoms",
+        advices=collider_AdviceDict['Atoms']
+    )
 
     # Generate AdviceSection
     overall_ColliderTier = min(max_tier, tier_atomLevels)  # Looks silly, but may get more evaluations in the future
