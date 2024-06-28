@@ -12,7 +12,7 @@ def setConsSaltLickProgressionTier() -> AdviceSection:
         name="Salt Lick",
         tier="Not Yet Evaluated",
         header="Best Salt Lick tier met: Not Yet Evaluated. Recommended salt lick actions:",
-        picture="Construction_Salt_Lick.png",
+        picture="Construction_Salt_Lick.gif",
     )
     highestConstructionLevel = max(session_data.account.all_skills["Construction"])
     if highestConstructionLevel < 1:

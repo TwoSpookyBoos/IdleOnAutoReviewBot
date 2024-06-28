@@ -2212,6 +2212,7 @@ $extra: (
 	jade-vendor: $jade-vendor,
 	owl: $owl,
 	kangaroo: $kangaroo,
+	collider-toggle: $collider-toggle,
 );
 $id-map: map-merge($extra, $id-map);
 

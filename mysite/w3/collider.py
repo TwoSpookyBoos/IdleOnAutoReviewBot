@@ -47,11 +47,12 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
 
     #Alerts
     #Collider is not Off
+    colliderData['OnOffStatus'] = True
     if colliderData['OnOffStatus'] == True:
         settings_advice['Alerts'].append(
             Advice(
                 label=f"Collider switch status: {'On' if session_data.account.atom_collider['OnOffStatus'] else 'Off'}.<br>Recommended to select Off instead.",
-                picture_class="",
+                picture_class="collider-toggle",
             )
         )
 
@@ -214,7 +215,7 @@ def setColliderProgressionTier() -> AdviceSection:
         name="Atom Collider",
         tier="Not Yet Evaluated",
         header="",
-        picture="Collider.png",
+        picture="Collider.gif",
     )
 
     highestConstructionLevel = max(session_data.account.all_skills["Construction"])

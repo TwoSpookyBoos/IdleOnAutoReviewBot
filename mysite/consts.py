@@ -2851,7 +2851,7 @@ skill_talentsDict = {
         },
         "Medium": {
             368: {"Name": "Adaptation Revelation", "Tab": "Elite Class"},
-            276: {"Name": "Garb of Un'AGI'ing Quality", "Tab": "Archer"},
+            276: {"Name": "Garb of Un'AGI'ng Quality", "Tab": "Archer"},
             278: {"Name": "Sanic Speed", "Tab": "Archer"},
             293: {"Name": "Agi Again", "Tab": "Archer Subclass"},
         },

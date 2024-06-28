@@ -184,7 +184,7 @@ def setSamplingProgressionTier() -> AdviceSection:
         name="Sampling",
         tier="Not Yet Evaluated",
         header="",
-        picture="3D_Printer.png",
+        picture="3D_Printer.gif",
     )
 
     highestConstructionLevel = max(session_data.account.all_skills["Construction"])
