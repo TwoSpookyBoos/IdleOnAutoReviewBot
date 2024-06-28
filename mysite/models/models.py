@@ -12,12 +12,12 @@ from flask import g
 
 from utils.data_formatting import getCharacterDetails, safe_loads
 from consts import expectedStackables, greenstack_progressionTiers, card_data, maxMeals, maxMealLevel, jade_emporium, max_IndexOfVials, getReadableVialNames, \
-    buildingsList, atomsList, prayersDict, labChipsList, bribesDict, shrinesList, pristineCharmsList, sigilsDict, \
+    buildingsDict, atomsList, prayersDict, labChipsList, bribesDict, shrinesList, pristineCharmsList, sigilsDict, \
     sailingDict, guildBonusesList, labBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesList, \
     getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampsDict, stampTypes, marketUpgradeList, \
     achievementsList, forgeUpgradesDict, arcadeBonuses, saltLickList, allMeritsDict, bubblesDict, familyBonusesDict, poBoxDict, equinoxBonusesDict, \
     maxDreams, dreamsThatUnlockNewBonuses, ceilUpToBase, starsignsDict, gfood_codes, getStyleNameFromIndex, divinity_divinitiesDict, getDivinityNameFromIndex, \
-    maxCookingTables, getNextESFamilyBreakpoint, expected_talentsDict
+    maxCookingTables, getNextESFamilyBreakpoint, expected_talentsDict, colliderStorageLimitList, gamingSuperbitsDict
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
 
 def session_singleton(cls):
@@ -870,7 +870,7 @@ class Account:
                                                               f"{familyBonusesDict[className]['PostDisplay']}"
                                                               f" {familyBonusesDict[className]['Stat']}")
 
-        self.raw_optlacc_list = safe_loads(self.raw_data.get("OptLacc", {}))
+        self.raw_optlacc_dict = safe_loads(self.raw_data.get("OptLacc", {}))
 
         self.dungeon_upgrades = {}
         raw_dungeon_upgrades = safe_loads(self.raw_data.get('DungUpg', []))
@@ -1027,10 +1027,10 @@ class Account:
     def _parse_w1_owl(self):
         self.owl = {}
         try:
-            self.owl['FeatherGeneration'] = self.raw_optlacc_list[254]
-            self.owl['BonusesOfOrion'] = self.raw_optlacc_list[255]
-            self.owl['FeatherRestarts'] = self.raw_optlacc_list[258]
-            self.owl['MegaFeathersOwned'] = self.raw_optlacc_list[262]
+            self.owl['FeatherGeneration'] = self.raw_optlacc_dict[254]
+            self.owl['BonusesOfOrion'] = self.raw_optlacc_dict[255]
+            self.owl['FeatherRestarts'] = self.raw_optlacc_dict[258]
+            self.owl['MegaFeathersOwned'] = self.raw_optlacc_dict[262]
         except:
             self.owl['FeatherGeneration'] = 0
             self.owl['BonusesOfOrion'] = 0
@@ -1079,7 +1079,8 @@ class Account:
             'OrangeUnlocked': 0,
             'GreenUnlocked': 0,
             'PurpleUnlocked': 0,
-            'YellowUnlocked': 0
+            'YellowUnlocked': 0,
+            'TotalUnlocked': 0,
         }
 
     def _parse_w2_bubbles(self):
@@ -1109,14 +1110,21 @@ class Account:
                             int(all_raw_bubbles[cauldronIndex][str(bubbleIndex)]),
                             bubblesDict[cauldronIndex][bubbleIndex]["x1"],
                             bubblesDict[cauldronIndex][bubbleIndex]["x2"])
-                        #if int(all_raw_bubbles[cauldronIndex][str(bubbleIndex)]) > 0:
+                        if int(all_raw_bubbles[cauldronIndex][str(bubbleIndex)]) > 0:
+                            self.alchemy_cauldrons['TotalUnlocked'] += 1
                             #Keep track of cauldron counts
+                            if cauldronIndex == 0:
+                                self.alchemy_cauldrons['OrangeUnlocked'] += 1
+                            elif cauldronIndex == 1:
+                                self.alchemy_cauldrons['GreenUnlocked'] += 1
+                            elif cauldronIndex == 2:
+                                self.alchemy_cauldrons['PurpleUnlocked'] += 1
+                            elif cauldronIndex == 3:
+                                self.alchemy_cauldrons['YellowUnlocked'] += 1
                     except:
                         continue  # Level and BaseValue already defaulted to 0 above
         except:
             pass
-
-
 
     def _parse_w2_p2w(self):
         self.alchemy_p2w = {
@@ -1185,18 +1193,28 @@ class Account:
         self._parse_w3_equinox_dreams()
         self._parse_w3_equinox_bonuses()
         self._parse_w3_shrines()
-        self._parse_w3_atoms()
+        self._parse_w3_atom_collider()
         self._parse_w3_prayers()
         self._parse_w3_saltlick()
 
     def _parse_w3_buildings(self):
         self.construction_buildings = {}
         raw_buildings_list = safe_loads(self.raw_data.get("Tower", []))
-        for buildingIndex, buildingName in enumerate(buildingsList):
+        for buildingIndex, buildingValuesDict in buildingsDict.items():
             try:
-                self.construction_buildings[buildingName] = int(raw_buildings_list[buildingIndex])
+                self.construction_buildings[buildingValuesDict['Name']] = {
+                    'Level': int(raw_buildings_list[buildingIndex]),
+                    'MaxLevel': buildingValuesDict['BaseMaxLevel'],
+                    'Image': buildingValuesDict['Image'],
+                    'Type': buildingValuesDict['Type'],
+                }
             except:
-                self.construction_buildings[buildingName] = 0
+                self.construction_buildings[buildingValuesDict['Name']] = {
+                    'Level': 0,
+                    'MaxLevel': buildingValuesDict['BaseMaxLevel'],
+                    'Image': buildingValuesDict['Image'],
+                    'Type': buildingValuesDict['Type'],
+                }
 
     def _parse_w3_library(self):
         self.library = {}
@@ -1269,14 +1287,55 @@ class Account:
                     5: 0
                 }
 
+    def _parse_w3_atom_collider(self):
+        self.atom_collider = {}
+        try:
+            self.atom_collider['Particles'] = self.raw_data.get("Divinity", {})[39]
+        except:
+            self.atom_collider['Particles'] = "Unknown"  #0.0
+
+        try:
+            self.atom_collider['StorageLimit'] = colliderStorageLimitList[self.raw_optlacc_dict[133]]  #colliderStorageLimitList[self.raw_optlacc_dict[132]]
+        except:
+            self.atom_collider['StorageLimit'] = "Unknown"  #colliderStorageLimitList[0]
+
+        try:
+            self.atom_collider['OnOffStatus'] = bool(self.raw_optlacc_dict[132])
+        except:
+            self.atom_collider['OnOffStatus'] = True  #0
+
+        self._parse_w3_atoms()
+
     def _parse_w3_atoms(self):
-        self.atoms = {}
+        self.atom_collider['Atoms'] = {}
         raw_atoms_list = safe_loads(self.raw_data.get("Atoms", []))
-        for atomIndex, atomName in enumerate(atomsList):
+        for atomIndex, atomInfoList in enumerate(atomsList):
             try:
-                self.atoms[atomName] = int(raw_atoms_list[atomIndex])
+                self.atom_collider['Atoms'][atomInfoList[0]] = {
+                    'Level': int(raw_atoms_list[atomIndex]),
+                    'MaxLevel': 20,
+                    'AtomInfo1': atomInfoList[1],
+                    'AtomInfo2': atomInfoList[2],
+                    'AtomInfo3': atomInfoList[3],
+                    'AtomInfo4': atomInfoList[4],
+                    'BaseCostToUpgrade': 0,
+                    'DiscountedCostToUpgrade': 0,
+                    'BaseCostToMax': 0,
+                    'DiscountedCostToMax': 0
+                }
             except:
-                self.atoms[atomName] = 0
+                self.atom_collider['Atoms'][atomInfoList[0]] = {
+                    'Level': 0,
+                    'MaxLevel': 20,
+                    'AtomInfo1': atomInfoList[1],
+                    'AtomInfo2': atomInfoList[2],
+                    'AtomInfo3': atomInfoList[3],
+                    'AtomInfo4': atomInfoList[4],
+                    'BaseCostToUpgrade': 0,
+                    'DiscountedCostToUpgrade': 0,
+                    'BaseCostToMax': 0,
+                    'DiscountedCostToMax': 0
+                }
 
     def _parse_w3_prayers(self):
         self.prayers = {}
@@ -1420,9 +1479,81 @@ class Account:
         self.rift['RubyCards'] = self.rift['Level'] >= 45
 
     def _parse_w5(self):
+        self.gaming = {
+            'BitsOwned': 0,
+            'FertilizerValue': 0,
+            'FertilizerSpeed': 0,
+            'FertilizerCapacity': 0,
+            'MutationsUnlocked': 0,
+            'EvolutionChance': 0,
+            'DNAOwned': 0,
+            'Nugget': 0,
+            'Acorns': 0,
+            'PoingHighscore': 0,
+            'LogbookString': "",
+            'Logbook': {},
+            'SuperBitsString': "",
+            'SuperBits': {},
+            'Envelopes': 0,
+            'Imports': {}
+        }
+        self._parse_w5_gaming()
+        self._parse_w5_gaming_sprouts()
         self._parse_w5_slab()
         self._parse_w5_sailing()
         self._parse_w5_divinity()
+
+    def _parse_w5_gaming(self):
+        raw_gaming_list = safe_loads(self.raw_data.get("Gaming", []))
+        if raw_gaming_list:
+            try:
+                self.gaming['BitsOwned'] = raw_gaming_list[0]
+                self.gaming['FertilizerValue'] = raw_gaming_list[1]
+                self.gaming['FertilizerSpeed'] = raw_gaming_list[2]
+                self.gaming['FertilizerCapacity'] = raw_gaming_list[3]
+                self.gaming['MutationsUnlocked'] = raw_gaming_list[4]
+                self.gaming['DNAOwned'] = raw_gaming_list[5]
+                self.gaming['EvolutionChance'] = raw_gaming_list[7]
+                self.gaming['Nugget'] = raw_gaming_list[8]
+                self.gaming['Acorns'] = raw_gaming_list[9]
+                self.gaming['EvolutionChance'] = raw_gaming_list[10]
+                self.gaming['LogbookString'] = raw_gaming_list[11]
+                self.gaming['SuperBitsString'] = raw_gaming_list[12]
+                self.gaming['Envelopes'] = raw_gaming_list[13]
+            except:
+                pass
+
+        for index, valuesDict in gamingSuperbitsDict.items():
+            self.gaming['SuperBits'][valuesDict['Name']] = {
+                'Unlocked': valuesDict['CodeString'] in self.gaming['SuperBitsString'],
+                'BonusText': valuesDict['BonusText']
+            }
+
+    def _parse_w5_gaming_sprouts(self):
+        # [0] through [24] = actual sprouts
+        # [300, 25469746.803332243, 0, 0, 655, 70],  # [25] = Sprinkler Import
+        # [315, 1335, 0, 0, 654, 383],  # [26] = Shovel Import
+        # [300, 1335, 503, 711, 429.34312394215203, 237.05230565943967],  # [27] = Squirrel Import
+        # [275, 287171, 26, 0, 82, 153],  # [28] = Seashell Import
+        # [260, 1, 0, 0, 82, 225],  # [29] = Kitsune Roxie Import
+        # [224, 1345, 0, 0, 98, 383],  # [30] = Log Import
+        # [1, 842957708.5889401, 0, 0, 83, 70],  # [31] = Poing Import
+        # [160, 23, 0, 0, 77, 295],  # [32] = Snail Import
+        # [0, 21884575.351264, 0, 0, 309, 210],  # [33] = Box9 Import
+        # [0, 842957708.5889401, 0, 0, 0, 0],  # [34] = Box10 Import
+        raw_gaming_sprouts_list = safe_loads(self.raw_data.get("GamingSprouts", []))
+        try:
+            self.gaming['Imports'] = {
+                'Snail': {
+                    'SnailRank': raw_gaming_sprouts_list[32][1]
+                }
+            }
+        except:
+            self.gaming['Imports'] = {
+                'Snail': {
+                    'SnailRank': 0
+                }
+            }
 
     def _parse_w5_slab(self):
         self.registered_slab = safe_loads(self.raw_data.get("Cards1", []))
@@ -1500,11 +1631,11 @@ class Account:
             "JadeEmporium": {},
         }
         try:
-            self.sneaking['CurrentMastery'] = self.raw_optlacc_list[231]
+            self.sneaking['CurrentMastery'] = self.raw_optlacc_dict[231]
         except:
             self.sneaking['CurrentMastery'] = 0
         try:
-            self.sneaking['MaxMastery'] = self.raw_optlacc_list[232]
+            self.sneaking['MaxMastery'] = self.raw_optlacc_dict[232]
         except:
             self.sneaking['MaxMastery'] = 0
         raw_ninja_list = safe_loads(self.raw_data.get("Ninja", []))
@@ -1522,7 +1653,7 @@ class Account:
         for gemstoneIndex, gemstoneName in enumerate(sneakingGemstonesList):
             self.sneaking["Gemstones"][gemstoneName] = {"Level": 0, "Value": 0, "Percent": 0, "Stat": ''}
             try:
-                self.sneaking["Gemstones"][gemstoneName]["Level"] = self.raw_optlacc_list[sneakingGemstonesFirstIndex + gemstoneIndex]
+                self.sneaking["Gemstones"][gemstoneName]["Level"] = self.raw_optlacc_dict[sneakingGemstonesFirstIndex + gemstoneIndex]
             except:
                 continue
             try:
@@ -1687,6 +1818,31 @@ class Account:
     def _calculate_w2(self):
         self.vialMasteryMulti = 1 + (self.maxed_vials * .02) if self.rift['VialMastery'] else 1
         self._calculate_w2_sigils()
+        self._calculate_w2_cauldrons()
+
+    def _calculate_w2_cauldrons(self):
+        perCauldronBubblesUnlocked = [
+            self.alchemy_cauldrons['OrangeUnlocked'],
+            self.alchemy_cauldrons['GreenUnlocked'],
+            self.alchemy_cauldrons['PurpleUnlocked'],
+            self.alchemy_cauldrons['YellowUnlocked']
+        ]
+        bubbleUnlockListByWorld = [20, 0, 0, 0, 0, 0, 0, 0, 0]
+        for bubbleColorCount in perCauldronBubblesUnlocked:
+            worldCounter = 1
+            while bubbleColorCount >= 5 and worldCounter <= len(bubbleUnlockListByWorld) - 1:
+                bubbleUnlockListByWorld[worldCounter] += 5
+                bubbleColorCount -= 5
+                worldCounter += 1
+            if bubbleColorCount > 0 and worldCounter <= len(bubbleUnlockListByWorld) - 1:
+                bubbleUnlockListByWorld[worldCounter] += bubbleColorCount
+                bubbleColorCount = 0
+        self.alchemy_cauldrons['BubblesPerWorld'] = bubbleUnlockListByWorld
+
+        self.alchemy_cauldrons['NextWorldMissingBubbles'] = min(
+            [cauldronValue // 5 for cauldronValue in perCauldronBubblesUnlocked],
+            default=0
+        ) + 1
 
     def _calculate_w2_sigils(self):
         for sigilName in self.alchemy_p2w["Sigils"]:
@@ -1709,13 +1865,32 @@ class Account:
             # After the +1, 0/1/2/3
 
     def _calculate_w3(self):
+        self._calculate_w3_tower_max_levels()
         self._calculate_w3_library_max_book_levels()
+        self._calculate_w3_collider_base_costs()
+        self._calculate_w3_collider_cost_reduction()
+
+    def _calculate_w3_tower_max_levels(self):
+        towers = [towerName for towerName, towerValuesDict in self.construction_buildings.items() if towerValuesDict['Type'] == 'Tower']
+        if sum(self.all_skills['Construction']) > 2500 and self.rift['SkillMastery']:
+            for towerName in towers:
+                try:
+                    self.construction_buildings[towerName]['MaxLevel'] += 30
+                except:
+                    continue
+
+        if self.atom_collider['Atoms']['Carbon - Wizard Maximizer']['Level'] > 0:
+            for towerName in towers:
+                try:
+                    self.construction_buildings[towerName]['MaxLevel'] += 2 * self.atom_collider['Atoms']['Carbon - Wizard Maximizer']['Level']
+                except:
+                    continue
 
     def _calculate_w3_library_max_book_levels(self):
         self.library['StaticSum'] = (0
-                      + (25 * (0 < self.construction_buildings.get('Talent Book Library', 0)))
+                      + (25 * (0 < self.construction_buildings['Talent Book Library']['Level']))
                       + (5 * (0 < self.achievements.get('Checkout Takeout', False)))
-                      + (10 * (0 < self.atoms.get('Oxygen - Library Booker', 0)))
+                      + (10 * (0 < self.atom_collider['Atoms']['Oxygen - Library Booker']['Level']))
                       + (25 * self.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0))
                       )
         self.library['ScalingSum'] = (0
@@ -1734,6 +1909,53 @@ class Account:
                               * summGroupB
                               )
         self.library['MaxBookLevel'] = 100 + self.library['StaticSum'] + self.library['ScalingSum'] + self.library['SummoningSum']
+
+    def _calculate_w3_collider_base_costs(self):
+        #Formula for base cost: (AtomInfo[3] + AtomInfo[1] * AtomCurrentLevel) * POWER(AtomInfo[2], AtomCurrentLevel)
+        for atomName, atomValuesDict in self.atom_collider['Atoms'].items():
+            #Update max level from 20 to 30, if Isotope Discovery unlocked
+            if self.gaming['SuperBits']['Isotope Discovery']['Unlocked']:
+                self.atom_collider['Atoms'][atomName]['MaxLevel'] += 10
+
+            #If atom isn't already at max level:
+            if atomValuesDict['Level'] < atomValuesDict['MaxLevel']:
+                # Calculate base cost to upgrade to next level
+                self.atom_collider['Atoms'][atomName]['BaseCostToUpgrade'] = (
+                    (atomValuesDict['AtomInfo3']
+                        + (atomValuesDict['AtomInfo1'] * atomValuesDict['Level']))
+                    * pow(atomValuesDict['AtomInfo2'], atomValuesDict['Level'])
+                )
+                # Calculate base cost to max level
+                for level in range(self.atom_collider['Atoms'][atomName]['Level'], self.atom_collider['Atoms'][atomName]['MaxLevel']):
+                    self.atom_collider['Atoms'][atomName]['BaseCostToMax'] += (
+                        (self.atom_collider['Atoms'][atomName]['AtomInfo3']
+                            + (self.atom_collider['Atoms'][atomName]['AtomInfo1'] * level))
+                        * pow(self.atom_collider['Atoms'][atomName]['AtomInfo2'], level)
+                    )
+
+    def _calculate_w3_collider_cost_reduction(self):
+        self.atom_collider['CostReductionRaw'] = (1 +
+            (
+                7 * self.merits[4][6]['Level']
+                + ((self.construction_buildings['Atom Collider']['Level'] - 1) // 10)  # 50 doesn't give 5%, you need 51.
+                + 1 * self.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['Level']
+                + 10 * self.gaming['SuperBits']['Atom Redux']['Unlocked']
+                + self.alchemy_bubbles['Atom Split']['BaseValue']
+                + self.stamps['Atomic Stamp']['Value']
+            )
+            / 100
+        )
+        self.atom_collider['CostReductionMulti'] = 1 / self.atom_collider['CostReductionRaw']
+        self.atom_collider['CostReductionMulti1Higher'] = 1 / (self.atom_collider['CostReductionRaw'] + 0.01)
+        self.atom_collider['CostDiscount'] = (1 - (1 / self.atom_collider['CostReductionRaw'])) * 100
+
+        for atomName, atomValuesDict in self.atom_collider['Atoms'].items():
+            # Calculate base cost to upgrade to next level, if not max level
+            if atomValuesDict['Level'] < atomValuesDict['MaxLevel']:
+                self.atom_collider['Atoms'][atomName]['DiscountedCostToUpgrade'] = (self.atom_collider['Atoms'][atomName]['BaseCostToUpgrade']
+                                                                                    * self.atom_collider['CostReductionMulti'])
+                self.atom_collider['Atoms'][atomName]['DiscountedCostToMax'] = (self.atom_collider['Atoms'][atomName]['BaseCostToMax']
+                                                                                * self.atom_collider['CostReductionMulti'])
 
     def _calculate_w4(self):
         self._calculate_w4_cooking_max_plate_levels()
@@ -1774,7 +1996,7 @@ class Account:
         self.cooking['MaxRemainingMeals'] = (maxMeals * maxMealLevel) - self.cooking['PlayerTotalMealLevels']
 
     def _calculate_w5(self):
-        pass
+        self._calculate_w5_divinity_link_advice()
 
     def _calculate_w5_divinity_link_advice(self):
         self.divinity['DivinityLinks'] = {
@@ -2078,8 +2300,8 @@ class Account:
             "ES Family": {
                 "Value": floor(self.family_bonuses["Elemental Sorcerer"]['Value']),
                 "Image": 'elemental-sorcerer-icon',
-                "Label": f"Elemental Sorcerer Family Bonus: +{floor(self.family_bonuses['Elemental Sorcerer']['Value'])}.<br>"
-                         f"Next increase at ES Class Level: ",
+                "Label": f"ES Family Bonus: +{floor(self.family_bonuses['Elemental Sorcerer']['Value'])}.<br>"
+                         f"Next increase at Class Level: ",
                 "Progression": self.family_bonuses['Elemental Sorcerer']['Level'],
                 "Goal": getNextESFamilyBreakpoint(self.family_bonuses['Elemental Sorcerer']['Level'])
             },

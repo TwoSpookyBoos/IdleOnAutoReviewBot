@@ -12,7 +12,7 @@ from utils.logging import get_logger
 from utils.text_formatting import is_username
 from w1 import stamps, bribes, smithing, owl
 from w2 import alchemy
-from w3 import trapping, consRefinery, consDeathNote, worship, consSaltLick, consBuildings, equinox, library, sampling
+from w3 import trapping, consRefinery, consDeathNote, worship, consSaltLick, consBuildings, equinox, library, sampling, collider
 from w4 import breeding, cooking, rift
 from w5 import slab, divinity, sailing
 from w6 import beanstalk, sneaking
@@ -79,16 +79,16 @@ def main(inputData, runType="web"):
     # World 3
     sections_3 = [
         section_refinery := consRefinery.setConsRefineryProgressionTier(),
-        section_saltlick := consSaltLick.setConsSaltLickProgressionTier(),
-        section_deathnote := consDeathNote.setConsDeathNoteProgressionTier(),
         section_buildings := consBuildings.setConsBuildingsProgressionTier(),
+        section_sampling := sampling.setSamplingProgressionTier(),
+        section_library := library.setLibraryProgressionTier(),
+        section_deathnote := consDeathNote.setConsDeathNoteProgressionTier(),
+        section_saltlick := consSaltLick.setConsSaltLickProgressionTier(),
+        section_collider := collider.setColliderProgressionTier(),
+        # section_worship =
         section_prayers := worship.setWorshipPrayersProgressionTier(),
         section_trapping := trapping.setTrappingProgressionTier(),
         section_equinox := equinox.setEquinoxProgressionTier(),
-        # section_collider =
-        # section_worship =
-        section_library := library.setLibraryProgressionTier(),
-        section_sampling := sampling.setSamplingProgressionTier(),
     ]
     # World 4
     sections_4 = [

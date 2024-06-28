@@ -160,7 +160,7 @@ def setSmithingProgressionTier() -> AdviceSection:
         name="Smithing",
         tier="Not Yet Evaluated",
         header="Best Smithing tier met: Not Yet Evaluated. Recommended Smithing actions",
-        picture="Smithing_Infinity_Hammer.png"
+        picture="Smithing_Infinity_Hammer.gif"
     )
 
     tier_CashPoints = 0

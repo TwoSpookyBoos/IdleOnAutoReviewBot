@@ -12,13 +12,13 @@ def setConsSaltLickProgressionTier() -> AdviceSection:
         name="Salt Lick",
         tier="Not Yet Evaluated",
         header="Best Salt Lick tier met: Not Yet Evaluated. Recommended salt lick actions:",
-        picture="Construction_Salt_Lick.png",
+        picture="Construction_Salt_Lick.gif",
     )
     highestConstructionLevel = max(session_data.account.all_skills["Construction"])
     if highestConstructionLevel < 1:
         saltlick_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
         return saltlick_AdviceSection
-    elif session_data.account.construction_buildings.get("Salt Lick", 0) < 1:
+    elif session_data.account.construction_buildings['Salt Lick']['Level'] < 1:
         saltlick_AdviceSection.header = "Come back after unlocking the Salt Lick within the Construction skill in World 3!"
         return saltlick_AdviceSection
 

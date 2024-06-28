@@ -11,6 +11,7 @@ logger = get_logger(__name__)
 
 
 def getEquinoxDreams() -> dict:
+    #TODO: Move to Account singleton
     try:
         rawDreams = safe_loads(session_data.account.raw_data.get("WeeklyBoss", "{}"))
     except Exception as reason:

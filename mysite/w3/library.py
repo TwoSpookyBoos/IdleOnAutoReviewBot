@@ -1,6 +1,6 @@
 from math import ceil
 from flask import g as session_data
-from consts import maxStaticBookLevels, maxScalingBookLevels, maxSummoningBookLevels, maxOverallBookLevels, skill_talentsDict, combat_talentsDict
+from consts import maxStaticBookLevels, maxScalingBookLevels, maxSummoningBookLevels, maxOverallBookLevels, skill_talentsDict, combat_talentsDict, currentWorld
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
@@ -8,13 +8,13 @@ from utils.logging import get_logger
 logger = get_logger(__name__)
 
 def getJeopardyGoal(start: int, interval: int, talentExceedsBookLevels: bool, max_talents_over_books: int):
-    #Example1: Refinery Throttle starts 0, interval 8, talentExceedsBookLevels = True, and doNotExceed would be the max character level including bonuses over books
-    #Example2: Enhancement Eclipse starts 0, interval 25, talentExceedsBookLevels = False. Because of that, doNotExceed should be Max Book level.
+    #Example1: Refinery Throttle starts 0, interval 8. talentExceedsBookLevels = True, so doNotExceed = max_talents_over_books.
+    #Example2: Enhancement Eclipse starts 0, interval 25. talentExceedsBookLevels = False, so doNotExceed = account-wide max book level.
     if talentExceedsBookLevels:
         doNotExceed = max_talents_over_books
         optimal = interval * ((doNotExceed - start) // interval)
         try:
-            logger.debug(f"Given {start}, {interval}, {doNotExceed}, {talentExceedsBookLevels > 0}: optimal {optimal}: Returning {optimal - (doNotExceed - session_data.account.library['MaxBookLevel'])}")
+            #logger.debug(f"Given {start}, {interval}, {doNotExceed}, {talentExceedsBookLevels > 0}: optimal {optimal}: Returning {optimal - (doNotExceed - session_data.account.library['MaxBookLevel'])}")
             return optimal - (doNotExceed - session_data.account.library['MaxBookLevel'])
         except Exception as reason:
             logger.exception(f"Could not find optimal target level using start {start}, interval {interval}, doNotExceed {doNotExceed} because: {reason}")
@@ -36,9 +36,9 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
     bookLevelAdvices[staticSubgroup] = []
 
     bookLevelAdvices[staticSubgroup].append(Advice(
-        label=f"Construction: Talent Book Library built: +{25 * (0 < session_data.account.construction_buildings.get('Talent Book Library', 0))}",
+        label=f"Construction: Talent Book Library built: +{25 * (0 < session_data.account.construction_buildings['Talent Book Library']['Level'])}",
         picture_class="talent-book-library",
-        progression=min(1, session_data.account.construction_buildings.get('Talent Book Library', 0)),
+        progression=min(1, session_data.account.construction_buildings['Talent Book Library']['Level']),
         goal=1
     ))
     bookLevelAdvices[staticSubgroup].append(Advice(
@@ -48,9 +48,9 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
         goal=1
     ))
     bookLevelAdvices[staticSubgroup].append(Advice(
-        label=f"Atom Collider: Oxygen: +{10 * (0 < session_data.account.atoms.get('Oxygen - Library Booker', 0))}",
+        label=f"Atom Collider: Oxygen: +{10 * (0 < session_data.account.atom_collider['Atoms']['Oxygen - Library Booker']['Level'])}",
         picture_class="oxygen",
-        progression=1 if 0 < session_data.account.atoms.get('Oxygen - Library Booker', 0) else 0,
+        progression=1 if 0 < session_data.account.atom_collider['Atoms']['Oxygen - Library Booker']['Level'] else 0,
         goal=1
     ))
     if not session_data.account.rift['EldritchArtifacts'] and session_data.account.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0) == 2:
@@ -155,6 +155,9 @@ def getBonusLevelAdviceGroup() -> AdviceGroup:
                 picture_class='the-family-guy'
             ))
 
+    for advice in bonusLevelAdvices[account_subgroupName]:
+        mark_advice_completed(advice)
+
     bonusLevelAdviceGroup = AdviceGroup(
         tier="",
         pre_string=f"Info- Sources of bonus talent levels beyond book levels",
@@ -165,7 +168,7 @@ def getBonusLevelAdviceGroup() -> AdviceGroup:
 def getTalentExclusions() -> list:
     talentExclusions = []
 
-    if sum([toon.lab_level for toon in session_data.account.safe_characters]) > 2100:
+    if sum(session_data.account.all_skills['Lab']) > 2100:
         talentExclusions.append(537)
         # 537: {"Name": "Essence Transferral", "Tab": "Bubonic Conjuror"},
 
@@ -190,14 +193,17 @@ def getTalentExclusions() -> list:
     if "Voidwalker" in session_data.account.classes:
         talentExclusions.append(319)
 
+    #If cooking is basically finished thanks to NMLB, exclude Cooking talents
     if session_data.account.cooking['MaxRemainingMeals'] < 300:
         talentExclusions.extend([148, 146, 147])
         # 148: {"Name": "Overflowing Ladle", "Tab": "Blood Berserker"},
         # 146: {"Name": "Apocalypse Chow", "Tab": "Blood Berserker"},
         # 147: {"Name": "Waiting to Cool", "Tab": "Blood Berserker"},
 
-    #if session_data.account.alchemy_bubbles
-    #492: {"Name": "Bubble Breakthrough", "Tab": "Shaman"},
+    #If all bubbles for current max world are unlocked, exclude Bubble Breakthrough
+    if session_data.account.alchemy_cauldrons['NextWorldMissingBubbles'] > currentWorld:
+        talentExclusions.append(492)
+        #492: {"Name": "Bubble Breakthrough", "Tab": "Shaman"},
 
     return talentExclusions
 
@@ -342,6 +348,9 @@ def setLibraryProgressionTier() -> AdviceSection:
     if highestConstructionLevel < 1:
         library_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
         return library_AdviceSection
+    elif session_data.account.construction_buildings['Talent Book Library']['Level'] < 1:
+        library_AdviceSection.header = "Come back after unlocking the Talent Book Library within the Construction skill in World 3!"
+        return library_AdviceSection
 
     max_tier = 0
     tier_bookLevels = 0
@@ -354,12 +363,12 @@ def setLibraryProgressionTier() -> AdviceSection:
         library_AdviceGroupDict[characterName] = characterAG
 
     # Generate AdviceSection
-    overall_SamplingTier = min(max_tier, tier_bookLevels)  # Looks silly, but may get more evaluations in the future
-    tier_section = f"{overall_SamplingTier}/{max_tier}"
+    overall_LibraryTier = min(max_tier, tier_bookLevels)  # Looks silly, but may get more evaluations in the future
+    tier_section = f"{overall_LibraryTier}/{max_tier}"
     library_AdviceSection.tier = tier_section
-    library_AdviceSection.pinchy_rating = overall_SamplingTier
+    library_AdviceSection.pinchy_rating = overall_LibraryTier
     library_AdviceSection.groups = library_AdviceGroupDict.values()
-    if overall_SamplingTier == max_tier:
+    if overall_LibraryTier == max_tier:
         library_AdviceSection.header = f"Best Library tier met: {tier_section}<br>You best ❤️"
     else:
         library_AdviceSection.header = f"Best Library tier met: {tier_section}"

@@ -184,14 +184,14 @@ def setSamplingProgressionTier() -> AdviceSection:
         name="Sampling",
         tier="Not Yet Evaluated",
         header="",
-        picture="3D_Printer.png",
+        picture="3D_Printer.gif",
     )
 
     highestConstructionLevel = max(session_data.account.all_skills["Construction"])
     if highestConstructionLevel < 1:
         sampling_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
         return sampling_AdviceSection
-    elif session_data.account.construction_buildings['3D Printer'] < 1:
+    elif session_data.account.construction_buildings['3D Printer']['Level'] < 1:
         sampling_AdviceSection.header = "Come back after unlocking the 3D Printer within the Construction skill in World 3!"
         return sampling_AdviceSection
 

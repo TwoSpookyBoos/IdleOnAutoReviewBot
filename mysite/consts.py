@@ -268,7 +268,7 @@ greenstack_progressionTiers = {
             "Base Monster Materials": ["Sewers3"],
             "Crystal Enemy Drops": [
                 "EquipmentStatues7", "EquipmentStatues3", "EquipmentStatues2", "EquipmentStatues4", "EquipmentStatues14",
-                "rtt0", "StoneZ1", "StoneT1",],
+                "rtt0", "StoneZ1", "StoneT1",],  #W1 Tool in particular drops from both W1 and W2 crystal farms
             "Other Skilling Resources": [
                 "GoldBar", "DementiaBar", "VoidBar", "LustreBar",
                 "Peanut", "Quest68", "Bullet3",],  #I really hate that the Slush Bucket is listed as Quest68
@@ -277,7 +277,8 @@ greenstack_progressionTiers = {
             "Base Monster Materials": [
                 "Quest15"],
             "Crystal Enemy Drops": [
-                "EquipmentStatues1", "EquipmentStatues5",
+                "EquipmentStatues1", "EquipmentStatues5",  #Power and Health statues are still more common than W2 statues
+                "EquipmentStatues10", "EquipmentStatues12", "EquipmentStatues13", "EquipmentStatues8", "EquipmentStatues11",  #W2 statues
                 "StoneA1", "StoneW1",
                 "StoneZ2", "StoneT2",
                 "PureWater",
@@ -346,10 +347,10 @@ stamps_progressionTiers = {
         "Specific": {'Pickaxe Stamp': 35, 'Hatchet Stamp': 35}}},
     8: {"TotalStampLevels": 500, "Stamps": {
         "Combat": ["Scimitar Stamp", "Bullseye Stamp", ],
-        "Skill": ["Drippy Drop Stamp", "Fishhead Stamp"],
+        "Skill": ["Drippy Drop Stamp"],
         "Misc": ["Biblio Stamp"],
         "Specific": {'Drippy Drop Stamp': 30},
-        "Optional": ["Hermes Stamp", "Talent III Stamp"]}},
+        "Optional": ["Hermes Stamp", "Fishhead Stamp", "Talent III Stamp"]}},
     9: {"TotalStampLevels": 600, "Stamps": {
         "Combat": ["Stat Graph Stamp"],
         "Skill": ["High IQ Lumber Stamp"],
@@ -369,9 +370,9 @@ stamps_progressionTiers = {
         "Specific": {'Drippy Drop Stamp': 50},
         "Optional": ["Saw Stamp"]}},
     13: {"TotalStampLevels": 1000, "Stamps": {
-        "Skill": ["Fly Intel Stamp", "Holy Mackerel Stamp", "Cooked Meal Stamp"],
+        "Skill": ["Holy Mackerel Stamp", "Cooked Meal Stamp"],
         "Specific": {'Pickaxe Stamp': 55, 'Hatchet Stamp': 55, 'Card Stamp': 50},
-        "Optional": ["Agile Stamp", "Book Stamp", "Talent II Stamp"]}},
+        "Optional": ["Agile Stamp", "Book Stamp", "Fly Intel Stamp", "Talent II Stamp"]}},
     14: {"TotalStampLevels": 1500, "Stamps": {
         "Combat": ["Avast Yar Stamp"],
         "Skill": ["Banked Pts Stamp", "Nest Eggs Stamp"],
@@ -487,48 +488,50 @@ owl_progressionTiers = {
 
 ###WORLD 2 PROGRESSION TIERS###
 bubbles_progressionTiers = [
-    # int tier, int TotalBubblesUnlocked,
+    # int tier,
+    # int TotalBubblesUnlocked,
     # dict {OrangeSampleBubbles},
     # dict {GreenSampleBubbles},
     # dict {PurpleSampleBubbles},
     # dict {UtilityBubbles},
     # str BubbleValuePercentage,
-    # str Notes
-    [0, 0, {}, {}, {}, {}, "0%", ""],
+    # str Orange, Green, Purple Notes
+    # str Utility Notes
+    [0, 0, {}, {}, {}, {}, "0% max value", ""],
     [1, 10,
      {'Roid Ragin': 12, 'Warriors Rule': 6, 'Hearty Diggy': 12, 'Wyoming Blood': 6, 'Sploosh Sploosh': 6, 'Stronk Tools': 8},
      {'Swift Steppin': 12, 'Archer Or Bust': 6, 'Sanic Tools': 8, 'Bug^2': 6},
      {'Stable Jenius': 12, 'Mage Is Best': 6, 'Hocus Choppus': 12, 'Molto Loggo': 6, 'Le Brain Tools': 8},
      {'Fmj': 5, 'Shaquracy': 5, 'Prowesessary': 7, 'Hammer Hammer': 6},
-     "10%",
+     "10% max value",
      "MINIMUM recommended Utility bubbles for finishing W2. Prowess hard-caps at 2x."],
     [2, 20,
      {'Roid Ragin': 25, 'Warriors Rule': 13, 'Hearty Diggy': 25, 'Wyoming Blood': 13, 'Sploosh Sploosh': 13, 'Stronk Tools': 18},
      {'Swift Steppin': 25, 'Archer Or Bust': 13, 'Sanic Tools': 18, 'Bug^2': 13},
      {'Stable Jenius': 25, 'Mage Is Best': 13, 'Hocus Choppus': 25, 'Molto Loggo': 13, 'Le Brain Tools': 18},
      {'Fmj': 10, 'Shaquracy': 10, 'Prowesessary': 15, 'Hammer Hammer': 14, 'All For Kill': 25},
-     "20%",
+     "20% max value",
      "MINIMUM recommended Utility bubbles for starting W3. Prowess hard-caps at 2x."],
     [3, 40,
      {'Roid Ragin': 67, 'Warriors Rule': 34, 'Hearty Diggy': 67, 'Wyoming Blood': 20, 'Sploosh Sploosh': 20, 'Stronk Tools': 47},
      {'Swift Steppin': 67, 'Archer Or Bust': 34, 'Sanic Tools': 47, 'Bug^2': 20},
      {'Stable Jenius': 67, 'Mage Is Best': 34, 'Hocus Choppus': 67, 'Molto Loggo': 20, 'Le Brain Tools': 47},
      {'Fmj': 15, 'Shaquracy': 15, 'Prowesessary': 40, 'Hammer Hammer': 41, 'All For Kill': 67},
-     "40%",
+     "40% max value",
      "MINIMUM recommended Utility bubbles for starting W4. Prowess hard-caps at 2x."],
     [4, 60,
      {'Roid Ragin': 100, 'Warriors Rule': 50, 'Hearty Diggy': 100, 'Wyoming Blood': 30, 'Sploosh Sploosh': 30, 'Stronk Tools': 70},
      {'Swift Steppin': 100, 'Archer Or Bust': 50, 'Sanic Tools': 70, 'Bug^2': 30},
      {'Stable Jenius': 100, 'Mage Is Best': 50, 'Hocus Choppus': 100, 'Molto Loggo': 30, 'Le Brain Tools': 70},
      {'Fmj': 20, 'Shaquracy': 20, 'Prowesessary': 60, 'Hammer Hammer': 65, 'All For Kill': 100},
-     "50%",
+     "50% max value",
      "MINIMUM recommended Utility bubbles for starting W5. Prowess hard-caps at 2x, which you should be reaching now!"],
     [5, 80,
      {'Roid Ragin': 150, 'Warriors Rule': 75, 'Hearty Diggy': 150, 'Wyoming Blood': 45, 'Sploosh Sploosh': 45, 'Stronk Tools': 105, 'Multorange': 45},
      {'Swift Steppin': 150, 'Archer Or Bust': 75, 'Bug^2': 45, 'Premigreen': 45, },
      {'Stable Jenius': 150, 'Mage Is Best': 75, 'Molto Loggo': 45, 'Le Brain Tools': 105, 'Severapurple': 45, },
      {'Fmj': 30, 'Shaquracy': 30, 'Hammer Hammer': 105, 'All For Kill': 150},
-     "60%",
+     "60% max value",
      "MINIMUM recommended Utility bubbles for starting W6 push. Keep watch of your No Bubble Left Behind list (from W4 Lab) to keep cheap/easy bubbles off when possible!"],
     [6, 100,
      {'Roid Ragin': 234, 'Warriors Rule': 117, 'Hearty Diggy': 234, 'Wyoming Blood': 70, 'Sploosh Sploosh': 70, 'Stronk Tools': 164, 'Multorange': 70,
@@ -536,7 +539,7 @@ bubbles_progressionTiers = [
      {'Swift Steppin': 234, 'Archer Or Bust': 117, 'Bug^2': 70, 'Premigreen': 70, 'Fly In Mind': 94},
      {'Stable Jenius': 234, 'Mage Is Best': 117, 'Molto Loggo': 70, 'Le Brain Tools': 164, 'Severapurple': 70, 'Tree Sleeper': 94},
      {'Cookin Roadkill': 105, 'All For Kill': 167},
-     "70%",
+     "70% max value",
      "Cookin Roadkill 105 = 60% bubble strength. All for Kill hard-cap at 167, you're finished!"],
     [7, 100,
      {'Roid Ragin': 400, 'Warriors Rule': 200, 'Hearty Diggy': 400, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 280, 'Multorange': 120,
@@ -544,112 +547,112 @@ bubbles_progressionTiers = [
      {'Swift Steppin': 400, 'Archer Or Bust': 200, 'Bug^2': 120, 'Premigreen': 120},
      {'Stable Jenius': 400, 'Mage Is Best': 200, 'Hocus Choppus': 400, 'Molto Loggo': 120, 'Le Brain Tools': 280, 'Severapurple': 120, 'Tree Sleeper': 160},
      {'Laaarrrryyyy': 150, 'Hammer Hammer': 150, },
-     "80%",
+     "80% max value",
      "Larry at 150 = 72% chance for +2 levels. Somewhere around level 125-150, this bubble should pass 100m Dementia Ore cost and be available to level with Boron upgrades from the W3 Atom Collider in Construction.  It should be, in my opinion, the ONLY Utility Bubble you spend these daily clicks on until it reaches 501. If you cannot afford the Particles needed to level Larry, invest into Sampling Bubbles."],
     [8, 100,
      {'Roid Ragin': 567, 'Warriors Rule': 284, 'Hearty Diggy': 567, 'Stronk Tools': 397, 'Multorange': 170, 'Dream Of Ironfish': 170, 'Shimmeron': 227},
      {'Swift Steppin': 567, 'Archer Or Bust': 284, 'Premigreen': 170},
      {'Stable Jenius': 567, 'Mage Is Best': 284, 'Hocus Choppus': 567, 'Le Brain Tools': 397, 'Severapurple': 170, 'Tree Sleeper': 227},
      {'Hammer Hammer': 180, },
-     "85%",
+     "85% max value",
      ""],
     [9, 100,
      {'Roid Ragin': 615, 'Warriors Rule': 308, 'Hearty Diggy': 615, 'Stronk Tools': 430, 'Multorange': 185, 'Dream Of Ironfish': 185, 'Shimmeron': 246},
      {'Swift Steppin': 615, 'Archer Or Bust': 308, 'Premigreen': 185},
      {'Stable Jenius': 615, 'Mage Is Best': 308, 'Hocus Choppus': 615, 'Le Brain Tools': 430, 'Severapurple': 185, 'Tree Sleeper': 246},
      {'Hammer Hammer': 210, },
-     "86%",
+     "86% max value",
      ""],
     [10, 100,
      {'Roid Ragin': 670, 'Warriors Rule': 335, 'Hearty Diggy': 670, 'Stronk Tools': 469, 'Multorange': 201, 'Dream Of Ironfish': 201, 'Shimmeron': 268},
      {'Swift Steppin': 670, 'Archer Or Bust': 335, 'Premigreen': 201},
      {'Stable Jenius': 670, 'Mage Is Best': 335, 'Hocus Choppus': 670, 'Le Brain Tools': 469, 'Severapurple': 201, 'Tree Sleeper': 268},
      {'Laaarrrryyyy': 501, },
-     "87%",
+     "87% max value",
      ""],
     [11, 100,
      {'Roid Ragin': 700, 'Warriors Rule': 367, 'Hearty Diggy': 734, 'Stronk Tools': 514, 'Multorange': 220, 'Dream Of Ironfish': 220, 'Shimmeron': 294},
      {'Swift Steppin': 700, 'Archer Or Bust': 367, 'Premigreen': 220},
      {'Stable Jenius': 700, 'Mage Is Best': 367, 'Hocus Choppus': 734, 'Le Brain Tools': 514, 'Severapurple': 220, 'Tree Sleeper': 294},
      {'Cookin Roadkill': 630, 'Hammer Hammer': 270, },
-     "88%",
+     "88% max value",
      ""],
     [12, 100,
      {'Roid Ragin': 720, 'Warriors Rule': 405, 'Hearty Diggy': 810, 'Stronk Tools': 567, 'Multorange': 243, 'Dream Of Ironfish': 243, 'Shimmeron': 324},
      {'Swift Steppin': 720, 'Archer Or Bust': 405, 'Premigreen': 243},
      {'Stable Jenius': 720, 'Mage Is Best': 405, 'Hocus Choppus': 810, 'Le Brain Tools': 567, 'Severapurple': 243, 'Tree Sleeper': 324},
      {'Startue Exp': 240, 'Hammer Hammer': 300, },
-     "89%",
+     "89% max value",
      ""],
     [13, 100,
      {'Roid Ragin': 740, 'Warriors Rule': 450, 'Hearty Diggy': 900, 'Stronk Tools': 630, 'Multorange': 270, 'Dream Of Ironfish': 270, 'Shimmeron': 360},
      {'Swift Steppin': 740, 'Archer Or Bust': 450, 'Premigreen': 270},
      {'Stable Jenius': 740, 'Mage Is Best': 450, 'Hocus Choppus': 900, 'Le Brain Tools': 630, 'Severapurple': 270, 'Tree Sleeper': 360},
      {'Droppin Loads': 280},
-     "90%",
+     "90% max value",
      ""],
     [14, 100,
      {'Roid Ragin': 760, 'Warriors Rule': 506, 'Hearty Diggy': 1012, 'Multorange': 304, 'Shimmeron': 405},
      {'Swift Steppin': 760, 'Archer Or Bust': 506, 'Premigreen': 304},
      {'Stable Jenius': 760, 'Mage Is Best': 506, 'Hocus Choppus': 1012, 'Severapurple': 304},
      {'Call Me Bob': 200},
-     "91%",
+     "91% max value",
      ""],
     [15, 100,
      {'Roid Ragin': 780, 'Warriors Rule': 575, 'Hearty Diggy': 1150, 'Multorange': 345, 'Shimmeron': 460},
      {'Swift Steppin': 780, 'Archer Or Bust': 575, 'Premigreen': 345},
      {'Stable Jenius': 780, 'Mage Is Best': 575, 'Hocus Choppus': 1150, 'Severapurple': 345},
      {'Big P': 140, 'Big Game Hunter': 70, 'Mr Massacre': 117},
-     "92%",
+     "92% max value",
      ""],
     [16, 100,
      {'Roid Ragin': 800, 'Warriors Rule': 665, 'Hearty Diggy': 1329, 'Multorange': 399, 'Shimmeron': 532},
      {'Swift Steppin': 800, 'Archer Or Bust': 665, 'Premigreen': 399},
      {'Stable Jenius': 800, 'Mage Is Best': 665, 'Hocus Choppus': 1329, 'Severapurple': 399},
      {'Big P': 240, 'Big Game Hunter': 120, 'Mr Massacre': 200},
-     "93%",
+     "93% max value",
      ""],
     [17, 100,
      {'Roid Ragin': 820, 'Warriors Rule': 784, 'Hearty Diggy': 1567, 'Multorange': 470, 'Shimmeron': 627},
      {'Swift Steppin': 820, 'Archer Or Bust': 784, 'Premigreen': 470},
      {'Stable Jenius': 820, 'Mage Is Best': 784, 'Hocus Choppus': 1567, 'Severapurple': 470},
      {'Big P': 340, 'Carpenter': 284, 'Big Game Hunter': 170, 'Mr Massacre': 284},
-     "94%",
+     "94% max value",
      ""],
     [18, 100,
      {'Roid Ragin': 840, 'Warriors Rule': 950, 'Hearty Diggy': 1900, 'Multorange': 570, 'Shimmeron': 760},
      {'Swift Steppin': 840, 'Archer Or Bust': 950, 'Premigreen': 570},
      {'Stable Jenius': 840, 'Mage Is Best': 950, 'Hocus Choppus': 1900, 'Severapurple': 570},
      {'Laaarrrryyyy': 900, 'Big P': 540, 'Call Me Bob': 500, 'Carpenter': 450, 'Big Game Hunter': 270, 'Mr Massacre': 450},
-     "95%",
+     "95% max value",
      ""],
     [19, 100,
      {'Roid Ragin': 860, 'Warriors Rule': 1200, 'Multorange': 720},
      {'Swift Steppin': 860, 'Archer Or Bust': 1200},
      {'Stable Jenius': 860, 'Mage Is Best': 1200, 'Severapurple': 720},
      {'Call Me Bob': 700, 'Cropius Mapper': 630, 'Lo Cost Mo Jade': 360},
-     "96%",
+     "96% max value",
      ""],
     [20, 100,
      {'Roid Ragin': 880, 'Warriors Rule': 1617, 'Multorange': 970},
      {'Swift Steppin': 880, 'Archer Or Bust': 1617},
      {'Stable Jenius': 880, 'Mage Is Best': 1617, 'Severapurple': 970},
      {'Big P': 940, 'Laaarrrryyyy': 1900, 'Carpenter': 950, 'Big Game Hunter': 570, 'Mr Massacre': 950, 'Diamond Chef': 553, 'Lo Cost Mo Jade': 760},
-     "97%",
+     "97% max value",
      ""],
     [21, 120,
      {'Roid Ragin': 900, 'Warriors Rule': 2450, 'Multorange': 1470},
      {'Swift Steppin': 900, 'Archer Or Bust': 2450},
      {'Stable Jenius': 900, 'Mage Is Best': 2450, 'Severapurple': 1470},
      {'Essence Boost-Orange': 400, 'Essence Boost-Green': 400, 'Call Me Bob': 1000, 'Diamond Chef': 890},
-     "98%",
+     "98% max value",
      ""],
     [22, 140,
      {'Roid Ragin': 950, 'Warriors Rule': 4950, 'Multorange': 2970},
      {'Swift Steppin': 950, 'Archer Or Bust': 4950},
      {'Stable Jenius': 950, 'Mage Is Best': 4950, 'Severapurple': 2970},
      {'Carpenter': 2450, 'Big P': 1440},
-     "99%",
+     "99% max value",
      ""],
     [23, 160,
      {'Roid Ragin': 10000, 'Hearty Diggy': 9900, 'Stronk Tools': 6930, 'Dream Of Ironfish': 2970, 'Shimmeron': 3960,
@@ -792,6 +795,93 @@ prayers_progressionTiers = [
 equinox_progressionTiers = {
     'Recommended': ['Equinox Symbols', 'Equinox Resources', 'Metal Detector', 'Slow Roast Wiz', 'Liquidvestment', 'Faux Jewels', 'Matching Scims', 'Equinox Dreams'],
     'Optional': ['Shades of K', 'Laboratory Fuse', 'Food Lust']
+}
+atoms_progressionTiers = {
+    0: {},
+    1: {
+        'Atoms': {
+            'Hydrogen - Stamp Decreaser': 5,
+            'Helium - Talent Power Stacker': 1
+        },
+    },
+    2: {
+        'Atoms': {
+            'Lithium - Bubble Insta Expander': 1,
+        },
+    },
+    3: {
+        'Atoms': {
+            'Boron - Particle Upgrader': 1,
+            'Helium - Talent Power Stacker': 2,
+        },
+    },
+    4: {
+        'Atoms': {
+            'Helium - Talent Power Stacker': 3,
+        },
+    },
+    5: {
+        'Atoms': {
+            'Nitrogen - Construction Trimmer': 1,
+            'Oxygen - Library Booker': 1,
+        },
+    },
+    6: {
+        'Atoms': {
+            'Hydrogen - Stamp Decreaser': 18,
+            'Helium - Talent Power Stacker': 4,
+        },
+    },
+    7: {
+        'Atoms': {
+            'Fluoride - Void Plate Chef': 3,
+            'Helium - Talent Power Stacker': 5,
+        },
+    },
+    8: {
+        'Atoms': {
+            'Fluoride - Void Plate Chef': 7,
+            'Helium - Talent Power Stacker': 6,
+        },
+    },
+    9: {
+        'Atoms': {
+            "Neon - Damage N' Cheapener": 2,
+            'Fluoride - Void Plate Chef': 11,
+            'Helium - Talent Power Stacker': 7,
+        },
+    },
+    10: {
+        'Atoms': {
+            "Neon - Damage N' Cheapener": 10,
+            'Fluoride - Void Plate Chef': 15,
+        },
+    },
+    11: {
+        'Atoms': {
+            'Helium - Talent Power Stacker': 8,
+            'Fluoride - Void Plate Chef': 20,
+        },
+    },
+    12: {
+        'Atoms': {
+            "Neon - Damage N' Cheapener": 20,
+            'Helium - Talent Power Stacker': 9,
+        },
+    },
+    13: {
+        'Atoms': {
+            'Boron - Particle Upgrader': 30,
+            'Hydrogen - Stamp Decreaser': 30,
+            "Neon - Damage N' Cheapener": 30,
+            'Fluoride - Void Plate Chef': 30,
+        },
+    },
+    14: {
+        'Atoms': {
+            'Helium - Talent Power Stacker': 10,
+        },
+    },
 }
 
 ###WORLD 4 PROGRESSION TIERS###
@@ -1099,7 +1189,7 @@ sailing_progressionTiers = {
             'Opera Mask': 2,
             'The True Lantern': 2
         },
-        'SuperBeanstacked': True
+        #'SuperBeanstacked': True
     },
     15: {
         'Artifacts': {
@@ -1240,6 +1330,7 @@ switches = [
 ]
 
 ###GENERAL / MULTI-USE CONSTS###
+currentWorld = 6
 missableGStacksDict = {
     #  ItemName               Codename     Quest Codeame          Quest Name                                          Wiki link to the item                             Recommended Class/Farming notes
     "Dog Bone":              ["Quest12",   "Dog_Bone1",           "Dog Bone: Why he Die???",                          "https://idleon.wiki/wiki/Dog_Bone",              "Active ES or time candy."],
@@ -1280,8 +1371,9 @@ expectedStackables = {
         "FoodPotMana4", "Leaf4",  # W4
         "FoodPotYe5", "Leaf5",  # W5
         "Leaf6",  # W6
-        "EquipmentStatues7", "EquipmentStatues3", "EquipmentStatues2", "EquipmentStatues4", "EquipmentStatues14",  # Standard statues
+        "EquipmentStatues7", "EquipmentStatues3", "EquipmentStatues2", "EquipmentStatues4", "EquipmentStatues14",  # "W1" statues, some in W1-W3
         "EquipmentStatues1", "EquipmentStatues5",  # Plausible but time consuming
+        "EquipmentStatues10", "EquipmentStatues12", "EquipmentStatues13", "EquipmentStatues8", "EquipmentStatues11",  # W2 statues are all slower than Power/Health
         "rtt0", "StoneZ1", "StoneT1", "StoneW1", "StoneA1",  #W1 Slow drops = Town TP + Stones
         "StoneT2", "StoneZ2",  "StoneW2",  #"StoneA2", # W2 upgrade stones and Mystery2
         "PureWater",  #W3 Slow drops = Distilled Water
@@ -1367,7 +1459,7 @@ expectedStackables = {
         "Quest70", "Quest71", "Quest75", "Gfoodcoupon", "ItemsCoupon1", "ItemsCoupon2",  # Loot Bags
         "FoodHealth8", "Quest69", "Quest74",  # Unobtainables
         "EquipmentStatues6", "EquipmentStatues15",  # Kachow and Bullseye
-        "EquipmentStatues8", "EquipmentStatues9", "EquipmentStatues10", "EquipmentStatues11", "EquipmentStatues12", "EquipmentStatues13",  # W2 Statues
+        "EquipmentStatues9",  # Oceanman Statue only comes from Catching
         "EquipmentStatues16", "EquipmentStatues17", "EquipmentStatues18", "EquipmentStatues19",  # W3 Statues
         "EquipmentStatues20", "EquipmentStatues21", "EquipmentStatues22", "EquipmentStatues23", "EquipmentStatues24",
         "EquipmentStatues25",  # W4 and W5 Statues
@@ -2620,7 +2712,7 @@ skill_talentsDict = {
         },
         "Medium": {
             533: {"Name": "Utmost Intellect", "Tab": "Elite Class"},
-            456: {"Name": "Unt-WIS-ted Robes", "Tab": "Mage"},
+            456: {"Name": "Unt'WIS'ted Robes", "Tab": "Mage"},
             459: {"Name": "Individual Insight", "Tab": "Mage"},
             488: {"Name": "Wis Wumbo", "Tab": "Mage Subclass"},
             449: {"Name": "Active Afk-er", "Tab": "Savvy Basics"},
@@ -2630,6 +2722,7 @@ skill_talentsDict = {
             472: {"Name": "Staring Statues", "Tab": "Wizard"},
             487: {"Name": "Stupendous Statues", "Tab": "Shaman"},
             1: {"Name": "Mana Booster", "Tab": "Savvy Basics"},
+            144: {"Name": "The Family Guy", "Tab": "Elite Class"},
             486: {"Name": "Occult Obols", "Tab": "Mage Subclass", 'Hardcap': 125},
         },
     },
@@ -2637,6 +2730,7 @@ skill_talentsDict = {
         "High": {
             43: {"Name": "Right Hand of Action", "Tab": "Maestro"},
             32: {"Name": "Printer Go Brrr", "Tab": "Maestro", "Optimal": [0, 40, True]},
+            34: {"Name": "One Step Ahead", "Tab": "Maestro"},
             59: {"Name": "Blood Marrow", "Tab": "Voidwalker"},
             57: {"Name": "Species Epoch", "Tab": "Voidwalker"},
             49: {"Name": "Enhancement Eclipse", "Tab": "Voidwalker", "Optimal": [0, 25, False], 'Hardcap': hardcap_enhancement_eclipse},
@@ -2663,7 +2757,7 @@ skill_talentsDict = {
             279: {"Name": "Robbinghood", "Tab": "Archer"},
             130: {"Name": "Refinery Throttle", "Tab": "Squire", "Optimal": [0, 8, True]},
             37: {"Name": "Skilliest Statue", "Tab": "Maestro", 'Hardcap': 200},
-            144: {"Name": "The Family Guy", "Tab": "Elite Class"},
+            #144: {"Name": "The Family Guy", "Tab": "Elite Class"},
         },
     },
     "Cooking": {
@@ -2688,7 +2782,7 @@ skill_talentsDict = {
         "Medium": {
             99: {"Name": "Haungry for Gold", "Tab": "Warrior"},
             143: {"Name": "Overblown Testosterone", "Tab": "Elite Class"},
-            96: {"Name": "-STR-ess Tested Garb", "Tab": "Warrior"},
+            96: {"Name": "'STR'ess Tested Garb", "Tab": "Warrior"},
             94: {"Name": "Firmly Grasp It", "Tab": "Warrior"},
             98: {"Name": "Absolute Unit", "Tab": "Warrior"},
             81: {"Name": "Str Summore", "Tab": "Warrior Subclass"},
@@ -2697,8 +2791,8 @@ skill_talentsDict = {
         },
         "Low": {
             112: {"Name": "Strongest Statues", "Tab": "Barbarian", 'Hardcap': 200},
+            116: {"Name": "Bobbin' Bobbers", "Tab": "Barbarian", 'Hardcap': 200},
             111: {"Name": "Fistful of Obol", "Tab": "Warrior Subclass", 'Hardcap': 125},
-            116: {"Name": "Bobbin' Bobbers", "Tab": "Barbarian"},
         },
     },
     "Mining": {
@@ -2713,7 +2807,7 @@ skill_talentsDict = {
         "Medium": {
             99: {"Name": "Haungry for Gold", "Tab": "Warrior"},
             143: {"Name": "Overblown Testosterone", "Tab": "Elite Class"},
-            96: {"Name": "-STR-ess Tested Garb", "Tab": "Warrior"},
+            96: {"Name": "'STR'ess Tested Garb", "Tab": "Warrior"},
             94: {"Name": "Firmly Grasp It", "Tab": "Warrior"},
             98: {"Name": "Absolute Unit", "Tab": "Warrior"},
             81: {"Name": "Str Summore", "Tab": "Warrior Subclass"},
@@ -2725,6 +2819,7 @@ skill_talentsDict = {
             112: {"Name": "Strongest Statues", "Tab": "Barbarian", 'Hardcap': 200},
             95: {"Name": "Strength in Numbers", "Tab": "Warrior"},
             0: {"Name": "Health Booster", "Tab": "Rage Basics"},
+            144: {"Name": "The Family Guy", "Tab": "Elite Class"},
             111: {"Name": "Fistful of Obol", "Tab": "Warrior Subclass", 'Hardcap': 125},
         },
     },
@@ -2739,12 +2834,13 @@ skill_talentsDict = {
         "Medium": {
             298: {"Name": "Sunset on the Hives", "Tab": "Bowman"},
             368: {"Name": "Adaptation Revelation", "Tab": "Elite Class"},
-            276: {"Name": "Garb of Un-AGI-ng Quality", "Tab": "Archer"},
+            276: {"Name": "Garb of Un'AGI'ng Quality", "Tab": "Archer"},
             278: {"Name": "Sanic Speed", "Tab": "Archer"},
             293: {"Name": "Agi Again", "Tab": "Archer Subclass"},
         },
         "Low": {
             292: {"Name": "Shwifty Statues", "Tab": "Bowman"},
+            144: {"Name": "The Family Guy", "Tab": "Elite Class"},
             291: {"Name": "Shoeful of Obol", "Tab": "Archer Subclass", 'Hardcap': 125},
         },
     },
@@ -2758,11 +2854,12 @@ skill_talentsDict = {
         },
         "Medium": {
             368: {"Name": "Adaptation Revelation", "Tab": "Elite Class"},
-            276: {"Name": "Garb of Un-AGI-ng Quality", "Tab": "Archer"},
+            276: {"Name": "Garb of Un'AGI'ng Quality", "Tab": "Archer"},
             278: {"Name": "Sanic Speed", "Tab": "Archer"},
             293: {"Name": "Agi Again", "Tab": "Archer Subclass"},
         },
         "Low": {
+            144: {"Name": "The Family Guy", "Tab": "Elite Class"},
             291: {"Name": "Shoeful of Obol", "Tab": "Archer Subclass", 'Hardcap': 125},
         },
     },
@@ -2783,9 +2880,7 @@ combat_talentsDict = {
     #Talents here are unique from the skill_talentsDict above
     #Elite Classes
     "Blood Berserker": {
-        "High": {
-            109: {"Name": "Monster Decimator", "Tab": "Barbarian"},
-        },
+        "High": {},
         "Medium": {
             108: {"Name": "No Pain No Gain", "Tab": "Barbarian"},
             97: {"Name": "Carry a Big Stick", "Tab": "Warrior"},
@@ -2930,7 +3025,7 @@ combat_talentsDict = {
             31: {"Name": "Skillage Damage", "Tab": "Maestro"},
             20: {"Name": "Lucky Hit", "Tab": "Journeyman"},
             54: {"Name": "Eternal Luk", "Tab": "Voidwalker"},
-            21: {"Name": "F'luk'ey Fabrics", "Tab": "Journeyman"},
+            21: {"Name": "F'LUK'ey Fabrics", "Tab": "Journeyman"},
             38: {"Name": "Bliss N Chips", "Tab": "Maestro"},
             6: {"Name": "Gilded Sword", "Tab": "Beginner"},
         },
@@ -3708,19 +3803,57 @@ equinoxBonusesDict = {
     11: {'Name': 'Food Lust', 'BaseLevel': 10, 'MaxLevelIncreases': {26: 4}, 'FinalMaxLevel': 14, 'Category': 'Optional'},
     12: {'Name': 'Equinox Symbols', 'BaseLevel': 5, 'MaxLevelIncreases': {31: 4}, 'FinalMaxLevel': 9, 'Category': 'Recommended'},
 }
-buildingsList: list[str] = [
-    "3D Printer", "Talent Book Library", "Death Note", "Salt Lick", "Chest Space", "Cost Cruncher", "Trapper Drone", "Automation Arm", "Atom Collider",
-    "Pulse Mage", "Fireball Lobber", "Boulder Roller", "Frozone Malone", "Stormcaller", "Party Starter", "Kraken Cosplayer", "Poisonic Elder", "Voidinator",
-    "Woodular Shrine", "Isaccian Shrine", "Crystal Shrine", "Pantheon Shrine", "Clover Shrine", "Summereading Shrine", "Crescent Shrine", "Undead Shrine", "Primordial Shrine"
-]
+buildingsDict = {
+    #Buildings
+    0: {'Name': '3D Printer', 'Image': 'three-d-printer', 'BaseMaxLevel': 10, 'Type': 'Utility'},
+    1: {'Name': 'Talent Book Library', 'Image': 'talent-book-library', 'BaseMaxLevel': 101, 'Type': 'Utility'},
+    2: {'Name': 'Death Note', 'Image': 'death-note', 'BaseMaxLevel': 51, 'Type': 'Utility'},
+    3: {'Name': 'Salt Lick', 'Image': 'salt-lick', 'BaseMaxLevel': 10, 'Type': 'Utility'},
+    4: {'Name': 'Chest Space', 'Image': 'chest-space', 'BaseMaxLevel': 25, 'Type': 'Utility'},
+    5: {'Name': 'Cost Cruncher', 'Image': 'cost-cruncher','BaseMaxLevel': 60, 'Type': 'Utility'},
+    6: {'Name': 'Trapper Drone', 'Image': 'critter-drone', 'BaseMaxLevel': 15, 'Type': 'Utility'},
+    7: {'Name': 'Automation Arm', 'Image': 'automation-arm', 'BaseMaxLevel': 5, 'Type': 'Utility'},
+    8: {'Name': 'Atom Collider', 'Image': 'atom-collider', 'BaseMaxLevel': 200, 'Type': 'Utility'},
+    #TD Towers
+    9: {'Name': 'Pulse Mage', 'Image': 'pulse-mage', 'BaseMaxLevel': 50, 'Type': 'Tower'},
+    10: {'Name': 'Fireball Lobber', 'Image': 'fireball-lobber', 'BaseMaxLevel': 50, 'Type': 'Tower'},
+    11: {'Name': 'Boulder Roller', 'Image': 'boulder-roller', 'BaseMaxLevel': 50, 'Type': 'Tower'},
+    12: {'Name': 'Frozone Malone', 'Image': 'frozone-malone', 'BaseMaxLevel': 50, 'Type': 'Tower'},
+    13: {'Name': 'Stormcaller', 'Image': 'stormcaller', 'BaseMaxLevel': 50, 'Type': 'Tower'},
+    14: {'Name': 'Party Starter', 'Image': 'party-starter', 'BaseMaxLevel': 50, 'Type': 'Tower'},
+    15: {'Name': 'Kraken Cosplayer', 'Image': 'kraken-cosplayer', 'BaseMaxLevel': 50, 'Type': 'Tower'},
+    16: {'Name': 'Poisonic Elder', 'Image': 'poisonic-elder', 'BaseMaxLevel': 50, 'Type': 'Tower'},
+    17: {'Name': 'Voidinator', 'Image': 'voidinator', 'BaseMaxLevel': 50, 'Type': 'Tower'},
+    #Shrines
+    18: {'Name': 'Woodular Shrine', 'Image': 'woodular-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine'},
+    19: {'Name': 'Isaccian Shrine', 'Image': 'isaccian-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine'},
+    20: {'Name': 'Crystal Shrine', 'Image': 'crystal-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine'},
+    21: {'Name': 'Pantheon Shrine', 'Image': 'pantheon-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine'},
+    22: {'Name': 'Clover Shrine', 'Image': 'clover-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine'},
+    23: {'Name': 'Summereading Shrine', 'Image': 'summereading-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine'},
+    24: {'Name': 'Crescent Shrine', 'Image': 'crescent-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine'},
+    25: {'Name': 'Undead Shrine', 'Image': 'undead-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine'},
+    26: {'Name': 'Primordial Shrine', 'Image': 'primordial-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine'},
+}
+buildingsTowerMaxLevel = 140
 shrinesList: list[str] = [
     "Woodular Shrine", "Isaccian Shrine", "Crystal Shrine", "Pantheon Shrine", "Clover Shrine", "Summereading Shrine", "Crescent Shrine", "Undead Shrine", "Primordial Shrine"
 ]
-atomsList: list[str] = [
-    "Hydrogen - Stamp Decreaser", "Helium - Talent Power Stacker", "Lithium - Bubble Insta Expander", "Beryllium - Post Office Penner",
-    "Boron - Particle Upgrader", "Carbon - Wizard Maximizer", "Nitrogen - Construction Trimmer", "Oxygen - Library Booker",
-    "Fluoride - Void Plate Chef", "Neon - Damage N' Cheapener", "Sodium - Snail Kryptonite"
+#AtomInfo in code. Last pulled 2.11 Kanga
+atomsList: list[list] = [
+    ["Hydrogen - Stamp Decreaser", 1, 1.35, 2, 1, "Every day you log in, the resource cost to upgrade a stamp's max lv decreases by {% up to a max of 90%. This reduction resets back to 0% when upgrading any stamp max lv."],
+    ["Helium - Talent Power Stacker", 0, 10, 10, 1, "All talents that give more bonus per 'Power of 10 resources you own' will count +{ more powers of 10 than you actually own when giving the bonus."],
+    ["Lithium - Bubble Insta Expander", 10, 1.25, 25, 1, "No Bubble Left Behind bonus now has a 15% chance to level up the lowest bubble out of ALL bubbles, not just the first 15 of each colour. Also, +{% chance to give +1 additional Lv."],
+    ["Beryllium - Post Office Penner", 20, 1.26, 75, 7, "Every day, 1 silver pen from your Post Office will instantly convert into 1 PO Box for all characters. This conversion happens { times per day."],
+    ["Boron - Particle Upgrader", 70, 1.37, 175, 2, "When a bubble has a cost of 100M or more to upgrade, you can instead spend particles. However, you can only do this { times a day, after which the cost will return to resources."],
+    ["Carbon - Wizard Maximizer", 250, 1.27, 500, 2, "All wizard towers in construction get +{ max levels. Also, all wizards get a +2% damage bonus for each wizard tower level above 50 in construction. Total bonus: }% wizard dmg."],
+    ["Nitrogen - Construction Trimmer", 500, 1.25, 1000, 15, "Gold trimmed construction slots give +{% more build rate than before. Also, you now have 1 additional trimmed slot."],
+    ["Oxygen - Library Booker", 2000, 1.24, 3250, 2, "Increases the Checkout Refresh Speed of the Talent Library by +{%. Also, the Minimum Talent LV is increased by +<, and the Maximum Talent LV is increased by +10."],
+    ["Fluoride - Void Plate Chef", 12000, 1.23, 10000, 1, "Multiplies your cooking speed by +{% for every meal at Lv 30+. In other words, every plate with a studded black void plate. Total bonus: >% cooking speed"],
+    ["Neon - Damage N' Cheapener", 40000, 1.22, 40000, 1, "Increases your total damage by +{%. Also, reduces the cost of all atom upgrades by {% too."],
+    ["Sodium - Snail Kryptonite", 50000, 2, 50000, 5, "When you fail a snail upgrade, it's LV gets reset to the nearest 5 (Up to Lv {) instead of back to 0, like failing at Lv 7 will reset to Lv 5."],
 ]
+colliderStorageLimitList = [15, 25, 100, 250, 1050]
 prayersList: list[str] = [
     "Big Brain Time (Forest Soul)", "Skilled Dimwit (Forest Soul)", "Unending Energy (Forest Soul)",
     "Shiny Snitch (Forest Soul)", "Zerg Rushogen (Forest Soul)",
@@ -4030,6 +4163,34 @@ divLevelReasonsDict = {
     2: "to activate Doot",
     40: "to unlock the TranQi Style.",
     50: "to unlock the Multitool Stamp from Poigu's quest."
+}
+#From code, GamingUpg = function (). Last updated 2.11 Kangaroo
+gamingSuperbitsDict = {
+    #
+    0: {'Name': 'Bits per Achievement', 'BonusText': "x1.03 Bits per Achievement you've unlocked", 'Cost': 1e9, 'CodeString': '_'},
+    1: {'Name': 'Plant Evo', 'BonusText': '+1 Max Evolution for all plants. This is 20x rarer than normal evolutions', 'Cost': 30e9, 'CodeString': 'a'},
+    2: {'Name': 'Obol Stat Booster', 'BonusText': 'All obols give +40% more STR/AGI/WIS/LUK than what they say they do!', 'Cost': 0, 'CodeString': 'b'},
+    3: {'Name': 'MSA Sailing', 'BonusText': 'MSA now gives +1% bonus Sailing Speed per 10 total Waves', 'Cost': 0, 'CodeString': 'c'},
+    4: {'Name': 'Moar Bubbles', 'BonusText': '+20% chance for +1 more bubble boosted by No Bubble Left Behind', 'Cost': 0, 'CodeString': 'd'},
+    5: {'Name': 'Plant Evo II', 'BonusText': '+1 Max Evolution for all plants. This one is 5000x rarer than normal', 'Cost': 0, 'CodeString': 'e'},
+    6: {'Name': 'Worship Totem HP', 'BonusText': '+5 Max HP for Worship Totem during Tower Defence summon battle', 'Cost': 0, 'CodeString': 'f'},
+    7: {'Name': 'MSA Totalizer', 'BonusText': 'Unlock the Totalizer for the Miniature Soul Apparatus (MSA) in World 3', 'Cost': 0, 'CodeString': 'g'},
+    8: {'Name': 'Shrine Speed', 'BonusText': 'All shrines level up +50% faster than normal', 'Cost': 0, 'CodeString': 'h'},
+    9: {'Name': 'No more Praying', 'BonusText': 'If no Prayers equipped, get 1/5th bonus of all prayers, and no curses', 'Cost': 0, 'CodeString': 'i'},
+    10: {'Name': 'Double EXP', 'BonusText': '+15% chance for Double Exp whenever claiming AFK gains', 'Cost': 0, 'CodeString': 'j'},
+    11: {'Name': 'MSA Class EXP', 'BonusText': 'MSA now gives +1% bonus Class EXP per 10 total Waves', 'Cost': 0, 'CodeString': 'k'},
+    12: {'Name': 'Library Checkouts', 'BonusText': '+1% faster Library Checkout Speed per Gaming Lv.', 'Cost': 0, 'CodeString': 'l'},
+    13: {'Name': 'MSA Mealing', 'BonusText': 'MSA now gives +10% bonus Meal Cooking speed per 10 total Waves', 'Cost': 0, 'CodeString': 'm'},
+    14: {'Name': 'Spice is Nice', 'BonusText': 'All spice claimed, either manually or automatically, is worth 1.5x more.', 'Cost': 0, 'CodeString': 'n'},
+    15: {'Name': 'Worship Totem HPr', 'BonusText': '+10 Max HP for Worship Totem during Tower Defence summon battle', 'Cost': 0, 'CodeString': 'o'},
+    16: {'Name': 'MSA Skill EXP', 'BonusText': 'MSA now gives +1% bonus Skill Exp per 10 total Waves', 'Cost': 0, 'CodeString': 'p'},
+    17: {'Name': 'Spice is Nicer', 'BonusText': 'All spice claimed, either manually or automatically, is worth 2x more.', 'Cost': 0, 'CodeString': 'q'},
+    18: {'Name': 'Plant Evo III', 'BonusText': '+1 Max Evolution for all plants. This one is 250x rarer than normal', 'Cost': 0, 'CodeString': 'r'},
+    19: {'Name': 'Noobie Gains', 'BonusText': 'Your lowest Leveled character gets 1.5x Class EXP', 'Cost': 0, 'CodeString': 's'},
+    20: {'Name': 'MSA Big Bits', 'BonusText': 'MSA now gives +50% Bits for Gaming per 10 total Waves', 'Cost': 0, 'CodeString': 't'},
+    21: {'Name': 'Atom Redux', 'BonusText': 'All atom upgrading is now 10% cheaper', 'Cost': 0, 'CodeString': 'u'},
+    22: {'Name': 'Even Moar Bubbles', 'BonusText': '+30% chance for +1 more bubble boosted by No Bubble Left Behind', 'Cost': 0, 'CodeString': 'v'},
+    23: {'Name': 'Isotope Discovery', 'BonusText': 'All atoms now have +10 Max LV', 'Cost': 0, 'CodeString': 'w'},
 }
 
 
