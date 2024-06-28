@@ -859,20 +859,16 @@ atoms_progressionTiers = {
     11: {
         'Atoms': {
             'Helium - Talent Power Stacker': 8,
-        },
-    },
-    12: {
-        'Atoms': {
             'Fluoride - Void Plate Chef': 20,
         },
     },
-    13: {
+    12: {
         'Atoms': {
             "Neon - Damage N' Cheapener": 20,
             'Helium - Talent Power Stacker': 9,
         },
     },
-    14: {
+    13: {
         'Atoms': {
             'Boron - Particle Upgrader': 30,
             'Hydrogen - Stamp Decreaser': 30,
