@@ -95,16 +95,17 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
                 )
 
     currentMaxedTowers = 0
-    for buildingName, buildingValuesDict in session_data.account.construction_buildings.items():
-        if buildingValuesDict['Type'] == 'Tower':
-            if buildingValuesDict['Level'] == buildingValuesDict['MaxLevel'] and buildingValuesDict['MaxLevel'] < buildingsTowerMaxLevel:
-                currentMaxedTowers += 1
+    if colliderData['Atoms']["Carbon - Wizard Maximizer"]['Level'] < colliderData['Atoms']["Carbon - Wizard Maximizer"]['MaxLevel']:
+        for buildingName, buildingValuesDict in session_data.account.construction_buildings.items():
+            if buildingValuesDict['Type'] == 'Tower':
+                if buildingValuesDict['Level'] == buildingValuesDict['MaxLevel'] and buildingValuesDict['MaxLevel'] < buildingsTowerMaxLevel:
+                    currentMaxedTowers += 1
 
     if currentMaxedTowers > 0:
         settings_advice['Alerts'].append(
             Advice(
                 label=f"{currentMaxedTowers} TD Tower{pl(currentMaxedTowers)} at max level."
-                      f"<br>Level up Carbon to increase your max Tower levels.",
+                      f"<br>Level up Carbon to increase your max Tower levels by 2.",
                 picture_class="carbon",
             )
         )
