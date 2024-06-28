@@ -2722,6 +2722,7 @@ skill_talentsDict = {
             472: {"Name": "Staring Statues", "Tab": "Wizard"},
             487: {"Name": "Stupendous Statues", "Tab": "Shaman"},
             1: {"Name": "Mana Booster", "Tab": "Savvy Basics"},
+            144: {"Name": "The Family Guy", "Tab": "Elite Class"},
             486: {"Name": "Occult Obols", "Tab": "Mage Subclass", 'Hardcap': 125},
         },
     },
@@ -2756,7 +2757,7 @@ skill_talentsDict = {
             279: {"Name": "Robbinghood", "Tab": "Archer"},
             130: {"Name": "Refinery Throttle", "Tab": "Squire", "Optimal": [0, 8, True]},
             37: {"Name": "Skilliest Statue", "Tab": "Maestro", 'Hardcap': 200},
-            144: {"Name": "The Family Guy", "Tab": "Elite Class"},
+            #144: {"Name": "The Family Guy", "Tab": "Elite Class"},
         },
     },
     "Cooking": {
@@ -2790,8 +2791,8 @@ skill_talentsDict = {
         },
         "Low": {
             112: {"Name": "Strongest Statues", "Tab": "Barbarian", 'Hardcap': 200},
+            116: {"Name": "Bobbin' Bobbers", "Tab": "Barbarian", 'Hardcap': 200},
             111: {"Name": "Fistful of Obol", "Tab": "Warrior Subclass", 'Hardcap': 125},
-            116: {"Name": "Bobbin' Bobbers", "Tab": "Barbarian"},
         },
     },
     "Mining": {
@@ -2818,6 +2819,7 @@ skill_talentsDict = {
             112: {"Name": "Strongest Statues", "Tab": "Barbarian", 'Hardcap': 200},
             95: {"Name": "Strength in Numbers", "Tab": "Warrior"},
             0: {"Name": "Health Booster", "Tab": "Rage Basics"},
+            144: {"Name": "The Family Guy", "Tab": "Elite Class"},
             111: {"Name": "Fistful of Obol", "Tab": "Warrior Subclass", 'Hardcap': 125},
         },
     },
@@ -2838,6 +2840,7 @@ skill_talentsDict = {
         },
         "Low": {
             292: {"Name": "Shwifty Statues", "Tab": "Bowman"},
+            144: {"Name": "The Family Guy", "Tab": "Elite Class"},
             291: {"Name": "Shoeful of Obol", "Tab": "Archer Subclass", 'Hardcap': 125},
         },
     },
@@ -2856,6 +2859,7 @@ skill_talentsDict = {
             293: {"Name": "Agi Again", "Tab": "Archer Subclass"},
         },
         "Low": {
+            144: {"Name": "The Family Guy", "Tab": "Elite Class"},
             291: {"Name": "Shoeful of Obol", "Tab": "Archer Subclass", 'Hardcap': 125},
         },
     },
