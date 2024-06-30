@@ -330,9 +330,16 @@ def getDeathNoteKills():
             for worldIndex in range(0, len(apocableMapIndexDict)):
                 for mapIndex in apocableMapIndexDict[worldIndex]:
                     if len(characterKillsList) > mapIndex:
-                        enemyMaps[worldIndex][mapIndex].updateZOWDict(characterIndex, characterKillsList[mapIndex][0])
-                    #else:
-                        #print("ConsDeathNote.getDeathNoteKills~ INFO Barbarian with characterIndex", characterIndex, "kill list has no data for mapIndex", mapIndex, ", len(characterKillsList)=", len(characterKillsList))
+                        try:
+                            enemyMaps[worldIndex][mapIndex].updateZOWDict(characterIndex, characterKillsList[mapIndex][0])
+                        except:
+                            logger.warning(f"Unexpected map kill count for characterIndex{characterIndex}, worldIndex{worldIndex}, mapIndex{mapIndex} of type {type(characterKillsList[mapIndex])}: {characterKillsList[mapIndex]} (expected List)")
+                            try:
+                                enemyMaps[worldIndex][mapIndex].updateZOWDict(characterIndex, float(characterKillsList[mapIndex]))
+                                logger.warning(f"Coerced {characterKillsList[mapIndex]} to float, yay. No cause for alarm.")
+                            except:
+                                logger.exception(f"Couldn't coerce {characterKillsList[mapIndex]} to float. Adding 0 placeholder instead.")
+                                enemyMaps[worldIndex][mapIndex].updateZOWDict(characterIndex, 0)
 
         #Regardless of class, for each map within each world, add this player's kills to EnemyMap's kill_count
         for worldIndex in range(1, len(apocableMapIndexDict)):
