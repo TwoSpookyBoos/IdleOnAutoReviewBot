@@ -3094,6 +3094,7 @@ stamp_maxes = {
     #Misc
     "Crystallin": 270,
     "Forge Stamp": 230,
+    "Biblio Stamp": 64,
 }
 stampsDict = {
     "Combat": {

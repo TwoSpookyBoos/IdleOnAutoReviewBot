@@ -1,9 +1,10 @@
 from math import ceil
 from flask import g as session_data
-from consts import maxStaticBookLevels, maxScalingBookLevels, maxSummoningBookLevels, maxOverallBookLevels, skill_talentsDict, combat_talentsDict, currentWorld
+from consts import maxStaticBookLevels, maxScalingBookLevels, maxSummoningBookLevels, maxOverallBookLevels, skill_talentsDict, combat_talentsDict, currentWorld, stamp_maxes
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
+from w4.breeding import parseJSONtoBreedingDict
 
 logger = get_logger(__name__)
 
@@ -164,6 +165,98 @@ def getBonusLevelAdviceGroup() -> AdviceGroup:
         advices=bonusLevelAdvices
     )
     return bonusLevelAdviceGroup
+
+def getCheckoutSpeedAdviceGroup() -> AdviceGroup:
+    checkoutSpeedAdvices = []
+
+    # Meal
+
+    checkoutSpeedAdvices.append(Advice(
+        label=f"Meal: Fortune Cookie: NOT IMPLEMENTED",
+        picture_class="fortune-cookie",
+        progression=0,
+        goal=90
+    ))
+
+    # Atom
+
+    checkoutSpeedAdvices.append(Advice(
+        label=f"""Oxygen - Library Booker: {2*session_data.account.atom_collider['Atoms']["Oxygen - Library Booker"]['Level']}/60%""",
+        picture_class="oxygen",
+        progression=session_data.account.atom_collider['Atoms']["Oxygen - Library Booker"]['Level'],
+        goal=20 + (10 * session_data.account.gaming['SuperBits']['Isotope Discovery']['Unlocked'])
+    ))
+
+    # Tower
+    
+    checkoutSpeedAdvices.append(Advice(
+        label=f"Talent Book Library building: {((session_data.account.construction_buildings['Talent Book Library']['Level']-1) * 5)}/995%",
+        picture_class="talent-book-library",
+        progression=session_data.account.construction_buildings['Talent Book Library']['Level'],
+        goal=200
+    ))
+
+    # Bubble
+
+    checkoutSpeedAdvices.append(Advice(
+        label=f"Ignore Overdues bubble: {2*session_data.account.alchemy_bubbles['Ignore Overdues']['BaseValue']:.2f}/100%",
+        picture_class="ignore-overdues",
+        progression=session_data.account.alchemy_bubbles['Ignore Overdues']['Level'],
+        resource=session_data.account.alchemy_bubbles['Ignore Overdues']['Material']
+    ))
+
+    # Vial
+
+    vialBonus = session_data.account.alchemy_vials.get('Chonker Chug (Dune Soul)', {}).get('Value', 0) * session_data.account.vialMasteryMulti
+    checkoutSpeedAdvices.append(Advice(
+        label=f"Chonker Chug vial: +{vialBonus:.2f}%",
+        picture_class='chonker-chug',
+        progression=session_data.account.alchemy_vials.get('Chonker Chug (Dune Soul)', {}).get('Level', 0),
+        goal=13
+    ))
+
+    # Stamp
+
+    stampLevel=session_data.account.stamps.get("Biblio Stamp", {}).get('Level', 0)
+    checkoutSpeedAdvices.append(Advice(
+        label=f"Stamp: Biblio Stamp: +{stampLevel}%",
+        picture_class="biblio-stamp",
+        progression=stampLevel,
+        goal=stamp_maxes.get("Biblio Stamp"),
+        resource=session_data.account.stamps.get("Biblio Stamp", {}).get('Material', 0),
+    ))
+
+    # Superbit
+
+    toons = session_data.account.all_characters
+    gaming_levels = []
+    for toon in toons:
+        gaming_levels.append(toon.gaming_level)
+    gaming_level = max(gaming_levels)
+    checkoutSpeedAdvices.append(Advice(
+        label=f"Superbit: Library Checkouts: +1% per Gaming Level",
+        picture_class="green-bits",
+        progression=gaming_level if session_data.account.gaming['SuperBits']['Library Checkouts']['Unlocked'] else 0
+    ))
+
+    # Achievement
+    
+    checkoutSpeedAdvices.append(Advice(
+        label=f"W3 Achievement: Checkout Takeout: +{30 * (0 < session_data.account.achievements.get('Checkout Takeout', False))}%",
+        picture_class="checkout-takeout",
+        progression=1 if session_data.account.achievements.get('Checkout Takeout', False) else 0,
+        goal=1
+    ))
+
+    checkoutSpeedAdviceGroup = AdviceGroup(
+        tier="",
+        pre_string=f"Info- Sources of Checkout Speed",
+        advices=checkoutSpeedAdvices
+    )
+
+    
+
+    return checkoutSpeedAdviceGroup
 
 def getTalentExclusions() -> list:
     talentExclusions = []
@@ -358,6 +451,7 @@ def setLibraryProgressionTier() -> AdviceSection:
     # Generate AdviceGroups
     library_AdviceGroupDict["MaxBookLevels"] = getBookLevelAdviceGroup()
     library_AdviceGroupDict["BonusLevels"] = getBonusLevelAdviceGroup()
+    library_AdviceGroupDict["CheckoutSpeed"] = getCheckoutSpeedAdviceGroup()
     characterCheckouts = getCharacterBooksAdviceGroups()
     for characterName, characterAG in characterCheckouts.items():
         library_AdviceGroupDict[characterName] = characterAG
