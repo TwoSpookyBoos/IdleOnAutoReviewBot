@@ -63,22 +63,39 @@ def getExpectedTalents(base_class, sub_class, elite_class):
 
 def getSpecializedSkills(base_class, sub_class, elite_class):
     specializedSkillsList = []
-    if base_class == "Mage":
-        specializedSkillsList.append("Choppin")
-    elif base_class == "Warrior":
+    if base_class == "Warrior":
         specializedSkillsList.append("Mining")
+    elif base_class == "Archer":
+        specializedSkillsList.append("Smithing")
+    elif base_class == "Mage":
+        specializedSkillsList.append("Choppin")
+
 
     if sub_class == "Barbarian":
         specializedSkillsList.append("Fishing")
+    elif sub_class == "Squire":
+        specializedSkillsList.append("Construction")
     elif sub_class == "Bowman":
         specializedSkillsList.append("Catching")
     elif sub_class == "Hunter":
         specializedSkillsList.append("Trapping")
     elif sub_class == "Wizard":
         specializedSkillsList.append("Worship")
+    elif sub_class == "Shaman":
+        specializedSkillsList.append("Alchemy")
 
     if elite_class == "Blood Berserker":
         specializedSkillsList.append("Cooking")
+    elif elite_class == "Divine Knight":
+        specializedSkillsList.append("Gaming")
+    elif elite_class == "Siege Breaker":
+        specializedSkillsList.append("Sailing")
+    elif elite_class == "Beast Master":
+        specializedSkillsList.append("Breeding")
+    elif elite_class == "Elemental Sorcerer":
+        specializedSkillsList.append("Divinity")
+    elif elite_class == "Bubonic Conjuror":
+        specializedSkillsList.append("Lab")
 
     return specializedSkillsList
 

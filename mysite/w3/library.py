@@ -169,8 +169,9 @@ def getTalentExclusions() -> list:
     talentExclusions = []
 
     if sum(session_data.account.all_skills['Lab']) > 2100:
-        talentExclusions.append(537)
+        talentExclusions.extend([537, 538])
         # 537: {"Name": "Essence Transferral", "Tab": "Bubonic Conjuror"},
+        # 538: {"Name": "Upload Squared", "Tab": "Bubonic Conjuror"},
 
     #If you can reach max book of 200, the Bubo Aura build really takes off. Priority for damage from Poison falls off a cliff.
     if max([toon.max_talents_over_books for toon in session_data.account.safe_characters if toon.class_name == "Bubonic Conjuror"], default=0) >= 200:
@@ -179,10 +180,16 @@ def getTalentExclusions() -> list:
 
     #Elite Account-Wides don't stack, can be excluded if already maxed on one character
     for talentNumber, className in {
+        176: "Divine Knight",  #176: {"Name": "One Thousand Hours Played", "Tab": "Divine Knight"},
         178: "Divine Knight",  #178: {"Name": "King of the Remembered", "Tab": "Divine Knight"},
+        326: "Siege Breaker",  #326: {"Name": "Expertly Sailed", "Tab": "Siege Breaker"},
+        327: "Siege Breaker",  #327: {"Name": "Captain Peptalk", "Tab": "Siege Breaker"},
         328: "Siege Breaker",  #328: {"Name": "Archlord Of The Pirates", "Tab": "Siege Breaker"},
+        372: "Beast Master",  #372: {"Name": "Shining Beacon of Egg", "Tab": "Beast Master"},
+        373: "Beast Master",  #373: {"Name": "Curviture Of The Paw", "Tab": "Beast Master"},
         508: "Elemental Sorcerer",  #506: {"Name": "Shared Beliefs", "Tab": "Elemental Sorcerer"},
         506: "Elemental Sorcerer",  #508: {"Name": "Wormhole Emperor", "Tab": "Elemental Sorcerer"},
+        536: "Bubonic Conjuror",  #536: {"Name": "Green Tube", "Tab": "Bubonic Conjuror"},
     }.items():
         if max([toon.max_talents.get(str(talentNumber), 0)
                for toon in session_data.account.safe_characters
@@ -200,10 +207,18 @@ def getTalentExclusions() -> list:
         # 146: {"Name": "Apocalypse Chow", "Tab": "Blood Berserker"},
         # 147: {"Name": "Waiting to Cool", "Tab": "Blood Berserker"},
 
-    #If all bubbles for current max world are unlocked, exclude Bubble Breakthrough
+    #If all bubbles for current max world are unlocked, exclude Shaman's Bubble Breakthrough
     if session_data.account.alchemy_cauldrons['NextWorldMissingBubbles'] > currentWorld:
-        talentExclusions.append(492)
+        talentExclusions.extend([492, 493])
         #492: {"Name": "Bubble Breakthrough", "Tab": "Shaman"},
+        #493: {"Name": "Sharing Some Smarts", "Tab": "Shaman"},
+
+    #If the final Gaming Superbit is owned, exclude DK Gaming
+    if session_data.account.gaming['SuperBits']['Isotope Discovery']['Unlocked']:
+        talentExclusions.extend([175, 176, 177])
+        #175: {"Name": "Undying Passion", "Tab": "Divine Knight"},
+        #176: {"Name": "One Thousand Hours Played", "Tab": "Divine Knight"},
+        #177: {"Name": "Bitty Litty", "Tab": "Divine Knight"},
 
     return talentExclusions
 

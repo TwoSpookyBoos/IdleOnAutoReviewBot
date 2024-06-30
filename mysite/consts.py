@@ -2701,6 +2701,8 @@ skill_talentsDict = {
     # [2] = does this talent benefit from bonuses over the max book level, True of False]
     # Example: Symbols of Beyond gives a benefit every 20 levels and does NOT benefit from bonuses like Rift Slug of Arctis
     # 2nd example: Apocalypse ZOW gives a bonus every 33 and DOES benefit from bonuses
+
+    #Wisdom Skills
     "Choppin": {
         "High": {
             460: {"Name": "Log on Logs", "Tab": "Mage"},
@@ -2725,41 +2727,46 @@ skill_talentsDict = {
             144: {"Name": "The Family Guy", "Tab": "Elite Class"},
             486: {"Name": "Occult Obols", "Tab": "Mage Subclass", 'Hardcap': 125},
         },
-    },
-    "Utility": {
-        "High": {
-            43: {"Name": "Right Hand of Action", "Tab": "Maestro"},
-            32: {"Name": "Printer Go Brrr", "Tab": "Maestro", "Optimal": [0, 40, True]},
-            34: {"Name": "One Step Ahead", "Tab": "Maestro"},
-            59: {"Name": "Blood Marrow", "Tab": "Voidwalker"},
-            57: {"Name": "Species Epoch", "Tab": "Voidwalker"},
-            49: {"Name": "Enhancement Eclipse", "Tab": "Voidwalker", "Optimal": [0, 25, False], 'Hardcap': hardcap_enhancement_eclipse},
-            53: {"Name": "Eternal WIS", "Tab": "Voidwalker"},
-            51: {"Name": "Eternal STR", "Tab": "Voidwalker"},
-            52: {"Name": "Eternal AGI", "Tab": "Voidwalker"},
+        "EXP Only": {
+            463: {"Name": "Inner Peace", "Tab": "Mage"},
         },
+    },
+    "Alchemy": {
         "Medium": {
             492: {"Name": "Bubble Breakthrough", "Tab": "Shaman"},
-            506: {"Name": "Shared Beliefs", "Tab": "Elemental Sorcerer"},
-            41: {"Name": "Crystal Countdown", "Tab": "Maestro"},
-            28: {"Name": "Cards Galore", "Tab": "Journeyman"},
-            29: {"Name": "Rares Everywhere", "Tab": "Journeyman"},
-            24: {"Name": "Curse of Mr Looty Booty", "Tab": "Journeyman"},
-            56: {"Name": "Voodoo Statufication", "Tab": "Voidwalker"},
-            78: {"Name": "Extra Bags", "Tab": "Beginner"},
-            131: {"Name": "Redox Rates", "Tab": "Squire"},
-            39: {"Name": "Colloquial Containers", "Tab": "Maestro"},
         },
         "Low": {
-            537: {"Name": "Essence Transferral", "Tab": "Bubonic Conjuror"},
-            269: {"Name": "Broken Time", "Tab": "Calm Basics"},
-            281: {"Name": "Acme Anvil", "Tab": "Archer"},
-            279: {"Name": "Robbinghood", "Tab": "Archer"},
-            130: {"Name": "Refinery Throttle", "Tab": "Squire", "Optimal": [0, 8, True]},
-            37: {"Name": "Skilliest Statue", "Tab": "Maestro", 'Hardcap': 200},
-            #144: {"Name": "The Family Guy", "Tab": "Elite Class"},
+            493: {"Name": "Sharing Some Smarts", "Tab": "Shaman"},  # Account-wide EXP bumped to Low
         },
     },
+    "Lab": {
+        "Low": {
+            538: {"Name": "Upload Squared", "Tab": "Bubonic Conjuror"},
+            537: {"Name": "Essence Transferral", "Tab": "Bubonic Conjuror"},
+            536: {"Name": "Green Tube", "Tab": "Bubonic Conjuror"},  # Account-wide EXP bumped to Low
+        },
+    },
+    "Worship": {
+        "High": {
+            476: {"Name": "Sooouls", "Tab": "Wizard"},
+        },
+        "Medium": {
+            303: {"Name": "Stop Right There", "Tab": "Hunter"},
+        },
+        "Low": {
+            478: {"Name": "Nearby Outlet", "Tab": "Wizard"},
+            475: {"Name": "Charge Syphon", "Tab": "Wizard", 'Hardcap': 200},
+        },
+        "EXP Only": {
+            477: {"Name": "Bless Up", "Tab": "Wizard"},
+        },
+    },
+    "Divinity": {
+        "Medium": {
+            506: {"Name": "Shared Beliefs", "Tab": "Elemental Sorcerer"},  # Account-wide EXP bumped to Medium because Divinity extra important
+        },
+    },
+    #Strength Skills
     "Cooking": {
         "High": {
             148: {"Name": "Overflowing Ladle", "Tab": "Blood Berserker"},
@@ -2787,12 +2794,15 @@ skill_talentsDict = {
             98: {"Name": "Absolute Unit", "Tab": "Warrior"},
             81: {"Name": "Str Summore", "Tab": "Warrior Subclass"},
             89: {"Name": "Idle Skilling", "Tab": "Rage Basics"},
-            118: {"Name": "Catching Some Zzz-s", "Tab": "Barbarian"},
+            118: {"Name": "Catching Some Zzz's", "Tab": "Barbarian"},
         },
         "Low": {
             112: {"Name": "Strongest Statues", "Tab": "Barbarian", 'Hardcap': 200},
             116: {"Name": "Bobbin' Bobbers", "Tab": "Barbarian", 'Hardcap': 200},
             111: {"Name": "Fistful of Obol", "Tab": "Warrior Subclass", 'Hardcap': 125},
+        },
+        "EXP Only": {
+            117: {"Name": "All Fish Diet", "Tab": "Barbarian"},
         },
     },
     "Mining": {
@@ -2822,6 +2832,42 @@ skill_talentsDict = {
             144: {"Name": "The Family Guy", "Tab": "Elite Class"},
             111: {"Name": "Fistful of Obol", "Tab": "Warrior Subclass", 'Hardcap': 125},
         },
+        "EXP Only": {
+            104: {"Name": "Tempestuous Emotions", "Tab": "Warrior"},
+        },
+    },
+    "Construction": {
+        "Medium": {
+            131: {"Name": "Redox Rates", "Tab": "Squire"},
+        },
+        "Low": {
+            130: {"Name": "Refinery Throttle", "Tab": "Squire", "Optimal": [0, 8, True]},
+        },
+        "EXP Only": {
+            132: {"Name": "Sharper Saws", "Tab": "Squire", 'Hardap': 160},
+        },
+    },
+    "Gaming": {
+        "Medium": {
+            177: {"Name": "Bitty Litty", "Tab": "Divine Knight"},
+        },
+        "Low": {
+            175: {"Name": "Undying Passion", "Tab": "Divine Knight"},
+            176: {"Name": "One Thousand Hours Played", "Tab": "Divine Knight"},  # Account-wide EXP bumped to Low
+        },
+    },
+    #Agility Skills
+    "Smithing": {
+        "High": {},
+        "Medium": {},
+        "Low": {
+            269: {"Name": "Broken Time", "Tab": "Calm Basics"},
+            281: {"Name": "Acme Anvil", "Tab": "Archer"},
+        },
+        "EXP Only": {
+            282: {"Name": "Yea I Already Know", "Tab": "Archer"},
+            284: {"Name": "Focused Soul", "Tab": "Archer"},
+        },
     },
     "Catching": {
         "High": {
@@ -2843,6 +2889,17 @@ skill_talentsDict = {
             144: {"Name": "The Family Guy", "Tab": "Elite Class"},
             291: {"Name": "Shoeful of Obol", "Tab": "Archer Subclass", 'Hardcap': 125},
         },
+        "EXP Only": {
+            282: {"Name": "Yea I Already Know", "Tab": "Archer"},
+            284: {"Name": "Focused Soul", "Tab": "Archer"},
+            297: {"Name": "Bug Enthusiast", "Tab": "Bowman"},
+        },
+    },
+    "Sailing": {
+        "Low": {
+            326: {"Name": "Expertly Sailed", "Tab": "Siege Breaker"},  # Account-wide EXP bumped to Low
+            327: {"Name": "Captain Peptalk", "Tab": "Siege Breaker"},  # Account-wide Captain EXP bumped to low
+        },
     },
     "Trapping": {
         "High": {
@@ -2862,19 +2919,51 @@ skill_talentsDict = {
             144: {"Name": "The Family Guy", "Tab": "Elite Class"},
             291: {"Name": "Shoeful of Obol", "Tab": "Archer Subclass", 'Hardcap': 125},
         },
-    },
-    "Worship": {
-        "High": {
-            476: {"Name": "Sooouls", "Tab": "Wizard"},
+        "EXP Only": {
+            282: {"Name": "Yea I Already Know", "Tab": "Archer"},
+            284: {"Name": "Focused Soul", "Tab": "Archer"},
         },
-        "Medium": {
-            303: {"Name": "Stop Right There", "Tab": "Hunter"},
+    },
+    "Breeding": {
+        "High": {
+            373: {"Name": "Curviture Of The Paw", "Tab": "Beast Master"},
         },
         "Low": {
-            478: {"Name": "Nearby Outlet", "Tab": "Wizard"},
-            475: {"Name": "Charge Syphon", "Tab": "Wizard", 'Hardcap': 200},
+            372: {"Name": "Shining Beacon of Egg", "Tab": "Beast Master"},  # Account-wide EXP bumped to Low
         },
-    }
+    },
+    # Utility is talents that apply to multiple skills at a bottom-of-the-group priority (Mostly Jman stuff + Drop Rate)
+    "Utility": {
+        "High": {
+            43: {"Name": "Right Hand of Action", "Tab": "Maestro"},
+            32: {"Name": "Printer Go Brrr", "Tab": "Maestro", "Optimal": [0, 40, True]},
+            34: {"Name": "One Step Ahead", "Tab": "Maestro"},
+            59: {"Name": "Blood Marrow", "Tab": "Voidwalker"},
+            57: {"Name": "Species Epoch", "Tab": "Voidwalker"},
+            49: {"Name": "Enhancement Eclipse", "Tab": "Voidwalker", "Optimal": [0, 25, False], 'Hardcap': hardcap_enhancement_eclipse},
+            53: {"Name": "Eternal WIS", "Tab": "Voidwalker"},
+            51: {"Name": "Eternal STR", "Tab": "Voidwalker"},
+            52: {"Name": "Eternal AGI", "Tab": "Voidwalker"},
+        },
+        "Medium": {
+            41: {"Name": "Crystal Countdown", "Tab": "Maestro"},
+            28: {"Name": "Cards Galore", "Tab": "Journeyman"},
+            29: {"Name": "Rares Everywhere", "Tab": "Journeyman"},
+            24: {"Name": "Curse of Mr Looty Booty", "Tab": "Journeyman"},
+            56: {"Name": "Voodoo Statufication", "Tab": "Voidwalker"},
+            78: {"Name": "Extra Bags", "Tab": "Beginner"},
+            39: {"Name": "Colloquial Containers", "Tab": "Maestro"},
+        },
+        "Low": {
+            279: {"Name": "Robbinghood", "Tab": "Archer"},
+            37: {"Name": "Skilliest Statue", "Tab": "Maestro", 'Hardcap': 200},
+        },
+        "EXP Only": {
+            42: {"Name": "Left Hand of Learning", "Tab": "Maestro"},
+            40: {"Name": "Maestro Infusion", "Tab": "Maestro"},
+            38: {"Name": "Bliss N Chips", "Tab": "Maestro"},
+        },
+    },
 }
 combat_talentsDict = {
     #Talents here are unique from the skill_talentsDict above
