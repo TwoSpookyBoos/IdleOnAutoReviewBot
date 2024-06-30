@@ -199,7 +199,7 @@ def getCheckoutSpeedAdviceGroup() -> AdviceGroup:
     # Bubble
 
     checkoutSpeedAdvices.append(Advice(
-        label=f"Ignore Overdues bubble: {2*session_data.account.alchemy_bubbles['Ignore Overdues']['BaseValue']:.2f}/100%",
+        label=f"Ignore Overdues bubble: {session_data.account.alchemy_bubbles['Ignore Overdues']['BaseValue']:.2f}/100%",
         picture_class="ignore-overdues",
         progression=session_data.account.alchemy_bubbles['Ignore Overdues']['Level'],
         resource=session_data.account.alchemy_bubbles['Ignore Overdues']['Material']
