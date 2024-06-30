@@ -169,6 +169,15 @@ def getBonusLevelAdviceGroup() -> AdviceGroup:
 def getCheckoutSpeedAdviceGroup() -> AdviceGroup:
     checkoutSpeedAdvices = []
 
+    # Lab sanity check
+    
+    checkoutSpeedAdvices.append(Advice(
+        label=f"Lab sanity check",
+        picture_class="black-diamond-rhinestone",
+        
+        progression=session_data.account.labJewels["Black Diamond Rhinestone"]["Value"],
+    ))
+
     # Meal
 
     checkoutSpeedAdvices.append(Advice(

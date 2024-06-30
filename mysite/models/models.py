@@ -17,7 +17,7 @@ from consts import expectedStackables, greenstack_progressionTiers, card_data, m
     getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampsDict, stampTypes, marketUpgradeList, \
     achievementsList, forgeUpgradesDict, arcadeBonuses, saltLickList, allMeritsDict, bubblesDict, familyBonusesDict, poBoxDict, equinoxBonusesDict, \
     maxDreams, dreamsThatUnlockNewBonuses, ceilUpToBase, starsignsDict, gfood_codes, getStyleNameFromIndex, divinity_divinitiesDict, getDivinityNameFromIndex, \
-    maxCookingTables, getNextESFamilyBreakpoint, expected_talentsDict, colliderStorageLimitList, gamingSuperbitsDict
+    maxCookingTables, getNextESFamilyBreakpoint, expected_talentsDict, colliderStorageLimitList, gamingSuperbitsDict, labJewelsDict
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
 
 def session_singleton(cls):
@@ -1434,6 +1434,7 @@ class Account:
         raw_lab = safe_loads(self.raw_data.get("Lab", []))
         self._parse_w4_lab_chips(raw_lab)
         self._parse_w4_lab_bonuses(raw_lab)
+        self._parse_w4_jewels(raw_lab)
 
     def _parse_w4_lab_chips(self, raw_lab):
         self.labChips = {}
@@ -1453,6 +1454,16 @@ class Account:
             self.labBonuses[labBonusName] = {
                 "Enabled": True,
                 "Value": 1
+            }
+    def _parse_w4_jewels(self, raw_lab):
+        #TODO: Account for if the jewel is actually connected.
+        jewelmulti = 1+0.5+0.1*raw_lab[14][16] # Will have to be fixed when labbonuses are implemented properly. index 16 is puropal navette
+
+        self.labJewels = {}
+        for jewelIndex, jewelInfo in labJewelsDict.items():
+            self.labJewels[jewelInfo["Name"]] = {
+                "Enabled": bool(raw_lab[14][jewelIndex]),
+                "Value": jewelInfo["BaseValue"]*jewelmulti
             }
 
     def _parse_w4_rift(self):

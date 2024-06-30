@@ -3948,6 +3948,29 @@ labBonusesList = [
     "My 1st Chemistry Set", "Unadulterated Banking Fury", "Sigils of Olden Alchemy", "Viral Connection",
     "Artifact Attraction", "Slab Sovereignty", "Spiritual Growth", "Depot Studies PhD"
 ]
+labJewelsDict = {
+    0: {'Name': "Amethyst Rhinestone", "Description": "Meal cooking is }x faster. This bonus is applied TWICE if all 3 purple jewels are active.", "BaseValue": 1.5}, 
+    1: {'Name': "Purple Navette", "Description": "Animal Farm' mainframe bonus gives an additional +}% per species. If Animal Farm is not active, then this does nothing.", "BaseValue": 0.5}, 
+    2: {'Name': "Purple Rhombol", "Description": "All players get +}% Lab EXP gain.", "BaseValue": 40}, 
+    3: {'Name': "Sapphire Rhinestone", "Description": "Construction slot 1 is now trimmed up, and has }x building Speed. Also trims slot 2 if all 4 blue jewels are active.", "BaseValue": 3}, 
+    4: {'Name': "Sapphire Navette", "Description": "All players get +}% All Stat. STR, AGI, WIS, and LUCK to boot.", "BaseValue": 3}, 
+    5: {'Name': "Sapphire Rhombol", "Description": "Even if this jewel is off, all players within a 150px radius of this jewel, shown by the circle, have +25% Line Width. @ Also gives +}% Breeding EXP, but only when active.", "BaseValue": 25}, 
+    6: {'Name': "Sapphire Pyramite", "Description": "Every 24 hours, the } lowest level Kitchen Upgrades across all owned kitchens gain +1 Lv.", "BaseValue": 2}, 
+    7: {'Name': "Pyrite Rhinestone", "Description": "No Bubble Left Behind' mainframe bonus gives +} levels instead of +1, and does so for the lowest 4 bubbles instead of 3.", "BaseValue": 2}, 
+    8: {'Name': "Pyrite Navette", "Description": "All players get }x 'non-consume' chance, and raises the max chance from 90% to 98%, allowing for longer AFK with food.", "BaseValue": 3}, 
+    9: {'Name': "Pyrite Rhombol", "Description": "All mainframe bonuses and jewels have a }% larger connection range, except for this jewel. This jewel has an 80px connection range no matter what!", "BaseValue": 30}, 
+    10:{'Name': "Pyrite Pyramite", "Description": "All players deal 1.}x more damage. This bonus is applied TWICE if all 4 Orange Jewels are active.", "BaseValue":10}, 
+    11:{'Name': "Emerald Rhinestone", "Description": "}% reduced incubation egg time. Mo eggs mo problems tho, fo sho.", "BaseValue":28}, 
+    12:{'Name': "Emerald Navette", "Description": "All players have } higher base efficiency in all skills, and +10% skill action speed. This bonus is applied TWICE if all 5 Green Jewels are active.", "BaseValue":200}, 
+    13:{'Name': "Emerald Rhombol", "Description": "Fungi Finger Pocketer' mainframe bonus gives an additional +}% cash bonus per million mushroom kills", "BaseValue":1}, 
+    14:{'Name': "Emerald Pyramite", "Description": "Meal cooking is }% faster for every 25 total upgrade levels across all kitchens.", "BaseValue":1},
+    15:{'Name': "Emerald Ulthurite", "Description": "Special Pets in the Fenceyard level up their Passive Bonuses +}% faster", "BaseValue":30}, 
+    16:{'Name': "Black Diamond Rhinestone", "Description": "All meal bonuses, as shown in the Dinner Table Menu, actually give 1.}x higher bonus than what is shown.", "BaseValue":16}, 
+    17:{'Name': "Black Diamond Ulthurite", "Description": "Unadulterated Banking Fury' gives an additional +}% Total Damage per greened stack. Bolsters 'Unadulterated Banking Fury'", "BaseValue":1}, 
+    18:{'Name': "Pure Opal Rhinestone", "Description": "Slab Sovereignty' gives an additional }% boost to all Slab Bonuses!", "BaseValue":20}, 
+    19:{'Name': "Pure Opal Navette", "Description": "+}% higher effects from all active bonuses and jewels within the Mainframe, except for Spelunker Obol. @ This is a multiplier, so +10% would be 1.10x, ya feel me? @ This bonus always has a 80px connection range no matter what!", "BaseValue":10}, 
+    20:{'Name': "Pure Opal Rhombol", "Description": "Depot Studies PhD' gives an additional }% boost to all Crop Depot bonuses!", "BaseValue": 10},
+}
 
 ###WORLD 5 CONSTS###
 artifactTiers = ["Base", "Ancient", "Eldritch", "Sovereign"]
