@@ -2701,6 +2701,8 @@ skill_talentsDict = {
     # [2] = does this talent benefit from bonuses over the max book level, True of False]
     # Example: Symbols of Beyond gives a benefit every 20 levels and does NOT benefit from bonuses like Rift Slug of Arctis
     # 2nd example: Apocalypse ZOW gives a bonus every 33 and DOES benefit from bonuses
+
+    #Wisdom Skills
     "Choppin": {
         "High": {
             460: {"Name": "Log on Logs", "Tab": "Mage"},
@@ -2725,41 +2727,46 @@ skill_talentsDict = {
             144: {"Name": "The Family Guy", "Tab": "Elite Class"},
             486: {"Name": "Occult Obols", "Tab": "Mage Subclass", 'Hardcap': 125},
         },
-    },
-    "Utility": {
-        "High": {
-            43: {"Name": "Right Hand of Action", "Tab": "Maestro"},
-            32: {"Name": "Printer Go Brrr", "Tab": "Maestro", "Optimal": [0, 40, True]},
-            34: {"Name": "One Step Ahead", "Tab": "Maestro"},
-            59: {"Name": "Blood Marrow", "Tab": "Voidwalker"},
-            57: {"Name": "Species Epoch", "Tab": "Voidwalker"},
-            49: {"Name": "Enhancement Eclipse", "Tab": "Voidwalker", "Optimal": [0, 25, False], 'Hardcap': hardcap_enhancement_eclipse},
-            53: {"Name": "Eternal WIS", "Tab": "Voidwalker"},
-            51: {"Name": "Eternal STR", "Tab": "Voidwalker"},
-            52: {"Name": "Eternal AGI", "Tab": "Voidwalker"},
+        "EXP Only": {
+            463: {"Name": "Inner Peace", "Tab": "Mage"},
         },
+    },
+    "Alchemy": {
         "Medium": {
             492: {"Name": "Bubble Breakthrough", "Tab": "Shaman"},
-            506: {"Name": "Shared Beliefs", "Tab": "Elemental Sorcerer"},
-            41: {"Name": "Crystal Countdown", "Tab": "Maestro"},
-            28: {"Name": "Cards Galore", "Tab": "Journeyman"},
-            29: {"Name": "Rares Everywhere", "Tab": "Journeyman"},
-            24: {"Name": "Curse of Mr Looty Booty", "Tab": "Journeyman"},
-            56: {"Name": "Voodoo Statufication", "Tab": "Voidwalker"},
-            78: {"Name": "Extra Bags", "Tab": "Beginner"},
-            131: {"Name": "Redox Rates", "Tab": "Squire"},
-            39: {"Name": "Colloquial Containers", "Tab": "Maestro"},
         },
         "Low": {
-            537: {"Name": "Essence Transferral", "Tab": "Bubonic Conjuror"},
-            269: {"Name": "Broken Time", "Tab": "Calm Basics"},
-            281: {"Name": "Acme Anvil", "Tab": "Archer"},
-            279: {"Name": "Robbinghood", "Tab": "Archer"},
-            130: {"Name": "Refinery Throttle", "Tab": "Squire", "Optimal": [0, 8, True]},
-            37: {"Name": "Skilliest Statue", "Tab": "Maestro", 'Hardcap': 200},
-            #144: {"Name": "The Family Guy", "Tab": "Elite Class"},
+            493: {"Name": "Sharing Some Smarts", "Tab": "Shaman"},  # Account-wide EXP bumped to Low
         },
     },
+    "Lab": {
+        "Low": {
+            538: {"Name": "Upload Squared", "Tab": "Bubonic Conjuror"},
+            537: {"Name": "Essence Transferral", "Tab": "Bubonic Conjuror"},
+            536: {"Name": "Green Tube", "Tab": "Bubonic Conjuror"},  # Account-wide EXP bumped to Low
+        },
+    },
+    "Worship": {
+        "High": {
+            476: {"Name": "Sooouls", "Tab": "Wizard"},
+        },
+        "Medium": {
+            303: {"Name": "Stop Right There", "Tab": "Hunter"},
+        },
+        "Low": {
+            478: {"Name": "Nearby Outlet", "Tab": "Wizard"},
+            475: {"Name": "Charge Syphon", "Tab": "Wizard", 'Hardcap': 200},
+        },
+        "EXP Only": {
+            477: {"Name": "Bless Up", "Tab": "Wizard"},
+        },
+    },
+    "Divinity": {
+        "Medium": {
+            506: {"Name": "Shared Beliefs", "Tab": "Elemental Sorcerer"},  # Account-wide EXP bumped to Medium because Divinity extra important
+        },
+    },
+    #Strength Skills
     "Cooking": {
         "High": {
             148: {"Name": "Overflowing Ladle", "Tab": "Blood Berserker"},
@@ -2787,12 +2794,15 @@ skill_talentsDict = {
             98: {"Name": "Absolute Unit", "Tab": "Warrior"},
             81: {"Name": "Str Summore", "Tab": "Warrior Subclass"},
             89: {"Name": "Idle Skilling", "Tab": "Rage Basics"},
-            118: {"Name": "Catching Some Zzz-s", "Tab": "Barbarian"},
+            118: {"Name": "Catching Some Zzz's", "Tab": "Barbarian"},
         },
         "Low": {
             112: {"Name": "Strongest Statues", "Tab": "Barbarian", 'Hardcap': 200},
             116: {"Name": "Bobbin' Bobbers", "Tab": "Barbarian", 'Hardcap': 200},
             111: {"Name": "Fistful of Obol", "Tab": "Warrior Subclass", 'Hardcap': 125},
+        },
+        "EXP Only": {
+            117: {"Name": "All Fish Diet", "Tab": "Barbarian"},
         },
     },
     "Mining": {
@@ -2822,6 +2832,42 @@ skill_talentsDict = {
             144: {"Name": "The Family Guy", "Tab": "Elite Class"},
             111: {"Name": "Fistful of Obol", "Tab": "Warrior Subclass", 'Hardcap': 125},
         },
+        "EXP Only": {
+            104: {"Name": "Tempestuous Emotions", "Tab": "Warrior"},
+        },
+    },
+    "Construction": {
+        "Medium": {
+            131: {"Name": "Redox Rates", "Tab": "Squire"},
+        },
+        "Low": {
+            130: {"Name": "Refinery Throttle", "Tab": "Squire", "Optimal": [0, 8, True]},
+        },
+        "EXP Only": {
+            132: {"Name": "Sharper Saws", "Tab": "Squire", 'Hardap': 160},
+        },
+    },
+    "Gaming": {
+        "Medium": {
+            177: {"Name": "Bitty Litty", "Tab": "Divine Knight"},
+        },
+        "Low": {
+            175: {"Name": "Undying Passion", "Tab": "Divine Knight"},
+            176: {"Name": "One Thousand Hours Played", "Tab": "Divine Knight"},  # Account-wide EXP bumped to Low
+        },
+    },
+    #Agility Skills
+    "Smithing": {
+        "High": {},
+        "Medium": {},
+        "Low": {
+            269: {"Name": "Broken Time", "Tab": "Calm Basics"},
+            281: {"Name": "Acme Anvil", "Tab": "Archer"},
+        },
+        "EXP Only": {
+            282: {"Name": "Yea I Already Know", "Tab": "Archer"},
+            284: {"Name": "Focused Soul", "Tab": "Archer"},
+        },
     },
     "Catching": {
         "High": {
@@ -2843,6 +2889,17 @@ skill_talentsDict = {
             144: {"Name": "The Family Guy", "Tab": "Elite Class"},
             291: {"Name": "Shoeful of Obol", "Tab": "Archer Subclass", 'Hardcap': 125},
         },
+        "EXP Only": {
+            282: {"Name": "Yea I Already Know", "Tab": "Archer"},
+            284: {"Name": "Focused Soul", "Tab": "Archer"},
+            297: {"Name": "Bug Enthusiast", "Tab": "Bowman"},
+        },
+    },
+    "Sailing": {
+        "Low": {
+            326: {"Name": "Expertly Sailed", "Tab": "Siege Breaker"},  # Account-wide EXP bumped to Low
+            327: {"Name": "Captain Peptalk", "Tab": "Siege Breaker"},  # Account-wide Captain EXP bumped to low
+        },
     },
     "Trapping": {
         "High": {
@@ -2862,19 +2919,51 @@ skill_talentsDict = {
             144: {"Name": "The Family Guy", "Tab": "Elite Class"},
             291: {"Name": "Shoeful of Obol", "Tab": "Archer Subclass", 'Hardcap': 125},
         },
-    },
-    "Worship": {
-        "High": {
-            476: {"Name": "Sooouls", "Tab": "Wizard"},
+        "EXP Only": {
+            282: {"Name": "Yea I Already Know", "Tab": "Archer"},
+            284: {"Name": "Focused Soul", "Tab": "Archer"},
         },
-        "Medium": {
-            303: {"Name": "Stop Right There", "Tab": "Hunter"},
+    },
+    "Breeding": {
+        "High": {
+            373: {"Name": "Curviture Of The Paw", "Tab": "Beast Master"},
         },
         "Low": {
-            478: {"Name": "Nearby Outlet", "Tab": "Wizard"},
-            475: {"Name": "Charge Syphon", "Tab": "Wizard", 'Hardcap': 200},
+            372: {"Name": "Shining Beacon of Egg", "Tab": "Beast Master"},  # Account-wide EXP bumped to Low
         },
-    }
+    },
+    # Utility is talents that apply to multiple skills at a bottom-of-the-group priority (Mostly Jman stuff + Drop Rate)
+    "Utility": {
+        "High": {
+            43: {"Name": "Right Hand of Action", "Tab": "Maestro"},
+            32: {"Name": "Printer Go Brrr", "Tab": "Maestro", "Optimal": [0, 40, True]},
+            34: {"Name": "One Step Ahead", "Tab": "Maestro"},
+            59: {"Name": "Blood Marrow", "Tab": "Voidwalker"},
+            57: {"Name": "Species Epoch", "Tab": "Voidwalker"},
+            49: {"Name": "Enhancement Eclipse", "Tab": "Voidwalker", "Optimal": [0, 25, False], 'Hardcap': hardcap_enhancement_eclipse},
+            53: {"Name": "Eternal WIS", "Tab": "Voidwalker"},
+            51: {"Name": "Eternal STR", "Tab": "Voidwalker"},
+            52: {"Name": "Eternal AGI", "Tab": "Voidwalker"},
+        },
+        "Medium": {
+            41: {"Name": "Crystal Countdown", "Tab": "Maestro"},
+            28: {"Name": "Cards Galore", "Tab": "Journeyman"},
+            29: {"Name": "Rares Everywhere", "Tab": "Journeyman"},
+            24: {"Name": "Curse of Mr Looty Booty", "Tab": "Journeyman"},
+            56: {"Name": "Voodoo Statufication", "Tab": "Voidwalker"},
+            78: {"Name": "Extra Bags", "Tab": "Beginner"},
+            39: {"Name": "Colloquial Containers", "Tab": "Maestro"},
+        },
+        "Low": {
+            279: {"Name": "Robbinghood", "Tab": "Archer"},
+            37: {"Name": "Skilliest Statue", "Tab": "Maestro", 'Hardcap': 200},
+        },
+        "EXP Only": {
+            42: {"Name": "Left Hand of Learning", "Tab": "Maestro"},
+            40: {"Name": "Maestro Infusion", "Tab": "Maestro"},
+            38: {"Name": "Bliss N Chips", "Tab": "Maestro"},
+        },
+    },
 }
 combat_talentsDict = {
     #Talents here are unique from the skill_talentsDict above
@@ -4059,6 +4148,534 @@ labJewelsDict = {
     19:{'Name': "Pure Opal Navette", "Description": "+}% higher effects from all active bonuses and jewels within the Mainframe, except for Spelunker Obol. @ This is a multiplier, so +10% would be 1.10x, ya feel me? @ This bonus always has a 80px connection range no matter what!", "BaseValue":10}, 
     20:{'Name': "Pure Opal Rhombol", "Description": "Depot Studies PhD' gives an additional }% boost to all Crop Depot bonuses!", "BaseValue": 10},
 }
+
+labBonusesList = [
+    "Animal Farm", "Wired In", "Gilded Cyclical Tubing", "No Bubble Left Behind", "Killer's Brightside",
+    "Shrine World Tour", "Viaduct of the Gods", "Certified Stamp Book", "Spelunker Obol", "Fungi Finger Pocketer",
+    "My 1st Chemistry Set", "Unadulterated Banking Fury", "Sigils of Olden Alchemy", "Viral Connection",
+    "Artifact Attraction", "Slab Sovereignty", "Spiritual Growth", "Depot Studies PhD"
+]
+
+maxNumberOfTerritories = 24  # as of w6 launch
+indexFirstTerritoryAssignedPet = 28
+slotUnlockWavesList = [2, 15, 50, 125]
+territoryNames = [
+    "", "Grasslands", "Jungle", "Encroaching Forest", "Tree Interior", "Stinky Sewers",
+    "Desert Oasis", "Beach Docks", "Coarse Mountains", "Twilight Desert", "The Crypt",
+    "Frosty Peaks", "Tundra Outback", "Crystal Caverns", "Pristalle Lake",
+    "Nebulon Mantle", "Starfield Skies", "Shores of Eternity",
+    "Molten Bay", "Smokey Lake", "Wurm Catacombs",
+    "Spirit Fields", "Bamboo Forest", "Lullaby Airways", "Dharma Mesa"
+]
+breedingUpgradesDict: dict[int, dict[str, str | int]] = {
+    0: {
+        'Name': 'No Upgrade Selected',
+        'BonusText': "TAP AN UPGRADE ABOVE! Also, as a reward for reading this, I'll let you know that upgrading this 'nothing' bonus actually boosts breeding exp gain!!",
+        'BonusValue': 2,
+        'MaxLevel': 100,
+        'MaxValue': 200,
+        'UnlockLevel': 1,
+    },
+    1: {
+        'Name': 'Genetic Splicing',
+        'BonusText': "Unlocks the 1st Breeding Multiplier, Gene Boosting. Genes are found while fighting with the DNA Splicer tool purchased at the Town Shop.",
+        'BonusValue': 4,
+        'MaxLevel': 20,
+        'MaxValue': 80,
+        'UnlockLevel': 1,
+    },
+    2: {
+        'Name': 'Egg Capacity',
+        'BonusText': "Increases the maximum number of eggs your incubator can hold. The more eggs you currently hold, the rarer it is to get a new one.",
+        'BonusValue': 1,
+        'MaxLevel': 5,
+        'MaxValue': 5,
+        'UnlockLevel': 5,
+    },
+    3: {
+        'Name': 'Breedability Pulse',
+        'BonusText': "Unlocks the 2nd Breeding Multiplier, Breedability. Pets placed in the Fenceyard with the Breedable Gene increase this multi over time.",
+        'BonusValue': 25,
+        'MaxLevel': 10,
+        'MaxValue': 250,
+        'UnlockLevel': 10,
+    },
+    4: {
+        'Name': 'Fence Extension',
+        'BonusText': "Increases the number of slots in your Fence Yard, allowing for more pets to roam around, free range style!",
+        'BonusValue': 1,
+        'MaxLevel': 10,
+        'MaxValue': 10,
+        'UnlockLevel': 15,
+    },
+    5: {
+        'Name': 'Rarity of the Egg',
+        'BonusText': "Unlocks the 3rd Breeding Multi, Rarity. When the egg incubator is full, theres a chance to increase the rarity of another egg!",
+        'BonusValue': 0,
+        'MaxLevel': 10,
+        'MaxValue': 3.5,
+        'UnlockLevel': 20,
+    },
+    6: {
+        'Name': 'Blooming Axe',
+        'BonusText': "Forage pets contribute a fraction of their forage speed toward Fight Power. Now you no longer need at least 1 fighting pet!",
+        'BonusValue': 6,
+        'MaxLevel': 10,
+        'MaxValue': 60,
+        'UnlockLevel': 25,
+    },
+    7: {
+        'Name': 'Pastpresent Brood',
+        'BonusText': "Unlocks the 4th Breeding Multiplier, Pastpres. This increases based on the number of different pets discovered from the previous world.",
+        'BonusValue': 0.15,
+        'MaxLevel': 5,
+        'MaxValue': 1.75,
+        'UnlockLevel': 30,
+    },
+    8: {
+        'Name': 'Paint Bucket',
+        'BonusText': "Unlocks Shiny Pet Breeding. Shiny Pets come in 1 of 5 colours, and boost their Special Passive bonus when in the Fenceyard.",
+        'BonusValue': 2,
+        'MaxLevel': 100,
+        'MaxValue': 201,
+        'UnlockLevel': 40,
+    },
+    9: {
+        'Name': 'Overwhelmed Golden Egg',
+        'BonusText': "Your New Pet Chance is multiplied for every 100 kitchen upgrade levels across all kitchens! So 200 Lvs would apply it twice!!",
+        'BonusValue': 0.02,
+        'MaxLevel': 20,
+        'MaxValue': 1.4,
+        'UnlockLevel': 50,
+    },
+    10: {
+        'Name': 'Failsafe Restitution Cloud',
+        'BonusText': "Unlocks the 5th Breeding Multiplier, Failure. This increases every time you fail to get a pet, up to a max, and depletes when you succeed.",
+        'BonusValue': 10,
+        'MaxLevel': 25,
+        'MaxValue': 250,
+        'UnlockLevel': 60,
+    },
+    11: {
+        'Name': 'Shattershell Iteration',
+        'BonusText': "Every time you use up your last incubator egg, there is a chance to produce 2 more eggs immediately.",
+        'BonusValue': 6,
+        'MaxLevel': 10,
+        'MaxValue': 60,
+        'UnlockLevel': 70,
+    },
+
+}
+breedingGeneticsList: list[str] = [
+    "Fighter", "Defender", "Forager", "Fleeter", "Breeder", "Special", "Mercenary", "Boomer",
+    "Sniper", "Amplifier", "Tsar", "Rattler", "Cursory", "Fastidious", "Flashy", "Opticular",
+    "Monolithic", "Alchemic", "Badumdum", "Defstone", "Targeter", "Looter", "Refiller", "Eggshell",
+    "Lazarus", "Trasher", "Miasma", "Converter", "Heavyweight", "Fastihoop", "Ninja",
+    "Superboomer", "Peapeapod", "Borger"
+]
+breedingShinyBonusList: list[str] = [
+    "Faster Shiny Pet Lv Up Rate",  #0
+    "Infinite Star Signs",
+    "Total Damage",  #2
+    "Drop Rate",
+    "Base Efficiency for All Skills",  #4
+    "Base WIS",
+    "Base STR",  #6
+    "Base AGI",
+    "Base LUK",  #8
+    "Class EXP",
+    "Skill EXP",  #10
+    "Tab 1 Talent Pts",
+    "Tab 2 Talent Pts",  #12
+    "Tab 3 Talent Pts",
+    "Tab 4 Talent Pts",  #14
+    "Star Talent Pts",
+    "Faster Refinery Speed",  #16
+    "Base Critter Per Trap",
+    "Multikill Per Tier",  #18
+    "Bonuses from All Meals",
+    "Line Width in Lab",  #20
+    "Higher Artifact Find Chance",
+    "Sail Captain EXP Gain",  #22
+    "Lower Minimum Travel Time for Sailing",
+    "Farming EXP",  #24
+    "Summoning EXP"
+]
+breedingSpeciesDict: dict[int, dict] = {
+    #Built using references to Genetics and ShinyBonus lists because I kept making typos + Wiki isn't consistent to copy/paste from
+    1: {
+        0: {
+            'Name': 'Green Mushroom',
+            'Genetic': breedingGeneticsList[0],  #Fighter
+            'ShinyBonus': breedingShinyBonusList[0],  #Faster Shiny Pet Lv Up Rate,
+        },
+        1: {
+            'Name': 'Squirrel',
+            'Genetic': breedingGeneticsList[2],  #Forager
+            'ShinyBonus': breedingShinyBonusList[1],  #Infinite Star Signs
+        },
+        2: {
+            'Name': 'Frog',
+            'Genetic': breedingGeneticsList[7],  #Boomer
+            'ShinyBonus': breedingShinyBonusList[2],  #Total Damage
+        },
+        3: {
+            'Name': 'Bored Bean',
+            'Genetic': breedingGeneticsList[3],  #Fleeter
+            'ShinyBonus': breedingShinyBonusList[16],  #Faster Refinery Speed
+        },
+        4: {
+            'Name': 'Red Mushroom',
+            'Genetic': breedingGeneticsList[0],  #Fighter
+            'ShinyBonus': breedingShinyBonusList[19],  #Bonuses from All Meals
+        },
+        5: {
+            'Name': 'Slime',
+            'Genetic': breedingGeneticsList[12],  #Cursory
+            'ShinyBonus': breedingShinyBonusList[3],  #Drop Rate
+        },
+        6: {
+            'Name': 'Piggo',
+            'Genetic': breedingGeneticsList[9],  #Amplifier
+            'ShinyBonus': breedingShinyBonusList[1],  #Infinite Star Signs
+        },
+        7: {
+            'Name': 'Baby Boa',
+            'Genetic': breedingGeneticsList[20],  #Targeter
+            'ShinyBonus': breedingShinyBonusList[18],  #Multikill Per Tier
+        },
+        8: {
+            'Name': 'Carrotman',
+            'Genetic': breedingGeneticsList[6],  #Mercenary
+            'ShinyBonus': breedingShinyBonusList[4],  #Base Efficiency for All Skills
+        },
+        9: {
+            'Name': 'Glublin',
+            'Genetic': breedingGeneticsList[22],  #Refiller
+            'ShinyBonus': breedingShinyBonusList[1],  #Infinite Star Signs
+        },
+        10: {
+            'Name': 'Wode Board',
+            'Genetic': breedingGeneticsList[26],  #Miasma
+            'ShinyBonus': breedingShinyBonusList[0],  #Faster Shiny Pet Lv Up Rate
+        },
+        11: {
+            'Name': 'Gigafrog',
+            'Genetic': breedingGeneticsList[9],  #Amplifier
+            'ShinyBonus': breedingShinyBonusList[4],  #Base Efficiency for All Skills
+        },
+        12: {
+            'Name': 'Wild Boar',
+            'Genetic': breedingGeneticsList[28],  #Heavyweight
+            'ShinyBonus': breedingShinyBonusList[7],  #Base AGI
+        },
+        13: {
+            'Name': 'Walking Stick',
+            'Genetic': breedingGeneticsList[22],  #Refiller
+            'ShinyBonus': breedingShinyBonusList[17],  #Base Critter Per Trap
+        },
+        14: {
+            'Name': 'Nutto',
+            'Genetic': breedingGeneticsList[33],  #Borger
+            'ShinyBonus': breedingShinyBonusList[2],  #Total Damage
+        },
+        15: {
+            'Name': 'Poop',
+            'Genetic': breedingGeneticsList[10],  #Tsar
+            'ShinyBonus': breedingShinyBonusList[24],  #Farming EXP
+        },
+        16: {
+            'Name': 'Rat',
+            'Genetic': breedingGeneticsList[16],  #Monolithic
+            'ShinyBonus': breedingShinyBonusList[18],  #Multikill Per Tier
+        },
+    },
+    2: {
+        0: {
+            'Name': 'Sandy Pot',
+            'Genetic': breedingGeneticsList[21],  #Looter
+            'ShinyBonus': breedingShinyBonusList[9],  #Class EXP
+        },
+        1: {
+            'Name': 'Mimic',
+            'Genetic': breedingGeneticsList[1],  #Defender
+            'ShinyBonus': breedingShinyBonusList[11],  #Tab 1 Talent Pts
+        },
+        2: {
+            'Name': 'Crabcake',
+            'Genetic': breedingGeneticsList[3],  #Fleeter
+            'ShinyBonus': breedingShinyBonusList[10],  #Skill EXP
+        },
+        3: {
+            'Name': 'Mafioso',
+            'Genetic': breedingGeneticsList[2],  #Forager
+            'ShinyBonus': breedingShinyBonusList[12],  #Tab 2 Talent Pts
+        },
+        4: {
+            'Name': 'Mallay',
+            'Genetic': breedingGeneticsList[15],  #Opticular
+            'ShinyBonus': breedingShinyBonusList[20],  #Line Width in Lab
+        },
+        5: {
+            'Name': 'Sand Castle',
+            'Genetic': breedingGeneticsList[19],  #Defstone
+            'ShinyBonus': breedingShinyBonusList[6],  #Base STR
+        },
+        6: {
+            'Name': 'Pincermin',
+            'Genetic': breedingGeneticsList[0],  #Fighter
+            'ShinyBonus': breedingShinyBonusList[2],  #Total Damage
+        },
+        7: {
+            'Name': 'Mashed Potato',
+            'Genetic': breedingGeneticsList[9],  #Amplifier
+            'ShinyBonus': breedingShinyBonusList[4],  #Base Efficiency for All Skills
+        },
+        8: {
+            'Name': 'Tyson',
+            'Genetic': breedingGeneticsList[13],  #Fastidious
+            'ShinyBonus': breedingShinyBonusList[21],  #Higher Artifact Find Chance
+        },
+        9: {
+            'Name': 'Whale',
+            'Genetic': breedingGeneticsList[18],  #Badumdum
+            'ShinyBonus': breedingShinyBonusList[16],  #Faster Refinery Speed
+        },
+        10: {
+            'Name': 'Moonmoon',
+            'Genetic': breedingGeneticsList[7],  #Mercenary
+            'ShinyBonus': breedingShinyBonusList[5],  #Base WIS
+        },
+        11: {
+            'Name': 'Sand Giant',
+            'Genetic': breedingGeneticsList[11],  #Rattler
+            'ShinyBonus': breedingShinyBonusList[4],  #Base Efficiency for All Skills
+        },
+        12: {
+            'Name': 'Snelbie',
+            'Genetic': breedingGeneticsList[16],  #Monolithic
+            'ShinyBonus': breedingShinyBonusList[14],  #Tab 4 Talent Pts
+        },
+        13: {
+            'Name': 'Dig Doug',
+            'Genetic': breedingGeneticsList[24],  #Lazarus
+            'ShinyBonus': breedingShinyBonusList[24],  #Farming EXP
+        },
+        14: {
+            'Name': 'Beefie',
+            'Genetic': breedingGeneticsList[25],  #Trasher
+            'ShinyBonus': breedingShinyBonusList[8],  #Base LUK
+        },
+        15: {
+            'Name': 'Crescent Spud',
+            'Genetic': breedingGeneticsList[16],  #Monolithic
+            'ShinyBonus': breedingShinyBonusList[0],  #Faster Shiny Pet Lv Up Rate
+        },
+        16: {
+            'Name': 'Chippy',
+            'Genetic': breedingGeneticsList[23],  #Eggshell
+            'ShinyBonus': breedingShinyBonusList[25],  #Summoning EXP
+        },
+    },
+    3: {
+		0: {
+            'Name': 'Sheepie',
+            'Genetic': breedingGeneticsList[8],  #Sniper
+            'ShinyBonus': breedingShinyBonusList[19],  #Bonuses from All Meals
+        },
+		1: {
+            'Name': 'Frost Flake',
+            'Genetic': breedingGeneticsList[30],  #Ninja
+            'ShinyBonus': breedingShinyBonusList[13],  #Tab 3 Talent Pts
+        },
+		2: {
+            'Name': 'Sir Stache',
+            'Genetic': breedingGeneticsList[23],  #Eggshell
+            'ShinyBonus': breedingShinyBonusList[1],  #Infinite Star Signs
+        },
+		3: {
+            'Name': 'Xylobone',
+            'Genetic': breedingGeneticsList[15],  #Opticular
+            'ShinyBonus': breedingShinyBonusList[3],  #Drop Rate
+        },
+		4: {
+            'Name': 'Bunny',
+            'Genetic': breedingGeneticsList[14],  #Flashy
+            'ShinyBonus': breedingShinyBonusList[8],  #Base LUK
+        },
+		5: {
+            'Name': 'Bloque',
+            'Genetic': breedingGeneticsList[17],  #Alchemic
+            'ShinyBonus': breedingShinyBonusList[18],  #Multikill Per Tier
+        },
+		6: {
+            'Name': 'Mamooth',
+            'Genetic': breedingGeneticsList[21],  #Looter
+            'ShinyBonus': breedingShinyBonusList[21],  #Higher Artifact Find Chance
+        },
+		7: {
+            'Name': 'Snowman',
+            'Genetic': breedingGeneticsList[19],  #Defstone
+            'ShinyBonus': breedingShinyBonusList[9],  #Class EXP
+        },
+		8: {
+            'Name': 'Penguin',
+            'Genetic': breedingGeneticsList[13],  #Fastidious
+            'ShinyBonus': breedingShinyBonusList[1],  #Infinite Star Signs
+        },
+		9: {
+            'Name': 'Thermister',
+            'Genetic': breedingGeneticsList[8],  #Sniper
+            'ShinyBonus': breedingShinyBonusList[10],  #Skill EXP
+        },
+		10: {
+            'Name': 'Quenchie',
+            'Genetic': breedingGeneticsList[7],  #Boomer
+            'ShinyBonus': breedingShinyBonusList[0],  #Faster Shiny Pet Lv Up Rate
+        },
+		11: {
+            'Name': 'Cryosnake',
+            'Genetic': breedingGeneticsList[23],  #Eggshell
+            'ShinyBonus': breedingShinyBonusList[15],  #Star Talent Pts
+        },
+		12: {
+            'Name': 'Mecho Mouse',
+            'Genetic': breedingGeneticsList[25],  #Trasher
+            'ShinyBonus': breedingShinyBonusList[6],  #Base STR
+        },
+		13: {
+            'Name': 'Bop Box',
+            'Genetic': breedingGeneticsList[27],  #Converter
+            'ShinyBonus': breedingShinyBonusList[1],  #Infinite Star Signs
+        },
+		14: {
+            'Name': 'Neyeptune',
+            'Genetic': breedingGeneticsList[24],  #Lazarus
+            'ShinyBonus': breedingShinyBonusList[24],  #Farming EXP
+        },
+		15: {
+            'Name': 'Dedotated Ram',
+            'Genetic': breedingGeneticsList[9],  #Amplifier
+            'ShinyBonus': breedingShinyBonusList[18],  #Multikill Per Tier
+        },
+		16: {
+            'Name': 'Bloodbone',
+            'Genetic': breedingGeneticsList[20],  #Targeter
+            'ShinyBonus': breedingShinyBonusList[24],  #Farming EXP
+        },
+        17: {
+            'Name': 'Panda',
+            'Genetic': breedingGeneticsList[27],  #Converter
+            'ShinyBonus': breedingShinyBonusList[2],  #Total Damage
+        },
+    },
+    4: {
+        0: {
+            'Name': 'Purp Mushroom',
+            'Genetic': breedingGeneticsList[10],  #Tsar
+            'ShinyBonus': breedingShinyBonusList[24],  #Farming EXP
+        },
+        1: {
+            'Name': 'TV',
+            'Genetic': breedingGeneticsList[11],  #Rattler
+            'ShinyBonus': breedingShinyBonusList[22],  #Sail Captain EXP Gain
+        },
+        2: {
+            'Name': 'Donut',
+            'Genetic': breedingGeneticsList[14],  #Flashy
+            'ShinyBonus': breedingShinyBonusList[25],  #Summoning EXP
+        },
+        3: {
+            'Name': 'Demon Genie',
+            'Genetic': breedingGeneticsList[31],  #Superboomer
+            'ShinyBonus': breedingShinyBonusList[16],  #Faster Refinery Speed
+        },
+        4: {
+            'Name': 'Flying Worm',
+            'Genetic': breedingGeneticsList[33],  #Borger
+            'ShinyBonus': breedingShinyBonusList[7],  #Base AGI
+        },
+        5: {
+            'Name': 'Dog',
+            'Genetic': breedingGeneticsList[32],  #Peapeapod
+            'ShinyBonus': breedingShinyBonusList[23],  #Lower Minimum Travel Time for Sailing
+        },
+        6: {
+            'Name': 'Soda Can',
+            'Genetic': breedingGeneticsList[29],  #Fastihoop
+            'ShinyBonus': breedingShinyBonusList[21],  #Higher Artifact Find Chance
+        },
+        7: {
+            'Name': 'Gelatinous Cuboid',
+            'Genetic': breedingGeneticsList[14],  #Flashy
+            'ShinyBonus': breedingShinyBonusList[2],  #Total Damage
+        },
+        8: {
+            'Name': 'Choccie',
+            'Genetic': breedingGeneticsList[31],  #Superboomer
+            'ShinyBonus': breedingShinyBonusList[3],  #Drop Rate
+        },
+        9: {
+            'Name': 'Biggole Wurm',
+            'Genetic': breedingGeneticsList[10],  #Tsar
+            'ShinyBonus': breedingShinyBonusList[9],  #Class EXP
+        },
+        10: {
+            'Name': 'Cool Bird',
+            'Genetic': breedingGeneticsList[33],  #Borger
+            'ShinyBonus': breedingShinyBonusList[6],  #Base STR
+        },
+        11: {
+            'Name': 'Clammie',
+            'Genetic': breedingGeneticsList[6],  #Mercenary
+            'ShinyBonus': breedingShinyBonusList[10],  #Skill EXP
+        },
+        12: {
+            'Name': 'Octodar',
+            'Genetic': breedingGeneticsList[12],  #Cursory
+            'ShinyBonus': breedingShinyBonusList[17],  #Base Critter Per Trap
+        },
+        13: {
+            'Name': 'Flombeige',
+            'Genetic': breedingGeneticsList[25],  #Trasher
+            'ShinyBonus': breedingShinyBonusList[7],  #Base AGI
+        },
+        14: {
+            'Name': 'Stilted Seeker',
+            'Genetic': breedingGeneticsList[33],  #Borger
+            'ShinyBonus': breedingShinyBonusList[5],  #Base WIS
+        },
+        15: {
+            'Name': 'Hedgehog',
+            'Genetic': breedingGeneticsList[32],  #Peapeapod
+            'ShinyBonus': breedingShinyBonusList[8],  #Base LUK
+        },
+    },
+}
+shinyDaysList = [0, 3, 11, 33, 85, 200, 448, 964, 2013, 4107, 8227, 16234, 31633, 60989, 116522, 999999999]
+
+def getShinyLevelFromDays(days: float) -> int:
+    shinyLevel = 0
+    for requirement in shinyDaysList:
+        if float(days) > requirement:
+            shinyLevel += 1
+        else:
+            break
+    return shinyLevel
+
+def getDaysToNextShinyLevel(days: float) -> float:
+    shinyLevel = 0
+    for requirement in shinyDaysList:
+        if float(days) > requirement:
+            shinyLevel += 1
+    #logger.debug(f"Input days of {days} found to be less than {shinyDaysList[highestExceeded]} by {shinyDaysList[highestExceeded] - float(days)} days")
+    try:
+        daysRemaining = shinyDaysList[shinyLevel] - float(days)
+        return daysRemaining
+    except Exception as reason:
+        logger.warning(f"With shinyLevel of {shinyLevel}, Defaulting Shiny days Remaining to 0. Reason: {reason}")
+        return 0
+
 
 ###WORLD 5 CONSTS###
 artifactTiers = ["Base", "Ancient", "Eldritch", "Sovereign"]
