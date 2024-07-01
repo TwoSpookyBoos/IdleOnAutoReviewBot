@@ -1897,6 +1897,8 @@ class Account:
         self._calculate_w3_collider_cost_reduction()
 
     def _calculate_w3_building_max_levels(self):
+        
+        towers = [towerName for towerName, towerValuesDict in self.construction_buildings.items() if towerValuesDict['Type'] == 'Tower'] # Placed here since it's used for both Construction mastery and atom levels
         if self.rift['SkillMastery']:
             totalLevel = sum(self.all_skills['Construction'])
             if totalLevel >= 500:
@@ -1914,7 +1916,6 @@ class Account:
                         continue
 
             if totalLevel >= 2500 :
-                towers = [towerName for towerName, towerValuesDict in self.construction_buildings.items() if towerValuesDict['Type'] == 'Tower']
                 for towerName in towers:
                     try:
                         self.construction_buildings[towerName]['MaxLevel'] += 30
