@@ -17,7 +17,7 @@ from consts import expectedStackables, greenstack_progressionTiers, card_data, m
     getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampsDict, stampTypes, marketUpgradeList, \
     achievementsList, forgeUpgradesDict, arcadeBonuses, saltLickList, allMeritsDict, bubblesDict, familyBonusesDict, poBoxDict, equinoxBonusesDict, \
     maxDreams, dreamsThatUnlockNewBonuses, ceilUpToBase, starsignsDict, gfood_codes, getStyleNameFromIndex, divinity_divinitiesDict, getDivinityNameFromIndex, \
-    maxCookingTables, getNextESFamilyBreakpoint, expected_talentsDict, colliderStorageLimitList, gamingSuperbitsDict, labJewelsDict
+    maxCookingTables, getNextESFamilyBreakpoint, expected_talentsDict, colliderStorageLimitList, gamingSuperbitsDict, labJewelsDict, cookingMealDict
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
 
 def session_singleton(cls):
@@ -1415,10 +1415,24 @@ class Account:
         # Meals contains 4 lists of lists. The first 3 are as long as the number of plates. The 4th is general shorter.
         emptyMeals = [emptyMeal for meal in range(4)]
         raw_meals_list = safe_loads(self.raw_data.get("Meals", emptyMeals))
+        # Make the sublists maxMeals long
         for sublistIndex, value in enumerate(raw_meals_list):
             if isinstance(raw_meals_list[sublistIndex], list):
                 while len(raw_meals_list[sublistIndex]) < maxMeals:
                     raw_meals_list[sublistIndex].append(0)
+                while len(raw_meals_list[sublistIndex]) > maxMeals:
+                    raw_meals_list[sublistIndex].pop()
+        
+        # Create meal dict
+        self.meals = {}
+        i = 0 
+        for lvl in raw_meals_list[0]:
+            self.meals[cookingMealDict[i]["Name"]] = {
+                "Level": lvl,
+                "Value": lvl*cookingMealDict[i]["BaseValue"], # Mealmulti applied in calculate section
+                "BaseValue": cookingMealDict[i]["BaseValue"]
+            }
+            i=i+1
 
         # Count the number of unlocked meals, unlocked meals under 11, and unlocked meals under 30
         for mealLevel in raw_meals_list[0]:
@@ -1455,15 +1469,18 @@ class Account:
                 "Enabled": True,
                 "Value": 1
             }
+            
     def _parse_w4_jewels(self, raw_lab):
         #TODO: Account for if the jewel is actually connected.
-        jewelmulti = 1+0.5+0.1*raw_lab[14][16] # Will have to be fixed when labbonuses are implemented properly. index 16 is puropal navette
+        jewelmulti = 1+0.5+0.1*raw_lab[14][16] # Will have to be fixed when labbonuses are implemented properly. index 16 is purple navette
 
         self.labJewels = {}
         for jewelIndex, jewelInfo in labJewelsDict.items():
             self.labJewels[jewelInfo["Name"]] = {
-                "Enabled": bool(raw_lab[14][jewelIndex]),
-                "Value": jewelInfo["BaseValue"]*jewelmulti
+                "Owned": bool(raw_lab[14][jewelIndex]),
+                "Enabled": bool(raw_lab[14][jewelIndex]), # Same as owned until connection range is implemented
+                "Value": jewelInfo["BaseValue"]*jewelmulti,
+                "BaseValue": jewelInfo["BaseValue"]
             }
 
     def _parse_w4_rift(self):
@@ -1970,6 +1987,7 @@ class Account:
 
     def _calculate_w4(self):
         self._calculate_w4_cooking_max_plate_levels()
+        self._calculate_w4_meal_multi()
 
     def _calculate_w4_cooking_max_plate_levels(self):
         # Sailing Artifact Increases
@@ -2005,6 +2023,10 @@ class Account:
 
         self.cooking['CurrentRemainingMeals'] = (self.cooking['MealsUnlocked'] * self.cooking['PlayerMaxPlateLvl']) - self.cooking['PlayerTotalMealLevels']
         self.cooking['MaxRemainingMeals'] = (maxMeals * maxMealLevel) - self.cooking['PlayerTotalMealLevels']
+
+    def _calculate_w4_meal_multi(self):
+        for meal in self.meals:
+            self.meals[meal]["Value"]=self.meals[meal]["Value"]*(1+self.labJewels["Black Diamond Rhinestone"]["Value"]/100)
 
     def _calculate_w5(self):
         self._calculate_w5_divinity_link_advice()

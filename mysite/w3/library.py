@@ -1,6 +1,6 @@
 from math import ceil
 from flask import g as session_data
-from consts import maxStaticBookLevels, maxScalingBookLevels, maxSummoningBookLevels, maxOverallBookLevels, skill_talentsDict, combat_talentsDict, currentWorld, stamp_maxes
+from consts import maxStaticBookLevels, maxScalingBookLevels, maxSummoningBookLevels, maxOverallBookLevels, skill_talentsDict, combat_talentsDict, currentWorld, stamp_maxes, maxMealLevel 
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
@@ -169,22 +169,13 @@ def getBonusLevelAdviceGroup() -> AdviceGroup:
 def getCheckoutSpeedAdviceGroup() -> AdviceGroup:
     checkoutSpeedAdvices = []
 
-    # Lab sanity check
-    
-    checkoutSpeedAdvices.append(Advice(
-        label=f"Lab sanity check",
-        picture_class="black-diamond-rhinestone",
-        
-        progression=session_data.account.labJewels["Black Diamond Rhinestone"]["Value"],
-    ))
-
     # Meal
 
     checkoutSpeedAdvices.append(Advice(
-        label=f"Meal: Fortune Cookie: NOT IMPLEMENTED",
+        label=f"Meal: Fortune Cookie: {session_data.account.meals['Fortune Cookie']['Value']}%",
         picture_class="fortune-cookie",
-        progression=0,
-        goal=90
+        progression=session_data.account.meals["Fortune Cookie"]["Level"],
+        goal=maxMealLevel 
     ))
 
     # Atom
@@ -199,10 +190,10 @@ def getCheckoutSpeedAdviceGroup() -> AdviceGroup:
     # Tower
     
     checkoutSpeedAdvices.append(Advice(
-        label=f"Talent Book Library building: {((session_data.account.construction_buildings['Talent Book Library']['Level']-1) * 5)}/995%",
+        label=f"Talent Book Library building: {((session_data.account.construction_buildings['Talent Book Library']['Level']-1) * 5)}/{session_data.account.construction_buildings['Talent Book Library']['MaxLevel']*5}%",
         picture_class="talent-book-library",
         progression=session_data.account.construction_buildings['Talent Book Library']['Level'],
-        goal=200
+        goal=session_data.account.construction_buildings['Talent Book Library']['MaxLevel']
     ))
 
     # Bubble
