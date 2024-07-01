@@ -4,7 +4,6 @@ from consts import maxStaticBookLevels, maxScalingBookLevels, maxSummoningBookLe
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
-from w4.breeding import parseJSONtoBreedingDict
 
 logger = get_logger(__name__)
 
@@ -170,16 +169,14 @@ def getCheckoutSpeedAdviceGroup() -> AdviceGroup:
     checkoutSpeedAdvices = []
 
     # Meal
-
     checkoutSpeedAdvices.append(Advice(
-        label=f"Meal: Fortune Cookie: {session_data.account.meals['Fortune Cookie']['Value']}%",
+        label=f"Meal: Fortune Cookie: {session_data.account.meals['Fortune Cookie']['Value']:.1f}%",
         picture_class="fortune-cookie",
         progression=session_data.account.meals["Fortune Cookie"]["Level"],
         goal=maxMealLevel 
     ))
 
     # Atom
-
     checkoutSpeedAdvices.append(Advice(
         label=f"""Oxygen - Library Booker: {2*session_data.account.atom_collider['Atoms']["Oxygen - Library Booker"]['Level']}/60%""",
         picture_class="oxygen",
@@ -188,7 +185,6 @@ def getCheckoutSpeedAdviceGroup() -> AdviceGroup:
     ))
 
     # Tower
-    
     checkoutSpeedAdvices.append(Advice(
         label=f"Talent Book Library building: {((session_data.account.construction_buildings['Talent Book Library']['Level']-1) * 5)}/{session_data.account.construction_buildings['Talent Book Library']['MaxLevel']*5}%",
         picture_class="talent-book-library",
@@ -197,26 +193,23 @@ def getCheckoutSpeedAdviceGroup() -> AdviceGroup:
     ))
 
     # Bubble
-
     checkoutSpeedAdvices.append(Advice(
-        label=f"Ignore Overdues bubble: {session_data.account.alchemy_bubbles['Ignore Overdues']['BaseValue']:.2f}/100%",
+        label=f"Ignore Overdues bubble: {session_data.account.alchemy_bubbles['Ignore Overdues']['BaseValue']:.1f}/100%",
         picture_class="ignore-overdues",
         progression=session_data.account.alchemy_bubbles['Ignore Overdues']['Level'],
         resource=session_data.account.alchemy_bubbles['Ignore Overdues']['Material']
     ))
 
     # Vial
-
-    vialBonus = session_data.account.alchemy_vials.get('Chonker Chug (Dune Soul)', {}).get('Value', 0) * session_data.account.vialMasteryMulti
+    vialBonus = session_data.account.alchemy_vials.get('Chonker Chug (Dune Soul)', {}).get('Value', 0) * session_data.account.vialMasteryMulti * session_data.account.labBonuses["My 1st Chemistry Set"]["Value"]
     checkoutSpeedAdvices.append(Advice(
-        label=f"Chonker Chug vial: +{vialBonus:.2f}%",
+        label=f"Chonker Chug vial: +{vialBonus:.1f}%",
         picture_class='chonker-chug',
         progression=session_data.account.alchemy_vials.get('Chonker Chug (Dune Soul)', {}).get('Level', 0),
         goal=13
     ))
 
     # Stamp
-
     stampLevel=session_data.account.stamps.get("Biblio Stamp", {}).get('Level', 0)
     checkoutSpeedAdvices.append(Advice(
         label=f"Stamp: Biblio Stamp: +{stampLevel}%",
@@ -227,12 +220,7 @@ def getCheckoutSpeedAdviceGroup() -> AdviceGroup:
     ))
 
     # Superbit
-
-    toons = session_data.account.all_characters
-    gaming_levels = []
-    for toon in toons:
-        gaming_levels.append(toon.gaming_level)
-    gaming_level = max(gaming_levels)
+    gaming_level = max(session_data.account.all_skills["Gaming"])
     checkoutSpeedAdvices.append(Advice(
         label=f"Superbit: Library Checkouts: +1% per Gaming Level",
         picture_class="green-bits",
@@ -240,13 +228,15 @@ def getCheckoutSpeedAdviceGroup() -> AdviceGroup:
     ))
 
     # Achievement
-    
     checkoutSpeedAdvices.append(Advice(
         label=f"W3 Achievement: Checkout Takeout: +{30 * (0 < session_data.account.achievements.get('Checkout Takeout', False))}%",
         picture_class="checkout-takeout",
         progression=1 if session_data.account.achievements.get('Checkout Takeout', False) else 0,
         goal=1
     ))
+    
+    for advice in checkoutSpeedAdvices:
+        mark_advice_completed(advice)
 
     checkoutSpeedAdviceGroup = AdviceGroup(
         tier="",

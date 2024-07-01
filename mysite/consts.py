@@ -4014,12 +4014,27 @@ labChipsList: list[str] = [
     "Omega Nanochip", "Omega Motherboard"
 ]
 
-labBonusesList = [
-    "Animal Farm", "Wired In", "Gilded Cyclical Tubing", "No Bubble Left Behind", "Killer's Brightside",
-    "Shrine World Tour", "Viaduct of the Gods", "Certified Stamp Book", "Spelunker Obol", "Fungi Finger Pocketer",
-    "My 1st Chemistry Set", "Unadulterated Banking Fury", "Sigils of Olden Alchemy", "Viral Connection",
-    "Artifact Attraction", "Slab Sovereignty", "Spiritual Growth", "Depot Studies PhD"
-]
+# I don't know what values 4 and 5 do. Added in case they turn out to be useful 
+labBonusesDict = {
+    0: {"Name": "Animal Farm", "Description": "+1% Total Damage for every different species you have bred within Pet Breeding. You just need to breed the pet type one time for it to count! @ - @ Total Bonus: {%", "BaseValue": 1, "Coordinates": [91, 90], "Value4": 90, "Value5": 0},
+    1: {"Name": "Wired In", "Description": "All Uploaded Players print 2x more resources from their section of the 3D Printer. The displayed amount will NOT appear doubled, just to avoid confusion as to what your actual base Sampling Rate is, but it will be displayed in blue.", "BaseValue": 2, "Coordinates": [250, 90], "Value4": 90, "Value5": 1},
+    2: {"Name": "Gilded Cyclical Tubing", "Description": "All refinery cycles occur 3x faster. Faster cycles means more salts!", "BaseValue": 3, "Coordinates": [356, 90], "Value4": 90, "Value5": 1},
+    3: {"Name": "No Bubble Left Behind", "Description": "Every 24 hours, your 3 lowest level Alchemy Bubbles gets +1 Lv. This only applies to bubbles Lv 5 or higher, so it's more like 'your lowest level bubble that is at least level 5'. ALSO, it only works on the first 15 bubbles of each colour! @ Doesn't trigger on days that you don't login.", "BaseValue": 1, "Coordinates": [450, 90], "Value4": 90, "Value5": 0},
+    4: {"Name": "Killer's Brightside", "Description": "All monster kills count for 2x more than normal for things like opening portals and Death Note. Doesn't increase resource drops or exp gain.", "BaseValue": 2, "Coordinates": [538, 90], "Value4": 90, "Value5": 1},
+    5: {"Name": "Shrine World Tour", "Description": "If a shrine is placed within town, instead of in a monster map, it will act as though it is placed in EVERY map in that entire world!", "BaseValue": 1, "Coordinates": [651, 90], "Value4": 90, "Value5": 0},
+    6: {"Name": "Viaduct of the Gods", "Description": "All alchemy liquids have x5 higher max capacity. However, you regenerate alchemy liquids -30% slower.", "BaseValue": 5, "Coordinates": [753, 90], "Value4": 90, "Value5": 1},
+    7: {"Name": "Certified Stamp Book", "Description": "All Stamps, except for MISC tab stamps, give DOUBLE the bonus.", "BaseValue": 2, "Coordinates": [824, 90], "Value4": 90, "Value5": 1},
+    8: {"Name": "Spelunker Obol", "Description": "1.50x higher effects from all active Jewels within the Mainframe, and gives you +50% rememberance of the game Idle Skilling. @ This bonus always has a 80px connection range no matter what!", "BaseValue": 1.5, "Coordinates": [945, 90], "Value4": 90, "Value5": 1},
+    9: {"Name": "Fungi Finger Pocketer", "Description": "+2% extra cash from monsters for every 1 million Green Mushroom kills your account has, which can be viewed at Death Note. @ - @ Total Bonus: {%", "BaseValue": 2, "Coordinates": [990, 90], "Value4": 90, "Value5": 0},
+    10: {"Name": "My 1st Chemistry Set", "Description": "All Vials in Alchemy give DOUBLE the bonus. The bonus description will reflect this doubling.", "BaseValue": 2, "Coordinates": [1177, 90], "Value4": 90, "Value5": 1},
+    11: {"Name": "Unadulterated Banking Fury", "Description": "+2% Total Damage for each 'green stack' of resources in your bank. A 'green stack' is a stack in your Storage Chest with 10 million or more items, since the number turns Green after 10M! @ - @ Total Bonus: {%", "BaseValue": 2, "Coordinates": [1300, 90], "Value4": 90, "Value5": 0},
+    12: {"Name": "Sigils of Olden Alchemy", "Description": "Allows you to level up Alchemy Sigils by assigning players in alchemy, at a base rate of 1 sigil xp per hour. @ Sigils can be leveled up just twice: Once to unlock their bonus, and once more to boost their bonus. Their bonuses are passive, and apply to all characters always.", "BaseValue": 1, "Coordinates": [400, 90], "Value4": 90, "Value5": 0},
+    13: {"Name": "Viral Connection", "Description": "All mainframe bonuses and jewels have a 50% larger connection range, unless it states otherwise. @ This bonus always has a 80px connection range no matter what!", "BaseValue": 50, "Coordinates": [1430, 90], "Value4": 90, "Value5": 0},
+    14: {"Name": "Artifact Attraction", "Description": "Artifact find chance is 1.5x higher! If you've found all artifacts at max rarity, then this bonus changes to 1,000x artifact find chance!", "BaseValue": 50, "Coordinates": [1530, 90], "Value4": 90, "Value5": 0},
+    15: {"Name": "Slab Sovereignty", "Description": "All bonuses given by the Slab are 1.25x higher!", "BaseValue": 25, "Coordinates": [1630, 90], "Value4": 90, "Value5": 0},
+    16: {"Name": "Spiritual Growth", "Description": "Boosts EXP multi for all three World 6 skills by +50%!", "BaseValue": 50, "Coordinates": [1790, 90], "Value4": 90, "Value5": 0},
+    17: {"Name": "Depot Studies PhD", "Description": "All bonuses given at the Crop Depot are 1.30x higher!", "BaseValue": 30, "Coordinates": [1950, 90], "Value4": 90, "Value5": 0},
+}
 
 labJewelsDict = {
     0: {'Name': "Amethyst Rhinestone", "Description": "Meal cooking is }x faster. This bonus is applied TWICE if all 3 purple jewels are active.", "BaseValue": 1.5}, 

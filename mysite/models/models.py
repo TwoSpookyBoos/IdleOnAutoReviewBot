@@ -13,11 +13,11 @@ from flask import g
 from utils.data_formatting import getCharacterDetails, safe_loads
 from consts import expectedStackables, greenstack_progressionTiers, card_data, maxMeals, maxMealLevel, jade_emporium, max_IndexOfVials, getReadableVialNames, \
     buildingsDict, atomsList, prayersDict, labChipsList, bribesDict, shrinesList, pristineCharmsList, sigilsDict, \
-    sailingDict, guildBonusesList, labBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesList, \
+    sailingDict, guildBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesList, \
     getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampsDict, stampTypes, marketUpgradeList, \
     achievementsList, forgeUpgradesDict, arcadeBonuses, saltLickList, allMeritsDict, bubblesDict, familyBonusesDict, poBoxDict, equinoxBonusesDict, \
     maxDreams, dreamsThatUnlockNewBonuses, ceilUpToBase, starsignsDict, gfood_codes, getStyleNameFromIndex, divinity_divinitiesDict, getDivinityNameFromIndex, \
-    maxCookingTables, getNextESFamilyBreakpoint, expected_talentsDict, colliderStorageLimitList, gamingSuperbitsDict, labJewelsDict, cookingMealDict
+    maxCookingTables, getNextESFamilyBreakpoint, expected_talentsDict, colliderStorageLimitList, gamingSuperbitsDict, labJewelsDict, cookingMealDict, labBonusesDict
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
 
 def session_singleton(cls):
@@ -1423,19 +1423,16 @@ class Account:
                 while len(raw_meals_list[sublistIndex]) > maxMeals:
                     raw_meals_list[sublistIndex].pop()
         
-        # Create meal dict
         self.meals = {}
-        i = 0 
-        for lvl in raw_meals_list[0]:
-            self.meals[cookingMealDict[i]["Name"]] = {
-                "Level": lvl,
-                "Value": lvl*cookingMealDict[i]["BaseValue"], # Mealmulti applied in calculate section
-                "BaseValue": cookingMealDict[i]["BaseValue"]
-            }
-            i=i+1
-
         # Count the number of unlocked meals, unlocked meals under 11, and unlocked meals under 30
-        for mealLevel in raw_meals_list[0]:
+        for index, mealLevel in enumerate(raw_meals_list[0]):
+            # Create meal dict
+            self.meals[cookingMealDict[index]["Name"]] = {
+                "Level": mealLevel,
+                "Value": mealLevel*cookingMealDict[index]["BaseValue"], # Mealmulti applied in calculate section
+                "BaseValue": cookingMealDict[index]["BaseValue"]
+            }
+
             if mealLevel > 0:
                 self.cooking['MealsUnlocked'] += 1
                 self.cooking['PlayerTotalMealLevels'] += mealLevel
@@ -1464,22 +1461,23 @@ class Account:
     def _parse_w4_lab_bonuses(self, raw_lab):
         #TODO: Actually figure out lab :(
         self.labBonuses = {}
-        for labBonusIndex, labBonusName in enumerate(labBonusesList):
-            self.labBonuses[labBonusName] = {
+        for index, node in labBonusesDict.items():
+            self.labBonuses[node["Name"]] = {
                 "Enabled": True,
-                "Value": 1
+                "Owned": True, # For W6 nodes
+                "Value": node["BaseValue"], # Currently no modifiers available, might change if the pure opal navette changes
+                "BaseValue": node["BaseValue"]
             }
             
     def _parse_w4_jewels(self, raw_lab):
         #TODO: Account for if the jewel is actually connected.
-        jewelmulti = 1+0.5+0.1*raw_lab[14][16] # Will have to be fixed when labbonuses are implemented properly. index 16 is purple navette
 
         self.labJewels = {}
         for jewelIndex, jewelInfo in labJewelsDict.items():
             self.labJewels[jewelInfo["Name"]] = {
                 "Owned": bool(raw_lab[14][jewelIndex]),
                 "Enabled": bool(raw_lab[14][jewelIndex]), # Same as owned until connection range is implemented
-                "Value": jewelInfo["BaseValue"]*jewelmulti,
+                "Value": jewelInfo["BaseValue"], # Jewelmulti added in calculate section
                 "BaseValue": jewelInfo["BaseValue"]
             }
 
@@ -1899,13 +1897,29 @@ class Account:
         self._calculate_w3_collider_cost_reduction()
 
     def _calculate_w3_building_max_levels(self):
-        towers = [towerName for towerName, towerValuesDict in self.construction_buildings.items() if towerValuesDict['Type'] == 'Tower']
-        if sum(self.all_skills['Construction']) > 2500 and self.rift['SkillMastery']:
-            for towerName in towers:
-                try:
-                    self.construction_buildings[towerName]['MaxLevel'] += 30
-                except:
-                    continue
+        if self.rift['SkillMastery']:
+            totalLevel = sum(self.all_skills['Construction'])
+            if totalLevel >= 500:
+                self.construction_buildings["Trapper Drone"]['MaxLevel'] += 35
+
+            if totalLevel >= 1000:
+                self.construction_buildings["Talent Book Library"]['MaxLevel'] += 100
+            
+            if totalLevel >= 1500:    
+                shrines = [shrineName for shrineName, shrineValuesDict in self.construction_buildings.items() if shrineValuesDict['Type'] == 'Shrine']
+                for shrineName in shrines:
+                    try:
+                        self.construction_buildings[shrineName]['MaxLevel'] += 30
+                    except:
+                        continue
+
+            if totalLevel >= 2500 :
+                towers = [towerName for towerName, towerValuesDict in self.construction_buildings.items() if towerValuesDict['Type'] == 'Tower']
+                for towerName in towers:
+                    try:
+                        self.construction_buildings[towerName]['MaxLevel'] += 30
+                    except:
+                        continue
 
         if self.atom_collider['Atoms']['Carbon - Wizard Maximizer']['Level'] > 0:
             for towerName in towers:
@@ -1913,20 +1927,6 @@ class Account:
                     self.construction_buildings[towerName]['MaxLevel'] += 2 * self.atom_collider['Atoms']['Carbon - Wizard Maximizer']['Level']
                 except:
                     continue
-        
-        shrines = [shrineName for shrineName, shrineValuesDict in self.construction_buildings.items() if shrineValuesDict['Type'] == 'Shrine']
-        if sum(self.all_skills['Construction']) > 1500 and self.rift['SkillMastery']:
-            for shrineName in shrines:
-                try:
-                    self.construction_buildings[shrineName]['MaxLevel'] += 30
-                except:
-                    continue
-
-        if sum(self.all_skills['Construction']) > 500 and self.rift['SkillMastery']:
-            self.construction_buildings["Trapper Drone"]['MaxLevel'] += 35
-        
-        if sum(self.all_skills['Construction']) > 1000 and self.rift['SkillMastery']:
-            self.construction_buildings["Talent Book Library"]['MaxLevel'] += 100
 
     def _calculate_w3_library_max_book_levels(self):
         self.library['StaticSum'] = (0
@@ -2001,6 +2001,7 @@ class Account:
 
     def _calculate_w4(self):
         self._calculate_w4_cooking_max_plate_levels()
+        self._calculate_w4_jewel_multi()
         self._calculate_w4_meal_multi()
 
     def _calculate_w4_cooking_max_plate_levels(self):
@@ -2038,9 +2039,22 @@ class Account:
         self.cooking['CurrentRemainingMeals'] = (self.cooking['MealsUnlocked'] * self.cooking['PlayerMaxPlateLvl']) - self.cooking['PlayerTotalMealLevels']
         self.cooking['MaxRemainingMeals'] = (maxMeals * maxMealLevel) - self.cooking['PlayerTotalMealLevels']
 
+    def _calculate_w4_jewel_multi(self): 
+        jewelMulti = 1
+        if self.labBonuses["Spelunker Obol"]["Enabled"]:
+            jewelMulti = self.labBonuses["Spelunker Obol"]["Value"]
+            if self.labJewels["Pure Opal Navette"]["Enabled"]: # Nested since jewel does nothing without spelunker
+                jewelMulti += self.labJewels["Pure Opal Navette"]["BaseValue"]/100 # The displayed value does nothing since the effect is used before spelunker obol is accounted for
+        for jewel in self.labJewels:
+            self.labJewels[jewel]["Value"] *= jewelMulti
+
     def _calculate_w4_meal_multi(self):
+        mealMulti = 1
+        if self.labJewels["Black Diamond Rhinestone"]["Enabled"]:
+            mealMulti += self.labJewels["Black Diamond Rhinestone"]["Value"]/100
+
         for meal in self.meals:
-            self.meals[meal]["Value"]=self.meals[meal]["Value"]*(1+self.labJewels["Black Diamond Rhinestone"]["Value"]/100)
+            self.meals[meal]["Value"] *= mealMulti
 
     def _calculate_w5(self):
         self._calculate_w5_divinity_link_advice()
