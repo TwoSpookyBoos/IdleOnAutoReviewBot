@@ -1893,12 +1893,12 @@ class Account:
             # After the +1, 0/1/2/3
 
     def _calculate_w3(self):
-        self._calculate_w3_tower_max_levels()
+        self._calculate_w3_building_max_levels()
         self._calculate_w3_library_max_book_levels()
         self._calculate_w3_collider_base_costs()
         self._calculate_w3_collider_cost_reduction()
 
-    def _calculate_w3_tower_max_levels(self):
+    def _calculate_w3_building_max_levels(self):
         towers = [towerName for towerName, towerValuesDict in self.construction_buildings.items() if towerValuesDict['Type'] == 'Tower']
         if sum(self.all_skills['Construction']) > 2500 and self.rift['SkillMastery']:
             for towerName in towers:
@@ -1913,6 +1913,20 @@ class Account:
                     self.construction_buildings[towerName]['MaxLevel'] += 2 * self.atom_collider['Atoms']['Carbon - Wizard Maximizer']['Level']
                 except:
                     continue
+        
+        shrines = [shrineName for shrineName, shrineValuesDict in self.construction_buildings.items() if shrineValuesDict['Type'] == 'Shrine']
+        if sum(self.all_skills['Construction']) > 1500 and self.rift['SkillMastery']:
+            for shrineName in shrines:
+                try:
+                    self.construction_buildings[shrineName]['MaxLevel'] += 30
+                except:
+                    continue
+
+        if sum(self.all_skills['Construction']) > 500 and self.rift['SkillMastery']:
+            self.construction_buildings["Trapper Drone"]['MaxLevel'] += 35
+        
+        if sum(self.all_skills['Construction']) > 1000 and self.rift['SkillMastery']:
+            self.construction_buildings["Talent Book Library"]['MaxLevel'] += 100
 
     def _calculate_w3_library_max_book_levels(self):
         self.library['StaticSum'] = (0
