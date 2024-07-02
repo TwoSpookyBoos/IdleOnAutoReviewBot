@@ -3183,6 +3183,7 @@ stamp_maxes = {
     #Misc
     "Crystallin": 270,
     "Forge Stamp": 230,
+    "Biblio Stamp": 64,
 }
 stampsDict = {
     "Combat": {
@@ -4023,6 +4024,77 @@ maxOverallBookLevels = 100 + maxStaticBookLevels + maxScalingBookLevels + maxSum
 maxCookingTables = 10  # Last verified as of v2.10
 maxMeals = 67  # Last verified as of v2.10
 maxMealLevel = 90  # Last verified as of v2.10
+
+cookingMealDict = {
+    0:{"Name": "Turkey a la Thank", "Description": "Do I smell gratitude? Oh, no, that's colonialization...", "Effect": "+{% Total Damage", "BaseValue": 2},
+	1:{"Name": "Egg", "Description": "It's just an egg.", "Effect": "+{% Meal Cooking Speed", "BaseValue": 5},
+	2:{"Name": "Salad", "Description": "Yea uhm, could I get a burger, but hold the meat and buns?", "Effect": "+{% Cash from Monsters", "BaseValue": 3},
+	3:{"Name": "Pie", "Description": "Cartoon characters with a fear of levitation HATE the smell of this!", "Effect": "+{% New Recipe Cooking Speed", "BaseValue": 5},
+	4:{"Name": "Frenk Fries", "Description": "You're breeding pets in outer space, don't be shocked that there's no France!", "Effect": "+{% New Pet Breeding Odds", "BaseValue": 5},
+	5:{"Name": "Spaghetti", "Description": "Your mom made this. It's her spaghetti.", "Effect": "+{% Breeding EXP", "BaseValue": 4},
+	6:{"Name": "Corn", "Description": "To think the government is subsidizing this... its bonus is terrible!!!", "Effect": "+{% Skill Efficiency", "BaseValue": 2},
+	7:{"Name": "Garlic Bread", "Description": "The letter H ain't lookin' so good after eating a few of these...", "Effect": "+{% VIP Library Membership", "BaseValue": 4},
+	8:{"Name": "Garlicless Bread", "Description": "Many revolutions in the world originate from an increase in the price of bread", "Effect": "+{% Lab EXP", "BaseValue": 2},
+	9:{"Name": "Pizza", "Description": "Mama mia mahhh piiiiiiiizzza!!! Wait I already did that joke, replace this one", "Effect": "+{% New Pet Breeding Odds", "BaseValue": 9},
+	10:{"Name": "Apple", "Description": "Aw jeez Richard, I sure am hungry for apples!", "Effect": "+{ Base DEF", "BaseValue": 5},
+	11:{"Name": "Pancakes", "Description": "Ohhh, they're called 'pan'cakes because they're like cakes made in a pan haha", "Effect": "+{Px Line Width in Lab Mainframe", "BaseValue": 2},
+	12:{"Name": "Corndog", "Description": "Ohhh, they're called 'corn'dogs because... wait, why are they called corndogs?", "Effect": "+{% Meal Cooking Speed", "BaseValue": 12},
+	13:{"Name": "Cabbage", "Description": "This is a MONUMENTALLY IMPORTANT vegetable, as well as upgrade.", "Effect": "+{% All Cooking Spd per 10 upgrade Lvs", "BaseValue": 5},
+	14:{"Name": "Potato Pea Pastry", "Description": "Yuhhhh it's that Triple P threat! Look out for them P's bro!", "Effect": "+{% Lower Egg Incubator Time", "BaseValue": 1},
+	15:{"Name": "Dango", "Description": "Look, I'm not sure what these are either, just go with it.", "Effect": "+{% Lower Kitchen Upgrade Costs", "BaseValue": 2},
+	16:{"Name": "Sourish Fish", "Description": "Shhh stop saying they're sweet, you're gonna get me in trouble!", "Effect": "+{% VIP Library Membership", "BaseValue": 4},
+	17:{"Name": "Octoplop", "Description": "They really did just plop an octopus on a plate and call it a day.", "Effect": "+{% Total Damage", "BaseValue": 2},
+	18:{"Name": "Croissant", "Description": "Carl loves these!", "Effect": "+{% Pet Fighting Damage", "BaseValue": 1},
+	19:{"Name": "Canopy", "Description": "...oh, you said 'Can of Pea's. You know, that does make a lot more sense.", "Effect": "+{% New Recipe Cooking Speed", "BaseValue": 10},
+	20:{"Name": "Cannoli", "Description": "Ain't got no joke for this one, it's existence is enough of a joke.", "Effect": "+{% Points earned in Tower Defence", "BaseValue": 1},
+	21:{"Name": "Cheese", "Description": "Sourced organically, straight from the moon!", "Effect": "+{% Cooking EXP", "BaseValue": 5},
+	22:{"Name": "Sawdust", "Description": "'Id rather starve than eat that' - Angie, 2021", "Effect": "+{% Lab EXP", "BaseValue": 5},
+	23:{"Name": "Eggplant", "Description": "Idk what you Zoomers are up to with those eggplant emojis, but I don't like it...", "Effect": "+{% Pet Breedability Speed in Fenceyard", "BaseValue": 5},
+	24:{"Name": "Cheesy Bread", "Description": "Another bread meal? Wow so unoriginal, I'm glad I already left a 1 star rating.", "Effect": "+{% Total Accuracy", "BaseValue": 1},
+	25:{"Name": "Wild Boar", "Description": "It's not really wild anymore is it, it looks kinda dead and roasted.", "Effect": "+{Px Line Width in Lab Mainframe", "BaseValue": 2},
+	26:{"Name": "Donut", "Description": "Mmmmm... doooooooonut...", "Effect": "+{% New Pet Breeding Odds", "BaseValue": 15},
+	27:{"Name": "Riceball", "Description": "Dude it's just a ball of rice, like what do you want me to say about it?", "Effect": "+{% Skill Efficiency", "BaseValue": 3},
+	28:{"Name": "Cauliflower", "Description": "The white part is called Curd! Hmm, time to recategorize this as an educational game!", "Effect": "+{% Basic Atk Speed", "BaseValue": 1},
+	29:{"Name": "Durian Fruit", "Description": "This must have been in the room when Kurt said it smelled like 'teen spirit'...", "Effect": "+{% Lower Kitchen Upgrade costs", "BaseValue": 6},
+	30:{"Name": "Orange", "Description": "The true arch-nemesis of rappers and poets alike.", "Effect": "+{% VIP Library Membership", "BaseValue": 3},
+	31:{"Name": "Bunt Cake", "Description": "Bunt cake more like Punt cake because I'm kicking this trash straight to the garbage.", "Effect": "+{% Cash from Monsters", "BaseValue": 7},
+	32:{"Name": "Chocolate Truffle", "Description": "I mean it's got a bite taken out of it, pretty gross.", "Effect": "+{% New Pet Breeding Odds", "BaseValue": 25},
+	33:{"Name": "Leek", "Description": "Prowess lowers the efficiency needed when efficiency bar is orange in AFK info", "Effect": "+{% skilling prowess", "BaseValue": 2},
+	34:{"Name": "Fortune Cookie", "Description": "It reads: 'Salvation lies not within enjoying video games, but from gitting gud at them'", "Effect": "+{% Faster Library checkout Speed", "BaseValue": 4},
+	35:{"Name": "Pretzel", "Description": "I love pretzels, people really be sleepin' on the versatility they bring to the table!", "Effect": "+{% Lab EXP", "BaseValue": 7},
+	36:{"Name": "Sea Urchin", "Description": "At least one person reading this has eating one of these. Oh, it's you? Good for you.", "Effect": "+{% Critters from traps", "BaseValue": 1},
+	37:{"Name": "Mashed Potato", "Description": "This nutritious meal reminds me of the potato monster from that IdleOn video game!", "Effect": "+{% Cooking EXP", "BaseValue": 6},
+	38:{"Name": "Mutton", "Description": "Yeap I tell you hwat Bobby, this is a real man's meal right here!", "Effect": "+{% Crit Chance", "BaseValue": 1},
+	39:{"Name": "Wedding Cake", "Description": "Imagine getting married lol so cringe haha am I right??!?! High-five, fellow kids!", "Effect": "+{% Pet Fighting Damage", "BaseValue": 2},
+	40:{"Name": "Eel", "Description": "The younger sibling of the Loch Ness Monster. He's real, but no one really cares.", "Effect": "+{% Line Width in Lab Mainframe", "BaseValue": 1},
+	41:{"Name": "Whipped Cocoa", "Description": "Why is this being served on a plate? Was the cup not good enough for you??", "Effect": "+{% Skill Efficiency", "BaseValue": 4},
+	42:{"Name": "Onion", "Description": "No, I'm not crying, this onion is just stimulating the lachrymal glands in my eyes.", "Effect": "+{% Total Damage", "BaseValue": 3},
+	43:{"Name": "Soda", "Description": "Yea those red marks are grill marks, our chef doesn't know what he's doing.", "Effect": "+{% Meal Cooking Speed", "BaseValue": 20},
+	44:{"Name": "Sushi Roll", "Description": "For something called a 'sushi roll', it isn't moving around very much.", "Effect": "+{% VIP Library Membership", "BaseValue": 7},
+	45:{"Name": "Buncha Banana", "Description": "Straight from the island of Karjama! Or something like that, starts with a K at least.", "Effect": "+{ Max LVs for TP Pete Star Talent", "BaseValue": 4},
+	46:{"Name": "Pumpkin", "Description": "According to the author of the Iliad, its value should peak right around January...", "Effect": "+{% Liquid Cap for liquids 1 and 2", "BaseValue": 2},
+	47:{"Name": "Cotton Candy", "Description": "The most exquisite of fairground cuisine!", "Effect": "+{% Divinity EXP", "BaseValue": 2},
+	48:{"Name": "Massive Fig", "Description": "This thing has gotta weigh at least 30!", "Effect": "+{% Total Damage", "BaseValue": 3},
+	49:{"Name": "Head Chef Geustloaf", "Description": "How DARE you question the honorable Chef Geustloaf's cooking abilities!", "Effect": "+{% Bits Gained in Gaming", "BaseValue": 4},
+	50:{"Name": "Kiwi Fruit", "Description": "Is there a reason these are so hard to cook? Aren't you just like... cutting it in half?", "Effect": "+{% Liquid Cap for liquids 3 and 4", "BaseValue": 2},
+	51:{"Name": "Popped Corn", "Description": "Effectively no different than a normal bowl of popcorn, but it's still impressive!", "Effect": "+{% Sailing Speed", "BaseValue": 2},
+	52:{"Name": "Double Cherry", "Description": "So like... why did the yellow circle want these again? This bonus is pretty bad.", "Effect": "+{% Meal Cooking Speed", "BaseValue": 30},
+	53:{"Name": "Ratatouey", "Description": "Hey cmon man how should I know how to spell Ratatouille, there's no France remember?", "Effect": "+{% Lower Kitchen Upgrade costs", "BaseValue": 8},
+	54:{"Name": "Giant Tomato", "Description": "It's big, it's large, it's round, it's red, and it'll fill you up thats for sure!", "Effect": "+{% Gaming EXP", "BaseValue": 5},
+	55:{"Name": "Wrath Grapes", "Description": "I'd be angry too if I were a grape.", "Effect": "+{% Divinity EXP", "BaseValue": 4},
+	56:{"Name": "Sausy Sausage", "Description": "Plump innit! Would go great with some momey milk!", "Effect": "+{% Bits Gained in Gaming", "BaseValue": 6},
+	57:{"Name": "Seasoned Marrow", "Description": "You ate all the edible stuff around the bone? Why not try the stuff inside the bone!", "Effect": "+{% Farming EXP", "BaseValue": 3},
+	58:{"Name": "Sticky Bun", "Description": "This frosting better be made of superglue or I'm suing for false advertising.", "Effect": "+{% All Summoning Essence Gain", "BaseValue": 5},
+	59:{"Name": "Frazzleberry", "Description": "Big. Blue. Beautiful. Boing. Boat. Broom. Balls. Backgammon. Bort.", "Effect": "+{% Sneaking EXP", "BaseValue": 2},
+	60:{"Name": "Misterloin Steak", "Description": "Make sure to paint on the grill marks to really give it that extra taste!", "Effect": "+{% Jade gain from Sneaking", "BaseValue": 6},
+	61:{"Name": "Large Pohayoh", "Description": "Aye lad if thah ain't tha larjes' fookin' poh'ay'oh eyev evah seen wih me own eyes!", "Effect": "+{% Summoning EXP", "BaseValue": 2},
+	62:{"Name": "Bill Jack Pepper", "Description": "It's Him.", "Effect": "+{% Crop Evolution Chance", "BaseValue": 5},
+	63:{"Name": "Burned Marshmallow", "Description": "IMPORTANT, this bonus DOUBLES at Farming Lv 50. Triples at Farming Lv 100, and so on!", "Effect": "+{% Meal Cooking Speed", "BaseValue": 40},
+	64:{"Name": "Yumi Peachring", "Description": "Don't disrespect the ring. All hail the ring.", "Effect": "+{% All Golden Food bonus", "BaseValue": 2},
+	65:{"Name": "Plumpcakes", "Description": "Ohhh, they're called 'plump'cakes because they're dummy thicc can I get an amen!", "Effect": "+{% Total Damage", "BaseValue": 6},
+	66:{"Name": "Nyanborgir", "Description": "It's the greatest meal ever! Bonus DOUBLES at Summoning Lv 50, Triples at 100, etc", "Effect": "+{% Crop Evolution Chance", "BaseValue": 9},
+}
+
 labChipsList: list[str] = [
     "Grounded Nanochip", "Grounded Motherboard", "Grounded Software", "Grounded Processor", "Potato Chip",
     "Conductive Nanochip", "Conductive Motherboard", "Conductive Software", "Conductive Processor", "Chocolatey Chip",
@@ -4030,12 +4102,60 @@ labChipsList: list[str] = [
     "Silkrode Nanochip", "Silkrode Motherboard", "Silkrode Software", "Silkrode Processor", "Poker Chip",
     "Omega Nanochip", "Omega Motherboard"
 ]
+
+# I don't know what values 4 and 5 do. Added in case they turn out to be useful 
+labBonusesDict = {
+    0: {"Name": "Animal Farm", "Description": "+1% Total Damage for every different species you have bred within Pet Breeding. You just need to breed the pet type one time for it to count! @ - @ Total Bonus: {%", "BaseValue": 1, "Coordinates": [91, 90], "Value4": 90, "Value5": 0},
+    1: {"Name": "Wired In", "Description": "All Uploaded Players print 2x more resources from their section of the 3D Printer. The displayed amount will NOT appear doubled, just to avoid confusion as to what your actual base Sampling Rate is, but it will be displayed in blue.", "BaseValue": 2, "Coordinates": [250, 90], "Value4": 90, "Value5": 1},
+    2: {"Name": "Gilded Cyclical Tubing", "Description": "All refinery cycles occur 3x faster. Faster cycles means more salts!", "BaseValue": 3, "Coordinates": [356, 90], "Value4": 90, "Value5": 1},
+    3: {"Name": "No Bubble Left Behind", "Description": "Every 24 hours, your 3 lowest level Alchemy Bubbles gets +1 Lv. This only applies to bubbles Lv 5 or higher, so it's more like 'your lowest level bubble that is at least level 5'. ALSO, it only works on the first 15 bubbles of each colour! @ Doesn't trigger on days that you don't login.", "BaseValue": 1, "Coordinates": [450, 90], "Value4": 90, "Value5": 0},
+    4: {"Name": "Killer's Brightside", "Description": "All monster kills count for 2x more than normal for things like opening portals and Death Note. Doesn't increase resource drops or exp gain.", "BaseValue": 2, "Coordinates": [538, 90], "Value4": 90, "Value5": 1},
+    5: {"Name": "Shrine World Tour", "Description": "If a shrine is placed within town, instead of in a monster map, it will act as though it is placed in EVERY map in that entire world!", "BaseValue": 1, "Coordinates": [651, 90], "Value4": 90, "Value5": 0},
+    6: {"Name": "Viaduct of the Gods", "Description": "All alchemy liquids have x5 higher max capacity. However, you regenerate alchemy liquids -30% slower.", "BaseValue": 5, "Coordinates": [753, 90], "Value4": 90, "Value5": 1},
+    7: {"Name": "Certified Stamp Book", "Description": "All Stamps, except for MISC tab stamps, give DOUBLE the bonus.", "BaseValue": 2, "Coordinates": [824, 90], "Value4": 90, "Value5": 1},
+    8: {"Name": "Spelunker Obol", "Description": "1.50x higher effects from all active Jewels within the Mainframe, and gives you +50% rememberance of the game Idle Skilling. @ This bonus always has a 80px connection range no matter what!", "BaseValue": 1.5, "Coordinates": [945, 90], "Value4": 90, "Value5": 1},
+    9: {"Name": "Fungi Finger Pocketer", "Description": "+2% extra cash from monsters for every 1 million Green Mushroom kills your account has, which can be viewed at Death Note. @ - @ Total Bonus: {%", "BaseValue": 2, "Coordinates": [990, 90], "Value4": 90, "Value5": 0},
+    10: {"Name": "My 1st Chemistry Set", "Description": "All Vials in Alchemy give DOUBLE the bonus. The bonus description will reflect this doubling.", "BaseValue": 2, "Coordinates": [1177, 90], "Value4": 90, "Value5": 1},
+    11: {"Name": "Unadulterated Banking Fury", "Description": "+2% Total Damage for each 'green stack' of resources in your bank. A 'green stack' is a stack in your Storage Chest with 10 million or more items, since the number turns Green after 10M! @ - @ Total Bonus: {%", "BaseValue": 2, "Coordinates": [1300, 90], "Value4": 90, "Value5": 0},
+    12: {"Name": "Sigils of Olden Alchemy", "Description": "Allows you to level up Alchemy Sigils by assigning players in alchemy, at a base rate of 1 sigil xp per hour. @ Sigils can be leveled up just twice: Once to unlock their bonus, and once more to boost their bonus. Their bonuses are passive, and apply to all characters always.", "BaseValue": 1, "Coordinates": [400, 90], "Value4": 90, "Value5": 0},
+    13: {"Name": "Viral Connection", "Description": "All mainframe bonuses and jewels have a 50% larger connection range, unless it states otherwise. @ This bonus always has a 80px connection range no matter what!", "BaseValue": 50, "Coordinates": [1430, 90], "Value4": 90, "Value5": 0},
+    14: {"Name": "Artifact Attraction", "Description": "Artifact find chance is 1.5x higher! If you've found all artifacts at max rarity, then this bonus changes to 1,000x artifact find chance!", "BaseValue": 50, "Coordinates": [1530, 90], "Value4": 90, "Value5": 0},
+    15: {"Name": "Slab Sovereignty", "Description": "All bonuses given by the Slab are 1.25x higher!", "BaseValue": 25, "Coordinates": [1630, 90], "Value4": 90, "Value5": 0},
+    16: {"Name": "Spiritual Growth", "Description": "Boosts EXP multi for all three World 6 skills by +50%!", "BaseValue": 50, "Coordinates": [1790, 90], "Value4": 90, "Value5": 0},
+    17: {"Name": "Depot Studies PhD", "Description": "All bonuses given at the Crop Depot are 1.30x higher!", "BaseValue": 30, "Coordinates": [1950, 90], "Value4": 90, "Value5": 0},
+}
+
+labJewelsDict = {
+    0: {'Name': "Amethyst Rhinestone", "Description": "Meal cooking is }x faster. This bonus is applied TWICE if all 3 purple jewels are active.", "BaseValue": 1.5}, 
+    1: {'Name': "Purple Navette", "Description": "Animal Farm' mainframe bonus gives an additional +}% per species. If Animal Farm is not active, then this does nothing.", "BaseValue": 0.5}, 
+    2: {'Name': "Purple Rhombol", "Description": "All players get +}% Lab EXP gain.", "BaseValue": 40}, 
+    3: {'Name': "Sapphire Rhinestone", "Description": "Construction slot 1 is now trimmed up, and has }x building Speed. Also trims slot 2 if all 4 blue jewels are active.", "BaseValue": 3}, 
+    4: {'Name': "Sapphire Navette", "Description": "All players get +}% All Stat. STR, AGI, WIS, and LUCK to boot.", "BaseValue": 3}, 
+    5: {'Name': "Sapphire Rhombol", "Description": "Even if this jewel is off, all players within a 150px radius of this jewel, shown by the circle, have +25% Line Width. @ Also gives +}% Breeding EXP, but only when active.", "BaseValue": 25}, 
+    6: {'Name': "Sapphire Pyramite", "Description": "Every 24 hours, the } lowest level Kitchen Upgrades across all owned kitchens gain +1 Lv.", "BaseValue": 2}, 
+    7: {'Name': "Pyrite Rhinestone", "Description": "No Bubble Left Behind' mainframe bonus gives +} levels instead of +1, and does so for the lowest 4 bubbles instead of 3.", "BaseValue": 2}, 
+    8: {'Name': "Pyrite Navette", "Description": "All players get }x 'non-consume' chance, and raises the max chance from 90% to 98%, allowing for longer AFK with food.", "BaseValue": 3}, 
+    9: {'Name': "Pyrite Rhombol", "Description": "All mainframe bonuses and jewels have a }% larger connection range, except for this jewel. This jewel has an 80px connection range no matter what!", "BaseValue": 30}, 
+    10:{'Name': "Pyrite Pyramite", "Description": "All players deal 1.}x more damage. This bonus is applied TWICE if all 4 Orange Jewels are active.", "BaseValue":10}, 
+    11:{'Name': "Emerald Rhinestone", "Description": "}% reduced incubation egg time. Mo eggs mo problems tho, fo sho.", "BaseValue":28}, 
+    12:{'Name': "Emerald Navette", "Description": "All players have } higher base efficiency in all skills, and +10% skill action speed. This bonus is applied TWICE if all 5 Green Jewels are active.", "BaseValue":200}, 
+    13:{'Name': "Emerald Rhombol", "Description": "Fungi Finger Pocketer' mainframe bonus gives an additional +}% cash bonus per million mushroom kills", "BaseValue":1}, 
+    14:{'Name': "Emerald Pyramite", "Description": "Meal cooking is }% faster for every 25 total upgrade levels across all kitchens.", "BaseValue":1},
+    15:{'Name': "Emerald Ulthurite", "Description": "Special Pets in the Fenceyard level up their Passive Bonuses +}% faster", "BaseValue":30}, 
+    16:{'Name': "Black Diamond Rhinestone", "Description": "All meal bonuses, as shown in the Dinner Table Menu, actually give 1.}x higher bonus than what is shown.", "BaseValue":16}, 
+    17:{'Name': "Black Diamond Ulthurite", "Description": "Unadulterated Banking Fury' gives an additional +}% Total Damage per greened stack. Bolsters 'Unadulterated Banking Fury'", "BaseValue":1}, 
+    18:{'Name': "Pure Opal Rhinestone", "Description": "Slab Sovereignty' gives an additional }% boost to all Slab Bonuses!", "BaseValue":20}, 
+    19:{'Name': "Pure Opal Navette", "Description": "+}% higher effects from all active bonuses and jewels within the Mainframe, except for Spelunker Obol. @ This is a multiplier, so +10% would be 1.10x, ya feel me? @ This bonus always has a 80px connection range no matter what!", "BaseValue":10}, 
+    20:{'Name': "Pure Opal Rhombol", "Description": "Depot Studies PhD' gives an additional }% boost to all Crop Depot bonuses!", "BaseValue": 10},
+}
+
 labBonusesList = [
     "Animal Farm", "Wired In", "Gilded Cyclical Tubing", "No Bubble Left Behind", "Killer's Brightside",
     "Shrine World Tour", "Viaduct of the Gods", "Certified Stamp Book", "Spelunker Obol", "Fungi Finger Pocketer",
     "My 1st Chemistry Set", "Unadulterated Banking Fury", "Sigils of Olden Alchemy", "Viral Connection",
     "Artifact Attraction", "Slab Sovereignty", "Spiritual Growth", "Depot Studies PhD"
 ]
+
 maxNumberOfTerritories = 24  # as of w6 launch
 indexFirstTerritoryAssignedPet = 28
 slotUnlockWavesList = [2, 15, 50, 125]

@@ -6,6 +6,7 @@
 .idea
 venv
 /venv
+/.venv
 .bashrc
 .gitconfig
 .my.cnf
