@@ -1495,12 +1495,20 @@ class Account:
 
         self.labJewels = {}
         for jewelIndex, jewelInfo in labJewelsDict.items():
-            self.labJewels[jewelInfo["Name"]] = {
-                "Owned": bool(raw_lab[14][jewelIndex]),
-                "Enabled": bool(raw_lab[14][jewelIndex]), # Same as owned until connection range is implemented
-                "Value": jewelInfo["BaseValue"], # Jewelmulti added in calculate section
-                "BaseValue": jewelInfo["BaseValue"]
-            }
+            try:
+                self.labJewels[jewelInfo["Name"]] = {
+                    "Owned": bool(raw_lab[14][jewelIndex]),
+                    "Enabled": bool(raw_lab[14][jewelIndex]), # Same as owned until connection range is implemented
+                    "Value": jewelInfo["BaseValue"], # Jewelmulti added in calculate section
+                    "BaseValue": jewelInfo["BaseValue"]
+                }
+            except:
+                self.labJewels[jewelInfo["Name"]] = {
+                    "Owned": False,
+                    "Enabled": False,  # Same as owned until connection range is implemented
+                    "Value": jewelInfo["BaseValue"],  # Jewelmulti added in calculate section
+                    "BaseValue": jewelInfo["BaseValue"]
+                }
 
     def _parse_w4_rift(self):
         self.rift = {
