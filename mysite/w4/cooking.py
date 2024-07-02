@@ -75,7 +75,7 @@ def setCookingProgressionTier():
                 progression=session_data.account.cooking['PlayerTotalMealLevels'],
                 goal=500
             ))
-    # 4) if Atom Collider Flouride upgrade owned and total plates over 500:
+    # 4) if Atom Collider Fluoride upgrade owned and total plates over 500:
     elif tier_Cooking == 4:
         if session_data.account.cooking['MealsUnlocked'] < maxMeals:
             cooking_AdviceDict["NextTier"].append(Advice(
@@ -94,8 +94,8 @@ def setCookingProgressionTier():
         if session_data.account.cooking['MealsUnder30'] > 0:
             cooking_AdviceDict["NextTier"].append(Advice(
                 label=f"Level up the remaining {session_data.account.cooking['MealsUnder30']} unlocked "
-                      f"{pl(session_data.account.cooking['MealsUnder30'], 'meal', 'meals')} to 30+ for Flouride",
-                picture_class="flouride",
+                      f"{pl(session_data.account.cooking['MealsUnder30'], 'meal', 'meals')} to 30+ for Fluoride",
+                picture_class="fluoride",
                 progression=session_data.account.cooking['MealsUnlocked'] - session_data.account.cooking['MealsUnder30'],
                 goal=session_data.account.cooking['MealsUnlocked']
             ))
@@ -134,8 +134,8 @@ def setCookingProgressionTier():
         ))
     if session_data.account.cooking['MealsUnder30'] > 0 and tier_Cooking >= 3:
         cooking_AdviceDict["CurrentTier"].append(Advice(
-            label="All unlocked plates to 30 for Flouride",
-            picture_class="flouride",
+            label="All unlocked plates to 30 for Fluoride",
+            picture_class="fluoride",
             progression=session_data.account.cooking['MealsUnlocked']-session_data.account.cooking['MealsUnder30'],
             goal=session_data.account.cooking['MealsUnlocked'],
         ))
