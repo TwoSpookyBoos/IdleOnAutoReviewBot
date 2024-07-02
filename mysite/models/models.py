@@ -12,12 +12,15 @@ from flask import g
 
 from utils.data_formatting import getCharacterDetails, safe_loads
 from consts import expectedStackables, greenstack_progressionTiers, card_data, maxMeals, maxMealLevel, jade_emporium, max_IndexOfVials, getReadableVialNames, \
-    buildingsDict, atomsList, prayersDict, labChipsList, bribesDict, shrinesList, pristineCharmsList, sigilsDict, \
-    sailingDict, guildBonusesList, labBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesList, \
+    buildingsDict, atomsList, prayersDict, bribesDict, shrinesList, pristineCharmsList, sigilsDict, \
+    sailingDict, guildBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesList, \
     getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampsDict, stampTypes, marketUpgradeList, \
     achievementsList, forgeUpgradesDict, arcadeBonuses, saltLickList, allMeritsDict, bubblesDict, familyBonusesDict, poBoxDict, equinoxBonusesDict, \
     maxDreams, dreamsThatUnlockNewBonuses, ceilUpToBase, starsignsDict, gfood_codes, getStyleNameFromIndex, divinity_divinitiesDict, getDivinityNameFromIndex, \
-    maxCookingTables, getNextESFamilyBreakpoint, expected_talentsDict, colliderStorageLimitList, gamingSuperbitsDict
+    maxCookingTables, getNextESFamilyBreakpoint, expected_talentsDict, colliderStorageLimitList, gamingSuperbitsDict, labJewelsDict, cookingMealDict, \
+    labBonusesDict, labChipsDict, maxCookingTables, getNextESFamilyBreakpoint, expected_talentsDict, colliderStorageLimitList, gamingSuperbitsDict, maxNumberOfTerritories, \
+    indexFirstTerritoryAssignedPet, territoryNames, slotUnlockWavesList, breedingUpgradesDict, breedingGeneticsList, breedingShinyBonusList, \
+    breedingSpeciesDict, getShinyLevelFromDays, getDaysToNextShinyLevel
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
 
 def session_singleton(cls):
@@ -63,22 +66,39 @@ def getExpectedTalents(base_class, sub_class, elite_class):
 
 def getSpecializedSkills(base_class, sub_class, elite_class):
     specializedSkillsList = []
-    if base_class == "Mage":
-        specializedSkillsList.append("Choppin")
-    elif base_class == "Warrior":
+    if base_class == "Warrior":
         specializedSkillsList.append("Mining")
+    elif base_class == "Archer":
+        specializedSkillsList.append("Smithing")
+    elif base_class == "Mage":
+        specializedSkillsList.append("Choppin")
+
 
     if sub_class == "Barbarian":
         specializedSkillsList.append("Fishing")
+    elif sub_class == "Squire":
+        specializedSkillsList.append("Construction")
     elif sub_class == "Bowman":
         specializedSkillsList.append("Catching")
     elif sub_class == "Hunter":
         specializedSkillsList.append("Trapping")
     elif sub_class == "Wizard":
         specializedSkillsList.append("Worship")
+    elif sub_class == "Shaman":
+        specializedSkillsList.append("Alchemy")
 
     if elite_class == "Blood Berserker":
         specializedSkillsList.append("Cooking")
+    elif elite_class == "Divine Knight":
+        specializedSkillsList.append("Gaming")
+    elif elite_class == "Siege Breaker":
+        specializedSkillsList.append("Sailing")
+    elif elite_class == "Beast Master":
+        specializedSkillsList.append("Breeding")
+    elif elite_class == "Elemental Sorcerer":
+        specializedSkillsList.append("Divinity")
+    elif elite_class == "Bubonic Conjuror":
+        specializedSkillsList.append("Lab")
 
     return specializedSkillsList
 
@@ -1386,6 +1406,7 @@ class Account:
         self._parse_w4_cooking()
         self._parse_w4_lab()
         self._parse_w4_rift()
+        self._parse_w4_breeding()
 
     def _parse_w4_cooking(self):
         self.cooking = {
@@ -1415,13 +1436,24 @@ class Account:
         # Meals contains 4 lists of lists. The first 3 are as long as the number of plates. The 4th is general shorter.
         emptyMeals = [emptyMeal for meal in range(4)]
         raw_meals_list = safe_loads(self.raw_data.get("Meals", emptyMeals))
+        # Make the sublists maxMeals long
         for sublistIndex, value in enumerate(raw_meals_list):
             if isinstance(raw_meals_list[sublistIndex], list):
                 while len(raw_meals_list[sublistIndex]) < maxMeals:
                     raw_meals_list[sublistIndex].append(0)
-
+                while len(raw_meals_list[sublistIndex]) > maxMeals:
+                    raw_meals_list[sublistIndex].pop()
+        
+        self.meals = {}
         # Count the number of unlocked meals, unlocked meals under 11, and unlocked meals under 30
-        for mealLevel in raw_meals_list[0]:
+        for index, mealLevel in enumerate(raw_meals_list[0]):
+            # Create meal dict
+            self.meals[cookingMealDict[index]["Name"]] = {
+                "Level": mealLevel,
+                "Value": mealLevel*cookingMealDict[index]["BaseValue"], # Mealmulti applied in calculate section
+                "BaseValue": cookingMealDict[index]["BaseValue"]
+            }
+
             if mealLevel > 0:
                 self.cooking['MealsUnlocked'] += 1
                 self.cooking['PlayerTotalMealLevels'] += mealLevel
@@ -1434,26 +1466,49 @@ class Account:
         raw_lab = safe_loads(self.raw_data.get("Lab", []))
         self._parse_w4_lab_chips(raw_lab)
         self._parse_w4_lab_bonuses(raw_lab)
+        self._parse_w4_jewels(raw_lab)
 
     def _parse_w4_lab_chips(self, raw_lab):
         self.labChips = {}
         raw_labChips_list = raw_lab
         if len(raw_labChips_list) >= 15:
             raw_labChips_list = raw_labChips_list[15]
-        for labChipIndex, labChipName in enumerate(labChipsList):
+        for labChipIndex, labChip in labChipsDict.items():
             try:
-                self.labChips[labChipName] = int(raw_labChips_list[labChipIndex])
+                self.labChips[labChip["Name"]] = int(raw_labChips_list[labChipIndex])
             except:
-                self.labChips[labChipName] = 0
+                self.labChips[labChip["Name"]] = 0
 
     def _parse_w4_lab_bonuses(self, raw_lab):
         #TODO: Actually figure out lab :(
         self.labBonuses = {}
-        for labBonusIndex, labBonusName in enumerate(labBonusesList):
-            self.labBonuses[labBonusName] = {
+        for index, node in labBonusesDict.items():
+            self.labBonuses[node["Name"]] = {
                 "Enabled": True,
-                "Value": 1
+                "Owned": True, # For W6 nodes
+                "Value": node["BaseValue"], # Currently no modifiers available, might change if the pure opal navette changes
+                "BaseValue": node["BaseValue"]
             }
+            
+    def _parse_w4_jewels(self, raw_lab):
+        #TODO: Account for if the jewel is actually connected.
+
+        self.labJewels = {}
+        for jewelIndex, jewelInfo in labJewelsDict.items():
+            try:
+                self.labJewels[jewelInfo["Name"]] = {
+                    "Owned": bool(raw_lab[14][jewelIndex]),
+                    "Enabled": bool(raw_lab[14][jewelIndex]), # Same as owned until connection range is implemented
+                    "Value": jewelInfo["BaseValue"], # Jewelmulti added in calculate section
+                    "BaseValue": jewelInfo["BaseValue"]
+                }
+            except:
+                self.labJewels[jewelInfo["Name"]] = {
+                    "Owned": False,
+                    "Enabled": False,  # Same as owned until connection range is implemented
+                    "Value": jewelInfo["BaseValue"],  # Jewelmulti added in calculate section
+                    "BaseValue": jewelInfo["BaseValue"]
+                }
 
     def _parse_w4_rift(self):
         self.rift = {
@@ -1477,6 +1532,166 @@ class Account:
         self.rift['VialMastery'] = self.rift['Level'] >= 35
         self.rift['ConstructionMastery'] = self.rift['Level'] >= 40
         self.rift['RubyCards'] = self.rift['Level'] >= 45
+
+    def _parse_w4_breeding(self):
+        self.breeding = {
+            'Unlocked Counts': {
+                "W1": 0,
+                "W2": 0,
+                "W3": 0,
+                "W4": 0,
+                "W5": 0,
+                "W6": 0,
+                "W7": 0,
+                "W8": 0,
+            },  #complete
+            'Total Unlocked Count': 0,  #complete
+            'Shiny Days': {
+                "W1": [],
+                "W2": [],
+                "W3": [],
+                "W4": [],
+                "W5": [],
+                "W6": [],
+                "W7": [],
+                "W8": [],
+            },  #complete
+            "Genetics": {},  #complete
+            "Species": {},
+            "Total Shiny Levels": {},  #Per Shiny Bonus, the total level of all shiny pets contributing that bonus
+            "Grouped Bonus": {},  #Pets regrouped by their Shiny Bonus, instead of by their World
+            'Territories': {},  #complete
+            'Highest Unlocked Territory Number': 0,  #complete
+            'Highest Unlocked Territory Name': '',  #complete
+            'Upgrades': {},  #complete
+            'ArenaMaxWave': 0,  #complete
+            'PetSlotsUnlocked': 2,  #complete
+        }
+        raw_breeding_list = safe_loads(self.raw_data.get("Breeding", []))
+        raw_territory_list = safe_loads(self.raw_data.get("Territory", []))
+        raw_breeding_pets = safe_loads(self.raw_data.get("Pets", []))
+
+        self._parse_w4_breeding_defaults(raw_breeding_list)
+        self._parse_w4_breeding_misc()
+        self._parse_w4_breeding_upgrades(raw_breeding_list)
+        self._parse_w4_breeding_territories(raw_breeding_pets, raw_territory_list)
+        self._parse_w4_breeding_pets(raw_breeding_list)
+
+    def _parse_w4_breeding_defaults(self, rawBreeding):
+        # Abilities defaulted to False
+        for genetic in breedingGeneticsList:
+            self.breeding["Genetics"][genetic] = False
+
+        # Total Shiny Bonus Levels defaulted to 0
+        #Grouped Bonus per Shiny Bonus defaulted to empty list
+        for bonus in breedingShinyBonusList:
+            self.breeding["Total Shiny Levels"][bonus] = 0
+            self.breeding['Grouped Bonus'][bonus] = []
+
+    def _parse_w4_breeding_misc(self):
+        #Highest Arena Wave
+        try:
+            self.breeding['ArenaMaxWave'] = int(self.raw_data["OptLacc"][89])
+        except:
+            pass
+
+        #Number of Pet Slots Unlocked
+        for requirement in slotUnlockWavesList:
+            if self.breeding['ArenaMaxWave'] > requirement:
+                self.breeding['PetSlotsUnlocked'] += 1
+
+    def _parse_w4_breeding_upgrades(self, rawBreeding):
+        for upgradeIndex, upgradeValuesDict in breedingUpgradesDict.items():
+            try:
+                self.breeding['Upgrades'][upgradeValuesDict['Name']] = {
+                    'Level': rawBreeding[2][upgradeIndex],
+                }
+            except:
+                self.breeding['Upgrades'][upgradeValuesDict['Name']] = {
+                    'Level': 0,
+                }
+
+    def _parse_w4_breeding_territories(self, rawPets, rawTerritory):
+        anyPetsAssignedPerTerritory: list[bool] = []
+        for territoryIndex in range(0, maxNumberOfTerritories):
+            try:
+                if rawPets[indexFirstTerritoryAssignedPet + 0 + (territoryIndex * 4)][0] != "none":
+                    anyPetsAssignedPerTerritory.append(True)
+                elif rawPets[indexFirstTerritoryAssignedPet + 1 + (territoryIndex * 4)][0] != "none":
+                    anyPetsAssignedPerTerritory.append(True)
+                elif rawPets[indexFirstTerritoryAssignedPet + 2 + (territoryIndex * 4)][0] != "none":
+                    anyPetsAssignedPerTerritory.append(True)
+                elif rawPets[indexFirstTerritoryAssignedPet + 3 + (territoryIndex * 4)][0] != "none":
+                    anyPetsAssignedPerTerritory.append(True)
+                else:
+                    anyPetsAssignedPerTerritory.append(False)
+            except:
+                anyPetsAssignedPerTerritory.append(False)
+
+            # Spice Progress above 0 or any pet assigned to territory
+            try:
+                if rawTerritory[territoryIndex][0] > 0 or anyPetsAssignedPerTerritory[territoryIndex] == True:
+                    #Can't decide which of these 3 will end up being the most useful, so assigning them all for now
+                    self.breeding['Territories'][territoryNames[territoryIndex+1]] = {'Unlocked': True}
+                    self.breeding["Highest Unlocked Territory Number"] = territoryIndex+1
+                    self.breeding["Highest Unlocked Territory Name"] = territoryNames[territoryIndex+1]
+            except:
+                self.breeding['Territories'][territoryNames[territoryIndex + 1]] = {'Unlocked': False}
+
+    def _parse_w4_breeding_pets(self, rawBreeding):
+        #Unlocked Counts per World
+        for index in range(0, 8):
+            try:
+                self.breeding['Unlocked Counts'][f"W{index+1}"] = rawBreeding[1][index]
+                self.breeding['Total Unlocked Count'] += rawBreeding[1][index]
+            except:
+                continue  #Already defaulted to 0 during initialization
+
+        #Shiny Days
+        for index in range(22, 30):
+            try:
+                self.breeding['Shiny Days'][f"W{index-21}"] = rawBreeding[index]
+            except:
+                continue  #Already defaulted to [] during initialization
+
+        #Parse data for each individual pet, increase their shiny bonus level, and mark their Genetic as obtained
+        for worldIndex, worldPetsDict in breedingSpeciesDict.items():
+            self.breeding['Species'][worldIndex] = {}
+            for petIndex, petValuesDict in worldPetsDict.items():
+                try:
+                    self.breeding['Species'][worldIndex][petValuesDict['Name']] = {
+                        'Unlocked': self.breeding['Unlocked Counts'][f"W{worldIndex}"] > petIndex,
+                        'Genetic': petValuesDict['Genetic'],
+                        'ShinyBonus': petValuesDict['ShinyBonus'],
+                        'ShinyLevel': getShinyLevelFromDays(self.breeding['Shiny Days'][f"W{worldIndex}"][petIndex]),
+                        'DaysToShinyLevel': getDaysToNextShinyLevel(self.breeding['Shiny Days'][f"W{worldIndex}"][petIndex]),
+                    }
+                    #Increase the total shiny bonus level
+                    self.breeding["Total Shiny Levels"][petValuesDict['ShinyBonus']] += self.breeding['Species'][worldIndex][petValuesDict['Name']]['ShinyLevel']
+                    #If this pet is unlocked, but their Genetic isn't marked as unlocked, update the Abilities
+                    if self.breeding['Species'][worldIndex][petValuesDict['Name']]['Unlocked'] and not self.breeding["Genetics"][petValuesDict['Genetic']]:
+                        self.breeding["Genetics"][petValuesDict['Genetic']] = True
+                except Exception as reason:
+                    print(f"Failed to parse pet {petValuesDict['Name']}: {reason}")
+                    self.breeding['Species'][worldIndex][petValuesDict['Name']] = {
+                        'Unlocked': False,
+                        'Genetic': petValuesDict['Genetic'],
+                        'ShinyBonus': petValuesDict['ShinyBonus'],
+                        'ShinyLevel': 0,
+                        'DaysToShinyLevel': 0,
+                    }
+                # Add this pet to the shiny bonus grouped list
+                self.breeding['Grouped Bonus'][petValuesDict['ShinyBonus']].append(
+                    (
+                        petValuesDict['Name'],
+                        self.breeding['Species'][worldIndex][petValuesDict['Name']]['ShinyLevel'],
+                        self.breeding['Species'][worldIndex][petValuesDict['Name']]['DaysToShinyLevel'],
+                    )
+                )
+
+        #Sort the Grouped bonus by Days to next Shiny Level
+        for groupedBonus in self.breeding["Grouped Bonus"]:
+            self.breeding["Grouped Bonus"][groupedBonus].sort(key=lambda x: float(x[2]))
 
     def _parse_w5(self):
         self.gaming = {
@@ -1865,19 +2080,36 @@ class Account:
             # After the +1, 0/1/2/3
 
     def _calculate_w3(self):
-        self._calculate_w3_tower_max_levels()
+        self._calculate_w3_building_max_levels()
         self._calculate_w3_library_max_book_levels()
         self._calculate_w3_collider_base_costs()
         self._calculate_w3_collider_cost_reduction()
 
-    def _calculate_w3_tower_max_levels(self):
-        towers = [towerName for towerName, towerValuesDict in self.construction_buildings.items() if towerValuesDict['Type'] == 'Tower']
-        if sum(self.all_skills['Construction']) > 2500 and self.rift['SkillMastery']:
-            for towerName in towers:
-                try:
-                    self.construction_buildings[towerName]['MaxLevel'] += 30
-                except:
-                    continue
+    def _calculate_w3_building_max_levels(self):
+        
+        towers = [towerName for towerName, towerValuesDict in self.construction_buildings.items() if towerValuesDict['Type'] == 'Tower'] # Placed here since it's used for both Construction mastery and atom levels
+        if self.rift['SkillMastery']:
+            totalLevel = sum(self.all_skills['Construction'])
+            if totalLevel >= 500:
+                self.construction_buildings["Trapper Drone"]['MaxLevel'] += 35
+
+            if totalLevel >= 1000:
+                self.construction_buildings["Talent Book Library"]['MaxLevel'] += 100
+            
+            if totalLevel >= 1500:    
+                shrines = [shrineName for shrineName, shrineValuesDict in self.construction_buildings.items() if shrineValuesDict['Type'] == 'Shrine']
+                for shrineName in shrines:
+                    try:
+                        self.construction_buildings[shrineName]['MaxLevel'] += 30
+                    except:
+                        continue
+
+            if totalLevel >= 2500 :
+                for towerName in towers:
+                    try:
+                        self.construction_buildings[towerName]['MaxLevel'] += 30
+                    except:
+                        continue
 
         if self.atom_collider['Atoms']['Carbon - Wizard Maximizer']['Level'] > 0:
             for towerName in towers:
@@ -1959,6 +2191,8 @@ class Account:
 
     def _calculate_w4(self):
         self._calculate_w4_cooking_max_plate_levels()
+        self._calculate_w4_jewel_multi()
+        self._calculate_w4_meal_multi()
 
     def _calculate_w4_cooking_max_plate_levels(self):
         # Sailing Artifact Increases
@@ -1994,6 +2228,25 @@ class Account:
 
         self.cooking['CurrentRemainingMeals'] = (self.cooking['MealsUnlocked'] * self.cooking['PlayerMaxPlateLvl']) - self.cooking['PlayerTotalMealLevels']
         self.cooking['MaxRemainingMeals'] = (maxMeals * maxMealLevel) - self.cooking['PlayerTotalMealLevels']
+
+    def _calculate_w4_jewel_multi(self): 
+        jewelMulti = 1
+        if self.labBonuses["Spelunker Obol"]["Enabled"]:
+            jewelMulti = self.labBonuses["Spelunker Obol"]["Value"]
+            if self.labJewels["Pure Opal Navette"]["Enabled"]: # Nested since jewel does nothing without spelunker
+                jewelMulti += self.labJewels["Pure Opal Navette"]["BaseValue"]/100 # The displayed value does nothing since the effect is used before spelunker obol is accounted for
+        for jewel in self.labJewels:
+            self.labJewels[jewel]["Value"] *= jewelMulti
+
+    def _calculate_w4_meal_multi(self):
+        mealMulti = 1
+        if self.labJewels["Black Diamond Rhinestone"]["Enabled"]:
+            mealMulti += self.labJewels["Black Diamond Rhinestone"]["Value"]/100
+
+        mealMulti += self.breeding['Total Shiny Levels']['Bonuses from All Meals']/100
+
+        for meal in self.meals:
+            self.meals[meal]["Value"] *= mealMulti
 
     def _calculate_w5(self):
         self._calculate_w5_divinity_link_advice()

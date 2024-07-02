@@ -1,6 +1,6 @@
 from math import ceil
 from flask import g as session_data
-from consts import maxStaticBookLevels, maxScalingBookLevels, maxSummoningBookLevels, maxOverallBookLevels, skill_talentsDict, combat_talentsDict, currentWorld
+from consts import maxStaticBookLevels, maxScalingBookLevels, maxSummoningBookLevels, maxOverallBookLevels, skill_talentsDict, combat_talentsDict, currentWorld, stamp_maxes, maxMealLevel 
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
@@ -165,12 +165,96 @@ def getBonusLevelAdviceGroup() -> AdviceGroup:
     )
     return bonusLevelAdviceGroup
 
+def getCheckoutSpeedAdviceGroup() -> AdviceGroup:
+    checkoutSpeedAdvices = []
+
+    # Meal
+    checkoutSpeedAdvices.append(Advice(
+        label=f"Meal: Fortune Cookie: {session_data.account.meals['Fortune Cookie']['Value']:.1f}%",
+        picture_class="fortune-cookie",
+        progression=session_data.account.meals["Fortune Cookie"]["Level"],
+        goal=maxMealLevel 
+    ))
+
+    # Atom
+    checkoutSpeedAdvices.append(Advice(
+        label=f"""Oxygen - Library Booker: {2*session_data.account.atom_collider['Atoms']["Oxygen - Library Booker"]['Level']}/60%""",
+        picture_class="oxygen",
+        progression=session_data.account.atom_collider['Atoms']["Oxygen - Library Booker"]['Level'],
+        goal=20 + (10 * session_data.account.gaming['SuperBits']['Isotope Discovery']['Unlocked'])
+    ))
+
+    # Tower
+    checkoutSpeedAdvices.append(Advice(
+        label=f"Talent Book Library building: {((session_data.account.construction_buildings['Talent Book Library']['Level']-1) * 5)}/{session_data.account.construction_buildings['Talent Book Library']['MaxLevel']*5}%",
+        picture_class="talent-book-library",
+        progression=session_data.account.construction_buildings['Talent Book Library']['Level'],
+        goal=session_data.account.construction_buildings['Talent Book Library']['MaxLevel']
+    ))
+
+    # Bubble
+    checkoutSpeedAdvices.append(Advice(
+        label=f"Ignore Overdues bubble: {session_data.account.alchemy_bubbles['Ignore Overdues']['BaseValue']:.1f}/100%",
+        picture_class="ignore-overdues",
+        progression=session_data.account.alchemy_bubbles['Ignore Overdues']['Level'],
+        resource=session_data.account.alchemy_bubbles['Ignore Overdues']['Material']
+    ))
+
+    # Vial
+    vialBonus = session_data.account.alchemy_vials.get('Chonker Chug (Dune Soul)', {}).get('Value', 0) * session_data.account.vialMasteryMulti * session_data.account.labBonuses["My 1st Chemistry Set"]["Value"]
+    checkoutSpeedAdvices.append(Advice(
+        label=f"Chonker Chug vial: +{vialBonus:.1f}%",
+        picture_class='chonker-chug',
+        progression=session_data.account.alchemy_vials.get('Chonker Chug (Dune Soul)', {}).get('Level', 0),
+        goal=13
+    ))
+
+    # Stamp
+    stampLevel=session_data.account.stamps.get("Biblio Stamp", {}).get('Level', 0)
+    checkoutSpeedAdvices.append(Advice(
+        label=f"Stamp: Biblio Stamp: +{stampLevel}%",
+        picture_class="biblio-stamp",
+        progression=stampLevel,
+        goal=stamp_maxes.get("Biblio Stamp"),
+        resource=session_data.account.stamps.get("Biblio Stamp", {}).get('Material', 0),
+    ))
+
+    # Superbit
+    gaming_level = max(session_data.account.all_skills["Gaming"])
+    checkoutSpeedAdvices.append(Advice(
+        label=f"Superbit: Library Checkouts: +1% per Gaming Level",
+        picture_class="green-bits",
+        progression=gaming_level if session_data.account.gaming['SuperBits']['Library Checkouts']['Unlocked'] else 0
+    ))
+
+    # Achievement
+    checkoutSpeedAdvices.append(Advice(
+        label=f"W3 Achievement: Checkout Takeout: +{30 * (0 < session_data.account.achievements.get('Checkout Takeout', False))}%",
+        picture_class="checkout-takeout",
+        progression=1 if session_data.account.achievements.get('Checkout Takeout', False) else 0,
+        goal=1
+    ))
+    
+    for advice in checkoutSpeedAdvices:
+        mark_advice_completed(advice)
+
+    checkoutSpeedAdviceGroup = AdviceGroup(
+        tier="",
+        pre_string=f"Info- Sources of Checkout Speed",
+        advices=checkoutSpeedAdvices
+    )
+
+    
+
+    return checkoutSpeedAdviceGroup
+
 def getTalentExclusions() -> list:
     talentExclusions = []
 
     if sum(session_data.account.all_skills['Lab']) > 2100:
-        talentExclusions.append(537)
+        talentExclusions.extend([537, 538])
         # 537: {"Name": "Essence Transferral", "Tab": "Bubonic Conjuror"},
+        # 538: {"Name": "Upload Squared", "Tab": "Bubonic Conjuror"},
 
     #If you can reach max book of 200, the Bubo Aura build really takes off. Priority for damage from Poison falls off a cliff.
     if max([toon.max_talents_over_books for toon in session_data.account.safe_characters if toon.class_name == "Bubonic Conjuror"], default=0) >= 200:
@@ -179,10 +263,16 @@ def getTalentExclusions() -> list:
 
     #Elite Account-Wides don't stack, can be excluded if already maxed on one character
     for talentNumber, className in {
+        176: "Divine Knight",  #176: {"Name": "One Thousand Hours Played", "Tab": "Divine Knight"},
         178: "Divine Knight",  #178: {"Name": "King of the Remembered", "Tab": "Divine Knight"},
+        326: "Siege Breaker",  #326: {"Name": "Expertly Sailed", "Tab": "Siege Breaker"},
+        327: "Siege Breaker",  #327: {"Name": "Captain Peptalk", "Tab": "Siege Breaker"},
         328: "Siege Breaker",  #328: {"Name": "Archlord Of The Pirates", "Tab": "Siege Breaker"},
+        372: "Beast Master",  #372: {"Name": "Shining Beacon of Egg", "Tab": "Beast Master"},
+        373: "Beast Master",  #373: {"Name": "Curviture Of The Paw", "Tab": "Beast Master"},
         508: "Elemental Sorcerer",  #506: {"Name": "Shared Beliefs", "Tab": "Elemental Sorcerer"},
         506: "Elemental Sorcerer",  #508: {"Name": "Wormhole Emperor", "Tab": "Elemental Sorcerer"},
+        536: "Bubonic Conjuror",  #536: {"Name": "Green Tube", "Tab": "Bubonic Conjuror"},
     }.items():
         if max([toon.max_talents.get(str(talentNumber), 0)
                for toon in session_data.account.safe_characters
@@ -200,10 +290,18 @@ def getTalentExclusions() -> list:
         # 146: {"Name": "Apocalypse Chow", "Tab": "Blood Berserker"},
         # 147: {"Name": "Waiting to Cool", "Tab": "Blood Berserker"},
 
-    #If all bubbles for current max world are unlocked, exclude Bubble Breakthrough
+    #If all bubbles for current max world are unlocked, exclude Shaman's Bubble Breakthrough
     if session_data.account.alchemy_cauldrons['NextWorldMissingBubbles'] > currentWorld:
-        talentExclusions.append(492)
+        talentExclusions.extend([492, 493])
         #492: {"Name": "Bubble Breakthrough", "Tab": "Shaman"},
+        #493: {"Name": "Sharing Some Smarts", "Tab": "Shaman"},
+
+    #If the final Gaming Superbit is owned, exclude DK Gaming
+    if session_data.account.gaming['SuperBits']['Isotope Discovery']['Unlocked']:
+        talentExclusions.extend([175, 176, 177])
+        #175: {"Name": "Undying Passion", "Tab": "Divine Knight"},
+        #176: {"Name": "One Thousand Hours Played", "Tab": "Divine Knight"},
+        #177: {"Name": "Bitty Litty", "Tab": "Divine Knight"},
 
     return talentExclusions
 
@@ -358,6 +456,7 @@ def setLibraryProgressionTier() -> AdviceSection:
     # Generate AdviceGroups
     library_AdviceGroupDict["MaxBookLevels"] = getBookLevelAdviceGroup()
     library_AdviceGroupDict["BonusLevels"] = getBonusLevelAdviceGroup()
+    library_AdviceGroupDict["CheckoutSpeed"] = getCheckoutSpeedAdviceGroup()
     characterCheckouts = getCharacterBooksAdviceGroups()
     for characterName, characterAG in characterCheckouts.items():
         library_AdviceGroupDict[characterName] = characterAG
