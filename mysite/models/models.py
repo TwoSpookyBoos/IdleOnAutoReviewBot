@@ -12,13 +12,13 @@ from flask import g
 
 from utils.data_formatting import getCharacterDetails, safe_loads
 from consts import expectedStackables, greenstack_progressionTiers, card_data, maxMeals, maxMealLevel, jade_emporium, max_IndexOfVials, getReadableVialNames, \
-    buildingsDict, atomsList, prayersDict, labChipsList, bribesDict, shrinesList, pristineCharmsList, sigilsDict, \
+    buildingsDict, atomsList, prayersDict, bribesDict, shrinesList, pristineCharmsList, sigilsDict, \
     sailingDict, guildBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesList, \
     getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampsDict, stampTypes, marketUpgradeList, \
     achievementsList, forgeUpgradesDict, arcadeBonuses, saltLickList, allMeritsDict, bubblesDict, familyBonusesDict, poBoxDict, equinoxBonusesDict, \
     maxDreams, dreamsThatUnlockNewBonuses, ceilUpToBase, starsignsDict, gfood_codes, getStyleNameFromIndex, divinity_divinitiesDict, getDivinityNameFromIndex, \
     maxCookingTables, getNextESFamilyBreakpoint, expected_talentsDict, colliderStorageLimitList, gamingSuperbitsDict, labJewelsDict, cookingMealDict, \
-    labBonusesDict, maxCookingTables, getNextESFamilyBreakpoint, expected_talentsDict, colliderStorageLimitList, gamingSuperbitsDict, maxNumberOfTerritories, \
+    labBonusesDict, labChipsDict, maxCookingTables, getNextESFamilyBreakpoint, expected_talentsDict, colliderStorageLimitList, gamingSuperbitsDict, maxNumberOfTerritories, \
     indexFirstTerritoryAssignedPet, territoryNames, slotUnlockWavesList, breedingUpgradesDict, breedingGeneticsList, breedingShinyBonusList, \
     breedingSpeciesDict, getShinyLevelFromDays, getDaysToNextShinyLevel
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
@@ -1473,11 +1473,11 @@ class Account:
         raw_labChips_list = raw_lab
         if len(raw_labChips_list) >= 15:
             raw_labChips_list = raw_labChips_list[15]
-        for labChipIndex, labChipName in enumerate(labChipsList):
+        for labChipIndex, labChip in labChipsDict.items():
             try:
-                self.labChips[labChipName] = int(raw_labChips_list[labChipIndex])
+                self.labChips[labChip["Name"]] = int(raw_labChips_list[labChipIndex])
             except:
-                self.labChips[labChipName] = 0
+                self.labChips[labChip["Name"]] = 0
 
     def _parse_w4_lab_bonuses(self, raw_lab):
         #TODO: Actually figure out lab :(
@@ -1495,12 +1495,20 @@ class Account:
 
         self.labJewels = {}
         for jewelIndex, jewelInfo in labJewelsDict.items():
-            self.labJewels[jewelInfo["Name"]] = {
-                "Owned": bool(raw_lab[14][jewelIndex]),
-                "Enabled": bool(raw_lab[14][jewelIndex]), # Same as owned until connection range is implemented
-                "Value": jewelInfo["BaseValue"], # Jewelmulti added in calculate section
-                "BaseValue": jewelInfo["BaseValue"]
-            }
+            try:
+                self.labJewels[jewelInfo["Name"]] = {
+                    "Owned": bool(raw_lab[14][jewelIndex]),
+                    "Enabled": bool(raw_lab[14][jewelIndex]), # Same as owned until connection range is implemented
+                    "Value": jewelInfo["BaseValue"], # Jewelmulti added in calculate section
+                    "BaseValue": jewelInfo["BaseValue"]
+                }
+            except:
+                self.labJewels[jewelInfo["Name"]] = {
+                    "Owned": False,
+                    "Enabled": False,  # Same as owned until connection range is implemented
+                    "Value": jewelInfo["BaseValue"],  # Jewelmulti added in calculate section
+                    "BaseValue": jewelInfo["BaseValue"]
+                }
 
     def _parse_w4_rift(self):
         self.rift = {
