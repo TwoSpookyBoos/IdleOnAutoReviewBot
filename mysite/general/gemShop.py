@@ -1,7 +1,7 @@
 from models.models import Advice, AdviceGroup, AdviceSection
 from utils.data_formatting import safe_loads
 from utils.logging import get_logger
-from consts import gemShop_progressionTiers
+from consts import gemShop_progressionTiers, maxFarmingCrops
 from flask import g as session_data
 
 logger = get_logger(__name__)
@@ -80,12 +80,22 @@ def try_exclude_ChestSluggo(exclusionList):
     if session_data.account.sum_artifact_tiers >= 58:  #(numberOfArtifacts * numberOfArtifactTiers) * 0.43:
         exclusionList.append("Chest Sluggo")
 
+def try_exclude_GoldenSprinkler(exclusionList):
+    if (
+        session_data.account.gaming['SuperBits']['Isotope Discovery']['Unlocked']
+        or session_data.account.gaming['FertilizerValue'] >= 440
+        or session_data.account.gaming['FertilizerSpeed'] >= 520
+        or session_data.account.farming["CropsUnlocked"] >= maxFarmingCrops
+    ):
+        exclusionList.append("Golden Sprinkler")
+
 def getGemShopExclusions():
     exclusionList = []
     try_exclude_SoupedUpTube(exclusionList)
     try_exclude_FluorescentFlaggies(exclusionList)
     try_exclude_BurningBadBooks(exclusionList)
     try_exclude_ChestSluggo(exclusionList)
+    try_exclude_GoldenSprinkler(exclusionList)
 
     return exclusionList
 
