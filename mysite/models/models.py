@@ -2235,6 +2235,8 @@ class Account:
         if self.labJewels["Black Diamond Rhinestone"]["Enabled"]:
             mealMulti += self.labJewels["Black Diamond Rhinestone"]["Value"]/100
 
+        mealMulti += self.breeding['Total Shiny Levels']['Bonuses from All Meals']/100
+
         for meal in self.meals:
             self.meals[meal]["Value"] *= mealMulti
 
