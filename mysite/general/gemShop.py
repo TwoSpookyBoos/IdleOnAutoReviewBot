@@ -83,9 +83,10 @@ def try_exclude_ChestSluggo(exclusionList):
 def try_exclude_GoldenSprinkler(exclusionList):
     if (
         session_data.account.gaming['SuperBits']['Isotope Discovery']['Unlocked']
-        or session_data.account.gaming['FertilizerValue'] >= 440
-        or session_data.account.gaming['FertilizerSpeed'] >= 520
-        or session_data.account.farming["CropsUnlocked"] >= maxFarmingCrops
+        or session_data.account.gaming['BitsOwned'] >= 1e47  #Red 100B
+        or session_data.account.gaming['FertilizerValue'] >= 420
+        or session_data.account.gaming['FertilizerSpeed'] >= 500
+        or session_data.account.farming["CropsUnlocked"] >= maxFarmingCrops * 0.8
     ):
         exclusionList.append("Golden Sprinkler")
 
