@@ -451,7 +451,7 @@ def setConsDeathNoteProgressionTier():
     apocCharactersIndexList = getapocCharactersIndexList()
     bbCharactersIndexList = getChowMeowCharactersIndexList()
     meowBBIndex = getMEOWBBIndex(bbCharactersIndexList)
-    session_data.account.meowBBIndex = meowBBIndex
+    session_data.account.meowBBIndex = meowBBIndex  #TODO: Move this parse/calculate to Account
     fullDeathNoteDict = getDeathNoteKills()
 
     max_tier = deathNote_progressionTiers[-2][0]
@@ -705,7 +705,7 @@ def setConsDeathNoteProgressionTier():
             tier=str(tier_combo['MEOW'] if tier_combo['MEOW'] < 27 else ""),
             pre_string=f"{'Informational- ' if tier_combo['MEOW'] >= 27 else ''}Complete {apocToNextTier['MEOW']} more Super CHOW{pl(['dummy']*apocToNextTier['MEOW'])} with {session_data.account.all_characters[meowBBIndex].character_name} {meowsForNextTier}",
             advices=deathnote_AdviceDict['MEOW'],
-            post_string="Aim for 24hrs or less (4m+ KPH) per enemy"
+            post_string=f"Aim for 24hrs or less (4m+ KPH) per enemy."
         )
     else:
         deathnote_AdviceGroupDict['MEOW'] = AdviceGroup(
@@ -715,6 +715,8 @@ def setConsDeathNoteProgressionTier():
         )
 
     #Generate Advice Section
+    if len(bbCharactersIndexList) > 1:
+        deathnote_AdviceSection.note = "Important! As of February 2024, Super CHOWs only give benefit if completed on your 2nd Blood Berserker regardless of the platform you play on."
     overall_DeathNoteTier = min(max_tier+1, tier_combo[1], tier_combo[2], tier_combo[3],
                                 tier_combo[4], tier_combo[5], tier_combo[6],
                                 tier_combo['ZOW'], tier_combo['CHOW'], tier_combo['MEOW'])  #tier_zows, tier_chows, tier_meows

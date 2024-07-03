@@ -111,7 +111,7 @@ def getGemShopExclusions():
 
     #W4
     try_exclude_SoupedUpTube(exclusionList)
-    
+
     #W5
     try_exclude_ChestSluggo(exclusionList)
     try_exclude_GoldenSprinkler(exclusionList)
