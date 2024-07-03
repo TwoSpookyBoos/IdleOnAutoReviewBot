@@ -2783,6 +2783,7 @@ skill_talentsDict = {
     },
     "Divinity": {
         "Medium": {
+            505: {"Name": "Polytheism", "Tab": "Elemental Sorcerer"},  # Account-wide divinity points
             506: {"Name": "Shared Beliefs", "Tab": "Elemental Sorcerer"},  # Account-wide EXP bumped to Medium because Divinity extra important
         },
     },
@@ -3062,6 +3063,7 @@ combat_talentsDict = {
             6: {"Name": "Gilded Sword", "Tab": "Savvy Basics"},
         },
         "Low": {
+            507: {"Name": "Gods Chosen Children", "Tab": "Elemental Sorcerer"},
             103: {"Name": "Idle Casting", "Tab": "Savvy Basics"},
             5: {"Name": "Sharpened Axe", "Tab": "Savvy Basics"},
             531: {"Name": "Memorial Skulls", "Tab": "Elemental Sorcerer"},

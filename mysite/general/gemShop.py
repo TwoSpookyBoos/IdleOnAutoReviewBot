@@ -1,7 +1,7 @@
 from models.models import Advice, AdviceGroup, AdviceSection
 from utils.data_formatting import safe_loads
 from utils.logging import get_logger
-from consts import gemShop_progressionTiers, maxFarmingCrops
+from consts import gemShop_progressionTiers, maxFarmingCrops, currentWorld
 from flask import g as session_data
 
 logger = get_logger(__name__)
@@ -95,11 +95,24 @@ def try_exclude_ShroomFamiliar(exclusionList):
     if session_data.account.summoning['Battles']['Red'] >= 8:
         exclusionList.append("Shroom Familiar")
 
+
+def try_exclude_IvoryBubbleCauldrons(exclusionList):
+    if session_data.account.alchemy_cauldrons['NextWorldMissingBubbles'] > currentWorld:
+        exclusionList.append('Ivory Bubble Cauldrons')
+
 def getGemShopExclusions():
     exclusionList = []
-    try_exclude_SoupedUpTube(exclusionList)
+    #W2
+    try_exclude_IvoryBubbleCauldrons(exclusionList)
+
+    #W3
     try_exclude_FluorescentFlaggies(exclusionList)
     try_exclude_BurningBadBooks(exclusionList)
+
+    #W4
+    try_exclude_SoupedUpTube(exclusionList)
+    
+    #W5
     try_exclude_ChestSluggo(exclusionList)
     try_exclude_GoldenSprinkler(exclusionList)
 

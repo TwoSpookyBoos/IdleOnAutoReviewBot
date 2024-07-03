@@ -251,6 +251,7 @@ def getCheckoutSpeedAdviceGroup() -> AdviceGroup:
 def getTalentExclusions() -> list:
     talentExclusions = []
 
+    #If over 2100 lab, you have all jewels from Jade Emporium and lab levels no longer matter
     if sum(session_data.account.all_skills['Lab']) > 2100:
         talentExclusions.extend([537, 538])
         # 537: {"Name": "Essence Transferral", "Tab": "Bubonic Conjuror"},
@@ -261,19 +262,28 @@ def getTalentExclusions() -> list:
         talentExclusions.append(525)
         #525: {"Name": "Chemical Warfare", "Tab": "Bubonic Conjuror"},
 
+    #If you have less than 5 God Ranks, exclude ES damage per God rank
+    if session_data.account.divinity['GodRank'] < 4:
+        talentExclusions.append(507)
+
     #Elite Account-Wides don't stack, can be excluded if already maxed on one character
     for talentNumber, className in {
-        176: "Divine Knight",  #176: {"Name": "One Thousand Hours Played", "Tab": "Divine Knight"},
-        177: "Divine Knight",  #177: {"Name": "Bitty Litty", "Tab": "Divine Knight"},
-        178: "Divine Knight",  #178: {"Name": "King of the Remembered", "Tab": "Divine Knight"},
-        326: "Siege Breaker",  #326: {"Name": "Expertly Sailed", "Tab": "Siege Breaker"},
-        327: "Siege Breaker",  #327: {"Name": "Captain Peptalk", "Tab": "Siege Breaker"},
-        328: "Siege Breaker",  #328: {"Name": "Archlord Of The Pirates", "Tab": "Siege Breaker"},
-        372: "Beast Master",  #372: {"Name": "Shining Beacon of Egg", "Tab": "Beast Master"},
-        373: "Beast Master",  #373: {"Name": "Curviture Of The Paw", "Tab": "Beast Master"},
-        506: "Elemental Sorcerer",  # 506: {"Name": "Shared Beliefs", "Tab": "Elemental Sorcerer"},
+        148: "Blood Berserker",     #148: {"Name": "Overflowing Ladle", "Tab": "Blood Berserker"},
+        176: "Divine Knight",       #176: {"Name": "One Thousand Hours Played", "Tab": "Divine Knight"},
+        177: "Divine Knight",       #177: {"Name": "Bitty Litty", "Tab": "Divine Knight"},
+        178: "Divine Knight",       #178: {"Name": "King of the Remembered", "Tab": "Divine Knight"},
+        326: "Siege Breaker",       #326: {"Name": "Expertly Sailed", "Tab": "Siege Breaker"},
+        327: "Siege Breaker",       #327: {"Name": "Captain Peptalk", "Tab": "Siege Breaker"},
+        328: "Siege Breaker",       #328: {"Name": "Archlord Of The Pirates", "Tab": "Siege Breaker"},
+        310: "Hunter",              #310: {"Name": "Eagle Eye", "Tab": "Hunter"},
+        311: "Hunter",              #311: {"Name": "Invasive Species", "Tab": "Hunter"},
+        372: "Beast Master",        #372: {"Name": "Shining Beacon of Egg", "Tab": "Beast Master"},
+        373: "Beast Master",        #373: {"Name": "Curviture Of The Paw", "Tab": "Beast Master"},
+        505: "Elemental Sorcerer",  #505: {"Name": "Polytheism", "Tab": "Elemental Sorcerer"},
+        506: "Elemental Sorcerer",  #506: {"Name": "Shared Beliefs", "Tab": "Elemental Sorcerer"},
+        507: "Elemental Sorcerer",  #507: {"Name": "Gods Chosen Children", "Tab": "Elemental Sorcerer"},
         508: "Elemental Sorcerer",  #508: {"Name": "Wormhole Emperor", "Tab": "Elemental Sorcerer"},
-        536: "Bubonic Conjuror",  #536: {"Name": "Green Tube", "Tab": "Bubonic Conjuror"},
+        536: "Bubonic Conjuror",    #536: {"Name": "Green Tube", "Tab": "Bubonic Conjuror"},
     }.items():
         if max([toon.max_talents.get(str(talentNumber), 0)
                for toon in session_data.account.safe_characters
