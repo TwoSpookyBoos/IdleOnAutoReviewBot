@@ -8,7 +8,6 @@ logger = get_logger(__name__)
 
 skillsToReview_RightHand = ["Mining", "Choppin", "Fishing", "Catching", "Trapping", "Worship"]
 
-
 def getHandsAdviceGroup(maestros, beginners):
     janky_skills = maestros_goal_levels(maestros)
     tier = f"{len(janky_skills) or 6}/{len(skillsToReview_RightHand)}"
@@ -435,7 +434,15 @@ def setSecretClassProgressionTier():
         advices=secretClass_AdviceDict["UnlockNextClass"]
     )
     secretClass_AdviceGroupDict["MaestroHands"] = getHandsAdviceGroup(maestros, beginners)
+
     #Generate AdviceSection
+    if len(maestros) > 1:
+        secretClass_AdviceSection.note = (
+            f"Important! Only one Maestro's Right and Left Hands buffs work."
+            f"<br>On Steam, this is the last created Maestro."
+            f"<br>I'm not totally sure about other platforms, sorry 🙁"
+        )
+
     overall_SecretClassTier = min(max_tier, tier_SecretClass)
     tier_section = f"{overall_SecretClassTier}/{max_tier}"
     secretClass_AdviceSection.pinchy_rating = overall_SecretClassTier
