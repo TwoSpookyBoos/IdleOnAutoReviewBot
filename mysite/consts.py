@@ -5203,6 +5203,124 @@ def getGemstonePercent(gemstoneName: str, gemstoneValue: float):
         logger.exception(f"Could not find max value for Gemstone: {gemstoneName} because: {reason}")
     pass
 
+# Plenty of unknown values. HP, damage, speed, reward size, etc seem to require calculation 
+SummoningDict = {
+
+    "White": {
+        0: {"EnemyID": "Pet1", "Value2": 29, "Value3": 24, "Value4": 12, "OpponentName": "Pablo_and_his_Plump_Piggies", "RewardID": 1, "Value8": 0, "Image": "piggo"},
+        1: {"EnemyID": "Pet2", "Value2": 25, "Value3": 26, "Value4": 12, "OpponentName": "Gam3rPr0digy_and_their_Boar_Stampede", "RewardID": 2, "Value8": 1, "Image": "wild-boar"},
+        2: {"EnemyID": "Pet3", "Value2": 23, "Value3": 22, "Value4": 17, "OpponentName": "Donald_and_his_Quacky_Ducks", "RewardID": 3, "Value8": 2, "Image": "mallay"},
+        3: {"EnemyID": "Pet0", "Value2": 28, "Value3": 23, "Value4": 12, "OpponentName": "Sandy_and_her_Nutty_Squirrels", "RewardID": 6, "Value8": 3, "Image": "squirrel"},
+        4: {"EnemyID": "Pet4", "Value2": 30, "Value3": 25, "Value4": 18, "OpponentName": "Popo_and_their_Largest_of_Mammalians", "RewardID": 4, "Value8": 5, "Image": "whale"},
+        5: {"EnemyID": "Pet6", "Value2": 34, "Value3": 21, "Value4": 18, "OpponentName": "Little_Susie_and_her_Bunny_Family", "RewardID": 2, "Value8": 7, "Image": "bunny"},
+        6: {"EnemyID": "Pet5", "Value2": 26, "Value3": 29, "Value4": 14, "OpponentName": "MoveFan84_and_his_Famous_Nacho_Batallion", "RewardID": 1, "Value8": 13, "Image": "chippy"},
+        7: {"EnemyID": "Pet10", "Value2": 30, "Value3": 38, "Value4": 15, "OpponentName": "Ronaldo_and_his_Cool_Freakin'_Birdz", "RewardID": 5, "Value8": 24, "Image": "cool-bird"},
+        8: {"EnemyID": "Pet11", "Value2": 34, "Value3": 30, "Value4": 16, "OpponentName": "Master_Oogman_and_his_Speedy_Hedgehogs", "RewardID": 3, "Value8": 40, "Image": "hedgehog"},
+    },
+
+    "Green": {
+        0: {"EnemyID": "mushG", "Value2": 26, "Value3": 41, "Value4": 8, "OpponentName": "Jonesy_and_his_Lil_Mushies", "RewardID": 1, "Value8": 4, "Image": "green-mushroom"},
+        1: {"EnemyID": "mushR", "Value2": 20, "Value3": 38, "Value4": 13, "OpponentName": "Walter_and_his_Lil_Shrooms", "RewardID": 7, "Value8": 5, "Image": "red-mushroom"},
+        2: {"EnemyID": "frogG", "Value2": 27, "Value3": 18, "Value4": 9, "OpponentName": "Lex_and_her_Hoppy_Frogs", "RewardID": 2, "Value8": 6, "Image": "frog"},
+        3: {"EnemyID": "beanG", "Value2": 47, "Value3": 32, "Value4": 16, "OpponentName": "Bongo_and_his_Lazy_Beans", "RewardID": 1, "Value8": 8, "Image": "bored-bean"},
+        4: {"EnemyID": "slimeG", "Value2": 23, "Value3": 15, "Value4": 10, "OpponentName": "Sam_and_his_Goopy_Slimes", "RewardID": 5, "Value8": 10, "Image": "slime"},
+        5: {"EnemyID": "snakeG", "Value2": 33, "Value3": 24, "Value4": 14, "OpponentName": "Mika_and_his_Itty_Bitty_Baby_Boas", "RewardID": 2, "Value8": 12, "Image": "baby-boa"},
+        6: {"EnemyID": "carrotO", "Value2": 42, "Value3": 22, "Value4": 24, "OpponentName": "Guy_Montag_and_his_Walking_Veggies", "RewardID": 3, "Value8": 15, "Image": "carrotman"},
+        7: {"EnemyID": "goblinG", "Value2": 38, "Value3": 34, "Value4": 16, "OpponentName": "Gork_and_his_Ugly_Glublins", "RewardID": 4, "Value8": 17, "Image": "glublin"},
+        8: {"EnemyID": "plank", "Value2": 44, "Value3": 21, "Value4": 21, "OpponentName": "Ed_and_his_Stolen_Planks", "RewardID": 8, "Value8": 19, "Image": "wode-board"},
+        9: {"EnemyID": "frogBIG", "Value2": 56, "Value3": 33, "Value4": 22, "OpponentName": "Gigachad_and_his_Awesome_Gigafrogs", "RewardID": 5, "Value8": 21, "Image": "gigafrog"},
+        10: {"EnemyID": "poopSmall", "Value2": 26, "Value3": 19, "Value4": 11, "OpponentName": "TP_Pete_Jr_and_his_Battle_Poops", "RewardID": 6, "Value8": 25, "Image": "poop"},
+        11: {"EnemyID": "ratB", "Value2": 31, "Value3": 19, "Value4": 13, "OpponentName": "Michael_and_his_Rodents", "RewardID": 4, "Value8": 28, "Image": "rat"},
+        12: {"EnemyID": "branch", "Value2": 32, "Value3": 31, "Value4": 20, "OpponentName": "Kyle_and_his_Branch_Brigade", "RewardID": 3, "Value8": 31, "Image": "walking-stick"},
+        13: {"EnemyID": "acorn", "Value2": 42, "Value3": 25, "Value4": 17, "OpponentName": "Aaron_and_his_Aacorn_Gang", "RewardID": 6, "Value8": 39, "Image": "nutto"},
+        14: {"EnemyID": "mushW", "Value2": 26, "Value3": 37, "Value4": 13, "OpponentName": "Kip_and_his_Lil_Fungi", "RewardID": 1, "Value8": 50, "Image": "wood-mushroom"},
+    },
+
+    "Yellow": {
+        0: {"EnemyID": "jarSand", "Value2": 31, "Value3": 20, "Value4": 12, "OpponentName": "Karen_and_her_Pots", "RewardID": 9, "Value8": 9, "Image": "sandy-pot"},
+        1: {"EnemyID": "mimicA", "Value2": 33, "Value3": 30, "Value4": 16, "OpponentName": "Jimmy_and_his_Enthusiastic_Mimics", "RewardID": 7, "Value8": 11, "Image": "mimic"},
+        2: {"EnemyID": "crabcake", "Value2": 35, "Value3": 43, "Value4": 21, "OpponentName": "Eugene_and_his_Frosted_Crabs", "RewardID": 10, "Value8": 14, "Image": "crabcake"},
+        3: {"EnemyID": "coconut", "Value2": 49, "Value3": 25, "Value4": 14, "OpponentName": "Nobby_and_his_Gang_of_Nuts", "RewardID": 2, "Value8": 16, "Image": "mafioso"},
+        4: {"EnemyID": "sandcastle", "Value2": 32, "Value3": 17, "Value4": 17, "OpponentName": "Tiny_Tim_and_his_Cool_Castles", "RewardID": 8, "Value8": 18, "Image": "sand-castle"},
+        5: {"EnemyID": "pincermin", "Value2": 39, "Value3": 54, "Value4": 26, "OpponentName": "Tira_and_her_Shrewd_Pincermen", "RewardID": 7, "Value8": 22, "Image": "pincermin"},
+        6: {"EnemyID": "potato", "Value2": 57, "Value3": 58, "Value4": 28, "OpponentName": "Misha_and_her_Super_Spuds", "RewardID": 3, "Value8": 26, "Image": "mashed-potato"},
+        7: {"EnemyID": "steak", "Value2": 55, "Value3": 37, "Value4": 23, "OpponentName": "Wlad_and_his_Rootin'_Tootin'_Tysons", "RewardID": 5, "Value8": 30, "Image": "tyson"},
+        8: {"EnemyID": "moonman", "Value2": 27, "Value3": 29, "Value4": 22, "OpponentName": "Mac_and_his_Many_Moonmoons", "RewardID": 11, "Value8": 34, "Image": "moonmoon"},
+        9: {"EnemyID": "sandgiant", "Value2": 50, "Value3": 21, "Value4": 23, "OpponentName": "Sir_Reginald_and_his_Gentlemen_Giants", "RewardID": 4, "Value8": 45, "Image": "sand-giant"},
+        10: {"EnemyID": "snailZ", "Value2": 42, "Value3": 26, "Value4": 25, "OpponentName": "Shelby_and_her_Shelled_Snelbies", "RewardID": 1, "Value8": 60, "Image": "snelbie"},
+    },
+
+    "Blue": {
+        0: {"EnemyID": "sheep", "Value2": 32, "Value3": 31, "Value4": 14, "OpponentName": "Paulie_and_his_Sheepie_Herd", "RewardID": 12, "Value8": 20, "Image": "sheepie"},
+        1: {"EnemyID": "flake", "Value2": 35, "Value3": 28, "Value4": 14, "OpponentName": "Dirk_and_his_Celsius_Flakes", "RewardID": 9, "Value8": 23, "Image": "frost-flake"},
+        2: {"EnemyID": "stache", "Value2": 30, "Value3": 19, "Value4": 14, "OpponentName": "Mr_Harrison_and_his_Mighty_Staches", "RewardID": 6, "Value8": 27, "Image": "sir-stache"},
+        3: {"EnemyID": "bloque", "Value2": 40, "Value3": 27, "Value4": 12, "OpponentName": "Gibby_and_his_Bloque_Offensive", "RewardID": 1, "Value8": 29, "Image": "bloque"},
+        4: {"EnemyID": "mamoth", "Value2": 37, "Value3": 22, "Value4": 14, "OpponentName": "Esther_and_her_Trampler_Mamooths", "RewardID": 8, "Value8": 32, "Image": "mamooth"},
+        5: {"EnemyID": "snowball", "Value2": 33, "Value3": 26, "Value4": 20, "OpponentName": "Frosty_and_his_Relatives", "RewardID": 13, "Value8": 35, "Image": "snowman"},
+        6: {"EnemyID": "penguin", "Value2": 52, "Value3": 24, "Value4": 22, "OpponentName": "The_Accountant_and_his_Trusty_Penguins", "RewardID": 2, "Value8": 38, "Image": "penguin"},
+        7: {"EnemyID": "thermostat", "Value2": 43, "Value3": 39, "Value4": 25, "OpponentName": "Fermi_and_his_Thermies", "RewardID": 4, "Value8": 41, "Image": "thermister"},
+        8: {"EnemyID": "glass", "Value2": 35, "Value3": 27, "Value4": 15, "OpponentName": "Kristen_and_her_Chill_Quenchies", "RewardID": 10, "Value8": 46, "Image": "quenchie"},
+        9: {"EnemyID": "snakeB", "Value2": 31, "Value3": 18, "Value4": 14, "OpponentName": "Rob_and_his_Ice_Cold_Killer_Snakes", "RewardID": 14, "Value8": 49, "Image": "cryosnake"},
+        10: {"EnemyID": "speaker", "Value2": 30, "Value3": 38, "Value4": 21, "OpponentName": "Lil_Plump_and_his_Dope_Bops", "RewardID": 15, "Value8": 51, "Image": "bop-box"},
+        11: {"EnemyID": "eye", "Value2": 39, "Value3": 23, "Value4": 18, "OpponentName": "Nadia_and_her_All_Seeing_Eyes", "RewardID": 7, "Value8": 54, "Image": "neyeptune"},
+        12: {"EnemyID": "ram", "Value2": 37, "Value3": 42, "Value4": 21, "OpponentName": "Shepherd_and_his_Flock_of_Rams", "RewardID": 5, "Value8": 65, "Image": "dedotated-ram"},
+        13: {"EnemyID": "skele2", "Value2": 33, "Value3": 31, "Value4": 30, "OpponentName": "Brody_and_his_Infamous_Bloodbones", "RewardID": 11, "Value8": 74, "Image": "bloodbone"},
+     },
+    
+    "Purple": {
+        0: {"EnemyID": "mushP", "Value2": 33, "Value3": 32, "Value4": 16, "OpponentName": "ProXD_and_his_Mushrooms_of_Mischief", "RewardID": 16, "Value8": 33, "Image": "purp-mushroom"},
+        1: {"EnemyID": "w4a2", "Value2": 31, "Value3": 36, "Value4": 23, "OpponentName": "Tallie_and_her_Rambunctious_TVs", "RewardID": 9, "Value8": 36, "Image": "tv"},
+        2: {"EnemyID": "w4a3", "Value2": 37, "Value3": 37, "Value4": 21, "OpponentName": "Homer_and_his_Epic_Donuts", "RewardID": 1, "Value8": 37, "Image": "donut"},
+        3: {"EnemyID": "demonP", "Value2": 53, "Value3": 34, "Value4": 31, "OpponentName": "Nostalgo_and_his_Genies_of_Olde", "RewardID": 3, "Value8": 42, "Image": "demon-genie"},
+        4: {"EnemyID": "w4b2", "Value2": 28, "Value3": 29, "Value4": 18, "OpponentName": "Dalia_and_her_Hyperactive_Drinks", "RewardID": 12, "Value8": 43, "Image": "soda-can"},
+        5: {"EnemyID": "w4b1", "Value2": 19, "Value3": 23, "Value4": 10, "OpponentName": "Werm_and_his_Worms", "RewardID": 6, "Value8": 47, "Image": "flying-worm"},
+        6: {"EnemyID": "w4b3", "Value2": 36, "Value3": 36, "Value4": 22, "OpponentName": "JelloL0ver87_and_his_Beloved_Gel_Cubes", "RewardID": 8, "Value8": 52, "Image": "gelatinous-cuboid"},
+        7: {"EnemyID": "w4b4", "Value2": 46, "Value3": 32, "Value4": 28, "OpponentName": "Megacorp_Representative_and_his_Product", "RewardID": 13, "Value8": 56, "Image": "choccie"},
+        8: {"EnemyID": "w4b5", "Value2": 37, "Value3": 33, "Value4": 30, "OpponentName": "Werm's_Stepsister_and_her_Worms", "RewardID": 1, "Value8": 61, "Image": "biggole-wurm"},
+        9: {"EnemyID": "w4c1", "Value2": 26, "Value3": 26, "Value4": 14, "OpponentName": "DQ_and_their_abandoned_Clammies", "RewardID": 2, "Value8": 62, "Image": "clammie"},
+        10: {"EnemyID": "w4c2", "Value2": 19, "Value3": 24, "Value4": 10, "OpponentName": "Dee_and_her_'dars", "RewardID": 4, "Value8": 66, "Image": "octodar"},
+        11: {"EnemyID": "w4c3", "Value2": 33, "Value3": 30, "Value4": 24, "OpponentName": "Gordon_and_his_Eloquent_Flombeiges", "RewardID": 10, "Value8": 70, "Image": "flombeige"},
+        12: {"EnemyID": "w4c4", "Value2": 66, "Value3": 39, "Value4": 30, "OpponentName": "Giuseppe_and_his_Power_Tools", "RewardID": 14, "Value8": 78, "Image": "stilted-seeker"},
+
+    },
+
+    "Red": {
+        0: {"EnemyID": "w5a1", "Value2": 24, "Value3": 20, "Value4": 10, "OpponentName": "Jawz_and_his_Hot_Smokin_Suggmas", "RewardID": 17, "Value8": 44, "Image": "suggma"},
+        1: {"EnemyID": "w5a2", "Value2": 20, "Value3": 28, "Value4": 12, "OpponentName": "Macdonald_and_his_Homemade_Maccies", "RewardID": 15, "Value8": 48, "Image": "maccie"},
+        2: {"EnemyID": "w5a3", "Value2": 43, "Value3": 36, "Value4": 29, "OpponentName": "Brandon_and_his_Iconic_Brightsides", "RewardID": 1, "Value8": 53, "Image": "mister-brightside"},
+        3: {"EnemyID": "w5a4", "Value2": 30, "Value3": 27, "Value4": 18, "OpponentName": "Lola_and_her_Crazy_Crackers", "RewardID": 5, "Value8": 55, "Image": "cheese-nub"},
+        4: {"EnemyID": "w5a5", "Value2": 32, "Value3": 32, "Value4": 28, "OpponentName": "Mr_M_and_his_Holey_Moleys", "RewardID": 11, "Value8": 57, "Image": "stiltmole"},
+        5: {"EnemyID": "w5b1", "Value2": 20, "Value3": 27, "Value4": 11, "OpponentName": "The_Don's_Molto_Bene_Moltis", "RewardID": 16, "Value8": 59, "Image": "molti"},
+        6: {"EnemyID": "w5b2", "Value2": 22, "Value3": 27, "Value4": 18, "OpponentName": "Smoggy_Shaman_and_their_Scary_Bones", "RewardID": 7, "Value8": 63, "Image": "purgatory-stalker"},
+        7: {"EnemyID": "w5b3", "Value2": 23, "Value3": 24, "Value4": 18, "OpponentName": "Thomas_and_his_Halftime_Breakforce", "RewardID": 18, "Value8": 69, "Image": "citringe"},
+        8: {"EnemyID": "w5b4", "Value2": 28, "Value3": 30, "Value4": 24, "OpponentName": "Larry_and_his_Lava_Lamps", "RewardID": 9, "Value8": 71, "Image": "lampar"},
+        9: {"EnemyID": "w5b5", "Value2": 31, "Value3": 31, "Value4": 28, "OpponentName": "OwO_and_their_Spirit_Army", "RewardID": 3, "Value8": 75, "Image": "fire-spirit"},
+        10: {"EnemyID": "w5b6", "Value2": 34, "Value3": 37, "Value4": 23, "OpponentName": "Briggs_and_his_Mole_Workforce", "RewardID": 6, "Value8": 79, "Image": "biggole-mole"},
+        11: {"EnemyID": "w5c1", "Value2": 21, "Value3": 22, "Value4": 11, "OpponentName": "Krepe_and_his_Crawlies", "RewardID": 4, "Value8": 82, "Image": "crawler"},
+        12: {"EnemyID": "w5c2", "Value2": 34, "Value3": 25, "Value4": 22, "OpponentName": "Grinder23_and_his_Favorite_Mobs", "RewardID": 10, "Value8": 84, "Image": "tremor-wurm"},
+    },
+
+    "Cyan": {
+        0: {"EnemyID": "w6a1", "Value2": 22, "Value3": 25, "Value4": 16, "OpponentName": "Spiffy_Jr_and_their_Whelming_Liquids", "RewardID": 19, "Value8": 58, "Image": "sprout-spirit"},
+        1: {"EnemyID": "w6a2", "Value2": 27, "Value3": 34, "Value4": 19, "OpponentName": "iFarm_and_their_0cal_Units", "RewardID": 2, "Value8": 64, "Image": "ricecake"},
+        2: {"EnemyID": "w6a3", "Value2": 35, "Value3": 39, "Value4": 27, "OpponentName": "Spiffy_Sr_and_his_Bigtime_Liquids", "RewardID": 8, "Value8": 67, "Image": "river-spirit"},
+        3: {"EnemyID": "w6a4", "Value2": 33, "Value3": 27, "Value4": 22, "OpponentName": "Bart_and_his_Trollsquad", "RewardID": 12, "Value8": 68, "Image": "baby-troll"},
+        4: {"EnemyID": "w6a5", "Value2": 36, "Value3": 35, "Value4": 29, "OpponentName": "Grunkle_and_their_Rooted_Whimsy", "RewardID": 14, "Value8": 72, "Image": "woodlin-spirit"},
+        5: {"EnemyID": "w6b1", "Value2": 46, "Value3": 36, "Value4": 34, "OpponentName": "Barb_and_her_Overworked_Blobs", "RewardID": 13, "Value8": 73, "Image": "bamboo-spirit"},
+        6: {"EnemyID": "w6b2", "Value2": 25, "Value3": 29, "Value4": 22, "OpponentName": "Lumi_and_her_Bright_Lights", "RewardID": 1, "Value8": 76, "Image": "lantern-spirit"},
+        7: {"EnemyID": "w6b3", "Value2": 36, "Value3": 33, "Value4": 26, "OpponentName": "Marge_and_her_Troll_Patrol", "RewardID": 16, "Value8": 77, "Image": "mama-troll"},
+        8: {"EnemyID": "w6b4", "Value2": 45, "Value3": 34, "Value4": 31, "OpponentName": "Lief_and_his_Overzealous_Leeks", "RewardID": 5, "Value8": 80, "Image": "leek-spirit"},
+        9: {"EnemyID": "w6c1", "Value2": 29, "Value3": 27, "Value4": 19, "OpponentName": "Seru_and_their_Ceramic_Entities", "RewardID": 15, "Value8": 81, "Image": "ceramic-spirit"},
+        10: {"EnemyID": "w6c2", "Value2": 38, "Value3": 33, "Value4": 27, "OpponentName": "Mr_Walker_and_his_Untiring_Doggies", "RewardID": 17, "Value8": 83, "Image": "skydoggie-spirit"},
+        11: {"EnemyID": "w6d1", "Value2": 23, "Value3": 24, "Value4": 14, "OpponentName": "Duke_of_Yolk_and_his_Subjects", "RewardID": 3, "Value8": 85, "Image": "royal-egg"},
+        12: {"EnemyID": "w6d2", "Value2": 27, "Value3": 31, "Value4": 16, "OpponentName": "Sorel_and_her_Esteemed_Sludge", "RewardID": 18, "Value8": 86, "Image": "minichief-spirit"},
+        13: {"EnemyID": "w6d3", "Value2": 42, "Value3": 41, "Value4": 32, "OpponentName": "Shinji_and_his_Inevitable_Army", "RewardID": 20, "Value8": 87, "Image": "samurai-guardian"},
+    },
+ }
+
+# Maps to the RewardID, 1 indexed because Lava
+SummoningRewards = ["<x_Total_DMG", "<x_Jade_Gain", "<x_Farming_SPD", "<x_Artifact_Find", "+{_Lab_Con_Range", "<x_All_Essence", "<x_Sneak_EXP", "<x_Sigil_SPD", "<x_Farming_EXP", "+{%_Drop_Rate", "<x_Crop_EVO", "+{%_AFK_Gains", "+{%_Skill_EXP", "<x_Construct_SPD", "<x_Skill_Effncy.", "<x_Cooking_SPD", "<x_Gaming_Bits", "<x_Shiny_EXP", "+{%_All_Stat", "+{_Library_Max"]
+
 
 ### SLAB CONSTS ###
 #slabString last pulled from code in 2.08
