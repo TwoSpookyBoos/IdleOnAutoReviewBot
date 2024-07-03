@@ -18,9 +18,10 @@ from consts import expectedStackables, greenstack_progressionTiers, card_data, m
     achievementsList, forgeUpgradesDict, arcadeBonuses, saltLickList, allMeritsDict, bubblesDict, familyBonusesDict, poBoxDict, equinoxBonusesDict, \
     maxDreams, dreamsThatUnlockNewBonuses, ceilUpToBase, starsignsDict, gfood_codes, getStyleNameFromIndex, divinity_divinitiesDict, getDivinityNameFromIndex, \
     maxCookingTables, getNextESFamilyBreakpoint, expected_talentsDict, colliderStorageLimitList, gamingSuperbitsDict, labJewelsDict, cookingMealDict, \
-    labBonusesDict, labChipsDict, maxCookingTables, getNextESFamilyBreakpoint, expected_talentsDict, colliderStorageLimitList, gamingSuperbitsDict, maxNumberOfTerritories, \
+    labBonusesDict, labChipsDict, maxCookingTables, getNextESFamilyBreakpoint, expected_talentsDict, colliderStorageLimitList, gamingSuperbitsDict, \
+    maxNumberOfTerritories, \
     indexFirstTerritoryAssignedPet, territoryNames, slotUnlockWavesList, breedingUpgradesDict, breedingGeneticsList, breedingShinyBonusList, \
-    breedingSpeciesDict, getShinyLevelFromDays, getDaysToNextShinyLevel
+    breedingSpeciesDict, getShinyLevelFromDays, getDaysToNextShinyLevel, summoningBattleCountsDict, summoningDict
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
 
 def session_singleton(cls):
@@ -1965,28 +1966,60 @@ class Account:
     def _parse_w6_summoning(self):
         self.summoning = {}
         raw_summoning_list = safe_loads(self.raw_data.get('Summon', []))
+
+        # raw_summoning_list[0] = Upgrades
         try:
             self.summoning["Upgrades"] = raw_summoning_list[0]
         except:
-            self.summoning["Upgrades"] = [0] * 69  # As of 2.09 Red/Cyan, there are exactly 69 upgrades
+            self.summoning["Upgrades"] = [0] * 69  # As of 2.09 Red/Cyan, there are exactly 69 upgrades #TODO: Replace with a value in consts
+
+        # raw_summoning_list[1] = List of codified names of enemies from battles won
+        self.summoning["Battles"] = {}
         try:
-            self.summoning["BattlesWon"] = raw_summoning_list[1]
+            self._parse_w6_summoning_battles(raw_summoning_list[1])
         except:
-            self.summoning["BattlesWon"] = []
+            self._parse_w6_summoning_battles([])
+
         # raw_summoning_list[2] looks to be essence owned
         # raw_summoning_list[3] I have no idea what this is
-        # raw_summoning_list[4] looks to be list[int] familiars in the Sanctuary, starting with Slime in [0], Vrumbi in [1], etc.
+
+        # raw_summoning_list[4] = list[int] familiars in the Sanctuary, starting with Slime in [0], Vrumbi in [1], etc.
+        self.summoning['SanctuaryTotal'] = 0
         try:
-            # [2,3,2,1,1,0,0,0,0,0,0,0,0,0]
-            self.summoning['SanctuaryTotal'] = int(raw_summoning_list[4][0])  # Gray Slimes
-            self.summoning['SanctuaryTotal'] += 3 * int(raw_summoning_list[4][1])  # Vrumbi
-            self.summoning['SanctuaryTotal'] += 12 * int(raw_summoning_list[4][2])  # Bloomie
-            self.summoning['SanctuaryTotal'] += 60 * int(raw_summoning_list[4][3])  # Tonka
-            self.summoning['SanctuaryTotal'] += 360 * int(raw_summoning_list[4][4])  # Regalis
-            # self.summoning['SanctuaryTotal'] += 2520 * int(raw_summoning_list[4][5])  #Sparkie
+            self._parse_w6_summoning_sanctuary(raw_summoning_list[4])
         except:
-            self.summoning['SanctuaryTotal'] = 0
+            self._parse_w6_summoning_sanctuary([])
+
+        #Used later to create a list of Advices for Winner Bonuses. Can be added directly into an AdviceGroup as the advices attribute
         self.summoning['WinnerBonusesAdvice'] = []
+
+    def _parse_w6_summoning_battles(self, rawBattles):
+        try:
+            totalBattlesWon = len(rawBattles)
+        except:
+            totalBattlesWon = 0
+
+        if totalBattlesWon >= summoningBattleCountsDict["All"]:
+            self.summoning["Battles"] = summoningBattleCountsDict
+        else:
+            for colorName, colorDict in summoningDict.items():
+                self.summoning["Battles"][colorName] = 0
+                for battleIndex, battleValuesDict in colorDict.items():
+                    if battleIndex + 1 >= self.summoning["Battles"][colorName] and battleValuesDict['EnemyID'] in rawBattles:
+                        self.summoning["Battles"][colorName] = battleIndex + 1
+
+    def _parse_w6_summoning_sanctuary(self, rawSanctuary):
+        if rawSanctuary:
+            try:
+                # [2,3,2,1,1,0,0,0,0,0,0,0,0,0]
+                self.summoning['SanctuaryTotal'] = int(rawSanctuary[0])  # Gray Slimes
+                self.summoning['SanctuaryTotal'] += 3 * int(rawSanctuary[1])  # Vrumbi
+                self.summoning['SanctuaryTotal'] += 12 * int(rawSanctuary[2])  # Bloomie
+                self.summoning['SanctuaryTotal'] += 60 * int(rawSanctuary[3])  # Tonka
+                self.summoning['SanctuaryTotal'] += 360 * int(rawSanctuary[4])  # Regalis
+                # self.summoning['SanctuaryTotal'] += 2520 * int(raw_summoning_list[4][5])  #Sparkie
+            except:
+                pass
 
     def _calculate_wave_1(self):
         self._calculate_general()
@@ -2135,11 +2168,12 @@ class Account:
                       + .01 * (0 < self.achievements.get('Regalis My Beloved', False))
                       )
         summGroupB = 1 + (.3 * self.sneaking.get('PristineCharms', {}).get('Crystal Comb', 0))
-        self.library['SummoningSum'] = round(0
-                              + 10.5 * ('w6d3' in self.summoning['BattlesWon'])
-                              * summGroupA
-                              * summGroupB
-                              )
+        self.library['SummoningSum'] = round(
+            0
+            + 10.5 * (self.summoning['Battles']['Cyan'] >= 14)
+            * summGroupA
+            * summGroupB
+        )
         self.library['MaxBookLevel'] = 100 + self.library['StaticSum'] + self.library['ScalingSum'] + self.library['SummoningSum']
 
     def _calculate_w3_collider_base_costs(self):

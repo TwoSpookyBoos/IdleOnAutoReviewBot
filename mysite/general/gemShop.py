@@ -90,6 +90,11 @@ def try_exclude_GoldenSprinkler(exclusionList):
     ):
         exclusionList.append("Golden Sprinkler")
 
+def try_exclude_ShroomFamiliar(exclusionList):
+    #if Red is at least half-way finished, exclude
+    if session_data.account.summoning['Battles']['Red'] >= 8:
+        exclusionList.append("Shroom Familiar")
+
 def getGemShopExclusions():
     exclusionList = []
     try_exclude_SoupedUpTube(exclusionList)

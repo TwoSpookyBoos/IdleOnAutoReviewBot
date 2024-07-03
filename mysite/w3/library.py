@@ -86,7 +86,7 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
     #Summoning Sources
     summoningSubgroup = f"Summoning Winner Bonus: +{session_data.account.library['SummoningSum']}/{maxSummoningBookLevels}"
     bookLevelAdvices[summoningSubgroup] = []
-    cyan14beat = 'w6d3' in session_data.account.summoning['BattlesWon']
+    cyan14beat = session_data.account.summoning['Battles']['Cyan'] >= 14
     bookLevelAdvices[summoningSubgroup].append(Advice(
         label=f"Summoning match Cyan14: +{10.5 * cyan14beat}{'' if cyan14beat else '. No other multipliers apply until this is beaten.'}",
         picture_class="samurai-guardian",
@@ -264,14 +264,15 @@ def getTalentExclusions() -> list:
     #Elite Account-Wides don't stack, can be excluded if already maxed on one character
     for talentNumber, className in {
         176: "Divine Knight",  #176: {"Name": "One Thousand Hours Played", "Tab": "Divine Knight"},
+        177: "Divine Knight",  #177: {"Name": "Bitty Litty", "Tab": "Divine Knight"},
         178: "Divine Knight",  #178: {"Name": "King of the Remembered", "Tab": "Divine Knight"},
         326: "Siege Breaker",  #326: {"Name": "Expertly Sailed", "Tab": "Siege Breaker"},
         327: "Siege Breaker",  #327: {"Name": "Captain Peptalk", "Tab": "Siege Breaker"},
         328: "Siege Breaker",  #328: {"Name": "Archlord Of The Pirates", "Tab": "Siege Breaker"},
         372: "Beast Master",  #372: {"Name": "Shining Beacon of Egg", "Tab": "Beast Master"},
         373: "Beast Master",  #373: {"Name": "Curviture Of The Paw", "Tab": "Beast Master"},
-        508: "Elemental Sorcerer",  #506: {"Name": "Shared Beliefs", "Tab": "Elemental Sorcerer"},
-        506: "Elemental Sorcerer",  #508: {"Name": "Wormhole Emperor", "Tab": "Elemental Sorcerer"},
+        506: "Elemental Sorcerer",  # 506: {"Name": "Shared Beliefs", "Tab": "Elemental Sorcerer"},
+        508: "Elemental Sorcerer",  #508: {"Name": "Wormhole Emperor", "Tab": "Elemental Sorcerer"},
         536: "Bubonic Conjuror",  #536: {"Name": "Green Tube", "Tab": "Bubonic Conjuror"},
     }.items():
         if max([toon.max_talents.get(str(talentNumber), 0)
