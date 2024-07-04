@@ -512,6 +512,18 @@ class AdviceGroup(AdviceBase):
         if isinstance(self.advices, dict):
             self.advices = {key: value for key, value in self.advices.items() if value}
 
+    def sort_advices(self, reverseBool):
+        if 'default' in self.advices:
+            if isinstance(self.advices['default'], list):
+                try:
+                    self.advices['default']: list[Advice] = sorted(
+                        self.advices['default'],
+                        key=lambda a: float(str(a.progression).split('%')[0]),
+                        reverse=reverseBool
+                    )
+                except:
+                    pass
+
 class AdviceSection(AdviceBase):
     """
     Contains a list of `AdviceGroup` objects
