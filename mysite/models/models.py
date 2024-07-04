@@ -1722,8 +1722,13 @@ class Account:
     def _parse_w5_gaming(self):
         raw_gaming_list = safe_loads(self.raw_data.get("Gaming", []))
         if raw_gaming_list:
+            #Bits Owned sometimes Float, sometimes String
             try:
-                self.gaming['BitsOwned'] = raw_gaming_list[0]
+                self.gaming['BitsOwned'] = float(raw_gaming_list[0])
+            except:
+                pass
+
+            try:
                 self.gaming['FertilizerValue'] = raw_gaming_list[1]
                 self.gaming['FertilizerSpeed'] = raw_gaming_list[2]
                 self.gaming['FertilizerCapacity'] = raw_gaming_list[3]
