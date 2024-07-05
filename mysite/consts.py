@@ -2904,7 +2904,7 @@ skill_talentsDict = {
         },
         "EXP Only": {
             282: {"Name": "Yea I Already Know", "Tab": "Archer"},
-            284: {"Name": "Focused Soul", "Tab": "Archer"},
+            265: {"Name": "Focused Soul", "Tab": "Archer"},
         },
     },
     "Catching": {
@@ -2929,7 +2929,7 @@ skill_talentsDict = {
         },
         "EXP Only": {
             282: {"Name": "Yea I Already Know", "Tab": "Archer"},
-            284: {"Name": "Focused Soul", "Tab": "Archer"},
+            265: {"Name": "Focused Soul", "Tab": "Archer"},
             297: {"Name": "Bug Enthusiast", "Tab": "Bowman"},
         },
     },
@@ -2959,7 +2959,7 @@ skill_talentsDict = {
         },
         "EXP Only": {
             282: {"Name": "Yea I Already Know", "Tab": "Archer"},
-            284: {"Name": "Focused Soul", "Tab": "Archer"},
+            265: {"Name": "Focused Soul", "Tab": "Archer"},
         },
     },
     "Breeding": {
