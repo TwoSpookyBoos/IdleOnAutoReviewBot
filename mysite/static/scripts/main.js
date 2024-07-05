@@ -567,12 +567,6 @@ function initResultsUI() {
     calcProgressBars(document)
 }
 
-window.addEventListener("load", () => {
-    storeGetParamsIfProvided()
-    initBaseUI()
-    fetchPlayerAdvice()
-})
-
 document.addEventListener("DOMContentLoaded", () => {
     // Define the fonts you are loading
     const fonts = ['Kode Mono', 'Open Sans', 'Rubik', 'Roboto']
