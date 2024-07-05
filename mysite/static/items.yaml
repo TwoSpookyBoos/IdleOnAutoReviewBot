@@ -714,7 +714,7 @@ Weight14: Fat Albert
 InvStorage99: Cosmic Storage Chest
 Spice0: Spice
 Spice6: Spice
-Spice9: Strung Jewels
+Spice9: Spice
 SailTr0: sailing-treasure-0
 SailTr1: sailing-treasure-1
 SailTr2: sailing-treasure-2
@@ -747,17 +747,134 @@ SailTr28: sailing-treasure-28
 SailTr29: sailing-treasure-29
 SailTr30: sailing-treasure-30
 Bits: Bits
-W6item0: Strung Jewels
-W6item1: Strung Jewels
-W6item2: Strung Jewels
-W6item3: Strung Jewels
-W6item4: Strung Jewels
-W6item5: Strung Jewels
-W6item6: Strung Jewels
-W6item7: Strung Jewels
-W6item8: Strung Jewels
-W6item9: Strung Jewels
-W6item10: Strung Jewels
+Basic-Crop-0: Apple
+Basic-Crop-1: Orange
+Basic-Crop-2: Lemon
+Basic-Crop-3: Pear
+Basic-Crop-4: Strawberry
+Basic-Crop-5: Bananas
+Basic-Crop-6: Blueberry
+Basic-Crop-7: Red Grapes
+Basic-Crop-8: Red Pear
+Basic-Crop-9: Pineapple
+Basic-Crop-10: Lime
+Basic-Crop-11: Raspberry
+Basic-Crop-12: Fig
+Basic-Crop-13: Peach
+Basic-Crop-14: Purple Grapes
+Basic-Crop-15: Yellow Pear
+Basic-Crop-16: Watermelon
+Basic-Crop-17: Green Grapes
+Basic-Crop-18: Dragon Fruit
+Basic-Crop-19: Mango
+Basic-Crop-20: Gold Blueberry
+Earthy-Crop-0: Carrot
+Earthy-Crop-1: Potato
+Earthy-Crop-2: Beat
+Earthy-Crop-3: Tomato
+Earthy-Crop-4: Artichoke
+Earthy-Crop-5: Roma Tomato
+Earthy-Crop-6: Butternut Squash
+Earthy-Crop-7: Avocado
+Earthy-Crop-8: Red Pepper
+Earthy-Crop-9: Broccoli
+Earthy-Crop-10: Radish
+Earthy-Crop-11: Coconut
+Earthy-Crop-12: Sliced Tomato
+Earthy-Crop-13: Cashew
+Earthy-Crop-14: Turnip
+Earthy-Crop-15: Coffee Bean
+Earthy-Crop-16: Pumpkin
+Earthy-Crop-17: Sliced Cucumber
+Earthy-Crop-18: Eggplant
+Earthy-Crop-19: Lettuce
+Earthy-Crop-20: Garlic
+Earthy-Crop-21: Green Beans
+Earthy-Crop-22: Bell Pepper
+Earthy-Crop-23: Corn
+Earthy-Crop-24: Gold Sliced Tomato
+Bulbo-Crop-0: Daisy
+Bulbo-Crop-1: Flour
+Bulbo-Crop-2: Stargazer Lily
+Bulbo-Crop-3: Rose
+Bulbo-Crop-4: Sunflower
+Bulbo-Crop-5: Blue Daisy
+Bulbo-Crop-6: Red Rose
+Bulbo-Crop-7: Tulip
+Bulbo-Crop-8: Pink Daisy
+Bulbo-Crop-9: Cauliflower
+Bulbo-Crop-10: Cape Marguerite Daisy
+Bulbo-Crop-11: Papua Black Orchid
+Bulbo-Crop-12: Muffin
+Bulbo-Crop-13: Black Rose
+Bulbo-Crop-14: Golden Tulip
+Sushi-Crop-0: Sake Maki
+Sushi-Crop-1: Salmon Nigiri
+Sushi-Crop-2: Temaki
+Sushi-Crop-3: Hamaguri
+Sushi-Crop-4: Onigiri
+Sushi-Crop-5: Ama-ebi
+Sushi-Crop-6: Cup Ramen
+Sushi-Crop-7: Dalkon Maki
+Sushi-Crop-8: Sushi-Crop-8
+Sushi-Crop-9: Sushi-Crop-9
+Sushi-Crop-10: Ikura
+Sushi-Crop-11: Sushi-Crop-11
+Sushi-Crop-12: Sushi-Crop-12
+Sushi-Crop-13: Sushi-Crop-13
+Sushi-Crop-14: Abocado Maki
+Sushi-Crop-15: Ebi Nigiri
+Sushi-Crop-16: Sushi-Crop-16
+Sushi-Crop-17: Sushi-Crop-17
+Sushi-Crop-18: Tako Nigiri
+Sushi-Crop-19: Soy Sauce
+Sushi-Crop-20: Sushi-Crop-20
+Sushi-Crop-21: Neko Rice
+Sushi-Crop-22: Shrimp
+Mushie-Crop-0: Mushroom 1
+Mushie-Crop-1: Mushroom 2
+Mushie-Crop-2: Mushroom 3
+Mushie-Crop-3: Mushroom 4
+Mushie-Crop-4: Mushroom 5
+Mushie-Crop-5: Mushroom 6
+Mushie-Crop-6: Mushroom 7
+Mushie-Crop-7: Mushroom 8
+Mushie-Crop-8: Mushroom 9
+Mushie-Crop-9: Mushroom 10
+Mushie-Crop-10: Mushroom 11
+Mushie-Crop-11: Mushroom 12
+Mushie-Crop-12: Mushroom 13
+Mushie-Crop-13: Mushroom 14
+Mushie-Crop-14: Mushroom 15
+Mushie-Crop-15: Mushroom 16
+Mushie-Crop-16: Mushroom 17
+Mushie-Crop-17: Mushroom 18
+Mushie-Crop-18: Mushroom 19
+Mushie-Crop-19: Mushroom 20
+Mushie-Crop-20: Mushroom 21
+Mushie-Crop-21: Mushroom 22
+Mushie-Crop-22: Mushroom 23
+Glassy-Crop-0: Glassy Bananas
+Glassy-Crop-1: Glassy Mango
+Glassy-Crop-2: Glassy Mushroom 1
+Glassy-Crop-3: Glassy Maki
+Glassy-Crop-4: Glassy Mushroom 2
+Glassy-Crop-5: Glassy Carrot
+Glassy-Crop-6: Glassy Tomato
+Glassy-Crop-7: Glassy Watermellon
+Glassy-Crop-8: Glassy Shrimp
+Glassy-Crop-9: Glassy Rose
+Glassy-Crop-10: Glassy Corn
+Glassy-Crop-11: Glassy Lettuce
+Glassy-Crop-12: Glassy Onigiri
+White-Essence: White Essence
+Green-Essence: Green Essence
+Yellow-Essence: Yellow Essence
+Blue-Essence: Blue Essence
+Purple-Essence: Purple Essence
+Red-Essence: Red Essence
+Cyan-Essence: Cyan Essence
+Jade-Coin: Jade Coin
 Ladle: Cooking Ladle
 PetEgg: Pet Egg
 Genetic0: Grassy Gene Spiral

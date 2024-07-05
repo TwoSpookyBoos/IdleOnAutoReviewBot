@@ -42,6 +42,8 @@
 
 //W6
 @import "sneaking";
+@import "farming";
+@import "summoning";
 
 $id-map: (
 	item-backpack-space: $inventory-bag-u,
@@ -2183,6 +2185,8 @@ $id-map: map-merge($owl-map, $id-map);
 $id-map: map-merge($companions-map, $id-map);
 $id-map: map-merge($all-gaming, $id-map);
 $id-map: map-merge($kangaroo-map, $id-map);
+$id-map: map-merge($all-farming, $id-map);
+$id-map: map-merge($all-summoning, $id-map);
 
 $extra: (
     //storage: $cosmic-storage-chest,
