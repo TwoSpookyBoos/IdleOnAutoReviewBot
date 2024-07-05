@@ -746,38 +746,35 @@ deathNote_progressionTiers = [
     # 0-4 int tier. int w1LowestSkull, int w2LowestSkull, int w3LowestSkull, int w4LowestSkull,
     # 5-9 int w5LowestSkull, int w6LowestSkull, int w7LowestSkull, int w8LowestSkull, int zowCount, int chowCount,
     # 10-11 int meowCount, str Notes
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ""],
-    [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, ""],
-    [2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, ""],
-    [3, 3, 3, 3, 1, 0, 0, 0, 0, 0, 0, 0, ""],
-    [4, 4, 4, 4, 2, 0, 0, 0, 0, 15, 0, 0,
-     "The recommendation for ZOWs is 12hrs or less (8,333+ KPH) per enemy. If you aren't at that mark yet, don't sweat it. Come back later!"],
-    [5, 5, 5, 5, 3, 0, 0, 0, 0, 26, 0, 0,
+    [0,  0,  0,  0,  0,  0,  0,     0, 0,   0, 0, 0, ""],
+    [1,  1,  1,  1,  0,  0,  0,     0, 0,   0, 0, 0, ""],
+    [2,  2,  2,  2,  0,  0,  0,     0, 0,   0, 0, 0, ""],
+    [3,  3,  3,  3,  1,  0,  0,     0, 0,   0, 0, 0, ""],
+    [4,  4,  4,  4,  2,  0,  0,     0, 0,   0, 0, 0, ""],  #The recommendation for ZOWs is 12hrs or less (8,333+ KPH) per enemy. If you aren't at that mark yet, don't sweat it. Come back later!
+    [5,  5,  5,  5,  3,  0,  0,     0, 0,   0, 0, 0,
      "The Voidwalker questline requires W1-W3 at all Plat Skulls. Aim to complete this by Mid W5 as Vman's account-wide buffs are insanely strong."],
-    [6, 7, 5, 5, 4, 0, 0, 0, 0, 40, 15, 0,
-     "The recommendation for CHOWs is 12hrs or less (83,333+ KPH) per enemy. If you aren't at that mark yet, don't sweat it. Come back later!"],
-    [7,  10, 7,  5,  5,  1,  0,     0, 0, 40, 26, 0, ""],
-    [8,  10, 10, 7,  5,  2,  0,     0, 0, 40, 40, 0, ""],
-    [9,  10, 10, 10, 5,  3,  0,     0, 0, 40, 40, 0, ""],
-    [10, 10, 10, 10, 7,  4,  0,     0, 0, 53, 53, 0, ""],
-    [11, 10, 10, 10, 10, 5,  0,     0, 0, 53, 53, 0, "Complete Lava Skull, then BB Super CHOW, before you start working on Eclipse Skulls. "],
-    [12, 10, 10, 10, 10, 7,  0,     0, 0, 66, 66, 0, ""],
-    [13, 10, 10, 10, 10, 10, 0,     0, 0, 66, 66, 0, ""],
-    [14, 10, 10, 10, 10, 10, 0,     0, 0, 73, 66, 0, ""],
-    [15, 10, 10, 10, 10, 10, 0,     0, 0, 73, 73, 0, "The recommendation for Super CHOWs is 24hrs or less (4m+ KPH)"],
-    [16, 20, 10, 10, 10, 10, 0,     0, 0, 80, 73, 26, ""],
-    [17, 20, 20, 10, 10, 10, 1,     0, 0, 84, 80, 40, ""],
-    [18, 20, 20, 20, 10, 10, 2,     0, 0, 85, 80, 53, ""],
-    [19, 20, 20, 20, 20, 10, 3,     0, 0, 85, 80, 66, ""],
-    [20, 20, 20, 20, 20, 20, 4,     0, 0, 85, 82, 66, ""],
-    [21, 20, 20, 20, 20, 20, 5,     0, 0, 85, 83, 66, ""],
-    [22, 20, 20, 20, 20, 20, 7,     0, 0, 85, 83, 66, ""],
-    [23, 20, 20, 20, 20, 20, 10,    0, 0, 85, 83, 66, ""],
-    [24, 20, 20, 20, 20, 20, 10,    0, 0, 85, 83, 73, ""],
-    [25, 20, 20, 20, 20, 20, 20,    0, 0, 85, 83, 80, ""],
-    [26, 20, 20, 20, 20, 20, 20,    0, 0, 85, 83, 82, ""],
-    [27, 20, 20, 20, 20, 20, 20,    0, 0, 85, 85, 83, "As of v2.08, completing a Super CHOW on Boops is impossible."],
-    [28, 20, 20, 20, 20, 20, 20,    0, 0, 86, 86, 86, "Info only"]
+    [6,  7,  5,  5,  4,  0,  0,     0, 0,   0, 0, 0, ""],  #"The recommendation for CHOWs is 12hrs or less (83,333+ KPH) per enemy. If you aren't at that mark yet, don't sweat it. Come back later!"
+    [7,  10, 7,  5,  5,  1,  0,     0, 0,   0, 0, 0, ""],
+    [8,  10, 10, 7,  5,  2,  0,     0, 0,   0, 0, 0, ""],
+    [9,  10, 10, 10, 5,  3,  0,     0, 0,   0, 0, 0, ""],
+    [10, 10, 10, 10, 7,  4,  0,     0, 0,   0, 0, 0, ""],
+    [11, 10, 10, 10, 10, 5,  0,     0, 0,   0, 0, 0, ""],  #"Complete Lava Skull, then BB Super CHOW, before you start working on Eclipse Skulls. "
+    [12, 10, 10, 10, 10, 7,  0,     0, 0,   0, 0, 0, ""],
+    [13, 10, 10, 10, 10, 10, 0,     0, 0,   0, 0, 0, ""],
+    [14, 10, 10, 10, 10, 10, 0,     0, 0,   0, 0, 0, ""],
+    [15, 10, 10, 10, 10, 10, 0,     0, 0,   0, 0, 0, ""],
+    [16, 20, 10, 10, 10, 10, 0,     0, 0,   0, 0, 0, ""],
+    [17, 20, 20, 10, 10, 10, 1,     0, 0,   0, 0, 0, ""],
+    [18, 20, 20, 20, 10, 10, 2,     0, 0,   0, 0, 0, ""],
+    [19, 20, 20, 20, 20, 10, 3,     0, 0,   15, 15, 15, "Aim for Super CHOWs in 24hrs each (4m+ KPH)"],
+    [20, 20, 20, 20, 20, 20, 4,     0, 0,   26, 26, 26, ""],
+    [21, 20, 20, 20, 20, 20, 5,     0, 0,   40, 40, 40, ""],
+    [22, 20, 20, 20, 20, 20, 7,     0, 0,   53, 53, 53, ""],
+    [23, 20, 20, 20, 20, 20, 10,    0, 0,   66, 66, 66, ""],
+    [24, 20, 20, 20, 20, 20, 10,    0, 0,   73, 73, 73, ""],
+    [25, 20, 20, 20, 20, 20, 20,    0, 0,   80, 80, 80, ""],
+    [26, 20, 20, 20, 20, 20, 20,    0, 0,   84, 84, 83, "As of v2.11, completing a Super CHOW on Boops is impossible."],
+    [27, 20, 20, 20, 20, 20, 20,    0, 0,   86, 86, 86, "Info only"]
 ]
 buildingsPostBuffs_progressionTiers = [
     [0, "Unlock", [], "", ""],
@@ -4046,6 +4043,7 @@ maxOverallBookLevels = 100 + maxStaticBookLevels + maxScalingBookLevels + maxSum
 maxCookingTables = 10  # Last verified as of v2.10
 maxMeals = 67  # Last verified as of v2.10
 maxMealLevel = 90  # Last verified as of v2.10
+cookingCloseEnough = 450
 
 cookingMealDict = {
     0:{"Name": "Turkey a la Thank", "Description": "Do I smell gratitude? Oh, no, that's colonialization...", "Effect": "+{% Total Damage", "BaseValue": 2},
@@ -4116,7 +4114,6 @@ cookingMealDict = {
 	65:{"Name": "Plumpcakes", "Description": "Ohhh, they're called 'plump'cakes because they're dummy thicc can I get an amen!", "Effect": "+{% Total Damage", "BaseValue": 6},
 	66:{"Name": "Nyanborgir", "Description": "It's the greatest meal ever! Bonus DOUBLES at Summoning Lv 50, Triples at 100, etc", "Effect": "+{% Crop Evolution Chance", "BaseValue": 9},
 }
-
 
 labChipsDict = {
     1: {"Name": "Grounded Nanochip", "Description": "+{% Total Defence", "Effect": "Boosts total defence", "Material": "Copper", "MaterialCost": 20000, "Meal": "Meal0", "MealCost": 100, "Spice": "Spice0", "SpiceCost": 100, "Value10": 0, "EffectID": "def", "BaseValue": 10},

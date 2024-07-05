@@ -1,6 +1,7 @@
 from math import ceil
 from flask import g as session_data
-from consts import maxStaticBookLevels, maxScalingBookLevels, maxSummoningBookLevels, maxOverallBookLevels, skill_talentsDict, combat_talentsDict, currentWorld, stamp_maxes, maxMealLevel 
+from consts import maxStaticBookLevels, maxScalingBookLevels, maxSummoningBookLevels, maxOverallBookLevels, skill_talentsDict, combat_talentsDict, currentWorld, \
+    stamp_maxes, maxMealLevel, cookingCloseEnough
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
@@ -244,8 +245,6 @@ def getCheckoutSpeedAdviceGroup() -> AdviceGroup:
         advices=checkoutSpeedAdvices
     )
 
-    
-
     return checkoutSpeedAdviceGroup
 
 def getTalentExclusions() -> list:
@@ -295,7 +294,7 @@ def getTalentExclusions() -> list:
         talentExclusions.append(319)
 
     #If cooking is basically finished thanks to NMLB, exclude Cooking talents
-    if session_data.account.cooking['MaxRemainingMeals'] < 300:
+    if session_data.account.cooking['MaxRemainingMeals'] < cookingCloseEnough:
         talentExclusions.extend([148, 146, 147])
         # 148: {"Name": "Overflowing Ladle", "Tab": "Blood Berserker"},
         # 146: {"Name": "Apocalypse Chow", "Tab": "Blood Berserker"},

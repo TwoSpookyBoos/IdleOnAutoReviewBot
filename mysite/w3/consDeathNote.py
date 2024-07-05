@@ -4,7 +4,7 @@ from math import floor
 from math import ceil
 
 from config import app
-from consts import deathNote_progressionTiers
+from consts import deathNote_progressionTiers, cookingCloseEnough
 from flask import g as session_data
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
@@ -454,7 +454,7 @@ def setConsDeathNoteProgressionTier():
     session_data.account.meowBBIndex = meowBBIndex  #TODO: Move this parse/calculate to Account
     fullDeathNoteDict = getDeathNoteKills()
 
-    max_tier = deathNote_progressionTiers[-2][0]
+    max_tier = deathNote_progressionTiers[-2][0]  #Final 1 tier is info only
     overall_DeathNoteTier = 0
     worldIndexes = []
     tier_combo = {}
@@ -657,6 +657,12 @@ def setConsDeathNoteProgressionTier():
             if not riftPresent:
                 session_data.account.rift_meowed = True
 
+    #If the player is basically finished with cooking, bypass the requirement while still showing the progress
+    if session_data.account.cooking['MaxRemainingMeals'] < cookingCloseEnough:
+        tier_combo['ZOW'] = max_tier
+        tier_combo['CHOW'] = max_tier
+        tier_combo['MEOW'] = max_tier
+
     #Generate Advice Groups
     #Basic Worlds
     for worldIndex in worldIndexes:
@@ -666,20 +672,21 @@ def setConsDeathNoteProgressionTier():
             advices=deathnote_AdviceDict[f"W{worldIndex}"],
             post_string=""
         )
-        if fullDeathNoteDict[worldIndex].next_lowest_skull_name == "Eclipse Skull":
-            deathnote_AdviceGroupDict[f"W{worldIndex}"].post_string = "Complete Super CHOWs with your Blood Berserker before finishing Eclipse Skulls"
+        # if fullDeathNoteDict[worldIndex].next_lowest_skull_name == "Eclipse Skull":
+        #     deathnote_AdviceGroupDict[f"W{worldIndex}"].post_string = "Complete Super CHOWs with your Blood Berserker before finishing Eclipse Skulls"
 
     # ZOW
     if highestZOWCountIndex is not None:
         deathnote_AdviceGroupDict['ZOW'] = AdviceGroup(
-            tier=str(tier_combo['ZOW'] if tier_combo['ZOW'] < 27 else ""),
-            pre_string=f"{'Informational- ' if tier_combo['ZOW'] >= 27 else ''}Complete {apocToNextTier['ZOW']} more ZOW{pl(['dummy'] * apocToNextTier['ZOW'])} with {session_data.account.all_characters[highestZOWCountIndex].character_name} {zowsForNextTier}",
+            tier=str(tier_combo['ZOW'] if tier_combo['ZOW'] < max_tier else ""),
+            pre_string=f"{'Informational- You could complete' if tier_combo['ZOW'] >= max_tier else 'Complete'} {apocToNextTier['ZOW']} more"
+                       f" ZOW{pl(apocToNextTier['ZOW'])} with {session_data.account.all_characters[highestZOWCountIndex].character_name} {zowsForNextTier}",
             advices=deathnote_AdviceDict['ZOW'],
             post_string="Aim for 12hrs or less (8k+ KPH) per enemy"
         )
     else:
         deathnote_AdviceGroupDict['ZOW'] = AdviceGroup(
-            tier=str(tier_combo['ZOW'] if tier_combo['ZOW'] < 27 else ""),
+            tier=str(tier_combo['ZOW'] if tier_combo['ZOW'] < max_tier else ""),
             pre_string=f"ZOW Progress unavailable until a Barbarian is found in your account",
             advices=deathnote_AdviceDict['ZOW'],
         )
@@ -687,14 +694,15 @@ def setConsDeathNoteProgressionTier():
     # CHOW
     if highestCHOWCountIndex is not None:
         deathnote_AdviceGroupDict['CHOW'] = AdviceGroup(
-            tier=str(tier_combo['CHOW'] if tier_combo['CHOW'] < 27 else ""),
-            pre_string=f"{'Informational- ' if tier_combo['CHOW'] >= 27 else ''}Complete {apocToNextTier['CHOW']} more CHOW{pl(['dummy'] * apocToNextTier['CHOW'])} with {session_data.account.all_characters[highestCHOWCountIndex].character_name} {chowsForNextTier}",
+            tier=str(tier_combo['CHOW'] if tier_combo['CHOW'] < max_tier else ""),
+            pre_string=f"{'Informational- You could complete' if tier_combo['CHOW'] >= max_tier else 'Complete'} {apocToNextTier['CHOW']} more"
+                       f" CHOW{pl(apocToNextTier['CHOW'])} with {session_data.account.all_characters[highestCHOWCountIndex].character_name} {chowsForNextTier}",
             advices=deathnote_AdviceDict['CHOW'],
             post_string="Aim for 12hrs or less (83k+ KPH) per enemy"
         )
     else:
         deathnote_AdviceGroupDict['CHOW'] = AdviceGroup(
-            tier=str(tier_combo['CHOW'] if tier_combo['CHOW'] < 27 else ""),
+            tier=str(tier_combo['CHOW'] if tier_combo['CHOW'] < max_tier else ""),
             pre_string=f"CHOW Progress unavailable until a Blood Berserker is found in your account",
             advices=deathnote_AdviceDict['CHOW'],
         )
@@ -702,14 +710,15 @@ def setConsDeathNoteProgressionTier():
     # MEOW
     if meowBBIndex is not None:
         deathnote_AdviceGroupDict['MEOW'] = AdviceGroup(
-            tier=str(tier_combo['MEOW'] if tier_combo['MEOW'] < 27 else ""),
-            pre_string=f"{'Informational- ' if tier_combo['MEOW'] >= 27 else ''}Complete {apocToNextTier['MEOW']} more Super CHOW{pl(['dummy']*apocToNextTier['MEOW'])} with {session_data.account.all_characters[meowBBIndex].character_name} {meowsForNextTier}",
+            tier=str(tier_combo['MEOW'] if tier_combo['MEOW'] < max_tier else ""),
+            pre_string=f"{'Informational- You could complete' if tier_combo['MEOW'] >= max_tier else 'Complete'} {apocToNextTier['MEOW']} more"
+                       f" Super CHOW{pl(apocToNextTier['MEOW'])} with {session_data.account.all_characters[meowBBIndex].character_name} {meowsForNextTier}",
             advices=deathnote_AdviceDict['MEOW'],
-            post_string=f"Aim for 24hrs or less (4m+ KPH) per enemy."
+            post_string=f"Aim for 24hrs or less (4m+ KPH) per enemy"
         )
     else:
         deathnote_AdviceGroupDict['MEOW'] = AdviceGroup(
-            tier=str(tier_combo['MEOW'] if tier_combo['MEOW'] < 27 else ""),
+            tier=str(tier_combo['MEOW'] if tier_combo['MEOW'] < max_tier else ""),
             pre_string=f"Super CHOW Progress unavailable until a Blood Berserker is found in your account",
             advices=deathnote_AdviceDict['MEOW'],
         )

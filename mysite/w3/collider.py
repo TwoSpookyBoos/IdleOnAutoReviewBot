@@ -1,5 +1,5 @@
 from flask import g as session_data
-from consts import colliderStorageLimitList, buildingsTowerMaxLevel, atoms_progressionTiers, maxTiersPerGroup
+from consts import colliderStorageLimitList, buildingsTowerMaxLevel, atoms_progressionTiers, maxTiersPerGroup, cookingCloseEnough
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
@@ -200,7 +200,7 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
 def getAtomExclusionsList() -> list[str]:
     exclusionsList = []
     # If cooking is basically finished thanks to NMLB, exclude Fluoride's cooking speed
-    if session_data.account.cooking['MaxRemainingMeals'] < 300:
+    if session_data.account.cooking['MaxRemainingMeals'] < cookingCloseEnough:
         exclusionsList.append('Fluoride - Void Plate Chef')
 
     return exclusionsList
