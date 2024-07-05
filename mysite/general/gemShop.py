@@ -1,7 +1,7 @@
 from models.models import Advice, AdviceGroup, AdviceSection
 from utils.data_formatting import safe_loads
 from utils.logging import get_logger
-from consts import gemShop_progressionTiers
+from consts import gemShop_progressionTiers, maxFarmingCrops, currentWorld
 from flask import g as session_data
 
 logger = get_logger(__name__)
@@ -80,12 +80,46 @@ def try_exclude_ChestSluggo(exclusionList):
     if session_data.account.sum_artifact_tiers >= 58:  #(numberOfArtifacts * numberOfArtifactTiers) * 0.43:
         exclusionList.append("Chest Sluggo")
 
+def try_exclude_GoldenSprinkler(exclusionList):
+    if (
+        session_data.account.gaming['SuperBits']['Isotope Discovery']['Unlocked']
+        or session_data.account.gaming['FertilizerValue'] >= 420
+        or session_data.account.gaming['FertilizerSpeed'] >= 500
+        or session_data.account.farming["CropsUnlocked"] >= maxFarmingCrops * 0.8
+    ):
+        exclusionList.append("Golden Sprinkler")
+    if "Golden Sprinkler" not in exclusionList:
+        try:
+            if session_data.account.gaming['BitsOwned'] >= 1e47:  #Red 100B
+                exclusionList.append("Golden Sprinkler")
+        except:
+            pass
+
+def try_exclude_ShroomFamiliar(exclusionList):
+    #if Red is at least half-way finished, exclude
+    if session_data.account.summoning['Battles']['Red'] >= 8:
+        exclusionList.append("Shroom Familiar")
+
+
+def try_exclude_IvoryBubbleCauldrons(exclusionList):
+    if session_data.account.alchemy_cauldrons['NextWorldMissingBubbles'] > currentWorld:
+        exclusionList.append('Ivory Bubble Cauldrons')
+
 def getGemShopExclusions():
     exclusionList = []
-    try_exclude_SoupedUpTube(exclusionList)
+    #W2
+    try_exclude_IvoryBubbleCauldrons(exclusionList)
+
+    #W3
     try_exclude_FluorescentFlaggies(exclusionList)
     try_exclude_BurningBadBooks(exclusionList)
+
+    #W4
+    try_exclude_SoupedUpTube(exclusionList)
+
+    #W5
     try_exclude_ChestSluggo(exclusionList)
+    try_exclude_GoldenSprinkler(exclusionList)
 
     return exclusionList
 

@@ -124,7 +124,12 @@ def getMissableGStacks(owned_stuff: Assets):
                         tier="",
                         pre_string="",
                         advices=[
-                            Advice(label=item.name, picture_class=item.name, progression=item.progression, unit="%")
+                            Advice(
+                                label=item.name,
+                                picture_class=item.name,
+                                progression=item.progression,
+                                unit="%"
+                            )
                             for item in advice_EndangeredQuestGStacks
                         ]
                     )
@@ -134,7 +139,8 @@ def getMissableGStacks(owned_stuff: Assets):
 
     if len(advice_MissedQuestGStacks) > 0:
         tier_missed = f"{len(advice_MissedQuestGStacks)}/{len(missableGStacksDict)}"
-        header_missed = f"You have already missed {tier_missed} missable quest item Greenstacks.<br>You're locked out of these until you get more character slots :("
+        header_missed = (f"You have already missed {tier_missed} missable quest item Greenstacks."
+                         f"<br>You're locked out of these until you get more character slots :(")
         section_missed = AdviceSection(
             name="Missed Greenstacks",
             tier=tier_missed,
@@ -146,7 +152,11 @@ def getMissableGStacks(owned_stuff: Assets):
                     tier="",
                     pre_string="",
                     advices=[
-                        Advice(label=item.name, picture_class=item.name, progression=item.quest)
+                        Advice(
+                            label=item.name,
+                            picture_class=item.name,
+                            progression=item.quest
+                        )
                         for item in advice_MissedQuestGStacks
                     ]
                 )
@@ -175,7 +185,12 @@ def setGStackProgressionTier():
     for tier, categories in remainingToDoGStacksByTier.items():
         tier_subsection = {
             category: [
-                Advice(label=item.name, picture_class=item.name, progression=item.progression, unit="%")
+                Advice(
+                    label=item.name,
+                    picture_class=item.name,
+                    progression=item.progression,
+                    unit="%"
+                )
                 for item in items
             ]
             for category, items in categories.items()
@@ -193,7 +208,10 @@ def setGStackProgressionTier():
         pre_string="Curious... you also managed to greenstack these unprecedented items:",
         post_string="Share your unyielding persistence with us, please!",
         advices=[
-            Advice(label=name, picture_class=name)
+            Advice(
+                label=name,
+                picture_class=name
+            )
             for name, item in all_owned_stuff.items_gstacked_unprecedented.items()
         ]
     )

@@ -1,6 +1,7 @@
 from math import ceil
 from flask import g as session_data
-from consts import maxStaticBookLevels, maxScalingBookLevels, maxSummoningBookLevels, maxOverallBookLevels, skill_talentsDict, combat_talentsDict, currentWorld, stamp_maxes, maxMealLevel 
+from consts import maxStaticBookLevels, maxScalingBookLevels, maxSummoningBookLevels, maxOverallBookLevels, skill_talentsDict, combat_talentsDict, currentWorld, \
+    stamp_maxes, maxMealLevel, cookingCloseEnough
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
@@ -86,7 +87,7 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
     #Summoning Sources
     summoningSubgroup = f"Summoning Winner Bonus: +{session_data.account.library['SummoningSum']}/{maxSummoningBookLevels}"
     bookLevelAdvices[summoningSubgroup] = []
-    cyan14beat = 'w6d3' in session_data.account.summoning['BattlesWon']
+    cyan14beat = session_data.account.summoning['Battles']['Cyan'] >= 14
     bookLevelAdvices[summoningSubgroup].append(Advice(
         label=f"Summoning match Cyan14: +{10.5 * cyan14beat}{'' if cyan14beat else '. No other multipliers apply until this is beaten.'}",
         picture_class="samurai-guardian",
@@ -244,13 +245,12 @@ def getCheckoutSpeedAdviceGroup() -> AdviceGroup:
         advices=checkoutSpeedAdvices
     )
 
-    
-
     return checkoutSpeedAdviceGroup
 
 def getTalentExclusions() -> list:
     talentExclusions = []
 
+    #If over 2100 lab, you have all jewels from Jade Emporium and lab levels no longer matter
     if sum(session_data.account.all_skills['Lab']) > 2100:
         talentExclusions.extend([537, 538])
         # 537: {"Name": "Essence Transferral", "Tab": "Bubonic Conjuror"},
@@ -261,18 +261,28 @@ def getTalentExclusions() -> list:
         talentExclusions.append(525)
         #525: {"Name": "Chemical Warfare", "Tab": "Bubonic Conjuror"},
 
+    #If you have less than 5 God Ranks, exclude ES damage per God rank
+    if session_data.account.divinity['GodRank'] < 4:
+        talentExclusions.append(507)
+
     #Elite Account-Wides don't stack, can be excluded if already maxed on one character
     for talentNumber, className in {
-        176: "Divine Knight",  #176: {"Name": "One Thousand Hours Played", "Tab": "Divine Knight"},
-        178: "Divine Knight",  #178: {"Name": "King of the Remembered", "Tab": "Divine Knight"},
-        326: "Siege Breaker",  #326: {"Name": "Expertly Sailed", "Tab": "Siege Breaker"},
-        327: "Siege Breaker",  #327: {"Name": "Captain Peptalk", "Tab": "Siege Breaker"},
-        328: "Siege Breaker",  #328: {"Name": "Archlord Of The Pirates", "Tab": "Siege Breaker"},
-        372: "Beast Master",  #372: {"Name": "Shining Beacon of Egg", "Tab": "Beast Master"},
-        373: "Beast Master",  #373: {"Name": "Curviture Of The Paw", "Tab": "Beast Master"},
-        508: "Elemental Sorcerer",  #506: {"Name": "Shared Beliefs", "Tab": "Elemental Sorcerer"},
-        506: "Elemental Sorcerer",  #508: {"Name": "Wormhole Emperor", "Tab": "Elemental Sorcerer"},
-        536: "Bubonic Conjuror",  #536: {"Name": "Green Tube", "Tab": "Bubonic Conjuror"},
+        148: "Blood Berserker",     #148: {"Name": "Overflowing Ladle", "Tab": "Blood Berserker"},
+        176: "Divine Knight",       #176: {"Name": "One Thousand Hours Played", "Tab": "Divine Knight"},
+        177: "Divine Knight",       #177: {"Name": "Bitty Litty", "Tab": "Divine Knight"},
+        178: "Divine Knight",       #178: {"Name": "King of the Remembered", "Tab": "Divine Knight"},
+        326: "Siege Breaker",       #326: {"Name": "Expertly Sailed", "Tab": "Siege Breaker"},
+        327: "Siege Breaker",       #327: {"Name": "Captain Peptalk", "Tab": "Siege Breaker"},
+        328: "Siege Breaker",       #328: {"Name": "Archlord Of The Pirates", "Tab": "Siege Breaker"},
+        310: "Hunter",              #310: {"Name": "Eagle Eye", "Tab": "Hunter"},
+        311: "Hunter",              #311: {"Name": "Invasive Species", "Tab": "Hunter"},
+        372: "Beast Master",        #372: {"Name": "Shining Beacon of Egg", "Tab": "Beast Master"},
+        373: "Beast Master",        #373: {"Name": "Curviture Of The Paw", "Tab": "Beast Master"},
+        505: "Elemental Sorcerer",  #505: {"Name": "Polytheism", "Tab": "Elemental Sorcerer"},
+        506: "Elemental Sorcerer",  #506: {"Name": "Shared Beliefs", "Tab": "Elemental Sorcerer"},
+        507: "Elemental Sorcerer",  #507: {"Name": "Gods Chosen Children", "Tab": "Elemental Sorcerer"},
+        508: "Elemental Sorcerer",  #508: {"Name": "Wormhole Emperor", "Tab": "Elemental Sorcerer"},
+        536: "Bubonic Conjuror",    #536: {"Name": "Green Tube", "Tab": "Bubonic Conjuror"},
     }.items():
         if max([toon.max_talents.get(str(talentNumber), 0)
                for toon in session_data.account.safe_characters
@@ -284,7 +294,7 @@ def getTalentExclusions() -> list:
         talentExclusions.append(319)
 
     #If cooking is basically finished thanks to NMLB, exclude Cooking talents
-    if session_data.account.cooking['MaxRemainingMeals'] < 300:
+    if session_data.account.cooking['MaxRemainingMeals'] < cookingCloseEnough:
         talentExclusions.extend([148, 146, 147])
         # 148: {"Name": "Overflowing Ladle", "Tab": "Blood Berserker"},
         # 146: {"Name": "Apocalypse Chow", "Tab": "Blood Berserker"},

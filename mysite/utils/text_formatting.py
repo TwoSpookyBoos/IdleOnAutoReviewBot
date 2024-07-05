@@ -53,11 +53,15 @@ ITEM_CODE_DICT = {v: k for k, v in ITEM_NAME_DICT.items()}
 
 
 def _get_item_name(_dict, name):
-    try:
-        return _dict[name]
-    except KeyError:
-        logger.debug("Unknown item: %s", name)
-        return f"Unknown-{name}"
+    if name:
+        try:
+            return _dict[name]
+        except KeyError:
+            logger.debug(f"Unknown item: '{name}'")
+            return f"Unknown-'{name}'"
+    else:
+        #Don't need a logger message if the unknown item is an empty string
+        return f"Unknown-'{name}'"
 
 
 def getItemDisplayName(codeName):
@@ -65,7 +69,8 @@ def getItemDisplayName(codeName):
 
 
 def getItemCodeName(itemName):
-    return  _get_item_name(ITEM_CODE_DICT, itemName)
+    if itemName != "":
+        return _get_item_name(ITEM_CODE_DICT, itemName)
 
 def numeralToNumber(numeral: str):
     if numeral in numeralList:

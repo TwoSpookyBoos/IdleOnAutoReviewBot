@@ -79,8 +79,8 @@ def getShinySpeedSourcesAdviceGroup(fasterShinyPetTotalLevels) -> AdviceGroup:
     sps_adviceDict["Multi Group B- Everything Else"].append(session_data.account.star_sign_extras['SeraphAdvice'])
     sps_adviceDict["Multi Group B- Everything Else"].append(session_data.account.star_sign_extras['SilkrodeNanoAdvice'])
 
-    red8beat = 'w5b4' in session_data.account.summoning['BattlesWon']
-    cyan13beat = 'w6d2' in session_data.account.summoning['BattlesWon']
+    red8beat = session_data.account.summoning['Battles']['Red'] >= 8
+    cyan13beat = session_data.account.summoning['Battles']['Cyan'] >= 13
     sps_adviceDict["Multi Group A- Summoning Winner Bonus"].append(Advice(
         label=f"Summoning match Red8: +{1.88 * red8beat}{'' if red8beat else '. Not yet beaten.'}",
         picture_class="citringe",

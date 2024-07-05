@@ -113,6 +113,7 @@ def section_beanstalk():
         pre_string="Collect 10,000 of these Golden Foods",
         advices=advice_beanstack,
     )
+    group_beanstack.sort_advices(True)
 
     group_super_beanstack = (
         AdviceGroup(
@@ -123,6 +124,8 @@ def section_beanstalk():
         if upgrade_bought
         else None
     )
+    if group_super_beanstack:
+        group_super_beanstack.sort_advices(True)
 
     header = (
         "Well done, Jack! The Golden Goose took an enviably massive dump in your lap. Go pay the giants off! 🍯"
