@@ -657,7 +657,7 @@ bubbles_progressionTiers = [
      {'Roid Ragin': 880, 'Warriors Rule': 1617, 'Multorange': 970},
      {'Swift Steppin': 880, 'Archer Or Bust': 1617},
      {'Stable Jenius': 880, 'Mage Is Best': 1617, 'Severapurple': 970},
-     {'Big P': 940, 'Laaarrrryyyy': 1900, 'Carpenter': 950, 'Big Game Hunter': 570, 'Mr Massacre': 950, 'Diamond Chef': 553, 'Lo Cost Mo Jade': 760},
+     {'Cookin Roadkill': 1330, 'Big P': 940, 'Laaarrrryyyy': 1900, 'Carpenter': 950, 'Big Game Hunter': 570, 'Mr Massacre': 950, 'Diamond Chef': 553, 'Lo Cost Mo Jade': 760},
      "97% max value",
      ""],
     [21, 120,
