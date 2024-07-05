@@ -2745,7 +2745,7 @@ skill_talentsDict = {
             486: {"Name": "Occult Obols", "Tab": "Mage Subclass", 'Hardcap': 125},
         },
         "EXP Only": {
-            463: {"Name": "Inner Peace", "Tab": "Mage"},
+            464: {"Name": "Inner Peace", "Tab": "Mage"},
         },
     },
     "Alchemy": {
