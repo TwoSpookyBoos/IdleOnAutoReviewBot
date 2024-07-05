@@ -199,7 +199,7 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
     tier_GreenSampleBubbles = 0
     tier_PurpleSampleBubbles = 0
     tier_UtilityBubbles = 0
-    max_tier = bubbles_progressionTiers[-2][0]  #Final tier is Informational
+    max_tier = bubbles_progressionTiers[-4][0]  #Final 3 tiers are Informational
     overall_alchemyBubblesTier = 0
 
     exclusionsList = getBubbleExclusions()

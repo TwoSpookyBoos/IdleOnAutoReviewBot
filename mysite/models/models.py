@@ -518,7 +518,7 @@ class AdviceGroup(AdviceBase):
                 try:
                     self.advices['default']: list[Advice] = sorted(
                         self.advices['default'],
-                        key=lambda a: float(str(a.progression).split('%')[0]),
+                        key=lambda a: float(str(a.progression).strip('%')),
                         reverse=reverseBool
                     )
                 except:
