@@ -256,6 +256,7 @@ def setCookingProgressionTier():
     cooking_AdviceSection.groups = cooking_AdviceGroupDict.values()
     if overall_CookingTier == max_tier:
         cooking_AdviceSection.header = f"Best Cooking tier met: {tier_section}<br>You best ❤️"
+        cooking_AdviceSection.complete = True
     else:
         cooking_AdviceSection.header = f"Best Cooking tier met: {tier_section}"
 

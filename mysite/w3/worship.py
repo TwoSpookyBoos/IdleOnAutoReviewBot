@@ -111,6 +111,7 @@ def setWorshipPrayersProgressionTier() -> AdviceSection:
     prayers_AdviceSection.groups = prayers_AdviceGroupDict.values()
     if overall_WorshipPrayersTier == max_tier:
         prayers_AdviceSection.header = f"Best Prayer tier met: {tier_section}<br>You best ❤️"
+        prayers_AdviceSection.complete = True
     else:
         prayers_AdviceSection.header = f"Best Prayer tier met: {tier_section}"
     return prayers_AdviceSection

@@ -1319,23 +1319,11 @@ sailing_progressionTiers = {
 
 ###UI CONSTS###
 maxTiersPerGroup = 3
-#If you add a new switch here, you need to also add a default in main.js:defaults
+#If you add a new switch here, you need to also add a default in \static\scripts\main.js:defaults
 switches = [
     {
         "label": "Autoloot purchased",
         "name": "autoloot",
-        "true": "",
-        "false": "",
-    },
-    {
-        "label": "Sheepie acquired",
-        "name": "sheepie",
-        "true": "",
-        "false": "",
-    },
-    {
-        "label": "Doot acquired",
-        "name": "doot",
         "true": "",
         "false": "",
     },
@@ -1346,8 +1334,26 @@ switches = [
         "false": "",
     },
     {
+        "label": "Doot acquired",
+        "name": "doot",
+        "true": "",
+        "false": "",
+    },
+    {
+        "label": "Sheepie acquired",
+        "name": "sheepie",
+        "true": "",
+        "false": "",
+    },
+    {
         "label": "Order groups by tier",
         "name": "order_tiers",
+        "true": "",
+        "false": "",
+    },
+    {
+        "label": "Hide Completed",
+        "name": "hide_completed",
         "true": "",
         "false": "",
     },

@@ -483,6 +483,7 @@ def setBreedingProgressionTier() -> AdviceSection:
     breeding_AdviceSection.groups = breeding_AdviceGroupDict.values()
     if overall_BreedingTier == maxBreedingTier:
         breeding_AdviceSection.header = f"Best Breeding tier met: {tier_section}<br>You best ❤️"
+        breeding_AdviceSection.complete = True
     else:
         breeding_AdviceSection.header = f"Best Breeding tier met: {tier_section}"
 

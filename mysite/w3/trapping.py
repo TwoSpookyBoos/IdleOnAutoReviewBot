@@ -441,6 +441,7 @@ def setTrappingProgressionTier():
     trapping_AdviceSection.groups = trapping_AdviceGroupDict.values()
     if overall_TrappingTier == max_tier:
         trapping_AdviceSection.header = f"Best Trapping tier met: {tier_section}<br>Keep it up! You're on the right track! ❤️"
+        trapping_AdviceSection.complete = True
     else:
         trapping_AdviceSection.header = f"Best Trapping tier met: {tier_section}"
 

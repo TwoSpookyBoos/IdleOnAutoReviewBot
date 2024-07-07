@@ -131,6 +131,9 @@ def main(inputData, runType="web"):
         AdviceWorld(name=WorldName.SMOLDERIN_PLATEAU, sections=sections_5, banner="w5banner.png"),
         AdviceWorld(name=WorldName.SPIRITED_VALLEY, sections=sections_6, banner="w6banner.png"),
     ]
+    if session_data.hide_completed:
+        for world in reviews:
+            world.hide_completed_sections()
 
     headerData = HeaderData(inputData)
     logger.info(f"{headerData.last_update = }")

@@ -104,6 +104,7 @@ def setOwlProgressionTier() -> AdviceSection:
     owl_AdviceSection.groups = owl_AdviceGroupDict.values()
     if overall_OwlTier == max_tier:
         owl_AdviceSection.header = f"Best Owl tier met: {tier_section}<br>You best ❤️"
+        owl_AdviceSection.complete = True
     else:
         owl_AdviceSection.header = f"Best Owl tier met: {tier_section}"
 

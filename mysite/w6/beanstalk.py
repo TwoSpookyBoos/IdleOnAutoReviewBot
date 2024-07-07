@@ -139,10 +139,13 @@ def section_beanstalk():
         (group_super_beanstack if upgrade_bought else group_upgrade),
     ]
 
-    return AdviceSection(
+    beanstalk_AdviceSection = AdviceSection(
         name="Beanstalk",
         tier=tier,
         header=header,
         picture="Beanstalk.png",
         groups=groups,
+        complete=True if not groups else False
     )
+
+    return beanstalk_AdviceSection

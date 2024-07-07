@@ -581,6 +581,7 @@ class AdviceSection(AdviceBase):
         collapse: bool | None = None,
         groups: list[AdviceGroup] = [],
         pinchy_rating: int = 0,
+        complete: bool = False,
         **extra,
     ):
         super().__init__(collapse, **extra)
@@ -591,6 +592,7 @@ class AdviceSection(AdviceBase):
         self.picture: str = picture
         self._groups: list[AdviceGroup] = groups
         self.pinchy_rating: int = pinchy_rating
+        self.complete: bool = complete
 
     @property
     def header(self) -> str:
@@ -666,6 +668,9 @@ class AdviceWorld(AdviceBase):
     @property
     def id(self):
         return kebab(self.name)
+
+    def hide_completed_sections(self):
+        self.sections = [section for section in self.sections if not section.complete]
 
 
 greenStackAmount = 10**7

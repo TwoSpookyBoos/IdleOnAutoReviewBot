@@ -185,6 +185,7 @@ def setSlabProgressionTier():
     slab_AdviceSection.groups = slab_AdviceGroupDict.values()
     if len(slab_AdviceSection.groups) == 0:
         slab_AdviceSection.header = f"All currently owned items registered in The Slab<br>You best ❤️"
+        slab_AdviceSection.complete = True
     else:
         slab_AdviceSection.header = f"You're missing some obtainable Slab stacks!"
 

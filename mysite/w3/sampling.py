@@ -110,7 +110,9 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     ))
     psrAdvices[accountSubgroup].append(Advice(
         label=f"Star Talent: Printer Sampling: {starTalentOnePoint:.3f}% at minimum level 1",
-        picture_class='printer-sampling'
+        picture_class='printer-sampling',
+        progression=1,
+        goal=1
     ))
 
     #Character-Specific
@@ -124,7 +126,9 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     psrAdvices[characterSubgroup] = []
     psrAdvices[characterSubgroup].append(Advice(
         label=f"Star Talent: Printer Sampling: Additional {starTalentDiffToMax:.2f}% at max level 100",
-        picture_class='printer-sampling'
+        picture_class='printer-sampling',
+        progression=1,
+        goal=1
     ))
     psrAdvices[characterSubgroup].append(Advice(
         label=f"Post Office: Utilitarian Capsule: +3.33% at max 400 crates",
@@ -147,6 +151,7 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         label=f"Character's Printer Sample Rate below is calculated WITHOUT the prayer's bonus.",
         picture_class='',
     ))
+    complete_toons = 0  #Either above 90 and the prayer not worn, or below 90 and already wearing the prayer. Those are the 2 "no action needed" states
     for toon in session_data.account.safe_characters:
         characterTotalPSR = account_sum + starTalentDiffToMax + toon.po_boxes_invested.get('Utilitarian Capsule', {}).get('Bonus1Value', 0)
         if toon.sub_class == 'Squire':
@@ -157,6 +162,7 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
             characterEval = f"{'Keep prayer equipped' if 'The Royal Sampler' in toon.equipped_prayers else 'Equip prayer'} for +{prayerGain:.3f}%"
         else:
             characterEval = f"Prayer not needed{'. You may remove if desired.' if 'The Royal Sampler' in toon.equipped_prayers else ', not worn.'}"
+
         psrAdvices[prayerSubgroup].append(Advice(
             label=f"{toon.character_name}: {characterEval}",
             picture_class=f"{toon.class_name_icon}",
@@ -200,6 +206,12 @@ def setSamplingProgressionTier() -> AdviceSection:
 
     # Generate AdviceGroups
     sampling_AdviceGroupDict["PrinterSampleRate"] = getPrinterSampleRateAdviceGroup()
+    complete_toons = 0  # Either above 90 and the prayer not worn, or below 90 and already wearing the prayer. Those are the 2 "no action needed" states
+    for entry in sampling_AdviceGroupDict["PrinterSampleRate"].advices['Which Characters need Royal Sampler?']:
+        if "Keep prayer equipped" in entry.label or "Prayer not needed, not worn." in entry.label:
+            complete_toons += 1
+    if complete_toons >= session_data.account.playerCount:
+        sampling_AdviceSection.complete = True
 
     # Generate AdviceSection
     overall_SamplingTier = min(max_tier, tier_PrinterSampleRate)  #Looks silly, but may get more evaluations in the future

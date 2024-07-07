@@ -96,7 +96,8 @@ def getMissableGStacks(owned_stuff: Assets):
             picture="Greenstack.png",
             note=note
         )
-        # sections.append(section_obtained)
+        section_obtained.complete = True if not section_obtained.groups else False
+        #sections.append(section_obtained)
 
     if len(advice_EndangeredQuestGStacks) > 0:
         tier_obtainable = f"{len(advice_EndangeredQuestGStacks)}/{len(missableGStacksDict) - len(advice_ObtainedQuestGStacks)}"
@@ -112,8 +113,7 @@ def getMissableGStacks(owned_stuff: Assets):
         if header_alreadymissed != "" or header_alreadyobtained != "":
             header_missable = "and " + header_missable
         header_obtainable = f"You {header_alreadymissed}{header_alreadyobtained}{header_missable} missable quest item Greenstacks.<br>Be sure <strong>NOT</strong> to turn in their quests until GStacking them:"
-        sections.append(
-            AdviceSection(
+        endangered_AdviceSection = AdviceSection(
                 name="Endangered Greenstacks",
                 tier=tier_obtainable,
                 header=header_obtainable,
@@ -135,7 +135,8 @@ def getMissableGStacks(owned_stuff: Assets):
                     )
                 ]
             )
-        )
+        endangered_AdviceSection.complete = True if not endangered_AdviceSection.groups else False
+        sections.append(endangered_AdviceSection)
 
     if len(advice_MissedQuestGStacks) > 0:
         tier_missed = f"{len(advice_MissedQuestGStacks)}/{len(missableGStacksDict)}"
@@ -162,7 +163,8 @@ def getMissableGStacks(owned_stuff: Assets):
                 )
             ]
         )
-        # sections.append(section_missed)
+        section_missed.complete = True if not section_missed.groups else False
+        #sections.append(section_missed)
 
     return sections
 
@@ -243,5 +245,6 @@ def setGStackProgressionTier():
         picture="Greenstack.png",
         groups=groups
     )
+    section_regular_gstacks.complete = True if not section_regular_gstacks.groups else False
 
     return *sections_quest_gstacks, section_regular_gstacks
