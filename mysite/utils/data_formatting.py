@@ -256,7 +256,7 @@ def getCharacterDetails(inputJSON, runType):
         except:
             characterSecondaryPresetTalents[character_index] = {}
         try:
-            equipped_lab_chips[character_index] = safe_loads(inputJSON["Lab"][character_index+1])
+            equipped_lab_chips[character_index] = safe_loads(inputJSON["Lab"])[character_index+1]
         except:
             equipped_lab_chips[character_index] = []
 

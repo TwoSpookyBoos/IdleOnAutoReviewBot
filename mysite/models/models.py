@@ -1522,12 +1522,6 @@ class Account:
                 self.labChips[labChip["Name"]] = int(raw_labChips_list[labChipIndex])
             except:
                 self.labChips[labChip["Name"]] = 0
-        for toon in self.all_characters:
-            for labChipName in toon.equipped_lab_chips:
-                try:
-                    self.labChips[labChipName] += 1
-                except:
-                    continue
 
     def _parse_w4_lab_bonuses(self, raw_lab):
         #TODO: Actually figure out lab :(
