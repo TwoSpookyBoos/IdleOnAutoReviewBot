@@ -117,12 +117,9 @@ def main(inputData, runType="web"):
         section_breeding, section_cooking, section_rift,
         section_divinity, section_sailing
     ]
-    unrated_sections = [
-        section_gemShop, section_cards,
-        section_buildings, section_sampling, section_library, section_collider, section_trapping,
-        section_slab,
-        section_sneaking, section_beanstalk,
-    ]
+    unrated_sections = []
+    for sectionList in [sections_general, sections_1, sections_2, sections_3, sections_4, sections_5, sections_6]:
+        unrated_sections.extend([section for section in sectionList if section not in pinchable_sections])
     sections_pinchy = pinchy.generatePinchyWorld(pinchable_sections, unrated_sections)
 
     reviews = [
