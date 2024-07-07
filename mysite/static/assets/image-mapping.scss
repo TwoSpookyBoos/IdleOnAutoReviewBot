@@ -1,4 +1,5 @@
 //General
+//@import "sections";
 @import "vars";
 @import "skill-icons";
 @import "classes";
@@ -2156,6 +2157,7 @@ $monsters: (
     samurai-guardian: $samurai-guardian
 );
 
+//$id-map: map-merge($sections-map, $id-map);
 $id-map: map-merge($skill-icons, $id-map);
 $id-map: map-merge($storage-items, $id-map);
 $id-map: map-merge($character-classes, $id-map);
@@ -2218,6 +2220,11 @@ $extra: (
 	kangaroo: $kangaroo,
 	collider-toggle: $collider-toggle,
 	talent-preset-1: $talent-preset-1,
+	buildings: $buildings,
+    sampling: $sampling,
+    library: $library,
+    slab: $slab,
+    beanstalk: $beanstalk,
 );
 $id-map: map-merge($extra, $id-map);
 

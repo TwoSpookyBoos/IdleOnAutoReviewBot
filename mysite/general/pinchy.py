@@ -306,6 +306,7 @@ def is_portal_opened(mobKills, monster, portalKC):
 
 
 def getHighestPrint():
+    #TODO: Move to Account
     awfulPrinterList = safe_loads(session_data.account.raw_data["Print"])
     # print("Pinchy~ OUTPUT awfulPrinterList: ", type(awfulPrinterList), awfulPrinterList)
     goodPrinterList = [p for p in awfulPrinterList if isinstance(p, int)]
@@ -376,7 +377,7 @@ def generate_advice_groups(sectionsByThreshold: dict):
 
         advice_group = AdviceGroup(
             tier="",
-            pre_string=f"{threshold} rated activit{pl(advices, 'y', 'ies')}",
+            pre_string=f"{threshold} rated section{pl(advices)}",
             advices=advices
         )
 
@@ -384,15 +385,33 @@ def generate_advice_groups(sectionsByThreshold: dict):
     return advice_groups
 
 
-def generatePinchyWorld(all_sections):
-    dictOfPRs = {section.name: section.pinchy_rating for section in all_sections}
+def getUnratedLinksAdviceGroup(unrated_sections) -> AdviceGroup:
+    unrated_advice = []
+    for section in unrated_sections:
+        unrated_advice.append(
+            Advice(
+                label=section.name,
+                picture_class=section.name,
+                as_link=True
+            )
+        )
+    unrated_AG = AdviceGroup(
+        tier="",
+        pre_string="Unrated Sections",
+        advices=unrated_advice
+    )
+    return unrated_AG
+
+
+def generatePinchyWorld(pinchable_sections, unrated_sections):
+    dictOfPRs = {section.name: section.pinchy_rating for section in pinchable_sections}
 
     sectionPlacements: Placements = sort_pinchy_reviews(dictOfPRs)
     expectedThreshold: Threshold = tier_from_monster_kills(dictOfPRs)
     lowestThresholdReached: Threshold = sectionPlacements.lowest
 
     placements_per_section = sectionPlacements.per_section()
-    for section in all_sections:
+    for section in pinchable_sections:
         section.pinchy_placement = placements_per_section[section.name]
 
 
@@ -412,6 +431,7 @@ def generatePinchyWorld(all_sections):
         pinchyExpected = f"Expected Progression, based on highest enemy map: {expectedThreshold}"
 
     advice_groups = generate_advice_groups(sectionPlacements.final)
+    advice_groups.append(getUnratedLinksAdviceGroup(unrated_sections))
 
     sections_maxed_count = sectionPlacements.maxed_count
     sections_total = Placements.section_count

@@ -67,7 +67,6 @@ def main(inputData, runType="web"):
         section_smithing := smithing.setSmithingProgressionTier(),
         section_owl := owl.setOwlProgressionTier()
     ]
-
     # World 2
     sections_2 = [
         section_alchBubbles := alchemy.setAlchemyBubblesProgressionTier(),
@@ -75,7 +74,6 @@ def main(inputData, runType="web"):
         section_alchP2W := alchemy.setAlchemyP2W(),
         # section_obols := idleon_Obols.setObolsProgressionTier()
     ]
-
     # World 3
     sections_3 = [
         section_refinery := consRefinery.setConsRefineryProgressionTier(),
@@ -119,7 +117,13 @@ def main(inputData, runType="web"):
         section_breeding, section_cooking, section_rift,
         section_divinity, section_sailing
     ]
-    sections_pinchy = pinchy.generatePinchyWorld(pinchable_sections)
+    unrated_sections = [
+        section_gemShop, section_cards,
+        section_buildings, section_sampling, section_library, section_collider, section_trapping,
+        section_slab,
+        section_sneaking, section_beanstalk,
+    ]
+    sections_pinchy = pinchy.generatePinchyWorld(pinchable_sections, unrated_sections)
 
     reviews = [
         AdviceWorld(name=WorldName.PINCHY, sections=sections_pinchy, title="Pinchy AutoReview", collapse=False),
