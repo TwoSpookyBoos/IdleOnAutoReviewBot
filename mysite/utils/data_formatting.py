@@ -229,45 +229,51 @@ def getCharacterDetails(inputJSON, runType):
     perSkillDict = characterSkillsDict["Skills"]
     equipped_prayers = {}
     postOfficeList = []
-    for list_index in range(0, playerCount):
+    equipped_lab_chips = {}
+    for character_index in range(0, playerCount):
         try:
-            playerClasses.append(getHumanReadableClasses(inputJSON[f"CharacterClass_{list_index}"]))
+            playerClasses.append(getHumanReadableClasses(inputJSON[f"CharacterClass_{character_index}"]))
         except:
-            playerClasses.append(f"UnknownClass{list_index}")
+            playerClasses.append(f"UnknownClass{character_index}")
         try:
-            postOfficeList.append(safe_loads(inputJSON[f"POu_{list_index}"]))
+            postOfficeList.append(safe_loads(inputJSON[f"POu_{character_index}"]))
         except:
             postOfficeList.append([0]*36)
         try:
-            equipped_prayers[list_index] = safe_loads(inputJSON[f"Prayers_{list_index}"])
+            equipped_prayers[character_index] = safe_loads(inputJSON[f"Prayers_{character_index}"])
         except:
-            equipped_prayers[list_index] = []
+            equipped_prayers[character_index] = []
         try:
-            characterMaxTalents[list_index] = safe_loads(inputJSON[f"SM_{list_index}"])
+            characterMaxTalents[character_index] = safe_loads(inputJSON[f"SM_{character_index}"])
         except:
-            characterMaxTalents[list_index] = {}
+            characterMaxTalents[character_index] = {}
         try:
-            characterCurrentPresetTalents[list_index] = safe_loads(inputJSON[f"SL_{list_index}"])
+            characterCurrentPresetTalents[character_index] = safe_loads(inputJSON[f"SL_{character_index}"])
         except:
-            characterCurrentPresetTalents[list_index] = {}
+            characterCurrentPresetTalents[character_index] = {}
         try:
-            characterSecondaryPresetTalents[list_index] = safe_loads(inputJSON[f"SLpre_{list_index}"])
+            characterSecondaryPresetTalents[character_index] = safe_loads(inputJSON[f"SLpre_{character_index}"])
         except:
-            characterSecondaryPresetTalents[list_index] = {}
+            characterSecondaryPresetTalents[character_index] = {}
+        try:
+            equipped_lab_chips[character_index] = safe_loads(inputJSON["Lab"])[character_index+1]
+        except:
+            equipped_lab_chips[character_index] = []
 
-        characterDict[list_index] = dict(
-            character_index=list_index,
-            character_name=playerNames[list_index],
-            class_name=playerClasses[list_index],
-            base_class=getBaseClass(playerClasses[list_index]),
-            sub_class=getSubclass(playerClasses[list_index]),
-            elite_class=getEliteClass(playerClasses[list_index]),
-            equipped_prayers=equipped_prayers[list_index],
-            all_skill_levels=characterSkillsDict[list_index],
-            max_talents=characterMaxTalents[list_index],
-            current_preset_talents=characterCurrentPresetTalents[list_index],
-            secondary_preset_talents=characterSecondaryPresetTalents[list_index],
-            po_boxes=postOfficeList[list_index]
+        characterDict[character_index] = dict(
+            character_index=character_index,
+            character_name=playerNames[character_index],
+            class_name=playerClasses[character_index],
+            base_class=getBaseClass(playerClasses[character_index]),
+            sub_class=getSubclass(playerClasses[character_index]),
+            elite_class=getEliteClass(playerClasses[character_index]),
+            equipped_prayers=equipped_prayers[character_index],
+            all_skill_levels=characterSkillsDict[character_index],
+            max_talents=characterMaxTalents[character_index],
+            current_preset_talents=characterCurrentPresetTalents[character_index],
+            secondary_preset_talents=characterSecondaryPresetTalents[character_index],
+            po_boxes=postOfficeList[character_index],
+            equipped_lab_chips=equipped_lab_chips[character_index]
         )
 
     return [playerCount, playerNames, playerClasses, characterDict, perSkillDict]

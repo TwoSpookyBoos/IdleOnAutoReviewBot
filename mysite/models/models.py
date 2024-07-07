@@ -7,21 +7,44 @@ from collections import defaultdict
 from enum import Enum
 from math import ceil, floor
 from typing import Any
-
 from flask import g
-
 from utils.data_formatting import getCharacterDetails, safe_loads
-from consts import expectedStackables, greenstack_progressionTiers, card_data, maxMeals, maxMealLevel, jade_emporium, max_IndexOfVials, getReadableVialNames, \
-    buildingsDict, atomsList, prayersDict, bribesDict, shrinesList, pristineCharmsList, sigilsDict, \
-    sailingDict, guildBonusesList, lavaFunc, vialsDict, sneakingGemstonesFirstIndex, sneakingGemstonesList, \
-    getMoissaniteValue, getGemstoneValue, getGemstonePercent, sneakingGemstonesStatList, stampsDict, stampTypes, marketUpgradeList, \
-    achievementsList, forgeUpgradesDict, arcadeBonuses, saltLickList, allMeritsDict, bubblesDict, familyBonusesDict, poBoxDict, equinoxBonusesDict, \
-    maxDreams, dreamsThatUnlockNewBonuses, ceilUpToBase, starsignsDict, gfood_codes, getStyleNameFromIndex, divinity_divinitiesDict, getDivinityNameFromIndex, \
-    maxCookingTables, getNextESFamilyBreakpoint, expected_talentsDict, colliderStorageLimitList, gamingSuperbitsDict, labJewelsDict, cookingMealDict, \
-    labBonusesDict, labChipsDict, maxCookingTables, getNextESFamilyBreakpoint, expected_talentsDict, colliderStorageLimitList, gamingSuperbitsDict, \
-    maxNumberOfTerritories, \
-    indexFirstTerritoryAssignedPet, territoryNames, slotUnlockWavesList, breedingUpgradesDict, breedingGeneticsList, breedingShinyBonusList, \
-    breedingSpeciesDict, getShinyLevelFromDays, getDaysToNextShinyLevel, summoningBattleCountsDict, summoningDict
+from consts import (
+    #General
+    lavaFunc,
+    expectedStackables, greenstack_progressionTiers, gfood_codes,
+    card_data,
+    guildBonusesList, familyBonusesDict, getNextESFamilyBreakpoint,
+    achievementsList, allMeritsDict, starsignsDict,
+    ceilUpToBase,
+    #W1
+    stampsDict, stampTypes, bribesDict, forgeUpgradesDict,
+    #W2
+    bubblesDict,
+    vialsDict, max_IndexOfVials, getReadableVialNames,
+    sigilsDict,
+    arcadeBonuses,
+    poBoxDict,
+    #W3
+    buildingsDict, shrinesList, saltLickList, atomsList, colliderStorageLimitList,
+    prayersDict,
+    equinoxBonusesDict, maxDreams, dreamsThatUnlockNewBonuses,
+    expected_talentsDict,
+    #W4
+    labJewelsDict,labBonusesDict, labChipsDict,
+    maxMeals, maxMealLevel, cookingMealDict, maxCookingTables,
+    maxNumberOfTerritories, indexFirstTerritoryAssignedPet, territoryNames, slotUnlockWavesList, breedingUpgradesDict, breedingGeneticsList,
+    breedingShinyBonusList, breedingSpeciesDict, getShinyLevelFromDays, getDaysToNextShinyLevel,
+    #W5
+    sailingDict,
+    getStyleNameFromIndex, divinity_divinitiesDict, getDivinityNameFromIndex,
+    gamingSuperbitsDict,
+    #W6 Sneaking
+    jade_emporium, pristineCharmsList, sneakingGemstonesFirstIndex, sneakingGemstonesList, sneakingGemstonesStatList,
+    getMoissaniteValue, getGemstoneValue, getGemstonePercent,
+    marketUpgradeList,
+    summoningBattleCountsDict, summoningDict
+)
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
 
 def session_singleton(cls):
@@ -74,7 +97,6 @@ def getSpecializedSkills(base_class, sub_class, elite_class):
     elif base_class == "Mage":
         specializedSkillsList.append("Choppin")
 
-
     if sub_class == "Barbarian":
         specializedSkillsList.append("Fishing")
     elif sub_class == "Squire":
@@ -118,7 +140,9 @@ class Character:
         max_talents: dict,
         current_preset_talents: dict,
         secondary_preset_talents: dict,
-        po_boxes: list[int]):
+        po_boxes: list[int],
+        equipped_lab_chips: list[str]
+    ):
 
         self.character_index: int = character_index
         self.character_name: str = character_name
@@ -218,6 +242,13 @@ class Character:
                     'Bonus3Value': 0,
                     'Bonus3String': '',
                 }
+        self.equipped_lab_chips: list[str] = []
+        for chipIndex in equipped_lab_chips:
+            if chipIndex != -1:
+                try:
+                    self.equipped_lab_chips.append(labChipsDict[chipIndex]['Name'])
+                except:
+                    continue
 
         self.apoc_dict: dict = {
             name: {
@@ -1456,7 +1487,7 @@ class Account:
                     raw_meals_list[sublistIndex].append(0)
                 while len(raw_meals_list[sublistIndex]) > maxMeals:
                     raw_meals_list[sublistIndex].pop()
-        
+
         self.meals = {}
         # Count the number of unlocked meals, unlocked meals under 11, and unlocked meals under 30
         for index, mealLevel in enumerate(raw_meals_list[0]):
@@ -1502,7 +1533,7 @@ class Account:
                 "Value": node["BaseValue"], # Currently no modifiers available, might change if the pure opal navette changes
                 "BaseValue": node["BaseValue"]
             }
-            
+
     def _parse_w4_jewels(self, raw_lab):
         #TODO: Account for if the jewel is actually connected.
 
@@ -2136,7 +2167,7 @@ class Account:
         self._calculate_w3_collider_cost_reduction()
 
     def _calculate_w3_building_max_levels(self):
-        
+
         towers = [towerName for towerName, towerValuesDict in self.construction_buildings.items() if towerValuesDict['Type'] == 'Tower'] # Placed here since it's used for both Construction mastery and atom levels
         if self.rift['SkillMastery']:
             totalLevel = sum(self.all_skills['Construction'])
@@ -2145,8 +2176,8 @@ class Account:
 
             if totalLevel >= 1000:
                 self.construction_buildings["Talent Book Library"]['MaxLevel'] += 100
-            
-            if totalLevel >= 1500:    
+
+            if totalLevel >= 1500:
                 shrines = [shrineName for shrineName, shrineValuesDict in self.construction_buildings.items() if shrineValuesDict['Type'] == 'Shrine']
                 for shrineName in shrines:
                     try:
@@ -2280,7 +2311,7 @@ class Account:
         self.cooking['CurrentRemainingMeals'] = (self.cooking['MealsUnlocked'] * self.cooking['PlayerMaxPlateLvl']) - self.cooking['PlayerTotalMealLevels']
         self.cooking['MaxRemainingMeals'] = (maxMeals * maxMealLevel) - self.cooking['PlayerTotalMealLevels']
 
-    def _calculate_w4_jewel_multi(self): 
+    def _calculate_w4_jewel_multi(self):
         jewelMulti = 1
         if self.labBonuses["Spelunker Obol"]["Enabled"]:
             jewelMulti = self.labBonuses["Spelunker Obol"]["Value"]
