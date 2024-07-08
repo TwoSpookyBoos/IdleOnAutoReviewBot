@@ -1298,7 +1298,7 @@ sailing_progressionTiers = {
             'Crystal Steak': 4,
             'Trilobite Rock': 4,
             'Opera Mask': 4,
-            #'Socrates': 4,
+            'Socrates': 4,
             'The True Lantern': 4,
             'The Onyx Lantern': 4,
             'The Shim Lantern': 4,
