@@ -5205,7 +5205,7 @@ sneakingGemstonesStatList: list[str] = [
 sneakingGemstonesFirstIndex = 233
 sneakingGemstonesCount = len(sneakingGemstonesList)
 sneakingGemstonesMaxValueDict = {"Aquamarine": 10000, "Emerald": 5000, "Garnet": 2500, "Starite": 200, "Topaz": 1000, "Moissanite": 300}
-maxFarmingCrops = 120  # Last verified as of 2.08
+maxFarmingCrops = 160  # Last verified as of 2.11 Land Rank update
 marketUpgradeList = [
     "Land Plots", "Stronger Vines", "Nutritious Soil", "Smarter Seeds",
     "Biology Boost", "Product Doubler", "More Beenz", "Enhanced Deeds",
