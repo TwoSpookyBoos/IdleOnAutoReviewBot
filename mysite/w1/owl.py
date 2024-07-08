@@ -48,7 +48,7 @@ def setOwlProgressionTier() -> AdviceSection:
                         picture_class=f"feather-generation"
                     ))
         if 'MegaFeathersOwned' in tierRequirementsDict:
-            if session_data.account.owl['MegaFeathersOwned'] < tierRequirementsDict['MegaFeathersOwned']:
+            if session_data.account.owl['MegaFeathersOwned'] < tierRequirementsDict['MegaFeathersOwned']+1:
                 for mf, resets in featherResetsDict.items():
                     if lastMFShown < mf <= tierRequirementsDict['MegaFeathersOwned']:
                         if session_data.account.owl['MegaFeathersOwned'] <= mf:
@@ -67,20 +67,16 @@ def setOwlProgressionTier() -> AdviceSection:
                 if subgroupName not in owl_AdviceDict['MegaFeathers'] and len(owl_AdviceDict['MegaFeathers']) < maxTiersPerGroup:
                     owl_AdviceDict['MegaFeathers'][subgroupName] = []
                 if subgroupName in owl_AdviceDict['MegaFeathers']:
-                    if len(owl_AdviceDict['MegaFeathers']) > 0:
-                        owl_AdviceDict['MegaFeathers'][subgroupName].insert(-1, Advice(
+                    orion_advice = Advice(
                             label=f"Before MF{tierRequirementsDict['MegaFeathersOwned']+1}, purchase Bonuses of Orion {tierRequirementsDict['BonusesOfOrion']}",
                             picture_class="bonuses-of-orion",
                             progression=session_data.account.owl['BonusesOfOrion'],
                             goal=tierRequirementsDict['BonusesOfOrion']
-                        ))
+                        )
+                    if len(owl_AdviceDict['MegaFeathers']) > 0:
+                        owl_AdviceDict['MegaFeathers'][subgroupName].insert(-1, orion_advice)
                     else:
-                        owl_AdviceDict['MegaFeathers'][subgroupName].append(Advice(
-                            label=f"Before purchasing Mega Feather {tierRequirementsDict['MegaFeathersOwned'] + 1}, purchase level {tierRequirementsDict['BonusesOfOrion']} of Bonuses of Orion",
-                            picture_class="bonuses-of-orion",
-                            progression=session_data.account.owl['BonusesOfOrion'],
-                            goal=tierRequirementsDict['BonusesOfOrion']
-                        ))
+                        owl_AdviceDict['MegaFeathers'][subgroupName].append(orion_advice)
                     owl_AdviceDict['MegaFeathers'][subgroupName].append(Advice(
                         label=f"{orionDRValues.get(tierRequirementsDict['BonusesOfOrion'], 'IDK')}% Drop Rate will then be yours 🎉",
                         picture_class="drop-rate"
