@@ -93,5 +93,6 @@ def getCardSetReview():
                 f"You have completed all {section.tier} cardset tiers. Too rich "
                 f"for my blood, I fold. Your sleight of hand is admirable. ♥️♠️♦️♣️"
             )
+            section.complete = True
 
     return section

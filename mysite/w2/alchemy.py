@@ -159,6 +159,7 @@ def setAlchemyVialsProgressionTier() -> AdviceSection:
     vial_AdviceSection.groups = vial_AdviceGroupDict.values()
     if overall_AlchemyVialsTier == max_tier:
         vial_AdviceSection.header = f"Best Vial tier met: {tier_section}<br>You best ❤️"
+        vial_AdviceSection.complete = True
     else:
         vial_AdviceSection.header = f"Best Vial tier met: {tier_section}"
 
@@ -168,7 +169,7 @@ def setAlchemyVialsProgressionTier() -> AdviceSection:
 def getBubbleExclusions():
     exclusionsList = []
     #If all crops owned or Evolution GMO is level 10+, exclude the requirement for Cropius Mapper
-    if session_data.account.farming["CropsUnlocked"] >= maxFarmingCrops or session_data.account.farming["MarketUpgrades"].get("Evolution GMO", 0) > 10:
+    if session_data.account.farming["CropsUnlocked"] >= maxFarmingCrops or session_data.account.farming["MarketUpgrades"].get("Evolution GMO", 0) > 50:
         exclusionsList.append("Cropius Mapper")
     return exclusionsList
 
@@ -296,6 +297,7 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
     bubbles_AdviceSection.groups = bubbles_AdviceGroupDict.values()
     if overall_alchemyBubblesTier >= max_tier:
         bubbles_AdviceSection.header = f"Best Bubbles tier met: {tier_section}<br>You best ❤️"
+        bubbles_AdviceSection.complete = True
     else:
         bubbles_AdviceSection.header = f"Best Bubbles tier met: {tier_section}"
 
@@ -387,6 +389,7 @@ def setAlchemyP2W() -> AdviceSection:
     p2w_AdviceSection.groups = p2w_AdviceGroupDict.values()
     if p2wSum >= p2wMax:
         p2w_AdviceSection.header = f"You've purchased all {p2wMax} upgrades in Alchemy's Pay 2 Win tab!<br>You best ❤️"
+        p2w_AdviceSection.complete = True
     else:
         p2w_AdviceSection.header = f"You've purchased {tier_section} upgrades in Alchemy's Pay 2 Win tab.<br>Try to purchase the basic upgrades before Mid W5, and Player upgrades after each Alchemy level up!"
     return p2w_AdviceSection

@@ -142,7 +142,8 @@ def setCombatLevelsProgressionTier() -> AdviceSection:
         header=header,
         picture="Family.png",
         groups=[total_level_group, lvlup_group],
-        pinchy_rating=overall_CombatLevelTier
+        pinchy_rating=overall_CombatLevelTier,
+        complete=overall_CombatLevelTier == max_tier
     )
 
     return combat_section

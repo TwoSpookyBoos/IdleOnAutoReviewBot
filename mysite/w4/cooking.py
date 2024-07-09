@@ -1,7 +1,7 @@
 from models.models import Advice, AdviceGroup, AdviceSection
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import maxMeals, maxMealLevel
+from consts import maxMeals, maxMealLevel, cookingCloseEnough
 from utils.text_formatting import pl
 
 logger = get_logger(__name__)
@@ -44,7 +44,9 @@ def setCookingProgressionTier():
     if tier_Cooking == 4 and session_data.account.cooking['MealsUnlocked'] >= maxMeals and session_data.account.cooking['MealsUnder30'] <= 0:
         tier_Cooking = 5
     if tier_Cooking == 5 and session_data.account.cooking['PlayerMaxPlateLvl'] >= maxMealLevel:
-        tier_Cooking = 6
+        tier_Cooking = max_tier
+    if session_data.account.cooking['MaxRemainingMeals'] < cookingCloseEnough:
+        tier_Cooking = max_tier
 
     #Generate NextTier Advice
     # 1) if cooking is unlocked at least
@@ -256,6 +258,7 @@ def setCookingProgressionTier():
     cooking_AdviceSection.groups = cooking_AdviceGroupDict.values()
     if overall_CookingTier == max_tier:
         cooking_AdviceSection.header = f"Best Cooking tier met: {tier_section}<br>You best ❤️"
+        cooking_AdviceSection.complete = True
     else:
         cooking_AdviceSection.header = f"Best Cooking tier met: {tier_section}"
 

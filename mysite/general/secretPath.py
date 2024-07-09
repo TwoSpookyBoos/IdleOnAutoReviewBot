@@ -415,11 +415,11 @@ def setSecretClassProgressionTier():
             ))
 
     #No Infinilyte
-    elif tier_SecretClass == 3:
-        secretClass_AdviceDict["UnlockNextClass"].append(Advice(
-            label="Welcome to the Infinilyte waiting room",
-            picture_class="infinilyte-icon"
-        ))
+    # elif tier_SecretClass == 3:
+    #     secretClass_AdviceDict["UnlockNextClass"].append(Advice(
+    #         label="Welcome to the Infinilyte waiting room",
+    #         picture_class="infinilyte-icon"
+    #     ))
 
     group_pre_strings = [
         "Create a Journeyman",
@@ -450,6 +450,11 @@ def setSecretClassProgressionTier():
     secretClass_AdviceSection.groups = secretClass_AdviceGroupDict.values()
     if overall_SecretClassTier == max_tier:
         secretClass_AdviceSection.header = f"Best Secret Class tier met: {tier_section}<br>You best ❤️"
+        try:
+            if len(secretClass_AdviceGroupDict["MaestroHands"].advices['default']) == 0:
+                secretClass_AdviceSection.complete = True
+        except:
+            pass
     else:
         secretClass_AdviceSection.header = f"Best Secret Class tier met: {tier_section}"
 

@@ -199,4 +199,6 @@ def setConsBuildingsProgressionTier():
 
     #Generate AdviceSection
     building_AdviceSection.groups = building_AdviceGroupDict.values()
+    if len(building_AdviceSection.groups) == 0:
+        building_AdviceSection.complete = True
     return building_AdviceSection

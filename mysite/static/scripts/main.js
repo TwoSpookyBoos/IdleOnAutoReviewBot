@@ -22,10 +22,11 @@ const opts = {
 const defaults = {
     player: "",
     autoloot: "off",
-    sheepie: "off",
     doot: "off",
     riftslug: "off",
-    order_tiers: "off",
+    sheepie: "off",
+    order_tiers: "on",
+    hide_completed: "off",
     progress_bars: "off",
     handedness: "off",
     light: "off"

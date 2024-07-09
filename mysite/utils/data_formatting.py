@@ -340,6 +340,7 @@ def mark_advice_completed(advice):
         pass
 
 
+
 def scrape_slab():
     url_wiki_slab_raw = "https://raw.githubusercontent.com/BigCoight/IdleonWikiBot3.0/master/exported/ts/data/SpecificItemRepo.ts"
     response = requests.get(url_wiki_slab_raw)

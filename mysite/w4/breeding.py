@@ -309,8 +309,8 @@ def setBreedingProgressionTier() -> AdviceSection:
             ['rattler', 'monolithic', 'refiller', 'borger']],
         # 5-pet comp used to beat Wave 125
         3: [
-            ['Rattler', 'Monolithic', 'Looter', 'Refiller', 'Borger'],
-            ['rattler', 'monolithic', 'looter', 'refiller', 'borger']],
+            ['Rattler', 'Looter', 'Badumdum', 'Refiller', 'Borger'],
+            ['rattler', 'looter', 'badumdum', 'refiller', 'borger']],
         # 6-pet comp used to beat Wave 200
         4: [
             ['Rattler', 'Defender', 'Looter', 'Refiller', 'Badumdum', 'Borger'],
@@ -483,6 +483,7 @@ def setBreedingProgressionTier() -> AdviceSection:
     breeding_AdviceSection.groups = breeding_AdviceGroupDict.values()
     if overall_BreedingTier == maxBreedingTier:
         breeding_AdviceSection.header = f"Best Breeding tier met: {tier_section}<br>You best ❤️"
+        breeding_AdviceSection.complete = True
     else:
         breeding_AdviceSection.header = f"Best Breeding tier met: {tier_section}"
 

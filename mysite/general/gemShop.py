@@ -391,5 +391,6 @@ def setGemShopProgressionTier():
         groups=groups,
         note=disclaimer
     )
+    section.complete = True if len(section.groups) <= 1 else False
 
     return section

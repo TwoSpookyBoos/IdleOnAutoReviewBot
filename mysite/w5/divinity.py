@@ -284,6 +284,7 @@ def setDivinityProgressionTier():
     divinity_AdviceSection.groups = divinity_AdviceGroupDict.values()
     if overall_DivinityTier == max_tier:
         divinity_AdviceSection.header = f"Best Divinity tier met: {tier_section}<br>You best ❤️"
+        divinity_AdviceSection.complete = True
     else:
         divinity_AdviceSection.header = f"Best Divinity tier met: {tier_section}"
 

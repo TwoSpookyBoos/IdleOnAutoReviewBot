@@ -263,6 +263,7 @@ def setColliderProgressionTier() -> AdviceSection:
     collider_AdviceSection.groups = collider_AdviceGroupDict.values()
     if overall_ColliderTier == max_tier:
         collider_AdviceSection.header = f"Best Collider tier met: {tier_section}<br>You best ❤️"
+        collider_AdviceSection.complete = True
     else:
         collider_AdviceSection.header = f"Best Collider tier met: {tier_section}"
     return collider_AdviceSection

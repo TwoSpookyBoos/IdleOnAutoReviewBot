@@ -1,5 +1,8 @@
-//General
+//Master, don't put anything else before this lol
 @import "vars";
+
+//General
+@import "sections";
 @import "skill-icons";
 @import "classes";
 @import "talents";
@@ -2156,6 +2159,7 @@ $monsters: (
     samurai-guardian: $samurai-guardian
 );
 
+$id-map: map-merge($sections-map, $id-map);
 $id-map: map-merge($skill-icons, $id-map);
 $id-map: map-merge($storage-items, $id-map);
 $id-map: map-merge($character-classes, $id-map);
@@ -2195,14 +2199,9 @@ $extra: (
 	vial-l4: $vial-l4,
 	vial-max: $vial-max,
 	prayers: $prayer-stone,
-	bribes: $bribes,
-	pay2win: $pay2win,
 	iceland-irwin: $iceland-irwin,
 	empty-forge-slot: $empty-forge-slot,
 	forge-upgrades: $forge-upgrades,
-	stamps: $stamps,
-	combat-levels: $family,
-	cards: $cards,
 	damage: $damage,
 	rift: $rift-ripper,
 	equinox: $equinox-mirror,
@@ -2214,8 +2213,6 @@ $extra: (
 	nebulyte: $nebulyte,
 	divinity: $divinity,
 	jade-vendor: $jade-vendor,
-	owl: $owl,
-	kangaroo: $kangaroo,
 	collider-toggle: $collider-toggle,
 	talent-preset-1: $talent-preset-1,
 );

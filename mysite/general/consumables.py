@@ -381,5 +381,6 @@ def parseConsumables():
     )
     if section_storage.collapse:
         section_storage.header = "You've collected all current Storage Chests and Inventory Bags!<br>You best ❤️"
+        section_storage.complete = True
 
     return *sections_candy, section_storage

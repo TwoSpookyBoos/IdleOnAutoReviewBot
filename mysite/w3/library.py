@@ -464,10 +464,20 @@ def setLibraryProgressionTier() -> AdviceSection:
     tier_bookLevels = 0
 
     # Generate AdviceGroups
-    library_AdviceGroupDict["MaxBookLevels"] = getBookLevelAdviceGroup()
-    library_AdviceGroupDict["BonusLevels"] = getBonusLevelAdviceGroup()
-    library_AdviceGroupDict["CheckoutSpeed"] = getCheckoutSpeedAdviceGroup()
     characterCheckouts = getCharacterBooksAdviceGroups()
+    if not session_data.hide_completed:
+        library_AdviceGroupDict["MaxBookLevels"] = getBookLevelAdviceGroup()
+        library_AdviceGroupDict["BonusLevels"] = getBonusLevelAdviceGroup()
+        library_AdviceGroupDict["CheckoutSpeed"] = getCheckoutSpeedAdviceGroup()
+    else:
+        #Only show MaxBookLevels checklist if it isn't complete
+        if (
+                session_data.account.library['StaticSum'] < maxStaticBookLevels
+                or session_data.account.library['ScalingSum'] < maxScalingBookLevels
+                or session_data.account.library['SummoningSum'] < maxSummoningBookLevels
+        ):
+            library_AdviceGroupDict["MaxBookLevels"] = getBookLevelAdviceGroup()
+
     for characterName, characterAG in characterCheckouts.items():
         library_AdviceGroupDict[characterName] = characterAG
 

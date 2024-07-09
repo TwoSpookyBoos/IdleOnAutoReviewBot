@@ -537,6 +537,15 @@ class AdviceGroup(AdviceBase):
             for field in self.__compare_by
         )
 
+    def remove_completed_advices(self):
+        if isinstance(self.advices, list):
+            self.advices = [value for value in self.advices if value.goal != "✔"]
+        if isinstance(self.advices, dict):
+            for key, value in self.advices.items():
+                if isinstance(value, list):
+                    self.advices[key] = [v for v in value if v.goal != "✔"]
+            self.advices = {key: value for key, value in self.advices.items() if value}
+
     def remove_empty_subgroups(self):
         if isinstance(self.advices, list):
             self.advices = [value for value in self.advices if value]
@@ -581,6 +590,7 @@ class AdviceSection(AdviceBase):
         collapse: bool | None = None,
         groups: list[AdviceGroup] = [],
         pinchy_rating: int = 0,
+        complete: bool = False,
         **extra,
     ):
         super().__init__(collapse, **extra)
@@ -591,6 +601,7 @@ class AdviceSection(AdviceBase):
         self.picture: str = picture
         self._groups: list[AdviceGroup] = groups
         self.pinchy_rating: int = pinchy_rating
+        self.complete: bool = complete
 
     @property
     def header(self) -> str:
@@ -666,6 +677,9 @@ class AdviceWorld(AdviceBase):
     @property
     def id(self):
         return kebab(self.name)
+
+    def hide_completed_sections(self):
+        self.sections = [section for section in self.sections if not section.complete]
 
 
 greenStackAmount = 10**7

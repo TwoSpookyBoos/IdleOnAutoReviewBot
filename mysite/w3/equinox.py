@@ -126,6 +126,7 @@ def setEquinoxProgressionTier() -> AdviceSection:
     equinox_AdviceSection.groups = equinox_AdviceGroupDict.values()
     if overall_EquinoxTier == max_tier:
         equinox_AdviceSection.header = f"Best Equinox tier met: {tier_section}<br>You best ❤️"
+        equinox_AdviceSection.complete = True
     else:
         equinox_AdviceSection.header = f"Best Equinox tier met: {tier_section}"
 

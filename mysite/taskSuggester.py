@@ -67,7 +67,6 @@ def main(inputData, runType="web"):
         section_smithing := smithing.setSmithingProgressionTier(),
         section_owl := owl.setOwlProgressionTier()
     ]
-
     # World 2
     sections_2 = [
         section_alchBubbles := alchemy.setAlchemyBubblesProgressionTier(),
@@ -75,7 +74,6 @@ def main(inputData, runType="web"):
         section_alchP2W := alchemy.setAlchemyP2W(),
         # section_obols := idleon_Obols.setObolsProgressionTier()
     ]
-
     # World 3
     sections_3 = [
         section_refinery := consRefinery.setConsRefineryProgressionTier(),
@@ -119,7 +117,10 @@ def main(inputData, runType="web"):
         section_breeding, section_cooking, section_rift,
         section_divinity, section_sailing
     ]
-    sections_pinchy = pinchy.generatePinchyWorld(pinchable_sections)
+    unrated_sections = []
+    for sectionList in [sections_general, sections_1, sections_2, sections_3, sections_4, sections_5, sections_6]:
+        unrated_sections.extend([section for section in sectionList if section not in pinchable_sections])
+    sections_pinchy = pinchy.generatePinchyWorld(pinchable_sections, unrated_sections)
 
     reviews = [
         AdviceWorld(name=WorldName.PINCHY, sections=sections_pinchy, title="Pinchy AutoReview", collapse=False),
@@ -131,6 +132,13 @@ def main(inputData, runType="web"):
         AdviceWorld(name=WorldName.SMOLDERIN_PLATEAU, sections=sections_5, banner="w5banner.png"),
         AdviceWorld(name=WorldName.SPIRITED_VALLEY, sections=sections_6, banner="w6banner.png"),
     ]
+    if session_data.hide_completed:
+        for world in reviews:
+            world.hide_completed_sections()
+            for section in world.sections:
+                for group in section.groups:
+                    group.remove_completed_advices()
+                    group.remove_empty_subgroups()
 
     headerData = HeaderData(inputData)
     logger.info(f"{headerData.last_update = }")

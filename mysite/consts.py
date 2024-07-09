@@ -1298,7 +1298,7 @@ sailing_progressionTiers = {
             'Crystal Steak': 4,
             'Trilobite Rock': 4,
             'Opera Mask': 4,
-            #'Socrates': 4,
+            'Socrates': 4,
             'The True Lantern': 4,
             'The Onyx Lantern': 4,
             'The Shim Lantern': 4,
@@ -1319,23 +1319,11 @@ sailing_progressionTiers = {
 
 ###UI CONSTS###
 maxTiersPerGroup = 3
-#If you add a new switch here, you need to also add a default in main.js:defaults
+#If you add a new switch here, you need to also add a default in \static\scripts\main.js:defaults
 switches = [
     {
         "label": "Autoloot purchased",
         "name": "autoloot",
-        "true": "",
-        "false": "",
-    },
-    {
-        "label": "Sheepie acquired",
-        "name": "sheepie",
-        "true": "",
-        "false": "",
-    },
-    {
-        "label": "Doot acquired",
-        "name": "doot",
         "true": "",
         "false": "",
     },
@@ -1346,8 +1334,26 @@ switches = [
         "false": "",
     },
     {
+        "label": "Doot acquired",
+        "name": "doot",
+        "true": "",
+        "false": "",
+    },
+    {
+        "label": "Sheepie acquired",
+        "name": "sheepie",
+        "true": "",
+        "false": "",
+    },
+    {
         "label": "Order groups by tier",
         "name": "order_tiers",
+        "true": "",
+        "false": "",
+    },
+    {
+        "label": "Hide Completed",
+        "name": "hide_completed",
         "true": "",
         "false": "",
     },
@@ -2612,7 +2618,11 @@ expected_talentsDict = {
         10, 11, 12, 13, 6,
     ],
     "Journeyman": [
-        75, 76, 77, 78, 79,  #Bottom row of extra Tab1 talents specific to Journeyman
+        #All 3 rows from Tab1
+        0, 1, 8, 9, 5,
+        10, 11, 12, 13, 6,
+        75, 76, 77, 78, 79,
+        #Plus the 3 rows from Journeyman Tab2
         15, 16, 17, 18, 19,  #Top row
         20, 21, 22, 23, 24,  #Middle row
         25, 26, 27, 28, 29  #Bottom row
@@ -5199,7 +5209,7 @@ sneakingGemstonesStatList: list[str] = [
 sneakingGemstonesFirstIndex = 233
 sneakingGemstonesCount = len(sneakingGemstonesList)
 sneakingGemstonesMaxValueDict = {"Aquamarine": 10000, "Emerald": 5000, "Garnet": 2500, "Starite": 200, "Topaz": 1000, "Moissanite": 300}
-maxFarmingCrops = 120  # Last verified as of 2.08
+maxFarmingCrops = 160  # Last verified as of 2.11 Land Rank update
 marketUpgradeList = [
     "Land Plots", "Stronger Vines", "Nutritious Soil", "Smarter Seeds",
     "Biology Boost", "Product Doubler", "More Beenz", "Enhanced Deeds",
