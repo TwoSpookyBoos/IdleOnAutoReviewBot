@@ -2618,7 +2618,11 @@ expected_talentsDict = {
         10, 11, 12, 13, 6,
     ],
     "Journeyman": [
-        75, 76, 77, 78, 79,  #Bottom row of extra Tab1 talents specific to Journeyman
+        #All 3 rows from Tab1
+        0, 1, 8, 9, 5,
+        10, 11, 12, 13, 6,
+        75, 76, 77, 78, 79,
+        #Plus the 3 rows from Journeyman Tab2
         15, 16, 17, 18, 19,  #Top row
         20, 21, 22, 23, 24,  #Middle row
         25, 26, 27, 28, 29  #Bottom row
