@@ -286,7 +286,7 @@ def getTalentExclusions() -> list:
     }.items():
         if max([toon.max_talents.get(str(talentNumber), 0)
                for toon in session_data.account.safe_characters
-               if toon.class_name == className], default=0) == session_data.account.library['MaxBookLevel']:
+               if className in toon.all_classes], default=0) == session_data.account.library['MaxBookLevel']:
             talentExclusions.append(talentNumber)
 
     #Exclude Siege Breaker > Plunder Ye Deceased if they have a Vman. Level 50 in Enhance Eclipse spawns Plunders often enough to not need the extra time.
