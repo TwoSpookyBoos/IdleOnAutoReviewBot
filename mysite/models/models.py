@@ -1036,7 +1036,7 @@ class Account:
                     print(f"failed on characterIndex '{sampleIndex // 7}', sampleIndex '{sampleIndex}', sampleItem '{sampleItem}', because: {reason}")
             else:
                 if sampleItem != 'Blank':  #Don't want blanks in the AllSorted list, but they're desired in the Character-Specific group
-                    if getItemDisplayName(sampleItem) not in self.printer['AllSorted']:
+                    if getItemDisplayName(sampleItem) not in self.printer['AllSamplesSorted']:
                         self.printer['AllSamplesSorted'][getItemDisplayName(sampleItem)] = []
                     try:
                         self.printer['AllSamplesSorted'][getItemDisplayName(sampleItem)].append(sample_values[sampleIndex])
