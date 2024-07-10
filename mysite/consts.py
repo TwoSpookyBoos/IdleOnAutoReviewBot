@@ -3008,7 +3008,7 @@ skill_talentsDict = {
         },
         "EXP Only": {
             42: {"Name": "Left Hand of Learning", "Tab": "Maestro"},
-            40: {"Name": "Maestro Infusion", "Tab": "Maestro"},
+            40: {"Name": "Maestro Transfusion", "Tab": "Maestro"},
             38: {"Name": "Bliss N Chips", "Tab": "Maestro"},
         },
     },

@@ -344,6 +344,7 @@ def tier_from_monster_kills(dictOfPRs) -> Threshold:
         # logger.info(f"Starting to review map kill counts per player because expectedIndex still W1: {dictOfPRs['Construction Death Note']}")
         for character in session_data.account.safe_characters:
             try:
+                #TODO: Move to account
                 mobKills = safe_loads(session_data.account.raw_data[f'KLA_{character.character_index}'])  # String pretending to be a list of lists yet again
             except:
                 logger.exception(f"Could not retrieve KLA_{character.character_index} for Pinchy. Setting mobKills to empty list")
