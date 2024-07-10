@@ -31,7 +31,6 @@ def setOwlProgressionTier() -> AdviceSection:
     }
 
     # Generate Alert Advice
-    session_data.account.owl['FeatherGeneration'] = 0
     if session_data.account.owl['FeatherGeneration'] < 1:
         alert_advice = Advice(
             label=("Find the Owl in W1 and start generating Feathers!"
