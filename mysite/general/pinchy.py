@@ -305,18 +305,6 @@ def is_portal_opened(mobKills, monster, portalKC):
         return False
 
 
-def getHighestPrint():
-    #TODO: Move to Account
-    #TODO: Need to include values from the secondary PrintXtra
-    awfulPrinterList = safe_loads(session_data.account.raw_data["Print"])
-    # print("Pinchy~ OUTPUT awfulPrinterList: ", type(awfulPrinterList), awfulPrinterList)
-    goodPrinterList = [p for p in awfulPrinterList if isinstance(p, int)]
-    highestPrintFound = max(goodPrinterList)
-    # print("Pinchy~ OUTPUT Final highest print value found: ", highestPrintFound)
-
-    return highestPrintFound
-
-
 def threshold_for_highest_portal_opened(mobKills):
     threshold = next((
         threshold
@@ -332,9 +320,9 @@ def tier_from_monster_kills(dictOfPRs) -> Threshold:
     """find highest enemy killed or world unlocked to compare to"""
     expectedThreshold = Threshold.fromname(Threshold.W1)
 
-    highestPrint = getHighestPrint()
+    highestPrint = session_data.account.printer['HighestValue']
     mobKillThresholds = []
-    if highestPrint >= 24500000000:  # Sites like IE/IT round up to 25B after 24.5B
+    if highestPrint >= 2.45e10:  # Sites like IE/IT round up to 25B after 24.5B
         expectedThreshold = Threshold.fromname(Threshold.MAX_TIER)
     elif dictOfPRs[Placements.DEATH_NOTE] >= 25:
         expectedThreshold = Threshold.fromname(Threshold.W7_WAITING_ROOM)

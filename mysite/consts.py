@@ -1990,6 +1990,20 @@ familyBonusesDict = {
     #"Arcane Cultist": {'funcType': 'decay', 'x1': 0, 'x2': 0, 'Stat': '', 'PrePlus': False, 'PostDisplay': '', 'levelDiscount': familyBonusClassTierLevelReductions[0]},
 }
 esFamilyBonusBreakpointsList = [0, 88, 108, 131, 157, 186, 219, 258, 303, 356, 419, 497, 594, 719, 885, 1118, 1468, 2049, 3210, 6681, 1272447]
+printerIndexesBeingPrintedByCharacterIndex = [
+    [5, 6],  #Character Index 0
+    [12, 13],
+    [19, 20],
+    [26, 27],
+    [33, 34],
+    [40, 41],  #Character Index 5
+    [47, 48],
+    [54, 55],
+    [61, 62],
+    [68, 69],  #Character Index 9
+]
+#This flattens the above list of lists. Nested list comprehension sucks to read
+printerAllIndexesBeingPrinted = [index for characterIndex in printerIndexesBeingPrintedByCharacterIndex for index in characterIndex]
 
 def getNextESFamilyBreakpoint(currentLevel: int) -> int:
     result = -1

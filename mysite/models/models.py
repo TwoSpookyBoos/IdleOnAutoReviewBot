@@ -10,40 +10,40 @@ from typing import Any
 from flask import g
 from utils.data_formatting import getCharacterDetails, safe_loads
 from consts import (
-    #General
+    # General
     lavaFunc,
     expectedStackables, greenstack_progressionTiers, gfood_codes,
     card_data,
     guildBonusesList, familyBonusesDict, getNextESFamilyBreakpoint,
     achievementsList, allMeritsDict, starsignsDict,
     ceilUpToBase,
-    #W1
+    # W1
     stampsDict, stampTypes, bribesDict, forgeUpgradesDict,
-    #W2
+    # W2
     bubblesDict,
     vialsDict, max_IndexOfVials, getReadableVialNames,
     sigilsDict,
     arcadeBonuses,
     poBoxDict,
-    #W3
+    # W3
     buildingsDict, shrinesList, saltLickList, atomsList, colliderStorageLimitList,
     prayersDict,
     equinoxBonusesDict, maxDreams, dreamsThatUnlockNewBonuses,
     expected_talentsDict,
-    #W4
-    labJewelsDict,labBonusesDict, labChipsDict,
+    # W4
+    labJewelsDict, labBonusesDict, labChipsDict,
     maxMeals, maxMealLevel, cookingMealDict, maxCookingTables,
     maxNumberOfTerritories, indexFirstTerritoryAssignedPet, territoryNames, slotUnlockWavesList, breedingUpgradesDict, breedingGeneticsList,
     breedingShinyBonusList, breedingSpeciesDict, getShinyLevelFromDays, getDaysToNextShinyLevel,
-    #W5
+    # W5
     sailingDict,
     getStyleNameFromIndex, divinity_divinitiesDict, getDivinityNameFromIndex,
     gamingSuperbitsDict,
-    #W6 Sneaking
+    # W6 Sneaking
     jade_emporium, pristineCharmsList, sneakingGemstonesFirstIndex, sneakingGemstonesList, sneakingGemstonesStatList,
     getMoissaniteValue, getGemstoneValue, getGemstonePercent,
     marketUpgradeList,
-    summoningBattleCountsDict, summoningDict
+    summoningBattleCountsDict, summoningDict, printerAllIndexesBeingPrinted
 )
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
 
@@ -263,6 +263,7 @@ class Character:
             for name in ("ZOW", "CHOW", "MEOW")
         }
         self.equipment = Equipment(raw_data, character_index, self.combat_level >= 1)
+        self.printed_materials = {}
 
         self.setPolytheismLink()
 
@@ -313,6 +314,9 @@ class Character:
             self.max_talents_over_books += value
         except:
             pass
+
+    def setPrintedMaterials(self, printDict):
+        self.printed_materials = printDict
 
     def __str__(self):
         return self.character_name
@@ -994,6 +998,57 @@ class Account:
                 self.guildBonuses[bonusName] = raw_guild[0][bonusIndex]
             except:
                 self.guildBonuses[bonusName] = 0
+
+        self._parse_general_printer()
+
+    def _parse_general_printer(self):
+        self.printer = {
+            'HighestValue': 0,
+            'AllSamplesSorted': {},
+            'CurrentPrintsByCharacter': {},
+            'AllCurrentPrints': {},
+        }
+
+        raw_print = safe_loads(self.raw_data.get('Print', [0, 0, 0, 0, 0, 'Blank']))[5:]
+        raw_printer_xtra = safe_loads(self.raw_data.get('PrinterXtra', []))
+        self.printer['HighestValue'] = max([p for p in raw_print if isinstance(p, int)] + [p for p in raw_printer_xtra if isinstance(p, int)])
+
+        self.item_filter = []
+        if len(raw_printer_xtra) >= 121:
+            for codeName in raw_printer_xtra[120:]:
+                if codeName != 'Blank':
+                    self.item_filter.append(getItemDisplayName(codeName))
+        try:
+            sample_names = raw_print[0::2] + raw_printer_xtra[0:119:2]
+            sample_values = raw_print[1::2] + raw_printer_xtra[1:119:2]
+        except:
+            sample_names = []
+            sample_values = []
+        for sampleIndex, sampleItem in enumerate(sample_names):
+            if sampleIndex in printerAllIndexesBeingPrinted:
+                if sampleIndex//7 not in self.printer['CurrentPrintsByCharacter']:
+                    self.printer['CurrentPrintsByCharacter'][sampleIndex // 7] = {}
+                if getItemDisplayName(sampleItem) not in self.printer['CurrentPrintsByCharacter'][sampleIndex//7]:
+                    self.printer['CurrentPrintsByCharacter'][sampleIndex // 7][getItemDisplayName(sampleItem)] = []
+                try:
+                    self.printer['CurrentPrintsByCharacter'][sampleIndex // 7][getItemDisplayName(sampleItem)].append(sample_values[sampleIndex])
+                except Exception as reason:
+                    print(f"failed on characterIndex '{sampleIndex // 7}', sampleIndex '{sampleIndex}', sampleItem '{sampleItem}', because: {reason}")
+            else:
+                if sampleItem != 'Blank':  #Don't want blanks in the AllSorted list, but they're desired in the Character-Specific group
+                    if getItemDisplayName(sampleItem) not in self.printer['AllSorted']:
+                        self.printer['AllSamplesSorted'][getItemDisplayName(sampleItem)] = []
+                    try:
+                        self.printer['AllSamplesSorted'][getItemDisplayName(sampleItem)].append(sample_values[sampleIndex])
+                    except Exception as reason:
+                        print(f"failed on sampleIndex '{sampleIndex}', sampleItem '{sampleItem}', because: {reason}")
+        for characterIndex, printDict in self.printer['CurrentPrintsByCharacter'].items():
+            if characterIndex < self.playerCount:
+                self.all_characters[characterIndex].setPrintedMaterials(printDict)
+            for printName, printValues in printDict.items():
+                if printName not in self.printer['AllCurrentPrints']:
+                    self.printer['AllCurrentPrints'][printName] = []
+                self.printer['AllCurrentPrints'][printName] += printValues
 
     def _parse_w1(self):
         self._parse_w1_starsigns()
