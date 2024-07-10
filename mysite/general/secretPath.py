@@ -7,7 +7,7 @@ from utils.text_formatting import pl
 
 logger = get_logger(__name__)
 
-skillsToReview_RightHand = ["Mining", "Choppin", "Fishing", "Catching", "Trapping", "Worship"]
+skillsToReview_RightHand = ["Mining", "Choppin", "Fishing", "Catching", "Trapping"]  #, "Worship"]
 
 def getHandsAdviceGroup(maestros, beginners):
     janky_skills = maestros_goal_levels(maestros)
