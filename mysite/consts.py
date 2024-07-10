@@ -5212,7 +5212,7 @@ sneakingGemstonesMaxValueDict = {"Aquamarine": 10000, "Emerald": 5000, "Garnet":
 maxFarmingCrops = 160  # Last verified as of 2.11 Land Rank update
 marketUpgradeList = [
     "Land Plots", "Stronger Vines", "Nutritious Soil", "Smarter Seeds",
-    "Biology Boost", "Product Doubler", "More Beenz", "Enhanced Deeds",
+    "Biology Boost", "Product Doubler", "More Beenz", "Rank Boost",
     "Overgrowth", "Evolution GMO", "Speed GMO", "OG Fertilizer",
     "EXP GMO", "Land Rank", "Value GMO", "Super GMO"]
 marketUpgradeFirstIndex = 2

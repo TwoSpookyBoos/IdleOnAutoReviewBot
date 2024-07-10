@@ -307,6 +307,7 @@ def is_portal_opened(mobKills, monster, portalKC):
 
 def getHighestPrint():
     #TODO: Move to Account
+    #TODO: Need to include values from the secondary PrintXtra
     awfulPrinterList = safe_loads(session_data.account.raw_data["Print"])
     # print("Pinchy~ OUTPUT awfulPrinterList: ", type(awfulPrinterList), awfulPrinterList)
     goodPrinterList = [p for p in awfulPrinterList if isinstance(p, int)]
@@ -333,11 +334,11 @@ def tier_from_monster_kills(dictOfPRs) -> Threshold:
 
     highestPrint = getHighestPrint()
     mobKillThresholds = []
-    if highestPrint >= 9500000000:  # Sites like IE/IT round up to 10B after 9.5B
+    if highestPrint >= 24500000000:  # Sites like IE/IT round up to 25B after 24.5B
         expectedThreshold = Threshold.fromname(Threshold.MAX_TIER)
-    elif dictOfPRs[Placements.DEATH_NOTE] >= 24:
+    elif dictOfPRs[Placements.DEATH_NOTE] >= 25:
         expectedThreshold = Threshold.fromname(Threshold.W7_WAITING_ROOM)
-    elif dictOfPRs[Placements.DEATH_NOTE] >= 21:
+    elif dictOfPRs[Placements.DEATH_NOTE] >= 17:
         expectedThreshold = Threshold.fromname(Threshold.SOLID_W7_PREP)
     else:
         # logger.info(f"Starting to review map kill counts per player because expectedIndex still W1: {dictOfPRs['Construction Death Note']}")
