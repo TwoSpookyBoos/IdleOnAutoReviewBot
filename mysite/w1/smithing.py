@@ -275,7 +275,7 @@ def setSmithingProgressionTier() -> AdviceSection:
     #Check for any unused Forge slots
     unusedForgeSlots = getUnusedForgeSlotsCount()
     if unusedForgeSlots > 0:
-        session_data.account.alerts_AdviceDict.append(Advice(
+        session_data.account.alerts_AdviceDict['World 1'].append(Advice(
             label=f"You have {unusedForgeSlots} empty ore slot{pl([''] * unusedForgeSlots)} in your {{{{ Forge|#smithing }}}}!",
             picture_class="empty-forge-slot"
         ))

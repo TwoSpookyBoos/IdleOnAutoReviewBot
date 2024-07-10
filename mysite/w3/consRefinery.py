@@ -345,7 +345,7 @@ def setConsRefineryProgressionTier():
     # Generate AdviceGroups
     refinery_AdviceGroupDict['AutoRefine'] = AdviceGroup(
         tier=str(tier_AutoRefine),
-        pre_string="Red and Green Salts should always be set to 0% Auto-Refine",
+        pre_string="Red and Green Salts should always be set to 0% Auto-Refine and On to produce salts",
         advices=refinery_AdviceDict['AutoRefine'],
         post_string=""
     )
