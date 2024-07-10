@@ -125,6 +125,14 @@ def setDivinityProgressionTier():
     #Doot Checks Info
     if not session_data.account.doot_owned:
         divinity_AdviceDict["DivinityLinks"] = session_data.account.divinity['DivinityLinks'].get(int(tier_Divinity), [])
+        if session_data.account.divinity['Divinities'][2].get("Unlocked", False):
+            #If you don't own Doot but do have Arctis unlocked, generate Alert if any character has no divinity link
+            for character in session_data.account.all_characters:
+                if character.divinity_link == "Unlinked":
+                    session_data.account.alerts_AdviceDict['World 5'].append(Advice(
+                        label=f"{character.character_name} isn't linked to a {{{{ Divinity|#divinity }}}}",
+                        picture_class=character.class_name_icon
+                    ))
     #     divinity_AdviceDict["Dooted"].append(Advice(
     #         label=f"Doot not owned, bummer 💔",
     #         picture_class="king-doot"
@@ -238,6 +246,7 @@ def setDivinityProgressionTier():
                         progression=lowestDivinitySkillLevel,
                         goal=divinityLevel
                     ))
+
     #Generate AdviceGroups
     divinity_AdviceGroupDict["TieredProgress"] = AdviceGroup(
         tier=str(tier_Divinity),

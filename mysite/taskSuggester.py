@@ -106,7 +106,6 @@ def main(inputData, runType="web"):
     sections_6 = [
         section_sneaking := sneaking.setSneakingProgressionTier(),
         section_beanstalk := beanstalk.section_beanstalk(),
-
     ]
 
     pinchable_sections = [

@@ -157,7 +157,7 @@ class Placements(dict):
         STAMPS:        [0,   1, 2, 3,    4,  5,  6,      7,  8,  9,      10, 11, 13,     16, 19, 22,     26, 30, 34,     38,   99],
         BRIBES:        [0,   1, 1, 1,    2,  2,  2,      3,  3,  3,      4,  4,  4,      5,  5,  5,      5,  5,  5,      6,    99],
         SMITHING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  2,  3,      4,  5,  6,      6,  6,  6,      6,    99],
-        OWL:           [0,   0, 0, 0,    1,  1,  1,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,  1,  2,      3,    99],
+        OWL:           [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  1,      2,    99],
         BUBBLES:       [0,   0, 0, 0,    0,  1,  1,      2,  2,  2,      3,  4,  5,      6,  7,  9,      12, 16, 20,     22,   99],
         VIALS:         [0,   0, 0, 0,    1,  1,  2,      3,  4,  5,      6,  6,  7,      8,  9,  10,     12, 20, 25,     26,   99],
         P2W:           [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  1,      1,  1,  1,      1,  1,  1,      1,    99],
@@ -393,6 +393,16 @@ def getUnratedLinksAdviceGroup(unrated_sections) -> AdviceGroup:
     return unrated_AG
 
 
+def getAlertsAdviceGroup() -> AdviceGroup:
+    alerts_AG = AdviceGroup(
+        tier="",
+        pre_string="Alerts",
+        advices=session_data.account.alerts_AdviceDict
+    )
+    alerts_AG.remove_empty_subgroups()
+    return alerts_AG
+
+
 def generatePinchyWorld(pinchable_sections, unrated_sections):
     dictOfPRs = {section.name: section.pinchy_rating for section in pinchable_sections}
 
@@ -422,6 +432,7 @@ def generatePinchyWorld(pinchable_sections, unrated_sections):
 
     advice_groups = generate_advice_groups(sectionPlacements.final)
     advice_groups.append(getUnratedLinksAdviceGroup(unrated_sections))
+    advice_groups.insert(0, getAlertsAdviceGroup())
 
     sections_maxed_count = sectionPlacements.maxed_count
     sections_total = Placements.section_count

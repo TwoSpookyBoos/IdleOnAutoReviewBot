@@ -491,16 +491,13 @@ smithing_progressionTiers = [
 owl_progressionTiers = {
     0: {},
     1: {
-        "FeatherGeneration": 1
-    },
-    2: {
         "MegaFeathersOwned": 9,
     },
-    3: {
+    2: {
         "MegaFeathersOwned": 17,
         "BonusesOfOrion": 23
     },
-    4: {
+    3: {
         "MegaFeathersOwned": 24,
         "BonusesOfOrion": 29
     },

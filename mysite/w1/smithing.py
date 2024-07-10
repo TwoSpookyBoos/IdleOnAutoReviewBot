@@ -275,15 +275,10 @@ def setSmithingProgressionTier() -> AdviceSection:
     #Check for any unused Forge slots
     unusedForgeSlots = getUnusedForgeSlotsCount()
     if unusedForgeSlots > 0:
-        smithing_AdviceGroupDict["EmptyForgeSlots"] = AdviceGroup(
-            tier="",
-            pre_string=f"Informational - Fill the Forge",
-            advices=[
-                Advice(label=f"You have {unusedForgeSlots} empty ore slot{pl([''] * unusedForgeSlots)} in your Forge!",
-                       picture_class="empty-forge-slot")
-            ],
-            post_string=""
-        )
+        session_data.account.alerts_AdviceDict.append(Advice(
+            label=f"You have {unusedForgeSlots} empty ore slot{pl([''] * unusedForgeSlots)} in your {{{{ Forge|#smithing }}}}!",
+            picture_class="empty-forge-slot"
+        ))
 
     #Forge Capacity calculations
     smithing_AdviceGroupDict["OreCapacity"], smithing_AdviceGroupDict["Bars"] = getForgeCapacityAdviceGroup()

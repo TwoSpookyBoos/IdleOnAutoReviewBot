@@ -376,6 +376,10 @@ def setAlchemyP2W() -> AdviceSection:
             p2w_AdviceDict["Pay2Win"].append(
                 Advice(label="Player Upgrades", picture_class="p2w-player", progression=str(playerSum), goal=str(highestAlchemyLevel * 2))
             )
+            session_data.account.alerts_AdviceDict['World 2'].append(Advice(
+                label=f"{{{{ P2W|#pay2win }}}} Player upgrades can be leveled",
+                picture_class="p2w-player",
+            ))
     p2w_AdviceGroupDict["Pay2Win"] = AdviceGroup(
         tier="",
         pre_string="Remaining Pay2Win upgrades to purchase",

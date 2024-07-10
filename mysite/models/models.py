@@ -12,6 +12,7 @@ from utils.data_formatting import getCharacterDetails, safe_loads
 from consts import (
     # General
     lavaFunc,
+    currentWorld,
     expectedStackables, greenstack_progressionTiers, gfood_codes,
     card_data,
     guildBonusesList, familyBonusesDict, getNextESFamilyBreakpoint,
@@ -30,6 +31,7 @@ from consts import (
     prayersDict,
     equinoxBonusesDict, maxDreams, dreamsThatUnlockNewBonuses,
     expected_talentsDict,
+    printerAllIndexesBeingPrinted,
     # W4
     labJewelsDict, labBonusesDict, labChipsDict,
     maxMeals, maxMealLevel, cookingMealDict, maxCookingTables,
@@ -43,7 +45,7 @@ from consts import (
     jade_emporium, pristineCharmsList, sneakingGemstonesFirstIndex, sneakingGemstonesList, sneakingGemstonesStatList,
     getMoissaniteValue, getGemstoneValue, getGemstonePercent,
     marketUpgradeList,
-    summoningBattleCountsDict, summoningDict, printerAllIndexesBeingPrinted
+    summoningBattleCountsDict, summoningDict,
 )
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
 
@@ -869,9 +871,15 @@ class Account:
         self.raw_data = (
             json.loads(json_data) if isinstance(json_data, str) else json_data
         )
+        self._prep_alerts_AG()
         self._parse_wave_1(run_type)
         self._calculate_wave_1()
         self._calculate_wave_2()
+
+    def _prep_alerts_AG(self):
+        self.alerts_AdviceDict = {"General": []}
+        for i in range(0, currentWorld):
+            self.alerts_AdviceDict[f"World {i+1}"] = []
 
     def _parse_wave_1(self, run_type):
         self._parse_switches()
