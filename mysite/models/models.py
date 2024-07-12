@@ -2070,17 +2070,20 @@ class Account:
         raw_farmcrop_dict = safe_loads(self.raw_data.get("FarmCrop", {}))
         if isinstance(raw_farmcrop_dict, dict):
             for cropIndexStr, cropAmountOwned in raw_farmcrop_dict.items():
-                self.farming["CropsUnlocked"] += 1  # Once discovered, crops will always appear in this dict.
-                if cropAmountOwned >= 200:
-                    self.farming["CropStacks"]["EvolutionGMO"] += 1
-                if cropAmountOwned >= 1000:
-                    self.farming["CropStacks"]["SpeedGMO"] += 1
-                if cropAmountOwned >= 2500:
-                    self.farming["CropStacks"]["ExpGMO"] += 1
-                if cropAmountOwned >= 10000:
-                    self.farming["CropStacks"]["ValueGMO"] += 1
-                if cropAmountOwned >= 100000:
-                    self.farming["CropStacks"]["SuperGMO"] += 1
+                try:
+                    self.farming["CropsUnlocked"] += 1  # Once discovered, crops will always appear in this dict.
+                    if float(cropAmountOwned) >= 200:
+                        self.farming["CropStacks"]["EvolutionGMO"] += 1
+                    if float(cropAmountOwned) >= 1000:
+                        self.farming["CropStacks"]["SpeedGMO"] += 1
+                    if float(cropAmountOwned) >= 2500:
+                        self.farming["CropStacks"]["ExpGMO"] += 1
+                    if float(cropAmountOwned) >= 10000:
+                        self.farming["CropStacks"]["ValueGMO"] += 1
+                    if float(cropAmountOwned) >= 100000:
+                        self.farming["CropStacks"]["SuperGMO"] += 1
+                except:
+                    continue
         raw_farmupg_list = safe_loads(self.raw_data.get("FarmUpg", {}))
         if isinstance(raw_farmupg_list, list):
             for marketUpgradeIndex, marketUpgradeName in enumerate(marketUpgradeList):
