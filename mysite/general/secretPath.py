@@ -3,10 +3,11 @@ from models.models import AdviceSection, AdviceGroup, Advice, Character
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import numberOfSecretClasses
+from utils.text_formatting import pl
 
 logger = get_logger(__name__)
 
-skillsToReview_RightHand = ["Mining", "Choppin", "Fishing", "Catching", "Trapping", "Worship"]
+skillsToReview_RightHand = ["Mining", "Choppin", "Fishing", "Catching", "Trapping"]  #, "Worship"]
 
 def getHandsAdviceGroup(maestros, beginners):
     janky_skills = maestros_goal_levels(maestros)
@@ -26,6 +27,11 @@ def getHandsAdviceGroup(maestros, beginners):
         )
         for skill, (maestro, goal) in janky_skills.items()
     ]
+    if advices:
+        session_data.account.alerts_AdviceDict['General'].append(Advice(
+            label=f"Your {{{{ Maestro|#secret-class-path }}}} isn't best in {len(advices)} Skill{pl(advices)}",
+            picture_class='right-hand-of-action',
+        ))
 
     group = AdviceGroup(
             tier="", pre_string=hands_pre_string, post_string=post_string, advices=advices

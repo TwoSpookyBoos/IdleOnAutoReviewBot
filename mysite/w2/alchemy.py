@@ -5,23 +5,10 @@ from utils.data_formatting import safe_loads
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import maxTiersPerGroup, bubbles_progressionTiers, vials_progressionTiers, max_IndexOfVials, maxFarmingCrops
+from consts import maxTiersPerGroup, bubbles_progressionTiers, vials_progressionTiers, max_IndexOfVials, maxFarmingCrops, atrisk_basicBubbles, \
+    atrisk_lithiumBubbles
 
 logger = get_logger(__name__)
-
-def getSumUnlockedBubbles(colorDict, colorString):
-    bubblesUnlocked = 0
-    for bubble in colorDict:
-        if not isinstance(colorDict[bubble], int):
-            #logger.warning(f"Non-Integer Bubble value found. Attempting to convert: {colorString} {bubble} {type(colorDict[bubble])} {colorDict[bubble]}")
-            try:
-                colorDict[bubble] = int(round(float(colorDict[bubble])))
-            except:
-                logger.exception(f"Could not convert [{colorString} {bubble} {type(colorDict[bubble])} {colorDict[bubble]}] to int :( Setting bubble to level 0")
-                colorDict[bubble] = 0
-        if colorDict[bubble] > 0:
-            bubblesUnlocked += 1
-    return bubblesUnlocked
 
 def setAlchemyVialsProgressionTier() -> AdviceSection:
     vial_AdviceDict = {
@@ -173,6 +160,60 @@ def getBubbleExclusions():
         exclusionsList.append("Cropius Mapper")
     return exclusionsList
 
+def getAtRiskAdviceGroups() -> list[AdviceGroup]:
+    atriskBasic_AdviceList = []
+    atriskLithium_AdviceList = []
+    nblbCount = session_data.account.labBonuses['No Bubble Left Behind']['Value']
+    #Create a sorted list of every bubble, including the janky placeholders
+    sorted_bubbles = sorted(
+        session_data.account.alchemy_bubbles.items(),
+        key=lambda bubble: bubble[1]['Level'],
+        reverse=False
+    )
+    #Basic NBLB: Remove any bubbles with index 15 or higher and level of 1 or lower
+    sorted_bubbles_basic = [(k, v) for k, v in sorted_bubbles if v['Level'] > 1 and v['BubbleIndex'] <= 14]
+    atriskBasic_AdviceList.extend([
+        Advice(
+            label=bubbleName,
+            picture_class=bubbleName,
+            progression=bubbleValuesDict['Level'],
+            goal=max(sorted_bubbles_basic[2 * nblbCount][1]['Level'], bubbleValuesDict['Level'] + 20),
+            resource=bubbleValuesDict['Material']
+        )
+        for bubbleName, bubbleValuesDict in sorted_bubbles_basic
+            if bubbleName in atrisk_basicBubbles
+            and bubbleValuesDict['Level'] < sorted_bubbles_basic[2 * nblbCount][1]['Level']
+    ])
+    atriskBasic_AG = AdviceGroup(
+        tier="",
+        pre_string=f"Informational- \"Easy\" to print materials in your {2 * nblbCount} lowest leveled W1-W3 bubbles",
+        advices=atriskBasic_AdviceList,
+        post_string=f"Highest level for NBLB today: {sorted_bubbles_basic[nblbCount-1][1]['Level']}"
+    )
+
+    #Same thing, but for Lithium Bubbles W4-W5 now
+    #Lithium only works on W4 and W5 bubbles, indexes 15 through 24
+    sorted_bubbles_lithium = [(k, v) for k, v in sorted_bubbles if v['Level'] > 1 and 15 <= v['BubbleIndex'] <= 24]
+    atriskLithium_AdviceList.extend([
+        Advice(
+            label=bubbleName,
+            picture_class=bubbleName,
+            progression=bubbleValuesDict['Level'],
+            goal=max(sorted_bubbles_lithium[nblbCount][1]['Level'], bubbleValuesDict['Level'] + 10),
+            resource=bubbleValuesDict['Material']
+        )
+        for bubbleName, bubbleValuesDict in sorted_bubbles_lithium
+            if bubbleName in atrisk_lithiumBubbles
+            and bubbleValuesDict['Level'] < sorted_bubbles_lithium[nblbCount][1]['Level']
+    ])
+
+    atriskLithium_AG = AdviceGroup(
+        tier="",
+        pre_string=f"Informational- Slower to print materials in your {nblbCount} lowest leveled W4-W5 bubbles",
+        advices=atriskLithium_AdviceList if session_data.account.atom_collider['Atoms']['Lithium - Bubble Insta Expander']['Level'] >= 1 else [],
+        post_string=f"Highest level for Lithium today: {sorted_bubbles_lithium[nblbCount-1][1]['Level']}"
+    )
+    return [atriskBasic_AG, atriskLithium_AG]
 
 def setAlchemyBubblesProgressionTier() -> AdviceSection:
     bubbles_AdviceDict = {
@@ -289,6 +330,7 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
             pre_string=f"{'Informational- ' if agdTiers[counter] >= 22 else ''}{agdPre_strings[counter]}",
             advices=bubbles_AdviceDict[agdNames[counter]]
         )
+    bubbles_AdviceGroupDict['AtRiskBasic'], bubbles_AdviceGroupDict['AtRiskLithium'] = getAtRiskAdviceGroups()
 
     #Generate AdviceSection
     tier_section = f"{overall_alchemyBubblesTier}/{max_tier}"
@@ -376,6 +418,10 @@ def setAlchemyP2W() -> AdviceSection:
             p2w_AdviceDict["Pay2Win"].append(
                 Advice(label="Player Upgrades", picture_class="p2w-player", progression=str(playerSum), goal=str(highestAlchemyLevel * 2))
             )
+            session_data.account.alerts_AdviceDict['World 2'].append(Advice(
+                label=f"{{{{ P2W|#pay2win }}}} Player upgrades can be leveled",
+                picture_class="p2w-player",
+            ))
     p2w_AdviceGroupDict["Pay2Win"] = AdviceGroup(
         tier="",
         pre_string="Remaining Pay2Win upgrades to purchase",

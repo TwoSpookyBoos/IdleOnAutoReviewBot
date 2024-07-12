@@ -30,23 +30,20 @@ def setOwlProgressionTier() -> AdviceSection:
         23: 40, 29: 67.5
     }
 
+    # Generate Alert Advice
+    if session_data.account.owl['FeatherGeneration'] < 1:
+        alert_advice = Advice(
+            label=("Find the Owl in W1 and start generating Feathers!"
+                   if session_data.account.owl['MegaFeathersOwned'] == 0
+                   else "You aren't generating any {{ Owl|#owl }} Feathers!"),
+            picture_class=f"feather-generation"
+        )
+        session_data.account.alerts_AdviceDict['World 1'].append(alert_advice)
+
     # Generate Advice
     lastMFShown = -1
     for tierNumber, tierRequirementsDict in owl_progressionTiers.items():
         subgroupName = f"To Reach {'Informational ' if tierNumber > max_tier else ''}Tier {tierNumber}"
-        if 'FeatherGeneration' in tierRequirementsDict:
-            if session_data.account.owl['FeatherGeneration'] < tierRequirementsDict['FeatherGeneration']:
-                if subgroupName not in owl_AdviceDict['MegaFeathers'] and len(owl_AdviceDict['MegaFeathers']) < maxTiersPerGroup:
-                    owl_AdviceDict['MegaFeathers'][subgroupName] = []
-                if subgroupName in owl_AdviceDict['MegaFeathers']:
-                    if session_data.account.owl['MegaFeathersOwned'] == 0:
-                        preString = f"Find the Owl in W1 and start generating Feathers!"
-                    else:
-                        preString = f"Start generating Feathers!"
-                    owl_AdviceDict['MegaFeathers'][subgroupName].append(Advice(
-                        label=preString,
-                        picture_class=f"feather-generation"
-                    ))
         if 'MegaFeathersOwned' in tierRequirementsDict:
             if session_data.account.owl['MegaFeathersOwned'] < tierRequirementsDict['MegaFeathersOwned']+1:
                 for mf, resets in featherResetsDict.items():

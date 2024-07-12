@@ -178,20 +178,21 @@ def setCookingProgressionTier():
             if vman.secondary_preset_talents.get("59", 0) >= bestBMPresetLevel:
                 bestBMPresetLevel = vman.secondary_preset_talents.get("59", 0)
 
-        if not anyVWMaxBooked:
-            cooking_AdviceDict["CurrentTier"].append(Advice(
-                label="Heads up! You don't have any Voidwalkers with Blood Marrow talent at max book level!",
-                picture_class="beginner-talent-book",
-                progression=bestBMBook,
-                goal=session_data.account.library['MaxBookLevel']
-            ))
-        if not anyVWMaxLeveled:
-            cooking_AdviceDict["CurrentTier"].append(Advice(
-                label="Heads up! You don't have any Voidwalkers with Blood Marrow talent at max level in any presets!",
-                picture_class="talent-preset-1",
-                progression=bestBMPresetLevel,
-                goal=session_data.account.library['MaxBookLevel']
-            ))
+        if session_data.account.cooking['MaxRemainingMeals'] > cookingCloseEnough:
+            if not anyVWMaxBooked:
+                session_data.account.alerts_AdviceDict['World 4'].append(Advice(
+                    label="No Voidwalkers with {{ Blood Marrow|#cooking }} talent max booked!",
+                    picture_class="beginner-talent-book",
+                    progression=bestBMBook,
+                    goal=session_data.account.library['MaxBookLevel']
+                ))
+            if not anyVWMaxLeveled:
+                session_data.account.alerts_AdviceDict['World 4'].append(Advice(
+                    label="No Voidwalkers with {{ Blood Marrow|#cooking }} talent maxed in any presets!",
+                    picture_class="talent-preset-1",
+                    progression=bestBMPresetLevel,
+                    goal=session_data.account.library['MaxBookLevel']
+                ))
 
     else:  #tier_Cooking < max_tier:
         cooking_AdviceDict["CurrentTier"].append(Advice(

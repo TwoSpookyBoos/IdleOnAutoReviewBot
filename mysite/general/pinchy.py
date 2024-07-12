@@ -157,7 +157,7 @@ class Placements(dict):
         STAMPS:        [0,   1, 2, 3,    4,  5,  6,      7,  8,  9,      10, 11, 13,     16, 19, 22,     26, 30, 34,     38,   99],
         BRIBES:        [0,   1, 1, 1,    2,  2,  2,      3,  3,  3,      4,  4,  4,      5,  5,  5,      5,  5,  5,      6,    99],
         SMITHING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  2,  3,      4,  5,  6,      6,  6,  6,      6,    99],
-        OWL:           [0,   0, 0, 0,    1,  1,  1,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,  1,  2,      3,    99],
+        OWL:           [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  1,      2,    99],
         BUBBLES:       [0,   0, 0, 0,    0,  1,  1,      2,  2,  2,      3,  4,  5,      6,  7,  9,      12, 16, 20,     22,   99],
         VIALS:         [0,   0, 0, 0,    1,  1,  2,      3,  4,  5,      6,  6,  7,      8,  9,  10,     12, 20, 25,     26,   99],
         P2W:           [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  1,      1,  1,  1,      1,  1,  1,      1,    99],
@@ -305,17 +305,6 @@ def is_portal_opened(mobKills, monster, portalKC):
         return False
 
 
-def getHighestPrint():
-    #TODO: Move to Account
-    awfulPrinterList = safe_loads(session_data.account.raw_data["Print"])
-    # print("Pinchy~ OUTPUT awfulPrinterList: ", type(awfulPrinterList), awfulPrinterList)
-    goodPrinterList = [p for p in awfulPrinterList if isinstance(p, int)]
-    highestPrintFound = max(goodPrinterList)
-    # print("Pinchy~ OUTPUT Final highest print value found: ", highestPrintFound)
-
-    return highestPrintFound
-
-
 def threshold_for_highest_portal_opened(mobKills):
     threshold = next((
         threshold
@@ -331,18 +320,19 @@ def tier_from_monster_kills(dictOfPRs) -> Threshold:
     """find highest enemy killed or world unlocked to compare to"""
     expectedThreshold = Threshold.fromname(Threshold.W1)
 
-    highestPrint = getHighestPrint()
+    highestPrint = session_data.account.printer['HighestValue']
     mobKillThresholds = []
-    if highestPrint >= 9500000000:  # Sites like IE/IT round up to 10B after 9.5B
+    if highestPrint >= 2.45e10:  # Sites like IE/IT round up to 25B after 24.5B
         expectedThreshold = Threshold.fromname(Threshold.MAX_TIER)
-    elif dictOfPRs[Placements.DEATH_NOTE] >= 24:
+    elif dictOfPRs[Placements.DEATH_NOTE] >= 25:
         expectedThreshold = Threshold.fromname(Threshold.W7_WAITING_ROOM)
-    elif dictOfPRs[Placements.DEATH_NOTE] >= 21:
+    elif dictOfPRs[Placements.DEATH_NOTE] >= 17:
         expectedThreshold = Threshold.fromname(Threshold.SOLID_W7_PREP)
     else:
         # logger.info(f"Starting to review map kill counts per player because expectedIndex still W1: {dictOfPRs['Construction Death Note']}")
         for character in session_data.account.safe_characters:
             try:
+                #TODO: Move to account
                 mobKills = safe_loads(session_data.account.raw_data[f'KLA_{character.character_index}'])  # String pretending to be a list of lists yet again
             except:
                 logger.exception(f"Could not retrieve KLA_{character.character_index} for Pinchy. Setting mobKills to empty list")
@@ -403,6 +393,16 @@ def getUnratedLinksAdviceGroup(unrated_sections) -> AdviceGroup:
     return unrated_AG
 
 
+def getAlertsAdviceGroup() -> AdviceGroup:
+    alerts_AG = AdviceGroup(
+        tier="",
+        pre_string="Alerts",
+        advices=session_data.account.alerts_AdviceDict
+    )
+    alerts_AG.remove_empty_subgroups()
+    return alerts_AG
+
+
 def generatePinchyWorld(pinchable_sections, unrated_sections):
     dictOfPRs = {section.name: section.pinchy_rating for section in pinchable_sections}
 
@@ -432,6 +432,7 @@ def generatePinchyWorld(pinchable_sections, unrated_sections):
 
     advice_groups = generate_advice_groups(sectionPlacements.final)
     advice_groups.append(getUnratedLinksAdviceGroup(unrated_sections))
+    advice_groups.insert(0, getAlertsAdviceGroup())
 
     sections_maxed_count = sectionPlacements.maxed_count
     sections_total = Placements.section_count

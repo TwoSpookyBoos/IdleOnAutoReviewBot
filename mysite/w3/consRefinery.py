@@ -16,12 +16,13 @@ saltValuesDict = {
 }
 
 class Salt:
-    def __init__(self, salt_name: str, auto_refine: int, salt_rank: int, next_salt_rank: int, previousSalt, merit_purchased: bool = True):
+    def __init__(self, salt_name: str, auto_refine: int, salt_rank: int, next_salt_rank: int, previousSalt, merit_purchased: bool = True, running: bool = False):
         self.salt_name: str = salt_name
         self.salt_rank: int = salt_rank
         self.auto_refine: int = auto_refine
         self.max_rank_with_excess: int = salt_rank
         self.merit_purchased: bool = merit_purchased
+        self.running: bool = running
         if self.merit_purchased is True:
             self.salt_consumption_scaling: float = 1.3
         else:
@@ -72,18 +73,24 @@ def parseConsRefinery():
         # Combustion = Tab1
         'Red Rank': 0,
         'Red AutoRefine': 0,
+        'Red Running': False,
         'Orange Rank': 0,
         'Orange AutoRefine': 0,
+        'Orange Running': False,
         'Blue Rank': 0,
         'Blue AutoRefine': 0,
+        'Blue Running': False,
 
         # Synthesis = Tab2
         'Green Rank': 0,
         'Green AutoRefine': 0,
+        'Green Running': False,
         'Purple Rank': 0,
         'Purple AutoRefine': 0,
+        'Purple Running': False,
         'Nullo Rank': 0,
         'Nullo AutoRefine': 0,
+        'Nullo Running': False,
 
         # W3 Merit
         'Salt Merit': 0
@@ -92,18 +99,24 @@ def parseConsRefinery():
         # Combustion = Tab1
         consRefineryDict['Red Rank'] = refineryList[3][1]
         consRefineryDict['Red AutoRefine'] = refineryList[3][4]
+        consRefineryDict['Red Running'] = refineryList[3][3]
         consRefineryDict['Orange Rank'] = refineryList[4][1]
         consRefineryDict['Orange AutoRefine'] = refineryList[4][4]
+        consRefineryDict['Orange Running'] = refineryList[4][4]
         consRefineryDict['Blue Rank'] = refineryList[5][1]
         consRefineryDict['Blue AutoRefine'] = refineryList[5][4]
+        consRefineryDict['Blue Running'] = refineryList[5][3]
 
         #Synthesis = Tab2
         consRefineryDict['Green Rank'] = refineryList[6][1]
         consRefineryDict['Green AutoRefine'] = refineryList[6][4]
+        consRefineryDict['Green Running'] = refineryList[3][3]
         consRefineryDict['Purple Rank'] = refineryList[7][1]
         consRefineryDict['Purple AutoRefine'] = refineryList[7][4]
+        consRefineryDict['Purple Running'] = refineryList[3][3]
         consRefineryDict['Nullo Rank'] = refineryList[8][1]
         consRefineryDict['Nullo AutoRefine'] = refineryList[8][4]
+        consRefineryDict['Nullo Running'] = refineryList[3][3]
 
     consRefineryDict['Salt Merit'] = session_data.account.merits[2][6]["Level"]
 
@@ -116,7 +129,8 @@ def parseConsRefinery():
         salt_rank=consRefineryDict['Red Rank'],
         next_salt_rank=consRefineryDict['Orange Rank'],
         previousSalt=None,
-        merit_purchased=consRefineryDict["Salt Merit"] >= 1
+        merit_purchased=consRefineryDict["Salt Merit"] >= 1,
+        running=consRefineryDict['Red Running'],
     )
     consRefineryDict["OrangeSalt"] = Salt(
         salt_name="Orange",
@@ -124,7 +138,8 @@ def parseConsRefinery():
         salt_rank=consRefineryDict["Orange Rank"],
         next_salt_rank=consRefineryDict["Blue Rank"],
         previousSalt=consRefineryDict["RedSalt"],
-        merit_purchased=consRefineryDict["Salt Merit"] >= 2
+        merit_purchased=consRefineryDict["Salt Merit"] >= 2,
+        running=consRefineryDict['Orange Running'],
     )
     consRefineryDict["BlueSalt"] = Salt(
         salt_name="Blue",
@@ -132,7 +147,8 @@ def parseConsRefinery():
         salt_rank=consRefineryDict["Blue Rank"],
         next_salt_rank=consRefineryDict["Green Rank"],
         previousSalt=consRefineryDict["OrangeSalt"],
-        merit_purchased=consRefineryDict["Salt Merit"] >= 3
+        merit_purchased=consRefineryDict["Salt Merit"] >= 3,
+        running=consRefineryDict['Blue Running'],
     )
     consRefineryDict["GreenSalt"] = Salt(
         salt_name="Green",
@@ -140,7 +156,8 @@ def parseConsRefinery():
         salt_rank=consRefineryDict["Green Rank"],
         next_salt_rank=consRefineryDict["Purple Rank"],
         previousSalt=consRefineryDict["BlueSalt"],
-        merit_purchased=consRefineryDict["Salt Merit"] >= 4
+        merit_purchased=consRefineryDict["Salt Merit"] >= 4,
+        running=consRefineryDict['Green Running'],
     )
     consRefineryDict["PurpleSalt"] = Salt(
         salt_name="Purple",
@@ -148,7 +165,8 @@ def parseConsRefinery():
         salt_rank=consRefineryDict["Purple Rank"],
         next_salt_rank=consRefineryDict["Nullo Rank"],
         previousSalt=consRefineryDict["GreenSalt"],
-        merit_purchased=consRefineryDict["Salt Merit"] >= 5
+        merit_purchased=consRefineryDict["Salt Merit"] >= 5,
+        running=consRefineryDict['Purple Running'],
     )
     consRefineryDict["NulloSalt"] = Salt(
         salt_name="Nullo",
@@ -156,7 +174,8 @@ def parseConsRefinery():
         salt_rank=consRefineryDict["Nullo Rank"],
         next_salt_rank=0,
         previousSalt=consRefineryDict["PurpleSalt"],
-        merit_purchased=consRefineryDict["Salt Merit"] >= 6
+        merit_purchased=consRefineryDict["Salt Merit"] >= 6,
+        running=consRefineryDict['Nullo Running'],
     )
     #print(consRefineryDict)
     return consRefineryDict
@@ -188,21 +207,56 @@ def setConsRefineryProgressionTier():
     tier_W3Merits = 1
     consRefineryDict = parseConsRefinery()
 
-    # AutoRefine Advice
+    # AutoRefine and On/Off Advice
+    if not consRefineryDict['RedSalt'].running:
+        if consRefineryDict['RedSalt'].salt_rank < 100:
+            tier_AutoRefine = 0
+            refinery_AdviceDict['AutoRefine'].append(Advice(
+                label=f"{consRefineryDict['RedSalt'].salt_name} is not producing",
+                picture_class=consRefineryDict['RedSalt'].image,
+                progression='Off',
+                goal='On')
+            )
+        session_data.account.alerts_AdviceDict['World 3'].append(Advice(
+            label=f"{{{{ Red Salt|#refinery }}}} is not producing",
+            picture_class=consRefineryDict['RedSalt'].image
+        ))
     if consRefineryDict['RedSalt'].auto_refine != 0:
         if consRefineryDict['RedSalt'].salt_rank < 100:
             tier_AutoRefine = 0
-        refinery_AdviceDict['AutoRefine'].append(
-            Advice(label=consRefineryDict['RedSalt'].salt_name, picture_class=consRefineryDict['RedSalt'].image,
-                   progression=consRefineryDict['RedSalt'].auto_refine, goal=0, unit="%")
-        )
+            refinery_AdviceDict['AutoRefine'].append(
+                Advice(label=consRefineryDict['RedSalt'].salt_name, picture_class=consRefineryDict['RedSalt'].image,
+                       progression=consRefineryDict['RedSalt'].auto_refine, goal=0, unit="%")
+            )
+        session_data.account.alerts_AdviceDict['World 3'].append(Advice(
+            label=f"{{{{ Red Salt|#refinery }}}} auto-refining early",
+            picture_class=consRefineryDict['RedSalt'].image
+        ))
+
+    if not consRefineryDict['GreenSalt'].running:
+        if consRefineryDict['GreenSalt'].salt_rank < 30:
+            tier_AutoRefine = 0
+            refinery_AdviceDict['AutoRefine'].append(Advice(
+                label=f"{consRefineryDict['GreenSalt'].salt_name} is not producing",
+                picture_class=consRefineryDict['GreenSalt'].image,
+                progression='Off',
+                goal='On')
+            )
+        session_data.account.alerts_AdviceDict['World 3'].append(Advice(
+            label=f"{{{{ Green Salt|#refinery }}}} is not producing",
+            picture_class=consRefineryDict['GreenSalt'].image
+        ))
     if consRefineryDict['GreenSalt'].auto_refine != 0:
         if consRefineryDict['GreenSalt'].salt_rank < 30:
             tier_AutoRefine = 0
-        refinery_AdviceDict['AutoRefine'].append(
-            Advice(label=consRefineryDict['GreenSalt'].salt_name, picture_class=consRefineryDict['GreenSalt'].image,
-                   progression=consRefineryDict['GreenSalt'].auto_refine, goal=0, unit="%", value_format="{value}{unit}")
-        )
+            refinery_AdviceDict['AutoRefine'].append(
+                Advice(label=consRefineryDict['GreenSalt'].salt_name, picture_class=consRefineryDict['GreenSalt'].image,
+                       progression=consRefineryDict['GreenSalt'].auto_refine, goal=0, unit="%")
+            )
+        session_data.account.alerts_AdviceDict['World 3'].append(Advice(
+            label=f"{{{{ Green Salt|#refinery }}}} auto-refining early",
+            picture_class=consRefineryDict['GreenSalt'].image
+        ))
 
     # W3Merits Advice
     sum_SaltsRank2Plus = 0
@@ -291,7 +345,7 @@ def setConsRefineryProgressionTier():
     # Generate AdviceGroups
     refinery_AdviceGroupDict['AutoRefine'] = AdviceGroup(
         tier=str(tier_AutoRefine),
-        pre_string="Red and Green Salts should always be set to 0% Auto-Refine",
+        pre_string="Red and Green Salts should always be set to 0% Auto-Refine and On to produce salts",
         advices=refinery_AdviceDict['AutoRefine'],
         post_string=""
     )
