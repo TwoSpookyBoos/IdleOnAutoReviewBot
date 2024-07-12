@@ -1281,7 +1281,7 @@ sailing_progressionTiers = {
             'Arrowhead': 4,
             '10 AD Tablet': 4,
             'Ashen Urn': 4,
-            #'Amberite': 4,
+            'Amberite': 4,
             'Triagulon': 4,
             'Billcye Tri': 4,
             'Frost Relic': 4,
@@ -4244,6 +4244,7 @@ labBonusesDict = {
     16: {"Name": "Spiritual Growth", "Description": "Boosts EXP multi for all three World 6 skills by +50%!", "BaseValue": 50, "Coordinates": [1790, 90], "Value4": 90, "Value5": 0},
     17: {"Name": "Depot Studies PhD", "Description": "All bonuses given at the Crop Depot are 1.30x higher!", "BaseValue": 30, "Coordinates": [1950, 90], "Value4": 90, "Value5": 0},
 }
+nblbMaxBubbleCount = 10
 
 labJewelsDict = {
     0: {'Name': "Amethyst Rhinestone", "Description": "Meal cooking is }x faster. This bonus is applied TWICE if all 3 purple jewels are active.", "BaseValue": 1.5}, 

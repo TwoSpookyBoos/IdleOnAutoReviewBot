@@ -33,7 +33,7 @@ from consts import (
     expected_talentsDict,
     printerAllIndexesBeingPrinted,
     # W4
-    labJewelsDict, labBonusesDict, labChipsDict,
+    labJewelsDict, labBonusesDict, nblbMaxBubbleCount, labChipsDict,
     maxMeals, maxMealLevel, cookingMealDict, maxCookingTables,
     maxNumberOfTerritories, indexFirstTerritoryAssignedPet, territoryNames, slotUnlockWavesList, breedingUpgradesDict, breedingGeneticsList,
     breedingShinyBonusList, breedingSpeciesDict, getShinyLevelFromDays, getDaysToNextShinyLevel,
@@ -2420,10 +2420,12 @@ class Account:
         self.labBonuses['No Bubble Left Behind']['Value'] += 1 * self.gaming['SuperBits']['Moar Bubbles']['Unlocked']  #20% chance at +1
         self.labBonuses['No Bubble Left Behind']['Value'] += 1 * self.gaming['SuperBits']['Even Moar Bubbles']['Unlocked']  #30% chance at +1
         self.labBonuses['No Bubble Left Behind']['Value'] += 1 * self.merits[3][6]['Level']  #Up to 3
-
         #Grand total: 3 + 1 + 4 + 1 + 1 + 3 = 13 possible. 11 guaranteed, 2 are chances
 
+        #Reduce this down to 0 if the lab bonus isn't enabled
         self.labBonuses['No Bubble Left Behind']['Value'] *= self.labBonuses['No Bubble Left Behind']['Enabled']
+        #Now for the bullshit: Lava has a hidden cap of 10 bubbles
+        self.labBonuses['No Bubble Left Behind']['Value'] = min(nblbMaxBubbleCount, self.labBonuses['No Bubble Left Behind']['Value'])
 
     def _calculate_w5(self):
         self._calculate_w5_divinity_link_advice()

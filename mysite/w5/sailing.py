@@ -2,7 +2,7 @@ from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import sailing_progressionTiers, maxTiersPerGroup, numberOfArtifactTiers, numberOfArtifacts
+from consts import sailing_progressionTiers, maxTiersPerGroup, numberOfArtifactTiers, numberOfArtifacts, nblbMaxBubbleCount
 
 logger = get_logger(__name__)
 
@@ -14,6 +14,11 @@ def getSailingDelays() -> dict:
     # If Purrmep is already unlocked, delay priority on Jade Rock
     if session_data.account.divinity['Divinities'][7]['Unlocked']:
         delaysDict[5] = ["Jade Rock"]
+    # If NBLB is already increasing the max number of bubbles (10 as of v2.11), delay Amberite
+    if session_data.account.labBonuses['No Bubble Left Behind']['Value'] >= nblbMaxBubbleCount:
+        delaysDict[4] = ["Amberite"]
+        delaysDict[13] = ["Amberite"]
+        delaysDict[16] = ["Amberite"]
     return delaysDict
 
 def setSailingProgressionTier():
