@@ -2353,6 +2353,7 @@ class Account:
         self._calculate_w4_cooking_max_plate_levels()
         self._calculate_w4_jewel_multi()
         self._calculate_w4_meal_multi()
+        self._calculate_w4_lab_bonuses()
 
     def _calculate_w4_cooking_max_plate_levels(self):
         # Sailing Artifact Increases
@@ -2407,6 +2408,19 @@ class Account:
 
         for meal in self.meals:
             self.meals[meal]["Value"] *= mealMulti
+
+    def _calculate_w4_lab_bonuses(self):
+        self.labBonuses['No Bubble Left Behind']['Value'] = 3
+
+        self.labBonuses['No Bubble Left Behind']['Value'] += 1 * self.labJewels['Pyrite Rhinestone']['Enabled']  #Up to +1
+        self.labBonuses['No Bubble Left Behind']['Value'] += 1 * self.sailing['Artifacts']['Amberite']['Level']  #Up to +4 as of 2.11
+        self.labBonuses['No Bubble Left Behind']['Value'] += 1 * self.gaming['SuperBits']['Moar Bubbles']['Unlocked']  #20% chance at +1
+        self.labBonuses['No Bubble Left Behind']['Value'] += 1 * self.gaming['SuperBits']['Even Moar Bubbles']['Unlocked']  #30% chance at +1
+        self.labBonuses['No Bubble Left Behind']['Value'] += 1 * self.merits[3][6]['Level']  #Up to 3
+
+        #Grand total: 3 + 1 + 4 + 1 + 1 + 3 = 13 possible. 11 guaranteed, 2 are chances
+
+        self.labBonuses['No Bubble Left Behind']['Value'] *= self.labBonuses['No Bubble Left Behind']['Enabled']
 
     def _calculate_w5(self):
         self._calculate_w5_divinity_link_advice()

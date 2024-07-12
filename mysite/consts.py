@@ -3924,6 +3924,46 @@ bubblesDict = {
         39: {'Name': 'Yellow39', 'Material': '', 'x1': 0, 'x2': 0, 'funcType': 'decay'},
     },  #Yellow Bubbles
 }
+atrisk_basicBubbles = [
+    "Roid Ragin",
+    "Hearty Diggy",
+    "Wyoming Blood",
+    "Sploosh Sploosh",
+    "Stronk Tools",
+    "Fmj",
+    "Swift Steppin",
+    "Hammer Hammer",
+    "Lil Big Damage",
+    "Anvilnomics",
+    "Bug^2",
+    "Shaquracy",
+    "Cheap Shot",
+    "Call Me Ash",
+    "Fast Boi Talent",
+    "Stable Jenius",
+    "Name I Guess",
+    "Le Brain Tools",
+    "Cookin Roadkill",
+    "All For Kill",
+    "Gospel Leader",
+    "Droppin Loads",
+    "Prowesessary",
+    "Stamp Tramp",
+    "Undeveloped Costs",
+    "Laaarrrryyyy",
+    "Ignore Overdues",
+]
+atrisk_lithiumBubbles = [
+    "Penny Of Strength",
+    "Fly In Mind",
+    'Afk Expexp',
+    'Slabbo Critterbug',
+    'Nickel Of Wisdom',
+    'Severapurple',
+    'Hyperswift',
+    'Matrix Evolved',
+    'Slabe Logsoul',
+]
 def getReadableVialNames(inputNumber):
     try:
         return f"{vialsDict[int(inputNumber)]['Name']} ({getItemDisplayName(vialsDict[int(inputNumber)]['Material'])})"
