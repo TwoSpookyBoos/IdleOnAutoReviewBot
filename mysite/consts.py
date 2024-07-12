@@ -3963,6 +3963,8 @@ atrisk_lithiumBubbles = [
     'Hyperswift',
     'Matrix Evolved',
     'Slabe Logsoul',
+    'Bit By Bit',
+    'Gifts Abound',
 ]
 def getReadableVialNames(inputNumber):
     try:
