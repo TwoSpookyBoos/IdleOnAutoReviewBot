@@ -1677,17 +1677,17 @@ class Account:
                 "W6": [],
                 "W7": [],
                 "W8": [],
-            },  #complete
-            "Genetics": {},  #complete
+            },
+            "Genetics": {},
             "Species": {},
-            "Total Shiny Levels": {},  #Per Shiny Bonus, the total level of all shiny pets contributing that bonus
-            "Grouped Bonus": {},  #Pets regrouped by their Shiny Bonus, instead of by their World
-            'Territories': {},  #complete
-            'Highest Unlocked Territory Number': 0,  #complete
-            'Highest Unlocked Territory Name': '',  #complete
-            'Upgrades': {},  #complete
-            'ArenaMaxWave': 0,  #complete
-            'PetSlotsUnlocked': 2,  #complete
+            "Total Shiny Levels": {},
+            "Grouped Bonus": {},
+            'Territories': {},
+            'Highest Unlocked Territory Number': 0,
+            'Highest Unlocked Territory Name': '',
+            'Upgrades': {},
+            'ArenaMaxWave': 0,
+            'PetSlotsUnlocked': 2,
         }
         raw_breeding_list = safe_loads(self.raw_data.get("Breeding", []))
         raw_territory_list = safe_loads(self.raw_data.get("Territory", []))

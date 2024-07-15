@@ -4773,6 +4773,8 @@ breedingSpeciesDict: dict[int, dict] = {
         },
     },
 }
+breedingTotalPets = sum([len(petValues) for worldIndex, petValues in breedingSpeciesDict.items()])
+
 shinyDaysList = [0, 3, 11, 33, 85, 200, 448, 964, 2013, 4107, 8227, 16234, 31633, 60989, 116522, 999999999]
 
 def getShinyLevelFromDays(days: float) -> int:
