@@ -2075,7 +2075,7 @@ class Account:
         raw_farmupg_list = safe_loads(self.raw_data.get("FarmUpg", {}))
         self._parse_w6_farming_markets(raw_farmupg_list)
 
-        raw_farmrank_list = safe_loads(self.raw_data.get("FarmRank", []))
+        raw_farmrank_list = safe_loads(self.raw_data.get("FarmRank", [[0]*36]))
         self._parse_w6_farming_land_ranks(raw_farmrank_list)
 
     def _parse_w6_farming_crops(self, rawCrops):
@@ -2109,13 +2109,13 @@ class Account:
             try:
                 self.farming['LandRankPlotRanks'] = rawRanks[0]
                 self.farming['LandRankTotalRanks'] = sum(rawRanks[0])
-                self.farming['LandRankMinPlot'] = min(rawRanks[0])
-                self.farming['LandRankMinPlot'] = max(rawRanks[0])
+                self.farming['LandRankMinPlot'] = min(rawRanks[0], default=0)
+                self.farming['LandRankMinPlot'] = max(rawRanks[0], default=0)
             except:
                 self.farming['LandRankPlotRanks'] = [0]*36
-                self.farming['LandRankTotalRanks'] = sum(rawRanks[0])
-                self.farming['LandRankMinPlot'] = min(rawRanks[0])
-                self.farming['LandRankMinPlot'] = max(rawRanks[0])
+                self.farming['LandRankTotalRanks'] = 0
+                self.farming['LandRankMinPlot'] = 0
+                self.farming['LandRankMinPlot'] = 0
             for upgradeIndex, upgradeValuesDict in landrankDict.items():
                 try:
                     self.farming['LandRankDatabase'][upgradeValuesDict['Name']] = {
