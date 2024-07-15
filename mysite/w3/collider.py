@@ -168,8 +168,8 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     ))
 
     cr_advice.append(Advice(
-        label=f"Remaining cost: {session_data.account.atom_collider['CostReductionMulti']*100:.2f}% / ",
-              #f"{(1 / session_data.account.atom_collider['CostReductionMax'])*100:.2f}%",
+        label=f"Remaining cost: {session_data.account.atom_collider['CostReductionMulti']*100:.2f}%",
+              #f" / {(1 / session_data.account.atom_collider['CostReductionMax'])*100:.2f}%",
         picture_class='particles',
     ))
 
