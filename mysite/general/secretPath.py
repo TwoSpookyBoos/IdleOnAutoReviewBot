@@ -9,24 +9,31 @@ logger = get_logger(__name__)
 
 skillsToReview_RightHand = ["Mining", "Choppin", "Fishing", "Catching", "Trapping"]  #, "Worship"]
 
-def getHandsAdviceGroup(maestros, beginners):
+def getHandsAdviceGroupCatchUp(maestros, beginners):
+    # This function returns the skills maestros aren't best in.
     janky_skills = maestros_goal_levels(maestros)
-    tier = f"{len(janky_skills) or 6}/{len(skillsToReview_RightHand)}"
+    zero_count = sum(1 for skill, (_, _, next_highest_non_maestro_char) in janky_skills.items() if not next_highest_non_maestro_char)
+    if zero_count == len(skillsToReview_RightHand):
+        # No maestros ahead in any skill. I think?
+        return
+    tier = f"{zero_count}/{len(skillsToReview_RightHand)}"
     hands_pre_string = create_hands_pre_string(janky_skills, maestros, beginners, tier)
 
     post_string = ""
     if "Worship" in janky_skills:
         post_string = "Worship matters moreso for Species Epoch than Right Hand. Don't steal charge away from this character!"
 
-    advices = [
-        Advice(
-            label=maestro.character_name,
-            picture_class=skill,
-            progression=maestro.skills[skill],
-            goal=goal,
-        )
-        for skill, (maestro, goal) in janky_skills.items()
-    ]
+    advices = []
+
+    for skill, (maestro, goal, next_highest_non_maestro_char) in janky_skills.items():
+        if not next_highest_non_maestro_char:
+            advices.append(Advice(
+                label=maestro.character_name,
+                picture_class=skill,
+                progression=maestro.skills[skill],
+                goal=goal,
+            ))
+
     if advices:
         session_data.account.alerts_AdviceDict['General'].append(Advice(
             label=f"Your {{{{ Maestro|#secret-class-path }}}} isn't best in {len(advices)} Skill{pl(advices)}",
@@ -34,9 +41,43 @@ def getHandsAdviceGroup(maestros, beginners):
         ))
 
     group = AdviceGroup(
-            tier="", pre_string=hands_pre_string, post_string=post_string, advices=advices
-        )
+        tier="", pre_string=hands_pre_string, post_string=post_string, advices=advices
+    )
     return group
+
+
+def getHandsAdviceGroupStayAhead(maestros):
+    # This function returns the skills maestros are best in.
+    janky_skills = maestros_goal_levels(maestros)
+    zero_count = sum(1 for skill, (_, _, next_highest_non_maestro_char) in janky_skills.items() if not next_highest_non_maestro_char)
+    if zero_count == len(skillsToReview_RightHand):
+        # No maestros ahead in any skill. I think?
+        return
+    tier = f"{zero_count}/{len(skillsToReview_RightHand)}"
+    hands_pre_string = f"⚠️ Your Maestro is the highest level in {len(skillsToReview_RightHand)-zero_count}/{len(skillsToReview_RightHand)} Right Hand skills. Be careful not to let other characters overtake"
+
+    post_string = ""
+    if "Worship" in janky_skills:
+        post_string = "Worship matters moreso for Species Epoch than Right Hand. Don't steal charge away from this character!"
+
+    advices_first = []
+
+    for skill, (maestro, goal, next_highest_non_maestro_char) in janky_skills.items():
+        if next_highest_non_maestro_char:
+            advices_first.append(Advice(
+                label=f"{'🛑 ' if next_highest_non_maestro_char.skills[skill] == maestro.skills[skill]-1 else ''}"
+                f"{maestro.character_name} has {maestro.skills[skill]} {skill}. Next closest is {next_highest_non_maestro_char} at {next_highest_non_maestro_char.skills[skill]}",
+
+                picture_class=skill,
+                progression=next_highest_non_maestro_char.skills[skill],
+                goal=maestro.skills[skill]-1
+            ))
+
+    group = AdviceGroup(
+        tier="", pre_string=hands_pre_string, post_string=post_string, advices=advices_first
+    )
+    return group
+
 
 def create_hands_pre_string(janky_skills, maestros, beginners, tier):
     account = session_data.account
@@ -48,11 +89,13 @@ def create_hands_pre_string(janky_skills, maestros, beginners, tier):
 
     else:
 
+        # if maestros are the highest in all skills
         if not janky_skills:
             if len(maestros) > 1:
                 header = "Your Maestros are a workforce to be dealt with! An arduous bunch, the lot!"
             else:
                 header = f"{maestros[0]} is the highest level in all {tier} Right Hand skills! A Jack of trades, this one! ❤️"
+        # if maestros are not the highest in all skills
         else:
             if len(maestros) > 1:
                 header = f"Your Maestros are not the highest level in {tier} Right Hand skills"
@@ -63,7 +106,14 @@ def create_hands_pre_string(janky_skills, maestros, beginners, tier):
 def maestros_goal_levels(maestros):
     account = session_data.account
     janky_skills = dict()
-
+    # HOPEFULLY. The dict should look like this:
+    # janky_skills["skill"] = (
+    #     best_maestro,  # Character object?
+    #     required_level,  # int, representing the... highest? level of the skill?
+    #     next_highest_non_maestro_char  # False if maestro isn't best, character object if is?
+    # )
+    # ..... Or an empty dict?
+    # This might need some refactoring.
     if not maestros:
         return janky_skills
 
@@ -76,10 +126,12 @@ def maestros_goal_levels(maestros):
 
         if best_maestro_rank == 0:
             # maestro is already best
-            continue
+            next_highest_non_maestro = next((toon for toon in chars_ordered if toon not in maestros), None)
+        else:
+            next_highest_non_maestro = False
 
         required_level = chars_ordered[0].skills[skill] + 1
-        janky_skills[skill] = (best_maestro, required_level)
+        janky_skills[skill] = (best_maestro, required_level, next_highest_non_maestro)
 
     return janky_skills
 
@@ -439,7 +491,8 @@ def setSecretClassProgressionTier():
         pre_string=group_pre_strings[tier_SecretClass],
         advices=secretClass_AdviceDict["UnlockNextClass"]
     )
-    secretClass_AdviceGroupDict["MaestroHands"] = getHandsAdviceGroup(maestros, beginners)
+    secretClass_AdviceGroupDict["MaestroHands"] = getHandsAdviceGroupCatchUp(maestros, beginners)
+    secretClass_AdviceGroupDict["MaestroHandsInTheLead"] = getHandsAdviceGroupStayAhead(maestros)
 
     #Generate AdviceSection
     if len(maestros) > 1:
