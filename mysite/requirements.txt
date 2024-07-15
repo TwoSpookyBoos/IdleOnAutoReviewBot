@@ -1,6 +1,7 @@
 flask
 requests
 #coloredlogs
+# Note: colordlogs is needed for dev, but not for the PythonAnywhere deployment. Uncomment the line above to install it.
 ua-parser
 babel
 pyyaml
