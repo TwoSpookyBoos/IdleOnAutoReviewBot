@@ -5264,6 +5264,28 @@ sneakingGemstonesFirstIndex = 233
 sneakingGemstonesCount = len(sneakingGemstonesList)
 sneakingGemstonesMaxValueDict = {"Aquamarine": 10000, "Emerald": 5000, "Garnet": 2500, "Starite": 200, "Topaz": 1000, "Moissanite": 300}
 maxFarmingCrops = 160  # Last verified as of 2.11 Land Rank update
+landrankDict = {
+    0: {'Name': 'Evolution Boost', 'UnlockLevel': 1, 'Value': 250},
+    1: {'Name': 'Production Boost', 'UnlockLevel': 5, 'Value': 5},
+    2: {'Name': 'Soil Exp Boost', 'UnlockLevel': 20, 'Value': 25},
+    3: {'Name': 'Evolution Megaboost', 'UnlockLevel': 30, 'Value': 600},
+    4: {'Name': 'Seed of Stealth', 'UnlockLevel': 60, 'Value': 2},
+    5: {'Name': 'Farmtastic Boost', 'UnlockLevel': 80, 'Value': 90},
+    6: {'Name': 'Soil Exp Megaboost', 'UnlockLevel': 125, 'Value': 200},
+    7: {'Name': 'Overgrowth Boost', 'UnlockLevel': 180, 'Value': 120},
+    8: {'Name': 'Production Megaboost', 'UnlockLevel': 250, 'Value': 100},
+    9: {'Name': 'Seed of Loot', 'UnlockLevel': 400, 'Value': 10},
+    10: {'Name': 'Evolution Superboost', 'UnlockLevel': 500, 'Value': 3000},
+    11: {'Name': 'Overgrowth Megaboost', 'UnlockLevel': 600, 'Value': 340},
+    12: {'Name': 'Farmtastic Megaboost', 'UnlockLevel': 700, 'Value': 110},
+    13: {'Name': 'Soil Exp Superboost', 'UnlockLevel': 900, 'Value': 520},
+    14: {'Name': 'Seed of Damage', 'UnlockLevel': 1200, 'Value': 20},
+    15: {'Name': 'Evolution Ultraboost', 'UnlockLevel': 1300, 'Value': 40000},
+    16: {'Name': 'Farmtastic Superboost', 'UnlockLevel': 1500, 'Value': 220},
+    17: {'Name': 'Production Superboost', 'UnlockLevel': 1750, 'Value': 600},
+    18: {'Name': 'Overgrowth Superboost', 'UnlockLevel': 2000, 'Value': 240},
+    19: {'Name': 'Seed of Stats', 'UnlockLevel': 3500, 'Value': 5},
+}
 marketUpgradeList = [
     "Land Plots", "Stronger Vines", "Nutritious Soil", "Smarter Seeds",
     "Biology Boost", "Product Doubler", "More Beenz", "Rank Boost",

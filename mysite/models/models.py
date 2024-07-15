@@ -41,10 +41,10 @@ from consts import (
     sailingDict,
     getStyleNameFromIndex, divinity_divinitiesDict, getDivinityNameFromIndex,
     gamingSuperbitsDict,
-    # W6 Sneaking
+    # W6
     jade_emporium, pristineCharmsList, sneakingGemstonesFirstIndex, sneakingGemstonesList, sneakingGemstonesStatList,
     getMoissaniteValue, getGemstoneValue, getGemstonePercent,
-    marketUpgradeList,
+    marketUpgradeList, landrankDict,
     summoningBattleCountsDict, summoningDict,
 )
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
@@ -2066,10 +2066,21 @@ class Account:
                 "ValueGMO": 0,  # 10,000
                 "SuperGMO": 0  # 100,000
             },
+            'LandRankDatabase': {},
         }
+
         raw_farmcrop_dict = safe_loads(self.raw_data.get("FarmCrop", {}))
-        if isinstance(raw_farmcrop_dict, dict):
-            for cropIndexStr, cropAmountOwned in raw_farmcrop_dict.items():
+        self._parse_w6_farming_crops(raw_farmcrop_dict)
+
+        raw_farmupg_list = safe_loads(self.raw_data.get("FarmUpg", {}))
+        self._parse_w6_farming_markets(raw_farmupg_list)
+
+        raw_farmrank_list = safe_loads(self.raw_data.get("FarmRank", []))
+        self._parse_w6_farming_land_ranks(raw_farmrank_list)
+
+    def _parse_w6_farming_crops(self, rawCrops):
+        if isinstance(rawCrops, dict):
+            for cropIndexStr, cropAmountOwned in rawCrops.items():
                 try:
                     self.farming["CropsUnlocked"] += 1  # Once discovered, crops will always appear in this dict.
                     if float(cropAmountOwned) >= 200:
@@ -2084,13 +2095,36 @@ class Account:
                         self.farming["CropStacks"]["SuperGMO"] += 1
                 except:
                     continue
-        raw_farmupg_list = safe_loads(self.raw_data.get("FarmUpg", {}))
-        if isinstance(raw_farmupg_list, list):
+
+    def _parse_w6_farming_markets(self, rawMarkets):
+        if isinstance(rawMarkets, list):
             for marketUpgradeIndex, marketUpgradeName in enumerate(marketUpgradeList):
                 try:
-                    self.farming["MarketUpgrades"][marketUpgradeName] = raw_farmupg_list[marketUpgradeIndex + 2]
+                    self.farming["MarketUpgrades"][marketUpgradeName] = rawMarkets[marketUpgradeIndex + 2]
                 except:
                     self.farming["MarketUpgrades"][marketUpgradeName] = 0
+
+    def _parse_w6_farming_land_ranks(self, rawRanks):
+        if isinstance(rawRanks, list):
+            try:
+                self.farming['LandRankPlotRanks'] = rawRanks[0]
+                self.farming['LandRankTotalRanks'] = sum(rawRanks[0])
+                self.farming['LandRankMinPlot'] = min(rawRanks[0])
+                self.farming['LandRankMinPlot'] = max(rawRanks[0])
+            except:
+                self.farming['LandRankPlotRanks'] = [0]*36
+                self.farming['LandRankTotalRanks'] = sum(rawRanks[0])
+                self.farming['LandRankMinPlot'] = min(rawRanks[0])
+                self.farming['LandRankMinPlot'] = max(rawRanks[0])
+            for upgradeIndex, upgradeValuesDict in landrankDict.items():
+                try:
+                    self.farming['LandRankDatabase'][upgradeValuesDict['Name']] = {
+                        'Level': rawRanks[2][upgradeIndex]
+                    }
+                except:
+                    self.farming['LandRankDatabase'][upgradeValuesDict['Name']] = {
+                        'Level': 0
+                    }
 
     def _parse_w6_summoning(self):
         self.summoning = {}
