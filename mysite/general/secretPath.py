@@ -13,7 +13,7 @@ def getHandsAdviceGroupCatchUp(maestros, beginners):
     # This function returns the skills maestros aren't best in.
     janky_skills = maestros_goal_levels(maestros)
     zero_count = sum(1 for skill, (_, _, next_highest_non_maestro_char) in janky_skills.items() if not next_highest_non_maestro_char)
-    if zero_count == 5:
+    if zero_count == len(skillsToReview_RightHand):
         # No maestros ahead in any skill. I think?
         return
     tier = f"{zero_count}/{len(skillsToReview_RightHand)}"
@@ -50,7 +50,7 @@ def getHandsAdviceGroupStayAhead(maestros):
     # This function returns the skills maestros are best in.
     janky_skills = maestros_goal_levels(maestros)
     zero_count = sum(1 for skill, (_, _, next_highest_non_maestro_char) in janky_skills.items() if not next_highest_non_maestro_char)
-    if zero_count == 5:
+    if zero_count == len(skillsToReview_RightHand):
         # No maestros ahead in any skill. I think?
         return
     tier = f"{zero_count}/{len(skillsToReview_RightHand)}"
