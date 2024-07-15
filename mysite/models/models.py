@@ -2363,6 +2363,17 @@ class Account:
                     )
 
     def _calculate_w3_collider_cost_reduction(self):
+        self.atom_collider['CostReductionMax'] = (1 +
+            (
+                7 * 4  #Max merit
+                + 1 * 19  #Max Atom Collider building
+                + 1 * 30  #Max Neon
+                + 10  #Superbit
+                + 14  #Atom Split bubble
+                + 20  #Stamp
+            )
+            / 100
+        )
         self.atom_collider['CostReductionRaw'] = (1 +
             (
                 7 * self.merits[4][6]['Level']
@@ -2377,6 +2388,7 @@ class Account:
         self.atom_collider['CostReductionMulti'] = 1 / self.atom_collider['CostReductionRaw']
         self.atom_collider['CostReductionMulti1Higher'] = 1 / (self.atom_collider['CostReductionRaw'] + 0.01)
         self.atom_collider['CostDiscount'] = (1 - (1 / self.atom_collider['CostReductionRaw'])) * 100
+        self.atom_collider['CostDiscountMax'] = (1 - (1 / self.atom_collider['CostReductionMax'])) * 100
 
         for atomName, atomValuesDict in self.atom_collider['Atoms'].items():
             # Calculate base cost to upgrade to next level, if not max level

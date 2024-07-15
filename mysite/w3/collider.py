@@ -122,17 +122,7 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
 def getCostReductionAdviceGroup() -> AdviceGroup:
     cr_advice = []
 
-    sum_cost_reduction = (1 +
-                              (
-                                7 * session_data.account.merits[4][6]['Level']
-                                + ((session_data.account.construction_buildings['Atom Collider']['Level']-1) // 10)  #50 doesn't give 5%, you need 51.
-                                + 1 * session_data.account.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['Level']
-                                + 10 * session_data.account.gaming['SuperBits']['Atom Redux']['Unlocked']
-                                + session_data.account.alchemy_bubbles['Atom Split']['BaseValue']
-                                + session_data.account.stamps['Atomic Stamp']['Value']
-                              )
-                          / 100
-                          )
+
 
     cr_advice.append(Advice(
         label=f"W5 Taskboard Merit: {session_data.account.merits[4][6]['Level'] * 7}/28%"
@@ -178,12 +168,14 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     ))
 
     cr_advice.append(Advice(
-        label=f"Remaining cost: {session_data.account.atom_collider['CostReductionMulti']*100:.2f}%",
+        label=f"Remaining cost: {session_data.account.atom_collider['CostReductionMulti']*100:.2f}% / ",
+              #f"{(1 / session_data.account.atom_collider['CostReductionMax'])*100:.2f}%",
         picture_class='particles',
     ))
 
     cr_advice.append(Advice(
-        label=f"Total cost discount: {session_data.account.atom_collider['CostDiscount']:.2f}% off",
+        label=f"Total discount: {session_data.account.atom_collider['CostDiscount']:.2f}% / "
+              f"{session_data.account.atom_collider['CostDiscountMax']:.2f}% off",
         picture_class='particles',
     ))
 
