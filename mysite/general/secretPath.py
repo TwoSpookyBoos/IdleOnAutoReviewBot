@@ -54,7 +54,7 @@ def getHandsAdviceGroupStayAhead(maestros):
         # No maestros ahead in any skill. I think?
         return
     tier = f"{zero_count}/{len(skillsToReview_RightHand)}"
-    hands_pre_string = f"Your Maestro is the highest level in {5-zero_count} Right Hand skills, but others can overtake"
+    hands_pre_string = f"⚠️ Your Maestro is the highest level in {len(skillsToReview_RightHand)-zero_count}/{len(skillsToReview_RightHand)} Right Hand skills. Be careful not to let other characters overtake"
 
     post_string = ""
     if "Worship" in janky_skills:
@@ -65,8 +65,12 @@ def getHandsAdviceGroupStayAhead(maestros):
     for skill, (maestro, goal, next_highest_non_maestro_char) in janky_skills.items():
         if next_highest_non_maestro_char:
             advices_first.append(Advice(
-                label=f"{maestro.character_name} is {maestro.skills[skill]} {skill}, but {next_highest_non_maestro_char} is close at {next_highest_non_maestro_char.skills[skill]}!",
-                picture_class=skill
+                label=f"{'🛑 ' if next_highest_non_maestro_char.skills[skill] == maestro.skills[skill]-1 else ''}"
+                f"{maestro.character_name} has {maestro.skills[skill]} {skill}. Next closest is {next_highest_non_maestro_char} at {next_highest_non_maestro_char.skills[skill]}",
+
+                picture_class=skill,
+                progression=next_highest_non_maestro_char.skills[skill],
+                goal=maestro.skills[skill]-1
             ))
 
     group = AdviceGroup(
