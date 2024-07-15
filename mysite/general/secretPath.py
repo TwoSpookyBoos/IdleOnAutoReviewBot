@@ -54,7 +54,7 @@ def getHandsAdviceGroupStayAhead(maestros):
         # No maestros ahead in any skill. I think?
         return
     tier = f"{zero_count}/{len(skillsToReview_RightHand)}"
-    hands_pre_string = f"Your Maestro is the highest level in {5-zero_count} Right Hand skills, but others can overtake"
+    hands_pre_string = f"Your Maestro is the already best in {len(skillsToReview_RightHand)-zero_count} Right Hand skills, but others can overtake"
 
     post_string = ""
     if "Worship" in janky_skills:
