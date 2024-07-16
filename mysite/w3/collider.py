@@ -68,8 +68,6 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
         )
 
     #Sodium lower than Snail // 5
-    colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'] = 2
-    session_data.account.gaming['Imports']['Snail']['SnailRank'] = 15
     if colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'] < session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5:
         settings_advice['Alerts'].append(
             Advice(
