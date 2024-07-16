@@ -1863,16 +1863,22 @@ class Account:
                 self.gaming['Acorns'] = raw_gaming_list[9]
                 self.gaming['EvolutionChance'] = raw_gaming_list[10]
                 self.gaming['LogbookString'] = raw_gaming_list[11]
-                self.gaming['SuperBitsString'] = raw_gaming_list[12]
+                self.gaming['SuperBitsString'] = str(raw_gaming_list[12])
                 self.gaming['Envelopes'] = raw_gaming_list[13]
             except:
                 pass
 
         for index, valuesDict in gamingSuperbitsDict.items():
-            self.gaming['SuperBits'][valuesDict['Name']] = {
-                'Unlocked': valuesDict['CodeString'] in self.gaming['SuperBitsString'],
-                'BonusText': valuesDict['BonusText']
-            }
+            try:
+                self.gaming['SuperBits'][valuesDict['Name']] = {
+                    'Unlocked': valuesDict['CodeString'] in self.gaming['SuperBitsString'],
+                    'BonusText': valuesDict['BonusText']
+                }
+            except:
+                self.gaming['SuperBits'][valuesDict['Name']] = {
+                    'Unlocked': False,
+                    'BonusText': valuesDict['BonusText']
+                }
 
     def _parse_w5_gaming_sprouts(self):
         # [0] through [24] = actual sprouts
