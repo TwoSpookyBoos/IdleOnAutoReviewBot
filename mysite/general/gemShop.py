@@ -1,7 +1,7 @@
 from models.models import Advice, AdviceGroup, AdviceSection
 from utils.data_formatting import safe_loads
 from utils.logging import get_logger
-from consts import gemShop_progressionTiers, maxFarmingCrops, currentWorld
+from consts import gemShop_progressionTiers, maxFarmingCrops, currentWorld, breedingTotalPets, cookingCloseEnough
 from flask import g as session_data
 
 logger = get_logger(__name__)
@@ -73,6 +73,14 @@ def try_exclude_BurningBadBooks(exclusionList):
         exclusionList.append("Burning Bad Books")
 
 
+def try_exclude_EggCapacity(exclusionList):
+    if session_data.account.breeding['Total Unlocked Count'] >= breedingTotalPets - 5:
+        exclusionList.append('Royal Egg Cap')
+
+def try_exclude_Kitchens(exclusionList):
+    if session_data.account.cooking['MaxRemainingMeals'] < cookingCloseEnough:
+        exclusionList.append('Richelin Kitchen')
+
 def try_exclude_ChestSluggo(exclusionList):
     # 33 artifacts times 4 tiers each = 132 for v2.09
     # Minus the new 3 lanterns and giants eye, 29 * 2 = 58 expected count when finishing all Ancient artifacts
@@ -116,6 +124,8 @@ def getGemShopExclusions():
 
     #W4
     try_exclude_SoupedUpTube(exclusionList)
+    try_exclude_EggCapacity(exclusionList)
+    try_exclude_Kitchens(exclusionList)
 
     #W5
     try_exclude_ChestSluggo(exclusionList)

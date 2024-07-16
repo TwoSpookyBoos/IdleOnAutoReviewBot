@@ -454,7 +454,8 @@ def setConsDeathNoteProgressionTier():
     session_data.account.meowBBIndex = meowBBIndex  #TODO: Move this parse/calculate to Account
     fullDeathNoteDict = getDeathNoteKills()
 
-    max_tier = deathNote_progressionTiers[-2][0]  #Final 1 tier is info only
+    infoTiers = 2
+    max_tier = deathNote_progressionTiers[-(1 + infoTiers)][0]  #Final 2 tiers are info only
     overall_DeathNoteTier = 0
     worldIndexes = []
     tier_combo = {}
@@ -659,9 +660,12 @@ def setConsDeathNoteProgressionTier():
 
     #If the player is basically finished with cooking, bypass the requirement while still showing the progress
     if session_data.account.cooking['MaxRemainingMeals'] < cookingCloseEnough:
-        tier_combo['ZOW'] = max_tier
-        tier_combo['CHOW'] = max_tier
-        tier_combo['MEOW'] = max_tier
+        if tier_combo['ZOW'] < max_tier + infoTiers:
+            tier_combo['ZOW'] = max_tier + infoTiers
+        if tier_combo['CHOW'] < max_tier + infoTiers:
+            tier_combo['CHOW'] = max_tier + infoTiers
+        if tier_combo['MEOW'] < max_tier + infoTiers:
+            tier_combo['MEOW'] = max_tier + infoTiers
 
     #Generate Advice Groups
     #Basic Worlds
@@ -726,7 +730,7 @@ def setConsDeathNoteProgressionTier():
     #Generate Advice Section
     if len(bbCharactersIndexList) > 1:
         deathnote_AdviceSection.note = "Important! As of February 2024, Super CHOWs only give benefit if completed on your 2nd Blood Berserker regardless of the platform you play on."
-    overall_DeathNoteTier = min(max_tier+1, tier_combo[1], tier_combo[2], tier_combo[3],
+    overall_DeathNoteTier = min((max_tier + infoTiers), tier_combo[1], tier_combo[2], tier_combo[3],
                                 tier_combo[4], tier_combo[5], tier_combo[6],
                                 tier_combo['ZOW'], tier_combo['CHOW'], tier_combo['MEOW'])  #tier_zows, tier_chows, tier_meows
 
@@ -734,7 +738,7 @@ def setConsDeathNoteProgressionTier():
     deathnote_AdviceSection.tier = tier_section
     deathnote_AdviceSection.pinchy_rating = overall_DeathNoteTier
     deathnote_AdviceSection.groups = deathnote_AdviceGroupDict.values()
-    if overall_DeathNoteTier == max_tier:
+    if overall_DeathNoteTier >= max_tier:
         deathnote_AdviceSection.header = f"Best Death Note tier met: {tier_section}<br>You best ❤️"
         deathnote_AdviceSection.complete = True
     else:

@@ -156,7 +156,7 @@ def setAlchemyVialsProgressionTier() -> AdviceSection:
 def getBubbleExclusions():
     exclusionsList = []
     #If all crops owned or Evolution GMO is level 10+, exclude the requirement for Cropius Mapper
-    if session_data.account.farming["CropsUnlocked"] >= maxFarmingCrops or session_data.account.farming["MarketUpgrades"].get("Evolution GMO", 0) > 50:
+    if session_data.account.farming["CropsUnlocked"] >= maxFarmingCrops or session_data.account.farming["MarketUpgrades"].get("Evolution GMO", 0) > 20:
         exclusionsList.append("Cropius Mapper")
     return exclusionsList
 
@@ -197,7 +197,7 @@ def getAtRiskAdviceGroups() -> list[AdviceGroup]:
 
     #Same thing, but for Lithium Bubbles W4-W5 now
     #Lithium only works on W4 and W5 bubbles, indexes 15 through 24
-    sorted_bubbles_lithium = [(k, v) for k, v in sorted_bubbles if v['Level'] > 1 and 15 <= v['BubbleIndex'] <= 24]
+    sorted_bubbles_lithium = [(k, v) for k, v in sorted_bubbles if 1 < v['Level'] < 1500 and 15 <= v['BubbleIndex'] <= 24]
     if len(sorted_bubbles_lithium) > nblbCount:
         lithium_ps = f"Highest level for Lithium today: {sorted_bubbles_lithium[nblbCount-1][1]['Level']}"
 
@@ -249,7 +249,8 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
     tier_GreenSampleBubbles = 0
     tier_PurpleSampleBubbles = 0
     tier_UtilityBubbles = 0
-    max_tier = bubbles_progressionTiers[-4][0]  #Final 3 tiers are Informational
+    infoTiers = 3
+    max_tier = bubbles_progressionTiers[-(1 + infoTiers)][0]  #Final 3 tiers are Informational
     overall_alchemyBubblesTier = 0
 
     exclusionsList = getBubbleExclusions()
@@ -320,7 +321,7 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
             if bubbleTiers[typeIndex] == (tier[0] - 1) and requirementsMet[typeIndex] == True:  # Only update if they already met the previous tier
                 bubbleTiers[typeIndex] = tier[0]
 
-    overall_alchemyBubblesTier = min(max_tier, tier_TotalBubblesUnlocked,
+    overall_alchemyBubblesTier = min(max_tier + infoTiers, tier_TotalBubblesUnlocked,
                                      bubbleTiers[0], bubbleTiers[1], bubbleTiers[2], bubbleTiers[3])
     #Generate AdviceGroups
     agdNames = ["TotalBubblesUnlocked", "OrangeSampleBubbles", "GreenSampleBubbles", "PurpleSampleBubbles", "UtilityBubbles"]

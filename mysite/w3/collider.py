@@ -50,7 +50,7 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
     if colliderData['OnOffStatus'] == True:
         settings_advice['Alerts'].append(
             Advice(
-                label=f"Collider switch status: {'On' if session_data.account.atom_collider['OnOffStatus'] else 'Off'}.<br>Recommended to select Off instead.",
+                label=f"Collider switch status: {'On' if session_data.account.atom_collider['OnOffStatus'] else 'Off'}.<br>Recommended to select Off instead to avoid nuking your storage from a single misclick.",
                 picture_class="collider-toggle",
             )
         )
@@ -74,6 +74,17 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
                 label=f"Snail could reset from Rank {session_data.account.gaming['Imports']['Snail']['SnailRank']}"
                       f" to {colliderData['Atoms']['Sodium - Snail Kryptonite']['Level']*5}!"
                       f"<br>Level Sodium to {session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5}"
+                      f" to protect Rank {5 * (session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5)}.",
+                picture_class="sodium",
+                progression=colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'],
+                goal=session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5
+            )
+        )
+        session_data.account.alerts_AdviceDict['World 3'].append(
+            Advice(
+                label=f"Snail could reset from Rank {session_data.account.gaming['Imports']['Snail']['SnailRank']}"
+                      f" to {colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'] * 5}!"
+                      f"<br>Level {{{{ Sodium|#atom-collider }}}} to {session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5}"
                       f" to protect Rank {5 * (session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5)}.",
                 picture_class="sodium",
                 progression=colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'],
@@ -109,6 +120,13 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
                 picture_class="carbon",
             )
         )
+        session_data.account.alerts_AdviceDict['World 3'].append(
+            Advice(
+                label=f"{currentMaxedTowers} TD Tower{pl(currentMaxedTowers)} at max level."
+                      f"<br>Level up {{{{ Carbon|#atom-collider }}}} to increase your max Tower levels by 2.",
+                picture_class="carbon",
+            )
+        )
 
     settings_ag = AdviceGroup(
         tier="",
@@ -122,17 +140,7 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
 def getCostReductionAdviceGroup() -> AdviceGroup:
     cr_advice = []
 
-    sum_cost_reduction = (1 +
-                              (
-                                7 * session_data.account.merits[4][6]['Level']
-                                + ((session_data.account.construction_buildings['Atom Collider']['Level']-1) // 10)  #50 doesn't give 5%, you need 51.
-                                + 1 * session_data.account.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['Level']
-                                + 10 * session_data.account.gaming['SuperBits']['Atom Redux']['Unlocked']
-                                + session_data.account.alchemy_bubbles['Atom Split']['BaseValue']
-                                + session_data.account.stamps['Atomic Stamp']['Value']
-                              )
-                          / 100
-                          )
+
 
     cr_advice.append(Advice(
         label=f"W5 Taskboard Merit: {session_data.account.merits[4][6]['Level'] * 7}/28%"
@@ -179,11 +187,13 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
 
     cr_advice.append(Advice(
         label=f"Remaining cost: {session_data.account.atom_collider['CostReductionMulti']*100:.2f}%",
+              #f" / {(1 / session_data.account.atom_collider['CostReductionMax'])*100:.2f}%",
         picture_class='particles',
     ))
 
     cr_advice.append(Advice(
-        label=f"Total cost discount: {session_data.account.atom_collider['CostDiscount']:.2f}% off",
+        label=f"Total discount: {session_data.account.atom_collider['CostDiscount']:.2f}% / "
+              f"{session_data.account.atom_collider['CostDiscountMax']:.2f}% off",
         picture_class='particles',
     ))
 
@@ -261,7 +271,7 @@ def setColliderProgressionTier() -> AdviceSection:
     collider_AdviceSection.tier = tier_section
     collider_AdviceSection.pinchy_rating = overall_ColliderTier
     collider_AdviceSection.groups = collider_AdviceGroupDict.values()
-    if overall_ColliderTier == max_tier:
+    if overall_ColliderTier >= max_tier:
         collider_AdviceSection.header = f"Best Collider tier met: {tier_section}<br>You best ❤️"
         collider_AdviceSection.complete = True
     else:

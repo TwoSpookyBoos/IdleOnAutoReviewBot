@@ -9,7 +9,8 @@ logger = get_logger(__name__)
 
 def setWorshipPrayersProgressionTier() -> AdviceSection:
     worshipPrayersDict = session_data.account.prayers
-    max_tier = prayers_progressionTiers[-3][0]  # Final tier is ignorable, second to final is optional
+    infoTiers = 2
+    max_tier = prayers_progressionTiers[-(1 + infoTiers)][0]  # Final tier is ignorable, second to final is optional
     tier_WorshipPrayers = 0
     overall_WorshipPrayersTier = 0
 
@@ -104,12 +105,12 @@ def setWorshipPrayersProgressionTier() -> AdviceSection:
     )
 
     #Generate Advice Section
-    overall_WorshipPrayersTier = min(max_tier, tier_WorshipPrayers)
+    overall_WorshipPrayersTier = min(max_tier + infoTiers, tier_WorshipPrayers)
     tier_section = f"{overall_WorshipPrayersTier}/{max_tier}"
     prayers_AdviceSection.pinchy_rating = overall_WorshipPrayersTier
     prayers_AdviceSection.tier = tier_section
     prayers_AdviceSection.groups = prayers_AdviceGroupDict.values()
-    if overall_WorshipPrayersTier == max_tier:
+    if overall_WorshipPrayersTier >= max_tier:
         prayers_AdviceSection.header = f"Best Prayer tier met: {tier_section}<br>You best ❤️"
         prayers_AdviceSection.complete = True
     else:

@@ -41,10 +41,10 @@ from consts import (
     sailingDict,
     getStyleNameFromIndex, divinity_divinitiesDict, getDivinityNameFromIndex,
     gamingSuperbitsDict,
-    # W6 Sneaking
+    # W6
     jade_emporium, pristineCharmsList, sneakingGemstonesFirstIndex, sneakingGemstonesList, sneakingGemstonesStatList,
     getMoissaniteValue, getGemstoneValue, getGemstonePercent,
-    marketUpgradeList,
+    marketUpgradeList, landrankDict,
     summoningBattleCountsDict, summoningDict,
 )
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
@@ -622,8 +622,11 @@ class AdviceSection(AdviceBase):
             finished = ""
 
             if "/" in self.tier:
-                prog, goal = self.tier.split("/")
-                finished = " finished" if prog == goal else ""
+                try:
+                    prog, goal = self.tier.split("/")
+                    finished = " finished" if prog >= goal else ""
+                except:
+                    finished = ""
 
             parts[1] = f"""<span class="tier-progress{finished}">{parts[1]}</span>"""
 
@@ -1677,17 +1680,17 @@ class Account:
                 "W6": [],
                 "W7": [],
                 "W8": [],
-            },  #complete
-            "Genetics": {},  #complete
+            },
+            "Genetics": {},
             "Species": {},
-            "Total Shiny Levels": {},  #Per Shiny Bonus, the total level of all shiny pets contributing that bonus
-            "Grouped Bonus": {},  #Pets regrouped by their Shiny Bonus, instead of by their World
-            'Territories': {},  #complete
-            'Highest Unlocked Territory Number': 0,  #complete
-            'Highest Unlocked Territory Name': '',  #complete
-            'Upgrades': {},  #complete
-            'ArenaMaxWave': 0,  #complete
-            'PetSlotsUnlocked': 2,  #complete
+            "Total Shiny Levels": {},
+            "Grouped Bonus": {},
+            'Territories': {},
+            'Highest Unlocked Territory Number': 0,
+            'Highest Unlocked Territory Name': '',
+            'Upgrades': {},
+            'ArenaMaxWave': 0,
+            'PetSlotsUnlocked': 2,
         }
         raw_breeding_list = safe_loads(self.raw_data.get("Breeding", []))
         raw_territory_list = safe_loads(self.raw_data.get("Territory", []))
@@ -1860,16 +1863,22 @@ class Account:
                 self.gaming['Acorns'] = raw_gaming_list[9]
                 self.gaming['EvolutionChance'] = raw_gaming_list[10]
                 self.gaming['LogbookString'] = raw_gaming_list[11]
-                self.gaming['SuperBitsString'] = raw_gaming_list[12]
+                self.gaming['SuperBitsString'] = str(raw_gaming_list[12])
                 self.gaming['Envelopes'] = raw_gaming_list[13]
             except:
                 pass
 
         for index, valuesDict in gamingSuperbitsDict.items():
-            self.gaming['SuperBits'][valuesDict['Name']] = {
-                'Unlocked': valuesDict['CodeString'] in self.gaming['SuperBitsString'],
-                'BonusText': valuesDict['BonusText']
-            }
+            try:
+                self.gaming['SuperBits'][valuesDict['Name']] = {
+                    'Unlocked': valuesDict['CodeString'] in self.gaming['SuperBitsString'],
+                    'BonusText': valuesDict['BonusText']
+                }
+            except:
+                self.gaming['SuperBits'][valuesDict['Name']] = {
+                    'Unlocked': False,
+                    'BonusText': valuesDict['BonusText']
+                }
 
     def _parse_w5_gaming_sprouts(self):
         # [0] through [24] = actual sprouts
@@ -1883,11 +1892,11 @@ class Account:
         # [160, 23, 0, 0, 77, 295],  # [32] = Snail Import
         # [0, 21884575.351264, 0, 0, 309, 210],  # [33] = Box9 Import
         # [0, 842957708.5889401, 0, 0, 0, 0],  # [34] = Box10 Import
-        raw_gaming_sprouts_list = safe_loads(self.raw_data.get("GamingSprouts", []))
+        raw_gaming_sprout_list = safe_loads(self.raw_data.get("GamingSprout", []))
         try:
             self.gaming['Imports'] = {
                 'Snail': {
-                    'SnailRank': raw_gaming_sprouts_list[32][1]
+                    'SnailRank': raw_gaming_sprout_list[32][1]
                 }
             }
         except:
@@ -2066,10 +2075,21 @@ class Account:
                 "ValueGMO": 0,  # 10,000
                 "SuperGMO": 0  # 100,000
             },
+            'LandRankDatabase': {},
         }
+
         raw_farmcrop_dict = safe_loads(self.raw_data.get("FarmCrop", {}))
-        if isinstance(raw_farmcrop_dict, dict):
-            for cropIndexStr, cropAmountOwned in raw_farmcrop_dict.items():
+        self._parse_w6_farming_crops(raw_farmcrop_dict)
+
+        raw_farmupg_list = safe_loads(self.raw_data.get("FarmUpg", {}))
+        self._parse_w6_farming_markets(raw_farmupg_list)
+
+        raw_farmrank_list = safe_loads(self.raw_data.get("FarmRank", [[0]*36]))
+        self._parse_w6_farming_land_ranks(raw_farmrank_list)
+
+    def _parse_w6_farming_crops(self, rawCrops):
+        if isinstance(rawCrops, dict):
+            for cropIndexStr, cropAmountOwned in rawCrops.items():
                 try:
                     self.farming["CropsUnlocked"] += 1  # Once discovered, crops will always appear in this dict.
                     if float(cropAmountOwned) >= 200:
@@ -2084,13 +2104,36 @@ class Account:
                         self.farming["CropStacks"]["SuperGMO"] += 1
                 except:
                     continue
-        raw_farmupg_list = safe_loads(self.raw_data.get("FarmUpg", {}))
-        if isinstance(raw_farmupg_list, list):
+
+    def _parse_w6_farming_markets(self, rawMarkets):
+        if isinstance(rawMarkets, list):
             for marketUpgradeIndex, marketUpgradeName in enumerate(marketUpgradeList):
                 try:
-                    self.farming["MarketUpgrades"][marketUpgradeName] = raw_farmupg_list[marketUpgradeIndex + 2]
+                    self.farming["MarketUpgrades"][marketUpgradeName] = rawMarkets[marketUpgradeIndex + 2]
                 except:
                     self.farming["MarketUpgrades"][marketUpgradeName] = 0
+
+    def _parse_w6_farming_land_ranks(self, rawRanks):
+        if isinstance(rawRanks, list):
+            try:
+                self.farming['LandRankPlotRanks'] = rawRanks[0]
+                self.farming['LandRankTotalRanks'] = sum(rawRanks[0])
+                self.farming['LandRankMinPlot'] = min(rawRanks[0], default=0)
+                self.farming['LandRankMinPlot'] = max(rawRanks[0], default=0)
+            except:
+                self.farming['LandRankPlotRanks'] = [0]*36
+                self.farming['LandRankTotalRanks'] = 0
+                self.farming['LandRankMinPlot'] = 0
+                self.farming['LandRankMinPlot'] = 0
+            for upgradeIndex, upgradeValuesDict in landrankDict.items():
+                try:
+                    self.farming['LandRankDatabase'][upgradeValuesDict['Name']] = {
+                        'Level': rawRanks[2][upgradeIndex]
+                    }
+                except:
+                    self.farming['LandRankDatabase'][upgradeValuesDict['Name']] = {
+                        'Level': 0
+                    }
 
     def _parse_w6_summoning(self):
         self.summoning = {}
@@ -2329,6 +2372,17 @@ class Account:
                     )
 
     def _calculate_w3_collider_cost_reduction(self):
+        self.atom_collider['CostReductionMax'] = (1 +
+            (
+                7 * 4  #Max merit
+                + 1 * 19  #Max Atom Collider building
+                + 1 * 30  #Max Neon
+                + 10  #Superbit
+                + 14  #Atom Split bubble
+                + 20  #Stamp
+            )
+            / 100
+        )
         self.atom_collider['CostReductionRaw'] = (1 +
             (
                 7 * self.merits[4][6]['Level']
@@ -2343,6 +2397,7 @@ class Account:
         self.atom_collider['CostReductionMulti'] = 1 / self.atom_collider['CostReductionRaw']
         self.atom_collider['CostReductionMulti1Higher'] = 1 / (self.atom_collider['CostReductionRaw'] + 0.01)
         self.atom_collider['CostDiscount'] = (1 - (1 / self.atom_collider['CostReductionRaw'])) * 100
+        self.atom_collider['CostDiscountMax'] = (1 - (1 / self.atom_collider['CostReductionMax'])) * 100
 
         for atomName, atomValuesDict in self.atom_collider['Atoms'].items():
             # Calculate base cost to upgrade to next level, if not max level

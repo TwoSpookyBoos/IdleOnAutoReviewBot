@@ -27,6 +27,7 @@ def setCookingProgressionTier():
         return cooking_AdviceSection
 
     tier_Cooking = 0
+    #TODO: Really ought to be structured into proper tiers.. What were you smoking when you made this?
     max_tier = 6
     voidwalkers = [toon for toon in session_data.account.all_characters if toon.elite_class == "Voidwalker"]
     atomFluoride = session_data.account.atom_collider['Atoms']['Fluoride - Void Plate Chef']['Level'] >= 1
@@ -257,7 +258,7 @@ def setCookingProgressionTier():
     cooking_AdviceSection.tier = tier_section
     cooking_AdviceSection.pinchy_rating = overall_CookingTier
     cooking_AdviceSection.groups = cooking_AdviceGroupDict.values()
-    if overall_CookingTier == max_tier:
+    if overall_CookingTier >= max_tier:
         cooking_AdviceSection.header = f"Best Cooking tier met: {tier_section}<br>You best ❤️"
         cooking_AdviceSection.complete = True
     else:

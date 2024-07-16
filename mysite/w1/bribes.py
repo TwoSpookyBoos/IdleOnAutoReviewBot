@@ -149,7 +149,7 @@ def setBribesProgressionTier() -> AdviceSection:
     bribe_AdviceSection.pinchy_rating = overall_BribesTier
     bribe_AdviceSection.tier = tier_section
     bribe_AdviceSection.groups = bribe_AdviceGroupDict.values()
-    if overall_BribesTier == max_tier:
+    if overall_BribesTier >= max_tier:
         bribe_AdviceSection.header = f"Best Bribe tier met: {tier_section}<br>You best ❤️"
         bribe_AdviceSection.complete = True
     else:

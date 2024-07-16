@@ -289,7 +289,7 @@ def setSmithingProgressionTier() -> AdviceSection:
     smithing_AdviceSection.pinchy_rating = overall_SmithingTier
     smithing_AdviceSection.tier = tier_section
     smithing_AdviceSection.groups = smithing_AdviceGroupDict.values()
-    if overall_SmithingTier == max_tier:
+    if overall_SmithingTier >= max_tier:
         smithing_AdviceSection.header = f"Best Smithing tier met: {tier_section}<br>You best ❤️"
         smithing_AdviceSection.complete = True
     else:
