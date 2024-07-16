@@ -322,7 +322,7 @@ def tier_from_monster_kills(dictOfPRs) -> Threshold:
 
     highestPrint = session_data.account.printer['HighestValue']
     mobKillThresholds = []
-    if highestPrint >= 2.45e10:  # Sites like IE/IT round up to 25B after 24.5B
+    if highestPrint >= 2.3e10:
         expectedThreshold = Threshold.fromname(Threshold.MAX_TIER)
     elif dictOfPRs[Placements.DEATH_NOTE] >= 25:
         expectedThreshold = Threshold.fromname(Threshold.W7_WAITING_ROOM)
