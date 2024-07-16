@@ -432,6 +432,7 @@ EquipmentCape12: Blooming Vine
 EquipmentCape13: Eternal Flames of The Divine
 EquipmentCape14: Phoenix Wings
 EquipmentCape15: Giant Nightshade
+EquipmentCape16: Timeless Watch
 StampA1: Sword Stamp
 StampA2: Heart Stamp
 StampA3: Mana Stamp
@@ -1379,6 +1380,8 @@ EquipmentNametag8: Summer Shovel Nametag
 EquipmentNametag9: Falloween Nametag
 EquipmentNametag10: 3rd Anniversary IdleOn Nametag
 EquipmentNametag11: Nightshade Nametag
+EquipmentNametag12: Megafeather Nametag
+EquipmentNametag13: Timeless Nametag
 EquipmentKeychain0: Simple Key Chain
 EquipmentKeychain1: Leafy Chain
 EquipmentKeychain2: Red Sneaker Chain
@@ -1691,6 +1694,7 @@ Quest83: Blue Tome Pages
 Quest84: Red Tome Pages
 Quest85: Anniversary Box
 Quest86: Basketball
+Quest87: Secret Map
 EquipmentSmithingTabs2: Anvil Tab II
 EquipmentSmithingTabs3: Anvil Tab III
 EquipmentSmithingTabs4: Anvil Tab IV
