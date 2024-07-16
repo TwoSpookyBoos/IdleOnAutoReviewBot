@@ -622,8 +622,11 @@ class AdviceSection(AdviceBase):
             finished = ""
 
             if "/" in self.tier:
-                prog, goal = self.tier.split("/")
-                finished = " finished" if prog == goal else ""
+                try:
+                    prog, goal = self.tier.split("/")
+                    finished = " finished" if prog >= goal else ""
+                except:
+                    finished = ""
 
             parts[1] = f"""<span class="tier-progress{finished}">{parts[1]}</span>"""
 
