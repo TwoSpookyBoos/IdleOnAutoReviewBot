@@ -1892,11 +1892,11 @@ class Account:
         # [160, 23, 0, 0, 77, 295],  # [32] = Snail Import
         # [0, 21884575.351264, 0, 0, 309, 210],  # [33] = Box9 Import
         # [0, 842957708.5889401, 0, 0, 0, 0],  # [34] = Box10 Import
-        raw_gaming_sprouts_list = safe_loads(self.raw_data.get("GamingSprouts", []))
+        raw_gaming_sprout_list = safe_loads(self.raw_data.get("GamingSprout", []))
         try:
             self.gaming['Imports'] = {
                 'Snail': {
-                    'SnailRank': raw_gaming_sprouts_list[32][1]
+                    'SnailRank': raw_gaming_sprout_list[32][1]
                 }
             }
         except:
