@@ -507,7 +507,7 @@ def setSecretClassProgressionTier():
     secretClass_AdviceSection.pinchy_rating = overall_SecretClassTier
     secretClass_AdviceSection.tier = tier_section
     secretClass_AdviceSection.groups = secretClass_AdviceGroupDict.values()
-    if overall_SecretClassTier == max_tier:
+    if overall_SecretClassTier >= max_tier:
         secretClass_AdviceSection.header = f"Best Secret Class tier met: {tier_section}<br>You best ❤️"
         try:
             if len(secretClass_AdviceGroupDict["MaestroHands"].advices['default']) == 0:

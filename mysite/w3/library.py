@@ -487,7 +487,7 @@ def setLibraryProgressionTier() -> AdviceSection:
     library_AdviceSection.tier = tier_section
     library_AdviceSection.pinchy_rating = overall_LibraryTier
     library_AdviceSection.groups = library_AdviceGroupDict.values()
-    if overall_LibraryTier == max_tier:
+    if overall_LibraryTier >= max_tier:
         library_AdviceSection.header = f"Best Library tier met: {tier_section}<br>You best ❤️"
     else:
         library_AdviceSection.header = f"Best Library tier met: {tier_section}"

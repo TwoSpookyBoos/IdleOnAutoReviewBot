@@ -738,7 +738,7 @@ def setConsDeathNoteProgressionTier():
     deathnote_AdviceSection.tier = tier_section
     deathnote_AdviceSection.pinchy_rating = overall_DeathNoteTier
     deathnote_AdviceSection.groups = deathnote_AdviceGroupDict.values()
-    if overall_DeathNoteTier == max_tier:
+    if overall_DeathNoteTier >= max_tier:
         deathnote_AdviceSection.header = f"Best Death Note tier met: {tier_section}<br>You best ❤️"
         deathnote_AdviceSection.complete = True
     else:

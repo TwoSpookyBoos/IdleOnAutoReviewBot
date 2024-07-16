@@ -17,6 +17,7 @@ def setOwlProgressionTier() -> AdviceSection:
         picture='Owl.gif'
     )
 
+    infoTiers = 1
     max_tier = max(owl_progressionTiers.keys())-1  #One informational tier
     tier_MegaFeathers = 0
     featherResetsDict = {
@@ -90,12 +91,12 @@ def setOwlProgressionTier() -> AdviceSection:
     )
 
     # Generate AdviceSection
-    overall_OwlTier = min(max_tier, tier_MegaFeathers)
+    overall_OwlTier = min(max_tier + infoTiers, tier_MegaFeathers)
     tier_section = f"{overall_OwlTier}/{max_tier}"
     owl_AdviceSection.pinchy_rating = overall_OwlTier
     owl_AdviceSection.tier = tier_section
     owl_AdviceSection.groups = owl_AdviceGroupDict.values()
-    if overall_OwlTier == max_tier:
+    if overall_OwlTier >= max_tier:
         owl_AdviceSection.header = f"Best Owl tier met: {tier_section}<br>You best ❤️"
         owl_AdviceSection.complete = True
     else:

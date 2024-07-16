@@ -181,7 +181,7 @@ def setSailingProgressionTier():
     sailing_AdviceSection.tier = tier_section
     sailing_AdviceSection.pinchy_rating = overall_SailingTier
     sailing_AdviceSection.groups = sailing_AdviceGroupDict.values()
-    if overall_SailingTier == max_tier:
+    if overall_SailingTier >= max_tier:
         sailing_AdviceSection.header = f"Best Sailing tier met: {tier_section}<br>You best ❤️"
         sailing_AdviceSection.complete = True
     else:

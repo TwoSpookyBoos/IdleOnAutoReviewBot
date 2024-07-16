@@ -380,7 +380,7 @@ def setConsRefineryProgressionTier():
     refinery_AdviceSection.tier = tier_section
     refinery_AdviceSection.pinchy_rating = overall_ConsRefineryTier
     refinery_AdviceSection.groups = refinery_AdviceGroupDict.values()
-    if overall_ConsRefineryTier == max_tier:
+    if overall_ConsRefineryTier >= max_tier:
         refinery_AdviceSection.header = f"Best Refinery tier met: {tier_section}<br>You best ❤️"
         refinery_AdviceSection.complete = True
     else:

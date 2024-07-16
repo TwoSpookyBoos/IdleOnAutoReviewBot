@@ -80,7 +80,7 @@ def setSneakingProgressionTier():
     sneaking_AdviceSection.tier = tier_section
     sneaking_AdviceSection.pinchy_rating = overall_SneakingTier
     sneaking_AdviceSection.groups = sneaking_AdviceGroupDict.values()
-    if overall_SneakingTier == max_tier:
+    if overall_SneakingTier >= max_tier:
         sneaking_AdviceSection.header = f"Best Sneaking tier met: {tier_section}<br>You best ❤️"
     else:
         sneaking_AdviceSection.header = f"Best Sneaking tier met: {tier_section}"

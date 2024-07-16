@@ -404,7 +404,7 @@ def setStampProgressionTier() -> AdviceSection:
     stamp_AdviceSection.pinchy_rating = overall_StampTier
     stamp_AdviceSection.tier = tier_section
     stamp_AdviceSection.groups = stamp_AdviceGroupDict.values()
-    if overall_StampTier == max_tier:
+    if overall_StampTier >= max_tier:
         stamp_AdviceSection.header = f"Best Stamp tier met: {tier_section}.<br>You best ❤️<br>Let me know what important stamps you're aiming for next!"
         stamp_AdviceSection.complete = True
     else:

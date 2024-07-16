@@ -57,7 +57,7 @@ def setConsSaltLickProgressionTier() -> AdviceSection:
     saltlick_AdviceSection.tier = tier_section
     saltlick_AdviceSection.pinchy_rating = overall_ConsSaltLickTier
     saltlick_AdviceSection.groups = saltlick_AdviceGroupDict.values()
-    if overall_ConsSaltLickTier == max_tier:
+    if overall_ConsSaltLickTier >= max_tier:
         saltlick_AdviceSection.header = f"Best Salt Lick tier met: {tier_section}<br>You best ❤️"
         saltlick_AdviceSection.complete = True
     else:

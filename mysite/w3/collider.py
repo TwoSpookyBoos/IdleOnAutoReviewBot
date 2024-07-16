@@ -253,7 +253,7 @@ def setColliderProgressionTier() -> AdviceSection:
     collider_AdviceSection.tier = tier_section
     collider_AdviceSection.pinchy_rating = overall_ColliderTier
     collider_AdviceSection.groups = collider_AdviceGroupDict.values()
-    if overall_ColliderTier == max_tier:
+    if overall_ColliderTier >= max_tier:
         collider_AdviceSection.header = f"Best Collider tier met: {tier_section}<br>You best ❤️"
         collider_AdviceSection.complete = True
     else:

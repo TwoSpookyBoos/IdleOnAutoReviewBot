@@ -219,7 +219,7 @@ def setSamplingProgressionTier() -> AdviceSection:
     sampling_AdviceSection.tier = tier_section
     sampling_AdviceSection.pinchy_rating = overall_SamplingTier
     sampling_AdviceSection.groups = sampling_AdviceGroupDict.values()
-    if overall_SamplingTier == max_tier:
+    if overall_SamplingTier >= max_tier:
         sampling_AdviceSection.header = f"Best Sampling tier met: {tier_section}<br>You best ❤️"
     else:
         sampling_AdviceSection.header = f"Best Sampling tier met: {tier_section}"

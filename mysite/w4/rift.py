@@ -87,7 +87,7 @@ def setRiftProgressionTier():
     rift_AdviceSection.tier = tier_section
     rift_AdviceSection.pinchy_rating = overall_RiftTier
     rift_AdviceSection.groups = rift_AdviceGroupDict.values()
-    if overall_RiftTier == max_tier:
+    if overall_RiftTier >= max_tier:
         rift_AdviceSection.header = f"Best Rift tier met: {tier_section}<br>You best ❤️"
         rift_AdviceSection.complete = True
     else:
