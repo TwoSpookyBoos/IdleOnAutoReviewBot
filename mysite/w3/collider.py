@@ -50,7 +50,7 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
     if colliderData['OnOffStatus'] == True:
         settings_advice['Alerts'].append(
             Advice(
-                label=f"Collider switch status: {'On' if session_data.account.atom_collider['OnOffStatus'] else 'Off'}.<br>Recommended to select Off instead.",
+                label=f"Collider switch status: {'On' if session_data.account.atom_collider['OnOffStatus'] else 'Off'}.<br>Recommended to select Off instead to avoid nuking your storage from a single misclick.",
                 picture_class="collider-toggle",
             )
         )
@@ -68,11 +68,24 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
         )
 
     #Sodium lower than Snail // 5
+    colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'] = 2
+    session_data.account.gaming['Imports']['Snail']['SnailRank'] = 15
     if colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'] < session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5:
         settings_advice['Alerts'].append(
             Advice(
                 label=f"Snail could reset from Rank {session_data.account.gaming['Imports']['Snail']['SnailRank']}"
                       f" to {colliderData['Atoms']['Sodium - Snail Kryptonite']['Level']*5}!"
+                      f"<br>Level Sodium to {session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5}"
+                      f" to protect Rank {5 * (session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5)}.",
+                picture_class="sodium",
+                progression=colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'],
+                goal=session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5
+            )
+        )
+        session_data.account.alerts_AdviceDict['World 3'].append(
+            Advice(
+                label=f"Snail could reset from Rank {session_data.account.gaming['Imports']['Snail']['SnailRank']}"
+                      f" to {colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'] * 5}!"
                       f"<br>Level Sodium to {session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5}"
                       f" to protect Rank {5 * (session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5)}.",
                 picture_class="sodium",
@@ -103,6 +116,13 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
 
     if currentMaxedTowers > 0:
         settings_advice['Alerts'].append(
+            Advice(
+                label=f"{currentMaxedTowers} TD Tower{pl(currentMaxedTowers)} at max level."
+                      f"<br>Level up Carbon to increase your max Tower levels by 2.",
+                picture_class="carbon",
+            )
+        )
+        session_data.account.alerts_AdviceDict['World 3'].append(
             Advice(
                 label=f"{currentMaxedTowers} TD Tower{pl(currentMaxedTowers)} at max level."
                       f"<br>Level up Carbon to increase your max Tower levels by 2.",
