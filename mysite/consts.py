@@ -2944,7 +2944,7 @@ skill_talentsDict = {
             293: {"Name": "Agi Again", "Tab": "Archer Subclass"},
         },
         "Low": {
-            292: {"Name": "Shwifty Statues", "Tab": "Bowman"},
+            292: {"Name": "Shwifty Statues", "Tab": "Bowman", 'Hardcap': 200},
             144: {"Name": "The Family Guy", "Tab": "Elite Class"},
             291: {"Name": "Shoeful of Obol", "Tab": "Archer Subclass", 'Hardcap': 125},
         },
