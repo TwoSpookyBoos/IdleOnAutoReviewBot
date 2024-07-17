@@ -3125,7 +3125,7 @@ combat_talentsDict = {
             290: {"Name": "Speedna", "Tab": "Bowman"},
             273: {"Name": "Strafe", "Tab": "Archer"},
             284: {"Name": "Veins of the Infernal", "Tab": "Archer"},
-            276: {"Name": "High Polymer Limbs", "Tab": "Archer"},
+            277: {"Name": "High Polymer Limbs", "Tab": "Archer"},
             6: {"Name": "Gilded Sword", "Tab": "Calm Basics"},
         },
         "Low": {
@@ -3149,7 +3149,7 @@ combat_talentsDict = {
             290: {"Name": "Looty Mc Shooty", "Tab": "Bowman"},
             #273: {"Name": "Strafe", "Tab": "Archer"},
             284: {"Name": "Veins of the Infernal", "Tab": "Archer"},
-            276: {"Name": "High Polymer Limbs", "Tab": "Archer"},
+            277: {"Name": "High Polymer Limbs", "Tab": "Archer"},
             6: {"Name": "Gilded Sword", "Tab": "Calm Basics"},
         },
         "Low": {
