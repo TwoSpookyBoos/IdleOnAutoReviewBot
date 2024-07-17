@@ -2828,11 +2828,11 @@ class Account:
 
             # Arctis minor link
             if self.doot_owned or char.divinity_link == "Arctis" or char.current_polytheism_link == "Arctis" or char.secondary_polytheism_link == "Arctis":
-                bigp_value = self.alchemy_bubbles['Big P']['BaseValue']
-                div_minorlink_value = char.divinity_level / (char.divinity_level + 60)
                 arctis_base = 15
-                final_result = ceil(arctis_base * bigp_value * div_minorlink_value)
-                character_specific_bonuses += ceil(15 * self.alchemy_bubbles['Big P']['BaseValue'] * (char.divinity_level / (char.divinity_level + 60)))
+                #bigp_value = self.alchemy_bubbles['Big P']['BaseValue']
+                #div_minorlink_value = char.divinity_level / (char.divinity_level + 60)
+                #final_result = ceil(arctis_base * bigp_value * div_minorlink_value)
+                character_specific_bonuses += ceil(arctis_base * self.alchemy_bubbles['Big P']['BaseValue'] * (char.divinity_level / (char.divinity_level + 60)))
 
             # Symbols of Beyond = 1 per 20 levels
             if char.class_name in ["Blood Berserker", "Divine Knight"]:

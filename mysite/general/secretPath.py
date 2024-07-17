@@ -7,7 +7,7 @@ from utils.text_formatting import pl
 
 logger = get_logger(__name__)
 
-skillsToReview_RightHand = ["Mining", "Choppin", "Fishing", "Catching", "Trapping"]  #, "Worship"]
+skillsToReview_RightHand = ["Mining", "Choppin", "Fishing", "Catching", "Trapping", "Worship"]
 
 def getHandsAdviceGroupCatchUp(maestros, beginners):
     # This function returns the skills maestros aren't best in.
@@ -20,15 +20,21 @@ def getHandsAdviceGroupCatchUp(maestros, beginners):
     hands_pre_string = create_hands_pre_string(janky_skills, maestros, beginners, tier)
 
     post_string = ""
-    if "Worship" in janky_skills:
-        post_string = "Worship matters moreso for Species Epoch than Right Hand. Don't steal charge away from this character!"
+    if "Worship" in janky_skills \
+            or "Trapping" in janky_skills:
+        post_string = (f"Right Hand gives about 8% more Souls and Critters, and Species Epoch gives about 6% PER Trapping and Worship level! "
+                       f"Don't steal Mman's Worship Charge, and don't slack on your Crystal Countdowns!")
 
     advices = []
 
     for skill, (maestro, goal, next_highest_non_maestro_char) in janky_skills.items():
         if not next_highest_non_maestro_char:
+            if len(maestros) == 1:
+                fancy_label = skill
+            else:
+                fancy_label = f"Best {skill} Maestro: {maestro.character_name}"
             advices.append(Advice(
-                label=maestro.character_name,
+                label=fancy_label,
                 picture_class=skill,
                 progression=maestro.skills[skill],
                 goal=goal,
@@ -54,19 +60,31 @@ def getHandsAdviceGroupStayAhead(maestros):
         # No maestros ahead in any skill. I think?
         return
     tier = f"{zero_count}/{len(skillsToReview_RightHand)}"
-    hands_pre_string = f"⚠️ Your Maestro is the highest level in {len(skillsToReview_RightHand)-zero_count}/{len(skillsToReview_RightHand)} Right Hand skills. Be careful not to let other characters overtake"
+    if len(maestros) == 1:
+        hands_pre_string = (f"Your Maestro is the highest level in {len(skillsToReview_RightHand)-zero_count}/{len(skillsToReview_RightHand)}"
+                            f" Right Hand skills. Be careful not to let other characters overtake")
+    else:
+        hands_pre_string = (f"Your Maestros are not the highest level in {len(skillsToReview_RightHand)-zero_count}/{len(skillsToReview_RightHand)}"
+                            f" Right Hand skills. Be careful not to let other characters overtake")
 
     post_string = ""
-    if "Worship" in janky_skills:
-        post_string = "Worship matters moreso for Species Epoch than Right Hand. Don't steal charge away from this character!"
+    # if "Worship" in janky_skills \
+    #         or "Trapping" in janky_skills:
+    #     post_string = (f"Right Hand gives about 8% more Souls and Critters, and Species Epoch gives about 6% PER Trapping and Worship level! "
+    #                    f"Don't steal Mman's Worship Charge, and don't slack on your Crystal Countdowns!")
 
     advices_first = []
 
     for skill, (maestro, goal, next_highest_non_maestro_char) in janky_skills.items():
         if next_highest_non_maestro_char:
+            if next_highest_non_maestro_char.skills[skill] == maestro.skills[skill] - 1:
+                fancy_label = f"🛑 {next_highest_non_maestro_char} should not level {skill} any further."
+            else:
+                fancy_label = f"{next_highest_non_maestro_char} can level {skill} to {maestro.skills[skill] - 1}"
             advices_first.append(Advice(
-                label=f"{'🛑 ' if next_highest_non_maestro_char.skills[skill] == maestro.skills[skill]-1 else ''}"
-                f"{maestro.character_name} has {maestro.skills[skill]} {skill}. Next closest is {next_highest_non_maestro_char} at {next_highest_non_maestro_char.skills[skill]}",
+                label=fancy_label,
+                #label=f"{'🛑 ' if next_highest_non_maestro_char.skills[skill] == maestro.skills[skill]-1 else ''}"
+                #f"{maestro.character_name} has {maestro.skills[skill]} {skill}. Next closest is {next_highest_non_maestro_char} at {next_highest_non_maestro_char.skills[skill]}",
 
                 picture_class=skill,
                 progression=next_highest_non_maestro_char.skills[skill],
@@ -152,9 +170,9 @@ def setSecretClassProgressionTier():
     tier_SecretClass = 0
 
     toons = session_data.account.all_characters
-    maestros: list[Character] = [toon for toon in toons if toon.sub_class == "Maestro"]
-    jmans: list[Character] = [toon for toon in toons if toon.base_class == "Journeyman"]
-    beginners: list[Character] = [toon for toon in toons if toon.base_class in ["Beginner", "Journeyman"]]
+    maestros: list[Character] = [toon for toon in toons if "Maestro" in toon.all_classes]
+    jmans: list[Character] = [toon for toon in toons if "Journeyman" in toon.all_classes]
+    beginners: list[Character] = jmans + [toon for toon in toons if "Beginner" in toon.all_classes]
 
     if "Infinilyte" in session_data.account.classes:
         tier_SecretClass = 4
