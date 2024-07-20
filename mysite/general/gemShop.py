@@ -113,6 +113,11 @@ def try_exclude_IvoryBubbleCauldrons(exclusionList):
     if session_data.account.alchemy_cauldrons['NextWorldMissingBubbles'] > currentWorld:
         exclusionList.append('Ivory Bubble Cauldrons')
 
+def try_exclude_farming(exclusionList):
+    if session_data.account.farming["CropsUnlocked"] >= maxFarmingCrops:
+        exclusionList.append('Instagrow Generator')
+        exclusionList.append('Plot of Land')
+
 def getGemShopExclusions():
     exclusionList = []
     #W2
@@ -130,6 +135,9 @@ def getGemShopExclusions():
     #W5
     try_exclude_ChestSluggo(exclusionList)
     try_exclude_GoldenSprinkler(exclusionList)
+
+    #W6
+    try_exclude_farming(exclusionList)
 
     return exclusionList
 
