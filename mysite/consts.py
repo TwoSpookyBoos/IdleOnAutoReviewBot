@@ -5044,7 +5044,7 @@ gamingSuperbitsDict = {
     22: {'Name': 'Even Moar Bubbles', 'BonusText': '+30% chance for +1 more bubble boosted by No Bubble Left Behind', 'Cost': 0, 'CodeString': 'v'},
     23: {'Name': 'Isotope Discovery', 'BonusText': 'All atoms now have +10 Max LV', 'Cost': 0, 'CodeString': 'w'},
 }
-
+snailMaxRank = 25
 
 def getDivinityNameFromIndex(inputValue: int) -> str:
     return divinity_divinitiesDict.get(inputValue, {"Name": f"UnknownDivinity{inputValue}"}).get("Name")
