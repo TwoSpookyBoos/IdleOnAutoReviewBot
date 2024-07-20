@@ -32,16 +32,16 @@ def setEquinoxProgressionTier() -> AdviceSection:
 
     #Dreams Completed
     remainingBonusesToBeUnlocked = []
-    for bonusName, bonusValuesDict in session_data.account.equinox_bonuses.items():
-        if bonusValuesDict['Unlocked'] == False:
-            remainingBonusesToBeUnlocked.append(bonusName)
     if session_data.account.total_dreams_completed >= maxDreams:  #If the player has completed ALL dreams, set to max tier
         tier_TotalDreamsCompleted = max_tier + infoTiers
     else:
+        for bonusName, bonusValuesDict in session_data.account.equinox_bonuses.items():
+            if bonusValuesDict['Unlocked'] == False:
+                remainingBonusesToBeUnlocked.append(bonusName)
         # Otherwise set to max - 1 (for completing all dreams) - however many upgrades are remaining to be unlocked
         # 11 - 1 = t10 if all bonuses unlocked
         # 11 - 1 - 4 = t6 if 5 remaining bonuses to be unlocked
-        tier_TotalDreamsCompleted = max_tier - infoTiers - len(session_data.account.remaining_equinox_dreams_unlocking_new_bonuses)
+        tier_TotalDreamsCompleted = max_tier - len(session_data.account.remaining_equinox_dreams_unlocking_new_bonuses)
         for lockedBonus in remainingBonusesToBeUnlocked:
             equinox_AdviceDict["DreamsCompleted"].append(Advice(
                 label=f"{lockedBonus} ({session_data.account.equinox_bonuses[lockedBonus]['Category']})",
@@ -107,8 +107,11 @@ def setEquinoxProgressionTier() -> AdviceSection:
 
     # Generate AdviceGroups
     equinox_AdviceGroupDict["DreamsCompleted"] = AdviceGroup(
-        tier=str(tier_TotalDreamsCompleted),
-        pre_string=f"{pl(maxDreams - session_data.account.total_dreams_completed, 'Complete the last Equinox Dream', 'Complete more Equinox Dreams')}",
+        tier=f"{tier_TotalDreamsCompleted if tier_TotalDreamsCompleted < max_tier else ''}",
+        pre_string=f"{'Informational- ' if tier_TotalDreamsCompleted >= max_tier else ''}"
+                   f"""{pl(maxDreams - session_data.account.total_dreams_completed,
+                         'Complete the last Equinox Dream',
+                         'Complete more Equinox Dreams')}""",
         advices=equinox_AdviceDict['DreamsCompleted']
     )
 
