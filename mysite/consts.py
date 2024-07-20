@@ -3105,6 +3105,7 @@ combat_talentsDict = {
             103: {"Name": "Idle Casting", "Tab": "Savvy Basics"},
             5: {"Name": "Sharpened Axe", "Tab": "Savvy Basics"},
             531: {"Name": "Memorial Skulls", "Tab": "Elemental Sorcerer"},
+            463: {"Name": "Choppin It Up Ez", "Tab": "Mage"},
         },
     },
     "Siege Breaker": {
