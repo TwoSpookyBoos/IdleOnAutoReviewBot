@@ -5300,29 +5300,38 @@ marketUpgradeLastIndex = marketUpgradeFirstIndex + len(marketUpgradeList)
 def getMoissaniteValue(moissaniteLevel: int):
     try:
         if moissaniteLevel > 0:
-            return 3+(300*(moissaniteLevel/(moissaniteLevel+1000)))
+            return 3 + (300 * (moissaniteLevel / (moissaniteLevel+1000)))
         else:
             return 0
     except:
         return 0
-def getGemstoneValue(gemstoneName: str, gemstoneLevel: int, moissaniteLevel: int, moissaniteValue: float):
-    moissaniteMulti = 1 + (moissaniteValue / 100)
+
+def getGemstoneBoostedValue(gemstoneValue: float, moissaniteValue: float):
+    if moissaniteValue > 0:
+        moissaniteMulti = 1 + (moissaniteValue / 100)
+        boostedValue = gemstoneValue * moissaniteMulti
+        return boostedValue
+    else:
+        return gemstoneValue
+
+def getGemstoneBaseValue(gemstoneName: str, gemstoneLevel: int):
     value = 0
     if gemstoneLevel > 0:
         if gemstoneName == "Aquamarine":
             value = 40 + (10000 * (gemstoneLevel / (gemstoneLevel + 1000)))
         elif gemstoneName == "Emerald":
-            value = 15 + (5000  * (gemstoneLevel / (gemstoneLevel + 1000)))
+            value = 15 + (5000 * (gemstoneLevel / (gemstoneLevel + 1000)))
         elif gemstoneName == "Garnet":
-            value = 12 + (2500  * (gemstoneLevel / (gemstoneLevel + 1000)))
+            value = 12 + (2500 * (gemstoneLevel / (gemstoneLevel + 1000)))
         elif gemstoneName == "Starite":
-            value = 5 +  (200   * (gemstoneLevel / (gemstoneLevel + 1000)))
+            value = 5 + (200 * (gemstoneLevel / (gemstoneLevel + 1000)))
         elif gemstoneName == "Topaz":
-            value = 10 + (1000  * (gemstoneLevel / (gemstoneLevel + 1000)))
-
-    if moissaniteLevel > 0:
-        value *= moissaniteMulti
+            value = 10 + (1000 * (gemstoneLevel / (gemstoneLevel + 1000)))
+        else:
+            logger.warning(f"Unrecognized gemstoneName: '{gemstoneName}'. Returning default 0 value")
+            value = 0
     return value
+
 def getGemstonePercent(gemstoneName: str, gemstoneValue: float):
     try:
         return 100 * (gemstoneValue / sneakingGemstonesMaxValueDict[gemstoneName])
