@@ -3155,7 +3155,7 @@ combat_talentsDict = {
         "Low": {
             268: {"Name": "Idle Shooting", "Tab": "Calm Basics"},
             5: {"Name": "Sharpened Axe", "Tab": "Calm Basics"},
-            366: {"Name": "Stacked Skulls", "Tab": "Siege Breaker"},
+            366: {"Name": "Stacked Skulls", "Tab": "Beast Master"},
         },
     },
     "Voidwalker": {
