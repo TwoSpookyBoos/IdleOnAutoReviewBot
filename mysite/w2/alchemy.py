@@ -6,7 +6,7 @@ from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import maxTiersPerGroup, bubbles_progressionTiers, vials_progressionTiers, max_IndexOfVials, maxFarmingCrops, atrisk_basicBubbles, \
-    atrisk_lithiumBubbles
+    atrisk_lithiumBubbles, cookingCloseEnough
 
 logger = get_logger(__name__)
 
@@ -158,6 +158,11 @@ def getBubbleExclusions():
     #If all crops owned or Evolution GMO is level 10+, exclude the requirement for Cropius Mapper
     if session_data.account.farming["CropsUnlocked"] >= maxFarmingCrops or session_data.account.farming["MarketUpgrades"].get("Evolution GMO", 0) > 20:
         exclusionsList.append("Cropius Mapper")
+
+    #If cooking is nearly finished, exclude Diamond Chef
+    if session_data.account.cooking['MaxRemainingMeals'] < cookingCloseEnough:
+        exclusionsList.append("Diamond Chef")
+
     return exclusionsList
 
 def getAtRiskAdviceGroups() -> list[AdviceGroup]:
