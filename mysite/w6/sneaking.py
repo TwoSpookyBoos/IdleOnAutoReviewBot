@@ -28,15 +28,22 @@ def setSneakingProgressionTier():
 
     #Assess Gemstones
     for gemstoneName, gemstoneData in session_data.account.sneaking["Gemstones"].items():
+        if session_data.account.sneaking["Gemstones"]['Moissanite']['BaseValue'] > 0 and gemstoneName != 'Moissanite':
+            boosted_value = f" (+{gemstoneData['BoostedValue']:.2f}% total)"
+        else:
+            boosted_value = ''
         sneaking_AdviceDict["Gemstones"].append(Advice(
-            label="{} (Level {}: +{:.2f}% {})".format(
-                gemstoneName,
-                gemstoneData.get('Level', 0),
-                gemstoneData.get('Value', 0),
-                gemstoneData.get('Stat', '')),
+            # label="{} (Level {}: +{:.2f}% {})".format(
+            #     gemstoneName,
+            #     gemstoneData.get('Level', 0),
+            #     gemstoneData.get('Value', 0),
+            #     gemstoneData.get('Stat', '')),
+            label=f"Level {gemstoneData['Level']} {gemstoneName}:"
+                  f" +{gemstoneData['BaseValue']:.2f}% {gemstoneData['Stat']}"
+                  f"{boosted_value}",
             picture_class=gemstoneName,
             progression=f"{gemstoneData.get('Percent', 0):.2f}",
-            goal=100 if session_data.account.sneaking["Gemstones"]['Moissanite']['Level'] == 0 else 400,
+            goal=100,  # if session_data.account.sneaking["Gemstones"]['Moissanite']['Level'] == 0 or gemstoneName == 'Moissanite' else 400,
             unit="%"
         ))
 
@@ -60,7 +67,7 @@ def setSneakingProgressionTier():
     sneaking_AdviceGroupDict["Gemstones"] = AdviceGroup(
         tier="",
         pre_string="Percentage of Gemstone values",
-        post_string="Formulas thanks to merlinthewizard1313",
+        #post_string="Formulas thanks to merlinthewizard1313",
         advices=sneaking_AdviceDict["Gemstones"]
     )
     sneaking_AdviceGroupDict["JadeEmporium"] = AdviceGroup(

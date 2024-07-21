@@ -23,7 +23,8 @@ def setEquinoxProgressionTier() -> AdviceSection:
         equinox_AdviceSection.header = "Come back after unlocking Equinox!"
         return equinox_AdviceSection
 
-    max_tier = len(dreamsThatUnlockNewBonuses) + 1  # 1 final tier for completing all dreams
+    infoTiers = 1
+    max_tier = len(dreamsThatUnlockNewBonuses)  # 1 final info tier for completing all dreams
     playerRecommendedBonusTotal = sum([bonus['CurrentLevel'] for bonus in session_data.account.equinox_bonuses.values() if bonus['Category'] == 'Recommended'])
     playerOptionalBonusTotal = sum([bonus['CurrentLevel'] for bonus in session_data.account.equinox_bonuses.values() if bonus['Category'] == 'Optional'])
     recommendedBonusTotal = sum([bonus['FinalMaxLevel'] for bonus in session_data.account.equinox_bonuses.values() if bonus['Category'] == 'Recommended'])
@@ -31,16 +32,16 @@ def setEquinoxProgressionTier() -> AdviceSection:
 
     #Dreams Completed
     remainingBonusesToBeUnlocked = []
-    for bonusName, bonusValuesDict in session_data.account.equinox_bonuses.items():
-        if bonusValuesDict['Unlocked'] == False:
-            remainingBonusesToBeUnlocked.append(bonusName)
     if session_data.account.total_dreams_completed >= maxDreams:  #If the player has completed ALL dreams, set to max tier
-        tier_TotalDreamsCompleted = max_tier
+        tier_TotalDreamsCompleted = max_tier + infoTiers
     else:
+        for bonusName, bonusValuesDict in session_data.account.equinox_bonuses.items():
+            if bonusValuesDict['Unlocked'] == False:
+                remainingBonusesToBeUnlocked.append(bonusName)
         # Otherwise set to max - 1 (for completing all dreams) - however many upgrades are remaining to be unlocked
         # 11 - 1 = t10 if all bonuses unlocked
         # 11 - 1 - 4 = t6 if 5 remaining bonuses to be unlocked
-        tier_TotalDreamsCompleted = max_tier - 1 - len(session_data.account.remaining_equinox_dreams_unlocking_new_bonuses)
+        tier_TotalDreamsCompleted = max_tier - len(session_data.account.remaining_equinox_dreams_unlocking_new_bonuses)
         for lockedBonus in remainingBonusesToBeUnlocked:
             equinox_AdviceDict["DreamsCompleted"].append(Advice(
                 label=f"{lockedBonus} ({session_data.account.equinox_bonuses[lockedBonus]['Category']})",
@@ -106,8 +107,11 @@ def setEquinoxProgressionTier() -> AdviceSection:
 
     # Generate AdviceGroups
     equinox_AdviceGroupDict["DreamsCompleted"] = AdviceGroup(
-        tier=str(tier_TotalDreamsCompleted),
-        pre_string=f"{pl(maxDreams - session_data.account.total_dreams_completed, 'Complete the last Equinox Dream', 'Complete more Equinox Dreams')}",
+        tier=f"{tier_TotalDreamsCompleted if tier_TotalDreamsCompleted < max_tier else ''}",
+        pre_string=f"{'Informational- ' if tier_TotalDreamsCompleted >= max_tier else ''}"
+                   f"""{pl(maxDreams - session_data.account.total_dreams_completed,
+                         'Complete the last Equinox Dream',
+                         'Complete more Equinox Dreams')}""",
         advices=equinox_AdviceDict['DreamsCompleted']
     )
 
@@ -119,7 +123,7 @@ def setEquinoxProgressionTier() -> AdviceSection:
 
     # Generate AdviceSection
 
-    overall_EquinoxTier = min(max_tier, tier_TotalDreamsCompleted)
+    overall_EquinoxTier = min(max_tier + infoTiers, tier_TotalDreamsCompleted)
     tier_section = f"{overall_EquinoxTier}/{max_tier}"
     equinox_AdviceSection.tier = tier_section
     equinox_AdviceSection.pinchy_rating = overall_EquinoxTier

@@ -43,7 +43,7 @@ from consts import (
     gamingSuperbitsDict,
     # W6
     jade_emporium, pristineCharmsList, sneakingGemstonesFirstIndex, sneakingGemstonesList, sneakingGemstonesStatList,
-    getMoissaniteValue, getGemstoneValue, getGemstonePercent,
+    getMoissaniteValue, getGemstoneBaseValue, getGemstoneBoostedValue, getGemstonePercent,
     marketUpgradeList, landrankDict,
     summoningBattleCountsDict, summoningDict,
 )
@@ -624,7 +624,7 @@ class AdviceSection(AdviceBase):
             if "/" in self.tier:
                 try:
                     prog, goal = self.tier.split("/")
-                    finished = " finished" if prog >= goal else ""
+                    finished = " finished" if float(prog) >= float(goal) else ""
                 except:
                     finished = ""
 
@@ -2002,7 +2002,7 @@ class Account:
             except:
                 self.sneaking["PristineCharms"][pristineCharmName] = False
         for gemstoneIndex, gemstoneName in enumerate(sneakingGemstonesList):
-            self.sneaking["Gemstones"][gemstoneName] = {"Level": 0, "Value": 0, "Percent": 0, "Stat": ''}
+            self.sneaking["Gemstones"][gemstoneName] = {"Level": 0, "BaseValue": 0, "BoostedValue": 0.0, "Percent": 0, "Stat": ''}
             try:
                 self.sneaking["Gemstones"][gemstoneName]["Level"] = self.raw_optlacc_dict[sneakingGemstonesFirstIndex + gemstoneIndex]
             except:
@@ -2012,24 +2012,26 @@ class Account:
             except:
                 continue
         try:
-            self.sneaking["Gemstones"]["Moissanite"]["Value"] = getMoissaniteValue(self.sneaking["Gemstones"]["Moissanite"]["Level"])
+            self.sneaking["Gemstones"]["Moissanite"]["BaseValue"] = getMoissaniteValue(self.sneaking["Gemstones"]["Moissanite"]["Level"])
         except:
-            self.sneaking["Gemstones"]["Moissanite"]["Value"] = 0
+            pass  #Already defaulted to 0
         for gemstoneName in sneakingGemstonesList[0:-1]:
             try:
-                self.sneaking["Gemstones"][gemstoneName]["Value"] = getGemstoneValue(
+                self.sneaking["Gemstones"][gemstoneName]["BaseValue"] = getGemstoneBaseValue(
                     gemstoneName,
                     self.sneaking["Gemstones"][gemstoneName]["Level"],
-                    self.sneaking["Gemstones"]["Moissanite"]["Level"],
-                    self.sneaking["Gemstones"]["Moissanite"]["Value"]
+                )
+                self.sneaking["Gemstones"][gemstoneName]["BoostedValue"] = getGemstoneBoostedValue(
+                    self.sneaking["Gemstones"][gemstoneName]["BaseValue"],
+                    self.sneaking["Gemstones"]["Moissanite"]["BaseValue"]
                 )
             except:
-                continue
+                continue  #Already defaulted to 0
         for gemstoneName in sneakingGemstonesList:
             try:
                 self.sneaking["Gemstones"][gemstoneName]["Percent"] = getGemstonePercent(
                     gemstoneName,
-                    self.sneaking["Gemstones"][gemstoneName]["Value"]
+                    self.sneaking["Gemstones"][gemstoneName]["BaseValue"]
                 )
             except:
                 continue
