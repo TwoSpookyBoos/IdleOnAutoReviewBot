@@ -226,9 +226,9 @@ greenstack_progressionTiers = {
         7: {
             "Base Monster Materials": [
                 "SnowA4", "SnowC5",
-                "GalaxyB3", "GalaxyB4", "GalaxyB5", "GalaxyC1", "GalaxyC2", "GalaxyC3",],
+                "GalaxyB3", "GalaxyB4", "GalaxyB5", "GalaxyC1", "GalaxyC2", "GalaxyC3", "GalaxyC4"],
             "Crystal Enemy Drops": [
-                "FoodPotMana1", "FoodPotMana2", "FoodPotGr1", "FoodPotOr1", "FoodPotOr2", "FoodHealth1", "FoodHealth3", "FoodHealth2", "Leaf1"],
+                "FoodPotMana1", "FoodPotMana2", "FoodPotGr1", "FoodPotOr2", "FoodHealth1", "FoodHealth3", "FoodHealth2", "Leaf1"],
             "Other Skilling Resources": [
                 "CraftMat11",
                 "Critter5",
@@ -236,10 +236,11 @@ greenstack_progressionTiers = {
             },
         8: {
             "Base Monster Materials": [
-                "GalaxyC4",
-                "LavaA1", "LavaA2", "LavaA3", "LavaA4", "LavaA5", "LavaB1", "LavaB2", "LavaB3", "LavaB4", "LavaB5"],
+                "LavaA1", "LavaA2", "LavaA3", "LavaA4", "LavaA5", "LavaB1", "LavaB2", "LavaB3", "LavaB4", "LavaB5",
+                "SpiA1", "SpiA2",
+            ],
             "Crystal Enemy Drops": [
-                "FoodHealth6", "FoodHealth7", "FoodPotGr2", "FoodPotRe3", "Leaf2",],
+                "FoodHealth6", "FoodHealth7", "FoodPotGr2", "FoodPotRe3",],
             "Other Skilling Resources": [
                 "CraftMat12",
                 "Critter6", "Critter7",
@@ -248,9 +249,9 @@ greenstack_progressionTiers = {
         9: {
             "Base Monster Materials": [
                 "LavaB6", "LavaC1", "LavaC2",  #Can beat Kruk and move to W6 without fighting these
-                "SpiA1", "SpiA2", "SpiA3", "SpiA4", "SpiA5", "SpiB1", "SpiB2", "SpiB3",],
+                "SpiA3", "SpiA4", "SpiA5", "SpiB1", "SpiB2", "SpiB3", "SpiB4", "SpiC1", "SpiC2",],
             "Crystal Enemy Drops": [
-                "FoodHealth10", "FoodPotOr3", "FoodPotYe2", "Leaf3"],
+                "FoodHealth10", "FoodPotOr3", "FoodPotYe2", ],
             "Other Skilling Resources": [
                 "CraftMat13", "CraftMat14",
                 "Critter8", "Critter9",
@@ -258,14 +259,15 @@ greenstack_progressionTiers = {
             },
         10: {
             "Base Monster Materials": [
-                "SpiB4", "SpiC1", "SpiC2", "SpiD1", "SpiD2", "SpiD3",],
+                 "SpiD1", "SpiD2", "SpiD3",],
             "Crystal Enemy Drops": [
+                "Leaf2",
+                "Leaf3",
                 "FoodPotMana4", "Leaf4",
                 "FoodPotYe5", "Leaf5",
                 "Leaf6",],
             "Printable Skilling Resources": [],
             "Other Skilling Resources": [
-                "Critter10", "Critter11",
                 "Soul7",
                 "CopperBar", "IronBar",
                 "FoodMining1", "FoodFish1", "FoodCatch1", "Bullet", "BulletB",],
@@ -278,9 +280,12 @@ greenstack_progressionTiers = {
                 "Quest14", "Quest22", "Quest23", "Quest24",
                 "Quest32",
             ],
+            "Crystal Enemy Drops": [
+                "FoodPotOr1",
+            ],
             "Other Skilling Resources": [
                 "PlatBar",
-
+                "Critter10", "Critter11",
             ],
             },
         12: {
