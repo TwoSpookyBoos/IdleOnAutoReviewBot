@@ -356,39 +356,33 @@ stamps_progressionTiers = {
         "Misc": ["Vendor Stamp"]}},
     4: {"TotalStampLevels": 200, "Stamps": {
         "Combat": ["Fist Stamp", "Manamoar Stamp"],
-        "Skill": ["Lil' Mining Baggy Stamp", "Fishing Rod Stamp", "Catch Net Stamp"],
-        "Misc": ["Talent S Stamp"],
+        "Skill": ["Lil' Mining Baggy Stamp"],
         "Optional": ["Clover Stamp"]}},
     5: {"TotalStampLevels": 250, "Stamps": {
-        "Combat": ["Longsword Stamp", "Battleaxe Stamp"],
+        "Combat": ["Longsword Stamp"],
         "Skill": ["Anvil Zoomer Stamp", "Matty Bag Stamp"],
-        "Misc": ["Questin Stamp"],
-        "Specific": {'Pickaxe Stamp': 25, 'Hatchet Stamp': 25},
         "Optional": ["Kapow Stamp"]}},
-    6: {"TotalStampLevels": 300, "Stamps": {
-        "Combat": ["Feather Stamp", "Polearm Stamp", "Buckler Stamp"],
-        "Skill": ["Purp Froge Stamp"], "MiscStamps": ["Potion Stamp"]}},
+    6: {"TotalStampLevels": 300, "Stamps": {}},
     7: {"TotalStampLevels": 400, "Stamps": {
+        "Skill": ["Fishing Rod Stamp", "Catch Net Stamp"],
         "Specific": {'Pickaxe Stamp': 35, 'Hatchet Stamp': 35}}},
     8: {"TotalStampLevels": 500, "Stamps": {
-        "Combat": ["Scimitar Stamp", "Bullseye Stamp", ],
+        "Combat": ["Battleaxe Stamp", "Scimitar Stamp", "Bullseye Stamp"],
         "Skill": ["Drippy Drop Stamp"],
         "Misc": ["Biblio Stamp"],
         "Specific": {'Drippy Drop Stamp': 30},
-        "Optional": ["Hermes Stamp", "Fishhead Stamp", "Talent III Stamp"]}},
+        "Optional": ["Hermes Stamp", "Talent III Stamp"]}},
     9: {"TotalStampLevels": 600, "Stamps": {
-        "Combat": ["Stat Graph Stamp"],
-        "Skill": ["High IQ Lumber Stamp"],
-        "Misc": ["Mason Jar Stamp", "Crystallin"],
-        "Specific": {'Mason Jar Stamp': 12}}},
+        "Misc": ["Crystallin", "Talent S Stamp"]}},
     10: {"TotalStampLevels": 700, "Stamps": {
+        "Combat": ["Polearm Stamp", "Buckler Stamp", "Stat Graph Stamp"],
         "Skill": ["Twin Ores Stamp", "Duplogs Stamp", "Cool Diggy Tool Stamp", "Swag Swingy Tool Stamp", "Alch Go Brrr Stamp",
-                  "Droplots Stamp", "Bugsack Stamp", "Hidey Box Stamp", "Spikemouth Stamp"],
-        "Specific": {'Drippy Drop Stamp': 40, 'Matty Bag Stamp': 50}}},
+                  "Droplots Stamp", "Bugsack Stamp", "Hidey Box Stamp", "Spikemouth Stamp", "Purp Froge Stamp"],
+        "Specific": {'Drippy Drop Stamp': 40, 'Matty Bag Stamp': 30}}},
     11: {"TotalStampLevels": 800, "Stamps": {
          "Skill": ["Stample Stamp", "Spice Stamp", "Egg Stamp"],
-         "Misc": ["Sigil Stamp"],
-         "Specific": {'Pickaxe Stamp': 45, 'Hatchet Stamp': 45, 'Mason Jar Stamp': 24}}},
+         "Misc": ["Mason Jar Stamp", "Sigil Stamp"],
+         "Specific": {'Pickaxe Stamp': 45, 'Hatchet Stamp': 45, 'Mason Jar Stamp': 12}}},
     12: {"TotalStampLevels": 900, "Stamps": {
         "Skill": ["Brainstew Stamp", "Bag o Heads Stamp", "Skelefish Stamp"],
         "Misc": ["Card Stamp"],
@@ -397,7 +391,7 @@ stamps_progressionTiers = {
     13: {"TotalStampLevels": 1000, "Stamps": {
         "Skill": ["Holy Mackerel Stamp", "Cooked Meal Stamp"],
         "Specific": {'Pickaxe Stamp': 55, 'Hatchet Stamp': 55, 'Card Stamp': 50},
-        "Optional": ["Agile Stamp", "Book Stamp", "Fly Intel Stamp", "Talent II Stamp"]}},
+        "Optional": ["Agile Stamp", "Book Stamp", "Smart Dirt Stamp", "High IQ Lumber Stamp", "Fishhead Stamp", "Fly Intel Stamp", "Talent II Stamp"]}},
     14: {"TotalStampLevels": 1500, "Stamps": {
         "Combat": ["Avast Yar Stamp"],
         "Skill": ["Banked Pts Stamp", "Nest Eggs Stamp"],
@@ -422,6 +416,8 @@ stamps_progressionTiers = {
         "Combat": ["Sashe Sidestamp"],
         "Specific": {'Pickaxe Stamp': 75, 'Hatchet Stamp': 75, 'Drippy Drop Stamp': 90, 'Crystallin': 100}}},
     19: {"TotalStampLevels": 4000, "Stamps": {
+        "Combat": ["Feather Stamp"],
+        "Misc": ["Potion Stamp", "Questin Stamp"],
         "Specific": {'Matty Bag Stamp': 150}}},
     20: {"TotalStampLevels": 4500, "Stamps": {
         "Skill": ["Crop Evo Stamp"],
