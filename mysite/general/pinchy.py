@@ -43,7 +43,7 @@ class Threshold:
     EARLY_W7_PREP = "Early W7 Prep"
     SOLID_W7_PREP = "Solid W7 Prep"
     W7_WAITING_ROOM = "W7 Waiting Room"
-    MAX_TIER = "Maxed for v2.10"
+    MAX_TIER = "Maxed for v2.11"
     PLACEHOLDER = "Placeholder"
 
     thresholdNames = [
@@ -455,7 +455,8 @@ def generatePinchyWorld(pinchable_sections, unrated_sections):
     pinchy_all = AdviceSection(
         name="Pinchy all",
         tier=sections_maxed,
-        header=f"Sections maxed: {sections_maxed}",
+        header=f"Sections maxed: {sections_maxed}"
+               f"{'<br>You Bestest ❤️' if sections_maxed_count >= sections_total else ''}",
         picture="Pinchy.gif",
         groups=advice_groups
     )
