@@ -226,9 +226,9 @@ greenstack_progressionTiers = {
         7: {
             "Base Monster Materials": [
                 "SnowA4", "SnowC5",
-                "GalaxyB3", "GalaxyB4", "GalaxyB5", "GalaxyC1", "GalaxyC2", "GalaxyC3",],
+                "GalaxyB3", "GalaxyB4", "GalaxyB5", "GalaxyC1", "GalaxyC2", "GalaxyC3", "GalaxyC4"],
             "Crystal Enemy Drops": [
-                "FoodPotMana1", "FoodPotMana2", "FoodPotGr1", "FoodPotOr1", "FoodPotOr2", "FoodHealth1", "FoodHealth3", "FoodHealth2", "Leaf1"],
+                "FoodPotMana1", "FoodPotMana2", "FoodPotGr1", "FoodPotOr2", "FoodHealth1", "FoodHealth3", "FoodHealth2", "Leaf1"],
             "Other Skilling Resources": [
                 "CraftMat11",
                 "Critter5",
@@ -236,10 +236,11 @@ greenstack_progressionTiers = {
             },
         8: {
             "Base Monster Materials": [
-                "GalaxyC4",
-                "LavaA1", "LavaA2", "LavaA3", "LavaA4", "LavaA5", "LavaB1", "LavaB2", "LavaB3", "LavaB4", "LavaB5"],
+                "LavaA1", "LavaA2", "LavaA3", "LavaA4", "LavaA5", "LavaB1", "LavaB2", "LavaB3", "LavaB4", "LavaB5",
+                "SpiA1", "SpiA2",
+            ],
             "Crystal Enemy Drops": [
-                "FoodHealth6", "FoodHealth7", "FoodPotGr2", "FoodPotRe3", "Leaf2",],
+                "FoodHealth6", "FoodHealth7", "FoodPotGr2", "FoodPotRe3",],
             "Other Skilling Resources": [
                 "CraftMat12",
                 "Critter6", "Critter7",
@@ -248,9 +249,9 @@ greenstack_progressionTiers = {
         9: {
             "Base Monster Materials": [
                 "LavaB6", "LavaC1", "LavaC2",  #Can beat Kruk and move to W6 without fighting these
-                "SpiA1", "SpiA2", "SpiA3", "SpiA4", "SpiA5", "SpiB1", "SpiB2", "SpiB3",],
+                "SpiA3", "SpiA4", "SpiA5", "SpiB1", "SpiB2", "SpiB3", "SpiB4", "SpiC1", "SpiC2",],
             "Crystal Enemy Drops": [
-                "FoodHealth10", "FoodPotOr3", "FoodPotYe2", "Leaf3"],
+                "FoodHealth10", "FoodPotOr3", "FoodPotYe2", ],
             "Other Skilling Resources": [
                 "CraftMat13", "CraftMat14",
                 "Critter8", "Critter9",
@@ -258,14 +259,15 @@ greenstack_progressionTiers = {
             },
         10: {
             "Base Monster Materials": [
-                "SpiB4", "SpiC1", "SpiC2", "SpiD1", "SpiD2", "SpiD3",],
+                 "SpiD1", "SpiD2", "SpiD3",],
             "Crystal Enemy Drops": [
+                "Leaf2",
+                "Leaf3",
                 "FoodPotMana4", "Leaf4",
                 "FoodPotYe5", "Leaf5",
                 "Leaf6",],
             "Printable Skilling Resources": [],
             "Other Skilling Resources": [
-                "Critter10", "Critter11",
                 "Soul7",
                 "CopperBar", "IronBar",
                 "FoodMining1", "FoodFish1", "FoodCatch1", "Bullet", "BulletB",],
@@ -278,9 +280,12 @@ greenstack_progressionTiers = {
                 "Quest14", "Quest22", "Quest23", "Quest24",
                 "Quest32",
             ],
+            "Crystal Enemy Drops": [
+                "FoodPotOr1",
+            ],
             "Other Skilling Resources": [
                 "PlatBar",
-
+                "Critter10", "Critter11",
             ],
             },
         12: {
@@ -351,39 +356,33 @@ stamps_progressionTiers = {
         "Misc": ["Vendor Stamp"]}},
     4: {"TotalStampLevels": 200, "Stamps": {
         "Combat": ["Fist Stamp", "Manamoar Stamp"],
-        "Skill": ["Lil' Mining Baggy Stamp", "Fishing Rod Stamp", "Catch Net Stamp"],
-        "Misc": ["Talent S Stamp"],
+        "Skill": ["Lil' Mining Baggy Stamp"],
         "Optional": ["Clover Stamp"]}},
     5: {"TotalStampLevels": 250, "Stamps": {
-        "Combat": ["Longsword Stamp", "Battleaxe Stamp"],
+        "Combat": ["Longsword Stamp"],
         "Skill": ["Anvil Zoomer Stamp", "Matty Bag Stamp"],
-        "Misc": ["Questin Stamp"],
-        "Specific": {'Pickaxe Stamp': 25, 'Hatchet Stamp': 25},
         "Optional": ["Kapow Stamp"]}},
-    6: {"TotalStampLevels": 300, "Stamps": {
-        "Combat": ["Feather Stamp", "Polearm Stamp", "Buckler Stamp"],
-        "Skill": ["Purp Froge Stamp"], "MiscStamps": ["Potion Stamp"]}},
+    6: {"TotalStampLevels": 300, "Stamps": {}},
     7: {"TotalStampLevels": 400, "Stamps": {
+        "Skill": ["Fishing Rod Stamp", "Catch Net Stamp"],
         "Specific": {'Pickaxe Stamp': 35, 'Hatchet Stamp': 35}}},
     8: {"TotalStampLevels": 500, "Stamps": {
-        "Combat": ["Scimitar Stamp", "Bullseye Stamp", ],
+        "Combat": ["Battleaxe Stamp", "Scimitar Stamp", "Bullseye Stamp"],
         "Skill": ["Drippy Drop Stamp"],
         "Misc": ["Biblio Stamp"],
         "Specific": {'Drippy Drop Stamp': 30},
-        "Optional": ["Hermes Stamp", "Fishhead Stamp", "Talent III Stamp"]}},
+        "Optional": ["Hermes Stamp", "Talent III Stamp"]}},
     9: {"TotalStampLevels": 600, "Stamps": {
-        "Combat": ["Stat Graph Stamp"],
-        "Skill": ["High IQ Lumber Stamp"],
-        "Misc": ["Mason Jar Stamp", "Crystallin"],
-        "Specific": {'Mason Jar Stamp': 12}}},
+        "Misc": ["Crystallin", "Talent S Stamp"]}},
     10: {"TotalStampLevels": 700, "Stamps": {
+        "Combat": ["Polearm Stamp", "Buckler Stamp", "Stat Graph Stamp"],
         "Skill": ["Twin Ores Stamp", "Duplogs Stamp", "Cool Diggy Tool Stamp", "Swag Swingy Tool Stamp", "Alch Go Brrr Stamp",
-                  "Droplots Stamp", "Bugsack Stamp", "Hidey Box Stamp", "Spikemouth Stamp"],
-        "Specific": {'Drippy Drop Stamp': 40, 'Matty Bag Stamp': 50}}},
+                  "Droplots Stamp", "Bugsack Stamp", "Hidey Box Stamp", "Spikemouth Stamp", "Purp Froge Stamp"],
+        "Specific": {'Drippy Drop Stamp': 40, 'Matty Bag Stamp': 30}}},
     11: {"TotalStampLevels": 800, "Stamps": {
          "Skill": ["Stample Stamp", "Spice Stamp", "Egg Stamp"],
-         "Misc": ["Sigil Stamp"],
-         "Specific": {'Pickaxe Stamp': 45, 'Hatchet Stamp': 45, 'Mason Jar Stamp': 24}}},
+         "Misc": ["Mason Jar Stamp", "Sigil Stamp"],
+         "Specific": {'Pickaxe Stamp': 45, 'Hatchet Stamp': 45, 'Mason Jar Stamp': 12}}},
     12: {"TotalStampLevels": 900, "Stamps": {
         "Skill": ["Brainstew Stamp", "Bag o Heads Stamp", "Skelefish Stamp"],
         "Misc": ["Card Stamp"],
@@ -392,7 +391,7 @@ stamps_progressionTiers = {
     13: {"TotalStampLevels": 1000, "Stamps": {
         "Skill": ["Holy Mackerel Stamp", "Cooked Meal Stamp"],
         "Specific": {'Pickaxe Stamp': 55, 'Hatchet Stamp': 55, 'Card Stamp': 50},
-        "Optional": ["Agile Stamp", "Book Stamp", "Fly Intel Stamp", "Talent II Stamp"]}},
+        "Optional": ["Agile Stamp", "Book Stamp", "Smart Dirt Stamp", "High IQ Lumber Stamp", "Fishhead Stamp", "Fly Intel Stamp", "Talent II Stamp"]}},
     14: {"TotalStampLevels": 1500, "Stamps": {
         "Combat": ["Avast Yar Stamp"],
         "Skill": ["Banked Pts Stamp", "Nest Eggs Stamp"],
@@ -417,6 +416,8 @@ stamps_progressionTiers = {
         "Combat": ["Sashe Sidestamp"],
         "Specific": {'Pickaxe Stamp': 75, 'Hatchet Stamp': 75, 'Drippy Drop Stamp': 90, 'Crystallin': 100}}},
     19: {"TotalStampLevels": 4000, "Stamps": {
+        "Combat": ["Feather Stamp"],
+        "Misc": ["Potion Stamp", "Questin Stamp"],
         "Specific": {'Matty Bag Stamp': 150}}},
     20: {"TotalStampLevels": 4500, "Stamps": {
         "Skill": ["Crop Evo Stamp"],

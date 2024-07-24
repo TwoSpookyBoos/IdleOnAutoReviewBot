@@ -624,7 +624,7 @@ class AdviceSection(AdviceBase):
             if "/" in self.tier:
                 try:
                     prog, goal = self.tier.split("/")
-                    finished = " finished" if float(prog) >= float(goal) else ""
+                    finished = " finished" if int(prog) >= int(goal) else ""
                 except:
                     finished = ""
 
@@ -2210,7 +2210,7 @@ class Account:
     def _calculate_w1(self):
         self.star_sign_extras = {
             'SeraphMulti': min(3, 1.1 ** ceil((max(self.all_skills.get('Summoning', [0])) + 1) / 20)),
-            'SeraphGoal': min(240, ceilUpToBase(max(self.all_skills.get('Summoning', [0])), 20))
+            'SeraphGoal': min(220, ceilUpToBase(max(self.all_skills.get('Summoning', [0])), 20))
         }
         if bool(self.star_signs.get("Seraph Cosmos", {}).get('Unlocked', False)):
             self.star_sign_extras['SeraphEval'] = f"Multis signs by {self.star_sign_extras['SeraphMulti']:.2f}x."
