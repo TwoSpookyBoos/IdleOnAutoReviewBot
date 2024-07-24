@@ -238,12 +238,13 @@ def setColliderProgressionTier() -> AdviceSection:
     max_tier = max(atoms_progressionTiers.keys())
     tier_atomLevels = 0
     pAtoms = session_data.account.atom_collider['Atoms']  #Player Atoms
+    exclusionsList = getAtomExclusionsList()
 
     for tier, tierRequirements in atoms_progressionTiers.items():
         subgroupName = f"To reach Tier {tier}"
         #Atom levels
         for rAtom, rLevel in tierRequirements.get('Atoms', {}).items():
-            if pAtoms[rAtom]['Level'] < rLevel:
+            if rAtom not in exclusionsList and pAtoms[rAtom]['Level'] < rLevel:
                 if subgroupName not in collider_AdviceDict['Atoms'] and len(collider_AdviceDict['Atoms']) < maxTiersPerGroup:
                     collider_AdviceDict['Atoms'][subgroupName] = []
                 if subgroupName in collider_AdviceDict['Atoms']:
