@@ -3106,6 +3106,7 @@ combat_talentsDict = {
             103: {"Name": "Idle Casting", "Tab": "Savvy Basics"},
             5: {"Name": "Sharpened Axe", "Tab": "Savvy Basics"},
             531: {"Name": "Memorial Skulls", "Tab": "Elemental Sorcerer"},
+            463: {"Name": "Choppin It Up Ez", "Tab": "Mage"},
         },
     },
     "Siege Breaker": {
@@ -3156,7 +3157,7 @@ combat_talentsDict = {
         "Low": {
             268: {"Name": "Idle Shooting", "Tab": "Calm Basics"},
             5: {"Name": "Sharpened Axe", "Tab": "Calm Basics"},
-            366: {"Name": "Stacked Skulls", "Tab": "Siege Breaker"},
+            366: {"Name": "Stacked Skulls", "Tab": "Beast Master"},
         },
     },
     "Voidwalker": {
@@ -5045,7 +5046,7 @@ gamingSuperbitsDict = {
     22: {'Name': 'Even Moar Bubbles', 'BonusText': '+30% chance for +1 more bubble boosted by No Bubble Left Behind', 'Cost': 0, 'CodeString': 'v'},
     23: {'Name': 'Isotope Discovery', 'BonusText': 'All atoms now have +10 Max LV', 'Cost': 0, 'CodeString': 'w'},
 }
-
+snailMaxRank = 25
 
 def getDivinityNameFromIndex(inputValue: int) -> str:
     return divinity_divinitiesDict.get(inputValue, {"Name": f"UnknownDivinity{inputValue}"}).get("Name")
@@ -5300,29 +5301,38 @@ marketUpgradeLastIndex = marketUpgradeFirstIndex + len(marketUpgradeList)
 def getMoissaniteValue(moissaniteLevel: int):
     try:
         if moissaniteLevel > 0:
-            return 3+(300*(moissaniteLevel/(moissaniteLevel+1000)))
+            return 3 + (300 * (moissaniteLevel / (moissaniteLevel+1000)))
         else:
             return 0
     except:
         return 0
-def getGemstoneValue(gemstoneName: str, gemstoneLevel: int, moissaniteLevel: int, moissaniteValue: float):
-    moissaniteMulti = 1 + (moissaniteValue / 100)
+
+def getGemstoneBoostedValue(gemstoneValue: float, moissaniteValue: float):
+    if moissaniteValue > 0:
+        moissaniteMulti = 1 + (moissaniteValue / 100)
+        boostedValue = gemstoneValue * moissaniteMulti
+        return boostedValue
+    else:
+        return gemstoneValue
+
+def getGemstoneBaseValue(gemstoneName: str, gemstoneLevel: int):
     value = 0
     if gemstoneLevel > 0:
         if gemstoneName == "Aquamarine":
             value = 40 + (10000 * (gemstoneLevel / (gemstoneLevel + 1000)))
         elif gemstoneName == "Emerald":
-            value = 15 + (5000  * (gemstoneLevel / (gemstoneLevel + 1000)))
+            value = 15 + (5000 * (gemstoneLevel / (gemstoneLevel + 1000)))
         elif gemstoneName == "Garnet":
-            value = 12 + (2500  * (gemstoneLevel / (gemstoneLevel + 1000)))
+            value = 12 + (2500 * (gemstoneLevel / (gemstoneLevel + 1000)))
         elif gemstoneName == "Starite":
-            value = 5 +  (200   * (gemstoneLevel / (gemstoneLevel + 1000)))
+            value = 5 + (200 * (gemstoneLevel / (gemstoneLevel + 1000)))
         elif gemstoneName == "Topaz":
-            value = 10 + (1000  * (gemstoneLevel / (gemstoneLevel + 1000)))
-
-    if moissaniteLevel > 0:
-        value *= moissaniteMulti
+            value = 10 + (1000 * (gemstoneLevel / (gemstoneLevel + 1000)))
+        else:
+            logger.warning(f"Unrecognized gemstoneName: '{gemstoneName}'. Returning default 0 value")
+            value = 0
     return value
+
 def getGemstonePercent(gemstoneName: str, gemstoneValue: float):
     try:
         return 100 * (gemstoneValue / sneakingGemstonesMaxValueDict[gemstoneName])

@@ -1,5 +1,5 @@
 from flask import g as session_data
-from consts import colliderStorageLimitList, buildingsTowerMaxLevel, atoms_progressionTiers, maxTiersPerGroup, cookingCloseEnough
+from consts import colliderStorageLimitList, buildingsTowerMaxLevel, atoms_progressionTiers, maxTiersPerGroup, cookingCloseEnough, snailMaxRank
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
@@ -68,29 +68,30 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
         )
 
     #Sodium lower than Snail // 5
-    if colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'] < session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5:
-        settings_advice['Alerts'].append(
-            Advice(
-                label=f"Snail could reset from Rank {session_data.account.gaming['Imports']['Snail']['SnailRank']}"
-                      f" to {colliderData['Atoms']['Sodium - Snail Kryptonite']['Level']*5}!"
-                      f"<br>Level Sodium to {session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5}"
-                      f" to protect Rank {5 * (session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5)}.",
-                picture_class="sodium",
-                progression=colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'],
-                goal=session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5
+    if session_data.account.gaming['Imports']['Snail']['SnailRank'] < snailMaxRank:
+        if colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'] < session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5:
+            settings_advice['Alerts'].append(
+                Advice(
+                    label=f"Snail could reset from Rank {session_data.account.gaming['Imports']['Snail']['SnailRank']}"
+                          f" to {colliderData['Atoms']['Sodium - Snail Kryptonite']['Level']*5}!"
+                          f"<br>Level Sodium to {session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5}"
+                          f" to protect Rank {5 * (session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5)}.",
+                    picture_class="sodium",
+                    progression=colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'],
+                    goal=session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5
+                )
             )
-        )
-        session_data.account.alerts_AdviceDict['World 3'].append(
-            Advice(
-                label=f"Snail could reset from Rank {session_data.account.gaming['Imports']['Snail']['SnailRank']}"
-                      f" to {colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'] * 5}!"
-                      f"<br>Level {{{{ Sodium|#atom-collider }}}} to {session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5}"
-                      f" to protect Rank {5 * (session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5)}.",
-                picture_class="sodium",
-                progression=colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'],
-                goal=session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5
+            session_data.account.alerts_AdviceDict['World 3'].append(
+                Advice(
+                    label=f"Snail could reset from Rank {session_data.account.gaming['Imports']['Snail']['SnailRank']}"
+                          f" to {colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'] * 5}!"
+                          f"<br>Level {{{{ Sodium|#atom-collider }}}} to {session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5}"
+                          f" to protect Rank {5 * (session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5)}.",
+                    picture_class="sodium",
+                    progression=colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'],
+                    goal=session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5
+                )
             )
-        )
 
     #Neon would cheapen the next Helium upgrade
     for heliumLevel, neonLevel in {6: 0, 7: 2, 8: 10, 9: 21, 10: 30}.items():
