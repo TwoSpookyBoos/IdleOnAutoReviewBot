@@ -624,7 +624,7 @@ class AdviceSection(AdviceBase):
             if "/" in self.tier:
                 try:
                     prog, goal = self.tier.split("/")
-                    finished = " finished" if prog >= goal else ""
+                    finished = " finished" if int(prog) >= int(goal) else ""
                 except:
                     finished = ""
 
