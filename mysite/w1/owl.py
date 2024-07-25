@@ -18,7 +18,7 @@ def setOwlProgressionTier() -> AdviceSection:
     )
 
     infoTiers = 1
-    max_tier = max(owl_progressionTiers.keys())-1  #One informational tier
+    max_tier = max(owl_progressionTiers.keys()) - infoTiers  #One informational tier
     tier_MegaFeathers = 0
     featherResetsDict = {
         0: 6, 1: 6, 2: 7, 3: 8, 4: 9,
