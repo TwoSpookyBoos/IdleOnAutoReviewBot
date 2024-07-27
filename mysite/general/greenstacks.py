@@ -5,29 +5,18 @@ from consts import missableGStacksDict
 from models.models import AdviceSection, AdviceGroup, Advice, gstackable_codenames, gstackable_codenames_expected, Assets
 from utils.logging import get_logger
 from flask import g as session_data
-from utils.data_formatting import safe_loads
 
 logger = get_logger(__name__)
 
 
 def getEquinoxDreams() -> dict:
-    #TODO: Move to Account singleton
-    try:
-        rawDreams = safe_loads(session_data.account.raw_data.get("WeeklyBoss", "{}"))
-    except Exception as reason:
-        logger.error("Unable to access WeeklyBoss data from JSON: %s", reason)
-        return dict(
-            Dream1=False,
-            Dream12=False,
-            Dream29=False
-        )
-
-    results = dict(
-        Dream1=rawDreams.get("d_0") == -1,
-        Dream12=rawDreams.get("d_11") == -1,
-        Dream29=rawDreams.get("d_28") == -1,
-    )
-    # logger.debug("OUTPUT results: %s", results)
+    results = {}
+    for dreamNumber in [1, 12, 29]:
+        try:
+            results[f"Dream{dreamNumber}"] = session_data.account.equinox_dreams[dreamNumber]
+        except Exception as reason:
+            logger.warning(f"Unable to access Equinox Dream {dreamNumber}: {reason}. Defaulting to False.")
+            results[f"Dream{dreamNumber}"] = False
 
     return results
 
@@ -53,8 +42,12 @@ def getMissableGStacks(owned_stuff: Assets):
     advice_ObtainedQuestGStacks = owned_stuff.quest_items_gstacked
     advice_EndangeredQuestGStacks = list(owned_stuff.quest_items_gstackable)
     advice_MissedQuestGStacks = []
+    questGStacks_AdviceDict = {
+        "Endangered": [],
+        "Missed": []
+    }
+    questGStacks_AdviceGroupDict = {}
 
-    #quest_statuses_per_toon = [json.loads(session_data.account.raw_data.get(f"QuestComplete_{i}", "{}")) for i in range(session_data.account.playerCount)]
     quest_names = sum((list(statuses.keys()) for statuses in session_data.account.all_quests), list())
     quests_completed_on_all_toons = [
         name
@@ -66,13 +59,11 @@ def getMissableGStacks(owned_stuff: Assets):
     for quest_item in list(advice_EndangeredQuestGStacks):
         item_data = missableGStacksDict[quest_item.name]
         quest_codename = item_data[1]
+        quest_item.quest = item_data[2]
 
         if quest_codename in quests_completed_on_all_toons:
-            quest_item.quest = item_data[2]
             advice_MissedQuestGStacks.append(quest_item)
             advice_EndangeredQuestGStacks.remove(quest_item)
-
-    sections = list()
 
     note = (
         "These items are only recommended for players trying to complete the "
@@ -82,96 +73,81 @@ def getMissableGStacks(owned_stuff: Assets):
         "to clean up later!"
     )
 
-    if len(advice_ObtainedQuestGStacks) > 0:
-        tier_obtained = f"{len(advice_ObtainedQuestGStacks)}/{len(missableGStacksDict)}"
-        if len(advice_ObtainedQuestGStacks) == len(missableGStacksDict):
-            header_obtained = f"You have obtained all {tier_obtained} missable quest item Greensacks! Way to go, you heap hoarder ❤️"
-        else:
-            header_obtained = f"You have obtained {tier_obtained} missable quest item Greenstacks"
-
-        section_obtained = AdviceSection(
-            name="Obtained Greenstacks",
-            tier=tier_obtained,
-            header=header_obtained,
-            picture="Greenstack.png",
-            note=note
-        )
-        section_obtained.complete = True if not section_obtained.groups else False
-        #sections.append(section_obtained)
+    tier_obtainable = f"{len(advice_EndangeredQuestGStacks)}/{len(missableGStacksDict) - len(advice_ObtainedQuestGStacks)}"
+    if len(advice_EndangeredQuestGStacks) < len(missableGStacksDict) - len(advice_ObtainedQuestGStacks):
+        header_alreadymissed = f"already missed {len(missableGStacksDict) - len(advice_ObtainedQuestGStacks) - len(advice_EndangeredQuestGStacks)},<br>"
+    else:
+        header_alreadymissed = f""
+    if len(advice_ObtainedQuestGStacks) > 1:
+        header_alreadyobtained = f"already obtained {len(advice_ObtainedQuestGStacks)},<br>"
+    else:
+        header_alreadyobtained = ""
+    header_missable = f"can still obtain {len(advice_EndangeredQuestGStacks)}"
+    if header_alreadymissed != "" or header_alreadyobtained != "":
+        header_missable = "and " + header_missable
+    header_obtainable = (f"You {header_alreadymissed}{header_alreadyobtained}{header_missable} missable quest item Greenstacks."
+                         f"<br>Be sure NOT to turn in their quests until GStacking them:")
 
     if len(advice_EndangeredQuestGStacks) > 0:
-        tier_obtainable = f"{len(advice_EndangeredQuestGStacks)}/{len(missableGStacksDict) - len(advice_ObtainedQuestGStacks)}"
-        if len(advice_EndangeredQuestGStacks) < len(missableGStacksDict) - len(advice_ObtainedQuestGStacks):
-            header_alreadymissed = f"already missed {len(missableGStacksDict) - len(advice_ObtainedQuestGStacks) - len(advice_EndangeredQuestGStacks)},<br>"
-        else:
-            header_alreadymissed = f""
-        if len(advice_ObtainedQuestGStacks) > 1:
-            header_alreadyobtained = f"already obtained {len(advice_ObtainedQuestGStacks)},<br>"
-        else:
-            header_alreadyobtained = ""
-        header_missable = f"can still obtain {len(advice_EndangeredQuestGStacks)}"
-        if header_alreadymissed != "" or header_alreadyobtained != "":
-            header_missable = "and " + header_missable
-        header_obtainable = f"You {header_alreadymissed}{header_alreadyobtained}{header_missable} missable quest item Greenstacks.<br>Be sure <strong>NOT</strong> to turn in their quests until GStacking them:"
-        endangered_AdviceSection = AdviceSection(
-                name="Endangered Greenstacks",
-                tier=tier_obtainable,
-                header=header_obtainable,
-                picture="Greenstack.png",
-                note=note,
-                groups=[
-                    AdviceGroup(
-                        tier="",
-                        pre_string="",
-                        advices=[
-                            Advice(
-                                label=item.name,
-                                picture_class=item.name,
-                                progression=item.progression,
-                                unit="%"
-                            )
-                            for item in advice_EndangeredQuestGStacks
-                        ]
-                    )
-                ]
+        questGStacks_AdviceDict['Endangered'] = [
+            Advice(
+                label=f"{item.name}- {item.quest}",
+                picture_class=item.name,
+                progression=item.progression,
+                unit="%"
             )
-        endangered_AdviceSection.complete = True if not endangered_AdviceSection.groups else False
-        sections.append(endangered_AdviceSection)
+            for item in advice_EndangeredQuestGStacks
+        ]
+        questGStacks_AdviceGroupDict['Endangered'] = AdviceGroup(
+            tier="",
+            pre_string="Still obtainable",
+            advices=questGStacks_AdviceDict['Endangered']
+        )
+        # endangered_AdviceSection = AdviceSection(
+        #         name="Endangered Greenstacks",
+        #         tier=tier_obtainable,
+        #         header=header_obtainable,
+        #         picture="Greenstack.png",
+        #         note=note,
+        #         groups=[endangered_AdviceGroup]
+        #     )
+        # endangered_AdviceSection.complete = True if not endangered_AdviceSection.groups else False
+        # sections.append(endangered_AdviceSection)
 
     if len(advice_MissedQuestGStacks) > 0:
         tier_missed = f"{len(advice_MissedQuestGStacks)}/{len(missableGStacksDict)}"
         header_missed = (f"You have already missed {tier_missed} missable quest item Greenstacks."
                          f"<br>You're locked out of these until you get more character slots :(")
-        section_missed = AdviceSection(
-            name="Missed Greenstacks",
-            tier=tier_missed,
-            header=header_missed,
-            picture="Greenstack.png",
-            note=note,
-            groups=[
-                AdviceGroup(
-                    tier="",
-                    pre_string="",
-                    advices=[
-                        Advice(
-                            label=item.name,
-                            picture_class=item.name,
-                            progression=item.quest
-                        )
-                        for item in advice_MissedQuestGStacks
-                    ]
-                )
-            ]
+        questGStacks_AdviceDict['Missed'] = [
+            Advice(
+                label=f"{item.name}- {item.quest}",
+                picture_class=item.name,
+                progression=item.progression,
+                unit="%"
+            )
+            for item in advice_MissedQuestGStacks
+        ]
+        questGStacks_AdviceGroupDict['Missed'] = AdviceGroup(
+            tier="",
+            pre_string="Already missed",
+            advices=questGStacks_AdviceDict['Missed']
         )
-        section_missed.complete = True if not section_missed.groups else False
-        #sections.append(section_missed)
 
-    return sections
+    questGStacks_AdviceSection = AdviceSection(
+        name="Endangered Greenstacks",
+        tier=tier_obtainable,
+        header=header_obtainable,
+        picture="Greenstack.png",
+        note=note,
+        groups=questGStacks_AdviceGroupDict.values()
+    )
+
+    return questGStacks_AdviceSection
 
 def setGStackProgressionTier():
     equinoxDreamsStatus = getEquinoxDreams()
     all_owned_stuff: Assets = all_owned_items()
-    sections_quest_gstacks = getMissableGStacks(all_owned_stuff)
+    questGStacks_AdviceSection = getMissableGStacks(all_owned_stuff)
 
     unprecedented_gstacks = all_owned_stuff.items_gstacked_unprecedented
     if unprecedented_gstacks:
@@ -247,4 +223,4 @@ def setGStackProgressionTier():
     )
     section_regular_gstacks.complete = True if not section_regular_gstacks.groups else False
 
-    return *sections_quest_gstacks, section_regular_gstacks
+    return questGStacks_AdviceSection, section_regular_gstacks

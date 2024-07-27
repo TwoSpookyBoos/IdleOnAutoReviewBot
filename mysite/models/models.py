@@ -1370,7 +1370,7 @@ class Account:
 
     def _parse_w3_equinox_dreams(self):
         self.equinox_unlocked = self.achievements['Equinox Visitor']
-        self.equinox_dreams = [True]
+        self.equinox_dreams = [True]  #d_0 in the code is Dream 1. By padding the first slot, we can get Dream 1 by that same index: equinox_dreams[1]
         raw_equinox_dreams = safe_loads(self.raw_data.get("WeeklyBoss", {}))
         self.equinox_dreams += [
             float(raw_equinox_dreams.get(f'd_{i}', 0)) == -1

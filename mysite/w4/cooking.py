@@ -28,6 +28,7 @@ def setCookingProgressionTier():
 
     tier_Cooking = 0
     #TODO: Really ought to be structured into proper tiers.. What were you smoking when you made this?
+    infoTiers = 1
     max_tier = 6
     voidwalkers = [toon for toon in session_data.account.all_characters if toon.elite_class == "Voidwalker"]
     atomFluoride = session_data.account.atom_collider['Atoms']['Fluoride - Void Plate Chef']['Level'] >= 1
@@ -45,9 +46,11 @@ def setCookingProgressionTier():
     if tier_Cooking == 4 and session_data.account.cooking['MealsUnlocked'] >= maxMeals and session_data.account.cooking['MealsUnder30'] <= 0:
         tier_Cooking = 5
     if tier_Cooking == 5 and session_data.account.cooking['PlayerMaxPlateLvl'] >= maxMealLevel:
-        tier_Cooking = max_tier
+        tier_Cooking = 6
     if session_data.account.cooking['MaxRemainingMeals'] < cookingCloseEnough:
-        tier_Cooking = max_tier
+        tier_Cooking = 6
+    if session_data.account.cooking['MaxRemainingMeals'] == 0:
+        tier_Cooking = 7
 
     #Generate NextTier Advice
     # 1) if cooking is unlocked at least
@@ -111,14 +114,13 @@ def setCookingProgressionTier():
             goal=maxMealLevel
         ))
     # 6) All basics + max plate levels
-    #elif tier_Cooking == 6:
-        # Finished, for now. Leaving this here for future use.
-        # cooking_AdviceDict["NextTier"].append(Advice(
-        #     label=f"",
-        #     picture_class="",
-        #     progression="",
-        #     goal=""
-        # ))
+    elif tier_Cooking == 6:
+        cooking_AdviceDict["NextTier"].append(Advice(
+            label=f"Finish all {maxMeals} meals to level {maxMealLevel}",
+            picture_class="turkey-a-la-thank",
+            progression=session_data.account.cooking['PlayerTotalMealLevels'],
+            goal=maxMeals * maxMealLevel,
+        ))
 
     #Generate CurrentTier Advice
     if session_data.account.cooking['MealsUnlocked'] < maxMeals:
@@ -149,7 +151,16 @@ def setCookingProgressionTier():
             progression="",
             goal="",
         ))
-    if tier_Cooking >= 4:
+
+    if tier_Cooking < 4:
+        cooking_AdviceDict["CurrentTier"].append(Advice(
+            label="Any fast meal to level (5% of your Daily Ladles or less)",
+            picture_class="blood-marrow",
+            progression="",
+            goal="",
+        ))
+    # Elif they have Voidwalker and meals still to level, replace the generic "any faster meal" with the more specific Vman Blood Marrow note
+    elif 4 <= tier_Cooking < max_tier:
         cooking_AdviceDict["CurrentTier"].append(Advice(
             label="Any! Voidwalker's Blood Marrow buff scales with EVERY meal level!",
             picture_class="blood-marrow",
@@ -195,13 +206,7 @@ def setCookingProgressionTier():
                     goal=session_data.account.library['MaxBookLevel']
                 ))
 
-    else:  #tier_Cooking < max_tier:
-        cooking_AdviceDict["CurrentTier"].append(Advice(
-            label="Any fast meal to level (5% of your Daily Ladles or less)",
-            picture_class="blood-marrow",
-            progression="",
-            goal="",
-        ))
+    #If not all meals are maxed
     if session_data.account.cooking['PlayerTotalMealLevels'] < session_data.account.cooking['MaxTotalMealLevels']:
         current_remainingMeals = session_data.account.cooking['CurrentRemainingMeals']
         current_maxMealLevel = session_data.account.cooking['PlayerMaxPlateLvl']
@@ -223,6 +228,7 @@ def setCookingProgressionTier():
             goal=maxMeals * maxMealLevel,
         ))
 
+    #If any sources of max plate levels are missing
     if session_data.account.cooking['PlayerMissingPlateUpgrades']:
         for missingUpgrade in session_data.account.cooking['PlayerMissingPlateUpgrades']:
             cooking_AdviceDict["PlateLevels"].append(Advice(
@@ -253,7 +259,7 @@ def setCookingProgressionTier():
     )
 
     # Generate Advice Section
-    overall_CookingTier = min(max_tier, tier_Cooking)
+    overall_CookingTier = min(max_tier + infoTiers, tier_Cooking)
     tier_section = f"{overall_CookingTier}/{max_tier}"
     cooking_AdviceSection.tier = tier_section
     cooking_AdviceSection.pinchy_rating = overall_CookingTier

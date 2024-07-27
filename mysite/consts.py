@@ -112,7 +112,7 @@ gemShop_progressionTiers = [
         'Item Backpack Space': 6, 'Carry Capacity': 10, 'More Storage Space': 10, 'Card Presets': 1,
         'Brimstone Forge Slot': 16, 'Sigil Supercharge': 10,
         'Fluorescent Flaggies': 2,
-        'Golden Sprinkler': 4,
+        'Golden Sprinkler': 4, 'Divinity Sparkie': 6,
         'Plot of Land': 12, 'Shroom Familiar': 3,
     },
      "I wouldn't recommend going any further as of v2.02. This tier is for the dedicated Gem Farmers from Colo and Normal-difficulty World Bosses."],
@@ -828,8 +828,13 @@ prayers_progressionTiers = [
     [9, {'Tachion of the Titans': 1, 'Balance of Precision': 1, 'Circular Criticals': 1, 'Vacuous Tissue': 1, 'Glitterbug': 1}, ""],
 ]
 equinox_progressionTiers = {
-    'Recommended': ['Equinox Symbols', 'Equinox Resources', 'Metal Detector', 'Slow Roast Wiz', 'Liquidvestment', 'Faux Jewels', 'Matching Scims', 'Equinox Dreams'],
-    'Optional': ['Shades of K', 'Laboratory Fuse', 'Food Lust']
+    'Recommended': [
+        'Equinox Symbols', 'Equinox Resources', 'Metal Detector', 'Slow Roast Wiz',
+        'Liquidvestment', 'Faux Jewels', 'Matching Scims', 'Equinox Dreams', 'Voter Rights'
+    ],
+    'Optional': [
+        'Shades of K', 'Laboratory Fuse', 'Food Lust'
+    ]
 }
 atoms_progressionTiers = {
     0: {},
@@ -3982,20 +3987,21 @@ def getReadableBubbleNames(inputNumber, color):
 
 
 ###WORLD 3 CONSTS###
-maxDreams = 31  # Last verified as of v2.10
-dreamsThatUnlockNewBonuses = [1, 3, 6, 8, 11, 14, 18, 21, 24, 29]
+maxDreams = 36  # Last verified as of v2.10
+dreamsThatUnlockNewBonuses = [1, 3, 6, 8, 11, 14, 18, 21, 24, 29, 32]
 equinoxBonusesDict = {
     2: {'Name': 'Equinox Dreams', 'BaseLevel': 5, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 5, 'Category': 'Recommended'},
     3: {'Name': 'Equinox Resources', 'BaseLevel': 4, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 4, 'Category': 'Recommended'},
     4: {'Name': 'Shades of K', 'BaseLevel': 3, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 3, 'Category': 'Optional'},
     5: {'Name': 'Liquidvestment', 'BaseLevel': 4, 'MaxLevelIncreases': {7: 3, 16: 4}, 'FinalMaxLevel': 11, 'Category': 'Recommended'},
-    6: {'Name': 'Matching Scims', 'BaseLevel': 8, 'MaxLevelIncreases': {13: 5, 19: 10}, 'FinalMaxLevel': 23, 'Category': 'Recommended'},
-    7: {'Name': 'Slow Roast Wiz', 'BaseLevel': 5, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 5, 'Category': 'Recommended'},
+    6: {'Name': 'Matching Scims', 'BaseLevel': 8, 'MaxLevelIncreases': {13: 5, 19: 10, 35: 10}, 'FinalMaxLevel': 33, 'Category': 'Recommended'},
+    7: {'Name': 'Slow Roast Wiz', 'BaseLevel': 5, 'MaxLevelIncreases': {33: 6}, 'FinalMaxLevel': 11, 'Category': 'Recommended'},
     8: {'Name': 'Laboratory Fuse', 'BaseLevel': 10, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 10, 'Category': 'Optional'},
     9: {'Name': 'Metal Detector', 'BaseLevel': 6, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 6, 'Category': 'Recommended'},
     10: {'Name': 'Faux Jewels', 'BaseLevel': 6, 'MaxLevelIncreases': {22: 5, 27: 10}, 'FinalMaxLevel': 21, 'Category': 'Recommended'},
     11: {'Name': 'Food Lust', 'BaseLevel': 10, 'MaxLevelIncreases': {26: 4}, 'FinalMaxLevel': 14, 'Category': 'Optional'},
     12: {'Name': 'Equinox Symbols', 'BaseLevel': 5, 'MaxLevelIncreases': {31: 4}, 'FinalMaxLevel': 9, 'Category': 'Recommended'},
+    13: {'Name': 'Voter Rights', 'BaseLevel': 15, 'MaxLevelIncreases': {36: 15}, 'FinalMaxLevel': 30, 'Category': 'Recommended'},
 }
 buildingsDict = {
     #Buildings
