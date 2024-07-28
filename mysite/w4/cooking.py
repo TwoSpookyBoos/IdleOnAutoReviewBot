@@ -212,21 +212,22 @@ def setCookingProgressionTier():
         current_maxMealLevel = session_data.account.cooking['PlayerMaxPlateLvl']
         max_remainingMeals = session_data.account.cooking['MaxRemainingMeals']
 
-        if current_remainingMeals != max_remainingMeals:
+        if tier_Cooking < max_tier:
+            if current_remainingMeals != max_remainingMeals:
+                cooking_AdviceDict["CurrentTier"].append(Advice(
+                    label=f"Info- Current possible: {session_data.account.cooking['MealsUnlocked']}/{maxMeals} meals, "
+                          f"{current_maxMealLevel}/{maxMealLevel} plate levels ({current_remainingMeals} to go!)",
+                    picture_class="turkey-a-la-thank",
+                    progression=session_data.account.cooking['PlayerTotalMealLevels'],
+                    goal=session_data.account.cooking['MealsUnlocked'] * current_maxMealLevel,
+                ))
+
             cooking_AdviceDict["CurrentTier"].append(Advice(
-                label=f"Info- Current possible: {session_data.account.cooking['MealsUnlocked']}/{maxMeals} meals, "
-                      f"{current_maxMealLevel}/{maxMealLevel} plate levels ({current_remainingMeals} to go!)",
+                label=f"Info- Total Meal Levels ({max_remainingMeals} to go!)",
                 picture_class="turkey-a-la-thank",
                 progression=session_data.account.cooking['PlayerTotalMealLevels'],
-                goal=session_data.account.cooking['MealsUnlocked'] * current_maxMealLevel,
+                goal=maxMeals * maxMealLevel,
             ))
-
-        cooking_AdviceDict["CurrentTier"].append(Advice(
-            label=f"Info- Total Meal Levels ({max_remainingMeals} to go!)",
-            picture_class="turkey-a-la-thank",
-            progression=session_data.account.cooking['PlayerTotalMealLevels'],
-            goal=maxMeals * maxMealLevel,
-        ))
 
     #If any sources of max plate levels are missing
     if session_data.account.cooking['PlayerMissingPlateUpgrades']:
@@ -237,9 +238,13 @@ def setCookingProgressionTier():
            ))
 
     # Generate Advice Groups
+    if tier_Cooking < max_tier:
+        next_ps = "To unlock the next Tier of Meal Priorities"
+    else:
+        next_ps = f"Informational- Finish Cooking"
     cooking_AdviceGroupDict["NextTier"] = AdviceGroup(
-        tier=str(tier_Cooking),
-        pre_string="To unlock the next Tier of Meal Priorities",
+        tier=f"{tier_Cooking if tier_Cooking < max_tier else ''}",
+        pre_string=next_ps,
         advices=cooking_AdviceDict["NextTier"],
         post_string="",
     )
