@@ -9,7 +9,7 @@ logger = get_logger(__name__)
 
 skillsToReview_RightHand = ["Mining", "Choppin", "Fishing", "Catching", "Trapping", "Worship"]
 
-def getHandsAdviceGroupCatchUp(maestros, beginners):
+def getHandsAdviceGroupCatchUp(vmans, maestros, beginners):
     # This function returns the skills maestros aren't best in.
     janky_skills = maestros_goal_levels(maestros)
     zero_count = sum(1 for skill, (_, _, next_highest_non_maestro_char) in janky_skills.items() if not next_highest_non_maestro_char)
@@ -23,7 +23,7 @@ def getHandsAdviceGroupCatchUp(maestros, beginners):
     if "Worship" in janky_skills \
             or "Trapping" in janky_skills:
         post_string = (f"Right Hand gives about 8% more Souls and Critters, and Species Epoch gives about 6% PER Trapping and Worship level! "
-                       f"Don't steal Mman's Worship Charge, and don't slack on your Crystal Countdowns!")
+                       f"Don't steal {'Vman' if vmans else 'Mman'}'s Worship Charge, and don't slack on your Crystal Countdowns!")
 
     advices = []
 
@@ -170,6 +170,7 @@ def setSecretClassProgressionTier():
     tier_SecretClass = 0
 
     toons = session_data.account.all_characters
+    vmans: list[Character] = [toon for toon in toons if "Voidwalker" in toon.all_classes]
     maestros: list[Character] = [toon for toon in toons if "Maestro" in toon.all_classes]
     jmans: list[Character] = [toon for toon in toons if "Journeyman" in toon.all_classes]
     beginners: list[Character] = jmans + [toon for toon in toons if "Beginner" in toon.all_classes]
@@ -509,7 +510,7 @@ def setSecretClassProgressionTier():
         pre_string=group_pre_strings[tier_SecretClass],
         advices=secretClass_AdviceDict["UnlockNextClass"]
     )
-    secretClass_AdviceGroupDict["MaestroHands"] = getHandsAdviceGroupCatchUp(maestros, beginners)
+    secretClass_AdviceGroupDict["MaestroHands"] = getHandsAdviceGroupCatchUp(vmans, maestros, beginners)
     secretClass_AdviceGroupDict["MaestroHandsInTheLead"] = getHandsAdviceGroupStayAhead(maestros)
 
     #Generate AdviceSection
