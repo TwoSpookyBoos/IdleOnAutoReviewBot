@@ -15,7 +15,7 @@ def test_index(client):
 def test_valid_input_post(client, conf):
     response = client.post(
         "/results",
-        data=json.dumps(dict(player="scoli")),
+        data=json.dumps(dict(player="nikokoni")),
         headers=conf.headers
     )
     assert response.status_code == 200
