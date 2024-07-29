@@ -3152,9 +3152,8 @@ combat_talentsDict = {
             361: {"Name": "Boar Rush", "Tab": "Beast Master", 'Optimal': [0, 20, True]},
         },
         "Medium": {
-            328: {"Name": "Archlord Of The Pirates", "Tab": "Siege Breaker"},
-            290: {"Name": "Looty Mc Shooty", "Tab": "Bowman"},
-            #273: {"Name": "Strafe", "Tab": "Archer"},
+            305: {"Name": "Looty Mc Shooty", "Tab": "Hunter"},
+            273: {"Name": "Strafe", "Tab": "Archer"},
             284: {"Name": "Veins of the Infernal", "Tab": "Archer"},
             277: {"Name": "High Polymer Limbs", "Tab": "Archer"},
             6: {"Name": "Gilded Sword", "Tab": "Calm Basics"},
