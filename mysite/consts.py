@@ -503,6 +503,51 @@ owl_progressionTiers = {
         "BonusesOfOrion": 29
     },
 }
+starsigns_progressionTiers = {
+    0: {
+        "UnlockedSigns": 0,
+        "SpecificSigns": [],
+        "Goal": "",
+    },
+    1: {
+        "UnlockedSigns": 13,
+        "SpecificSigns": ["Chronus Cosmos"],
+        "Goal": "The Chronus Cosmos sign"
+    },
+    2: {
+        "UnlockedSigns": 24,
+        "SpecificSigns": ["Pie Seas", "Shoe Fly"],
+        "Goal": "The Hydron tab",
+    },
+    3: {
+        "UnlockedSigns": 32,
+        "SpecificSigns": ["Hydron Cosmos"],
+        "Goal": "The Hydron Cosmos sign"
+    },
+    4: {
+        "UnlockedSigns": 58,
+        "SpecificSigns": ["The Forsaken"],
+        "Goal": "The Seraph tab"
+    },
+    5: {
+        "UnlockedSigns": 64,
+        "SpecificSigns": ["Seraph Cosmos"],
+        "Goal": "The Seraph Cosmos sign"
+    },
+    6: {
+        "UnlockedSigns": 0,
+        "SpecificSigns": [
+            #Chronus signs that could have been skipped previously but are good
+            "Blue Hedgehog", "Gum Drop", "The OG Skiller", "Mr No Sleep",
+            #Hydron
+            "Trapezoidburg", "Preys Bea", "Gum Drop Major", "The Overachiever", "Divividov",
+            # Seraph
+            "Damarian Major",  #Left-most branch
+            "Killian Maximus",  #Left-inner branch
+        ],
+        "Goal": "The rest of the notable signs"
+    },  #Go back and unlock the rest of the good stuff
+}
 
 ###WORLD 2 PROGRESSION TIERS###
 bubbles_progressionTiers = [
