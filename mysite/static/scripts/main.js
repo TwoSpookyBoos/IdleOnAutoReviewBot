@@ -25,7 +25,7 @@ const defaults = {
     doot: "off",
     riftslug: "off",
     sheepie: "off",
-    order_tiers: "on",
+    order_tiers: "off",
     hide_completed: "off",
     progress_bars: "off",
     handedness: "off",
