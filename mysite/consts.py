@@ -3041,7 +3041,7 @@ combat_talentsDict = {
             6: {"Name": "Gilded Sword", "Tab": "Rage Basics"},
         },
         "Low": {
-            103: {"Name": "Idle Brawling", "Tab": "Rage Basics"},
+            88: {"Name": "Idle Brawling", "Tab": "Rage Basics"},
             5: {"Name": "Sharpened Axe", "Tab": "Rage Basics"},
             141: {"Name": "Charred Skulls", "Tab": "Blood Berserker"},
         },
@@ -3063,7 +3063,7 @@ combat_talentsDict = {
             6: {"Name": "Gilded Sword", "Tab": "Rage Basics"},
         },
         "Low": {
-            103: {"Name": "Idle Brawling", "Tab": "Rage Basics"},
+            88: {"Name": "Idle Brawling", "Tab": "Rage Basics"},
             5: {"Name": "Sharpened Axe", "Tab": "Rage Basics"},
             141: {"Name": "Charred Skulls", "Tab": "Divine Knight"},
         },
@@ -3084,7 +3084,7 @@ combat_talentsDict = {
             6: {"Name": "Gilded Sword", "Tab": "Savvy Basics"},
         },
         "Low": {
-            103: {"Name": "Idle Casting", "Tab": "Savvy Basics"},
+            448: {"Name": "Idle Casting", "Tab": "Savvy Basics"},
             5: {"Name": "Sharpened Axe", "Tab": "Savvy Basics"},
             531: {"Name": "Memorial Skulls", "Tab": "Bubonic Conjuror"},
         },
@@ -3108,7 +3108,7 @@ combat_talentsDict = {
         },
         "Low": {
             507: {"Name": "Gods Chosen Children", "Tab": "Elemental Sorcerer"},
-            103: {"Name": "Idle Casting", "Tab": "Savvy Basics"},
+            448: {"Name": "Idle Casting", "Tab": "Savvy Basics"},
             5: {"Name": "Sharpened Axe", "Tab": "Savvy Basics"},
             531: {"Name": "Memorial Skulls", "Tab": "Elemental Sorcerer"},
             463: {"Name": "Choppin It Up Ez", "Tab": "Mage"},
