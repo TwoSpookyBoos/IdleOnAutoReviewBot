@@ -217,10 +217,10 @@ def setConsRefineryProgressionTier():
                 progression='Off',
                 goal='On')
             )
-        session_data.account.alerts_AdviceDict['World 3'].append(Advice(
-            label=f"{{{{ Red Salt|#refinery }}}} is not producing",
-            picture_class=consRefineryDict['RedSalt'].image
-        ))
+            session_data.account.alerts_AdviceDict['World 3'].append(Advice(
+                label=f"{{{{ Red Salt|#refinery }}}} is not producing",
+                picture_class=consRefineryDict['RedSalt'].image
+            ))
     if consRefineryDict['RedSalt'].auto_refine != 0:
         if consRefineryDict['RedSalt'].salt_rank < 100:
             tier_AutoRefine = 0
@@ -228,10 +228,10 @@ def setConsRefineryProgressionTier():
                 Advice(label=consRefineryDict['RedSalt'].salt_name, picture_class=consRefineryDict['RedSalt'].image,
                        progression=consRefineryDict['RedSalt'].auto_refine, goal=0, unit="%")
             )
-        session_data.account.alerts_AdviceDict['World 3'].append(Advice(
-            label=f"{{{{ Red Salt|#refinery }}}} auto-refining early",
-            picture_class=consRefineryDict['RedSalt'].image
-        ))
+            session_data.account.alerts_AdviceDict['World 3'].append(Advice(
+                label=f"{{{{ Red Salt|#refinery }}}} auto-refining early. Recommended to at least reach Rank 100 before auto-refining early.",
+                picture_class=consRefineryDict['RedSalt'].image
+            ))
 
     if not consRefineryDict['GreenSalt'].running:
         if consRefineryDict['GreenSalt'].salt_rank < 30:
@@ -242,10 +242,10 @@ def setConsRefineryProgressionTier():
                 progression='Off',
                 goal='On')
             )
-        session_data.account.alerts_AdviceDict['World 3'].append(Advice(
-            label=f"{{{{ Green Salt|#refinery }}}} is not producing",
-            picture_class=consRefineryDict['GreenSalt'].image
-        ))
+            session_data.account.alerts_AdviceDict['World 3'].append(Advice(
+                label=f"{{{{ Green Salt|#refinery }}}} is not producing",
+                picture_class=consRefineryDict['GreenSalt'].image
+            ))
     if consRefineryDict['GreenSalt'].auto_refine != 0:
         if consRefineryDict['GreenSalt'].salt_rank < 30:
             tier_AutoRefine = 0
@@ -253,10 +253,10 @@ def setConsRefineryProgressionTier():
                 Advice(label=consRefineryDict['GreenSalt'].salt_name, picture_class=consRefineryDict['GreenSalt'].image,
                        progression=consRefineryDict['GreenSalt'].auto_refine, goal=0, unit="%")
             )
-        session_data.account.alerts_AdviceDict['World 3'].append(Advice(
-            label=f"{{{{ Green Salt|#refinery }}}} auto-refining early",
-            picture_class=consRefineryDict['GreenSalt'].image
-        ))
+            session_data.account.alerts_AdviceDict['World 3'].append(Advice(
+                label=f"{{{{ Green Salt|#refinery }}}} auto-refining early. Recommended to at least reach Rank 30 before auto-refining early.",
+                picture_class=consRefineryDict['GreenSalt'].image
+            ))
 
     # W3Merits Advice
     sum_SaltsRank2Plus = 0
