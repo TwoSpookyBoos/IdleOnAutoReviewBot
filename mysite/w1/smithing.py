@@ -144,7 +144,8 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
         AdviceGroup(
         tier='',
         pre_string="Info- Total Capacity and Bar thresholds",
-        advices=bar_Advices)
+        advices=bar_Advices,
+        post_string="Note: Lava rounds partial stacks up to whole bars when claiming AFK")
     ]
     return cap_AdviceGroups
 

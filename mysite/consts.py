@@ -3188,7 +3188,7 @@ combat_talentsDict = {
     },
     "Beast Master": {
         "High": {
-            302: {"Name": "Uwu Rawrrr", "Tab": "Hunter"},
+            #302: {"Name": "Uwu Rawrrr", "Tab": "Hunter"},
             362: {"Name": "Whale Wallop", "Tab": "Beast Master", 'Optimal': [0, 17, True]},
             301: {"Name": "Bear Trap", "Tab": "Hunter", 'Optimal': [0, 30, True]},
             300: {"Name": "Three-Sixty Noscope", "Tab": "Hunter",},
