@@ -125,8 +125,9 @@ class Placements(dict):
     SECRET_CLASS_PATH = "Secret Class Path"
     STAMPS = "Stamps"
     BRIBES = "Bribes"
-    OWL = "Owl"
     SMITHING = "Smithing"
+    STAR_SIGNS = "Star Signs"
+    OWL = "Owl"
     BUBBLES = "Bubbles"
     VIALS = "Vials"
     P2W = "Pay2Win"
@@ -141,8 +142,8 @@ class Placements(dict):
     DIVINITY = "Divinity"
     SAILING = "Sailing"
     sections = [
-        COMBAT_LEVELS,
-        STAMPS, BRIBES, SMITHING,
+        COMBAT_LEVELS, SECRET_CLASS_PATH,
+        STAMPS, BRIBES, SMITHING, STAR_SIGNS, OWL,
         BUBBLES, VIALS, P2W,
         REFINERY, SALT_LICK, DEATH_NOTE, PRAYERS, EQUINOX,
         BREEDING, COOKING, RIFT,
@@ -157,6 +158,7 @@ class Placements(dict):
         STAMPS:        [0,   1, 2, 3,    4,  5,  6,      7,  8,  9,      10, 11, 13,     16, 19, 22,     26, 30, 34,     38,   99],
         BRIBES:        [0,   1, 1, 1,    2,  2,  2,      3,  3,  3,      4,  4,  4,      5,  5,  5,      5,  5,  5,      6,    99],
         SMITHING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  2,  3,      4,  5,  6,      6,  6,  6,      6,    99],
+        STAR_SIGNS:    [0,   0, 0, 0,    0,  1,  1,      1,  2,  2,      2,  3,  3,      3,  4,  4,      5,  5,  6,      6,    99],
         OWL:           [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  1,      2,    99],
         BUBBLES:       [0,   0, 0, 0,    0,  0,  1,      1,  2,  2,      3,  3,  4,      5,  6,  7,      12, 16, 20,     22,   99],
         VIALS:         [0,   0, 0, 0,    1,  1,  2,      2,  3,  4,      5,  6,  7,      8,  9,  10,     12, 20, 25,     26,   99],

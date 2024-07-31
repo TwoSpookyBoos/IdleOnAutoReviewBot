@@ -2215,6 +2215,7 @@ $extra: (
 	jade-vendor: $jade-vendor,
 	collider-toggle: $collider-toggle,
 	talent-preset-1: $talent-preset-1,
+	telescope: $telescope,
 );
 $id-map: map-merge($extra, $id-map);
 

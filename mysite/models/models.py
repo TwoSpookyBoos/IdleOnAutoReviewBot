@@ -1071,6 +1071,7 @@ class Account:
 
     def _parse_w1_starsigns(self):
         self.star_signs = {}
+        self.star_sign_extras = {"UnlockedSigns": 0}
         raw_star_signs = safe_loads(self.raw_data.get("StarSg", {}))
         for signIndex, signValuesDict in starsignsDict.items():
             self.star_signs[signValuesDict['Name']] = {
@@ -1088,6 +1089,8 @@ class Account:
                 # Some StarSigns are saved as strings "1" to mean unlocked.
                 # The names in the JSON also have underscores instead of spaces
                 self.star_signs[signValuesDict['Name']]['Unlocked'] = int(raw_star_signs[signValuesDict['Name'].replace(" ", "_")]) > 0
+                if self.star_signs[signValuesDict['Name']]['Unlocked']:
+                    self.star_sign_extras['UnlockedSigns'] += 1
             except:
                 pass
 
@@ -2208,10 +2211,9 @@ class Account:
         pass
 
     def _calculate_w1(self):
-        self.star_sign_extras = {
-            'SeraphMulti': min(3, 1.1 ** ceil((max(self.all_skills.get('Summoning', [0])) + 1) / 20)),
-            'SeraphGoal': min(220, ceilUpToBase(max(self.all_skills.get('Summoning', [0])), 20))
-        }
+        self.star_sign_extras['SeraphMulti'] = min(3, 1.1 ** ceil((max(self.all_skills.get('Summoning', [0])) + 1) / 20))
+        self.star_sign_extras['SeraphGoal'] = min(220, ceilUpToBase(max(self.all_skills.get('Summoning', [0])), 20))
+
         if bool(self.star_signs.get("Seraph Cosmos", {}).get('Unlocked', False)):
             self.star_sign_extras['SeraphEval'] = f"Multis signs by {self.star_sign_extras['SeraphMulti']:.2f}x."
         else:
