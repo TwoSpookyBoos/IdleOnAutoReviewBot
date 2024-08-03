@@ -4827,7 +4827,12 @@ breedingSpeciesDict: dict[int, dict] = {
 }
 breedingTotalPets = sum([len(petValues) for worldIndex, petValues in breedingSpeciesDict.items()])
 
-shinyDaysList = [0, 3, 11, 33, 85, 200, 448, 964, 2013, 4107, 8227, 16234, 31633, 60989, 116522, 999999999]
+shinyDaysList = [
+    0, 3, 11, 33, 85,
+    200, 448, 964, 2013, 4107,
+    8227, 16234, 31633, 60989, 116522,
+    220874, 415802, 778022, 1447955, 2681786,
+]
 
 def getShinyLevelFromDays(days: float) -> int:
     shinyLevel = 0
@@ -4839,17 +4844,16 @@ def getShinyLevelFromDays(days: float) -> int:
     return shinyLevel
 
 def getDaysToNextShinyLevel(days: float) -> float:
-    shinyLevel = 0
-    for requirement in shinyDaysList:
-        if float(days) > requirement:
-            shinyLevel += 1
-    #logger.debug(f"Input days of {days} found to be less than {shinyDaysList[highestExceeded]} by {shinyDaysList[highestExceeded] - float(days)} days")
-    try:
-        daysRemaining = shinyDaysList[shinyLevel] - float(days)
-        return daysRemaining
-    except Exception as reason:
-        logger.warning(f"With shinyLevel of {shinyLevel}, Defaulting Shiny days Remaining to 0. Reason: {reason}")
+    shinyLevel = getShinyLevelFromDays(days)
+    if shinyLevel >= len(shinyDaysList):
         return 0
+    else:
+        try:
+            daysRemaining = shinyDaysList[shinyLevel] - float(days)
+            return daysRemaining
+        except Exception as reason:
+            logger.warning(f"With shinyLevel of {shinyLevel}, Defaulting Shiny days Remaining to 0. Reason: {reason}")
+            return 0
 
 
 ###WORLD 5 CONSTS###
