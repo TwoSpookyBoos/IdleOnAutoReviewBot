@@ -75,26 +75,26 @@ def numeralToNumber(numeral: str):
     if numeral in numeralList:
         return numeralList.index(numeral)+1
 
-def notateNumber(type: str, input: float):
+def notateNumber(type: str, input: float, decimals=2):
     match type:
         case "Basic":
             if float(input) >= 1e24:
-                result = f"{input:.2e}"
+                result = f"{input:.{decimals}e}"
             elif float(input) >= 1e21:
-                result = f"{input / 1e21:.2f}QQQ"
+                result = f"{input / 1e21:.{decimals}f}QQQ"
             elif float(input) >= 1e18:
-                result = f"{input / 1e18:.2f}QQ"
+                result = f"{input / 1e18:.{decimals}f}QQ"
             elif float(input) >= 1e15:
-                result = f"{input / 1e15:.2f}Q"
+                result = f"{input / 1e15:.{decimals}f}Q"
             elif float(input) >= 1e12:
-                result = f"{input / 1e12:.2f}T"
+                result = f"{input / 1e12:.{decimals}f}T"
             elif float(input) >= 1e9:
-                result = f"{input/1e9:.2f}B"
+                result = f"{input/1e9:.{decimals}f}B"
             elif float(input) >= 1e6:
-                result = f"{input/1e6:.2f}M"
-            # I'm not personally a fan of reducing to K, but can enable it if there is outcry
-            # elif float(input) > 1e3:
-            #     result = f"{input/1e3:.2f}K"
+                result = f"{input/1e6:.{decimals}f}M"
+            # I'm not personally a fan of reducing to K, but helps Mobile not get scuffed
+            elif float(input) > 1e3:
+                result = f"{input/1e3:.{decimals}f}K"
             else:
                 result = f"{input:,}"
         case _:

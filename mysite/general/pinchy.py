@@ -326,7 +326,7 @@ def tier_from_monster_kills(dictOfPRs) -> Threshold:
 
     highestPrint = session_data.account.printer['HighestValue']
     mobKillThresholds = []
-    if highestPrint >= 23e9:
+    if highestPrint >= 22e9:
         expectedThreshold = Threshold.fromname(Threshold.MAX_TIER)
     elif dictOfPRs[Placements.DEATH_NOTE] >= 25:
         expectedThreshold = Threshold.fromname(Threshold.W7_WAITING_ROOM)

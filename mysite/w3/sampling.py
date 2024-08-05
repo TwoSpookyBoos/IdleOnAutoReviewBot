@@ -246,17 +246,17 @@ def setSamplingProgressionTier() -> AdviceSection:
                 sampling_AdviceDict['MaterialSamples'][subgroupName].append(Advice(
                     label=f"{materialName}",
                     picture_class=materialName,
-                    progression=notateNumber("Basic", max(allSamples.get(materialName, [0]))),
-                    goal=notateNumber("Basic", materialNumber),
+                    progression=notateNumber("Basic", max(allSamples.get(materialName, [0])), 1),
+                    goal=notateNumber("Basic", materialNumber, 1),
                 ))
 
     #After evaluating all tiers, populate the catchup group
     for materialName, materialNumber in failedMaterialsDict.get(tier_MaterialSamples, {}).items():
         sampling_AdviceDict['MaterialSamples'][catchup].append(Advice(
-            label=f"{materialName}%",
+            label=f"{materialName}",
             picture_class=materialName,
-            progression=notateNumber("Basic", max(allSamples.get(materialName, [0]))),
-            goal=notateNumber("Basic", materialNumber),
+            progression=notateNumber("Basic", max(allSamples.get(materialName, [0])), 1),
+            goal=notateNumber("Basic", materialNumber, 1),
         ))
 
     # Generate AdviceGroups
