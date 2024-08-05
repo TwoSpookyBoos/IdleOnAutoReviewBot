@@ -8,6 +8,20 @@ from utils.logging import get_logger
 
 logger = get_logger(__name__)
 
+def getSampleClass(materialName: str) -> str:
+    if materialName == "Oak Logs":
+        return "mage-icon"
+    elif materialName == "Copper Ore":
+        return "warrior-icon"
+    elif materialName == "Goldfish":
+        return "barbarian-icon"
+    elif materialName == "Fly":
+        return "bowman-icon"
+    elif materialName == "Spore Cap":
+        return "voidwalker-icon"
+    else:
+        return ""
+
 def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     psrAdvices = {}
 
@@ -250,6 +264,7 @@ def setSamplingProgressionTier() -> AdviceSection:
                         picture_class=materialName,
                         progression=notateNumber("Match", max(allSamples.get(materialName, [0])), 2, goalLetter[-1]),
                         goal=notateNumber("Match", materialNumber, 1, goalLetter[-1]),
+                        resource=getSampleClass(materialName)
                     ))
                 else:
                     sampling_AdviceDict['MaterialSamples'][subgroupName].append(Advice(
@@ -257,6 +272,7 @@ def setSamplingProgressionTier() -> AdviceSection:
                         picture_class=materialName,
                         progression=notateNumber("Basic", max(allSamples.get(materialName, [0])), 1),
                         goal=notateNumber("Basic", materialNumber, 1),
+                        resource=getSampleClass(materialName)
                     ))
 
     #After evaluating all tiers, populate the catchup group
@@ -268,6 +284,7 @@ def setSamplingProgressionTier() -> AdviceSection:
                 picture_class=materialName,
                 progression=notateNumber("Match", max(allSamples.get(materialName, [0])), 2, goalLetter[-1]),
                 goal=notateNumber("Match", materialNumber, 1, goalLetter[-1]),
+                resource=getSampleClass(materialName)
             ))
         else:
             sampling_AdviceDict['MaterialSamples'][catchup].append(Advice(
@@ -275,6 +292,7 @@ def setSamplingProgressionTier() -> AdviceSection:
                 picture_class=materialName,
                 progression=notateNumber("Basic", max(allSamples.get(materialName, [0])), 1),
                 goal=notateNumber("Basic", materialNumber, 1),
+                resource=getSampleClass(materialName)
             ))
 
     # Generate AdviceGroups
