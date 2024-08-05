@@ -225,9 +225,9 @@ def setSamplingProgressionTier() -> AdviceSection:
         #        Add failed requirements to failedMaterialsDict
         for materialName, materialNumber in tierRequirements.items():
             finalMaterialNumber = materialNumber if session_data.account.doot_owned and tierNumber >= 3 else materialNumber * .70
-            if allSamples.get(materialName, [0])[0] < finalMaterialNumber:
+            if max(allSamples.get(materialName, [0])) < finalMaterialNumber:
                 failedMaterialsDict[tierNumber][materialName] = finalMaterialNumber
-                logger.info(f"Tier{tierNumber} failed on {materialName}: {allSamples.get(materialName, [0])[0]} < {finalMaterialNumber}")
+                logger.info(f"Tier{tierNumber} failed on {materialName}: {max(allSamples.get(materialName, [0]))} < {finalMaterialNumber}")
         # If the player passed at least 1 requirement and tier_MaterialSamples already current, increase tier_MaterialSamples
         if len(failedMaterialsDict[tierNumber].keys()) < len(tierRequirements.keys()) and tier_MaterialSamples == tierNumber - 1:
             tier_MaterialSamples = tierNumber
@@ -246,16 +246,16 @@ def setSamplingProgressionTier() -> AdviceSection:
                 sampling_AdviceDict['MaterialSamples'][subgroupName].append(Advice(
                     label=f"{materialName}",
                     picture_class=materialName,
-                    progression=notateNumber("Basic", allSamples.get(materialName, [0])[0]),
+                    progression=notateNumber("Basic", max(allSamples.get(materialName, [0]))),
                     goal=notateNumber("Basic", materialNumber),
                 ))
 
     #After evaluating all tiers, populate the catchup group
     for materialName, materialNumber in failedMaterialsDict.get(tier_MaterialSamples, {}).items():
         sampling_AdviceDict['MaterialSamples'][catchup].append(Advice(
-            label=f"{materialName}",
+            label=f"{materialName}%",
             picture_class=materialName,
-            progression=notateNumber("Basic", allSamples.get(materialName, [0])[0]),
+            progression=notateNumber("Basic", max(allSamples.get(materialName, [0]))),
             goal=notateNumber("Basic", materialNumber),
         ))
 
