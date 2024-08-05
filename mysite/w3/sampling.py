@@ -1,7 +1,8 @@
 from flask import g as session_data
-from consts import lavaFunc
+from consts import lavaFunc, sampling_progressionTiers, maxTiersPerGroup
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
+from utils.text_formatting import notateNumber
 from utils.logging import get_logger
 
 
@@ -184,7 +185,12 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     return psrAdviceGroup
 
 def setSamplingProgressionTier() -> AdviceSection:
-    sampling_AdviceDict = {}
+    catchup = "Info- Catchup other samples to current tier"
+    sampling_AdviceDict = {
+        "MaterialSamples": {
+            catchup: [],
+        },
+    }
     sampling_AdviceGroupDict = {}
     sampling_AdviceSection = AdviceSection(
         name="Sampling",
@@ -201,26 +207,81 @@ def setSamplingProgressionTier() -> AdviceSection:
         sampling_AdviceSection.header = "Come back after unlocking the 3D Printer within the Construction skill in World 3!"
         return sampling_AdviceSection
 
-    max_tier = 0
-    tier_PrinterSampleRate = 0
+    infoTiers = 0
+    max_tier = max(sampling_progressionTiers.keys()) - infoTiers
+    tier_MaterialSamples = 0
+    #highestSample = session_data.account.printer['HighestValue']
+    allSamples = session_data.account.printer['AllSamplesSorted']
+
+    # Generate Alert Advice
+
+    # Assess tiers
+    failedMaterialsDict = {}
+    for tierNumber, tierRequirements in sampling_progressionTiers.items():
+        subgroupName = f"Meet at least 1 sample size to reach {'Informational ' if tierNumber > max_tier else ''}Tier {tierNumber}"
+        failedMaterialsDict[tierNumber] = {}
+        # For each material in progressionTiers,
+        #    Check if player's best sample of each material is less than tierRequirement
+        #        Add failed requirements to failedMaterialsDict
+        for materialName, materialNumber in tierRequirements.items():
+            finalMaterialNumber = materialNumber if session_data.account.doot_owned and tierNumber >= 3 else materialNumber * .70
+            if allSamples.get(materialName, [0])[0] < finalMaterialNumber:
+                failedMaterialsDict[tierNumber][materialName] = finalMaterialNumber
+                logger.info(f"Tier{tierNumber} failed on {materialName}: {allSamples.get(materialName, [0])[0]} < {finalMaterialNumber}")
+        # If the player passed at least 1 requirement and tier_MaterialSamples already current, increase tier_MaterialSamples
+        if len(failedMaterialsDict[tierNumber].keys()) < len(tierRequirements.keys()) and tier_MaterialSamples == tierNumber - 1:
+            tier_MaterialSamples = tierNumber
+        if (
+            0 < len(failedMaterialsDict[tierNumber].keys())  #At least 1 requirement was failed
+            and subgroupName not in sampling_AdviceDict['MaterialSamples']  #The subgroupName name doesn't already exist
+            and len(sampling_AdviceDict['MaterialSamples']) < maxTiersPerGroup  #Less than maxTiersPerGroup already exist
+            and tier_MaterialSamples < tierNumber
+        ):
+            #Setup empty subgroup with subgroupName as empty list to be added to
+            sampling_AdviceDict['MaterialSamples'][subgroupName] = []
+
+        #Finally, if that subgroupName exists, populate with Advice
+        if subgroupName in sampling_AdviceDict['MaterialSamples']:
+            for materialName, materialNumber in failedMaterialsDict[tierNumber].items():
+                sampling_AdviceDict['MaterialSamples'][subgroupName].append(Advice(
+                    label=f"{materialName}",
+                    picture_class=materialName,
+                    progression=notateNumber("Basic", allSamples.get(materialName, [0])[0]),
+                    goal=notateNumber("Basic", materialNumber),
+                ))
+
+    #After evaluating all tiers, populate the catchup group
+    for materialName, materialNumber in failedMaterialsDict.get(tier_MaterialSamples, {}).items():
+        sampling_AdviceDict['MaterialSamples'][catchup].append(Advice(
+            label=f"{materialName}",
+            picture_class=materialName,
+            progression=notateNumber("Basic", allSamples.get(materialName, [0])[0]),
+            goal=notateNumber("Basic", materialNumber),
+        ))
 
     # Generate AdviceGroups
+    sampling_AdviceGroupDict["MaterialSamples"] = AdviceGroup(
+        tier=tier_MaterialSamples,
+        pre_string="Improve material samples",
+        advices=sampling_AdviceDict['MaterialSamples']
+    )
+    sampling_AdviceGroupDict["MaterialSamples"].remove_empty_subgroups()
     sampling_AdviceGroupDict["PrinterSampleRate"] = getPrinterSampleRateAdviceGroup()
     complete_toons = 0  # Either above 90 and the prayer not worn, or below 90 and already wearing the prayer. Those are the 2 "no action needed" states
     for entry in sampling_AdviceGroupDict["PrinterSampleRate"].advices['Which Characters need Royal Sampler?']:
         if "Keep prayer equipped" in entry.label or "Prayer not needed, not worn." in entry.label:
             complete_toons += 1
-    if complete_toons >= session_data.account.playerCount:
-        sampling_AdviceSection.complete = True
 
     # Generate AdviceSection
-    overall_SamplingTier = min(max_tier, tier_PrinterSampleRate)  #Looks silly, but may get more evaluations in the future
+    overall_SamplingTier = min(max_tier + infoTiers, tier_MaterialSamples)  #Looks silly, but may get more evaluations in the future
     tier_section = f"{overall_SamplingTier}/{max_tier}"
     sampling_AdviceSection.tier = tier_section
     sampling_AdviceSection.pinchy_rating = overall_SamplingTier
     sampling_AdviceSection.groups = sampling_AdviceGroupDict.values()
     if overall_SamplingTier >= max_tier:
         sampling_AdviceSection.header = f"Best Sampling tier met: {tier_section}<br>You best ❤️"
+        if complete_toons >= session_data.account.playerCount:  #Checks both the tier requirement and the Royal Sampler goodness
+            sampling_AdviceSection.complete = True
     else:
         sampling_AdviceSection.header = f"Best Sampling tier met: {tier_section}"
     return sampling_AdviceSection

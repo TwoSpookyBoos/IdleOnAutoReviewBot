@@ -113,7 +113,7 @@ def main(inputData, runType="web"):
         section_combatLevels, section_secretPath,
         section_stamps, section_bribes, section_smithing, section_starsigns, section_owl,
         section_alchBubbles, section_alchVials, section_alchP2W,
-        section_refinery, section_saltlick, section_deathnote, section_prayers, section_equinox,
+        section_refinery, section_sampling, section_saltlick, section_deathnote, section_prayers, section_equinox,
         section_breeding, section_cooking, section_rift,
         section_divinity, section_sailing
     ]

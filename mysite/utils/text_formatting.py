@@ -2,7 +2,6 @@ import re
 from pathlib import Path
 
 import yaml
-from flask import g
 
 from config import app
 from .logging import get_logger
@@ -75,3 +74,29 @@ def getItemCodeName(itemName):
 def numeralToNumber(numeral: str):
     if numeral in numeralList:
         return numeralList.index(numeral)+1
+
+def notateNumber(type: str, input: float):
+    match type:
+        case "Basic":
+            if float(input) >= 1e24:
+                result = f"{input:.2e}"
+            elif float(input) >= 1e21:
+                result = f"{input / 1e21:.2f}QQQ"
+            elif float(input) >= 1e18:
+                result = f"{input / 1e18:.2f}QQ"
+            elif float(input) >= 1e15:
+                result = f"{input / 1e15:.2f}Q"
+            elif float(input) >= 1e12:
+                result = f"{input / 1e12:.2f}T"
+            elif float(input) >= 1e9:
+                result = f"{input/1e9:.2f}B"
+            elif float(input) >= 1e6:
+                result = f"{input/1e6:.2f}M"
+            # I'm not personally a fan of reducing to K, but can enable it if there is outcry
+            # elif float(input) > 1e3:
+            #     result = f"{input/1e3:.2f}K"
+            else:
+                result = f"{input:,}"
+        case _:
+            result = f"{input:,}"
+    return result
