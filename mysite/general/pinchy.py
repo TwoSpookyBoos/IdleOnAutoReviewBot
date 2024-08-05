@@ -132,6 +132,7 @@ class Placements(dict):
     VIALS = "Vials"
     P2W = "Pay2Win"
     REFINERY = "Refinery"
+    SAMPLING = "Sampling"
     SALT_LICK = "Salt Lick"
     DEATH_NOTE = "Death Note"
     PRAYERS = "Prayers"
@@ -145,7 +146,7 @@ class Placements(dict):
         COMBAT_LEVELS, SECRET_CLASS_PATH,
         STAMPS, BRIBES, SMITHING, STAR_SIGNS, OWL,
         BUBBLES, VIALS, P2W,
-        REFINERY, SALT_LICK, DEATH_NOTE, PRAYERS, EQUINOX,
+        REFINERY, SAMPLING, SALT_LICK, DEATH_NOTE, PRAYERS, EQUINOX,
         BREEDING, COOKING, RIFT,
         DIVINITY, SAILING
     ]
@@ -164,6 +165,7 @@ class Placements(dict):
         VIALS:         [0,   0, 0, 0,    1,  1,  2,      2,  3,  4,      5,  6,  7,      8,  9,  10,     12, 20, 25,     26,   99],
         P2W:           [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  1,      1,  1,  1,      1,  1,  1,      1,    99],
         REFINERY:      [0,   0, 0, 0,    0,  0,  0,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,    99],
+        SAMPLING:      [0,   0, 0, 0,    0,  1,  1,      1,  2,  2,      2,  3,  3,      3,  4,  5,      6,  7,  8,      9,    99],
         SALT_LICK:     [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      9,    99],
         DEATH_NOTE:    [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      3,  5,  5,      5,  5,  6,      10, 17, 24,     25,   99],
         PRAYERS:       [0,   0, 0, 0,    0,  0,  0,      0,  1,  1,      2,  3,  4,      4,  5,  6,      7,  7,  7,      7,    99],
@@ -268,7 +270,7 @@ def sort_pinchy_reviews(dictOfPRs) -> Placements:
 
 # https://idleon.wiki/wiki/Portal_Requirements
 portalOpeningKills = [
-    (Threshold.EARLY_W7_PREP, 264,      100),  #W6 Samurai Spirits
+    (Threshold.EARLY_W7_PREP, 264,      100),  # W6 Samurai Spirits
     (Threshold.LATE_W6,       260, 25000000),  # W6 Ceramic Spirits
     (Threshold.MID_W6,        256,  1100000),  # W6 Bamboo Spirits
     (Threshold.EARLY_W6,      251,    30000),  # W6 Sprout Spirits
@@ -322,9 +324,9 @@ def tier_from_monster_kills(dictOfPRs) -> Threshold:
     """find highest enemy killed or world unlocked to compare to"""
     expectedThreshold = Threshold.fromname(Threshold.W1)
 
-    highestPrint = session_data.account.printer['HighestValue']
+    #highestPrint = session_data.account.printer['HighestValue']
     mobKillThresholds = []
-    if highestPrint >= 2.3e10:
+    if dictOfPRs[Placements.SAMPLING] >= 9:
         expectedThreshold = Threshold.fromname(Threshold.MAX_TIER)
     elif dictOfPRs[Placements.DEATH_NOTE] >= 25:
         expectedThreshold = Threshold.fromname(Threshold.W7_WAITING_ROOM)

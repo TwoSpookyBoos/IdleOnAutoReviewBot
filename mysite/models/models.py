@@ -1054,6 +1054,8 @@ class Account:
                         self.printer['AllSamplesSorted'][getItemDisplayName(sampleItem)].append(sample_values[sampleIndex])
                     except Exception as reason:
                         print(f"failed on sampleIndex '{sampleIndex}', sampleItem '{sampleItem}', because: {reason}")
+        for sampleItem in self.printer['AllSamplesSorted']:
+            self.printer['AllSamplesSorted'][sampleItem].sort(reverse=True)
         for characterIndex, printDict in self.printer['CurrentPrintsByCharacter'].items():
             if characterIndex < self.playerCount:
                 self.all_characters[characterIndex].setPrintedMaterials(printDict)

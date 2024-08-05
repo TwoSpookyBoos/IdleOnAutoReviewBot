@@ -2,7 +2,6 @@ import re
 from pathlib import Path
 
 import yaml
-from flask import g
 
 from config import app
 from .logging import get_logger
@@ -75,3 +74,47 @@ def getItemCodeName(itemName):
 def numeralToNumber(numeral: str):
     if numeral in numeralList:
         return numeralList.index(numeral)+1
+
+def notateNumber(type: str, input: float, decimals=2, matchString="B"):
+    match type:
+        case "Basic":
+            if float(input) >= 1e24:
+                result = f"{input:.{decimals}e}"
+            elif float(input) >= 1e21:
+                result = f"{input / 1e21:.{decimals}f}QQQ"
+            elif float(input) >= 1e18:
+                result = f"{input / 1e18:.{decimals}f}QQ"
+            elif float(input) >= 1e15:
+                result = f"{input / 1e15:.{decimals}f}Q"
+            elif float(input) >= 1e12:
+                result = f"{input / 1e12:.{decimals}f}T"
+            elif float(input) >= 1e9:
+                result = f"{input/1e9:.{decimals}f}B"
+            elif float(input) >= 1e6:
+                result = f"{input/1e6:.{decimals}f}M"
+            # I'm not personally a fan of reducing to K, but helps Mobile not get scuffed
+            elif float(input) >= 1e3:
+                result = f"{input/1e3:.{decimals}f}K"
+            else:
+                result = f"{input:,}"
+        case "Match":
+            if matchString == "QQQ":
+                result = f"{input / 1e21:.{decimals}f}QQQ"
+            elif matchString == "QQ":
+                result = f"{input / 1e18:.{decimals}f}QQ"
+            elif matchString == "Q":
+                result = f"{input / 1e15:.{decimals}f}Q"
+            elif matchString == "T":
+                result = f"{input / 1e12:.{decimals}f}T"
+            elif matchString == "B":
+                result = f"{input / 1e9:.{decimals}f}B"
+            elif matchString == "M":
+                result = f"{input / 1e6:.{decimals}f}M"
+            elif matchString == "K":
+                result = f"{input / 1e3:.{decimals}f}K"
+            else:
+                logger.debug(f"Unexpected matchString: {matchString}")
+                result = f"{input:,}"
+        case _:
+            result = f"{input:,}"
+    return result
