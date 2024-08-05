@@ -243,21 +243,39 @@ def setSamplingProgressionTier() -> AdviceSection:
         #Finally, if that subgroupName exists, populate with Advice
         if subgroupName in sampling_AdviceDict['MaterialSamples']:
             for materialName, materialNumber in failedMaterialsDict[tierNumber].items():
-                sampling_AdviceDict['MaterialSamples'][subgroupName].append(Advice(
-                    label=f"{materialName}",
-                    picture_class=materialName,
-                    progression=notateNumber("Basic", max(allSamples.get(materialName, [0])), 1),
-                    goal=notateNumber("Basic", materialNumber, 1),
-                ))
+                goalLetter = notateNumber("Basic", materialNumber, 1)[-1]
+                if goalLetter.isalpha():
+                    sampling_AdviceDict['MaterialSamples'][subgroupName].append(Advice(
+                        label=f"{materialName}",
+                        picture_class=materialName,
+                        progression=notateNumber("Match", max(allSamples.get(materialName, [0])), 2, goalLetter[-1]),
+                        goal=notateNumber("Match", materialNumber, 1, goalLetter[-1]),
+                    ))
+                else:
+                    sampling_AdviceDict['MaterialSamples'][subgroupName].append(Advice(
+                        label=f"{materialName}",
+                        picture_class=materialName,
+                        progression=notateNumber("Basic", max(allSamples.get(materialName, [0])), 1),
+                        goal=notateNumber("Basic", materialNumber, 1),
+                    ))
 
     #After evaluating all tiers, populate the catchup group
     for materialName, materialNumber in failedMaterialsDict.get(tier_MaterialSamples, {}).items():
-        sampling_AdviceDict['MaterialSamples'][catchup].append(Advice(
-            label=f"{materialName}",
-            picture_class=materialName,
-            progression=notateNumber("Basic", max(allSamples.get(materialName, [0])), 1),
-            goal=notateNumber("Basic", materialNumber, 1),
-        ))
+        goalLetter = notateNumber("Basic", materialNumber, 1)[-1]
+        if goalLetter.isalpha():
+            sampling_AdviceDict['MaterialSamples'][catchup].append(Advice(
+                label=f"{materialName}",
+                picture_class=materialName,
+                progression=notateNumber("Match", max(allSamples.get(materialName, [0])), 2, goalLetter[-1]),
+                goal=notateNumber("Match", materialNumber, 1, goalLetter[-1]),
+            ))
+        else:
+            sampling_AdviceDict['MaterialSamples'][catchup].append(Advice(
+                label=f"{materialName}",
+                picture_class=materialName,
+                progression=notateNumber("Basic", max(allSamples.get(materialName, [0])), 1),
+                goal=notateNumber("Basic", materialNumber, 1),
+            ))
 
     # Generate AdviceGroups
     sampling_AdviceGroupDict["MaterialSamples"] = AdviceGroup(
