@@ -977,7 +977,7 @@ sampling_progressionTiers = {
     6: {"Oak Logs": 200e6, "Copper Ore": 140e6, "Goldfish": 20e6,  "Fly": 10e6,  "Spore Cap": 100e3},
     7: {"Oak Logs": 1.5e9, "Copper Ore": 1e9,   "Goldfish": 150e6, "Fly": 75e6,  "Spore Cap": 1e6},
     8: {"Oak Logs": 10e9,  "Copper Ore": 7e9,   "Goldfish": 1e9,   "Fly": 500e6, "Spore Cap": 10e6},
-    9: {"Oak Logs": 22e9,  "Copper Ore": 16e9,  "Goldfish": 1.6e9, "Fly": 800e6, "Spore Cap": 20e6},
+    9: {"Oak Logs": 22e9,  "Copper Ore": 15e9,  "Goldfish": 2e9,   "Fly": 1e9,   "Spore Cap": 25e6},
 }
 
 ###WORLD 4 PROGRESSION TIERS###
