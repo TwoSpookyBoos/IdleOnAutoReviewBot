@@ -120,14 +120,20 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     capacity_Advices["Character Specific"].append(Advice(
         label=f"Starsign: Mr No Sleep: {30 * bool(session_data.account.star_signs.get('Mr No Sleep', {}).get('Unlocked', False))}/30% base",
         picture_class="mr-no-sleep",
+        progression=1 if session_data.account.star_signs.get('Mr No Sleep', {}).get('Unlocked', False) else 0,
+        goal=1
     ))
     capacity_Advices["Character Specific"].append(Advice(
         label=f"Starsign: Pack Mule: {10 * bool(session_data.account.star_signs.get('Pack Mule', {}).get('Unlocked', False))}/10% base",
         picture_class="pack-mule",
+        progression=1 if session_data.account.star_signs.get('Pack Mule', {}).get('Unlocked', False) else 0,
+        goal=1
     ))
     capacity_Advices["Character Specific"].append(Advice(
         label=f"Starsign: The OG Skiller: {5 * bool(session_data.account.star_signs.get('The OG Skiller', {}).get('Unlocked', False))}/5% base",
         picture_class="the-og-skiller",
+        progression=1 if session_data.account.star_signs.get('The OG Skiller', {}).get('Unlocked', False) else 0,
+        goal=1
     ))
     capacity_Advices["Character Specific"].append(Advice(
         label=f"Total Starsign Value: {totalStarsignValue:.2f}%",

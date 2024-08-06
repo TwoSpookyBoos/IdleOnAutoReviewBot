@@ -2236,7 +2236,7 @@ class Account:
         if self.star_sign_extras['SeraphGoal'] < 240:
             self.star_sign_extras['SeraphEval'] += " Increases every 20 Summoning levels."
         self.star_sign_extras['SeraphAdvice'] = Advice(
-            label=f"Starsign: Seraph Cosmos: {self.star_sign_extras['SeraphEval']}",
+            label=f"{{{{ Starsign|#star-signs }}}}: Seraph Cosmos: {self.star_sign_extras['SeraphEval']}",
             picture_class="seraph-cosmos",
             progression=max(self.all_skills.get('Summoning', [0])),
             goal=self.star_sign_extras['SeraphGoal'])
@@ -2251,7 +2251,10 @@ class Account:
             self.star_sign_extras['SilkrodeNanoMulti'] = 1
         self.star_sign_extras['SilkrodeNanoAdvice'] = Advice(
             label=f"Lab Chip: Silkrode Nanochip: {self.star_sign_extras['SilkrodeNanoEval']}",
-            picture_class="silkrode-nanochip")
+            picture_class="silkrode-nanochip",
+            progression=1 if self.labChips.get('Silkrode Nanochip', 0) > 0 else 0,
+            goal=1
+        )
 
     def _calculate_w2(self):
         self.vialMasteryMulti = 1 + (self.maxed_vials * .02) if self.rift['VialMastery'] else 1

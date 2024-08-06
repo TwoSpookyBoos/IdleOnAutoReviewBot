@@ -5296,15 +5296,15 @@ def getGemstoneBaseValue(gemstoneName: str, gemstoneLevel: int):
     value = 0
     if gemstoneLevel > 0:
         if gemstoneName == "Aquamarine":
-            value = 40 + (10000 * (gemstoneLevel / (gemstoneLevel + 1000)))
+            value = 40 + (sneakingGemstonesMaxValueDict['Aquamarine'] * (gemstoneLevel / (gemstoneLevel + 1000)))
         elif gemstoneName == "Emerald":
-            value = 15 + (5000 * (gemstoneLevel / (gemstoneLevel + 1000)))
+            value = 15 + (sneakingGemstonesMaxValueDict['Emerald'] * (gemstoneLevel / (gemstoneLevel + 1000)))
         elif gemstoneName == "Garnet":
-            value = 12 + (2500 * (gemstoneLevel / (gemstoneLevel + 1000)))
+            value = 12 + (sneakingGemstonesMaxValueDict['Garnet'] * (gemstoneLevel / (gemstoneLevel + 1000)))
         elif gemstoneName == "Starite":
-            value = 5 + (200 * (gemstoneLevel / (gemstoneLevel + 1000)))
+            value = 5 + (sneakingGemstonesMaxValueDict['Starite'] * (gemstoneLevel / (gemstoneLevel + 1000)))
         elif gemstoneName == "Topaz":
-            value = 10 + (1000 * (gemstoneLevel / (gemstoneLevel + 1000)))
+            value = 10 + (sneakingGemstonesMaxValueDict['Topaz'] * (gemstoneLevel / (gemstoneLevel + 1000)))
         else:
             logger.warning(f"Unrecognized gemstoneName: '{gemstoneName}'. Returning default 0 value")
             value = 0

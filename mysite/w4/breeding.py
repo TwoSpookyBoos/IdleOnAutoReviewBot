@@ -1,5 +1,6 @@
 import copy
 from models.models import AdviceSection, AdviceGroup, Advice
+from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
@@ -66,15 +67,21 @@ def getShinySpeedSourcesAdviceGroup(fasterShinyPetTotalLevels) -> AdviceGroup:
 
     sps_adviceDict["Multi Group B- Everything Else"].append(Advice(
         label=f"Lab Jewel: Emerald Ulthurite",
-        picture_class='emerald-ulthurite'
+        picture_class='emerald-ulthurite',
+        progression=1 if session_data.account.labJewels["Emerald Ulthurite"]["Enabled"] else 0,
+        goal=1
     ))
     sps_adviceDict["Multi Group B- Everything Else"].append(Advice(
-        label=f"Faster Shiny Pet Lv Up Rate Shiny Pets: +{3 * fasterShinyPetTotalLevels}% total",
+        label=f"Faster Shiny Pet Lv Up Rate Shiny Pets: "
+              f"+{3 * fasterShinyPetTotalLevels}% total",
         picture_class='green-mushroom-shiny'
     ))
     sps_adviceDict["Multi Group B- Everything Else"].append(Advice(
-        label=f"Star Sign: Breedabilli: +{15 * session_data.account.star_signs.get('Breedabilli', {}).get('Unlocked', False)}%",
-        picture_class='breedabilli'
+        label=f"Star Sign: Breedabilli: "
+              f"+{15 * session_data.account.star_signs.get('Breedabilli', {}).get('Unlocked', False)}/15%",
+        picture_class='breedabilli',
+        progression=1 if session_data.account.star_signs.get('Breedabilli', {}).get('Unlocked', False) else 0,
+        goal=1
     ))
     sps_adviceDict["Multi Group B- Everything Else"].append(session_data.account.star_sign_extras['SeraphAdvice'])
     sps_adviceDict["Multi Group B- Everything Else"].append(session_data.account.star_sign_extras['SilkrodeNanoAdvice'])
@@ -82,19 +89,25 @@ def getShinySpeedSourcesAdviceGroup(fasterShinyPetTotalLevels) -> AdviceGroup:
     red8beat = session_data.account.summoning['Battles']['Red'] >= 8
     cyan13beat = session_data.account.summoning['Battles']['Cyan'] >= 13
     sps_adviceDict["Multi Group A- Summoning Winner Bonus"].append(Advice(
-        label=f"Summoning match Red8: +{1.88 * red8beat}{'' if red8beat else '. Not yet beaten.'}",
+        label=f"Summoning match Red8: "
+              f"+{1.88 * red8beat}/1.88{'' if red8beat else '. Not yet beaten.'}",
         picture_class="citringe",
         progression=1 if red8beat else 0,
         goal=1
     ))
     sps_adviceDict["Multi Group A- Summoning Winner Bonus"].append(Advice(
-        label=f"Summoning match Cyan13: +{3.45 * cyan13beat}{'' if cyan13beat else '. Not yet beaten.'}",
+        label=f"Summoning match Cyan13: "
+              f"+{3.45 * cyan13beat}/3.45{'' if cyan13beat else '. Not yet beaten.'}",
         picture_class="minichief-spirit",
         progression=1 if cyan13beat else 0,
         goal=1
     ))
     for advice in session_data.account.summoning['WinnerBonusesAdvice']:
         sps_adviceDict["Multi Group A- Summoning Winner Bonus"].append(advice)
+
+    for group_name in sps_adviceDict:  #["Stamps", "Account Wide", "Character Specific"]:
+        for advice in sps_adviceDict[group_name]:
+            mark_advice_completed(advice)
 
     sps_AdviceGroup = AdviceGroup(
         tier="",

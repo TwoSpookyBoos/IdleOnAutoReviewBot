@@ -1,3 +1,4 @@
+from consts import sneakingGemstonesMaxValueDict
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
 from flask import g as session_data
@@ -39,7 +40,7 @@ def setSneakingProgressionTier():
             #     gemstoneData.get('Value', 0),
             #     gemstoneData.get('Stat', '')),
             label=f"Level {gemstoneData['Level']} {gemstoneName}:"
-                  f" +{gemstoneData['BaseValue']:.2f}% {gemstoneData['Stat']}"
+                  f" +{gemstoneData['BaseValue']:.2f}/{sneakingGemstonesMaxValueDict.get(gemstoneName, 0)}% {gemstoneData['Stat']}"
                   f"{boosted_value}",
             picture_class=gemstoneName,
             progression=f"{gemstoneData.get('Percent', 0):.2f}",
