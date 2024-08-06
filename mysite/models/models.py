@@ -2192,7 +2192,9 @@ class Account:
 
         if totalBattlesWon >= summoningBattleCountsDict["All"]:
             self.summoning["Battles"] = summoningBattleCountsDict
+            self.summoning['AllBattlesWon'] = True
         else:
+            self.summoning['AllBattlesWon'] = False
             for colorName, colorDict in summoningDict.items():
                 self.summoning["Battles"][colorName] = 0
                 for battleIndex, battleValuesDict in colorDict.items():

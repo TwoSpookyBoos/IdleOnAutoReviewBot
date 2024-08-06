@@ -14,8 +14,9 @@ def setMissingStamps():
     return [stampName for stampName, stampValues in session_data.account.stamps.items() if stampValues.get("Delivered", False) == False and stampName not in unavailableStampsList]
 
 # Stamp p3
-def getCapacityExclusions():
+def getStampExclusions() -> dict[str,bool]:
     exclusionsDict = {
+        #Capacity
         'Matty Bag Stamp': False,  # Materials
         'Foods': False,  # Doesn't exist currently, placeholder
         "Lil' Mining Baggy Stamp": False,  # Mining Ores
@@ -25,6 +26,10 @@ def getCapacityExclusions():
         'Critters': False,  # Doesn't exist currently, placeholder
         'Souls': False,  # Doesn't exist currently, placeholder
         'Mason Jar Stamp': False,  #All types, but less per level
+        #Others
+        'Triad Essence Stamp': False,  #Sussy Gene quests
+        'Summoner Stone Stamp': False,
+        'Void Axe Stamp': False
     }
     if session_data.account.stamps.get('Crystallin', {}).get("Level", 0) >= 250:  #Old Max Pre-W6
         exclusionsDict['Matty Bag Stamp'] = True
@@ -33,6 +38,13 @@ def getCapacityExclusions():
         exclusionsDict['Bag o Heads Stamp'] = True
     if exclusionsDict['Matty Bag Stamp'] and exclusionsDict['Bugsack Stamp'] and exclusionsDict['Bag o Heads Stamp']:
         exclusionsDict['Mason Jar Stamp'] = True
+
+    #If all summoning matches are finished, exclude the Sussy Gene stamps if not obtained
+    if session_data.account.summoning['AllBattlesWon']:
+        exclusionsDict['Triad Essence Stamp'] = True
+        exclusionsDict['Summoner Stone Stamp'] = True
+        exclusionsDict['Void Axe Stamp'] = True
+
     return exclusionsDict
 
 def getCapacityAdviceGroup() -> AdviceGroup:
@@ -188,7 +200,6 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     )
     return capacity_AdviceGroup
 
-
 def getCostReductionAdviceGroup() -> AdviceGroup:
     costReduction_Advices = {"Vials": [], "Uncapped": []}
 
@@ -295,7 +306,7 @@ def setStampProgressionTier() -> AdviceSection:
 
     playerStamps = session_data.account.stamps
     missingStampsList = setMissingStamps()
-    capacityExclusionsDict = getCapacityExclusions()
+    exclusionsDict = getStampExclusions()
     tier_StampLevels = 0
     tier_FindStamps = {"Combat": 0, "Skill": 0, "Misc": 0}
     tier_RequiredSpecificStamps = 0
@@ -320,7 +331,7 @@ def setStampProgressionTier() -> AdviceSection:
         # Collect important Combat, Skill, and Misc stamps
         for stampType in stampTypes:
             for rStamp in stamps_progressionTiers[tier].get("Stamps").get(stampType, []):
-                if rStamp in missingStampsList:
+                if rStamp in missingStampsList and exclusionsDict.get(rStamp, False) == False:
                     subgroupName = f"To reach Tier {tier}"
                     if subgroupName not in stamp_AdviceDict["FindStamps"][stampType] and len(stamp_AdviceDict["FindStamps"][stampType]) < maxTiersPerGroup:
                         stamp_AdviceDict["FindStamps"][stampType][subgroupName] = []
@@ -337,31 +348,28 @@ def setStampProgressionTier() -> AdviceSection:
 
         # SpecificStampLevels
         for stampName, stampRequiredLevel in stamps_progressionTiers[tier].get("Stamps", {}).get("Specific", {}).items():
-            if playerStamps.get(stampName, {}).get("Level", 0) < stampRequiredLevel:
+            if playerStamps.get(stampName, {}).get("Level", 0) < stampRequiredLevel and exclusionsDict.get(stampName, False) == False:
                 #logger.debug(f"Tier {tier} requirement for {stampName} failed: {playerStamps.get(stampName, {}).get('Level', 0)} is less than {stampRequiredLevel}")
-                if capacityExclusionsDict.get(stampName, False) == False:  #Check to see if this is a capacity-increasing stamp, and skip if it is set to True
-                    subgroupName = f"To reach Tier {tier}"
-                    if subgroupName not in stamp_AdviceDict["Specific"] and len(stamp_AdviceDict["Specific"]) < maxTiersPerGroup:
-                        stamp_AdviceDict["Specific"][subgroupName] = []
-                    if subgroupName in stamp_AdviceDict["Specific"]:
-                        adviceCountsDict["Specific"] += 1
-                        stamp_AdviceDict["Specific"][subgroupName].append(
-                            Advice(
-                                label=stampName,
-                                picture_class=stampName,
-                                progression=playerStamps.get(stampName, {}).get("Level", 0),
-                                goal=stampRequiredLevel,
-                                resource=playerStamps.get(stampName, {}).get('Material', ''),
-                            ))
-                else:
-                    logger.debug(f"Skipping {stampName} failure because it is set to True in capacityExclusionsDict")
+                subgroupName = f"To reach Tier {tier}"
+                if subgroupName not in stamp_AdviceDict["Specific"] and len(stamp_AdviceDict["Specific"]) < maxTiersPerGroup:
+                    stamp_AdviceDict["Specific"][subgroupName] = []
+                if subgroupName in stamp_AdviceDict["Specific"]:
+                    adviceCountsDict["Specific"] += 1
+                    stamp_AdviceDict["Specific"][subgroupName].append(
+                        Advice(
+                            label=stampName,
+                            picture_class=stampName,
+                            progression=playerStamps.get(stampName, {}).get("Level", 0),
+                            goal=stampRequiredLevel,
+                            resource=playerStamps.get(stampName, {}).get('Material', ''),
+                        ))
 
         if tier_RequiredSpecificStamps == tier - 1 and adviceCountsDict["Specific"] == 0:
             tier_RequiredSpecificStamps = tier
 
         #Optional Stamps
         for rStamp in stamps_progressionTiers[tier].get("Stamps").get("Optional", []):
-            if rStamp in missingStampsList:
+            if rStamp in missingStampsList and exclusionsDict.get(rStamp, False) == False:
                 subgroupName = f"Previously Tier {tier}"
                 if subgroupName not in stamp_AdviceDict["FindStamps"]["Optional"]:  #and len(stamp_AdviceDict["FindStamps"]["Optional"]) < maxTiersPerGroup:
                     stamp_AdviceDict["FindStamps"]["Optional"][subgroupName] = []
