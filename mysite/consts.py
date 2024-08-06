@@ -2070,7 +2070,7 @@ def getNextESFamilyBreakpoint(currentLevel: int) -> int:
     result = -1
     for requirement in esFamilyBonusBreakpointsList:
         try:
-            if currentLevel > requirement:
+            if currentLevel >= requirement:
                 result += 1
             else:
                 break

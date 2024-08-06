@@ -2756,7 +2756,8 @@ class Account:
 
     def _calculate_w6(self):
         self.summoning['WinnerBonusesAdvice'].append(Advice(
-            label=f"{{{{ Pristine Charm|#sneaking }}}}: Crystal Comb: {1 + (.3 * self.sneaking.get('PristineCharms', {}).get('Crystal Comb', 0))}x",
+            label=f"{{{{ Pristine Charm|#sneaking }}}}: Crystal Comb: "
+                  f"{1 + (.3 * self.sneaking.get('PristineCharms', {}).get('Crystal Comb', 0))}/1.3x",
             picture_class="crystal-comb",
             progression=1 if self.sneaking.get("PristineCharms", {}).get('Crystal Comb', False) else 0,
             goal=1
@@ -2766,25 +2767,29 @@ class Account:
         else:
             winzLanternPostString = ""
         self.summoning['WinnerBonusesAdvice'].append(Advice(
-            label=f"{{{{ Artifact|#sailing }}}}: The Winz Lantern: {1 + (.25 * self.sailing['Artifacts'].get('The Winz Lantern', {}).get('Level', 0))}x{winzLanternPostString}",
+            label=f"{{{{ Artifact|#sailing }}}}: The Winz Lantern: "
+                  f"{1 + (.25 * self.sailing['Artifacts'].get('The Winz Lantern', {}).get('Level', 0))}/2x{winzLanternPostString}",
             picture_class="the-winz-lantern",
             progression=self.sailing['Artifacts'].get('The Winz Lantern', {}).get('Level', 0),
             goal=4
         ))
         self.summoning['WinnerBonusesAdvice'].append(Advice(
-            label=f"W6 Larger Winner bonuses merit: +{self.merits[5][4]['Level']}%",
+            label=f"W6 Larger Winner bonuses merit: "
+                  f"+{self.merits[5][4]['Level']}/{self.merits[5][4]['MaxLevel']}%",
             picture_class="merit-5-4",
             progression=self.merits[5][4]["Level"],
             goal=self.merits[5][4]["MaxLevel"]
         ))
         self.summoning['WinnerBonusesAdvice'].append(Advice(
-            label=f"W6 Achievement: Spectre Stars: +{1 * (0 < self.achievements.get('Spectre Stars', False))}%",
+            label=f"W6 Achievement: Spectre Stars: "
+                  f"+{1 * (0 < self.achievements.get('Spectre Stars', False))}/1%",
             picture_class="spectre-stars",
             progression=1 if self.achievements.get('Spectre Stars', False) else 0,
             goal=1
         ))
         self.summoning['WinnerBonusesAdvice'].append(Advice(
-            label=f"W6 Achievement: Regalis My Beloved: +{1 * (0 < self.achievements.get('Regalis My Beloved', False))}%",
+            label=f"W6 Achievement: Regalis My Beloved: "
+                  f"+{1 * (0 < self.achievements.get('Regalis My Beloved', False))}/1%",
             picture_class="regalis-my-beloved",
             progression=360 if self.achievements.get('Regalis My Beloved', False) else self.summoning['SanctuaryTotal'],
             goal=360
@@ -2798,14 +2803,16 @@ class Account:
             "Rift Slug": {
                 "Value": 25 * self.riftslug_owned,
                 "Image": "rift-slug",
-                "Label": f"Companion: Rift Slug: +{25 * self.riftslug_owned}",
+                "Label": f"Companion: Rift Slug: "
+                         f"+{25 * self.riftslug_owned}/25",
                 "Progression": 1 if self.riftslug_owned else 0,
                 "Goal": 1
             },
             "ES Family": {
                 "Value": floor(self.family_bonuses["Elemental Sorcerer"]['Value']),
                 "Image": 'elemental-sorcerer-icon',
-                "Label": f"ES Family Bonus: +{floor(self.family_bonuses['Elemental Sorcerer']['Value'])}.<br>"
+                "Label": f"ES Family Bonus: "
+                         f"+{floor(self.family_bonuses['Elemental Sorcerer']['Value'])}.<br>"
                          f"Next increase at Class Level: ",
                 "Progression": self.family_bonuses['Elemental Sorcerer']['Level'],
                 "Goal": getNextESFamilyBreakpoint(self.family_bonuses['Elemental Sorcerer']['Level'])
@@ -2813,21 +2820,24 @@ class Account:
             "Equinox Symbols": {
                 "Value": self.equinox_bonuses['Equinox Symbols']['CurrentLevel'],
                 "Image": 'equinox-symbols',
-                "Label": f"{{{{ Equinox|#equinox }}}}: Equinox Symbols: +{self.equinox_bonuses['Equinox Symbols']['CurrentLevel']}",
+                "Label": f"{{{{ Equinox|#equinox }}}}: Equinox Symbols: "
+                         f"+{self.equinox_bonuses['Equinox Symbols']['CurrentLevel']}/{self.equinox_bonuses['Equinox Symbols']['FinalMaxLevel']}",
                 "Progression": self.equinox_bonuses['Equinox Symbols']['CurrentLevel'],
                 "Goal": self.equinox_bonuses['Equinox Symbols']['FinalMaxLevel']
             },
             "Maroon Warship": {
                 "Value": 1 * self.achievements['Maroon Warship'],
                 "Image": "maroon-warship",
-                "Label": f"W5 Achievement: Maroon Warship: +{1 * self.achievements['Maroon Warship']}",
+                "Label": f"W5 Achievement: Maroon Warship: "
+                         f"+{1 * self.achievements['Maroon Warship']}/1",
                 "Progression": 1 if self.achievements['Maroon Warship'] else 0,
                 "Goal": 1
             },
             "Sneaking Mastery": {
                 "Value": 5 if self.sneaking['MaxMastery'] >= 3 else 0,
                 "Image": "sneaking-mastery",
-                "Label": f"{{{{ Rift|#rift }}}}: Sneaking Mastery: +{5 if self.sneaking['MaxMastery'] >= 3 else 0} (Mastery III)",
+                "Label": f"{{{{ Rift|#rift }}}}: Sneaking Mastery: "
+                         f"+{5 if self.sneaking['MaxMastery'] >= 3 else 0}/5 (Mastery III)",
                 "Progression": self.sneaking['MaxMastery'],
                 "Goal": 3
             },

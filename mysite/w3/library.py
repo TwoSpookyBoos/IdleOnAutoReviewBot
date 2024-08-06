@@ -37,19 +37,22 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
     bookLevelAdvices[staticSubgroup] = []
 
     bookLevelAdvices[staticSubgroup].append(Advice(
-        label=f"Construction: Talent Book Library built: +{25 * (0 < session_data.account.construction_buildings['Talent Book Library']['Level'])}",
+        label=f"Construction: Talent Book Library built: "
+              f"+{25 * (0 < session_data.account.construction_buildings['Talent Book Library']['Level'])}/25",
         picture_class="talent-book-library",
         progression=min(1, session_data.account.construction_buildings['Talent Book Library']['Level']),
         goal=1
     ))
     bookLevelAdvices[staticSubgroup].append(Advice(
-        label=f"W3 Achievement: Checkout Takeout: +{5 * (0 < session_data.account.achievements.get('Checkout Takeout', False))}",
+        label=f"W3 Achievement: Checkout Takeout: "
+              f"+{5 * (0 < session_data.account.achievements.get('Checkout Takeout', False))}/5",
         picture_class="checkout-takeout",
         progression=1 if session_data.account.achievements.get('Checkout Takeout', False) else 0,
         goal=1
     ))
     bookLevelAdvices[staticSubgroup].append(Advice(
-        label=f"Atom Collider: Oxygen: +{10 * (0 < session_data.account.atom_collider['Atoms']['Oxygen - Library Booker']['Level'])}",
+        label=f"{{{{Atom Collider|#atom-collider }}}}: Oxygen: "
+              f"+{10 * (0 < session_data.account.atom_collider['Atoms']['Oxygen - Library Booker']['Level'])}/10",
         picture_class="oxygen",
         progression=1 if 0 < session_data.account.atom_collider['Atoms']['Oxygen - Library Booker']['Level'] else 0,
         goal=1
@@ -61,7 +64,8 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
     else:
         furyPostString = ""
     bookLevelAdvices[staticSubgroup].append(Advice(
-        label=f"{{{{ Artifact|#sailing }}}}: Fury Relic: +{25 * session_data.account.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0)}{furyPostString}",
+        label=f"{{{{ Artifact|#sailing }}}}: Fury Relic: "
+              f"+{25 * session_data.account.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0)}/100{furyPostString}",
         picture_class="fury-relic",
         progression=session_data.account.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0),
         goal=4
@@ -72,13 +76,15 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
     bookLevelAdvices[scalingSubgroup] = []
 
     bookLevelAdvices[scalingSubgroup].append(Advice(
-        label=f"W3 Max Book level Merit: +{2 * session_data.account.merits[2][2]['Level']}",
+        label=f"W3 Max Book level Merit: "
+              f"+{2 * session_data.account.merits[2][2]['Level']}/10",
         picture_class="merit-2-2",
         progression=session_data.account.merits[2][2]["Level"],
         goal=session_data.account.merits[2][2]["MaxLevel"]
     ))
     bookLevelAdvices[scalingSubgroup].append(Advice(
-        label=f"{{{{Salt Lick|#salt-lick }}}}: +{2 * session_data.account.saltlick.get('Max Book', 0)}",
+        label=f"{{{{Salt Lick|#salt-lick }}}}: "
+              f"+{2 * session_data.account.saltlick.get('Max Book', 0)}/20",
         picture_class="salt-lick",
         progression=session_data.account.saltlick.get('Max Book', 0),
         goal=10
@@ -89,7 +95,8 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
     bookLevelAdvices[summoningSubgroup] = []
     cyan14beat = session_data.account.summoning['Battles']['Cyan'] >= 14
     bookLevelAdvices[summoningSubgroup].append(Advice(
-        label=f"Summoning match Cyan14: +{10.5 * cyan14beat}{'' if cyan14beat else '. No other multipliers apply until this is beaten.'}",
+        label=f"Summoning match Cyan14: "
+              f"+{10.5 * cyan14beat}/10.5{'' if cyan14beat else '. No other multipliers apply until this is beaten.'}",
         picture_class="samurai-guardian",
         progression=1 if cyan14beat else 0,
         goal=1
@@ -146,7 +153,7 @@ def getBonusLevelAdviceGroup() -> AdviceGroup:
             symbols_image_name = ''  #Journeyman doesn't get a Symbols talent
         if symbols_image_name:
             bonusLevelAdvices[subgroupName].append(Advice(
-                label=f"Symbols of Beyond: +{char.symbols_of_beyond}",
+                label=f"Symbols of Beyond: +{char.symbols_of_beyond}/{1 + session_data.account.library['MaxBookLevel']//20}",
                 picture_class=symbols_image_name
         ))
 
