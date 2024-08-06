@@ -459,7 +459,7 @@ stamps_progressionTiers = {
     31: {"TotalStampLevels": 9600, "Stamps": {
         "Specific": {'Golden Apple Stamp': 80}}},
     32: {"TotalStampLevels": 10000, "Stamps": {
-        "Specific": {'Mason Jar Stamp': 100}}},
+        "Specific": {'Mason Jar Stamp': 88}}},
     33: {"TotalStampLevels": 10500, "Stamps": {
         "Specific": {'Bugsack Stamp': 168, 'Bag o Heads Stamp': 168}}},
     34: {"TotalStampLevels": 11000, "Stamps": {
@@ -472,12 +472,26 @@ stamps_progressionTiers = {
         "Skill": ["Amplestample Stamp"],
         "Specific": {'Maxo Slappo Stamp': 98, 'Sashe Sidestamp': 98, 'Intellectostampo': 98}}},
     37: {"TotalStampLevels": 12500, "Stamps": {
-        "Specific": {'Ladle Stamp': 270}}},
+        "Specific": {'Mason Jar Stamp': 96, "Matty Bag Stamp": 320, 'Crystallin': 260},}},
     38: {"TotalStampLevels": 13000, "Stamps": {
         "Combat": ["Sukka Foo"],
         "Skill": ["Triad Essence Stamp", "Summoner Stone Stamp"],
         "Specific": {'Triad Essence Stamp': 80, 'Forge Stamp': 220},
         "Optional": ["Void Axe Stamp"]}},
+    39: {"TotalStampLevels": 13000, "Stamps": {
+        "Specific": {
+            "Mason Jar Stamp": 96, "Matty Bag Stamp": 380, 'Crystallin': 270,
+            "Lil' Mining Baggy Stamp": 280, 'Forge Stamp': 230, 'Summoner Stone Stamp': 120, 'Drippy Drop Stamp': 150,},}},
+    40: {"TotalStampLevels": 13000, "Stamps": {
+        "Specific": {
+            "Choppin' Bag Stamp": 300, 'Intellectostampo': 161, 'Maxo Slappo Stamp': 140,
+            'Cool Diggy Tool Stamp': 300, 'Swag Swingy Tool Stamp': 320, 'Golden Apple Stamp': 112,},}},
+
+    41: {"TotalStampLevels": 13000, "Stamps": {
+        "Specific": {
+            'Skelefish Stamp': 40, 'Hatchet Stamp': 295, 'Pickaxe Stamp': 255,
+            'Sashe Sidestamp': 126,  'Conjocharmo Stamp': 170,
+            'Captalist Stats Stamp': 140,},}},
 }
 smithing_progressionTiers = [
     # int tier, int Cash Points Purchased, int Monster Points Purchased, int Forge Totals, str Notes
@@ -3210,7 +3224,7 @@ stamp_maxes = {
     "Matty Bag Stamp": 410,  #420 is possible but exploity
     "Bag o Heads Stamp": 224,
     "Bugsack Stamp": 224,
-    "Drippy Drop Stamp": 155,
+    "Drippy Drop Stamp": 160,
     "Cooked Meal Stamp": 465,
     "Ladle Stamp": 320,
     "Multitool": 220,

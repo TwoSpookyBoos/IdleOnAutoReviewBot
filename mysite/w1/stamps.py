@@ -31,9 +31,9 @@ def getStampExclusions() -> dict[str,bool]:
         'Summoner Stone Stamp': False,
         'Void Axe Stamp': False
     }
-    if session_data.account.stamps.get('Crystallin', {}).get("Level", 0) >= 250:  #Old Max Pre-W6
+    if session_data.account.stamps.get('Crystallin', {}).get("Level", 0) >= 270:  #Highest Crystallin in Tiers
         exclusionsDict['Matty Bag Stamp'] = True
-    if session_data.account.stamps.get('Multitool Stamp', {}).get("Level", 0) >= 210:  #Old Max Pre-W6
+    if session_data.account.stamps.get('Multitool Stamp', {}).get("Level", 0) >= 220:  #Highest Multitool in Tiers
         exclusionsDict['Bugsack Stamp'] = True
         exclusionsDict['Bag o Heads Stamp'] = True
     if exclusionsDict['Matty Bag Stamp'] and exclusionsDict['Bugsack Stamp'] and exclusionsDict['Bag o Heads Stamp']:
