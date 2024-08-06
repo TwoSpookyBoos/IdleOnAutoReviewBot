@@ -36,7 +36,7 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
     #Achievement value of -1 means completed
     achievement = session_data.account.achievements.get("Vitamin D-licious", False)
     cap_Advices["Static Sources"].append(Advice(
-        label=f"W5 Achievement: Vitamin D-licious: +{50 if achievement else 0}%",
+        label=f"W5 Achievement: Vitamin D-licious: +{50 if achievement else 0}/50%",
         picture_class='vitamin-d-licious',
         progression="1" if achievement else "0",
         goal="1"
@@ -46,7 +46,7 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
     bribe = session_data.account.bribes["W6"].get("Forge Cap Smuggling", -1) == 1
     bribeValue = 1.3 if bribe else 1
     cap_Advices["Static Sources"].append(Advice(
-        label=f"{{{{ Bribe|#bribes }}}}: Forge Cap Smuggling: {bribeValue}x",
+        label=f"{{{{ Bribe|#bribes }}}}: Forge Cap Smuggling: {bribeValue}/1.3x",
         picture_class='forge-cap-smuggling',
         progression="1" if bribe else "0",
         goal="1"
@@ -54,7 +54,7 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
 
     #Verify Skill Mastery itself is unlocked from The Rift
     cap_Advices["Static Sources"].append(Advice(
-        label="{{ Rift|#rift }}: Skill Mastery",
+        label="{{ Rift|#rift }} 16: Skill Mastery unlocked",
         picture_class='skill-mastery',
         progression="1" if session_data.account.rift['SkillMastery'] else "0",
         goal="1"
@@ -63,7 +63,7 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
     totalSmithingLevels = sum(session_data.account.all_skills.get("Smithing", [0]))
     skillMasteryBonusBool = session_data.account.rift['SkillMastery'] and totalSmithingLevels >= 300
     cap_Advices["Static Sources"].append(Advice(
-        label=f"Skill Mastery at 300 Smithing: +{25 * skillMasteryBonusBool * session_data.account.rift['SkillMastery']}%",
+        label=f"Skill Mastery at 300 Smithing: +{25 * skillMasteryBonusBool * session_data.account.rift['SkillMastery']}/25%",
         picture_class='smithing',
         progression=totalSmithingLevels,
         goal=300
@@ -73,7 +73,7 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
     #Forge Upgrade purchased at the forge itself with coins
     forge_upgrades = (2 + 0.5 * (session_data.account.forge_upgrades[1]["Purchased"] - 1)) * session_data.account.forge_upgrades[1]["Purchased"] * 10
     cap_Advices["Scaling Sources"].append(Advice(
-        label=f"Forge Upgrade: {session_data.account.forge_upgrades[1]['UpgradeName']}: +{int(forge_upgrades)}",
+        label=f"Forge Upgrade: {session_data.account.forge_upgrades[1]['UpgradeName']}: +{int(forge_upgrades)}/13250",
         picture_class='forge-upgrades',
         progression=session_data.account.forge_upgrades[1]["Purchased"],
         goal=session_data.account.forge_upgrades[1]["MaxPurchases"]
@@ -81,14 +81,14 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
 
     #Godshard Ore card
     cap_Advices["Scaling Sources"].append(Advice(
-        label=f"Godshard Ore card: {30 * (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Godshard Ore'))}%",
+        label=f"Godshard Ore card: {30 * (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Godshard Ore'))}/180%",
         picture_class="godshard-ore-card",
         progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == "Godshard Ore"),
         goal=6
     ))
 
     cap_Advices["Scaling Sources"].append(Advice(
-        label=f"{{{{ Forge Stamp|#stamps }}}}: +{session_data.account.stamps.get('Forge Stamp', {}).get('Value', 0):.2f}% Forge Capacity",
+        label=f"{{{{ Forge Stamp|#stamps }}}}: +{session_data.account.stamps.get('Forge Stamp', {}).get('Value', 0):.2f}/57.50%",
         picture_class="forge-stamp",
         progression=session_data.account.stamps.get("Forge Stamp", {}).get("Level", 0),
         goal=230  #Forge Stamp currently has a max of 230, unless it gets increased by the Sacred Methods bundle.
@@ -96,7 +96,7 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
 
     #Arcade Bonus 26 gives Forge Ore Capacity
     cap_Advices["Scaling Sources"].append(Advice(
-        label=f"Arcade Bonus: {session_data.account.arcade.get(26, {}).get('Display', '')} {'(50% max)' if session_data.account.arcade.get(26, {}).get('Level', 0) < 100 else ''}",
+        label=f"Arcade Bonus: {session_data.account.arcade.get(26, {}).get('Value', ''):.2f}/50%",
         picture_class="arcade-bonus-26",
         progression=session_data.account.arcade.get(26, {}).get("Level", 0),
         goal=100
@@ -133,7 +133,9 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
         nextBar = oreCost - (final_forgeCapacity % oreCost) if final_forgeCapacity % oreCost > 0 else oreCost
         bar_Advices["Bars per Forge Slot"].append(Advice(
             label=f"{math.floor(final_forgeCapacity / oreCost):,} {barName}s. {nextBar:,} capacity to next bar",
-            picture_class=barName
+            picture_class=barName,
+            progression=oreCost-nextBar,
+            goal=oreCost
         ))
 
     cap_AdviceGroups = [
@@ -145,7 +147,7 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
         tier='',
         pre_string="Info- Total Capacity and Bar thresholds",
         advices=bar_Advices,
-        post_string="Note: Lava rounds partial stacks up to whole bars when claiming AFK")
+        post_string="Note: Partial stacks round up to whole bars when claiming AFK")
     ]
     return cap_AdviceGroups
 
