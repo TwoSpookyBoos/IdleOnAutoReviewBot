@@ -2224,7 +2224,11 @@ class Account:
         self._calculate_w6()
 
     def _calculate_general(self):
-        pass
+        if self.assets.get("Trophy2").amount >= 75 and self.equinox_dreams[17]:
+            self.alerts_AdviceDict['General'].append(Advice(
+                label=f"You have {self.assets.get('Trophy2').amount}/75 Lucky Lads to craft a Luckier Lad!",
+                picture_class="luckier-lad"
+            ))
 
     def _calculate_w1(self):
         self.star_sign_extras['SeraphMulti'] = min(3, 1.1 ** ceil((max(self.all_skills.get('Summoning', [0])) + 1) / 20))
