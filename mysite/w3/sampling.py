@@ -55,70 +55,77 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     psrAdvices[accountSubgroup] = []
     
     psrAdvices[accountSubgroup].append(Advice(
-        label=f"Snow Slurry vial: +{vialBonus:.2f}%",
+        label=f"Snow Slurry vial: "
+              f"+{vialBonus:.2f}%",
         picture_class='snow-slurry',
         progression=session_data.account.alchemy_vials.get('Snow Slurry (Snow Ball)', {}).get('Level', 0),
         goal=13
     ))
     psrAdvices[accountSubgroup].append(Advice(
-        label=f"Sample It bubble: +{session_data.account.alchemy_bubbles['Sample It']['BaseValue']:.2f}%",
+        label=f"Sample It bubble: "
+              f"+{session_data.account.alchemy_bubbles['Sample It']['BaseValue']:.2f}/10%",
         picture_class="sample-it",
         progression=session_data.account.alchemy_bubbles['Sample It']['Level'],
         goal=200,
         resource=session_data.account.alchemy_bubbles['Sample It']['Material']
     ))
     psrAdvices[accountSubgroup].append(Advice(
-        label=f"{{{{ Salt Lick|#salt-lick }}}}: +{0.5 * session_data.account.saltlick.get('Printer Sample Size', 0)}%",
+        label=f"{{{{ Salt Lick|#salt-lick }}}} bonus: "
+              f"+{0.5 * session_data.account.saltlick.get('Printer Sample Size', 0)}/10%",
         picture_class="salt-lick",
         progression=session_data.account.saltlick.get('Printer Sample Size', 0),
         goal=20
     ))
     psrAdvices[accountSubgroup].append(Advice(
-        label=f"W3 Printer Sample Rate merit: +{0.5 * session_data.account.merits[2][4]['Level']}%",
+        label=f"W3 Printer Sample Rate merit: "
+              f"+{0.5 * session_data.account.merits[2][4]['Level']}/{0.5 * session_data.account.merits[2][4]['MaxLevel']}%",
         picture_class="merit-2-4",
         progression=session_data.account.merits[2][4]["Level"],
         goal=session_data.account.merits[2][4]["MaxLevel"]
     ))
     psrAdvices[accountSubgroup].append(Advice(
-        label=f"Maestro Family Bonus: {session_data.account.family_bonuses['Maestro']['DisplayValue']} at Class Level {session_data.account.family_bonuses['Maestro']['Level']}",
+        label=f"Maestro Family Bonus: "
+              f"{session_data.account.family_bonuses['Maestro']['Value']:.2f}/4.5% at Class Level {session_data.account.family_bonuses['Maestro']['Level']}",
         picture_class="maestro-icon",
         progression=session_data.account.family_bonuses['Maestro']['Level'],
         goal=328
     ))
     psrAdvices[accountSubgroup].append(Advice(
-        label=f"Amplestample Stamp: +{amplestampleValue:.3f}%",
+        label=f"Amplestample Stamp: +{amplestampleValue:.3f}/6.45%",
         picture_class="amplestample-stamp",
         progression=session_data.account.stamps.get("Amplestample Stamp", {}).get("Level", 0),
         goal=32,
         resource=session_data.account.stamps.get("Amplestample Stamp", {}).get("Material", 0),
     ))
     psrAdvices[accountSubgroup].append(Advice(
-        label=f"Stample Stamp: +{stampleValue:.3f}%",
+        label=f"Stample Stamp: +{stampleValue:.3f}/6.667%",
         picture_class="stample-stamp",
         progression=session_data.account.stamps.get("Stample Stamp", {}).get("Level", 0),
         goal=60,
         resource=session_data.account.stamps.get("Stample Stamp", {}).get("Material", 0),
     ))
     psrAdvices[accountSubgroup].append(Advice(
-        label=f"Lab Bonus: Certified Stamp Book: {'2x (Already applied)' if session_data.account.labBonuses.get('Certified Stamp Book', {}).get('Enabled', False) else '1x'}",
+        label=f"Lab Bonus: Certified Stamp Book: "
+              f"{'2/2x (Already applied)' if session_data.account.labBonuses.get('Certified Stamp Book', {}).get('Enabled', False) else '1/2x'}",
         picture_class="certified-stamp-book",
         progression=int(session_data.account.labBonuses.get("Certified Stamp Book", {}).get("Enabled", False)),
         goal=1
     ))
     psrAdvices[accountSubgroup].append(Advice(
-        label=f"{{{{ Pristine Charm|#sneaking }}}}: Liqorice Rolle: {'1.25x (Already applied)' if session_data.account.sneaking.get('PristineCharms', {}).get('Liqorice Rolle', False) else '1x'}",
+        label=f"{{{{ Pristine Charm|#sneaking }}}}: Liqorice Rolle: "
+              f"{'1.25/1.25x (Already applied)' if session_data.account.sneaking.get('PristineCharms', {}).get('Liqorice Rolle', False) else '1/1.25x'}",
         picture_class="liqorice-rolle",
         progression=int(session_data.account.sneaking.get("PristineCharms", {}).get("Liqorice Rolle", False)),
         goal=1
     ))
     psrAdvices[accountSubgroup].append(Advice(
-        label=f"Arcade Bonus: {session_data.account.arcade.get(5, {}).get('Display', '')} {'(2% max)' if session_data.account.arcade.get(5, {}).get('Level', 0) < 100 else ''}",
+        label=f"Arcade Bonus: {session_data.account.arcade.get(5, {}).get('Value', ''):.2f}/2%",
         picture_class="arcade-bonus-5",
         progression=session_data.account.arcade.get(5, {}).get('Level', 0),
         goal=100
     ))
     psrAdvices[accountSubgroup].append(Advice(
-        label=f"W3 Achievement: Saharan Skull: {1 if achievementStatus else 0}%",
+        label=f"W3 Achievement: Saharan Skull: {1 if achievementStatus else 0}/1%",
         picture_class="saharan-skull",
         progression=1 if achievementStatus else 0,
         goal=1
