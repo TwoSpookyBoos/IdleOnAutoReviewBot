@@ -937,6 +937,16 @@ class Account:
         self.all_skills = perSkillDict
         self.all_quests = [safe_loads(self.raw_data.get(f"QuestComplete_{i}", "{}")) for i in range(self.playerCount)]
         self.max_toon_count = 10  # OPTIMIZE: find a way to read this from somewhere
+        self._parse_character_class_lists()
+
+    def _parse_character_class_lists(self):
+        self.beginners: list[Character] = [toon for toon in self.all_characters if "Beginner" in toon.all_classes or "Journeyman" in toon.all_classes]
+        self.jmans: list[Character] = [toon for toon in self.all_characters if "Journeyman" in toon.all_classes]
+        self.maestros: list[Character] = [toon for toon in self.all_characters if "Maestro" in toon.all_classes]
+        self.vmans: list[Character] = [toon for toon in self.all_characters if "Voidwalker" in toon.all_classes]
+
+        self.barbs: list[Character] = [toon for toon in self.all_characters if "Barbarian" in toon.all_classes]
+        self.bbs: list[Character] = [toon for toon in self.all_characters if "Barbarian" in toon.all_classes]
 
     def _parse_general(self):
         # General / Multiple uses
