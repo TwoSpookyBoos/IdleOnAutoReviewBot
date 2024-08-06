@@ -143,7 +143,8 @@ class Character:
         current_preset_talents: dict,
         secondary_preset_talents: dict,
         po_boxes: list[int],
-        equipped_lab_chips: list[str]
+        equipped_lab_chips: list[str],
+        inventory_bags: dict,
     ):
 
         self.character_index: int = character_index
@@ -163,6 +164,7 @@ class Character:
         self.secondary_preset_talents: dict = secondary_preset_talents
         self.specialized_skills: list[str] = getSpecializedSkills(self.base_class, self.sub_class, self.elite_class)
         self.expected_talents: list[int] = getExpectedTalents(self.base_class, self.sub_class, self.elite_class)
+        self.inventory_bags: dict = inventory_bags
 
         self.combat_level: int = all_skill_levels["Combat"]
         self.mining_level: int = all_skill_levels["Mining"]
