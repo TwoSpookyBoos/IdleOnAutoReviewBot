@@ -396,7 +396,7 @@ stamps_progressionTiers = {
     13: {"TotalStampLevels": 2500, "Stamps": {
         "Combat": ["Avast Yar Stamp", "Blackheart Stamp"],
         "Skill": ["Banked Pts Stamp", "Nest Eggs Stamp", "Lab Tube Stamp", "Ladle Stamp", "Sailboat Stamp"],
-        "Misc": ["Holy Mackerel Stamp", "Golden Apple Stamp", "Talent III Stamp"],
+        "Misc": ["Refinery", "Golden Apple Stamp", "Talent III Stamp"],
         "Specific": {
             'Matty Bag Stamp': 100, 'Crystallin': 60,
             'Pickaxe Stamp': 65, 'Hatchet Stamp': 65, 'Card Stamp': 100,
@@ -405,13 +405,14 @@ stamps_progressionTiers = {
         "Optional": ["Arcane Stamp", "Gilded Axe Stamp", "DNA Stamp"]
     }},
     14: {"TotalStampLevels": 4000, "Stamps": {
-        "Combat": ["Steve Sword", "Diamond Axe Stamp", "Sashe Sidestamp", "Feather Stamp"],
+        "Combat": ["Steve Sword", "Diamond Axe Stamp", "Sashe Sidestamp"],
         "Skill": ["Gamejoy Stamp", "Divine Stamp"],
         "Misc": ["Potion Stamp", "Questin Stamp"],
         "Specific": {
             'Bugsack Stamp': 80, 'Bag o Heads Stamp': 80, 'Pickaxe Stamp': 75, 'Hatchet Stamp': 75,
             'Drippy Drop Stamp': 90, 'Crystallin': 100,
-            },
+        },
+        "Optional": ["Feather Stamp"],
     }},
     15: {"TotalStampLevels": 5500, "Stamps": {
         "Combat": ["Tripleshot Stamp", "Maxo Slappo Stamp"],
@@ -425,24 +426,26 @@ stamps_progressionTiers = {
     }},
     16: {"TotalStampLevels": 7500, "Stamps": {
         "Combat": ["Violence Stamp", "Intellectostampo", "Dementia Sword Stamp", "Conjocharmo Stamp"],
-        "Skill": ["Flowin Stamp", "Sneaky Peeky Stamp", "Jade Mint Stamp", "White Essence Stamp"],
+        "Skill": ["Multitool Stamp", "Flowin Stamp", "Sneaky Peeky Stamp", "Jade Mint Stamp", "White Essence Stamp"],
         "Misc": ["Forge Stamp"],
         "Specific": {
             'Matty Bag Stamp': 200, 'Crystallin': 150,
-            'Drippy Drop Stamp': 100, 'Potion Stamp': 40,
-            'Pickaxe Stamp': 95, 'Hatchet Stamp': 95, 'Golden Apple Stamp': 60, 'Bugsack Stamp': 120, 'Bag o Heads Stamp': 120, 'Multitool Stamp': 100,
-            'Ladle Stamp': 180, 'Forge Stamp': 100
+            'Bugsack Stamp': 120, 'Bag o Heads Stamp': 120, 'Multitool Stamp': 100,
+            'Drippy Drop Stamp': 100, 'Potion Stamp': 40, 'Golden Apple Stamp': 60,
+            'Pickaxe Stamp': 95, 'Hatchet Stamp': 95, 'Ladle Stamp': 180, 'Forge Stamp': 100
         },
         "Optional": ["Blover Stamp"]
     }},
     17: {"TotalStampLevels": 9200, "Stamps": {
-        "Skill": ["Multitool Stamp", "Dark Triad Essence Stamp"],
+        "Combat": ['Captalist Stats Stamp'],
+        "Skill": ["Dark Triad Essence Stamp"],
         "Misc": ["Atomic Stamp"],
         "Specific": {
-            'Matty Bag Stamp': 280, 'Multitool Stamp': 150,
-            'Pickaxe Stamp': 105, 'Hatchet Stamp': 105, 'Mason Jar Stamp': 80,
+            'Mason Jar Stamp': 80, 'Bugsack Stamp': 136, 'Bag o Heads Stamp': 136, 'Multitool Stamp': 150,
+            'Matty Bag Stamp': 280, 'Crystallin': 250,
+            'Pickaxe Stamp': 105, 'Hatchet Stamp': 105,
             'Drippy Drop Stamp': 110, 'Potion Stamp': 60,
-            'Card Stamp': 200, 'Crystallin': 250
+            'Card Stamp': 200,
         }
     }},
     18: {"TotalStampLevels": 11000, "Stamps": {
@@ -467,10 +470,8 @@ stamps_progressionTiers = {
         "Specific": {
             "Mason Jar Stamp": 96, "Matty Bag Stamp": 380, 'Crystallin': 270,
             "Lil' Mining Baggy Stamp": 280, 'Forge Stamp': 230, 'Summoner Stone Stamp': 120, 'Drippy Drop Stamp': 155,
-            #Consider Splitting to T21
             "Choppin' Bag Stamp": 300, 'Intellectostampo': 161, 'Maxo Slappo Stamp': 140,
             'Cool Diggy Tool Stamp': 300, 'Swag Swingy Tool Stamp': 320, 'Golden Apple Stamp': 112,
-            #Consider Splitting to T22
             'Skelefish Stamp': 40, 'Hatchet Stamp': 295, 'Pickaxe Stamp': 255,
             'Sashe Sidestamp': 126,  'Conjocharmo Stamp': 170,
             'Captalist Stats Stamp': 140,
