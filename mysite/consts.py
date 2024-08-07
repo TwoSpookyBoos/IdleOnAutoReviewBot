@@ -309,7 +309,7 @@ greenstack_progressionTiers = {
                 "PureWater",
                 "FoodG9",],
             "Other Skilling Resources": [
-                "StarfireBar",
+                "StarfireBar", "DreadloBar",
                 "FoodChoppin1",
                 "EquipmentSmithingTabs2",
                 "PeanutG",],
@@ -322,7 +322,7 @@ greenstack_progressionTiers = {
             "Crystal Enemy Drops": [
                 "StoneW2", "SilverPen"],  #"StoneA2",],
             "Other Skilling Resources": [
-                "DreadloBar", "MarbleBar", "GodshardBar",
+                "MarbleBar", "GodshardBar",
                 "FoodTrapping1", "FoodWorship1",
                 "Critter1A", "Critter2A", "Critter3A", "Critter4A", "Critter5A", "Critter6A", "Critter7A", "Critter8A", "Critter9A", "Critter10A", "Critter11A",
                 "Ladle",
@@ -382,102 +382,101 @@ stamps_progressionTiers = {
     11: {"TotalStampLevels": 800, "Stamps": {
          "Skill": ["Stample Stamp", "Spice Stamp", "Egg Stamp"],
          "Misc": ["Mason Jar Stamp", "Sigil Stamp"],
-         "Specific": {'Pickaxe Stamp': 45, 'Hatchet Stamp': 45, 'Mason Jar Stamp': 12}}},
-    12: {"TotalStampLevels": 900, "Stamps": {
-        "Skill": ["Brainstew Stamp", "Bag o Heads Stamp", "Skelefish Stamp"],
+         "Specific": {'Pickaxe Stamp': 45, 'Hatchet Stamp': 45, 'Mason Jar Stamp': 12}
+    }},
+    12: {"TotalStampLevels": 1000, "Stamps": {
+        "Skill": ["Brainstew Stamp", "Bag o Heads Stamp", "Skelefish Stamp", "Holy Mackerel Stamp", "Cooked Meal Stamp"],
         "Misc": ["Card Stamp"],
-        "Specific": {'Drippy Drop Stamp': 50},
-        "Optional": ["Saw Stamp"]}},
-    13: {"TotalStampLevels": 1000, "Stamps": {
-        "Skill": ["Holy Mackerel Stamp", "Cooked Meal Stamp"],
-        "Specific": {'Pickaxe Stamp': 55, 'Hatchet Stamp': 55, 'Card Stamp': 50},
-        "Optional": ["Agile Stamp", "Book Stamp", "Smart Dirt Stamp", "High IQ Lumber Stamp", "Fishhead Stamp", "Fly Intel Stamp", "Talent II Stamp"]}},
-    14: {"TotalStampLevels": 1500, "Stamps": {
-        "Combat": ["Avast Yar Stamp"],
-        "Skill": ["Banked Pts Stamp", "Nest Eggs Stamp"],
-        "Misc": ["Holy Mackerel Stamp"],
-        "Specific": {'Matty Bag Stamp': 100, 'Crystallin': 60},
-        "Optional": ["Arcane Stamp"]}},
-    15: {"TotalStampLevels": 2000, "Stamps": {
-        "Skill": ["Lab Tube Stamp"],
-        "Misc": ["Golden Apple Stamp"],
-        "Specific": {'Pickaxe Stamp': 65, 'Hatchet Stamp': 65, 'Card Stamp': 100},
-        "Optional": ["Gilded Axe Stamp", "DNA Stamp"]}},
-    16: {"TotalStampLevels": 2500, "Stamps": {
-        "Combat": ["Blackheart Stamp"],
-        "Skill": ["Ladle Stamp", "Sailboat Stamp"],
-        "Misc": ["Talent III Stamp"],
-        "Specific": {'Golden Apple Stamp': 28}}},
-    17: {"TotalStampLevels": 3000, "Stamps": {
-        "Combat": ["Steve Sword", "Diamond Axe Stamp"],
+        "Specific": {
+            'Drippy Drop Stamp': 50,
+            'Pickaxe Stamp': 55, 'Hatchet Stamp': 55, 'Card Stamp': 50
+        },
+        "Optional": ["Saw Stamp", "Agile Stamp", "Book Stamp", "Smart Dirt Stamp", "High IQ Lumber Stamp", "Fishhead Stamp", "Fly Intel Stamp", "Talent II Stamp"]
+    }},
+    13: {"TotalStampLevels": 2500, "Stamps": {
+        "Combat": ["Avast Yar Stamp", "Blackheart Stamp"],
+        "Skill": ["Banked Pts Stamp", "Nest Eggs Stamp", "Lab Tube Stamp", "Ladle Stamp", "Sailboat Stamp"],
+        "Misc": ["Refinery", "Golden Apple Stamp", "Talent III Stamp"],
+        "Specific": {
+            'Matty Bag Stamp': 100, 'Crystallin': 60,
+            'Pickaxe Stamp': 65, 'Hatchet Stamp': 65, 'Card Stamp': 100,
+            'Golden Apple Stamp': 28
+        },
+        "Optional": ["Arcane Stamp", "Gilded Axe Stamp", "DNA Stamp"]
+    }},
+    14: {"TotalStampLevels": 4000, "Stamps": {
+        "Combat": ["Steve Sword", "Diamond Axe Stamp", "Sashe Sidestamp"],
         "Skill": ["Gamejoy Stamp", "Divine Stamp"],
-        "Specific": {'Bugsack Stamp': 80, 'Bag o Heads Stamp': 80}}},
-    18: {"TotalStampLevels": 3500, "Stamps": {
-        "Combat": ["Sashe Sidestamp"],
-        "Specific": {'Pickaxe Stamp': 75, 'Hatchet Stamp': 75, 'Drippy Drop Stamp': 90, 'Crystallin': 100}}},
-    19: {"TotalStampLevels": 4000, "Stamps": {
-        "Combat": ["Feather Stamp"],
         "Misc": ["Potion Stamp", "Questin Stamp"],
-        "Specific": {'Matty Bag Stamp': 150}}},
-    20: {"TotalStampLevels": 4500, "Stamps": {
-        "Skill": ["Crop Evo Stamp"],
-        "Misc": ["Multikill Stamp"],
-        "Specific": {'Card Stamp': 150, 'Ladle Stamp': 100, 'Potion Stamp': 20},
-        "Optional": ["Void Sword Stamp"]}},
-    21: {"TotalStampLevels": 5000, "Stamps": {
+        "Specific": {
+            'Bugsack Stamp': 80, 'Bag o Heads Stamp': 80, 'Pickaxe Stamp': 75, 'Hatchet Stamp': 75,
+            'Drippy Drop Stamp': 90, 'Crystallin': 100,
+        },
+        "Optional": ["Feather Stamp"],
+    }},
+    15: {"TotalStampLevels": 5500, "Stamps": {
         "Combat": ["Tripleshot Stamp", "Maxo Slappo Stamp"],
-        "Skill": ["Buzz Buzz Stamp"],
-        "Specific": {'Pickaxe Stamp': 85, 'Hatchet Stamp': 85, 'Mason Jar Stamp': 52, 'Golden Apple Stamp': 40}}},
-    22: {"TotalStampLevels": 5500, "Stamps": {
-        "Specific": {'Bugsack Stamp': 120, 'Bag o Heads Stamp': 120}}},
-    23: {"TotalStampLevels": 6000, "Stamps": {
-        "Combat": ["Violence Stamp", "Intellectostampo"],
-        "Skill": ["Flowin Stamp"],
-        "Specific": {'Matty Bag Stamp': 200, 'Crystallin': 150},
-        "Optional": ["Blover Stamp"]}},
-    24: {"TotalStampLevels": 6500, "Stamps": {
-        "Combat": ["Dementia Sword Stamp"],
-        "Skill": ["Sneaky Peeky Stamp", "Jade Mint Stamp", "White Essence Stamp"],
+        "Skill": ["Crop Evo Stamp", "Buzz Buzz Stamp"],
+        "Misc": ["Multikill Stamp"],
+        "Specific": {
+            'Matty Bag Stamp': 150, 'Card Stamp': 150, 'Ladle Stamp': 100, 'Potion Stamp': 20,
+            'Pickaxe Stamp': 85, 'Hatchet Stamp': 85, 'Mason Jar Stamp': 52, 'Golden Apple Stamp': 40,
+        },
+        "Optional": ["Void Sword Stamp"]
+    }},
+    16: {"TotalStampLevels": 7500, "Stamps": {
+        "Combat": ["Violence Stamp", "Intellectostampo", "Dementia Sword Stamp", "Conjocharmo Stamp"],
+        "Skill": ["Multitool Stamp", "Flowin Stamp", "Sneaky Peeky Stamp", "Jade Mint Stamp", "White Essence Stamp"],
         "Misc": ["Forge Stamp"],
-        "Specific": {'Drippy Drop Stamp': 100, 'Ladle Stamp': 150, 'Potion Stamp': 40, 'Forge Stamp': 40}}},
-    25: {"TotalStampLevels": 7000, "Stamps": {
-        "Combat": ["Conjocharmo Stamp"],
-        "Specific": {'Pickaxe Stamp': 95, 'Hatchet Stamp': 95, 'Golden Apple Stamp': 60, 'Multitool Stamp': 100}}},
-    26: {"TotalStampLevels": 7500, "Stamps": {
-        "Specific": {'Ladle Stamp': 180, 'Forge Stamp': 100}}},
-    27: {"TotalStampLevels": 8000, "Stamps": {
-        "Skill": ["Multitool Stamp"],
-        "Specific": {'Matty Bag Stamp': 280, 'Multitool Stamp': 150}}},
-    28: {"TotalStampLevels": 8400, "Stamps": {
+        "Specific": {
+            'Matty Bag Stamp': 200, 'Crystallin': 150,
+            'Bugsack Stamp': 120, 'Bag o Heads Stamp': 120, 'Multitool Stamp': 100,
+            'Drippy Drop Stamp': 100, 'Potion Stamp': 40, 'Golden Apple Stamp': 60,
+            'Pickaxe Stamp': 95, 'Hatchet Stamp': 95, 'Ladle Stamp': 180, 'Forge Stamp': 100
+        },
+        "Optional": ["Blover Stamp"]
+    }},
+    17: {"TotalStampLevels": 9200, "Stamps": {
+        "Combat": ['Captalist Stats Stamp'],
         "Skill": ["Dark Triad Essence Stamp"],
         "Misc": ["Atomic Stamp"],
-        "Specific": {'Pickaxe Stamp': 105, 'Hatchet Stamp': 105, 'Mason Jar Stamp': 80, 'Crystallin': 200, 'Bugsack Stamp': 144, 'Bag o Heads Stamp': 144, }}},
-    29: {"TotalStampLevels": 8800, "Stamps": {
-        "Specific": {'Drippy Drop Stamp': 110, 'Potion Stamp': 60}}},
-    30: {"TotalStampLevels": 9200, "Stamps": {
-        "Specific": {'Card Stamp': 200, 'Crystallin': 250}}},
-    31: {"TotalStampLevels": 9600, "Stamps": {
-        "Specific": {'Golden Apple Stamp': 80}}},
-    32: {"TotalStampLevels": 10000, "Stamps": {
-        "Specific": {'Mason Jar Stamp': 100}}},
-    33: {"TotalStampLevels": 10500, "Stamps": {
-        "Specific": {'Bugsack Stamp': 168, 'Bag o Heads Stamp': 168}}},
-    34: {"TotalStampLevels": 11000, "Stamps": {
-        "Specific": {'Golden Apple Stamp': 100, 'Multitool Stamp': 210}}},
-    35: {"TotalStampLevels": 11500, "Stamps": {
-        "Combat": ["Golden Sixes Stamp"],
-        "Specific": {'Golden Sixes Stamp': 120, 'Forge Stamp': 160}}},
-    36: {"TotalStampLevels": 12000, "Stamps": {
-        "Combat": ["Stat Wallstreet Stamp"],
-        "Skill": ["Amplestample Stamp"],
-        "Specific": {'Maxo Slappo Stamp': 98, 'Sashe Sidestamp': 98, 'Intellectostampo': 98}}},
-    37: {"TotalStampLevels": 12500, "Stamps": {
-        "Specific": {'Ladle Stamp': 270}}},
-    38: {"TotalStampLevels": 13000, "Stamps": {
-        "Combat": ["Sukka Foo"],
-        "Skill": ["Triad Essence Stamp", "Summoner Stone Stamp"],
-        "Specific": {'Triad Essence Stamp': 80, 'Forge Stamp': 220},
-        "Optional": ["Void Axe Stamp"]}},
+        "Specific": {
+            'Mason Jar Stamp': 80, 'Bugsack Stamp': 136, 'Bag o Heads Stamp': 136, 'Multitool Stamp': 150,
+            'Matty Bag Stamp': 280, 'Crystallin': 250,
+            'Pickaxe Stamp': 105, 'Hatchet Stamp': 105,
+            'Drippy Drop Stamp': 110, 'Potion Stamp': 60,
+            'Card Stamp': 200,
+        }
+    }},
+    18: {"TotalStampLevels": 11000, "Stamps": {
+        "Specific": {
+            'Mason Jar Stamp': 88,
+            'Bugsack Stamp': 168, 'Bag o Heads Stamp': 168,  'Multitool Stamp': 210,
+            'Golden Apple Stamp': 100,
+        }
+    }},
+    19: {"TotalStampLevels": 13000, "Stamps": {
+        "Combat": ["Golden Sixes Stamp", "Stat Wallstreet Stamp"],
+        "Skill": ["Amplestample Stamp", "Triad Essence Stamp", "Summoner Stone Stamp"],
+        "Specific": {
+            'Golden Sixes Stamp': 120,
+            'Maxo Slappo Stamp': 98, 'Sashe Sidestamp': 98, 'Intellectostampo': 98,
+            'Mason Jar Stamp': 96, "Matty Bag Stamp": 320, 'Crystallin': 260,
+            'Triad Essence Stamp': 80, 'Forge Stamp': 220
+        },
+        "Optional": ["Sukka Foo", "Void Axe Stamp"]
+    }},
+    20: {"TotalStampLevels": 13000, "Stamps": {
+        "Specific": {
+            "Mason Jar Stamp": 96, "Matty Bag Stamp": 380, 'Crystallin': 270,
+            "Lil' Mining Baggy Stamp": 280, 'Forge Stamp': 230, 'Summoner Stone Stamp': 120, 'Drippy Drop Stamp': 155,
+            "Choppin' Bag Stamp": 300, 'Intellectostampo': 161, 'Maxo Slappo Stamp': 140,
+            'Cool Diggy Tool Stamp': 300, 'Swag Swingy Tool Stamp': 320, 'Golden Apple Stamp': 112,
+            'Skelefish Stamp': 40, 'Hatchet Stamp': 295, 'Pickaxe Stamp': 255,
+            'Sashe Sidestamp': 126,  'Conjocharmo Stamp': 170,
+            'Captalist Stats Stamp': 140,
+        },
+    }},
 }
 smithing_progressionTiers = [
     # int tier, int Cash Points Purchased, int Monster Points Purchased, int Forge Totals, str Notes
@@ -979,7 +978,7 @@ sampling_progressionTiers = {
     6: {"Oak Logs": 200e6, "Copper Ore": 140e6, "Goldfish": 20e6,  "Fly": 10e6,  "Spore Cap": 100e3},
     7: {"Oak Logs": 1.5e9, "Copper Ore": 1e9,   "Goldfish": 150e6, "Fly": 75e6,  "Spore Cap": 1e6},
     8: {"Oak Logs": 10e9,  "Copper Ore": 7e9,   "Goldfish": 1e9,   "Fly": 500e6, "Spore Cap": 10e6},
-    9: {"Oak Logs": 22e9,  "Copper Ore": 16e9,  "Goldfish": 1.6e9, "Fly": 800e6, "Spore Cap": 20e6},
+    9: {"Oak Logs": 22e9,  "Copper Ore": 15e9,  "Goldfish": 2e9,   "Fly": 1e9,   "Spore Cap": 25e6},
 }
 
 ###WORLD 4 PROGRESSION TIERS###
@@ -2070,7 +2069,7 @@ def getNextESFamilyBreakpoint(currentLevel: int) -> int:
     result = -1
     for requirement in esFamilyBonusBreakpointsList:
         try:
-            if currentLevel > requirement:
+            if currentLevel >= requirement:
                 result += 1
             else:
                 break
@@ -3210,7 +3209,7 @@ stamp_maxes = {
     "Matty Bag Stamp": 410,  #420 is possible but exploity
     "Bag o Heads Stamp": 224,
     "Bugsack Stamp": 224,
-    "Drippy Drop Stamp": 155,
+    "Drippy Drop Stamp": 160,
     "Cooked Meal Stamp": 465,
     "Ladle Stamp": 320,
     "Multitool": 220,
@@ -5296,15 +5295,15 @@ def getGemstoneBaseValue(gemstoneName: str, gemstoneLevel: int):
     value = 0
     if gemstoneLevel > 0:
         if gemstoneName == "Aquamarine":
-            value = 40 + (10000 * (gemstoneLevel / (gemstoneLevel + 1000)))
+            value = 40 + (sneakingGemstonesMaxValueDict['Aquamarine'] * (gemstoneLevel / (gemstoneLevel + 1000)))
         elif gemstoneName == "Emerald":
-            value = 15 + (5000 * (gemstoneLevel / (gemstoneLevel + 1000)))
+            value = 15 + (sneakingGemstonesMaxValueDict['Emerald'] * (gemstoneLevel / (gemstoneLevel + 1000)))
         elif gemstoneName == "Garnet":
-            value = 12 + (2500 * (gemstoneLevel / (gemstoneLevel + 1000)))
+            value = 12 + (sneakingGemstonesMaxValueDict['Garnet'] * (gemstoneLevel / (gemstoneLevel + 1000)))
         elif gemstoneName == "Starite":
-            value = 5 + (200 * (gemstoneLevel / (gemstoneLevel + 1000)))
+            value = 5 + (sneakingGemstonesMaxValueDict['Starite'] * (gemstoneLevel / (gemstoneLevel + 1000)))
         elif gemstoneName == "Topaz":
-            value = 10 + (1000 * (gemstoneLevel / (gemstoneLevel + 1000)))
+            value = 10 + (sneakingGemstonesMaxValueDict['Topaz'] * (gemstoneLevel / (gemstoneLevel + 1000)))
         else:
             logger.warning(f"Unrecognized gemstoneName: '{gemstoneName}'. Returning default 0 value")
             value = 0

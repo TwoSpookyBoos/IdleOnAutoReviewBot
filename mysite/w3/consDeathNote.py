@@ -293,12 +293,12 @@ def getEnemyNameFromMap(inputMap: str) -> str:
 
 def getapocCharactersIndexList() -> list:
     #get classes, find Barbarian and BB
-    apocCharactersIndexList = [c.character_index for c in session_data.account.safe_characters if c.sub_class == "Barbarian"]
+    apocCharactersIndexList = [c.character_index for c in session_data.account.barbs]
     return apocCharactersIndexList
 
 def getChowMeowCharactersIndexList() -> list:
     # get classes, find BB ONLY for Chow and Meow
-    bbCharactersIndexList = [c.character_index for c in session_data.account.safe_characters if c.elite_class == "Blood Berserker"]
+    bbCharactersIndexList = [c.character_index for c in session_data.account.bbs]
     return bbCharactersIndexList
 
 def getDeathNoteKills():

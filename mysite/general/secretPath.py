@@ -169,11 +169,10 @@ def setSecretClassProgressionTier():
     max_tier = numberOfSecretClasses
     tier_SecretClass = 0
 
-    toons = session_data.account.all_characters
-    vmans: list[Character] = [toon for toon in toons if "Voidwalker" in toon.all_classes]
-    maestros: list[Character] = [toon for toon in toons if "Maestro" in toon.all_classes]
-    jmans: list[Character] = [toon for toon in toons if "Journeyman" in toon.all_classes]
-    beginners: list[Character] = jmans + [toon for toon in toons if "Beginner" in toon.all_classes]
+    beginners = session_data.account.beginners
+    jmans = session_data.account.jmans
+    maestros = session_data.account.maestros
+    vmans = session_data.account.vmans
 
     if "Infinilyte" in session_data.account.classes:
         tier_SecretClass = 4

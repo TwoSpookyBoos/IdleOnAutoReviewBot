@@ -143,7 +143,8 @@ class Character:
         current_preset_talents: dict,
         secondary_preset_talents: dict,
         po_boxes: list[int],
-        equipped_lab_chips: list[str]
+        equipped_lab_chips: list[str],
+        inventory_bags: dict,
     ):
 
         self.character_index: int = character_index
@@ -163,6 +164,7 @@ class Character:
         self.secondary_preset_talents: dict = secondary_preset_talents
         self.specialized_skills: list[str] = getSpecializedSkills(self.base_class, self.sub_class, self.elite_class)
         self.expected_talents: list[int] = getExpectedTalents(self.base_class, self.sub_class, self.elite_class)
+        self.inventory_bags: dict = inventory_bags
 
         self.combat_level: int = all_skill_levels["Combat"]
         self.mining_level: int = all_skill_levels["Mining"]
@@ -937,6 +939,16 @@ class Account:
         self.all_skills = perSkillDict
         self.all_quests = [safe_loads(self.raw_data.get(f"QuestComplete_{i}", "{}")) for i in range(self.playerCount)]
         self.max_toon_count = 10  # OPTIMIZE: find a way to read this from somewhere
+        self._parse_character_class_lists()
+
+    def _parse_character_class_lists(self):
+        self.beginners: list[Character] = [toon for toon in self.all_characters if "Beginner" in toon.all_classes or "Journeyman" in toon.all_classes]
+        self.jmans: list[Character] = [toon for toon in self.all_characters if "Journeyman" in toon.all_classes]
+        self.maestros: list[Character] = [toon for toon in self.all_characters if "Maestro" in toon.all_classes]
+        self.vmans: list[Character] = [toon for toon in self.all_characters if "Voidwalker" in toon.all_classes]
+
+        self.barbs: list[Character] = [toon for toon in self.all_characters if "Barbarian" in toon.all_classes]
+        self.bbs: list[Character] = [toon for toon in self.all_characters if "Barbarian" in toon.all_classes]
 
     def _parse_general(self):
         # General / Multiple uses
@@ -1368,6 +1380,10 @@ class Account:
 
     def _parse_w3_library(self):
         self.library = {}
+        try:
+            self.library['BooksReady'] = self.raw_optlacc_dict[55]
+        except:
+            self.library['BooksReady'] = 0
 
     def _parse_w3_deathnote(self):
         self.rift_meowed = False
@@ -2180,7 +2196,9 @@ class Account:
 
         if totalBattlesWon >= summoningBattleCountsDict["All"]:
             self.summoning["Battles"] = summoningBattleCountsDict
+            self.summoning['AllBattlesWon'] = True
         else:
+            self.summoning['AllBattlesWon'] = False
             for colorName, colorDict in summoningDict.items():
                 self.summoning["Battles"][colorName] = 0
                 for battleIndex, battleValuesDict in colorDict.items():
@@ -2210,7 +2228,11 @@ class Account:
         self._calculate_w6()
 
     def _calculate_general(self):
-        pass
+        if self.assets.get("Trophy2").amount >= 75 and self.equinox_dreams[17]:
+            self.alerts_AdviceDict['General'].append(Advice(
+                label=f"You have {self.assets.get('Trophy2').amount}/75 Lucky Lads to craft a Luckier Lad!",
+                picture_class="luckier-lad"
+            ))
 
     def _calculate_w1(self):
         self.star_sign_extras['SeraphMulti'] = min(3, 1.1 ** ceil((max(self.all_skills.get('Summoning', [0])) + 1) / 20))
@@ -2224,7 +2246,7 @@ class Account:
         if self.star_sign_extras['SeraphGoal'] < 240:
             self.star_sign_extras['SeraphEval'] += " Increases every 20 Summoning levels."
         self.star_sign_extras['SeraphAdvice'] = Advice(
-            label=f"Starsign: Seraph Cosmos: {self.star_sign_extras['SeraphEval']}",
+            label=f"{{{{ Starsign|#star-signs }}}}: Seraph Cosmos: {self.star_sign_extras['SeraphEval']}",
             picture_class="seraph-cosmos",
             progression=max(self.all_skills.get('Summoning', [0])),
             goal=self.star_sign_extras['SeraphGoal'])
@@ -2239,7 +2261,10 @@ class Account:
             self.star_sign_extras['SilkrodeNanoMulti'] = 1
         self.star_sign_extras['SilkrodeNanoAdvice'] = Advice(
             label=f"Lab Chip: Silkrode Nanochip: {self.star_sign_extras['SilkrodeNanoEval']}",
-            picture_class="silkrode-nanochip")
+            picture_class="silkrode-nanochip",
+            progression=1 if self.labChips.get('Silkrode Nanochip', 0) > 0 else 0,
+            goal=1
+        )
 
     def _calculate_w2(self):
         self.vialMasteryMulti = 1 + (self.maxed_vials * .02) if self.rift['VialMastery'] else 1
@@ -2744,7 +2769,8 @@ class Account:
 
     def _calculate_w6(self):
         self.summoning['WinnerBonusesAdvice'].append(Advice(
-            label=f"{{{{ Pristine Charm|#sneaking }}}}: Crystal Comb: {1 + (.3 * self.sneaking.get('PristineCharms', {}).get('Crystal Comb', 0))}x",
+            label=f"{{{{ Pristine Charm|#sneaking }}}}: Crystal Comb: "
+                  f"{1 + (.3 * self.sneaking.get('PristineCharms', {}).get('Crystal Comb', 0))}/1.3x",
             picture_class="crystal-comb",
             progression=1 if self.sneaking.get("PristineCharms", {}).get('Crystal Comb', False) else 0,
             goal=1
@@ -2754,25 +2780,29 @@ class Account:
         else:
             winzLanternPostString = ""
         self.summoning['WinnerBonusesAdvice'].append(Advice(
-            label=f"{{{{ Artifact|#sailing }}}}: The Winz Lantern: {1 + (.25 * self.sailing['Artifacts'].get('The Winz Lantern', {}).get('Level', 0))}x{winzLanternPostString}",
+            label=f"{{{{ Artifact|#sailing }}}}: The Winz Lantern: "
+                  f"{1 + (.25 * self.sailing['Artifacts'].get('The Winz Lantern', {}).get('Level', 0))}/2x{winzLanternPostString}",
             picture_class="the-winz-lantern",
             progression=self.sailing['Artifacts'].get('The Winz Lantern', {}).get('Level', 0),
             goal=4
         ))
         self.summoning['WinnerBonusesAdvice'].append(Advice(
-            label=f"W6 Larger Winner bonuses merit: +{self.merits[5][4]['Level']}%",
+            label=f"W6 Larger Winner bonuses merit: "
+                  f"+{self.merits[5][4]['Level']}/{self.merits[5][4]['MaxLevel']}%",
             picture_class="merit-5-4",
             progression=self.merits[5][4]["Level"],
             goal=self.merits[5][4]["MaxLevel"]
         ))
         self.summoning['WinnerBonusesAdvice'].append(Advice(
-            label=f"W6 Achievement: Spectre Stars: +{1 * (0 < self.achievements.get('Spectre Stars', False))}%",
+            label=f"W6 Achievement: Spectre Stars: "
+                  f"+{1 * (0 < self.achievements.get('Spectre Stars', False))}/1%",
             picture_class="spectre-stars",
             progression=1 if self.achievements.get('Spectre Stars', False) else 0,
             goal=1
         ))
         self.summoning['WinnerBonusesAdvice'].append(Advice(
-            label=f"W6 Achievement: Regalis My Beloved: +{1 * (0 < self.achievements.get('Regalis My Beloved', False))}%",
+            label=f"W6 Achievement: Regalis My Beloved: "
+                  f"+{1 * (0 < self.achievements.get('Regalis My Beloved', False))}/1%",
             picture_class="regalis-my-beloved",
             progression=360 if self.achievements.get('Regalis My Beloved', False) else self.summoning['SanctuaryTotal'],
             goal=360
@@ -2786,14 +2816,16 @@ class Account:
             "Rift Slug": {
                 "Value": 25 * self.riftslug_owned,
                 "Image": "rift-slug",
-                "Label": f"Companion: Rift Slug: +{25 * self.riftslug_owned}",
+                "Label": f"Companion: Rift Slug: "
+                         f"+{25 * self.riftslug_owned}/25",
                 "Progression": 1 if self.riftslug_owned else 0,
                 "Goal": 1
             },
             "ES Family": {
                 "Value": floor(self.family_bonuses["Elemental Sorcerer"]['Value']),
                 "Image": 'elemental-sorcerer-icon',
-                "Label": f"ES Family Bonus: +{floor(self.family_bonuses['Elemental Sorcerer']['Value'])}.<br>"
+                "Label": f"ES Family Bonus: "
+                         f"+{floor(self.family_bonuses['Elemental Sorcerer']['Value'])}.<br>"
                          f"Next increase at Class Level: ",
                 "Progression": self.family_bonuses['Elemental Sorcerer']['Level'],
                 "Goal": getNextESFamilyBreakpoint(self.family_bonuses['Elemental Sorcerer']['Level'])
@@ -2801,21 +2833,24 @@ class Account:
             "Equinox Symbols": {
                 "Value": self.equinox_bonuses['Equinox Symbols']['CurrentLevel'],
                 "Image": 'equinox-symbols',
-                "Label": f"{{{{ Equinox|#equinox }}}}: Equinox Symbols: +{self.equinox_bonuses['Equinox Symbols']['CurrentLevel']}",
+                "Label": f"{{{{ Equinox|#equinox }}}}: Equinox Symbols: "
+                         f"+{self.equinox_bonuses['Equinox Symbols']['CurrentLevel']}/{self.equinox_bonuses['Equinox Symbols']['FinalMaxLevel']}",
                 "Progression": self.equinox_bonuses['Equinox Symbols']['CurrentLevel'],
                 "Goal": self.equinox_bonuses['Equinox Symbols']['FinalMaxLevel']
             },
             "Maroon Warship": {
                 "Value": 1 * self.achievements['Maroon Warship'],
                 "Image": "maroon-warship",
-                "Label": f"W5 Achievement: Maroon Warship: +{1 * self.achievements['Maroon Warship']}",
+                "Label": f"W5 Achievement: Maroon Warship: "
+                         f"+{1 * self.achievements['Maroon Warship']}/1",
                 "Progression": 1 if self.achievements['Maroon Warship'] else 0,
                 "Goal": 1
             },
             "Sneaking Mastery": {
                 "Value": 5 if self.sneaking['MaxMastery'] >= 3 else 0,
                 "Image": "sneaking-mastery",
-                "Label": f"{{{{ Rift|#rift }}}}: Sneaking Mastery: +{5 if self.sneaking['MaxMastery'] >= 3 else 0} (Mastery III)",
+                "Label": f"{{{{ Rift|#rift }}}}: Sneaking Mastery: "
+                         f"+{5 if self.sneaking['MaxMastery'] >= 3 else 0}/5 (Mastery III)",
                 "Progression": self.sneaking['MaxMastery'],
                 "Goal": 3
             },

@@ -230,31 +230,15 @@ def getCharacterDetails(inputJSON, runType):
     equipped_prayers = {}
     postOfficeList = []
     equipped_lab_chips = {}
+    inventory_bags = {}
     for character_index in range(0, playerCount):
-        try:
-            playerClasses.append(getHumanReadableClasses(inputJSON[f"CharacterClass_{character_index}"]))
-        except:
-            playerClasses.append(f"UnknownClass{character_index}")
-        try:
-            postOfficeList.append(safe_loads(inputJSON[f"POu_{character_index}"]))
-        except:
-            postOfficeList.append([0]*36)
-        try:
-            equipped_prayers[character_index] = safe_loads(inputJSON[f"Prayers_{character_index}"])
-        except:
-            equipped_prayers[character_index] = []
-        try:
-            characterMaxTalents[character_index] = safe_loads(inputJSON[f"SM_{character_index}"])
-        except:
-            characterMaxTalents[character_index] = {}
-        try:
-            characterCurrentPresetTalents[character_index] = safe_loads(inputJSON[f"SL_{character_index}"])
-        except:
-            characterCurrentPresetTalents[character_index] = {}
-        try:
-            characterSecondaryPresetTalents[character_index] = safe_loads(inputJSON[f"SLpre_{character_index}"])
-        except:
-            characterSecondaryPresetTalents[character_index] = {}
+        playerClasses.append(getHumanReadableClasses(inputJSON.get(f"CharacterClass_{character_index}", 0)))
+        postOfficeList.append(safe_loads(inputJSON.get(f"POu_{character_index}", [0]*36)))
+        equipped_prayers[character_index] = safe_loads(inputJSON.get(f"Prayers_{character_index}", []))
+        characterMaxTalents[character_index] = safe_loads(inputJSON.get(f"SM_{character_index}", {}))
+        characterCurrentPresetTalents[character_index] = safe_loads(inputJSON.get(f"SL_{character_index}", {}))
+        characterSecondaryPresetTalents[character_index] = safe_loads(inputJSON.get(f"SLpre_{character_index}", {}))
+        inventory_bags[character_index] = safe_loads(inputJSON.get(f'InvBagsUsed_{character_index}', {}))
         try:
             equipped_lab_chips[character_index] = safe_loads(inputJSON["Lab"])[character_index+1]
         except:
@@ -273,7 +257,8 @@ def getCharacterDetails(inputJSON, runType):
             current_preset_talents=characterCurrentPresetTalents[character_index],
             secondary_preset_talents=characterSecondaryPresetTalents[character_index],
             po_boxes=postOfficeList[character_index],
-            equipped_lab_chips=equipped_lab_chips[character_index]
+            equipped_lab_chips=equipped_lab_chips[character_index],
+            inventory_bags=inventory_bags[character_index]
         )
 
     return [playerCount, playerNames, playerClasses, characterDict, perSkillDict]

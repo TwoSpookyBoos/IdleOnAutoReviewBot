@@ -14,8 +14,9 @@ def setMissingStamps():
     return [stampName for stampName, stampValues in session_data.account.stamps.items() if stampValues.get("Delivered", False) == False and stampName not in unavailableStampsList]
 
 # Stamp p3
-def getCapacityExclusions():
+def getStampExclusions() -> dict[str,bool]:
     exclusionsDict = {
+        #Capacity
         'Matty Bag Stamp': False,  # Materials
         'Foods': False,  # Doesn't exist currently, placeholder
         "Lil' Mining Baggy Stamp": False,  # Mining Ores
@@ -25,14 +26,25 @@ def getCapacityExclusions():
         'Critters': False,  # Doesn't exist currently, placeholder
         'Souls': False,  # Doesn't exist currently, placeholder
         'Mason Jar Stamp': False,  #All types, but less per level
+        #Others
+        'Triad Essence Stamp': False,  #Sussy Gene quests
+        'Summoner Stone Stamp': False,
+        'Void Axe Stamp': False
     }
-    if session_data.account.stamps.get('Crystallin', {}).get("Level", 0) >= 250:  #Old Max Pre-W6
+    if session_data.account.stamps.get('Crystallin', {}).get("Level", 0) >= 270:  #Highest Crystallin in Tiers
         exclusionsDict['Matty Bag Stamp'] = True
-    if session_data.account.stamps.get('Multitool Stamp', {}).get("Level", 0) >= 210:  #Old Max Pre-W6
+    if session_data.account.stamps.get('Multitool Stamp', {}).get("Level", 0) >= 220:  #Highest Multitool in Tiers
         exclusionsDict['Bugsack Stamp'] = True
         exclusionsDict['Bag o Heads Stamp'] = True
     if exclusionsDict['Matty Bag Stamp'] and exclusionsDict['Bugsack Stamp'] and exclusionsDict['Bag o Heads Stamp']:
         exclusionsDict['Mason Jar Stamp'] = True
+
+    #If all summoning matches are finished, exclude the Sussy Gene stamps if not obtained
+    if session_data.account.summoning['AllBattlesWon']:
+        exclusionsDict['Triad Essence Stamp'] = True if not session_data.account.stamps['Triad Essence Stamp']['Delivered'] else False
+        exclusionsDict['Summoner Stone Stamp'] = True if not session_data.account.stamps['Summoner Stone Stamp']['Delivered'] else False
+        exclusionsDict['Void Axe Stamp'] = True if not session_data.account.stamps['Void Axe Stamp']['Delivered'] else False
+
     return exclusionsDict
 
 def getCapacityAdviceGroup() -> AdviceGroup:
@@ -52,35 +64,40 @@ def getCapacityAdviceGroup() -> AdviceGroup:
         goal=1
     ))
     capacity_Advices["Stamps"].append(Advice(
-        label="Lab Bonus: Certified Stamp Book",
+        label=f"Lab Bonus: Certified Stamp Book: "
+              f"{'2' if session_data.account.labBonuses.get('Certified Stamp Book', {}).get('Enabled', False) else '0'}/2x",
         picture_class="certified-stamp-book",
-        progression=f"{1 if session_data.account.labBonuses.get('Certified Stamp Book', {}).get('Enabled', False) else 0}",
+        progression=1 if session_data.account.labBonuses.get('Certified Stamp Book', {}).get('Enabled', False) else 0,
         goal=1
     ))
+    # I'm kinda doubting Lava ever fixes this bug, so hiding it
+    # capacity_Advices["Stamps"].append(Advice(
+    #     label="Lab Jewel: Pure Opal Navette (lol jk, this is bugged)",
+    #     picture_class="pure-opal-navette",
+    # ))
     capacity_Advices["Stamps"].append(Advice(
-        label="Lab Jewel: Pure Opal Navette (lol jk, this is bugged)",
-        picture_class="pure-opal-navette",
-    ))
-    capacity_Advices["Stamps"].append(Advice(
-        label="{{ Pristine Charm|#sneaking }}: Liqorice Rolle",
+        label=f"{{{{ Pristine Charm|#sneaking }}}}: Liqorice Rolle: "
+              f"{'1.25' if session_data.account.sneaking.get('PristineCharms', {}).get('Liqorice Rolle', False) else '1'}/1.25x",
         picture_class="liqorice-rolle",
-        progression=int(session_data.account.sneaking.get("PristineCharms", {}).get("Liqorice Rolle", False)),
+        progression=1 if session_data.account.sneaking.get('PristineCharms', {}).get('Liqorice Rolle', False) else 0,
         goal=1
     ))
     for capStamp in ["Mason Jar Stamp", "Lil' Mining Baggy Stamp", "Choppin' Bag Stamp", "Matty Bag Stamp", "Bag o Heads Stamp", "Bugsack Stamp"]:
         capacity_Advices["Stamps"].append(Advice(
-            label=capStamp,
+            label=f"{capStamp}: "
+                  f"{session_data.account.stamps.get(capStamp, {}).get('Level', 0)}/{stamp_maxes.get(capStamp, 999)}%",
             picture_class=capStamp,
             progression=session_data.account.stamps.get(capStamp, {}).get('Level', 0),
-            goal=stamp_maxes.get(capStamp, 999,),
+            goal=stamp_maxes.get(capStamp, 999),
             resource=session_data.account.stamps.get(capStamp, {}).get('Material', 0),
         ))
 
     #Account-Wide
     capacity_Advices["Account Wide"].append(Advice(
-        label="{{ Bribe|#bribes }}: Bottomless Bags",
+        label=f"{{{{ Bribe|#bribes }}}}: Bottomless Bags: "
+              f"{'5' if session_data.account.bribes['W4'].get('Bottomless Bags') >= 1 else '0'}/5%",
         picture_class="bottomless-bags",
-        progression=1 if session_data.account.bribes["W4"].get("Bottomless Bags") >= 1 else 0,
+        progression=1 if session_data.account.bribes['W4'].get('Bottomless Bags') >= 1 else 0,
         goal=1
     ))
     capacity_Advices["Account Wide"].append(Advice(
@@ -96,13 +113,14 @@ def getCapacityAdviceGroup() -> AdviceGroup:
         goal="∞"
     ))
     capacity_Advices["Account Wide"].append(Advice(
-        label="Chaotic Chizoar card increases the capacity from Pantheon Shrine",
+        label="Chaotic Chizoar card increases Pantheon Shrine",
         picture_class="chaotic-chizoar-card",
         progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == "Chaotic Chizoar"),
         goal=6
     ))
     capacity_Advices["Account Wide"].append(Advice(
-        label="{{ Gem Shop|#gem-shop }}: Carry Capacity",
+        label=f"{{{{ Gem Shop|#gem-shop }}}}: Carry Capacity: "
+              f"{(25*session_data.account.gemshop.get('Carry Capacity', 0))}%/250%",
         picture_class="carry-capacity",
         progression=session_data.account.gemshop.get("Carry Capacity", 0),
         goal=10
@@ -112,25 +130,33 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     #Character Specific
     capacity_Advices["Character Specific"].append(session_data.account.star_sign_extras['SilkrodeNanoAdvice'])
     capacity_Advices["Character Specific"].append(Advice(
-        label=f"Starsign: Mr No Sleep: {30 * bool(session_data.account.star_signs.get('Mr No Sleep', {}).get('Unlocked', False))}% base",
+        label=f"Starsign: Mr No Sleep: {30 * bool(session_data.account.star_signs.get('Mr No Sleep', {}).get('Unlocked', False))}/30% base",
         picture_class="mr-no-sleep",
+        progression=1 if session_data.account.star_signs.get('Mr No Sleep', {}).get('Unlocked', False) else 0,
+        goal=1
     ))
     capacity_Advices["Character Specific"].append(Advice(
-        label=f"Starsign: Pack Mule: {10 * bool(session_data.account.star_signs.get('Pack Mule', {}).get('Unlocked', False))}% base",
+        label=f"Starsign: Pack Mule: {10 * bool(session_data.account.star_signs.get('Pack Mule', {}).get('Unlocked', False))}/10% base",
         picture_class="pack-mule",
+        progression=1 if session_data.account.star_signs.get('Pack Mule', {}).get('Unlocked', False) else 0,
+        goal=1
     ))
     capacity_Advices["Character Specific"].append(Advice(
-        label=f"Starsign: The OG Skiller: {5 * bool(session_data.account.star_signs.get('The OG Skiller', {}).get('Unlocked', False))}% base",
+        label=f"Starsign: The OG Skiller: {5 * bool(session_data.account.star_signs.get('The OG Skiller', {}).get('Unlocked', False))}/5% base",
         picture_class="the-og-skiller",
+        progression=1 if session_data.account.star_signs.get('The OG Skiller', {}).get('Unlocked', False) else 0,
+        goal=1
     ))
     capacity_Advices["Character Specific"].append(Advice(
         label=f"Total Starsign Value: {totalStarsignValue:.2f}%",
-        picture_class="",
+        picture_class="telescope",
     ))
-
+    # This only checks if they are max booked, not if they are actually maxed in either of their presets
+    bestJmanBagBook = max([jman.max_talents.get("78", 0) for jman in session_data.account.jmans])
     capacity_Advices["Character Specific"].append(Advice(
         label="Jman's Extra Bags talent (Materials only)",
         picture_class="extra-bags",
+        progression=bestJmanBagBook,
         goal=maxOverallBookLevels
     ))
     capacity_Advices["Character Specific"].append(Advice(
@@ -142,7 +168,7 @@ def getCapacityAdviceGroup() -> AdviceGroup:
         picture_class="herculean-matty-pouch",
     ))
     capacity_Advices["Character Specific"].append(Advice(
-        label=f"{{{{ Prayer|#prayers }}}}: Ruck Sack: {session_data.account.prayers['Ruck Sack']['BonusString']}",
+        label=f"{{{{ Prayer|#prayers }}}}: Ruck Sack: {session_data.account.prayers['Ruck Sack']['BonusValue']}/177%",
         picture_class="ruck-sack",
         progression=session_data.account.prayers['Ruck Sack']['Level'],
         goal=50
@@ -173,7 +199,6 @@ def getCapacityAdviceGroup() -> AdviceGroup:
         post_string="",
     )
     return capacity_AdviceGroup
-
 
 def getCostReductionAdviceGroup() -> AdviceGroup:
     costReduction_Advices = {"Vials": [], "Uncapped": []}
@@ -211,7 +236,7 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     ))
     costReduction_Advices["Vials"].append(Advice(
         label="Total Vial reduction (95% hardcap)",
-        picture_class="",
+        picture_class="vials",
         progression=f"{totalVialReduction:.2f}",
         goal=95,
         unit="%"
@@ -281,7 +306,7 @@ def setStampProgressionTier() -> AdviceSection:
 
     playerStamps = session_data.account.stamps
     missingStampsList = setMissingStamps()
-    capacityExclusionsDict = getCapacityExclusions()
+    exclusionsDict = getStampExclusions()
     tier_StampLevels = 0
     tier_FindStamps = {"Combat": 0, "Skill": 0, "Misc": 0}
     tier_RequiredSpecificStamps = 0
@@ -306,7 +331,7 @@ def setStampProgressionTier() -> AdviceSection:
         # Collect important Combat, Skill, and Misc stamps
         for stampType in stampTypes:
             for rStamp in stamps_progressionTiers[tier].get("Stamps").get(stampType, []):
-                if rStamp in missingStampsList:
+                if rStamp in missingStampsList and exclusionsDict.get(rStamp, False) == False:
                     subgroupName = f"To reach Tier {tier}"
                     if subgroupName not in stamp_AdviceDict["FindStamps"][stampType] and len(stamp_AdviceDict["FindStamps"][stampType]) < maxTiersPerGroup:
                         stamp_AdviceDict["FindStamps"][stampType][subgroupName] = []
@@ -323,31 +348,28 @@ def setStampProgressionTier() -> AdviceSection:
 
         # SpecificStampLevels
         for stampName, stampRequiredLevel in stamps_progressionTiers[tier].get("Stamps", {}).get("Specific", {}).items():
-            if playerStamps.get(stampName, {}).get("Level", 0) < stampRequiredLevel:
+            if playerStamps.get(stampName, {}).get("Level", 0) < stampRequiredLevel and exclusionsDict.get(stampName, False) == False:
                 #logger.debug(f"Tier {tier} requirement for {stampName} failed: {playerStamps.get(stampName, {}).get('Level', 0)} is less than {stampRequiredLevel}")
-                if capacityExclusionsDict.get(stampName, False) == False:  #Check to see if this is a capacity-increasing stamp, and skip if it is set to True
-                    subgroupName = f"To reach Tier {tier}"
-                    if subgroupName not in stamp_AdviceDict["Specific"] and len(stamp_AdviceDict["Specific"]) < maxTiersPerGroup:
-                        stamp_AdviceDict["Specific"][subgroupName] = []
-                    if subgroupName in stamp_AdviceDict["Specific"]:
-                        adviceCountsDict["Specific"] += 1
-                        stamp_AdviceDict["Specific"][subgroupName].append(
-                            Advice(
-                                label=stampName,
-                                picture_class=stampName,
-                                progression=playerStamps.get(stampName, {}).get("Level", 0),
-                                goal=stampRequiredLevel,
-                                resource=playerStamps.get(stampName, {}).get('Material', ''),
-                            ))
-                else:
-                    logger.debug(f"Skipping {stampName} failure because it is set to True in capacityExclusionsDict")
+                subgroupName = f"To reach Tier {tier}"
+                if subgroupName not in stamp_AdviceDict["Specific"] and len(stamp_AdviceDict["Specific"]) < maxTiersPerGroup:
+                    stamp_AdviceDict["Specific"][subgroupName] = []
+                if subgroupName in stamp_AdviceDict["Specific"]:
+                    adviceCountsDict["Specific"] += 1
+                    stamp_AdviceDict["Specific"][subgroupName].append(
+                        Advice(
+                            label=stampName,
+                            picture_class=stampName,
+                            progression=playerStamps.get(stampName, {}).get("Level", 0),
+                            goal=stampRequiredLevel,
+                            resource=playerStamps.get(stampName, {}).get('Material', ''),
+                        ))
 
         if tier_RequiredSpecificStamps == tier - 1 and adviceCountsDict["Specific"] == 0:
             tier_RequiredSpecificStamps = tier
 
         #Optional Stamps
         for rStamp in stamps_progressionTiers[tier].get("Stamps").get("Optional", []):
-            if rStamp in missingStampsList:
+            if rStamp in missingStampsList and exclusionsDict.get(rStamp, False) == False:
                 subgroupName = f"Previously Tier {tier}"
                 if subgroupName not in stamp_AdviceDict["FindStamps"]["Optional"]:  #and len(stamp_AdviceDict["FindStamps"]["Optional"]) < maxTiersPerGroup:
                     stamp_AdviceDict["FindStamps"]["Optional"][subgroupName] = []

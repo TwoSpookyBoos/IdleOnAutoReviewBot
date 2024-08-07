@@ -6,7 +6,6 @@ from models.models import AdviceGroup, Advice, AdviceSection
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
-from utils.data_formatting import safe_loads
 
 logger = get_logger(__name__)
 
@@ -288,11 +287,8 @@ def parseInventoryBagSlots() -> AdviceGroup:
     playersWithMaxBagSlots = []
     playersMissingBagSlots = []
 
-    for characterIndex, character in enumerate(session_data.account.safe_characters):
-        try:
-            playerBagDict[characterIndex] = safe_loads(session_data.account.raw_data.get(f'InvBagsUsed_{characterIndex}', "{}"))
-        except:
-            logger.exception(f"Unable to retrieve InvBagsUsed for {characterIndex} ({character.character_name})")
+    for characterIndex, character in enumerate(session_data.account.all_characters):
+        playerBagDict[characterIndex] = character.inventory_bags
 
     inventorySlots_AdviceGroup = AdviceGroup(
         tier="",

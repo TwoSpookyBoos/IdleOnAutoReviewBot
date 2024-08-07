@@ -30,7 +30,7 @@ def setCookingProgressionTier():
     #TODO: Really ought to be structured into proper tiers.. What were you smoking when you made this?
     infoTiers = 1
     max_tier = 6
-    voidwalkers = [toon for toon in session_data.account.all_characters if toon.elite_class == "Voidwalker"]
+    vmans = session_data.account.vmans
     atomFluoride = session_data.account.atom_collider['Atoms']['Fluoride - Void Plate Chef']['Level'] >= 1
     dchefLevel = session_data.account.alchemy_bubbles['Diamond Chef']['Level']
 
@@ -39,7 +39,7 @@ def setCookingProgressionTier():
         tier_Cooking = 1
     if tier_Cooking == 1 and dchefLevel >= 15:
         tier_Cooking = 2
-    if tier_Cooking == 2 and len(voidwalkers) > 0:
+    if tier_Cooking == 2 and len(vmans) > 0:
         tier_Cooking = 3
     if tier_Cooking == 3 and atomFluoride and session_data.account.cooking['PlayerTotalMealLevels'] >= 500:
         tier_Cooking = 4
@@ -63,7 +63,7 @@ def setCookingProgressionTier():
         ))
     # 2) if Diamond Chef owned and level 15+, Speed meal or Fastest to 11.
     elif tier_Cooking == 2:
-        if len(voidwalkers) == 0:
+        if len(vmans) == 0:
             cooking_AdviceDict["NextTier"].append(Advice(
                 label="Unlock a Voidwalker",
                 picture_class="voidwalker-icon"
@@ -172,7 +172,7 @@ def setCookingProgressionTier():
         #59: {"Name": "Blood Marrow", "Tab": "Voidwalker"},
         #If Blood Marrow is not max booked, recommend booking it
         #If Blood Marrow is not leveled on either preset, recommend leveling it
-        for vman in voidwalkers:
+        for vman in vmans:
             #Book level
             if vman.max_talents.get("59", 0) >= session_data.account.library['MaxBookLevel']:
                 anyVWMaxBooked = True
