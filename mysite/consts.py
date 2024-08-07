@@ -971,14 +971,14 @@ atoms_progressionTiers = {
 sampling_progressionTiers = {
     0: {"Oak Logs": 0,     "Copper Ore": 0,     "Goldfish": 0,     "Fly": 0,     "Spore Cap": 0},
     1: {"Oak Logs": 150,   "Copper Ore": 60,    "Goldfish": 50,    "Fly": 50,    "Spore Cap": 20},
-    2: {"Oak Logs": 1000,  "Copper Ore": 250,   "Goldfish": 100,   "Fly": 100,   "Spore Cap": 70},
-    3: {"Oak Logs": 10000, "Copper Ore": 1000,  "Goldfish": 300,   "Fly": 300,   "Spore Cap": 100},
-    4: {"Oak Logs": 700e3, "Copper Ore": 100e3, "Goldfish": 5e3,   "Fly": 5e3,   "Spore Cap": 5e3},
-    5: {"Oak Logs": 20e6,  "Copper Ore": 14e6,  "Goldfish": 2e6,   "Fly": 1e6,   "Spore Cap": 20e3},
-    6: {"Oak Logs": 200e6, "Copper Ore": 140e6, "Goldfish": 20e6,  "Fly": 10e6,  "Spore Cap": 100e3},
-    7: {"Oak Logs": 1.5e9, "Copper Ore": 1e9,   "Goldfish": 150e6, "Fly": 75e6,  "Spore Cap": 1e6},
-    8: {"Oak Logs": 10e9,  "Copper Ore": 7e9,   "Goldfish": 1e9,   "Fly": 500e6, "Spore Cap": 10e6},
-    9: {"Oak Logs": 22e9,  "Copper Ore": 15e9,  "Goldfish": 2e9,   "Fly": 1e9,   "Spore Cap": 25e6},
+    2: {"Oak Logs": 1000,  "Copper Ore": 700,   "Goldfish": 100,   "Fly": 100,   "Spore Cap": 70},
+    3: {"Oak Logs": 8e3,   "Copper Ore": 10e3,  "Goldfish": 500,   "Fly": 500,   "Spore Cap": 500},
+    4: {"Oak Logs": 300e3, "Copper Ore": 500e3, "Goldfish": 5e3,   "Fly": 5e3,   "Spore Cap": 400e3},
+    5: {"Oak Logs": 16e6,  "Copper Ore": 20e6,  "Goldfish": 2e6,   "Fly": 900e3, "Spore Cap": 1e6},
+    6: {"Oak Logs": 200e6, "Copper Ore": 160e6, "Goldfish": 20e6,  "Fly": 9e6,   "Spore Cap": 2.5e6},
+    7: {"Oak Logs": 1.5e9, "Copper Ore": 1.2e9, "Goldfish": 150e6, "Fly": 68e6,  "Spore Cap": 10e6},
+    8: {"Oak Logs": 10e9,  "Copper Ore": 8e9,   "Goldfish": 1e9,   "Fly": 454e6, "Spore Cap": 20e6},
+    9: {"Oak Logs": 22e9,  "Copper Ore": 15e9,  "Goldfish": 2e9,   "Fly": 1e9,   "Spore Cap": 30e6},
 }
 
 ###WORLD 4 PROGRESSION TIERS###
