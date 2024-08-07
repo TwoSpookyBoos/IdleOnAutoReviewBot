@@ -1380,6 +1380,10 @@ class Account:
 
     def _parse_w3_library(self):
         self.library = {}
+        try:
+            self.library['BooksReady'] = self.raw_optlacc_dict[55]
+        except:
+            self.library['BooksReady'] = 0
 
     def _parse_w3_deathnote(self):
         self.rift_meowed = False
