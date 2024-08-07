@@ -309,7 +309,7 @@ greenstack_progressionTiers = {
                 "PureWater",
                 "FoodG9",],
             "Other Skilling Resources": [
-                "StarfireBar",
+                "StarfireBar", "DreadloBar",
                 "FoodChoppin1",
                 "EquipmentSmithingTabs2",
                 "PeanutG",],
@@ -322,7 +322,7 @@ greenstack_progressionTiers = {
             "Crystal Enemy Drops": [
                 "StoneW2", "SilverPen"],  #"StoneA2",],
             "Other Skilling Resources": [
-                "DreadloBar", "MarbleBar", "GodshardBar",
+                "MarbleBar", "GodshardBar",
                 "FoodTrapping1", "FoodWorship1",
                 "Critter1A", "Critter2A", "Critter3A", "Critter4A", "Critter5A", "Critter6A", "Critter7A", "Critter8A", "Critter9A", "Critter10A", "Critter11A",
                 "Ladle",
