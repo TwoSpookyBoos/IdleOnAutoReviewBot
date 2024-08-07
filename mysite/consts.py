@@ -471,7 +471,7 @@ stamps_progressionTiers = {
             "Mason Jar Stamp": 96, "Matty Bag Stamp": 380, 'Crystallin': 270,
             "Lil' Mining Baggy Stamp": 280, 'Forge Stamp': 230, 'Summoner Stone Stamp': 120, 'Drippy Drop Stamp': 155,
             "Choppin' Bag Stamp": 300, 'Intellectostampo': 161, 'Maxo Slappo Stamp': 140,
-            'Cool Diggy Tool Stamp': 300, 'Swag Swingy Tool Stamp': 320, 'Golden Apple Stamp': 112,
+            'Cool Diggy Tool Stamp': 300, 'Swag Swingy Tool Stamp': 360, 'Golden Apple Stamp': 112,
             'Skelefish Stamp': 40, 'Hatchet Stamp': 295, 'Pickaxe Stamp': 255,
             'Sashe Sidestamp': 126,  'Conjocharmo Stamp': 170,
             'Captalist Stats Stamp': 140,
