@@ -3138,6 +3138,7 @@ combat_talentsDict = {
             46: {"Name": "Void Radius", "Tab": "Voidwalker"},
             45: {"Name": "Void Trial Rerun", "Tab": "Voidwalker"},
             47: {"Name": "Bossing Vain", "Tab": "Voidwalker"},
+            58: {"Name": "Master of the System", "Tab": "Voidwalker"},
         },
         "Medium": {
             50: {"Name": "Power Orb", "Tab": "Voidwalker"},
@@ -4573,7 +4574,7 @@ breedingSpeciesDict: dict[int, dict] = {
         },
     },
     3: {
-		0: {
+        0: {
             'Name': 'Sheepie',
             'Genetic': breedingGeneticsList[8],  #Sniper
             'ShinyBonus': breedingShinyBonusList[19],  #Bonuses from All Meals
