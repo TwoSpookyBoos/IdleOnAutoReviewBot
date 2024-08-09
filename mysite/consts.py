@@ -470,7 +470,7 @@ stamps_progressionTiers = {
         "Specific": {
             "Mason Jar Stamp": 96, "Matty Bag Stamp": 380, 'Crystallin': 270,
             "Lil' Mining Baggy Stamp": 280, 'Forge Stamp': 230, 'Summoner Stone Stamp': 120, 'Drippy Drop Stamp': 155,
-            "Choppin' Bag Stamp": 300, 'Intellectostampo': 161, 'Maxo Slappo Stamp': 140,
+            "Choppin' Bag Stamp": 300, 'Intellectostampo': 161, 'Maxo Slappo Stamp': 133,
             'Cool Diggy Tool Stamp': 280, 'Swag Swingy Tool Stamp': 360, 'Golden Apple Stamp': 112,
             'Skelefish Stamp': 40, 'Hatchet Stamp': 295, 'Pickaxe Stamp': 255,
             'Sashe Sidestamp': 126,  'Conjocharmo Stamp': 170,
@@ -549,17 +549,17 @@ starsigns_progressionTiers = {
 }
 statues_progressionTiers = {
     0: {},
-    1: {"MinStatueLevel": 20, "Exclusions": "Early"},
+    1: {"MinStatueLevel": 20, "Exclusions": "Onyx1"},
     2: {"MinStatueTypeNumber": 1, "MinStatueType": "Gold", "Exclusions": "None"},
-    3: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx", "Exclusions": "Mid"},
-    4: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx", "Exclusions": "Late"},
-    5: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx", "Exclusions": "None"},
+    3: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx", "Exclusions": "Onyx1"},
+    4: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx", "Exclusions": "Onyx2"},
+    5: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx", "Exclusions": "Onyx3"},
     6: {"MinStatueLevel": 40, "Exclusions": "None"},
-    7: {"MinStatueLevel": 150, "Exclusions": "End"},
-    8: {"MinStatueLevel": 200, "Exclusions": "End"},
-    9: {"MinStatueLevel": 250, "Exclusions": "End"},
-    10: {"MinStatueLevel": 80, "Exclusions": "Early"},
-    11: {"MinStatueLevel": 300, "Exclusions": "End"},
+    7: {"MinStatueLevel": 150, "Exclusions": "Final3"},
+    8: {"MinStatueLevel": 200, "Exclusions": "Final3"},
+    9: {"MinStatueLevel": 250, "Exclusions": "Final3"},
+    10: {"MinStatueLevel": 80, "Exclusions": "Onyx1"},
+    11: {"MinStatueLevel": 300, "Exclusions": "Final3"},
 
 }
 
@@ -3529,27 +3529,28 @@ statuesDict = {
 statueTypeList = ["Normal", "Gold", "Onyx"]
 statueCount = len(statuesDict.keys())
 statueExclusionsDict = {
-    "Early": [
+    "Onyx1": [
         "Kachow Statue", "Bullseye Statue",
         "Oceanman Statue",
         "Box Statue", "Twosoul Statue", "Seesaw Statue",
         "Battleaxe Statue", "Spiral Statue", "Boat Statue",
         "Compost Statue", "Stealth Statue", "Essence Statue"
     ],
-    "Mid": [
-        "Kachow Statue", "Bullseye Statue",
-        "Oceanman Statue",
-        "Box Statue", "Twosoul Statue", "Seesaw Statue",
-        "Battleaxe Statue", "Spiral Statue", "Boat Statue",
-        "Compost Statue", "Stealth Statue", "Essence Statue"
-    ],
-    "Late": [
+    "Onyx2": [
         "Power Statue", "Speed Statue", "Mining Statue", "Feasty Statue", "Health Statue", "Lumberbob Statue", "Kachow Statue", "Bullseye Statue",
         "Thicc Skin Statue", "Oceanman Statue", "Ol Reliable Statue", "Exp Book Statue", "Anvil Statue", "Cauldron Statue",
         "Beholder Statue", "Bullseye Statue", "Box Statue", "Twosoul Statue", "EhExPee Statue", "Seesaw Statue",
         "Pecunia Statue", "Mutton Statue", "Egg Statue",
     ],
-    "End": [
+    "Onyx3": [
+        "Power Statue", "Speed Statue", "Mining Statue", "Feasty Statue", "Health Statue", "Lumberbob Statue", # "Kachow Statue", "Bullseye Statue",
+        "Thicc Skin Statue", "Ol Reliable Statue", "Exp Book Statue", "Anvil Statue", "Cauldron Statue", # "Oceanman Statue",
+        "Beholder Statue", "Bullseye Statue", "EhExPee Statue", #"Box Statue", "Twosoul Statue", "Seesaw Statue",
+        "Pecunia Statue", "Mutton Statue", "Egg Statue",
+        "Battleaxe Statue", "Spiral Statue", "Boat Statue",
+        "Compost Statue", "Stealth Statue", "Essence Statue"
+    ],
+    "Final3": [
         "Power Statue", "Speed Statue", "Health Statue", "Kachow Statue", "Bullseye Statue",
         "Thicc Skin Statue", "Oceanman Statue", "Ol Reliable Statue", "Exp Book Statue", "Anvil Statue", "Cauldron Statue",
         "Beholder Statue", "Bullseye Statue", "Box Statue", "Twosoul Statue", "EhExPee Statue", "Seesaw Statue",
