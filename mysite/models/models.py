@@ -948,7 +948,8 @@ class Account:
         self.vmans: list[Character] = [toon for toon in self.all_characters if "Voidwalker" in toon.all_classes]
 
         self.barbs: list[Character] = [toon for toon in self.all_characters if "Barbarian" in toon.all_classes]
-        self.bbs: list[Character] = [toon for toon in self.all_characters if "Barbarian" in toon.all_classes]
+        self.bbs: list[Character] = [toon for toon in self.all_characters if "Blood Berserker" in toon.all_classes]
+        self.dks: list[Character] = [toon for toon in self.all_characters if "Divine Knight" in toon.all_classes]
 
     def _parse_general(self):
         # General / Multiple uses

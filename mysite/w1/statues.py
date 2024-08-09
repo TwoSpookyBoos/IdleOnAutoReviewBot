@@ -94,7 +94,7 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
     for jman in session_data.account.jmans:
         bestCrystalBook = max(bestCrystalBook, jman.max_talents.get("26", 0))
     crystal_AdviceList.append(Advice(
-        label="Cmon Out Crystals (Jman only)",
+        label="Cmon Out Crystals talent (Jman only)",
         picture_class="cmon-out-crystals",
         progression=bestCrystalBook,
         goal=session_data.account.library['MaxBookLevel']
@@ -124,12 +124,22 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
         goal=3,
         unit="%"
     ))
+    bestOrbBook = 0
+    for dk in session_data.account.dks:
+        bestOrbBook = max(bestOrbBook, dk.max_talents.get("168", 0))
+    crystal_AdviceList.append(Advice(
+        label="Orb of Remembrance talent (Divine Knight only)",
+        picture_class="orb-of-remembrance",
+        progression=bestOrbBook,
+        goal=session_data.account.library['MaxBookLevel']
+    ))
     crystal_AdviceList.append(Advice(
         label=f"Minimum 10x Drop Rate (per Tome): {session_data.account.raw_optlacc_dict[200]:.2f}x",
         picture_class="drop-rate",
         progression=f"{session_data.account.raw_optlacc_dict[200]:.2f}",
         goal=10,
     ))
+
 
     #Statue Value
     deposit_AdviceList.append(Advice(
@@ -155,7 +165,7 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
     deposit_AdviceList.append(Advice(
         label=f"{{{{ Rift|#rift }}}} Bonus: Vial Mastery: {session_data.account.maxed_vials}/27 maxed vials",
         picture_class="vial-mastery",
-        progression=f"{session_data.account.vialMasteryMulti:.2f}",
+        progression=f"{session_data.account.vialMasteryMulti:.2f}" if session_data.account.vialMasteryMulti > 1 else 0,
         goal=1.54
     ))
     deposit_AdviceList.append(Advice(
