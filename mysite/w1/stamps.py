@@ -2,7 +2,7 @@ from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
 from utils.data_formatting import safe_loads, mark_advice_completed
 from utils.logging import get_logger
-from consts import maxTiersPerGroup, stamps_progressionTiers, stamp_maxes, stampsDict, unavailableStampsList, stampTypes, maxOverallBookLevels
+from consts import maxTiersPerGroup, stamps_progressionTiers, stamp_maxes, stampsDict, unavailableStampsList, stampTypes, maxOverallBookLevels, max_VialLevel
 from flask import g as session_data
 
 
@@ -207,13 +207,13 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
         label="Vial: Blue Flav (Platinum Ore)",
         picture_class="platinum-ore",
         progression=session_data.account.alchemy_vials.get("Blue Flav (Platinum Ore)", {}).get("Level", 0),
-        goal=13
+        goal=max_VialLevel
     ))
     costReduction_Advices["Vials"].append(Advice(
         label="Vial: Venison Malt (Mongo Worm Slices)",
         picture_class="mongo-worm-slices",
         progression=session_data.account.alchemy_vials.get("Venison Malt (Mongo Worm Slices)", {}).get("Level", 0),
-        goal=13
+        goal=max_VialLevel
     ))
     costReduction_Advices["Vials"].append(Advice(
         label="Lab Bonus: My 1st Chemistry Set",

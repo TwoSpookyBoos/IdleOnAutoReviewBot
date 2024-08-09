@@ -116,7 +116,7 @@ def setCookingProgressionTier():
     # 6) All basics + max plate levels
     elif tier_Cooking == 6:
         cooking_AdviceDict["NextTier"].append(Advice(
-            label=f"Finish all {maxMeals} meals to level {maxMealLevel}",
+            label=f"Finish all {maxMeals} meals to level {maxMealLevel} ({session_data.account.cooking['CurrentRemainingMeals']} to go!)",
             picture_class="turkey-a-la-thank",
             progression=session_data.account.cooking['PlayerTotalMealLevels'],
             goal=maxMeals * maxMealLevel,
