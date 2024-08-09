@@ -12,17 +12,17 @@ from utils.data_formatting import getCharacterDetails, safe_loads
 from consts import (
     # General
     lavaFunc,
-    currentWorld,
+    currentWorld, maxCharacters,
     expectedStackables, greenstack_progressionTiers, gfood_codes,
     card_data,
     guildBonusesList, familyBonusesDict, getNextESFamilyBreakpoint,
     achievementsList, allMeritsDict, starsignsDict,
     ceilUpToBase,
     # W1
-    stampsDict, stampTypes, bribesDict, forgeUpgradesDict,
+    stampsDict, stampTypes, bribesDict, forgeUpgradesDict, statuesDict, statueTypeList, statueCount,
     # W2
     bubblesDict,
-    vialsDict, max_IndexOfVials, getReadableVialNames,
+    vialsDict, max_IndexOfVials, getReadableVialNames, max_VialLevel,
     sigilsDict,
     arcadeBonuses,
     poBoxDict,
@@ -938,7 +938,7 @@ class Account:
         self.safe_playerIndexes: list[int] = [char.character_index for char in self.all_characters if char]
         self.all_skills = perSkillDict
         self.all_quests = [safe_loads(self.raw_data.get(f"QuestComplete_{i}", "{}")) for i in range(self.playerCount)]
-        self.max_toon_count = 10  # OPTIMIZE: find a way to read this from somewhere
+        self.max_toon_count = max(maxCharacters, playerCount)  # OPTIMIZE: find a way to read this from somewhere
         self._parse_character_class_lists()
 
     def _parse_character_class_lists(self):
@@ -1082,6 +1082,7 @@ class Account:
         self._parse_w1_bribes()
         self._parse_w1_stamps()
         self._parse_w1_owl()
+        self._parse_w1_statues()
 
     def _parse_w1_starsigns(self):
         self.star_signs = {}
@@ -1199,6 +1200,54 @@ class Account:
             self.owl['FeatherRestarts'] = 0
             self.owl['MegaFeathersOwned'] = 0
 
+    def _parse_w1_statues(self):
+        self.statues = {}
+        self.maxed_statues = 0
+        #"StuG": "[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0]",
+        raw_statue_type_list = safe_loads(self.raw_data.get("StuG", []))
+        if not raw_statue_type_list:
+            raw_statue_type_list = [0]*statueCount
+        self.onyx_statues_unlocked = max(raw_statue_type_list, default=0) >= statueTypeList.index("Onyx")
+        statue_levels = [0]*statueCount
+
+        #Find the maximum value across all characters. Only matters while Normal, since Gold shares across all characters
+        for char in self.safe_characters:
+            try:
+                char_statues = safe_loads(self.raw_data.get(f"StatueLevels_{char.character_index}"))
+                for statueIndex, statueDetails in enumerate(char_statues):
+                    if statueDetails[0] > statue_levels[statueIndex]:
+                        statue_levels[statueIndex] = statueDetails[0]
+            except:
+                continue
+
+        for statueIndex, statueDetails in statuesDict.items():
+            try:
+                self.statues[statueDetails['Name']] = {
+                    'Level': statue_levels[statueIndex],
+                    'Type': statueTypeList[raw_statue_type_list[statueIndex]],
+                    'TypeTier': raw_statue_type_list[statueIndex],
+                    'ItemName': statueDetails['ItemName'],
+                    'Effect': statueDetails['Effect'],
+                    'BaseValue': statueDetails['BaseValue'],
+                    'Value': statueDetails['BaseValue'],  # Handled in _calculate_w1_statue_multi()
+                    'Farmer': statueDetails['Farmer'],
+                    'Target': statueDetails['Target'],
+                }
+            except:
+                self.statues[statueDetails['Name']] = {
+                    'Level': 0,
+                    'Type': statueTypeList[raw_statue_type_list[statueIndex]],
+                    'TypeTier': raw_statue_type_list[0],
+                    'ItemName': statueDetails['ItemName'],
+                    'Effect': statueDetails['Effect'],
+                    'BaseValue': statueDetails['BaseValue'],
+                    'Value': statueDetails['BaseValue'],  # Handled in _calculate_w1_statue_multi()
+                    'Farmer': statueDetails['Farmer'],
+                    'Target': statueDetails['Target'],
+                }
+            if self.statues[statueDetails['Name']]['TypeTier'] >= len(statueTypeList)-1:
+                self.maxed_statues += 1
+
     def _parse_w2(self):
         self._parse_w2_vials()
         self._parse_w2_cauldrons()
@@ -1233,7 +1282,7 @@ class Account:
             pass
         self.maxed_vials = 0
         for vial in self.alchemy_vials.values():
-            if vial.get("Level", 0) >= 13:
+            if vial.get("Level", 0) >= max_VialLevel:
                 self.maxed_vials += 1
 
     def _parse_w2_cauldrons(self):
@@ -1621,7 +1670,7 @@ class Account:
             raw_labChips_list = raw_labChips_list[15]
         for labChipIndex, labChip in labChipsDict.items():
             try:
-                self.labChips[labChip["Name"]] = int(raw_labChips_list[labChipIndex])
+                self.labChips[labChip["Name"]] = max(0, int(raw_labChips_list[labChipIndex]))
             except:
                 self.labChips[labChip["Name"]] = 0
 
@@ -2235,6 +2284,10 @@ class Account:
             ))
 
     def _calculate_w1(self):
+        self._calculate_w1_starsigns()
+        self._calculate_w1_statues()
+
+    def _calculate_w1_starsigns(self):
         self.star_sign_extras['SeraphMulti'] = min(3, 1.1 ** ceil((max(self.all_skills.get('Summoning', [0])) + 1) / 20))
         self.star_sign_extras['SeraphGoal'] = min(220, ceilUpToBase(max(self.all_skills.get('Summoning', [0])), 20))
 
@@ -2265,6 +2318,27 @@ class Account:
             progression=1 if self.labChips.get('Silkrode Nanochip', 0) > 0 else 0,
             goal=1
         )
+
+    def _calculate_w1_statues(self):
+        voodooStatuficationMulti = []
+        for char in self.safe_characters:
+            if char.class_name == "Voidwalker":
+                voodooStatuficationMulti.append(
+                    lavaFunc(
+                        'decay',
+                        char.max_talents_over_books + char.max_talents.get("56", 0),
+                        200,
+                        200
+                    )
+                )
+        voodooStatuficationMulti = 1 + max(voodooStatuficationMulti, default=0)
+
+        onyxMulti = 2 + 0.3 * self.sailing['Artifacts'].get('The Onyx Lantern', {}).get('Level', 0)
+
+        for statueName, statueDetails in self.statues.items():
+            if statueDetails['Type'] == "Onyx":
+                self.statues[statueName]["Value"] *= onyxMulti
+            self.statues[statueName]["Value"] *= voodooStatuficationMulti
 
     def _calculate_w2(self):
         self.vialMasteryMulti = 1 + (self.maxed_vials * .02) if self.rift['VialMastery'] else 1

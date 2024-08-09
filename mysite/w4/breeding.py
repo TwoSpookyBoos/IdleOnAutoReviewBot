@@ -199,15 +199,21 @@ def getActiveBMAdviceGroup() -> AdviceGroup:
     # Lab Chips
     abm_adviceDict["Lab Chips"].append(Advice(
         label="Chocco Chip for more Crystal Mobs",
-        picture_class="chocolatey-chip"
+        picture_class="chocolatey-chip",
+        progression=session_data.account.labChips.get('Chocolatey Chip', 0),
+        goal=1
     ))
     abm_adviceDict["Lab Chips"].append(Advice(
         label="Omega Nanochip: Top Left card doubler",
-        picture_class="omega-nanochip"
+        picture_class="omega-nanochip",
+        progression=session_data.account.labChips.get('Omega Nanochip', 0),
+        goal=1
     ))
     abm_adviceDict["Lab Chips"].append(Advice(
         label="Omega Motherboard: Bottom Right card doubler",
-        picture_class="omega-motherboard"
+        picture_class="omega-motherboard",
+        progression=session_data.account.labChips.get('Omega Motherboard', 0),
+        goal=1
     ))
     abm_adviceDict["Lab Chips"].append(Advice(
         label="Silkrode Software aka Keychain Doubler ONLY IF your top Keychain gives more than 10% total respawn",
