@@ -3529,27 +3529,27 @@ statueTypeList = ["Normal", "Gold", "Onyx"]
 statueCount = len(statuesDict.keys())
 statueExclusionsDict = {
     "Early": [
-        "Kachow Statue",
+        "Kachow Statue", "Bullseye Statue",
         "Oceanman Statue",
         "Box Statue", "Twosoul Statue", "Seesaw Statue",
         "Battleaxe Statue", "Spiral Statue", "Boat Statue",
         "Compost Statue", "Stealth Statue", "Essence Statue"
     ],
     "Mid": [
-        "Kachow Statue",
+        "Kachow Statue", "Bullseye Statue",
         "Oceanman Statue",
         "Box Statue", "Twosoul Statue", "Seesaw Statue",
         "Battleaxe Statue", "Spiral Statue", "Boat Statue",
         "Compost Statue", "Stealth Statue", "Essence Statue"
     ],
     "Late": [
-        "Power Statue", "Speed Statue", "Mining Statue", "Feasty Statue", "Health Statue", "Lumberbob Statue", "Kachow Statue",
+        "Power Statue", "Speed Statue", "Mining Statue", "Feasty Statue", "Health Statue", "Lumberbob Statue", "Kachow Statue", "Bullseye Statue",
         "Thicc Skin Statue", "Oceanman Statue", "Ol Reliable Statue", "Exp Book Statue", "Anvil Statue", "Cauldron Statue",
         "Beholder Statue", "Bullseye Statue", "Box Statue", "Twosoul Statue", "EhExPee Statue", "Seesaw Statue",
         "Pecunia Statue", "Mutton Statue", "Egg Statue",
     ],
     "End": [
-        "Power Statue", "Speed Statue", "Health Statue", "Kachow Statue",
+        "Power Statue", "Speed Statue", "Health Statue", "Kachow Statue", "Bullseye Statue",
         "Thicc Skin Statue", "Oceanman Statue", "Ol Reliable Statue", "Exp Book Statue", "Anvil Statue", "Cauldron Statue",
         "Beholder Statue", "Bullseye Statue", "Box Statue", "Twosoul Statue", "EhExPee Statue", "Seesaw Statue",
         "Pecunia Statue", "Mutton Statue", "Egg Statue",
