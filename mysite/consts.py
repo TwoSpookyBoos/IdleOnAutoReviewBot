@@ -549,6 +549,17 @@ starsigns_progressionTiers = {
 }
 statues_progressionTiers = {
     0: {},
+    1: {"MinStatueLevel": 50, "Exclusions": "Early"},
+    2: {"MinStatueTypeNumber": 1, "MinStatueType": "Gold", "Exclusions": "None"},
+    3: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx", "Exclusions": "Mid"},
+    4: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx", "Exclusions": "Late"},
+    5: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx", "Exclusions": "None"},
+    6: {"MinStatueLevel": 50, "Exclusions": "None"},
+    7: {"MinStatueLevel": 150, "Exclusions": "End"},
+    8: {"MinStatueLevel": 200, "Exclusions": "End"},
+    9: {"MinStatueLevel": 250, "Exclusions": "End"},
+    10: {"MinStatueLevel": 300, "Exclusions": "End"},
+    11: {"MinStatueLevel": 100, "Exclusions": "Early"},
 }
 
 ###WORLD 2 PROGRESSION TIERS###
@@ -3491,7 +3502,7 @@ statuesDict = {
     3:  {"Name": "Feasty Statue", "ItemName": "EquipmentStatues4", "Effect": "% Food Effect", "BaseValue": 1, "Farmer": "W1-W3 Crystals with DK", "Target": "w1-w3-crystals"},
     4:  {"Name": "Health Statue", "ItemName": "EquipmentStatues5", "Effect": "Base Health", "BaseValue": 3, "Farmer": "Crystals with DK at Beans", "Target": "bored-bean"},
     5:  {"Name": "Kachow Statue", "ItemName": "EquipmentStatues6", "Effect": "% Crit Damage", "BaseValue": 0.4, "Farmer": "Monolith Quest on All characters", "Target": "monolith"},
-    6:  {"Name": "Lumberbob Statue", "ItemName": "EquipmentStatues7", "Effect": "Choppin Power", "BaseValue": 0.3, "Farmer": "Crystals with DK at Bored Beans", "Target": "w1-w3-crystals"},
+    6:  {"Name": "Lumberbob Statue", "ItemName": "EquipmentStatues7", "Effect": "Choppin Power", "BaseValue": 0.3, "Farmer": "Crystals with DK at Bored Beans", "Target": "bored-bean"},
     7:  {"Name": "Thicc Skin Statue", "ItemName": "EquipmentStatues8", "Effect": "Base Defence", "BaseValue": 1, "Farmer": "Crystals with DK at Sandy Pot or Tyson", "Target": "crystal-crabal"},
     8:  {"Name": "Oceanman Statue", "ItemName": "EquipmentStatues9", "Effect": "Fishing Power", "BaseValue": 0.3, "Farmer": "AFK or Candy with Vman at W2 Bugs", "Target": "fly-nest"},
     9:  {"Name": "Ol Reliable Statue", "ItemName": "EquipmentStatues10", "Effect": "Catchin Power", "BaseValue": 0.3, "Farmer": "Crystals with DK at Sandy Pot or Tyson", "Target": "crystal-crabal"},
@@ -3516,18 +3527,37 @@ statuesDict = {
 }
 statueTypeList = ["Normal", "Gold", "Onyx"]
 statueCount = len(statuesDict.keys())
-statue_lateExclusionsList = [
-    "Kachow Statue",
-    "Oceanman Statue",
-    "Box Statue", "Twosoul Statue", "Seesaw Statue",
-]
-statue_earlyExclusionsList = statue_lateExclusionsList + [
-    "Battleaxe Statue", "Spiral Statue", "Boat Statue",
-    "Compost Statue", "Stealth Statue", "Essence Statue"
-]
-statue_midExclusionsList = [
-    "Compost Statue", "Stealth Statue", "Essence Statue"
-]
+statueExclusionsDict = {
+    "Early": [
+        "Kachow Statue",
+        "Oceanman Statue",
+        "Box Statue", "Twosoul Statue", "Seesaw Statue",
+        "Battleaxe Statue", "Spiral Statue", "Boat Statue",
+        "Compost Statue", "Stealth Statue", "Essence Statue"
+    ],
+    "Mid": [
+        "Kachow Statue",
+        "Oceanman Statue",
+        "Box Statue", "Twosoul Statue", "Seesaw Statue",
+        "Battleaxe Statue", "Spiral Statue", "Boat Statue",
+        "Compost Statue", "Stealth Statue", "Essence Statue"
+    ],
+    "Late": [
+        "Power Statue", "Speed Statue", "Mining Statue", "Feasty Statue", "Health Statue", "Lumberbob Statue", "Kachow Statue",
+        "Thicc Skin Statue", "Oceanman Statue", "Ol Reliable Statue", "Exp Book Statue", "Anvil Statue", "Cauldron Statue",
+        "Beholder Statue", "Bullseye Statue", "Box Statue", "Twosoul Statue", "EhExPee Statue", "Seesaw Statue",
+        "Pecunia Statue", "Mutton Statue", "Egg Statue",
+    ],
+    "End": [
+        "Power Statue", "Speed Statue", "Health Statue", "Kachow Statue",
+        "Thicc Skin Statue", "Oceanman Statue", "Ol Reliable Statue", "Exp Book Statue", "Anvil Statue", "Cauldron Statue",
+        "Beholder Statue", "Bullseye Statue", "Box Statue", "Twosoul Statue", "EhExPee Statue", "Seesaw Statue",
+        "Pecunia Statue", "Mutton Statue", "Egg Statue",
+        "Battleaxe Statue", "Spiral Statue", "Boat Statue",
+        "Compost Statue", "Stealth Statue", "Essence Statue",
+    ],
+    "None": []
+}
 
 
 ###WORLD 2 CONSTS###

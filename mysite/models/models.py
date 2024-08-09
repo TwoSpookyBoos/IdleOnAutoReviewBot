@@ -1224,8 +1224,8 @@ class Account:
             try:
                 self.statues[statueDetails['Name']] = {
                     'Level': statue_levels[statueIndex],
-                    'Type': statueTypeList[raw_statue_type_list[statueIndex]],
-                    'TypeTier': raw_statue_type_list[statueIndex],
+                    'Type': statueTypeList[raw_statue_type_list[statueIndex]],  #Description: Normal, Gold, Onyx
+                    'TypeNumber': raw_statue_type_list[statueIndex],  #Integer: 0-2
                     'ItemName': statueDetails['ItemName'],
                     'Effect': statueDetails['Effect'],
                     'BaseValue': statueDetails['BaseValue'],
@@ -1237,7 +1237,7 @@ class Account:
                 self.statues[statueDetails['Name']] = {
                     'Level': 0,
                     'Type': statueTypeList[raw_statue_type_list[statueIndex]],
-                    'TypeTier': raw_statue_type_list[0],
+                    'TypeNumber': raw_statue_type_list[0],
                     'ItemName': statueDetails['ItemName'],
                     'Effect': statueDetails['Effect'],
                     'BaseValue': statueDetails['BaseValue'],
@@ -1245,7 +1245,7 @@ class Account:
                     'Farmer': statueDetails['Farmer'],
                     'Target': statueDetails['Target'],
                 }
-            if self.statues[statueDetails['Name']]['TypeTier'] >= len(statueTypeList)-1:
+            if self.statues[statueDetails['Name']]['TypeNumber'] >= len(statueTypeList)-1:
                 self.maxed_statues += 1
 
     def _parse_w2(self):
