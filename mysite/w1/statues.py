@@ -153,10 +153,10 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
         goal=max_VialLevel
     ))
     deposit_AdviceList.append(Advice(
-        label=f"{{{{ Rift|#rift }}}} Bonus: Vial Mastery: {session_data.account.vialMasteryMulti:.2f}/1.54x",
+        label=f"{{{{ Rift|#rift }}}} Bonus: Vial Mastery: {session_data.account.maxed_vials}/27 maxed vials",
         picture_class="vial-mastery",
-        progression=f"{1 if session_data.account.rift['VialMastery'] else 0}",
-        goal=1
+        progression=f"{session_data.account.maxed_vials}",
+        goal=1.54
     ))
     deposit_AdviceList.append(Advice(
         label="Total Vial value (100% hardcap)",

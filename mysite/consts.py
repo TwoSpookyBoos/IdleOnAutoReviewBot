@@ -549,17 +549,18 @@ starsigns_progressionTiers = {
 }
 statues_progressionTiers = {
     0: {},
-    1: {"MinStatueLevel": 50, "Exclusions": "Early"},
+    1: {"MinStatueLevel": 20, "Exclusions": "Early"},
     2: {"MinStatueTypeNumber": 1, "MinStatueType": "Gold", "Exclusions": "None"},
     3: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx", "Exclusions": "Mid"},
     4: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx", "Exclusions": "Late"},
     5: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx", "Exclusions": "None"},
-    6: {"MinStatueLevel": 50, "Exclusions": "None"},
+    6: {"MinStatueLevel": 40, "Exclusions": "None"},
     7: {"MinStatueLevel": 150, "Exclusions": "End"},
     8: {"MinStatueLevel": 200, "Exclusions": "End"},
     9: {"MinStatueLevel": 250, "Exclusions": "End"},
-    10: {"MinStatueLevel": 300, "Exclusions": "End"},
-    11: {"MinStatueLevel": 100, "Exclusions": "Early"},
+    10: {"MinStatueLevel": 80, "Exclusions": "Early"},
+    11: {"MinStatueLevel": 300, "Exclusions": "End"},
+
 }
 
 ###WORLD 2 PROGRESSION TIERS###
