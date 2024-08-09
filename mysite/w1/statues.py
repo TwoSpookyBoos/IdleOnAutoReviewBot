@@ -155,7 +155,7 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
     deposit_AdviceList.append(Advice(
         label=f"{{{{ Rift|#rift }}}} Bonus: Vial Mastery: {session_data.account.maxed_vials}/27 maxed vials",
         picture_class="vial-mastery",
-        progression=f"{session_data.account.maxed_vials}",
+        progression=f"{session_data.account.vialMasteryMulti:.2f}",
         goal=1.54
     ))
     deposit_AdviceList.append(Advice(
