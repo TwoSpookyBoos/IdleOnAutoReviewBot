@@ -557,9 +557,9 @@ statues_progressionTiers = {
     6: {"MinStatueLevel": 40, "Exclusions": "None"},
     7: {"MinStatueLevel": 150, "Exclusions": "Final3"},
     8: {"MinStatueLevel": 200, "Exclusions": "Final3"},
-    9: {"MinStatueLevel": 250, "Exclusions": "Final3"},
+    9: {"MinStatueLevel": 240, "Exclusions": "Final3"},
     10: {"MinStatueLevel": 80, "Exclusions": "Onyx1"},
-    11: {"MinStatueLevel": 300, "Exclusions": "Final3"},
+    11: {"MinStatueLevel": 280, "Exclusions": "Final3"},
 
 }
 
