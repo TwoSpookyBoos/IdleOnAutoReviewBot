@@ -3538,14 +3538,14 @@ statueExclusionsDict = {
     ],
     "Onyx2": [
         "Power Statue", "Speed Statue", "Mining Statue", "Feasty Statue", "Health Statue", "Lumberbob Statue", "Kachow Statue", "Bullseye Statue",
-        "Thicc Skin Statue", "Oceanman Statue", "Ol Reliable Statue", "Exp Book Statue", "Anvil Statue", "Cauldron Statue",
-        "Beholder Statue", "Bullseye Statue", "Box Statue", "Twosoul Statue", "EhExPee Statue", "Seesaw Statue",
+        "Ol Reliable Statue", "Exp Book Statue", "Anvil Statue", "Cauldron Statue",  # "Thicc Skin Statue", "Oceanman Statue",
+        "Beholder Statue", "Bullseye Statue", "Box Statue", "Twosoul Statue", "Seesaw Statue",  # "EhExPee Statue",
         "Pecunia Statue", "Mutton Statue", "Egg Statue",
     ],
     "Onyx3": [
-        "Power Statue", "Speed Statue", "Mining Statue", "Feasty Statue", "Health Statue", "Lumberbob Statue", # "Kachow Statue", "Bullseye Statue",
-        "Thicc Skin Statue", "Ol Reliable Statue", "Exp Book Statue", "Anvil Statue", "Cauldron Statue", # "Oceanman Statue",
-        "Beholder Statue", "Bullseye Statue", "EhExPee Statue", #"Box Statue", "Twosoul Statue", "Seesaw Statue",
+        "Power Statue", "Speed Statue", "Mining Statue", "Feasty Statue", "Health Statue", "Lumberbob Statue",  # "Kachow Statue", "Bullseye Statue",
+        "Thicc Skin Statue", "Ol Reliable Statue", "Exp Book Statue", "Anvil Statue", "Cauldron Statue",  # "Oceanman Statue",
+        "Beholder Statue", "Bullseye Statue", "EhExPee Statue",  # "Box Statue", "Twosoul Statue", "Seesaw Statue",
         "Pecunia Statue", "Mutton Statue", "Egg Statue",
         "Battleaxe Statue", "Spiral Statue", "Boat Statue",
         "Compost Statue", "Stealth Statue", "Essence Statue"
