@@ -117,11 +117,15 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
         progression=session_data.account.sailing['Artifacts']['Moai Head']['Level'],
         goal=1
     ))
+    try:
+        crystal_chance = f"{float(session_data.account.raw_optlacc_dict[202]) * 100:.3f}"
+    except:
+        crystal_chance = "Unknown"
     crystal_AdviceList.append(Advice(
-        label=f"Minimum 1% Crystal Spawn Chance (per Tome): {session_data.account.raw_optlacc_dict[202] * 100:.3f}%",
+        label=f"Minimum 1% Crystal Spawn Chance (per Tome): {crystal_chance}%",
         picture_class="crystal-carrot",
-        progression=f"{session_data.account.raw_optlacc_dict[202]*100:.3f}",
-        goal=3,
+        progression=crystal_chance,
+        goal=1,
         unit="%"
     ))
     bestOrbBook = 0
