@@ -3531,8 +3531,8 @@ statueCount = len(statuesDict.keys())
 statueExclusionsDict = {
     "Onyx1": [
         "Kachow Statue", "Bullseye Statue",
-        "Oceanman Statue",
-        "Box Statue", "Twosoul Statue", "Seesaw Statue",
+        "Oceanman Statue", "Thicc Skin Statue",
+        "Box Statue", "Twosoul Statue", "Seesaw Statue", "EhExPee Statue",
         "Battleaxe Statue", "Spiral Statue", "Boat Statue",
         "Compost Statue", "Stealth Statue", "Essence Statue"
     ],
