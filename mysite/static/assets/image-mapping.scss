@@ -2061,6 +2061,8 @@ $monsters: (
 	poop: $poop,
 	rat: $rat,
 	boop: $boop,
+	crystal-carrot: $crystal-carrot,
+	w1-w3-crystals: $w1-w3-crystals,
 
 	dr-defecaus: $dr-defecaus,
 	baba-yaga: $baba-yaga,
@@ -2080,6 +2082,7 @@ $monsters: (
 	moonmoon: $moonmoon,
 	sand-giant: $sand-giant,
 	snelbie: $snelbie,
+	crystal-crabal: $crystal-crabal,
 
     biggie-hours: $biggie-hours,
     king-doot: $king-doot,
@@ -2101,6 +2104,7 @@ $monsters: (
 	neyeptune: $neyeptune,
 	dedotated-ram: $dedotated-ram,
 	bloodbone: $bloodbone,
+	crystal-cattle: $crystal-cattle,
 
 	chizoar: $chizoar,
 
@@ -2121,6 +2125,7 @@ $monsters: (
 	flombeige: $flombeige,
 	stilted-seeker: $stilted-seeker,
 	rift-monsters: $rift-monsters,
+    crystal-custard: $crystal-custard,
 
 	massive-troll: $massive-troll,
 
@@ -2139,6 +2144,7 @@ $monsters: (
 	biggole-mole: $biggole-mole,
 	crawler: $crawler,
 	tremor-wurm: $tremor-wurm,
+	crystal-capybara: $crystal-capybara,
 
 	kattlecruk: $kattlecruk-boss,
 
@@ -2156,7 +2162,8 @@ $monsters: (
     skydoggie-spirit: $skydoggie-spirit,
     royal-egg: $royal-egg,
     minichief-spirit: $minichief-spirit,
-    samurai-guardian: $samurai-guardian
+    samurai-guardian: $samurai-guardian,
+    crystal-candalight: $crystal-candalight
 );
 
 $id-map: map-merge($sections-map, $id-map);
@@ -2216,6 +2223,9 @@ $extra: (
 	collider-toggle: $collider-toggle,
 	talent-preset-1: $talent-preset-1,
 	telescope: $telescope,
+	town-marble: $town-marble,
+	monolith: $monolith,
+	fly-nest: $fly-nest,
 );
 $id-map: map-merge($extra, $id-map);
 

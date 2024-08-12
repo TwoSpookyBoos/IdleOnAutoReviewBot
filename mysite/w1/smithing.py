@@ -96,7 +96,7 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
 
     #Arcade Bonus 26 gives Forge Ore Capacity
     cap_Advices["Scaling Sources"].append(Advice(
-        label=f"Arcade Bonus: {session_data.account.arcade.get(26, {}).get('Value', ''):.2f}/50%",
+        label=f"Arcade Bonus: {session_data.account.arcade.get(26, {}).get('Value', 0):.2f}/50%",
         picture_class="arcade-bonus-26",
         progression=session_data.account.arcade.get(26, {}).get("Level", 0),
         goal=100

@@ -126,6 +126,7 @@ class Placements(dict):
     STAMPS = "Stamps"
     BRIBES = "Bribes"
     SMITHING = "Smithing"
+    STATUES = "Statues"
     STAR_SIGNS = "Star Signs"
     OWL = "Owl"
     BUBBLES = "Bubbles"
@@ -144,7 +145,7 @@ class Placements(dict):
     SAILING = "Sailing"
     sections = [
         COMBAT_LEVELS, SECRET_CLASS_PATH,
-        STAMPS, BRIBES, SMITHING, STAR_SIGNS, OWL,
+        STAMPS, BRIBES, SMITHING, STATUES, STAR_SIGNS, OWL,
         BUBBLES, VIALS, P2W,
         REFINERY, SAMPLING, SALT_LICK, DEATH_NOTE, PRAYERS, EQUINOX,
         BREEDING, COOKING, RIFT,
@@ -159,6 +160,7 @@ class Placements(dict):
         STAMPS:        [0,   1, 2, 3,    4,  5,  6,      7,  8,  9,      10, 11, 12,     13, 14, 15,     16, 17, 18,     20,   99],
         BRIBES:        [0,   1, 1, 1,    2,  2,  2,      3,  3,  3,      4,  4,  4,      5,  5,  5,      5,  5,  5,      6,    99],
         SMITHING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  2,  3,      4,  5,  6,      6,  6,  6,      6,    99],
+        STATUES:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  1,      2,  3,  4,      5,  6,  8,      11,   99],
         STAR_SIGNS:    [0,   0, 0, 0,    0,  1,  1,      1,  2,  2,      2,  3,  3,      3,  4,  4,      5,  5,  6,      6,    99],
         OWL:           [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  1,      2,    99],
         BUBBLES:       [0,   0, 0, 0,    0,  0,  1,      1,  2,  2,      3,  3,  4,      5,  6,  7,      10, 15, 20,     22,   99],
@@ -171,7 +173,7 @@ class Placements(dict):
         PRAYERS:       [0,   0, 0, 0,    0,  0,  0,      0,  1,  1,      2,  3,  4,      4,  5,  6,      7,  7,  7,      7,    99],
         EQUINOX:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      11,   99],
         BREEDING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  1,      1,  2,  2,      3,  4,  5,      6,  8,  9,      11,   99],
-        COOKING:       [0,   0, 0, 0,    0,  0,  0,      1,  1,  1,      1,  1,  2,      3,  4,  4,      5,  5,  6,      6,    99],
+        COOKING:       [0,   0, 0, 0,    0,  0,  0,      1,  1,  1,      1,  1,  2,      3,  4,  4,      5,  5,  5,      6,    99],
         RIFT:          [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      11,   99],
         DIVINITY:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  3,  5,      7,  8,  9,      10, 11, 12,     12,   99],
         SAILING:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  2,  3,      5,  7,  9,      11, 14, 16,     18,   99],

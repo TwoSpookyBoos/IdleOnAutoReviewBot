@@ -470,7 +470,7 @@ stamps_progressionTiers = {
         "Specific": {
             "Mason Jar Stamp": 96, "Matty Bag Stamp": 380, 'Crystallin': 270,
             "Lil' Mining Baggy Stamp": 280, 'Forge Stamp': 230, 'Summoner Stone Stamp': 120, 'Drippy Drop Stamp': 155,
-            "Choppin' Bag Stamp": 300, 'Intellectostampo': 161, 'Maxo Slappo Stamp': 140,
+            "Choppin' Bag Stamp": 300, 'Intellectostampo': 161, 'Maxo Slappo Stamp': 133,
             'Cool Diggy Tool Stamp': 280, 'Swag Swingy Tool Stamp': 360, 'Golden Apple Stamp': 112,
             'Skelefish Stamp': 40, 'Hatchet Stamp': 295, 'Pickaxe Stamp': 255,
             'Sashe Sidestamp': 126,  'Conjocharmo Stamp': 170,
@@ -546,6 +546,21 @@ starsigns_progressionTiers = {
         ],
         "Goal": "The rest of the notable signs"
     },  #Go back and unlock the rest of the good stuff
+}
+statues_progressionTiers = {
+    0: {},
+    1: {"MinStatueLevel": 20, "Exclusions": "Onyx1"},
+    2: {"MinStatueTypeNumber": 1, "MinStatueType": "Gold", "Exclusions": "None"},
+    3: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx", "Exclusions": "Onyx1"},
+    4: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx", "Exclusions": "Onyx2"},
+    5: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx", "Exclusions": "Onyx3"},
+    6: {"MinStatueLevel": 40, "Exclusions": "None"},
+    7: {"MinStatueLevel": 150, "Exclusions": "Final3"},
+    8: {"MinStatueLevel": 200, "Exclusions": "Final3"},
+    9: {"MinStatueLevel": 240, "Exclusions": "Final3"},
+    10: {"MinStatueLevel": 80, "Exclusions": "Onyx1"},
+    11: {"MinStatueLevel": 280, "Exclusions": "Final3"},
+
 }
 
 ###WORLD 2 PROGRESSION TIERS###
@@ -685,7 +700,7 @@ bubbles_progressionTiers = [
      {'Roid Ragin': 840, 'Warriors Rule': 950, 'Hearty Diggy': 1900, 'Multorange': 570, 'Shimmeron': 760},
      {'Swift Steppin': 840, 'Archer Or Bust': 950, 'Premigreen': 570},
      {'Stable Jenius': 840, 'Mage Is Best': 950, 'Hocus Choppus': 1900, 'Severapurple': 570},
-     {'Laaarrrryyyy': 900, 'Big P': 540, 'Call Me Bob': 500, 'Carpenter': 450, 'Big Game Hunter': 270, 'Mr Massacre': 450},
+     {'Laaarrrryyyy': 900, 'Big P': 540, 'Call Me Bob': 500, 'Carpenter': 450, 'Big Game Hunter': 270, 'Mr Massacre': 450, "Grind Time": 500},
      "95% max value",
      ""],
     [19, 100,
@@ -733,7 +748,7 @@ bubbles_progressionTiers = [
       'Slabo Critterbug': 1140, 'Slabo Agility': 1140, 'Endgame Eff II': 1140, 'Tome Agility': 1140},
      {'Stable Jenius': 9500, 'Le Brain Tools': 1330, 'Tree Sleeper': 760,
       'Slabe Logsoul': 1140, 'Slabe Wisdom': 1140, 'Endgame Eff III': 1140, 'Tome Wisdom': 1140},
-     {"Nickel Of Wisdom": 570, "Penny Of Strength": 570, "Dollar Of Agility": 570},
+     {"Nickel Of Wisdom": 570, "Penny Of Strength": 570, "Dollar Of Agility": 570, "Grind Time": 1000},
      "95% catchup",
      ""],
     [25, 160,
@@ -744,7 +759,8 @@ bubbles_progressionTiers = [
      {'Stable Jenius': 10000, 'Hocus Choppus': 9900, 'Le Brain Tools': 6930, 'Tree Sleeper': 3960,
       'Slabe Logsoul': 5940, 'Slabe Wisdom': 5940, 'Endgame Eff III': 5940, 'Tome Wisdom': 5940},
      {'Cookin Roadkill': 6930, 'Carpenter': 4950, "Nickel Of Wisdom": 2970, "Penny Of Strength": 2970, "Dollar Of Agility": 2970,
-      'Droppin Loads': 6930, 'Startue Exp': 5940, 'Laaarrrryyyy': 9900, 'Big Game Hunter': 2970, 'Mr Massacre': 4950, 'Lo Cost Mo Jade': 3960},
+      'Droppin Loads': 6930, 'Startue Exp': 5940, 'Laaarrrryyyy': 9900, 'Big Game Hunter': 2970, 'Mr Massacre': 4950, 'Lo Cost Mo Jade': 3960,
+      "Grind Time": 10000},
      "99% catchup",
      ""],
 ]
@@ -1434,6 +1450,7 @@ switches = [
 
 ###GENERAL / MULTI-USE CONSTS###
 currentWorld = 6
+maxCharacters = 10
 missableGStacksDict = {
     #  ItemName               Codename     Quest Codeame          Quest Name                                          Wiki link to the item                             Recommended Class/Farming notes
     "Dog Bone":              ["Quest12",   "Dog_Bone1",           "Dog Bone: Why he Die???",                          "https://idleon.wiki/wiki/Dog_Bone",              "Active ES or time candy."],
@@ -3138,6 +3155,7 @@ combat_talentsDict = {
             46: {"Name": "Void Radius", "Tab": "Voidwalker"},
             45: {"Name": "Void Trial Rerun", "Tab": "Voidwalker"},
             47: {"Name": "Bossing Vain", "Tab": "Voidwalker"},
+            58: {"Name": "Master of the System", "Tab": "Voidwalker"},
         },
         "Medium": {
             50: {"Name": "Power Orb", "Tab": "Voidwalker"},
@@ -3478,9 +3496,75 @@ forgeUpgradesDict = {
         "MaxPurchases": 60
     }
 }
+statuesDict = {
+    0:  {"Name": "Power Statue", "ItemName": "EquipmentStatues1", "Effect": "Base Damage", "BaseValue": 3, "Farmer": "Crystals with DK at Beans", "Target": "bored-bean"},
+    1:  {"Name": "Speed Statue", "ItemName": "EquipmentStatues2", "Effect": "% Move Speed", "BaseValue": 0.1, "Farmer": "W1-W3 Crystals with DK", "Target": "w1-w3-crystals"},
+    2:  {"Name": "Mining Statue", "ItemName": "EquipmentStatues3", "Effect": "Mining Power", "BaseValue": 0.3, "Farmer": "Crystals with DK at Beans", "Target": "bored-bean"},
+    3:  {"Name": "Feasty Statue", "ItemName": "EquipmentStatues4", "Effect": "% Food Effect", "BaseValue": 1, "Farmer": "W1-W3 Crystals with DK", "Target": "w1-w3-crystals"},
+    4:  {"Name": "Health Statue", "ItemName": "EquipmentStatues5", "Effect": "Base Health", "BaseValue": 3, "Farmer": "Crystals with DK at Beans", "Target": "bored-bean"},
+    5:  {"Name": "Kachow Statue", "ItemName": "EquipmentStatues6", "Effect": "% Crit Damage", "BaseValue": 0.4, "Farmer": "Monolith Quest on All characters", "Target": "monolith"},
+    6:  {"Name": "Lumberbob Statue", "ItemName": "EquipmentStatues7", "Effect": "Choppin Power", "BaseValue": 0.3, "Farmer": "Crystals with DK at Beans", "Target": "bored-bean"},
+    7:  {"Name": "Thicc Skin Statue", "ItemName": "EquipmentStatues8", "Effect": "Base Defence", "BaseValue": 1, "Farmer": "Crystals with DK at Sandy Pot or Tyson", "Target": "crystal-crabal"},
+    8:  {"Name": "Oceanman Statue", "ItemName": "EquipmentStatues9", "Effect": "Fishing Power", "BaseValue": 0.3, "Farmer": "AFK or Candy with Vman at W2 Bugs", "Target": "fly-nest"},
+    9:  {"Name": "Ol Reliable Statue", "ItemName": "EquipmentStatues10", "Effect": "Catchin Power", "BaseValue": 0.3, "Farmer": "Crystals with DK at Sandy Pot or Tyson", "Target": "crystal-crabal"},
+    10: {"Name": "Exp Book Statue", "ItemName": "EquipmentStatues11", "Effect": "% Class EXP", "BaseValue": 0.1, "Farmer": "Crystals with DK at Sandy Pot or Tyson", "Target": "crystal-crabal"},
+    11: {"Name": "Anvil Statue", "ItemName": "EquipmentStatues12", "Effect": "% Product SPD", "BaseValue": 0.5, "Farmer": "Crystals with DK at Sandy Pot or Tyson", "Target": "crystal-crabal"},
+    12: {"Name": "Cauldron Statue", "ItemName": "EquipmentStatues13", "Effect": "% Alchemy EXP", "BaseValue": 0.5, "Farmer": "Crystals with DK at Sandy Pot or Tyson", "Target": "crystal-crabal"},
+    13: {"Name": "Beholder Statue", "ItemName": "EquipmentStatues14", "Effect": "% Crit Chance", "BaseValue": 0.2, "Farmer": "Crystals with DK at Beans", "Target": "bored-bean"},
+    14: {"Name": "Bullseye Statue", "ItemName": "EquipmentStatues15", "Effect": "% Accuracy", "BaseValue": 0.8, "Farmer": "Active ES at Wood Mushroom or Candy at Nutto", "Target": "wood-mushroom"},
+    15: {"Name": "Box Statue", "ItemName": "EquipmentStatues16", "Effect": "Trappin Power", "BaseValue": 0.3, "Farmer": "Candy or Active ES at Penguins", "Target": "penguin"},
+    16: {"Name": "Twosoul Statue", "ItemName": "EquipmentStatues17", "Effect": "Worship Power", "BaseValue": 0.3, "Farmer": "Candy or Active ES at Quenchies", "Target": "quenchie"},
+    17: {"Name": "EhExPee Statue", "ItemName": "EquipmentStatues18", "Effect": "% Skill EXP", "BaseValue": 0.1, "Farmer": "Crystals with DK at Bloodbones", "Target": "bloodbone"},
+    18: {"Name": "Seesaw Statue", "ItemName": "EquipmentStatues19", "Effect": "% Cons EXP", "BaseValue": 0.5, "Farmer": "Candy or Active ES at Cryosnakes", "Target": "cryosnake"},
+    19: {"Name": "Pecunia Statue", "ItemName": "EquipmentStatues20", "Effect": "% Coins", "BaseValue": 1, "Farmer": "Crystals with DK at Clammies", "Target": "clammie"},
+    20: {"Name": "Mutton Statue", "ItemName": "EquipmentStatues21", "Effect": "% Cooking EXP", "BaseValue": 0.3, "Farmer": "Crystals with DK at Clammies", "Target": "clammie"},
+    21: {"Name": "Egg Statue", "ItemName": "EquipmentStatues22", "Effect": "% Breeding EXP", "BaseValue": 0.4, "Farmer": "Crystals with DK at Clammies", "Target": "clammie"},
+    22: {"Name": "Battleaxe Statue", "ItemName": "EquipmentStatues23", "Effect": "% Damage", "BaseValue": 0.2, "Farmer": "Crystals with DK at Tremor Wurms", "Target": "tremor-wurm"},
+    23: {"Name": "Spiral Statue", "ItemName": "EquipmentStatues24", "Effect": "% Divinity EXP", "BaseValue": 1, "Farmer": "Crystals with DK at Tremor Wurms", "Target": "tremor-wurm"},
+    24: {"Name": "Boat Statue", "ItemName": "EquipmentStatues25", "Effect": "% Sailing SPD", "BaseValue": 0.5, "Farmer": "Crystals with DK at Tremor Wurms", "Target": "tremor-wurm"},
+    25: {"Name": "Compost Statue", "ItemName": "EquipmentStatues26", "Effect": "% Farming EXP", "BaseValue": 0.4, "Farmer": "Crystals with DK at Minichiefs", "Target": "minichief-spirit"},
+    26: {"Name": "Stealth Statue", "ItemName": "EquipmentStatues27", "Effect": "% Stealth", "BaseValue": 0.3, "Farmer": "Crystals with DK at Minichiefs", "Target": "minichief-spirit"},
+    27: {"Name": "Essence Statue", "ItemName": "EquipmentStatues28", "Effect": "% White ESS", "BaseValue": 0.6, "Farmer": "Crystals with DK at Minichiefs", "Target": "minichief-spirit"},
+}
+statueTypeList = ["Normal", "Gold", "Onyx"]
+statueCount = len(statuesDict.keys())
+statueExclusionsDict = {
+    "Onyx1": [
+        "Kachow Statue", "Bullseye Statue",
+        "Oceanman Statue", "Thicc Skin Statue",
+        "Box Statue", "Twosoul Statue", "Seesaw Statue", "EhExPee Statue",
+        "Battleaxe Statue", "Spiral Statue", "Boat Statue",
+        "Compost Statue", "Stealth Statue", "Essence Statue"
+    ],
+    "Onyx2": [
+        "Power Statue", "Speed Statue", "Mining Statue", "Feasty Statue", "Health Statue", "Lumberbob Statue", "Kachow Statue", "Bullseye Statue",
+        "Ol Reliable Statue", "Exp Book Statue", "Anvil Statue", "Cauldron Statue",  # "Thicc Skin Statue", "Oceanman Statue",
+        "Beholder Statue", "Bullseye Statue", "Box Statue", "Twosoul Statue", "Seesaw Statue",  # "EhExPee Statue",
+        "Pecunia Statue", "Mutton Statue", "Egg Statue",
+    ],
+    "Onyx3": [
+        "Power Statue", "Speed Statue", "Mining Statue", "Feasty Statue", "Health Statue", "Lumberbob Statue",  # "Kachow Statue", "Bullseye Statue",
+        "Thicc Skin Statue", "Ol Reliable Statue", "Exp Book Statue", "Anvil Statue", "Cauldron Statue",  # "Oceanman Statue",
+        "Beholder Statue", "Bullseye Statue", "EhExPee Statue",  # "Box Statue", "Twosoul Statue", "Seesaw Statue",
+        "Pecunia Statue", "Mutton Statue", "Egg Statue",
+        "Battleaxe Statue", "Spiral Statue", "Boat Statue",
+        "Compost Statue", "Stealth Statue", "Essence Statue"
+    ],
+    "Final3": [
+        "Power Statue", "Speed Statue", "Health Statue", "Kachow Statue", "Bullseye Statue",
+        "Thicc Skin Statue", "Oceanman Statue", "Ol Reliable Statue", "Exp Book Statue", "Anvil Statue", "Cauldron Statue",
+        "Beholder Statue", "Bullseye Statue", "Box Statue", "Twosoul Statue", "EhExPee Statue", "Seesaw Statue",
+        "Pecunia Statue", "Mutton Statue", "Egg Statue",
+        "Battleaxe Statue", "Spiral Statue", "Boat Statue",
+        "Compost Statue", "Stealth Statue", "Essence Statue",
+    ],
+    "None": []
+}
+
 
 ###WORLD 2 CONSTS###
 max_IndexOfVials = 75  # Last verified as of v2.10
+max_VialLevel = 13  # Last verified as of 2.12
 max_IndexOfBubbles = 29  # Last verified as of v2.10
 max_IndexOfSigils = 3  # Last verified as of v2.10
 vialsDict = {
@@ -4573,7 +4657,7 @@ breedingSpeciesDict: dict[int, dict] = {
         },
     },
     3: {
-		0: {
+        0: {
             'Name': 'Sheepie',
             'Genetic': breedingGeneticsList[8],  #Sniper
             'ShinyBonus': breedingShinyBonusList[19],  #Bonuses from All Meals

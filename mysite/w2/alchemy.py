@@ -177,22 +177,24 @@ def getAtRiskAdviceGroups() -> list[AdviceGroup]:
     )
     #Basic NBLB: Remove any bubbles with index 15 or higher and level of 1 or lower
     sorted_bubbles_basic = [(k, v) for k, v in sorted_bubbles if v['Level'] > 1 and v['BubbleIndex'] <= 14]
+    todays_highest = sorted_bubbles_basic[nblbCount - 1][1]['Level']
     if len(sorted_bubbles_basic) > 2 * nblbCount:
-        basic_ps = f"Highest level for NBLB today: {sorted_bubbles_basic[nblbCount-1][1]['Level']}"
-        atriskBasic_AdviceList.extend([
-            Advice(
-                label=bubbleName,
-                picture_class=bubbleName,
-                progression=bubbleValuesDict['Level'],
-                goal=max(sorted_bubbles_basic[2 * nblbCount][1]['Level'], bubbleValuesDict['Level'] + 20),
-                resource=bubbleValuesDict['Material']
-            )
-            for bubbleName, bubbleValuesDict in sorted_bubbles_basic
-                if bubbleName in atrisk_basicBubbles
-                and bubbleValuesDict['Level'] < sorted_bubbles_basic[2 * nblbCount][1]['Level']
-        ])
+        basic_ps = f"Highest level for NBLB today: {todays_highest}"
     else:
         basic_ps = ""
+    atriskBasic_AdviceList.extend([
+        Advice(
+            label=bubbleName,
+            picture_class=bubbleName,
+            progression=bubbleValuesDict['Level'],
+            goal=todays_highest+20, #max(sorted_bubbles_basic[2 * nblbCount][1]['Level'], bubbleValuesDict['Level'] + 20),
+            resource=bubbleValuesDict['Material']
+        )
+        for bubbleName, bubbleValuesDict in sorted_bubbles_basic
+            if bubbleName in atrisk_basicBubbles
+            and bubbleValuesDict['Level'] < todays_highest + 20  #sorted_bubbles_basic[2 * nblbCount][1]['Level']
+    ])
+
     atriskBasic_AG = AdviceGroup(
         tier="",
         pre_string=f"Informational- \"Easy\" to print materials in your {2 * nblbCount} lowest leveled W1-W3 bubbles",
@@ -203,8 +205,10 @@ def getAtRiskAdviceGroups() -> list[AdviceGroup]:
     #Same thing, but for Lithium Bubbles W4-W5 now
     #Lithium only works on W4 and W5 bubbles, indexes 15 through 24
     sorted_bubbles_lithium = [(k, v) for k, v in sorted_bubbles if 1 < v['Level'] < 1500 and 15 <= v['BubbleIndex'] <= 24]
+
     if len(sorted_bubbles_lithium) > nblbCount:
-        lithium_ps = f"Highest level for Lithium today: {sorted_bubbles_lithium[nblbCount-1][1]['Level']}"
+        todays_lithium = sorted_bubbles_lithium[nblbCount - 1][1]['Level']
+        lithium_ps = f"Highest level for Lithium today: {todays_lithium}"
 
         atriskLithium_AdviceList.extend([
             Advice(
@@ -216,7 +220,7 @@ def getAtRiskAdviceGroups() -> list[AdviceGroup]:
             )
             for bubbleName, bubbleValuesDict in sorted_bubbles_lithium
                 if bubbleName in atrisk_lithiumBubbles
-                and bubbleValuesDict['Level'] < sorted_bubbles_lithium[nblbCount][1]['Level']
+                and bubbleValuesDict['Level'] < todays_lithium + 10
         ])
     else:
         lithium_ps = f""

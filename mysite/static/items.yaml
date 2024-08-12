@@ -1340,8 +1340,10 @@ SmithingRecipes3: SmithingRecipes3
 SmithingRecipes4: SmithingRecipes4
 SmithingRecipes5: SmithingRecipes5
 SmithingRecipes6: SmithingRecipes6
-Liquid1: Liquid1
-Liquid2: Liquid2
+Liquid1: Water Droplets
+Liquid2: Liquid Nitrogen
+Liquid3: Trench Seawater
+Liquid4: Toxic Mercury
 Gfoodcoupon: Gold Food Coupon
 ItemsCoupon1: Resource Coupon
 ItemsCoupon2: Really Really Resource Coupon
@@ -1695,6 +1697,8 @@ Quest84: Red Tome Pages
 Quest85: Anniversary Box
 Quest86: Basketball
 Quest87: Secret Map
+Quest88: Golden Oyster
+Quest89: Event Point
 EquipmentSmithingTabs2: Anvil Tab II
 EquipmentSmithingTabs3: Anvil Tab III
 EquipmentSmithingTabs4: Anvil Tab IV
@@ -1944,6 +1948,7 @@ EquipmentHats102: Fanned Blossomage
 EquipmentHats103: Dainty Brim
 EquipmentHats104: Charcoal Hat
 EquipmentHats109: Husky Hat
+EquipmentHats110: Yellow Beanie
 CardsA0: Green Mushroom Card
 CardsA1: Red Mushroom Card
 CardsA2: Frog Card
