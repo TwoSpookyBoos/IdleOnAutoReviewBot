@@ -3538,7 +3538,7 @@ statueExclusionsDict = {
     ],
     "Onyx2": [
         "Power Statue", "Speed Statue", "Mining Statue", "Feasty Statue", "Health Statue", "Lumberbob Statue", "Kachow Statue", "Bullseye Statue",
-        "Ol Reliable Statue", "Exp Book Statue", "Anvil Statue", "Cauldron Statue",  # "Thicc Skin Statue", "Oceanman Statue",
+        "Ol Reliable Statue", "Exp Book Statue", "Anvil Statue", "Cauldron Statue", "Oceanman Statue",  # "Thicc Skin Statue",
         "Beholder Statue", "Bullseye Statue", "Box Statue", "Twosoul Statue", "Seesaw Statue",  # "EhExPee Statue",
         "Pecunia Statue", "Mutton Statue", "Egg Statue",
     ],
