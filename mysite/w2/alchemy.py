@@ -178,8 +178,11 @@ def getAtRiskAdviceGroups() -> list[AdviceGroup]:
     #Basic NBLB: Remove any bubbles with index 15 or higher and level of 1 or lower
     sorted_bubbles_basic = [(k, v) for k, v in sorted_bubbles if v['Level'] > 1 and v['BubbleIndex'] <= 14]
     basic_ps = ""
-    if sorted_bubbles_basic:
-        todays_highest = sorted_bubbles_basic[nblbCount - 1][1]['Level']
+    if sorted_bubbles_basic and max(session_data.account.all_skills['Lab']) > 1:
+        try:
+            todays_highest = sorted_bubbles_basic[nblbCount - 1][1]['Level']
+        except:
+            todays_highest = sorted_bubbles_basic[-1][1]['Level']
         if len(sorted_bubbles_basic) > 2 * nblbCount:
             basic_ps = f"Highest level for NBLB today: {todays_highest}"
         atriskBasic_AdviceList.extend([
@@ -206,9 +209,12 @@ def getAtRiskAdviceGroups() -> list[AdviceGroup]:
     #Lithium only works on W4 and W5 bubbles, indexes 15 through 24
     sorted_bubbles_lithium = [(k, v) for k, v in sorted_bubbles if 1 < v['Level'] < 1500 and 15 <= v['BubbleIndex'] <= 24]
     lithium_ps = f""
-    if sorted_bubbles_lithium:
+    if sorted_bubbles_lithium and max(session_data.account.all_skills['Lab']) > 1:
         if len(sorted_bubbles_lithium) > nblbCount:
-            todays_lithium = sorted_bubbles_lithium[nblbCount - 1][1]['Level']
+            try:
+                todays_lithium = sorted_bubbles_lithium[nblbCount - 1][1]['Level']
+            except:
+                todays_lithium = sorted_bubbles_lithium[-1][1]['Level']
             lithium_ps = f"Highest level for Lithium today: {todays_lithium}"
             atriskLithium_AdviceList.extend([
                 Advice(
