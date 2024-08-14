@@ -4,7 +4,7 @@ import yaml
 from flask import g as session_data
 
 from config import app
-from general import combatLevels, greenstacks, pinchy, cards, secretPath, consumables, gemShop
+from general import combatLevels, greenstacks, pinchy, cards, secretPath, consumables, gemShop, active
 from models.custom_exceptions import UsernameBanned
 from models.models import AdviceWorld, WorldName, Account
 from utils.data_formatting import getJSONfromAPI, getJSONfromText, HeaderData
@@ -55,6 +55,7 @@ def main(inputData, runType="web"):
     sections_general = [
         section_combatLevels := combatLevels.setCombatLevelsProgressionTier(),
         section_secretPath := secretPath.setSecretClassProgressionTier(),
+        section_active := active.setActiveProgressionTier(),
         *(sections_consumables := consumables.parseConsumables()),
         section_gemShop := gemShop.setGemShopProgressionTier(),
         *(sections_gstacks := greenstacks.setGStackProgressionTier()),
