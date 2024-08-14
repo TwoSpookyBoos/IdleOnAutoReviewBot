@@ -2,7 +2,7 @@ from math import ceil
 
 from flask import g as session_data
 from consts import maxStaticBookLevels, maxScalingBookLevels, maxSummoningBookLevels, maxOverallBookLevels, skill_talentsDict, combat_talentsDict, currentWorld, \
-    stamp_maxes, maxMealLevel, cookingCloseEnough
+    stamp_maxes, maxMealLevel, cookingCloseEnough, librarySubgroupTiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
@@ -328,6 +328,7 @@ def getCharacterBooksAdviceGroups(anyBookAdvice: bool):
     character_AdviceGroupDict = {}
 
     talentExclusions = getTalentExclusions()
+    char_tiers = {}
 
     for toon in session_data.account.safe_characters:
         character_adviceDict[toon.character_name] = {}
@@ -403,8 +404,16 @@ def getCharacterBooksAdviceGroups(anyBookAdvice: bool):
                                     talentNumbersAdded.append(talentNumber)
 
         #Create AdviceGroup before moving on to next character
+        char_tier = 0
+        for subgroupname in character_adviceDict[toon.character_name]:
+            if char_tier == librarySubgroupTiers.index(subgroupname)-1 and len(character_adviceDict[toon.character_name][subgroupname]) == 0:
+                char_tier = librarySubgroupTiers.index(subgroupname)
+            else:
+                break
+        char_tiers[toon.character_name] = char_tier
+
         character_AdviceGroupDict[toon.character_name] = AdviceGroup(
-            tier="",
+            tier=char_tier,
             pre_string=f"Priority Checkouts for {toon.character_name} the {toon.class_name}",
             advices=character_adviceDict[toon.character_name]
         )
@@ -415,7 +424,7 @@ def getCharacterBooksAdviceGroups(anyBookAdvice: bool):
     for ag in character_AdviceGroupDict.values():
         ag.remove_empty_subgroups()
 
-    return character_AdviceGroupDict, anyBookAdvice
+    return character_AdviceGroupDict, anyBookAdvice, min(char_tiers.values(), default=0)
 
 def setLibraryProgressionTier() -> AdviceSection:
     library_AdviceDict = {
@@ -438,12 +447,11 @@ def setLibraryProgressionTier() -> AdviceSection:
         library_AdviceSection.header = "Come back after unlocking the Talent Book Library within the Construction skill in World 3!"
         return library_AdviceSection
 
-    max_tier = 0
-    tier_bookLevels = 0
+    max_tier = len(librarySubgroupTiers)-1
     anyBookAdvice = False
 
     # Generate AdviceGroups
-    characterCheckouts, anyBookAdvice = getCharacterBooksAdviceGroups(anyBookAdvice)
+    characterCheckouts, anyBookAdvice, tier_bookLevels = getCharacterBooksAdviceGroups(anyBookAdvice)
     if not session_data.hide_completed:
         library_AdviceGroupDict["MaxBookLevels"] = getBookLevelAdviceGroup()
         library_AdviceGroupDict["BonusLevels"] = getBonusLevelAdviceGroup()

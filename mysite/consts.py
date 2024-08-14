@@ -985,16 +985,16 @@ atoms_progressionTiers = {
     },
 }
 sampling_progressionTiers = {
-    0: {"Oak Logs": 0,     "Copper Ore": 0,     "Goldfish": 0,     "Fly": 0,     "Spore Cap": 0},
-    1: {"Oak Logs": 150,   "Copper Ore": 60,    "Goldfish": 50,    "Fly": 50,    "Spore Cap": 20},
-    2: {"Oak Logs": 1000,  "Copper Ore": 700,   "Goldfish": 100,   "Fly": 100,   "Spore Cap": 70},
-    3: {"Oak Logs": 8e3,   "Copper Ore": 10e3,  "Goldfish": 500,   "Fly": 500,   "Spore Cap": 500},
-    4: {"Oak Logs": 300e3, "Copper Ore": 500e3, "Goldfish": 5e3,   "Fly": 5e3,   "Spore Cap": 400e3},
-    5: {"Oak Logs": 16e6,  "Copper Ore": 20e6,  "Goldfish": 2e6,   "Fly": 900e3, "Spore Cap": 1e6},
-    6: {"Oak Logs": 200e6, "Copper Ore": 160e6, "Goldfish": 20e6,  "Fly": 9e6,   "Spore Cap": 2.5e6},
-    7: {"Oak Logs": 1.5e9, "Copper Ore": 1.2e9, "Goldfish": 150e6, "Fly": 68e6,  "Spore Cap": 10e6},
-    8: {"Oak Logs": 10e9,  "Copper Ore": 8e9,   "Goldfish": 1e9,   "Fly": 454e6, "Spore Cap": 20e6},
-    9: {"Oak Logs": 22e9,  "Copper Ore": 15e9,  "Goldfish": 2e9,   "Fly": 1e9,   "Spore Cap": 30e6},
+    0: {"Materials": {"Oak Logs": 0,     "Copper Ore": 0,     "Goldfish": 0,     "Fly": 0,     "Spore Cap": 0}, "NonDootDiscount": 1},
+    1: {"Materials": {"Oak Logs": 150,   "Copper Ore": 60,    "Goldfish": 50,    "Fly": 50,    "Spore Cap": 20}, "NonDootDiscount": 1},
+    2: {"Materials": {"Oak Logs": 1000,  "Copper Ore": 700,   "Goldfish": 100,   "Fly": 100,   "Spore Cap": 70}, "NonDootDiscount": 1},
+    3: {"Materials": {"Oak Logs": 8e3,   "Copper Ore": 10e3,  "Goldfish": 500,   "Fly": 500,   "Spore Cap": 500}, "NonDootDiscount": .7},
+    4: {"Materials": {"Oak Logs": 300e3, "Copper Ore": 500e3, "Goldfish": 5e3,   "Fly": 5e3,   "Spore Cap": 400e3}, "NonDootDiscount": .7},
+    5: {"Materials": {"Oak Logs": 16e6,  "Copper Ore": 20e6,  "Goldfish": 2e6,   "Fly": 900e3, "Spore Cap": 1e6}, "NonDootDiscount": .7},
+    6: {"Materials": {"Oak Logs": 200e6, "Copper Ore": 160e6, "Goldfish": 20e6,  "Fly": 9e6,   "Spore Cap": 2.5e6}, "NonDootDiscount": .75},
+    7: {"Materials": {"Oak Logs": 1.5e9, "Copper Ore": 1.2e9, "Goldfish": 150e6, "Fly": 68e6,  "Spore Cap": 10e6}, "NonDootDiscount": .8},
+    8: {"Materials": {"Oak Logs": 10e9,  "Copper Ore": 8e9,   "Goldfish": 1e9,   "Fly": 454e6, "Spore Cap": 20e6}, "NonDootDiscount": .85},
+    9: {"Materials": {"Oak Logs": 22e9,  "Copper Ore": 15e9,  "Goldfish": 2e9,   "Fly": 1e9,   "Spore Cap": 30e6}, "NonDootDiscount": .90},
 }
 
 ###WORLD 4 PROGRESSION TIERS###
@@ -2733,6 +2733,10 @@ expected_talentsDict = {
 }
 hardcap_symbols = 280
 hardcap_enhancement_eclipse = 250  #Lava might add more in the future, but there are no bonuses above 250 in v2.10
+librarySubgroupTiers = [
+    '', 'Skilling - High Priority', 'Skilling - Medium Priority', 'Skilling - Low Priority', 'Skilling - EXP Only Priority',
+    'Combat - High Priority', 'Combat - Medium Priority', 'Combat - Low Priority',
+]
 skill_talentsDict = {
     # Optimal is an optional list for calculating library.getJeapordyGoal
     # [0] = the starting level
