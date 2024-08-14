@@ -1372,7 +1372,6 @@ class Account:
                     self.alchemy_p2w["Sigils"][sigilName]["PlayerHours"] = float(raw_p2w_list[4][self.alchemy_p2w["Sigils"][sigilName]["Index"]])
                     self.alchemy_p2w["Sigils"][sigilName]["Level"] = raw_p2w_list[4][self.alchemy_p2w["Sigils"][sigilName]["Index"] + 1] + 1
                 except Exception as reason:
-                    print(f"{reason}")
                     pass  # Already defaulted to 0s in consts.sigilsDict
 
     def _parse_w2_arcade(self):
@@ -3044,21 +3043,21 @@ class Account:
                     * crystals_4_dayys_multi
                 )
             except Exception as reason:
-                print(f"Hit character value exception for {char.character_name}: {reason}")
+                print(f"Character Specific crystal spawn chance calc exception for {char.character_name}: {reason}")
                 character_influenced = 1
             char.setCrystalSpawnChance(account_wide * character_influenced)
-            print(f"Base Chance: {base_crystal_chance}")
-            print(f"Crystallin Stamp Multi: { 1 + self.stamps['Crystallin']['Value'] / 100}")
-            print(f"Total card Multi including doublers: {1 + total_card_chance / 100}")
-            print(f"~Account Wide Total: {account_wide}")
-            print(f"Cmon Out Crystals Multi: {cmon_out_crystals_multi}")
-            print(f"Crystals 4 Dayys Multi: {crystals_4_dayys_multi}")
-            print(f"Crystal Shrine including Chaotic Chizoar: {self.shrines['Crescent Shrine']['Value']}")
-            print(f"PO Box: {char.po_boxes_invested['Non Predatory Loot Box']['Bonus3Value']}")
-            print(f"Shrine + PO Multi: {shrine_and_po}")
-            print(f"~Character Specific Total: {character_influenced}")
-            print(f"Final number: {char.crystal_spawn_chance}")
-            print(f"Final percent: {char.crystal_spawn_chance:%}")
+            # print(f"Base Chance: {base_crystal_chance}")
+            # print(f"Crystallin Stamp Multi: { 1 + self.stamps['Crystallin']['Value'] / 100}")
+            # print(f"Total card Multi including doublers: {1 + total_card_chance / 100}")
+            # print(f"~Account Wide Total: {account_wide}")
+            # print(f"Cmon Out Crystals Multi: {cmon_out_crystals_multi}")
+            # print(f"Crystals 4 Dayys Multi: {crystals_4_dayys_multi}")
+            # print(f"Crystal Shrine including Chaotic Chizoar: {self.shrines['Crescent Shrine']['Value']}")
+            # print(f"PO Box: {char.po_boxes_invested['Non Predatory Loot Box']['Bonus3Value']}")
+            # print(f"Shrine + PO Multi: {shrine_and_po}")
+            # print(f"~Character Specific Total: {character_influenced}")
+            # print(f"Final number: {char.crystal_spawn_chance}")
+            # print(f"Final percent: {char.crystal_spawn_chance:%}")
         self.highest_crystal_spawn_chance = max([char.crystal_spawn_chance for char in self.all_characters if "Journeyman" not in char.all_classes],
                                                 default=base_crystal_chance)
         self.highest_jman_crystal_spawn_chance = max([char.crystal_spawn_chance for char in self.all_characters if "Journeyman" in char.all_classes],
