@@ -1,0 +1,29 @@
+@keyframes showModal {
+    0% {
+        display: none;
+        z-index: -9999;
+        opacity: 0;
+    }
+    1% {
+        display: none;
+        z-index: -9999;
+        opacity: 0;
+    }
+    66% {
+        display: none;
+        z-index: -9999;
+        opacity: 0;
+    }
+    100% {
+        display: flex;
+        z-index: 9999;
+        opacity: 1;
+    }
+}
+
+#javascript-blocked {
+    display: flex;
+    z-index: -9999;
+    opacity: 0;
+    animation: showModal 1.5s ease 1.5s forwards;
+}
