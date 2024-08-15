@@ -176,70 +176,7 @@ def getLinksAndDootChecksAdviceGroups(tier_Divinity: int, lowestDivinitySkillLev
 
     return links_AdviceGroup, doot_AdviceGroup
 
-def getOldArctisAdviceGroup(lowestDivinitySkillLevel: int) -> AdviceGroup:
-    arctis_AdviceDict = {}
-    bigPBreakpointsList = [540, 940, 1440, 1940, 2440, 2940, 5940]
-    arctisCombosDict = {
-        540: {90: 14, 109: 15},
-        940: {87: 14, 105: 15, 128: 16},
-        1440: {85: 14, 103: 15, 126: 16, 156: 17, 197: 18},
-        1940: {102: 15, 124: 16, 153: 17, 194: 18},
-        2440: {101: 15, 123: 16, 152: 17, 192: 18},
-        2940: {123: 16, 152: 17, 191: 18},
-        5940: {122: 16, 150: 17, 189: 18}
-    }
-
-    lowestBigPToShow = 540
-    currentLowestArctisValue = 0
-    # Find the lowest Big P threshold the account has already reached. This will be the first entry shown
-    for bigPLevel in arctisCombosDict:
-        if session_data.account.alchemy_bubbles['Big P']['Level'] >= bigPLevel:
-            lowestBigPToShow = bigPLevel
-    # Find the next Big P threshold they could meet
-    if lowestBigPToShow <= session_data.account.alchemy_bubbles['Big P']['Level']:
-        try:
-            nextBigPTarget = bigPBreakpointsList[bigPBreakpointsList.index(lowestBigPToShow) + 1]
-        except:
-            nextBigPTarget = 0
-    else:
-        nextBigPTarget = lowestBigPToShow
-
-    for bigPLevel in arctisCombosDict:
-        if bigPLevel >= lowestBigPToShow:
-            arctis_AdviceDict[f"Big P level {bigPLevel}"] = []  # Create subgroup
-            # Find the Arctis Value of the lowest div-level character in the account. Don't show entries below or equal to this.
-            for divinityLevel in arctisCombosDict[bigPLevel]:
-                if lowestDivinitySkillLevel >= divinityLevel and bigPLevel <= session_data.account.alchemy_bubbles['Big P']['Level']:
-                    if arctisCombosDict[bigPLevel][divinityLevel] > currentLowestArctisValue:
-                        currentLowestArctisValue = arctisCombosDict[bigPLevel][divinityLevel]
-
-    for bigPLevel in arctisCombosDict:
-        subgroupName = f"Big P level {bigPLevel}"
-        if subgroupName in arctis_AdviceDict:
-            if bigPLevel == lowestBigPToShow and nextBigPTarget != 0:
-                arctis_AdviceDict[subgroupName].append(Advice(
-                    label=f"Current Big P bubble level",
-                    picture_class='big-p',
-                    progression=session_data.account.alchemy_bubbles['Big P']['Level'],
-                    goal=nextBigPTarget,
-                    resource=session_data.account.alchemy_bubbles['Big P']['Material'],
-                ))
-            for divinityLevel in arctisCombosDict[bigPLevel]:
-                if arctisCombosDict[bigPLevel][divinityLevel] > currentLowestArctisValue:  # Strictly greater than
-                    arctis_AdviceDict[subgroupName].append(Advice(
-                        label=f"+{arctisCombosDict[bigPLevel][divinityLevel]} at Divinity Level {divinityLevel}",
-                        picture_class='divinity',
-                        progression=lowestDivinitySkillLevel,
-                        goal=divinityLevel
-                    ))
-    arctis_AdviceGroup = AdviceGroup(
-        tier="",
-        pre_string="Arctis minor link bonus (+# Talent LV for all talents above Lv 1) breakpoints. Progress shown is your LOWEST divinity level",
-        advices=arctis_AdviceDict
-    )
-    return arctis_AdviceGroup
-
-def getNewArctisAdviceGroup(lowestDivinitySkillLevel: int, highestDivinitySkillLevel: int) -> AdviceGroup:
+def getArctisAdviceGroup(lowestDivinitySkillLevel: int, highestDivinitySkillLevel: int) -> AdviceGroup:
     arctis_AdviceDict = {"Current Values": []}
     current_big_p = session_data.account.alchemy_bubbles['Big P']['Level']
 
@@ -370,8 +307,7 @@ def setDivinityProgressionTier():
     divinity_AdviceGroupDict["Styles"] = getStylesInfoAdviceGroup(highestDivinitySkillLevel)
     divinity_AdviceGroupDict["DivinityLinks"], divinity_AdviceGroupDict["Dooted"] = getLinksAndDootChecksAdviceGroups(
         int(tier_Divinity), lowestDivinitySkillLevel, highestDivinitySkillLevel)
-    divinity_AdviceGroupDict["Arctis"] = getOldArctisAdviceGroup(lowestDivinitySkillLevel)
-    divinity_AdviceGroupDict["Arctis2"] = getNewArctisAdviceGroup(lowestDivinitySkillLevel, highestDivinitySkillLevel)
+    divinity_AdviceGroupDict["Arctis"] = getArctisAdviceGroup(lowestDivinitySkillLevel, highestDivinitySkillLevel)
 
     # Generate AdviceSection
     overall_DivinityTier = min(max_tier, tier_Divinity)
