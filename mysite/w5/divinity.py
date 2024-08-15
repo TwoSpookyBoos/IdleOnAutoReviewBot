@@ -1,9 +1,12 @@
+from math import ceil
+
 from models.models import AdviceSection, AdviceGroup, Advice
+from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import (maxTiersPerGroup, divinity_progressionTiers, divinity_offeringsDict, divinity_stylesDict,
-                    getOfferingNameFromIndex, getStyleNameFromIndex, getDivinityNameFromIndex, divLevelReasonsDict)
+                    getOfferingNameFromIndex, getStyleNameFromIndex, getDivinityNameFromIndex, divLevelReasonsDict, divinity_arctisBreakpoints)
 
 logger = get_logger(__name__)
 
@@ -209,6 +212,7 @@ def getOldArctisAdviceGroup(lowestDivinitySkillLevel: int) -> AdviceGroup:
                 if lowestDivinitySkillLevel >= divinityLevel and bigPLevel <= session_data.account.alchemy_bubbles['Big P']['Level']:
                     if arctisCombosDict[bigPLevel][divinityLevel] > currentLowestArctisValue:
                         currentLowestArctisValue = arctisCombosDict[bigPLevel][divinityLevel]
+
     for bigPLevel in arctisCombosDict:
         subgroupName = f"Big P level {bigPLevel}"
         if subgroupName in arctis_AdviceDict:
@@ -236,22 +240,61 @@ def getOldArctisAdviceGroup(lowestDivinitySkillLevel: int) -> AdviceGroup:
     return arctis_AdviceGroup
 
 def getNewArctisAdviceGroup(lowestDivinitySkillLevel: int, highestDivinitySkillLevel: int) -> AdviceGroup:
-    arctis_AdviceDict = {}
-    arctisBigPBreakpoints = {
-        13: {            70: 2041,  71: 1193,  72:  841,  73:  647,  74:  525,  75:  441},
-        14: {            84: 2041,  85: 1331,  86:  986,  87:  782,  88:  648,  89:  522},
-        15: {100: 4441, 101: 2397, 102: 1641, 103: 1246, 104: 1004, 105:  841, 106:  722},
-        16: {122: 3601, 123: 2401, 124: 1801, 125: 1441, 126: 1201, 127: 1029, 128:  901},
-        17: {150: 4441, 151: 3101, 152: 2383, 153: 1936, 154: 1631, 155: 1409, 156: 1241},
-        18: {188: 5983, 189: 4302, 190: 3361, 191: 2759, 192: 2341, 193: 2033, 194: 1798},
-        19: {244: 6041, 245: 4841, 246: 4041, 247: 3469, 248: 3041, 249: 2707, 250: 2441},
+    arctis_AdviceDict = {"Current Values": []}
+    current_big_p = session_data.account.alchemy_bubbles['Big P']['Level']
 
-    }
+    # Find the lowest minor link bonus from Arctis across all characters, as if they were linked
+    currentLowestArctisValue = 0
+    currentHighestArctisValue = 0
+    for char in session_data.account.all_characters:
+        char_arctis = ceil(15 * session_data.account.alchemy_bubbles['Big P']['BaseValue'] * (char.divinity_level / (char.divinity_level + 60)))
+        if currentLowestArctisValue == 0:  #First character being evaluated
+            currentLowestArctisValue = char_arctis
+            currentHighestArctisValue = char_arctis
+        else:
+            currentLowestArctisValue = min(currentLowestArctisValue, char_arctis)
+            currentHighestArctisValue = max(currentHighestArctisValue, char_arctis)
+
+    # Populate the Current Values list with Arctis, Div levels, and Big P bubble so players know their starting points
+    arctis_AdviceDict["Current Values"].append(Advice(
+        label=f"Arctis minor link ranges: +{currentLowestArctisValue} - +{currentHighestArctisValue}",
+        picture_class="arctis"
+    ))
+    arctis_AdviceDict["Current Values"].append(Advice(
+        label=f"Divinity level ranges: {lowestDivinitySkillLevel} - {highestDivinitySkillLevel}",
+        picture_class="divinity"
+    ))
+    arctis_AdviceDict["Current Values"].append(Advice(
+        label=f"Big P bubble level: {current_big_p}",
+        picture_class="big-p"
+    ))
+
+    for arctis_breakpoint, requirementsDict in divinity_arctisBreakpoints.items():
+        for div_level, big_p_level in requirementsDict.items():
+            if arctis_breakpoint > currentLowestArctisValue:  #At least 1 above their minimum
+                if div_level >= lowestDivinitySkillLevel or big_p_level >= current_big_p:
+                    if f"Arctis +{arctis_breakpoint}" not in arctis_AdviceDict and arctis_breakpoint <= currentHighestArctisValue + 1:  #No more than 1 above their max
+                        arctis_AdviceDict[f"Arctis +{arctis_breakpoint}"] = []
+                    if f"Arctis +{arctis_breakpoint}" in arctis_AdviceDict:
+                        arctis_AdviceDict[f"Arctis +{arctis_breakpoint}"].append(Advice(
+                            label=f"{div_level} Divinity and {big_p_level} Big P",
+                            picture_class="arctis",
+                            progression=current_big_p,
+                            goal=big_p_level
+                        ))
+
+    for subgroupAL in arctis_AdviceDict.values():
+        for advice in subgroupAL:
+            mark_advice_completed(advice)
+
     arctis_AdviceGroup = AdviceGroup(
         tier="",
-        pre_string="Arctis minor link bonus (+# Talent LV for all talents above Lv 1) breakpoints. Progress shown is your LOWEST divinity level",
+        pre_string=f"Upcoming Arctis minor link bonus breakpoints"
+                   f" (+# Talent LV for all talents above Lv 1)",
         advices=arctis_AdviceDict
     )
+    arctis_AdviceGroup.remove_empty_subgroups()
+
     return arctis_AdviceGroup
 
 def setDivinityProgressionTier():
@@ -325,6 +368,7 @@ def setDivinityProgressionTier():
     divinity_AdviceGroupDict["DivinityLinks"], divinity_AdviceGroupDict["Dooted"] = getLinksAndDootChecksAdviceGroups(
         int(tier_Divinity), lowestDivinitySkillLevel, highestDivinitySkillLevel)
     divinity_AdviceGroupDict["Arctis"] = getOldArctisAdviceGroup(lowestDivinitySkillLevel)
+    divinity_AdviceGroupDict["Arctis2"] = getNewArctisAdviceGroup(lowestDivinitySkillLevel, highestDivinitySkillLevel)
 
     # Generate AdviceSection
     overall_DivinityTier = min(max_tier, tier_Divinity)
