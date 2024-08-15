@@ -4,7 +4,7 @@
     cursor: pointer;
 }
 
-#cookie-policy, #error {
+#cookie-policy, #error, #javascript-blocked {
     display: block;
     position: fixed; /* Stay in place */
     z-index: -10; /* go behind */
@@ -85,7 +85,7 @@
     }
 }
 
-#cookie-policy.show, #error.show {
+#cookie-policy.show, #error.show, #javascript-blocked {
     z-index: 100;
     opacity: 1;
 

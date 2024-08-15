@@ -544,7 +544,12 @@ function setupSearchBar() {
     })
 }
 
+function delJSBlockedModal() {
+    document.querySelector('#javascript-blocked').remove()
+}
+
 function initBaseUI() {
+    delJSBlockedModal()
     setTimeout(defineCookieModalAction, 1000)
     hideSpinnerIfFirstAccess()
     defineFormSubmitAction()
