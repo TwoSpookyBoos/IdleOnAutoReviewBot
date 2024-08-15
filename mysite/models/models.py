@@ -981,7 +981,7 @@ class Account:
                                                               f"{familyBonusesDict[className]['PostDisplay']}"
                                                               f" {familyBonusesDict[className]['Stat']}")
 
-        self.raw_optlacc_dict = safe_loads(self.raw_data.get("OptLacc", {}))
+        self.raw_optlacc_dict = {k:v for k, v in enumerate(safe_loads(self.raw_data.get("OptLacc", [])))}
 
         self.dungeon_upgrades = {}
         raw_dungeon_upgrades = safe_loads(self.raw_data.get('DungUpg', []))
@@ -1193,65 +1193,60 @@ class Account:
                     }
 
     def _parse_w1_owl(self):
-        self.owl = {}
-        try:
-            self.owl['FeatherGeneration'] = self.raw_optlacc_dict[254]
-            self.owl['BonusesOfOrion'] = self.raw_optlacc_dict[255]
-            self.owl['FeatherRestarts'] = self.raw_optlacc_dict[258]
-            self.owl['MegaFeathersOwned'] = self.raw_optlacc_dict[262]
-        except:
-            self.owl['FeatherGeneration'] = 0
-            self.owl['BonusesOfOrion'] = 0
-            self.owl['FeatherRestarts'] = 0
-            self.owl['MegaFeathersOwned'] = 0
+        self.owl = {
+            'FeatherGeneration': self.raw_optlacc_dict.get(254, 0),
+            'BonusesOfOrion': self.raw_optlacc_dict.get(255, 0),
+            'FeatherRestarts': self.raw_optlacc_dict.get(258, 0),
+            'MegaFeathersOwned': self.raw_optlacc_dict.get(262, 0)
+        }
 
     def _parse_w1_statues(self):
-        self.statues = {}
-        self.maxed_statues = 0
-        #"StuG": "[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0]",
-        raw_statue_type_list = safe_loads(self.raw_data.get("StuG", []))
-        if not raw_statue_type_list:
-            raw_statue_type_list = [0]*statueCount
-        self.onyx_statues_unlocked = max(raw_statue_type_list, default=0) >= statueTypeList.index("Onyx")
-        statue_levels = [0]*statueCount
+            self.statues = {}
+            self.maxed_statues = 0
+            #"StuG": "[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0]",
+            raw_statue_type_list = safe_loads(self.raw_data.get("StuG", []))
+            if not raw_statue_type_list:
+                raw_statue_type_list = [0]*statueCount
+            self.onyx_statues_unlocked = max(raw_statue_type_list, default=0) >= statueTypeList.index("Onyx")
+            statue_levels = [0]*statueCount
 
-        #Find the maximum value across all characters. Only matters while Normal, since Gold shares across all characters
-        for char in self.safe_characters:
-            try:
-                char_statues = safe_loads(self.raw_data.get(f"StatueLevels_{char.character_index}"))
-                for statueIndex, statueDetails in enumerate(char_statues):
-                    if statueDetails[0] > statue_levels[statueIndex]:
-                        statue_levels[statueIndex] = statueDetails[0]
-            except:
-                continue
+            #Find the maximum value across all characters. Only matters while Normal, since Gold shares across all characters
+            for char in self.safe_characters:
+                try:
+                    char_statues = safe_loads(self.raw_data.get(f"StatueLevels_{char.character_index}"))
+                    for statueIndex, statueDetails in enumerate(char_statues):
+                        if statueDetails[0] > statue_levels[statueIndex]:
+                            statue_levels[statueIndex] = statueDetails[0]
+                except:
+                    continue
 
-        for statueIndex, statueDetails in statuesDict.items():
-            try:
-                self.statues[statueDetails['Name']] = {
-                    'Level': statue_levels[statueIndex],
-                    'Type': statueTypeList[raw_statue_type_list[statueIndex]],  #Description: Normal, Gold, Onyx
-                    'TypeNumber': raw_statue_type_list[statueIndex],  #Integer: 0-2
-                    'ItemName': statueDetails['ItemName'],
-                    'Effect': statueDetails['Effect'],
-                    'BaseValue': statueDetails['BaseValue'],
-                    'Value': statueDetails['BaseValue'],  # Handled in _calculate_w1_statue_multi()
-                    'Farmer': statueDetails['Farmer'],
-                    'Target': statueDetails['Target'],
-                }
-            except:
-                self.statues[statueDetails['Name']] = {
-                    'Level': 0,
-                    'Type': statueTypeList[raw_statue_type_list[statueIndex]],
-                    'TypeNumber': raw_statue_type_list[0],
-                    'ItemName': statueDetails['ItemName'],
-                    'Effect': statueDetails['Effect'],
-                    'BaseValue': statueDetails['BaseValue'],
-                    'Value': statueDetails['BaseValue'],  # Handled in _calculate_w1_statue_multi()
-                    'Farmer': statueDetails['Farmer'],
-                    'Target': statueDetails['Target'],
-                }
-            if self.statues[statueDetails['Name']]['TypeNumber'] >= len(statueTypeList)-1:
-                self.maxed_statues += 1
+            for statueIndex, statueDetails in statuesDict.items():
+                try:
+                    self.statues[statueDetails['Name']] = {
+                        'Level': statue_levels[statueIndex],
+                        'Type': statueTypeList[raw_statue_type_list[statueIndex]],  #Description: Normal, Gold, Onyx
+                        'TypeNumber': raw_statue_type_list[statueIndex],  #Integer: 0-2
+                        'ItemName': statueDetails['ItemName'],
+                        'Effect': statueDetails['Effect'],
+                        'BaseValue': statueDetails['BaseValue'],
+                        'Value': statueDetails['BaseValue'],  # Handled in _calculate_w1_statue_multi()
+                        'Farmer': statueDetails['Farmer'],
+                        'Target': statueDetails['Target'],
+                    }
+                except:
+                    self.statues[statueDetails['Name']] = {
+                        'Level': 0,
+                        'Type': statueTypeList[raw_statue_type_list[statueIndex]],
+                        'TypeNumber': raw_statue_type_list[0],
+                        'ItemName': statueDetails['ItemName'],
+                        'Effect': statueDetails['Effect'],
+                        'BaseValue': statueDetails['BaseValue'],
+                        'Value': statueDetails['BaseValue'],  # Handled in _calculate_w1_statue_multi()
+                        'Farmer': statueDetails['Farmer'],
+                        'Target': statueDetails['Target'],
+                    }
+                if self.statues[statueDetails['Name']]['TypeNumber'] >= len(statueTypeList)-1:
+                    self.maxed_statues += 1
 
     def _parse_w2(self):
         self._parse_w2_vials()
@@ -1432,11 +1427,9 @@ class Account:
                 }
 
     def _parse_w3_library(self):
-        self.library = {}
-        try:
-            self.library['BooksReady'] = self.raw_optlacc_dict[55]
-        except:
-            self.library['BooksReady'] = 0
+        self.library = {
+            'BooksReady': self.raw_optlacc_dict.get(55, 0)
+        }
 
     def _parse_w3_deathnote(self):
         self.rift_meowed = False
@@ -1519,21 +1512,14 @@ class Account:
                 }
 
     def _parse_w3_atom_collider(self):
-        self.atom_collider = {}
+        self.atom_collider = {
+            'StorageLimit': colliderStorageLimitList[self.raw_optlacc_dict.get(133, 0)],
+            'OnOffStatus': bool(self.raw_optlacc_dict.get(132, 1))
+        }
         try:
             self.atom_collider['Particles'] = self.raw_data.get("Divinity", {})[39]
         except:
             self.atom_collider['Particles'] = "Unknown"  #0.0
-
-        try:
-            self.atom_collider['StorageLimit'] = colliderStorageLimitList[self.raw_optlacc_dict[133]]  #colliderStorageLimitList[self.raw_optlacc_dict[132]]
-        except:
-            self.atom_collider['StorageLimit'] = "Unknown"  #colliderStorageLimitList[0]
-
-        try:
-            self.atom_collider['OnOffStatus'] = bool(self.raw_optlacc_dict[132])
-        except:
-            self.atom_collider['OnOffStatus'] = True  #0
 
         self._parse_w3_atoms()
 
@@ -2066,15 +2052,9 @@ class Account:
             "Gemstones": {},
             'Beanstalk': {},
             "JadeEmporium": {},
+            'CurrentMastery': self.raw_optlacc_dict.get(231, 0),
+            'MaxMastery': self.raw_optlacc_dict.get(232, 0),
         }
-        try:
-            self.sneaking['CurrentMastery'] = self.raw_optlacc_dict[231]
-        except:
-            self.sneaking['CurrentMastery'] = 0
-        try:
-            self.sneaking['MaxMastery'] = self.raw_optlacc_dict[232]
-        except:
-            self.sneaking['MaxMastery'] = 0
         raw_ninja_list = safe_loads(self.raw_data.get("Ninja", []))
         self._parse_w6_gemstones(raw_ninja_list)
         self._parse_w6_jade_emporium(raw_ninja_list)
@@ -2088,11 +2068,13 @@ class Account:
             except:
                 self.sneaking["PristineCharms"][pristineCharmName] = False
         for gemstoneIndex, gemstoneName in enumerate(sneakingGemstonesList):
-            self.sneaking["Gemstones"][gemstoneName] = {"Level": 0, "BaseValue": 0, "BoostedValue": 0.0, "Percent": 0, "Stat": ''}
-            try:
-                self.sneaking["Gemstones"][gemstoneName]["Level"] = self.raw_optlacc_dict[sneakingGemstonesFirstIndex + gemstoneIndex]
-            except:
-                continue
+            self.sneaking["Gemstones"][gemstoneName] = {
+                "Level": self.raw_optlacc_dict.get(sneakingGemstonesFirstIndex + gemstoneIndex, 0),
+                "BaseValue": 0,
+                "BoostedValue": 0.0,
+                "Percent": 0,
+                "Stat": ''
+            }
             try:
                 self.sneaking["Gemstones"][gemstoneName]["Stat"] = sneakingGemstonesStatList[gemstoneIndex]
             except:
