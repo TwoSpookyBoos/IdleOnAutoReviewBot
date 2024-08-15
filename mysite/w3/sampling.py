@@ -244,8 +244,8 @@ def setSamplingProgressionTier() -> AdviceSection:
         # For each material in progressionTiers,
         #    Check if player's best sample of each material is less than tierRequirement
         #        Add failed requirements to failedMaterialsDict
-        for materialName, materialNumber in tierRequirements.items():
-            finalMaterialNumber = materialNumber if session_data.account.doot_owned and tierNumber >= 3 else materialNumber * .70
+        for materialName, materialNumber in tierRequirements['Materials'].items():
+            finalMaterialNumber = materialNumber if session_data.account.doot_owned and tierNumber >= 3 else materialNumber * tierRequirements['NonDootDiscount']
             if max(allSamples.get(materialName, [0])) < finalMaterialNumber:
                 failedMaterialsDict[tierNumber][materialName] = finalMaterialNumber
                 #logger.info(f"Tier{tierNumber} failed on {materialName}: {max(allSamples.get(materialName, [0]))} < {finalMaterialNumber}")

@@ -11,13 +11,13 @@ from flask import g
 from utils.data_formatting import getCharacterDetails, safe_loads
 from consts import (
     # General
-    lavaFunc,
+    lavaFunc, ceilUpToBase,
     currentWorld, maxCharacters,
     expectedStackables, greenstack_progressionTiers, gfood_codes,
     card_data,
     guildBonusesList, familyBonusesDict, getNextESFamilyBreakpoint,
     achievementsList, allMeritsDict, starsignsDict,
-    ceilUpToBase,
+    base_crystal_chance,
     # W1
     stampsDict, stampTypes, bribesDict, forgeUpgradesDict, statuesDict, statueTypeList, statueCount,
     # W2
@@ -165,6 +165,7 @@ class Character:
         self.specialized_skills: list[str] = getSpecializedSkills(self.base_class, self.sub_class, self.elite_class)
         self.expected_talents: list[int] = getExpectedTalents(self.base_class, self.sub_class, self.elite_class)
         self.inventory_bags: dict = inventory_bags
+        self.crystal_spawn_chance: float = 0.0
 
         self.combat_level: int = all_skill_levels["Combat"]
         self.mining_level: int = all_skill_levels["Mining"]
@@ -211,14 +212,14 @@ class Character:
                     'Bonus1String': '',
                     'Bonus2Value': lavaFunc(
                         poBoxValues['2_funcType'],
-                        po_boxes[poBoxIndex],
+                        po_boxes[poBoxIndex] - poBoxValues['2_minCount'],
                         poBoxValues['2_x1'],
                         poBoxValues['2_x2'],
                     ) if po_boxes[poBoxIndex] >= poBoxValues['2_minCount'] else 0,
                     'Bonus2String': '',
                     'Bonus3Value': lavaFunc(
                         poBoxValues['3_funcType'],
-                        po_boxes[poBoxIndex],
+                        po_boxes[poBoxIndex] - poBoxValues['3_minCount'],
                         poBoxValues['3_x1'],
                         poBoxValues['3_x2'],
                     ) if po_boxes[poBoxIndex] >= poBoxValues['3_minCount'] else 0,
@@ -322,6 +323,9 @@ class Character:
 
     def setPrintedMaterials(self, printDict):
         self.printed_materials = printDict
+
+    def setCrystalSpawnChance(self, value: float):
+        self.crystal_spawn_chance = value
 
     def __str__(self):
         return self.character_name
@@ -977,7 +981,7 @@ class Account:
                                                               f"{familyBonusesDict[className]['PostDisplay']}"
                                                               f" {familyBonusesDict[className]['Stat']}")
 
-        self.raw_optlacc_dict = safe_loads(self.raw_data.get("OptLacc", {}))
+        self.raw_optlacc_dict = {k:v for k, v in enumerate(safe_loads(self.raw_data.get("OptLacc", [])))}
 
         self.dungeon_upgrades = {}
         raw_dungeon_upgrades = safe_loads(self.raw_data.get('DungUpg', []))
@@ -1189,65 +1193,60 @@ class Account:
                     }
 
     def _parse_w1_owl(self):
-        self.owl = {}
-        try:
-            self.owl['FeatherGeneration'] = self.raw_optlacc_dict[254]
-            self.owl['BonusesOfOrion'] = self.raw_optlacc_dict[255]
-            self.owl['FeatherRestarts'] = self.raw_optlacc_dict[258]
-            self.owl['MegaFeathersOwned'] = self.raw_optlacc_dict[262]
-        except:
-            self.owl['FeatherGeneration'] = 0
-            self.owl['BonusesOfOrion'] = 0
-            self.owl['FeatherRestarts'] = 0
-            self.owl['MegaFeathersOwned'] = 0
+        self.owl = {
+            'FeatherGeneration': self.raw_optlacc_dict.get(254, 0),
+            'BonusesOfOrion': self.raw_optlacc_dict.get(255, 0),
+            'FeatherRestarts': self.raw_optlacc_dict.get(258, 0),
+            'MegaFeathersOwned': self.raw_optlacc_dict.get(262, 0)
+        }
 
     def _parse_w1_statues(self):
-        self.statues = {}
-        self.maxed_statues = 0
-        #"StuG": "[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0]",
-        raw_statue_type_list = safe_loads(self.raw_data.get("StuG", []))
-        if not raw_statue_type_list:
-            raw_statue_type_list = [0]*statueCount
-        self.onyx_statues_unlocked = max(raw_statue_type_list, default=0) >= statueTypeList.index("Onyx")
-        statue_levels = [0]*statueCount
+            self.statues = {}
+            self.maxed_statues = 0
+            #"StuG": "[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0]",
+            raw_statue_type_list = safe_loads(self.raw_data.get("StuG", []))
+            if not raw_statue_type_list:
+                raw_statue_type_list = [0]*statueCount
+            self.onyx_statues_unlocked = max(raw_statue_type_list, default=0) >= statueTypeList.index("Onyx")
+            statue_levels = [0]*statueCount
 
-        #Find the maximum value across all characters. Only matters while Normal, since Gold shares across all characters
-        for char in self.safe_characters:
-            try:
-                char_statues = safe_loads(self.raw_data.get(f"StatueLevels_{char.character_index}"))
-                for statueIndex, statueDetails in enumerate(char_statues):
-                    if statueDetails[0] > statue_levels[statueIndex]:
-                        statue_levels[statueIndex] = statueDetails[0]
-            except:
-                continue
+            #Find the maximum value across all characters. Only matters while Normal, since Gold shares across all characters
+            for char in self.safe_characters:
+                try:
+                    char_statues = safe_loads(self.raw_data.get(f"StatueLevels_{char.character_index}"))
+                    for statueIndex, statueDetails in enumerate(char_statues):
+                        if statueDetails[0] > statue_levels[statueIndex]:
+                            statue_levels[statueIndex] = statueDetails[0]
+                except:
+                    continue
 
-        for statueIndex, statueDetails in statuesDict.items():
-            try:
-                self.statues[statueDetails['Name']] = {
-                    'Level': statue_levels[statueIndex],
-                    'Type': statueTypeList[raw_statue_type_list[statueIndex]],  #Description: Normal, Gold, Onyx
-                    'TypeNumber': raw_statue_type_list[statueIndex],  #Integer: 0-2
-                    'ItemName': statueDetails['ItemName'],
-                    'Effect': statueDetails['Effect'],
-                    'BaseValue': statueDetails['BaseValue'],
-                    'Value': statueDetails['BaseValue'],  # Handled in _calculate_w1_statue_multi()
-                    'Farmer': statueDetails['Farmer'],
-                    'Target': statueDetails['Target'],
-                }
-            except:
-                self.statues[statueDetails['Name']] = {
-                    'Level': 0,
-                    'Type': statueTypeList[raw_statue_type_list[statueIndex]],
-                    'TypeNumber': raw_statue_type_list[0],
-                    'ItemName': statueDetails['ItemName'],
-                    'Effect': statueDetails['Effect'],
-                    'BaseValue': statueDetails['BaseValue'],
-                    'Value': statueDetails['BaseValue'],  # Handled in _calculate_w1_statue_multi()
-                    'Farmer': statueDetails['Farmer'],
-                    'Target': statueDetails['Target'],
-                }
-            if self.statues[statueDetails['Name']]['TypeNumber'] >= len(statueTypeList)-1:
-                self.maxed_statues += 1
+            for statueIndex, statueDetails in statuesDict.items():
+                try:
+                    self.statues[statueDetails['Name']] = {
+                        'Level': statue_levels[statueIndex],
+                        'Type': statueTypeList[raw_statue_type_list[statueIndex]],  #Description: Normal, Gold, Onyx
+                        'TypeNumber': raw_statue_type_list[statueIndex],  #Integer: 0-2
+                        'ItemName': statueDetails['ItemName'],
+                        'Effect': statueDetails['Effect'],
+                        'BaseValue': statueDetails['BaseValue'],
+                        'Value': statueDetails['BaseValue'],  # Handled in _calculate_w1_statue_multi()
+                        'Farmer': statueDetails['Farmer'],
+                        'Target': statueDetails['Target'],
+                    }
+                except:
+                    self.statues[statueDetails['Name']] = {
+                        'Level': 0,
+                        'Type': statueTypeList[raw_statue_type_list[statueIndex]],
+                        'TypeNumber': raw_statue_type_list[0],
+                        'ItemName': statueDetails['ItemName'],
+                        'Effect': statueDetails['Effect'],
+                        'BaseValue': statueDetails['BaseValue'],
+                        'Value': statueDetails['BaseValue'],  # Handled in _calculate_w1_statue_multi()
+                        'Farmer': statueDetails['Farmer'],
+                        'Target': statueDetails['Target'],
+                    }
+                if self.statues[statueDetails['Name']]['TypeNumber'] >= len(statueTypeList)-1:
+                    self.maxed_statues += 1
 
     def _parse_w2(self):
         self._parse_w2_vials()
@@ -1368,7 +1367,6 @@ class Account:
                     self.alchemy_p2w["Sigils"][sigilName]["PlayerHours"] = float(raw_p2w_list[4][self.alchemy_p2w["Sigils"][sigilName]["Index"]])
                     self.alchemy_p2w["Sigils"][sigilName]["Level"] = raw_p2w_list[4][self.alchemy_p2w["Sigils"][sigilName]["Index"] + 1] + 1
                 except Exception as reason:
-                    print(f"{reason}")
                     pass  # Already defaulted to 0s in consts.sigilsDict
 
     def _parse_w2_arcade(self):
@@ -1429,11 +1427,9 @@ class Account:
                 }
 
     def _parse_w3_library(self):
-        self.library = {}
-        try:
-            self.library['BooksReady'] = self.raw_optlacc_dict[55]
-        except:
-            self.library['BooksReady'] = 0
+        self.library = {
+            'BooksReady': self.raw_optlacc_dict.get(55, 0)
+        }
 
     def _parse_w3_deathnote(self):
         self.rift_meowed = False
@@ -1491,7 +1487,17 @@ class Account:
                     2: int(raw_shrines_list[shrineIndex][2]),
                     "Level": int(raw_shrines_list[shrineIndex][3]),
                     "Hours": float(raw_shrines_list[shrineIndex][4]),
-                    5: int(raw_shrines_list[shrineIndex][5])
+                    5: int(raw_shrines_list[shrineIndex][5]),
+                    "BaseValue": (
+                        buildingsDict[18+shrineIndex]['ValueBase']
+                        + (buildingsDict[18+shrineIndex]['ValueIncrement'] * (int(raw_shrines_list[shrineIndex][3]) - 1))
+                        if int(raw_shrines_list[shrineIndex][3]) > 0 else 0
+                    ),
+                    "Value": (
+                        buildingsDict[18+shrineIndex]['ValueBase']
+                        + (buildingsDict[18+shrineIndex]['ValueIncrement'] * (int(raw_shrines_list[shrineIndex][3]) - 1))
+                        if int(raw_shrines_list[shrineIndex][3]) > 0 else 0
+                    )
                 }
             except:
                 self.shrines[shrineName] = {
@@ -1500,25 +1506,20 @@ class Account:
                     2: 0,
                     "Level": 0,
                     "Hours": 0.0,
-                    5: 0
+                    5: 0,
+                    "BaseValue": 0,
+                    "Value": 0
                 }
 
     def _parse_w3_atom_collider(self):
-        self.atom_collider = {}
+        self.atom_collider = {
+            'StorageLimit': colliderStorageLimitList[self.raw_optlacc_dict.get(133, 0)],
+            'OnOffStatus': bool(self.raw_optlacc_dict.get(132, 1))
+        }
         try:
             self.atom_collider['Particles'] = self.raw_data.get("Divinity", {})[39]
         except:
             self.atom_collider['Particles'] = "Unknown"  #0.0
-
-        try:
-            self.atom_collider['StorageLimit'] = colliderStorageLimitList[self.raw_optlacc_dict[133]]  #colliderStorageLimitList[self.raw_optlacc_dict[132]]
-        except:
-            self.atom_collider['StorageLimit'] = "Unknown"  #colliderStorageLimitList[0]
-
-        try:
-            self.atom_collider['OnOffStatus'] = bool(self.raw_optlacc_dict[132])
-        except:
-            self.atom_collider['OnOffStatus'] = True  #0
 
         self._parse_w3_atoms()
 
@@ -2051,15 +2052,9 @@ class Account:
             "Gemstones": {},
             'Beanstalk': {},
             "JadeEmporium": {},
+            'CurrentMastery': self.raw_optlacc_dict.get(231, 0),
+            'MaxMastery': self.raw_optlacc_dict.get(232, 0),
         }
-        try:
-            self.sneaking['CurrentMastery'] = self.raw_optlacc_dict[231]
-        except:
-            self.sneaking['CurrentMastery'] = 0
-        try:
-            self.sneaking['MaxMastery'] = self.raw_optlacc_dict[232]
-        except:
-            self.sneaking['MaxMastery'] = 0
         raw_ninja_list = safe_loads(self.raw_data.get("Ninja", []))
         self._parse_w6_gemstones(raw_ninja_list)
         self._parse_w6_jade_emporium(raw_ninja_list)
@@ -2073,11 +2068,13 @@ class Account:
             except:
                 self.sneaking["PristineCharms"][pristineCharmName] = False
         for gemstoneIndex, gemstoneName in enumerate(sneakingGemstonesList):
-            self.sneaking["Gemstones"][gemstoneName] = {"Level": 0, "BaseValue": 0, "BoostedValue": 0.0, "Percent": 0, "Stat": ''}
-            try:
-                self.sneaking["Gemstones"][gemstoneName]["Level"] = self.raw_optlacc_dict[sneakingGemstonesFirstIndex + gemstoneIndex]
-            except:
-                continue
+            self.sneaking["Gemstones"][gemstoneName] = {
+                "Level": self.raw_optlacc_dict.get(sneakingGemstonesFirstIndex + gemstoneIndex, 0),
+                "BaseValue": 0,
+                "BoostedValue": 0.0,
+                "Percent": 0,
+                "Stat": ''
+            }
             try:
                 self.sneaking["Gemstones"][gemstoneName]["Stat"] = sneakingGemstonesStatList[gemstoneIndex]
             except:
@@ -2395,6 +2392,7 @@ class Account:
         self._calculate_w3_library_max_book_levels()
         self._calculate_w3_collider_base_costs()
         self._calculate_w3_collider_cost_reduction()
+        self._calculate_w3_shrine_values()
 
     def _calculate_w3_building_max_levels(self):
 
@@ -2512,6 +2510,11 @@ class Account:
                                                                                     * self.atom_collider['CostReductionMulti'])
                 self.atom_collider['Atoms'][atomName]['DiscountedCostToMax'] = (self.atom_collider['Atoms'][atomName]['BaseCostToMax']
                                                                                 * self.atom_collider['CostReductionMulti'])
+
+    def _calculate_w3_shrine_values(self):
+        cchizoar_multi = 1 + (5 * (1 + next(c.getStars() for c in self.cards if c.name == 'Chaotic Chizoar')) / 100)
+        for shrine in self.shrines:
+            self.shrines[shrine]['Value'] *= cchizoar_multi
 
     def _calculate_w4(self):
         self._calculate_w4_cooking_max_plate_levels()
@@ -2885,6 +2888,7 @@ class Account:
 
     def _calculate_wave_2(self):
         self._calculate_general_character_over_books()
+        self._calculate_general_crystal_spawn_chance()
 
     def _calculate_general_character_over_books(self):
         self.bonus_talents = {
@@ -2978,6 +2982,70 @@ class Account:
                     char.setFamilyGuyBonus(floor(self.family_bonuses["Elemental Sorcerer"]['Value'] * family_guy_multi) - floor(self.family_bonuses["Elemental Sorcerer"]['Value']))
                 except:
                     pass
+
+    def _calculate_general_crystal_spawn_chance(self):
+        #This assumes you have the Shrine bonus and the Star Talent maxed
+        poop_value = 10 * (1 + next(c.getStars() for c in self.cards if c.name == 'Poop'))
+        genie_value = 15 * (1 + next(c.getStars() for c in self.cards if c.name == 'Demon Genie'))
+
+        # If they have both doublers, add together and 2x
+        if self.labChips['Omega Nanochip'] and self.labChips['Omega Motherboard']:
+            total_card_chance = 2 * (poop_value + genie_value)
+        # If they only have 1 doubler, double whichever is stronger
+        elif self.labChips['Omega Nanochip'] or self.labChips['Omega Motherboard']:
+            total_card_chance = (2 * max(poop_value, genie_value)) + min(poop_value, genie_value)
+        # If they have neither doubler, use base values only
+        else:
+            total_card_chance = poop_value + genie_value
+
+        account_wide = (
+            base_crystal_chance
+            * (1 + self.stamps['Crystallin']['Value'] / 100)
+            * (1 + total_card_chance / 100)
+        )
+
+        for char in self.all_characters:
+            cmon_out_crystals_multi = max(1, 1 + lavaFunc(
+                'decay',
+                char.max_talents_over_books if char.max_talents.get("26", 0) > 0 else 0,  #This is an assumption that Cmon Out Crystals is max booked
+                300,
+                100
+            ) / 100)
+            crystals_4_dayys_multi = max(1, 1 + lavaFunc(
+                'decay',
+                char.max_talents.get("619", 0),
+                174,
+                50
+            ) / 100)
+            shrine_and_po = 1 + ((char.po_boxes_invested['Non Predatory Loot Box']['Bonus3Value'] + self.shrines['Crescent Shrine']['Value']) / 100)
+            try:
+                character_influenced = (
+                    shrine_and_po
+                    * cmon_out_crystals_multi
+                    * crystals_4_dayys_multi
+                )
+            except Exception as reason:
+                print(f"Character Specific crystal spawn chance calc exception for {char.character_name}: {reason}")
+                character_influenced = 1
+            char.setCrystalSpawnChance(account_wide * character_influenced)
+            # print(f"Base Chance: {base_crystal_chance}")
+            # print(f"Crystallin Stamp Multi: { 1 + self.stamps['Crystallin']['Value'] / 100}")
+            # print(f"Total card Multi including doublers: {1 + total_card_chance / 100}")
+            # print(f"~Account Wide Total: {account_wide}")
+            # print(f"Cmon Out Crystals Multi: {cmon_out_crystals_multi}")
+            # print(f"Crystals 4 Dayys Multi: {crystals_4_dayys_multi}")
+            # print(f"Crystal Shrine including Chaotic Chizoar: {self.shrines['Crescent Shrine']['Value']}")
+            # print(f"PO Box: {char.po_boxes_invested['Non Predatory Loot Box']['Bonus3Value']}")
+            # print(f"Shrine + PO Multi: {shrine_and_po}")
+            # print(f"~Character Specific Total: {character_influenced}")
+            # print(f"Final number: {char.crystal_spawn_chance}")
+            # print(f"Final percent: {char.crystal_spawn_chance:%}")
+        self.highest_crystal_spawn_chance = max([char.crystal_spawn_chance for char in self.all_characters if "Journeyman" not in char.all_classes],
+                                                default=base_crystal_chance)
+        self.highest_jman_crystal_spawn_chance = max([char.crystal_spawn_chance for char in self.all_characters if "Journeyman" in char.all_classes],
+                                                     default=base_crystal_chance)
+        # print(f"Best Non-Jman: {self.highest_crystal_spawn_chance:%}")
+        # print(f"Best Jman: {self.highest_jman_crystal_spawn_chance:%}")
 
     def _make_cards(self):
         card_counts = safe_loads(self.raw_data.get(self._key_cards, {}))

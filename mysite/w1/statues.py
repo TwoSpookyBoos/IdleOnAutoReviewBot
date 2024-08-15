@@ -1,5 +1,5 @@
 from models.models import Advice, AdviceGroup, AdviceSection
-from consts import maxTiersPerGroup, statueTypeList, statues_progressionTiers, statueCount, max_VialLevel, stamp_maxes, statueExclusionsDict
+from consts import maxTiersPerGroup, statueTypeList, statues_progressionTiers, statueCount, max_VialLevel, statueExclusionsDict
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
@@ -49,82 +49,82 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
             resource="onyx-tools"
         ))
     crystal_AdviceList.append(Advice(
-        label=f"W4 Demon Genie card: +{15 * (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Demon Genie'))}"
-              f"/90% Crystal Mob Spawn Chance",
-        picture_class="demon-genie-card",
-        progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == "Demon Genie"),
-        goal=6
-    ))
-    crystal_AdviceList.append(Advice(
-        label=f"W1 Poop card: +{10 * (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Poop'))}"
-              f"/60% Crystal Mob Spawn Chance",
-        picture_class="poop-card",
-        progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == "Poop"),
-        goal=6
-    ))
-    crystal_AdviceList.append(Advice(
-        label="Omega Nanochip: Top Left card doubler",
-        picture_class="omega-nanochip",
-        progression=session_data.account.labChips.get('Omega Nanochip', 0),
-        goal=1
-    ))
-    crystal_AdviceList.append(Advice(
-        label="Omega Motherboard: Bottom Right card doubler",
-        picture_class="omega-motherboard",
-        progression=session_data.account.labChips.get('Omega Motherboard', 0),
-        goal=1
-    ))
-    crystal_AdviceList.append(Advice(
         label="Chocco Chip for more Crystal Mobs",
         picture_class="chocolatey-chip",
         progression=session_data.account.labChips.get('Chocolatey Chip', 0),
         goal=1
     ))
     crystal_AdviceList.append(Advice(
-        label=f"Minimum 210 Crystallin Stamp: {session_data.account.stamps['Crystallin']['Level']} (+{session_data.account.stamps['Crystallin']['Value']:.3f}%)",
+        label=f"Minimum 3 star W4 Demon Genie card: +{15 * (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Demon Genie'))}"
+              f"/90% Crystal Mob Spawn Chance",
+        picture_class="demon-genie-card",
+        progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == "Demon Genie"),
+        goal=3
+    ))
+    crystal_AdviceList.append(Advice(
+        label=f"Minimum 3 star W1 Poop card: +{10 * (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Poop'))}"
+              f"/60% Crystal Mob Spawn Chance",
+        picture_class="poop-card",
+        progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == "Poop"),
+        goal=3
+    ))
+    # crystal_AdviceList.append(Advice(
+    #     label="Omega Nanochip: Top Left card doubler",
+    #     picture_class="omega-nanochip",
+    #     progression=session_data.account.labChips.get('Omega Nanochip', 0),
+    #     goal=1
+    # ))
+    # crystal_AdviceList.append(Advice(
+    #     label="Omega Motherboard: Bottom Right card doubler",
+    #     picture_class="omega-motherboard",
+    #     progression=session_data.account.labChips.get('Omega Motherboard', 0),
+    #     goal=1
+    # ))
+
+    crystal_AdviceList.append(Advice(
+        label=f"Minimum 200 Crystallin Stamp: {session_data.account.stamps['Crystallin']['Level']} (+{session_data.account.stamps['Crystallin']['Value']:.3f}%)",
         picture_class="crystallin",
         progression=session_data.account.stamps['Crystallin']['Level'],
-        goal=210  #stamp_maxes['Crystallin']
+        goal=200  #stamp_maxes['Crystallin']
     ))
-    crystal_AdviceList.append(Advice(
-        label="Crystals 4 Dayys star talent",
-        picture_class="crystals-4-dayys",
-    ))
-    bestCrystalBook = 0
-    for jman in session_data.account.jmans:
-        bestCrystalBook = max(bestCrystalBook, jman.max_talents.get("26", 0))
-    crystal_AdviceList.append(Advice(
-        label="Cmon Out Crystals talent (Jman only)",
-        picture_class="cmon-out-crystals",
-        progression=bestCrystalBook,
-        goal=session_data.account.library['MaxBookLevel']
-    ))
-    crystal_AdviceList.append(Advice(
-        label="Crescent Shrine",
-        picture_class="crescent-shrine",
-        progression=session_data.account.shrines.get("Crescent Shrine", {}).get("Level", 0),
-        goal="∞"
-    ))
-    crystal_AdviceList.append(Advice(
-        label="Chaotic Chizoar card increases Crescent Shrine",
-        picture_class="chaotic-chizoar-card",
-        progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == "Chaotic Chizoar"),
-        goal=6
-    ))
+    # crystals_4_dayys_multi = 1 + lavaFunc('decay', 100, 174, 50) / 100
+    # crystal_AdviceList.append(Advice(
+    #     label=f"Crystals 4 Dayys star talent: {crystals_4_dayys_multi}x at level 100",
+    #     picture_class="crystals-4-dayys",
+    # ))
+    # bestCrystalBook = 0
+    # for jman in session_data.account.jmans:
+    #     bestCrystalBook = max(bestCrystalBook, jman.max_talents.get("26", 0))
+    # crystal_AdviceList.append(Advice(
+    #     label=f"Level {bestCrystalBook}/{session_data.account.library['MaxBookLevel']} booked Cmon Out Crystals talent (Jman only)",
+    #     picture_class="cmon-out-crystals",
+    #     progression=bestCrystalBook,
+    #     goal=session_data.account.library['MaxBookLevel']
+    # ))
+    # crystal_AdviceList.append(Advice(
+    #     label="Crescent Shrine",
+    #     picture_class="crescent-shrine",
+    #     progression=session_data.account.shrines.get("Crescent Shrine", {}).get("Level", 0),
+    #     goal="∞"
+    # ))
+    # crystal_AdviceList.append(Advice(
+    #     label="Chaotic Chizoar card increases Crescent Shrine",
+    #     picture_class="chaotic-chizoar-card",
+    #     progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == "Chaotic Chizoar"),
+    #     goal=6
+    # ))
     crystal_AdviceList.append(Advice(
         label=f"{{{{ Sailing|#sailing }}}}: Moai Head artifact to apply Shrines everywhere",
         picture_class="moai-head",
         progression=session_data.account.sailing['Artifacts']['Moai Head']['Level'],
         goal=1
     ))
-    try:
-        crystal_chance = f"{float(session_data.account.raw_optlacc_dict[202]) * 100:.3f}"
-    except:
-        crystal_chance = "Unknown"
     crystal_AdviceList.append(Advice(
-        label=f"Minimum 1% Crystal Spawn Chance (per Tome): {crystal_chance}%",
+        label=f"Minimum 1% (1 in 100) {{{{ Crystal Spawn Chance|#active }}}} on Non-Jman:"
+              f"<br>{session_data.account.highest_crystal_spawn_chance*100:.4f}%"
+              f" (1 in {100/(session_data.account.highest_crystal_spawn_chance*100):.2f})",
         picture_class="crystal-carrot",
-        progression=crystal_chance,
+        progression=f"{session_data.account.highest_crystal_spawn_chance * 100:.4f}",
         goal=1,
         unit="%"
     ))
@@ -132,18 +132,18 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
     for dk in session_data.account.dks:
         bestOrbBook = max(bestOrbBook, dk.max_talents.get("168", 0))
     crystal_AdviceList.append(Advice(
-        label="Orb of Remembrance talent (Divine Knight only)",
+        label=f"Level {bestOrbBook}/{session_data.account.library['MaxBookLevel']} booked Orb of Remembrance talent (Divine Knight only)",
         picture_class="orb-of-remembrance",
         progression=bestOrbBook,
         goal=session_data.account.library['MaxBookLevel']
     ))
+    tome_DropChance = session_data.account.raw_optlacc_dict.get(200, 1)
     crystal_AdviceList.append(Advice(
-        label=f"Minimum 10x Drop Rate (per Tome): {session_data.account.raw_optlacc_dict[200]:.2f}x",
+        label=f"Minimum 10x Drop Rate (per Tome): {tome_DropChance:.2f}x",
         picture_class="drop-rate",
-        progression=f"{session_data.account.raw_optlacc_dict[200]:.2f}",
+        progression=f"{tome_DropChance:.2f}",
         goal=10,
     ))
-
 
     #Statue Value
     deposit_AdviceList.append(Advice(
@@ -198,7 +198,7 @@ def setStatuesProgressionTier() -> AdviceSection:
     statues_AdviceSection = AdviceSection(
         name="Statues",
         tier="Not Yet Evaluated",
-        header="Best Statues tier met: Not Yet Evaluated. Recommended Star Sign actions",
+        header="Best Statues tier met: Not Yet Evaluated. Recommended Statues actions",
         picture='Town_Marble.gif'
     )
 
