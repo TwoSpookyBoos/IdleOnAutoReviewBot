@@ -250,7 +250,7 @@ def setSamplingProgressionTier() -> AdviceSection:
                 failedMaterialsDict[tierNumber][materialName] = finalMaterialNumber
                 #logger.info(f"Tier{tierNumber} failed on {materialName}: {max(allSamples.get(materialName, [0]))} < {finalMaterialNumber}")
         # If the player passed at least 1 requirement and tier_MaterialSamples already current, increase tier_MaterialSamples
-        if len(failedMaterialsDict[tierNumber].keys()) < len(tierRequirements.keys()) and tier_MaterialSamples == tierNumber - 1:
+        if len(failedMaterialsDict[tierNumber].keys()) < len(tierRequirements['Materials'].keys()) and tier_MaterialSamples == tierNumber - 1:
             tier_MaterialSamples = tierNumber
         if (
             0 < len(failedMaterialsDict[tierNumber].keys())  #At least 1 requirement was failed
