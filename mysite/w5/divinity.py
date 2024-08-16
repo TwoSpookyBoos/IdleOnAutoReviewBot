@@ -210,7 +210,10 @@ def getArctisAdviceGroup(lowestDivinitySkillLevel: int, highestDivinitySkillLeve
         any_completed_big_p_goal = False
         for div_level, big_p_level in requirementsDict.items():
             if arctis_breakpoint > currentLowestArctisValue:  #At least 1 above their minimum
-                if div_level >= lowestDivinitySkillLevel or big_p_level >= current_big_p:
+                if (
+                    (div_level == max(requirementsDict.keys(), default=1)) or
+                        (div_level >= lowestDivinitySkillLevel and big_p_level >= current_big_p)
+                ):
                     if f"Arctis +{arctis_breakpoint}" not in arctis_AdviceDict and arctis_breakpoint <= currentHighestArctisValue + 1:  #No more than 1 above their max
                         arctis_AdviceDict[f"Arctis +{arctis_breakpoint}"] = []
                     if f"Arctis +{arctis_breakpoint}" in arctis_AdviceDict and not any_completed_big_p_goal:
