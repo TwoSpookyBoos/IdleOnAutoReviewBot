@@ -1040,7 +1040,7 @@ class Account:
 
         raw_print = safe_loads(self.raw_data.get('Print', [0, 0, 0, 0, 0, 'Blank']))[5:]
         raw_printer_xtra = safe_loads(self.raw_data.get('PrinterXtra', []))
-        self.printer['HighestValue'] = max([p for p in raw_print if isinstance(p, int)] + [p for p in raw_printer_xtra if isinstance(p, int)])
+        self.printer['HighestValue'] = max([p for p in raw_print if isinstance(p, int)] + [p for p in raw_printer_xtra if isinstance(p, int)], default=0)
 
         self.item_filter = []
         if len(raw_printer_xtra) >= 121:

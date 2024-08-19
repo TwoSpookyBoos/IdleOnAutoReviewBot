@@ -105,14 +105,14 @@ def setSlabProgressionTier():
                         slab_itemNameFindList.index(itemName)]))
                 continue
             # If the item is a Dungeon Armor AND the player has purchased all MaxArmor
-            if itemName in dungeonArmorsList and session_data.account.dungeon_upgrades.get("MaxArmor", 0)[0] >= maxDungeonArmorsAvailable:
+            if itemName in dungeonArmorsList and session_data.account.dungeon_upgrades.get("MaxArmor", [0])[0] >= maxDungeonArmorsAvailable:
                 slab_AdviceDict["Dungeon"]["Armor"].append(Advice(
                     label=getItemDisplayName(itemName),
                     picture_class=getItemDisplayName(itemName) if itemName not in slab_itemNameFindList else slab_itemNameReplacementList[
                         slab_itemNameFindList.index(itemName)]))
                 continue
                 # If the item is a Dungeon Jewelry AND the player has purchased all MaxJewelry
-            if itemName in dungeonJewelryList and session_data.account.dungeon_upgrades.get("MaxJewelry", 0)[0] >= maxDungeonJewelryAvailable:
+            if itemName in dungeonJewelryList and session_data.account.dungeon_upgrades.get("MaxJewelry", [0])[0] >= maxDungeonJewelryAvailable:
                 slab_AdviceDict["Dungeon"]["Armor"].append(Advice(
                     label=getItemDisplayName(itemName),
                     picture_class=getItemDisplayName(itemName) if itemName not in slab_itemNameFindList else slab_itemNameReplacementList[
