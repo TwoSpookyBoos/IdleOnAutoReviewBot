@@ -8,7 +8,10 @@ logger = get_logger(__name__)
 
 def setEquinoxProgressionTier() -> AdviceSection:
     equinox_AdviceDict = {
-        "DreamsCompleted": [],
+        "Dreams": {
+            "Complete Dreams": [],
+            "Unlock Equinox Bonuses": [],
+        },
         "TotalUpgrades": {},
     }
     equinox_AdviceGroupDict = {}
@@ -42,13 +45,19 @@ def setEquinoxProgressionTier() -> AdviceSection:
         # 11 - 1 = t10 if all bonuses unlocked
         # 11 - 1 - 4 = t6 if 5 remaining bonuses to be unlocked
         tier_TotalDreamsCompleted = max_tier - len(session_data.account.remaining_equinox_dreams_unlocking_new_bonuses)
+        for dream in session_data.account.remaining_equinox_dreams_unlocking_new_bonuses:
+            equinox_AdviceDict["Dreams"]["Complete Dreams"].append(Advice(
+                label=f"Dream {dream}",
+                picture_class="",
+            ))
         for lockedBonus in remainingBonusesToBeUnlocked:
-            equinox_AdviceDict["DreamsCompleted"].append(Advice(
+            equinox_AdviceDict["Dreams"]["Unlock Equinox Bonuses"].append(Advice(
                 label=f"{lockedBonus} ({session_data.account.equinox_bonuses[lockedBonus]['Category']})",
                 picture_class=lockedBonus,
-                goal=f"Dream {session_data.account.remaining_equinox_dreams_unlocking_new_bonuses[remainingBonusesToBeUnlocked.index(lockedBonus)]}"
+                #goal=f"Dream {session_data.account.remaining_equinox_dreams_unlocking_new_bonuses[remainingBonusesToBeUnlocked.index(lockedBonus)]}"
             ))
-        equinox_AdviceDict["DreamsCompleted"].append(Advice(
+
+        equinox_AdviceDict["Dreams"]["Complete Dreams"].append(Advice(
             label=f"Complete all {maxDreams} Dreams",
             picture_class="equinox-mirror",
             progression=session_data.account.total_dreams_completed,
@@ -106,13 +115,14 @@ def setEquinoxProgressionTier() -> AdviceSection:
             ))
 
     # Generate AdviceGroups
-    equinox_AdviceGroupDict["DreamsCompleted"] = AdviceGroup(
+    equinox_AdviceGroupDict["Complete Dreams"] = AdviceGroup(
         tier=f"{tier_TotalDreamsCompleted if tier_TotalDreamsCompleted < max_tier else ''}",
         pre_string=f"{'Informational- ' if tier_TotalDreamsCompleted >= max_tier else ''}"
                    f"""{pl(maxDreams - session_data.account.total_dreams_completed,
-                         'Complete the last Equinox Dream',
-                         'Complete more Equinox Dreams')}""",
-        advices=equinox_AdviceDict['DreamsCompleted']
+                         'Complete all Equinox Dreams',
+                         'Unlock more Equinox Bonuses')}""",
+        advices=equinox_AdviceDict["Dreams"],
+        post_string="New Bonuses unlock in a set order. They are not tied to certain Dreams."
     )
 
     equinox_AdviceGroupDict["BonusUpgrades"] = AdviceGroup(

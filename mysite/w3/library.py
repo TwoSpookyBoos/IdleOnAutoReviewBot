@@ -375,7 +375,7 @@ def getCharacterBooksAdviceGroups(anyBookAdvice: bool):
                 subgroupName = f"Combat - {rating} Priority"
                 if subgroupName not in character_adviceDict[toon.character_name]:
                     character_adviceDict[toon.character_name][subgroupName] = []
-                if className in toon.all_classes:  #Only check recommendations for their CURRENT class
+                if className == toon.class_name:  #Only check recommendations for their CURRENT class
                     if combat_talentsDict[className][rating]:  # Trying to .items() on an empty dict gets angy- This should prevent that.
                         for talentNumber, talentDetailsDict in combat_talentsDict[className][rating].items():
                             if (

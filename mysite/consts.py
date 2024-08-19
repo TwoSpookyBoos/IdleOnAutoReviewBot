@@ -3011,8 +3011,8 @@ skill_talentsDict = {
     },
 }
 combat_talentsDict = {
-    #Talents here are unique from the skill_talentsDict above
-    #Elite Classes
+    # Talents here are unique from the skill_talentsDict above
+    # Warriors
     "Blood Berserker": {
         "High": {},
         "Medium": {
@@ -3028,6 +3028,19 @@ combat_talentsDict = {
             140: {"Name": "Tough Steaks", "Tab": "Blood Berserker"},
         },
     },
+    "Barbarian": {
+        "High": {},
+        "Medium": {
+            108: {"Name": "No Pain No Gain", "Tab": "Barbarian"},
+            97: {"Name": "Carry a Big Stick", "Tab": "Warrior"},
+            6: {"Name": "Gilded Sword", "Tab": "Rage Basics"},
+        },
+        "Low": {
+            88: {"Name": "Idle Brawling", "Tab": "Rage Basics"},
+            5: {"Name": "Sharpened Axe", "Tab": "Rage Basics"},
+            110: {"Name": "Apocalypse Zow", "Tab": "Barbarian"},
+        },
+    },
     "Divine Knight": {
         "High": {
             168: {"Name": "Orb of Remembrance", "Tab": "Divine Knight"},
@@ -3035,7 +3048,7 @@ combat_talentsDict = {
             165: {"Name": "Knightly Disciple", "Tab": "Divine Knight"},  #Inconsistent levels for extra attacks per Stark. Idk, just max book it and deal with it
             169: {"Name": "Imbued Shockwaves", "Tab": "Divine Knight"},
             121: {"Name": "Daggerang", "Tab": "Squire", "Optimal": [0, 30, True]},
-            166: {"Name": "Mega Mongorang", "Tab": "Divine Knight", "Optimal": [0, 25, True]},
+            166: {"Name": "Mega Mongorang", "Tab": "Divine Knight"},
         },
         "Medium": {
             178: {"Name": "King of the Remembered", "Tab": "Divine Knight"},
@@ -3051,6 +3064,23 @@ combat_talentsDict = {
             170: {"Name": "Gamer Strength", "Tab": "Divine Knight"},
         },
     },
+    "Squire": {
+        "High": {
+            120: {"Name": "Shockwave Slash", "Tab": "Squire", "Optimal": [0, 30, True]},
+            121: {"Name": "Daggerang", "Tab": "Squire", "Optimal": [0, 30, True]},        },
+        "Medium": {
+            129: {"Name": "Blocky Bottles", "Tab": "Squire"},
+            125: {"Name": "Precision Power", "Tab": "Squire"},
+            97: {"Name": "Carry a Big Stick", "Tab": "Warrior"},
+            6: {"Name": "Gilded Sword", "Tab": "Rage Basics"},
+        },
+        "Low": {
+            88: {"Name": "Idle Brawling", "Tab": "Rage Basics"},
+            5: {"Name": "Sharpened Axe", "Tab": "Rage Basics"},
+        },
+    },
+
+    # Mages
     "Bubonic Conjuror": {
         "High": {
             490: {"Name": "Cranium Cooking", "Tab": "Shaman"},
@@ -3071,6 +3101,23 @@ combat_talentsDict = {
             5: {"Name": "Sharpened Axe", "Tab": "Savvy Basics"},
             531: {"Name": "Memorial Skulls", "Tab": "Bubonic Conjuror"},
             530: {"Name": "Wired In Power", "Tab": "Bubonic Conjuror"},
+        },
+    },
+    "Shaman": {
+        "High": {
+            490: {"Name": "Cranium Cooking", "Tab": "Shaman"},
+            481: {"Name": "Auspicious Aura", "Tab": "Shaman"},
+            483: {"Name": "Tenteyecle", "Tab": "Shaman"},
+        },
+        "Medium": {
+            485: {"Name": "Virile Vials", "Tab": "Shaman"},
+            455: {"Name": "Knowledge Is Power", "Tab": "Mage"},
+            457: {"Name": "Power Overwhelming", "Tab": "Mage"},
+            6: {"Name": "Gilded Sword", "Tab": "Savvy Basics"},
+        },
+        "Low": {
+            448: {"Name": "Idle Casting", "Tab": "Savvy Basics"},
+            5: {"Name": "Sharpened Axe", "Tab": "Savvy Basics"},
         },
     },
     "Elemental Sorcerer": {
@@ -3100,6 +3147,28 @@ combat_talentsDict = {
             500: {"Name": "Believer Strength", "Tab": "Elemental Sorcerer"},
         },
     },
+    "Wizard": {
+        "High": {
+            469: {"Name": "Mana Is Life", "Tab": "Wizard"},
+            467: {"Name": "Tornado", "Tab": "Wizard"},
+            466: {"Name": "Floor Is Lava", "Tab": "Wizard"},
+        },
+        "Medium": {
+            474: {"Name": "Fuscia Flasks", "Tab": "Wizard"},
+            470: {"Name": "Paperwork, Great", "Tab": "Wizard"},
+            455: {"Name": "Knowledge Is Power", "Tab": "Mage"},
+            457: {"Name": "Power Overwhelming", "Tab": "Mage"},
+            6: {"Name": "Gilded Sword", "Tab": "Savvy Basics"},
+        },
+        "Low": {
+            448: {"Name": "Idle Casting", "Tab": "Savvy Basics"},
+            5: {"Name": "Sharpened Axe", "Tab": "Savvy Basics"},
+            463: {"Name": "Choppin It Up Ez", "Tab": "Mage"},
+            451: {"Name": "Mini Fireball", "Tab": "Mage"},
+        },
+    },
+
+    # Archers
     "Siege Breaker": {
         "High": {
             318: {"Name": "Pirate Flag", "Tab": "Siege Breaker"},
@@ -3111,7 +3180,6 @@ combat_talentsDict = {
             270: {"Name": "Piercing Arrow", "Tab": "Archer", 'Optimal': [0, 40, True]},
         },
         "Medium": {
-            #287: {"Name": "Flax Instastring", "Tab": "Bowman"},  #I believe this only procs single target, making it fairly useless
             289: {"Name": "Woah, That Was Fast", "Tab": "Bowman"},
             286: {"Name": "Magic Shortbow", "Tab": "Bowman", 'Optimal': [0, 20, True]},
             328: {"Name": "Archlord Of The Pirates", "Tab": "Siege Breaker"},
@@ -3126,6 +3194,25 @@ combat_talentsDict = {
             5: {"Name": "Sharpened Axe", "Tab": "Calm Basics"},
             366: {"Name": "Stacked Skulls", "Tab": "Siege Breaker"},
             320: {"Name": "Crew Rowing Strength", "Tab": "Siege Breaker"},
+        },
+    },
+    "Bowman": {
+        "High": {
+            285: {"Name": "Homing Arrows", "Tab": "Bowman", 'Optimal': [0, 15, True]},
+            270: {"Name": "Piercing Arrow", "Tab": "Archer", 'Optimal': [0, 40, True]},
+        },
+        "Medium": {
+            289: {"Name": "Woah, That Was Fast", "Tab": "Bowman"},
+            286: {"Name": "Magic Shortbow", "Tab": "Bowman", 'Optimal': [0, 20, True]},
+            290: {"Name": "Speedna", "Tab": "Bowman"},
+            273: {"Name": "Strafe", "Tab": "Archer"},
+            284: {"Name": "Veins of the Infernal", "Tab": "Archer"},
+            277: {"Name": "High Polymer Limbs", "Tab": "Archer"},
+            6: {"Name": "Gilded Sword", "Tab": "Calm Basics"},
+        },
+        "Low": {
+            268: {"Name": "Idle Shooting", "Tab": "Calm Basics"},
+            5: {"Name": "Sharpened Axe", "Tab": "Calm Basics"},
         },
     },
     "Beast Master": {
@@ -3152,6 +3239,26 @@ combat_talentsDict = {
             365: {"Name": "Animalistic Ferocity", "Tab": "Beast Master"},
         },
     },
+    "Hunter": {
+        "High": {
+            301: {"Name": "Bear Trap", "Tab": "Hunter", 'Optimal': [0, 30, True]},
+            300: {"Name": "Three-Sixty Noscope", "Tab": "Hunter",},
+            270: {"Name": "Piercing Arrow", "Tab": "Archer", 'Optimal': [0, 40, True]},
+        },
+        "Medium": {
+            305: {"Name": "Looty Mc Shooty", "Tab": "Hunter"},
+            273: {"Name": "Strafe", "Tab": "Archer"},
+            284: {"Name": "Veins of the Infernal", "Tab": "Archer"},
+            277: {"Name": "High Polymer Limbs", "Tab": "Archer"},
+            6: {"Name": "Gilded Sword", "Tab": "Calm Basics"},
+        },
+        "Low": {
+            268: {"Name": "Idle Shooting", "Tab": "Calm Basics"},
+            5: {"Name": "Sharpened Axe", "Tab": "Calm Basics"},
+        },
+    },
+
+    # Secret Class
     "Voidwalker": {
         "High": {
             19: {"Name": "Gimme Gimme", "Tab": "Journeyman"},
@@ -3169,6 +3276,25 @@ combat_talentsDict = {
             31: {"Name": "Skillage Damage", "Tab": "Maestro"},
             20: {"Name": "Lucky Hit", "Tab": "Journeyman"},
             54: {"Name": "Eternal Luk", "Tab": "Voidwalker"},
+            21: {"Name": "F'LUK'ey Fabrics", "Tab": "Journeyman"},
+            38: {"Name": "Bliss N Chips", "Tab": "Maestro"},
+            6: {"Name": "Gilded Sword", "Tab": "Beginner"},
+        },
+        "Low": {
+            5: {"Name": "Sharpened Axe", "Tab": "Beginner"},
+            36: {"Name": "Clever Clover Obols", "Tab": "Maestro"},
+        }
+    },
+    "Maestro": {
+        "High": {
+            19: {"Name": "Gimme Gimme", "Tab": "Journeyman"},
+            26: {"Name": "Cmon Out Crystals", "Tab": "Journeyman"},
+        },
+        "Medium": {
+            33: {"Name": "Triple Jab", "Tab": "Maestro"},
+            18: {"Name": "Two Punch Man", "Tab": "Journeyman"},
+            31: {"Name": "Skillage Damage", "Tab": "Maestro"},
+            20: {"Name": "Lucky Hit", "Tab": "Journeyman"},
             21: {"Name": "F'LUK'ey Fabrics", "Tab": "Journeyman"},
             38: {"Name": "Bliss N Chips", "Tab": "Maestro"},
             6: {"Name": "Gilded Sword", "Tab": "Beginner"},
