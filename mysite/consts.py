@@ -1170,7 +1170,7 @@ sailing_progressionTiers = {
         'CaptainsAndBoats': 3,
         'Artifacts': {
             'Moai Head': 1,
-            'Fauxory Tusk': 2
+            'Fauxory Tusk': 1
         }
     },
     2: {
@@ -1178,7 +1178,8 @@ sailing_progressionTiers = {
         'CaptainsAndBoats': 5,
         'Artifacts': {
             'Gold Relic': 1,
-            '10 AD Tablet': 2
+            '10 AD Tablet': 2,
+            'Fauxory Tusk': 2
         }
     },
     3: {
