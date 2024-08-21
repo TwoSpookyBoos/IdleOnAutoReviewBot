@@ -1722,15 +1722,6 @@ class Account:
                     break
         for riftLevel, riftBonusDict in riftRewardsDict.items():
             self.rift[riftBonusDict['Shorthand']] = self.rift['Level'] >= riftLevel
-        self.rift['TrapBoxVacuum'] = self.rift['Level'] >= 5
-        self.rift[''] = self.rift['Level'] >= 10
-        self.rift[''] = self.rift['Level'] >= 15
-        self.rift[''] = self.rift['Level'] >= 20
-        self.rift[''] = self.rift['Level'] >= 25
-        self.rift[''] = self.rift['Level'] >= 30
-        self.rift[''] = self.rift['Level'] >= 35
-        self.rift[''] = self.rift['Level'] >= 40
-        self.rift[''] = self.rift['Level'] >= 45
 
     def _parse_w4_breeding(self):
         self.breeding = {
