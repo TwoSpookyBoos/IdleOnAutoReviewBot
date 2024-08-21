@@ -45,7 +45,7 @@ from consts import (
     jade_emporium, pristineCharmsList, sneakingGemstonesFirstIndex, sneakingGemstonesList, sneakingGemstonesStatList,
     getMoissaniteValue, getGemstoneBaseValue, getGemstoneBoostedValue, getGemstonePercent,
     marketUpgradeList, landrankDict,
-    summoningBattleCountsDict, summoningDict,
+    summoningBattleCountsDict, summoningDict, riftRewardsDict,
 )
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
 
@@ -1040,7 +1040,7 @@ class Account:
 
         raw_print = safe_loads(self.raw_data.get('Print', [0, 0, 0, 0, 0, 'Blank']))[5:]
         raw_printer_xtra = safe_loads(self.raw_data.get('PrinterXtra', []))
-        self.printer['HighestValue'] = max([p for p in raw_print if isinstance(p, int)] + [p for p in raw_printer_xtra if isinstance(p, int)])
+        self.printer['HighestValue'] = max([p for p in raw_print if isinstance(p, int)] + [p for p in raw_printer_xtra if isinstance(p, int)], default=0)
 
         self.item_filter = []
         if len(raw_printer_xtra) >= 121:
@@ -1720,15 +1720,8 @@ class Account:
                 if self.all_quests[characterIndex].get("Rift_Ripper1", 0) == 1:
                     self.rift['Unlocked'] = True
                     break
-        self.rift['TrapBoxVacuum'] = self.rift['Level'] >= 5
-        self.rift['InfiniteStars'] = self.rift['Level'] >= 10
-        self.rift['SkillMastery'] = self.rift['Level'] >= 15
-        self.rift['EclipseSkulls'] = self.rift['Level'] >= 20
-        self.rift['StampMastery'] = self.rift['Level'] >= 25
-        self.rift['EldritchArtifacts'] = self.rift['Level'] >= 30
-        self.rift['VialMastery'] = self.rift['Level'] >= 35
-        self.rift['ConstructionMastery'] = self.rift['Level'] >= 40
-        self.rift['RubyCards'] = self.rift['Level'] >= 45
+        for riftLevel, riftBonusDict in riftRewardsDict.items():
+            self.rift[riftBonusDict['Shorthand']] = self.rift['Level'] >= riftLevel
 
     def _parse_w4_breeding(self):
         self.breeding = {

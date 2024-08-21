@@ -1,7 +1,7 @@
 from models.models import Advice, AdviceGroup, AdviceSection
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import maxMeals, maxMealLevel, cookingCloseEnough
+from consts import maxMeals, maxMealLevel, cookingCloseEnough, break_you_best
 from utils.text_formatting import pl
 
 logger = get_logger(__name__)
@@ -270,7 +270,7 @@ def setCookingProgressionTier():
     cooking_AdviceSection.pinchy_rating = overall_CookingTier
     cooking_AdviceSection.groups = cooking_AdviceGroupDict.values()
     if overall_CookingTier >= max_tier:
-        cooking_AdviceSection.header = f"Best Cooking tier met: {tier_section}<br>You best ❤️"
+        cooking_AdviceSection.header = f"Best Cooking tier met: {tier_section}{break_you_best}"
         cooking_AdviceSection.complete = True
     else:
         cooking_AdviceSection.header = f"Best Cooking tier met: {tier_section}"

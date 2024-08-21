@@ -1,4 +1,4 @@
-from consts import saltLick_progressionTiers
+from consts import saltLick_progressionTiers, break_you_best
 from flask import g as session_data
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
@@ -58,7 +58,7 @@ def setConsSaltLickProgressionTier() -> AdviceSection:
     saltlick_AdviceSection.pinchy_rating = overall_ConsSaltLickTier
     saltlick_AdviceSection.groups = saltlick_AdviceGroupDict.values()
     if overall_ConsSaltLickTier >= max_tier:
-        saltlick_AdviceSection.header = f"Best Salt Lick tier met: {tier_section}<br>You best ❤️"
+        saltlick_AdviceSection.header = f"Best Salt Lick tier met: {tier_section}{break_you_best}"
         saltlick_AdviceSection.complete = True
     else:
         saltlick_AdviceSection.header = f"Best Salt Lick tier met: {tier_section}"

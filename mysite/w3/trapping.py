@@ -1,3 +1,4 @@
+from consts import break_keep_it_up
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
 from utils.data_formatting import safe_loads
@@ -440,7 +441,7 @@ def setTrappingProgressionTier():
     trapping_AdviceSection.tier = tier_section
     trapping_AdviceSection.groups = trapping_AdviceGroupDict.values()
     if overall_TrappingTier >= max_tier:
-        trapping_AdviceSection.header = f"Best Trapping tier met: {tier_section}<br>Keep it up! You're on the right track! ❤️"
+        trapping_AdviceSection.header = f"Best Trapping tier met: {tier_section}{break_keep_it_up}"
         trapping_AdviceSection.complete = True
     else:
         trapping_AdviceSection.header = f"Best Trapping tier met: {tier_section}"

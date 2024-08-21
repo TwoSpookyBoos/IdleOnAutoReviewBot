@@ -4,7 +4,7 @@ from utils.logging import get_logger
 from flask import g as session_data
 from consts import slabList, reclaimableQuestItems, vendorItems, anvilItems, dungeonWeaponsList, maxDungeonWeaponsAvailable, \
     dungeonArmorsList, maxDungeonArmorsAvailable, dungeonJewelryList, maxDungeonJewelryAvailable, dungeonDropsList, anvilTabs, vendors, knownSlabIgnorablesList, \
-    slab_itemNameFindList, slab_itemNameReplacementList
+    slab_itemNameFindList, slab_itemNameReplacementList, break_you_best
 
 logger = get_logger(__name__)
 
@@ -105,14 +105,14 @@ def setSlabProgressionTier():
                         slab_itemNameFindList.index(itemName)]))
                 continue
             # If the item is a Dungeon Armor AND the player has purchased all MaxArmor
-            if itemName in dungeonArmorsList and session_data.account.dungeon_upgrades.get("MaxArmor", 0)[0] >= maxDungeonArmorsAvailable:
+            if itemName in dungeonArmorsList and session_data.account.dungeon_upgrades.get("MaxArmor", [0])[0] >= maxDungeonArmorsAvailable:
                 slab_AdviceDict["Dungeon"]["Armor"].append(Advice(
                     label=getItemDisplayName(itemName),
                     picture_class=getItemDisplayName(itemName) if itemName not in slab_itemNameFindList else slab_itemNameReplacementList[
                         slab_itemNameFindList.index(itemName)]))
                 continue
                 # If the item is a Dungeon Jewelry AND the player has purchased all MaxJewelry
-            if itemName in dungeonJewelryList and session_data.account.dungeon_upgrades.get("MaxJewelry", 0)[0] >= maxDungeonJewelryAvailable:
+            if itemName in dungeonJewelryList and session_data.account.dungeon_upgrades.get("MaxJewelry", [0])[0] >= maxDungeonJewelryAvailable:
                 slab_AdviceDict["Dungeon"]["Armor"].append(Advice(
                     label=getItemDisplayName(itemName),
                     picture_class=getItemDisplayName(itemName) if itemName not in slab_itemNameFindList else slab_itemNameReplacementList[
@@ -184,7 +184,7 @@ def setSlabProgressionTier():
     slab_AdviceSection.pinchy_rating = overall_SlabTier
     slab_AdviceSection.groups = slab_AdviceGroupDict.values()
     if len(slab_AdviceSection.groups) == 0:
-        slab_AdviceSection.header = f"All currently owned items registered in The Slab<br>You best ❤️"
+        slab_AdviceSection.header = f"All currently owned items registered in The Slab{break_you_best}"
         slab_AdviceSection.complete = True
     else:
         slab_AdviceSection.header = f"You're missing some obtainable Slab stacks!"

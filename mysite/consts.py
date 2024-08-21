@@ -1170,7 +1170,7 @@ sailing_progressionTiers = {
         'CaptainsAndBoats': 3,
         'Artifacts': {
             'Moai Head': 1,
-            'Fauxory Tusk': 2
+            'Fauxory Tusk': 1
         }
     },
     2: {
@@ -1178,7 +1178,8 @@ sailing_progressionTiers = {
         'CaptainsAndBoats': 5,
         'Artifacts': {
             'Gold Relic': 1,
-            '10 AD Tablet': 2
+            '10 AD Tablet': 2,
+            'Fauxory Tusk': 2
         }
     },
     3: {
@@ -1451,6 +1452,8 @@ switches = [
 ###GENERAL / MULTI-USE CONSTS###
 currentWorld = 6
 maxCharacters = 10
+break_you_best = "<br>You best ❤️"
+break_keep_it_up = "<br>Keep it up! You're on the right track! ❤️"
 missableGStacksDict = {
     #  ItemName               Codename     Quest Codeame          Quest Name                                          Wiki link to the item                             Recommended Class/Farming notes
     "Dog Bone":              ["Quest12",   "Dog_Bone1",           "Dog Bone: Why he Die???",                          "https://idleon.wiki/wiki/Dog_Bone",              "Active ES or time candy."],
@@ -3011,8 +3014,8 @@ skill_talentsDict = {
     },
 }
 combat_talentsDict = {
-    #Talents here are unique from the skill_talentsDict above
-    #Elite Classes
+    # Talents here are unique from the skill_talentsDict above
+    # Warriors
     "Blood Berserker": {
         "High": {},
         "Medium": {
@@ -3028,6 +3031,19 @@ combat_talentsDict = {
             140: {"Name": "Tough Steaks", "Tab": "Blood Berserker"},
         },
     },
+    "Barbarian": {
+        "High": {},
+        "Medium": {
+            108: {"Name": "No Pain No Gain", "Tab": "Barbarian"},
+            97: {"Name": "Carry a Big Stick", "Tab": "Warrior"},
+            6: {"Name": "Gilded Sword", "Tab": "Rage Basics"},
+        },
+        "Low": {
+            88: {"Name": "Idle Brawling", "Tab": "Rage Basics"},
+            5: {"Name": "Sharpened Axe", "Tab": "Rage Basics"},
+            110: {"Name": "Apocalypse Zow", "Tab": "Barbarian"},
+        },
+    },
     "Divine Knight": {
         "High": {
             168: {"Name": "Orb of Remembrance", "Tab": "Divine Knight"},
@@ -3035,7 +3051,7 @@ combat_talentsDict = {
             165: {"Name": "Knightly Disciple", "Tab": "Divine Knight"},  #Inconsistent levels for extra attacks per Stark. Idk, just max book it and deal with it
             169: {"Name": "Imbued Shockwaves", "Tab": "Divine Knight"},
             121: {"Name": "Daggerang", "Tab": "Squire", "Optimal": [0, 30, True]},
-            166: {"Name": "Mega Mongorang", "Tab": "Divine Knight", "Optimal": [0, 25, True]},
+            166: {"Name": "Mega Mongorang", "Tab": "Divine Knight"},
         },
         "Medium": {
             178: {"Name": "King of the Remembered", "Tab": "Divine Knight"},
@@ -3051,6 +3067,23 @@ combat_talentsDict = {
             170: {"Name": "Gamer Strength", "Tab": "Divine Knight"},
         },
     },
+    "Squire": {
+        "High": {
+            120: {"Name": "Shockwave Slash", "Tab": "Squire", "Optimal": [0, 30, True]},
+            121: {"Name": "Daggerang", "Tab": "Squire", "Optimal": [0, 30, True]},        },
+        "Medium": {
+            129: {"Name": "Blocky Bottles", "Tab": "Squire"},
+            125: {"Name": "Precision Power", "Tab": "Squire"},
+            97: {"Name": "Carry a Big Stick", "Tab": "Warrior"},
+            6: {"Name": "Gilded Sword", "Tab": "Rage Basics"},
+        },
+        "Low": {
+            88: {"Name": "Idle Brawling", "Tab": "Rage Basics"},
+            5: {"Name": "Sharpened Axe", "Tab": "Rage Basics"},
+        },
+    },
+
+    # Mages
     "Bubonic Conjuror": {
         "High": {
             490: {"Name": "Cranium Cooking", "Tab": "Shaman"},
@@ -3071,6 +3104,23 @@ combat_talentsDict = {
             5: {"Name": "Sharpened Axe", "Tab": "Savvy Basics"},
             531: {"Name": "Memorial Skulls", "Tab": "Bubonic Conjuror"},
             530: {"Name": "Wired In Power", "Tab": "Bubonic Conjuror"},
+        },
+    },
+    "Shaman": {
+        "High": {
+            490: {"Name": "Cranium Cooking", "Tab": "Shaman"},
+            481: {"Name": "Auspicious Aura", "Tab": "Shaman"},
+            483: {"Name": "Tenteyecle", "Tab": "Shaman"},
+        },
+        "Medium": {
+            485: {"Name": "Virile Vials", "Tab": "Shaman"},
+            455: {"Name": "Knowledge Is Power", "Tab": "Mage"},
+            457: {"Name": "Power Overwhelming", "Tab": "Mage"},
+            6: {"Name": "Gilded Sword", "Tab": "Savvy Basics"},
+        },
+        "Low": {
+            448: {"Name": "Idle Casting", "Tab": "Savvy Basics"},
+            5: {"Name": "Sharpened Axe", "Tab": "Savvy Basics"},
         },
     },
     "Elemental Sorcerer": {
@@ -3100,6 +3150,28 @@ combat_talentsDict = {
             500: {"Name": "Believer Strength", "Tab": "Elemental Sorcerer"},
         },
     },
+    "Wizard": {
+        "High": {
+            469: {"Name": "Mana Is Life", "Tab": "Wizard"},
+            467: {"Name": "Tornado", "Tab": "Wizard"},
+            466: {"Name": "Floor Is Lava", "Tab": "Wizard"},
+        },
+        "Medium": {
+            474: {"Name": "Fuscia Flasks", "Tab": "Wizard"},
+            470: {"Name": "Paperwork, Great", "Tab": "Wizard"},
+            455: {"Name": "Knowledge Is Power", "Tab": "Mage"},
+            457: {"Name": "Power Overwhelming", "Tab": "Mage"},
+            6: {"Name": "Gilded Sword", "Tab": "Savvy Basics"},
+        },
+        "Low": {
+            448: {"Name": "Idle Casting", "Tab": "Savvy Basics"},
+            5: {"Name": "Sharpened Axe", "Tab": "Savvy Basics"},
+            463: {"Name": "Choppin It Up Ez", "Tab": "Mage"},
+            451: {"Name": "Mini Fireball", "Tab": "Mage"},
+        },
+    },
+
+    # Archers
     "Siege Breaker": {
         "High": {
             318: {"Name": "Pirate Flag", "Tab": "Siege Breaker"},
@@ -3111,7 +3183,6 @@ combat_talentsDict = {
             270: {"Name": "Piercing Arrow", "Tab": "Archer", 'Optimal': [0, 40, True]},
         },
         "Medium": {
-            #287: {"Name": "Flax Instastring", "Tab": "Bowman"},  #I believe this only procs single target, making it fairly useless
             289: {"Name": "Woah, That Was Fast", "Tab": "Bowman"},
             286: {"Name": "Magic Shortbow", "Tab": "Bowman", 'Optimal': [0, 20, True]},
             328: {"Name": "Archlord Of The Pirates", "Tab": "Siege Breaker"},
@@ -3126,6 +3197,25 @@ combat_talentsDict = {
             5: {"Name": "Sharpened Axe", "Tab": "Calm Basics"},
             366: {"Name": "Stacked Skulls", "Tab": "Siege Breaker"},
             320: {"Name": "Crew Rowing Strength", "Tab": "Siege Breaker"},
+        },
+    },
+    "Bowman": {
+        "High": {
+            285: {"Name": "Homing Arrows", "Tab": "Bowman", 'Optimal': [0, 15, True]},
+            270: {"Name": "Piercing Arrow", "Tab": "Archer", 'Optimal': [0, 40, True]},
+        },
+        "Medium": {
+            289: {"Name": "Woah, That Was Fast", "Tab": "Bowman"},
+            286: {"Name": "Magic Shortbow", "Tab": "Bowman", 'Optimal': [0, 20, True]},
+            290: {"Name": "Speedna", "Tab": "Bowman"},
+            273: {"Name": "Strafe", "Tab": "Archer"},
+            284: {"Name": "Veins of the Infernal", "Tab": "Archer"},
+            277: {"Name": "High Polymer Limbs", "Tab": "Archer"},
+            6: {"Name": "Gilded Sword", "Tab": "Calm Basics"},
+        },
+        "Low": {
+            268: {"Name": "Idle Shooting", "Tab": "Calm Basics"},
+            5: {"Name": "Sharpened Axe", "Tab": "Calm Basics"},
         },
     },
     "Beast Master": {
@@ -3152,6 +3242,26 @@ combat_talentsDict = {
             365: {"Name": "Animalistic Ferocity", "Tab": "Beast Master"},
         },
     },
+    "Hunter": {
+        "High": {
+            301: {"Name": "Bear Trap", "Tab": "Hunter", 'Optimal': [0, 30, True]},
+            300: {"Name": "Three-Sixty Noscope", "Tab": "Hunter",},
+            270: {"Name": "Piercing Arrow", "Tab": "Archer", 'Optimal': [0, 40, True]},
+        },
+        "Medium": {
+            305: {"Name": "Looty Mc Shooty", "Tab": "Hunter"},
+            273: {"Name": "Strafe", "Tab": "Archer"},
+            284: {"Name": "Veins of the Infernal", "Tab": "Archer"},
+            277: {"Name": "High Polymer Limbs", "Tab": "Archer"},
+            6: {"Name": "Gilded Sword", "Tab": "Calm Basics"},
+        },
+        "Low": {
+            268: {"Name": "Idle Shooting", "Tab": "Calm Basics"},
+            5: {"Name": "Sharpened Axe", "Tab": "Calm Basics"},
+        },
+    },
+
+    # Secret Class
     "Voidwalker": {
         "High": {
             19: {"Name": "Gimme Gimme", "Tab": "Journeyman"},
@@ -3169,6 +3279,25 @@ combat_talentsDict = {
             31: {"Name": "Skillage Damage", "Tab": "Maestro"},
             20: {"Name": "Lucky Hit", "Tab": "Journeyman"},
             54: {"Name": "Eternal Luk", "Tab": "Voidwalker"},
+            21: {"Name": "F'LUK'ey Fabrics", "Tab": "Journeyman"},
+            38: {"Name": "Bliss N Chips", "Tab": "Maestro"},
+            6: {"Name": "Gilded Sword", "Tab": "Beginner"},
+        },
+        "Low": {
+            5: {"Name": "Sharpened Axe", "Tab": "Beginner"},
+            36: {"Name": "Clever Clover Obols", "Tab": "Maestro"},
+        }
+    },
+    "Maestro": {
+        "High": {
+            19: {"Name": "Gimme Gimme", "Tab": "Journeyman"},
+            26: {"Name": "Cmon Out Crystals", "Tab": "Journeyman"},
+        },
+        "Medium": {
+            33: {"Name": "Triple Jab", "Tab": "Maestro"},
+            18: {"Name": "Two Punch Man", "Tab": "Journeyman"},
+            31: {"Name": "Skillage Damage", "Tab": "Maestro"},
+            20: {"Name": "Lucky Hit", "Tab": "Journeyman"},
             21: {"Name": "F'LUK'ey Fabrics", "Tab": "Journeyman"},
             38: {"Name": "Bliss N Chips", "Tab": "Maestro"},
             6: {"Name": "Gilded Sword", "Tab": "Beginner"},
@@ -3550,7 +3679,7 @@ statueExclusionsDict = {
     "Onyx3": [
         "Power Statue", "Speed Statue", "Mining Statue", "Feasty Statue", "Health Statue", "Lumberbob Statue",  # "Kachow Statue", "Bullseye Statue",
         "Thicc Skin Statue", "Ol Reliable Statue", "Exp Book Statue", "Anvil Statue", "Cauldron Statue",  # "Oceanman Statue",
-        "Beholder Statue", "Bullseye Statue", "EhExPee Statue",  # "Box Statue", "Twosoul Statue", "Seesaw Statue",
+        "Beholder Statue", "EhExPee Statue",  # "Bullseye Statue", "Box Statue", "Twosoul Statue", "Seesaw Statue",
         "Pecunia Statue", "Mutton Statue", "Egg Statue",
         "Battleaxe Statue", "Spiral Statue", "Boat Statue",
         "Compost Statue", "Stealth Statue", "Essence Statue"
@@ -4259,6 +4388,20 @@ cookingMealDict = {
     64:{"Name": "Yumi Peachring", "Description": "Don't disrespect the ring. All hail the ring.", "Effect": "+{% All Golden Food bonus", "BaseValue": 2},
     65:{"Name": "Plumpcakes", "Description": "Ohhh, they're called 'plump'cakes because they're dummy thicc can I get an amen!", "Effect": "+{% Total Damage", "BaseValue": 6},
     66:{"Name": "Nyanborgir", "Description": "It's the greatest meal ever! Bonus DOUBLES at Summoning Lv 50, Triples at 100, etc", "Effect": "+{% Crop Evolution Chance", "BaseValue": 9},
+}
+
+riftRewardsDict = {
+    5: {'Name': 'Trap Box Vacuum', 'Shorthand': "TrapBoxVacuum"},
+    10: {'Name': 'Infinite Stars', 'Shorthand': "InfiniteStars"},
+    15: {'Name': 'Skill Mastery', 'Shorthand': "SkillMastery"},
+    20: {'Name': 'Eclipse Skulls', 'Shorthand': "EclipseSkulls"},
+    25: {'Name': 'Stamp Mastery', 'Shorthand': "StampMastery"},
+    30: {'Name': 'Eldritch Artifact', 'Shorthand': "EldritchArtifacts"},
+    35: {'Name': 'Vial Mastery', 'Shorthand': "VialMastery"},
+    40: {'Name': 'Construct Mastery', 'Shorthand': "ConstructionMastery"},
+    45: {'Name': 'Ruby Cards', 'Shorthand': "RubyCards"},
+    50: {'Name': 'Killroy Prime', 'Shorthand': "KillroyPrime"},
+    55: {'Name': 'Sneaking Mastery', 'Shorthand': "SneakingMastery"},
 }
 
 labChipsDict = {

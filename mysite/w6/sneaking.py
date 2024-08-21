@@ -1,4 +1,4 @@
-from consts import sneakingGemstonesMaxValueDict
+from consts import sneakingGemstonesMaxValueDict, break_you_best
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
 from flask import g as session_data
@@ -89,7 +89,7 @@ def setSneakingProgressionTier():
     sneaking_AdviceSection.pinchy_rating = overall_SneakingTier
     sneaking_AdviceSection.groups = sneaking_AdviceGroupDict.values()
     if overall_SneakingTier >= max_tier:
-        sneaking_AdviceSection.header = f"Best Sneaking tier met: {tier_section}<br>You best ❤️"
+        sneaking_AdviceSection.header = f"Best Sneaking tier met: {tier_section}{break_you_best}"
     else:
         sneaking_AdviceSection.header = f"Best Sneaking tier met: {tier_section}"
 

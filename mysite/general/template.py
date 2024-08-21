@@ -2,15 +2,9 @@ import json
 from models.models import AdviceSection
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import progressionTiers
+from consts import progressionTiers, break_you_best
 
 logger = get_logger(__name__)
-
-def parseJSONtoLists():
-    rawTemplate = session_data.account.raw_data.get("Template", [])
-    if isinstance(rawTemplate, str):
-        rawCooking = json.loads(rawTemplate)
-    return rawTemplate
 
 def setTemplateProgressionTier():
     template_AdviceDict = {
@@ -21,13 +15,27 @@ def setTemplateProgressionTier():
         tier="0",
         pinchy_rating=0,
         header="Best Template tier met: Not Yet Evaluated",
-        picture=""
+        picture="",
+        complete=False
     )
     highestTemplateSkillLevel = max(session_data.account.all_skills["TemplateSkill"])
     if highestTemplateSkillLevel < 1:
         template_AdviceSection.header = "Come back after unlocking Template!"
         return template_AdviceSection
 
+    infoTiers = 0
+    max_tier = progressionTiers["Template"][-1][0] - infoTiers
     tier_Template = 0
-    max_tier = progressionTiers["Template"][-1][0]
-    overall_TemplateTier = min(max_tier, tier_Template)
+
+    overall_TemplateTier = min(max_tier + infoTiers, tier_Template)
+    tier_section = f"{overall_TemplateTier}/{max_tier}"
+    template_AdviceSection.pinchy_rating = overall_TemplateTier
+    template_AdviceSection.tier = tier_section
+    template_AdviceSection.groups = template_AdviceGroupDict.values()
+    if overall_TemplateTier >= max_tier:
+        template_AdviceSection.header = f"Best Template tier met: {tier_section}{break_you_best}️"
+        template_AdviceSection.complete = True
+    else:
+        template_AdviceSection.header = f"Best Template tier met: {tier_section}"
+
+    return template_AdviceSection

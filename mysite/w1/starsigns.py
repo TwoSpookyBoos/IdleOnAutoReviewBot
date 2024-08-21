@@ -1,5 +1,5 @@
 from models.models import Advice, AdviceGroup, AdviceSection
-from consts import starsigns_progressionTiers, maxTiersPerGroup
+from consts import starsigns_progressionTiers, maxTiersPerGroup, break_you_best
 from utils.logging import get_logger
 from flask import g as session_data
 
@@ -75,7 +75,7 @@ def setStarsignsProgressionTier() -> AdviceSection:
     starsigns_AdviceSection.tier = tier_section
     starsigns_AdviceSection.groups = starsigns_AdviceGroupDict.values()
     if overall_StarsignsTier >= max_tier:
-        starsigns_AdviceSection.header = f"Best Star Signs tier met: {tier_section}<br>You best ❤️"
+        starsigns_AdviceSection.header = f"Best Star Signs tier met: {tier_section}{break_you_best}"
         starsigns_AdviceSection.complete = True
     else:
         starsigns_AdviceSection.header = f"Best Star Signs tier met: {tier_section}"

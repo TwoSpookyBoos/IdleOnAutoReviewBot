@@ -4,7 +4,7 @@ from math import floor
 from math import ceil
 
 from config import app
-from consts import deathNote_progressionTiers, cookingCloseEnough
+from consts import deathNote_progressionTiers, cookingCloseEnough, break_you_best
 from flask import g as session_data
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
@@ -739,7 +739,7 @@ def setConsDeathNoteProgressionTier():
     deathnote_AdviceSection.pinchy_rating = overall_DeathNoteTier
     deathnote_AdviceSection.groups = deathnote_AdviceGroupDict.values()
     if overall_DeathNoteTier >= max_tier:
-        deathnote_AdviceSection.header = f"Best Death Note tier met: {tier_section}<br>You best ❤️"
+        deathnote_AdviceSection.header = f"Best Death Note tier met: {tier_section}{break_you_best}"
         deathnote_AdviceSection.complete = True
     else:
         deathnote_AdviceSection.header = f"Best Death Note tier met: {tier_section}"

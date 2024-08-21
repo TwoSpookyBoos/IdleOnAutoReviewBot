@@ -1,7 +1,7 @@
 import json
 from collections import defaultdict
 
-from consts import missableGStacksDict
+from consts import missableGStacksDict, break_you_best
 from models.models import AdviceSection, AdviceGroup, Advice, gstackable_codenames, gstackable_codenames_expected, Assets
 from utils.logging import get_logger
 from flask import g as session_data
@@ -73,20 +73,33 @@ def getMissableGStacks(owned_stuff: Assets):
         "to clean up later!"
     )
 
-    tier_obtainable = f"{len(advice_EndangeredQuestGStacks)}/{len(missableGStacksDict) - len(advice_ObtainedQuestGStacks)}"
+    already_missed = len(missableGStacksDict) - len(advice_ObtainedQuestGStacks) - len(advice_EndangeredQuestGStacks)
+    already_obtained = len(advice_ObtainedQuestGStacks)
+    still_obtainable = len(advice_EndangeredQuestGStacks)
+    possible = len(missableGStacksDict)
+
+    tier_obtainable = f"{len(advice_EndangeredQuestGStacks)}/{possible - len(advice_ObtainedQuestGStacks)}"
+
     if len(advice_EndangeredQuestGStacks) < len(missableGStacksDict) - len(advice_ObtainedQuestGStacks):
-        header_alreadymissed = f"already missed {len(missableGStacksDict) - len(advice_ObtainedQuestGStacks) - len(advice_EndangeredQuestGStacks)},<br>"
+        header_alreadymissed = f"already missed {already_missed}"
     else:
         header_alreadymissed = f""
-    if len(advice_ObtainedQuestGStacks) > 1:
-        header_alreadyobtained = f"already obtained {len(advice_ObtainedQuestGStacks)},<br>"
+
+    if already_obtained > 1:
+        header_alreadyobtained = f"{'and ' if already_missed > 0 and still_obtainable == 0 else ''}already obtained {already_obtained}"
     else:
         header_alreadyobtained = ""
-    header_missable = f"can still obtain {len(advice_EndangeredQuestGStacks)}"
-    if header_alreadymissed != "" or header_alreadyobtained != "":
-        header_missable = "and " + header_missable
-    header_obtainable = (f"You {header_alreadymissed}{header_alreadyobtained}{header_missable} missable quest item Greenstacks."
-                         f"<br>Be sure NOT to turn in their quests until GStacking them:")
+
+    header_missable = ""
+    if (header_alreadymissed != "" or header_alreadyobtained != "") and still_obtainable > 0:
+        header_missable = ",<br>and can still obtain {still_obtainable}"
+
+    header_obtainable = (f"You {header_alreadymissed}"
+                         f"{',<br>' if header_alreadymissed != '' else ''}{header_alreadyobtained}"
+                         f"{header_missable}"
+                         f" missable quest item Greenstacks."
+                         f"{break_you_best if already_obtained == possible else ''}"
+                         f"{'<br> Be sure NOT to turn in their quests until GStacking them' if still_obtainable > 0 else ''}")
 
     if len(advice_EndangeredQuestGStacks) > 0:
         questGStacks_AdviceDict['Endangered'] = [
@@ -141,6 +154,8 @@ def getMissableGStacks(owned_stuff: Assets):
         note=note,
         groups=questGStacks_AdviceGroupDict.values()
     )
+    if still_obtainable == 0:
+        questGStacks_AdviceSection.complete = True
 
     return questGStacks_AdviceSection
 
@@ -199,7 +214,7 @@ def setGStackProgressionTier():
     header = f"You currently have {tier} GStacks."
     show_limit = len(groups)
     if expectedGStacksCount >= 200 or equinoxDreamsStatus.get("Dream29", False) == True:
-        header += "<br>You best ❤️ (until Lava adds further Dream tasks)<br>Other possible targets are still listed below."
+        header += f"{break_you_best} (until Lava adds further Dream tasks)<br>Other possible targets are still listed below."
         show_limit = 4
     elif expectedGStacksCount >= 75 or equinoxDreamsStatus.get("Dream12", False) == True:
         header += " Equinox Dream 29 requires 200. Aim for items up through Tier 10!<br>Tiers 11-14 are optional without much extra benefit to collecting than +1 GStack."

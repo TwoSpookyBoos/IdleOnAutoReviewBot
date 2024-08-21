@@ -1,5 +1,5 @@
 from flask import g as session_data
-from consts import colliderStorageLimitList, buildingsTowerMaxLevel, atoms_progressionTiers, maxTiersPerGroup, cookingCloseEnough, snailMaxRank
+from consts import colliderStorageLimitList, buildingsTowerMaxLevel, atoms_progressionTiers, maxTiersPerGroup, cookingCloseEnough, snailMaxRank, break_you_best
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
@@ -274,7 +274,7 @@ def setColliderProgressionTier() -> AdviceSection:
     collider_AdviceSection.pinchy_rating = overall_ColliderTier
     collider_AdviceSection.groups = collider_AdviceGroupDict.values()
     if overall_ColliderTier >= max_tier:
-        collider_AdviceSection.header = f"Best Collider tier met: {tier_section}<br>You best ❤️"
+        collider_AdviceSection.header = f"Best Collider tier met: {tier_section}{break_you_best}"
         collider_AdviceSection.complete = True
     else:
         collider_AdviceSection.header = f"Best Collider tier met: {tier_section}"

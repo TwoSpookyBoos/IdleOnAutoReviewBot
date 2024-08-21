@@ -1,5 +1,5 @@
 from models.models import AdviceSection, AdviceGroup, Advice
-from consts import maxTiersPerGroup, prayers_progressionTiers
+from consts import maxTiersPerGroup, prayers_progressionTiers, break_you_best
 from flask import g as session_data
 from utils.text_formatting import pl
 from utils.logging import get_logger
@@ -111,7 +111,7 @@ def setWorshipPrayersProgressionTier() -> AdviceSection:
     prayers_AdviceSection.tier = tier_section
     prayers_AdviceSection.groups = prayers_AdviceGroupDict.values()
     if overall_WorshipPrayersTier >= max_tier:
-        prayers_AdviceSection.header = f"Best Prayer tier met: {tier_section}<br>You best ❤️"
+        prayers_AdviceSection.header = f"Best Prayer tier met: {tier_section}{break_you_best}"
         prayers_AdviceSection.complete = True
     else:
         prayers_AdviceSection.header = f"Best Prayer tier met: {tier_section}"

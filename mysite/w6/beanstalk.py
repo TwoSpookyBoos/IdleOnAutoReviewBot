@@ -1,4 +1,4 @@
-from consts import gfood_codes
+from consts import gfood_codes, break_you_best
 from models.models import AdviceSection, Advice, AdviceGroup
 from utils.text_formatting import getItemDisplayName
 from flask import g as session_data
@@ -134,7 +134,7 @@ def section_beanstalk():
         group_super_beanstack.sort_advices(True)
 
     header = (
-        "Well done, Jack! The Golden Goose took an enviably massive dump in your lap. Go pay the giants off! 🍯"
+        f"Well done, Jack! The Golden Goose took an enviably massive dump in your lap. Go pay the giants off! 🍯{break_you_best}"
         if foods_finished == len(gold_foods)
         else f"You have upgraded the Beanstalk {tier} times"
     )

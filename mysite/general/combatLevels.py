@@ -1,4 +1,4 @@
-from consts import combatLevels_progressionTiers
+from consts import combatLevels_progressionTiers, break_you_best
 from models.models import AdviceGroup, Advice, AdviceSection
 from utils.logging import get_logger
 from flask import g as session_data
@@ -133,7 +133,7 @@ def setCombatLevelsProgressionTier() -> AdviceSection:
     header = f"Best Family class level tier met: {tier}. "
 
     if overall_CombatLevelTier == max_tier:
-        header += f"<br>You best ❤️<br>Your Family class level is {total_combat_level}"
+        header += f"{break_you_best}<br>Your Family class level is {total_combat_level}"
         #, no more rewards for you. Do you, like, live off of genocidal energy or something? ... jk 💪💪💪"
 
     combat_section = AdviceSection(

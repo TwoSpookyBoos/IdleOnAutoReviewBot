@@ -1,5 +1,5 @@
 from flask import g as session_data
-from consts import lavaFunc, sampling_progressionTiers, maxTiersPerGroup
+from consts import lavaFunc, sampling_progressionTiers, maxTiersPerGroup, break_you_best, skillIndexList
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import notateNumber
@@ -205,6 +205,36 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     )
     return psrAdviceGroup
 
+def getPrinterOutputAdviceGroup() -> AdviceGroup:
+    po_AdviceDict = {
+        "Account Wide": [],
+        "Character Specific": [],
+    }
+
+    # Account Wide
+    sm_base = 4 * session_data.account.rift['SkillMastery']
+    sm_bonus = sum([1 for skill in session_data.account.all_skills.values() if sum(skill) > 750])
+    sm_sum = sm_base + sm_bonus
+    sm_multi = 1 + (sm_sum / 100)
+
+    po_AdviceDict["Account Wide"].append(Advice(
+        label=f"{{{{Rift|#rift}}}}: Skill Mastery unlocked: {sm_base}/4%"
+              f"<br>Additional 1% per Skill at 750: {sm_bonus}/{len(skillIndexList)}%",
+        picture_class='skill-mastery',
+        progression=sm_multi,
+        goal=1 + (4 + len(skillIndexList)) / 100,
+        unit="x"
+    ))
+
+    # Character Specific
+
+    po_AdviceGroup = AdviceGroup(
+        tier="",
+        pre_string="Info- Sources of Printer Output",
+        advices=po_AdviceDict
+    )
+    return po_AdviceGroup
+
 def setSamplingProgressionTier() -> AdviceSection:
     catchup = "Info- Catchup other samples to current tier"
     sampling_AdviceDict = {
@@ -310,6 +340,7 @@ def setSamplingProgressionTier() -> AdviceSection:
     )
     sampling_AdviceGroupDict["MaterialSamples"].remove_empty_subgroups()
     sampling_AdviceGroupDict["PrinterSampleRate"] = getPrinterSampleRateAdviceGroup()
+    #sampling_AdviceGroupDict["PrinterOutput"] = getPrinterOutputAdviceGroup()
     complete_toons = 0  # Either above 90 and the prayer not worn, or below 90 and already wearing the prayer. Those are the 2 "no action needed" states
     for entry in sampling_AdviceGroupDict["PrinterSampleRate"].advices['Which Characters need Royal Sampler?']:
         if "Keep prayer equipped" in entry.label or "Prayer not needed, not worn." in entry.label:
@@ -322,7 +353,7 @@ def setSamplingProgressionTier() -> AdviceSection:
     sampling_AdviceSection.pinchy_rating = overall_SamplingTier
     sampling_AdviceSection.groups = sampling_AdviceGroupDict.values()
     if overall_SamplingTier >= max_tier:
-        sampling_AdviceSection.header = f"Best Sampling tier met: {tier_section}<br>You best ❤️"
+        sampling_AdviceSection.header = f"Best Sampling tier met: {tier_section}{break_you_best}"
         if complete_toons >= session_data.account.playerCount:  #Checks both the tier requirement and the Royal Sampler goodness
             sampling_AdviceSection.complete = True
     else:

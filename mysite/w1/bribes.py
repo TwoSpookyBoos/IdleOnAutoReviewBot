@@ -1,7 +1,7 @@
 from models.models import Advice, AdviceGroup, AdviceSection
 from utils.text_formatting import pl
 from utils.logging import get_logger
-from consts import bribes_progressionTiers, unpurchasableBribes
+from consts import bribes_progressionTiers, unpurchasableBribes, break_you_best
 from flask import g as session_data
 
 logger = get_logger(__name__)
@@ -150,7 +150,7 @@ def setBribesProgressionTier() -> AdviceSection:
     bribe_AdviceSection.tier = tier_section
     bribe_AdviceSection.groups = bribe_AdviceGroupDict.values()
     if overall_BribesTier >= max_tier:
-        bribe_AdviceSection.header = f"Best Bribe tier met: {tier_section}<br>You best ❤️"
+        bribe_AdviceSection.header = f"Best Bribe tier met: {tier_section}{break_you_best}"
         bribe_AdviceSection.complete = True
     else:
         bribe_AdviceSection.header = f"Best Bribe tier met: {tier_section}"

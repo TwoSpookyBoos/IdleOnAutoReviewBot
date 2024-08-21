@@ -1,5 +1,5 @@
 from models.models import Advice, AdviceGroup, AdviceSection
-from consts import owl_progressionTiers, maxTiersPerGroup
+from consts import owl_progressionTiers, maxTiersPerGroup, break_you_best
 from utils.logging import get_logger
 from flask import g as session_data
 
@@ -97,7 +97,7 @@ def setOwlProgressionTier() -> AdviceSection:
     owl_AdviceSection.tier = tier_section
     owl_AdviceSection.groups = owl_AdviceGroupDict.values()
     if overall_OwlTier >= max_tier:
-        owl_AdviceSection.header = f"Best Owl tier met: {tier_section}<br>You best ❤️"
+        owl_AdviceSection.header = f"Best Owl tier met: {tier_section}{break_you_best}"
         owl_AdviceSection.complete = True
     else:
         owl_AdviceSection.header = f"Best Owl tier met: {tier_section}"

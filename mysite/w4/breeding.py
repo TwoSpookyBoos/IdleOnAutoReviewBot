@@ -4,7 +4,7 @@ from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import numberOfArtifacts, numberOfArtifactTiers, breeding_progressionTiers, getReadableVialNames, maxTiersPerGroup, territoryNames
+from consts import numberOfArtifacts, numberOfArtifactTiers, breeding_progressionTiers, getReadableVialNames, maxTiersPerGroup, territoryNames, break_you_best
 
 logger = get_logger(__name__)
 
@@ -501,7 +501,7 @@ def setBreedingProgressionTier() -> AdviceSection:
     breeding_AdviceSection.pinchy_rating = overall_BreedingTier
     breeding_AdviceSection.groups = breeding_AdviceGroupDict.values()
     if overall_BreedingTier >= maxBreedingTier:
-        breeding_AdviceSection.header = f"Best Breeding tier met: {tier_section}<br>You best ❤️"
+        breeding_AdviceSection.header = f"Best Breeding tier met: {tier_section}{break_you_best}"
         breeding_AdviceSection.complete = True
     else:
         breeding_AdviceSection.header = f"Best Breeding tier met: {tier_section}"

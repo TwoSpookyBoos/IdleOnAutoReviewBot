@@ -6,7 +6,7 @@ from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import (maxTiersPerGroup, divinity_progressionTiers, divinity_offeringsDict, divinity_stylesDict,
-                    getOfferingNameFromIndex, getStyleNameFromIndex, getDivinityNameFromIndex, divLevelReasonsDict, divinity_arctisBreakpoints)
+                    getOfferingNameFromIndex, getStyleNameFromIndex, getDivinityNameFromIndex, divLevelReasonsDict, divinity_arctisBreakpoints, break_you_best)
 
 logger = get_logger(__name__)
 
@@ -320,7 +320,7 @@ def setDivinityProgressionTier():
     divinity_AdviceSection.pinchy_rating = overall_DivinityTier
     divinity_AdviceSection.groups = divinity_AdviceGroupDict.values()
     if overall_DivinityTier >= max_tier:
-        divinity_AdviceSection.header = f"Best Divinity tier met: {tier_section}<br>You best ❤️"
+        divinity_AdviceSection.header = f"Best Divinity tier met: {tier_section}{break_you_best}"
         divinity_AdviceSection.complete = True
     else:
         divinity_AdviceSection.header = f"Best Divinity tier met: {tier_section}"

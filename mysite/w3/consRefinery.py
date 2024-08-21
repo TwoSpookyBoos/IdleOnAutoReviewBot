@@ -1,4 +1,6 @@
 from flask import g as session_data
+
+from consts import break_keep_it_up
 from models.models import AdviceSection, AdviceGroup, Advice
 from math import floor
 
@@ -381,7 +383,7 @@ def setConsRefineryProgressionTier():
     refinery_AdviceSection.pinchy_rating = overall_ConsRefineryTier
     refinery_AdviceSection.groups = refinery_AdviceGroupDict.values()
     if overall_ConsRefineryTier >= max_tier:
-        refinery_AdviceSection.header = f"Best Refinery tier met: {tier_section}<br>You best ❤️"
+        refinery_AdviceSection.header = f"Best Refinery tier met: {tier_section}{break_keep_it_up}"
         refinery_AdviceSection.complete = True
     else:
         refinery_AdviceSection.header = f"Best Refinery tier met: {tier_section}"

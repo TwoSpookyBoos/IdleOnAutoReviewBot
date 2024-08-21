@@ -2,7 +2,7 @@ from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import sailing_progressionTiers, maxTiersPerGroup, numberOfArtifactTiers, numberOfArtifacts, nblbMaxBubbleCount
+from consts import sailing_progressionTiers, maxTiersPerGroup, numberOfArtifactTiers, numberOfArtifacts, nblbMaxBubbleCount, break_you_best
 
 logger = get_logger(__name__)
 
@@ -182,7 +182,7 @@ def setSailingProgressionTier():
     sailing_AdviceSection.pinchy_rating = overall_SailingTier
     sailing_AdviceSection.groups = sailing_AdviceGroupDict.values()
     if overall_SailingTier >= max_tier:
-        sailing_AdviceSection.header = f"Best Sailing tier met: {tier_section}<br>You best ❤️"
+        sailing_AdviceSection.header = f"Best Sailing tier met: {tier_section}{break_you_best}"
         sailing_AdviceSection.complete = True
     else:
         sailing_AdviceSection.header = f"Best Sailing tier met: {tier_section}"
