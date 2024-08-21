@@ -340,7 +340,7 @@ def setSamplingProgressionTier() -> AdviceSection:
     )
     sampling_AdviceGroupDict["MaterialSamples"].remove_empty_subgroups()
     sampling_AdviceGroupDict["PrinterSampleRate"] = getPrinterSampleRateAdviceGroup()
-    sampling_AdviceGroupDict["PrinterOutput"] = getPrinterOutputAdviceGroup()
+    #sampling_AdviceGroupDict["PrinterOutput"] = getPrinterOutputAdviceGroup()
     complete_toons = 0  # Either above 90 and the prayer not worn, or below 90 and already wearing the prayer. Those are the 2 "no action needed" states
     for entry in sampling_AdviceGroupDict["PrinterSampleRate"].advices['Which Characters need Royal Sampler?']:
         if "Keep prayer equipped" in entry.label or "Prayer not needed, not worn." in entry.label:
