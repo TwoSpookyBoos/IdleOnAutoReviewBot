@@ -2,7 +2,7 @@ import json
 from models.models import AdviceSection, AdviceGroup, Advice, Character
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import numberOfSecretClasses
+from consts import numberOfSecretClasses, break_you_best
 from utils.text_formatting import pl
 
 logger = get_logger(__name__)
@@ -526,7 +526,7 @@ def setSecretClassProgressionTier():
     secretClass_AdviceSection.tier = tier_section
     secretClass_AdviceSection.groups = secretClass_AdviceGroupDict.values()
     if overall_SecretClassTier >= max_tier:
-        secretClass_AdviceSection.header = f"Best Secret Class tier met: {tier_section}<br>You best ❤️"
+        secretClass_AdviceSection.header = f"Best Secret Class tier met: {tier_section}{break_you_best}️"
         try:
             if len(secretClass_AdviceGroupDict["MaestroHands"].advices['default']) == 0:
                 secretClass_AdviceSection.complete = True

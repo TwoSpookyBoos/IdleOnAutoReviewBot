@@ -2,24 +2,12 @@ from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import rift_progressionTiers
+from consts import rift_progressionTiers, break_you_best, riftRewardsDict
 
 logger = get_logger(__name__)
-riftRewardsDict = {
-    5: 'Trap Box Vacuum',
-    10: 'Infinite Stars',
-    15: 'Skill Mastery',
-    20: 'Eclipse Skulls',
-    25: 'Stamp Mastery',
-    30: 'Eldritch Artifact',
-    35: 'Vial Mastery',
-    40: 'Construct Mastery',
-    45: 'Ruby Cards',
-    50: 'Killroy Prime',
-    55: 'Sneaking Mastery'}
 
 def getRiftRewardFromLevel(inputLevel):
-    return riftRewardsDict.get(inputLevel, f"UnknownRiftReward{inputLevel}")
+    return riftRewardsDict.get(inputLevel, {}).get('Name', f"UnknownRiftReward{inputLevel}")
 
 def setRiftProgressionTier():
     rift_AdviceDict = {
@@ -88,7 +76,7 @@ def setRiftProgressionTier():
     rift_AdviceSection.pinchy_rating = overall_RiftTier
     rift_AdviceSection.groups = rift_AdviceGroupDict.values()
     if overall_RiftTier >= max_tier:
-        rift_AdviceSection.header = f"Best Rift tier met: {tier_section}<br>You best ❤️"
+        rift_AdviceSection.header = f"Best Rift tier met: {tier_section}{break_you_best}"
         rift_AdviceSection.complete = True
     else:
         rift_AdviceSection.header = f"Best Rift tier met: {tier_section}"

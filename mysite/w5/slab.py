@@ -4,7 +4,7 @@ from utils.logging import get_logger
 from flask import g as session_data
 from consts import slabList, reclaimableQuestItems, vendorItems, anvilItems, dungeonWeaponsList, maxDungeonWeaponsAvailable, \
     dungeonArmorsList, maxDungeonArmorsAvailable, dungeonJewelryList, maxDungeonJewelryAvailable, dungeonDropsList, anvilTabs, vendors, knownSlabIgnorablesList, \
-    slab_itemNameFindList, slab_itemNameReplacementList
+    slab_itemNameFindList, slab_itemNameReplacementList, break_you_best
 
 logger = get_logger(__name__)
 
@@ -184,7 +184,7 @@ def setSlabProgressionTier():
     slab_AdviceSection.pinchy_rating = overall_SlabTier
     slab_AdviceSection.groups = slab_AdviceGroupDict.values()
     if len(slab_AdviceSection.groups) == 0:
-        slab_AdviceSection.header = f"All currently owned items registered in The Slab<br>You best ❤️"
+        slab_AdviceSection.header = f"All currently owned items registered in The Slab{break_you_best}"
         slab_AdviceSection.complete = True
     else:
         slab_AdviceSection.header = f"You're missing some obtainable Slab stacks!"

@@ -1,6 +1,6 @@
 import math
 from models.models import Advice, AdviceGroup, AdviceSection
-from consts import smithing_progressionTiers
+from consts import smithing_progressionTiers, break_you_best
 from flask import g as session_data
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl
@@ -293,7 +293,7 @@ def setSmithingProgressionTier() -> AdviceSection:
     smithing_AdviceSection.tier = tier_section
     smithing_AdviceSection.groups = smithing_AdviceGroupDict.values()
     if overall_SmithingTier >= max_tier:
-        smithing_AdviceSection.header = f"Best Smithing tier met: {tier_section}<br>You best ❤️"
+        smithing_AdviceSection.header = f"Best Smithing tier met: {tier_section}{break_you_best}"
         smithing_AdviceSection.complete = True
     else:
         smithing_AdviceSection.header = f"Best Smithing tier met: {tier_section}"

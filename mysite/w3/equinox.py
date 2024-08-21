@@ -1,5 +1,5 @@
 from flask import g as session_data
-from consts import maxDreams, dreamsThatUnlockNewBonuses, equinox_progressionTiers
+from consts import maxDreams, dreamsThatUnlockNewBonuses, equinox_progressionTiers, break_you_best
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
 from utils.text_formatting import pl
@@ -139,7 +139,7 @@ def setEquinoxProgressionTier() -> AdviceSection:
     equinox_AdviceSection.pinchy_rating = overall_EquinoxTier
     equinox_AdviceSection.groups = equinox_AdviceGroupDict.values()
     if overall_EquinoxTier >= max_tier:
-        equinox_AdviceSection.header = f"Best Equinox tier met: {tier_section}<br>You best ❤️"
+        equinox_AdviceSection.header = f"Best Equinox tier met: {tier_section}{break_you_best}"
         equinox_AdviceSection.complete = True
     else:
         equinox_AdviceSection.header = f"Best Equinox tier met: {tier_section}"

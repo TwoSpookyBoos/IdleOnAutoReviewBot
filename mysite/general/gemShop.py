@@ -1,7 +1,7 @@
 from models.models import Advice, AdviceGroup, AdviceSection
 from utils.data_formatting import safe_loads
 from utils.logging import get_logger
-from consts import gemShop_progressionTiers, maxFarmingCrops, currentWorld, breedingTotalPets, cookingCloseEnough
+from consts import gemShop_progressionTiers, maxFarmingCrops, currentWorld, breedingTotalPets, cookingCloseEnough, break_you_best
 from flask import g as session_data
 
 logger = get_logger(__name__)
@@ -391,7 +391,9 @@ def setGemShopProgressionTier():
 
     tier = f"{recommended_total_bought}/{recommended_total}"
     if not groups:
-        section_title = f"You bought all {tier} Recommended Permanent/Non-Gamba Gem Shop purchases<br>Your shine blinds me, you diamond-donned dragon! 💎"
+        section_title = (f"You bought all {tier} Recommended Permanent/Non-Gamba Gem Shop purchases"
+                         f"<br>Your shine blinds me, you diamond-donned dragon! 💎"
+                         f"{break_you_best}")
     else:
         section_title = f"Bought {tier} Recommended Permanent/Non-Gamba Gem Shop purchases"
     disclaimer = (

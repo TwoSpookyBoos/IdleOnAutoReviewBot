@@ -2,7 +2,8 @@ from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
 from utils.data_formatting import safe_loads, mark_advice_completed
 from utils.logging import get_logger
-from consts import maxTiersPerGroup, stamps_progressionTiers, stamp_maxes, stampsDict, unavailableStampsList, stampTypes, maxOverallBookLevels, max_VialLevel
+from consts import maxTiersPerGroup, stamps_progressionTiers, stamp_maxes, stampsDict, unavailableStampsList, stampTypes, maxOverallBookLevels, max_VialLevel, \
+    break_you_best
 from flask import g as session_data
 
 
@@ -427,7 +428,7 @@ def setStampProgressionTier() -> AdviceSection:
     stamp_AdviceSection.tier = tier_section
     stamp_AdviceSection.groups = stamp_AdviceGroupDict.values()
     if overall_StampTier >= max_tier:
-        stamp_AdviceSection.header = f"Best Stamp tier met: {tier_section}.<br>You best ❤️<br>Let me know what important stamps you're aiming for next!"
+        stamp_AdviceSection.header = f"Best Stamp tier met: {tier_section}{break_you_best}<br>Let me know what important stamps you're aiming for next!"
         stamp_AdviceSection.complete = True
     else:
         stamp_AdviceSection.header = f"Best Stamp tier met: {tier_section}"

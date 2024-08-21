@@ -2,6 +2,7 @@ from collections import defaultdict
 
 from flask import g as session_data
 
+from consts import break_you_best
 from models.models import AdviceSection, AdviceGroup, Advice
 
 star_tiers = ["Unlock", "Bronze", "Silver", "Gold", "Platinum", "Ruby"]
@@ -92,6 +93,7 @@ def getCardSetReview():
             section.header = (
                 f"You have completed all {section.tier} cardset tiers. Too rich "
                 f"for my blood, I fold. Your sleight of hand is admirable. ♥️♠️♦️♣️"
+                f"{break_you_best}"
             )
             section.complete = True
 

@@ -1452,6 +1452,8 @@ switches = [
 ###GENERAL / MULTI-USE CONSTS###
 currentWorld = 6
 maxCharacters = 10
+break_you_best = "<br>You best ❤️"
+break_keep_it_up = "<br>Keep it up! You're on the right track! ❤️"
 missableGStacksDict = {
     #  ItemName               Codename     Quest Codeame          Quest Name                                          Wiki link to the item                             Recommended Class/Farming notes
     "Dog Bone":              ["Quest12",   "Dog_Bone1",           "Dog Bone: Why he Die???",                          "https://idleon.wiki/wiki/Dog_Bone",              "Active ES or time candy."],
@@ -4386,6 +4388,20 @@ cookingMealDict = {
     64:{"Name": "Yumi Peachring", "Description": "Don't disrespect the ring. All hail the ring.", "Effect": "+{% All Golden Food bonus", "BaseValue": 2},
     65:{"Name": "Plumpcakes", "Description": "Ohhh, they're called 'plump'cakes because they're dummy thicc can I get an amen!", "Effect": "+{% Total Damage", "BaseValue": 6},
     66:{"Name": "Nyanborgir", "Description": "It's the greatest meal ever! Bonus DOUBLES at Summoning Lv 50, Triples at 100, etc", "Effect": "+{% Crop Evolution Chance", "BaseValue": 9},
+}
+
+riftRewardsDict = {
+    5: {'Name': 'Trap Box Vacuum', 'Shorthand': "TrapBoxVacuum"},
+    10: {'Name': 'Infinite Stars', 'Shorthand': "InfiniteStars"},
+    15: {'Name': 'Skill Mastery', 'Shorthand': "SkillMastery"},
+    20: {'Name': 'Eclipse Skulls', 'Shorthand': "EclipseSkulls"},
+    25: {'Name': 'Stamp Mastery', 'Shorthand': "StampMastery"},
+    30: {'Name': 'Eldritch Artifact', 'Shorthand': "EldritchArtifacts"},
+    35: {'Name': 'Vial Mastery', 'Shorthand': "VialMastery"},
+    40: {'Name': 'Construct Mastery', 'Shorthand': "ConstructionMastery"},
+    45: {'Name': 'Ruby Cards', 'Shorthand': "RubyCards"},
+    50: {'Name': 'Killroy Prime', 'Shorthand': "KillroyPrime"},
+    55: {'Name': 'Sneaking Mastery', 'Shorthand': "SneakingMastery"},
 }
 
 labChipsDict = {

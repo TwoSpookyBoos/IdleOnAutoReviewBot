@@ -6,7 +6,7 @@ from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import maxTiersPerGroup, bubbles_progressionTiers, vials_progressionTiers, max_IndexOfVials, maxFarmingCrops, atrisk_basicBubbles, \
-    atrisk_lithiumBubbles, cookingCloseEnough
+    atrisk_lithiumBubbles, cookingCloseEnough, break_you_best
 
 logger = get_logger(__name__)
 
@@ -145,7 +145,7 @@ def setAlchemyVialsProgressionTier() -> AdviceSection:
     vial_AdviceSection.pinchy_rating = overall_AlchemyVialsTier
     vial_AdviceSection.groups = vial_AdviceGroupDict.values()
     if overall_AlchemyVialsTier == max_tier:
-        vial_AdviceSection.header = f"Best Vial tier met: {tier_section}<br>You best ❤️"
+        vial_AdviceSection.header = f"Best Vial tier met: {tier_section}{break_you_best}"
         vial_AdviceSection.complete = True
     else:
         vial_AdviceSection.header = f"Best Vial tier met: {tier_section}"
@@ -361,7 +361,7 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
     bubbles_AdviceSection.pinchy_rating = overall_alchemyBubblesTier
     bubbles_AdviceSection.groups = bubbles_AdviceGroupDict.values()
     if overall_alchemyBubblesTier >= max_tier:
-        bubbles_AdviceSection.header = f"Best Bubbles tier met: {tier_section}<br>You best ❤️"
+        bubbles_AdviceSection.header = f"Best Bubbles tier met: {tier_section}{break_you_best}"
         bubbles_AdviceSection.complete = True
     else:
         bubbles_AdviceSection.header = f"Best Bubbles tier met: {tier_section}"
@@ -457,10 +457,11 @@ def setAlchemyP2W() -> AdviceSection:
     p2w_AdviceSection.tier = tier_section
     p2w_AdviceSection.groups = p2w_AdviceGroupDict.values()
     if p2wSum >= p2wMax:
-        p2w_AdviceSection.header = f"You've purchased all {p2wMax} upgrades in Alchemy's Pay 2 Win tab!<br>You best ❤️"
+        p2w_AdviceSection.header = f"You've purchased all {p2wMax} upgrades in Alchemy's Pay 2 Win tab!{break_you_best}"
         p2w_AdviceSection.complete = True
     else:
-        p2w_AdviceSection.header = f"You've purchased {tier_section} upgrades in Alchemy's Pay 2 Win tab.<br>Try to purchase the basic upgrades before Mid W5, and Player upgrades after each Alchemy level up!"
+        p2w_AdviceSection.header = (f"You've purchased {tier_section} upgrades in Alchemy's Pay 2 Win tab."
+                                    f"<br>Try to purchase the basic upgrades before Mid W5, and Player upgrades after each Alchemy level up!")
     return p2w_AdviceSection
 
 # def setAlchemySigils() -> AdviceSection:

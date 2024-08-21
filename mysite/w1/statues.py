@@ -1,5 +1,5 @@
 from models.models import Advice, AdviceGroup, AdviceSection
-from consts import maxTiersPerGroup, statueTypeList, statues_progressionTiers, statueCount, max_VialLevel, statueExclusionsDict
+from consts import maxTiersPerGroup, statueTypeList, statues_progressionTiers, statueCount, max_VialLevel, statueExclusionsDict, break_you_best
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
@@ -238,7 +238,7 @@ def setStatuesProgressionTier() -> AdviceSection:
     statues_AdviceSection.tier = tier_section
     statues_AdviceSection.groups = statues_AdviceGroupDict.values()
     if overall_StatuesTier >= max_tier:
-        statues_AdviceSection.header = f"Best Statues tier met: {tier_section}<br>You best ❤️"
+        statues_AdviceSection.header = f"Best Statues tier met: {tier_section}{break_you_best}"
         statues_AdviceSection.complete = True
     else:
         statues_AdviceSection.header = f"Best Statues tier met: {tier_section}"

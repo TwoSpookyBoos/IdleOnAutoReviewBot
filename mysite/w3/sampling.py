@@ -1,5 +1,5 @@
 from flask import g as session_data
-from consts import lavaFunc, sampling_progressionTiers, maxTiersPerGroup
+from consts import lavaFunc, sampling_progressionTiers, maxTiersPerGroup, break_you_best
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import notateNumber
@@ -322,7 +322,7 @@ def setSamplingProgressionTier() -> AdviceSection:
     sampling_AdviceSection.pinchy_rating = overall_SamplingTier
     sampling_AdviceSection.groups = sampling_AdviceGroupDict.values()
     if overall_SamplingTier >= max_tier:
-        sampling_AdviceSection.header = f"Best Sampling tier met: {tier_section}<br>You best ❤️"
+        sampling_AdviceSection.header = f"Best Sampling tier met: {tier_section}{break_you_best}"
         if complete_toons >= session_data.account.playerCount:  #Checks both the tier requirement and the Royal Sampler goodness
             sampling_AdviceSection.complete = True
     else:

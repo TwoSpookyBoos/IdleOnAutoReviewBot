@@ -2,7 +2,7 @@ from math import ceil
 
 from flask import g as session_data
 from consts import maxStaticBookLevels, maxScalingBookLevels, maxSummoningBookLevels, maxOverallBookLevels, skill_talentsDict, combat_talentsDict, currentWorld, \
-    stamp_maxes, maxMealLevel, cookingCloseEnough, librarySubgroupTiers
+    stamp_maxes, maxMealLevel, cookingCloseEnough, librarySubgroupTiers, break_you_best
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
@@ -482,7 +482,7 @@ def setLibraryProgressionTier() -> AdviceSection:
     library_AdviceSection.pinchy_rating = overall_LibraryTier
     library_AdviceSection.groups = library_AdviceGroupDict.values()
     if overall_LibraryTier >= max_tier:
-        library_AdviceSection.header = f"Best Library tier met: {tier_section}<br>You best ❤️"
+        library_AdviceSection.header = f"Best Library tier met: {tier_section}{break_you_best}"
         library_AdviceSection.complete = True
     else:
         library_AdviceSection.header = f"Best Library tier met: {tier_section}"
