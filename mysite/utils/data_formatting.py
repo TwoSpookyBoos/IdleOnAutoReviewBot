@@ -107,6 +107,7 @@ def load_toolbox_data(rawJSON):
     parsed["charNames"] = rawJSON.get("charNames", [])
     parsed["companion"] = rawJSON.get("companion", {})
     parsed["guildData"] = rawJSON.get("guildData", {})
+    parsed["serverVars"] = rawJSON.get("serverVars", {})
     parsed["AutoLoot"] = rawJSON.get("serverVars", {}).get("AutoLoot", 0)
     if not isinstance(parsed.get("AutoLoot"), int):
         try:

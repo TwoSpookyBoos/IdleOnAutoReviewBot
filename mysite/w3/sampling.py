@@ -219,9 +219,19 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
 
     kotr_multi = 1
 
-    charm_multi = 1.25 if session_data.account.sneaking["PristineCharms"]["Lolly Flower"] else 1
+    charm_multi = 1.25
+    charm_multi_active = charm_multi if session_data.account.sneaking["PristineCharms"]["Lolly Flower"] else 1
 
-    ballot_multi = 1  #1.2 if enabled for the week
+    equinoxMulti = 1 + (session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel'] / 100)
+    ballot_active = session_data.account.ballot['CurrentBuff'] == 11
+    if ballot_active:
+        ballot_status = "is Active"
+    elif not ballot_active and session_data.account.ballot['CurrentBuff'] != "Unknown":
+        ballot_status = "is Inactive"
+    else:
+        ballot_status = "status is not available in provided data"
+    ballot_multi = 1 + (session_data.account.ballot['Buffs'][11]['Value'] / 100)
+    ballot_multi_active = max(1, ballot_multi * ballot_active)
 
     lab_multi_aw = 2 if session_data.account.doot_owned else 1
     lab_multi_cs = 2 if session_data.account.labBonuses['Wired In']['Enabled'] else 1
@@ -229,7 +239,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     harriep_multi_aw = 3 if session_data.account.doot_owned else 1
     harriep_multi_cs = 3 if session_data.account.divinity['Divinities'][4]['Unlocked'] else 1
 
-    aw_multi = 1 * sm_multi * gr_multi * kotr_multi * charm_multi * ballot_multi * lab_multi_aw * harriep_multi_aw
+    aw_multi = 1 * sm_multi * gr_multi * kotr_multi * charm_multi_active * ballot_multi_active * lab_multi_aw * harriep_multi_aw
     aw_label = f"Account Wide: {aw_multi:.3f}x"
     cs_multi = lab_multi_cs * harriep_multi_cs
     cs_label = f"Character Specific: Up to {cs_multi}x"
@@ -279,17 +289,29 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     ))
 
     po_AdviceDict[aw_label].append(Advice(
-        label=f"{{{{ Pristine Charm|#sneaking }}}}: Lolly Flower: {charm_multi}/1.25x",
+        label=f"{{{{ Pristine Charm|#sneaking }}}}: Lolly Flower: {charm_multi_active}/{charm_multi}x",
         picture_class="lolly-flower",
         progression=int(session_data.account.sneaking["PristineCharms"]["Lolly Flower"]),
         goal=1
     ))
 
     po_AdviceDict[aw_label].append(Advice(
-        label=f"Weekly Ballot: {ballot_multi}x (WIP)",
+        label=f"Weekly Ballot: {ballot_multi_active:.3f}/{ballot_multi:.3f}x"
+              f"<br>(Buff {ballot_status})",
         picture_class="ballot-11",
-        unit="x"
     ))
+    po_AdviceDict[aw_label].append(Advice(
+        label=f"{{{{ Equinox|#equinox}}}}: Voter Rights: {equinoxMulti}/1.{session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']}x to Weekly Ballot (Already included above)",
+        picture_class="voter-rights",
+        progression=session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel'],
+        goal=session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']
+    ))
+
+    # for bonusIndex, bonusValuesDict in session_data.account.ballot['Buffs'].items():
+    #     po_AdviceDict["Ballot"].append(Advice(
+    #         label=bonusValuesDict['Description'],
+    #         picture_class=bonusValuesDict['Image'],
+    #     ))
 
     po_AdviceGroup = AdviceGroup(
         tier="",

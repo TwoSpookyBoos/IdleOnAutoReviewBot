@@ -45,7 +45,7 @@ from consts import (
     jade_emporium, pristineCharmsList, sneakingGemstonesFirstIndex, sneakingGemstonesList, sneakingGemstonesStatList,
     getMoissaniteValue, getGemstoneBaseValue, getGemstoneBoostedValue, getGemstonePercent,
     marketUpgradeList, landrankDict,
-    summoningBattleCountsDict, summoningDict, riftRewardsDict,
+    summoningBattleCountsDict, summoningDict, riftRewardsDict, ballotDict,
 )
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
 
@@ -982,6 +982,7 @@ class Account:
                                                               f" {familyBonusesDict[className]['Stat']}")
 
         self.raw_optlacc_dict = {k:v for k, v in enumerate(safe_loads(self.raw_data.get("OptLacc", [])))}
+        self.raw_serverVars_dict = safe_loads(self.raw_data.get("serverVars", {}))
 
         self.dungeon_upgrades = {}
         raw_dungeon_upgrades = safe_loads(self.raw_data.get('DungUpg', []))
@@ -1254,6 +1255,7 @@ class Account:
         self._parse_w2_bubbles()
         self._parse_w2_p2w()
         self._parse_w2_arcade()
+        self._parse_w2_ballot()
 
     def _parse_w2_vials(self):
         self.alchemy_vials = {}
@@ -1395,6 +1397,19 @@ class Account:
                         "Display"] = f"+{self.arcade[upgradeIndex]['Value']}{arcadeBonuses[upgradeIndex]['displayType']} {arcadeBonuses[upgradeIndex]['Stat']}"
                 except:
                     self.arcade[upgradeIndex]["Display"] = f"+% UnknownUpgrade{upgradeIndex}"
+
+    def _parse_w2_ballot(self):
+        self.ballot = {
+            "CurrentBuff": self.raw_serverVars_dict.get('voteCategories', ["Unknown"])[0],
+            "Buffs": {}
+        }
+        for buffIndex, buffValuesDict in ballotDict.items():
+            self.ballot['Buffs'][buffIndex] = {
+                'Description': buffValuesDict['Description'],
+                'BaseValue': buffValuesDict['BaseValue'],
+                'Value': buffValuesDict['BaseValue'],
+                'Image': buffValuesDict['Image'],
+            }
 
     def _parse_w3(self):
         self._parse_w3_buildings()
@@ -2335,6 +2350,7 @@ class Account:
         self.vialMasteryMulti = 1 + (self.maxed_vials * .02) if self.rift['VialMastery'] else 1
         self._calculate_w2_sigils()
         self._calculate_w2_cauldrons()
+        self._calculate_w2_ballot()
 
     def _calculate_w2_cauldrons(self):
         perCauldronBubblesUnlocked = [
@@ -2379,6 +2395,17 @@ class Account:
                 self.alchemy_p2w["Sigils"][sigilName]["PrechargeLevel"] = self.alchemy_p2w["Sigils"][sigilName]["Level"]
             # Before the +1, -1 would mean not unlocked, 0 would mean Blue tier, 1 would be Yellow tier, and 2 would mean Red tier
             # After the +1, 0/1/2/3
+
+    def _calculate_w2_ballot(self):
+        equinoxMulti = 1 + (self.equinox_bonuses['Voter Rights']['CurrentLevel'] / 100)
+        for buffIndex, buffValuesDict in self.ballot['Buffs'].items():
+            self.ballot['Buffs'][buffIndex]['Value'] *= equinoxMulti
+            # Check for + or +x% replacements
+            if "{" in buffValuesDict['Description']:
+                self.ballot['Buffs'][buffIndex]['Description'] = buffValuesDict['Description'].replace("{", f"{self.ballot['Buffs'][buffIndex]['Value']:.3f}")
+            # Check for multi replacements
+            if "}" in buffValuesDict['Description']:
+                self.ballot['Buffs'][buffIndex]['Description'] = buffValuesDict['Description'].replace("}", f"{1 + (self.ballot['Buffs'][buffIndex]['Value'] / 100):.3f}")
 
     def _calculate_w3(self):
         self._calculate_w3_building_max_levels()
