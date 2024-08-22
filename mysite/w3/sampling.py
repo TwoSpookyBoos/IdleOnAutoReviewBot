@@ -1,5 +1,5 @@
 from flask import g as session_data
-from consts import lavaFunc, sampling_progressionTiers, maxTiersPerGroup, break_you_best, skillIndexList
+from consts import lavaFunc, sampling_progressionTiers, maxTiersPerGroup, break_you_best, skillIndexList, goldrelic_multisDict
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import notateNumber
@@ -206,18 +206,57 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     return psrAdviceGroup
 
 def getPrinterOutputAdviceGroup() -> AdviceGroup:
-    po_AdviceDict = {
-        "Account Wide": [],
-        "Character Specific": [],
-    }
-
-    # Account Wide
-    sm_base = 4 * session_data.account.rift['SkillMastery']
+    # Calculate Multis for Labels
+    # Skill Mastery
+    sm_base = 4 * session_data.account.rift['SkillMastery']  # This isn't expressed anywhere in game, but is hard-coded in source code.
     sm_bonus = sum([1 for skill in session_data.account.all_skills.values() if sum(skill) > 750])
     sm_sum = sm_base + sm_bonus
     sm_multi = 1 + (sm_sum / 100)
 
-    po_AdviceDict["Account Wide"].append(Advice(
+    gr_level = session_data.account.sailing['Artifacts']['Gold Relic']['Level']
+    gr_days = session_data.account.raw_optlacc_dict.get(125, 0)
+    gr_multi = 1 + ((gr_days * goldrelic_multisDict.get(gr_level, 0)) / 100)
+
+    kotr_multi = 1
+
+    charm_multi = 1.25 if session_data.account.sneaking["PristineCharms"]["Lolly Flower"] else 1
+
+    ballot_multi = 1  #1.2 if enabled for the week
+
+    lab_multi_aw = 2 if session_data.account.doot_owned else 1
+    lab_multi_cs = 2 if session_data.account.labBonuses['Wired In']['Enabled'] else 1
+
+    harriep_multi_aw = 3 if session_data.account.doot_owned else 1
+    harriep_multi_cs = 3 if session_data.account.divinity['Divinities'][4]['Unlocked'] else 1
+
+    aw_multi = 1 * sm_multi * gr_multi * kotr_multi * charm_multi * ballot_multi * lab_multi_aw * harriep_multi_aw
+    aw_label = f"Account Wide: {aw_multi:.3f}x"
+    cs_multi = lab_multi_cs * harriep_multi_cs
+    cs_label = f"Character Specific: Up to {cs_multi}x"
+
+    po_AdviceDict = {
+        cs_label: [],
+        aw_label: [],
+    }
+
+    # If Doot is not owned, these are Character Specific. Otherwise, they are account-wide
+    po_AdviceDict[f"{cs_label if not session_data.account.doot_owned else aw_label}"].append(Advice(
+        label=f"Lab Bonus: Wired In: {'2x (Thanks Doot!)' if session_data.account.doot_owned else '2x if connected to Lab/Arctis'}",
+        picture_class='wired-in',
+        progression=lab_multi_aw if session_data.account.doot_owned else '',
+        goal=2,
+        unit="x"
+    ))
+    po_AdviceDict[f"{cs_label if not session_data.account.doot_owned else aw_label}"].append(Advice(
+        label=f"{{{{ Divinity|#divinity }}}}: Harriep Major Link bonus: {'3x (Thanks Doot!)' if session_data.account.doot_owned else '3x if linked'}",
+        picture_class='harriep',
+        progression=harriep_multi_aw if session_data.account.doot_owned else '',
+        goal=3,
+        unit="x"
+    ))
+
+    # Account Wide
+    po_AdviceDict[aw_label].append(Advice(
         label=f"{{{{Rift|#rift}}}}: Skill Mastery unlocked: {sm_base}/4%"
               f"<br>Additional 1% per Skill at 750: {sm_bonus}/{len(skillIndexList)}%",
         picture_class='skill-mastery',
@@ -226,12 +265,38 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
         unit="x"
     ))
 
-    # Character Specific
+    po_AdviceDict[aw_label].append(Advice(
+        label=f"Divine Knight's King of the Remembered: {kotr_multi}x (WIP)",
+        picture_class="king-of-the-remembered",
+        unit="x"
+    ))
+
+    po_AdviceDict[aw_label].append(Advice(
+        label=f"{{{{ Sailing|#sailing}}}}: Level {gr_level} Gold Relic: {gr_multi}x ({gr_days} days)",
+        picture_class="gold-relic",
+        progression=gr_multi,
+        unit="x"
+    ))
+
+    po_AdviceDict[aw_label].append(Advice(
+        label=f"{{{{ Pristine Charm|#sneaking }}}}: Lolly Flower: {charm_multi}/1.25x",
+        picture_class="lolly-flower",
+        progression=int(session_data.account.sneaking["PristineCharms"]["Lolly Flower"]),
+        goal=1
+    ))
+
+    po_AdviceDict[aw_label].append(Advice(
+        label=f"Weekly Ballot: {ballot_multi}x (WIP)",
+        picture_class="ballot-11",
+        unit="x"
+    ))
 
     po_AdviceGroup = AdviceGroup(
         tier="",
-        pre_string="Info- Sources of Printer Output",
-        advices=po_AdviceDict
+        pre_string=f"""Info- Sources of Printer Output. """
+                   f"""Grand Total: {aw_multi:.3f}{f" - {aw_multi * cs_multi:.3f}" if len(po_AdviceDict[cs_label]) > 0 else ''}x""",
+        advices=po_AdviceDict if len(po_AdviceDict[cs_label]) > 0 else po_AdviceDict[aw_label],
+        post_string="Please note: Printer Output multiplies resources printed each hour. It does NOT increase the size of taking a new sample."
     )
     return po_AdviceGroup
 

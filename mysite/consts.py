@@ -5074,6 +5074,13 @@ sailingDict = {
         31: {'Name': 'The Shim Lantern'},
         32: {'Name': 'The Winz Lantern'}}},
 }
+goldrelic_multisDict = {
+    0: 0,
+    1: 2,
+    2: 2.5,
+    3: 3,
+    4: 5
+}
 divinity_divinitiesDict = {
     1: {
         "Name": "Snehebatu",

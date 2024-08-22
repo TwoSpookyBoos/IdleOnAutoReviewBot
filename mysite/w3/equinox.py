@@ -48,7 +48,7 @@ def setEquinoxProgressionTier() -> AdviceSection:
         for dream in session_data.account.remaining_equinox_dreams_unlocking_new_bonuses:
             equinox_AdviceDict["Dreams"]["Complete Dreams"].append(Advice(
                 label=f"Dream {dream}",
-                picture_class="",
+                picture_class="ballot-32",
             ))
         for lockedBonus in remainingBonusesToBeUnlocked:
             equinox_AdviceDict["Dreams"]["Unlock Equinox Bonuses"].append(Advice(
