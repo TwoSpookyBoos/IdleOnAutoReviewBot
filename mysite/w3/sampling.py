@@ -209,7 +209,8 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     # Calculate Multis for Labels
     # Skill Mastery
     sm_base = 4 * session_data.account.rift['SkillMastery']  # This isn't expressed anywhere in game, but is hard-coded in source code.
-    sm_bonus = sum([1 for skill in session_data.account.all_skills.values() if sum(skill) > 750])
+    sm_eligible_skills = len(skillIndexList) - 1  #-1 to exclude Combat
+    sm_bonus = sum([1 for skillName, skillLevels in session_data.account.all_skills.items() if skillName != "Combat" and sum(skillLevels) > 750])
     sm_sum = sm_base + sm_bonus
     sm_multi = 1 + (sm_sum / 100)
 
@@ -268,10 +269,10 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     # Account Wide
     po_AdviceDict[aw_label].append(Advice(
         label=f"{{{{Rift|#rift}}}}: Skill Mastery unlocked: {sm_base}/4%"
-              f"<br>Additional 1% per Skill at 750: {sm_bonus}/{len(skillIndexList)}%",
+              f"<br>Additional 1% per Skill at 750: {sm_bonus}/{sm_eligible_skills}%",
         picture_class='skill-mastery',
         progression=sm_multi,
-        goal=1 + (4 + len(skillIndexList)) / 100,
+        goal=1 + (4 + sm_eligible_skills) / 100,
         unit="x"
     ))
 
