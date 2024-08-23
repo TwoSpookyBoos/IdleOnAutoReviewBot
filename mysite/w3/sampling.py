@@ -225,7 +225,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     anyDKMaxLeveled = False
     bestKotRPresetLevel = 0
     for dk in session_data.account.dks:
-        levels_above_max = dk.max_talents_over_books - session_data.account.library['MaxBookLevel']
+        #levels_above_max = dk.max_talents_over_books - session_data.account.library['MaxBookLevel']  #Printer seems to use Book level
         # Book level
         if dk.max_talents.get("178", 0) >= session_data.account.library['MaxBookLevel']:
             anyDKMaxBooked = True
@@ -239,9 +239,9 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
         ):
             anyDKMaxLeveled = True
         if dk.current_preset_talents.get("178", 0) >= bestKotRPresetLevel:
-            bestKotRPresetLevel = dk.current_preset_talents.get("178", 0) + levels_above_max
+            bestKotRPresetLevel = dk.current_preset_talents.get("178", 0)
         if dk.secondary_preset_talents.get("178", 0) >= bestKotRPresetLevel:
-            bestKotRPresetLevel = dk.secondary_preset_talents.get("178", 0) + levels_above_max
+            bestKotRPresetLevel = dk.secondary_preset_talents.get("178", 0)
 
     talent_value = lavaFunc('decay', bestKotRPresetLevel, 5, 150)
     orb_kills = session_data.account.raw_optlacc_dict.get(138, 0)
@@ -310,7 +310,9 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
               f"""{'<br>Not max leveled in any preset!' if not anyDKMaxLeveled else ''}"""
               f"""{f"<br>({talent_value:.3f} talent * {pow10_kills:.3f} pow10 kills)" if anyDKMaxBooked and anyDKMaxLeveled else ''}""",
         picture_class="king-of-the-remembered",
-        resource="orb-of-remembrance"
+        resource="orb-of-remembrance",
+        progression=f"{kotr_multi:.3f}",
+        unit="x"
     ))
 
     po_AdviceDict[aw_label].append(Advice(
