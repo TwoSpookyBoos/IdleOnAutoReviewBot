@@ -104,7 +104,7 @@ gemShop_progressionTiers = [
      ""],
     [6, "D", {
         'Item Backpack Space': 4, 'Carry Capacity': 8, 'More Storage Space': 5, 'Brimstone Forge Slot': 8,
-        'Ivory Bubble Cauldrons': 4, 'Obol Storage Space': 3, 'More Sample Spaces': 6, 'Burning Bad Books': 4, 'Zen Cogs': 8,
+        'Ivory Bubble Cauldrons': 4, 'More Sample Spaces': 6, 'Burning Bad Books': 4, 'Zen Cogs': 8,
         'Souped Up Tube': 3, 'Fenceyard Space': 6, 'Chest Sluggo': 12,
         'Plot of Land': 8, 'Instagrow Generator': 8,},
      ""],
