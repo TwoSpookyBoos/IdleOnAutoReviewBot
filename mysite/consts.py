@@ -758,7 +758,7 @@ bubbles_progressionTiers = [
       'Slabo Critterbug': 5940, 'Slabo Agility': 5940, 'Endgame Eff II': 5940, 'Tome Agility': 5940},
      {'Stable Jenius': 10000, 'Hocus Choppus': 9900, 'Le Brain Tools': 6930, 'Tree Sleeper': 3960,
       'Slabe Logsoul': 5940, 'Slabe Wisdom': 5940, 'Endgame Eff III': 5940, 'Tome Wisdom': 5940},
-     {'Cookin Roadkill': 6930, 'Carpenter': 4950, "Nickel Of Wisdom": 2970, "Penny Of Strength": 2970, "Dollar Of Agility": 2970,
+     {'Cookin Roadkill': 6930, 'Call Me Bob': 5000, 'Carpenter': 4950, "Nickel Of Wisdom": 2970, "Penny Of Strength": 2970, "Dollar Of Agility": 2970,
       'Droppin Loads': 6930, 'Startue Exp': 5940, 'Laaarrrryyyy': 9900, 'Big Game Hunter': 2970, 'Mr Massacre': 4950, 'Lo Cost Mo Jade': 3960,
       "Grind Time": 10000},
      "99% catchup",

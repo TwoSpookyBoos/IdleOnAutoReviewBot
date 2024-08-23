@@ -15,6 +15,7 @@
 @import "achievements";
 @import "merits";
 @import "companions";
+@import "ui";
 
 //W1
 @import "bribes";
@@ -2200,6 +2201,7 @@ $id-map: map-merge($kangaroo-map, $id-map);
 $id-map: map-merge($all-farming, $id-map);
 $id-map: map-merge($all-summoning, $id-map);
 $id-map: map-merge($ballot, $id-map);
+$id-map: map-merge($ui-map, $id-map);
 
 $extra: (
     //storage: $cosmic-storage-chest,

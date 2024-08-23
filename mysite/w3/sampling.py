@@ -1,3 +1,5 @@
+import math
+
 from flask import g as session_data
 from consts import lavaFunc, sampling_progressionTiers, maxTiersPerGroup, break_you_best, skillIndexList, goldrelic_multisDict
 from models.models import AdviceSection, AdviceGroup, Advice
@@ -218,7 +220,33 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     gr_days = session_data.account.raw_optlacc_dict.get(125, 0)
     gr_multi = 1 + ((gr_days * goldrelic_multisDict.get(gr_level, 0)) / 100)
 
-    kotr_multi = 1
+    anyDKMaxBooked = False
+    bestKotRBook = 0
+    anyDKMaxLeveled = False
+    bestKotRPresetLevel = 0
+    for dk in session_data.account.dks:
+        levels_above_max = dk.max_talents_over_books - session_data.account.library['MaxBookLevel']
+        # Book level
+        if dk.max_talents.get("178", 0) >= session_data.account.library['MaxBookLevel']:
+            anyDKMaxBooked = True
+        if dk.max_talents.get("178", 0) > bestKotRBook:
+            bestKotRBook = dk.max_talents.get("178", 0)
+
+        # Preset level
+        if (
+                dk.current_preset_talents.get("178", 0) >= session_data.account.library['MaxBookLevel']
+                or dk.secondary_preset_talents.get("178", 0) >= session_data.account.library['MaxBookLevel']
+        ):
+            anyDKMaxLeveled = True
+        if dk.current_preset_talents.get("178", 0) >= bestKotRPresetLevel:
+            bestKotRPresetLevel = dk.current_preset_talents.get("178", 0) + levels_above_max
+        if dk.secondary_preset_talents.get("178", 0) >= bestKotRPresetLevel:
+            bestKotRPresetLevel = dk.secondary_preset_talents.get("178", 0) + levels_above_max
+
+    talent_value = lavaFunc('decay', bestKotRPresetLevel, 5, 150)
+    orb_kills = session_data.account.raw_optlacc_dict.get(138, 0)
+    pow10_kills = math.log(orb_kills,10)
+    kotr_multi = max(1, 1 + ((talent_value * pow10_kills) / 100))
 
     charm_multi = 1.25
     charm_multi_active = charm_multi if session_data.account.sneaking["PristineCharms"]["Lolly Flower"] else 1
@@ -277,9 +305,12 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     ))
 
     po_AdviceDict[aw_label].append(Advice(
-        label=f"Divine Knight's King of the Remembered: {kotr_multi}x (WIP)",
+        label=f"""DK's King of the Remembered: {kotr_multi:.3f}x"""
+              f"""{'<br>Not max booked!' if not anyDKMaxBooked else ''}"""
+              f"""{'<br>Not max leveled in any preset!' if not anyDKMaxLeveled else ''}"""
+              f"""{f"<br>({talent_value:.3f} talent * {pow10_kills:.3f} pow10 kills)" if anyDKMaxBooked and anyDKMaxLeveled else ''}""",
         picture_class="king-of-the-remembered",
-        unit="x"
+        resource="orb-of-remembrance"
     ))
 
     po_AdviceDict[aw_label].append(Advice(
@@ -308,11 +339,18 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
         goal=session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']
     ))
 
-    # for bonusIndex, bonusValuesDict in session_data.account.ballot['Buffs'].items():
-    #     po_AdviceDict["Ballot"].append(Advice(
-    #         label=bonusValuesDict['Description'],
-    #         picture_class=bonusValuesDict['Image'],
-    #     ))
+    po_AdviceDict[cs_label].append(Advice(
+        label="Blue Dot before your sample = Only 2x from Lab is active",
+        picture_class="printer-blue"
+    ))
+    po_AdviceDict[cs_label].append(Advice(
+        label="Yellow Star = Only 3x from Harriep is active",
+        picture_class="printer-yellow"
+    ))
+    po_AdviceDict[cs_label].append(Advice(
+        label="Purple Swirl = 6x total from Lab and Harriep",
+        picture_class="printer-purple"
+    ))
 
     po_AdviceGroup = AdviceGroup(
         tier="",
