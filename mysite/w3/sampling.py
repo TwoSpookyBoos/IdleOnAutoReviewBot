@@ -358,7 +358,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
         tier="",
         pre_string=f"""Info- Sources of Printer Output. """
                    f"""Grand Total: {aw_multi:.3f}{f" - {aw_multi * cs_multi:.3f}" if len(po_AdviceDict[cs_label]) > 0 else ''}x""",
-        advices=po_AdviceDict if len(po_AdviceDict[cs_label]) > 0 else po_AdviceDict[aw_label],
+        advices=po_AdviceDict if session_data.account.doot_owned else po_AdviceDict[aw_label],
         post_string="Please note: Printer Output multiplies resources printed each hour. It does NOT increase the size of taking a new sample."
     )
     return po_AdviceGroup
