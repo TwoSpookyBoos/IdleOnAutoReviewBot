@@ -245,7 +245,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
 
     talent_value = lavaFunc('decay', bestKotRPresetLevel, 5, 150)
     orb_kills = session_data.account.raw_optlacc_dict.get(138, 0)
-    pow10_kills = math.log(orb_kills,10)
+    pow10_kills = math.log(orb_kills,10) if orb_kills > 0 else 0
     kotr_multi = max(1, 1 + ((talent_value * pow10_kills) / 100))
 
     charm_multi = 1.25
