@@ -803,26 +803,26 @@ sigils_progressionTiers = {
     1: {
         "Unlock": {
             "Big Muscle": 1, "Pumped Kicks": 1, "Odd Litearture": 1, "Good Fortune": 1, "Plunging Sword": 1, "Wizardly Hat": 1, "Envelope Pile": 1,
-            "Shiny Beacon": 1, "Metal Exterior": 1, "Two Starz": 1, "Pipe Gauge": 1, "Trove": 1, "Pea Pod": 1,
+
         },
         "LevelUp": {
-            "Big Muscle": 2, "Pumped Kicks": 2, "Odd Litearture": 2, "Envelope Pile": 2,
+
         },
     },
     2: {
         "Unlock": {
-            "Tuft Of Hair": 1, "Emoji Veggie": 1, "VIP Parchment": 1, "Dream Catcher": 1,
+            "Shiny Beacon": 1, "Metal Exterior": 1, "Two Starz": 1, "Pipe Gauge": 1, "Trove": 1, "Pea Pod": 1,
         },
         "LevelUp": {
-            "Pea Pod": 2, "Trove": 2,
+            "Envelope Pile": 2, "Odd Litearture": 2, "Big Muscle": 2, "Pumped Kicks": 2,
         },
     },
     3: {
         "Unlock": {
-            "Duster Studs": 1, "Garlic Glove": 1, "Lab Tesstube": 1, "Peculiar Vial": 1,
+            "Tuft Of Hair": 1, "Emoji Veggie": 1, "VIP Parchment": 1, "Dream Catcher": 1, "Duster Studs": 1, "Garlic Glove": 1, "Lab Tesstube": 1, "Peculiar Vial": 1,
         },
         "LevelUp": {
-            "Pipe Gauge": 2, "Emoji Veggie": 2, "Good Fortune": 2, "Plunging Sword": 2,
+            "Pea Pod": 2, "Pipe Gauge": 2, "Good Fortune": 2, "Plunging Sword": 2,
         },
     },
     4: {
@@ -830,7 +830,7 @@ sigils_progressionTiers = {
             "Loot Pile": 1, "Div Spiral": 1, "Cool Coin": 1,
         },
         "LevelUp": {
-            "Trove": 2, "Peculiar Vial": 2,
+            "Peculiar Vial": 2, "Emoji Veggie": 2, "Trove": 2,
         },
     },
     5: {
