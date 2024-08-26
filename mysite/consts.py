@@ -853,7 +853,7 @@ sigils_progressionTiers = {
     },
     8: {
         "LevelUp": {
-            "Peculiar Vial": 3, "Shiny Beacon": 3, "Big Muscle": 3, "Pumped Kicks": 3, "Odd Litearture": 3,
+            "Peculiar Vial": 3, "Big Muscle": 3, "Pumped Kicks": 3, "Odd Litearture": 3,
         },
     },
     9: {
@@ -863,7 +863,7 @@ sigils_progressionTiers = {
     },
     10: {
         "LevelUp": {
-            "Div Spiral": 3, "Loot Pile": 2,
+            "Div Spiral": 3, "Loot Pile": 2, "Shiny Beacon": 3,
         },
     },
     11: {
