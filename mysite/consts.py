@@ -824,7 +824,7 @@ sigils_progressionTiers = {
             "Duster Studs": 1, "Garlic Glove": 1, "Lab Tesstube": 1, "Peculiar Vial": 1,
         },
         "LevelUp": {
-            "Pipe Gauge": 2, "Emoji Veggie": 2,
+            "Pipe Gauge": 2, "Emoji Veggie": 2, "Good Fortune": 2, "Plunging Sword": 2,
         },
     },
     4: {
@@ -832,17 +832,57 @@ sigils_progressionTiers = {
             "Loot Pile": 1, "Div Spiral": 1, "Cool Coin": 1,
         },
         "LevelUp": {
-            "Peculiar Vial": 2, "Cool Coin": 2, "Div Spiral": 2, "Garlic Glove": 2,
+            "Trove": 2, "Peculiar Vial": 2,
         },
     },
-    5: {"LevelUp": {
-            "Cool Coin": 2, "Div Spiral": 2, "Garlic Glove": 2,
+    5: {
+        "LevelUp": {
+            "Cool Coin": 2, "Div Spiral": 2, "Dream Catcher": 2, "Shiny Beacon": 2,
         },
-        "Other": {"Ionized Sigils": True}},
-    6: {"LevelUp": {
-        "Pea Pod": 3, "Envelope Pile": 3,
-    }},
-
+        "Other": {
+            "Ionized Sigils": True
+        },
+    },
+    6: {
+        "LevelUp": {
+            "Pea Pod": 3, "Envelope Pile": 3, "Emoji Veggie": 3,
+        },
+    },
+    7: {
+        "LevelUp": {
+            "Trove": 3, "Pipe Gauge": 3, "Dream Catcher": 3,
+        },
+    },
+    8: {
+        "LevelUp": {
+            "Peculiar Vial": 3, "Shiny Beacon": 3, "Big Muscle": 3, "Pumped Kicks": 3, "Odd Liteartue": 3,
+        },
+    },
+    9: {
+        "LevelUp": {
+            "Cool Coin": 3, "Good Fortune": 3,
+        },
+    },
+    10: {
+        "LevelUp": {
+            "Div Spiral": 3, "Loot Pile": 2,
+        },
+    },
+    11: {
+        "LevelUp": {
+            "Garlic Glove": 2, "Plunging Sword": 2, "Two Starz": 2, "Duster Studs": 2, "Lab Tesstube": 2,
+        },
+    },
+    12: {
+        "LevelUp": {
+            "Loot Pile": 3, "Garlic Glove": 3, "Plunging Sword": 3, "Two Starz": 3, "Duster Studs": 3,  "Lab Tesstube": 3,
+        },
+    },
+    13: {
+        "LevelUp": {
+            "Wizardly Hat": 3, "Metal Exterior": 3, "VIP Parchment": 3, "Tuft of Hair": 3,
+        },
+    },
 }
 
 ###WORLD 3 PROGRESSION TIERS###
