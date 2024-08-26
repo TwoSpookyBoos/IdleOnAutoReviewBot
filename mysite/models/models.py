@@ -2226,6 +2226,9 @@ class Account:
 
         # raw_summoning_list[1] = List of codified names of enemies from battles won
         self.summoning["Battles"] = {}
+        self.summoning["BattleDetails"] = {}
+        for color in summoningDict:
+            self.summoning["BattleDetails"][color] = {}
         try:
             self._parse_w6_summoning_battles(raw_summoning_list[1])
         except:
@@ -2260,6 +2263,16 @@ class Account:
                 for battleIndex, battleValuesDict in colorDict.items():
                     if battleIndex + 1 >= self.summoning["Battles"][colorName] and battleValuesDict['EnemyID'] in rawBattles:
                         self.summoning["Battles"][colorName] = battleIndex + 1
+
+        for colorName, colorDict in summoningDict.items():
+            for battleIndex, battleValuesDict in colorDict.items():
+                self.summoning["BattleDetails"][colorName][battleIndex + 1] = {
+                    'Defeated': battleValuesDict['EnemyID'] in rawBattles,
+                    'Image': battleValuesDict['Image'],
+                    'RewardType': battleValuesDict['RewardID'],
+                    'RewardQTY': battleValuesDict['RewardQTY'],
+                    'RewardBaseValue': battleValuesDict['RewardQTY'] * 3.5,
+                }
 
     def _parse_w6_summoning_sanctuary(self, rawSanctuary):
         if rawSanctuary:
@@ -2410,7 +2423,7 @@ class Account:
 
     def _calculate_w3(self):
         self._calculate_w3_building_max_levels()
-        self._calculate_w3_library_max_book_levels()
+
         self._calculate_w3_collider_base_costs()
         self._calculate_w3_collider_cost_reduction()
         self._calculate_w3_shrine_values()
@@ -2447,31 +2460,6 @@ class Account:
                     self.construction_buildings[towerName]['MaxLevel'] += 2 * self.atom_collider['Atoms']['Carbon - Wizard Maximizer']['Level']
                 except:
                     continue
-
-    def _calculate_w3_library_max_book_levels(self):
-        self.library['StaticSum'] = (0
-                      + (25 * (0 < self.construction_buildings['Talent Book Library']['Level']))
-                      + (5 * (0 < self.achievements.get('Checkout Takeout', False)))
-                      + (10 * (0 < self.atom_collider['Atoms']['Oxygen - Library Booker']['Level']))
-                      + (25 * self.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0))
-                      )
-        self.library['ScalingSum'] = (0
-                       + 2 * self.merits[2][2]['Level']
-                       + 2 * self.saltlick.get('Max Book', 0)
-                       )
-        summGroupA = (1 + (.25 * self.sailing['Artifacts'].get('The Winz Lantern', {}).get('Level', 0))
-                      + .01 * self.merits[5][4]['Level']
-                      + .01 * (0 < self.achievements.get('Spectre Stars', False))
-                      + .01 * (0 < self.achievements.get('Regalis My Beloved', False))
-                      )
-        summGroupB = 1 + (.3 * self.sneaking.get('PristineCharms', {}).get('Crystal Comb', 0))
-        self.library['SummoningSum'] = round(
-            0
-            + 10.5 * (self.summoning['Battles']['Cyan'] >= 14)
-            * summGroupA
-            * summGroupB
-        )
-        self.library['MaxBookLevel'] = 100 + self.library['StaticSum'] + self.library['ScalingSum'] + self.library['SummoningSum']
 
     def _calculate_w3_collider_base_costs(self):
         #Formula for base cost: (AtomInfo[3] + AtomInfo[1] * AtomCurrentLevel) * POWER(AtomInfo[2], AtomCurrentLevel)
@@ -2867,22 +2855,37 @@ class Account:
         }
 
     def _calculate_w6(self):
+        self._calculate_w6_summoning_winner_bonuses()
+
+    def _calculate_w6_summoning_winner_bonuses(self):
+        mga = 1.3 if self.sneaking['PristineCharms']['Crystal Comb'] else 1
         self.summoning['WinnerBonusesAdvice'].append(Advice(
             label=f"{{{{ Pristine Charm|#sneaking }}}}: Crystal Comb: "
-                  f"{1 + (.3 * self.sneaking.get('PristineCharms', {}).get('Crystal Comb', 0))}/1.3x",
+                  f"{1 + (.3 * self.sneaking['PristineCharms']['Crystal Comb'])}/1.3x",
             picture_class="crystal-comb",
-            progression=1 if self.sneaking.get("PristineCharms", {}).get('Crystal Comb', False) else 0,
+            progression=int(self.sneaking['PristineCharms']['Crystal Comb']),
             goal=1
         ))
+
         if not self.sneaking['JadeEmporium']['Brighter Lighthouse Bulb']['Obtained']:
             winzLanternPostString = ". Unlocked from {{ Jade Emporium|#sneaking }}"
         else:
             winzLanternPostString = ""
+        mgb = (1 + (
+            (
+                (25 * self.sailing['Artifacts']['The Winz Lantern']['Level'])
+                + self.merits[5][4]['Level']
+                + int(self.achievements['Spectre Stars'])
+                + int(self.achievements['Regalis My Beloved'])
+             )
+             / 100 )
+        )
+
         self.summoning['WinnerBonusesAdvice'].append(Advice(
             label=f"{{{{ Artifact|#sailing }}}}: The Winz Lantern: "
-                  f"{1 + (.25 * self.sailing['Artifacts'].get('The Winz Lantern', {}).get('Level', 0))}/2x{winzLanternPostString}",
+                  f"{1 + (.25 * self.sailing['Artifacts']['The Winz Lantern']['Level'])}/2x{winzLanternPostString}",
             picture_class="the-winz-lantern",
-            progression=self.sailing['Artifacts'].get('The Winz Lantern', {}).get('Level', 0),
+            progression=self.sailing['Artifacts']['The Winz Lantern']['Level'],
             goal=4
         ))
         self.summoning['WinnerBonusesAdvice'].append(Advice(
@@ -2894,22 +2897,48 @@ class Account:
         ))
         self.summoning['WinnerBonusesAdvice'].append(Advice(
             label=f"W6 Achievement: Spectre Stars: "
-                  f"+{1 * (0 < self.achievements.get('Spectre Stars', False))}/1%",
+                  f"+{int(self.achievements['Spectre Stars'])}/1%",
             picture_class="spectre-stars",
-            progression=1 if self.achievements.get('Spectre Stars', False) else 0,
+            progression=int(self.achievements['Spectre Stars']),
             goal=1
         ))
         self.summoning['WinnerBonusesAdvice'].append(Advice(
             label=f"W6 Achievement: Regalis My Beloved: "
-                  f"+{1 * (0 < self.achievements.get('Regalis My Beloved', False))}/1%",
+                  f"+{int(self.achievements['Regalis My Beloved'])}/1%",
             picture_class="regalis-my-beloved",
-            progression=360 if self.achievements.get('Regalis My Beloved', False) else self.summoning['SanctuaryTotal'],
+            progression=360 if not self.achievements['Regalis My Beloved'] else self.summoning['SanctuaryTotal'],
             goal=360
         ))
+        self.summoning['WinnerBonusesMulti'] = max(1, mga * mgb)
+        #print(f"Summoning Winner Bonus Multis: {mga} * {mgb} = {self.summoning['WinnerBonusesMulti']}")
 
     def _calculate_wave_2(self):
+        self._calculate_w3_library_max_book_levels()
         self._calculate_general_character_over_books()
         self._calculate_general_crystal_spawn_chance()
+
+    def _calculate_w3_library_max_book_levels(self):
+        self.library['StaticSum'] = (0
+                      + (25 * (0 < self.construction_buildings['Talent Book Library']['Level']))
+                      + (5 * (0 < self.achievements.get('Checkout Takeout', False)))
+                      + (10 * (0 < self.atom_collider['Atoms']['Oxygen - Library Booker']['Level']))
+                      + (25 * self.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0))
+                      )
+        self.library['ScalingSum'] = (0
+                       + 2 * self.merits[2][2]['Level']
+                       + 2 * self.saltlick.get('Max Book', 0)
+                       )
+        # summGroupA = (1 + (.25 * self.sailing['Artifacts'].get('The Winz Lantern', {}).get('Level', 0))
+        #               + .01 * self.merits[5][4]['Level']
+        #               + .01 * (0 < self.achievements.get('Spectre Stars', False))
+        #               + .01 * (0 < self.achievements.get('Regalis My Beloved', False))
+        #               )
+        # summGroupB = 1 + (.3 * self.sneaking.get('PristineCharms', {}).get('Crystal Comb', 0))
+        self.library['SummoningSum'] = round(
+            10.5 * (self.summoning['Battles']['Cyan'] >= 14)
+            * self.summoning['WinnerBonusesMulti']
+        )
+        self.library['MaxBookLevel'] = 100 + self.library['StaticSum'] + self.library['ScalingSum'] + self.library['SummoningSum']
 
     def _calculate_general_character_over_books(self):
         self.bonus_talents = {

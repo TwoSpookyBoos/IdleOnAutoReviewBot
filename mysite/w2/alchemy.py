@@ -4,7 +4,7 @@ from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import maxTiersPerGroup, bubbles_progressionTiers, vials_progressionTiers, max_IndexOfVials, maxFarmingCrops, atrisk_basicBubbles, \
-    atrisk_lithiumBubbles, cookingCloseEnough, break_you_best, sigils_progressionTiers, max_IndexOfSigils
+    atrisk_lithiumBubbles, cookingCloseEnough, break_you_best, sigils_progressionTiers, max_IndexOfSigils, max_VialLevel
 
 logger = get_logger(__name__)
 
@@ -463,11 +463,94 @@ def setAlchemyP2W() -> AdviceSection:
 
 
 def getSigilSpeedAdviceGroup() -> AdviceGroup:
-    speed_Advice = []
+
+    # 1 + (achievement, 0 or 20) + (Pea Pod sigil times Chilled Yarn artifact) + (20 * Gem Shop purchases) + (Willow Sippy (Equinox Log) vial * vialMastery) + (Sigil Stamp)
+    # * multi(Summoning Winner Bonus: Green9 + Yellow4 + Blue4 + Purple7 + Cyan3)
+    # * multi(Tuttle vial * vialMastery)
+    # * multi(Bonus Ballot)
+    # Multi Group A = several
+    mga = 1 + ((1) / 100)
+    mga_label = f"Multi Group A: {mga}x"
+
+    # Multi Group B = Summoning Winner Bonuses
+    mgb = 1 + ((1) / 100)
+    mgb_label = f"Multi Group B: {mgb}x"
+
+    # Multi Group C = Tuttle Vial
+    mgc = 1 + (
+            (session_data.account.alchemy_vials['Willow Sippy (Willow Logs)']['Value']
+             * session_data.account.vialMasteryMulti
+             * session_data.account.labBonuses['My 1st Chemistry Set']['Value'])
+            / 100)
+    mgc_label = f"Multi Group C: {mgc}x"
+
+    # Multi Group D = Bonus Ballot
+    ballot_active = session_data.account.ballot['CurrentBuff'] == 17
+    if ballot_active:
+        ballot_status = "is Active"
+    elif not ballot_active and session_data.account.ballot['CurrentBuff'] != "Unknown":
+        ballot_status = "is Inactive"
+    else:
+        ballot_status = "status is not available in provided data"
+    ballot_multi = 1 + (session_data.account.ballot['Buffs'][17]['Value'] / 100)
+    ballot_multi_active = max(1, ballot_multi * ballot_active)
+
+    mgd = ballot_multi_active
+    mgd_label = f"Multi Group D: {mgd}x"
+
+    total_multi = max(1, mga * mgb * mgc * mgd)
+
+    speed_Advice = {
+        mga_label: [],
+        mgb_label: [],
+        mgc_label: [],
+        mgd_label: [],
+    }
+
+    # Multi Group A
+    # Multi Group B
+    #Green9 + Yellow4 + Blue4 + Purple7 + Cyan3
+    speed_Advice[mgb_label].append(Advice(
+        label=f"Summoning match Green 9: "
+              f"+{session_data.account.summoning['BattleDetails']['Green'][9]['RewardBaseValue'] * session_data.account.summoning['BattleDetails']['Green'][9]['Defeated']}"
+              f"/{session_data.account.summoning['BattleDetails']['Green'][9]['RewardBaseValue']}",
+        picture_class=session_data.account.summoning['BattleDetails']['Green'][9]['Image'],
+        progression=1 if session_data.account.summoning['BattleDetails']['Green'][9]['Defeated'] else 0,
+        goal=1
+    ))
+    for advice in session_data.account.summoning['WinnerBonusesAdvice']:
+        speed_Advice[mgb_label].append(advice)
+
+    # Multi Group C
+    speed_Advice[mgc_label].append(Advice(
+        label=f"{{{{ Vial|#vials }}}}: Turtle Tisane (Tuttle)",
+        picture_class="tuttle",
+        progression=session_data.account.alchemy_vials['Turtle Tisane (Tuttle)']['Level'],
+        goal=max_VialLevel
+    ))
+    speed_Advice[mgc_label].append(Advice(
+        label=f"Lab Bonus: My 1st Chemistry Set: {session_data.account.labBonuses['My 1st Chemistry Set']['Value']}x",
+        picture_class="my-1st-chemistry-set",
+        progression=int(session_data.account.labBonuses['My 1st Chemistry Set']['Enabled']),
+        goal=1
+    ))
+    speed_Advice[mgc_label].append(Advice(
+        label=f"{{{{ Rift|#rift }}}} Bonus: Vial Mastery: {session_data.account.vialMasteryMulti:.2f}x",
+        picture_class="vial-mastery",
+        progression=f"{1 if session_data.account.rift['VialMastery'] else 0}",
+        goal=1
+    ))
+
+    # Multi Group D
+    speed_Advice[mgd_label].append(Advice(
+        label=f"Weekly Ballot: {ballot_multi_active:.3f}/{ballot_multi:.3f}x"
+              f"<br>(Buff {ballot_status})",
+        picture_class="ballot-17",
+    ))
 
     speed_AdviceGroup = AdviceGroup(
         tier='',
-        pre_string="Info- Sources of Sigil Charging Speed",
+        pre_string=f"Info- Sources of Sigil Charging Speed. Grant total: {total_multi}",
         advices=speed_Advice
     )
     return speed_AdviceGroup
