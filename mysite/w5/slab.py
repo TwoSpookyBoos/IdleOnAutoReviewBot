@@ -4,7 +4,7 @@ from utils.logging import get_logger
 from flask import g as session_data
 from consts import slabList, reclaimableQuestItems, vendorItems, anvilItems, dungeonWeaponsList, maxDungeonWeaponsAvailable, \
     dungeonArmorsList, maxDungeonArmorsAvailable, dungeonJewelryList, maxDungeonJewelryAvailable, dungeonDropsList, anvilTabs, vendors, \
-    break_you_best, slab_itemNameReplacementDict, hidden_but_constantly_avaiable_slabList
+    break_you_best, slab_itemNameReplacementDict, hidden_but_constantly_avaiable_slabList, hidden_gemshopItems
 
 logger = get_logger(__name__)
 
@@ -36,6 +36,7 @@ def setSlabProgressionTier():
             "Armor": [],
             "Weapons": []
         },
+        "GemShop": [],
     }
     slab_AdviceGroupDict = {}
     slab_AdviceSection = AdviceSection(
@@ -108,8 +109,15 @@ def setSlabProgressionTier():
                         picture_class=getItemDisplayName(itemName) if itemName not in slab_itemNameReplacementDict else slab_itemNameReplacementDict[itemName]))
                     continue
                     # If the item is a Dungeon Jewelry AND the player has purchased all MaxJewelry
+                # If the item is a Dungeon Jewelry AND the player has purchased all MaxJewelry
                 if itemName in dungeonJewelryList and session_data.account.dungeon_upgrades.get("MaxJewelry", [0])[0] >= maxDungeonJewelryAvailable:
                     slab_AdviceDict["Dungeon"]["Armor"].append(Advice(
+                        label=getItemDisplayName(itemName),
+                        picture_class=getItemDisplayName(itemName) if itemName not in slab_itemNameReplacementDict else slab_itemNameReplacementDict[itemName]))
+                    continue
+                # If the item can always (or at least regularly) be purchased from the Gem Shop
+                if itemName in hidden_gemshopItems:
+                    slab_AdviceDict["GemShop"].append(Advice(
                         label=getItemDisplayName(itemName),
                         picture_class=getItemDisplayName(itemName) if itemName not in slab_itemNameReplacementDict else slab_itemNameReplacementDict[itemName]))
                     continue
@@ -168,9 +176,14 @@ def setSlabProgressionTier():
         pre_string=f"Could be dropped in the Dungeon",
         advices=slab_AdviceDict["Dungeon"]
     )
+    slab_AdviceGroupDict["GemShop"] = AdviceGroup(
+        tier='',
+        pre_string=f"Could be purchased from the Gem Shop",
+        advices=slab_AdviceDict["GemShop"]
+    )
 
-    #The Deprecated group is currently commented out as it was causing a lot of confusion on day one. Might bring it back later though.
-    slab_AdviceGroupDict["Deprecated"] = getHiddenAdviceGroup()
+    #The Hidden group is currently commented out as it was causing a lot of confusion on day one. Might bring it back later though.
+    slab_AdviceGroupDict["Hidden"] = getHiddenAdviceGroup()
 
     # Generate AdviceSection
     overall_SlabTier = min(max_tier, tier_Slab)
