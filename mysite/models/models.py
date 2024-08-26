@@ -1364,6 +1364,7 @@ class Account:
                 self.alchemy_p2w["Player"] = raw_p2w_list[3]
             except:
                 self.alchemy_p2w["Player"] = [0] * 2
+
             for sigilName in self.alchemy_p2w["Sigils"]:
                 try:
                     self.alchemy_p2w["Sigils"][sigilName]["PlayerHours"] = float(raw_p2w_list[4][self.alchemy_p2w["Sigils"][sigilName]["Index"]])

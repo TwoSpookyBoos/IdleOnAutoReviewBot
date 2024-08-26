@@ -75,6 +75,7 @@ def main(inputData, runType="web"):
         section_alchBubbles := alchemy.setAlchemyBubblesProgressionTier(),
         section_alchVials := alchemy.setAlchemyVialsProgressionTier(),
         section_alchP2W := alchemy.setAlchemyP2W(),
+        section_alchSigils := alchemy.setAlchemySigilsProgressionTier(),
         # section_obols := idleon_Obols.setObolsProgressionTier()
     ]
     # World 3

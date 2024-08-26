@@ -1,12 +1,10 @@
-from math import floor
-
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import safe_loads
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import maxTiersPerGroup, bubbles_progressionTiers, vials_progressionTiers, max_IndexOfVials, maxFarmingCrops, atrisk_basicBubbles, \
-    atrisk_lithiumBubbles, cookingCloseEnough, break_you_best
+    atrisk_lithiumBubbles, cookingCloseEnough, break_you_best, sigils_progressionTiers, max_IndexOfSigils
 
 logger = get_logger(__name__)
 
@@ -464,35 +462,87 @@ def setAlchemyP2W() -> AdviceSection:
                                     f"<br>Try to purchase the basic upgrades before Mid W5, and Player upgrades after each Alchemy level up!")
     return p2w_AdviceSection
 
-# def setAlchemySigils() -> AdviceSection:
-#     sigils_AdviceDict = {
-#         "S": [], "A": [], "B": [], "C": [], "D": [], "F": []
-#     }
-#     sigils_AdviceGroupDict = {}
-#     sigils_AdviceSection = AdviceSection(
-#         name="Sigils",
-#         tier="Not Yet Evaluated",
-#         header="Best sigils tier met: Not Yet Evaluated. Recommended sigils actions:",
-#         picture="Sigils.png"
-#     )
-#
-#     highestLabLevel = max(session_data.account.all_skills["Laboratory"])
-#     if highestLabLevel < 1:
-#         sigils_AdviceSection.header = "Come back after unlocking the Laboratory skill in World 4!"
-#         return sigils_AdviceSection
-#
-#     alchemy_sigilsList = session_data.account.alchemy_p2w["Sigils"]
-#     sigils_AdviceDict["S"].append(Advice(
-#         label="Jade Emporium: Ionized Sigils",
-#         picture_class="ionized-sigils",
-#         progression=f"{1 if 'Ionized Sigils' in session_data.account.jade_emporium_purchases else 0}",
-#         goal=1
-#     ))
-#
-#     # for tierIndex, tierContents in sigils_progressionTiers.items():
-#     #     for sigilName in tierContents.get("Sigils", []):
-#     #         if alchemy_sigilsList.get(sigilName, {}).get("PrechargeLevel") < max_IndexOfSigils:
-#     #
-#     #
-#     # #Generate AdviceSection
-#     return sigils_AdviceSection
+def setAlchemySigilsProgressionTier() -> AdviceSection:
+    sigils_AdviceDict = {
+        'Sigils': {}
+    }
+    sigils_AdviceGroupDict = {}
+    sigils_AdviceSection = AdviceSection(
+        name='Sigils',
+        tier="Not Yet Evaluated",
+        header="Best Sigils tier met: Not Yet Evaluated. Recommended Sigils actions:",
+        picture="Sigils.png"
+    )
+
+    highestLabLevel = max(session_data.account.all_skills["Lab"])
+    if highestLabLevel < 1:
+        sigils_AdviceSection.header = "Come back after unlocking the Laboratory skill in World 4!"
+        return sigils_AdviceSection
+
+    account_sigils = session_data.account.alchemy_p2w['Sigils']
+    infoTiers = 4
+    max_tier = max(sigils_progressionTiers.keys()) - infoTiers
+    tier_Sigils = 0
+
+    # Assess Tiers
+    for tierNumber, tierContents in sigils_progressionTiers.items():
+        subgroupName = f"To reach {'Informational ' if tierNumber > max_tier else ''}Tier {tierNumber}"
+        if 'Ionized Sigils' in tierContents.get('Other', {}) and not session_data.account.sneaking['JadeEmporium']['Ionized Sigils']['Obtained']:
+            if subgroupName not in sigils_AdviceDict['Sigils'] and len(sigils_AdviceDict['Sigils']) < maxTiersPerGroup:
+                sigils_AdviceDict['Sigils'][subgroupName] = []
+            if subgroupName in sigils_AdviceDict['Sigils']:
+                sigils_AdviceDict['Sigils'][subgroupName].append(Advice(
+                    label=f"{{{{ Jade Emporium|#sneaking }}}}: Purchase Ionized Sigils to unlock Red sigils",
+                    picture_class='ionized-sigils',
+                    progression=int(session_data.account.sneaking['JadeEmporium']['Ionized Sigils']['Obtained']),
+                    goal=1
+                ))
+        # Unlock new Sigils
+        for requiredSigil, requiredLevel in tierContents.get('Unlock', {}).items():
+            if account_sigils[requiredSigil]['PrechargeLevel'] < requiredLevel:
+                if subgroupName not in sigils_AdviceDict['Sigils'] and len(sigils_AdviceDict['Sigils']) < maxTiersPerGroup:
+                    sigils_AdviceDict['Sigils'][subgroupName] = []
+                if subgroupName in sigils_AdviceDict['Sigils']:
+                    sigils_AdviceDict['Sigils'][subgroupName].append(Advice(
+                        label=f"Unlock {requiredSigil}",
+                        picture_class=requiredSigil,
+                        progression=f"{account_sigils[requiredSigil]['PlayerHours']:.2f}",
+                        goal=f"{account_sigils[requiredSigil]['Requirements'][requiredLevel - 1]}"
+                    ))
+        # Level Up unlocked Sigils
+        for requiredSigil, requiredLevel in tierContents.get('LevelUp', {}).items():
+            if account_sigils[requiredSigil]['PrechargeLevel'] < requiredLevel:
+                if subgroupName not in sigils_AdviceDict['Sigils'] and len(sigils_AdviceDict['Sigils']) < maxTiersPerGroup:
+                    sigils_AdviceDict['Sigils'][subgroupName] = []
+                if subgroupName in sigils_AdviceDict['Sigils']:
+                    sigils_AdviceDict['Sigils'][subgroupName].append(Advice(
+                        label=f"Level up {requiredSigil}",
+                        picture_class=requiredSigil,
+                        progression=f"{0 if requiredLevel > account_sigils[requiredSigil]['PrechargeLevel']+1 else account_sigils[requiredSigil]['PlayerHours']:.2f}",
+                        goal=f"{account_sigils[requiredSigil]['Requirements'][requiredLevel - 1]}"
+                    ))
+        if tier_Sigils == tierNumber-1 and subgroupName not in sigils_AdviceDict['Sigils']:
+            tier_Sigils = tierNumber
+
+    # Generate AdviceGroups
+    sigils_AdviceGroupDict['Sigils'] = AdviceGroup(
+        tier=f"{tier_Sigils if tier_Sigils < max_tier else ''}",
+        pre_string=f"{'Informational- ' if tier_Sigils >= max_tier else ''}"
+                   f"Unlock and level {'all' if tier_Sigils >= max_tier else 'important'} Sigils",
+        advices=sigils_AdviceDict['Sigils'],
+    )
+
+    overall_SigilsTier = min(max_tier + infoTiers, tier_Sigils)
+
+    # #Generate AdviceSection
+    tier_section = f"{overall_SigilsTier}/{max_tier}"
+    sigils_AdviceSection.tier = tier_section
+    sigils_AdviceSection.pinchy_rating = overall_SigilsTier
+    sigils_AdviceSection.groups = sigils_AdviceGroupDict.values()
+    if overall_SigilsTier >= max_tier:
+        sigils_AdviceSection.header = f"Best Sigils tier met: {tier_section}{break_you_best}"
+        sigils_AdviceSection.complete = True
+    else:
+        sigils_AdviceSection.header = f"Best Sigils tier met: {tier_section}"
+
+    return sigils_AdviceSection

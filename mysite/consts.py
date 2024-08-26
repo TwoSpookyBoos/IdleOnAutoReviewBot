@@ -804,16 +804,16 @@ sigils_progressionTiers = {
     0: {},
     1: {
         "Unlock": {
-            "Big Muscle": 1, "Pumped Kicks": 1, "Odd Literarture": 1, "Good Fortune": 1, "Plunging Sword": 1, "Wizardly Hat": 1, "Envelope Pile": 1,
+            "Big Muscle": 1, "Pumped Kicks": 1, "Odd Litearture": 1, "Good Fortune": 1, "Plunging Sword": 1, "Wizardly Hat": 1, "Envelope Pile": 1,
             "Shiny Beacon": 1, "Metal Exterior": 1, "Two Starz": 1, "Pipe Gauge": 1, "Trove": 1, "Pea Pod": 1,
         },
         "LevelUp": {
-            "Big Muscle": 2, "Pumped Kicks": 2, "Odd Literarture": 2, "Envelope Pile": 2,
+            "Big Muscle": 2, "Pumped Kicks": 2, "Odd Litearture": 2, "Envelope Pile": 2,
         },
     },
     2: {
         "Unlock": {
-            "Tuft Of Hair": 1, "Emoji Veggie": 1, "Vip Parchment": 1, "Dream Catcher": 1,
+            "Tuft Of Hair": 1, "Emoji Veggie": 1, "VIP Parchment": 1, "Dream Catcher": 1,
         },
         "LevelUp": {
             "Pea Pod": 2, "Trove": 2,
@@ -855,7 +855,7 @@ sigils_progressionTiers = {
     },
     8: {
         "LevelUp": {
-            "Peculiar Vial": 3, "Shiny Beacon": 3, "Big Muscle": 3, "Pumped Kicks": 3, "Odd Liteartue": 3,
+            "Peculiar Vial": 3, "Shiny Beacon": 3, "Big Muscle": 3, "Pumped Kicks": 3, "Odd Litearture": 3,
         },
     },
     9: {
@@ -880,7 +880,12 @@ sigils_progressionTiers = {
     },
     13: {
         "LevelUp": {
-            "Wizardly Hat": 3, "Metal Exterior": 3, "VIP Parchment": 3, "Tuft of Hair": 3,
+            "Wizardly Hat": 2, "Metal Exterior": 2, "VIP Parchment": 2, "Tuft Of Hair": 2,
+        },
+    },
+    14: {
+        "LevelUp": {
+            "Wizardly Hat": 3, "Metal Exterior": 3, "VIP Parchment": 3, "Tuft Of Hair": 3,
         },
     },
 }
@@ -3858,7 +3863,7 @@ vialsDict = {
 sigilsDict = {
     "Big Muscle":       {"Index": 0,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [2, 100, 50000]},
     "Pumped Kicks":     {"Index": 2,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [3, 150, 60000]},
-    "Odd Literarture":  {"Index": 4,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [5, 200, 70000]},
+    "Odd Litearture":   {"Index": 4,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [5, 200, 70000]},
     "Good Fortune":     {"Index": 6,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [8, 300, 90000]},
     "Plunging Sword":   {"Index": 8,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [15, 700, 100000]},
     "Wizardly Hat":     {"Index": 10, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [24, 1250, 130000]},
@@ -3871,7 +3876,7 @@ sigilsDict = {
     "Pea Pod":          {"Index": 24, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [2100, 15000, 420000]},
     "Tuft Of Hair":     {"Index": 26, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [3000, 25000, 450000]},
     "Emoji Veggie":     {"Index": 28, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [4500, 33000, 480000]},
-    "Vip Parchment":    {"Index": 30, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [6300, 42000, 520000]},
+    "VIP Parchment":    {"Index": 30, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [6300, 42000, 520000]},
     "Dream Catcher":    {"Index": 32, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [7000, 50000, 560000]},
     "Duster Studs":     {"Index": 34, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [8000, 60000, 600000]},
     "Garlic Glove":     {"Index": 36, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [9000, 70000, 650000]},
