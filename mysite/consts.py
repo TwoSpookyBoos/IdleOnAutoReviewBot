@@ -441,8 +441,7 @@ stamps_progressionTiers = {
         "Skill": ["Dark Triad Essence Stamp"],
         "Misc": ["Atomic Stamp"],
         "Specific": {
-            'Mason Jar Stamp': 80, 'Bugsack Stamp': 136, 'Bag o Heads Stamp': 136, 'Multitool Stamp': 150,
-            'Matty Bag Stamp': 280, 'Crystallin': 250,
+            'Mason Jar Stamp': 80, 'Bugsack Stamp': 168, 'Bag o Heads Stamp': 168, 'Multitool Stamp': 210,
             'Pickaxe Stamp': 105, 'Hatchet Stamp': 105,
             'Drippy Drop Stamp': 110, 'Potion Stamp': 60,
             'Card Stamp': 200,
@@ -450,8 +449,7 @@ stamps_progressionTiers = {
     }},
     18: {"TotalStampLevels": 11000, "Stamps": {
         "Specific": {
-            'Mason Jar Stamp': 88,
-            'Bugsack Stamp': 168, 'Bag o Heads Stamp': 168,  'Multitool Stamp': 210,
+            'Mason Jar Stamp': 88, 'Matty Bag Stamp': 280, 'Crystallin': 250,
             'Golden Apple Stamp': 100,
         }
     }},

@@ -150,7 +150,6 @@ def setAlchemyVialsProgressionTier() -> AdviceSection:
 
     return vial_AdviceSection
 
-
 def getBubbleExclusions():
     exclusionsList = []
     #If all crops owned or Evolution GMO is level 10+, exclude the requirement for Cropius Mapper
@@ -462,6 +461,18 @@ def setAlchemyP2W() -> AdviceSection:
                                     f"<br>Try to purchase the basic upgrades before Mid W5, and Player upgrades after each Alchemy level up!")
     return p2w_AdviceSection
 
+
+def getSigilSpeedAdviceGroup() -> AdviceGroup:
+    speed_Advice = []
+
+    speed_AdviceGroup = AdviceGroup(
+        tier='',
+        pre_string="Info- Sources of Sigil Charging Speed",
+        advices=speed_Advice
+    )
+    return speed_AdviceGroup
+
+
 def setAlchemySigilsProgressionTier() -> AdviceSection:
     sigils_AdviceDict = {
         'Sigils': {}
@@ -531,6 +542,7 @@ def setAlchemySigilsProgressionTier() -> AdviceSection:
                    f"Unlock and level {'all' if tier_Sigils >= max_tier else 'important'} Sigils",
         advices=sigils_AdviceDict['Sigils'],
     )
+    sigils_AdviceGroupDict['Speed'] = getSigilSpeedAdviceGroup()
 
     overall_SigilsTier = min(max_tier + infoTiers, tier_Sigils)
 
