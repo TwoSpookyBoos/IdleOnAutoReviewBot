@@ -1,5 +1,5 @@
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.data_formatting import safe_loads
+from utils.data_formatting import safe_loads, mark_advice_completed
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
@@ -673,6 +673,10 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
         progression=int(ballot_active),
         goal=1
     ))
+
+    for group_name in speed_Advice:
+        for advice in speed_Advice[group_name]:
+            mark_advice_completed(advice)
 
     speed_AdviceGroup = AdviceGroup(
         tier='',

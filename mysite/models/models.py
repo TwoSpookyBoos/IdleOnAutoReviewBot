@@ -26,6 +26,7 @@ from consts import (
     sigilsDict,
     arcadeBonuses,
     poBoxDict,
+    ballotDict,
     # W3
     buildingsDict, shrinesList, saltLickList, atomsList, colliderStorageLimitList,
     prayersDict,
@@ -33,19 +34,20 @@ from consts import (
     expected_talentsDict,
     printerAllIndexesBeingPrinted,
     # W4
+    riftRewardsDict,
     labJewelsDict, labBonusesDict, nblbMaxBubbleCount, labChipsDict,
     maxMeals, maxMealLevel, cookingMealDict, maxCookingTables,
     maxNumberOfTerritories, indexFirstTerritoryAssignedPet, territoryNames, slotUnlockWavesList, breedingUpgradesDict, breedingGeneticsList,
     breedingShinyBonusList, breedingSpeciesDict, getShinyLevelFromDays, getDaysToNextShinyLevel,
     # W5
-    sailingDict,
+    sailingDict, numberOfArtifactTiers,
     getStyleNameFromIndex, divinity_divinitiesDict, getDivinityNameFromIndex,
     gamingSuperbitsDict,
     # W6
     jade_emporium, pristineCharmsList, sneakingGemstonesFirstIndex, sneakingGemstonesList, sneakingGemstonesStatList,
     getMoissaniteValue, getGemstoneBaseValue, getGemstoneBoostedValue, getGemstonePercent,
     marketUpgradeList, landrankDict,
-    summoningBattleCountsDict, summoningDict, riftRewardsDict, ballotDict, numberOfArtifactTiers,
+    summoningBattleCountsDict, summoningDict,
 )
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
 
