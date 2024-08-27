@@ -3449,6 +3449,7 @@ stamp_maxes = {
     "Crystallin": 270,
     "Forge Stamp": 230,
     "Biblio Stamp": 64,
+    "Sigil Stamp": 312,
 }
 stampsDict = {
     "Combat": {

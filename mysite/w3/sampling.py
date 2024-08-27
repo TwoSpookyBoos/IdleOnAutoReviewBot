@@ -37,12 +37,12 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     account_sum += 0.5 * session_data.account.saltlick.get('Printer Sample Size', 0)
     account_sum += 0.5 * session_data.account.merits[2][4]['Level']
     account_sum += session_data.account.family_bonuses['Maestro']['Value']
-    stampleValue = session_data.account.stamps.get('Stample Stamp', {}).get('Value', 0)
-    amplestampleValue = session_data.account.stamps.get('Amplestample Stamp', {}).get('Value', 0)
-    if session_data.account.labBonuses.get("Certified Stamp Book", {}).get("Enabled", False):
+    stampleValue = session_data.account.stamps['Stample Stamp']['Value']
+    amplestampleValue = session_data.account.stamps['Amplestample Stamp']['Value']
+    if session_data.account.labBonuses['Certified Stamp Book']['Enabled']:
         stampleValue *= 2
         amplestampleValue *= 2
-    if session_data.account.sneaking.get("PristineCharms", {}).get("Liqorice Rolle", False):
+    if session_data.account.sneaking["PristineCharms"]["Liqorice Rolle"]:
         stampleValue *= 1.25
         amplestampleValue *= 1.25
     account_sum += stampleValue
@@ -95,29 +95,29 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     psrAdvices[accountSubgroup].append(Advice(
         label=f"Amplestample Stamp: +{amplestampleValue:.3f}/6.45%",
         picture_class="amplestample-stamp",
-        progression=session_data.account.stamps.get("Amplestample Stamp", {}).get("Level", 0),
+        progression=session_data.account.stamps['Amplestample Stamp']['Level'],
         goal=32,
-        resource=session_data.account.stamps.get("Amplestample Stamp", {}).get("Material", 0),
+        resource=session_data.account.stamps['Amplestample Stamp']['Material'],
     ))
     psrAdvices[accountSubgroup].append(Advice(
         label=f"Stample Stamp: +{stampleValue:.3f}/6.667%",
         picture_class="stample-stamp",
-        progression=session_data.account.stamps.get("Stample Stamp", {}).get("Level", 0),
+        progression=session_data.account.stamps['Stample Stamp']['Level'],
         goal=60,
-        resource=session_data.account.stamps.get("Stample Stamp", {}).get("Material", 0),
+        resource=session_data.account.stamps['Stample Stamp']['Material'],
     ))
     psrAdvices[accountSubgroup].append(Advice(
         label=f"Lab Bonus: Certified Stamp Book: "
-              f"{'2/2x (Already applied)' if session_data.account.labBonuses.get('Certified Stamp Book', {}).get('Enabled', False) else '1/2x'}",
+              f"{'2/2x<br>(Already applied to Stamps above)' if session_data.account.labBonuses['Certified Stamp Book']['Enabled'] else '1/2x'}",
         picture_class="certified-stamp-book",
-        progression=int(session_data.account.labBonuses.get("Certified Stamp Book", {}).get("Enabled", False)),
+        progression=int(session_data.account.labBonuses['Certified Stamp Book']['Enabled']),
         goal=1
     ))
     psrAdvices[accountSubgroup].append(Advice(
         label=f"{{{{ Pristine Charm|#sneaking }}}}: Liqorice Rolle: "
-              f"{'1.25/1.25x (Already applied)' if session_data.account.sneaking.get('PristineCharms', {}).get('Liqorice Rolle', False) else '1/1.25x'}",
+              f"{'1.25/1.25x<br>(Already applied to Stamps above)' if session_data.account.sneaking['PristineCharms']['Liqorice Rolle'] else '1/1.25x'}",
         picture_class="liqorice-rolle",
-        progression=int(session_data.account.sneaking.get("PristineCharms", {}).get("Liqorice Rolle", False)),
+        progression=int(session_data.account.sneaking['PristineCharms']['Liqorice Rolle']),
         goal=1
     ))
     psrAdvices[accountSubgroup].append(Advice(

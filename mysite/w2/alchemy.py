@@ -4,7 +4,8 @@ from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import maxTiersPerGroup, bubbles_progressionTiers, vials_progressionTiers, max_IndexOfVials, maxFarmingCrops, atrisk_basicBubbles, \
-    atrisk_lithiumBubbles, cookingCloseEnough, break_you_best, sigils_progressionTiers, max_IndexOfSigils, max_VialLevel
+    atrisk_lithiumBubbles, cookingCloseEnough, break_you_best, sigils_progressionTiers, max_IndexOfSigils, max_VialLevel, numberOfArtifactTiers, stamp_maxes, \
+    lavaFunc
 
 logger = get_logger(__name__)
 
@@ -468,10 +469,34 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
     # * multi(Summoning Winner Bonus: Green9 + Yellow5 + Blue5 + Purple7 + Cyan3)
     # * multi(Tuttle vial * vialMastery)
     # * multi(Bonus Ballot)
+
     # Multi Group A = several
+    peapod_values = [0, 25, 50, 100]
+    chilled_yarn_multi = [1, 2, 3, 4, 5]
+    player_peapod_value = (
+        peapod_values[session_data.account.alchemy_p2w['Sigils']['Pea Pod']['Level']]
+        * chilled_yarn_multi[session_data.account.sailing['Artifacts']['Chilled Yarn']['Level']]
+    )
+    willow_vial_value = (
+        session_data.account.alchemy_vials['Willow Sippy (Willow Logs)']['Value']
+        * session_data.account.vialMasteryMulti
+        * session_data.account.labBonuses['My 1st Chemistry Set']['Value']
+    )
+
+    player_sigil_stamp_value = session_data.account.stamps.get('Sigil Stamp', {}).get('Value', 0)
+    goal_sigil_stamp_value = lavaFunc('decay', stamp_maxes['Sigil Stamp'], 40, 150) * 2 * 1.25
+    if session_data.account.labBonuses['Certified Stamp Book']['Enabled']:
+        player_sigil_stamp_value *= 2
+    if session_data.account.sneaking["PristineCharms"]["Liqorice Rolle"]:
+        player_sigil_stamp_value *= 1.25
+
     mga = 1 + (
         (
             (20 * session_data.account.achievements['Vial Junkee'])
+            + (20 * session_data.account.gemshop['Sigil Supercharge'])
+            + player_peapod_value
+            + willow_vial_value
+            + player_sigil_stamp_value
         ) / 100
     )
     mga_label = f"Multi Group A: {mga:.3f}x"
@@ -496,11 +521,12 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
     mgb_label = f"Multi Group B: {mgb:.3f}x"
 
     # Multi Group C = Tuttle Vial
-    mgc = 1 + (
-            (session_data.account.alchemy_vials['Willow Sippy (Willow Logs)']['Value']
+    tuttle_vial_multi = 1 + (
+            (session_data.account.alchemy_vials['Turtle Tisane (Tuttle)']['Value']
              * session_data.account.vialMasteryMulti
              * session_data.account.labBonuses['My 1st Chemistry Set']['Value'])
             / 100)
+    mgc = tuttle_vial_multi
     mgc_label = f"Multi Group C: {mgc:.3f}x"
 
     # Multi Group D = Bonus Ballot
@@ -534,6 +560,69 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
         progression=int(session_data.account.achievements['Vial Junkee']),
         goal=1
     ))
+    speed_Advice[mga_label].append(Advice(
+        label=f"{{{{ Gem Shop|#gem-shop }}}}: Sigil Supercharge: "
+              f"+{20 * session_data.account.gemshop['Sigil Supercharge']}/{20 * 10}%",
+        picture_class="sigil-supercharge",
+        progression=session_data.account.gemshop['Sigil Supercharge'],
+        goal=10
+    ))
+    speed_Advice[mga_label].append(Advice(
+        label=f"Sigil: Level {session_data.account.alchemy_p2w['Sigils']['Pea Pod']['Level']}"
+              f" Pea Pod: +{player_peapod_value}/{peapod_values[-1] * chilled_yarn_multi[-1]}%",
+        picture_class="pea-pod",
+        progression=session_data.account.alchemy_p2w['Sigils']['Pea Pod']['Level'],
+        goal=max_IndexOfSigils
+    ))
+    speed_Advice[mga_label].append(Advice(
+        label=f"{{{{ Artifact|#sailing}}}}: Chilled Yarn: {chilled_yarn_multi[session_data.account.sailing['Artifacts']['Chilled Yarn']['Level']]}"
+              f"/{chilled_yarn_multi[-1]}x"
+              f"<br>(Already applied to Pea Pod Sigil above)",
+        picture_class="chilled-yarn",
+        progression=session_data.account.sailing['Artifacts']['Chilled Yarn']['Level'],
+        goal=numberOfArtifactTiers
+    ))
+    speed_Advice[mga_label].append(Advice(
+        label=f"{{{{ Vial|#vials }}}}: Willow Sippy (Willow Logs): +{willow_vial_value}",
+        picture_class="willow-logs",
+        progression=session_data.account.alchemy_vials['Willow Sippy (Willow Logs)']['Level'],
+        goal=max_VialLevel
+    ))
+    speed_Advice[mga_label].append(Advice(
+        label=f"Lab Bonus: My 1st Chemistry Set: {session_data.account.labBonuses['My 1st Chemistry Set']['Value']}x"
+              f"<br>(Already applied to Vial above)",
+        picture_class="my-1st-chemistry-set",
+        progression=int(session_data.account.labBonuses['My 1st Chemistry Set']['Enabled']),
+        goal=1
+    ))
+    speed_Advice[mga_label].append(Advice(
+        label=f"{{{{ Rift|#rift }}}} Bonus: Vial Mastery: {session_data.account.vialMasteryMulti:.2f}x"
+              f"<br>(Already applied to Vial above)",
+        picture_class="vial-mastery",
+        progression=f"{1 if session_data.account.rift['VialMastery'] else 0}",
+        goal=1
+    ))
+    speed_Advice[mga_label].append(Advice(
+        label=f"Sigil Stamp: +{player_sigil_stamp_value:.3f}/{goal_sigil_stamp_value:.3f}%",
+        picture_class="sigil-stamp",
+        progression=session_data.account.stamps['Sigil Stamp']['Level'],
+        goal=stamp_maxes['Sigil Stamp'],
+        resource=session_data.account.stamps['Sigil Stamp']['Material'],
+    ))
+    speed_Advice[mga_label].append(Advice(
+        label=f"Lab Bonus: Certified Stamp Book: "
+              f"{'2/2x<br>(Already applied to Stamp above)' if session_data.account.labBonuses.get('Certified Stamp Book', {}).get('Enabled', False) else '1/2x'}",
+        picture_class="certified-stamp-book",
+        progression=int(session_data.account.labBonuses.get("Certified Stamp Book", {}).get("Enabled", False)),
+        goal=1
+    ))
+    speed_Advice[mga_label].append(Advice(
+        label=f"{{{{ Pristine Charm|#sneaking }}}}: Liqorice Rolle: "
+              f"{'1.25/1.25x<br>(Already applied to Stamp above)' if session_data.account.sneaking.get('PristineCharms', {}).get('Liqorice Rolle', False) else '1/1.25x'}",
+        picture_class="liqorice-rolle",
+        progression=int(session_data.account.sneaking.get("PristineCharms", {}).get("Liqorice Rolle", False)),
+        goal=1
+    ))
 
     # Multi Group B
     for color, battleNumber in {"Green": 9, "Yellow": 5, "Blue": 5, "Purple": 7, "Cyan": 3}.items():
@@ -556,19 +645,21 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
 
     # Multi Group C
     speed_Advice[mgc_label].append(Advice(
-        label=f"{{{{ Vial|#vials }}}}: Turtle Tisane (Tuttle)",
+        label=f"{{{{ Vial|#vials }}}}: Turtle Tisane (Tuttle): {tuttle_vial_multi}x",
         picture_class="tuttle",
         progression=session_data.account.alchemy_vials['Turtle Tisane (Tuttle)']['Level'],
         goal=max_VialLevel
     ))
     speed_Advice[mgc_label].append(Advice(
-        label=f"Lab Bonus: My 1st Chemistry Set: {session_data.account.labBonuses['My 1st Chemistry Set']['Value']}x",
+        label=f"Lab Bonus: My 1st Chemistry Set: {session_data.account.labBonuses['My 1st Chemistry Set']['Value']}x"
+              f"<br>(Already applied to Vial above)",
         picture_class="my-1st-chemistry-set",
         progression=int(session_data.account.labBonuses['My 1st Chemistry Set']['Enabled']),
         goal=1
     ))
     speed_Advice[mgc_label].append(Advice(
-        label=f"{{{{ Rift|#rift }}}} Bonus: Vial Mastery: {session_data.account.vialMasteryMulti:.2f}x",
+        label=f"{{{{ Rift|#rift }}}} Bonus: Vial Mastery: {session_data.account.vialMasteryMulti:.2f}x"
+              f"<br>(Already applied to Vial above)",
         picture_class="vial-mastery",
         progression=f"{1 if session_data.account.rift['VialMastery'] else 0}",
         goal=1
