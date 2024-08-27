@@ -670,6 +670,8 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
         label=f"Weekly Ballot: {ballot_multi_active:.3f}/{ballot_multi:.3f}x"
               f"<br>(Buff {ballot_status})",
         picture_class="ballot-17",
+        progression=int(ballot_active),
+        goal=1
     ))
 
     speed_AdviceGroup = AdviceGroup(

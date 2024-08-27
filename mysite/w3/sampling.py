@@ -333,6 +333,8 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
         label=f"Weekly Ballot: {ballot_multi_active:.3f}/{ballot_multi:.3f}x"
               f"<br>(Buff {ballot_status})",
         picture_class="ballot-11",
+        progression=int(ballot_active),
+        goal=1
     ))
     po_AdviceDict[aw_label].append(Advice(
         label=f"{{{{ Equinox|#equinox}}}}: Voter Rights: {equinoxMulti}/1.{session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']}x to Weekly Ballot (Already included above)",
