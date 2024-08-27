@@ -6093,6 +6093,7 @@ hidden_but_constantly_avaiable_slabList = [
     "InvBag21", "InvBag22", "InvBag23", "InvBag24", "InvBag25", "InvBag26",  # Premium Inventory bags from Gem Shop
     "InvStorage31", "InvStorage32", "InvStorage33", "InvStorage34", "InvStorage35", "InvStorage36", "InvStorage37",  # Premium Storage chests from Gem Shop
     "InvStorage38", "InvStorage39", "InvStorage40", "InvStorage41", "InvStorage42", "InvStorage99",
+    "StonePremRestore", "StonePremStatswap",
 ]
 
 #This replacement dict is needed due to a restriction for the image mapping variable names not being able to start with a Number
@@ -6251,8 +6252,9 @@ anvilTabs = {
 }
 
 hidden_gemshopItems = [
-    "InvBag21", "InvBag22", "InvBag23", "InvBag24", "InvBag25", "InvBag26",
-    "InvStorage31", "InvStorage32", "InvStorage33", "InvStorage34", "InvStorage35", "InvStorage36", "InvStorage37",
+    "InvBag21", "InvBag22", "InvBag23", "InvBag24", "InvBag25", "InvBag26",  # Premium Inventory bags from Gem Shop
+    "InvStorage31", "InvStorage32", "InvStorage33", "InvStorage34", "InvStorage35", "InvStorage36", "InvStorage37",  # Premium Storage chests from Gem Shop
     "InvStorage38", "InvStorage39", "InvStorage40", "InvStorage41", "InvStorage42", "InvStorage99",
-    "GemP25", "GemP35",
+    "StonePremRestore", "StonePremStatswap",  # Premium Stat Reset and Hat Stat Swapper. Cheapies
+    "GemP25", "GemP35",  #Hyper Obol Circle and Square
 ]
