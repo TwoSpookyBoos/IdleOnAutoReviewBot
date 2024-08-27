@@ -583,7 +583,7 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
         goal=numberOfArtifactTiers
     ))
     speed_Advice[mga_label].append(Advice(
-        label=f"{{{{ Vial|#vials }}}}: Willow Sippy (Willow Logs): +{willow_vial_value}",
+        label=f"{{{{ Vial|#vials }}}}: Willow Sippy (Willow Logs): +{willow_vial_value:.3f}",
         picture_class="willow-logs",
         progression=session_data.account.alchemy_vials['Willow Sippy (Willow Logs)']['Level'],
         goal=max_VialLevel
