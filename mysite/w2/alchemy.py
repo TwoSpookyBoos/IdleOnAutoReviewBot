@@ -465,16 +465,35 @@ def setAlchemyP2W() -> AdviceSection:
 def getSigilSpeedAdviceGroup() -> AdviceGroup:
 
     # 1 + (achievement, 0 or 20) + (Pea Pod sigil times Chilled Yarn artifact) + (20 * Gem Shop purchases) + (Willow Sippy (Equinox Log) vial * vialMastery) + (Sigil Stamp)
-    # * multi(Summoning Winner Bonus: Green9 + Yellow4 + Blue4 + Purple7 + Cyan3)
+    # * multi(Summoning Winner Bonus: Green9 + Yellow5 + Blue5 + Purple7 + Cyan3)
     # * multi(Tuttle vial * vialMastery)
     # * multi(Bonus Ballot)
     # Multi Group A = several
-    mga = 1 + ((1) / 100)
-    mga_label = f"Multi Group A: {mga}x"
+    mga = 1 + (
+        (
+            (20 * session_data.account.achievements['Vial Junkee'])
+        ) / 100
+    )
+    mga_label = f"Multi Group A: {mga:.3f}x"
 
     # Multi Group B = Summoning Winner Bonuses
-    mgb = 1 + ((1) / 100)
-    mgb_label = f"Multi Group B: {mgb}x"
+    bd = session_data.account.summoning['BattleDetails']
+    player_matches_total = (
+        bd['Green'][9]['RewardBaseValue'] * bd['Green'][9]['Defeated']
+        + bd['Yellow'][5]['RewardBaseValue'] * bd['Yellow'][5]['Defeated']
+        + bd['Blue'][5]['RewardBaseValue'] * bd['Blue'][5]['Defeated']
+        + bd['Purple'][7]['RewardBaseValue'] * bd['Green'][7]['Defeated']
+        + bd['Cyan'][3]['RewardBaseValue'] * bd['Green'][3]['Defeated']
+    )
+    matches_total = (
+        bd['Green'][9]['RewardBaseValue']
+        + bd['Yellow'][5]['RewardBaseValue']
+        + bd['Blue'][5]['RewardBaseValue']
+        + bd['Purple'][7]['RewardBaseValue']
+        + bd['Cyan'][3]['RewardBaseValue']
+    )
+    mgb = 1 + ((matches_total * session_data.account.summoning['WinnerBonusesMulti']) / 100)
+    mgb_label = f"Multi Group B: {mgb:.3f}x"
 
     # Multi Group C = Tuttle Vial
     mgc = 1 + (
@@ -482,7 +501,7 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
              * session_data.account.vialMasteryMulti
              * session_data.account.labBonuses['My 1st Chemistry Set']['Value'])
             / 100)
-    mgc_label = f"Multi Group C: {mgc}x"
+    mgc_label = f"Multi Group C: {mgc:.3f}x"
 
     # Multi Group D = Bonus Ballot
     ballot_active = session_data.account.ballot['CurrentBuff'] == 17
@@ -496,7 +515,7 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
     ballot_multi_active = max(1, ballot_multi * ballot_active)
 
     mgd = ballot_multi_active
-    mgd_label = f"Multi Group D: {mgd}x"
+    mgd_label = f"Multi Group D: {mgd:.3f}x"
 
     total_multi = max(1, mga * mgb * mgc * mgd)
 
@@ -508,15 +527,29 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
     }
 
     # Multi Group A
-    # Multi Group B
-    #Green9 + Yellow4 + Blue4 + Purple7 + Cyan3
-    speed_Advice[mgb_label].append(Advice(
-        label=f"Summoning match Green 9: "
-              f"+{session_data.account.summoning['BattleDetails']['Green'][9]['RewardBaseValue'] * session_data.account.summoning['BattleDetails']['Green'][9]['Defeated']}"
-              f"/{session_data.account.summoning['BattleDetails']['Green'][9]['RewardBaseValue']}",
-        picture_class=session_data.account.summoning['BattleDetails']['Green'][9]['Image'],
-        progression=1 if session_data.account.summoning['BattleDetails']['Green'][9]['Defeated'] else 0,
+    speed_Advice[mga_label].append(Advice(
+        label=f"W2 Achievement: Vial Junkee: "
+              f"+{20 * session_data.account.achievements['Vial Junkee']}/20%",
+        picture_class="vial-junkee",
+        progression=int(session_data.account.achievements['Vial Junkee']),
         goal=1
+    ))
+
+    # Multi Group B
+    for color, battleNumber in {"Green": 9, "Yellow": 5, "Blue": 5, "Purple": 7, "Cyan": 3}.items():
+        speed_Advice[mgb_label].append(Advice(
+            label=f"Summoning match {color} {battleNumber}: "
+                  f"+{session_data.account.summoning['BattleDetails'][color][battleNumber]['RewardBaseValue'] * session_data.account.summoning['BattleDetails'][color][battleNumber]['Defeated']}"
+                  f"/{session_data.account.summoning['BattleDetails'][color][battleNumber]['RewardBaseValue']}",
+            picture_class=session_data.account.summoning['BattleDetails'][color][battleNumber]['Image'],
+            progression=1 if session_data.account.summoning['BattleDetails'][color][battleNumber]['Defeated'] else 0,
+            goal=1
+        ))
+    speed_Advice[mgb_label].append(Advice(
+        label=f"Summoning matches total: +{player_matches_total}/{matches_total}",
+        picture_class="summoning",
+        progression=player_matches_total,
+        goal=matches_total
     ))
     for advice in session_data.account.summoning['WinnerBonusesAdvice']:
         speed_Advice[mgb_label].append(advice)
@@ -550,7 +583,7 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
 
     speed_AdviceGroup = AdviceGroup(
         tier='',
-        pre_string=f"Info- Sources of Sigil Charging Speed. Grant total: {total_multi}",
+        pre_string=f"Info- Sources of Sigil Charging Speed. Grand total: {total_multi:.3f}x",
         advices=speed_Advice
     )
     return speed_AdviceGroup

@@ -45,7 +45,7 @@ from consts import (
     jade_emporium, pristineCharmsList, sneakingGemstonesFirstIndex, sneakingGemstonesList, sneakingGemstonesStatList,
     getMoissaniteValue, getGemstoneBaseValue, getGemstoneBoostedValue, getGemstonePercent,
     marketUpgradeList, landrankDict,
-    summoningBattleCountsDict, summoningDict, riftRewardsDict, ballotDict,
+    summoningBattleCountsDict, summoningDict, riftRewardsDict, ballotDict, numberOfArtifactTiers,
 )
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
 
@@ -2858,7 +2858,8 @@ class Account:
         self._calculate_w6_summoning_winner_bonuses()
 
     def _calculate_w6_summoning_winner_bonuses(self):
-        mga = 1.3 if self.sneaking['PristineCharms']['Crystal Comb'] else 1
+        mga = 1.3
+        player_mga = 1.3 if self.sneaking['PristineCharms']['Crystal Comb'] else 1
         self.summoning['WinnerBonusesAdvice'].append(Advice(
             label=f"{{{{ Pristine Charm|#sneaking }}}}: Crystal Comb: "
                   f"{1 + (.3 * self.sneaking['PristineCharms']['Crystal Comb'])}/1.3x",
@@ -2871,14 +2872,24 @@ class Account:
             winzLanternPostString = ". Unlocked from {{ Jade Emporium|#sneaking }}"
         else:
             winzLanternPostString = ""
+
         mgb = (1 + (
+            (
+                (25 * numberOfArtifactTiers)
+                + self.merits[5][4]['MaxLevel']
+                + 1  #int(self.achievements['Spectre Stars'])
+                + 1  #int(self.achievements['Regalis My Beloved'])
+            )
+            / 100)
+        )
+        player_mgb = (1 + (
             (
                 (25 * self.sailing['Artifacts']['The Winz Lantern']['Level'])
                 + self.merits[5][4]['Level']
                 + int(self.achievements['Spectre Stars'])
                 + int(self.achievements['Regalis My Beloved'])
-             )
-             / 100 )
+            )
+            / 100)
         )
 
         self.summoning['WinnerBonusesAdvice'].append(Advice(
@@ -2909,7 +2920,15 @@ class Account:
             progression=360 if not self.achievements['Regalis My Beloved'] else self.summoning['SanctuaryTotal'],
             goal=360
         ))
-        self.summoning['WinnerBonusesMulti'] = max(1, mga * mgb)
+        self.summoning['WinnerBonusesMulti'] = max(1, player_mga * player_mgb)
+        self.summoning['WinnerBonusesMultiMax'] = max(1, mga * mgb)
+        self.summoning['WinnerBonusesAdvice'].append(Advice(
+            label=f"Winner Bonuses Multi: {self.summoning['WinnerBonusesMulti']:.3f}/{self.summoning['WinnerBonusesMultiMax']:.3f}x",
+            picture_class="summoning",
+            progression=f"{self.summoning['WinnerBonusesMulti']:.3f}",
+            goal=f"{self.summoning['WinnerBonusesMultiMax']:.3f}",
+            #unit="x"
+        ))
         #print(f"Summoning Winner Bonus Multis: {mga} * {mgb} = {self.summoning['WinnerBonusesMulti']}")
 
     def _calculate_wave_2(self):
