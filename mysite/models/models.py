@@ -2919,7 +2919,7 @@ class Account:
             label=f"W6 Achievement: Regalis My Beloved: "
                   f"+{int(self.achievements['Regalis My Beloved'])}/1%",
             picture_class="regalis-my-beloved",
-            progression=360 if not self.achievements['Regalis My Beloved'] else self.summoning['SanctuaryTotal'],
+            progression=self.summoning['SanctuaryTotal'] if not self.achievements['Regalis My Beloved'] else 360,
             goal=360
         ))
         self.summoning['WinnerBonusesMulti'] = max(1, player_mga * player_mgb)
