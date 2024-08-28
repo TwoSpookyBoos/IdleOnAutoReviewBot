@@ -489,13 +489,16 @@ smithing_progressionTiers = [
 owl_progressionTiers = {
     0: {},
     1: {
-        "MegaFeathersOwned": 9,
+        "MegaFeathersOwned": 1,
     },
     2: {
+        "MegaFeathersOwned": 9,
+    },
+    3: {
         "MegaFeathersOwned": 17,
         "BonusesOfOrion": 23
     },
-    3: {
+    4: {
         "MegaFeathersOwned": 24,
         "BonusesOfOrion": 29
     },
@@ -2817,7 +2820,7 @@ expected_talentsDict = {
 hardcap_symbols = 280
 hardcap_enhancement_eclipse = 250  #Lava might add more in the future, but there are no bonuses above 250 in v2.10
 librarySubgroupTiers = [
-    '', 'Skilling - High Priority', 'Skilling - Medium Priority', 'Skilling - Low Priority', 'Skilling - EXP Only Priority',
+    '', 'Skilling - High Priority', 'Skilling - Medium Priority', 'Skilling - Low Priority', 'Skilling - Lowest Priority',
     'Combat - High Priority', 'Combat - Medium Priority', 'Combat - Low Priority',
 ]
 skill_talentsDict = {
@@ -2853,7 +2856,7 @@ skill_talentsDict = {
             144: {"Name": "The Family Guy", "Tab": "Elite Class"},
             486: {"Name": "Occult Obols", "Tab": "Mage Subclass", 'Hardcap': 125},
         },
-        "EXP Only": {
+        "Lowest": {
             464: {"Name": "Inner Peace", "Tab": "Mage"},
         },
     },
@@ -2883,7 +2886,7 @@ skill_talentsDict = {
             478: {"Name": "Nearby Outlet", "Tab": "Wizard"},
             475: {"Name": "Charge Syphon", "Tab": "Wizard", 'Hardcap': 200},
         },
-        "EXP Only": {
+        "Lowest": {
             477: {"Name": "Bless Up", "Tab": "Wizard"},
         },
     },
@@ -2928,7 +2931,7 @@ skill_talentsDict = {
             116: {"Name": "Bobbin' Bobbers", "Tab": "Barbarian", 'Hardcap': 200},
             111: {"Name": "Fistful of Obol", "Tab": "Warrior Subclass", 'Hardcap': 125},
         },
-        "EXP Only": {
+        "Lowest": {
             117: {"Name": "All Fish Diet", "Tab": "Barbarian"},
         },
     },
@@ -2959,7 +2962,7 @@ skill_talentsDict = {
             144: {"Name": "The Family Guy", "Tab": "Elite Class"},
             111: {"Name": "Fistful of Obol", "Tab": "Warrior Subclass", 'Hardcap': 125},
         },
-        "EXP Only": {
+        "Lowest": {
             104: {"Name": "Tempestuous Emotions", "Tab": "Warrior"},
         },
     },
@@ -2970,7 +2973,7 @@ skill_talentsDict = {
         "Low": {
             130: {"Name": "Refinery Throttle", "Tab": "Squire", "Optimal": [0, 8, True]},
         },
-        "EXP Only": {
+        "Lowest": {
             132: {"Name": "Sharper Saws", "Tab": "Squire", 'Hardap': 160},
         },
     },
@@ -2991,7 +2994,7 @@ skill_talentsDict = {
             269: {"Name": "Broken Time", "Tab": "Calm Basics"},
             281: {"Name": "Acme Anvil", "Tab": "Archer"},
         },
-        "EXP Only": {
+        "Lowest": {
             282: {"Name": "Yea I Already Know", "Tab": "Archer"},
             265: {"Name": "Focused Soul", "Tab": "Archer"},
         },
@@ -3016,7 +3019,7 @@ skill_talentsDict = {
             144: {"Name": "The Family Guy", "Tab": "Elite Class"},
             291: {"Name": "Shoeful of Obol", "Tab": "Archer Subclass", 'Hardcap': 125},
         },
-        "EXP Only": {
+        "Lowest": {
             282: {"Name": "Yea I Already Know", "Tab": "Archer"},
             265: {"Name": "Focused Soul", "Tab": "Archer"},
             297: {"Name": "Bug Enthusiast", "Tab": "Bowman"},
@@ -3046,7 +3049,7 @@ skill_talentsDict = {
             144: {"Name": "The Family Guy", "Tab": "Elite Class"},
             291: {"Name": "Shoeful of Obol", "Tab": "Archer Subclass", 'Hardcap': 125},
         },
-        "EXP Only": {
+        "Lowest": {
             282: {"Name": "Yea I Already Know", "Tab": "Archer"},
             265: {"Name": "Focused Soul", "Tab": "Archer"},
         },
@@ -3086,7 +3089,7 @@ skill_talentsDict = {
             37: {"Name": "Skilliest Statue", "Tab": "Maestro", 'Hardcap': 200},
             27: {"Name": "Reroll Pls", "Tab": "Journeyman"},
         },
-        "EXP Only": {
+        "Lowest": {
             42: {"Name": "Left Hand of Learning", "Tab": "Maestro"},
             40: {"Name": "Maestro Transfusion", "Tab": "Maestro"},
             38: {"Name": "Bliss N Chips", "Tab": "Maestro"},
