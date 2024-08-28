@@ -704,7 +704,7 @@ def setAlchemySigilsProgressionTier() -> AdviceSection:
         return sigils_AdviceSection
 
     account_sigils = session_data.account.alchemy_p2w['Sigils']
-    infoTiers = 4
+    infoTiers = 6
     max_tier = max(sigils_progressionTiers.keys()) - infoTiers
     tier_Sigils = 0
 
