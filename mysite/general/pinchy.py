@@ -132,6 +132,7 @@ class Placements(dict):
     BUBBLES = "Bubbles"
     VIALS = "Vials"
     P2W = "Pay2Win"
+    SIGILS = "Sigils"
     REFINERY = "Refinery"
     SAMPLING = "Sampling"
     SALT_LICK = "Salt Lick"
@@ -146,7 +147,7 @@ class Placements(dict):
     sections = [
         COMBAT_LEVELS, SECRET_CLASS_PATH,
         STAMPS, BRIBES, SMITHING, STATUES, STAR_SIGNS, OWL,
-        BUBBLES, VIALS, P2W,
+        BUBBLES, VIALS, P2W, SIGILS,
         REFINERY, SAMPLING, SALT_LICK, DEATH_NOTE, PRAYERS, EQUINOX,
         BREEDING, COOKING, RIFT,
         DIVINITY, SAILING
@@ -162,10 +163,11 @@ class Placements(dict):
         SMITHING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  2,  3,      4,  5,  6,      6,  6,  6,      6,    99],
         STATUES:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      1,  2,  3,      4,  5,  7,      11,   99],
         STAR_SIGNS:    [0,   0, 0, 0,    0,  1,  1,      1,  2,  2,      2,  3,  3,      3,  4,  4,      5,  5,  6,      6,    99],
-        OWL:           [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  1,      2,    99],
+        OWL:           [0,   0, 0, 0,    1,  1,  1,      1,  2,  2,      2,  2,  2,      2,  2,  2,      2,  2,  2,      3,    99],
         BUBBLES:       [0,   0, 0, 0,    0,  0,  1,      1,  2,  2,      2,  3,  3,      4,  5,  6,      10, 15, 20,     22,   99],
         VIALS:         [0,   0, 0, 0,    1,  1,  2,      2,  3,  4,      5,  6,  7,      8,  9,  10,     12, 20, 25,     26,   99],
         P2W:           [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  1,      1,  1,  1,      1,  1,  1,      1,    99],
+        SIGILS:        [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  1,      2,  3,  4,      8,    99],
         REFINERY:      [0,   0, 0, 0,    0,  0,  0,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,    99],
         SAMPLING:      [0,   0, 0, 0,    0,  1,  1,      1,  2,  2,      2,  3,  3,      3,  4,  5,      6,  7,  8,      9,    99],
         SALT_LICK:     [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      9,    99],
@@ -174,7 +176,7 @@ class Placements(dict):
         EQUINOX:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      11,   99],
         BREEDING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  1,      1,  2,  2,      3,  4,  5,      6,  8,  9,      11,   99],
         COOKING:       [0,   0, 0, 0,    0,  0,  0,      1,  1,  1,      1,  1,  2,      3,  4,  4,      5,  5,  5,      6,    99],
-        RIFT:          [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      11,   99],
+        RIFT:          [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      4,  6,  8,      9,  10, 11,     11,   99],
         DIVINITY:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  3,  5,      7,  8,  9,      10, 11, 12,     12,   99],
         SAILING:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  2,  3,      5,  7,  9,      11, 14, 16,     18,   99],
     }

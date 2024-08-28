@@ -155,7 +155,7 @@ def getActiveBMAdviceGroup() -> AdviceGroup:
         picture_class="the-divine-scarf"
     ))
     abm_adviceDict["Equipment"].append(Advice(
-        label="Spinge Tingler Sniper: +12% respawn",
+        label="Spine Tingler Sniper: +12% respawn",
         picture_class="spine-tingler-sniper"
     ))
     abm_adviceDict["Equipment"].append(Advice(

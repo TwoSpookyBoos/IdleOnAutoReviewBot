@@ -205,21 +205,21 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     costReduction_Advices = {"Vials": [], "Uncapped": []}
 
     costReduction_Advices["Vials"].append(Advice(
-        label="Vial: Blue Flav (Platinum Ore)",
+        label=f"{{{{ Vial|#vials }}}}: Blue Flav (Platinum Ore)",
         picture_class="platinum-ore",
-        progression=session_data.account.alchemy_vials.get("Blue Flav (Platinum Ore)", {}).get("Level", 0),
+        progression=session_data.account.alchemy_vials['Blue Flav (Platinum Ore)']['Level'],
         goal=max_VialLevel
     ))
     costReduction_Advices["Vials"].append(Advice(
-        label="Vial: Venison Malt (Mongo Worm Slices)",
+        label=f"{{{{ Vial|#vials }}}}: Venison Malt (Mongo Worm Slices)",
         picture_class="mongo-worm-slices",
-        progression=session_data.account.alchemy_vials.get("Venison Malt (Mongo Worm Slices)", {}).get("Level", 0),
+        progression=session_data.account.alchemy_vials['Venison Malt (Mongo Worm Slices)']['Level'],
         goal=max_VialLevel
     ))
     costReduction_Advices["Vials"].append(Advice(
         label="Lab Bonus: My 1st Chemistry Set",
         picture_class="my-1st-chemistry-set",
-        progression=f"{1 if session_data.account.labBonuses.get('My 1st Chemistry Set', {}).get('Enabled', False) else 0}",
+        progression=int(session_data.account.labBonuses['My 1st Chemistry Set']['Enabled']),
         goal=1
     ))
 

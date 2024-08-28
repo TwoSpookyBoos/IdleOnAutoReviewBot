@@ -26,6 +26,7 @@ from consts import (
     sigilsDict,
     arcadeBonuses,
     poBoxDict,
+    ballotDict,
     # W3
     buildingsDict, shrinesList, saltLickList, atomsList, colliderStorageLimitList,
     prayersDict,
@@ -33,19 +34,20 @@ from consts import (
     expected_talentsDict,
     printerAllIndexesBeingPrinted,
     # W4
+    riftRewardsDict,
     labJewelsDict, labBonusesDict, nblbMaxBubbleCount, labChipsDict,
     maxMeals, maxMealLevel, cookingMealDict, maxCookingTables,
     maxNumberOfTerritories, indexFirstTerritoryAssignedPet, territoryNames, slotUnlockWavesList, breedingUpgradesDict, breedingGeneticsList,
     breedingShinyBonusList, breedingSpeciesDict, getShinyLevelFromDays, getDaysToNextShinyLevel,
     # W5
-    sailingDict,
+    sailingDict, numberOfArtifactTiers,
     getStyleNameFromIndex, divinity_divinitiesDict, getDivinityNameFromIndex,
     gamingSuperbitsDict,
     # W6
     jade_emporium, pristineCharmsList, sneakingGemstonesFirstIndex, sneakingGemstonesList, sneakingGemstonesStatList,
     getMoissaniteValue, getGemstoneBaseValue, getGemstoneBoostedValue, getGemstonePercent,
     marketUpgradeList, landrankDict,
-    summoningBattleCountsDict, summoningDict, riftRewardsDict,
+    summoningBattleCountsDict, summoningDict,
 )
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
 
@@ -982,6 +984,7 @@ class Account:
                                                               f" {familyBonusesDict[className]['Stat']}")
 
         self.raw_optlacc_dict = {k:v for k, v in enumerate(safe_loads(self.raw_data.get("OptLacc", [])))}
+        self.raw_serverVars_dict = safe_loads(self.raw_data.get("serverVars", {}))
 
         self.dungeon_upgrades = {}
         raw_dungeon_upgrades = safe_loads(self.raw_data.get('DungUpg', []))
@@ -1254,6 +1257,7 @@ class Account:
         self._parse_w2_bubbles()
         self._parse_w2_p2w()
         self._parse_w2_arcade()
+        self._parse_w2_ballot()
 
     def _parse_w2_vials(self):
         self.alchemy_vials = {}
@@ -1362,6 +1366,7 @@ class Account:
                 self.alchemy_p2w["Player"] = raw_p2w_list[3]
             except:
                 self.alchemy_p2w["Player"] = [0] * 2
+
             for sigilName in self.alchemy_p2w["Sigils"]:
                 try:
                     self.alchemy_p2w["Sigils"][sigilName]["PlayerHours"] = float(raw_p2w_list[4][self.alchemy_p2w["Sigils"][sigilName]["Index"]])
@@ -1395,6 +1400,19 @@ class Account:
                         "Display"] = f"+{self.arcade[upgradeIndex]['Value']}{arcadeBonuses[upgradeIndex]['displayType']} {arcadeBonuses[upgradeIndex]['Stat']}"
                 except:
                     self.arcade[upgradeIndex]["Display"] = f"+% UnknownUpgrade{upgradeIndex}"
+
+    def _parse_w2_ballot(self):
+        self.ballot = {
+            "CurrentBuff": self.raw_serverVars_dict.get('voteCategories', ["Unknown"])[0],
+            "Buffs": {}
+        }
+        for buffIndex, buffValuesDict in ballotDict.items():
+            self.ballot['Buffs'][buffIndex] = {
+                'Description': buffValuesDict['Description'],
+                'BaseValue': buffValuesDict['BaseValue'],
+                'Value': buffValuesDict['BaseValue'],
+                'Image': buffValuesDict['Image'],
+            }
 
     def _parse_w3(self):
         self._parse_w3_buildings()
@@ -2210,6 +2228,9 @@ class Account:
 
         # raw_summoning_list[1] = List of codified names of enemies from battles won
         self.summoning["Battles"] = {}
+        self.summoning["BattleDetails"] = {}
+        for color in summoningDict:
+            self.summoning["BattleDetails"][color] = {}
         try:
             self._parse_w6_summoning_battles(raw_summoning_list[1])
         except:
@@ -2244,6 +2265,16 @@ class Account:
                 for battleIndex, battleValuesDict in colorDict.items():
                     if battleIndex + 1 >= self.summoning["Battles"][colorName] and battleValuesDict['EnemyID'] in rawBattles:
                         self.summoning["Battles"][colorName] = battleIndex + 1
+
+        for colorName, colorDict in summoningDict.items():
+            for battleIndex, battleValuesDict in colorDict.items():
+                self.summoning["BattleDetails"][colorName][battleIndex + 1] = {
+                    'Defeated': battleValuesDict['EnemyID'] in rawBattles,
+                    'Image': battleValuesDict['Image'],
+                    'RewardType': battleValuesDict['RewardID'],
+                    'RewardQTY': battleValuesDict['RewardQTY'],
+                    'RewardBaseValue': battleValuesDict['RewardQTY'] * 3.5,
+                }
 
     def _parse_w6_summoning_sanctuary(self, rawSanctuary):
         if rawSanctuary:
@@ -2335,6 +2366,7 @@ class Account:
         self.vialMasteryMulti = 1 + (self.maxed_vials * .02) if self.rift['VialMastery'] else 1
         self._calculate_w2_sigils()
         self._calculate_w2_cauldrons()
+        self._calculate_w2_ballot()
 
     def _calculate_w2_cauldrons(self):
         perCauldronBubblesUnlocked = [
@@ -2380,9 +2412,20 @@ class Account:
             # Before the +1, -1 would mean not unlocked, 0 would mean Blue tier, 1 would be Yellow tier, and 2 would mean Red tier
             # After the +1, 0/1/2/3
 
+    def _calculate_w2_ballot(self):
+        equinoxMulti = 1 + (self.equinox_bonuses['Voter Rights']['CurrentLevel'] / 100)
+        for buffIndex, buffValuesDict in self.ballot['Buffs'].items():
+            self.ballot['Buffs'][buffIndex]['Value'] *= equinoxMulti
+            # Check for + or +x% replacements
+            if "{" in buffValuesDict['Description']:
+                self.ballot['Buffs'][buffIndex]['Description'] = buffValuesDict['Description'].replace("{", f"{self.ballot['Buffs'][buffIndex]['Value']:.3f}")
+            # Check for multi replacements
+            if "}" in buffValuesDict['Description']:
+                self.ballot['Buffs'][buffIndex]['Description'] = buffValuesDict['Description'].replace("}", f"{1 + (self.ballot['Buffs'][buffIndex]['Value'] / 100):.3f}")
+
     def _calculate_w3(self):
         self._calculate_w3_building_max_levels()
-        self._calculate_w3_library_max_book_levels()
+
         self._calculate_w3_collider_base_costs()
         self._calculate_w3_collider_cost_reduction()
         self._calculate_w3_shrine_values()
@@ -2419,31 +2462,6 @@ class Account:
                     self.construction_buildings[towerName]['MaxLevel'] += 2 * self.atom_collider['Atoms']['Carbon - Wizard Maximizer']['Level']
                 except:
                     continue
-
-    def _calculate_w3_library_max_book_levels(self):
-        self.library['StaticSum'] = (0
-                      + (25 * (0 < self.construction_buildings['Talent Book Library']['Level']))
-                      + (5 * (0 < self.achievements.get('Checkout Takeout', False)))
-                      + (10 * (0 < self.atom_collider['Atoms']['Oxygen - Library Booker']['Level']))
-                      + (25 * self.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0))
-                      )
-        self.library['ScalingSum'] = (0
-                       + 2 * self.merits[2][2]['Level']
-                       + 2 * self.saltlick.get('Max Book', 0)
-                       )
-        summGroupA = (1 + (.25 * self.sailing['Artifacts'].get('The Winz Lantern', {}).get('Level', 0))
-                      + .01 * self.merits[5][4]['Level']
-                      + .01 * (0 < self.achievements.get('Spectre Stars', False))
-                      + .01 * (0 < self.achievements.get('Regalis My Beloved', False))
-                      )
-        summGroupB = 1 + (.3 * self.sneaking.get('PristineCharms', {}).get('Crystal Comb', 0))
-        self.library['SummoningSum'] = round(
-            0
-            + 10.5 * (self.summoning['Battles']['Cyan'] >= 14)
-            * summGroupA
-            * summGroupB
-        )
-        self.library['MaxBookLevel'] = 100 + self.library['StaticSum'] + self.library['ScalingSum'] + self.library['SummoningSum']
 
     def _calculate_w3_collider_base_costs(self):
         #Formula for base cost: (AtomInfo[3] + AtomInfo[1] * AtomCurrentLevel) * POWER(AtomInfo[2], AtomCurrentLevel)
@@ -2839,22 +2857,48 @@ class Account:
         }
 
     def _calculate_w6(self):
+        self._calculate_w6_summoning_winner_bonuses()
+
+    def _calculate_w6_summoning_winner_bonuses(self):
+        mga = 1.3
+        player_mga = 1.3 if self.sneaking['PristineCharms']['Crystal Comb'] else 1
         self.summoning['WinnerBonusesAdvice'].append(Advice(
             label=f"{{{{ Pristine Charm|#sneaking }}}}: Crystal Comb: "
-                  f"{1 + (.3 * self.sneaking.get('PristineCharms', {}).get('Crystal Comb', 0))}/1.3x",
+                  f"{1 + (.3 * self.sneaking['PristineCharms']['Crystal Comb'])}/1.3x",
             picture_class="crystal-comb",
-            progression=1 if self.sneaking.get("PristineCharms", {}).get('Crystal Comb', False) else 0,
+            progression=int(self.sneaking['PristineCharms']['Crystal Comb']),
             goal=1
         ))
+
         if not self.sneaking['JadeEmporium']['Brighter Lighthouse Bulb']['Obtained']:
             winzLanternPostString = ". Unlocked from {{ Jade Emporium|#sneaking }}"
         else:
             winzLanternPostString = ""
+
+        mgb = (1 + (
+            (
+                (25 * numberOfArtifactTiers)
+                + self.merits[5][4]['MaxLevel']
+                + 1  #int(self.achievements['Spectre Stars'])
+                + 1  #int(self.achievements['Regalis My Beloved'])
+            )
+            / 100)
+        )
+        player_mgb = (1 + (
+            (
+                (25 * self.sailing['Artifacts']['The Winz Lantern']['Level'])
+                + self.merits[5][4]['Level']
+                + int(self.achievements['Spectre Stars'])
+                + int(self.achievements['Regalis My Beloved'])
+            )
+            / 100)
+        )
+
         self.summoning['WinnerBonusesAdvice'].append(Advice(
             label=f"{{{{ Artifact|#sailing }}}}: The Winz Lantern: "
-                  f"{1 + (.25 * self.sailing['Artifacts'].get('The Winz Lantern', {}).get('Level', 0))}/2x{winzLanternPostString}",
+                  f"{1 + (.25 * self.sailing['Artifacts']['The Winz Lantern']['Level'])}/2x{winzLanternPostString}",
             picture_class="the-winz-lantern",
-            progression=self.sailing['Artifacts'].get('The Winz Lantern', {}).get('Level', 0),
+            progression=self.sailing['Artifacts']['The Winz Lantern']['Level'],
             goal=4
         ))
         self.summoning['WinnerBonusesAdvice'].append(Advice(
@@ -2866,22 +2910,56 @@ class Account:
         ))
         self.summoning['WinnerBonusesAdvice'].append(Advice(
             label=f"W6 Achievement: Spectre Stars: "
-                  f"+{1 * (0 < self.achievements.get('Spectre Stars', False))}/1%",
+                  f"+{int(self.achievements['Spectre Stars'])}/1%",
             picture_class="spectre-stars",
-            progression=1 if self.achievements.get('Spectre Stars', False) else 0,
+            progression=int(self.achievements['Spectre Stars']),
             goal=1
         ))
         self.summoning['WinnerBonusesAdvice'].append(Advice(
             label=f"W6 Achievement: Regalis My Beloved: "
-                  f"+{1 * (0 < self.achievements.get('Regalis My Beloved', False))}/1%",
+                  f"+{int(self.achievements['Regalis My Beloved'])}/1%",
             picture_class="regalis-my-beloved",
-            progression=360 if self.achievements.get('Regalis My Beloved', False) else self.summoning['SanctuaryTotal'],
+            progression=360 if not self.achievements['Regalis My Beloved'] else self.summoning['SanctuaryTotal'],
             goal=360
         ))
+        self.summoning['WinnerBonusesMulti'] = max(1, player_mga * player_mgb)
+        self.summoning['WinnerBonusesMultiMax'] = max(1, mga * mgb)
+        self.summoning['WinnerBonusesAdvice'].append(Advice(
+            label=f"Winner Bonuses Multi: {self.summoning['WinnerBonusesMulti']:.3f}/{self.summoning['WinnerBonusesMultiMax']:.3f}x",
+            picture_class="summoning",
+            progression=f"{self.summoning['WinnerBonusesMulti']:.3f}",
+            goal=f"{self.summoning['WinnerBonusesMultiMax']:.3f}",
+            #unit="x"
+        ))
+        #print(f"Summoning Winner Bonus Multis: {mga} * {mgb} = {self.summoning['WinnerBonusesMulti']}")
 
     def _calculate_wave_2(self):
+        self._calculate_w3_library_max_book_levels()
         self._calculate_general_character_over_books()
         self._calculate_general_crystal_spawn_chance()
+
+    def _calculate_w3_library_max_book_levels(self):
+        self.library['StaticSum'] = (0
+                      + (25 * (0 < self.construction_buildings['Talent Book Library']['Level']))
+                      + (5 * (0 < self.achievements.get('Checkout Takeout', False)))
+                      + (10 * (0 < self.atom_collider['Atoms']['Oxygen - Library Booker']['Level']))
+                      + (25 * self.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0))
+                      )
+        self.library['ScalingSum'] = (0
+                       + 2 * self.merits[2][2]['Level']
+                       + 2 * self.saltlick.get('Max Book', 0)
+                       )
+        # summGroupA = (1 + (.25 * self.sailing['Artifacts'].get('The Winz Lantern', {}).get('Level', 0))
+        #               + .01 * self.merits[5][4]['Level']
+        #               + .01 * (0 < self.achievements.get('Spectre Stars', False))
+        #               + .01 * (0 < self.achievements.get('Regalis My Beloved', False))
+        #               )
+        # summGroupB = 1 + (.3 * self.sneaking.get('PristineCharms', {}).get('Crystal Comb', 0))
+        self.library['SummoningSum'] = round(
+            10.5 * (self.summoning['Battles']['Cyan'] >= 14)
+            * self.summoning['WinnerBonusesMulti']
+        )
+        self.library['MaxBookLevel'] = 100 + self.library['StaticSum'] + self.library['ScalingSum'] + self.library['SummoningSum']
 
     def _calculate_general_character_over_books(self):
         self.bonus_talents = {

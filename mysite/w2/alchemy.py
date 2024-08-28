@@ -1,12 +1,11 @@
-from math import floor
-
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.data_formatting import safe_loads
+from utils.data_formatting import safe_loads, mark_advice_completed
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import maxTiersPerGroup, bubbles_progressionTiers, vials_progressionTiers, max_IndexOfVials, maxFarmingCrops, atrisk_basicBubbles, \
-    atrisk_lithiumBubbles, cookingCloseEnough, break_you_best
+    atrisk_lithiumBubbles, cookingCloseEnough, break_you_best, sigils_progressionTiers, max_IndexOfSigils, max_VialLevel, numberOfArtifactTiers, stamp_maxes, \
+    lavaFunc
 
 logger = get_logger(__name__)
 
@@ -151,7 +150,6 @@ def setAlchemyVialsProgressionTier() -> AdviceSection:
         vial_AdviceSection.header = f"Best Vial tier met: {tier_section}"
 
     return vial_AdviceSection
-
 
 def getBubbleExclusions():
     exclusionsList = []
@@ -464,35 +462,312 @@ def setAlchemyP2W() -> AdviceSection:
                                     f"<br>Try to purchase the basic upgrades before Mid W5, and Player upgrades after each Alchemy level up!")
     return p2w_AdviceSection
 
-# def setAlchemySigils() -> AdviceSection:
-#     sigils_AdviceDict = {
-#         "S": [], "A": [], "B": [], "C": [], "D": [], "F": []
-#     }
-#     sigils_AdviceGroupDict = {}
-#     sigils_AdviceSection = AdviceSection(
-#         name="Sigils",
-#         tier="Not Yet Evaluated",
-#         header="Best sigils tier met: Not Yet Evaluated. Recommended sigils actions:",
-#         picture="Sigils.png"
-#     )
-#
-#     highestLabLevel = max(session_data.account.all_skills["Laboratory"])
-#     if highestLabLevel < 1:
-#         sigils_AdviceSection.header = "Come back after unlocking the Laboratory skill in World 4!"
-#         return sigils_AdviceSection
-#
-#     alchemy_sigilsList = session_data.account.alchemy_p2w["Sigils"]
-#     sigils_AdviceDict["S"].append(Advice(
-#         label="Jade Emporium: Ionized Sigils",
-#         picture_class="ionized-sigils",
-#         progression=f"{1 if 'Ionized Sigils' in session_data.account.jade_emporium_purchases else 0}",
-#         goal=1
-#     ))
-#
-#     # for tierIndex, tierContents in sigils_progressionTiers.items():
-#     #     for sigilName in tierContents.get("Sigils", []):
-#     #         if alchemy_sigilsList.get(sigilName, {}).get("PrechargeLevel") < max_IndexOfSigils:
-#     #
-#     #
-#     # #Generate AdviceSection
-#     return sigils_AdviceSection
+
+def getSigilSpeedAdviceGroup() -> AdviceGroup:
+
+    # 1 + (achievement, 0 or 20) + (Pea Pod sigil times Chilled Yarn artifact) + (20 * Gem Shop purchases) + (Willow Sippy (Equinox Log) vial * vialMastery) + (Sigil Stamp)
+    # * multi(Summoning Winner Bonus: Green9 + Yellow5 + Blue5 + Purple7 + Cyan3)
+    # * multi(Tuttle vial * vialMastery)
+    # * multi(Bonus Ballot)
+
+    # Multi Group A = several
+    peapod_values = [0, 25, 50, 100]
+    chilled_yarn_multi = [1, 2, 3, 4, 5]
+    player_peapod_value = (
+        peapod_values[session_data.account.alchemy_p2w['Sigils']['Pea Pod']['Level']]
+        * chilled_yarn_multi[session_data.account.sailing['Artifacts']['Chilled Yarn']['Level']]
+    )
+    willow_vial_value = (
+        session_data.account.alchemy_vials['Willow Sippy (Willow Logs)']['Value']
+        * session_data.account.vialMasteryMulti
+        * session_data.account.labBonuses['My 1st Chemistry Set']['Value']
+    )
+
+    player_sigil_stamp_value = session_data.account.stamps.get('Sigil Stamp', {}).get('Value', 0)
+    goal_sigil_stamp_value = lavaFunc('decay', stamp_maxes['Sigil Stamp'], 40, 150) * 2 * 1.25
+    if session_data.account.labBonuses['Certified Stamp Book']['Enabled']:
+        player_sigil_stamp_value *= 2
+    if session_data.account.sneaking["PristineCharms"]["Liqorice Rolle"]:
+        player_sigil_stamp_value *= 1.25
+
+    mga = 1 + (
+        (
+            (20 * session_data.account.achievements['Vial Junkee'])
+            + (20 * session_data.account.gemshop['Sigil Supercharge'])
+            + player_peapod_value
+            + willow_vial_value
+            + player_sigil_stamp_value
+        ) / 100
+    )
+    mga_label = f"Multi Group A: {mga:.3f}x"
+
+    # Multi Group B = Summoning Winner Bonuses
+    bd = session_data.account.summoning['BattleDetails']
+    player_matches_total = (
+        bd['Green'][9]['RewardBaseValue'] * bd['Green'][9]['Defeated']
+        + bd['Yellow'][5]['RewardBaseValue'] * bd['Yellow'][5]['Defeated']
+        + bd['Blue'][5]['RewardBaseValue'] * bd['Blue'][5]['Defeated']
+        + bd['Purple'][7]['RewardBaseValue'] * bd['Green'][7]['Defeated']
+        + bd['Cyan'][3]['RewardBaseValue'] * bd['Green'][3]['Defeated']
+    )
+    matches_total = (
+        bd['Green'][9]['RewardBaseValue']
+        + bd['Yellow'][5]['RewardBaseValue']
+        + bd['Blue'][5]['RewardBaseValue']
+        + bd['Purple'][7]['RewardBaseValue']
+        + bd['Cyan'][3]['RewardBaseValue']
+    )
+    mgb = 1 + ((matches_total * session_data.account.summoning['WinnerBonusesMulti']) / 100)
+    mgb_label = f"Multi Group B: {mgb:.3f}x"
+
+    # Multi Group C = Tuttle Vial
+    tuttle_vial_multi = 1 + (
+            (session_data.account.alchemy_vials['Turtle Tisane (Tuttle)']['Value']
+             * session_data.account.vialMasteryMulti
+             * session_data.account.labBonuses['My 1st Chemistry Set']['Value'])
+            / 100)
+    mgc = tuttle_vial_multi
+    mgc_label = f"Multi Group C: {mgc:.3f}x"
+
+    # Multi Group D = Bonus Ballot
+    ballot_active = session_data.account.ballot['CurrentBuff'] == 17
+    if ballot_active:
+        ballot_status = "is Active"
+    elif not ballot_active and session_data.account.ballot['CurrentBuff'] != "Unknown":
+        ballot_status = "is Inactive"
+    else:
+        ballot_status = "status is not available in provided data"
+    ballot_multi = 1 + (session_data.account.ballot['Buffs'][17]['Value'] / 100)
+    ballot_multi_active = max(1, ballot_multi * ballot_active)
+
+    mgd = ballot_multi_active
+    mgd_label = f"Multi Group D: {mgd:.3f}x"
+
+    total_multi = max(1, mga * mgb * mgc * mgd)
+
+    speed_Advice = {
+        mga_label: [],
+        mgb_label: [],
+        mgc_label: [],
+        mgd_label: [],
+    }
+
+    # Multi Group A
+    speed_Advice[mga_label].append(Advice(
+        label=f"W2 Achievement: Vial Junkee: "
+              f"+{20 * session_data.account.achievements['Vial Junkee']}/20%",
+        picture_class="vial-junkee",
+        progression=int(session_data.account.achievements['Vial Junkee']),
+        goal=1
+    ))
+    speed_Advice[mga_label].append(Advice(
+        label=f"{{{{ Gem Shop|#gem-shop }}}}: Sigil Supercharge: "
+              f"+{20 * session_data.account.gemshop['Sigil Supercharge']}/{20 * 10}%",
+        picture_class="sigil-supercharge",
+        progression=session_data.account.gemshop['Sigil Supercharge'],
+        goal=10
+    ))
+    speed_Advice[mga_label].append(Advice(
+        label=f"Sigil: Level {session_data.account.alchemy_p2w['Sigils']['Pea Pod']['Level']}"
+              f" Pea Pod: +{player_peapod_value}/{peapod_values[-1] * chilled_yarn_multi[-1]}%",
+        picture_class="pea-pod",
+        progression=session_data.account.alchemy_p2w['Sigils']['Pea Pod']['Level'],
+        goal=max_IndexOfSigils
+    ))
+    speed_Advice[mga_label].append(Advice(
+        label=f"{{{{ Artifact|#sailing}}}}: Chilled Yarn: {chilled_yarn_multi[session_data.account.sailing['Artifacts']['Chilled Yarn']['Level']]}"
+              f"/{chilled_yarn_multi[-1]}x"
+              f"<br>(Already applied to Pea Pod Sigil above)",
+        picture_class="chilled-yarn",
+        progression=session_data.account.sailing['Artifacts']['Chilled Yarn']['Level'],
+        goal=numberOfArtifactTiers
+    ))
+    speed_Advice[mga_label].append(Advice(
+        label=f"{{{{ Vial|#vials }}}}: Willow Sippy (Willow Logs): +{willow_vial_value:.3f}",
+        picture_class="willow-logs",
+        progression=session_data.account.alchemy_vials['Willow Sippy (Willow Logs)']['Level'],
+        goal=max_VialLevel
+    ))
+    speed_Advice[mga_label].append(Advice(
+        label=f"Lab Bonus: My 1st Chemistry Set: {session_data.account.labBonuses['My 1st Chemistry Set']['Value']}x"
+              f"<br>(Already applied to Vial above)",
+        picture_class="my-1st-chemistry-set",
+        progression=int(session_data.account.labBonuses['My 1st Chemistry Set']['Enabled']),
+        goal=1
+    ))
+    speed_Advice[mga_label].append(Advice(
+        label=f"{{{{ Rift|#rift }}}} Bonus: Vial Mastery: {session_data.account.vialMasteryMulti:.2f}x"
+              f"<br>(Already applied to Vial above)",
+        picture_class="vial-mastery",
+        progression=f"{1 if session_data.account.rift['VialMastery'] else 0}",
+        goal=1
+    ))
+    speed_Advice[mga_label].append(Advice(
+        label=f"Sigil Stamp: +{player_sigil_stamp_value:.3f}/{goal_sigil_stamp_value:.3f}%",
+        picture_class="sigil-stamp",
+        progression=session_data.account.stamps['Sigil Stamp']['Level'],
+        goal=stamp_maxes['Sigil Stamp'],
+        resource=session_data.account.stamps['Sigil Stamp']['Material'],
+    ))
+    speed_Advice[mga_label].append(Advice(
+        label=f"Lab Bonus: Certified Stamp Book: "
+              f"{'2/2x<br>(Already applied to Stamp above)' if session_data.account.labBonuses.get('Certified Stamp Book', {}).get('Enabled', False) else '1/2x'}",
+        picture_class="certified-stamp-book",
+        progression=int(session_data.account.labBonuses.get("Certified Stamp Book", {}).get("Enabled", False)),
+        goal=1
+    ))
+    speed_Advice[mga_label].append(Advice(
+        label=f"{{{{ Pristine Charm|#sneaking }}}}: Liqorice Rolle: "
+              f"{'1.25/1.25x<br>(Already applied to Stamp above)' if session_data.account.sneaking.get('PristineCharms', {}).get('Liqorice Rolle', False) else '1/1.25x'}",
+        picture_class="liqorice-rolle",
+        progression=int(session_data.account.sneaking.get("PristineCharms", {}).get("Liqorice Rolle", False)),
+        goal=1
+    ))
+
+    # Multi Group B
+    for color, battleNumber in {"Green": 9, "Yellow": 5, "Blue": 5, "Purple": 7, "Cyan": 3}.items():
+        speed_Advice[mgb_label].append(Advice(
+            label=f"Summoning match {color} {battleNumber}: "
+                  f"+{session_data.account.summoning['BattleDetails'][color][battleNumber]['RewardBaseValue'] * session_data.account.summoning['BattleDetails'][color][battleNumber]['Defeated']}"
+                  f"/{session_data.account.summoning['BattleDetails'][color][battleNumber]['RewardBaseValue']}",
+            picture_class=session_data.account.summoning['BattleDetails'][color][battleNumber]['Image'],
+            progression=1 if session_data.account.summoning['BattleDetails'][color][battleNumber]['Defeated'] else 0,
+            goal=1
+        ))
+    speed_Advice[mgb_label].append(Advice(
+        label=f"Summoning matches total: +{player_matches_total}/{matches_total}",
+        picture_class="summoning",
+        progression=player_matches_total,
+        goal=matches_total
+    ))
+    for advice in session_data.account.summoning['WinnerBonusesAdvice']:
+        speed_Advice[mgb_label].append(advice)
+
+    # Multi Group C
+    speed_Advice[mgc_label].append(Advice(
+        label=f"{{{{ Vial|#vials }}}}: Turtle Tisane (Tuttle): {tuttle_vial_multi}x",
+        picture_class="tuttle",
+        progression=session_data.account.alchemy_vials['Turtle Tisane (Tuttle)']['Level'],
+        goal=max_VialLevel
+    ))
+    speed_Advice[mgc_label].append(Advice(
+        label=f"Lab Bonus: My 1st Chemistry Set: {session_data.account.labBonuses['My 1st Chemistry Set']['Value']}x"
+              f"<br>(Already applied to Vial above)",
+        picture_class="my-1st-chemistry-set",
+        progression=int(session_data.account.labBonuses['My 1st Chemistry Set']['Enabled']),
+        goal=1
+    ))
+    speed_Advice[mgc_label].append(Advice(
+        label=f"{{{{ Rift|#rift }}}} Bonus: Vial Mastery: {session_data.account.vialMasteryMulti:.2f}x"
+              f"<br>(Already applied to Vial above)",
+        picture_class="vial-mastery",
+        progression=f"{1 if session_data.account.rift['VialMastery'] else 0}",
+        goal=1
+    ))
+
+    # Multi Group D
+    speed_Advice[mgd_label].append(Advice(
+        label=f"Weekly Ballot: {ballot_multi_active:.3f}/{ballot_multi:.3f}x"
+              f"<br>(Buff {ballot_status})",
+        picture_class="ballot-17",
+        progression=int(ballot_active),
+        goal=1
+    ))
+
+    for group_name in speed_Advice:
+        for advice in speed_Advice[group_name]:
+            mark_advice_completed(advice)
+
+    speed_AdviceGroup = AdviceGroup(
+        tier='',
+        pre_string=f"Info- Sources of Sigil Charging Speed. Grand total: {total_multi:.3f}x",
+        advices=speed_Advice
+    )
+    return speed_AdviceGroup
+
+
+def setAlchemySigilsProgressionTier() -> AdviceSection:
+    sigils_AdviceDict = {
+        'Sigils': {}
+    }
+    sigils_AdviceGroupDict = {}
+    sigils_AdviceSection = AdviceSection(
+        name='Sigils',
+        tier="Not Yet Evaluated",
+        header="Best Sigils tier met: Not Yet Evaluated. Recommended Sigils actions:",
+        picture="Sigils.png"
+    )
+
+    highestLabLevel = max(session_data.account.all_skills["Lab"])
+    if highestLabLevel < 1:
+        sigils_AdviceSection.header = "Come back after unlocking the Laboratory skill in World 4!"
+        return sigils_AdviceSection
+
+    account_sigils = session_data.account.alchemy_p2w['Sigils']
+    infoTiers = 6
+    max_tier = max(sigils_progressionTiers.keys()) - infoTiers
+    tier_Sigils = 0
+
+    # Assess Tiers
+    for tierNumber, tierContents in sigils_progressionTiers.items():
+        subgroupName = f"To reach {'Informational ' if tierNumber > max_tier else ''}Tier {tierNumber}"
+        if 'Ionized Sigils' in tierContents.get('Other', {}) and not session_data.account.sneaking['JadeEmporium']['Ionized Sigils']['Obtained']:
+            if subgroupName not in sigils_AdviceDict['Sigils'] and len(sigils_AdviceDict['Sigils']) < maxTiersPerGroup:
+                sigils_AdviceDict['Sigils'][subgroupName] = []
+            if subgroupName in sigils_AdviceDict['Sigils']:
+                sigils_AdviceDict['Sigils'][subgroupName].append(Advice(
+                    label=f"{{{{ Jade Emporium|#sneaking }}}}: Purchase Ionized Sigils to unlock Red sigils",
+                    picture_class='ionized-sigils',
+                    progression=int(session_data.account.sneaking['JadeEmporium']['Ionized Sigils']['Obtained']),
+                    goal=1
+                ))
+        # Unlock new Sigils
+        for requiredSigil, requiredLevel in tierContents.get('Unlock', {}).items():
+            if account_sigils[requiredSigil]['PrechargeLevel'] < requiredLevel:
+                if subgroupName not in sigils_AdviceDict['Sigils'] and len(sigils_AdviceDict['Sigils']) < maxTiersPerGroup:
+                    sigils_AdviceDict['Sigils'][subgroupName] = []
+                if subgroupName in sigils_AdviceDict['Sigils']:
+                    sigils_AdviceDict['Sigils'][subgroupName].append(Advice(
+                        label=f"Unlock {requiredSigil}",
+                        picture_class=requiredSigil,
+                        progression=f"{account_sigils[requiredSigil]['PlayerHours']:.2f}",
+                        goal=f"{account_sigils[requiredSigil]['Requirements'][requiredLevel - 1]}"
+                    ))
+        # Level Up unlocked Sigils
+        for requiredSigil, requiredLevel in tierContents.get('LevelUp', {}).items():
+            if account_sigils[requiredSigil]['PrechargeLevel'] < requiredLevel:
+                if subgroupName not in sigils_AdviceDict['Sigils'] and len(sigils_AdviceDict['Sigils']) < maxTiersPerGroup:
+                    sigils_AdviceDict['Sigils'][subgroupName] = []
+                if subgroupName in sigils_AdviceDict['Sigils']:
+                    sigils_AdviceDict['Sigils'][subgroupName].append(Advice(
+                        label=f"Level up {requiredSigil}",
+                        picture_class=requiredSigil,
+                        progression=f"{0 if requiredLevel > account_sigils[requiredSigil]['PrechargeLevel']+1 else account_sigils[requiredSigil]['PlayerHours']:.2f}",
+                        goal=f"{account_sigils[requiredSigil]['Requirements'][requiredLevel - 1]}"
+                    ))
+        if tier_Sigils == tierNumber-1 and subgroupName not in sigils_AdviceDict['Sigils']:
+            tier_Sigils = tierNumber
+
+    # Generate AdviceGroups
+    sigils_AdviceGroupDict['Sigils'] = AdviceGroup(
+        tier=f"{tier_Sigils if tier_Sigils < max_tier else ''}",
+        pre_string=f"{'Informational- ' if tier_Sigils >= max_tier else ''}"
+                   f"Unlock and level {'all' if tier_Sigils >= max_tier else 'important'} Sigils",
+        advices=sigils_AdviceDict['Sigils'],
+    )
+    sigils_AdviceGroupDict['Speed'] = getSigilSpeedAdviceGroup()
+
+    overall_SigilsTier = min(max_tier + infoTiers, tier_Sigils)
+
+    # #Generate AdviceSection
+    tier_section = f"{overall_SigilsTier}/{max_tier}"
+    sigils_AdviceSection.tier = tier_section
+    sigils_AdviceSection.pinchy_rating = overall_SigilsTier
+    sigils_AdviceSection.groups = sigils_AdviceGroupDict.values()
+    if overall_SigilsTier >= max_tier:
+        sigils_AdviceSection.header = f"Best Sigils tier met: {tier_section}{break_you_best}"
+        sigils_AdviceSection.complete = True
+    else:
+        sigils_AdviceSection.header = f"Best Sigils tier met: {tier_section}"
+
+    return sigils_AdviceSection

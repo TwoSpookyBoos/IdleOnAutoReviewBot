@@ -15,6 +15,7 @@
 @import "achievements";
 @import "merits";
 @import "companions";
+@import "ui";
 
 //W1
 @import "bribes";
@@ -25,6 +26,7 @@
 @import "arcade";
 @import "postoffice";
 @import "kangaroo";
+@import "ballot";
 
 //W3
 @import "construction";
@@ -606,6 +608,7 @@ crescent-moon-pendant: $crescent-moon-pendant,
 strung-tooth-of-the-divine: $strung-tooth-of-the-divine,
 the-divine-scarf: $the-divine-scarf,
 deathbloom-flower-pendant: $deathbloom-flower-pendant,
+spiritlord-horn-chain: $spiritlord-horn-chain,
 
 // Rings
 
@@ -668,6 +671,8 @@ riftwalker-wings: $riftwalker-wings,
 blooming-vine: $blooming-vine,
 eternal-flames-of-the-divine: $eternal-flames-of-the-divine,
 phoenix-wings: $phoenix-wings,
+giant-nightshade: $giant-nightshade,
+timeless-watch: $timeless-watch,
 
 // Dungeon Chains
 
@@ -736,6 +741,8 @@ summer-shovel-nametag: $summer-shovel-nametag,
 falloween-nametag: $falloween-nametag,
 balling-nametag: $balling-nametag,
 third-anniversary-idleon-nametag: $third-anniversary-idleon-nametag,
+nightshade-nametag: $nightshade-nametag,
+timeless-nametag: $timeless-nametag,
 
 // Mining Pickaxes
 
@@ -1028,7 +1035,7 @@ premium-luk-stone: $premium-luk-stone,
 
 hat-premiumifier: $hat-premiumifier,
 premium-stone-refunder: $premium-stone-refunder,
-premium-bonus-swapper: $premium-bonus-swapper,
+premium-hat-swapper: $premium-hat-swapper,
 
 // Premium Hats
 diamon-horns: $diamon-horns,
@@ -1044,6 +1051,8 @@ big-bunny: $big-bunny,
 giftmas-tree: $giftmas-tree,
 fluffy-ramsy: $fluffy-ramsy,
 parasite: $parasite,
+husky-hat: $husky-hat,
+yellow-beanie: $yellow-beanie,
 
 // Quest Items
 
@@ -1111,9 +1120,10 @@ signed-contract: $signed-contract,
 shovel: $shovel,
 
 // Seasonal Event Drops
-
+event-point: $event-point,
 summer-cooler: $summer-cooler,
 beach-oyster: $beach-oyster,
+golden-oyster: $golden-oyster,
 
 giftmas-box-2021: $giftmas-box-2021,
 giftmas-box: $giftmas-box,
@@ -1542,6 +1552,7 @@ dementia-obol-of-worship: $dementia-obol-of-worship,
 
 // obols - bosses
 
+bossius-obol-stack: $bossius-obol-stack,
 granite-obol-of-amaroks-stare: $granite-obol-of-amaroks-stare,
 skeletal-obol-of-efaunts-gaze: $skeletal-obol-of-efaunts-gaze,
 frozen-obol-of-chizoars-rage: $frozen-obol-of-chizoars-rage,
@@ -2039,6 +2050,10 @@ really-really-resource-coupon: $really-really-resource-coupon,
 bottle: $bottle,
 garbage: $garbage,
 basketball: $basketball,
+rare-drop: $rare-drop,
+mega-rare-drop: $mega-rare-drop,
+secret-map: $secret-map,
+gem-note: $gem-note,
 );
 
 $monsters: (
@@ -2198,6 +2213,8 @@ $id-map: map-merge($all-gaming, $id-map);
 $id-map: map-merge($kangaroo-map, $id-map);
 $id-map: map-merge($all-farming, $id-map);
 $id-map: map-merge($all-summoning, $id-map);
+$id-map: map-merge($ballot, $id-map);
+$id-map: map-merge($ui-map, $id-map);
 
 $extra: (
     //storage: $cosmic-storage-chest,

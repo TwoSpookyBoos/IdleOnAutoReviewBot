@@ -1,5 +1,7 @@
+import math
+
 from flask import g as session_data
-from consts import lavaFunc, sampling_progressionTiers, maxTiersPerGroup, break_you_best, skillIndexList
+from consts import lavaFunc, sampling_progressionTiers, maxTiersPerGroup, break_you_best, skillIndexList, goldrelic_multisDict
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import notateNumber
@@ -35,12 +37,12 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     account_sum += 0.5 * session_data.account.saltlick.get('Printer Sample Size', 0)
     account_sum += 0.5 * session_data.account.merits[2][4]['Level']
     account_sum += session_data.account.family_bonuses['Maestro']['Value']
-    stampleValue = session_data.account.stamps.get('Stample Stamp', {}).get('Value', 0)
-    amplestampleValue = session_data.account.stamps.get('Amplestample Stamp', {}).get('Value', 0)
-    if session_data.account.labBonuses.get("Certified Stamp Book", {}).get("Enabled", False):
+    stampleValue = session_data.account.stamps['Stample Stamp']['Value']
+    amplestampleValue = session_data.account.stamps['Amplestample Stamp']['Value']
+    if session_data.account.labBonuses['Certified Stamp Book']['Enabled']:
         stampleValue *= 2
         amplestampleValue *= 2
-    if session_data.account.sneaking.get("PristineCharms", {}).get("Liqorice Rolle", False):
+    if session_data.account.sneaking["PristineCharms"]["Liqorice Rolle"]:
         stampleValue *= 1.25
         amplestampleValue *= 1.25
     account_sum += stampleValue
@@ -93,29 +95,29 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     psrAdvices[accountSubgroup].append(Advice(
         label=f"Amplestample Stamp: +{amplestampleValue:.3f}/6.45%",
         picture_class="amplestample-stamp",
-        progression=session_data.account.stamps.get("Amplestample Stamp", {}).get("Level", 0),
+        progression=session_data.account.stamps['Amplestample Stamp']['Level'],
         goal=32,
-        resource=session_data.account.stamps.get("Amplestample Stamp", {}).get("Material", 0),
+        resource=session_data.account.stamps['Amplestample Stamp']['Material'],
     ))
     psrAdvices[accountSubgroup].append(Advice(
         label=f"Stample Stamp: +{stampleValue:.3f}/6.667%",
         picture_class="stample-stamp",
-        progression=session_data.account.stamps.get("Stample Stamp", {}).get("Level", 0),
+        progression=session_data.account.stamps['Stample Stamp']['Level'],
         goal=60,
-        resource=session_data.account.stamps.get("Stample Stamp", {}).get("Material", 0),
+        resource=session_data.account.stamps['Stample Stamp']['Material'],
     ))
     psrAdvices[accountSubgroup].append(Advice(
         label=f"Lab Bonus: Certified Stamp Book: "
-              f"{'2/2x (Already applied)' if session_data.account.labBonuses.get('Certified Stamp Book', {}).get('Enabled', False) else '1/2x'}",
+              f"{'2/2x<br>(Already applied to Stamps above)' if session_data.account.labBonuses['Certified Stamp Book']['Enabled'] else '1/2x'}",
         picture_class="certified-stamp-book",
-        progression=int(session_data.account.labBonuses.get("Certified Stamp Book", {}).get("Enabled", False)),
+        progression=int(session_data.account.labBonuses['Certified Stamp Book']['Enabled']),
         goal=1
     ))
     psrAdvices[accountSubgroup].append(Advice(
         label=f"{{{{ Pristine Charm|#sneaking }}}}: Liqorice Rolle: "
-              f"{'1.25/1.25x (Already applied)' if session_data.account.sneaking.get('PristineCharms', {}).get('Liqorice Rolle', False) else '1/1.25x'}",
+              f"{'1.25/1.25x<br>(Already applied to Stamps above)' if session_data.account.sneaking['PristineCharms']['Liqorice Rolle'] else '1/1.25x'}",
         picture_class="liqorice-rolle",
-        progression=int(session_data.account.sneaking.get("PristineCharms", {}).get("Liqorice Rolle", False)),
+        progression=int(session_data.account.sneaking['PristineCharms']['Liqorice Rolle']),
         goal=1
     ))
     psrAdvices[accountSubgroup].append(Advice(
@@ -206,32 +208,160 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     return psrAdviceGroup
 
 def getPrinterOutputAdviceGroup() -> AdviceGroup:
-    po_AdviceDict = {
-        "Account Wide": [],
-        "Character Specific": [],
-    }
-
-    # Account Wide
-    sm_base = 4 * session_data.account.rift['SkillMastery']
-    sm_bonus = sum([1 for skill in session_data.account.all_skills.values() if sum(skill) > 750])
+    # Calculate Multis for Labels
+    # Skill Mastery
+    sm_base = 4 * session_data.account.rift['SkillMastery']  # This isn't expressed anywhere in game, but is hard-coded in source code.
+    sm_eligible_skills = len(skillIndexList) - 1  #-1 to exclude Combat
+    sm_bonus = sum([1 for skillName, skillLevels in session_data.account.all_skills.items() if skillName != "Combat" and sum(skillLevels) > 750])
     sm_sum = sm_base + sm_bonus
     sm_multi = 1 + (sm_sum / 100)
 
-    po_AdviceDict["Account Wide"].append(Advice(
-        label=f"{{{{Rift|#rift}}}}: Skill Mastery unlocked: {sm_base}/4%"
-              f"<br>Additional 1% per Skill at 750: {sm_bonus}/{len(skillIndexList)}%",
-        picture_class='skill-mastery',
-        progression=sm_multi,
-        goal=1 + (4 + len(skillIndexList)) / 100,
+    gr_level = session_data.account.sailing['Artifacts']['Gold Relic']['Level']
+    gr_days = session_data.account.raw_optlacc_dict.get(125, 0)
+    gr_multi = 1 + ((gr_days * goldrelic_multisDict.get(gr_level, 0)) / 100)
+
+    anyDKMaxBooked = False
+    bestKotRBook = 0
+    anyDKMaxLeveled = False
+    bestKotRPresetLevel = 0
+    for dk in session_data.account.dks:
+        #levels_above_max = dk.max_talents_over_books - session_data.account.library['MaxBookLevel']  #Printer seems to use Book level
+        # Book level
+        if dk.max_talents.get("178", 0) >= session_data.account.library['MaxBookLevel']:
+            anyDKMaxBooked = True
+        if dk.max_talents.get("178", 0) > bestKotRBook:
+            bestKotRBook = dk.max_talents.get("178", 0)
+
+        # Preset level
+        if (
+                dk.current_preset_talents.get("178", 0) >= session_data.account.library['MaxBookLevel']
+                or dk.secondary_preset_talents.get("178", 0) >= session_data.account.library['MaxBookLevel']
+        ):
+            anyDKMaxLeveled = True
+        if dk.current_preset_talents.get("178", 0) >= bestKotRPresetLevel:
+            bestKotRPresetLevel = dk.current_preset_talents.get("178", 0)
+        if dk.secondary_preset_talents.get("178", 0) >= bestKotRPresetLevel:
+            bestKotRPresetLevel = dk.secondary_preset_talents.get("178", 0)
+
+    talent_value = lavaFunc('decay', bestKotRPresetLevel, 5, 150)
+    orb_kills = session_data.account.raw_optlacc_dict.get(138, 0)
+    pow10_kills = math.log(orb_kills,10) if orb_kills > 0 else 0
+    kotr_multi = max(1, 1 + ((talent_value * pow10_kills) / 100))
+
+    charm_multi = 1.25
+    charm_multi_active = charm_multi if session_data.account.sneaking["PristineCharms"]["Lolly Flower"] else 1
+
+    equinoxMulti = 1 + (session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel'] / 100)
+    ballot_active = session_data.account.ballot['CurrentBuff'] == 11
+    if ballot_active:
+        ballot_status = "is Active"
+    elif not ballot_active and session_data.account.ballot['CurrentBuff'] != "Unknown":
+        ballot_status = "is Inactive"
+    else:
+        ballot_status = "status is not available in provided data"
+    ballot_multi = 1 + (session_data.account.ballot['Buffs'][11]['Value'] / 100)
+    ballot_multi_active = max(1, ballot_multi * ballot_active)
+
+    lab_multi_aw = 2 if session_data.account.doot_owned else 1
+    lab_multi_cs = 2 if session_data.account.labBonuses['Wired In']['Enabled'] else 1
+
+    harriep_multi_aw = 3 if session_data.account.doot_owned else 1
+    harriep_multi_cs = 3 if session_data.account.divinity['Divinities'][4]['Unlocked'] else 1
+
+    aw_multi = 1 * sm_multi * gr_multi * kotr_multi * charm_multi_active * ballot_multi_active * lab_multi_aw * harriep_multi_aw
+    aw_label = f"Account Wide: {aw_multi:.3f}x"
+    cs_multi = lab_multi_cs * harriep_multi_cs
+    cs_label = f"Character Specific: Up to {cs_multi}x"
+
+    po_AdviceDict = {
+        cs_label: [],
+        aw_label: [],
+    }
+
+    # If Doot is not owned, these are Character Specific. Otherwise, they are account-wide
+    po_AdviceDict[f"{cs_label if not session_data.account.doot_owned else aw_label}"].append(Advice(
+        label=f"Lab Bonus: Wired In: {'2x (Thanks Doot!)' if session_data.account.doot_owned else '2x if connected to Lab/Arctis'}",
+        picture_class='wired-in',
+        progression=lab_multi_aw if session_data.account.doot_owned else '',
+        goal=2,
+        unit="x"
+    ))
+    po_AdviceDict[f"{cs_label if not session_data.account.doot_owned else aw_label}"].append(Advice(
+        label=f"{{{{ Divinity|#divinity }}}}: Harriep Major Link bonus: {'3x (Thanks Doot!)' if session_data.account.doot_owned else '3x if linked'}",
+        picture_class='harriep',
+        progression=harriep_multi_aw if session_data.account.doot_owned else '',
+        goal=3,
         unit="x"
     ))
 
-    # Character Specific
+    # Account Wide
+    po_AdviceDict[aw_label].append(Advice(
+        label=f"{{{{Rift|#rift}}}}: Skill Mastery unlocked: {sm_base}/4%"
+              f"<br>Additional 1% per Skill at 750: {sm_bonus}/{sm_eligible_skills}%",
+        picture_class='skill-mastery',
+        progression=sm_multi,
+        goal=1 + (4 + sm_eligible_skills) / 100,
+        unit="x"
+    ))
+
+    po_AdviceDict[aw_label].append(Advice(
+        label=f"""DK's King of the Remembered: {kotr_multi:.3f}x"""
+              f"""{'<br>Not max booked!' if not anyDKMaxBooked else ''}"""
+              f"""{'<br>Not max leveled in any preset!' if not anyDKMaxLeveled else ''}"""
+              f"""{f"<br>({talent_value:.3f} talent * {pow10_kills:.3f} pow10 kills)" if anyDKMaxBooked and anyDKMaxLeveled else ''}""",
+        picture_class="king-of-the-remembered",
+        resource="orb-of-remembrance",
+        progression=f"{kotr_multi:.3f}",
+        unit="x"
+    ))
+
+    po_AdviceDict[aw_label].append(Advice(
+        label=f"{{{{ Sailing|#sailing}}}}: Level {gr_level} Gold Relic: {gr_multi}x ({gr_days} days)",
+        picture_class="gold-relic",
+        progression=gr_multi,
+        unit="x"
+    ))
+
+    po_AdviceDict[aw_label].append(Advice(
+        label=f"{{{{ Pristine Charm|#sneaking }}}}: Lolly Flower: {charm_multi_active}/{charm_multi}x",
+        picture_class="lolly-flower",
+        progression=int(session_data.account.sneaking["PristineCharms"]["Lolly Flower"]),
+        goal=1
+    ))
+
+    po_AdviceDict[aw_label].append(Advice(
+        label=f"Weekly Ballot: {ballot_multi_active:.3f}/{ballot_multi:.3f}x"
+              f"<br>(Buff {ballot_status})",
+        picture_class="ballot-11",
+        progression=int(ballot_active),
+        goal=1
+    ))
+    po_AdviceDict[aw_label].append(Advice(
+        label=f"{{{{ Equinox|#equinox}}}}: Voter Rights: {equinoxMulti}/1.{session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']}x to Weekly Ballot (Already included above)",
+        picture_class="voter-rights",
+        progression=session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel'],
+        goal=session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']
+    ))
+
+    po_AdviceDict[cs_label].append(Advice(
+        label="Blue Dot before your sample = Only 2x from Lab is active",
+        picture_class="printer-blue"
+    ))
+    po_AdviceDict[cs_label].append(Advice(
+        label="Yellow Star = Only 3x from Harriep is active",
+        picture_class="printer-yellow"
+    ))
+    po_AdviceDict[cs_label].append(Advice(
+        label="Purple Swirl = 6x total from Lab and Harriep",
+        picture_class="printer-purple"
+    ))
 
     po_AdviceGroup = AdviceGroup(
         tier="",
-        pre_string="Info- Sources of Printer Output",
-        advices=po_AdviceDict
+        pre_string=f"""Info- Sources of Printer Output. """
+                   f"""Grand Total: {aw_multi:.3f}{f" - {aw_multi * cs_multi:.3f}" if len(po_AdviceDict[cs_label]) > 0 else ''}x""",
+        advices=po_AdviceDict if session_data.account.doot_owned else po_AdviceDict[aw_label],
+        post_string="Please note: Printer Output multiplies resources printed each hour. It does NOT increase the size of taking a new sample."
     )
     return po_AdviceGroup
 
@@ -340,7 +470,7 @@ def setSamplingProgressionTier() -> AdviceSection:
     )
     sampling_AdviceGroupDict["MaterialSamples"].remove_empty_subgroups()
     sampling_AdviceGroupDict["PrinterSampleRate"] = getPrinterSampleRateAdviceGroup()
-    #sampling_AdviceGroupDict["PrinterOutput"] = getPrinterOutputAdviceGroup()
+    sampling_AdviceGroupDict["PrinterOutput"] = getPrinterOutputAdviceGroup()
     complete_toons = 0  # Either above 90 and the prayer not worn, or below 90 and already wearing the prayer. Those are the 2 "no action needed" states
     for entry in sampling_AdviceGroupDict["PrinterSampleRate"].advices['Which Characters need Royal Sampler?']:
         if "Keep prayer equipped" in entry.label or "Prayer not needed, not worn." in entry.label:
