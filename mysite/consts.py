@@ -550,17 +550,76 @@ starsigns_progressionTiers = {
 }
 statues_progressionTiers = {
     0: {},
-    1: {"MinStatueLevel": 20, "Exclusions": "Onyx1"},
-    2: {"MinStatueTypeNumber": 1, "MinStatueType": "Gold", "Exclusions": "None"},
-    3: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx", "Exclusions": "Onyx1"},
-    4: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx", "Exclusions": "Onyx2"},
-    5: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx", "Exclusions": "Onyx3"},
-    6: {"MinStatueLevel": 40, "Exclusions": "None"},
-    7: {"MinStatueLevel": 150, "Exclusions": "Final3"},
-    8: {"MinStatueLevel": 200, "Exclusions": "Final3"},
-    9: {"MinStatueLevel": 240, "Exclusions": "Final3"},
-    10: {"MinStatueLevel": 80, "Exclusions": "Onyx1"},
-    11: {"MinStatueLevel": 280, "Exclusions": "Final3"},
+    1: {#"MinStatueLevel": 20, "Exclusions": "Onyx1",
+        "SpecificLevels": {
+        "Power Statue": 20, "Speed Statue": 20, "Mining Statue": 20, "Feasty Statue": 20, "Health Statue": 20, "Lumberbob Statue": 20,
+        "Ol Reliable Statue": 20, "Exp Book Statue": 20, "Anvil Statue": 20, "Cauldron Statue": 20,
+        "Beholder Statue": 20,
+        "Pecunia Statue": 20, "Mutton Statue": 20, "Egg Statue": 20,
+    },},
+    2: {"MinStatueTypeNumber": 1, "MinStatueType": "Gold",# "Exclusions": "None",
+        'SpecificTypes': [
+        'Power Statue', 'Speed Statue', 'Mining Statue', 'Feasty Statue', 'Health Statue', 'Kachow Statue', 'Lumberbob Statue',
+        'Thicc Skin Statue', 'Oceanman Statue', 'Ol Reliable Statue', 'Exp Book Statue', 'Anvil Statue', 'Cauldron Statue',
+        'Beholder Statue', 'Bullseye Statue',
+        'Box Statue', 'Twosoul Statue', 'EhExPee Statue', 'Seesaw Statue',
+        'Pecunia Statue', 'Mutton Statue', 'Egg Statue',
+        'Battleaxe Statue', 'Spiral Statue', 'Boat Statue',
+        'Compost Statue', 'Stealth Statue', 'Essence Statue'
+    ],},
+    3: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx",# "Exclusions": "Onyx1",
+        "SpecificTypes": [
+        'Power Statue', 'Speed Statue', 'Mining Statue', 'Feasty Statue', 'Health Statue', 'Lumberbob Statue',
+        'Ol Reliable Statue', 'Exp Book Statue', 'Anvil Statue', 'Cauldron Statue',
+        'Beholder Statue',
+        'Pecunia Statue', 'Mutton Statue', 'Egg Statue'
+    ],},
+    4: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx",# "Exclusions": "Onyx2",
+        "SpecificTypes": [
+        'Thicc Skin Statue',
+        'EhExPee Statue',
+        'Battleaxe Statue', 'Spiral Statue', 'Boat Statue',
+        'Compost Statue', 'Stealth Statue', 'Essence Statue'
+    ],},
+    5: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx",# "Exclusions": "Onyx3",
+        'SpecificTypes': [
+        'Kachow Statue', 'Oceanman Statue', 'Bullseye Statue',
+        'Box Statue', 'Twosoul Statue', 'Seesaw Statue'
+    ],},
+    6: {#"MinStatueLevel": 40, "Exclusions": "None",
+        'SpecificLevels': {
+        'Speed Statue': 40, 'Mining Statue': 40, 'Feasty Statue': 40, 'Health Statue': 40, 'Lumberbob Statue': 40,
+        'Oceanman Statue': 40, 'Ol Reliable Statue': 40, 'Exp Book Statue': 40, 'Anvil Statue': 40, 'Cauldron Statue': 40,
+        'Beholder Statue': 40, 'Box Statue': 40, 'Twosoul Statue': 40, 'EhExPee Statue': 40,
+        'Pecunia Statue': 40, 'Mutton Statue': 40, 'Egg Statue': 40,
+        'Battleaxe Statue': 40, 'Spiral Statue': 40, 'Boat Statue': 40,
+        'Compost Statue': 40, 'Stealth Statue': 40, 'Essence Statue': 40,
+    },},
+    7: {#"MinStatueLevel": 150, "Exclusions": "Final3",
+        'SpecificLevels': {
+        'Mining Statue': 150, 'Feasty Statue': 150, 'Lumberbob Statue': 150,
+    },},
+    8: {#"MinStatueLevel": 200, "Exclusions": "Final3",
+        'SpecificLevels': {
+        'Mining Statue': 200, 'Feasty Statue': 200, 'Lumberbob Statue': 200,
+    },},
+    9: {#"MinStatueLevel": 240, "Exclusions": "Final3",
+        'SpecificLevels': {
+        'Mining Statue': 240, 'Feasty Statue': 240, 'Lumberbob Statue': 240,
+    },},
+    10: {#"MinStatueLevel": 80, "Exclusions": "Onyx1",
+         'SpecificLevels': {
+        'Speed Statue': 80,
+        'Oceanman Statue': 80, 'Ol Reliable Statue': 80, 'Anvil Statue': 80, 'Cauldron Statue': 80,
+        'Beholder Statue': 80, 'EhExPee Statue': 80,
+        'Pecunia Statue': 80, 'Mutton Statue': 80, 'Egg Statue': 80,
+        'Battleaxe Statue': 80, 'Spiral Statue': 80, 'Boat Statue': 80,
+        'Compost Statue': 80, 'Stealth Statue': 80, 'Essence Statue': 80,
+    },},
+    11: {#"MinStatueLevel": 280, "Exclusions": "Final3",
+         'SpecificLevels': {
+        'Mining Statue': 280, 'Feasty Statue': 280, 'Lumberbob Statue': 280,
+    },},
 
 }
 
@@ -4436,6 +4495,19 @@ maxStaticBookLevels = 140
 maxScalingBookLevels = 30
 maxSummoningBookLevels = 29
 maxOverallBookLevels = 100 + maxStaticBookLevels + maxScalingBookLevels + maxSummoningBookLevels
+dnSkullRequirementList = [0, 25000, 100000, 250000, 500000, 1000000, 5000000, 100000000, 1000000000]
+dnSkullValueList = [0, 1, 2, 3, 4, 5, 7, 10, 20]
+apocableMapIndexDict = {
+    0: [30, 9, 38, 69, 120, 166],  #Barbarian only, not in regular DeathNote
+    1: [1, 2, 14, 17, 16, 13, 18, 31, 19, 24, 26, 27, 28, 8, 15],
+    2: [51, 52, 53, 57, 58, 59, 60, 62, 63, 64, 65],
+    3: [101, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 116, 117],
+    4: [151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163],
+    5: [201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213],
+    6: [251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264]
+}
+apocAmountsList = [100000, 1000000, 100000000]
+apocNamesList = ["ZOW", "CHOW", "MEOW"]
 
 ###WORLD 4 CONSTS###
 maxCookingTables = 10  # Last verified as of v2.10
