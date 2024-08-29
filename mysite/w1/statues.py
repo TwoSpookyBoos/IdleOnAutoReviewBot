@@ -145,8 +145,8 @@ def setStatuesProgressionTier() -> AdviceSection:
         subgroupName = f"To reach Tier {tierNumber}"
         for statueName, statueDetails in session_data.account.statues.items():
             # Trying to futureproof new tiers- If at least Gold, but not the max tier
-            farmDetails = f": {statueDetails['Farmer']}" if 1 <= statueDetails['TypeNumber'] < len(statueTypeList) else ""
-            farmResource = statueDetails['Target'] if 1 <= statueDetails['TypeNumber'] < len(statueTypeList) else ""
+            farmDetails = f": {statueDetails['Farmer']}" if 0 <= statueDetails['TypeNumber'] < len(statueTypeList) else ""
+            farmResource = statueDetails['Target'] if 0 <= statueDetails['TypeNumber'] < len(statueTypeList) else ""
             if 'SpecificLevels' in tierRequirements:
                 if statueName in tierRequirements['SpecificLevels']:
                     if statueDetails['Level'] < tierRequirements['SpecificLevels'][statueName]:
@@ -167,11 +167,12 @@ def setStatuesProgressionTier() -> AdviceSection:
                             statues_AdviceDict["Tiers"][subgroupName] = []
                         if subgroupName in statues_AdviceDict["Tiers"]:
                             statues_AdviceDict['Tiers'][subgroupName].append(Advice(
-                                label=f"Raise {statueName} to {tierRequirements.get('MinStatueType', 'UnknownStatueType')}{farmDetails}",
+                                label=f"Raise {statueName} to {tierRequirements.get('MinStatueType', 'UnknownStatueType')}"
+                                      f"{farmDetails if tierRequirements.get('MinStatueType', 'UnknownStatueType') != 'Gold' else ''}",
                                 picture_class=statueName,
                                 progression=statueDetails['TypeNumber'] if statueDetails['TypeNumber'] < 1 else session_data.account.assets.get(statueDetails['ItemName']).amount,
                                 goal=tierRequirements.get('MinStatueTypeNumber', 0) if statueDetails['TypeNumber'] < 1 else 20000,
-                                resource=farmResource
+                                resource="coins" if tierRequirements.get('MinStatueType', 'UnknownStatueType') == 'Gold' else ''
                             ))
                         if session_data.account.assets.get(statueDetails['ItemName']).amount >= 20000 and statueDetails['Type'] != statueTypeList[-1]:
                             depositable_statues += 1

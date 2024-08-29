@@ -550,15 +550,13 @@ starsigns_progressionTiers = {
 }
 statues_progressionTiers = {
     0: {},
-    1: {#"MinStatueLevel": 20, "Exclusions": "Onyx1",
-        "SpecificLevels": {
+    1: {"SpecificLevels": {
         "Power Statue": 20, "Speed Statue": 20, "Mining Statue": 20, "Feasty Statue": 20, "Health Statue": 20, "Lumberbob Statue": 20,
         "Ol Reliable Statue": 20, "Exp Book Statue": 20, "Anvil Statue": 20, "Cauldron Statue": 20,
         "Beholder Statue": 20,
         "Pecunia Statue": 20, "Mutton Statue": 20, "Egg Statue": 20,
     },},
-    2: {"MinStatueTypeNumber": 1, "MinStatueType": "Gold",# "Exclusions": "None",
-        'SpecificTypes': [
+    2: {"MinStatueTypeNumber": 1, "MinStatueType": "Gold", 'SpecificTypes': [
         'Power Statue', 'Speed Statue', 'Mining Statue', 'Feasty Statue', 'Health Statue', 'Kachow Statue', 'Lumberbob Statue',
         'Thicc Skin Statue', 'Oceanman Statue', 'Ol Reliable Statue', 'Exp Book Statue', 'Anvil Statue', 'Cauldron Statue',
         'Beholder Statue', 'Bullseye Statue',
@@ -567,48 +565,40 @@ statues_progressionTiers = {
         'Battleaxe Statue', 'Spiral Statue', 'Boat Statue',
         'Compost Statue', 'Stealth Statue', 'Essence Statue'
     ],},
-    3: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx",# "Exclusions": "Onyx1",
-        "SpecificTypes": [
+    3: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx", 'SpecificTypes': [
         'Power Statue', 'Speed Statue', 'Mining Statue', 'Feasty Statue', 'Health Statue', 'Lumberbob Statue',
         'Ol Reliable Statue', 'Exp Book Statue', 'Anvil Statue', 'Cauldron Statue',
         'Beholder Statue',
         'Pecunia Statue', 'Mutton Statue', 'Egg Statue'
     ],},
-    4: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx",# "Exclusions": "Onyx2",
-        "SpecificTypes": [
+    4: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx", 'SpecificTypes': [
         'Thicc Skin Statue',
         'EhExPee Statue',
         'Battleaxe Statue', 'Spiral Statue', 'Boat Statue',
         'Compost Statue', 'Stealth Statue', 'Essence Statue'
     ],},
-    5: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx",# "Exclusions": "Onyx3",
-        'SpecificTypes': [
+    5: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx", 'SpecificTypes': [
         'Kachow Statue', 'Oceanman Statue', 'Bullseye Statue',
         'Box Statue', 'Twosoul Statue', 'Seesaw Statue'
     ],},
-    6: {#"MinStatueLevel": 40, "Exclusions": "None",
-        'SpecificLevels': {
-        'Speed Statue': 40, 'Mining Statue': 40, 'Feasty Statue': 40, 'Health Statue': 40, 'Lumberbob Statue': 40,
+    6: {'SpecificLevels': {
+        'Power Statue': 40, 'Speed Statue': 40, 'Mining Statue': 40, 'Feasty Statue': 40, 'Health Statue': 40, 'Lumberbob Statue': 40,
         'Oceanman Statue': 40, 'Ol Reliable Statue': 40, 'Exp Book Statue': 40, 'Anvil Statue': 40, 'Cauldron Statue': 40,
-        'Beholder Statue': 40, 'Box Statue': 40, 'Twosoul Statue': 40, 'EhExPee Statue': 40,
+        'Beholder Statue': 40, 'Box Statue': 40, 'Twosoul Statue': 40, 'Seesaw Statue': 40, 'EhExPee Statue': 40,
         'Pecunia Statue': 40, 'Mutton Statue': 40, 'Egg Statue': 40,
         'Battleaxe Statue': 40, 'Spiral Statue': 40, 'Boat Statue': 40,
         'Compost Statue': 40, 'Stealth Statue': 40, 'Essence Statue': 40,
     },},
-    7: {#"MinStatueLevel": 150, "Exclusions": "Final3",
-        'SpecificLevels': {
+    7: {'SpecificLevels': {
         'Mining Statue': 150, 'Feasty Statue': 150, 'Lumberbob Statue': 150,
     },},
-    8: {#"MinStatueLevel": 200, "Exclusions": "Final3",
-        'SpecificLevels': {
+    8: {'SpecificLevels': {
         'Mining Statue': 200, 'Feasty Statue': 200, 'Lumberbob Statue': 200,
     },},
-    9: {#"MinStatueLevel": 240, "Exclusions": "Final3",
-        'SpecificLevels': {
+    9: {'SpecificLevels': {
         'Mining Statue': 240, 'Feasty Statue': 240, 'Lumberbob Statue': 240,
     },},
-    10: {#"MinStatueLevel": 80, "Exclusions": "Onyx1",
-         'SpecificLevels': {
+    10: {'SpecificLevels': {
         'Speed Statue': 80,
         'Oceanman Statue': 80, 'Ol Reliable Statue': 80, 'Anvil Statue': 80, 'Cauldron Statue': 80,
         'Beholder Statue': 80, 'EhExPee Statue': 80,
@@ -616,8 +606,7 @@ statues_progressionTiers = {
         'Battleaxe Statue': 80, 'Spiral Statue': 80, 'Boat Statue': 80,
         'Compost Statue': 80, 'Stealth Statue': 80, 'Essence Statue': 80,
     },},
-    11: {#"MinStatueLevel": 280, "Exclusions": "Final3",
-         'SpecificLevels': {
+    11: {'SpecificLevels': {
         'Mining Statue': 280, 'Feasty Statue': 280, 'Lumberbob Statue': 280,
     },},
 
@@ -3805,39 +3794,6 @@ statuesDict = {
 }
 statueTypeList = ["Normal", "Gold", "Onyx"]
 statueCount = len(statuesDict.keys())
-statueExclusionsDict = {
-    "Onyx1": [
-        "Kachow Statue", "Bullseye Statue",
-        "Oceanman Statue", "Thicc Skin Statue",
-        "Box Statue", "Twosoul Statue", "Seesaw Statue", "EhExPee Statue",
-        "Battleaxe Statue", "Spiral Statue", "Boat Statue",
-        "Compost Statue", "Stealth Statue", "Essence Statue"
-    ],
-    "Onyx2": [
-        "Power Statue", "Speed Statue", "Mining Statue", "Feasty Statue", "Health Statue", "Lumberbob Statue", "Kachow Statue", "Bullseye Statue",
-        "Ol Reliable Statue", "Exp Book Statue", "Anvil Statue", "Cauldron Statue", "Oceanman Statue",  # "Thicc Skin Statue",
-        "Beholder Statue", "Bullseye Statue", "Box Statue", "Twosoul Statue", "Seesaw Statue",  # "EhExPee Statue",
-        "Pecunia Statue", "Mutton Statue", "Egg Statue",
-    ],
-    "Onyx3": [
-        "Power Statue", "Speed Statue", "Mining Statue", "Feasty Statue", "Health Statue", "Lumberbob Statue",  # "Kachow Statue", "Bullseye Statue",
-        "Thicc Skin Statue", "Ol Reliable Statue", "Exp Book Statue", "Anvil Statue", "Cauldron Statue",  # "Oceanman Statue",
-        "Beholder Statue", "EhExPee Statue",  # "Bullseye Statue", "Box Statue", "Twosoul Statue", "Seesaw Statue",
-        "Pecunia Statue", "Mutton Statue", "Egg Statue",
-        "Battleaxe Statue", "Spiral Statue", "Boat Statue",
-        "Compost Statue", "Stealth Statue", "Essence Statue"
-    ],
-    "Final3": [
-        "Power Statue", "Speed Statue", "Health Statue", "Kachow Statue", "Bullseye Statue",
-        "Thicc Skin Statue", "Oceanman Statue", "Ol Reliable Statue", "Exp Book Statue", "Anvil Statue", "Cauldron Statue",
-        "Beholder Statue", "Bullseye Statue", "Box Statue", "Twosoul Statue", "EhExPee Statue", "Seesaw Statue",
-        "Pecunia Statue", "Mutton Statue", "Egg Statue",
-        "Battleaxe Statue", "Spiral Statue", "Boat Statue",
-        "Compost Statue", "Stealth Statue", "Essence Statue",
-    ],
-    "None": []
-}
-
 
 ###WORLD 2 CONSTS###
 max_IndexOfVials = 75  # Last verified as of v2.10
