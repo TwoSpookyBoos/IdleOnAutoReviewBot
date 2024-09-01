@@ -3962,7 +3962,7 @@ bubblesDict = {
         26: {'Name': 'Essence Boost-Green', 'Material': 'Tree12', 'x1': 50, 'x2': 60, 'funcType': 'decay'},
         27: {'Name': 'Endgame Eff II', 'Material': 'Bulbo-Crop-0', 'x1': 3, 'x2': 60, 'funcType': 'decay'},
         28: {'Name': 'Tome Agility', 'Material': 'Bug13', 'x1': 2.5, 'x2': 60, 'funcType': 'decay'},
-        29: {'Name': 'Stealth Chapter', 'Material': 'Mushie-Crop-15', 'x1': 10, 'x2': 50, 'funcType': 'decay'},
+        29: {'Name': 'Stealth Chapter', 'Material': 'Mushroom-16', 'x1': 10, 'x2': 50, 'funcType': 'decay'},
         30: {'Name': 'Green30', 'Material': '', 'x1': 0, 'x2': 0, 'funcType': 'decay'},
         31: {'Name': 'Green31', 'Material': '', 'x1': 0, 'x2': 0, 'funcType': 'decay'},
         32: {'Name': 'Green32', 'Material': '', 'x1': 0, 'x2': 0, 'funcType': 'decay'},
