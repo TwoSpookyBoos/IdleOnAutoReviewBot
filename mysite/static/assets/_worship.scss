@@ -1,45 +1,45 @@
 $prayers: (
-    big-brain-time: wiki('7/72/Big_Brain_Time.png'),
-    skilled-dimwit: wiki('0/01/Skilled_Dimwit.png'),
-    unending-energy: wiki('d/da/Unending_Energy.png'),
-    shiny-snitch: wiki('a/a0/Shiny_Snitch.png'),
-    zerg-rushogen: wiki('f/f6/Zerg_Rushogen.png'),
-    tachion-of-the-titans: wiki('4/4d/Tachion_of_the_Titans.png'),
-    balance-of-precision: wiki('2/2d/Balance_of_Precision.png'),
-    midas-minded: wiki('d/d6/Midas_Minded.png'),
-    jawbreaker: wiki('6/6e/Jawbreaker.png'),
-    the-royal-sampler: wiki('5/5b/The_Royal_Sampler.png'),
-    antifun-spirit: wiki('3/38/Antifun_Spirit.png'),
-    circular-criticals: wiki('b/b4/Circular_Criticals.png'),
-    ruck-sack: wiki('1/17/Ruck_Sack.png'),
-    fibers-of-absence: wiki('d/d0/Fibers_of_Absence.png'),
-    vacuous-tissue: wiki('c/cb/Vacuous_Tissue.png'),
-    beefy-for-real: wiki('c/cb/Beefy_For_Real.png'),
-    balance-of-pain: wiki('3/3d/Balance_of_Pain.png'),
-    balance-of-proficiency: wiki('9/9a/Balance_of_Proficiency.png'),
-    glitterbug: wiki('4/42/Glitterbug.png')
+    big-brain-time: img('wiki/Big_Brain_Time.png'),
+    skilled-dimwit: img('wiki/Skilled_Dimwit.png'),
+    unending-energy: img('wiki/Unending_Energy.png'),
+    shiny-snitch: img('wiki/Shiny_Snitch.png'),
+    zerg-rushogen: img('wiki/Zerg_Rushogen.png'),
+    tachion-of-the-titans: img('wiki/Tachion_of_the_Titans.png'),
+    balance-of-precision: img('wiki/Balance_of_Precision.png'),
+    midas-minded: img('wiki/Midas_Minded.png'),
+    jawbreaker: img('wiki/Jawbreaker.png'),
+    the-royal-sampler: img('wiki/The_Royal_Sampler.png'),
+    antifun-spirit: img('wiki/Antifun_Spirit.png'),
+    circular-criticals: img('wiki/Circular_Criticals.png'),
+    ruck-sack: img('wiki/Ruck_Sack.png'),
+    fibers-of-absence: img('wiki/Fibers_of_Absence.png'),
+    vacuous-tissue: img('wiki/Vacuous_Tissue.png'),
+    beefy-for-real: img('wiki/Beefy_For_Real.png'),
+    balance-of-pain: img('wiki/Balance_of_Pain.png'),
+    balance-of-proficiency: img('wiki/Balance_of_Proficiency.png'),
+    glitterbug: img('wiki/Glitterbug.png')
 );
 
 $totems: (
-    goblin-gorfest-totem: wiki('6/65/Goblin_Gorfest_Totem.gif'),
-    acorn-assault-totem: wiki('5/5c/Acorn_Assault_Totem.gif'),
-    wakawaka-war-totem: wiki('0/03/Wakawaka_War_Totem.gif'),
-    ez-totem: wiki('f/f7/EZ_Totem.gif'),
-    frosty-firefight-totem: wiki('4/40/Frosty_Firefight_Totem.gif'),
-    clash-of-cans-totem: wiki('8/81/Clash_of_Cans_Totem.gif'),
-    citric-conflict-totem: wiki('6/6d/Citric_Conflict_Totem.gif'),
-    breezy-battle-totem: wiki('5/55/Breezy_Battle_Totem.gif')
+    goblin-gorfest-totem: img('wiki/Goblin_Gorfest_Totem.gif'),
+    acorn-assault-totem: img('wiki/Acorn_Assault_Totem.gif'),
+    wakawaka-war-totem: img('wiki/Wakawaka_War_Totem.gif'),
+    ez-totem: img('wiki/EZ_Totem.gif'),
+    frosty-firefight-totem: img('wiki/Frosty_Firefight_Totem.gif'),
+    clash-of-cans-totem: img('wiki/Clash_of_Cans_Totem.gif'),
+    citric-conflict-totem: img('wiki/Citric_Conflict_Totem.gif'),
+    breezy-battle-totem: img('wiki/Breezy_Battle_Totem.gif')
 );
 
 $skulls: (
-    normal-skull: wiki('6/6d/Status_Skull0.png'),
-    copper-skull: wiki('3/3d/Status_Skull1.png'),
-    iron-skull: wiki('d/de/Status_Skull2.png'),
-    gold-skull: wiki('c/cb/Status_Skull3.png'),
-    platinum-skull: wiki('0/00/Status_Skull4.png'),
-    dementia-skull: wiki('8/8a/Status_Skull5.png'),
-    lava-skull: wiki('e/e5/Status_Skull6.png'),
-    eclipse-skull: wiki('8/82/Rift_Bonus_4.png')
+    normal-skull: img('wiki/Status_Skull0.png'),
+    copper-skull: img('wiki/Status_Skull1.png'),
+    iron-skull: img('wiki/Status_Skull2.png'),
+    gold-skull: img('wiki/Status_Skull3.png'),
+    platinum-skull: img('wiki/Status_Skull4.png'),
+    dementia-skull: img('wiki/Status_Skull5.png'),
+    lava-skull: img('wiki/Status_Skull6.png'),
+    eclipse-skull: img('wiki/Rift_Bonus_4.png')
 );
 
 $all-worship: map-merge($prayers, $totems);

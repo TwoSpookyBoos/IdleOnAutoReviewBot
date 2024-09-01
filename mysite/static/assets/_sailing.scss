@@ -1,135 +1,135 @@
 $captains: (
-	captain-0-idle: wiki("d/d5/Captain_0_Idle.gif"),
-	captain-0-walking: wiki("b/ba/Captain_0_Walking.gif"),
+	captain-0-idle: img('wiki/Captain_0_Idle.gif'),
+	captain-0-walking: img('wiki/Captain_0_Walking.gif'),
 
-	captain-1-idle: wiki("d/de/Captain_1_Idle.gif"),
-	captain-1-walking: wiki("8/8d/Captain_1_Walking.gif"),
+	captain-1-idle: img('wiki/Captain_1_Idle.gif'),
+	captain-1-walking: img('wiki/Captain_1_Walking.gif'),
 
-	captain-2-idle: wiki("b/b4/Captain_2_Idle.gif"),
-	captain-2-walking: wiki("1/1c/Captain_2_Walking.gif"),
+	captain-2-idle: img('wiki/Captain_2_Idle.gif'),
+	captain-2-walking: img('wiki/Captain_2_Walking.gif'),
 
-	captain-3-idle: wiki("d/d2/Captain_3_Idle.gif"),
-	captain-3-walking: wiki("b/be/Captain_3_Walking.gif"),
+	captain-3-idle: img('wiki/Captain_3_Idle.gif'),
+	captain-3-walking: img('wiki/Captain_3_Walking.gif'),
 
-	captain-4-idle: wiki("1/1a/Captain_4_Idle.gif"),
-	captain-4-walking: wiki("9/90/Captain_4_Walking.gif"),
+	captain-4-idle: img('wiki/Captain_4_Idle.gif'),
+	captain-4-walking: img('wiki/Captain_4_Walking.gif'),
 
-	captain-5-idle: wiki("c/c7/Captain_5_Idle.gif"),
-	captain-5-walking: wiki("c/cd/Captain_5_Walking.gif"),
+	captain-5-idle: img('wiki/Captain_5_Idle.gif'),
+	captain-5-walking: img('wiki/Captain_5_Walking.gif'),
 
-	the-endercaptain-idle: wiki("5/58/The_Endercaptain_Idle.gif"),
-	the-endercaptain-walking: wiki("8/85/The_Endercaptain_Walking.gif")
+	the-endercaptain-idle: img('wiki/The_Endercaptain_Idle.gif'),
+	the-endercaptain-walking: img('wiki/The_Endercaptain_Walking.gif')
 );
 
 $boats: (
-	sailing-ship-tier-1: wiki("5/52/Sailing_Ship_Tier_1.png"),
-	sailing-ship-tier-2: wiki("0/0c/Sailing_Ship_Tier_2.png"),
-	sailing-ship-tier-3: wiki("9/90/Sailing_Ship_Tier_3.png"),
-	sailing-ship-tier-4: wiki("e/e7/Sailing_Ship_Tier_4.png"),
-	sailing-ship-tier-5: wiki("0/0e/Sailing_Ship_Tier_5.png"),
-	sailing-ship-tier-6: wiki("3/32/Sailing_Ship_Tier_6.png"),
+	sailing-ship-tier-1: img('wiki/Sailing_Ship_Tier_1.png'),
+	sailing-ship-tier-2: img('wiki/Sailing_Ship_Tier_2.png'),
+	sailing-ship-tier-3: img('wiki/Sailing_Ship_Tier_3.png'),
+	sailing-ship-tier-4: img('wiki/Sailing_Ship_Tier_4.png'),
+	sailing-ship-tier-5: img('wiki/Sailing_Ship_Tier_5.png'),
+	sailing-ship-tier-6: img('wiki/Sailing_Ship_Tier_6.png'),
 );
 
 $effects: (
-	boat-speed: wiki("8/89/Captain_Effect_0.png"),
-	loot-value: wiki("4/4f/Captain_Effect_1.png"),
-	cloud-discover-rate: wiki("e/e8/Captain_Effect_2.png"),
-	artifact-find-chance: wiki("9/9d/Captain_Effect_3.png"),
-	rare-chest-chance: wiki("9/99/Captain_Effect_4.png")
+	boat-speed: img('wiki/Captain_Effect_0.png'),
+	loot-value: img('wiki/Captain_Effect_1.png'),
+	cloud-discover-rate: img('wiki/Captain_Effect_2.png'),
+	artifact-find-chance: img('wiki/Captain_Effect_3.png'),
+	rare-chest-chance: img('wiki/Captain_Effect_4.png')
 );
 
 $chests: (
-	wood-chest: wiki("3/37/Sail_Chest_0.png"),
-	iron-chest: wiki("1/11/Sail_Chest_1.png"),
-	gilded-chest: wiki("3/3a/Sail_Chest_2.png"),
-	noble-chest: wiki("f/f4/Sail_Chest_3.png"),
-	occult-chest: wiki("d/d5/Sail_Chest_4.png"),
-	miracle-chest: wiki("0/03/Sail_Chest_5.png")
+	wood-chest: img('wiki/Sail_Chest_0.png'),
+	iron-chest: img('wiki/Sail_Chest_1.png'),
+	gilded-chest: img('wiki/Sail_Chest_2.png'),
+	noble-chest: img('wiki/Sail_Chest_3.png'),
+	occult-chest: img('wiki/Sail_Chest_4.png'),
+	miracle-chest: img('wiki/Sail_Chest_5.png')
 );
 
 $treasures: (
-    sailing-treasure-0: wiki('1/1a/Sailing_Treasure_0.png'),  //Gold Bars
+    sailing-treasure-0: img('wiki/Sailing_Treasure_0.png'),  //Gold Bars
 
-	sailing-treasure-1: wiki("d/d9/Sailing_Treasure_1.png"),
-	sailing-treasure-2: wiki("9/93/Sailing_Treasure_2.png"),
+	sailing-treasure-1: img('wiki/Sailing_Treasure_1.png'),
+	sailing-treasure-2: img('wiki/Sailing_Treasure_2.png'),
 
-	sailing-treasure-3: wiki("2/21/Sailing_Treasure_3.png"),
-	sailing-treasure-4: wiki("c/cb/Sailing_Treasure_4.png"),
+	sailing-treasure-3: img('wiki/Sailing_Treasure_3.png'),
+	sailing-treasure-4: img('wiki/Sailing_Treasure_4.png'),
 
-	sailing-treasure-5: wiki("f/f2/Sailing_Treasure_5.png"),
-	sailing-treasure-6: wiki("c/c4/Sailing_Treasure_6.png"),
+	sailing-treasure-5: img('wiki/Sailing_Treasure_5.png'),
+	sailing-treasure-6: img('wiki/Sailing_Treasure_6.png'),
 
-	sailing-treasure-7: wiki("9/9a/Sailing_Treasure_7.png"),
-	sailing-treasure-8: wiki("4/4e/Sailing_Treasure_8.png"),
+	sailing-treasure-7: img('wiki/Sailing_Treasure_7.png'),
+	sailing-treasure-8: img('wiki/Sailing_Treasure_8.png'),
 
-	sailing-treasure-9: wiki("a/a3/Sailing_Treasure_9.png"),
-	sailing-treasure-10: wiki("1/18/Sailing_Treasure_10.png"),
+	sailing-treasure-9: img('wiki/Sailing_Treasure_9.png'),
+	sailing-treasure-10: img('wiki/Sailing_Treasure_10.png'),
 
-	sailing-treasure-11: wiki("5/53/Sailing_Treasure_11.png"),
-	sailing-treasure-12: wiki("5/5c/Sailing_Treasure_12.png"),
+	sailing-treasure-11: img('wiki/Sailing_Treasure_11.png'),
+	sailing-treasure-12: img('wiki/Sailing_Treasure_12.png'),
 
-	sailing-treasure-13: wiki("c/c9/Sailing_Treasure_13.png"),
-	sailing-treasure-14: wiki("c/c9/Sailing_Treasure_14.png"),
+	sailing-treasure-13: img('wiki/Sailing_Treasure_13.png'),
+	sailing-treasure-14: img('wiki/Sailing_Treasure_14.png'),
 
-	sailing-treasure-15: wiki("0/0a/Sailing_Treasure_15.png"),
-	sailing-treasure-16: wiki("c/cb/Sailing_Treasure_16.png"),
+	sailing-treasure-15: img('wiki/Sailing_Treasure_15.png'),
+	sailing-treasure-16: img('wiki/Sailing_Treasure_16.png'),
 
-	sailing-treasure-17: wiki("c/ca/Sailing_Treasure_17.png"),
-	sailing-treasure-18: wiki("1/14/Sailing_Treasure_18.png"),
+	sailing-treasure-17: img('wiki/Sailing_Treasure_17.png'),
+	sailing-treasure-18: img('wiki/Sailing_Treasure_18.png'),
 
-	sailing-treasure-19: wiki("2/20/Sailing_Treasure_19.png"),
-	sailing-treasure-20: wiki("3/3b/Sailing_Treasure_20.png"),
+	sailing-treasure-19: img('wiki/Sailing_Treasure_19.png'),
+	sailing-treasure-20: img('wiki/Sailing_Treasure_20.png'),
 
-	sailing-treasure-21: wiki("7/7f/Sailing_Treasure_21.png"),
-	sailing-treasure-22: wiki("d/d2/Sailing_Treasure_22.png"),
+	sailing-treasure-21: img('wiki/Sailing_Treasure_21.png'),
+	sailing-treasure-22: img('wiki/Sailing_Treasure_22.png'),
 
-	sailing-treasure-23: wiki("9/97/Sailing_Treasure_23.png"),
-	sailing-treasure-24: wiki("d/d1/Sailing_Treasure_24.png"),
+	sailing-treasure-23: img('wiki/Sailing_Treasure_23.png'),
+	sailing-treasure-24: img('wiki/Sailing_Treasure_24.png'),
 
-	sailing-treasure-25: wiki("b/bd/Sailing_Treasure_25.png"),
-	sailing-treasure-26: wiki("9/91/Sailing_Treasure_26.png"),
+	sailing-treasure-25: img('wiki/Sailing_Treasure_25.png'),
+	sailing-treasure-26: img('wiki/Sailing_Treasure_26.png'),
 
-	sailing-treasure-27: wiki("0/02/Sailing_Treasure_27.png"),
-	sailing-treasure-28: wiki("8/8e/Sailing_Treasure_28.png"),
+	sailing-treasure-27: img('wiki/Sailing_Treasure_27.png'),
+	sailing-treasure-28: img('wiki/Sailing_Treasure_28.png'),
 
-	sailing-treasure-29: wiki("2/2b/Sailing_Treasure_29.png"),
-	sailing-treasure-30: wiki("0/0c/Sailing_Treasure_30.png")
+	sailing-treasure-29: img('wiki/Sailing_Treasure_29.png'),
+	sailing-treasure-30: img('wiki/Sailing_Treasure_30.png')
 );
 
 $artifacts: (
-	moai-head: wiki("5/59/Moai_Head.png"),
-	maneki-kat: wiki("a/a6/Maneki_Kat.png"),
-	ruble-cuble: wiki("4/4f/Ruble_Cuble.png"),
-	fauxory-tusk: wiki("a/aa/Fauxory_Tusk.png"),
-	gold-relic: wiki("2/26/Gold_Relic.png"),
-	genie-lamp-sailing: wiki("7/72/Genie_Lamp_%28Sailing%29.png"),
-	silver-ankh: wiki("3/37/Silver_Ankh.png"),
-	emerald-relic: wiki("f/f9/Emerald_Relic.png"),
-	fun-hippoete: wiki("1/10/Fun_Hippoete.png"),
-	arrowhead: wiki("d/d1/Arrowhead.png"),
-	x10-ad-tablet: wiki("5/5f/10_AD_Tablet.png"),
-	ashen-urn: wiki("4/42/Ashen_Urn.png"),
-	amberite: wiki("3/33/Amberite.png"),
-	triagulon: wiki("3/35/Triagulon.png"),
-	billcye-tri: wiki("0/08/Billcye_Tri.png"),
-	frost-relic: wiki("5/58/Frost_Relic.png"),
-	chilled-yarn: wiki("c/cb/Chilled_Yarn.png"),
-	causticolumn: wiki("0/01/Causticolumn.png"),
-	jade-rock: wiki("a/a4/Jade_Rock.png"),
-	dreamcatcher: wiki("3/32/Dreamcatcher.png"),
-	gummy-orb: wiki("d/d1/Gummy_Orb.png"),
-	fury-relic: wiki("d/dc/Fury_Relic.png"),
-	cloud-urn: wiki("a/ac/Cloud_Urn.png"),
-	weatherbook: wiki("6/66/Weatherbook.png"),
-	giants-eye: wiki("9/96/Giants_Eye.png"),
-	crystal-steak: wiki("5/58/Crystal_Steak.png"),
-	trilobite-rock: wiki("5/5b/Trilobite_Rock.png"),
-	opera-mask: wiki("6/6e/Opera_Mask.png"),
-	socrates: wiki("c/cd/Socrates.png"),
-	the-true-lantern: wiki("6/6f/The_True_Lantern.png"),
-	the-onyx-lantern: wiki("5/5b/The_Onyx_Lantern.png"),
-	the-shim-lantern: wiki("5/57/The_Shim_Lantern.png"),
-	the-winz-lantern: wiki("f/f6/The_Winz_Lantern.png")
+	moai-head: img('wiki/Moai_Head.png'),
+	maneki-kat: img('wiki/Maneki_Kat.png'),
+	ruble-cuble: img('wiki/Ruble_Cuble.png'),
+	fauxory-tusk: img('wiki/Fauxory_Tusk.png'),
+	gold-relic: img('wiki/Gold_Relic.png'),
+	genie-lamp-sailing: img('wiki/Genie_Lamp_%28Sailing%29.png'),
+	silver-ankh: img('wiki/Silver_Ankh.png'),
+	emerald-relic: img('wiki/Emerald_Relic.png'),
+	fun-hippoete: img('wiki/Fun_Hippoete.png'),
+	arrowhead: img('wiki/Arrowhead.png'),
+	x10-ad-tablet: img('wiki/10_AD_Tablet.png'),
+	ashen-urn: img('wiki/Ashen_Urn.png'),
+	amberite: img('wiki/Amberite.png'),
+	triagulon: img('wiki/Triagulon.png'),
+	billcye-tri: img('wiki/Billcye_Tri.png'),
+	frost-relic: img('wiki/Frost_Relic.png'),
+	chilled-yarn: img('wiki/Chilled_Yarn.png'),
+	causticolumn: img('wiki/Causticolumn.png'),
+	jade-rock: img('wiki/Jade_Rock.png'),
+	dreamcatcher: img('wiki/Dreamcatcher.png'),
+	gummy-orb: img('wiki/Gummy_Orb.png'),
+	fury-relic: img('wiki/Fury_Relic.png'),
+	cloud-urn: img('wiki/Cloud_Urn.png'),
+	weatherbook: img('wiki/Weatherbook.png'),
+	giants-eye: img('wiki/Giants_Eye.png'),
+	crystal-steak: img('wiki/Crystal_Steak.png'),
+	trilobite-rock: img('wiki/Trilobite_Rock.png'),
+	opera-mask: img('wiki/Opera_Mask.png'),
+	socrates: img('wiki/Socrates.png'),
+	the-true-lantern: img('wiki/The_True_Lantern.png'),
+	the-onyx-lantern: img('wiki/The_Onyx_Lantern.png'),
+	the-shim-lantern: img('wiki/The_Shim_Lantern.png'),
+	the-winz-lantern: img('wiki/The_Winz_Lantern.png')
 );
 
 $all-sailing: map-merge($captains, $captains);
