@@ -1,58 +1,58 @@
 $shrines: (
-    woodular-shrine: wiki('3/3f/Woodular_Shrine.png'),
-    isaccian-shrine: wiki('b/b9/Isaccian_Shrine.png'),
-    crystal-shrine: wiki('c/c8/Crystal_Shrine.png'),
-    pantheon-shrine: wiki('9/92/Pantheon_Shrine.png'),
-    clover-shrine: wiki('e/e0/Clover_Shrine.png'),
-    summereading-shrine: wiki('e/e3/Summereading_Shrine.png'),
-    crescent-shrine: wiki('8/8b/Crescent_Shrine.png'),
+    woodular-shrine: img('wiki/Woodular_Shrine.png'),
+    isaccian-shrine: img('wiki/Isaccian_Shrine.png'),
+    crystal-shrine: img('wiki/Crystal_Shrine.png'),
+    pantheon-shrine: img('wiki/Pantheon_Shrine.png'),
+    clover-shrine: img('wiki/Clover_Shrine.png'),
+    summereading-shrine: img('wiki/Summereading_Shrine.png'),
+    crescent-shrine: img('wiki/Crescent_Shrine.png'),
     shrine-box: img('shrine-box.png'),
     shrine-box2: img('shrine-box2.png'),
-    undead-shrine: wiki('c/c3/Undead_Shrine.png'),
-    primordial-shrine: wiki('4/42/Primordial_Shrine.png')
+    undead-shrine: img('wiki/Undead_Shrine.png'),
+    primordial-shrine: img('wiki/Primordial_Shrine.png')
 );
 
 $towers: (
-    pulse-mage: wiki('0/00/Pulse_Mage.png'),
-    fireball-lobber: wiki('7/79/Fireball_Lobber.png'),
-    boulder-roller: wiki('f/f4/Boulder_Roller.png'),
-    frozone-malone: wiki('d/dd/Frozone_Malone.png'),
-    stormcaller: wiki('a/aa/Stormcaller.png'),
-    party-starter: wiki('3/38/Party_Starter.png'),
-    kraken-cosplayer: wiki('1/11/Kraken_Cosplayer.png'),
-    poisonic-elder: wiki('c/c1/Poisonic_Elder.png'),
-    voidinator: wiki('2/2a/Voidinator.png'),
+    pulse-mage: img('wiki/Pulse_Mage.png'),
+    fireball-lobber: img('wiki/Fireball_Lobber.png'),
+    boulder-roller: img('wiki/Boulder_Roller.png'),
+    frozone-malone: img('wiki/Frozone_Malone.png'),
+    stormcaller: img('wiki/Stormcaller.png'),
+    party-starter: img('wiki/Party_Starter.png'),
+    kraken-cosplayer: img('wiki/Kraken_Cosplayer.png'),
+    poisonic-elder: img('wiki/Poisonic_Elder.png'),
+    voidinator: img('wiki/Voidinator.png'),
 );
 
 $utilities: (
-    three-d-printer: wiki('d/d5/3D_Printer.png'),
-    talent-book-library: wiki('a/ae/Talent_Book_Library.png'),
-    death-note: wiki('6/62/Death_Note.png'),
-    salt-lick: wiki('3/38/Salt_Lick.png'),
-    chest-space: wiki('5/5b/Chest_Space.png'),
-    cost-cruncher: wiki('b/bb/Cost_Cruncher.png'),
-    critter-drone: wiki('e/e9/Critter_Drone.gif'),
-    automation-arm: wiki('b/b0/Auto_Arm.gif'),
-    ez-totem: wiki('f/f7/EZ_Totem.gif'),
-    atom-collider: wiki('7/73/Atom_Collider.png'),
-    refinery: wiki('2/2a/Refinery.gif'),
-    construction-table: wiki('2/25/Construction_Table.gif'),
-    prayer-stone: wiki('9/9b/Prayer_Stone.gif')
+    three-d-printer: img('wiki/3D_Printer.png'),
+    talent-book-library: img('wiki/Talent_Book_Library.png'),
+    death-note: img('wiki/Death_Note.png'),
+    salt-lick: img('wiki/Salt_Lick.png'),
+    chest-space: img('wiki/Chest_Space.png'),
+    cost-cruncher: img('wiki/Cost_Cruncher.png'),
+    critter-drone: img('wiki/Critter_Drone.gif'),
+    automation-arm: img('wiki/Auto_Arm.gif'),
+    ez-totem: img('wiki/EZ_Totem.gif'),
+    atom-collider: img('wiki/Atom_Collider.png'),
+    refinery: img('wiki/Refinery.gif'),
+    construction-table: img('wiki/Construction_Table.gif'),
+    prayer-stone: img('wiki/Prayer_Stone.gif')
 );
 
 $atoms: (
-    particles: wiki('4/4e/Atoms.png'),
-    hydrogen: wiki('e/e3/Hydrogen_-_Stamp_Decreaser.png'),
-    helium: wiki('8/83/Helium_-_Talent_Power_Stacker.png'),
-    lithium: wiki('7/75/Lithium_-_Bubble_Insta_Expander.png'),
-    beryllium: wiki('6/67/Beryllium_-_Post_Office_Penner.png'),
-    boron: wiki('b/be/Boron_-_Particle_Upgrader.png'),
-    carbon: wiki('a/ac/Carbon_-_Wizard_Maximizer.png'),
-    nitrogen: wiki('b/be/Nitrogen_-_Construction_Trimmer.png'),
-    oxygen: wiki('d/d5/Oxygen_-_Library_Booker.png'),
-    fluoride: wiki('2/24/Fluoride_-_Void_Plate_Chef.png'),
-    neon: wiki('2/2a/Neon_-_Damage_N%27_Cheapener.png'),
-    sodium: wiki('5/5e/Sodium_-_Snail_Kryptonite.png')
+    particles: img('wiki/Atoms.png'),
+    hydrogen: img('wiki/Hydrogen_-_Stamp_Decreaser.png'),
+    helium: img('wiki/Helium_-_Talent_Power_Stacker.png'),
+    lithium: img('wiki/Lithium_-_Bubble_Insta_Expander.png'),
+    beryllium: img('wiki/Beryllium_-_Post_Office_Penner.png'),
+    boron: img('wiki/Boron_-_Particle_Upgrader.png'),
+    carbon: img('wiki/Carbon_-_Wizard_Maximizer.png'),
+    nitrogen: img('wiki/Nitrogen_-_Construction_Trimmer.png'),
+    oxygen: img('wiki/Oxygen_-_Library_Booker.png'),
+    fluoride: img('wiki/Fluoride_-_Void_Plate_Chef.png'),
+    neon: img('wiki/Neon_-_Damage_N%27_Cheapener.png'),
+    sodium: img('wiki/Sodium_-_Snail_Kryptonite.png')
 );
 
 $all-construction: map-merge($shrines, $towers);
