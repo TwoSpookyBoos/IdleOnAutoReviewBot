@@ -4,7 +4,8 @@ from math import floor
 from math import ceil
 
 from config import app
-from consts import deathNote_progressionTiers, cookingCloseEnough, break_you_best
+from consts import deathNote_progressionTiers, cookingCloseEnough, break_you_best, dnSkullRequirementList, dnSkullValueList, dnSkullValueToNameDict, \
+    dnNextSkullNameDict, apocableMapIndexDict, apocAmountsList, apocNamesList
 from flask import g as session_data
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
@@ -13,8 +14,6 @@ from utils.logging import get_logger
 
 
 logger = get_logger(__name__)
-dnSkullRequirementList = [0, 25000, 100000, 250000, 500000, 1000000, 5000000, 100000000, 1000000000]
-dnSkullValueList = [0, 1, 2, 3, 4, 5, 7, 10, 20]
 reversed_dnSkullRequirementList = dnSkullRequirementList[::-1]
 reversed_dnSkullValueList = dnSkullValueList[::-1]
 
@@ -137,7 +136,7 @@ def buildMaps() -> dict[int, dict]:
         #mapData[4]: str = zow rating
         #mapData[5]: str = chow rating
         #mapData[6]: str = meow rating
-        if mapData[1] in [30, 9, 38, 69, 120, 166]:
+        if mapData[1] in apocableMapIndexDict[0]:
             world = 0
         else:
             world = floor(mapData[1]/50)+1
@@ -153,36 +152,14 @@ def buildMaps() -> dict[int, dict]:
     return mapDict
 
 def getSkullNames(mkValue: int) -> str:
-    skullDict = {
-        0: "None",
-        1: "Normal Skull",
-        2: "Copper Skull",
-        3: "Iron Skull",
-        4: "Gold Skull",
-        5: "Platinum Skull",
-        7: "Dementia Skull",
-        10: "Lava Skull",
-        20: "Eclipse Skull"
-    }
     try:
-        return skullDict.get(mkValue, f"UnknownSkull{mkValue}")
+        return dnSkullValueToNameDict.get(mkValue, f"UnknownSkull{mkValue}")
     except Exception as reason:
-        return f"Unexpected Input received: {reason}"
+        return f"Unexpected Input '{mkValue}' received: {reason}"
 
 def getNextSkullNames(mkValue: int) -> str:
-    nextSkullDict = {
-        0: "Normal Skull",
-        1: "Copper Skull",
-        2: "Iron Skull",
-        3: "Gold Skull",
-        4: "Platinum Skull",
-        5: "Dementia Skull",
-        7: "Lava Skull",
-        10: "Eclipse Skull",
-        20: "Finished!"
-    }
     try:
-        return nextSkullDict.get(mkValue, f"UnknownSkull{mkValue}")
+        return dnNextSkullNameDict.get(mkValue, f"UnknownSkull{mkValue}")
     except Exception as reason:
         return f"Unexpected Input received: {reason}"
 
@@ -302,19 +279,8 @@ def getChowMeowCharactersIndexList() -> list:
     return bbCharactersIndexList
 
 def getDeathNoteKills():
-    apocAmountsList = [100000, 1000000, 100000000]
-    apocNamesList = ["ZOW", "CHOW", "MEOW"]
     enemyMaps = buildMaps()
     apocCharactersIndexList = getapocCharactersIndexList()
-    apocableMapIndexDict = {
-        0: [30, 9, 38, 69, 120, 166],  #Barbarian only, not in regular DeathNote
-        1: [1, 2, 14, 17, 16, 13, 18, 31, 19, 24, 26, 27, 28, 8, 15],
-        2: [51, 52, 53, 57, 58, 59, 60, 62, 63, 64, 65],
-        3: [101, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 116, 117],
-        4: [151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163],
-        5: [201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213],
-        6: [251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264]
-    }
 
     #total up all kills across characters
     for characterIndex in range(0, len(session_data.account.safe_characters)):

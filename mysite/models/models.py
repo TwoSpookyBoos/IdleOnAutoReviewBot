@@ -879,9 +879,7 @@ class Account:
     _key_cards = "Cards0"
 
     def __init__(self, json_data, run_type="web"):
-        self.raw_data = (
-            json.loads(json_data) if isinstance(json_data, str) else json_data
-        )
+        self.raw_data = safe_loads(json_data)
         self._prep_alerts_AG()
         self._parse_wave_1(run_type)
         self._calculate_wave_1()

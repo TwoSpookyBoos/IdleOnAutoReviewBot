@@ -4453,6 +4453,28 @@ maxSummoningBookLevels = 29
 maxOverallBookLevels = 100 + maxStaticBookLevels + maxScalingBookLevels + maxSummoningBookLevels
 dnSkullRequirementList = [0, 25000, 100000, 250000, 500000, 1000000, 5000000, 100000000, 1000000000]
 dnSkullValueList = [0, 1, 2, 3, 4, 5, 7, 10, 20]
+dnSkullValueToNameDict = {
+    0: "None",
+    1: "Normal Skull",
+    2: "Copper Skull",
+    3: "Iron Skull",
+    4: "Gold Skull",
+    5: "Platinum Skull",
+    7: "Dementia Skull",
+    10: "Lava Skull",
+    20: "Eclipse Skull"
+}
+dnNextSkullNameDict = {
+    0: "Normal Skull",
+    1: "Copper Skull",
+    2: "Iron Skull",
+    3: "Gold Skull",
+    4: "Platinum Skull",
+    5: "Dementia Skull",
+    7: "Lava Skull",
+    10: "Eclipse Skull",
+    20: "Finished!"
+}
 apocableMapIndexDict = {
     0: [30, 9, 38, 69, 120, 166],  #Barbarian only, not in regular DeathNote
     1: [1, 2, 14, 17, 16, 13, 18, 31, 19, 24, 26, 27, 28, 8, 15],
