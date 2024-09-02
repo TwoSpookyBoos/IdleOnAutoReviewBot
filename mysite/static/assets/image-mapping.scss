@@ -2249,7 +2249,7 @@ $id-map: map-merge($extra, $id-map);
 
 
 @each $class, $link in $id-map {
-	.#{$class}::before, .resource-#{$class} {
+	.#{$class}:not(.lazy)::before, .resource-#{$class}:not(.lazy) {
 		background-image: $link;
 	}
 }

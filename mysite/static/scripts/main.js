@@ -329,7 +329,23 @@ function loadResults(html) {
     spinner.stop()
     const mainWrapper = document.getElementById('top');
     mainWrapper.innerHTML = html;
+
+    initLazyLoading();
 }
+
+function initLazyLoading() {
+    const images = document.querySelectorAll(".lazy");
+    const observer = new IntersectionObserver((entries) => {
+        entries.map((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.classList.remove("lazy");
+                observer.unobserve(entry.target);
+            }
+        });
+    });
+    images.forEach((image) => observer.observe(image));
+}
+
 
 function loadErrorPopup(html, statusCode) {
     spinner.stop()
