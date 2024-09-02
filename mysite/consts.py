@@ -1722,7 +1722,6 @@ expectedStackables = {
         "ClassSwapB", "ResetBox",
     ]
 }
-
 card_data = {
     "Blunder Hills": {
         "Crystal0": ["Crystal Carrot", 3],
@@ -1975,7 +1974,6 @@ card_data = {
         "xmasEvent3": ["Golden Giftmas Box", 1],
     },
 }
-
 numberOfSecretClasses = 3  # Last verified as of v2.10
 humanReadableClasses = {
     1: "Beginner",
@@ -2008,7 +2006,6 @@ humanReadableClasses = {
     36: "Bubonic Conjuror",
     37: "Arcane Cultist"
 }
-
 skillIndexList = ["Combat",
                   "Mining", "Smithing", "Choppin",
                   "Fishing", "Alchemy", "Catching",
@@ -2017,7 +2014,6 @@ skillIndexList = ["Combat",
                   "Sailing", "Divinity", "Gaming",
                   "Farming", "Sneaking", "Summoning"]
 emptySkillList = [0] * 25
-
 expectedInventoryBagValuesDict = {
     0:1,
     1:1,
@@ -3472,7 +3468,6 @@ def ceilUpToBase(inputValue: int, base: int) -> int:
         toReturn += base
     return toReturn
 
-
 ###WORLD 1 CONSTS###
 bribesDict = {
     "W1": ["Insider Trading", "Tracking Chips", "Mandatory Fire Sale", "Sleeping On the Job", "Artificial Demand", "The Art of the Deal"],
@@ -4453,6 +4448,8 @@ maxSummoningBookLevels = 29
 maxOverallBookLevels = 100 + maxStaticBookLevels + maxScalingBookLevels + maxSummoningBookLevels
 dnSkullRequirementList = [0, 25000, 100000, 250000, 500000, 1000000, 5000000, 100000000, 1000000000]
 dnSkullValueList = [0, 1, 2, 3, 4, 5, 7, 10, 20]
+reversed_dnSkullRequirementList = dnSkullRequirementList[::-1]
+reversed_dnSkullValueList = dnSkullValueList[::-1]
 dnSkullValueToNameDict = {
     0: "None",
     1: "Normal Skull",
@@ -4486,6 +4483,124 @@ apocableMapIndexDict = {
 }
 apocAmountsList = [100000, 1000000, 100000000]
 apocNamesList = ["ZOW", "CHOW", "MEOW"]
+apocDifficultyNameList = ['Basic W1 Enemies', 'Basic W2 Enemies', 'Basic W3 Enemies', 'Basic W4 Enemies', 'Basic W5 Enemies', 'Basic W6 Enemies',
+                              'Easy Extras', 'Medium Extras', 'Difficult Extras', 'Insane', 'Impossible']
+def getSkullNames(mkValue: int) -> str:
+    try:
+        return dnSkullValueToNameDict.get(mkValue, f"UnknownSkull{mkValue}")
+    except Exception as reason:
+        return f"Unexpected Input '{mkValue}' received: {reason}"
+
+def getNextSkullNames(mkValue: int) -> str:
+    try:
+        return dnNextSkullNameDict.get(mkValue, f"UnknownSkull{mkValue}")
+    except Exception as reason:
+        return f"Unexpected Input received: {reason}"
+
+def getEnemyNameFromMap(inputMap: str) -> str:
+    mapNametoEnemyNameDict = {
+        # W1 Maps
+        "Spore Meadows": "Green Mushroom",
+        "Froggy Fields": "Frog",
+        "Valley of the Beans": "Bored Bean",
+        "Birch Enclave": "Red Mushroom",
+        "Jungle Perimeter": "Slime",
+        "The Base of the Bark": "Stick",
+        "Hollowed Trunk": "Nutto",
+        "Where the Branches End": "Wood Mushroom",
+        "Winding Willows": "Baby Boa",
+        "Vegetable Patch": "Carrotman",
+        "Forest Outskirts": "Glublin",
+        "Encroaching Forest Villa": "Wode Board",
+        "Tucked Away": "Gigafrog",
+        "Poopy Sewers": "Poop",
+        "Rats Nest": "Rat",
+        "The Roots": "Special - Single Nutto at WorshipTD map",
+        "The Office": "Special - Poops surrounding Dr.Def",
+        "Meel's Crypt": "Special- Boop",
+
+        # W2 Maps
+        "Jar Bridge": "Sandy Pot",
+        "The Mimic Hole": "Mimic",
+        "Dessert Dunes": "Crabcake",
+        "The Grandioso Canyon": "Mafioso",
+        "Shifty Sandbox": "Sand Castle",
+        "Pincer Plateau": "Pincermin",
+        "Slamabam Straightaway": "Mashed Potato",
+        "The Ring": "Tyson",
+        "Up Up Down Down": "Moonmoon",
+        "Sands of Time": "Sand Giant",
+        "Djonnuttown": "Snelbie",
+        "Mummy Memorial": "Special- Invisible Green Mushroom inside King Doot's map",
+
+        # W3 Maps
+        "Steep Sheep Ledge": "Sheepie",
+        "Snowfield Outskirts": "Frost Flake",
+        "The Stache Split": "Sir Stache",
+        "Refrigeration Station": "Bloque",
+        "Mamooooth Mountain": "Mamooth",
+        "Rollin' Tundra": "Snowmen",
+        "Signature Slopes": "Penguin",
+        "Thermonuclear Climb": "Thermister",
+        "Waterlogged Entrance": "Quenchie",
+        "Cryo Catacombs": "Cryosnake",
+        "Overpass of Sound": "Bop Box",
+        "Crystal Basecamp": "Neyeptune",
+        "Wam Wonderland": "Dedotated Ram",
+        "Hell Hath Frozen Over": "Bloodbone",
+        "Equinox Valley": "Special- AFK only Dedotated Ram",
+
+        # W4 Maps
+        "Spaceway Raceway": "Purp Mushroom",
+        "TV Outpost": "TV",
+        "Donut Drive-In": "Donut",
+        "Outskirts of Fallstar Isle": "Demon Genie",
+        "Mountainous Deugh": "Soda Can",
+        "Wurm Highway": "Flying Worm",
+        "Jelly Cube Bridge": "Gelatinous Cuboid",
+        "Cocoa Tunnel": "Choccie",
+        "Standstill Plains": "Biggole Wurm",
+        "Shelled Shores": "Clammie",
+        "The Untraveled Octopath": "Octodar",
+        "Flamboyant Bayou": "Flombeige",
+        "Enclave of Eyes": "Stilted Seeker",
+        "The Rift": "Rift Monsters",
+
+        # W5 Maps
+        "Naut Sake Perimeter": "Suggma",
+        "Niagrilled Falls": "Maccie",
+        "The Killer Roundabout": "Mister Brightside",
+        "Cracker Jack Lake": "Cheese Nub",
+        "The Great Molehill": "Stiltmole",
+        "Erruption River": "Molti",
+        "Mount Doomish": "Purgatory Stalker",
+        "OJ Bay": "Citringe",
+        "Lampar Lake": "Lampar",
+        "Spitfire River": "Fire Spirit",
+        "Miner Mole Outskirts": "Biggole Mole",
+        "Crawly Catacombs": "Crawler",
+        "The Worm Nest": "Tremor Wurm",
+
+        # W6 Maps
+        "Gooble Goop Creek": "Sprout Spirit",
+        "Picnic Bridgeways": "Ricecake",
+        "Irrigation Station": "River Spirit",
+        "Troll Playground": "Baby Troll",
+        "Edge of the Valley": "Woodlin Spirit",
+        "Bamboo Laboredge": "Bamboo Spirit",
+        "Lightway Path": "Lantern Spirit",
+        "Troll Broodnest": "Mama Troll",
+        "Above the Clouds": "Leek Spirit",
+        "Sleepy Skyline": "Ceramic Spirit",
+        "Dozey Dogpark": "Skydoggie Spirit",
+        "Yolkrock Basin": "Royal Egg",
+        "Chieftain Stairway": "Minichief Spirit",
+        "Emperor's Castle Doorstep": "Samurai Guardian",
+    }
+    try:
+        return mapNametoEnemyNameDict.get(inputMap, f"UnknownMap:{inputMap}")
+    except Exception as reason:
+        return f"Unexpected Input received: {reason}"
 
 ###WORLD 4 CONSTS###
 maxCookingTables = 10  # Last verified as of v2.10

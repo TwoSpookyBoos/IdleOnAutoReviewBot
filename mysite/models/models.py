@@ -1,14 +1,17 @@
 import copy
 import functools
 import json
+import os
 import re
 import sys
+from config import app
 from collections import defaultdict
 from enum import Enum
 from math import ceil, floor
 from typing import Any
 from flask import g
 from utils.data_formatting import getCharacterDetails, safe_loads
+from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
 from consts import (
     # General
     lavaFunc, ceilUpToBase,
@@ -33,6 +36,7 @@ from consts import (
     equinoxBonusesDict, maxDreams, dreamsThatUnlockNewBonuses,
     expected_talentsDict,
     printerAllIndexesBeingPrinted,
+    dnSkullValueList, reversed_dnSkullValueList, reversed_dnSkullRequirementList, getSkullNames, getNextSkullNames,
     # W4
     riftRewardsDict,
     labJewelsDict, labBonusesDict, nblbMaxBubbleCount, labChipsDict,
@@ -47,9 +51,9 @@ from consts import (
     jade_emporium, pristineCharmsList, sneakingGemstonesFirstIndex, sneakingGemstonesList, sneakingGemstonesStatList,
     getMoissaniteValue, getGemstoneBaseValue, getGemstoneBoostedValue, getGemstonePercent,
     marketUpgradeList, landrankDict,
-    summoningBattleCountsDict, summoningDict,
+    summoningBattleCountsDict, summoningDict, dnSkullRequirementList, apocableMapIndexDict, apocAmountsList, apocNamesList,
 )
-from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
+
 
 def session_singleton(cls):
     def getinstance(*args, **kwargs):
@@ -59,6 +63,12 @@ def session_singleton(cls):
 
     return getinstance
 
+
+def getJSONDataFromFile(filePath):
+    with open(filePath, 'r') as inputFile:
+        jsonData = json.load(inputFile)
+    inputFile.close()
+    return jsonData
 
 class Equipment:
     def __init__(self, raw_data, toon_index, safeStatus: bool):
@@ -188,6 +198,7 @@ class Character:
         self.farming_level: int = all_skill_levels["Farming"]
         self.sneaking_level: int = all_skill_levels["Sneaking"]
         self.summoning_level: int = all_skill_levels["Summoning"]
+
         self.equipped_prayers = []
         for prayerIndex in equipped_prayers:
             if prayerIndex != -1:  #-1 is the placeholder value for an empty prayer slot
@@ -874,6 +885,136 @@ class Card:
         return f"[{self.__class__.__name__}: {self.name}, {self.count}, {self.star}-star]"
 
 
+class EnemyWorld:
+    def __init__(self, worldnumber: int, mapsdict: dict):
+        self.world_number: int = worldnumber
+        self.maps_dict: dict = mapsdict
+        self.lowest_skulls_dict: dict = {}
+        self.lowest_skull_value: int = -1
+        self.current_lowest_skull_name: str = "None"
+        self.next_lowest_skull_name: str = "Normal Skull"
+        for skullValue in dnSkullValueList:
+            self.lowest_skulls_dict[skullValue] = []
+        if len(mapsdict) > 0:
+            for enemy_map_index in self.maps_dict:
+                self.lowest_skulls_dict[self.maps_dict[enemy_map_index].skull_mk_value].append(
+                    [self.maps_dict[enemy_map_index].map_name,
+                     self.maps_dict[enemy_map_index].kills_to_next_skull,
+                     self.maps_dict[enemy_map_index].percent_toward_next_skull,
+                     self.maps_dict[enemy_map_index].monster_image])
+            for skullDict in self.lowest_skulls_dict:
+                self.lowest_skulls_dict[skullDict] = sorted(self.lowest_skulls_dict[skullDict], key=lambda item: item[2], reverse=True)
+            for skullDict in self.lowest_skulls_dict:
+                if len(self.lowest_skulls_dict[skullDict]) > 0:
+                    if self.lowest_skull_value == -1:
+                        self.lowest_skull_value = skullDict
+            self.current_lowest_skull_name = getSkullNames(self.lowest_skull_value)
+            self.next_lowest_skull_name = getNextSkullNames(self.lowest_skull_value)
+
+    def __str__(self):
+        if self.world_number == 0:
+            return "Barbarian Only Extras"
+        else:
+            return f"World {self.world_number}"
+
+
+class EnemyMap:
+    def __init__(self, mapname: str, monstername: str, mapindex: int, portalrequirement: int, zowrating: str, chowrating: str, meowrating: str, monsterimage: str = ""):
+        self.map_name: str = mapname
+        self.map_index: int = mapindex
+        self.monster_name: str = monstername
+        self.portal_requirement: int = portalrequirement
+        self.zow_rating: str = zowrating
+        self.chow_rating: str = chowrating
+        self.meow_rating: str = meowrating
+        self.kill_count: float = 0
+        self.skull_mk_value: int = 0
+        self.skull_name: str = "None"
+        self.kills_to_next_skull: int = 0
+        self.percent_toward_next_skull: int = 0
+        self.zow_dict = {}
+        if monsterimage:
+            self.monster_image = monsterimage.lower()
+        else:
+            self.monster_image = monstername
+
+    def __str__(self):
+        return self.map_name
+
+    def getRating(self, ratingType: str):
+        if ratingType == 'ZOW':
+            return self.zow_rating
+        elif ratingType == 'CHOW':
+            return self.chow_rating
+        elif ratingType == 'MEOW':
+            return self.meow_rating
+
+    def updateZOWDict(self, characterIndex: int, KLAValue: float):
+        if characterIndex not in self.zow_dict:
+            self.zow_dict[characterIndex] = {}
+        self.zow_dict[characterIndex] = int(abs(float(KLAValue) - self.portal_requirement))
+
+    def addRawKLA(self, additionalKills: float):
+        try:
+            self.kill_count += abs(float(additionalKills) - self.portal_requirement)
+        except Exception as reason:
+            print(f"Unable to add additionalKills value of {type(additionalKills)} {additionalKills} to {self.map_name} because: {reason}")
+            #logger.warning(f"Unable to add additionalKills value of {type(additionalKills)} {additionalKills} to {self.map_name} because: {reason}")
+
+    def generateDNSkull(self):
+        self.kill_count = int(self.kill_count)
+        for counter in range(0, len(dnSkullRequirementList)):
+            if self.kill_count >= dnSkullRequirementList[counter]:
+                self.skull_mk_value = dnSkullValueList[counter]
+        self.skull_name = getSkullNames(self.skull_mk_value)
+        if self.skull_mk_value == reversed_dnSkullValueList[0]:
+            #If map's skull is highest, currently Eclipse Skull, set in defaults
+            self.kills_to_next_skull = 0
+            self.percent_toward_next_skull = 100
+        else:
+            for skullValueIndex in range(1, len(reversed_dnSkullValueList)):
+                if self.skull_mk_value == reversed_dnSkullValueList[skullValueIndex]:
+                    self.kills_to_next_skull = ceil(reversed_dnSkullRequirementList[skullValueIndex-1] - self.kill_count)
+                    self.percent_toward_next_skull = floor((self.kill_count / reversed_dnSkullRequirementList[skullValueIndex-1]) * 100)
+
+def buildMaps() -> dict[int, dict]:
+    mapDict = {
+        0: {},
+        1: {},
+        2: {},
+        3: {},
+        4: {},
+        5: {},
+        6: {},
+        #7: {},
+        #8: {}
+    }
+    rawMaps = getJSONDataFromFile(os.path.join(app.static_folder, 'enemy-maps.json'))
+    for mapData in rawMaps["mapData"]:
+        #["Spore Meadows", 1, "Green Mushroom", 11, "Basic W1 Enemies", "Basic W1 Enemies", "Basic W1 Enemies"],
+        #mapData[0]: str = map name
+        #mapData[1]: int = map index
+        #mapData[2]: str = enemy name
+        #mapData[3]: int = portal requirement
+        #mapData[4]: str = zow rating
+        #mapData[5]: str = chow rating
+        #mapData[6]: str = meow rating
+        if mapData[1] in apocableMapIndexDict[0]:
+            world = 0
+        else:
+            world = floor(mapData[1] / 50) + 1
+        mapDict[world][mapData[1]] = EnemyMap(
+            mapname=mapData[0],
+            mapindex=mapData[1],
+            monstername=mapData[2],
+            portalrequirement=mapData[3],
+            zowrating=mapData[4],
+            chowrating=mapData[5],
+            meowrating=mapData[6],
+            monsterimage=mapData[7]
+        )
+    return mapDict
+
 @session_singleton
 class Account:
     _key_cards = "Cards0"
@@ -1030,6 +1171,7 @@ class Account:
                 self.guildBonuses[bonusName] = 0
 
         self._parse_general_printer()
+        self._parse_general_maps()
 
     def _parse_general_printer(self):
         self.printer = {
@@ -1081,6 +1223,10 @@ class Account:
                 if printName not in self.printer['AllCurrentPrints']:
                     self.printer['AllCurrentPrints'][printName] = []
                 self.printer['AllCurrentPrints'][printName] += printValues
+
+    def _parse_general_maps(self):
+        self.enemy_maps = buildMaps()
+        self.enemy_worlds = {}
 
     def _parse_w1(self):
         self._parse_w1_starsigns()
@@ -1448,8 +1594,114 @@ class Account:
         }
 
     def _parse_w3_deathnote(self):
-        self.rift_meowed = False
-        self.meowBBIndex = 0
+        self.apocCharactersIndexList = [c.character_index for c in self.barbs]
+        self.bbCharactersIndexList = [c.character_index for c in self.bbs]
+        self.meowBBIndex = self._parse_w3_meowBBIndex()
+        self.rift_meowed = self._parse_w3_deathnote_rift_meowed()
+        self._parse_w3_deathnote_kills()
+
+    def _parse_w3_meowBBIndex(self):
+        if len(self.apocCharactersIndexList) == 1:
+            return self.apocCharactersIndexList[0]
+        elif len(self.apocCharactersIndexList) >= 2:
+            return self.apocCharactersIndexList[1]
+        else:
+            return None
+
+    def _parse_w3_deathnote_rift_meowed(self):
+        if self.meowBBIndex is not None:
+            riftPresent = False
+            for remainingMap in self.all_characters[self.meowBBIndex].apoc_dict['MEOW']['Medium Extras']:
+                if remainingMap[0] == 'The Rift':
+                    riftPresent = True
+                    break
+            if not riftPresent:
+                self.rift_meowed = True
+        else:
+            riftPresent = True
+        return not riftPresent
+
+    def _parse_w3_deathnote_kills(self):
+        # total up all kills across characters
+        for characterIndex, characterData in enumerate(self.safe_characters):
+            try:
+                characterKillsList = safe_loads(self.raw_data[f"KLA_{characterIndex}"])
+            except Exception as reason:
+                print(f"Unable to retrieve kill list for Character{characterIndex} because:{reason}")
+                continue
+
+            # If the character's subclass is Barbarian, add their special Apoc-Only kills to EnemyMap's zow_dict
+            if characterIndex in self.apocCharactersIndexList:
+                for worldIndex in range(0, len(apocableMapIndexDict)):
+                    for mapIndex in apocableMapIndexDict[worldIndex]:
+                        if len(characterKillsList) > mapIndex:
+                            try:
+                                self.enemy_maps[worldIndex][mapIndex].updateZOWDict(characterIndex, characterKillsList[mapIndex][0])
+                            except:
+                                try:
+                                    self.enemy_maps[worldIndex][mapIndex].updateZOWDict(characterIndex, float(characterKillsList[mapIndex]))
+                                except:
+                                    self.enemy_maps[worldIndex][mapIndex].updateZOWDict(characterIndex, 0)
+
+            # Regardless of class, for each map within each world, add this player's kills to EnemyMap's kill_count
+            for worldIndex in range(1, len(apocableMapIndexDict)):
+                for mapIndex in apocableMapIndexDict[worldIndex]:
+                    if len(characterKillsList) > mapIndex:
+                        if isinstance(characterKillsList[mapIndex], list):
+                            try:
+                                self.enemy_maps[worldIndex][mapIndex].addRawKLA(characterKillsList[mapIndex][0])
+                            except:
+                                self.enemy_maps[worldIndex][mapIndex].addRawKLA(0)
+                        else:
+                            try:
+                                self.enemy_maps[worldIndex][mapIndex].addRawKLA(characterKillsList[mapIndex])
+                            except:
+                                self.enemy_maps[worldIndex][mapIndex].addRawKLA(0)
+
+        # Have each EnemyMap calculate its Skull Value, Name, Count to Next, and Percent to Next now that all kills are totaled
+        # Barbarian Only in worldIndex 0
+        for worldIndex in range(1, len(self.enemy_maps)):
+            for enemy_map in self.enemy_maps[worldIndex]:
+                self.enemy_maps[worldIndex][enemy_map].generateDNSkull()
+            # After each Map in that World has its Skull Info, create the corresponding EnemyWorld
+            self.enemy_worlds[worldIndex] = EnemyWorld(worldIndex, self.enemy_maps[worldIndex])
+
+        # Barbarian Only in 0
+        for barbCharacterIndex in self.apocCharactersIndexList:
+            for worldIndex in range(0, len(self.enemy_maps)):
+                for enemy_map in self.enemy_maps[worldIndex]:
+                    if barbCharacterIndex in self.enemy_maps[worldIndex][enemy_map].zow_dict:
+                        # print("DN~ INFO barbCharacterIndex", barbCharacterIndex, "found in worldIndex", worldIndex, "enemy_map", enemy_map)
+                        kill_count = self.enemy_maps[worldIndex][enemy_map].zow_dict[barbCharacterIndex]
+                        for apocIndex in range(0, len(apocAmountsList)):
+                            if kill_count < apocAmountsList[apocIndex]:
+                                # characterDict[barbCharacterIndex].apoc_dict[apocNamesList[apocIndex]][enemyMaps[worldIndex][enemy_map].zow_rating].append([
+                                self.all_characters[barbCharacterIndex].addUnmetApoc(
+                                    apocNamesList[apocIndex], self.enemy_maps[worldIndex][enemy_map].getRating(apocNamesList[apocIndex]),
+                                    [
+                                        self.enemy_maps[worldIndex][enemy_map].map_name,  # map name
+                                        apocAmountsList[apocIndex] - kill_count,  # kills short of zow/chow/meow
+                                        floor((kill_count / apocAmountsList[apocIndex]) * 100),  # percent toward zow/chow/meow
+                                        self.enemy_maps[worldIndex][enemy_map].monster_image  # monster image
+                                    ]
+                                )
+                            else:
+                                self.all_characters[barbCharacterIndex].increaseApocTotal(apocNamesList[apocIndex])
+                    else:
+                        # This condition can be hit when reviewing data from before a World release
+                        # For example, JSON data from w5 before w6 is released hits this to populate 0% toward W6 kills
+                        for apocIndex in range(0, len(apocAmountsList)):
+                            self.all_characters[barbCharacterIndex].addUnmetApoc(
+                                apocNamesList[apocIndex], self.enemy_maps[worldIndex][enemy_map].getRating(apocNamesList[apocIndex]),
+                                [
+                                    self.enemy_maps[worldIndex][enemy_map].map_name,  # map name
+                                    apocAmountsList[apocIndex],  # kills short of zow/chow/meow
+                                    0,  # percent toward zow/chow/meow
+                                    self.enemy_maps[worldIndex][enemy_map].monster_image  # monster image
+                                ]
+                            )
+            # Sort them
+            self.all_characters[barbCharacterIndex].sortApocByProgression()
 
     def _parse_w3_equinox_dreams(self):
         self.equinox_unlocked = self.achievements['Equinox Visitor']
