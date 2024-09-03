@@ -550,17 +550,65 @@ starsigns_progressionTiers = {
 }
 statues_progressionTiers = {
     0: {},
-    1: {"MinStatueLevel": 20, "Exclusions": "Onyx1"},
-    2: {"MinStatueTypeNumber": 1, "MinStatueType": "Gold", "Exclusions": "None"},
-    3: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx", "Exclusions": "Onyx1"},
-    4: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx", "Exclusions": "Onyx2"},
-    5: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx", "Exclusions": "Onyx3"},
-    6: {"MinStatueLevel": 40, "Exclusions": "None"},
-    7: {"MinStatueLevel": 150, "Exclusions": "Final3"},
-    8: {"MinStatueLevel": 200, "Exclusions": "Final3"},
-    9: {"MinStatueLevel": 240, "Exclusions": "Final3"},
-    10: {"MinStatueLevel": 80, "Exclusions": "Onyx1"},
-    11: {"MinStatueLevel": 280, "Exclusions": "Final3"},
+    1: {"SpecificLevels": {
+        "Power Statue": 20, "Speed Statue": 20, "Mining Statue": 20, "Feasty Statue": 20, "Health Statue": 20, "Lumberbob Statue": 20,
+        "Ol Reliable Statue": 20, "Exp Book Statue": 20, "Anvil Statue": 20, "Cauldron Statue": 20,
+        "Beholder Statue": 20,
+        "Pecunia Statue": 20, "Mutton Statue": 20, "Egg Statue": 20,
+    },},
+    2: {"MinStatueTypeNumber": 1, "MinStatueType": "Gold", 'SpecificTypes': [
+        'Power Statue', 'Speed Statue', 'Mining Statue', 'Feasty Statue', 'Health Statue', 'Kachow Statue', 'Lumberbob Statue',
+        'Thicc Skin Statue', 'Oceanman Statue', 'Ol Reliable Statue', 'Exp Book Statue', 'Anvil Statue', 'Cauldron Statue',
+        'Beholder Statue', 'Bullseye Statue',
+        'Box Statue', 'Twosoul Statue', 'EhExPee Statue', 'Seesaw Statue',
+        'Pecunia Statue', 'Mutton Statue', 'Egg Statue',
+        'Battleaxe Statue', 'Spiral Statue', 'Boat Statue',
+        'Compost Statue', 'Stealth Statue', 'Essence Statue'
+    ],},
+    3: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx", 'SpecificTypes': [
+        'Power Statue', 'Speed Statue', 'Mining Statue', 'Feasty Statue', 'Health Statue', 'Lumberbob Statue',
+        'Ol Reliable Statue', 'Exp Book Statue', 'Anvil Statue', 'Cauldron Statue',
+        'Beholder Statue',
+        'Pecunia Statue', 'Mutton Statue', 'Egg Statue'
+    ],},
+    4: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx", 'SpecificTypes': [
+        'Thicc Skin Statue',
+        'EhExPee Statue',
+        'Battleaxe Statue', 'Spiral Statue', 'Boat Statue',
+        'Compost Statue', 'Stealth Statue', 'Essence Statue'
+    ],},
+    5: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx", 'SpecificTypes': [
+        'Kachow Statue', 'Oceanman Statue', 'Bullseye Statue',
+        'Box Statue', 'Twosoul Statue', 'Seesaw Statue'
+    ],},
+    6: {'SpecificLevels': {
+        'Power Statue': 40, 'Speed Statue': 40, 'Mining Statue': 40, 'Feasty Statue': 40, 'Health Statue': 40, 'Lumberbob Statue': 40,
+        'Oceanman Statue': 40, 'Ol Reliable Statue': 40, 'Exp Book Statue': 40, 'Anvil Statue': 40, 'Cauldron Statue': 40,
+        'Beholder Statue': 40, 'Box Statue': 40, 'Twosoul Statue': 40, 'Seesaw Statue': 40, 'EhExPee Statue': 40,
+        'Pecunia Statue': 40, 'Mutton Statue': 40, 'Egg Statue': 40,
+        'Battleaxe Statue': 40, 'Spiral Statue': 40, 'Boat Statue': 40,
+        'Compost Statue': 40, 'Stealth Statue': 40, 'Essence Statue': 40,
+    },},
+    7: {'SpecificLevels': {
+        'Mining Statue': 150, 'Feasty Statue': 150, 'Lumberbob Statue': 150,
+    },},
+    8: {'SpecificLevels': {
+        'Mining Statue': 200, 'Feasty Statue': 200, 'Lumberbob Statue': 200,
+    },},
+    9: {'SpecificLevels': {
+        'Mining Statue': 240, 'Feasty Statue': 240, 'Lumberbob Statue': 240,
+    },},
+    10: {'SpecificLevels': {
+        'Speed Statue': 80,
+        'Oceanman Statue': 80, 'Ol Reliable Statue': 80, 'Anvil Statue': 80, 'Cauldron Statue': 80,
+        'Beholder Statue': 80, 'EhExPee Statue': 80,
+        'Pecunia Statue': 80, 'Mutton Statue': 80, 'Egg Statue': 80,
+        'Battleaxe Statue': 80, 'Spiral Statue': 80, 'Boat Statue': 80,
+        'Compost Statue': 80, 'Stealth Statue': 80, 'Essence Statue': 80,
+    },},
+    11: {'SpecificLevels': {
+        'Mining Statue': 280, 'Feasty Statue': 280, 'Lumberbob Statue': 280,
+    },},
 
 }
 
@@ -1674,7 +1722,6 @@ expectedStackables = {
         "ClassSwapB", "ResetBox",
     ]
 }
-
 card_data = {
     "Blunder Hills": {
         "Crystal0": ["Crystal Carrot", 3],
@@ -1927,7 +1974,6 @@ card_data = {
         "xmasEvent3": ["Golden Giftmas Box", 1],
     },
 }
-
 numberOfSecretClasses = 3  # Last verified as of v2.10
 humanReadableClasses = {
     1: "Beginner",
@@ -1960,7 +2006,6 @@ humanReadableClasses = {
     36: "Bubonic Conjuror",
     37: "Arcane Cultist"
 }
-
 skillIndexList = ["Combat",
                   "Mining", "Smithing", "Choppin",
                   "Fishing", "Alchemy", "Catching",
@@ -1969,7 +2014,6 @@ skillIndexList = ["Combat",
                   "Sailing", "Divinity", "Gaming",
                   "Farming", "Sneaking", "Summoning"]
 emptySkillList = [0] * 25
-
 expectedInventoryBagValuesDict = {
     0:1,
     1:1,
@@ -3392,6 +3436,75 @@ combat_talentsDict = {
     },
 }
 base_crystal_chance = 0.0005  # 1 in 2000
+filter_recipes = {
+    "Lucky Lad": ["Luckier Lad"],
+    "Beginner Recipe": [
+        "Copper Band", "Iron Boots", "Steel Band", "Goo Galoshes", "Fur Shirt", "Dooble Goopi", "Bleached Designer Wode Patch Pants",
+        "Serrated Rex Ring", "Fishing Overalls", "Bandito Pantaloon",
+        "Blue Tee", "Peanut", "Golden Peanut",  #IDK about including these. They're technically from quests but maybe they count too? :shrug:
+    ],
+    "Novice Recipe": [
+        "Defenders Dignity", "Strung Bludgeon", "Polished Bludgeon", "Googley Eyes", "Dootjat Eye", "Protectors Pride", "Skullfish Pendant",
+        "Star Talent Reset Potion"
+    ],
+    "Apprentice Recipe": [
+        "Midnight Stopwatch", "Dawn Stopwatch",
+    ],
+    "Journeyman Recipe": [
+        "Bolstered DNA Splicer", "Double Barreled DNA Splicer", "Ergonomic DNA Splicer",
+    ],
+    "Adept Recipe": [
+        "Magma Core Headdress", "Magma Core Wavemaille", "Magma Core Battleskirt", "Magma Core Lavarunners",
+        "Molten Core Knucklers", "Magma Maul", "Sediment Core Grunkler", "Cattle Core Soothsayer Staff",
+        "Colossal Food Pouch", "Colossal Matty Pouch", "Coldseeker Bullet",
+        "Shiny Bored Beanie", "Divvy Slippers", "Zero Point Stopwatch"
+    ],
+    "Master Recipe": [
+        "Pentastud Slapper", "Elegant Spear", "Pristine Longbow", "Sparky Marble Staff", "Demented Emperor Opal",
+        "Crown of the Gods", "Robe of the Gods", "Tatters of the Gods", "Drip of the Gods",
+        "Mittens of the Gods", "Massive Godbreaker", "Doublestring Godshooter", "Magnifique Godcaster", "Golden Cake"
+    ],
+}
+filter_never = [
+    #Statues
+    "Power Statue", "Speed Statue", "Mining Statue", "Feasty Statue", "Health Statue", "Kachow Statue", "Lumberbob Statue",
+    "Thicc Skin Statue", "Oceanman Statue", "Ol Reliable Statue", "Exp Book Statue", "Anvil Statue", "Cauldron Statue", "Beholder Statue", "Bullseye Statue",
+    "Box Statue", "Twosoul Statue", "EhExPee Statue", "Seesaw Statue",
+    "Pecunia Statue", "Mutton Statue", "Egg Statue",
+    "Battleaxe Statue", "Spiral Statue", "Boat Statue",
+    "Compost Statue", "Stealth Statue", "Essence Statue",
+    #Golden Foods
+    "Golden Jam", "Golden Kebabs", "Golden Meat Pie", "Golden Nomwich", "Golden Ham", "Golden Bread", "Golden Ribs", "Golden Cheese",
+    "Golden Grilled Cheese Nomwich", "Golden Hampter Gummy Candy", "Golden Nigiri", "Golden Dumpling", "Golden Cake", "Gold Food Coupon",
+    #Choppin Efficiency talent
+    "Leaf1",
+    #Consumables
+    "Gem", "Gem Envelope", "Small Experience Balloon", "Medium Experience Balloon", "Large Experience Balloon",
+    "1 HR Time Candy", "2 HR Time Candy", "4 HR Time Candy", "12 HR Time Candy", "24 HR Time Candy", "72 HR Time Candy",
+    "Steamy Time Candy", "Spooky Time Candy", "Cosmic Time Candy",
+    "Forest Villa Key", "Efaunt's Tomb Key", "Chizoar's Cavern Key", "Troll's Enclave Key", "Kruk's Volcano Key",
+    "Silver Pen", "Pet Egg", "Cooking Ladle",
+    "Candy Canes", "Aqua Pearl", "Mistleberries",
+    "Dungeon Credits", "Dungeon Credits Flurbo Edition",
+    #W1 Rares
+    "Golden Plop", "Woodular Circle", "Red Frisbee",
+    #W2 Rares
+    "Glass Shard", "Nuget Cake", "Ghost", "Midnight Cookie",
+    #W3 Rares
+    "Ice Age 3", "Black Lense",
+    #W4 Rares
+    "Lost Batteries", "Pearler Shell",
+    #W5 Rares
+    "Royal Suggma Urn", "Hampter", "OJ Juice", "Magma Obol of Big Time Domeo",
+    #W6 Rares
+    "Stacked Rice Cake", "Dark Lantern",
+    #Event Lootboxes
+    "Event Point",
+    "Summer Cooler", "Beach Oyster", "Golden Oyster",
+    "Choco Box", "Lovey Dovey Letter",
+    "Egg Capsule", "Gummy Bunny", "Goldegg Capsule",
+    "Phone Box", "Spring Baggie", "Anniversary Box", "Falloween Treat", "2021 Giftmas Box",
+]
 
 def lavaFunc(funcType: str, level: int, x1: int | float, x2: int | float, roundResult=False):
     result = 0
@@ -3423,7 +3536,6 @@ def ceilUpToBase(inputValue: int, base: int) -> int:
     while toReturn <= inputValue:
         toReturn += base
     return toReturn
-
 
 ###WORLD 1 CONSTS###
 bribesDict = {
@@ -3746,39 +3858,6 @@ statuesDict = {
 }
 statueTypeList = ["Normal", "Gold", "Onyx"]
 statueCount = len(statuesDict.keys())
-statueExclusionsDict = {
-    "Onyx1": [
-        "Kachow Statue", "Bullseye Statue",
-        "Oceanman Statue", "Thicc Skin Statue",
-        "Box Statue", "Twosoul Statue", "Seesaw Statue", "EhExPee Statue",
-        "Battleaxe Statue", "Spiral Statue", "Boat Statue",
-        "Compost Statue", "Stealth Statue", "Essence Statue"
-    ],
-    "Onyx2": [
-        "Power Statue", "Speed Statue", "Mining Statue", "Feasty Statue", "Health Statue", "Lumberbob Statue", "Kachow Statue", "Bullseye Statue",
-        "Ol Reliable Statue", "Exp Book Statue", "Anvil Statue", "Cauldron Statue", "Oceanman Statue",  # "Thicc Skin Statue",
-        "Beholder Statue", "Bullseye Statue", "Box Statue", "Twosoul Statue", "Seesaw Statue",  # "EhExPee Statue",
-        "Pecunia Statue", "Mutton Statue", "Egg Statue",
-    ],
-    "Onyx3": [
-        "Power Statue", "Speed Statue", "Mining Statue", "Feasty Statue", "Health Statue", "Lumberbob Statue",  # "Kachow Statue", "Bullseye Statue",
-        "Thicc Skin Statue", "Ol Reliable Statue", "Exp Book Statue", "Anvil Statue", "Cauldron Statue",  # "Oceanman Statue",
-        "Beholder Statue", "EhExPee Statue",  # "Bullseye Statue", "Box Statue", "Twosoul Statue", "Seesaw Statue",
-        "Pecunia Statue", "Mutton Statue", "Egg Statue",
-        "Battleaxe Statue", "Spiral Statue", "Boat Statue",
-        "Compost Statue", "Stealth Statue", "Essence Statue"
-    ],
-    "Final3": [
-        "Power Statue", "Speed Statue", "Health Statue", "Kachow Statue", "Bullseye Statue",
-        "Thicc Skin Statue", "Oceanman Statue", "Ol Reliable Statue", "Exp Book Statue", "Anvil Statue", "Cauldron Statue",
-        "Beholder Statue", "Bullseye Statue", "Box Statue", "Twosoul Statue", "EhExPee Statue", "Seesaw Statue",
-        "Pecunia Statue", "Mutton Statue", "Egg Statue",
-        "Battleaxe Statue", "Spiral Statue", "Boat Statue",
-        "Compost Statue", "Stealth Statue", "Essence Statue",
-    ],
-    "None": []
-}
-
 
 ###WORLD 2 CONSTS###
 max_IndexOfVials = 75  # Last verified as of v2.10
@@ -3962,7 +4041,7 @@ bubblesDict = {
         26: {'Name': 'Essence Boost-Green', 'Material': 'Tree12', 'x1': 50, 'x2': 60, 'funcType': 'decay'},
         27: {'Name': 'Endgame Eff II', 'Material': 'Bulbo-Crop-0', 'x1': 3, 'x2': 60, 'funcType': 'decay'},
         28: {'Name': 'Tome Agility', 'Material': 'Bug13', 'x1': 2.5, 'x2': 60, 'funcType': 'decay'},
-        29: {'Name': 'Stealth Chapter', 'Material': 'Mushroom-16', 'x1': 10, 'x2': 50, 'funcType': 'decay'},
+        29: {'Name': 'Stealth Chapter', 'Material': 'Mushie-Crop-15', 'x1': 10, 'x2': 50, 'funcType': 'decay'},
         30: {'Name': 'Green30', 'Material': '', 'x1': 0, 'x2': 0, 'funcType': 'decay'},
         31: {'Name': 'Green31', 'Material': '', 'x1': 0, 'x2': 0, 'funcType': 'decay'},
         32: {'Name': 'Green32', 'Material': '', 'x1': 0, 'x2': 0, 'funcType': 'decay'},
@@ -4436,6 +4515,161 @@ maxStaticBookLevels = 140
 maxScalingBookLevels = 30
 maxSummoningBookLevels = 29
 maxOverallBookLevels = 100 + maxStaticBookLevels + maxScalingBookLevels + maxSummoningBookLevels
+dnSkullRequirementList = [0, 25000, 100000, 250000, 500000, 1000000, 5000000, 100000000, 1000000000]
+dnSkullValueList = [0, 1, 2, 3, 4, 5, 7, 10, 20]
+reversed_dnSkullRequirementList = dnSkullRequirementList[::-1]
+reversed_dnSkullValueList = dnSkullValueList[::-1]
+dnSkullValueToNameDict = {
+    0: "None",
+    1: "Normal Skull",
+    2: "Copper Skull",
+    3: "Iron Skull",
+    4: "Gold Skull",
+    5: "Platinum Skull",
+    7: "Dementia Skull",
+    10: "Lava Skull",
+    20: "Eclipse Skull"
+}
+dnNextSkullNameDict = {
+    0: "Normal Skull",
+    1: "Copper Skull",
+    2: "Iron Skull",
+    3: "Gold Skull",
+    4: "Platinum Skull",
+    5: "Dementia Skull",
+    7: "Lava Skull",
+    10: "Eclipse Skull",
+    20: "Finished!"
+}
+apocableMapIndexDict = {
+    0: [30, 9, 38, 69, 120, 166],  #Barbarian only, not in regular DeathNote
+    1: [1, 2, 14, 17, 16, 13, 18, 31, 19, 24, 26, 27, 28, 8, 15],
+    2: [51, 52, 53, 57, 58, 59, 60, 62, 63, 64, 65],
+    3: [101, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 116, 117],
+    4: [151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163],
+    5: [201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213],
+    6: [251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264]
+}
+apocAmountsList = [100000, 1000000, 100000000]
+apocNamesList = ["ZOW", "CHOW", "MEOW"]
+apocDifficultyNameList = ['Basic W1 Enemies', 'Basic W2 Enemies', 'Basic W3 Enemies', 'Basic W4 Enemies', 'Basic W5 Enemies', 'Basic W6 Enemies',
+                              'Easy Extras', 'Medium Extras', 'Difficult Extras', 'Insane', 'Impossible']
+def getSkullNames(mkValue: int) -> str:
+    try:
+        return dnSkullValueToNameDict.get(mkValue, f"UnknownSkull{mkValue}")
+    except Exception as reason:
+        return f"Unexpected Input '{mkValue}' received: {reason}"
+
+def getNextSkullNames(mkValue: int) -> str:
+    try:
+        return dnNextSkullNameDict.get(mkValue, f"UnknownSkull{mkValue}")
+    except Exception as reason:
+        return f"Unexpected Input received: {reason}"
+
+def getEnemyNameFromMap(inputMap: str) -> str:
+    mapNametoEnemyNameDict = {
+        # W1 Maps
+        "Spore Meadows": "Green Mushroom",
+        "Froggy Fields": "Frog",
+        "Valley of the Beans": "Bored Bean",
+        "Birch Enclave": "Red Mushroom",
+        "Jungle Perimeter": "Slime",
+        "The Base of the Bark": "Stick",
+        "Hollowed Trunk": "Nutto",
+        "Where the Branches End": "Wood Mushroom",
+        "Winding Willows": "Baby Boa",
+        "Vegetable Patch": "Carrotman",
+        "Forest Outskirts": "Glublin",
+        "Encroaching Forest Villa": "Wode Board",
+        "Tucked Away": "Gigafrog",
+        "Poopy Sewers": "Poop",
+        "Rats Nest": "Rat",
+        "The Roots": "Special - Single Nutto at WorshipTD map",
+        "The Office": "Special - Poops surrounding Dr.Def",
+        "Meel's Crypt": "Special- Boop",
+
+        # W2 Maps
+        "Jar Bridge": "Sandy Pot",
+        "The Mimic Hole": "Mimic",
+        "Dessert Dunes": "Crabcake",
+        "The Grandioso Canyon": "Mafioso",
+        "Shifty Sandbox": "Sand Castle",
+        "Pincer Plateau": "Pincermin",
+        "Slamabam Straightaway": "Mashed Potato",
+        "The Ring": "Tyson",
+        "Up Up Down Down": "Moonmoon",
+        "Sands of Time": "Sand Giant",
+        "Djonnuttown": "Snelbie",
+        "Mummy Memorial": "Special- Invisible Green Mushroom inside King Doot's map",
+
+        # W3 Maps
+        "Steep Sheep Ledge": "Sheepie",
+        "Snowfield Outskirts": "Frost Flake",
+        "The Stache Split": "Sir Stache",
+        "Refrigeration Station": "Bloque",
+        "Mamooooth Mountain": "Mamooth",
+        "Rollin' Tundra": "Snowmen",
+        "Signature Slopes": "Penguin",
+        "Thermonuclear Climb": "Thermister",
+        "Waterlogged Entrance": "Quenchie",
+        "Cryo Catacombs": "Cryosnake",
+        "Overpass of Sound": "Bop Box",
+        "Crystal Basecamp": "Neyeptune",
+        "Wam Wonderland": "Dedotated Ram",
+        "Hell Hath Frozen Over": "Bloodbone",
+        "Equinox Valley": "Special- AFK only Dedotated Ram",
+
+        # W4 Maps
+        "Spaceway Raceway": "Purp Mushroom",
+        "TV Outpost": "TV",
+        "Donut Drive-In": "Donut",
+        "Outskirts of Fallstar Isle": "Demon Genie",
+        "Mountainous Deugh": "Soda Can",
+        "Wurm Highway": "Flying Worm",
+        "Jelly Cube Bridge": "Gelatinous Cuboid",
+        "Cocoa Tunnel": "Choccie",
+        "Standstill Plains": "Biggole Wurm",
+        "Shelled Shores": "Clammie",
+        "The Untraveled Octopath": "Octodar",
+        "Flamboyant Bayou": "Flombeige",
+        "Enclave of Eyes": "Stilted Seeker",
+        "The Rift": "Rift Monsters",
+
+        # W5 Maps
+        "Naut Sake Perimeter": "Suggma",
+        "Niagrilled Falls": "Maccie",
+        "The Killer Roundabout": "Mister Brightside",
+        "Cracker Jack Lake": "Cheese Nub",
+        "The Great Molehill": "Stiltmole",
+        "Erruption River": "Molti",
+        "Mount Doomish": "Purgatory Stalker",
+        "OJ Bay": "Citringe",
+        "Lampar Lake": "Lampar",
+        "Spitfire River": "Fire Spirit",
+        "Miner Mole Outskirts": "Biggole Mole",
+        "Crawly Catacombs": "Crawler",
+        "The Worm Nest": "Tremor Wurm",
+
+        # W6 Maps
+        "Gooble Goop Creek": "Sprout Spirit",
+        "Picnic Bridgeways": "Ricecake",
+        "Irrigation Station": "River Spirit",
+        "Troll Playground": "Baby Troll",
+        "Edge of the Valley": "Woodlin Spirit",
+        "Bamboo Laboredge": "Bamboo Spirit",
+        "Lightway Path": "Lantern Spirit",
+        "Troll Broodnest": "Mama Troll",
+        "Above the Clouds": "Leek Spirit",
+        "Sleepy Skyline": "Ceramic Spirit",
+        "Dozey Dogpark": "Skydoggie Spirit",
+        "Yolkrock Basin": "Royal Egg",
+        "Chieftain Stairway": "Minichief Spirit",
+        "Emperor's Castle Doorstep": "Samurai Guardian",
+    }
+    try:
+        return mapNametoEnemyNameDict.get(inputMap, f"UnknownMap:{inputMap}")
+    except Exception as reason:
+        return f"Unexpected Input received: {reason}"
 
 ###WORLD 4 CONSTS###
 maxCookingTables = 10  # Last verified as of v2.10

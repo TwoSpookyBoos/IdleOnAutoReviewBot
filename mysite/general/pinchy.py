@@ -273,52 +273,35 @@ def sort_pinchy_reviews(dictOfPRs) -> Placements:
 
 
 # https://idleon.wiki/wiki/Portal_Requirements
-portalOpeningKills = [
-    (Threshold.EARLY_W7_PREP, 264,      100),  # W6 Samurai Spirits
-    (Threshold.LATE_W6,       260, 25000000),  # W6 Ceramic Spirits
-    (Threshold.MID_W6,        256,  1100000),  # W6 Bamboo Spirits
-    (Threshold.EARLY_W6,      251,    30000),  # W6 Sprout Spirits
-    (Threshold.LATE_W5,       210,   600000),  # W5 Fire Spirits
-    (Threshold.MID_W5,        205,    75000),  # W5 Stiltmoles
-    (Threshold.EARLY_W5,      201,    15000),  # W5 Suggmas
-    (Threshold.LATE_W4,       160,   190000),  # W4 Clammies
-    (Threshold.MID_W4,        155,    40000),  # W4 Soda Cans
-    (Threshold.EARLY_W4,      151,     5000),  # W4 Purp Mushrooms
-    (Threshold.LATE_W3,       110,    18000),  # W3 Quenchies
-    (Threshold.MID_W3,        106,     6000),  # W3 Mamooths
-    (Threshold.EARLY_W3,      101,     1000),  # W3 Sheepies
-    (Threshold.LATE_W2,        62,     3000),  # W2 Tysons
-    (Threshold.MID_W2,         57,     1200),  # W2 Mafiosos
-    (Threshold.EARLY_W2,       51,      250),  # W2 Sandy Pots
+mapThresholds = [
+    (Threshold.EARLY_W7_PREP, 6,    264),  # W6 Samurai Spirits
+    (Threshold.LATE_W6,       6,    260),  # W6 Ceramic Spirits
+    (Threshold.MID_W6,        6,    256),  # W6 Bamboo Spirits
+    (Threshold.EARLY_W6,      6,    251),  # W6 Sprout Spirits
+    (Threshold.LATE_W5,       5,    210),  # W5 Fire Spirits
+    (Threshold.MID_W5,        5,    205),  # W5 Stiltmoles
+    (Threshold.EARLY_W5,      5,    201),  # W5 Suggmas
+    (Threshold.LATE_W4,       4,    160),  # W4 Clammies
+    (Threshold.MID_W4,        4,    155),  # W4 Soda Cans
+    (Threshold.EARLY_W4,      4,    151),  # W4 Purp Mushrooms
+    (Threshold.LATE_W3,       3,    110),  # W3 Quenchies
+    (Threshold.MID_W3,        3,    106),  # W3 Mamooths
+    (Threshold.EARLY_W3,      3,    101),  # W3 Sheepies
+    (Threshold.LATE_W2,       2,     62),  # W2 Tysons
+    (Threshold.MID_W2,        2,     57),  # W2 Mafiosos
+    (Threshold.EARLY_W2,      2,     51),  # W2 Sandy Pots
 ]
-maxExpectedThresholdFromMaps = portalOpeningKills[0][0]
+maxExpectedThresholdFromMaps = mapThresholds[0][0]
 
+def is_portal_opened(worldNumber, mapNumber):
+    return session_data.account.enemy_worlds[worldNumber].maps_dict[mapNumber].kill_count > 0
 
-def is_portal_opened(mobKills, monster, portalKC):
-    if len(mobKills) > monster:
-        if isinstance(mobKills[monster], list):
-            try:
-                return float(mobKills[monster][0]) < portalKC
-            except Exception as reason:
-                logger.exception(f"Could not determine if portal is open. Given mobKills[monster] of {mobKills[monster]}, monster of {monster}, and portalKC of {portalKC} because: {reason}")
-                return False
-        else:
-            try:
-                return float(mobKills[monster]) < portalKC
-            except Exception as reason:
-                logger.exception(
-                    f"Could not determine if portal is open. Given mobKills[monster] of {mobKills[monster]}, monster of {monster}, and portalKC of {portalKC} because: {reason}")
-                return False
-    else:
-        return False
-
-
-def threshold_for_highest_portal_opened(mobKills):
+def threshold_for_highest_portal_opened():
     threshold = next((
         threshold
-        for threshold, monster, portalKC
-        in portalOpeningKills
-        if is_portal_opened(mobKills, monster, portalKC)
+        for threshold, worldNumber, mapNumber
+        in mapThresholds
+        if is_portal_opened(worldNumber, mapNumber)
     ), Threshold.W1)
 
     return Threshold.fromname(threshold)
@@ -337,17 +320,8 @@ def tier_from_monster_kills(dictOfPRs) -> Threshold:
     elif dictOfPRs[Placements.DEATH_NOTE] >= 17:
         expectedThreshold = Threshold.fromname(Threshold.SOLID_W7_PREP)
     else:
-        # logger.info(f"Starting to review map kill counts per player because expectedIndex still W1: {dictOfPRs['Construction Death Note']}")
-        for character in session_data.account.safe_characters:
-            try:
-                #TODO: Move to account
-                mobKills = safe_loads(session_data.account.raw_data[f'KLA_{character.character_index}'])  # String pretending to be a list of lists yet again
-            except:
-                logger.exception(f"Could not retrieve KLA_{character.character_index} for Pinchy. Setting mobKills to empty list")
-                mobKills = []
-            # logger.info("%s, %s", type(playerKillsList), playerKillsList)  # Expected to be a list
-            threshold = threshold_for_highest_portal_opened(mobKills)
-            mobKillThresholds.append(threshold)
+        threshold = threshold_for_highest_portal_opened()
+        mobKillThresholds.append(threshold)
 
     expectedThreshold = max((expectedThreshold, *mobKillThresholds))
 

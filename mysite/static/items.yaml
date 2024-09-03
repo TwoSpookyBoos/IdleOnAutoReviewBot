@@ -1334,12 +1334,12 @@ TalentBook1: TalentBook1
 TalentBook2: TalentBook2
 TalentBook3: TalentBook3
 TalentBook4: TalentBook4
-SmithingRecipes1: SmithingRecipes1
-SmithingRecipes2: SmithingRecipes2
-SmithingRecipes3: SmithingRecipes3
-SmithingRecipes4: SmithingRecipes4
-SmithingRecipes5: SmithingRecipes5
-SmithingRecipes6: SmithingRecipes6
+SmithingRecipes1: Beginner Recipe
+SmithingRecipes2: Novice Recipe
+SmithingRecipes3: Apprentice Recipe
+SmithingRecipes4: Journeyman Recipe
+SmithingRecipes5: Adept Recipe
+SmithingRecipes6: Master Recipe
 Liquid1: Water Droplets
 Liquid2: Liquid Nitrogen
 Liquid3: Trench Seawater

@@ -286,7 +286,6 @@ def setBreedingProgressionTier() -> AdviceSection:
     tier_UnlockedTerritories = 0
     tier_MaxArenaWave = 0
     tier_ShinyLevels = 0
-    overall_BreedingTier = 0
     nextArenaWaveUnlock = 0
     recommendedTerritoryCompsList: dict[int, list[list[str]]] = {
         0: [
@@ -453,7 +452,7 @@ def setBreedingProgressionTier() -> AdviceSection:
                                     )
                                 )
 
-    overall_BreedingTier = min(maxBreedingTier, tier_UnlockedTerritories, tier_ShinyLevels)
+    overall_BreedingTier = min(maxBreedingTier, tier_MaxArenaWave, tier_UnlockedTerritories, tier_ShinyLevels)
 
     #Generate Advice Groups
     if tier_UnlockedTerritories < maxBreedingTier:

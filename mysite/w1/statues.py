@@ -1,5 +1,5 @@
 from models.models import Advice, AdviceGroup, AdviceSection
-from consts import maxTiersPerGroup, statueTypeList, statues_progressionTiers, statueCount, max_VialLevel, statueExclusionsDict, break_you_best
+from consts import maxTiersPerGroup, statueTypeList, statues_progressionTiers, statueCount, max_VialLevel, break_you_best
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
@@ -39,18 +39,6 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
         progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == "Poop"),
         goal=3
     ))
-    # crystal_AdviceList.append(Advice(
-    #     label="Omega Nanochip: Top Left card doubler",
-    #     picture_class="omega-nanochip",
-    #     progression=session_data.account.labChips.get('Omega Nanochip', 0),
-    #     goal=1
-    # ))
-    # crystal_AdviceList.append(Advice(
-    #     label="Omega Motherboard: Bottom Right card doubler",
-    #     picture_class="omega-motherboard",
-    #     progression=session_data.account.labChips.get('Omega Motherboard', 0),
-    #     goal=1
-    # ))
 
     crystal_AdviceList.append(Advice(
         label=f"Minimum 200 Crystallin Stamp: {session_data.account.stamps['Crystallin']['Level']} (+{session_data.account.stamps['Crystallin']['Value']:.3f}%)",
@@ -58,32 +46,6 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
         progression=session_data.account.stamps['Crystallin']['Level'],
         goal=200  #stamp_maxes['Crystallin']
     ))
-    # crystals_4_dayys_multi = 1 + lavaFunc('decay', 100, 174, 50) / 100
-    # crystal_AdviceList.append(Advice(
-    #     label=f"Crystals 4 Dayys star talent: {crystals_4_dayys_multi}x at level 100",
-    #     picture_class="crystals-4-dayys",
-    # ))
-    # bestCrystalBook = 0
-    # for jman in session_data.account.jmans:
-    #     bestCrystalBook = max(bestCrystalBook, jman.max_talents.get("26", 0))
-    # crystal_AdviceList.append(Advice(
-    #     label=f"Level {bestCrystalBook}/{session_data.account.library['MaxBookLevel']} booked Cmon Out Crystals talent (Jman only)",
-    #     picture_class="cmon-out-crystals",
-    #     progression=bestCrystalBook,
-    #     goal=session_data.account.library['MaxBookLevel']
-    # ))
-    # crystal_AdviceList.append(Advice(
-    #     label="Crescent Shrine",
-    #     picture_class="crescent-shrine",
-    #     progression=session_data.account.shrines.get("Crescent Shrine", {}).get("Level", 0),
-    #     goal="∞"
-    # ))
-    # crystal_AdviceList.append(Advice(
-    #     label="Chaotic Chizoar card increases Crescent Shrine",
-    #     picture_class="chaotic-chizoar-card",
-    #     progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == "Chaotic Chizoar"),
-    #     goal=6
-    # ))
     crystal_AdviceList.append(Advice(
         label=f"{{{{ Sailing|#sailing }}}}: Moai Head artifact to apply Shrines everywhere",
         picture_class="moai-head",
@@ -182,34 +144,38 @@ def setStatuesProgressionTier() -> AdviceSection:
     for tierNumber, tierRequirements in statues_progressionTiers.items():
         subgroupName = f"To reach Tier {tierNumber}"
         for statueName, statueDetails in session_data.account.statues.items():
-            if statueName not in statueExclusionsDict[tierRequirements.get('Exclusions', 'None')]:
-                #Trying to futureproof new tiers- If at least Gold, but not the max tier
-                farmDetails = f": {statueDetails['Farmer']}" if 1 <= statueDetails['TypeNumber'] < len(statueTypeList) else ""
-                farmResource = statueDetails['Target'] if 1 <= statueDetails['TypeNumber'] < len(statueTypeList) else ""
-                if statueDetails['Level'] < tierRequirements.get('MinStatueLevel', 0):
-                    if subgroupName not in statues_AdviceDict["Tiers"] and len(statues_AdviceDict["Tiers"]) < maxTiersPerGroup:
-                        statues_AdviceDict["Tiers"][subgroupName] = []
-                    if subgroupName in statues_AdviceDict["Tiers"]:
-                        statues_AdviceDict['Tiers'][subgroupName].append(Advice(
-                            label=f"Level up {statueName}{farmDetails}",
-                            picture_class=statueName,
-                            progression=statueDetails['Level'],
-                            goal=tierRequirements.get('MinStatueLevel', 0),
-                            resource=farmResource
-                        ))
-                if statueDetails['TypeNumber'] < tierRequirements.get('MinStatueTypeNumber', 0):
-                    if subgroupName not in statues_AdviceDict["Tiers"] and len(statues_AdviceDict["Tiers"]) < maxTiersPerGroup:
-                        statues_AdviceDict["Tiers"][subgroupName] = []
-                    if subgroupName in statues_AdviceDict["Tiers"]:
-                        statues_AdviceDict['Tiers'][subgroupName].append(Advice(
-                            label=f"Raise {statueName} to {tierRequirements.get('MinStatueType', 'UnknownStatueType')}{farmDetails}",
-                            picture_class=statueName,
-                            progression=statueDetails['TypeNumber'] if statueDetails['TypeNumber'] < 1 else session_data.account.assets.get(statueDetails['ItemName']).amount,
-                            goal=tierRequirements.get('MinStatueTypeNumber', 0) if statueDetails['TypeNumber'] < 1 else 20000,
-                            resource=farmResource
-                        ))
-                    if session_data.account.assets.get(statueDetails['ItemName']).amount >= 20000 and statueDetails['Type'] != statueTypeList[-1]:
-                        depositable_statues += 1
+            # Trying to futureproof new tiers- If at least Gold, but not the max tier
+            farmDetails = f": {statueDetails['Farmer']}" if 0 <= statueDetails['TypeNumber'] < len(statueTypeList) else ""
+            farmResource = statueDetails['Target'] if 0 <= statueDetails['TypeNumber'] < len(statueTypeList) else ""
+            if 'SpecificLevels' in tierRequirements:
+                if statueName in tierRequirements['SpecificLevels']:
+                    if statueDetails['Level'] < tierRequirements['SpecificLevels'][statueName]:
+                        if subgroupName not in statues_AdviceDict["Tiers"] and len(statues_AdviceDict["Tiers"]) < maxTiersPerGroup:
+                            statues_AdviceDict["Tiers"][subgroupName] = []
+                        if subgroupName in statues_AdviceDict["Tiers"]:
+                            statues_AdviceDict['Tiers'][subgroupName].append(Advice(
+                                label=f"Level up {statueName}{farmDetails}",
+                                picture_class=statueName,
+                                progression=statueDetails['Level'],
+                                goal=tierRequirements['SpecificLevels'][statueName],
+                                resource=farmResource
+                            ))
+            if 'SpecificTypes' in tierRequirements:
+                if statueName in tierRequirements['SpecificTypes']:
+                    if statueDetails['TypeNumber'] < tierRequirements.get('MinStatueTypeNumber', 0):
+                        if subgroupName not in statues_AdviceDict["Tiers"] and len(statues_AdviceDict["Tiers"]) < maxTiersPerGroup:
+                            statues_AdviceDict["Tiers"][subgroupName] = []
+                        if subgroupName in statues_AdviceDict["Tiers"]:
+                            statues_AdviceDict['Tiers'][subgroupName].append(Advice(
+                                label=f"Raise {statueName} to {tierRequirements.get('MinStatueType', 'UnknownStatueType')}"
+                                      f"{farmDetails if tierRequirements.get('MinStatueType', 'UnknownStatueType') != 'Gold' else ''}",
+                                picture_class=statueName,
+                                progression=statueDetails['TypeNumber'] if statueDetails['TypeNumber'] < 1 else session_data.account.assets.get(statueDetails['ItemName']).amount,
+                                goal=tierRequirements.get('MinStatueTypeNumber', 0) if statueDetails['TypeNumber'] < 1 else 20000,
+                                resource="coins" if tierRequirements.get('MinStatueType', 'UnknownStatueType') == 'Gold' else ''
+                            ))
+                        if session_data.account.assets.get(statueDetails['ItemName']).amount >= 20000 and statueDetails['Type'] != statueTypeList[-1]:
+                            depositable_statues += 1
         if subgroupName not in statues_AdviceDict["Tiers"] and tier_Statues == tierNumber-1:
             tier_Statues = tierNumber
 

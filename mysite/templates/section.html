@@ -1,7 +1,7 @@
 <section id="{{ section.css_class }}">
     <h1 class="subheading{% if section %} toggler{% endif %}{% if section.collapse %} folded{% endif %}">
         {% if section.picture %}
-            <img src="{{ section.picture | img }}" alt="{{ section.name }}">
+            <img src="{{ section.picture | img }}" alt="{{ section.name }}" loading="lazy">
         {% endif %}
         <div class="heading-wrapper">
             <span>{{ section.header | safe }}</span>
@@ -29,14 +29,14 @@
                                 <span class="progress-box{% if not progress_bars %} hidden{% endif %} {{ advice.status }}">
                                     <span class="progress-bar"></span>
                                 </span>
-                                <li class="advice {{ advice.css_class }}">
+                                <li class="advice {{ advice.css_class }} lazy">
                                 {% if advice.as_link %}
                                     <a href="#{{ advice.css_class }}">{{ advice.label }}</a>
                                 {% else %}
                                     {{ advice.label | safe }}
                                 {% endif %}
                                 </li>
-                                <li class="resource{% if advice.resource %} resource-{{ advice.resource }}{% endif %}"></li>
+                                <li class="resource{% if advice.resource %} resource-{{ advice.resource }} lazy{% endif %}"></li>
                                 <li class="prog">{{ advice.progression }}</li>
                                 <li class="arrow{% if not advice.progression or not advice.goal %}-hidden{% endif %}"></li>
                                 <li class="goal {{ advice.status }}">{{ advice.goal }}</li>

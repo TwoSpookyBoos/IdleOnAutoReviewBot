@@ -1,8 +1,5 @@
-import json
-from collections import defaultdict
-
 from consts import missableGStacksDict, break_you_best
-from models.models import AdviceSection, AdviceGroup, Advice, gstackable_codenames, gstackable_codenames_expected, Assets
+from models.models import AdviceSection, AdviceGroup, Advice, gstackable_codenames_expected, Assets
 from utils.logging import get_logger
 from flask import g as session_data
 
@@ -19,23 +16,6 @@ def getEquinoxDreams() -> dict:
             results[f"Dream{dreamNumber}"] = False
 
     return results
-
-
-def all_owned_items() -> Assets:
-    name_quantity_key_pairs = tuple((f"InventoryOrder_{i}", f"ItemQTY_{i}") for i in session_data.account.safe_playerIndexes) + (("ChestOrder", "ChestQuantity"),)
-    all_stuff_owned = defaultdict(int)
-
-    for codename in gstackable_codenames:
-        all_stuff_owned[codename] = 0
-
-    for name_key, quantity_key in name_quantity_key_pairs:
-        for name, count in zip(session_data.account.raw_data[name_key], session_data.account.raw_data[quantity_key]):
-            try:
-                all_stuff_owned[name] += int(count)
-            except:
-                continue
-
-    return Assets(all_stuff_owned)
 
 
 def getMissableGStacks(owned_stuff: Assets):
@@ -91,8 +71,8 @@ def getMissableGStacks(owned_stuff: Assets):
         header_alreadyobtained = ""
 
     header_missable = ""
-    if (header_alreadymissed != "" or header_alreadyobtained != "") and still_obtainable > 0:
-        header_missable = f",<br>and can still obtain {still_obtainable}"
+    if still_obtainable > 0:
+        header_missable = f"{', < br > and' if (header_alreadymissed != '' or header_alreadyobtained != '') else ''}can still obtain {still_obtainable}"
 
     header_obtainable = (f"You {header_alreadymissed}"
                          f"{',<br>' if header_alreadymissed != '' else ''}{header_alreadyobtained}"
@@ -161,7 +141,7 @@ def getMissableGStacks(owned_stuff: Assets):
 
 def setGStackProgressionTier():
     equinoxDreamsStatus = getEquinoxDreams()
-    all_owned_stuff: Assets = all_owned_items()
+    all_owned_stuff: Assets = session_data.account.assets
     questGStacks_AdviceSection = getMissableGStacks(all_owned_stuff)
 
     unprecedented_gstacks = all_owned_stuff.items_gstacked_unprecedented
