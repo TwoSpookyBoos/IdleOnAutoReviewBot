@@ -3436,6 +3436,75 @@ combat_talentsDict = {
     },
 }
 base_crystal_chance = 0.0005  # 1 in 2000
+filter_recipes = {
+    "Lucky Lad": ["Luckier Lad"],
+    "Beginner Recipe": [
+        "Copper Band", "Iron Boots", "Steel Band", "Goo Galoshes", "Fur Shirt", "Dooble Goopi", "Bleached Designer Wode Patch Pants",
+        "Serrated Rex Ring", "Fishing Overalls", "Bandito Pantaloon",
+        "Blue Tee", "Peanut", "Golden Peanut",  #IDK about including these. They're technically from quests but maybe they count too? :shrug:
+    ],
+    "Novice Recipe": [
+        "Defenders Dignity", "Strung Bludgeon", "Polished Bludgeon", "Googley Eyes", "Dootjat Eye", "Protectors Pride", "Skullfish Pendant",
+        "Star Talent Reset Potion"
+    ],
+    "Apprentice Recipe": [
+        "Midnight Stopwatch", "Dawn Stopwatch",
+    ],
+    "Journeyman Recipe": [
+        "Bolstered DNA Splicer", "Double Barreled DNA Splicer", "Ergonomic DNA Splicer",
+    ],
+    "Adept Recipe": [
+        "Magma Core Headdress", "Magma Core Wavemaille", "Magma Core Battleskirt", "Magma Core Lavarunners",
+        "Molten Core Knucklers", "Magma Maul", "Sediment Core Grunkler", "Cattle Core Soothsayer Staff",
+        "Colossal Food Pouch", "Colossal Matty Pouch", "Coldseeker Bullet",
+        "Shiny Bored Beanie", "Divvy Slippers", "Zero Point Stopwatch"
+    ],
+    "Master Recipe": [
+        "Pentastud Slapper", "Elegant Spear", "Pristine Longbow", "Sparky Marble Staff", "Demented Emperor Opal",
+        "Crown of the Gods", "Robe of the Gods", "Tatters of the Gods", "Drip of the Gods",
+        "Mittens of the Gods", "Massive Godbreaker", "Doublestring Godshooter", "Magnifique Godcaster", "Golden Cake"
+    ],
+}
+filter_never = [
+    #Statues
+    "Power Statue", "Speed Statue", "Mining Statue", "Feasty Statue", "Health Statue", "Kachow Statue", "Lumberbob Statue",
+    "Thicc Skin Statue", "Oceanman Statue", "Ol Reliable Statue", "Exp Book Statue", "Anvil Statue", "Cauldron Statue", "Beholder Statue", "Bullseye Statue",
+    "Box Statue", "Twosoul Statue", "EhExPee Statue", "Seesaw Statue",
+    "Pecunia Statue", "Mutton Statue", "Egg Statue",
+    "Battleaxe Statue", "Spiral Statue", "Boat Statue",
+    "Compost Statue", "Stealth Statue", "Essence Statue",
+    #Golden Foods
+    "Golden Jam", "Golden Kebabs", "Golden Meat Pie", "Golden Nomwich", "Golden Ham", "Golden Bread", "Golden Ribs", "Golden Cheese",
+    "Golden Grilled Cheese Nomwich", "Golden Hampter Gummy Candy", "Golden Nigiri", "Golden Dumpling", "Golden Cake", "Gold Food Coupon",
+    #Choppin Efficiency talent
+    "Leaf1",
+    #Consumables
+    "Gem", "Gem Envelope", "Small Experience Balloon", "Medium Experience Balloon", "Large Experience Balloon",
+    "1 HR Time Candy", "2 HR Time Candy", "4 HR Time Candy", "12 HR Time Candy", "24 HR Time Candy", "72 HR Time Candy",
+    "Steamy Time Candy", "Spooky Time Candy", "Cosmic Time Candy",
+    "Forest Villa Key", "Efaunt's Tomb Key", "Chizoar's Cavern Key", "Troll's Enclave Key", "Kruk's Volcano Key",
+    "Silver Pen", "Pet Egg", "Cooking Ladle",
+    "Candy Canes", "Aqua Pearl", "Mistleberries",
+    "Dungeon Credits", "Dungeon Credits Flurbo Edition",
+    #W1 Rares
+    "Golden Plop", "Woodular Circle", "Red Frisbee",
+    #W2 Rares
+    "Glass Shard", "Nuget Cake", "Ghost", "Midnight Cookie",
+    #W3 Rares
+    "Ice Age 3", "Black Lense",
+    #W4 Rares
+    "Lost Batteries", "Pearler Shell",
+    #W5 Rares
+    "Royal Suggma Urn", "Hampter", "OJ Juice", "Magma Obol of Big Time Domeo",
+    #W6 Rares
+    "Stacked Rice Cake", "Dark Lantern",
+    #Event Lootboxes
+    "Event Point",
+    "Summer Cooler", "Beach Oyster", "Golden Oyster",
+    "Choco Box", "Lovey Dovey Letter",
+    "Egg Capsule", "Gummy Bunny", "Goldegg Capsule",
+    "Phone Box", "Spring Baggie", "Anniversary Box", "Falloween Treat", "2021 Giftmas Box",
+]
 
 def lavaFunc(funcType: str, level: int, x1: int | float, x2: int | float, roundResult=False):
     result = 0

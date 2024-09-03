@@ -21,6 +21,7 @@ from consts import (
     guildBonusesList, familyBonusesDict, getNextESFamilyBreakpoint,
     achievementsList, allMeritsDict, starsignsDict,
     base_crystal_chance,
+    filter_recipes, filter_never,
     # W1
     stampsDict, stampTypes, bribesDict, forgeUpgradesDict, statuesDict, statueTypeList, statueCount,
     # W2
@@ -36,7 +37,8 @@ from consts import (
     equinoxBonusesDict, maxDreams, dreamsThatUnlockNewBonuses,
     expected_talentsDict,
     printerAllIndexesBeingPrinted,
-    dnSkullValueList, reversed_dnSkullValueList, reversed_dnSkullRequirementList, getSkullNames, getNextSkullNames,
+    dnSkullValueList, reversed_dnSkullValueList, dnSkullRequirementList, reversed_dnSkullRequirementList,
+    getSkullNames, getNextSkullNames, apocableMapIndexDict, apocAmountsList, apocNamesList,
     # W4
     riftRewardsDict,
     labJewelsDict, labBonusesDict, nblbMaxBubbleCount, labChipsDict,
@@ -51,7 +53,7 @@ from consts import (
     jade_emporium, pristineCharmsList, sneakingGemstonesFirstIndex, sneakingGemstonesList, sneakingGemstonesStatList,
     getMoissaniteValue, getGemstoneBaseValue, getGemstoneBoostedValue, getGemstonePercent,
     marketUpgradeList, landrankDict,
-    summoningBattleCountsDict, summoningDict, dnSkullRequirementList, apocableMapIndexDict, apocAmountsList, apocNamesList,
+    summoningBattleCountsDict, summoningDict,
 )
 
 
@@ -1183,13 +1185,9 @@ class Account:
 
         raw_print = safe_loads(self.raw_data.get('Print', [0, 0, 0, 0, 0, 'Blank']))[5:]
         raw_printer_xtra = safe_loads(self.raw_data.get('PrinterXtra', []))
+        self._parse_general_item_filter(raw_printer_xtra)
         self.printer['HighestValue'] = max([p for p in raw_print if isinstance(p, int)] + [p for p in raw_printer_xtra if isinstance(p, int)], default=0)
 
-        self.item_filter = []
-        if len(raw_printer_xtra) >= 121:
-            for codeName in raw_printer_xtra[120:]:
-                if codeName != 'Blank':
-                    self.item_filter.append(getItemDisplayName(codeName))
         try:
             sample_names = raw_print[0::2] + raw_printer_xtra[0:119:2]
             sample_values = raw_print[1::2] + raw_printer_xtra[1:119:2]
@@ -1223,6 +1221,13 @@ class Account:
                 if printName not in self.printer['AllCurrentPrints']:
                     self.printer['AllCurrentPrints'][printName] = []
                 self.printer['AllCurrentPrints'][printName] += printValues
+
+    def _parse_general_item_filter(self, raw_printer_xtra):
+        self.item_filter = []
+        if len(raw_printer_xtra) >= 121:
+            for codeName in raw_printer_xtra[120:]:
+                if codeName != 'Blank':
+                    self.item_filter.append(getItemDisplayName(codeName))
 
     def _parse_general_maps(self):
         self.enemy_maps = buildMaps()
@@ -2549,11 +2554,42 @@ class Account:
         self._calculate_w6()
 
     def _calculate_general(self):
+        self._calculate_general_alerts()
+        self._calculate_general_item_filter()
+
+    def _calculate_general_alerts(self):
         if self.assets.get("Trophy2").amount >= 75 and self.equinox_dreams[17]:
             self.alerts_AdviceDict['General'].append(Advice(
                 label=f"You have {self.assets.get('Trophy2').amount}/75 Lucky Lads to craft a Luckier Lad!",
                 picture_class="luckier-lad"
             ))
+
+    def _calculate_general_item_filter(self):
+        for filtered_displayName in self.item_filter:
+            if filtered_displayName == "Lucky Lad" and getItemCodeName("Luckier Lad") not in self.registered_slab and self.assets.get("Trophy2").amount < 75:
+                self.alerts_AdviceDict['General'].append(Advice(
+                    label=f"Lucky filtered before 75 for Luckier Lad",
+                    picture_class="lucky-lad",
+                    resource="luckier-lad"
+                ))
+            elif filtered_displayName in filter_recipes:
+                for itemName in filter_recipes[filtered_displayName]:
+                    if getItemCodeName(itemName) not in self.registered_slab:
+                        self.alerts_AdviceDict['General'].append(Advice(
+                            label=f"{filtered_displayName} filtered, {itemName} not in Slab",
+                            picture_class=filtered_displayName,
+                            resource=itemName
+                        ))
+            elif filtered_displayName in filter_never and self.autoloot:
+                self.alerts_AdviceDict['General'].append(Advice(
+                    label=f"Why did you filter {filtered_displayName}???",
+                    picture_class=filtered_displayName,
+                ))
+            elif getItemCodeName(filtered_displayName) not in self.registered_slab:
+                    self.alerts_AdviceDict['General'].append(Advice(
+                        label=f"{filtered_displayName} filtered, not in Slab",
+                        picture_class=filtered_displayName,
+                    ))
 
     def _calculate_w1(self):
         self._calculate_w1_starsigns()
