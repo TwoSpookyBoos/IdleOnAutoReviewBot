@@ -2135,7 +2135,7 @@ class Account:
                     if self.breeding['Species'][worldIndex][petValuesDict['Name']]['Unlocked'] and not self.breeding["Genetics"][petValuesDict['Genetic']]:
                         self.breeding["Genetics"][petValuesDict['Genetic']] = True
                 except Exception as reason:
-                    print(f"Failed to parse pet {petValuesDict['Name']}: {reason}")
+                    print(f"models._parse_w4_breeding_pets EXCEPTION: Failed to parse breeding pet {petValuesDict['Name']}: {reason}")
                     self.breeding['Species'][worldIndex][petValuesDict['Name']] = {
                         'Unlocked': False,
                         'Genetic': petValuesDict['Genetic'],
@@ -3425,12 +3425,17 @@ class Account:
             all_stuff_owned[codename] = 0
 
         for name_key, quantity_key in name_quantity_key_pairs:
-            for name, count in zip(
-                self.raw_data[name_key], self.raw_data[quantity_key]
-            ):
-                try:
-                    all_stuff_owned[name] += int(count)
-                except Exception as reason:
-                    continue
+            try:
+                for name, count in zip(
+                    self.raw_data[name_key], self.raw_data[quantity_key]
+                ):
+                    try:
+                        all_stuff_owned[name] += int(count)
+                    except Exception as reason:
+                        print(f"models._all_owned_items EXCEPTION: Unable to add ({type(count)}) {count} to {name}: {reason}")
+                        continue
+            except Exception as reason:
+                print(f"models._all_owned_items EXCEPTION: Unable to access {name_key} or {quantity_key} from JSON: {reason}")
+                continue
 
         return Assets(all_stuff_owned)
