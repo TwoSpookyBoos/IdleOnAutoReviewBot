@@ -18,6 +18,7 @@ from consts import (
     currentWorld, maxCharacters,
     expectedStackables, greenstack_progressionTiers, gfood_codes,
     card_data,
+    gemShopDict,
     guildBonusesList, familyBonusesDict, getNextESFamilyBreakpoint,
     achievementsList, allMeritsDict, starsignsDict,
     base_crystal_chance,
@@ -1100,7 +1101,8 @@ class Account:
 
     def _parse_general(self):
         # General / Multiple uses
-        self.gemshop = {}
+        self._parse_general_gemshop()
+
         self.family_bonuses = {}
         for className in familyBonusesDict.keys():
             # Create the skeleton for all current classes, with level and value of 0
@@ -1174,6 +1176,15 @@ class Account:
 
         self._parse_general_printer()
         self._parse_general_maps()
+
+    def _parse_general_gemshop(self):
+        self.gemshop = {}
+        raw_gem_items_purchased = safe_loads(self.raw_data.get("GemItemsPurchased", []))
+        for purchaseName, purchaseIndex in gemShopDict.items():
+            try:
+                self.gemshop[purchaseName] = int(raw_gem_items_purchased[purchaseIndex])
+            except:
+                self.gemshop[purchaseName] = 0
 
     def _parse_general_printer(self):
         self.printer = {
