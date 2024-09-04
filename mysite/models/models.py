@@ -32,6 +32,7 @@ from consts import (
     arcadeBonuses,
     poBoxDict,
     ballotDict,
+    fishingToolkitDict,
     # W3
     buildingsDict, shrinesList, saltLickList, atomsList, colliderStorageLimitList,
     prayersDict,
@@ -2576,6 +2577,8 @@ class Account:
             ))
 
     def _calculate_general_item_filter(self):
+        raw_fishing_toolkit_lures = safe_loads(self.raw_data.get("FamValFishingToolkitOwned", [{'0': 0, 'length': 1}]))[0]
+        raw_fishing_toolkit_lines = safe_loads(self.raw_data.get("FamValFishingToolkitOwned", [{'0': 0, 'length': 1}]))[1]
         for filtered_displayName in self.item_filter:
             if filtered_displayName == "Lucky Lad" and getItemCodeName("Luckier Lad") not in self.registered_slab and self.assets.get("Trophy2").amount < 75:
                 self.alerts_AdviceDict['General'].append(Advice(
@@ -2597,8 +2600,20 @@ class Account:
                     picture_class=filtered_displayName,
                 ))
             elif getItemCodeName(filtered_displayName) not in self.registered_slab:
+                self.alerts_AdviceDict['General'].append(Advice(
+                    label=f"{filtered_displayName} filtered, not in Slab",
+                    picture_class=filtered_displayName,
+                ))
+            elif filtered_displayName in fishingToolkitDict['Lures']:
+                if fishingToolkitDict['Lures'].index(filtered_displayName) not in raw_fishing_toolkit_lures.values():
                     self.alerts_AdviceDict['General'].append(Advice(
-                        label=f"{filtered_displayName} filtered, not in Slab",
+                        label=f"{filtered_displayName} filtered, not in Fishing Toolkit",
+                        picture_class=filtered_displayName,
+                    ))
+            elif filtered_displayName in fishingToolkitDict['Lines']:
+                if fishingToolkitDict['Lines'].index(filtered_displayName) not in raw_fishing_toolkit_lines.values():
+                    self.alerts_AdviceDict['General'].append(Advice(
+                        label=f"{filtered_displayName} filtered, not in Fishing Toolkit",
                         picture_class=filtered_displayName,
                     ))
 

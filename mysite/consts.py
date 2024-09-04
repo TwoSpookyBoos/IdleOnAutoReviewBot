@@ -425,7 +425,7 @@ stamps_progressionTiers = {
         "Optional": ["Void Sword Stamp"]
     }},
     16: {"TotalStampLevels": 7500, "Stamps": {
-        "Combat": ["Violence Stamp", "Intellectostampo", "Dementia Sword Stamp", "Conjocharmo Stamp"],
+        "Combat": ["Violence Stamp", "Intellectostampo", "Dementia Sword Stamp"],
         "Skill": ["Multitool Stamp", "Flowin Stamp", "Sneaky Peeky Stamp", "Jade Mint Stamp", "White Essence Stamp"],
         "Misc": ["Forge Stamp"],
         "Specific": {
@@ -437,7 +437,7 @@ stamps_progressionTiers = {
         "Optional": ["Blover Stamp"]
     }},
     17: {"TotalStampLevels": 9200, "Stamps": {
-        "Combat": ['Captalist Stats Stamp'],
+        "Combat": ["Conjocharmo Stamp", 'Captalist Stats Stamp'],
         "Skill": ["Dark Triad Essence Stamp"],
         "Misc": ["Atomic Stamp"],
         "Specific": {
@@ -4356,6 +4356,17 @@ ballotDict = {
     32: {'BaseValue': 40, 'Description': "Boosts Equinox Bar Fill rate by }x", 'Image': "ballot-32"},
     33: {'BaseValue': 50, 'Description': "Boosts Refinery Cycle Speed by +{%", 'Image': "ballot-33"},
     34: {'BaseValue': 52, 'Description': "Increases cash earned from monsters by +{%", 'Image': "ballot-34"},
+}
+fishingToolkitDict = {
+    "Lures": [
+        'Fly', 'Wormie Weight', 'Iron Hook', 'Basic Bobber', 'Dualhook Prongs', 'Pound of Steel', 'Pound of Feathers',
+        'Massless Unit for Physics Questions', 'Literal Elephant', 'Valve Patented Circle Thingies', 'Dynamite', 'Not Dynamite',
+        'Triple Threat', 'Crash Box', 'Fat Albert',
+    ],
+    "Lines": [
+        'Fishing Twine', 'Copper Twine', 'Silver Twine', 'Gold Twine', 'Platinum Twine', 'Leafy Vines', 'Fun Flags', 'Electrical Wiring',
+        'Wiener Links', 'Zeus Gon Fishin', 'Needledrop', 'Scripticus Spoons', 'Its a Boy Celebration', 'Its a Girl Celebration', 'Its Alright Celebration'
+    ],
 }
 
 def getReadableVialNames(inputNumber):
