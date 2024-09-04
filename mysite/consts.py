@@ -1385,7 +1385,6 @@ sailing_progressionTiers = {
             'Weatherbook': 1,
             'Trilobite Rock': 1,
             'Opera Mask': 1,
-            'The True Lantern': 1
         }
     },
     11: {
