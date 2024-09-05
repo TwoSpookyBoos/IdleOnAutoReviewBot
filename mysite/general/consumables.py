@@ -1,8 +1,7 @@
-import json
 from enum import IntEnum
-
 from consts import expectedInventoryBagValuesDict, break_you_best
-from models.models import AdviceGroup, Advice, AdviceSection
+from models.models import AdviceGroup, Advice, AdviceSection, Assets
+from utils.data_formatting import safe_loads
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
@@ -201,28 +200,28 @@ class Bag(StorageItemMixin, IntEnum):
 
 
 def getCandyHourSections():
-    bank = dict(zip(session_data.account.raw_data["ChestOrder"], session_data.account.raw_data["ChestQuantity"]))
+    bank: Assets = session_data.account.assets
 
     # Standard Time Candies: 1hr - 72hr
-    normal_candy = (bank.get(f"Timecandy{i}", 0) for i in range(1, 7))
+    normal_candy = (bank.get(f"Timecandy{i}").amount for i in range(1, 7))
     normal_candy_times = 1, 2, 4, 12, 24, 72
     guaranteedCandyHours = sum(
         qty * hr
         for qty, hr in zip(normal_candy, normal_candy_times)
     )
 
-    tier_regular = "no guaranteed candy"
-    guaranteedCandyString = f"You have {tier_regular} in your bank. Wow."
-
     if guaranteedCandyHours > 0:
         tier_regular = str(guaranteedCandyHours)
-        guaranteedCandyString = f"You have {guaranteedCandyHours} hours ({guaranteedCandyHours / 24:.2f} days) of guaranteed candy in your bank."
+        guaranteedCandyString = f"You have {guaranteedCandyHours} hours ({guaranteedCandyHours / 24:.2f} days) of guaranteed candy."
+    else:
+        tier_regular = "no guaranteed candy"
+        guaranteedCandyString = f"You have {tier_regular}. Wow."
 
-    if guaranteedCandyHours >= 1000:
+    if guaranteedCandyHours >= 10000:
         guaranteedCandyString += "<br>Don't forget about them!"
 
     # Variable Time Candies: Steamy, Spooky, Cosmic
-    variable_candy = (bank.get(f"Timecandy{i}", 0) for i in range(7, 10))
+    variable_candy = (bank.get(f"Timecandy{i}").amount for i in range(7, 10))
     variable_candy_times = (1/6, 24), (1/3, 12), (1/12, 500)
     variableCandyHoursMin = 0
     variableCandyHoursMax = 0
@@ -239,13 +238,13 @@ def getCandyHourSections():
         variableCandyHoursMax += qty * hrs_max
 
     tier_variable = "no variable candy"
-    variableCandyString = f"You have {tier_variable} in your bank."
+    variableCandyString = f"You have {tier_variable}."
 
     if variableCandyHoursMin > 0:
         hours_range = f"{variableCandyHoursMin:.2f} - {variableCandyHoursMax:.2f}"
         days_range = f"{variableCandyHoursMin / 24:.2f} - {variableCandyHoursMax / 24:.2f}"
         tier_variable = hours_range
-        variableCandyString = f"You have somewhere between {hours_range} hours ({days_range} days) of variable candy in your bank."
+        variableCandyString = f"You have somewhere between {hours_range} hours ({days_range} days) of variable candy."
 
     # TODO: Maybe Black / Divinity Pearls?
 
@@ -338,9 +337,7 @@ def parseInventoryBagSlots() -> AdviceGroup:
     return inventorySlots_AdviceGroup
 
 def parseStorageChests():
-    usedStorageChests = session_data.account.raw_data.get('InvStorageUsed', [])
-    if isinstance(usedStorageChests, str):
-        usedStorageChests = json.loads(usedStorageChests)
+    usedStorageChests = safe_loads(session_data.account.raw_data.get('InvStorageUsed', []))
     missing_chests = [chest for chest in StorageChest if str(chest.value) not in usedStorageChests.keys()]
 
     advices = [

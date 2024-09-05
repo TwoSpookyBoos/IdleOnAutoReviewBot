@@ -2,28 +2,16 @@ from consts import combatLevels_progressionTiers, break_you_best
 from models.models import AdviceGroup, Advice, AdviceSection
 from utils.logging import get_logger
 from flask import g as session_data
-from utils.data_formatting import safe_loads
 
 logger = get_logger(__name__)
 
 
 def getEquinoxDreams() -> dict:
-    try:
-        rawDreams = safe_loads(session_data.account.raw_data.get("WeeklyBoss", "{}"))
-    except Exception as reason:
-        logger.error("Unable to access WeeklyBoss data from JSON: %s", reason)
-        return dict(
-            Dream3=False,
-            Dream11=False,
-            Dream23=False
-        )
-
     results = dict(
-        Dream3=rawDreams.get("d_2") == -1,
-        Dream11=rawDreams.get("d_10") == -1,
-        Dream23=rawDreams.get("d_22") == -1,
+        Dream3=session_data.account.equinox_dreams[3],
+        Dream11=session_data.account.equinox_dreams[11],
+        Dream23=session_data.account.equinox_dreams[23],
     )
-    # logger.debug("OUTPUT results: %s", results)
 
     return results
 

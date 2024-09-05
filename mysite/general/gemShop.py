@@ -16,7 +16,7 @@ def try_exclude_DungeonTickets(exclusionList):
             exclusionList.append('Weekly Dungeon Boosters')
             return
 
-    #Scenario 2: Over Rank 50 or 200+ tickets
+    #Scenario 2: Over Rank 40 or 100+ tickets
     if session_data.account.raw_optlacc_dict:
         try:
             ##Blatantly stolen list from IE lol
@@ -39,7 +39,7 @@ def try_exclude_DungeonTickets(exclusionList):
             playerCredits = 0
             playerFurbo = 0
             playerBoosters = 0
-        if playerDungeonRank >= 50 or playerBoosters >= 200:
+        if playerDungeonRank >= 40 or playerBoosters >= 100:
             if 'Weekly Dungeon Boosters' not in exclusionList:
                 exclusionList.append('Weekly Dungeon Boosters')
                 return
@@ -118,29 +118,40 @@ def try_exclude_farming(exclusionList):
         exclusionList.append('Instagrow Generator')
         exclusionList.append('Plot of Land')
 
-def getGemShopExclusions():
+def getGemShopFullExclusions():
+    # Exclusions for SS through Practical Max. Not applied to True Max only
     exclusionList = []
+    #W1
+    try_exclude_DungeonTickets(exclusionList)
     #W2
     try_exclude_IvoryBubbleCauldrons(exclusionList)
-
     #W3
     try_exclude_FluorescentFlaggies(exclusionList)
     try_exclude_BurningBadBooks(exclusionList)
-
     #W4
     try_exclude_SoupedUpTube(exclusionList)
     try_exclude_EggCapacity(exclusionList)
     try_exclude_Kitchens(exclusionList)
-
     #W5
     try_exclude_ChestSluggo(exclusionList)
     try_exclude_GoldenSprinkler(exclusionList)
-
     #W6
-    try_exclude_farming(exclusionList)
 
     return exclusionList
 
+def getGemShopPartialExclusions():
+    #Exclusions for SS through D only. Not applied to Practical Max or True Max
+    exclusionList = []
+    #W1
+    #W2
+    #W3
+    #W4
+    #W5
+    #W6
+    try_exclude_farming(exclusionList)
+    try_exclude_ShroomFamiliar(exclusionList)
+
+    return exclusionList
 
 def getBonusSectionName(bonusName):
     match bonusName:
@@ -176,166 +187,11 @@ def getBonusSectionName(bonusName):
         case _:
             return "UnknownShop"
 
-def getBoughtGemShopItems():
-    parsedList = safe_loads(session_data.account.raw_data["GemItemsPurchased"])
-    gemShopDict = {
-        #Inventory and Storage
-        'Item Backpack Space': 0,
-        'Storage Chest Space': 0,
-        'Carry Capacity': 0,
-        'Food Slot': 0,
-        'More Storage Space': 0,
-        'Card Presets': 0,
-
-        #Dailies N' Resets
-        'Daily Teleports': 0,
-        'Daily Minigame Plays': 0,
-
-        #Cards
-        'Extra Card Slot': 0,
-
-        #Goods & Services
-        'Weekly Dungeon Boosters': 0,
-
-        #World 1&2
-        'Infinity Hammer': 0,
-        'Brimstone Forge Slot': 0,
-        'Ivory Bubble Cauldrons': 0,
-        'Bleach Liquid Cauldrons': 0,
-        'Obol Storage Space': 0,
-        'Sigil Supercharge': 0,
-
-        #World 3
-        'Crystal 3d Printer': 0,
-        'More Sample Spaces': 0,
-        'Burning Bad Books': 0,
-        'Prayer Slots': 0,
-        'Zen Cogs': 0,
-        'Cog Inventory Space': 0,
-        'Tower Building Slots': 0,
-        'Fluorescent Flaggies': 0,
-
-        #World 4
-        'Royal Egg Cap': 0,
-        'Richelin Kitchen': 0,
-        'Souped Up Tube': 0,
-        'Pet Storage': 0,
-        'Fenceyard Space': 0,
-
-        #World 5
-        'Chest Sluggo': 0,
-        'Divinity Sparkie': 0,
-        'Golden Sprinkler': 0,
-        'Lava Sprouts': 0,
-
-        #World 6
-        'Plot of Land': 0,
-        'Pristine Charm': 0,
-        'Shroom Familiar': 0,
-        'Sand of Time': 0,
-        'Instagrow Generator': 0,
-        'Life Refill': 0,
-        'Compost Bag': 0,
-        'Summoner Stone': 0,
-
-        #Fomo
-        'FOMO-1': 0,
-        'FOMO-2': 0,
-        'FOMO-3': 0,
-        'FOMO-4': 0,
-        'FOMO-5': 0,
-        'FOMO-6': 0,
-        'FOMO-7': 0,
-        'FOMO-8': 0
-    }  # Default 0s
-    try:
-        gemShopDict = {
-            #Inventory and Storage
-            'Item Backpack Space': parsedList[55],
-            'Storage Chest Space': parsedList[56],
-            'Carry Capacity': parsedList[58],
-            'Food Slot': parsedList[59],
-            'More Storage Space': parsedList[109],
-            'Card Presets': parsedList[66],
-
-            #Dailies N' Resets
-            'Daily Teleports': parsedList[71],
-            'Daily Minigame Plays': parsedList[72],
-
-            #Cards
-            'Extra Card Slot': parsedList[63],
-
-            #Goods & Services
-            'Weekly Dungeon Boosters': parsedList[84],
-
-            #World 1&2
-            'Infinity Hammer': parsedList[103],
-            'Brimstone Forge Slot': parsedList[104],
-            'Ivory Bubble Cauldrons': parsedList[105],
-            'Bleach Liquid Cauldrons': parsedList[106],
-            'Obol Storage Space': parsedList[57],
-            'Sigil Supercharge': parsedList[110],
-
-            #World 3
-            'Crystal 3d Printer': parsedList[111],
-            'More Sample Spaces': parsedList[112],
-            'Burning Bad Books': parsedList[113],
-            'Prayer Slots': parsedList[114],
-            'Zen Cogs': parsedList[115],
-            'Cog Inventory Space': parsedList[116],
-            'Tower Building Slots': parsedList[117],
-            'Fluorescent Flaggies': parsedList[118],
-
-            #World 4
-            'Royal Egg Cap': parsedList[119],
-            'Richelin Kitchen': parsedList[120],
-            'Souped Up Tube': parsedList[123],
-            'Pet Storage': parsedList[124],
-            'Fenceyard Space': parsedList[125],
-
-            #World 5
-            'Chest Sluggo': parsedList[129],
-            'Divinity Sparkie': parsedList[130],
-            'Golden Sprinkler': parsedList[131],
-            'Lava Sprouts': parsedList[133],
-
-            #World 6
-            'Plot of Land': parsedList[135],
-            'Pristine Charm': parsedList[136],
-            'Shroom Familiar': parsedList[137],
-            'Sand of Time': parsedList[138],
-            'Instagrow Generator': parsedList[139],
-            'Life Refill': parsedList[140],
-            'Compost Bag': parsedList[141],
-            'Summoner Stone': parsedList[142],
-
-            #Fomo
-            'FOMO-1': parsedList[87],
-            'FOMO-2': parsedList[88],
-            'FOMO-3': parsedList[89],
-            'FOMO-4': parsedList[90],
-            'FOMO-5': parsedList[91],
-            'FOMO-6': parsedList[92],
-            'FOMO-7': parsedList[93],
-            'FOMO-8': parsedList[94]
-        }
-    except Exception as reason:
-        logger.exception("Unable to parse Gem Shop:", exc_info=reason)
-    # logger.debug(gemShopDict)
-    for k, v in gemShopDict.items():
-        if not isinstance(v, int):
-            try:
-                gemShopDict[k] = int(v)
-            except:
-                logger.warning(f"Could not force {k}'s {type(v)} {v} to int. Setting to 0.")
-                gemShopDict[k] = 0
-    session_data.account.gemshop = gemShopDict
-    return gemShopDict
-
-
 def setGemShopProgressionTier():
-    boughtItems = getBoughtGemShopItems()
-    gemShopExclusions = getGemShopExclusions()
+    boughtItems = session_data.account.gemshop
+    fullExclusions = getGemShopFullExclusions()  # Exclusions for SS through Practical Max. Not applied to True Max only
+    partialExclusions = fullExclusions + getGemShopPartialExclusions()  #Exclusions for SS through D only. Not applied to Practical Max or True Max
+
 
     recommended_stock = {item: count for tier in gemShop_progressionTiers for item, count in tier[2].items()}
 
@@ -350,7 +206,7 @@ def setGemShopProgressionTier():
     #progressionTiers[tier][2] = dict recommendedPurchases
     #progressionTiers[tier][3] = str notes
 
-    filtered_groups = ["SS", *"SABCD", "Practical Max"]
+    filtered_groups = ["SS", *"SABCD"]
     groups = [
         AdviceGroup(
             tier="",
@@ -361,12 +217,28 @@ def setGemShopProgressionTier():
                 Advice(label=f"{name} ({getBonusSectionName(name)})", picture_class=name, progression=int(prog), goal=int(goal))
                 for name, qty in gemShop_progressionTiers[i][2].items()
                 if name in recommended_stock_bought
-                and name not in gemShopExclusions
+                and name not in partialExclusions
                 and (prog := float(recommended_stock_bought[name])) < (goal := float(qty))
             ]
         )
         for i, tier in enumerate(filtered_groups, start=1)
     ]
+
+    partially_filtered_groups = ["Practical Max"]
+    for i, tier in enumerate(partially_filtered_groups, start=7):
+        groups.append(AdviceGroup(
+                tier="",
+                pre_string=tier,
+                post_string=gemShop_progressionTiers[i][3],
+                hide=False,
+                advices=[
+                    Advice(label=f"{name} ({getBonusSectionName(name)})", picture_class=name, progression=int(prog), goal=int(goal))
+                    for name, qty in gemShop_progressionTiers[i][2].items()
+                    if name in recommended_stock_bought
+                    and name not in fullExclusions
+                    and (prog := float(recommended_stock_bought[name])) < (goal := float(qty))
+                ]
+        ))
 
     unfiltered_groups = ["True Max"]
     for i, tier in enumerate(unfiltered_groups, start=8):

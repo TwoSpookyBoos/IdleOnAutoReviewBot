@@ -18,6 +18,7 @@ from consts import (
     currentWorld, maxCharacters,
     expectedStackables, greenstack_progressionTiers, gfood_codes,
     card_data,
+    gemShopDict,
     guildBonusesList, familyBonusesDict, getNextESFamilyBreakpoint,
     achievementsList, allMeritsDict, starsignsDict,
     base_crystal_chance,
@@ -31,6 +32,8 @@ from consts import (
     arcadeBonuses,
     poBoxDict,
     ballotDict,
+    fishingToolkitDict,
+    obolsDict, ignorable_obols_list,
     # W3
     buildingsDict, shrinesList, saltLickList, atomsList, colliderStorageLimitList,
     prayersDict,
@@ -1100,7 +1103,40 @@ class Account:
 
     def _parse_general(self):
         # General / Multiple uses
+        self.raw_optlacc_dict = {k: v for k, v in enumerate(safe_loads(self.raw_data.get("OptLacc", [])))}
+        self.raw_serverVars_dict = safe_loads(self.raw_data.get("serverVars", {}))
+        self.assets = self._all_owned_items()
+        self.cards = self._make_cards()
+
+        self.minigame_plays_remaining = self.raw_optlacc_dict.get(33, 0)
+        self.daily_world_boss_kills = self.raw_optlacc_dict.get(195, 0)
+        self.daily_particle_clicks_remaining = self.raw_optlacc_dict.get(135, 0)
+
+        self._parse_class_unique_kill_stacks()
+        self._parse_general_gemshop()
+        self._parse_family_bonuses()
+        self._parse_dungeon_upgrades()
+        self._parse_general_achievements()
+        self._parse_general_merits()
+        self._parse_general_guild_bonuses()
+        self._parse_general_printer()
+        self._parse_general_maps()
+
+    def _parse_general_gemshop(self):
         self.gemshop = {}
+        raw_gem_items_purchased = safe_loads(self.raw_data.get("GemItemsPurchased", []))
+        for purchaseName, purchaseIndex in gemShopDict.items():
+            try:
+                self.gemshop[purchaseName] = int(raw_gem_items_purchased[purchaseIndex])
+            except:
+                self.gemshop[purchaseName] = 0
+
+    def _parse_class_unique_kill_stacks(self):
+        self.dk_orb_kills = self.raw_optlacc_dict.get(138, 0)
+        self.sb_plunder_kills = self.raw_optlacc_dict.get(139, 0)
+        self.es_wormhole_kills = self.raw_optlacc_dict.get(152, 0)
+
+    def _parse_family_bonuses(self):
         self.family_bonuses = {}
         for className in familyBonusesDict.keys():
             # Create the skeleton for all current classes, with level and value of 0
@@ -1124,9 +1160,7 @@ class Account:
                                                               f"{familyBonusesDict[className]['PostDisplay']}"
                                                               f" {familyBonusesDict[className]['Stat']}")
 
-        self.raw_optlacc_dict = {k:v for k, v in enumerate(safe_loads(self.raw_data.get("OptLacc", [])))}
-        self.raw_serverVars_dict = safe_loads(self.raw_data.get("serverVars", {}))
-
+    def _parse_dungeon_upgrades(self):
         self.dungeon_upgrades = {}
         raw_dungeon_upgrades = safe_loads(self.raw_data.get('DungUpg', []))
         if raw_dungeon_upgrades:
@@ -1144,6 +1178,7 @@ class Account:
                 self.dungeon_upgrades["FlurboShop"] = [0, 0, 0, 0, 0, 0, 0, 0]
                 self.dungeon_upgrades["CreditShop"] = [0, 0, 0, 0, 0, 0, 0, 0]
 
+    def _parse_general_achievements(self):
         self.achievements = {}
         raw_reg_achieves = safe_loads(self.raw_data.get('AchieveReg', []))
         for achieveIndex, achieveData in enumerate(achievementsList):
@@ -1153,6 +1188,7 @@ class Account:
             except:
                 self.achievements[achieveData[0].replace('_', ' ')] = False
 
+    def _parse_general_merits(self):
         self.merits = copy.deepcopy(allMeritsDict)
         raw_merits_list = safe_loads(self.raw_data.get("TaskZZ2", []))
         for worldIndex in self.merits:
@@ -1162,8 +1198,7 @@ class Account:
                 except:
                     continue  # Already defaulted to 0 in Consts
 
-        self.assets = self._all_owned_items()
-        self.cards = self._make_cards()
+    def _parse_general_guild_bonuses(self):
         self.guildBonuses = {}
         raw_guild = self.raw_data.get('guildData', {}).get('stats', [])
         for bonusIndex, bonusName in enumerate(guildBonusesList):
@@ -1171,9 +1206,6 @@ class Account:
                 self.guildBonuses[bonusName] = raw_guild[0][bonusIndex]
             except:
                 self.guildBonuses[bonusName] = 0
-
-        self._parse_general_printer()
-        self._parse_general_maps()
 
     def _parse_general_printer(self):
         self.printer = {
@@ -1407,6 +1439,7 @@ class Account:
         self._parse_w2_p2w()
         self._parse_w2_arcade()
         self._parse_w2_ballot()
+        self._parse_w2_obols()
 
     def _parse_w2_vials(self):
         self.alchemy_vials = {}
@@ -1439,6 +1472,7 @@ class Account:
                 self.maxed_vials += 1
 
     def _parse_w2_cauldrons(self):
+        raw_cauldron_upgrades = self.raw_data.get('CauldUpgLVs', [])
         self.alchemy_cauldrons = {
             'OrangeUnlocked': 0,
             'GreenUnlocked': 0,
@@ -1446,6 +1480,46 @@ class Account:
             'YellowUnlocked': 0,
             'TotalUnlocked': 0,
         }
+        try:
+            self.alchemy_cauldrons["OrangeBoosts"] = [
+                raw_cauldron_upgrades[0],
+                raw_cauldron_upgrades[1],
+                raw_cauldron_upgrades[2],
+                raw_cauldron_upgrades[3],
+            ]
+            self.alchemy_cauldrons["GreenBoosts"] = [
+                raw_cauldron_upgrades[4],
+                raw_cauldron_upgrades[5],
+                raw_cauldron_upgrades[6],
+                raw_cauldron_upgrades[7],
+            ]
+            self.alchemy_cauldrons["PurpleBoosts"] = [
+                raw_cauldron_upgrades[8],
+                raw_cauldron_upgrades[9],
+                raw_cauldron_upgrades[10],
+                raw_cauldron_upgrades[11],
+            ]
+            self.alchemy_cauldrons["PurpleBoosts"] = [
+                raw_cauldron_upgrades[12],
+                raw_cauldron_upgrades[13],
+                raw_cauldron_upgrades[14],
+                raw_cauldron_upgrades[15],
+            ]
+        except:
+            self.alchemy_cauldrons["OrangeBoosts"]: [0, 0, 0, 0]
+            self.alchemy_cauldrons["GreenBoosts"]: [0, 0, 0, 0]
+            self.alchemy_cauldrons["PurpleBoosts"]: [0, 0, 0, 0]
+            self.alchemy_cauldrons["YellowBoosts"]: [0, 0, 0, 0]
+        try:
+            self.alchemy_cauldrons["WaterDroplets"] = [raw_cauldron_upgrades[18], raw_cauldron_upgrades[19]]
+            self.alchemy_cauldrons["LiquidNitrogen"] = [raw_cauldron_upgrades[22], raw_cauldron_upgrades[23]]
+            self.alchemy_cauldrons["TrenchSeawater"] = [raw_cauldron_upgrades[26], raw_cauldron_upgrades[27]]
+            self.alchemy_cauldrons["ToxicMercury"] = [raw_cauldron_upgrades[30], raw_cauldron_upgrades[31]]
+        except:
+            self.alchemy_cauldrons["WaterDroplets"] = [0, 0]
+            self.alchemy_cauldrons["LiquidNitrogen"] = [0, 0]
+            self.alchemy_cauldrons["TrenchSeawater"] = [0, 0]
+            self.alchemy_cauldrons["ToxicMercury"] = [0, 0]
 
     def _parse_w2_bubbles(self):
         self.alchemy_bubbles = {}
@@ -1563,6 +1637,49 @@ class Account:
                 'Image': buffValuesDict['Image'],
             }
 
+    def _parse_w2_obols(self):
+        #Please send help, I hate Obols so much
+        self.obols = {
+            'Unknown': {
+                'Unknown': {'Total': 0},
+                'Circle': {'Total': 0},
+                'Square': {'Total': 0},
+                'Hexagon': {'Total': 0},
+                'Sparkle': {'Total': 0},
+            },
+            'Drop Rate': {
+                'Circle': {'Total': 0},
+                'Square': {'Total': 0},
+                'Hexagon': {'Total': 0},
+                'Sparkle': {'Total': 0},
+            },
+            'Choppin': {
+                'Circle': {'Total': 0},
+                'Square': {'Total': 0},
+                'Hexagon': {'Total': 0},
+                'Sparkle': {'Total': 0},
+            },
+        }
+        raw_owned_obols = []
+        for jsonkey in [
+            "ObolEqO1","ObolEqO2", "ObolEqO0_0", "ObolEqO0_1", "ObolEqO0_2", "ObolEqO0_3", "ObolEqO0_4",
+            "ObolEqO0_5", "ObolEqO0_6", "ObolEqO0_7", "ObolEqO0_8", "ObolEqO0_9"
+        ]:
+            raw_owned_obols += safe_loads(self.raw_data.get(jsonkey, []))
+        raw_obol_inventory_list = safe_loads(self.raw_data.get("ObolInvOr"))
+        for subdict in raw_obol_inventory_list:
+            raw_owned_obols += subdict.values()
+        for obol in raw_owned_obols:
+            if obol not in ignorable_obols_list:
+                obolBonusType = obolsDict.get(obol, {}).get('Bonus', 'Unknown')
+                obolShape = obolsDict.get(obol, {}).get('Shape', 'Unknown')
+                self.obols[obolBonusType][obolShape]['Total'] += 1
+                if obol not in self.obols[obolBonusType][obolShape]:
+                    self.obols[obolBonusType][obolShape][obol] = {'Count': 1}
+                else:
+                    self.obols[obolBonusType][obolShape][obol]['Count'] += 1
+        print(f"session_data.account.obols: {self.obols['Drop Rate']}")
+
     def _parse_w3(self):
         self._parse_w3_buildings()
         self._parse_w3_library()
@@ -1606,10 +1723,10 @@ class Account:
         self._parse_w3_deathnote_kills()
 
     def _parse_w3_meowBBIndex(self):
-        if len(self.apocCharactersIndexList) == 1:
-            return self.apocCharactersIndexList[0]
-        elif len(self.apocCharactersIndexList) >= 2:
-            return self.apocCharactersIndexList[1]
+        if len(self.bbCharactersIndexList) == 1:
+            return self.bbCharactersIndexList[0]
+        elif len(self.bbCharactersIndexList) >= 2:
+            return self.bbCharactersIndexList[1]
         else:
             return None
 
@@ -2565,6 +2682,8 @@ class Account:
             ))
 
     def _calculate_general_item_filter(self):
+        raw_fishing_toolkit_lures = safe_loads(self.raw_data.get("FamValFishingToolkitOwned", [{'0': 0, 'length': 1}]))[0]
+        raw_fishing_toolkit_lines = safe_loads(self.raw_data.get("FamValFishingToolkitOwned", [{'0': 0, 'length': 1}]))[1]
         for filtered_displayName in self.item_filter:
             if filtered_displayName == "Lucky Lad" and getItemCodeName("Luckier Lad") not in self.registered_slab and self.assets.get("Trophy2").amount < 75:
                 self.alerts_AdviceDict['General'].append(Advice(
@@ -2586,8 +2705,20 @@ class Account:
                     picture_class=filtered_displayName,
                 ))
             elif getItemCodeName(filtered_displayName) not in self.registered_slab:
+                self.alerts_AdviceDict['General'].append(Advice(
+                    label=f"{filtered_displayName} filtered, not in Slab",
+                    picture_class=filtered_displayName,
+                ))
+            elif filtered_displayName in fishingToolkitDict['Lures']:
+                if fishingToolkitDict['Lures'].index(filtered_displayName) not in raw_fishing_toolkit_lures.values():
                     self.alerts_AdviceDict['General'].append(Advice(
-                        label=f"{filtered_displayName} filtered, not in Slab",
+                        label=f"{filtered_displayName} filtered, not in Fishing Toolkit",
+                        picture_class=filtered_displayName,
+                    ))
+            elif filtered_displayName in fishingToolkitDict['Lines']:
+                if fishingToolkitDict['Lines'].index(filtered_displayName) not in raw_fishing_toolkit_lines.values():
+                    self.alerts_AdviceDict['General'].append(Advice(
+                        label=f"{filtered_displayName} filtered, not in Fishing Toolkit",
                         picture_class=filtered_displayName,
                     ))
 

@@ -113,9 +113,9 @@ gemShop_progressionTiers = [
         'Brimstone Forge Slot': 16, 'Sigil Supercharge': 10,
         'Fluorescent Flaggies': 2,
         'Golden Sprinkler': 4, 'Divinity Sparkie': 6,
-        'Plot of Land': 12, 'Shroom Familiar': 3,
+        'Plot of Land': 12, 'Shroom Familiar': 3, 'Instagrow Generator': 8,
     },
-     "I wouldn't recommend going any further as of v2.02. This tier is for the dedicated Gem Farmers from Colo and Normal-difficulty World Bosses."],
+     "I wouldn't recommend going any further as of v2.12."],
     [8, "True Max",
      {
         #Inventory and Storage
@@ -425,7 +425,7 @@ stamps_progressionTiers = {
         "Optional": ["Void Sword Stamp"]
     }},
     16: {"TotalStampLevels": 7500, "Stamps": {
-        "Combat": ["Violence Stamp", "Intellectostampo", "Dementia Sword Stamp", "Conjocharmo Stamp"],
+        "Combat": ["Violence Stamp", "Intellectostampo", "Dementia Sword Stamp"],
         "Skill": ["Multitool Stamp", "Flowin Stamp", "Sneaky Peeky Stamp", "Jade Mint Stamp", "White Essence Stamp"],
         "Misc": ["Forge Stamp"],
         "Specific": {
@@ -437,7 +437,7 @@ stamps_progressionTiers = {
         "Optional": ["Blover Stamp"]
     }},
     17: {"TotalStampLevels": 9200, "Stamps": {
-        "Combat": ['Captalist Stats Stamp'],
+        "Combat": ["Conjocharmo Stamp", 'Captalist Stats Stamp'],
         "Skill": ["Dark Triad Essence Stamp"],
         "Misc": ["Atomic Stamp"],
         "Specific": {
@@ -1385,7 +1385,6 @@ sailing_progressionTiers = {
             'Weatherbook': 1,
             'Trilobite Rock': 1,
             'Opera Mask': 1,
-            'The True Lantern': 1
         }
     },
     11: {
@@ -2006,14 +2005,28 @@ humanReadableClasses = {
     36: "Bubonic Conjuror",
     37: "Arcane Cultist"
 }
-skillIndexList = ["Combat",
-                  "Mining", "Smithing", "Choppin",
-                  "Fishing", "Alchemy", "Catching",
-                  "Trapping", "Construction", "Worship",
-                  "Cooking", "Breeding", "Lab",
-                  "Sailing", "Divinity", "Gaming",
-                  "Farming", "Sneaking", "Summoning"]
+skillIndexList = [
+    "Combat",
+    "Mining", "Smithing", "Choppin",
+    "Fishing", "Alchemy", "Catching",
+    "Trapping", "Construction", "Worship",
+    "Cooking", "Breeding", "Lab",
+    "Sailing", "Divinity", "Gaming",
+    "Farming", "Sneaking", "Summoning"
+                  ]
 emptySkillList = [0] * 25
+balloonable_skillsList = [
+    "Mining", "Smithing", "Choppin",
+    "Fishing", "Alchemy", "Catching",
+    "Trapping", "Worship",
+    "Cooking",  #"Lab" isn't balloonable, oddly enough. You can pearl it though
+]
+pearlable_skillsList = [
+    "Mining", "Smithing", "Choppin",
+    "Fishing", "Alchemy", "Catching",
+    "Trapping", "Worship",
+    "Cooking", "Lab",
+]
 expectedInventoryBagValuesDict = {
     0:1,
     1:1,
@@ -2090,74 +2103,74 @@ expectedStorageChestValuesDict = {
     104:3,
 }
 gemShopDict = {
-    #Inventory and Storage
-    'Item Backpack Space': 0,
-    'Storage Chest Space': 0,
-    'Carry Capacity': 0,
-    'Food Slot': 0,
-    'More Storage Space': 0,
-    'Card Presets': 0,
+    # Inventory and Storage
+    'Item Backpack Space': 55,
+    'Storage Chest Space': 56,
+    'Carry Capacity': 58,
+    'Food Slot': 59,
+    'More Storage Space': 109,
+    'Card Presets': 66,
 
-    #Dailies N' Resets
-    'Daily Teleports': 0,
-    'Daily Minigame Plays': 0,
+    # Dailies N' Resets
+    'Daily Teleports': 71,
+    'Daily Minigame Plays': 72,
 
-    #Cards
-    'Extra Card Slot': 0,
+    # Cards
+    'Extra Card Slot': 63,
 
-    #Goods & Services
-    'Weekly Dungeon Boosters': 0,
+    # Goods & Services
+    'Weekly Dungeon Boosters': 84,
 
-    #World 1&2
-    'Infinity Hammer': 0,
-    'Brimstone Forge Slot': 0,
-    'Ivory Bubble Cauldrons': 0,
-    'Bleach Liquid Cauldrons': 0,
-    'Obol Storage Space': 0,
-    'Sigil Supercharge': 0,
+    # World 1&2
+    'Infinity Hammer': 103,
+    'Brimstone Forge Slot': 104,
+    'Ivory Bubble Cauldrons': 105,
+    'Bleach Liquid Cauldrons': 106,
+    'Obol Storage Space': 57,
+    'Sigil Supercharge': 110,
 
-    #World 3
-    'Crystal 3d Printer': 0,
-    'More Sample Spaces': 0,
-    'Burning Bad Books': 0,
-    'Prayer Slots': 0,
-    'Zen Cogs': 0,
-    'Cog Inventory Space': 0,
-    'Tower Building Slots': 0,
-    'Fluorescent Flaggies': 0,
+    # World 3
+    'Crystal 3d Printer': 111,
+    'More Sample Spaces': 112,
+    'Burning Bad Books': 113,
+    'Prayer Slots': 114,
+    'Zen Cogs': 115,
+    'Cog Inventory Space': 116,
+    'Tower Building Slots': 117,
+    'Fluorescent Flaggies': 118,
 
-    #World 4
-    'Royal Egg Cap': 0,
-    'Richelin Kitchen': 0,
-    'Souped Up Tube': 0,
-    'Pet Storage': 0,
-    'Fenceyard Space': 0,
+    # World 4
+    'Royal Egg Cap': 119,
+    'Richelin Kitchen': 120,
+    'Souped Up Tube': 123,
+    'Pet Storage': 124,
+    'Fenceyard Space': 125,
 
-    #World 5
-    'Chest Sluggo': 0,
-    'Divinity Sparkie': 0,
-    'Golden Sprinkler': 0,
-    'Lava Sprouts': 0,
+    # World 5
+    'Chest Sluggo': 129,
+    'Divinity Sparkie': 130,
+    'Golden Sprinkler': 131,
+    'Lava Sprouts': 133,
 
-    #World 6
-    'Plot of Land': 0,
-    'Pristine Charm': 0,
-    'Shroom Familiar': 0,
-    'Sand of Time': 0,
-    'Instagrow Generator': 0,
-    'Life Refill': 0,
-    'Compost Bag': 0,
-    'Summoner Stone': 0,
+    # World 6
+    'Plot of Land': 135,
+    'Pristine Charm': 136,
+    'Shroom Familiar': 137,
+    'Sand of Time': 138,
+    'Instagrow Generator': 139,
+    'Life Refill': 140,
+    'Compost Bag': 141,
+    'Summoner Stone': 142,
 
-    #Fomo
-    'FOMO-1': 0,
-    'FOMO-2': 0,
-    'FOMO-3': 0,
-    'FOMO-4': 0,
-    'FOMO-5': 0,
-    'FOMO-6': 0,
-    'FOMO-7': 0,
-    'FOMO-8': 0
+    # Fomo
+    'FOMO-1': 87,
+    'FOMO-2': 88,
+    'FOMO-3': 89,
+    'FOMO-4': 90,
+    'FOMO-5': 91,
+    'FOMO-6': 92,
+    'FOMO-7': 93,
+    'FOMO-8': 94,
     }  # Default 0s
 guildBonusesList = [
     "Guild Gifts", "Stat Runes", "Rucksack", "Power of Pow", "REM Fighting", "Make or Break",
@@ -4358,6 +4371,32 @@ ballotDict = {
     33: {'BaseValue': 50, 'Description': "Boosts Refinery Cycle Speed by +{%", 'Image': "ballot-33"},
     34: {'BaseValue': 52, 'Description': "Increases cash earned from monsters by +{%", 'Image': "ballot-34"},
 }
+fishingToolkitDict = {
+    "Lures": [
+        'Fly', 'Wormie Weight', 'Iron Hook', 'Basic Bobber', 'Dualhook Prongs', 'Pound of Steel', 'Pound of Feathers',
+        'Massless Unit for Physics Questions', 'Literal Elephant', 'Valve Patented Circle Thingies', 'Dynamite', 'Not Dynamite',
+        'Triple Threat', 'Crash Box', 'Fat Albert',
+    ],
+    "Lines": [
+        'Fishing Twine', 'Copper Twine', 'Silver Twine', 'Gold Twine', 'Platinum Twine', 'Leafy Vines', 'Fun Flags', 'Electrical Wiring',
+        'Wiener Links', 'Zeus Gon Fishin', 'Needledrop', 'Scripticus Spoons', 'Its a Boy Celebration', 'Its a Girl Celebration', 'Its Alright Celebration'
+    ],
+}
+obolsDict = {
+    #Drop Rate
+    "ObolBronzePop":    {"Shape": "Circle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolBronzePop")},
+    "ObolSilverPop":    {"Shape": "Circle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolSilverPop")},
+    "ObolHyper0":       {"Shape": "Circle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolHyper0")},
+    "ObolSilverLuck":   {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolSilverLuck")},
+    "ObolGoldLuck":     {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolGoldLuck")},
+    "ObolKnight":       {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolKnight")},
+    "ObolPlatinumLuck": {"Shape": "Hexagon", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolPlatinumLuck")},
+    "ObolLava":         {"Shape": "Hexagon", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolLava")},
+    "ObolPinkLuck":     {"Shape": "Sparkle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolPinkLuck")},
+}
+ignorable_obols_list = [
+    'Blank', 'LockedInvSpace', 'ObolLocked1', 'ObolLocked2', 'ObolLocked3', 'ObolLocked4',
+]
 
 def getReadableVialNames(inputNumber):
     try:
@@ -4370,7 +4409,6 @@ def getReadableBubbleNames(inputNumber, color):
         return bubblesDict[bubbleCauldronColorList.index(color)][inputNumber]
     except:
         return f"Unknown {color} Bubble {inputNumber}"
-
 
 ###WORLD 3 CONSTS###
 maxDreams = 36  # Last verified as of v2.10
