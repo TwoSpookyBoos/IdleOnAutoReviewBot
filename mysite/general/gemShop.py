@@ -122,6 +122,7 @@ def getGemShopFullExclusions():
     # Exclusions for SS through Practical Max. Not applied to True Max only
     exclusionList = []
     #W1
+    try_exclude_DungeonTickets(exclusionList)
     #W2
     try_exclude_IvoryBubbleCauldrons(exclusionList)
     #W3
@@ -142,7 +143,6 @@ def getGemShopPartialExclusions():
     #Exclusions for SS through D only. Not applied to Practical Max or True Max
     exclusionList = []
     #W1
-    try_exclude_DungeonTickets(exclusionList)
     #W2
     #W3
     #W4
