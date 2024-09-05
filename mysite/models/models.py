@@ -1723,10 +1723,10 @@ class Account:
         self._parse_w3_deathnote_kills()
 
     def _parse_w3_meowBBIndex(self):
-        if len(self.apocCharactersIndexList) == 1:
-            return self.apocCharactersIndexList[0]
-        elif len(self.apocCharactersIndexList) >= 2:
-            return self.apocCharactersIndexList[1]
+        if len(self.bbCharactersIndexList) == 1:
+            return self.bbCharactersIndexList[0]
+        elif len(self.bbCharactersIndexList) >= 2:
+            return self.bbCharactersIndexList[1]
         else:
             return None
 
