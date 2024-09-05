@@ -130,13 +130,16 @@ def getShortTermAdviceList() -> list[Advice]:
     shortterm = []
     obols = []
     #Div jail if Goat not unlocked
-    if max(session_data.account.all_skills.get("Divinity", [0])) > 0 and not session_data.account.divinity['Divinities'][5]['Unlocked']:
-        shortterm.append(Advice(
-            label=f"Divinity jail until you unlock Goharut 🙁",
-            picture_class='goharut',
-            progression=session_data.account.divinity['GodsUnlocked'],
-            goal=5
-        ))
+    quick_divinity_goals = [2, 5]
+    for divinity in quick_divinity_goals:
+        if max(session_data.account.all_skills.get("Divinity", [0])) > 0 and not session_data.account.divinity['Divinities'][divinity]['Unlocked']:
+            shortterm.append(Advice(
+                label=f"Divinity jail until you unlock {session_data.account.divinity['Divinities'][divinity]['Name']} 🙁",
+                picture_class=session_data.account.divinity['Divinities'][divinity]['Name'],
+                progression=session_data.account.divinity['GodsUnlocked'],
+                goal=divinity
+            ))
+            break
     if not session_data.account.labBonuses['No Bubble Left Behind']['Enabled']:
         shortterm.append(Advice(
             label=f"Lab jail until you unlock No Bubble Left Behind 🙁",
