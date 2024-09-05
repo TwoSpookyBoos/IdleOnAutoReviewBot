@@ -72,7 +72,7 @@ def getMissableGStacks(owned_stuff: Assets):
 
     header_missable = ""
     if still_obtainable > 0:
-        header_missable = f"{', < br > and' if (header_alreadymissed != '' or header_alreadyobtained != '') else ''}can still obtain {still_obtainable}"
+        header_missable = f"{',<br> and ' if (header_alreadymissed != '' or header_alreadyobtained != '') else ''}can still obtain {still_obtainable}"
 
     header_obtainable = (f"You {header_alreadymissed}"
                          f"{',<br>' if header_alreadymissed != '' else ''}{header_alreadyobtained}"
