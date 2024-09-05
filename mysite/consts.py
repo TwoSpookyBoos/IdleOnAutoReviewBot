@@ -2005,14 +2005,28 @@ humanReadableClasses = {
     36: "Bubonic Conjuror",
     37: "Arcane Cultist"
 }
-skillIndexList = ["Combat",
-                  "Mining", "Smithing", "Choppin",
-                  "Fishing", "Alchemy", "Catching",
-                  "Trapping", "Construction", "Worship",
-                  "Cooking", "Breeding", "Lab",
-                  "Sailing", "Divinity", "Gaming",
-                  "Farming", "Sneaking", "Summoning"]
+skillIndexList = [
+    "Combat",
+    "Mining", "Smithing", "Choppin",
+    "Fishing", "Alchemy", "Catching",
+    "Trapping", "Construction", "Worship",
+    "Cooking", "Breeding", "Lab",
+    "Sailing", "Divinity", "Gaming",
+    "Farming", "Sneaking", "Summoning"
+                  ]
 emptySkillList = [0] * 25
+balloonable_skillsList = [
+    "Mining", "Smithing", "Choppin",
+    "Fishing", "Alchemy", "Catching",
+    "Trapping", "Worship",
+    "Cooking",  #"Lab" isn't balloonable, oddly enough. You can pearl it though
+]
+pearlable_skillsList = [
+    "Mining", "Smithing", "Choppin",
+    "Fishing", "Alchemy", "Catching",
+    "Trapping", "Worship",
+    "Cooking", "Lab",
+]
 expectedInventoryBagValuesDict = {
     0:1,
     1:1,
@@ -4368,6 +4382,21 @@ fishingToolkitDict = {
         'Wiener Links', 'Zeus Gon Fishin', 'Needledrop', 'Scripticus Spoons', 'Its a Boy Celebration', 'Its a Girl Celebration', 'Its Alright Celebration'
     ],
 }
+obolsDict = {
+    #Drop Rate
+    "ObolBronzePop":    {"Shape": "Circle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolBronzePop")},
+    "ObolSilverPop":    {"Shape": "Circle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolSilverPop")},
+    "ObolHyper0":       {"Shape": "Circle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolHyper0")},
+    "ObolSilverLuck":   {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolSilverLuck")},
+    "ObolGoldLuck":     {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolGoldLuck")},
+    "ObolKnight":       {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolKnight")},
+    "ObolPlatinumLuck": {"Shape": "Hexagon", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolPlatinumLuck")},
+    "ObolLava":         {"Shape": "Hexagon", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolLava")},
+    "ObolPinkLuck":     {"Shape": "Sparkle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolPinkLuck")},
+}
+ignorable_obols_list = [
+    'Blank', 'LockedInvSpace', 'ObolLocked1', 'ObolLocked2', 'ObolLocked3', 'ObolLocked4',
+]
 
 def getReadableVialNames(inputNumber):
     try:
@@ -4380,7 +4409,6 @@ def getReadableBubbleNames(inputNumber, color):
         return bubblesDict[bubbleCauldronColorList.index(color)][inputNumber]
     except:
         return f"Unknown {color} Bubble {inputNumber}"
-
 
 ###WORLD 3 CONSTS###
 maxDreams = 36  # Last verified as of v2.10
