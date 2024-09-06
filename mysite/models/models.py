@@ -1024,10 +1024,10 @@ def buildMaps() -> dict[int, dict]:
 class Account:
     _key_cards = "Cards0"
 
-    def __init__(self, json_data, run_type="web"):
+    def __init__(self, json_data, sourceString, run_type="web"):
         self.raw_data = safe_loads(json_data)
         self._prep_alerts_AG()
-        self._parse_wave_1(run_type)
+        self._parse_wave_1(run_type, sourceString)
         self._calculate_wave_1()
         self._calculate_wave_2()
 
@@ -1036,9 +1036,9 @@ class Account:
         for i in range(0, currentWorld):
             self.alerts_AdviceDict[f"World {i+1}"] = []
 
-    def _parse_wave_1(self, run_type):
+    def _parse_wave_1(self, run_type, sourceString):
         self._parse_switches()
-        self._parse_characters(run_type)
+        self._parse_characters(run_type, sourceString)
         self._parse_general()
         self._parse_w1()
         self._parse_w2()
@@ -1076,9 +1076,9 @@ class Account:
                         self.sheepie_owned = True
                         g.sheepie = True
 
-    def _parse_characters(self, run_type):
+    def _parse_characters(self, run_type, sourceString):
         playerCount, playerNames, playerClasses, characterDict, perSkillDict = getCharacterDetails(
-            self.raw_data, run_type
+            self.raw_data, run_type, sourceString
         )
         self.names = playerNames
         self.playerCount = playerCount
@@ -1678,7 +1678,7 @@ class Account:
                     self.obols[obolBonusType][obolShape][obol] = {'Count': 1}
                 else:
                     self.obols[obolBonusType][obolShape][obol]['Count'] += 1
-        print(f"session_data.account.obols: {self.obols['Drop Rate']}")
+        #print(f"session_data.account.obols: {self.obols['Drop Rate']}")
 
     def _parse_w3(self):
         self._parse_w3_buildings()

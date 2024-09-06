@@ -39,8 +39,8 @@ class UserDataException(BaseCustomException):
     dirname = "bad_submits"
     msg_base = (
         "Looks like the data you submitted was neither a username nor valid data.<br>"
-        "Check what you submitted - it must be either the first toon name or the "
-        "JSON object provided by either IdleonEfficiency or IdleonToolbox."
+        "Check what you submitted - it must be either your first character name or the "
+        "JSON object provided by IdleonEfficiency, IdleonLeaderboards, or IdleonToolbox."
     )
 
     def __init__(self, msg, data):
@@ -55,7 +55,7 @@ class ProfileNotFound(BaseCustomException):
     dirname = "private_profiles"
     msg_base = (
         "Looks like you haven't made your profile public yet.<br>"
-        "Head on over to IdleonEfficiency and publish your data."
+        "Head on over to IdleonEfficiency or IdleonLeaderboards to publish your data."
     )
 
     def __init__(self, username):
@@ -65,9 +65,9 @@ class ProfileNotFound(BaseCustomException):
 
 
 class EmptyResponse(BaseCustomException):
-    dirname = "IE"
-    msg_base = ("Hmm, something weird is going on with your data over at IdleonEfficiency, no data has been provided "
-                "to us...")
+    dirname = "API"
+    msg_base = ("AutoReview received empty JSONs back when requesting your data, weird."
+                "<br>Please try re-uploading your Public Profile, or submit a JSON instead")
 
     def __init__(self, username):
         super().__init__()
@@ -75,16 +75,19 @@ class EmptyResponse(BaseCustomException):
         self.log_msg = f"Empty response: {self.username}"
 
 
-class IEConnectionFailed(BaseCustomException):
-    dirname = "IE"
-    msg_base = "We're having trouble connecting to IdleonEfficiency to collect data."
+class APIConnectionFailed(BaseCustomException):
+    dirname = "API"
+    msg_base = ("AutoReview didn't get a response from IdleonEfficiency or IdleonLeaderboards to collect data."
+                "<br>Please try back later.")
 
     def __init__(self, exc, trace):
         super().__init__()
-        self.url = exc.request.url
+        try:
+            self.url = exc.request.url
+        except:
+            self.url = "Unknown"
         self.stacktrace = trace
         self.log_msg = f"Error connecting to {self.url}"
-
 
 
 class JSONDecodeError(BaseCustomException):
@@ -92,8 +95,9 @@ class JSONDecodeError(BaseCustomException):
     faq = True
     dirname = "faulty_data"
     msg_base = (
-        "Looks like the data you submitted is corrupted.<br>"
-        "The issue has been reported and will be investigated."
+        "The JSON you submitted could not be Decoded.<br>"
+        "Please verify the data wasn't pasted twice<br>"
+        "or perhaps missing the enclosing curly brackets"
     )
 
     def __init__(self, data):

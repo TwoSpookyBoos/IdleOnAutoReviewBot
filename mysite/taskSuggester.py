@@ -40,10 +40,10 @@ def main(inputData, runType="web"):
         maybe_ban(inputData, runType)
 
     # Step 1: Retrieve data from public IdleonEfficiency website or from file
-    parsedJSON = get_or_parse_json(inputData, runType)
+    parsedJSON, sourceString = get_or_parse_json(inputData, runType)
 
     # Step 2: Make account data available throughout the session
-    session_data.account = Account(parsedJSON)
+    session_data.account = Account(parsedJSON, sourceString)
 
     for name in session_data.account.names:
         maybe_ban(name, runType)
@@ -143,7 +143,7 @@ def main(inputData, runType="web"):
                     group.remove_completed_advices()
                     group.remove_empty_subgroups()
 
-    headerData = HeaderData(inputData)
+    headerData = HeaderData(inputData, sourceString)
     logger.info(f"{headerData.last_update = }")
 
     if runType == "consoleTest":
