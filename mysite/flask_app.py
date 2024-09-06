@@ -16,7 +16,7 @@ from models.custom_exceptions import (
     UsernameBanned,
     ProfileNotFound,
     EmptyResponse,
-    IEConnectionFailed,
+    APIConnectionFailed,
     BaseCustomException,
     JSONDecodeError,
 )
@@ -137,7 +137,7 @@ def results() -> Response | str:
         error = e.msg_display.format(dirname)
         response = error, 500
 
-    except IEConnectionFailed as e:
+    except APIConnectionFailed as e:
         dirname = create_and_populate_log_files(e.stacktrace, headerData, e.log_msg, name_or_data, e)
         error = e.msg_display.format(dirname)
         response = error, 500

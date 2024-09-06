@@ -11,6 +11,7 @@ app.config.update(dict(
     PROJECT_ROOT=Path(os.path.dirname(os.path.abspath(__file__))),
     IE="https://www.idleonefficiency.com",
     IT="https://idleontoolbox.com",
+    LB="https://idleonleaderboards.com",
     TRELLO="https://trello.com/b/CG6GYsTN/idleon-autoreview-development",
     DISCORD="https://discord.gg/ZmEkqzfjmJ",
     CHANNEL_BUG_REPORTS="https://discord.com/channels/1174869900255313952/1174870448975130644",
@@ -32,7 +33,9 @@ app.config.update(dict(
     IE_DATA=f"{app.config['IE']}/raw-data",
     IE_UPLOAD=f"{app.config['IE']}/profile/upload",
     IE_JSON_TEMPLATE="https://cdn2.idleonefficiency.com/profiles/{username}.json",
-    IE_PROFILE_TEMPLATE="{username}.idleonefficiency.com"
+    IE_PROFILE_TEMPLATE="{username}.idleonefficiency.com",
+    LB_JSON_TEMPLATE="https://idleonleaderboards.com/profiles/{username}.json",
+    LB_PROFILE_TEMPLATE="https://idleonleaderboards.com/profiles/{username}.json",
 ))
 
 if not Path(app.config["LOGS"]).exists():

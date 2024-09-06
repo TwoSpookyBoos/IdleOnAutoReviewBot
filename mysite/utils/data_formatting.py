@@ -10,7 +10,7 @@ from babel.dates import format_datetime
 from flask import request, g as session_data
 
 from consts import humanReadableClasses, skillIndexList, emptySkillList
-from models.custom_exceptions import ProfileNotFound, EmptyResponse, IEConnectionFailed
+from models.custom_exceptions import ProfileNotFound, EmptyResponse, APIConnectionFailed
 
 from .logging import get_logger
 from config import app
@@ -23,7 +23,7 @@ class HeaderData:
     JSON = "JSON"
     PUBLIC = "Public Profile"
 
-    def __init__(self, input_data):
+    def __init__(self, input_data, sourceString):
         self.ie_link = ""
         self.link_text = ""
         self.first_name = ""
@@ -33,7 +33,7 @@ class HeaderData:
             username = input_data
 
             self.data_source = self.PUBLIC
-            self.link_text = app.config["IE_PROFILE_TEMPLATE"].format(username=username)
+            self.link_text = app.config[f"{sourceString}_PROFILE_TEMPLATE"].format(username=username)
             self.ie_link = f"https://{self.link_text}"
             self.first_name = session_data.account.names[0]
         else:
@@ -67,27 +67,53 @@ class HeaderData:
 
 
 def getJSONfromAPI(runType, username="scoli"):
-    if runType == "web":
-        logger.info("~~~~~~~~~~~~~~~ Getting JSON from API ~~~~~~~~~~~~~~~")
+    api_data = {
+        "IE": {"Data": {}, "LastUpdated": 0, "Summary": "", "Exception": "", "Traceback": ""},
+        "LB": {"Data": {}, "LastUpdated": 0, "Summary": "", "Exception": "", "Traceback": ""},
+    }
+    for apiName in api_data.keys():
+        try:
+            url = app.config[f"{apiName}_JSON_TEMPLATE"].format(username=username)
+            if runType == "web":
+                logger.info(f"~~~ Getting JSON from {apiName} API: {url} ~~~")
+            headers = {"Content-Type": "text/json", "method": "GET"}
+            response = requests.get(url, headers=headers)
 
-    try:
-        url = app.config["IE_JSON_TEMPLATE"].format(username=username)
-        headers = {"Content-Type": "text/json", "method": "GET"}
-        response = requests.get(url, headers=headers)
+            if response.status_code == 403 or response.status_code == 404:
+                logger.warning(f"Error retrieving data from {apiName}: {response.status_code} code returned")
+                api_data[apiName]["Summary"] = "ProfileNotFound"
+                continue
+                #raise ProfileNotFound(username)
 
-        if response.status_code == 403:
-            raise ProfileNotFound(username)
+            api_data[apiName]["Data"] = response.json()
+            api_data[apiName]["LastUpdated"] = safe_loads(safe_loads(safe_loads(api_data[apiName]["Data"]).get("TimeAway", {})).get("GlobalTime", 0))
+            logger.info(f"Last updated time epoch = {api_data[apiName]['LastUpdated']}")
 
-        account_data = response.json()
+            if not api_data[apiName]["Data"]:
+                api_data[apiName]["Summary"] = "EmptyResponse"
+                logger.warning(f"Error retrieving data from {apiName}: Empty Response received")
+                continue
+                #raise EmptyResponse(username)
 
-        if not account_data:
-            raise EmptyResponse(username)
+        except requests.exceptions.RequestException as e:
+            logger.warning(f"Error retrieving data from {apiName}: {e}")
+            api_data[apiName]["Exception"] = e
+            api_data[apiName]["Traceback"] = traceback.format_exc()
 
-        return account_data
-
-    except requests.exceptions.RequestException as e:
-        logger.exception(f"Error retrieving data from IE for %s", e.request.url, exc_info=e)
-        raise IEConnectionFailed(e, traceback.format_exc())
+    freshest = ("", 0)
+    for apiName, apiDict in api_data.items():
+        #If IE and LB are tied for freshness, take LB
+        if apiDict["LastUpdated"] >= freshest[1]:
+            freshest = (apiName, apiDict["LastUpdated"])
+    if freshest[1] == 0:
+        logger.exception(f"Data not found from any APIs. Raising ProfileNotFound exception.")
+        raise ProfileNotFound(username)
+    if freshest[0] != "":
+        logger.info(f"Source data to be used: {freshest[0]}")
+        return api_data[freshest[0]]["Data"], freshest[0]
+    else:
+        raise APIConnectionFailed(api_data["IE"]["Exception"], api_data["IE"]["Traceback"])
+        #raise APIConnectionFailed(api_data["LB"]["Exception"], api_data["LB"]["Traceback"])
 
 
 def getJSONfromText(runType, rawJSON):
@@ -99,7 +125,7 @@ def getJSONfromText(runType, rawJSON):
     if from_toolbox(parsed):  # Check to see if this is Toolbox JSON
         parsed = load_toolbox_data(parsed)
 
-    return parsed
+    return parsed, "JSON"
 
 
 def load_toolbox_data(rawJSON):
@@ -173,7 +199,7 @@ def getEliteClass(inputClass):
             return f"UnknownEliteClass-{inputClass}"
 
 
-def getCharacterDetails(inputJSON, runType):
+def getCharacterDetails(inputJSON, runType, sourceString=""):
     playerCount = 0
     playerNames = []
     playerClasses = []
@@ -188,7 +214,7 @@ def getCharacterDetails(inputJSON, runType):
         playerCount = len(playerNames)
         if runType == "web":
             logger.info(
-                "From Public IE, found %s characters: %s",
+                f"From Public {sourceString} profile, found %s characters: %s",
                 playerCount,
                 ", ".join(playerNames),
             )
@@ -214,7 +240,7 @@ def getCharacterDetails(inputJSON, runType):
                     playerNames.append(item[7:])
             if runType == "web":
                 logger.info(
-                    f"From IE JSON or Toolbox Raw Game JSON, found {playerCount} unsorted characters: %s",
+                    f"From JSON, found {playerCount} unsorted characters: %s",
                     ", ".join(playerNames),
                 )
         except:
