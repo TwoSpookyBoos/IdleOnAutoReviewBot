@@ -284,7 +284,7 @@ class Character:
                 "Impossible": [],
                 "Total": 0,
             }
-            for name in ("ZOW", "CHOW", "MEOW")
+            for name in apocNamesList
         }
         self.equipment = Equipment(raw_data, character_index, self.combat_level >= 1)
         self.printed_materials = {}
@@ -953,6 +953,9 @@ class EnemyMap:
             return self.chow_rating
         elif ratingType == 'MEOW':
             return self.meow_rating
+        else:
+            return 'Insane'
+
 
     def updateZOWDict(self, characterIndex: int, KLAValue: float):
         if characterIndex not in self.zow_dict:
@@ -1678,7 +1681,7 @@ class Account:
                     self.obols[obolBonusType][obolShape][obol] = {'Count': 1}
                 else:
                     self.obols[obolBonusType][obolShape][obol]['Count'] += 1
-        print(f"session_data.account.obols: {self.obols['Drop Rate']}")
+        #print(f"session_data.account.obols: {self.obols['Drop Rate']}")
 
     def _parse_w3(self):
         self._parse_w3_buildings()
@@ -1795,16 +1798,18 @@ class Account:
                     if barbCharacterIndex in self.enemy_maps[worldIndex][enemy_map].zow_dict:
                         # print("DN~ INFO barbCharacterIndex", barbCharacterIndex, "found in worldIndex", worldIndex, "enemy_map", enemy_map)
                         kill_count = self.enemy_maps[worldIndex][enemy_map].zow_dict[barbCharacterIndex]
-                        for apocIndex in range(0, len(apocAmountsList)):
-                            if kill_count < apocAmountsList[apocIndex]:
+                        for apocIndex, apocAmount in enumerate(apocAmountsList):
+                            if kill_count < apocAmount:
                                 # characterDict[barbCharacterIndex].apoc_dict[apocNamesList[apocIndex]][enemyMaps[worldIndex][enemy_map].zow_rating].append([
                                 self.all_characters[barbCharacterIndex].addUnmetApoc(
-                                    apocNamesList[apocIndex], self.enemy_maps[worldIndex][enemy_map].getRating(apocNamesList[apocIndex]),
+                                    apocNamesList[apocIndex],
+                                    self.enemy_maps[worldIndex][enemy_map].getRating(apocNamesList[apocIndex]),
                                     [
                                         self.enemy_maps[worldIndex][enemy_map].map_name,  # map name
-                                        apocAmountsList[apocIndex] - kill_count,  # kills short of zow/chow/meow
-                                        floor((kill_count / apocAmountsList[apocIndex]) * 100),  # percent toward zow/chow/meow
-                                        self.enemy_maps[worldIndex][enemy_map].monster_image  # monster image
+                                        apocAmount - kill_count if apocIndex < 3 else kill_count,  # kills short of zow/chow/meow
+                                        floor((kill_count / apocAmount) * 100),  # percent toward zow/chow/meow
+                                        self.enemy_maps[worldIndex][enemy_map].monster_image,  # monster image
+                                        worldIndex
                                     ]
                                 )
                             else:
@@ -1812,14 +1817,15 @@ class Account:
                     else:
                         # This condition can be hit when reviewing data from before a World release
                         # For example, JSON data from w5 before w6 is released hits this to populate 0% toward W6 kills
-                        for apocIndex in range(0, len(apocAmountsList)):
+                        for apocIndex, apocAmount in enumerate(apocAmountsList):
                             self.all_characters[barbCharacterIndex].addUnmetApoc(
                                 apocNamesList[apocIndex], self.enemy_maps[worldIndex][enemy_map].getRating(apocNamesList[apocIndex]),
                                 [
                                     self.enemy_maps[worldIndex][enemy_map].map_name,  # map name
                                     apocAmountsList[apocIndex],  # kills short of zow/chow/meow
                                     0,  # percent toward zow/chow/meow
-                                    self.enemy_maps[worldIndex][enemy_map].monster_image  # monster image
+                                    self.enemy_maps[worldIndex][enemy_map].monster_image,  # monster image
+                                    worldIndex
                                 ]
                             )
             # Sort them
