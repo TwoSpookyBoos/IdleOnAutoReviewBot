@@ -2679,6 +2679,8 @@ class Account:
     def _calculate_general(self):
         self._calculate_general_alerts()
         self._calculate_general_item_filter()
+        self.highestWorldReached = self._calculate_general_highest_world_reached()
+        #print(f"session_data.account.highestWorldReached = {self.highestWorldReached}")
 
     def _calculate_general_alerts(self):
         if self.assets.get("Trophy2").amount >= 75 and self.equinox_dreams[17]:
@@ -2727,6 +2729,36 @@ class Account:
                         label=f"{filtered_displayName} filtered, not in Fishing Toolkit",
                         picture_class=filtered_displayName,
                     ))
+
+    def _calculate_general_highest_world_reached(self):
+        if (
+            self.raw_optlacc_dict.get(194, 0) > 0
+            or self.achievements['Valley Visitor']
+            or self.enemy_worlds[6].maps_dict[251].kill_count > 0
+        ):
+            return 6
+        elif (
+            self.achievements['The Plateauourist']
+            or self.enemy_worlds[5].maps_dict[201].kill_count > 0
+        ):
+            return 5
+        elif (
+            self.achievements['Milky Wayfarer']
+            or self.enemy_worlds[4].maps_dict[151].kill_count > 0
+        ):
+            return 4
+        elif (
+            self.achievements['Snowy Wonderland']
+            or self.enemy_worlds[3].maps_dict[101].kill_count > 0
+        ):
+            return 3
+        elif (
+            self.achievements['Down by the Desert']
+            or self.enemy_worlds[2].maps_dict[51].kill_count > 0
+        ):
+            return 2
+        else:
+            return 1
 
     def _calculate_w1(self):
         self._calculate_w1_starsigns()

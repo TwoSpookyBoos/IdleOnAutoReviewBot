@@ -4589,6 +4589,8 @@ apocableMapIndexDict = {
     5: [201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213],
     6: [251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264]
 }
+dnBasicMapsCount = sum([len(v) for k, v in apocableMapIndexDict.items() if k > 0])
+dnAllApocMapsCount = dnBasicMapsCount + len(apocableMapIndexDict[0])
 apocAmountsList = [100000, 1000000, 100000000, 1000000000, 1000000000000]
 apocNamesList = ["ZOW", "CHOW", "MEOW", "1B","64bitOverflow"]
 apocDifficultyNameList = [
