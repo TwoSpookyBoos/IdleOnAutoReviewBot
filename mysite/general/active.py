@@ -471,7 +471,9 @@ def getConsumablesAdviceList() -> list[Advice]:
         #     ))
     if 0 < session_data.account.alchemy_vials['Dabar Special (Godshard Bar)']['Level'] < max_VialLevel:
         consumables.append(Advice(
-            label=f"2 minute Archer AFK claims (or candy) to smelt Metal bars",
+            label=f"2 minute Archer AFK claims (or candy) to smelt Metal bars"
+                  f"<br>{{{{ Smithing|#smithing }}}} has Forge Ore Capacity sources"
+                  f"<br>Ideally, you want 150k+ capacity before going too hard",
             picture_class='smeltin-erryday',
             resource='time-candy-1-hr'
         ))
