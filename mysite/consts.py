@@ -5891,7 +5891,7 @@ sneakingGemstonesStatList: list[str] = [
 ]
 sneakingGemstonesFirstIndex = 233
 sneakingGemstonesCount = len(sneakingGemstonesList)
-sneakingGemstonesMaxValueDict = {"Aquamarine": 10000, "Emerald": 5000, "Garnet": 2500, "Starite": 200, "Topaz": 1000, "Moissanite": 300}
+sneakingGemstonesMaxValueDict = {"Aquamarine": 10040, "Emerald": 5015, "Garnet": 2512, "Starite": 205, "Topaz": 1010, "Moissanite": 303}
 maxFarmingCrops = 160  # Last verified as of 2.11 Land Rank update
 landrankDict = {
     0: {'Name': 'Evolution Boost', 'UnlockLevel': 1, 'Value': 250},
