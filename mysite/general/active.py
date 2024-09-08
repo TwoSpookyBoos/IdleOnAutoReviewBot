@@ -469,6 +469,14 @@ def getConsumablesAdviceList() -> list[Advice]:
         #         progression=notateNumber("Match", session_data.account.assets.get('FoodG13').amount, 2, "K"),
         #         goal="100K"
         #     ))
+    if session_data.account.stamps['Mason Jar Stamp']['Level'] < stamp_maxes['Mason Jar Stamp']:
+        consumables.append(Advice(
+            label=f"Candy Glass Shards for Mason Jar Stamp",
+            picture_class='mason-jar-stamp',
+            progression=session_data.account.stamps['Mason Jar Stamp']['Level'],
+            goal=stamp_maxes['Mason Jar Stamp'],
+            resource='time-candy-1-hr'
+        ))
     if 0 < session_data.account.alchemy_vials['Dabar Special (Godshard Bar)']['Level'] < max_VialLevel:
         consumables.append(Advice(
             label=f"2 minute Archer AFK claims (or candy) to smelt Metal bars"
