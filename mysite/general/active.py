@@ -1,5 +1,6 @@
 from models.models import Advice, AdviceGroup, AdviceSection, EnemyWorld, EnemyMap
-from consts import maxTiersPerGroup, lavaFunc, stamp_maxes, pearlable_skillsList, max_VialLevel
+from consts import maxTiersPerGroup, lavaFunc, stamp_maxes, pearlable_skillsList, max_VialLevel, currentWorld, dnSkullValueList, cookingCloseEnough, \
+    dnBasicMapsCount
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
@@ -194,11 +195,16 @@ def getCardsAdviceList() -> list[Advice]:
         "Shrine Value": ["Chaotic Chizoar"],
         "Crystal Spawn Chance": ["Demon Genie", "Poop"],
         "Drop Chance": ["Emperor", "Minichief Spirit", "King Doot", "Mister Brightside", "Crystal Carrot", "Bop Box"],
+        "Skill AFK": ["Amarok", "Mama Troll", "Bunny"],
+        "Combat Gains": ["Chaotic Amarok", "Boop", "Woodlin Spirit", "Suggma", "Clammie", "Demented Spiritlord", "Moonmoon", "Fly"],
+        "Solid Passives": ["Godshard Ore", "Crystal Candalight", "Crystal Capybara", "Samurai Guardian", "Royal Egg", "Domeo Magmus"],
+        "Stat% Filler": ["River Spirit", "Blighted Chizoar", "Tremor Wurm", "Stilted Seeker"],
     }
-    card_advice_limit = 4
+    card_advice_limit = 8
 
     for reason, cardnameList in all_cards.items():
         for card in cardnameList:
+            #logger.debug(f"Looking up card: {card}")
             if (1 + next(c.getStars() for c in session_data.account.cards if c.name == card)) < card_level_goal and len(cards) < card_advice_limit:
                 cards.append(Advice(
                     label=f"Farm {card} cards for {reason}",
@@ -332,12 +338,18 @@ def getConsumablesAdviceList() -> list[Advice]:
     consumables = []
 
     #If 30+ Colo tickets owned
+    total_colo_tickets = session_data.account.assets.get('TixCol').amount + session_data.account.raw_data.get("CYColosseumTickets", 0)
+    if total_colo_tickets > 300 and session_data.account.highestWorldReached >= 6:
+        consumables.append(Advice(
+            label=f"{total_colo_tickets} Colo Tickets available",
+            picture_class='colosseum-ticket',
+        ))
 
     if (
             session_data.account.assets.get('Quest35').amount
             + session_data.account.assets.get('Quest36').amount
             + session_data.account.assets.get('Quest37').amount
-    ) > 0:
+    ) > 300:
         biggies = f"<br>{session_data.account.assets.get('Quest35').amount} Biggie Hours available" if session_data.account.assets.get(
             'Quest35').amount > 0 else ''
         doot_total = session_data.account.assets.get('Quest36').amount + session_data.account.assets.get('Quest37').amount
@@ -351,46 +363,121 @@ def getConsumablesAdviceList() -> list[Advice]:
             resource='dootjat-eye'
         ))
 
-    if session_data.account.alchemy_vials['Dabar Special (Godshard Bar)']['Level'] < max_VialLevel:
+    #Pearls and Balloons
+    if session_data.account.highestWorldReached >= 4:
+        # Black Pearls
+        if session_data.account.assets.get('Pearl4').amount > 0:
+            black_pearlable_skills = [skillName for skillName in pearlable_skillsList if min(session_data.account.all_skills.get(skillName, [0])) < 30]
+            if black_pearlable_skills:
+                consumables.append(Advice(
+                    label=f"Spend Black Pearls on Skills under level 30:"
+                          f"<br>{', '.join(skillName for skillName in black_pearlable_skills)}",
+                    picture_class='black-pearl' if len(black_pearlable_skills) > 1 else black_pearlable_skills[0],
+                    resource='black-pearl'
+                ))
+        # Red Pearls
+        if session_data.account.assets.get('Pearl6').amount > 0:
+            red_pearlable_skills = [skillName for skillName in pearlable_skillsList if min(session_data.account.all_skills.get(skillName, [0])) < 50]
+            if red_pearlable_skills:
+                consumables.append(Advice(
+                    label=f"Spend Divinity Pearls on Skills under level 50:"
+                          f"<br>{', '.join(skillName for skillName in red_pearlable_skills)}",
+                    picture_class='divinity-pearl' if len(red_pearlable_skills) > 1 else red_pearlable_skills[0],
+                    resource='divinity-pearl'
+                ))
+        # Balloons
+        if (
+                session_data.account.assets.get('ExpBalloon1').amount
+                + session_data.account.assets.get('ExpBalloon2').amount
+                + session_data.account.assets.get('ExpBalloon3').amount
+        ) > 0:
+            balloonable_skills = [skillName for skillName in pearlable_skillsList if sum(session_data.account.all_skills.get(skillName, [0])) < 750]
+            if balloonable_skills:
+                consumables.append(Advice(
+                    label=f"Spend Experience Balloons on Skills under 750 Skill Mastery for Printer Output:"
+                          f"<br>{', '.join(skillName for skillName in balloonable_skills)}",
+                    picture_class='small-experience-balloon' if len(balloonable_skills) > 1 else balloonable_skills[0],
+                    resource='small-experience-balloon'
+                ))
+
+    # Candy options
+    if session_data.account.highestWorldReached >= 2:
+        if not session_data.account.maestros and session_data.account.jmans:
+            consumables.append(Advice(
+                label=f"Level any remaining skills for {{{{ Maestro|#secret-class-path }}}} quest"
+                      f"Pearls, Balloons, and Candies are all valid here!",
+                picture_class='maestro-class',
+                resource='time-candy-1-hr'
+            ))
+    if session_data.account.highestWorldReached >= 4:
+        for character in session_data.account.all_characters:
+            if character.elite_class == "None" and character.sub_class != "Maestro":
+                consumables.append(Advice(
+                    label=f"Candy {character.character_name} through W4 maps to obtain their Elite Class",
+                    picture_class=character.class_name_icon,
+                    resource='time-candy-4-hr'
+                ))
+        if not session_data.account.vmans:
+            consumables.append(Advice(
+                label=f"Candy any remaining kills for {{{{ Voidwalker|#secret-class-path }}}} quest",
+                picture_class='voidwalker-class',
+                resource='time-candy-1-hr'
+            ))
+    if session_data.account.highestWorldReached >= 6:
+        for worldIndex in range(1, currentWorld):
+            if session_data.account.enemy_worlds[worldIndex].lowest_skull_value < dnSkullValueList[-1]:
+                consumables.append(Advice(
+                    label=f"Candy World {worldIndex} kills for {{{{ Death Note|#death-note }}}}",
+                    picture_class='death-note',
+                    resource='time-candy-24-hr'
+                ))
+        if session_data.account.cooking['MaxRemainingMeals'] > cookingCloseEnough and session_data.account.meowBBIndex is not None:
+            if session_data.account.all_characters[session_data.account.meowBBIndex].apoc_dict['MEOW']['Total'] < dnBasicMapsCount:
+                consumables.append(Advice(
+                    label=f"Candy Super CHOW stacks with {session_data.account.all_characters[session_data.account.meowBBIndex].character_name}",
+                    picture_class='death-note',
+                    resource='time-candy-24-hr'
+                ))
+        if (
+            session_data.account.sneaking['JadeEmporium']["Gold Food Beanstalk"]['Obtained']
+                and not session_data.account.sneaking['Beanstalk']['FoodG13']['Beanstacked']
+        ):
+            consumables.append(Advice(
+                label=f"Candy materials to Beanstack Golden Cakes in {{{{ The Beanstalk|#beanstalk }}}}",
+                picture_class='golden-cake',
+                resource='time-candy-24-hr',
+                progression=notateNumber("Match", session_data.account.assets.get('FoodG13').amount, 2, "K"),
+                goal="10K"
+            ))
+        elif (
+            session_data.account.sneaking['JadeEmporium']["Supersized Gold Beanstacking"]['Obtained']
+            and not session_data.account.sneaking['Beanstalk']['FoodG13']['SuperBeanstacked']
+        ):
+            consumables.append(Advice(
+                label=f"Candy materials to Super Beanstack Golden Cakes in {{{{ The Beanstalk|#beanstalk }}}}",
+                picture_class='golden-cake',
+                resource='time-candy-24-hr',
+                progression=notateNumber("Match", session_data.account.assets.get('FoodG13').amount, 2, "K"),
+                goal="100K"
+            ))
+        # Assets doesn't currently include Worn items, which would make this inaccurate. Commenting out for now.
+        # elif session_data.account.assets.get('FoodG13').amount < 100e3:
+        #     consumables.append(Advice(
+        #         label=f"Get another 100k Golden Cakes to wear while farming",
+        #         picture_class='golden-cake',
+        #         resource='time-candy-24-hr',
+        #         progression=notateNumber("Match", session_data.account.assets.get('FoodG13').amount, 2, "K"),
+        #         goal="100K"
+        #     ))
+    if 0 < session_data.account.alchemy_vials['Dabar Special (Godshard Bar)']['Level'] < max_VialLevel:
         consumables.append(Advice(
-            label=f"2 minute Archer claims (or candy) for Godshard bars",
+            label=f"2 minute Archer AFK claims (or candy) to smelt Metal bars"
+                  f"<br>{{{{ Smithing|#smithing }}}} has Forge Ore Capacity sources"
+                  f"<br>Ideally, you want 150k+ capacity before going too hard",
             picture_class='smeltin-erryday',
             resource='time-candy-1-hr'
         ))
-    # Black Pearls
-    if session_data.account.assets.get('Pearl4').amount > 0:
-        black_pearlable_skills = [skillName for skillName in pearlable_skillsList if min(session_data.account.all_skills.get(skillName, [0])) < 30]
-        if black_pearlable_skills:
-            consumables.append(Advice(
-                label=f"Spend Black Pearls on Skills under level 30:"
-                      f"<br>{', '.join(skillName for skillName in black_pearlable_skills)}",
-                picture_class='black-pearl' if len(black_pearlable_skills) > 1 else black_pearlable_skills[0],
-                resource='black-pearl'
-            ))
-    # Red Pearls
-    if session_data.account.assets.get('Pearl6').amount > 0:
-        red_pearlable_skills = [skillName for skillName in pearlable_skillsList if min(session_data.account.all_skills.get(skillName, [0])) < 50]
-        if red_pearlable_skills:
-            consumables.append(Advice(
-                label=f"Spend Divinity Pearls on Skills under level 50:"
-                      f"<br>{', '.join(skillName for skillName in red_pearlable_skills)}",
-                picture_class='divinity-pearl' if len(red_pearlable_skills) > 1 else red_pearlable_skills[0],
-                resource='divinity-pearl'
-            ))
-    # Balloons
-    if (
-            session_data.account.assets.get('ExpBalloon1').amount
-            + session_data.account.assets.get('ExpBalloon2').amount
-            + session_data.account.assets.get('ExpBalloon3').amount
-    ) > 0:
-        balloonable_skills = [skillName for skillName in pearlable_skillsList if sum(session_data.account.all_skills.get(skillName, [0])) < 750]
-        if balloonable_skills:
-            consumables.append(Advice(
-                label=f"Spend Experience Balloons on Skills under 750 Skill Mastery for Printer Output:"
-                      f"<br>{', '.join(skillName for skillName in balloonable_skills)}",
-                picture_class='small-experience-balloon' if len(balloonable_skills) > 1 else balloonable_skills[0],
-                resource='small-experience-balloon'
-            ))
+
     return consumables
 
 def getActiveGoalsAdviceGroup() -> AdviceGroup:

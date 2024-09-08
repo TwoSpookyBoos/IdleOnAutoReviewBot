@@ -1,4 +1,4 @@
-from consts import deathNote_progressionTiers, cookingCloseEnough, break_you_best, apocDifficultyNameList, currentWorld
+from consts import deathNote_progressionTiers, cookingCloseEnough, break_you_best, apocDifficultyNameList, currentWorld, apocNamesList
 from flask import g as session_data
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
@@ -6,6 +6,66 @@ from utils.logging import get_logger
 
 
 logger = get_logger(__name__)
+
+def getAllKillsDisplayAdviceGroup():
+    advices = {}
+    ags = []
+    apocName = apocNamesList[-1]
+    difficultyName = apocDifficultyNameList[-2]
+    for characterIndex in session_data.account.apocCharactersIndexList:
+        toon = session_data.account.all_characters[characterIndex]
+        advices[toon.character_name] = []
+        for enemy in toon.apoc_dict[apocName][difficultyName]:
+            advices[toon.character_name].append(
+                Advice(
+                    label=enemy[0],
+                    picture_class=enemy[3],
+                    goal=f"{enemy[1]:,}"),
+            )
+    for toon_name, toon_advice_list in advices.items():
+        ags.append(AdviceGroup(
+            tier="",
+            pre_string=f"Info- All kills for {toon_name} without a filter. Have fun!",
+            advices=toon_advice_list
+        ))
+    return ags
+
+def getAllKillsDisplaySubgroupedByWorldAdviceGroup():
+    advices = {}
+    ags = []
+    apocName = apocNamesList[-1]
+    difficultyName = apocDifficultyNameList[-2]
+    #logger.debug(f"apocCharactersIndexList: {session_data.account.apocCharactersIndexList}")
+    for characterIndex in session_data.account.apocCharactersIndexList:
+        toon = session_data.account.all_characters[characterIndex]
+        #logger.debug(f"Generating AdviceGroup for: {toon.character_name}")
+        advices[toon.character_name] = {
+            "Scattered Extras": [],
+            "World 1": [],
+            "World 2": [],
+            "World 3": [],
+            "World 4": [],
+            "World 5": [],
+            "World 6": [],
+            #"World 7": [],
+            #"World 8": [],
+        }
+        for enemy in toon.apoc_dict[apocName][difficultyName]:
+            subgroupName = f"World {enemy[4]}" if enemy[4] != 0 else f"Scattered Extras"
+            advices[toon.character_name][subgroupName].append(
+                Advice(
+                    label=enemy[0],
+                    picture_class=enemy[3],
+                    goal=f"{enemy[1]:,}"),
+            )
+    for toon_name, toon_advice_list in advices.items():
+        ags.append(AdviceGroup(
+            tier="",
+            pre_string=f"Informational- All kills for {toon_name} without a filter. Have fun",
+            advices=toon_advice_list
+        ))
+    return ags
+
 
 def setConsDeathNoteProgressionTier():
     deathnote_AdviceDict = {
@@ -258,6 +318,11 @@ def setConsDeathNoteProgressionTier():
             pre_string=f"Super CHOW Progress unavailable until a Blood Berserker is found in your account",
             advices=deathnote_AdviceDict['MEOW'],
         )
+
+    if meowBBIndex is not None:
+        all_kills_ags = getAllKillsDisplaySubgroupedByWorldAdviceGroup()
+        for ag in all_kills_ags:
+            deathnote_AdviceGroupDict[ag.pre_string] = ag
 
     #Generate Advice Section
     if len(bbCharactersIndexList) > 1:

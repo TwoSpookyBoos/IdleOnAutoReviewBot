@@ -3564,8 +3564,8 @@ stamp_maxes = {
     #Combat
     #Skill
     "Mason Jar Stamp": 160,
-    "Lil' Mining Baggy Stamp": 300,
-    "Choppin' Bag Stamp": 320,
+    "Lil' Mining Baggy Stamp": 310,
+    "Choppin' Bag Stamp": 330,
     "Matty Bag Stamp": 410,  #420 is possible but exploity
     "Bag o Heads Stamp": 224,
     "Bugsack Stamp": 224,
@@ -4390,6 +4390,7 @@ obolsDict = {
     "ObolSilverLuck":   {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolSilverLuck")},
     "ObolGoldLuck":     {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolGoldLuck")},
     "ObolKnight":       {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolKnight")},
+    "ObolHyperB0":       {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolHyper0")},
     "ObolPlatinumLuck": {"Shape": "Hexagon", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolPlatinumLuck")},
     "ObolLava":         {"Shape": "Hexagon", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolLava")},
     "ObolPinkLuck":     {"Shape": "Sparkle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolPinkLuck")},
@@ -4588,10 +4589,15 @@ apocableMapIndexDict = {
     5: [201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213],
     6: [251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264]
 }
-apocAmountsList = [100000, 1000000, 100000000]
-apocNamesList = ["ZOW", "CHOW", "MEOW"]
-apocDifficultyNameList = ['Basic W1 Enemies', 'Basic W2 Enemies', 'Basic W3 Enemies', 'Basic W4 Enemies', 'Basic W5 Enemies', 'Basic W6 Enemies',
-                              'Easy Extras', 'Medium Extras', 'Difficult Extras', 'Insane', 'Impossible']
+dnBasicMapsCount = sum([len(v) for k, v in apocableMapIndexDict.items() if k > 0])
+dnAllApocMapsCount = dnBasicMapsCount + len(apocableMapIndexDict[0])
+apocAmountsList = [100000, 1000000, 100000000, 1000000000, 1000000000000]
+apocNamesList = ["ZOW", "CHOW", "MEOW", "1B","64bitOverflow"]
+apocDifficultyNameList = [
+    'Basic W1 Enemies', 'Basic W2 Enemies', 'Basic W3 Enemies', 'Basic W4 Enemies', 'Basic W5 Enemies', 'Basic W6 Enemies',
+    'Easy Extras', 'Medium Extras', 'Difficult Extras', 'Insane', 'Impossible'
+]
+
 def getSkullNames(mkValue: int) -> str:
     try:
         return dnSkullValueToNameDict.get(mkValue, f"UnknownSkull{mkValue}")
@@ -5885,7 +5891,7 @@ sneakingGemstonesStatList: list[str] = [
 ]
 sneakingGemstonesFirstIndex = 233
 sneakingGemstonesCount = len(sneakingGemstonesList)
-sneakingGemstonesMaxValueDict = {"Aquamarine": 10000, "Emerald": 5000, "Garnet": 2500, "Starite": 200, "Topaz": 1000, "Moissanite": 300}
+sneakingGemstonesMaxValueDict = {"Aquamarine": 10040, "Emerald": 5015, "Garnet": 2512, "Starite": 205, "Topaz": 1010, "Moissanite": 303}
 maxFarmingCrops = 160  # Last verified as of 2.11 Land Rank update
 landrankDict = {
     0: {'Name': 'Evolution Boost', 'UnlockLevel': 1, 'Value': 250},
