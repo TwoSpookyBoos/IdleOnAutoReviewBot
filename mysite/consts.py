@@ -3564,8 +3564,8 @@ stamp_maxes = {
     #Combat
     #Skill
     "Mason Jar Stamp": 160,
-    "Lil' Mining Baggy Stamp": 300,
-    "Choppin' Bag Stamp": 320,
+    "Lil' Mining Baggy Stamp": 310,
+    "Choppin' Bag Stamp": 330,
     "Matty Bag Stamp": 410,  #420 is possible but exploity
     "Bag o Heads Stamp": 224,
     "Bugsack Stamp": 224,
