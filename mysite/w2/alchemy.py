@@ -485,10 +485,11 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
 
     player_sigil_stamp_value = session_data.account.stamps.get('Sigil Stamp', {}).get('Value', 0)
     goal_sigil_stamp_value = lavaFunc('decay', stamp_maxes['Sigil Stamp'], 40, 150) * 2 * 1.25
-    if session_data.account.labBonuses['Certified Stamp Book']['Enabled']:
-        player_sigil_stamp_value *= 2
-    if session_data.account.sneaking["PristineCharms"]["Liqorice Rolle"]:
-        player_sigil_stamp_value *= 1.25
+    # The Sigil Stamp is a MISC stamp, thus isn't multiplied by the Lab bonus or Pristine Charm
+    # if session_data.account.labBonuses['Certified Stamp Book']['Enabled']:
+    #     player_sigil_stamp_value *= 2
+    # if session_data.account.sneaking["PristineCharms"]["Liqorice Rolle"]:
+    #     player_sigil_stamp_value *= 1.25
 
     mga = 1 + (
         (
@@ -608,20 +609,6 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
         progression=session_data.account.stamps['Sigil Stamp']['Level'],
         goal=stamp_maxes['Sigil Stamp'],
         resource=session_data.account.stamps['Sigil Stamp']['Material'],
-    ))
-    speed_Advice[mga_label].append(Advice(
-        label=f"Lab Bonus: Certified Stamp Book: "
-              f"{'2/2x<br>(Already applied to Stamp above)' if session_data.account.labBonuses.get('Certified Stamp Book', {}).get('Enabled', False) else '1/2x'}",
-        picture_class="certified-stamp-book",
-        progression=int(session_data.account.labBonuses.get("Certified Stamp Book", {}).get("Enabled", False)),
-        goal=1
-    ))
-    speed_Advice[mga_label].append(Advice(
-        label=f"{{{{ Pristine Charm|#sneaking }}}}: Liqorice Rolle: "
-              f"{'1.25/1.25x<br>(Already applied to Stamp above)' if session_data.account.sneaking.get('PristineCharms', {}).get('Liqorice Rolle', False) else '1/1.25x'}",
-        picture_class="liqorice-rolle",
-        progression=int(session_data.account.sneaking.get("PristineCharms", {}).get("Liqorice Rolle", False)),
-        goal=1
     ))
 
     # Multi Group B

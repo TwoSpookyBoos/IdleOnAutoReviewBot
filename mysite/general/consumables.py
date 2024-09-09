@@ -200,7 +200,7 @@ class Bag(StorageItemMixin, IntEnum):
 
 
 def getCandyHourSections():
-    bank: Assets = session_data.account.assets
+    bank: Assets = session_data.account.stored_assets
 
     # Standard Time Candies: 1hr - 72hr
     normal_candy = (bank.get(f"Timecandy{i}").amount for i in range(1, 7))

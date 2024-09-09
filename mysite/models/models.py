@@ -162,6 +162,7 @@ class Character:
         po_boxes: list[int],
         equipped_lab_chips: list[str],
         inventory_bags: dict,
+        kill_dict: dict,
     ):
 
         self.character_index: int = character_index
@@ -182,6 +183,8 @@ class Character:
         self.specialized_skills: list[str] = getSpecializedSkills(self.base_class, self.sub_class, self.elite_class)
         self.expected_talents: list[int] = getExpectedTalents(self.base_class, self.sub_class, self.elite_class)
         self.inventory_bags: dict = inventory_bags
+        self.kill_dict: dict = kill_dict
+        self.fixKillDict()
         self.crystal_spawn_chance: float = 0.0
 
         self.combat_level: int = all_skill_levels["Combat"]
@@ -290,6 +293,27 @@ class Character:
         self.printed_materials = {}
 
         self.setPolytheismLink()
+
+    def fixKillDict(self):
+        for mapIndex in self.kill_dict:
+            #If the map is already a List as expected,
+            # if each entry isn't already float or int,
+            #  try to convert every entry to a float or set to 0 if error
+            if isinstance(self.kill_dict[mapIndex], list):
+                for killIndex, killCount in enumerate(self.kill_dict[mapIndex]):
+                    if not isinstance(killCount, float) or not isinstance(killCount, int):
+                        try:
+                            self.kill_dict[mapIndex][killIndex] = float(killCount)
+                        except:
+                            self.kill_dict[mapIndex][killIndex] = 0
+            else:
+                #Sometimes users have just raw strings, floats, or ints that aren't in a list
+                # Try to put them into a list AND convert to float at the same time
+                #  else default to a list containing zeroes as some maps have multiple portals
+                try:
+                    self.kill_dict[mapIndex] = [float(self.kill_dict[mapIndex])]
+                except:
+                    self.kill_dict[mapIndex] = [0, 0, 0]
 
     def addUnmetApoc(self, apocType: str, apocRating: str, mapInfoList: list):
         self.apoc_dict[apocType][apocRating].append(mapInfoList)
@@ -1108,7 +1132,8 @@ class Account:
         # General / Multiple uses
         self.raw_optlacc_dict = {k: v for k, v in enumerate(safe_loads(self.raw_data.get("OptLacc", [])))}
         self.raw_serverVars_dict = safe_loads(self.raw_data.get("serverVars", {}))
-        self.assets = self._all_owned_items()
+        self.stored_assets = self._all_stored_items()
+        self.worn_assets = self._all_worn_items()
         self.cards = self._make_cards()
 
         self.minigame_plays_remaining = self.raw_optlacc_dict.get(33, 0)
@@ -1748,40 +1773,25 @@ class Account:
 
     def _parse_w3_deathnote_kills(self):
         # total up all kills across characters
-        for characterIndex, characterData in enumerate(self.safe_characters):
-            try:
-                characterKillsList = safe_loads(self.raw_data[f"KLA_{characterIndex}"])
-            except Exception as reason:
-                print(f"Unable to retrieve kill list for Character{characterIndex} because:{reason}")
-                continue
+        for characterIndex, characterData in enumerate(self.all_characters):
+            characterKillsDict = characterData.kill_dict
 
             # If the character's subclass is Barbarian, add their special Apoc-Only kills to EnemyMap's zow_dict
             if characterIndex in self.apocCharactersIndexList:
                 for worldIndex in range(0, len(apocableMapIndexDict)):
                     for mapIndex in apocableMapIndexDict[worldIndex]:
-                        if len(characterKillsList) > mapIndex:
-                            try:
-                                self.enemy_maps[worldIndex][mapIndex].updateZOWDict(characterIndex, characterKillsList[mapIndex][0])
-                            except:
-                                try:
-                                    self.enemy_maps[worldIndex][mapIndex].updateZOWDict(characterIndex, float(characterKillsList[mapIndex]))
-                                except:
-                                    self.enemy_maps[worldIndex][mapIndex].updateZOWDict(characterIndex, 0)
+                        try:
+                            self.enemy_maps[worldIndex][mapIndex].updateZOWDict(characterIndex, characterKillsDict.get(mapIndex, [0])[0])
+                        except:
+                            self.enemy_maps[worldIndex][mapIndex].updateZOWDict(characterIndex, 0)
 
             # Regardless of class, for each map within each world, add this player's kills to EnemyMap's kill_count
             for worldIndex in range(1, len(apocableMapIndexDict)):
                 for mapIndex in apocableMapIndexDict[worldIndex]:
-                    if len(characterKillsList) > mapIndex:
-                        if isinstance(characterKillsList[mapIndex], list):
-                            try:
-                                self.enemy_maps[worldIndex][mapIndex].addRawKLA(characterKillsList[mapIndex][0])
-                            except:
-                                self.enemy_maps[worldIndex][mapIndex].addRawKLA(0)
-                        else:
-                            try:
-                                self.enemy_maps[worldIndex][mapIndex].addRawKLA(characterKillsList[mapIndex])
-                            except:
-                                self.enemy_maps[worldIndex][mapIndex].addRawKLA(0)
+                    try:
+                        self.enemy_maps[worldIndex][mapIndex].addRawKLA(characterKillsDict.get(mapIndex, [0])[0])
+                    except:
+                        self.enemy_maps[worldIndex][mapIndex].addRawKLA(0)
 
         # Have each EnemyMap calculate its Skull Value, Name, Count to Next, and Percent to Next now that all kills are totaled
         # Barbarian Only in worldIndex 0
@@ -2683,9 +2693,9 @@ class Account:
         #print(f"session_data.account.highestWorldReached = {self.highestWorldReached}")
 
     def _calculate_general_alerts(self):
-        if self.assets.get("Trophy2").amount >= 75 and self.equinox_dreams[17]:
+        if self.stored_assets.get("Trophy2").amount >= 75 and self.equinox_dreams[17]:
             self.alerts_AdviceDict['General'].append(Advice(
-                label=f"You have {self.assets.get('Trophy2').amount}/75 Lucky Lads to craft a Luckier Lad!",
+                label=f"You have {self.stored_assets.get('Trophy2').amount}/75 Lucky Lads to craft a Luckier Lad!",
                 picture_class="luckier-lad"
             ))
 
@@ -2693,7 +2703,7 @@ class Account:
         raw_fishing_toolkit_lures = safe_loads(self.raw_data.get("FamValFishingToolkitOwned", [{'0': 0, 'length': 1}]))[0]
         raw_fishing_toolkit_lines = safe_loads(self.raw_data.get("FamValFishingToolkitOwned", [{'0': 0, 'length': 1}]))[1]
         for filtered_displayName in self.item_filter:
-            if filtered_displayName == "Lucky Lad" and getItemCodeName("Luckier Lad") not in self.registered_slab and self.assets.get("Trophy2").amount < 75:
+            if filtered_displayName == "Lucky Lad" and getItemCodeName("Luckier Lad") not in self.registered_slab and self.stored_assets.get("Trophy2").amount < 75:
                 self.alerts_AdviceDict['General'].append(Advice(
                     label=f"Lucky filtered before 75 for Luckier Lad",
                     picture_class="lucky-lad",
@@ -3583,7 +3593,7 @@ class Account:
 
         return cards
 
-    def _all_owned_items(self) -> Assets:
+    def _all_stored_items(self) -> Assets:
         chest_keys = (("ChestOrder", "ChestQuantity"),)
         name_quantity_key_pairs = chest_keys + tuple(
             (f"InventoryOrder_{i}", f"ItemQTY_{i}") for i in self.safe_playerIndexes
@@ -3608,3 +3618,14 @@ class Account:
                 continue
 
         return Assets(all_stuff_owned)
+
+    def _all_worn_items(self) -> Assets:
+        stuff_worn = defaultdict(int)
+        for toon in self.safe_characters:
+            for stuff_list in [toon.equipment.foods, toon.equipment.equips]:
+                for item in stuff_list:
+                    if item.codename != 'Blank':
+                        if item.codename not in stuff_worn:
+                            stuff_worn[item.codename] = 0
+                        stuff_worn[item.codename] += item.amount
+        return Assets(stuff_worn)

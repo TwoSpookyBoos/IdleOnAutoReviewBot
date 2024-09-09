@@ -232,6 +232,7 @@ def getCharacterDetails(inputJSON, runType):
     postOfficeList = []
     equipped_lab_chips = {}
     inventory_bags = {}
+    kill_lists = {}
     for character_index in range(0, playerCount):
         playerClasses.append(getHumanReadableClasses(inputJSON.get(f"CharacterClass_{character_index}", 0)))
         postOfficeList.append(safe_loads(inputJSON.get(f"POu_{character_index}", [0]*36)))
@@ -240,6 +241,7 @@ def getCharacterDetails(inputJSON, runType):
         characterCurrentPresetTalents[character_index] = safe_loads(inputJSON.get(f"SL_{character_index}", {}))
         characterSecondaryPresetTalents[character_index] = safe_loads(inputJSON.get(f"SLpre_{character_index}", {}))
         inventory_bags[character_index] = safe_loads(inputJSON.get(f'InvBagsUsed_{character_index}', {}))
+        kill_lists[character_index] = safe_loads(inputJSON.get(f'KLA_{character_index}', []))
         try:
             equipped_lab_chips[character_index] = safe_loads(inputJSON["Lab"])[character_index+1]
         except:
@@ -259,7 +261,8 @@ def getCharacterDetails(inputJSON, runType):
             secondary_preset_talents=characterSecondaryPresetTalents[character_index],
             po_boxes=postOfficeList[character_index],
             equipped_lab_chips=equipped_lab_chips[character_index],
-            inventory_bags=inventory_bags[character_index]
+            inventory_bags=inventory_bags[character_index],
+            kill_dict={k:v for k, v in enumerate(kill_lists[character_index])},
         )
 
     return [playerCount, playerNames, playerClasses, characterDict, perSkillDict]
