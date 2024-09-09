@@ -338,7 +338,7 @@ def getConsumablesAdviceList() -> list[Advice]:
     consumables = []
 
     #If 30+ Colo tickets owned
-    total_colo_tickets = session_data.account.assets.get('TixCol').amount + session_data.account.raw_data.get("CYColosseumTickets", 0)
+    total_colo_tickets = session_data.account.stored_assets.get('TixCol').amount + session_data.account.raw_data.get("CYColosseumTickets", 0)
     if total_colo_tickets > 300 and session_data.account.highestWorldReached >= 6:
         consumables.append(Advice(
             label=f"{total_colo_tickets} Colo Tickets available",
@@ -346,13 +346,13 @@ def getConsumablesAdviceList() -> list[Advice]:
         ))
 
     if (
-            session_data.account.assets.get('Quest35').amount
-            + session_data.account.assets.get('Quest36').amount
-            + session_data.account.assets.get('Quest37').amount
+            session_data.account.stored_assets.get('Quest35').amount
+            + session_data.account.stored_assets.get('Quest36').amount
+            + session_data.account.stored_assets.get('Quest37').amount
     ) > 300:
-        biggies = f"<br>{session_data.account.assets.get('Quest35').amount} Biggie Hours available" if session_data.account.assets.get(
+        biggies = f"<br>{session_data.account.stored_assets.get('Quest35').amount} Biggie Hours available" if session_data.account.stored_assets.get(
             'Quest35').amount > 0 else ''
-        doot_total = session_data.account.assets.get('Quest36').amount + session_data.account.assets.get('Quest37').amount
+        doot_total = session_data.account.stored_assets.get('Quest36').amount + session_data.account.stored_assets.get('Quest37').amount
         doots = f"<br>{doot_total} King Doots available" if doot_total > 0 else ''
 
         consumables.append(Advice(
@@ -366,7 +366,7 @@ def getConsumablesAdviceList() -> list[Advice]:
     #Pearls and Balloons
     if session_data.account.highestWorldReached >= 4:
         # Black Pearls
-        if session_data.account.assets.get('Pearl4').amount > 0:
+        if session_data.account.stored_assets.get('Pearl4').amount > 0:
             black_pearlable_skills = [skillName for skillName in pearlable_skillsList if min(session_data.account.all_skills.get(skillName, [0])) < 30]
             if black_pearlable_skills:
                 consumables.append(Advice(
@@ -376,7 +376,7 @@ def getConsumablesAdviceList() -> list[Advice]:
                     resource='black-pearl'
                 ))
         # Red Pearls
-        if session_data.account.assets.get('Pearl6').amount > 0:
+        if session_data.account.stored_assets.get('Pearl6').amount > 0:
             red_pearlable_skills = [skillName for skillName in pearlable_skillsList if min(session_data.account.all_skills.get(skillName, [0])) < 50]
             if red_pearlable_skills:
                 consumables.append(Advice(
@@ -387,9 +387,9 @@ def getConsumablesAdviceList() -> list[Advice]:
                 ))
         # Balloons
         if (
-                session_data.account.assets.get('ExpBalloon1').amount
-                + session_data.account.assets.get('ExpBalloon2').amount
-                + session_data.account.assets.get('ExpBalloon3').amount
+                session_data.account.stored_assets.get('ExpBalloon1').amount
+                + session_data.account.stored_assets.get('ExpBalloon2').amount
+                + session_data.account.stored_assets.get('ExpBalloon3').amount
         ) > 0:
             balloonable_skills = [skillName for skillName in pearlable_skillsList if sum(session_data.account.all_skills.get(skillName, [0])) < 750]
             if balloonable_skills:
@@ -411,12 +411,20 @@ def getConsumablesAdviceList() -> list[Advice]:
             ))
     if session_data.account.highestWorldReached >= 4:
         for character in session_data.account.all_characters:
-            if character.elite_class == "None" and character.sub_class != "Maestro":
-                consumables.append(Advice(
-                    label=f"Candy {character.character_name} through W4 maps to obtain their Elite Class",
-                    picture_class=character.class_name_icon,
-                    resource='time-candy-4-hr'
-                ))
+            try:
+                if (
+                    character.elite_class == "None"
+                    and character.sub_class != "Maestro"
+                    and float(character.kill_dict.get(153, [0])[0]) > 0  #Killcount on Donut map would be 0 or negative if portal to Demon Genies is open
+                ):
+
+                    consumables.append(Advice(
+                        label=f"Candy {character.character_name} through W4 maps to obtain their Elite Class",
+                        picture_class=character.class_name_icon,
+                        resource='time-candy-4-hr'
+                    ))
+            except:
+                continue
         if not session_data.account.vmans:
             consumables.append(Advice(
                 label=f"Candy any remaining kills for {{{{ Voidwalker|#secret-class-path }}}} quest",
@@ -438,15 +446,18 @@ def getConsumablesAdviceList() -> list[Advice]:
                     picture_class='death-note',
                     resource='time-candy-24-hr'
                 ))
+
+        total_gold_cakes = session_data.account.stored_assets.get('FoodG13').amount + session_data.account.worn_assets.get('FoodG13').amount
+
         if (
             session_data.account.sneaking['JadeEmporium']["Gold Food Beanstalk"]['Obtained']
-                and not session_data.account.sneaking['Beanstalk']['FoodG13']['Beanstacked']
+            and not session_data.account.sneaking['Beanstalk']['FoodG13']['Beanstacked']
         ):
             consumables.append(Advice(
                 label=f"Candy materials to Beanstack Golden Cakes in {{{{ The Beanstalk|#beanstalk }}}}",
                 picture_class='golden-cake',
                 resource='time-candy-24-hr',
-                progression=notateNumber("Match", session_data.account.assets.get('FoodG13').amount, 2, "K"),
+                progression=notateNumber("Match", total_gold_cakes, 2, "K"),
                 goal="10K"
             ))
         elif (
@@ -457,18 +468,18 @@ def getConsumablesAdviceList() -> list[Advice]:
                 label=f"Candy materials to Super Beanstack Golden Cakes in {{{{ The Beanstalk|#beanstalk }}}}",
                 picture_class='golden-cake',
                 resource='time-candy-24-hr',
-                progression=notateNumber("Match", session_data.account.assets.get('FoodG13').amount, 2, "K"),
+                progression=notateNumber("Match", total_gold_cakes, 2, "K"),
                 goal="100K"
             ))
-        # Assets doesn't currently include Worn items, which would make this inaccurate. Commenting out for now.
-        # elif session_data.account.assets.get('FoodG13').amount < 100e3:
-        #     consumables.append(Advice(
-        #         label=f"Get another 100k Golden Cakes to wear while farming",
-        #         picture_class='golden-cake',
-        #         resource='time-candy-24-hr',
-        #         progression=notateNumber("Match", session_data.account.assets.get('FoodG13').amount, 2, "K"),
-        #         goal="100K"
-        #     ))
+
+        elif total_gold_cakes < 100e3:
+            consumables.append(Advice(
+                label=f"Get another 100k Golden Cakes to wear while farming",
+                picture_class='golden-cake',
+                resource='time-candy-24-hr',
+                progression=notateNumber("Match", total_gold_cakes, 2, "K"),
+                goal="100K"
+            ))
     if session_data.account.stamps['Mason Jar Stamp']['Level'] < stamp_maxes['Mason Jar Stamp']:
         consumables.append(Advice(
             label=f"Candy Glass Shards for Mason Jar Stamp",

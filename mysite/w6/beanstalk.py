@@ -23,13 +23,7 @@ def section_beanstalk():
 
     # Assets contains totals from Storage and inventories
     for gfood in gfood_codes:
-        gold_foods[gfood] += session_data.account.assets.get(gfood).amount
-
-    # Also include the amounts equipped on characters
-    for toon in session_data.account.safe_characters:
-        for food in toon.equipment.foods:
-            if food.codename in gold_foods:
-                gold_foods[food.codename] += food.amount
+        gold_foods[gfood] += session_data.account.stored_assets.get(gfood).amount + session_data.account.worn_assets.get(gfood).amount
 
     foods_ready_to_deposit = []  # Food ready to deposit, including a tag in the name for 10k or 100k
     foods_to_beanstack = []  # If food is not already Beanstacked and player has less than required amount (10k)

@@ -55,9 +55,14 @@ def setSlabProgressionTier():
         for itemName in itemList:
             if itemName not in session_data.account.registered_slab:
                 #If the item is an Asset, meaning in storage, character inventory, or worn by a character
-                if session_data.account.assets.get(itemName).amount > 0:
+                if session_data.account.stored_assets.get(itemName).amount > 0:
                     slab_AdviceDict["Storage"].append(Advice(
-                        label=getItemDisplayName(itemName),
+                        label=f"{getItemDisplayName(itemName)} (Storage or Inventory)",
+                        picture_class=getItemDisplayName(itemName) if itemName not in slab_itemNameReplacementDict else slab_itemNameReplacementDict[itemName]))
+                    continue
+                elif session_data.account.worn_assets.get(itemName).amount > 0:
+                    slab_AdviceDict["Storage"].append(Advice(
+                        label=f"{getItemDisplayName(itemName)} (Equipped)",
                         picture_class=getItemDisplayName(itemName) if itemName not in slab_itemNameReplacementDict else slab_itemNameReplacementDict[itemName]))
                     continue
                 #If the item is a reclaimable quest item AND the quest has been completed by at least 1 character

@@ -170,11 +170,11 @@ def setStatuesProgressionTier() -> AdviceSection:
                                 label=f"Raise {statueName} to {tierRequirements.get('MinStatueType', 'UnknownStatueType')}"
                                       f"{farmDetails if tierRequirements.get('MinStatueType', 'UnknownStatueType') != 'Gold' else ''}",
                                 picture_class=statueName,
-                                progression=statueDetails['TypeNumber'] if statueDetails['TypeNumber'] < 1 else session_data.account.assets.get(statueDetails['ItemName']).amount,
+                                progression=statueDetails['TypeNumber'] if statueDetails['TypeNumber'] < 1 else session_data.account.stored_assets.get(statueDetails['ItemName']).amount,
                                 goal=tierRequirements.get('MinStatueTypeNumber', 0) if statueDetails['TypeNumber'] < 1 else 20000,
                                 resource="coins" if tierRequirements.get('MinStatueType', 'UnknownStatueType') == 'Gold' else farmResource
                             ))
-                        if session_data.account.assets.get(statueDetails['ItemName']).amount >= 20000 and statueDetails['Type'] != statueTypeList[-1]:
+                        if session_data.account.stored_assets.get(statueDetails['ItemName']).amount >= 20000 and statueDetails['Type'] != statueTypeList[-1]:
                             depositable_statues += 1
         if subgroupName not in statues_AdviceDict["Tiers"] and tier_Statues == tierNumber-1:
             tier_Statues = tierNumber

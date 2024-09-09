@@ -141,7 +141,7 @@ def getMissableGStacks(owned_stuff: Assets):
 
 def setGStackProgressionTier():
     equinoxDreamsStatus = getEquinoxDreams()
-    all_owned_stuff: Assets = session_data.account.assets
+    all_owned_stuff: Assets = session_data.account.stored_assets
     questGStacks_AdviceSection = getMissableGStacks(all_owned_stuff)
 
     unprecedented_gstacks = all_owned_stuff.items_gstacked_unprecedented
