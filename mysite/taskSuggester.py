@@ -4,12 +4,12 @@ import yaml
 from flask import g as session_data
 
 from config import app
-from general import combatLevels, greenstacks, pinchy, cards, secretPath, consumables, gemShop, active
 from models.custom_exceptions import UsernameBanned
 from models.models import AdviceWorld, WorldName, Account
 from utils.data_formatting import getJSONfromAPI, getJSONfromText, HeaderData
 from utils.logging import get_logger
 from utils.text_formatting import is_username
+from general import combatLevels, greenstacks, pinchy, cards, secretPath, consumables, gemShop, active, achievements
 from w1 import stamps, bribes, smithing, statues, starsigns, owl
 from w2 import alchemy
 from w3 import trapping, consRefinery, consDeathNote, worship, consSaltLick, consBuildings, equinox, library, sampling, collider
@@ -48,7 +48,7 @@ def main(inputData, runType="web"):
     for name in session_data.account.names:
         maybe_ban(name, runType)
 
-    roastworthyBool = getRoastableStatus(session_data.account.names)
+    #roastworthyBool = getRoastableStatus(session_data.account.names)
 
     # Step 3: Send that data off to all the different analyzers
     # General
@@ -56,6 +56,7 @@ def main(inputData, runType="web"):
         section_combatLevels := combatLevels.setCombatLevelsProgressionTier(),
         section_secretPath := secretPath.setSecretClassProgressionTier(),
         section_active := active.setActiveProgressionTier(),
+        section_achievements := achievements.setAchievementsProgressionTier(),
         *(sections_consumables := consumables.parseConsumables()),
         section_gemShop := gemShop.setGemShopProgressionTier(),
         *(sections_gstacks := greenstacks.setGStackProgressionTier()),
@@ -113,7 +114,7 @@ def main(inputData, runType="web"):
     ]
 
     pinchable_sections = [
-        section_combatLevels, section_secretPath,
+        section_combatLevels, section_secretPath, section_achievements,
         section_stamps, section_bribes, section_smithing, section_statues, section_starsigns, section_owl,
         section_alchBubbles, section_alchVials, section_alchP2W, section_alchSigils,
         section_refinery, section_sampling, section_saltlick, section_deathnote, section_prayers, section_equinox,

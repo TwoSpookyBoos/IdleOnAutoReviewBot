@@ -1,8 +1,7 @@
-import json
-from models.models import AdviceSection
+from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import progressionTiers, break_you_best
+from consts import template_progressionTiers, break_you_best
 
 logger = get_logger(__name__)
 
@@ -24,7 +23,7 @@ def setTemplateProgressionTier():
         return template_AdviceSection
 
     infoTiers = 0
-    max_tier = progressionTiers["Template"][-1][0] - infoTiers
+    max_tier = max(template_progressionTiers.keys(), default=0) - infoTiers
     tier_Template = 0
 
     overall_TemplateTier = min(max_tier + infoTiers, tier_Template)
