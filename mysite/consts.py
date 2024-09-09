@@ -340,7 +340,7 @@ achievements_progressionTiers = {
             'Half a Mill-log': {'World': 1, 'Reward': 'W1 Colo and Shops', 'Rating': ''},
             'Super Cereal': {'World': 2, 'Reward': 'W2 Colo and Shops', 'Rating': ''},
         },
-        'Free Teleports': {},
+        #'Free Teleports': {},
         'Monster Respawn': {},
         'Recipes': {},
         'Dungeon RNG Items': {
@@ -355,10 +355,10 @@ achievements_progressionTiers = {
             'Skill Master': {'World': 2, 'Reward': 'W2 Key', 'Rating': ''},
             'Cool Score!': {'World': 3, 'Reward': 'W3 Colo and Shop', 'Rating': ''},
         },
-        'Free Teleports': {
-            'Nice Fur Suit': {'World': 1, 'Reward': 'Free Teleport to Encroaching Forest Villas / Wode Boards / Amarok', 'Rating': ''},
-            "Million Null 'n Void": {'World': 1, 'Reward': 'Free Teleport to Echoing Egress / Void Ore', 'Rating': ''},
-        },
+        # 'Free Teleports': {
+        #     'Nice Fur Suit': {'World': 1, 'Reward': 'Free Teleport to Encroaching Forest Villas / Wode Boards / Amarok', 'Rating': ''},
+        #     "Million Null 'n Void": {'World': 1, 'Reward': 'Free Teleport to Echoing Egress / Void Ore', 'Rating': ''},
+        # },
         'Monster Respawn': {},
         'Recipes': {
             'Based Roots': {'World': 1, 'Reward': 'Acorn Hat', 'Rating': ''},
@@ -375,12 +375,11 @@ achievements_progressionTiers = {
         'EZ Access': {
             'Top Cogs': {'World': 3, 'Reward': 'W3 Key', 'Rating': ''},
             'Good Plate': {'World': 4, 'Reward': 'W4 Shop', 'Rating': ''},
-            'Bonsai Bonanza': {'World': 5, 'Reward': 'W5 Shop', 'Rating': ''},
-            'Doctor Repellant': {'World': 6, 'Reward': 'W6 Shop', 'Rating': ''},
+
         },
-        'Free Teleports': {
-            'Your Skin, My Skin': {'World': 2, 'Reward': 'Free Teleport to Djonnuttown / Snelbies / Efaunt', 'Rating': ''},
-        },
+        # 'Free Teleports': {
+        #     'Your Skin, My Skin': {'World': 2, 'Reward': 'Free Teleport to Djonnuttown / Snelbies / Efaunt', 'Rating': ''},
+        # },
         'Monster Respawn': {
             'Two-Time Savior': {'World': 1, 'Reward': '5% Mob Respawn in W1', 'Rating': ''},
 
@@ -407,8 +406,10 @@ achievements_progressionTiers = {
         },
     },
     4: {
-        'EZ Access': {},
-        'Free Teleports': {},
+        'EZ Access': {
+            'Bonsai Bonanza': {'World': 5, 'Reward': 'W5 Shop', 'Rating': ''},
+        },
+        #'Free Teleports': {},
         'Monster Respawn': {
 
             'Lavathian Skulls': {'World': 5, 'Reward': '2% Mob Respawn in W5', 'Rating': ''},
@@ -432,8 +433,10 @@ achievements_progressionTiers = {
         },
     },
     5: {
-        'EZ Access': {},
-        'Free Teleports': {},
+        'EZ Access': {
+            'Doctor Repellant': {'World': 6, 'Reward': 'W6 Shop', 'Rating': ''},
+        },
+        #'Free Teleports': {},
         'Monster Respawn': {
             'Two Desserts!': {'World': 2, 'Reward': '5% Mob Respawn in W2', 'Rating': ''},
         },
@@ -2369,7 +2372,9 @@ def getNextESFamilyBreakpoint(currentLevel: int) -> int:
 
 #achievementsList last pulled from code in 2.08. Search for: RegAchieves = function ()
 #Replace: "], ["  with:  "],\n["  before pasting in
-achievement_categories = ['EZ Access', 'Free Teleports', 'Monster Respawn', 'Recipes', 'Dungeon RNG Items', 'Other Nice Rewards']
+achievement_categories = [
+    'EZ Access', #'Free Teleports',
+    'Monster Respawn', 'Recipes', 'Dungeon RNG Items', 'Other Nice Rewards']
 achievementsList = [
     ["Learn_2_Forge", "1", "Get_the_mining_certificate_from_Glumlee.", "*STEAM_EXCLUSIVE_&*10_gems_&*1hr_time_candy", "0"],
     ["Another_Me!", "1", "Create_a_2nd_character._Trust_me,_you_wanna_do_this_ASAP.", "*STEAM_EXCLUSIVE_&*8_gems", "0"],
