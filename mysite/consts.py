@@ -332,6 +332,135 @@ greenstack_progressionTiers = {
             ]
         },
     }
+achievements_progressionTiers = {
+    0: {},
+    1: {
+        'EZ Access': {
+            'Platinum 200G': {'World': 1, 'Reward': 'W1 Key', 'Rating': ''},
+            'Half a Mill-log': {'World': 1, 'Reward': 'W1 Colo and Shops', 'Rating': ''},
+            'Super Cereal': {'World': 2, 'Reward': 'W2 Colo and Shops', 'Rating': ''},
+        },
+        #'Free Teleports': {},
+        'Monster Respawn': {},
+        'Recipes': {},
+        'Dungeon RNG Items': {
+            '2 Tons of Iron': {'World': 1, 'Reward': 'Golden Dice', 'Rating': ''},
+        },
+        'Other Nice Rewards': {
+            'Golden Fly': {'World': 2, 'Reward': '5% Catching Efficiency', 'Rating': ''},
+        },
+    },
+    2: {
+        'EZ Access': {
+            'Skill Master': {'World': 2, 'Reward': 'W2 Key', 'Rating': ''},
+            'Cool Score!': {'World': 3, 'Reward': 'W3 Colo and Shop', 'Rating': ''},
+        },
+        # 'Free Teleports': {
+        #     'Nice Fur Suit': {'World': 1, 'Reward': 'Free Teleport to Encroaching Forest Villas / Wode Boards / Amarok', 'Rating': ''},
+        #     "Million Null 'n Void": {'World': 1, 'Reward': 'Free Teleport to Echoing Egress / Void Ore', 'Rating': ''},
+        # },
+        'Monster Respawn': {},
+        'Recipes': {
+            'Based Roots': {'World': 1, 'Reward': 'Acorn Hat', 'Rating': ''},
+        },
+        'Dungeon RNG Items': {
+            'House Flipper': {'World': 1, 'Reward': 'Horn of the Foal', 'Rating': ''},
+            "Croakin' Froge": {'World': 3, 'Reward': 'Plump Dice', 'Rating': ''},
+        },
+        'Other Nice Rewards': {
+            'Cog in the System': {'World': 3, 'Reward': '5% cons build speed', 'Rating': ''},
+        },
+    },
+    3: {
+        'EZ Access': {
+            'Top Cogs': {'World': 3, 'Reward': 'W3 Key', 'Rating': ''},
+            'Good Plate': {'World': 4, 'Reward': 'W4 Shop', 'Rating': ''},
+
+        },
+        # 'Free Teleports': {
+        #     'Your Skin, My Skin': {'World': 2, 'Reward': 'Free Teleport to Djonnuttown / Snelbies / Efaunt', 'Rating': ''},
+        # },
+        'Monster Respawn': {
+            'Two-Time Savior': {'World': 1, 'Reward': '5% Mob Respawn in W1', 'Rating': ''},
+
+        },
+        'Recipes': {
+            'Nuget Nightmare': {'World': 2, 'Reward': 'Nuget Cake Hat', 'Rating': ''},
+            'The Goose is Loose': {'World': 3, 'Reward': 'HONK Hat', 'Rating': ''},
+        },
+        'Dungeon RNG Items': {
+            'Souped Up Salts': {'World': 3, 'Reward': 'RNG Voucher', 'Rating': ''},
+            'Mutant Massacrer': {'World': 4, 'Reward': 'Coin Flip', 'Rating': ''},
+        },
+        'Other Nice Rewards': {
+            'Golden Obolden!': {'World': 2, 'Reward': '+20% Obol Frags', 'Rating': ''},
+            'Ink Blot': {'World': 2, 'Reward': '20% non-consume Silver Pen', 'Rating': ''},
+            'Vial Junkee': {'World': 2, 'Reward': '20% Sigil Speed', 'Rating': ''},
+            'Fruit Salad': {'World': 2, 'Reward': '5% catching speed', 'Rating': ''},
+            'Checkout Takeout': {'World': 3, 'Reward': '+5 Book max level', 'Rating': ''},
+            'Shiny Shells': {'World': 4, 'Reward': '10% Breeding Incubator Speed', 'Rating': ''},
+            'Cabbage Patch': {'World': 4, 'Reward': '10% Meal Cooking Speed', 'Rating': ''},
+            'Le Pretzel Bleu': {'World': 4, 'Reward': '20% Meal Cooking Speed', 'Rating': ''},
+            'Gilded Shells': {'World': 4, 'Reward': '1.1x Egg Rarity chance', 'Rating': ''},
+            'Best Plate': {'World': 4, 'Reward': '10% cheaper Kitchen upgrades', 'Rating': ''},
+        },
+    },
+    4: {
+        'EZ Access': {
+            'Bonsai Bonanza': {'World': 5, 'Reward': 'W5 Shop', 'Rating': ''},
+        },
+        #'Free Teleports': {},
+        'Monster Respawn': {
+
+            'Lavathian Skulls': {'World': 5, 'Reward': '2% Mob Respawn in W5', 'Rating': ''},
+        },
+        'Recipes': {},
+        'Dungeon RNG Items': {},
+        'Other Nice Rewards': {
+            'The Plateauourist': {'World': 5, 'Reward': '+4 Daily Crystals', 'Rating': ''},
+            'Artifact Finder': {'World': 5, 'Reward': '+1 Sailing Loot Pile', 'Rating': ''},
+            'Gilded Vessel': {'World': 5, 'Reward': '+1 Sailing Loot Pile', 'Rating': ''},
+            'True Naval Captain': {'World': 5, 'Reward': '20% Sailing EXP', 'Rating': ''},
+            'Grand Captain': {'World': 5, 'Reward': '20% Sailing EXP', 'Rating': ''},
+            'Voraci Vantasia': {'World': 5, 'Reward': '+10% Divinity Points', 'Rating': ''},
+            'Legendary Wormhole': {'World': 5, 'Reward': '+10% Divinity Points', 'Rating': ''},
+            'All Hail Purrmep': {'World': 5, 'Reward': '+10 Particle clicks daily', 'Rating': ''},
+            'Lucky Harvest': {'World': 5, 'Reward': '1.05x Bit Gain', 'Rating': ''},
+            'Broken Controller': {'World': 5, 'Reward': '1.05x Bit Gain', 'Rating': ''},
+            'Vitamin D-licious': {'World': 5, 'Reward': '+50% Forge Ore Capacity', 'Rating': ''},
+            'Maroon Warship': {'World': 5, 'Reward': '+1 Level to all talents', 'Rating': ''},
+            'Sneaky Stealing': {'World': 5, 'Reward': '25% Shop Capacity', 'Rating': ''},
+        },
+    },
+    5: {
+        'EZ Access': {
+            'Doctor Repellant': {'World': 6, 'Reward': 'W6 Shop', 'Rating': ''},
+        },
+        #'Free Teleports': {},
+        'Monster Respawn': {
+            'Two Desserts!': {'World': 2, 'Reward': '5% Mob Respawn in W2', 'Rating': ''},
+        },
+        'Recipes': {},
+        'Dungeon RNG Items': {},
+        'Other Nice Rewards': {
+            'Perfect Trade Deal': {'World': 5, 'Reward': '+1 Treasure per Chest', 'Rating': ''},
+            "Lil' Overgrowth": {'World': 6, 'Reward': '1.05x Crop Evo', 'Rating': ''},
+            'Big Time Land Owner': {'World': 6, 'Reward': '1.15x Crop OG', 'Rating': ''},
+            'Crop Flooding': {'World': 6, 'Reward': '5% Magic Beans', 'Rating': ''},
+            'Ceramic Sneaking': {'World': 6, 'Reward': '1.03x Jade', 'Rating': ''},
+            'Lucky Stealy': {'World': 6, 'Reward': '1.05x Jade', 'Rating': ''},
+            'Top Floor Sneaking': {'World': 6, 'Reward': '1.07x Jade', 'Rating': ''},
+            'Untying Extraordinaire': {'World': 6, 'Reward': '1.05x Stealth', 'Rating': ''},
+            'Best Bloomie': {'World': 6, 'Reward': '1.05x Essence', 'Rating': ''},
+            'Spectre Stars': {'World': 6, 'Reward': '1% Larger Winner bonuses', 'Rating': ''},
+            'Regalis My Beloved': {'World': 6, 'Reward': '1% Larger Winner bonuses', 'Rating': ''},
+            "Scorin' the Ladies": {'World': 6, 'Reward': '10% Catch Eff', 'Rating': ''},
+            'Effervess Enthusiess': {'World': 6, 'Reward': '10% Chop Eff', 'Rating': ''},
+            'Summoning GM': {'World': 6, 'Reward': '6% Drop Rate', 'Rating': ''},
+            'Big Big Hampter': {'World': 6, 'Reward': '4% Drop Rate', 'Rating': ''},
+        },
+    },
+}
 
 ###WORLD 1 PROGRESSION TIERS###
 bribes_progressionTiers = [
@@ -2243,6 +2372,9 @@ def getNextESFamilyBreakpoint(currentLevel: int) -> int:
 
 #achievementsList last pulled from code in 2.08. Search for: RegAchieves = function ()
 #Replace: "], ["  with:  "],\n["  before pasting in
+achievement_categories = [
+    'EZ Access', #'Free Teleports',
+    'Monster Respawn', 'Recipes', 'Dungeon RNG Items', 'Other Nice Rewards']
 achievementsList = [
     ["Learn_2_Forge", "1", "Get_the_mining_certificate_from_Glumlee.", "*STEAM_EXCLUSIVE_&*10_gems_&*1hr_time_candy", "0"],
     ["Another_Me!", "1", "Create_a_2nd_character._Trust_me,_you_wanna_do_this_ASAP.", "*STEAM_EXCLUSIVE_&*8_gems", "0"],

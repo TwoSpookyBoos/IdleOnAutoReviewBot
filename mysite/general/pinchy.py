@@ -123,6 +123,7 @@ class Threshold:
 class Placements(dict):
     COMBAT_LEVELS = "Combat Levels"
     SECRET_CLASS_PATH = "Secret Class Path"
+    ACHIEVEMENTS = "Achievements"
     STAMPS = "Stamps"
     BRIBES = "Bribes"
     SMITHING = "Smithing"
@@ -145,7 +146,7 @@ class Placements(dict):
     DIVINITY = "Divinity"
     SAILING = "Sailing"
     sections = [
-        COMBAT_LEVELS, SECRET_CLASS_PATH,
+        COMBAT_LEVELS, SECRET_CLASS_PATH, ACHIEVEMENTS,
         STAMPS, BRIBES, SMITHING, STATUES, STAR_SIGNS, OWL,
         BUBBLES, VIALS, P2W, SIGILS,
         REFINERY, SAMPLING, SALT_LICK, DEATH_NOTE, PRAYERS, EQUINOX,
@@ -158,6 +159,7 @@ class Placements(dict):
         #               W1   W2          W3              W4              W5              W6              W7              Max   Placeholder
         COMBAT_LEVELS: [0,   3, 7, 8,    10, 14, 15,     16, 17, 18,     19, 21, 23,     24, 25, 27,     28, 29, 30,     32,   99],
         SECRET_CLASS_PATH:[0,0, 0, 0,    0,  0,  0,      0,  1,  1,      2,  3,  3,      3,  3,  3,      3,  3,  3,      3,    99],
+        ACHIEVEMENTS:  [0,   0, 0, 0,    0,  1,  1,      1,  1,  1,      2,  2,  2,      2,  2,  2,      3,  4,  5,      5,    99],
         STAMPS:        [0,   1, 2, 3,    4,  5,  6,      7,  8,  9,      10, 11, 12,     13, 14, 15,     16, 17, 18,     20,   99],
         BRIBES:        [0,   1, 1, 1,    2,  2,  2,      3,  3,  3,      4,  4,  4,      4,  5,  5,      5,  5,  5,      6,    99],
         SMITHING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  2,  3,      4,  5,  6,      6,  6,  6,      6,    99],
