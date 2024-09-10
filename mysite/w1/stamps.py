@@ -78,9 +78,9 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     # ))
     capacity_Advices["Stamps"].append(Advice(
         label=f"{{{{ Pristine Charm|#sneaking }}}}: Liqorice Rolle: "
-              f"{'1.25' if session_data.account.sneaking.get('PristineCharms', {}).get('Liqorice Rolle', False) else '1'}/1.25x",
-        picture_class="liqorice-rolle",
-        progression=1 if session_data.account.sneaking.get('PristineCharms', {}).get('Liqorice Rolle', False) else 0,
+              f"{'1.25' if session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained'] else '1'}/1.25x",
+        picture_class=session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Image'],
+        progression=int(session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained']),
         goal=1
     ))
     for capStamp in ["Mason Jar Stamp", "Lil' Mining Baggy Stamp", "Choppin' Bag Stamp", "Matty Bag Stamp", "Bag o Heads Stamp", "Bugsack Stamp"]:

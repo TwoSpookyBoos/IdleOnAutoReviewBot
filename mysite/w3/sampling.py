@@ -42,7 +42,7 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     if session_data.account.labBonuses['Certified Stamp Book']['Enabled']:
         stampleValue *= 2
         amplestampleValue *= 2
-    if session_data.account.sneaking["PristineCharms"]["Liqorice Rolle"]:
+    if session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained']:
         stampleValue *= 1.25
         amplestampleValue *= 1.25
     account_sum += stampleValue
@@ -115,9 +115,9 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     ))
     psrAdvices[accountSubgroup].append(Advice(
         label=f"{{{{ Pristine Charm|#sneaking }}}}: Liqorice Rolle: "
-              f"{'1.25/1.25x<br>(Already applied to Stamps above)' if session_data.account.sneaking['PristineCharms']['Liqorice Rolle'] else '1/1.25x'}",
-        picture_class="liqorice-rolle",
-        progression=int(session_data.account.sneaking['PristineCharms']['Liqorice Rolle']),
+              f"{'1.25/1.25x<br>(Already applied to Stamps above)' if session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained'] else '1/1.25x'}",
+        picture_class=session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Image'],
+        progression=int(session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained']),
         goal=1
     ))
     psrAdvices[accountSubgroup].append(Advice(
@@ -249,7 +249,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     kotr_multi = max(1, 1 + ((talent_value * pow10_kills) / 100))
 
     charm_multi = 1.25
-    charm_multi_active = charm_multi if session_data.account.sneaking["PristineCharms"]["Lolly Flower"] else 1
+    charm_multi_active = charm_multi if session_data.account.sneaking['PristineCharms']['Lolly Flower']['Obtained'] else 1
 
     equinoxMulti = 1 + (session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel'] / 100)
     ballot_active = session_data.account.ballot['CurrentBuff'] == 11
@@ -324,8 +324,8 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
 
     po_AdviceDict[aw_label].append(Advice(
         label=f"{{{{ Pristine Charm|#sneaking }}}}: Lolly Flower: {charm_multi_active}/{charm_multi}x",
-        picture_class="lolly-flower",
-        progression=int(session_data.account.sneaking["PristineCharms"]["Lolly Flower"]),
+        picture_class=session_data.account.sneaking['PristineCharms']['Lolly Flower']['Image'],
+        progression=int(session_data.account.sneaking['PristineCharms']['Lolly Flower']['Obtained']),
         goal=1
     ))
 

@@ -57,11 +57,11 @@ def setSneakingProgressionTier():
             ))
 
     # Assess Pristine Charms
-    for pristineCharmName, pristineCharmBool in session_data.account.sneaking["PristineCharms"].items():
-        if not pristineCharmBool:
+    for pristineCharmName, pristineCharmDict in session_data.account.sneaking["PristineCharms"].items():
+        if not pristineCharmDict['Obtained']:
             sneaking_AdviceDict['PristineCharms'].append(Advice(
-                label=pristineCharmName,
-                picture_class=pristineCharmName
+                label=f"{pristineCharmName}: {pristineCharmDict['Bonus']}",
+                picture_class=f"{pristineCharmDict['Image']}"
             ))
 
     # Generate AdviceGroups

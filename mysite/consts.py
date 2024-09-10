@@ -6009,11 +6009,31 @@ jade_emporium = [
 
 ]
 gfood_codes = ["PeanutG", "ButterBar", *[f"FoodG{i}" for i in range(1, 14)]]
-pristineCharmsList: list[str] = [
-    "Sparkle Log", "Fruit Rolle", "Glowing Veil", "Cotton Candy", "Sugar Bomb",
-    "Gumm Eye", "Bubblegum Law", "Sour Wowzer", "Crystal Comb", "Rock Candy",
-    "Lollipop Law", "Taffy Disc", "Stick of Chew", "Treat Sack", "Gumm Stick",
-    "Lolly Flower", "Gumball Necklace", "Liqorice Rolle",
+# pristineCharmsList: list[str] = [
+#     "Sparkle Log", "Fruit Rolle", "Glowing Veil", "Cotton Candy", "Sugar Bomb",
+#     "Gumm Eye", "Bubblegum Law", "Sour Wowzer", "Crystal Comb", "Rock Candy",
+#     "Lollipop Law", "Taffy Disc", "Stick of Chew", "Treat Sack", "Gumm Stick",
+#     "Lolly Flower", "Gumball Necklace", "Liqorice Rolle",
+# ]
+pristineCharmsList: list = [
+    {'Name': 'Sparkle Log', 'Image': 'sparkle-log', 'Bonus': '1.20x Total DMG'},
+    {'Name': 'Fruit Rolle', 'Image': 'fruit-rolle', 'Bonus': '+20% AGI'},
+    {'Name': 'Glowing Veil', 'Image': 'glowing-veil', 'Bonus': '1.40x Artifact Find Chance'},
+    {'Name': 'Cotton Candy', 'Image': 'cotton-candy-charm', 'Bonus': '1.15x Drop Rate'},
+    {'Name': 'Sugar Bomb', 'Image': 'sugar-bomb', 'Bonus': '+20% STR'},
+    {'Name': 'Gumm Eye', 'Image': 'gumm-eye', 'Bonus': '+20% LUK'},
+    {'Name': 'Bubblegum Law', 'Image': 'bubblegum-law', 'Bonus': '1.25x Kill per Kill'},
+    {'Name': 'Sour Wowzer', 'Image': 'sour-wowzer', 'Bonus': '+50% Sneaking EXP gain'},
+    {'Name': 'Crystal Comb', 'Image': 'crystal-comb', 'Bonus': '1.30x Bigger Summoning Winner Bonuses'},
+    {'Name': 'Rock Candy', 'Image': 'rock-candy', 'Bonus': '+50% Farming EXP gain'},
+    {'Name': 'Lollipop Law', 'Image': 'lollipop-law', 'Bonus': '+20% WIS'},
+    {'Name': 'Taffy Disc', 'Image': 'taffy-disc', 'Bonus': '1.50x Higher Overgrowth Chance'},
+    {'Name': 'Stick of Chew', 'Image': 'stick-of-chew', 'Bonus': '1.30x All Essence Generation'},
+    {'Name': 'Treat Sack', 'Image': 'treat-sack', 'Bonus': '1.40x Jade Coin gain'},
+    {'Name': 'Gumm Stick', 'Image': 'gumm-stick', 'Bonus': '+50% Golden Food bonus'},
+    {'Name': 'Lolly Flower', 'Image': 'lolly-flower', 'Bonus': '+25% Printer Output'},
+    {'Name': 'Gumball Necklace', 'Image': 'gumball-necklace', 'Bonus': '1.40x Money from Monsters'},
+    {'Name': 'Liqorice Rolle', 'Image': 'liqorice-rolle', 'Bonus': '1.25x Bigger Bonuses of Non Misc Stamps'},
 ]
 sneakingGemstonesList: list[str] = [
     "Aquamarine", "Emerald", "Garnet", "Starite", "Topaz", "Moissanite"

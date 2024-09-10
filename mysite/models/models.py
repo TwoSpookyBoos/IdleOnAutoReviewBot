@@ -2461,11 +2461,19 @@ class Account:
 
     def _parse_w6_gemstones(self, raw_ninja_list):
         raw_pristine_charms_list = raw_ninja_list[107] if raw_ninja_list else []
-        for pristineCharmIndex, pristineCharmName in enumerate(pristineCharmsList):
+        for pristineCharmIndex, pristineCharmDict in enumerate(pristineCharmsList):
             try:
-                self.sneaking["PristineCharms"][pristineCharmName] = bool(raw_pristine_charms_list[pristineCharmIndex])
+                self.sneaking["PristineCharms"][pristineCharmDict['Name']] = {
+                    'Obtained': bool(raw_pristine_charms_list[pristineCharmIndex]),
+                    'Image': pristineCharmDict['Image'],
+                    'Bonus': pristineCharmDict['Bonus'],
+                }
             except:
-                self.sneaking["PristineCharms"][pristineCharmName] = False
+                self.sneaking["PristineCharms"][pristineCharmDict['Name']] = {
+                    'Obtained': False,
+                    'Image': pristineCharmDict['Image'],
+                    'Bonus': pristineCharmDict['Bonus'],
+                }
         for gemstoneIndex, gemstoneName in enumerate(sneakingGemstonesList):
             self.sneaking["Gemstones"][gemstoneName] = {
                 "Level": self.raw_optlacc_dict.get(sneakingGemstonesFirstIndex + gemstoneIndex, 0),
@@ -3326,12 +3334,12 @@ class Account:
 
     def _calculate_w6_summoning_winner_bonuses(self):
         mga = 1.3
-        player_mga = 1.3 if self.sneaking['PristineCharms']['Crystal Comb'] else 1
+        player_mga = 1.3 if self.sneaking['PristineCharms']['Crystal Comb']['Obtained'] else 1
         self.summoning['WinnerBonusesAdvice'].append(Advice(
             label=f"{{{{ Pristine Charm|#sneaking }}}}: Crystal Comb: "
-                  f"{1 + (.3 * self.sneaking['PristineCharms']['Crystal Comb'])}/1.3x",
-            picture_class="crystal-comb",
-            progression=int(self.sneaking['PristineCharms']['Crystal Comb']),
+                  f"{player_mga}/1.3x",
+            picture_class=self.sneaking['PristineCharms']['Crystal Comb']['Image'],
+            progression=int(self.sneaking['PristineCharms']['Crystal Comb']['Obtained']),
             goal=1
         ))
 
