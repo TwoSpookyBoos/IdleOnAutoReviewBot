@@ -27,6 +27,7 @@
 @import "postoffice";
 @import "kangaroo";
 @import "ballot";
+@import "islands";
 
 //W3
 @import "construction";
@@ -2215,6 +2216,7 @@ $id-map: map-merge($all-farming, $id-map);
 $id-map: map-merge($all-summoning, $id-map);
 $id-map: map-merge($ballot, $id-map);
 $id-map: map-merge($ui-map, $id-map);
+$id-map: map-merge($all-islands, $id-map);
 
 $extra: (
     //storage: $cosmic-storage-chest,
@@ -2244,6 +2246,7 @@ $extra: (
 	town-marble: $town-marble,
 	monolith: $monolith,
 	fly-nest: $fly-nest,
+	cooking-table: $cooking-table,
 );
 $id-map: map-merge($extra, $id-map);
 

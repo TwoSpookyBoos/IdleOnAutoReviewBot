@@ -1,0 +1,20 @@
+$islands: (
+    trash-island: img('wiki/Trash_Island.png'),
+    rando-island: img('wiki/Rando_Island.png'),
+    crystal-island: img('wiki/Crystal_Island.png'),
+    seasalt-island: img('wiki/Seasalt_Island.png'),
+    shimmer-island: img('wiki/Shimmer_Island.png'),
+    fractal-island: img('wiki/Fractal_Island.png')
+);
+
+$island-etc: (
+    island-expeditions-board: img('wiki/Island_Expeditions_Board.gif'),
+    island-expeditions-boat: img('wiki/Island_Expeditions_Boat.gif'),
+    shimmer-target-dummy: img('wiki/Shimmer_Island_Dummy_Target.gif'),
+    shimmer-blue-fairy: img('wiki/Shimmer_Island_Fairy.gif'),
+    shimmer-pink-fairy: img('wiki/Shimmer_Island_Fairy_2.gif'),
+    trash-island-tuna: img('wiki/Trash_Island_Tuna.gif'),
+    rando-island-rock: img('wiki/Rando_Island_Rock.gif')
+);
+
+$all-islands: map-merge($islands, $island-etc);

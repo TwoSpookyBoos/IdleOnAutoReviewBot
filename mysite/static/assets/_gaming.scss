@@ -6,7 +6,18 @@ $gaming-bits: (
     blue-bits: img('wiki/Gaming_Bits_-_Blue.png')
 );
 
-$gaming-imports: ();
+$gaming-imports: (
+    little-sprinkler: img('gaming/GamingItem0.png'),
+    gold-sprinkler: img('gaming/GamingItem0b.png'),
+    dirty-shovel: img('gaming/GamingItem1.png'),
+    autumn-squirrel: img('gaming/GamingItem2.png'),
+    elegant-seashell: img('gaming/GamingItem3_12.png'),
+    kitsune-roxie-active: img('gaming/GamingItem4.png'),
+    kitsune-roxie-inactive: img('gaming/GamingItem4b.png'),
+    bog-log: img('gaming/GamingItem5.png'),
+    pong-controller: img('gaming/GamingItem6.png'),
+    immortal-snail: img('gaming/GamingItem7.png')
+);
 
 $gaming-plants: (
     sprout: img('wiki/Gaming_Plant_0.gif'),
