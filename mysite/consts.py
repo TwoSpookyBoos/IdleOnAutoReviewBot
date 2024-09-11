@@ -300,7 +300,7 @@ greenstack_progressionTiers = {
             },
         13: {
             "Base Monster Materials": [
-                "Quest15"],
+                "Quest15", "Hgg"],
             "Crystal Enemy Drops": [
                 "EquipmentStatues1", "EquipmentStatues5",  #Power and Health statues are still more common than W2 statues
                 "EquipmentStatues10", "EquipmentStatues12", "EquipmentStatues13", "EquipmentStatues8", "EquipmentStatues11",  #W2 statues
@@ -317,8 +317,6 @@ greenstack_progressionTiers = {
                 "FoodPotMana3", "FoodPotRe1", "ButterBar", ],
         },
         14: {
-            "Base Monster Materials": [
-                "Hgg"],
             "Crystal Enemy Drops": [
                 "StoneW2", "SilverPen"],  #"StoneA2",],
             "Other Skilling Resources": [
