@@ -1287,7 +1287,7 @@ class Account:
         if len(raw_printer_xtra) >= 121:
             for codeName in raw_printer_xtra[120:]:
                 if codeName != 'Blank':
-                    self.item_filter.append(getItemDisplayName(codeName))
+                    self.item_filter.append(codeName)
 
     def _parse_general_maps(self):
         self.enemy_maps = buildMaps()
@@ -2710,8 +2710,13 @@ class Account:
     def _calculate_general_item_filter(self):
         raw_fishing_toolkit_lures = safe_loads(self.raw_data.get("FamValFishingToolkitOwned", [{'0': 0, 'length': 1}]))[0]
         raw_fishing_toolkit_lines = safe_loads(self.raw_data.get("FamValFishingToolkitOwned", [{'0': 0, 'length': 1}]))[1]
-        for filtered_displayName in self.item_filter:
-            if filtered_displayName == "Lucky Lad" and getItemCodeName("Luckier Lad") not in self.registered_slab and self.stored_assets.get("Trophy2").amount < 75:
+        for filtered_codeName in self.item_filter:
+            filtered_displayName = getItemDisplayName(filtered_codeName)
+            if (
+                filtered_codeName == 'Trophy2'  #Lucky Lad
+                and 'Trophy20' not in self.registered_slab  #Luckier Lad
+                and self.stored_assets.get("Trophy2").amount < 75
+            ):
                 self.alerts_AdviceDict['General'].append(Advice(
                     label=f"Lucky filtered before 75 for Luckier Lad",
                     picture_class="lucky-lad",
@@ -2730,7 +2735,7 @@ class Account:
                     label=f"Why did you filter {filtered_displayName}???",
                     picture_class=filtered_displayName,
                 ))
-            elif getItemCodeName(filtered_displayName) not in self.registered_slab:
+            elif filtered_codeName not in self.registered_slab:
                 self.alerts_AdviceDict['General'].append(Advice(
                     label=f"{filtered_displayName} filtered, not in Slab",
                     picture_class=filtered_displayName,
