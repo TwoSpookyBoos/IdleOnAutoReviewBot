@@ -26,7 +26,7 @@ def getRightHandsAdviceGroups():
             sorted_skills[skill], key=lambda toon: toon.skills[skill], reverse=True
         )
         #Decide if skill needs to catchup or stayahead
-        #If Journeyman isn't in first
+        #If Maestro isn't in first
         if 'Maestro' not in sorted_skills[skill][0].all_classes:
             skills_needing_catchup.append(skill)
             highest_jman_name = ''
@@ -43,8 +43,8 @@ def getRightHandsAdviceGroups():
                 progression=highest_jman_level,
                 goal=sorted_skills[skill][0].skills[skill]+1
             ))
-        #Elif Journeyman is 1st but is tied with 2nd
-        elif sorted_skills[skill][0].skills[skill] == sorted_skills[skill][1].skills[skill]:
+        #Elif Maestro is 1st but is tied with 2nd and 2nd isn't another Maestro
+        elif sorted_skills[skill][0].skills[skill] == sorted_skills[skill][1].skills[skill] and 'Maestro' not in sorted_skills[skill][1].all_classes:
             skills_needing_catchup.append(skill)
             highest_jman_name = ''
             highest_jman_level = 0
@@ -62,6 +62,12 @@ def getRightHandsAdviceGroups():
             ))
         #Else if Journeyman is 1st and they aren't tied with 2nd
         else:
+            stayahead_advices[skill].append(Advice(
+                label=f"{sorted_skills[skill][0].character_name} is currently best at {skill}",
+                picture_class=sorted_skills[skill][0].class_name_icon,
+                progression=sorted_skills[skill][0].skills[skill],
+                goal=sorted_skills[skill][0].skills[skill] + 1
+            ))
             for char in sorted_skills[skill][1:]:
                 stayahead_advices[skill].append(Advice(
                     label=(
