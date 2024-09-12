@@ -62,23 +62,25 @@ def getRightHandsAdviceGroups():
             ))
         #Else if Journeyman is 1st and they aren't tied with 2nd
         else:
+            #Display the leader
             stayahead_advices[skill].append(Advice(
                 label=f"{sorted_skills[skill][0].character_name} is currently best at {skill}",
                 picture_class=sorted_skills[skill][0].class_name_icon,
                 progression=sorted_skills[skill][0].skills[skill],
-                goal=sorted_skills[skill][0].skills[skill] + 1
             ))
-            for char in sorted_skills[skill][1:]:
-                stayahead_advices[skill].append(Advice(
-                    label=(
-                        f"{char.character_name} can level {skill}"  # to {sorted_skills[skill][0].skills[skill]-1}"
-                        if char.skills[skill] < sorted_skills[skill][0].skills[skill]-1
-                        else f"{'🛑' if 'Maestro' not in char.all_classes else '⚠️'} {char.character_name} will overtake {skill} if leveled any further"
-                    ),
-                    picture_class=char.class_name_icon,
-                    progression=char.skills[skill],
-                    goal=sorted_skills[skill][0].skills[skill] - 1
-                ))
+            #Display the rest
+            if len(sorted_skills[skill]) > 1:
+                for char in sorted_skills[skill][1:]:
+                    stayahead_advices[skill].append(Advice(
+                        label=(
+                            f"{char.character_name} can level {skill}"  # to {sorted_skills[skill][0].skills[skill]-1}"
+                            if char.skills[skill] < sorted_skills[skill][0].skills[skill]-1
+                            else f"{'🛑' if 'Maestro' not in char.all_classes else '⚠️'} {char.character_name} will overtake {skill} if leveled any further"
+                        ),
+                        picture_class=char.class_name_icon,
+                        progression=char.skills[skill],
+                        goal=sorted_skills[skill][0].skills[skill] - 1
+                    ))
 
     #Catch Up
     catchup_ag = AdviceGroup(
