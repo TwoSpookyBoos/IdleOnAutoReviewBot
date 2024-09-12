@@ -1,8 +1,16 @@
 import math
+from pathlib import Path
+
+import yaml
+
 from utils.logging import get_logger
 from utils.text_formatting import getItemDisplayName
+from config import app
 
 logger = get_logger(__name__)
+
+with open(Path(app.static_folder) / 'items.yaml', 'r') as f:
+    items_codes_and_names = yaml.load(f, yaml.Loader)
 
 ###GENERAL PROGRESSION TIERS###
 combatLevels_progressionTiers = [
