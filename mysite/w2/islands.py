@@ -29,6 +29,7 @@ def getTrashIslandAdviceGroup() -> AdviceGroup:
             progression=session_data.account.islands['Trash Island']['Garbage Purchases'],
             goal=9
         ))
+
     for stamp_name in ['Golden Sixes Stamp', 'Stat Wallstreet Stamp', 'Skelefish Stamp', 'Amplestample Stamp']:
         if not session_data.account.islands['Trash Island'][stamp_name]['Unlocked']:
             trash_advices.append(Advice(
