@@ -39,7 +39,7 @@ def setAchievementsProgressionTier():
     #Advice Group
     for category in achievement_categories:
         achievements_AdviceGroupDict[category] = AdviceGroup(
-            tier=tiers[categoryName],
+            tier=tiers[category],
             pre_string=f"Complete achievements for {category}",
             advices=achievements_AdviceDict[category]
         )

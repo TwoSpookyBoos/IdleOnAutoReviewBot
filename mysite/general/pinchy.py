@@ -134,6 +134,7 @@ class Placements(dict):
     VIALS = "Vials"
     P2W = "Pay2Win"
     SIGILS = "Sigils"
+    ISLANDS = "Islands"
     REFINERY = "Refinery"
     SAMPLING = "Sampling"
     SALT_LICK = "Salt Lick"
@@ -148,7 +149,7 @@ class Placements(dict):
     sections = [
         COMBAT_LEVELS, SECRET_CLASS_PATH, ACHIEVEMENTS,
         STAMPS, BRIBES, SMITHING, STATUES, STAR_SIGNS, OWL,
-        BUBBLES, VIALS, P2W, SIGILS,
+        BUBBLES, VIALS, P2W, SIGILS, ISLANDS,
         REFINERY, SAMPLING, SALT_LICK, DEATH_NOTE, PRAYERS, EQUINOX,
         BREEDING, COOKING, RIFT,
         DIVINITY, SAILING
@@ -170,6 +171,7 @@ class Placements(dict):
         VIALS:         [0,   0, 0, 0,    1,  1,  2,      2,  3,  4,      5,  6,  7,      8,  9,  10,     12, 20, 25,     26,   99],
         P2W:           [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  1,      1,  1,  1,      1,  1,  1,      1,    99],
         SIGILS:        [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  1,      2,  3,  4,      8,    99],
+        ISLANDS:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      4,    99],
         REFINERY:      [0,   0, 0, 0,    0,  0,  0,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,    99],
         SAMPLING:      [0,   0, 0, 0,    0,  1,  1,      1,  2,  2,      2,  3,  3,      3,  4,  5,      6,  7,  8,      9,    99],
         SALT_LICK:     [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      9,    99],

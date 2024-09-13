@@ -300,7 +300,7 @@ greenstack_progressionTiers = {
             },
         13: {
             "Base Monster Materials": [
-                "Quest15"],
+                "Quest15", "Hgg"],
             "Crystal Enemy Drops": [
                 "EquipmentStatues1", "EquipmentStatues5",  #Power and Health statues are still more common than W2 statues
                 "EquipmentStatues10", "EquipmentStatues12", "EquipmentStatues13", "EquipmentStatues8", "EquipmentStatues11",  #W2 statues
@@ -317,8 +317,6 @@ greenstack_progressionTiers = {
                 "FoodPotMana3", "FoodPotRe1", "ButterBar", ],
         },
         14: {
-            "Base Monster Materials": [
-                "Hgg"],
             "Crystal Enemy Drops": [
                 "StoneW2", "SilverPen"],  #"StoneA2",],
             "Other Skilling Resources": [
@@ -523,7 +521,7 @@ stamps_progressionTiers = {
         "Optional": ["Saw Stamp", "Agile Stamp", "Book Stamp", "Smart Dirt Stamp", "High IQ Lumber Stamp", "Fishhead Stamp", "Fly Intel Stamp", "Talent II Stamp"]
     }},
     13: {"TotalStampLevels": 2500, "Stamps": {
-        "Combat": ["Avast Yar Stamp", "Blackheart Stamp"],
+        "Combat": ["Avast Yar Stamp", "Blackheart Stamp", "Steve Sword",],
         "Skill": ["Banked Pts Stamp", "Nest Eggs Stamp", "Lab Tube Stamp", "Ladle Stamp", "Sailboat Stamp"],
         "Misc": ["Refinery", "Golden Apple Stamp", "Talent III Stamp"],
         "Specific": {
@@ -534,7 +532,7 @@ stamps_progressionTiers = {
         "Optional": ["Arcane Stamp", "Gilded Axe Stamp", "DNA Stamp"]
     }},
     14: {"TotalStampLevels": 4000, "Stamps": {
-        "Combat": ["Steve Sword", "Diamond Axe Stamp", "Sashe Sidestamp"],
+        "Combat": ["Diamond Axe Stamp", "Sashe Sidestamp"],
         "Skill": ["Gamejoy Stamp", "Divine Stamp"],
         "Misc": ["Potion Stamp", "Questin Stamp"],
         "Specific": {
@@ -843,7 +841,7 @@ bubbles_progressionTiers = [
      {'Roid Ragin': 740, 'Warriors Rule': 450, 'Hearty Diggy': 900, 'Stronk Tools': 630, 'Multorange': 270, 'Dream Of Ironfish': 270},
      {'Swift Steppin': 740, 'Archer Or Bust': 450, 'Premigreen': 270},
      {'Stable Jenius': 740, 'Mage Is Best': 450, 'Hocus Choppus': 900, 'Le Brain Tools': 630, 'Severapurple': 270, 'Tree Sleeper': 360},
-     {'Droppin Loads': 280, 'Shimmeron': 360},
+     {'Droppin Loads': 280, 'Shimmeron': 360, 'Buff Boi Talent': 100, 'Fast Boi Talent': 100, 'Smart Boi Talent': 100,},
      "90% max value",
      ""],
     [14, 120,
@@ -885,7 +883,7 @@ bubbles_progressionTiers = [
      {'Roid Ragin': 860, 'Warriors Rule': 1200, 'Multorange': 720},
      {'Swift Steppin': 860, 'Archer Or Bust': 1200},
      {'Stable Jenius': 860, 'Mage Is Best': 1200, 'Severapurple': 720},
-     {'Call Me Bob': 700, 'Cropius Mapper': 630, 'Lo Cost Mo Jade': 360},
+     {'Call Me Bob': 700, 'Cropius Mapper': 630, 'Lo Cost Mo Jade': 360, 'Buff Boi Talent': 200, 'Fast Boi Talent': 200, 'Smart Boi Talent': 200,},
      "96% max value",
      ""],
     [20, 120,
@@ -907,6 +905,7 @@ bubbles_progressionTiers = [
      {'Swift Steppin': 950, 'Archer Or Bust': 4950},
      {'Stable Jenius': 950, 'Mage Is Best': 4950, 'Severapurple': 2970},
      {'Big P': 1440, 'Call Me Bob': 2500, "Nickel Of Wisdom": 120, "Penny Of Strength": 120, "Dollar Of Agility": 120,
+      'Buff Boi Talent': 300, 'Fast Boi Talent': 300, 'Smart Boi Talent': 300,
       'Droppin Loads': 1330, 'Startue Exp': 1140, "Grind Time": 5000},
      "99% max value",
      ""],
@@ -939,7 +938,7 @@ bubbles_progressionTiers = [
       'Slabe Logsoul': 5940, 'Slabe Wisdom': 5940, 'Endgame Eff III': 5940, 'Tome Wisdom': 5940},
      {'Cookin Roadkill': 6930, 'Call Me Bob': 10000, 'Carpenter': 4950, "Nickel Of Wisdom": 2970, "Penny Of Strength": 2970, "Dollar Of Agility": 2970,
       'Droppin Loads': 6930, 'Startue Exp': 5940, 'Laaarrrryyyy': 9900, 'Big Game Hunter': 2970, 'Mr Massacre': 4950, 'Shimmeron': 3960, 'Lo Cost Mo Jade': 3960,
-      'Hammer Hammer': 10000, "Grind Time": 10000},
+      'Hammer Hammer': 10000, "Grind Time": 10000, 'Buff Boi Talent': 1000, 'Fast Boi Talent': 1000, 'Smart Boi Talent': 1000,},
      "99% catchup",
      ""],
 ]
@@ -1066,6 +1065,13 @@ sigils_progressionTiers = {
             "Wizardly Hat": 3, "Metal Exterior": 3, "VIP Parchment": 3, "Tuft Of Hair": 3,
         },
     },
+}
+islands_progressionTiers = {
+    0: {},
+    1: {'Islands': ['Trash Island']},
+    2: {'Islands': ['Seasalt Island', 'Shimmer Island']},
+    3: {'Islands': ['Crystal Island', 'Rando Island']},
+    4: {'Islands': ['Fractal Island']},
 }
 
 ###WORLD 3 PROGRESSION TIERS###
@@ -4530,6 +4536,33 @@ obolsDict = {
 ignorable_obols_list = [
     'Blank', 'LockedInvSpace', 'ObolLocked1', 'ObolLocked2', 'ObolLocked3', 'ObolLocked4',
 ]
+islands_dict = {
+    'Trash Island':     {'Code': '_', 'Description': 'Trade garbage that washs up each day for items',},
+    'Rando Island':     {'Code': 'a', 'Description': 'Guaranteed Random Event once a week',},
+    'Crystal Island':   {'Code': 'b', 'Description': 'Fight daily giant crystal mobs that drop candy',},
+    'Seasalt Island':   {'Code': 'c', 'Description': 'Catch legendary fish for crafting World 6 equips',},
+    'Shimmer Island':   {'Code': 'd', 'Description': 'Do Weekly Challenges for Shimmer Upgrades',},
+    'Fractal Island':   {'Code': 'e', 'Description': 'Dump your time candy here for... nothing...?',},
+}
+islands_trash_shop_costs = {
+    'Skelefish Stamp': 20,
+    'Amplestample Stamp': 40,
+    'Golden Sixes Stamp': 80,
+    'Stat Wallstreet Stamp': 300,
+    'Unlock New Bribe Set': 135,
+    'Filthy Damage Special Talent Book': 450,
+    'Trash Tuna Nametag': 1500
+}
+islands_fractal_rewards_dict = {
+    24: {'Reward': '1 in 100000 chance for Master of Nothing Trophy per hour of Nothing AFK', 'Image': 'master-of-nothing'},
+    200: {'Reward': '1.25x Dungeon Credits and Flurbos gained', 'Image': 'ballot-14'},
+    750: {'Reward': '-30% Kitchen Upgrade Costs', 'Image': 'cooking-table'},
+    2500: {'Reward': '1.20x Chance to find Sailing Artifacts', 'Image': 'artifact-find-chance'},
+    10e3: {'Reward': 'Dirty Shovel digs up +25% more Gold Nuggets', 'Image': 'dirty-shovel'},
+    20e3: {'Reward': '+100 Star Talent Pts', 'Image': 'star-talent-icon'},
+    40e3: {'Reward': 'World 6 Bonus... I wonder what it will be...', 'Image': 'rift-tbd'},
+    60e3: {'Reward': 'World 7 Bonus... I wonder what it will be...', 'Image': 'rift-tbd'},
+}
 
 def getReadableVialNames(inputNumber):
     try:

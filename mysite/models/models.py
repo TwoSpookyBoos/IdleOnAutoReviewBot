@@ -34,6 +34,7 @@ from consts import (
     ballotDict,
     fishingToolkitDict,
     obolsDict, ignorable_obols_list,
+    islands_dict, islands_trash_shop_costs,
     # W3
     buildingsDict, shrinesList, saltLickList, atomsList, colliderStorageLimitList,
     prayersDict,
@@ -1287,7 +1288,7 @@ class Account:
         if len(raw_printer_xtra) >= 121:
             for codeName in raw_printer_xtra[120:]:
                 if codeName != 'Blank':
-                    self.item_filter.append(getItemDisplayName(codeName))
+                    self.item_filter.append(codeName)
 
     def _parse_general_maps(self):
         self.enemy_maps = buildMaps()
@@ -1468,6 +1469,7 @@ class Account:
         self._parse_w2_arcade()
         self._parse_w2_ballot()
         self._parse_w2_obols()
+        self._parse_w2_islands()
 
     def _parse_w2_vials(self):
         self.alchemy_vials = {}
@@ -1707,6 +1709,20 @@ class Account:
                 else:
                     self.obols[obolBonusType][obolShape][obol]['Count'] += 1
         #print(f"session_data.account.obols: {self.obols['Drop Rate']}")
+
+    def _parse_w2_islands(self):
+        self.islands = {
+            'Trash': int(float(self.raw_optlacc_dict.get(161, 0))),  #[161]: 362.202271805249
+            'Bottles': int(float(self.raw_optlacc_dict.get(162, 0))),  #[162]: 106.90044163281846
+        }
+        raw_islands_list = list(self.raw_optlacc_dict.get(169, ''))  #[169]: "_dcabe"
+        for islandName, islandData in islands_dict.items():
+            self.islands[islandName] = {
+                'Unlocked': islandData['Code'] in raw_islands_list,
+                'Description': islandData['Description']
+            }
+
+        self.nothing_hours = self.raw_optlacc_dict.get(184, 0)
 
     def _parse_w3(self):
         self._parse_w3_buildings()
@@ -2710,8 +2726,13 @@ class Account:
     def _calculate_general_item_filter(self):
         raw_fishing_toolkit_lures = safe_loads(self.raw_data.get("FamValFishingToolkitOwned", [{'0': 0, 'length': 1}]))[0]
         raw_fishing_toolkit_lines = safe_loads(self.raw_data.get("FamValFishingToolkitOwned", [{'0': 0, 'length': 1}]))[1]
-        for filtered_displayName in self.item_filter:
-            if filtered_displayName == "Lucky Lad" and getItemCodeName("Luckier Lad") not in self.registered_slab and self.stored_assets.get("Trophy2").amount < 75:
+        for filtered_codeName in self.item_filter:
+            filtered_displayName = getItemDisplayName(filtered_codeName)
+            if (
+                filtered_codeName == 'Trophy2'  #Lucky Lad
+                and 'Trophy20' not in self.registered_slab  #Luckier Lad
+                and self.stored_assets.get("Trophy2").amount < 75
+            ):
                 self.alerts_AdviceDict['General'].append(Advice(
                     label=f"Lucky filtered before 75 for Luckier Lad",
                     picture_class="lucky-lad",
@@ -2730,7 +2751,7 @@ class Account:
                     label=f"Why did you filter {filtered_displayName}???",
                     picture_class=filtered_displayName,
                 ))
-            elif getItemCodeName(filtered_displayName) not in self.registered_slab:
+            elif filtered_codeName not in self.registered_slab:
                 self.alerts_AdviceDict['General'].append(Advice(
                     label=f"{filtered_displayName} filtered, not in Slab",
                     picture_class=filtered_displayName,
@@ -2840,6 +2861,7 @@ class Account:
         self._calculate_w2_sigils()
         self._calculate_w2_cauldrons()
         self._calculate_w2_ballot()
+        self._calculate_w2_islands_trash()
 
     def _calculate_w2_cauldrons(self):
         perCauldronBubblesUnlocked = [
@@ -2895,6 +2917,20 @@ class Account:
             # Check for multi replacements
             if "}" in buffValuesDict['Description']:
                 self.ballot['Buffs'][buffIndex]['Description'] = buffValuesDict['Description'].replace("}", f"{1 + (self.ballot['Buffs'][buffIndex]['Value'] / 100):.3f}")
+
+    def _calculate_w2_islands_trash(self):
+        for item in islands_trash_shop_costs:
+            self.islands['Trash Island'][item] = {'Cost': islands_trash_shop_costs[item]}
+        #Onetime purchases
+        self.islands['Trash Island']['Skelefish Stamp']['Unlocked'] = self.stamps['Skelefish Stamp']['Delivered'] or self.stored_assets.get('StampB47').amount > 0
+        self.islands['Trash Island']['Amplestample Stamp']['Unlocked'] = self.stamps['Amplestample Stamp']['Delivered'] or self.stored_assets.get('StampB32').amount > 0
+        self.islands['Trash Island']['Golden Sixes Stamp']['Unlocked'] = self.stamps['Golden Sixes Stamp']['Delivered'] or self.stored_assets.get('StampA38').amount > 0
+        self.islands['Trash Island']['Stat Wallstreet Stamp']['Unlocked'] = self.stamps['Stat Wallstreet Stamp']['Delivered'] or self.stored_assets.get('StampA39').amount > 0
+        self.islands['Trash Island']['Unlock New Bribe Set']['Unlocked'] = self.bribes['Trash Island']['The Art of the Bail'] >= 0
+
+        #Repeated purchases
+        self.islands['Trash Island']['Garbage Purchases'] = self.raw_optlacc_dict.get(163, 0)
+        self.islands['Trash Island']['Bottle Purchases'] = self.raw_optlacc_dict.get(164, 0)
 
     def _calculate_w3(self):
         self._calculate_w3_building_max_levels()
