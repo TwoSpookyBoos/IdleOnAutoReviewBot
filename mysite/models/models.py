@@ -8,7 +8,7 @@ from config import app
 from collections import defaultdict
 from enum import Enum
 from math import ceil, floor
-from typing import Any
+from typing import Any, Union
 from flask import g
 from utils.data_formatting import getCharacterDetails, safe_loads
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
@@ -58,6 +58,7 @@ from consts import (
     getMoissaniteValue, getGemstoneBaseValue, getGemstoneBoostedValue, getGemstonePercent,
     marketUpgradeList, landrankDict,
     summoningBattleCountsDict, summoningDict,
+    items_codes_and_names
 )
 
 
@@ -754,13 +755,14 @@ class Asset:
         self.name: str = name if name else getItemDisplayName(codename)
         self.codename: str = codename if codename else getItemCodeName(name)
         self.amount: float = amount
-        self.greenstacked: bool = self.amount >= greenStackAmount
-        self.progression: int = self.amount * 100 // greenStackAmount
         self.quest: str = ""
 
     def __eq__(self, other):
-        if isinstance(other, str):
-            return other == self.codename or other == self.name
+        match other:
+            case str():
+                return other == self.codename or other == self.name
+            case Assets():
+                return other.codename == self.codename and other.name == self.name
 
     def __str__(self):
         return f"{self.name}: {self.amount}"
@@ -771,6 +773,25 @@ class Asset:
     def __hash__(self):
         return str(self.__dict__).__hash__()
 
+    def __add__(self, other):
+        match other:
+            case Asset():
+                self.amount += other.amount
+            case int():
+                self.amount += other
+            case _:
+                print(f"RHS operand not of valid type: '{type(other)}'. Not added.")
+
+        return self
+
+    @property
+    def greenstacked(self) -> bool:
+        return self.amount >= greenStackAmount
+
+    @property
+    def progression(self) -> int:
+        return self.amount * 100 // greenStackAmount
+
 
 class Assets(dict):
     def __init__(self, assets: dict[str, int]):
@@ -780,6 +801,18 @@ class Assets(dict):
                 (codename, Asset(codename, count)) for codename, count in assets.items()
             )
         )
+
+    def __add__(self, other: Union["Assets", dict[str, int]]):
+        match other:
+            case Assets() | dict():
+                for codename, asset in other.items():
+                    this_asset = self.get(codename)
+                    this_asset += asset
+
+            case _:
+                print(f"RHS operand not of valid type: '{type(other)}'. Not added.")
+
+        return self
 
     def get(self, item, default=None):
         return super().get(item, default if default else Asset(item, 0))
@@ -1135,6 +1168,7 @@ class Account:
         self.raw_serverVars_dict = safe_loads(self.raw_data.get("serverVars", {}))
         self.stored_assets = self._all_stored_items()
         self.worn_assets = self._all_worn_items()
+        self.all_assets = self.stored_assets + self.worn_assets
         self.cards = self._make_cards()
 
         self.minigame_plays_remaining = self.raw_optlacc_dict.get(33, 0)
@@ -3642,34 +3676,21 @@ class Account:
         name_quantity_key_pairs = chest_keys + tuple(
             (f"InventoryOrder_{i}", f"ItemQTY_{i}") for i in self.safe_playerIndexes
         )
-        all_stuff_owned = defaultdict(int)
-
-        for codename in gstackable_codenames:
-            all_stuff_owned[codename] = 0
+        all_stuff_stored_or_in_inv = dict.fromkeys(items_codes_and_names.keys(), 0)
 
         for name_key, quantity_key in name_quantity_key_pairs:
-            try:
-                for name, count in zip(
-                    self.raw_data[name_key], self.raw_data[quantity_key]
-                ):
-                    try:
-                        all_stuff_owned[name] += int(count)
-                    except Exception as reason:
-                        print(f"models._all_owned_items EXCEPTION: Unable to add ({type(count)}) {count} to {name}: {reason}")
-                        continue
-            except Exception as reason:
-                print(f"models._all_owned_items EXCEPTION: Unable to access {name_key} or {quantity_key} from JSON: {reason}")
-                continue
+            pair_item_name_to_quantity = zip(self.raw_data.get(name_key, list()), self.raw_data.get(quantity_key, list()))
+            for name, count in pair_item_name_to_quantity:
+                all_stuff_stored_or_in_inv[name] += int(count)
 
-        return Assets(all_stuff_owned)
+        return Assets(all_stuff_stored_or_in_inv)
 
     def _all_worn_items(self) -> Assets:
         stuff_worn = defaultdict(int)
         for toon in self.safe_characters:
-            for stuff_list in [toon.equipment.foods, toon.equipment.equips]:
-                for item in stuff_list:
-                    if item.codename != 'Blank':
-                        if item.codename not in stuff_worn:
-                            stuff_worn[item.codename] = 0
-                        stuff_worn[item.codename] += item.amount
+            for item in [*toon.equipment.foods, *toon.equipment.equips]:
+                if item.codename == 'Blank':
+                    continue
+                stuff_worn[item.codename] += item.amount
+
         return Assets(stuff_worn)
