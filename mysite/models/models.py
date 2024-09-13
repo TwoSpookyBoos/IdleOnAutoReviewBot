@@ -2926,7 +2926,7 @@ class Account:
         self.islands['Trash Island']['Amplestample Stamp']['Unlocked'] = self.stamps['Amplestample Stamp']['Delivered'] or self.stored_assets.get('StampB32').amount > 0
         self.islands['Trash Island']['Golden Sixes Stamp']['Unlocked'] = self.stamps['Golden Sixes Stamp']['Delivered'] or self.stored_assets.get('StampA38').amount > 0
         self.islands['Trash Island']['Stat Wallstreet Stamp']['Unlocked'] = self.stamps['Stat Wallstreet Stamp']['Delivered'] or self.stored_assets.get('StampA39').amount > 0
-        self.islands['Trash Island']['Unlock New Bribe Set']['Unlocked'] = self.bribes['Trash Island']['The Art of the Bail'] >= 0
+        self.islands['Trash Island']['Unlock New Bribe Set']['Unlocked'] = self.bribes['Trash Island']['Random Garbage'] >= 0
 
         #Repeated purchases
         self.islands['Trash Island']['Garbage Purchases'] = self.raw_optlacc_dict.get(163, 0)
