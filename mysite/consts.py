@@ -4571,6 +4571,43 @@ islands_fractal_rewards_dict = {
     40e3: {'Reward': 'World 6 Bonus... I wonder what it will be...', 'Image': 'rift-tbd'},
     60e3: {'Reward': 'World 7 Bonus... I wonder what it will be...', 'Image': 'rift-tbd'},
 }
+killroy_dict = {
+    'Timer': {
+        'Required Fights': 0,
+        'Required Equinox': 0,
+        'UpgradesIndex': 106,
+        'Image': 'killroy-timer'
+    },
+    'Talent Points': {
+        'Required Fights': 2,
+        'Required Equinox': 0,
+        'UpgradesIndex': 107,
+        'Image': 'killroy-talent-points'},
+    'Skulls': {
+        'Required Fights': 16,
+        'Required Equinox': 0,
+        'UpgradesIndex': 108,
+        'Image': 'killroy-skulls'
+    },
+    'Respawn': {
+        'Required Fights': 36,
+        'Required Equinox': 1,
+        'UpgradesIndex': 109,
+        'Image': 'killroy-respawn'
+    },
+    'Dungeon Credits': {
+        'Required Fights': 64,
+        'Required Equinox': 2,
+        'UpgradesIndex': 110,
+        'Image': 'killroy-dungeon-credits'
+    },
+    'Pearls': {
+        'Required Fights': 100,
+        'Required Equinox': 3,
+        'UpgradesIndex': 111,
+        'Image': 'killroy-pearls'
+    },
+        }
 
 def getReadableVialNames(inputNumber):
     try:

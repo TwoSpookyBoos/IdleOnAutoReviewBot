@@ -35,6 +35,7 @@ from consts import (
     fishingToolkitDict,
     obolsDict, ignorable_obols_list,
     islands_dict, islands_trash_shop_costs,
+    killroy_dict,
     # W3
     buildingsDict, shrinesList, saltLickList, atomsList, colliderStorageLimitList,
     prayersDict,
@@ -1504,6 +1505,7 @@ class Account:
         self._parse_w2_ballot()
         self._parse_w2_obols()
         self._parse_w2_islands()
+        self._parse_w2_killroy()
 
     def _parse_w2_vials(self):
         self.alchemy_vials = {}
@@ -1757,6 +1759,16 @@ class Account:
             }
 
         self.nothing_hours = self.raw_optlacc_dict.get(184, 0)
+
+    def _parse_w2_killroy(self):
+        self.killroy = {}
+        for upgradeName, upgradeDict in killroy_dict.items():
+            self.killroy[upgradeName] = {
+                'Available': False,
+                'Remaining': max(0, upgradeDict['Required Fights'] - self.raw_optlacc_dict.get(112, 0)),
+                'Upgrades': self.raw_optlacc_dict.get(upgradeDict['UpgradesIndex'], 0),
+                'Image': upgradeDict['Image']
+            }
 
     def _parse_w3(self):
         self._parse_w3_buildings()
@@ -2896,6 +2908,7 @@ class Account:
         self._calculate_w2_cauldrons()
         self._calculate_w2_ballot()
         self._calculate_w2_islands_trash()
+        self._calculate_w2_killroy()
 
     def _calculate_w2_cauldrons(self):
         perCauldronBubblesUnlocked = [
@@ -2965,6 +2978,15 @@ class Account:
         #Repeated purchases
         self.islands['Trash Island']['Garbage Purchases'] = self.raw_optlacc_dict.get(163, 0)
         self.islands['Trash Island']['Bottle Purchases'] = self.raw_optlacc_dict.get(164, 0)
+
+    def _calculate_w2_killroy(self):
+        for upgradeName, upgradeDict in killroy_dict.items():
+            if not self.killroy[upgradeName]['Available']:
+                self.killroy[upgradeName]['Available'] = (
+                    self.raw_optlacc_dict.get(112, 0) >= upgradeDict['Required Fights']
+                    or self.killroy[upgradeName]['Upgrades'] > 0
+                    or self.equinox_bonuses['Shades of K']['CurrentLevel'] >= upgradeDict['Required Equinox']
+                )
 
     def _calculate_w3(self):
         self._calculate_w3_building_max_levels()

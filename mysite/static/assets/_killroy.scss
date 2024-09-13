@@ -1,0 +1,12 @@
+$killroy-upgrades: (
+    killroy-timer: img('killroy/killroy_upgrade_01.png'),
+    killroy-talent-points: img('killroy/killroy_upgrade_02.png'),
+    killroy-skulls: img('killroy/killroy_upgrade_03.png'),
+    killroy-respawn: img('killroy/killroy_upgrade_04.png'),
+    killroy-dungeon-credits: img('killroy/killroy_upgrade_05.png'),
+    killroy-pearls: img('killroy/killroy_upgrade_06.png'),
+);
+
+$killroy-etc: ();
+
+$all-killroy: map-merge($killroy-upgrades, $killroy-etc);
