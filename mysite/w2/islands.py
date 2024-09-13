@@ -19,6 +19,8 @@ def getTrashIslandAdviceGroup() -> AdviceGroup:
         trash_advices.append(Advice(
             label=f"Unlock and Purchase the new {{{{ Bribes|#bribes}}}}",
             picture_class='bribes',
+            progression=session_data.account.islands['Trash'],
+            goal=session_data.account.islands['Trash Island']['Unlock New Bribe Set']['Cost']
         ))
     if session_data.account.islands['Trash Island']['Garbage Purchases'] < 9:
         trash_advices.append(Advice(
@@ -27,26 +29,14 @@ def getTrashIslandAdviceGroup() -> AdviceGroup:
             progression=session_data.account.islands['Trash Island']['Garbage Purchases'],
             goal=9
         ))
-    if not session_data.account.islands['Trash Island']['Golden Sixes Stamp']['Unlocked']:
-        trash_advices.append(Advice(
-            label=f"Purchase the Golden Sixes {{{{ Stamp|#stamps }}}}",
-            picture_class='golden-sixes-stamp',
-        ))
-    if not session_data.account.islands['Trash Island']['Stat Wallstreet Stamp']['Unlocked']:
-        trash_advices.append(Advice(
-            label=f"Purchase the Stat Wallstreet {{{{ Stamp|#stamps }}}}",
-            picture_class='stat-wallstreet-stamp',
-        ))
-    if not session_data.account.islands['Trash Island']['Skelefish Stamp']['Unlocked']:
-        trash_advices.append(Advice(
-            label=f"Purchase the Skelefish {{{{ Stamp|#stamps }}}}",
-            picture_class='skelefish-stamp',
-        ))
-    if not session_data.account.islands['Trash Island']['Amplestample Stamp']['Unlocked']:
-        trash_advices.append(Advice(
-            label=f"Purchase the Amplestample {{{{ Stamp|#stamps }}}}",
-            picture_class='amplestample-stamp',
-        ))
+    for stamp_name in ['Golden Sixes Stamp', 'Stat Wallstreet Stamp', 'Skelefish Stamp', 'Amplestample Stamp']:
+        if not session_data.account.islands['Trash Island'][stamp_name]['Unlocked']:
+            trash_advices.append(Advice(
+                label=f"Purchase the {stamp_name[:-6]} {{{{ Stamp|#stamps }}}}",
+                picture_class=stamp_name,
+                progression=session_data.account.islands['Trash'],
+                goal=session_data.account.islands['Trash Island'][stamp_name]['Cost']
+            ))
 
     trash_advicegroup = AdviceGroup(
         tier='',
