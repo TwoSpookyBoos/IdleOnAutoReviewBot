@@ -42,8 +42,8 @@ def getKillroyUpgradeRecommendationsAdviceGroup():
     skull_hardcap = 900
     desired_timer_ratio = 3/2
     timer_softcap = 180
-    skull_goal = min(skull_hardcap, max(2 + session_data.account.killroy['Timer']['Upgrades'], math.ceil(session_data.account.killroy['Timer']['Upgrades'] * desired_skull_ratio)))
-    timer_goal = min(timer_softcap, max(3 + session_data.account.killroy['Skulls']['Upgrades'], math.ceil(session_data.account.killroy['Skulls']['Upgrades'] * desired_timer_ratio)))
+    skull_goal = min(skull_hardcap, max(2 + session_data.account.killroy['Skulls']['Upgrades'], math.ceil(session_data.account.killroy['Skulls']['Upgrades'] * desired_skull_ratio)))
+    timer_goal = min(timer_softcap, max(3 + session_data.account.killroy['Timer']['Upgrades'], math.ceil(session_data.account.killroy['Timer']['Upgrades'] * desired_timer_ratio)))
     #logger.debug(f"skull_ratio: {player_skull_ratio}")
 
     future_advices[ratio_label].append(Advice(
