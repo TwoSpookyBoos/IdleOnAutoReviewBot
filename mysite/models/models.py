@@ -3684,7 +3684,10 @@ class Account:
         for name_key, quantity_key in name_quantity_key_pairs:
             pair_item_name_to_quantity = zip(self.raw_data.get(name_key, list()), self.raw_data.get(quantity_key, list()))
             for name, count in pair_item_name_to_quantity:
-                all_stuff_stored_or_in_inv[name] += int(count)
+                if name not in all_stuff_stored_or_in_inv:
+                    all_stuff_stored_or_in_inv[name] = int(count)
+                else:
+                    all_stuff_stored_or_in_inv[name] += int(count)
 
         return Assets(all_stuff_stored_or_in_inv)
 
