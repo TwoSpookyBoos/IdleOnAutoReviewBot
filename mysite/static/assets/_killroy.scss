@@ -7,6 +7,8 @@ $killroy-upgrades: (
     killroy-pearls: img('killroy/killroy_upgrade_06.png'),
 );
 
-$killroy-etc: ();
+$killroy-etc: (
+    killroy-skull: img('wiki/Killroy_Skull.png')
+);
 
 $all-killroy: map-merge($killroy-upgrades, $killroy-etc);

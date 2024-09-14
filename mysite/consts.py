@@ -404,7 +404,7 @@ achievements_progressionTiers = {
             'Vial Junkee': {'World': 2, 'Reward': '20% Sigil Speed', 'Rating': ''},
             'Fruit Salad': {'World': 2, 'Reward': '5% catching speed', 'Rating': ''},
             'Checkout Takeout': {'World': 3, 'Reward': '+5 Book max level', 'Rating': ''},
-            'Shiny Shells': {'World': 4, 'Reward': '10% Breeding Incubator Speed', 'Rating': ''},
+
             'Cabbage Patch': {'World': 4, 'Reward': '10% Meal Cooking Speed', 'Rating': ''},
             'Le Pretzel Bleu': {'World': 4, 'Reward': '20% Meal Cooking Speed', 'Rating': ''},
             'Gilded Shells': {'World': 4, 'Reward': '1.1x Egg Rarity chance', 'Rating': ''},
@@ -449,6 +449,7 @@ achievements_progressionTiers = {
         'Recipes': {},
         'Dungeon RNG Items': {},
         'Other Nice Rewards': {
+            'Shiny Shells': {'World': 4, 'Reward': '10% Breeding Incubator Speed', 'Rating': ''},
             'Perfect Trade Deal': {'World': 5, 'Reward': '+1 Treasure per Chest', 'Rating': ''},
             "Lil' Overgrowth": {'World': 6, 'Reward': '1.05x Crop Evo', 'Rating': ''},
             'Big Time Land Owner': {'World': 6, 'Reward': '1.15x Crop OG', 'Rating': ''},
@@ -1073,6 +1074,11 @@ sigils_progressionTiers = {
             "Wizardly Hat": 3, "Metal Exterior": 3, "VIP Parchment": 3, "Tuft Of Hair": 3,
         },
     },
+}
+killroy_progressionTiers = {
+    0: {},
+    1: {'Upgrades': {'Timer': 2, 'Talent Points': 1}, 'Note': 'Unlock Talent Points and place 1 point'},
+    2: {'Upgrades': {'Timer': 15, 'Skulls': 1}, 'Note': 'Unlock Skulls and place 1 point'},
 }
 islands_progressionTiers = {
     0: {},
@@ -4608,6 +4614,7 @@ killroy_dict = {
         'Image': 'killroy-pearls'
     },
         }
+killroy_only_1_level = ['Talent Points', 'Respawn', 'Dungeon Credits', 'Pearls']
 
 def getReadableVialNames(inputNumber):
     try:
