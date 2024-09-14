@@ -308,8 +308,8 @@ def setSecretClassProgressionTier():
             if session_data.account.all_quests[characterIndex].get("Rocklyte2", 0) == 1:
                 rock2complete = True
         totalQuestPeanuts = 1651 - (51*bush1complete) - (200*bush2complete) - (400*bush3complete) - (500*rock1complete) - (500*rock2complete)
-        goldenPeanutsOwned = session_data.account.stored_assets.get("PeanutG").amount + session_data.account.worn_assets.get("PeanutG").amount
-        peanutsOwned = session_data.account.stored_assets.get("Peanut").amount
+        goldenPeanutsOwned = session_data.account.all_assets.get("PeanutG").amount
+        peanutsOwned = session_data.account.all_assets.get("Peanut").amount
         if goldenPeanutsOwned < 6:
             peanutsRemaining = totalQuestPeanuts - peanutsOwned - (goldenPeanutsOwned*100)
         else:
@@ -341,19 +341,19 @@ def setSecretClassProgressionTier():
             secretClass_AdviceDict["UnlockNextClass"].append(Advice(
                 label="Hot Dogs can be purchased from both W1 Vendors daily",
                 picture_class="hot-dog",
-                progression=session_data.account.stored_assets.get("FoodHealth3").amount + session_data.account.worn_assets.get("FoodHealth3").amount,
+                progression=session_data.account.all_assets.get("FoodHealth3").amount,
                 goal=2 * peanutsRemaining
             ))
             secretClass_AdviceDict["UnlockNextClass"].append(Advice(
                 label="Bleach Logs",
                 picture_class="bleach-logs",
-                progression=session_data.account.stored_assets.get("BirchTree").amount,
+                progression=session_data.account.all_assets.get("BirchTree").amount,
                 goal=peanutsRemaining
             ))
             secretClass_AdviceDict["UnlockNextClass"].append(Advice(
                 label="Copper Ore",
                 picture_class="copper-ore",
-                progression=session_data.account.stored_assets.get("Copper").amount,
+                progression=session_data.account.all_assets.get("Copper").amount,
                 goal=peanutsRemaining
             ))
 

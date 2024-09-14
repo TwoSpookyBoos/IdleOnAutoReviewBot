@@ -1167,9 +1167,12 @@ class Account:
         # General / Multiple uses
         self.raw_optlacc_dict = {k: v for k, v in enumerate(safe_loads(self.raw_data.get("OptLacc", [])))}
         self.raw_serverVars_dict = safe_loads(self.raw_data.get("serverVars", {}))
+
         self.stored_assets = self._all_stored_items()
         self.worn_assets = self._all_worn_items()
-        self.all_assets = self.stored_assets + self.worn_assets
+        self.all_assets = copy.deepcopy(self.stored_assets)
+        self.all_assets + self.worn_assets
+
         self.cards = self._make_cards()
 
         self.minigame_plays_remaining = self.raw_optlacc_dict.get(33, 0)
