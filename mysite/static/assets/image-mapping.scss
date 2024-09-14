@@ -27,6 +27,7 @@
 @import "postoffice";
 @import "kangaroo";
 @import "ballot";
+@import "killroy";
 @import "islands";
 
 //W3
@@ -2217,6 +2218,7 @@ $id-map: map-merge($all-summoning, $id-map);
 $id-map: map-merge($ballot, $id-map);
 $id-map: map-merge($ui-map, $id-map);
 $id-map: map-merge($all-islands, $id-map);
+$id-map: map-merge($all-killroy, $id-map);
 
 $extra: (
     //storage: $cosmic-storage-chest,
