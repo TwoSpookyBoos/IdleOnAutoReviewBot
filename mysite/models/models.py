@@ -751,11 +751,17 @@ quest_items_codenames = expectedStackables["Missable Quest Items"]
 
 
 class Asset:
-    def __init__(self, codename: str, amount: float, name: str = ""):
-        self.name: str = name if name else getItemDisplayName(codename)
-        self.codename: str = codename if codename else getItemCodeName(name)
-        self.amount: float = amount
-        self.quest: str = ""
+    def __init__(self, codename: Union[str, "Asset"], amount: float, name: str = ""):
+        if isinstance(codename, Asset):
+            self.name: str = codename.name
+            self.codename: str = codename.codename
+            self.amount: float = codename.amount
+            self.quest: str = codename.quest
+        else:
+            self.name: str = name if name else getItemDisplayName(codename)
+            self.codename: str = codename if codename else getItemCodeName(name)
+            self.amount: float = amount
+            self.quest: str = ""
 
     def __eq__(self, other):
         match other:
@@ -773,7 +779,10 @@ class Asset:
     def __hash__(self):
         return str(self.__dict__).__hash__()
 
-    def __add__(self, other):
+    def __add__(self, other: Union["Asset", int]):
+        return Asset(self, 0).add(other)
+
+    def __iadd__(self, other: Union["Asset", int]):
         match other:
             case Asset():
                 self.amount += other.amount
@@ -783,6 +792,9 @@ class Asset:
                 print(f"RHS operand not of valid type: '{type(other)}'. Not added.")
 
         return self
+
+    def add(self, other: Union["Asset", int]):
+        return self.__iadd__(other)
 
     @property
     def greenstacked(self) -> bool:
@@ -794,21 +806,40 @@ class Asset:
 
 
 class Assets(dict):
-    def __init__(self, assets: dict[str, int]):
+    def __init__(self, assets: Union[dict[str, int], "Assets", None] = None):
         self.tiers = greenstack_progressionTiers
-        super().__init__(
-            tuple(
-                (codename, Asset(codename, count)) for codename, count in assets.items()
-            )
-        )
 
-    def __add__(self, other: Union["Assets", dict[str, int]]):
+        if assets is None:
+            assets = dict()
+
+        if isinstance(assets, Assets):
+            super().__init__(
+                tuple(
+                    (codename, Asset(asset, 0)) for codename, asset in assets.items()
+                )
+            )
+        else:
+            super().__init__(
+                tuple(
+                    (codename, Asset(codename, count)) for codename, count in assets.items()
+                )
+            )
+
+    def __add__(self, other: Union["Assets", Asset, dict[str, int]]):
+        """Creates a new Assets object as a sum of the two Asset-like operands"""
+        return Assets(self).add(other)
+
+    def add(self, other):
+        return self.__iadd__(other)
+
+    def __iadd__(self, other: Union["Assets", Asset, dict[str, int]]):
+        """Adds the other resource to self in-place"""
         match other:
             case Assets() | dict():
                 for codename, asset in other.items():
-                    this_asset = self.get(codename)
-                    this_asset += asset
-
+                    self.get(codename).add(asset)
+            case Asset():
+                self.get(other.codename).add(other)
             case _:
                 print(f"RHS operand not of valid type: '{type(other)}'. Not added.")
 
@@ -1169,8 +1200,7 @@ class Account:
 
         self.stored_assets = self._all_stored_items()
         self.worn_assets = self._all_worn_items()
-        self.all_assets = copy.deepcopy(self.stored_assets)
-        self.all_assets + self.worn_assets
+        self.all_assets = self.stored_assets + self.worn_assets
 
         self.cards = self._make_cards()
 
