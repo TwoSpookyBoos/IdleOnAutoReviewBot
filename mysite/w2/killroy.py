@@ -39,9 +39,11 @@ def getKillroyUpgradeRecommendationsAdviceGroup():
 
     player_skull_ratio = session_data.account.killroy['Skulls']['Upgrades'] / max(1, session_data.account.killroy['Timer']['Upgrades'])
     desired_skull_ratio = 2/3
+    skull_hardcap = 900
     desired_timer_ratio = 3/2
-    skull_goal = min(900, max(1, math.ceil(session_data.account.killroy['Timer']['Upgrades'] * desired_skull_ratio)))
-    timer_goal = max(1, math.ceil(session_data.account.killroy['Skulls']['Upgrades'] * desired_timer_ratio))
+    timer_softcap = 180
+    skull_goal = min(skull_hardcap, max(2 + session_data.account.killroy['Timer']['Upgrades'], math.ceil(session_data.account.killroy['Timer']['Upgrades'] * desired_skull_ratio)))
+    timer_goal = min(timer_softcap, max(3 + session_data.account.killroy['Skulls']['Upgrades'], math.ceil(session_data.account.killroy['Skulls']['Upgrades'] * desired_timer_ratio)))
     #logger.debug(f"skull_ratio: {player_skull_ratio}")
 
     future_advices[ratio_label].append(Advice(
@@ -51,40 +53,79 @@ def getKillroyUpgradeRecommendationsAdviceGroup():
         goal=f"{desired_skull_ratio:.2%}",
     ))
 
+    #Skull and timer Advice
     if player_skull_ratio < desired_skull_ratio:
-        if session_data.account.killroy['Skulls']['Available'] and session_data.account.killroy['Skulls']['Upgrades'] < skull_goal:
-            future_advices[ratio_label].append(Advice(
-                label=f"Level Skulls to {skull_goal} to meet desired ratio",
+        if session_data.account.killroy['Skulls']['Upgrades'] < skull_hardcap:
+            if session_data.account.killroy['Skulls']['Available']:
+                skull_advice = Advice(
+                    label=f"Level Skulls to {skull_goal} to meet desired ratio",
+                    picture_class='killroy-skulls',
+                    progression=session_data.account.killroy['Skulls']['Upgrades'],
+                    goal=skull_goal
+                )
+                timer_advice = Advice(
+                    label=f"Keep Timer as-is{' for now' if session_data.account.killroy['Timer']['Upgrades'] < timer_softcap else '. You have reached the softcap.'}",
+                    picture_class='killroy-timer',
+                    progression=session_data.account.killroy['Timer']['Upgrades'],
+                    # goal=timer_goal
+                )
+            else:
+                skull_advice = Advice(
+                    label=f"Level up Skulls once unlocked",
+                    picture_class='killroy-skulls',
+                )
+                timer_advice = Advice(
+                    label=f"Level Timer until you unlock Skulls upgrade",
+                    picture_class='killroy-timer',
+                    progression=session_data.account.killroy['Timer']['Upgrades'],
+                    goal=min(15, session_data.account.killroy['Timer']['Upgrades'] + session_data.account.killroy['Skulls']['Remaining'])
+                )
+        else:
+            skull_advice = Advice(
+                label=f"🛑 Skulls drop chance is hardcapped at {skull_hardcap} upgrades. Do not level further!",
                 picture_class='killroy-skulls',
                 progression=session_data.account.killroy['Skulls']['Upgrades'],
-                goal=skull_goal
-            ))
-            future_advices[ratio_label].append(Advice(
-                label=f"Keep Timer as-is for now",
-                picture_class='killroy-timer',
-                progression=session_data.account.killroy['Timer']['Upgrades'],
-                #goal=timer_goal
-            ))
-        else:
-            future_advices[ratio_label].append(Advice(
-                label=f"Level Timer until you unlock Skulls upgrade",
-                picture_class='killroy-timer',
-                progression=session_data.account.killroy['Timer']['Upgrades'],
-                goal=min(15, session_data.account.killroy['Timer']['Upgrades'] + session_data.account.killroy['Skulls']['Remaining'])
-            ))
+                # goal=skull_goal
+            )
+            if session_data.account.killroy['Timer']['Upgrades'] < timer_softcap:
+                timer_advice = Advice(
+                    label=f"Level Timer to {timer_goal} to meet desired ratio",
+                    picture_class='killroy-timer',
+                    progression=session_data.account.killroy['Timer']['Upgrades'],
+                    goal=timer_goal
+                )
+            else:
+                timer_advice = Advice(
+                    label=f"Some maps seem to stop respawning enemies after around {timer_softcap} Timer upgrades. Upgrade at your own risk.",
+                    picture_class='killroy-timer',
+                    progression=session_data.account.killroy['Timer']['Upgrades'],
+                )
     else:
-        future_advices[ratio_label].append(Advice(
-            label=f"Level Timer to {timer_goal} to meet desired ratio",
-            picture_class='killroy-timer',
-            progression=session_data.account.killroy['Timer']['Upgrades'],
-            goal=timer_goal
-        ))
-        future_advices[ratio_label].append(Advice(
-            label=f"{'Keep Skulls as - is for now' if session_data.account.killroy['Skulls']['Upgrades'] < skull_goal else 'Skulls hardcapped at 900. Time to stop!'}",
+        skull_advice = Advice(
+            label=f"'Keep Skulls as - is{' for now' if session_data.account.killroy['Skulls']['Upgrades'] < skull_hardcap else '. You have reached the hardcap!'}",
             picture_class='killroy-skulls',
             progression=session_data.account.killroy['Skulls']['Upgrades'],
-            #goal=skull_goal
-        ))
+            # goal=skull_goal
+        )
+        if session_data.account.killroy['Timer']['Upgrades'] < timer_softcap:
+            timer_advice = Advice(
+                label=f"Level Timer to {timer_goal} to meet desired ratio",
+                picture_class='killroy-timer',
+                progression=session_data.account.killroy['Timer']['Upgrades'],
+                goal=timer_goal
+            )
+        else:
+            timer_advice = Advice(
+                label=f"Some maps seem to stop respawning enemies after around {timer_softcap} Timer upgrades. Upgrade at your own risk.",
+                picture_class='killroy-timer',
+                progression=session_data.account.killroy['Timer']['Upgrades'],
+            )
+
+    #Decide if Skull or Timer advice goes first
+    if player_skull_ratio < desired_skull_ratio:
+        future_advices[ratio_label].extend([skull_advice, timer_advice])
+    else:
+        future_advices[ratio_label].extend([timer_advice, skull_advice])
 
     for upgradeName, upgradeDict in session_data.account.killroy.items():
         if upgradeName in killroy_only_1_level:
@@ -98,13 +139,6 @@ def getKillroyUpgradeRecommendationsAdviceGroup():
                 progression=upgradeDict['Upgrades'],
                 goal=1
             ))
-        # else:
-        #     future_advices[ratio_label].append(Advice(
-        #         label=f"Continue leveling {upgradeName}",
-        #         picture_class=upgradeDict['Image'],
-        #         progression=upgradeDict['Upgrades'],
-        #         goal=900 if upgradeName == 'Skulls' else ''
-        #     ))
 
     future_ag = AdviceGroup(
         tier="",
