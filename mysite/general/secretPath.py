@@ -44,22 +44,23 @@ def getRightHandsAdviceGroups():
                 goal=sorted_skills[skill][0].skills[skill]+1
             ))
         #Elif Maestro is 1st but is tied with 2nd and 2nd isn't another Maestro
-        elif sorted_skills[skill][0].skills[skill] == sorted_skills[skill][1].skills[skill] and 'Maestro' not in sorted_skills[skill][1].all_classes:
-            skills_needing_catchup.append(skill)
-            highest_jman_name = ''
-            highest_jman_level = 0
-            for char in sorted_skills[skill]:
-                if 'Maestro' in char.all_classes:
-                    highest_jman_name = char.character_name
-                    highest_jman_level = char.skills[skill]
-                    break
-            catchup_advices.append(Advice(
-                label=f"{highest_jman_name} is tied for best in {skill}."
-                      f"<br>Right Hand buff only applies if they're STRICTLY better 🙁",
-                picture_class=skill,
-                progression=highest_jman_level,
-                goal=highest_jman_level + 1
-            ))
+        elif len(sorted_skills[skill]) > 1:
+            if sorted_skills[skill][0].skills[skill] == sorted_skills[skill][1].skills[skill] and 'Maestro' not in sorted_skills[skill][1].all_classes:
+                skills_needing_catchup.append(skill)
+                highest_jman_name = ''
+                highest_jman_level = 0
+                for char in sorted_skills[skill]:
+                    if 'Maestro' in char.all_classes:
+                        highest_jman_name = char.character_name
+                        highest_jman_level = char.skills[skill]
+                        break
+                catchup_advices.append(Advice(
+                    label=f"{highest_jman_name} is tied for best in {skill}."
+                          f"<br>Right Hand buff only applies if they're STRICTLY better 🙁",
+                    picture_class=skill,
+                    progression=highest_jman_level,
+                    goal=highest_jman_level + 1
+                ))
         #Else if Journeyman is 1st and they aren't tied with 2nd
         else:
             #Display the leader
