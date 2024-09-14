@@ -4,7 +4,7 @@ from datetime import datetime
 from pathlib import Path
 
 import requests
-from flask import g, render_template, request, redirect, Response, send_from_directory
+from flask import g, render_template, request, redirect, Response, send_from_directory, make_response
 
 import consts
 import taskSuggester
@@ -184,6 +184,14 @@ def index() -> Response | str:
         player=player,
         switches=switches(),
     )
+
+
+@app.route("/cache", methods=["GET"])
+def cache_sha() -> str:
+    resp = make_response("")
+    resp.headers["X-Cache-Sha"] = app.config["CACHE_SHA"]
+
+    return resp
 
 
 def create_and_populate_log_files(data, headerData, msg, name_or_data, error):
