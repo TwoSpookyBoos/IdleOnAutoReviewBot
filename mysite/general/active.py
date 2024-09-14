@@ -447,7 +447,7 @@ def getConsumablesAdviceList() -> list[Advice]:
                     resource='time-candy-24-hr'
                 ))
 
-        total_gold_cakes = session_data.account.stored_assets.get('FoodG13').amount + session_data.account.worn_assets.get('FoodG13').amount
+        total_gold_cakes = session_data.account.all_assets.get('FoodG13').amount
 
         if (
             session_data.account.sneaking['JadeEmporium']["Gold Food Beanstalk"]['Obtained']
