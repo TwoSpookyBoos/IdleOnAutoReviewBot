@@ -404,7 +404,7 @@ achievements_progressionTiers = {
             'Vial Junkee': {'World': 2, 'Reward': '20% Sigil Speed', 'Rating': ''},
             'Fruit Salad': {'World': 2, 'Reward': '5% catching speed', 'Rating': ''},
             'Checkout Takeout': {'World': 3, 'Reward': '+5 Book max level', 'Rating': ''},
-            'Shiny Shells': {'World': 4, 'Reward': '10% Breeding Incubator Speed', 'Rating': ''},
+
             'Cabbage Patch': {'World': 4, 'Reward': '10% Meal Cooking Speed', 'Rating': ''},
             'Le Pretzel Bleu': {'World': 4, 'Reward': '20% Meal Cooking Speed', 'Rating': ''},
             'Gilded Shells': {'World': 4, 'Reward': '1.1x Egg Rarity chance', 'Rating': ''},
@@ -449,6 +449,7 @@ achievements_progressionTiers = {
         'Recipes': {},
         'Dungeon RNG Items': {},
         'Other Nice Rewards': {
+            'Shiny Shells': {'World': 4, 'Reward': '10% Breeding Incubator Speed', 'Rating': ''},
             'Perfect Trade Deal': {'World': 5, 'Reward': '+1 Treasure per Chest', 'Rating': ''},
             "Lil' Overgrowth": {'World': 6, 'Reward': '1.05x Crop Evo', 'Rating': ''},
             'Big Time Land Owner': {'World': 6, 'Reward': '1.15x Crop OG', 'Rating': ''},
@@ -594,7 +595,7 @@ stamps_progressionTiers = {
         "Specific": {
             'Golden Sixes Stamp': 120,
             'Maxo Slappo Stamp': 98, 'Sashe Sidestamp': 98, 'Intellectostampo': 98,
-            'Mason Jar Stamp': 96, "Matty Bag Stamp": 320, 'Crystallin': 260,
+            'Mason Jar Stamp': 92, "Matty Bag Stamp": 320, 'Crystallin': 260,
             'Triad Essence Stamp': 80, 'Forge Stamp': 220
         },
         "Optional": ["Sukka Foo", "Void Axe Stamp"]
@@ -814,35 +815,35 @@ bubbles_progressionTiers = [
      {'Roid Ragin': 567, 'Warriors Rule': 284, 'Hearty Diggy': 567, 'Stronk Tools': 397, 'Multorange': 170, 'Dream Of Ironfish': 170},
      {'Swift Steppin': 567, 'Archer Or Bust': 284, 'Premigreen': 170},
      {'Stable Jenius': 567, 'Mage Is Best': 284, 'Hocus Choppus': 567, 'Le Brain Tools': 397, 'Severapurple': 170, 'Tree Sleeper': 227},
-     {'Hammer Hammer': 180, 'Shimmeron': 227},
+     {'Hammer Hammer': 180},
      "85% max value",
      ""],
     [9, 120,
      {'Roid Ragin': 615, 'Warriors Rule': 308, 'Hearty Diggy': 615, 'Stronk Tools': 430, 'Multorange': 185, 'Dream Of Ironfish': 185},
      {'Swift Steppin': 615, 'Archer Or Bust': 308, 'Premigreen': 185},
      {'Stable Jenius': 615, 'Mage Is Best': 308, 'Hocus Choppus': 615, 'Le Brain Tools': 430, 'Severapurple': 185, 'Tree Sleeper': 246},
-     {'Hammer Hammer': 210, 'Shimmeron': 246},
+     {'Hammer Hammer': 210},
      "86% max value",
      ""],
     [10, 120,
      {'Roid Ragin': 670, 'Warriors Rule': 335, 'Hearty Diggy': 670, 'Stronk Tools': 469, 'Multorange': 201, 'Dream Of Ironfish': 201},
      {'Swift Steppin': 670, 'Archer Or Bust': 335, 'Premigreen': 201},
      {'Stable Jenius': 670, 'Mage Is Best': 335, 'Hocus Choppus': 670, 'Le Brain Tools': 469, 'Severapurple': 201, 'Tree Sleeper': 268},
-     {'Laaarrrryyyy': 501, 'Shimmeron': 268},
+     {'Laaarrrryyyy': 501},
      "87% max value",
      ""],
     [11, 120,
      {'Roid Ragin': 700, 'Warriors Rule': 367, 'Hearty Diggy': 734, 'Stronk Tools': 514, 'Multorange': 220, 'Dream Of Ironfish': 220},
      {'Swift Steppin': 700, 'Archer Or Bust': 367, 'Premigreen': 220},
      {'Stable Jenius': 700, 'Mage Is Best': 367, 'Hocus Choppus': 734, 'Le Brain Tools': 514, 'Severapurple': 220, 'Tree Sleeper': 294},
-     {'Cookin Roadkill': 630, 'Hammer Hammer': 270, 'Shimmeron': 294},
+     {'Cookin Roadkill': 630, 'Hammer Hammer': 270},
      "88% max value",
      ""],
     [12, 120,
      {'Roid Ragin': 720, 'Warriors Rule': 405, 'Hearty Diggy': 810, 'Stronk Tools': 567, 'Multorange': 243, 'Dream Of Ironfish': 243},
      {'Swift Steppin': 720, 'Archer Or Bust': 405, 'Premigreen': 243},
      {'Stable Jenius': 720, 'Mage Is Best': 405, 'Hocus Choppus': 810, 'Le Brain Tools': 567, 'Severapurple': 243, 'Tree Sleeper': 324},
-     {'Startue Exp': 240, 'Hammer Hammer': 300, 'Shimmeron': 324},
+     {'Startue Exp': 240, 'Hammer Hammer': 300},
      "89% max value",
      ""],
     [13, 120,
@@ -1073,6 +1074,11 @@ sigils_progressionTiers = {
             "Wizardly Hat": 3, "Metal Exterior": 3, "VIP Parchment": 3, "Tuft Of Hair": 3,
         },
     },
+}
+killroy_progressionTiers = {
+    0: {},
+    1: {'Upgrades': {'Timer': 2, 'Talent Points': 1}, 'Note': 'Unlock Talent Points and place 1 point'},
+    2: {'Upgrades': {'Timer': 15, 'Skulls': 1}, 'Note': 'Unlock Skulls and place 1 point'},
 }
 islands_progressionTiers = {
     0: {},
@@ -4571,6 +4577,44 @@ islands_fractal_rewards_dict = {
     40e3: {'Reward': 'World 6 Bonus... I wonder what it will be...', 'Image': 'rift-tbd'},
     60e3: {'Reward': 'World 7 Bonus... I wonder what it will be...', 'Image': 'rift-tbd'},
 }
+killroy_dict = {
+    'Timer': {
+        'Required Fights': 0,
+        'Required Equinox': 0,
+        'UpgradesIndex': 106,
+        'Image': 'killroy-timer'
+    },
+    'Talent Points': {
+        'Required Fights': 2,
+        'Required Equinox': 0,
+        'UpgradesIndex': 107,
+        'Image': 'killroy-talent-points'},
+    'Skulls': {
+        'Required Fights': 16,
+        'Required Equinox': 0,
+        'UpgradesIndex': 108,
+        'Image': 'killroy-skulls'
+    },
+    'Respawn': {
+        'Required Fights': 36,
+        'Required Equinox': 1,
+        'UpgradesIndex': 109,
+        'Image': 'killroy-respawn'
+    },
+    'Dungeon Credits': {
+        'Required Fights': 64,
+        'Required Equinox': 2,
+        'UpgradesIndex': 110,
+        'Image': 'killroy-dungeon-credits'
+    },
+    'Pearls': {
+        'Required Fights': 100,
+        'Required Equinox': 3,
+        'UpgradesIndex': 111,
+        'Image': 'killroy-pearls'
+    },
+        }
+killroy_only_1_level = ['Talent Points', 'Respawn', 'Dungeon Credits', 'Pearls']
 
 def getReadableVialNames(inputNumber):
     try:

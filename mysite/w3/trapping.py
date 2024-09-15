@@ -220,7 +220,7 @@ def getStaticShinyTrapAdviceList(highestTrapset: int) -> dict[str, list[Advice]]
     shinyTrapsLabelList = ["Royal 20 Minutes", "Royal 1 Hour", "Silkskin 20 Minutes", "Silkskin 1 Hour", "Royal 10 Hours", "Silkskin 20 Hours", "Royal 40 Hours"]
     shinyTrapsItemNameList = ["royal-traps", "royal-traps", "silkskin-traps", "silkskin-traps", "royal-traps", "silkskin-traps", "royal-traps"]
     shinyTrapsRequiredTrapIndexList = [6, 6, 1, 1, 6, 1, 6]
-    shinyTrapsEffPerHourList = ["12x/hr", "8x/hr", "3x/hr", "2.1x/hr", "3.8x/hr", "1.5x/hr", "3.13x/hr"]
+    shinyTrapsEffPerHourList = ["12x/hr", "8x/hr", "3x/hr", "2.1x/hr", "3.8x/hr", "1.25x/hr", "2.6x/hr"]
     for counter in range(0, len(shinyTrapsLabelList) - numOfVaccuumSuggestions):
         if highestTrapset >= shinyTrapsRequiredTrapIndexList[counter]:
             adviceDict["Shiny Chance Multi for Manually Claimed traps"].append(
@@ -251,7 +251,7 @@ def getStaticEXPTrapAdviceList(highestTrapset) -> dict[str, list[Advice]]:
     expTrapsLabelList = ["Natural 8 Hours", "Natural 20 Hours"]
     expTrapsItemNameList = ["natural-traps", "natural-traps"]
     expTrapsRequiredTrapIndexList = [3, 3]
-    expTrapsEffPerHourList = ["5x/hr", "3.75x/hr"]
+    expTrapsEffPerHourList = ["5x/hr", "3.12x/hr"]
     for counter in range(0, len(expTrapsLabelList) - numOfVaccuumSuggestions):
         if highestTrapset >= expTrapsRequiredTrapIndexList[counter]:
             adviceDict["Best Experience for Manually Claimed traps"].append(

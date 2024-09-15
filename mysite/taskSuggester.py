@@ -11,7 +11,7 @@ from utils.logging import get_logger
 from utils.text_formatting import is_username
 from general import combatLevels, greenstacks, pinchy, cards, secretPath, consumables, gemShop, active, achievements
 from w1 import stamps, bribes, smithing, statues, starsigns, owl
-from w2 import alchemy, islands
+from w2 import alchemy, killroy, islands
 from w3 import trapping, consRefinery, consDeathNote, worship, consSaltLick, consBuildings, equinox, library, sampling, collider
 from w4 import breeding, cooking, rift
 from w5 import slab, divinity, sailing
@@ -78,6 +78,7 @@ def main(inputData, runType="web"):
         section_alchP2W := alchemy.setAlchemyP2W(),
         section_alchSigils := alchemy.setAlchemySigilsProgressionTier(),
         # section_obols := idleon_Obols.setObolsProgressionTier(),
+        section_killroy := killroy.setKillroyProgressionTier(),
         section_islands := islands.setIslandsProgressionTier()
     ]
     # World 3

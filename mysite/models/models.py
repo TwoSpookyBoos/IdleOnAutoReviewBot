@@ -35,6 +35,7 @@ from consts import (
     fishingToolkitDict,
     obolsDict, ignorable_obols_list,
     islands_dict, islands_trash_shop_costs,
+    killroy_dict,
     # W3
     buildingsDict, shrinesList, saltLickList, atomsList, colliderStorageLimitList,
     prayersDict,
@@ -751,11 +752,17 @@ quest_items_codenames = expectedStackables["Missable Quest Items"]
 
 
 class Asset:
-    def __init__(self, codename: str, amount: float, name: str = ""):
-        self.name: str = name if name else getItemDisplayName(codename)
-        self.codename: str = codename if codename else getItemCodeName(name)
-        self.amount: float = amount
-        self.quest: str = ""
+    def __init__(self, codename: Union[str, "Asset"], amount: float, name: str = ""):
+        if isinstance(codename, Asset):
+            self.name: str = codename.name
+            self.codename: str = codename.codename
+            self.amount: float = codename.amount
+            self.quest: str = codename.quest
+        else:
+            self.name: str = name if name else getItemDisplayName(codename)
+            self.codename: str = codename if codename else getItemCodeName(name)
+            self.amount: float = amount
+            self.quest: str = ""
 
     def __eq__(self, other):
         match other:
@@ -773,7 +780,10 @@ class Asset:
     def __hash__(self):
         return str(self.__dict__).__hash__()
 
-    def __add__(self, other):
+    def __add__(self, other: Union["Asset", int]):
+        return Asset(self, 0).add(other)
+
+    def __iadd__(self, other: Union["Asset", int]):
         match other:
             case Asset():
                 self.amount += other.amount
@@ -783,6 +793,9 @@ class Asset:
                 print(f"RHS operand not of valid type: '{type(other)}'. Not added.")
 
         return self
+
+    def add(self, other: Union["Asset", int]):
+        return self.__iadd__(other)
 
     @property
     def greenstacked(self) -> bool:
@@ -794,21 +807,40 @@ class Asset:
 
 
 class Assets(dict):
-    def __init__(self, assets: dict[str, int]):
+    def __init__(self, assets: Union[dict[str, int], "Assets", None] = None):
         self.tiers = greenstack_progressionTiers
-        super().__init__(
-            tuple(
-                (codename, Asset(codename, count)) for codename, count in assets.items()
-            )
-        )
 
-    def __add__(self, other: Union["Assets", dict[str, int]]):
+        if assets is None:
+            assets = dict()
+
+        if isinstance(assets, Assets):
+            super().__init__(
+                tuple(
+                    (codename, Asset(asset, 0)) for codename, asset in assets.items()
+                )
+            )
+        else:
+            super().__init__(
+                tuple(
+                    (codename, Asset(codename, count)) for codename, count in assets.items()
+                )
+            )
+
+    def __add__(self, other: Union["Assets", Asset, dict[str, int]]):
+        """Creates a new Assets object as a sum of the two Asset-like operands"""
+        return Assets(self).add(other)
+
+    def add(self, other):
+        return self.__iadd__(other)
+
+    def __iadd__(self, other: Union["Assets", Asset, dict[str, int]]):
+        """Adds the other resource to self in-place"""
         match other:
             case Assets() | dict():
                 for codename, asset in other.items():
-                    this_asset = self.get(codename)
-                    this_asset += asset
-
+                    self.get(codename).add(asset)
+            case Asset():
+                self.get(other.codename).add(other)
             case _:
                 print(f"RHS operand not of valid type: '{type(other)}'. Not added.")
 
@@ -1169,8 +1201,7 @@ class Account:
 
         self.stored_assets = self._all_stored_items()
         self.worn_assets = self._all_worn_items()
-        self.all_assets = copy.deepcopy(self.stored_assets)
-        self.all_assets + self.worn_assets
+        self.all_assets = self.stored_assets + self.worn_assets
 
         self.cards = self._make_cards()
 
@@ -1507,6 +1538,7 @@ class Account:
         self._parse_w2_ballot()
         self._parse_w2_obols()
         self._parse_w2_islands()
+        self._parse_w2_killroy()
 
     def _parse_w2_vials(self):
         self.alchemy_vials = {}
@@ -1760,6 +1792,18 @@ class Account:
             }
 
         self.nothing_hours = self.raw_optlacc_dict.get(184, 0)
+
+    def _parse_w2_killroy(self):
+        self.killroy = {}
+        self.killroy_total_fights = self.raw_optlacc_dict.get(112, 0)
+        for upgradeName, upgradeDict in killroy_dict.items():
+            self.killroy[upgradeName] = {
+                'Available': False,
+                'Remaining': max(0, upgradeDict['Required Fights'] - self.killroy_total_fights),
+                'Upgrades': self.raw_optlacc_dict.get(upgradeDict['UpgradesIndex'], 0),
+                'Image': upgradeDict['Image']
+            }
+
 
     def _parse_w3(self):
         self._parse_w3_buildings()
@@ -2899,6 +2943,7 @@ class Account:
         self._calculate_w2_cauldrons()
         self._calculate_w2_ballot()
         self._calculate_w2_islands_trash()
+        self._calculate_w2_killroy()
 
     def _calculate_w2_cauldrons(self):
         perCauldronBubblesUnlocked = [
@@ -2968,6 +3013,14 @@ class Account:
         #Repeated purchases
         self.islands['Trash Island']['Garbage Purchases'] = self.raw_optlacc_dict.get(163, 0)
         self.islands['Trash Island']['Bottle Purchases'] = self.raw_optlacc_dict.get(164, 0)
+
+    def _calculate_w2_killroy(self):
+        for upgradeName, upgradeDict in killroy_dict.items():
+            if not self.killroy[upgradeName]['Available']:
+                self.killroy[upgradeName]['Available'] = (
+                    self.raw_optlacc_dict.get(112, 0) >= upgradeDict['Required Fights']
+                    or self.killroy[upgradeName]['Upgrades'] > 0
+                ) and self.equinox_bonuses['Shades of K']['CurrentLevel'] >= upgradeDict['Required Equinox']
 
     def _calculate_w3(self):
         self._calculate_w3_building_max_levels()
