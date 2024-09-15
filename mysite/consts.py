@@ -595,7 +595,7 @@ stamps_progressionTiers = {
         "Specific": {
             'Golden Sixes Stamp': 120,
             'Maxo Slappo Stamp': 98, 'Sashe Sidestamp': 98, 'Intellectostampo': 98,
-            'Mason Jar Stamp': 96, "Matty Bag Stamp": 320, 'Crystallin': 260,
+            'Mason Jar Stamp': 92, "Matty Bag Stamp": 320, 'Crystallin': 260,
             'Triad Essence Stamp': 80, 'Forge Stamp': 220
         },
         "Optional": ["Sukka Foo", "Void Axe Stamp"]
