@@ -404,10 +404,9 @@ achievements_progressionTiers = {
             'Vial Junkee': {'World': 2, 'Reward': '20% Sigil Speed', 'Rating': ''},
             'Fruit Salad': {'World': 2, 'Reward': '5% catching speed', 'Rating': ''},
             'Checkout Takeout': {'World': 3, 'Reward': '+5 Book max level', 'Rating': ''},
-
+            'Shiny Shells': {'World': 4, 'Reward': '10% Breeding Incubator Speed', 'Rating': ''},
             'Cabbage Patch': {'World': 4, 'Reward': '10% Meal Cooking Speed', 'Rating': ''},
             'Le Pretzel Bleu': {'World': 4, 'Reward': '20% Meal Cooking Speed', 'Rating': ''},
-            'Gilded Shells': {'World': 4, 'Reward': '1.1x Egg Rarity chance', 'Rating': ''},
             'Best Plate': {'World': 4, 'Reward': '10% cheaper Kitchen upgrades', 'Rating': ''},
         },
     },
@@ -449,7 +448,7 @@ achievements_progressionTiers = {
         'Recipes': {},
         'Dungeon RNG Items': {},
         'Other Nice Rewards': {
-            'Shiny Shells': {'World': 4, 'Reward': '10% Breeding Incubator Speed', 'Rating': ''},
+            'Gilded Shells': {'World': 4, 'Reward': '1.1x Egg Rarity chance', 'Rating': ''},
             'Perfect Trade Deal': {'World': 5, 'Reward': '+1 Treasure per Chest', 'Rating': ''},
             "Lil' Overgrowth": {'World': 6, 'Reward': '1.05x Crop Evo', 'Rating': ''},
             'Big Time Land Owner': {'World': 6, 'Reward': '1.15x Crop OG', 'Rating': ''},
