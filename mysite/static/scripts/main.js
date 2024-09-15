@@ -607,13 +607,14 @@ async function loadUpdatedAssetsIfNecessary() {
 
         // Compare the header value with localStorage value
         if (serverCacheSHA !== clientCacheSHA) {
-            console.log('Cache is invalid, values do not match');
+            console.log('Static files updated, updating stored cache SHA and invalidating cache');
 
             // Cache invalidation logic - here, you can refresh the page or clear specific cached resources
             // Update the value in localStorage with the new value from the server
             localStorage.setItem('cache-sha', serverCacheSHA);
 
             if ('caches' in window) {
+                console.log("'caches' key found, clearing all cache")
                 caches.keys().then(cacheNames => {
                     cacheNames.forEach(cacheName => {
                         caches.delete(cacheName);
@@ -622,8 +623,6 @@ async function loadUpdatedAssetsIfNecessary() {
             }
             // Optionally, reload the page to force re-fetching resources
             location.reload();  // True forces reload from the server, bypassing cache
-        } else {
-            console.log('Cache is valid, values match');
         }
     } catch (error) {
         console.error("Error fetching cache version:", error);
@@ -635,6 +634,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Define the fonts you are loading
     const fonts = ['Kode Mono', 'Open Sans', 'Rubik', 'Roboto']
     const loadedFonts = fonts.map(f => new FontFaceObserver(f).load())
+
+
 
     loadUpdatedAssetsIfNecessary()
 
