@@ -51,7 +51,7 @@ from consts import (
     maxNumberOfTerritories, indexFirstTerritoryAssignedPet, territoryNames, slotUnlockWavesList, breedingUpgradesDict, breedingGeneticsList,
     breedingShinyBonusList, breedingSpeciesDict, getShinyLevelFromDays, getDaysToNextShinyLevel,
     # W5
-    sailingDict, numberOfArtifactTiers,
+    sailingDict, numberOfArtifactTiers, captainBuffs,
     getStyleNameFromIndex, divinity_divinitiesDict, getDivinityNameFromIndex,
     gamingSuperbitsDict,
     # W6
@@ -2173,6 +2173,8 @@ class Account:
                 #Pads out the length of all tables to 11 entries, to be safe.
                 while len(raw_cooking_list[sublistIndex]) < 11:
                     raw_cooking_list[sublistIndex].append(0)
+        self.cooking['Tables'] = raw_cooking_list
+        self.cooking['Tables Owned'] = sum(1 for table in self.cooking['Tables'] if table[0] == 2)
 
     def _parse_w4_cooking_meals(self):
         emptyMeal = [0] * maxMeals
@@ -2271,6 +2273,7 @@ class Account:
 
     def _parse_w4_breeding(self):
         self.breeding = {
+            'Egg Slots': 3,
             'Unlocked Counts': {
                 "W1": 0,
                 "W2": 0,
@@ -2280,8 +2283,8 @@ class Account:
                 "W6": 0,
                 "W7": 0,
                 "W8": 0,
-            },  #complete
-            'Total Unlocked Count': 0,  #complete
+            },
+            'Total Unlocked Count': 0,
             'Shiny Days': {
                 "W1": [],
                 "W2": [],
@@ -2307,13 +2310,18 @@ class Account:
         raw_territory_list = safe_loads(self.raw_data.get("Territory", []))
         raw_breeding_pets = safe_loads(self.raw_data.get("Pets", []))
 
-        self._parse_w4_breeding_defaults(raw_breeding_list)
+        self._parse_w4_breeding_defaults()
         self._parse_w4_breeding_misc()
         self._parse_w4_breeding_upgrades(raw_breeding_list)
         self._parse_w4_breeding_territories(raw_breeding_pets, raw_territory_list)
         self._parse_w4_breeding_pets(raw_breeding_list)
+        self.breeding['Egg Slots'] += (
+            self.gemshop['Royal Egg Cap']
+            + self.breeding['Upgrades']['Egg Capacity']['Level']
+            + self.merits[3][2]['Level']
+        )
 
-    def _parse_w4_breeding_defaults(self, rawBreeding):
+    def _parse_w4_breeding_defaults(self):
         # Abilities defaulted to False
         for genetic in breedingGeneticsList:
             self.breeding["Genetics"][genetic] = False
@@ -2554,6 +2562,52 @@ class Account:
                     self.sailing['Artifacts'][artifactValuesDict['Name']] = {
                         'Level': 0
                     }
+        self._parse_w5_sailing_boats()
+        self._parse_w5_sailing_captains()
+
+    def _parse_w5_sailing_boats(self):
+        raw_sailing_boats = safe_loads(safe_loads(self.raw_data.get("Boats", [])))  # Some users have needed to have data converted twice
+        for boatIndex, boatDetails in enumerate(raw_sailing_boats):
+            try:
+                self.sailing['Boats'][boatIndex] = {
+                    'Captain': boatDetails[0],
+                    'Destination': boatDetails[1],
+                    'LootUpgrades': boatDetails[3],
+                    'SpeedUpgrades': boatDetails[5],
+                    'TotalUpgrades': boatDetails[3] + boatDetails[5]
+                }
+            except:
+                self.sailing['Boats'][boatIndex] = {
+                    'Captain': -1,
+                    'Destination': -1,
+                    'LootUpgrades': 0,
+                    'SpeedUpgrades': 0,
+                    'TotalUpgrades': 0
+                }
+
+    def _parse_w5_sailing_captains(self):
+        raw_sailing_captains = safe_loads(safe_loads(self.raw_data.get("Captains", [])))  # Some users have needed to have data converted twice
+        for captainIndex, captainDetails in enumerate(raw_sailing_captains):
+            try:
+                self.sailing['Captains'][captainIndex] = {
+                    'Tier': captainDetails[0],
+                    'TopBuff': captainBuffs[captainDetails[1]],
+                    'BottomBuff': captainBuffs[captainDetails[2]],
+                    'Level': captainDetails[3],
+                    #'EXP': captainDetails[4],
+                    'TopBuffBaseValue': captainDetails[5],
+                    'BottomBuffBaseValue': captainDetails[6],
+                }
+            except:
+                self.sailing['Captains'][captainIndex] = {
+                    'Tier': 0,
+                    'TopBuff': 'None',
+                    'BottomBuff': 'None',
+                    'Level': 0,
+                    #'EXP': 0,
+                    'TopBuffBaseValue': 0,
+                    'BottomBuffBaseValue': 0,
+                }
 
     def _parse_w5_divinity(self):
         self.divinity = {
@@ -2705,6 +2759,13 @@ class Account:
         raw_farmrank_list = safe_loads(self.raw_data.get("FarmRank", [[0]*36]))
         self._parse_w6_farming_land_ranks(raw_farmrank_list)
 
+        self.farming['Total Plots'] = (
+            1
+            + self.farming['MarketUpgrades']['Land Plots']
+            + self.gemshop['Plot of Land']
+            + 3 if self.merits[5][2] >= 3 else self.merits[5][2]
+        )
+
     def _parse_w6_farming_crops(self, rawCrops):
         if isinstance(rawCrops, dict):
             for cropIndexStr, cropAmountOwned in rawCrops.items():
@@ -2789,11 +2850,11 @@ class Account:
 
     def _parse_w6_summoning_battles(self, rawBattles):
         try:
-            totalBattlesWon = len(rawBattles)
+            self.summoning['Battles']['Total'] = len(rawBattles)
         except:
-            totalBattlesWon = 0
+            self.summoning['Battles']['Total'] = 0
 
-        if totalBattlesWon >= summoningBattleCountsDict["All"]:
+        if self.summoning['Battles']['Total'] >= summoningBattleCountsDict["All"]:
             self.summoning["Battles"] = summoningBattleCountsDict
             self.summoning['AllBattlesWon'] = True
         else:

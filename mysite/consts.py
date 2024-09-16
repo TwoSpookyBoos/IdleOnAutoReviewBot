@@ -5700,6 +5700,7 @@ sailingDict = {
         31: {'Name': 'The Shim Lantern'},
         32: {'Name': 'The Winz Lantern'}}},
 }
+captainBuffs = ['Boat Speed', 'Loot Value', 'Cloud Discover Rate', 'Artifact Find Chance', 'Rare Chest Chance', 'None']
 goldrelic_multisDict = {
     0: 0,
     1: 2,

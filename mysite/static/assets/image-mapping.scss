@@ -2249,6 +2249,7 @@ $extra: (
 	monolith: $monolith,
 	fly-nest: $fly-nest,
 	cooking-table: $cooking-table,
+	egg-nest: $egg-nest,
 );
 $id-map: map-merge($extra, $id-map);
 
