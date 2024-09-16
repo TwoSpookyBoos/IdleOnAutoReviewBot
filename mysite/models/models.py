@@ -3089,7 +3089,7 @@ class Account:
         self.atom_collider['CostReductionMax'] = (1 +
             (
                 7 * 4  #Max merit
-                + 1 * 19  #Max Atom Collider building
+                + 1 * 20  #Max Atom Collider building
                 + 1 * 30  #Max Neon
                 + 10  #Superbit
                 + 14  #Atom Split bubble
@@ -3100,7 +3100,7 @@ class Account:
         self.atom_collider['CostReductionRaw'] = (1 +
             (
                 7 * self.merits[4][6]['Level']
-                + ((self.construction_buildings['Atom Collider']['Level'] - 1) // 10)  # 50 doesn't give 5%, you need 51.
+                + (self.construction_buildings['Atom Collider']['Level'] / 10)  # 50 doesn't give 5%, you need 51.
                 + 1 * self.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['Level']
                 + 10 * self.gaming['SuperBits']['Atom Redux']['Unlocked']
                 + self.alchemy_bubbles['Atom Split']['BaseValue']
