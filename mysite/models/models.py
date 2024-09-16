@@ -2763,7 +2763,7 @@ class Account:
             1
             + self.farming['MarketUpgrades']['Land Plots']
             + self.gemshop['Plot of Land']
-            + 3 if self.merits[5][2] >= 3 else self.merits[5][2]
+            + 3 if self.merits[5][2]['Level'] >= 3 else self.merits[5][2]['Level']
         )
 
     def _parse_w6_farming_crops(self, rawCrops):
