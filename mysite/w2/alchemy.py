@@ -493,7 +493,7 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
 
     mga = 1 + (
         (
-            (20 * session_data.account.achievements['Vial Junkee'])
+            (20 * session_data.account.achievements['Vial Junkee']['Complete'])
             + (20 * session_data.account.gemshop['Sigil Supercharge'])
             + player_peapod_value
             + willow_vial_value
@@ -556,9 +556,9 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
     # Multi Group A
     speed_Advice[mga_label].append(Advice(
         label=f"W2 Achievement: Vial Junkee: "
-              f"+{20 * session_data.account.achievements['Vial Junkee']}/20%",
+              f"+{20 * session_data.account.achievements['Vial Junkee']['Complete']}/20%",
         picture_class="vial-junkee",
-        progression=int(session_data.account.achievements['Vial Junkee']),
+        progression=int(session_data.account.achievements['Vial Junkee']['Complete']),
         goal=1
     ))
     speed_Advice[mga_label].append(Advice(

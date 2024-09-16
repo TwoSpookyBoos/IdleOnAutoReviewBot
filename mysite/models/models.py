@@ -37,7 +37,7 @@ from consts import (
     islands_dict, islands_trash_shop_costs,
     killroy_dict,
     # W3
-    buildingsDict, shrinesList, saltLickList, atomsList, colliderStorageLimitList,
+    refineryDict, buildingsDict, shrinesList, saltLickList, atomsList, colliderStorageLimitList,
     prayersDict,
     equinoxBonusesDict, maxDreams, dreamsThatUnlockNewBonuses,
     expected_talentsDict,
@@ -986,6 +986,7 @@ class EnemyWorld:
         self.maps_dict: dict = mapsdict
         self.lowest_skulls_dict: dict = {}
         self.lowest_skull_value: int = -1
+        self.total_mk = sum(enemy_map.skull_mk_value for enemy_map in mapsdict.values())
         self.current_lowest_skull_name: str = "None"
         self.next_lowest_skull_name: str = "Normal Skull"
         for skullValue in dnSkullValueList:
@@ -1045,7 +1046,6 @@ class EnemyMap:
             return self.meow_rating
         else:
             return 'Insane'
-
 
     def updateZOWDict(self, characterIndex: int, KLAValue: float):
         if characterIndex not in self.zow_dict:
@@ -1218,6 +1218,7 @@ class Account:
         self._parse_general_guild_bonuses()
         self._parse_general_printer()
         self._parse_general_maps()
+        self._parse_general_colo_scores()
 
     def _parse_general_gemshop(self):
         self.gemshop = {}
@@ -1281,9 +1282,15 @@ class Account:
         for achieveIndex, achieveData in enumerate(achievementsList):
             try:
                 if achieveData[0].replace('_', ' ') != "FILLERZZZ ACH":
-                    self.achievements[achieveData[0].replace('_', ' ')] = raw_reg_achieves[achieveIndex] == -1
+                    self.achievements[achieveData[0].replace('_', ' ')] = {
+                        'Complete': raw_reg_achieves[achieveIndex] == -1,
+                        'Raw': raw_reg_achieves[achieveIndex]
+                    }
             except:
-                self.achievements[achieveData[0].replace('_', ' ')] = False
+                self.achievements[achieveData[0].replace('_', ' ')] = {
+                    'Complete': False,
+                    'Raw': 0
+                }
 
     def _parse_general_merits(self):
         self.merits = copy.deepcopy(allMeritsDict)
@@ -1361,6 +1368,15 @@ class Account:
     def _parse_general_maps(self):
         self.enemy_maps = buildMaps()
         self.enemy_worlds = {}
+
+    def _parse_general_colo_scores(self):
+        self.colo_scores = {}
+        raw_colo_scores = safe_loads(self.raw_data.get('FamValColosseumHighscores', []))
+        for coloIndex, coloScore in enumerate(raw_colo_scores):
+            try:
+                self.colo_scores[coloIndex] = int(coloScore)
+            except:
+                self.colo_scores[coloIndex] = 0
 
     def _parse_w1(self):
         self._parse_w1_starsigns()
@@ -1482,52 +1498,52 @@ class Account:
         }
 
     def _parse_w1_statues(self):
-            self.statues = {}
-            self.maxed_statues = 0
-            #"StuG": "[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0]",
-            raw_statue_type_list = safe_loads(self.raw_data.get("StuG", []))
-            if not raw_statue_type_list:
-                raw_statue_type_list = [0]*statueCount
-            self.onyx_statues_unlocked = max(raw_statue_type_list, default=0) >= statueTypeList.index("Onyx")
-            statue_levels = [0]*statueCount
+        self.statues = {}
+        self.maxed_statues = 0
+        #"StuG": "[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0]",
+        raw_statue_type_list = safe_loads(self.raw_data.get("StuG", []))
+        if not raw_statue_type_list:
+            raw_statue_type_list = [0]*statueCount
+        self.onyx_statues_unlocked = max(raw_statue_type_list, default=0) >= statueTypeList.index("Onyx")
+        statue_levels = [0]*statueCount
 
-            #Find the maximum value across all characters. Only matters while Normal, since Gold shares across all characters
-            for char in self.safe_characters:
-                try:
-                    char_statues = safe_loads(self.raw_data.get(f"StatueLevels_{char.character_index}"))
-                    for statueIndex, statueDetails in enumerate(char_statues):
-                        if statueDetails[0] > statue_levels[statueIndex]:
-                            statue_levels[statueIndex] = statueDetails[0]
-                except:
-                    continue
+        #Find the maximum value across all characters. Only matters while Normal, since Gold shares across all characters
+        for char in self.safe_characters:
+            try:
+                char_statues = safe_loads(self.raw_data.get(f"StatueLevels_{char.character_index}"))
+                for statueIndex, statueDetails in enumerate(char_statues):
+                    if statueDetails[0] > statue_levels[statueIndex]:
+                        statue_levels[statueIndex] = statueDetails[0]
+            except:
+                continue
 
-            for statueIndex, statueDetails in statuesDict.items():
-                try:
-                    self.statues[statueDetails['Name']] = {
-                        'Level': statue_levels[statueIndex],
-                        'Type': statueTypeList[raw_statue_type_list[statueIndex]],  #Description: Normal, Gold, Onyx
-                        'TypeNumber': raw_statue_type_list[statueIndex],  #Integer: 0-2
-                        'ItemName': statueDetails['ItemName'],
-                        'Effect': statueDetails['Effect'],
-                        'BaseValue': statueDetails['BaseValue'],
-                        'Value': statueDetails['BaseValue'],  # Handled in _calculate_w1_statue_multi()
-                        'Farmer': statueDetails['Farmer'],
-                        'Target': statueDetails['Target'],
-                    }
-                except:
-                    self.statues[statueDetails['Name']] = {
-                        'Level': 0,
-                        'Type': statueTypeList[raw_statue_type_list[statueIndex]],
-                        'TypeNumber': raw_statue_type_list[0],
-                        'ItemName': statueDetails['ItemName'],
-                        'Effect': statueDetails['Effect'],
-                        'BaseValue': statueDetails['BaseValue'],
-                        'Value': statueDetails['BaseValue'],  # Handled in _calculate_w1_statue_multi()
-                        'Farmer': statueDetails['Farmer'],
-                        'Target': statueDetails['Target'],
-                    }
-                if self.statues[statueDetails['Name']]['TypeNumber'] >= len(statueTypeList)-1:
-                    self.maxed_statues += 1
+        for statueIndex, statueDetails in statuesDict.items():
+            try:
+                self.statues[statueDetails['Name']] = {
+                    'Level': statue_levels[statueIndex],
+                    'Type': statueTypeList[raw_statue_type_list[statueIndex]],  #Description: Normal, Gold, Onyx
+                    'TypeNumber': raw_statue_type_list[statueIndex],  #Integer: 0-2
+                    'ItemName': statueDetails['ItemName'],
+                    'Effect': statueDetails['Effect'],
+                    'BaseValue': statueDetails['BaseValue'],
+                    'Value': statueDetails['BaseValue'],  # Handled in _calculate_w1_statue_multi()
+                    'Farmer': statueDetails['Farmer'],
+                    'Target': statueDetails['Target'],
+                }
+            except:
+                self.statues[statueDetails['Name']] = {
+                    'Level': 0,
+                    'Type': statueTypeList[raw_statue_type_list[statueIndex]],
+                    'TypeNumber': raw_statue_type_list[0],
+                    'ItemName': statueDetails['ItemName'],
+                    'Effect': statueDetails['Effect'],
+                    'BaseValue': statueDetails['BaseValue'],
+                    'Value': statueDetails['BaseValue'],  # Handled in _calculate_w1_statue_multi()
+                    'Farmer': statueDetails['Farmer'],
+                    'Target': statueDetails['Target'],
+                }
+            if self.statues[statueDetails['Name']]['TypeNumber'] >= len(statueTypeList)-1:
+                self.maxed_statues += 1
 
     def _parse_w2(self):
         self._parse_w2_vials()
@@ -1693,7 +1709,7 @@ class Account:
                 try:
                     self.alchemy_p2w["Sigils"][sigilName]["PlayerHours"] = float(raw_p2w_list[4][self.alchemy_p2w["Sigils"][sigilName]["Index"]])
                     self.alchemy_p2w["Sigils"][sigilName]["Level"] = raw_p2w_list[4][self.alchemy_p2w["Sigils"][sigilName]["Index"] + 1] + 1
-                except Exception as reason:
+                except:
                     pass  # Already defaulted to 0s in consts.sigilsDict
 
     def _parse_w2_arcade(self):
@@ -1804,8 +1820,8 @@ class Account:
                 'Image': upgradeDict['Image']
             }
 
-
     def _parse_w3(self):
+        self._parse_w3_refinery()
         self._parse_w3_buildings()
         self._parse_w3_library()
         self._parse_w3_deathnote()
@@ -1815,6 +1831,33 @@ class Account:
         self._parse_w3_atom_collider()
         self._parse_w3_prayers()
         self._parse_w3_saltlick()
+
+    def _parse_w3_refinery(self):
+        self.refinery = {}
+        raw_refinery_list = safe_loads(self.raw_data.get("Refinery", []))
+        for saltColor, saltDetails in refineryDict.items():
+            try:
+                self.refinery[saltColor] = {
+                    'Rank': raw_refinery_list[saltDetails[0]][1],
+                    'Running': raw_refinery_list[saltDetails[0]][3],
+                    'AutoRefine': raw_refinery_list[saltDetails[0]][4],
+                    'Image': saltDetails[1],
+                    'CyclesPerSynthCycle': saltDetails[2],
+                    'PreviousSaltConsumption': saltDetails[3],
+                    'NextSaltConsumption': saltDetails[4],
+                    'NextSaltCyclesPerSynthCycle': saltDetails[5]
+                }
+            except:
+                self.refinery[saltColor] = {
+                    'Rank': 0,
+                    'Running': False,
+                    'AutoRefine': 0,
+                    'Image': saltDetails[1],
+                    'CyclesPerSynthCycle': saltDetails[2],
+                    'PreviousSaltConsumption': saltDetails[3],
+                    'NextSaltConsumption': saltDetails[4],
+                    'NextSaltCyclesPerSynthCycle': saltDetails[5]
+                }
 
     def _parse_w3_buildings(self):
         self.construction_buildings = {}
@@ -1939,7 +1982,7 @@ class Account:
             self.all_characters[barbCharacterIndex].sortApocByProgression()
 
     def _parse_w3_equinox_dreams(self):
-        self.equinox_unlocked = self.achievements['Equinox Visitor']
+        self.equinox_unlocked = self.achievements['Equinox Visitor']['Complete']
         self.equinox_dreams = [True]  #d_0 in the code is Dream 1. By padding the first slot, we can get Dream 1 by that same index: equinox_dreams[1]
         raw_equinox_dreams = safe_loads(self.raw_data.get("WeeklyBoss", {}))
         self.equinox_dreams += [
@@ -2150,7 +2193,7 @@ class Account:
             # Create meal dict
             self.meals[cookingMealDict[index]["Name"]] = {
                 "Level": mealLevel,
-                "Value": mealLevel*cookingMealDict[index]["BaseValue"], # Mealmulti applied in calculate section
+                "Value": mealLevel*cookingMealDict[index]["BaseValue"],  # Mealmulti applied in calculate section
                 "BaseValue": cookingMealDict[index]["BaseValue"]
             }
 
@@ -2185,8 +2228,8 @@ class Account:
         for index, node in labBonusesDict.items():
             self.labBonuses[node["Name"]] = {
                 "Enabled": True,
-                "Owned": True, # For W6 nodes
-                "Value": node["BaseValue"], # Currently no modifiers available, might change if the pure opal navette changes
+                "Owned": True,  # For W6 nodes
+                "Value": node["BaseValue"],  # Currently no modifiers available, might change if the pure opal navette changes
                 "BaseValue": node["BaseValue"]
             }
 
@@ -2198,8 +2241,8 @@ class Account:
             try:
                 self.labJewels[jewelInfo["Name"]] = {
                     "Owned": bool(raw_lab[14][jewelIndex]),
-                    "Enabled": bool(raw_lab[14][jewelIndex]), # Same as owned until connection range is implemented
-                    "Value": jewelInfo["BaseValue"], # Jewelmulti added in calculate section
+                    "Enabled": bool(raw_lab[14][jewelIndex]),  # Same as owned until connection range is implemented
+                    "Value": jewelInfo["BaseValue"],  # Jewelmulti added in calculate section
                     "BaseValue": jewelInfo["BaseValue"]
                 }
             except:
@@ -2640,6 +2683,7 @@ class Account:
 
     def _parse_w6_farming(self):
         self.farming = {
+            'Crops': {},
             "CropsUnlocked": 0,
             "MarketUpgrades": {},
             "CropStacks": {
@@ -2666,6 +2710,7 @@ class Account:
             for cropIndexStr, cropAmountOwned in rawCrops.items():
                 try:
                     self.farming["CropsUnlocked"] += 1  # Once discovered, crops will always appear in this dict.
+                    self.farming['Crops'][int(cropIndexStr)] = float(cropAmountOwned)
                     if float(cropAmountOwned) >= 200:
                         self.farming["CropStacks"]["EvolutionGMO"] += 1
                     if float(cropAmountOwned) >= 1000:
@@ -2853,27 +2898,27 @@ class Account:
     def _calculate_general_highest_world_reached(self):
         if (
             self.raw_optlacc_dict.get(194, 0) > 0
-            or self.achievements['Valley Visitor']
+            or self.achievements['Valley Visitor']['Complete']
             or self.enemy_worlds[6].maps_dict[251].kill_count > 0
         ):
             return 6
         elif (
-            self.achievements['The Plateauourist']
+            self.achievements['The Plateauourist']['Complete']
             or self.enemy_worlds[5].maps_dict[201].kill_count > 0
         ):
             return 5
         elif (
-            self.achievements['Milky Wayfarer']
+            self.achievements['Milky Wayfarer']['Complete']
             or self.enemy_worlds[4].maps_dict[151].kill_count > 0
         ):
             return 4
         elif (
-            self.achievements['Snowy Wonderland']
+            self.achievements['Snowy Wonderland']['Complete']
             or self.enemy_worlds[3].maps_dict[101].kill_count > 0
         ):
             return 3
         elif (
-            self.achievements['Down by the Desert']
+            self.achievements['Down by the Desert']['Complete']
             or self.enemy_worlds[2].maps_dict[51].kill_count > 0
         ):
             return 2
@@ -3024,14 +3069,13 @@ class Account:
 
     def _calculate_w3(self):
         self._calculate_w3_building_max_levels()
-
         self._calculate_w3_collider_base_costs()
         self._calculate_w3_collider_cost_reduction()
         self._calculate_w3_shrine_values()
 
     def _calculate_w3_building_max_levels(self):
-
-        towers = [towerName for towerName, towerValuesDict in self.construction_buildings.items() if towerValuesDict['Type'] == 'Tower'] # Placed here since it's used for both Construction mastery and atom levels
+        # Placed towers here since it's used for both Construction mastery and atom levels
+        towers = [towerName for towerName, towerValuesDict in self.construction_buildings.items() if towerValuesDict['Type'] == 'Tower']
         if self.rift['SkillMastery']:
             totalLevel = sum(self.all_skills['Construction'])
             if totalLevel >= 500:
@@ -3048,7 +3092,7 @@ class Account:
                     except:
                         continue
 
-            if totalLevel >= 2500 :
+            if totalLevel >= 2500:
                 for towerName in towers:
                     try:
                         self.construction_buildings[towerName]['MaxLevel'] += 30
@@ -3171,8 +3215,8 @@ class Account:
         jewelMulti = 1
         if self.labBonuses["Spelunker Obol"]["Enabled"]:
             jewelMulti = self.labBonuses["Spelunker Obol"]["Value"]
-            if self.labJewels["Pure Opal Navette"]["Enabled"]: # Nested since jewel does nothing without spelunker
-                jewelMulti += self.labJewels["Pure Opal Navette"]["BaseValue"]/100 # The displayed value does nothing since the effect is used before spelunker obol is accounted for
+            if self.labJewels["Pure Opal Navette"]["Enabled"]:  # Nested since jewel does nothing without spelunker
+                jewelMulti += self.labJewels["Pure Opal Navette"]["BaseValue"] / 100  # The displayed value does nothing since the effect is used before spelunker obol is accounted for
         for jewel in self.labJewels:
             self.labJewels[jewel]["Value"] *= jewelMulti
 
@@ -3487,8 +3531,8 @@ class Account:
             (
                 (25 * self.sailing['Artifacts']['The Winz Lantern']['Level'])
                 + self.merits[5][4]['Level']
-                + int(self.achievements['Spectre Stars'])
-                + int(self.achievements['Regalis My Beloved'])
+                + int(self.achievements['Spectre Stars']['Complete'])
+                + int(self.achievements['Regalis My Beloved']['Complete'])
             )
             / 100)
         )
@@ -3509,16 +3553,16 @@ class Account:
         ))
         self.summoning['WinnerBonusesAdvice'].append(Advice(
             label=f"W6 Achievement: Spectre Stars: "
-                  f"+{int(self.achievements['Spectre Stars'])}/1%",
+                  f"+{int(self.achievements['Spectre Stars']['Complete'])}/1%",
             picture_class="spectre-stars",
-            progression=int(self.achievements['Spectre Stars']),
+            progression=int(self.achievements['Spectre Stars']['Complete']),
             goal=1
         ))
         self.summoning['WinnerBonusesAdvice'].append(Advice(
             label=f"W6 Achievement: Regalis My Beloved: "
-                  f"+{int(self.achievements['Regalis My Beloved'])}/1%",
+                  f"+{int(self.achievements['Regalis My Beloved']['Complete'])}/1%",
             picture_class="regalis-my-beloved",
-            progression=self.summoning['SanctuaryTotal'] if not self.achievements['Regalis My Beloved'] else 360,
+            progression=self.summoning['SanctuaryTotal'] if not self.achievements['Regalis My Beloved']['Complete'] else 360,
             goal=360
         ))
         self.summoning['WinnerBonusesMulti'] = max(1, player_mga * player_mgb)
@@ -3538,16 +3582,18 @@ class Account:
         self._calculate_general_crystal_spawn_chance()
 
     def _calculate_w3_library_max_book_levels(self):
-        self.library['StaticSum'] = (0
-                      + (25 * (0 < self.construction_buildings['Talent Book Library']['Level']))
-                      + (5 * (0 < self.achievements.get('Checkout Takeout', False)))
-                      + (10 * (0 < self.atom_collider['Atoms']['Oxygen - Library Booker']['Level']))
-                      + (25 * self.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0))
-                      )
-        self.library['ScalingSum'] = (0
-                       + 2 * self.merits[2][2]['Level']
-                       + 2 * self.saltlick.get('Max Book', 0)
-                       )
+        self.library['StaticSum'] = (
+            0
+            + (25 * (0 < self.construction_buildings['Talent Book Library']['Level']))
+            + (5 * self.achievements['Checkout Takeout']['Complete'])
+            + (10 * (0 < self.atom_collider['Atoms']['Oxygen - Library Booker']['Level']))
+            + (25 * self.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0))
+        )
+        self.library['ScalingSum'] = (
+            0
+            + 2 * self.merits[2][2]['Level']
+            + 2 * self.saltlick.get('Max Book', 0)
+        )
         # summGroupA = (1 + (.25 * self.sailing['Artifacts'].get('The Winz Lantern', {}).get('Level', 0))
         #               + .01 * self.merits[5][4]['Level']
         #               + .01 * (0 < self.achievements.get('Spectre Stars', False))
@@ -3588,11 +3634,11 @@ class Account:
                 "Goal": self.equinox_bonuses['Equinox Symbols']['FinalMaxLevel']
             },
             "Maroon Warship": {
-                "Value": 1 * self.achievements['Maroon Warship'],
+                "Value": 1 * self.achievements['Maroon Warship']['Complete'],
                 "Image": "maroon-warship",
                 "Label": f"W5 Achievement: Maroon Warship: "
-                         f"+{1 * self.achievements['Maroon Warship']}/1",
-                "Progression": 1 if self.achievements['Maroon Warship'] else 0,
+                         f"+{1 * self.achievements['Maroon Warship']['Complete']}/1",
+                "Progression": 1 if self.achievements['Maroon Warship']['Complete'] else 0,
                 "Goal": 1
             },
             "Sneaking Mastery": {

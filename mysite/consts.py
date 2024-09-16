@@ -4644,6 +4644,15 @@ equinoxBonusesDict = {
     12: {'Name': 'Equinox Symbols', 'BaseLevel': 5, 'MaxLevelIncreases': {31: 4}, 'FinalMaxLevel': 9, 'Category': 'Recommended'},
     13: {'Name': 'Voter Rights', 'BaseLevel': 15, 'MaxLevelIncreases': {36: 15}, 'FinalMaxLevel': 30, 'Category': 'Recommended'},
 }
+refineryDict = {
+    # "salt": [json index, advice image name, cycles per Synth cycle, consumption of previous salt, next salt consumption, next salt cycles per Synth cycle]
+    "Red": [3, "redox-salts", 4, 0, 2, 4],
+    "Orange": [4, "explosive-salts", 4, 2, 2, 4],
+    "Blue": [5, "spontaneity-salts", 4, 2, 1, 1],
+    "Green": [6, "dioxide-synthesis", 1, 1, 2, 1],
+    "Purple": [7, "purple-salt", 1, 2, 2, 1],
+    "Nullo": [8, "nullo-salt", 1, 2, 0, 0]
+}
 buildingsDict = {
     #Buildings
     0: {'Name': '3D Printer', 'Image': 'three-d-printer', 'BaseMaxLevel': 10, 'Type': 'Utility'},
