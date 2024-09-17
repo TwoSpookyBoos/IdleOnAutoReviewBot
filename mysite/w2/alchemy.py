@@ -1,11 +1,11 @@
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import safe_loads, mark_advice_completed
-from utils.text_formatting import pl
+from utils.text_formatting import pl, getItemDisplayName
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import maxTiersPerGroup, bubbles_progressionTiers, vials_progressionTiers, max_IndexOfVials, maxFarmingCrops, atrisk_basicBubbles, \
     atrisk_lithiumBubbles, cookingCloseEnough, break_you_best, sigils_progressionTiers, max_IndexOfSigils, max_VialLevel, numberOfArtifactTiers, stamp_maxes, \
-    lavaFunc
+    lavaFunc, vial_costs
 
 logger = get_logger(__name__)
 
@@ -111,9 +111,21 @@ def setAlchemyVialsProgressionTier() -> AdviceSection:
         for requiredVial in tier[3]:
             if requiredVial in unmaxedVialsList:
                 if len(vial_AdviceDict["MaxVials"]["Vials to max next"]) < maxAdvicesPerGroup:
-                    vial_AdviceDict["MaxVials"]["Vials to max next"].append(
-                        Advice(label=requiredVial, picture_class=requiredVial.split("(")[0].strip(), progression="", goal="")
-                    )
+                    goal = int(vial_costs[session_data.account.alchemy_vials[requiredVial]['Level'] + 1])
+                    prog = session_data.account.all_assets.get(session_data.account.alchemy_vials[requiredVial]['Material']).amount / goal
+                    # Generate Alerts
+                    if prog >= goal:
+                        session_data.account.alerts_AdviceDict['World 2'].append(Advice(
+                            label=f"{requiredVial} {{{{ Vial|#vials }}}} ready to be maxed!",
+                            picture_class="vial-13"
+                        ))
+                    vial_AdviceDict["MaxVials"]["Vials to max next"].append(Advice(
+                        label=f"{requiredVial}"
+                              f"{'<br>Ready for level ' if prog >= 100 else ''}"
+                              f"{session_data.account.alchemy_vials[requiredVial]['Level'] + 1 if prog >= 100 else ''}",
+                        picture_class=getItemDisplayName(session_data.account.alchemy_vials[requiredVial]['Material']),
+                        progression=f"{prog:.1f}%",
+                    ))
 
     if len(virileVialsList) < maxExpectedVV:
         vial_AdviceDict["EarlyVials"]["Info - Shaman's Virile Vials"] = [

@@ -1569,16 +1569,18 @@ class Account:
             for vialKey, vialValue in raw_alchemy_vials.items():
                 try:
                     self.alchemy_vials[getReadableVialNames(vialKey)] = {
-                        "Level": int(vialValue),
-                        "Value": lavaFunc(
-                            vialsDict.get(int(vialKey)).get("funcType"),
+                        'Level': int(vialValue),
+                        'Value': lavaFunc(
+                            vialsDict[int(vialKey)]['funcType'],
                             int(vialValue),
-                            vialsDict.get(int(vialKey)).get("x1"),
-                            vialsDict.get(int(vialKey)).get("x2")
-                        )
+                            vialsDict[int(vialKey)]['x1'],
+                            vialsDict[int(vialKey)]['x2'],
+
+                        ),
+                        'Material': vialsDict[int(vialKey)]['Material']
                     }
                 except:
-                    self.alchemy_vials[getReadableVialNames(vialKey)] = {"Level": 0, "Value": 0}
+                    self.alchemy_vials[getReadableVialNames(vialKey)] = {"Level": 0, "Value": 0, 'Material': vialsDict[int(vialKey)]['Material']}
         except:
             pass
         self.maxed_vials = 0
