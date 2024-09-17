@@ -1,36 +1,49 @@
 $sections-map: (
     //Banners
     banner-general: url('https://www.legendsofidleon.com/static/CharacterHorizontal2-580d154e754cdc4e59a0a30f781a3123.png'),
-    banner-w1: wiki('1/10/BH_header.png' ),
-    banner-w2: wiki('6/6a/YYD_header.png'),
-    banner-w3: wiki('b/bc/FT_header.png' ),
-    banner-w4: wiki('7/72/HN_header.png' ),
-    banner-w5: wiki('7/7b/SP_header.png' ),
-    banner-w6: wiki('1/1d/SV_header.png' ),
+    banner-w1: img('w1banner.png'),
+    banner-w2: img('w2banner.png'),
+    banner-w3: img('w3banner.png'),
+    banner-w4: img('w4banner.png'),
+    banner-w5: img('w5banner.png'),
+    banner-w6: img('w6banner.png'),
 
     //Sections needed for quick-links from Pinchy
+//General
+    pinchy: img('Pinchy.gif'),
+    combat-levels: img('Family.png'),
+    secret-class-path: img('wiki/Stone_Peanut.png'),
+    active: img('Auto.png'),
+    achievements: img('Grasslands_Gary.gif'),
     regular-candy: img('Candy_1hr.png'),
     variable-candy: img('Candy_Cosmic.png'),
     endangered-greenstacks: img('Greenstack.png'),
     greenstacks: img('Greenstack.png'),
-    combat-levels: img('Family.png'),
-    pinchy: img('Pinchy.gif'),
     cards: img('cards/Cards.png'),
+//W1
     stamps: img('Stamps_Header.png'),
     bribes: img('Bribes.png'),
-    pay2win: img('pay2win.png'),
+    star-signs: img('Telescope.gif'),
+    statues: img('Town_Marble.gif'),
     owl: img('Owl.gif'),
+//W2
+    vials: img('wiki/Vial-level-1.png'),
+    sigils: img('Sigils.png'),
+    islands: img('wiki/Island_Expeditions_Boat.gif'),
+    killroy: img('wiki/Killroy.gif'),
+    pay2win: img('pay2win.png'),
     kangaroo: img('Kangaroo.gif'),
+//W3
     buildings: img('Construction_Table.gif'),
     sampling: img('3D_Printer.gif'),
     library: img('Library.png'),
+    prayers: img('wiki/Prayer_Stone.gif'),
+//W4
+    rift: img('wiki/Rift_Ripper.gif'),
+    equinox: img('wiki/Equinox_Mirror.png'),
+//W5
+    divinity: img('wiki/Divinity_Skill_Icon.png'),
     slab: img('Slab.png'),
+//W6
     beanstalk: img('Beanstalk.png'),
-    star-signs: img('Telescope.gif'),
-    statues: img('Town_Marble.gif'),
-    active: img('Auto.png'),
-    sigils: img('Sigils.png'),
-    achievements: img('Grasslands_Gary.gif'),
-    islands: img('wiki/Island_Expeditions_Boat.gif'),
-    killroy: img('wiki/Killroy.gif')
 );

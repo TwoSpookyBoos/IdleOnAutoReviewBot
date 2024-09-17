@@ -28,6 +28,11 @@ $summoning-essences: (
 
 $summoning-upgrades: ();
 
+$summoning-etc: (
+    summoning-table: img('Summoning_Table.png')
+);
+
 $all-summoning: map-merge($summoning-familiars, $summoning-stones);
 $all-summoning: map-merge($all-summoning, $summoning-essences);
 $all-summoning: map-merge($all-summoning, $summoning-upgrades);
+$all-summoning: map-merge($all-summoning, $summoning-etc);
