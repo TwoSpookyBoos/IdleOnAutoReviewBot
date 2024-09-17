@@ -112,7 +112,7 @@ def setAlchemyVialsProgressionTier() -> AdviceSection:
             if requiredVial in unmaxedVialsList:
                 if len(vial_AdviceDict["MaxVials"]["Vials to max next"]) < maxAdvicesPerGroup:
                     goal = int(vial_costs[session_data.account.alchemy_vials[requiredVial]['Level']])
-                    prog = session_data.account.all_assets.get(session_data.account.alchemy_vials[requiredVial]['Material']).amount / goal
+                    prog = 100 * (session_data.account.all_assets.get(session_data.account.alchemy_vials[requiredVial]['Material']).amount / goal)
                     # Generate Alerts
                     if prog >= goal:
                         session_data.account.alerts_AdviceDict['World 2'].append(Advice(
