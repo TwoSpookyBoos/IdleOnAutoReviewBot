@@ -1802,7 +1802,7 @@ class Account:
             'Trash': int(float(self.raw_optlacc_dict.get(161, 0))),  #[161]: 362.202271805249
             'Bottles': int(float(self.raw_optlacc_dict.get(162, 0))),  #[162]: 106.90044163281846
         }
-        raw_islands_list = list(self.raw_optlacc_dict.get(169, ''))  #[169]: "_dcabe"
+        raw_islands_list = list(str(self.raw_optlacc_dict.get(169, '')))  #[169]: "_dcabe" or could be int 0 for whatever reason...
         for islandName, islandData in islands_dict.items():
             self.islands[islandName] = {
                 'Unlocked': islandData['Code'] in raw_islands_list,
