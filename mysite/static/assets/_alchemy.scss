@@ -266,4 +266,5 @@ $sigils: (
 );
 
 $all-alchemy: map-merge($bubbles, $vials);
+$all-alchemy: map-merge($all-alchemy, $p2w);
 $all-alchemy: map-merge($all-alchemy, $sigils);
