@@ -1558,16 +1558,16 @@ class Account:
 
     def _parse_w2_vials(self):
         self.alchemy_vials = {}
-        try:
-            manualVialsAdded = 0
-            raw_alchemy_vials = safe_loads(self.raw_data.get("CauldronInfo", [0, 0, 0, 0, {}])[4])
-            if "length" in raw_alchemy_vials:
-                del raw_alchemy_vials["length"]
-            while len(raw_alchemy_vials) < max_IndexOfVials:
-                raw_alchemy_vials[int(max_IndexOfVials - manualVialsAdded)] = 0
-                manualVialsAdded += 1
-            for vialKey, vialValue in raw_alchemy_vials.items():
-                try:
+        manualVialsAdded = 0
+        raw_alchemy_vials = safe_loads(self.raw_data.get("CauldronInfo", [0, 0, 0, 0, {}])[4])
+        if "length" in raw_alchemy_vials:
+            del raw_alchemy_vials["length"]
+        while len(raw_alchemy_vials) < max_IndexOfVials:
+            raw_alchemy_vials[int(max_IndexOfVials - manualVialsAdded)] = 0
+            manualVialsAdded += 1
+        for vialKey, vialValue in raw_alchemy_vials.items():
+            try:
+                if int(vialKey) < max_IndexOfVials:
                     self.alchemy_vials[getReadableVialNames(vialKey)] = {
                         'Level': int(vialValue),
                         'Value': lavaFunc(
@@ -1575,14 +1575,14 @@ class Account:
                             int(vialValue),
                             vialsDict[int(vialKey)]['x1'],
                             vialsDict[int(vialKey)]['x2'],
-
                         ),
                         'Material': vialsDict[int(vialKey)]['Material']
                     }
-                except:
+            except:
+                try:
                     self.alchemy_vials[getReadableVialNames(vialKey)] = {"Level": 0, "Value": 0, 'Material': vialsDict[int(vialKey)]['Material']}
-        except:
-            pass
+                except:
+                    continue
         self.maxed_vials = 0
         for vial in self.alchemy_vials.values():
             if vial.get("Level", 0) >= max_VialLevel:

@@ -30,35 +30,13 @@ def setAlchemyVialsProgressionTier() -> AdviceSection:
         vial_AdviceSection.header = "Come back after unlocking the Alchemy skill in World 2!"
         return vial_AdviceSection
 
-    virileVialsList = []
-    maxExpectedVV = max_IndexOfVials-4  # Exclude both pickle and both rare drop vials
-    maxedVialsList = []
-    unmaxedVialsList = []
-    lockedVialsList = []
     alchemyVialsDict = session_data.account.alchemy_vials
-    unlockedVials = 0
-
-    for vialName, vialValue in alchemyVialsDict.items():
-        try:
-            if int(vialValue.get("Level", 0)) == 0:
-                lockedVialsList.append(vialName)
-                #unmaxedVialsList.append(getReadableVialNames(vial))
-                unmaxedVialsList.append(vialName)
-            else:
-                unlockedVials += 1
-                if int(vialValue.get("Level", 0)) >= 4:
-                    #virileVialsList.append(getReadableVialNames(vial))
-                    virileVialsList.append(vialName)
-                if int(vialValue.get("Level", 0)) >= 13:
-                    #maxedVialsList.append(getReadableVialNames(vial))
-                    maxedVialsList.append(vialName)
-                else:
-                    #unmaxedVialsList.append(getReadableVialNames(vial))
-                    unmaxedVialsList.append(vialName)
-        except:
-            logger.exception(f"Could not coerce vial {vialName}'s level of {type(vialValue.get('Level', 0))} {vialValue.get('Level', 0)} to Int for Vial comparison")
-            lockedVialsList.append(vialName)
-            unmaxedVialsList.append(vialName)
+    virileVialsList = [vialName for vialName, vialValue in alchemyVialsDict.items() if vialValue['Level'] >= 4]
+    maxExpectedVV = max_IndexOfVials-4  # Exclude both pickle and both rare drop vials
+    maxedVialsList = [vialName for vialName, vialValue in alchemyVialsDict.items() if vialValue['Level'] >= max_VialLevel]
+    unmaxedVialsList = [vialName for vialName in alchemyVialsDict if vialName not in maxedVialsList]
+    lockedVialsList = [vialName for vialName, vialValue in alchemyVialsDict.items() if vialValue['Level'] == 0]
+    unlockedVials = sum(1 for vial in alchemyVialsDict.values() if vial['Level'] > 0)
 
     tier_TotalVialsUnlocked = 0
     tier_TotalVialsMaxed = 0
