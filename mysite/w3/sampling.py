@@ -337,7 +337,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
         goal=1
     ))
     po_AdviceDict[aw_label].append(Advice(
-        label=f"{{{{ Equinox|#equinox}}}}: Voter Rights: {equinoxMulti}/1.{session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']}x to Weekly Ballot (Already included above)",
+        label=f"{{{{ Equinox|#equinox}}}}: Voter Rights: {equinoxMulti:.2f}/1.{session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']}x to Weekly Ballot (Already included above)",
         picture_class="voter-rights",
         progression=session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel'],
         goal=session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']
