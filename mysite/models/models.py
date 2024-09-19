@@ -2993,20 +2993,22 @@ class Account:
         self._calculate_w1_statues()
 
     def _calculate_w1_starsigns(self):
-        self.star_sign_extras['SeraphMulti'] = min(3, 1.1 ** ceil((max(self.all_skills.get('Summoning', [0])) + 1) / 20))
-        self.star_sign_extras['SeraphGoal'] = min(220, ceilUpToBase(max(self.all_skills.get('Summoning', [0])), 20))
-
+        self.star_sign_extras['SeraphMulti'] = min(3, 1.1 ** ceil((max(self.all_skills['Summoning'], default=0) + 1) / 20))
+        self.star_sign_extras['SeraphGoal'] = min(220, ceilUpToBase(max(self.all_skills['Summoning'], default=0), 20))
+        min_level_stacks = ceil((min(self.all_skills['Summoning'], default=0) + 1) / 20)
+        max_level_stacks = ceil((max(self.all_skills['Summoning'], default=0) + 1) / 20)
+        inequality_notice = ' (Note: Some characters lower leveled)' if min_level_stacks != max_level_stacks else ''
         if bool(self.star_signs.get("Seraph Cosmos", {}).get('Unlocked', False)):
             self.star_sign_extras['SeraphEval'] = f"Multis signs by {self.star_sign_extras['SeraphMulti']:.2f}x."
         else:
-            self.star_sign_extras['SeraphEval'] = f"Locked. Would increase other signs by {self.star_sign_extras['SeraphMulti']:.2f}x if unlocked."
+            self.star_sign_extras['SeraphEval'] = f"Locked. Would increase other signs by {self.star_sign_extras['SeraphMulti']:.2f}x if unlocked.{inequality_notice}"
             self.star_sign_extras['SeraphMulti'] = 1
         if self.star_sign_extras['SeraphGoal'] < 240:
-            self.star_sign_extras['SeraphEval'] += " Increases every 20 Summoning levels."
+            self.star_sign_extras['SeraphEval'] += f" Increases every 20 Summoning levels.{inequality_notice}"
         self.star_sign_extras['SeraphAdvice'] = Advice(
             label=f"{{{{ Starsign|#star-signs }}}}: Seraph Cosmos: {self.star_sign_extras['SeraphEval']}",
             picture_class="seraph-cosmos",
-            progression=max(self.all_skills.get('Summoning', [0])),
+            progression=max(self.all_skills['Summoning'], default=0),
             goal=self.star_sign_extras['SeraphGoal'])
 
         if self.labChips.get('Silkrode Nanochip', 0) > 0:
