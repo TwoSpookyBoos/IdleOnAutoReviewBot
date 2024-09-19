@@ -14,7 +14,7 @@ logger = get_logger(__name__)
 def getDivLevelReason(inputLevel: int) -> str:
     return divLevelReasonsDict.get(inputLevel, "")
 
-def getOfferingsAdviceGroup(lowOffering, highOffering):
+def getOfferingsAdviceGroup(lowOffering, highOffering, divinityPoints, lowOfferingGoal, highOfferingGoal):
     offerings_AdviceDict = {
         "Available Offerings": [],
         "Strategy": []
@@ -22,10 +22,14 @@ def getOfferingsAdviceGroup(lowOffering, highOffering):
     offerings_AdviceDict["Available Offerings"].append(Advice(
         label=f"{divinity_offeringsDict.get(lowOffering, {}).get('Chance', 0)}% Offering: {getOfferingNameFromIndex(lowOffering)}",
         picture_class=divinity_offeringsDict.get(lowOffering, {}).get('Image', ''),
+        progression=divinityPoints,
+        goal=lowOfferingGoal
     ))
     offerings_AdviceDict["Available Offerings"].append(Advice(
         label=f"{divinity_offeringsDict.get(highOffering, {}).get('Chance', 0)}% Offering: {getOfferingNameFromIndex(highOffering)}",
         picture_class=divinity_offeringsDict.get(highOffering, {}).get('Image', ''),
+        progression=divinityPoints,
+        goal=highOfferingGoal
     ))
     offerings_AdviceDict["Strategy"].append(Advice(
         label=f"Option 1: Choose the high offering if 100% Chance, otherwise choose low offering.",
@@ -263,6 +267,9 @@ def setDivinityProgressionTier():
     max_tier = max(divinity_progressionTiers.keys())
     lowOffering = session_data.account.divinity['LowOffering']
     highOffering = session_data.account.divinity['HighOffering']
+    divinityPoints = session_data.account.divinity['DivinityPoints']
+    lowOfferingGoal = session_data.account.divinity['LowOfferingGoal']
+    highOfferingGoal = session_data.account.divinity['HighOfferingGoal']
 
     # Assess Tiers
     for tierLevel, tierRequirements in divinity_progressionTiers.items():
@@ -306,7 +313,7 @@ def setDivinityProgressionTier():
         pre_string="Complete objectives to reach the next Divinity tier",
         advices=divinity_AdviceDict["TieredProgress"]
     )
-    divinity_AdviceGroupDict["Offerings"] = getOfferingsAdviceGroup(lowOffering, highOffering)
+    divinity_AdviceGroupDict["Offerings"] = getOfferingsAdviceGroup(lowOffering, highOffering, divinityPoints, lowOfferingGoal, highOfferingGoal)
     divinity_AdviceGroupDict["Blessings"] = getBlessingsAdviceGroup()
     divinity_AdviceGroupDict["Styles"] = getStylesInfoAdviceGroup(highestDivinitySkillLevel)
     divinity_AdviceGroupDict["DivinityLinks"], divinity_AdviceGroupDict["Dooted"] = getLinksAndDootChecksAdviceGroups(
