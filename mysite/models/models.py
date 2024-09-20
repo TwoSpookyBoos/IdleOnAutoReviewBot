@@ -52,7 +52,7 @@ from consts import (
     breedingShinyBonusList, breedingSpeciesDict, getShinyLevelFromDays, getDaysToNextShinyLevel,
     # W5
     sailingDict, numberOfArtifactTiers, captainBuffs,
-    getStyleNameFromIndex, divinity_divinitiesDict, divinity_offeringsDict, getDivinityNameFromIndex,
+    getStyleNameFromIndex, divinity_divinitiesDict, divinity_offeringsDict, getDivinityNameFromIndex, divinity_DivCostAfter3,
     gamingSuperbitsDict,
     # W6
     jade_emporium, pristineCharmsList, sneakingGemstonesFirstIndex, sneakingGemstonesList, sneakingGemstonesStatList,
@@ -3568,15 +3568,14 @@ class Account:
         }
 
     def _calculate_w5_divinity_offering_costs(self):
-        if (self.raw_serverVars_dict.get("DivCostAfter3") is not None):
-            self.divinity['LowOfferingGoal'] = self._divinityUpgradeCost(self.divinity['LowOffering'], self.divinity['GodsUnlocked'])
-            self.divinity['HighOfferingGoal'] = self._divinityUpgradeCost(self.divinity['HighOffering'], self.divinity['GodsUnlocked'])
+        self.divinity['LowOfferingGoal'] = self._divinityUpgradeCost(self.divinity['LowOffering'], self.divinity['GodsUnlocked'])
+        self.divinity['HighOfferingGoal'] = self._divinityUpgradeCost(self.divinity['HighOffering'], self.divinity['GodsUnlocked'])
     
     def _divinityUpgradeCost(self, offeringIndex, unlockedDivinity):
-        cost = (20 * pow(unlockedDivinity + 1.3, 2.3) * pow(2.2, unlockedDivinity) + 60) * divinity_offeringsDict.get(offeringIndex).get("Chance")/100;
-        if (2 < unlockedDivinity) :
-            cost = cost * pow(min(1.8, max(1, 1 + self.raw_serverVars_dict.get("DivCostAfter3") / 100)), unlockedDivinity - 2);
-        return ceil(cost);
+        cost = (20 * pow(unlockedDivinity + 1.3, 2.3) * pow(2.2, unlockedDivinity) + 60) * divinity_offeringsDict.get(offeringIndex, {}).get("Chance", 0) / 100
+        if unlockedDivinity >= 3:
+            cost = cost * pow(min(1.8, max(1, 1 + self.raw_serverVars_dict.get("DivCostAfter3", divinity_DivCostAfter3) / 100)), unlockedDivinity - 2)
+        return ceil(cost)
 
     def _calculate_w6(self):
         self._calculate_w6_summoning_winner_bonuses()

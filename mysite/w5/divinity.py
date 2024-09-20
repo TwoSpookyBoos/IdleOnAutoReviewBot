@@ -22,13 +22,13 @@ def getOfferingsAdviceGroup(lowOffering, highOffering, divinityPoints, lowOfferi
     offerings_AdviceDict["Available Offerings"].append(Advice(
         label=f"{divinity_offeringsDict.get(lowOffering, {}).get('Chance', 0)}% Offering: {getOfferingNameFromIndex(lowOffering)}",
         picture_class=divinity_offeringsDict.get(lowOffering, {}).get('Image', ''),
-        progression=divinityPoints,
+        progression=f"{divinityPoints:.0f}",
         goal=lowOfferingGoal
     ))
     offerings_AdviceDict["Available Offerings"].append(Advice(
         label=f"{divinity_offeringsDict.get(highOffering, {}).get('Chance', 0)}% Offering: {getOfferingNameFromIndex(highOffering)}",
         picture_class=divinity_offeringsDict.get(highOffering, {}).get('Image', ''),
-        progression=divinityPoints,
+        progression=f"{divinityPoints:.0f}",
         goal=highOfferingGoal
     ))
     offerings_AdviceDict["Strategy"].append(Advice(

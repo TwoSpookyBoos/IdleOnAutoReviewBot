@@ -5863,6 +5863,7 @@ divLevelReasonsDict = {
     40: "to unlock the TranQi Style.",
     50: "to unlock the Multitool Stamp from Poigu's quest."
 }
+divinity_DivCostAfter3 = 40  # Last verified as of v2.12 Ballot
 divinity_arctisBreakpoints = {
         13: { 72:  841,  73:  647,  74:  525,  75:  441,  76:  379,  77:  332,  78:  295},
         14: { 85: 1331,  86:  986,  87:  782,  88:  648,  89:  522,  90:  481,  91:  425,  92:  381},
