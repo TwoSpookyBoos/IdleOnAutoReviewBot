@@ -2620,6 +2620,12 @@ class Account:
         while len(raw_divinity_list) < 40:
             raw_divinity_list.append(0)
         self.divinity['DivinityPoints'] = raw_divinity_list[24]
+        if isinstance(self.divinity['DivinityPoints'], str):
+            try:
+                self.divinity['DivinityPoints'] = int(float(self.divinity['DivinityPoints']))
+            except Exception as reason:
+                print(f"models._parse_w5_divinity: WARNING Could not convert '{type(self.divinity['DivinityPoints'])}' {self.divinity['DivinityPoints']} to int: {reason}. Defaulting to 0")
+                self.divinity['DivinityPoints'] = 0
         self.divinity['GodsUnlocked'] = min(10, raw_divinity_list[25])
         self.divinity['GodRank'] = max(0, raw_divinity_list[25] - 10)
         self.divinity['LowOffering'] = raw_divinity_list[26]
