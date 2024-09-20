@@ -141,8 +141,6 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
 def getCostReductionAdviceGroup() -> AdviceGroup:
     cr_advice = []
 
-
-
     cr_advice.append(Advice(
         label=f"W5 Taskboard Merit: {session_data.account.merits[4][6]['Level'] * 7}/28%"
               f"<br>The in-game display is incorrect. Don't @ me.",
@@ -166,10 +164,10 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     ))
 
     cr_advice.append(Advice(
-        label=f"Atom Collider building: {((session_data.account.construction_buildings['Atom Collider']['Level']-1) // 10)}/19%",
+        label=f"Atom Collider building: {session_data.account.construction_buildings['Atom Collider']['Level'] / 10:.1f}/20%",
         picture_class="atom-collider",
         progression=session_data.account.construction_buildings['Atom Collider']['Level'],
-        goal=191
+        goal=session_data.account.construction_buildings['Atom Collider']['MaxLevel']
     ))
 
     cr_advice.append(Advice(

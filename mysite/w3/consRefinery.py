@@ -1,21 +1,10 @@
 from flask import g as session_data
-
 from consts import break_keep_it_up
 from models.models import AdviceSection, AdviceGroup, Advice
 from math import floor
+from utils.logging import get_logger
 
-from utils.data_formatting import safe_loads
-
-
-saltValuesDict = {
-    # "salt": [advice image name, cycles per Synth cycle, consumption of previous salt, next salt consumption, next salt cycles per Synth cycle]
-    "Red": ["redox-salts", 4, 0, 2, 4],
-    "Orange": ["explosive-salts", 4, 2, 2, 4],
-    "Blue": ["spontaneity-salts", 4, 2, 1, 1],
-    "Green": ["dioxide-synthesis", 1, 1, 2, 1],
-    "Purple": ["purple-salt", 1, 2, 2, 1],
-    "Nullo": ["nullo-salt", 1, 2, 0, 0]
-}
+logger = get_logger(__name__)
 
 class Salt:
     def __init__(self, salt_name: str, auto_refine: int, salt_rank: int, next_salt_rank: int, previousSalt, merit_purchased: bool = True, running: bool = False):
@@ -29,12 +18,12 @@ class Salt:
             self.salt_consumption_scaling: float = 1.3
         else:
             self.salt_consumption_scaling: float = 1.5
-        if salt_name in saltValuesDict:
-            self.image: str = saltValuesDict[salt_name][0]
-            self.cycles_per_Synthesis_cycle: int = saltValuesDict[salt_name][1]
-            self.consumption_of_previous_salt: int = saltValuesDict[salt_name][2]
-            self.next_salt_consumption: int = saltValuesDict[salt_name][3]
-            self.next_salt_cycles_per_Synthesis_cycle: int = saltValuesDict[salt_name][4]
+        if salt_name in session_data.account.refinery:
+            self.image: str = session_data.account.refinery[salt_name]['Image']
+            self.cycles_per_Synthesis_cycle: int = session_data.account.refinery[salt_name]['CyclesPerSynthCycle']
+            self.consumption_of_previous_salt: int = session_data.account.refinery[salt_name]['PreviousSaltConsumption']
+            self.next_salt_consumption: int = session_data.account.refinery[salt_name]['NextSaltConsumption']
+            self.next_salt_cycles_per_Synthesis_cycle: int = session_data.account.refinery[salt_name]['NextSaltCyclesPerSynthCycle']
             self.output: int = int(floor(self.salt_rank ** 1.3)) * self.cycles_per_Synthesis_cycle
             if next_salt_rank != 0:
                 self.consumed: int = int(floor(next_salt_rank ** self.salt_consumption_scaling) * self.next_salt_consumption * self.next_salt_cycles_per_Synthesis_cycle)
@@ -70,116 +59,62 @@ class Salt:
         return self.excess
 
 def parseConsRefinery():
-    refineryList = safe_loads(session_data.account.raw_data.get("Refinery", []))
-    consRefineryDict = {
-        # Combustion = Tab1
-        'Red Rank': 0,
-        'Red AutoRefine': 0,
-        'Red Running': False,
-        'Orange Rank': 0,
-        'Orange AutoRefine': 0,
-        'Orange Running': False,
-        'Blue Rank': 0,
-        'Blue AutoRefine': 0,
-        'Blue Running': False,
-
-        # Synthesis = Tab2
-        'Green Rank': 0,
-        'Green AutoRefine': 0,
-        'Green Running': False,
-        'Purple Rank': 0,
-        'Purple AutoRefine': 0,
-        'Purple Running': False,
-        'Nullo Rank': 0,
-        'Nullo AutoRefine': 0,
-        'Nullo Running': False,
-
-        # W3 Merit
-        'Salt Merit': 0
-    }  #Default 0s
-    if refineryList:
-        # Combustion = Tab1
-        consRefineryDict['Red Rank'] = refineryList[3][1]
-        consRefineryDict['Red AutoRefine'] = refineryList[3][4]
-        consRefineryDict['Red Running'] = refineryList[3][3]
-        consRefineryDict['Orange Rank'] = refineryList[4][1]
-        consRefineryDict['Orange AutoRefine'] = refineryList[4][4]
-        consRefineryDict['Orange Running'] = refineryList[4][4]
-        consRefineryDict['Blue Rank'] = refineryList[5][1]
-        consRefineryDict['Blue AutoRefine'] = refineryList[5][4]
-        consRefineryDict['Blue Running'] = refineryList[5][3]
-
-        #Synthesis = Tab2
-        consRefineryDict['Green Rank'] = refineryList[6][1]
-        consRefineryDict['Green AutoRefine'] = refineryList[6][4]
-        consRefineryDict['Green Running'] = refineryList[3][3]
-        consRefineryDict['Purple Rank'] = refineryList[7][1]
-        consRefineryDict['Purple AutoRefine'] = refineryList[7][4]
-        consRefineryDict['Purple Running'] = refineryList[3][3]
-        consRefineryDict['Nullo Rank'] = refineryList[8][1]
-        consRefineryDict['Nullo AutoRefine'] = refineryList[8][4]
-        consRefineryDict['Nullo Running'] = refineryList[3][3]
-
-    consRefineryDict['Salt Merit'] = session_data.account.merits[2][6]["Level"]
-
-    consRefineryDict['Combustion AutoRefine'] = consRefineryDict['Red AutoRefine'] + consRefineryDict['Orange AutoRefine'] + consRefineryDict['Blue AutoRefine']
-    consRefineryDict['Synthesis AutoRefine'] = consRefineryDict['Green AutoRefine'] + consRefineryDict['Purple AutoRefine'] + consRefineryDict['Nullo AutoRefine']
-    consRefineryDict['Sum AutoRefine'] = consRefineryDict['Combustion AutoRefine'] + consRefineryDict['Synthesis AutoRefine']
-    consRefineryDict["RedSalt"] = Salt(
+    consRefineryDict = {}
+    consRefineryDict['RedSalt'] = Salt(
         salt_name='Red',
-        auto_refine=consRefineryDict['Red AutoRefine'],
-        salt_rank=consRefineryDict['Red Rank'],
-        next_salt_rank=consRefineryDict['Orange Rank'],
+        auto_refine=session_data.account.refinery['Red']['AutoRefine'],
+        salt_rank=session_data.account.refinery['Red']['Rank'],
+        next_salt_rank=session_data.account.refinery['Orange']['Rank'],
         previousSalt=None,
-        merit_purchased=consRefineryDict["Salt Merit"] >= 1,
-        running=consRefineryDict['Red Running'],
+        merit_purchased=session_data.account.merits[2][6]['Level'] >= 1,
+        running=session_data.account.refinery['Red']['Running'],
     )
-    consRefineryDict["OrangeSalt"] = Salt(
-        salt_name="Orange",
-        auto_refine=consRefineryDict['Orange AutoRefine'],
-        salt_rank=consRefineryDict["Orange Rank"],
-        next_salt_rank=consRefineryDict["Blue Rank"],
-        previousSalt=consRefineryDict["RedSalt"],
-        merit_purchased=consRefineryDict["Salt Merit"] >= 2,
-        running=consRefineryDict['Orange Running'],
+    consRefineryDict['OrangeSalt'] = Salt(
+        salt_name='Orange',
+        auto_refine=session_data.account.refinery['Orange']['AutoRefine'],
+        salt_rank=session_data.account.refinery['Orange']['Rank'],
+        next_salt_rank=session_data.account.refinery['Blue']['Rank'],
+        previousSalt=consRefineryDict['RedSalt'],
+        merit_purchased=session_data.account.merits[2][6]['Level'] >= 2,
+        running=session_data.account.refinery['Orange']['Running'],
     )
-    consRefineryDict["BlueSalt"] = Salt(
-        salt_name="Blue",
-        auto_refine=consRefineryDict['Blue AutoRefine'],
-        salt_rank=consRefineryDict["Blue Rank"],
-        next_salt_rank=consRefineryDict["Green Rank"],
-        previousSalt=consRefineryDict["OrangeSalt"],
-        merit_purchased=consRefineryDict["Salt Merit"] >= 3,
-        running=consRefineryDict['Blue Running'],
+    consRefineryDict['BlueSalt'] = Salt(
+        salt_name='Blue',
+        auto_refine=session_data.account.refinery['Blue']['AutoRefine'],
+        salt_rank=session_data.account.refinery['Blue']['Rank'],
+        next_salt_rank=session_data.account.refinery['Green']['Rank'],
+        previousSalt=consRefineryDict['OrangeSalt'],
+        merit_purchased=session_data.account.merits[2][6]['Level'] >= 3,
+        running=session_data.account.refinery['Blue']['Running'],
     )
-    consRefineryDict["GreenSalt"] = Salt(
-        salt_name="Green",
-        auto_refine=consRefineryDict['Green AutoRefine'],
-        salt_rank=consRefineryDict["Green Rank"],
-        next_salt_rank=consRefineryDict["Purple Rank"],
-        previousSalt=consRefineryDict["BlueSalt"],
-        merit_purchased=consRefineryDict["Salt Merit"] >= 4,
-        running=consRefineryDict['Green Running'],
+    consRefineryDict['GreenSalt'] = Salt(
+        salt_name='Green',
+        auto_refine=session_data.account.refinery['Green']['AutoRefine'],
+        salt_rank=session_data.account.refinery['Green']['Rank'],
+        next_salt_rank=session_data.account.refinery['Purple']['Rank'],
+        previousSalt=consRefineryDict['BlueSalt'],
+        merit_purchased=session_data.account.merits[2][6]['Level'] >= 4,
+        running=session_data.account.refinery['Green']['Running'],
     )
-    consRefineryDict["PurpleSalt"] = Salt(
-        salt_name="Purple",
-        auto_refine=consRefineryDict['Purple AutoRefine'],
-        salt_rank=consRefineryDict["Purple Rank"],
-        next_salt_rank=consRefineryDict["Nullo Rank"],
-        previousSalt=consRefineryDict["GreenSalt"],
-        merit_purchased=consRefineryDict["Salt Merit"] >= 5,
-        running=consRefineryDict['Purple Running'],
+    consRefineryDict['PurpleSalt'] = Salt(
+        salt_name='Purple',
+        auto_refine=session_data.account.refinery['Purple']['AutoRefine'],
+        salt_rank=session_data.account.refinery['Purple']['Rank'],
+        next_salt_rank=session_data.account.refinery['Nullo']['Rank'],
+        previousSalt=consRefineryDict['GreenSalt'],
+        merit_purchased=session_data.account.merits[2][6]['Level'] >= 5,
+        running=session_data.account.refinery['Purple']['Running'],
     )
-    consRefineryDict["NulloSalt"] = Salt(
-        salt_name="Nullo",
-        auto_refine=consRefineryDict['Nullo AutoRefine'],
-        salt_rank=consRefineryDict["Nullo Rank"],
+    consRefineryDict['NulloSalt'] = Salt(
+        salt_name='Nullo',
+        auto_refine=session_data.account.refinery['Nullo']['AutoRefine'],
+        salt_rank=session_data.account.refinery['Nullo']['Rank'],
         next_salt_rank=0,
-        previousSalt=consRefineryDict["PurpleSalt"],
-        merit_purchased=consRefineryDict["Salt Merit"] >= 6,
-        running=consRefineryDict['Nullo Running'],
+        previousSalt=consRefineryDict['PurpleSalt'],
+        merit_purchased=session_data.account.merits[2][6]['Level'] >= 6,
+        running=session_data.account.refinery['Nullo']['Running'],
     )
-    #print(consRefineryDict)
+    #logger.debug(consRefineryDict)
     return consRefineryDict
 
 def setConsRefineryProgressionTier():
@@ -262,23 +197,23 @@ def setConsRefineryProgressionTier():
 
     # W3Merits Advice
     sum_SaltsRank2Plus = 0
-    if consRefineryDict['Orange Rank'] >= 2:
+    if consRefineryDict['OrangeSalt'].salt_rank >= 2:
         sum_SaltsRank2Plus += 1
-    if consRefineryDict['Blue Rank'] >= 2:
+    if consRefineryDict['BlueSalt'].salt_rank >= 2:
         sum_SaltsRank2Plus += 1
-    if consRefineryDict['Green Rank'] >= 2:
+    if consRefineryDict['GreenSalt'].salt_rank >= 2:
         sum_SaltsRank2Plus += 1
-    if consRefineryDict['Purple Rank'] >= 2:
+    if consRefineryDict['PurpleSalt'].salt_rank >= 2:
         sum_SaltsRank2Plus += 1
-    if consRefineryDict['Nullo Rank'] >= 2:
+    if consRefineryDict['NulloSalt'].salt_rank >= 2:
         sum_SaltsRank2Plus += 1
-    if consRefineryDict['Salt Merit'] < sum_SaltsRank2Plus:
+    if session_data.account.merits[2][6]['Level'] < sum_SaltsRank2Plus:
         tier_W3Merits = 0
         refinery_AdviceDict["Merits"].append(
             Advice(
                 label="W3 Taskboard Merits Purchased",
                 picture_class="iceland-irwin",
-                progression=str(consRefineryDict['Salt Merit']),
+                progression=session_data.account.merits[2][6]['Level'],
                 goal=sum_SaltsRank2Plus)
         )
 

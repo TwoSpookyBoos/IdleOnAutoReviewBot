@@ -46,9 +46,9 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
     ))
     bookLevelAdvices[staticSubgroup].append(Advice(
         label=f"W3 Achievement: Checkout Takeout: "
-              f"+{5 * (0 < session_data.account.achievements.get('Checkout Takeout', False))}/5",
+              f"+{5 * session_data.account.achievements['Checkout Takeout']['Complete']}/5",
         picture_class="checkout-takeout",
-        progression=1 if session_data.account.achievements.get('Checkout Takeout', False) else 0,
+        progression=int(session_data.account.achievements['Checkout Takeout']['Complete']),
         goal=1
     ))
     bookLevelAdvices[staticSubgroup].append(Advice(
@@ -58,9 +58,9 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
         progression=1 if 0 < session_data.account.atom_collider['Atoms']['Oxygen - Library Booker']['Level'] else 0,
         goal=1
     ))
-    if not session_data.account.rift['EldritchArtifacts'] and session_data.account.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0) == 2:
+    if not session_data.account.rift['EldritchArtifacts'] and session_data.account.sailing['Artifacts']['Fury Relic']['Level'] == 2:
         furyPostString = ". Eldritch Artifacts are unlocked by reaching {{ Rift|#rift }} 31"
-    elif not session_data.account.sneaking['JadeEmporium']["Sovereign Artifacts"]['Obtained'] and session_data.account.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0) == 3:
+    elif not session_data.account.sneaking['JadeEmporium']["Sovereign Artifacts"]['Obtained'] and session_data.account.sailing['Artifacts']['Fury Relic']['Level'] == 3:
         furyPostString = ". Sovereign Artifacts unlock from {{ Jade Emporium|#sneaking }}"
     else:
         furyPostString = ""
@@ -238,9 +238,9 @@ def getCheckoutSpeedAdviceGroup() -> AdviceGroup:
 
     # Achievement
     checkoutSpeedAdvices.append(Advice(
-        label=f"W3 Achievement: Checkout Takeout: +{30 * (0 < session_data.account.achievements.get('Checkout Takeout', False))}%",
+        label=f"W3 Achievement: Checkout Takeout: +{30 * session_data.account.achievements['Checkout Takeout']['Complete']}%",
         picture_class="checkout-takeout",
-        progression=1 if session_data.account.achievements.get('Checkout Takeout', False) else 0,
+        progression=int(session_data.account.achievements['Checkout Takeout']['Complete']),
         goal=1
     ))
     

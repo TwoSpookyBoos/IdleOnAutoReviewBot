@@ -4026,8 +4026,11 @@ statueCount = len(statuesDict.keys())
 ###WORLD 2 CONSTS###
 max_IndexOfVials = 75  # Last verified as of v2.10
 max_VialLevel = 13  # Last verified as of 2.12
+vial_costs = [1, 100, 1000, 2500, 10e3, 50e3, 100e3, 500e3, 1e6, 5e6, 25e6, 100e6, 1e9]
 max_IndexOfBubbles = 29  # Last verified as of v2.10
 max_IndexOfSigils = 3  # Last verified as of v2.10
+min_NBLB = 2
+max_NBLB = 1500
 vialsDict = {
     0: {"Name": "Copper Corona", "Material": "Copper", "x1": 3, "x2": 0, "funcType": "add"},
     1: {"Name": "Sippy Splinter", "Material": "OakTree", "x1": 3, "x2": 0, "funcType": "add"},
@@ -4643,6 +4646,15 @@ equinoxBonusesDict = {
     11: {'Name': 'Food Lust', 'BaseLevel': 10, 'MaxLevelIncreases': {26: 4}, 'FinalMaxLevel': 14, 'Category': 'Optional'},
     12: {'Name': 'Equinox Symbols', 'BaseLevel': 5, 'MaxLevelIncreases': {31: 4}, 'FinalMaxLevel': 9, 'Category': 'Recommended'},
     13: {'Name': 'Voter Rights', 'BaseLevel': 15, 'MaxLevelIncreases': {36: 15}, 'FinalMaxLevel': 30, 'Category': 'Recommended'},
+}
+refineryDict = {
+    # "salt": [json index, advice image name, cycles per Synth cycle, consumption of previous salt, next salt consumption, next salt cycles per Synth cycle]
+    "Red": [3, "redox-salts", 4, 0, 2, 4],
+    "Orange": [4, "explosive-salts", 4, 2, 2, 4],
+    "Blue": [5, "spontaneity-salts", 4, 2, 1, 1],
+    "Green": [6, "dioxide-synthesis", 1, 1, 2, 1],
+    "Purple": [7, "purple-salt", 1, 2, 2, 1],
+    "Nullo": [8, "nullo-salt", 1, 2, 0, 0]
 }
 buildingsDict = {
     #Buildings
@@ -5691,6 +5703,7 @@ sailingDict = {
         31: {'Name': 'The Shim Lantern'},
         32: {'Name': 'The Winz Lantern'}}},
 }
+captainBuffs = ['Boat Speed', 'Loot Value', 'Cloud Discover Rate', 'Artifact Find Chance', 'Rare Chest Chance', 'None']
 goldrelic_multisDict = {
     0: 0,
     1: 2,
