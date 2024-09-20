@@ -246,9 +246,30 @@ function setupPinchyHrefActions() {
         const link = e.currentTarget
         const targetId = link.getAttribute("href").slice(1)
         const target = document.querySelector(`#${targetId}`)
-        target.parentElement.classList.remove('folded')
-        target.querySelectorAll('*:not(.empty)').forEach(c => c.classList.remove('folded'))
+        unfoldElementIfFolded(target)
     })
+}
+
+/**
+ * Setup the scrolling to the clicked section when the hash changes
+ * Defaults to Pinchy if no hash is accessed
+ */
+function setupAnchorLinkScrolling() {
+    addEventListener("hashchange", () => {
+        var h = location.hash.slice(1) || "pinchy"
+        var target = (document.getElementById(h) || document.getElementsByName(h)[0] || document.body);
+        unfoldElementIfFolded(target)
+        target.scrollIntoView()
+    });
+}
+
+/**
+ * Unfolds the section it is folded
+ * @param {Element} target 
+ */
+function unfoldElementIfFolded(target) {
+    target.parentElement.classList.remove('folded')
+    target.querySelectorAll('*:not(.empty)').forEach(c => c.classList.remove('folded'))
 }
 
 function applyShowMoreButton() {
@@ -584,6 +605,7 @@ function initResultsUI() {
     setFormValues()
     setupFolding()
     setupPinchyHrefActions()
+    setupAnchorLinkScrolling()
     applyShowMoreButton()
     setupDataClock()
     calcProgressBars(document)
