@@ -52,7 +52,7 @@ from consts import (
     breedingShinyBonusList, breedingSpeciesDict, getShinyLevelFromDays, getDaysToNextShinyLevel,
     # W5
     sailingDict, numberOfArtifactTiers, captainBuffs,
-    getStyleNameFromIndex, divinity_divinitiesDict, getDivinityNameFromIndex,
+    getStyleNameFromIndex, divinity_divinitiesDict, divinity_offeringsDict, getDivinityNameFromIndex,
     gamingSuperbitsDict,
     # W6
     jade_emporium, pristineCharmsList, sneakingGemstonesFirstIndex, sneakingGemstonesList, sneakingGemstonesStatList,
@@ -2619,11 +2619,13 @@ class Account:
         raw_divinity_list = safe_loads(self.raw_data.get("Divinity", []))
         while len(raw_divinity_list) < 40:
             raw_divinity_list.append(0)
-
+        self.divinity['DivinityPoints'] = raw_divinity_list[24]
         self.divinity['GodsUnlocked'] = min(10, raw_divinity_list[25])
         self.divinity['GodRank'] = max(0, raw_divinity_list[25] - 10)
         self.divinity['LowOffering'] = raw_divinity_list[26]
         self.divinity['HighOffering'] = raw_divinity_list[27]
+        self.divinity['LowOfferingGoal'] = ""
+        self.divinity['HighOfferingGoal'] = ""
         for divinityIndex in self.divinity['Divinities']:
             if self.divinity['GodsUnlocked'] >= divinityIndex:
                 self.divinity['Divinities'][divinityIndex]["Unlocked"] = True
@@ -3312,6 +3314,7 @@ class Account:
 
     def _calculate_w5(self):
         self._calculate_w5_divinity_link_advice()
+        self._calculate_w5_divinity_offering_costs()
 
     def _calculate_w5_divinity_link_advice(self):
         self.divinity['DivinityLinks'] = {
@@ -3563,6 +3566,17 @@ class Account:
                 ),
             ],
         }
+
+    def _calculate_w5_divinity_offering_costs(self):
+        if (self.raw_serverVars_dict.get("DivCostAfter3") is not None):
+            self.divinity['LowOfferingGoal'] = self._divinityUpgradeCost(self.divinity['LowOffering'], self.divinity['GodsUnlocked'])
+            self.divinity['HighOfferingGoal'] = self._divinityUpgradeCost(self.divinity['HighOffering'], self.divinity['GodsUnlocked'])
+    
+    def _divinityUpgradeCost(self, offeringIndex, unlockedDivinity):
+        cost = (20 * pow(unlockedDivinity + 1.3, 2.3) * pow(2.2, unlockedDivinity) + 60) * divinity_offeringsDict.get(offeringIndex).get("Chance")/100;
+        if (2 < unlockedDivinity) :
+            cost = cost * pow(min(1.8, max(1, 1 + self.raw_serverVars_dict.get("DivCostAfter3") / 100)), unlockedDivinity - 2);
+        return ceil(cost);
 
     def _calculate_w6(self):
         self._calculate_w6_summoning_winner_bonuses()
