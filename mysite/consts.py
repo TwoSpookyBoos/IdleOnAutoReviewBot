@@ -6141,6 +6141,7 @@ sneakingGemstonesStatList: list[str] = [
 ]
 sneakingGemstonesFirstIndex = 233
 sneakingGemstonesCount = len(sneakingGemstonesList)
+sneakingGemstonesBaseValueDict = {"Aquamarine": 40, "Emerald": 15, "Garnet": 12, "Starite": 5, "Topaz": 10, "Moissanite": 3}
 sneakingGemstonesMaxValueDict = {"Aquamarine": 10040, "Emerald": 5015, "Garnet": 2512, "Starite": 205, "Topaz": 1010, "Moissanite": 303}
 maxFarmingCrops = 160  # Last verified as of 2.11 Land Rank update
 landrankDict = {
@@ -6193,16 +6194,14 @@ def getGemstoneBoostedValue(gemstoneValue: float, moissaniteValue: float):
 def getGemstoneBaseValue(gemstoneName: str, gemstoneLevel: int):
     value = 0
     if gemstoneLevel > 0:
-        if gemstoneName == "Aquamarine":
-            value = 40 + (sneakingGemstonesMaxValueDict['Aquamarine'] * (gemstoneLevel / (gemstoneLevel + 1000)))
-        elif gemstoneName == "Emerald":
-            value = 15 + (sneakingGemstonesMaxValueDict['Emerald'] * (gemstoneLevel / (gemstoneLevel + 1000)))
-        elif gemstoneName == "Garnet":
-            value = 12 + (sneakingGemstonesMaxValueDict['Garnet'] * (gemstoneLevel / (gemstoneLevel + 1000)))
-        elif gemstoneName == "Starite":
-            value = 5 + (sneakingGemstonesMaxValueDict['Starite'] * (gemstoneLevel / (gemstoneLevel + 1000)))
-        elif gemstoneName == "Topaz":
-            value = 10 + (sneakingGemstonesMaxValueDict['Topaz'] * (gemstoneLevel / (gemstoneLevel + 1000)))
+        if gemstoneName in sneakingGemstonesBaseValueDict:
+            value = (
+                sneakingGemstonesBaseValueDict[gemstoneName]
+                + (
+                    (sneakingGemstonesMaxValueDict[gemstoneName] - sneakingGemstonesBaseValueDict[gemstoneName])
+                    * (gemstoneLevel / (gemstoneLevel + 1000))
+                )
+            )
         else:
             logger.warning(f"Unrecognized gemstoneName: '{gemstoneName}'. Returning default 0 value")
             value = 0
