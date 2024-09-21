@@ -241,26 +241,22 @@ function setupSwitchesActions() {
     document.querySelector('#progress_bars').onclick = () => calcProgressBars(document)
 }
 
-function setupPinchyHrefActions() {
-    document.querySelectorAll('#pinchy .advice-group a').forEach(hyperlink => hyperlink.onclick = e => {
+function setupHrefEventActions() {
+    addEventListener("hashchange", evt => {
+        var h = location.hash.slice(1) || "pinchy-all" // Defaults on the pinchy section if you try to access an empty hash, for exemple when hiting return on your browser
+        var target = (document.getElementById(h) || document.getElementsByName(h)[0] || document.body)
+        unfoldElementIfFolded(target)
+    });
+
+    document.querySelectorAll('#mainresults .advice a').forEach(hyperlink => hyperlink.onclick = e => {
         const link = e.currentTarget
         const targetId = link.getAttribute("href").slice(1)
-        const target = document.querySelector(`#${targetId}`)
-        unfoldElementIfFolded(target)
-    })
-}
 
-/**
- * Setup the scrolling to the clicked section when the hash changes
- * Defaults to Pinchy if no hash is accessed
- */
-function setupAnchorLinkScrolling() {
-    addEventListener("hashchange", () => {
-        var h = location.hash.slice(1) || "pinchy"
-        var target = (document.getElementById(h) || document.getElementsByName(h)[0] || document.body);
-        unfoldElementIfFolded(target)
-        target.scrollIntoView()
-    });
+        // Delegate the navigation to the HashChange event
+        e.preventDefault()
+        history.replaceState(undefined, undefined, `#${targetId}`);
+        window.dispatchEvent(new HashChangeEvent("hashchange"))
+    })
 }
 
 /**
@@ -268,8 +264,29 @@ function setupAnchorLinkScrolling() {
  * @param {Element} target 
  */
 function unfoldElementIfFolded(target) {
-    target.parentElement.classList.remove('folded')
-    target.querySelectorAll('*:not(.empty)').forEach(c => c.classList.remove('folded'))
+    var [childH1, childDiv] = [...target.children]
+    var parentDiv = target.parentElement.parentElement;
+    var parentH1 = target.parentElement.parentElement.closest('h1');
+    var article = target.parentElement.parentElement.parentElement;
+
+    if (parentDiv.classList.contains('folded')) {
+        // The section is folded, we need to wait until the transition is complete to scroll to its position
+        const onTransitionEnd = evt => { 
+            if (evt.target == parentDiv) { // Multiple events are triggered, we only want the main div one
+                article.removeEventListener("transitionend", onTransitionEnd);
+                target.scrollIntoView()
+            }
+        }
+        article.addEventListener("transitionend", onTransitionEnd)
+    } else {
+        // The section is open, scroll directly to it
+        target.scrollIntoView()
+    }
+
+    parentDiv.classList.remove('folded');
+    parentH1?.classList.remove('folded');
+    childH1.classList.remove('folded');
+    childDiv.classList.remove('folded');
 }
 
 function applyShowMoreButton() {
@@ -604,8 +621,7 @@ function initBaseUI() {
 function initResultsUI() {
     setFormValues()
     setupFolding()
-    setupPinchyHrefActions()
-    setupAnchorLinkScrolling()
+    setupHrefEventActions()
     applyShowMoreButton()
     setupDataClock()
     calcProgressBars(document)
