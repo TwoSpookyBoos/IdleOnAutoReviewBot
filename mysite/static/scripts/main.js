@@ -242,13 +242,46 @@ function setupSwitchesActions() {
 }
 
 function setupPinchyHrefActions() {
-    document.querySelectorAll('#pinchy .advice-group a').forEach(hyperlink => hyperlink.onclick = e => {
+    addEventListener("hashchange", evt => {
+        console.log(evt)
+        var h = location.hash.slice(1) || "pinchy-all"
+        var target = (document.getElementById(h) || document.getElementsByName(h)[0] || document.body)
+        unfoldElementIfFolded(target)
+    });
+
+    document.querySelectorAll('#pinchy .advice a').forEach(hyperlink => hyperlink.onclick = e => {
         const link = e.currentTarget
         const targetId = link.getAttribute("href").slice(1)
-        const target = document.querySelector(`#${targetId}`)
-        target.parentElement.classList.remove('folded')
-        target.querySelectorAll('*:not(.empty)').forEach(c => c.classList.remove('folded'))
+
+        // Delegate the navigation to the HashChange event
+        e.preventDefault()
+        history.replaceState(undefined, undefined, `#${targetId}`);
+        window.dispatchEvent(new HashChangeEvent("hashchange"))
     })
+}
+
+/**
+ * Unfolds the section it is folded
+ * @param {Element} target 
+ */
+function unfoldElementIfFolded(target) {
+    var [childH1, childDiv] = [...target.children]
+    var parentDiv = target.parentElement.parentElement;
+    var parentH1 = target.parentElement.parentElement.closest('h1');
+    var article = target.parentElement.parentElement.parentElement;
+    article.addEventListener("transitionend", e => console.log("global:",e)); 
+    
+    const promises = []; 
+    if (parentDiv.classList.contains('folded')) {
+        promises.push(new Promise((resolve) => article.addEventListener("transitionend", evt => { if (evt.target == parentDiv) resolve() })))
+    }
+
+    parentDiv.classList.remove('folded');
+    parentH1?.classList.remove('folded');
+    childH1.classList.remove('folded');
+    childDiv.classList.remove('folded');
+
+    Promise.allSettled(promises).then(() => target.scrollIntoView())
 }
 
 function applyShowMoreButton() {
