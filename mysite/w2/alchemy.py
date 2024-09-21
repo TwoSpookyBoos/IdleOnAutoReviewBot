@@ -179,7 +179,7 @@ def getAtRiskAdviceGroups() -> list[AdviceGroup]:
             basic_poststring = f"Highest level for NBLB today: {todays_highest}"
         atriskBasic_AdviceList.extend([
             Advice(
-                label=bubbleName,
+                label=f"{bubbleName}{' (Printing!)' if bubbleValuesDict['Material'] in session_data.account.printer['AllCurrentPrints'] else ''}",
                 picture_class=bubbleName,
                 progression=bubbleValuesDict['Level'],
                 goal=min(max_NBLB, max(todays_highest+20, bubbleValuesDict['Level'] + 20)),
@@ -222,7 +222,7 @@ def getAtRiskAdviceGroups() -> list[AdviceGroup]:
             lithium_poststring = f"Highest level for Lithium today: {todays_highest_lithium}"
             atriskLithium_AdviceList.extend([
                 Advice(
-                    label=bubbleName,
+                    label=f"{bubbleName}{' (Printing!)' if bubbleValuesDict['Material'] in session_data.account.printer['AllCurrentPrints'] else ''}",
                     picture_class=bubbleName,
                     progression=bubbleValuesDict['Level'],
                     goal=min(max_NBLB, max(todays_highest_lithium + 10, bubbleValuesDict['Level'] + 10)),
