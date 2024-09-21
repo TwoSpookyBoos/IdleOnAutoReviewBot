@@ -1,8 +1,6 @@
 import math
-from pathlib import Path
-
 import yaml
-
+from pathlib import Path
 from utils.logging import get_logger
 from utils.text_formatting import getItemDisplayName
 from config import app
@@ -301,7 +299,7 @@ greenstack_progressionTiers = {
             "Base Monster Materials": ["Sewers3"],
             "Crystal Enemy Drops": [
                 "EquipmentStatues7", "EquipmentStatues3", "EquipmentStatues2", "EquipmentStatues4", "EquipmentStatues14",
-                "rtt0", "StoneZ1", "StoneT1",],  #W1 Tool in particular drops from both W1 and W2 crystal farms
+                "StoneZ1", "StoneT1",],  #W1 Tool in particular drops from both W1 and W2 crystal farms
             "Other Skilling Resources": [
                 "GoldBar", "DementiaBar", "VoidBar", "LustreBar",
                 "Peanut", "Quest68", "Bullet3",],  #I really hate that the Slush Bucket is listed as Quest68
@@ -312,6 +310,8 @@ greenstack_progressionTiers = {
             "Crystal Enemy Drops": [
                 "EquipmentStatues1", "EquipmentStatues5",  #Power and Health statues are still more common than W2 statues
                 "EquipmentStatues10", "EquipmentStatues12", "EquipmentStatues13", "EquipmentStatues8", "EquipmentStatues11",  #W2 statues
+                "EquipmentStatues18",  #W3 EhExPee statue
+                "rtt0",
                 "StoneA1", "StoneW1",
                 "StoneZ2", "StoneT2",
                 "PureWater",
@@ -1777,7 +1777,7 @@ expectedStackables = {
         "EquipmentStatues10", "EquipmentStatues12", "EquipmentStatues13", "EquipmentStatues8", "EquipmentStatues11",  # W2 statues are all slower than Power/Health
         "rtt0", "StoneZ1", "StoneT1", "StoneW1", "StoneA1",  #W1 Slow drops = Town TP + Stones
         "StoneT2", "StoneZ2",  "StoneW2",  #"StoneA2", # W2 upgrade stones and Mystery2
-        "PureWater",  #W3 Slow drops = Distilled Water
+        "PureWater", "EquipmentStatues18",  #W3 Slow drops = Distilled Water + EhExPee Statue
         "FoodG9",  #W5 Slow drops = Golden W5 Sammy
         "FoodG11", "FoodG12"
     ],
@@ -1861,9 +1861,9 @@ expectedStackables = {
         "FoodHealth8", "Quest69", "Quest74",  # Unobtainables
         "EquipmentStatues6", "EquipmentStatues15",  # Kachow and Bullseye
         "EquipmentStatues9",  # Oceanman Statue only comes from Catching
-        "EquipmentStatues16", "EquipmentStatues17", "EquipmentStatues18", "EquipmentStatues19",  # W3 Statues
-        "EquipmentStatues20", "EquipmentStatues21", "EquipmentStatues22", "EquipmentStatues23", "EquipmentStatues24",
-        "EquipmentStatues25",  # W4 and W5 Statues
+        "EquipmentStatues16", "EquipmentStatues17", "EquipmentStatues19",  # W3 Statues
+        "EquipmentStatues20", "EquipmentStatues21", "EquipmentStatues22",  # W4 Statues
+        "EquipmentStatues23", "EquipmentStatues24", "EquipmentStatues25",  # W5 Statues
         "FoodG1", "FoodG2", "FoodG3", "FoodG4", "FoodG5", "FoodG6", "FoodG7", "FoodG8", "FoodG10",  # Gold Foods
         "ResetFrag", "ResetCompleted", "ResetCompletedS", "ClassSwap",
         "ClassSwapB", "ResetBox",
