@@ -195,12 +195,12 @@ def getCardsAdviceList() -> list[Advice]:
         "Shrine Value": ["Chaotic Chizoar"],
         "Crystal Spawn Chance": ["Demon Genie", "Poop"],
         "Drop Chance": ["Emperor", "Minichief Spirit", "King Doot", "Mister Brightside", "Crystal Carrot", "Bop Box"],
-        "Skill AFK": ["Amarok", "Mama Troll", "Bunny"],
+        "Skilling Goodness": ["Chaotic Troll", "Amarok", "Mama Troll", "Bunny"],
         "Combat Gains": ["Chaotic Amarok", "Boop", "Woodlin Spirit", "Suggma", "Clammie", "Demented Spiritlord", "Moonmoon", "Fly"],
         "Solid Passives": ["Godshard Ore", "Crystal Candalight", "Crystal Capybara", "Samurai Guardian", "Royal Egg", "Domeo Magmus"],
         "Stat% Filler": ["River Spirit", "Blighted Chizoar", "Tremor Wurm", "Stilted Seeker"],
     }
-    card_advice_limit = 8
+    card_advice_limit = 10
 
     for reason, cardnameList in all_cards.items():
         for card in cardnameList:
