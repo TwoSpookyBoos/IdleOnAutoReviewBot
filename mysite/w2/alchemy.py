@@ -494,7 +494,7 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
     )
 
     player_sigil_stamp_value = session_data.account.stamps.get('Sigil Stamp', {}).get('Value', 0)
-    goal_sigil_stamp_value = lavaFunc('decay', stamp_maxes['Sigil Stamp'], 40, 150) * 2 * 1.25
+    goal_sigil_stamp_value = lavaFunc('decay', stamp_maxes['Sigil Stamp'], 40, 150)
     # The Sigil Stamp is a MISC stamp, thus isn't multiplied by the Lab bonus or Pristine Charm
     # if session_data.account.labBonuses['Certified Stamp Book']['Enabled']:
     #     player_sigil_stamp_value *= 2
