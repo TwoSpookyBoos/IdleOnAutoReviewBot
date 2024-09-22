@@ -1,7 +1,7 @@
 from consts import break_keep_it_up, trappingQuestsRequirementList
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
-from utils.data_formatting import safe_loads
+from utils.data_formatting import safe_loads, mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
 
@@ -342,6 +342,8 @@ def setTrappingProgressionTier():
                     progression=shinyItem.amount,
                     goal=trappingQuestsRequirementList[tier_unlockCritters-2]["shinyQuantity"]
             ))
+    for advice in trapping_AdviceDict["UnlockCritters"]:
+        mark_advice_completed(advice)
 
     #UnusedTraps
     if len(unplacedTrapsDict) > 0:
