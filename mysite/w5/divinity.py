@@ -22,14 +22,14 @@ def getOfferingsAdviceGroup(lowOffering, highOffering, divinityPoints, lowOfferi
     offerings_AdviceDict["Available Offerings"].append(Advice(
         label=f"{divinity_offeringsDict.get(lowOffering, {}).get('Chance', 0)}% Offering: {getOfferingNameFromIndex(lowOffering)}",
         picture_class=divinity_offeringsDict.get(lowOffering, {}).get('Image', ''),
-        progression=divinityPoints,
-        goal=lowOfferingGoal
+        progression=f"{divinityPoints / lowOfferingGoal:.2%}",
+        #goal=lowOfferingGoal
     ))
     offerings_AdviceDict["Available Offerings"].append(Advice(
         label=f"{divinity_offeringsDict.get(highOffering, {}).get('Chance', 0)}% Offering: {getOfferingNameFromIndex(highOffering)}",
         picture_class=divinity_offeringsDict.get(highOffering, {}).get('Image', ''),
-        progression=divinityPoints,
-        goal=highOfferingGoal
+        progression=f"{divinityPoints / highOfferingGoal:.2%}",
+        #goal=highOfferingGoal
     ))
     offerings_AdviceDict["Strategy"].append(Advice(
         label=f"Option 1: Choose the high offering if 100% Chance, otherwise choose low offering.",

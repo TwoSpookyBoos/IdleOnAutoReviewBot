@@ -3574,8 +3574,8 @@ class Account:
         }
 
     def _calculate_w5_divinity_offering_costs(self):
-        self.divinity['LowOfferingGoal'] = self._divinityUpgradeCost(self.divinity['LowOffering'], self.divinity['GodsUnlocked'])
-        self.divinity['HighOfferingGoal'] = self._divinityUpgradeCost(self.divinity['HighOffering'], self.divinity['GodsUnlocked'])
+        self.divinity['LowOfferingGoal'] = self._divinityUpgradeCost(self.divinity['LowOffering'], self.divinity['GodsUnlocked'] + self.divinity['GodRank'])
+        self.divinity['HighOfferingGoal'] = self._divinityUpgradeCost(self.divinity['HighOffering'], self.divinity['GodsUnlocked'] + self.divinity['GodRank'])
     
     def _divinityUpgradeCost(self, offeringIndex, unlockedDivinity):
         cost = (20 * pow(unlockedDivinity + 1.3, 2.3) * pow(2.2, unlockedDivinity) + 60) * divinity_offeringsDict.get(offeringIndex, {}).get("Chance", 0) / 100
