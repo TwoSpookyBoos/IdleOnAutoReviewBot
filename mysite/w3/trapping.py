@@ -1,4 +1,4 @@
-from consts import break_keep_it_up, trappingQuestsRequirementList
+from consts import break_keep_it_up
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
 from utils.data_formatting import safe_loads
@@ -307,25 +307,11 @@ def setTrappingProgressionTier():
     #UnlockCritters
     tier_unlockCritters = highestUnlockedCritter[0]
     if highestUnlockedCritter[0] != maxCritterTypes:  #unlocked not equal to the max possible to unlock.
-        trapping_AdviceDict["UnlockCritters"].append(Advice(
+        trapping_AdviceDict["UnlockCritters"].append(
+            Advice(
                 label=highestUnlockedCritter[3],
                 picture_class=highestUnlockedCritter[3])
             )
-        if tier_unlockCritters >= 2 and tier_unlockCritters < 11: # Show only the quests with Critter requirement
-            normalItem=session_data.account.stored_assets.get(trappingQuestsRequirementList[tier_unlockCritters-2]["normalItemName"])
-            trapping_AdviceDict["UnlockCritters"].append(Advice(
-                    label=normalItem.name,
-                    picture_class=normalItem.name,
-                    progression=normalItem.amount,
-                    goal=trappingQuestsRequirementList[tier_unlockCritters-2]["normalQuantity"]
-            ))
-            shinyItem=session_data.account.stored_assets.get(trappingQuestsRequirementList[tier_unlockCritters-2]["shinyItemName"])
-            trapping_AdviceDict["UnlockCritters"].append(Advice(
-                    label=shinyItem.name,
-                    picture_class=shinyItem.name,
-                    progression=shinyItem.amount,
-                    goal=trappingQuestsRequirementList[tier_unlockCritters-2]["shinyQuantity"]
-            ))
 
     #UnusedTraps
     if len(unplacedTrapsDict) > 0:
