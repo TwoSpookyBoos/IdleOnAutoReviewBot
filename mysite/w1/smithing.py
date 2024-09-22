@@ -33,8 +33,7 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
         "Bars per Forge Slot": []
     }
     #Static Sources
-    #Achievement value of -1 means completed
-    achievement = session_data.account.achievements.get("Vitamin D-licious", False)
+    achievement = session_data.account.achievements['Vitamin D-licious']['Complete']
     cap_Advices["Static Sources"].append(Advice(
         label=f"W5 Achievement: Vitamin D-licious: +{50 if achievement else 0}/50%",
         picture_class='vitamin-d-licious',

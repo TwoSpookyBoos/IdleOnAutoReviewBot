@@ -1,11 +1,11 @@
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import safe_loads, mark_advice_completed
-from utils.text_formatting import pl
+from utils.text_formatting import pl, getItemDisplayName
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import maxTiersPerGroup, bubbles_progressionTiers, vials_progressionTiers, max_IndexOfVials, maxFarmingCrops, atrisk_basicBubbles, \
     atrisk_lithiumBubbles, cookingCloseEnough, break_you_best, sigils_progressionTiers, max_IndexOfSigils, max_VialLevel, numberOfArtifactTiers, stamp_maxes, \
-    lavaFunc
+    lavaFunc, vial_costs, min_NBLB, max_NBLB
 
 logger = get_logger(__name__)
 
@@ -30,35 +30,13 @@ def setAlchemyVialsProgressionTier() -> AdviceSection:
         vial_AdviceSection.header = "Come back after unlocking the Alchemy skill in World 2!"
         return vial_AdviceSection
 
-    virileVialsList = []
-    maxExpectedVV = max_IndexOfVials-4  # Exclude both pickle and both rare drop vials
-    maxedVialsList = []
-    unmaxedVialsList = []
-    lockedVialsList = []
     alchemyVialsDict = session_data.account.alchemy_vials
-    unlockedVials = 0
-
-    for vialName, vialValue in alchemyVialsDict.items():
-        try:
-            if int(vialValue.get("Level", 0)) == 0:
-                lockedVialsList.append(vialName)
-                #unmaxedVialsList.append(getReadableVialNames(vial))
-                unmaxedVialsList.append(vialName)
-            else:
-                unlockedVials += 1
-                if int(vialValue.get("Level", 0)) >= 4:
-                    #virileVialsList.append(getReadableVialNames(vial))
-                    virileVialsList.append(vialName)
-                if int(vialValue.get("Level", 0)) >= 13:
-                    #maxedVialsList.append(getReadableVialNames(vial))
-                    maxedVialsList.append(vialName)
-                else:
-                    #unmaxedVialsList.append(getReadableVialNames(vial))
-                    unmaxedVialsList.append(vialName)
-        except:
-            logger.exception(f"Could not coerce vial {vialName}'s level of {type(vialValue.get('Level', 0))} {vialValue.get('Level', 0)} to Int for Vial comparison")
-            lockedVialsList.append(vialName)
-            unmaxedVialsList.append(vialName)
+    virileVialsList = [vialName for vialName, vialValue in alchemyVialsDict.items() if vialValue['Level'] >= 4]
+    maxExpectedVV = max_IndexOfVials-4  # Exclude both pickle and both rare drop vials
+    maxedVialsList = [vialName for vialName, vialValue in alchemyVialsDict.items() if vialValue['Level'] >= max_VialLevel]
+    unmaxedVialsList = [vialName for vialName in alchemyVialsDict if vialName not in maxedVialsList]
+    lockedVialsList = [vialName for vialName, vialValue in alchemyVialsDict.items() if vialValue['Level'] == 0]
+    unlockedVials = sum(1 for vial in alchemyVialsDict.values() if vial['Level'] > 0)
 
     tier_TotalVialsUnlocked = 0
     tier_TotalVialsMaxed = 0
@@ -111,9 +89,21 @@ def setAlchemyVialsProgressionTier() -> AdviceSection:
         for requiredVial in tier[3]:
             if requiredVial in unmaxedVialsList:
                 if len(vial_AdviceDict["MaxVials"]["Vials to max next"]) < maxAdvicesPerGroup:
-                    vial_AdviceDict["MaxVials"]["Vials to max next"].append(
-                        Advice(label=requiredVial, picture_class=requiredVial.split("(")[0].strip(), progression="", goal="")
-                    )
+                    goal = int(vial_costs[session_data.account.alchemy_vials[requiredVial]['Level']])
+                    prog = 100 * (session_data.account.all_assets.get(session_data.account.alchemy_vials[requiredVial]['Material']).amount / max(1, goal))
+                    # Generate Alerts
+                    if prog >= goal and session_data.account.alchemy_vials[requiredVial]['Level'] == max_VialLevel-1:
+                        session_data.account.alerts_AdviceDict['World 2'].append(Advice(
+                            label=f"{requiredVial} {{{{ Vial|#vials }}}} ready to be maxed!",
+                            picture_class="vial-13"
+                        ))
+                    vial_AdviceDict["MaxVials"]["Vials to max next"].append(Advice(
+                        label=f"{requiredVial}"
+                              f"{'<br>Ready for level ' if prog >= 100 else ''}"
+                              f"{session_data.account.alchemy_vials[requiredVial]['Level'] + 1 if prog >= 100 else ''}",
+                        picture_class=getItemDisplayName(session_data.account.alchemy_vials[requiredVial]['Material']),
+                        progression=f"{prog:.1f}%",
+                    ))
 
     if len(virileVialsList) < maxExpectedVV:
         vial_AdviceDict["EarlyVials"]["Info - Shaman's Virile Vials"] = [
@@ -174,64 +164,84 @@ def getAtRiskAdviceGroups() -> list[AdviceGroup]:
         reverse=False
     )
     #Basic NBLB: Remove any bubbles with index 15 or higher and level of 1 or lower
-    sorted_bubbles_basic = [(k, v) for k, v in sorted_bubbles if v['Level'] > 1 and v['BubbleIndex'] <= 14]
-    basic_ps = ""
+    sorted_bubbles_basic = [(k, v) for k, v in sorted_bubbles if v['Level'] >= min_NBLB and v['BubbleIndex'] <= 14]
+    basic_prestring = ""
+    lithium_prestring = ""
+    basic_poststring = ""
     if sorted_bubbles_basic and max(session_data.account.all_skills['Lab'], default=0) > 1:
         try:
+            todays_lowest = sorted_bubbles_basic[0][1]['Level']
             todays_highest = sorted_bubbles_basic[nblbCount - 1][1]['Level']
         except:
+            todays_lowest = sorted_bubbles_basic[0][1]['Level']
             todays_highest = sorted_bubbles_basic[-1][1]['Level']
         if len(sorted_bubbles_basic) > 2 * nblbCount:
-            basic_ps = f"Highest level for NBLB today: {todays_highest}"
+            basic_poststring = f"Highest level for NBLB today: {todays_highest}"
         atriskBasic_AdviceList.extend([
             Advice(
-                label=bubbleName,
+                label=f"{bubbleName}{' (Printing!)' if bubbleValuesDict['Material'] in session_data.account.printer['AllCurrentPrints'] else ''}",
                 picture_class=bubbleName,
                 progression=bubbleValuesDict['Level'],
-                goal=todays_highest+20, #max(sorted_bubbles_basic[2 * nblbCount][1]['Level'], bubbleValuesDict['Level'] + 20),
+                goal=min(max_NBLB, max(todays_highest+20, bubbleValuesDict['Level'] + 20)),
                 resource=bubbleValuesDict['Material']
             )
             for bubbleName, bubbleValuesDict in sorted_bubbles_basic
                 if bubbleName in atrisk_basicBubbles
-                and bubbleValuesDict['Level'] < todays_highest + 20  #sorted_bubbles_basic[2 * nblbCount][1]['Level']
+                and (
+                    bubbleValuesDict['Level'] < todays_highest + 20
+                    or todays_lowest >= 200
+                )
+                and bubbleValuesDict['Level'] < max_NBLB
         ])
+
+        if todays_lowest >= 200:
+            basic_prestring = f"Informational \"Easy\" to print materials in W1-W3 bubbles"
+            lithium_prestring = f"Informational- Slower to print materials in W4-W5 bubbles"
+        else:
+            basic_prestring = f"Informational- \"Easy\" to print materials in your {2 * nblbCount} lowest leveled W1-W3 bubbles"
+            lithium_prestring = f"Informational- Slower to print materials in your {nblbCount} lowest leveled W4-W5 bubbles"
 
     atriskBasic_AG = AdviceGroup(
         tier="",
-        pre_string=f"Informational- \"Easy\" to print materials in your {2 * nblbCount} lowest leveled W1-W3 bubbles",
+        pre_string=basic_prestring,
         advices=atriskBasic_AdviceList,
-        post_string=basic_ps
+        post_string=basic_poststring
     )
 
     #Same thing, but for Lithium Bubbles W4-W5 now
     #Lithium only works on W4 and W5 bubbles, indexes 15 through 24
-    sorted_bubbles_lithium = [(k, v) for k, v in sorted_bubbles if 1 < v['Level'] < 1500 and 15 <= v['BubbleIndex'] <= 24]
-    lithium_ps = f""
+    sorted_bubbles_lithium = [(k, v) for k, v in sorted_bubbles if min_NBLB <= v['Level'] < max_NBLB and 15 <= v['BubbleIndex'] <= 24]
+    #lithium_prestring = ""
+    lithium_poststring = ""
     if sorted_bubbles_lithium and max(session_data.account.all_skills['Lab'], default=0) > 1:
         if len(sorted_bubbles_lithium) > nblbCount:
             try:
-                todays_lithium = sorted_bubbles_lithium[nblbCount - 1][1]['Level']
+                todays_highest_lithium = sorted_bubbles_lithium[nblbCount - 1][1]['Level']
             except:
-                todays_lithium = sorted_bubbles_lithium[-1][1]['Level']
-            lithium_ps = f"Highest level for Lithium today: {todays_lithium}"
+                todays_highest_lithium = sorted_bubbles_lithium[-1][1]['Level']
+            lithium_poststring = f"Highest level for Lithium today: {todays_highest_lithium}"
             atriskLithium_AdviceList.extend([
                 Advice(
-                    label=bubbleName,
+                    label=f"{bubbleName}{' (Printing!)' if bubbleValuesDict['Material'] in session_data.account.printer['AllCurrentPrints'] else ''}",
                     picture_class=bubbleName,
                     progression=bubbleValuesDict['Level'],
-                    goal=max(sorted_bubbles_lithium[nblbCount][1]['Level'], bubbleValuesDict['Level'] + 10),
+                    goal=min(max_NBLB, max(todays_highest_lithium + 10, bubbleValuesDict['Level'] + 10)),
                     resource=bubbleValuesDict['Material']
                 )
                 for bubbleName, bubbleValuesDict in sorted_bubbles_lithium
                     if bubbleName in atrisk_lithiumBubbles
-                    and bubbleValuesDict['Level'] < todays_lithium + 10
+                    and (
+                        bubbleValuesDict['Level'] < todays_highest_lithium + 10
+                        or len(atriskBasic_AdviceList) > 0
+                    )
+                    and bubbleValuesDict['Level'] < max_NBLB
             ])
 
     atriskLithium_AG = AdviceGroup(
         tier="",
-        pre_string=f"Informational- Slower to print materials in your {nblbCount} lowest leveled W4-W5 bubbles",
+        pre_string=lithium_prestring,
         advices=atriskLithium_AdviceList if session_data.account.atom_collider['Atoms']['Lithium - Bubble Insta Expander']['Level'] >= 1 else [],
-        post_string=lithium_ps
+        post_string=lithium_poststring
     )
     return [atriskBasic_AG, atriskLithium_AG]
 
@@ -484,7 +494,7 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
     )
 
     player_sigil_stamp_value = session_data.account.stamps.get('Sigil Stamp', {}).get('Value', 0)
-    goal_sigil_stamp_value = lavaFunc('decay', stamp_maxes['Sigil Stamp'], 40, 150) * 2 * 1.25
+    goal_sigil_stamp_value = lavaFunc('decay', stamp_maxes['Sigil Stamp'], 40, 150)
     # The Sigil Stamp is a MISC stamp, thus isn't multiplied by the Lab bonus or Pristine Charm
     # if session_data.account.labBonuses['Certified Stamp Book']['Enabled']:
     #     player_sigil_stamp_value *= 2
@@ -493,7 +503,7 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
 
     mga = 1 + (
         (
-            (20 * session_data.account.achievements['Vial Junkee'])
+            (20 * session_data.account.achievements['Vial Junkee']['Complete'])
             + (20 * session_data.account.gemshop['Sigil Supercharge'])
             + player_peapod_value
             + willow_vial_value
@@ -556,9 +566,9 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
     # Multi Group A
     speed_Advice[mga_label].append(Advice(
         label=f"W2 Achievement: Vial Junkee: "
-              f"+{20 * session_data.account.achievements['Vial Junkee']}/20%",
+              f"+{20 * session_data.account.achievements['Vial Junkee']['Complete']}/20%",
         picture_class="vial-junkee",
-        progression=int(session_data.account.achievements['Vial Junkee']),
+        progression=int(session_data.account.achievements['Vial Junkee']['Complete']),
         goal=1
     ))
     speed_Advice[mga_label].append(Advice(

@@ -58,14 +58,14 @@ def getMissableGStacks(owned_stuff: Assets):
     still_obtainable = len(advice_EndangeredQuestGStacks)
     possible = len(missableGStacksDict)
 
-    tier_obtainable = f"{len(advice_EndangeredQuestGStacks)}/{possible - len(advice_ObtainedQuestGStacks)}"
+    tier_obtainable = f"{still_obtainable}/{possible - still_obtainable}"
 
-    if len(advice_EndangeredQuestGStacks) < len(missableGStacksDict) - len(advice_ObtainedQuestGStacks):
+    if already_missed > 0:
         header_alreadymissed = f"already missed {already_missed}"
     else:
         header_alreadymissed = f""
 
-    if already_obtained > 1:
+    if already_obtained > 0:
         header_alreadyobtained = f"{'and ' if already_missed > 0 and still_obtainable == 0 else ''}already obtained {already_obtained}"
     else:
         header_alreadyobtained = ""
@@ -76,7 +76,7 @@ def getMissableGStacks(owned_stuff: Assets):
                            f"can still obtain {'all ' if still_obtainable == possible else ''}{still_obtainable}")
 
     header_obtainable = (f"You {header_alreadymissed}"
-                         f"{',<br>' if header_alreadymissed != '' else ''}{header_alreadyobtained}"
+                         f"{',<br>' if header_alreadymissed != '' and header_alreadyobtained != '' else ''}{header_alreadyobtained}"
                          f"{header_missable}"
                          f" missable quest item Greenstacks."
                          f"{break_you_best if already_obtained == possible else ''}"

@@ -48,8 +48,8 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     account_sum += stampleValue
     account_sum += amplestampleValue
     account_sum += float(session_data.account.arcade.get(5, {}).get('Value', 0))
-    account_sum += session_data.account.achievements.get('Saharan Skull', False)
-    achievementStatus = session_data.account.achievements.get('Saharan Skull', False)
+    account_sum += session_data.account.achievements['Saharan Skull']['Complete']
+    #achievementStatus = session_data.account.achievements['Saharan Skull']['Complete']
     starTalentOnePoint = lavaFunc('bigBase', 1, 10, 0.075)
     account_sum += starTalentOnePoint
 
@@ -127,9 +127,9 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         goal=100
     ))
     psrAdvices[accountSubgroup].append(Advice(
-        label=f"W3 Achievement: Saharan Skull: {1 if achievementStatus else 0}/1%",
+        label=f"W3 Achievement: Saharan Skull: {int(session_data.account.achievements['Saharan Skull']['Complete'])}/1%",
         picture_class="saharan-skull",
-        progression=1 if achievementStatus else 0,
+        progression=int(session_data.account.achievements['Saharan Skull']['Complete']),
         goal=1
     ))
     psrAdvices[accountSubgroup].append(Advice(
@@ -337,7 +337,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
         goal=1
     ))
     po_AdviceDict[aw_label].append(Advice(
-        label=f"{{{{ Equinox|#equinox}}}}: Voter Rights: {equinoxMulti}/1.{session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']}x to Weekly Ballot (Already included above)",
+        label=f"{{{{ Equinox|#equinox}}}}: Voter Rights: {equinoxMulti:.2f}/1.{session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']}x to Weekly Ballot (Already included above)",
         picture_class="voter-rights",
         progression=session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel'],
         goal=session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']

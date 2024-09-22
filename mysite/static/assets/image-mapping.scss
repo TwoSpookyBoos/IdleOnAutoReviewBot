@@ -2058,138 +2058,13 @@ secret-map: $secret-map,
 gem-note: $gem-note,
 );
 
-$monsters: (
-// W1
-
-	green-mushroom: $green-mushroom,
-	frog: $frog,
-	bored-bean: $bored-bean,
-	red-mushroom: $red-mushroom,
-	slime: $slime,
-	froge: $froge,
-	baby-boa: $baby-boa,
-	carrotman: $carrotman,
-	glublin: $glublin,
-	wode-board: $wode-board,
-	gigafrog: $gigafrog,
-	walking-stick: $walking-stick,
-	nutto: $nutto,
-	wood-mushroom: $wood-mushroom,
-	poop: $poop,
-	rat: $rat,
-	boop: $boop,
-	crystal-carrot: $crystal-carrot,
-	w1-w3-crystals: $w1-w3-crystals,
-
-	dr-defecaus: $dr-defecaus,
-	baba-yaga: $baba-yaga,
-	amarok: $amarok,
-
-
-// W2
-
-	sandy-pot: $sandy-pot,
-	mimic: $mimic,
-	crabcake: $crabcake,
-	mafioso: $mafioso,
-	sand-castle: $sand-castle,
-	pincermin: $pincermin,
-	mashed-potato: $mashed-potato,
-	tyson: $tyson,
-	moonmoon: $moonmoon,
-	sand-giant: $sand-giant,
-	snelbie: $snelbie,
-	crystal-crabal: $crystal-crabal,
-
-    biggie-hours: $biggie-hours,
-    king-doot: $king-doot,
-	efaunt: $efaunt-boss,
-
-// W3
-
-	sheepie: $sheepie,
-	frost-flake: $frost-flake,
-	sir-stache: $sir-stache,
-	bloque: $bloque,
-	mamooth: $mamooth,
-	snowman: $snowman,
-	penguin: $penguin,
-	thermister: $thermister,
-	quenchie: $quenchie,
-	cryosnake: $cryosnake,
-	bop-box: $bop-box,
-	neyeptune: $neyeptune,
-	dedotated-ram: $dedotated-ram,
-	bloodbone: $bloodbone,
-	crystal-cattle: $crystal-cattle,
-
-	chizoar: $chizoar,
-
-// W4
-
-	purp-mushroom: $purp-mushroom,
-	mutated-mush: $mutated-mush,
-	tv: $tv,
-	donut: $donut,
-	demon-genie: $demon-genie,
-	soda-can: $soda-can,
-	flying-worm: $flying-worm,
-	gelatinous-cuboid: $gelatinous-cuboid,
-	choccie: $choccie,
-	biggole-wurm: $biggole-wurm,
-	clammie: $clammie,
-	octodar: $octodar,
-	flombeige: $flombeige,
-	stilted-seeker: $stilted-seeker,
-	rift-monsters: $rift-monsters,
-    crystal-custard: $crystal-custard,
-
-	massive-troll: $massive-troll,
-
-// W5
-
-	suggma: $suggma,
-	maccie: $maccie,
-	mister-brightside: $mister-brightside,
-	cheese-nub: $cheese-nub,
-	stiltmole: $stiltmole,
-	molti: $molti,
-	purgatory-stalker: $purgatory-stalker,
-	citringe: $citringe,
-	lampar: $lampar,
-	fire-spirit: $fire-spirit,
-	biggole-mole: $biggole-mole,
-	crawler: $crawler,
-	tremor-wurm: $tremor-wurm,
-	crystal-capybara: $crystal-capybara,
-
-	kattlecruk: $kattlecruk-boss,
-
-// W6
-    sprout-spirit: $sprout-spirit,
-    ricecake: $ricecake,
-    river-spirit: $river-spirit,
-    baby-troll: $baby-troll,
-    woodlin-spirit: $woodlin-spirit,
-    bamboo-spirit: $bamboo-spirit,
-    lantern-spirit: $lantern-spirit,
-    mama-troll: $mama-troll,
-    leek-spirit: $leek-spirit,
-    ceramic-spirit: $ceramic-spirit,
-    skydoggie-spirit: $skydoggie-spirit,
-    royal-egg: $royal-egg,
-    minichief-spirit: $minichief-spirit,
-    samurai-guardian: $samurai-guardian,
-    crystal-candalight: $crystal-candalight
-);
-
 $id-map: map-merge($sections-map, $id-map);
+$id-map: map-merge($all-world-contents, $id-map);
 $id-map: map-merge($skill-icons, $id-map);
 $id-map: map-merge($storage-items, $id-map);
 $id-map: map-merge($character-classes, $id-map);
 $id-map: map-merge($breeding-map, $id-map);
 $id-map: map-merge($bribes-map, $id-map);
-$id-map: map-merge($monsters, $id-map);
 $id-map: map-merge($boss-keys, $id-map);
 $id-map: map-merge($all-cards, $id-map);
 $id-map: map-merge($rift, $id-map);
@@ -2219,38 +2094,6 @@ $id-map: map-merge($ballot, $id-map);
 $id-map: map-merge($ui-map, $id-map);
 $id-map: map-merge($all-islands, $id-map);
 $id-map: map-merge($all-killroy, $id-map);
-
-$extra: (
-    //storage: $cosmic-storage-chest,
-    coins: $coins,
-    p2w-player: $p2w-player,
-	vials: $vial-l1,
-	vial-l4: $vial-l4,
-	vial-max: $vial-max,
-	prayers: $prayer-stone,
-	iceland-irwin: $iceland-irwin,
-	empty-forge-slot: $empty-forge-slot,
-	forge-upgrades: $forge-upgrades,
-	damage: $damage,
-	rift: $rift-ripper,
-	equinox: $equinox-mirror,
-	secret-class-path: $stone-peanut,
-	promotheus: $promotheus,
-	bushlyte: $bushlyte,
-	goldric: $goldric,
-	cactolyte: $cactolyte,
-	nebulyte: $nebulyte,
-	divinity: $divinity,
-	jade-vendor: $jade-vendor,
-	collider-toggle: $collider-toggle,
-	talent-preset-1: $talent-preset-1,
-	telescope: $telescope,
-	town-marble: $town-marble,
-	monolith: $monolith,
-	fly-nest: $fly-nest,
-	cooking-table: $cooking-table,
-);
-$id-map: map-merge($extra, $id-map);
 
 
 @each $class, $link in $id-map {

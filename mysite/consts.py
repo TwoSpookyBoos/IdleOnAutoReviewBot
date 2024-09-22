@@ -1,8 +1,6 @@
 import math
-from pathlib import Path
-
 import yaml
-
+from pathlib import Path
 from utils.logging import get_logger
 from utils.text_formatting import getItemDisplayName
 from config import app
@@ -301,7 +299,7 @@ greenstack_progressionTiers = {
             "Base Monster Materials": ["Sewers3"],
             "Crystal Enemy Drops": [
                 "EquipmentStatues7", "EquipmentStatues3", "EquipmentStatues2", "EquipmentStatues4", "EquipmentStatues14",
-                "rtt0", "StoneZ1", "StoneT1",],  #W1 Tool in particular drops from both W1 and W2 crystal farms
+                "StoneZ1", "StoneT1",],  #W1 Tool in particular drops from both W1 and W2 crystal farms
             "Other Skilling Resources": [
                 "GoldBar", "DementiaBar", "VoidBar", "LustreBar",
                 "Peanut", "Quest68", "Bullet3",],  #I really hate that the Slush Bucket is listed as Quest68
@@ -312,6 +310,8 @@ greenstack_progressionTiers = {
             "Crystal Enemy Drops": [
                 "EquipmentStatues1", "EquipmentStatues5",  #Power and Health statues are still more common than W2 statues
                 "EquipmentStatues10", "EquipmentStatues12", "EquipmentStatues13", "EquipmentStatues8", "EquipmentStatues11",  #W2 statues
+                "EquipmentStatues18",  #W3 EhExPee statue
+                "rtt0",
                 "StoneA1", "StoneW1",
                 "StoneZ2", "StoneT2",
                 "PureWater",
@@ -1777,7 +1777,7 @@ expectedStackables = {
         "EquipmentStatues10", "EquipmentStatues12", "EquipmentStatues13", "EquipmentStatues8", "EquipmentStatues11",  # W2 statues are all slower than Power/Health
         "rtt0", "StoneZ1", "StoneT1", "StoneW1", "StoneA1",  #W1 Slow drops = Town TP + Stones
         "StoneT2", "StoneZ2",  "StoneW2",  #"StoneA2", # W2 upgrade stones and Mystery2
-        "PureWater",  #W3 Slow drops = Distilled Water
+        "PureWater", "EquipmentStatues18",  #W3 Slow drops = Distilled Water + EhExPee Statue
         "FoodG9",  #W5 Slow drops = Golden W5 Sammy
         "FoodG11", "FoodG12"
     ],
@@ -1861,9 +1861,9 @@ expectedStackables = {
         "FoodHealth8", "Quest69", "Quest74",  # Unobtainables
         "EquipmentStatues6", "EquipmentStatues15",  # Kachow and Bullseye
         "EquipmentStatues9",  # Oceanman Statue only comes from Catching
-        "EquipmentStatues16", "EquipmentStatues17", "EquipmentStatues18", "EquipmentStatues19",  # W3 Statues
-        "EquipmentStatues20", "EquipmentStatues21", "EquipmentStatues22", "EquipmentStatues23", "EquipmentStatues24",
-        "EquipmentStatues25",  # W4 and W5 Statues
+        "EquipmentStatues16", "EquipmentStatues17", "EquipmentStatues19",  # W3 Statues
+        "EquipmentStatues20", "EquipmentStatues21", "EquipmentStatues22",  # W4 Statues
+        "EquipmentStatues23", "EquipmentStatues24", "EquipmentStatues25",  # W5 Statues
         "FoodG1", "FoodG2", "FoodG3", "FoodG4", "FoodG5", "FoodG6", "FoodG7", "FoodG8", "FoodG10",  # Gold Foods
         "ResetFrag", "ResetCompleted", "ResetCompletedS", "ClassSwap",
         "ClassSwapB", "ResetBox",
@@ -4026,8 +4026,11 @@ statueCount = len(statuesDict.keys())
 ###WORLD 2 CONSTS###
 max_IndexOfVials = 75  # Last verified as of v2.10
 max_VialLevel = 13  # Last verified as of 2.12
+vial_costs = [1, 100, 1000, 2500, 10e3, 50e3, 100e3, 500e3, 1e6, 5e6, 25e6, 100e6, 1e9]
 max_IndexOfBubbles = 29  # Last verified as of v2.10
 max_IndexOfSigils = 3  # Last verified as of v2.10
+min_NBLB = 2
+max_NBLB = 1500
 vialsDict = {
     0: {"Name": "Copper Corona", "Material": "Copper", "x1": 3, "x2": 0, "funcType": "add"},
     1: {"Name": "Sippy Splinter", "Material": "OakTree", "x1": 3, "x2": 0, "funcType": "add"},
@@ -4643,6 +4646,15 @@ equinoxBonusesDict = {
     11: {'Name': 'Food Lust', 'BaseLevel': 10, 'MaxLevelIncreases': {26: 4}, 'FinalMaxLevel': 14, 'Category': 'Optional'},
     12: {'Name': 'Equinox Symbols', 'BaseLevel': 5, 'MaxLevelIncreases': {31: 4}, 'FinalMaxLevel': 9, 'Category': 'Recommended'},
     13: {'Name': 'Voter Rights', 'BaseLevel': 15, 'MaxLevelIncreases': {36: 15}, 'FinalMaxLevel': 30, 'Category': 'Recommended'},
+}
+refineryDict = {
+    # "salt": [json index, advice image name, cycles per Synth cycle, consumption of previous salt, next salt consumption, next salt cycles per Synth cycle]
+    "Red": [3, "redox-salts", 4, 0, 2, 4],
+    "Orange": [4, "explosive-salts", 4, 2, 2, 4],
+    "Blue": [5, "spontaneity-salts", 4, 2, 1, 1],
+    "Green": [6, "dioxide-synthesis", 1, 1, 2, 1],
+    "Purple": [7, "purple-salt", 1, 2, 2, 1],
+    "Nullo": [8, "nullo-salt", 1, 2, 0, 0]
 }
 buildingsDict = {
     #Buildings
@@ -5702,6 +5714,7 @@ sailingDict = {
         31: {'Name': 'The Shim Lantern'},
         32: {'Name': 'The Winz Lantern'}}},
 }
+captainBuffs = ['Boat Speed', 'Loot Value', 'Cloud Discover Rate', 'Artifact Find Chance', 'Rare Chest Chance', 'None']
 goldrelic_multisDict = {
     0: 0,
     1: 2,
@@ -5861,6 +5874,7 @@ divLevelReasonsDict = {
     40: "to unlock the TranQi Style.",
     50: "to unlock the Multitool Stamp from Poigu's quest."
 }
+divinity_DivCostAfter3 = 40  # Last verified as of v2.12 Ballot
 divinity_arctisBreakpoints = {
         13: { 72:  841,  73:  647,  74:  525,  75:  441,  76:  379,  77:  332,  78:  295},
         14: { 85: 1331,  86:  986,  87:  782,  88:  648,  89:  522,  90:  481,  91:  425,  92:  381},
@@ -6138,6 +6152,7 @@ sneakingGemstonesStatList: list[str] = [
 ]
 sneakingGemstonesFirstIndex = 233
 sneakingGemstonesCount = len(sneakingGemstonesList)
+sneakingGemstonesBaseValueDict = {"Aquamarine": 40, "Emerald": 15, "Garnet": 12, "Starite": 5, "Topaz": 10, "Moissanite": 3}
 sneakingGemstonesMaxValueDict = {"Aquamarine": 10040, "Emerald": 5015, "Garnet": 2512, "Starite": 205, "Topaz": 1010, "Moissanite": 303}
 maxFarmingCrops = 160  # Last verified as of 2.11 Land Rank update
 landrankDict = {
@@ -6190,16 +6205,14 @@ def getGemstoneBoostedValue(gemstoneValue: float, moissaniteValue: float):
 def getGemstoneBaseValue(gemstoneName: str, gemstoneLevel: int):
     value = 0
     if gemstoneLevel > 0:
-        if gemstoneName == "Aquamarine":
-            value = 40 + (sneakingGemstonesMaxValueDict['Aquamarine'] * (gemstoneLevel / (gemstoneLevel + 1000)))
-        elif gemstoneName == "Emerald":
-            value = 15 + (sneakingGemstonesMaxValueDict['Emerald'] * (gemstoneLevel / (gemstoneLevel + 1000)))
-        elif gemstoneName == "Garnet":
-            value = 12 + (sneakingGemstonesMaxValueDict['Garnet'] * (gemstoneLevel / (gemstoneLevel + 1000)))
-        elif gemstoneName == "Starite":
-            value = 5 + (sneakingGemstonesMaxValueDict['Starite'] * (gemstoneLevel / (gemstoneLevel + 1000)))
-        elif gemstoneName == "Topaz":
-            value = 10 + (sneakingGemstonesMaxValueDict['Topaz'] * (gemstoneLevel / (gemstoneLevel + 1000)))
+        if gemstoneName in sneakingGemstonesBaseValueDict:
+            value = (
+                sneakingGemstonesBaseValueDict[gemstoneName]
+                + (
+                    (sneakingGemstonesMaxValueDict[gemstoneName] - sneakingGemstonesBaseValueDict[gemstoneName])
+                    * (gemstoneLevel / (gemstoneLevel + 1000))
+                )
+            )
         else:
             logger.warning(f"Unrecognized gemstoneName: '{gemstoneName}'. Returning default 0 value")
             value = 0
