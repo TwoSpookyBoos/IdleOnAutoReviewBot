@@ -5,7 +5,7 @@ from utils.logging import get_logger
 from flask import g as session_data
 from consts import maxTiersPerGroup, bubbles_progressionTiers, vials_progressionTiers, max_IndexOfVials, maxFarmingCrops, atrisk_basicBubbles, \
     atrisk_lithiumBubbles, cookingCloseEnough, break_you_best, sigils_progressionTiers, max_IndexOfSigils, max_VialLevel, numberOfArtifactTiers, stamp_maxes, \
-    lavaFunc, vial_costs, min_NBLB, max_NBLB
+    lavaFunc, vial_costs, min_NBLB, max_NBLB, nblb_skippable
 
 logger = get_logger(__name__)
 
@@ -251,7 +251,8 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
         "PurpleSampleBubbles": {},
         "OrangeSampleBubbles": {},
         "GreenSampleBubbles": {},
-        "UtilityBubbles": {}
+        "UtilityBubbles": {},
+        'NBLB': [],
     }
     bubbles_AdviceGroupDict = {}
     bubbles_AdviceSection = AdviceSection(
@@ -343,13 +344,26 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
             if bubbleTiers[typeIndex] == (tier[0] - 1) and requirementsMet[typeIndex] == True:  # Only update if they already met the previous tier
                 bubbleTiers[typeIndex] = tier[0]
 
-    overall_alchemyBubblesTier = min(max_tier + infoTiers, tier_TotalBubblesUnlocked,
-                                     bubbleTiers[0], bubbleTiers[1], bubbleTiers[2], bubbleTiers[3])
+    for bubbleName, bubbleDetails in session_data.account.alchemy_bubbles.items():
+        if 0 < bubbleDetails['Level'] < min_NBLB and bubbleName not in nblb_skippable:
+            bubbles_AdviceDict['NBLB'].append(
+                Advice(
+                    label=bubbleName,
+                    picture_class=bubbleDetails['Material'],
+                    progression=bubbleDetails['Level'],
+                    goal=min_NBLB
+            ))
+
+    overall_alchemyBubblesTier = min(
+        max_tier + infoTiers, tier_TotalBubblesUnlocked,
+        bubbleTiers[0], bubbleTiers[1], bubbleTiers[2], bubbleTiers[3]
+    )
     #Generate AdviceGroups
-    agdNames = ["TotalBubblesUnlocked", "OrangeSampleBubbles", "GreenSampleBubbles", "PurpleSampleBubbles", "UtilityBubbles"]
-    agdTiers = [tier_TotalBubblesUnlocked, bubbleTiers[0], bubbleTiers[1], bubbleTiers[2], bubbleTiers[3]]
+    agdNames = ["TotalBubblesUnlocked", 'NBLB', "OrangeSampleBubbles", "GreenSampleBubbles", "PurpleSampleBubbles", "UtilityBubbles"]
+    agdTiers = [tier_TotalBubblesUnlocked, 99, bubbleTiers[0], bubbleTiers[1], bubbleTiers[2], bubbleTiers[3]]
     agdPre_strings = [
         f"Continue unlocking W{nextWorldMissingBubbles} bubbles",
+        f"Get these bubbles into No Bubble Left Behind range"
         f"Level Orange sample-boosting bubbles",
         f"Level Green sample-boosting bubbles",
         f"Level Purple sample-boosting bubbles",

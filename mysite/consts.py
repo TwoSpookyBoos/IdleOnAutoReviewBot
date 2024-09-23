@@ -4031,6 +4031,12 @@ max_IndexOfBubbles = 29  # Last verified as of v2.10
 max_IndexOfSigils = 3  # Last verified as of v2.10
 min_NBLB = 2
 max_NBLB = 1500
+nblb_skippable = [
+    'Reely Smart', 'Bappity Boopity', 'Bite But Not Chew',  #Orange
+    'Lil Big Damage', 'Anvilnomics', 'Cheap Shot',  #Green
+    'Noodubble',  #Purple
+    'Petting The Rift',  #Yellow
+]
 vialsDict = {
     0: {"Name": "Copper Corona", "Material": "Copper", "x1": 3, "x2": 0, "funcType": "add"},
     1: {"Name": "Sippy Splinter", "Material": "OakTree", "x1": 3, "x2": 0, "funcType": "add"},
