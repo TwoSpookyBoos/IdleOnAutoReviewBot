@@ -381,6 +381,7 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
             pre_string=f"{'Informational- ' if agdTiers[counter] >= 22 else ''}{agdPre_strings[counter]}",
             advices=bubbles_AdviceDict[value]
         )
+        bubbles_AdviceGroupDict[value].remove_empty_subgroups()
     bubbles_AdviceGroupDict['AtRiskBasic'], bubbles_AdviceGroupDict['AtRiskLithium'] = getAtRiskAdviceGroups()
 
     #Generate AdviceSection
