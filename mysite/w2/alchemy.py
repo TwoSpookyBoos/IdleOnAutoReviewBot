@@ -355,9 +355,10 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
             bubbles_AdviceDict['UnlockAndLevel']['No Bubble Left Behind'].append(
                 Advice(
                     label=bubbleName,
-                    picture_class=bubbleDetails['Material'],
+                    picture_class=bubbleName,
                     progression=bubbleDetails['Level'],
-                    goal=min_NBLB
+                    goal=min_NBLB,
+                    resource=bubbleDetails['Material'],
             ))
 
     overall_alchemyBubblesTier = min(
