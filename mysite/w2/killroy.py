@@ -44,7 +44,6 @@ def getKillroyUpgradeRecommendationsAdviceGroup():
     timer_softcap = 180
     skull_goal = min(skull_hardcap, max(2 + session_data.account.killroy['Skulls']['Upgrades'], math.ceil(session_data.account.killroy['Timer']['Upgrades'] * desired_skull_ratio)))
     timer_goal = min(timer_softcap, max(3 + session_data.account.killroy['Timer']['Upgrades'], math.ceil(session_data.account.killroy['Skulls']['Upgrades'] * desired_timer_ratio)))
-    #logger.debug(f"skull_ratio: {player_skull_ratio}")
 
     future_advices[ratio_label].append(Advice(
         label=f"Current Skull Ratio",
@@ -160,10 +159,9 @@ def setKillroyProgressionTier():
         picture="wiki/Killroy.gif",
         complete=False
     )
-    # highestKillroySkillLevel = max(session_data.account.all_skills["KillroySkill"])
-    # if highestKillroySkillLevel < 1:
-    #     killroy_AdviceSection.header = "Come back after unlocking Killroy!"
-    #     return killroy_AdviceSection
+    if session_data.account.highestWorldReached < 2:
+        killroy_AdviceSection.header = "Come back after unlocking Killroy in W2 town!"
+        return killroy_AdviceSection
 
     infoTiers = 0
     max_tier = 0 #max(killroy_progressionTiers.keys(), default=0) - infoTiers
