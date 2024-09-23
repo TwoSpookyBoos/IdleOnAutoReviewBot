@@ -264,29 +264,40 @@ function setupHrefEventActions() {
  * @param {Element} target 
  */
 function unfoldElementIfFolded(target) {
-    var [childH1, childDiv] = [...target.children]
-    var parentDiv = target.parentElement.parentElement;
-    var parentH1 = target.parentElement.parentElement.closest('h1');
-    var article = target.parentElement.parentElement.parentElement;
+    var [sectionH1, sectionDiv] = findSectionElements(target)
+    var [articleH1, articleDiv] = findArticlesElements(target);
+    var articleElement = articleDiv?.parentElement;
 
-    if (parentDiv.classList.contains('folded')) {
+    if (articleDiv?.classList.contains('folded')) {
         // The section is folded, we need to wait until the transition is complete to scroll to its position
         const onTransitionEnd = evt => { 
-            if (evt.target == parentDiv) { // Multiple events are triggered, we only want the main div one
-                article.removeEventListener("transitionend", onTransitionEnd);
-                target.scrollIntoView()
+            if (evt.target == articleDiv) { // Multiple events are triggered, we only want the article div one
+                articleElement.removeEventListener("transitionend", onTransitionEnd);
+                target.scrollIntoView({behavior: "smooth"})
             }
         }
-        article.addEventListener("transitionend", onTransitionEnd)
+        articleElement.addEventListener("transitionend", onTransitionEnd)
     } else {
         // The section is open, scroll directly to it
-        target.scrollIntoView()
+        target.scrollIntoView({behavior: "smooth"})
     }
 
-    parentDiv.classList.remove('folded');
-    parentH1?.classList.remove('folded');
-    childH1.classList.remove('folded');
-    childDiv.classList.remove('folded');
+    articleH1?.classList.remove('folded');
+    articleDiv?.classList.remove('folded');
+    sectionH1?.classList.remove('folded');
+    sectionDiv?.classList.remove('folded');
+}
+
+function findArticlesElements(target) {
+    var div = target.closest('div.collapse-wrapper:has(> div.sections)') || document.querySelector('div.collapse-wrapper:has(> div.sections)');
+    var h1 = div.parentElement.querySelector('h1.banner.toggler');
+    return [h1, div]
+}
+
+function findSectionElements(target) {
+    var div = target.closest('div.collapse-wrapper:has(> ul.advice-section)') || target.querySelector('div.collapse-wrapper:has(> ul.advice-section)');
+    var h1 = div.parentElement.querySelector('h1.subheading.toggler')
+    return [h1, div]
 }
 
 function applyShowMoreButton() {
