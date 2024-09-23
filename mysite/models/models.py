@@ -23,8 +23,11 @@ from consts import (
     achievementsList, allMeritsDict, starsignsDict,
     base_crystal_chance,
     filter_recipes, filter_never,
+    event_points_shop_dict,
     # W1
-    stampsDict, stampTypes, bribesDict, forgeUpgradesDict, statuesDict, statueTypeList, statueCount,
+    stampsDict, stampTypes, bribesDict,
+    forgeUpgradesDict,
+    statuesDict, statueTypeList, statueCount,
     # W2
     bubblesDict,
     vialsDict, max_IndexOfVials, getReadableVialNames, max_VialLevel,
@@ -1219,6 +1222,7 @@ class Account:
         self._parse_general_printer()
         self._parse_general_maps()
         self._parse_general_colo_scores()
+        self._parse_general_event_points_shop()
 
     def _parse_general_gemshop(self):
         self.gemshop = {}
@@ -1377,6 +1381,31 @@ class Account:
                 self.colo_scores[coloIndex] = int(coloScore)
             except:
                 self.colo_scores[coloIndex] = 0
+
+    def _parse_general_event_points_shop(self):
+        self.event_points_shop = {
+            'Points Owned': self.raw_optlacc_dict.get(310, 0),
+            'Raw Purchases': self.raw_optlacc_dict.get(311, ""),
+            'Bonuses': {}
+        }
+        if isinstance(self.event_points_shop['Raw Purchases'], str):
+            self.event_points_shop['Raw Purchases'] = list(self.event_points_shop['Raw Purchases'])
+        else:
+            print(f"models._parse_general_event_points_shop: Purchases not String type: {type(self.event_points_shop['Raw Purchases'])} with value of: {self.event_points_shop['Raw Purchases']}")
+            self.event_points_shop['Raw Purchases'] = []
+        for bonusName, bonusDetails in event_points_shop_dict.items():
+            try:
+                self.event_points_shop['Bonuses'][bonusName] = {
+                    'Owned': bonusDetails['Code'] in self.event_points_shop['Raw Purchases'],
+                    'Cost': bonusDetails['Cost'],
+                    'Description': bonusDetails['Description'],
+                }
+            except:
+                self.event_points_shop['Bonuses'][bonusName] = {
+                    'Owned': False,
+                    'Cost': bonusDetails['Cost'],
+                    'Description': bonusDetails['Description'],
+                }
 
     def _parse_w1(self):
         self._parse_w1_starsigns()

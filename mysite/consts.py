@@ -4022,6 +4022,12 @@ statuesDict = {
 }
 statueTypeList = ["Normal", "Gold", "Onyx"]
 statueCount = len(statuesDict.keys())
+event_points_shop_dict = {
+    'Golden Tome': {'Cost': 25, 'Code': '_', 'Description': 'Adds a new DMG Multi bonus type to the Tome in World 4'},
+    'Stamp Stack': {'Cost': 20, 'Code': 'a', 'Description': 'Get +3 Stamp LVs every day for a random Stamp'},
+    'Bubble Broth': {'Cost': 15, 'Code': 'b', 'Description': 'Get +5 LVs for a random Alchemy Bubble every day'},
+    'Equinox Enhancement': {'Cost': 15, 'Code': 'c', 'Description': 'Get 1.5x faster Bar fill Rate in Equinox Valley in World 3'},
+}  #Found near end of NinjaInfo function in the source code
 
 ###WORLD 2 CONSTS###
 max_IndexOfVials = 75  # Last verified as of v2.10
