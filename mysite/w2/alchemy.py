@@ -247,12 +247,14 @@ def getAtRiskAdviceGroups() -> list[AdviceGroup]:
 
 def setAlchemyBubblesProgressionTier() -> AdviceSection:
     bubbles_AdviceDict = {
-        "TotalBubblesUnlocked": [],
+        'UnlockAndLevel': {
+            "Unlock All Bubbles": [],
+            'No Bubble Left Behind': []
+        },
         "PurpleSampleBubbles": {},
         "OrangeSampleBubbles": {},
         "GreenSampleBubbles": {},
         "UtilityBubbles": {},
-        'NBLB': [],
     }
     bubbles_AdviceGroupDict = {}
     bubbles_AdviceSection = AdviceSection(
@@ -313,9 +315,9 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
                 imagenameList = ["cauldron-o", "cauldron-g", "cauldron-p", "cauldron-y"]
                 for cauldronIndex, cauldronBubblesUnlocked in enumerate(perCauldronBubblesUnlocked):
                     if cauldronBubblesUnlocked < (5 * nextWorldMissingBubbles):
-                        bubbles_AdviceDict["TotalBubblesUnlocked"].append(
+                        bubbles_AdviceDict['UnlockAndLevel']["Unlock All Bubbles"].append(
                             Advice(
-                                label=f"{colorList[cauldronIndex]} Bubbles Unlocked",
+                                label=f"W{nextWorldMissingBubbles} {colorList[cauldronIndex]} Bubbles Unlocked",
                                 picture_class=imagenameList[cauldronIndex],
                                 progression=str(cauldronBubblesUnlocked - (5 * (nextWorldMissingBubbles - 1))),
                                 goal=5)
@@ -350,7 +352,7 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
             and bubbleName not in nblb_skippable
             and bubbleDetails['BubbleIndex'] <= nblb_max_index
         ):
-            bubbles_AdviceDict['NBLB'].append(
+            bubbles_AdviceDict['UnlockAndLevel']['No Bubble Left Behind'].append(
                 Advice(
                     label=bubbleName,
                     picture_class=bubbleDetails['Material'],
@@ -363,11 +365,10 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
         bubbleTiers[0], bubbleTiers[1], bubbleTiers[2], bubbleTiers[3]
     )
     #Generate AdviceGroups
-    agdNames = ["TotalBubblesUnlocked", 'NBLB', "OrangeSampleBubbles", "GreenSampleBubbles", "PurpleSampleBubbles", "UtilityBubbles"]
-    agdTiers = [tier_TotalBubblesUnlocked, 99, bubbleTiers[0], bubbleTiers[1], bubbleTiers[2], bubbleTiers[3]]
+    agdNames = ["UnlockAndLevel", "OrangeSampleBubbles", "GreenSampleBubbles", "PurpleSampleBubbles", "UtilityBubbles"]
+    agdTiers = [tier_TotalBubblesUnlocked, bubbleTiers[0], bubbleTiers[1], bubbleTiers[2], bubbleTiers[3]]
     agdPre_strings = [
-        f"Continue unlocking W{nextWorldMissingBubbles} bubbles",
-        f"Get these bubbles into No Bubble Left Behind range",
+        f"Continue unlocking W{nextWorldMissingBubbles} bubbles and bringing worthwhile bubbles into No Bubble Left Behind range",
         f"Level Orange sample-boosting bubbles",
         f"Level Green sample-boosting bubbles",
         f"Level Purple sample-boosting bubbles",
