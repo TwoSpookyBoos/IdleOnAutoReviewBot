@@ -126,6 +126,12 @@ def getKillroyUpgradeRecommendationsAdviceGroup():
     else:
         future_advices[ratio_label].extend([timer_advice, skull_advice])
 
+    future_advices[ratio_label].append(Advice(
+        label=f"Still trying to find a good ratio for Respawn."
+              f"<br>It is worth leveling but idk exacts yet.",
+        picture_class='killroy-respawn'
+    ))
+
     for upgradeName, upgradeDict in session_data.account.killroy.items():
         if upgradeName in killroy_only_1_level:
             if upgradeDict['Upgrades'] >= 1:

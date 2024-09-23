@@ -4629,7 +4629,7 @@ killroy_dict = {
         'Image': 'killroy-pearls'
     },
         }
-killroy_only_1_level = ['Talent Points', 'Respawn', 'Dungeon Credits', 'Pearls']
+killroy_only_1_level = ['Talent Points', 'Dungeon Credits', 'Pearls']
 
 def getReadableVialNames(inputNumber):
     try:
