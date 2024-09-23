@@ -320,9 +320,10 @@ greenstack_progressionTiers = {
                 "StarfireBar", "DreadloBar",
                 "FoodChoppin1",
                 "EquipmentSmithingTabs2",
-                "PeanutG",],
+                "PeanutG",
+            ],
             "Misc": [
-                "FoodPotMana3", "FoodPotRe1", "ButterBar", ],
+                "FoodPotMana3", "FoodPotRe1", "ButterBar", "EquipmentStatues9",],
         },
         14: {
             "Crystal Enemy Drops": [
@@ -1827,6 +1828,7 @@ expectedStackables = {
         "FoodPotRe2",  #Average Life Potion from W2 Shop + Gigafrogs
         "FoodPotRe1",  #Small Life Potion from W1 Sewers and Tree mobs, not crystals
         "ButterBar",  #Catching Butterflies
+        "EquipmentStatues9",  #Oceanman statue can be candied from W2 bugs
         "FoodPotMana3",  #Decent Mana Potion from Bloques
         "OilBarrel2",  # Slime Barrel, 1 in 3334
         "DesertC2b",  # Ghost, 1 in 2k
@@ -1860,7 +1862,6 @@ expectedStackables = {
         "Quest70", "Quest71", "Quest75", "Gfoodcoupon", "ItemsCoupon1", "ItemsCoupon2",  # Loot Bags
         "FoodHealth8", "Quest69", "Quest74",  # Unobtainables
         "EquipmentStatues6", "EquipmentStatues15",  # Kachow and Bullseye
-        "EquipmentStatues9",  # Oceanman Statue only comes from Catching
         "EquipmentStatues16", "EquipmentStatues17", "EquipmentStatues19",  # W3 Statues
         "EquipmentStatues20", "EquipmentStatues21", "EquipmentStatues22",  # W4 Statues
         "EquipmentStatues23", "EquipmentStatues24", "EquipmentStatues25",  # W5 Statues
