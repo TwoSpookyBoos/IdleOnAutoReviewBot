@@ -4031,6 +4031,7 @@ max_IndexOfBubbles = 29  # Last verified as of v2.10
 max_IndexOfSigils = 3  # Last verified as of v2.10
 min_NBLB = 2
 max_NBLB = 1500
+nblb_max_index = 24
 nblb_skippable = [
     'Reely Smart', 'Bappity Boopity', 'Bite But Not Chew',  #Orange
     'Lil Big Damage', 'Anvilnomics', 'Cheap Shot',  #Green

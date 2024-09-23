@@ -5,7 +5,7 @@ from utils.logging import get_logger
 from flask import g as session_data
 from consts import maxTiersPerGroup, bubbles_progressionTiers, vials_progressionTiers, max_IndexOfVials, maxFarmingCrops, atrisk_basicBubbles, \
     atrisk_lithiumBubbles, cookingCloseEnough, break_you_best, sigils_progressionTiers, max_IndexOfSigils, max_VialLevel, numberOfArtifactTiers, stamp_maxes, \
-    lavaFunc, vial_costs, min_NBLB, max_NBLB, nblb_skippable
+    lavaFunc, vial_costs, min_NBLB, max_NBLB, nblb_skippable, nblb_max_index
 
 logger = get_logger(__name__)
 
@@ -345,7 +345,11 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
                 bubbleTiers[typeIndex] = tier[0]
 
     for bubbleName, bubbleDetails in session_data.account.alchemy_bubbles.items():
-        if 0 < bubbleDetails['Level'] < min_NBLB and bubbleName not in nblb_skippable:
+        if (
+            0 < bubbleDetails['Level'] < min_NBLB
+            and bubbleName not in nblb_skippable
+            and bubbleDetails['BubbleIndex'] <= nblb_max_index
+        ):
             bubbles_AdviceDict['NBLB'].append(
                 Advice(
                     label=bubbleName,
@@ -363,17 +367,17 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
     agdTiers = [tier_TotalBubblesUnlocked, 99, bubbleTiers[0], bubbleTiers[1], bubbleTiers[2], bubbleTiers[3]]
     agdPre_strings = [
         f"Continue unlocking W{nextWorldMissingBubbles} bubbles",
-        f"Get these bubbles into No Bubble Left Behind range"
+        f"Get these bubbles into No Bubble Left Behind range",
         f"Level Orange sample-boosting bubbles",
         f"Level Green sample-boosting bubbles",
         f"Level Purple sample-boosting bubbles",
         f"Level Utility bubbles",
     ]
-    for counter in range(0, len(agdNames)):
-        bubbles_AdviceGroupDict[agdNames[counter]] = AdviceGroup(
+    for counter, value in enumerate(agdNames):
+        bubbles_AdviceGroupDict[value] = AdviceGroup(
             tier=f"{agdTiers[counter] if agdTiers[counter] < 22 else ''}",
             pre_string=f"{'Informational- ' if agdTiers[counter] >= 22 else ''}{agdPre_strings[counter]}",
-            advices=bubbles_AdviceDict[agdNames[counter]]
+            advices=bubbles_AdviceDict[value]
         )
     bubbles_AdviceGroupDict['AtRiskBasic'], bubbles_AdviceGroupDict['AtRiskLithium'] = getAtRiskAdviceGroups()
 
