@@ -241,14 +241,63 @@ function setupSwitchesActions() {
     document.querySelector('#progress_bars').onclick = () => calcProgressBars(document)
 }
 
-function setupPinchyHrefActions() {
-    document.querySelectorAll('#pinchy .advice-group a').forEach(hyperlink => hyperlink.onclick = e => {
+function setupHrefEventActions() {
+    addEventListener("hashchange", evt => {
+        var h = location.hash.slice(1) || "pinchy-all" // Defaults on the pinchy section if you try to access an empty hash, for exemple when hiting return on your browser
+        var target = (document.getElementById(h) || document.getElementsByName(h)[0] || document.body)
+        unfoldElementIfFolded(target)
+    });
+
+    document.querySelectorAll('#mainresults .advice a').forEach(hyperlink => hyperlink.onclick = e => {
         const link = e.currentTarget
         const targetId = link.getAttribute("href").slice(1)
-        const target = document.querySelector(`#${targetId}`)
-        target.parentElement.classList.remove('folded')
-        target.querySelectorAll('*:not(.empty)').forEach(c => c.classList.remove('folded'))
+
+        // Delegate the navigation to the HashChange event
+        e.preventDefault()
+        history.replaceState(undefined, undefined, `#${targetId}`);
+        window.dispatchEvent(new HashChangeEvent("hashchange"))
     })
+}
+
+/**
+ * Unfolds the section it is folded
+ * @param {Element} target 
+ */
+function unfoldElementIfFolded(target) {
+    var [sectionH1, sectionDiv] = findSectionElements(target)
+    var [articleH1, articleDiv] = findArticlesElements(target);
+    var articleElement = articleDiv?.parentElement;
+
+    if (articleDiv?.classList.contains('folded')) {
+        // The section is folded, we need to wait until the transition is complete to scroll to its position
+        const onTransitionEnd = evt => { 
+            if (evt.target == articleDiv) { // Multiple events are triggered, we only want the article div one
+                articleElement.removeEventListener("transitionend", onTransitionEnd);
+                target.scrollIntoView({behavior: "smooth"})
+            }
+        }
+        articleElement.addEventListener("transitionend", onTransitionEnd)
+    } else {
+        // The section is open, scroll directly to it
+        target.scrollIntoView({behavior: "smooth"})
+    }
+
+    articleH1?.classList.remove('folded');
+    articleDiv?.classList.remove('folded');
+    sectionH1?.classList.remove('folded');
+    sectionDiv?.classList.remove('folded');
+}
+
+function findArticlesElements(target) {
+    var div = target.closest('div.collapse-wrapper:has(> div.sections)') || document.querySelector('div.collapse-wrapper:has(> div.sections)');
+    var h1 = div.parentElement.querySelector('h1.banner.toggler');
+    return [h1, div]
+}
+
+function findSectionElements(target) {
+    var div = target.closest('div.collapse-wrapper:has(> ul.advice-section)') || target.querySelector('div.collapse-wrapper:has(> ul.advice-section)');
+    var h1 = div.parentElement.querySelector('h1.subheading.toggler')
+    return [h1, div]
 }
 
 function applyShowMoreButton() {
@@ -583,7 +632,7 @@ function initBaseUI() {
 function initResultsUI() {
     setFormValues()
     setupFolding()
-    setupPinchyHrefActions()
+    setupHrefEventActions()
     applyShowMoreButton()
     setupDataClock()
     calcProgressBars(document)

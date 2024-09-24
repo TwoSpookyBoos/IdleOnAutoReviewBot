@@ -1,8 +1,6 @@
 import math
-from pathlib import Path
-
 import yaml
-
+from pathlib import Path
 from utils.logging import get_logger
 from utils.text_formatting import getItemDisplayName
 from config import app
@@ -301,7 +299,7 @@ greenstack_progressionTiers = {
             "Base Monster Materials": ["Sewers3"],
             "Crystal Enemy Drops": [
                 "EquipmentStatues7", "EquipmentStatues3", "EquipmentStatues2", "EquipmentStatues4", "EquipmentStatues14",
-                "rtt0", "StoneZ1", "StoneT1",],  #W1 Tool in particular drops from both W1 and W2 crystal farms
+                "StoneZ1", "StoneT1",],  #W1 Tool in particular drops from both W1 and W2 crystal farms
             "Other Skilling Resources": [
                 "GoldBar", "DementiaBar", "VoidBar", "LustreBar",
                 "Peanut", "Quest68", "Bullet3",],  #I really hate that the Slush Bucket is listed as Quest68
@@ -312,6 +310,8 @@ greenstack_progressionTiers = {
             "Crystal Enemy Drops": [
                 "EquipmentStatues1", "EquipmentStatues5",  #Power and Health statues are still more common than W2 statues
                 "EquipmentStatues10", "EquipmentStatues12", "EquipmentStatues13", "EquipmentStatues8", "EquipmentStatues11",  #W2 statues
+                "EquipmentStatues18",  #W3 EhExPee statue
+                "rtt0",
                 "StoneA1", "StoneW1",
                 "StoneZ2", "StoneT2",
                 "PureWater",
@@ -320,9 +320,10 @@ greenstack_progressionTiers = {
                 "StarfireBar", "DreadloBar",
                 "FoodChoppin1",
                 "EquipmentSmithingTabs2",
-                "PeanutG",],
+                "PeanutG",
+            ],
             "Misc": [
-                "FoodPotMana3", "FoodPotRe1", "ButterBar", ],
+                "FoodPotMana3", "FoodPotRe1", "ButterBar", "EquipmentStatues9",],
         },
         14: {
             "Crystal Enemy Drops": [
@@ -1777,7 +1778,7 @@ expectedStackables = {
         "EquipmentStatues10", "EquipmentStatues12", "EquipmentStatues13", "EquipmentStatues8", "EquipmentStatues11",  # W2 statues are all slower than Power/Health
         "rtt0", "StoneZ1", "StoneT1", "StoneW1", "StoneA1",  #W1 Slow drops = Town TP + Stones
         "StoneT2", "StoneZ2",  "StoneW2",  #"StoneA2", # W2 upgrade stones and Mystery2
-        "PureWater",  #W3 Slow drops = Distilled Water
+        "PureWater", "EquipmentStatues18",  #W3 Slow drops = Distilled Water + EhExPee Statue
         "FoodG9",  #W5 Slow drops = Golden W5 Sammy
         "FoodG11", "FoodG12"
     ],
@@ -1827,6 +1828,7 @@ expectedStackables = {
         "FoodPotRe2",  #Average Life Potion from W2 Shop + Gigafrogs
         "FoodPotRe1",  #Small Life Potion from W1 Sewers and Tree mobs, not crystals
         "ButterBar",  #Catching Butterflies
+        "EquipmentStatues9",  #Oceanman statue can be candied from W2 bugs
         "FoodPotMana3",  #Decent Mana Potion from Bloques
         "OilBarrel2",  # Slime Barrel, 1 in 3334
         "DesertC2b",  # Ghost, 1 in 2k
@@ -1860,10 +1862,9 @@ expectedStackables = {
         "Quest70", "Quest71", "Quest75", "Gfoodcoupon", "ItemsCoupon1", "ItemsCoupon2",  # Loot Bags
         "FoodHealth8", "Quest69", "Quest74",  # Unobtainables
         "EquipmentStatues6", "EquipmentStatues15",  # Kachow and Bullseye
-        "EquipmentStatues9",  # Oceanman Statue only comes from Catching
-        "EquipmentStatues16", "EquipmentStatues17", "EquipmentStatues18", "EquipmentStatues19",  # W3 Statues
-        "EquipmentStatues20", "EquipmentStatues21", "EquipmentStatues22", "EquipmentStatues23", "EquipmentStatues24",
-        "EquipmentStatues25",  # W4 and W5 Statues
+        "EquipmentStatues16", "EquipmentStatues17", "EquipmentStatues19",  # W3 Statues
+        "EquipmentStatues20", "EquipmentStatues21", "EquipmentStatues22",  # W4 Statues
+        "EquipmentStatues23", "EquipmentStatues24", "EquipmentStatues25",  # W5 Statues
         "FoodG1", "FoodG2", "FoodG3", "FoodG4", "FoodG5", "FoodG6", "FoodG7", "FoodG8", "FoodG10",  # Gold Foods
         "ResetFrag", "ResetCompleted", "ResetCompletedS", "ClassSwap",
         "ClassSwapB", "ResetBox",
@@ -3728,7 +3729,7 @@ stamp_maxes = {
     "Crystallin": 270,
     "Forge Stamp": 230,
     "Biblio Stamp": 64,
-    "Sigil Stamp": 312,
+    "Sigil Stamp": 324,
 }
 stampsDict = {
     "Combat": {
@@ -4022,6 +4023,12 @@ statuesDict = {
 }
 statueTypeList = ["Normal", "Gold", "Onyx"]
 statueCount = len(statuesDict.keys())
+event_points_shop_dict = {
+    'Golden Tome': {'Cost': 25, 'Code': '_', 'Description': 'Adds a new DMG Multi bonus type to the Tome in World 4'},
+    'Stamp Stack': {'Cost': 20, 'Code': 'a', 'Description': 'Get +3 Stamp LVs every day for a random Stamp'},
+    'Bubble Broth': {'Cost': 15, 'Code': 'b', 'Description': 'Get +5 LVs for a random Alchemy Bubble every day'},
+    'Equinox Enhancement': {'Cost': 15, 'Code': 'c', 'Description': 'Get 1.5x faster Bar fill Rate in Equinox Valley in World 3'},
+}  #Found near end of NinjaInfo function in the source code
 
 ###WORLD 2 CONSTS###
 max_IndexOfVials = 75  # Last verified as of v2.10
@@ -4031,6 +4038,13 @@ max_IndexOfBubbles = 29  # Last verified as of v2.10
 max_IndexOfSigils = 3  # Last verified as of v2.10
 min_NBLB = 2
 max_NBLB = 1500
+nblb_max_index = 24
+nblb_skippable = [
+    'Reely Smart', 'Bappity Boopity', 'Bite But Not Chew',  #Orange
+    'Lil Big Damage', 'Anvilnomics', 'Cheap Shot',  #Green
+    'Noodubble',  #Purple
+    'Petting The Rift',  #Yellow
+]
 vialsDict = {
     0: {"Name": "Copper Corona", "Material": "Copper", "x1": 3, "x2": 0, "funcType": "add"},
     1: {"Name": "Sippy Splinter", "Material": "OakTree", "x1": 3, "x2": 0, "funcType": "add"},
@@ -4616,7 +4630,7 @@ killroy_dict = {
         'Image': 'killroy-pearls'
     },
         }
-killroy_only_1_level = ['Talent Points', 'Respawn', 'Dungeon Credits', 'Pearls']
+killroy_only_1_level = ['Talent Points', 'Dungeon Credits', 'Pearls']
 
 def getReadableVialNames(inputNumber):
     try:
@@ -4824,6 +4838,17 @@ apocNamesList = ["ZOW", "CHOW", "MEOW", "1B","64bitOverflow"]
 apocDifficultyNameList = [
     'Basic W1 Enemies', 'Basic W2 Enemies', 'Basic W3 Enemies', 'Basic W4 Enemies', 'Basic W5 Enemies', 'Basic W6 Enemies',
     'Easy Extras', 'Medium Extras', 'Difficult Extras', 'Insane', 'Impossible'
+]
+trappingQuestsRequirementList = [
+    {"QuestName": "Pelt for the Pelt God",         "normalQuantity": 100,   "normalItemName": "Critter1", "shinyQuantity": 1,  "shinyItemName": "Critter1A"},
+    {"QuestName": "Frogecoin to the MOON!",        "normalQuantity": 250,   "normalItemName": "Critter2", "shinyQuantity": 1,  "shinyItemName": "Critter2A"},
+    {"QuestName": "Yet another Cartoon Reference", "normalQuantity": 500,   "normalItemName": "Critter3", "shinyQuantity": 2,  "shinyItemName": "Critter3A"},
+    {"QuestName": "Small Stingers, Big Owie",      "normalQuantity": 1000,  "normalItemName": "Critter4", "shinyQuantity": 2,  "shinyItemName": "Critter4A"},
+    {"QuestName": "The Mouse n the Molerat",       "normalQuantity": 1500,  "normalItemName": "Critter5", "shinyQuantity": 3,  "shinyItemName": "Critter5A"},
+    {"QuestName": "Happy Tree Friend",             "normalQuantity": 2500,  "normalItemName": "Critter6", "shinyQuantity": 4,  "shinyItemName": "Critter6A"},
+    {"QuestName": "Noot Noot!",                    "normalQuantity": 4000,  "normalItemName": "Critter7", "shinyQuantity": 6,  "shinyItemName": "Critter7A"},
+    {"QuestName": "Bunny you Should Say That!",    "normalQuantity": 8000,  "normalItemName": "Critter8", "shinyQuantity": 10, "shinyItemName": "Critter8A"},
+    {"QuestName": "Rollin' Thunder",               "normalQuantity": 65000, "normalItemName": "Critter9", "shinyQuantity": 1,  "shinyItemName": "Critter9A"}
 ]
 
 def getSkullNames(mkValue: int) -> str:
@@ -5863,6 +5888,7 @@ divLevelReasonsDict = {
     40: "to unlock the TranQi Style.",
     50: "to unlock the Multitool Stamp from Poigu's quest."
 }
+divinity_DivCostAfter3 = 40  # Last verified as of v2.12 Ballot
 divinity_arctisBreakpoints = {
         13: { 72:  841,  73:  647,  74:  525,  75:  441,  76:  379,  77:  332,  78:  295},
         14: { 85: 1331,  86:  986,  87:  782,  88:  648,  89:  522,  90:  481,  91:  425,  92:  381},
@@ -6140,6 +6166,7 @@ sneakingGemstonesStatList: list[str] = [
 ]
 sneakingGemstonesFirstIndex = 233
 sneakingGemstonesCount = len(sneakingGemstonesList)
+sneakingGemstonesBaseValueDict = {"Aquamarine": 40, "Emerald": 15, "Garnet": 12, "Starite": 5, "Topaz": 10, "Moissanite": 3}
 sneakingGemstonesMaxValueDict = {"Aquamarine": 10040, "Emerald": 5015, "Garnet": 2512, "Starite": 205, "Topaz": 1010, "Moissanite": 303}
 maxFarmingCrops = 160  # Last verified as of 2.11 Land Rank update
 landrankDict = {
@@ -6192,16 +6219,14 @@ def getGemstoneBoostedValue(gemstoneValue: float, moissaniteValue: float):
 def getGemstoneBaseValue(gemstoneName: str, gemstoneLevel: int):
     value = 0
     if gemstoneLevel > 0:
-        if gemstoneName == "Aquamarine":
-            value = 40 + (sneakingGemstonesMaxValueDict['Aquamarine'] * (gemstoneLevel / (gemstoneLevel + 1000)))
-        elif gemstoneName == "Emerald":
-            value = 15 + (sneakingGemstonesMaxValueDict['Emerald'] * (gemstoneLevel / (gemstoneLevel + 1000)))
-        elif gemstoneName == "Garnet":
-            value = 12 + (sneakingGemstonesMaxValueDict['Garnet'] * (gemstoneLevel / (gemstoneLevel + 1000)))
-        elif gemstoneName == "Starite":
-            value = 5 + (sneakingGemstonesMaxValueDict['Starite'] * (gemstoneLevel / (gemstoneLevel + 1000)))
-        elif gemstoneName == "Topaz":
-            value = 10 + (sneakingGemstonesMaxValueDict['Topaz'] * (gemstoneLevel / (gemstoneLevel + 1000)))
+        if gemstoneName in sneakingGemstonesBaseValueDict:
+            value = (
+                sneakingGemstonesBaseValueDict[gemstoneName]
+                + (
+                    (sneakingGemstonesMaxValueDict[gemstoneName] - sneakingGemstonesBaseValueDict[gemstoneName])
+                    * (gemstoneLevel / (gemstoneLevel + 1000))
+                )
+            )
         else:
             logger.warning(f"Unrecognized gemstoneName: '{gemstoneName}'. Returning default 0 value")
             value = 0

@@ -78,7 +78,7 @@ def setConsBuildingsProgressionTier():
     if influencers[1] >= 12 or playerBuildings['Trapper Drone']['Level'] >= 20:
         try:
             progressionTiersPostBuffs[2][2].remove('Trapper Drone')  #Remove Trapper Drone from S Tier
-            progressionTiersPostBuffs[6][2].append('Trapper Drone')  #Add Trapper Drone to D tier
+            progressionTiersPostBuffs[5][2].insert(1, 'Trapper Drone')  #Add Trapper Drone to C tier
             if hasBuffs:
                 maxLevelDict['Trapper Drone'] = 50
             #logger.debug("Successfully moved Trapper Drone from PostBuff S to D tier and changed level from 20 to 50")
@@ -103,7 +103,7 @@ def setConsBuildingsProgressionTier():
     if playerBuildings['Talent Book Library']['Level'] >= 101:
         try:
             progressionTiersPostBuffs[2][2].remove("Talent Book Library")  #Remove from S tier
-            progressionTiersPostBuffs[5][2].append("Talent Book Library")  #Add to C tier
+            progressionTiersPostBuffs[5][2].insert(1, "Talent Book Library")  #Add to C tier
             if hasBuffs:
                 maxLevelDict["Talent Book Library"] = 201
             #logger.debug("Successfully moved 101+ Talent Library Book from PostBuff A to C tier.")
@@ -115,7 +115,7 @@ def setConsBuildingsProgressionTier():
         if playerBuildings[towerName]['Level'] >= 70:
             try:
                 progressionTiersPostBuffs[3][2].remove(towerName)  #Remove from A tier
-                progressionTiersPostBuffs[5][2].append(towerName)  #Add to C tier
+                progressionTiersPostBuffs[5][2].insert(3, towerName)  #Add to C tier
                 if hasBuffs:
                     maxLevelDict[towerName] = 140
                 #logger.info(f"Successfully moved 70+ basic tower from PostBuff A to C tier: {getBuildingNameFromIndex(towerIndex)})
@@ -136,9 +136,9 @@ def setConsBuildingsProgressionTier():
     if playerBuildings['Voidinator']['Level'] >= 40:  #Voidinator scaling is very bad
         try:
             progressionTiersPreBuffs[4][2].remove("Voidinator")  #Remove from PreBuff B tier
-            progressionTiersPreBuffs[5][2].append("Voidinator")  #Add to C tier
+            progressionTiersPreBuffs[5][2].insert(0, "Voidinator")  #Add to C tier
             progressionTiersPostBuffs[3][2].remove("Voidinator")  #Remove from PostBuff A tier
-            progressionTiersPostBuffs[5][2].append("Voidinator")  #Add to C tier
+            progressionTiersPostBuffs[5][2].insert(0, "Voidinator")  #Add to C tier
             if hasBuffs:
                 maxLevelDict["Voidinator"] = 140
             #logger.debug("Successfully moved 30+ Voidinator from A/B to C tier in both tierlists")

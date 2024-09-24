@@ -5,7 +5,7 @@ from utils.logging import get_logger
 from flask import g as session_data
 from consts import maxTiersPerGroup, bubbles_progressionTiers, vials_progressionTiers, max_IndexOfVials, maxFarmingCrops, atrisk_basicBubbles, \
     atrisk_lithiumBubbles, cookingCloseEnough, break_you_best, sigils_progressionTiers, max_IndexOfSigils, max_VialLevel, numberOfArtifactTiers, stamp_maxes, \
-    lavaFunc, vial_costs, min_NBLB, max_NBLB
+    lavaFunc, vial_costs, min_NBLB, max_NBLB, nblb_skippable, nblb_max_index
 
 logger = get_logger(__name__)
 
@@ -179,7 +179,7 @@ def getAtRiskAdviceGroups() -> list[AdviceGroup]:
             basic_poststring = f"Highest level for NBLB today: {todays_highest}"
         atriskBasic_AdviceList.extend([
             Advice(
-                label=bubbleName,
+                label=f"{bubbleName}{' (Printing!)' if bubbleValuesDict['Material'] in session_data.account.printer['AllCurrentPrints'] else ''}",
                 picture_class=bubbleName,
                 progression=bubbleValuesDict['Level'],
                 goal=min(max_NBLB, max(todays_highest+20, bubbleValuesDict['Level'] + 20)),
@@ -222,7 +222,7 @@ def getAtRiskAdviceGroups() -> list[AdviceGroup]:
             lithium_poststring = f"Highest level for Lithium today: {todays_highest_lithium}"
             atriskLithium_AdviceList.extend([
                 Advice(
-                    label=bubbleName,
+                    label=f"{bubbleName}{' (Printing!)' if bubbleValuesDict['Material'] in session_data.account.printer['AllCurrentPrints'] else ''}",
                     picture_class=bubbleName,
                     progression=bubbleValuesDict['Level'],
                     goal=min(max_NBLB, max(todays_highest_lithium + 10, bubbleValuesDict['Level'] + 10)),
@@ -247,11 +247,14 @@ def getAtRiskAdviceGroups() -> list[AdviceGroup]:
 
 def setAlchemyBubblesProgressionTier() -> AdviceSection:
     bubbles_AdviceDict = {
-        "TotalBubblesUnlocked": [],
+        'UnlockAndLevel': {
+            "Unlock All Bubbles": [],
+            'No Bubble Left Behind': []
+        },
         "PurpleSampleBubbles": {},
         "OrangeSampleBubbles": {},
         "GreenSampleBubbles": {},
-        "UtilityBubbles": {}
+        "UtilityBubbles": {},
     }
     bubbles_AdviceGroupDict = {}
     bubbles_AdviceSection = AdviceSection(
@@ -312,9 +315,9 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
                 imagenameList = ["cauldron-o", "cauldron-g", "cauldron-p", "cauldron-y"]
                 for cauldronIndex, cauldronBubblesUnlocked in enumerate(perCauldronBubblesUnlocked):
                     if cauldronBubblesUnlocked < (5 * nextWorldMissingBubbles):
-                        bubbles_AdviceDict["TotalBubblesUnlocked"].append(
+                        bubbles_AdviceDict['UnlockAndLevel']["Unlock All Bubbles"].append(
                             Advice(
-                                label=f"{colorList[cauldronIndex]} Bubbles Unlocked",
+                                label=f"W{nextWorldMissingBubbles} {colorList[cauldronIndex]} Bubbles Unlocked",
                                 picture_class=imagenameList[cauldronIndex],
                                 progression=str(cauldronBubblesUnlocked - (5 * (nextWorldMissingBubbles - 1))),
                                 goal=5)
@@ -343,24 +346,42 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
             if bubbleTiers[typeIndex] == (tier[0] - 1) and requirementsMet[typeIndex] == True:  # Only update if they already met the previous tier
                 bubbleTiers[typeIndex] = tier[0]
 
-    overall_alchemyBubblesTier = min(max_tier + infoTiers, tier_TotalBubblesUnlocked,
-                                     bubbleTiers[0], bubbleTiers[1], bubbleTiers[2], bubbleTiers[3])
+    for bubbleName, bubbleDetails in session_data.account.alchemy_bubbles.items():
+        if (
+            0 < bubbleDetails['Level'] < min_NBLB
+            and bubbleName not in nblb_skippable
+            and bubbleDetails['BubbleIndex'] <= nblb_max_index
+        ):
+            bubbles_AdviceDict['UnlockAndLevel']['No Bubble Left Behind'].append(
+                Advice(
+                    label=bubbleName,
+                    picture_class=bubbleName,
+                    progression=bubbleDetails['Level'],
+                    goal=min_NBLB,
+                    resource=bubbleDetails['Material'],
+            ))
+
+    overall_alchemyBubblesTier = min(
+        max_tier + infoTiers, tier_TotalBubblesUnlocked,
+        bubbleTiers[0], bubbleTiers[1], bubbleTiers[2], bubbleTiers[3]
+    )
     #Generate AdviceGroups
-    agdNames = ["TotalBubblesUnlocked", "OrangeSampleBubbles", "GreenSampleBubbles", "PurpleSampleBubbles", "UtilityBubbles"]
+    agdNames = ["UnlockAndLevel", "OrangeSampleBubbles", "GreenSampleBubbles", "PurpleSampleBubbles", "UtilityBubbles"]
     agdTiers = [tier_TotalBubblesUnlocked, bubbleTiers[0], bubbleTiers[1], bubbleTiers[2], bubbleTiers[3]]
     agdPre_strings = [
-        f"Continue unlocking W{nextWorldMissingBubbles} bubbles",
+        f"Continue unlocking W{nextWorldMissingBubbles} bubbles and bringing worthwhile bubbles into No Bubble Left Behind range",
         f"Level Orange sample-boosting bubbles",
         f"Level Green sample-boosting bubbles",
         f"Level Purple sample-boosting bubbles",
         f"Level Utility bubbles",
     ]
-    for counter in range(0, len(agdNames)):
-        bubbles_AdviceGroupDict[agdNames[counter]] = AdviceGroup(
+    for counter, value in enumerate(agdNames):
+        bubbles_AdviceGroupDict[value] = AdviceGroup(
             tier=f"{agdTiers[counter] if agdTiers[counter] < 22 else ''}",
             pre_string=f"{'Informational- ' if agdTiers[counter] >= 22 else ''}{agdPre_strings[counter]}",
-            advices=bubbles_AdviceDict[agdNames[counter]]
+            advices=bubbles_AdviceDict[value]
         )
+        bubbles_AdviceGroupDict[value].remove_empty_subgroups()
     bubbles_AdviceGroupDict['AtRiskBasic'], bubbles_AdviceGroupDict['AtRiskLithium'] = getAtRiskAdviceGroups()
 
     #Generate AdviceSection
@@ -494,7 +515,7 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
     )
 
     player_sigil_stamp_value = session_data.account.stamps.get('Sigil Stamp', {}).get('Value', 0)
-    goal_sigil_stamp_value = lavaFunc('decay', stamp_maxes['Sigil Stamp'], 40, 150) * 2 * 1.25
+    goal_sigil_stamp_value = lavaFunc('decay', stamp_maxes['Sigil Stamp'], 40, 150)
     # The Sigil Stamp is a MISC stamp, thus isn't multiplied by the Lab bonus or Pristine Charm
     # if session_data.account.labBonuses['Certified Stamp Book']['Enabled']:
     #     player_sigil_stamp_value *= 2
@@ -739,7 +760,7 @@ def setAlchemySigilsProgressionTier() -> AdviceSection:
                     sigils_AdviceDict['Sigils'][subgroupName].append(Advice(
                         label=f"Level up {requiredSigil}"
                               f"{'. Go look at the Sigils screen to redeem your level!' if account_sigils[requiredSigil]['PlayerHours'] > account_sigils[requiredSigil]['Requirements'][requiredLevel - 1] else ''}",
-                        picture_class=requiredSigil,
+                        picture_class=f"{requiredSigil}-{requiredLevel}",
                         progression=f"{0 if requiredLevel > account_sigils[requiredSigil]['PrechargeLevel']+1 else account_sigils[requiredSigil]['PlayerHours']:.2f}",
                         goal=f"{account_sigils[requiredSigil]['Requirements'][requiredLevel - 1]}"
                     ))

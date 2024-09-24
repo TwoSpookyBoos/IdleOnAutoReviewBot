@@ -1,7 +1,7 @@
-from consts import break_keep_it_up
+from consts import break_keep_it_up, trappingQuestsRequirementList
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
-from utils.data_formatting import safe_loads
+from utils.data_formatting import safe_loads, mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
 
@@ -305,13 +305,45 @@ def setTrappingProgressionTier():
     secretCharacterNotUsingNatureTrapsDict = getSecretClassTrapStatus(placedTrapsDict)
 
     #UnlockCritters
+    agd_unlockcritters_post_stringsList = [
+        "",
+        "Froge critters are unlocked after completing Lord of the Hunt's quest: Pelt for the Pelt God",
+        "Crabbo critters are unlocked after completing Lord of the Hunt's quest: Frogecoin to the MOON!",
+        "Scorpie critters are unlocked after completing Lord of the Hunt's quest: Yet another Cartoon Reference",
+        "Mousey critters are unlocked after completing Lord of the Hunt's quest: Small Stingers, Big Owie",
+        "Owlio critters are unlocked after completing Lord of the Hunt's quest: The Mouse n the Molerat",
+        "Pingy critters are unlocked after completing Lord of the Hunt's quest: Happy Tree Friend",
+        "Bunny critters are unlocked after completing Lord of the Hunt's quest: Noot Noot!",
+        "Dung Beat critters are unlocked after completing Lord of the Hunt's quest: Bunny you Should Say That!",
+        "Honker critters are unlocked after completing Lord of the Hunt's quest: Rollin' Thunder",
+        "Blobfish critters are unlocked after completing Blobbo's quest: Glitter Critter",
+        "Tuttle critters are unlocked in W6 Jade Emporium",
+        ""
+    ]
     tier_unlockCritters = highestUnlockedCritter[0]
     if highestUnlockedCritter[0] != maxCritterTypes:  #unlocked not equal to the max possible to unlock.
         trapping_AdviceDict["UnlockCritters"].append(
             Advice(
-                label=highestUnlockedCritter[3],
+                label=agd_unlockcritters_post_stringsList[highestUnlockedCritter[0]],
                 picture_class=highestUnlockedCritter[3])
             )
+        if tier_unlockCritters >= 2 and tier_unlockCritters < 11: # Show only the quests with Critter requirement
+            normalItem=session_data.account.stored_assets.get(trappingQuestsRequirementList[tier_unlockCritters-2]["normalItemName"])
+            trapping_AdviceDict["UnlockCritters"].append(Advice(
+                    label=normalItem.name,
+                    picture_class=normalItem.name,
+                    progression=normalItem.amount,
+                    goal=trappingQuestsRequirementList[tier_unlockCritters-2]["normalQuantity"]
+            ))
+            shinyItem=session_data.account.stored_assets.get(trappingQuestsRequirementList[tier_unlockCritters-2]["shinyItemName"])
+            trapping_AdviceDict["UnlockCritters"].append(Advice(
+                    label=shinyItem.name,
+                    picture_class=shinyItem.name,
+                    progression=shinyItem.amount,
+                    goal=trappingQuestsRequirementList[tier_unlockCritters-2]["shinyQuantity"]
+            ))
+    for advice in trapping_AdviceDict["UnlockCritters"]:
+        mark_advice_completed(advice)
 
     #UnusedTraps
     if len(unplacedTrapsDict) > 0:
@@ -376,26 +408,11 @@ def setTrappingProgressionTier():
     trapping_AdviceDict["EXPTraps"] = getStaticEXPTrapAdviceList(highestWearableTrapset)
 
     #Generate Advice Groups
-    agd_unlockcritters_post_stringsList = [
-        "",
-        "Froge critters are unlocked after completing Lord of the Hunt's quest: Pelt for the Pelt God",
-        "Crabbo critters are unlocked after completing Lord of the Hunt's quest: Frogecoin to the MOON!",
-        "Scorpie critters are unlocked after completing Lord of the Hunt's quest: Yet another Cartoon Reference",
-        "Mousey critters are unlocked after completing Lord of the Hunt's quest: Small Stingers, Big Owie",
-        "Owlio critters are unlocked after completing Lord of the Hunt's quest: The Mouse n the Molerat",
-        "Pingy critters are unlocked after completing Lord of the Hunt's quest: Happy Tree Friend",
-        "Bunny critters are unlocked after completing Lord of the Hunt's quest: Noot Noot!",
-        "Dung Beat critters are unlocked after completing Lord of the Hunt's quest: Bunny you Should Say That!",
-        "Honker critters are unlocked after completing Lord of the Hunt's quest: Rollin' Thunder",
-        "Blobfish critters are unlocked after completing Blobbo's quest: Glitter Critter",
-        "Tuttle critters are unlocked in W6 Jade Emporium",
-        ""
-    ]
+
     trapping_AdviceGroupDict["UnlockCritters"] = AdviceGroup(
         tier=highestUnlockedCritter[0],
         pre_string=f"{pl((['UnlockRemaining']*(maxCritterTypes-highestUnlockedCritter[0])), 'Unlock the final Critter type', 'Continue unlocking new Critter types')}",
         advices=trapping_AdviceDict["UnlockCritters"],
-        post_string=agd_unlockcritters_post_stringsList[highestUnlockedCritter[0]]
     )
     trapping_AdviceGroupDict["UnplacedTraps"] = AdviceGroup(
         tier="",

@@ -25,9 +25,36 @@ def getRightHandsAdviceGroups():
         sorted_skills[skill]: list[Character] = sorted(
             sorted_skills[skill], key=lambda toon: toon.skills[skill], reverse=True
         )
-        #Decide if skill needs to catchup or stayahead
-        #If Maestro isn't in first
-        if 'Maestro' not in sorted_skills[skill][0].all_classes:
+        highest_skill_level = sorted_skills[skill][0].skills[skill]
+        characters_at_highest = sum(1 for char in sorted_skills[skill] if char.skills[skill] == highest_skill_level)
+
+        #If Maestro isn't in first, place into Catchup
+        if characters_at_highest > 1:
+            skills_needing_catchup.append(skill)
+            highest_jman_name = ''
+            highest_jman_level = 0
+            for char in sorted_skills[skill]:
+                if 'Maestro' in char.all_classes:
+                    highest_jman_name = char.character_name
+                    highest_jman_level = char.skills[skill]
+                    break
+            if highest_jman_level == highest_skill_level:
+                catchup_advices.append(Advice(
+                    label=f"{highest_jman_name} is tied for best in {skill}."
+                          f"<br>Right Hand buff only applies if they're STRICTLY better 🙁",
+                    picture_class=skill,
+                    progression=highest_jman_level,
+                    goal=highest_jman_level + 1
+                ))
+            else:
+                catchup_advices.append(Advice(
+                    label=f"{highest_jman_name} {'is the highest leveled Mman but still ' if len(session_data.account.maestros) > 1 else ''}"
+                          f"not best in {skill}",
+                    picture_class=skill,
+                    progression=highest_jman_level,
+                    goal=sorted_skills[skill][0].skills[skill]+1
+                ))
+        elif characters_at_highest == 1 and 'Maestro' not in sorted_skills[skill][0].all_classes:
             skills_needing_catchup.append(skill)
             highest_jman_name = ''
             highest_jman_level = 0
@@ -41,47 +68,52 @@ def getRightHandsAdviceGroups():
                       f"not best in {skill}",
                 picture_class=skill,
                 progression=highest_jman_level,
-                goal=sorted_skills[skill][0].skills[skill]+1
+                goal=sorted_skills[skill][0].skills[skill] + 1
             ))
-        #Elif Maestro is 1st but is tied with 2nd and 2nd isn't another Maestro
-        elif len(sorted_skills[skill]) > 1:
-            if sorted_skills[skill][0].skills[skill] == sorted_skills[skill][1].skills[skill] and 'Maestro' not in sorted_skills[skill][1].all_classes:
-                skills_needing_catchup.append(skill)
-                highest_jman_name = ''
-                highest_jman_level = 0
-                for char in sorted_skills[skill]:
-                    if 'Maestro' in char.all_classes:
-                        highest_jman_name = char.character_name
-                        highest_jman_level = char.skills[skill]
-                        break
-                catchup_advices.append(Advice(
-                    label=f"{highest_jman_name} is tied for best in {skill}."
-                          f"<br>Right Hand buff only applies if they're STRICTLY better 🙁",
-                    picture_class=skill,
-                    progression=highest_jman_level,
-                    goal=highest_jman_level + 1
-                ))
-        #Else if Journeyman is 1st and they aren't tied with 2nd
-        else:
-            #Display the leader
+
+        #Now for StayAhead / all specialized characters
+        #Display the leader
+        if characters_at_highest == 1:
             stayahead_advices[skill].append(Advice(
-                label=f"{sorted_skills[skill][0].character_name} is currently best at {skill}",
+                label=f"{'🛑' if 'Maestro' not in sorted_skills[skill][0].all_classes else ''} {sorted_skills[skill][0].character_name} is currently best at {skill}",
                 picture_class=sorted_skills[skill][0].class_name_icon,
                 progression=sorted_skills[skill][0].skills[skill],
             ))
-            #Display the rest
-            if len(sorted_skills[skill]) > 1:
-                for char in sorted_skills[skill][1:]:
-                    stayahead_advices[skill].append(Advice(
-                        label=(
-                            f"{char.character_name} can level {skill}"  # to {sorted_skills[skill][0].skills[skill]-1}"
-                            if char.skills[skill] < sorted_skills[skill][0].skills[skill]-1
-                            else f"{'🛑' if 'Maestro' not in char.all_classes else '⚠️'} {char.character_name} will overtake {skill} if leveled any further"
-                        ),
-                        picture_class=char.class_name_icon,
-                        progression=char.skills[skill],
-                        goal=sorted_skills[skill][0].skills[skill] - 1
-                    ))
+        else:
+            stayahead_advices[skill].append(Advice(
+                label=f"{sorted_skills[skill][0].character_name} is currently TIED for best at {skill}",
+                picture_class=sorted_skills[skill][0].class_name_icon,
+                progression=sorted_skills[skill][0].skills[skill],
+            ))
+        no_goal = True if characters_at_highest > 1 else False
+        #Display the rest
+        if len(sorted_skills[skill]) > 1:
+            for char in sorted_skills[skill][1:]:
+                if 'Maestro' not in char.all_classes:
+                    label_symbol = '🛑'
+                else:
+                    if 'Maestro' in sorted_skills[skill][0].all_classes:
+                        label_symbol = '⚠️'
+                    else:
+                        label_symbol = '✔️'
+                stayahead_advices[skill].append(Advice(
+                    label=(
+                        f"{char.character_name} can level {skill}"  # to {sorted_skills[skill][0].skills[skill]-1}"
+                        if char.skills[skill] < sorted_skills[skill][0].skills[skill]-1
+                        else f"{label_symbol} {char.character_name} will {'overtake' if char.skills[skill] == highest_skill_level else 'tie'} {skill} if leveled any further"
+                    ),
+                    picture_class=char.class_name_icon,
+                    progression=char.skills[skill],
+                    goal=sorted_skills[skill][0].skills[skill] - 1 if not no_goal else ''
+                ))
+        # except Exception as reason:
+        #     logger.exception(f"Couldn't figure out how to evaluate {skill}: {reason}")
+        #     stayahead_advices[skill].append(Advice(
+        #         label=f"Something went wrong trying to figure out where to place {sorted_skills[skill][0].character_name}"
+        #               f"<br>Please contact Scoli with your Data so he can review!",
+        #         picture_class=sorted_skills[skill][0].class_name_icon,
+        #         progression=sorted_skills[skill][0].skills[skill],
+        #     ))
 
     #Catch Up
     catchup_ag = AdviceGroup(
@@ -116,149 +148,6 @@ def getRightHandsAdviceGroups():
     )
     stayahead_ag.remove_empty_subgroups()
     return catchup_ag, stayahead_ag
-
-# def getHandsAdviceGroupCatchUp(vmans, maestros, beginners):
-#     # This function returns the skills maestros aren't best in.
-#     janky_skills = maestros_goal_levels(maestros)
-#     zero_count = sum(1 for skill, (_, _, next_highest_non_maestro_char) in janky_skills.items() if not next_highest_non_maestro_char)
-#     if zero_count == len(skillsToReview_RightHand):
-#         # No maestros ahead in any skill. I think?
-#         return
-#     tier = f"{zero_count}/{len(skillsToReview_RightHand)}"
-#     hands_pre_string = create_hands_pre_string(janky_skills, maestros, beginners, tier)
-#
-#     post_string = ""
-#     if "Worship" in janky_skills \
-#             or "Trapping" in janky_skills:
-#         post_string = ()
-#
-#     advices = []
-#
-#     for skill, (maestro, goal, next_highest_non_maestro_char) in janky_skills.items():
-#         if not next_highest_non_maestro_char:
-#             if len(maestros) == 1:
-#                 fancy_label = skill
-#             else:
-#                 fancy_label = f"Best {skill} Maestro: {maestro.character_name}"
-#             advices.append(Advice(
-#                 label=fancy_label,
-#                 picture_class=skill,
-#                 progression=maestro.skills[skill],
-#                 goal=goal,
-#             ))
-#
-#     if advices:
-#         session_data.account.alerts_AdviceDict['General'].append(Advice(
-#             label=f"Your {{{{ Maestro|#secret-class-path }}}} isn't best in {len(advices)} Skill{pl(advices)}",
-#             picture_class='right-hand-of-action',
-#         ))
-#
-#     group = AdviceGroup(
-#         tier="", pre_string=hands_pre_string, post_string=post_string, advices=advices
-#     )
-#     return group
-#
-#
-# def getHandsAdviceGroupStayAhead(maestros):
-#     # This function returns the skills maestros are best in.
-#     janky_skills = maestros_goal_levels(maestros)
-#     zero_count = sum(1 for skill, (_, _, next_highest_non_maestro_char) in janky_skills.items() if not next_highest_non_maestro_char)
-#     if zero_count == len(skillsToReview_RightHand):
-#         # No maestros ahead in any skill. I think?
-#         return
-#     tier = f"{zero_count}/{len(skillsToReview_RightHand)}"
-#     if len(maestros) == 1:
-#         hands_pre_string = (f"Your Maestro is the highest level in {len(skillsToReview_RightHand)-zero_count}/{len(skillsToReview_RightHand)}"
-#                             f" Right Hand skills. Be careful not to let other characters overtake")
-#     else:
-#         hands_pre_string = (f"Your Maestros are not the highest level in {len(skillsToReview_RightHand)-zero_count}/{len(skillsToReview_RightHand)}"
-#                             f" Right Hand skills. Be careful not to let other characters overtake")
-#
-#     post_string = ""
-#     # if "Worship" in janky_skills \
-#     #         or "Trapping" in janky_skills:
-#     #     post_string = (f"Right Hand gives about 8% more Souls and Critters, and Species Epoch gives about 6% PER Trapping and Worship level! "
-#     #                    f"Don't steal Mman's Worship Charge, and don't slack on your Crystal Countdowns!")
-#
-#     advices_first = []
-#
-#     for skill, (maestro, goal, next_highest_non_maestro_char) in janky_skills.items():
-#         if next_highest_non_maestro_char:
-#             if next_highest_non_maestro_char.skills[skill] == maestro.skills[skill] - 1:
-#                 fancy_label = f"🛑 {next_highest_non_maestro_char} should not level {skill} any further."
-#             else:
-#                 fancy_label = f"{next_highest_non_maestro_char} can level {skill} to {maestro.skills[skill] - 1}"
-#             advices_first.append(Advice(
-#                 label=fancy_label,
-#                 #label=f"{'🛑 ' if next_highest_non_maestro_char.skills[skill] == maestro.skills[skill]-1 else ''}"
-#                 #f"{maestro.character_name} has {maestro.skills[skill]} {skill}. Next closest is {next_highest_non_maestro_char} at {next_highest_non_maestro_char.skills[skill]}",
-#
-#                 picture_class=skill,
-#                 progression=next_highest_non_maestro_char.skills[skill],
-#                 goal=maestro.skills[skill]-1
-#             ))
-#
-#     group = AdviceGroup(
-#         tier="", pre_string=hands_pre_string, post_string=post_string, advices=advices_first
-#     )
-#     return group
-#
-#
-# def create_hands_pre_string(janky_skills, maestros, beginners, tier):
-#     account = session_data.account
-#     if not maestros:
-#         header = "Gosh golly, I'm jealous, So many nice things ahead of you!<br>Check this section again once you've acquired a Maestro"
-#
-#         if len(account.safe_characters) == account.max_toon_count and not beginners:
-#             header = "Oh… Oh no… Your family is full but I don't see any future Maestros…<br>I wish you the best of luck 😔"
-#
-#     else:
-#
-#         # if maestros are the highest in all skills
-#         if not janky_skills:
-#             if len(maestros) > 1:
-#                 header = "Your Maestros are a workforce to be dealt with! An arduous bunch, the lot!"
-#             else:
-#                 header = f"{maestros[0]} is the highest level in all {tier} Right Hand skills! A Jack of trades, this one! ❤️"
-#         # if maestros are not the highest in all skills
-#         else:
-#             if len(maestros) > 1:
-#                 header = f"Your Maestros are not the highest level in {tier} Right Hand skills"
-#             else:
-#                 header = f"{maestros[0]} is not the highest level in {tier} Right Hand skills"
-#     return header
-#
-# def maestros_goal_levels(maestros):
-#     account = session_data.account
-#     janky_skills = dict()
-#     # HOPEFULLY. The dict should look like this:
-#     # janky_skills["skill"] = (
-#     #     best_maestro,  # Character object?
-#     #     required_level,  # int, representing the... highest? level of the skill?
-#     #     next_highest_non_maestro_char  # False if maestro isn't best, character object if is?
-#     # )
-#     # ..... Or an empty dict?
-#     # This might need some refactoring.
-#     if not maestros:
-#         return janky_skills
-#
-#     for skill in skillsToReview_RightHand:
-#         chars_ordered: list[Character] = sorted(
-#             account.safe_characters, key=lambda toon: toon.skills[skill], reverse=True
-#         )
-#         best_maestro = next((toon for toon in chars_ordered if toon in maestros), None)
-#         best_maestro_rank = chars_ordered.index(best_maestro)
-#
-#         if best_maestro_rank == 0:
-#             # maestro is already best
-#             next_highest_non_maestro = next((toon for toon in chars_ordered if toon not in maestros), None)
-#         else:
-#             next_highest_non_maestro = False
-#
-#         required_level = chars_ordered[0].skills[skill] + 1
-#         janky_skills[skill] = (best_maestro, required_level, next_highest_non_maestro)
-#
-#     return janky_skills
 
 def setSecretClassProgressionTier():
     secretClass_AdviceDict = {
@@ -636,7 +525,9 @@ def setSecretClassProgressionTier():
     secretClass_AdviceSection.groups = secretClass_AdviceGroupDict.values()
     if overall_SecretClassTier >= max_tier:
         secretClass_AdviceSection.header = f"Best Secret Class tier met: {tier_section}{break_you_best}️"
-        secretClass_AdviceSection.complete = True if 'RightHandsCatchup' not in secretClass_AdviceGroupDict else False
+        #logger.debug(f"Number of Catchup advices: {len(secretClass_AdviceGroupDict['RightHandsCatchup'].advices['default'])}")
+        if 'RightHandsCatchup' in secretClass_AdviceGroupDict:
+            secretClass_AdviceSection.complete = True if len(secretClass_AdviceGroupDict['RightHandsCatchup'].advices['default']) == 0 else False
     else:
         secretClass_AdviceSection.header = f"Best Secret Class tier met: {tier_section}"
 

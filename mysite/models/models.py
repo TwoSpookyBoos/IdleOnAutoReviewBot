@@ -23,8 +23,11 @@ from consts import (
     achievementsList, allMeritsDict, starsignsDict,
     base_crystal_chance,
     filter_recipes, filter_never,
+    event_points_shop_dict,
     # W1
-    stampsDict, stampTypes, bribesDict, forgeUpgradesDict, statuesDict, statueTypeList, statueCount,
+    stampsDict, stampTypes, bribesDict,
+    forgeUpgradesDict,
+    statuesDict, statueTypeList, statueCount,
     # W2
     bubblesDict,
     vialsDict, max_IndexOfVials, getReadableVialNames, max_VialLevel,
@@ -52,7 +55,7 @@ from consts import (
     breedingShinyBonusList, breedingSpeciesDict, getShinyLevelFromDays, getDaysToNextShinyLevel,
     # W5
     sailingDict, numberOfArtifactTiers, captainBuffs,
-    getStyleNameFromIndex, divinity_divinitiesDict, getDivinityNameFromIndex,
+    getStyleNameFromIndex, divinity_divinitiesDict, divinity_offeringsDict, getDivinityNameFromIndex, divinity_DivCostAfter3,
     gamingSuperbitsDict,
     # W6
     jade_emporium, pristineCharmsList, sneakingGemstonesFirstIndex, sneakingGemstonesList, sneakingGemstonesStatList,
@@ -1219,6 +1222,7 @@ class Account:
         self._parse_general_printer()
         self._parse_general_maps()
         self._parse_general_colo_scores()
+        self._parse_general_event_points_shop()
 
     def _parse_general_gemshop(self):
         self.gemshop = {}
@@ -1377,6 +1381,31 @@ class Account:
                 self.colo_scores[coloIndex] = int(coloScore)
             except:
                 self.colo_scores[coloIndex] = 0
+
+    def _parse_general_event_points_shop(self):
+        self.event_points_shop = {
+            'Points Owned': self.raw_optlacc_dict.get(310, 0),
+            'Raw Purchases': self.raw_optlacc_dict.get(311, ""),
+            'Bonuses': {}
+        }
+        if isinstance(self.event_points_shop['Raw Purchases'], str):
+            self.event_points_shop['Raw Purchases'] = list(self.event_points_shop['Raw Purchases'])
+        else:
+            print(f"models._parse_general_event_points_shop: Purchases not String type: {type(self.event_points_shop['Raw Purchases'])} with value of: {self.event_points_shop['Raw Purchases']}")
+            self.event_points_shop['Raw Purchases'] = []
+        for bonusName, bonusDetails in event_points_shop_dict.items():
+            try:
+                self.event_points_shop['Bonuses'][bonusName] = {
+                    'Owned': bonusDetails['Code'] in self.event_points_shop['Raw Purchases'],
+                    'Cost': bonusDetails['Cost'],
+                    'Description': bonusDetails['Description'],
+                }
+            except:
+                self.event_points_shop['Bonuses'][bonusName] = {
+                    'Owned': False,
+                    'Cost': bonusDetails['Cost'],
+                    'Description': bonusDetails['Description'],
+                }
 
     def _parse_w1(self):
         self._parse_w1_starsigns()
@@ -2619,11 +2648,19 @@ class Account:
         raw_divinity_list = safe_loads(self.raw_data.get("Divinity", []))
         while len(raw_divinity_list) < 40:
             raw_divinity_list.append(0)
-
+        self.divinity['DivinityPoints'] = raw_divinity_list[24]
+        if isinstance(self.divinity['DivinityPoints'], str):
+            try:
+                self.divinity['DivinityPoints'] = int(float(self.divinity['DivinityPoints']))
+            except Exception as reason:
+                print(f"models._parse_w5_divinity: WARNING Could not convert '{type(self.divinity['DivinityPoints'])}' {self.divinity['DivinityPoints']} to int: {reason}. Defaulting to 0")
+                self.divinity['DivinityPoints'] = 0
         self.divinity['GodsUnlocked'] = min(10, raw_divinity_list[25])
         self.divinity['GodRank'] = max(0, raw_divinity_list[25] - 10)
         self.divinity['LowOffering'] = raw_divinity_list[26]
         self.divinity['HighOffering'] = raw_divinity_list[27]
+        self.divinity['LowOfferingGoal'] = ""
+        self.divinity['HighOfferingGoal'] = ""
         for divinityIndex in self.divinity['Divinities']:
             if self.divinity['GodsUnlocked'] >= divinityIndex:
                 self.divinity['Divinities'][divinityIndex]["Unlocked"] = True
@@ -3312,6 +3349,7 @@ class Account:
 
     def _calculate_w5(self):
         self._calculate_w5_divinity_link_advice()
+        self._calculate_w5_divinity_offering_costs()
 
     def _calculate_w5_divinity_link_advice(self):
         self.divinity['DivinityLinks'] = {
@@ -3563,6 +3601,16 @@ class Account:
                 ),
             ],
         }
+
+    def _calculate_w5_divinity_offering_costs(self):
+        self.divinity['LowOfferingGoal'] = self._divinityUpgradeCost(self.divinity['LowOffering'], self.divinity['GodsUnlocked'] + self.divinity['GodRank'])
+        self.divinity['HighOfferingGoal'] = self._divinityUpgradeCost(self.divinity['HighOffering'], self.divinity['GodsUnlocked'] + self.divinity['GodRank'])
+    
+    def _divinityUpgradeCost(self, offeringIndex, unlockedDivinity):
+        cost = (20 * pow(unlockedDivinity + 1.3, 2.3) * pow(2.2, unlockedDivinity) + 60) * divinity_offeringsDict.get(offeringIndex, {}).get("Chance", 0) / 100
+        if unlockedDivinity >= 3:
+            cost = cost * pow(min(1.8, max(1, 1 + self.raw_serverVars_dict.get("DivCostAfter3", divinity_DivCostAfter3) / 100)), unlockedDivinity - 2)
+        return ceil(cost)
 
     def _calculate_w6(self):
         self._calculate_w6_summoning_winner_bonuses()
