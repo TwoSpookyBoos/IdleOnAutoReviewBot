@@ -25,9 +25,11 @@ def getRightHandsAdviceGroups():
         sorted_skills[skill]: list[Character] = sorted(
             sorted_skills[skill], key=lambda toon: toon.skills[skill], reverse=True
         )
+        highest_skill_level = sorted_skills[skill][0].skills[skill]
+        characters_at_highest = sum(1 for char in sorted_skills[skill] if char.skills[skill] == highest_skill_level)
 
         #If Maestro isn't in first, place into Catchup
-        if 'Maestro' not in sorted_skills[skill][0].all_classes:
+        if characters_at_highest > 1:
             skills_needing_catchup.append(skill)
             highest_jman_name = ''
             highest_jman_level = 0
@@ -36,7 +38,7 @@ def getRightHandsAdviceGroups():
                     highest_jman_name = char.character_name
                     highest_jman_level = char.skills[skill]
                     break
-            if highest_jman_level == sorted_skills[skill][0].skills[skill]:
+            if highest_jman_level == highest_skill_level:
                 catchup_advices.append(Advice(
                     label=f"{highest_jman_name} is tied for best in {skill}."
                           f"<br>Right Hand buff only applies if they're STRICTLY better 🙁",
@@ -52,15 +54,38 @@ def getRightHandsAdviceGroups():
                     progression=highest_jman_level,
                     goal=sorted_skills[skill][0].skills[skill]+1
                 ))
+        elif characters_at_highest == 1 and 'Maestro' not in sorted_skills[skill][0].all_classes:
+            skills_needing_catchup.append(skill)
+            highest_jman_name = ''
+            highest_jman_level = 0
+            for char in sorted_skills[skill]:
+                if 'Maestro' in char.all_classes:
+                    highest_jman_name = char.character_name
+                    highest_jman_level = char.skills[skill]
+                    break
+            catchup_advices.append(Advice(
+                label=f"{highest_jman_name} {'is the highest leveled Mman but still ' if len(session_data.account.maestros) > 1 else ''}"
+                      f"not best in {skill}",
+                picture_class=skill,
+                progression=highest_jman_level,
+                goal=sorted_skills[skill][0].skills[skill] + 1
+            ))
 
         #Now for StayAhead / all specialized characters
         #Display the leader
-        stayahead_advices[skill].append(Advice(
-            label=f"{'🛑' if 'Maestro' not in sorted_skills[skill][0].all_classes else ''} {sorted_skills[skill][0].character_name} is currently best at {skill}",
-            picture_class=sorted_skills[skill][0].class_name_icon,
-            progression=sorted_skills[skill][0].skills[skill],
-        ))
-        no_goal = True if 'Maestro' not in sorted_skills[skill][0].all_classes else False
+        if characters_at_highest == 1:
+            stayahead_advices[skill].append(Advice(
+                label=f"{'🛑' if 'Maestro' not in sorted_skills[skill][0].all_classes else ''} {sorted_skills[skill][0].character_name} is currently best at {skill}",
+                picture_class=sorted_skills[skill][0].class_name_icon,
+                progression=sorted_skills[skill][0].skills[skill],
+            ))
+        else:
+            stayahead_advices[skill].append(Advice(
+                label=f"{sorted_skills[skill][0].character_name} is currently TIED for best at {skill}",
+                picture_class=sorted_skills[skill][0].class_name_icon,
+                progression=sorted_skills[skill][0].skills[skill],
+            ))
+        no_goal = True if characters_at_highest > 1 else False
         #Display the rest
         if len(sorted_skills[skill]) > 1:
             for char in sorted_skills[skill][1:]:
@@ -75,7 +100,7 @@ def getRightHandsAdviceGroups():
                     label=(
                         f"{char.character_name} can level {skill}"  # to {sorted_skills[skill][0].skills[skill]-1}"
                         if char.skills[skill] < sorted_skills[skill][0].skills[skill]-1
-                        else f"{label_symbol} {char.character_name} will overtake {skill} if leveled any further"
+                        else f"{label_symbol} {char.character_name} will {'overtake' if char.skills[skill] == highest_skill_level else 'tie'} {skill} if leveled any further"
                     ),
                     picture_class=char.class_name_icon,
                     progression=char.skills[skill],
