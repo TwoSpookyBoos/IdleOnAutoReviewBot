@@ -3700,19 +3700,22 @@ class Account:
                     self.farming['MarketUpgrades'][name]['Description'] = details['Description'].replace("{", f"{details['Value']:g}")
                 if name in self.farming['CropStacks']:
                     if name == 'Super Gmo':
+                        self.farming['MarketUpgrades'][name]['StackedValue'] = super_multi
                         self.farming['MarketUpgrades'][name]['Description'] += (
                             f"<br>{self.farming['CropStacks'][name]} stacks = "
                             f"{super_multi:,.4g}x"
                         )
                     elif name == 'Evolution Gmo':
+                        self.farming['MarketUpgrades'][name]['StackedValue'] = super_multi * pow(1 + (details['Value'] / 100), self.farming['CropStacks'][name])
                         self.farming['MarketUpgrades'][name]['Description'] += (
                             f"<br>{self.farming['CropStacks'][name]} stacks = "
-                            f"{super_multi * pow(1 + (details['Value'] / 100), self.farming['CropStacks'][name]):,.4g}x"
+                            f"{self.farming['MarketUpgrades'][name]['StackedValue']:,.4g}x"
                         )
                     else:
+                        self.farming['MarketUpgrades'][name]['StackedValue'] = super_multi * (1 + ((details['Value'] * self.farming['CropStacks'][name]) / 100))
                         self.farming['MarketUpgrades'][name]['Description'] += (
                             f"<br>{self.farming['CropStacks'][name]} stacks = "
-                            f"{super_multi * (1 + ((details['Value'] * self.farming['CropStacks'][name]) / 100)):,.5g}x"
+                            f"{self.farming['MarketUpgrades'][name]['StackedValue']:,.5g}x"
                         )
 
             except Exception as reason:
