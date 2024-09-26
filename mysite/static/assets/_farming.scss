@@ -180,5 +180,12 @@ $crop-depot: (
     depot-paintbrush: img('CropDepotPen6.png'),
 );
 
+$farming-ui: (
+    day-market: img('wiki/Day_Market.png'),
+    night-market: img('wiki/Night_Market.png'),
+    crop-depot: img('wiki/Crop_Depot.png'),
+);
+
 $all-farming: map-merge($seed-gifs, $all-crops);
 $all-farming: map-merge($all-farming, $crop-depot);
+$all-farming: map-merge($all-farming, $farming-ui);

@@ -299,7 +299,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
         label=f"{{{{Rift|#rift}}}}: Skill Mastery unlocked: {sm_base}/4%"
               f"<br>Additional 1% per Skill at 750: {sm_bonus}/{sm_eligible_skills}%",
         picture_class='skill-mastery',
-        progression=sm_multi,
+        progression=f"{sm_multi:.2f}",
         goal=1 + (4 + sm_eligible_skills) / 100,
         unit="x"
     ))

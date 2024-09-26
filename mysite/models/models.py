@@ -2863,6 +2863,7 @@ class Account:
                     'Level': rawMarkets[marketUpgradeIndex + 2],
                     'Description': marketUpgrade[1].replace('_', ' '),
                     'Value': rawMarkets[marketUpgradeIndex + 2] * float(marketUpgrade[8]),
+                    'StackedValue': rawMarkets[marketUpgradeIndex + 2] * float(marketUpgrade[8]),  #Updated later in calculate function
                     'UpgradesAtSameCrop': int(marketUpgrade[2]),
                     'CropTypeValue': float(marketUpgrade[3]),
                     'BaseCost': int(marketUpgrade[4]),
@@ -2877,6 +2878,7 @@ class Account:
                     'Level': 0,
                     'Description': marketUpgrade[1].replace('_', ' '),
                     'Value': 0,
+                    'StackedValue': 0,  # Updated later in calculate function
                     'UpgradesAtSameCrop': marketUpgrade[2],
                     'CropTypeValue': marketUpgrade[3],
                     'BaseCost': marketUpgrade[4],
@@ -3687,12 +3689,32 @@ class Account:
             self.farming['Depot'][bonusName]['ValuePlus1'] = self.farming['Depot'][bonusName]['BaseValuePlus1'] * lab_multi
 
     def _calculate_w6_farming_day_market(self):
+        super_multi = 1 + ((self.farming['CropStacks']['Super Gmo'] * self.farming['MarketUpgrades']['Super Gmo']['Value']) / 100)
+        #print(f"models._calculate_w6_farming_day_market super_multi = {super_multi}")
         for name, details in self.farming['MarketUpgrades'].items():
             try:
                 if "}" in details['Description']:  #Multiplicative
-                    self.farming['MarketUpgrades'][name]['Description'] = details['Description'].replace("}", f"{1 + (details['Value'] / 100):.3g}")
+                    val = 1 + (details['Value'] / 100)
+                    self.farming['MarketUpgrades'][name]['Description'] = details['Description'].replace("}", f"{val:.3g}")
                 else:
                     self.farming['MarketUpgrades'][name]['Description'] = details['Description'].replace("{", f"{details['Value']:g}")
+                if name in self.farming['CropStacks']:
+                    if name == 'Super Gmo':
+                        self.farming['MarketUpgrades'][name]['Description'] += (
+                            f"<br>{self.farming['CropStacks'][name]} stacks = "
+                            f"{super_multi:,.4g}x"
+                        )
+                    elif name == 'Evolution Gmo':
+                        self.farming['MarketUpgrades'][name]['Description'] += (
+                            f"<br>{self.farming['CropStacks'][name]} stacks = "
+                            f"{super_multi * pow(1 + (details['Value'] / 100), self.farming['CropStacks'][name]):,.4g}x"
+                        )
+                    else:
+                        self.farming['MarketUpgrades'][name]['Description'] += (
+                            f"<br>{self.farming['CropStacks'][name]} stacks = "
+                            f"{super_multi * (1 + ((details['Value'] * self.farming['CropStacks'][name]) / 100)):,.5g}x"
+                        )
+
             except Exception as reason:
                 print(f"models._calculate_w6_farming_day_market: Exception substituting value for {name}: {reason}")
                 continue

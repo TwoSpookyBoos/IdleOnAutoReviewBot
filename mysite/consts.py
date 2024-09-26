@@ -6218,7 +6218,7 @@ marketUpgradeDetails = [
     "OG_FERTILIZER }x_higher_chance_for_Overgrowth_to_occur 2 0.10 40 1.060 48 500 1".split(" "),
     "EXP_GMO +{%_farming_EXP_gain_crop_you_have_2500_of 2 0.10 60 1.095 57 100 1".split(" "),
     "LAND_RANK Each_plot_now_gets_Rank_XP_when_a_crop_is_collected. 2 0.10 80 1.050 61 1 1".split(" "),
-    "VALUE_GMO +{%_crop_value_per_per_crop_you_have_10k_of 2 0.10 150 1.125 95 500 1".split(" "),
+    "VALUE_GMO +{%_crop_value_per_crop_you_have_10k_of 2 0.10 150 1.125 95 500 1".split(" "),
     "SUPER_GMO +{%_all_'GMO'_bonuses_per_crop_you_have_100K_of 2 0.10 250 1.20 109 50 0.5".split(" "),
 ]
 marketUpgradeFirstIndex = 2
