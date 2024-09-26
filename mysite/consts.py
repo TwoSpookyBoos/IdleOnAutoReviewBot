@@ -1672,6 +1672,10 @@ sailing_progressionTiers = {
 
 
 ###WORLD 6 PROGRESSION TIERS###
+farming_progressionTiers = {
+    0: {},
+    1: {}
+}
 
 ###UI CONSTS###
 maxTiersPerGroup = 3
@@ -3689,6 +3693,8 @@ def lavaFunc(funcType: str, level: int, x1: int | float, x2: int | float, roundR
             result = x1 + x2 * level
         case 'special1':
             result = 100 - (level * x1) / (level + x2)
+        case 'pow':
+            result = pow(x1, level)
         case _:
             result = 0
     if roundResult:
@@ -6196,8 +6202,86 @@ marketUpgradeList = [
     "Biology Boost", "Product Doubler", "More Beenz", "Rank Boost",
     "Overgrowth", "Evolution GMO", "Speed GMO", "OG Fertilizer",
     "EXP GMO", "Land Rank", "Value GMO", "Super GMO"]
+#  Last verified from MarketInfo function as of 2.12, slightly tweaked for readability
+marketUpgradeDetails = [
+    "LAND_PLOTS {_extra_plots_of_land_to_plant_crops_in 0 2 2 2 0 20 1".split(" "),
+    "STRONGER_VINES +{%_chance_for_+1_crop_when_fully_grown 1 0.18 2 1.13 3 500 2".split(" "),
+    "NUTRITIOUS_SOIL +{%_growth_speed_for_all_land 7 0.15 3 1.12 8 500 1".split(" "),
+    "SMARTER_SEEDS +{%_farming_EXP_gain_from_all_sources 21 0.14 6 1.1 14 500 3".split(" "),
+    "BIOLOGY_BOOST +{%_chance_of_crop_evolution,_or_'next_crop'_chance 46 0.09 10 1.1 31 500 15".split(" "),
+    "PRODUCT_DOUBLER +{%_chance_for_crops_to_be_worth_2x_when_collected 30 0.12 15 1.2 42 500 3".split(" "),
+    "MORE_BEENZ +{%_magic_beans_gained_when_trading_in_crops 61 0.11 25 1.15 53 500 2".split(" "),
+    "RANK_BOOST Plots_earn_+{%_more_Rank_XP_when_a_crop_is_collected 84 0.11 30 1.2 80 500 3".split(" "),
+    "OVERGROWTH Unlocks_Overgrowth_(OG)._Each_OG_doubles_crop_value_~_EXP 2 0.10 10 1.1 19 1 1".split(" "),
+    "EVOLUTION_GMO }x_crop_evolution_chance_per_crop_you_have_200_of 2 0.10 15 1.080 25 500 0.8".split(" "),
+    "SPEED_GMO +{%_growth_speed_per_crop_you_have_1000_of 2 0.10 25 1.155 36 500 0.3".split(" "),
+    "OG_FERTILIZER }x_higher_chance_for_Overgrowth_to_occur 2 0.10 40 1.060 48 500 1".split(" "),
+    "EXP_GMO +{%_farming_EXP_gain_crop_you_have_2500_of 2 0.10 60 1.095 57 100 1".split(" "),
+    "LAND_RANK Each_plot_now_gets_Rank_XP_when_a_crop_is_collected. 2 0.10 80 1.050 61 1 1".split(" "),
+    "VALUE_GMO +{%_crop_value_per_per_crop_you_have_10k_of 2 0.10 150 1.125 95 500 1".split(" "),
+    "SUPER_GMO +{%_all_'GMO'_bonuses_per_crop_you_have_100K_of 2 0.10 250 1.20 109 50 0.5".split(" "),
+]
 marketUpgradeFirstIndex = 2
 marketUpgradeLastIndex = marketUpgradeFirstIndex + len(marketUpgradeList)
+cropDepotDict = {
+    0: {
+        'EmporiumUnlockName': 'Reinforced Science Pencil',
+        'BonusString': 'DMG',
+        'funcType': 'add',
+        'x1': 20,
+        'x2': 0,
+        'Image': 'depot-pencil',
+    },
+    1: {
+        'EmporiumUnlockName': 'Science Pen',
+        'BonusString': 'Gaming Evo',
+        'funcType': 'pow',
+        'x1': 1.02,
+        'x2': 0,
+        'Image': 'depot-pen',
+    },
+    2: {
+        'EmporiumUnlockName': 'Science Marker',
+        'BonusString': 'Jade Coin',
+        'funcType': 'add',
+        'x1': 8,
+        'x2': 0,
+        'Image': 'depot-marker',
+    },
+    3: {
+        'EmporiumUnlockName': 'Science Featherpen',
+        'BonusString': 'Meal Spd',
+        'funcType': 'pow',
+        'x1': 1.1,
+        'x2': 0,
+        'Image': 'depot-featherpen',
+    },
+    4: {
+        'EmporiumUnlockName': 'Science Environmentally Sourced Pencil',
+        'BonusString': 'Cash',
+        'funcType': 'add',
+        'x1': 15,
+        'x2': 0,
+        'Image': 'depot-green-pencil',
+    },
+    5: {
+        'EmporiumUnlockName': 'Science Crayon',
+        'BonusString': 'Pet Rate',
+        'funcType': 'add',
+        'x1': 7,
+        'x2': 0,
+        'Image': 'depot-crayon',
+    },
+    6: {
+        'EmporiumUnlockName': 'Science Paintbrush',
+        'BonusString': 'Base Critters',
+        'funcType': 'add',
+        'x1': 0.1,
+        'x2': 0,
+        'Image': 'depot-paintbrush',
+    },
+
+}
 
 def getMoissaniteValue(moissaniteLevel: int):
     try:

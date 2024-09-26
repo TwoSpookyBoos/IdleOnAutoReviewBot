@@ -663,7 +663,7 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
 
     # Multi Group C
     speed_Advice[mgc_label].append(Advice(
-        label=f"{{{{ Vial|#vials }}}}: Turtle Tisane (Tuttle): {tuttle_vial_multi}x",
+        label=f"{{{{ Vial|#vials }}}}: Turtle Tisane (Tuttle): {tuttle_vial_multi:.3f}x",
         picture_class="tuttle",
         progression=session_data.account.alchemy_vials['Turtle Tisane (Tuttle)']['Level'],
         goal=max_VialLevel

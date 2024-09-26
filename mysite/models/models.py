@@ -60,7 +60,7 @@ from consts import (
     # W6
     jade_emporium, pristineCharmsList, sneakingGemstonesFirstIndex, sneakingGemstonesList, sneakingGemstonesStatList,
     getMoissaniteValue, getGemstoneBaseValue, getGemstoneBoostedValue, getGemstonePercent,
-    marketUpgradeList, landrankDict,
+    marketUpgradeDetails, landrankDict, cropDepotDict, maxFarmingCrops,
     summoningBattleCountsDict, summoningDict,
     items_codes_and_names
 )
@@ -2780,19 +2780,21 @@ class Account:
             "CropsUnlocked": 0,
             "MarketUpgrades": {},
             "CropStacks": {
-                "EvolutionGMO": 0,  # 200
-                "SpeedGMO": 0,  # 1,000
-                "ExpGMO": 0,  # 2,500
-                "ValueGMO": 0,  # 10,000
-                "SuperGMO": 0  # 100,000
+                "Evolution Gmo": 0,  # 200
+                "Speed Gmo": 0,  # 1,000
+                "Exp Gmo": 0,  # 2,500
+                "Value Gmo": 0,  # 10,000
+                "Super Gmo": 0  # 100,000
             },
             'LandRankDatabase': {},
+            'Depot': {},
         }
 
         raw_farmcrop_dict = safe_loads(self.raw_data.get("FarmCrop", {}))
         self._parse_w6_farming_crops(raw_farmcrop_dict)
+        self._parse_w6_farming_crop_depot()
 
-        raw_farmupg_list = safe_loads(self.raw_data.get("FarmUpg", {}))
+        raw_farmupg_list = safe_loads(self.raw_data.get("FarmUpg", []))
         self._parse_w6_farming_markets(raw_farmupg_list)
 
         raw_farmrank_list = safe_loads(self.raw_data.get("FarmRank", [[0]*36]))
@@ -2800,7 +2802,7 @@ class Account:
 
         self.farming['Total Plots'] = (
             1
-            + self.farming['MarketUpgrades']['Land Plots']
+            + self.farming['MarketUpgrades']['Land Plots']['Level']
             + self.gemshop['Plot of Land']
             + 3 if self.merits[5][2]['Level'] >= 3 else self.merits[5][2]['Level']
         )
@@ -2812,25 +2814,78 @@ class Account:
                     self.farming["CropsUnlocked"] += 1  # Once discovered, crops will always appear in this dict.
                     self.farming['Crops'][int(cropIndexStr)] = float(cropAmountOwned)
                     if float(cropAmountOwned) >= 200:
-                        self.farming["CropStacks"]["EvolutionGMO"] += 1
+                        self.farming["CropStacks"]["Evolution Gmo"] += 1
                     if float(cropAmountOwned) >= 1000:
-                        self.farming["CropStacks"]["SpeedGMO"] += 1
+                        self.farming["CropStacks"]["Speed Gmo"] += 1
                     if float(cropAmountOwned) >= 2500:
-                        self.farming["CropStacks"]["ExpGMO"] += 1
+                        self.farming["CropStacks"]["Exp Gmo"] += 1
                     if float(cropAmountOwned) >= 10000:
-                        self.farming["CropStacks"]["ValueGMO"] += 1
+                        self.farming["CropStacks"]["Value Gmo"] += 1
                     if float(cropAmountOwned) >= 100000:
-                        self.farming["CropStacks"]["SuperGMO"] += 1
+                        self.farming["CropStacks"]["Super Gmo"] += 1
                 except:
                     continue
 
+    def _parse_w6_farming_crop_depot(self):
+        for bonusIndex, bonusDetails in cropDepotDict.items():
+            self.farming['Depot'][bonusIndex] = {
+                'BonusString': bonusDetails['BonusString'],
+                'Image': bonusDetails['Image'],
+                'ScalingType': bonusDetails['funcType'],
+                'ScalingNumber': bonusDetails['x1'],
+                'Unlocked': self.sneaking['JadeEmporium'][bonusDetails['EmporiumUnlockName']]['Obtained'],
+                'BaseValue': lavaFunc(
+                    bonusDetails['funcType'],
+                    self.farming['CropsUnlocked'],
+                    bonusDetails['x1'],
+                    bonusDetails['x2']
+                ),
+                'BaseValuePlus1': lavaFunc(
+                    bonusDetails['funcType'],
+                    min(maxFarmingCrops, self.farming['CropsUnlocked'] + 1),
+                    bonusDetails['x1'],
+                    bonusDetails['x2']
+                ),
+                'MaxValue': lavaFunc(
+                    bonusDetails['funcType'],
+                    maxFarmingCrops,
+                    bonusDetails['x1'],
+                    bonusDetails['x2']
+                ),
+                'Value': 0,
+                'ValuePlus1': 0,
+            }
+
     def _parse_w6_farming_markets(self, rawMarkets):
-        if isinstance(rawMarkets, list):
-            for marketUpgradeIndex, marketUpgradeName in enumerate(marketUpgradeList):
-                try:
-                    self.farming["MarketUpgrades"][marketUpgradeName] = rawMarkets[marketUpgradeIndex + 2]
-                except:
-                    self.farming["MarketUpgrades"][marketUpgradeName] = 0
+        for marketUpgradeIndex, marketUpgrade in enumerate(marketUpgradeDetails):
+            try:
+                self.farming["MarketUpgrades"][marketUpgrade[0].replace('_', ' ').title()] = {
+                    'Level': rawMarkets[marketUpgradeIndex + 2],
+                    'Description': marketUpgrade[1].replace('_', ' '),
+                    'Value': rawMarkets[marketUpgradeIndex + 2] * float(marketUpgrade[8]),
+                    'UpgradesAtSameCrop': int(marketUpgrade[2]),
+                    'CropTypeValue': float(marketUpgrade[3]),
+                    'BaseCost': int(marketUpgrade[4]),
+                    'CostIncrement': float(marketUpgrade[5]),
+                    'UnlockRequirement': int(marketUpgrade[6]),
+                    'MaxLevel': int(marketUpgrade[7]),
+                    'BonusPerLevel': float(marketUpgrade[8]),
+                    'MarketType': 'Day' if marketUpgradeIndex < 8 else 'Night'
+                }
+            except:
+                self.farming["MarketUpgrades"][marketUpgrade[0].title()] = {
+                    'Level': 0,
+                    'Description': marketUpgrade[1].replace('_', ' '),
+                    'Value': 0,
+                    'UpgradesAtSameCrop': marketUpgrade[2],
+                    'CropTypeValue': marketUpgrade[3],
+                    'BaseCost': marketUpgrade[4],
+                    'CostIncrement': marketUpgrade[5],
+                    'UnlockRequirement': marketUpgrade[6],
+                    'MaxLevel': marketUpgrade[7],
+                    'BonusPerLevel': marketUpgrade[8],
+                    'MarketType': 'Day' if marketUpgradeIndex < 8 else 'Night'
+                }
 
     def _parse_w6_farming_land_ranks(self, rawRanks):
         if isinstance(rawRanks, list):
@@ -3318,9 +3373,10 @@ class Account:
         if self.labBonuses["Spelunker Obol"]["Enabled"]:
             jewelMulti = self.labBonuses["Spelunker Obol"]["Value"]
             if self.labJewels["Pure Opal Navette"]["Enabled"]:  # Nested since jewel does nothing without spelunker
+                self.labBonuses["Spelunker Obol"]["Value"] += self.labJewels["Pure Opal Navette"]["BaseValue"] / 100
                 jewelMulti += self.labJewels["Pure Opal Navette"]["BaseValue"] / 100  # The displayed value does nothing since the effect is used before spelunker obol is accounted for
         for jewel in self.labJewels:
-            self.labJewels[jewel]["Value"] *= jewelMulti
+            self.labJewels[jewel]["Value"] *= jewelMulti if jewel != 'Pure Opal Navette' else 1
 
     def _calculate_w4_meal_multi(self):
         mealMulti = 1
@@ -3613,7 +3669,36 @@ class Account:
         return ceil(cost)
 
     def _calculate_w6(self):
+        self._calculate_w6_farming()
         self._calculate_w6_summoning_winner_bonuses()
+
+    def _calculate_w6_farming(self):
+        self._calculate_w6_farming_crop_depot()
+        self._calculate_w6_farming_day_market()
+        self._calculate_w6_farming_night_market()
+
+    def _calculate_w6_farming_crop_depot(self):
+        lab_multi = 1 + ((
+            (self.labBonuses['Depot Studies PhD']['Value'] + self.labJewels['Pure Opal Rhombol']['Value']) * self.labBonuses['Depot Studies PhD']['Enabled']
+        ) / 100)
+        #print(f"models._calculate_w6_farming_crop_depot lab_multi = {lab_multi}")
+        for bonusName, bonusDetails in self.farming['Depot'].items():
+            self.farming['Depot'][bonusName]['Value'] = self.farming['Depot'][bonusName]['BaseValue'] * lab_multi
+            self.farming['Depot'][bonusName]['ValuePlus1'] = self.farming['Depot'][bonusName]['BaseValuePlus1'] * lab_multi
+
+    def _calculate_w6_farming_day_market(self):
+        for name, details in self.farming['MarketUpgrades'].items():
+            try:
+                if "}" in details['Description']:  #Multiplicative
+                    self.farming['MarketUpgrades'][name]['Description'] = details['Description'].replace("}", f"{1 + (details['Value'] / 100):.3g}")
+                else:
+                    self.farming['MarketUpgrades'][name]['Description'] = details['Description'].replace("{", f"{details['Value']:g}")
+            except Exception as reason:
+                print(f"models._calculate_w6_farming_day_market: Exception substituting value for {name}: {reason}")
+                continue
+
+    def _calculate_w6_farming_night_market(self):
+        pass
 
     def _calculate_w6_summoning_winner_bonuses(self):
         mga = 1.3

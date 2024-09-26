@@ -170,4 +170,15 @@ $all-crops: (
     purple-glassy-corn: img('wiki/FarmCrop159.png'),
 );
 
+$crop-depot: (
+    depot-pencil: img('CropDepotPen0.png'),
+    depot-pen: img('CropDepotPen1.png'),
+    depot-marker: img('CropDepotPen2.png'),
+    depot-featherpen: img('CropDepotPen3.png'),
+    depot-green-pencil: img('CropDepotPen4.png'),
+    depot-crayon: img('CropDepotPen5.png'),
+    depot-paintbrush: img('CropDepotPen6.png'),
+);
+
 $all-farming: map-merge($seed-gifs, $all-crops);
+$all-farming: map-merge($all-farming, $crop-depot);

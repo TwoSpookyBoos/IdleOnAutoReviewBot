@@ -15,7 +15,7 @@ from w2 import alchemy, killroy, islands
 from w3 import trapping, consRefinery, consDeathNote, worship, consSaltLick, consBuildings, equinox, library, sampling, collider
 from w4 import breeding, cooking, rift
 from w5 import slab, divinity, sailing
-from w6 import beanstalk, sneaking
+from w6 import beanstalk, sneaking, farming
 
 logger = get_logger(__name__)
 
@@ -111,6 +111,7 @@ def main(inputData, runType="web"):
     ]
     # World 6
     sections_6 = [
+        section_farming := farming.setFarmingProgressionTier(),
         section_sneaking := sneaking.setSneakingProgressionTier(),
         section_beanstalk := beanstalk.section_beanstalk(),
     ]
