@@ -2904,11 +2904,19 @@ class Account:
             for upgradeIndex, upgradeValuesDict in landrankDict.items():
                 try:
                     self.farming['LandRankDatabase'][upgradeValuesDict['Name']] = {
-                        'Level': rawRanks[2][upgradeIndex]
+                        'Level': rawRanks[2][upgradeIndex],
+                        'BaseValue': upgradeValuesDict['Value'],
+                        'Value': (
+                            (1.7 * upgradeValuesDict['Value'] * rawRanks[2][upgradeIndex]) / (rawRanks[2][upgradeIndex] + 80)
+                            if upgradeIndex not in [4, 9, 14, 19]
+                            else upgradeValuesDict['Value'] * rawRanks[2][upgradeIndex]
+                        )
                     }
                 except:
                     self.farming['LandRankDatabase'][upgradeValuesDict['Name']] = {
-                        'Level': 0
+                        'Level': 0,
+                        'BaseValue': upgradeValuesDict['Value'],
+                        'Value': 0
                     }
 
     def _parse_w6_summoning(self):
@@ -3678,6 +3686,7 @@ class Account:
         self._calculate_w6_farming_crop_depot()
         self._calculate_w6_farming_day_market()
         self._calculate_w6_farming_night_market()
+        self._calculate_w6_farming_crop_value()
 
     def _calculate_w6_farming_crop_depot(self):
         lab_multi = 1 + ((
@@ -3702,19 +3711,19 @@ class Account:
                     if name == 'Super Gmo':
                         self.farming['MarketUpgrades'][name]['StackedValue'] = super_multi
                         self.farming['MarketUpgrades'][name]['Description'] += (
-                            f"<br>{self.farming['CropStacks'][name]} stacks = "
+                            f".<br>{self.farming['CropStacks'][name]} stacks = "
                             f"{super_multi:,.4g}x"
                         )
                     elif name == 'Evolution Gmo':
                         self.farming['MarketUpgrades'][name]['StackedValue'] = super_multi * pow(1 + (details['Value'] / 100), self.farming['CropStacks'][name])
                         self.farming['MarketUpgrades'][name]['Description'] += (
-                            f"<br>{self.farming['CropStacks'][name]} stacks = "
+                            f".<br>{self.farming['CropStacks'][name]} stacks = "
                             f"{self.farming['MarketUpgrades'][name]['StackedValue']:,.4g}x"
                         )
                     else:
                         self.farming['MarketUpgrades'][name]['StackedValue'] = super_multi * (1 + ((details['Value'] * self.farming['CropStacks'][name]) / 100))
                         self.farming['MarketUpgrades'][name]['Description'] += (
-                            f"<br>{self.farming['CropStacks'][name]} stacks = "
+                            f".<br>{self.farming['CropStacks'][name]} stacks = "
                             f"{self.farming['MarketUpgrades'][name]['StackedValue']:,.5g}x"
                         )
 
@@ -3724,6 +3733,30 @@ class Account:
 
     def _calculate_w6_farming_night_market(self):
         pass
+
+    def _calculate_w6_farming_crop_value(self):
+        #if ("CropsBonusValue" == e)
+        #return Math.min(100, Math.round(Math.max(1, Math.floor(1 + (c.randomFloat() + q._customBlock_FarmingStuffs("BasketUpgQTY", 0, 5) / 100))) * (1 + q._customBlock_FarmingStuffs("LandRankUpgBonusTOTAL", 1, 0) / 100) * (1 + (q._customBlock_FarmingStuffs("LankRankUpgBonus", 1, 0) * c.asNumber(a.engine.getGameAttribute("FarmRank")[0][0 | t]) + q._customBlock_Summoning("VotingBonusz", 29, 0)) / 100)));
+        self.farming['Value'] = {}
+        self.farming['Value']['Doubler Multi'] = floor(1 + (self.farming['MarketUpgrades']['Product Doubler']['Value'] / 100))
+        self.farming['Value']['Mboost Sboost Multi'] = 1 + ((
+                self.farming['LandRankDatabase']['Production Megaboost']['Value'] + self.farming['LandRankDatabase']['Production Superboost']['Value']
+        ) / 100)
+        self.farming['Value']['Pboost Ballot Multi'] = 1 + (
+            (
+                (self.farming['LandRankDatabase']['Production Boost']['Value']) * self.farming.get('LandRankMinPlot', 0)  #Value of PBoost * Lowest Plot Rank
+                + (self.ballot['Buffs'][29]['Value'] * int(self.ballot['CurrentBuff'] == 29))  #Plus value of Ballot Buff * Active status
+            )
+            / 100
+        )
+        self.farming['Value']['BeforeCap'] = round(
+            max(1, self.farming['Value']['Doubler Multi'])  #end of max
+            * self.farming['Value']['Mboost Sboost Multi']
+            * self.farming['Value']['Pboost Ballot Multi']
+            )  #end of round
+        self.farming['Value']['Final'] = min(100, self.farming['Value']['BeforeCap'])
+        #print(f"models._calculate_w6_farming_crop_value CropValue BEFORE cap = {self.farming['Value']['BeforeCap']}")
+        #print(f"models._calculate_w6_farming_crop_value CropValue AFTER cap = {self.farming['Value']['Final']}")
 
     def _calculate_w6_summoning_winner_bonuses(self):
         mga = 1.3

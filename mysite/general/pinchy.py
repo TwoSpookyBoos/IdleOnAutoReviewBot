@@ -146,13 +146,15 @@ class Placements(dict):
     RIFT = "Rift"
     DIVINITY = "Divinity"
     SAILING = "Sailing"
+    FARMING = "Farming"
     sections = [
         COMBAT_LEVELS, SECRET_CLASS_PATH, ACHIEVEMENTS,
         STAMPS, BRIBES, SMITHING, STATUES, STAR_SIGNS, OWL,
         BUBBLES, VIALS, P2W, SIGILS, ISLANDS,
         REFINERY, SAMPLING, SALT_LICK, DEATH_NOTE, PRAYERS, EQUINOX,
         BREEDING, COOKING, RIFT,
-        DIVINITY, SAILING
+        DIVINITY, SAILING,
+        FARMING
     ]
 
     sectionThresholds = {
@@ -183,6 +185,7 @@ class Placements(dict):
         RIFT:          [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      4,  6,  8,      9,  10, 11,     11,   99],
         DIVINITY:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  3,  5,      7,  8,  9,      10, 11, 12,     12,   99],
         SAILING:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  2,  3,      5,  7,  9,      11, 14, 16,     18,   99],
+        FARMING:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,    99],
     }
     section_count = len(sectionThresholds)
 

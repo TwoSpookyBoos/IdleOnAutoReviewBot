@@ -180,6 +180,36 @@ $crop-depot: (
     depot-paintbrush: img('CropDepotPen6.png'),
 );
 
+$landranks: (
+    evolution-boost: img('wiki/Land_Rank_Icon_Rank_1.png'),
+    production-boost: img('wiki/Land_Rank_Icon_Rank_5.png'),
+    soil-exp-boost: img('wiki/Land_Rank_Icon_Rank_20.png'),
+    evolution-megaboost: img('wiki/Land_Rank_Icon_Rank_30.png'),
+    seed-of-stealth: img('wiki/Land_Rank_Icon_Rank_60.png'),
+    farmtastic-boost: img('wiki/Land_Rank_Icon_Rank_80.png'),
+    soil-exp-megaboost: img('wiki/Land_Rank_Icon_Rank_125.png'),
+    overgrowth-boost: img('wiki/Land_Rank_Icon_Rank_180.png'),
+    production-megaboost: img('wiki/Land_Rank_Icon_Rank_250.png'),
+    seed-of-loot: img('wiki/Land_Rank_Icon_Rank_400.png'),
+    evolution-superboost: img('wiki/Land_Rank_Icon_Rank_500.png'),
+    overgrowth-megaboost: img('wiki/Land_Rank_Icon_Rank_600.png'),
+    farmtastic-megaboost: img('wiki/Land_Rank_Icon_Rank_700.png'),
+    soil-exp-superboost: img('wiki/Land_Rank_Icon_Rank_900.png'),
+    seed-of-damage: img('wiki/Land_Rank_Icon_Rank_1200.png'),
+    evolution-ultraboost: img('wiki/Land_Rank_Icon_Rank_1300.png'),
+    farmtastic-superboost: img('wiki/Land_Rank_Icon_Rank_1500.png'),
+    production-superboost: img('wiki/Land_Rank_Icon_Rank_1750.png'),
+    overgrowth-superboost: img('wiki/Land_Rank_Icon_Rank_2000.png'),
+    seed-of-stats: img('wiki/Land_Rank_Icon_Rank_3500.png'),
+    landrank-1: img('wiki/RankStar0.png'),
+    landrank-2: img('wiki/RankStar1.png'),
+    landrank-3: img('wiki/RankStar2.png'),
+    landrank-4: img('wiki/RankStar3.png'),
+    landrank-5: img('wiki/RankStar4.png'),
+    landrank-6: img('wiki/RankStar5.png'),
+    landrank-7: img('wiki/RankStar6.png'),
+);
+
 $farming-ui: (
     day-market: img('wiki/Day_Market.png'),
     night-market: img('wiki/Night_Market.png'),
@@ -188,4 +218,5 @@ $farming-ui: (
 
 $all-farming: map-merge($seed-gifs, $all-crops);
 $all-farming: map-merge($all-farming, $crop-depot);
+$all-farming: map-merge($all-farming, $landranks);
 $all-farming: map-merge($all-farming, $farming-ui);
