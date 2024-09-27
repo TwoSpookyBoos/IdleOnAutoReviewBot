@@ -1682,7 +1682,7 @@ farming_progressionTiers = {
     2: {},  #{'Night Market': {'Land Rank': 1}},
     3: {},  #{'Crops Unlocked': 120, 'LandRankMinPlot': 50},
     4: {},  #{'Crops Unlocked': 140, 'LandRankMinPlot': 75},
-    5: {},  #{'Crops Unlocked': 160, 'LandRankMinPlot': 100,'Night Market': {'Super Gmo': 50,},},
+    5: {},  #{'Crops Unlocked': 160, 'LandRankMinPlot': 100,'Night Market': {},},
     6: {
         'Farming Level': 300,
         'Day Market': {
@@ -1696,6 +1696,7 @@ farming_progressionTiers = {
             'Speed Gmo': 80,
             'Og Fertilizer': 200,
             'Exp Gmo': 100,
+            'Super Gmo': 50,
         },
         'Land Ranks': {
             'Seed of Stealth': 1,
@@ -3764,7 +3765,7 @@ stamp_maxes = {
     #Misc
     "Crystallin": 270,
     "Forge Stamp": 230,
-    "Biblio Stamp": 64,
+    "Biblio Stamp": 66,
     "Sigil Stamp": 324,
 }
 stampsDict = {

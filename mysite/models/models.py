@@ -2890,34 +2890,33 @@ class Account:
                 }
 
     def _parse_w6_farming_land_ranks(self, rawRanks):
-        if isinstance(rawRanks, list):
+        try:
+            self.farming['LandRankPlotRanks'] = rawRanks[0]
+            self.farming['LandRankTotalRanks'] = sum(rawRanks[0])
+            self.farming['LandRankMinPlot'] = min(rawRanks[0], default=0)
+            self.farming['LandRankMaxPlot'] = max(rawRanks[0], default=0)
+        except:
+            self.farming['LandRankPlotRanks'] = [0]*36
+            self.farming['LandRankTotalRanks'] = 0
+            self.farming['LandRankMinPlot'] = 0
+            self.farming['LandRankMaxPlot'] = 0
+        for upgradeIndex, upgradeValuesDict in landrankDict.items():
             try:
-                self.farming['LandRankPlotRanks'] = rawRanks[0]
-                self.farming['LandRankTotalRanks'] = sum(rawRanks[0])
-                self.farming['LandRankMinPlot'] = min(rawRanks[0], default=0)
-                self.farming['LandRankMinPlot'] = max(rawRanks[0], default=0)
+                self.farming['LandRankDatabase'][upgradeValuesDict['Name']] = {
+                    'Level': rawRanks[2][upgradeIndex],
+                    'BaseValue': upgradeValuesDict['Value'],
+                    'Value': (
+                        (1.7 * upgradeValuesDict['Value'] * rawRanks[2][upgradeIndex]) / (rawRanks[2][upgradeIndex] + 80)
+                        if upgradeIndex not in [4, 9, 14, 19]
+                        else upgradeValuesDict['Value'] * rawRanks[2][upgradeIndex]
+                    )
+                }
             except:
-                self.farming['LandRankPlotRanks'] = [0]*36
-                self.farming['LandRankTotalRanks'] = 0
-                self.farming['LandRankMinPlot'] = 0
-                self.farming['LandRankMinPlot'] = 0
-            for upgradeIndex, upgradeValuesDict in landrankDict.items():
-                try:
-                    self.farming['LandRankDatabase'][upgradeValuesDict['Name']] = {
-                        'Level': rawRanks[2][upgradeIndex],
-                        'BaseValue': upgradeValuesDict['Value'],
-                        'Value': (
-                            (1.7 * upgradeValuesDict['Value'] * rawRanks[2][upgradeIndex]) / (rawRanks[2][upgradeIndex] + 80)
-                            if upgradeIndex not in [4, 9, 14, 19]
-                            else upgradeValuesDict['Value'] * rawRanks[2][upgradeIndex]
-                        )
-                    }
-                except:
-                    self.farming['LandRankDatabase'][upgradeValuesDict['Name']] = {
-                        'Level': 0,
-                        'BaseValue': upgradeValuesDict['Value'],
-                        'Value': 0
-                    }
+                self.farming['LandRankDatabase'][upgradeValuesDict['Name']] = {
+                    'Level': 0,
+                    'BaseValue': upgradeValuesDict['Value'],
+                    'Value': 0
+                }
 
     def _parse_w6_summoning(self):
         self.summoning = {}
@@ -3742,19 +3741,35 @@ class Account:
         self.farming['Value']['Mboost Sboost Multi'] = 1 + ((
                 self.farming['LandRankDatabase']['Production Megaboost']['Value'] + self.farming['LandRankDatabase']['Production Superboost']['Value']
         ) / 100)
-        self.farming['Value']['Pboost Ballot Multi'] = 1 + (
+        #Calculate with the Min Plot Rank
+        self.farming['Value']['Pboost Ballot Multi Min'] = 1 + (
             (
                 (self.farming['LandRankDatabase']['Production Boost']['Value']) * self.farming.get('LandRankMinPlot', 0)  #Value of PBoost * Lowest Plot Rank
                 + (self.ballot['Buffs'][29]['Value'] * int(self.ballot['CurrentBuff'] == 29))  #Plus value of Ballot Buff * Active status
             )
             / 100
         )
-        self.farming['Value']['BeforeCap'] = round(
+        self.farming['Value']['BeforeCapMin'] = round(
             max(1, self.farming['Value']['Doubler Multi'])  #end of max
             * self.farming['Value']['Mboost Sboost Multi']
-            * self.farming['Value']['Pboost Ballot Multi']
+            * self.farming['Value']['Pboost Ballot Multi Min']
             )  #end of round
-        self.farming['Value']['Final'] = min(100, self.farming['Value']['BeforeCap'])
+
+        #Now calculate with the Max Plot Rank
+        self.farming['Value']['Pboost Ballot Multi Max'] = 1 + (
+            (
+                (self.farming['LandRankDatabase']['Production Boost']['Value']) * self.farming.get('LandRankMaxPlot', 0)  # Value of PBoost * Highest Plot Rank
+                + (self.ballot['Buffs'][29]['Value'] * int(self.ballot['CurrentBuff'] == 29))  # Plus value of Ballot Buff * Active status
+            )
+            / 100
+        )
+        self.farming['Value']['BeforeCapMax'] = round(
+            max(1, self.farming['Value']['Doubler Multi'])  # end of max
+            * self.farming['Value']['Mboost Sboost Multi']
+            * self.farming['Value']['Pboost Ballot Multi Max']
+        )  # end of round
+        self.farming['Value']['FinalMin'] = min(100, self.farming['Value']['BeforeCapMin'])
+        self.farming['Value']['FinalMax'] = min(100, self.farming['Value']['BeforeCapMax'])
         #print(f"models._calculate_w6_farming_crop_value CropValue BEFORE cap = {self.farming['Value']['BeforeCap']}")
         #print(f"models._calculate_w6_farming_crop_value CropValue AFTER cap = {self.farming['Value']['Final']}")
 
@@ -4000,24 +4015,10 @@ class Account:
                 print(f"Character Specific crystal spawn chance calc exception for {char.character_name}: {reason}")
                 character_influenced = 1
             char.setCrystalSpawnChance(account_wide * character_influenced)
-            # print(f"Base Chance: {base_crystal_chance}")
-            # print(f"Crystallin Stamp Multi: { 1 + self.stamps['Crystallin']['Value'] / 100}")
-            # print(f"Total card Multi including doublers: {1 + total_card_chance / 100}")
-            # print(f"~Account Wide Total: {account_wide}")
-            # print(f"Cmon Out Crystals Multi: {cmon_out_crystals_multi}")
-            # print(f"Crystals 4 Dayys Multi: {crystals_4_dayys_multi}")
-            # print(f"Crystal Shrine including Chaotic Chizoar: {self.shrines['Crescent Shrine']['Value']}")
-            # print(f"PO Box: {char.po_boxes_invested['Non Predatory Loot Box']['Bonus3Value']}")
-            # print(f"Shrine + PO Multi: {shrine_and_po}")
-            # print(f"~Character Specific Total: {character_influenced}")
-            # print(f"Final number: {char.crystal_spawn_chance}")
-            # print(f"Final percent: {char.crystal_spawn_chance:%}")
         self.highest_crystal_spawn_chance = max([char.crystal_spawn_chance for char in self.all_characters if "Journeyman" not in char.all_classes],
                                                 default=base_crystal_chance)
         self.highest_jman_crystal_spawn_chance = max([char.crystal_spawn_chance for char in self.all_characters if "Journeyman" in char.all_classes],
                                                      default=base_crystal_chance)
-        # print(f"Best Non-Jman: {self.highest_crystal_spawn_chance:%}")
-        # print(f"Best Jman: {self.highest_jman_crystal_spawn_chance:%}")
 
     def _make_cards(self):
         card_counts = safe_loads(self.raw_data.get(self._key_cards, {}))

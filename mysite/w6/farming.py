@@ -145,8 +145,8 @@ def getCropValueAdviceGroup():
     val = session_data.account.farming['Value']
     mga = f"Multi Group A: {val['Doubler Multi']:.2f}"
     mgb = f"Multi Group B: {val['Mboost Sboost Multi']:.2f}"
-    mgc = f"Multi Group C: {val['Pboost Ballot Multi']:.2f}"
-    final = f"Conclusion: You are {'NOT capped' if val['Final'] < 100 else ''}{'overcapped' if val['BeforeCap'] > 120 else ''}"
+    mgc = f"Multi Group C: {val['Pboost Ballot Multi Min']:.2f} to {val['Pboost Ballot Multi Max']:.2f}"
+    final = f"Conclusion: You are {'NOT capped on Lowest plots' if val['FinalMin'] < 100 else ''}{'overcapped on Lowest plots' if val['BeforeCapMin'] > 120 else ''}"
     value_advices = {
         mga: [],
         mgb: [],
@@ -179,9 +179,19 @@ def getCropValueAdviceGroup():
         label=f"Minimum Land Rank: {session_data.account.farming.get('LandRankMinPlot', 0)}",
         picture_class=getLandRankImage(session_data.account.farming.get('LandRankMinPlot', 0)),
     ))
+    # value_advices[mgc].append(Advice(
+    #     label=f"Land Rank: Production Boost: {session_data.account.farming['LandRankDatabase']['Production Boost']['Value']:.3f} per land rank."
+    #           f"<br>Total on Lowest: {session_data.account.farming['LandRankDatabase']['Production Boost']['Value'] * session_data.account.farming.get('LandRankMinPlot', 0):.3f}",
+    #     picture_class='production-boost',
+    # ))
+    value_advices[mgc].append(Advice(
+        label=f"Maximum Land Rank: {session_data.account.farming.get('LandRankMaxPlot', 0)}",
+        picture_class=getLandRankImage(session_data.account.farming.get('LandRankMaxPlot', 0)),
+    ))
     value_advices[mgc].append(Advice(
         label=f"Land Rank: Production Boost: {session_data.account.farming['LandRankDatabase']['Production Boost']['Value']:.3f} per land rank."
-              f"<br>Total: {session_data.account.farming['LandRankDatabase']['Production Boost']['Value'] * session_data.account.farming.get('LandRankMinPlot', 0):.3f}",
+              f"<br>Total on Lowest: {session_data.account.farming['LandRankDatabase']['Production Boost']['Value'] * session_data.account.farming.get('LandRankMinPlot', 0):.3f}"
+              f"<br>Total on Highest: {session_data.account.farming['LandRankDatabase']['Production Boost']['Value'] * session_data.account.farming.get('LandRankMaxPlot', 0):.3f}",
         picture_class='production-boost',
     ))
     ballot_active = session_data.account.ballot['CurrentBuff'] == 29
@@ -203,14 +213,19 @@ def getCropValueAdviceGroup():
 
     #Final
     value_advices[final].append(Advice(
-        label=f"Total before hidden 100x cap",
-        picture_class='',
-        progression=val['BeforeCap'],
+        label=f"Total on Lowest ranked plot",
+        picture_class='crop-scientist',
+        progression=val['BeforeCapMin'],
         goal=100
     ))
     value_advices[final].append(Advice(
-        label=f"Hey wait, what about Night Market Value GMO??"
-              f"<br>Sorry mate, Lava hasn't implemented it 😭",
+        label=f"Total on Highest ranked plot",
+        picture_class='crop-scientist',
+        progression=val['BeforeCapMax'],
+        goal=100
+    ))
+    value_advices[final].append(Advice(
+        label=f"Lava hasn't implemented Night Market Value GMO 😭",
         picture_class='night-market',
         progression="Lava",
         goal="Pls"
