@@ -1,33 +1,26 @@
 import hashlib
 import os
+from pathlib import Path
 
 from flask import url_for
 
 from config import app
 
 
-def get_resource(dir_: str, filename: str, autoversion: bool = False) -> str:
-    path = f"{dir_}/{filename}"
-    suffix = ""
+def get_resource(dir_: str, filename: str) -> str:
+    path = Path(dir_) / filename
 
-    # cache invalidation
-    if autoversion:
-        full_path = os.path.join(app.static_folder, path)
-        mtime = os.path.getmtime(full_path)
-        suffix = hashlib.md5(str(mtime).encode()).hexdigest()[:8]
-        suffix = f"?v={suffix}"
-
-    return url_for("static", filename=f"{path}") + suffix
+    return url_for("static", filename=path.as_posix())
 
 
 @app.template_filter("style")
 def style(filename: str):
-    return get_resource("styles", f"{filename}.css", True)
+    return get_resource("styles", f"{filename}.css")
 
 
 @app.template_filter("script")
 def script(filename: str):
-    return get_resource("scripts", f"{filename}.js", True)
+    return get_resource("scripts", f"{filename}.js")
 
 
 @app.template_filter("img")

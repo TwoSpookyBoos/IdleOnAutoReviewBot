@@ -20,6 +20,7 @@ app.config.update(dict(
     KOFI="https://ko-fi.com/W7W4SRUK5",
     LAVA="https://twitter.com/lavaflame2",
     DOMAIN="ieautoreview-scoli.pythonanywhere.com",
+    CACHE_SHA=os.getenv("CACHE_SHA", ""),
 
 ))
 app.config.update(dict(
