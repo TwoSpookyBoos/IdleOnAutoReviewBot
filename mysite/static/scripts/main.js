@@ -587,6 +587,59 @@ function initResultsUI() {
     applyShowMoreButton()
     setupDataClock()
     calcProgressBars(document)
+    handleParallax()
+}
+
+function handleParallax() {
+    const background = document.getElementById('backgrounds');
+
+    let dominantElement = null;
+    let dominantBackground = null;
+
+    const switchBackground = () => {
+        Array.from(background.children).forEach(bg => bg.style.opacity = "0");
+        const backgroundToFocus = document.getElementById(dominantElement.bg);
+        if (backgroundToFocus) {
+            backgroundToFocus.style.opacity = "1";
+        }
+        dominantBackground = backgroundToFocus;
+    }
+
+    const translateBackground = () => {
+        const bgHeight = background.getBoundingClientRect().height;
+        const bgHeightDiff = (bgHeight - window.innerHeight) / bgHeight * 100;
+        const focusedArticle = dominantElement.article
+        const scrollPercentage = (dominantElement.top - window.innerHeight / 2) / -focusedArticle.scrollHeight;
+        dominantBackground.style.transform = `translateY(-${scrollPercentage * bgHeightDiff}%)`;
+    }
+
+    const findDominantElement = () => {
+        const screenCenter = window.innerHeight / 2;
+
+        dominantElement = Array.from(document.querySelectorAll("article"))
+        .map((article, index) => {
+            const rect = article.getBoundingClientRect();
+            return { bg: `bg-${article.id}`, article: article, top: rect.top, bottom: rect.bottom, height: rect.height };
+        })
+        .find(article => {
+            const dominatesTop = article.top <= 0 && article.bottom > screenCenter;
+            const dominatesMiddle = article.top >= 0 && article.bottom <= window.innerHeight && article.height >= screenCenter;
+            const dominatesBottom = article.top <= screenCenter && article.bottom > window.innerHeight;
+            return dominatesTop | dominatesMiddle | dominatesBottom;
+        });
+    }
+
+    const updateParallax = () => {
+        findDominantElement()
+        switchBackground()
+        if (dominantBackground) {
+            translateBackground()
+        }
+    }
+
+    document.querySelector('.container-fluid').onscroll = updateParallax;
+    window.addEventListener('resize', updateParallax);
+    updateParallax();
 }
 
 document.addEventListener("DOMContentLoaded", () => {

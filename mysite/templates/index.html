@@ -13,6 +13,7 @@
         <link rel="stylesheet" type="text/css" href="{{ "javascript-blocked"|style }}">
         <link rel="stylesheet" type="text/css" href="{{ "error"|style }}">
         <link rel="stylesheet" type="text/css" href="{{ "spin"|style }}">
+        <link rel="stylesheet" type="text/css" href="{{ "parallax"|style }}">
         <link rel="stylesheet" type="text/css" href="{{ "jquery-eu-biscuit-law-popup"|style }}"/>
 
         <link rel="icon" href="{{ "pinchy_64x64.png"|img }}" type="image/png">
@@ -43,6 +44,7 @@
         </style>
     </head>
     <body class="eupopup eupopup-block eupopup-style-compact">
+        {% include 'backgrounds.html' %}
         <div id="drawer-handle"{% if handedness %} class="lefty"{% endif %}>
             <div class="hamburger">
                 <span class="bar bar1"></span>
