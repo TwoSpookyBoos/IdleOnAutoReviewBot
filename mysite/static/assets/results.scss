@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&display=swap&family=Rubik:ital,wght@0,300..900;1,300..900&family=Roboto:wght@100;400;500&display=swap');
+@import 'vars';
 
 @font-face {
     font-family: 'Space Mono';
@@ -19,9 +20,14 @@
     inherits: false;
 }
 
+@function fg-subheading-dark-mode($h) {
+    @return hsla($h, 25%, 65%, 100%);
+}
+
 :root,
 :root.dark-mode {
     --fg: white;
+    --fg-shadow: 1px 1px black;
     --bg: hsla(206deg, 16%, 26%, 1);
 
     --fg-em: hsla(0deg, 2%, 82%, 1);
@@ -37,76 +43,13 @@
     --border-error: 1px solid darkred;
 
     --fg-subheading: goldenrod;
-    --fg-subheading-progress: lightgoldenrodyellow;
+    --fg-subheading-progress: hsla(49deg, 100%, 50%, 1);
     --fg-subheading-finished: springgreen;
     --bg-subheading: hsla(0deg, 0%, 100%, 0.1);
     --border-subheading: hsla(0deg, 100%, 100%, 0.3);
     --fg-goal-complete: goldenrod;
 
-    --bg-pinchy: hsla(52deg, 100%, 50%, 20%);
-    --bg-pinchy-banner: linear-gradient(to right, hsla(0deg, 0%, 0%, 45%), hsla(0deg, 0%, 0%, 20%));
-    --fg-pinchy-title: var(--fg-title);
-    --bg-pinchy-group-odd: hsl(71.54deg 13.68% 37.25%);
-    --bg-pinchy-group-even: hsl(70deg 15.38% 30.59%);
-    --fg-pinchy-subheading: hsla(41deg, 98.23%, 90.3%, 100%);
-    --fg-pinchy-subheading-accent: hsla(44deg, 100%, 50%, 100%);
-
-    --bg-general: linear-gradient(to bottom, hsla(312deg, 95%, 7%, 1), hsla(326deg, 91%, 21%, 1), hsla(8deg, 69%, 33%, 1));
-    --general-fg-subheading: hsla(15deg, 25%, 65%, 1);
-    --general-bg-subheading: hsla(15deg, 100%, 87%, 0.1);
-
-    --general-fg-advice-group: hsla(15deg, 100%, 96%, 1);
-    --general-bg-advice-group-odd: hsla(15deg, 42%, 69%, 0.3);
-    --general-bg-advice-group-even: hsla(15deg, 52%, 73%, 0.6);
-
-    --w1-fg-subheading: darkseagreen;
-    --w1-bg-subheading: hsla(122deg, 100%, 87%, 0.1);
-
-    --w1-fg-advice-group: hsl(120deg, 100%, 96%);
-    --w1-bg-advice-group-odd: hsl(173.79deg 15.18% 37.45%);
-    --w1-bg-advice-group-even: hsl(148.75deg 20.34% 53.73%);
-
-    --w2-fg-subheading: hsl(50, 25%, 65%);
-    --w2-bg-subheading: hsla(50, 100%, 86%, 0.1);
-
-    --w2-fg-advice-group: hsl(50, 100%, 96%);
-    --w2-bg-advice-group-odd: hsl(93.33deg 4.43% 39.8%);
-    --w2-bg-advice-group-even: hsl(60deg 9.45% 49.8%);
-
-    --w3-fg-subheading: hsl(200, 25%, 65%);
-    --w3-bg-subheading: hsla(200, 100%, 86%, 0.1);
-
-    --w3-fg-advice-group: hsl(200, 100%, 96%);
-    --w3-bg-advice-group-odd: hsl(202.29deg 17.77% 38.63%);
-    --w3-bg-advice-group-even: hsl(201.7deg 18.58% 49.61%);
-
-    --w4-fg-subheading: hsl(247, 100%, 96%);
-    --w4-bg-subheading: hsla(282.5, 77.9%, 27.9%, .4);
-
-    --w4-fg-advice-group: hsl(247, 100%, 96%);
-    --w4-bg-advice-group-odd: hsl(268deg 25% 48%);
-    --w4-bg-advice-group-even: hsl(265deg 24% 34%);
-
-    --w5-fg-subheading: hsl(15, 100%, 96%);
-    --w5-bg-subheading: hsla(15, 78%, 28%, 0.4);
-
-    --w5-fg-advice-group: hsl(15deg, 100%, 96%);
-    --w5-bg-advice-group-odd: hsl(15deg 25% 48%);
-    --w5-bg-advice-group-even: hsl(15deg 24% 34%);
-
-    --caverns-fg-subheading: hsl(15, 100%, 96%);
-    --caverns-bg-subheading: hsla(15, 78%, 28%, 0.4);
-
-    --caverns-fg-advice-group: hsl(15deg, 100%, 96%);
-    --caverns-bg-advice-group-odd: hsl(15deg 25% 48%);
-    --caverns-bg-advice-group-even: hsl(15deg 24% 34%);
-
-    --w6-fg-subheading: hsl(165, 100%, 96%);
-    --w6-bg-subheading: hsla(155, 78%, 28%, 0.4);
-
-    --w6-fg-advice-group: hsl(167deg, 100%, 96%);
-    --w6-bg-advice-group-odd: hsl(178, 25%, 48%);
-    --w6-bg-advice-group-even: hsl(161, 24%, 34%);
+    --fg-advice-group: white;
 
     --bg-scrollbar-thumb: gray;
     --scrollbar-thumb-color: rgba(255, 255, 255, 0.7);
@@ -120,78 +63,204 @@
     --bg-header-json: #8e6c19;
     --bg-header-public: var(--bg-pinchy);
 
-    --progress-color: rgba(0, 0, 0, 0.3);
+    --fg-subheading-alpha: 100%;
+
+    --pinchy-bg-banner: none;
+    --pinchy-fg-banner: var(--fg-title);
+    --pinchy-fg-banner-shadow: 5px 5px hsl(41, 27%, 28%);
+
+    --pinchy-fg-subheading: fg-subheading-dark-mode(41deg);
+    --pinchy-bg-subheading: none;
+
+    --pinchy-fg-advice-group: var(--fg-advice-group);
+    --pinchy-bg-advice-group-odd: hsl(71.54deg 13.68% 37.25%);
+    --pinchy-bg-advice-group-even: hsl(70deg 15.38% 30.59%);
+    --pinchy-progress-color: var(--progress-color);
+
+    --general-bg-banner: none;
+    --general-fg-banner: hsl(0, 74%, 49%);
+    --general-fg-banner-shadow: 5px 5px hsl(0, 27%, 28%);
+
+    --general-fg-subheading: fg-subheading-dark-mode(15deg);
+    --general-bg-subheading: none;
+
+    --general-fg-advice-group: var(--fg-advice-group);
+    --general-bg-advice-group-odd: hsl(15deg 18.78% 44.08%);
+    --general-bg-advice-group-even: hsl(15deg 21.16% 54.09%);
+    --general-progress-color: var(--progress-color);
+
+    --blunder-hills-fg-subheading: fg-subheading-dark-mode(120deg);
+    --blunder-hills-bg-subheading: none;
+
+    --blunder-hills-fg-advice-group: var(--fg-advice-group);
+    --blunder-hills-bg-advice-group-odd: hsl(173.79deg 15.18% 37.45%);
+    --blunder-hills-bg-advice-group-even: hsl(148.75deg 20.34% 53.73%);
+    --blunder-hills-progress-color: var(--progress-color);
+
+    --yum-yum-desert-fg-subheading: fg-subheading-dark-mode(50deg);
+    --yum-yum-desert-bg-subheading: none;
+
+    --yum-yum-desert-fg-advice-group: var(--fg-advice-group);
+    --yum-yum-desert-bg-advice-group-odd: hsl(93.33deg 4.43% 39.8%);
+    --yum-yum-desert-bg-advice-group-even: hsl(60deg 9.45% 49.8%);
+    --yum-yum-desert-progress-color: var(--progress-color);
+
+    --frostbite-tundra-fg-subheading: fg-subheading-dark-mode(200deg);
+    --frostbite-tundra-bg-subheading: none;
+
+    --frostbite-tundra-fg-advice-group: var(--fg-advice-group);
+    --frostbite-tundra-bg-advice-group-odd: hsl(202.29deg 17.77% 38.63%);
+    --frostbite-tundra-bg-advice-group-even: hsl(201.7deg 18.58% 49.61%);
+    --frostbite-tundra-progress-color: var(--progress-color);
+
+    --hyperion-nebula-fg-subheading: fg-subheading-dark-mode(247deg);
+    --hyperion-nebula-bg-subheading: none;
+
+    --hyperion-nebula-fg-advice-group: var(--fg-advice-group);
+    --hyperion-nebula-bg-advice-group-odd: hsl(268deg 25% 48%);
+    --hyperion-nebula-bg-advice-group-even: hsl(265deg 24% 34%);
+    --hyperion-nebula-progress-color: var(--progress-color);
+
+    --smolderin-plateau-fg-subheading: fg-subheading-dark-mode(15deg);
+    --smolderin-plateau-bg-subheading: none;
+
+    --smolderin-plateau-fg-advice-group: var(--fg-advice-group);
+    --smolderin-plateau-bg-advice-group-odd: hsl(15deg 25% 48%);
+    --smolderin-plateau-bg-advice-group-even: hsl(15deg 24% 34%);
+    --smolderin-plateau-progress-color: var(--progress-color);
+
+    --caverns-bg-banner: none;
+    --caverns-fg-banner: hsl(271, 74%, 49%);
+    --caverns-fg-banner-shadow: 5px 5px hsl(271, 27%, 28%);
+
+    --caverns-fg-subheading: hsl(15, 100%, 96%);
+    --caverns-bg-subheading: none;
+
+    --caverns-fg-advice-group: hsl(15deg, 100%, 96%);
+    --caverns-bg-advice-group-odd: hsl(15deg, 25%, 48%);
+    --caverns-bg-advice-group-even: hsl(15deg, 24%, 34%);
+    --caverns-progress-color: var(--progress-color);
+
+    --spirited-valley-fg-subheading: fg-subheading-dark-mode(165deg);
+    --spirited-valley-bg-subheading: none;
+
+    --spirited-valley-fg-advice-group: var(--fg-advice-group);
+    --spirited-valley-bg-advice-group-odd: hsl(178deg, 25%, 48%);
+    --spirited-valley-bg-advice-group-even: hsl(161deg, 24%, 34%);
+    --spirited-valley-progress-color: var(--progress-color);
+
+    --banner-display-light: none;
+    --banner-display-dark: block;
+    --banner-padding: 0;
+
+    --progress-color: hsla(0deg, 0%, 0%, 0.3);
+    --progress-box-bg: hsla(0deg, 0%, 0%, 0.2);
+}
+
+:root:not(.light-mode) {
+    #backgrounds {
+        display: none;
+    }
+}
+
+@function fg-subheading-light-mode($h) {
+    @return hsla($h, 25%, 20%, 100%);
+}
+
+@function fg-progress-bar-light-mode($h) {
+    @return hsla($h, 50%, 50%, 0.6);
 }
 
 :root.light-mode {
     --fg: black;
-    --bg: hsla(0deg, 0%, 89%);
+    --fg-shadow: none;
+    --bg: none;
 
     --fg-em: black;
-    --fg-link: hsla(221deg, 100%, 54%);
-    --fg-link-visited: hsla(271deg, 100%, 54%);
     --fg-title: green;
 
     --arrow-border: #7d7d7d;
+    --bg-transparent: #fffb;
 
     --bg-aside: white;
     --bg-link: transparent;
     --bg-link-visited: transparent;
 
-    --fg-subheading: black;
-    --fg-subheading-progress: darkred;
-    --fg-subheading-finished: darkgreen;
+    --fg-subheading: white;
+    --fg-subheading-progress: hsla(49deg, 100%, 35%, 100%);
+    --fg-subheading-finished: hsla(120deg, 100%, 35%, 100%);
     --border-subheading: hsla(0deg, 100%, 0%, 0.3);
-    --fg-goal-complete: goldenrod;
+    --fg-goal-complete: hsla(43, 74%, 49%, 100%);
 
-    --fg-pinchy-title: hsla(43.94deg 93.41% 59.54%);
-    --fg-pinchy-subheading: hsla(42deg, 62%, 23%);
-    --fg-pinchy-subheading-accent: hsla(44deg, 97%, 36%);
+    --fg-advice-group: black;
 
-    --bg-pinchy-group-odd: hsl(44.21deg 46.34% 91.96%);
-    --bg-pinchy-group-even: hsl(48.75deg 20.25% 69.02%);
+    --pinchy-bg-banner: #000b;
+    --pinchy-fg-banner: hsla(43.94deg 93.41% 59.54%);
+    --pinchy-fg-banner-shadow: 2px 2px black;
 
-    --bg-general: linear-gradient(to bottom, hsla(0deg, 95%, 90%, 1), hsla(8deg, 95%, 90%, 1), hsla(16deg, 95%, 90%, 1));
-    --general-fg-subheading: hsla(0deg, 25%, 15%, 1);
-    --general-bg-subheading: hsla(0deg, 100%, 87%, 0.1);
+    --pinchy-fg-subheading: fg-subheading-light-mode(41deg);
+    --pinchy-bg-subheading: var(--bg-transparent);
 
-    --general-fg-advice-group: black;
-    --general-bg-advice-group-odd: hsla(15deg, 42%, 69%, 0.3);
-    --general-bg-advice-group-even: hsla(15deg, 52%, 73%, 0.5);
+    --pinchy-fg-advice-group: var(--fg-advice-group);
+    --pinchy-bg-advice-group-odd: var(--bg-transparent);
+    --pinchy-bg-advice-group-even: var(--bg-transparent);
+    --pinchy-progress-color: #{fg-progress-bar-light-mode(60deg)};
 
-    --w1-fg-subheading: hsla(145deg, 50%, 29%);
+    --general-bg-banner: #000b;
+    --general-fg-banner: hsl(0, 93%, 59%);
+    --general-fg-banner-shadow: 2px 2px black;
 
-    --w1-fg-advice-group: black;
-    --w1-bg-advice-group-odd: hsl(151.76deg 32.69% 79.61%);
-    --w1-bg-advice-group-even: hsl(151.15deg 39.39% 74.12%);
+    --general-fg-subheading: fg-subheading-light-mode(15deg);
+    --general-bg-subheading: var(--bg-transparent);
 
-    --w2-fg-subheading: hsl(50, 50%, 29%);
-    --w2-bg-subheading: hsla(50, 100%, 86%, 0.1);
+    --general-fg-advice-group: var(--fg-advice-group);
+    --general-bg-advice-group-odd: var(--bg-transparent);
+    --general-bg-advice-group-even: var(--bg-transparent);
+    --general-progress-color: #{fg-progress-bar-light-mode(0deg)};
 
-    --w2-fg-advice-group: black;
-    --w2-bg-advice-group-odd: hsl(50deg 29.41% 80%);
-    --w2-bg-advice-group-even: hsl(49.2deg 38.46% 74.51%);
+    --blunder-hills-fg-subheading: fg-subheading-light-mode(120deg);
+    --blunder-hills-bg-subheading: var(--bg-transparent);
 
-    --w3-fg-subheading: hsl(200, 50%, 29%);
-    --w3-bg-subheading: hsla(200, 100%, 86%, 0.1);
+    --blunder-hills-fg-advice-group: var(--fg-advice-group);
+    --blunder-hills-bg-advice-group-odd: var(--bg-transparent);
+    --blunder-hills-bg-advice-group-even: var(--bg-transparent);
+    --blunder-hills-progress-color: #{fg-progress-bar-light-mode(117.05deg)};
 
-    --w3-fg-advice-group: black;
-    --w3-bg-advice-group-odd: hsl(201.18deg 32.69% 79.61%);
-    --w3-bg-advice-group-even: hsl(201.18deg 38.93% 74.31%);
+    --yum-yum-desert-fg-subheading: fg-subheading-light-mode(50deg);
+    --yum-yum-desert-bg-subheading: var(--bg-transparent);
 
-    --w4-fg-subheading: hsl(247, 45%, 40%);
-    --w4-bg-subheading: hsl(269, 50%, 86.9%);
+    --yum-yum-desert-fg-advice-group: var(--fg-advice-group);
+    --yum-yum-desert-bg-advice-group-odd: var(--bg-transparent);
+    --yum-yum-desert-bg-advice-group-even: var(--bg-transparent);
+    --yum-yum-desert-progress-color: #{fg-progress-bar-light-mode(56.88deg)};
 
-    --w4-fg-advice-group: black;
-    --w4-bg-advice-group-odd: hsl(268deg 50.4% 77%);
-    --w4-bg-advice-group-even: hsl(265deg 40% 60%);
+    --frostbite-tundra-fg-subheading: fg-subheading-light-mode(200deg);
+    --frostbite-tundra-bg-subheading: var(--bg-transparent);
 
-    --w5-fg-subheading: hsl(15deg, 45%, 40%);
-    --w5-bg-subheading: hsl(15deg, 49%, 87%);
+    --frostbite-tundra-fg-advice-group: var(--fg-advice-group);
+    --frostbite-tundra-bg-advice-group-odd: var(--bg-transparent);
+    --frostbite-tundra-bg-advice-group-even: var(--bg-transparent);
+    --frostbite-tundra-progress-color: #{fg-progress-bar-light-mode(220deg)};
 
-    --w5-fg-advice-group: black;
-    --w5-bg-advice-group-odd: hsl(15deg, 51%, 77%);
-    --w5-bg-advice-group-even: hsl(15deg, 40%, 60%);
+    --hyperion-nebula-fg-subheading: fg-subheading-light-mode(247deg);
+    --hyperion-nebula-bg-subheading: var(--bg-transparent);
+
+    --hyperion-nebula-fg-advice-group: var(--fg-advice-group);
+    --hyperion-nebula-bg-advice-group-odd: var(--bg-transparent);
+    --hyperion-nebula-bg-advice-group-even: var(--bg-transparent);
+    --hyperion-nebula-progress-color: #{fg-progress-bar-light-mode(280.94deg)};
+
+    --smolderin-plateau-fg-subheading: fg-subheading-light-mode(15deg);
+    --smolderin-plateau-bg-subheading: var(--bg-transparent);
+
+    --smolderin-plateau-fg-advice-group: var(--fg-advice-group);
+    --smolderin-plateau-bg-advice-group-odd: var(--bg-transparent);
+    --smolderin-plateau-bg-advice-group-even: var(--bg-transparent);
+    --smolderin-plateau-progress-color: #{fg-progress-bar-light-mode(24.15deg)};
+
+    --caverns-bg-banner: #000b;
+    --caverns-fg-banner: hsl(271, 74%, 49%);
+    --caverns-fg-banner-shadow: 5px 5px black;
 
     --caverns-fg-subheading: hsl(15deg, 45%, 40%);
     --caverns-bg-subheading: hsl(15deg, 49%, 87%);
@@ -200,47 +269,49 @@
     --caverns-bg-advice-group-odd: hsl(15deg, 51%, 77%);
     --caverns-bg-advice-group-even: hsl(15deg, 40%, 60%);
 
-    --w6-fg-subheading: hsl(160, 45%, 40%);
-    --w6-bg-subheading: hsl(165, 48%, 86%);
+    --spirited-valley-fg-subheading: fg-subheading-light-mode(165deg);
+    --spirited-valley-bg-subheading: var(--bg-transparent);
 
-    --w6-fg-advice-group: black;
-    --w6-bg-advice-group-odd: hsl(160, 51%, 77%);
-    --w6-bg-advice-group-even: hsl(160, 40%, 60%);
+    --spirited-valley-fg-advice-group: var(--fg-advice-group);
+    --spirited-valley-bg-advice-group-odd: var(--bg-transparent);
+    --spirited-valley-bg-advice-group-even: var(--bg-transparent);
+    --spirited-valley-progress-color: #{fg-progress-bar-light-mode(84.57deg)};
 
     --scrollbar-thumb-color: rgba(0, 0, 0, 0.4);
 
-    --fg-show-more: white;
+    --fg-show-more: black;
     --fg-note: #70590c;
 
-    --fg-last-update: black;
+    --fg-last-update: white;
     --bg-last-update: var(--bg-nav);
 
-    --bg-header-json: #d8c394;
-    --bg-header-public: var(--bg-pinchy);
+    --bg-header-json: hsl(58.41deg 84.96% 26.08%);
+    --bg-header-public: #033f00b0;
 
-    --progress-color: rgba(255, 255, 255, 0.4);
+    --progress-color: hsla(0deg, 0%, 0%, 0.4);
+    --progress-box-bg: hsla(0deg, 0%, 50%, 0.3);
 
-    * {
-        text-shadow: none;
+    .advice-group ul.table::before,
+    .advice-group ul.table::after {
+        display: none !important;
     }
+
+    --banner-display-light: block;
+    --banner-display-dark: none;
+    --banner-padding: 1.5em 0;
 }
 
-h1, strong, em, a,
-nav, body, form, input, textarea,
-.advice-section, .advice-group,
-.tier-progress, .finished,
-.heading-wrapper > span {
-    transition: color .5s ease-in-out,
-                background-color .5s ease-in-out;
-
-    .light-mode & {
-        transition: color .5s ease-in-out,
-                    background-color .5s ease-in-out;
-    }
-}
-.arrow {
-    transition: border-left-color .5s ease-in-out;
-}
+$worlds: (
+    "pinchy",
+    "general",
+    "blunder-hills",
+    "yum-yum-desert",
+    "frostbite-tundra",
+    "hyperion-nebula",
+    "smolderin-plateau",
+    "caverns",
+    "spirited-valley"
+);
 
 a {
     color: var(--fg-link);
@@ -310,10 +381,30 @@ h1, strong {
 .hidden-children-hidden { display: none !important; }
 
 
+#veil {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: -2;
+    background-color: hsla(0deg, 0%, 0%, 0);
+    transition: background-color .5s linear,
+                z-index .5s linear;
+
+    &.sidebar-open {
+        right: 0;
+        z-index: 97;
+        background-color: hsla(0deg, 0%, 0%, 0.7);
+        transition: background-color .5s linear,
+                    z-index 0s linear;
+    }
+}
+
 body {
     display: flex;
     flex-direction: column;
-    background-color: var(--bg);
+    background: center / contain repeat img('backgrounds/sewers.png');
     color: var(--fg);
     height: 100%;
     max-height: 100vh;
@@ -337,13 +428,14 @@ body {
                 font-family: "Rubik", sans-serif;
                 font-optical-sizing: auto;
                 padding: 10px 20px;
-                border-bottom: var(--border);
                 display: flex;
                 flex-direction: row;
                 flex-wrap: wrap;
                 justify-content: space-between;
                 row-gap: 1em;
                 column-gap: 1em;
+
+                color: var(--fg-last-update);
 
                 &.json { background-color: var(--bg-header-json); }
                 &.public { background-color:var(--bg-header-public); }
@@ -352,6 +444,14 @@ body {
                     display: flex;
                     align-items: center;
                 }
+
+                #data-source-name {
+                    color: #a5c2ff;
+                    &:visited {
+                        color: #e6a5ff;
+                    }
+                }
+
                 #update-time {
                     position: relative;
                     width: fit-content;
@@ -393,15 +493,26 @@ body {
                 article {
                     font-family: 'Kode Mono', sans-serif;
                     font-variant-ligatures: none;
-                    text-shadow: 1px 1px black;
+                    text-shadow: var(--fg-shadow);
 
-                    .banner img {
-                        width: 100%;
-                        @media (max-width: 600px) {
-                            margin-left: -5vw;
-                            width: unset;
-                            max-width: unset;
-                            height: fit-content;
+                    .banner {
+                        display: flex;
+                        justify-content: center;
+                        padding: var(--banner-padding);
+                        backdrop-filter: blur(4px);
+
+                        img {
+                            @media (max-width: 600px) {
+                                max-width: 95%;
+                                height: fit-content;
+                            }
+                            &.light {
+                                display: var(--banner-display-light);
+                            }
+                            &.dark {
+                                display: var(--banner-display-dark);
+                                width: 100%;
+                            }
                         }
                     }
 
@@ -425,7 +536,7 @@ body {
                             font-family: 'Kode Mono', sans-serif;
                             font-weight: 700;
                             font-variant-ligatures: none;
-                            text-shadow: 1px 1px black;
+                            text-shadow: var(--fg-shadow);
 
                             .subheading {
                                 display: flex;
@@ -433,10 +544,6 @@ body {
                                 align-items: center;
                                 column-gap: 20px;
                                 padding: 20px;
-
-                                &.folded {
-                                    border-bottom: 1px solid var(--border-subheading);
-                                }
 
                                 img {
                                     max-width: 80px;
@@ -498,7 +605,7 @@ body {
 
                                 .note {
                                     color: var(--fg-note);
-                                    background-color: rgba(215, 178, 84, 0.62);
+                                    background-color: rgba(215, 178, 84, 100%);
                                     margin: 0;
                                 }
 
@@ -586,29 +693,9 @@ body {
                                             }
 
                                         }
-                                        .progress-box, .progress-bar {
-                                            display: block;
-                                            z-index: 0;
-                                        }
-                                        .progress-box {
-                                            position: absolute;
-                                            left: 0;
-                                            border: 3px solid var(--progress-color);
-                                            background-clip: padding-box;
-                                            width: 100%;
-                                            .progress-bar {
-                                                background: var(--progress-color);
-                                                width: calc(3 * var(--col-gap));
-                                                height: 100%;
-                                            }
-                                            &.gilded {
-                                                border: 1px solid rgba(255, 217, 0, 0.4);
-                                                box-shadow: 0 0 5px 0 inset gold;
-                                            }
-                                        }
-
                                         .advice {
                                             display: flex;
+                                            position: relative;
                                             align-items: center;
                                             word-break: break-word;
                                             padding: 3px;
@@ -617,6 +704,26 @@ body {
                                                 display: block;
                                                 content: '';
                                                 height: 40px;
+                                            }
+                                            .progress-box, .progress-bar {
+                                                display: block;
+                                                z-index: 0;
+                                            }
+                                            .progress-box {
+                                                position: absolute;
+                                                left: 0;
+                                                height: 100%;
+                                                width: 100%;
+                                                z-index: -1;
+                                                background: var(--progress-box-bg);
+
+                                                .progress-bar {
+                                                    height: 100%;
+                                                }
+                                                &.gilded {
+                                                    border: 1px solid rgba(255, 217, 0, 0.4);
+                                                    box-shadow: 0 0 5px 0 inset gold;
+                                                }
                                             }
                                         }
 
@@ -661,7 +768,7 @@ body {
                                     color: var(--fg-show-more);
                                     display: none;
                                     text-align: center;
-                                    background: hsla(0deg, 0%, 0%, 0.4);
+                                    background: hsla(0deg, 0%, 100%, 0.4);
                                     margin: 0 10px 10px;
                                     padding: 20px 0;
                                     cursor: pointer;
@@ -676,352 +783,51 @@ body {
                     }
                 }
 
-                #pinchy {
-                    background: var(--bg-pinchy);
-
-                    .banner {
-                        background: var(--bg-pinchy-banner);
-                        color: var(--fg-pinchy-title);
-                        padding: 20px;
-                    }
-
-                    .subheading {
-                        background-color: hsla(255deg, 100%, 100%, 0.1);
-
-                        & > span {
-                            color: var(--fg-pinchy-subheading);
-
-                            span {
-                                color: var(--fg-pinchy-subheading-accent);
-                            }
-                        }
-                    }
-
-                    .advice-group {
-                        --color-fade: white;
-
-                        &:nth-child(even) {
-                            background: var(--bg-pinchy-group-even);
-
-                            --table-edge-bg-to: var(--bg-pinchy-group-even);
-
-                            .table::before {
-                                //background: linear-gradient(to top, transparent, var(--table-edge-bg-to));
-                                //transition: --table-edge-bg-to .5s ease-in-out;
-                            }
-
-                            .table::after {
-                                //background: linear-gradient(to bottom, transparent, var(--table-edge-bg-to));
-                                //transition: --table-edge-bg-to .5s ease-in-out;
-                            }
-                        }
-
-                        &:nth-child(odd) {
-                            background: var(--bg-pinchy-group-odd);
-
-                            --table-edge-bg-to: var(--bg-pinchy-group-odd);
-
-                            .table::before {
-                                //background: linear-gradient(to top, transparent, var(--table-edge-bg-to));
-                                //transition: --table-edge-bg-to .5s ease-in-out;
-                            }
-
-                            .table::after {
-                                //background: linear-gradient(to bottom, transparent, var(--table-edge-bg-to));
-                                //transition: --table-edge-bg-to .5s ease-in-out;
-                            }
+                @each $world in ("pinchy", "general", "caverns") {
+                    ##{$world} {
+                        .banner {
+                            text-align: center;
+                            font-size: 3em;
+                            color: var(--#{$world}-fg-banner);
+                            padding: 20px;
+                            text-shadow: var(--#{$world}-fg-banner-shadow);
                         }
                     }
                 }
 
-                #general {
-                    background: var(--bg-general);
-
-                    .subheading {
-                        background: var(--general-bg-subheading);
-
-                        & > span {
-                            color: var(--general-fg-subheading);
-                        }
-                    }
-
-                    .advice-group {
-                        color: var(--general-fg-advice-group);
-
-                        &:nth-child(odd) {
-                            background-color: var(--general-bg-advice-group-odd);
+                @each $world in $worlds {
+                    ##{$world} {
+                        .table {
+                            scrollbar-color: var(--#{$world}-progress-color) transparent;
                         }
 
-                        &:nth-child(even) {
-                            background-color: var(--general-bg-advice-group-even);
+                        .progress-box .progress-bar {
+                            background: var(--#{$world}-progress-color);
                         }
-                    }
-                }
 
-                #blunder-hills {
-                    .subheading {
-                        background: var(--w1-bg-subheading);
+                        .subheading {
+                            background: var(--#{$world}-bg-subheading);
 
-                        & > span {
-                            color: var(--w1-fg-subheading);
-                        }
-                    }
-
-                    .advice-group {
-                        color: var(--w1-fg-advice-group);
-
-                        &:nth-child(odd) {
-                            background-color: var(--w1-bg-advice-group-odd);
-
-                            .table::before, .table::after {
-                                --table-edge-bg-to: var(--w1-bg-advice-group-odd);
+                            .heading-wrapper > span {
+                                color: var(--#{$world}-fg-subheading);
                             }
                         }
 
-                        &:nth-child(even) {
-                            background-color: var(--w1-bg-advice-group-even);
+                        .advice-group {
+                            color: var(--#{$world}-fg-advice-group);
 
-                            .table::before, .table::after {
-                                --table-edge-bg-to: var(--w1-bg-advice-group-even);
-                            }
-                        }
-                    }
-                }
+                            @each $oddity in ("odd", "even") {
+                                &:nth-child(#{$oddity}) {
+                                    background-color: var(--#{$world}-bg-advice-group-#{$oddity});
 
-                #yum-yum-desert {
-                    .subheading {
-                        background: var(--w2-bg-subheading);
-
-                        & > span {
-                            color: var(--w2-fg-subheading);
-
-                            .tier-progress {
-                                color: var(--fg-subheading-progress);
-
-                                &.finished {
-                                    color: var(--fg-subheading-finished);
+                                    .table::before, .table::after {
+                                        --table-edge-bg-to: var(--#{$world}-bg-advice-group-#{$oddity});
+                                    }
                                 }
                             }
-
-                        }
-                    }
-
-                    .advice-group {
-                        color: var(--w2-fg-advice-group);
-
-                        &:nth-child(odd) {
-                            background-color: var(--w2-bg-advice-group-odd);
-
-                            .table::before, .table::after {
-                                --table-edge-bg-to: var(--w2-bg-advice-group-odd);
-                            }
-                        }
-
-                        &:nth-child(even) {
-                            background-color: var(--w2-bg-advice-group-even);
-
-                            .table::before, .table::after {
-                                --table-edge-bg-to: var(--w2-bg-advice-group-even);
-                            }
                         }
                     }
                 }
-
-                #frostbite-tundra {
-                    .subheading {
-                        background: var(--w3-bg-subheading);
-
-                        & > span {
-                            color: var(--w3-fg-subheading);
-
-                            .tier-progress {
-                                color: var(--fg-subheading-progress);
-
-                                &.finished {
-                                    color: var(--fg-subheading-finished);
-                                }
-                            }
-
-                        }
-                    }
-
-                    .advice-group {
-                        color: var(--w3-fg-advice-group);
-
-                        &:nth-child(odd) {
-                            background-color: var(--w3-bg-advice-group-odd);
-
-                            .table::before, .table::after {
-                                --table-edge-bg-to: var(--w3-bg-advice-group-odd);
-                            }
-                        }
-
-                        &:nth-child(even) {
-                            background-color: var(--w3-bg-advice-group-even);
-
-                            .table::before, .table::after {
-                                --table-edge-bg-to: var(--w3-bg-advice-group-even);
-                            }
-                        }
-                    }
-                }
-
-                #hyperion-nebula {
-                    .subheading {
-                        background: var(--w4-bg-subheading);
-
-                        & > span {
-                            color: var(--w4-fg-subheading);
-
-                            .tier-progress {
-                                color: var(--fg-subheading-progress);
-
-                                &.finished {
-                                    color: var(--fg-subheading-finished);
-                                }
-                            }
-
-                        }
-                    }
-
-                    .advice-group {
-                        color: var(--w4-fg-advice-group);
-
-                        &:nth-child(odd) {
-                            background-color: var(--w4-bg-advice-group-odd);
-
-                            .table::before, .table::after {
-                                --table-edge-bg-to: var(--w4-bg-advice-group-odd);
-                            }
-                        }
-
-                        &:nth-child(even) {
-                            background-color: var(--w4-bg-advice-group-even);
-
-                            .table::before, .table::after {
-                                --table-edge-bg-to: var(--w4-bg-advice-group-even);
-                            }
-                        }
-                    }
-                }
-
-                #smolderin-plateau {
-                    .subheading {
-                        background: var(--w5-bg-subheading);
-
-                        & > span {
-                            color: var(--w5-fg-subheading);
-
-                            .tier-progress {
-                                color: var(--fg-subheading-progress);
-
-                                &.finished {
-                                    color: var(--fg-subheading-finished);
-                                }
-                            }
-
-                        }
-                    }
-
-                    .advice-group {
-                        color: var(--w5-fg-advice-group);
-
-                        &:nth-child(odd) {
-                            background-color: var(--w5-bg-advice-group-odd);
-
-                            .table::before, .table::after {
-                                --table-edge-bg-to: var(--w5-bg-advice-group-odd);
-                            }
-                        }
-
-                        &:nth-child(even) {
-                            background-color: var(--w5-bg-advice-group-even);
-
-                            .table::before, .table::after {
-                                --table-edge-bg-to: var(--w5-bg-advice-group-even);
-                            }
-                        }
-                    }
-                }
-
-                #the-caverns-below {
-                    .subheading {
-                        background: var(--caverns-bg-subheading);
-
-                        & > span {
-                            color: var(--caverns-fg-subheading);
-
-                            .tier-progress {
-                                color: var(--fg-subheading-progress);
-
-                                &.finished {
-                                    color: var(--fg-subheading-finished);
-                                }
-                            }
-
-                        }
-                    }
-
-                    .advice-group {
-                        color: var(--caverns-fg-advice-group);
-
-                        &:nth-child(odd) {
-                            background-color: var(--caverns-bg-advice-group-odd);
-
-                            .table::before, .table::after {
-                                --table-edge-bg-to: var(--caverns-bg-advice-group-odd);
-                            }
-                        }
-
-                        &:nth-child(even) {
-                            background-color: var(--caverns-bg-advice-group-even);
-
-                            .table::before, .table::after {
-                                --table-edge-bg-to: var(--caverns-bg-advice-group-even);
-                            }
-                        }
-                    }
-                }
-
-                #spirited-valley {
-                    .subheading {
-                        background: var(--w6-bg-subheading);
-
-                        & > span {
-                            color: var(--w6-fg-subheading);
-
-                            .tier-progress {
-                                color: var(--fg-subheading-progress);
-
-                                &.finished {
-                                    color: var(--fg-subheading-finished);
-                                }
-                            }
-
-                        }
-                    }
-
-                    .advice-group {
-                        color: var(--w6-fg-advice-group);
-
-                        &:nth-child(odd) {
-                            background-color: var(--w6-bg-advice-group-odd);
-
-                            .table::before, .table::after {
-                                --table-edge-bg-to: var(--w6-bg-advice-group-odd);
-                            }
-                        }
-
-                        &:nth-child(even) {
-                            background-color: var(--w6-bg-advice-group-even);
-
-                            .table::before, .table::after {
-                                --table-edge-bg-to: var(--w6-bg-advice-group-even);
-                            }
-                        }
-                    }
-                }
-
             }
         }
 
@@ -1037,7 +843,7 @@ body {
 
             @media (max-width: 600px) {
                 flex-direction: column;
-                bottom: calc((var(--nav-height) + var(--nav-padding) * 2) * 2 + 10px);
+                bottom: calc((var(--nav-height) + var(--nav-padding) * 2) + 10px);
             }
 
             #scroll-to-top, #expand-collapse {
@@ -1084,10 +890,10 @@ body {
 
         footer {
             font-family: "Open Sans", sans-serif;
+            color: oldlace;
             width: 100%;
             margin-top: auto; /*always sticks to the bottom of the page*/
             padding: 20px;
-            border-top: var(--border);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1153,13 +959,6 @@ body {
     article {
         .banner {
             overflow-x: hidden;
-
-            img {
-                margin-left: -5vw;
-                width: unset;
-                max-width: unset;
-                height: fit-content;
-            }
         }
 
         section {

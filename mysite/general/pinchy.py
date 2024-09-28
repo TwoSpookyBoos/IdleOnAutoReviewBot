@@ -376,6 +376,7 @@ def generate_advice_list(sections: list[Tier], threshold: Threshold):
             advice.progression = ""
             advice.goal = ""
             advice.unit = ""
+            advice.percent = "0"
 
     return advices
 

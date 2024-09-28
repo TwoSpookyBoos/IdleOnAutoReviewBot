@@ -37,7 +37,8 @@ const defaults = {
 const spinner = new Spin.Spinner(opts)
 
 function toggleSidebar() {
-    document.querySelectorAll('#drawer, #drawer-handle').forEach(e => e.classList.toggle('sidebar-open'))
+    document.querySelectorAll('#drawer, #drawer-handle, #veil')
+        .forEach(e => e.classList.toggle('sidebar-open'))
 }
 
 function openSidebarIfFirstAccess() {
@@ -64,70 +65,6 @@ function defineFormSubmitAction() {
     })
 }
 
-// calculate progress bars
-function calcProgressBars(parent = document) {
-    const top = el => el.getBoundingClientRect().top
-
-    parent.querySelectorAll(".progress-box").forEach(progressBox => {
-        const checkbox = document.querySelector('#progress_bars')
-        const advice = progressBox.nextElementSibling
-        const siblings = Array.from(advice.parentElement.children)
-        const idx = siblings.indexOf(advice)
-        const prog = siblings[idx + 2]
-        const goal = siblings[idx + 4]
-        const row = siblings.slice(idx, idx + 5)
-        const rowWidth = row.reduce((total, curr) => total + curr.offsetWidth, 0)
-        const [progCoefficient, show] = progWidth(progressBox, rowWidth, prog, goal)
-
-        const rowHeight = advice.offsetHeight
-        const rowTop = top(advice) - top(advice.parentElement) + advice.parentElement.scrollTop
-
-        const progressBar = progressBox.querySelector(".progress-bar")
-        progressBar.style.width = `${progCoefficient}%`
-
-        progressBox.style.height = `${rowHeight}px`
-        progressBox.style.top = `${rowTop}px`
-
-        if (checkbox.value === "off" || !show) {
-            progressBox.classList.add('hidden')
-        } else if (show) {
-            progressBox.classList.remove('hidden')
-        }
-    })
-}
-
-function progWidth(bar, w, p, g) {
-    const toFloat = e => parseFloat(e.innerText.replace(/.*?([\d.]+).*/, "$1"))
-    const goal = toFloat(g)
-    const prog = toFloat(p)
-    const inPercentages = g.innerText.includes("%") || p.innerText.includes("%")
-    const inRatio = !(isNaN(prog) || isNaN(goal))
-    const isDone = [g.innerText, p.innerText].some(el => el === "✔")
-
-
-    if (inRatio) return [(100 * Math.min(prog, goal) / goal), true]
-    if (inPercentages) return [Math.min([prog, goal].find(e => !isNaN(e)), 100), true]
-    if (isDone) return [100, true]
-
-    return [0, (inPercentages || inRatio)]
-}
-
-const hideProgressBoxes = (parent = document) => parent
-    .querySelectorAll('.progress-box')
-    .forEach(box => box.classList.add("hidden"))
-
-let resizeTimer;
-window.addEventListener('resize', () => {
-    if (!resizeTimer) hideProgressBoxes()
-
-    clearTimeout(resizeTimer);
-
-    resizeTimer = setTimeout(() => {
-        calcProgressBars()
-        resizeTimer = null
-    }, 100)
-})
-
 function setupFolding() {
     // set event listeners for folding worlds and sections
     document.querySelectorAll('.toggler').forEach(toggler => toggler.onclick = (e) => {
@@ -139,7 +76,7 @@ function setupFolding() {
 }
 
 function setupLightSwitch() {
-    document.querySelector('#light-switch').onclick = (e) => {
+    document.querySelector('#light-switch').onclick = e => {
         document.documentElement.classList.toggle('light-mode')
         e.currentTarget.classList.toggle('on')
         e.currentTarget.classList.toggle('off')
@@ -152,29 +89,40 @@ function setupSidebarToggling() {
 
     // close the sidebar if clicked outside of it or not on hamburger
     document.addEventListener("click", (e) => {
-        let drawer = e.target.closest("#drawer") || e.target.closest("#drawer-handle") || e.target.id === "close-modal-error"
-        let sidebar = document.getElementById("drawer")
-        if (!drawer && sidebar.classList.contains("sidebar-open")) {
+        const drawerClicked = e.target.closest("#drawer") || e.target.closest("#drawer-handle") || e.target.id === "close-modal-error",
+            sidebarOpened = document.getElementById("drawer").classList.contains("sidebar-open");
+        if (!drawerClicked && sidebarOpened) {
             toggleSidebar()
         }
     })
 
     // close the sidebar if it's open and Esc key is pressed
     document.addEventListener("keydown", (e) => {
-        let escPressed = e.code === "Escape"
-        if (escPressed) toggleSidebar()
+        const escPressed = e.code === "Escape",
+            searchOpen = document.querySelector("#searchbar-wrapper").classList.contains("search-open"),
+            settingsOpen = document.querySelector("#switchbox-wrapper").classList.contains("open");
+
+        if (!escPressed) return;
+
+        if (searchOpen) {
+            document.querySelector("#searchbar-wrapper").classList.remove("search-open");
+        } else if (settingsOpen) {
+            document.querySelector("#switchbox-wrapper").classList.remove("open");
+        } else {
+            toggleSidebar();
+        }
     })
 }
 
 function setupSubmitKeybind() {
     // submit the form content if the text area is focused and (Ctrl|Cmd) + Enter is pressed
     document.querySelector("textarea[name='player']").addEventListener("keypress", e => {
-        let ctrlCmdPressed = e.ctrlKey || e.metaKey
-        let enterPressed = e.code === "Enter"
+        const ctrlCmdPressed = e.ctrlKey || e.metaKey
+        const enterPressed = e.code === "Enter"
 
         if (!(ctrlCmdPressed && enterPressed)) return
 
-        let clickEvent = new MouseEvent('click', {
+        const clickEvent = new MouseEvent('click', {
             'view': window,
             'bubbles': true,
             'cancelable': true
@@ -240,7 +188,14 @@ function setupSwitchesActions() {
     }
 
     // toggle progress bars
-    document.querySelector('#progress_bars').onclick = () => calcProgressBars(document);
+    document.querySelector('#progress_bars').onclick = () => document.querySelectorAll(".progress-box").forEach(progressBox => {
+        const checkbox = document.querySelector('#progress_bars')
+        if (checkbox.value === "off") {
+            progressBox.classList.add('hidden')
+        } else {
+            progressBox.classList.remove('hidden')
+        }
+    })
 
     // On Click Listener for the Hide Completed switch
     document.querySelector('label[for="hide_completed"]').addEventListener('click', hideComposite);
@@ -325,7 +280,6 @@ function applyShowMoreButton() {
 
             const group = groups.shift()
             group.classList.remove("hidden")
-            calcProgressBars(group)
             if (groups.length === 0) {
                 button.style.display = "none"
             }
@@ -612,7 +566,6 @@ const hidableElements = [
 ];
 
 function hideComposite(event) {
-    hideProgressBoxes()
     const slider = event.currentTarget,
         classToHide = slider.dataset.hides,
         checkboxOn = document.getElementById(slider.getAttribute("for")).value === "on",
@@ -646,8 +599,6 @@ function hideComposite(event) {
             parent.classList.toggle(kidsHiddenClass, shouldHide)
         });
     })
-
-    calcProgressBars()
 }
 
 
@@ -695,24 +646,33 @@ function searchByCriteria(criteria) {
 }
 
 function setupSearchBar() {
-    const searchBar = document.querySelector('#search')
+    const searchBar = document.querySelector('#search');
+
     document.querySelector('#search-clear').onclick = () => {
         searchBar.value = ""
-        hideProgressBoxes()
         document.querySelectorAll('.search-hidden').forEach(hidden => {
             hidden.classList.remove('search-hidden')
         })
-        calcProgressBars()
-    }
+    };
 
-    searchBar.addEventListener('input', e => {
-        clearTimeout(searchTimer);
-        searchTimer = setTimeout((criteria) => {
-            hideProgressBoxes()
-            searchByCriteria(criteria)
-            calcProgressBars()
-        }, 1000, e.target.value)
-    })
+    searchBar.addEventListener("keyup", e => {
+        if (e.key !== "Enter") return;
+        searchByCriteria(e.currentTarget.value);
+        document.querySelector("#searchbar-wrapper").classList.remove('search-open');
+    });
+    document.querySelector("#searchbar-wrapper").addEventListener('click', e => e.target.classList.remove("search-open"))
+    document.querySelector("#magnifier").onclick = () => {
+        document.querySelector("#searchbar-wrapper").classList.toggle('search-open')
+        document.querySelector('#search').focus();
+    };
+}
+
+function setupSwitchBox() {
+    const switchBox = document.querySelector("#switchbox-wrapper");
+    switchBox.addEventListener('click', e => e.target.classList.remove("open"))
+    document.querySelector("#settings").onclick = () => {
+        switchBox.classList.toggle('open')
+    };
 }
 
 function delJSBlockedModal() {
@@ -733,6 +693,7 @@ function initBaseUI() {
     setupSwitchesActions()
     setupErrorPopup()
     setupSearchBar()
+    setupSwitchBox()
 }
 
 function initResultsUI() {
@@ -742,7 +703,59 @@ function initResultsUI() {
     applyShowMoreButton()
     setupDataClock()
     hideElements()
-    calcProgressBars(document)
+    handleParallax()
+}
+
+function handleParallax() {
+    const background = document.getElementById('backgrounds');
+
+    let dominantElement = null;
+    let dominantBackground = null;
+
+    const switchBackground = () => {
+        Array.from(background.children).forEach(bg => bg.style.opacity = "0");
+        const backgroundToFocus = document.getElementById(dominantElement.bg);
+        if (backgroundToFocus) {
+            backgroundToFocus.style.opacity = "1";
+        }
+        dominantBackground = backgroundToFocus;
+    }
+
+    const translateBackground = () => {
+        const bgHeight = background.getBoundingClientRect().height;
+        const bgHeightDiff = (bgHeight - window.innerHeight) / bgHeight * 100;
+        const focusedArticle = dominantElement.article
+        const scrollPercentage = (dominantElement.top - window.innerHeight / 2) / -focusedArticle.scrollHeight;
+        dominantBackground.style.transform = `translateY(-${scrollPercentage * bgHeightDiff}%)`;
+    }
+
+    const findDominantElement = () => {
+        const screenCenter = window.innerHeight / 2;
+
+        dominantElement = Array.from(document.querySelectorAll("article"))
+        .map(article => {
+            const rect = article.getBoundingClientRect();
+            return { bg: `bg-${article.id}`, article: article, top: rect.top, bottom: rect.bottom, height: rect.height };
+        })
+        .find(article => {
+            const dominatesTop = article.top <= 0 && article.bottom > screenCenter;
+            const dominatesMiddle = article.top >= 0 && article.bottom <= window.innerHeight && article.height >= screenCenter;
+            const dominatesBottom = article.top <= screenCenter && article.bottom > window.innerHeight;
+            return dominatesTop | dominatesMiddle | dominatesBottom;
+        });
+    }
+
+    const updateParallax = () => {
+        findDominantElement()
+        switchBackground()
+        if (dominantBackground) {
+            translateBackground()
+        }
+    }
+
+    document.querySelector('.container-fluid').onscroll = updateParallax;
+    window.addEventListener('resize', updateParallax);
+    updateParallax();
 }
 
 document.addEventListener("DOMContentLoaded", () => {

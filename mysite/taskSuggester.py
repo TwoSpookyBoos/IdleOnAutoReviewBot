@@ -156,14 +156,14 @@ def main(inputData, runType="web"):
     #Build Worlds
     reviews = [
         AdviceWorld(name=WorldName.PINCHY, sections=sections_pinchy, title="Pinchy AutoReview", collapse=False, complete=False),
-        AdviceWorld(name=WorldName.GENERAL, sections=sections_general, banner="general_banner.jpg"),
-        AdviceWorld(name=WorldName.BLUNDER_HILLS, sections=sections_1, banner="w1banner.png"),
-        AdviceWorld(name=WorldName.YUMYUM_DESERT, sections=sections_2, banner="w2banner.png"),
-        AdviceWorld(name=WorldName.FROSTBITE_TUNDRA, sections=sections_3, banner="w3banner.png"),
-        AdviceWorld(name=WorldName.HYPERION_NEBULA, sections=sections_4, banner="w4banner.png"),
-        AdviceWorld(name=WorldName.SMOLDERIN_PLATEAU, sections=sections_5, banner="w5banner.png"),
+        AdviceWorld(name=WorldName.GENERAL, sections=sections_general, title="General"),
+        AdviceWorld(name=WorldName.BLUNDER_HILLS, sections=sections_1, banner=["w1banner.png", "w1bannertext.png"]),
+        AdviceWorld(name=WorldName.YUMYUM_DESERT, sections=sections_2, banner=["w2banner.png", "w2bannertext.png"]),
+        AdviceWorld(name=WorldName.FROSTBITE_TUNDRA, sections=sections_3, banner=["w3banner.png", "w3bannertext.png"]),
+        AdviceWorld(name=WorldName.HYPERION_NEBULA, sections=sections_4, banner=["w4banner.png", "w4bannertext.png"]),
+        AdviceWorld(name=WorldName.SMOLDERIN_PLATEAU, sections=sections_5, banner=["w5banner.png", "w5bannertext.png"]),
         AdviceWorld(name=WorldName.CAVERNS, sections=sections_caverns, title="The Caverns Below"),
-        AdviceWorld(name=WorldName.SPIRITED_VALLEY, sections=sections_6, banner="w6banner.png"),
+        AdviceWorld(name=WorldName.SPIRITED_VALLEY, sections=sections_6, banner=["w6banner.png", "w6bannertext.png"]),
     ]
 
     for world in reviews:
