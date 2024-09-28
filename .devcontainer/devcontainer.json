@@ -12,11 +12,7 @@
 			]
 		}
 	},
-	"workspaceFolder": "mysite",
 	"forwardPorts": [5000],
-	"postCreateCommand": [
-		"pip install --upgrade pip setuptools wheel",
-		"pip install -r mysite/requirements.txt"
-	]
+	"postCreateCommand": "bash ./.devcontainer/postCreateCommand.sh"
 	
 }
