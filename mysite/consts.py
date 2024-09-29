@@ -556,7 +556,7 @@ stamps_progressionTiers = {
         "Misc": ["Multikill Stamp"],
         "Specific": {
             'Matty Bag Stamp': 150, 'Card Stamp': 150, 'Ladle Stamp': 100, 'Potion Stamp': 20,
-            'Pickaxe Stamp': 85, 'Hatchet Stamp': 85, 'Mason Jar Stamp': 52, 'Golden Apple Stamp': 40,
+            'Pickaxe Stamp': 85, 'Hatchet Stamp': 85, 'Mason Jar Stamp': 52, 'Golden Apple Stamp': 40, 'Crop Evo Stamp': 20,
         },
         "Optional": ["Void Sword Stamp"]
     }},
@@ -1678,12 +1678,7 @@ sailing_progressionTiers = {
 ###WORLD 6 PROGRESSION TIERS###
 farming_progressionTiers = {
     0: {},
-    1: {},  #{'Night Market': {'Overgrowth': 1}},
-    2: {},  #{'Night Market': {'Land Rank': 1}},
-    3: {},  #{'Crops Unlocked': 120, 'LandRankMinPlot': 50},
-    4: {},  #{'Crops Unlocked': 140, 'LandRankMinPlot': 75},
-    5: {},  #{'Crops Unlocked': 160, 'LandRankMinPlot': 100,'Night Market': {},},
-    6: {
+    1: {
         'Farming Level': 300,
         'Day Market': {
             'Land Plots': 20,
@@ -3739,6 +3734,9 @@ def ceilUpToBase(inputValue: int, base: int) -> int:
         toReturn += base
     return toReturn
 
+def ValueToMulti(value: float, min_value=1.0):
+    return max(min_value, 1 + (value / 100))
+
 ###WORLD 1 CONSTS###
 bribesDict = {
     "W1": ["Insider Trading", "Tracking Chips", "Mandatory Fire Sale", "Sleeping On the Job", "Artificial Demand", "The Art of the Deal"],
@@ -3762,6 +3760,7 @@ stamp_maxes = {
     "Cooked Meal Stamp": 465,
     "Ladle Stamp": 320,
     "Multitool": 220,
+    'Crop Evo Stamp': 90,
     #Misc
     "Crystallin": 270,
     "Forge Stamp": 230,
@@ -5005,7 +5004,17 @@ def getEnemyNameFromMap(inputMap: str) -> str:
     except Exception as reason:
         return f"Unexpected Input received: {reason}"
 
+
 ###WORLD 4 CONSTS###
+tomepct = {
+  50: 9757,
+  25: 17764,
+  10: 22114,
+  5: 23449,
+  1: 25008,
+  0.5: 25485,
+  0.1: 26254,
+}
 maxCookingTables = 10  # Last verified as of v2.10
 maxMeals = 67  # Last verified as of v2.10
 maxMealLevel = 90  # Last verified as of v2.10
@@ -6169,12 +6178,6 @@ jade_emporium = [
 
 ]
 gfood_codes = ["PeanutG", "ButterBar", *[f"FoodG{i}" for i in range(1, 14)]]
-# pristineCharmsList: list[str] = [
-#     "Sparkle Log", "Fruit Rolle", "Glowing Veil", "Cotton Candy", "Sugar Bomb",
-#     "Gumm Eye", "Bubblegum Law", "Sour Wowzer", "Crystal Comb", "Rock Candy",
-#     "Lollipop Law", "Taffy Disc", "Stick of Chew", "Treat Sack", "Gumm Stick",
-#     "Lolly Flower", "Gumball Necklace", "Liqorice Rolle",
-# ]
 pristineCharmsList: list = [
     {'Name': 'Sparkle Log', 'Image': 'sparkle-log', 'Bonus': '1.20x Total DMG'},
     {'Name': 'Fruit Rolle', 'Image': 'fruit-rolle', 'Bonus': '+20% AGI'},
@@ -6313,6 +6316,34 @@ cropDepotDict = {
     },
 
 }
+cropDict = {
+    1: {'Name': 'Apple', 'Image': 'apple', 'SeedName': 'Basic', 'SeedCropIndex': 0},
+    21: {'Name': 'Gold Blueberry', 'Image': 'gold-blueberry', 'SeedName': 'Basic', 'SeedCropIndex': 19},
+    46: {'Name': 'Gold Sliced Tomato', 'Image': 'gold-sliced-tomato', 'SeedName': 'Earthy', 'SeedCropIndex': 23},
+    61: {'Name': 'Golden Tulip', 'Image': 'golden-tulip', 'SeedName': 'Bulbo', 'SeedCropIndex': 13},
+    84: {'Name': 'Sushi Crop 23', 'Image': 'sushi-crop-23', 'SeedName': 'Sushi', 'SeedCropIndex': 21},
+    107: {'Name': 'Mushroom 23', 'Image': 'mushroom-23', 'SeedName': 'Mushie', 'SeedCropIndex': 21},
+    120: {'Name': 'Glassy Corn', 'Image': 'glassy-corn', 'SeedName': 'Glassy', 'SeedCropIndex': 11},
+    130: {'Name': 'Red Glassy Corn', 'Image': 'red-glassy-corn', 'SeedName': 'Glassy', 'SeedCropIndex': 21},
+    140: {'Name': 'Green Glassy Corn', 'Image': 'green-glassy-corn', 'SeedName': 'Glassy', 'SeedCropIndex': 31},
+    150: {'Name': 'White Glassy Corn', 'Image': 'white-glassy-corn', 'SeedName': 'Glassy', 'SeedCropIndex': 41},
+    160: {'Name': 'Purple Glassy Corn', 'Image': 'purple-glassy-corn', 'SeedName': 'Glassy', 'SeedCropIndex': 51},
+}
+seed_base = {
+    'Basic': 0.75,
+    'Earthy': 0.63,
+    'Bulbo': 0.3,
+    'Sushi': 0.4,
+    'Mushie': 0.2,
+    'Glassy': 0.05
+}
+crop_base = 0.3
+def getCropEvoChance(overallSeedNumber: int) -> float:
+    try:
+        return crop_base * pow(seed_base[cropDict[overallSeedNumber]['SeedName']], cropDict[overallSeedNumber]['SeedCropIndex'])
+    except:
+        logger.warning(f"overallSeedNumber {overallSeedNumber} not found in cropDict. Returning 0")
+        return 0.0
 
 def getMoissaniteValue(moissaniteLevel: int):
     try:

@@ -1841,6 +1841,7 @@ class Account:
         self.nothing_hours = self.raw_optlacc_dict.get(184, 0)
 
     def _parse_w2_killroy(self):
+        self._parse_w2_killroy_skull_shop()
         self.killroy = {}
         self.killroy_total_fights = self.raw_optlacc_dict.get(112, 0)
         for upgradeName, upgradeDict in killroy_dict.items():
@@ -1850,6 +1851,18 @@ class Account:
                 'Upgrades': self.raw_optlacc_dict.get(upgradeDict['UpgradesIndex'], 0),
                 'Image': upgradeDict['Image']
             }
+
+    def _parse_w2_killroy_skull_shop(self):
+        self.killroy_skullshop = {
+            'Third Battle Unlocked': self.raw_optlacc_dict.get(227, 0) == 1,
+            'Artifact Purchases': self.raw_optlacc_dict.get(228, 0),
+            'Artifact Multi': 1 + (self.raw_optlacc_dict.get(228, 0) / (300 + self.raw_optlacc_dict.get(228, 0))),
+            'Crop Purchases': self.raw_optlacc_dict.get(229, 0),
+            'Crop Multi': 1 + ((self.raw_optlacc_dict.get(229, 0) / (300 + self.raw_optlacc_dict.get(229, 0))) * 9),
+            'Crop Multi Plus 1': 1 + (((1 + self.raw_optlacc_dict.get(229, 0)) / (1 + 300 + self.raw_optlacc_dict.get(229, 0))) * 9),
+            'Jade Purchases': self.raw_optlacc_dict.get(230, 0),
+            'Jade Multi': 1 + ((self.raw_optlacc_dict.get(230, 0) / (300 + self.raw_optlacc_dict.get(230, 0))) * 2),
+        }
 
     def _parse_w3(self):
         self._parse_w3_refinery()

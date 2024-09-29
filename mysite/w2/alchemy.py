@@ -182,7 +182,7 @@ def getAtRiskAdviceGroups() -> list[AdviceGroup]:
                 label=f"{bubbleName}{' (Printing!)' if bubbleValuesDict['Material'] in session_data.account.printer['AllCurrentPrints'] else ''}",
                 picture_class=bubbleName,
                 progression=bubbleValuesDict['Level'],
-                goal=min(max_NBLB, max(todays_highest+20, bubbleValuesDict['Level'] + 20)),
+                goal=min(max_NBLB, max(todays_highest+20, bubbleValuesDict['Level'] + 20)) if max(todays_highest+20, bubbleValuesDict['Level'] + 20) < 1000 else max_NBLB,
                 resource=bubbleValuesDict['Material']
             )
             for bubbleName, bubbleValuesDict in sorted_bubbles_basic
@@ -225,7 +225,7 @@ def getAtRiskAdviceGroups() -> list[AdviceGroup]:
                     label=f"{bubbleName}{' (Printing!)' if bubbleValuesDict['Material'] in session_data.account.printer['AllCurrentPrints'] else ''}",
                     picture_class=bubbleName,
                     progression=bubbleValuesDict['Level'],
-                    goal=min(max_NBLB, max(todays_highest_lithium + 10, bubbleValuesDict['Level'] + 10)),
+                    goal=min(max_NBLB, max(todays_highest_lithium + 10, bubbleValuesDict['Level'] + 10)) if max(todays_highest_lithium + 10, bubbleValuesDict['Level'] + 10) < 1000 else max_NBLB,
                     resource=bubbleValuesDict['Material']
                 )
                 for bubbleName, bubbleValuesDict in sorted_bubbles_lithium

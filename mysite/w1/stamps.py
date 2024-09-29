@@ -3,7 +3,7 @@ from utils.text_formatting import pl
 from utils.data_formatting import safe_loads, mark_advice_completed
 from utils.logging import get_logger
 from consts import maxTiersPerGroup, stamps_progressionTiers, stamp_maxes, stampsDict, unavailableStampsList, stampTypes, maxOverallBookLevels, max_VialLevel, \
-    break_you_best
+    break_you_best, maxFarmingCrops
 from flask import g as session_data
 
 
@@ -30,7 +30,8 @@ def getStampExclusions() -> dict[str,bool]:
         #Others
         'Triad Essence Stamp': False,  #Sussy Gene quests
         'Summoner Stone Stamp': False,
-        'Void Axe Stamp': False
+        'Void Axe Stamp': False,
+        'Crop Evo Stamp': False,
     }
     if session_data.account.stamps.get('Crystallin', {}).get("Level", 0) >= 270:  #Highest Crystallin in Tiers
         exclusionsDict['Matty Bag Stamp'] = True
@@ -45,6 +46,9 @@ def getStampExclusions() -> dict[str,bool]:
         exclusionsDict['Triad Essence Stamp'] = True if not session_data.account.stamps['Triad Essence Stamp']['Delivered'] else False
         exclusionsDict['Summoner Stone Stamp'] = True if not session_data.account.stamps['Summoner Stone Stamp']['Delivered'] else False
         exclusionsDict['Void Axe Stamp'] = True if not session_data.account.stamps['Void Axe Stamp']['Delivered'] else False
+
+    if session_data.account.farming['CropsUnlocked'] >= maxFarmingCrops:
+        exclusionsDict['Crop Evo Stamp'] = True
 
     return exclusionsDict
 
@@ -65,10 +69,10 @@ def getCapacityAdviceGroup() -> AdviceGroup:
         goal=1
     ))
     capacity_Advices["Stamps"].append(Advice(
-        label=f"Lab Bonus: Certified Stamp Book: "
-              f"{'2' if session_data.account.labBonuses.get('Certified Stamp Book', {}).get('Enabled', False) else '0'}/2x",
+        label=f"Lab: Certified Stamp Book: "
+              f"{max(1, 2 * session_data.account.labBonuses['Certified Stamp Book']['Enabled'])}/2x",
         picture_class="certified-stamp-book",
-        progression=1 if session_data.account.labBonuses.get('Certified Stamp Book', {}).get('Enabled', False) else 0,
+        progression=int(session_data.account.labBonuses['Certified Stamp Book']['Enabled']),
         goal=1
     ))
     # I'm kinda doubting Lava ever fixes this bug, so hiding it
@@ -131,21 +135,21 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     #Character Specific
     capacity_Advices["Character Specific"].append(session_data.account.star_sign_extras['SilkrodeNanoAdvice'])
     capacity_Advices["Character Specific"].append(Advice(
-        label=f"Starsign: Mr No Sleep: {30 * bool(session_data.account.star_signs.get('Mr No Sleep', {}).get('Unlocked', False))}/30% base",
+        label=f"Starsign: Mr No Sleep: {30 * session_data.account.star_signs['Mr No Sleep']['Unlocked']}/30% base",
         picture_class="mr-no-sleep",
-        progression=1 if session_data.account.star_signs.get('Mr No Sleep', {}).get('Unlocked', False) else 0,
+        progression=int(session_data.account.star_signs['Mr No Sleep']['Unlocked']),
         goal=1
     ))
     capacity_Advices["Character Specific"].append(Advice(
-        label=f"Starsign: Pack Mule: {10 * bool(session_data.account.star_signs.get('Pack Mule', {}).get('Unlocked', False))}/10% base",
+        label=f"Starsign: Pack Mule: {10 * session_data.account.star_signs['Pack Mule']['Unlocked']}/10% base",
         picture_class="pack-mule",
-        progression=1 if session_data.account.star_signs.get('Pack Mule', {}).get('Unlocked', False) else 0,
+        progression=int(session_data.account.star_signs['Pack Mule']['Unlocked']),
         goal=1
     ))
     capacity_Advices["Character Specific"].append(Advice(
-        label=f"Starsign: The OG Skiller: {5 * bool(session_data.account.star_signs.get('The OG Skiller', {}).get('Unlocked', False))}/5% base",
+        label=f"Starsign: The OG Skiller: {5 * session_data.account.star_signs['The OG Skiller']['Unlocked']}/5% base",
         picture_class="the-og-skiller",
-        progression=1 if session_data.account.star_signs.get('The OG Skiller', {}).get('Unlocked', False) else 0,
+        progression=int(session_data.account.star_signs['The OG Skiller']['Unlocked']),
         goal=1
     ))
     capacity_Advices["Character Specific"].append(Advice(
@@ -217,7 +221,7 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
         goal=max_VialLevel
     ))
     costReduction_Advices["Vials"].append(Advice(
-        label="Lab Bonus: My 1st Chemistry Set",
+        label="Lab: My 1st Chemistry Set",
         picture_class="my-1st-chemistry-set",
         progression=int(session_data.account.labBonuses['My 1st Chemistry Set']['Enabled']),
         goal=1
@@ -230,7 +234,7 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     if session_data.account.labBonuses.get("My 1st Chemistry Set", {}).get("Enabled", False):
         totalVialReduction *= 2
     costReduction_Advices["Vials"].append(Advice(
-        label=f"{{{{ Rift|#rift }}}} Bonus: Vial Mastery: {session_data.account.vialMasteryMulti:.2f}x",
+        label=f"{{{{ Rift|#rift }}}}: Vial Mastery: {session_data.account.vialMasteryMulti:.2f}x",
         picture_class="vial-mastery",
         progression=f"{1 if session_data.account.rift['VialMastery'] else 0}",
         goal=1

@@ -55,8 +55,8 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
     cap_Advices["Static Sources"].append(Advice(
         label="{{ Rift|#rift }} 16: Skill Mastery unlocked",
         picture_class='skill-mastery',
-        progression="1" if session_data.account.rift['SkillMastery'] else "0",
-        goal="1"
+        progression=int(session_data.account.rift['SkillMastery']),
+        goal=1
     ))
     #Account-wide total smithing levels of 300 needed to unlock the bonus
     totalSmithingLevels = sum(session_data.account.all_skills.get("Smithing", [0]))
