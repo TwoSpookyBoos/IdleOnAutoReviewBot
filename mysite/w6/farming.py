@@ -199,7 +199,7 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
         picture_class=getLandRankImage(farming.get('LandRankMaxPlot', 0)),
     ))
     value_advices[mgc].append(Advice(
-        label=f"Land Rank: Production Boost: {farming['LandRankDatabase']['Production Boost']['Value']:.3f} per land rank."
+        label=f"Land Rank: Production Boost: {farming['LandRankDatabase']['Production Boost']['Value']:,.3f} per land rank."
               f"<br>Total on Lowest: {farming['LandRankDatabase']['Production Boost']['Value'] * farming.get('LandRankMinPlot', 0):.3f}"
               f"<br>Total on Highest: {farming['LandRankDatabase']['Production Boost']['Value'] * farming.get('LandRankMaxPlot', 0):.3f}",
         picture_class='production-boost',
@@ -328,8 +328,8 @@ def getEvoChanceAdviceGroup(farming):
     stamp = f"Stamps: {stamp_multi:.3f}x"
     meals = f"Meals: {meals_multi:.3f}x"
     farm = f"Markets: {farm_multi:.3g}x"
-    lr = f"Land Ranks: {lr_multi:.3f}x"
-    summon = f"Summoning: {summon_multi:.3f}x"
+    lr = f"Land Ranks: {lr_multi:,.3f}x"
+    summon = f"Summoning: {summon_multi:,.3f}x"
     ss = f"Star Sign: {ss_multi:.3f}x"
     misc = f"Misc: {misc_multi:.3f}x"
     total = f"Subtotal before Crop Chapter Bubble: {subtotal_multi:.3g}x"
@@ -409,7 +409,7 @@ def getEvoChanceAdviceGroup(farming):
 #Meals
     evo_advices[meals].append(Advice(
         label=f"Meal: Bill Jack Pepper"
-              f"<br>Total Value after multis: {session_data.account.meals['Bill Jack Pepper']['Value']:.3f}%",
+              f"<br>Total Value after multis: {session_data.account.meals['Bill Jack Pepper']['Value']:,.3f}%",
         picture_class="bill-jack-pepper",
         progression=session_data.account.meals['Bill Jack Pepper']['Level'],
         goal=maxMealLevel
@@ -422,7 +422,7 @@ def getEvoChanceAdviceGroup(farming):
     ))
     evo_advices[meals].append(Advice(
         label=f"Meal: Nyanborgir"
-              f"<br>Total Value after multis: {session_data.account.meals['Nyanborgir']['Value'] * nyan_stacks:.3f}%",
+              f"<br>Total Value after multis: {session_data.account.meals['Nyanborgir']['Value'] * nyan_stacks:,.3f}%",
         picture_class="nyanborgir",
         progression=session_data.account.meals['Nyanborgir']['Level'],
         goal=maxMealLevel
@@ -466,24 +466,24 @@ def getEvoChanceAdviceGroup(farming):
     ))
     evo_advices[lr].append(Advice(
         label=f"Land Rank: Evolution Boost: {farming['LandRankDatabase']['Evolution Boost']['Value']:.3f} per land rank."
-              f"<br>Total on Lowest: {farming['LandRankDatabase']['Evolution Boost']['Value'] * farming.get('LandRankMinPlot', 0):.3f}"
-              f"<br>Total on Highest: {farming['LandRankDatabase']['Evolution Boost']['Value'] * farming.get('LandRankMaxPlot', 0):.3f}",
+              f"<br>Total on Lowest: {farming['LandRankDatabase']['Evolution Boost']['Value'] * farming.get('LandRankMinPlot', 0):,.3f}"
+              f"<br>Total on Highest: {farming['LandRankDatabase']['Evolution Boost']['Value'] * farming.get('LandRankMaxPlot', 0):,.3f}",
         picture_class='evolution-boost',
     ))
     evo_advices[lr].append(Advice(
         label=f"Land Rank: Evolution Megaboost",
         picture_class='evolution-megaboost',
-        progression=f"{farming['LandRankDatabase']['Evolution Megaboost']['Value']:.3f}"
+        progression=f"{farming['LandRankDatabase']['Evolution Megaboost']['Value']:,.3f}"
     ))
     evo_advices[lr].append(Advice(
         label=f"Land Rank: Evolution Superboost",
         picture_class='evolution-superboost',
-        progression=f"{farming['LandRankDatabase']['Evolution Superboost']['Value']:.3f}"
+        progression=f"{farming['LandRankDatabase']['Evolution Superboost']['Value']:,.3f}"
     ))
     evo_advices[lr].append(Advice(
         label=f"Land Rank: Evolution Ultraboost",
         picture_class='evolution-ultraboost',
-        progression=f"{farming['LandRankDatabase']['Evolution Ultraboost']['Value']:.3f}"
+        progression=f"{farming['LandRankDatabase']['Evolution Ultraboost']['Value']:,.3f}"
     ))
 
 #SUMMONING
@@ -516,7 +516,7 @@ def getEvoChanceAdviceGroup(farming):
 
     evo_advices[ss].append(Advice(
         label=f"{{{{ Starsign|#star-signs }}}}: Cropiovo Minor: {3 * session_data.account.star_signs['Cropiovo Minor']['Unlocked']:.0f}/3% per farming level."
-              f"<br>Total Value if doubled: {starsign_final_value:.3f}%",
+              f"<br>Total Value if doubled: {starsign_final_value:,.3f}%",
         picture_class='cropiovo-minor',
         progression=int(session_data.account.star_signs['Cropiovo Minor']['Unlocked']),
         goal=1
