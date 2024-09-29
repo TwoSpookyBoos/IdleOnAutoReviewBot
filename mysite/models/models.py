@@ -3535,10 +3535,6 @@ class Account:
                     picture_class="nobisect"
                 ),
                 Advice(
-                    label="Cooking BB generally wants Snake",
-                    picture_class="cooking-ladle"
-                ),
-                Advice(
                     label="Extra characters can link to Snake if not Meditating",
                     picture_class="snehebatu"
                 ),
@@ -3560,10 +3556,6 @@ class Account:
                 Advice(
                     label="1 Map Pusher",
                     picture_class="nobisect"
-                ),
-                Advice(
-                    label="Cooking BB generally wants Snake",
-                    picture_class="cooking-ladle"
                 ),
                 Advice(
                     label="Extra characters can link to Snake if not Meditating",
@@ -3588,10 +3580,6 @@ class Account:
                     picture_class="nobisect"
                 ),
                 Advice(
-                    label="Cooking BB generally wants Snake",
-                    picture_class="cooking-ladle"
-                ),
-                Advice(
                     label="Extra characters can link to Snake if not Meditating",
                     picture_class="snehebatu"
                 ),
@@ -3612,10 +3600,6 @@ class Account:
                 Advice(
                     label="1 Map Pusher",
                     picture_class="nobisect"
-                ),
-                Advice(
-                    label="Cooking BB generally wants Snake",
-                    picture_class="cooking-ladle"
                 ),
                 Advice(
                     label="Extra characters can link to Snake if not Meditating",
@@ -3640,10 +3624,6 @@ class Account:
                     picture_class="nobisect"
                 ),
                 Advice(
-                    label="Cooking BB generally wants Snake",
-                    picture_class="cooking-ladle"
-                ),
-                Advice(
                     label="Extra characters can link to Snake if not Meditating",
                     picture_class="snehebatu"
                 ),
@@ -3664,10 +3644,6 @@ class Account:
                 Advice(
                     label="1 Map Pusher",
                     picture_class="nobisect"
-                ),
-                Advice(
-                    label="Cooking BB generally wants Snake",
-                    picture_class="cooking-ladle"
                 ),
                 Advice(
                     label="Extra characters can link to Snake if not Meditating",
