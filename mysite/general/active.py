@@ -231,7 +231,7 @@ def getLongTermAdviceList() -> list[Advice]:
     # Gmush Farming
     for killTarget in [1e6, 500e6, 1e9, 100e9, 500e9, 1e12]:
         if killTarget > session_data.account.enemy_worlds[1].maps_dict[1].kill_count:
-            goalLetter = notateNumber("Basic", killTarget, 0)[-1]
+            goalLetter = notateNumber('Basic', killTarget, 0)[-1]
             longterm.append(Advice(
                 label=f"Kill more Gmush for Money multi"
                       f"<br>AFK or Candy kills with highest KPH character",

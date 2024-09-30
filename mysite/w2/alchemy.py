@@ -89,20 +89,20 @@ def setAlchemyVialsProgressionTier() -> AdviceSection:
         for requiredVial in tier[3]:
             if requiredVial in unmaxedVialsList:
                 if len(vial_AdviceDict["MaxVials"]["Vials to max next"]) < maxAdvicesPerGroup:
-                    goal = int(vial_costs[session_data.account.alchemy_vials[requiredVial]['Level']])
-                    prog = 100 * (session_data.account.all_assets.get(session_data.account.alchemy_vials[requiredVial]['Material']).amount / max(1, goal))
+                    goal = int(vial_costs[alchemyVialsDict[requiredVial]['Level']])
+                    prog = 100 * (session_data.account.all_assets.get(alchemyVialsDict[requiredVial]['Material']).amount / max(1, goal))
                     # Generate Alerts
-                    if prog >= goal and session_data.account.alchemy_vials[requiredVial]['Level'] == max_VialLevel-1:
+                    if prog >= goal and alchemyVialsDict[requiredVial]['Level'] == max_VialLevel-1:
                         session_data.account.alerts_AdviceDict['World 2'].append(Advice(
                             label=f"{requiredVial} {{{{ Vial|#vials }}}} ready to be maxed!",
                             picture_class="vial-13"
                         ))
                     vial_AdviceDict["MaxVials"]["Vials to max next"].append(Advice(
-                        label=f"{requiredVial}"
+                        label=f"{requiredVial} {'NEEDS TO BE UNLOCKED!' if alchemyVialsDict[requiredVial]['Level'] == 0 else ''}"
                               f"{'<br>Ready for level ' if prog >= 100 else ''}"
-                              f"{session_data.account.alchemy_vials[requiredVial]['Level'] + 1 if prog >= 100 else ''}",
-                        picture_class=getItemDisplayName(session_data.account.alchemy_vials[requiredVial]['Material']),
-                        progression=f"{prog:.1f}%",
+                              f"{alchemyVialsDict[requiredVial]['Level'] + 1 if prog >= 100 else ''}",
+                        picture_class=getItemDisplayName(alchemyVialsDict[requiredVial]['Material']),
+                        progression=f"{min(1000, prog):.1f}%{'+' if min(1000, prog) == 1000 else ''}",
                     ))
 
     if len(virileVialsList) < maxExpectedVV:
@@ -144,7 +144,7 @@ def setAlchemyVialsProgressionTier() -> AdviceSection:
 def getBubbleExclusions():
     exclusionsList = []
     #If all crops owned or Evolution GMO is level 10+, exclude the requirement for Cropius Mapper
-    if session_data.account.farming["CropsUnlocked"] >= maxFarmingCrops or session_data.account.farming["MarketUpgrades"].get("Evolution GMO", 0) > 20:
+    if session_data.account.farming["CropsUnlocked"] >= maxFarmingCrops or session_data.account.farming['MarketUpgrades']['Evolution Gmo']['Level'] > 20:
         exclusionsList.append("Cropius Mapper")
 
     #If cooking is nearly finished, exclude Diamond Chef
@@ -340,9 +340,9 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
                             bubbles_AdviceDict[bubbleType][subgroupName].append(Advice(
                                 label=f"{requiredBubble}{' (Printing!)' if session_data.account.alchemy_bubbles[requiredBubble]['Material'] in session_data.account.printer['AllCurrentPrints'] else ''}",
                                 picture_class=str(requiredBubble),
-                                progression=str(session_data.account.alchemy_bubbles.get(requiredBubble, {}).get('Level', 0)),
+                                progression=str(session_data.account.alchemy_bubbles[requiredBubble]['Level']),
                                 goal=str(tier[typeIndex+2][requiredBubble]),
-                                resource=str(session_data.account.alchemy_bubbles.get(requiredBubble, {}).get('Material', '')))),
+                                resource=str(session_data.account.alchemy_bubbles[requiredBubble]['Level']))),
             if bubbleTiers[typeIndex] == (tier[0] - 1) and requirementsMet[typeIndex] == True:  # Only update if they already met the previous tier
                 bubbleTiers[typeIndex] = tier[0]
 
@@ -514,7 +514,7 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
         * session_data.account.labBonuses['My 1st Chemistry Set']['Value']
     )
 
-    player_sigil_stamp_value = session_data.account.stamps.get('Sigil Stamp', {}).get('Value', 0)
+    player_sigil_stamp_value = session_data.account.stamps['Sigil Stamp']['Value']
     goal_sigil_stamp_value = lavaFunc('decay', stamp_maxes['Sigil Stamp'], 40, 150)
     # The Sigil Stamp is a MISC stamp, thus isn't multiplied by the Lab bonus or Pristine Charm
     # if session_data.account.labBonuses['Certified Stamp Book']['Enabled']:

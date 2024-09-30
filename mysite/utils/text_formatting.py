@@ -77,46 +77,36 @@ def numeralToNumber(numeral: str):
     if numeral in numeralList:
         return numeralList.index(numeral)+1
 
-def notateNumber(type: str, input: float, decimals=2, matchString="B"):
-    match type:
+
+stringToDecimal = {
+    "QQQ": 1e21,
+    "QQ": 1e18,
+    "Q": 1e15,
+    "T": 1e12,
+    "B": 1e9,
+    "M": 1e6,
+    "K": 1e3,
+    "": 1
+}
+def notateNumber(inputType: str, inputValue: float, decimals=2, matchString="B"):
+    match inputType:
         case "Basic":
-            if float(input) >= 1e24:
-                result = f"{input:.{decimals}e}"
-            elif float(input) >= 1e21:
-                result = f"{input / 1e21:.{decimals}f}QQQ"
-            elif float(input) >= 1e18:
-                result = f"{input / 1e18:.{decimals}f}QQ"
-            elif float(input) >= 1e15:
-                result = f"{input / 1e15:.{decimals}f}Q"
-            elif float(input) >= 1e12:
-                result = f"{input / 1e12:.{decimals}f}T"
-            elif float(input) >= 1e9:
-                result = f"{input/1e9:.{decimals}f}B"
-            elif float(input) >= 1e6:
-                result = f"{input/1e6:.{decimals}f}M"
-            # I'm not personally a fan of reducing to K, but helps Mobile not get scuffed
-            elif float(input) >= 1e3:
-                result = f"{input/1e3:.{decimals}f}K"
+            if float(inputValue) >= 1e24:
+                result = f"{inputValue:.{decimals}e}"
+            elif float(inputValue) < 1e3:
+                result = f"{inputValue:,}"
             else:
-                result = f"{input:,}"
+                for k, v in stringToDecimal.items():
+                    if float(inputValue) >= v:
+                        result = f"{inputValue / v:.{decimals}f}{k}"
+                        break
         case "Match":
-            if matchString == "QQQ":
-                result = f"{input / 1e21:.{decimals}f}QQQ"
-            elif matchString == "QQ":
-                result = f"{input / 1e18:.{decimals}f}QQ"
-            elif matchString == "Q":
-                result = f"{input / 1e15:.{decimals}f}Q"
-            elif matchString == "T":
-                result = f"{input / 1e12:.{decimals}f}T"
-            elif matchString == "B":
-                result = f"{input / 1e9:.{decimals}f}B"
-            elif matchString == "M":
-                result = f"{input / 1e6:.{decimals}f}M"
-            elif matchString == "K":
-                result = f"{input / 1e3:.{decimals}f}K"
-            else:
-                logger.debug(f"Unexpected matchString: {matchString}")
-                result = f"{input:,}"
+            result = f"{inputValue / stringToDecimal[matchString.upper()]:.{decimals}f}{matchString.upper()}"
+            # if matchString.upper() in stringToDecimal:
+            #
+            # else:
+            #     logger.debug(f"Unexpected matchString: {matchString}")
+            #     result = f"{inputValue:,}"
         case _:
-            result = f"{input:,}"
+            result = f"{inputValue:,}"
     return result
