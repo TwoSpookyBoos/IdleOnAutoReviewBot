@@ -171,7 +171,7 @@ def setStatuesProgressionTier() -> AdviceSection:
                                       f"{farmDetails if tierRequirements.get('MinStatueType', 'UnknownStatueType') != 'Gold' else ''}",
                                 picture_class=statueName,
                                 progression=statueDetails['TypeNumber'] if statueDetails['TypeNumber'] < 1 else session_data.account.stored_assets.get(statueDetails['ItemName']).amount,
-                                goal=tierRequirements.get('MinStatueTypeNumber', 0) if statueDetails['TypeNumber'] < 1 else 20000,
+                                goal=20000 if tierRequirements.get('MinStatueType', 'UnknownStatueType') == 'Onyx' else tierRequirements.get('MinStatueTypeNumber', 0),
                                 resource="coins" if tierRequirements.get('MinStatueType', 'UnknownStatueType') == 'Gold' else farmResource
                             ))
                         if session_data.account.stored_assets.get(statueDetails['ItemName']).amount >= 20000 and statueDetails['Type'] != statueTypeList[-1]:
