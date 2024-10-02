@@ -26,7 +26,6 @@ def getLandRankImage(level: int) -> str:
     else:
         return 'landrank-1'
 
-
 def getCropDepotAdviceGroup(farming) -> AdviceGroup:
     lab_note = f"<br>Note: Most of Lab is defaulted ON until I figure out Lab parsing. Sorry 🙁"
 
@@ -163,10 +162,10 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
     mgc = f"Multi Group C: {val['Pboost Ballot Multi Min']:.2f} to {val['Pboost Ballot Multi Max']:.2f}"
     final = f"Conclusion: You are {'NOT ' if val['FinalMin'] < 100 else 'over' if val['BeforeCapMin'] >= 125 else ''}capped on Lowest plots"
     value_advices = {
+        final: [],
         mga: [],
         mgb: [],
         mgc: [],
-        final: [],
     }
     #MGA
     value_advices[mga].append(Advice(
@@ -248,7 +247,7 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
     )
     return value_ag
 
-def getEvoChanceAdviceGroup(farming):
+def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
     #Fun calculations
 #Alchemy
     maps_opened = 0
@@ -488,7 +487,6 @@ def getEvoChanceAdviceGroup(farming):
 
 #SUMMONING
     #Battles
-    battle_total = 0
     for color, battlesList in summ_battles.items():
         for battle in battlesList:
             beat = session_data.account.summoning['Battles'][color] >= battle
@@ -630,6 +628,127 @@ def getEvoChanceAdviceGroup(farming):
         advices=evo_advices
     )
     return evo_ag
+
+def getSpeedAdviceGroup(farming) -> AdviceGroup:
+    # Fun calculations
+#Summoning
+    summ_battles = {
+        'White': [3, 9],
+        'Green': [7, 13],
+        'Yellow': [7],
+        'Purple': [4],
+        'Red': [10],
+        'Cyan': [12]
+    }
+    battle_reward_total = 0
+    for color, battlesList in summ_battles.items():
+        for battle in battlesList:
+            if session_data.account.summoning['Battles'][color] >= battle:
+                battle_reward_total += session_data.account.summoning["BattleDetails"][color][battle]['RewardBaseValue']
+    summon_multi = ValueToMulti(session_data.account.summoning['WinnerBonusesMulti'] * battle_reward_total)
+#Vial and Day Market
+    vial_value = session_data.account.alchemy_vials['Ricecakorade (Rice Cake)']['Value'] * session_data.account.vialMasteryMulti
+    if session_data.account.labBonuses['My 1st Chemistry Set']['Enabled']:
+        vial_value *= 2
+    vm_multi = ValueToMulti(vial_value + farming['MarketUpgrades']['Nutritious Soil']['Value'])
+#Night Market
+    nm_multi = farming['MarketUpgrades']['Speed Gmo']['StackedValue']
+#Total
+    total_multi = summon_multi * vm_multi * nm_multi
+
+    # Create subgroup labels
+    total = f"Total: {total_multi:,.3f}x"
+    summon = f"Summoning: {summon_multi:,.3f}x"
+    vm = f"Vial + Day Market: {vm_multi:,.3f}x"
+    nm = f"Night Market: {nm_multi:,.3f}x"
+    speed_advices = {
+        total: [],
+        summon: [],
+        vm: [],
+        nm: [],
+    }
+#Advices
+#Total
+    speed_advices[total].append(Advice(
+        label=f"Farming Speed Multi: {total_multi:,.3f}x",
+        picture_class='crop-scientist'
+    ))
+#Summoning
+    #Battles
+    for color, battlesList in summ_battles.items():
+        for battle in battlesList:
+            beat = session_data.account.summoning['Battles'][color] >= battle
+            speed_advices[summon].append(Advice(
+                label=f"Summoning match {color}{battle}: "
+                      f"{beat * session_data.account.summoning['BattleDetails'][color][battle]['RewardBaseValue']}"
+                      f"/{session_data.account.summoning['BattleDetails'][color][battle]['RewardBaseValue']}"
+                      f"{'.<br>Not yet beaten.' if not beat else ''}",
+                picture_class=session_data.account.summoning["BattleDetails"][color][battle]['Image'],
+                progression=int(session_data.account.summoning['Battles'][color] >= battle),
+                goal=1
+            ))
+    # Winner Bonus Increases
+    for advice in session_data.account.summoning['WinnerBonusesAdvice']:
+        speed_advices[summon].append(advice)
+
+#Vial and Market
+    # Vial
+    speed_advices[vm].append(Advice(
+        label="Lab: My 1st Chemistry Set: "
+              f"{max(1, 2 * session_data.account.labBonuses['My 1st Chemistry Set']['Enabled'])}/2x",
+        picture_class="my-1st-chemistry-set",
+        progression=int(session_data.account.labBonuses['My 1st Chemistry Set']['Enabled']),
+        goal=1
+    ))
+    speed_advices[vm].append(Advice(
+        label=f"{{{{ Rift|#rift }}}}: Vial Mastery: {session_data.account.vialMasteryMulti:.2f}x",
+        picture_class="vial-mastery",
+        progression=f"{1 if session_data.account.rift['VialMastery'] else 0}",
+        goal=1
+    ))
+    speed_advices[vm].append(Advice(
+        label=f"{{{{ Vial|#vials }}}}: Ricecakorade (Rice Cake): {session_data.account.alchemy_vials['Ricecakorade (Rice Cake)']['Value']:.2f}%"
+              f"<br>Total Value after multis: {vial_value:.2f}%",
+        picture_class="rice-cake",
+        progression=session_data.account.alchemy_vials['Ricecakorade (Rice Cake)']['Level'],
+        goal=max_VialLevel
+    ))
+    # Day Market
+    speed_advices[vm].append(Advice(
+        label=f"Day Market: Nutritious Soil: {farming['MarketUpgrades']['Nutritious Soil']['Value']:.0f}/"
+              f"{farming['MarketUpgrades']['Nutritious Soil']['BonusPerLevel'] * farming['MarketUpgrades']['Biology Boost']['MaxLevel']}%",
+        picture_class="day-market",
+        progression=farming['MarketUpgrades']['Nutritious Soil']['Level'],
+        goal=farming['MarketUpgrades']['Nutritious Soil']['MaxLevel']
+    ))
+#Night Market
+    speed_advices[nm].append(Advice(
+        label=f"Night Market: Super Gmo: {farming['MarketUpgrades']['Super Gmo']['Value']:.0f}/"
+              f"{farming['MarketUpgrades']['Super Gmo']['BonusPerLevel'] * farming['MarketUpgrades']['Super Gmo']['MaxLevel']}%"
+              f"<br>{farming['CropStacks']['Super Gmo']} stacks = {farming['MarketUpgrades']['Super Gmo']['StackedValue']}x",
+        picture_class="night-market",
+        progression=farming['MarketUpgrades']['Super Gmo']['Level'],
+        goal=farming['MarketUpgrades']['Super Gmo']['MaxLevel']
+    ))
+    speed_advices[nm].append(Advice(
+        label=f"Night Market: Speed Gmo: {farming['MarketUpgrades']['Speed Gmo']['Value']:.0f}/"
+              f"{farming['MarketUpgrades']['Evolution Gmo']['BonusPerLevel'] * farming['MarketUpgrades']['Speed Gmo']['MaxLevel']}%"
+              f"<br>{farming['CropStacks']['Speed Gmo']} stacks = {farming['MarketUpgrades']['Speed Gmo']['StackedValue']:.4g}x",
+        picture_class="night-market",
+        progression=farming['MarketUpgrades']['Speed Gmo']['Level'],
+        goal=farming['MarketUpgrades']['Speed Gmo']['MaxLevel']
+    ))
+
+    for category in speed_advices.values():
+        for advice in category:
+            mark_advice_completed(advice)
+
+    speed_ag = AdviceGroup(
+        tier='',
+        pre_string="Informational- Sources of Farming Speed",
+        advices=speed_advices
+    )
+    return speed_ag
 
 def setFarmingProgressionTier():
     farming_AdviceDict = {
@@ -776,6 +895,7 @@ def setFarmingProgressionTier():
         advices=farming_AdviceDict['Land Ranks']
     )
     farming_AdviceGroupDict['Evo'] = getEvoChanceAdviceGroup(farming)
+    farming_AdviceGroupDict['Speed'] = getSpeedAdviceGroup(farming)
     farming_AdviceGroupDict['Value'] = getCropValueAdviceGroup(farming)
     farming_AdviceGroupDict['Depot'] = getCropDepotAdviceGroup(farming)
     farming_AdviceGroupDict['Day'] = getDayMarketAdviceGroup(farming)
