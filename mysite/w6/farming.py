@@ -314,10 +314,20 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
 #Misc
     totalFarmingLevels = sum(session_data.account.all_skills['Smithing'])
     skillMasteryBonusBool = session_data.account.rift['SkillMastery'] and totalFarmingLevels >= 300
+    ballot_active = session_data.account.ballot['CurrentBuff'] == 29
+    if ballot_active:
+        ballot_status = "is Active"
+    elif not ballot_active and session_data.account.ballot['CurrentBuff'] != "Unknown":
+        ballot_status = "is Inactive"
+    else:
+        ballot_status = "status is not available in provided data"
+    ballot_multi = 1 + (session_data.account.ballot['Buffs'][29]['Value'] / 100)
+    ballot_multi_active = max(1, ballot_multi * ballot_active)
     misc_multi = (
         (1.05 * session_data.account.achievements["Lil' Overgrowth"]['Complete'])
         * session_data.account.killroy_skullshop['Crop Multi']
         * 1.15 * skillMasteryBonusBool * session_data.account.rift['SkillMastery']
+        * ballot_multi_active
     )
     #subtotal doesn't include Crop Chapter
     subtotal_multi = alch_multi * stamp_multi * meals_multi * farm_multi * lr_multi * summon_multi * ss_multi * misc_multi
@@ -549,6 +559,14 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
         picture_class='farming',
         progression=totalFarmingLevels,
         goal=200
+    ))
+
+    evo_advices[misc].append(Advice(
+        label=f"Weekly Ballot: {ballot_multi_active:.3f}/{ballot_multi:.3f}x"
+              f"<br>(Buff {ballot_status})",
+        picture_class='ballot-29',
+        progression=int(ballot_active),
+        goal=1
     ))
 
 #Total
