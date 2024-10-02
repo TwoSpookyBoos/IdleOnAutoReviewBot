@@ -201,7 +201,7 @@ def getShortTermAdviceList() -> list[Advice]:
                 if char_kills < goal:
                     #logger.debug(f"{char} {enemy_map.monster_name} KLA: {char.kill_dict.get(mapNumber, [0])[0]} means total kills of {char_kills}")
                     shortterm.append(Advice(
-                        label=f"{char} - Complete 1M {enemy_map.monster_name} kills for Weekly Boss actions",
+                        label=f"{char}- Kill 1M {enemy_map.monster_name}s for W2 Weekly Boss",
                         picture_class=char.class_name_icon,
                         progression=notateNumber('Match', char_kills, 2, 'K'),
                         goal=notateNumber('Match', goal, 0, 'K'),
