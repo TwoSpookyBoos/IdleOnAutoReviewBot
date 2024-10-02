@@ -250,7 +250,7 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     costReduction_Advices["Uncapped"].append(Advice(
         label="{{ Jade Emporium|#sneaking }}: Ionized Sigils",
         picture_class="ionized-sigils",
-        progression=f"{1 if session_data.account.sneaking['JadeEmporium']['Ionized Sigils']['Obtained'] else 0}",
+        progression=int(session_data.account.sneaking['JadeEmporium']['Ionized Sigils']['Obtained']),
         goal=1
     ))
     if (session_data.account.alchemy_p2w.get('Sigils', {}).get('Envelope Pile', {}).get('PrechargeLevel', 0)

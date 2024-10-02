@@ -750,6 +750,65 @@ def getSpeedAdviceGroup(farming) -> AdviceGroup:
     )
     return speed_ag
 
+def getBeanMultiAdviceGroup(farming) -> AdviceGroup:
+    # Fun calculations
+    mga = ValueToMulti(farming['MarketUpgrades']['More Beenz']['Value'])
+    mgb = ValueToMulti(
+        (25 * session_data.account.sneaking['JadeEmporium']['Deal Sweetening']['Obtained'])
+        + (5 * session_data.account.achievements['Crop Flooding']['Complete'])
+    )
+    total_multi = mga * mgb
+    # Create subgroup labels
+    total = f"Total: {total_multi}x"
+    mga = f"Day Market: {mga}x"
+    mgb = f"Emporium + Achievement: {mgb}x"
+    bm_advices = {
+        total: [],
+        mga: [],
+        mgb: []
+    }
+
+    #Total
+    bm_advices[total].append(Advice(
+        label=f"Magic Beans Bonus: {total_multi:,.3f}x",
+        picture_class='crop-scientist'
+    ))
+
+    #Day Market - More Beenz
+    bm_advices[mga].append(Advice(
+        label=f"More Beenz: +{farming['MarketUpgrades']['More Beenz']['Value']:.0f}%",
+        picture_class='day-market',
+        progression=f"{farming['MarketUpgrades']['More Beenz']['Level']:.0f}",
+        goal=f"{farming['MarketUpgrades']['More Beenz']['MaxLevel']:.0f}",
+    ))
+    #Emporium - Deal Sweetening
+    bm_advices[mgb].append(Advice(
+        label=f"{{{{ Jade Emporium|#sneaking }}}}: Deal Sweetening: "
+              f"+{25 * session_data.account.sneaking['JadeEmporium']['Deal Sweetening']['Obtained']}/25%",
+        picture_class='deal-sweetening',
+        progression=int(session_data.account.sneaking['JadeEmporium']['Deal Sweetening']['Obtained']),
+        goal=1
+    ))
+    #Achievement - Crop Flooding
+    bm_advices[mgb].append(Advice(
+        label=f"W6 Achievement: Crop Flooding: "
+              f"+{5 * session_data.account.achievements['Crop Flooding']['Complete']}/5%",
+        picture_class='crop-flooding',
+        progression=int(session_data.account.achievements['Crop Flooding']['Complete']),
+        goal=1
+    ))
+
+    for category in bm_advices.values():
+        for advice in category:
+            mark_advice_completed(advice)
+
+    bm_ag = AdviceGroup(
+        tier='',
+        pre_string='Informational- Sources of Magic Bean Bonus',
+        advices=bm_advices
+    )
+    return bm_ag
+
 def setFarmingProgressionTier():
     farming_AdviceDict = {
         'Unlock Crops': {},
@@ -897,6 +956,7 @@ def setFarmingProgressionTier():
     farming_AdviceGroupDict['Evo'] = getEvoChanceAdviceGroup(farming)
     farming_AdviceGroupDict['Speed'] = getSpeedAdviceGroup(farming)
     farming_AdviceGroupDict['Value'] = getCropValueAdviceGroup(farming)
+    farming_AdviceGroupDict['Bean'] = getBeanMultiAdviceGroup(farming)
     farming_AdviceGroupDict['Depot'] = getCropDepotAdviceGroup(farming)
     farming_AdviceGroupDict['Day'] = getDayMarketAdviceGroup(farming)
     farming_AdviceGroupDict['Night'] = getNightMarketAdviceGroup(farming)
