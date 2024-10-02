@@ -342,7 +342,7 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
                                 picture_class=str(requiredBubble),
                                 progression=str(session_data.account.alchemy_bubbles[requiredBubble]['Level']),
                                 goal=str(tier[typeIndex+2][requiredBubble]),
-                                resource=str(session_data.account.alchemy_bubbles[requiredBubble]['Level']))),
+                                resource=str(session_data.account.alchemy_bubbles[requiredBubble]['Material']))),
             if bubbleTiers[typeIndex] == (tier[0] - 1) and requirementsMet[typeIndex] == True:  # Only update if they already met the previous tier
                 bubbleTiers[typeIndex] = tier[0]
 
