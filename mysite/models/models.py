@@ -3753,6 +3753,7 @@ class Account:
         self._calculate_w6_farming_crop_evo()
         self._calculate_w6_farming_crop_speed()
         self._calculate_w6_farming_bean_bonus()
+        self._calculate_w6_farming_og()
 
     def _calculate_w6_farming_crop_depot(self):
         lab_multi = 1 + ((
@@ -3965,6 +3966,33 @@ class Account:
             + (5 * self.achievements['Crop Flooding']['Complete'])
         )
         self.farming['Bean']['Total Multi'] = self.farming['Bean']['mga'] * self.farming['Bean']['mgb']
+
+    def _calculate_w6_farming_og(self):
+        # Fun calculations
+        self.farming['OG'] = {}
+        self.farming['OG']['Ach Multi'] = ValueToMulti(15 * self.achievements['Big Time Land Owner']['Complete'])
+        self.farming['OG']['Starsign Final Value'] = (
+                15 * self.star_signs['O.G. Signalais']['Unlocked']
+                * self.star_sign_extras['SilkrodeNanoMulti']
+                * self.star_sign_extras['SeraphMulti']
+        )
+        self.farming['OG']['SS Multi'] = ValueToMulti(self.farming['OG']['Starsign Final Value'])
+        self.farming['OG']['NM Multi'] = ValueToMulti(self.farming['MarketUpgrades']['Og Fertilizer']['Value'])
+        self.farming['OG']['Merit Multi'] = ValueToMulti(2 * self.merits[5][2]['Level'])
+        self.farming['OG']['LR Multi'] = (ValueToMulti(
+            self.farming['LandRankDatabase']['Overgrowth Boost']['Value']
+            + self.farming['LandRankDatabase']['Overgrowth Megaboost']['Value']
+            + self.farming['LandRankDatabase']['Overgrowth Superboost']['Value']
+        ))
+        self.farming['OG']['Pristine Multi'] = ValueToMulti(50 * self.sneaking['PristineCharms']['Taffy Disc']['Obtained'])
+        self.farming['OG']['Total Multi'] = (
+                self.farming['OG']['Ach Multi']
+                * self.farming['OG']['SS Multi']
+                * self.farming['OG']['NM Multi']
+                * self.farming['OG']['Merit Multi']
+                * self.farming['OG']['LR Multi']
+                * self.farming['OG']['Pristine Multi']
+        )
 
     def _calculate_wave_2(self):
         self._calculate_w3_library_max_book_levels()

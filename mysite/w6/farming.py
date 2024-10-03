@@ -157,9 +157,9 @@ def getNightMarketAdviceGroup(farming) -> AdviceGroup:
 
 def getCropValueAdviceGroup(farming) -> AdviceGroup:
     val = farming['Value']
-    mga = f"Multi Group A: {val['Doubler Multi']:.2f}"
-    mgb = f"Multi Group B: {val['Mboost Sboost Multi']:.2f}"
-    mgc = f"Multi Group C: {val['Pboost Ballot Multi Min']:.2f} to {val['Pboost Ballot Multi Max']:.2f}"
+    mga = f"Multi Group A: {val['Doubler Multi']:.2f}x"
+    mgb = f"Multi Group B: {val['Mboost Sboost Multi']:.2f}x"
+    mgc = f"Multi Group C: {val['Pboost Ballot Multi Min']:.2f}x to {val['Pboost Ballot Multi Max']:.2f}x"
     final = f"Conclusion: You are {'NOT ' if val['FinalMin'] < 100 else 'over' if val['BeforeCapMin'] >= 125 else ''}capped on Lowest plots"
     value_advices = {
         final: [],
@@ -713,32 +713,14 @@ def getBeanMultiAdviceGroup(farming) -> AdviceGroup:
     return bm_ag
 
 def getOGAdviceGroup(farming):
-    # Fun calculations
-    ach_multi = ValueToMulti(15 * session_data.account.achievements['Big Time Land Owner']['Complete'])
-    starsign_final_value = (
-        15 * session_data.account.star_signs['O.G. Signalais']['Unlocked']
-        * session_data.account.star_sign_extras['SilkrodeNanoMulti']
-        * session_data.account.star_sign_extras['SeraphMulti']
-    )
-    ss_multi = ValueToMulti(starsign_final_value)
-    nm_multi = ValueToMulti(farming['MarketUpgrades']['Og Fertilizer']['Value'])
-    merit_multi = ValueToMulti(2 * session_data.account.merits[5][2]['Level'])
-    lr_multi = (ValueToMulti(
-        farming['LandRankDatabase']['Overgrowth Boost']['Value']
-        + farming['LandRankDatabase']['Overgrowth Megaboost']['Value']
-        + farming['LandRankDatabase']['Overgrowth Superboost']['Value']
-    ))
-    pristine_multi = ValueToMulti(50 * session_data.account.sneaking['PristineCharms']['Taffy Disc']['Obtained'])
-    total_multi = ach_multi * ss_multi * nm_multi * merit_multi * lr_multi * pristine_multi
-
     # Create subgroup labels
-    total = f"Total: {total_multi:,.3f}x"
-    nm = f"Night Market: {nm_multi:.3f}x"
-    lr = f"Land Rank Total: {lr_multi:,.3f}x"
-    ss = f"Star Sign: {ss_multi:.2f}x"
-    ach = f"Achievement: {ach_multi:.2f}x"
-    merit = f"Merit: {merit_multi:.2f}x"
-    pristine = f"Pristine Charm: {pristine_multi:.2f}x"
+    total = f"Total: {farming['OG']['Total Multi']:,.3f}x"
+    nm = f"Night Market: {farming['OG']['NM Multi']:.3f}x"
+    lr = f"Land Rank Total: {farming['OG']['LR Multi']:,.3f}x"
+    ss = f"Star Sign: {farming['OG']['SS Multi']:.2f}x"
+    ach = f"Achievement: {farming['OG']['Ach Multi']:.2f}x"
+    merit = f"Merit: {farming['OG']['Merit Multi']:.2f}x"
+    pristine = f"Pristine Charm: {farming['OG']['Pristine Multi']:.2f}x"
 
     og_advices = {
         total: [],
@@ -751,7 +733,7 @@ def getOGAdviceGroup(farming):
     }
 #Total
     og_advices[total].append(Advice(
-        label=f"Overgrowth Chance: {total_multi:,.3f}x",
+        label=f"Overgrowth Chance: {farming['OG']['Total Multi']:,.3f}x",
         picture_class='crop-scientist'
     ))
 #Achievement- Big Time Land Owner = 1.15x
@@ -767,7 +749,7 @@ def getOGAdviceGroup(farming):
     og_advices[ss].append(session_data.account.star_sign_extras['SilkrodeNanoAdvice'])
     og_advices[ss].append(Advice(
         label=f"{{{{ Starsign|#star-signs }}}}: O.G. Signalais: {15 * session_data.account.star_signs['O.G. Signalais']['Unlocked']:.0f}/15%."
-              f"<br>Total Value if doubled: {starsign_final_value:.3f}%",
+              f"<br>Total Value if doubled: {farming['OG']['Starsign Final Value']:.3f}%",
         picture_class='og-signalais',
         progression=int(session_data.account.star_signs['O.G. Signalais']['Unlocked']),
         goal=1
