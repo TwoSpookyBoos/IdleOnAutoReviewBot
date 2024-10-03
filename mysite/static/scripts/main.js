@@ -254,7 +254,7 @@ function setupHrefEventActions() {
 
         // Delegate the navigation to the HashChange event
         e.preventDefault()
-        history.replaceState(undefined, undefined, `#${targetId}`);
+        history.pushState(undefined, undefined, `#${targetId}`);
         window.dispatchEvent(new HashChangeEvent("hashchange"))
     })
 }
