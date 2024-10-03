@@ -1,4 +1,4 @@
-from math import ceil, floor
+from math import ceil
 
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
@@ -178,14 +178,14 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
 
     #MGB
     value_advices[mgb].append(Advice(
-        label=f"Land Rank: Production Megaboost",
+        label=f"Production Megaboost: +{farming['LandRankDatabase']['Production Megaboost']['Value']:.3f}%",
         picture_class='production-megaboost',
-        progression=f"{farming['LandRankDatabase']['Production Megaboost']['Value']:.3f}"
+        progression=farming['LandRankDatabase']['Production Megaboost']['Level']
     ))
     value_advices[mgb].append(Advice(
-        label=f"Land Rank: Production Superboost",
+        label=f"Production Superboost: +{farming['LandRankDatabase']['Production Superboost']['Value']:.3f}%",
         picture_class='production-superboost',
-        progression=f"{farming['LandRankDatabase']['Production Superboost']['Value']:.3f}"
+        progression=farming['LandRankDatabase']['Production Superboost']['Level']
     ))
 
     #MGC
@@ -198,10 +198,11 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
         picture_class=getLandRankImage(farming.get('LandRankMaxPlot', 0)),
     ))
     value_advices[mgc].append(Advice(
-        label=f"Land Rank: Production Boost: {farming['LandRankDatabase']['Production Boost']['Value']:,.3f} per land rank."
-              f"<br>Total on Lowest: {farming['LandRankDatabase']['Production Boost']['Value'] * farming.get('LandRankMinPlot', 0):.3f}"
-              f"<br>Total on Highest: {farming['LandRankDatabase']['Production Boost']['Value'] * farming.get('LandRankMaxPlot', 0):.3f}",
+        label=f"Production Boost: +{farming['LandRankDatabase']['Production Boost']['Value']:,.3f}% per land rank."
+              f"<br>Total on Lowest: +{farming['LandRankDatabase']['Production Boost']['Value'] * farming.get('LandRankMinPlot', 0):.3f}%"
+              f"<br>Total on Highest: +{farming['LandRankDatabase']['Production Boost']['Value'] * farming.get('LandRankMaxPlot', 0):.3f}%",
         picture_class='production-boost',
+        progression=farming['LandRankDatabase']['Production Boost']['Level']
     ))
     ballot_active = session_data.account.ballot['CurrentBuff'] == 29
     if ballot_active:
@@ -474,25 +475,26 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
         picture_class=getLandRankImage(farming.get('LandRankMaxPlot', 0)),
     ))
     evo_advices[lr].append(Advice(
-        label=f"Land Rank: Evolution Boost: {farming['LandRankDatabase']['Evolution Boost']['Value']:.3f} per land rank."
-              f"<br>Total on Lowest: {farming['LandRankDatabase']['Evolution Boost']['Value'] * farming.get('LandRankMinPlot', 0):,.3f}"
-              f"<br>Total on Highest: {farming['LandRankDatabase']['Evolution Boost']['Value'] * farming.get('LandRankMaxPlot', 0):,.3f}",
+        label=f"Evolution Boost: +{farming['LandRankDatabase']['Evolution Boost']['Value']:.3f}% per land rank."
+              f"<br>Total on Lowest: +{farming['LandRankDatabase']['Evolution Boost']['Value'] * farming.get('LandRankMinPlot', 0):,.3f}%"
+              f"<br>Total on Highest: +{farming['LandRankDatabase']['Evolution Boost']['Value'] * farming.get('LandRankMaxPlot', 0):,.3f}%",
         picture_class='evolution-boost',
+        progression=farming['LandRankDatabase']['Evolution Boost']['Level']
     ))
     evo_advices[lr].append(Advice(
-        label=f"Land Rank: Evolution Megaboost",
+        label=f"Evolution Megaboost: +{farming['LandRankDatabase']['Evolution Megaboost']['Value']:,.3f}%",
         picture_class='evolution-megaboost',
-        progression=f"{farming['LandRankDatabase']['Evolution Megaboost']['Value']:,.3f}"
+        progression=farming['LandRankDatabase']['Evolution Megaboost']['Level']
     ))
     evo_advices[lr].append(Advice(
-        label=f"Land Rank: Evolution Superboost",
+        label=f"Evolution Superboost: +{farming['LandRankDatabase']['Evolution Superboost']['Value']:,.3f}%",
         picture_class='evolution-superboost',
-        progression=f"{farming['LandRankDatabase']['Evolution Superboost']['Value']:,.3f}"
+        progression=farming['LandRankDatabase']['Evolution Superboost']['Level']
     ))
     evo_advices[lr].append(Advice(
-        label=f"Land Rank: Evolution Ultraboost",
+        label=f"Evolution Ultraboost: +{farming['LandRankDatabase']['Evolution Ultraboost']['Value']:,.3f}%",
         picture_class='evolution-ultraboost',
-        progression=f"{farming['LandRankDatabase']['Evolution Ultraboost']['Value']:,.3f}"
+        progression=farming['LandRankDatabase']['Evolution Ultraboost']['Level']
     ))
 
 #SUMMONING
@@ -596,7 +598,7 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
             label=f"Final {final_crops[first_failed_key][0]} chance"
                   f"<br>{first_failed_goal:.3g} for 100% chance",
             picture_class=final_crops[first_failed_key][2],
-            progression=f"{min(1, prog_percent):.3%}",
+            progression=f"{min(1, prog_percent):.2%}",
             #goal=f"{first_failed_goal:.3g}"
         ))
     else:
@@ -776,6 +778,7 @@ def getBeanMultiAdviceGroup(farming) -> AdviceGroup:
         + (5 * session_data.account.achievements['Crop Flooding']['Complete'])
     )
     total_multi = mga * mgb
+
     # Create subgroup labels
     total = f"Total: {total_multi}x"
     mga = f"Day Market: {mga}x"
@@ -826,6 +829,118 @@ def getBeanMultiAdviceGroup(farming) -> AdviceGroup:
         advices=bm_advices
     )
     return bm_ag
+
+def getOGAdviceGroup(farming):
+    # Fun calculations
+    ach_multi = ValueToMulti(15 * session_data.account.achievements['Big Time Land Owner']['Complete'])
+    starsign_final_value = (
+        15 * session_data.account.star_signs['O.G. Signalais']['Unlocked']
+        * session_data.account.star_sign_extras['SilkrodeNanoMulti']
+        * session_data.account.star_sign_extras['SeraphMulti']
+    )
+    ss_multi = ValueToMulti(starsign_final_value)
+    nm_multi = ValueToMulti(farming['MarketUpgrades']['Og Fertilizer']['Value'])
+    merit_multi = ValueToMulti(2 * session_data.account.merits[5][2]['Level'])
+    lr_multi = (ValueToMulti(
+        farming['LandRankDatabase']['Overgrowth Boost']['Value']
+        + farming['LandRankDatabase']['Overgrowth Megaboost']['Value']
+        + farming['LandRankDatabase']['Overgrowth Superboost']['Value']
+    ))
+    pristine_multi = ValueToMulti(50 * session_data.account.sneaking['PristineCharms']['Taffy Disc']['Obtained'])
+    total_multi = ach_multi * ss_multi * nm_multi * merit_multi * lr_multi * pristine_multi
+
+    # Create subgroup labels
+    total = f"Total: {total_multi:,.3f}x"
+    nm = f"Night Market: {nm_multi:.3f}x"
+    lr = f"Land Rank Total: {lr_multi:,.3f}x"
+    ss = f"Star Sign: {ss_multi:.2f}x"
+    ach = f"Achievement: {ach_multi:.2f}x"
+    merit = f"Merit: {merit_multi:.2f}x"
+    pristine = f"Pristine Charm: {pristine_multi:.2f}x"
+
+    og_advices = {
+        total: [],
+        nm: [],
+        lr: [],
+        ss: [],
+        ach: [],
+        merit: [],
+        pristine: [],
+    }
+#Total
+    og_advices[total].append(Advice(
+        label=f"Overgrowth Chance: {total_multi:,.3f}x",
+        picture_class='crop-scientist'
+    ))
+#Achievement- Big Time Land Owner = 1.15x
+    og_advices[ach].append(Advice(
+        label=f"W6 Achievement: Big Time Land Owner: "
+              f"{ValueToMulti(15 * session_data.account.achievements['Big Time Land Owner']['Complete']):.2f}/1.15x",
+        picture_class='big-time-land-owner',
+        progression=int(session_data.account.achievements['Big Time Land Owner']['Complete']),
+        goal=1
+    ))
+#Star Sign
+    og_advices[ss].append(session_data.account.star_sign_extras['SeraphAdvice'])
+    og_advices[ss].append(session_data.account.star_sign_extras['SilkrodeNanoAdvice'])
+    og_advices[ss].append(Advice(
+        label=f"{{{{ Starsign|#star-signs }}}}: O.G. Signalais: {15 * session_data.account.star_signs['O.G. Signalais']['Unlocked']:.0f}/15%."
+              f"<br>Total Value if doubled: {starsign_final_value:.3f}%",
+        picture_class='og-signalais',
+        progression=int(session_data.account.star_signs['O.G. Signalais']['Unlocked']),
+        goal=1
+    ))
+#Night Market
+    og_advices[nm].append(Advice(
+        label=f"Night Market: OG Fertilizer: {farming['MarketUpgrades']['Og Fertilizer']['Value']:.0f}/"
+              f"{farming['MarketUpgrades']['Og Fertilizer']['BonusPerLevel'] * farming['MarketUpgrades']['Og Fertilizer']['MaxLevel']}%",
+        picture_class="night-market",
+        progression=farming['MarketUpgrades']['Og Fertilizer']['Level'],
+        goal=farming['MarketUpgrades']['Og Fertilizer']['MaxLevel']
+    ))
+#Merit
+    og_advices[merit].append(Advice(
+        label=f"W6 Taskboard Merit: +{2 * session_data.account.merits[5][2]['Level']}/30%",
+        picture_class='merit-5-2',
+        progression=session_data.account.merits[5][2]['Level'],
+        goal=15
+    ))
+#Land Rank
+    og_advices[lr].append(Advice(
+        label=f"Overgrowth Boost: +{farming['LandRankDatabase']['Overgrowth Boost']['Value']:,.3f}%",
+        picture_class='overgrowth-boost',
+        progression=farming['LandRankDatabase']['Overgrowth Boost']['Level']
+    ))
+    og_advices[lr].append(Advice(
+        label=f"Overgrowth Megaboost: +{farming['LandRankDatabase']['Overgrowth Megaboost']['Value']:,.3f}%",
+        picture_class='overgrowth-megaboost',
+        progression=farming['LandRankDatabase']['Overgrowth Megaboost']['Level']
+    ))
+    og_advices[lr].append(Advice(
+        label=f"Overgrowth Superboost: +{farming['LandRankDatabase']['Overgrowth Superboost']['Value']:,.3f}%",
+        picture_class='overgrowth-superboost',
+        progression=farming['LandRankDatabase']['Overgrowth Superboost']['Level']
+    ))
+
+#Pristine Charm
+    og_advices[pristine].append(Advice(
+        label=f"{{{{ Pristine Charm|#sneaking }}}}: Taffy Disc: "
+              f"{ValueToMulti(50 * session_data.account.sneaking['PristineCharms']['Taffy Disc']['Obtained']):.2f}/1.50x",
+        picture_class=session_data.account.sneaking['PristineCharms']['Taffy Disc']['Image'],
+        progression=int(session_data.account.sneaking['PristineCharms']['Taffy Disc']['Obtained']),
+        goal=1
+    ))
+
+    for category in og_advices.values():
+        for advice in category:
+            mark_advice_completed(advice)
+
+    og_ag = AdviceGroup(
+        tier='',
+        pre_string='Informational- Sources of Overgrowth',
+        advices=og_advices
+    )
+    return og_ag
 
 def setFarmingProgressionTier():
     farming_AdviceDict = {
@@ -973,6 +1088,7 @@ def setFarmingProgressionTier():
     )
     farming_AdviceGroupDict['Evo'] = getEvoChanceAdviceGroup(farming)
     farming_AdviceGroupDict['Speed'] = getSpeedAdviceGroup(farming)
+    farming_AdviceGroupDict['OG'] = getOGAdviceGroup(farming)
     farming_AdviceGroupDict['Value'] = getCropValueAdviceGroup(farming)
     farming_AdviceGroupDict['Bean'] = getBeanMultiAdviceGroup(farming)
     farming_AdviceGroupDict['Depot'] = getCropDepotAdviceGroup(farming)

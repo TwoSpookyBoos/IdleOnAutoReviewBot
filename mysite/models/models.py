@@ -3667,8 +3667,82 @@ class Account:
         return ceil(cost)
 
     def _calculate_w6(self):
-        self._calculate_w6_farming()
         self._calculate_w6_summoning_winner_bonuses()
+        self._calculate_w6_farming()
+
+    def _calculate_w6_summoning_winner_bonuses(self):
+        mga = 1.3
+        player_mga = 1.3 if self.sneaking['PristineCharms']['Crystal Comb']['Obtained'] else 1
+        self.summoning['WinnerBonusesAdvice'].append(Advice(
+            label=f"{{{{ Pristine Charm|#sneaking }}}}: Crystal Comb: "
+                  f"{player_mga}/1.3x",
+            picture_class=self.sneaking['PristineCharms']['Crystal Comb']['Image'],
+            progression=int(self.sneaking['PristineCharms']['Crystal Comb']['Obtained']),
+            goal=1
+        ))
+
+        if not self.sneaking['JadeEmporium']['Brighter Lighthouse Bulb']['Obtained']:
+            winzLanternPostString = ". Unlocked from {{ Jade Emporium|#sneaking }}"
+        else:
+            winzLanternPostString = ""
+
+        mgb = (1 + (
+            (
+                (25 * numberOfArtifactTiers)
+                + self.merits[5][4]['MaxLevel']
+                + 1  #int(self.achievements['Spectre Stars'])
+                + 1  #int(self.achievements['Regalis My Beloved'])
+            )
+            / 100)
+        )
+        player_mgb = (1 + (
+            (
+                (25 * self.sailing['Artifacts']['The Winz Lantern']['Level'])
+                + self.merits[5][4]['Level']
+                + int(self.achievements['Spectre Stars']['Complete'])
+                + int(self.achievements['Regalis My Beloved']['Complete'])
+            )
+            / 100)
+        )
+
+        self.summoning['WinnerBonusesAdvice'].append(Advice(
+            label=f"{{{{ Artifact|#sailing }}}}: The Winz Lantern: "
+                  f"{1 + (.25 * self.sailing['Artifacts']['The Winz Lantern']['Level'])}/2x{winzLanternPostString}",
+            picture_class="the-winz-lantern",
+            progression=self.sailing['Artifacts']['The Winz Lantern']['Level'],
+            goal=4
+        ))
+        self.summoning['WinnerBonusesAdvice'].append(Advice(
+            label=f"W6 Larger Winner bonuses merit: "
+                  f"+{self.merits[5][4]['Level']}/{self.merits[5][4]['MaxLevel']}%",
+            picture_class="merit-5-4",
+            progression=self.merits[5][4]["Level"],
+            goal=self.merits[5][4]["MaxLevel"]
+        ))
+        self.summoning['WinnerBonusesAdvice'].append(Advice(
+            label=f"W6 Achievement: Spectre Stars: "
+                  f"+{int(self.achievements['Spectre Stars']['Complete'])}/1%",
+            picture_class="spectre-stars",
+            progression=int(self.achievements['Spectre Stars']['Complete']),
+            goal=1
+        ))
+        self.summoning['WinnerBonusesAdvice'].append(Advice(
+            label=f"W6 Achievement: Regalis My Beloved: "
+                  f"+{int(self.achievements['Regalis My Beloved']['Complete'])}/1%",
+            picture_class="regalis-my-beloved",
+            progression=self.summoning['SanctuaryTotal'] if not self.achievements['Regalis My Beloved']['Complete'] else 360,
+            goal=360
+        ))
+        self.summoning['WinnerBonusesMulti'] = max(1, player_mga * player_mgb)
+        self.summoning['WinnerBonusesMultiMax'] = max(1, mga * mgb)
+        self.summoning['WinnerBonusesAdvice'].append(Advice(
+            label=f"Winner Bonuses Multi: {self.summoning['WinnerBonusesMulti']:.3f}/{self.summoning['WinnerBonusesMultiMax']:.3f}x",
+            picture_class="summoning",
+            progression=f"{self.summoning['WinnerBonusesMulti']:.3f}",
+            goal=f"{self.summoning['WinnerBonusesMultiMax']:.3f}",
+            #unit="x"
+        ))
+        #print(f"Summoning Winner Bonus Multis: {mga} * {mgb} = {self.summoning['WinnerBonusesMulti']}")
 
     def _calculate_w6_farming(self):
         self._calculate_w6_farming_crop_depot()
@@ -3762,79 +3836,7 @@ class Account:
         #print(f"models._calculate_w6_farming_crop_value CropValue BEFORE cap = {self.farming['Value']['BeforeCap']}")
         #print(f"models._calculate_w6_farming_crop_value CropValue AFTER cap = {self.farming['Value']['Final']}")
 
-    def _calculate_w6_summoning_winner_bonuses(self):
-        mga = 1.3
-        player_mga = 1.3 if self.sneaking['PristineCharms']['Crystal Comb']['Obtained'] else 1
-        self.summoning['WinnerBonusesAdvice'].append(Advice(
-            label=f"{{{{ Pristine Charm|#sneaking }}}}: Crystal Comb: "
-                  f"{player_mga}/1.3x",
-            picture_class=self.sneaking['PristineCharms']['Crystal Comb']['Image'],
-            progression=int(self.sneaking['PristineCharms']['Crystal Comb']['Obtained']),
-            goal=1
-        ))
-
-        if not self.sneaking['JadeEmporium']['Brighter Lighthouse Bulb']['Obtained']:
-            winzLanternPostString = ". Unlocked from {{ Jade Emporium|#sneaking }}"
-        else:
-            winzLanternPostString = ""
-
-        mgb = (1 + (
-            (
-                (25 * numberOfArtifactTiers)
-                + self.merits[5][4]['MaxLevel']
-                + 1  #int(self.achievements['Spectre Stars'])
-                + 1  #int(self.achievements['Regalis My Beloved'])
-            )
-            / 100)
-        )
-        player_mgb = (1 + (
-            (
-                (25 * self.sailing['Artifacts']['The Winz Lantern']['Level'])
-                + self.merits[5][4]['Level']
-                + int(self.achievements['Spectre Stars']['Complete'])
-                + int(self.achievements['Regalis My Beloved']['Complete'])
-            )
-            / 100)
-        )
-
-        self.summoning['WinnerBonusesAdvice'].append(Advice(
-            label=f"{{{{ Artifact|#sailing }}}}: The Winz Lantern: "
-                  f"{1 + (.25 * self.sailing['Artifacts']['The Winz Lantern']['Level'])}/2x{winzLanternPostString}",
-            picture_class="the-winz-lantern",
-            progression=self.sailing['Artifacts']['The Winz Lantern']['Level'],
-            goal=4
-        ))
-        self.summoning['WinnerBonusesAdvice'].append(Advice(
-            label=f"W6 Larger Winner bonuses merit: "
-                  f"+{self.merits[5][4]['Level']}/{self.merits[5][4]['MaxLevel']}%",
-            picture_class="merit-5-4",
-            progression=self.merits[5][4]["Level"],
-            goal=self.merits[5][4]["MaxLevel"]
-        ))
-        self.summoning['WinnerBonusesAdvice'].append(Advice(
-            label=f"W6 Achievement: Spectre Stars: "
-                  f"+{int(self.achievements['Spectre Stars']['Complete'])}/1%",
-            picture_class="spectre-stars",
-            progression=int(self.achievements['Spectre Stars']['Complete']),
-            goal=1
-        ))
-        self.summoning['WinnerBonusesAdvice'].append(Advice(
-            label=f"W6 Achievement: Regalis My Beloved: "
-                  f"+{int(self.achievements['Regalis My Beloved']['Complete'])}/1%",
-            picture_class="regalis-my-beloved",
-            progression=self.summoning['SanctuaryTotal'] if not self.achievements['Regalis My Beloved']['Complete'] else 360,
-            goal=360
-        ))
-        self.summoning['WinnerBonusesMulti'] = max(1, player_mga * player_mgb)
-        self.summoning['WinnerBonusesMultiMax'] = max(1, mga * mgb)
-        self.summoning['WinnerBonusesAdvice'].append(Advice(
-            label=f"Winner Bonuses Multi: {self.summoning['WinnerBonusesMulti']:.3f}/{self.summoning['WinnerBonusesMultiMax']:.3f}x",
-            picture_class="summoning",
-            progression=f"{self.summoning['WinnerBonusesMulti']:.3f}",
-            goal=f"{self.summoning['WinnerBonusesMultiMax']:.3f}",
-            #unit="x"
-        ))
-        #print(f"Summoning Winner Bonus Multis: {mga} * {mgb} = {self.summoning['WinnerBonusesMulti']}")
+    #def _calculate_w6_farming_crop_evo(self):
 
     def _calculate_wave_2(self):
         self._calculate_w3_library_max_book_levels()

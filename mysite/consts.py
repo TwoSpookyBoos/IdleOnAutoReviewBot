@@ -6228,7 +6228,7 @@ landrankDict = {
     15: {'Name': 'Evolution Ultraboost', 'UnlockLevel': 1300, 'Value': 40000},
     16: {'Name': 'Farmtastic Superboost', 'UnlockLevel': 1500, 'Value': 220},
     17: {'Name': 'Production Superboost', 'UnlockLevel': 1750, 'Value': 600},
-    18: {'Name': 'Overgrowth Superboost', 'UnlockLevel': 2000, 'Value': 240},
+    18: {'Name': 'Overgrowth Superboost', 'UnlockLevel': 2000, 'Value': 1500},
     19: {'Name': 'Seed of Stats', 'UnlockLevel': 3500, 'Value': 5},
 }
 marketUpgradeList = [
