@@ -14,7 +14,8 @@ from utils.data_formatting import getCharacterDetails, safe_loads
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
 from consts import (
     # General
-    lavaFunc, ceilUpToBase,
+    lavaFunc, ceilUpToBase, ValueToMulti,
+    items_codes_and_names,
     currentWorld, maxCharacters,
     expectedStackables, greenstack_progressionTiers, gfood_codes,
     card_data,
@@ -62,7 +63,7 @@ from consts import (
     getMoissaniteValue, getGemstoneBaseValue, getGemstoneBoostedValue, getGemstonePercent,
     marketUpgradeDetails, landrankDict, cropDepotDict, maxFarmingCrops,
     summoningBattleCountsDict, summoningDict,
-    items_codes_and_names
+
 )
 
 
@@ -3749,6 +3750,7 @@ class Account:
         self._calculate_w6_farming_day_market()
         self._calculate_w6_farming_night_market()
         self._calculate_w6_farming_crop_value()
+        self._calculate_w6_farming_crop_evo()
 
     def _calculate_w6_farming_crop_depot(self):
         lab_multi = 1 + ((
@@ -3836,7 +3838,96 @@ class Account:
         #print(f"models._calculate_w6_farming_crop_value CropValue BEFORE cap = {self.farming['Value']['BeforeCap']}")
         #print(f"models._calculate_w6_farming_crop_value CropValue AFTER cap = {self.farming['Value']['Final']}")
 
-    #def _calculate_w6_farming_crop_evo(self):
+    def _calculate_w6_farming_crop_evo(self):
+        # Alchemy
+        self.farming['Evo'] = {}
+        self.farming['Evo']['Maps Opened'] = 0
+        for char in self.all_characters:
+            for mapIndex in range(251, 264):  # Clearing the fake portal at Samurai Guardians doesn't count
+                try:
+                    if int(float(char.kill_dict.get(mapIndex, [1])[0])) <= 0:
+                        self.farming['Evo']['Maps Opened'] += 1
+                except:
+                    continue
+        self.farming['Evo']['Cropius Final Value'] = self.farming['Evo']['Maps Opened'] * self.alchemy_bubbles['Cropius Mapper']['BaseValue']
+        self.farming['Evo']['Vial Value'] = self.alchemy_vials['Flavorgil (Caulifish)']['Value'] * self.vialMasteryMulti
+        self.farming['Evo']['Vial Value'] *= 2 if self.labBonuses['My 1st Chemistry Set']['Enabled'] else 1
+        self.farming['Evo']['Alch Multi'] = (
+            ValueToMulti(self.farming['Evo']['Cropius Final Value'])
+            # * ValueToMulti(session_data.account.alchemy_bubbles['Crop Chapter']['BaseValue'])
+            * ValueToMulti(self.farming['Evo']['Vial Value'])
+        )
+        # Stamp
+        self.farming['Evo']['Stamp Value'] = (
+                max(1, 2 * self.labBonuses['Certified Stamp Book']['Enabled'])
+                * max(1, 1.25 * self.sneaking['PristineCharms']['Liqorice Rolle']['Obtained'])
+                * self.stamps['Crop Evo Stamp']['Value']
+        )
+        self.farming['Evo']['Stamp Multi'] = ValueToMulti(self.farming['Evo']['Stamp Value'])
+        # Meals
+        self.farming['Evo']['Nyan Stacks'] = ceil((max(self.all_skills['Summoning'], default=0) + 1) / 50)
+        self.farming['Evo']['Meals Multi'] = (
+                ValueToMulti(self.meals['Bill Jack Pepper']['Value'])
+                * ValueToMulti(self.meals['Nyanborgir']['Value'] * self.farming['Evo']['Nyan Stacks'])
+        )
+        # Markets
+        self.farming['Evo']['Farm Multi'] = ValueToMulti(self.farming['MarketUpgrades']['Biology Boost']['Value']) * self.farming['MarketUpgrades']['Evolution Gmo']['StackedValue']
+        # Land Ranks
+        self.farming['Evo']['LR Multi'] = (
+                ValueToMulti(self.farming['LandRankDatabase']['Evolution Boost']['Value'] * self.farming.get('LandRankMinPlot', 0))
+                * ValueToMulti(self.farming['LandRankDatabase']['Evolution Megaboost']['Value'])
+                * ValueToMulti(self.farming['LandRankDatabase']['Evolution Superboost']['Value'])
+                * ValueToMulti(self.farming['LandRankDatabase']['Evolution Ultraboost']['Value'])
+        )
+        # Summoning
+        self.farming['Evo']['Summ Battles'] = {
+            'Yellow': [9],
+            'Blue': [14],
+            'Red': [5]
+        }
+        battle_reward_total = 0
+        for color, battlesList in self.farming['Evo']['Summ Battles'].items():
+            for battle in battlesList:
+                if self.summoning['Battles'][color] >= battle:
+                    battle_reward_total += self.summoning["BattleDetails"][color][battle]['RewardBaseValue']
+        self.farming['Evo']['Summon Multi'] = ValueToMulti(self.summoning['WinnerBonusesMulti'] * battle_reward_total)
+        # Starsign
+        self.farming['Evo']['Starsign Final Value'] = (
+                3 * self.star_signs['Cropiovo Minor']['Unlocked']
+                * max(self.all_skills['Farming'], default=0)
+                * self.star_sign_extras['SilkrodeNanoMulti']
+                * self.star_sign_extras['SeraphMulti']
+        )
+        self.farming['Evo']['SS Multi'] = ValueToMulti(self.farming['Evo']['Starsign Final Value'])
+        # Misc
+        self.farming['Evo']['Total Farming Levels'] = sum(self.all_skills['Farming'])
+        self.farming['Evo']['Skill Mastery Bonus Bool'] = self.rift['SkillMastery'] and self.farming['Evo']['Total Farming Levels'] >= 300
+        self.farming['Evo']['Ballot Active'] = self.ballot['CurrentBuff'] == 29
+        if self.farming['Evo']['Ballot Active']:
+            self.farming['Evo']['Ballot Status'] = "is Active"
+        elif not self.farming['Evo']['Ballot Active'] and self.ballot['CurrentBuff'] != "Unknown":
+            self.farming['Evo']['Ballot Status'] = "is Inactive"
+        else:
+            self.farming['Evo']['Ballot Status'] = "status is not available in provided data"
+        self.farming['Evo']['Ballot Multi Max'] = 1 + (self.ballot['Buffs'][29]['Value'] / 100)
+        self.farming['Evo']['Ballot Multi Current'] = max(1, self.farming['Evo']['Ballot Multi Max'] * self.farming['Evo']['Ballot Active'])
+        self.farming['Evo']['Misc Multi'] = (
+                (1.05 * self.achievements["Lil' Overgrowth"]['Complete'])
+                * self.killroy_skullshop['Crop Multi']
+                * 1.15 * self.farming['Evo']['Skill Mastery Bonus Bool'] * self.rift['SkillMastery']
+                * self.farming['Evo']['Ballot Multi Current']
+        )
+        # subtotal doesn't include Crop Chapter
+        self.farming['Evo']['Subtotal Multi'] = (
+                self.farming['Evo']['Alch Multi']
+                * self.farming['Evo']['Stamp Multi']
+                * self.farming['Evo']['Meals Multi']
+                * self.farming['Evo']['Farm Multi']
+                * self.farming['Evo']['LR Multi']
+                * self.farming['Evo']['Summon Multi']
+                * self.farming['Evo']['SS Multi']
+                * self.farming['Evo']['Misc Multi']
+        )
 
     def _calculate_wave_2(self):
         self._calculate_w3_library_max_book_levels()

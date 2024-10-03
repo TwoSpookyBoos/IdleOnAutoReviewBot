@@ -249,100 +249,16 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
     return value_ag
 
 def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
-    #Fun calculations
-#Alchemy
-    maps_opened = 0
-    for char in session_data.account.all_characters:
-        for mapIndex in range(251, 264):  # Clearing the fake portal at Samurai Guardians doesn't count
-            try:
-                if int(float(char.kill_dict.get(mapIndex, [1])[0])) <= 0:
-                    maps_opened += 1
-            except Exception as reason:
-                logger.warning(f"Exception check '{char}' mapIndex '{mapIndex}' with type/value of: {type(char.kill_dict.get(mapIndex, [1])[0])}"
-                               f" / {char.kill_dict.get(mapIndex, [1])[0]}"
-                               f" with reason: {reason}")
-    cropius_final_value = maps_opened * session_data.account.alchemy_bubbles['Cropius Mapper']['BaseValue']
-    vial_value = session_data.account.alchemy_vials['Flavorgil (Caulifish)']['Value'] * session_data.account.vialMasteryMulti
-    if session_data.account.labBonuses['My 1st Chemistry Set']['Enabled']:
-        vial_value *= 2
-    alch_multi = (
-        ValueToMulti(cropius_final_value)
-        #* ValueToMulti(session_data.account.alchemy_bubbles['Crop Chapter']['BaseValue'])
-        * ValueToMulti(vial_value)
-    )
-#Stamp
-    stamp_value = (
-            max(1, 2 * session_data.account.labBonuses['Certified Stamp Book']['Enabled'])
-            * max(1, 1.25 * session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained'])
-            * session_data.account.stamps['Crop Evo Stamp']['Value']
-    )
-    stamp_multi = ValueToMulti(stamp_value)
-#Meals
-    nyan_stacks = ceil((max(session_data.account.all_skills['Summoning'], default=0) + 1) / 50)
-    meals_multi = (
-        ValueToMulti(session_data.account.meals['Bill Jack Pepper']['Value'])
-        * ValueToMulti(session_data.account.meals['Nyanborgir']['Value'] * nyan_stacks)
-    )
-#Markets
-    farm_multi = ValueToMulti(farming['MarketUpgrades']['Biology Boost']['Value']) * farming['MarketUpgrades']['Evolution Gmo']['StackedValue']
-#Land Ranks
-    lr_multi = (
-        ValueToMulti(farming['LandRankDatabase']['Evolution Boost']['Value'] * farming.get('LandRankMinPlot', 0))
-        * ValueToMulti(farming['LandRankDatabase']['Evolution Megaboost']['Value'])
-        * ValueToMulti(farming['LandRankDatabase']['Evolution Superboost']['Value'])
-        * ValueToMulti(farming['LandRankDatabase']['Evolution Ultraboost']['Value'])
-    )
-#Summoning
-    summ_battles = {
-        'Yellow': [9],
-        'Blue': [14],
-        'Red': [5]
-    }
-    battle_reward_total = 0
-    for color, battlesList in summ_battles.items():
-        for battle in battlesList:
-            if session_data.account.summoning['Battles'][color] >= battle:
-                battle_reward_total += session_data.account.summoning["BattleDetails"][color][battle]['RewardBaseValue']
-    summon_multi = ValueToMulti(session_data.account.summoning['WinnerBonusesMulti'] * battle_reward_total)
-#Starsign
-    starsign_final_value = (
-            3 * session_data.account.star_signs['Cropiovo Minor']['Unlocked']
-            * max(session_data.account.all_skills['Farming'], default=0)
-            * session_data.account.star_sign_extras['SilkrodeNanoMulti']
-            * session_data.account.star_sign_extras['SeraphMulti']
-    )
-    ss_multi = ValueToMulti(starsign_final_value)
-#Misc
-    totalFarmingLevels = sum(session_data.account.all_skills['Smithing'])
-    skillMasteryBonusBool = session_data.account.rift['SkillMastery'] and totalFarmingLevels >= 300
-    ballot_active = session_data.account.ballot['CurrentBuff'] == 29
-    if ballot_active:
-        ballot_status = "is Active"
-    elif not ballot_active and session_data.account.ballot['CurrentBuff'] != "Unknown":
-        ballot_status = "is Inactive"
-    else:
-        ballot_status = "status is not available in provided data"
-    ballot_multi = 1 + (session_data.account.ballot['Buffs'][29]['Value'] / 100)
-    ballot_multi_active = max(1, ballot_multi * ballot_active)
-    misc_multi = (
-        (1.05 * session_data.account.achievements["Lil' Overgrowth"]['Complete'])
-        * session_data.account.killroy_skullshop['Crop Multi']
-        * 1.15 * skillMasteryBonusBool * session_data.account.rift['SkillMastery']
-        * ballot_multi_active
-    )
-    #subtotal doesn't include Crop Chapter
-    subtotal_multi = alch_multi * stamp_multi * meals_multi * farm_multi * lr_multi * summon_multi * ss_multi * misc_multi
-
     #Create subgroup labels
-    alch = f"Alchemy without Crop Chapter: {alch_multi:.3f}x"
-    stamp = f"Stamps: {stamp_multi:.3f}x"
-    meals = f"Meals: {meals_multi:.3f}x"
-    farm = f"Markets: {farm_multi:.3g}x"
-    lr = f"Land Ranks: {lr_multi:,.3f}x"
-    summon = f"Summoning: {summon_multi:,.3f}x"
-    ss = f"Star Sign: {ss_multi:.3f}x"
-    misc = f"Misc: {misc_multi:.3f}x"
-    total = f"Subtotal before Crop Chapter Bubble: {subtotal_multi:.3g}x"
+    alch = f"Alchemy without Crop Chapter: {farming['Evo']['Alch Multi']:.3f}x"
+    stamp = f"Stamps: {farming['Evo']['Stamp Multi']:.3f}x"
+    meals = f"Meals: {farming['Evo']['Meals Multi']:.3f}x"
+    farm = f"Markets: {farming['Evo']['Farm Multi']:.3g}x"
+    lr = f"Land Ranks: {farming['Evo']['LR Multi']:,.3f}x"
+    summon = f"Summoning: {farming['Evo']['Summon Multi']:,.3f}x"
+    ss = f"Star Sign: {farming['Evo']['SS Multi']:.3f}x"
+    misc = f"Misc: {farming['Evo']['Misc Multi']:.3f}x"
+    total = f"Subtotal before Crop Chapter Bubble: {farming['Evo']['Subtotal Multi']:.3g}x"
     evo_advices = {
         total: [],
         alch: [],
@@ -358,8 +274,8 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
 #Bubbles
 
     evo_advices[alch].append(Advice(
-        label=f"Cropius Mapper: {maps_opened}/{maxCharacters * (len(session_data.account.enemy_maps[6])-1)} maps"
-              f"<br>Total value: {cropius_final_value:.3f}%",
+        label=f"Cropius Mapper: {farming['Evo']['Maps Opened']}/{maxCharacters * (len(session_data.account.enemy_maps[6])-1)} maps"
+              f"<br>Total value: {farming['Evo']['Cropius Final Value']:.3f}%",
         picture_class='cropius-mapper',
         progression=session_data.account.alchemy_bubbles['Cropius Mapper']['Level'],
         resource=session_data.account.alchemy_bubbles['Cropius Mapper']['Material']
@@ -386,7 +302,7 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
     ))
     evo_advices[alch].append(Advice(
         label=f"{{{{ Vial|#vials }}}}: Flavorgil (Caulifish): {session_data.account.alchemy_vials['Flavorgil (Caulifish)']['Value']:.2f}%"
-              f"<br>Total Value after multis: {vial_value:.2f}%",
+              f"<br>Total Value after multis: {farming['Evo']['Vial Value']:.2f}%",
         picture_class="caulifish",
         progression=session_data.account.alchemy_vials['Flavorgil (Caulifish)']['Level'],
         goal=max_VialLevel
@@ -409,7 +325,7 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
     ))
     evo_advices[stamp].append(Advice(
         label=f"Crop Evo {{{{ Stamp|#stamps}}}}: {session_data.account.stamps['Crop Evo Stamp']['Value']:.0f}%"
-              f"<br>Total Value after multis: {stamp_value:.2f}%",
+              f"<br>Total Value after multis: {farming['Evo']['Stamp Value']:.2f}%",
         picture_class='crop-evo-stamp',
         progression=session_data.account.stamps['Crop Evo Stamp']['Level'],
         goal=stamp_maxes['Crop Evo Stamp'],
@@ -427,12 +343,12 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
 
     evo_advices[meals].append(Advice(
         label=f"Highest Summoning level: {max(session_data.account.all_skills['Summoning'], default=0)}"
-              f"<br>Provides a {nyan_stacks}x multi to Nyanborgir",
+              f"<br>Provides a {farming['Evo']['Nyan Stacks']}x multi to Nyanborgir",
         picture_class='summoning'
     ))
     evo_advices[meals].append(Advice(
         label=f"Meal: Nyanborgir"
-              f"<br>Total Value after multis: {session_data.account.meals['Nyanborgir']['Value'] * nyan_stacks:,.3f}%",
+              f"<br>Total Value after multis: {session_data.account.meals['Nyanborgir']['Value'] * farming['Evo']['Nyan Stacks']:,.3f}%",
         picture_class="nyanborgir",
         progression=session_data.account.meals['Nyanborgir']['Level'],
         goal=maxMealLevel
@@ -499,7 +415,7 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
 
 #SUMMONING
     #Battles
-    for color, battlesList in summ_battles.items():
+    for color, battlesList in farming['Evo']['Summ Battles'].items():
         for battle in battlesList:
             beat = session_data.account.summoning['Battles'][color] >= battle
             evo_advices[summon].append(Advice(
@@ -526,7 +442,7 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
 
     evo_advices[ss].append(Advice(
         label=f"{{{{ Starsign|#star-signs }}}}: Cropiovo Minor: {3 * session_data.account.star_signs['Cropiovo Minor']['Unlocked']:.0f}/3% per farming level."
-              f"<br>Total Value if doubled: {starsign_final_value:,.3f}%",
+              f"<br>Total Value if doubled: {farming['Evo']['Starsign Final Value']:,.3f}%",
         picture_class='cropiovo-minor',
         progression=int(session_data.account.star_signs['Cropiovo Minor']['Unlocked']),
         goal=1
@@ -557,17 +473,17 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
     ))
     # Account-wide total farming levels of 200 needed to unlock the bonus
     evo_advices[misc].append(Advice(
-        label=f"Skill Mastery at 200 Farming: +{1.15 * skillMasteryBonusBool * session_data.account.rift['SkillMastery']}/1.15x",
+        label=f"Skill Mastery at 200 Farming: +{1.15 * farming['Evo']['Skill Mastery Bonus Bool'] * session_data.account.rift['SkillMastery']}/1.15x",
         picture_class='farming',
-        progression=totalFarmingLevels,
+        progression=farming['Evo']['Total Farming Levels'],
         goal=200
     ))
 
     evo_advices[misc].append(Advice(
-        label=f"Weekly Ballot: {ballot_multi_active:.3f}/{ballot_multi:.3f}x"
-              f"<br>(Buff {ballot_status})",
+        label=f"Weekly Ballot: {farming['Evo']['Ballot Multi Current']:.3f}/{farming['Evo']['Ballot Multi Max']:.3f}x"
+              f"<br>(Buff {farming['Evo']['Ballot Status']})",
         picture_class='ballot-29',
-        progression=int(ballot_active),
+        progression=int(farming['Evo']['Ballot Active']),
         goal=1
     ))
 
@@ -586,14 +502,14 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
         10:160
     }.items():
         final_crops[k] = [cropDict[v]['SeedName'],  ceil(1 / getCropEvoChance(v)),  cropDict[v]['Image']]
-    subtotal_purple_glassy_percent = subtotal_multi / final_crops[max(final_crops.keys())][1]
+    subtotal_purple_glassy_percent = farming['Evo']['Subtotal Multi'] / final_crops[max(final_crops.keys())][1]
     purple_glassy_completed = subtotal_purple_glassy_percent >= 1
     first_failed_goal = 0
     first_failed_key = 0
     if purple_glassy_completed:
         first_failed_goal = final_crops[max(final_crops.keys())][1]
         first_failed_key = max(final_crops.keys())
-        prog_percent = subtotal_multi / final_crops[first_failed_key][1]
+        prog_percent = farming['Evo']['Subtotal Multi'] / final_crops[first_failed_key][1]
         evo_advices[total].append(Advice(
             label=f"Final {final_crops[first_failed_key][0]} chance"
                   f"<br>{first_failed_goal:.3g} for 100% chance",
@@ -604,10 +520,10 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
     else:
         #Find the first crop with a failed requirement
         for k, v in final_crops.items():
-            if subtotal_multi < v[1]:
+            if farming['Evo']['Subtotal Multi'] < v[1]:
                 first_failed_key = k
                 first_failed_goal = v[1]
-                prog_percent = subtotal_multi / final_crops[first_failed_key][1]
+                prog_percent = farming['Evo']['Subtotal Multi'] / final_crops[first_failed_key][1]
                 evo_advices[total].append(Advice(
                     label=f"Final {v[0]} chance with 0 stacks of Crop Chapter"
                           f"<br>{first_failed_goal:.3g} for 100% chance",
@@ -621,7 +537,7 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
         for threshold, points in tomepct.items():
             crop_chapter_stacks = max(1, (points - 5000)//2000)
             crop_chapter_multi = ValueToMulti(session_data.account.alchemy_bubbles['Crop Chapter']['BaseValue'] * crop_chapter_stacks)
-            total_multi = subtotal_multi * crop_chapter_multi
+            total_multi = farming['Evo']['Subtotal Multi'] * crop_chapter_multi
             prog_percent = min(1, total_multi / first_failed_goal)
             completed = prog_percent >= 1 or purple_glassy_completed
             if not completed and (
