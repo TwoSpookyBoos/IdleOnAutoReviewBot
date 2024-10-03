@@ -3751,6 +3751,7 @@ class Account:
         self._calculate_w6_farming_night_market()
         self._calculate_w6_farming_crop_value()
         self._calculate_w6_farming_crop_evo()
+        self._calculate_w6_farming_crop_speed()
 
     def _calculate_w6_farming_crop_depot(self):
         lab_multi = 1 + ((
@@ -3928,6 +3929,32 @@ class Account:
                 * self.farming['Evo']['SS Multi']
                 * self.farming['Evo']['Misc Multi']
         )
+
+    def _calculate_w6_farming_crop_speed(self):
+        self.farming['Speed'] = {}
+        # Summoning
+        self.farming['Speed']['Summ Battles'] = {
+            'White': [3, 9],
+            'Green': [7, 13],
+            'Yellow': [7],
+            'Purple': [4],
+            'Red': [10],
+            'Cyan': [12]
+        }
+        battle_reward_total = 0
+        for color, battlesList in self.farming['Speed']['Summ Battles'].items():
+            for battle in battlesList:
+                if self.summoning['Battles'][color] >= battle:
+                    battle_reward_total += self.summoning["BattleDetails"][color][battle]['RewardBaseValue']
+        self.farming['Speed']['Summon Multi'] = ValueToMulti(self.summoning['WinnerBonusesMulti'] * battle_reward_total)
+        # Vial and Day Market
+        self.farming['Speed']['Vial Value'] = self.alchemy_vials['Ricecakorade (Rice Cake)']['Value'] * self.vialMasteryMulti
+        self.farming['Speed']['Vial Value'] *= 2 if self.labBonuses['My 1st Chemistry Set']['Enabled'] else 1
+        self.farming['Speed']['VM Multi'] = ValueToMulti(self.farming['Speed']['Vial Value'] + self.farming['MarketUpgrades']['Nutritious Soil']['Value'])
+        # Night Market
+        self.farming['Speed']['NM Multi'] = self.farming['MarketUpgrades']['Speed Gmo']['StackedValue']
+        # Total
+        self.farming['Speed']['Total Multi'] = self.farming['Speed']['Summon Multi'] * self.farming['Speed']['VM Multi'] * self.farming['Speed']['NM Multi']
 
     def _calculate_wave_2(self):
         self._calculate_w3_library_max_book_levels()

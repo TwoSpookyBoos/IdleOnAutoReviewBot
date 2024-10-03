@@ -566,37 +566,11 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
     return evo_ag
 
 def getSpeedAdviceGroup(farming) -> AdviceGroup:
-    # Fun calculations
-#Summoning
-    summ_battles = {
-        'White': [3, 9],
-        'Green': [7, 13],
-        'Yellow': [7],
-        'Purple': [4],
-        'Red': [10],
-        'Cyan': [12]
-    }
-    battle_reward_total = 0
-    for color, battlesList in summ_battles.items():
-        for battle in battlesList:
-            if session_data.account.summoning['Battles'][color] >= battle:
-                battle_reward_total += session_data.account.summoning["BattleDetails"][color][battle]['RewardBaseValue']
-    summon_multi = ValueToMulti(session_data.account.summoning['WinnerBonusesMulti'] * battle_reward_total)
-#Vial and Day Market
-    vial_value = session_data.account.alchemy_vials['Ricecakorade (Rice Cake)']['Value'] * session_data.account.vialMasteryMulti
-    if session_data.account.labBonuses['My 1st Chemistry Set']['Enabled']:
-        vial_value *= 2
-    vm_multi = ValueToMulti(vial_value + farming['MarketUpgrades']['Nutritious Soil']['Value'])
-#Night Market
-    nm_multi = farming['MarketUpgrades']['Speed Gmo']['StackedValue']
-#Total
-    total_multi = summon_multi * vm_multi * nm_multi
-
     # Create subgroup labels
-    total = f"Total: {total_multi:,.3f}x"
-    summon = f"Summoning: {summon_multi:,.3f}x"
-    vm = f"Vial + Day Market: {vm_multi:,.3f}x"
-    nm = f"Night Market: {nm_multi:,.3f}x"
+    total = f"Total: {farming['Speed']['Total Multi']:,.3f}x"
+    summon = f"Summoning: {farming['Speed']['Summon Multi']:,.3f}x"
+    vm = f"Vial + Day Market: {farming['Speed']['VM Multi']:,.3f}x"
+    nm = f"Night Market: {farming['Speed']['NM Multi']:,.3f}x"
     speed_advices = {
         total: [],
         summon: [],
@@ -606,12 +580,12 @@ def getSpeedAdviceGroup(farming) -> AdviceGroup:
 #Advices
 #Total
     speed_advices[total].append(Advice(
-        label=f"Farming Speed Multi: {total_multi:,.3f}x",
+        label=f"Farming Speed Multi: {farming['Speed']['Total Multi']:,.3f}x",
         picture_class='crop-scientist'
     ))
 #Summoning
     #Battles
-    for color, battlesList in summ_battles.items():
+    for color, battlesList in farming['Speed']['Summ Battles'].items():
         for battle in battlesList:
             beat = session_data.account.summoning['Battles'][color] >= battle
             speed_advices[summon].append(Advice(
@@ -644,7 +618,7 @@ def getSpeedAdviceGroup(farming) -> AdviceGroup:
     ))
     speed_advices[vm].append(Advice(
         label=f"{{{{ Vial|#vials }}}}: Ricecakorade (Rice Cake): {session_data.account.alchemy_vials['Ricecakorade (Rice Cake)']['Value']:.2f}%"
-              f"<br>Total Value after multis: {vial_value:.2f}%",
+              f"<br>Total Value after multis: {farming['Speed']['Vial Value']:.2f}%",
         picture_class="rice-cake",
         progression=session_data.account.alchemy_vials['Ricecakorade (Rice Cake)']['Level'],
         goal=max_VialLevel
