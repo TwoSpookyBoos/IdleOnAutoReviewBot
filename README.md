@@ -25,7 +25,7 @@ venv_dir="<venv/dir/name/here>"
 python -m venv "$venv_dir"
 source "$venv_dir"/bin/activate
 pip install --upgrade pip setuptools wheel
-pip install -r requirements.txt
+pip install -r mysite/requirements/dev.txt
 ```
 #### Windows:
 ``` powershell
@@ -33,7 +33,7 @@ $venv_dir = "<venv/dir/name/here>"
 python -m venv "$venv_dir"
 "$venv_dir"/Scripts/Activate.ps1
 pip install --upgrade pip setuptools wheel
-pip install -r requirements.txt
+pip install -r mysite/requirements/dev.txt
 ```
 <hr/>
 
