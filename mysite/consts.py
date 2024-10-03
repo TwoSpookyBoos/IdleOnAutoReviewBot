@@ -4388,7 +4388,7 @@ atrisk_lithiumBubbles = [
     "Penny Of Strength",
     "Fly In Mind",
     'Afk Expexp',
-    'Slabbo Critterbug',
+    'Slabo Critterbug',
     'Nickel Of Wisdom',
     'Severapurple',
     'Hyperswift',
