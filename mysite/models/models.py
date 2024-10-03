@@ -3752,6 +3752,7 @@ class Account:
         self._calculate_w6_farming_crop_value()
         self._calculate_w6_farming_crop_evo()
         self._calculate_w6_farming_crop_speed()
+        self._calculate_w6_farming_bean_bonus()
 
     def _calculate_w6_farming_crop_depot(self):
         lab_multi = 1 + ((
@@ -3955,6 +3956,15 @@ class Account:
         self.farming['Speed']['NM Multi'] = self.farming['MarketUpgrades']['Speed Gmo']['StackedValue']
         # Total
         self.farming['Speed']['Total Multi'] = self.farming['Speed']['Summon Multi'] * self.farming['Speed']['VM Multi'] * self.farming['Speed']['NM Multi']
+
+    def _calculate_w6_farming_bean_bonus(self):
+        self.farming['Bean'] = {}
+        self.farming['Bean']['mga'] = ValueToMulti(self.farming['MarketUpgrades']['More Beenz']['Value'])
+        self.farming['Bean']['mgb'] = ValueToMulti(
+            (25 * self.sneaking['JadeEmporium']['Deal Sweetening']['Obtained'])
+            + (5 * self.achievements['Crop Flooding']['Complete'])
+        )
+        self.farming['Bean']['Total Multi'] = self.farming['Bean']['mga'] * self.farming['Bean']['mgb']
 
     def _calculate_wave_2(self):
         self._calculate_w3_library_max_book_levels()

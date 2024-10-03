@@ -661,18 +661,10 @@ def getSpeedAdviceGroup(farming) -> AdviceGroup:
     return speed_ag
 
 def getBeanMultiAdviceGroup(farming) -> AdviceGroup:
-    # Fun calculations
-    mga = ValueToMulti(farming['MarketUpgrades']['More Beenz']['Value'])
-    mgb = ValueToMulti(
-        (25 * session_data.account.sneaking['JadeEmporium']['Deal Sweetening']['Obtained'])
-        + (5 * session_data.account.achievements['Crop Flooding']['Complete'])
-    )
-    total_multi = mga * mgb
-
     # Create subgroup labels
-    total = f"Total: {total_multi}x"
-    mga = f"Day Market: {mga}x"
-    mgb = f"Emporium + Achievement: {mgb}x"
+    total = f"Total: {farming['Bean']['Total Multi']}x"
+    mga = f"Day Market: {farming['Bean']['mga']}x"
+    mgb = f"Emporium + Achievement: {farming['Bean']['mgb']}x"
     bm_advices = {
         total: [],
         mga: [],
@@ -681,7 +673,7 @@ def getBeanMultiAdviceGroup(farming) -> AdviceGroup:
 
     #Total
     bm_advices[total].append(Advice(
-        label=f"Magic Beans Bonus: {total_multi:,.3f}x",
+        label=f"Magic Beans Bonus: {farming['Bean']['Total Multi']:,.3f}x",
         picture_class='crop-scientist'
     ))
 
