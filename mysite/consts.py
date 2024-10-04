@@ -327,7 +327,7 @@ greenstack_progressionTiers = {
         },
         14: {
             "Crystal Enemy Drops": [
-                "StoneW2", "SilverPen"],  #"StoneA2",],
+                "StoneW2", 'ResetFrag', "SilverPen"],  #"StoneA2",],
             "Other Skilling Resources": [
                 "MarbleBar", "GodshardBar",
                 "FoodTrapping1", "FoodWorship1",
@@ -1796,7 +1796,7 @@ expectedStackables = {
         "Sewers3", "Quest15", "Hgg"  # Specialty Monster Materials
     ],
     "Crystal Enemy Drops": [
-        "SilverPen",
+        "SilverPen", 'ResetFrag',
         "FoodPotMana1", "FoodPotMana2", "FoodPotGr1", "FoodPotOr1", "FoodPotOr2", "FoodHealth1", "FoodHealth3", "FoodHealth2", "Leaf1",  # W1
         "FoodHealth6", "FoodHealth7", "FoodPotGr2", "FoodPotRe3", "Leaf2",  # W2
         "FoodHealth10", "FoodPotOr3", "FoodPotYe2", "Leaf3",  # W3
@@ -1896,7 +1896,7 @@ expectedStackables = {
         "EquipmentStatues20", "EquipmentStatues21", "EquipmentStatues22",  # W4 Statues
         "EquipmentStatues23", "EquipmentStatues24", "EquipmentStatues25",  # W5 Statues
         "FoodG1", "FoodG2", "FoodG3", "FoodG4", "FoodG5", "FoodG6", "FoodG7", "FoodG8", "FoodG10",  # Gold Foods
-        "ResetFrag", "ResetCompleted", "ResetCompletedS", "ClassSwap",
+        "ResetCompleted", "ResetCompletedS", "ClassSwap",
         "ClassSwapB", "ResetBox",
     ]
 }
