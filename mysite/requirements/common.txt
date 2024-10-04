@@ -1,0 +1,7 @@
+flask
+requests
+ua-parser
+babel
+pyyaml
+libsass
+pytest
