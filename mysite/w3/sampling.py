@@ -212,7 +212,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     # Skill Mastery
     sm_base = 4 * session_data.account.rift['SkillMastery']  # This isn't expressed anywhere in game, but is hard-coded in source code.
     sm_eligible_skills = len(skillIndexList) - 1  #-1 to exclude Combat
-    sm_bonus = sum([1 for skillName, skillLevels in session_data.account.all_skills.items() if skillName != "Combat" and sum(skillLevels) > 750])
+    sm_bonus = sum([1 for skillName, skillLevels in session_data.account.all_skills.items() if skillName != "Combat" and sum(skillLevels) >= 750])
     sm_sum = sm_base + sm_bonus
     sm_multi = 1 + (sm_sum / 100)
 
