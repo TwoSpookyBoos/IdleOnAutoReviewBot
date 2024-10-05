@@ -37,7 +37,7 @@ class Salt:
             self.excess_amount: int = self.output - self.consumed
             if previousSalt is not None:
                 if previousSalt.excess is True:
-                    if next_salt_rank != 0:
+                    if next_salt_rank != 0 or salt_name == 'Nullo':
                         self.max_rank_with_excess: int = int(
                             floor(
                                 ((previousSalt.output-1)/(self.consumption_of_previous_salt * self.cycles_per_Synthesis_cycle)) ** (1/self.salt_consumption_scaling)
