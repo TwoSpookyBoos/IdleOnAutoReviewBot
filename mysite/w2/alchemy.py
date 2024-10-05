@@ -5,7 +5,7 @@ from utils.logging import get_logger
 from flask import g as session_data
 from consts import maxTiersPerGroup, bubbles_progressionTiers, vials_progressionTiers, max_IndexOfVials, maxFarmingCrops, atrisk_basicBubbles, \
     atrisk_lithiumBubbles, cookingCloseEnough, break_you_best, sigils_progressionTiers, max_IndexOfSigils, max_VialLevel, numberOfArtifactTiers, stamp_maxes, \
-    lavaFunc, vial_costs, min_NBLB, max_NBLB, nblb_skippable, nblb_max_index
+    lavaFunc, vial_costs, min_NBLB, max_NBLB, nblb_skippable, nblb_max_index, ValueToMulti
 
 logger = get_logger(__name__)
 
@@ -522,14 +522,12 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
     # if session_data.account.sneaking["PristineCharms"]["Liqorice Rolle"]:
     #     player_sigil_stamp_value *= 1.25
 
-    mga = 1 + (
-        (
-            (20 * session_data.account.achievements['Vial Junkee']['Complete'])
-            + (20 * session_data.account.gemshop['Sigil Supercharge'])
-            + player_peapod_value
-            + willow_vial_value
-            + player_sigil_stamp_value
-        ) / 100
+    mga = ValueToMulti(
+        (20 * session_data.account.achievements['Vial Junkee']['Complete'])
+        + (20 * session_data.account.gemshop['Sigil Supercharge'])
+        + player_peapod_value
+        + willow_vial_value
+        + player_sigil_stamp_value
     )
     mga_label = f"Multi Group A: {mga:.3f}x"
 
@@ -549,15 +547,15 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
         + bd['Purple'][7]['RewardBaseValue']
         + bd['Cyan'][3]['RewardBaseValue']
     )
-    mgb = 1 + ((matches_total * session_data.account.summoning['WinnerBonusesMulti']) / 100)
+    mgb = ValueToMulti(matches_total * session_data.account.summoning['WinnerBonusesMulti'])
     mgb_label = f"Multi Group B: {mgb:.3f}x"
 
     # Multi Group C = Tuttle Vial
-    tuttle_vial_multi = 1 + (
-            (session_data.account.alchemy_vials['Turtle Tisane (Tuttle)']['Value']
-             * session_data.account.vialMasteryMulti
-             * session_data.account.labBonuses['My 1st Chemistry Set']['Value'])
-            / 100)
+    tuttle_vial_multi = ValueToMulti(
+        session_data.account.alchemy_vials['Turtle Tisane (Tuttle)']['Value']
+        * session_data.account.vialMasteryMulti
+        * session_data.account.labBonuses['My 1st Chemistry Set']['Value']
+    )
     mgc = tuttle_vial_multi
     mgc_label = f"Multi Group C: {mgc:.3f}x"
 
@@ -569,7 +567,7 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
         ballot_status = "is Inactive"
     else:
         ballot_status = "status is not available in provided data"
-    ballot_multi = 1 + (session_data.account.ballot['Buffs'][17]['Value'] / 100)
+    ballot_multi = ValueToMulti(session_data.account.ballot['Buffs'][17]['Value'])
     ballot_multi_active = max(1, ballot_multi * ballot_active)
 
     mgd = ballot_multi_active

@@ -39,12 +39,12 @@ def getCropDepotAdviceGroup(farming) -> AdviceGroup:
     rhombol_max = session_data.account.labJewels['Pure Opal Rhombol']['BaseValue']
     rhombol_enhanced_max = rhombol_max * (spelunker_max + (navette_max/100))
 
-    studies_value = max(1, 1 + ((session_data.account.labBonuses['Depot Studies PhD']['Value'] + rhombol_value) / 100))
-    studies_max = 1 + (session_data.account.labBonuses['Depot Studies PhD']['BaseValue'] / 100)
+    studies_value = max(1, ValueToMulti(session_data.account.labBonuses['Depot Studies PhD']['Value'] + rhombol_value))
+    studies_max = ValueToMulti(session_data.account.labBonuses['Depot Studies PhD']['BaseValue'])
     studies_enhanced_max_value = session_data.account.labBonuses['Depot Studies PhD']['BaseValue']
 
-    lab_multi = max(1, 1 + ((session_data.account.labBonuses['Depot Studies PhD']['Value'] + rhombol_value) / 100))
-    lab_max = max(1, 1 + ((studies_enhanced_max_value + rhombol_enhanced_max) / 100))
+    lab_multi = max(1, ValueToMulti(session_data.account.labBonuses['Depot Studies PhD']['Value'] + rhombol_value))
+    lab_max = max(1, ValueToMulti(studies_enhanced_max_value + rhombol_enhanced_max))
     cd_advices = [
         Advice(
             label=f"Lab Jewel: Pure Opal Navette: Increases the value of Spelunker Obol by +{navette_value/100:.1f}/{navette_max/100:.1f}"
@@ -211,7 +211,7 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
         ballot_status = "is Inactive"
     else:
         ballot_status = "status is not available in provided data"
-    ballot_multi = 1 + (session_data.account.ballot['Buffs'][29]['Value'] / 100)
+    ballot_multi = ValueToMulti(session_data.account.ballot['Buffs'][29]['Value'])
     ballot_multi_active = max(1, ballot_multi * ballot_active)
     value_advices[mgc].append(Advice(
         label=f"Plus Weekly Ballot: {ballot_multi_active:.3f}/{ballot_multi:.3f}x"
@@ -881,8 +881,8 @@ def setFarmingProgressionTier():
                     farming_AdviceDict['Night Market'][subgroupName] = []
                 if subgroupName in farming_AdviceDict['Night Market']:
                     if rName in multis:
-                        current = 1 + (farming['MarketUpgrades'][rName]['Value'] / 100)
-                        target = 1 + ((farming['MarketUpgrades'][rName]['BonusPerLevel'] * rLevel) / 100)
+                        current = ValueToMulti(farming['MarketUpgrades'][rName]['Value'])
+                        target = ValueToMulti(farming['MarketUpgrades'][rName]['BonusPerLevel'] * rLevel)
                     else:
                         current = farming['MarketUpgrades'][rName]['Value']
                         target = farming['MarketUpgrades'][rName]['BonusPerLevel'] * rLevel

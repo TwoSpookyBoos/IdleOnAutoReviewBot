@@ -1,6 +1,6 @@
 import math
 from models.models import Advice, AdviceGroup, AdviceSection
-from consts import smithing_progressionTiers, break_you_best
+from consts import smithing_progressionTiers, break_you_best, ValueToMulti
 from flask import g as session_data
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl
@@ -43,9 +43,9 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
 
     #Bribe value of 1 means purchased
     bribe = session_data.account.bribes["W6"].get("Forge Cap Smuggling", -1) == 1
-    bribeValue = 1.3 if bribe else 1
+    bribe_multi = 1.3 if bribe else 1
     cap_Advices["Static Sources"].append(Advice(
-        label=f"{{{{ Bribe|#bribes }}}}: Forge Cap Smuggling: {bribeValue}/1.3x",
+        label=f"{{{{ Bribe|#bribes }}}}: Forge Cap Smuggling: {bribe_multi}/1.3x",
         picture_class='forge-cap-smuggling',
         progression="1" if bribe else "0",
         goal="1"
@@ -87,17 +87,17 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
     ))
 
     cap_Advices["Scaling Sources"].append(Advice(
-        label=f"{{{{ Forge Stamp|#stamps }}}}: +{session_data.account.stamps.get('Forge Stamp', {}).get('Value', 0):.2f}/57.50%",
+        label=f"{{{{ Forge Stamp|#stamps }}}}: +{session_data.account.stamps['Forge Stamp']['Value']:.2f}/57.50%",
         picture_class="forge-stamp",
-        progression=session_data.account.stamps.get("Forge Stamp", {}).get("Level", 0),
+        progression=session_data.account.stamps['Forge Stamp']['Level'],
         goal=230  #Forge Stamp currently has a max of 230, unless it gets increased by the Sacred Methods bundle.
     ))
 
     #Arcade Bonus 26 gives Forge Ore Capacity
     cap_Advices["Scaling Sources"].append(Advice(
-        label=f"Arcade Bonus: {session_data.account.arcade.get(26, {}).get('Value', 0):.2f}/50%",
+        label=f"Arcade Bonus: {session_data.account.arcade[26]['Value']:.2f}/50%",
         picture_class="arcade-bonus-26",
-        progression=session_data.account.arcade.get(26, {}).get("Level", 0),
+        progression=session_data.account.arcade[26]['Level'],
         goal=100
     ))
 
@@ -105,10 +105,10 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
         for advice in cap_Advices[group_name]:
             mark_advice_completed(advice)
 
-    groupA = 1 + (((session_data.account.arcade.get(26, {}).get("Value", 0)) + (30 * (next(c.getStars() for c in session_data.account.cards if c.name == 'Godshard Ore')+1)))/100)
-    groupB = 1 + session_data.account.stamps.get('Forge Stamp', {}).get('Value', 0) / 100
-    groupC = bribeValue
-    groupD = 1 + (50 * achievement + 25 * skillMasteryBonusBool) / 100
+    groupA = ValueToMulti((session_data.account.arcade[26]['Value'] + (30 * (next(c.getStars() for c in session_data.account.cards if c.name == 'Godshard Ore')+1))))
+    groupB = ValueToMulti(session_data.account.stamps['Forge Stamp']['Value'])
+    groupC = bribe_multi
+    groupD = ValueToMulti((50 * achievement) + (25 * skillMasteryBonusBool))
 
     final_forgeCapacity = math.ceil(min(2e9, (20 + forge_upgrades) * groupA * groupB * groupC * groupD))
     bar_Advices["Total Capacity"].append(Advice(

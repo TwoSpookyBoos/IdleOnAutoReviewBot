@@ -3215,7 +3215,7 @@ class Account:
             # After the +1, 0/1/2/3
 
     def _calculate_w2_ballot(self):
-        equinoxMulti = 1 + (self.equinox_bonuses['Voter Rights']['CurrentLevel'] / 100)
+        equinoxMulti = ValueToMulti(self.equinox_bonuses['Voter Rights']['CurrentLevel'])
         for buffIndex, buffValuesDict in self.ballot['Buffs'].items():
             self.ballot['Buffs'][buffIndex]['Value'] *= equinoxMulti
             # Check for + or +x% replacements
@@ -3223,7 +3223,7 @@ class Account:
                 self.ballot['Buffs'][buffIndex]['Description'] = buffValuesDict['Description'].replace("{", f"{self.ballot['Buffs'][buffIndex]['Value']:.3f}")
             # Check for multi replacements
             if "}" in buffValuesDict['Description']:
-                self.ballot['Buffs'][buffIndex]['Description'] = buffValuesDict['Description'].replace("}", f"{1 + (self.ballot['Buffs'][buffIndex]['Value'] / 100):.3f}")
+                self.ballot['Buffs'][buffIndex]['Description'] = buffValuesDict['Description'].replace("}", f"{ValueToMulti(self.ballot['Buffs'][buffIndex]['Value']):.3f}")
 
     def _calculate_w2_islands_trash(self):
         for item in islands_trash_shop_costs:
@@ -3310,27 +3310,21 @@ class Account:
                     )
 
     def _calculate_w3_collider_cost_reduction(self):
-        self.atom_collider['CostReductionMax'] = (1 +
-            (
-                7 * 4  #Max merit
-                + 1 * 20  #Max Atom Collider building
-                + 1 * 30  #Max Neon
-                + 10  #Superbit
-                + 14  #Atom Split bubble
-                + 20  #Stamp
-            )
-            / 100
+        self.atom_collider['CostReductionMax'] = ValueToMulti(
+            7 * 4  #Max merit
+            + 1 * 20  #Max Atom Collider building
+            + 1 * 30  #Max Neon
+            + 10  #Superbit
+            + 14  #Atom Split bubble
+            + 20  #Stamp
         )
-        self.atom_collider['CostReductionRaw'] = (1 +
-            (
-                7 * self.merits[4][6]['Level']
-                + (self.construction_buildings['Atom Collider']['Level'] / 10)  # 50 doesn't give 5%, you need 51.
-                + 1 * self.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['Level']
-                + 10 * self.gaming['SuperBits']['Atom Redux']['Unlocked']
-                + self.alchemy_bubbles['Atom Split']['BaseValue']
-                + self.stamps['Atomic Stamp']['Value']
-            )
-            / 100
+        self.atom_collider['CostReductionRaw'] = ValueToMulti(
+            7 * self.merits[4][6]['Level']
+            + (self.construction_buildings['Atom Collider']['Level'] / 10)
+            + 1 * self.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['Level']
+            + 10 * self.gaming['SuperBits']['Atom Redux']['Unlocked']
+            + self.alchemy_bubbles['Atom Split']['BaseValue']
+            + self.stamps['Atomic Stamp']['Value']
         )
         self.atom_collider['CostReductionMulti'] = 1 / self.atom_collider['CostReductionRaw']
         self.atom_collider['CostReductionMulti1Higher'] = 1 / (self.atom_collider['CostReductionRaw'] + 0.01)
@@ -3346,7 +3340,7 @@ class Account:
                                                                                 * self.atom_collider['CostReductionMulti'])
 
     def _calculate_w3_shrine_values(self):
-        cchizoar_multi = 1 + (5 * (1 + next(c.getStars() for c in self.cards if c.name == 'Chaotic Chizoar')) / 100)
+        cchizoar_multi = ValueToMulti(5 * (1 + next(c.getStars() for c in self.cards if c.name == 'Chaotic Chizoar')))
         for shrine in self.shrines:
             self.shrines[shrine]['Value'] *= cchizoar_multi
 
@@ -3687,23 +3681,17 @@ class Account:
         else:
             winzLanternPostString = ""
 
-        mgb = (1 + (
-            (
-                (25 * numberOfArtifactTiers)
-                + self.merits[5][4]['MaxLevel']
-                + 1  #int(self.achievements['Spectre Stars'])
-                + 1  #int(self.achievements['Regalis My Beloved'])
-            )
-            / 100)
+        mgb = ValueToMulti(
+            (25 * numberOfArtifactTiers)
+            + self.merits[5][4]['MaxLevel']
+            + 1  #int(self.achievements['Spectre Stars'])
+            + 1  #int(self.achievements['Regalis My Beloved'])
         )
-        player_mgb = (1 + (
-            (
-                (25 * self.sailing['Artifacts']['The Winz Lantern']['Level'])
-                + self.merits[5][4]['Level']
-                + int(self.achievements['Spectre Stars']['Complete'])
-                + int(self.achievements['Regalis My Beloved']['Complete'])
-            )
-            / 100)
+        player_mgb = ValueToMulti(
+            (25 * self.sailing['Artifacts']['The Winz Lantern']['Level'])
+            + self.merits[5][4]['Level']
+            + int(self.achievements['Spectre Stars']['Complete'])
+            + int(self.achievements['Regalis My Beloved']['Complete'])
         )
 
         self.summoning['WinnerBonusesAdvice'].append(Advice(
@@ -3756,21 +3744,21 @@ class Account:
         self._calculate_w6_farming_og()
 
     def _calculate_w6_farming_crop_depot(self):
-        lab_multi = 1 + ((
+        lab_multi = ValueToMulti(
             (self.labBonuses['Depot Studies PhD']['Value'] + self.labJewels['Pure Opal Rhombol']['Value']) * self.labBonuses['Depot Studies PhD']['Enabled']
-        ) / 100)
+        )
         #print(f"models._calculate_w6_farming_crop_depot lab_multi = {lab_multi}")
         for bonusName, bonusDetails in self.farming['Depot'].items():
             self.farming['Depot'][bonusName]['Value'] = self.farming['Depot'][bonusName]['BaseValue'] * lab_multi
             self.farming['Depot'][bonusName]['ValuePlus1'] = self.farming['Depot'][bonusName]['BaseValuePlus1'] * lab_multi
 
     def _calculate_w6_farming_day_market(self):
-        super_multi = 1 + ((self.farming['CropStacks']['Super Gmo'] * self.farming['MarketUpgrades']['Super Gmo']['Value']) / 100)
+        super_multi = ValueToMulti(self.farming['CropStacks']['Super Gmo'] * self.farming['MarketUpgrades']['Super Gmo']['Value'])
         #print(f"models._calculate_w6_farming_day_market super_multi = {super_multi}")
         for name, details in self.farming['MarketUpgrades'].items():
             try:
                 if "}" in details['Description']:  #Multiplicative
-                    val = 1 + (details['Value'] / 100)
+                    val = ValueToMulti(details['Value'])
                     self.farming['MarketUpgrades'][name]['Description'] = details['Description'].replace("}", f"{val:.3g}")
                 else:
                     self.farming['MarketUpgrades'][name]['Description'] = details['Description'].replace("{", f"{details['Value']:g}")
@@ -3782,13 +3770,13 @@ class Account:
                             f"{super_multi:,.4g}x"
                         )
                     elif name == 'Evolution Gmo':
-                        self.farming['MarketUpgrades'][name]['StackedValue'] = super_multi * pow(1 + (details['Value'] / 100), self.farming['CropStacks'][name])
+                        self.farming['MarketUpgrades'][name]['StackedValue'] = super_multi * pow(ValueToMulti(details['Value']), self.farming['CropStacks'][name])
                         self.farming['MarketUpgrades'][name]['Description'] += (
                             f".<br>{self.farming['CropStacks'][name]} stacks = "
                             f"{self.farming['MarketUpgrades'][name]['StackedValue']:,.4g}x"
                         )
                     else:
-                        self.farming['MarketUpgrades'][name]['StackedValue'] = super_multi * (1 + ((details['Value'] * self.farming['CropStacks'][name]) / 100))
+                        self.farming['MarketUpgrades'][name]['StackedValue'] = super_multi * (ValueToMulti(details['Value'] * self.farming['CropStacks'][name]))
                         self.farming['MarketUpgrades'][name]['Description'] += (
                             f".<br>{self.farming['CropStacks'][name]} stacks = "
                             f"{self.farming['MarketUpgrades'][name]['StackedValue']:,.5g}x"
@@ -3805,17 +3793,14 @@ class Account:
         #if ("CropsBonusValue" == e)
         #return Math.min(100, Math.round(Math.max(1, Math.floor(1 + (c.randomFloat() + q._customBlock_FarmingStuffs("BasketUpgQTY", 0, 5) / 100))) * (1 + q._customBlock_FarmingStuffs("LandRankUpgBonusTOTAL", 1, 0) / 100) * (1 + (q._customBlock_FarmingStuffs("LankRankUpgBonus", 1, 0) * c.asNumber(a.engine.getGameAttribute("FarmRank")[0][0 | t]) + q._customBlock_Summoning("VotingBonusz", 29, 0)) / 100)));
         self.farming['Value'] = {}
-        self.farming['Value']['Doubler Multi'] = floor(1 + (self.farming['MarketUpgrades']['Product Doubler']['Value'] / 100))
-        self.farming['Value']['Mboost Sboost Multi'] = 1 + ((
-                self.farming['LandRankDatabase']['Production Megaboost']['Value'] + self.farming['LandRankDatabase']['Production Superboost']['Value']
-        ) / 100)
+        self.farming['Value']['Doubler Multi'] = floor(ValueToMulti(self.farming['MarketUpgrades']['Product Doubler']['Value']))
+        self.farming['Value']['Mboost Sboost Multi'] = ValueToMulti(
+            self.farming['LandRankDatabase']['Production Megaboost']['Value'] + self.farming['LandRankDatabase']['Production Superboost']['Value']
+        )
         #Calculate with the Min Plot Rank
-        self.farming['Value']['Pboost Ballot Multi Min'] = 1 + (
-            (
-                (self.farming['LandRankDatabase']['Production Boost']['Value']) * self.farming.get('LandRankMinPlot', 0)  #Value of PBoost * Lowest Plot Rank
-                + (self.ballot['Buffs'][29]['Value'] * int(self.ballot['CurrentBuff'] == 29))  #Plus value of Ballot Buff * Active status
-            )
-            / 100
+        self.farming['Value']['Pboost Ballot Multi Min'] = ValueToMulti(
+            (self.farming['LandRankDatabase']['Production Boost']['Value']) * self.farming.get('LandRankMinPlot', 0)  #Value of PBoost * Lowest Plot Rank
+            + (self.ballot['Buffs'][29]['Value'] * int(self.ballot['CurrentBuff'] == 29))  #Plus value of Ballot Buff * Active status
         )
         self.farming['Value']['BeforeCapMin'] = round(
             max(1, self.farming['Value']['Doubler Multi'])  #end of max
@@ -3824,12 +3809,9 @@ class Account:
             )  #end of round
 
         #Now calculate with the Max Plot Rank
-        self.farming['Value']['Pboost Ballot Multi Max'] = 1 + (
-            (
-                (self.farming['LandRankDatabase']['Production Boost']['Value']) * self.farming.get('LandRankMaxPlot', 0)  # Value of PBoost * Highest Plot Rank
-                + (self.ballot['Buffs'][29]['Value'] * int(self.ballot['CurrentBuff'] == 29))  # Plus value of Ballot Buff * Active status
-            )
-            / 100
+        self.farming['Value']['Pboost Ballot Multi Max'] = ValueToMulti(
+            (self.farming['LandRankDatabase']['Production Boost']['Value']) * self.farming.get('LandRankMaxPlot', 0)  # Value of PBoost * Highest Plot Rank
+            + (self.ballot['Buffs'][29]['Value'] * int(self.ballot['CurrentBuff'] == 29))  # Plus value of Ballot Buff * Active status
         )
         self.farming['Value']['BeforeCapMax'] = round(
             max(1, self.farming['Value']['Doubler Multi'])  # end of max
@@ -3912,7 +3894,7 @@ class Account:
             self.farming['Evo']['Ballot Status'] = "is Inactive"
         else:
             self.farming['Evo']['Ballot Status'] = "status is not available in provided data"
-        self.farming['Evo']['Ballot Multi Max'] = 1 + (self.ballot['Buffs'][29]['Value'] / 100)
+        self.farming['Evo']['Ballot Multi Max'] = ValueToMulti(self.ballot['Buffs'][29]['Value'])
         self.farming['Evo']['Ballot Multi Current'] = max(1, self.farming['Evo']['Ballot Multi Max'] * self.farming['Evo']['Ballot Active'])
         self.farming['Evo']['Misc Multi'] = (
                 (1.05 * self.achievements["Lil' Overgrowth"]['Complete'])
@@ -4134,24 +4116,24 @@ class Account:
 
         account_wide = (
             base_crystal_chance
-            * (1 + self.stamps['Crystallin']['Value'] / 100)
-            * (1 + total_card_chance / 100)
+            * ValueToMulti(self.stamps['Crystallin']['Value'])
+            * ValueToMulti(total_card_chance)
         )
 
         for char in self.all_characters:
-            cmon_out_crystals_multi = max(1, 1 + lavaFunc(
+            cmon_out_crystals_multi = max(1, ValueToMulti(lavaFunc(
                 'decay',
                 char.max_talents_over_books if char.max_talents.get("26", 0) > 0 else 0,  #This is an assumption that Cmon Out Crystals is max booked
                 300,
                 100
-            ) / 100)
-            crystals_4_dayys_multi = max(1, 1 + lavaFunc(
+            )))
+            crystals_4_dayys_multi = max(1, ValueToMulti(lavaFunc(
                 'decay',
                 char.max_talents.get("619", 0),
                 174,
                 50
-            ) / 100)
-            shrine_and_po = 1 + ((char.po_boxes_invested['Non Predatory Loot Box']['Bonus3Value'] + self.shrines['Crescent Shrine']['Value']) / 100)
+            )))
+            shrine_and_po = ValueToMulti(char.po_boxes_invested['Non Predatory Loot Box']['Bonus3Value'] + self.shrines['Crescent Shrine']['Value'])
             try:
                 character_influenced = (
                     shrine_and_po
