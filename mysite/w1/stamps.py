@@ -344,7 +344,7 @@ def setStampProgressionTier() -> AdviceSection:
                         adviceCountsDict[stampType] += 1
                         stamp_AdviceDict["FindStamps"][stampType][subgroupName].append(
                             Advice(
-                                label=rStamp,
+                                label=f"{rStamp}, leveled with {playerStamps.get(rStamp, {}).get('Material', '').replace('-', ' ').title()}",
                                 picture_class=rStamp,
                                 resource=playerStamps.get(rStamp, {}).get('Material', ''),
                             ))
