@@ -1679,28 +1679,113 @@ sailing_progressionTiers = {
 farming_progressionTiers = {
     0: {},
     1: {
-        'Farming Level': 300,
+        'Farming Level': 10,
         'Day Market': {
-            'Land Plots': 20,
-            'Stronger Vines': 170,
-            'Product Doubler': 100,
-            'More Beenz': 100,
+            'Land Plots': 4,
+            'Stronger Vines': 6,
+            'Nutritious Soil': 7,
+        },
+        'Crops Unlocked': 19,  #Total number of crops is 19 for Overgrowth to be purchasable
+        'Suggestions': {
+            'EvoChance': [4, 4.5],
+            'CropIndex': [11, 29]  #11 = Basic/Lime, 29 = Earthy/Avocado
         },
         'Night Market': {
-            'Evolution Gmo': 125,
-            'Speed Gmo': 80,
-            'Og Fertilizer': 200,
-            'Exp Gmo': 100,
-            'Super Gmo': 50,
+            'Overgrowth': 1,
+        },
+    },  #Get Overgrowth
+    2: {
+        'Farming Level': 50,
+        'Day Market': {
+            'Land Plots': 7,
+            'Stronger Vines': 34,
+            'Nutritious Soil': 34,
+            'Product Doubler': 12,
+            'Biology Boost': 26,
+        },
+        'Crops Unlocked': 61,  #Total number of crops is 61 for Land Ranks to be purchasable
+        'Suggestions': {
+            'EvoChance': [325, 335],
+            'CropIndex': [21, 41, 55, 72],  #21 = Basic/Golden Blueberry, 41 = Earthy/Lettuce, 55 = Bulbo/Pink Daisy, 72 = Sushi/11
+        },
+        'Night Market': {
+            'Land Rank': 1,
+            'Evolution Gmo': 20,  #1.16x
+            'Speed Gmo': 10,  #3%
+        },
+    },  #Get Land Ranks
+    3: {
+        'Farming Level': 120,
+        'Day Market': {
+            'Land Plots': 11,
+            'Stronger Vines': 56,
+            'Nutritious Soil': 54,
+            'Biology Boost': 45,
+            'Product Doubler': 28,
+            'More Beenz': 28,
+            'Rank Boost': 19,
         },
         'Land Ranks': {
-            'Seed of Stealth': 1,
-            'Seed of Loot': 1,
-            'Seed of Damage': 1,
-            'Seed of Stats': 1,
-            'Overgrowth Superboost': 1000,
+            1: {
+                'Evolution Boost': 25,
+                'Soil Exp Boost': 25,
+                'Evolution Megaboost': 25,
+                'Production Boost': 50,
+                'Soil Exp Megaboost': 25,
+            },
+            2:{
+                'Soil Exp Boost': 50,
+                'Production Boost': 80,
+                'Overgrowth Boost': 50,
+            },
+            3: {
+                'Production Boost': 100,
+                'Production Megaboost': 100,
+                'Overgrowth Boost': 75,
+                'Soil Exp Megaboost': 50,
+            },
         },
-    },
+        'Suggestions': {
+            'EvoChance': [325, 335],  #TODO
+            'Speed': [30, 40],
+            'CropIndex': [46, 61]  #46 = Earthy/Gold Sliced Tomato, 61 = Bulbo/Golden Tulip, #TODO
+        },
+        'Night Market': {
+            'Evolution Gmo': 30,  # 1.24x
+            'Speed Gmo': 25,  # 7.5%
+            'Og Fertilizer': 10,  # 1.1x
+        },
+        #Soil Exp Boost : Mega : Super is around 4:2:3
+        #OG Boost : Mega :  Super is around 4:5:8
+        #Farmtastic pretty optional
+    },  #1k stacks. Reach 120 farming and the first few Glassy
+    # 4: {},  #Repeat the 1k stacks. Bean farming to afford
+    # 5: {},
+    # 6: {},  #Max Value, 100k stacks
+    # 15: {
+    #     'Farming Level': 300,
+    #     'Day Market': {
+    #         'Land Plots': 20,
+    #         'Stronger Vines': 170,
+    #         'Product Doubler': 100,
+    #         'More Beenz': 100,
+    #         'Rank Boost': 100,
+    #     },
+    #     'Night Market': {
+    #         'Evolution Gmo': 125,
+    #         'Speed Gmo': 80,
+    #         'Og Fertilizer': 200,
+    #         'Exp Gmo': 100,
+    #         'Super Gmo': 50,
+    #     },
+    #     'Land Ranks': {
+    #         'Seed of Stealth': 1,
+    #         'Seed of Loot': 1,
+    #         'Seed of Damage': 1,
+    #         'Seed of Stats': 1,
+    #         'Overgrowth Superboost': 1000,
+    #     },
+    # },
 }
 
 ###UI CONSTS###
@@ -6317,17 +6402,177 @@ cropDepotDict = {
 
 }
 cropDict = {
-    1: {'Name': 'Apple', 'Image': 'apple', 'SeedName': 'Basic', 'SeedCropIndex': 0},
-    21: {'Name': 'Gold Blueberry', 'Image': 'gold-blueberry', 'SeedName': 'Basic', 'SeedCropIndex': 19},
-    46: {'Name': 'Gold Sliced Tomato', 'Image': 'gold-sliced-tomato', 'SeedName': 'Earthy', 'SeedCropIndex': 23},
-    61: {'Name': 'Golden Tulip', 'Image': 'golden-tulip', 'SeedName': 'Bulbo', 'SeedCropIndex': 13},
-    84: {'Name': 'Sushi Crop 23', 'Image': 'sushi-crop-23', 'SeedName': 'Sushi', 'SeedCropIndex': 21},
-    107: {'Name': 'Mushroom 23', 'Image': 'mushroom-23', 'SeedName': 'Mushie', 'SeedCropIndex': 21},
-    120: {'Name': 'Glassy Corn', 'Image': 'glassy-corn', 'SeedName': 'Glassy', 'SeedCropIndex': 11},
-    130: {'Name': 'Red Glassy Corn', 'Image': 'red-glassy-corn', 'SeedName': 'Glassy', 'SeedCropIndex': 21},
-    140: {'Name': 'Green Glassy Corn', 'Image': 'green-glassy-corn', 'SeedName': 'Glassy', 'SeedCropIndex': 31},
-    150: {'Name': 'White Glassy Corn', 'Image': 'white-glassy-corn', 'SeedName': 'Glassy', 'SeedCropIndex': 41},
-    160: {'Name': 'Purple Glassy Corn', 'Image': 'purple-glassy-corn', 'SeedName': 'Glassy', 'SeedCropIndex': 51},
+#Basic
+    #0: {'Name': '', 'Image': '', 'SeedName': 'Earthy', 'SeedCropIndex': None},
+    1: {'Name': 'Apple', 'Image': 'apple-crop', 'SeedName': 'Basic', 'SeedCropIndex': 1},
+    2: {'Name': 'Orange', 'Image': 'orange', 'SeedName': 'Basic', 'SeedCropIndex': 2},
+    3: {'Name': 'Lemon', 'Image': 'lemon', 'SeedName': 'Basic', 'SeedCropIndex': 3},
+    4: {'Name': 'Pear', 'Image': 'pear', 'SeedName': 'Basic', 'SeedCropIndex': 4},
+    5: {'Name': 'Strawberry', 'Image': 'strawberry', 'SeedName': 'Basic', 'SeedCropIndex': 5},
+    6: {'Name': 'Bananas', 'Image': 'bananas', 'SeedName': 'Basic', 'SeedCropIndex': 6},
+    7: {'Name': 'Blueberry', 'Image': 'blueberry', 'SeedName': 'Basic', 'SeedCropIndex': 7},
+    8: {'Name': 'Brown Grapes', 'Image': 'red-grapes', 'SeedName': 'Basic', 'SeedCropIndex': 8},
+    9: {'Name': 'Red Pear', 'Image': 'red-pear', 'SeedName': 'Basic', 'SeedCropIndex': 9},
+    10: {'Name': 'Pineapple', 'Image': 'pineapple', 'SeedName': 'Basic', 'SeedCropIndex': 10},
+    11: {'Name': 'Lime', 'Image': 'lime', 'SeedName': 'Basic', 'SeedCropIndex': 11},
+    12: {'Name': 'Raspberry', 'Image': 'raspberry', 'SeedName': 'Basic', 'SeedCropIndex': 12},
+    13: {'Name': 'Fig', 'Image': 'fig', 'SeedName': 'Basic', 'SeedCropIndex': 13},
+    14: {'Name': 'Peach', 'Image': 'peach', 'SeedName': 'Basic', 'SeedCropIndex': 14},
+    15: {'Name': 'Purple Grapes', 'Image': 'purple-grapes', 'SeedName': 'Basic', 'SeedCropIndex': 15},
+    16: {'Name': 'Yellow Pear', 'Image': 'yellow-pear', 'SeedName': 'Basic', 'SeedCropIndex': 16},
+    17: {'Name': 'Watermelon', 'Image': 'watermelon', 'SeedName': 'Basic', 'SeedCropIndex': 17},
+    18: {'Name': 'Green Grapes', 'Image': 'green-grapes', 'SeedName': 'Basic', 'SeedCropIndex': 18},
+    19: {'Name': 'Dragon Fruit', 'Image': 'dragon-fruit', 'SeedName': 'Basic', 'SeedCropIndex': 19},
+    20: {'Name': 'Mango', 'Image': 'mango', 'SeedName': 'Basic', 'SeedCropIndex': 20},
+    21: {'Name': 'Gold Blueberry', 'Image': 'gold-blueberry', 'SeedName': 'Basic', 'SeedCropIndex': 21},
+#Earthy
+    22: {'Name': 'Carrot', 'Image': 'carrot', 'SeedName': 'Earthy', 'SeedCropIndex': 1},
+    23: {'Name': 'Potato', 'Image': 'potato', 'SeedName': 'Earthy', 'SeedCropIndex': 2},
+    24: {'Name': 'Beat', 'Image': 'beat', 'SeedName': 'Earthy', 'SeedCropIndex': 3},
+    25: {'Name': 'Tomato', 'Image': 'tomato', 'SeedName': 'Earthy', 'SeedCropIndex': 4},
+    26: {'Name': 'Artichoke', 'Image': 'artichoke', 'SeedName': 'Earthy', 'SeedCropIndex': 5},
+    27: {'Name': 'Roma Tomato', 'Image': 'roma-tomato', 'SeedName': 'Earthy', 'SeedCropIndex': 6},
+    28: {'Name': 'Butternut Squash', 'Image': 'butternut-squash', 'SeedName': 'Earthy', 'SeedCropIndex': 7},
+    29: {'Name': 'Avocado', 'Image': 'avocado', 'SeedName': 'Earthy', 'SeedCropIndex': 8},
+    30: {'Name': 'Red Pepper', 'Image': 'red-pepper', 'SeedName': 'Earthy', 'SeedCropIndex': 9},
+    31: {'Name': 'Broccoli', 'Image': 'broccoli', 'SeedName': 'Earthy', 'SeedCropIndex': 10},
+    32: {'Name': 'Radish', 'Image': 'radish', 'SeedName': 'Earthy', 'SeedCropIndex': 11},
+    33: {'Name': 'Coconut', 'Image': 'coconut', 'SeedName': 'Earthy', 'SeedCropIndex': 12},
+    34: {'Name': 'Sliced Tomato', 'Image': 'sliced-tomato', 'SeedName': 'Earthy', 'SeedCropIndex': 13},
+    35: {'Name': 'Cashew', 'Image': 'cashew', 'SeedName': 'Earthy', 'SeedCropIndex': 14},
+    36: {'Name': 'Turnip', 'Image': 'turnip', 'SeedName': 'Earthy', 'SeedCropIndex': 15},
+    37: {'Name': 'Coffee Bean', 'Image': 'coffee-bean', 'SeedName': 'Earthy', 'SeedCropIndex': 16},
+    38: {'Name': 'Pumpkin', 'Image': 'pumpkin', 'SeedName': 'Earthy', 'SeedCropIndex': 17},
+    39: {'Name': 'Sliced Cucumber', 'Image': 'sliced-cucumber', 'SeedName': 'Earthy', 'SeedCropIndex': 18},
+    40: {'Name': 'Eggplant', 'Image': 'eggplant', 'SeedName': 'Earthy', 'SeedCropIndex': 19},
+    41: {'Name': 'Lettuce', 'Image': 'lettuce', 'SeedName': 'Earthy', 'SeedCropIndex': 20},
+    42: {'Name': 'Garlic', 'Image': 'garlic', 'SeedName': 'Earthy', 'SeedCropIndex': 21},
+    43: {'Name': 'Green Beans', 'Image': 'green-beans', 'SeedName': 'Earthy', 'SeedCropIndex': 22},
+    44: {'Name': 'Bell Pepper', 'Image': 'bell-pepper', 'SeedName': 'Earthy', 'SeedCropIndex': 23},
+    45: {'Name': 'Corn', 'Image': 'corn-crop', 'SeedName': 'Earthy', 'SeedCropIndex': 24},
+    46: {'Name': 'Gold Sliced Tomato', 'Image': 'gold-sliced-tomato', 'SeedName': 'Earthy', 'SeedCropIndex': 25},
+#Bulbo
+    47: {'Name': 'Daisy', 'Image': 'daisy', 'SeedName': 'Bulbo', 'SeedCropIndex': 1},
+    48: {'Name': 'Flour', 'Image': 'flour', 'SeedName': 'Bulbo', 'SeedCropIndex': 2},
+    49: {'Name': 'Stargazer Lily', 'Image': 'stargazer-lily', 'SeedName': 'Bulbo', 'SeedCropIndex': 3},
+    50: {'Name': 'Rose', 'Image': 'rose', 'SeedName': 'Bulbo', 'SeedCropIndex': 4},
+    51: {'Name': 'Sunflower', 'Image': 'sunflower', 'SeedName': 'Bulbo', 'SeedCropIndex': 5},
+    52: {'Name': 'Blue Daisy', 'Image': 'blue-daisy', 'SeedName': 'Bulbo', 'SeedCropIndex': 6},
+    53: {'Name': 'Red Rose', 'Image': 'red-rose', 'SeedName': 'Bulbo', 'SeedCropIndex': 7},
+    54: {'Name': 'Tulip', 'Image': 'tulip', 'SeedName': 'Bulbo', 'SeedCropIndex': 8},
+    55: {'Name': 'Pink Daisy', 'Image': 'pink-daisy', 'SeedName': 'Bulbo', 'SeedCropIndex': 9},
+    56: {'Name': 'Cauliflower', 'Image': 'cauliflower', 'SeedName': 'Bulbo', 'SeedCropIndex': 10},
+    57: {'Name': 'Cape Marguerite Daisy', 'Image': 'cape-marguerite-daisy', 'SeedName': 'Bulbo', 'SeedCropIndex': 11},
+    58: {'Name': 'Papua Black Orchid', 'Image': 'papua-black-orchid', 'SeedName': 'Bulbo', 'SeedCropIndex': 12},
+    59: {'Name': 'Muffin', 'Image': 'muffin', 'SeedName': 'Bulbo', 'SeedCropIndex': 13},
+    60: {'Name': 'Black Rose', 'Image': 'black-rose', 'SeedName': 'Bulbo', 'SeedCropIndex': 14},
+    61: {'Name': 'Golden Tulip', 'Image': 'golden-tulip', 'SeedName': 'Bulbo', 'SeedCropIndex': 15},
+#Sushi
+    62: {'Name': 'Sushi Crop 1', 'Image': 'sushi-crop-1', 'SeedName': 'Sushi', 'SeedCropIndex': 1},
+    63: {'Name': 'Sushi Crop 2', 'Image': 'sushi-crop-2', 'SeedName': 'Sushi', 'SeedCropIndex': 2},
+    64: {'Name': 'Sushi Crop 3', 'Image': 'sushi-crop-3', 'SeedName': 'Sushi', 'SeedCropIndex': 3},
+    65: {'Name': 'Sushi Crop 4', 'Image': 'sushi-crop-4', 'SeedName': 'Sushi', 'SeedCropIndex': 4},
+    66: {'Name': 'Sushi Crop 5', 'Image': 'sushi-crop-5', 'SeedName': 'Sushi', 'SeedCropIndex': 5},
+    67: {'Name': 'Sushi Crop 6', 'Image': 'sushi-crop-6', 'SeedName': 'Sushi', 'SeedCropIndex': 6},
+    68: {'Name': 'Sushi Crop 7', 'Image': 'sushi-crop-7', 'SeedName': 'Sushi', 'SeedCropIndex': 7},
+    69: {'Name': 'Sushi Crop 8', 'Image': 'sushi-crop-8', 'SeedName': 'Sushi', 'SeedCropIndex': 8},
+    70: {'Name': 'Sushi Crop 9', 'Image': 'sushi-crop-9', 'SeedName': 'Sushi', 'SeedCropIndex': 9},
+    71: {'Name': 'Sushi Crop 10', 'Image': 'sushi-crop-10', 'SeedName': 'Sushi', 'SeedCropIndex': 10},
+    72: {'Name': 'Sushi Crop 11', 'Image': 'sushi-crop-11', 'SeedName': 'Sushi', 'SeedCropIndex': 11},
+    73: {'Name': 'Sushi Crop 12', 'Image': 'sushi-crop-12', 'SeedName': 'Sushi', 'SeedCropIndex': 12},
+    74: {'Name': 'Sushi Crop 13', 'Image': 'sushi-crop-13', 'SeedName': 'Sushi', 'SeedCropIndex': 13},
+    75: {'Name': 'Sushi Crop 14', 'Image': 'sushi-crop-14', 'SeedName': 'Sushi', 'SeedCropIndex': 14},
+    76: {'Name': 'Sushi Crop 15', 'Image': 'sushi-crop-15', 'SeedName': 'Sushi', 'SeedCropIndex': 15},
+    77: {'Name': 'Sushi Crop 16', 'Image': 'sushi-crop-16', 'SeedName': 'Sushi', 'SeedCropIndex': 16},
+    78: {'Name': 'Sushi Crop 17', 'Image': 'sushi-crop-17', 'SeedName': 'Sushi', 'SeedCropIndex': 17},
+    79: {'Name': 'Sushi Crop 18', 'Image': 'sushi-crop-18', 'SeedName': 'Sushi', 'SeedCropIndex': 18},
+    80: {'Name': 'Sushi Crop 19', 'Image': 'sushi-crop-19', 'SeedName': 'Sushi', 'SeedCropIndex': 19},
+    81: {'Name': 'Sushi Crop 20', 'Image': 'sushi-crop-20', 'SeedName': 'Sushi', 'SeedCropIndex': 20},
+    82: {'Name': 'Sushi Crop 21', 'Image': 'sushi-crop-21', 'SeedName': 'Sushi', 'SeedCropIndex': 21},
+    83: {'Name': 'Sushi Crop 22', 'Image': 'sushi-crop-22', 'SeedName': 'Sushi', 'SeedCropIndex': 22},
+    84: {'Name': 'Sushi Crop 23', 'Image': 'sushi-crop-23', 'SeedName': 'Sushi', 'SeedCropIndex': 23},
+#Mushie
+    85:  {'Name': 'Mushroom 1', 'Image': 'mushroom-1', 'SeedName': 'Mushie', 'SeedCropIndex': 1},
+    86:  {'Name': 'Mushroom 2', 'Image': 'mushroom-2', 'SeedName': 'Mushie', 'SeedCropIndex': 2},
+    87:  {'Name': 'Mushroom 3', 'Image': 'mushroom-3', 'SeedName': 'Mushie', 'SeedCropIndex': 3},
+    88:  {'Name': 'Mushroom 4', 'Image': 'mushroom-4', 'SeedName': 'Mushie', 'SeedCropIndex': 4},
+    89:  {'Name': 'Mushroom 5', 'Image': 'mushroom-5', 'SeedName': 'Mushie', 'SeedCropIndex': 5},
+    90:  {'Name': 'Mushroom 6', 'Image': 'mushroom-6', 'SeedName': 'Mushie', 'SeedCropIndex': 6},
+    91:  {'Name': 'Mushroom 7', 'Image': 'mushroom-7', 'SeedName': 'Mushie', 'SeedCropIndex': 7},
+    92:  {'Name': 'Mushroom 8', 'Image': 'mushroom-8', 'SeedName': 'Mushie', 'SeedCropIndex': 8},
+    93:  {'Name': 'Mushroom 9', 'Image': 'mushroom-9', 'SeedName': 'Mushie', 'SeedCropIndex': 9},
+    94:  {'Name': 'Mushroom 10', 'Image': 'mushroom-10', 'SeedName': 'Mushie', 'SeedCropIndex': 10},
+    95:  {'Name': 'Mushroom 11', 'Image': 'mushroom-11', 'SeedName': 'Mushie', 'SeedCropIndex': 11},
+    96:  {'Name': 'Mushroom 12', 'Image': 'mushroom-12', 'SeedName': 'Mushie', 'SeedCropIndex': 12},
+    97:  {'Name': 'Mushroom 13', 'Image': 'mushroom-13', 'SeedName': 'Mushie', 'SeedCropIndex': 13},
+    98:  {'Name': 'Mushroom 14', 'Image': 'mushroom-14', 'SeedName': 'Mushie', 'SeedCropIndex': 14},
+    99:  {'Name': 'Mushroom 15', 'Image': 'mushroom-15', 'SeedName': 'Mushie', 'SeedCropIndex': 15},
+    100: {'Name': 'Mushroom 16', 'Image': 'mushroom-16', 'SeedName': 'Mushie', 'SeedCropIndex': 16},
+    101: {'Name': 'Mushroom 17', 'Image': 'mushroom-17', 'SeedName': 'Mushie', 'SeedCropIndex': 17},
+    102: {'Name': 'Mushroom 18', 'Image': 'mushroom-18', 'SeedName': 'Mushie', 'SeedCropIndex': 18},
+    103: {'Name': 'Mushroom 19', 'Image': 'mushroom-19', 'SeedName': 'Mushie', 'SeedCropIndex': 19},
+    104: {'Name': 'Mushroom 20', 'Image': 'mushroom-20', 'SeedName': 'Mushie', 'SeedCropIndex': 20},
+    105: {'Name': 'Mushroom 21', 'Image': 'mushroom-21', 'SeedName': 'Mushie', 'SeedCropIndex': 21},
+    106: {'Name': 'Mushroom 22', 'Image': 'mushroom-22', 'SeedName': 'Mushie', 'SeedCropIndex': 22},
+    107: {'Name': 'Mushroom 23', 'Image': 'mushroom-23', 'SeedName': 'Mushie', 'SeedCropIndex': 23},
+#Glassy
+    108: {'Name': 'Glassy Bananas', 'Image': 'glassy-bananas', 'SeedName': 'Glassy', 'SeedCropIndex': 1},
+    109: {'Name': 'Glassy Mango', 'Image': 'glassy-mango', 'SeedName': 'Glassy', 'SeedCropIndex': 2},
+    110: {'Name': 'Glassy Mushroom', 'Image': 'glassy-mushroom', 'SeedName': 'Glassy', 'SeedCropIndex': 3},
+    111: {'Name': 'Glassy Maki', 'Image': 'glassy-maki', 'SeedName': 'Glassy', 'SeedCropIndex': 4},
+    112: {'Name': 'Glassy Broccoli', 'Image': 'glassy-broccoli', 'SeedName': 'Glassy', 'SeedCropIndex': 5},
+    113: {'Name': 'Glassy Carrot', 'Image': 'glassy-carrot', 'SeedName': 'Glassy', 'SeedCropIndex': 6},
+    114: {'Name': 'Glassy Tomato', 'Image': 'glassy-tomato', 'SeedName': 'Glassy', 'SeedCropIndex': 7},
+    115: {'Name': 'Glassy Watermelon', 'Image': 'glassy-watermelon', 'SeedName': 'Glassy', 'SeedCropIndex': 8},
+    116: {'Name': 'Glassy Shrimp', 'Image': 'glassy-shrimp', 'SeedName': 'Glassy', 'SeedCropIndex': 9},
+    117: {'Name': 'Glassy Rose', 'Image': 'glassy-rose', 'SeedName': 'Glassy', 'SeedCropIndex': 10},
+    118: {'Name': 'Glassy Lettuce', 'Image': 'glassy-lettuce', 'SeedName': 'Glassy', 'SeedCropIndex': 11},
+    119: {'Name': 'Glassy Onigiri', 'Image': 'glassy-onigiri', 'SeedName': 'Glassy', 'SeedCropIndex': 12},
+    120: {'Name': 'Glassy Corn', 'Image': 'glassy-corn', 'SeedName': 'Glassy', 'SeedCropIndex': 13},
+#Red Glassy
+    121: {'Name': 'Red Glassy Bananas',     'Image': 'red-glassy-bananas', 'SeedName': 'Glassy',    'SeedCropIndex': 14},
+    122: {'Name': 'Red Glassy Mango',       'Image': 'red-glassy-mango', 'SeedName': 'Glassy',      'SeedCropIndex': 15},
+    123: {'Name': 'Red Glassy Broccoli',    'Image': 'red-glassy-broccoli', 'SeedName': 'Glassy',   'SeedCropIndex': 16},
+    124: {'Name': 'Red Glassy Carrot',      'Image': 'red-glassy-carrot', 'SeedName': 'Glassy',     'SeedCropIndex': 17},
+    125: {'Name': 'Red Glassy Tomato',      'Image': 'red-glassy-tomato', 'SeedName': 'Glassy',     'SeedCropIndex': 18},
+    126: {'Name': 'Red Glassy Watermelon',  'Image': 'red-glassy-watermelon', 'SeedName': 'Glassy', 'SeedCropIndex': 19},
+    127: {'Name': 'Red Glassy Shrimp',      'Image': 'red-glassy-shrimp', 'SeedName': 'Glassy',     'SeedCropIndex': 20},
+    128: {'Name': 'Red Glassy Rose',        'Image': 'red-glassy-rose', 'SeedName': 'Glassy',       'SeedCropIndex': 21},
+    129: {'Name': 'Red Glassy Onigiri',     'Image': 'red-glassy-corn', 'SeedName': 'Glassy',       'SeedCropIndex': 22},
+    130: {'Name': 'Red Glassy Corn',        'Image': 'red-glassy-corn', 'SeedName': 'Glassy',       'SeedCropIndex': 23},
+#Green Glassy
+    131: {'Name': 'Green Glassy Bananas',     'Image': 'green-glassy-bananas', 'SeedName': 'Glassy',    'SeedCropIndex': 24},
+    132: {'Name': 'Green Glassy Mango',       'Image': 'green-glassy-mango', 'SeedName': 'Glassy',      'SeedCropIndex': 25},
+    133: {'Name': 'Green Glassy Broccoli',    'Image': 'green-glassy-broccoli', 'SeedName': 'Glassy',   'SeedCropIndex': 26},
+    134: {'Name': 'Green Glassy Carrot',      'Image': 'green-glassy-carrot', 'SeedName': 'Glassy',     'SeedCropIndex': 27},
+    135: {'Name': 'Green Glassy Tomato',      'Image': 'green-glassy-tomato', 'SeedName': 'Glassy',     'SeedCropIndex': 28},
+    136: {'Name': 'Green Glassy Watermelon',  'Image': 'green-glassy-watermelon', 'SeedName': 'Glassy', 'SeedCropIndex': 29},
+    137: {'Name': 'Green Glassy Shrimp',      'Image': 'green-glassy-shrimp', 'SeedName': 'Glassy',     'SeedCropIndex': 30},
+    138: {'Name': 'Green Glassy Rose',        'Image': 'green-glassy-rose', 'SeedName': 'Glassy',       'SeedCropIndex': 31},
+    139: {'Name': 'Green Glassy Onigiri',     'Image': 'green-glassy-corn', 'SeedName': 'Glassy',       'SeedCropIndex': 32},
+    140: {'Name': 'Green Glassy Corn',        'Image': 'green-glassy-corn', 'SeedName': 'Glassy',       'SeedCropIndex': 33},
+#White Glassy
+    141: {'Name': 'White Glassy Bananas',     'Image': 'white-glassy-bananas', 'SeedName': 'Glassy',    'SeedCropIndex': 34},
+    142: {'Name': 'White Glassy Mango',       'Image': 'white-glassy-mango', 'SeedName': 'Glassy',      'SeedCropIndex': 35},
+    143: {'Name': 'White Glassy Broccoli',    'Image': 'white-glassy-broccoli', 'SeedName': 'Glassy',   'SeedCropIndex': 36},
+    144: {'Name': 'White Glassy Carrot',      'Image': 'white-glassy-carrot', 'SeedName': 'Glassy',     'SeedCropIndex': 37},
+    145: {'Name': 'White Glassy Tomato',      'Image': 'white-glassy-tomato', 'SeedName': 'Glassy',     'SeedCropIndex': 38},
+    146: {'Name': 'White Glassy Watermelon',  'Image': 'white-glassy-watermelon', 'SeedName': 'Glassy', 'SeedCropIndex': 39},
+    147: {'Name': 'White Glassy Shrimp',      'Image': 'white-glassy-shrimp', 'SeedName': 'Glassy',     'SeedCropIndex': 40},
+    148: {'Name': 'White Glassy Rose',        'Image': 'white-glassy-rose', 'SeedName': 'Glassy',       'SeedCropIndex': 41},
+    149: {'Name': 'White Glassy Onigiri',     'Image': 'white-glassy-corn', 'SeedName': 'Glassy',       'SeedCropIndex': 42},
+    150: {'Name': 'White Glassy Corn',        'Image': 'white-glassy-corn', 'SeedName': 'Glassy',       'SeedCropIndex': 43},
+#Purple Glassy
+    151: {'Name': 'Purple Glassy Bananas',     'Image': 'purple-glassy-bananas', 'SeedName': 'Glassy',    'SeedCropIndex': 44},
+    152: {'Name': 'Purple Glassy Mango',       'Image': 'purple-glassy-mango', 'SeedName': 'Glassy',      'SeedCropIndex': 45},
+    153: {'Name': 'Purple Glassy Broccoli',    'Image': 'purple-glassy-broccoli', 'SeedName': 'Glassy',   'SeedCropIndex': 46},
+    154: {'Name': 'Purple Glassy Carrot',      'Image': 'purple-glassy-carrot', 'SeedName': 'Glassy',     'SeedCropIndex': 47},
+    155: {'Name': 'Purple Glassy Tomato',      'Image': 'purple-glassy-tomato', 'SeedName': 'Glassy',     'SeedCropIndex': 48},
+    156: {'Name': 'Purple Glassy Watermelon',  'Image': 'purple-glassy-watermelon', 'SeedName': 'Glassy', 'SeedCropIndex': 49},
+    157: {'Name': 'Purple Glassy Shrimp',      'Image': 'purple-glassy-shrimp', 'SeedName': 'Glassy',     'SeedCropIndex': 50},
+    158: {'Name': 'Purple Glassy Rose',        'Image': 'purple-glassy-rose', 'SeedName': 'Glassy',       'SeedCropIndex': 51},
+    159: {'Name': 'Purple Glassy Onigiri',     'Image': 'purple-glassy-corn', 'SeedName': 'Glassy',       'SeedCropIndex': 52},
+    160: {'Name': 'Purple Glassy Corn',        'Image': 'purple-glassy-corn', 'SeedName': 'Glassy',       'SeedCropIndex': 53},
 }
 seed_base = {
     'Basic': 0.75,
@@ -6339,11 +6584,14 @@ seed_base = {
 }
 crop_base = 0.3
 def getCropEvoChance(overallSeedNumber: int) -> float:
-    try:
-        return crop_base * pow(seed_base[cropDict[overallSeedNumber]['SeedName']], cropDict[overallSeedNumber]['SeedCropIndex'])
-    except:
-        logger.warning(f"overallSeedNumber {overallSeedNumber} not found in cropDict. Returning 0")
-        return 0.0
+    if cropDict[overallSeedNumber]['SeedCropIndex'] == 1:
+        return 1
+    else:
+        try:
+            return crop_base * pow(seed_base[cropDict[overallSeedNumber]['SeedName']], cropDict[overallSeedNumber]['SeedCropIndex'] - 2)
+        except:
+            logger.warning(f"overallSeedNumber {overallSeedNumber} not found in cropDict. Returning crop_base {crop_base}")
+            return crop_base
 
 def getMoissaniteValue(moissaniteLevel: int):
     try:

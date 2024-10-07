@@ -2790,6 +2790,7 @@ class Account:
 
     def _parse_w6_farming(self):
         self.farming = {
+            'MagicBeans': 0,
             'Crops': {},
             "CropsUnlocked": 0,
             "MarketUpgrades": {},
@@ -2818,7 +2819,7 @@ class Account:
             1
             + self.farming['MarketUpgrades']['Land Plots']['Level']
             + self.gemshop['Plot of Land']
-            + 3 if self.merits[5][2]['Level'] >= 3 else self.merits[5][2]['Level']
+            + min(3, self.merits[5][2]['Level'])
         )
 
     def _parse_w6_farming_crops(self, rawCrops):
@@ -2871,6 +2872,10 @@ class Account:
             }
 
     def _parse_w6_farming_markets(self, rawMarkets):
+        try:
+            self.farming['MagicBeans'] = int(float(rawMarkets[1]))
+        except:
+            pass
         for marketUpgradeIndex, marketUpgrade in enumerate(marketUpgradeDetails):
             try:
                 self.farming["MarketUpgrades"][marketUpgrade[0].replace('_', ' ').title()] = {
@@ -2907,7 +2912,7 @@ class Account:
         try:
             self.farming['LandRankPlotRanks'] = rawRanks[0]
             self.farming['LandRankTotalRanks'] = sum(rawRanks[0])
-            self.farming['LandRankMinPlot'] = min(rawRanks[0], default=0)
+            self.farming['LandRankMinPlot'] = min([v for v in rawRanks[0] if v > 0], default=0)
             self.farming['LandRankMaxPlot'] = max(rawRanks[0], default=0)
         except:
             self.farming['LandRankPlotRanks'] = [0]*36
@@ -3753,7 +3758,7 @@ class Account:
             self.farming['Depot'][bonusName]['ValuePlus1'] = self.farming['Depot'][bonusName]['BaseValuePlus1'] * lab_multi
 
     def _calculate_w6_farming_day_market(self):
-        super_multi = ValueToMulti(self.farming['CropStacks']['Super Gmo'] * self.farming['MarketUpgrades']['Super Gmo']['Value'])
+        super_multi = ValueToMulti(self.farming['MarketUpgrades']['Super Gmo']['Value'] * self.farming['CropStacks']['Super Gmo'])
         #print(f"models._calculate_w6_farming_day_market super_multi = {super_multi}")
         for name, details in self.farming['MarketUpgrades'].items():
             try:
@@ -3825,6 +3830,7 @@ class Account:
 
     def _calculate_w6_farming_crop_evo(self):
         # Alchemy
+        self.farming['Mama Trolls Unlocked'] = False
         self.farming['Evo'] = {}
         self.farming['Evo']['Maps Opened'] = 0
         for char in self.all_characters:
@@ -3832,6 +3838,8 @@ class Account:
                 try:
                     if int(float(char.kill_dict.get(mapIndex, [1])[0])) <= 0:
                         self.farming['Evo']['Maps Opened'] += 1
+                        if mapIndex == 257 and not self.farming['Mama Trolls Unlocked']:
+                            self.farming['Mama Trolls Unlocked'] = True
                 except:
                     continue
         self.farming['Evo']['Cropius Final Value'] = self.farming['Evo']['Maps Opened'] * self.alchemy_bubbles['Cropius Mapper']['BaseValue']
@@ -3859,7 +3867,7 @@ class Account:
         self.farming['Evo']['Farm Multi'] = ValueToMulti(self.farming['MarketUpgrades']['Biology Boost']['Value']) * self.farming['MarketUpgrades']['Evolution Gmo']['StackedValue']
         # Land Ranks
         self.farming['Evo']['LR Multi'] = (
-                ValueToMulti(self.farming['LandRankDatabase']['Evolution Boost']['Value'] * self.farming.get('LandRankMinPlot', 0))
+                ValueToMulti(self.farming['LandRankDatabase']['Evolution Boost']['Value'] * self.farming['LandRankMinPlot'])
                 * ValueToMulti(self.farming['LandRankDatabase']['Evolution Megaboost']['Value'])
                 * ValueToMulti(self.farming['LandRankDatabase']['Evolution Superboost']['Value'])
                 * ValueToMulti(self.farming['LandRankDatabase']['Evolution Ultraboost']['Value'])
@@ -3897,21 +3905,21 @@ class Account:
         self.farming['Evo']['Ballot Multi Max'] = ValueToMulti(self.ballot['Buffs'][29]['Value'])
         self.farming['Evo']['Ballot Multi Current'] = max(1, self.farming['Evo']['Ballot Multi Max'] * self.farming['Evo']['Ballot Active'])
         self.farming['Evo']['Misc Multi'] = (
-                (1.05 * self.achievements["Lil' Overgrowth"]['Complete'])
+                ValueToMulti(5 * self.achievements["Lil' Overgrowth"]['Complete'])
                 * self.killroy_skullshop['Crop Multi']
-                * 1.15 * self.farming['Evo']['Skill Mastery Bonus Bool'] * self.rift['SkillMastery']
+                * ValueToMulti(15 * self.farming['Evo']['Skill Mastery Bonus Bool'] * self.rift['SkillMastery'])
                 * self.farming['Evo']['Ballot Multi Current']
         )
         # subtotal doesn't include Crop Chapter
         self.farming['Evo']['Subtotal Multi'] = (
-                self.farming['Evo']['Alch Multi']
-                * self.farming['Evo']['Stamp Multi']
-                * self.farming['Evo']['Meals Multi']
-                * self.farming['Evo']['Farm Multi']
-                * self.farming['Evo']['LR Multi']
-                * self.farming['Evo']['Summon Multi']
-                * self.farming['Evo']['SS Multi']
-                * self.farming['Evo']['Misc Multi']
+            self.farming['Evo']['Alch Multi']
+            * self.farming['Evo']['Stamp Multi']
+            * self.farming['Evo']['Meals Multi']
+            * self.farming['Evo']['Farm Multi']
+            * self.farming['Evo']['LR Multi']
+            * self.farming['Evo']['Summon Multi']
+            * self.farming['Evo']['SS Multi']
+            * self.farming['Evo']['Misc Multi']
         )
 
     def _calculate_w6_farming_crop_speed(self):

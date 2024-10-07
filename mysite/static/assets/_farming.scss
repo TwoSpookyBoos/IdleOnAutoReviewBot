@@ -8,6 +8,7 @@ $seed-gifs: (
 );
 
 $all-crops: (
+    //Basic Seed
     apple-crop: img('wiki/FarmCrop0.png'),
     orange: img('wiki/FarmCrop1.png'),
     lemon: img('wiki/FarmCrop2.png'),
@@ -29,6 +30,7 @@ $all-crops: (
     dragon-fruit: img('wiki/FarmCrop18.png'),
     mango: img('wiki/FarmCrop19.png'),
     gold-blueberry: img('wiki/FarmCrop20.png'),
+    //Earthy Seed
     carrot: img('wiki/FarmCrop21.png'),
     potato: img('wiki/FarmCrop22.png'),
     beat: img('wiki/FarmCrop23.png'),
@@ -52,8 +54,9 @@ $all-crops: (
     garlic: img('wiki/FarmCrop41.png'),
     green-beans: img('wiki/FarmCrop42.png'),
     bell-pepper: img('wiki/FarmCrop43.png'),
-    corn: img('wiki/FarmCrop44.png'),
+    corn-crop: img('wiki/FarmCrop44.png'),
     gold-sliced-tomato: img('wiki/FarmCrop45.png'),
+    //Bulbo Seed
     daisy: img('wiki/FarmCrop46.png'),
     flour: img('wiki/FarmCrop47.png'),
     stargazer-lily: img('wiki/FarmCrop48.png'),
@@ -122,7 +125,7 @@ $all-crops: (
     glassy-broccoli: img('wiki/FarmCrop111.png'),
     glassy-carrot: img('wiki/FarmCrop112.png'),
     glassy-tomato: img('wiki/FarmCrop113.png'),
-    glassy-watermellon: img('wiki/FarmCrop114.png'),
+    glassy-watermelon: img('wiki/FarmCrop114.png'),
     glassy-shrimp: img('wiki/FarmCrop115.png'),
     glassy-rose: img('wiki/FarmCrop116.png'),
     glassy-lettuce: img('wiki/FarmCrop117.png'),
@@ -211,6 +214,7 @@ $landranks: (
 );
 
 $farming-ui: (
+    magic-bean: img('wiki/FarmCropBean.png'),
     day-market: img('wiki/Day_Market.png'),
     night-market: img('wiki/Night_Market.png'),
     crop-depot: img('wiki/Crop_Depot.png'),
