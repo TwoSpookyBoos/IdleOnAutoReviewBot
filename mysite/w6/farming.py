@@ -960,7 +960,7 @@ def setFarmingProgressionTier():
                 if 'Speed' in suggies:
                     if subgroupName in farming_AdviceDict['Tiers'] and farming['Speed']['Total Multi'] < suggies['Speed'][1]:
                         farming_AdviceDict['Tiers'][subgroupName].append(Advice(
-                            label=f"Suggestion: Aim for {suggies['Speed'][0]} to {suggies['Speed'][1]}x Speed",
+                            label=f"Suggestion: {suggies['Speed'][0]} to {suggies['Speed'][1]}x Speed",
                             picture_class='crop-scientist',
                             progression=f"{farming['Speed']['Total Multi']:.2f}" if farming['Speed']['Total Multi'] < 10 else f"{farming['Speed']['Total Multi']:.0f}",
                             goal=f"{suggies['Speed'][1]}"

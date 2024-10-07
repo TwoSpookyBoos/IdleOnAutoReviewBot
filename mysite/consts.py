@@ -1779,11 +1779,15 @@ farming_progressionTiers = {
     #         'Super Gmo': 50,
     #     },
     #     'Land Ranks': {
-    #         'Seed of Stealth': 1,
-    #         'Seed of Loot': 1,
-    #         'Seed of Damage': 1,
-    #         'Seed of Stats': 1,
-    #         'Overgrowth Superboost': 1000,
+    #         1: {
+    #             'Seed of Stealth': 1,
+    #             'Seed of Loot': 1,
+    #             'Seed of Damage': 1,
+    #             'Seed of Stats': 1,
+    #         },
+    #         2: {
+    #             'Overgrowth Superboost': 1000,
+    #         },
     #     },
     # },
 }
