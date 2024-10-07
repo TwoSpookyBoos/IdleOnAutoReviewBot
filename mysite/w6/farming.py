@@ -601,7 +601,7 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
             if not completed and (
                 (tome_added < 3 and first_failed_key <= 8)
                 or (tome_added < 5 and first_failed_key >= 9)
-            ):
+            ) and crop_chapter_multi > 1:
                 evo_advices[total].append(Advice(
                     label=f"{threshold}% tome = {crop_chapter_stacks} stacks"
                           f"<br>Bubble Multi: {crop_chapter_multi:.3f}x"
