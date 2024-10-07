@@ -599,8 +599,8 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
             prog_percent = min(1, total_multi / first_failed_goal)
             completed = prog_percent >= 1 or purple_glassy_completed
             if not completed and (
-                (tome_added < 3 and first_failed_key <= 8)
-                or (tome_added < 5 and first_failed_key >= 9)
+                (tome_added < 3 and first_failed_key <= 6)
+                or (tome_added < 5 and first_failed_key >= 7)
             ) and crop_chapter_multi > 1:
                 evo_advices[total].append(Advice(
                     label=f"{threshold}% tome = {crop_chapter_stacks} stacks"
