@@ -1336,23 +1336,24 @@ class Account:
             sample_names = []
             sample_values = []
         for sampleIndex, sampleItem in enumerate(sample_names):
-            if sampleIndex in printerAllIndexesBeingPrinted:
-                if sampleIndex//7 not in self.printer['CurrentPrintsByCharacter']:
-                    self.printer['CurrentPrintsByCharacter'][sampleIndex // 7] = {}
-                if getItemDisplayName(sampleItem) not in self.printer['CurrentPrintsByCharacter'][sampleIndex//7]:
-                    self.printer['CurrentPrintsByCharacter'][sampleIndex // 7][getItemDisplayName(sampleItem)] = []
-                try:
-                    self.printer['CurrentPrintsByCharacter'][sampleIndex // 7][getItemDisplayName(sampleItem)].append(sample_values[sampleIndex])
-                except Exception as reason:
-                    print(f"failed on characterIndex '{sampleIndex // 7}', sampleIndex '{sampleIndex}', sampleItem '{sampleItem}', because: {reason}")
-            else:
-                if sampleItem != 'Blank':  #Don't want blanks in the AllSorted list, but they're desired in the Character-Specific group
-                    if getItemDisplayName(sampleItem) not in self.printer['AllSamplesSorted']:
-                        self.printer['AllSamplesSorted'][getItemDisplayName(sampleItem)] = []
+            if sampleItem:
+                if sampleIndex in printerAllIndexesBeingPrinted:
+                    if sampleIndex//7 not in self.printer['CurrentPrintsByCharacter']:
+                        self.printer['CurrentPrintsByCharacter'][sampleIndex // 7] = {}
+                    if getItemDisplayName(sampleItem) not in self.printer['CurrentPrintsByCharacter'][sampleIndex//7]:
+                        self.printer['CurrentPrintsByCharacter'][sampleIndex // 7][getItemDisplayName(sampleItem)] = []
                     try:
-                        self.printer['AllSamplesSorted'][getItemDisplayName(sampleItem)].append(sample_values[sampleIndex])
+                        self.printer['CurrentPrintsByCharacter'][sampleIndex // 7][getItemDisplayName(sampleItem)].append(sample_values[sampleIndex])
                     except Exception as reason:
-                        print(f"failed on sampleIndex '{sampleIndex}', sampleItem '{sampleItem}', because: {reason}")
+                        print(f"failed on characterIndex '{sampleIndex // 7}', sampleIndex '{sampleIndex}', sampleItem '{sampleItem}', because: {reason}")
+                else:
+                    if sampleItem != 'Blank':  #Don't want blanks in the AllSorted list, but they're desired in the Character-Specific group
+                        if getItemDisplayName(sampleItem) not in self.printer['AllSamplesSorted']:
+                            self.printer['AllSamplesSorted'][getItemDisplayName(sampleItem)] = []
+                        try:
+                            self.printer['AllSamplesSorted'][getItemDisplayName(sampleItem)].append(float(sample_values[sampleIndex]))
+                        except Exception as reason:
+                            print(f"models._parse_general_printer Failed on sampleIndex '{sampleIndex}', sampleItem '{sampleItem}', because: {reason}")
         for sampleItem in self.printer['AllSamplesSorted']:
             self.printer['AllSamplesSorted'][sampleItem].sort(reverse=True)
         for characterIndex, printDict in self.printer['CurrentPrintsByCharacter'].items():
