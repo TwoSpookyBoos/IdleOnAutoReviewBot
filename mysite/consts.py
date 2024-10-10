@@ -3186,6 +3186,7 @@ skill_talentsDict = {
         },
         "Lowest": {
             464: {"Name": "Inner Peace", "Tab": "Mage"},
+            8: {'Name': 'Star Player', 'Tab': 'Savvy Basics'}
         },
     },
     "Alchemy": {
@@ -3292,6 +3293,7 @@ skill_talentsDict = {
         },
         "Lowest": {
             104: {"Name": "Tempestuous Emotions", "Tab": "Warrior"},
+            8: {'Name': 'Star Player', 'Tab': 'Rage Basics'}
         },
     },
     "Construction": {
@@ -3325,6 +3327,7 @@ skill_talentsDict = {
         "Lowest": {
             282: {"Name": "Yea I Already Know", "Tab": "Archer"},
             265: {"Name": "Focused Soul", "Tab": "Archer"},
+            8: {'Name': 'Star Player', 'Tab': 'Calm Basics'}
         },
     },
     "Catching": {
@@ -3421,6 +3424,8 @@ skill_talentsDict = {
             42: {"Name": "Left Hand of Learning", "Tab": "Maestro"},
             40: {"Name": "Maestro Transfusion", "Tab": "Maestro"},
             38: {"Name": "Bliss N Chips", "Tab": "Maestro"},
+            17: {'Name': 'Supernova Player', 'Tab': 'Journeyman'},
+            8: {'Name': 'Star Player', 'Tab': 'Beginner'}
         },
     },
 }
@@ -3825,6 +3830,7 @@ def ceilUpToBase(inputValue: int, base: int) -> int:
 
 def ValueToMulti(value: float, min_value=1.0):
     return max(min_value, 1 + (value / 100))
+
 
 ###WORLD 1 CONSTS###
 bribesDict = {
