@@ -120,6 +120,13 @@ def try_exclude_farming(exclusionList):
         exclusionList.append('Instagrow Generator')
         exclusionList.append('Plot of Land')
 
+def try_exclude_Sigils(exclusionList):
+    if (
+        session_data.account.alchemy_p2w['Sigils']['Pea Pod']['PrechargeLevel'] >= 3
+        or session_data.account.alchemy_p2w['Sigils']['Pea Pod']['Level'] >= 3
+    ):
+        exclusionList.append('Sigil Supercharge')
+
 def getGemShopFullExclusions():
     # Exclusions for SS through Practical Max. Not applied to True Max only
     exclusionList = []
@@ -127,6 +134,7 @@ def getGemShopFullExclusions():
     try_exclude_DungeonTickets(exclusionList)
     #W2
     try_exclude_IvoryBubbleCauldrons(exclusionList)
+    try_exclude_Sigils(exclusionList)
     #W3
     try_exclude_FluorescentFlaggies(exclusionList)
     try_exclude_BurningBadBooks(exclusionList)
