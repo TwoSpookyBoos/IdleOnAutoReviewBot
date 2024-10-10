@@ -11,7 +11,6 @@ logger = get_logger(__name__)
 
 # Stamp p2
 def setMissingStamps():
-
     return [stampName for stampName, stampValues in session_data.account.stamps.items() if stampValues.get("Delivered", False) == False and stampName not in unavailableStampsList]
 
 # Stamp p3
@@ -33,9 +32,9 @@ def getStampExclusions() -> dict[str,bool]:
         'Void Axe Stamp': False,
         'Crop Evo Stamp': False,
     }
-    if session_data.account.stamps.get('Crystallin', {}).get("Level", 0) >= 270:  #Highest Crystallin in Tiers
+    if session_data.account.stamps['Crystallin']['Level'] >= 270:  #Highest Crystallin in Tiers
         exclusionsDict['Matty Bag Stamp'] = True
-    if session_data.account.stamps.get('Multitool Stamp', {}).get("Level", 0) >= 220:  #Highest Multitool in Tiers
+    if session_data.account.stamps['Multitool Stamp']['Level'] >= 220:  #Highest Multitool in Tiers
         exclusionsDict['Bugsack Stamp'] = True
         exclusionsDict['Bag o Heads Stamp'] = True
     if exclusionsDict['Matty Bag Stamp'] and exclusionsDict['Bugsack Stamp'] and exclusionsDict['Bag o Heads Stamp']:
@@ -56,9 +55,9 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     capacity_Advices = {"Stamps": [], "Account Wide": [], "Character Specific": []}
 
     starsignBase = 0
-    starsignBase += 30 * bool(session_data.account.star_signs.get('Mr No Sleep', {}).get('Unlocked', False))
-    starsignBase += 10 * bool(session_data.account.star_signs.get('Pack Mule', {}).get('Unlocked', False))
-    starsignBase += 5 * bool(session_data.account.star_signs.get('The OG Skiller', {}).get('Unlocked', False))
+    starsignBase += 30 * bool(session_data.account.star_signs['Mr No Sleep']['Unlocked'])
+    starsignBase += 10 * bool(session_data.account.star_signs['Pack Mule']['Unlocked'])
+    starsignBase += 5 * bool(session_data.account.star_signs['The OG Skiller']['Unlocked'])
     totalStarsignValue = starsignBase * session_data.account.star_sign_extras['SilkrodeNanoMulti'] * session_data.account.star_sign_extras['SeraphMulti']
 
     #Stamps
@@ -100,9 +99,9 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     #Account-Wide
     capacity_Advices["Account Wide"].append(Advice(
         label=f"{{{{ Bribe|#bribes }}}}: Bottomless Bags: "
-              f"{'5' if session_data.account.bribes['W4'].get('Bottomless Bags') >= 1 else '0'}/5%",
+              f"{'5' if session_data.account.bribes['W4']['Bottomless Bags'] >= 1 else '0'}/5%",
         picture_class="bottomless-bags",
-        progression=1 if session_data.account.bribes['W4'].get('Bottomless Bags') >= 1 else 0,
+        progression=1 if session_data.account.bribes['W4']['Bottomless Bags'] >= 1 else 0,
         goal=1
     ))
     capacity_Advices["Account Wide"].append(Advice(
@@ -114,7 +113,7 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     capacity_Advices["Account Wide"].append(Advice(
         label="Pantheon Shrine",
         picture_class="pantheon-shrine",
-        progression=session_data.account.shrines.get("Pantheon Shrine", {}).get("Level", 0),
+        progression=session_data.account.shrines['Pantheon Shrine']['Level'],
         goal="∞"
     ))
     capacity_Advices["Account Wide"].append(Advice(
@@ -227,11 +226,11 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
         goal=1
     ))
 
-    blueFavReduction = session_data.account.alchemy_vials.get("Blue Flav (Platinum Ore)", {}).get("Value", 0)
-    venisonMaltReduction = session_data.account.alchemy_vials.get("Venison Malt (Mongo Worm Slices)", {}).get("Value", 0)
+    blueFavReduction = session_data.account.alchemy_vials['Blue Flav (Platinum Ore)']['Value']
+    venisonMaltReduction = session_data.account.alchemy_vials['Venison Malt (Mongo Worm Slices)']['Value']
     totalVialReduction = blueFavReduction + venisonMaltReduction
     totalVialReduction *= session_data.account.vialMasteryMulti
-    if session_data.account.labBonuses.get("My 1st Chemistry Set", {}).get("Enabled", False):
+    if session_data.account.labBonuses['My 1st Chemistry Set']['Enabled']:
         totalVialReduction *= 2
     costReduction_Advices["Vials"].append(Advice(
         label=f"{{{{ Rift|#rift }}}}: Vial Mastery: {session_data.account.vialMasteryMulti:.2f}x",
@@ -240,10 +239,10 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
         goal=1
     ))
     costReduction_Advices["Vials"].append(Advice(
-        label="Total Vial reduction (95% hardcap)",
+        label="Total Vial reduction (90% hardcap)",
         picture_class="vials",
         progression=f"{totalVialReduction:.2f}",
-        goal=95,
+        goal=90,
         unit="%"
     ))
 
@@ -265,9 +264,9 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
         goal=3
     ))
     costReduction_Advices["Uncapped"].append(Advice(
-        label=f"{{{{ Artifact|#sailing }}}}: Chilled Yarn increases sigil by {1 + session_data.account.sailing['Artifacts'].get('Chilled Yarn', {}).get('Level', 0)}x",
+        label=f"{{{{ Artifact|#sailing }}}}: Chilled Yarn increases sigil by {1 + session_data.account.sailing['Artifacts']['Chilled Yarn']['Level']}x",
         picture_class="chilled-yarn",
-        progression=session_data.account.sailing['Artifacts'].get('Chilled Yarn', {}).get('Level', 0),
+        progression=session_data.account.sailing['Artifacts']['Chilled Yarn']['Level'],
         goal=4
     ))
 
