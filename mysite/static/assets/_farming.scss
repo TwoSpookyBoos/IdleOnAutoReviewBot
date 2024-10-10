@@ -8,6 +8,7 @@ $seed-gifs: (
 );
 
 $all-crops: (
+    //Basic Seed
     apple-crop: img('wiki/FarmCrop0.png'),
     orange: img('wiki/FarmCrop1.png'),
     lemon: img('wiki/FarmCrop2.png'),
@@ -29,6 +30,7 @@ $all-crops: (
     dragon-fruit: img('wiki/FarmCrop18.png'),
     mango: img('wiki/FarmCrop19.png'),
     gold-blueberry: img('wiki/FarmCrop20.png'),
+    //Earthy Seed
     carrot: img('wiki/FarmCrop21.png'),
     potato: img('wiki/FarmCrop22.png'),
     beat: img('wiki/FarmCrop23.png'),
@@ -52,8 +54,9 @@ $all-crops: (
     garlic: img('wiki/FarmCrop41.png'),
     green-beans: img('wiki/FarmCrop42.png'),
     bell-pepper: img('wiki/FarmCrop43.png'),
-    corn: img('wiki/FarmCrop44.png'),
+    corn-crop: img('wiki/FarmCrop44.png'),
     gold-sliced-tomato: img('wiki/FarmCrop45.png'),
+    //Bulbo Seed
     daisy: img('wiki/FarmCrop46.png'),
     flour: img('wiki/FarmCrop47.png'),
     stargazer-lily: img('wiki/FarmCrop48.png'),
@@ -122,7 +125,7 @@ $all-crops: (
     glassy-broccoli: img('wiki/FarmCrop111.png'),
     glassy-carrot: img('wiki/FarmCrop112.png'),
     glassy-tomato: img('wiki/FarmCrop113.png'),
-    glassy-watermellon: img('wiki/FarmCrop114.png'),
+    glassy-watermelon: img('wiki/FarmCrop114.png'),
     glassy-shrimp: img('wiki/FarmCrop115.png'),
     glassy-rose: img('wiki/FarmCrop116.png'),
     glassy-lettuce: img('wiki/FarmCrop117.png'),
@@ -170,4 +173,54 @@ $all-crops: (
     purple-glassy-corn: img('wiki/FarmCrop159.png'),
 );
 
+$crop-depot: (
+    depot-pencil: img('CropDepotPen0.png'),
+    depot-pen: img('CropDepotPen1.png'),
+    depot-marker: img('CropDepotPen2.png'),
+    depot-featherpen: img('CropDepotPen3.png'),
+    depot-green-pencil: img('CropDepotPen4.png'),
+    depot-crayon: img('CropDepotPen5.png'),
+    depot-paintbrush: img('CropDepotPen6.png'),
+);
+
+$landranks: (
+    evolution-boost: img('wiki/Land_Rank_Icon_Rank_1.png'),
+    production-boost: img('wiki/Land_Rank_Icon_Rank_5.png'),
+    soil-exp-boost: img('wiki/Land_Rank_Icon_Rank_20.png'),
+    evolution-megaboost: img('wiki/Land_Rank_Icon_Rank_30.png'),
+    seed-of-stealth: img('wiki/Land_Rank_Icon_Rank_60.png'),
+    farmtastic-boost: img('wiki/Land_Rank_Icon_Rank_80.png'),
+    soil-exp-megaboost: img('wiki/Land_Rank_Icon_Rank_125.png'),
+    overgrowth-boost: img('wiki/Land_Rank_Icon_Rank_180.png'),
+    production-megaboost: img('wiki/Land_Rank_Icon_Rank_250.png'),
+    seed-of-loot: img('wiki/Land_Rank_Icon_Rank_400.png'),
+    evolution-superboost: img('wiki/Land_Rank_Icon_Rank_500.png'),
+    overgrowth-megaboost: img('wiki/Land_Rank_Icon_Rank_600.png'),
+    farmtastic-megaboost: img('wiki/Land_Rank_Icon_Rank_700.png'),
+    soil-exp-superboost: img('wiki/Land_Rank_Icon_Rank_900.png'),
+    seed-of-damage: img('wiki/Land_Rank_Icon_Rank_1200.png'),
+    evolution-ultraboost: img('wiki/Land_Rank_Icon_Rank_1300.png'),
+    farmtastic-superboost: img('wiki/Land_Rank_Icon_Rank_1500.png'),
+    production-superboost: img('wiki/Land_Rank_Icon_Rank_1750.png'),
+    overgrowth-superboost: img('wiki/Land_Rank_Icon_Rank_2000.png'),
+    seed-of-stats: img('wiki/Land_Rank_Icon_Rank_3500.png'),
+    landrank-1: img('wiki/RankStar0.png'),
+    landrank-2: img('wiki/RankStar1.png'),
+    landrank-3: img('wiki/RankStar2.png'),
+    landrank-4: img('wiki/RankStar3.png'),
+    landrank-5: img('wiki/RankStar4.png'),
+    landrank-6: img('wiki/RankStar5.png'),
+    landrank-7: img('wiki/RankStar6.png'),
+);
+
+$farming-ui: (
+    magic-bean: img('wiki/FarmCropBean.png'),
+    day-market: img('wiki/Day_Market.png'),
+    night-market: img('wiki/Night_Market.png'),
+    crop-depot: img('wiki/Crop_Depot.png'),
+);
+
 $all-farming: map-merge($seed-gifs, $all-crops);
+$all-farming: map-merge($all-farming, $crop-depot);
+$all-farming: map-merge($all-farming, $landranks);
+$all-farming: map-merge($all-farming, $farming-ui);

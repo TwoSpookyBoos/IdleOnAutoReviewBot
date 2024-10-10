@@ -2,6 +2,7 @@ from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import break_you_best, achievements_progressionTiers, achievement_categories
+from utils.text_formatting import notateNumber
 
 logger = get_logger(__name__)
 
@@ -11,13 +12,13 @@ def getAchievementStatus(achievementName):
         match achievementName:
             #EZ Access
             case 'Platinum 200G':
-                return min(200000, session_data.account.all_assets.get('Plat').amount), 200000, 'platinum-ore'
+                return notateNumber('Match', min(200000, session_data.account.all_assets.get('Plat').amount), 0, 'K'), '200K', 'platinum-ore'
             case 'Half a Mill-log':
-                return min(500000, session_data.account.all_assets.get('StumpTree').amount), 500000, 'veiny-logs'
+                return notateNumber('Match', min(500000, session_data.account.all_assets.get('StumpTree').amount), 0, 'K'), '500K', 'veiny-logs'
             case 'Super Cereal':
-                return min(50000, session_data.account.all_assets.get('Bug3').amount), 50000, 'sentient-cereal'
+                return notateNumber('Match', min(50000, session_data.account.all_assets.get('Bug3').amount), 0, 'K'), '50K', 'sentient-cereal'
             case 'Cool Score!':
-                return min(2500000, session_data.account.colo_scores[3]), 2500000, ''
+                return notateNumber('Match', min(2500000, session_data.account.colo_scores[3]), 0, 'K'), '2500K', ''
             case 'Doctor Repellant':
                 return min(10000, int(session_data.account.farming['Crops'].get(0, 0))), 10000, 'apple-crop'
             case 'Good Plate':
@@ -31,11 +32,11 @@ def getAchievementStatus(achievementName):
             case 'Lavathian Skulls':
                 return min(130, session_data.account.enemy_worlds[5].total_mk), 130, 'death-note'
             case 'Two Desserts!':
-                return min(2, session_data.account.all_assets.get('Trophy11').amount), 2, 'yumyum-sheriff'
+                return int(min(2, session_data.account.all_assets.get('Trophy11').amount)), 2, 'yumyum-sheriff'
 
             #Recipes
             case 'The Goose is Loose':
-                return min(1000000, session_data.account.all_assets.get('Critter9').amount), 1000000, 'honker'
+                return notateNumber('Match', min(1000000, session_data.account.all_assets.get('Critter9').amount), 0, 'K'), '1000K', 'honker'
 
             #Dungeon RNG
             case '2 Tons of Iron':
@@ -52,7 +53,7 @@ def getAchievementStatus(achievementName):
             case 'Vial Junkee':
                 return sum(1 for vial in session_data.account.alchemy_vials.values() if vial['Level'] >= 9), 10, 'vial-9'
             case 'Fruit Salad':
-                return min(1000000, session_data.account.all_assets.get('Bug4').amount), 1000000, 'fruitfly'
+                return notateNumber('Match', min(1000000, session_data.account.all_assets.get('Bug4').amount), 0, 'K'), '1000K', 'fruitfly'
             #W3
             case 'Checkout Takeout':
                 return min(1000, session_data.account.achievements[achievementName]['Raw']), 1000, 'talent-book-library'
@@ -81,7 +82,7 @@ def getAchievementStatus(achievementName):
             case 'Voraci Vantasia':
                 return min(500, session_data.account.achievements[achievementName]['Raw']), 500, 'voraci'
             case 'Vitamin D-licious':
-                return min(5000000, session_data.account.all_assets.get('LavaB3').amount), 5000000, 'orange-slice'
+                return notateNumber('Match', min(5000000, session_data.account.all_assets.get('LavaB3').amount), 0, 'K'), '5000K', 'orange-slice'
             case 'Maroon Warship':
                 return min(300, max([boat['TotalUpgrades'] for boat in session_data.account.sailing['Boats'].values()], default=0)), 300, 'sailing-ship-tier-6'
             #W6
@@ -92,9 +93,9 @@ def getAchievementStatus(achievementName):
             case 'Regalis My Beloved':
                 return min(360, session_data.account.summoning['SanctuaryTotal']), 360, ''
             case "Scorin' the Ladies":
-                return min(250000, session_data.account.all_assets.get('Bug12').amount), 250000, 'ladybug'
+                return notateNumber('Match', min(250000, session_data.account.all_assets.get('Bug12').amount), 0, 'K'), '250K', 'ladybug'
             case 'Effervess Enthusiess':
-                return min(5000000, session_data.account.all_assets.get('Tree13').amount), 5000000, 'effervescent-logs'
+                return notateNumber('Match', min(5000000, session_data.account.all_assets.get('Tree13').amount), 0, 'K'), '5000K', 'effervescent-logs'
             case 'Summoning GM':
                 return min(58, session_data.account.summoning['Battles']['Total']), 58, ''
             case _:

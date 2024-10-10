@@ -445,10 +445,10 @@ def setBreedingProgressionTier() -> AdviceSection:
                             for possibleShinyPet in failedShinyBonus[failedRequirement[0]]:
                                 breeding_AdviceDict["ShinyLevels"][shinySubgroup].append(
                                     Advice(
-                                        label=f"{possibleShinyPet[0]}: {possibleShinyPet[2]:.2f} base days to level",
+                                        label=f"{possibleShinyPet[0]}: {possibleShinyPet[2]:,.2f} base days to level",
                                         picture_class=possibleShinyPet[0],
                                         progression=possibleShinyPet[1],
-                                        goal=failedRequirement[3]
+                                        goal=max(failedRequirement[3], possibleShinyPet[1])
                                     )
                                 )
 

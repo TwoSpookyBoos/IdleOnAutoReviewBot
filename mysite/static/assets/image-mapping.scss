@@ -29,6 +29,7 @@
 @import "ballot";
 @import "killroy";
 @import "islands";
+@import "weekly_bosses";
 
 //W3
 @import "construction";
@@ -2094,6 +2095,7 @@ $id-map: map-merge($ballot, $id-map);
 $id-map: map-merge($ui-map, $id-map);
 $id-map: map-merge($all-islands, $id-map);
 $id-map: map-merge($all-killroy, $id-map);
+$id-map: map-merge($all-weekly-boss-map, $id-map);
 
 
 @each $class, $link in $id-map {

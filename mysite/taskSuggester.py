@@ -15,7 +15,7 @@ from w2 import alchemy, killroy, islands
 from w3 import trapping, consRefinery, consDeathNote, worship, consSaltLick, consBuildings, equinox, library, sampling, collider
 from w4 import breeding, cooking, rift
 from w5 import slab, divinity, sailing
-from w6 import beanstalk, sneaking
+from w6 import beanstalk, sneaking, farming
 
 logger = get_logger(__name__)
 
@@ -111,6 +111,7 @@ def main(inputData, runType="web"):
     ]
     # World 6
     sections_6 = [
+        section_farming := farming.setFarmingProgressionTier(),
         section_sneaking := sneaking.setSneakingProgressionTier(),
         section_beanstalk := beanstalk.section_beanstalk(),
     ]
@@ -121,7 +122,8 @@ def main(inputData, runType="web"):
         section_alchBubbles, section_alchVials, section_alchP2W, section_alchSigils, section_islands,
         section_refinery, section_sampling, section_saltlick, section_deathnote, section_prayers, section_equinox,
         section_breeding, section_cooking, section_rift,
-        section_divinity, section_sailing
+        section_divinity, section_sailing,
+        section_farming
     ]
     unrated_sections = []
     for sectionList in [sections_general, sections_1, sections_2, sections_3, sections_4, sections_5, sections_6]:

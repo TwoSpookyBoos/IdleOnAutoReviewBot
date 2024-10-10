@@ -327,7 +327,7 @@ greenstack_progressionTiers = {
         },
         14: {
             "Crystal Enemy Drops": [
-                "StoneW2", "SilverPen"],  #"StoneA2",],
+                "StoneW2", 'ResetFrag', "SilverPen"],  #"StoneA2",],
             "Other Skilling Resources": [
                 "MarbleBar", "GodshardBar",
                 "FoodTrapping1", "FoodWorship1",
@@ -556,7 +556,7 @@ stamps_progressionTiers = {
         "Misc": ["Multikill Stamp"],
         "Specific": {
             'Matty Bag Stamp': 150, 'Card Stamp': 150, 'Ladle Stamp': 100, 'Potion Stamp': 20,
-            'Pickaxe Stamp': 85, 'Hatchet Stamp': 85, 'Mason Jar Stamp': 52, 'Golden Apple Stamp': 40,
+            'Pickaxe Stamp': 85, 'Hatchet Stamp': 85, 'Mason Jar Stamp': 52, 'Golden Apple Stamp': 40, 'Crop Evo Stamp': 20,
         },
         "Optional": ["Void Sword Stamp"]
     }},
@@ -927,7 +927,7 @@ bubbles_progressionTiers = [
       'Tome Agility': 540},
      {'Stable Jenius': 9000,
       'Slabe Logsoul': 540, 'Slabe Wisdom': 540, 'Endgame Eff III': 540},  # 'Tome Wisdom': 540},
-     {"Nickel Of Wisdom": 270, "Penny Of Strength": 270, "Dollar Of Agility": 270},
+     {"Nickel Of Wisdom": 270, "Penny Of Strength": 270, "Dollar Of Agility": 270, 'Card Champ': 360, 'Egg Ink': 360},
      "90% catchup",
      ""],
     [24, 140,
@@ -939,7 +939,7 @@ bubbles_progressionTiers = [
       'Tome Agility': 1140},
      {'Stable Jenius': 9500, 'Le Brain Tools': 1330, 'Tree Sleeper': 760,
       'Slabe Logsoul': 1140, 'Slabe Wisdom': 1140, 'Endgame Eff III': 1140},  # 'Tome Wisdom': 1140},
-     {"Nickel Of Wisdom": 570, "Penny Of Strength": 570, "Dollar Of Agility": 570},
+     {"Nickel Of Wisdom": 570, "Penny Of Strength": 570, "Dollar Of Agility": 570, 'Card Champ': 760, 'Egg Ink': 760},
      "95% catchup",
      ""],
     [25, 160,
@@ -1676,6 +1676,121 @@ sailing_progressionTiers = {
 
 
 ###WORLD 6 PROGRESSION TIERS###
+farming_progressionTiers = {
+    0: {},
+    1: {
+        'Farming Level': 10,
+        'Day Market': {
+            'Land Plots': 4,
+            'Stronger Vines': 6,
+            'Nutritious Soil': 7,
+        },
+        'Crops Unlocked': 19,  #Total number of crops is 19 for Overgrowth to be purchasable
+        'Suggestions': {
+            'EvoChance': [4, 4.5],
+            'CropIndex': [11, 29]  #11 = Basic/Lime, 29 = Earthy/Avocado
+        },
+        'Night Market': {
+            'Overgrowth': 1,
+        },
+    },  #Get Overgrowth
+    2: {
+        'Farming Level': 50,
+        'Day Market': {
+            'Land Plots': 7,
+            'Stronger Vines': 34,
+            'Nutritious Soil': 34,
+            'Product Doubler': 12,
+            'Biology Boost': 26,
+        },
+        'Crops Unlocked': 61,  #Total number of crops is 61 for Land Ranks to be purchasable
+        'Suggestions': {
+            'EvoChance': [325, 335],
+            'CropIndex': [21, 41, 55, 72],  #21 = Basic/Golden Blueberry, 41 = Earthy/Lettuce, 55 = Bulbo/Pink Daisy, 72 = Sushi/11
+        },
+        'Night Market': {
+            'Land Rank': 1,
+            'Evolution Gmo': 20,  #1.16x
+            'Speed Gmo': 10,  #3%
+        },
+    },  #Get Land Ranks
+    3: {
+        'Farming Level': 120,
+        'Day Market': {
+            'Land Plots': 11,
+            'Stronger Vines': 56,
+            'Nutritious Soil': 54,
+            'Biology Boost': 45,
+            'Product Doubler': 28,
+            'More Beenz': 28,
+            'Rank Boost': 19,
+        },
+        'Land Ranks': {
+            1: {
+                'Evolution Boost': 25,
+                'Soil Exp Boost': 25,
+                'Evolution Megaboost': 25,
+                'Production Boost': 50,
+                'Soil Exp Megaboost': 25,
+            },
+            2:{
+                'Soil Exp Boost': 50,
+                'Production Boost': 80,
+                'Overgrowth Boost': 50,
+            },
+            3: {
+                'Production Boost': 100,
+                'Production Megaboost': 100,
+                'Overgrowth Boost': 75,
+                'Soil Exp Megaboost': 50,
+            },
+        },
+        'Suggestions': {
+            'EvoChance': [325, 335],  #TODO
+            'Speed': [30, 40],
+            'CropIndex': [46, 61]  #46 = Earthy/Gold Sliced Tomato, 61 = Bulbo/Golden Tulip, #TODO
+        },
+        'Night Market': {
+            'Evolution Gmo': 30,  # 1.24x
+            'Speed Gmo': 25,  # 7.5%
+            'Og Fertilizer': 10,  # 1.1x
+        },
+        #Soil Exp Boost : Mega : Super is around 4:2:3
+        #OG Boost : Mega :  Super is around 4:5:8
+        #Farmtastic pretty optional
+    },  #1k stacks. Reach 120 farming and the first few Glassy
+    # 4: {},  #Repeat the 1k stacks. Bean farming to afford
+    # 5: {},
+    # 6: {},  #Max Value, 100k stacks
+    # 15: {
+    #     'Farming Level': 300,
+    #     'Day Market': {
+    #         'Land Plots': 20,
+    #         'Stronger Vines': 170,
+    #         'Product Doubler': 100,
+    #         'More Beenz': 100,
+    #         'Rank Boost': 100,
+    #     },
+    #     'Night Market': {
+    #         'Evolution Gmo': 125,
+    #         'Speed Gmo': 80,
+    #         'Og Fertilizer': 200,
+    #         'Exp Gmo': 100,
+    #         'Super Gmo': 50,
+    #     },
+    #     'Land Ranks': {
+    #         1: {
+    #             'Seed of Stealth': 1,
+    #             'Seed of Loot': 1,
+    #             'Seed of Damage': 1,
+    #             'Seed of Stats': 1,
+    #         },
+    #         2: {
+    #             'Overgrowth Superboost': 1000,
+    #         },
+    #     },
+    # },
+}
 
 ###UI CONSTS###
 maxTiersPerGroup = 3
@@ -1770,7 +1885,7 @@ expectedStackables = {
         "Sewers3", "Quest15", "Hgg"  # Specialty Monster Materials
     ],
     "Crystal Enemy Drops": [
-        "SilverPen",
+        "SilverPen", 'ResetFrag',
         "FoodPotMana1", "FoodPotMana2", "FoodPotGr1", "FoodPotOr1", "FoodPotOr2", "FoodHealth1", "FoodHealth3", "FoodHealth2", "Leaf1",  # W1
         "FoodHealth6", "FoodHealth7", "FoodPotGr2", "FoodPotRe3", "Leaf2",  # W2
         "FoodHealth10", "FoodPotOr3", "FoodPotYe2", "Leaf3",  # W3
@@ -1870,7 +1985,7 @@ expectedStackables = {
         "EquipmentStatues20", "EquipmentStatues21", "EquipmentStatues22",  # W4 Statues
         "EquipmentStatues23", "EquipmentStatues24", "EquipmentStatues25",  # W5 Statues
         "FoodG1", "FoodG2", "FoodG3", "FoodG4", "FoodG5", "FoodG6", "FoodG7", "FoodG8", "FoodG10",  # Gold Foods
-        "ResetFrag", "ResetCompleted", "ResetCompletedS", "ClassSwap",
+        "ResetCompleted", "ResetCompletedS", "ClassSwap",
         "ClassSwapB", "ResetBox",
     ]
 }
@@ -3071,6 +3186,7 @@ skill_talentsDict = {
         },
         "Lowest": {
             464: {"Name": "Inner Peace", "Tab": "Mage"},
+            8: {'Name': 'Star Player', 'Tab': 'Savvy Basics'}
         },
     },
     "Alchemy": {
@@ -3177,6 +3293,7 @@ skill_talentsDict = {
         },
         "Lowest": {
             104: {"Name": "Tempestuous Emotions", "Tab": "Warrior"},
+            8: {'Name': 'Star Player', 'Tab': 'Rage Basics'}
         },
     },
     "Construction": {
@@ -3210,6 +3327,7 @@ skill_talentsDict = {
         "Lowest": {
             282: {"Name": "Yea I Already Know", "Tab": "Archer"},
             265: {"Name": "Focused Soul", "Tab": "Archer"},
+            8: {'Name': 'Star Player', 'Tab': 'Calm Basics'}
         },
     },
     "Catching": {
@@ -3306,6 +3424,8 @@ skill_talentsDict = {
             42: {"Name": "Left Hand of Learning", "Tab": "Maestro"},
             40: {"Name": "Maestro Transfusion", "Tab": "Maestro"},
             38: {"Name": "Bliss N Chips", "Tab": "Maestro"},
+            17: {'Name': 'Supernova Player', 'Tab': 'Journeyman'},
+            8: {'Name': 'Star Player', 'Tab': 'Beginner'}
         },
     },
 }
@@ -3693,6 +3813,8 @@ def lavaFunc(funcType: str, level: int, x1: int | float, x2: int | float, roundR
             result = x1 + x2 * level
         case 'special1':
             result = 100 - (level * x1) / (level + x2)
+        case 'pow':
+            result = pow(x1, level)
         case _:
             result = 0
     if roundResult:
@@ -3705,6 +3827,10 @@ def ceilUpToBase(inputValue: int, base: int) -> int:
     while toReturn <= inputValue:
         toReturn += base
     return toReturn
+
+def ValueToMulti(value: float, min_value=1.0):
+    return max(min_value, 1 + (value / 100))
+
 
 ###WORLD 1 CONSTS###
 bribesDict = {
@@ -3729,17 +3855,18 @@ stamp_maxes = {
     "Cooked Meal Stamp": 465,
     "Ladle Stamp": 320,
     "Multitool": 220,
+    'Crop Evo Stamp': 90,
     #Misc
     "Crystallin": 270,
     "Forge Stamp": 230,
-    "Biblio Stamp": 64,
+    "Biblio Stamp": 66,
     "Sigil Stamp": 324,
 }
 stampsDict = {
     "Combat": {
         0: {'Name': "Sword Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'spore-cap'},
         1: {'Name': "Heart Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'oak-logs'},
-        2: {'Name': "Mana Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'copper-pre'},
+        2: {'Name': "Mana Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'copper-ore'},
         3: {'Name': "Tomahawk Stamp", 'funcType': 'decay', 'x1': 6, 'x2': 40, 'Material': 'copper-bar'},
         4: {'Name': "Target Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'thread'},
         5: {'Name': "Shield Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'iron-ore'},
@@ -4356,7 +4483,7 @@ atrisk_lithiumBubbles = [
     "Penny Of Strength",
     "Fly In Mind",
     'Afk Expexp',
-    'Slabbo Critterbug',
+    'Slabo Critterbug',
     'Nickel Of Wisdom',
     'Severapurple',
     'Hyperswift',
@@ -4972,7 +5099,17 @@ def getEnemyNameFromMap(inputMap: str) -> str:
     except Exception as reason:
         return f"Unexpected Input received: {reason}"
 
+
 ###WORLD 4 CONSTS###
+tomepct = {
+  50: 9757,
+  25: 17764,
+  10: 22114,
+  5: 23449,
+  1: 25008,
+  0.5: 25485,
+  0.1: 26254,
+}
 maxCookingTables = 10  # Last verified as of v2.10
 maxMeals = 67  # Last verified as of v2.10
 maxMealLevel = 90  # Last verified as of v2.10
@@ -6136,12 +6273,6 @@ jade_emporium = [
 
 ]
 gfood_codes = ["PeanutG", "ButterBar", *[f"FoodG{i}" for i in range(1, 14)]]
-# pristineCharmsList: list[str] = [
-#     "Sparkle Log", "Fruit Rolle", "Glowing Veil", "Cotton Candy", "Sugar Bomb",
-#     "Gumm Eye", "Bubblegum Law", "Sour Wowzer", "Crystal Comb", "Rock Candy",
-#     "Lollipop Law", "Taffy Disc", "Stick of Chew", "Treat Sack", "Gumm Stick",
-#     "Lolly Flower", "Gumball Necklace", "Liqorice Rolle",
-# ]
 pristineCharmsList: list = [
     {'Name': 'Sparkle Log', 'Image': 'sparkle-log', 'Bonus': '1.20x Total DMG'},
     {'Name': 'Fruit Rolle', 'Image': 'fruit-rolle', 'Bonus': '+20% AGI'},
@@ -6192,7 +6323,7 @@ landrankDict = {
     15: {'Name': 'Evolution Ultraboost', 'UnlockLevel': 1300, 'Value': 40000},
     16: {'Name': 'Farmtastic Superboost', 'UnlockLevel': 1500, 'Value': 220},
     17: {'Name': 'Production Superboost', 'UnlockLevel': 1750, 'Value': 600},
-    18: {'Name': 'Overgrowth Superboost', 'UnlockLevel': 2000, 'Value': 240},
+    18: {'Name': 'Overgrowth Superboost', 'UnlockLevel': 2000, 'Value': 1500},
     19: {'Name': 'Seed of Stats', 'UnlockLevel': 3500, 'Value': 5},
 }
 marketUpgradeList = [
@@ -6200,8 +6331,281 @@ marketUpgradeList = [
     "Biology Boost", "Product Doubler", "More Beenz", "Rank Boost",
     "Overgrowth", "Evolution GMO", "Speed GMO", "OG Fertilizer",
     "EXP GMO", "Land Rank", "Value GMO", "Super GMO"]
+#  Last verified from MarketInfo function as of 2.12, slightly tweaked for readability
+marketUpgradeDetails = [
+    "LAND_PLOTS {_extra_plots_of_land_to_plant_crops_in 0 2 2 2 0 20 1".split(" "),
+    "STRONGER_VINES +{%_chance_for_+1_crop_when_fully_grown 1 0.18 2 1.13 3 500 2".split(" "),
+    "NUTRITIOUS_SOIL +{%_growth_speed_for_all_land 7 0.15 3 1.12 8 500 1".split(" "),
+    "SMARTER_SEEDS +{%_farming_EXP_gain_from_all_sources 21 0.14 6 1.1 14 500 3".split(" "),
+    "BIOLOGY_BOOST +{%_chance_of_crop_evolution,_or_'next_crop'_chance 46 0.09 10 1.1 31 500 15".split(" "),
+    "PRODUCT_DOUBLER +{%_chance_for_crops_to_be_worth_2x_when_collected 30 0.12 15 1.2 42 500 3".split(" "),
+    "MORE_BEENZ +{%_magic_beans_gained_when_trading_in_crops 61 0.11 25 1.15 53 500 2".split(" "),
+    "RANK_BOOST Plots_earn_+{%_more_Rank_XP_when_a_crop_is_collected 84 0.11 30 1.2 80 500 3".split(" "),
+    "OVERGROWTH Unlocks_Overgrowth_(OG)._Each_OG_doubles_crop_value_~_EXP 2 0.10 10 1.1 19 1 1".split(" "),
+    "EVOLUTION_GMO }x_crop_evolution_chance_per_crop_you_have_200_of 2 0.10 15 1.080 25 500 0.8".split(" "),
+    "SPEED_GMO +{%_growth_speed_per_crop_you_have_1000_of 2 0.10 25 1.155 36 500 0.3".split(" "),
+    "OG_FERTILIZER }x_higher_chance_for_Overgrowth_to_occur 2 0.10 40 1.060 48 500 1".split(" "),
+    "EXP_GMO +{%_farming_EXP_gain_crop_you_have_2500_of 2 0.10 60 1.095 57 100 1".split(" "),
+    "LAND_RANK Each_plot_now_gets_Rank_XP_when_a_crop_is_collected. 2 0.10 80 1.050 61 1 1".split(" "),
+    "VALUE_GMO +{%_crop_value_per_crop_you_have_10k_of 2 0.10 150 1.125 95 500 1".split(" "),
+    "SUPER_GMO +{%_all_'GMO'_bonuses_per_crop_you_have_100K_of 2 0.10 250 1.20 109 50 0.5".split(" "),
+]
 marketUpgradeFirstIndex = 2
 marketUpgradeLastIndex = marketUpgradeFirstIndex + len(marketUpgradeList)
+cropDepotDict = {
+    0: {
+        'EmporiumUnlockName': 'Reinforced Science Pencil',
+        'BonusString': 'DMG',
+        'funcType': 'add',
+        'x1': 20,
+        'x2': 0,
+        'Image': 'depot-pencil',
+    },
+    1: {
+        'EmporiumUnlockName': 'Science Pen',
+        'BonusString': 'Gaming Evo',
+        'funcType': 'pow',
+        'x1': 1.02,
+        'x2': 0,
+        'Image': 'depot-pen',
+    },
+    2: {
+        'EmporiumUnlockName': 'Science Marker',
+        'BonusString': 'Jade Coin',
+        'funcType': 'add',
+        'x1': 8,
+        'x2': 0,
+        'Image': 'depot-marker',
+    },
+    3: {
+        'EmporiumUnlockName': 'Science Featherpen',
+        'BonusString': 'Meal Spd',
+        'funcType': 'pow',
+        'x1': 1.1,
+        'x2': 0,
+        'Image': 'depot-featherpen',
+    },
+    4: {
+        'EmporiumUnlockName': 'Science Environmentally Sourced Pencil',
+        'BonusString': 'Cash',
+        'funcType': 'add',
+        'x1': 15,
+        'x2': 0,
+        'Image': 'depot-green-pencil',
+    },
+    5: {
+        'EmporiumUnlockName': 'Science Crayon',
+        'BonusString': 'Pet Rate',
+        'funcType': 'add',
+        'x1': 7,
+        'x2': 0,
+        'Image': 'depot-crayon',
+    },
+    6: {
+        'EmporiumUnlockName': 'Science Paintbrush',
+        'BonusString': 'Base Critters',
+        'funcType': 'add',
+        'x1': 0.1,
+        'x2': 0,
+        'Image': 'depot-paintbrush',
+    },
+
+}
+cropDict = {
+#Basic
+    #0: {'Name': '', 'Image': '', 'SeedName': 'Earthy', 'SeedCropIndex': None},
+    1: {'Name': 'Apple', 'Image': 'apple-crop', 'SeedName': 'Basic', 'SeedCropIndex': 1},
+    2: {'Name': 'Orange', 'Image': 'orange', 'SeedName': 'Basic', 'SeedCropIndex': 2},
+    3: {'Name': 'Lemon', 'Image': 'lemon', 'SeedName': 'Basic', 'SeedCropIndex': 3},
+    4: {'Name': 'Pear', 'Image': 'pear', 'SeedName': 'Basic', 'SeedCropIndex': 4},
+    5: {'Name': 'Strawberry', 'Image': 'strawberry', 'SeedName': 'Basic', 'SeedCropIndex': 5},
+    6: {'Name': 'Bananas', 'Image': 'bananas', 'SeedName': 'Basic', 'SeedCropIndex': 6},
+    7: {'Name': 'Blueberry', 'Image': 'blueberry', 'SeedName': 'Basic', 'SeedCropIndex': 7},
+    8: {'Name': 'Brown Grapes', 'Image': 'red-grapes', 'SeedName': 'Basic', 'SeedCropIndex': 8},
+    9: {'Name': 'Red Pear', 'Image': 'red-pear', 'SeedName': 'Basic', 'SeedCropIndex': 9},
+    10: {'Name': 'Pineapple', 'Image': 'pineapple', 'SeedName': 'Basic', 'SeedCropIndex': 10},
+    11: {'Name': 'Lime', 'Image': 'lime', 'SeedName': 'Basic', 'SeedCropIndex': 11},
+    12: {'Name': 'Raspberry', 'Image': 'raspberry', 'SeedName': 'Basic', 'SeedCropIndex': 12},
+    13: {'Name': 'Fig', 'Image': 'fig', 'SeedName': 'Basic', 'SeedCropIndex': 13},
+    14: {'Name': 'Peach', 'Image': 'peach', 'SeedName': 'Basic', 'SeedCropIndex': 14},
+    15: {'Name': 'Purple Grapes', 'Image': 'purple-grapes', 'SeedName': 'Basic', 'SeedCropIndex': 15},
+    16: {'Name': 'Yellow Pear', 'Image': 'yellow-pear', 'SeedName': 'Basic', 'SeedCropIndex': 16},
+    17: {'Name': 'Watermelon', 'Image': 'watermelon', 'SeedName': 'Basic', 'SeedCropIndex': 17},
+    18: {'Name': 'Green Grapes', 'Image': 'green-grapes', 'SeedName': 'Basic', 'SeedCropIndex': 18},
+    19: {'Name': 'Dragon Fruit', 'Image': 'dragon-fruit', 'SeedName': 'Basic', 'SeedCropIndex': 19},
+    20: {'Name': 'Mango', 'Image': 'mango', 'SeedName': 'Basic', 'SeedCropIndex': 20},
+    21: {'Name': 'Gold Blueberry', 'Image': 'gold-blueberry', 'SeedName': 'Basic', 'SeedCropIndex': 21},
+#Earthy
+    22: {'Name': 'Carrot', 'Image': 'carrot', 'SeedName': 'Earthy', 'SeedCropIndex': 1},
+    23: {'Name': 'Potato', 'Image': 'potato', 'SeedName': 'Earthy', 'SeedCropIndex': 2},
+    24: {'Name': 'Beat', 'Image': 'beat', 'SeedName': 'Earthy', 'SeedCropIndex': 3},
+    25: {'Name': 'Tomato', 'Image': 'tomato', 'SeedName': 'Earthy', 'SeedCropIndex': 4},
+    26: {'Name': 'Artichoke', 'Image': 'artichoke', 'SeedName': 'Earthy', 'SeedCropIndex': 5},
+    27: {'Name': 'Roma Tomato', 'Image': 'roma-tomato', 'SeedName': 'Earthy', 'SeedCropIndex': 6},
+    28: {'Name': 'Butternut Squash', 'Image': 'butternut-squash', 'SeedName': 'Earthy', 'SeedCropIndex': 7},
+    29: {'Name': 'Avocado', 'Image': 'avocado', 'SeedName': 'Earthy', 'SeedCropIndex': 8},
+    30: {'Name': 'Red Pepper', 'Image': 'red-pepper', 'SeedName': 'Earthy', 'SeedCropIndex': 9},
+    31: {'Name': 'Broccoli', 'Image': 'broccoli', 'SeedName': 'Earthy', 'SeedCropIndex': 10},
+    32: {'Name': 'Radish', 'Image': 'radish', 'SeedName': 'Earthy', 'SeedCropIndex': 11},
+    33: {'Name': 'Coconut', 'Image': 'coconut', 'SeedName': 'Earthy', 'SeedCropIndex': 12},
+    34: {'Name': 'Sliced Tomato', 'Image': 'sliced-tomato', 'SeedName': 'Earthy', 'SeedCropIndex': 13},
+    35: {'Name': 'Cashew', 'Image': 'cashew', 'SeedName': 'Earthy', 'SeedCropIndex': 14},
+    36: {'Name': 'Turnip', 'Image': 'turnip', 'SeedName': 'Earthy', 'SeedCropIndex': 15},
+    37: {'Name': 'Coffee Bean', 'Image': 'coffee-bean', 'SeedName': 'Earthy', 'SeedCropIndex': 16},
+    38: {'Name': 'Pumpkin', 'Image': 'pumpkin', 'SeedName': 'Earthy', 'SeedCropIndex': 17},
+    39: {'Name': 'Sliced Cucumber', 'Image': 'sliced-cucumber', 'SeedName': 'Earthy', 'SeedCropIndex': 18},
+    40: {'Name': 'Eggplant', 'Image': 'eggplant', 'SeedName': 'Earthy', 'SeedCropIndex': 19},
+    41: {'Name': 'Lettuce', 'Image': 'lettuce', 'SeedName': 'Earthy', 'SeedCropIndex': 20},
+    42: {'Name': 'Garlic', 'Image': 'garlic', 'SeedName': 'Earthy', 'SeedCropIndex': 21},
+    43: {'Name': 'Green Beans', 'Image': 'green-beans', 'SeedName': 'Earthy', 'SeedCropIndex': 22},
+    44: {'Name': 'Bell Pepper', 'Image': 'bell-pepper', 'SeedName': 'Earthy', 'SeedCropIndex': 23},
+    45: {'Name': 'Corn', 'Image': 'corn-crop', 'SeedName': 'Earthy', 'SeedCropIndex': 24},
+    46: {'Name': 'Gold Sliced Tomato', 'Image': 'gold-sliced-tomato', 'SeedName': 'Earthy', 'SeedCropIndex': 25},
+#Bulbo
+    47: {'Name': 'Daisy', 'Image': 'daisy', 'SeedName': 'Bulbo', 'SeedCropIndex': 1},
+    48: {'Name': 'Flour', 'Image': 'flour', 'SeedName': 'Bulbo', 'SeedCropIndex': 2},
+    49: {'Name': 'Stargazer Lily', 'Image': 'stargazer-lily', 'SeedName': 'Bulbo', 'SeedCropIndex': 3},
+    50: {'Name': 'Rose', 'Image': 'rose', 'SeedName': 'Bulbo', 'SeedCropIndex': 4},
+    51: {'Name': 'Sunflower', 'Image': 'sunflower', 'SeedName': 'Bulbo', 'SeedCropIndex': 5},
+    52: {'Name': 'Blue Daisy', 'Image': 'blue-daisy', 'SeedName': 'Bulbo', 'SeedCropIndex': 6},
+    53: {'Name': 'Red Rose', 'Image': 'red-rose', 'SeedName': 'Bulbo', 'SeedCropIndex': 7},
+    54: {'Name': 'Tulip', 'Image': 'tulip', 'SeedName': 'Bulbo', 'SeedCropIndex': 8},
+    55: {'Name': 'Pink Daisy', 'Image': 'pink-daisy', 'SeedName': 'Bulbo', 'SeedCropIndex': 9},
+    56: {'Name': 'Cauliflower', 'Image': 'cauliflower', 'SeedName': 'Bulbo', 'SeedCropIndex': 10},
+    57: {'Name': 'Cape Marguerite Daisy', 'Image': 'cape-marguerite-daisy', 'SeedName': 'Bulbo', 'SeedCropIndex': 11},
+    58: {'Name': 'Papua Black Orchid', 'Image': 'papua-black-orchid', 'SeedName': 'Bulbo', 'SeedCropIndex': 12},
+    59: {'Name': 'Muffin', 'Image': 'muffin', 'SeedName': 'Bulbo', 'SeedCropIndex': 13},
+    60: {'Name': 'Black Rose', 'Image': 'black-rose', 'SeedName': 'Bulbo', 'SeedCropIndex': 14},
+    61: {'Name': 'Golden Tulip', 'Image': 'golden-tulip', 'SeedName': 'Bulbo', 'SeedCropIndex': 15},
+#Sushi
+    62: {'Name': 'Sushi Crop 1', 'Image': 'sushi-crop-1', 'SeedName': 'Sushi', 'SeedCropIndex': 1},
+    63: {'Name': 'Sushi Crop 2', 'Image': 'sushi-crop-2', 'SeedName': 'Sushi', 'SeedCropIndex': 2},
+    64: {'Name': 'Sushi Crop 3', 'Image': 'sushi-crop-3', 'SeedName': 'Sushi', 'SeedCropIndex': 3},
+    65: {'Name': 'Sushi Crop 4', 'Image': 'sushi-crop-4', 'SeedName': 'Sushi', 'SeedCropIndex': 4},
+    66: {'Name': 'Sushi Crop 5', 'Image': 'sushi-crop-5', 'SeedName': 'Sushi', 'SeedCropIndex': 5},
+    67: {'Name': 'Sushi Crop 6', 'Image': 'sushi-crop-6', 'SeedName': 'Sushi', 'SeedCropIndex': 6},
+    68: {'Name': 'Sushi Crop 7', 'Image': 'sushi-crop-7', 'SeedName': 'Sushi', 'SeedCropIndex': 7},
+    69: {'Name': 'Sushi Crop 8', 'Image': 'sushi-crop-8', 'SeedName': 'Sushi', 'SeedCropIndex': 8},
+    70: {'Name': 'Sushi Crop 9', 'Image': 'sushi-crop-9', 'SeedName': 'Sushi', 'SeedCropIndex': 9},
+    71: {'Name': 'Sushi Crop 10', 'Image': 'sushi-crop-10', 'SeedName': 'Sushi', 'SeedCropIndex': 10},
+    72: {'Name': 'Sushi Crop 11', 'Image': 'sushi-crop-11', 'SeedName': 'Sushi', 'SeedCropIndex': 11},
+    73: {'Name': 'Sushi Crop 12', 'Image': 'sushi-crop-12', 'SeedName': 'Sushi', 'SeedCropIndex': 12},
+    74: {'Name': 'Sushi Crop 13', 'Image': 'sushi-crop-13', 'SeedName': 'Sushi', 'SeedCropIndex': 13},
+    75: {'Name': 'Sushi Crop 14', 'Image': 'sushi-crop-14', 'SeedName': 'Sushi', 'SeedCropIndex': 14},
+    76: {'Name': 'Sushi Crop 15', 'Image': 'sushi-crop-15', 'SeedName': 'Sushi', 'SeedCropIndex': 15},
+    77: {'Name': 'Sushi Crop 16', 'Image': 'sushi-crop-16', 'SeedName': 'Sushi', 'SeedCropIndex': 16},
+    78: {'Name': 'Sushi Crop 17', 'Image': 'sushi-crop-17', 'SeedName': 'Sushi', 'SeedCropIndex': 17},
+    79: {'Name': 'Sushi Crop 18', 'Image': 'sushi-crop-18', 'SeedName': 'Sushi', 'SeedCropIndex': 18},
+    80: {'Name': 'Sushi Crop 19', 'Image': 'sushi-crop-19', 'SeedName': 'Sushi', 'SeedCropIndex': 19},
+    81: {'Name': 'Sushi Crop 20', 'Image': 'sushi-crop-20', 'SeedName': 'Sushi', 'SeedCropIndex': 20},
+    82: {'Name': 'Sushi Crop 21', 'Image': 'sushi-crop-21', 'SeedName': 'Sushi', 'SeedCropIndex': 21},
+    83: {'Name': 'Sushi Crop 22', 'Image': 'sushi-crop-22', 'SeedName': 'Sushi', 'SeedCropIndex': 22},
+    84: {'Name': 'Sushi Crop 23', 'Image': 'sushi-crop-23', 'SeedName': 'Sushi', 'SeedCropIndex': 23},
+#Mushie
+    85:  {'Name': 'Mushroom 1', 'Image': 'mushroom-1', 'SeedName': 'Mushie', 'SeedCropIndex': 1},
+    86:  {'Name': 'Mushroom 2', 'Image': 'mushroom-2', 'SeedName': 'Mushie', 'SeedCropIndex': 2},
+    87:  {'Name': 'Mushroom 3', 'Image': 'mushroom-3', 'SeedName': 'Mushie', 'SeedCropIndex': 3},
+    88:  {'Name': 'Mushroom 4', 'Image': 'mushroom-4', 'SeedName': 'Mushie', 'SeedCropIndex': 4},
+    89:  {'Name': 'Mushroom 5', 'Image': 'mushroom-5', 'SeedName': 'Mushie', 'SeedCropIndex': 5},
+    90:  {'Name': 'Mushroom 6', 'Image': 'mushroom-6', 'SeedName': 'Mushie', 'SeedCropIndex': 6},
+    91:  {'Name': 'Mushroom 7', 'Image': 'mushroom-7', 'SeedName': 'Mushie', 'SeedCropIndex': 7},
+    92:  {'Name': 'Mushroom 8', 'Image': 'mushroom-8', 'SeedName': 'Mushie', 'SeedCropIndex': 8},
+    93:  {'Name': 'Mushroom 9', 'Image': 'mushroom-9', 'SeedName': 'Mushie', 'SeedCropIndex': 9},
+    94:  {'Name': 'Mushroom 10', 'Image': 'mushroom-10', 'SeedName': 'Mushie', 'SeedCropIndex': 10},
+    95:  {'Name': 'Mushroom 11', 'Image': 'mushroom-11', 'SeedName': 'Mushie', 'SeedCropIndex': 11},
+    96:  {'Name': 'Mushroom 12', 'Image': 'mushroom-12', 'SeedName': 'Mushie', 'SeedCropIndex': 12},
+    97:  {'Name': 'Mushroom 13', 'Image': 'mushroom-13', 'SeedName': 'Mushie', 'SeedCropIndex': 13},
+    98:  {'Name': 'Mushroom 14', 'Image': 'mushroom-14', 'SeedName': 'Mushie', 'SeedCropIndex': 14},
+    99:  {'Name': 'Mushroom 15', 'Image': 'mushroom-15', 'SeedName': 'Mushie', 'SeedCropIndex': 15},
+    100: {'Name': 'Mushroom 16', 'Image': 'mushroom-16', 'SeedName': 'Mushie', 'SeedCropIndex': 16},
+    101: {'Name': 'Mushroom 17', 'Image': 'mushroom-17', 'SeedName': 'Mushie', 'SeedCropIndex': 17},
+    102: {'Name': 'Mushroom 18', 'Image': 'mushroom-18', 'SeedName': 'Mushie', 'SeedCropIndex': 18},
+    103: {'Name': 'Mushroom 19', 'Image': 'mushroom-19', 'SeedName': 'Mushie', 'SeedCropIndex': 19},
+    104: {'Name': 'Mushroom 20', 'Image': 'mushroom-20', 'SeedName': 'Mushie', 'SeedCropIndex': 20},
+    105: {'Name': 'Mushroom 21', 'Image': 'mushroom-21', 'SeedName': 'Mushie', 'SeedCropIndex': 21},
+    106: {'Name': 'Mushroom 22', 'Image': 'mushroom-22', 'SeedName': 'Mushie', 'SeedCropIndex': 22},
+    107: {'Name': 'Mushroom 23', 'Image': 'mushroom-23', 'SeedName': 'Mushie', 'SeedCropIndex': 23},
+#Normal Glassy
+    108: {'Name': 'Glassy Bananas', 'Image': 'glassy-bananas', 'SeedName': 'Normal Glassy', 'SeedCropIndex': 1},
+    109: {'Name': 'Glassy Mango', 'Image': 'glassy-mango', 'SeedName': 'Normal Glassy', 'SeedCropIndex': 2},
+    110: {'Name': 'Glassy Mushroom', 'Image': 'glassy-mushroom', 'SeedName': 'Normal Glassy', 'SeedCropIndex': 3},
+    111: {'Name': 'Glassy Maki', 'Image': 'glassy-maki', 'SeedName': 'Normal Glassy', 'SeedCropIndex': 4},
+    112: {'Name': 'Glassy Broccoli', 'Image': 'glassy-broccoli', 'SeedName': 'Normal Glassy', 'SeedCropIndex': 5},
+    113: {'Name': 'Glassy Carrot', 'Image': 'glassy-carrot', 'SeedName': 'Normal Glassy', 'SeedCropIndex': 6},
+    114: {'Name': 'Glassy Tomato', 'Image': 'glassy-tomato', 'SeedName': 'Normal Glassy', 'SeedCropIndex': 7},
+    115: {'Name': 'Glassy Watermelon', 'Image': 'glassy-watermelon', 'SeedName': 'Normal Glassy', 'SeedCropIndex': 8},
+    116: {'Name': 'Glassy Shrimp', 'Image': 'glassy-shrimp', 'SeedName': 'Normal Glassy', 'SeedCropIndex': 9},
+    117: {'Name': 'Glassy Rose', 'Image': 'glassy-rose', 'SeedName': 'Normal Glassy', 'SeedCropIndex': 10},
+    118: {'Name': 'Glassy Lettuce', 'Image': 'glassy-lettuce', 'SeedName': 'Normal Glassy', 'SeedCropIndex': 11},
+    119: {'Name': 'Glassy Onigiri', 'Image': 'glassy-onigiri', 'SeedName': 'Normal Glassy', 'SeedCropIndex': 12},
+    120: {'Name': 'Glassy Corn', 'Image': 'glassy-corn', 'SeedName': 'Normal Glassy', 'SeedCropIndex': 13},
+#Red Glassy
+    121: {'Name': 'Red Glassy Bananas',     'Image': 'red-glassy-bananas', 'SeedName': 'Red Glassy',    'SeedCropIndex': 14},
+    122: {'Name': 'Red Glassy Mango',       'Image': 'red-glassy-mango', 'SeedName': 'Red Glassy',      'SeedCropIndex': 15},
+    123: {'Name': 'Red Glassy Broccoli',    'Image': 'red-glassy-broccoli', 'SeedName': 'Red Glassy',   'SeedCropIndex': 16},
+    124: {'Name': 'Red Glassy Carrot',      'Image': 'red-glassy-carrot', 'SeedName': 'Red Glassy',     'SeedCropIndex': 17},
+    125: {'Name': 'Red Glassy Tomato',      'Image': 'red-glassy-tomato', 'SeedName': 'Red Glassy',     'SeedCropIndex': 18},
+    126: {'Name': 'Red Glassy Watermelon',  'Image': 'red-glassy-watermelon', 'SeedName': 'Red Glassy', 'SeedCropIndex': 19},
+    127: {'Name': 'Red Glassy Shrimp',      'Image': 'red-glassy-shrimp', 'SeedName': 'Red Glassy',     'SeedCropIndex': 20},
+    128: {'Name': 'Red Glassy Rose',        'Image': 'red-glassy-rose', 'SeedName': 'Red Glassy',       'SeedCropIndex': 21},
+    129: {'Name': 'Red Glassy Onigiri',     'Image': 'red-glassy-corn', 'SeedName': 'Red Glassy',       'SeedCropIndex': 22},
+    130: {'Name': 'Red Glassy Corn',        'Image': 'red-glassy-corn', 'SeedName': 'Red Glassy',       'SeedCropIndex': 23},
+#Green Glassy
+    131: {'Name': 'Green Glassy Bananas',     'Image': 'green-glassy-bananas', 'SeedName': 'Green Glassy',    'SeedCropIndex': 24},
+    132: {'Name': 'Green Glassy Mango',       'Image': 'green-glassy-mango', 'SeedName': 'Green Glassy',      'SeedCropIndex': 25},
+    133: {'Name': 'Green Glassy Broccoli',    'Image': 'green-glassy-broccoli', 'SeedName': 'Green Glassy',   'SeedCropIndex': 26},
+    134: {'Name': 'Green Glassy Carrot',      'Image': 'green-glassy-carrot', 'SeedName': 'Green Glassy',     'SeedCropIndex': 27},
+    135: {'Name': 'Green Glassy Tomato',      'Image': 'green-glassy-tomato', 'SeedName': 'Green Glassy',     'SeedCropIndex': 28},
+    136: {'Name': 'Green Glassy Watermelon',  'Image': 'green-glassy-watermelon', 'SeedName': 'Green Glassy', 'SeedCropIndex': 29},
+    137: {'Name': 'Green Glassy Shrimp',      'Image': 'green-glassy-shrimp', 'SeedName': 'Green Glassy',     'SeedCropIndex': 30},
+    138: {'Name': 'Green Glassy Rose',        'Image': 'green-glassy-rose', 'SeedName': 'Green Glassy',       'SeedCropIndex': 31},
+    139: {'Name': 'Green Glassy Onigiri',     'Image': 'green-glassy-corn', 'SeedName': 'Green Glassy',       'SeedCropIndex': 32},
+    140: {'Name': 'Green Glassy Corn',        'Image': 'green-glassy-corn', 'SeedName': 'Green Glassy',       'SeedCropIndex': 33},
+#White Glassy
+    141: {'Name': 'White Glassy Bananas',     'Image': 'white-glassy-bananas', 'SeedName': 'White Glassy',    'SeedCropIndex': 34},
+    142: {'Name': 'White Glassy Mango',       'Image': 'white-glassy-mango', 'SeedName': 'White Glassy',      'SeedCropIndex': 35},
+    143: {'Name': 'White Glassy Broccoli',    'Image': 'white-glassy-broccoli', 'SeedName': 'White Glassy',   'SeedCropIndex': 36},
+    144: {'Name': 'White Glassy Carrot',      'Image': 'white-glassy-carrot', 'SeedName': 'White Glassy',     'SeedCropIndex': 37},
+    145: {'Name': 'White Glassy Tomato',      'Image': 'white-glassy-tomato', 'SeedName': 'White Glassy',     'SeedCropIndex': 38},
+    146: {'Name': 'White Glassy Watermelon',  'Image': 'white-glassy-watermelon', 'SeedName': 'White Glassy', 'SeedCropIndex': 39},
+    147: {'Name': 'White Glassy Shrimp',      'Image': 'white-glassy-shrimp', 'SeedName': 'White Glassy',     'SeedCropIndex': 40},
+    148: {'Name': 'White Glassy Rose',        'Image': 'white-glassy-rose', 'SeedName': 'White Glassy',       'SeedCropIndex': 41},
+    149: {'Name': 'White Glassy Onigiri',     'Image': 'white-glassy-corn', 'SeedName': 'White Glassy',       'SeedCropIndex': 42},
+    150: {'Name': 'White Glassy Corn',        'Image': 'white-glassy-corn', 'SeedName': 'White Glassy',       'SeedCropIndex': 43},
+#Purple Glassy
+    151: {'Name': 'Purple Glassy Bananas',     'Image': 'purple-glassy-bananas', 'SeedName': 'Purple Glassy',    'SeedCropIndex': 44},
+    152: {'Name': 'Purple Glassy Mango',       'Image': 'purple-glassy-mango', 'SeedName': 'Purple Glassy',      'SeedCropIndex': 45},
+    153: {'Name': 'Purple Glassy Broccoli',    'Image': 'purple-glassy-broccoli', 'SeedName': 'Purple Glassy',   'SeedCropIndex': 46},
+    154: {'Name': 'Purple Glassy Carrot',      'Image': 'purple-glassy-carrot', 'SeedName': 'Purple Glassy',     'SeedCropIndex': 47},
+    155: {'Name': 'Purple Glassy Tomato',      'Image': 'purple-glassy-tomato', 'SeedName': 'Purple Glassy',     'SeedCropIndex': 48},
+    156: {'Name': 'Purple Glassy Watermelon',  'Image': 'purple-glassy-watermelon', 'SeedName': 'Purple Glassy', 'SeedCropIndex': 49},
+    157: {'Name': 'Purple Glassy Shrimp',      'Image': 'purple-glassy-shrimp', 'SeedName': 'Purple Glassy',     'SeedCropIndex': 50},
+    158: {'Name': 'Purple Glassy Rose',        'Image': 'purple-glassy-rose', 'SeedName': 'Purple Glassy',       'SeedCropIndex': 51},
+    159: {'Name': 'Purple Glassy Onigiri',     'Image': 'purple-glassy-corn', 'SeedName': 'Purple Glassy',       'SeedCropIndex': 52},
+    160: {'Name': 'Purple Glassy Corn',        'Image': 'purple-glassy-corn', 'SeedName': 'Purple Glassy',       'SeedCropIndex': 53},
+}
+seed_base = {
+    'Basic': 0.75,
+    'Earthy': 0.63,
+    'Bulbo': 0.3,
+    'Sushi': 0.4,
+    'Mushie': 0.2,
+    'Normal Glassy': 0.05,
+    'Red Glassy': 0.05,
+    'Green Glassy': 0.05,
+    'White Glassy': 0.05,
+    'Purple Glassy': 0.05
+}
+crop_base = 0.3
+def getCropEvoChance(overallSeedNumber: int) -> float:
+    if cropDict[overallSeedNumber]['SeedCropIndex'] == 1:
+        return 1
+    else:
+        try:
+            return crop_base * pow(seed_base[cropDict[overallSeedNumber]['SeedName']], cropDict[overallSeedNumber]['SeedCropIndex'] - 2)
+        except:
+            logger.warning(f"overallSeedNumber {overallSeedNumber} not found in cropDict. Returning crop_base {crop_base}")
+            return crop_base
 
 def getMoissaniteValue(moissaniteLevel: int):
     try:

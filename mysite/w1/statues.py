@@ -168,10 +168,11 @@ def setStatuesProgressionTier() -> AdviceSection:
                         if subgroupName in statues_AdviceDict["Tiers"]:
                             statues_AdviceDict['Tiers'][subgroupName].append(Advice(
                                 label=f"Raise {statueName} to {tierRequirements.get('MinStatueType', 'UnknownStatueType')}"
-                                      f"{farmDetails if tierRequirements.get('MinStatueType', 'UnknownStatueType') != 'Gold' else ''}",
+                                      f"{farmDetails if tierRequirements.get('MinStatueType', 'UnknownStatueType') != 'Gold' else ''}"
+                                      f"{'<br>Reminder: You need to raise this statue to Gold first!' if tierRequirements.get('MinStatueType', 'UnknownStatueType') == 'Onyx' and statueDetails['Level'] == 0 else ''}",
                                 picture_class=statueName,
                                 progression=statueDetails['TypeNumber'] if statueDetails['TypeNumber'] < 1 else session_data.account.stored_assets.get(statueDetails['ItemName']).amount,
-                                goal=tierRequirements.get('MinStatueTypeNumber', 0) if statueDetails['TypeNumber'] < 1 else 20000,
+                                goal=20000 if tierRequirements.get('MinStatueType', 'UnknownStatueType') == 'Onyx' else tierRequirements.get('MinStatueTypeNumber', 0),
                                 resource="coins" if tierRequirements.get('MinStatueType', 'UnknownStatueType') == 'Gold' else farmResource
                             ))
                         if session_data.account.stored_assets.get(statueDetails['ItemName']).amount >= 20000 and statueDetails['Type'] != statueTypeList[-1]:
