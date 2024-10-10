@@ -88,25 +88,27 @@ def try_exclude_ChestSluggo(exclusionList):
     if session_data.account.sum_artifact_tiers >= 58:  #(numberOfArtifacts * numberOfArtifactTiers) * 0.43:
         exclusionList.append("Chest Sluggo")
 
-def try_exclude_GoldenSprinkler(exclusionList):
+def try_exclude_Gaming(exclusionList):
     if (
         session_data.account.gaming['SuperBits']['Isotope Discovery']['Unlocked']
         or session_data.account.gaming['FertilizerValue'] >= 420
         or session_data.account.gaming['FertilizerSpeed'] >= 500
-        or session_data.account.farming["CropsUnlocked"] >= maxFarmingCrops * 0.8
+        or session_data.account.farming['CropsUnlocked'] >= maxFarmingCrops * 0.75
     ):
-        exclusionList.append("Golden Sprinkler")
-    if "Golden Sprinkler" not in exclusionList:
-        try:
-            if session_data.account.gaming['BitsOwned'] >= 1e47:  #Red 100B
-                exclusionList.append("Golden Sprinkler")
-        except:
-            pass
+        exclusionList.append('Golden Sprinkler')
+        exclusionList.append('Lava Sprouts')
+        return
+    try:
+        if session_data.account.gaming['BitsOwned'] >= 1e47:  #Red 100B
+            exclusionList.append('Golden Sprinkler')
+            exclusionList.append('Lava Sprouts')
+    except:
+        pass
 
 def try_exclude_ShroomFamiliar(exclusionList):
     #if Red is at least half-way finished, exclude
     if session_data.account.summoning['Battles']['Red'] >= 8:
-        exclusionList.append("Shroom Familiar")
+        exclusionList.append('Shroom Familiar')
 
 
 def try_exclude_IvoryBubbleCauldrons(exclusionList):
@@ -134,7 +136,7 @@ def getGemShopFullExclusions():
     try_exclude_Kitchens(exclusionList)
     #W5
     try_exclude_ChestSluggo(exclusionList)
-    try_exclude_GoldenSprinkler(exclusionList)
+    try_exclude_Gaming(exclusionList)
     #W6
 
     return exclusionList
