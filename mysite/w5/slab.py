@@ -70,9 +70,9 @@ def setSlabProgressionTier():
                 if itemName in reclaimableQuestItems.keys():
                     if session_data.account.compiled_quests.get(reclaimableQuestItems[itemName]['QuestNameCoded'], {}).get('CompletedCount', 0) > 0:
                         slab_AdviceDict["Reclaims"].append(Advice(
-                            label=f"{getItemDisplayName(itemName)} ({reclaimableQuestItems[itemName]['QuestGiver']}: {reclaimableQuestItems[itemName]['QuestName']})",
+                            label=f"{getItemDisplayName(itemName)} ({reclaimableQuestItems[itemName]['QuestGiver'].replace('_', ' ')}: {reclaimableQuestItems[itemName]['QuestName']})",
                             picture_class=getItemDisplayName(itemName) if itemName not in slab_itemNameReplacementDict else slab_itemNameReplacementDict[itemName],
-                            resource=reclaimableQuestItems[itemName]['QuestGiver']
+                            resource=reclaimableQuestItems[itemName]['QuestGiver'].replace('_', '-')
                         ))
                     continue
                 #If the item comes from a quest AND at least 1 character hasn't completed it
@@ -80,9 +80,9 @@ def setSlabProgressionTier():
                     #logger.debug(f"{itemName} quest {slab_QuestRewards[itemName]['QuestNameCoded']} completed by {session_data.account.compiled_quests.get(slab_QuestRewards[itemName]['QuestNameCoded'], {}).get('CompletedCount', 0)}/{maxCharacters}")
                     if session_data.account.compiled_quests.get(slab_QuestRewards[itemName]['QuestNameCoded'], {}).get('CompletedCount', 0) < maxCharacters:
                         slab_AdviceDict["Quests"].append(Advice(
-                            label=f"{getItemDisplayName(itemName)} ({slab_QuestRewards[itemName]['QuestGiver']}: {slab_QuestRewards[itemName]['QuestName']})",
+                            label=f"{getItemDisplayName(itemName)} ({slab_QuestRewards[itemName]['QuestGiver'].replace('_', ' ')}: {slab_QuestRewards[itemName]['QuestName']})",
                             picture_class=getItemDisplayName(itemName) if itemName not in slab_itemNameReplacementDict else slab_itemNameReplacementDict[itemName],
-                            resource=slab_QuestRewards[itemName]['QuestGiver']
+                            resource=slab_QuestRewards[itemName]['QuestGiver'].replace('_', '-')
                         ))
                     continue
                 #If the item is sold by a vendor

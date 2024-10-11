@@ -7178,11 +7178,965 @@ reclaimableQuestItems = {
     }
 }
 slab_QuestRewards = {
+    'EquipmentPants16': {
+        "ItemName": "Adam's Leaf",
+        "QuestGiver": "Sprout",
+        "QuestName": "Sticks and Stone Something Something Bones...",
+        "QuestNameCoded": "Sprout2"
+    },
+    'EquipmentShirts17': {
+        "ItemName": "MCR Tshirt",
+        "QuestGiver": "Sprout",
+        "QuestName": "Justice Wears No Clothes",
+        "QuestNameCoded": "Sprout3"
+    },
+    'NPCtoken12': {
+        "ItemName": "Sproutinald Token",
+        "QuestGiver": "Sprout",
+        "QuestName": "Frisbee Fanatic",
+        "QuestNameCoded": "Sprout4"
+    },
+    'EquipmentRings12': {
+        "ItemName": "Frisbee Ring",
+        "QuestGiver": "Sprout",
+        "QuestName": "Frisbee Fanatic",
+        "QuestNameCoded": "Sprout4"
+    },
+    'MaxCapBagT1': {
+        "ItemName": "Miniature Choppin Pouch",
+        "QuestGiver": "Woodsman",
+        "QuestName": "A noob's first swing",
+        "QuestNameCoded": "Woodsman1"
+    },
+    'EquipmentToolsHatchet0': {
+        "ItemName": "Old Hatchet",
+        "QuestGiver": "Woodsman",
+        "QuestName": "A noob's 2nd first swing",
+        "QuestNameCoded": "Woodsman2"
+    },
+    'EquipmentHats4Choppin': {
+        "ItemName": "Stump Prop",
+        "QuestGiver": "Woodsman",
+        "QuestName": "It's Just a Plank, Bro!",
+        "QuestNameCoded": "Woodsman3"
+    },
+    'NPCtoken5': {
+        "ItemName": "Woodsman Token",
+        "QuestGiver": "Woodsman",
+        "QuestName": "Exotic Pranks... I mean Logs!",
+        "QuestNameCoded": "Woodsman4"
+    },
+    'CraftMat2': {
+        "ItemName": "Crimson String",
+        "QuestGiver": "Scripticus",
+        "QuestName": "Hardcore Gamer Status, Here I Come!",
+        "QuestNameCoded": "Scripticus2"
+    },
+    'EquipmentHats7': {
+        "ItemName": "Red Headband",
+        "QuestGiver": "Scripticus",
+        "QuestName": "Gear Up, Gamer!",
+        "QuestNameCoded": "Scripticus3"
+    },
+    'InvBag1': {
+        "ItemName": "Inventory Bag A",
+        "QuestGiver": "Scripticus",
+        "QuestName": "Mr. Worldwide",
+        "QuestNameCoded": "Scripticus4"
+    },
+    'EquipmentTools1': {
+        "ItemName": "Junk Pickaxe",
+        "QuestGiver": "Scripticus",
+        "QuestName": "Certified Swinger, of Pickaxes of course!",
+        "QuestNameCoded": "Scripticus6"
+    },
+    'MaxCapBagM1': {
+        "ItemName": "Mini Materials Pouch",
+        "QuestGiver": "Scripticus",
+        "QuestName": "The Smithing Grind",
+        "QuestNameCoded": "Scripticus7"
+    },
+    'InvBag2': {
+        "ItemName": "Inventory Bag B",
+        "QuestGiver": "Scripticus",
+        "QuestName": "Warrior, Archer or Mage?",
+        "QuestNameCoded": "Scripticus8"
+    },
+    'MaxCapBagM3': {
+        "ItemName": "Small Material Pouch",
+        "QuestGiver": "Scripticus",
+        "QuestName": "Warrior, Archer or Mage?",
+        "QuestNameCoded": "Scripticus8"
+    },
+    'InvBag3': {
+        "ItemName": "Inventory Bag C",
+        "QuestGiver": "Scripticus",
+        "QuestName": "Stiltzcho, the Leaf Scout",
+        "QuestNameCoded": "Scripticus9"
+    },
+    'Trophy6': {
+        "ItemName": "Blunder Hero",
+        "QuestGiver": "Scripticus",
+        "QuestName": "Champion of the Grasslands",
+        "QuestNameCoded": "Scripticus12"
+    },
+    'StoneA1b': {
+        "ItemName": "Armor Upgrade Stone G",
+        "QuestGiver": "Krunk",
+        "QuestName": "The Scientific Method, According to a Rock",
+        "QuestNameCoded": "Krunk2"
+    },
+    'InvStorage3': {
+        "ItemName": "The Scientific Method, According to a Rock",
+        "QuestGiver": "Krunk",
+        "QuestName": "Storage Chest 3",
+        "QuestNameCoded": "Krunk2"
+    },
+    'NPCtoken10': {
+        "ItemName": "Krunk Token",
+        "QuestGiver": "Krunk",
+        "QuestName": "King of the Cavern",
+        "QuestNameCoded": "Krunk3"
+    },
+    'OilBarrel4': {
+        "ItemName": "Glumlee's Special Tutorial Oil",
+        "QuestGiver": "Glumlee",
+        "QuestName": "Learning to Swing",
+        "QuestNameCoded": "Glumlee1"
+    },
+    'Quest1': {
+        "ItemName": "Mining Certificate",
+        "QuestGiver": "Glumlee",
+        "QuestName": "Literally Burning your Money",
+        "QuestNameCoded": "Glumlee3"
+    },
+    'MaxCapBagT2': {
+        "ItemName": "Miniature Mining Pouch",
+        "QuestGiver": "Glumlee",
+        "QuestName": "Literally Burning your Money",
+        "QuestNameCoded": "Glumlee3"
+    },
+    'NPCtoken6': {
+        "ItemName": "Glumlee Token",
+        "QuestGiver": "Glumlee",
+        "QuestName": "He's Havin' a Bad Day",
+        "QuestNameCoded": "Glumlee5"
+    },
+    'MaxCapBag6': {
+        "ItemName": "Miniscule Food Pouch",
+        "QuestGiver": "Picnic_Stowaway",
+        "QuestName": "The Hungry Stowaway",
+        "QuestNameCoded": "Picnic_Stowaway1"
+    },
+    'EquipmentPendant9': {
+        "ItemName": "Little Wooden Katana",
+        "QuestGiver": "Picnic_Stowaway",
+        "QuestName": "Beating Up Frogs for some Sauce",
+        "QuestNameCoded": "Picnic_Stowaway2"
+    },
+    'Quest9': {
+        "ItemName": "Picnic Token",
+        "QuestGiver": "Picnic_Stowaway",
+        "QuestName": "A Midnight Snack",
+        "QuestNameCoded": "Picnic_Stowaway11"
+    },
+    'Trophy1': {
+        "ItemName": "King of Food",
+        "QuestGiver": "Picnic_Stowaway",
+        "QuestName": "King of Food",
+        "QuestNameCoded": "Picnic_Stowaway12"
+    },
+    'StampA4': {
+        "ItemName": "Tomahawk Stamp",
+        "QuestGiver": "Hamish",
+        "QuestName": "The Hamazing Plot Twist",
+        "QuestNameCoded": "Hamish1"
+    },
+    'StampB6': {
+        "ItemName": "Should We Tell Him?",
+        "QuestGiver": "Hamish",
+        "QuestName": "Choppin' Bag Stamp",
+        "QuestNameCoded": "Hamish2"
+    },
+    'InvStorage1': {
+        "ItemName": "Slime for Storage",
+        "QuestGiver": "Hamish",
+        "QuestName": "Storage Chest 1",
+        "QuestNameCoded": "Hamish3"
+    },
+    'Quest5': {
+        "ItemName": "Class Certificate",
+        "QuestGiver": "Promotheus",
+        "QuestName": "Three Right Answers",
+        "QuestNameCoded": "Promotheus2"
+    },
+    'EquipmentHats29': {
+        "ItemName": "Slovakian Scare",
+        "QuestGiver": "Promotheus",
+        "QuestName": "Alien Headband",
+        "QuestNameCoded": "Promotheus3"
+    },
+    'InvBag4': {
+        "ItemName": "Inventory Bag D",
+        "QuestGiver": "Promotheus",
+        "QuestName": "The Witcher, but not Really Inventory Bag D",
+        "QuestNameCoded": "Promotheus4"
+    },
+    'PeanutS': {
+        "ItemName": "Stone Peanut",
+        "QuestGiver": "Bushlyte",
+        "QuestName": "A Peanut Saved is a Peanut not Eaten!",
+        "QuestNameCoded": "Bushlyte3"
+    },
+    'Trophy3': {
+        "ItemName": "Club Member",
+        "QuestGiver": "Rocklyte",
+        "QuestName": "Becoming the Best Beginner",
+        "QuestNameCoded": "Rocklyte3"
+    },
+    'Trophy13': {
+        "ItemName": "Club Maestro",
+        "QuestGiver": "Cactolyte",
+        "QuestName": "Maestro! The Stro! Mman!",
+        "QuestNameCoded": "Cactolyte4"
+    },
+    'Quest6': {
+        "ItemName": "Scouting Report",
+        "QuestGiver": "Stiltzcho",
+        "QuestName": "Investigator by Day, Prankster by Night",
+        "QuestNameCoded": "Stiltzcho3"
+    },
+    'EquipmentPendant11': {
+        "ItemName": "Carrot Horror",
+        "QuestGiver": "Stiltzcho",
+        "QuestName": "Investigator by Day, Prankster by Night",
+        "QuestNameCoded": "Stiltzcho3"
+    },
+    'NPCtoken4': {
+        "ItemName": "Stiltzcho Token",
+        "QuestGiver": "Stiltzcho",
+        "QuestName": "Time Crime Season Finale",
+        "QuestNameCoded": "Stiltzcho6"
+    },
+    'MaxCapBag10': {
+        "ItemName": "Small Food Pouch",
+        "QuestGiver": "Funguy",
+        "QuestName": "Mushroom Munchies",
+        "QuestNameCoded": "Funguy1"
+    },
     'EquipmentRings13': {
         "ItemName": "Silver Stopwatch",
         "QuestGiver": "Funguy",
         "QuestName": "Partycrastination",
         "QuestNameCoded": "Funguy3"
+    },
+    'NPCtoken9': {
+        "ItemName": "Funguy Token",
+        "QuestGiver": "Funguy",
+        "QuestName": "Wicked Party Cleanup",
+        "QuestNameCoded": "Funguy5"
+    },
+    'StampC1': {
+        "ItemName": "",
+        "QuestGiver": "Tiki_Chief",
+        "QuestName": "",
+        "QuestNameCoded": "Tiki_Chief2"
+    },
+    'NPCtoken11': {
+        "ItemName": "Questin Stamp",
+        "QuestGiver": "Tiki_Chief",
+        "QuestName": "Three Strikes, you're Out!",
+        "QuestNameCoded": "Tiki_Chief4"
+    },
+    'NPCtoken13': {
+        "ItemName": "Dog Bone Token",
+        "QuestGiver": "Dog_Bone",
+        "QuestName": "Bow Wow going Dow..n!",
+        "QuestNameCoded": "Dog_Bone2"
+    },
+    'StampC6': {
+        "ItemName": "Potion Stamp",
+        "QuestGiver": "Papua_Piggea",
+        "QuestName": "Stamp Collecting",
+        "QuestNameCoded": "Papua_Piggea3"
+    },
+    'NPCtoken7': {
+        "ItemName": "Papua Piggea Token",
+        "QuestGiver": "Papua_Piggea",
+        "QuestName": "This Little Piggy Felt Remorse",
+        "QuestNameCoded": "Papua_Piggea4"
+    },
+    'StampA19': {
+        "ItemName": "Polearm Stamp",
+        "QuestGiver": "Papua_Piggea",
+        "QuestName": "This Little Piggy Felt Remorse",
+        "QuestNameCoded": "Papua_Piggea4"
+    },
+    'StampA9': {
+        "ItemName": "Fist Stamp",
+        "QuestGiver": "Mutton",
+        "QuestName": "Beatboxing Starterpack",
+        "QuestNameCoded": "Mutton1"
+    },
+    'InvStorage5': {
+        "ItemName": "Storage Chest 5",
+        "QuestGiver": "Mutton",
+        "QuestName": "Beatboxing Starterpack",
+        "QuestNameCoded": "Mutton1"
+    },
+    'StampA14': {
+        "ItemName": "Manamoar Stamp",
+        "QuestGiver": "Mutton",
+        "QuestName": "Clout Chasin'",
+        "QuestNameCoded": "Mutton2"
+    },
+    'StampA16': {
+        "ItemName": "Scimitar Stamp",
+        "QuestGiver": "Mutton",
+        "QuestName": "Cross Platform Promotion",
+        "QuestNameCoded": "Mutton3"
+    },
+    'StampC7': {
+        "ItemName": "Golden Apple Stamp",
+        "QuestGiver": "Mutton",
+        "QuestName": "7 Figure Followers",
+        "QuestNameCoded": "Mutton4"
+    },
+    'StampA26': {
+        "ItemName": "Steve Sword",
+        "QuestGiver": "Mutton",
+        "QuestName": "7 Figure Followers",
+        "QuestNameCoded": "Mutton4"
+    },
+    'StampB17': {
+        "ItemName": "Fishing Rod Stamp",
+        "QuestGiver": "Fishpaste",
+        "QuestName": "'Accidental' Exploit",
+        "QuestNameCoded": "Fishpaste971"
+    },
+    'NPCtoken22': {
+        "ItemName": "Fishpaste Token",
+        "QuestGiver": "Fishpaste",
+        "QuestName": "Can you do the Can Can?",
+        "QuestNameCoded": "Fishpaste972"
+    },
+    'Weight6': {
+        "ItemName": "One Pound of Feathers",
+        "QuestGiver": "Fishpaste",
+        "QuestName": "Can you do the Can Can?",
+        "QuestNameCoded": "Fishpaste972"
+    },
+    'StampC18': {
+        "ItemName": "Talent S Stamp",
+        "QuestGiver": "Fishpaste",
+        "QuestName": "Can you do the Can Can?",
+        "QuestNameCoded": "Fishpaste972"
+    },
+    'Weight2': {
+        "ItemName": "Iron Hook",
+        "QuestGiver": "Scubidew",
+        "QuestName": "Don't Step to Me, Bro!",
+        "QuestNameCoded": "Scubidew1"
+    },
+    # 'Weight2': {
+    #     "ItemName": "Iron Hook",
+    #     "QuestGiver": "Carpetiem",
+    #     "QuestName": "Helping 100 times over",
+    #     "QuestNameCoded": "Carpetiem4"
+    # },
+    'Weight3': {
+        "ItemName": "Basic Bobber",
+        "QuestGiver": "Scubidew",
+        "QuestName": "Uncovering the Deep Sea State!!!",
+        "QuestNameCoded": "Scubidew2"
+    },
+    'NPCtoken26': {
+        "ItemName": "Scubidew Token",
+        "QuestGiver": "Scubidew",
+        "QuestName": "A Normal Quest.",
+        "QuestNameCoded": "Scubidew3"
+    },
+    'Weight1': {
+        "ItemName": "Wormie Weight",
+        "QuestGiver": "Whattso",
+        "QuestName": "Mopey Dick",
+        "QuestNameCoded": "Whattso1"
+    },
+    'Line11': {
+        "ItemName": "Scripticus Spoons",
+        "QuestGiver": "Whattso",
+        "QuestName": "The Whaley Hard Minigame",
+        "QuestNameCoded": "Whattso2"
+    },
+    'Weight12': {
+        "ItemName": "Triple Threat",
+        "QuestGiver": "Whattso",
+        "QuestName": "Bobbin' Bobbers",
+        "QuestNameCoded": "Whattso3"
+    },
+    'NPCtoken18': {
+        "ItemName": "Whattso Token",
+        "QuestGiver": "Whattso",
+        "QuestName": "Bobbin' Bobbers",
+        "QuestNameCoded": "Whattso3"
+    },
+    'Line7': {
+        "ItemName": "Electrical Wiring",
+        "QuestGiver": "Whattso",
+        "QuestName": "The Biggest Fish in the Sea...?",
+        "QuestNameCoded": "Whattso4"
+    },
+    'Quest46': {
+        "ItemName": "The Bobber Challenge Scroll",
+        "QuestGiver": "Whattso",
+        "QuestName": "The Biggest Fish in the Sea...?",
+        "QuestNameCoded": "Whattso4"
+    },
+    'Quest20': {
+        "ItemName": "Signed Arrest Warrant",
+        "QuestGiver": "Bandit_Bob",
+        "QuestName": "Bringing Bob's Boxes",
+        "QuestNameCoded": "Bandit_Bob3"
+    },
+    'NPCtoken16': {
+        "ItemName": "Bandit Bob Token",
+        "QuestGiver": "Bandit_Bob",
+        "QuestName": "The Desert Dungeon Prequest",
+        "QuestNameCoded": "Bandit_Bob4"
+    },
+    'NPCtoken20': {
+        "ItemName": "Carpetiem Token",
+        "QuestGiver": "Carpetiem",
+        "QuestName": "Helping 100 times over",
+        "QuestNameCoded": "Carpetiem4"
+    },
+    'Line2': {
+        "ItemName": "Silver Twine",
+        "QuestGiver": "Carpetiem",
+        "QuestName": "Helping 100 times over",
+        "QuestNameCoded": "Carpetiem4"
+    },
+    'NPCtoken25': {
+        "ItemName": "Djonnut Token",
+        "QuestGiver": "Djonnut",
+        "QuestName": "The Blue New World",
+        "QuestNameCoded": "Djonnut3"
+    },
+    'Quest27': {
+        "ItemName": "Bag o Nuts",
+        "QuestGiver": "Goldric",
+        "QuestName": "Dress to Impress",
+        "QuestNameCoded": "Goldric5"
+    },
+    'NPCtoken21': {
+        "ItemName": "Goldric Token",
+        "QuestGiver": "Goldric",
+        "QuestName": "Dont lay a finger on my Sheepies!!!",
+        "QuestNameCoded": "Goldric6"
+    },
+    'EquipmentRingsFishing1': {
+        "ItemName": "Shallow Watering",
+        "QuestGiver": "Omar_Da_Ogar",
+        "QuestName": "Helping Omar Again",
+        "QuestNameCoded": "Omar_Da_Ogar2"
+    },
+    'EquipmentRingsFishing2': {
+        "ItemName": "Oceanic Ring,",
+        "QuestGiver": "Omar_Da_Ogar",
+        "QuestName": "Helping Omar Some More",
+        "QuestNameCoded": "Omar_Da_Ogar4"
+    },
+    'Pearl1': {
+        "ItemName": "Aqua Pearl",
+        "QuestGiver": "Omar_Da_Ogar",
+        "QuestName": "Helping Omar Yet Again Deja Vu",
+        "QuestNameCoded": "Omar_Da_Ogar5"
+    },
+    'EquipmentRingsFishing3': {
+        "ItemName": "Deepwater Trench Ring",
+        "QuestGiver": "Omar_Da_Ogar",
+        "QuestName": "Helping Omar For The Final Time",
+        "QuestNameCoded": "Omar_Da_Ogar6"
+    },
+    'NPCtoken15': {
+        'ItemName': 'TP Pete Token',
+        'QuestGiver': 'TP Pete',
+        'QuestName': 'Fired for BS Reasons!',
+        'QuestNameCoded': 'TP_Pete3'
+    },
+    'EquipmentRings6': {
+        "ItemName": "Death Wish",
+        "QuestGiver": "Meel",
+        "QuestName": "Waitin' for the Cards to Drop",
+        "QuestNameCoded": "Meel2"
+    },
+    'InvStorage11': {
+        "ItemName": "Red Stuff Bad!",
+        "QuestGiver": "Snake_Jar",
+        "QuestName": "Storage Chest 11",
+        "QuestNameCoded": "Snake_Jar2"
+    },
+    'EquipmentHats44': {
+        "ItemName": "Jar",
+        "QuestGiver": "Snake_Jar",
+        "QuestName": "PSA. You Are Being Eaten!",
+        "QuestNameCoded": "Snake_Jar3"
+    },
+    'NPCtoken17': {
+        "ItemName": "Snake Jar Token",
+        "QuestGiver": "Snake_Jar",
+        "QuestName": "A Noob, served Medium Rare!",
+        "QuestNameCoded": "Snake_Jar4"
+    },
+    'NPCtoken24': {
+        "ItemName": "Loominadi Token",
+        "QuestGiver": "Loominadi",
+        "QuestName": "The Mummy of Mystery",
+        "QuestNameCoded": "Loominadi4"
+    },
+    'Weight8': {
+        "ItemName": "Literal Elephant",
+        "QuestGiver": "Loominadi",
+        "QuestName": "The Mummy of Mystery",
+        "QuestNameCoded": "Loominadi4"
+    },
+    'StampB14': {
+        "ItemName": "Brainstew Stamps",
+        "QuestGiver": "Wellington",
+        "QuestName": "Platforms in Disguise, Platsformers!",
+        "QuestNameCoded": "Wellington1"
+    },
+    'StampA24': {
+        "ItemName": "Arcane Stamp",
+        "QuestGiver": "Wellington",
+        "QuestName": "Platforms in Disguise, Platsformers!",
+        "QuestNameCoded": "Wellington1"
+    },
+    'StampB20': {
+        "ItemName": "Fly Intel Stamp",
+        "QuestGiver": "Wellington",
+        "QuestName": "Findin' Fingerprints",
+        "QuestNameCoded": "Wellington2"
+    },
+    'StampB22': {
+        "ItemName": "Holy Mackerel Stamp",
+        "QuestGiver": "Wellington",
+        "QuestName": "Findin' Fingerprints",
+        "QuestNameCoded": "Wellington2"
+    },
+    'StampC14': {
+        "ItemName": "Talent II Stamp",
+        "QuestGiver": "Wellington",
+        "QuestName": "You Can't Run, but you Can Hide",
+        "QuestNameCoded": "Wellington3"
+    },
+    'NPCtoken23': {
+        "ItemName": "Wellington Token",
+        "QuestGiver": "Wellington",
+        "QuestName": "Puzzles and Math, a Winning Combination!",
+        "QuestNameCoded": "Wellington4"
+    },
+    'NPCtoken14': {
+        "ItemName": "Dazey Token",
+        "QuestGiver": "Dazey",
+        "QuestName": "Literally Physics",
+        "QuestNameCoded": "Dazey2"
+    },
+    'InvStorage4': {
+        "ItemName": "Storage Chest 4",
+        "QuestGiver": "Cowbo_Jones",
+        "QuestName": "The Hatless Howerhouse!",
+        "QuestNameCoded": "Cowbo_Jones2"
+    },
+    'InvBag5': {
+        "ItemName": "Inventory Bag E",
+        "QuestGiver": "Cowbo_Jones",
+        "QuestName": "Bake Him Away, Toys",
+        "QuestNameCoded": "Cowbo_Jones8"
+    },
+    'EquipmentHats30': {
+        "ItemName": "Cowbo Galloneer",
+        "QuestGiver": "Cowbo_Jones",
+        "QuestName": "A Hat in Crime",
+        "QuestNameCoded": "Cowbo_Jones9"
+    },
+    'InvBag6': {
+        "ItemName": "Inventory Bag F",
+        "QuestGiver": "Cowbo_Jones",
+        "QuestName": "Commence Criminal Crimes!",
+        "QuestNameCoded": "Cowbo_Jones10"
+    },
+    'InvBag8': {
+        "ItemName": "Inventory Bag H",
+        "QuestGiver": "Cowbo_Jones",
+        "QuestName": "Oh No, not the Elderly!",
+        "QuestNameCoded": "Cowbo_Jones13"
+    },
+    'NPCtoken19': {
+        "ItemName": "Cowbo Jones Token",
+        "QuestGiver": "Cowbo_Jones",
+        "QuestName": "Tomb Raid",
+        "QuestNameCoded": "Cowbo_Jones14"
+    },
+    'Trophy11': {
+        "ItemName": "YumYum Sheriff",
+        "QuestGiver": "Cowbo_Jones",
+        "QuestName": "The New Sheriff",
+        "QuestNameCoded": "Cowbo_Jones15"
+    },
+    'Trophy22': {
+        "ItemName": "Gladiator",
+        "QuestGiver": "Centurion",
+        "QuestName": "Glorious Gladiator",
+        "QuestNameCoded": "Centurion8"
+    },
+    'StampB4': {
+        "ItemName": "Lil' Mining Baggy Stamp",
+        "QuestGiver": "XxX_Cattleprod_XxX",
+        "QuestName": "Peak Gaming",
+        "QuestNameCoded": "XxX_Cattleprod_XxX1"
+    },
+    'StampB19': {
+        "ItemName": "Catch Net Stamp",
+        "QuestGiver": "XxX_Cattleprod_XxX",
+        "QuestName": "Peak Gaming",
+        "QuestNameCoded": "XxX_Cattleprod_XxX1"
+    },
+    'StampC2': {
+        "ItemName": "Mason Jar Stamp",
+        "QuestGiver": "XxX_Cattleprod_XxX",
+        "QuestName": "Wait No, I meant Pathetic Gaming",
+        "QuestNameCoded": "XxX_Cattleprod_XxX2"
+    },
+    'StampB18': {
+        "ItemName": "Fishhead Stamp",
+        "QuestGiver": "XxX_Cattleprod_XxX",
+        "QuestName": "Wait No, I meant Pathetic Gaming",
+        "QuestNameCoded": "XxX_Cattleprod_XxX2"
+    },
+    'StampA28': {
+        "ItemName": "Stat Graph Stamp",
+        "QuestGiver": "XxX_Cattleprod_XxX",
+        "QuestName": "Ok, NOW it's Peak Gaming!",
+        "QuestNameCoded": "XxX_Cattleprod_XxX3"
+    },
+    'NPCtoken32': {
+        "ItemName": "Hoggi Token",
+        "QuestGiver": "Hoggindaz",
+        "QuestName": "Chizoar No More",
+        "QuestNameCoded": "Hoggindaz9"
+    },
+    'Trophy15': {
+        "ItemName": "Frost Prince",
+        "QuestGiver": "Hoggindaz",
+        "QuestName": "The Fresh Prince of the Tundra",
+        "QuestNameCoded": "Hoggindaz10"
+    },
+    'Quest61': {
+        "ItemName": "Bill Brr's Vote",
+        "QuestGiver": "Bill_Brr",
+        "QuestName": "Coin Shenanigans",
+        "QuestNameCoded": "Bill_Brr4"
+    },
+    'NPCtoken37': {
+        "ItemName": "Bill Brr Token",
+        "QuestGiver": "Bill_Brr",
+        "QuestName": "Hatin' on the Green One",
+        "QuestNameCoded": "Bill_Brr7"
+    },
+    'NPCtoken33': {
+        "ItemName": "Bellows Token",
+        "QuestGiver": "Bellows",
+        "QuestName": "Optometric Hoarder",
+        "QuestNameCoded": "Bellows4"
+    },
+    'StampA22': {
+        "ItemName": "Hermes Stamp",
+        "QuestGiver": "Crystalswine",
+        "QuestName": "Melting the Snakes",
+        "QuestNameCoded": "Crystalswine4"
+    },
+    'NPCtoken38': {
+        "ItemName": "Crystalswine Token",
+        "QuestGiver": "Crystalswine",
+        "QuestName": "Sunrunning to Chizoar",
+        "QuestNameCoded": "Crystalswine5"
+    },
+    'StampA25': {
+        "ItemName": "Avast Yar Stamp",
+        "QuestGiver": "Crystalswine",
+        "QuestName": "Global Warming",
+        "QuestNameCoded": "Crystalswine6"
+    },
+    'Quest60': {
+        "ItemName": "Yondergreens Vote",
+        "QuestGiver": "Yondergreen",
+        "QuestName": "Legislative Action",
+        "QuestNameCoded": "Yondergreen4"
+    },
+    'NPCtoken36': {
+        "ItemName": "Yondergreen Token",
+        "QuestGiver": "Yondergreen",
+        "QuestName": "Ad Solidarity Contract",
+        "QuestNameCoded": "Yondergreen7"
+    },
+    'CardPack4': {
+        "ItemName": "Dungeon Card Pack",
+        "QuestGiver": "Worldo",
+        "QuestName": "Odd Jobs for Cold Hard Cash",
+        "QuestNameCoded": "Worldo1"
+    },
+    'Quest59': {
+        "ItemName": "Shuvelle's Vote",
+        "QuestGiver": "Shuvelle",
+        "QuestName": "Mayoral Movie Taste",
+        "QuestNameCoded": "Shuvelle4"
+    },
+    'NPCtoken35': {
+        "ItemName": "Shuvelle Token",
+        "QuestGiver": "Shuvelle",
+        "QuestName": "Dig Diggily Diggy Dig Dig Hole!",
+        "QuestNameCoded": "Shuvelle7"
+    },
+    'NPCtoken31': {
+        "ItemName": "Lonely Hunter Token",
+        "QuestGiver": "Lonely_Hunter",
+        "QuestName": "Opening Chests",
+        "QuestNameCoded": "Lonely_Hunter3"
+    },
+    'ResetBox': {
+        "ItemName": "Post Office Box Reseto Magnifico",
+        "QuestGiver": "Lord_of_the_Hunt",
+        "QuestName": "Untitled Quest",
+        "QuestNameCoded": "Lord_of_the_Hunt10"
+    },
+    'Trophy10': {
+        "ItemName": "Critter Baron",
+        "QuestGiver": "Lord_of_the_Hunt",
+        "QuestName": "To Trap or not to Trap",
+        "QuestNameCoded": "Lord_of_the_Hunt11"
+    },
+    'StampA21': {
+        "ItemName": "Buckler Stamp",
+        "QuestGiver": "Snouts",
+        "QuestName": "A Salty Fall",
+        "QuestNameCoded": "Snouts1"
+    },
+    'StampA18': {
+        "ItemName": "Feather Stamp",
+        "QuestGiver": "Snouts",
+        "QuestName": "Gravity VS Salt",
+        "QuestNameCoded": "Snouts2"
+    },
+    'StampB26': {
+        "ItemName": "Purp Froge Stamp",
+        "QuestGiver": "Snouts",
+        "QuestName": "Gravity VS Salt",
+        "QuestNameCoded": "Snouts2"
+    },
+    'StampC15': {
+        "ItemName": "Talent III Stamp",
+        "QuestGiver": "Snouts",
+        "QuestName": "Big Ol Chonker",
+        "QuestNameCoded": "Snouts3"
+    },
+    'StampC20': {
+        "ItemName": "Biblio Stamp",
+        "QuestGiver": "Snouts",
+        "QuestName": "Big Ol Chonker",
+        "QuestNameCoded": "Snouts3"
+    },
+    'NPCtoken34': {
+        "ItemName": "Snouts Token",
+        "QuestGiver": "Snouts",
+        "QuestName": "Mana Plox",
+        "QuestNameCoded": "Snouts4"
+    },
+    'Timecandy7': {
+        "ItemName": "Steamy Time Candy",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 4",
+        "QuestNameCoded": "Walupiggy4"
+    },
+    'Quest44': {
+        "ItemName": "Goldegg Capsule",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 4",
+        "QuestNameCoded": "Walupiggy4"
+    },
+    'CardPack1': {
+        "ItemName": "Newbie Card Pack",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 4",
+        "QuestNameCoded": "Walupiggy4"
+    },
+    'StampB42': {
+        "ItemName": "Lab Tube Stamp",
+        "QuestGiver": "Capital_P",
+        "QuestName": "Right side wrong side!",
+        "QuestNameCoded": "Capital_P1"
+    },
+    'StampC21': {
+        "ItemName": "DNA Stamp",
+        "QuestGiver": "Capital_P",
+        "QuestName": "No room on the Dance Floor!",
+        "QuestNameCoded": "Capital_P2"
+    },
+    'StampA30': {
+        "ItemName": "Diamond Axe Stamp",
+        "QuestGiver": "Capital_P",
+        "QuestName": "Everybody move it move it!",
+        "QuestNameCoded": "Capital_P3"
+    },
+    'StampB37': {
+        "ItemName": "Cooked Meal Stamp",
+        "QuestGiver": "Oinkin",
+        "QuestName": "Filling the Menu",
+        "QuestNameCoded": "Oinkin1"
+    },
+    'StampB40': {
+        "ItemName": "Nest Eggs Stamp",
+        "QuestGiver": "Oinkin",
+        "QuestName": "Diner Deliverer",
+        "QuestNameCoded": "Oinkin2"
+    },
+    'StampB39': {
+        "ItemName": "Ladle Stamp",
+        "QuestGiver": "Oinkin",
+        "QuestName": "Recipe for Fattening Pastry",
+        "QuestNameCoded": "Oinkin3"
+    },
+    'StampB43': {
+        "ItemName": "Sailboat Stamp",
+        "QuestGiver": "Pirate_Porkchop",
+        "QuestName": "Bring me the Booty",
+        "QuestNameCoded": "Pirate_Porkchop1"
+    },
+    'StampB45': {
+        "ItemName": "Divine Stamp",
+        "QuestGiver": "Pirate_Porkchop",
+        "QuestName": "Sailing for some Sparks",
+        "QuestNameCoded": "Pirate_Porkchop2"
+    },
+    'StampA34': {
+        "ItemName": "Sashe Sidestamp",
+        "QuestGiver": "Pirate_Porkchop",
+        "QuestName": "Seeking Treasure Shrooms",
+        "QuestNameCoded": "Pirate_Porkchop3"
+    },
+    'StampA36': {
+        "ItemName": "Conjocharmo Stamp",
+        "QuestGiver": "Pirate_Porkchop",
+        "QuestName": "Ye finest treasure at once!",
+        "QuestNameCoded": "Pirate_Porkchop4"
+    },
+    'StampB44': {
+        "ItemName": "Gamejoy Stamp",
+        "QuestGiver": "Poigu",
+        "QuestName": "Think twice speak once",
+        "QuestNameCoded": "Poigu1"
+    },
+    'StampB46': {
+        "ItemName": "Multitool Stamp",
+        "QuestGiver": "Poigu",
+        "QuestName": "Speak from the heart not the mind",
+        "QuestNameCoded": "Poigu2"
+    },
+    'Quest70': {
+        "ItemName": "Phone Box",
+        "QuestGiver": "Rift_Ripper",
+        "QuestName": "Entering The Rift...",
+        "QuestNameCoded": "Rift_Ripper1"
+    },
+    'Quest71': {
+        "ItemName": "Gem Envelope",
+        "QuestGiver": "Rift_Ripper",
+        "QuestName": "Entering The Rift...",
+        "QuestNameCoded": "Rift_Ripper1"
+    },
+    # 'Quest71': {
+    #     "ItemName": "Gem Envelope",
+    #     "QuestGiver": "Nebulyte",
+    #     "QuestName": "Chizoar Slayer",
+    #     "QuestNameCoded": "Nebulyte2"
+    # },
+    'CardPack5': {
+        "ItemName": "Galaxy Card Pack",
+        "QuestGiver": "Nebulyte",
+        "QuestName": "Chizoar Slayer",
+        "QuestNameCoded": "Nebulyte2"
+    },
+    'CardPack6': {
+        "ItemName": "Smolderin Card Pack",
+        "QuestGiver": "Nebulyte",
+        "QuestName": "Oh Geez Lets Not Think About This One...",
+        "QuestNameCoded": "Nebulyte3"
+    },
+    'EquipmentNametag4': {
+        "ItemName": "Vman Nametag",
+        "QuestGiver": "Nebulyte",
+        "QuestName": "VMAN ACHIEVED!",
+        "QuestNameCoded": "Nebulyte4"
+    },
+    'Trophy17': {
+        "ItemName": "One of the Divine",
+        "QuestGiver": "Tired_Mole",
+        "QuestName": "Divine Endeavor",
+        "QuestNameCoded": "Tired_Mole3"
+    },
+    'SmithingHammerChisel3': {
+        "ItemName": "Onyx Tools",
+        "QuestGiver": "Monolith",
+        "QuestName": "Onyx Statue Crafting",
+        "QuestNameCoded": "Monolith2"
+    },
+    'Weight14': {
+        "ItemName": "Fat Albert",
+        "QuestGiver": "Royal_Worm",
+        "QuestName": "A Royal Gift",
+        "QuestNameCoded": "Royal_Worm6"
+    },
+    'Trophy19': {
+        "ItemName": "Nebula Royal",
+        "QuestGiver": "Royal_Worm",
+        "QuestName": "Royal Bidding",
+        "QuestNameCoded": "Royal_Worm9"
+    },
+    'StampB48': {
+        "ItemName": "Crop Evo Stamp",
+        "QuestGiver": "Hoov",
+        "QuestName": "Sneak Dropout",
+        "QuestNameCoded": "Hoov1"
+    },
+    'StampA40': {
+        "ItemName": "Void Sword Stamp",
+        "QuestGiver": "Hoov",
+        "QuestName": "Stealth Check 1 2 3",
+        "QuestNameCoded": "Hoov2"
+    },
+    'InvStorageN': {
+        "ItemName": "Ninja Chest",
+        "QuestGiver": "Hoov",
+        "QuestName": "Sneak Registration",
+        "QuestNameCoded": "Hoov4"
+    },
+    'StampB53': {
+        "ItemName": "Triad Essence Stamp",
+        "QuestGiver": "Sussy_Gene",
+        "QuestName": "Goofin' Around",
+        "QuestNameCoded": "Sussy_Gene1"
+    },
+    'StampB51': {
+        "ItemName": "Summoner Stone Stamp",
+        "QuestGiver": "Sussy_Gene",
+        "QuestName": "Messin' Around",
+        "QuestNameCoded": "Sussy_Gene2"
+    },
+    'StampA41': {
+        "ItemName": "Void Axe Stamp",
+        "QuestGiver": "Sussy_Gene",
+        "QuestName": "Loiterin' Around",
+        "QuestNameCoded": "Sussy_Gene3"
     },
 }
 #vendorItems last pulled from code in 2.12. Search for: ShopNames = function ()
