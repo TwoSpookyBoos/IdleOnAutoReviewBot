@@ -4,7 +4,7 @@ from utils.logging import get_logger
 from flask import g as session_data
 from consts import slabList, reclaimableQuestItems, vendorItems, anvilItems, dungeonWeaponsList, maxDungeonWeaponsAvailable, \
     dungeonArmorsList, maxDungeonArmorsAvailable, dungeonJewelryList, maxDungeonJewelryAvailable, dungeonDropsList, anvilTabs, vendors, \
-    break_you_best, slab_itemNameReplacementDict, hidden_but_constantly_avaiable_slabList, hidden_gemshopItems
+    break_you_best, slab_itemNameReplacementDict, hidden_but_constantly_avaiable_slabList, hidden_gemshopItems, slab_QuestRewards, maxCharacters
 
 logger = get_logger(__name__)
 
@@ -28,6 +28,7 @@ def getHiddenAdviceGroup() -> AdviceGroup:
 def setSlabProgressionTier():
     slab_AdviceDict = {
         "Reclaims": [],
+        'Quests': [],
         "Storage": [],
         "Vendors": {},
         "Anvil": {},
@@ -67,13 +68,22 @@ def setSlabProgressionTier():
                     continue
                 #If the item is a reclaimable quest item AND the quest has been completed by at least 1 character
                 if itemName in reclaimableQuestItems.keys():
-                    for characterIndex, characterQuests in enumerate(session_data.account.all_quests):
-                        if reclaimableQuestItems[itemName].get("QuestNameCoded") in characterQuests:
-                            if characterQuests[reclaimableQuestItems[itemName].get("QuestNameCoded")] > 0:
-                                slab_AdviceDict["Reclaims"].append(Advice(
-                                    label=f"{getItemDisplayName(itemName)} ({reclaimableQuestItems[itemName].get('QuestGiver')}: {reclaimableQuestItems[itemName].get('QuestName')})",
-                                    picture_class=getItemDisplayName(itemName) if itemName not in slab_itemNameReplacementDict else slab_itemNameReplacementDict[itemName]))
-                                break  #Only show this once per account, not once per character
+                    if session_data.account.compiled_quests.get(reclaimableQuestItems[itemName]['QuestNameCoded'], {}).get('CompletedCount', 0) > 0:
+                        slab_AdviceDict["Reclaims"].append(Advice(
+                            label=f"{getItemDisplayName(itemName)} ({reclaimableQuestItems[itemName]['QuestGiver']}: {reclaimableQuestItems[itemName]['QuestName']})",
+                            picture_class=getItemDisplayName(itemName) if itemName not in slab_itemNameReplacementDict else slab_itemNameReplacementDict[itemName],
+                            resource=reclaimableQuestItems[itemName]['QuestGiver']
+                        ))
+                    continue
+                #If the item comes from a quest AND at least 1 character hasn't completed it
+                if itemName in slab_QuestRewards.keys():
+                    #logger.debug(f"{itemName} quest {slab_QuestRewards[itemName]['QuestNameCoded']} completed by {session_data.account.compiled_quests.get(slab_QuestRewards[itemName]['QuestNameCoded'], {}).get('CompletedCount', 0)}/{maxCharacters}")
+                    if session_data.account.compiled_quests.get(slab_QuestRewards[itemName]['QuestNameCoded'], {}).get('CompletedCount', 0) < maxCharacters:
+                        slab_AdviceDict["Quests"].append(Advice(
+                            label=f"{getItemDisplayName(itemName)} ({slab_QuestRewards[itemName]['QuestGiver']}: {slab_QuestRewards[itemName]['QuestName']})",
+                            picture_class=getItemDisplayName(itemName) if itemName not in slab_itemNameReplacementDict else slab_itemNameReplacementDict[itemName],
+                            resource=slab_QuestRewards[itemName]['QuestGiver']
+                        ))
                     continue
                 #If the item is sold by a vendor
                 for vendor, vendorList in vendorItems.items():
@@ -160,6 +170,11 @@ def setSlabProgressionTier():
         tier='',
         pre_string=f"Found in storage or on a character",
         advices=slab_AdviceDict["Storage"]
+    )
+    slab_AdviceGroupDict["Quests"] = AdviceGroup(
+        tier='',
+        pre_string=f"Could be obtained by completing a quest",
+        advices=slab_AdviceDict["Quests"]
     )
     slab_AdviceGroupDict["Reclaims"] = AdviceGroup(
         tier='',

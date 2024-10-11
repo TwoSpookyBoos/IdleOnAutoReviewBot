@@ -762,11 +762,13 @@ class Asset:
             self.codename: str = codename.codename
             self.amount: float = codename.amount
             self.quest: str = codename.quest
+            self.quest_giver: str = codename.quest_giver
         else:
             self.name: str = name if name else getItemDisplayName(codename)
             self.codename: str = codename if codename else getItemCodeName(name)
             self.amount: float = amount
             self.quest: str = ""
+            self.quest_giver: str = ""
 
     def __eq__(self, other):
         match other:
@@ -1224,6 +1226,7 @@ class Account:
         self._parse_general_maps()
         self._parse_general_colo_scores()
         self._parse_general_event_points_shop()
+        self._parse_general_quests()
 
     def _parse_general_gemshop(self):
         self.gemshop = {}
@@ -1233,6 +1236,28 @@ class Account:
                 self.gemshop[purchaseName] = int(raw_gem_items_purchased[purchaseIndex])
             except:
                 self.gemshop[purchaseName] = 0
+
+    def _parse_general_quests(self):
+        self.compiled_quests = {}
+        for charIndex, questsDict in enumerate(self.all_quests):
+            for questName, questStatus in questsDict.items():
+                if questName not in self.compiled_quests:
+                    self.compiled_quests[questName] = {
+                        'CompletedCount': 0,
+                        'CompletedChars': [],
+                        'AcceptedCount': 0,
+                        'AcceptedChars': [],
+                        'UnacceptedCount': 0,
+                        'UnacceptedChars': []
+                    }
+                if questStatus == 1:
+                    status = 'Completed'
+                elif questStatus == 0:
+                    status = 'Accepted'
+                else:  #Won't be reliable. If they haven't interacted with the NPC, their quest may not appear here at all.
+                    status = 'Unaccepted'
+                self.compiled_quests[questName][f'{status}Count'] += 1
+                self.compiled_quests[questName][f'{status}Chars'].append(charIndex)
 
     def _parse_class_unique_kill_stacks(self):
         self.dk_orb_kills = self.raw_optlacc_dict.get(138, 0)
