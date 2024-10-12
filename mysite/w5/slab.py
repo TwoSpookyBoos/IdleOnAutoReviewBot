@@ -66,6 +66,11 @@ def setSlabProgressionTier():
                         label=f"{getItemDisplayName(itemName)} (Equipped)",
                         picture_class=getItemDisplayName(itemName) if itemName not in slab_itemNameReplacementDict else slab_itemNameReplacementDict[itemName]))
                     continue
+                elif session_data.account.npc_tokens.get(itemName, 0) > 0:
+                    slab_AdviceDict["Storage"].append(Advice(
+                        label=f"{getItemDisplayName(itemName)} (Retrieve from NPC Tokens)",
+                        picture_class=getItemDisplayName(itemName) if itemName not in slab_itemNameReplacementDict else slab_itemNameReplacementDict[itemName]))
+                    continue
                 #If the item is a reclaimable quest item AND the quest has been completed by at least 1 character
                 if itemName in reclaimableQuestItems.keys():
                     if session_data.account.compiled_quests.get(reclaimableQuestItems[itemName]['QuestNameCoded'], {}).get('CompletedCount', 0) > 0:

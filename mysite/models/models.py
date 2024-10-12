@@ -25,6 +25,7 @@ from consts import (
     base_crystal_chance,
     filter_recipes, filter_never,
     event_points_shop_dict,
+    npc_tokens,
     # W1
     stampsDict, stampTypes, bribesDict,
     forgeUpgradesDict,
@@ -1227,6 +1228,7 @@ class Account:
         self._parse_general_colo_scores()
         self._parse_general_event_points_shop()
         self._parse_general_quests()
+        self._parse_general_npc_tokens()
 
     def _parse_general_gemshop(self):
         self.gemshop = {}
@@ -1258,6 +1260,17 @@ class Account:
                     status = 'Unaccepted'
                 self.compiled_quests[questName][f'{status}Count'] += 1
                 self.compiled_quests[questName][f'{status}Chars'].append(charIndex)
+
+    def _parse_general_npc_tokens(self):
+        self.npc_tokens = {}
+        raw_npc_tokens = self.raw_data.get('CYNPC', [])
+        for tokenIndex, tokenName in enumerate(npc_tokens):
+            try:
+                self.npc_tokens[tokenName] = int(raw_npc_tokens[tokenIndex])
+            except:
+                self.npc_tokens[tokenName] = 0
+        # for tokenName, tokenCount in self.npc_tokens.items():
+        #     self.all_assets.get(tokenName).add(tokenCount)
 
     def _parse_class_unique_kill_stacks(self):
         self.dk_orb_kills = self.raw_optlacc_dict.get(138, 0)

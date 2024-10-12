@@ -8163,6 +8163,14 @@ slab_QuestRewards = {
         "QuestNameCoded": "Sussy_Gene3"
     },
 }
+npc_tokens = [
+    'NPCtoken5', 'NPCtoken6', 'NPCtoken4', 'NPCtoken9', 'NPCtoken10', 'NPCtoken11',
+    'NPCtoken13', 'NPCtoken7', 'Quest9', 'NPCtoken15', 'NPCtoken12', 'NPCtoken14',
+    'NPCtoken16', 'NPCtoken17', 'NPCtoken18', 'NPCtoken19', 'NPCtoken20', 'NPCtoken21',
+    'NPCtoken27', 'NPCtoken22', 'NPCtoken24', 'NPCtoken25', 'NPCtoken26', 'NPCtoken23',
+    'NPCtoken32', 'NPCtoken31', 'NPCtoken34', 'NPCtoken35', 'NPCtoken36', 'NPCtoken38',
+    'NPCtoken33', 'NPCtoken37'
+]
 #vendorItems last pulled from code in 2.12. Search for: ShopNames = function ()
 vendorItems = {
     "W1 Town": "FoodHealth1 FoodHealth3 FoodHealth2 CraftMat3 FoodPotMana1 FoodPotOr1 FoodPotRe1 FoodPotGr1 OilBarrel1 StoneW1 StoneA1 StoneT1 EquipmentRings7 EquipmentStatues1 SmithingHammerChisel StampA5 StampA6 StampA3 InvBag104 InvStorage2 InvStorage6 InvStorage7 Quest86 rtt0 ResetFrag".split(' '),
