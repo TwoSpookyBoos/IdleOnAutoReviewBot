@@ -2831,6 +2831,14 @@ class Account:
         self.farming = {
             'MagicBeans': 0,
             'Crops': {},
+            'CropCountsPerSeed': {
+                'Basic': 0,
+                'Earthy': 0,
+                'Bulbo': 0,
+                'Sushi': 0,
+                'Mushie': 0,
+                'Glassy': 0,
+            },
             "CropsUnlocked": 0,
             "MarketUpgrades": {},
             "CropStacks": {
@@ -2866,6 +2874,18 @@ class Account:
             for cropIndexStr, cropAmountOwned in rawCrops.items():
                 try:
                     self.farming["CropsUnlocked"] += 1  # Once discovered, crops will always appear in this dict.
+                    if int(cropIndexStr) < 21:
+                        self.farming['CropCountsPerSeed']['Basic'] += 1
+                    elif int(cropIndexStr) < 46:
+                        self.farming['CropCountsPerSeed']['Earthy'] += 1
+                    elif int(cropIndexStr) < 61:
+                        self.farming['CropCountsPerSeed']['Bulbo'] += 1
+                    elif int(cropIndexStr) < 84:
+                        self.farming['CropCountsPerSeed']['Sushi'] += 1
+                    elif int(cropIndexStr) < 107:
+                        self.farming['CropCountsPerSeed']['Mushie'] += 1
+                    else:
+                        self.farming['CropCountsPerSeed']['Glassy'] += 1
                     self.farming['Crops'][int(cropIndexStr)] = float(cropAmountOwned)
                     if float(cropAmountOwned) >= 200:
                         self.farming["CropStacks"]["Evolution Gmo"] += 1

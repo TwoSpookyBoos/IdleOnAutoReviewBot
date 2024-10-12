@@ -6,7 +6,7 @@ from utils.data_formatting import mark_advice_completed
 from flask import g as session_data
 from consts import (farming_progressionTiers, break_you_best, maxTiersPerGroup, maxFarmingCrops, maxCharacters, max_VialLevel, maxMealLevel, stamp_maxes,
                     ValueToMulti, tomepct, getCropEvoChance, cropDict, landrankDict)
-from utils.text_formatting import pl
+from utils.text_formatting import pl, notateNumber
 
 logger = get_logger(__name__)
 
@@ -720,9 +720,9 @@ def getSpeedAdviceGroup(farming) -> AdviceGroup:
 
 def getBeanMultiAdviceGroup(farming) -> AdviceGroup:
     # Create subgroup labels
-    total = f"Total: {farming['Bean']['Total Multi']}x"
-    mga = f"Day Market: {farming['Bean']['mga']}x"
-    mgb = f"Emporium + Achievement: {farming['Bean']['mgb']}x"
+    total = f"Total: {farming['Bean']['Total Multi']:.2f}x"
+    mga = f"Day Market: {farming['Bean']['mga']:.2f}x"
+    mgb = f"Emporium + Achievement: {farming['Bean']['mgb']:.2f}x"
     bm_advices = {
         total: [],
         mga: [],
@@ -923,6 +923,20 @@ def setFarmingProgressionTier():
                     goal=tierRequirements.get('Farming Level', 0)
                 ))
 
+        # Unlock Crops
+        if farming['CropsUnlocked'] < tierRequirements.get('Crops Unlocked', 0):
+            if subgroupName not in farming_AdviceDict['Tiers'] and len(farming_AdviceDict['Tiers']) < maxTiersPerGroup:
+                farming_AdviceDict['Tiers'][subgroupName] = []
+            if subgroupName in farming_AdviceDict['Tiers']:
+                advice_types_added.add('Crops Unlocked')
+                shortby = tierRequirements.get('Crops Unlocked', 0) - farming['CropsUnlocked']
+                farming_AdviceDict['Tiers'][subgroupName].append(Advice(
+                    label=f"Unlock {shortby} more crop type{pl(shortby)}",
+                    picture_class='crop-depot',
+                    progression=farming['CropsUnlocked'],
+                    goal=tierRequirements.get('Crops Unlocked', 0)
+                ))
+
         #Day Market
         for rName, rLevel in tierRequirements.get('Day Market', {}).items():
             if farming['MarketUpgrades'][rName]['Level'] < rLevel:
@@ -938,52 +952,6 @@ def setFarmingProgressionTier():
                         progression=farming['MarketUpgrades'][rName]['Level'],
                         goal=rLevel
                     ))
-
-        #Unlock Crops
-        if farming['CropsUnlocked'] < tierRequirements.get('Crops Unlocked', 0):
-            if subgroupName not in farming_AdviceDict['Tiers'] and len(farming_AdviceDict['Tiers']) < maxTiersPerGroup:
-                farming_AdviceDict['Tiers'][subgroupName] = []
-            if subgroupName in farming_AdviceDict['Tiers']:
-                advice_types_added.add('Crops Unlocked')
-                shortby = tierRequirements.get('Crops Unlocked', 0) - farming['CropsUnlocked']
-                farming_AdviceDict['Tiers'][subgroupName].append(Advice(
-                    label=f"Unlock {shortby} more crop type{pl(shortby)}",
-                    picture_class='crop-depot',
-                    progression=farming['CropsUnlocked'],
-                    goal=tierRequirements.get('Crops Unlocked', 0)
-                ))
-
-        # Suggestions
-        if subgroupName in farming_AdviceDict['Tiers']:
-            if tierRequirements.get('Suggestions', {}):
-                suggies = tierRequirements['Suggestions']
-                if 'Speed' in suggies:
-                    if subgroupName in farming_AdviceDict['Tiers'] and farming['Speed']['Total Multi'] < suggies['Speed'][1]:
-                        farming_AdviceDict['Tiers'][subgroupName].append(Advice(
-                            label=f"Suggestion: {suggies['Speed'][0]} to {suggies['Speed'][1]}x Speed",
-                            picture_class='crop-scientist',
-                            progression=f"{farming['Speed']['Total Multi']:.2f}" if farming['Speed']['Total Multi'] < 10 else f"{farming['Speed']['Total Multi']:.0f}",
-                            goal=f"{suggies['Speed'][1]}"
-                        ))
-                if 'Crops Unlocked' in advice_types_added:
-                    if 'EvoChance' in suggies:
-                        if farming['Evo']['Subtotal Multi'] < suggies['EvoChance'][1]:
-                            farming_AdviceDict['Tiers'][subgroupName].append(Advice(
-                                label=f"Suggestion: {suggies['EvoChance'][0]} to {suggies['EvoChance'][1]}x Evo Chance",
-                                picture_class='crop-scientist',
-                                progression=f"{farming['Evo']['Subtotal Multi']:.1f}" if farming['Evo']['Subtotal Multi'] < 10 else f"{farming['Evo']['Subtotal Multi']:.0f}",
-                                goal=f"{suggies['EvoChance'][1]}"
-                            ))
-                    if 'CropIndex' in suggies:
-                        for cropIndex in suggies['CropIndex']:
-                            if subgroupName in farming_AdviceDict['Tiers'] and cropIndex-1 not in farming['Crops']:
-                                crop = cropDict.get(cropIndex, {'Name': f"UnknownCrop{cropIndex}", 'Image': '', 'SeedName': 'UnknownSeed', 'SeedCropIndex': 0})
-                                farming_AdviceDict['Tiers'][subgroupName].append(Advice(
-                                    label=f"Suggestion: {crop['Name']} ({crop['SeedName']} #{crop['SeedCropIndex']})",
-                                    picture_class=crop['Image'],
-                                    progression=0,
-                                    goal=1
-                                ))
 
         # Land Ranks - Database Upgrades
         for setNumber, setRequirements in tierRequirements.get('Land Ranks', {}).items():
@@ -1004,6 +972,69 @@ def setFarmingProgressionTier():
                             progression=farming['LandRankDatabase'][rName]['Level'],
                             goal=rLevel
                         ))
+
+        # Suggestions
+        if subgroupName in farming_AdviceDict['Tiers']:
+            if tierRequirements.get('Suggestions', {}):
+                suggies = tierRequirements['Suggestions']
+                if 'Speed' in suggies:
+                    if farming['Speed']['Total Multi'] < suggies['Speed'][1]:
+                        farming_AdviceDict['Tiers'][subgroupName].append(Advice(
+                            label=f"Suggestion: {suggies['Speed'][0]} to {suggies['Speed'][1]}x Speed",
+                            picture_class='crop-scientist',
+                            progression=f"{farming['Speed']['Total Multi']:.2f}" if farming['Speed']['Total Multi'] < 10 else f"{farming['Speed']['Total Multi']:.0f}",
+                            goal=f"{suggies['Speed'][1]}"
+                        ))
+                if 'OG' in suggies:
+                    if farming['OG']['Total Multi'] < suggies['OG'][1]:
+                        farming_AdviceDict['Tiers'][subgroupName].append(Advice(
+                            label=f"Suggestion: {suggies['OG'][0]} to {suggies['OG'][1]}x Overgrowth",
+                            picture_class='crop-scientist',
+                            progression=f"{farming['OG']['Total Multi']:.2f}" if farming['OG']['Total Multi'] < 10 else f"{farming['OG']['Total Multi']:.0f}",
+                            goal=f"{suggies['OG'][1]}"
+                        ))
+                if 'Crops Unlocked' in advice_types_added:
+                    if 'EvoChance' in suggies:
+                        if farming['Evo']['Subtotal Multi'] < suggies['EvoChance'][1]:
+                            low_target = notateNumber(
+                                'Basic',
+                                suggies['EvoChance'][0],
+                                2 if suggies['EvoChance'][0] < 10 else 0
+                            )
+                            target = notateNumber(
+                                'Basic',
+                                suggies['EvoChance'][1],
+                                2 if suggies['EvoChance'][1] < 10 else 0
+                            )
+                            match_letter = target[-1] if target[-1].isalpha() else ''
+                            farming_AdviceDict['Tiers'][subgroupName].append(Advice(
+                                label=f"Suggestion: {low_target} to {target}x Evo Chance",
+                                picture_class='crop-scientist',
+                                progression=notateNumber(
+                                    'Match',
+                                    farming['Evo']['Subtotal Multi'],
+                                    2 if farming['Evo']['Subtotal Multi'] < 10 else 0,
+                                    match_letter
+                                ),
+                                goal=target
+                            ))
+                    if 'CropIndex' in suggies:
+                        for cropIndex in suggies['CropIndex']:
+                            if cropIndex-1 not in farming['Crops']:
+                                crop = cropDict.get(cropIndex, {'Name': f"UnknownCrop{cropIndex}", 'Image': '', 'SeedName': 'UnknownSeed', 'SeedCropIndex': 0})
+                                farming_AdviceDict['Tiers'][subgroupName].append(Advice(
+                                    label=f"Suggestion: {crop['Name']} ({crop['SeedName']} #{crop['SeedCropIndex']})",
+                                    picture_class=crop['Image'],
+                                    progression=farming['CropCountsPerSeed'][crop['SeedName'] if not crop['SeedName'].endswith('Glassy') else 'Glassy'],
+                                    goal=crop['SeedCropIndex']
+                                ))
+                if 'No Trade' in suggies:
+                    farming_AdviceDict['Tiers'][subgroupName].append(Advice(
+                        label=suggies['No Trade'],
+                        picture_class='crop-transfer-ticket',
+                        progression="❌",
+                        goal="❌",
+                    ))
 
         #Night Market
         total_magic_bean_cost = 0
@@ -1033,27 +1064,15 @@ def setFarmingProgressionTier():
                     total_magic_bean_cost += upgrade_cost
                     total_nm_entries += 1
         if total_nm_entries > 1:
+            target = notateNumber('Basic', total_magic_bean_cost, 2)
+            match_letter = str(target[-1])
             farming_AdviceDict['Tiers'][subgroupName].append(Advice(
                 label=f"Grand Total Magic Bean Cost remaining in this Tier",
                 picture_class='magic-bean',
-                progression=f"{farming['MagicBeans']}",  #Does not include the value of their current trade
-                goal=total_magic_bean_cost,
+                progression=f"{notateNumber('Match', farming['MagicBeans'], 2, match_letter)}",  #Does not include the value of their current trade
+                goal=target,
                 resource='magic-bean'
             ))
-
-
-        #Land Ranks - Minimum Plot
-        # if farming['LandRankMinPlot'] < tierRequirements.get('LandRankMinPlot', 0):
-        #     if subgroupName not in farming_AdviceDict['Tiers'] and len(farming_AdviceDict['Tiers']) < maxTiersPerGroup:
-        #         farming_AdviceDict['Tiers'][subgroupName] = []
-        #     if subgroupName in farming_AdviceDict['Tiers']:
-        #         farming_AdviceDict['Tiers'][subgroupName].append(Advice(
-        #             label=f"Raise minimum Plot Land rank to {tierRequirements.get('LandRankMinPlot', 0)}",
-        #             picture_class=getLandRankImage(tierRequirements.get('LandRankMinPlot', 0)),
-        #             progression=farming['LandRankMinPlot'],
-        #             goal=tierRequirements.get('LandRankMinPlot', 0)
-        #         ))
-
 
         #Final tier check
         if subgroupName not in farming_AdviceDict['Tiers'] and tier_All == tierNumber - 1:

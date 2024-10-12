@@ -532,7 +532,7 @@ stamps_progressionTiers = {
     13: {"TotalStampLevels": 2500, "Stamps": {
         "Combat": ["Avast Yar Stamp", "Blackheart Stamp", "Steve Sword",],
         "Skill": ["Banked Pts Stamp", "Nest Eggs Stamp", "Lab Tube Stamp", "Ladle Stamp", "Sailboat Stamp"],
-        "Misc": ["Refinery", "Golden Apple Stamp", "Talent III Stamp"],
+        "Misc": ["Refinery", "Golden Apple Stamp"],
         "Specific": {
             'Matty Bag Stamp': 100, 'Crystallin': 60,
             'Pickaxe Stamp': 65, 'Hatchet Stamp': 65, 'Card Stamp': 100,
@@ -1743,12 +1743,13 @@ farming_progressionTiers = {
                 'Production Megaboost': 100,
                 'Overgrowth Boost': 75,
                 'Soil Exp Megaboost': 50,
-            },
+            },  #425 total
         },
+        'Crops Unlocked': 116,
         'Suggestions': {
-            'EvoChance': [325, 335],  #TODO
-            'Speed': [30, 40],
-            'CropIndex': [46, 61]  #46 = Earthy/Gold Sliced Tomato, 61 = Bulbo/Golden Tulip, #TODO
+            'EvoChance': [1e12, 10e12],
+            'Speed': [8, 20],
+            'CropIndex': [46, 61, 84, 104, 119]  #46 = Earthy/Gold Sliced Tomato, 61 = Bulbo/Golden Tulip, 84 = Sushi/Max, 104 = Mushie/20, 119 = Normal Glassy/Onigiri
         },
         'Night Market': {
             'Evolution Gmo': 30,  # 1.24x
@@ -1759,10 +1760,99 @@ farming_progressionTiers = {
         #OG Boost : Mega :  Super is around 4:5:8
         #Farmtastic pretty optional
     },  #1k stacks. Reach 120 farming and the first few Glassy
-    # 4: {},  #Repeat the 1k stacks. Bean farming to afford
-    # 5: {},
-    # 6: {},  #Max Value, 100k stacks
-    # 15: {
+    4: {
+        'Day Market': {
+            'Land Plots': 12,
+            'Stronger Vines': 62,
+            'Nutritious Soil': 60,
+            'Biology Boost': 56,
+            'Product Doubler': 35,
+            'More Beenz': 37,
+            'Rank Boost': 24,
+        },
+        'Land Ranks': {
+            1: {
+                'Evolution Superboost': 25,
+                'Soil Exp Boost': 100,
+                'Soil Exp Megaboost': 100,
+            },  #550 total
+        },
+        'Crops Unlocked': 123,
+        'Suggestions': {
+            'EvoChance': [1e16, 1e18],
+            'Speed': [30, 40],
+            'OG': [2.5, 6.25],  #Guarantees 2x OG at 2.5 OG, guarantees 4x OG
+            'CropIndex': [107, 123]  #107 = Mushie/Final, 122 = Red Glassy/Mango
+        },
+        'Night Market': {
+            'Evolution Gmo': 40,  #1.32x
+            'Og Fertilizer': 20,  #1.20x
+            'Super Gmo': 10,  #5%
+        },
+        #Value is around 10x
+    },  #Repeat the 1k stacks. Day Market Farming to afford 100% Product Doubler, Bean Farming for 5% Super GMO
+    5: {
+        #'Day Market': {},  #Intentionally excluded.
+        #'Land Ranks': {1: {},},  #Intentionally excluded.
+        'Crops Unlocked': 126,
+        'Suggestions': {
+            'EvoChance': [1e22, 5e22],
+            'Speed': [30, 40],
+            'CropIndex': [126],  #126 at end of 1k stacking, before 100k stacking
+            'No Trade': "Do not complete a Bean trade! Start back at Apples and stack to 100k of each crop"
+        },
+        #'Night Market': {},
+    },  #End of 1k stacking, before 100k stacking. No Bean Trade
+    6: {
+        'Day Market': {
+            'Land Plots': 16,
+            'Stronger Vines': 84,
+            'Nutritious Soil': 87,
+            'Smarter Seeds': 86,
+            #'Biology Boost': 56,    #Intentionally excluded.
+            'Product Doubler': 50,
+            'More Beenz': 55,
+            'Rank Boost': 37,
+        },
+        'Land Ranks': {
+            1: {
+                'Overgrowth Megaboost': 100,
+                'Soil Exp Superboost': 100,
+                'Evolution Ultraboost': 25,
+            },  #775/1400
+            2: {
+                'Overgrowth Boost': 200,
+                'Overgrowth Megaboost': 250,
+            },  #950/1400
+            3: {
+                'Soil Exp Boost': 220,
+                'Soil Exp Megaboost': 110,
+                'Soil Exp Superboost': 170,
+            },  #1200/1400
+            4: {
+                'Soil Exp Boost': 330,
+                'Soil Exp Megaboost': 165,
+                'Soil Exp Superboost': 255,
+            },  #1400/1400
+        },
+        'Crops Unlocked': 127,
+        'Suggestions': {
+            'EvoChance': [1e23, 5e23],
+            'Speed': [250, 400],
+            'OG': [6.25, 15.625],
+            'CropIndex': [127]
+        },
+        'Night Market': {
+            'Evolution Gmo': 65,  #1.25x
+            'Speed Gmo': 35,  #10.5%
+            'Og Fertilizer': 57,  #1.57x
+            'Super Gmo': 20,  #10%
+        },
+    },  #First round of 100k stacking + Day Market at the same time
+
+    # 7: {},  #Finish unlocking Land ranks up to Overgrowth Superboost, Max Value. 15% Speed and 15% Super GMO
+    # 8: {},  #Unlock all crops. Keep pushing Evo, Speed, Super, OG
+    # 9: {
     #     'Farming Level': 300,
     #     'Day Market': {
     #         'Land Plots': 20,
@@ -1789,11 +1879,11 @@ farming_progressionTiers = {
     #             'Overgrowth Superboost': 1000,
     #         },
     #     },
-    # },
+    # },  #Done and futureproofed
 }
 
 ###UI CONSTS###
-maxTiersPerGroup = 3
+maxTiersPerGroup = 10
 #If you add a new switch here, you need to also add a default in \static\scripts\main.js:defaults
 switches = [
     {
@@ -7181,13 +7271,13 @@ slab_QuestRewards = {
     'EquipmentPants16': {
         "ItemName": "Adam's Leaf",
         "QuestGiver": "Sprout",
-        "QuestName": "Sticks and Stone Something Something Bones...",
+        "QuestName": "Justice Wears No Clothes",
         "QuestNameCoded": "Sprout2"
     },
     'EquipmentShirts17': {
         "ItemName": "MCR Tshirt",
         "QuestGiver": "Sprout",
-        "QuestName": "Justice Wears No Clothes",
+        "QuestName": "Shoe Shopping with Sprout",
         "QuestNameCoded": "Sprout3"
     },
     'NPCtoken12': {
