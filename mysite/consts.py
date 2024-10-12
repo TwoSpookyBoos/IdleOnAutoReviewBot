@@ -7952,6 +7952,24 @@ slab_QuestRewards = {
         "QuestName": "Mana Plox",
         "QuestNameCoded": "Snouts4"
     },
+    'Trash': {
+        "ItemName": "Broken Weapon",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 1",
+        "QuestNameCoded": "Walupiggy1"
+    },
+    'Trash2': {
+        "ItemName": "Dried Paint Blob",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 2",
+        "QuestNameCoded": "Walupiggy2"
+    },
+    'Trash3': {
+        "ItemName": "Engraved Bullet",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 3",
+        "QuestNameCoded": "Walupiggy3"
+    },
     'Timecandy7': {
         "ItemName": "Steamy Time Candy",
         "QuestGiver": "Walupiggy",
