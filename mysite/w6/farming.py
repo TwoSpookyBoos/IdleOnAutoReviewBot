@@ -1065,7 +1065,7 @@ def setFarmingProgressionTier():
                     total_nm_entries += 1
         if total_nm_entries > 1:
             target = notateNumber('Basic', total_magic_bean_cost, 2)
-            match_letter = str(target[-1])
+            match_letter = str(target[-1]) if target[-1].isalpha() else ''
             farming_AdviceDict['Tiers'][subgroupName].append(Advice(
                 label=f"Grand Total Magic Bean Cost remaining in this Tier",
                 picture_class='magic-bean',
