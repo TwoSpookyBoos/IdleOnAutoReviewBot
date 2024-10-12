@@ -1733,7 +1733,7 @@ farming_progressionTiers = {
                 'Production Boost': 50,
                 'Soil Exp Megaboost': 25,
             },
-            2:{
+            2: {
                 'Soil Exp Boost': 50,
                 'Production Boost': 80,
                 'Overgrowth Boost': 50,

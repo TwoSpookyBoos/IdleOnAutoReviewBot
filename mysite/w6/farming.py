@@ -954,6 +954,7 @@ def setFarmingProgressionTier():
                     ))
 
         # Land Ranks - Database Upgrades
+        lr_this_tier = []
         for setNumber, setRequirements in tierRequirements.get('Land Ranks', {}).items():
             for rName, rLevel in setRequirements.items():
                 if farming['LandRankDatabase'][rName]['Level'] < rLevel and rName not in lr_exclusions:
@@ -966,12 +967,31 @@ def setFarmingProgressionTier():
                         else:
                             current = farming['LandRankDatabase'][rName]['Value']
                             target = (1.7 * farming['LandRankDatabase'][rName]['BaseValue'] * rLevel) / (rLevel + 80)
-                        farming_AdviceDict['Tiers'][subgroupName].append(Advice(
-                            label=f"{rName}: {current:.4g}/{target:.4g}%",
-                            picture_class=rName,
-                            progression=farming['LandRankDatabase'][rName]['Level'],
-                            goal=rLevel
-                        ))
+                        lr_this_tier.append([rName, rLevel, current, target])
+                        # farming_AdviceDict['Tiers'][subgroupName].append(Advice(
+                        #     label=f"{rName}: {current:.4g}/{target:.4g}%",
+                        #     picture_class=rName,
+                        #     progression=farming['LandRankDatabase'][rName]['Level'],
+                        #     goal=rLevel
+                        # ))
+
+        for lrIndex, lrAdvice in enumerate(lr_this_tier):
+            if lrIndex+1 < len(lr_this_tier):
+                safe_to_add = lr_this_tier[lrIndex][0] != lr_this_tier[lrIndex+1][0]
+                if safe_to_add:
+                    farming_AdviceDict['Tiers'][subgroupName].append(Advice(
+                        label=f"{lrAdvice[0]}: {lrAdvice[2]:.4g}/{lrAdvice[3]:.4g}%",
+                        picture_class=lrAdvice[0],
+                        progression=farming['LandRankDatabase'][lrAdvice[0]]['Level'],
+                        goal=lrAdvice[1]
+                    ))
+            else:
+                farming_AdviceDict['Tiers'][subgroupName].append(Advice(
+                    label=f"{lrAdvice[0]}: {lrAdvice[2]:.4g}/{lrAdvice[3]:.4g}%",
+                    picture_class=lrAdvice[0],
+                    progression=farming['LandRankDatabase'][lrAdvice[0]]['Level'],
+                    goal=lrAdvice[1]
+                ))
 
         # Suggestions
         if subgroupName in farming_AdviceDict['Tiers']:
