@@ -1,5 +1,5 @@
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.text_formatting import getItemDisplayName
+from utils.text_formatting import getItemDisplayName, pl
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import slabList, reclaimableQuestItems, vendorItems, anvilItems, dungeonWeaponsList, maxDungeonWeaponsAvailable, \
@@ -169,6 +169,14 @@ def setSlabProgressionTier():
             emptyDungeonSubgroups.append(subgroup)
     for emptySubgroup in emptyDungeonSubgroups:
         slab_AdviceDict["Dungeon"].pop(emptySubgroup)
+
+    # Generate Alert
+    minimal_effort_stacks = len(slab_AdviceDict['Reclaims']) + len(slab_AdviceDict['Storage'])
+    if minimal_effort_stacks > 0:
+        session_data.account.alerts_AdviceDict['World 5'].append(Advice(
+            label=f"{minimal_effort_stacks} minimal effort {{{{ Slab|#slab}}}} stack{pl(minimal_effort_stacks)} available",
+            picture_class='the-slab'
+        ))
 
     # Generate AdviceGroups
     slab_AdviceGroupDict["Storage"] = AdviceGroup(
