@@ -4,7 +4,8 @@ from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import numberOfArtifacts, numberOfArtifactTiers, breeding_progressionTiers, getReadableVialNames, maxTiersPerGroup, territoryNames, break_you_best
+from consts import numberOfArtifacts, numberOfArtifactTiers, breeding_progressionTiers, getReadableVialNames, maxTiersPerGroup, territoryNames, break_you_best, \
+    maxFarmingCrops
 
 logger = get_logger(__name__)
 
@@ -65,6 +66,16 @@ def getShinySpeedSourcesAdviceGroup(fasterShinyPetTotalLevels) -> AdviceGroup:
         "Multi Group B- Everything Else": []
     }
 
+    sps_adviceDict["Multi Group B- Everything Else"].append(Advice(
+        label=f"Total Farming crops discovered: {session_data.account.farming['CropsUnlocked']}/{maxFarmingCrops}",
+        picture_class='crop-depot',
+        progression=session_data.account.farming['CropsUnlocked'],
+        goal=maxFarmingCrops
+    ))
+    sps_adviceDict["Multi Group B- Everything Else"].append(Advice(
+        label=f"{{{{Science Crayon|#farming}}}} Total: {session_data.account.farming['Depot'][5]['Value']:,.2f}",
+        picture_class=session_data.account.farming['Depot'][5]['Image'],
+    ))
     sps_adviceDict["Multi Group B- Everything Else"].append(Advice(
         label=f"Lab Jewel: Emerald Ulthurite",
         picture_class='emerald-ulthurite',

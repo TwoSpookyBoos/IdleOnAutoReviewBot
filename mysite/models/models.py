@@ -3185,14 +3185,14 @@ class Account:
         if self.star_sign_extras['SeraphGoal'] < 240:
             self.star_sign_extras['SeraphEval'] += f" Increases every 20 Summoning levels.{inequality_notice}"
         self.star_sign_extras['SeraphAdvice'] = Advice(
-            label=f"{{{{ Starsign|#star-signs }}}}: Seraph Cosmos: {self.star_sign_extras['SeraphEval']}",
+            label=f"{{{{ Star Sign|#star-signs }}}}: Seraph Cosmos: {self.star_sign_extras['SeraphEval']}",
             picture_class="seraph-cosmos",
             progression=max(self.all_skills['Summoning'], default=0),
             goal=self.star_sign_extras['SeraphGoal'])
 
         if self.labChips.get('Silkrode Nanochip', 0) > 0:
             self.star_sign_extras['DoublerOwned'] = True
-            self.star_sign_extras['SilkrodeNanoEval'] = f"{self.labChips.get('Silkrode Nanochip', 0)} owned. Doubles starsigns when equipped."
+            self.star_sign_extras['SilkrodeNanoEval'] = f"{self.labChips.get('Silkrode Nanochip', 0)} owned. Doubles star signs when equipped."
             self.star_sign_extras['SilkrodeNanoMulti'] = 2
         else:
             self.star_sign_extras['DoublerOwned'] = False
