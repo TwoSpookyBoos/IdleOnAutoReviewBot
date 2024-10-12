@@ -187,29 +187,30 @@ def getShortTermAdviceList() -> list[Advice]:
     shortterm += obols
 
     for char in session_data.account.all_characters:
-        for mapNumber, details in {
-            1: [1, 'weekly-boss-action-t'],  # Green Mushrooms
-            53: [2, 'weekly-boss-action-r'],  # Crabcakes
-            116: [3, 'weekly-boss-action-u'],  # Dedotated Rams
-            158: [4, 'weekly-boss-action-y'],  # Choccies
-            205: [5, 'weekly-boss-action-v'],  # Stiltmoles
-        }.items():
-            enemy_map = session_data.account.enemy_worlds[details[0]].maps_dict[mapNumber]
-            goal = 1000000
-            try:
-                char_kills = enemy_map.portal_requirement - char.kill_dict.get(mapNumber, [0])[0]
-                if char_kills < goal:
-                    #logger.debug(f"{char} {enemy_map.monster_name} KLA: {char.kill_dict.get(mapNumber, [0])[0]} means total kills of {char_kills}")
-                    shortterm.append(Advice(
-                        label=f"{char}- Kill 1M {enemy_map.monster_name}s for W2 Weekly Boss",
-                        picture_class=char.class_name_icon,
-                        progression=notateNumber('Match', char_kills, 2, 'K'),
-                        goal=notateNumber('Match', goal, 0, 'K'),
-                        resource=details[1]
-                    ))
-            except Exception as reason:
-                logger.debug(f"W{details[0]}M{mapNumber} '{char}': {reason}")
-                continue
+        if 'Journeyman' not in char.all_classes:
+            for mapNumber, details in {
+                1: [1, 'weekly-boss-action-t'],  # Green Mushrooms
+                53: [2, 'weekly-boss-action-r'],  # Crabcakes
+                116: [3, 'weekly-boss-action-u'],  # Dedotated Rams
+                158: [4, 'weekly-boss-action-y'],  # Choccies
+                205: [5, 'weekly-boss-action-v'],  # Stiltmoles
+            }.items():
+                enemy_map = session_data.account.enemy_worlds[details[0]].maps_dict[mapNumber]
+                goal = 1000000
+                try:
+                    char_kills = enemy_map.portal_requirement - char.kill_dict.get(mapNumber, [0])[0]
+                    if char_kills < goal:
+                        #logger.debug(f"{char} {enemy_map.monster_name} KLA: {char.kill_dict.get(mapNumber, [0])[0]} means total kills of {char_kills}")
+                        shortterm.append(Advice(
+                            label=f"{char}- Kill 1M {enemy_map.monster_name}s for W2 Weekly Boss",
+                            picture_class=char.class_name_icon,
+                            progression=notateNumber('Match', char_kills, 2, 'K'),
+                            goal=notateNumber('Match', goal, 0, 'K'),
+                            resource=details[1]
+                        ))
+                except Exception as reason:
+                    logger.debug(f"W{details[0]}M{mapNumber} '{char}': {reason}")
+                    continue
 
     return shortterm
 
@@ -430,9 +431,9 @@ def getConsumablesAdviceList() -> list[Advice]:
     if session_data.account.highestWorldReached >= 2:
         if not session_data.account.maestros and session_data.account.jmans:
             consumables.append(Advice(
-                label=f"Level any remaining skills for {{{{ Maestro|#secret-class-path }}}} quest"
-                      f"Pearls, Balloons, and Candies are all valid here!",
-                picture_class='maestro-class',
+                label=f"Level any remaining skills for {{{{ Maestro|#secret-class-path }}}} quest."
+                      f"<br>Pearls, Balloons, and Candies are all valid here!",
+                picture_class='maestro-icon',
                 resource='time-candy-1-hr'
             ))
     if session_data.account.highestWorldReached >= 4:
@@ -440,7 +441,7 @@ def getConsumablesAdviceList() -> list[Advice]:
             try:
                 if (
                     character.elite_class == "None"
-                    and character.sub_class != "Maestro"
+                    and 'Journeyman' not in character.all_classes
                     and float(character.kill_dict.get(153, [0])[0]) > 0  #Killcount on Donut map would be 0 or negative if portal to Demon Genies is open
                 ):
 
@@ -454,7 +455,7 @@ def getConsumablesAdviceList() -> list[Advice]:
         if not session_data.account.vmans:
             consumables.append(Advice(
                 label=f"Candy any remaining kills for {{{{ Voidwalker|#secret-class-path }}}} quest",
-                picture_class='voidwalker-class',
+                picture_class='voidwalker-icon',
                 resource='time-candy-1-hr'
             ))
     if session_data.account.highestWorldReached >= 6:
