@@ -1883,7 +1883,7 @@ farming_progressionTiers = {
 }
 
 ###UI CONSTS###
-maxTiersPerGroup = 10
+maxTiersPerGroup = 3
 #If you add a new switch here, you need to also add a default in \static\scripts\main.js:defaults
 switches = [
     {
