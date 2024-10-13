@@ -323,7 +323,7 @@ greenstack_progressionTiers = {
                 "PeanutG",
             ],
             "Misc": [
-                "FoodPotMana3", "FoodPotRe1", "ButterBar", "EquipmentStatues9",],
+                "FoodPotMana3", "FoodPotRe1", "ButterBar", "EquipmentStatues9", "OilBarrel2"],
         },
         14: {
             "Crystal Enemy Drops": [
@@ -335,7 +335,7 @@ greenstack_progressionTiers = {
                 "Ladle",
             ],
             "Misc": [
-                "OilBarrel2", "DesertC2b", "Quest78",
+                "DesertC2b", "Quest78",
             ]
         },
     }
