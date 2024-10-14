@@ -5895,6 +5895,34 @@ def getDaysToNextShinyLevel(days: float) -> float:
             return 0
 
 
+breedabilityDaysList = [
+    0.0000,
+    2.9722,
+    25.5910,
+    230.7881,
+    2445.8520,
+    30113.1432,
+    421857.0285,
+    6615176.2308,
+    114686626.8729,
+    2177232407.5082,
+]
+breedabilityHearts = [1 + pow(x, 1.25) for x in range(0, 10)]
+
+def getBreedabilityMultiFromDays(days: float) -> float:
+    result = 1 + math.log(max(1, pow(days+1, 0.725)))
+    #print(f"getBreedabilityMultiFromDays: Given {days} days, Breedability Multi = {result}")
+    return result
+
+def getBreedabilityHeartFromMulti(multi: float) -> str:
+    result = 0
+    for reqIndex, requirement in enumerate(breedabilityHearts):
+        if multi >= requirement:
+            result += 1
+        else:
+            break
+    return f"breedability-heart-{result}"
+
 ###WORLD 5 CONSTS###
 artifactTiers = ["Base", "Ancient", "Eldritch", "Sovereign"]
 numberOfArtifactTiers = len(artifactTiers)

@@ -11,7 +11,7 @@ from math import ceil, floor
 from typing import Any, Union
 from flask import g
 from utils.data_formatting import getCharacterDetails, safe_loads
-from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
+from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, notateNumber
 from consts import (
     # General
     lavaFunc, ceilUpToBase, ValueToMulti,
@@ -54,7 +54,7 @@ from consts import (
     labJewelsDict, labBonusesDict, nblbMaxBubbleCount, labChipsDict,
     maxMeals, maxMealLevel, cookingMealDict, maxCookingTables,
     maxNumberOfTerritories, indexFirstTerritoryAssignedPet, territoryNames, slotUnlockWavesList, breedingUpgradesDict, breedingGeneticsList,
-    breedingShinyBonusList, breedingSpeciesDict, getShinyLevelFromDays, getDaysToNextShinyLevel,
+    breedingShinyBonusList, breedingSpeciesDict, getShinyLevelFromDays, getDaysToNextShinyLevel, getBreedabilityMultiFromDays, getBreedabilityHeartFromMulti,
     # W5
     sailingDict, numberOfArtifactTiers, captainBuffs,
     getStyleNameFromIndex, divinity_divinitiesDict, divinity_offeringsDict, getDivinityNameFromIndex, divinity_DivCostAfter3,
@@ -2369,6 +2369,16 @@ class Account:
                 "W8": 0,
             },
             'Total Unlocked Count': 0,
+            'Breedability Days': {
+                "W1": [],
+                "W2": [],
+                "W3": [],
+                "W4": [],
+                "W5": [],
+                "W6": [],
+                "W7": [],
+                "W8": [],
+            },
             'Shiny Days': {
                 "W1": [],
                 "W2": [],
@@ -2475,6 +2485,13 @@ class Account:
             except:
                 continue  #Already defaulted to 0 during initialization
 
+        # Breedability Days
+        for index in range(13, 21):
+            try:
+                self.breeding['Breedability Days'][f"W{index - 12}"] = rawBreeding[index]
+            except:
+                continue  # Already default to [] during initialization
+
         #Shiny Days
         for index in range(22, 30):
             try:
@@ -2493,6 +2510,9 @@ class Account:
                         'ShinyBonus': petValuesDict['ShinyBonus'],
                         'ShinyLevel': getShinyLevelFromDays(self.breeding['Shiny Days'][f"W{worldIndex}"][petIndex]),
                         'DaysToShinyLevel': getDaysToNextShinyLevel(self.breeding['Shiny Days'][f"W{worldIndex}"][petIndex]),
+                        'BreedabilityDays': self.breeding['Breedability Days'][f"W{worldIndex}"][petIndex],
+                        'BreedabilityMulti': getBreedabilityMultiFromDays(self.breeding['Breedability Days'][f"W{worldIndex}"][petIndex]),
+                        'BreedabilityHeart': getBreedabilityHeartFromMulti(getBreedabilityMultiFromDays(self.breeding['Breedability Days'][f"W{worldIndex}"][petIndex])),
                     }
                     #Increase the total shiny bonus level
                     self.breeding["Total Shiny Levels"][petValuesDict['ShinyBonus']] += self.breeding['Species'][worldIndex][petValuesDict['Name']]['ShinyLevel']
@@ -2507,6 +2527,9 @@ class Account:
                         'ShinyBonus': petValuesDict['ShinyBonus'],
                         'ShinyLevel': 0,
                         'DaysToShinyLevel': 0,
+                        'BreedabilityDays': 0.0,
+                        'BreedabilityMulti': 1,
+                        'BreedabilityHeart': 'breedability-heart-1',
                     }
                 # Add this pet to the shiny bonus grouped list
                 self.breeding['Grouped Bonus'][petValuesDict['ShinyBonus']].append(
@@ -2520,6 +2543,8 @@ class Account:
         #Sort the Grouped bonus by Days to next Shiny Level
         for groupedBonus in self.breeding["Grouped Bonus"]:
             self.breeding["Grouped Bonus"][groupedBonus].sort(key=lambda x: float(x[2]))
+
+
 
     def _parse_w5(self):
         self.gaming = {
