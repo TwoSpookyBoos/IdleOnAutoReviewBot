@@ -18,7 +18,8 @@ from models.custom_exceptions import (
     EmptyResponse,
     IEConnectionFailed,
     BaseCustomException,
-    JSONDecodeError, WtfDataException,
+    JSONDecodeError,
+    WtfDataException,
 )
 from utils.text_formatting import (
     is_username,
@@ -54,9 +55,6 @@ def parse_user_input() -> str | dict | None:
 
     else:
         raise UserDataException("Submitted data not valid.", data)
-
-    if "OptLacc" not in parsed:
-        raise WtfDataException(data)
 
     return parsed
 

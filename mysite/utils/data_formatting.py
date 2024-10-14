@@ -10,7 +10,7 @@ from babel.dates import format_datetime
 from flask import request, g as session_data
 
 from consts import humanReadableClasses, skillIndexList, emptySkillList
-from models.custom_exceptions import ProfileNotFound, EmptyResponse, IEConnectionFailed
+from models.custom_exceptions import ProfileNotFound, EmptyResponse, IEConnectionFailed, WtfDataException
 
 from .logging import get_logger
 from config import app
@@ -98,6 +98,9 @@ def getJSONfromText(runType, rawJSON):
 
     if from_toolbox(parsed):  # Check to see if this is Toolbox JSON
         parsed = load_toolbox_data(parsed)
+
+    if "OptLacc" not in parsed:
+        raise WtfDataException(rawJSON)
 
     return parsed
 
