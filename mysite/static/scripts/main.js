@@ -62,70 +62,6 @@ function defineFormSubmitAction() {
     })
 }
 
-// calculate progress bars
-function calcProgressBars(parent = document) {
-    const top = el => el.getBoundingClientRect().top
-
-    parent.querySelectorAll(".progress-box").forEach(progressBox => {
-        const checkbox = document.querySelector('#progress_bars')
-        const advice = progressBox.nextElementSibling
-        const siblings = Array.from(advice.parentElement.children)
-        const idx = siblings.indexOf(advice)
-        const prog = siblings[idx + 2]
-        const goal = siblings[idx + 4]
-        const row = siblings.slice(idx, idx + 5)
-        const rowWidth = row.reduce((total, curr) => total + curr.offsetWidth, 0)
-        const [progCoefficient, show] = progWidth(progressBox, rowWidth, prog, goal)
-
-        const rowHeight = advice.offsetHeight
-        const rowTop = top(advice) - top(advice.parentElement) + advice.parentElement.scrollTop
-
-        const progressBar = progressBox.querySelector(".progress-bar")
-        progressBar.style.width = `${progCoefficient}%`
-
-        progressBox.style.height = `${rowHeight}px`
-        progressBox.style.top = `${rowTop}px`
-
-        if (checkbox.value === "off" || !show) {
-            progressBox.classList.add('hidden')
-        } else if (show) {
-            progressBox.classList.remove('hidden')
-        }
-    })
-}
-
-function progWidth(bar, w, p, g) {
-    const toFloat = e => parseFloat(e.innerText.replace(/.*?([\d.]+).*/, "$1"))
-    const goal = toFloat(g)
-    const prog = toFloat(p)
-    const inPercentages = g.innerText.includes("%") || p.innerText.includes("%")
-    const inRatio = !(isNaN(prog) || isNaN(goal))
-    const isDone = [g.innerText, p.innerText].some(el => el === "✔")
-
-
-    if (inRatio) return [(100 * Math.min(prog, goal) / goal), true]
-    if (inPercentages) return [Math.min([prog, goal].find(e => !isNaN(e)), 100), true]
-    if (isDone) return [100, true]
-
-    return [0, (inPercentages || inRatio)]
-}
-
-const hideProgressBoxes = (parent = document) => parent
-    .querySelectorAll('.progress-box')
-    .forEach(box => box.classList.add("hidden"))
-
-let resizeTimer;
-window.addEventListener('resize', () => {
-    if (!resizeTimer) hideProgressBoxes()
-
-    clearTimeout(resizeTimer);
-
-    resizeTimer = setTimeout(() => {
-        calcProgressBars()
-        resizeTimer = null
-    }, 100)
-})
-
 function setupFolding() {
     // set event listeners for folding worlds and sections
     document.querySelectorAll('.toggler').forEach(toggler => toggler.onclick = (e) => {
@@ -137,7 +73,7 @@ function setupFolding() {
 }
 
 function setupLightSwitch() {
-    document.querySelector('#light-switch').onclick = (e) => {
+    document.querySelector('#light-switch').onclick = e => {
         document.documentElement.classList.toggle('light-mode')
         e.currentTarget.classList.toggle('on')
         e.currentTarget.classList.toggle('off')
@@ -238,7 +174,14 @@ function setupSwitchesActions() {
     }
 
     // toggle progress bars
-    document.querySelector('#progress_bars').onclick = () => calcProgressBars(document)
+    document.querySelector('#progress_bars').onclick = () => document.querySelectorAll(".progress-box").forEach(progressBox => {
+        const checkbox = document.querySelector('#progress_bars')
+        if (checkbox.value === "off") {
+            progressBox.classList.add('hidden')
+        } else {
+            progressBox.classList.remove('hidden')
+        }
+    })
 }
 
 function setupPinchyHrefActions() {
@@ -265,7 +208,6 @@ function applyShowMoreButton() {
 
             const group = groups.shift()
             group.classList.remove("hidden")
-            calcProgressBars(group)
             if (groups.length === 0) {
                 button.style.display = "none"
             }
@@ -543,19 +485,15 @@ function setupSearchBar() {
     const searchBar = document.querySelector('#search')
     document.querySelector('#search-clear').onclick = () => {
         searchBar.value = ""
-        hideProgressBoxes()
         document.querySelectorAll('.search-hidden').forEach(hidden => {
             hidden.classList.remove('search-hidden')
         })
-        calcProgressBars()
     }
 
     searchBar.addEventListener('input', e => {
         clearTimeout(searchTimer);
         searchTimer = setTimeout((criteria) => {
-            hideProgressBoxes()
             searchByCriteria(criteria)
-            calcProgressBars()
         }, 1000, e.target.value)
     })
 }
@@ -586,7 +524,6 @@ function initResultsUI() {
     setupPinchyHrefActions()
     applyShowMoreButton()
     setupDataClock()
-    calcProgressBars(document)
     handleParallax()
 }
 
@@ -617,7 +554,7 @@ function handleParallax() {
         const screenCenter = window.innerHeight / 2;
 
         dominantElement = Array.from(document.querySelectorAll("article"))
-        .map((article, index) => {
+        .map(article => {
             const rect = article.getBoundingClientRect();
             return { bg: `bg-${article.id}`, article: article, top: rect.top, bottom: rect.bottom, height: rect.height };
         })

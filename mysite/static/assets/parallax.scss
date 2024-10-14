@@ -34,30 +34,32 @@
             transform 1s ease-out;
 
         .fg, .sky {
-            z-index: -100;
             position: fixed;
             top: 0;
-
             height: inherit;
-            width: 100%;
-
-            background-size: cover;
             background-position: left top;
+        }
+
+        .fg {
+            z-index: -100;
+            width: 100%;
+            background-size: cover;
         }
 
         .sky {
             z-index: -101;
             width: 9600px;
-            height: inherit;
             min-width: calc(960px * 3);
             background-size: contain;
-            animation: clouds 60s linear infinite;
+            animation: clouds 30s linear infinite;
         }
     }
 
 }
 
 @each $world in (
+    "pinchy",
+    "general",
     "blunder-hills",
     "yum-yum-desert",
     "frostbite-tundra",

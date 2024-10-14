@@ -1,5 +1,5 @@
 import pytest
-from flask_app import app
+from app import app
 from collections import namedtuple
 
 
