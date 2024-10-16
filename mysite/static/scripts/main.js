@@ -638,10 +638,55 @@ function initResultsUI() {
     calcProgressBars(document)
 }
 
+async function loadUpdatedAssetsIfNecessary() {
+    try {
+        // Fetch the index page (or any other resource that includes the custom header)
+        const response = await fetch("/cache", {method: 'GET', cache: 'no-store'});
+
+        // Get the value of the custom header
+        const serverCacheSHA = response.headers.get('X-Cache-Sha');
+
+        if (!serverCacheSHA) {
+            console.error("Custom header not found in the response");
+            return;
+        }
+
+        // Retrieve the stored value from localStorage
+        const clientCacheSHA = localStorage.getItem('cache-sha');
+
+        // Compare the header value with localStorage value
+        if (serverCacheSHA !== clientCacheSHA) {
+            console.log('Static files updated, updating stored cache SHA and invalidating cache');
+
+            // Cache invalidation logic - here, you can refresh the page or clear specific cached resources
+            // Update the value in localStorage with the new value from the server
+            localStorage.setItem('cache-sha', serverCacheSHA);
+
+            if ('caches' in window) {
+                console.log("'caches' key found, clearing all cache")
+                caches.keys().then(cacheNames => {
+                    cacheNames.forEach(cacheName => {
+                        caches.delete(cacheName);
+                    });
+                });
+            }
+            // Optionally, reload the page to force re-fetching resources
+            location.reload();  // True forces reload from the server, bypassing cache
+        }
+    } catch (error) {
+        console.error("Error fetching cache version:", error);
+    }
+
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     // Define the fonts you are loading
     const fonts = ['Kode Mono', 'Open Sans', 'Rubik', 'Roboto']
     const loadedFonts = fonts.map(f => new FontFaceObserver(f).load())
+
+
+
+    loadUpdatedAssetsIfNecessary()
 
     // Wait for all fonts to be loaded
     Promise.all(loadedFonts).then(() => {
