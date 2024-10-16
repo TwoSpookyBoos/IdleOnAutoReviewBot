@@ -115,7 +115,8 @@ const hideProgressBoxes = (parent = document) => parent
     .forEach(box => box.classList.add("hidden"))
 
 let resizeTimer;
-window.addEventListener('resize', () => {
+
+const handleProgressBoxes = () => {
     if (!resizeTimer) hideProgressBoxes()
 
     clearTimeout(resizeTimer);
@@ -124,7 +125,9 @@ window.addEventListener('resize', () => {
         calcProgressBars()
         resizeTimer = null
     }, 100)
-})
+}
+
+window.addEventListener('resize', handleProgressBoxes)
 
 function setupFolding() {
     // set event listeners for folding worlds and sections
@@ -142,6 +145,7 @@ function setupLightSwitch() {
         e.currentTarget.classList.toggle('on')
         e.currentTarget.classList.toggle('off')
         localStorage.setItem('light', e.currentTarget.classList[0])
+        handleProgressBoxes()
     }
 }
 

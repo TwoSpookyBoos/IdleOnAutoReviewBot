@@ -32,6 +32,8 @@
     --border: 1px solid gray;
     --arrow-border: #c8cac8;
 
+    --progress-color: rgba(0, 0, 0, 0.3);
+
     --fg-error: hsla(0deg, 81%, 26%, 1);
     --bg-error: hsla(0deg, 75%, 78%, 1);
     --border-error: 1px solid darkred;
@@ -50,6 +52,7 @@
     --pinchy-bg-group-even: hsl(70deg 15.38% 30.59%);
     --pinchy-fg-subheading: hsla(41deg, 98.23%, 90.3%, 100%);
     --pinchy-fg-subheading-accent: hsla(44deg, 100%, 50%, 100%);
+    --pinchy-progress-color: var(--progress-color);
 
     --bg-general: linear-gradient(to bottom, hsla(312deg, 95%, 7%, 1), hsla(326deg, 91%, 21%, 1), hsla(8deg, 69%, 33%, 1));
     --general-fg-subheading: hsla(15deg, 25%, 65%, 1);
@@ -58,6 +61,7 @@
     --general-fg-advice-group: hsla(15deg, 100%, 96%, 1);
     --general-bg-advice-group-odd: hsla(15deg, 42%, 69%, 0.3);
     --general-bg-advice-group-even: hsla(15deg, 52%, 73%, 0.6);
+    --general-progress-color: var(--progress-color);
 
     --w1-fg-subheading: darkseagreen;
     --w1-bg-subheading: hsla(122deg, 100%, 87%, 0.1);
@@ -65,6 +69,7 @@
     --w1-fg-advice-group: hsl(120deg, 100%, 96%);
     --w1-bg-advice-group-odd: hsl(173.79deg 15.18% 37.45%);
     --w1-bg-advice-group-even: hsl(148.75deg 20.34% 53.73%);
+    --w1-progress-color: var(--progress-color);
 
     --w2-fg-subheading: hsl(50, 25%, 65%);
     --w2-bg-subheading: hsla(50, 100%, 86%, 0.1);
@@ -72,6 +77,7 @@
     --w2-fg-advice-group: hsl(50, 100%, 96%);
     --w2-bg-advice-group-odd: hsl(93.33deg 4.43% 39.8%);
     --w2-bg-advice-group-even: hsl(60deg 9.45% 49.8%);
+    --w2-progress-color: var(--progress-color);
 
     --w3-fg-subheading: hsl(200, 25%, 65%);
     --w3-bg-subheading: hsla(200, 100%, 86%, 0.1);
@@ -79,6 +85,7 @@
     --w3-fg-advice-group: hsl(200, 100%, 96%);
     --w3-bg-advice-group-odd: hsl(202.29deg 17.77% 38.63%);
     --w3-bg-advice-group-even: hsl(201.7deg 18.58% 49.61%);
+    --w3-progress-color: var(--progress-color);
 
     --w4-fg-subheading: hsl(247, 100%, 96%);
     --w4-bg-subheading: hsla(282.5, 77.9%, 27.9%, .4);
@@ -86,6 +93,7 @@
     --w4-fg-advice-group: hsl(247, 100%, 96%);
     --w4-bg-advice-group-odd: hsl(268deg 25% 48%);
     --w4-bg-advice-group-even: hsl(265deg 24% 34%);
+    --w4-progress-color: var(--progress-color);
 
     --w5-fg-subheading: hsl(15, 100%, 96%);
     --w5-bg-subheading: hsla(15, 78%, 28%, 0.4);
@@ -93,6 +101,7 @@
     --w5-fg-advice-group: hsl(15deg, 100%, 96%);
     --w5-bg-advice-group-odd: hsl(15deg 25% 48%);
     --w5-bg-advice-group-even: hsl(15deg 24% 34%);
+    --w5-progress-color: var(--progress-color);
 
     --w6-fg-subheading: hsl(165, 100%, 96%);
     --w6-bg-subheading: hsla(155, 78%, 28%, 0.4);
@@ -100,6 +109,7 @@
     --w6-fg-advice-group: hsl(167deg, 100%, 96%);
     --w6-bg-advice-group-odd: hsl(178, 25%, 48%);
     --w6-bg-advice-group-even: hsl(161, 24%, 34%);
+    --w6-progress-color: var(--progress-color);
 
     --bg-scrollbar-thumb: gray;
     --scrollbar-thumb-color: rgba(255, 255, 255, 0.7);
@@ -112,8 +122,6 @@
 
     --bg-header-json: #8e6c19;
     --bg-header-public: var(--bg-pinchy);
-
-    --progress-color: rgba(0, 0, 0, 0.3);
 }
 
 :root:not(.light-mode) {
