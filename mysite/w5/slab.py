@@ -10,14 +10,17 @@ logger = get_logger(__name__)
 
 def getHiddenAdviceGroup() -> AdviceGroup:
     hidden_adviceList = []
-
+    hidden_names = {}
     #Just for fun. This does the opposite: Looks for items registered as owned that aren't in the expected Slab list
     for itemName in session_data.account.registered_slab:
         if itemName not in slabList:
+            hidden_names[itemName] = getItemDisplayName(itemName)
             hidden_adviceList.append(Advice(
                 label=getItemDisplayName(itemName),
                 picture_class=getItemDisplayName(itemName) if itemName not in slab_itemNameReplacementDict else slab_itemNameReplacementDict[itemName]))
 
+    #logger.debug(f"Cards1 length: {len(session_data.account.registered_slab)}")
+    #logger.debug(f"{len(hidden_names)} Hidden Slab Items: {hidden_names}")
     hidden_AdviceGroup = AdviceGroup(
         tier='',
         pre_string=f"Info- These items are registered, but not displayed or included in the max",

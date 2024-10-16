@@ -891,9 +891,9 @@ def setFarmingProgressionTier():
         complete=False
     )
     highestFarmingSkillLevel = max(session_data.account.all_skills["Farming"])
-    # if highestFarmingSkillLevel < 1:
-    #     farming_AdviceSection.header = "Come back after unlocking the Farming skill in W6!"
-    #     return farming_AdviceSection
+    if highestFarmingSkillLevel < 1:
+        farming_AdviceSection.header = "Come back after unlocking the Farming skill in W6!"
+        return farming_AdviceSection
 
     infoTiers = 0
     max_tier = max(farming_progressionTiers.keys(), default=0) - infoTiers

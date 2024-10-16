@@ -518,8 +518,7 @@ stamps_progressionTiers = {
     11: {"TotalStampLevels": 800, "Stamps": {
          "Skill": ["Stample Stamp", "Spice Stamp", "Egg Stamp"],
          "Misc": ["Mason Jar Stamp", "Sigil Stamp"],
-         "Specific": {'Pickaxe Stamp': 45, 'Hatchet Stamp': 45, 'Mason Jar Stamp': 12}
-    }},
+         "Specific": {'Pickaxe Stamp': 45, 'Hatchet Stamp': 45, 'Mason Jar Stamp': 12}}},
     12: {"TotalStampLevels": 1000, "Stamps": {
         "Skill": ["Brainstew Stamp", "Bag o Heads Stamp", "Skelefish Stamp", "Holy Mackerel Stamp", "Cooked Meal Stamp"],
         "Misc": ["Card Stamp"],
@@ -2602,7 +2601,7 @@ def getNextESFamilyBreakpoint(currentLevel: int) -> int:
 #achievementsList last pulled from code in 2.08. Search for: RegAchieves = function ()
 #Replace: "], ["  with:  "],\n["  before pasting in
 achievement_categories = [
-    'EZ Access', #'Free Teleports',
+    'EZ Access',  #'Free Teleports',
     'Monster Respawn', 'Recipes', 'Dungeon RNG Items', 'Other Nice Rewards']
 achievementsList = [
     ["Learn_2_Forge", "1", "Get_the_mining_certificate_from_Glumlee.", "*STEAM_EXCLUSIVE_&*10_gems_&*1hr_time_candy", "0"],
@@ -3576,7 +3575,7 @@ combat_talentsDict = {
     "Squire": {
         "High": {
             120: {"Name": "Shockwave Slash", "Tab": "Squire", "Optimal": [0, 30, True]},
-            121: {"Name": "Daggerang", "Tab": "Squire", "Optimal": [0, 30, True]},        },
+            121: {"Name": "Daggerang", "Tab": "Squire", "Optimal": [0, 30, True]},},
         "Medium": {
             129: {"Name": "Blocky Bottles", "Tab": "Squire"},
             125: {"Name": "Precision Power", "Tab": "Squire"},
@@ -3886,7 +3885,6 @@ filter_never = [
 ]
 
 def lavaFunc(funcType: str, level: int, x1: int | float, x2: int | float, roundResult=False):
-    result = 0
     match funcType:
         case 'add':
             if x2 != 0:
@@ -4865,6 +4863,7 @@ def getReadableBubbleNames(inputNumber, color):
     except:
         return f"Unknown {color} Bubble {inputNumber}"
 
+
 ###WORLD 3 CONSTS###
 maxDreams = 36  # Last verified as of v2.10
 dreamsThatUnlockNewBonuses = [1, 3, 6, 8, 11, 14, 18, 21, 24, 29, 32]
@@ -5695,82 +5694,82 @@ breedingSpeciesDict: dict[int, dict] = {
             'Genetic': breedingGeneticsList[8],  #Sniper
             'ShinyBonus': breedingShinyBonusList[19],  #Bonuses from All Meals
         },
-		1: {
+        1: {
             'Name': 'Frost Flake',
             'Genetic': breedingGeneticsList[30],  #Ninja
             'ShinyBonus': breedingShinyBonusList[13],  #Tab 3 Talent Pts
         },
-		2: {
+        2: {
             'Name': 'Sir Stache',
             'Genetic': breedingGeneticsList[23],  #Eggshell
             'ShinyBonus': breedingShinyBonusList[1],  #Infinite Star Signs
         },
-		3: {
+        3: {
             'Name': 'Xylobone',
             'Genetic': breedingGeneticsList[15],  #Opticular
             'ShinyBonus': breedingShinyBonusList[3],  #Drop Rate
         },
-		4: {
+        4: {
             'Name': 'Bunny',
             'Genetic': breedingGeneticsList[14],  #Flashy
             'ShinyBonus': breedingShinyBonusList[8],  #Base LUK
         },
-		5: {
+        5: {
             'Name': 'Bloque',
             'Genetic': breedingGeneticsList[17],  #Alchemic
             'ShinyBonus': breedingShinyBonusList[18],  #Multikill Per Tier
         },
-		6: {
+        6: {
             'Name': 'Mamooth',
             'Genetic': breedingGeneticsList[21],  #Looter
             'ShinyBonus': breedingShinyBonusList[21],  #Higher Artifact Find Chance
         },
-		7: {
+        7: {
             'Name': 'Snowman',
             'Genetic': breedingGeneticsList[19],  #Defstone
             'ShinyBonus': breedingShinyBonusList[9],  #Class EXP
         },
-		8: {
+        8: {
             'Name': 'Penguin',
             'Genetic': breedingGeneticsList[13],  #Fastidious
             'ShinyBonus': breedingShinyBonusList[1],  #Infinite Star Signs
         },
-		9: {
+        9: {
             'Name': 'Thermister',
             'Genetic': breedingGeneticsList[8],  #Sniper
             'ShinyBonus': breedingShinyBonusList[10],  #Skill EXP
         },
-		10: {
+        10: {
             'Name': 'Quenchie',
             'Genetic': breedingGeneticsList[7],  #Boomer
             'ShinyBonus': breedingShinyBonusList[0],  #Faster Shiny Pet Lv Up Rate
         },
-		11: {
+        11: {
             'Name': 'Cryosnake',
             'Genetic': breedingGeneticsList[23],  #Eggshell
             'ShinyBonus': breedingShinyBonusList[15],  #Star Talent Pts
         },
-		12: {
+        12: {
             'Name': 'Mecho Mouse',
             'Genetic': breedingGeneticsList[25],  #Trasher
             'ShinyBonus': breedingShinyBonusList[6],  #Base STR
         },
-		13: {
+        13: {
             'Name': 'Bop Box',
             'Genetic': breedingGeneticsList[27],  #Converter
             'ShinyBonus': breedingShinyBonusList[1],  #Infinite Star Signs
         },
-		14: {
+        14: {
             'Name': 'Neyeptune',
             'Genetic': breedingGeneticsList[24],  #Lazarus
             'ShinyBonus': breedingShinyBonusList[24],  #Farming EXP
         },
-		15: {
+        15: {
             'Name': 'Dedotated Ram',
             'Genetic': breedingGeneticsList[9],  #Amplifier
             'ShinyBonus': breedingShinyBonusList[18],  #Multikill Per Tier
         },
-		16: {
+        16: {
             'Name': 'Bloodbone',
             'Genetic': breedingGeneticsList[20],  #Targeter
             'ShinyBonus': breedingShinyBonusList[24],  #Farming EXP
@@ -5922,6 +5921,7 @@ def getBreedabilityHeartFromMulti(multi: float) -> str:
         else:
             break
     return f"breedability-heart-{result}"
+
 
 ###WORLD 5 CONSTS###
 artifactTiers = ["Base", "Ancient", "Eldritch", "Sovereign"]
@@ -7195,25 +7195,25 @@ dungeonDropsList = [
     "KeyFrag", "DungCredits1", "LootDice", "Tree7D", "PlatD", "Fish1D", "Fish3D", "Cashb", "Dung3Ice",
     "FoodHealth1d", "FoodHealth2d", "FoodHealth3d"
 ]
-maxDungeonWeaponsAvailable = 23 #This is the value saved in the JSON, 0-23 = 24 total. Last verified in 2.12
+maxDungeonWeaponsAvailable = 23  #This is the value saved in the JSON, 0-23 = 24 total. Last verified in 2.12
 dungeonWeaponsList = [
-    "DungWeaponPunchA1", "DungWeaponPunchA2", "DungWeaponPunchA3", "DungWeaponPunchA4", "DungWeaponPunchA5", "DungWeaponPunchB1", "DungWeaponPunchB2", "DungWeaponPunchB3", "DungWeaponPunchB4", "DungWeaponPunchB5", "DungWeaponPunchC1", "DungWeaponPunchC2", "DungWeaponPunchC3", "DungWeaponPunchC4", "DungWeaponPunchC5", "DungWeaponPunchD1", "DungWeaponPunchD2", "DungWeaponPunchD3", "DungWeaponPunchD4", "DungWeaponPunchD5", "DungWeaponPunchE1", "DungWeaponPunchE2", "DungWeaponPunchE3", "DungWeaponPunchE4", #"DungWeaponPunchE5", "DungWeaponPunchF1", "DungWeaponPunchF2", "DungWeaponPunchF3", "DungWeaponPunchF4", "DungWeaponPunchF5",
-    "DungWeaponSwordA1", "DungWeaponSwordA2", "DungWeaponSwordA3", "DungWeaponSwordA4", "DungWeaponSwordA5", "DungWeaponSwordB1", "DungWeaponSwordB2", "DungWeaponSwordB3", "DungWeaponSwordB4", "DungWeaponSwordB5", "DungWeaponSwordC1", "DungWeaponSwordC2", "DungWeaponSwordC3", "DungWeaponSwordC4", "DungWeaponSwordC5", "DungWeaponSwordD1", "DungWeaponSwordD2", "DungWeaponSwordD3", "DungWeaponSwordD4", "DungWeaponSwordD5", "DungWeaponSwordE1", "DungWeaponSwordE2", "DungWeaponSwordE3", "DungWeaponSwordE4", #"DungWeaponSwordE5", "DungWeaponSwordF1", "DungWeaponSwordF2", "DungWeaponSwordF3", "DungWeaponSwordF4", "DungWeaponSwordF5",
-    "DungWeaponBowA1", "DungWeaponBowA2", "DungWeaponBowA3", "DungWeaponBowA4", "DungWeaponBowA5", "DungWeaponBowB1", "DungWeaponBowB2", "DungWeaponBowB3", "DungWeaponBowB4", "DungWeaponBowB5", "DungWeaponBowC1", "DungWeaponBowC2", "DungWeaponBowC3", "DungWeaponBowC4", "DungWeaponBowC5", "DungWeaponBowD1", "DungWeaponBowD2", "DungWeaponBowD3", "DungWeaponBowD4", "DungWeaponBowD5", "DungWeaponBowE1", "DungWeaponBowE2", "DungWeaponBowE3", "DungWeaponBowE4", #"DungWeaponBowE5", "DungWeaponBowF1", "DungWeaponBowF2", "DungWeaponBowF3", "DungWeaponBowF4", "DungWeaponBowF5",
-    "DungWeaponWandA1", "DungWeaponWandA2", "DungWeaponWandA3", "DungWeaponWandA4", "DungWeaponWandA5", "DungWeaponWandB1", "DungWeaponWandB2", "DungWeaponWandB3", "DungWeaponWandB4", "DungWeaponWandB5", "DungWeaponWandC1", "DungWeaponWandC2", "DungWeaponWandC3", "DungWeaponWandC4", "DungWeaponWandC5", "DungWeaponWandD1", "DungWeaponWandD2", "DungWeaponWandD3", "DungWeaponWandD4", "DungWeaponWandD5", "DungWeaponWandE1", "DungWeaponWandE2", "DungWeaponWandE3", "DungWeaponWandE4", #"DungWeaponWandE5", "DungWeaponWandF1", "DungWeaponWandF2", "DungWeaponWandF3", "DungWeaponWandF4", #"DungWeaponWandF5",
+    "DungWeaponPunchA1", "DungWeaponPunchA2", "DungWeaponPunchA3", "DungWeaponPunchA4", "DungWeaponPunchA5", "DungWeaponPunchB1", "DungWeaponPunchB2", "DungWeaponPunchB3", "DungWeaponPunchB4", "DungWeaponPunchB5", "DungWeaponPunchC1", "DungWeaponPunchC2", "DungWeaponPunchC3", "DungWeaponPunchC4", "DungWeaponPunchC5", "DungWeaponPunchD1", "DungWeaponPunchD2", "DungWeaponPunchD3", "DungWeaponPunchD4", "DungWeaponPunchD5", "DungWeaponPunchE1", "DungWeaponPunchE2", "DungWeaponPunchE3", "DungWeaponPunchE4",  #"DungWeaponPunchE5", "DungWeaponPunchF1", "DungWeaponPunchF2", "DungWeaponPunchF3", "DungWeaponPunchF4", "DungWeaponPunchF5",
+    "DungWeaponSwordA1", "DungWeaponSwordA2", "DungWeaponSwordA3", "DungWeaponSwordA4", "DungWeaponSwordA5", "DungWeaponSwordB1", "DungWeaponSwordB2", "DungWeaponSwordB3", "DungWeaponSwordB4", "DungWeaponSwordB5", "DungWeaponSwordC1", "DungWeaponSwordC2", "DungWeaponSwordC3", "DungWeaponSwordC4", "DungWeaponSwordC5", "DungWeaponSwordD1", "DungWeaponSwordD2", "DungWeaponSwordD3", "DungWeaponSwordD4", "DungWeaponSwordD5", "DungWeaponSwordE1", "DungWeaponSwordE2", "DungWeaponSwordE3", "DungWeaponSwordE4",  #"DungWeaponSwordE5", "DungWeaponSwordF1", "DungWeaponSwordF2", "DungWeaponSwordF3", "DungWeaponSwordF4", "DungWeaponSwordF5",
+    "DungWeaponBowA1", "DungWeaponBowA2", "DungWeaponBowA3", "DungWeaponBowA4", "DungWeaponBowA5", "DungWeaponBowB1", "DungWeaponBowB2", "DungWeaponBowB3", "DungWeaponBowB4", "DungWeaponBowB5", "DungWeaponBowC1", "DungWeaponBowC2", "DungWeaponBowC3", "DungWeaponBowC4", "DungWeaponBowC5", "DungWeaponBowD1", "DungWeaponBowD2", "DungWeaponBowD3", "DungWeaponBowD4", "DungWeaponBowD5", "DungWeaponBowE1", "DungWeaponBowE2", "DungWeaponBowE3", "DungWeaponBowE4",  #"DungWeaponBowE5", "DungWeaponBowF1", "DungWeaponBowF2", "DungWeaponBowF3", "DungWeaponBowF4", "DungWeaponBowF5",
+    "DungWeaponWandA1", "DungWeaponWandA2", "DungWeaponWandA3", "DungWeaponWandA4", "DungWeaponWandA5", "DungWeaponWandB1", "DungWeaponWandB2", "DungWeaponWandB3", "DungWeaponWandB4", "DungWeaponWandB5", "DungWeaponWandC1", "DungWeaponWandC2", "DungWeaponWandC3", "DungWeaponWandC4", "DungWeaponWandC5", "DungWeaponWandD1", "DungWeaponWandD2", "DungWeaponWandD3", "DungWeaponWandD4", "DungWeaponWandD5", "DungWeaponWandE1", "DungWeaponWandE2", "DungWeaponWandE3", "DungWeaponWandE4",  #"DungWeaponWandE5", "DungWeaponWandF1", "DungWeaponWandF2", "DungWeaponWandF3", "DungWeaponWandF4", #"DungWeaponWandF5",
 ]
 maxDungeonArmorsAvailable = 3  #This is the value saved in the JSON, 0-3 = 4 total. Last verified in 2.12
 dungeonArmorsList = [
-    "DungEquipmentHats0", "DungEquipmentHats1", "DungEquipmentHats2", "DungEquipmentHats3", #"DungEquipmentHats4",
-    "DungEquipmentShirt0", "DungEquipmentShirt1", "DungEquipmentShirt2", "DungEquipmentShirt3", #"DungEquipmentShirt4",
-    "DungEquipmentPants0", "DungEquipmentPants1", "DungEquipmentPants2", "DungEquipmentPants3", #"DungEquipmentPants4",
-    "DungEquipmentShoes0", "DungEquipmentShoes1", "DungEquipmentShoes2", "DungEquipmentShoes3", #"DungEquipmentShoes4",
-] #This list was pulled from the items.yaml file
+    "DungEquipmentHats0", "DungEquipmentHats1", "DungEquipmentHats2", "DungEquipmentHats3",  #"DungEquipmentHats4",
+    "DungEquipmentShirt0", "DungEquipmentShirt1", "DungEquipmentShirt2", "DungEquipmentShirt3",  #"DungEquipmentShirt4",
+    "DungEquipmentPants0", "DungEquipmentPants1", "DungEquipmentPants2", "DungEquipmentPants3",  #"DungEquipmentPants4",
+    "DungEquipmentShoes0", "DungEquipmentShoes1", "DungEquipmentShoes2", "DungEquipmentShoes3",  #"DungEquipmentShoes4",
+]  #This list was pulled from the items.yaml file
 maxDungeonJewelryAvailable = 3   #This is the value saved in the JSON, 0-3 = 4 total. Last verified in 2.12
 dungeonJewelryList = [
-    "DungEquipmentPendant0", "DungEquipmentPendant1", "DungEquipmentPendant2", "DungEquipmentPendant3", #"DungEquipmentPendant4",
-    "DungEquipmentRings0", "DungEquipmentRings1", "DungEquipmentRings2", "DungEquipmentRings3", #"DungEquipmentRings4",
-] #This list was pulled from the items.yaml file
+    "DungEquipmentPendant0", "DungEquipmentPendant1", "DungEquipmentPendant2", "DungEquipmentPendant3",  #"DungEquipmentPendant4",
+    "DungEquipmentRings0", "DungEquipmentRings1", "DungEquipmentRings2", "DungEquipmentRings3",  #"DungEquipmentRings4",
+]  #This list was pulled from the items.yaml file
 
 reclaimableQuestItems = {
     "CraftMat2": {
