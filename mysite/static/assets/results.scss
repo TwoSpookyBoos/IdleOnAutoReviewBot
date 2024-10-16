@@ -44,12 +44,12 @@
     --fg-goal-complete: goldenrod;
 
     --bg-pinchy: hsla(52deg, 100%, 50%, 20%);
-    --bg-pinchy-banner: linear-gradient(to right, hsla(0deg, 0%, 0%, 45%), hsla(0deg, 0%, 0%, 20%));
+    --pinchy-bg-banner: linear-gradient(to right, hsla(0deg, 0%, 0%, 45%), hsla(0deg, 0%, 0%, 20%));
     --fg-pinchy-title: var(--fg-title);
-    --bg-pinchy-group-odd: hsl(71.54deg 13.68% 37.25%);
-    --bg-pinchy-group-even: hsl(70deg 15.38% 30.59%);
-    --fg-pinchy-subheading: hsla(41deg, 98.23%, 90.3%, 100%);
-    --fg-pinchy-subheading-accent: hsla(44deg, 100%, 50%, 100%);
+    --pinchy-bg-group-odd: hsl(71.54deg 13.68% 37.25%);
+    --pinchy-bg-group-even: hsl(70deg 15.38% 30.59%);
+    --pinchy-fg-subheading: hsla(41deg, 98.23%, 90.3%, 100%);
+    --pinchy-fg-subheading-accent: hsla(44deg, 100%, 50%, 100%);
 
     --bg-general: linear-gradient(to bottom, hsla(312deg, 95%, 7%, 1), hsla(326deg, 91%, 21%, 1), hsla(8deg, 69%, 33%, 1));
     --general-fg-subheading: hsla(15deg, 25%, 65%, 1);
@@ -116,6 +116,12 @@
     --progress-color: rgba(0, 0, 0, 0.3);
 }
 
+:root:not(.light-mode) {
+    #backgrounds {
+        display: none;
+    }
+}
+
 :root.light-mode {
     --fg: white;
     --bg: none;
@@ -138,74 +144,78 @@
     --fg-goal-complete: goldenrod;
 
     --fg-pinchy-title: hsla(43.94deg 93.41% 59.54%);
-    --fg-pinchy-subheading: hsla(42deg, 62%, 23%);
-    --bg-pinchy-subheading: #0008;
+    --pinchy-fg-subheading: hsla(42deg, 62%, 23%);
+    --pinchy-bg-subheading: #0008;
 
-    --fg-pinchy-subheading-accent: hsla(44deg, 97%, 36%);
+    --pinchy-fg-subheading-accent: hsla(44deg, 97%, 36%);
 
     --bg-pinchy: none;
-    --bg-pinchy-group-odd: hsl(44.21deg 46.34% 91.96%);
-    --bg-pinchy-group-even: hsl(48.75deg 20.25% 69.02%);
+    --pinchy-bg-group-odd: #0008;
+    --pinchy-bg-group-even: #0008;
+
+    --pinchy-progress-color: hsla(60.34deg, 100%, 34.12%, 60%);
 
     --bg-general: none;
     --general-fg-subheading: hsla(0deg, 25%, 15%, 1);
     --general-bg-subheading: #0008;
 
-    --general-fg-advice-group: black;
-    --general-bg-advice-group-odd: hsla(15deg, 42%, 69%, 0.3);
-    --general-bg-advice-group-even: hsla(15deg, 52%, 73%, 0.5);
+    --general-fg-advice-group: var(--fg);
+    --general-bg-advice-group-odd: #0008;
+    --general-bg-advice-group-even: #0008;
+
+    --general-progress-color: hsla(0deg, 100%, 34%, 60%);
 
     --w1-fg-subheading: hsla(145deg, 50%, 29%);
     --w1-bg-subheading: #0008;
 
-    --w1-fg-advice-group: black;
-    --w1-bg-advice-group-odd: hsl(151.76deg 32.69% 79.61%);
-    --w1-bg-advice-group-even: hsl(151.15deg 39.39% 74.12%);
+    --w1-fg-advice-group: var(--fg);
+    --w1-bg-advice-group-odd: #0008;
+    --w1-bg-advice-group-even: #0008;
 
     --w1-progress-color: hsla(117.05deg, 100%, 28.6%, 60%);
 
     --w2-fg-subheading: hsl(50, 50%, 29%);
     --w2-bg-subheading: #0008;
 
-    --w2-fg-advice-group: black;
-    --w2-bg-advice-group-odd: hsl(50deg 29.41% 80%);
-    --w2-bg-advice-group-even: hsl(49.2deg 38.46% 74.51%);
+    --w2-fg-advice-group: var(--fg);
+    --w2-bg-advice-group-odd: #0008;
+    --w2-bg-advice-group-even: #0008;
 
     --w2-progress-color: hsla(56.88deg, 99.06%, 29.82%, 60%);
 
     --w3-fg-subheading: hsl(200, 50%, 29%);
     --w3-bg-subheading: #0008;
 
-    --w3-fg-advice-group: black;
-    --w3-bg-advice-group-odd: hsl(201.18deg 32.69% 79.61%);
-    --w3-bg-advice-group-even: hsl(201.18deg 38.93% 74.31%);
+    --w3-fg-advice-group: var(--fg);
+    --w3-bg-advice-group-odd: #0008;
+    --w3-bg-advice-group-even: #0008;
 
     --w3-progress-color: rgba(7, 89, 255, 60%);
 
     --w4-fg-subheading: hsl(247, 45%, 40%);
     --w4-bg-subheading: #0008;
 
-    --w4-fg-advice-group: black;
-    --w4-bg-advice-group-odd: hsl(268deg 50.4% 77%);
-    --w4-bg-advice-group-even: hsl(265deg 40% 60%);
+    --w4-fg-advice-group: var(--fg);
+    --w4-bg-advice-group-odd: #0008;
+    --w4-bg-advice-group-even: #0008;
 
     --w4-progress-color: hsla(280.94deg, 100%, 40.77%, 60%);
 
     --w5-fg-subheading: hsl(15deg, 45%, 40%);
     --w5-bg-subheading: #0008;
 
-    --w5-fg-advice-group: black;
-    --w5-bg-advice-group-odd: hsl(15deg, 51%, 77%);
-    --w5-bg-advice-group-even: hsl(15deg, 40%, 60%);
+    --w5-fg-advice-group: var(--fg);
+    --w5-bg-advice-group-odd: #0008;
+    --w5-bg-advice-group-even: #0008;
 
     --w5-progress-color: hsla(24.15deg, 100%, 43.99%, 60%);
 
     --w6-fg-subheading: hsl(160, 45%, 40%);
     --w6-bg-subheading: #0008;
 
-    --w6-fg-advice-group: black;
-    --w6-bg-advice-group-odd: hsl(160, 51%, 77%);
-    --w6-bg-advice-group-even: hsl(160, 40%, 60%);
+    --w6-fg-advice-group: var(--fg);
+    --w6-bg-advice-group-odd: #0008;
+    --w6-bg-advice-group-even: #0008;
 
     --w6-progress-color: hsla(84.57deg, 100%, 43.99%, 60%);
 
@@ -214,14 +224,28 @@
     --fg-show-more: white;
     --fg-note: #70590c;
 
-    --fg-last-update: black;
+    --fg-last-update: var(--fg);
     --bg-last-update: var(--bg-nav);
 
     --bg-header-json: #d8c394;
     --bg-header-public: var(--bg-pinchy);
 
     --progress-color: rgba(0, 0, 0, 0.4);
+
+    .advice-group ul.table::before,
+    .advice-group ul.table::after {
+        display: none !important;
+    }
 }
+
+$worlds: (
+    "blunder-hills",
+    "yum-yum-desert",
+    "frostbite-tundra",
+    "hyperion-nebula",
+    "smolderin-plateau",
+    "spirited-valley"
+);
 
 h1, strong, em, a,
 nav, body, form, input, textarea,
@@ -500,7 +524,6 @@ body {
                                     display: flex;
                                     flex-direction: column;
                                     row-gap: 5px;
-                                    background: #0008 !important;
 
                                     width: 100%;
                                     max-height: 400px;
@@ -544,6 +567,27 @@ body {
 
                                         & > *:not(.progress-bar) {
                                             z-index: 1;
+                                        }
+
+                                        &::before, &::after {
+                                            z-index: 2;
+                                            position: sticky;
+                                            display: block;
+                                            content: '';
+                                            height: 20px;
+                                            width: 100%;
+                                            grid-column: 1 / span 5;
+                                            transition: --table-edge-bg-to .5s ease-in-out;
+                                        }
+
+                                        &::before {
+                                            top: 0;
+                                            background: linear-gradient(to top, transparent, var(--table-edge-bg-to));
+                                        }
+
+                                        &::after {
+                                            bottom: 0;
+                                            background: linear-gradient(to bottom, transparent, var(--table-edge-bg-to));
                                         }
 
                                         &::-webkit-scrollbar-thumb {
@@ -649,142 +693,85 @@ body {
                         }
                     }
                 }
-
                 #pinchy {
-                    background: var(--bg-pinchy);
-
                     .banner {
-                        background: var(--bg-pinchy-banner);
+                        background: var(--pinchy-bg-banner);
                         color: var(--fg-pinchy-title);
                         padding: 20px;
                     }
+                }
+                
+                @each $group in ("pinchy", "general") {
+                    ##{$group} {
+                        background: var(--bg-#{$group});
 
-                    .subheading {
-                        background: var(--bg-pinchy-subheading);
+                        .subheading {
+                            background: var(--#{$group}-bg-subheading);
 
-                        & > span {
-                            color: var(--fg-pinchy-subheading);
+                            & > span {
+                                color: var(--#{$group}-fg-subheading);
 
-                            span {
-                                color: var(--fg-pinchy-subheading-accent);
+                                span {
+                                    color: var(--#{$group}-fg-subheading-accent);
+                                }
                             }
+                        }
+                    }
+                }
+                
+                #pinchy {
+                    .advice-group {
+                        &:nth-child(odd) {
+                            background: var(--pinchy-bg-group-odd);
+
+                            --table-edge-bg-to: var(--pinchy-bg-group-odd);
+                        }
+
+                        &:nth-child(even) {
+                            background: var(--pinchy-bg-group-even);
+
+                            --table-edge-bg-to: var(--pinchy-bg-group-even);
                         }
                     }
                 }
 
                 #general {
-                    background: var(--bg-general);
+                    .advice-group {
+                        color: var(--general-fg-advice-group);
 
-                    .subheading {
-                        background: var(--general-bg-subheading);
+                        &:nth-child(odd) {
+                            background-color: var(--general-bg-advice-group-odd);
+                        }
 
-                        & > span {
-                            color: var(--general-fg-subheading);
+                        &:nth-child(even) {
+                            background-color: var(--general-bg-advice-group-even);
                         }
                     }
                 }
 
-                #blunder-hills {
-                    .subheading {
-                        background: var(--w1-bg-subheading);
+                @for $i from 1 through 6 {
+                    $world: nth($worlds, $i);
+                    ##{$world} {
+                        .subheading {
+                            background: var(--w#{$i}-bg-subheading);
 
-                        & > span {
-                            color: var(--w1-fg-subheading);
+                            & > span {
+                                color: var(--w#{$i}-fg-subheading);
+                            }
                         }
-                    }
-                }
 
-                #yum-yum-desert {
-                    .subheading {
-                        background: var(--w2-bg-subheading);
+                        .advice-group {
+                            color: var(--w#{$i}-fg-advice-group);
 
-                        & > span {
-                            color: var(--w2-fg-subheading);
+                            @each $oddity in ("odd", "even") {
+                                &:nth-child(#{$oddity}) {
+                                    background-color: var(--w#{$i}-bg-advice-group-#{$oddity});
 
-                            .tier-progress {
-                                color: var(--fg-subheading-progress);
-
-                                &.finished {
-                                    color: var(--fg-subheading-finished);
+                                    .table::before, .table::after {
+                                        --table-edge-bg-to: var(--w#{$i}-bg-advice-group-#{$oddity});
+                                    }
                                 }
                             }
-
-                        }
-                    }
-                }
-
-                #frostbite-tundra {
-                    .subheading {
-                        background: var(--w3-bg-subheading);
-
-                        & > span {
-                            color: var(--w3-fg-subheading);
-
-                            .tier-progress {
-                                color: var(--fg-subheading-progress);
-
-                                &.finished {
-                                    color: var(--fg-subheading-finished);
-                                }
-                            }
-
-                        }
-                    }
-                }
-
-                #hyperion-nebula {
-                    .subheading {
-                        background: var(--w4-bg-subheading);
-
-                        & > span {
-                            color: var(--w4-fg-subheading);
-
-                            .tier-progress {
-                                color: var(--fg-subheading-progress);
-
-                                &.finished {
-                                    color: var(--fg-subheading-finished);
-                                }
-                            }
-
-                        }
-                    }
-                }
-
-                #smolderin-plateau {
-                    .subheading {
-                        background: var(--w5-bg-subheading);
-
-                        & > span {
-                            color: var(--w5-fg-subheading);
-
-                            .tier-progress {
-                                color: var(--fg-subheading-progress);
-
-                                &.finished {
-                                    color: var(--fg-subheading-finished);
-                                }
-                            }
-
-                        }
-                    }
-                }
-
-                #spirited-valley {
-                    .subheading {
-                        background: var(--w6-bg-subheading);
-
-                        & > span {
-                            color: var(--w6-fg-subheading);
-
-                            .tier-progress {
-                                color: var(--fg-subheading-progress);
-
-                                &.finished {
-                                    color: var(--fg-subheading-finished);
-                                }
-                            }
-
                         }
                     }
                 }
@@ -863,6 +850,8 @@ body {
 }
 
 @each $world, $colour in (
+    "pinchy" --pinchy-progress-color,
+    "general" --general-progress-color,
     "blunder-hills" --w1-progress-color,
     "yum-yum-desert" --w2-progress-color,
     "frostbite-tundra" --w3-progress-color,
@@ -871,10 +860,13 @@ body {
     "spirited-valley" --w6-progress-color,
 ) {
     ##{$world} .progress-box {
-        border: 3px solid var($colour);
+        border: none;
         .progress-bar {
             background: var($colour);
         }
+    }
+    ##{$world} .table {
+        scrollbar-color: var($colour) transparent;
     }
 }
 
