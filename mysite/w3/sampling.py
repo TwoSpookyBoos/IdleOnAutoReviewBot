@@ -1,7 +1,7 @@
 import math
 
 from flask import g as session_data
-from consts import lavaFunc, sampling_progressionTiers, maxTiersPerGroup, break_you_best, skillIndexList, goldrelic_multisDict
+from consts import lavaFunc, sampling_progressionTiers, maxTiersPerGroup, break_you_best, skillIndexList, goldrelic_multisDict, ValueToMulti
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import notateNumber
@@ -121,9 +121,9 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         goal=1
     ))
     psrAdvices[accountSubgroup].append(Advice(
-        label=f"Arcade Bonus: {session_data.account.arcade.get(5, {}).get('Value', ''):.2f}/2%",
+        label=f"Arcade Bonus: {session_data.account.arcade[5]['Value']:.2f}/2%",
         picture_class="arcade-bonus-5",
-        progression=session_data.account.arcade.get(5, {}).get('Level', 0),
+        progression=session_data.account.arcade[5]['Level'],
         goal=100
     ))
     psrAdvices[accountSubgroup].append(Advice(
@@ -212,13 +212,13 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     # Skill Mastery
     sm_base = 4 * session_data.account.rift['SkillMastery']  # This isn't expressed anywhere in game, but is hard-coded in source code.
     sm_eligible_skills = len(skillIndexList) - 1  #-1 to exclude Combat
-    sm_bonus = sum([1 for skillName, skillLevels in session_data.account.all_skills.items() if skillName != "Combat" and sum(skillLevels) > 750])
+    sm_bonus = sum([1 for skillName, skillLevels in session_data.account.all_skills.items() if skillName != "Combat" and sum(skillLevels) >= 750])
     sm_sum = sm_base + sm_bonus
-    sm_multi = 1 + (sm_sum / 100)
+    sm_multi = ValueToMulti(sm_sum)
 
     gr_level = session_data.account.sailing['Artifacts']['Gold Relic']['Level']
     gr_days = session_data.account.raw_optlacc_dict.get(125, 0)
-    gr_multi = 1 + ((gr_days * goldrelic_multisDict.get(gr_level, 0)) / 100)
+    gr_multi = ValueToMulti(gr_days * goldrelic_multisDict.get(gr_level, 0))
 
     anyDKMaxBooked = False
     bestKotRBook = 0
@@ -246,12 +246,12 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     talent_value = lavaFunc('decay', bestKotRPresetLevel, 5, 150)
     orb_kills = session_data.account.raw_optlacc_dict.get(138, 0)
     pow10_kills = math.log(orb_kills,10) if orb_kills > 0 else 0
-    kotr_multi = max(1, 1 + ((talent_value * pow10_kills) / 100))
+    kotr_multi = max(1, ValueToMulti(talent_value * pow10_kills))
 
     charm_multi = 1.25
     charm_multi_active = charm_multi if session_data.account.sneaking['PristineCharms']['Lolly Flower']['Obtained'] else 1
 
-    equinoxMulti = 1 + (session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel'] / 100)
+    equinoxMulti = ValueToMulti(session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel'])
     ballot_active = session_data.account.ballot['CurrentBuff'] == 11
     if ballot_active:
         ballot_status = "is Active"
@@ -259,7 +259,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
         ballot_status = "is Inactive"
     else:
         ballot_status = "status is not available in provided data"
-    ballot_multi = 1 + (session_data.account.ballot['Buffs'][11]['Value'] / 100)
+    ballot_multi = ValueToMulti(session_data.account.ballot['Buffs'][11]['Value'])
     ballot_multi_active = max(1, ballot_multi * ballot_active)
 
     lab_multi_aw = 2 if session_data.account.doot_owned else 1
@@ -299,8 +299,8 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
         label=f"{{{{Rift|#rift}}}}: Skill Mastery unlocked: {sm_base}/4%"
               f"<br>Additional 1% per Skill at 750: {sm_bonus}/{sm_eligible_skills}%",
         picture_class='skill-mastery',
-        progression=sm_multi,
-        goal=1 + (4 + sm_eligible_skills) / 100,
+        progression=f"{sm_multi:.2f}",
+        goal=ValueToMulti(4 + sm_eligible_skills),
         unit="x"
     ))
 
@@ -406,9 +406,14 @@ def setSamplingProgressionTier() -> AdviceSection:
         #        Add failed requirements to failedMaterialsDict
         for materialName, materialNumber in tierRequirements['Materials'].items():
             finalMaterialNumber = materialNumber if session_data.account.doot_owned and tierNumber >= 3 else materialNumber * tierRequirements['NonDootDiscount']
-            if max(allSamples.get(materialName, [0])) < finalMaterialNumber:
+            #logger.debug(f"Comparing {float(max(allSamples.get(materialName, [0])))} to {finalMaterialNumber}")
+            try:
+                if max(allSamples.get(materialName, [0])) < finalMaterialNumber:
+                    failedMaterialsDict[tierNumber][materialName] = finalMaterialNumber
+                    #logger.info(f"Tier{tierNumber} failed on {materialName}: {max(allSamples.get(materialName, [0]))} < {finalMaterialNumber}")
+            except Exception as reason:
+                logger.exception(f"Couldn't compare {type(max(allSamples.get(materialName, [0])))} {max(allSamples.get(materialName, [0]))} to T{tierNumber} {materialName} {finalMaterialNumber}: {reason}")
                 failedMaterialsDict[tierNumber][materialName] = finalMaterialNumber
-                #logger.info(f"Tier{tierNumber} failed on {materialName}: {max(allSamples.get(materialName, [0]))} < {finalMaterialNumber}")
         # If the player passed at least 1 requirement and tier_MaterialSamples already current, increase tier_MaterialSamples
         if len(failedMaterialsDict[tierNumber].keys()) < len(tierRequirements['Materials'].keys()) and tier_MaterialSamples == tierNumber - 1:
             tier_MaterialSamples = tierNumber

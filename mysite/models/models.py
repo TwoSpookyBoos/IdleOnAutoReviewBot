@@ -11,10 +11,11 @@ from math import ceil, floor
 from typing import Any, Union
 from flask import g
 from utils.data_formatting import getCharacterDetails, safe_loads
-from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
+from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, notateNumber
 from consts import (
     # General
-    lavaFunc, ceilUpToBase,
+    lavaFunc, ceilUpToBase, ValueToMulti,
+    items_codes_and_names,
     currentWorld, maxCharacters,
     expectedStackables, greenstack_progressionTiers, gfood_codes,
     card_data,
@@ -24,6 +25,7 @@ from consts import (
     base_crystal_chance,
     filter_recipes, filter_never,
     event_points_shop_dict,
+    npc_tokens,
     # W1
     stampsDict, stampTypes, bribesDict,
     forgeUpgradesDict,
@@ -52,7 +54,7 @@ from consts import (
     labJewelsDict, labBonusesDict, nblbMaxBubbleCount, labChipsDict,
     maxMeals, maxMealLevel, cookingMealDict, maxCookingTables,
     maxNumberOfTerritories, indexFirstTerritoryAssignedPet, territoryNames, slotUnlockWavesList, breedingUpgradesDict, breedingGeneticsList,
-    breedingShinyBonusList, breedingSpeciesDict, getShinyLevelFromDays, getDaysToNextShinyLevel,
+    breedingShinyBonusList, breedingSpeciesDict, getShinyLevelFromDays, getDaysToNextShinyLevel, getBreedabilityMultiFromDays, getBreedabilityHeartFromMulti,
     # W5
     sailingDict, numberOfArtifactTiers, captainBuffs,
     getStyleNameFromIndex, divinity_divinitiesDict, divinity_offeringsDict, getDivinityNameFromIndex, divinity_DivCostAfter3,
@@ -60,9 +62,9 @@ from consts import (
     # W6
     jade_emporium, pristineCharmsList, sneakingGemstonesFirstIndex, sneakingGemstonesList, sneakingGemstonesStatList,
     getMoissaniteValue, getGemstoneBaseValue, getGemstoneBoostedValue, getGemstonePercent,
-    marketUpgradeList, landrankDict,
+    marketUpgradeDetails, landrankDict, cropDepotDict, maxFarmingCrops,
     summoningBattleCountsDict, summoningDict,
-    items_codes_and_names
+
 )
 
 
@@ -761,11 +763,13 @@ class Asset:
             self.codename: str = codename.codename
             self.amount: float = codename.amount
             self.quest: str = codename.quest
+            self.quest_giver: str = codename.quest_giver
         else:
             self.name: str = name if name else getItemDisplayName(codename)
             self.codename: str = codename if codename else getItemCodeName(name)
             self.amount: float = amount
             self.quest: str = ""
+            self.quest_giver: str = ""
 
     def __eq__(self, other):
         match other:
@@ -1223,6 +1227,8 @@ class Account:
         self._parse_general_maps()
         self._parse_general_colo_scores()
         self._parse_general_event_points_shop()
+        self._parse_general_quests()
+        self._parse_general_npc_tokens()
 
     def _parse_general_gemshop(self):
         self.gemshop = {}
@@ -1232,6 +1238,39 @@ class Account:
                 self.gemshop[purchaseName] = int(raw_gem_items_purchased[purchaseIndex])
             except:
                 self.gemshop[purchaseName] = 0
+
+    def _parse_general_quests(self):
+        self.compiled_quests = {}
+        for charIndex, questsDict in enumerate(self.all_quests):
+            for questName, questStatus in questsDict.items():
+                if questName not in self.compiled_quests:
+                    self.compiled_quests[questName] = {
+                        'CompletedCount': 0,
+                        'CompletedChars': [],
+                        'AcceptedCount': 0,
+                        'AcceptedChars': [],
+                        'UnacceptedCount': 0,
+                        'UnacceptedChars': []
+                    }
+                if questStatus == 1:
+                    status = 'Completed'
+                elif questStatus == 0:
+                    status = 'Accepted'
+                else:  #Won't be reliable. If they haven't interacted with the NPC, their quest may not appear here at all.
+                    status = 'Unaccepted'
+                self.compiled_quests[questName][f'{status}Count'] += 1
+                self.compiled_quests[questName][f'{status}Chars'].append(charIndex)
+
+    def _parse_general_npc_tokens(self):
+        self.npc_tokens = {}
+        raw_npc_tokens = self.raw_data.get('CYNPC', [])
+        for tokenIndex, tokenName in enumerate(npc_tokens):
+            try:
+                self.npc_tokens[tokenName] = int(raw_npc_tokens[tokenIndex])
+            except:
+                self.npc_tokens[tokenName] = 0
+        # for tokenName, tokenCount in self.npc_tokens.items():
+        #     self.all_assets.get(tokenName).add(tokenCount)
 
     def _parse_class_unique_kill_stacks(self):
         self.dk_orb_kills = self.raw_optlacc_dict.get(138, 0)
@@ -1335,23 +1374,24 @@ class Account:
             sample_names = []
             sample_values = []
         for sampleIndex, sampleItem in enumerate(sample_names):
-            if sampleIndex in printerAllIndexesBeingPrinted:
-                if sampleIndex//7 not in self.printer['CurrentPrintsByCharacter']:
-                    self.printer['CurrentPrintsByCharacter'][sampleIndex // 7] = {}
-                if getItemDisplayName(sampleItem) not in self.printer['CurrentPrintsByCharacter'][sampleIndex//7]:
-                    self.printer['CurrentPrintsByCharacter'][sampleIndex // 7][getItemDisplayName(sampleItem)] = []
-                try:
-                    self.printer['CurrentPrintsByCharacter'][sampleIndex // 7][getItemDisplayName(sampleItem)].append(sample_values[sampleIndex])
-                except Exception as reason:
-                    print(f"failed on characterIndex '{sampleIndex // 7}', sampleIndex '{sampleIndex}', sampleItem '{sampleItem}', because: {reason}")
-            else:
-                if sampleItem != 'Blank':  #Don't want blanks in the AllSorted list, but they're desired in the Character-Specific group
-                    if getItemDisplayName(sampleItem) not in self.printer['AllSamplesSorted']:
-                        self.printer['AllSamplesSorted'][getItemDisplayName(sampleItem)] = []
+            if sampleItem:
+                if sampleIndex in printerAllIndexesBeingPrinted:
+                    if sampleIndex//7 not in self.printer['CurrentPrintsByCharacter']:
+                        self.printer['CurrentPrintsByCharacter'][sampleIndex // 7] = {}
+                    if getItemDisplayName(sampleItem) not in self.printer['CurrentPrintsByCharacter'][sampleIndex//7]:
+                        self.printer['CurrentPrintsByCharacter'][sampleIndex // 7][getItemDisplayName(sampleItem)] = []
                     try:
-                        self.printer['AllSamplesSorted'][getItemDisplayName(sampleItem)].append(sample_values[sampleIndex])
+                        self.printer['CurrentPrintsByCharacter'][sampleIndex // 7][getItemDisplayName(sampleItem)].append(sample_values[sampleIndex])
                     except Exception as reason:
-                        print(f"failed on sampleIndex '{sampleIndex}', sampleItem '{sampleItem}', because: {reason}")
+                        print(f"failed on characterIndex '{sampleIndex // 7}', sampleIndex '{sampleIndex}', sampleItem '{sampleItem}', because: {reason}")
+                else:
+                    if sampleItem != 'Blank':  #Don't want blanks in the AllSorted list, but they're desired in the Character-Specific group
+                        if getItemDisplayName(sampleItem) not in self.printer['AllSamplesSorted']:
+                            self.printer['AllSamplesSorted'][getItemDisplayName(sampleItem)] = []
+                        try:
+                            self.printer['AllSamplesSorted'][getItemDisplayName(sampleItem)].append(float(sample_values[sampleIndex]))
+                        except Exception as reason:
+                            print(f"models._parse_general_printer Failed on sampleIndex '{sampleIndex}', sampleItem '{sampleItem}', because: {reason}")
         for sampleItem in self.printer['AllSamplesSorted']:
             self.printer['AllSamplesSorted'][sampleItem].sort(reverse=True)
         for characterIndex, printDict in self.printer['CurrentPrintsByCharacter'].items():
@@ -1841,6 +1881,7 @@ class Account:
         self.nothing_hours = self.raw_optlacc_dict.get(184, 0)
 
     def _parse_w2_killroy(self):
+        self._parse_w2_killroy_skull_shop()
         self.killroy = {}
         self.killroy_total_fights = self.raw_optlacc_dict.get(112, 0)
         for upgradeName, upgradeDict in killroy_dict.items():
@@ -1850,6 +1891,18 @@ class Account:
                 'Upgrades': self.raw_optlacc_dict.get(upgradeDict['UpgradesIndex'], 0),
                 'Image': upgradeDict['Image']
             }
+
+    def _parse_w2_killroy_skull_shop(self):
+        self.killroy_skullshop = {
+            'Third Battle Unlocked': self.raw_optlacc_dict.get(227, 0) == 1,
+            'Artifact Purchases': self.raw_optlacc_dict.get(228, 0),
+            'Artifact Multi': 1 + (self.raw_optlacc_dict.get(228, 0) / (300 + self.raw_optlacc_dict.get(228, 0))),
+            'Crop Purchases': self.raw_optlacc_dict.get(229, 0),
+            'Crop Multi': 1 + ((self.raw_optlacc_dict.get(229, 0) / (300 + self.raw_optlacc_dict.get(229, 0))) * 9),
+            'Crop Multi Plus 1': 1 + (((1 + self.raw_optlacc_dict.get(229, 0)) / (1 + 300 + self.raw_optlacc_dict.get(229, 0))) * 9),
+            'Jade Purchases': self.raw_optlacc_dict.get(230, 0),
+            'Jade Multi': 1 + ((self.raw_optlacc_dict.get(230, 0) / (300 + self.raw_optlacc_dict.get(230, 0))) * 2),
+        }
 
     def _parse_w3(self):
         self._parse_w3_refinery()
@@ -2316,6 +2369,16 @@ class Account:
                 "W8": 0,
             },
             'Total Unlocked Count': 0,
+            'Breedability Days': {
+                "W1": [],
+                "W2": [],
+                "W3": [],
+                "W4": [],
+                "W5": [],
+                "W6": [],
+                "W7": [],
+                "W8": [],
+            },
             'Shiny Days': {
                 "W1": [],
                 "W2": [],
@@ -2422,6 +2485,13 @@ class Account:
             except:
                 continue  #Already defaulted to 0 during initialization
 
+        # Breedability Days
+        for index in range(13, 21):
+            try:
+                self.breeding['Breedability Days'][f"W{index - 12}"] = rawBreeding[index]
+            except:
+                continue  # Already default to [] during initialization
+
         #Shiny Days
         for index in range(22, 30):
             try:
@@ -2440,6 +2510,9 @@ class Account:
                         'ShinyBonus': petValuesDict['ShinyBonus'],
                         'ShinyLevel': getShinyLevelFromDays(self.breeding['Shiny Days'][f"W{worldIndex}"][petIndex]),
                         'DaysToShinyLevel': getDaysToNextShinyLevel(self.breeding['Shiny Days'][f"W{worldIndex}"][petIndex]),
+                        'BreedabilityDays': self.breeding['Breedability Days'][f"W{worldIndex}"][petIndex],
+                        'BreedabilityMulti': getBreedabilityMultiFromDays(self.breeding['Breedability Days'][f"W{worldIndex}"][petIndex]),
+                        'BreedabilityHeart': getBreedabilityHeartFromMulti(getBreedabilityMultiFromDays(self.breeding['Breedability Days'][f"W{worldIndex}"][petIndex])),
                     }
                     #Increase the total shiny bonus level
                     self.breeding["Total Shiny Levels"][petValuesDict['ShinyBonus']] += self.breeding['Species'][worldIndex][petValuesDict['Name']]['ShinyLevel']
@@ -2454,6 +2527,9 @@ class Account:
                         'ShinyBonus': petValuesDict['ShinyBonus'],
                         'ShinyLevel': 0,
                         'DaysToShinyLevel': 0,
+                        'BreedabilityDays': 0.0,
+                        'BreedabilityMulti': 1,
+                        'BreedabilityHeart': 'breedability-heart-1',
                     }
                 # Add this pet to the shiny bonus grouped list
                 self.breeding['Grouped Bonus'][petValuesDict['ShinyBonus']].append(
@@ -2467,6 +2543,8 @@ class Account:
         #Sort the Grouped bonus by Days to next Shiny Level
         for groupedBonus in self.breeding["Grouped Bonus"]:
             self.breeding["Grouped Bonus"][groupedBonus].sort(key=lambda x: float(x[2]))
+
+
 
     def _parse_w5(self):
         self.gaming = {
@@ -2776,23 +2854,34 @@ class Account:
 
     def _parse_w6_farming(self):
         self.farming = {
+            'MagicBeans': 0,
             'Crops': {},
+            'CropCountsPerSeed': {
+                'Basic': 0,
+                'Earthy': 0,
+                'Bulbo': 0,
+                'Sushi': 0,
+                'Mushie': 0,
+                'Glassy': 0,
+            },
             "CropsUnlocked": 0,
             "MarketUpgrades": {},
             "CropStacks": {
-                "EvolutionGMO": 0,  # 200
-                "SpeedGMO": 0,  # 1,000
-                "ExpGMO": 0,  # 2,500
-                "ValueGMO": 0,  # 10,000
-                "SuperGMO": 0  # 100,000
+                "Evolution Gmo": 0,  # 200
+                "Speed Gmo": 0,  # 1,000
+                "Exp Gmo": 0,  # 2,500
+                "Value Gmo": 0,  # 10,000
+                "Super Gmo": 0  # 100,000
             },
             'LandRankDatabase': {},
+            'Depot': {},
         }
 
         raw_farmcrop_dict = safe_loads(self.raw_data.get("FarmCrop", {}))
         self._parse_w6_farming_crops(raw_farmcrop_dict)
+        self._parse_w6_farming_crop_depot()
 
-        raw_farmupg_list = safe_loads(self.raw_data.get("FarmUpg", {}))
+        raw_farmupg_list = safe_loads(self.raw_data.get("FarmUpg", []))
         self._parse_w6_farming_markets(raw_farmupg_list)
 
         raw_farmrank_list = safe_loads(self.raw_data.get("FarmRank", [[0]*36]))
@@ -2800,9 +2889,9 @@ class Account:
 
         self.farming['Total Plots'] = (
             1
-            + self.farming['MarketUpgrades']['Land Plots']
+            + self.farming['MarketUpgrades']['Land Plots']['Level']
             + self.gemshop['Plot of Land']
-            + 3 if self.merits[5][2]['Level'] >= 3 else self.merits[5][2]['Level']
+            + min(3, self.merits[5][2]['Level'])
         )
 
     def _parse_w6_farming_crops(self, rawCrops):
@@ -2810,49 +2899,127 @@ class Account:
             for cropIndexStr, cropAmountOwned in rawCrops.items():
                 try:
                     self.farming["CropsUnlocked"] += 1  # Once discovered, crops will always appear in this dict.
+                    if int(cropIndexStr) < 21:
+                        self.farming['CropCountsPerSeed']['Basic'] += 1
+                    elif int(cropIndexStr) < 46:
+                        self.farming['CropCountsPerSeed']['Earthy'] += 1
+                    elif int(cropIndexStr) < 61:
+                        self.farming['CropCountsPerSeed']['Bulbo'] += 1
+                    elif int(cropIndexStr) < 84:
+                        self.farming['CropCountsPerSeed']['Sushi'] += 1
+                    elif int(cropIndexStr) < 107:
+                        self.farming['CropCountsPerSeed']['Mushie'] += 1
+                    else:
+                        self.farming['CropCountsPerSeed']['Glassy'] += 1
                     self.farming['Crops'][int(cropIndexStr)] = float(cropAmountOwned)
                     if float(cropAmountOwned) >= 200:
-                        self.farming["CropStacks"]["EvolutionGMO"] += 1
+                        self.farming["CropStacks"]["Evolution Gmo"] += 1
                     if float(cropAmountOwned) >= 1000:
-                        self.farming["CropStacks"]["SpeedGMO"] += 1
+                        self.farming["CropStacks"]["Speed Gmo"] += 1
                     if float(cropAmountOwned) >= 2500:
-                        self.farming["CropStacks"]["ExpGMO"] += 1
+                        self.farming["CropStacks"]["Exp Gmo"] += 1
                     if float(cropAmountOwned) >= 10000:
-                        self.farming["CropStacks"]["ValueGMO"] += 1
+                        self.farming["CropStacks"]["Value Gmo"] += 1
                     if float(cropAmountOwned) >= 100000:
-                        self.farming["CropStacks"]["SuperGMO"] += 1
+                        self.farming["CropStacks"]["Super Gmo"] += 1
                 except:
                     continue
 
+    def _parse_w6_farming_crop_depot(self):
+        for bonusIndex, bonusDetails in cropDepotDict.items():
+            self.farming['Depot'][bonusIndex] = {
+                'BonusString': bonusDetails['BonusString'],
+                'Image': bonusDetails['Image'],
+                'ScalingType': bonusDetails['funcType'],
+                'ScalingNumber': bonusDetails['x1'],
+                'Unlocked': self.sneaking['JadeEmporium'][bonusDetails['EmporiumUnlockName']]['Obtained'],
+                'BaseValue': lavaFunc(
+                    bonusDetails['funcType'],
+                    self.farming['CropsUnlocked'],
+                    bonusDetails['x1'],
+                    bonusDetails['x2']
+                ),
+                'BaseValuePlus1': lavaFunc(
+                    bonusDetails['funcType'],
+                    min(maxFarmingCrops, self.farming['CropsUnlocked'] + 1),
+                    bonusDetails['x1'],
+                    bonusDetails['x2']
+                ),
+                'MaxValue': lavaFunc(
+                    bonusDetails['funcType'],
+                    maxFarmingCrops,
+                    bonusDetails['x1'],
+                    bonusDetails['x2']
+                ),
+                'Value': 0,
+                'ValuePlus1': 0,
+            }
+
     def _parse_w6_farming_markets(self, rawMarkets):
-        if isinstance(rawMarkets, list):
-            for marketUpgradeIndex, marketUpgradeName in enumerate(marketUpgradeList):
-                try:
-                    self.farming["MarketUpgrades"][marketUpgradeName] = rawMarkets[marketUpgradeIndex + 2]
-                except:
-                    self.farming["MarketUpgrades"][marketUpgradeName] = 0
+        try:
+            self.farming['MagicBeans'] = int(float(rawMarkets[1]))
+        except:
+            pass
+        for marketUpgradeIndex, marketUpgrade in enumerate(marketUpgradeDetails):
+            try:
+                self.farming["MarketUpgrades"][marketUpgrade[0].replace('_', ' ').title()] = {
+                    'Level': rawMarkets[marketUpgradeIndex + 2],
+                    'Description': marketUpgrade[1].replace('_', ' '),
+                    'Value': rawMarkets[marketUpgradeIndex + 2] * float(marketUpgrade[8]),
+                    'StackedValue': rawMarkets[marketUpgradeIndex + 2] * float(marketUpgrade[8]),  #Updated later in calculate function
+                    'UpgradesAtSameCrop': int(marketUpgrade[2]),
+                    'CropTypeValue': float(marketUpgrade[3]),
+                    'BaseCost': int(marketUpgrade[4]),
+                    'CostIncrement': float(marketUpgrade[5]),
+                    'UnlockRequirement': int(marketUpgrade[6]),
+                    'MaxLevel': int(marketUpgrade[7]),
+                    'BonusPerLevel': float(marketUpgrade[8]),
+                    'MarketType': 'Day' if marketUpgradeIndex < 8 else 'Night'
+                }
+            except:
+                self.farming["MarketUpgrades"][marketUpgrade[0].title()] = {
+                    'Level': 0,
+                    'Description': marketUpgrade[1].replace('_', ' '),
+                    'Value': 0,
+                    'StackedValue': 0,  # Updated later in calculate function
+                    'UpgradesAtSameCrop': marketUpgrade[2],
+                    'CropTypeValue': marketUpgrade[3],
+                    'BaseCost': marketUpgrade[4],
+                    'CostIncrement': marketUpgrade[5],
+                    'UnlockRequirement': marketUpgrade[6],
+                    'MaxLevel': marketUpgrade[7],
+                    'BonusPerLevel': marketUpgrade[8],
+                    'MarketType': 'Day' if marketUpgradeIndex < 8 else 'Night'
+                }
 
     def _parse_w6_farming_land_ranks(self, rawRanks):
-        if isinstance(rawRanks, list):
+        try:
+            self.farming['LandRankPlotRanks'] = rawRanks[0]
+            self.farming['LandRankTotalRanks'] = sum(rawRanks[0])
+            self.farming['LandRankMinPlot'] = min([v for v in rawRanks[0] if v > 0], default=0)
+            self.farming['LandRankMaxPlot'] = max(rawRanks[0], default=0)
+        except:
+            self.farming['LandRankPlotRanks'] = [0]*36
+            self.farming['LandRankTotalRanks'] = 0
+            self.farming['LandRankMinPlot'] = 0
+            self.farming['LandRankMaxPlot'] = 0
+        for upgradeIndex, upgradeValuesDict in landrankDict.items():
             try:
-                self.farming['LandRankPlotRanks'] = rawRanks[0]
-                self.farming['LandRankTotalRanks'] = sum(rawRanks[0])
-                self.farming['LandRankMinPlot'] = min(rawRanks[0], default=0)
-                self.farming['LandRankMinPlot'] = max(rawRanks[0], default=0)
+                self.farming['LandRankDatabase'][upgradeValuesDict['Name']] = {
+                    'Level': rawRanks[2][upgradeIndex],
+                    'BaseValue': upgradeValuesDict['Value'],
+                    'Value': (
+                        (1.7 * upgradeValuesDict['Value'] * rawRanks[2][upgradeIndex]) / (rawRanks[2][upgradeIndex] + 80)
+                        if upgradeIndex not in [4, 9, 14, 19]
+                        else upgradeValuesDict['Value'] * rawRanks[2][upgradeIndex]
+                    )
+                }
             except:
-                self.farming['LandRankPlotRanks'] = [0]*36
-                self.farming['LandRankTotalRanks'] = 0
-                self.farming['LandRankMinPlot'] = 0
-                self.farming['LandRankMinPlot'] = 0
-            for upgradeIndex, upgradeValuesDict in landrankDict.items():
-                try:
-                    self.farming['LandRankDatabase'][upgradeValuesDict['Name']] = {
-                        'Level': rawRanks[2][upgradeIndex]
-                    }
-                except:
-                    self.farming['LandRankDatabase'][upgradeValuesDict['Name']] = {
-                        'Level': 0
-                    }
+                self.farming['LandRankDatabase'][upgradeValuesDict['Name']] = {
+                    'Level': 0,
+                    'BaseValue': upgradeValuesDict['Value'],
+                    'Value': 0
+                }
 
     def _parse_w6_summoning(self):
         self.summoning = {}
@@ -3043,14 +3210,14 @@ class Account:
         if self.star_sign_extras['SeraphGoal'] < 240:
             self.star_sign_extras['SeraphEval'] += f" Increases every 20 Summoning levels.{inequality_notice}"
         self.star_sign_extras['SeraphAdvice'] = Advice(
-            label=f"{{{{ Starsign|#star-signs }}}}: Seraph Cosmos: {self.star_sign_extras['SeraphEval']}",
+            label=f"{{{{ Star Sign|#star-signs }}}}: Seraph Cosmos: {self.star_sign_extras['SeraphEval']}",
             picture_class="seraph-cosmos",
             progression=max(self.all_skills['Summoning'], default=0),
             goal=self.star_sign_extras['SeraphGoal'])
 
         if self.labChips.get('Silkrode Nanochip', 0) > 0:
             self.star_sign_extras['DoublerOwned'] = True
-            self.star_sign_extras['SilkrodeNanoEval'] = f"{self.labChips.get('Silkrode Nanochip', 0)} owned. Doubles starsigns when equipped."
+            self.star_sign_extras['SilkrodeNanoEval'] = f"{self.labChips.get('Silkrode Nanochip', 0)} owned. Doubles star signs when equipped."
             self.star_sign_extras['SilkrodeNanoMulti'] = 2
         else:
             self.star_sign_extras['DoublerOwned'] = False
@@ -3137,7 +3304,7 @@ class Account:
             # After the +1, 0/1/2/3
 
     def _calculate_w2_ballot(self):
-        equinoxMulti = 1 + (self.equinox_bonuses['Voter Rights']['CurrentLevel'] / 100)
+        equinoxMulti = ValueToMulti(self.equinox_bonuses['Voter Rights']['CurrentLevel'])
         for buffIndex, buffValuesDict in self.ballot['Buffs'].items():
             self.ballot['Buffs'][buffIndex]['Value'] *= equinoxMulti
             # Check for + or +x% replacements
@@ -3145,7 +3312,7 @@ class Account:
                 self.ballot['Buffs'][buffIndex]['Description'] = buffValuesDict['Description'].replace("{", f"{self.ballot['Buffs'][buffIndex]['Value']:.3f}")
             # Check for multi replacements
             if "}" in buffValuesDict['Description']:
-                self.ballot['Buffs'][buffIndex]['Description'] = buffValuesDict['Description'].replace("}", f"{1 + (self.ballot['Buffs'][buffIndex]['Value'] / 100):.3f}")
+                self.ballot['Buffs'][buffIndex]['Description'] = buffValuesDict['Description'].replace("}", f"{ValueToMulti(self.ballot['Buffs'][buffIndex]['Value']):.3f}")
 
     def _calculate_w2_islands_trash(self):
         for item in islands_trash_shop_costs:
@@ -3232,27 +3399,21 @@ class Account:
                     )
 
     def _calculate_w3_collider_cost_reduction(self):
-        self.atom_collider['CostReductionMax'] = (1 +
-            (
-                7 * 4  #Max merit
-                + 1 * 20  #Max Atom Collider building
-                + 1 * 30  #Max Neon
-                + 10  #Superbit
-                + 14  #Atom Split bubble
-                + 20  #Stamp
-            )
-            / 100
+        self.atom_collider['CostReductionMax'] = ValueToMulti(
+            7 * 4  #Max merit
+            + 1 * 20  #Max Atom Collider building
+            + 1 * 30  #Max Neon
+            + 10  #Superbit
+            + 14  #Atom Split bubble
+            + 20  #Stamp
         )
-        self.atom_collider['CostReductionRaw'] = (1 +
-            (
-                7 * self.merits[4][6]['Level']
-                + (self.construction_buildings['Atom Collider']['Level'] / 10)  # 50 doesn't give 5%, you need 51.
-                + 1 * self.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['Level']
-                + 10 * self.gaming['SuperBits']['Atom Redux']['Unlocked']
-                + self.alchemy_bubbles['Atom Split']['BaseValue']
-                + self.stamps['Atomic Stamp']['Value']
-            )
-            / 100
+        self.atom_collider['CostReductionRaw'] = ValueToMulti(
+            7 * self.merits[4][6]['Level']
+            + (self.construction_buildings['Atom Collider']['Level'] / 10)
+            + 1 * self.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['Level']
+            + 10 * self.gaming['SuperBits']['Atom Redux']['Unlocked']
+            + self.alchemy_bubbles['Atom Split']['BaseValue']
+            + self.stamps['Atomic Stamp']['Value']
         )
         self.atom_collider['CostReductionMulti'] = 1 / self.atom_collider['CostReductionRaw']
         self.atom_collider['CostReductionMulti1Higher'] = 1 / (self.atom_collider['CostReductionRaw'] + 0.01)
@@ -3268,7 +3429,7 @@ class Account:
                                                                                 * self.atom_collider['CostReductionMulti'])
 
     def _calculate_w3_shrine_values(self):
-        cchizoar_multi = 1 + (5 * (1 + next(c.getStars() for c in self.cards if c.name == 'Chaotic Chizoar')) / 100)
+        cchizoar_multi = ValueToMulti(5 * (1 + next(c.getStars() for c in self.cards if c.name == 'Chaotic Chizoar')))
         for shrine in self.shrines:
             self.shrines[shrine]['Value'] *= cchizoar_multi
 
@@ -3318,9 +3479,10 @@ class Account:
         if self.labBonuses["Spelunker Obol"]["Enabled"]:
             jewelMulti = self.labBonuses["Spelunker Obol"]["Value"]
             if self.labJewels["Pure Opal Navette"]["Enabled"]:  # Nested since jewel does nothing without spelunker
+                self.labBonuses["Spelunker Obol"]["Value"] += self.labJewels["Pure Opal Navette"]["BaseValue"] / 100
                 jewelMulti += self.labJewels["Pure Opal Navette"]["BaseValue"] / 100  # The displayed value does nothing since the effect is used before spelunker obol is accounted for
         for jewel in self.labJewels:
-            self.labJewels[jewel]["Value"] *= jewelMulti
+            self.labJewels[jewel]["Value"] *= jewelMulti if jewel != 'Pure Opal Navette' else 1
 
     def _calculate_w4_meal_multi(self):
         mealMulti = 1
@@ -3457,10 +3619,6 @@ class Account:
                     picture_class="nobisect"
                 ),
                 Advice(
-                    label="Cooking BB generally wants Snake",
-                    picture_class="cooking-ladle"
-                ),
-                Advice(
                     label="Extra characters can link to Snake if not Meditating",
                     picture_class="snehebatu"
                 ),
@@ -3482,10 +3640,6 @@ class Account:
                 Advice(
                     label="1 Map Pusher",
                     picture_class="nobisect"
-                ),
-                Advice(
-                    label="Cooking BB generally wants Snake",
-                    picture_class="cooking-ladle"
                 ),
                 Advice(
                     label="Extra characters can link to Snake if not Meditating",
@@ -3510,10 +3664,6 @@ class Account:
                     picture_class="nobisect"
                 ),
                 Advice(
-                    label="Cooking BB generally wants Snake",
-                    picture_class="cooking-ladle"
-                ),
-                Advice(
                     label="Extra characters can link to Snake if not Meditating",
                     picture_class="snehebatu"
                 ),
@@ -3534,10 +3684,6 @@ class Account:
                 Advice(
                     label="1 Map Pusher",
                     picture_class="nobisect"
-                ),
-                Advice(
-                    label="Cooking BB generally wants Snake",
-                    picture_class="cooking-ladle"
                 ),
                 Advice(
                     label="Extra characters can link to Snake if not Meditating",
@@ -3562,10 +3708,6 @@ class Account:
                     picture_class="nobisect"
                 ),
                 Advice(
-                    label="Cooking BB generally wants Snake",
-                    picture_class="cooking-ladle"
-                ),
-                Advice(
                     label="Extra characters can link to Snake if not Meditating",
                     picture_class="snehebatu"
                 ),
@@ -3586,10 +3728,6 @@ class Account:
                 Advice(
                     label="1 Map Pusher",
                     picture_class="nobisect"
-                ),
-                Advice(
-                    label="Cooking BB generally wants Snake",
-                    picture_class="cooking-ladle"
                 ),
                 Advice(
                     label="Extra characters can link to Snake if not Meditating",
@@ -3614,6 +3752,7 @@ class Account:
 
     def _calculate_w6(self):
         self._calculate_w6_summoning_winner_bonuses()
+        self._calculate_w6_farming()
 
     def _calculate_w6_summoning_winner_bonuses(self):
         mga = 1.3
@@ -3631,23 +3770,17 @@ class Account:
         else:
             winzLanternPostString = ""
 
-        mgb = (1 + (
-            (
-                (25 * numberOfArtifactTiers)
-                + self.merits[5][4]['MaxLevel']
-                + 1  #int(self.achievements['Spectre Stars'])
-                + 1  #int(self.achievements['Regalis My Beloved'])
-            )
-            / 100)
+        mgb = ValueToMulti(
+            (25 * numberOfArtifactTiers)
+            + self.merits[5][4]['MaxLevel']
+            + 1  #int(self.achievements['Spectre Stars'])
+            + 1  #int(self.achievements['Regalis My Beloved'])
         )
-        player_mgb = (1 + (
-            (
-                (25 * self.sailing['Artifacts']['The Winz Lantern']['Level'])
-                + self.merits[5][4]['Level']
-                + int(self.achievements['Spectre Stars']['Complete'])
-                + int(self.achievements['Regalis My Beloved']['Complete'])
-            )
-            / 100)
+        player_mgb = ValueToMulti(
+            (25 * self.sailing['Artifacts']['The Winz Lantern']['Level'])
+            + self.merits[5][4]['Level']
+            + int(self.achievements['Spectre Stars']['Complete'])
+            + int(self.achievements['Regalis My Beloved']['Complete'])
         )
 
         self.summoning['WinnerBonusesAdvice'].append(Advice(
@@ -3688,6 +3821,252 @@ class Account:
             #unit="x"
         ))
         #print(f"Summoning Winner Bonus Multis: {mga} * {mgb} = {self.summoning['WinnerBonusesMulti']}")
+
+    def _calculate_w6_farming(self):
+        self._calculate_w6_farming_crop_depot()
+        self._calculate_w6_farming_day_market()
+        self._calculate_w6_farming_night_market()
+        self._calculate_w6_farming_crop_value()
+        self._calculate_w6_farming_crop_evo()
+        self._calculate_w6_farming_crop_speed()
+        self._calculate_w6_farming_bean_bonus()
+        self._calculate_w6_farming_og()
+
+    def _calculate_w6_farming_crop_depot(self):
+        lab_multi = ValueToMulti(
+            (self.labBonuses['Depot Studies PhD']['Value'] + self.labJewels['Pure Opal Rhombol']['Value']) * self.labBonuses['Depot Studies PhD']['Enabled']
+        )
+        #print(f"models._calculate_w6_farming_crop_depot lab_multi = {lab_multi}")
+        for bonusName, bonusDetails in self.farming['Depot'].items():
+            self.farming['Depot'][bonusName]['Value'] = self.farming['Depot'][bonusName]['BaseValue'] * lab_multi
+            self.farming['Depot'][bonusName]['ValuePlus1'] = self.farming['Depot'][bonusName]['BaseValuePlus1'] * lab_multi
+
+    def _calculate_w6_farming_day_market(self):
+        super_multi = ValueToMulti(self.farming['MarketUpgrades']['Super Gmo']['Value'] * self.farming['CropStacks']['Super Gmo'])
+        #print(f"models._calculate_w6_farming_day_market super_multi = {super_multi}")
+        for name, details in self.farming['MarketUpgrades'].items():
+            try:
+                if "}" in details['Description']:  #Multiplicative
+                    val = ValueToMulti(details['Value'])
+                    self.farming['MarketUpgrades'][name]['Description'] = details['Description'].replace("}", f"{val:.3g}")
+                else:
+                    self.farming['MarketUpgrades'][name]['Description'] = details['Description'].replace("{", f"{details['Value']:g}")
+                if name in self.farming['CropStacks']:
+                    if name == 'Super Gmo':
+                        self.farming['MarketUpgrades'][name]['StackedValue'] = super_multi
+                        self.farming['MarketUpgrades'][name]['Description'] += (
+                            f".<br>{self.farming['CropStacks'][name]} stacks = "
+                            f"{super_multi:,.4g}x"
+                        )
+                    elif name == 'Evolution Gmo':
+                        self.farming['MarketUpgrades'][name]['StackedValue'] = super_multi * pow(ValueToMulti(details['Value']), self.farming['CropStacks'][name])
+                        self.farming['MarketUpgrades'][name]['Description'] += (
+                            f".<br>{self.farming['CropStacks'][name]} stacks = "
+                            f"{self.farming['MarketUpgrades'][name]['StackedValue']:,.4g}x"
+                        )
+                    else:
+                        self.farming['MarketUpgrades'][name]['StackedValue'] = super_multi * (ValueToMulti(details['Value'] * self.farming['CropStacks'][name]))
+                        self.farming['MarketUpgrades'][name]['Description'] += (
+                            f".<br>{self.farming['CropStacks'][name]} stacks = "
+                            f"{self.farming['MarketUpgrades'][name]['StackedValue']:,.5g}x"
+                        )
+
+            except Exception as reason:
+                print(f"models._calculate_w6_farming_day_market: Exception substituting value for {name}: {reason}")
+                continue
+
+    def _calculate_w6_farming_night_market(self):
+        pass
+
+    def _calculate_w6_farming_crop_value(self):
+        #if ("CropsBonusValue" == e)
+        #return Math.min(100, Math.round(Math.max(1, Math.floor(1 + (c.randomFloat() + q._customBlock_FarmingStuffs("BasketUpgQTY", 0, 5) / 100))) * (1 + q._customBlock_FarmingStuffs("LandRankUpgBonusTOTAL", 1, 0) / 100) * (1 + (q._customBlock_FarmingStuffs("LankRankUpgBonus", 1, 0) * c.asNumber(a.engine.getGameAttribute("FarmRank")[0][0 | t]) + q._customBlock_Summoning("VotingBonusz", 29, 0)) / 100)));
+        self.farming['Value'] = {}
+        self.farming['Value']['Doubler Multi'] = floor(ValueToMulti(self.farming['MarketUpgrades']['Product Doubler']['Value']))
+        self.farming['Value']['Mboost Sboost Multi'] = ValueToMulti(
+            self.farming['LandRankDatabase']['Production Megaboost']['Value'] + self.farming['LandRankDatabase']['Production Superboost']['Value']
+        )
+        #Calculate with the Min Plot Rank
+        self.farming['Value']['Pboost Ballot Multi Min'] = ValueToMulti(
+            (self.farming['LandRankDatabase']['Production Boost']['Value']) * self.farming.get('LandRankMinPlot', 0)  #Value of PBoost * Lowest Plot Rank
+            + (self.ballot['Buffs'][29]['Value'] * int(self.ballot['CurrentBuff'] == 29))  #Plus value of Ballot Buff * Active status
+        )
+        self.farming['Value']['BeforeCapMin'] = round(
+            max(1, self.farming['Value']['Doubler Multi'])  #end of max
+            * self.farming['Value']['Mboost Sboost Multi']
+            * self.farming['Value']['Pboost Ballot Multi Min']
+            )  #end of round
+
+        #Now calculate with the Max Plot Rank
+        self.farming['Value']['Pboost Ballot Multi Max'] = ValueToMulti(
+            (self.farming['LandRankDatabase']['Production Boost']['Value']) * self.farming.get('LandRankMaxPlot', 0)  # Value of PBoost * Highest Plot Rank
+            + (self.ballot['Buffs'][29]['Value'] * int(self.ballot['CurrentBuff'] == 29))  # Plus value of Ballot Buff * Active status
+        )
+        self.farming['Value']['BeforeCapMax'] = round(
+            max(1, self.farming['Value']['Doubler Multi'])  # end of max
+            * self.farming['Value']['Mboost Sboost Multi']
+            * self.farming['Value']['Pboost Ballot Multi Max']
+        )  # end of round
+        self.farming['Value']['FinalMin'] = min(100, self.farming['Value']['BeforeCapMin'])
+        self.farming['Value']['FinalMax'] = min(100, self.farming['Value']['BeforeCapMax'])
+        #print(f"models._calculate_w6_farming_crop_value CropValue BEFORE cap = {self.farming['Value']['BeforeCap']}")
+        #print(f"models._calculate_w6_farming_crop_value CropValue AFTER cap = {self.farming['Value']['Final']}")
+
+    def _calculate_w6_farming_crop_evo(self):
+        # Alchemy
+        self.farming['Mama Trolls Unlocked'] = False
+        self.farming['Evo'] = {}
+        self.farming['Evo']['Maps Opened'] = 0
+        for char in self.all_characters:
+            for mapIndex in range(251, 264):  # Clearing the fake portal at Samurai Guardians doesn't count
+                try:
+                    if int(float(char.kill_dict.get(mapIndex, [1])[0])) <= 0:
+                        self.farming['Evo']['Maps Opened'] += 1
+                        if mapIndex == 257 and not self.farming['Mama Trolls Unlocked']:
+                            self.farming['Mama Trolls Unlocked'] = True
+                except:
+                    continue
+        self.farming['Evo']['Cropius Final Value'] = self.farming['Evo']['Maps Opened'] * self.alchemy_bubbles['Cropius Mapper']['BaseValue']
+        self.farming['Evo']['Vial Value'] = self.alchemy_vials['Flavorgil (Caulifish)']['Value'] * self.vialMasteryMulti
+        self.farming['Evo']['Vial Value'] *= 2 if self.labBonuses['My 1st Chemistry Set']['Enabled'] else 1
+        self.farming['Evo']['Alch Multi'] = (
+            ValueToMulti(self.farming['Evo']['Cropius Final Value'])
+            # * ValueToMulti(session_data.account.alchemy_bubbles['Crop Chapter']['BaseValue'])
+            * ValueToMulti(self.farming['Evo']['Vial Value'])
+        )
+        # Stamp
+        self.farming['Evo']['Stamp Value'] = (
+                max(1, 2 * self.labBonuses['Certified Stamp Book']['Enabled'])
+                * max(1, 1.25 * self.sneaking['PristineCharms']['Liqorice Rolle']['Obtained'])
+                * self.stamps['Crop Evo Stamp']['Value']
+        )
+        self.farming['Evo']['Stamp Multi'] = ValueToMulti(self.farming['Evo']['Stamp Value'])
+        # Meals
+        self.farming['Evo']['Nyan Stacks'] = ceil((max(self.all_skills['Summoning'], default=0) + 1) / 50)
+        self.farming['Evo']['Meals Multi'] = (
+                ValueToMulti(self.meals['Bill Jack Pepper']['Value'])
+                * ValueToMulti(self.meals['Nyanborgir']['Value'] * self.farming['Evo']['Nyan Stacks'])
+        )
+        # Markets
+        self.farming['Evo']['Farm Multi'] = ValueToMulti(self.farming['MarketUpgrades']['Biology Boost']['Value']) * self.farming['MarketUpgrades']['Evolution Gmo']['StackedValue']
+        # Land Ranks
+        self.farming['Evo']['LR Multi'] = (
+                ValueToMulti(self.farming['LandRankDatabase']['Evolution Boost']['Value'] * self.farming['LandRankMinPlot'])
+                * ValueToMulti(self.farming['LandRankDatabase']['Evolution Megaboost']['Value'])
+                * ValueToMulti(self.farming['LandRankDatabase']['Evolution Superboost']['Value'])
+                * ValueToMulti(self.farming['LandRankDatabase']['Evolution Ultraboost']['Value'])
+        )
+        # Summoning
+        self.farming['Evo']['Summ Battles'] = {
+            'Yellow': [9],
+            'Blue': [14],
+            'Red': [5]
+        }
+        battle_reward_total = 0
+        for color, battlesList in self.farming['Evo']['Summ Battles'].items():
+            for battle in battlesList:
+                if self.summoning['Battles'][color] >= battle:
+                    battle_reward_total += self.summoning["BattleDetails"][color][battle]['RewardBaseValue']
+        self.farming['Evo']['Summon Multi'] = ValueToMulti(self.summoning['WinnerBonusesMulti'] * battle_reward_total)
+        # Starsign
+        self.farming['Evo']['Starsign Final Value'] = (
+                3 * self.star_signs['Cropiovo Minor']['Unlocked']
+                * max(self.all_skills['Farming'], default=0)
+                * self.star_sign_extras['SilkrodeNanoMulti']
+                * self.star_sign_extras['SeraphMulti']
+        )
+        self.farming['Evo']['SS Multi'] = ValueToMulti(self.farming['Evo']['Starsign Final Value'])
+        # Misc
+        self.farming['Evo']['Total Farming Levels'] = sum(self.all_skills['Farming'])
+        self.farming['Evo']['Skill Mastery Bonus Bool'] = self.rift['SkillMastery'] and self.farming['Evo']['Total Farming Levels'] >= 300
+        self.farming['Evo']['Ballot Active'] = self.ballot['CurrentBuff'] == 29
+        if self.farming['Evo']['Ballot Active']:
+            self.farming['Evo']['Ballot Status'] = "is Active"
+        elif not self.farming['Evo']['Ballot Active'] and self.ballot['CurrentBuff'] != "Unknown":
+            self.farming['Evo']['Ballot Status'] = "is Inactive"
+        else:
+            self.farming['Evo']['Ballot Status'] = "status is not available in provided data"
+        self.farming['Evo']['Ballot Multi Max'] = ValueToMulti(self.ballot['Buffs'][29]['Value'])
+        self.farming['Evo']['Ballot Multi Current'] = max(1, self.farming['Evo']['Ballot Multi Max'] * self.farming['Evo']['Ballot Active'])
+        self.farming['Evo']['Misc Multi'] = (
+                ValueToMulti(5 * self.achievements["Lil' Overgrowth"]['Complete'])
+                * self.killroy_skullshop['Crop Multi']
+                * ValueToMulti(15 * self.farming['Evo']['Skill Mastery Bonus Bool'] * self.rift['SkillMastery'])
+                * self.farming['Evo']['Ballot Multi Current']
+        )
+        # subtotal doesn't include Crop Chapter
+        self.farming['Evo']['Subtotal Multi'] = (
+            self.farming['Evo']['Alch Multi']
+            * self.farming['Evo']['Stamp Multi']
+            * self.farming['Evo']['Meals Multi']
+            * self.farming['Evo']['Farm Multi']
+            * self.farming['Evo']['LR Multi']
+            * self.farming['Evo']['Summon Multi']
+            * self.farming['Evo']['SS Multi']
+            * self.farming['Evo']['Misc Multi']
+        )
+
+    def _calculate_w6_farming_crop_speed(self):
+        self.farming['Speed'] = {}
+        # Summoning
+        self.farming['Speed']['Summ Battles'] = {
+            'White': [3, 9],
+            'Green': [7, 13],
+            'Yellow': [7],
+            'Purple': [4],
+            'Red': [10],
+            'Cyan': [12]
+        }
+        battle_reward_total = 0
+        for color, battlesList in self.farming['Speed']['Summ Battles'].items():
+            for battle in battlesList:
+                if self.summoning['Battles'][color] >= battle:
+                    battle_reward_total += self.summoning["BattleDetails"][color][battle]['RewardBaseValue']
+        self.farming['Speed']['Summon Multi'] = ValueToMulti(self.summoning['WinnerBonusesMulti'] * battle_reward_total)
+        # Vial and Day Market
+        self.farming['Speed']['Vial Value'] = self.alchemy_vials['Ricecakorade (Rice Cake)']['Value'] * self.vialMasteryMulti
+        self.farming['Speed']['Vial Value'] *= 2 if self.labBonuses['My 1st Chemistry Set']['Enabled'] else 1
+        self.farming['Speed']['VM Multi'] = ValueToMulti(self.farming['Speed']['Vial Value'] + self.farming['MarketUpgrades']['Nutritious Soil']['Value'])
+        # Night Market
+        self.farming['Speed']['NM Multi'] = self.farming['MarketUpgrades']['Speed Gmo']['StackedValue']
+        # Total
+        self.farming['Speed']['Total Multi'] = self.farming['Speed']['Summon Multi'] * self.farming['Speed']['VM Multi'] * self.farming['Speed']['NM Multi']
+
+    def _calculate_w6_farming_bean_bonus(self):
+        self.farming['Bean'] = {}
+        self.farming['Bean']['mga'] = ValueToMulti(self.farming['MarketUpgrades']['More Beenz']['Value'])
+        self.farming['Bean']['mgb'] = ValueToMulti(
+            (25 * self.sneaking['JadeEmporium']['Deal Sweetening']['Obtained'])
+            + (5 * self.achievements['Crop Flooding']['Complete'])
+        )
+        self.farming['Bean']['Total Multi'] = self.farming['Bean']['mga'] * self.farming['Bean']['mgb']
+
+    def _calculate_w6_farming_og(self):
+        # Fun calculations
+        self.farming['OG'] = {}
+        self.farming['OG']['Ach Multi'] = ValueToMulti(15 * self.achievements['Big Time Land Owner']['Complete'])
+        self.farming['OG']['Starsign Final Value'] = (
+                15 * self.star_signs['O.G. Signalais']['Unlocked']
+                * self.star_sign_extras['SilkrodeNanoMulti']
+                * self.star_sign_extras['SeraphMulti']
+        )
+        self.farming['OG']['SS Multi'] = ValueToMulti(self.farming['OG']['Starsign Final Value'])
+        self.farming['OG']['NM Multi'] = ValueToMulti(self.farming['MarketUpgrades']['Og Fertilizer']['Value'])
+        self.farming['OG']['Merit Multi'] = ValueToMulti(2 * self.merits[5][2]['Level'])
+        self.farming['OG']['LR Multi'] = (ValueToMulti(
+            self.farming['LandRankDatabase']['Overgrowth Boost']['Value']
+            + self.farming['LandRankDatabase']['Overgrowth Megaboost']['Value']
+            + self.farming['LandRankDatabase']['Overgrowth Superboost']['Value']
+        ))
+        self.farming['OG']['Pristine Multi'] = ValueToMulti(50 * self.sneaking['PristineCharms']['Taffy Disc']['Obtained'])
+        self.farming['OG']['Total Multi'] = (
+                self.farming['OG']['Ach Multi']
+                * self.farming['OG']['SS Multi']
+                * self.farming['OG']['NM Multi']
+                * self.farming['OG']['Merit Multi']
+                * self.farming['OG']['LR Multi']
+                * self.farming['OG']['Pristine Multi']
+        )
 
     def _calculate_wave_2(self):
         self._calculate_w3_library_max_book_levels()
@@ -3829,24 +4208,24 @@ class Account:
 
         account_wide = (
             base_crystal_chance
-            * (1 + self.stamps['Crystallin']['Value'] / 100)
-            * (1 + total_card_chance / 100)
+            * ValueToMulti(self.stamps['Crystallin']['Value'])
+            * ValueToMulti(total_card_chance)
         )
 
         for char in self.all_characters:
-            cmon_out_crystals_multi = max(1, 1 + lavaFunc(
+            cmon_out_crystals_multi = max(1, ValueToMulti(lavaFunc(
                 'decay',
                 char.max_talents_over_books if char.max_talents.get("26", 0) > 0 else 0,  #This is an assumption that Cmon Out Crystals is max booked
                 300,
                 100
-            ) / 100)
-            crystals_4_dayys_multi = max(1, 1 + lavaFunc(
+            )))
+            crystals_4_dayys_multi = max(1, ValueToMulti(lavaFunc(
                 'decay',
                 char.max_talents.get("619", 0),
                 174,
                 50
-            ) / 100)
-            shrine_and_po = 1 + ((char.po_boxes_invested['Non Predatory Loot Box']['Bonus3Value'] + self.shrines['Crescent Shrine']['Value']) / 100)
+            )))
+            shrine_and_po = ValueToMulti(char.po_boxes_invested['Non Predatory Loot Box']['Bonus3Value'] + self.shrines['Crescent Shrine']['Value'])
             try:
                 character_influenced = (
                     shrine_and_po
@@ -3857,24 +4236,10 @@ class Account:
                 print(f"Character Specific crystal spawn chance calc exception for {char.character_name}: {reason}")
                 character_influenced = 1
             char.setCrystalSpawnChance(account_wide * character_influenced)
-            # print(f"Base Chance: {base_crystal_chance}")
-            # print(f"Crystallin Stamp Multi: { 1 + self.stamps['Crystallin']['Value'] / 100}")
-            # print(f"Total card Multi including doublers: {1 + total_card_chance / 100}")
-            # print(f"~Account Wide Total: {account_wide}")
-            # print(f"Cmon Out Crystals Multi: {cmon_out_crystals_multi}")
-            # print(f"Crystals 4 Dayys Multi: {crystals_4_dayys_multi}")
-            # print(f"Crystal Shrine including Chaotic Chizoar: {self.shrines['Crescent Shrine']['Value']}")
-            # print(f"PO Box: {char.po_boxes_invested['Non Predatory Loot Box']['Bonus3Value']}")
-            # print(f"Shrine + PO Multi: {shrine_and_po}")
-            # print(f"~Character Specific Total: {character_influenced}")
-            # print(f"Final number: {char.crystal_spawn_chance}")
-            # print(f"Final percent: {char.crystal_spawn_chance:%}")
         self.highest_crystal_spawn_chance = max([char.crystal_spawn_chance for char in self.all_characters if "Journeyman" not in char.all_classes],
                                                 default=base_crystal_chance)
         self.highest_jman_crystal_spawn_chance = max([char.crystal_spawn_chance for char in self.all_characters if "Journeyman" in char.all_classes],
                                                      default=base_crystal_chance)
-        # print(f"Best Non-Jman: {self.highest_crystal_spawn_chance:%}")
-        # print(f"Best Jman: {self.highest_jman_crystal_spawn_chance:%}")
 
     def _make_cards(self):
         card_counts = safe_loads(self.raw_data.get(self._key_cards, {}))

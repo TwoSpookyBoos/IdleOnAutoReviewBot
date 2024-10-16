@@ -3,7 +3,7 @@ from utils.text_formatting import pl
 from utils.data_formatting import safe_loads, mark_advice_completed
 from utils.logging import get_logger
 from consts import maxTiersPerGroup, stamps_progressionTiers, stamp_maxes, stampsDict, unavailableStampsList, stampTypes, maxOverallBookLevels, max_VialLevel, \
-    break_you_best
+    break_you_best, maxFarmingCrops
 from flask import g as session_data
 
 
@@ -11,7 +11,6 @@ logger = get_logger(__name__)
 
 # Stamp p2
 def setMissingStamps():
-
     return [stampName for stampName, stampValues in session_data.account.stamps.items() if stampValues.get("Delivered", False) == False and stampName not in unavailableStampsList]
 
 # Stamp p3
@@ -30,11 +29,12 @@ def getStampExclusions() -> dict[str,bool]:
         #Others
         'Triad Essence Stamp': False,  #Sussy Gene quests
         'Summoner Stone Stamp': False,
-        'Void Axe Stamp': False
+        'Void Axe Stamp': False,
+        'Crop Evo Stamp': False,
     }
-    if session_data.account.stamps.get('Crystallin', {}).get("Level", 0) >= 270:  #Highest Crystallin in Tiers
+    if session_data.account.stamps['Crystallin']['Level'] >= 270:  #Highest Crystallin in Tiers
         exclusionsDict['Matty Bag Stamp'] = True
-    if session_data.account.stamps.get('Multitool Stamp', {}).get("Level", 0) >= 220:  #Highest Multitool in Tiers
+    if session_data.account.stamps['Multitool Stamp']['Level'] >= 220:  #Highest Multitool in Tiers
         exclusionsDict['Bugsack Stamp'] = True
         exclusionsDict['Bag o Heads Stamp'] = True
     if exclusionsDict['Matty Bag Stamp'] and exclusionsDict['Bugsack Stamp'] and exclusionsDict['Bag o Heads Stamp']:
@@ -46,15 +46,18 @@ def getStampExclusions() -> dict[str,bool]:
         exclusionsDict['Summoner Stone Stamp'] = True if not session_data.account.stamps['Summoner Stone Stamp']['Delivered'] else False
         exclusionsDict['Void Axe Stamp'] = True if not session_data.account.stamps['Void Axe Stamp']['Delivered'] else False
 
+    if session_data.account.farming['CropsUnlocked'] >= maxFarmingCrops:
+        exclusionsDict['Crop Evo Stamp'] = True
+
     return exclusionsDict
 
 def getCapacityAdviceGroup() -> AdviceGroup:
     capacity_Advices = {"Stamps": [], "Account Wide": [], "Character Specific": []}
 
     starsignBase = 0
-    starsignBase += 30 * bool(session_data.account.star_signs.get('Mr No Sleep', {}).get('Unlocked', False))
-    starsignBase += 10 * bool(session_data.account.star_signs.get('Pack Mule', {}).get('Unlocked', False))
-    starsignBase += 5 * bool(session_data.account.star_signs.get('The OG Skiller', {}).get('Unlocked', False))
+    starsignBase += 30 * bool(session_data.account.star_signs['Mr No Sleep']['Unlocked'])
+    starsignBase += 10 * bool(session_data.account.star_signs['Pack Mule']['Unlocked'])
+    starsignBase += 5 * bool(session_data.account.star_signs['The OG Skiller']['Unlocked'])
     totalStarsignValue = starsignBase * session_data.account.star_sign_extras['SilkrodeNanoMulti'] * session_data.account.star_sign_extras['SeraphMulti']
 
     #Stamps
@@ -65,10 +68,10 @@ def getCapacityAdviceGroup() -> AdviceGroup:
         goal=1
     ))
     capacity_Advices["Stamps"].append(Advice(
-        label=f"Lab Bonus: Certified Stamp Book: "
-              f"{'2' if session_data.account.labBonuses.get('Certified Stamp Book', {}).get('Enabled', False) else '0'}/2x",
+        label=f"Lab: Certified Stamp Book: "
+              f"{max(1, 2 * session_data.account.labBonuses['Certified Stamp Book']['Enabled'])}/2x",
         picture_class="certified-stamp-book",
-        progression=1 if session_data.account.labBonuses.get('Certified Stamp Book', {}).get('Enabled', False) else 0,
+        progression=int(session_data.account.labBonuses['Certified Stamp Book']['Enabled']),
         goal=1
     ))
     # I'm kinda doubting Lava ever fixes this bug, so hiding it
@@ -96,9 +99,9 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     #Account-Wide
     capacity_Advices["Account Wide"].append(Advice(
         label=f"{{{{ Bribe|#bribes }}}}: Bottomless Bags: "
-              f"{'5' if session_data.account.bribes['W4'].get('Bottomless Bags') >= 1 else '0'}/5%",
+              f"{'5' if session_data.account.bribes['W4']['Bottomless Bags'] >= 1 else '0'}/5%",
         picture_class="bottomless-bags",
-        progression=1 if session_data.account.bribes['W4'].get('Bottomless Bags') >= 1 else 0,
+        progression=1 if session_data.account.bribes['W4']['Bottomless Bags'] >= 1 else 0,
         goal=1
     ))
     capacity_Advices["Account Wide"].append(Advice(
@@ -110,7 +113,7 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     capacity_Advices["Account Wide"].append(Advice(
         label="Pantheon Shrine",
         picture_class="pantheon-shrine",
-        progression=session_data.account.shrines.get("Pantheon Shrine", {}).get("Level", 0),
+        progression=session_data.account.shrines['Pantheon Shrine']['Level'],
         goal="∞"
     ))
     capacity_Advices["Account Wide"].append(Advice(
@@ -131,21 +134,21 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     #Character Specific
     capacity_Advices["Character Specific"].append(session_data.account.star_sign_extras['SilkrodeNanoAdvice'])
     capacity_Advices["Character Specific"].append(Advice(
-        label=f"Starsign: Mr No Sleep: {30 * bool(session_data.account.star_signs.get('Mr No Sleep', {}).get('Unlocked', False))}/30% base",
+        label=f"Starsign: Mr No Sleep: {30 * session_data.account.star_signs['Mr No Sleep']['Unlocked']}/30% base",
         picture_class="mr-no-sleep",
-        progression=1 if session_data.account.star_signs.get('Mr No Sleep', {}).get('Unlocked', False) else 0,
+        progression=int(session_data.account.star_signs['Mr No Sleep']['Unlocked']),
         goal=1
     ))
     capacity_Advices["Character Specific"].append(Advice(
-        label=f"Starsign: Pack Mule: {10 * bool(session_data.account.star_signs.get('Pack Mule', {}).get('Unlocked', False))}/10% base",
+        label=f"Starsign: Pack Mule: {10 * session_data.account.star_signs['Pack Mule']['Unlocked']}/10% base",
         picture_class="pack-mule",
-        progression=1 if session_data.account.star_signs.get('Pack Mule', {}).get('Unlocked', False) else 0,
+        progression=int(session_data.account.star_signs['Pack Mule']['Unlocked']),
         goal=1
     ))
     capacity_Advices["Character Specific"].append(Advice(
-        label=f"Starsign: The OG Skiller: {5 * bool(session_data.account.star_signs.get('The OG Skiller', {}).get('Unlocked', False))}/5% base",
+        label=f"Starsign: The OG Skiller: {5 * session_data.account.star_signs['The OG Skiller']['Unlocked']}/5% base",
         picture_class="the-og-skiller",
-        progression=1 if session_data.account.star_signs.get('The OG Skiller', {}).get('Unlocked', False) else 0,
+        progression=int(session_data.account.star_signs['The OG Skiller']['Unlocked']),
         goal=1
     ))
     capacity_Advices["Character Specific"].append(Advice(
@@ -217,36 +220,36 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
         goal=max_VialLevel
     ))
     costReduction_Advices["Vials"].append(Advice(
-        label="Lab Bonus: My 1st Chemistry Set",
+        label="Lab: My 1st Chemistry Set",
         picture_class="my-1st-chemistry-set",
         progression=int(session_data.account.labBonuses['My 1st Chemistry Set']['Enabled']),
         goal=1
     ))
 
-    blueFavReduction = session_data.account.alchemy_vials.get("Blue Flav (Platinum Ore)", {}).get("Value", 0)
-    venisonMaltReduction = session_data.account.alchemy_vials.get("Venison Malt (Mongo Worm Slices)", {}).get("Value", 0)
+    blueFavReduction = session_data.account.alchemy_vials['Blue Flav (Platinum Ore)']['Value']
+    venisonMaltReduction = session_data.account.alchemy_vials['Venison Malt (Mongo Worm Slices)']['Value']
     totalVialReduction = blueFavReduction + venisonMaltReduction
     totalVialReduction *= session_data.account.vialMasteryMulti
-    if session_data.account.labBonuses.get("My 1st Chemistry Set", {}).get("Enabled", False):
+    if session_data.account.labBonuses['My 1st Chemistry Set']['Enabled']:
         totalVialReduction *= 2
     costReduction_Advices["Vials"].append(Advice(
-        label=f"{{{{ Rift|#rift }}}} Bonus: Vial Mastery: {session_data.account.vialMasteryMulti:.2f}x",
+        label=f"{{{{ Rift|#rift }}}}: Vial Mastery: {session_data.account.vialMasteryMulti:.2f}x",
         picture_class="vial-mastery",
         progression=f"{1 if session_data.account.rift['VialMastery'] else 0}",
         goal=1
     ))
     costReduction_Advices["Vials"].append(Advice(
-        label="Total Vial reduction (95% hardcap)",
+        label="Total Vial reduction (90% hardcap)",
         picture_class="vials",
         progression=f"{totalVialReduction:.2f}",
-        goal=95,
+        goal=90,
         unit="%"
     ))
 
     costReduction_Advices["Uncapped"].append(Advice(
         label="{{ Jade Emporium|#sneaking }}: Ionized Sigils",
         picture_class="ionized-sigils",
-        progression=f"{1 if session_data.account.sneaking['JadeEmporium']['Ionized Sigils']['Obtained'] else 0}",
+        progression=int(session_data.account.sneaking['JadeEmporium']['Ionized Sigils']['Obtained']),
         goal=1
     ))
     if (session_data.account.alchemy_p2w.get('Sigils', {}).get('Envelope Pile', {}).get('PrechargeLevel', 0)
@@ -261,9 +264,9 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
         goal=3
     ))
     costReduction_Advices["Uncapped"].append(Advice(
-        label=f"{{{{ Artifact|#sailing }}}}: Chilled Yarn increases sigil by {1 + session_data.account.sailing['Artifacts'].get('Chilled Yarn', {}).get('Level', 0)}x",
+        label=f"{{{{ Artifact|#sailing }}}}: Chilled Yarn increases sigil by {1 + session_data.account.sailing['Artifacts']['Chilled Yarn']['Level']}x",
         picture_class="chilled-yarn",
-        progression=session_data.account.sailing['Artifacts'].get('Chilled Yarn', {}).get('Level', 0),
+        progression=session_data.account.sailing['Artifacts']['Chilled Yarn']['Level'],
         goal=4
     ))
 
@@ -340,7 +343,7 @@ def setStampProgressionTier() -> AdviceSection:
                         adviceCountsDict[stampType] += 1
                         stamp_AdviceDict["FindStamps"][stampType][subgroupName].append(
                             Advice(
-                                label=rStamp,
+                                label=f"{rStamp}, leveled with {playerStamps.get(rStamp, {}).get('Material', '').replace('-', ' ').title()}",
                                 picture_class=rStamp,
                                 resource=playerStamps.get(rStamp, {}).get('Material', ''),
                             ))

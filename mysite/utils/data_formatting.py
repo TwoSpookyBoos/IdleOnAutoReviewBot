@@ -10,7 +10,7 @@ from babel.dates import format_datetime
 from flask import request, g as session_data
 
 from consts import humanReadableClasses, skillIndexList, emptySkillList
-from models.custom_exceptions import ProfileNotFound, EmptyResponse, IEConnectionFailed
+from models.custom_exceptions import ProfileNotFound, EmptyResponse, IEConnectionFailed, WtfDataException
 
 from .logging import get_logger
 from config import app
@@ -98,6 +98,9 @@ def getJSONfromText(runType, rawJSON):
 
     if from_toolbox(parsed):  # Check to see if this is Toolbox JSON
         parsed = load_toolbox_data(parsed)
+
+    if "OptLacc" not in parsed:
+        raise WtfDataException(rawJSON)
 
     return parsed
 
@@ -318,15 +321,26 @@ def safe_loads(data):
     return json.loads(data) if isinstance(data, str) else data
 
 def mark_advice_completed(advice):
-    try:
-        prog = str(advice.progression).strip("%")
-        goal = str(advice.goal).strip("%")
-        if advice.goal and advice.progression and float(prog) >= float(goal):
-            advice.progression = ""
-            advice.goal = "✔"
-            setattr(advice, "status", "complete")
-    except:
-        pass
+    if str(advice.goal) == "" and str(advice.progression).endswith("+"):
+        setattr(advice, "status", "complete")
+    elif str(advice.goal) == "" and str(advice.progression).endswith("%"):
+        try:
+            if float(str(advice.progression).strip("%")) > 100:
+                advice.progression = ""
+                advice.goal = "✔"
+                setattr(advice, "status", "complete")
+        except:
+            pass
+    else:
+        try:
+            prog = str(advice.progression).strip("%")
+            goal = str(advice.goal).strip("%")
+            if advice.goal and advice.progression and float(prog) >= float(goal):
+                advice.progression = ""
+                advice.goal = "✔"
+                setattr(advice, "status", "complete")
+        except:
+            pass
 
 
 

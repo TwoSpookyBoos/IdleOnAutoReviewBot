@@ -1,7 +1,7 @@
 from flask import g as session_data
 from consts import break_keep_it_up
 from models.models import AdviceSection, AdviceGroup, Advice
-from math import floor
+from math import floor, ceil
 from utils.logging import get_logger
 
 logger = get_logger(__name__)
@@ -37,12 +37,10 @@ class Salt:
             self.excess_amount: int = self.output - self.consumed
             if previousSalt is not None:
                 if previousSalt.excess is True:
-                    if next_salt_rank != 0:
-                        self.max_rank_with_excess: int = int(
-                            floor(
-                                ((previousSalt.output-1)/(self.consumption_of_previous_salt * self.cycles_per_Synthesis_cycle)) ** (1/self.salt_consumption_scaling)
-                            )
-                        )
+                    if next_salt_rank != 0 or salt_name == 'Nullo':
+                        self.max_rank_with_excess: int = max(0, ceil(
+                            (previousSalt.output /
+                             (self.consumption_of_previous_salt * self.cycles_per_Synthesis_cycle)) ** (1 / self.salt_consumption_scaling))- 1)
                     if self.max_rank_with_excess >= salt_rank:
                         self.canBeLeveled = True
                     else:
@@ -66,7 +64,7 @@ def parseConsRefinery():
         salt_rank=session_data.account.refinery['Red']['Rank'],
         next_salt_rank=session_data.account.refinery['Orange']['Rank'],
         previousSalt=None,
-        merit_purchased=session_data.account.merits[2][6]['Level'] >= 1,
+        merit_purchased=True,
         running=session_data.account.refinery['Red']['Running'],
     )
     consRefineryDict['OrangeSalt'] = Salt(
@@ -75,7 +73,7 @@ def parseConsRefinery():
         salt_rank=session_data.account.refinery['Orange']['Rank'],
         next_salt_rank=session_data.account.refinery['Blue']['Rank'],
         previousSalt=consRefineryDict['RedSalt'],
-        merit_purchased=session_data.account.merits[2][6]['Level'] >= 2,
+        merit_purchased=session_data.account.merits[2][6]['Level'] >= 1,
         running=session_data.account.refinery['Orange']['Running'],
     )
     consRefineryDict['BlueSalt'] = Salt(
@@ -84,7 +82,7 @@ def parseConsRefinery():
         salt_rank=session_data.account.refinery['Blue']['Rank'],
         next_salt_rank=session_data.account.refinery['Green']['Rank'],
         previousSalt=consRefineryDict['OrangeSalt'],
-        merit_purchased=session_data.account.merits[2][6]['Level'] >= 3,
+        merit_purchased=session_data.account.merits[2][6]['Level'] >= 2,
         running=session_data.account.refinery['Blue']['Running'],
     )
     consRefineryDict['GreenSalt'] = Salt(
@@ -93,7 +91,7 @@ def parseConsRefinery():
         salt_rank=session_data.account.refinery['Green']['Rank'],
         next_salt_rank=session_data.account.refinery['Purple']['Rank'],
         previousSalt=consRefineryDict['BlueSalt'],
-        merit_purchased=session_data.account.merits[2][6]['Level'] >= 4,
+        merit_purchased=session_data.account.merits[2][6]['Level'] >= 3,
         running=session_data.account.refinery['Green']['Running'],
     )
     consRefineryDict['PurpleSalt'] = Salt(
@@ -102,7 +100,7 @@ def parseConsRefinery():
         salt_rank=session_data.account.refinery['Purple']['Rank'],
         next_salt_rank=session_data.account.refinery['Nullo']['Rank'],
         previousSalt=consRefineryDict['GreenSalt'],
-        merit_purchased=session_data.account.merits[2][6]['Level'] >= 5,
+        merit_purchased=session_data.account.merits[2][6]['Level'] >= 4,
         running=session_data.account.refinery['Purple']['Running'],
     )
     consRefineryDict['NulloSalt'] = Salt(
@@ -111,7 +109,7 @@ def parseConsRefinery():
         salt_rank=session_data.account.refinery['Nullo']['Rank'],
         next_salt_rank=0,
         previousSalt=consRefineryDict['PurpleSalt'],
-        merit_purchased=session_data.account.merits[2][6]['Level'] >= 6,
+        merit_purchased=session_data.account.merits[2][6]['Level'] >= 5,
         running=session_data.account.refinery['Nullo']['Running'],
     )
     #logger.debug(consRefineryDict)

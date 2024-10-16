@@ -28,18 +28,17 @@ def getMissableGStacks(owned_stuff: Assets):
     }
     questGStacks_AdviceGroupDict = {}
 
-    quest_names = sum((list(statuses.keys()) for statuses in session_data.account.all_quests), list())
     quests_completed_on_all_toons = [
         name
-        for name in quest_names
-        if all(quests.get(name, 0) == 1 for quests in session_data.account.all_quests)
-        # Quest value one of (-1, 0, 1). -1 means not started.
+        for name in session_data.account.compiled_quests
+        if session_data.account.compiled_quests[name]['CompletedCount'] == session_data.account.playerCount
     ]
 
     for quest_item in list(advice_EndangeredQuestGStacks):
         item_data = missableGStacksDict[quest_item.name]
         quest_codename = item_data[1]
         quest_item.quest = item_data[2]
+        quest_item.quest_giver = item_data[5]
 
         if quest_codename in quests_completed_on_all_toons:
             advice_MissedQuestGStacks.append(quest_item)
@@ -88,7 +87,8 @@ def getMissableGStacks(owned_stuff: Assets):
                 label=f"{item.name}- {item.quest}",
                 picture_class=item.name,
                 progression=item.progression,
-                unit="%"
+                unit="%",
+                resource=item.quest_giver
             )
             for item in advice_EndangeredQuestGStacks
         ]
@@ -117,7 +117,8 @@ def getMissableGStacks(owned_stuff: Assets):
                 label=f"{item.name}- {item.quest}",
                 picture_class=item.name,
                 progression=item.progression,
-                unit="%"
+                unit="%",
+                resource=item.quest_giver
             )
             for item in advice_MissedQuestGStacks
         ]

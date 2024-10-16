@@ -1,10 +1,11 @@
 import copy
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
-from utils.text_formatting import pl
+from utils.text_formatting import pl, notateNumber
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import numberOfArtifacts, numberOfArtifactTiers, breeding_progressionTiers, getReadableVialNames, maxTiersPerGroup, territoryNames, break_you_best
+from consts import numberOfArtifacts, numberOfArtifactTiers, breeding_progressionTiers, getReadableVialNames, maxTiersPerGroup, territoryNames, break_you_best, \
+    maxFarmingCrops, breedabilityDaysList, getBreedabilityHeartFromMulti
 
 logger = get_logger(__name__)
 
@@ -66,6 +67,16 @@ def getShinySpeedSourcesAdviceGroup(fasterShinyPetTotalLevels) -> AdviceGroup:
     }
 
     sps_adviceDict["Multi Group B- Everything Else"].append(Advice(
+        label=f"Total Farming crops discovered: {session_data.account.farming['CropsUnlocked']}/{maxFarmingCrops}",
+        picture_class='crop-depot',
+        progression=session_data.account.farming['CropsUnlocked'],
+        goal=maxFarmingCrops
+    ))
+    sps_adviceDict["Multi Group B- Everything Else"].append(Advice(
+        label=f"{{{{Science Crayon|#farming}}}} Total: {session_data.account.farming['Depot'][5]['Value']:,.2f}",
+        picture_class=session_data.account.farming['Depot'][5]['Image'],
+    ))
+    sps_adviceDict["Multi Group B- Everything Else"].append(Advice(
         label=f"Lab Jewel: Emerald Ulthurite",
         picture_class='emerald-ulthurite',
         progression=1 if session_data.account.labJewels["Emerald Ulthurite"]["Enabled"] else 0,
@@ -114,6 +125,39 @@ def getShinySpeedSourcesAdviceGroup(fasterShinyPetTotalLevels) -> AdviceGroup:
         pre_string="Info- Sources of Shiny Pet Level Rate",
         advices=sps_adviceDict)
     return sps_AdviceGroup
+
+def getBreedabilityAdviceGroup():
+    b_advices = []
+    all_breedability = {
+        k:v
+        for worldIndex in session_data.account.breeding['Species'].keys()
+        for k,v in session_data.account.breeding['Species'][worldIndex].items()
+    }
+    sorted_breedability = sorted(
+        all_breedability.items(),
+        key=lambda pet: pet[1]['BreedabilityDays'],
+        reverse=True
+    )
+    for pet in sorted_breedability:
+        b_advices.append(Advice(
+            label=f"{pet[0]}"
+                  f"<br>Breedability Multi: {pet[1]['BreedabilityMulti']:.3f}x"
+                  f"<br>Heart VII: {notateNumber('Match', pet[1]['BreedabilityDays'], 0, 'K' if pet[1]['BreedabilityDays'] >= 1000 else '')} / "
+                  f"{notateNumber('Match', breedabilityDaysList[-4], 0, 'K')}",
+            picture_class=pet[0],
+            progression=f"{pet[1]['BreedabilityDays'] / breedabilityDaysList[-4]:.2%}",
+            resource=pet[1]['BreedabilityHeart']
+        ))
+
+    for advice in b_advices:
+        mark_advice_completed(advice)
+    
+    b_ag = AdviceGroup(
+        tier='',
+        pre_string="Informational- Breedability Multi and Heart VII Progress",
+        advices=b_advices
+    )
+    return b_ag
 
 def getActiveBMAdviceGroup() -> AdviceGroup:
     abm_adviceDict = {
@@ -445,10 +489,10 @@ def setBreedingProgressionTier() -> AdviceSection:
                             for possibleShinyPet in failedShinyBonus[failedRequirement[0]]:
                                 breeding_AdviceDict["ShinyLevels"][shinySubgroup].append(
                                     Advice(
-                                        label=f"{possibleShinyPet[0]}: {possibleShinyPet[2]:.2f} base days to level",
+                                        label=f"{possibleShinyPet[0]}: {possibleShinyPet[2]:,.2f} base days to level",
                                         picture_class=possibleShinyPet[0],
                                         progression=possibleShinyPet[1],
-                                        goal=failedRequirement[3]
+                                        goal=max(failedRequirement[3], possibleShinyPet[1])
                                     )
                                 )
 
@@ -493,6 +537,7 @@ def setBreedingProgressionTier() -> AdviceSection:
             )
         breeding_AdviceGroupDict["ShinySpeedSources"] = getShinySpeedSourcesAdviceGroup(breedingDict['Total Shiny Levels']['Faster Shiny Pet Lv Up Rate'])
         breeding_AdviceGroupDict["ActiveBM"] = getActiveBMAdviceGroup()
+        breeding_AdviceGroupDict['Breedability'] = getBreedabilityAdviceGroup()
 
     #Generate Advice Section
     tier_section = f"{overall_BreedingTier}/{maxBreedingTier}"

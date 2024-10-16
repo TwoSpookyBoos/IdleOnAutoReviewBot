@@ -19,6 +19,7 @@ from models.custom_exceptions import (
     IEConnectionFailed,
     BaseCustomException,
     JSONDecodeError,
+    WtfDataException,
 )
 from utils.text_formatting import (
     is_username,
@@ -51,7 +52,6 @@ def parse_user_input() -> str | dict | None:
             parsed = json.loads(data)
         except json.JSONDecodeError as e:
             raise custom_exceptions.JSONDecodeError(data)
-
 
     else:
         raise UserDataException("Submitted data not valid.", data)
@@ -143,6 +143,11 @@ def results() -> Response | str:
         response = error, 500
 
     except JSONDecodeError as e:
+        dirname = create_and_populate_log_files(e.data, headerData, str(e), name_or_data, e)
+        error = e.msg_display.format(dirname)
+        response = error, 400
+
+    except WtfDataException as e:
         dirname = create_and_populate_log_files(e.data, headerData, str(e), name_or_data, e)
         error = e.msg_display.format(dirname)
         response = error, 400

@@ -323,11 +323,11 @@ greenstack_progressionTiers = {
                 "PeanutG",
             ],
             "Misc": [
-                "FoodPotMana3", "FoodPotRe1", "ButterBar", "EquipmentStatues9",],
+                "FoodPotMana3", "FoodPotRe1", "ButterBar", "EquipmentStatues9", "OilBarrel2"],
         },
         14: {
             "Crystal Enemy Drops": [
-                "StoneW2", "SilverPen"],  #"StoneA2",],
+                "StoneW2", 'ResetFrag', "SilverPen"],  #"StoneA2",],
             "Other Skilling Resources": [
                 "MarbleBar", "GodshardBar",
                 "FoodTrapping1", "FoodWorship1",
@@ -335,7 +335,7 @@ greenstack_progressionTiers = {
                 "Ladle",
             ],
             "Misc": [
-                "OilBarrel2", "DesertC2b", "Quest78",
+                "DesertC2b", "Quest78",
             ]
         },
     }
@@ -518,8 +518,7 @@ stamps_progressionTiers = {
     11: {"TotalStampLevels": 800, "Stamps": {
          "Skill": ["Stample Stamp", "Spice Stamp", "Egg Stamp"],
          "Misc": ["Mason Jar Stamp", "Sigil Stamp"],
-         "Specific": {'Pickaxe Stamp': 45, 'Hatchet Stamp': 45, 'Mason Jar Stamp': 12}
-    }},
+         "Specific": {'Pickaxe Stamp': 45, 'Hatchet Stamp': 45, 'Mason Jar Stamp': 12}}},
     12: {"TotalStampLevels": 1000, "Stamps": {
         "Skill": ["Brainstew Stamp", "Bag o Heads Stamp", "Skelefish Stamp", "Holy Mackerel Stamp", "Cooked Meal Stamp"],
         "Misc": ["Card Stamp"],
@@ -532,7 +531,7 @@ stamps_progressionTiers = {
     13: {"TotalStampLevels": 2500, "Stamps": {
         "Combat": ["Avast Yar Stamp", "Blackheart Stamp", "Steve Sword",],
         "Skill": ["Banked Pts Stamp", "Nest Eggs Stamp", "Lab Tube Stamp", "Ladle Stamp", "Sailboat Stamp"],
-        "Misc": ["Refinery", "Golden Apple Stamp", "Talent III Stamp"],
+        "Misc": ["Refinery", "Golden Apple Stamp"],
         "Specific": {
             'Matty Bag Stamp': 100, 'Crystallin': 60,
             'Pickaxe Stamp': 65, 'Hatchet Stamp': 65, 'Card Stamp': 100,
@@ -556,7 +555,7 @@ stamps_progressionTiers = {
         "Misc": ["Multikill Stamp"],
         "Specific": {
             'Matty Bag Stamp': 150, 'Card Stamp': 150, 'Ladle Stamp': 100, 'Potion Stamp': 20,
-            'Pickaxe Stamp': 85, 'Hatchet Stamp': 85, 'Mason Jar Stamp': 52, 'Golden Apple Stamp': 40,
+            'Pickaxe Stamp': 85, 'Hatchet Stamp': 85, 'Mason Jar Stamp': 52, 'Golden Apple Stamp': 40, 'Crop Evo Stamp': 20,
         },
         "Optional": ["Void Sword Stamp"]
     }},
@@ -927,7 +926,7 @@ bubbles_progressionTiers = [
       'Tome Agility': 540},
      {'Stable Jenius': 9000,
       'Slabe Logsoul': 540, 'Slabe Wisdom': 540, 'Endgame Eff III': 540},  # 'Tome Wisdom': 540},
-     {"Nickel Of Wisdom": 270, "Penny Of Strength": 270, "Dollar Of Agility": 270},
+     {"Nickel Of Wisdom": 270, "Penny Of Strength": 270, "Dollar Of Agility": 270, 'Card Champ': 360, 'Egg Ink': 360},
      "90% catchup",
      ""],
     [24, 140,
@@ -939,7 +938,7 @@ bubbles_progressionTiers = [
       'Tome Agility': 1140},
      {'Stable Jenius': 9500, 'Le Brain Tools': 1330, 'Tree Sleeper': 760,
       'Slabe Logsoul': 1140, 'Slabe Wisdom': 1140, 'Endgame Eff III': 1140},  # 'Tome Wisdom': 1140},
-     {"Nickel Of Wisdom": 570, "Penny Of Strength": 570, "Dollar Of Agility": 570},
+     {"Nickel Of Wisdom": 570, "Penny Of Strength": 570, "Dollar Of Agility": 570, 'Card Champ': 760, 'Egg Ink': 760},
      "95% catchup",
      ""],
     [25, 160,
@@ -1676,6 +1675,211 @@ sailing_progressionTiers = {
 
 
 ###WORLD 6 PROGRESSION TIERS###
+farming_progressionTiers = {
+    0: {},
+    1: {
+        'Farming Level': 10,
+        'Day Market': {
+            'Land Plots': 4,
+            'Stronger Vines': 6,
+            'Nutritious Soil': 7,
+        },
+        'Crops Unlocked': 19,  #Total number of crops is 19 for Overgrowth to be purchasable
+        'Suggestions': {
+            'EvoChance': [4, 4.5],
+            'CropIndex': [11, 29]  #11 = Basic/Lime, 29 = Earthy/Avocado
+        },
+        'Night Market': {
+            'Overgrowth': 1,
+        },
+    },  #Get Overgrowth
+    2: {
+        'Farming Level': 50,
+        'Day Market': {
+            'Land Plots': 7,
+            'Stronger Vines': 34,
+            'Nutritious Soil': 34,
+            'Product Doubler': 12,
+            'Biology Boost': 26,
+        },
+        'Crops Unlocked': 61,  #Total number of crops is 61 for Land Ranks to be purchasable
+        'Suggestions': {
+            'EvoChance': [325, 335],
+            'CropIndex': [21, 41, 55, 72],  #21 = Basic/Golden Blueberry, 41 = Earthy/Lettuce, 55 = Bulbo/Pink Daisy, 72 = Sushi/11
+        },
+        'Night Market': {
+            'Land Rank': 1,
+            'Evolution Gmo': 20,  #1.16x
+            'Speed Gmo': 10,  #3%
+        },
+    },  #Get Land Ranks
+    3: {
+        'Farming Level': 120,
+        'Day Market': {
+            'Land Plots': 11,
+            'Stronger Vines': 56,
+            'Nutritious Soil': 54,
+            'Biology Boost': 45,
+            'Product Doubler': 28,
+            'More Beenz': 28,
+            'Rank Boost': 19,
+        },
+        'Land Ranks': {
+            1: {
+                'Evolution Boost': 25,
+                'Soil Exp Boost': 25,
+                'Evolution Megaboost': 25,
+                'Production Boost': 50,
+                'Soil Exp Megaboost': 25,
+            },
+            2: {
+                'Soil Exp Boost': 50,
+                'Production Boost': 80,
+                'Overgrowth Boost': 50,
+            },
+            3: {
+                'Production Boost': 100,
+                'Production Megaboost': 100,
+                'Overgrowth Boost': 75,
+                'Soil Exp Megaboost': 50,
+            },  #425 total
+        },
+        'Crops Unlocked': 116,
+        'Suggestions': {
+            'EvoChance': [1e12, 10e12],
+            'Speed': [8, 20],
+            'CropIndex': [46, 61, 84, 104, 119]  #46 = Earthy/Gold Sliced Tomato, 61 = Bulbo/Golden Tulip, 84 = Sushi/Max, 104 = Mushie/20, 119 = Normal Glassy/Onigiri
+        },
+        'Night Market': {
+            'Evolution Gmo': 30,  # 1.24x
+            'Speed Gmo': 25,  # 7.5%
+            'Og Fertilizer': 10,  # 1.1x
+        },
+        #Soil Exp Boost : Mega : Super is around 4:2:3
+        #OG Boost : Mega :  Super is around 4:5:8
+        #Farmtastic pretty optional
+    },  #1k stacks. Reach 120 farming and the first few Glassy
+    4: {
+        'Day Market': {
+            'Land Plots': 12,
+            'Stronger Vines': 62,
+            'Nutritious Soil': 60,
+            'Biology Boost': 56,
+            'Product Doubler': 35,
+            'More Beenz': 37,
+            'Rank Boost': 24,
+        },
+        'Land Ranks': {
+            1: {
+                'Evolution Superboost': 25,
+                'Soil Exp Boost': 100,
+                'Soil Exp Megaboost': 100,
+            },  #550 total
+        },
+        'Crops Unlocked': 123,
+        'Suggestions': {
+            'EvoChance': [1e16, 1e18],
+            'Speed': [30, 40],
+            'OG': [2.5, 6.25],  #Guarantees 2x OG at 2.5 OG, guarantees 4x OG
+            'CropIndex': [107, 123]  #107 = Mushie/Final, 122 = Red Glassy/Mango
+        },
+        'Night Market': {
+            'Evolution Gmo': 40,  #1.32x
+            'Og Fertilizer': 20,  #1.20x
+            'Super Gmo': 10,  #5%
+        },
+        #Value is around 10x
+    },  #Repeat the 1k stacks. Day Market Farming to afford 100% Product Doubler, Bean Farming for 5% Super GMO
+    5: {
+        #'Day Market': {},  #Intentionally excluded.
+        #'Land Ranks': {1: {},},  #Intentionally excluded.
+        'Crops Unlocked': 126,
+        'Suggestions': {
+            'EvoChance': [1e22, 5e22],
+            'Speed': [30, 40],
+            'CropIndex': [126],  #126 at end of 1k stacking, before 100k stacking
+            'No Trade': "Do not complete a Bean trade! Start back at Apples and stack to 100k of each crop"
+        },
+        #'Night Market': {},
+    },  #End of 1k stacking, before 100k stacking. No Bean Trade
+    6: {
+        'Day Market': {
+            'Land Plots': 16,
+            'Stronger Vines': 84,
+            'Nutritious Soil': 87,
+            'Smarter Seeds': 86,
+            #'Biology Boost': 56,    #Intentionally excluded.
+            'Product Doubler': 50,
+            'More Beenz': 55,
+            'Rank Boost': 37,
+        },
+        'Land Ranks': {
+            1: {
+                'Overgrowth Megaboost': 100,
+                'Soil Exp Superboost': 100,
+                'Evolution Ultraboost': 25,
+            },  #775/1400
+            2: {
+                'Overgrowth Boost': 200,
+                'Overgrowth Megaboost': 250,
+            },  #950/1400
+            3: {
+                'Soil Exp Boost': 220,
+                'Soil Exp Megaboost': 110,
+                'Soil Exp Superboost': 170,
+            },  #1200/1400
+            4: {
+                'Soil Exp Boost': 330,
+                'Soil Exp Megaboost': 165,
+                'Soil Exp Superboost': 255,
+            },  #1400/1400
+        },
+        'Crops Unlocked': 127,
+        'Suggestions': {
+            'EvoChance': [1e23, 5e23],
+            'Speed': [250, 400],
+            'OG': [6.25, 15.625],
+            'CropIndex': [127]
+        },
+        'Night Market': {
+            'Evolution Gmo': 65,  #1.25x
+            'Speed Gmo': 35,  #10.5%
+            'Og Fertilizer': 57,  #1.57x
+            'Super Gmo': 20,  #10%
+        },
+    },  #First round of 100k stacking + Day Market at the same time
+
+    # 7: {},  #Finish unlocking Land ranks up to Overgrowth Superboost, Max Value. 15% Speed and 15% Super GMO
+    # 8: {},  #Unlock all crops. Keep pushing Evo, Speed, Super, OG
+    # 9: {
+    #     'Farming Level': 300,
+    #     'Day Market': {
+    #         'Land Plots': 20,
+    #         'Stronger Vines': 170,
+    #         'Product Doubler': 100,
+    #         'More Beenz': 100,
+    #         'Rank Boost': 100,
+    #     },
+    #     'Night Market': {
+    #         'Evolution Gmo': 125,
+    #         'Speed Gmo': 80,
+    #         'Og Fertilizer': 200,
+    #         'Exp Gmo': 100,
+    #         'Super Gmo': 50,
+    #     },
+    #     'Land Ranks': {
+    #         1: {
+    #             'Seed of Stealth': 1,
+    #             'Seed of Loot': 1,
+    #             'Seed of Damage': 1,
+    #             'Seed of Stats': 1,
+    #         },
+    #         2: {
+    #             'Overgrowth Superboost': 1000,
+    #         },
+    #     },
+    # },  #Done and futureproofed
+}
 
 ###UI CONSTS###
 maxTiersPerGroup = 3
@@ -1739,19 +1943,19 @@ break_you_best = "<br>You best ❤️"
 break_keep_it_up = "<br>Keep it up! You're on the right track! ❤️"
 missableGStacksDict = {
     #  ItemName               Codename     Quest Codeame          Quest Name                                          Wiki link to the item                             Recommended Class/Farming notes
-    "Dog Bone":              ["Quest12",   "Dog_Bone1",           "Dog Bone: Why he Die???",                          "https://idleon.wiki/wiki/Dog_Bone",              "Active ES or time candy."],
-    "Ketchup Bottle":        ["Quest3",    "Picnic_Stowaway2",    "Picnic Stowaway: Beating Up Frogs for some Sauce", "https://idleon.wiki/wiki/Ketchup_Bottle",        "Active ES or time candy."],
-    "Mustard Bottle":        ["Quest4",    "Picnic_Stowaway2",    "Picnic Stowaway: Beating Up Frogs for some Sauce", "https://idleon.wiki/wiki/Mustard_Bottle",        "Active ES or time candy."],
-    "Strange Rock":          ["Quest7",    "Stiltzcho2",          "Stiltzcho: No Stone Unturned",                     "https://idleon.wiki/wiki/Strange_Rock",          "Active ES or time candy."],
-    "Time Thingy":           ["Quest21",   "Funguy3",             "Funguy: Partycrastination",                        "https://idleon.wiki/wiki/Time_Thingy",           "Active ES or time candy."],
-    "Employment Statistics": ["Quest14",   "TP_Pete2",            "TP Pete: The Rats are to Blame!",                  "https://idleon.wiki/wiki/Employment_Statistics", "Active ES or time candy."],
-    "Corporatube Sub":       ["Quest22",   "Mutton4",             "Mutton: 7 Figure Followers",                       "https://idleon.wiki/wiki/Corporatube_Sub",       "Active ES or time candy."],
-    "Instablab Follower":    ["Quest23",   "Mutton4",             "Mutton: 7 Figure Followers",                       "https://idleon.wiki/wiki/Instablab_Follower",    "Active ES or time candy."],
-    "Cloudsound Follower":   ["Quest24",   "Mutton4",             "Mutton: 7 Figure Followers",                       "https://idleon.wiki/wiki/Cloudsound_Follower",   "Active ES or time candy."],
-    "Casual Confidante":     ["GoldricP1", "Goldric3",            "Goldric: Only Winners have Portraits",             "https://idleon.wiki/wiki/Casual_Confidante",     "Active ES or time candy."],
-    "Triumphant Treason":    ["GoldricP2", "Goldric3",            "Goldric: Only Winners have Portraits",             "https://idleon.wiki/wiki/Triumphant_Treason",    "Active ES or time candy."],
-    "Claiming Cashe":        ["GoldricP3", "Goldric3",            "Goldric: Only Winners have Portraits",             "https://idleon.wiki/wiki/Claiming_Cashe",        "Active ES or time candy."],
-    "Monster Rating":        ["Quest32",   "XxX_Cattleprod_XxX3", "XxX_Cattleprod_XxX: Ok, NOW it's Peak Gaming!",    "https://idleon.wiki/wiki/Monster_Rating",        "Monster Ratings can drop from Crystal enemies, making Divine Knight the better farmer for Monster Ratings."]
+    "Dog Bone":              ["Quest12",   "Dog_Bone1",           "Dog Bone: Why he Die???",                          "https://idleon.wiki/wiki/Dog_Bone",              "Active ES or time candy.", 'dog-bone-npc'],
+    "Ketchup Bottle":        ["Quest3",    "Picnic_Stowaway2",    "Picnic Stowaway: Beating Up Frogs for some Sauce", "https://idleon.wiki/wiki/Ketchup_Bottle",        "Active ES or time candy.", 'picnic-stowaway'],
+    "Mustard Bottle":        ["Quest4",    "Picnic_Stowaway2",    "Picnic Stowaway: Beating Up Frogs for some Sauce", "https://idleon.wiki/wiki/Mustard_Bottle",        "Active ES or time candy.", 'picnic-stowaway'],
+    "Strange Rock":          ["Quest7",    "Stiltzcho2",          "Stiltzcho: No Stone Unturned",                     "https://idleon.wiki/wiki/Strange_Rock",          "Active ES or time candy.", 'stiltzcho'],
+    "Time Thingy":           ["Quest21",   "Funguy3",             "Funguy: Partycrastination",                        "https://idleon.wiki/wiki/Time_Thingy",           "Active ES or time candy.", 'funguy'],
+    "Employment Statistics": ["Quest14",   "TP_Pete2",            "TP Pete: The Rats are to Blame!",                  "https://idleon.wiki/wiki/Employment_Statistics", "Active ES or time candy.", 'tp-pete'],
+    "Corporatube Sub":       ["Quest22",   "Mutton4",             "Mutton: 7 Figure Followers",                       "https://idleon.wiki/wiki/Corporatube_Sub",       "Active ES or time candy.", 'mutton'],
+    "Instablab Follower":    ["Quest23",   "Mutton4",             "Mutton: 7 Figure Followers",                       "https://idleon.wiki/wiki/Instablab_Follower",    "Active ES or time candy.", 'mutton'],
+    "Cloudsound Follower":   ["Quest24",   "Mutton4",             "Mutton: 7 Figure Followers",                       "https://idleon.wiki/wiki/Cloudsound_Follower",   "Active ES or time candy.", 'mutton'],
+    "Casual Confidante":     ["GoldricP1", "Goldric3",            "Goldric: Only Winners have Portraits",             "https://idleon.wiki/wiki/Casual_Confidante",     "Active ES or time candy.", 'goldric'],
+    "Triumphant Treason":    ["GoldricP2", "Goldric3",            "Goldric: Only Winners have Portraits",             "https://idleon.wiki/wiki/Triumphant_Treason",    "Active ES or time candy.", 'goldric'],
+    "Claiming Cashe":        ["GoldricP3", "Goldric3",            "Goldric: Only Winners have Portraits",             "https://idleon.wiki/wiki/Claiming_Cashe",        "Active ES or time candy.", 'goldric'],
+    "Monster Rating":        ["Quest32",   "XxX_Cattleprod_XxX3", "XxX_Cattleprod_XxX: Ok, NOW it's Peak Gaming!",    "https://idleon.wiki/wiki/Monster_Rating",        "Monster Ratings can drop from Crystal enemies, making Divine Knight the better farmer for Monster Ratings.", 'xxx-cattleprod-xxx']
 }
 expectedStackables = {
     "Missable Quest Items": [
@@ -1770,7 +1974,7 @@ expectedStackables = {
         "Sewers3", "Quest15", "Hgg"  # Specialty Monster Materials
     ],
     "Crystal Enemy Drops": [
-        "SilverPen",
+        "SilverPen", 'ResetFrag',
         "FoodPotMana1", "FoodPotMana2", "FoodPotGr1", "FoodPotOr1", "FoodPotOr2", "FoodHealth1", "FoodHealth3", "FoodHealth2", "Leaf1",  # W1
         "FoodHealth6", "FoodHealth7", "FoodPotGr2", "FoodPotRe3", "Leaf2",  # W2
         "FoodHealth10", "FoodPotOr3", "FoodPotYe2", "Leaf3",  # W3
@@ -1870,7 +2074,7 @@ expectedStackables = {
         "EquipmentStatues20", "EquipmentStatues21", "EquipmentStatues22",  # W4 Statues
         "EquipmentStatues23", "EquipmentStatues24", "EquipmentStatues25",  # W5 Statues
         "FoodG1", "FoodG2", "FoodG3", "FoodG4", "FoodG5", "FoodG6", "FoodG7", "FoodG8", "FoodG10",  # Gold Foods
-        "ResetFrag", "ResetCompleted", "ResetCompletedS", "ClassSwap",
+        "ResetCompleted", "ResetCompletedS", "ClassSwap",
         "ClassSwapB", "ResetBox",
     ]
 }
@@ -2397,7 +2601,7 @@ def getNextESFamilyBreakpoint(currentLevel: int) -> int:
 #achievementsList last pulled from code in 2.08. Search for: RegAchieves = function ()
 #Replace: "], ["  with:  "],\n["  before pasting in
 achievement_categories = [
-    'EZ Access', #'Free Teleports',
+    'EZ Access',  #'Free Teleports',
     'Monster Respawn', 'Recipes', 'Dungeon RNG Items', 'Other Nice Rewards']
 achievementsList = [
     ["Learn_2_Forge", "1", "Get_the_mining_certificate_from_Glumlee.", "*STEAM_EXCLUSIVE_&*10_gems_&*1hr_time_candy", "0"],
@@ -3071,6 +3275,7 @@ skill_talentsDict = {
         },
         "Lowest": {
             464: {"Name": "Inner Peace", "Tab": "Mage"},
+            8: {'Name': 'Star Player', 'Tab': 'Savvy Basics'}
         },
     },
     "Alchemy": {
@@ -3177,6 +3382,7 @@ skill_talentsDict = {
         },
         "Lowest": {
             104: {"Name": "Tempestuous Emotions", "Tab": "Warrior"},
+            8: {'Name': 'Star Player', 'Tab': 'Rage Basics'}
         },
     },
     "Construction": {
@@ -3210,6 +3416,7 @@ skill_talentsDict = {
         "Lowest": {
             282: {"Name": "Yea I Already Know", "Tab": "Archer"},
             265: {"Name": "Focused Soul", "Tab": "Archer"},
+            8: {'Name': 'Star Player', 'Tab': 'Calm Basics'}
         },
     },
     "Catching": {
@@ -3306,6 +3513,8 @@ skill_talentsDict = {
             42: {"Name": "Left Hand of Learning", "Tab": "Maestro"},
             40: {"Name": "Maestro Transfusion", "Tab": "Maestro"},
             38: {"Name": "Bliss N Chips", "Tab": "Maestro"},
+            17: {'Name': 'Supernova Player', 'Tab': 'Journeyman'},
+            8: {'Name': 'Star Player', 'Tab': 'Beginner'}
         },
     },
 }
@@ -3366,7 +3575,7 @@ combat_talentsDict = {
     "Squire": {
         "High": {
             120: {"Name": "Shockwave Slash", "Tab": "Squire", "Optimal": [0, 30, True]},
-            121: {"Name": "Daggerang", "Tab": "Squire", "Optimal": [0, 30, True]},        },
+            121: {"Name": "Daggerang", "Tab": "Squire", "Optimal": [0, 30, True]},},
         "Medium": {
             129: {"Name": "Blocky Bottles", "Tab": "Squire"},
             125: {"Name": "Precision Power", "Tab": "Squire"},
@@ -3676,7 +3885,6 @@ filter_never = [
 ]
 
 def lavaFunc(funcType: str, level: int, x1: int | float, x2: int | float, roundResult=False):
-    result = 0
     match funcType:
         case 'add':
             if x2 != 0:
@@ -3693,6 +3901,8 @@ def lavaFunc(funcType: str, level: int, x1: int | float, x2: int | float, roundR
             result = x1 + x2 * level
         case 'special1':
             result = 100 - (level * x1) / (level + x2)
+        case 'pow':
+            result = pow(x1, level)
         case _:
             result = 0
     if roundResult:
@@ -3705,6 +3915,10 @@ def ceilUpToBase(inputValue: int, base: int) -> int:
     while toReturn <= inputValue:
         toReturn += base
     return toReturn
+
+def ValueToMulti(value: float, min_value=1.0):
+    return max(min_value, 1 + (value / 100))
+
 
 ###WORLD 1 CONSTS###
 bribesDict = {
@@ -3729,17 +3943,18 @@ stamp_maxes = {
     "Cooked Meal Stamp": 465,
     "Ladle Stamp": 320,
     "Multitool": 220,
+    'Crop Evo Stamp': 90,
     #Misc
     "Crystallin": 270,
     "Forge Stamp": 230,
-    "Biblio Stamp": 64,
+    "Biblio Stamp": 66,
     "Sigil Stamp": 324,
 }
 stampsDict = {
     "Combat": {
         0: {'Name': "Sword Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'spore-cap'},
         1: {'Name': "Heart Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'oak-logs'},
-        2: {'Name': "Mana Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'copper-pre'},
+        2: {'Name': "Mana Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'copper-ore'},
         3: {'Name': "Tomahawk Stamp", 'funcType': 'decay', 'x1': 6, 'x2': 40, 'Material': 'copper-bar'},
         4: {'Name': "Target Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'thread'},
         5: {'Name': "Shield Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'iron-ore'},
@@ -4356,7 +4571,7 @@ atrisk_lithiumBubbles = [
     "Penny Of Strength",
     "Fly In Mind",
     'Afk Expexp',
-    'Slabbo Critterbug',
+    'Slabo Critterbug',
     'Nickel Of Wisdom',
     'Severapurple',
     'Hyperswift',
@@ -4647,6 +4862,7 @@ def getReadableBubbleNames(inputNumber, color):
         return bubblesDict[bubbleCauldronColorList.index(color)][inputNumber]
     except:
         return f"Unknown {color} Bubble {inputNumber}"
+
 
 ###WORLD 3 CONSTS###
 maxDreams = 36  # Last verified as of v2.10
@@ -4972,7 +5188,17 @@ def getEnemyNameFromMap(inputMap: str) -> str:
     except Exception as reason:
         return f"Unexpected Input received: {reason}"
 
+
 ###WORLD 4 CONSTS###
+tomepct = {
+  50: 9757,
+  25: 17764,
+  10: 22114,
+  5: 23449,
+  1: 25008,
+  0.5: 25485,
+  0.1: 26254,
+}
 maxCookingTables = 10  # Last verified as of v2.10
 maxMeals = 67  # Last verified as of v2.10
 maxMealLevel = 90  # Last verified as of v2.10
@@ -5468,82 +5694,82 @@ breedingSpeciesDict: dict[int, dict] = {
             'Genetic': breedingGeneticsList[8],  #Sniper
             'ShinyBonus': breedingShinyBonusList[19],  #Bonuses from All Meals
         },
-		1: {
+        1: {
             'Name': 'Frost Flake',
             'Genetic': breedingGeneticsList[30],  #Ninja
             'ShinyBonus': breedingShinyBonusList[13],  #Tab 3 Talent Pts
         },
-		2: {
+        2: {
             'Name': 'Sir Stache',
             'Genetic': breedingGeneticsList[23],  #Eggshell
             'ShinyBonus': breedingShinyBonusList[1],  #Infinite Star Signs
         },
-		3: {
+        3: {
             'Name': 'Xylobone',
             'Genetic': breedingGeneticsList[15],  #Opticular
             'ShinyBonus': breedingShinyBonusList[3],  #Drop Rate
         },
-		4: {
+        4: {
             'Name': 'Bunny',
             'Genetic': breedingGeneticsList[14],  #Flashy
             'ShinyBonus': breedingShinyBonusList[8],  #Base LUK
         },
-		5: {
+        5: {
             'Name': 'Bloque',
             'Genetic': breedingGeneticsList[17],  #Alchemic
             'ShinyBonus': breedingShinyBonusList[18],  #Multikill Per Tier
         },
-		6: {
+        6: {
             'Name': 'Mamooth',
             'Genetic': breedingGeneticsList[21],  #Looter
             'ShinyBonus': breedingShinyBonusList[21],  #Higher Artifact Find Chance
         },
-		7: {
+        7: {
             'Name': 'Snowman',
             'Genetic': breedingGeneticsList[19],  #Defstone
             'ShinyBonus': breedingShinyBonusList[9],  #Class EXP
         },
-		8: {
+        8: {
             'Name': 'Penguin',
             'Genetic': breedingGeneticsList[13],  #Fastidious
             'ShinyBonus': breedingShinyBonusList[1],  #Infinite Star Signs
         },
-		9: {
+        9: {
             'Name': 'Thermister',
             'Genetic': breedingGeneticsList[8],  #Sniper
             'ShinyBonus': breedingShinyBonusList[10],  #Skill EXP
         },
-		10: {
+        10: {
             'Name': 'Quenchie',
             'Genetic': breedingGeneticsList[7],  #Boomer
             'ShinyBonus': breedingShinyBonusList[0],  #Faster Shiny Pet Lv Up Rate
         },
-		11: {
+        11: {
             'Name': 'Cryosnake',
             'Genetic': breedingGeneticsList[23],  #Eggshell
             'ShinyBonus': breedingShinyBonusList[15],  #Star Talent Pts
         },
-		12: {
+        12: {
             'Name': 'Mecho Mouse',
             'Genetic': breedingGeneticsList[25],  #Trasher
             'ShinyBonus': breedingShinyBonusList[6],  #Base STR
         },
-		13: {
+        13: {
             'Name': 'Bop Box',
             'Genetic': breedingGeneticsList[27],  #Converter
             'ShinyBonus': breedingShinyBonusList[1],  #Infinite Star Signs
         },
-		14: {
+        14: {
             'Name': 'Neyeptune',
             'Genetic': breedingGeneticsList[24],  #Lazarus
             'ShinyBonus': breedingShinyBonusList[24],  #Farming EXP
         },
-		15: {
+        15: {
             'Name': 'Dedotated Ram',
             'Genetic': breedingGeneticsList[9],  #Amplifier
             'ShinyBonus': breedingShinyBonusList[18],  #Multikill Per Tier
         },
-		16: {
+        16: {
             'Name': 'Bloodbone',
             'Genetic': breedingGeneticsList[20],  #Targeter
             'ShinyBonus': breedingShinyBonusList[24],  #Farming EXP
@@ -5666,6 +5892,35 @@ def getDaysToNextShinyLevel(days: float) -> float:
         except Exception as reason:
             logger.warning(f"With shinyLevel of {shinyLevel}, Defaulting Shiny days Remaining to 0. Reason: {reason}")
             return 0
+
+
+breedabilityDaysList = [
+    0.0000,
+    2.9722,
+    25.5910,
+    230.7881,
+    2445.8520,
+    30113.1432,
+    421857.0285,
+    6615176.2308,
+    114686626.8729,
+    2177232407.5082,
+]
+breedabilityHearts = [1 + pow(x, 1.25) for x in range(0, 10)]
+
+def getBreedabilityMultiFromDays(days: float) -> float:
+    result = 1 + math.log(max(1, pow(days+1, 0.725)))
+    #print(f"getBreedabilityMultiFromDays: Given {days} days, Breedability Multi = {result}")
+    return result
+
+def getBreedabilityHeartFromMulti(multi: float) -> str:
+    result = 0
+    for reqIndex, requirement in enumerate(breedabilityHearts):
+        if multi >= requirement:
+            result += 1
+        else:
+            break
+    return f"breedability-heart-{result}"
 
 
 ###WORLD 5 CONSTS###
@@ -6136,12 +6391,6 @@ jade_emporium = [
 
 ]
 gfood_codes = ["PeanutG", "ButterBar", *[f"FoodG{i}" for i in range(1, 14)]]
-# pristineCharmsList: list[str] = [
-#     "Sparkle Log", "Fruit Rolle", "Glowing Veil", "Cotton Candy", "Sugar Bomb",
-#     "Gumm Eye", "Bubblegum Law", "Sour Wowzer", "Crystal Comb", "Rock Candy",
-#     "Lollipop Law", "Taffy Disc", "Stick of Chew", "Treat Sack", "Gumm Stick",
-#     "Lolly Flower", "Gumball Necklace", "Liqorice Rolle",
-# ]
 pristineCharmsList: list = [
     {'Name': 'Sparkle Log', 'Image': 'sparkle-log', 'Bonus': '1.20x Total DMG'},
     {'Name': 'Fruit Rolle', 'Image': 'fruit-rolle', 'Bonus': '+20% AGI'},
@@ -6192,7 +6441,7 @@ landrankDict = {
     15: {'Name': 'Evolution Ultraboost', 'UnlockLevel': 1300, 'Value': 40000},
     16: {'Name': 'Farmtastic Superboost', 'UnlockLevel': 1500, 'Value': 220},
     17: {'Name': 'Production Superboost', 'UnlockLevel': 1750, 'Value': 600},
-    18: {'Name': 'Overgrowth Superboost', 'UnlockLevel': 2000, 'Value': 240},
+    18: {'Name': 'Overgrowth Superboost', 'UnlockLevel': 2000, 'Value': 1500},
     19: {'Name': 'Seed of Stats', 'UnlockLevel': 3500, 'Value': 5},
 }
 marketUpgradeList = [
@@ -6200,8 +6449,281 @@ marketUpgradeList = [
     "Biology Boost", "Product Doubler", "More Beenz", "Rank Boost",
     "Overgrowth", "Evolution GMO", "Speed GMO", "OG Fertilizer",
     "EXP GMO", "Land Rank", "Value GMO", "Super GMO"]
+#  Last verified from MarketInfo function as of 2.12, slightly tweaked for readability
+marketUpgradeDetails = [
+    "LAND_PLOTS {_extra_plots_of_land_to_plant_crops_in 0 2 2 2 0 20 1".split(" "),
+    "STRONGER_VINES +{%_chance_for_+1_crop_when_fully_grown 1 0.18 2 1.13 3 500 2".split(" "),
+    "NUTRITIOUS_SOIL +{%_growth_speed_for_all_land 7 0.15 3 1.12 8 500 1".split(" "),
+    "SMARTER_SEEDS +{%_farming_EXP_gain_from_all_sources 21 0.14 6 1.1 14 500 3".split(" "),
+    "BIOLOGY_BOOST +{%_chance_of_crop_evolution,_or_'next_crop'_chance 46 0.09 10 1.1 31 500 15".split(" "),
+    "PRODUCT_DOUBLER +{%_chance_for_crops_to_be_worth_2x_when_collected 30 0.12 15 1.2 42 500 3".split(" "),
+    "MORE_BEENZ +{%_magic_beans_gained_when_trading_in_crops 61 0.11 25 1.15 53 500 2".split(" "),
+    "RANK_BOOST Plots_earn_+{%_more_Rank_XP_when_a_crop_is_collected 84 0.11 30 1.2 80 500 3".split(" "),
+    "OVERGROWTH Unlocks_Overgrowth_(OG)._Each_OG_doubles_crop_value_~_EXP 2 0.10 10 1.1 19 1 1".split(" "),
+    "EVOLUTION_GMO }x_crop_evolution_chance_per_crop_you_have_200_of 2 0.10 15 1.080 25 500 0.8".split(" "),
+    "SPEED_GMO +{%_growth_speed_per_crop_you_have_1000_of 2 0.10 25 1.155 36 500 0.3".split(" "),
+    "OG_FERTILIZER }x_higher_chance_for_Overgrowth_to_occur 2 0.10 40 1.060 48 500 1".split(" "),
+    "EXP_GMO +{%_farming_EXP_gain_crop_you_have_2500_of 2 0.10 60 1.095 57 100 1".split(" "),
+    "LAND_RANK Each_plot_now_gets_Rank_XP_when_a_crop_is_collected. 2 0.10 80 1.050 61 1 1".split(" "),
+    "VALUE_GMO +{%_crop_value_per_crop_you_have_10k_of 2 0.10 150 1.125 95 500 1".split(" "),
+    "SUPER_GMO +{%_all_'GMO'_bonuses_per_crop_you_have_100K_of 2 0.10 250 1.20 109 50 0.5".split(" "),
+]
 marketUpgradeFirstIndex = 2
 marketUpgradeLastIndex = marketUpgradeFirstIndex + len(marketUpgradeList)
+cropDepotDict = {
+    0: {
+        'EmporiumUnlockName': 'Reinforced Science Pencil',
+        'BonusString': 'DMG',
+        'funcType': 'add',
+        'x1': 20,
+        'x2': 0,
+        'Image': 'depot-pencil',
+    },
+    1: {
+        'EmporiumUnlockName': 'Science Pen',
+        'BonusString': 'Gaming Evo',
+        'funcType': 'pow',
+        'x1': 1.02,
+        'x2': 0,
+        'Image': 'depot-pen',
+    },
+    2: {
+        'EmporiumUnlockName': 'Science Marker',
+        'BonusString': 'Jade Coin',
+        'funcType': 'add',
+        'x1': 8,
+        'x2': 0,
+        'Image': 'depot-marker',
+    },
+    3: {
+        'EmporiumUnlockName': 'Science Featherpen',
+        'BonusString': 'Meal Spd',
+        'funcType': 'pow',
+        'x1': 1.1,
+        'x2': 0,
+        'Image': 'depot-featherpen',
+    },
+    4: {
+        'EmporiumUnlockName': 'Science Environmentally Sourced Pencil',
+        'BonusString': 'Cash',
+        'funcType': 'add',
+        'x1': 15,
+        'x2': 0,
+        'Image': 'depot-green-pencil',
+    },
+    5: {
+        'EmporiumUnlockName': 'Science Crayon',
+        'BonusString': 'Pet Rate',
+        'funcType': 'add',
+        'x1': 7,
+        'x2': 0,
+        'Image': 'depot-crayon',
+    },
+    6: {
+        'EmporiumUnlockName': 'Science Paintbrush',
+        'BonusString': 'Base Critters',
+        'funcType': 'add',
+        'x1': 0.1,
+        'x2': 0,
+        'Image': 'depot-paintbrush',
+    },
+
+}
+cropDict = {
+#Basic
+    #0: {'Name': '', 'Image': '', 'SeedName': 'Earthy', 'SeedCropIndex': None},
+    1: {'Name': 'Apple', 'Image': 'apple-crop', 'SeedName': 'Basic', 'SeedCropIndex': 1},
+    2: {'Name': 'Orange', 'Image': 'orange', 'SeedName': 'Basic', 'SeedCropIndex': 2},
+    3: {'Name': 'Lemon', 'Image': 'lemon', 'SeedName': 'Basic', 'SeedCropIndex': 3},
+    4: {'Name': 'Pear', 'Image': 'pear', 'SeedName': 'Basic', 'SeedCropIndex': 4},
+    5: {'Name': 'Strawberry', 'Image': 'strawberry', 'SeedName': 'Basic', 'SeedCropIndex': 5},
+    6: {'Name': 'Bananas', 'Image': 'bananas', 'SeedName': 'Basic', 'SeedCropIndex': 6},
+    7: {'Name': 'Blueberry', 'Image': 'blueberry', 'SeedName': 'Basic', 'SeedCropIndex': 7},
+    8: {'Name': 'Brown Grapes', 'Image': 'red-grapes', 'SeedName': 'Basic', 'SeedCropIndex': 8},
+    9: {'Name': 'Red Pear', 'Image': 'red-pear', 'SeedName': 'Basic', 'SeedCropIndex': 9},
+    10: {'Name': 'Pineapple', 'Image': 'pineapple', 'SeedName': 'Basic', 'SeedCropIndex': 10},
+    11: {'Name': 'Lime', 'Image': 'lime', 'SeedName': 'Basic', 'SeedCropIndex': 11},
+    12: {'Name': 'Raspberry', 'Image': 'raspberry', 'SeedName': 'Basic', 'SeedCropIndex': 12},
+    13: {'Name': 'Fig', 'Image': 'fig', 'SeedName': 'Basic', 'SeedCropIndex': 13},
+    14: {'Name': 'Peach', 'Image': 'peach', 'SeedName': 'Basic', 'SeedCropIndex': 14},
+    15: {'Name': 'Purple Grapes', 'Image': 'purple-grapes', 'SeedName': 'Basic', 'SeedCropIndex': 15},
+    16: {'Name': 'Yellow Pear', 'Image': 'yellow-pear', 'SeedName': 'Basic', 'SeedCropIndex': 16},
+    17: {'Name': 'Watermelon', 'Image': 'watermelon', 'SeedName': 'Basic', 'SeedCropIndex': 17},
+    18: {'Name': 'Green Grapes', 'Image': 'green-grapes', 'SeedName': 'Basic', 'SeedCropIndex': 18},
+    19: {'Name': 'Dragon Fruit', 'Image': 'dragon-fruit', 'SeedName': 'Basic', 'SeedCropIndex': 19},
+    20: {'Name': 'Mango', 'Image': 'mango', 'SeedName': 'Basic', 'SeedCropIndex': 20},
+    21: {'Name': 'Gold Blueberry', 'Image': 'gold-blueberry', 'SeedName': 'Basic', 'SeedCropIndex': 21},
+#Earthy
+    22: {'Name': 'Carrot', 'Image': 'carrot', 'SeedName': 'Earthy', 'SeedCropIndex': 1},
+    23: {'Name': 'Potato', 'Image': 'potato', 'SeedName': 'Earthy', 'SeedCropIndex': 2},
+    24: {'Name': 'Beat', 'Image': 'beat', 'SeedName': 'Earthy', 'SeedCropIndex': 3},
+    25: {'Name': 'Tomato', 'Image': 'tomato', 'SeedName': 'Earthy', 'SeedCropIndex': 4},
+    26: {'Name': 'Artichoke', 'Image': 'artichoke', 'SeedName': 'Earthy', 'SeedCropIndex': 5},
+    27: {'Name': 'Roma Tomato', 'Image': 'roma-tomato', 'SeedName': 'Earthy', 'SeedCropIndex': 6},
+    28: {'Name': 'Butternut Squash', 'Image': 'butternut-squash', 'SeedName': 'Earthy', 'SeedCropIndex': 7},
+    29: {'Name': 'Avocado', 'Image': 'avocado', 'SeedName': 'Earthy', 'SeedCropIndex': 8},
+    30: {'Name': 'Red Pepper', 'Image': 'red-pepper', 'SeedName': 'Earthy', 'SeedCropIndex': 9},
+    31: {'Name': 'Broccoli', 'Image': 'broccoli', 'SeedName': 'Earthy', 'SeedCropIndex': 10},
+    32: {'Name': 'Radish', 'Image': 'radish', 'SeedName': 'Earthy', 'SeedCropIndex': 11},
+    33: {'Name': 'Coconut', 'Image': 'coconut', 'SeedName': 'Earthy', 'SeedCropIndex': 12},
+    34: {'Name': 'Sliced Tomato', 'Image': 'sliced-tomato', 'SeedName': 'Earthy', 'SeedCropIndex': 13},
+    35: {'Name': 'Cashew', 'Image': 'cashew', 'SeedName': 'Earthy', 'SeedCropIndex': 14},
+    36: {'Name': 'Turnip', 'Image': 'turnip', 'SeedName': 'Earthy', 'SeedCropIndex': 15},
+    37: {'Name': 'Coffee Bean', 'Image': 'coffee-bean', 'SeedName': 'Earthy', 'SeedCropIndex': 16},
+    38: {'Name': 'Pumpkin', 'Image': 'pumpkin', 'SeedName': 'Earthy', 'SeedCropIndex': 17},
+    39: {'Name': 'Sliced Cucumber', 'Image': 'sliced-cucumber', 'SeedName': 'Earthy', 'SeedCropIndex': 18},
+    40: {'Name': 'Eggplant', 'Image': 'eggplant', 'SeedName': 'Earthy', 'SeedCropIndex': 19},
+    41: {'Name': 'Lettuce', 'Image': 'lettuce', 'SeedName': 'Earthy', 'SeedCropIndex': 20},
+    42: {'Name': 'Garlic', 'Image': 'garlic', 'SeedName': 'Earthy', 'SeedCropIndex': 21},
+    43: {'Name': 'Green Beans', 'Image': 'green-beans', 'SeedName': 'Earthy', 'SeedCropIndex': 22},
+    44: {'Name': 'Bell Pepper', 'Image': 'bell-pepper', 'SeedName': 'Earthy', 'SeedCropIndex': 23},
+    45: {'Name': 'Corn', 'Image': 'corn-crop', 'SeedName': 'Earthy', 'SeedCropIndex': 24},
+    46: {'Name': 'Gold Sliced Tomato', 'Image': 'gold-sliced-tomato', 'SeedName': 'Earthy', 'SeedCropIndex': 25},
+#Bulbo
+    47: {'Name': 'Daisy', 'Image': 'daisy', 'SeedName': 'Bulbo', 'SeedCropIndex': 1},
+    48: {'Name': 'Flour', 'Image': 'flour', 'SeedName': 'Bulbo', 'SeedCropIndex': 2},
+    49: {'Name': 'Stargazer Lily', 'Image': 'stargazer-lily', 'SeedName': 'Bulbo', 'SeedCropIndex': 3},
+    50: {'Name': 'Rose', 'Image': 'rose', 'SeedName': 'Bulbo', 'SeedCropIndex': 4},
+    51: {'Name': 'Sunflower', 'Image': 'sunflower', 'SeedName': 'Bulbo', 'SeedCropIndex': 5},
+    52: {'Name': 'Blue Daisy', 'Image': 'blue-daisy', 'SeedName': 'Bulbo', 'SeedCropIndex': 6},
+    53: {'Name': 'Red Rose', 'Image': 'red-rose', 'SeedName': 'Bulbo', 'SeedCropIndex': 7},
+    54: {'Name': 'Tulip', 'Image': 'tulip', 'SeedName': 'Bulbo', 'SeedCropIndex': 8},
+    55: {'Name': 'Pink Daisy', 'Image': 'pink-daisy', 'SeedName': 'Bulbo', 'SeedCropIndex': 9},
+    56: {'Name': 'Cauliflower', 'Image': 'cauliflower', 'SeedName': 'Bulbo', 'SeedCropIndex': 10},
+    57: {'Name': 'Cape Marguerite Daisy', 'Image': 'cape-marguerite-daisy', 'SeedName': 'Bulbo', 'SeedCropIndex': 11},
+    58: {'Name': 'Papua Black Orchid', 'Image': 'papua-black-orchid', 'SeedName': 'Bulbo', 'SeedCropIndex': 12},
+    59: {'Name': 'Muffin', 'Image': 'muffin', 'SeedName': 'Bulbo', 'SeedCropIndex': 13},
+    60: {'Name': 'Black Rose', 'Image': 'black-rose', 'SeedName': 'Bulbo', 'SeedCropIndex': 14},
+    61: {'Name': 'Golden Tulip', 'Image': 'golden-tulip', 'SeedName': 'Bulbo', 'SeedCropIndex': 15},
+#Sushi
+    62: {'Name': 'Sushi Crop 1', 'Image': 'sushi-crop-1', 'SeedName': 'Sushi', 'SeedCropIndex': 1},
+    63: {'Name': 'Sushi Crop 2', 'Image': 'sushi-crop-2', 'SeedName': 'Sushi', 'SeedCropIndex': 2},
+    64: {'Name': 'Sushi Crop 3', 'Image': 'sushi-crop-3', 'SeedName': 'Sushi', 'SeedCropIndex': 3},
+    65: {'Name': 'Sushi Crop 4', 'Image': 'sushi-crop-4', 'SeedName': 'Sushi', 'SeedCropIndex': 4},
+    66: {'Name': 'Sushi Crop 5', 'Image': 'sushi-crop-5', 'SeedName': 'Sushi', 'SeedCropIndex': 5},
+    67: {'Name': 'Sushi Crop 6', 'Image': 'sushi-crop-6', 'SeedName': 'Sushi', 'SeedCropIndex': 6},
+    68: {'Name': 'Sushi Crop 7', 'Image': 'sushi-crop-7', 'SeedName': 'Sushi', 'SeedCropIndex': 7},
+    69: {'Name': 'Sushi Crop 8', 'Image': 'sushi-crop-8', 'SeedName': 'Sushi', 'SeedCropIndex': 8},
+    70: {'Name': 'Sushi Crop 9', 'Image': 'sushi-crop-9', 'SeedName': 'Sushi', 'SeedCropIndex': 9},
+    71: {'Name': 'Sushi Crop 10', 'Image': 'sushi-crop-10', 'SeedName': 'Sushi', 'SeedCropIndex': 10},
+    72: {'Name': 'Sushi Crop 11', 'Image': 'sushi-crop-11', 'SeedName': 'Sushi', 'SeedCropIndex': 11},
+    73: {'Name': 'Sushi Crop 12', 'Image': 'sushi-crop-12', 'SeedName': 'Sushi', 'SeedCropIndex': 12},
+    74: {'Name': 'Sushi Crop 13', 'Image': 'sushi-crop-13', 'SeedName': 'Sushi', 'SeedCropIndex': 13},
+    75: {'Name': 'Sushi Crop 14', 'Image': 'sushi-crop-14', 'SeedName': 'Sushi', 'SeedCropIndex': 14},
+    76: {'Name': 'Sushi Crop 15', 'Image': 'sushi-crop-15', 'SeedName': 'Sushi', 'SeedCropIndex': 15},
+    77: {'Name': 'Sushi Crop 16', 'Image': 'sushi-crop-16', 'SeedName': 'Sushi', 'SeedCropIndex': 16},
+    78: {'Name': 'Sushi Crop 17', 'Image': 'sushi-crop-17', 'SeedName': 'Sushi', 'SeedCropIndex': 17},
+    79: {'Name': 'Sushi Crop 18', 'Image': 'sushi-crop-18', 'SeedName': 'Sushi', 'SeedCropIndex': 18},
+    80: {'Name': 'Sushi Crop 19', 'Image': 'sushi-crop-19', 'SeedName': 'Sushi', 'SeedCropIndex': 19},
+    81: {'Name': 'Sushi Crop 20', 'Image': 'sushi-crop-20', 'SeedName': 'Sushi', 'SeedCropIndex': 20},
+    82: {'Name': 'Sushi Crop 21', 'Image': 'sushi-crop-21', 'SeedName': 'Sushi', 'SeedCropIndex': 21},
+    83: {'Name': 'Sushi Crop 22', 'Image': 'sushi-crop-22', 'SeedName': 'Sushi', 'SeedCropIndex': 22},
+    84: {'Name': 'Sushi Crop 23', 'Image': 'sushi-crop-23', 'SeedName': 'Sushi', 'SeedCropIndex': 23},
+#Mushie
+    85:  {'Name': 'Mushroom 1', 'Image': 'mushroom-1', 'SeedName': 'Mushie', 'SeedCropIndex': 1},
+    86:  {'Name': 'Mushroom 2', 'Image': 'mushroom-2', 'SeedName': 'Mushie', 'SeedCropIndex': 2},
+    87:  {'Name': 'Mushroom 3', 'Image': 'mushroom-3', 'SeedName': 'Mushie', 'SeedCropIndex': 3},
+    88:  {'Name': 'Mushroom 4', 'Image': 'mushroom-4', 'SeedName': 'Mushie', 'SeedCropIndex': 4},
+    89:  {'Name': 'Mushroom 5', 'Image': 'mushroom-5', 'SeedName': 'Mushie', 'SeedCropIndex': 5},
+    90:  {'Name': 'Mushroom 6', 'Image': 'mushroom-6', 'SeedName': 'Mushie', 'SeedCropIndex': 6},
+    91:  {'Name': 'Mushroom 7', 'Image': 'mushroom-7', 'SeedName': 'Mushie', 'SeedCropIndex': 7},
+    92:  {'Name': 'Mushroom 8', 'Image': 'mushroom-8', 'SeedName': 'Mushie', 'SeedCropIndex': 8},
+    93:  {'Name': 'Mushroom 9', 'Image': 'mushroom-9', 'SeedName': 'Mushie', 'SeedCropIndex': 9},
+    94:  {'Name': 'Mushroom 10', 'Image': 'mushroom-10', 'SeedName': 'Mushie', 'SeedCropIndex': 10},
+    95:  {'Name': 'Mushroom 11', 'Image': 'mushroom-11', 'SeedName': 'Mushie', 'SeedCropIndex': 11},
+    96:  {'Name': 'Mushroom 12', 'Image': 'mushroom-12', 'SeedName': 'Mushie', 'SeedCropIndex': 12},
+    97:  {'Name': 'Mushroom 13', 'Image': 'mushroom-13', 'SeedName': 'Mushie', 'SeedCropIndex': 13},
+    98:  {'Name': 'Mushroom 14', 'Image': 'mushroom-14', 'SeedName': 'Mushie', 'SeedCropIndex': 14},
+    99:  {'Name': 'Mushroom 15', 'Image': 'mushroom-15', 'SeedName': 'Mushie', 'SeedCropIndex': 15},
+    100: {'Name': 'Mushroom 16', 'Image': 'mushroom-16', 'SeedName': 'Mushie', 'SeedCropIndex': 16},
+    101: {'Name': 'Mushroom 17', 'Image': 'mushroom-17', 'SeedName': 'Mushie', 'SeedCropIndex': 17},
+    102: {'Name': 'Mushroom 18', 'Image': 'mushroom-18', 'SeedName': 'Mushie', 'SeedCropIndex': 18},
+    103: {'Name': 'Mushroom 19', 'Image': 'mushroom-19', 'SeedName': 'Mushie', 'SeedCropIndex': 19},
+    104: {'Name': 'Mushroom 20', 'Image': 'mushroom-20', 'SeedName': 'Mushie', 'SeedCropIndex': 20},
+    105: {'Name': 'Mushroom 21', 'Image': 'mushroom-21', 'SeedName': 'Mushie', 'SeedCropIndex': 21},
+    106: {'Name': 'Mushroom 22', 'Image': 'mushroom-22', 'SeedName': 'Mushie', 'SeedCropIndex': 22},
+    107: {'Name': 'Mushroom 23', 'Image': 'mushroom-23', 'SeedName': 'Mushie', 'SeedCropIndex': 23},
+#Normal Glassy
+    108: {'Name': 'Glassy Bananas', 'Image': 'glassy-bananas', 'SeedName': 'Normal Glassy', 'SeedCropIndex': 1},
+    109: {'Name': 'Glassy Mango', 'Image': 'glassy-mango', 'SeedName': 'Normal Glassy', 'SeedCropIndex': 2},
+    110: {'Name': 'Glassy Mushroom', 'Image': 'glassy-mushroom', 'SeedName': 'Normal Glassy', 'SeedCropIndex': 3},
+    111: {'Name': 'Glassy Maki', 'Image': 'glassy-maki', 'SeedName': 'Normal Glassy', 'SeedCropIndex': 4},
+    112: {'Name': 'Glassy Broccoli', 'Image': 'glassy-broccoli', 'SeedName': 'Normal Glassy', 'SeedCropIndex': 5},
+    113: {'Name': 'Glassy Carrot', 'Image': 'glassy-carrot', 'SeedName': 'Normal Glassy', 'SeedCropIndex': 6},
+    114: {'Name': 'Glassy Tomato', 'Image': 'glassy-tomato', 'SeedName': 'Normal Glassy', 'SeedCropIndex': 7},
+    115: {'Name': 'Glassy Watermelon', 'Image': 'glassy-watermelon', 'SeedName': 'Normal Glassy', 'SeedCropIndex': 8},
+    116: {'Name': 'Glassy Shrimp', 'Image': 'glassy-shrimp', 'SeedName': 'Normal Glassy', 'SeedCropIndex': 9},
+    117: {'Name': 'Glassy Rose', 'Image': 'glassy-rose', 'SeedName': 'Normal Glassy', 'SeedCropIndex': 10},
+    118: {'Name': 'Glassy Lettuce', 'Image': 'glassy-lettuce', 'SeedName': 'Normal Glassy', 'SeedCropIndex': 11},
+    119: {'Name': 'Glassy Onigiri', 'Image': 'glassy-onigiri', 'SeedName': 'Normal Glassy', 'SeedCropIndex': 12},
+    120: {'Name': 'Glassy Corn', 'Image': 'glassy-corn', 'SeedName': 'Normal Glassy', 'SeedCropIndex': 13},
+#Red Glassy
+    121: {'Name': 'Red Glassy Bananas',     'Image': 'red-glassy-bananas', 'SeedName': 'Red Glassy',    'SeedCropIndex': 14},
+    122: {'Name': 'Red Glassy Mango',       'Image': 'red-glassy-mango', 'SeedName': 'Red Glassy',      'SeedCropIndex': 15},
+    123: {'Name': 'Red Glassy Broccoli',    'Image': 'red-glassy-broccoli', 'SeedName': 'Red Glassy',   'SeedCropIndex': 16},
+    124: {'Name': 'Red Glassy Carrot',      'Image': 'red-glassy-carrot', 'SeedName': 'Red Glassy',     'SeedCropIndex': 17},
+    125: {'Name': 'Red Glassy Tomato',      'Image': 'red-glassy-tomato', 'SeedName': 'Red Glassy',     'SeedCropIndex': 18},
+    126: {'Name': 'Red Glassy Watermelon',  'Image': 'red-glassy-watermelon', 'SeedName': 'Red Glassy', 'SeedCropIndex': 19},
+    127: {'Name': 'Red Glassy Shrimp',      'Image': 'red-glassy-shrimp', 'SeedName': 'Red Glassy',     'SeedCropIndex': 20},
+    128: {'Name': 'Red Glassy Rose',        'Image': 'red-glassy-rose', 'SeedName': 'Red Glassy',       'SeedCropIndex': 21},
+    129: {'Name': 'Red Glassy Onigiri',     'Image': 'red-glassy-corn', 'SeedName': 'Red Glassy',       'SeedCropIndex': 22},
+    130: {'Name': 'Red Glassy Corn',        'Image': 'red-glassy-corn', 'SeedName': 'Red Glassy',       'SeedCropIndex': 23},
+#Green Glassy
+    131: {'Name': 'Green Glassy Bananas',     'Image': 'green-glassy-bananas', 'SeedName': 'Green Glassy',    'SeedCropIndex': 24},
+    132: {'Name': 'Green Glassy Mango',       'Image': 'green-glassy-mango', 'SeedName': 'Green Glassy',      'SeedCropIndex': 25},
+    133: {'Name': 'Green Glassy Broccoli',    'Image': 'green-glassy-broccoli', 'SeedName': 'Green Glassy',   'SeedCropIndex': 26},
+    134: {'Name': 'Green Glassy Carrot',      'Image': 'green-glassy-carrot', 'SeedName': 'Green Glassy',     'SeedCropIndex': 27},
+    135: {'Name': 'Green Glassy Tomato',      'Image': 'green-glassy-tomato', 'SeedName': 'Green Glassy',     'SeedCropIndex': 28},
+    136: {'Name': 'Green Glassy Watermelon',  'Image': 'green-glassy-watermelon', 'SeedName': 'Green Glassy', 'SeedCropIndex': 29},
+    137: {'Name': 'Green Glassy Shrimp',      'Image': 'green-glassy-shrimp', 'SeedName': 'Green Glassy',     'SeedCropIndex': 30},
+    138: {'Name': 'Green Glassy Rose',        'Image': 'green-glassy-rose', 'SeedName': 'Green Glassy',       'SeedCropIndex': 31},
+    139: {'Name': 'Green Glassy Onigiri',     'Image': 'green-glassy-corn', 'SeedName': 'Green Glassy',       'SeedCropIndex': 32},
+    140: {'Name': 'Green Glassy Corn',        'Image': 'green-glassy-corn', 'SeedName': 'Green Glassy',       'SeedCropIndex': 33},
+#White Glassy
+    141: {'Name': 'White Glassy Bananas',     'Image': 'white-glassy-bananas', 'SeedName': 'White Glassy',    'SeedCropIndex': 34},
+    142: {'Name': 'White Glassy Mango',       'Image': 'white-glassy-mango', 'SeedName': 'White Glassy',      'SeedCropIndex': 35},
+    143: {'Name': 'White Glassy Broccoli',    'Image': 'white-glassy-broccoli', 'SeedName': 'White Glassy',   'SeedCropIndex': 36},
+    144: {'Name': 'White Glassy Carrot',      'Image': 'white-glassy-carrot', 'SeedName': 'White Glassy',     'SeedCropIndex': 37},
+    145: {'Name': 'White Glassy Tomato',      'Image': 'white-glassy-tomato', 'SeedName': 'White Glassy',     'SeedCropIndex': 38},
+    146: {'Name': 'White Glassy Watermelon',  'Image': 'white-glassy-watermelon', 'SeedName': 'White Glassy', 'SeedCropIndex': 39},
+    147: {'Name': 'White Glassy Shrimp',      'Image': 'white-glassy-shrimp', 'SeedName': 'White Glassy',     'SeedCropIndex': 40},
+    148: {'Name': 'White Glassy Rose',        'Image': 'white-glassy-rose', 'SeedName': 'White Glassy',       'SeedCropIndex': 41},
+    149: {'Name': 'White Glassy Onigiri',     'Image': 'white-glassy-corn', 'SeedName': 'White Glassy',       'SeedCropIndex': 42},
+    150: {'Name': 'White Glassy Corn',        'Image': 'white-glassy-corn', 'SeedName': 'White Glassy',       'SeedCropIndex': 43},
+#Purple Glassy
+    151: {'Name': 'Purple Glassy Bananas',     'Image': 'purple-glassy-bananas', 'SeedName': 'Purple Glassy',    'SeedCropIndex': 44},
+    152: {'Name': 'Purple Glassy Mango',       'Image': 'purple-glassy-mango', 'SeedName': 'Purple Glassy',      'SeedCropIndex': 45},
+    153: {'Name': 'Purple Glassy Broccoli',    'Image': 'purple-glassy-broccoli', 'SeedName': 'Purple Glassy',   'SeedCropIndex': 46},
+    154: {'Name': 'Purple Glassy Carrot',      'Image': 'purple-glassy-carrot', 'SeedName': 'Purple Glassy',     'SeedCropIndex': 47},
+    155: {'Name': 'Purple Glassy Tomato',      'Image': 'purple-glassy-tomato', 'SeedName': 'Purple Glassy',     'SeedCropIndex': 48},
+    156: {'Name': 'Purple Glassy Watermelon',  'Image': 'purple-glassy-watermelon', 'SeedName': 'Purple Glassy', 'SeedCropIndex': 49},
+    157: {'Name': 'Purple Glassy Shrimp',      'Image': 'purple-glassy-shrimp', 'SeedName': 'Purple Glassy',     'SeedCropIndex': 50},
+    158: {'Name': 'Purple Glassy Rose',        'Image': 'purple-glassy-rose', 'SeedName': 'Purple Glassy',       'SeedCropIndex': 51},
+    159: {'Name': 'Purple Glassy Onigiri',     'Image': 'purple-glassy-corn', 'SeedName': 'Purple Glassy',       'SeedCropIndex': 52},
+    160: {'Name': 'Purple Glassy Corn',        'Image': 'purple-glassy-corn', 'SeedName': 'Purple Glassy',       'SeedCropIndex': 53},
+}
+seed_base = {
+    'Basic': 0.75,
+    'Earthy': 0.63,
+    'Bulbo': 0.3,
+    'Sushi': 0.4,
+    'Mushie': 0.2,
+    'Normal Glassy': 0.05,
+    'Red Glassy': 0.05,
+    'Green Glassy': 0.05,
+    'White Glassy': 0.05,
+    'Purple Glassy': 0.05
+}
+crop_base = 0.3
+def getCropEvoChance(overallSeedNumber: int) -> float:
+    if cropDict[overallSeedNumber]['SeedCropIndex'] == 1:
+        return 1
+    else:
+        try:
+            return crop_base * pow(seed_base[cropDict[overallSeedNumber]['SeedName']], cropDict[overallSeedNumber]['SeedCropIndex'] - 2)
+        except:
+            logger.warning(f"overallSeedNumber {overallSeedNumber} not found in cropDict. Returning crop_base {crop_base}")
+            return crop_base
 
 def getMoissaniteValue(moissaniteLevel: int):
     try:
@@ -6673,25 +7195,25 @@ dungeonDropsList = [
     "KeyFrag", "DungCredits1", "LootDice", "Tree7D", "PlatD", "Fish1D", "Fish3D", "Cashb", "Dung3Ice",
     "FoodHealth1d", "FoodHealth2d", "FoodHealth3d"
 ]
-maxDungeonWeaponsAvailable = 23 #This is the value saved in the JSON, 0-23 = 24 total. Last verified in 2.12
+maxDungeonWeaponsAvailable = 23  #This is the value saved in the JSON, 0-23 = 24 total. Last verified in 2.12
 dungeonWeaponsList = [
-    "DungWeaponPunchA1", "DungWeaponPunchA2", "DungWeaponPunchA3", "DungWeaponPunchA4", "DungWeaponPunchA5", "DungWeaponPunchB1", "DungWeaponPunchB2", "DungWeaponPunchB3", "DungWeaponPunchB4", "DungWeaponPunchB5", "DungWeaponPunchC1", "DungWeaponPunchC2", "DungWeaponPunchC3", "DungWeaponPunchC4", "DungWeaponPunchC5", "DungWeaponPunchD1", "DungWeaponPunchD2", "DungWeaponPunchD3", "DungWeaponPunchD4", "DungWeaponPunchD5", "DungWeaponPunchE1", "DungWeaponPunchE2", "DungWeaponPunchE3", "DungWeaponPunchE4", #"DungWeaponPunchE5", "DungWeaponPunchF1", "DungWeaponPunchF2", "DungWeaponPunchF3", "DungWeaponPunchF4", "DungWeaponPunchF5",
-    "DungWeaponSwordA1", "DungWeaponSwordA2", "DungWeaponSwordA3", "DungWeaponSwordA4", "DungWeaponSwordA5", "DungWeaponSwordB1", "DungWeaponSwordB2", "DungWeaponSwordB3", "DungWeaponSwordB4", "DungWeaponSwordB5", "DungWeaponSwordC1", "DungWeaponSwordC2", "DungWeaponSwordC3", "DungWeaponSwordC4", "DungWeaponSwordC5", "DungWeaponSwordD1", "DungWeaponSwordD2", "DungWeaponSwordD3", "DungWeaponSwordD4", "DungWeaponSwordD5", "DungWeaponSwordE1", "DungWeaponSwordE2", "DungWeaponSwordE3", "DungWeaponSwordE4", #"DungWeaponSwordE5", "DungWeaponSwordF1", "DungWeaponSwordF2", "DungWeaponSwordF3", "DungWeaponSwordF4", "DungWeaponSwordF5",
-    "DungWeaponBowA1", "DungWeaponBowA2", "DungWeaponBowA3", "DungWeaponBowA4", "DungWeaponBowA5", "DungWeaponBowB1", "DungWeaponBowB2", "DungWeaponBowB3", "DungWeaponBowB4", "DungWeaponBowB5", "DungWeaponBowC1", "DungWeaponBowC2", "DungWeaponBowC3", "DungWeaponBowC4", "DungWeaponBowC5", "DungWeaponBowD1", "DungWeaponBowD2", "DungWeaponBowD3", "DungWeaponBowD4", "DungWeaponBowD5", "DungWeaponBowE1", "DungWeaponBowE2", "DungWeaponBowE3", "DungWeaponBowE4", #"DungWeaponBowE5", "DungWeaponBowF1", "DungWeaponBowF2", "DungWeaponBowF3", "DungWeaponBowF4", "DungWeaponBowF5",
-    "DungWeaponWandA1", "DungWeaponWandA2", "DungWeaponWandA3", "DungWeaponWandA4", "DungWeaponWandA5", "DungWeaponWandB1", "DungWeaponWandB2", "DungWeaponWandB3", "DungWeaponWandB4", "DungWeaponWandB5", "DungWeaponWandC1", "DungWeaponWandC2", "DungWeaponWandC3", "DungWeaponWandC4", "DungWeaponWandC5", "DungWeaponWandD1", "DungWeaponWandD2", "DungWeaponWandD3", "DungWeaponWandD4", "DungWeaponWandD5", "DungWeaponWandE1", "DungWeaponWandE2", "DungWeaponWandE3", "DungWeaponWandE4", #"DungWeaponWandE5", "DungWeaponWandF1", "DungWeaponWandF2", "DungWeaponWandF3", "DungWeaponWandF4", #"DungWeaponWandF5",
+    "DungWeaponPunchA1", "DungWeaponPunchA2", "DungWeaponPunchA3", "DungWeaponPunchA4", "DungWeaponPunchA5", "DungWeaponPunchB1", "DungWeaponPunchB2", "DungWeaponPunchB3", "DungWeaponPunchB4", "DungWeaponPunchB5", "DungWeaponPunchC1", "DungWeaponPunchC2", "DungWeaponPunchC3", "DungWeaponPunchC4", "DungWeaponPunchC5", "DungWeaponPunchD1", "DungWeaponPunchD2", "DungWeaponPunchD3", "DungWeaponPunchD4", "DungWeaponPunchD5", "DungWeaponPunchE1", "DungWeaponPunchE2", "DungWeaponPunchE3", "DungWeaponPunchE4",  #"DungWeaponPunchE5", "DungWeaponPunchF1", "DungWeaponPunchF2", "DungWeaponPunchF3", "DungWeaponPunchF4", "DungWeaponPunchF5",
+    "DungWeaponSwordA1", "DungWeaponSwordA2", "DungWeaponSwordA3", "DungWeaponSwordA4", "DungWeaponSwordA5", "DungWeaponSwordB1", "DungWeaponSwordB2", "DungWeaponSwordB3", "DungWeaponSwordB4", "DungWeaponSwordB5", "DungWeaponSwordC1", "DungWeaponSwordC2", "DungWeaponSwordC3", "DungWeaponSwordC4", "DungWeaponSwordC5", "DungWeaponSwordD1", "DungWeaponSwordD2", "DungWeaponSwordD3", "DungWeaponSwordD4", "DungWeaponSwordD5", "DungWeaponSwordE1", "DungWeaponSwordE2", "DungWeaponSwordE3", "DungWeaponSwordE4",  #"DungWeaponSwordE5", "DungWeaponSwordF1", "DungWeaponSwordF2", "DungWeaponSwordF3", "DungWeaponSwordF4", "DungWeaponSwordF5",
+    "DungWeaponBowA1", "DungWeaponBowA2", "DungWeaponBowA3", "DungWeaponBowA4", "DungWeaponBowA5", "DungWeaponBowB1", "DungWeaponBowB2", "DungWeaponBowB3", "DungWeaponBowB4", "DungWeaponBowB5", "DungWeaponBowC1", "DungWeaponBowC2", "DungWeaponBowC3", "DungWeaponBowC4", "DungWeaponBowC5", "DungWeaponBowD1", "DungWeaponBowD2", "DungWeaponBowD3", "DungWeaponBowD4", "DungWeaponBowD5", "DungWeaponBowE1", "DungWeaponBowE2", "DungWeaponBowE3", "DungWeaponBowE4",  #"DungWeaponBowE5", "DungWeaponBowF1", "DungWeaponBowF2", "DungWeaponBowF3", "DungWeaponBowF4", "DungWeaponBowF5",
+    "DungWeaponWandA1", "DungWeaponWandA2", "DungWeaponWandA3", "DungWeaponWandA4", "DungWeaponWandA5", "DungWeaponWandB1", "DungWeaponWandB2", "DungWeaponWandB3", "DungWeaponWandB4", "DungWeaponWandB5", "DungWeaponWandC1", "DungWeaponWandC2", "DungWeaponWandC3", "DungWeaponWandC4", "DungWeaponWandC5", "DungWeaponWandD1", "DungWeaponWandD2", "DungWeaponWandD3", "DungWeaponWandD4", "DungWeaponWandD5", "DungWeaponWandE1", "DungWeaponWandE2", "DungWeaponWandE3", "DungWeaponWandE4",  #"DungWeaponWandE5", "DungWeaponWandF1", "DungWeaponWandF2", "DungWeaponWandF3", "DungWeaponWandF4", #"DungWeaponWandF5",
 ]
 maxDungeonArmorsAvailable = 3  #This is the value saved in the JSON, 0-3 = 4 total. Last verified in 2.12
 dungeonArmorsList = [
-    "DungEquipmentHats0", "DungEquipmentHats1", "DungEquipmentHats2", "DungEquipmentHats3", #"DungEquipmentHats4",
-    "DungEquipmentShirt0", "DungEquipmentShirt1", "DungEquipmentShirt2", "DungEquipmentShirt3", #"DungEquipmentShirt4",
-    "DungEquipmentPants0", "DungEquipmentPants1", "DungEquipmentPants2", "DungEquipmentPants3", #"DungEquipmentPants4",
-    "DungEquipmentShoes0", "DungEquipmentShoes1", "DungEquipmentShoes2", "DungEquipmentShoes3", #"DungEquipmentShoes4",
-] #This list was pulled from the items.yaml file
+    "DungEquipmentHats0", "DungEquipmentHats1", "DungEquipmentHats2", "DungEquipmentHats3",  #"DungEquipmentHats4",
+    "DungEquipmentShirt0", "DungEquipmentShirt1", "DungEquipmentShirt2", "DungEquipmentShirt3",  #"DungEquipmentShirt4",
+    "DungEquipmentPants0", "DungEquipmentPants1", "DungEquipmentPants2", "DungEquipmentPants3",  #"DungEquipmentPants4",
+    "DungEquipmentShoes0", "DungEquipmentShoes1", "DungEquipmentShoes2", "DungEquipmentShoes3",  #"DungEquipmentShoes4",
+]  #This list was pulled from the items.yaml file
 maxDungeonJewelryAvailable = 3   #This is the value saved in the JSON, 0-3 = 4 total. Last verified in 2.12
 dungeonJewelryList = [
-    "DungEquipmentPendant0", "DungEquipmentPendant1", "DungEquipmentPendant2", "DungEquipmentPendant3", #"DungEquipmentPendant4",
-    "DungEquipmentRings0", "DungEquipmentRings1", "DungEquipmentRings2", "DungEquipmentRings3", #"DungEquipmentRings4",
-] #This list was pulled from the items.yaml file
+    "DungEquipmentPendant0", "DungEquipmentPendant1", "DungEquipmentPendant2", "DungEquipmentPendant3",  #"DungEquipmentPendant4",
+    "DungEquipmentRings0", "DungEquipmentRings1", "DungEquipmentRings2", "DungEquipmentRings3",  #"DungEquipmentRings4",
+]  #This list was pulled from the items.yaml file
 
 reclaimableQuestItems = {
     "CraftMat2": {
@@ -6773,6 +7295,1000 @@ reclaimableQuestItems = {
         "QuestNameCoded": "Nebulyte4"
     }
 }
+slab_QuestRewards = {
+    'EquipmentPants16': {
+        "ItemName": "Adam's Leaf",
+        "QuestGiver": "Sprout",
+        "QuestName": "Justice Wears No Clothes",
+        "QuestNameCoded": "Sprout2"
+    },
+    'EquipmentShirts17': {
+        "ItemName": "MCR Tshirt",
+        "QuestGiver": "Sprout",
+        "QuestName": "Shoe Shopping with Sprout",
+        "QuestNameCoded": "Sprout3"
+    },
+    'NPCtoken12': {
+        "ItemName": "Sproutinald Token",
+        "QuestGiver": "Sprout",
+        "QuestName": "Frisbee Fanatic",
+        "QuestNameCoded": "Sprout4"
+    },
+    'EquipmentRings12': {
+        "ItemName": "Frisbee Ring",
+        "QuestGiver": "Sprout",
+        "QuestName": "Frisbee Fanatic",
+        "QuestNameCoded": "Sprout4"
+    },
+    'MaxCapBagT1': {
+        "ItemName": "Miniature Choppin Pouch",
+        "QuestGiver": "Woodsman",
+        "QuestName": "A noob's first swing",
+        "QuestNameCoded": "Woodsman1"
+    },
+    'EquipmentToolsHatchet0': {
+        "ItemName": "Old Hatchet",
+        "QuestGiver": "Woodsman",
+        "QuestName": "A noob's 2nd first swing",
+        "QuestNameCoded": "Woodsman2"
+    },
+    'EquipmentHats4Choppin': {
+        "ItemName": "Stump Prop",
+        "QuestGiver": "Woodsman",
+        "QuestName": "It's Just a Plank, Bro!",
+        "QuestNameCoded": "Woodsman3"
+    },
+    'NPCtoken5': {
+        "ItemName": "Woodsman Token",
+        "QuestGiver": "Woodsman",
+        "QuestName": "Exotic Pranks... I mean Logs!",
+        "QuestNameCoded": "Woodsman4"
+    },
+    'CraftMat2': {
+        "ItemName": "Crimson String",
+        "QuestGiver": "Scripticus",
+        "QuestName": "Hardcore Gamer Status, Here I Come!",
+        "QuestNameCoded": "Scripticus2"
+    },
+    'EquipmentHats7': {
+        "ItemName": "Red Headband",
+        "QuestGiver": "Scripticus",
+        "QuestName": "Gear Up, Gamer!",
+        "QuestNameCoded": "Scripticus3"
+    },
+    'InvBag1': {
+        "ItemName": "Inventory Bag A",
+        "QuestGiver": "Scripticus",
+        "QuestName": "Mr. Worldwide",
+        "QuestNameCoded": "Scripticus4"
+    },
+    'EquipmentTools1': {
+        "ItemName": "Junk Pickaxe",
+        "QuestGiver": "Scripticus",
+        "QuestName": "Certified Swinger, of Pickaxes of course!",
+        "QuestNameCoded": "Scripticus6"
+    },
+    'MaxCapBagM1': {
+        "ItemName": "Mini Materials Pouch",
+        "QuestGiver": "Scripticus",
+        "QuestName": "The Smithing Grind",
+        "QuestNameCoded": "Scripticus7"
+    },
+    'InvBag2': {
+        "ItemName": "Inventory Bag B",
+        "QuestGiver": "Scripticus",
+        "QuestName": "Warrior, Archer or Mage?",
+        "QuestNameCoded": "Scripticus8"
+    },
+    'MaxCapBagM3': {
+        "ItemName": "Small Material Pouch",
+        "QuestGiver": "Scripticus",
+        "QuestName": "Warrior, Archer or Mage?",
+        "QuestNameCoded": "Scripticus8"
+    },
+    'InvBag3': {
+        "ItemName": "Inventory Bag C",
+        "QuestGiver": "Scripticus",
+        "QuestName": "Stiltzcho, the Leaf Scout",
+        "QuestNameCoded": "Scripticus9"
+    },
+    'Trophy6': {
+        "ItemName": "Blunder Hero",
+        "QuestGiver": "Scripticus",
+        "QuestName": "Champion of the Grasslands",
+        "QuestNameCoded": "Scripticus12"
+    },
+    'StoneA1b': {
+        "ItemName": "Armor Upgrade Stone G",
+        "QuestGiver": "Krunk",
+        "QuestName": "The Scientific Method, According to a Rock",
+        "QuestNameCoded": "Krunk2"
+    },
+    'InvStorage3': {
+        "ItemName": "The Scientific Method, According to a Rock",
+        "QuestGiver": "Krunk",
+        "QuestName": "Storage Chest 3",
+        "QuestNameCoded": "Krunk2"
+    },
+    'NPCtoken10': {
+        "ItemName": "Krunk Token",
+        "QuestGiver": "Krunk",
+        "QuestName": "King of the Cavern",
+        "QuestNameCoded": "Krunk3"
+    },
+    'OilBarrel4': {
+        "ItemName": "Glumlee's Special Tutorial Oil",
+        "QuestGiver": "Glumlee",
+        "QuestName": "Learning to Swing",
+        "QuestNameCoded": "Glumlee1"
+    },
+    'Quest1': {
+        "ItemName": "Mining Certificate",
+        "QuestGiver": "Glumlee",
+        "QuestName": "Literally Burning your Money",
+        "QuestNameCoded": "Glumlee3"
+    },
+    'MaxCapBagT2': {
+        "ItemName": "Miniature Mining Pouch",
+        "QuestGiver": "Glumlee",
+        "QuestName": "Literally Burning your Money",
+        "QuestNameCoded": "Glumlee3"
+    },
+    'NPCtoken6': {
+        "ItemName": "Glumlee Token",
+        "QuestGiver": "Glumlee",
+        "QuestName": "He's Havin' a Bad Day",
+        "QuestNameCoded": "Glumlee5"
+    },
+    'MaxCapBag6': {
+        "ItemName": "Miniscule Food Pouch",
+        "QuestGiver": "Picnic_Stowaway",
+        "QuestName": "The Hungry Stowaway",
+        "QuestNameCoded": "Picnic_Stowaway1"
+    },
+    'EquipmentPendant9': {
+        "ItemName": "Little Wooden Katana",
+        "QuestGiver": "Picnic_Stowaway",
+        "QuestName": "Beating Up Frogs for some Sauce",
+        "QuestNameCoded": "Picnic_Stowaway2"
+    },
+    'Quest9': {
+        "ItemName": "Picnic Token",
+        "QuestGiver": "Picnic_Stowaway",
+        "QuestName": "A Midnight Snack",
+        "QuestNameCoded": "Picnic_Stowaway11"
+    },
+    'Trophy1': {
+        "ItemName": "King of Food",
+        "QuestGiver": "Picnic_Stowaway",
+        "QuestName": "King of Food",
+        "QuestNameCoded": "Picnic_Stowaway12"
+    },
+    'StampA4': {
+        "ItemName": "Tomahawk Stamp",
+        "QuestGiver": "Hamish",
+        "QuestName": "The Hamazing Plot Twist",
+        "QuestNameCoded": "Hamish1"
+    },
+    'StampB6': {
+        "ItemName": "Should We Tell Him?",
+        "QuestGiver": "Hamish",
+        "QuestName": "Choppin' Bag Stamp",
+        "QuestNameCoded": "Hamish2"
+    },
+    'InvStorage1': {
+        "ItemName": "Slime for Storage",
+        "QuestGiver": "Hamish",
+        "QuestName": "Storage Chest 1",
+        "QuestNameCoded": "Hamish3"
+    },
+    'Quest5': {
+        "ItemName": "Class Certificate",
+        "QuestGiver": "Promotheus",
+        "QuestName": "Three Right Answers",
+        "QuestNameCoded": "Promotheus2"
+    },
+    'EquipmentHats29': {
+        "ItemName": "Slovakian Scare",
+        "QuestGiver": "Promotheus",
+        "QuestName": "Alien Headband",
+        "QuestNameCoded": "Promotheus3"
+    },
+    'InvBag4': {
+        "ItemName": "Inventory Bag D",
+        "QuestGiver": "Promotheus",
+        "QuestName": "The Witcher, but not Really Inventory Bag D",
+        "QuestNameCoded": "Promotheus4"
+    },
+    'PeanutS': {
+        "ItemName": "Stone Peanut",
+        "QuestGiver": "Bushlyte",
+        "QuestName": "A Peanut Saved is a Peanut not Eaten!",
+        "QuestNameCoded": "Bushlyte3"
+    },
+    'Trophy3': {
+        "ItemName": "Club Member",
+        "QuestGiver": "Rocklyte",
+        "QuestName": "Becoming the Best Beginner",
+        "QuestNameCoded": "Rocklyte3"
+    },
+    'Trophy13': {
+        "ItemName": "Club Maestro",
+        "QuestGiver": "Cactolyte",
+        "QuestName": "Maestro! The Stro! Mman!",
+        "QuestNameCoded": "Cactolyte4"
+    },
+    'Quest6': {
+        "ItemName": "Scouting Report",
+        "QuestGiver": "Stiltzcho",
+        "QuestName": "Investigator by Day, Prankster by Night",
+        "QuestNameCoded": "Stiltzcho3"
+    },
+    'EquipmentPendant11': {
+        "ItemName": "Carrot Horror",
+        "QuestGiver": "Stiltzcho",
+        "QuestName": "Investigator by Day, Prankster by Night",
+        "QuestNameCoded": "Stiltzcho3"
+    },
+    'NPCtoken4': {
+        "ItemName": "Stiltzcho Token",
+        "QuestGiver": "Stiltzcho",
+        "QuestName": "Time Crime Season Finale",
+        "QuestNameCoded": "Stiltzcho6"
+    },
+    'MaxCapBag10': {
+        "ItemName": "Small Food Pouch",
+        "QuestGiver": "Funguy",
+        "QuestName": "Mushroom Munchies",
+        "QuestNameCoded": "Funguy1"
+    },
+    'EquipmentRings13': {
+        "ItemName": "Silver Stopwatch",
+        "QuestGiver": "Funguy",
+        "QuestName": "Partycrastination",
+        "QuestNameCoded": "Funguy3"
+    },
+    'NPCtoken9': {
+        "ItemName": "Funguy Token",
+        "QuestGiver": "Funguy",
+        "QuestName": "Wicked Party Cleanup",
+        "QuestNameCoded": "Funguy5"
+    },
+    'StampC1': {
+        "ItemName": "",
+        "QuestGiver": "Tiki_Chief",
+        "QuestName": "",
+        "QuestNameCoded": "Tiki_Chief2"
+    },
+    'NPCtoken11': {
+        "ItemName": "Questin Stamp",
+        "QuestGiver": "Tiki_Chief",
+        "QuestName": "Three Strikes, you're Out!",
+        "QuestNameCoded": "Tiki_Chief4"
+    },
+    'NPCtoken13': {
+        "ItemName": "Dog Bone Token",
+        "QuestGiver": "Dog_Bone",
+        "QuestName": "Bow Wow going Dow..n!",
+        "QuestNameCoded": "Dog_Bone2"
+    },
+    'StampC6': {
+        "ItemName": "Potion Stamp",
+        "QuestGiver": "Papua_Piggea",
+        "QuestName": "Stamp Collecting",
+        "QuestNameCoded": "Papua_Piggea3"
+    },
+    'NPCtoken7': {
+        "ItemName": "Papua Piggea Token",
+        "QuestGiver": "Papua_Piggea",
+        "QuestName": "This Little Piggy Felt Remorse",
+        "QuestNameCoded": "Papua_Piggea4"
+    },
+    'StampA19': {
+        "ItemName": "Polearm Stamp",
+        "QuestGiver": "Papua_Piggea",
+        "QuestName": "This Little Piggy Felt Remorse",
+        "QuestNameCoded": "Papua_Piggea4"
+    },
+    'StampA9': {
+        "ItemName": "Fist Stamp",
+        "QuestGiver": "Mutton",
+        "QuestName": "Beatboxing Starterpack",
+        "QuestNameCoded": "Mutton1"
+    },
+    'InvStorage5': {
+        "ItemName": "Storage Chest 5",
+        "QuestGiver": "Mutton",
+        "QuestName": "Beatboxing Starterpack",
+        "QuestNameCoded": "Mutton1"
+    },
+    'StampA14': {
+        "ItemName": "Manamoar Stamp",
+        "QuestGiver": "Mutton",
+        "QuestName": "Clout Chasin'",
+        "QuestNameCoded": "Mutton2"
+    },
+    'StampA16': {
+        "ItemName": "Scimitar Stamp",
+        "QuestGiver": "Mutton",
+        "QuestName": "Cross Platform Promotion",
+        "QuestNameCoded": "Mutton3"
+    },
+    'StampC7': {
+        "ItemName": "Golden Apple Stamp",
+        "QuestGiver": "Mutton",
+        "QuestName": "7 Figure Followers",
+        "QuestNameCoded": "Mutton4"
+    },
+    'StampA26': {
+        "ItemName": "Steve Sword",
+        "QuestGiver": "Mutton",
+        "QuestName": "7 Figure Followers",
+        "QuestNameCoded": "Mutton4"
+    },
+    'StampB17': {
+        "ItemName": "Fishing Rod Stamp",
+        "QuestGiver": "Fishpaste",
+        "QuestName": "'Accidental' Exploit",
+        "QuestNameCoded": "Fishpaste971"
+    },
+    'NPCtoken22': {
+        "ItemName": "Fishpaste Token",
+        "QuestGiver": "Fishpaste",
+        "QuestName": "Can you do the Can Can?",
+        "QuestNameCoded": "Fishpaste972"
+    },
+    'Weight6': {
+        "ItemName": "One Pound of Feathers",
+        "QuestGiver": "Fishpaste",
+        "QuestName": "Can you do the Can Can?",
+        "QuestNameCoded": "Fishpaste972"
+    },
+    'StampC18': {
+        "ItemName": "Talent S Stamp",
+        "QuestGiver": "Fishpaste",
+        "QuestName": "Can you do the Can Can?",
+        "QuestNameCoded": "Fishpaste972"
+    },
+    'Weight2': {
+        "ItemName": "Iron Hook",
+        "QuestGiver": "Scubidew",
+        "QuestName": "Don't Step to Me, Bro!",
+        "QuestNameCoded": "Scubidew1"
+    },
+    # 'Weight2': {
+    #     "ItemName": "Iron Hook",
+    #     "QuestGiver": "Carpetiem",
+    #     "QuestName": "Helping 100 times over",
+    #     "QuestNameCoded": "Carpetiem4"
+    # },
+    'Weight3': {
+        "ItemName": "Basic Bobber",
+        "QuestGiver": "Scubidew",
+        "QuestName": "Uncovering the Deep Sea State!!!",
+        "QuestNameCoded": "Scubidew2"
+    },
+    'NPCtoken26': {
+        "ItemName": "Scubidew Token",
+        "QuestGiver": "Scubidew",
+        "QuestName": "A Normal Quest.",
+        "QuestNameCoded": "Scubidew3"
+    },
+    'Weight1': {
+        "ItemName": "Wormie Weight",
+        "QuestGiver": "Whattso",
+        "QuestName": "Mopey Dick",
+        "QuestNameCoded": "Whattso1"
+    },
+    'Line11': {
+        "ItemName": "Scripticus Spoons",
+        "QuestGiver": "Whattso",
+        "QuestName": "The Whaley Hard Minigame",
+        "QuestNameCoded": "Whattso2"
+    },
+    'Weight12': {
+        "ItemName": "Triple Threat",
+        "QuestGiver": "Whattso",
+        "QuestName": "Bobbin' Bobbers",
+        "QuestNameCoded": "Whattso3"
+    },
+    'NPCtoken18': {
+        "ItemName": "Whattso Token",
+        "QuestGiver": "Whattso",
+        "QuestName": "Bobbin' Bobbers",
+        "QuestNameCoded": "Whattso3"
+    },
+    'Line7': {
+        "ItemName": "Electrical Wiring",
+        "QuestGiver": "Whattso",
+        "QuestName": "The Biggest Fish in the Sea...?",
+        "QuestNameCoded": "Whattso4"
+    },
+    'Quest46': {
+        "ItemName": "The Bobber Challenge Scroll",
+        "QuestGiver": "Whattso",
+        "QuestName": "The Biggest Fish in the Sea...?",
+        "QuestNameCoded": "Whattso4"
+    },
+    'Quest20': {
+        "ItemName": "Signed Arrest Warrant",
+        "QuestGiver": "Bandit_Bob",
+        "QuestName": "Bringing Bob's Boxes",
+        "QuestNameCoded": "Bandit_Bob3"
+    },
+    'NPCtoken16': {
+        "ItemName": "Bandit Bob Token",
+        "QuestGiver": "Bandit_Bob",
+        "QuestName": "The Desert Dungeon Prequest",
+        "QuestNameCoded": "Bandit_Bob4"
+    },
+    'NPCtoken20': {
+        "ItemName": "Carpetiem Token",
+        "QuestGiver": "Carpetiem",
+        "QuestName": "Helping 100 times over",
+        "QuestNameCoded": "Carpetiem4"
+    },
+    'Line2': {
+        "ItemName": "Silver Twine",
+        "QuestGiver": "Carpetiem",
+        "QuestName": "Helping 100 times over",
+        "QuestNameCoded": "Carpetiem4"
+    },
+    'NPCtoken25': {
+        "ItemName": "Djonnut Token",
+        "QuestGiver": "Djonnut",
+        "QuestName": "The Blue New World",
+        "QuestNameCoded": "Djonnut3"
+    },
+    'Quest27': {
+        "ItemName": "Bag o Nuts",
+        "QuestGiver": "Goldric",
+        "QuestName": "Dress to Impress",
+        "QuestNameCoded": "Goldric5"
+    },
+    'NPCtoken21': {
+        "ItemName": "Goldric Token",
+        "QuestGiver": "Goldric",
+        "QuestName": "Dont lay a finger on my Sheepies!!!",
+        "QuestNameCoded": "Goldric6"
+    },
+    'EquipmentRingsFishing1': {
+        "ItemName": "Shallow Watering",
+        "QuestGiver": "Omar_Da_Ogar",
+        "QuestName": "Helping Omar Again",
+        "QuestNameCoded": "Omar_Da_Ogar2"
+    },
+    'EquipmentRingsFishing2': {
+        "ItemName": "Oceanic Ring,",
+        "QuestGiver": "Omar_Da_Ogar",
+        "QuestName": "Helping Omar Some More",
+        "QuestNameCoded": "Omar_Da_Ogar4"
+    },
+    'Pearl1': {
+        "ItemName": "Aqua Pearl",
+        "QuestGiver": "Omar_Da_Ogar",
+        "QuestName": "Helping Omar Yet Again Deja Vu",
+        "QuestNameCoded": "Omar_Da_Ogar5"
+    },
+    'EquipmentRingsFishing3': {
+        "ItemName": "Deepwater Trench Ring",
+        "QuestGiver": "Omar_Da_Ogar",
+        "QuestName": "Helping Omar For The Final Time",
+        "QuestNameCoded": "Omar_Da_Ogar6"
+    },
+    'NPCtoken15': {
+        'ItemName': 'TP Pete Token',
+        'QuestGiver': 'TP Pete',
+        'QuestName': 'Fired for BS Reasons!',
+        'QuestNameCoded': 'TP_Pete3'
+    },
+    'EquipmentRings6': {
+        "ItemName": "Death Wish",
+        "QuestGiver": "Meel",
+        "QuestName": "Waitin' for the Cards to Drop",
+        "QuestNameCoded": "Meel2"
+    },
+    'InvStorage11': {
+        "ItemName": "Red Stuff Bad!",
+        "QuestGiver": "Snake_Jar",
+        "QuestName": "Storage Chest 11",
+        "QuestNameCoded": "Snake_Jar2"
+    },
+    'EquipmentHats44': {
+        "ItemName": "Jar",
+        "QuestGiver": "Snake_Jar",
+        "QuestName": "PSA. You Are Being Eaten!",
+        "QuestNameCoded": "Snake_Jar3"
+    },
+    'NPCtoken17': {
+        "ItemName": "Snake Jar Token",
+        "QuestGiver": "Snake_Jar",
+        "QuestName": "A Noob, served Medium Rare!",
+        "QuestNameCoded": "Snake_Jar4"
+    },
+    'NPCtoken24': {
+        "ItemName": "Loominadi Token",
+        "QuestGiver": "Loominadi",
+        "QuestName": "The Mummy of Mystery",
+        "QuestNameCoded": "Loominadi4"
+    },
+    'Weight8': {
+        "ItemName": "Literal Elephant",
+        "QuestGiver": "Loominadi",
+        "QuestName": "The Mummy of Mystery",
+        "QuestNameCoded": "Loominadi4"
+    },
+    'StampB14': {
+        "ItemName": "Brainstew Stamps",
+        "QuestGiver": "Wellington",
+        "QuestName": "Platforms in Disguise, Platsformers!",
+        "QuestNameCoded": "Wellington1"
+    },
+    'StampA24': {
+        "ItemName": "Arcane Stamp",
+        "QuestGiver": "Wellington",
+        "QuestName": "Platforms in Disguise, Platsformers!",
+        "QuestNameCoded": "Wellington1"
+    },
+    'StampB20': {
+        "ItemName": "Fly Intel Stamp",
+        "QuestGiver": "Wellington",
+        "QuestName": "Findin' Fingerprints",
+        "QuestNameCoded": "Wellington2"
+    },
+    'StampB22': {
+        "ItemName": "Holy Mackerel Stamp",
+        "QuestGiver": "Wellington",
+        "QuestName": "Findin' Fingerprints",
+        "QuestNameCoded": "Wellington2"
+    },
+    'StampC14': {
+        "ItemName": "Talent II Stamp",
+        "QuestGiver": "Wellington",
+        "QuestName": "You Can't Run, but you Can Hide",
+        "QuestNameCoded": "Wellington3"
+    },
+    'NPCtoken23': {
+        "ItemName": "Wellington Token",
+        "QuestGiver": "Wellington",
+        "QuestName": "Puzzles and Math, a Winning Combination!",
+        "QuestNameCoded": "Wellington4"
+    },
+    'NPCtoken14': {
+        "ItemName": "Dazey Token",
+        "QuestGiver": "Dazey",
+        "QuestName": "Literally Physics",
+        "QuestNameCoded": "Dazey2"
+    },
+    'InvStorage4': {
+        "ItemName": "Storage Chest 4",
+        "QuestGiver": "Cowbo_Jones",
+        "QuestName": "The Hatless Howerhouse!",
+        "QuestNameCoded": "Cowbo_Jones2"
+    },
+    'InvBag5': {
+        "ItemName": "Inventory Bag E",
+        "QuestGiver": "Cowbo_Jones",
+        "QuestName": "Bake Him Away, Toys",
+        "QuestNameCoded": "Cowbo_Jones8"
+    },
+    'EquipmentHats30': {
+        "ItemName": "Cowbo Galloneer",
+        "QuestGiver": "Cowbo_Jones",
+        "QuestName": "A Hat in Crime",
+        "QuestNameCoded": "Cowbo_Jones9"
+    },
+    'InvBag6': {
+        "ItemName": "Inventory Bag F",
+        "QuestGiver": "Cowbo_Jones",
+        "QuestName": "Commence Criminal Crimes!",
+        "QuestNameCoded": "Cowbo_Jones10"
+    },
+    'InvBag8': {
+        "ItemName": "Inventory Bag H",
+        "QuestGiver": "Cowbo_Jones",
+        "QuestName": "Oh No, not the Elderly!",
+        "QuestNameCoded": "Cowbo_Jones13"
+    },
+    'NPCtoken19': {
+        "ItemName": "Cowbo Jones Token",
+        "QuestGiver": "Cowbo_Jones",
+        "QuestName": "Tomb Raid",
+        "QuestNameCoded": "Cowbo_Jones14"
+    },
+    'Trophy11': {
+        "ItemName": "YumYum Sheriff",
+        "QuestGiver": "Cowbo_Jones",
+        "QuestName": "The New Sheriff",
+        "QuestNameCoded": "Cowbo_Jones15"
+    },
+    'Trophy22': {
+        "ItemName": "Gladiator",
+        "QuestGiver": "Centurion",
+        "QuestName": "Glorious Gladiator",
+        "QuestNameCoded": "Centurion8"
+    },
+    'StampB4': {
+        "ItemName": "Lil' Mining Baggy Stamp",
+        "QuestGiver": "XxX_Cattleprod_XxX",
+        "QuestName": "Peak Gaming",
+        "QuestNameCoded": "XxX_Cattleprod_XxX1"
+    },
+    'StampB19': {
+        "ItemName": "Catch Net Stamp",
+        "QuestGiver": "XxX_Cattleprod_XxX",
+        "QuestName": "Peak Gaming",
+        "QuestNameCoded": "XxX_Cattleprod_XxX1"
+    },
+    'StampC2': {
+        "ItemName": "Mason Jar Stamp",
+        "QuestGiver": "XxX_Cattleprod_XxX",
+        "QuestName": "Wait No, I meant Pathetic Gaming",
+        "QuestNameCoded": "XxX_Cattleprod_XxX2"
+    },
+    'StampB18': {
+        "ItemName": "Fishhead Stamp",
+        "QuestGiver": "XxX_Cattleprod_XxX",
+        "QuestName": "Wait No, I meant Pathetic Gaming",
+        "QuestNameCoded": "XxX_Cattleprod_XxX2"
+    },
+    'StampA28': {
+        "ItemName": "Stat Graph Stamp",
+        "QuestGiver": "XxX_Cattleprod_XxX",
+        "QuestName": "Ok, NOW it's Peak Gaming!",
+        "QuestNameCoded": "XxX_Cattleprod_XxX3"
+    },
+    'NPCtoken32': {
+        "ItemName": "Hoggi Token",
+        "QuestGiver": "Hoggindaz",
+        "QuestName": "Chizoar No More",
+        "QuestNameCoded": "Hoggindaz9"
+    },
+    'Trophy15': {
+        "ItemName": "Frost Prince",
+        "QuestGiver": "Hoggindaz",
+        "QuestName": "The Fresh Prince of the Tundra",
+        "QuestNameCoded": "Hoggindaz10"
+    },
+    'Quest61': {
+        "ItemName": "Bill Brr's Vote",
+        "QuestGiver": "Bill_Brr",
+        "QuestName": "Coin Shenanigans",
+        "QuestNameCoded": "Bill_Brr4"
+    },
+    'NPCtoken37': {
+        "ItemName": "Bill Brr Token",
+        "QuestGiver": "Bill_Brr",
+        "QuestName": "Hatin' on the Green One",
+        "QuestNameCoded": "Bill_Brr7"
+    },
+    'NPCtoken33': {
+        "ItemName": "Bellows Token",
+        "QuestGiver": "Bellows",
+        "QuestName": "Optometric Hoarder",
+        "QuestNameCoded": "Bellows4"
+    },
+    'StampA22': {
+        "ItemName": "Hermes Stamp",
+        "QuestGiver": "Crystalswine",
+        "QuestName": "Melting the Snakes",
+        "QuestNameCoded": "Crystalswine4"
+    },
+    'NPCtoken38': {
+        "ItemName": "Crystalswine Token",
+        "QuestGiver": "Crystalswine",
+        "QuestName": "Sunrunning to Chizoar",
+        "QuestNameCoded": "Crystalswine5"
+    },
+    'StampA25': {
+        "ItemName": "Avast Yar Stamp",
+        "QuestGiver": "Crystalswine",
+        "QuestName": "Global Warming",
+        "QuestNameCoded": "Crystalswine6"
+    },
+    'Quest60': {
+        "ItemName": "Yondergreens Vote",
+        "QuestGiver": "Yondergreen",
+        "QuestName": "Legislative Action",
+        "QuestNameCoded": "Yondergreen4"
+    },
+    'NPCtoken36': {
+        "ItemName": "Yondergreen Token",
+        "QuestGiver": "Yondergreen",
+        "QuestName": "Ad Solidarity Contract",
+        "QuestNameCoded": "Yondergreen7"
+    },
+    'CardPack4': {
+        "ItemName": "Dungeon Card Pack",
+        "QuestGiver": "Worldo",
+        "QuestName": "Odd Jobs for Cold Hard Cash",
+        "QuestNameCoded": "Worldo1"
+    },
+    'Quest59': {
+        "ItemName": "Shuvelle's Vote",
+        "QuestGiver": "Shuvelle",
+        "QuestName": "Mayoral Movie Taste",
+        "QuestNameCoded": "Shuvelle4"
+    },
+    'NPCtoken35': {
+        "ItemName": "Shuvelle Token",
+        "QuestGiver": "Shuvelle",
+        "QuestName": "Dig Diggily Diggy Dig Dig Hole!",
+        "QuestNameCoded": "Shuvelle7"
+    },
+    'NPCtoken31': {
+        "ItemName": "Lonely Hunter Token",
+        "QuestGiver": "Lonely_Hunter",
+        "QuestName": "Opening Chests",
+        "QuestNameCoded": "Lonely_Hunter3"
+    },
+    'ResetBox': {
+        "ItemName": "Post Office Box Reseto Magnifico",
+        "QuestGiver": "Lord_of_the_Hunt",
+        "QuestName": "Untitled Quest",
+        "QuestNameCoded": "Lord_of_the_Hunt10"
+    },
+    'Trophy10': {
+        "ItemName": "Critter Baron",
+        "QuestGiver": "Lord_of_the_Hunt",
+        "QuestName": "To Trap or not to Trap",
+        "QuestNameCoded": "Lord_of_the_Hunt11"
+    },
+    'StampA21': {
+        "ItemName": "Buckler Stamp",
+        "QuestGiver": "Snouts",
+        "QuestName": "A Salty Fall",
+        "QuestNameCoded": "Snouts1"
+    },
+    'StampA18': {
+        "ItemName": "Feather Stamp",
+        "QuestGiver": "Snouts",
+        "QuestName": "Gravity VS Salt",
+        "QuestNameCoded": "Snouts2"
+    },
+    'StampB26': {
+        "ItemName": "Purp Froge Stamp",
+        "QuestGiver": "Snouts",
+        "QuestName": "Gravity VS Salt",
+        "QuestNameCoded": "Snouts2"
+    },
+    'StampC15': {
+        "ItemName": "Talent III Stamp",
+        "QuestGiver": "Snouts",
+        "QuestName": "Big Ol Chonker",
+        "QuestNameCoded": "Snouts3"
+    },
+    'StampC20': {
+        "ItemName": "Biblio Stamp",
+        "QuestGiver": "Snouts",
+        "QuestName": "Big Ol Chonker",
+        "QuestNameCoded": "Snouts3"
+    },
+    'NPCtoken34': {
+        "ItemName": "Snouts Token",
+        "QuestGiver": "Snouts",
+        "QuestName": "Mana Plox",
+        "QuestNameCoded": "Snouts4"
+    },
+    'Mayo': {
+        "ItemName": "Mayonnaise Bottle",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 1",
+        "QuestNameCoded": "Walupiggy1"
+    },
+    'Trash': {
+        "ItemName": "Broken Weapon",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 2",
+        "QuestNameCoded": "Walupiggy2"
+    },
+    'Trash2': {
+        "ItemName": "Dried Paint Blob",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 3",
+        "QuestNameCoded": "Walupiggy3"
+    },
+    'Trash3': {
+        "ItemName": "Engraved Bullet",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 4",
+        "QuestNameCoded": "Walupiggy4"
+    },
+    'Timecandy7': {
+        "ItemName": "Steamy Time Candy",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 4",
+        "QuestNameCoded": "Walupiggy4"
+    },
+    'Quest44': {
+        "ItemName": "Goldegg Capsule",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 4",
+        "QuestNameCoded": "Walupiggy4"
+    },
+    'CardPack1': {
+        "ItemName": "Newbie Card Pack",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 4",
+        "QuestNameCoded": "Walupiggy4"
+    },
+    'StampB42': {
+        "ItemName": "Lab Tube Stamp",
+        "QuestGiver": "Capital_P",
+        "QuestName": "Right side wrong side!",
+        "QuestNameCoded": "Capital_P1"
+    },
+    'StampC21': {
+        "ItemName": "DNA Stamp",
+        "QuestGiver": "Capital_P",
+        "QuestName": "No room on the Dance Floor!",
+        "QuestNameCoded": "Capital_P2"
+    },
+    'StampA30': {
+        "ItemName": "Diamond Axe Stamp",
+        "QuestGiver": "Capital_P",
+        "QuestName": "Everybody move it move it!",
+        "QuestNameCoded": "Capital_P3"
+    },
+    'StampB37': {
+        "ItemName": "Cooked Meal Stamp",
+        "QuestGiver": "Oinkin",
+        "QuestName": "Filling the Menu",
+        "QuestNameCoded": "Oinkin1"
+    },
+    'StampB40': {
+        "ItemName": "Nest Eggs Stamp",
+        "QuestGiver": "Oinkin",
+        "QuestName": "Diner Deliverer",
+        "QuestNameCoded": "Oinkin2"
+    },
+    'StampB39': {
+        "ItemName": "Ladle Stamp",
+        "QuestGiver": "Oinkin",
+        "QuestName": "Recipe for Fattening Pastry",
+        "QuestNameCoded": "Oinkin3"
+    },
+    'StampB43': {
+        "ItemName": "Sailboat Stamp",
+        "QuestGiver": "Pirate_Porkchop",
+        "QuestName": "Bring me the Booty",
+        "QuestNameCoded": "Pirate_Porkchop1"
+    },
+    'StampB45': {
+        "ItemName": "Divine Stamp",
+        "QuestGiver": "Pirate_Porkchop",
+        "QuestName": "Sailing for some Sparks",
+        "QuestNameCoded": "Pirate_Porkchop2"
+    },
+    'StampA34': {
+        "ItemName": "Sashe Sidestamp",
+        "QuestGiver": "Pirate_Porkchop",
+        "QuestName": "Seeking Treasure Shrooms",
+        "QuestNameCoded": "Pirate_Porkchop3"
+    },
+    'StampA36': {
+        "ItemName": "Conjocharmo Stamp",
+        "QuestGiver": "Pirate_Porkchop",
+        "QuestName": "Ye finest treasure at once!",
+        "QuestNameCoded": "Pirate_Porkchop4"
+    },
+    'StampB44': {
+        "ItemName": "Gamejoy Stamp",
+        "QuestGiver": "Poigu",
+        "QuestName": "Think twice speak once",
+        "QuestNameCoded": "Poigu1"
+    },
+    'StampB46': {
+        "ItemName": "Multitool Stamp",
+        "QuestGiver": "Poigu",
+        "QuestName": "Speak from the heart not the mind",
+        "QuestNameCoded": "Poigu2"
+    },
+    'Quest70': {
+        "ItemName": "Phone Box",
+        "QuestGiver": "Rift_Ripper",
+        "QuestName": "Entering The Rift...",
+        "QuestNameCoded": "Rift_Ripper1"
+    },
+    'Quest71': {
+        "ItemName": "Gem Envelope",
+        "QuestGiver": "Rift_Ripper",
+        "QuestName": "Entering The Rift...",
+        "QuestNameCoded": "Rift_Ripper1"
+    },
+    # 'Quest71': {
+    #     "ItemName": "Gem Envelope",
+    #     "QuestGiver": "Nebulyte",
+    #     "QuestName": "Chizoar Slayer",
+    #     "QuestNameCoded": "Nebulyte2"
+    # },
+    'CardPack5': {
+        "ItemName": "Galaxy Card Pack",
+        "QuestGiver": "Nebulyte",
+        "QuestName": "Chizoar Slayer",
+        "QuestNameCoded": "Nebulyte2"
+    },
+    'CardPack6': {
+        "ItemName": "Smolderin Card Pack",
+        "QuestGiver": "Nebulyte",
+        "QuestName": "Oh Geez Lets Not Think About This One...",
+        "QuestNameCoded": "Nebulyte3"
+    },
+    'EquipmentNametag4': {
+        "ItemName": "Vman Nametag",
+        "QuestGiver": "Nebulyte",
+        "QuestName": "VMAN ACHIEVED!",
+        "QuestNameCoded": "Nebulyte4"
+    },
+    'Trophy17': {
+        "ItemName": "One of the Divine",
+        "QuestGiver": "Tired_Mole",
+        "QuestName": "Divine Endeavor",
+        "QuestNameCoded": "Tired_Mole3"
+    },
+    'SmithingHammerChisel3': {
+        "ItemName": "Onyx Tools",
+        "QuestGiver": "Monolith",
+        "QuestName": "Onyx Statue Crafting",
+        "QuestNameCoded": "Monolith2"
+    },
+    'Weight14': {
+        "ItemName": "Fat Albert",
+        "QuestGiver": "Royal_Worm",
+        "QuestName": "A Royal Gift",
+        "QuestNameCoded": "Royal_Worm6"
+    },
+    'Trophy19': {
+        "ItemName": "Nebula Royal",
+        "QuestGiver": "Royal_Worm",
+        "QuestName": "Royal Bidding",
+        "QuestNameCoded": "Royal_Worm9"
+    },
+    'StampB48': {
+        "ItemName": "Crop Evo Stamp",
+        "QuestGiver": "Hoov",
+        "QuestName": "Sneak Dropout",
+        "QuestNameCoded": "Hoov1"
+    },
+    'StampA40': {
+        "ItemName": "Void Sword Stamp",
+        "QuestGiver": "Hoov",
+        "QuestName": "Stealth Check 1 2 3",
+        "QuestNameCoded": "Hoov2"
+    },
+    'InvStorageN': {
+        "ItemName": "Ninja Chest",
+        "QuestGiver": "Hoov",
+        "QuestName": "Sneak Registration",
+        "QuestNameCoded": "Hoov4"
+    },
+    'StampB53': {
+        "ItemName": "Triad Essence Stamp",
+        "QuestGiver": "Sussy_Gene",
+        "QuestName": "Goofin' Around",
+        "QuestNameCoded": "Sussy_Gene1"
+    },
+    'StampB51': {
+        "ItemName": "Summoner Stone Stamp",
+        "QuestGiver": "Sussy_Gene",
+        "QuestName": "Messin' Around",
+        "QuestNameCoded": "Sussy_Gene2"
+    },
+    'StampA41': {
+        "ItemName": "Void Axe Stamp",
+        "QuestGiver": "Sussy_Gene",
+        "QuestName": "Loiterin' Around",
+        "QuestNameCoded": "Sussy_Gene3"
+    },
+}
+npc_tokens = [
+    'NPCtoken5', 'NPCtoken6', 'NPCtoken4', 'NPCtoken9', 'NPCtoken10', 'NPCtoken11',
+    'NPCtoken13', 'NPCtoken7', 'Quest9', 'NPCtoken15', 'NPCtoken12', 'NPCtoken14',
+    'NPCtoken16', 'NPCtoken17', 'NPCtoken18', 'NPCtoken19', 'NPCtoken20', 'NPCtoken21',
+    'NPCtoken27', 'NPCtoken22', 'NPCtoken24', 'NPCtoken25', 'NPCtoken26', 'NPCtoken23',
+    'NPCtoken32', 'NPCtoken31', 'NPCtoken34', 'NPCtoken35', 'NPCtoken36', 'NPCtoken38',
+    'NPCtoken33', 'NPCtoken37'
+]
 #vendorItems last pulled from code in 2.12. Search for: ShopNames = function ()
 vendorItems = {
     "W1 Town": "FoodHealth1 FoodHealth3 FoodHealth2 CraftMat3 FoodPotMana1 FoodPotOr1 FoodPotRe1 FoodPotGr1 OilBarrel1 StoneW1 StoneA1 StoneT1 EquipmentRings7 EquipmentStatues1 SmithingHammerChisel StampA5 StampA6 StampA3 InvBag104 InvStorage2 InvStorage6 InvStorage7 Quest86 rtt0 ResetFrag".split(' '),

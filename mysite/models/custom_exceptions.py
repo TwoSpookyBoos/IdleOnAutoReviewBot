@@ -86,15 +86,21 @@ class IEConnectionFailed(BaseCustomException):
         self.log_msg = f"Error connecting to {self.url}"
 
 
-
 class JSONDecodeError(BaseCustomException):
     reportable = False
     faq = True
     dirname = "faulty_data"
-    msg_base = (
-        "Looks like the data you submitted is corrupted.<br>"
-        "The issue has been reported and will be investigated."
-    )
+    msg_base = "The data you submitted is corrupted or not a valid JSON structure."
+
+    def __init__(self, data):
+        super().__init__()
+        self.data = data
+
+class WtfDataException(BaseCustomException):
+    reportable = False
+    faq = True
+    dirname = "wtf"
+    msg_base = "This doesn't look like an IdleOn JSON.<br>Try again!"
 
     def __init__(self, data):
         super().__init__()
