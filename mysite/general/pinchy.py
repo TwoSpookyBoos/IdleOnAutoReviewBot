@@ -371,13 +371,14 @@ def generate_advice_groups(sectionsByThreshold: dict):
 def getUnratedLinksAdviceGroup(unrated_sections) -> AdviceGroup:
     unrated_advice = []
     for section in unrated_sections:
-        unrated_advice.append(
-            Advice(
-                label=section.name,
-                picture_class=section.name,
-                as_link=True
+        if not section.unreached:
+            unrated_advice.append(
+                Advice(
+                    label=section.name,
+                    picture_class=section.name,
+                    as_link=True
+                )
             )
-        )
     unrated_AG = AdviceGroup(
         tier="",
         pre_string="Unrated Sections",
