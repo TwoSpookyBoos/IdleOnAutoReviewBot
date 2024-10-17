@@ -241,7 +241,7 @@ class Thresholds(dict):
         return self._thresholds[threshold.index - 1] if threshold.index > 0 else threshold
 
     def next(self, threshold):
-        return self._thresholds[threshold.index + 1] if self._thresholds.index(threshold) > 0 else threshold
+        return self._thresholds[threshold.index + 1] if threshold.index + 1 < len(self._thresholds) else threshold
 
     @property
     def placeholder(self):
