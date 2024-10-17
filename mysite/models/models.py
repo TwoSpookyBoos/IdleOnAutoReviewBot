@@ -654,6 +654,7 @@ class AdviceSection(AdviceBase):
         groups: list[AdviceGroup] = [],
         pinchy_rating: int = 0,
         complete: bool = False,
+        unreached: bool = False,
         **extra,
     ):
         super().__init__(collapse, **extra)
@@ -665,6 +666,7 @@ class AdviceSection(AdviceBase):
         self._groups: list[AdviceGroup] = groups
         self.pinchy_rating: int = pinchy_rating
         self.complete: bool = complete
+        self.unreached = unreached
 
     @property
     def header(self) -> str:
@@ -746,7 +748,9 @@ class AdviceWorld(AdviceBase):
 
     def hide_completed_sections(self):
         self.sections = [section for section in self.sections if not section.complete]
-
+    
+    def hide_unreached_sections(self):
+        self.sections = [section for section in self.sections if not section.unreached]
 
 greenStackAmount = 10**7
 gstackable_codenames = [item for items in expectedStackables.values() for item in items]

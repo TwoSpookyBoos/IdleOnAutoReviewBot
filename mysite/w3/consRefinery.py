@@ -134,7 +134,7 @@ def setConsRefineryProgressionTier():
     highestConstructionLevel = max(session_data.account.all_skills["Construction"])
     if highestConstructionLevel < 1:
         refinery_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
-        refinery_AdviceSection.collapse = True
+        refinery_AdviceSection.unreached = True
         return refinery_AdviceSection
 
     max_tier = 1  #Pass or Fail

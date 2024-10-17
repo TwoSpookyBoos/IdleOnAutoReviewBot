@@ -260,6 +260,7 @@ def setDivinityProgressionTier():
     highestDivinitySkillLevel = max(session_data.account.all_skills.get("Divinity", [0]))
     if highestDivinitySkillLevel < 1:
         divinity_AdviceSection.header = "Come back after unlocking the Divinity skill in W5!"
+        divinity_AdviceSection.unreached = True
         return divinity_AdviceSection
 
     lowestDivinitySkillLevel = min(session_data.account.all_skills.get("Divinity", [0]))

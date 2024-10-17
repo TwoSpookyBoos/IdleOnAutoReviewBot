@@ -442,9 +442,11 @@ def setLibraryProgressionTier() -> AdviceSection:
     highestConstructionLevel = max(session_data.account.all_skills["Construction"])
     if highestConstructionLevel < 1:
         library_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
+        library_AdviceSection.unreached = True
         return library_AdviceSection
     elif session_data.account.construction_buildings['Talent Book Library']['Level'] < 1:
         library_AdviceSection.header = "Come back after unlocking the Talent Book Library within the Construction skill in World 3!"
+        library_AdviceSection.unreached = True
         return library_AdviceSection
 
     max_tier = len(librarySubgroupTiers)-1

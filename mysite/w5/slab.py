@@ -50,6 +50,10 @@ def setSlabProgressionTier():
         header="Best Slab tier met: Not Yet Evaluated",
         picture="Slab.png"
     )
+    if session_data.account.highestWorldReached < 5:
+        slab_AdviceSection.collapsed = True
+        slab_AdviceSection.unreached = True
+        #return slab_AdviceSection
 
     tier_Slab = 0
     max_tier = 0

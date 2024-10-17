@@ -320,13 +320,17 @@ def tier_from_monster_kills(dictOfPRs) -> Threshold:
 
     #highestPrint = session_data.account.printer['HighestValue']
     mobKillThresholds = []
-    if dictOfPRs[Placements.SAMPLING] >= 9:
-        expectedThreshold = Threshold.fromname(Threshold.MAX_TIER)
-    elif dictOfPRs[Placements.DEATH_NOTE] >= 25:
-        expectedThreshold = Threshold.fromname(Threshold.W7_WAITING_ROOM)
-    elif dictOfPRs[Placements.DEATH_NOTE] >= 17:
-        expectedThreshold = Threshold.fromname(Threshold.SOLID_W7_PREP)
-    else:
+    try:
+        if dictOfPRs[Placements.SAMPLING] >= 9:
+            expectedThreshold = Threshold.fromname(Threshold.MAX_TIER)
+        elif dictOfPRs[Placements.DEATH_NOTE] >= 25:
+            expectedThreshold = Threshold.fromname(Threshold.W7_WAITING_ROOM)
+        elif dictOfPRs[Placements.DEATH_NOTE] >= 17:
+            expectedThreshold = Threshold.fromname(Threshold.SOLID_W7_PREP)
+        else:
+            threshold = threshold_for_highest_portal_opened()
+            mobKillThresholds.append(threshold)
+    except KeyError:
         threshold = threshold_for_highest_portal_opened()
         mobKillThresholds.append(threshold)
 
@@ -393,7 +397,7 @@ def getAlertsAdviceGroup() -> AdviceGroup:
 
 
 def generatePinchyWorld(pinchable_sections, unrated_sections):
-    dictOfPRs = {section.name: section.pinchy_rating for section in pinchable_sections}
+    dictOfPRs = {section.name: section.pinchy_rating for section in pinchable_sections if not section.unreached}
 
     sectionPlacements: Placements = sort_pinchy_reviews(dictOfPRs)
     expectedThreshold: Threshold = tier_from_monster_kills(dictOfPRs)
@@ -401,8 +405,10 @@ def generatePinchyWorld(pinchable_sections, unrated_sections):
 
     placements_per_section = sectionPlacements.per_section()
     for section in pinchable_sections:
-        section.pinchy_placement = placements_per_section[section.name]
-
+        try:
+            section.pinchy_placement = placements_per_section[section.name]
+        except KeyError:
+            continue
 
     # Generate advice based on catchup
     equalSnippet = ""

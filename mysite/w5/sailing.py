@@ -38,6 +38,7 @@ def setSailingProgressionTier():
     highestSailingSkillLevel = max(session_data.account.all_skills.get("Sailing", [0]))
     if highestSailingSkillLevel < 1:
         sailing_AdviceSection.header = "Come back after unlocking the Sailing skill in W5!"
+        sailing_AdviceSection.unreached = True
         return sailing_AdviceSection
 
     delaysDict = getSailingDelays()

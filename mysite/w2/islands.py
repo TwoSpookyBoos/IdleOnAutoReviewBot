@@ -81,6 +81,7 @@ def setIslandsProgressionTier():
     highestFishingSkillLevel = max(session_data.account.all_skills["Fishing"])
     if highestFishingSkillLevel < 30:
         islands_AdviceSection.header = "Come back after reaching level 30 Fishing!"
+        islands_AdviceSection.unreached = True
         return islands_AdviceSection
 
     infoTiers = 0

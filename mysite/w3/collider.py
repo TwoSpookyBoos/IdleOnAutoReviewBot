@@ -229,9 +229,11 @@ def setColliderProgressionTier() -> AdviceSection:
     highestConstructionLevel = max(session_data.account.all_skills["Construction"])
     if highestConstructionLevel < 1:
         collider_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
+        collider_AdviceSection.unreached = True
         return collider_AdviceSection
     elif session_data.account.construction_buildings['Atom Collider']['Level'] < 1:
         collider_AdviceSection.header = "Come back after unlocking the Atom Collider within the Construction skill in World 3!"
+        collider_AdviceSection.unreached = True
         return collider_AdviceSection
 
     max_tier = max(atoms_progressionTiers.keys())

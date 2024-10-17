@@ -291,6 +291,7 @@ def setTrappingProgressionTier():
     highestTrappingLevel = max(trappingLevelsList)
     if highestTrappingLevel < 1:
         trapping_AdviceSection.header = "Come back after unlocking the Trapping skill in World 3!"
+        trapping_AdviceSection.unreached = True
         return trapping_AdviceSection
 
     highestWearableTrapset = 0
