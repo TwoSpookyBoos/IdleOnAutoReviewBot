@@ -323,7 +323,8 @@ greenstack_progressionTiers = {
                 "PeanutG",
             ],
             "Misc": [
-                "FoodPotMana3", "FoodPotRe1", "ButterBar", "EquipmentStatues9", "OilBarrel2"],
+                "FoodPotMana3", "FoodPotRe1", "ButterBar", "EquipmentStatues9", "OilBarrel2"
+            ],
         },
         14: {
             "Crystal Enemy Drops": [
@@ -335,7 +336,7 @@ greenstack_progressionTiers = {
                 "Ladle",
             ],
             "Misc": [
-                "DesertC2b", "Quest78",
+                "DesertC2b", "Quest78", "EfauntDrop1"
             ]
         },
     }
@@ -2041,6 +2042,7 @@ expectedStackables = {
         "OilBarrel2",  # Slime Barrel, 1 in 3334
         "DesertC2b",  # Ghost, 1 in 2k
         "Quest78",  # Equinox Mirror
+        "EfauntDrop1",  # Basic Efaunt material
         "Key2", "Key3"  # Efaunt and Chizoar keys
     ],
     "Cheater": [
@@ -2050,7 +2052,7 @@ expectedStackables = {
         "GalaxyA2b", "GalaxyC1b",  # W4 Rare Drops
         "LavaA1b", "LavaA5b", "LavaB3b",  # W5 Rare Drops
         "SpiA2b", "SpiB2b",  # W6 Rare Drops
-        "EfauntDrop1", "EfauntDrop2", "Chiz0", "Chiz1", "TrollPart", "KrukPart", "KrukPart2",  # World Boss Materials
+        "EfauntDrop2", "Chiz0", "Chiz1", "TrollPart", "KrukPart", "KrukPart2",  # World Boss Materials
         "CraftMat2",  # Crimson String
         "OilBarrel1", "OilBarrel3", "OilBarrel4", "OilBarrel5",  # Oil Barrels
         "PureWater2",  # Alchemy Dense water
