@@ -3345,7 +3345,7 @@ skill_talentsDict = {
             118: {"Name": "Catching Some Zzz's", "Tab": "Barbarian"},
         },
         "Low": {
-            112: {"Name": "Strongest Statues", "Tab": "Barbarian", 'Hardcap': 200},
+            112: {"Name": "Strongest Statues", "Tab": "Barbarian"},
             116: {"Name": "Bobbin' Bobbers", "Tab": "Barbarian", 'Hardcap': 200},
             111: {"Name": "Fistful of Obol", "Tab": "Warrior Subclass", 'Hardcap': 125},
         },
@@ -3373,8 +3373,8 @@ skill_talentsDict = {
         },
         "Low": {
             92: {"Name": "Health Overdrive", "Tab": "Warrior"},
-            127: {"Name": "Shieldiest Statues", "Tab": "Squire", 'Hardcap': 200},
-            112: {"Name": "Strongest Statues", "Tab": "Barbarian", 'Hardcap': 200},
+            127: {"Name": "Shieldiest Statues", "Tab": "Squire"},
+            112: {"Name": "Strongest Statues", "Tab": "Barbarian"},
             95: {"Name": "Strength in Numbers", "Tab": "Warrior"},
             0: {"Name": "Health Booster", "Tab": "Rage Basics"},
             144: {"Name": "The Family Guy", "Tab": "Elite Class"},
@@ -3435,7 +3435,7 @@ skill_talentsDict = {
             293: {"Name": "Agi Again", "Tab": "Archer Subclass"},
         },
         "Low": {
-            292: {"Name": "Shwifty Statues", "Tab": "Bowman", 'Hardcap': 200},
+            292: {"Name": "Shwifty Statues", "Tab": "Bowman"},
             144: {"Name": "The Family Guy", "Tab": "Elite Class"},
             291: {"Name": "Shoeful of Obol", "Tab": "Archer Subclass", 'Hardcap': 125},
         },
@@ -3506,7 +3506,7 @@ skill_talentsDict = {
         },
         "Low": {
             279: {"Name": "Robbinghood", "Tab": "Archer"},
-            37: {"Name": "Skilliest Statue", "Tab": "Maestro", 'Hardcap': 200},
+            37: {"Name": "Skilliest Statue", "Tab": "Maestro"},
             27: {"Name": "Reroll Pls", "Tab": "Journeyman"},
         },
         "Lowest": {
