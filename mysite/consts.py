@@ -7295,7 +7295,7 @@ reclaimableQuestItems = {
         "QuestNameCoded": "Nebulyte4"
     }
 }
-slab_QuestRewards = {
+slab_QuestRewardsAllChars = {
     'EquipmentPants16': {
         "ItemName": "Adam's Leaf",
         "QuestGiver": "Sprout",
@@ -7500,24 +7500,7 @@ slab_QuestRewards = {
         "QuestName": "The Witcher, but not Really Inventory Bag D",
         "QuestNameCoded": "Promotheus4"
     },
-    'PeanutS': {
-        "ItemName": "Stone Peanut",
-        "QuestGiver": "Bushlyte",
-        "QuestName": "A Peanut Saved is a Peanut not Eaten!",
-        "QuestNameCoded": "Bushlyte3"
-    },
-    'Trophy3': {
-        "ItemName": "Club Member",
-        "QuestGiver": "Rocklyte",
-        "QuestName": "Becoming the Best Beginner",
-        "QuestNameCoded": "Rocklyte3"
-    },
-    'Trophy13': {
-        "ItemName": "Club Maestro",
-        "QuestGiver": "Cactolyte",
-        "QuestName": "Maestro! The Stro! Mman!",
-        "QuestNameCoded": "Cactolyte4"
-    },
+
     'Quest6': {
         "ItemName": "Scouting Report",
         "QuestGiver": "Stiltzcho",
@@ -7998,12 +7981,7 @@ slab_QuestRewards = {
         "QuestName": "Ad Solidarity Contract",
         "QuestNameCoded": "Yondergreen7"
     },
-    'CardPack4': {
-        "ItemName": "Dungeon Card Pack",
-        "QuestGiver": "Worldo",
-        "QuestName": "Odd Jobs for Cold Hard Cash",
-        "QuestNameCoded": "Worldo1"
-    },
+
     'Quest59': {
         "ItemName": "Shuvelle's Vote",
         "QuestGiver": "Shuvelle",
@@ -8069,48 +8047,6 @@ slab_QuestRewards = {
         "QuestGiver": "Snouts",
         "QuestName": "Mana Plox",
         "QuestNameCoded": "Snouts4"
-    },
-    'Mayo': {
-        "ItemName": "Mayonnaise Bottle",
-        "QuestGiver": "Walupiggy",
-        "QuestName": "Treasure Hunt 1",
-        "QuestNameCoded": "Walupiggy1"
-    },
-    'Trash': {
-        "ItemName": "Broken Weapon",
-        "QuestGiver": "Walupiggy",
-        "QuestName": "Treasure Hunt 2",
-        "QuestNameCoded": "Walupiggy2"
-    },
-    'Trash2': {
-        "ItemName": "Dried Paint Blob",
-        "QuestGiver": "Walupiggy",
-        "QuestName": "Treasure Hunt 3",
-        "QuestNameCoded": "Walupiggy3"
-    },
-    'Trash3': {
-        "ItemName": "Engraved Bullet",
-        "QuestGiver": "Walupiggy",
-        "QuestName": "Treasure Hunt 4",
-        "QuestNameCoded": "Walupiggy4"
-    },
-    'Timecandy7': {
-        "ItemName": "Steamy Time Candy",
-        "QuestGiver": "Walupiggy",
-        "QuestName": "Treasure Hunt 4",
-        "QuestNameCoded": "Walupiggy4"
-    },
-    'Quest44': {
-        "ItemName": "Goldegg Capsule",
-        "QuestGiver": "Walupiggy",
-        "QuestName": "Treasure Hunt 4",
-        "QuestNameCoded": "Walupiggy4"
-    },
-    'CardPack1': {
-        "ItemName": "Newbie Card Pack",
-        "QuestGiver": "Walupiggy",
-        "QuestName": "Treasure Hunt 4",
-        "QuestNameCoded": "Walupiggy4"
     },
     'StampB42': {
         "ItemName": "Lab Tube Stamp",
@@ -8202,24 +8138,6 @@ slab_QuestRewards = {
     #     "QuestName": "Chizoar Slayer",
     #     "QuestNameCoded": "Nebulyte2"
     # },
-    'CardPack5': {
-        "ItemName": "Galaxy Card Pack",
-        "QuestGiver": "Nebulyte",
-        "QuestName": "Chizoar Slayer",
-        "QuestNameCoded": "Nebulyte2"
-    },
-    'CardPack6': {
-        "ItemName": "Smolderin Card Pack",
-        "QuestGiver": "Nebulyte",
-        "QuestName": "Oh Geez Lets Not Think About This One...",
-        "QuestNameCoded": "Nebulyte3"
-    },
-    'EquipmentNametag4': {
-        "ItemName": "Vman Nametag",
-        "QuestGiver": "Nebulyte",
-        "QuestName": "VMAN ACHIEVED!",
-        "QuestNameCoded": "Nebulyte4"
-    },
     'Trophy17': {
         "ItemName": "One of the Divine",
         "QuestGiver": "Tired_Mole",
@@ -8279,6 +8197,92 @@ slab_QuestRewards = {
         "QuestGiver": "Sussy_Gene",
         "QuestName": "Loiterin' Around",
         "QuestNameCoded": "Sussy_Gene3"
+    },
+}
+slab_QuestRewardsOnce = {
+    'Mayo': {
+        "ItemName": "Mayonnaise Bottle",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 1",
+        "QuestNameCoded": "Walupiggy1"
+    },
+    'Trash': {
+        "ItemName": "Broken Weapon",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 2",
+        "QuestNameCoded": "Walupiggy2"
+    },
+    'Trash2': {
+        "ItemName": "Dried Paint Blob",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 3",
+        "QuestNameCoded": "Walupiggy3"
+    },
+    'Trash3': {
+        "ItemName": "Engraved Bullet",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 4",
+        "QuestNameCoded": "Walupiggy4"
+    },
+    'Timecandy7': {
+        "ItemName": "Steamy Time Candy",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 4",
+        "QuestNameCoded": "Walupiggy4"
+    },
+    'Quest44': {
+        "ItemName": "Goldegg Capsule",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 4",
+        "QuestNameCoded": "Walupiggy4"
+    },
+    'CardPack1': {
+        "ItemName": "Newbie Card Pack",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 4",
+        "QuestNameCoded": "Walupiggy4"
+    },
+    'CardPack4': {
+        "ItemName": "Dungeon Card Pack",
+        "QuestGiver": "Worldo",
+        "QuestName": "Odd Jobs for Cold Hard Cash",
+        "QuestNameCoded": "Worldo1"
+    },
+    'CardPack5': {
+        "ItemName": "Galaxy Card Pack",
+        "QuestGiver": "Nebulyte",
+        "QuestName": "Chizoar Slayer",
+        "QuestNameCoded": "Nebulyte2"
+    },
+    'CardPack6': {
+        "ItemName": "Smolderin Card Pack",
+        "QuestGiver": "Nebulyte",
+        "QuestName": "Oh Geez Lets Not Think About This One...",
+        "QuestNameCoded": "Nebulyte3"
+    },
+    'PeanutS': {
+        "ItemName": "Stone Peanut",
+        "QuestGiver": "Bushlyte",
+        "QuestName": "A Peanut Saved is a Peanut not Eaten!",
+        "QuestNameCoded": "Bushlyte3"
+    },
+    'Trophy3': {
+        "ItemName": "Club Member",
+        "QuestGiver": "Rocklyte",
+        "QuestName": "Becoming the Best Beginner",
+        "QuestNameCoded": "Rocklyte3"
+    },
+    'Trophy13': {
+        "ItemName": "Club Maestro",
+        "QuestGiver": "Cactolyte",
+        "QuestName": "Maestro! The Stro! Mman!",
+        "QuestNameCoded": "Cactolyte4"
+    },
+    'EquipmentNametag4': {
+        "ItemName": "Vman Nametag",
+        "QuestGiver": "Nebulyte",
+        "QuestName": "VMAN ACHIEVED!",
+        "QuestNameCoded": "Nebulyte4"
     },
 }
 npc_tokens = [

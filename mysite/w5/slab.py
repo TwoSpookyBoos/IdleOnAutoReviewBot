@@ -2,9 +2,18 @@ from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import getItemDisplayName, pl
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import slabList, reclaimableQuestItems, vendorItems, anvilItems, dungeonWeaponsList, maxDungeonWeaponsAvailable, \
-    dungeonArmorsList, maxDungeonArmorsAvailable, dungeonJewelryList, maxDungeonJewelryAvailable, dungeonDropsList, anvilTabs, vendors, \
-    break_you_best, slab_itemNameReplacementDict, hidden_but_constantly_avaiable_slabList, hidden_gemshopItems, slab_QuestRewards, maxCharacters
+from consts import (
+    slabList, slab_itemNameReplacementDict,
+    reclaimableQuestItems, slab_QuestRewardsAllChars, slab_QuestRewardsOnce,
+    vendorItems, anvilItems,
+    dungeonWeaponsList, maxDungeonWeaponsAvailable,
+    dungeonArmorsList, maxDungeonArmorsAvailable,
+    dungeonJewelryList, maxDungeonJewelryAvailable,
+    dungeonDropsList,
+    anvilTabs, vendors,
+    hidden_but_constantly_avaiable_slabList, hidden_gemshopItems,
+    maxCharacters, break_you_best
+)
 
 logger = get_logger(__name__)
 
@@ -90,14 +99,24 @@ def setSlabProgressionTier():
                             resource=reclaimableQuestItems[itemName]['QuestGiver'].replace('_', '-')
                         ))
                     continue
-                #If the item comes from a quest AND at least 1 character hasn't completed it
-                if itemName in slab_QuestRewards.keys():
+                #If the item comes from a quest that all characters can complete AND at least 1 character hasn't completed it
+                if itemName in slab_QuestRewardsAllChars.keys():
                     #logger.debug(f"{itemName} quest {slab_QuestRewards[itemName]['QuestNameCoded']} completed by {session_data.account.compiled_quests.get(slab_QuestRewards[itemName]['QuestNameCoded'], {}).get('CompletedCount', 0)}/{maxCharacters}")
-                    if session_data.account.compiled_quests.get(slab_QuestRewards[itemName]['QuestNameCoded'], {}).get('CompletedCount', 0) < maxCharacters:
+                    if session_data.account.compiled_quests.get(slab_QuestRewardsAllChars[itemName]['QuestNameCoded'], {}).get('CompletedCount', 0) < maxCharacters:
                         slab_AdviceDict["Quests"].append(Advice(
-                            label=f"{getItemDisplayName(itemName)} ({slab_QuestRewards[itemName]['QuestGiver'].replace('_', ' ')}: {slab_QuestRewards[itemName]['QuestName']})",
+                            label=f"{getItemDisplayName(itemName)} ({slab_QuestRewardsAllChars[itemName]['QuestGiver'].replace('_', ' ')}: {slab_QuestRewardsAllChars[itemName]['QuestName']})",
                             picture_class=getItemDisplayName(itemName) if itemName not in slab_itemNameReplacementDict else slab_itemNameReplacementDict[itemName],
-                            resource=slab_QuestRewards[itemName]['QuestGiver'].replace('_', '-')
+                            resource=slab_QuestRewardsAllChars[itemName]['QuestGiver'].replace('_', '-')
+                        ))
+                    continue
+                #If the item comes from a quest that generally only 1 character can complete AND hasn't been completed by ANY characters yet
+                if itemName in slab_QuestRewardsOnce.keys():
+                    if session_data.account.compiled_quests.get(slab_QuestRewardsOnce[itemName]['QuestNameCoded'], {}).get('CompletedCount', 0) < 1:
+                        slab_AdviceDict["Quests"].append(Advice(
+                            label=f"{getItemDisplayName(itemName)} ({slab_QuestRewardsOnce[itemName]['QuestGiver'].replace('_', ' ')}: {slab_QuestRewardsOnce[itemName]['QuestName']})",
+                            picture_class=getItemDisplayName(itemName) if itemName not in slab_itemNameReplacementDict else slab_itemNameReplacementDict[
+                                itemName],
+                            resource=slab_QuestRewardsOnce[itemName]['QuestGiver'].replace('_', '-')
                         ))
                     continue
                 #If the item is sold by a vendor

@@ -64,7 +64,6 @@ from consts import (
     getMoissaniteValue, getGemstoneBaseValue, getGemstoneBoostedValue, getGemstonePercent,
     marketUpgradeDetails, landrankDict, cropDepotDict, maxFarmingCrops,
     summoningBattleCountsDict, summoningDict,
-
 )
 
 
