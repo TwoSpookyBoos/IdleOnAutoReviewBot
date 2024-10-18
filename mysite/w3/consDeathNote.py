@@ -90,9 +90,11 @@ def setConsDeathNoteProgressionTier():
     highestConstructionLevel = max(session_data.account.all_skills["Construction"])
     if highestConstructionLevel < 1:
         deathnote_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
+        deathnote_AdviceSection.unreached = True
         return deathnote_AdviceSection
     elif session_data.account.construction_buildings['Death Note']['Level'] < 1:
         deathnote_AdviceSection.header = "Come back after unlocking the Death Note within the Construction skill in World 3!"
+        deathnote_AdviceSection.unreached = True
         return deathnote_AdviceSection
 
     # Just shortening the paths

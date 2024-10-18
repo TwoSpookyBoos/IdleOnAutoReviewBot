@@ -24,6 +24,7 @@ def setEquinoxProgressionTier() -> AdviceSection:
 
     if not session_data.account.equinox_unlocked:
         equinox_AdviceSection.header = "Come back after unlocking Equinox!"
+        equinox_AdviceSection.unreached = True
         return equinox_AdviceSection
 
     infoTiers = 1

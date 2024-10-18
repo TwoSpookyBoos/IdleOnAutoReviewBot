@@ -28,6 +28,7 @@ def setAlchemyVialsProgressionTier() -> AdviceSection:
     highestAlchemyLevel = max(session_data.account.all_skills["Alchemy"])
     if highestAlchemyLevel < 1:
         vial_AdviceSection.header = "Come back after unlocking the Alchemy skill in World 2!"
+        vial_AdviceSection.unreached = True
         return vial_AdviceSection
 
     alchemyVialsDict = session_data.account.alchemy_vials
@@ -266,6 +267,7 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
     highestAlchemyLevel = max(session_data.account.all_skills["Alchemy"])
     if highestAlchemyLevel < 1:
         bubbles_AdviceSection.header = "Come back after unlocking the Alchemy skill in World 2!"
+        bubbles_AdviceSection.unreached = True
         return bubbles_AdviceSection
 
     tier_TotalBubblesUnlocked = 0
@@ -412,6 +414,7 @@ def setAlchemyP2W() -> AdviceSection:
     highestAlchemyLevel = max(session_data.account.all_skills["Alchemy"])
     if highestAlchemyLevel < 1:
         p2w_AdviceSection.header = "Come back after unlocking the Alchemy skill in World 2!"
+        p2w_AdviceSection.unreached = True
         return p2w_AdviceSection
 
     alchemyP2WList = safe_loads(session_data.account.raw_data["CauldronP2W"])
@@ -717,6 +720,7 @@ def setAlchemySigilsProgressionTier() -> AdviceSection:
     highestLabLevel = max(session_data.account.all_skills["Lab"])
     if highestLabLevel < 1:
         sigils_AdviceSection.header = "Come back after unlocking the Laboratory skill in World 4!"
+        sigils_AdviceSection.unreached = True
         return sigils_AdviceSection
 
     account_sigils = session_data.account.alchemy_p2w['Sigils']

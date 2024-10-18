@@ -167,6 +167,7 @@ def setKillroyProgressionTier():
     )
     if session_data.account.highestWorldReached < 2:
         killroy_AdviceSection.header = "Come back after unlocking Killroy in W2 town!"
+        killroy_AdviceSection.unreached = True
         return killroy_AdviceSection
 
     infoTiers = 0

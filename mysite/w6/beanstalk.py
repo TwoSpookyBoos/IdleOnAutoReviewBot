@@ -14,9 +14,9 @@ def section_beanstalk():
         return AdviceSection(
             name="Beanstalk",
             tier="",
-            header="Come back once you've bought the \"Gold Food Beanstalk\" from the Jade Emporium",
+            header="Come back after unlocking \"Gold Food Beanstalk\" from the Jade Emporium",
             picture="Jade_Vendor.gif",
-            collapse=True,
+            unreached=True
         )
 
     gold_foods = dict.fromkeys(gfood_codes, 0)
