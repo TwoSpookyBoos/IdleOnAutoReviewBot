@@ -322,7 +322,7 @@ def setBreedingProgressionTier() -> AdviceSection:
     highestBreedingLevel = max(session_data.account.all_skills["Breeding"])
     if highestBreedingLevel < 1:
         breeding_AdviceSection.header = "Come back after unlocking the Breeding skill in World 4!"
-        breeding_AdviceSection.collapse = True
+        breeding_AdviceSection.unreached = True
         return breeding_AdviceSection
 
     progressionTiersBreeding = copy.deepcopy(breeding_progressionTiers)

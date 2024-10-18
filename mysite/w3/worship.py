@@ -29,6 +29,7 @@ def setWorshipPrayersProgressionTier() -> AdviceSection:
     highestWorshipLevel = max(session_data.account.all_skills["Worship"])
     if highestWorshipLevel < 1:
         prayers_AdviceSection.header = "Come back after unlocking the Worship skill in World 3!"
+        prayers_AdviceSection.unreached = True
         return prayers_AdviceSection
 
     adviceCountsDict = {"Recommended": 0, "Optional": 0, "Ignorable": 0}

@@ -241,7 +241,7 @@ class Thresholds(dict):
         return self._thresholds[threshold.index - 1] if threshold.index > 0 else threshold
 
     def next(self, threshold):
-        return self._thresholds[threshold.index + 1] if self._thresholds.index(threshold) > 0 else threshold
+        return self._thresholds[threshold.index + 1] if threshold.index + 1 < len(self._thresholds) else threshold
 
     @property
     def placeholder(self):
@@ -320,13 +320,17 @@ def tier_from_monster_kills(dictOfPRs) -> Threshold:
 
     #highestPrint = session_data.account.printer['HighestValue']
     mobKillThresholds = []
-    if dictOfPRs[Placements.SAMPLING] >= 9:
-        expectedThreshold = Threshold.fromname(Threshold.MAX_TIER)
-    elif dictOfPRs[Placements.DEATH_NOTE] >= 25:
-        expectedThreshold = Threshold.fromname(Threshold.W7_WAITING_ROOM)
-    elif dictOfPRs[Placements.DEATH_NOTE] >= 17:
-        expectedThreshold = Threshold.fromname(Threshold.SOLID_W7_PREP)
-    else:
+    try:
+        if dictOfPRs[Placements.SAMPLING] >= 9:
+            expectedThreshold = Threshold.fromname(Threshold.MAX_TIER)
+        elif dictOfPRs[Placements.DEATH_NOTE] >= 25:
+            expectedThreshold = Threshold.fromname(Threshold.W7_WAITING_ROOM)
+        elif dictOfPRs[Placements.DEATH_NOTE] >= 17:
+            expectedThreshold = Threshold.fromname(Threshold.SOLID_W7_PREP)
+        else:
+            threshold = threshold_for_highest_portal_opened()
+            mobKillThresholds.append(threshold)
+    except KeyError:
         threshold = threshold_for_highest_portal_opened()
         mobKillThresholds.append(threshold)
 
@@ -367,13 +371,14 @@ def generate_advice_groups(sectionsByThreshold: dict):
 def getUnratedLinksAdviceGroup(unrated_sections) -> AdviceGroup:
     unrated_advice = []
     for section in unrated_sections:
-        unrated_advice.append(
-            Advice(
-                label=section.name,
-                picture_class=section.name,
-                as_link=True
+        if not section.unreached:
+            unrated_advice.append(
+                Advice(
+                    label=section.name,
+                    picture_class=section.name,
+                    as_link=True
+                )
             )
-        )
     unrated_AG = AdviceGroup(
         tier="",
         pre_string="Unrated Sections",
@@ -393,7 +398,7 @@ def getAlertsAdviceGroup() -> AdviceGroup:
 
 
 def generatePinchyWorld(pinchable_sections, unrated_sections):
-    dictOfPRs = {section.name: section.pinchy_rating for section in pinchable_sections}
+    dictOfPRs = {section.name: section.pinchy_rating for section in pinchable_sections if not section.unreached}
 
     sectionPlacements: Placements = sort_pinchy_reviews(dictOfPRs)
     expectedThreshold: Threshold = tier_from_monster_kills(dictOfPRs)
@@ -401,8 +406,10 @@ def generatePinchyWorld(pinchable_sections, unrated_sections):
 
     placements_per_section = sectionPlacements.per_section()
     for section in pinchable_sections:
-        section.pinchy_placement = placements_per_section[section.name]
-
+        try:
+            section.pinchy_placement = placements_per_section[section.name]
+        except KeyError:
+            continue
 
     # Generate advice based on catchup
     equalSnippet = ""

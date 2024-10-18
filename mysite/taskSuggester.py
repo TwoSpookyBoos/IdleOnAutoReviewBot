@@ -140,13 +140,15 @@ def main(inputData, runType="web"):
         AdviceWorld(name=WorldName.SMOLDERIN_PLATEAU, sections=sections_5, banner="w5banner.png"),
         AdviceWorld(name=WorldName.SPIRITED_VALLEY, sections=sections_6, banner="w6banner.png"),
     ]
-    if session_data.hide_completed:
-        for world in reviews:
+    for world in reviews:
+        world.hide_unreached_sections()  # Feel free to comment this out while testing
+        if session_data.hide_completed:
             world.hide_completed_sections()
             for section in world.sections:
                 for group in section.groups:
                     group.remove_completed_advices()
                     group.remove_empty_subgroups()
+    reviews = [world for world in reviews if len(world.sections) > 0]
 
     headerData = HeaderData(inputData)
     logger.info(f"{headerData.last_update = }")

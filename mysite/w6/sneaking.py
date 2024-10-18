@@ -22,6 +22,7 @@ def setSneakingProgressionTier():
     highestSneakingSkillLevel = max(session_data.account.all_skills.get("Sneaking", [0]))
     if highestSneakingSkillLevel < 1:
         sneaking_AdviceSection.header = "Come back after unlocking the Sneaking skill in W6!"
+        sneaking_AdviceSection.unreached = True
         return sneaking_AdviceSection
 
     tier_Sneaking = 0
