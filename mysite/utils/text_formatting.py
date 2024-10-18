@@ -4,10 +4,11 @@ from pathlib import Path
 import yaml
 
 from config import app
-from .logging import get_logger
+from .logging import get_logger, log_unknown_item
 
 
 logger = get_logger(__name__)
+
 numeralList = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"]
 
 def pl(_list, suffix_singular: str = "", suffix_plural: str = "s") -> str:
@@ -59,6 +60,7 @@ def _get_item_name(_dict, name):
             return _dict[name]
         except KeyError:
             logger.debug(f"Unknown item: '{name}'")
+            log_unknown_item(name)
             return f"Unknown-'{name}'"
     else:
         #Don't need a logger message if the unknown item is an empty string
