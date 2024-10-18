@@ -15,9 +15,12 @@ def getHiddenAdviceGroup() -> AdviceGroup:
     for itemName in session_data.account.registered_slab:
         if itemName not in slabList:
             hidden_names[itemName] = getItemDisplayName(itemName)
+            decoded_name = getItemDisplayName(itemName) if itemName not in slab_itemNameReplacementDict else slab_itemNameReplacementDict[itemName]
+            decoded_name = 'placeholder' if decoded_name.startswith("Unknown-'") else decoded_name
             hidden_adviceList.append(Advice(
                 label=getItemDisplayName(itemName),
-                picture_class=getItemDisplayName(itemName) if itemName not in slab_itemNameReplacementDict else slab_itemNameReplacementDict[itemName]))
+                picture_class=decoded_name
+            ))
 
     #logger.debug(f"Cards1 length: {len(session_data.account.registered_slab)}")
     #logger.debug(f"{len(hidden_names)} Hidden Slab Items: {hidden_names}")

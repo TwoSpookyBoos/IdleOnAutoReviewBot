@@ -98,7 +98,7 @@ def getCrystalSpawnChanceAdviceGroup() -> AdviceGroup:
 
     # Totals
     crystal_Advice[total].append(Advice(
-        label=f"Note: Crescent Shrine and PO Box are additive: {1 + ((session_data.account.shrines['Crescent Shrine']['Value'] + box_value) / 100)}x"
+        label=f"Note: Crescent Shrine and PO Box are additive: {1 + ((session_data.account.shrines['Crescent Shrine']['Value'] + box_value) / 100):.3f}x"
               f"<br>The cards also add together. Everything else is a unique multiplier.",
         picture_class="shrine-box2"
     ))
@@ -548,6 +548,10 @@ def setActiveProgressionTier() -> AdviceSection:
         header="Best Active tier met: Not Yet Evaluated. Recommended Star Sign actions",
         picture='Auto.png'
     )
+    if session_data.account.highestWorldReached < 4:
+        active_AdviceSection.header = "Come back after reaching W4 town!"
+        active_AdviceSection.unreached = True
+        return active_AdviceSection
 
     infoTiers = 0
     max_tier = 0
