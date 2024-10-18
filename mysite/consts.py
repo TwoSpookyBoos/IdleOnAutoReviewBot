@@ -1647,7 +1647,7 @@ sailing_progressionTiers = {
             'Triagulon': 4,
             'Billcye Tri': 4,
             'Frost Relic': 4,
-            #'Chilled Yarn': 4,
+            'Chilled Yarn': 4,
             'Causticolumn': 4,
             'Jade Rock': 4,
             'Gummy Orb': 4,
