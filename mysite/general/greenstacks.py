@@ -211,17 +211,26 @@ def setGStackProgressionTier():
     elif expectedGStacksCount < 20 and equinoxDreamsStatus.get("Dream1", False) == False:
         header += " Equinox Dream 1 requires 20. Aim for items in Tier 1.<br>Start buying items listed in the Timegated tier from shops every day!"
         show_limit = 2
+    else:
+
+        show_limit = 2
 
     for group in groups[show_limit:]:
         group.hide = True
 
+    #Dream Review
+    overall_GreenstacksTier = 0
+    for dream in [1, 12, 29]:
+        if equinoxDreamsStatus.get(f"Dream{dream}", False) == True:
+            overall_GreenstacksTier += 1
+
     section_regular_gstacks = AdviceSection(
         name="Greenstacks",
         tier=tier,
+        pinchy_rating=overall_GreenstacksTier,
         header=header,
         picture="Greenstack.png",
         groups=groups,
-        unrated=True
     )
     section_regular_gstacks.complete = True if not section_regular_gstacks.groups else False
 

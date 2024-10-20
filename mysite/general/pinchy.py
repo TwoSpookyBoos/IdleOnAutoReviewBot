@@ -124,6 +124,7 @@ class Placements(dict):
     COMBAT_LEVELS = "Combat Levels"
     SECRET_CLASS_PATH = "Secret Class Path"
     ACHIEVEMENTS = "Achievements"
+    GSTACKS = "Greenstacks"
     STAMPS = "Stamps"
     BRIBES = "Bribes"
     SMITHING = "Smithing"
@@ -150,7 +151,7 @@ class Placements(dict):
     SAILING = "Sailing"
     FARMING = "Farming"
     sections = [
-        COMBAT_LEVELS, SECRET_CLASS_PATH, ACHIEVEMENTS,
+        COMBAT_LEVELS, SECRET_CLASS_PATH, ACHIEVEMENTS, GSTACKS,
         STAMPS, BRIBES, SMITHING, STATUES, STAR_SIGNS, OWL,
         BUBBLES, VIALS, P2W, SIGILS, ISLANDS,
         REFINERY, SAMPLING, SALT_LICK, DEATH_NOTE, COLLIDER, PRAYERS, TRAPPING, EQUINOX,
@@ -165,6 +166,7 @@ class Placements(dict):
         COMBAT_LEVELS: [0,   3, 7, 8,    10, 14, 15,     16, 17, 18,     19, 21, 23,     24, 25, 27,     28, 29, 30,     32,   99],
         SECRET_CLASS_PATH:[0,0, 0, 0,    0,  0,  0,      0,  1,  1,      2,  3,  3,      3,  3,  3,      3,  3,  3,      3,    99],
         ACHIEVEMENTS:  [0,   0, 0, 0,    0,  1,  1,      1,  1,  1,      2,  2,  2,      2,  2,  2,      3,  4,  5,      5,    99],
+        GSTACKS:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      1,  2,  2,      2,  3,  3,      3,    99],
         STAMPS:        [0,   1, 2, 3,    4,  5,  6,      7,  8,  9,      10, 11, 12,     13, 14, 15,     16, 17, 18,     20,   99],
         BRIBES:        [0,   1, 1, 1,    2,  2,  2,      3,  3,  3,      4,  4,  4,      4,  5,  5,      5,  5,  5,      6,    99],
         SMITHING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  2,  3,      4,  5,  6,      6,  6,  6,      6,    99],
@@ -182,7 +184,7 @@ class Placements(dict):
         DEATH_NOTE:    [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      3,  5,  5,      5,  5,  6,      10, 17, 24,     25,   99],
         COLLIDER:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  10,     13,   99],
         PRAYERS:       [0,   0, 0, 0,    0,  0,  0,      0,  1,  1,      2,  3,  4,      4,  5,  6,      7,  7,  7,      7,    99],
-        TRAPPING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      12,   99],
+        TRAPPING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      7,  7,  7,      7,  10, 10,     12, 12, 12,     12,   99],
         EQUINOX:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      11,   99],
         BREEDING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  1,      1,  2,  2,      3,  4,  5,      6,  8,  9,      11,   99],
         COOKING:       [0,   0, 0, 0,    0,  0,  0,      1,  1,  1,      1,  1,  2,      3,  4,  4,      5,  5,  5,      6,    99],
