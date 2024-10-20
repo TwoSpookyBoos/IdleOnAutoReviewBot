@@ -103,7 +103,8 @@ def getMissableGStacks(owned_stuff: Assets):
         #         header=header_obtainable,
         #         picture="Greenstack.png",
         #         note=note,
-        #         groups=[endangered_AdviceGroup]
+        #         groups=[endangered_AdviceGroup],
+        #         unrated=True
         #     )
         # endangered_AdviceSection.complete = True if not endangered_AdviceSection.groups else False
         # sections.append(endangered_AdviceSection)
@@ -134,10 +135,10 @@ def getMissableGStacks(owned_stuff: Assets):
         header=header_obtainable,
         picture="Greenstack.png",
         note=note,
-        groups=questGStacks_AdviceGroupDict.values()
+        groups=questGStacks_AdviceGroupDict.values(),
+        unrated=True
     )
-    if still_obtainable == 0:
-        questGStacks_AdviceSection.complete = True
+    questGStacks_AdviceSection.complete = still_obtainable == 0
 
     return questGStacks_AdviceSection
 
@@ -216,7 +217,8 @@ def setGStackProgressionTier():
         tier=tier,
         header=header,
         picture="Greenstack.png",
-        groups=groups
+        groups=groups,
+        unrated=True
     )
     section_regular_gstacks.complete = True if not section_regular_gstacks.groups else False
 

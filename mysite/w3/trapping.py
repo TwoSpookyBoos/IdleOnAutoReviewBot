@@ -328,7 +328,7 @@ def setTrappingProgressionTier():
                 label=agd_unlockcritters_post_stringsList[highestUnlockedCritter[0]],
                 picture_class=highestUnlockedCritter[3])
             )
-        if tier_unlockCritters >= 2 and tier_unlockCritters < 11: # Show only the quests with Critter requirement
+        if 2 <= tier_unlockCritters < 11:  # Show only the quests with Critter requirement
             normalItem=session_data.account.stored_assets.get(trappingQuestsRequirementList[tier_unlockCritters-2]["normalItemName"])
             trapping_AdviceDict["UnlockCritters"].append(Advice(
                     label=normalItem.name,
@@ -457,6 +457,7 @@ def setTrappingProgressionTier():
     overall_TrappingTier = min(max_tier, tier_unlockCritters)
     tier_section = f"{overall_TrappingTier}/{max_tier}"
     trapping_AdviceSection.tier = tier_section
+    trapping_AdviceSection.pinchy_rating = overall_TrappingTier
     trapping_AdviceSection.groups = trapping_AdviceGroupDict.values()
     if overall_TrappingTier >= max_tier:
         trapping_AdviceSection.header = f"Best Trapping tier met: {tier_section}{break_keep_it_up}"

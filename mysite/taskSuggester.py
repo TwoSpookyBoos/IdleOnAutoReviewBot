@@ -116,19 +116,25 @@ def main(inputData, runType="web"):
         section_beanstalk := beanstalk.section_beanstalk(),
     ]
 
-    pinchable_sections = [
-        section_combatLevels, section_secretPath, section_achievements,
-        section_stamps, section_bribes, section_smithing, section_statues, section_starsigns, section_owl,
-        section_alchBubbles, section_alchVials, section_alchP2W, section_alchSigils, section_islands,
-        section_refinery, section_sampling, section_saltlick, section_deathnote, section_prayers, section_equinox,
-        section_breeding, section_cooking, section_rift,
-        section_divinity, section_sailing,
-        section_farming
-    ]
+    #Sort sections into rated and unrated
+    all_sections = [sections_general, sections_1, sections_2, sections_3, sections_4, sections_5, sections_6]
     unrated_sections = []
-    for sectionList in [sections_general, sections_1, sections_2, sections_3, sections_4, sections_5, sections_6]:
-        unrated_sections.extend([section for section in sectionList if section not in pinchable_sections])
-    sections_pinchy = pinchy.generatePinchyWorld(pinchable_sections, unrated_sections)
+    pinchable_sections = []
+    for section_list in all_sections:
+        for section in section_list:
+            if section.unrated:  # and not session_data.account.hide_unrated:
+                unrated_sections.append(section)
+            else:
+                pinchable_sections.append(section)
+
+    #Remove completed sections from Pinchy, if that setting is enabled
+    completed_pinchable_sections = []
+    # if session_data.account.hide_completed:
+    #     completed_pinchable_sections = [section for section in pinchable_sections if section.complete]
+    #     pinchable_sections = [section for section in pinchable_sections if not section.complete]
+    #     #completed_unrated_sections = [section for section in unrated_sections if section.complete]
+    #     unrated_sections = [section for section in unrated_sections if not section.complete]
+    sections_pinchy = pinchy.generatePinchyWorld(pinchable_sections, unrated_sections, len(completed_pinchable_sections))
 
     reviews = [
         AdviceWorld(name=WorldName.PINCHY, sections=sections_pinchy, title="Pinchy AutoReview", collapse=False),
@@ -142,12 +148,14 @@ def main(inputData, runType="web"):
     ]
     for world in reviews:
         world.hide_unreached_sections()  # Feel free to comment this out while testing
-        if session_data.hide_completed:
+        if session_data.account.hide_completed:
             world.hide_completed_sections()
             for section in world.sections:
                 for group in section.groups:
                     group.remove_completed_advices()
                     group.remove_empty_subgroups()
+        if session_data.account.hide_unrated:
+            world.hide_unrated_sections()
     reviews = [world for world in reviews if len(world.sections) > 0]
 
     headerData = HeaderData(inputData)

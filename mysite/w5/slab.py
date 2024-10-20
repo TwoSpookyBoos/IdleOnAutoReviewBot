@@ -60,7 +60,8 @@ def setSlabProgressionTier():
         tier="0",
         pinchy_rating=0,
         header="Best Slab tier met: Not Yet Evaluated",
-        picture="Slab.png"
+        picture="Slab.png",
+        unrated=True
     )
     if session_data.account.highestWorldReached < 5:
         slab_AdviceSection.collapsed = True
@@ -201,7 +202,7 @@ def setSlabProgressionTier():
 
     # Generate Alert
     minimal_effort_stacks = len(slab_AdviceDict['Reclaims']) + len(slab_AdviceDict['Storage'])
-    if minimal_effort_stacks > 0:
+    if minimal_effort_stacks > 0 and not session_data.account.hide_unrated:
         session_data.account.alerts_AdviceDict['World 5'].append(Advice(
             label=f"{minimal_effort_stacks} minimal effort {{{{ Slab|#slab}}}} stack{pl(minimal_effort_stacks)} available",
             picture_class='the-slab'
@@ -255,7 +256,7 @@ def setSlabProgressionTier():
     slab_AdviceSection.groups = slab_AdviceGroupDict.values()
     if len(slab_AdviceSection.groups) == 0:
         slab_AdviceSection.header = f"All currently owned items registered in The Slab{break_you_best}"
-        slab_AdviceSection.complete = True
+        #slab_AdviceSection.complete = True
     else:
         slab_AdviceSection.header = f"You're missing some obtainable Slab stacks!"
 

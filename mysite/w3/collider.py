@@ -81,8 +81,7 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
                     goal=session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5
                 )
             )
-            session_data.account.alerts_AdviceDict['World 3'].append(
-                Advice(
+            session_data.account.alerts_AdviceDict['World 3'].append(Advice(
                     label=f"Snail could reset from Rank {session_data.account.gaming['Imports']['Snail']['SnailRank']}"
                           f" to {colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'] * 5}!"
                           f"<br>Level {{{{ Sodium|#atom-collider }}}} to {session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5}"
@@ -90,8 +89,7 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
                     picture_class="sodium",
                     progression=colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'],
                     goal=session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5
-                )
-            )
+            ))
 
     #Neon would cheapen the next Helium upgrade
     for heliumLevel, neonLevel in {6: 0, 7: 2, 8: 10, 9: 21, 10: 30}.items():
@@ -224,6 +222,7 @@ def setColliderProgressionTier() -> AdviceSection:
         tier="Not Yet Evaluated",
         header="",
         picture="Collider.gif",
+        unrated=True
     )
 
     highestConstructionLevel = max(session_data.account.all_skills["Construction"])
@@ -275,7 +274,7 @@ def setColliderProgressionTier() -> AdviceSection:
     collider_AdviceSection.groups = collider_AdviceGroupDict.values()
     if overall_ColliderTier >= max_tier:
         collider_AdviceSection.header = f"Best Collider tier met: {tier_section}{break_you_best}"
-        collider_AdviceSection.complete = True
+        #collider_AdviceSection.complete = True
     else:
         collider_AdviceSection.header = f"Best Collider tier met: {tier_section}"
     return collider_AdviceSection

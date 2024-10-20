@@ -437,6 +437,7 @@ def setLibraryProgressionTier() -> AdviceSection:
         tier="Not Yet Evaluated",
         header="",
         picture="Library.png",
+        unrated=True
     )
 
     highestConstructionLevel = max(session_data.account.all_skills["Construction"])
@@ -471,7 +472,12 @@ def setLibraryProgressionTier() -> AdviceSection:
         library_AdviceGroupDict[characterName] = characterAG
 
     # Generate Alerts
-    if session_data.account.library['BooksReady'] >= 40 and session_data.account.construction_buildings['Automation Arm']['Level'] >= 5 and anyBookAdvice:
+    if (
+        session_data.account.library['BooksReady'] >= 40
+        and session_data.account.construction_buildings['Automation Arm']['Level'] >= 5
+        and anyBookAdvice
+        and not session_data.account.hide_unrated
+    ):
         session_data.account.alerts_AdviceDict['World 3'].append(Advice(
             label=f"{session_data.account.library['BooksReady'] // 20} perfect {{{{ checkouts|#library }}}} available",
             picture_class="talent-book-library"
@@ -485,7 +491,7 @@ def setLibraryProgressionTier() -> AdviceSection:
     library_AdviceSection.groups = library_AdviceGroupDict.values()
     if overall_LibraryTier >= max_tier:
         library_AdviceSection.header = f"Best Library tier met: {tier_section}{break_you_best}"
-        library_AdviceSection.complete = True
+        #library_AdviceSection.complete = True
     else:
         library_AdviceSection.header = f"Best Library tier met: {tier_section}"
     return library_AdviceSection

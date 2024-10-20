@@ -291,8 +291,9 @@ def setGemShopProgressionTier():
         header=section_title,
         picture="gemshop.png",
         groups=groups,
-        note=disclaimer
+        note=disclaimer,
+        unrated=True
     )
-    section.complete = True if len(section.groups) <= 1 else False
+    #section.complete = True if len(section.groups) <= 1 else False
 
     return section

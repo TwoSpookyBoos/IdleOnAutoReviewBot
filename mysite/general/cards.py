@@ -79,6 +79,7 @@ def getCardSetReview():
         header=f"You have reached {tier} cardset tiers. Keep going!",
         groups=groups,
         note=note,
+        unrated=True
     )
 
     if not section:
@@ -95,6 +96,6 @@ def getCardSetReview():
                 f"for my blood, I fold. Your sleight of hand is admirable. ♥️♠️♦️♣️"
                 f"{break_you_best}"
             )
-            section.complete = True
+            #section.complete = True
 
     return section

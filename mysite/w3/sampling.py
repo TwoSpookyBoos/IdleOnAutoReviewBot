@@ -491,8 +491,9 @@ def setSamplingProgressionTier() -> AdviceSection:
     sampling_AdviceSection.groups = sampling_AdviceGroupDict.values()
     if overall_SamplingTier >= max_tier:
         sampling_AdviceSection.header = f"Best Sampling tier met: {tier_section}{break_you_best}"
-        if complete_toons >= session_data.account.playerCount:  #Checks both the tier requirement and the Royal Sampler goodness
-            sampling_AdviceSection.complete = True
+        sampling_AdviceSection.complete = True
+        # if complete_toons >= session_data.account.playerCount:  #Checks both the tier requirement and the Royal Sampler goodness
+        #     sampling_AdviceSection.complete = True
     else:
         sampling_AdviceSection.header = f"Best Sampling tier met: {tier_section}"
     return sampling_AdviceSection

@@ -654,6 +654,7 @@ class AdviceSection(AdviceBase):
         pinchy_rating: int = 0,
         complete: bool = False,
         unreached: bool = False,
+        unrated: bool = False,
         **extra,
     ):
         super().__init__(collapse, **extra)
@@ -666,6 +667,7 @@ class AdviceSection(AdviceBase):
         self.pinchy_rating: int = pinchy_rating
         self.complete: bool = complete
         self.unreached = unreached
+        self.unrated = unrated
 
     @property
     def header(self) -> str:
@@ -750,6 +752,9 @@ class AdviceWorld(AdviceBase):
     
     def hide_unreached_sections(self):
         self.sections = [section for section in self.sections if not section.unreached]
+
+    def hide_unrated_sections(self):
+        self.sections = [section for section in self.sections if not section.unrated]
 
 greenStackAmount = 10**7
 gstackable_codenames = [item for items in expectedStackables.values() for item in items]
@@ -1159,6 +1164,9 @@ class Account:
             g.autoloot = True
         else:
             self.autoloot = False
+
+        self.hide_completed = g.hide_completed
+        self.hide_unrated = g.hide_unrated
 
         # Companions
         self.sheepie_owned = g.sheepie

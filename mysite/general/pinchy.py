@@ -140,6 +140,7 @@ class Placements(dict):
     SALT_LICK = "Salt Lick"
     DEATH_NOTE = "Death Note"
     PRAYERS = "Prayers"
+    TRAPPING = "Trapping"
     EQUINOX = "Equinox"
     BREEDING = "Breeding"
     COOKING = "Cooking"
@@ -151,7 +152,7 @@ class Placements(dict):
         COMBAT_LEVELS, SECRET_CLASS_PATH, ACHIEVEMENTS,
         STAMPS, BRIBES, SMITHING, STATUES, STAR_SIGNS, OWL,
         BUBBLES, VIALS, P2W, SIGILS, ISLANDS,
-        REFINERY, SAMPLING, SALT_LICK, DEATH_NOTE, PRAYERS, EQUINOX,
+        REFINERY, SAMPLING, SALT_LICK, DEATH_NOTE, PRAYERS, TRAPPING, EQUINOX,
         BREEDING, COOKING, RIFT,
         DIVINITY, SAILING,
         FARMING
@@ -179,6 +180,7 @@ class Placements(dict):
         SALT_LICK:     [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      9,    99],
         DEATH_NOTE:    [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      3,  5,  5,      5,  5,  6,      10, 17, 24,     25,   99],
         PRAYERS:       [0,   0, 0, 0,    0,  0,  0,      0,  1,  1,      2,  3,  4,      4,  5,  6,      7,  7,  7,      7,    99],
+        TRAPPING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      12,    99],
         EQUINOX:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      11,   99],
         BREEDING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  1,      1,  2,  2,      3,  4,  5,      6,  8,  9,      11,   99],
         COOKING:       [0,   0, 0, 0,    0,  0,  0,      1,  1,  1,      1,  1,  2,      3,  4,  4,      5,  5,  5,      6,    99],
@@ -356,15 +358,18 @@ def generate_advice_list(sections: list[Tier], threshold: Threshold):
 def generate_advice_groups(sectionsByThreshold: dict):
     advice_groups = []
     for threshold, sections in sectionsByThreshold.items():
-        advices = generate_advice_list(sections, Threshold.fromname(threshold))
+        if session_data.account.hide_completed and threshold == Threshold.MAX_TIER:
+            continue
+        else:
+            advices = generate_advice_list(sections, Threshold.fromname(threshold))
 
-        advice_group = AdviceGroup(
-            tier="",
-            pre_string=f"{threshold} rated section{pl(advices)}",
-            advices=advices
-        )
+            advice_group = AdviceGroup(
+                tier="",
+                pre_string=f"{threshold} rated section{pl(advices)}",
+                advices=advices
+            )
 
-        advice_groups.append(advice_group)
+            advice_groups.append(advice_group)
     return advice_groups
 
 
@@ -397,7 +402,7 @@ def getAlertsAdviceGroup() -> AdviceGroup:
     return alerts_AG
 
 
-def generatePinchyWorld(pinchable_sections, unrated_sections):
+def generatePinchyWorld(pinchable_sections, unrated_sections, completed_pinchable_section_count=0):
     dictOfPRs = {section.name: section.pinchy_rating for section in pinchable_sections if not section.unreached}
 
     sectionPlacements: Placements = sort_pinchy_reviews(dictOfPRs)
@@ -427,12 +432,13 @@ def generatePinchyWorld(pinchable_sections, unrated_sections):
         pinchyExpected = f"Expected Progression, based on highest enemy map: {expectedThreshold}"
 
     advice_groups = generate_advice_groups(sectionPlacements.final)
-    advice_groups.append(getUnratedLinksAdviceGroup(unrated_sections))
+    if not session_data.account.hide_unrated:
+        advice_groups.append(getUnratedLinksAdviceGroup(unrated_sections))
     advice_groups.insert(0, getAlertsAdviceGroup())
 
     sections_maxed_count = sectionPlacements.maxed_count
     sections_total = Placements.section_count
-    sections_maxed = f"{sections_maxed_count}/{sections_total}"
+    sections_maxed = f"{sections_maxed_count + completed_pinchable_section_count}/{sections_total}"
 
     pinchy_high = AdviceSection(
         name="Pinchy high",

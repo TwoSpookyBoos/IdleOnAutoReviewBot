@@ -26,7 +26,8 @@ def setConsBuildingsProgressionTier():
         picture="Construction_Table.gif",
         collapse=False,
         note="Buildings shift around in Priority Tiers after reaching particular levels or notable account progression points."
-             " The goal levels displayed are only for that particular tier and may be beyond your personal max level."
+             " The goal levels displayed are only for that particular tier and may be beyond your personal max level.",
+        unrated=True
     )
     highestConstructionLevel = max(session_data.account.all_skills["Construction"])
     if highestConstructionLevel < 1:
@@ -199,6 +200,5 @@ def setConsBuildingsProgressionTier():
 
     #Generate AdviceSection
     building_AdviceSection.groups = building_AdviceGroupDict.values()
-    if len(building_AdviceSection.groups) == 0:
-        building_AdviceSection.complete = True
+    #building_AdviceSection.complete = len(building_AdviceSection.groups) == 0
     return building_AdviceSection

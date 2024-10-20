@@ -546,7 +546,8 @@ def setActiveProgressionTier() -> AdviceSection:
         name="Active",
         tier="Not Yet Evaluated",
         header="Best Active tier met: Not Yet Evaluated. Recommended Star Sign actions",
-        picture='Auto.png'
+        picture='Auto.png',
+        unrated=True
     )
     if session_data.account.highestWorldReached < 4:
         active_AdviceSection.header = "Come back after reaching W4 town!"
@@ -585,7 +586,7 @@ def setActiveProgressionTier() -> AdviceSection:
     active_AdviceSection.groups = active_AdviceGroupDict.values()
     if overall_ActiveTier >= max_tier:
         active_AdviceSection.header = f"Active Farming Information"
-        active_AdviceSection.complete = True
+        #active_AdviceSection.complete = True
     else:
         active_AdviceSection.header = f"Active Farming Information"
 

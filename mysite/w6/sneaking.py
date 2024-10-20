@@ -17,7 +17,8 @@ def setSneakingProgressionTier():
         tier="0",
         pinchy_rating=0,
         header="Best Sneaking tier met: Not Yet Evaluated",
-        picture="Dojo_Ghost.gif"
+        picture="Dojo_Ghost.gif",
+        unrated=True  #TODO: Fix once real tiers added
     )
     highestSneakingSkillLevel = max(session_data.account.all_skills.get("Sneaking", [0]))
     if highestSneakingSkillLevel < 1:
@@ -91,6 +92,7 @@ def setSneakingProgressionTier():
     sneaking_AdviceSection.groups = sneaking_AdviceGroupDict.values()
     if overall_SneakingTier >= max_tier:
         sneaking_AdviceSection.header = f"Best Sneaking tier met: {tier_section}{break_you_best}"
+        #sneaking_AdviceSection.complete = True  #TODO: Fix once real tiers added
     else:
         sneaking_AdviceSection.header = f"Best Sneaking tier met: {tier_section}"
 

@@ -154,8 +154,7 @@ def getKillroyUpgradeRecommendationsAdviceGroup():
     return future_ag
 
 def setKillroyProgressionTier():
-    killroy_AdviceDict = {
-    }
+    killroy_AdviceDict = {}
     killroy_AdviceGroupDict = {}
     killroy_AdviceSection = AdviceSection(
         name="Killroy",
@@ -163,7 +162,7 @@ def setKillroyProgressionTier():
         pinchy_rating=0,
         header="Best Killroy tier met: Not Yet Evaluated",
         picture="wiki/Killroy.gif",
-        complete=False
+        unrated=True
     )
     if session_data.account.highestWorldReached < 2:
         killroy_AdviceSection.header = "Come back after unlocking Killroy in W2 town!"
@@ -184,7 +183,7 @@ def setKillroyProgressionTier():
     killroy_AdviceSection.groups = killroy_AdviceGroupDict.values()
     if overall_KillroyTier >= max_tier:
         killroy_AdviceSection.header = f"Best Killroy tier met: {tier_section}{break_you_best}️"
-        killroy_AdviceSection.complete = True
+        #killroy_AdviceSection.complete = True
     else:
         killroy_AdviceSection.header = f"Best Killroy tier met: {tier_section}"
 

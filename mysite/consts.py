@@ -1923,6 +1923,12 @@ switches = [
         "false": "",
     },
     {
+        "label": "Hide Unrated Sections",
+        "name": "hide_unrated",
+        "true": "",
+        "false": "",
+    },
+    {
         "label": "Show progress bars",
         "name": "progress_bars",
         "true": "",
