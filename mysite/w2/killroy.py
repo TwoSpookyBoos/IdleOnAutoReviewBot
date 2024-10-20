@@ -129,7 +129,8 @@ def getKillroyUpgradeRecommendationsAdviceGroup():
     future_advices[ratio_label].append(Advice(
         label=f"Still trying to find a good ratio for Respawn."
               f"<br>It is worth leveling but idk exacts yet.",
-        picture_class='killroy-respawn'
+        picture_class='killroy-respawn',
+        progression=session_data.account.killroy['Respawn']['Upgrades'],
     ))
 
     for upgradeName, upgradeDict in session_data.account.killroy.items():
@@ -174,7 +175,7 @@ def setKillroyProgressionTier():
     tier_Killroy = 0
 
     killroy_AdviceGroupDict['Future'] = getKillroyUpgradeRecommendationsAdviceGroup()
-    killroy_AdviceGroupDict['Current'] = getKillroyCurrentUpgradesAdviceGroup()
+    #killroy_AdviceGroupDict['Current'] = getKillroyCurrentUpgradesAdviceGroup()
 
     overall_KillroyTier = min(max_tier + infoTiers, tier_Killroy)
     tier_section = f"{overall_KillroyTier}/{max_tier}"
