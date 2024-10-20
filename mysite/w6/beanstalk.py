@@ -129,7 +129,7 @@ def section_beanstalk():
 
     header = (
         f"Well done, Jack! The Golden Goose took an enviably massive dump in your lap. Go pay the giants off! 🍯{break_you_best}"
-        if foods_finished == len(gold_foods)
+        if foods_finished == len(gold_foods)*2
         else f"You have upgraded the Beanstalk {tier} times"
     )
 

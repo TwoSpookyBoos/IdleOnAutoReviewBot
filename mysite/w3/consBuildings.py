@@ -25,8 +25,6 @@ def setConsBuildingsProgressionTier():
         header="Priority Tiers for Trimmed Building Slots",
         picture="Construction_Table.gif",
         collapse=False,
-        note="Buildings shift around in Priority Tiers after reaching particular levels or notable account progression points."
-             " The goal levels displayed are only for that particular tier and may be beyond your personal max level.",
         unrated=True
     )
     if not session_data.account.hide_info:

@@ -810,11 +810,15 @@ def setAlchemySigilsProgressionTier() -> AdviceSection:
                 if subgroupName not in sigils_AdviceDict['Sigils'] and len(sigils_AdviceDict['Sigils']) < maxTiersPerGroup:
                     sigils_AdviceDict['Sigils'][subgroupName] = []
                 if subgroupName in sigils_AdviceDict['Sigils']:
+                    if account_sigils[requiredSigil]['PlayerHours'] < 100:
+                        prog = f"{account_sigils[requiredSigil]['PlayerHours']:.2f}"
+                    else:
+                        prog = f"{account_sigils[requiredSigil]['PlayerHours']:.0f}"
                     sigils_AdviceDict['Sigils'][subgroupName].append(Advice(
                         label=f"Level up {requiredSigil}"
                               f"{'. Go look at the Sigils screen to redeem your level!' if account_sigils[requiredSigil]['PlayerHours'] > account_sigils[requiredSigil]['Requirements'][requiredLevel - 1] else ''}",
                         picture_class=f"{requiredSigil}-{requiredLevel}",
-                        progression=f"{0 if requiredLevel > account_sigils[requiredSigil]['PrechargeLevel']+1 else account_sigils[requiredSigil]['PlayerHours']:.2f}",
+                        progression=f"{0 if requiredLevel > account_sigils[requiredSigil]['PrechargeLevel']+1 else prog}",
                         goal=f"{account_sigils[requiredSigil]['Requirements'][requiredLevel - 1]}"
                     ))
         if tier_Sigils == tierNumber-1 and subgroupName not in sigils_AdviceDict['Sigils']:

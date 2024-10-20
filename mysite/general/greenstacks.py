@@ -96,7 +96,6 @@ def getMissableGStacks(owned_stuff: Assets):
             tier="",
             pre_string="Still obtainable",
             advices=questGStacks_AdviceDict['Endangered'],
-            informational=True
         )
         # endangered_AdviceSection = AdviceSection(
         #         name="Endangered Greenstacks",
