@@ -4569,6 +4569,26 @@ atrisk_basicBubbles = [
     "Laaarrrryyyy",
     "Ignore Overdues",
 ]
+atrisk_advancedBubbles = [
+    "Warriors Rule",
+    "Big Meaty Claws",
+    "Call Me Bob",
+    "Multorange",
+    "Bite But Not Chew",
+    "Archer Or Bust",
+    "Quick Slap",
+    "Sanic Tools",
+    "Bow Jack",
+    "Cuz I Catch Em All",
+    "Mage Is Best",
+    "Brewstachio",
+    "Smart Boi Talent",
+    "Purple Bargain",
+    "Startue Exp",
+    "Level Up Gift",
+    "Cogs For Hands",
+    "Sample It",
+]
 atrisk_lithiumBubbles = [
     "Penny Of Strength",
     "Fly In Mind",
@@ -4582,6 +4602,7 @@ atrisk_lithiumBubbles = [
     'Bit By Bit',
     'Gifts Abound',
 ]
+atrisk_lithiumAdvancedBubbles = []
 
 arcadeBonuses = {
     0:  {"Stat": "Base Damage", "x1": 1, "x2": 0, "funcType": "add", "displayType": ""},

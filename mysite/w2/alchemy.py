@@ -5,7 +5,7 @@ from utils.logging import get_logger
 from flask import g as session_data
 from consts import maxTiersPerGroup, bubbles_progressionTiers, vials_progressionTiers, max_IndexOfVials, maxFarmingCrops, atrisk_basicBubbles, \
     atrisk_lithiumBubbles, cookingCloseEnough, break_you_best, sigils_progressionTiers, max_IndexOfSigils, max_VialLevel, numberOfArtifactTiers, stamp_maxes, \
-    lavaFunc, vial_costs, min_NBLB, max_NBLB, nblb_skippable, nblb_max_index, ValueToMulti
+    lavaFunc, vial_costs, min_NBLB, max_NBLB, nblb_skippable, nblb_max_index, ValueToMulti, atrisk_advancedBubbles, atrisk_lithiumAdvancedBubbles
 
 logger = get_logger(__name__)
 
@@ -155,8 +155,22 @@ def getBubbleExclusions():
     return exclusionsList
 
 def getAtRiskAdviceGroups() -> list[AdviceGroup]:
-    atriskBasic_AdviceList = []
-    atriskLithium_AdviceList = []
+    standard_today = "Basic - In Today's Range"
+    standard = "Basic Skilling Resources"
+    advanced_today = "Advanced - In Today's Range"
+    advanced = "Advanced Resources"
+    atriskBasic_AdviceList = {
+        standard_today: [],
+        standard: [],
+        advanced_today: [],
+        advanced: []
+    }
+    atriskLithium_AdviceList = {
+        standard_today: [],
+        standard: [],
+        advanced_today: [],
+        advanced: []
+    }
     nblbCount = session_data.account.labBonuses['No Bubble Left Behind']['Value']
     #Create a sorted list of every bubble, including the janky placeholders
     sorted_bubbles = sorted(
@@ -177,23 +191,38 @@ def getAtRiskAdviceGroups() -> list[AdviceGroup]:
             todays_lowest = sorted_bubbles_basic[0][1]['Level']
             todays_highest = sorted_bubbles_basic[-1][1]['Level']
         if len(sorted_bubbles_basic) > 2 * nblbCount:
-            basic_poststring = f"Highest level for NBLB today: {todays_highest}"
-        atriskBasic_AdviceList.extend([
-            Advice(
-                label=f"{bubbleName}{' (Printing!)' if bubbleValuesDict['Material'] in session_data.account.printer['AllCurrentPrints'] else ''}",
-                picture_class=bubbleName,
-                progression=bubbleValuesDict['Level'],
-                goal=min(max_NBLB, max(todays_highest+20, bubbleValuesDict['Level'] + 20)) if max(todays_highest+20, bubbleValuesDict['Level'] + 20) < 1000 else max_NBLB,
-                resource=bubbleValuesDict['Material']
-            )
-            for bubbleName, bubbleValuesDict in sorted_bubbles_basic
-                if bubbleName in atrisk_basicBubbles
-                and (
+            basic_poststring = f"Today's W1-W3 NBLB range: {todays_lowest} - {todays_highest}"
+        for bubbleName, bubbleValuesDict in sorted_bubbles_basic:
+            if bubbleValuesDict['Level'] < max_NBLB and (
                     bubbleValuesDict['Level'] < todays_highest + 20
                     or todays_lowest >= 200
-                )
-                and bubbleValuesDict['Level'] < max_NBLB
-        ])
+            ):
+                if bubbleName in atrisk_basicBubbles:
+                    if bubbleValuesDict['Level'] <= todays_highest:
+                        subgroupName = standard_today
+                    else:
+                        subgroupName = standard
+                elif bubbleName in atrisk_advancedBubbles:
+                    if bubbleValuesDict['Level'] <= todays_highest:
+                        subgroupName = advanced_today
+                    else:
+                        subgroupName = advanced
+                else:
+                    subgroupName = ""
+
+                if subgroupName:
+                    if max(todays_highest + 20, bubbleValuesDict['Level'] + 20) < 600:
+                        target = min(max_NBLB, max(todays_highest + 20, bubbleValuesDict['Level'] + 20))
+                    else:
+                        target = max_NBLB
+                    atriskBasic_AdviceList[subgroupName].append(Advice(
+                        label=f"{bubbleName}"
+                              f"{' (Printing!)' if bubbleValuesDict['Material'] in session_data.account.printer['AllCurrentPrints'] else ''}",
+                        picture_class=bubbleName,
+                        progression=bubbleValuesDict['Level'],
+                        goal=target,
+                        resource=bubbleValuesDict['Material']
+                    ))
 
         if todays_lowest >= 200:
             basic_prestring = f"Informational \"Easy\" to print materials in W1-W3 bubbles"
@@ -217,26 +246,42 @@ def getAtRiskAdviceGroups() -> list[AdviceGroup]:
     if sorted_bubbles_lithium and max(session_data.account.all_skills['Lab'], default=0) > 1:
         if len(sorted_bubbles_lithium) > nblbCount:
             try:
+                todays_lowest_lithium = sorted_bubbles_lithium[0][1]['Level']
                 todays_highest_lithium = sorted_bubbles_lithium[nblbCount - 1][1]['Level']
             except:
+                todays_lowest_lithium = sorted_bubbles_lithium[0][1]['Level']
                 todays_highest_lithium = sorted_bubbles_lithium[-1][1]['Level']
-            lithium_poststring = f"Highest level for Lithium today: {todays_highest_lithium}"
-            atriskLithium_AdviceList.extend([
-                Advice(
-                    label=f"{bubbleName}{' (Printing!)' if bubbleValuesDict['Material'] in session_data.account.printer['AllCurrentPrints'] else ''}",
-                    picture_class=bubbleName,
-                    progression=bubbleValuesDict['Level'],
-                    goal=min(max_NBLB, max(todays_highest_lithium + 10, bubbleValuesDict['Level'] + 10)) if max(todays_highest_lithium + 10, bubbleValuesDict['Level'] + 10) < 1000 else max_NBLB,
-                    resource=bubbleValuesDict['Material']
-                )
-                for bubbleName, bubbleValuesDict in sorted_bubbles_lithium
-                    if bubbleName in atrisk_lithiumBubbles
-                    and (
+            lithium_poststring = f"Today's W4-W5 (Lithium) range: {todays_lowest_lithium} - {todays_highest_lithium}"
+            for bubbleName, bubbleValuesDict in sorted_bubbles_lithium:
+                if bubbleValuesDict['Level'] < max_NBLB and (
                         bubbleValuesDict['Level'] < todays_highest_lithium + 10
                         or len(atriskBasic_AdviceList) > 0
-                    )
-                    and bubbleValuesDict['Level'] < max_NBLB
-            ])
+                ):
+                    if bubbleName in atrisk_lithiumBubbles:
+                        if bubbleValuesDict['Level'] <= todays_highest_lithium:
+                            subgroupName = standard_today
+                        else:
+                            subgroupName = standard
+                    elif bubbleName in atrisk_lithiumAdvancedBubbles:
+                        if bubbleValuesDict['Level'] <= todays_highest_lithium:
+                            subgroupName = advanced_today
+                        else:
+                            subgroupName = advanced
+                    else:
+                        subgroupName = ""
+
+                    if subgroupName:
+                        if max(todays_highest_lithium + 10, bubbleValuesDict['Level'] + 10) < 600:
+                            target = min(max_NBLB, max(todays_highest_lithium + 10, bubbleValuesDict['Level'] + 10))
+                        else:
+                            target = max_NBLB
+                        atriskLithium_AdviceList[subgroupName].append(Advice(
+                                label=f"{bubbleName}{' (Printing!)' if bubbleValuesDict['Material'] in session_data.account.printer['AllCurrentPrints'] else ''}",
+                                picture_class=bubbleName,
+                                progression=bubbleValuesDict['Level'],
+                                goal=target,
+                                resource=bubbleValuesDict['Material']
+                        ))
 
     atriskLithium_AG = AdviceGroup(
         tier="",
@@ -244,6 +289,8 @@ def getAtRiskAdviceGroups() -> list[AdviceGroup]:
         advices=atriskLithium_AdviceList if session_data.account.atom_collider['Atoms']['Lithium - Bubble Insta Expander']['Level'] >= 1 else [],
         post_string=lithium_poststring
     )
+    atriskBasic_AG.remove_empty_subgroups()
+    atriskLithium_AG.remove_empty_subgroups()
     return [atriskBasic_AG, atriskLithium_AG]
 
 def setAlchemyBubblesProgressionTier() -> AdviceSection:
