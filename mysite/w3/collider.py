@@ -263,9 +263,10 @@ def setColliderProgressionTier() -> AdviceSection:
     collider_AdviceGroupDict['ColliderSettings'] = getColliderSettingsAdviceGroup()
     collider_AdviceGroupDict['CostReduction'] = getCostReductionAdviceGroup()
     collider_AdviceGroupDict['Atoms'] = AdviceGroup(
-        tier=tier_atomLevels,
-        pre_string="Level Priority Atoms",
-        advices=collider_AdviceDict['Atoms']
+        tier=f"{tier_atomLevels if tier_atomLevels < max_tier else ''}",
+        pre_string=f"{'Informational- ' if tier_atomLevels >= max_tier else ''}Level Priority Atoms",
+        advices=collider_AdviceDict['Atoms'],
+        informational=True if tier_atomLevels >= max_tier else False
     )
 
     # Generate AdviceSection
@@ -276,7 +277,7 @@ def setColliderProgressionTier() -> AdviceSection:
     collider_AdviceSection.groups = collider_AdviceGroupDict.values()
     if overall_ColliderTier >= max_tier:
         collider_AdviceSection.header = f"Best Collider tier met: {tier_section}{break_you_best}"
-        #collider_AdviceSection.complete = True
+        collider_AdviceSection.complete = True
     else:
         collider_AdviceSection.header = f"Best Collider tier met: {tier_section}"
     return collider_AdviceSection
