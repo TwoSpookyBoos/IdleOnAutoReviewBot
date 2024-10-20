@@ -4,7 +4,6 @@ from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import break_you_best, killroy_only_1_level  # killroy_progressionTiers,
-from utils.text_formatting import pl
 
 logger = get_logger(__name__)
 
@@ -149,7 +148,8 @@ def getKillroyUpgradeRecommendationsAdviceGroup():
     future_ag = AdviceGroup(
         tier="",
         pre_string="Informational- Future upgrades",
-        advices=future_advices
+        advices=future_advices,
+        informational=True
     )
 
     return future_ag
@@ -161,7 +161,7 @@ def setKillroyProgressionTier():
         name="Killroy",
         tier="0",
         pinchy_rating=0,
-        header="Best Killroy tier met: Not Yet Evaluated",
+        header="Killroy Information",
         picture="wiki/Killroy.gif",
         unrated=True
     )
@@ -182,10 +182,10 @@ def setKillroyProgressionTier():
     killroy_AdviceSection.pinchy_rating = overall_KillroyTier
     killroy_AdviceSection.tier = tier_section
     killroy_AdviceSection.groups = killroy_AdviceGroupDict.values()
-    if overall_KillroyTier >= max_tier:
-        killroy_AdviceSection.header = f"Best Killroy tier met: {tier_section}{break_you_best}️"
-        #killroy_AdviceSection.complete = True
-    else:
-        killroy_AdviceSection.header = f"Best Killroy tier met: {tier_section}"
+    # if overall_KillroyTier >= max_tier:
+    #     killroy_AdviceSection.header = f"Best Killroy tier met: {tier_section}{break_you_best}️"
+    #     #killroy_AdviceSection.complete = True
+    # else:
+    #     killroy_AdviceSection.header = f"Best Killroy tier met: {tier_section}"
 
     return killroy_AdviceSection

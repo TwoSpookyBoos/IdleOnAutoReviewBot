@@ -29,6 +29,11 @@ def setConsBuildingsProgressionTier():
              " The goal levels displayed are only for that particular tier and may be beyond your personal max level.",
         unrated=True
     )
+    if not session_data.account.hide_info:
+        building_AdviceSection.note = (
+            "Buildings shift around in Priority Tiers after reaching particular levels or notable account progression points."
+            " The goal levels displayed are only for that particular tier and may be beyond your personal max level."
+        )
     highestConstructionLevel = max(session_data.account.all_skills["Construction"])
     if highestConstructionLevel < 1:
         building_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
@@ -188,14 +193,14 @@ def setConsBuildingsProgressionTier():
                 tier="",
                 pre_string=f"Unlock All Buildings",
                 advices=building_AdviceDict[tierKey],
-                post_string=""
+                informational=True
             )
         else:
             building_AdviceGroupDict[tierKey] = AdviceGroup(
                 tier="",
                 pre_string=f"{str(tierNamesList[tierKey])} Tier",
                 advices=building_AdviceDict[tierKey],
-                post_string=""
+                informational=True
             )
 
     #Generate AdviceSection

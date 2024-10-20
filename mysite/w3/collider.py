@@ -131,7 +131,8 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
         tier="",
         pre_string="Collider Alerts and General Information",
         advices=settings_advice,
-        post_string=f""
+        post_string=f"",
+        informational=True
     )
     settings_ag.remove_empty_subgroups()
     return settings_ag
@@ -200,7 +201,8 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     cr_ag = AdviceGroup(
         tier="",
         pre_string="Info- Sources of Atom Collider Cost Reduction",
-        advices=cr_advice
+        advices=cr_advice,
+        informational=True
     )
     return cr_ag
 
@@ -222,7 +224,6 @@ def setColliderProgressionTier() -> AdviceSection:
         tier="Not Yet Evaluated",
         header="",
         picture="Collider.gif",
-        unrated=True
     )
 
     highestConstructionLevel = max(session_data.account.all_skills["Construction"])
@@ -235,7 +236,8 @@ def setColliderProgressionTier() -> AdviceSection:
         collider_AdviceSection.unreached = True
         return collider_AdviceSection
 
-    max_tier = max(atoms_progressionTiers.keys())
+    info_tiers = 1
+    max_tier = max(atoms_progressionTiers.keys()) - info_tiers
     tier_atomLevels = 0
     pAtoms = session_data.account.atom_collider['Atoms']  #Player Atoms
     exclusionsList = getAtomExclusionsList()
@@ -267,7 +269,7 @@ def setColliderProgressionTier() -> AdviceSection:
     )
 
     # Generate AdviceSection
-    overall_ColliderTier = min(max_tier, tier_atomLevels)  # Looks silly, but may get more evaluations in the future
+    overall_ColliderTier = min(max_tier + info_tiers, tier_atomLevels)  # Looks silly, but may get more evaluations in the future
     tier_section = f"{overall_ColliderTier}/{max_tier}"
     collider_AdviceSection.tier = tier_section
     collider_AdviceSection.pinchy_rating = overall_ColliderTier

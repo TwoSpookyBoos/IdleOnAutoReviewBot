@@ -235,7 +235,8 @@ def getAtRiskAdviceGroups() -> list[AdviceGroup]:
         tier="",
         pre_string=basic_prestring,
         advices=atriskBasic_AdviceList,
-        post_string=basic_poststring
+        post_string=basic_poststring,
+        informational=True
     )
 
     #Same thing, but for Lithium Bubbles W4-W5 now
@@ -276,18 +277,19 @@ def getAtRiskAdviceGroups() -> list[AdviceGroup]:
                         else:
                             target = max_NBLB
                         atriskLithium_AdviceList[subgroupName].append(Advice(
-                                label=f"{bubbleName}{' (Printing!)' if bubbleValuesDict['Material'] in session_data.account.printer['AllCurrentPrints'] else ''}",
-                                picture_class=bubbleName,
-                                progression=bubbleValuesDict['Level'],
-                                goal=target,
-                                resource=bubbleValuesDict['Material']
+                            label=f"{bubbleName}{' (Printing!)' if bubbleValuesDict['Material'] in session_data.account.printer['AllCurrentPrints'] else ''}",
+                            picture_class=bubbleName,
+                            progression=bubbleValuesDict['Level'],
+                            goal=target,
+                            resource=bubbleValuesDict['Material']
                         ))
 
     atriskLithium_AG = AdviceGroup(
         tier="",
         pre_string=lithium_prestring,
         advices=atriskLithium_AdviceList if session_data.account.atom_collider['Atoms']['Lithium - Bubble Insta Expander']['Level'] >= 1 else [],
-        post_string=lithium_poststring
+        post_string=lithium_poststring,
+        informational=True
     )
     atriskBasic_AG.remove_empty_subgroups()
     atriskLithium_AG.remove_empty_subgroups()
@@ -426,9 +428,10 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
     ]
     for counter, value in enumerate(agdNames):
         bubbles_AdviceGroupDict[value] = AdviceGroup(
-            tier=f"{agdTiers[counter] if agdTiers[counter] < 22 else ''}",
-            pre_string=f"{'Informational- ' if agdTiers[counter] >= 22 else ''}{agdPre_strings[counter]}",
-            advices=bubbles_AdviceDict[value]
+            tier=f"{agdTiers[counter] if agdTiers[counter] < max_tier else ''}",
+            pre_string=f"{'Informational- ' if agdTiers[counter] >= max_tier else ''}{agdPre_strings[counter]}",
+            advices=bubbles_AdviceDict[value],
+            informational=True if agdTiers[counter] >= max_tier else False
         )
         bubbles_AdviceGroupDict[value].remove_empty_subgroups()
     bubbles_AdviceGroupDict['AtRiskBasic'], bubbles_AdviceGroupDict['AtRiskLithium'] = getAtRiskAdviceGroups()
@@ -747,7 +750,8 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
     speed_AdviceGroup = AdviceGroup(
         tier='',
         pre_string=f"Info- Sources of Sigil Charging Speed. Grand total: {total_multi:.3f}x",
-        advices=speed_Advice
+        advices=speed_Advice,
+        informational=True
     )
     return speed_AdviceGroup
 
@@ -822,6 +826,7 @@ def setAlchemySigilsProgressionTier() -> AdviceSection:
         pre_string=f"{'Informational- ' if tier_Sigils >= max_tier else ''}"
                    f"Unlock and level {'all' if tier_Sigils >= max_tier else 'important'} Sigils",
         advices=sigils_AdviceDict['Sigils'],
+        informational=True if tier_Sigils >= max_tier else False
     )
     sigils_AdviceGroupDict['Speed'] = getSigilSpeedAdviceGroup()
 

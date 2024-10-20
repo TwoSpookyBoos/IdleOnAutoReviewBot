@@ -122,18 +122,13 @@ def main(inputData, runType="web"):
     pinchable_sections = []
     for section_list in all_sections:
         for section in section_list:
-            if section.unrated:  # and not session_data.account.hide_unrated:
+            if section.unrated:
                 unrated_sections.append(section)
             else:
                 pinchable_sections.append(section)
 
     #Remove completed sections from Pinchy, if that setting is enabled
     completed_pinchable_sections = []
-    # if session_data.account.hide_completed:
-    #     completed_pinchable_sections = [section for section in pinchable_sections if section.complete]
-    #     pinchable_sections = [section for section in pinchable_sections if not section.complete]
-    #     #completed_unrated_sections = [section for section in unrated_sections if section.complete]
-    #     unrated_sections = [section for section in unrated_sections if not section.complete]
     sections_pinchy = pinchy.generatePinchyWorld(pinchable_sections, unrated_sections, len(completed_pinchable_sections))
 
     reviews = [
@@ -148,14 +143,19 @@ def main(inputData, runType="web"):
     ]
     for world in reviews:
         world.hide_unreached_sections()  # Feel free to comment this out while testing
+        if session_data.account.hide_unrated:
+            world.hide_unrated_sections()
+        if session_data.account.hide_info:
+            for section in world.sections:
+                section.remove_info_groups()
         if session_data.account.hide_completed:
             world.hide_completed_sections()
             for section in world.sections:
+                section.remove_complete_groups()
                 for group in section.groups:
                     group.remove_completed_advices()
                     group.remove_empty_subgroups()
-        if session_data.account.hide_unrated:
-            world.hide_unrated_sections()
+
     reviews = [world for world in reviews if len(world.sections) > 0]
 
     headerData = HeaderData(inputData)

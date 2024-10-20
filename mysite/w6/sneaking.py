@@ -16,7 +16,7 @@ def setSneakingProgressionTier():
         name="Sneaking",
         tier="0",
         pinchy_rating=0,
-        header="Best Sneaking tier met: Not Yet Evaluated",
+        header="Sneaking Information",  #"Best Sneaking tier met: Not Yet Evaluated",
         picture="Dojo_Ghost.gif",
         unrated=True  #TODO: Fix once real tiers added
     )
@@ -69,19 +69,22 @@ def setSneakingProgressionTier():
     # Generate AdviceGroups
     sneaking_AdviceGroupDict["Gemstones"] = AdviceGroup(
         tier="",
-        pre_string="Percentage of Gemstone values",
+        pre_string="Informational- Percentage of Gemstone values",
         #post_string="Formulas thanks to merlinthewizard1313",
-        advices=sneaking_AdviceDict["Gemstones"]
+        advices=sneaking_AdviceDict["Gemstones"],
+        informational=True
     )
     sneaking_AdviceGroupDict["JadeEmporium"] = AdviceGroup(
         tier="",
         pre_string="Purchase all upgrades from the Jade Emporium",
-        advices=sneaking_AdviceDict["JadeEmporium"]
+        advices=sneaking_AdviceDict["JadeEmporium"],
+        informational=True
     )
     sneaking_AdviceGroupDict["PristineCharms"] = AdviceGroup(
         tier="",
         pre_string="Collect all Pristine Charms",
-        advices=sneaking_AdviceDict["PristineCharms"]
+        advices=sneaking_AdviceDict["PristineCharms"],
+        informational=True
     )
 
     # Generate AdviceSection
@@ -90,10 +93,10 @@ def setSneakingProgressionTier():
     sneaking_AdviceSection.tier = tier_section
     sneaking_AdviceSection.pinchy_rating = overall_SneakingTier
     sneaking_AdviceSection.groups = sneaking_AdviceGroupDict.values()
-    if overall_SneakingTier >= max_tier:
-        sneaking_AdviceSection.header = f"Best Sneaking tier met: {tier_section}{break_you_best}"
-        #sneaking_AdviceSection.complete = True  #TODO: Fix once real tiers added
-    else:
-        sneaking_AdviceSection.header = f"Best Sneaking tier met: {tier_section}"
+    # if overall_SneakingTier >= max_tier:
+    #     sneaking_AdviceSection.header = f"Best Sneaking tier met: {tier_section}{break_you_best}"
+    #     #sneaking_AdviceSection.complete = True  #TODO: Fix once real tiers added
+    # else:
+    #     sneaking_AdviceSection.header = f"Best Sneaking tier met: {tier_section}"
 
     return sneaking_AdviceSection

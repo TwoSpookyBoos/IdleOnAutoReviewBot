@@ -1923,6 +1923,12 @@ switches = [
         "false": "",
     },
     {
+        "label": "Hide Informational Groups",
+        "name": "hide_info",
+        "true": "",
+        "false": "",
+    },
+    {
         "label": "Hide Unrated Sections",
         "name": "hide_unrated",
         "true": "",
@@ -4894,6 +4900,7 @@ def getReadableBubbleNames(inputNumber, color):
 
 
 ###WORLD 3 CONSTS###
+max_printer_sample_rate = 90
 maxDreams = 36  # Last verified as of v2.10
 dreamsThatUnlockNewBonuses = [1, 3, 6, 8, 11, 14, 18, 21, 24, 29, 32]
 equinoxBonusesDict = {

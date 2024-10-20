@@ -27,6 +27,7 @@ const defaults = {
     sheepie: "off",
     order_tiers: "off",
     hide_completed: "off",
+    hide_info: "off",
     hide_unrated: "off",
     progress_bars: "off",
     handedness: "off",

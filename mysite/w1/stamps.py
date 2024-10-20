@@ -201,6 +201,7 @@ def getCapacityAdviceGroup() -> AdviceGroup:
         pre_string="Info- Sources of Carry Capacity",
         advices=capacity_Advices,
         post_string="",
+        informational=True
     )
     return capacity_AdviceGroup
 
@@ -280,6 +281,7 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
         pre_string="Info- Sources of Stamp Cost Reduction",
         advices=costReduction_Advices,
         post_string="",
+        informational=True
     )
     return costReduction_AdviceGroup
 

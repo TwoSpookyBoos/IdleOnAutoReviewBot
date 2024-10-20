@@ -123,7 +123,8 @@ def getCrystalSpawnChanceAdviceGroup() -> AdviceGroup:
     crystal_AG = AdviceGroup(
         tier="",
         pre_string="Info- Sources of Crystal Spawn Chance",
-        advices=crystal_Advice
+        advices=crystal_Advice,
+        informational=True
     )
     return crystal_AG
 
@@ -533,7 +534,8 @@ def getActiveGoalsAdviceGroup() -> AdviceGroup:
         advices={
             "Short Term": getShortTermAdviceList(), "Cards": getCardsAdviceList(), "Long Term": getLongTermAdviceList(),
             "Daily": getDailyAdviceList(), "Weekly": getWeeklyAdviceList(), "Spend Consumables": getConsumablesAdviceList()
-        }
+        },
+        informational=True  #TODO One day, these should probably be real requirements
     )
     ag.remove_empty_subgroups()
 

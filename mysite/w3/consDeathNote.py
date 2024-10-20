@@ -26,7 +26,8 @@ def getAllKillsDisplayAdviceGroup():
         ags.append(AdviceGroup(
             tier="",
             pre_string=f"Info- All kills for {toon_name} without a filter. Have fun!",
-            advices=toon_advice_list
+            advices=toon_advice_list,
+            informational=True
         ))
     return ags
 
@@ -62,7 +63,8 @@ def getAllKillsDisplaySubgroupedByWorldAdviceGroup():
         ags.append(AdviceGroup(
             tier="",
             pre_string=f"Informational- All kills for {toon_name} without a filter. Have fun",
-            advices=toon_advice_list
+            advices=toon_advice_list,
+            informational=True
         ))
     return ags
 
@@ -280,7 +282,8 @@ def setConsDeathNoteProgressionTier():
             pre_string=f"{'Informational- You could complete' if tier_combo['ZOW'] >= max_tier else 'Complete'} {apocToNextTier['ZOW']} more"
                        f" ZOW{pl(apocToNextTier['ZOW'])} with {session_data.account.all_characters[highestZOWCountIndex].character_name} {zowsForNextTier}",
             advices=deathnote_AdviceDict['ZOW'],
-            post_string="Aim for 12hrs or less (8k+ KPH) per enemy"
+            post_string="Aim for 12hrs or less (8k+ KPH) per enemy",
+            informational=True if tier_combo['ZOW'] >= max_tier else False
         )
     else:
         deathnote_AdviceGroupDict['ZOW'] = AdviceGroup(
@@ -296,7 +299,8 @@ def setConsDeathNoteProgressionTier():
             pre_string=f"{'Informational- You could complete' if tier_combo['CHOW'] >= max_tier else 'Complete'} {apocToNextTier['CHOW']} more"
                        f" CHOW{pl(apocToNextTier['CHOW'])} with {session_data.account.all_characters[highestCHOWCountIndex].character_name} {chowsForNextTier}",
             advices=deathnote_AdviceDict['CHOW'],
-            post_string="Aim for 12hrs or less (83k+ KPH) per enemy"
+            post_string="Aim for 12hrs or less (83k+ KPH) per enemy",
+            informational=True if tier_combo['CHOW'] >= max_tier else False
         )
     else:
         deathnote_AdviceGroupDict['CHOW'] = AdviceGroup(
@@ -312,7 +316,8 @@ def setConsDeathNoteProgressionTier():
             pre_string=f"{'Informational- You could complete' if tier_combo['MEOW'] >= max_tier else 'Complete'} {apocToNextTier['MEOW']} more"
                        f" Super CHOW{pl(apocToNextTier['MEOW'])} with {session_data.account.all_characters[meowBBIndex].character_name} {meowsForNextTier}",
             advices=deathnote_AdviceDict['MEOW'],
-            post_string=f"Aim for 24hrs or less (4m+ KPH) per enemy"
+            post_string=f"Aim for 24hrs or less (4m+ KPH) per enemy",
+            informational=True if tier_combo['MEOW'] >= max_tier else False
         )
     else:
         deathnote_AdviceGroupDict['MEOW'] = AdviceGroup(

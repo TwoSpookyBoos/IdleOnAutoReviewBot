@@ -42,7 +42,8 @@ def getOfferingsAdviceGroup(lowOffering, highOffering, divinityPoints, lowOfferi
     offerings_AdviceGroup = AdviceGroup(
         tier="",
         pre_string="Offerings Information",
-        advices=offerings_AdviceDict
+        advices=offerings_AdviceDict,
+        informational=True
     )
     return offerings_AdviceGroup
 
@@ -63,7 +64,8 @@ def getBlessingsAdviceGroup():
     blessings_AdviceGroup = AdviceGroup(
         tier="",
         pre_string="Blessings Information",
-        advices=blessings_AdviceList
+        advices=blessings_AdviceList,
+        informational=True
     )
     return blessings_AdviceGroup
 
@@ -91,7 +93,8 @@ def getStylesInfoAdviceGroup(highestDivinitySkillLevel: int) -> AdviceGroup:
     styles_AdviceGroup = AdviceGroup(
         tier="",
         pre_string="Styles Information",
-        advices=styles_AdviceDict
+        advices=styles_AdviceDict,
+        informational=True
     )
     return styles_AdviceGroup
 
@@ -170,12 +173,14 @@ def getLinksAndDootChecksAdviceGroups(tier_Divinity: int, lowestDivinitySkillLev
     links_AdviceGroup = AdviceGroup(
         tier="",
         pre_string="Possible Divinity Link Setups",
-        advices=links_AdviceList
+        advices=links_AdviceList,
+        informational=True
     )
     doot_AdviceGroup = AdviceGroup(
         tier="",
         pre_string="Doot-Specific Checks",
-        advices=doot_AdviceList
+        advices=doot_AdviceList,
+        informational=True
     )
 
     return links_AdviceGroup, doot_AdviceGroup
@@ -239,7 +244,8 @@ def getArctisAdviceGroup(lowestDivinitySkillLevel: int, highestDivinitySkillLeve
         tier="",
         pre_string=f"Upcoming Arctis minor link bonus breakpoints"
                    f" (+# Talent LV for all talents above Lv 1)",
-        advices=arctis_AdviceDict
+        advices=arctis_AdviceDict,
+        informational=True
     )
     arctis_AdviceGroup.remove_empty_subgroups()
 

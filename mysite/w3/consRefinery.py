@@ -294,19 +294,22 @@ def setConsRefineryProgressionTier():
         tier="",
         pre_string="Salt Excess/Deficit per Synthesis Cycle",
         advices=refinery_AdviceDict['ExcessAndDeficits'],
-        post_string=""
+        post_string="",
+        informational=True
     )
     refinery_AdviceGroupDict['Tab1Ranks'] = AdviceGroup(
         tier="",
         pre_string="Max Tab1 Ranks without causing a Salt Deficit",
         advices=refinery_AdviceDict['Tab1Ranks'],
-        post_string="Or just YOLO rank up everything if balancing is too much of a pain ¯\\_(ツ)_/¯"
+        post_string="Or just YOLO rank up everything if balancing is too much of a pain ¯\\_(ツ)_/¯",
+        informational=True
     )
     refinery_AdviceGroupDict['Tab2Ranks'] = AdviceGroup(
         tier="",
         pre_string="Max Tab2 Ranks without causing a Salt Deficit",
         advices=refinery_AdviceDict['Tab2Ranks'],
-        post_string=""
+        post_string="",
+        informational=True
     )
 
     # Generate AdviceSection

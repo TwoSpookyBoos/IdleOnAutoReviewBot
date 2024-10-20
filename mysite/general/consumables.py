@@ -295,6 +295,7 @@ def parseInventoryBagSlots() -> AdviceGroup:
         tier="",
         pre_string="Collect more inventory space",
         advices=[],
+        informational=True
     )
     if session_data.account.autoloot:
         autoLootSlots = 5
@@ -352,7 +353,8 @@ def parseStorageChests():
     group = AdviceGroup(
         tier="",
         pre_string=f"Collect {len(missing_chests)} more storage chest{pl(missing_chests)} for your bank",
-        advices=advices
+        advices=advices,
+        informational=True
     )
     if len(advices) == 0:
         group.pre_string = f"You've collected all current Storage Chests!{break_you_best}"

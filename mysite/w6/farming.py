@@ -106,7 +106,8 @@ def getCropDepotAdviceGroup(farming) -> AdviceGroup:
     cd_ag = AdviceGroup(
         tier='',
         pre_string='Informational- Crop Depot bonuses',
-        advices=cd_advices
+        advices=cd_advices,
+        informational=True
     )
 
     return cd_ag
@@ -128,7 +129,8 @@ def getDayMarketAdviceGroup(farming) -> AdviceGroup:
     dm_ag = AdviceGroup(
         tier='',
         pre_string=f"Informational- Day Market upgrades",
-        advices=dm_advices
+        advices=dm_advices,
+        informational=True
     )
     return dm_ag
 
@@ -149,7 +151,8 @@ def getNightMarketAdviceGroup(farming) -> AdviceGroup:
     nm_ag = AdviceGroup(
         tier='',
         pre_string=f"Informational- Night Market upgrades",
-        advices=nm_advices
+        advices=nm_advices,
+        informational=True
     )
     return nm_ag
 
@@ -302,7 +305,8 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
     value_ag = AdviceGroup(
         tier='',
         pre_string="Informational- Sources of Crop Value",
-        advices=value_advices
+        advices=value_advices,
+        informational=True
     )
     return value_ag
 
@@ -619,7 +623,8 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
     evo_ag = AdviceGroup(
         tier='',
         pre_string="Informational- Sources of Crop Evolution Chance",
-        advices=evo_advices
+        advices=evo_advices,
+        informational=True
     )
     return evo_ag
 
@@ -714,7 +719,8 @@ def getSpeedAdviceGroup(farming) -> AdviceGroup:
     speed_ag = AdviceGroup(
         tier='',
         pre_string="Informational- Sources of Farming Speed",
-        advices=speed_advices
+        advices=speed_advices,
+        informational=True
     )
     return speed_ag
 
@@ -766,7 +772,8 @@ def getBeanMultiAdviceGroup(farming) -> AdviceGroup:
     bm_ag = AdviceGroup(
         tier='',
         pre_string='Informational- Sources of Magic Bean Bonus',
-        advices=bm_advices
+        advices=bm_advices,
+        informational=True
     )
     return bm_ag
 
@@ -860,7 +867,8 @@ def getOGAdviceGroup(farming):
     og_ag = AdviceGroup(
         tier='',
         pre_string='Informational- Sources of Overgrowth',
-        advices=og_advices
+        advices=og_advices,
+        informational=True
     )
     return og_ag
 

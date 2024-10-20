@@ -1,11 +1,13 @@
 import math
-
 from flask import g as session_data
-from consts import lavaFunc, sampling_progressionTiers, maxTiersPerGroup, break_you_best, skillIndexList, goldrelic_multisDict, ValueToMulti
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import notateNumber
 from utils.logging import get_logger
+from consts import (
+    lavaFunc, maxTiersPerGroup, ValueToMulti, break_you_best, skillIndexList,
+    sampling_progressionTiers, goldrelic_multisDict, max_printer_sample_rate
+)
 
 
 logger = get_logger(__name__)
@@ -180,8 +182,8 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         characterTotalPSR = account_sum + starTalentDiffToMax + toon.po_boxes_invested.get('Utilitarian Capsule', {}).get('Bonus1Value', 0)
         if toon.sub_class == 'Squire':
             characterTotalPSR += squireSuperSamplesMaxBook
-        if 90 > characterTotalPSR:
-            shortBy = 90 - characterTotalPSR
+        if max_printer_sample_rate > characterTotalPSR:
+            shortBy = max_printer_sample_rate - characterTotalPSR
             prayerGain = min(shortBy, session_data.account.prayers['The Royal Sampler']['BonusValue'])
             characterEval = f"{'Keep prayer equipped' if 'The Royal Sampler' in toon.equipped_prayers else 'Equip prayer'} for +{prayerGain:.3f}%"
         else:
@@ -191,7 +193,7 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
             label=f"{toon.character_name}: {characterEval}",
             picture_class=f"{toon.class_name_icon}",
             progression=f"{characterTotalPSR:.2f}",
-            goal=90,
+            goal=max_printer_sample_rate,
             unit="%"
         ))
 
@@ -202,8 +204,10 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
 
     psrAdviceGroup = AdviceGroup(
         tier="",
-        pre_string=f"Info- Sources of Printer Sample Rate (90% Hardcap)",
-        advices=psrAdvices
+        pre_string=f"Info- Sources of Printer Sample Rate ({max_printer_sample_rate}% Hardcap)",
+        advices=psrAdvices,
+        informational=True,
+        complete=True if account_sum + starTalentDiffToMax >= max_printer_sample_rate else False
     )
     return psrAdviceGroup
 
@@ -361,7 +365,8 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
         pre_string=f"""Info- Sources of Printer Output. """
                    f"""Grand Total: {aw_multi:.3f}{f" - {aw_multi * cs_multi:.3f}" if len(po_AdviceDict[cs_label]) > 0 else ''}x""",
         advices=po_AdviceDict if session_data.account.doot_owned else po_AdviceDict[aw_label],
-        post_string="Please note: Printer Output multiplies resources printed each hour. It does NOT increase the size of taking a new sample."
+        post_string="Please note: Printer Output multiplies resources printed each hour. It does NOT increase the size of taking a new sample.",
+        informational=True
     )
     return po_AdviceGroup
 

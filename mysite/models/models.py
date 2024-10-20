@@ -530,6 +530,8 @@ class AdviceGroup(AdviceBase):
         picture_class: str = "",
         collapse: bool | None = None,
         advices: list[Advice] | dict[str, list[Advice]] = [],
+        complete: bool = False,
+        informational: bool = False,
         **extra,
     ):
         super().__init__(collapse, **extra)
@@ -540,6 +542,8 @@ class AdviceGroup(AdviceBase):
         self.formatting: str = formatting
         self._picture_class: str = picture_class
         self.advices = advices
+        self.complete = complete
+        self.informational = informational
 
     def __str__(self) -> str:
         return ", ".join(map(str, self.advices))
@@ -713,6 +717,11 @@ class AdviceSection(AdviceBase):
         if g.order_tiers:
             self._groups = sorted(self._groups)
 
+    def remove_info_groups(self):
+        self._groups = [group for group in self._groups if not group.informational]
+
+    def remove_complete_groups(self):
+        self._groups = [group for group in self._groups if not group.complete]
 
 class AdviceWorld(AdviceBase):
     """
@@ -1167,6 +1176,7 @@ class Account:
 
         self.hide_completed = g.hide_completed
         self.hide_unrated = g.hide_unrated
+        self.hide_info = g.hide_info
 
         # Companions
         self.sheepie_owned = g.sheepie

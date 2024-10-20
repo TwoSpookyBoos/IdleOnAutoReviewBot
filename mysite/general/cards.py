@@ -21,7 +21,7 @@ def getCardSetReview():
                 Advice(label=card.name, picture_class=card.css_class)
             )
         group_unlockable = AdviceGroup(
-            tier="", pre_string="Discover new cards", advices=advices, picture_class='locked-card',
+            tier="", pre_string="Discover new cards", advices=advices, picture_class='locked-card', informational=True
         )
         groups.append(group_unlockable)
 
@@ -55,6 +55,7 @@ def getCardSetReview():
             pre_string=f"{name}: Collect {len(cardset) - cardset_diff} more cards for {star_tiers[cardset_star]} ({cardset_stars_sum}/{cardset_star_next})",
             picture_class=name,
             advices=advices,
+            informational=True
         )
         groups.append(group)
 

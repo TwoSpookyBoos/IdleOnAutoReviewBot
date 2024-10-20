@@ -112,7 +112,9 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
     bookLevelAdviceGroup = AdviceGroup(
         tier="",
         pre_string=f"Info- Sources of Max Book Levels ({session_data.account.library['MaxBookLevel']}/{maxOverallBookLevels})",
-        advices=bookLevelAdvices
+        advices=bookLevelAdvices,
+        informational=True,
+        complete=True if session_data.account.library['MaxBookLevel'] >= maxOverallBookLevels else False
     )
     return bookLevelAdviceGroup
 
@@ -170,7 +172,8 @@ def getBonusLevelAdviceGroup() -> AdviceGroup:
     bonusLevelAdviceGroup = AdviceGroup(
         tier="",
         pre_string=f"Info- Sources of bonus talent levels beyond book levels",
-        advices=bonusLevelAdvices
+        advices=bonusLevelAdvices,
+        informational=True
     )
     return bonusLevelAdviceGroup
 
@@ -250,7 +253,8 @@ def getCheckoutSpeedAdviceGroup() -> AdviceGroup:
     checkoutSpeedAdviceGroup = AdviceGroup(
         tier="",
         pre_string=f"Info- Sources of Checkout Speed",
-        advices=checkoutSpeedAdvices
+        advices=checkoutSpeedAdvices,
+        informational=True
     )
 
     return checkoutSpeedAdviceGroup

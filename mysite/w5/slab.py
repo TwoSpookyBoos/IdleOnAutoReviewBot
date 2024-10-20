@@ -35,8 +35,9 @@ def getHiddenAdviceGroup() -> AdviceGroup:
     #logger.debug(f"{len(hidden_names)} Hidden Slab Items: {hidden_names}")
     hidden_AdviceGroup = AdviceGroup(
         tier='',
-        pre_string=f"Info- These items are registered, but not displayed or included in the max",
-        advices=hidden_adviceList
+        pre_string=f"Info- These are included in your total found items, but do not appear visually on The Slab",
+        advices=hidden_adviceList,
+        informational=True
     )
     return hidden_AdviceGroup
 

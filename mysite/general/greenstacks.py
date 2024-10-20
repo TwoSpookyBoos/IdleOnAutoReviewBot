@@ -95,7 +95,8 @@ def getMissableGStacks(owned_stuff: Assets):
         questGStacks_AdviceGroupDict['Endangered'] = AdviceGroup(
             tier="",
             pre_string="Still obtainable",
-            advices=questGStacks_AdviceDict['Endangered']
+            advices=questGStacks_AdviceDict['Endangered'],
+            informational=True
         )
         # endangered_AdviceSection = AdviceSection(
         #         name="Endangered Greenstacks",
@@ -126,7 +127,8 @@ def getMissableGStacks(owned_stuff: Assets):
         questGStacks_AdviceGroupDict['Missed'] = AdviceGroup(
             tier="",
             pre_string="Already missed",
-            advices=questGStacks_AdviceDict['Missed']
+            advices=questGStacks_AdviceDict['Missed'],
+            informational=True
         )
 
     questGStacks_AdviceSection = AdviceSection(
@@ -175,7 +177,8 @@ def setGStackProgressionTier():
             AdviceGroup(
                 tier=str(tier),
                 pre_string="",
-                advices=tier_subsection
+                advices=tier_subsection,
+                informational=True
             )
         )
 
@@ -189,7 +192,8 @@ def setGStackProgressionTier():
                 picture_class=name
             )
             for name, item in all_owned_stuff.items_gstacked_unprecedented.items()
-        ]
+        ],
+        informational=True
     )
     groups.append(cheat_group)
 

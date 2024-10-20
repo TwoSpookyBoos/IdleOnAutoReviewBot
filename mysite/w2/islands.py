@@ -41,8 +41,9 @@ def getTrashIslandAdviceGroup() -> AdviceGroup:
 
     trash_advicegroup = AdviceGroup(
         tier='',
-        pre_string='Trash Island shop priorities',
-        advices=trash_advices
+        pre_string='Informational- Trash Island shop priorities',
+        advices=trash_advices,
+        informational=True
     )
     return trash_advicegroup
 
@@ -61,8 +62,9 @@ def getFractalAdviceGroup() -> AdviceGroup:
 
     fractal_advicegroup = AdviceGroup(
         tier='',
-        pre_string='Fractal Nothing hour rewards',
-        advices=fractal_advices
+        pre_string='Informational- Fractal Nothing hour rewards',
+        advices=fractal_advices,
+        informational=True
     )
 
     return fractal_advicegroup
