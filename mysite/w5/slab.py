@@ -2,9 +2,18 @@ from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import getItemDisplayName, pl
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import slabList, reclaimableQuestItems, vendorItems, anvilItems, dungeonWeaponsList, maxDungeonWeaponsAvailable, \
-    dungeonArmorsList, maxDungeonArmorsAvailable, dungeonJewelryList, maxDungeonJewelryAvailable, dungeonDropsList, anvilTabs, vendors, \
-    break_you_best, slab_itemNameReplacementDict, hidden_but_constantly_avaiable_slabList, hidden_gemshopItems, slab_QuestRewards, maxCharacters
+from consts import (
+    slabList, slab_itemNameReplacementDict,
+    reclaimableQuestItems, slab_QuestRewardsAllChars, slab_QuestRewardsOnce,
+    vendorItems, anvilItems,
+    dungeonWeaponsList, maxDungeonWeaponsAvailable,
+    dungeonArmorsList, maxDungeonArmorsAvailable,
+    dungeonJewelryList, maxDungeonJewelryAvailable,
+    dungeonDropsList,
+    anvilTabs, vendors,
+    hidden_but_constantly_avaiable_slabList, hidden_gemshopItems,
+    maxCharacters, break_you_best
+)
 
 logger = get_logger(__name__)
 
@@ -15,16 +24,20 @@ def getHiddenAdviceGroup() -> AdviceGroup:
     for itemName in session_data.account.registered_slab:
         if itemName not in slabList:
             hidden_names[itemName] = getItemDisplayName(itemName)
+            decoded_name = getItemDisplayName(itemName) if itemName not in slab_itemNameReplacementDict else slab_itemNameReplacementDict[itemName]
+            decoded_name = 'placeholder' if decoded_name.startswith("Unknown-'") else decoded_name
             hidden_adviceList.append(Advice(
                 label=getItemDisplayName(itemName),
-                picture_class=getItemDisplayName(itemName) if itemName not in slab_itemNameReplacementDict else slab_itemNameReplacementDict[itemName]))
+                picture_class=decoded_name
+            ))
 
     #logger.debug(f"Cards1 length: {len(session_data.account.registered_slab)}")
     #logger.debug(f"{len(hidden_names)} Hidden Slab Items: {hidden_names}")
     hidden_AdviceGroup = AdviceGroup(
         tier='',
-        pre_string=f"Info- These items are registered, but not displayed or included in the max",
-        advices=hidden_adviceList
+        pre_string=f"Info- These are included in your total found items, but do not appear visually on The Slab",
+        advices=hidden_adviceList,
+        informational=True
     )
     return hidden_AdviceGroup
 
@@ -48,8 +61,13 @@ def setSlabProgressionTier():
         tier="0",
         pinchy_rating=0,
         header="Best Slab tier met: Not Yet Evaluated",
-        picture="Slab.png"
+        picture="Slab.png",
+        unrated=True
     )
+    if session_data.account.highestWorldReached < 5:
+        slab_AdviceSection.collapsed = True
+        slab_AdviceSection.unreached = True
+        #return slab_AdviceSection
 
     tier_Slab = 0
     max_tier = 0
@@ -83,14 +101,24 @@ def setSlabProgressionTier():
                             resource=reclaimableQuestItems[itemName]['QuestGiver'].replace('_', '-')
                         ))
                     continue
-                #If the item comes from a quest AND at least 1 character hasn't completed it
-                if itemName in slab_QuestRewards.keys():
+                #If the item comes from a quest that all characters can complete AND at least 1 character hasn't completed it
+                if itemName in slab_QuestRewardsAllChars.keys():
                     #logger.debug(f"{itemName} quest {slab_QuestRewards[itemName]['QuestNameCoded']} completed by {session_data.account.compiled_quests.get(slab_QuestRewards[itemName]['QuestNameCoded'], {}).get('CompletedCount', 0)}/{maxCharacters}")
-                    if session_data.account.compiled_quests.get(slab_QuestRewards[itemName]['QuestNameCoded'], {}).get('CompletedCount', 0) < maxCharacters:
+                    if session_data.account.compiled_quests.get(slab_QuestRewardsAllChars[itemName]['QuestNameCoded'], {}).get('CompletedCount', 0) < maxCharacters:
                         slab_AdviceDict["Quests"].append(Advice(
-                            label=f"{getItemDisplayName(itemName)} ({slab_QuestRewards[itemName]['QuestGiver'].replace('_', ' ')}: {slab_QuestRewards[itemName]['QuestName']})",
+                            label=f"{getItemDisplayName(itemName)} ({slab_QuestRewardsAllChars[itemName]['QuestGiver'].replace('_', ' ')}: {slab_QuestRewardsAllChars[itemName]['QuestName']})",
                             picture_class=getItemDisplayName(itemName) if itemName not in slab_itemNameReplacementDict else slab_itemNameReplacementDict[itemName],
-                            resource=slab_QuestRewards[itemName]['QuestGiver'].replace('_', '-')
+                            resource=slab_QuestRewardsAllChars[itemName]['QuestGiver'].replace('_', '-')
+                        ))
+                    continue
+                #If the item comes from a quest that generally only 1 character can complete AND hasn't been completed by ANY characters yet
+                if itemName in slab_QuestRewardsOnce.keys():
+                    if session_data.account.compiled_quests.get(slab_QuestRewardsOnce[itemName]['QuestNameCoded'], {}).get('CompletedCount', 0) < 1:
+                        slab_AdviceDict["Quests"].append(Advice(
+                            label=f"{getItemDisplayName(itemName)} ({slab_QuestRewardsOnce[itemName]['QuestGiver'].replace('_', ' ')}: {slab_QuestRewardsOnce[itemName]['QuestName']})",
+                            picture_class=getItemDisplayName(itemName) if itemName not in slab_itemNameReplacementDict else slab_itemNameReplacementDict[
+                                itemName],
+                            resource=slab_QuestRewardsOnce[itemName]['QuestGiver'].replace('_', '-')
                         ))
                     continue
                 #If the item is sold by a vendor
@@ -175,7 +203,7 @@ def setSlabProgressionTier():
 
     # Generate Alert
     minimal_effort_stacks = len(slab_AdviceDict['Reclaims']) + len(slab_AdviceDict['Storage'])
-    if minimal_effort_stacks > 0:
+    if minimal_effort_stacks > 0 and not session_data.account.hide_unrated:
         session_data.account.alerts_AdviceDict['World 5'].append(Advice(
             label=f"{minimal_effort_stacks} minimal effort {{{{ Slab|#slab}}}} stack{pl(minimal_effort_stacks)} available",
             picture_class='the-slab'
@@ -229,7 +257,7 @@ def setSlabProgressionTier():
     slab_AdviceSection.groups = slab_AdviceGroupDict.values()
     if len(slab_AdviceSection.groups) == 0:
         slab_AdviceSection.header = f"All currently owned items registered in The Slab{break_you_best}"
-        slab_AdviceSection.complete = True
+        #slab_AdviceSection.complete = True
     else:
         slab_AdviceSection.header = f"You're missing some obtainable Slab stacks!"
 

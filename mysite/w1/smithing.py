@@ -139,14 +139,18 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
 
     cap_AdviceGroups = [
         AdviceGroup(
-        tier='',
-        pre_string="Info- Sources of Forge Ore Capacity",
-        advices=cap_Advices),
+            tier='',
+            pre_string="Info- Sources of Forge Ore Capacity",
+            advices=cap_Advices,
+            informational=True
+        ),
         AdviceGroup(
-        tier='',
-        pre_string="Info- Total Capacity and Bar thresholds",
-        advices=bar_Advices,
-        post_string="Note: Partial stacks round up to whole bars when claiming AFK")
+            tier='',
+            pre_string="Info- Total Capacity and Bar thresholds",
+            advices=bar_Advices,
+            post_string="Note: Partial stacks round up to whole bars when claiming AFK",
+            informational=True
+        )
     ]
     return cap_AdviceGroups
 

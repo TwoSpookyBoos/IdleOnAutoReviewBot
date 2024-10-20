@@ -15,7 +15,8 @@ def setTemplateProgressionTier():
         pinchy_rating=0,
         header="Best Template tier met: Not Yet Evaluated",
         picture="",
-        complete=False
+        complete=False,
+        unrated=False,
     )
     highestTemplateSkillLevel = max(session_data.account.all_skills["TemplateSkill"])
     if highestTemplateSkillLevel < 1:

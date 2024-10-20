@@ -25,13 +25,17 @@ def setConsBuildingsProgressionTier():
         header="Priority Tiers for Trimmed Building Slots",
         picture="Construction_Table.gif",
         collapse=False,
-        note="Buildings shift around in Priority Tiers after reaching particular levels or notable account progression points."
-             " The goal levels displayed are only for that particular tier and may be beyond your personal max level."
+        unrated=True
     )
+    if not session_data.account.hide_info:
+        building_AdviceSection.note = (
+            "Buildings shift around in Priority Tiers after reaching particular levels or notable account progression points."
+            " The goal levels displayed are only for that particular tier and may be beyond your personal max level."
+        )
     highestConstructionLevel = max(session_data.account.all_skills["Construction"])
     if highestConstructionLevel < 1:
         building_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
-        building_AdviceSection.collapse = True
+        building_AdviceSection.unreached = True
         return building_AdviceSection
 
     progressionTiersPreBuffs = copy.deepcopy(buildingsPreBuffs_progressionTiers)
@@ -187,18 +191,17 @@ def setConsBuildingsProgressionTier():
                 tier="",
                 pre_string=f"Unlock All Buildings",
                 advices=building_AdviceDict[tierKey],
-                post_string=""
+                informational=True
             )
         else:
             building_AdviceGroupDict[tierKey] = AdviceGroup(
                 tier="",
                 pre_string=f"{str(tierNamesList[tierKey])} Tier",
                 advices=building_AdviceDict[tierKey],
-                post_string=""
+                informational=True
             )
 
     #Generate AdviceSection
     building_AdviceSection.groups = building_AdviceGroupDict.values()
-    if len(building_AdviceSection.groups) == 0:
-        building_AdviceSection.complete = True
+    #building_AdviceSection.complete = len(building_AdviceSection.groups) == 0
     return building_AdviceSection

@@ -323,7 +323,8 @@ greenstack_progressionTiers = {
                 "PeanutG",
             ],
             "Misc": [
-                "FoodPotMana3", "FoodPotRe1", "ButterBar", "EquipmentStatues9", "OilBarrel2"],
+                "FoodPotMana3", "FoodPotRe1", "ButterBar", "EquipmentStatues9", "OilBarrel2"
+            ],
         },
         14: {
             "Crystal Enemy Drops": [
@@ -335,7 +336,7 @@ greenstack_progressionTiers = {
                 "Ladle",
             ],
             "Misc": [
-                "DesertC2b", "Quest78",
+                "DesertC2b", "Quest78", "EfauntDrop1"
             ]
         },
     }
@@ -1647,7 +1648,7 @@ sailing_progressionTiers = {
             'Triagulon': 4,
             'Billcye Tri': 4,
             'Frost Relic': 4,
-            #'Chilled Yarn': 4,
+            'Chilled Yarn': 4,
             'Causticolumn': 4,
             'Jade Rock': 4,
             'Gummy Orb': 4,
@@ -1922,6 +1923,18 @@ switches = [
         "false": "",
     },
     {
+        "label": "Hide Informational Groups",
+        "name": "hide_info",
+        "true": "",
+        "false": "",
+    },
+    {
+        "label": "Hide Unrated Sections",
+        "name": "hide_unrated",
+        "true": "",
+        "false": "",
+    },
+    {
         "label": "Show progress bars",
         "name": "progress_bars",
         "true": "",
@@ -2041,6 +2054,7 @@ expectedStackables = {
         "OilBarrel2",  # Slime Barrel, 1 in 3334
         "DesertC2b",  # Ghost, 1 in 2k
         "Quest78",  # Equinox Mirror
+        "EfauntDrop1",  # Basic Efaunt material
         "Key2", "Key3"  # Efaunt and Chizoar keys
     ],
     "Cheater": [
@@ -2050,7 +2064,7 @@ expectedStackables = {
         "GalaxyA2b", "GalaxyC1b",  # W4 Rare Drops
         "LavaA1b", "LavaA5b", "LavaB3b",  # W5 Rare Drops
         "SpiA2b", "SpiB2b",  # W6 Rare Drops
-        "EfauntDrop1", "EfauntDrop2", "Chiz0", "Chiz1", "TrollPart", "KrukPart", "KrukPart2",  # World Boss Materials
+        "EfauntDrop2", "Chiz0", "Chiz1", "TrollPart", "KrukPart", "KrukPart2",  # World Boss Materials
         "CraftMat2",  # Crimson String
         "OilBarrel1", "OilBarrel3", "OilBarrel4", "OilBarrel5",  # Oil Barrels
         "PureWater2",  # Alchemy Dense water
@@ -3345,7 +3359,7 @@ skill_talentsDict = {
             118: {"Name": "Catching Some Zzz's", "Tab": "Barbarian"},
         },
         "Low": {
-            112: {"Name": "Strongest Statues", "Tab": "Barbarian", 'Hardcap': 200},
+            112: {"Name": "Strongest Statues", "Tab": "Barbarian"},
             116: {"Name": "Bobbin' Bobbers", "Tab": "Barbarian", 'Hardcap': 200},
             111: {"Name": "Fistful of Obol", "Tab": "Warrior Subclass", 'Hardcap': 125},
         },
@@ -3373,8 +3387,8 @@ skill_talentsDict = {
         },
         "Low": {
             92: {"Name": "Health Overdrive", "Tab": "Warrior"},
-            127: {"Name": "Shieldiest Statues", "Tab": "Squire", 'Hardcap': 200},
-            112: {"Name": "Strongest Statues", "Tab": "Barbarian", 'Hardcap': 200},
+            127: {"Name": "Shieldiest Statues", "Tab": "Squire"},
+            112: {"Name": "Strongest Statues", "Tab": "Barbarian"},
             95: {"Name": "Strength in Numbers", "Tab": "Warrior"},
             0: {"Name": "Health Booster", "Tab": "Rage Basics"},
             144: {"Name": "The Family Guy", "Tab": "Elite Class"},
@@ -3435,7 +3449,7 @@ skill_talentsDict = {
             293: {"Name": "Agi Again", "Tab": "Archer Subclass"},
         },
         "Low": {
-            292: {"Name": "Shwifty Statues", "Tab": "Bowman", 'Hardcap': 200},
+            292: {"Name": "Shwifty Statues", "Tab": "Bowman"},
             144: {"Name": "The Family Guy", "Tab": "Elite Class"},
             291: {"Name": "Shoeful of Obol", "Tab": "Archer Subclass", 'Hardcap': 125},
         },
@@ -3506,7 +3520,7 @@ skill_talentsDict = {
         },
         "Low": {
             279: {"Name": "Robbinghood", "Tab": "Archer"},
-            37: {"Name": "Skilliest Statue", "Tab": "Maestro", 'Hardcap': 200},
+            37: {"Name": "Skilliest Statue", "Tab": "Maestro"},
             27: {"Name": "Reroll Pls", "Tab": "Journeyman"},
         },
         "Lowest": {
@@ -4567,6 +4581,26 @@ atrisk_basicBubbles = [
     "Laaarrrryyyy",
     "Ignore Overdues",
 ]
+atrisk_advancedBubbles = [
+    "Warriors Rule",
+    "Big Meaty Claws",
+    "Call Me Bob",
+    "Multorange",
+    "Bite But Not Chew",
+    "Archer Or Bust",
+    "Quick Slap",
+    "Sanic Tools",
+    "Bow Jack",
+    "Cuz I Catch Em All",
+    "Mage Is Best",
+    "Brewstachio",
+    "Smart Boi Talent",
+    "Purple Bargain",
+    "Startue Exp",
+    "Level Up Gift",
+    "Cogs For Hands",
+    "Sample It",
+]
 atrisk_lithiumBubbles = [
     "Penny Of Strength",
     "Fly In Mind",
@@ -4580,6 +4614,7 @@ atrisk_lithiumBubbles = [
     'Bit By Bit',
     'Gifts Abound',
 ]
+atrisk_lithiumAdvancedBubbles = []
 
 arcadeBonuses = {
     0:  {"Stat": "Base Damage", "x1": 1, "x2": 0, "funcType": "add", "displayType": ""},
@@ -4865,6 +4900,7 @@ def getReadableBubbleNames(inputNumber, color):
 
 
 ###WORLD 3 CONSTS###
+max_printer_sample_rate = 90
 maxDreams = 36  # Last verified as of v2.10
 dreamsThatUnlockNewBonuses = [1, 3, 6, 8, 11, 14, 18, 21, 24, 29, 32]
 equinoxBonusesDict = {
@@ -7295,7 +7331,7 @@ reclaimableQuestItems = {
         "QuestNameCoded": "Nebulyte4"
     }
 }
-slab_QuestRewards = {
+slab_QuestRewardsAllChars = {
     'EquipmentPants16': {
         "ItemName": "Adam's Leaf",
         "QuestGiver": "Sprout",
@@ -7500,24 +7536,7 @@ slab_QuestRewards = {
         "QuestName": "The Witcher, but not Really Inventory Bag D",
         "QuestNameCoded": "Promotheus4"
     },
-    'PeanutS': {
-        "ItemName": "Stone Peanut",
-        "QuestGiver": "Bushlyte",
-        "QuestName": "A Peanut Saved is a Peanut not Eaten!",
-        "QuestNameCoded": "Bushlyte3"
-    },
-    'Trophy3': {
-        "ItemName": "Club Member",
-        "QuestGiver": "Rocklyte",
-        "QuestName": "Becoming the Best Beginner",
-        "QuestNameCoded": "Rocklyte3"
-    },
-    'Trophy13': {
-        "ItemName": "Club Maestro",
-        "QuestGiver": "Cactolyte",
-        "QuestName": "Maestro! The Stro! Mman!",
-        "QuestNameCoded": "Cactolyte4"
-    },
+
     'Quest6': {
         "ItemName": "Scouting Report",
         "QuestGiver": "Stiltzcho",
@@ -7998,12 +8017,7 @@ slab_QuestRewards = {
         "QuestName": "Ad Solidarity Contract",
         "QuestNameCoded": "Yondergreen7"
     },
-    'CardPack4': {
-        "ItemName": "Dungeon Card Pack",
-        "QuestGiver": "Worldo",
-        "QuestName": "Odd Jobs for Cold Hard Cash",
-        "QuestNameCoded": "Worldo1"
-    },
+
     'Quest59': {
         "ItemName": "Shuvelle's Vote",
         "QuestGiver": "Shuvelle",
@@ -8069,48 +8083,6 @@ slab_QuestRewards = {
         "QuestGiver": "Snouts",
         "QuestName": "Mana Plox",
         "QuestNameCoded": "Snouts4"
-    },
-    'Mayo': {
-        "ItemName": "Mayonnaise Bottle",
-        "QuestGiver": "Walupiggy",
-        "QuestName": "Treasure Hunt 1",
-        "QuestNameCoded": "Walupiggy1"
-    },
-    'Trash': {
-        "ItemName": "Broken Weapon",
-        "QuestGiver": "Walupiggy",
-        "QuestName": "Treasure Hunt 2",
-        "QuestNameCoded": "Walupiggy2"
-    },
-    'Trash2': {
-        "ItemName": "Dried Paint Blob",
-        "QuestGiver": "Walupiggy",
-        "QuestName": "Treasure Hunt 3",
-        "QuestNameCoded": "Walupiggy3"
-    },
-    'Trash3': {
-        "ItemName": "Engraved Bullet",
-        "QuestGiver": "Walupiggy",
-        "QuestName": "Treasure Hunt 4",
-        "QuestNameCoded": "Walupiggy4"
-    },
-    'Timecandy7': {
-        "ItemName": "Steamy Time Candy",
-        "QuestGiver": "Walupiggy",
-        "QuestName": "Treasure Hunt 4",
-        "QuestNameCoded": "Walupiggy4"
-    },
-    'Quest44': {
-        "ItemName": "Goldegg Capsule",
-        "QuestGiver": "Walupiggy",
-        "QuestName": "Treasure Hunt 4",
-        "QuestNameCoded": "Walupiggy4"
-    },
-    'CardPack1': {
-        "ItemName": "Newbie Card Pack",
-        "QuestGiver": "Walupiggy",
-        "QuestName": "Treasure Hunt 4",
-        "QuestNameCoded": "Walupiggy4"
     },
     'StampB42': {
         "ItemName": "Lab Tube Stamp",
@@ -8202,24 +8174,6 @@ slab_QuestRewards = {
     #     "QuestName": "Chizoar Slayer",
     #     "QuestNameCoded": "Nebulyte2"
     # },
-    'CardPack5': {
-        "ItemName": "Galaxy Card Pack",
-        "QuestGiver": "Nebulyte",
-        "QuestName": "Chizoar Slayer",
-        "QuestNameCoded": "Nebulyte2"
-    },
-    'CardPack6': {
-        "ItemName": "Smolderin Card Pack",
-        "QuestGiver": "Nebulyte",
-        "QuestName": "Oh Geez Lets Not Think About This One...",
-        "QuestNameCoded": "Nebulyte3"
-    },
-    'EquipmentNametag4': {
-        "ItemName": "Vman Nametag",
-        "QuestGiver": "Nebulyte",
-        "QuestName": "VMAN ACHIEVED!",
-        "QuestNameCoded": "Nebulyte4"
-    },
     'Trophy17': {
         "ItemName": "One of the Divine",
         "QuestGiver": "Tired_Mole",
@@ -8279,6 +8233,92 @@ slab_QuestRewards = {
         "QuestGiver": "Sussy_Gene",
         "QuestName": "Loiterin' Around",
         "QuestNameCoded": "Sussy_Gene3"
+    },
+}
+slab_QuestRewardsOnce = {
+    'Mayo': {
+        "ItemName": "Mayonnaise Bottle",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 1",
+        "QuestNameCoded": "Walupiggy1"
+    },
+    'Trash': {
+        "ItemName": "Broken Weapon",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 2",
+        "QuestNameCoded": "Walupiggy2"
+    },
+    'Trash2': {
+        "ItemName": "Dried Paint Blob",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 3",
+        "QuestNameCoded": "Walupiggy3"
+    },
+    'Trash3': {
+        "ItemName": "Engraved Bullet",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 4",
+        "QuestNameCoded": "Walupiggy4"
+    },
+    'Timecandy7': {
+        "ItemName": "Steamy Time Candy",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 4",
+        "QuestNameCoded": "Walupiggy4"
+    },
+    'Quest44': {
+        "ItemName": "Goldegg Capsule",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 4",
+        "QuestNameCoded": "Walupiggy4"
+    },
+    'CardPack1': {
+        "ItemName": "Newbie Card Pack",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 4",
+        "QuestNameCoded": "Walupiggy4"
+    },
+    'CardPack4': {
+        "ItemName": "Dungeon Card Pack",
+        "QuestGiver": "Worldo",
+        "QuestName": "Odd Jobs for Cold Hard Cash",
+        "QuestNameCoded": "Worldo1"
+    },
+    'CardPack5': {
+        "ItemName": "Galaxy Card Pack",
+        "QuestGiver": "Nebulyte",
+        "QuestName": "Chizoar Slayer",
+        "QuestNameCoded": "Nebulyte2"
+    },
+    'CardPack6': {
+        "ItemName": "Smolderin Card Pack",
+        "QuestGiver": "Nebulyte",
+        "QuestName": "Oh Geez Lets Not Think About This One...",
+        "QuestNameCoded": "Nebulyte3"
+    },
+    'PeanutS': {
+        "ItemName": "Stone Peanut",
+        "QuestGiver": "Bushlyte",
+        "QuestName": "A Peanut Saved is a Peanut not Eaten!",
+        "QuestNameCoded": "Bushlyte3"
+    },
+    'Trophy3': {
+        "ItemName": "Club Member",
+        "QuestGiver": "Rocklyte",
+        "QuestName": "Becoming the Best Beginner",
+        "QuestNameCoded": "Rocklyte3"
+    },
+    'Trophy13': {
+        "ItemName": "Club Maestro",
+        "QuestGiver": "Cactolyte",
+        "QuestName": "Maestro! The Stro! Mman!",
+        "QuestNameCoded": "Cactolyte4"
+    },
+    'EquipmentNametag4': {
+        "ItemName": "Vman Nametag",
+        "QuestGiver": "Nebulyte",
+        "QuestName": "VMAN ACHIEVED!",
+        "QuestNameCoded": "Nebulyte4"
     },
 }
 npc_tokens = [

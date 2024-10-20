@@ -29,6 +29,7 @@ def setWorshipPrayersProgressionTier() -> AdviceSection:
     highestWorshipLevel = max(session_data.account.all_skills["Worship"])
     if highestWorshipLevel < 1:
         prayers_AdviceSection.header = "Come back after unlocking the Worship skill in World 3!"
+        prayers_AdviceSection.unreached = True
         return prayers_AdviceSection
 
     adviceCountsDict = {"Recommended": 0, "Optional": 0, "Ignorable": 0}
@@ -96,12 +97,14 @@ def setWorshipPrayersProgressionTier() -> AdviceSection:
         pre_string=f"Situational Prayer{pl(prayers_AdviceDict['Optional'])} you may consider levelling",
         advices=prayers_AdviceDict['Optional'],
         post_string="These are niche use prayers. They have different benefits/purposes at low level and high levels",
+        informational=True
     )
     prayers_AdviceGroupDict['Ignorable'] = AdviceGroup(
         tier="",
         pre_string=f"Ignorable Prayer{pl(prayers_AdviceDict['Ignorable'])}",
         advices=prayers_AdviceDict['Ignorable'],
-        post_string="Prayers in this group should still be unlocked, but can stay at level 1 after that as of v2.10.",
+        post_string="Prayers in this group should still be unlocked, but can stay at level 1 after that as of v2.12",
+        informational=True
     )
 
     #Generate Advice Section

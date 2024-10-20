@@ -98,7 +98,7 @@ def getCrystalSpawnChanceAdviceGroup() -> AdviceGroup:
 
     # Totals
     crystal_Advice[total].append(Advice(
-        label=f"Note: Crescent Shrine and PO Box are additive: {1 + ((session_data.account.shrines['Crescent Shrine']['Value'] + box_value) / 100)}x"
+        label=f"Note: Crescent Shrine and PO Box are additive: {1 + ((session_data.account.shrines['Crescent Shrine']['Value'] + box_value) / 100):.3f}x"
               f"<br>The cards also add together. Everything else is a unique multiplier.",
         picture_class="shrine-box2"
     ))
@@ -123,7 +123,8 @@ def getCrystalSpawnChanceAdviceGroup() -> AdviceGroup:
     crystal_AG = AdviceGroup(
         tier="",
         pre_string="Info- Sources of Crystal Spawn Chance",
-        advices=crystal_Advice
+        advices=crystal_Advice,
+        informational=True
     )
     return crystal_AG
 
@@ -533,7 +534,8 @@ def getActiveGoalsAdviceGroup() -> AdviceGroup:
         advices={
             "Short Term": getShortTermAdviceList(), "Cards": getCardsAdviceList(), "Long Term": getLongTermAdviceList(),
             "Daily": getDailyAdviceList(), "Weekly": getWeeklyAdviceList(), "Spend Consumables": getConsumablesAdviceList()
-        }
+        },
+        informational=True  #TODO One day, these should probably be real requirements
     )
     ag.remove_empty_subgroups()
 
@@ -546,8 +548,13 @@ def setActiveProgressionTier() -> AdviceSection:
         name="Active",
         tier="Not Yet Evaluated",
         header="Best Active tier met: Not Yet Evaluated. Recommended Star Sign actions",
-        picture='Auto.png'
+        picture='Auto.png',
+        unrated=True
     )
+    if session_data.account.highestWorldReached < 4:
+        active_AdviceSection.header = "Come back after reaching W4 town!"
+        active_AdviceSection.unreached = True
+        return active_AdviceSection
 
     infoTiers = 0
     max_tier = 0
@@ -581,7 +588,7 @@ def setActiveProgressionTier() -> AdviceSection:
     active_AdviceSection.groups = active_AdviceGroupDict.values()
     if overall_ActiveTier >= max_tier:
         active_AdviceSection.header = f"Active Farming Information"
-        active_AdviceSection.complete = True
+        #active_AdviceSection.complete = True
     else:
         active_AdviceSection.header = f"Active Farming Information"
 

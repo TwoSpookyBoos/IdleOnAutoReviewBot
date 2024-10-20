@@ -22,6 +22,7 @@ def setRiftProgressionTier():
     )
     if not session_data.account.rift['Unlocked']:
         rift_AdviceSection.header = "Come back after completing the Rift Ripper NPC's quest!"
+        rift_AdviceSection.unreached = True
         return rift_AdviceSection
 
     tier_RiftBonusesUnlocked = 0

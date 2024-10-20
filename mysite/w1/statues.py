@@ -119,7 +119,8 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
     crystal_AG = AdviceGroup(
         tier="",
         pre_string="Info- To-Do list before dedicated Onyx Statue farming",
-        advices={'Crystal Chance and Drop Rate': crystal_AdviceList, 'Statue Value': deposit_AdviceList}
+        advices={'Crystal Chance and Drop Rate': crystal_AdviceList, 'Statue Value': deposit_AdviceList},
+        informational=True
     )
     return crystal_AG
 

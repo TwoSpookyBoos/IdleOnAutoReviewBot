@@ -64,7 +64,6 @@ from consts import (
     getMoissaniteValue, getGemstoneBaseValue, getGemstoneBoostedValue, getGemstonePercent,
     marketUpgradeDetails, landrankDict, cropDepotDict, maxFarmingCrops,
     summoningBattleCountsDict, summoningDict,
-
 )
 
 
@@ -531,6 +530,8 @@ class AdviceGroup(AdviceBase):
         picture_class: str = "",
         collapse: bool | None = None,
         advices: list[Advice] | dict[str, list[Advice]] = [],
+        complete: bool = False,
+        informational: bool = False,
         **extra,
     ):
         super().__init__(collapse, **extra)
@@ -541,6 +542,8 @@ class AdviceGroup(AdviceBase):
         self.formatting: str = formatting
         self._picture_class: str = picture_class
         self.advices = advices
+        self.complete = complete
+        self.informational = informational
 
     def __str__(self) -> str:
         return ", ".join(map(str, self.advices))
@@ -654,6 +657,8 @@ class AdviceSection(AdviceBase):
         groups: list[AdviceGroup] = [],
         pinchy_rating: int = 0,
         complete: bool = False,
+        unreached: bool = False,
+        unrated: bool = False,
         **extra,
     ):
         super().__init__(collapse, **extra)
@@ -665,6 +670,8 @@ class AdviceSection(AdviceBase):
         self._groups: list[AdviceGroup] = groups
         self.pinchy_rating: int = pinchy_rating
         self.complete: bool = complete
+        self.unreached = unreached
+        self.unrated = unrated
 
     @property
     def header(self) -> str:
@@ -710,6 +717,11 @@ class AdviceSection(AdviceBase):
         if g.order_tiers:
             self._groups = sorted(self._groups)
 
+    def remove_info_groups(self):
+        self._groups = [group for group in self._groups if not group.informational]
+
+    def remove_complete_groups(self):
+        self._groups = [group for group in self._groups if not group.complete]
 
 class AdviceWorld(AdviceBase):
     """
@@ -746,7 +758,12 @@ class AdviceWorld(AdviceBase):
 
     def hide_completed_sections(self):
         self.sections = [section for section in self.sections if not section.complete]
+    
+    def hide_unreached_sections(self):
+        self.sections = [section for section in self.sections if not section.unreached]
 
+    def hide_unrated_sections(self):
+        self.sections = [section for section in self.sections if not section.unrated]
 
 greenStackAmount = 10**7
 gstackable_codenames = [item for items in expectedStackables.values() for item in items]
@@ -1156,6 +1173,10 @@ class Account:
             g.autoloot = True
         else:
             self.autoloot = False
+
+        self.hide_completed = g.hide_completed
+        self.hide_unrated = g.hide_unrated
+        self.hide_info = g.hide_info
 
         # Companions
         self.sheepie_owned = g.sheepie

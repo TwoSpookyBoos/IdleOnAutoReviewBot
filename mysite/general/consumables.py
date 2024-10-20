@@ -230,7 +230,8 @@ def getCandyHourSections():
         name="Regular Candy",
         tier=tier_regular,
         header=guaranteedCandyString,
-        picture="Candy_1hr.png"
+        picture="Candy_1hr.png",
+        unrated=True
     )
 
     for qty, (hrs_min, hrs_max) in zip(variable_candy, variable_candy_times):
@@ -252,7 +253,8 @@ def getCandyHourSections():
         name="Variable Candy",
         tier=tier_variable,
         header=variableCandyString,
-        picture="Candy_Cosmic.png"
+        picture="Candy_Cosmic.png",
+        unrated=True
     )
 
     return section_regular, section_variable
@@ -293,6 +295,7 @@ def parseInventoryBagSlots() -> AdviceGroup:
         tier="",
         pre_string="Collect more inventory space",
         advices=[],
+        informational=True
     )
     if session_data.account.autoloot:
         autoLootSlots = 5
@@ -350,7 +353,8 @@ def parseStorageChests():
     group = AdviceGroup(
         tier="",
         pre_string=f"Collect {len(missing_chests)} more storage chest{pl(missing_chests)} for your bank",
-        advices=advices
+        advices=advices,
+        informational=True
     )
     if len(advices) == 0:
         group.pre_string = f"You've collected all current Storage Chests!{break_you_best}"
@@ -370,7 +374,8 @@ def parseConsumables():
         tier="",
         header="Collect more space for your bank and inventories:",
         picture="Cosmic_Storage_Chest.png",
-        groups=groups
+        groups=groups,
+        unrated=True
     )
     if section_storage.collapse:
         section_storage.header = f"You've collected all current Storage Chests and Inventory Bags!{break_you_best}"

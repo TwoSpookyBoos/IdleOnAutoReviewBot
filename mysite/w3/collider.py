@@ -81,8 +81,7 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
                     goal=session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5
                 )
             )
-            session_data.account.alerts_AdviceDict['World 3'].append(
-                Advice(
+            session_data.account.alerts_AdviceDict['World 3'].append(Advice(
                     label=f"Snail could reset from Rank {session_data.account.gaming['Imports']['Snail']['SnailRank']}"
                           f" to {colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'] * 5}!"
                           f"<br>Level {{{{ Sodium|#atom-collider }}}} to {session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5}"
@@ -90,8 +89,7 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
                     picture_class="sodium",
                     progression=colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'],
                     goal=session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5
-                )
-            )
+            ))
 
     #Neon would cheapen the next Helium upgrade
     for heliumLevel, neonLevel in {6: 0, 7: 2, 8: 10, 9: 21, 10: 30}.items():
@@ -133,7 +131,8 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
         tier="",
         pre_string="Collider Alerts and General Information",
         advices=settings_advice,
-        post_string=f""
+        post_string=f"",
+        informational=True
     )
     settings_ag.remove_empty_subgroups()
     return settings_ag
@@ -202,7 +201,8 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     cr_ag = AdviceGroup(
         tier="",
         pre_string="Info- Sources of Atom Collider Cost Reduction",
-        advices=cr_advice
+        advices=cr_advice,
+        informational=True
     )
     return cr_ag
 
@@ -229,12 +229,15 @@ def setColliderProgressionTier() -> AdviceSection:
     highestConstructionLevel = max(session_data.account.all_skills["Construction"])
     if highestConstructionLevel < 1:
         collider_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
+        collider_AdviceSection.unreached = True
         return collider_AdviceSection
     elif session_data.account.construction_buildings['Atom Collider']['Level'] < 1:
         collider_AdviceSection.header = "Come back after unlocking the Atom Collider within the Construction skill in World 3!"
+        collider_AdviceSection.unreached = True
         return collider_AdviceSection
 
-    max_tier = max(atoms_progressionTiers.keys())
+    info_tiers = 1
+    max_tier = max(atoms_progressionTiers.keys()) - info_tiers
     tier_atomLevels = 0
     pAtoms = session_data.account.atom_collider['Atoms']  #Player Atoms
     exclusionsList = getAtomExclusionsList()
@@ -260,13 +263,14 @@ def setColliderProgressionTier() -> AdviceSection:
     collider_AdviceGroupDict['ColliderSettings'] = getColliderSettingsAdviceGroup()
     collider_AdviceGroupDict['CostReduction'] = getCostReductionAdviceGroup()
     collider_AdviceGroupDict['Atoms'] = AdviceGroup(
-        tier=tier_atomLevels,
-        pre_string="Level Priority Atoms",
-        advices=collider_AdviceDict['Atoms']
+        tier=f"{tier_atomLevels if tier_atomLevels < max_tier else ''}",
+        pre_string=f"{'Informational- ' if tier_atomLevels >= max_tier else ''}Level Priority Atoms",
+        advices=collider_AdviceDict['Atoms'],
+        informational=True if tier_atomLevels >= max_tier else False
     )
 
     # Generate AdviceSection
-    overall_ColliderTier = min(max_tier, tier_atomLevels)  # Looks silly, but may get more evaluations in the future
+    overall_ColliderTier = min(max_tier + info_tiers, tier_atomLevels)  # Looks silly, but may get more evaluations in the future
     tier_section = f"{overall_ColliderTier}/{max_tier}"
     collider_AdviceSection.tier = tier_section
     collider_AdviceSection.pinchy_rating = overall_ColliderTier

@@ -291,6 +291,7 @@ def setTrappingProgressionTier():
     highestTrappingLevel = max(trappingLevelsList)
     if highestTrappingLevel < 1:
         trapping_AdviceSection.header = "Come back after unlocking the Trapping skill in World 3!"
+        trapping_AdviceSection.unreached = True
         return trapping_AdviceSection
 
     highestWearableTrapset = 0
@@ -327,7 +328,7 @@ def setTrappingProgressionTier():
                 label=agd_unlockcritters_post_stringsList[highestUnlockedCritter[0]],
                 picture_class=highestUnlockedCritter[3])
             )
-        if tier_unlockCritters >= 2 and tier_unlockCritters < 11: # Show only the quests with Critter requirement
+        if 2 <= tier_unlockCritters < 11:  # Show only the quests with Critter requirement
             normalItem=session_data.account.stored_assets.get(trappingQuestsRequirementList[tier_unlockCritters-2]["normalItemName"])
             trapping_AdviceDict["UnlockCritters"].append(Advice(
                     label=normalItem.name,
@@ -418,37 +419,43 @@ def setTrappingProgressionTier():
         tier="",
         pre_string=f"Place unused trap{pl(trapping_AdviceDict['UnplacedTraps'])} (may require better Trap Set!)",
         advices=trapping_AdviceDict["UnplacedTraps"],
-        post_string=""
+        post_string="",
+        informational=True
     )
     trapping_AdviceGroupDict["BeginnerNatures"] = AdviceGroup(
         tier="",
         pre_string=f"Place only Nature Traps on your {pl(trapping_AdviceDict['BeginnerNatures'], 'Beginner', 'Beginners')}",
         advices=trapping_AdviceDict["BeginnerNatures"],
-        post_string="Nature EXP-only traps are recommended for Maestro's Right Hand of Action and Voidwalker's Species Epoch talents. You will get ZERO critters from Nature Traps, but the bonus critters from those 2 talents more than make up for this loss!"
+        post_string="Nature EXP-only traps are recommended for Maestro's Right Hand of Action and Voidwalker's Species Epoch talents. You will get ZERO critters from Nature Traps, but the bonus critters from those 2 talents more than make up for this loss!",
+        informational=True
     )
     trapping_AdviceGroupDict["NonMetaTraps"] = AdviceGroup(
         tier="",
         pre_string=f"Inefficient Trap Types or Durations",
         advices=trapping_AdviceDict["NonMetaTraps"],
-        post_string=""
+        post_string="",
+        informational=True
     )
     trapping_AdviceGroupDict["CritterTraps"] = AdviceGroup(
         tier="",
         pre_string=f"Best Critter-Focused traps",
         advices=trapping_AdviceDict["CritterTraps"],
-        post_string="Set critter traps with your Beast Master after maximizing Trapping Efficiency"
+        post_string="Set critter traps with your Beast Master after maximizing Trapping Efficiency",
+        informational=True
     )
     trapping_AdviceGroupDict["ShinyTraps"] = AdviceGroup(
         tier="",
         pre_string=f"Best Shiny Chance-Focused traps",
         advices=trapping_AdviceDict["ShinyTraps"],
-        post_string="Wear the Shiny Snitch prayer when Collecting. Shorter trap durations will earn more total Shiny Critters per day"
+        post_string="Wear the Shiny Snitch prayer when Collecting. Shorter trap durations will earn more total Shiny Critters per day",
+        informational=True
     )
     trapping_AdviceGroupDict["EXPTraps"] = AdviceGroup(
         tier="",
         pre_string=f"Best EXP-Focused traps",
         advices=trapping_AdviceDict["EXPTraps"],
-        post_string="Set EXP traps with your Mman/Vman after maximizing Trapping EXP"
+        post_string="Set EXP traps with your Mman/Vman after maximizing Trapping EXP",
+        informational=True
     )
 
     #Generate AdviceSection
@@ -456,6 +463,7 @@ def setTrappingProgressionTier():
     overall_TrappingTier = min(max_tier, tier_unlockCritters)
     tier_section = f"{overall_TrappingTier}/{max_tier}"
     trapping_AdviceSection.tier = tier_section
+    trapping_AdviceSection.pinchy_rating = overall_TrappingTier
     trapping_AdviceSection.groups = trapping_AdviceGroupDict.values()
     if overall_TrappingTier >= max_tier:
         trapping_AdviceSection.header = f"Best Trapping tier met: {tier_section}{break_keep_it_up}"

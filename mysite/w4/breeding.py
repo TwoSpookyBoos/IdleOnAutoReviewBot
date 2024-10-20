@@ -123,7 +123,9 @@ def getShinySpeedSourcesAdviceGroup(fasterShinyPetTotalLevels) -> AdviceGroup:
     sps_AdviceGroup = AdviceGroup(
         tier="",
         pre_string="Info- Sources of Shiny Pet Level Rate",
-        advices=sps_adviceDict)
+        advices=sps_adviceDict,
+        informational=True
+    )
     return sps_AdviceGroup
 
 def getBreedabilityAdviceGroup():
@@ -155,7 +157,8 @@ def getBreedabilityAdviceGroup():
     b_ag = AdviceGroup(
         tier='',
         pre_string="Informational- Breedability Multi and Heart VII Progress",
-        advices=b_advices
+        advices=b_advices,
+        informational=True
     )
     return b_ag
 
@@ -300,7 +303,8 @@ def getActiveBMAdviceGroup() -> AdviceGroup:
     abm_AdviceGroup = AdviceGroup(
         tier="",
         pre_string="Info- Active BM setup for around 4-5x shiny progress",
-        advices=abm_adviceDict
+        advices=abm_adviceDict,
+        informational=True
     )
     return abm_AdviceGroup
 
@@ -322,7 +326,7 @@ def setBreedingProgressionTier() -> AdviceSection:
     highestBreedingLevel = max(session_data.account.all_skills["Breeding"])
     if highestBreedingLevel < 1:
         breeding_AdviceSection.header = "Come back after unlocking the Breeding skill in World 4!"
-        breeding_AdviceSection.collapse = True
+        breeding_AdviceSection.unreached = True
         return breeding_AdviceSection
 
     progressionTiersBreeding = copy.deepcopy(breeding_progressionTiers)
@@ -533,7 +537,8 @@ def setBreedingProgressionTier() -> AdviceSection:
                 tier="",
                 pre_string="Advance Shiny levels per your desires",
                 advices=breeding_AdviceDict["ShinyLevelsTierList"],
-                post_string=""
+                post_string="",
+                informational=True
             )
         breeding_AdviceGroupDict["ShinySpeedSources"] = getShinySpeedSourcesAdviceGroup(breedingDict['Total Shiny Levels']['Faster Shiny Pet Lv Up Rate'])
         breeding_AdviceGroupDict["ActiveBM"] = getActiveBMAdviceGroup()

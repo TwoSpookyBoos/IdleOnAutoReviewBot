@@ -114,6 +114,7 @@ def setCombatLevelsProgressionTier() -> AdviceSection:
         tier="",
         pre_string=advice_PersonalLevels,
         advices=lvlup_advices,
+        informational=True
     )
 
     max_tier = combatLevels_progressionTiers[-1][0]
@@ -131,7 +132,7 @@ def setCombatLevelsProgressionTier() -> AdviceSection:
         picture="Family.png",
         groups=[total_level_group, lvlup_group],
         pinchy_rating=overall_CombatLevelTier,
-        complete=overall_CombatLevelTier == max_tier
+        complete=overall_CombatLevelTier >= max_tier
     )
 
     return combat_section

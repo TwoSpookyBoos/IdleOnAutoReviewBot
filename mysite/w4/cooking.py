@@ -24,6 +24,7 @@ def setCookingProgressionTier():
     highestCookingSkillLevel = max(session_data.account.all_skills["Cooking"])
     if highestCookingSkillLevel < 1:
         cooking_AdviceSection.header = "Come back after unlocking the Cooking skill in World 4!"
+        cooking_AdviceSection.unreached = True
         return cooking_AdviceSection
 
     tier_Cooking = 0

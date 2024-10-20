@@ -144,7 +144,8 @@ def getRightHandsAdviceGroups():
             f" the highest level in {len(skillsToReview_RightHand)-len(skills_needing_catchup)}/{len(skillsToReview_RightHand)}"
             f" Right Hand skills. Be careful not to let others overtake"
         ),
-        advices=stayahead_advices
+        advices=stayahead_advices,
+        informational=True
     )
     stayahead_ag.remove_empty_subgroups()
     return catchup_ag, stayahead_ag

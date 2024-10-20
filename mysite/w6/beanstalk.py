@@ -14,9 +14,10 @@ def section_beanstalk():
         return AdviceSection(
             name="Beanstalk",
             tier="",
-            header="Come back once you've bought the \"Gold Food Beanstalk\" from the Jade Emporium",
+            header="Come back after unlocking \"Gold Food Beanstalk\" from the Jade Emporium",
             picture="Jade_Vendor.gif",
-            collapse=True,
+            unreached=True,
+            unrated=True
         )
 
     gold_foods = dict.fromkeys(gfood_codes, 0)
@@ -66,12 +67,11 @@ def section_beanstalk():
         )
         for foodname in foods_ready_to_deposit
     ]
-    if len(foods_ready_to_deposit) > 0:
-        session_data.account.alerts_AdviceDict['World 6'].append(
-            Advice(
+    if len(foods_ready_to_deposit) > 0 and not session_data.account.hide_unrated:
+        session_data.account.alerts_AdviceDict['World 6'].append(Advice(
                 label=f"Golden Food ready for {{{{Beanstalk|#beanstalk}}}}",
                 picture_class="beanstalk"
-            ))
+        ))
 
     advice_beanstack = [
         Advice(
@@ -129,7 +129,7 @@ def section_beanstalk():
 
     header = (
         f"Well done, Jack! The Golden Goose took an enviably massive dump in your lap. Go pay the giants off! 🍯{break_you_best}"
-        if foods_finished == len(gold_foods)
+        if foods_finished == len(gold_foods)*2
         else f"You have upgraded the Beanstalk {tier} times"
     )
 
@@ -145,7 +145,8 @@ def section_beanstalk():
         header=header,
         picture="Beanstalk.png",
         groups=groups,
-        complete=True if not groups else False
+        unrated=True
+        #complete=True if not groups else False
     )
 
     return beanstalk_AdviceSection
