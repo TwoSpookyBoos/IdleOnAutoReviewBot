@@ -48,10 +48,18 @@ def format_character_name(name: str) -> str:
 
 
 __items_path = Path(app.static_folder) / 'items.yaml'
+__fake_items_path = Path(app.static_folder) / 'fake_items.yaml'
 
 with open(__items_path, 'r') as f:
     ITEM_NAME_DICT = yaml.load(f, yaml.Loader)
     ITEM_CODE_DICT = {v: k for k, v in ITEM_NAME_DICT.items()}
+
+with open(__fake_items_path) as f2:
+    FAKE_ITEM_NAME_DICT = yaml.load(f2, yaml.Loader)
+    FAKE_ITEM_CODE_DICT = {v: k for k, v in FAKE_ITEM_NAME_DICT.items()}
+
+ITEM_NAME_DICT.update(FAKE_ITEM_NAME_DICT)
+ITEM_CODE_DICT.update(FAKE_ITEM_CODE_DICT)
 
 
 def _get_item_name(_dict, name):
