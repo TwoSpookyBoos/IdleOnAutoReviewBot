@@ -1,5 +1,5 @@
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.data_formatting import safe_loads, mark_advice_completed
+from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl, getItemDisplayName
 from utils.logging import get_logger
 from flask import g as session_data
@@ -9,7 +9,7 @@ from consts import maxTiersPerGroup, bubbles_progressionTiers, vials_progression
 
 logger = get_logger(__name__)
 
-def setAlchemyVialsProgressionTier() -> AdviceSection:
+def getVialsProgressionTiersAdviceGroup():
     vial_AdviceDict = {
         "EarlyVials": {
         },
@@ -18,33 +18,21 @@ def setAlchemyVialsProgressionTier() -> AdviceSection:
             "Vials to max next": [],
         },
     }
-    vial_AdviceGroupDict = {}
-    vial_AdviceSection = AdviceSection(
-        name="Vials",
-        tier="Not Yet Evaluated",
-        header="Best Vial tier met: Not Yet Evaluated",
-        picture="Alchemy_Vial-level-1.png"
-    )
-    highestAlchemyLevel = max(session_data.account.all_skills["Alchemy"])
-    if highestAlchemyLevel < 1:
-        vial_AdviceSection.header = "Come back after unlocking the Alchemy skill in World 2!"
-        vial_AdviceSection.unreached = True
-        return vial_AdviceSection
+    info_tiers = 0
+    max_tier = vials_progressionTiers[-1][0] - info_tiers
+    maxAdvicesPerGroup = 6
+    tier_TotalVialsUnlocked = 0
+    tier_TotalVialsMaxed = 0
 
     alchemyVialsDict = session_data.account.alchemy_vials
     virileVialsList = [vialName for vialName, vialValue in alchemyVialsDict.items() if vialValue['Level'] >= 4]
-    maxExpectedVV = max_IndexOfVials-4  # Exclude both pickle and both rare drop vials
+    maxExpectedVV = max_IndexOfVials - 4  # Exclude both pickle and both rare drop vials
     maxedVialsList = [vialName for vialName, vialValue in alchemyVialsDict.items() if vialValue['Level'] >= max_VialLevel]
     unmaxedVialsList = [vialName for vialName in alchemyVialsDict if vialName not in maxedVialsList]
     lockedVialsList = [vialName for vialName, vialValue in alchemyVialsDict.items() if vialValue['Level'] == 0]
     unlockedVials = sum(1 for vial in alchemyVialsDict.values() if vial['Level'] > 0)
 
-    tier_TotalVialsUnlocked = 0
-    tier_TotalVialsMaxed = 0
-    overall_AlchemyVialsTier = 0
-    max_tier = vials_progressionTiers[-1][0]
-    maxAdvicesPerGroup = 6
-
+    #Assess Tiers
     if session_data.account.rift['VialMastery']:
         if len(maxedVialsList) < 27:
             advice_TrailingMaxedVials = " 27 is the magic number needed to get the Snake Skin vial to 100% chance to double deposited statues :D (This also requires Snake Skin itself be maxed lol)"
@@ -103,20 +91,29 @@ def setAlchemyVialsProgressionTier() -> AdviceSection:
                               f"{'<br>Ready for level ' if prog >= 100 else ''}"
                               f"{alchemyVialsDict[requiredVial]['Level'] + 1 if prog >= 100 else ''}",
                         picture_class=getItemDisplayName(alchemyVialsDict[requiredVial]['Material']),
-                        progression=f"{min(1000, prog):.1f}%{'+' if min(1000, prog) == 1000 else ''}",
+                        progression=f"{min(1000, prog):.1f}{'+' if min(1000, prog) == 1000 else ''}",
+                        goal=100,
+                        unit='%'
                     ))
 
     if len(virileVialsList) < maxExpectedVV:
         vial_AdviceDict["EarlyVials"]["Info - Shaman's Virile Vials"] = [
-            Advice(label="Total level 4+ Vials", picture_class="vial-l4", progression=len(virileVialsList), goal=maxExpectedVV)
+            Advice(
+                label="Total level 4+ Vials",
+                picture_class="vial-l4",
+                progression=len(virileVialsList),
+                goal=maxExpectedVV
+            )
         ]
 
     #Generate AdviceGroups
+    vial_AdviceGroupDict = {}
     vial_AdviceGroupDict["Total Unlocked Vials"] = AdviceGroup(
-        tier=str(tier_TotalVialsUnlocked),
-        pre_string="Early Vial Goals",
+        tier=str(tier_TotalVialsUnlocked) if tier_TotalVialsUnlocked < max_tier else '',
+        pre_string=f"{'Informational- ' if tier_TotalVialsUnlocked >= max_tier else ''}Early Vial Goals",
         post_string="",
-        advices=vial_AdviceDict["EarlyVials"]
+        advices=vial_AdviceDict["EarlyVials"],
+        informational=len(vial_AdviceDict["EarlyVials"]) == 1 and "Info - Shaman's Virile Vials" in vial_AdviceDict["EarlyVials"]
     )
     if len(vial_AdviceDict["EarlyVials"]) > 1:
         vial_AdviceGroupDict["Total Unlocked Vials"].post_string = "For the most unlock chances per day, rapidly drop multiple stacks of items on the cauldron!"
@@ -125,21 +122,37 @@ def setAlchemyVialsProgressionTier() -> AdviceSection:
         tier=str(tier_TotalVialsMaxed),
         pre_string="Late Vial Goals",
         post_string=advice_TrailingMaxedVials,
-        advices=vial_AdviceDict["MaxVials"]  #["Total Maxed Vials"]
+        advices=vial_AdviceDict["MaxVials"]
     )
+    overall_SectionTier = min(tier_TotalVialsUnlocked + info_tiers, tier_TotalVialsMaxed)
+    return vial_AdviceGroupDict, overall_SectionTier, max_tier
+
+def getAlchemyVialsAdviceSection() -> AdviceSection:
+    highestAlchemyLevel = max(session_data.account.all_skills["Alchemy"])
+    if highestAlchemyLevel < 1:
+        vial_AdviceSection = AdviceSection(
+            name="Vials",
+            tier="Not Yet Evaluated",
+            header="Come back after unlocking the Alchemy skill in World 2!",
+            picture="Alchemy_Vial-level-1.png",
+            unreached=True
+        )
+        return vial_AdviceSection
+
+    #Generate AdviceGroups
+    vial_AdviceGroupDict, overall_SectionTier, max_tier = getVialsProgressionTiersAdviceGroup()
 
     #Generate AdviceSection
-    overall_AlchemyVialsTier = min(tier_TotalVialsUnlocked, tier_TotalVialsMaxed)  #, tier_ParticularVialsMaxed)
-    tier_section = f"{overall_AlchemyVialsTier}/{max_tier}"
-    vial_AdviceSection.tier = tier_section
-    vial_AdviceSection.pinchy_rating = overall_AlchemyVialsTier
-    vial_AdviceSection.groups = vial_AdviceGroupDict.values()
-    if overall_AlchemyVialsTier == max_tier:
-        vial_AdviceSection.header = f"Best Vial tier met: {tier_section}{break_you_best}"
-        vial_AdviceSection.complete = True
-    else:
-        vial_AdviceSection.header = f"Best Vial tier met: {tier_section}"
 
+    tier_section = f"{overall_SectionTier}/{max_tier}"
+    vial_AdviceSection = AdviceSection(
+        name="Vials",
+        tier=tier_section,
+        pinchy_rating=overall_SectionTier,
+        header=f"Best Vial tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
+        picture="Alchemy_Vial-level-1.png",
+        groups=vial_AdviceGroupDict.values()
+    )
     return vial_AdviceSection
 
 def getBubbleExclusions():
@@ -154,7 +167,7 @@ def getBubbleExclusions():
 
     return exclusionsList
 
-def getAtRiskAdviceGroups() -> list[AdviceGroup]:
+def getAtRiskBubblesAdviceGroups() -> list[AdviceGroup]:
     standard_today = "Basic - In Today's Range"
     standard = "Basic Skilling Resources"
     advanced_today = "Advanced - In Today's Range"
@@ -295,7 +308,7 @@ def getAtRiskAdviceGroups() -> list[AdviceGroup]:
     atriskLithium_AG.remove_empty_subgroups()
     return [atriskBasic_AG, atriskLithium_AG]
 
-def setAlchemyBubblesProgressionTier() -> AdviceSection:
+def getBubblesProgressionTiersAdviceGroup():
     bubbles_AdviceDict = {
         'UnlockAndLevel': {
             "Unlock All Bubbles": [],
@@ -307,28 +320,10 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
         "UtilityBubbles": {},
     }
     bubbles_AdviceGroupDict = {}
-    bubbles_AdviceSection = AdviceSection(
-        name="Bubbles",
-        tier="Not Yet Evaluated",
-        header="Best Bubbles tier met: Not Yet Evaluated. Recommended Bubbles actions:",
-        picture="Alchemy_Bubble_all.gif"
-    )
-    highestAlchemyLevel = max(session_data.account.all_skills["Alchemy"])
-    if highestAlchemyLevel < 1:
-        bubbles_AdviceSection.header = "Come back after unlocking the Alchemy skill in World 2!"
-        bubbles_AdviceSection.unreached = True
-        return bubbles_AdviceSection
 
-    tier_TotalBubblesUnlocked = 0
-    sum_TotalBubblesUnlocked = 0
-    tier_OrangeSampleBubbles = 0
-    tier_GreenSampleBubbles = 0
-    tier_PurpleSampleBubbles = 0
-    tier_UtilityBubbles = 0
     infoTiers = 3
-    max_tier = bubbles_progressionTiers[-(1 + infoTiers)][0]  #Final 3 tiers are Informational
-    overall_alchemyBubblesTier = 0
-
+    max_tier = bubbles_progressionTiers[-1][0] - infoTiers  # Final 3 tiers are Informational
+    tier_TotalBubblesUnlocked = 0
     exclusionsList = getBubbleExclusions()
 
     perCauldronBubblesUnlocked = [
@@ -345,20 +340,20 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
     adviceCountsDict = {bubbleType: 0 for bubbleType in bubbleTypeList}
     bubbleTiers = [0, 0, 0, 0]
 
-    #Assess tiers
+    # Assess tiers
     for tier in bubbles_progressionTiers:
-        #tier[0] = int tier
-        #tier[1] = int TotalBubblesUnlocked
-        #tier[2] = dict {OrangeSampleBubbles}
-        #tier[3] = dict {GreenSampleBubbles}
-        #tier[4] = dict {PurpleSampleBubbles}
-        #tier[5] = dict {UtilityBubbles}
-        #tier[6] = str BubbleValuePercentage
-        #tier[7] = str Orange, Green, Purple Notes
-        #tier[8] = str Utility Notes (Not used atm)
+        # tier[0] = int tier
+        # tier[1] = int TotalBubblesUnlocked
+        # tier[2] = dict {OrangeSampleBubbles}
+        # tier[3] = dict {GreenSampleBubbles}
+        # tier[4] = dict {PurpleSampleBubbles}
+        # tier[5] = dict {UtilityBubbles}
+        # tier[6] = str BubbleValuePercentage
+        # tier[7] = str Orange, Green, Purple Notes
+        # tier[8] = str Utility Notes (Not used atm)
 
-        #tier_TotalBubblesUnlocked
-        if tier_TotalBubblesUnlocked == (tier[0]-1):  # Only check if they already met the previous tier
+        # tier_TotalBubblesUnlocked
+        if tier_TotalBubblesUnlocked == (tier[0] - 1):  # Only check if they already met the previous tier
             if sum_TotalBubblesUnlocked >= tier[1]:
                 tier_TotalBubblesUnlocked = tier[0]
             else:
@@ -374,11 +369,11 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
                                 goal=5)
                         )
 
-        #Orange, Green, Purple, and Utility bubbles
+        # Orange, Green, Purple, and Utility bubbles
         for typeIndex, bubbleType in enumerate(bubbleTypeList):
-            for requiredBubble in tier[typeIndex+2]:
+            for requiredBubble in tier[typeIndex + 2]:
                 if requiredBubble not in exclusionsList:
-                    if session_data.account.alchemy_bubbles[requiredBubble]['Level'] < tier[typeIndex+2][requiredBubble]:
+                    if session_data.account.alchemy_bubbles[requiredBubble]['Level'] < tier[typeIndex + 2][requiredBubble]:
                         requirementsMet[typeIndex] = False
                         subgroupName = (f"To reach {'Informational ' if tier[0] > max_tier else ''}Tier {tier[0]}"
                                         f"{' (' if bubbleType != 'UtilityBubbles' else ''}"
@@ -392,16 +387,16 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
                                 label=f"{requiredBubble}{' (Printing!)' if session_data.account.alchemy_bubbles[requiredBubble]['Material'] in session_data.account.printer['AllCurrentPrints'] else ''}",
                                 picture_class=str(requiredBubble),
                                 progression=str(session_data.account.alchemy_bubbles[requiredBubble]['Level']),
-                                goal=str(tier[typeIndex+2][requiredBubble]),
+                                goal=str(tier[typeIndex + 2][requiredBubble]),
                                 resource=str(session_data.account.alchemy_bubbles[requiredBubble]['Material']))),
             if bubbleTiers[typeIndex] == (tier[0] - 1) and requirementsMet[typeIndex] == True:  # Only update if they already met the previous tier
                 bubbleTiers[typeIndex] = tier[0]
 
     for bubbleName, bubbleDetails in session_data.account.alchemy_bubbles.items():
         if (
-            0 < bubbleDetails['Level'] < min_NBLB
-            and bubbleName not in nblb_skippable
-            and bubbleDetails['BubbleIndex'] <= nblb_max_index
+                0 < bubbleDetails['Level'] < min_NBLB
+                and bubbleName not in nblb_skippable
+                and bubbleDetails['BubbleIndex'] <= nblb_max_index
         ):
             bubbles_AdviceDict['UnlockAndLevel']['No Bubble Left Behind'].append(
                 Advice(
@@ -410,13 +405,9 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
                     progression=bubbleDetails['Level'],
                     goal=min_NBLB,
                     resource=bubbleDetails['Material'],
-            ))
+                ))
 
-    overall_alchemyBubblesTier = min(
-        max_tier + infoTiers, tier_TotalBubblesUnlocked,
-        bubbleTiers[0], bubbleTiers[1], bubbleTiers[2], bubbleTiers[3]
-    )
-    #Generate AdviceGroups
+    # Generate AdviceGroups
     agdNames = ["UnlockAndLevel", "OrangeSampleBubbles", "GreenSampleBubbles", "PurpleSampleBubbles", "UtilityBubbles"]
     agdTiers = [tier_TotalBubblesUnlocked, bubbleTiers[0], bubbleTiers[1], bubbleTiers[2], bubbleTiers[3]]
     agdPre_strings = [
@@ -434,49 +425,55 @@ def setAlchemyBubblesProgressionTier() -> AdviceSection:
             informational=True if agdTiers[counter] >= max_tier else False
         )
         bubbles_AdviceGroupDict[value].remove_empty_subgroups()
-    bubbles_AdviceGroupDict['AtRiskBasic'], bubbles_AdviceGroupDict['AtRiskLithium'] = getAtRiskAdviceGroups()
+
+    overall_SectionTier = min(
+        max_tier + infoTiers, tier_TotalBubblesUnlocked,
+        bubbleTiers[0], bubbleTiers[1], bubbleTiers[2], bubbleTiers[3]
+    )
+    return bubbles_AdviceGroupDict, overall_SectionTier, max_tier
+
+def getAlchemyBubblesAdviceSection() -> AdviceSection:
+    highestAlchemyLevel = max(session_data.account.all_skills["Alchemy"])
+    if highestAlchemyLevel < 1:
+        bubbles_AdviceSection = AdviceSection(
+            name="Bubbles",
+            tier="Not Yet Evaluated",
+            header="Come back after unlocking the Alchemy skill in World 2!",
+            picture="Alchemy_Bubble_all.gif",
+            unreached=True
+        )
+        return bubbles_AdviceSection
+
+    #Generate AdviceGroups
+    bubbles_AdviceGroupDict, overall_SectionTier, max_tier = getBubblesProgressionTiersAdviceGroup()
+    bubbles_AdviceGroupDict['AtRiskBasic'], bubbles_AdviceGroupDict['AtRiskLithium'] = getAtRiskBubblesAdviceGroups()
 
     #Generate AdviceSection
-    tier_section = f"{overall_alchemyBubblesTier}/{max_tier}"
-    bubbles_AdviceSection.tier = tier_section
-    bubbles_AdviceSection.pinchy_rating = overall_alchemyBubblesTier
-    bubbles_AdviceSection.groups = bubbles_AdviceGroupDict.values()
-    if overall_alchemyBubblesTier >= max_tier:
-        bubbles_AdviceSection.header = f"Best Bubbles tier met: {tier_section}{break_you_best}"
-        bubbles_AdviceSection.complete = True
-    else:
-        bubbles_AdviceSection.header = f"Best Bubbles tier met: {tier_section}"
+    tier_section = f"{overall_SectionTier}/{max_tier}"
+    bubbles_AdviceSection = AdviceSection(
+        name="Bubbles",
+        tier=tier_section,
+        pinchy_rating=overall_SectionTier,
+        header=f"Best Bubbles tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
+        picture="Alchemy_Bubble_all.gif",
+        groups=bubbles_AdviceGroupDict.values(),
+    )
 
     return bubbles_AdviceSection
 
-def setAlchemyP2W() -> AdviceSection:
+def getP2WProgressionTiersAdviceGroup(highestAlchemyLevel):
     p2w_AdviceDict = {
         "Pay2Win": []
     }
     p2w_AdviceGroupDict = {}
-    p2w_AdviceSection = AdviceSection(
-        name="Pay2Win",
-        tier="Not Yet Evaluated",
-        header="Best P2W tier met: Not Yet Evaluated. Recommended P2W actions:",
-        picture="pay2win.png"
-    )
-
-    highestAlchemyLevel = max(session_data.account.all_skills["Alchemy"])
-    if highestAlchemyLevel < 1:
-        p2w_AdviceSection.header = "Come back after unlocking the Alchemy skill in World 2!"
-        p2w_AdviceSection.unreached = True
-        return p2w_AdviceSection
-
-    alchemyP2WList = safe_loads(session_data.account.raw_data["CauldronP2W"])
-    for subElementIndex, subElementValue in enumerate(alchemyP2WList):
-        if not isinstance(subElementValue, list):
-            alchemyP2WList[subElementIndex] = [subElementValue]
-
+    info_tiers = 0
+    max_tier = 1 - info_tiers
+    tier_P2WUpgrades = 0
     liquidCauldronSum = 0
     liquidCauldronsUnlocked = 1
 
     if highestAlchemyLevel >= 80:
-        liquidCauldronsUnlocked = 4  #includes Toxic HG
+        liquidCauldronsUnlocked = 4  # includes Toxic HG
     elif highestAlchemyLevel >= 35:
         liquidCauldronsUnlocked = 3  # includes Trench Seawater
     elif highestAlchemyLevel >= 20:
@@ -485,44 +482,51 @@ def setAlchemyP2W() -> AdviceSection:
     bubbleCauldronMax = 4 * 375  # 4 cauldrons, 375 upgrades each
     liquidCauldronMax = 180 * liquidCauldronsUnlocked
     vialsMax = 15 + 45  # 15 attempts, 45 RNG
-    bubbleCauldronSum = sum(session_data.account.alchemy_p2w.get("Cauldrons"))
-    vialsSum = sum(session_data.account.alchemy_p2w.get("Vials"))
-    playerSum = sum(session_data.account.alchemy_p2w.get("Player"))
+    bubbleCauldronSum = sum(session_data.account.alchemy_p2w['Cauldrons'])
+    vialsSum = sum(session_data.account.alchemy_p2w['Vials'])
+    playerSum = sum(session_data.account.alchemy_p2w['Player'])
     if isinstance(session_data.account.alchemy_p2w.get("Liquids"), list):
-        for liquidEntry in session_data.account.alchemy_p2w.get("Liquids"):  # Liquids are different. Any locked liquid cauldrons are stored as -1 which would throw off a simple sum
+        # Liquids are different. Any locked liquid cauldrons are stored as -1 which would throw off a simple sum
+        for liquidEntry in session_data.account.alchemy_p2w.get("Liquids"):
             if liquidEntry != -1:
                 liquidCauldronSum += liquidEntry
 
     p2wSum = bubbleCauldronSum + liquidCauldronSum + vialsSum + playerSum
-    p2wMax = bubbleCauldronMax + liquidCauldronMax + vialsMax + (highestAlchemyLevel*2)
+    p2wMax = bubbleCauldronMax + liquidCauldronMax + vialsMax + (highestAlchemyLevel * 2)
     p2wSumWithoutPlayer = bubbleCauldronSum + liquidCauldronSum + vialsSum
     p2wMaxWithoutPlayer = bubbleCauldronMax + liquidCauldronMax + vialsMax
 
-    if p2wSumWithoutPlayer >= p2wMaxWithoutPlayer:
-        p2w_AdviceSection.pinchy_rating = 1
-        p2w_AdviceSection.tier = '1/1'
-    else:
-        p2w_AdviceSection.pinchy_rating = 0
-        p2w_AdviceSection.tier = '0/1'
+    tier_P2WUpgrades = int(p2wSumWithoutPlayer >= p2wMaxWithoutPlayer)
 
     if p2wSum < p2wMax:
         if bubbleCauldronSum < bubbleCauldronMax:
-            p2w_AdviceDict["Pay2Win"].append(
-                Advice(label="Bubble Cauldron Upgrades", picture_class="cauldron-a", progression=str(bubbleCauldronSum), goal=str(bubbleCauldronMax))
-            )
+            p2w_AdviceDict["Pay2Win"].append(Advice(
+                label="Bubble Cauldron Upgrades",
+                picture_class="cauldron-a",
+                progression=str(bubbleCauldronSum),
+                goal=str(bubbleCauldronMax)
+            ))
         if liquidCauldronSum < liquidCauldronMax:
-            p2w_AdviceDict["Pay2Win"].append(
-                Advice(label="Liquid Cauldron Upgrades", picture_class="bleach-liquid-cauldrons", progression=str(liquidCauldronSum),
-                       goal=str(liquidCauldronMax))
-            )
+            p2w_AdviceDict["Pay2Win"].append(Advice(
+                label="Liquid Cauldron Upgrades",
+                picture_class="bleach-liquid-cauldrons",
+                progression=str(liquidCauldronSum),
+                goal=str(liquidCauldronMax)
+            ))
         if vialsSum < vialsMax:
-            p2w_AdviceDict["Pay2Win"].append(
-                Advice(label="Vial Upgrades", picture_class="vials", progression=str(vialsSum), goal=str(vialsMax))
-            )
-        if playerSum < highestAlchemyLevel*2:
-            p2w_AdviceDict["Pay2Win"].append(
-                Advice(label="Player Upgrades", picture_class="p2w-player", progression=str(playerSum), goal=str(highestAlchemyLevel * 2))
-            )
+            p2w_AdviceDict["Pay2Win"].append(Advice(
+                label="Vial Upgrades",
+                picture_class="vials",
+                progression=str(vialsSum),
+                goal=str(vialsMax)
+            ))
+        if playerSum < highestAlchemyLevel * 2:
+            p2w_AdviceDict["Pay2Win"].append(Advice(
+                label="Player Upgrades",
+                picture_class="p2w-player",
+                progression=str(playerSum),
+                goal=str(highestAlchemyLevel * 2)
+            ))
             session_data.account.alerts_AdviceDict['World 2'].append(Advice(
                 label=f"{{{{ P2W|#pay2win }}}} Player upgrades can be leveled",
                 picture_class="p2w-player",
@@ -533,19 +537,42 @@ def setAlchemyP2W() -> AdviceSection:
         post_string="",
         advices=p2w_AdviceDict["Pay2Win"]
     )
+    overall_SectionTier = min(max_tier + info_tiers, tier_P2WUpgrades)
+    return p2w_AdviceGroupDict, overall_SectionTier, max_tier, p2wSum, p2wMax
+
+def getAlchemyP2WAdviceSection() -> AdviceSection:
+    highestAlchemyLevel = max(session_data.account.all_skills["Alchemy"])
+    if highestAlchemyLevel < 1:
+        p2w_AdviceSection = AdviceSection(
+            name="Pay2Win",
+            tier="Not Yet Evaluated",
+            header="Come back after unlocking the Alchemy skill in World 2!",
+            picture="pay2win.png",
+            unreached=True
+        )
+        return p2w_AdviceSection
+
+    #Generate AdviceGroups
+    p2w_AdviceGroupDict, overall_SectionTier, max_tier, p2wSum, p2wMax = getP2WProgressionTiersAdviceGroup(highestAlchemyLevel)
 
     #Generate AdviceSection
-    tier_section = f"{p2wSum}/{p2wMax}"
-    p2w_AdviceSection.tier = tier_section
-    p2w_AdviceSection.groups = p2w_AdviceGroupDict.values()
-    if p2wSum >= p2wMax:
-        p2w_AdviceSection.header = f"You've purchased all {p2wMax} upgrades in Alchemy's Pay 2 Win tab!{break_you_best}"
-        p2w_AdviceSection.complete = True
-    else:
-        p2w_AdviceSection.header = (f"You've purchased {tier_section} upgrades in Alchemy's Pay 2 Win tab."
-                                    f"<br>Try to purchase the basic upgrades before Mid W5, and Player upgrades after each Alchemy level up!")
+    tier_section = f"{overall_SectionTier}/{max_tier}"
+    header_upgrades = f"{p2wSum}/{p2wMax}"
+    p2w_AdviceSection = AdviceSection(
+        name="Pay2Win",
+        tier=tier_section,
+        pinchy_rating=overall_SectionTier,
+        header=(
+            f"You've purchased all {p2wMax} upgrades in Alchemy's Pay 2 Win tab!{break_you_best}"
+            if p2wSum >= p2wMax else (
+                f"You've purchased {header_upgrades} upgrades in Alchemy's Pay 2 Win tab."
+                f"<br>Try to purchase the basic upgrades before Mid W5, and Player upgrades after each Alchemy level up!"
+            )
+        ),
+        picture="pay2win.png",
+        groups=p2w_AdviceGroupDict.values()
+    )
     return p2w_AdviceSection
-
 
 def getSigilSpeedAdviceGroup() -> AdviceGroup:
 
@@ -751,33 +778,18 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
         tier='',
         pre_string=f"Info- Sources of Sigil Charging Speed. Grand total: {total_multi:.3f}x",
         advices=speed_Advice,
-        informational=True
+        informational=True,
     )
     return speed_AdviceGroup
 
-
-def setAlchemySigilsProgressionTier() -> AdviceSection:
+def getSigilsProgressionTiersAdviceGroup():
     sigils_AdviceDict = {
         'Sigils': {}
     }
-    sigils_AdviceGroupDict = {}
-    sigils_AdviceSection = AdviceSection(
-        name='Sigils',
-        tier="Not Yet Evaluated",
-        header="Best Sigils tier met: Not Yet Evaluated. Recommended Sigils actions:",
-        picture="Sigils.png"
-    )
-
-    highestLabLevel = max(session_data.account.all_skills["Lab"])
-    if highestLabLevel < 1:
-        sigils_AdviceSection.header = "Come back after unlocking the Laboratory skill in World 4!"
-        sigils_AdviceSection.unreached = True
-        return sigils_AdviceSection
-
-    account_sigils = session_data.account.alchemy_p2w['Sigils']
     infoTiers = 6
     max_tier = max(sigils_progressionTiers.keys()) - infoTiers
     tier_Sigils = 0
+    account_sigils = session_data.account.alchemy_p2w['Sigils']
 
     # Assess Tiers
     for tierNumber, tierContents in sigils_progressionTiers.items():
@@ -818,33 +830,46 @@ def setAlchemySigilsProgressionTier() -> AdviceSection:
                         label=f"Level up {requiredSigil}"
                               f"{'. Go look at the Sigils screen to redeem your level!' if account_sigils[requiredSigil]['PlayerHours'] > account_sigils[requiredSigil]['Requirements'][requiredLevel - 1] else ''}",
                         picture_class=f"{requiredSigil}-{requiredLevel}",
-                        progression=f"{0 if requiredLevel > account_sigils[requiredSigil]['PrechargeLevel']+1 else prog}",
+                        progression=f"{0 if requiredLevel > account_sigils[requiredSigil]['PrechargeLevel'] + 1 else prog}",
                         goal=f"{account_sigils[requiredSigil]['Requirements'][requiredLevel - 1]}"
                     ))
-        if tier_Sigils == tierNumber-1 and subgroupName not in sigils_AdviceDict['Sigils']:
+        if tier_Sigils == tierNumber - 1 and subgroupName not in sigils_AdviceDict['Sigils']:
             tier_Sigils = tierNumber
 
     # Generate AdviceGroups
+    sigils_AdviceGroupDict = {}
     sigils_AdviceGroupDict['Sigils'] = AdviceGroup(
         tier=f"{tier_Sigils if tier_Sigils < max_tier else ''}",
         pre_string=f"{'Informational- ' if tier_Sigils >= max_tier else ''}"
                    f"Unlock and level {'all' if tier_Sigils >= max_tier else 'important'} Sigils",
         advices=sigils_AdviceDict['Sigils'],
-        informational=True if tier_Sigils >= max_tier else False
+        informational=tier_Sigils >= max_tier
     )
+    overall_SectionTier = min(max_tier + infoTiers, tier_Sigils)
+    return sigils_AdviceGroupDict, overall_SectionTier, max_tier
+
+def getAlchemySigilsAdviceSection() -> AdviceSection:
+    highestLabLevel = max(session_data.account.all_skills["Lab"])
+    if highestLabLevel < 1:
+        sigils_AdviceSection = AdviceSection(
+            name='Sigils',
+            tier="Not Yet Evaluated",
+            header="Come back after unlocking the Laboratory skill in World 4!",
+            picture="Sigils.png",
+            unreached=True
+        )
+        return sigils_AdviceSection
+    sigils_AdviceGroupDict, overall_SectionTier, max_tier = getSigilsProgressionTiersAdviceGroup()
     sigils_AdviceGroupDict['Speed'] = getSigilSpeedAdviceGroup()
 
-    overall_SigilsTier = min(max_tier + infoTiers, tier_Sigils)
-
     # #Generate AdviceSection
-    tier_section = f"{overall_SigilsTier}/{max_tier}"
-    sigils_AdviceSection.tier = tier_section
-    sigils_AdviceSection.pinchy_rating = overall_SigilsTier
-    sigils_AdviceSection.groups = sigils_AdviceGroupDict.values()
-    if overall_SigilsTier >= max_tier:
-        sigils_AdviceSection.header = f"Best Sigils tier met: {tier_section}{break_you_best}"
-        sigils_AdviceSection.complete = True
-    else:
-        sigils_AdviceSection.header = f"Best Sigils tier met: {tier_section}"
-
+    tier_section = f"{overall_SectionTier}/{max_tier}"
+    sigils_AdviceSection = AdviceSection(
+        name='Sigils',
+        tier=tier_section,
+        pinchy_rating=overall_SectionTier,
+        header=f"Best Sigils tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
+        picture="Sigils.png",
+        groups=sigils_AdviceGroupDict.values()
+    )
     return sigils_AdviceSection

@@ -1,7 +1,5 @@
-import json
 from models.models import Advice, AdviceSection, AdviceGroup
 from utils.text_formatting import pl
-from utils.data_formatting import safe_loads
 from utils.logging import get_logger
 from flask import g as session_data
 
@@ -9,9 +7,10 @@ logger = get_logger(__name__)
 
 
 class Tier:
-    def __init__(self, tier: int, section: str = None, current: 'Threshold' = None, previous: 'Threshold' = None, next: 'Threshold' = None):
+    def __init__(self, tier: int, section: str = None, section_complete: bool = False, current: 'Threshold' = None, previous: 'Threshold' = None, next: 'Threshold' = None):
         self.tier = tier
         self.section = section
+        self.section_complete = section_complete
         self.current = current
         self.previous = previous
         self.next = next
@@ -276,8 +275,8 @@ class Thresholds(dict):
 def sort_pinchy_reviews(dictOfPRs) -> Placements:
     placements = Placements()
 
-    for section, pinchy_tier in dictOfPRs.items():
-        tier = Tier(pinchy_tier, section)
+    for section, (pinchy_tier, section_complete) in dictOfPRs.items():
+        tier = Tier(pinchy_tier, section, section_complete)
         placements.place(tier)
 
     placements.finalise()
@@ -327,11 +326,11 @@ def tier_from_monster_kills(dictOfPRs) -> Threshold:
     #highestPrint = session_data.account.printer['HighestValue']
     mobKillThresholds = []
     try:
-        if dictOfPRs[Placements.SAMPLING] >= 9:
+        if dictOfPRs[Placements.SAMPLING][0] >= 9:
             expectedThreshold = Threshold.fromname(Threshold.MAX_TIER)
-        elif dictOfPRs[Placements.DEATH_NOTE] >= 25:
+        elif dictOfPRs[Placements.DEATH_NOTE][0] >= 25:
             expectedThreshold = Threshold.fromname(Threshold.W7_WAITING_ROOM)
-        elif dictOfPRs[Placements.DEATH_NOTE] >= 17:
+        elif dictOfPRs[Placements.DEATH_NOTE][0] >= 17:
             expectedThreshold = Threshold.fromname(Threshold.SOLID_W7_PREP)
         else:
             threshold = threshold_for_highest_portal_opened()
@@ -348,7 +347,7 @@ def tier_from_monster_kills(dictOfPRs) -> Threshold:
 def generate_advice_list(sections: list[Tier], threshold: Threshold):
     advices = [
         Advice(label=section.section, picture_class=section.section, progression=section.tier, goal=section.next.tier, unit="T",
-               value_format="{unit} {value}", as_link=True) for section in sections
+               value_format="{unit} {value}", as_link=True, complete=section.section_complete) for section in sections
     ]
     if threshold == Threshold.fromname(Threshold.MAX_TIER):
         for advice in advices:
@@ -361,19 +360,15 @@ def generate_advice_list(sections: list[Tier], threshold: Threshold):
 
 def generate_advice_groups(sectionsByThreshold: dict):
     advice_groups = []
-    for threshold, sections in sectionsByThreshold.items():
-        if session_data.account.hide_completed and threshold == Threshold.MAX_TIER:
-            continue
-        else:
-            advices = generate_advice_list(sections, Threshold.fromname(threshold))
+    for threshold, sectionsInThreshold in sectionsByThreshold.items():
+        advices = generate_advice_list(sectionsInThreshold, Threshold.fromname(threshold))
+        advice_group = AdviceGroup(
+            tier="",
+            pre_string=f"{threshold} rated section{pl(advices)}",
+            advices=advices
+        )
 
-            advice_group = AdviceGroup(
-                tier="",
-                pre_string=f"{threshold} rated section{pl(advices)}",
-                advices=advices
-            )
-
-            advice_groups.append(advice_group)
+        advice_groups.append(advice_group)
     return advice_groups
 
 
@@ -406,8 +401,8 @@ def getAlertsAdviceGroup() -> AdviceGroup:
     return alerts_AG
 
 
-def generatePinchyWorld(pinchable_sections, unrated_sections, completed_pinchable_section_count=0):
-    dictOfPRs = {section.name: section.pinchy_rating for section in pinchable_sections if not section.unreached}
+def generatePinchyWorld(pinchable_sections: list[AdviceSection], unrated_sections: list[AdviceSection]):
+    dictOfPRs = {section.name: [section.pinchy_rating, section.complete] for section in pinchable_sections if not section.unreached}
 
     sectionPlacements: Placements = sort_pinchy_reviews(dictOfPRs)
     expectedThreshold: Threshold = tier_from_monster_kills(dictOfPRs)
@@ -442,7 +437,7 @@ def generatePinchyWorld(pinchable_sections, unrated_sections, completed_pinchabl
 
     sections_maxed_count = sectionPlacements.maxed_count
     sections_total = Placements.section_count
-    sections_maxed = f"{sections_maxed_count + completed_pinchable_section_count}/{sections_total}"
+    sections_maxed = f"{sections_maxed_count}/{sections_total}"
 
     pinchy_high = AdviceSection(
         name="Pinchy high",

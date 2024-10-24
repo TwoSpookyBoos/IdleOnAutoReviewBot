@@ -2,7 +2,7 @@ from math import ceil
 
 from flask import g as session_data
 from consts import maxStaticBookLevels, maxScalingBookLevels, maxSummoningBookLevels, maxOverallBookLevels, skill_talentsDict, combat_talentsDict, currentWorld, \
-    stamp_maxes, maxMealLevel, cookingCloseEnough, librarySubgroupTiers, break_you_best
+    stamp_maxes, maxMealLevel, cookingCloseEnough, librarySubgroupTiers, break_you_best, arbitrary_es_family_goal, max_VialLevel
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
@@ -168,16 +168,24 @@ def getBonusLevelAdviceGroup() -> AdviceGroup:
 
     for advice in bonusLevelAdvices[account_subgroupName]:
         mark_advice_completed(advice)
+    if (
+        int(session_data.account.bonus_talents['ES Family']['Progression']) >= arbitrary_es_family_goal and
+        sum([1 for advice in bonusLevelAdvices[account_subgroupName] if advice.goal == "✔" or advice.goal == '']) >= len(bonusLevelAdvices[account_subgroupName])-1
+    ):
+        good_enough = True
+    else:
+        good_enough = False
 
     bonusLevelAdviceGroup = AdviceGroup(
         tier="",
         pre_string=f"Info- Sources of bonus talent levels beyond book levels",
         advices=bonusLevelAdvices,
-        informational=True
+        informational=True,
+        complete=good_enough
     )
     return bonusLevelAdviceGroup
 
-def getCheckoutSpeedAdviceGroup() -> AdviceGroup:
+def getCheckoutSpeedAdviceGroup(anyBookAdvice) -> AdviceGroup:
     checkoutSpeedAdvices = []
 
     # Meal
@@ -213,22 +221,25 @@ def getCheckoutSpeedAdviceGroup() -> AdviceGroup:
     ))
 
     # Vial
-    vialBonus = session_data.account.alchemy_vials.get('Chonker Chug (Dune Soul)', {}).get('Value', 0) * session_data.account.vialMasteryMulti * session_data.account.labBonuses["My 1st Chemistry Set"]["Value"]
+    vialBonus = (
+        session_data.account.alchemy_vials['Chonker Chug (Dune Soul)']['Value']
+        * session_data.account.vialMasteryMulti
+        * session_data.account.labBonuses["My 1st Chemistry Set"]["Value"]
+    )
     checkoutSpeedAdvices.append(Advice(
         label=f"Chonker Chug vial: +{vialBonus:.1f}%",
         picture_class='chonker-chug',
-        progression=session_data.account.alchemy_vials.get('Chonker Chug (Dune Soul)', {}).get('Level', 0),
-        goal=13
+        progression=session_data.account.alchemy_vials['Chonker Chug (Dune Soul)']['Level'],
+        goal=max_VialLevel
     ))
 
     # Stamp
-    stampLevel=session_data.account.stamps.get("Biblio Stamp", {}).get('Level', 0)
     checkoutSpeedAdvices.append(Advice(
-        label=f"Stamp: Biblio Stamp: +{stampLevel}%",
+        label=f"Stamp: Biblio Stamp: +{session_data.account.stamps['Biblio Stamp']['Level']}%",
         picture_class="biblio-stamp",
-        progression=stampLevel,
-        goal=stamp_maxes.get("Biblio Stamp"),
-        resource=session_data.account.stamps.get("Biblio Stamp", {}).get('Material', 0),
+        progression=session_data.account.stamps["Biblio Stamp"]['Level'],
+        goal=stamp_maxes["Biblio Stamp"],
+        resource=session_data.account.stamps["Biblio Stamp"]['Material'],
     ))
 
     # Superbit
@@ -254,7 +265,8 @@ def getCheckoutSpeedAdviceGroup() -> AdviceGroup:
         tier="",
         pre_string=f"Info- Sources of Checkout Speed",
         advices=checkoutSpeedAdvices,
-        informational=True
+        informational=True,
+        complete=not anyBookAdvice
     )
 
     return checkoutSpeedAdviceGroup
@@ -327,9 +339,12 @@ def getTalentExclusions() -> list:
 
     return talentExclusions
 
-def getCharacterBooksAdviceGroups(anyBookAdvice: bool):
+def getLibraryProgressionTiersAdviceGroups():
     character_adviceDict = {}
     character_AdviceGroupDict = {}
+    info_tiers = 0
+    max_tier = len(librarySubgroupTiers) - 1
+    anyBookAdvice = False
 
     talentExclusions = getTalentExclusions()
     char_tiers = {}
@@ -427,53 +442,26 @@ def getCharacterBooksAdviceGroups(anyBookAdvice: bool):
     #Remove any empty subgroups
     for ag in character_AdviceGroupDict.values():
         ag.remove_empty_subgroups()
+    overall_SectionTier = min(max_tier, min(char_tiers.values(), default=0))
+    return character_AdviceGroupDict, overall_SectionTier, max_tier, anyBookAdvice
 
-    return character_AdviceGroupDict, anyBookAdvice, min(char_tiers.values(), default=0)
-
-def setLibraryProgressionTier() -> AdviceSection:
-    library_AdviceDict = {
-        "MaxBookLevels": [],
-        "PriorityCheckouts": {}
-    }
-    library_AdviceGroupDict = {}
-    library_AdviceSection = AdviceSection(
-        name="Library",
-        tier="Not Yet Evaluated",
-        header="",
-        picture="Library.png",
-        unrated=True
-    )
-
-    highestConstructionLevel = max(session_data.account.all_skills["Construction"])
-    if highestConstructionLevel < 1:
-        library_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
-        library_AdviceSection.unreached = True
+def getLibraryAdviceSection() -> AdviceSection:
+    if session_data.account.construction_buildings['Talent Book Library']['Level'] < 1:
+        library_AdviceSection = AdviceSection(
+            name="Library",
+            tier="Not Yet Evaluated",
+            header="Come back after unlocking the Talent Book Library within the Construction skill in World 3!",
+            picture="Library.png",
+            unrated=True,
+            unreached=True
+        )
         return library_AdviceSection
-    elif session_data.account.construction_buildings['Talent Book Library']['Level'] < 1:
-        library_AdviceSection.header = "Come back after unlocking the Talent Book Library within the Construction skill in World 3!"
-        library_AdviceSection.unreached = True
-        return library_AdviceSection
-
-    max_tier = len(librarySubgroupTiers)-1
-    anyBookAdvice = False
 
     # Generate AdviceGroups
-    characterCheckouts, anyBookAdvice, tier_bookLevels = getCharacterBooksAdviceGroups(anyBookAdvice)
-    if not session_data.hide_completed:
-        library_AdviceGroupDict["MaxBookLevels"] = getBookLevelAdviceGroup()
-        library_AdviceGroupDict["BonusLevels"] = getBonusLevelAdviceGroup()
-        library_AdviceGroupDict["CheckoutSpeed"] = getCheckoutSpeedAdviceGroup()
-    else:
-        #Only show MaxBookLevels checklist if it isn't complete
-        if (
-                session_data.account.library['StaticSum'] < maxStaticBookLevels
-                or session_data.account.library['ScalingSum'] < maxScalingBookLevels
-                or session_data.account.library['SummoningSum'] < maxSummoningBookLevels
-        ):
-            library_AdviceGroupDict["MaxBookLevels"] = getBookLevelAdviceGroup()
-
-    for characterName, characterAG in characterCheckouts.items():
-        library_AdviceGroupDict[characterName] = characterAG
+    library_AdviceGroupDict, overall_SectionTier, max_tier, anyBookAdvice = getLibraryProgressionTiersAdviceGroups()
+    library_AdviceGroupDict["MaxBookLevels"] = getBookLevelAdviceGroup()
+    library_AdviceGroupDict["BonusLevels"] = getBonusLevelAdviceGroup()
+    library_AdviceGroupDict["CheckoutSpeed"] = getCheckoutSpeedAdviceGroup(anyBookAdvice)
 
     # Generate Alerts
     if (
@@ -488,14 +476,14 @@ def setLibraryProgressionTier() -> AdviceSection:
         ))
 
     # Generate AdviceSection
-    overall_LibraryTier = min(max_tier, tier_bookLevels)  # Looks silly, but may get more evaluations in the future
-    tier_section = f"{overall_LibraryTier}/{max_tier}"
-    library_AdviceSection.tier = tier_section
-    library_AdviceSection.pinchy_rating = overall_LibraryTier
-    library_AdviceSection.groups = library_AdviceGroupDict.values()
-    if overall_LibraryTier >= max_tier:
-        library_AdviceSection.header = f"Best Library tier met: {tier_section}{break_you_best}"
-        library_AdviceSection.complete = True
-    else:
-        library_AdviceSection.header = f"Best Library tier met: {tier_section}"
+    tier_section = f"{overall_SectionTier}/{max_tier}"
+    library_AdviceSection = AdviceSection(
+        name="Library",
+        tier=tier_section,
+        pinchy_rating=overall_SectionTier,
+        header=f"Best Library tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
+        picture="Library.png",
+        groups=library_AdviceGroupDict.values(),
+        unrated=True
+    )
     return library_AdviceSection
