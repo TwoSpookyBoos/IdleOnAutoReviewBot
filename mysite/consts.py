@@ -299,10 +299,11 @@ greenstack_progressionTiers = {
             "Base Monster Materials": ["Sewers3"],
             "Crystal Enemy Drops": [
                 "EquipmentStatues7", "EquipmentStatues3", "EquipmentStatues2", "EquipmentStatues4", "EquipmentStatues14",
-                "StoneZ1", "StoneT1",],  #W1 Tool in particular drops from both W1 and W2 crystal farms
+                ],
             "Other Skilling Resources": [
                 "GoldBar", "DementiaBar", "VoidBar", "LustreBar",
-                "Peanut", "Quest68", "Bullet3",],  #I really hate that the Slush Bucket is listed as Quest68
+                "Peanut", "Quest68", "Bullet3", "FoodChoppin1",],  #I really hate that the Slush Bucket is listed as Quest68
+            "Misc": ["FoodPotRe1",],
             },
         13: {
             "Base Monster Materials": [
@@ -312,18 +313,18 @@ greenstack_progressionTiers = {
                 "EquipmentStatues10", "EquipmentStatues12", "EquipmentStatues13", "EquipmentStatues8", "EquipmentStatues11",  #W2 statues
                 "EquipmentStatues18",  #W3 EhExPee statue
                 "rtt0",
-                "StoneA1", "StoneW1",
+                "StoneA1", "StoneW1", "StoneZ1", "StoneT1",
                 "StoneZ2", "StoneT2",
                 "PureWater",
                 "FoodG9",],
             "Other Skilling Resources": [
                 "StarfireBar", "DreadloBar",
-                "FoodChoppin1",
+
                 "EquipmentSmithingTabs2",
                 "PeanutG",
             ],
             "Misc": [
-                "FoodPotMana3", "FoodPotRe1", "ButterBar", "EquipmentStatues9", "OilBarrel2"
+                "FoodPotMana3", "ButterBar", "EquipmentStatues9", "OilBarrel2"
             ],
         },
         14: {
@@ -1954,6 +1955,7 @@ currentWorld = 6
 maxCharacters = 10
 break_you_best = "<br>You best ❤️"
 break_keep_it_up = "<br>Keep it up! You're on the right track! ❤️"
+ignorable_labels = tuple('Weekly Ballot')
 missableGStacksDict = {
     #  ItemName               Codename     Quest Codeame          Quest Name                                          Wiki link to the item                             Recommended Class/Farming notes
     "Dog Bone":              ["Quest12",   "Dog_Bone1",           "Dog Bone: Why he Die???",                          "https://idleon.wiki/wiki/Dog_Bone",              "Active ES or time candy.", 'dog-bone-npc'],
@@ -2581,6 +2583,7 @@ familyBonusesDict = {
     #"Arcane Cultist": {'funcType': 'decay', 'x1': 0, 'x2': 0, 'Stat': '', 'PrePlus': False, 'PostDisplay': '', 'levelDiscount': familyBonusClassTierLevelReductions[0]},
 }
 esFamilyBonusBreakpointsList = [0, 88, 108, 131, 157, 186, 219, 258, 303, 356, 419, 497, 594, 719, 885, 1118, 1468, 2049, 3210, 6681, 1272447]
+arbitrary_es_family_goal = esFamilyBonusBreakpointsList[13]  #719 fairly feasible in v2.12, 885 feels too tough atm
 printerIndexesBeingPrintedByCharacterIndex = [
     [5, 6],  #Character Index 0
     [12, 13],
@@ -3253,7 +3256,7 @@ hardcap_enhancement_eclipse = 250  #Lava might add more in the future, but there
 librarySubgroupTiers = [
     '', 'Skilling - High Priority', 'Skilling - Medium Priority', 'Skilling - Low Priority', 'Skilling - Lowest Priority',
     'Combat - High Priority', 'Combat - Medium Priority', 'Combat - Low Priority',
-]
+]  #Why is there a placeholder in [0] again?
 skill_talentsDict = {
     # Optimal is an optional list for calculating library.getJeapordyGoal
     # [0] = the starting level
@@ -4224,6 +4227,8 @@ forgeUpgradesDict = {
         "MaxPurchases": 60
     }
 }
+arbitrary_forge_capacity_goal = 150001
+arbitrary_forge_capacity_note = f"Goal of {arbitrary_forge_capacity_goal:,} is the last Godshard Bar we can reach guaranteed as of v2.12"
 statuesDict = {
     0:  {"Name": "Power Statue", "ItemName": "EquipmentStatues1", "Effect": "Base Damage", "BaseValue": 3, "Farmer": "Crystals with DK at Beans", "Target": "bored-bean"},
     1:  {"Name": "Speed Statue", "ItemName": "EquipmentStatues2", "Effect": "% Move Speed", "BaseValue": 0.1, "Farmer": "W1-W3 Crystals with DK", "Target": "w1-w3-crystals"},
@@ -4901,6 +4906,8 @@ def getReadableBubbleNames(inputNumber, color):
 
 ###WORLD 3 CONSTS###
 max_printer_sample_rate = 90
+arbitrary_shrine_goal = 26
+arbitrary_shrine_note = f"Shrines have no Max level, goal of {arbitrary_shrine_goal} is arbitrary"
 maxDreams = 36  # Last verified as of v2.10
 dreamsThatUnlockNewBonuses = [1, 3, 6, 8, 11, 14, 18, 21, 24, 29, 32]
 equinoxBonusesDict = {
@@ -6457,7 +6464,8 @@ sneakingGemstonesFirstIndex = 233
 sneakingGemstonesCount = len(sneakingGemstonesList)
 sneakingGemstonesBaseValueDict = {"Aquamarine": 40, "Emerald": 15, "Garnet": 12, "Starite": 5, "Topaz": 10, "Moissanite": 3}
 sneakingGemstonesMaxValueDict = {"Aquamarine": 10040, "Emerald": 5015, "Garnet": 2512, "Starite": 205, "Topaz": 1010, "Moissanite": 303}
-maxFarmingCrops = 160  # Last verified as of 2.11 Land Rank update
+maxFarmingCrops = 160  # Last verified as of 2.12 Land Rank update
+maxFarmingValue = 100  # Last verified as of 2.12
 landrankDict = {
     0: {'Name': 'Evolution Boost', 'UnlockLevel': 1, 'Value': 250},
     1: {'Name': 'Production Boost', 'UnlockLevel': 5, 'Value': 5},

@@ -320,7 +320,12 @@ def setCustomTiers(filename="input.csv"):
 def safe_loads(data):
     return json.loads(data) if isinstance(data, str) else data
 
-def mark_advice_completed(advice):
+def mark_advice_completed(advice, force=False):
+    if force:
+        advice.progression = ""
+        advice.goal = "✔"
+        setattr(advice, "status", "complete")
+        return
     if str(advice.goal) == "" and str(advice.progression).endswith("+"):
         setattr(advice, "status", "complete")
     elif str(advice.goal) == "" and str(advice.progression).endswith("%"):
@@ -333,8 +338,8 @@ def mark_advice_completed(advice):
             pass
     else:
         try:
-            prog = str(advice.progression).strip("%")
-            goal = str(advice.goal).strip("%")
+            prog = str(advice.progression).strip('x')
+            goal = str(advice.goal).strip('x')
             if advice.goal and advice.progression and float(prog) >= float(goal):
                 advice.progression = ""
                 advice.goal = "✔"

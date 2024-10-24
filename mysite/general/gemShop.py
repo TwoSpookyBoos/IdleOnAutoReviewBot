@@ -197,16 +197,13 @@ def getBonusSectionName(bonusName):
         case _:
             return "UnknownShop"
 
-def setGemShopProgressionTier():
+def getGemShopAdviceSection() -> AdviceSection:
     boughtItems = session_data.account.gemshop
     fullExclusions = getGemShopFullExclusions()  # Exclusions for SS through Practical Max. Not applied to True Max only
     partialExclusions = fullExclusions + getGemShopPartialExclusions()  #Exclusions for SS through D only. Not applied to Practical Max or True Max
 
-
     recommended_stock = {item: count for tier in gemShop_progressionTiers for item, count in tier[2].items()}
-
     recommended_total = sum(recommended_stock.values())
-
     recommended_stock_bought = {k: min(v, boughtItems.get(k, 0)) for k, v in recommended_stock.items()}
     recommended_total_bought = sum(recommended_stock_bought.values())
 
@@ -295,8 +292,7 @@ def setGemShopProgressionTier():
         picture="gemshop.png",
         groups=groups,
         note=disclaimer,
-        unrated=True
+        unrated=True,
     )
-    #section.complete = True if len(section.groups) <= 1 else False
 
     return section

@@ -6,7 +6,7 @@ from utils.text_formatting import pl
 
 logger = get_logger(__name__)
 
-def setEquinoxProgressionTier() -> AdviceSection:
+def getEquinoxProgressionTiersAdviceGroup():
     equinox_AdviceDict = {
         "Dreams": {
             "Complete Dreams": [],
@@ -14,18 +14,6 @@ def setEquinoxProgressionTier() -> AdviceSection:
         },
         "TotalUpgrades": {},
     }
-    equinox_AdviceGroupDict = {}
-    equinox_AdviceSection = AdviceSection(
-        name="Equinox",
-        tier="Not Yet Evaluated",
-        header="Best Equinox tier met: Not Yet Evaluated",
-        picture="Equinox_Valley_Mirror.gif"
-    )
-
-    if not session_data.account.equinox_unlocked:
-        equinox_AdviceSection.header = "Come back after unlocking Equinox!"
-        equinox_AdviceSection.unreached = True
-        return equinox_AdviceSection
 
     infoTiers = 1
     max_tier = len(dreamsThatUnlockNewBonuses)  # 1 final info tier for completing all dreams
@@ -34,9 +22,9 @@ def setEquinoxProgressionTier() -> AdviceSection:
     recommendedBonusTotal = sum([bonus['FinalMaxLevel'] for bonus in session_data.account.equinox_bonuses.values() if bonus['Category'] == 'Recommended'])
     optionalBonusTotal = sum([bonus['FinalMaxLevel'] for bonus in session_data.account.equinox_bonuses.values() if bonus['Category'] == 'Optional'])
 
-    #Dreams Completed
+    # Dreams Completed
     remainingBonusesToBeUnlocked = []
-    if session_data.account.total_dreams_completed >= maxDreams:  #If the player has completed ALL dreams, set to max tier
+    if session_data.account.total_dreams_completed >= maxDreams:  # If the player has completed ALL dreams, set to max tier
         tier_TotalDreamsCompleted = max_tier + infoTiers
     else:
         for bonusName, bonusValuesDict in session_data.account.equinox_bonuses.items():
@@ -55,7 +43,7 @@ def setEquinoxProgressionTier() -> AdviceSection:
             equinox_AdviceDict["Dreams"]["Unlock Equinox Bonuses"].append(Advice(
                 label=f"{lockedBonus} ({session_data.account.equinox_bonuses[lockedBonus]['Category']})",
                 picture_class=lockedBonus,
-                #goal=f"Dream {session_data.account.remaining_equinox_dreams_unlocking_new_bonuses[remainingBonusesToBeUnlocked.index(lockedBonus)]}"
+                # goal=f"Dream {session_data.account.remaining_equinox_dreams_unlocking_new_bonuses[remainingBonusesToBeUnlocked.index(lockedBonus)]}"
             ))
 
         equinox_AdviceDict["Dreams"]["Complete Dreams"].append(Advice(
@@ -65,12 +53,12 @@ def setEquinoxProgressionTier() -> AdviceSection:
             goal=maxDreams
         ))
 
-    #Recommended Upgrades
+    # Recommended Upgrades
+    recommendedSubgroupName = f"Recommended Upgrades: {playerRecommendedBonusTotal}/{recommendedBonusTotal}"
     if playerRecommendedBonusTotal < recommendedBonusTotal:
-        recommendedSubgroupName = f"Recommended Upgrades: {playerRecommendedBonusTotal}/{recommendedBonusTotal}"
         equinox_AdviceDict["TotalUpgrades"][recommendedSubgroupName] = []
         for bonusName in equinox_progressionTiers['Recommended']:
-            if session_data.account.equinox_bonuses[bonusName]['CurrentLevel'] < session_data.account.equinox_bonuses[bonusName]['FinalMaxLevel']\
+            if session_data.account.equinox_bonuses[bonusName]['CurrentLevel'] < session_data.account.equinox_bonuses[bonusName]['FinalMaxLevel'] \
                     and session_data.account.equinox_bonuses[bonusName]['Unlocked'] == True:
                 if len(session_data.account.equinox_bonuses[bonusName]['RemainingUpgrades']) > 0:
                     expandDreamMaxLevelEval = (f" (Increase max level by completing "
@@ -116,6 +104,7 @@ def setEquinoxProgressionTier() -> AdviceSection:
             ))
 
     # Generate AdviceGroups
+    equinox_AdviceGroupDict = {}
     equinox_AdviceGroupDict["Complete Dreams"] = AdviceGroup(
         tier=f"{tier_TotalDreamsCompleted if tier_TotalDreamsCompleted < max_tier else ''}",
         pre_string=f"{'Informational- Complete all Equinox Dreams' if tier_TotalDreamsCompleted >= max_tier else 'Unlock more Equinox Bonuses'}",
@@ -129,20 +118,34 @@ def setEquinoxProgressionTier() -> AdviceSection:
         tier="",
         pre_string="Upgrade more Equinox Bonuses",
         advices=equinox_AdviceDict['TotalUpgrades'],
-        informational=True
+        informational=True,
+        complete=recommendedSubgroupName not in equinox_AdviceDict["TotalUpgrades"]
     )
+    overall_SectionTier = min(max_tier + infoTiers, tier_TotalDreamsCompleted)
+    return equinox_AdviceGroupDict, overall_SectionTier, max_tier
+
+def getEquinoxAdviceSection() -> AdviceSection:
+    if not session_data.account.equinox_unlocked:
+        equinox_AdviceSection = AdviceSection(
+            name="Equinox",
+            tier="Not Yet Evaluated",
+            header="Come back after unlocking Equinox in World 3!",
+            picture="Equinox_Valley_Mirror.gif",
+            unreached=True
+        )
+        return equinox_AdviceSection
+
+    #Generate AdviceGroups
+    equinox_AdviceGroupDict, overall_SectionTier, max_tier = getEquinoxProgressionTiersAdviceGroup()
 
     # Generate AdviceSection
-
-    overall_EquinoxTier = min(max_tier + infoTiers, tier_TotalDreamsCompleted)
-    tier_section = f"{overall_EquinoxTier}/{max_tier}"
-    equinox_AdviceSection.tier = tier_section
-    equinox_AdviceSection.pinchy_rating = overall_EquinoxTier
-    equinox_AdviceSection.groups = equinox_AdviceGroupDict.values()
-    if overall_EquinoxTier >= max_tier:
-        equinox_AdviceSection.header = f"Best Equinox tier met: {tier_section}{break_you_best}"
-        equinox_AdviceSection.complete = True
-    else:
-        equinox_AdviceSection.header = f"Best Equinox tier met: {tier_section}"
-
+    tier_section = f"{overall_SectionTier}/{max_tier}"
+    equinox_AdviceSection = AdviceSection(
+        name="Equinox",
+        tier=tier_section,
+        pinchy_rating=overall_SectionTier,
+        header=f"Best Equinox tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
+        picture="Equinox_Valley_Mirror.gif",
+        groups=equinox_AdviceGroupDict.values()
+    )
     return equinox_AdviceSection

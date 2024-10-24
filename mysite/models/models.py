@@ -4,6 +4,7 @@ import json
 import os
 import re
 import sys
+
 from config import app
 from collections import defaultdict
 from enum import Enum
@@ -14,7 +15,7 @@ from utils.data_formatting import getCharacterDetails, safe_loads
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, notateNumber
 from consts import (
     # General
-    lavaFunc, ceilUpToBase, ValueToMulti,
+    lavaFunc, ceilUpToBase, ValueToMulti, ignorable_labels,
     items_codes_and_names,
     currentWorld, maxCharacters,
     expectedStackables, greenstack_progressionTiers, gfood_codes,
@@ -42,7 +43,7 @@ from consts import (
     islands_dict, islands_trash_shop_costs,
     killroy_dict,
     # W3
-    refineryDict, buildingsDict, shrinesList, saltLickList, atomsList, colliderStorageLimitList,
+    refineryDict, buildingsDict, saltLickList, atomsList, colliderStorageLimitList, shrinesList, arbitrary_shrine_goal, arbitrary_shrine_note,
     prayersDict,
     equinoxBonusesDict, maxDreams, dreamsThatUnlockNewBonuses,
     expected_talentsDict,
@@ -254,18 +255,12 @@ class Character:
                     'Bonus3String': '',
                 }
                 if self.po_boxes_invested[poBoxValues['Name']]['Level'] > 0:
-                    self.po_boxes_invested[poBoxValues['Name']]['Bonus1String'] = (f"{poBoxValues['1_pre']}"
-                                                                                   f"{self.po_boxes_invested[poBoxValues['Name']]['Bonus1Value']}"
-                                                                                   f"{poBoxValues['1_post']}"
-                                                                                   f" {poBoxValues['1_stat']}")
-                    self.po_boxes_invested[poBoxValues['Name']]['Bonus2String'] = (f"{poBoxValues['2_pre']}"
-                                                                                   f"{self.po_boxes_invested[poBoxValues['Name']]['Bonus2Value']}"
-                                                                                   f"{poBoxValues['2_post']}"
-                                                                                   f" {poBoxValues['2_stat']}")
-                    self.po_boxes_invested[poBoxValues['Name']]['Bonus3String'] = (f"{poBoxValues['3_pre']}"
-                                                                                   f"{self.po_boxes_invested[poBoxValues['Name']]['Bonus3Value']}"
-                                                                                   f"{poBoxValues['3_post']}"
-                                                                                   f" {poBoxValues['3_stat']}")
+                    self.po_boxes_invested[poBoxValues['Name']]['Bonus1String'] = (
+                        f"{poBoxValues['1_pre']}{self.po_boxes_invested[poBoxValues['Name']]['Bonus1Value']}{poBoxValues['1_post']} {poBoxValues['1_stat']}")
+                    self.po_boxes_invested[poBoxValues['Name']]['Bonus2String'] = (
+                        f"{poBoxValues['2_pre']}{self.po_boxes_invested[poBoxValues['Name']]['Bonus2Value']}{poBoxValues['2_post']} {poBoxValues['2_stat']}")
+                    self.po_boxes_invested[poBoxValues['Name']]['Bonus3String'] = (
+                        f"{poBoxValues['3_pre']}{self.po_boxes_invested[poBoxValues['Name']]['Bonus3Value']}{poBoxValues['3_post']} {poBoxValues['3_stat']}")
             except:
                 self.po_boxes_invested[poBoxValues['Name']] = {
                     'Level': 0,
@@ -473,8 +468,17 @@ class Advice(AdviceBase):
         unit (str): if there is one, usually "%"
     """
 
-    def __init__(self, label: str, picture_class: str, progression: Any = "", goal: Any = "", unit: str = "", value_format: str = "{value}{unit}", resource: str = "",
-                 **extra):
+    def __init__(
+            self, label: str,
+            picture_class: str,
+            progression: Any = "",
+            goal: Any = "",
+            unit: str = "",
+            value_format: str = "{value}{unit}",
+            resource: str = "",
+            complete: bool = None,
+            **extra
+    ):
         super().__init__(**extra)
 
         self.label: str = label if extra.get("as_link") else LabelBuilder(label).label
@@ -486,7 +490,6 @@ class Advice(AdviceBase):
         self.unit: str = unit
         self.value_format: str = value_format
         self.resource: str = kebab(resource)
-
         if self.unit:
             if self.progression:
                 self.progression = self.value_format.format(
@@ -494,6 +497,10 @@ class Advice(AdviceBase):
                 )
             if self.goal:
                 self.goal = self.value_format.format(value=self.goal, unit=self.unit)
+        if complete is None:
+            self.complete: bool = self.goal in ("✔", "") or self.label.startswith(ignorable_labels)
+        else:
+            self.complete = complete
 
     @property
     def css_class(self) -> str:
@@ -523,14 +530,14 @@ class AdviceGroup(AdviceBase):
 
     def __init__(
         self,
-        tier: str,
+        tier: str | int,
         pre_string: str,
         post_string: str = "",
         formatting: str = "",
         picture_class: str = "",
         collapse: bool | None = None,
         advices: list[Advice] | dict[str, list[Advice]] = [],
-        complete: bool = False,
+        complete: bool = None,
         informational: bool = False,
         **extra,
     ):
@@ -604,13 +611,21 @@ class AdviceGroup(AdviceBase):
         )
 
     def remove_completed_advices(self):
-        if isinstance(self.advices, list):
-            self.advices = [value for value in self.advices if value.goal != "✔"]
-        if isinstance(self.advices, dict):
-            for key, value in self.advices.items():
-                if isinstance(value, list):
-                    self.advices[key] = [v for v in value if v.goal != "✔"]
-            self.advices = {key: value for key, value in self.advices.items() if value}
+        # If the Group is already marked as Complete, blank out the advices
+        if self.complete:
+            self.advices = []
+        # Elif there are no advices and the Group isn't yet marked Complete, mark it Complete
+        elif not self.advices and not self.complete:
+            self.complete = True
+        # Else, remove the completed advices but leave the incomplete advices
+        else:
+            if isinstance(self.advices, list):
+                self.advices = [value for value in self.advices if value.goal != "✔" and value.goal != ""]
+            if isinstance(self.advices, dict):
+                for key, value in self.advices.items():
+                    if isinstance(value, list):
+                        self.advices[key] = [v for v in value if v.goal != "✔" and v.goal != ""]
+                self.advices = {key: value for key, value in self.advices.items() if value}
 
     def remove_empty_subgroups(self):
         if isinstance(self.advices, list):
@@ -629,6 +644,25 @@ class AdviceGroup(AdviceBase):
                     )
                 except:
                     pass
+
+    def check_for_completeness(self, ignorable=tuple('Weekly Ballot')):
+        """
+        Used when a bool for complete was not passed in during initialization of the AdviceGroup
+        """
+        if self.complete is not None:
+            return
+        else:
+            if isinstance(self.advices, list):
+                temp_advices = [value for value in self.advices if not value.complete]
+            elif isinstance(self.advices, dict):
+                temp_advices = []
+                for key, value in self.advices.items():
+                    if isinstance(value, list):
+                        #flattern to a single list
+                        temp_advices.extend([advice for advice in value if not advice.complete])
+            else:
+                temp_advices = []
+            self.complete = len(temp_advices) == 0  #True if 0 length, False otherwise
 
 class AdviceSection(AdviceBase):
     """
@@ -656,7 +690,7 @@ class AdviceSection(AdviceBase):
         collapse: bool | None = None,
         groups: list[AdviceGroup] = [],
         pinchy_rating: int = 0,
-        complete: bool = False,
+        complete: bool | None = None,
         unreached: bool = False,
         unrated: bool = False,
         **extra,
@@ -669,7 +703,7 @@ class AdviceSection(AdviceBase):
         self.picture: str = picture
         self._groups: list[AdviceGroup] = groups
         self.pinchy_rating: int = pinchy_rating
-        self.complete: bool = complete
+        self.complete: bool | None = complete
         self.unreached = unreached
         self.unrated = unrated
 
@@ -713,6 +747,7 @@ class AdviceSection(AdviceBase):
     def groups(self, groups: list[AdviceGroup]):
         # filters out empty groups by checking if group has no advices
         self._groups = [group for group in groups if group]
+        self.check_for_completeness()
 
         if g.order_tiers:
             self._groups = sorted(self._groups)
@@ -722,6 +757,15 @@ class AdviceSection(AdviceBase):
 
     def remove_complete_groups(self):
         self._groups = [group for group in self._groups if not group.complete]
+
+    def check_for_completeness(self):
+        if self.complete is not None:
+            return
+        elif self.unreached:
+            #Unreached is set when a player hasn't progressed far enough to see the contents of a section. As far from complete as possible
+            self.complete = False
+        else:
+            self.complete = len([group for group in self.groups if not group.complete]) == 0  #True if 0 length, False otherwise
 
 class AdviceWorld(AdviceBase):
     """
@@ -743,6 +787,7 @@ class AdviceWorld(AdviceBase):
         sections: list[AdviceSection] = list(),
         banner: str = "",
         title: str = "",
+        complete: bool = None,
         **extra,
     ):
         super().__init__(collapse, **extra)
@@ -751,6 +796,10 @@ class AdviceWorld(AdviceBase):
         self.sections: list[AdviceSection] = sections
         self.banner: str = banner
         self.title: str = title
+        if complete is not None:
+            self.complete = complete
+        else:
+            self.check_for_completeness()
 
     @property
     def id(self):
@@ -764,6 +813,12 @@ class AdviceWorld(AdviceBase):
 
     def hide_unrated_sections(self):
         self.sections = [section for section in self.sections if not section.unrated]
+
+    def check_for_completeness(self):
+        """
+        Used when a bool for complete was not passed in during initialization of the AdviceWorld
+        """
+        self.complete = len([section for section in self.sections if not section.complete]) == 0  #True if 0 length, False otherwise
 
 greenStackAmount = 10**7
 gstackable_codenames = [item for items in expectedStackables.values() for item in items]
@@ -1177,6 +1232,7 @@ class Account:
         self.hide_completed = g.hide_completed
         self.hide_unrated = g.hide_unrated
         self.hide_info = g.hide_info
+        #consts.maxTiersPerGroup = 1 if g.one_tier else consts.maxTiersPerGroup
 
         # Companions
         self.sheepie_owned = g.sheepie
@@ -1581,6 +1637,7 @@ class Account:
 
     def _parse_w1_owl(self):
         self.owl = {
+            'Discovered': bool(self.raw_optlacc_dict.get(265, False)),
             'FeatherGeneration': self.raw_optlacc_dict.get(254, 0),
             'BonusesOfOrion': self.raw_optlacc_dict.get(255, 0),
             'FeatherRestarts': self.raw_optlacc_dict.get(258, 0),
@@ -2148,7 +2205,8 @@ class Account:
                         buildingsDict[18+shrineIndex]['ValueBase']
                         + (buildingsDict[18+shrineIndex]['ValueIncrement'] * (int(raw_shrines_list[shrineIndex][3]) - 1))
                         if int(raw_shrines_list[shrineIndex][3]) > 0 else 0
-                    )
+                    ),
+                    'Image': buildingsDict[18+shrineIndex]['Image']
                 }
             except:
                 self.shrines[shrineName] = {
@@ -2159,7 +2217,8 @@ class Account:
                     "Hours": 0.0,
                     5: 0,
                     "BaseValue": 0,
-                    "Value": 0
+                    "Value": 0,
+                    'Image': buildingsDict[18 + shrineIndex]['Image']
                 }
 
     def _parse_w3_atom_collider(self):
@@ -3296,7 +3355,6 @@ class Account:
                 worldCounter += 1
             if bubbleColorCount > 0 and worldCounter <= len(bubbleUnlockListByWorld) - 1:
                 bubbleUnlockListByWorld[worldCounter] += bubbleColorCount
-                bubbleColorCount = 0
         self.alchemy_cauldrons['BubblesPerWorld'] = bubbleUnlockListByWorld
 
         self.alchemy_cauldrons['NextWorldMissingBubbles'] = min(
@@ -3362,6 +3420,7 @@ class Account:
         self._calculate_w3_collider_base_costs()
         self._calculate_w3_collider_cost_reduction()
         self._calculate_w3_shrine_values()
+        self._calculate_w3_shrine_advices()
 
     def _calculate_w3_building_max_levels(self):
         # Placed towers here since it's used for both Construction mastery and atom levels
@@ -3453,6 +3512,25 @@ class Account:
         cchizoar_multi = ValueToMulti(5 * (1 + next(c.getStars() for c in self.cards if c.name == 'Chaotic Chizoar')))
         for shrine in self.shrines:
             self.shrines[shrine]['Value'] *= cchizoar_multi
+
+    def _calculate_w3_shrine_advices(self):
+        self.shrine_advices = {}
+        for shrine_name in self.shrines:
+            self.shrine_advices[shrine_name] = Advice(
+                label=f"Level {self.shrines[shrine_name]['Level']} {shrine_name}:"
+                      f" +{self.shrines[shrine_name]['Value']:.0f}%"
+                      f"<br>{arbitrary_shrine_note}",
+                picture_class=self.shrines[shrine_name]['Image'],
+                progression=self.shrines[shrine_name]['Level'],
+                goal=arbitrary_shrine_goal
+            )
+        cchizoar_multi = 1 + (5 * (1 + next(c.getStars() for c in self.cards if c.name == 'Chaotic Chizoar')) / 100)
+        self.shrine_advices['Chaotic Chizoar Card'] = Advice(
+            label=f"Chaotic Chizoar card to increase Shrine ({cchizoar_multi}x multi already included)",
+            picture_class="chaotic-chizoar-card",
+            progression=1 + next(c.getStars() for c in self.cards if c.name == "Chaotic Chizoar"),
+            goal=6
+        )
 
     def _calculate_w4(self):
         self._calculate_w4_cooking_max_plate_levels()
