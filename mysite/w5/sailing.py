@@ -188,7 +188,7 @@ def getSailingAdviceSection() -> AdviceSection:
         name="Sailing",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
-        header="Best Sailing tier met: Not Yet Evaluated",
+        header=f"Best Sailing tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture="Sailing.png",
         groups=sailing_AdviceGroupDict.values()
     )

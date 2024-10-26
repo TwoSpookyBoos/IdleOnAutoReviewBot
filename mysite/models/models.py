@@ -775,7 +775,9 @@ class AdviceWorld(AdviceBase):
         sections: list[AdviceSection] = list(),
         banner: str = "",
         title: str = "",
-        complete: bool = None,
+        complete: bool | None = None,
+        informational: bool | None = None,
+        unrated: bool | None = None,
         **extra,
     ):
         super().__init__(collapse, **extra)
@@ -788,6 +790,14 @@ class AdviceWorld(AdviceBase):
             self.complete = complete
         else:
             self.check_for_completeness()
+        if informational is not None:
+            self.informational = informational
+        else:
+            self.check_for_informationalness()
+        if unrated is not None:
+            self.unrated = unrated
+        else:
+            self.check_for_unratedness()
 
     @property
     def id(self):
@@ -807,6 +817,15 @@ class AdviceWorld(AdviceBase):
         Used when a bool for complete was not passed in during initialization of the AdviceWorld
         """
         self.complete = len([section for section in self.sections if not section.complete]) == 0  #True if 0 length, False otherwise
+
+    def check_for_informationalness(self):
+        self.informational = len([section for section in self.sections if not section.informational]) == 0 and len(
+            [section for section in self.sections if section]) > 0
+
+    def check_for_unratedness(self):
+        self.unrated = len([section for section in self.sections if not section.unrated]) == 0 and len(
+            [section for section in self.sections if section]) > 0
+
 
 greenStackAmount = 10**7
 gstackable_codenames = [item for items in expectedStackables.values() for item in items]

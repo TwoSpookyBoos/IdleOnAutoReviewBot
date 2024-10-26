@@ -6,7 +6,7 @@
         {{ world.title }}
     </h1>
     <div class="collapse-wrapper">
-        <div class="sections{% if not world.sections or world.collapse %} folded{% endif %}{% if world.complete %} complete{% endif %}">
+        <div class="sections{% if not world.sections or world.collapse %} folded{% endif %}{% if world.complete %} complete{% endif %}{% if world.informational %} informational{% endif %}{% if world.unrated %} unrated{% endif %}">
             {% for section in world.sections %}
                 {% include 'section.html' %}
             {% endfor %}
