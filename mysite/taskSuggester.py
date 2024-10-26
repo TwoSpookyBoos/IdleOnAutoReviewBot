@@ -125,6 +125,15 @@ def main(inputData, runType="web"):
             for group in section.groups:
                 group.check_for_completeness()
             section.check_for_completeness()
+            section.check_for_informationalness()
+            logger.debug(
+                (f"{section} {section.tier}: "
+                 f"Unreached={section.unreached}, "
+                 f"Unrated={section.unrated}, "
+                 f"Complete={section.complete}, "
+                 f"Info={section.informational}"
+                 )
+            )
             if section.unrated:
                 unrated_sections.append(section)
             else:
@@ -132,6 +141,12 @@ def main(inputData, runType="web"):
 
     #Pinchy Evaluation
     sections_pinchy = pinchy.generatePinchyWorld(pinchable_sections, unrated_sections)
+    for section in sections_pinchy:
+        for group in section.groups:
+            group.check_for_completeness()
+        section.check_for_completeness()
+        section.check_for_informationalness()
+        #logger.debug(f"{section}: Unreached={section.unreached}, Complete={section.complete}, Info={section.informational}, Unrated={section.unrated}")
 
     #Build Worlds
     reviews = [

@@ -293,6 +293,7 @@ def getGemShopAdviceSection() -> AdviceSection:
         groups=groups,
         note=disclaimer,
         unrated=True,
+        informational=True
     )
 
     return section

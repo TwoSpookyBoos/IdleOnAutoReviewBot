@@ -16,7 +16,6 @@ def setMissingStamps():
     return [stampName for stampName, stampValues in session_data.account.stamps.items() if
             not stampValues['Delivered'] and stampName not in unavailableStampsList]
 
-
 def getStampExclusions() -> dict[str, bool]:
     exclusionsDict = {
         # Capacity
@@ -53,7 +52,6 @@ def getStampExclusions() -> dict[str, bool]:
         exclusionsDict['Crop Evo Stamp'] = True
 
     return exclusionsDict
-
 
 def getCapacityAdviceGroup() -> AdviceGroup:
     capacity_Advices = {"Stamps": [], "Account Wide": [], "Character Specific": []}
@@ -197,7 +195,6 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     )
     return capacity_AdviceGroup
 
-
 def getCostReductionAdviceGroup() -> AdviceGroup:
     costReduction_Advices = {"Vials": [], "Uncapped": []}
 
@@ -278,11 +275,9 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     )
     return costReduction_AdviceGroup
 
-
 def getReadableStampName(stampNumber, stampType):
     # logger.debug(f"Fetching name for {stampType} + {stampNumber}")
     return stampsDict.get(stampType, {}).get(stampNumber, f"Unknown{stampType}{stampNumber}")
-
 
 def getProgressionTiersAdviceGroup():
     stamp_AdviceDict = {

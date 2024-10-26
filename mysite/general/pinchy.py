@@ -7,10 +7,22 @@ logger = get_logger(__name__)
 
 
 class Tier:
-    def __init__(self, tier: int, section: str = None, section_complete: bool = False, current: 'Threshold' = None, previous: 'Threshold' = None, next: 'Threshold' = None):
+    def __init__(
+            self,
+            tier: int,
+            section: str = None,
+            section_complete: bool = False,
+            section_informational: bool = False,
+            section_unrated: bool = False,
+            current: 'Threshold' = None,
+            previous: 'Threshold' = None,
+            next: 'Threshold' = None
+    ):
         self.tier = tier
         self.section = section
         self.section_complete = section_complete
+        self.section_informational = section_informational
+        self.section_unrated = section_unrated
         self.current = current
         self.previous = previous
         self.next = next
@@ -275,8 +287,8 @@ class Thresholds(dict):
 def sort_pinchy_reviews(dictOfPRs) -> Placements:
     placements = Placements()
 
-    for section, (pinchy_tier, section_complete) in dictOfPRs.items():
-        tier = Tier(pinchy_tier, section, section_complete)
+    for section, (pinchy_tier, section_complete, section_informational, section_unrated) in dictOfPRs.items():
+        tier = Tier(pinchy_tier, section, section_complete, section_informational, section_unrated)
         placements.place(tier)
 
     placements.finalise()
@@ -346,8 +358,18 @@ def tier_from_monster_kills(dictOfPRs) -> Threshold:
 
 def generate_advice_list(sections: list[Tier], threshold: Threshold):
     advices = [
-        Advice(label=section.section, picture_class=section.section, progression=section.tier, goal=section.next.tier, unit="T",
-               value_format="{unit} {value}", as_link=True, complete=section.section_complete) for section in sections
+        Advice(
+            label=section.section,
+            picture_class=section.section,
+            progression=section.tier,
+            goal=section.next.tier,
+            unit="T",
+            value_format="{unit} {value}",
+            as_link=True,
+            complete=section.section_complete,
+            informational=section.section_informational,
+            unrated=section.section_unrated
+            ) for section in sections
     ]
     if threshold == Threshold.fromname(Threshold.MAX_TIER):
         for advice in advices:
@@ -380,29 +402,37 @@ def getUnratedLinksAdviceGroup(unrated_sections) -> AdviceGroup:
                 Advice(
                     label=section.name,
                     picture_class=section.name,
-                    as_link=True
+                    as_link=True,
+                    complete=section.complete,
+                    unrated=section.unrated,
+                    informational=section.informational
                 )
             )
     unrated_AG = AdviceGroup(
         tier="",
         pre_string="Unrated Sections",
-        advices=unrated_advice
+        advices=unrated_advice,
+        unrated=True
     )
     return unrated_AG
 
 
 def getAlertsAdviceGroup() -> AdviceGroup:
+    for subgroupName in session_data.account.alerts_AdviceDict:
+        for advice in session_data.account.alerts_AdviceDict[subgroupName]:
+            advice.complete = False
     alerts_AG = AdviceGroup(
         tier="",
         pre_string="Alerts",
         advices=session_data.account.alerts_AdviceDict
     )
     alerts_AG.remove_empty_subgroups()
+    alerts_AG.check_for_completeness()
     return alerts_AG
 
 
 def generatePinchyWorld(pinchable_sections: list[AdviceSection], unrated_sections: list[AdviceSection]):
-    dictOfPRs = {section.name: [section.pinchy_rating, section.complete] for section in pinchable_sections if not section.unreached}
+    dictOfPRs = {section.name: [section.pinchy_rating, section.complete, section.informational, section.unrated] for section in pinchable_sections if not section.unreached}
 
     sectionPlacements: Placements = sort_pinchy_reviews(dictOfPRs)
     expectedThreshold: Threshold = tier_from_monster_kills(dictOfPRs)
@@ -443,14 +473,16 @@ def generatePinchyWorld(pinchable_sections: list[AdviceSection], unrated_section
         name="Pinchy high",
         tier=expectedThreshold.name,
         header=pinchyExpected,
-        collapse=True
+        collapse=True,
+        complete=False
     )
 
     pinchy_low = AdviceSection(
         name="Pinchy low",
         tier=lowestThresholdReached.name,
         header=f"Minimum Progression, based on weakest ranked review: {lowestThresholdReached}{equalSnippet}",
-        collapse=True
+        collapse=True,
+        complete=False
     )
 
     pinchy_all = AdviceSection(

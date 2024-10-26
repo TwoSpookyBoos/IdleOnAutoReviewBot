@@ -100,10 +100,10 @@ def getAchievementStatus(achievementName):
                 return min(58, session_data.account.summoning['Battles']['Total']), 58, ''
             case _:
                 #logger.debug(f"{achievementName} didn't match a special case")
-                return session_data.account.achievements[achievementName]['Raw'] if session_data.account.achievements[achievementName]['Raw'] != 0 else '', '', ''
+                return session_data.account.achievements[achievementName]['Raw'], 'IDK', ''
     except Exception as reason:
         logger.exception(f"Defaulting {achievementName} because {reason}")
-        return '', '', ''
+        return 0, 1, ''
 
 def getProgressionTiersAdviceGroup():
     infoTiers = 0
@@ -125,7 +125,8 @@ def getProgressionTiersAdviceGroup():
                         picture_class=achievementName,
                         progression=prog,
                         goal=goal,
-                        resource=resource
+                        resource=resource,
+                        complete=False
                     ))
             if subgroupName not in achievements_AdviceDict[categoryName] and tiers[categoryName] == tierNumber - 1:
                 tiers[categoryName] = tierNumber

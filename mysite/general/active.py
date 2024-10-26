@@ -562,8 +562,6 @@ def getActiveAdviceSection() -> AdviceSection:
         )
         return active_AdviceSection
 
-
-
     # Generate AdviceGroups
     active_AdviceGroupDict = {}
     active_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()

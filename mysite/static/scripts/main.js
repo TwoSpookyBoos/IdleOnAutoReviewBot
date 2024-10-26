@@ -241,6 +241,15 @@ function setupSwitchesActions() {
 
     // toggle progress bars
     document.querySelector('#progress_bars').onclick = () => calcProgressBars(document)
+
+    // On Click Listener for the Hide Completed switch
+    document.querySelector('label[for="hide_completed"]').addEventListener('click', hideCompleted)
+
+    // On Click Listener for the Hide Info switch
+    document.querySelector('label[for="hide_info"]').addEventListener('click', hideInfo)
+
+    // On Click Listener for the Hide Info switch
+    document.querySelector('label[for="hide_unrated"]').addEventListener('click', hideUnrated)
 }
 
 function setupHrefEventActions() {
@@ -545,6 +554,39 @@ function copyErrorDataAndRedirectToDiscord(e) {
         window.open(link, '_blank').focus()
         copied.classList.remove('show')
     }, 1000)
+}
+
+function hideCompleted(event) {
+    const checkbox_off = document.querySelector('#hide_completed').checked
+    const slider = event.currentTarget
+    const allElements = document.querySelectorAll("article, section, .advice-group, .advice-title, .advice, .resource, .prog, .arrow, .arrow-hidden, .goal")
+    allElements.forEach(el => {
+        if (el.classList.contains('complete')) {
+            el.style.display = checkbox_off ? null : 'none'
+        }
+    })
+}
+
+function hideInfo(event) {
+    const checkbox_off = document.querySelector('#hide_info').checked
+    const slider = event.currentTarget
+    const allElements = document.querySelectorAll("article, section, .advice-group, .advice-title, .advice, .resource, .prog, .arrow, .arrow-hidden, .goal")
+    allElements.forEach(el => {
+        if (el.classList.contains('informational')) {
+            el.style.display = checkbox_off ? null : 'none'
+        }
+    })
+}
+
+function hideUnrated(event) {
+    const checkbox_off = document.querySelector('#hide_unrated').checked
+    const slider = event.currentTarget
+    const allElements = document.querySelectorAll("article, section, .advice-group, .advice-title, .advice, .resource, .prog, .arrow, .arrow-hidden, .goal")
+    allElements.forEach(el => {
+        if (el.classList.contains('unrated')) {
+            el.style.display = checkbox_off ? null : 'none'
+        }
+    })
 }
 
 let searchTimer
