@@ -557,17 +557,21 @@ function copyErrorDataAndRedirectToDiscord(e) {
 }
 
 function hideComposite(event) {
-    const complete_checkbox_on = document.querySelector('#hide_completed').value == "on" ? true : false
-    const info_checkbox_on = document.querySelector('#hide_info').value == "on" ? true : false
-    const unrated_checkbox_on = document.querySelector('#hide_unrated').value == "on" ? true : false
+    const complete_checkbox_on = document.querySelector('#hide_completed').value == "on"
+    const info_checkbox_on = document.querySelector('#hide_info').value == "on"
+    const unrated_checkbox_on = document.querySelector('#hide_unrated').value == "on"
     //console.log({complete_checkbox_on, info_checkbox_on, unrated_checkbox_on})
+
     const slider = event.currentTarget
     const allElements = document.querySelectorAll("article, section, .advice-group, .advice-title, .advice, .resource, .prog, .arrow, .arrow-hidden, .goal")
     allElements.forEach(el => {
-        if ((el.classList.contains('complete') && complete_checkbox_on) || (el.classList.contains('informational') && info_checkbox_on) || (el.classList.contains('unrated') && unrated_checkbox_on)) {
-            el.style.display = 'none'
+        const should_be_hidden = ((el.classList.contains('complete') && complete_checkbox_on)
+                || (el.classList.contains('informational') && info_checkbox_on)
+                || (el.classList.contains('unrated') && unrated_checkbox_on))
+        if (should_be_hidden) {
+            el.classList.add("hidden")
         } else {
-            el.style.display = null
+            el.classList.remove("hidden")
         }
     })
 }
