@@ -174,6 +174,7 @@ def main(inputData, runType="web"):
                 for group in section.groups:
                     group.remove_completed_advices()
                     group.remove_empty_subgroups()
+        logger.debug(f"{world}: Unrated={world.unrated}, Complete={world.complete}, Info={world.informational}")
         continue
 
     reviews = [world for world in reviews if len(world.sections) > 0]
