@@ -560,7 +560,7 @@ function hideComposite(event) {
     const complete_checkbox_on = document.querySelector('#hide_completed').value == "on" ? true : false
     const info_checkbox_on = document.querySelector('#hide_info').value == "on" ? true : false
     const unrated_checkbox_on = document.querySelector('#hide_unrated').value == "on" ? true : false
-    console.log({complete_checkbox_on, info_checkbox_on, unrated_checkbox_on})
+    //console.log({complete_checkbox_on, info_checkbox_on, unrated_checkbox_on})
     const slider = event.currentTarget
     const allElements = document.querySelectorAll("article, section, .advice-group, .advice-title, .advice, .resource, .prog, .arrow, .arrow-hidden, .goal")
     allElements.forEach(el => {

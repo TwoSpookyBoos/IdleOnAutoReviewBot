@@ -162,7 +162,7 @@ def main(inputData, runType="web"):
 
     for world in reviews:
         world.hide_unreached_sections()  # Feel free to comment this out while testing
-        logger.debug(f"{world}: Unrated={world.unrated}, Complete={world.complete}, Info={world.informational}")
+        #logger.debug(f"{world}: Unrated={world.unrated}, Complete={world.complete}, Info={world.informational}")
         continue
 
     reviews = [world for world in reviews if len(world.sections) > 0]
