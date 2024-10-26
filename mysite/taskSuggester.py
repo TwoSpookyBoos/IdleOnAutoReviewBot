@@ -126,14 +126,14 @@ def main(inputData, runType="web"):
                 group.check_for_completeness()
             section.check_for_completeness()
             section.check_for_informationalness()
-            logger.debug(
-                (f"{section} {section.tier}: "
-                 f"Unreached={section.unreached}, "
-                 f"Unrated={section.unrated}, "
-                 f"Complete={section.complete}, "
-                 f"Info={section.informational}"
-                 )
-            )
+            # logger.debug(
+            #     (f"{section} {section.tier}: "
+            #      f"Unreached={section.unreached}, "
+            #      f"Unrated={section.unrated}, "
+            #      f"Complete={section.complete}, "
+            #      f"Info={section.informational}"
+            #      )
+            # )
             if section.unrated:
                 unrated_sections.append(section)
             else:
