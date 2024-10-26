@@ -243,13 +243,13 @@ function setupSwitchesActions() {
     document.querySelector('#progress_bars').onclick = () => calcProgressBars(document)
 
     // On Click Listener for the Hide Completed switch
-    document.querySelector('label[for="hide_completed"]').addEventListener('click', hideCompleted)
+    document.querySelector('label[for="hide_completed"]').addEventListener('click', hideComposite)
 
     // On Click Listener for the Hide Info switch
-    document.querySelector('label[for="hide_info"]').addEventListener('click', hideInfo)
+    document.querySelector('label[for="hide_info"]').addEventListener('click', hideComposite)
 
     // On Click Listener for the Hide Info switch
-    document.querySelector('label[for="hide_unrated"]').addEventListener('click', hideUnrated)
+    document.querySelector('label[for="hide_unrated"]').addEventListener('click', hideComposite)
 }
 
 function setupHrefEventActions() {
@@ -556,35 +556,18 @@ function copyErrorDataAndRedirectToDiscord(e) {
     }, 1000)
 }
 
-function hideCompleted(event) {
-    const checkbox_off = document.querySelector('#hide_completed').checked
+function hideComposite(event) {
+    const complete_checkbox_on = document.querySelector('#hide_completed').value == "on" ? true : false
+    const info_checkbox_on = document.querySelector('#hide_info').value == "on" ? true : false
+    const unrated_checkbox_on = document.querySelector('#hide_unrated').value == "on" ? true : false
+    console.log({complete_checkbox_on, info_checkbox_on, unrated_checkbox_on})
     const slider = event.currentTarget
     const allElements = document.querySelectorAll("article, section, .advice-group, .advice-title, .advice, .resource, .prog, .arrow, .arrow-hidden, .goal")
     allElements.forEach(el => {
-        if (el.classList.contains('complete')) {
-            el.style.display = checkbox_off ? null : 'none'
-        }
-    })
-}
-
-function hideInfo(event) {
-    const checkbox_off = document.querySelector('#hide_info').checked
-    const slider = event.currentTarget
-    const allElements = document.querySelectorAll("article, section, .advice-group, .advice-title, .advice, .resource, .prog, .arrow, .arrow-hidden, .goal")
-    allElements.forEach(el => {
-        if (el.classList.contains('informational')) {
-            el.style.display = checkbox_off ? null : 'none'
-        }
-    })
-}
-
-function hideUnrated(event) {
-    const checkbox_off = document.querySelector('#hide_unrated').checked
-    const slider = event.currentTarget
-    const allElements = document.querySelectorAll("article, section, .advice-group, .advice-title, .advice, .resource, .prog, .arrow, .arrow-hidden, .goal")
-    allElements.forEach(el => {
-        if (el.classList.contains('unrated')) {
-            el.style.display = checkbox_off ? null : 'none'
+        if ((el.classList.contains('complete') && complete_checkbox_on) || (el.classList.contains('informational') && info_checkbox_on) || (el.classList.contains('unrated') && unrated_checkbox_on)) {
+            el.style.display = 'none'
+        } else {
+            el.style.display = null
         }
     })
 }
