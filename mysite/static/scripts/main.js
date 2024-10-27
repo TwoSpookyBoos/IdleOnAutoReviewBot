@@ -557,6 +557,7 @@ function copyErrorDataAndRedirectToDiscord(e) {
 }
 
 function hideComposite(event) {
+    hideProgressBoxes()
     const complete_checkbox_on = document.querySelector('#hide_completed').value == "on"
     const info_checkbox_on = document.querySelector('#hide_info').value == "on"
     const unrated_checkbox_on = document.querySelector('#hide_unrated').value == "on"
@@ -574,6 +575,7 @@ function hideComposite(event) {
             el.classList.remove("hidden")
         }
     })
+    calcProgressBars()
 }
 
 let searchTimer

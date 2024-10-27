@@ -39,7 +39,7 @@
                                 <li class="resource{% if advice.resource %} resource-{{ advice.resource }} lazy{% endif %}{% if advice.complete %} complete{% endif %}{% if advice.informational %} informational{% endif %}{% if advice.unrated %} unrated{% endif %}"></li>
                                 <li class="prog{% if advice.complete %} complete{% endif %}{% if advice.informational %} informational{% endif %}{% if advice.unrated %} unrated{% endif %}">{{ advice.progression }}</li>
                                 <li class="arrow{% if not advice.progression or not advice.goal %}-hidden{% endif %}{% if advice.complete %} complete{% endif %}{% if advice.informational %} informational{% endif %}{% if advice.unrated %} unrated{% endif %}"></li>
-                                <li class="goal {{ advice.status }}{% if advice.complete %} complete{% endif %}{% if advice.informational %} informational{% endif %}{% if advice.unrated %} unrated{% endif %}">{{ advice.goal }}</li>
+                                <li class="goal {% if advice.complete %} complete{% endif %}{% if advice.informational %} informational{% endif %}{% if advice.unrated %} unrated{% endif %}">{{ advice.goal }}</li>
                             {% endfor %}
                         {% endfor %}
                         </ul>
