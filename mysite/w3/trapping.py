@@ -419,7 +419,7 @@ def getProgressionTiersAdviceGroup(trappingLevelsList: list[int]):
         post_string=f"Nature EXP-only traps are recommended for Maestro's Right Hand of Action and Voidwalker's Species Epoch talents."
                     f" You will get ZERO critters from Nature Traps, but the bonus critters from those 2 talents more than make up for this loss!",
         informational=True,
-        complete=min([vman.trapping_level for vman in session_data.account.vmans]) >= 120 or len(trapping_AdviceDict["BeginnerNatures"]) == 0
+        complete=min([vman.trapping_level for vman in session_data.account.vmans], default=0) >= 120 or len(trapping_AdviceDict["BeginnerNatures"]) == 0
     )
     trapping_AdviceGroupDict["NonMetaTraps"] = AdviceGroup(
         tier="",
