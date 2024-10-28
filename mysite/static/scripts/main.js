@@ -556,27 +556,81 @@ function copyErrorDataAndRedirectToDiscord(e) {
     }, 1000)
 }
 
-function hideComposite(event) {
-    hideProgressBoxes()
-    const complete_checkbox_on = document.querySelector('#hide_completed').value == "on"
-    const info_checkbox_on = document.querySelector('#hide_info').value == "on"
-    const unrated_checkbox_on = document.querySelector('#hide_unrated').value == "on"
-    //console.log({complete_checkbox_on, info_checkbox_on, unrated_checkbox_on})
-
-    const slider = event.currentTarget
-    const allElements = document.querySelectorAll("article, section, .advice-group, .advice-title, .advice, .resource, .prog, .arrow, .arrow-hidden, .goal")
-    allElements.forEach(el => {
-        const should_be_hidden = ((el.classList.contains('complete') && complete_checkbox_on)
-                || (el.classList.contains('informational') && info_checkbox_on)
-                || (el.classList.contains('unrated') && unrated_checkbox_on))
-        if (should_be_hidden) {
-            el.classList.add("hidden")
-        } else {
-            el.classList.remove("hidden")
-        }
-    })
-    calcProgressBars()
+function allHidden(siblings) {
+    return [...siblings].every(
+        sibling => [...sibling.classList].every(className => className.startsWith('hidden-'))
+    );
 }
+
+function hideEmptySubgroupTitles(adviceGroup, classToHide) {
+    const table = adviceGroup.querySelector('.table');
+    const adviceTitles = table.querySelectorAll('.advice-title');
+    const titleGroups = []
+
+    // Group siblings under each '.advice-title'
+    adviceTitles.forEach((title, index) => {
+        // Find the next '.advice-title' or the end of the '.table'
+        let nextTitleOrEnd = adviceTitles[index + 1] || table.lastElementChild;
+
+        let advices = []
+        let sibling = title.nextElementSibling;
+        while (sibling && sibling !== nextTitleOrEnd) {
+            advices.push(sibling); // Add sibling to this title's group
+            sibling = sibling.nextElementSibling;
+        }
+        titleGroups.push([title, advices])
+    });
+
+    // Loop over each title group and check the visibility condition
+    for (const [title, groupedAdvice] of titleGroups) {
+        // If no visible siblings are found, add `classToHide` class to the title
+        title.classList.toggle(classToHide, allHidden(groupedAdvice));
+    }
+}
+
+const hidableElements = [
+    "article",
+    "section",
+    ".advice-group",
+    ".advice-title",
+    ".advice", ".resource", ".prog", ".arrow", ".arrow-hidden", ".goal"
+];
+
+function hideComposite(event) {
+    const slider = event.currentTarget,
+        classToHide = slider.dataset.hides,
+        checkboxOn = document.querySelector(`#hide_${classToHide}`).value === "on",
+        queryString = hidableElements.map(cls => `${cls}.${classToHide}`).join(', '),
+        allElements = document.querySelectorAll(queryString);
+
+    allElements.forEach(el => el.classList.toggle(`hidden-${classToHide}`, checkboxOn));
+
+    // the following recursive hiding logic is only necessary if we're hiding elements. Unhiding is easy.
+    if (!checkboxOn) return
+
+    const groups = document.querySelectorAll(".advice-group");
+
+    groups.forEach(g => {
+        hideEmptySubgroupTitles(g, `hidden-${classToHide}`);
+        const allAdviceHidden = allHidden(g.querySelectorAll('.advice'));
+        g.classList.toggle(classToHide, allAdviceHidden)
+    });
+
+    const sections = document.querySelectorAll("section");
+
+    sections.forEach(s => {
+        const allGroupsHidden = allHidden(s.querySelectorAll('.advice-group'));
+        s.classList.toggle(classToHide, allGroupsHidden)
+    });
+
+    const worlds = document.querySelectorAll("article");
+
+    worlds.forEach(w => {
+        const allSectionsHidden = allHidden(w.querySelectorAll('.section'));
+        w.classList.toggle(classToHide, allSectionsHidden)
+    });
+}
+
 
 let searchTimer
 

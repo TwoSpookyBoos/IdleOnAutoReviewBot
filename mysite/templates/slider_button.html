@@ -1,5 +1,5 @@
 <input type="checkbox" id="{{ name }}" name="{{ name }}" value="{{ initial }}"{% if initial == "on" %} checked{% endif %}>
-<label for="{{ name }}" class="slider{% if handedness %} lefty{% endif %}">
+<label for="{{ name }}" class="slider{% if handedness %} lefty{% endif %}" data-hides="{{ name.replace("hide_", "") }}">
     <span class="label">{{ text }}</span>
     <span class="shaft {{ initial }}">
           <span class="knob"></span>
