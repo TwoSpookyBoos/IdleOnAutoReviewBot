@@ -27,7 +27,7 @@ const defaults = {
     sheepie: "off",
     order_tiers: "off",
     hide_completed: "off",
-    hide_info: "off",
+    hide_informational: "off",
     hide_unrated: "off",
     progress_bars: "off",
     handedness: "off",
@@ -246,7 +246,7 @@ function setupSwitchesActions() {
     document.querySelector('label[for="hide_completed"]').addEventListener('click', hideComposite)
 
     // On Click Listener for the Hide Info switch
-    document.querySelector('label[for="hide_info"]').addEventListener('click', hideComposite)
+    document.querySelector('label[for="hide_informational"]').addEventListener('click', hideComposite)
 
     // On Click Listener for the Hide Info switch
     document.querySelector('label[for="hide_unrated"]').addEventListener('click', hideComposite)
@@ -600,7 +600,7 @@ function hideComposite(event) {
     const slider = event.currentTarget,
         classToHide = slider.dataset.hides,
         checkboxOn = document.querySelector(`#hide_${classToHide}`).value === "on",
-        queryString = hidableElements.map(cls => `${cls}.${classToHide}`).join(', '),
+        queryString = hidableElements.map(cls => `${cls}.${checkboxOn ? '' : 'hidden-'}${classToHide}`).join(', '),
         allElements = document.querySelectorAll(queryString);
 
     allElements.forEach(el => el.classList.toggle(`hidden-${classToHide}`, checkboxOn));
@@ -626,7 +626,7 @@ function hideComposite(event) {
     const worlds = document.querySelectorAll("article");
 
     worlds.forEach(w => {
-        const allSectionsHidden = allHidden(w.querySelectorAll('.section'));
+        const allSectionsHidden = allHidden(w.querySelectorAll('section'));
         w.classList.toggle(classToHide, allSectionsHidden)
     });
 }

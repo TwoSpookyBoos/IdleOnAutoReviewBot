@@ -119,7 +119,7 @@ def getEquinoxProgressionTiersAdviceGroup():
         pre_string="Upgrade more Equinox Bonuses",
         advices=equinox_AdviceDict['TotalUpgrades'],
         informational=True,
-        complete=recommendedSubgroupName not in equinox_AdviceDict["TotalUpgrades"]
+        completed=recommendedSubgroupName not in equinox_AdviceDict["TotalUpgrades"]
     )
     overall_SectionTier = min(max_tier + infoTiers, tier_TotalDreamsCompleted)
     return equinox_AdviceGroupDict, overall_SectionTier, max_tier

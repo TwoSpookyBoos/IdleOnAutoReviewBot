@@ -41,7 +41,7 @@ def getAllKillsDisplaySubgroupedByWorldAdviceGroup():
             pre_string=f"Informational- All kills for {toon_name} without a filter. Have fun",
             advices=toon_advice_list,
             informational=True,
-            complete=True
+            completed=True
         ))
     return ags
 

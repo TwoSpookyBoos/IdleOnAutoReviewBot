@@ -98,7 +98,7 @@ def getProgressionTiersAdviceSections():
                 )
             ],
             informational=False,
-            complete=False
+            completed=False
         )
     beanstalk_AdviceGroupDict['Ready for Deposit'] = AdviceGroup(
         tier="",

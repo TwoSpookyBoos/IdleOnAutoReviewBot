@@ -1925,7 +1925,7 @@ switches = [
     },
     {
         "label": "Hide Informational Groups",
-        "name": "hide_info",
+        "name": "hide_informational",
         "true": "",
         "false": "",
     },

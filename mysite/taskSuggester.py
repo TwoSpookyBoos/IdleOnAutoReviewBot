@@ -130,7 +130,7 @@ def main(inputData, runType="web"):
             #     (f"{section} {section.tier}: "
             #      f"Unreached={section.unreached}, "
             #      f"Unrated={section.unrated}, "
-            #      f"Complete={section.complete}, "
+            #      f"Complete={section.completed}, "
             #      f"Info={section.informational}"
             #      )
             # )
@@ -146,7 +146,7 @@ def main(inputData, runType="web"):
             group.check_for_completeness()
         section.check_for_completeness()
         section.check_for_informationalness()
-        #logger.debug(f"{section}: Unreached={section.unreached}, Complete={section.complete}, Info={section.informational}, Unrated={section.unrated}")
+        #logger.debug(f"{section}: Unreached={section.unreached}, Complete={section.completed}, Info={section.informational}, Unrated={section.unrated}")
 
     #Build Worlds
     reviews = [
@@ -162,7 +162,7 @@ def main(inputData, runType="web"):
 
     for world in reviews:
         world.hide_unreached_sections()  # Feel free to comment this out while testing
-        #logger.debug(f"{world}: Unrated={world.unrated}, Complete={world.complete}, Info={world.informational}")
+        #logger.debug(f"{world}: Unrated={world.unrated}, Complete={world.completed}, Info={world.informational}")
         continue
 
     reviews = [world for world in reviews if len(world.sections) > 0]

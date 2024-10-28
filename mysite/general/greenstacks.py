@@ -106,7 +106,7 @@ def getMissableGStacksAdviceSection(owned_stuff: Assets) -> AdviceSection:
         #         groups=[endangered_AdviceGroup],
         #         unrated=True
         #     )
-        # endangered_AdviceSection.complete = True if not endangered_AdviceSection.groups else False
+        # endangered_AdviceSection.completed = True if not endangered_AdviceSection.groups else False
         # sections.append(endangered_AdviceSection)
 
     if len(advice_MissedQuestGStacks) > 0:
@@ -138,7 +138,7 @@ def getMissableGStacksAdviceSection(owned_stuff: Assets) -> AdviceSection:
         note=note,
         groups=questGStacks_AdviceGroupDict.values(),
         unrated=True,
-        complete=still_obtainable == 0
+        completed=still_obtainable == 0
     )
 
     return questGStacks_AdviceSection

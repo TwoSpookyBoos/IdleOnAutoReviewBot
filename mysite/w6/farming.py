@@ -307,7 +307,7 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
         pre_string="Informational- Sources of Crop Value",
         advices=value_advices,
         informational=True,
-        complete=val['BeforeCapMin']>=maxFarmingValue
+        completed=val['BeforeCapMin']>=maxFarmingValue
     )
     return value_ag
 
@@ -626,7 +626,7 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
         pre_string="Informational- Sources of Crop Evolution Chance",
         advices=evo_advices,
         informational=True,
-        complete=session_data.account.farming['CropsUnlocked'] >= maxFarmingCrops
+        completed=session_data.account.farming['CropsUnlocked'] >= maxFarmingCrops
     )
     return evo_ag
 

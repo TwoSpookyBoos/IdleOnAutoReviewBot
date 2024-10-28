@@ -101,7 +101,7 @@ def getStylesInfoAdviceGroup(highestDivinitySkillLevel: int) -> AdviceGroup:
         pre_string="Styles Information",
         advices=styles_AdviceDict,
         informational=True,
-        complete=True
+        completed=True
     )
     return styles_AdviceGroup
 
@@ -182,7 +182,7 @@ def getLinksAndDootChecksAdviceGroups(tier_Divinity: int, lowestDivinitySkillLev
         pre_string="Possible Divinity Link Setups",
         advices=links_AdviceList,
         informational=True,
-        complete=True
+        completed=True
     )
     doot_AdviceGroup = AdviceGroup(
         tier="",
@@ -254,7 +254,7 @@ def getArctisAdviceGroup(lowestDivinitySkillLevel: int, highestDivinitySkillLeve
                    f" (+# Talent LV for all talents above Lv 1)",
         advices=arctis_AdviceDict,
         informational=True,
-        complete=len(arctis_AdviceDict) == 1  #When Current Values is the only subgroup
+        completed=len(arctis_AdviceDict) == 1  #When Current Values is the only subgroup
     )
     arctis_AdviceGroup.remove_empty_subgroups()
 
