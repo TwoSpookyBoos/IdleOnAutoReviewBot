@@ -272,7 +272,7 @@ function setupHrefEventActions() {
 
 /**
  * Unfolds the section it is folded
- * @param {Element} target 
+ * @param {Element} target
  */
 function unfoldElementIfFolded(target) {
     var [sectionH1, sectionDiv] = findSectionElements(target)
@@ -281,7 +281,7 @@ function unfoldElementIfFolded(target) {
 
     if (articleDiv?.classList.contains('folded')) {
         // The section is folded, we need to wait until the transition is complete to scroll to its position
-        const onTransitionEnd = evt => { 
+        const onTransitionEnd = evt => {
             if (evt.target == articleDiv) { // Multiple events are triggered, we only want the article div one
                 articleElement.removeEventListener("transitionend", onTransitionEnd);
                 target.scrollIntoView({behavior: "smooth"})
@@ -556,10 +556,18 @@ function copyErrorDataAndRedirectToDiscord(e) {
     }, 1000)
 }
 
+const hiddenElements = {
+    "hidden-completed": new Set(),
+    "hidden-informational": new Set(),
+    "hidden-unrated": new Set(),
+    "hidden-children-hidden": new Set()
+}
+
 function allHidden(siblings) {
-    return [...siblings].every(
-        sibling => [...sibling.classList].every(className => className.startsWith('hidden-'))
-    );
+    // make a union of all hidden elements
+    const allHiddenElements = Object.values(hiddenElements).reduce((all, set) => all.union(set), new Set()),
+        siblingSet = new Set([...siblings]);
+    return allHiddenElements.isSupersetOf(siblingSet);
 }
 
 function hideEmptySubgroupTitles(adviceGroup, classToHide) {
@@ -581,10 +589,17 @@ function hideEmptySubgroupTitles(adviceGroup, classToHide) {
         titleGroups.push([title, advices])
     });
 
+    const kidsHiddenClass = Object.keys(hiddenElements)[-1]
     // Loop over each title group and check the visibility condition
     for (const [title, groupedAdvice] of titleGroups) {
         // If no visible siblings are found, add `classToHide` class to the title
-        title.classList.toggle(classToHide, allHidden(groupedAdvice));
+        const allKidsHidden = allHidden(groupedAdvice)
+        title.classList.toggle(kidsHiddenClass, allKidsHidden);
+        if (allKidsHidden) {
+            hiddenElements[kidsHiddenClass].add(title)
+        } else {
+            hiddenElements[kidsHiddenClass].delete(title)
+        }
     }
 }
 
@@ -593,41 +608,46 @@ const hidableElements = [
     "section",
     ".advice-group",
     ".advice-title",
-    ".advice", ".resource", ".prog", ".arrow", ".arrow-hidden", ".goal"
+    ".progress-box", ".advice", ".resource", ".prog", ".arrow", ".arrow-hidden", ".goal"
 ];
 
 function hideComposite(event) {
     const slider = event.currentTarget,
         classToHide = slider.dataset.hides,
         checkboxOn = document.querySelector(`#hide_${classToHide}`).value === "on",
-        queryString = hidableElements.map(cls => `${cls}.${checkboxOn ? '' : 'hidden-'}${classToHide}`).join(', '),
+        hiddenClass = `hidden-${classToHide}`,
+        queryString = hidableElements.map(cls => `${cls}.${checkboxOn ? classToHide : hiddenClass}`).join(', '),
         allElements = document.querySelectorAll(queryString);
 
-    allElements.forEach(el => el.classList.toggle(`hidden-${classToHide}`, checkboxOn));
+    if (!checkboxOn) {
+        hiddenElements[hiddenClass].forEach(e => e.classList.remove(hiddenClass));
+        hiddenElements[hiddenClass].clear();
+    } else {
+        allElements.forEach(el => el.classList.toggle(hiddenClass, checkboxOn));
+        hiddenElements[hiddenClass] = new Set([...allElements])
+    }
 
-    // the following recursive hiding logic is only necessary if we're hiding elements. Unhiding is easy.
-    if (!checkboxOn) return
-
-    const groups = document.querySelectorAll(".advice-group");
+    const groups = document.querySelectorAll(hidableElements[2]);
 
     groups.forEach(g => {
-        hideEmptySubgroupTitles(g, `hidden-${classToHide}`);
-        const allAdviceHidden = allHidden(g.querySelectorAll('.advice'));
-        g.classList.toggle(classToHide, allAdviceHidden)
+        hideEmptySubgroupTitles(g, hiddenClass);
+        const allAdviceHidden = allHidden(g.querySelectorAll(hidableElements[4]));
+        g.classList.toggle(hiddenClass, allAdviceHidden)
+        allAdviceHidden && hiddenElements[hiddenClass].add(g)
     });
 
-    const sections = document.querySelectorAll("section");
+    const sections = document.querySelectorAll(hidableElements[1]);
 
     sections.forEach(s => {
-        const allGroupsHidden = allHidden(s.querySelectorAll('.advice-group'));
-        s.classList.toggle(classToHide, allGroupsHidden)
+        const allGroupsHidden = allHidden(s.querySelectorAll(hidableElements[2]));
+        s.classList.toggle(hiddenClass, allGroupsHidden)
     });
 
-    const worlds = document.querySelectorAll("article");
+    const worlds = document.querySelectorAll(hidableElements[0]);
 
     worlds.forEach(w => {
-        const allSectionsHidden = allHidden(w.querySelectorAll('section'));
-        w.classList.toggle(classToHide, allSectionsHidden)
+        const allSectionsHidden = allHidden(w.querySelectorAll(hidableElements[1]));
+        w.classList.toggle(hiddenClass, allSectionsHidden)
     });
 }
 
