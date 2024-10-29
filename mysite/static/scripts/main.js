@@ -615,6 +615,7 @@ const hidableElements = [
 ];
 
 function hideComposite(event) {
+    hideProgressBoxes()
     const slider = event.currentTarget,
         classToHide = slider.dataset.hides,
         checkboxOn = document.querySelector(`#hide_${classToHide}`).value === "on",
@@ -652,6 +653,7 @@ function hideComposite(event) {
         const allSectionsHidden = allHidden(w.querySelectorAll(hidableElements[1]));
         w.classList.toggle(hiddenClass, allSectionsHidden)
     });
+    calcProgressBars()
 }
 
 
