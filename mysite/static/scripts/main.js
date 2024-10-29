@@ -240,16 +240,16 @@ function setupSwitchesActions() {
     }
 
     // toggle progress bars
-    document.querySelector('#progress_bars').onclick = () => calcProgressBars(document)
+    document.querySelector('#progress_bars').onclick = () => calcProgressBars(document);
 
     // On Click Listener for the Hide Completed switch
-    document.querySelector('label[for="hide_completed"]').addEventListener('click', hideComposite)
+    document.querySelector('label[for="hide_completed"]').addEventListener('click', hideComposite);
 
     // On Click Listener for the Hide Info switch
-    document.querySelector('label[for="hide_informational"]').addEventListener('click', hideComposite)
+    document.querySelector('label[for="hide_informational"]').addEventListener('click', hideComposite);
 
     // On Click Listener for the Hide Info switch
-    document.querySelector('label[for="hide_unrated"]').addEventListener('click', hideComposite)
+    document.querySelector('label[for="hide_unrated"]').addEventListener('click', hideComposite);
 }
 
 function setupHrefEventActions() {
@@ -370,6 +370,9 @@ function setupDataClock() {
     }, 1000)
 }
 
+function hideElements() {
+    ["completed", "informational", "unrated"].forEach(cls => hideComposite({currentTarget: {dataset: {hides: cls}}}));
+}
 
 function setFormValues() {
     const form = document.querySelector('form')
@@ -589,7 +592,7 @@ function hideEmptySubgroupTitles(adviceGroup, classToHide) {
         titleGroups.push([title, advices])
     });
 
-    const kidsHiddenClass = Object.keys(hiddenElements)[-1]
+    const kidsHiddenClass = Object.keys(hiddenElements).slice(-1)
     // Loop over each title group and check the visibility condition
     for (const [title, groupedAdvice] of titleGroups) {
         // If no visible siblings are found, add `classToHide` class to the title
@@ -742,6 +745,7 @@ function initResultsUI() {
     setupHrefEventActions()
     applyShowMoreButton()
     setupDataClock()
+    hideElements()
     calcProgressBars(document)
 }
 
