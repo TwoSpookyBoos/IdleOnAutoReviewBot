@@ -12,7 +12,7 @@ from math import ceil, floor
 from typing import Any, Union
 from flask import g
 from utils.data_formatting import getCharacterDetails, safe_loads
-from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, notateNumber
+from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
 from consts import (
     # General
     lavaFunc, ceilUpToBase, ValueToMulti, ignorable_labels,
@@ -704,7 +704,7 @@ class AdviceSection(AdviceBase):
         self.tier: str = tier
         self._raw_header: str = header
         self.picture: str = picture
-        self._groups: list[AdviceGroup] = groups
+        self.groups: list[AdviceGroup] = groups
         self.pinchy_rating: int = pinchy_rating
         self.complete: bool | None = complete
         self.unreached = unreached
@@ -751,10 +751,11 @@ class AdviceSection(AdviceBase):
     def groups(self, groups: list[AdviceGroup]):
         # filters out empty groups by checking if group has no advices
         self._groups = [group for group in groups if group]
-        #self.check_for_completeness()
 
         if g.order_tiers:
             self._groups = sorted(self._groups)
+
+    #def setup_groups(self, groups: list):
 
     def remove_info_groups(self):
         self._groups = [group for group in self._groups if not group.informational]
@@ -1268,7 +1269,7 @@ class Account:
         self.sheepie_owned = g.sheepie
         self.doot_owned = g.doot
         self.riftslug_owned = g.riftslug
-        if not self.doot_owned or not self.sheepie_owned or not self.riftslug_owned:
+        if not all([self.doot_owned, self.sheepie_owned, self.riftslug_owned]):
             rawCompanions = self.raw_data.get('companion', [])
             if rawCompanions:
                 for companionInfo in rawCompanions.get('l', []):
@@ -2653,7 +2654,6 @@ class Account:
         #Sort the Grouped bonus by Days to next Shiny Level
         for groupedBonus in self.breeding["Grouped Bonus"]:
             self.breeding["Grouped Bonus"][groupedBonus].sort(key=lambda x: float(x[2]))
-
 
 
     def _parse_w5(self):
