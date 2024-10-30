@@ -162,18 +162,6 @@ def main(inputData, runType="web"):
 
     for world in reviews:
         world.hide_unreached_sections()  # Feel free to comment this out while testing
-        if session_data.account.hide_unrated:
-            world.hide_unrated_sections()
-        if session_data.account.hide_info:
-            for section in world.sections:
-                section.remove_info_groups()
-        if session_data.account.hide_completed:
-            world.hide_completed_sections()
-            for section in world.sections:
-                section.remove_complete_groups()
-                for group in section.groups:
-                    group.remove_completed_advices()
-                    group.remove_empty_subgroups()
         #logger.debug(f"{world}: Unrated={world.unrated}, Complete={world.complete}, Info={world.informational}")
         continue
 

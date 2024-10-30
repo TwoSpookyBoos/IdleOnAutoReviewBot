@@ -473,7 +473,6 @@ def getLibraryAdviceSection() -> AdviceSection:
         session_data.account.library['BooksReady'] >= 40
         and session_data.account.construction_buildings['Automation Arm']['Level'] >= 5
         and anyBookAdvice
-        and not session_data.account.hide_unrated
     ):
         session_data.account.alerts_AdviceDict['World 3'].append(Advice(
             label=f"{session_data.account.library['BooksReady'] // 20} perfect {{{{ checkouts|#library }}}} available",

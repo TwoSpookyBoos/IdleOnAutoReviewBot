@@ -208,6 +208,7 @@ def getSlabProgressionTierAdviceGroups():
         session_data.account.alerts_AdviceDict['World 5'].append(Advice(
             label=f"{minimal_effort_stacks} minimal effort {{{{ Slab|#slab}}}} stack{pl(minimal_effort_stacks)} available",
             picture_class='the-slab',
+            unrated=True,
             informational=True
         ))
 

@@ -612,24 +612,6 @@ class AdviceGroup(AdviceBase):
             for field in self.__compare_by
         )
 
-    def remove_completed_advices(self):
-        # If the Group is already marked as Complete, blank out the advices
-        if self.complete:
-            self.advices = []
-        # Elif there are no advices and the Group isn't yet marked Complete, mark it Complete
-        elif not self.advices and not self.complete:
-            self.complete = True
-        # Else, remove the completed advices but leave the incomplete advices
-        else:
-            if isinstance(self.advices, list):
-                self.advices = [value for value in self.advices if value.goal != "✔" and value.goal != "" and not value.complete]
-            if isinstance(self.advices, dict):
-                for key, value in self.advices.items():
-                    if isinstance(value, list):
-                        self.advices[key] = [v for v in value if v.goal != "✔" and v.goal != "" and not v.complete]
-                self.advices = {key: value for key, value in self.advices.items() if value}
-
-
     def remove_empty_subgroups(self):
         if isinstance(self.advices, list):
             self.advices = [value for value in self.advices if value]
@@ -766,25 +748,6 @@ class AdviceSection(AdviceBase):
         else:
             self.completed = len([group for group in self.groups if group and not group.completed]) == 0  #True if 0 length, False otherwise
 
-    def remove_info_groups(self):
-        self._groups = [group for group in self._groups if not group.informational]
-
-    def check_for_informationalness(self):
-        if self.informational is not None:
-            return
-        else:
-            #print(f"{self.name}: {len([group for group in self.groups if group and group.informational])} Info groups / {len([group for group in self.groups if group])} total Truthy groups")
-            self.informational = len([group for group in self.groups if group and not group.informational]) == 0 and len([group for group in self.groups if group]) > 0  #True if 0 length, False otherwise
-
-    def check_for_completeness(self):
-        if self.complete is not None:
-            return
-        elif self.unreached:
-            #Unreached is set when a player hasn't progressed far enough to see the contents of a section. As far from complete as possible
-            self.complete = False
-        else:
-            self.complete = len([group for group in self.groups if group and not group.complete]) == 0  #True if 0 length, False otherwise
-
     def check_for_informationalness(self):
         if self.informational is not None:
             return
@@ -840,14 +803,8 @@ class AdviceWorld(AdviceBase):
     def id(self):
         return kebab(self.name)
 
-    def hide_completed_sections(self):
-        self.sections = [section for section in self.sections if not section.completed]
-    
     def hide_unreached_sections(self):
         self.sections = [section for section in self.sections if not section.unreached]
-
-    def hide_unrated_sections(self):
-        self.sections = [section for section in self.sections if not section.unrated]
 
     def check_for_completeness(self):
         """
@@ -1273,9 +1230,6 @@ class Account:
         else:
             self.autoloot = False
 
-        self.hide_completed = g.hide_completed
-        self.hide_unrated = g.hide_unrated
-        self.hide_informational = g.hide_informational
         #consts.maxTiersPerGroup = 1 if g.one_tier else consts.maxTiersPerGroup
 
         # Companions

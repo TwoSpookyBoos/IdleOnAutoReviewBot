@@ -59,10 +59,11 @@ def getProgressionTiersAdviceSections():
         )
         for foodname in foods_ready_to_deposit
     ]
-    if len(foods_ready_to_deposit) > 0 and not session_data.account.hide_unrated:
+    if len(foods_ready_to_deposit) > 0:
         session_data.account.alerts_AdviceDict['World 6'].append(Advice(
             label=f"Golden Food ready for {{{{Beanstalk|#beanstalk}}}}",
-            picture_class="beanstalk"
+            picture_class="beanstalk",
+            unrated=True
         ))
 
     beanstalk_AdviceDict['Beanstack'] = [
