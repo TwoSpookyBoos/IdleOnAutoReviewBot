@@ -324,16 +324,16 @@ def mark_advice_completed(advice, force=False):
     if force:
         advice.progression = ""
         advice.goal = "✔"
-        setattr(advice, "status", "complete")
+        advice.complete = True
         return
     if str(advice.goal) == "" and str(advice.progression).endswith("+"):
-        setattr(advice, "status", "complete")
+        advice.complete = True
     elif str(advice.goal) == "" and str(advice.progression).endswith("%"):
         try:
             if float(str(advice.progression).strip("%")) > 100:
                 advice.progression = ""
                 advice.goal = "✔"
-                setattr(advice, "status", "complete")
+                advice.complete = True
         except:
             pass
     else:
@@ -343,7 +343,7 @@ def mark_advice_completed(advice, force=False):
             if advice.goal and advice.progression and float(prog) >= float(goal):
                 advice.progression = ""
                 advice.goal = "✔"
-                setattr(advice, "status", "complete")
+                advice.complete = True
         except:
             pass
 
