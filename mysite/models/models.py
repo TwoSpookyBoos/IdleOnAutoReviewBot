@@ -3057,7 +3057,7 @@ class Account:
                     'MarketType': 'Day' if marketUpgradeIndex < 8 else 'Night'
                 }
             except:
-                self.farming["MarketUpgrades"][marketUpgrade[0].title()] = {
+                self.farming["MarketUpgrades"][marketUpgrade[0].replace('_', ' ').title()] = {
                     'Level': 0,
                     'Description': marketUpgrade[1].replace('_', ' '),
                     'Value': 0,
