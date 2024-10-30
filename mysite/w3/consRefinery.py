@@ -285,7 +285,7 @@ def getRefineryProgressionTierAdviceGroups():
         advices=refinery_AdviceDict['Tab1Ranks'],
         post_string="Or just YOLO rank up everything if balancing is too much of a pain ¯\\_(ツ)_/¯",
         informational=True,
-        completed=refinery_AdviceGroupDict['ExcessAndDeficits'].completed
+        completed=all([advice.progression >= advice.goal for advice in refinery_AdviceDict['Tab1Ranks']])
     )
     refinery_AdviceGroupDict['Tab2Ranks'] = AdviceGroup(
         tier="",
@@ -293,7 +293,7 @@ def getRefineryProgressionTierAdviceGroups():
         advices=refinery_AdviceDict['Tab2Ranks'],
         post_string="",
         informational=True,
-        completed=refinery_AdviceGroupDict['ExcessAndDeficits'].completed
+        completed=all([advice.progression >= advice.goal for advice in refinery_AdviceDict['Tab2Ranks']])
     )
     overall_SectionTier = min(max_tier, tier_AutoRefine, tier_W3Merits)
     return refinery_AdviceGroupDict, overall_SectionTier, max_tier

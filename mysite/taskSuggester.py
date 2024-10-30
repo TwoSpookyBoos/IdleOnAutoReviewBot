@@ -130,7 +130,7 @@ def main(inputData, runType="web"):
             #     (f"{section} {section.tier}: "
             #      f"Unreached={section.unreached}, "
             #      f"Unrated={section.unrated}, "
-            #      f"Complete={section.completed}, "
+            #      f"Completed={section.completed}, "
             #      f"Info={section.informational}"
             #      )
             # )
@@ -146,11 +146,11 @@ def main(inputData, runType="web"):
             group.check_for_completeness()
         section.check_for_completeness()
         section.check_for_informationalness()
-        #logger.debug(f"{section}: Unreached={section.unreached}, Complete={section.completed}, Info={section.informational}, Unrated={section.unrated}")
+        #logger.debug(f"{section}: Unreached={section.unreached}, Completed={section.completed}, Info={section.informational}, Unrated={section.unrated}")
 
     #Build Worlds
     reviews = [
-        AdviceWorld(name=WorldName.PINCHY, sections=sections_pinchy, title="Pinchy AutoReview", collapse=False),
+        AdviceWorld(name=WorldName.PINCHY, sections=sections_pinchy, title="Pinchy AutoReview", collapse=False, complete=False),
         AdviceWorld(name=WorldName.GENERAL, sections=sections_general, banner="general_banner.jpg"),
         AdviceWorld(name=WorldName.BLUNDER_HILLS, sections=sections_1, banner="w1banner.png"),
         AdviceWorld(name=WorldName.YUMYUM_DESERT, sections=sections_2, banner="w2banner.png"),
@@ -162,7 +162,19 @@ def main(inputData, runType="web"):
 
     for world in reviews:
         world.hide_unreached_sections()  # Feel free to comment this out while testing
-        #logger.debug(f"{world}: Unrated={world.unrated}, Complete={world.completed}, Info={world.informational}")
+        if session_data.account.hide_unrated:
+            world.hide_unrated_sections()
+        if session_data.account.hide_info:
+            for section in world.sections:
+                section.remove_info_groups()
+        if session_data.account.hide_completed:
+            world.hide_completed_sections()
+            for section in world.sections:
+                section.remove_complete_groups()
+                for group in section.groups:
+                    group.remove_completed_advices()
+                    group.remove_empty_subgroups()
+        #logger.debug(f"{world}: Unrated={world.unrated}, Complete={world.complete}, Info={world.informational}")
         continue
 
     reviews = [world for world in reviews if len(world.sections) > 0]

@@ -204,10 +204,11 @@ def getSlabProgressionTierAdviceGroups():
 
     # Generate Alert
     minimal_effort_stacks = len(slab_AdviceDict['Reclaims']) + len(slab_AdviceDict['Storage'])
-    if minimal_effort_stacks > 0 and not session_data.account.hide_unrated and not session_data.account.hide_informational:
+    if minimal_effort_stacks > 0:
         session_data.account.alerts_AdviceDict['World 5'].append(Advice(
             label=f"{minimal_effort_stacks} minimal effort {{{{ Slab|#slab}}}} stack{pl(minimal_effort_stacks)} available",
-            picture_class='the-slab'
+            picture_class='the-slab',
+            informational=True
         ))
 
     # Generate AdviceGroups

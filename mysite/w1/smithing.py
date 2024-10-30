@@ -149,6 +149,7 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
         advices=cap_Advices,
         informational=True,
     )
+    sources_ag.check_for_completeness()
     total_ag = AdviceGroup(
             tier='',
             pre_string="Info- Total Capacity and Bar thresholds",

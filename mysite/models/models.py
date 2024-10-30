@@ -12,7 +12,7 @@ from math import ceil, floor
 from typing import Any, Union
 from flask import g
 from utils.data_formatting import getCharacterDetails, safe_loads
-from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, notateNumber
+from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
 from consts import (
     # General
     lavaFunc, ceilUpToBase, ValueToMulti, ignorable_labels,
@@ -612,6 +612,24 @@ class AdviceGroup(AdviceBase):
             for field in self.__compare_by
         )
 
+    def remove_completed_advices(self):
+        # If the Group is already marked as Complete, blank out the advices
+        if self.complete:
+            self.advices = []
+        # Elif there are no advices and the Group isn't yet marked Complete, mark it Complete
+        elif not self.advices and not self.complete:
+            self.complete = True
+        # Else, remove the completed advices but leave the incomplete advices
+        else:
+            if isinstance(self.advices, list):
+                self.advices = [value for value in self.advices if value.goal != "✔" and value.goal != "" and not value.complete]
+            if isinstance(self.advices, dict):
+                for key, value in self.advices.items():
+                    if isinstance(value, list):
+                        self.advices[key] = [v for v in value if v.goal != "✔" and v.goal != "" and not v.complete]
+                self.advices = {key: value for key, value in self.advices.items() if value}
+
+
     def remove_empty_subgroups(self):
         if isinstance(self.advices, list):
             self.advices = [value for value in self.advices if value]
@@ -687,7 +705,7 @@ class AdviceSection(AdviceBase):
         self.tier: str = tier
         self._raw_header: str = header
         self.picture: str = picture
-        self._groups: list[AdviceGroup] = groups
+        self.groups: list[AdviceGroup] = groups
         self.pinchy_rating: int = pinchy_rating
         self.completed: bool | None = completed
         self.unreached = unreached
@@ -747,6 +765,25 @@ class AdviceSection(AdviceBase):
             self.completed = False
         else:
             self.completed = len([group for group in self.groups if group and not group.completed]) == 0  #True if 0 length, False otherwise
+
+    def remove_info_groups(self):
+        self._groups = [group for group in self._groups if not group.informational]
+
+    def check_for_informationalness(self):
+        if self.informational is not None:
+            return
+        else:
+            #print(f"{self.name}: {len([group for group in self.groups if group and group.informational])} Info groups / {len([group for group in self.groups if group])} total Truthy groups")
+            self.informational = len([group for group in self.groups if group and not group.informational]) == 0 and len([group for group in self.groups if group]) > 0  #True if 0 length, False otherwise
+
+    def check_for_completeness(self):
+        if self.complete is not None:
+            return
+        elif self.unreached:
+            #Unreached is set when a player hasn't progressed far enough to see the contents of a section. As far from complete as possible
+            self.complete = False
+        else:
+            self.complete = len([group for group in self.groups if group and not group.complete]) == 0  #True if 0 length, False otherwise
 
     def check_for_informationalness(self):
         if self.informational is not None:
@@ -1245,7 +1282,7 @@ class Account:
         self.sheepie_owned = g.sheepie
         self.doot_owned = g.doot
         self.riftslug_owned = g.riftslug
-        if not self.doot_owned or not self.sheepie_owned or not self.riftslug_owned:
+        if not all([self.doot_owned, self.sheepie_owned, self.riftslug_owned]):
             rawCompanions = self.raw_data.get('companion', [])
             if rawCompanions:
                 for companionInfo in rawCompanions.get('l', []):
@@ -2630,7 +2667,6 @@ class Account:
         #Sort the Grouped bonus by Days to next Shiny Level
         for groupedBonus in self.breeding["Grouped Bonus"]:
             self.breeding["Grouped Bonus"][groupedBonus].sort(key=lambda x: float(x[2]))
-
 
 
     def _parse_w5(self):
