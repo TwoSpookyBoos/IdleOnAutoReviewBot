@@ -23,11 +23,11 @@ def getHiddenAdviceGroup() -> AdviceGroup:
     #Just for fun. This does the opposite: Looks for items registered as owned that aren't in the expected Slab list
     for itemName in session_data.account.registered_slab:
         if itemName not in slabList:
-            hidden_names[itemName] = getItemDisplayName(itemName)
             decoded_name = getItemDisplayName(itemName) if itemName not in slab_itemNameReplacementDict else slab_itemNameReplacementDict[itemName]
+            hidden_names[itemName] = decoded_name
             decoded_name = 'placeholder' if decoded_name.startswith("Unknown-'") else decoded_name
             hidden_adviceList.append(Advice(
-                label=getItemDisplayName(itemName),
+                label=decoded_name,
                 picture_class=decoded_name
             ))
 
