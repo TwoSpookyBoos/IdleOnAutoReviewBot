@@ -1231,14 +1231,14 @@ atoms_progressionTiers = {
     },
     9: {
         'Atoms': {
-            "Neon - Damage N' Cheapener": 2,
+            #"Neon - Damage N' Cheapener": 2,
             'Fluoride - Void Plate Chef': 11,
             'Helium - Talent Power Stacker': 7,
         },
     },
     10: {
         'Atoms': {
-            "Neon - Damage N' Cheapener": 10,
+            #"Neon - Damage N' Cheapener": 10,
             'Fluoride - Void Plate Chef': 15,
         },
     },
@@ -1250,7 +1250,7 @@ atoms_progressionTiers = {
     },
     12: {
         'Atoms': {
-            "Neon - Damage N' Cheapener": 20,
+            #"Neon - Damage N' Cheapener": 20,
             'Helium - Talent Power Stacker': 9,
         },
     },
@@ -1258,7 +1258,7 @@ atoms_progressionTiers = {
         'Atoms': {
             'Boron - Particle Upgrader': 30,
             'Hydrogen - Stamp Decreaser': 30,
-            "Neon - Damage N' Cheapener": 30,
+            #"Neon - Damage N' Cheapener": 30,
             'Fluoride - Void Plate Chef': 30,
         },
     },
@@ -1673,7 +1673,6 @@ sailing_progressionTiers = {
         },
     }
 }
-
 
 ###WORLD 6 PROGRESSION TIERS###
 farming_progressionTiers = {
