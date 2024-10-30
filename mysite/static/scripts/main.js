@@ -253,9 +253,9 @@ function setupSwitchesActions() {
 }
 
 function setupHrefEventActions() {
-    addEventListener("hashchange", evt => {
-        var h = location.hash.slice(1) || "pinchy-all" // Defaults on the pinchy section if you try to access an empty hash, for exemple when hiting return on your browser
-        var target = (document.getElementById(h) || document.getElementsByName(h)[0] || document.body)
+    addEventListener("hashchange", () => {
+        const h = location.hash.slice(1) || "pinchy-all" // Defaults on the pinchy section if you try to access an empty hash, for exemple when hiting return on your browser
+        const target = (document.getElementById(h) || document.getElementsByName(h)[0] || document.body)
         unfoldElementIfFolded(target)
     });
 
@@ -275,14 +275,14 @@ function setupHrefEventActions() {
  * @param {Element} target
  */
 function unfoldElementIfFolded(target) {
-    var [sectionH1, sectionDiv] = findSectionElements(target)
-    var [articleH1, articleDiv] = findArticlesElements(target);
-    var articleElement = articleDiv?.parentElement;
+    const [sectionH1, sectionDiv] = findSectionElements(target)
+    const [articleH1, articleDiv] = findArticlesElements(target);
+    const articleElement = articleDiv?.parentElement;
 
     if (articleDiv?.classList.contains('folded')) {
         // The section is folded, we need to wait until the transition is complete to scroll to its position
         const onTransitionEnd = evt => {
-            if (evt.target == articleDiv) { // Multiple events are triggered, we only want the article div one
+            if (evt.target === articleDiv) { // Multiple events are triggered, we only want the article div one
                 articleElement.removeEventListener("transitionend", onTransitionEnd);
                 target.scrollIntoView({behavior: "smooth"})
             }
@@ -300,14 +300,14 @@ function unfoldElementIfFolded(target) {
 }
 
 function findArticlesElements(target) {
-    var div = target.closest('div.collapse-wrapper:has(> div.sections)') || document.querySelector('div.collapse-wrapper:has(> div.sections)');
-    var h1 = div.parentElement.querySelector('h1.banner.toggler');
+    const div = target.closest('div.collapse-wrapper:has(> div.sections)') || document.querySelector('div.collapse-wrapper:has(> div.sections)');
+    const h1 = div.parentElement.querySelector('h1.banner.toggler');
     return [h1, div]
 }
 
 function findSectionElements(target) {
-    var div = target.closest('div.collapse-wrapper:has(> ul.advice-section)') || target.querySelector('div.collapse-wrapper:has(> ul.advice-section)');
-    var h1 = div.parentElement.querySelector('h1.subheading.toggler')
+    const div = target.closest('div.collapse-wrapper:has(> ul.advice-section)') || target.querySelector('div.collapse-wrapper:has(> ul.advice-section)');
+    const h1 = div.parentElement.querySelector('h1.subheading.toggler')
     return [h1, div]
 }
 
@@ -411,6 +411,7 @@ function initLazyLoading() {
 
 
 function loadErrorPopup(html, statusCode) {
+    console.log(`error ${statusCode}`)
     spinner.stop()
     const error = document.createElement("p")
     error.innerHTML = html;
@@ -486,7 +487,7 @@ function storeGetParamsIfProvided() {
 function hideSpinnerIfFirstAccess() {
     if (!localStorage.getItem('player'))
         return
-    var target = document.querySelector('#top');
+    const target = document.querySelector('#top');
     spinner.spin(target);
 }
 
@@ -575,7 +576,7 @@ function allHidden(siblings) {
     return allHiddenElements.isSupersetOf(siblingSet);
 }
 
-function hideEmptySubgroupTitles(adviceGroup, classToHide) {
+function hideEmptySubgroupTitles(adviceGroup) {
     const table = adviceGroup.querySelector('.table');
     const adviceTitles = table.querySelectorAll('.advice-title');
     const siblings = [...table.children];
