@@ -559,14 +559,16 @@ function copyErrorDataAndRedirectToDiscord(e) {
     }, 1000)
 }
 
+const kidsHiddenClass = "hidden-children-hidden";
 const hiddenElements = {
     "hidden-completed": new Set(),
     "hidden-informational": new Set(),
     "hidden-unrated": new Set(),
-    "hidden-children-hidden": new Set()
+    [kidsHiddenClass]: new Set()
 }
 
 function allHidden(siblings) {
+    if (siblings.length < 1) return false
     // make a union of all hidden elements
     const allHiddenElements = Object.values(hiddenElements).reduce((all, set) => all.union(set), new Set()),
         siblingSet = new Set([...siblings]);
@@ -576,34 +578,26 @@ function allHidden(siblings) {
 function hideEmptySubgroupTitles(adviceGroup, classToHide) {
     const table = adviceGroup.querySelector('.table');
     const adviceTitles = table.querySelectorAll('.advice-title');
-    const titleGroups = []
+    const siblings = [...table.children];
 
-    // Group siblings under each '.advice-title'
-    adviceTitles.forEach((title, index) => {
-        // Find the next '.advice-title' or the end of the '.table'
-        let nextTitleOrEnd = adviceTitles[index + 1] || table.lastElementChild;
-
-        let advices = []
-        let sibling = title.nextElementSibling;
-        while (sibling && sibling !== nextTitleOrEnd) {
-            advices.push(sibling); // Add sibling to this title's group
-            sibling = sibling.nextElementSibling;
-        }
-        titleGroups.push([title, advices])
-    });
-
-    const kidsHiddenClass = Object.keys(hiddenElements).slice(-1)
-    // Loop over each title group and check the visibility condition
-    for (const [title, groupedAdvice] of titleGroups) {
-        // If no visible siblings are found, add `classToHide` class to the title
-        const allKidsHidden = allHidden(groupedAdvice)
-        title.classList.toggle(kidsHiddenClass, allKidsHidden);
-        if (allKidsHidden) {
-            hiddenElements[kidsHiddenClass].add(title)
-        } else {
-            hiddenElements[kidsHiddenClass].delete(title)
-        }
-    }
+    // Group siblings under each '.advice-title', then hide titles if all their advices are hidden
+    [...adviceTitles]
+        .map((title, index) => {
+            const titleIndex = siblings.indexOf(title),
+                nextTitleIndexOrEnd = siblings.indexOf(adviceTitles[index + 1]),
+                advices = siblings.slice(titleIndex + 1, nextTitleIndexOrEnd !== -1 ? nextTitleIndexOrEnd : undefined);
+            return [title, advices];
+        })
+        .forEach(([title, groupedAdvice]) => {
+            // If no visible siblings are found, add `classToHide` class to the title
+            const allKidsHidden = allHidden(groupedAdvice);
+            title.classList.toggle(kidsHiddenClass, allKidsHidden);
+            if (allKidsHidden) {
+                hiddenElements[kidsHiddenClass].add(title)
+            } else {
+                hiddenElements[kidsHiddenClass].delete(title)
+            }
+        })
 }
 
 const hidableElements = [
@@ -627,32 +621,28 @@ function hideComposite(event) {
         hiddenElements[hiddenClass].forEach(e => e.classList.remove(hiddenClass));
         hiddenElements[hiddenClass].clear();
     } else {
-        allElements.forEach(el => el.classList.toggle(hiddenClass, checkboxOn));
+        allElements.forEach(el => el.classList.add(hiddenClass));
         hiddenElements[hiddenClass] = new Set([...allElements])
     }
 
-    const groups = document.querySelectorAll(hidableElements[2]);
+    const elementsToRecurse = [
+        [hidableElements[2], hidableElements[4]], // groups, advice
+        [hidableElements[1], hidableElements[2]], // sections, groups
+        [hidableElements[0], hidableElements[1]]  // worlds, sections
+    ]
 
-    groups.forEach(g => {
-        hideEmptySubgroupTitles(g, hiddenClass);
-        const allAdviceHidden = allHidden(g.querySelectorAll(hidableElements[4]));
-        g.classList.toggle(hiddenClass, allAdviceHidden)
-        allAdviceHidden && hiddenElements[hiddenClass].add(g)
-    });
+    // first handle subgroup titles
+    document.querySelectorAll(elementsToRecurse[0][0])
+        .forEach(g => hideEmptySubgroupTitles(g, hiddenClass));
 
-    const sections = document.querySelectorAll(hidableElements[1]);
+    // recurse through groups, sections, and worlds and hide them if needed
+    elementsToRecurse.forEach(([parentStr, childStr]) => {
+        document.querySelectorAll(parentStr).forEach(parent => {
+            const shouldHide = allHidden(parent.querySelectorAll(childStr));
+            parent.classList.toggle(kidsHiddenClass, shouldHide)
+        });
+    })
 
-    sections.forEach(s => {
-        const allGroupsHidden = allHidden(s.querySelectorAll(hidableElements[2]));
-        s.classList.toggle(hiddenClass, allGroupsHidden)
-    });
-
-    const worlds = document.querySelectorAll(hidableElements[0]);
-
-    worlds.forEach(w => {
-        const allSectionsHidden = allHidden(w.querySelectorAll(hidableElements[1]));
-        w.classList.toggle(hiddenClass, allSectionsHidden)
-    });
     calcProgressBars()
 }
 

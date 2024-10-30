@@ -338,8 +338,8 @@ def mark_advice_completed(advice, force=False):
             pass
     else:
         try:
-            prog = str(advice.progression).strip('x').strip('%')
-            goal = str(advice.goal).strip('x').strip('%')
+            prog = str(advice.progression).strip('x%')
+            goal = str(advice.goal).strip('x%')
             if advice.goal and advice.progression and float(prog) >= float(goal):
                 advice.progression = ""
                 advice.goal = "✔"
