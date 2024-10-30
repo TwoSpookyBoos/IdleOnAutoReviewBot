@@ -3871,7 +3871,7 @@ filter_never = [
     "Golden Jam", "Golden Kebabs", "Golden Meat Pie", "Golden Nomwich", "Golden Ham", "Golden Bread", "Golden Ribs", "Golden Cheese",
     "Golden Grilled Cheese Nomwich", "Golden Hampter Gummy Candy", "Golden Nigiri", "Golden Dumpling", "Golden Cake", "Gold Food Coupon",
     #Choppin Efficiency talent
-    "Leaf1",
+    "Grass Leaf",
     #Consumables
     "Gem", "Gem Envelope", "Small Experience Balloon", "Medium Experience Balloon", "Large Experience Balloon",
     "1 HR Time Candy", "2 HR Time Candy", "4 HR Time Candy", "12 HR Time Candy", "24 HR Time Candy", "72 HR Time Candy",
@@ -6230,6 +6230,8 @@ gamingSuperbitsDict = {
 snailMaxRank = 25
 
 def getDivinityNameFromIndex(inputValue: int) -> str:
+    if inputValue == 0:
+        return "Unlinked"
     return divinity_divinitiesDict.get(inputValue, {"Name": f"UnknownDivinity{inputValue}"}).get("Name")
 def getOfferingNameFromIndex(inputValue):
     return divinity_offeringsDict.get(inputValue, {"Name": f"UnknownOffering{inputValue}"}).get("Name")
