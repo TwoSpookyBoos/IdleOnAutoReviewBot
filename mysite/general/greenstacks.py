@@ -18,7 +18,7 @@ def getEquinoxDreams() -> dict:
     return results
 
 
-def getMissableGStacks(owned_stuff: Assets):
+def getMissableGStacksAdviceSection(owned_stuff: Assets) -> AdviceSection:
     advice_ObtainedQuestGStacks = owned_stuff.quest_items_gstacked
     advice_EndangeredQuestGStacks = list(owned_stuff.quest_items_gstackable)
     advice_MissedQuestGStacks = []
@@ -137,16 +137,16 @@ def getMissableGStacks(owned_stuff: Assets):
         picture="Greenstack.png",
         note=note,
         groups=questGStacks_AdviceGroupDict.values(),
-        unrated=True
+        unrated=True,
+        complete=still_obtainable == 0
     )
-    questGStacks_AdviceSection.complete = still_obtainable == 0
 
     return questGStacks_AdviceSection
 
-def setGStackProgressionTier():
+def getGStackAdviceSections():
     equinoxDreamsStatus = getEquinoxDreams()
     all_owned_stuff: Assets = session_data.account.stored_assets
-    questGStacks_AdviceSection = getMissableGStacks(all_owned_stuff)
+    questGStacks_AdviceSection = getMissableGStacksAdviceSection(all_owned_stuff)
 
     unprecedented_gstacks = all_owned_stuff.items_gstacked_unprecedented
     if unprecedented_gstacks:
@@ -232,6 +232,5 @@ def setGStackProgressionTier():
         picture="Greenstack.png",
         groups=groups,
     )
-    section_regular_gstacks.complete = True if not section_regular_gstacks.groups else False
 
     return questGStacks_AdviceSection, section_regular_gstacks

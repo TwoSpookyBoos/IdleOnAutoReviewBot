@@ -127,6 +127,9 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
             )
         )
 
+    for advice in settings_advice['Information']:
+        mark_advice_completed(advice)
+
     settings_ag = AdviceGroup(
         tier="",
         pre_string="Collider Alerts and General Information",
@@ -214,34 +217,17 @@ def getAtomExclusionsList() -> list[str]:
 
     return exclusionsList
 
-def setColliderProgressionTier() -> AdviceSection:
+def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
     collider_AdviceDict = {
-        'Atoms': {}
+        'Atoms': {},
     }
-    collider_AdviceGroupDict = {}
-    collider_AdviceSection = AdviceSection(
-        name="Atom Collider",
-        tier="Not Yet Evaluated",
-        header="",
-        picture="Collider.gif",
-    )
-
-    highestConstructionLevel = max(session_data.account.all_skills["Construction"])
-    if highestConstructionLevel < 1:
-        collider_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
-        collider_AdviceSection.unreached = True
-        return collider_AdviceSection
-    elif session_data.account.construction_buildings['Atom Collider']['Level'] < 1:
-        collider_AdviceSection.header = "Come back after unlocking the Atom Collider within the Construction skill in World 3!"
-        collider_AdviceSection.unreached = True
-        return collider_AdviceSection
-
+    tier_atomLevels = 0
     info_tiers = 1
     max_tier = max(atoms_progressionTiers.keys()) - info_tiers
-    tier_atomLevels = 0
-    pAtoms = session_data.account.atom_collider['Atoms']  #Player Atoms
+    pAtoms = session_data.account.atom_collider['Atoms']  # Player Atoms
     exclusionsList = getAtomExclusionsList()
 
+    # Assess Tiers
     for tier, tierRequirements in atoms_progressionTiers.items():
         subgroupName = f"To reach Tier {tier}"
         #Atom levels
@@ -259,26 +245,43 @@ def setColliderProgressionTier() -> AdviceSection:
         if tier_atomLevels == tier-1 and subgroupName not in collider_AdviceDict['Atoms']:
             tier_atomLevels = tier
 
-    # Generate AdviceGroups
-    collider_AdviceGroupDict['ColliderSettings'] = getColliderSettingsAdviceGroup()
-    collider_AdviceGroupDict['CostReduction'] = getCostReductionAdviceGroup()
-    collider_AdviceGroupDict['Atoms'] = AdviceGroup(
+    tiers_ag = AdviceGroup(
         tier=f"{tier_atomLevels if tier_atomLevels < max_tier else ''}",
         pre_string=f"{'Informational- ' if tier_atomLevels >= max_tier else ''}Level Priority Atoms",
         advices=collider_AdviceDict['Atoms'],
         informational=True if tier_atomLevels >= max_tier else False
     )
+    overall_ColliderTier = min(max_tier + info_tiers, tier_atomLevels)
+    return tiers_ag, overall_ColliderTier, max_tier
+
+def getColliderAdviceSection() -> AdviceSection:
+    #highestConstructionLevel = max(session_data.account.all_skills["Construction"])
+    if session_data.account.construction_buildings['Atom Collider']['Level'] < 1:
+        collider_AdviceSection = AdviceSection(
+            name="Atom Collider",
+            tier="Not Yet Evaluated",
+            header=f"Come back after unlocking the Atom Collider within the Construction skill in World 3!",
+            picture="Collider.gif",
+            unreached=True
+        )
+        return collider_AdviceSection
+
+    # Generate AdviceGroups
+    collider_AdviceGroupDict = {}
+    collider_AdviceGroupDict['Atoms'], overall_ColliderTier, max_tier = getProgressionTiersAdviceGroup()
+    collider_AdviceGroupDict['ColliderSettings'] = getColliderSettingsAdviceGroup()
+    collider_AdviceGroupDict['CostReduction'] = getCostReductionAdviceGroup()
 
     # Generate AdviceSection
-    overall_ColliderTier = min(max_tier + info_tiers, tier_atomLevels)  # Looks silly, but may get more evaluations in the future
+
     tier_section = f"{overall_ColliderTier}/{max_tier}"
-    collider_AdviceSection.tier = tier_section
-    collider_AdviceSection.pinchy_rating = overall_ColliderTier
-    collider_AdviceSection.groups = collider_AdviceGroupDict.values()
-    if overall_ColliderTier >= max_tier:
-        collider_AdviceSection.header = f"Best Collider tier met: {tier_section}{break_you_best}"
-        collider_AdviceSection.complete = True
-    else:
-        collider_AdviceSection.header = f"Best Collider tier met: {tier_section}"
+    collider_AdviceSection = AdviceSection(
+        name="Atom Collider",
+        tier=tier_section,
+        pinchy_rating=overall_ColliderTier,
+        header=f"Best Collider tier met: {tier_section}{break_you_best if overall_ColliderTier >= max_tier else ''}",
+        picture="Collider.gif",
+        groups=collider_AdviceGroupDict.values()
+    )
     return collider_AdviceSection
     

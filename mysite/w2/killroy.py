@@ -7,26 +7,6 @@ from consts import break_you_best, killroy_only_1_level  # killroy_progressionTi
 
 logger = get_logger(__name__)
 
-def getKillroyCurrentUpgradesAdviceGroup():
-    current_advices = []
-    for upgradeName, upgradeDict in session_data.account.killroy.items():
-        #logger.debug(f"{upgradeName} available? {upgradeDict['Available']}")
-        current_advices.append(Advice(
-            label=f"{upgradeName}"
-                  f"{'<br>Complete ' if not upgradeDict['Available'] else ''}"
-                  f"{upgradeDict['Remaining'] if not upgradeDict['Available'] else ''}"
-                  f"{' more Killroy fights to unlock this upgrade' if not upgradeDict['Available'] else ''}",
-            picture_class=upgradeDict['Image'],
-            progression=upgradeDict['Upgrades']
-        ))
-    current_ag = AdviceGroup(
-        tier="",
-        pre_string="Informational- Current upgrades",
-        advices=current_advices
-    )
-
-    return current_ag
-
 def getKillroyUpgradeRecommendationsAdviceGroup():
     ratio_label = '2 Skulls to 3 Timer Ratio'
     only_1_label = 'Only 1 level needed'
@@ -130,6 +110,7 @@ def getKillroyUpgradeRecommendationsAdviceGroup():
               f"<br>It is worth leveling but idk exacts yet.",
         picture_class='killroy-respawn',
         progression=session_data.account.killroy['Respawn']['Upgrades'],
+        goal='TBD'
     ))
 
     for upgradeName, upgradeDict in session_data.account.killroy.items():
@@ -154,38 +135,39 @@ def getKillroyUpgradeRecommendationsAdviceGroup():
 
     return future_ag
 
-def setKillroyProgressionTier():
+def getKillroyAdviceSection() -> AdviceSection:
     killroy_AdviceDict = {}
     killroy_AdviceGroupDict = {}
-    killroy_AdviceSection = AdviceSection(
-        name="Killroy",
-        tier="0",
-        pinchy_rating=0,
-        header="Killroy Information",
-        picture="wiki/Killroy.gif",
-        unrated=True
-    )
+
     if session_data.account.highestWorldReached < 2:
-        killroy_AdviceSection.header = "Come back after unlocking Killroy in W2 town!"
-        killroy_AdviceSection.unreached = True
+        killroy_AdviceSection = AdviceSection(
+            name="Killroy",
+            tier="0",
+            pinchy_rating=0,
+            header="Come back after unlocking Killroy in W2 town!",
+            picture="wiki/Killroy.gif",
+            unrated=True,
+            unreached=True
+        )
         return killroy_AdviceSection
 
-    infoTiers = 0
-    max_tier = 0 #max(killroy_progressionTiers.keys(), default=0) - infoTiers
+    info_tiers = 0
+    max_tier = 0 - info_tiers  #max(killroy_progressionTiers.keys(), default=0) - infoTiers
     tier_Killroy = 0
 
+    #Generate AdviceGroup
     killroy_AdviceGroupDict['Future'] = getKillroyUpgradeRecommendationsAdviceGroup()
-    #killroy_AdviceGroupDict['Current'] = getKillroyCurrentUpgradesAdviceGroup()
 
-    overall_KillroyTier = min(max_tier + infoTiers, tier_Killroy)
+    #Generate AdviceSection
+    overall_KillroyTier = min(max_tier + info_tiers, tier_Killroy)
     tier_section = f"{overall_KillroyTier}/{max_tier}"
-    killroy_AdviceSection.pinchy_rating = overall_KillroyTier
-    killroy_AdviceSection.tier = tier_section
-    killroy_AdviceSection.groups = killroy_AdviceGroupDict.values()
-    # if overall_KillroyTier >= max_tier:
-    #     killroy_AdviceSection.header = f"Best Killroy tier met: {tier_section}{break_you_best}️"
-    #     #killroy_AdviceSection.complete = True
-    # else:
-    #     killroy_AdviceSection.header = f"Best Killroy tier met: {tier_section}"
-
+    killroy_AdviceSection = AdviceSection(
+        name="Killroy",
+        tier=tier_section,
+        pinchy_rating=overall_KillroyTier,
+        header="Killroy Information",
+        picture="wiki/Killroy.gif",
+        groups=killroy_AdviceGroupDict.values(),
+        unrated=True
+    )
     return killroy_AdviceSection

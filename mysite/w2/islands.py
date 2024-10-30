@@ -1,6 +1,6 @@
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
-from utils.data_formatting import  mark_advice_completed
+from utils.data_formatting import mark_advice_completed
 from flask import g as session_data
 from consts import islands_progressionTiers, break_you_best, maxTiersPerGroup, islands_fractal_rewards_dict
 
@@ -69,28 +69,13 @@ def getFractalAdviceGroup() -> AdviceGroup:
 
     return fractal_advicegroup
 
-def setIslandsProgressionTier():
+def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
     islands_AdviceDict = {}
-    islands_AdviceGroupDict = {}
-    islands_AdviceSection = AdviceSection(
-        name="Islands",
-        tier="0",
-        pinchy_rating=0,
-        header="Best Islands tier met: Not Yet Evaluated",
-        picture="wiki/Island_Expeditions_Boat.gif",
-        complete=False
-    )
-    highestFishingSkillLevel = max(session_data.account.all_skills["Fishing"])
-    if highestFishingSkillLevel < 30:
-        islands_AdviceSection.header = "Come back after reaching level 30 Fishing!"
-        islands_AdviceSection.unreached = True
-        return islands_AdviceSection
-
     infoTiers = 0
-    max_tier = max(islands_progressionTiers.keys(), default=0) - infoTiers
+    max_tier = max(islands_progressionTiers.keys()) - infoTiers
     tier_Islands = 0
 
-    #Assess Tiers
+    # Assess Tiers
     for tierNumber, tierRequirements in islands_progressionTiers.items():
         subgroupName = f"To reach Tier {tierNumber}"
         for islandName in tierRequirements.get('Islands', []):
@@ -104,27 +89,41 @@ def setIslandsProgressionTier():
                     ))
         if subgroupName not in islands_AdviceDict and tier_Islands == tierNumber - 1:
             tier_Islands = tierNumber
-
-
-    #Advice Groups
-    islands_AdviceGroupDict['Tiers'] = AdviceGroup(
+    tiers_ag = AdviceGroup(
         tier=tier_Islands,
         pre_string="Unlock all Islands",
         advices=islands_AdviceDict
     )
+    overall_SectionTier = min(max_tier + infoTiers, tier_Islands)
+    return tiers_ag, overall_SectionTier, max_tier
+
+def getIslandsAdviceSection() -> AdviceSection:
+    highestFishingSkillLevel = max(session_data.account.all_skills["Fishing"])
+    if highestFishingSkillLevel < 30:
+        islands_AdviceSection = AdviceSection(
+            name="Islands",
+            tier="Not Yet Evaluated",
+            header="Come back after reaching level 30 Fishing!",
+            picture="wiki/Island_Expeditions_Boat.gif",
+            unreached=True
+        )
+        return islands_AdviceSection
+
+    #Advice Groups
+    islands_AdviceGroupDict = {}
+    islands_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
     islands_AdviceGroupDict['Trash'] = getTrashIslandAdviceGroup()
     islands_AdviceGroupDict['Fractal'] = getFractalAdviceGroup()
 
     #Advice Section
-    overall_IslandsTier = min(max_tier + infoTiers, tier_Islands)
-    tier_section = f"{overall_IslandsTier}/{max_tier}"
-    islands_AdviceSection.pinchy_rating = overall_IslandsTier
-    islands_AdviceSection.tier = tier_section
-    islands_AdviceSection.groups = islands_AdviceGroupDict.values()
-    if overall_IslandsTier >= max_tier:
-        islands_AdviceSection.header = f"Best Islands tier met: {tier_section}{break_you_best}️"
-        islands_AdviceSection.complete = True
-    else:
-        islands_AdviceSection.header = f"Best Islands tier met: {tier_section}"
 
+    tier_section = f"{overall_SectionTier}/{max_tier}"
+    islands_AdviceSection = AdviceSection(
+        name="Islands",
+        tier=tier_section,
+        pinchy_rating=overall_SectionTier,
+        header=f"Best Islands tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}️",
+        picture="wiki/Island_Expeditions_Boat.gif",
+        groups=islands_AdviceGroupDict.values()
+    )
     return islands_AdviceSection

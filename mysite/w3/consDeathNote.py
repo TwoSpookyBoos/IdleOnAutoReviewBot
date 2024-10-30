@@ -7,30 +7,6 @@ from utils.logging import get_logger
 
 logger = get_logger(__name__)
 
-def getAllKillsDisplayAdviceGroup():
-    advices = {}
-    ags = []
-    apocName = apocNamesList[-1]
-    difficultyName = apocDifficultyNameList[-2]
-    for characterIndex in session_data.account.apocCharactersIndexList:
-        toon = session_data.account.all_characters[characterIndex]
-        advices[toon.character_name] = []
-        for enemy in toon.apoc_dict[apocName][difficultyName]:
-            advices[toon.character_name].append(
-                Advice(
-                    label=enemy[0],
-                    picture_class=enemy[3],
-                    goal=f"{enemy[1]:,}"),
-            )
-    for toon_name, toon_advice_list in advices.items():
-        ags.append(AdviceGroup(
-            tier="",
-            pre_string=f"Info- All kills for {toon_name} without a filter. Have fun!",
-            advices=toon_advice_list,
-            informational=True
-        ))
-    return ags
-
 def getAllKillsDisplaySubgroupedByWorldAdviceGroup():
     advices = {}
     ags = []
@@ -64,12 +40,12 @@ def getAllKillsDisplaySubgroupedByWorldAdviceGroup():
             tier="",
             pre_string=f"Informational- All kills for {toon_name} without a filter. Have fun",
             advices=toon_advice_list,
-            informational=True
+            informational=True,
+            complete=True
         ))
     return ags
 
-
-def setConsDeathNoteProgressionTier():
+def getDeathNoteProgressionTiersAdviceGroup():
     deathnote_AdviceDict = {
         "W1": [],
         "W2": [],
@@ -81,33 +57,8 @@ def setConsDeathNoteProgressionTier():
         "CHOW": {},
         "MEOW": {}
     }
-
-    deathnote_AdviceGroupDict = {}
-    deathnote_AdviceSection = AdviceSection(
-        name="Death Note",
-        tier="",
-        header="Recommended Death Note actions",
-        picture="Construction_Death_Note.png"
-    )
-    highestConstructionLevel = max(session_data.account.all_skills["Construction"])
-    if highestConstructionLevel < 1:
-        deathnote_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
-        deathnote_AdviceSection.unreached = True
-        return deathnote_AdviceSection
-    elif session_data.account.construction_buildings['Death Note']['Level'] < 1:
-        deathnote_AdviceSection.header = "Come back after unlocking the Death Note within the Construction skill in World 3!"
-        deathnote_AdviceSection.unreached = True
-        return deathnote_AdviceSection
-
-    # Just shortening the paths
-    apocCharactersIndexList = session_data.account.apocCharactersIndexList
-    bbCharactersIndexList = session_data.account.bbCharactersIndexList
-    meowBBIndex = session_data.account.meowBBIndex
-    fullDeathNoteDict = session_data.account.enemy_worlds
-
     infoTiers = 2
-    max_tier = deathNote_progressionTiers[-1][0] - infoTiers  #Final 2 tiers are info only
-    overall_DeathNoteTier = 0
+    max_tier = deathNote_progressionTiers[-1][0] - infoTiers
     worldIndexes = []
     tier_combo = {}
     for number in range(1, currentWorld + 1):
@@ -125,6 +76,11 @@ def setConsDeathNoteProgressionTier():
     chowsForNextTier = 0
     meowsForNextTier = 0
 
+    # Just shortening the paths
+    apocCharactersIndexList = session_data.account.apocCharactersIndexList
+    meowBBIndex = session_data.account.meowBBIndex
+    fullDeathNoteDict = session_data.account.enemy_worlds
+
     highestZOWCount = 0
     highestZOWCountIndex = None
     highestCHOWCount = 0
@@ -141,21 +97,21 @@ def setConsDeathNoteProgressionTier():
             highestCHOWCount = session_data.account.all_characters[barbIndex].apoc_dict['CHOW']['Total']
             highestCHOWCountIndex = barbIndex
 
-    #assess tiers
+    # Assess Tiers
     for tier in deathNote_progressionTiers:
-        #tier[0] = int tier
-        #tier[1] = int w1LowestSkull
-        #tier[2] = int w2LowestSkull
-        #tier[3] = int w3LowestSkull
-        #tier[4] = int w4LowestSkull
-        #tier[5] = int w5LowestSkull
-        #tier[6] = int w6LowestSkull
-        #tier[7] = int w7LowestSkull
-        #tier[8] = int w8LowestSkull
-        #tier[9] = int zowCount
-        #tier[10] = int chowCount
-        #tier[11] = int meowCount
-        #tier[12] = str Notes
+        # tier[0] = int tier
+        # tier[1] = int w1LowestSkull
+        # tier[2] = int w2LowestSkull
+        # tier[3] = int w3LowestSkull
+        # tier[4] = int w4LowestSkull
+        # tier[5] = int w5LowestSkull
+        # tier[6] = int w6LowestSkull
+        # tier[7] = int w7LowestSkull
+        # tier[8] = int w8LowestSkull
+        # tier[9] = int zowCount
+        # tier[10] = int chowCount
+        # tier[11] = int meowCount
+        # tier[12] = str Notes
 
         # Basic Worlds
         for worldIndex in worldIndexes:
@@ -216,7 +172,7 @@ def setConsDeathNoteProgressionTier():
                                         label=enemy[0],
                                         picture_class=enemy[3],
                                         progression=f"{enemy[2]}%"),
-                                    )
+                                )
                 else:
                     deathnote_AdviceDict["CHOW"] = [
                         Advice(
@@ -246,7 +202,7 @@ def setConsDeathNoteProgressionTier():
                                             label=enemy[0],
                                             picture_class=enemy[3],
                                             progression=f"{enemy[2]}%"),
-                                        )
+                                    )
                 else:
                     deathnote_AdviceDict["MEOW"] = [
                         Advice(
@@ -256,7 +212,7 @@ def setConsDeathNoteProgressionTier():
                             goal=1)
                     ]
 
-    #If the player is basically finished with cooking, bypass the requirement while still showing the progress
+    # If the player is basically finished with cooking, bypass the requirement while still showing the progress
     if session_data.account.cooking['MaxRemainingMeals'] < cookingCloseEnough:
         if tier_combo['ZOW'] < max_tier + infoTiers:
             tier_combo['ZOW'] = max_tier + infoTiers
@@ -265,8 +221,9 @@ def setConsDeathNoteProgressionTier():
         if tier_combo['MEOW'] < max_tier + infoTiers:
             tier_combo['MEOW'] = max_tier + infoTiers
 
-    #Generate Advice Groups
-    #Basic Worlds
+    # Generate Advice Groups
+    deathnote_AdviceGroupDict = {}
+    # Basic Worlds
     for worldIndex in worldIndexes:
         deathnote_AdviceGroupDict[f"W{worldIndex}"] = AdviceGroup(
             tier=str(tier_combo[worldIndex]),
@@ -331,21 +288,41 @@ def setConsDeathNoteProgressionTier():
         for ag in all_kills_ags:
             deathnote_AdviceGroupDict[ag.pre_string] = ag
 
-    #Generate Advice Section
-    if len(bbCharactersIndexList) > 1:
-        deathnote_AdviceSection.note = "Important! As of February 2024, Super CHOWs only give benefit if completed on your 2nd Blood Berserker regardless of the platform you play on."
-    overall_DeathNoteTier = min((max_tier + infoTiers), tier_combo[1], tier_combo[2], tier_combo[3],
-                                tier_combo[4], tier_combo[5], tier_combo[6],
-                                tier_combo['ZOW'], tier_combo['CHOW'], tier_combo['MEOW'])  #tier_zows, tier_chows, tier_meows
+    overall_SectionTier = min(
+        max_tier + infoTiers,
+        tier_combo[1], tier_combo[2], tier_combo[3],
+        tier_combo[4], tier_combo[5], tier_combo[6],
+        tier_combo['ZOW'], tier_combo['CHOW'], tier_combo['MEOW']
+    )
+    return deathnote_AdviceGroupDict, overall_SectionTier, max_tier
 
-    tier_section = f"{overall_DeathNoteTier}/{max_tier}"
-    deathnote_AdviceSection.tier = tier_section
-    deathnote_AdviceSection.pinchy_rating = overall_DeathNoteTier
-    deathnote_AdviceSection.groups = deathnote_AdviceGroupDict.values()
-    if overall_DeathNoteTier >= max_tier:
-        deathnote_AdviceSection.header = f"Best Death Note tier met: {tier_section}{break_you_best}"
-        deathnote_AdviceSection.complete = True
-    else:
-        deathnote_AdviceSection.header = f"Best Death Note tier met: {tier_section}"
+
+def getDeathNoteAdviceSection() -> AdviceSection:
+    #highestConstructionLevel = max(session_data.account.all_skills["Construction"])
+    if session_data.account.construction_buildings['Death Note']['Level'] < 1:
+        deathnote_AdviceSection = AdviceSection(
+            name="Death Note",
+            tier="",
+            header=f"Come back after unlocking the Death Note within the Construction skill in World 3!",
+            picture="Construction_Death_Note.png",
+            unreached=True
+        )
+        return deathnote_AdviceSection
+
+    #Generate AdviceGroups
+    deathnote_AdviceGroupDict, overall_SectionTier, max_tier = getDeathNoteProgressionTiersAdviceGroup()
+
+    #Generate AdviceSection
+    tier_section = f"{overall_SectionTier}/{max_tier}"
+    deathnote_AdviceSection = AdviceSection(
+        name="Death Note",
+        tier=tier_section,
+        pinchy_rating=overall_SectionTier,
+        header=f"Best Death Note tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
+        picture="Construction_Death_Note.png",
+        groups=deathnote_AdviceGroupDict.values()
+    )
+    if len(session_data.account.bbCharactersIndexList) > 1:
+        deathnote_AdviceSection.note = "Important! As of February 2024, Super CHOWs only give benefit if completed on your 2nd Blood Berserker regardless of the platform you play on."
 
     return deathnote_AdviceSection
