@@ -126,7 +126,7 @@ def getProgressionTiersAdviceGroup():
                         progression=prog,
                         goal=goal,
                         resource=resource,
-                        complete=False
+                        completed=False
                     ))
             if subgroupName not in achievements_AdviceDict[categoryName] and tiers[categoryName] == tierNumber - 1:
                 tiers[categoryName] = tierNumber

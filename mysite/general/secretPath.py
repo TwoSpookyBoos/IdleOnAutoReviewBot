@@ -164,7 +164,7 @@ def getRightHandsAdviceGroups():
         ),
         advices=stayahead_advices,
         informational=True,
-        complete=perfect
+        completed=perfect
     )
     stayahead_ag.remove_empty_subgroups()
     return catchup_ag, stayahead_ag

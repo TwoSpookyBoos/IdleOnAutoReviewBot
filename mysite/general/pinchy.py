@@ -366,7 +366,7 @@ def generate_advice_list(sections: list[Tier], threshold: Threshold):
             unit="T",
             value_format="{unit} {value}",
             as_link=True,
-            complete=section.section_complete,
+            completed=section.section_complete,
             informational=section.section_informational,
             unrated=section.section_unrated
             ) for section in sections
@@ -403,7 +403,7 @@ def getUnratedLinksAdviceGroup(unrated_sections) -> AdviceGroup:
                     label=section.name,
                     picture_class=section.name,
                     as_link=True,
-                    complete=section.complete,
+                    completed=section.completed,
                     unrated=section.unrated,
                     informational=section.informational
                 )
@@ -420,7 +420,7 @@ def getUnratedLinksAdviceGroup(unrated_sections) -> AdviceGroup:
 def getAlertsAdviceGroup() -> AdviceGroup:
     for subgroupName in session_data.account.alerts_AdviceDict:
         for advice in session_data.account.alerts_AdviceDict[subgroupName]:
-            advice.complete = False
+            advice.completed = False
     alerts_AG = AdviceGroup(
         tier="",
         pre_string="Alerts",
@@ -432,7 +432,7 @@ def getAlertsAdviceGroup() -> AdviceGroup:
 
 
 def generatePinchyWorld(pinchable_sections: list[AdviceSection], unrated_sections: list[AdviceSection]):
-    dictOfPRs = {section.name: [section.pinchy_rating, section.complete, section.informational, section.unrated] for section in pinchable_sections if not section.unreached}
+    dictOfPRs = {section.name: [section.pinchy_rating, section.completed, section.informational, section.unrated] for section in pinchable_sections if not section.unreached}
 
     sectionPlacements: Placements = sort_pinchy_reviews(dictOfPRs)
     expectedThreshold: Threshold = tier_from_monster_kills(dictOfPRs)
@@ -461,8 +461,7 @@ def generatePinchyWorld(pinchable_sections: list[AdviceSection], unrated_section
         pinchyExpected = f"Expected Progression, based on highest enemy map: {expectedThreshold}"
 
     advice_groups = generate_advice_groups(sectionPlacements.final)
-    if not session_data.account.hide_unrated:
-        advice_groups.append(getUnratedLinksAdviceGroup(unrated_sections))
+    advice_groups.append(getUnratedLinksAdviceGroup(unrated_sections))
     advice_groups.insert(0, getAlertsAdviceGroup())
 
     sections_maxed_count = sectionPlacements.maxed_count
@@ -474,7 +473,7 @@ def generatePinchyWorld(pinchable_sections: list[AdviceSection], unrated_section
         tier=expectedThreshold.name,
         header=pinchyExpected,
         collapse=True,
-        complete=False
+        completed=False
     )
 
     pinchy_low = AdviceSection(
@@ -482,7 +481,7 @@ def generatePinchyWorld(pinchable_sections: list[AdviceSection], unrated_section
         tier=lowestThresholdReached.name,
         header=f"Minimum Progression, based on weakest ranked review: {lowestThresholdReached}{equalSnippet}",
         collapse=True,
-        complete=False
+        completed=False
     )
 
     pinchy_all = AdviceSection(

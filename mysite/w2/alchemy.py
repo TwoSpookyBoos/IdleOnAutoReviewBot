@@ -81,7 +81,7 @@ def getVialsProgressionTiersAdviceGroup():
                     goal = int(vial_costs[alchemyVialsDict[requiredVial]['Level']])
                     prog = 100 * (session_data.account.all_assets.get(alchemyVialsDict[requiredVial]['Material']).amount / max(1, goal))
                     # Generate Alerts
-                    if prog >= goal and alchemyVialsDict[requiredVial]['Level'] == max_VialLevel-1:
+                    if prog >= 100 and alchemyVialsDict[requiredVial]['Level'] == max_VialLevel-1:
                         session_data.account.alerts_AdviceDict['World 2'].append(Advice(
                             label=f"{requiredVial} {{{{ Vial|#vials }}}} ready to be maxed!",
                             picture_class="vial-13"

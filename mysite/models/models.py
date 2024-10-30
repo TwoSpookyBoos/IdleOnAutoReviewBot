@@ -476,7 +476,7 @@ class Advice(AdviceBase):
             unit: str = "",
             value_format: str = "{value}{unit}",
             resource: str = "",
-            complete: bool = None,
+            completed: bool = None,
             unrated: bool = False,
             **extra
     ):
@@ -498,11 +498,14 @@ class Advice(AdviceBase):
                 )
             if self.goal:
                 self.goal = self.value_format.format(value=self.goal, unit=self.unit)
-        if complete is None:
-            self.complete: bool = self.goal in ("✔", "") or self.label.startswith(ignorable_labels)
+        if completed is None:
+            self.completed: bool = self.goal in ("✔", "") or self.label.startswith(ignorable_labels)
         else:
-            self.complete = complete
+            self.completed = completed
         self.unrated: bool = unrated
+
+        if self.goal == "✔":
+            self.status = "gilded"
 
     @property
     def css_class(self) -> str:
@@ -539,7 +542,7 @@ class AdviceGroup(AdviceBase):
         picture_class: str = "",
         collapse: bool | None = None,
         advices: list[Advice] | dict[str, list[Advice]] = [],
-        complete: bool = None,
+        completed: bool = None,
         informational: bool = False,
         **extra,
     ):
@@ -551,7 +554,7 @@ class AdviceGroup(AdviceBase):
         self.formatting: str = formatting
         self._picture_class: str = picture_class
         self.advices = advices
-        self.complete = complete
+        self.completed = completed
         self.informational = informational
 
     def __str__(self) -> str:
@@ -612,23 +615,6 @@ class AdviceGroup(AdviceBase):
             for field in self.__compare_by
         )
 
-    def remove_completed_advices(self):
-        # If the Group is already marked as Complete, blank out the advices
-        if self.complete:
-            self.advices = []
-        # Elif there are no advices and the Group isn't yet marked Complete, mark it Complete
-        elif not self.advices and not self.complete:
-            self.complete = True
-        # Else, remove the completed advices but leave the incomplete advices
-        else:
-            if isinstance(self.advices, list):
-                self.advices = [value for value in self.advices if value.goal != "✔" and value.goal != "" and not value.complete]
-            if isinstance(self.advices, dict):
-                for key, value in self.advices.items():
-                    if isinstance(value, list):
-                        self.advices[key] = [v for v in value if v.goal != "✔" and v.goal != "" and not v.complete]
-                self.advices = {key: value for key, value in self.advices.items() if value}
-
     def remove_empty_subgroups(self):
         if isinstance(self.advices, list):
             self.advices = [value for value in self.advices if value]
@@ -647,24 +633,24 @@ class AdviceGroup(AdviceBase):
                 except:
                     pass
 
-    def check_for_completeness(self):
+    def check_for_completeness(self, ignorable=tuple('Weekly Ballot')):
         """
         Used when a bool for complete was not passed in during initialization of the AdviceGroup
         """
-        if self.complete is not None:
+        if self.completed is not None:
             return
         else:
             if isinstance(self.advices, list):
-                temp_advices = [advice for advice in self.advices if not advice.complete]
+                temp_advices = [advice for advice in self.advices if not advice.completed]
             elif isinstance(self.advices, dict):
                 temp_advices = []
                 for key, value in self.advices.items():
                     if isinstance(value, list):
                         #flattern to a single list
-                        temp_advices.extend([advice for advice in value if not advice.complete])
+                        temp_advices.extend([advice for advice in value if not advice.completed])
             else:
                 temp_advices = []
-            self.complete = len(temp_advices) == 0  #True if 0 length, False otherwise
+            self.completed = len(temp_advices) == 0  #True if 0 length, False otherwise
 
 class AdviceSection(AdviceBase):
     """
@@ -692,7 +678,7 @@ class AdviceSection(AdviceBase):
         collapse: bool | None = None,
         groups: list[AdviceGroup] = [],
         pinchy_rating: int = 0,
-        complete: bool | None = None,
+        completed: bool | None = None,
         unreached: bool = False,
         unrated: bool = False,
         informational: bool | None = None,
@@ -706,7 +692,7 @@ class AdviceSection(AdviceBase):
         self.picture: str = picture
         self.groups: list[AdviceGroup] = groups
         self.pinchy_rating: int = pinchy_rating
-        self.complete: bool | None = complete
+        self.completed: bool | None = completed
         self.unreached = unreached
         self.unrated = unrated
         self.informational = informational
@@ -751,26 +737,19 @@ class AdviceSection(AdviceBase):
     def groups(self, groups: list[AdviceGroup]):
         # filters out empty groups by checking if group has no advices
         self._groups = [group for group in groups if group]
+        #self.check_for_completeness()
 
         if g.order_tiers:
             self._groups = sorted(self._groups)
 
-    #def setup_groups(self, groups: list):
-
-    def remove_info_groups(self):
-        self._groups = [group for group in self._groups if not group.informational]
-
-    def remove_complete_groups(self):
-        self._groups = [group for group in self._groups if not group.complete]
-
     def check_for_completeness(self):
-        if self.complete is not None:
+        if self.completed is not None:
             return
         elif self.unreached:
             #Unreached is set when a player hasn't progressed far enough to see the contents of a section. As far from complete as possible
-            self.complete = False
+            self.completed = False
         else:
-            self.complete = len([group for group in self.groups if group and not group.complete]) == 0  #True if 0 length, False otherwise
+            self.completed = len([group for group in self.groups if group and not group.completed]) == 0  #True if 0 length, False otherwise
 
     def check_for_informationalness(self):
         if self.informational is not None:
@@ -799,7 +778,7 @@ class AdviceWorld(AdviceBase):
         sections: list[AdviceSection] = list(),
         banner: str = "",
         title: str = "",
-        complete: bool | None = None,
+        completed: bool | None = None,
         informational: bool | None = None,
         unrated: bool | None = None,
         **extra,
@@ -810,8 +789,8 @@ class AdviceWorld(AdviceBase):
         self.sections: list[AdviceSection] = sections
         self.banner: str = banner
         self.title: str = title
-        if complete is not None:
-            self.complete = complete
+        if completed is not None:
+            self.completed = completed
         else:
             self.check_for_completeness()
         if informational is not None:
@@ -827,20 +806,14 @@ class AdviceWorld(AdviceBase):
     def id(self):
         return kebab(self.name)
 
-    def hide_completed_sections(self):
-        self.sections = [section for section in self.sections if not section.complete]
-    
     def hide_unreached_sections(self):
         self.sections = [section for section in self.sections if not section.unreached]
-
-    def hide_unrated_sections(self):
-        self.sections = [section for section in self.sections if not section.unrated]
 
     def check_for_completeness(self):
         """
         Used when a bool for complete was not passed in during initialization of the AdviceWorld
         """
-        self.complete = len([section for section in self.sections if not section.complete]) == 0  #True if 0 length, False otherwise
+        self.completed = len([section for section in self.sections if not section.completed]) == 0  #True if 0 length, False otherwise
 
     def check_for_informationalness(self):
         self.informational = len([section for section in self.sections if not section.informational]) == 0 and len(
@@ -1260,9 +1233,6 @@ class Account:
         else:
             self.autoloot = False
 
-        self.hide_completed = g.hide_completed
-        self.hide_unrated = g.hide_unrated
-        self.hide_info = g.hide_info
         #consts.maxTiersPerGroup = 1 if g.one_tier else consts.maxTiersPerGroup
 
         # Companions

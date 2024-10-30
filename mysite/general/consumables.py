@@ -232,7 +232,7 @@ def getCandyHourSections():
         header=guaranteedCandyString,
         picture="Candy_1hr.png",
         unrated=True,
-        complete=guaranteedCandyHours == 0
+        completed=guaranteedCandyHours == 0
     )
 
     for qty, (hrs_min, hrs_max) in zip(variable_candy, variable_candy_times):
@@ -256,7 +256,7 @@ def getCandyHourSections():
         header=variableCandyString,
         picture="Candy_Cosmic.png",
         unrated=True,
-        complete=variableCandyHoursMin == 0
+        completed=variableCandyHoursMin == 0
     )
 
     return section_regular, section_variable

@@ -419,7 +419,7 @@ def getProgressionTiersAdviceGroup(trappingLevelsList: list[int]):
         post_string=f"Nature EXP-only traps are recommended for Maestro's Right Hand of Action and Voidwalker's Species Epoch talents."
                     f" You will get ZERO critters from Nature Traps, but the bonus critters from those 2 talents more than make up for this loss!",
         informational=True,
-        complete=min([vman.trapping_level for vman in session_data.account.vmans], default=0) >= 120 or len(trapping_AdviceDict["BeginnerNatures"]) == 0
+        completed=min([vman.trapping_level for vman in session_data.account.vmans], default=0) >= 120 or len(trapping_AdviceDict["BeginnerNatures"]) == 0
     )
     trapping_AdviceGroupDict["NonMetaTraps"] = AdviceGroup(
         tier="",
@@ -434,7 +434,7 @@ def getProgressionTiersAdviceGroup(trappingLevelsList: list[int]):
         advices=trapping_AdviceDict["CritterTraps"],
         post_string="Set critter traps with your Beast Master after maximizing Trapping Efficiency",
         informational=True,
-        complete=True
+        completed=True
     )
     trapping_AdviceGroupDict["ShinyTraps"] = AdviceGroup(
         tier="",
@@ -442,7 +442,7 @@ def getProgressionTiersAdviceGroup(trappingLevelsList: list[int]):
         advices=trapping_AdviceDict["ShinyTraps"],
         post_string="Wear the Shiny Snitch prayer when Collecting. Shorter trap durations will earn more total Shiny Critters per day",
         informational=True,
-        complete=True
+        completed=True
     )
     trapping_AdviceGroupDict["EXPTraps"] = AdviceGroup(
         tier="",
@@ -450,7 +450,7 @@ def getProgressionTiersAdviceGroup(trappingLevelsList: list[int]):
         advices=trapping_AdviceDict["EXPTraps"],
         post_string="Set EXP traps with your Mman/Vman after maximizing Trapping EXP",
         informational=True,
-        complete=True
+        completed=True
     )
     overall_SectionTier = min(max_tier, tier_unlockCritters)
     return trapping_AdviceGroupDict, overall_SectionTier, max_tier

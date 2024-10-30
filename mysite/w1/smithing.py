@@ -156,7 +156,7 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
             advices=bar_Advices,
             post_string="Note: Partial stacks round up to whole bars when claiming AFK",
             informational=True,
-            complete=sources_ag.complete
+            completed=sources_ag.completed
         )
     cap_AdviceGroups = [sources_ag, total_ag]
     return cap_AdviceGroups

@@ -1,4 +1,4 @@
-<section id="{{ section.css_class }}">
+<section id="{{ section.css_class }}" class="{% if section.completed %} completed{% endif %}{% if section.informational %} informational{% endif %}{% if section.unrated %} unrated{% endif %}">
     <h1 class="subheading{% if section %} toggler{% endif %}{% if section.collapse %} folded{% endif %}">
         {% if section.picture %}
             <img src="{{ section.picture | img }}" alt="{{ section.name }}" loading="lazy">
@@ -16,7 +16,7 @@
             <li id="{{ section.css_class }}-tier" class="groups">
                 {% for group in section.groups %}
                     {% if group %}
-                    <div class="advice-group{% if group.hide %} hidden{% endif %}">
+                    <div class="advice-group{% if group.hide %} hidden{% endif %}{% if group.completed %} completed{% endif %}{% if group.informational %} informational{% endif %}{% if group.unrated %} unrated{% endif %}">
                         {% if group.heading %}
                             <span class="{{ group.picture_class }}">{{ group.heading }}</span>
                         {% endif %}
@@ -26,20 +26,20 @@
                                 <li class="advice-title"><strong>{{ title }}</strong></li>
                             {% endif %}
                             {% for advice in advices %}
-                                <span class="progress-box{% if not progress_bars %} hidden{% endif %} {{ advice.status }}">
+                                <span class="progress-box{% if not progress_bars %} hidden{% endif %} {{ advice.status }}{% if advice.completed %} completed{% endif %}{% if advice.informational %} informational{% endif %}{% if advice.unrated %} unrated{% endif %} {{ advice.status }}">
                                     <span class="progress-bar"></span>
                                 </span>
-                                <li class="advice {{ advice.css_class }} lazy">
+                                <li class="advice {{ advice.css_class }} lazy{% if advice.completed %} completed{% endif %}{% if advice.informational %} informational{% endif %}{% if advice.unrated %} unrated{% endif %}">
                                 {% if advice.as_link %}
                                     <a href="#{{ advice.css_class }}">{{ advice.label }}</a>
                                 {% else %}
                                     {{ advice.label | safe }}
                                 {% endif %}
                                 </li>
-                                <li class="resource{% if advice.resource %} resource-{{ advice.resource }} lazy{% endif %}"></li>
-                                <li class="prog">{{ advice.progression }}</li>
-                                <li class="arrow{% if not advice.progression or not advice.goal %}-hidden{% endif %}"></li>
-                                <li class="goal {{ advice.status }}">{{ advice.goal }}</li>
+                                <li class="resource{% if advice.resource %} resource-{{ advice.resource }} lazy{% endif %}{% if advice.completed %} completed{% endif %}{% if advice.informational %} informational{% endif %}{% if advice.unrated %} unrated{% endif %}"></li>
+                                <li class="prog{% if advice.completed %} completed{% endif %}{% if advice.informational %} informational{% endif %}{% if advice.unrated %} unrated{% endif %}">{{ advice.progression }}</li>
+                                <li class="arrow{% if not advice.progression or not advice.goal %}-hidden{% endif %}{% if advice.completed %} completed{% endif %}{% if advice.informational %} informational{% endif %}{% if advice.unrated %} unrated{% endif %}"></li>
+                                <li class="goal{% if advice.completed %} completed{% endif %}{% if advice.informational %} informational{% endif %}{% if advice.unrated %} unrated{% endif %} {{ advice.status }}">{{ advice.goal }}</li>
                             {% endfor %}
                         {% endfor %}
                         </ul>

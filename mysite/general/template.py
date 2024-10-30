@@ -34,7 +34,7 @@ def setTemplateProgressionTier():
             picture="",
             unrated=False,
             unreached=True,
-            complete=False
+            completed=False
         )
         return template_AdviceSection
 
@@ -53,7 +53,7 @@ def setTemplateProgressionTier():
         header=f"Best Template tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}️",
         picture="",
         groups=template_AdviceGroupDict.values(),
-        complete=None,
+        completed=None,
         unrated=None,
     )
 

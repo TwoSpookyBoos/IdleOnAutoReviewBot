@@ -130,7 +130,7 @@ def main(inputData, runType="web"):
             #     (f"{section} {section.tier}: "
             #      f"Unreached={section.unreached}, "
             #      f"Unrated={section.unrated}, "
-            #      f"Complete={section.complete}, "
+            #      f"Completed={section.completed}, "
             #      f"Info={section.informational}"
             #      )
             # )
@@ -146,7 +146,7 @@ def main(inputData, runType="web"):
             group.check_for_completeness()
         section.check_for_completeness()
         section.check_for_informationalness()
-        #logger.debug(f"{section}: Unreached={section.unreached}, Complete={section.complete}, Info={section.informational}, Unrated={section.unrated}")
+        #logger.debug(f"{section}: Unreached={section.unreached}, Completed={section.completed}, Info={section.informational}, Unrated={section.unrated}")
 
     #Build Worlds
     reviews = [
@@ -160,20 +160,8 @@ def main(inputData, runType="web"):
         AdviceWorld(name=WorldName.SPIRITED_VALLEY, sections=sections_6, banner="w6banner.png"),
     ]
 
-    for world in reviews[1:]:
+    for world in reviews:
         world.hide_unreached_sections()  # Feel free to comment this out while testing
-        if session_data.account.hide_unrated:
-            world.hide_unrated_sections()
-        if session_data.account.hide_info:
-            for section in world.sections:
-                section.remove_info_groups()
-        if session_data.account.hide_completed:
-            world.hide_completed_sections()
-            for section in world.sections:
-                section.remove_complete_groups()
-                for group in section.groups:
-                    group.remove_completed_advices()
-                    group.remove_empty_subgroups()
         #logger.debug(f"{world}: Unrated={world.unrated}, Complete={world.complete}, Info={world.informational}")
         continue
 
