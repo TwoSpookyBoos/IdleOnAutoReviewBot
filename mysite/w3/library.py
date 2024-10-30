@@ -125,11 +125,16 @@ def getBonusLevelAdviceGroup() -> AdviceGroup:
     account_subgroupName = f"Account Wide: +{session_data.account.bonus_talents_account_wide_sum}"
     bonusLevelAdvices[account_subgroupName] = []
     for bonusName, bonusValuesDict in session_data.account.bonus_talents.items():
+        force_complete = None
+        if bonusValuesDict.get('Label', '').startswith('ES Family Bonus'):
+            if int(bonusValuesDict['Progression']) >= arbitrary_es_family_goal:
+                force_complete = True
         bonusLevelAdvices[account_subgroupName].append(Advice(
             label=bonusValuesDict.get('Label', ''),
             picture_class=bonusValuesDict.get('Image', ''),
             progression=bonusValuesDict.get('Progression', ''),
             goal=bonusValuesDict.get('Goal', ''),
+            complete=force_complete
         ))
 
     #Character Specific

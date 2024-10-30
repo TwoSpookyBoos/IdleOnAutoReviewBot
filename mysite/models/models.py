@@ -622,11 +622,11 @@ class AdviceGroup(AdviceBase):
         # Else, remove the completed advices but leave the incomplete advices
         else:
             if isinstance(self.advices, list):
-                self.advices = [value for value in self.advices if value.goal != "✔" and value.goal != ""]
+                self.advices = [value for value in self.advices if value.goal != "✔" and value.goal != "" and not value.complete]
             if isinstance(self.advices, dict):
                 for key, value in self.advices.items():
                     if isinstance(value, list):
-                        self.advices[key] = [v for v in value if v.goal != "✔" and v.goal != ""]
+                        self.advices[key] = [v for v in value if v.goal != "✔" and v.goal != "" and not v.complete]
                 self.advices = {key: value for key, value in self.advices.items() if value}
 
     def remove_empty_subgroups(self):
