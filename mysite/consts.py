@@ -1954,7 +1954,7 @@ currentWorld = 6
 maxCharacters = 10
 break_you_best = "<br>You best ❤️"
 break_keep_it_up = "<br>Keep it up! You're on the right track! ❤️"
-ignorable_labels = tuple('Weekly Ballot')
+ignorable_labels: tuple = ('Weekly Ballot',)
 missableGStacksDict = {
     #  ItemName               Codename     Quest Codeame          Quest Name                                          Wiki link to the item                             Recommended Class/Farming notes
     "Dog Bone":              ["Quest12",   "Dog_Bone1",           "Dog Bone: Why he Die???",                          "https://idleon.wiki/wiki/Dog_Bone",              "Active ES or time candy.", 'dog-bone-npc'],

@@ -477,6 +477,7 @@ class Advice(AdviceBase):
             value_format: str = "{value}{unit}",
             resource: str = "",
             complete: bool = None,
+            unrated: bool = False,
             **extra
     ):
         super().__init__(**extra)
@@ -501,6 +502,7 @@ class Advice(AdviceBase):
             self.complete: bool = self.goal in ("✔", "") or self.label.startswith(ignorable_labels)
         else:
             self.complete = complete
+        self.unrated: bool = unrated
 
     @property
     def css_class(self) -> str:
@@ -653,7 +655,7 @@ class AdviceGroup(AdviceBase):
             return
         else:
             if isinstance(self.advices, list):
-                temp_advices = [value for value in self.advices if not value.complete]
+                temp_advices = [advice for advice in self.advices if not advice.complete]
             elif isinstance(self.advices, dict):
                 temp_advices = []
                 for key, value in self.advices.items():
@@ -693,6 +695,7 @@ class AdviceSection(AdviceBase):
         complete: bool | None = None,
         unreached: bool = False,
         unrated: bool = False,
+        informational: bool | None = None,
         **extra,
     ):
         super().__init__(collapse, **extra)
@@ -706,6 +709,7 @@ class AdviceSection(AdviceBase):
         self.complete: bool | None = complete
         self.unreached = unreached
         self.unrated = unrated
+        self.informational = informational
 
     @property
     def header(self) -> str:
@@ -747,7 +751,7 @@ class AdviceSection(AdviceBase):
     def groups(self, groups: list[AdviceGroup]):
         # filters out empty groups by checking if group has no advices
         self._groups = [group for group in groups if group]
-        self.check_for_completeness()
+        #self.check_for_completeness()
 
         if g.order_tiers:
             self._groups = sorted(self._groups)
@@ -765,7 +769,14 @@ class AdviceSection(AdviceBase):
             #Unreached is set when a player hasn't progressed far enough to see the contents of a section. As far from complete as possible
             self.complete = False
         else:
-            self.complete = len([group for group in self.groups if not group.complete]) == 0  #True if 0 length, False otherwise
+            self.complete = len([group for group in self.groups if group and not group.complete]) == 0  #True if 0 length, False otherwise
+
+    def check_for_informationalness(self):
+        if self.informational is not None:
+            return
+        else:
+            #print(f"{self.name}: {len([group for group in self.groups if group and group.informational])} Info groups / {len([group for group in self.groups if group])} total Truthy groups")
+            self.informational = len([group for group in self.groups if group and not group.informational]) == 0 and len([group for group in self.groups if group]) > 0  #True if 0 length, False otherwise
 
 class AdviceWorld(AdviceBase):
     """

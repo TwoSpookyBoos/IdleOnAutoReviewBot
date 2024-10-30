@@ -125,6 +125,15 @@ def main(inputData, runType="web"):
             for group in section.groups:
                 group.check_for_completeness()
             section.check_for_completeness()
+            section.check_for_informationalness()
+            logger.debug(
+                (f"{section} {section.tier}: "
+                 f"Unreached={section.unreached}, "
+                 f"Unrated={section.unrated}, "
+                 f"Complete={section.complete}, "
+                 f"Info={section.informational}"
+                 )
+            )
             if section.unrated:
                 unrated_sections.append(section)
             else:
@@ -132,10 +141,16 @@ def main(inputData, runType="web"):
 
     #Pinchy Evaluation
     sections_pinchy = pinchy.generatePinchyWorld(pinchable_sections, unrated_sections)
+    for section in sections_pinchy:
+        for group in section.groups:
+            group.check_for_completeness()
+        section.check_for_completeness()
+        section.check_for_informationalness()
+        logger.debug(f"{section}: Unreached={section.unreached}, Complete={section.complete}, Info={section.informational}, Unrated={section.unrated}")
 
     #Build Worlds
     reviews = [
-        AdviceWorld(name=WorldName.PINCHY, sections=sections_pinchy, title="Pinchy AutoReview", collapse=False),
+        AdviceWorld(name=WorldName.PINCHY, sections=sections_pinchy, title="Pinchy AutoReview", collapse=False, complete=False),
         AdviceWorld(name=WorldName.GENERAL, sections=sections_general, banner="general_banner.jpg"),
         AdviceWorld(name=WorldName.BLUNDER_HILLS, sections=sections_1, banner="w1banner.png"),
         AdviceWorld(name=WorldName.YUMYUM_DESERT, sections=sections_2, banner="w2banner.png"),
@@ -145,7 +160,7 @@ def main(inputData, runType="web"):
         AdviceWorld(name=WorldName.SPIRITED_VALLEY, sections=sections_6, banner="w6banner.png"),
     ]
 
-    for world in reviews:
+    for world in reviews[1:]:
         world.hide_unreached_sections()  # Feel free to comment this out while testing
         if session_data.account.hide_unrated:
             world.hide_unrated_sections()
