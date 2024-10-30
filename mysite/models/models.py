@@ -504,6 +504,9 @@ class Advice(AdviceBase):
             self.completed = completed
         self.unrated: bool = unrated
 
+        if self.goal == "✔":
+            self.status = "gilded"
+
     @property
     def css_class(self) -> str:
         name = kebab(self.picture_class)

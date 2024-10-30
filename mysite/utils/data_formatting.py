@@ -321,29 +321,31 @@ def safe_loads(data):
     return json.loads(data) if isinstance(data, str) else data
 
 def mark_advice_completed(advice, force=False):
-    if force:
+    def complete():
         advice.progression = ""
         advice.goal = "✔"
         advice.completed = True
-        return
-    if str(advice.goal) == "" and str(advice.progression).endswith("+"):
+        advice.status = "gilded"
+
+    if force:
+        complete()
+
+    elif not advice.goal and str(advice.progression).endswith("+"):
         advice.completed = True
-    elif str(advice.goal) == "" and str(advice.progression).endswith("%"):
+
+    elif not advice.goal and str(advice.progression).endswith("%"):
         try:
             if float(str(advice.progression).strip("%")) > 100:
-                advice.progression = ""
-                advice.goal = "✔"
-                advice.completed = True
+                complete()
         except:
             pass
+
     else:
         try:
             prog = str(advice.progression).strip('x%')
             goal = str(advice.goal).strip('x%')
             if advice.goal and advice.progression and float(prog) >= float(goal):
-                advice.progression = ""
-                advice.goal = "✔"
-                advice.completed = True
+                complete()
         except:
             pass
 
