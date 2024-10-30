@@ -371,7 +371,9 @@ function setupDataClock() {
 }
 
 function hideElements() {
-    ["completed", "informational", "unrated"].forEach(cls => hideComposite({currentTarget: {dataset: {hides: cls}}}));
+    ["completed", "informational", "unrated"].forEach(cls => hideComposite({
+        currentTarget: document.querySelector(`[data-hides="${cls}"]`)
+    }));
 }
 
 function setFormValues() {
@@ -613,9 +615,10 @@ function hideComposite(event) {
     hideProgressBoxes()
     const slider = event.currentTarget,
         classToHide = slider.dataset.hides,
-        checkboxOn = document.querySelector(`#hide_${classToHide}`).value === "on",
+        checkboxOn = document.getElementById(slider.getAttribute("for")).value === "on",
         hiddenClass = `hidden-${classToHide}`,
-        queryString = hidableElements.map(cls => `${cls}.${checkboxOn ? classToHide : hiddenClass}`).join(', '),
+        hiddenAttr = `[data-${classToHide}="true"]`,
+        queryString = checkboxOn ? hiddenAttr : `.${hiddenClass}`,
         allElements = document.querySelectorAll(queryString);
 
     if (!checkboxOn) {

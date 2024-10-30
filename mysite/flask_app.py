@@ -181,7 +181,7 @@ def index() -> Response | str:
 
     store_user_preferences()
 
-    return render_template(
+    page = render_template(
         "index.html",
         beta=is_beta,
         live_link=live_link,
@@ -189,6 +189,7 @@ def index() -> Response | str:
         player=player,
         switches=switches(),
     )
+    return Response(page, headers={"Cache-Control": "must-revalidate"})
 
 
 def create_and_populate_log_files(data, headerData, msg, name_or_data, error):

@@ -438,6 +438,10 @@ class AdviceBase:
     def collapse(self, _value: bool):
         self._collapse = _value
 
+    @property
+    def dataset(self) -> list:
+        return [[attr, getattr(self, attr, False)] for attr in ["completed", "informational", "unrated", "unreached"]]
+
 
 class LabelBuilder:
     wrapper = "span"
