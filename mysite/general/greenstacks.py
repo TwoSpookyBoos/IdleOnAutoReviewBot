@@ -166,6 +166,7 @@ def getGStackAdviceSections():
                     label=item.name,
                     picture_class=item.name,
                     progression=item.progression,
+                    goal=100,
                     unit="%"
                 )
                 for item in items

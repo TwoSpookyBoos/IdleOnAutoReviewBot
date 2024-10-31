@@ -120,12 +120,13 @@ def getDeathNoteProgressionTiersAdviceGroup():
                     tier_combo[worldIndex] = tier[0]
                 else:
                     for enemy in fullDeathNoteDict[worldIndex].lowest_skulls_dict[fullDeathNoteDict[worldIndex].lowest_skull_value]:
-                        deathnote_AdviceDict[f"W{worldIndex}"].append(
-                            Advice(
-                                label=enemy[0],
-                                picture_class=enemy[3],
-                                progression=f"{enemy[2]}%")
-                        )
+                        deathnote_AdviceDict[f"W{worldIndex}"].append(Advice(
+                            label=enemy[0],
+                            picture_class=enemy[3],
+                            progression=enemy[2],
+                            goal=100,
+                            unit='%'
+                        ))
 
         # ZOW
         if tier_combo['ZOW'] >= (tier[0] - 1):  # Only evaluate if they already met the previous tier's requirement
@@ -140,12 +141,13 @@ def getDeathNoteProgressionTiersAdviceGroup():
                             if difficultyName not in deathnote_AdviceDict['ZOW']:
                                 deathnote_AdviceDict['ZOW'][difficultyName] = []
                             for enemy in session_data.account.all_characters[highestZOWCountIndex].apoc_dict['ZOW'][difficultyName]:
-                                deathnote_AdviceDict["ZOW"][difficultyName].append(
-                                    Advice(
-                                        label=enemy[0],
-                                        picture_class=enemy[3],
-                                        progression=f"{enemy[2]}%"),
-                                )
+                                deathnote_AdviceDict["ZOW"][difficultyName].append(Advice(
+                                    label=enemy[0],
+                                    picture_class=enemy[3],
+                                    progression=enemy[2],
+                                    goal=100,
+                                    unit='%'
+                                ))
                 else:
                     deathnote_AdviceDict["ZOW"] = [
                         Advice(
@@ -167,12 +169,13 @@ def getDeathNoteProgressionTiersAdviceGroup():
                             if difficultyName not in deathnote_AdviceDict['CHOW']:
                                 deathnote_AdviceDict['CHOW'][difficultyName] = []
                             for enemy in session_data.account.all_characters[highestCHOWCountIndex].apoc_dict['CHOW'][difficultyName]:
-                                deathnote_AdviceDict["CHOW"][difficultyName].append(
-                                    Advice(
-                                        label=enemy[0],
-                                        picture_class=enemy[3],
-                                        progression=f"{enemy[2]}%"),
-                                )
+                                deathnote_AdviceDict["CHOW"][difficultyName].append(Advice(
+                                    label=enemy[0],
+                                    picture_class=enemy[3],
+                                    progression=enemy[2],
+                                    goal=100,
+                                    unit='%'
+                                ))
                 else:
                     deathnote_AdviceDict["CHOW"] = [
                         Advice(
@@ -197,12 +200,13 @@ def getDeathNoteProgressionTiersAdviceGroup():
                                 if difficultyName not in deathnote_AdviceDict['MEOW']:
                                     deathnote_AdviceDict['MEOW'][difficultyName] = []
                                 for enemy in session_data.account.all_characters[meowBBIndex].apoc_dict['MEOW'][difficultyName]:
-                                    deathnote_AdviceDict["MEOW"][difficultyName].append(
-                                        Advice(
-                                            label=enemy[0],
-                                            picture_class=enemy[3],
-                                            progression=f"{enemy[2]}%"),
-                                    )
+                                    deathnote_AdviceDict["MEOW"][difficultyName].append(Advice(
+                                        label=enemy[0],
+                                        picture_class=enemy[3],
+                                        progression=enemy[2],
+                                        goal=100,
+                                        unit='%'
+                                    ))
                 else:
                     deathnote_AdviceDict["MEOW"] = [
                         Advice(

@@ -28,7 +28,9 @@ def getHiddenAdviceGroup() -> AdviceGroup:
             decoded_name = 'placeholder' if decoded_name.startswith("Unknown-'") else decoded_name
             hidden_adviceList.append(Advice(
                 label=decoded_name,
-                picture_class=decoded_name
+                picture_class=decoded_name,
+                progression=0,
+                goal=1
             ))
 
     #logger.debug(f"Cards1 length: {len(session_data.account.registered_slab)}")
@@ -70,19 +72,25 @@ def getSlabProgressionTierAdviceGroups():
                 if session_data.account.stored_assets.get(itemName).amount > 0:
                     slab_AdviceDict["Storage"].append(Advice(
                         label=f"{item_display_name} (Storage or Inventory)",
-                        picture_class=item_picture
+                        picture_class=item_picture,
+                        progression=0,
+                        goal=1
                     ))
                     continue
                 elif session_data.account.worn_assets.get(itemName).amount > 0:
                     slab_AdviceDict["Storage"].append(Advice(
                         label=f"{item_display_name} (Equipped)",
-                        picture_class=item_picture
+                        picture_class=item_picture,
+                        progression=0,
+                        goal=1
                     ))
                     continue
                 elif session_data.account.npc_tokens.get(itemName, 0) > 0:
                     slab_AdviceDict["Storage"].append(Advice(
                         label=f"{item_display_name} (Retrieve from NPC Tokens)",
-                        picture_class=item_picture
+                        picture_class=item_picture,
+                        progression=0,
+                        goal=1
                     ))
                     continue
                 # If the item is a reclaimable quest item AND the quest has been completed by at least 1 character
@@ -91,7 +99,9 @@ def getSlabProgressionTierAdviceGroups():
                         slab_AdviceDict["Reclaims"].append(Advice(
                             label=f"{item_display_name} ({reclaimableQuestItems[itemName]['QuestGiver'].replace('_', ' ')}: {reclaimableQuestItems[itemName]['QuestName']})",
                             picture_class=item_picture,
-                            resource=reclaimableQuestItems[itemName]['QuestGiver'].replace('_', '-')
+                            resource=reclaimableQuestItems[itemName]['QuestGiver'].replace('_', '-'),
+                            progression=0,
+                            goal=1
                         ))
                     continue
                 # If the item comes from a quest that all characters can complete AND at least 1 character hasn't completed it
@@ -102,7 +112,9 @@ def getSlabProgressionTierAdviceGroups():
                         slab_AdviceDict["Quests"].append(Advice(
                             label=f"{item_display_name} ({slab_QuestRewardsAllChars[itemName]['QuestGiver'].replace('_', ' ')}: {slab_QuestRewardsAllChars[itemName]['QuestName']})",
                             picture_class=item_picture,
-                            resource=slab_QuestRewardsAllChars[itemName]['QuestGiver'].replace('_', '-')
+                            resource=slab_QuestRewardsAllChars[itemName]['QuestGiver'].replace('_', '-'),
+                            progression=0,
+                            goal=1
                         ))
                     continue
                 # If the item comes from a quest that generally only 1 character can complete AND hasn't been completed by ANY characters yet
@@ -111,7 +123,9 @@ def getSlabProgressionTierAdviceGroups():
                         slab_AdviceDict["Quests"].append(Advice(
                             label=f"{item_display_name} ({slab_QuestRewardsOnce[itemName]['QuestGiver'].replace('_', ' ')}: {slab_QuestRewardsOnce[itemName]['QuestName']})",
                             picture_class=item_picture,
-                            resource=slab_QuestRewardsOnce[itemName]['QuestGiver'].replace('_', '-')
+                            resource=slab_QuestRewardsOnce[itemName]['QuestGiver'].replace('_', '-'),
+                            progression=0,
+                            goal=1
                         ))
                     continue
                 # If the item is sold by a vendor
@@ -122,7 +136,9 @@ def getSlabProgressionTierAdviceGroups():
                     if itemName in vendorList:
                         slab_AdviceDict["Vendors"][vendor].append(Advice(
                             label=getItemDisplayName(itemName),
-                            picture_class=item_picture
+                            picture_class=item_picture,
+                            progression=0,
+                            goal=1
                         ))
                         break
                 # If the item is craftable at the anvil
@@ -133,28 +149,36 @@ def getSlabProgressionTierAdviceGroups():
                     if itemName in anvilTabList:
                         slab_AdviceDict["Anvil"][anvilTab].append(Advice(
                             label=getItemDisplayName(itemName),
-                            picture_class=item_picture
+                            picture_class=item_picture,
+                            progression=0,
+                            goal=1
                         ))
                         break
                 # If the item is a unique Dungeon Drop:
                 if itemName in dungeonDropsList:
                     slab_AdviceDict["Dungeon"]["Drops"].append(Advice(
                         label=getItemDisplayName(itemName),
-                        picture_class=item_picture
+                        picture_class=item_picture,
+                        progression=0,
+                        goal=1
                     ))
                     continue
                 # If the item is a Dungeon Weapon AND the player has purchased all MaxWeapons
                 if itemName in dungeonWeaponsList and session_data.account.dungeon_upgrades.get("MaxWeapon", 0) >= maxDungeonWeaponsAvailable:
                     slab_AdviceDict["Dungeon"]["Weapons"].append(Advice(
                         label=getItemDisplayName(itemName),
-                        picture_class=item_picture
+                        picture_class=item_picture,
+                        progression=0,
+                        goal=1
                     ))
                     continue
                 # If the item is a Dungeon Armor AND the player has purchased all MaxArmor
                 if itemName in dungeonArmorsList and session_data.account.dungeon_upgrades.get("MaxArmor", [0])[0] >= maxDungeonArmorsAvailable:
                     slab_AdviceDict["Dungeon"]["Armor"].append(Advice(
                         label=getItemDisplayName(itemName),
-                        picture_class=item_picture
+                        picture_class=item_picture,
+                        progression=0,
+                        goal=1
                     ))
                     continue
                     # If the item is a Dungeon Jewelry AND the player has purchased all MaxJewelry
@@ -162,14 +186,18 @@ def getSlabProgressionTierAdviceGroups():
                 if itemName in dungeonJewelryList and session_data.account.dungeon_upgrades.get("MaxJewelry", [0])[0] >= maxDungeonJewelryAvailable:
                     slab_AdviceDict["Dungeon"]["Armor"].append(Advice(
                         label=getItemDisplayName(itemName),
-                        picture_class=item_picture
+                        picture_class=item_picture,
+                        progression=0,
+                        goal=1
                     ))
                     continue
                 # If the item can always (or at least regularly) be purchased from the Gem Shop
                 if itemName in hidden_gemshopItems:
                     slab_AdviceDict["GemShop"].append(Advice(
                         label=getItemDisplayName(itemName),
-                        picture_class=item_picture
+                        picture_class=item_picture,
+                        progression=0,
+                        goal=1
                     ))
                     continue
 
@@ -181,7 +209,13 @@ def getSlabProgressionTierAdviceGroups():
     for subgroup in vendors:
         if vendors[subgroup] not in session_data.account.registered_slab:
             slab_AdviceDict["Vendors"][subgroup] = [
-                Advice(label=f"{subgroup} purchases hidden until Boss Crystal registered in The Slab", picture_class=getItemDisplayName(vendors[subgroup]))]
+                Advice(
+                    label=f"{subgroup} purchases hidden until Boss Crystal registered in The Slab",
+                    picture_class=getItemDisplayName(vendors[subgroup]),
+                    progression=0,
+                    goal=1
+                )
+            ]
     for emptySubgroup in emptyVendorSubgroups:
         slab_AdviceDict["Vendors"].pop(emptySubgroup)
 
@@ -191,7 +225,14 @@ def getSlabProgressionTierAdviceGroups():
             emptyAnvilSubgroups.append(subgroup)
     for subgroup in anvilTabs:
         if anvilTabs[subgroup] not in session_data.account.registered_slab:
-            slab_AdviceDict["Anvil"][subgroup] = [Advice(label=f"{subgroup} craftables hidden until tab registered in The Slab", picture_class=subgroup)]
+            slab_AdviceDict["Anvil"][subgroup] = [
+                Advice(
+                    label=f"{subgroup} craftables hidden until tab registered in The Slab",
+                    picture_class=subgroup,
+                    progression=0,
+                    goal=1
+                )
+            ]
     for removableSubgroup in emptyAnvilSubgroups:
         slab_AdviceDict["Anvil"].pop(removableSubgroup)
 

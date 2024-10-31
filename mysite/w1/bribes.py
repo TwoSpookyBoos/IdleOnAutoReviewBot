@@ -38,7 +38,9 @@ def getProgressionTiersAdviceGroup():
         elif allBribesDict['W1'][bribe] <= 0 and bribe not in unpurchasableBribes:
             bribe_AdviceDict["W1Bribes"].append(Advice(
                 label=bribe,
-                picture_class=bribe
+                picture_class=bribe,
+                progression=0,
+                goal=1
             ))
     bribe_AdviceGroupDict['W1'] = AdviceGroup(
         tier="0",
@@ -55,7 +57,9 @@ def getProgressionTiersAdviceGroup():
         elif allBribesDict['W2'][bribe] <= 0 and bribe not in unpurchasableBribes:
             bribe_AdviceDict["W2Bribes"].append(Advice(
                 label=bribe,
-                picture_class=bribe
+                picture_class=bribe,
+                progression=0,
+                goal=1
             ))
     bribe_AdviceGroupDict['W2'] = AdviceGroup(
         tier="1",
@@ -72,7 +76,9 @@ def getProgressionTiersAdviceGroup():
         elif allBribesDict['W3'][bribe] <= 0 and bribe not in unpurchasableBribes:
             bribe_AdviceDict["W3Bribes"].append(Advice(
                 label=bribe,
-                picture_class=bribe
+                picture_class=bribe,
+                progression=0,
+                goal=1
             ))
     bribe_AdviceGroupDict['W3'] = AdviceGroup(
         tier="2",
@@ -89,7 +95,9 @@ def getProgressionTiersAdviceGroup():
         elif allBribesDict['W4'][bribe] <= 0:
             bribe_AdviceDict["W4Bribes"].append(Advice(
                 label=bribe,
-                picture_class=bribe
+                picture_class=bribe,
+                progression=0,
+                goal=1
             ))
     bribe_AdviceGroupDict['W4'] = AdviceGroup(
         tier="3",
@@ -106,7 +114,9 @@ def getProgressionTiersAdviceGroup():
         elif allBribesDict['Trash Island'][bribe] <= 0 and bribe not in unpurchasableBribes:
             bribe_AdviceDict["TrashIslandBribes"].append(Advice(
                 label=bribe,
-                picture_class=bribe
+                picture_class=bribe,
+                progression=0,
+                goal=1
             ))
     bribe_AdviceGroupDict['Trash Island'] = AdviceGroup(
         tier="4",
@@ -123,7 +133,9 @@ def getProgressionTiersAdviceGroup():
         elif allBribesDict['W6'][bribe] <= 0 and bribe not in unpurchasableBribes:
             bribe_AdviceDict["W6Bribes"].append(Advice(
                 label=bribe,
-                picture_class=bribe
+                picture_class=bribe,
+                progression=0,
+                goal=1
             ))
     bribe_AdviceGroupDict['W6'] = AdviceGroup(
         tier="5",
