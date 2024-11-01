@@ -290,14 +290,16 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
         picture_class='wired-in',
         progression=lab_multi_aw if session_data.account.doot_owned else '',
         goal=2,
-        unit="x"
+        unit="x",
+        completed=session_data.account.doot_owned
     ))
     po_AdviceDict[f"{cs_label if not session_data.account.doot_owned else aw_label}"].append(Advice(
         label=f"{{{{ Divinity|#divinity }}}}: Harriep Major Link bonus: {'3x (Thanks Doot!)' if session_data.account.doot_owned else '3x if linked'}",
         picture_class='harriep',
         progression=harriep_multi_aw if session_data.account.doot_owned else '',
         goal=3,
-        unit="x"
+        unit="x",
+        completed=session_data.account.doot_owned
     ))
 
     # Account Wide

@@ -232,6 +232,7 @@ def getCandyHourSections():
         header=guaranteedCandyString,
         picture="Candy_1hr.png",
         unrated=True,
+        informational=True,
         completed=guaranteedCandyHours == 0
     )
 
@@ -256,6 +257,7 @@ def getCandyHourSections():
         header=variableCandyString,
         picture="Candy_Cosmic.png",
         unrated=True,
+        informational=True,
         completed=variableCandyHoursMin == 0
     )
 

@@ -123,7 +123,8 @@ def getKillroyUpgradeRecommendationsAdviceGroup():
                 label=label,
                 picture_class=upgradeDict['Image'],
                 progression=upgradeDict['Upgrades'],
-                goal=1
+                goal=1,
+                completed=upgradeDict['Upgrades'] >= 1
             ))
 
     future_ag = AdviceGroup(
