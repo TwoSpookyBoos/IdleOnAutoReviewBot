@@ -375,13 +375,15 @@ def getProgressionTiersAdviceGroup():
             tier=tier_StampLevels if tier_StampLevels < max_tier else '',
             pre_string=f"{'Informational- ' if tier_StampLevels >= max_tier else ''}"
                        f"Improve your total stamp levels",
-            advices=stamp_AdviceDict["StampLevels"]
+            advices=stamp_AdviceDict["StampLevels"],
+            informational=tier_StampLevels >= max_tier
         ),
         "SpecificStamps": AdviceGroup(
             tier=tier_SpecificStamps if tier_SpecificStamps < max_tier else '',
             pre_string=f"{'Informational- ' if tier_SpecificStamps >= max_tier else ''}"
                        f"Improve high-priority stamp{pl([''] * adviceCountsDict['Specific'])}",
-            advices=stamp_AdviceDict["Specific"]
+            advices=stamp_AdviceDict["Specific"],
+            informational=tier_SpecificStamps >= max_tier
         ),
         "Combat": AdviceGroup(
             tier=tier_FindStamps["Combat"],
