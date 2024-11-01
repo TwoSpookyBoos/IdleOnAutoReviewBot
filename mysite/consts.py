@@ -4057,7 +4057,7 @@ stamp_maxes = {
     "Card Stamp": 330,
     "DNA Stamp": 48,
     "Mason Jar Stamp": 160,
-    "Potion Stamp": 110,
+    "Potion Stamp": 105,
     "Forge Stamp": 240,
     "Talent II Stamp": 50,
     "Talent S Stamp": 72,
