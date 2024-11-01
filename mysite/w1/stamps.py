@@ -290,7 +290,7 @@ def getProgressionTiersAdviceGroup():
         },
         "Specific": {},
     }
-    info_tiers = 0
+    info_tiers = 3
     max_tier = max(stamps_progressionTiers.keys()) - info_tiers
     tier_StampLevels = 0
     tier_FindStamps = {"Combat": 0, "Skill": 0, "Misc": 0}
@@ -302,6 +302,7 @@ def getProgressionTiersAdviceGroup():
 
     #Assess Tiers
     for tier in stamps_progressionTiers:
+        subgroupName = f"To reach {'Informational ' if tier > max_tier else ''}Tier {tier}"
         # TotalLevelStamps
         if tier_StampLevels == tier - 1:
             if session_data.account.stamp_totals.get("Total", 0) >= stamps_progressionTiers[tier].get("TotalStampLevels", 0):  # int
@@ -320,7 +321,6 @@ def getProgressionTiersAdviceGroup():
         for stampType in stampTypes:
             for rStamp in stamps_progressionTiers[tier].get("Stamps").get(stampType, []):
                 if rStamp in missingStampsList and exclusionsDict.get(rStamp, False) == False:
-                    subgroupName = f"To reach Tier {tier}"
                     if subgroupName not in stamp_AdviceDict["FindStamps"][stampType] and len(stamp_AdviceDict["FindStamps"][stampType]) < maxTiersPerGroup:
                         stamp_AdviceDict["FindStamps"][stampType][subgroupName] = []
                     if subgroupName in stamp_AdviceDict["FindStamps"][stampType]:
@@ -338,7 +338,6 @@ def getProgressionTiersAdviceGroup():
         for stampName, stampRequiredLevel in stamps_progressionTiers[tier].get("Stamps", {}).get("Specific", {}).items():
             if playerStamps.get(stampName, {}).get("Level", 0) < stampRequiredLevel and exclusionsDict.get(stampName, False) == False:
                 # logger.debug(f"Tier {tier} requirement for {stampName} failed: {playerStamps.get(stampName, {}).get('Level', 0)} is less than {stampRequiredLevel}")
-                subgroupName = f"To reach Tier {tier}"
                 if subgroupName not in stamp_AdviceDict["Specific"] and len(stamp_AdviceDict["Specific"]) < maxTiersPerGroup:
                     stamp_AdviceDict["Specific"][subgroupName] = []
                 if subgroupName in stamp_AdviceDict["Specific"]:
@@ -373,33 +372,36 @@ def getProgressionTiersAdviceGroup():
     # Generate AdviceGroups
     stamp_AdviceGroupDict = {
         "StampLevels": AdviceGroup(
-            tier=tier_StampLevels,
-            pre_string="Improve your total stamp levels",
+            tier=tier_StampLevels if tier_StampLevels < max_tier else '',
+            pre_string=f"{'Informational- ' if tier_StampLevels >= max_tier else ''}"
+                       f"Improve your total stamp levels",
             advices=stamp_AdviceDict["StampLevels"]
         ),
         "SpecificStamps": AdviceGroup(
-            tier=str(tier_SpecificStamps),
-            pre_string=f"Improve high-priority stamp{pl([''] * adviceCountsDict['Specific'])}",
+            tier=tier_SpecificStamps if tier_SpecificStamps < max_tier else '',
+            pre_string=f"{'Informational- ' if tier_SpecificStamps >= max_tier else ''}"
+                       f"Improve high-priority stamp{pl([''] * adviceCountsDict['Specific'])}",
             advices=stamp_AdviceDict["Specific"]
         ),
         "Combat": AdviceGroup(
-            tier=str(tier_FindStamps["Combat"]),
+            tier=tier_FindStamps["Combat"],
             pre_string=f"Collect the following Combat stamp{pl([''] * adviceCountsDict['Combat'])}",
             advices=stamp_AdviceDict["FindStamps"]['Combat']
         ),
         "Skill": AdviceGroup(
-            tier=str(tier_FindStamps["Skill"]),
+            tier=tier_FindStamps["Skill"],
             pre_string=f"Collect the following Skill stamp{pl([''] * adviceCountsDict['Skill'])}",
             advices=stamp_AdviceDict["FindStamps"]["Skill"]
         ),
         "Misc": AdviceGroup(
-            tier=str(tier_FindStamps["Misc"]),
+            tier=tier_FindStamps["Misc"],
             pre_string=f"Collect the following Misc stamp{pl([''] * adviceCountsDict['Misc'])}",
             advices=stamp_AdviceDict["FindStamps"]["Misc"]
         ),
         "Optional": AdviceGroup(
             tier='',
-            pre_string="Owning every stamp slightly reduces your chances for the BEST stamps to be chosen by the Sacred Methods bundle on each daily reset. These stamps are Optional",
+            pre_string=f"Owning every stamp slightly reduces your chances for the BEST stamps to be chosen by the Sacred Methods bundle on each daily reset."
+                       f" These stamps are Optional",
             advices=stamp_AdviceDict["FindStamps"]["Optional"]
         )
     }

@@ -522,7 +522,7 @@ stamps_progressionTiers = {
          "Misc": ["Mason Jar Stamp", "Sigil Stamp"],
          "Specific": {'Pickaxe Stamp': 45, 'Hatchet Stamp': 45, 'Mason Jar Stamp': 12}}},
     12: {"TotalStampLevels": 1000, "Stamps": {
-        "Skill": ["Brainstew Stamp", "Bag o Heads Stamp", "Skelefish Stamp", "Holy Mackerel Stamp", "Cooked Meal Stamp"],
+        "Skill": ["Brainstew Stamps", "Bag o Heads Stamp", "Skelefish Stamp", "Holy Mackerel Stamp", "Cooked Meal Stamp"],
         "Misc": ["Card Stamp"],
         "Specific": {
             'Drippy Drop Stamp': 50,
@@ -610,8 +610,13 @@ stamps_progressionTiers = {
             'Hatchet Stamp': 295, 'Pickaxe Stamp': 255,
             'Sashe Sidestamp': 126,  'Conjocharmo Stamp': 170,
             'Captalist Stats Stamp': 140,
+            'Anvil Zoomer Stamp': 125, 'Skelefish Stamp': 32, 'Fishing Rod Stamp': 120, 'Catch Net Stamp': 120, 'Divine Stamp': 120,
+            'White Essence Stamp': 104, 'Triad Essence Stamp': 112, 'Dark Triad Essence Stamp': 96, 'Nest Eggs Stamp': 240,
         },
     }},
+    21: {"TotalStampLevels": 13000, "Stamps": {"Specific": {},}},  # Info tier for Capacity stamps, populated later from stamp_maxes
+    22: {"TotalStampLevels": 13000, "Stamps": {"Specific": {},}},  # Info tier for all other previously tiered stamps, populated later from stamp_maxes
+    23: {"TotalStampLevels": 13000, "Stamps": {"Specific": {},}},  # Info tier for all non-tiered stamps, populated later from stamp_maxes
 }
 smithing_progressionTiers = [
     # int tier, int Cash Points Purchased, int Monster Points Purchased, int Forge Totals, str Notes
@@ -3946,25 +3951,128 @@ bribesDict = {
     "W6": ["The Art of the Grail", "Artifact Pilfering", "Forge Cap Smuggling", "Gold from Lead", "Nugget Fabrication", "Divine PTS Miscounting", "Loot Table Tampering", "The Art of the Flail"]
 }
 unpurchasableBribes = ["The Art of the Flail"]  # These bribes are in the game, but cannot be purchased as of v2.10
+stampTypes = ["Combat", "Skill", "Misc"]
+unavailableStampsList = [
+    'Shiny Crab Stamp', 'Gear Stamp', 'SpoOoky Stamp', 'Prayday Stamp',  #Skill
+    'Talent I Stamp', 'Talent V Stamp',  #Misc
+]  # Last verified as of v2.10
 stamp_maxes = {
     #Combat
+    "Sword Stamp": 200,
+    "Target Stamp": 165,
+    "Fist Stamp": 56,
+    "Book Stamp": 72,
+    "Bullseye Stamp": 110,
+    "Buckler Stamp": 182,
+    "Avast Yar Stamp": 120,
+    "Gilded Axe Stamp": 162,
+    "Maxo Slappo Stamp": 140,
+    "Dementia Sword Stamp": 200,
+    "Void Axe Stamp": 255,
+    "Heart Stamp": 150,
+    "Shield Stamp": 145,
+    "Battleaxe Stamp": 140,
+    "Manamoar Stamp": 99,
+    "Feather Stamp": 165,
+    "Hermes Stamp": 75,
+    "Steve Sword": 320,
+    "Diamond Axe Stamp": 230,
+    "Sashe Sidestamp": 133,
+    "Golden Sixes Stamp": 210,
+    "Captalist Stats Stamp": 160,
+    "Mana Stamp": 145,
+    "Longsword Stamp": 136,
+    "Agile Stamp": 36,
+    "Clover Stamp": 82,
+    "Polearm Stamp": 246,
+    "Sukka Foo": 220,
+    "Blover Stamp": 104,
+    "Tripleshot Stamp": 300,
+    "Intellectostampo": 168,
+    "Stat Wallstreet Stamp": 78,
+    "Tomahawk Stamp": 128,
+    "Kapow Stamp": 96,
+    "Vitality Stamp": 132,
+    "Scimitar Stamp": 108,
+    "Violence Stamp": 87,
+    "Arcane Stamp": 78,
+    "Stat Graph Stamp": 95,
+    "Blackheart Stamp": 450,
+    "Conjocharmo Stamp": 210,
+    "Void Sword Stamp": 180,
     #Skill
-    "Mason Jar Stamp": 160,
-    "Lil' Mining Baggy Stamp": 310,
-    "Choppin' Bag Stamp": 330,
-    "Matty Bag Stamp": 410,  #420 is possible but exploity
+    "Pickaxe Stamp": 275,
+    "Twin Ores Stamp": 120,
+    "Smart Dirt Stamp": 165,
+    "Alch Go Brrr Stamp": 124,
+    "Fishing Rod Stamp": 150,
     "Bag o Heads Stamp": 224,
-    "Bugsack Stamp": 224,
+    "Hidey Box Stamp": 300,
+    "Cooked Meal Stamp": 480,
+    "Egg Stamp": 480,
+    "Divine Stamp": 168,
+    "Sneaky Peeky Stamp": 144,
+    "Triad Essence Stamp": 136,
+    "Hatchet Stamp": 325,
+    "Choppin' Bag Stamp": 330,
+    "Cool Diggy Tool Stamp": 340,
+    "Brainstew Stamps": 155,
+    "Fishhead Stamp": 125,
+    "Holy Mackerel Stamp": 155,
+    "Purp Froge Stamp": 130,
+    "Stample Stamp": 124,
+    "Flowin Stamp": 82,
+    "Spice Stamp": 510,
+    "Lab Tube Stamp": 340,
+    "Multitool Stamp": 230,
+    "Jade Mint Stamp": 150,
+    "Dark Triad Essence Stamp": 128,
+    "Anvil Zoomer Stamp": 155,
+    "Duplogs Stamp": 120,
+    "High IQ Lumber Stamp": 165,
     "Drippy Drop Stamp": 160,
-    "Cooked Meal Stamp": 465,
+    "Catch Net Stamp": 150,
+    "Bugsack Stamp": 224,
+    "Spikemouth Stamp": 78,
+    "Saw Stamp": 90,
     "Ladle Stamp": 320,
-    "Multitool": 220,
-    'Crop Evo Stamp': 90,
+    "Sailboat Stamp": 160,
+    "Skelefish Stamp": 42,
+    "Summoner Stone Stamp": 128,
+    "Lil' Mining Baggy Stamp": 310,
+    "Matty Bag Stamp": 410,
+    "Swag Swingy Tool Stamp": 410,
+    "Droplots Stamp": 84,
+    "Fly Intel Stamp": 120,
+    "Buzz Buzz Stamp": 155,
+    "Amplestample Stamp": 68,
+    "Banked Pts Stamp": 282,
+    "Nest Eggs Stamp": 320,
+    "Gamejoy Stamp": 115,
+    "Crop Evo Stamp": 85,
+    "White Essence Stamp": 136,
     #Misc
+    "Questin Stamp": 330,
+    "Gold Ball Stamp": 280,
+    "Card Stamp": 330,
+    "DNA Stamp": 48,
+    "Mason Jar Stamp": 160,
+    "Potion Stamp": 110,
+    "Forge Stamp": 240,
+    "Talent II Stamp": 50,
+    "Talent S Stamp": 72,
+    "Refinery Stamp": 90,
     "Crystallin": 270,
-    "Forge Stamp": 230,
-    "Biblio Stamp": 66,
+    "Golden Apple Stamp": 136,
+    "Vendor Stamp": 150,
+    "Talent III Stamp": 66,
+    "Multikill Stamp": 112,
+    "Atomic Stamp": 144,
+    "Arcade Ball Stamp": 310,
+    "Ball Timer Stamp": 90,
     "Sigil Stamp": 324,
+    "Talent IV Stamp": 56,
+    "Biblio Stamp": 66,
 }
 stampsDict = {
     "Combat": {
@@ -4016,7 +4124,7 @@ stampsDict = {
         1: {'Name': "Hatchet Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'thread'},
         2: {'Name': "Anvil Zoomer Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'copper-ore'},
         3: {'Name': "Lil' Mining Baggy Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'jungle-logs'},
-        4: {'Name': "Twin Ores Stamp", 'funcType': 'decay', 'x1': 15, 'x2': 40, 'Material': 'thief-hoof'},
+        4: {'Name': "Twin Ores Stamp", 'funcType': 'decay', 'x1': 15, 'x2': 40, 'Material': 'thief-hood'},
         5: {'Name': "Choppin' Bag Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'carrot-cube'},
         6: {'Name': "Duplogs Stamp", 'funcType': 'decay', 'x1': 15, 'x2': 40, 'Material': 'militia-helm'},
         7: {'Name': "Matty Bag Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'cramped-material-pouch'},
@@ -4025,7 +4133,7 @@ stampsDict = {
         10: {'Name': "High IQ Lumber Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'bullfrog-horn'},
         11: {'Name': "Swag Swingy Tool Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0, 'Material': 'copper-pickaxe'},
         12: {'Name': "Alch Go Brrr Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'forest-fibres'},
-        13: {'Name': "Brainstew Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'gold-ore'},
+        13: {'Name': "Brainstew Stamps", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'gold-ore'},
         14: {'Name': "Drippy Drop Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'pocket-sand'},
         15: {'Name': "Droplots Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'bloach'},
         16: {'Name': "Fishing Rod Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0, 'Material': 'fly'},
@@ -4072,7 +4180,7 @@ stampsDict = {
         1: {'Name': "Mason Jar Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'glass-shard'},
         2: {'Name': "Crystallin", 'funcType': 'decay', 'x1': 110, 'x2': 50, 'Material': 'boring-brick'},
         3: {'Name': "Arcade Ball Stamp", 'funcType': 'decay', 'x1': 50, 'x2': 100, 'Material': 'copper-ore'},
-        4: {'Name': "Gold Ball Stamp", 'funcType': 'decay', 'x1': 40, 'x2': 100, 'Material': 'golfish'},
+        4: {'Name': "Gold Ball Stamp", 'funcType': 'decay', 'x1': 40, 'x2': 100, 'Material': 'goldfish'},
         5: {'Name': "Potion Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'icing-ironbite'},
         6: {'Name': "Golden Apple Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'golden-nomwich'},
         7: {'Name': "Ball Timer Stamp", 'funcType': 'decay', 'x1': 12, 'x2': 30, 'Material': 'oak-logs'},
@@ -4093,11 +4201,28 @@ stampsDict = {
         22: {'Name': "Atomic Stamp", 'funcType': 'decay', 'x1': 20, 'x2': 80, 'Material': 'bamboo'},
     }
 }
-stampTypes = ["Combat", "Skill", "Misc"]
-unavailableStampsList = [
-    'Shiny Crab Stamp', 'Gear Stamp', 'SpoOoky Stamp', 'Prayday Stamp',  #Skill
-    'Talent I Stamp', 'Talent V Stamp',  #Misc
-]  # Last verified as of v2.10
+capacity_stamps = ["Mason Jar Stamp", "Lil' Mining Baggy Stamp", "Choppin' Bag Stamp", "Matty Bag Stamp", "Bag o Heads Stamp", "Bugsack Stamp"]
+stamps_progressionTiers[max(stamps_progressionTiers)-2]['Stamps']['Specific'] = {stampName: stamp_maxes[stampName] for stampName in capacity_stamps}
+#logger.debug(f"Stamps T{max(stamps_progressionTiers)-2} = {stamps_progressionTiers[max(stamps_progressionTiers)-2]['Stamps']['Specific']}")
+tiered_stamps = set()
+for tier in stamps_progressionTiers:
+    for requiredStamp in stamps_progressionTiers[tier].get('Stamps', {}).get('Specific', []):
+        if requiredStamp not in capacity_stamps:
+            tiered_stamps.add(requiredStamp)
+ordered_tiers_stamps = []
+remaining_stamps = []
+for stampType in stampsDict:
+    for stamp in stampsDict[stampType].values():
+        if stamp['Name'] not in unavailableStampsList and stamp['Name'] not in capacity_stamps:
+            if stamp['Name'] in tiered_stamps:
+                ordered_tiers_stamps.append(stamp['Name'])
+            else:
+                remaining_stamps.append(stamp['Name'])
+stamps_progressionTiers[max(stamps_progressionTiers)-1]['Stamps']['Specific'] = {stamp: stamp_maxes[stamp] for stamp in ordered_tiers_stamps}
+#logger.debug(f"Stamps T{max(stamps_progressionTiers)-1} = {stamps_progressionTiers[max(stamps_progressionTiers)-1]['Stamps']['Specific']}")
+stamps_progressionTiers[max(stamps_progressionTiers)]['Stamps']['Specific'] = {stamp: stamp_maxes[stamp] for stamp in remaining_stamps}
+#logger.debug(f"Stamps T{max(stamps_progressionTiers)} = {stamps_progressionTiers[max(stamps_progressionTiers)]['Stamps']['Specific']}")
+
 starsignsDict = {
     1: {'Name': "The Buff Guy", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
     2: {'Name': "Flexo Bendo", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
