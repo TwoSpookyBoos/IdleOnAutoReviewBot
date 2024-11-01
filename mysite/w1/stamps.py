@@ -336,14 +336,18 @@ def getProgressionTiersAdviceGroup():
 
         # SpecificStampLevels
         for stampName, stampRequiredLevel in stamps_progressionTiers[tier].get("Stamps", {}).get("Specific", {}).items():
-            if playerStamps.get(stampName, {}).get("Level", 0) < stampRequiredLevel and exclusionsDict.get(stampName, False) == False:
-                # logger.debug(f"Tier {tier} requirement for {stampName} failed: {playerStamps.get(stampName, {}).get('Level', 0)} is less than {stampRequiredLevel}")
-                if subgroupName not in stamp_AdviceDict["Specific"] and len(stamp_AdviceDict["Specific"]) < maxTiersPerGroup:
-                    stamp_AdviceDict["Specific"][subgroupName] = []
-                if subgroupName in stamp_AdviceDict["Specific"]:
-                    adviceCountsDict["Specific"] += 1
-                    stamp_AdviceDict["Specific"][subgroupName].append(
-                        Advice(
+            if playerStamps.get(stampName, {}).get("Level", 0) < stampRequiredLevel:
+                #logger.debug(f"T{tier} {stampName} failed: {playerStamps.get(stampName, {}).get('Level', 0)} < {stampRequiredLevel}")
+                #logger.debug(f"InfoTier={tier > max_tier}, Excluded={exclusionsDict.get(stampName, False)}, Delivered={playerStamps.get(stampName, {}).get('Delivered', False)}")
+                if (
+                    (tier <= max_tier and exclusionsDict.get(stampName, False) == False)
+                    or (tier > max_tier and playerStamps.get(stampName, {}).get('Delivered', False))
+                ):
+                    if subgroupName not in stamp_AdviceDict["Specific"] and len(stamp_AdviceDict["Specific"]) < maxTiersPerGroup:
+                        stamp_AdviceDict["Specific"][subgroupName] = []
+                    if subgroupName in stamp_AdviceDict["Specific"]:
+                        adviceCountsDict["Specific"] += 1
+                        stamp_AdviceDict["Specific"][subgroupName].append(Advice(
                             label=stampName,
                             picture_class=stampName,
                             progression=playerStamps.get(stampName, {}).get("Level", 0),
