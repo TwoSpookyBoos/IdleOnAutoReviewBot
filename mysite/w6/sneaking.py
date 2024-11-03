@@ -5,29 +5,19 @@ from flask import g as session_data
 
 logger = get_logger(__name__)
 
-def setSneakingProgressionTier():
+def getSneakingProgressionTiersAdviceGroups():
     sneaking_AdviceDict = {
         "Gemstones": [],
         "JadeEmporium": [],
         "PristineCharms": []
     }
     sneaking_AdviceGroupDict = {}
-    sneaking_AdviceSection = AdviceSection(
-        name="Sneaking",
-        tier="0",
-        pinchy_rating=0,
-        header="Best Sneaking tier met: Not Yet Evaluated",
-        picture="Dojo_Ghost.gif"
-    )
-    highestSneakingSkillLevel = max(session_data.account.all_skills.get("Sneaking", [0]))
-    if highestSneakingSkillLevel < 1:
-        sneaking_AdviceSection.header = "Come back after unlocking the Sneaking skill in W6!"
-        return sneaking_AdviceSection
 
+    info_tiers = 0
+    max_tier = 0 - info_tiers
     tier_Sneaking = 0
-    max_tier = 0
 
-    #Assess Gemstones
+    # Assess Gemstones
     for gemstoneName, gemstoneData in session_data.account.sneaking["Gemstones"].items():
         if session_data.account.sneaking["Gemstones"]['Moissanite']['BaseValue'] > 0 and gemstoneName != 'Moissanite':
             boosted_value = f" (+{gemstoneData['BoostedValue']:.2f}% total)"
@@ -53,7 +43,9 @@ def setSneakingProgressionTier():
         if not purchaseDict['Obtained']:
             sneaking_AdviceDict['JadeEmporium'].append(Advice(
                 label=purchaseName,
-                picture_class=purchaseName
+                picture_class=purchaseName,
+                progression=0,
+                goal=1
             ))
 
     # Assess Pristine Charms
@@ -61,36 +53,60 @@ def setSneakingProgressionTier():
         if not pristineCharmDict['Obtained']:
             sneaking_AdviceDict['PristineCharms'].append(Advice(
                 label=f"{pristineCharmName}: {pristineCharmDict['Bonus']}",
-                picture_class=f"{pristineCharmDict['Image']}"
+                picture_class=f"{pristineCharmDict['Image']}",
+                progression=0,
+                goal=1
             ))
 
     # Generate AdviceGroups
     sneaking_AdviceGroupDict["Gemstones"] = AdviceGroup(
         tier="",
-        pre_string="Percentage of Gemstone values",
-        #post_string="Formulas thanks to merlinthewizard1313",
-        advices=sneaking_AdviceDict["Gemstones"]
+        pre_string="Informational- Percentage of Gemstone values",
+        # post_string="Formulas thanks to merlinthewizard1313",
+        advices=sneaking_AdviceDict["Gemstones"],
+        informational=True
     )
     sneaking_AdviceGroupDict["JadeEmporium"] = AdviceGroup(
         tier="",
         pre_string="Purchase all upgrades from the Jade Emporium",
-        advices=sneaking_AdviceDict["JadeEmporium"]
+        advices=sneaking_AdviceDict["JadeEmporium"],
+        informational=True
     )
     sneaking_AdviceGroupDict["PristineCharms"] = AdviceGroup(
         tier="",
         pre_string="Collect all Pristine Charms",
-        advices=sneaking_AdviceDict["PristineCharms"]
+        advices=sneaking_AdviceDict["PristineCharms"],
+        informational=True
     )
+    overall_SectionTier = min(max_tier + info_tiers, tier_Sneaking)
+    return sneaking_AdviceGroupDict, overall_SectionTier, max_tier
 
-    # Generate AdviceSection
-    overall_SneakingTier = min(max_tier, tier_Sneaking)
-    tier_section = f"{overall_SneakingTier}/{max_tier}"
-    sneaking_AdviceSection.tier = tier_section
-    sneaking_AdviceSection.pinchy_rating = overall_SneakingTier
-    sneaking_AdviceSection.groups = sneaking_AdviceGroupDict.values()
-    if overall_SneakingTier >= max_tier:
-        sneaking_AdviceSection.header = f"Best Sneaking tier met: {tier_section}{break_you_best}"
-    else:
-        sneaking_AdviceSection.header = f"Best Sneaking tier met: {tier_section}"
+def getSneakingAdviceSection() -> AdviceSection:
+    highestSneakingSkillLevel = max(session_data.account.all_skills.get("Sneaking", [0]))
+    if highestSneakingSkillLevel < 1:
+        sneaking_AdviceSection = AdviceSection(
+            name="Sneaking",
+            tier="0",
+            pinchy_rating=0,
+            header="Come back after unlocking the Sneaking skill in W6!",
+            picture="Dojo_Ghost.gif",
+            unrated=True,  # TODO: Fix once real tiers added
+            unreached=True
+        )
+        return sneaking_AdviceSection
 
+    #Generate AdviceGroups
+    sneaking_AdviceGroupDict, overall_SectionTier, max_tier = getSneakingProgressionTiersAdviceGroups()
+
+    #Generate AdviceSection
+    tier_section = f"{overall_SectionTier}/{max_tier}"
+    sneaking_AdviceSection = AdviceSection(
+        name="Sneaking",
+        tier=tier_section,
+        pinchy_rating=overall_SectionTier,
+        header="Sneaking Information",  # f"Best Sneaking tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
+        picture="Dojo_Ghost.gif",
+        unrated=True,  # TODO: Fix once real tiers added
+        groups=sneaking_AdviceGroupDict.values(),
+    )
     return sneaking_AdviceSection

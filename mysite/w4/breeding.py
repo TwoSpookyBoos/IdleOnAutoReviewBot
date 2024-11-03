@@ -123,7 +123,9 @@ def getShinySpeedSourcesAdviceGroup(fasterShinyPetTotalLevels) -> AdviceGroup:
     sps_AdviceGroup = AdviceGroup(
         tier="",
         pre_string="Info- Sources of Shiny Pet Level Rate",
-        advices=sps_adviceDict)
+        advices=sps_adviceDict,
+        informational=True
+    )
     return sps_AdviceGroup
 
 def getBreedabilityAdviceGroup():
@@ -155,7 +157,8 @@ def getBreedabilityAdviceGroup():
     b_ag = AdviceGroup(
         tier='',
         pre_string="Informational- Breedability Multi and Heart VII Progress",
-        advices=b_advices
+        advices=b_advices,
+        informational=True
     )
     return b_ag
 
@@ -177,6 +180,7 @@ def getActiveBMAdviceGroup() -> AdviceGroup:
     abm_adviceDict["Prerequisites"].append(Advice(
         label="Voidwalker: Enhancement Eclipse talent leveled to 150+",
         picture_class="enhancement-eclipse",
+        progression=max([vman.max_talents.get("49", 0) for vman in session_data.account.vmans], default=0),
         goal=150
     ))
     abm_adviceDict["Prerequisites"].append(Advice(
@@ -297,14 +301,19 @@ def getActiveBMAdviceGroup() -> AdviceGroup:
         goal=10
     ))
 
+    for subgroupName in abm_adviceDict:
+        for advice in abm_adviceDict[subgroupName]:
+            mark_advice_completed(advice)
+
     abm_AdviceGroup = AdviceGroup(
         tier="",
         pre_string="Info- Active BM setup for around 4-5x shiny progress",
-        advices=abm_adviceDict
+        advices=abm_adviceDict,
+        informational=True
     )
     return abm_AdviceGroup
 
-def setBreedingProgressionTier() -> AdviceSection:
+def getBreedingProgressionTiersAdviceGroups(breedingDict):
     breeding_AdviceDict = {
         "UnlockedTerritories": {"Unlock more Spice Territories": [], "Recommended Territory Team (Left to Right)": []},
         "MaxArenaWave": {"Recommended Arena Team (Left to Right)": []},
@@ -312,21 +321,10 @@ def setBreedingProgressionTier() -> AdviceSection:
         "ShinyLevelsTierList": {}
     }
     breeding_AdviceGroupDict = {}
-    breeding_AdviceSection = AdviceSection(
-        name="Breeding",
-        tier="Not Yet Evaluated",
-        header="Best Breeding tier met: Not Yet Evaluated. Recommended breeding actions:",
-        picture="Breeding.png",
-        collapse=False
-    )
-    highestBreedingLevel = max(session_data.account.all_skills["Breeding"])
-    if highestBreedingLevel < 1:
-        breeding_AdviceSection.header = "Come back after unlocking the Breeding skill in World 4!"
-        breeding_AdviceSection.collapse = True
-        return breeding_AdviceSection
 
     progressionTiersBreeding = copy.deepcopy(breeding_progressionTiers)
-    maxBreedingTier = max(progressionTiersBreeding.keys())
+    info_tiers = 0
+    max_tier = max(progressionTiersBreeding.keys()) - info_tiers
     tier_UnlockedTerritories = 0
     tier_MaxArenaWave = 0
     tier_ShinyLevels = 0
@@ -351,7 +349,7 @@ def setBreedingProgressionTier() -> AdviceSection:
             ['Rattler', 'Looter', 'Monolithic', 'Refiller', 'Defender', 'Refiller'],
             ['rattler', 'looter', 'monolithic', 'refiller', 'defender', 'refiller']],
         6: [
-            #['Peapeapod or Rattler', 'Looter', 'Trasher (Manually click to delete enemy attacks!)', 'Refiller', 'Refiller', 'Lazarus or Filler'],
+            # ['Peapeapod or Rattler', 'Looter', 'Trasher (Manually click to delete enemy attacks!)', 'Refiller', 'Refiller', 'Lazarus or Filler'],
             # ['peapeapod', 'looter', 'trasher', 'refiller', 'refiller', 'lazarus']]
             ['Peapeapod or Rattler', 'Peapeapod or Rattler', 'Looter', 'Defender', 'Refiller', 'Refiller'],
             ['peapeapod', 'peapeapod', 'looter', 'defender', 'refiller', 'refiller']]
@@ -378,6 +376,7 @@ def setBreedingProgressionTier() -> AdviceSection:
             ['Rattler', 'Defender', 'Looter', 'Refiller', 'Badumdum', 'Borger'],
             ['rattler', 'defender', 'looter', 'refiller', 'badumdum', 'borger']]
     }
+
     shinyPetsTierList = {
         "S": ['Bonuses from All Meals', 'Base Efficiency for All Skills', 'Drop Rate'],
         "A": ['Base Critter Per Trap', 'Faster Refinery Speed', 'Multikill Per Tier', 'Infinite Star Signs'],
@@ -386,137 +385,133 @@ def setBreedingProgressionTier() -> AdviceSection:
         "D": ['Sail Captain EXP Gain', 'Total Damage', 'Any Tab Talent Pts'],
         "F": ['Class EXP', 'Line Width in Lab']
     }
-
-    breedingDict = session_data.account.breeding
-    shinyExclusionsDict = getShinyExclusions()
     shinyTiersDisplayed = []
-    if breedingDict == {}:
-        breeding_AdviceSection.header = "Breeding info could not be read from your save data :( Please file a bug report if you have Breeding unlocked"
-        return breeding_AdviceSection
-    else:
-        if shinyExclusionsDict:
-            if shinyExclusionsDict["Lower Minimum Travel Time for Sailing"] == True:
-                for tierName, tierList in shinyPetsTierList.items():
-                    if "Lower Minimum Travel Time for Sailing" in tierList:
-                        shinyPetsTierList[tierName].remove("Lower Minimum Travel Time for Sailing")
-                shinyPetsTierList["F"].append("Lower Minimum Travel Time for Sailing")
+    shinyExclusionsDict = getShinyExclusions()
+    if shinyExclusionsDict:
+        if shinyExclusionsDict["Lower Minimum Travel Time for Sailing"] == True:
+            for tierName, tierList in shinyPetsTierList.items():
+                if "Lower Minimum Travel Time for Sailing" in tierList:
+                    shinyPetsTierList[tierName].remove("Lower Minimum Travel Time for Sailing")
+            shinyPetsTierList["F"].append("Lower Minimum Travel Time for Sailing")
 
-            if shinyExclusionsDict["Higher Artifact Find Chance"] == True:
-                for tierName, tierList in shinyPetsTierList.items():
-                    if "Higher Artifact Find Chance" in tierList:
-                        shinyPetsTierList[tierName].remove("Higher Artifact Find Chance")
-                shinyPetsTierList["F"].append("Higher Artifact Find Chance")
+        if shinyExclusionsDict["Higher Artifact Find Chance"] == True:
+            for tierName, tierList in shinyPetsTierList.items():
+                if "Higher Artifact Find Chance" in tierList:
+                    shinyPetsTierList[tierName].remove("Higher Artifact Find Chance")
+            shinyPetsTierList["F"].append("Higher Artifact Find Chance")
 
-            if shinyExclusionsDict["Base Critter Per Trap"] == True:
-                for tierName, tierList in shinyPetsTierList.items():
-                    if "Base Critter Per Trap" in tierList:
-                        shinyPetsTierList[tierName].remove('Base Critter Per Trap')
-                shinyPetsTierList["B"].append('Base Critter Per Trap')
+        if shinyExclusionsDict["Base Critter Per Trap"] == True:
+            for tierName, tierList in shinyPetsTierList.items():
+                if "Base Critter Per Trap" in tierList:
+                    shinyPetsTierList[tierName].remove('Base Critter Per Trap')
+            shinyPetsTierList["B"].append('Base Critter Per Trap')
 
-            if shinyExclusionsDict["Faster Shiny Pet Lv Up Rate"] == True:
-                for tierName, tierList in shinyPetsTierList.items():
-                    if "Faster Shiny Pet Lv Up Rate" in tierList:
-                        shinyPetsTierList[tierName].remove('Faster Shiny Pet Lv Up Rate')
-                shinyPetsTierList["C"].append('Faster Shiny Pet Lv Up Rate')
+        if shinyExclusionsDict["Faster Shiny Pet Lv Up Rate"] == True:
+            for tierName, tierList in shinyPetsTierList.items():
+                if "Faster Shiny Pet Lv Up Rate" in tierList:
+                    shinyPetsTierList[tierName].remove('Faster Shiny Pet Lv Up Rate')
+            shinyPetsTierList["C"].append('Faster Shiny Pet Lv Up Rate')
 
-        for tier in progressionTiersBreeding:
-            #Unlocked Territories
-            if tier_UnlockedTerritories >= (tier-1):
-                if breedingDict["Highest Unlocked Territory Number"] >= progressionTiersBreeding[tier]["TerritoriesUnlocked"]:
-                    tier_UnlockedTerritories = tier
-                else:
-                    for territoryIndex in range(breedingDict["Highest Unlocked Territory Number"]+1, progressionTiersBreeding[tier]["TerritoriesUnlocked"]+1):
-                        breeding_AdviceDict["UnlockedTerritories"]["Unlock more Spice Territories"].append(
-                            Advice(
-                                label=getTerritoryName(territoryIndex),
-                                picture_class=getSpiceImage(territoryIndex)
-                            )
+    #Assess Tiers
+    for tier in progressionTiersBreeding:
+        # Unlocked Territories
+        if tier_UnlockedTerritories >= (tier - 1):
+            if breedingDict["Highest Unlocked Territory Number"] >= progressionTiersBreeding[tier]["TerritoriesUnlocked"]:
+                tier_UnlockedTerritories = tier
+            else:
+                for territoryIndex in range(breedingDict["Highest Unlocked Territory Number"] + 1,
+                                            progressionTiersBreeding[tier]["TerritoriesUnlocked"] + 1):
+                    breeding_AdviceDict["UnlockedTerritories"]["Unlock more Spice Territories"].append(
+                        Advice(
+                            label=getTerritoryName(territoryIndex),
+                            picture_class=getSpiceImage(territoryIndex)
                         )
-                    for petIndex in range(0, len(recommendedTerritoryCompsList[tier][0])):
-                        breeding_AdviceDict["UnlockedTerritories"]["Recommended Territory Team (Left to Right)"].append(
-                            Advice(
-                                label=recommendedTerritoryCompsList[tier][0][petIndex],
-                                picture_class=recommendedTerritoryCompsList[tier][1][petIndex]
-                            )
+                    )
+                for petIndex in range(0, len(recommendedTerritoryCompsList[tier][0])):
+                    breeding_AdviceDict["UnlockedTerritories"]["Recommended Territory Team (Left to Right)"].append(
+                        Advice(
+                            label=recommendedTerritoryCompsList[tier][0][petIndex],
+                            picture_class=recommendedTerritoryCompsList[tier][1][petIndex]
                         )
+                    )
 
-            #Arena Waves to unlock Pet Slots
-            if tier_MaxArenaWave >= (tier-1):
-                if breedingDict["ArenaMaxWave"] >= progressionTiersBreeding[tier]["ArenaWaves"]:
-                    tier_MaxArenaWave = tier
-                else:
-                    for petIndex in range(0, len(recommendedArenaCompsDict[tier_MaxArenaWave][0])):
-                        breeding_AdviceDict["MaxArenaWave"]["Recommended Arena Team (Left to Right)"].append(
-                            Advice(
-                                label=recommendedArenaCompsDict[tier_MaxArenaWave][0][petIndex],
-                                picture_class=recommendedArenaCompsDict[tier_MaxArenaWave][1][petIndex]
-                            )
+        # Arena Waves to unlock Pet Slots
+        if tier_MaxArenaWave >= (tier - 1):
+            if breedingDict["ArenaMaxWave"] >= progressionTiersBreeding[tier]["ArenaWaves"]:
+                tier_MaxArenaWave = tier
+            else:
+                for petIndex in range(0, len(recommendedArenaCompsDict[tier_MaxArenaWave][0])):
+                    breeding_AdviceDict["MaxArenaWave"]["Recommended Arena Team (Left to Right)"].append(
+                        Advice(
+                            label=recommendedArenaCompsDict[tier_MaxArenaWave][0][petIndex],
+                            picture_class=recommendedArenaCompsDict[tier_MaxArenaWave][1][petIndex]
                         )
+                    )
 
-            #Shinies
-            failedShinyRequirements = []
-            failedShinyBonus = {}
-            #if tier_ShinyLevels >= (tier-1):
-            if len(progressionTiersBreeding[tier].get("Shinies", {})) == 0 and tier_ShinyLevels >= tier-1:
-                # free pass
+        # Shinies
+        failedShinyRequirements = []
+        failedShinyBonus = {}
+        # if tier_ShinyLevels >= (tier-1):
+        if len(progressionTiersBreeding[tier].get("Shinies", {})) == 0 and tier_ShinyLevels >= tier - 1:
+            # free pass
+            tier_ShinyLevels = tier
+        else:
+            # if there are actual level requirements
+            allRequirementsMet = True
+            for requiredShinyBonusType in progressionTiersBreeding[tier]["Shinies"]:
+                if breedingDict["Total Shiny Levels"][requiredShinyBonusType] < progressionTiersBreeding[tier]["Shinies"][requiredShinyBonusType][0]:
+                    if shinyExclusionsDict.get(requiredShinyBonusType, False) == False:
+                        allRequirementsMet = False
+                    else:
+                        continue
+                    failedShinyRequirements.append([
+                        requiredShinyBonusType,
+                        breedingDict["Total Shiny Levels"][requiredShinyBonusType],
+                        progressionTiersBreeding[tier]["Shinies"][requiredShinyBonusType][0],
+                        progressionTiersBreeding[tier]["Shinies"][requiredShinyBonusType][1]],
+                    )
+                    failedShinyBonus[requiredShinyBonusType] = breedingDict["Grouped Bonus"][requiredShinyBonusType]
+            if allRequirementsMet == True and tier_ShinyLevels >= tier - 1:
                 tier_ShinyLevels = tier
             else:
-                # if there are actual level requirements
-                allRequirementsMet = True
-                for requiredShinyBonusType in progressionTiersBreeding[tier]["Shinies"]:
-                    if breedingDict["Total Shiny Levels"][requiredShinyBonusType] < progressionTiersBreeding[tier]["Shinies"][requiredShinyBonusType][0]:
-                        if shinyExclusionsDict.get(requiredShinyBonusType, False) == False:
-                            allRequirementsMet = False
-                        else:
-                            continue
-                        failedShinyRequirements.append([
-                            requiredShinyBonusType,
-                            breedingDict["Total Shiny Levels"][requiredShinyBonusType],
-                            progressionTiersBreeding[tier]["Shinies"][requiredShinyBonusType][0],
-                            progressionTiersBreeding[tier]["Shinies"][requiredShinyBonusType][1]],
-                        )
-                        failedShinyBonus[requiredShinyBonusType] = breedingDict["Grouped Bonus"][requiredShinyBonusType]
-                if allRequirementsMet == True and tier_ShinyLevels >= tier-1:
-                    tier_ShinyLevels = tier
-                else:
-                    if tier not in shinyTiersDisplayed and len(shinyTiersDisplayed) < maxTiersPerGroup-1:
-                        shinyTiersDisplayed.append(tier)
-                    if tier in shinyTiersDisplayed:
-                        for failedRequirement in failedShinyRequirements:
-                            shinySubgroup = f"Tier {tier} - {failedRequirement[0]}: {failedRequirement[1]}/{failedRequirement[2]}"
-                            if failedRequirement[0] not in breeding_AdviceDict["ShinyLevels"]:
-                                breeding_AdviceDict["ShinyLevels"][shinySubgroup] = []
-                            for possibleShinyPet in failedShinyBonus[failedRequirement[0]]:
-                                breeding_AdviceDict["ShinyLevels"][shinySubgroup].append(
-                                    Advice(
-                                        label=f"{possibleShinyPet[0]}: {possibleShinyPet[2]:,.2f} base days to level",
-                                        picture_class=possibleShinyPet[0],
-                                        progression=possibleShinyPet[1],
-                                        goal=max(failedRequirement[3], possibleShinyPet[1])
-                                    )
+                if tier not in shinyTiersDisplayed and len(shinyTiersDisplayed) < maxTiersPerGroup - 1:
+                    shinyTiersDisplayed.append(tier)
+                if tier in shinyTiersDisplayed:
+                    for failedRequirement in failedShinyRequirements:
+                        shinySubgroup = f"Tier {tier} - {failedRequirement[0]}: {failedRequirement[1]}/{failedRequirement[2]}"
+                        if failedRequirement[0] not in breeding_AdviceDict["ShinyLevels"]:
+                            breeding_AdviceDict["ShinyLevels"][shinySubgroup] = []
+                        for possibleShinyPet in failedShinyBonus[failedRequirement[0]]:
+                            breeding_AdviceDict["ShinyLevels"][shinySubgroup].append(
+                                Advice(
+                                    label=f"{possibleShinyPet[0]}: {possibleShinyPet[2]:,.2f} base days to level",
+                                    picture_class=possibleShinyPet[0],
+                                    progression=possibleShinyPet[1],
+                                    goal=max(failedRequirement[3], possibleShinyPet[1])
                                 )
+                            )
 
-    overall_BreedingTier = min(maxBreedingTier, tier_MaxArenaWave, tier_UnlockedTerritories, tier_ShinyLevels)
+    overall_SectionTier = min(max_tier + info_tiers, tier_MaxArenaWave, tier_UnlockedTerritories, tier_ShinyLevels)
 
-    #Generate Advice Groups
-    if tier_UnlockedTerritories < maxBreedingTier:
+    # Generate Advice Groups
+    if tier_UnlockedTerritories < max_tier:
         breeding_AdviceGroupDict["UnlockedTerritories"] = AdviceGroup(
             tier=str(tier_UnlockedTerritories),
-            pre_string=f"Unlock {progressionTiersBreeding[tier_UnlockedTerritories+1]['TerritoriesUnlocked'] - breedingDict['Highest Unlocked Territory Number']} more Spice Territor{pl(breeding_AdviceDict['UnlockedTerritories'], 'y', 'ies')}",
+            pre_string=f"Unlock {progressionTiersBreeding[tier_UnlockedTerritories + 1]['TerritoriesUnlocked'] - breedingDict['Highest Unlocked Territory Number']} more Spice Territor{pl(breeding_AdviceDict['UnlockedTerritories'], 'y', 'ies')}",
             advices=breeding_AdviceDict["UnlockedTerritories"],
             post_string=""
         )
-    if tier_MaxArenaWave != maxBreedingTier:
-        nextArenaWaveUnlock = progressionTiersBreeding[tier_MaxArenaWave+1]["ArenaWaves"]
+    if tier_MaxArenaWave != max_tier:
+        nextArenaWaveUnlock = progressionTiersBreeding[tier_MaxArenaWave + 1]["ArenaWaves"]
     breeding_AdviceGroupDict["MaxArenaWave"] = AdviceGroup(
         tier=str(tier_MaxArenaWave),
-        pre_string=f"Complete Arena Wave {nextArenaWaveUnlock} {pl(5-tier_MaxArenaWave, 'to unlock the final Arena bonus', 'to unlock another pet slot')}",
+        pre_string=f"Complete Arena Wave {nextArenaWaveUnlock} {pl(5 - tier_MaxArenaWave, 'to unlock the final Arena bonus', 'to unlock another pet slot')}",
         advices=breeding_AdviceDict["MaxArenaWave"],
         post_string=""
     )
 
-    if highestBreedingLevel >= 40:
-        if tier_ShinyLevels < maxBreedingTier:
+    if max(session_data.account.all_skills["Breeding"]) >= 40:
+        if tier_ShinyLevels < max_tier:
             breeding_AdviceGroupDict["ShinyLevels"] = AdviceGroup(
                 tier=str(tier_ShinyLevels),
                 pre_string=f"Level the following Shiny {pl(breeding_AdviceDict['ShinyLevels'], 'Bonus', 'Bonuses')}",
@@ -533,21 +528,39 @@ def setBreedingProgressionTier() -> AdviceSection:
                 tier="",
                 pre_string="Advance Shiny levels per your desires",
                 advices=breeding_AdviceDict["ShinyLevelsTierList"],
-                post_string=""
+                post_string="",
+                informational=True
             )
-        breeding_AdviceGroupDict["ShinySpeedSources"] = getShinySpeedSourcesAdviceGroup(breedingDict['Total Shiny Levels']['Faster Shiny Pet Lv Up Rate'])
-        breeding_AdviceGroupDict["ActiveBM"] = getActiveBMAdviceGroup()
-        breeding_AdviceGroupDict['Breedability'] = getBreedabilityAdviceGroup()
 
-    #Generate Advice Section
-    tier_section = f"{overall_BreedingTier}/{maxBreedingTier}"
-    breeding_AdviceSection.tier = tier_section
-    breeding_AdviceSection.pinchy_rating = overall_BreedingTier
-    breeding_AdviceSection.groups = breeding_AdviceGroupDict.values()
-    if overall_BreedingTier >= maxBreedingTier:
-        breeding_AdviceSection.header = f"Best Breeding tier met: {tier_section}{break_you_best}"
-        breeding_AdviceSection.complete = True
-    else:
-        breeding_AdviceSection.header = f"Best Breeding tier met: {tier_section}"
+    return breeding_AdviceGroupDict, overall_SectionTier, max_tier
 
+def getBreedingAdviceSection() -> AdviceSection:
+    highestBreedingLevel = max(session_data.account.all_skills["Breeding"])
+    if highestBreedingLevel < 1:
+        breeding_AdviceSection = AdviceSection(
+            name="Breeding",
+            tier="Not Yet Evaluated",
+            header="Come back after unlocking the Breeding skill in World 4!",
+            picture="Breeding.png",
+            unreached=True
+        )
+        return breeding_AdviceSection
+
+    breedingDict = session_data.account.breeding
+    #Generate AdviceGroups
+    breeding_AdviceGroupDict, overall_SectionTier, max_tier = getBreedingProgressionTiersAdviceGroups(breedingDict)
+    breeding_AdviceGroupDict["ShinySpeedSources"] = getShinySpeedSourcesAdviceGroup(breedingDict['Total Shiny Levels']['Faster Shiny Pet Lv Up Rate'])
+    breeding_AdviceGroupDict["ActiveBM"] = getActiveBMAdviceGroup()
+    breeding_AdviceGroupDict['Breedability'] = getBreedabilityAdviceGroup()
+
+    #Generate AdviceSection
+    tier_section = f"{overall_SectionTier}/{max_tier}"
+    breeding_AdviceSection = AdviceSection(
+        name="Breeding",
+        tier="Not Yet Evaluated",
+        pinchy_rating=overall_SectionTier,
+        header=f"Best Breeding tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
+        picture="Breeding.png",
+        groups = breeding_AdviceGroupDict.values()
+    )
     return breeding_AdviceSection

@@ -53,85 +53,104 @@ def main(inputData, runType="web"):
     # Step 3: Send that data off to all the different analyzers
     # General
     sections_general = [
-        section_combatLevels := combatLevels.setCombatLevelsProgressionTier(),
-        section_secretPath := secretPath.setSecretClassProgressionTier(),
-        section_active := active.setActiveProgressionTier(),
-        section_achievements := achievements.setAchievementsProgressionTier(),
-        *(sections_consumables := consumables.parseConsumables()),
-        section_gemShop := gemShop.setGemShopProgressionTier(),
-        *(sections_gstacks := greenstacks.setGStackProgressionTier()),
-        section_cards := cards.getCardSetReview(),
+        section_combatLevels := combatLevels.getCombatLevelsAdviceSection(),
+        section_secretPath := secretPath.getSecretClassAdviceSection(),
+        section_active := active.getActiveAdviceSection(),
+        section_achievements := achievements.getAchievementsAdviceSection(),
+        *(sections_consumables := consumables.getConsumablesAdviceSections()),
+        section_gemShop := gemShop.getGemShopAdviceSection(),
+        *(sections_gstacks := greenstacks.getGStackAdviceSections()),
+        section_cards := cards.getCardsAdviceSection(),
     ]
     # World 1
     sections_1 = [
-        section_stamps := stamps.setStampProgressionTier(),
-        section_bribes := bribes.setBribesProgressionTier(),
-        section_smithing := smithing.setSmithingProgressionTier(),
-        section_statues := statues.setStatuesProgressionTier(),
-        section_starsigns := starsigns.setStarsignsProgressionTier(),
-        section_owl := owl.setOwlProgressionTier()
+        section_stamps := stamps.getStampAdviceSection(),
+        section_bribes := bribes.getBribesAdviceSection(),
+        section_smithing := smithing.getSmithingAdviceSection(),
+        section_statues := statues.getStatuesAdviceSection(),
+        section_starsigns := starsigns.getStarsignsAdviceSection(),
+        section_owl := owl.getOwlAdviceSection()
     ]
     # World 2
     sections_2 = [
-        section_alchBubbles := alchemy.setAlchemyBubblesProgressionTier(),
-        section_alchVials := alchemy.setAlchemyVialsProgressionTier(),
-        section_alchP2W := alchemy.setAlchemyP2W(),
-        section_alchSigils := alchemy.setAlchemySigilsProgressionTier(),
+        section_alchBubbles := alchemy.getAlchemyBubblesAdviceSection(),
+        section_alchVials := alchemy.getAlchemyVialsAdviceSection(),
+        section_alchP2W := alchemy.getAlchemyP2WAdviceSection(),
+        section_alchSigils := alchemy.getAlchemySigilsAdviceSection(),
         # section_obols := idleon_Obols.setObolsProgressionTier(),
-        section_killroy := killroy.setKillroyProgressionTier(),
-        section_islands := islands.setIslandsProgressionTier()
+        section_killroy := killroy.getKillroyAdviceSection(),
+        section_islands := islands.getIslandsAdviceSection()
     ]
     # World 3
     sections_3 = [
-        section_refinery := consRefinery.setConsRefineryProgressionTier(),
-        section_buildings := consBuildings.setConsBuildingsProgressionTier(),
-        section_sampling := sampling.setSamplingProgressionTier(),
-        section_library := library.setLibraryProgressionTier(),
-        section_deathnote := consDeathNote.setConsDeathNoteProgressionTier(),
-        section_saltlick := consSaltLick.setConsSaltLickProgressionTier(),
-        section_collider := collider.setColliderProgressionTier(),
+        section_refinery := consRefinery.getConsRefineryAdviceSection(),
+        section_buildings := consBuildings.getConsBuildingsAdviceSection(),
+        section_sampling := sampling.getSamplingAdviceSection(),
+        section_library := library.getLibraryAdviceSection(),
+        section_deathnote := consDeathNote.getDeathNoteAdviceSection(),
+        section_saltlick := consSaltLick.getSaltLickAdviceSection(),
+        section_collider := collider.getColliderAdviceSection(),
         # section_worship =
-        section_prayers := worship.setWorshipPrayersProgressionTier(),
-        section_trapping := trapping.setTrappingProgressionTier(),
-        section_equinox := equinox.setEquinoxProgressionTier(),
+        section_prayers := worship.getPrayersAdviceSection(),
+        section_trapping := trapping.getTrappingAdviceSection(),
+        section_equinox := equinox.getEquinoxAdviceSection(),
     ]
     # World 4
     sections_4 = [
-        section_breeding := breeding.setBreedingProgressionTier(),
-        section_cooking := cooking.setCookingProgressionTier(),
+        section_breeding := breeding.getBreedingAdviceSection(),
+        section_cooking := cooking.getCookingAdviceSection(),
         # section_lab := ,
-        section_rift := rift.setRiftProgressionTier(),
+        section_rift := rift.getRiftAdviceSection(),
     ]
     # World 5
     sections_5 = [
-        section_slab := slab.setSlabProgressionTier(),
-        section_divinity := divinity.setDivinityProgressionTier(),
-        section_sailing := sailing.setSailingProgressionTier()
+        section_slab := slab.getSlabAdviceSection(),
+        section_divinity := divinity.getDivinityAdviceSection(),
+        section_sailing := sailing.getSailingAdviceSection()
         # section_gaming =
     ]
     # World 6
     sections_6 = [
         section_farming := farming.setFarmingProgressionTier(),
-        section_sneaking := sneaking.setSneakingProgressionTier(),
-        section_beanstalk := beanstalk.section_beanstalk(),
+        section_sneaking := sneaking.getSneakingAdviceSection(),
+        section_beanstalk := beanstalk.getBeanstalkAdviceSection(),
     ]
 
-    pinchable_sections = [
-        section_combatLevels, section_secretPath, section_achievements,
-        section_stamps, section_bribes, section_smithing, section_statues, section_starsigns, section_owl,
-        section_alchBubbles, section_alchVials, section_alchP2W, section_alchSigils, section_islands,
-        section_refinery, section_sampling, section_saltlick, section_deathnote, section_prayers, section_equinox,
-        section_breeding, section_cooking, section_rift,
-        section_divinity, section_sailing,
-        section_farming
-    ]
+    #Sort sections into rated and unrated, as well as checking for completeness
+    all_sections = [sections_general, sections_1, sections_2, sections_3, sections_4, sections_5, sections_6]
     unrated_sections = []
-    for sectionList in [sections_general, sections_1, sections_2, sections_3, sections_4, sections_5, sections_6]:
-        unrated_sections.extend([section for section in sectionList if section not in pinchable_sections])
-    sections_pinchy = pinchy.generatePinchyWorld(pinchable_sections, unrated_sections)
+    pinchable_sections = []
+    for section_list in all_sections:
+        for section in section_list:
+            for group in section.groups:
+                group.check_for_completeness()
+            section.check_for_completeness()
+            section.check_for_informationalness()
+            # logger.debug(
+            #     (f"{section} {section.tier}: "
+            #      f"Unreached={section.unreached}, "
+            #      f"Unrated={section.unrated}, "
+            #      f"Completed={section.completed}, "
+            #      f"Info={section.informational}"
+            #      )
+            # )
+            if section.unrated:
+                unrated_sections.append(section)
+            else:
+                pinchable_sections.append(section)
 
+    #Pinchy Evaluation
+    sections_pinchy = pinchy.generatePinchyWorld(pinchable_sections, unrated_sections)
+    for section in sections_pinchy:
+        for group in section.groups:
+            group.check_for_completeness()
+        section.check_for_completeness()
+        section.check_for_informationalness()
+        #logger.debug(f"{section}: Unreached={section.unreached}, Completed={section.completed}, Info={section.informational}, Unrated={section.unrated}")
+
+    #Build Worlds
     reviews = [
-        AdviceWorld(name=WorldName.PINCHY, sections=sections_pinchy, title="Pinchy AutoReview", collapse=False),
+        AdviceWorld(name=WorldName.PINCHY, sections=sections_pinchy, title="Pinchy AutoReview", collapse=False, complete=False),
         AdviceWorld(name=WorldName.GENERAL, sections=sections_general, banner="general_banner.jpg"),
         AdviceWorld(name=WorldName.BLUNDER_HILLS, sections=sections_1, banner="w1banner.png"),
         AdviceWorld(name=WorldName.YUMYUM_DESERT, sections=sections_2, banner="w2banner.png"),
@@ -140,13 +159,13 @@ def main(inputData, runType="web"):
         AdviceWorld(name=WorldName.SMOLDERIN_PLATEAU, sections=sections_5, banner="w5banner.png"),
         AdviceWorld(name=WorldName.SPIRITED_VALLEY, sections=sections_6, banner="w6banner.png"),
     ]
-    if session_data.hide_completed:
-        for world in reviews:
-            world.hide_completed_sections()
-            for section in world.sections:
-                for group in section.groups:
-                    group.remove_completed_advices()
-                    group.remove_empty_subgroups()
+
+    for world in reviews:
+        world.hide_unreached_sections()  # Feel free to comment this out while testing
+        #logger.debug(f"{world}: Unrated={world.unrated}, Complete={world.complete}, Info={world.informational}")
+        continue
+
+    reviews = [world for world in reviews if len(world.sections) > 0]
 
     headerData = HeaderData(inputData)
     logger.info(f"{headerData.last_update = }")

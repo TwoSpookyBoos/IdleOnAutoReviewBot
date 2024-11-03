@@ -9,7 +9,7 @@ from utils.logging import get_logger
 
 logger = get_logger(__name__)
 
-def getUnusedForgeSlotsCount():
+def getUnusedForgeSlotsAlert():
     unusedForgeSlotsCount = 0
     oreSlotIndex = 0
     try:
@@ -20,8 +20,14 @@ def getUnusedForgeSlotsCount():
                 unusedForgeSlotsCount += 1
             oreSlotIndex += 3
     except:
-        logger.exception(f"Could not retrieve forge levels or items. Returning 0 unused slots.")
-    return unusedForgeSlotsCount
+        logger.exception(f"Could not retrieve forge levels or items. Defaulting to 0 unused slots / no Alert.")
+
+    if unusedForgeSlotsCount > 0:
+        session_data.account.alerts_AdviceDict['World 1'].append(Advice(
+            label=f"You have {unusedForgeSlotsCount} empty ore slot{pl(unusedForgeSlotsCount)} in your {{{{ Forge|#smithing }}}}!",
+            picture_class="empty-forge-slot"
+        ))
+    return
 
 def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
     cap_Advices = {
@@ -137,47 +143,44 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
             goal=oreCost
         ))
 
-    cap_AdviceGroups = [
-        AdviceGroup(
+    sources_ag = AdviceGroup(
         tier='',
         pre_string="Info- Sources of Forge Ore Capacity",
-        advices=cap_Advices),
-        AdviceGroup(
-        tier='',
-        pre_string="Info- Total Capacity and Bar thresholds",
-        advices=bar_Advices,
-        post_string="Note: Partial stacks round up to whole bars when claiming AFK")
-    ]
+        advices=cap_Advices,
+        informational=True,
+    )
+    sources_ag.check_for_completeness()
+    total_ag = AdviceGroup(
+            tier='',
+            pre_string="Info- Total Capacity and Bar thresholds",
+            advices=bar_Advices,
+            post_string="Note: Partial stacks round up to whole bars when claiming AFK",
+            informational=True,
+            completed=sources_ag.completed
+        )
+    cap_AdviceGroups = [sources_ag, total_ag]
     return cap_AdviceGroups
 
-def setSmithingProgressionTier() -> AdviceSection:
+def getProgressionTiersAdviceGroup():
     smithing_AdviceDict = {
         "CashPoints": [],
         "MonsterPoints": [],
         "ForgeUpgrades": [],
         "EmptyForgeSlots": []
     }
-    smithing_AdviceGroupDict = {}
-    smithing_AdviceSection = AdviceSection(
-        name="Smithing",
-        tier="Not Yet Evaluated",
-        header="Best Smithing tier met: Not Yet Evaluated. Recommended Smithing actions",
-        picture="Smithing_Infinity_Hammer.gif"
-    )
-
+    info_tiers = 0
+    max_tier = smithing_progressionTiers[-1][0] - info_tiers
     tier_CashPoints = 0
     tier_MonsterPoints = 0
     tier_ForgeTotals = 0
-    max_tier = smithing_progressionTiers[-1][0]
-    overall_SmithingTier = 0
+
     playerCashPoints = []
     playerMonsterPoints = []
     sum_CashPoints = 0
     sum_MonsterPoints = 0
     sum_ForgeUpgrades = 0
-
-    #Total up all the purchases across all current characters
-    #TODO: Move this parsing to Account
+    # Total up all the purchases across all current characters
+    # TODO: Move this parsing to Account
     for character in session_data.account.safe_characters:
         try:
             playerCashPoints.append(int(session_data.account.raw_data[f"AnvilPAstats_{character.character_index}"][1]))
@@ -189,7 +192,7 @@ def setSmithingProgressionTier() -> AdviceSection:
             playerMonsterPoints.append(0)
             logger.exception(f"Unable to retrieve AnvilPAstats_{character.character_index}")
 
-    #Total up all the forge purchases, including the stinky Forge EXP
+    # Total up all the forge purchases, including the stinky Forge EXP
     for upgradeIndex, upgradeData in session_data.account.forge_upgrades.items():
         sum_ForgeUpgrades += int(upgradeData["Purchased"])
         if upgradeData["Purchased"] < upgradeData["MaxPurchases"]:
@@ -202,7 +205,9 @@ def setSmithingProgressionTier() -> AdviceSection:
                         goal=upgradeData["MaxPurchases"])
                 )
 
-    #Work out each tier individual and overall tier
+    #Assess Tiers
+    # TODO: Redo all of this in the new format, such as using maxTiersPerGroup and subgrouping AdviceGroups
+    smithing_AdviceGroupDict = {}
     for tier in smithing_progressionTiers:
         #tier[0] = int tier
         #tier[1] = int Cash Points Purchased
@@ -271,29 +276,28 @@ def setSmithingProgressionTier() -> AdviceSection:
                     tier=str(tier_CashPoints),
                     pre_string=f"Purchase any {tier[3] - sum_ForgeUpgrades} additional Forge Upgrades",
                     advices=smithing_AdviceDict["ForgeUpgrades"],
-                    post_string="As of v1.91, Forge EXP Gain does absolutely nothing. Feel free to skip it!"
+                    post_string="As of v2.12, Forge EXP Gain does absolutely nothing. Feel free to skip it!"
                 )
+    overall_SectionTier = min(tier_CashPoints + info_tiers, tier_MonsterPoints, tier_ForgeTotals)
+    return smithing_AdviceGroupDict, overall_SectionTier, max_tier
 
-    #Check for any unused Forge slots
-    unusedForgeSlots = getUnusedForgeSlotsCount()
-    if unusedForgeSlots > 0:
-        session_data.account.alerts_AdviceDict['World 1'].append(Advice(
-            label=f"You have {unusedForgeSlots} empty ore slot{pl([''] * unusedForgeSlots)} in your {{{{ Forge|#smithing }}}}!",
-            picture_class="empty-forge-slot"
-        ))
+def getSmithingAdviceSection() -> AdviceSection:
+    # Generate Alert Advice
+    getUnusedForgeSlotsAlert()
 
-    #Forge Capacity calculations
+    #Generate AdviceGroups
+    smithing_AdviceGroupDict, overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
     smithing_AdviceGroupDict["OreCapacity"], smithing_AdviceGroupDict["Bars"] = getForgeCapacityAdviceGroup()
 
-    #Print out all the final smithing info
-    overall_SmithingTier = min(tier_CashPoints, tier_MonsterPoints, tier_ForgeTotals)
-    tier_section = f"{overall_SmithingTier}/{max_tier}"
-    smithing_AdviceSection.pinchy_rating = overall_SmithingTier
-    smithing_AdviceSection.tier = tier_section
-    smithing_AdviceSection.groups = smithing_AdviceGroupDict.values()
-    if overall_SmithingTier >= max_tier:
-        smithing_AdviceSection.header = f"Best Smithing tier met: {tier_section}{break_you_best}"
-        smithing_AdviceSection.complete = True
-    else:
-        smithing_AdviceSection.header = f"Best Smithing tier met: {tier_section}"
+    #Generate AdviceSection
+    tier_section = f"{overall_SectionTier}/{max_tier}"
+    smithing_AdviceSection = AdviceSection(
+        name="Smithing",
+        tier=tier_section,
+        pinchy_rating=overall_SectionTier,
+        header=f"Best Smithing tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
+        picture="Smithing_Infinity_Hammer.gif",
+        groups=smithing_AdviceGroupDict.values()
+    )
+
     return smithing_AdviceSection
