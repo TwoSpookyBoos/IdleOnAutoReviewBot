@@ -4207,7 +4207,7 @@ stamps_progressionTiers[max(stamps_progressionTiers)-2]['Stamps']['Specific'] = 
 tiered_stamps = set()
 for tier in stamps_progressionTiers:
     for requiredStamp in stamps_progressionTiers[tier].get('Stamps', {}).get('Specific', []):
-        if requiredStamp not in capacity_stamps:
+        if requiredStamp not in capacity_stamps and requiredStamp != 'Crop Evo Stamp':
             tiered_stamps.add(requiredStamp)
 ordered_tiers_stamps = []
 remaining_stamps = []
