@@ -14,17 +14,11 @@ logger = get_logger(__name__)
 def getDivLevelReason(inputLevel: int) -> str:
     return divLevelReasonsDict.get(inputLevel, "")
 
-def getOfferingsAdviceGroup():
+def getOfferingsAdviceGroup(lowOffering, highOffering, divinityPoints, lowOfferingGoal, highOfferingGoal):
     offerings_AdviceDict = {
         "Available Offerings": [],
         "Strategy": []
     }
-    lowOffering = session_data.account.divinity['LowOffering']
-    highOffering = session_data.account.divinity['HighOffering']
-    divinityPoints = session_data.account.divinity['DivinityPoints']
-    lowOfferingGoal = session_data.account.divinity['LowOfferingGoal']
-    highOfferingGoal = session_data.account.divinity['HighOfferingGoal']
-
     offerings_AdviceDict["Available Offerings"].append(Advice(
         label=f"{divinity_offeringsDict.get(lowOffering, {}).get('Chance', 1)}% Offering: {getOfferingNameFromIndex(lowOffering)}",
         picture_class=divinity_offeringsDict.get(lowOffering, {}).get('Image', ''),
@@ -48,8 +42,7 @@ def getOfferingsAdviceGroup():
     offerings_AdviceGroup = AdviceGroup(
         tier="",
         pre_string="Offerings Information",
-        advices=offerings_AdviceDict,
-        informational=True
+        advices=offerings_AdviceDict
     )
     return offerings_AdviceGroup
 
@@ -70,8 +63,7 @@ def getBlessingsAdviceGroup():
     blessings_AdviceGroup = AdviceGroup(
         tier="",
         pre_string="Blessings Information",
-        advices=blessings_AdviceList,
-        informational=True
+        advices=blessings_AdviceList
     )
     return blessings_AdviceGroup
 
@@ -99,9 +91,7 @@ def getStylesInfoAdviceGroup(highestDivinitySkillLevel: int) -> AdviceGroup:
     styles_AdviceGroup = AdviceGroup(
         tier="",
         pre_string="Styles Information",
-        advices=styles_AdviceDict,
-        informational=True,
-        completed=True
+        advices=styles_AdviceDict
     )
     return styles_AdviceGroup
 
@@ -154,7 +144,7 @@ def getLinksAndDootChecksAdviceGroups(tier_Divinity: int, lowestDivinitySkillLev
                     if character.divinity_level == highestDivinitySkillLevel and character.divinity_link != "Purrmep":
                         highestCharactersNotAssignedToPurrmep.append(character)
             if not purrmepAssignedToAnyHighestCharacter:
-                if highestDivinitySkillLevel < 100 and highestDivinitySkillLevel - divLevelOfPurrmepLinkedCharacter >= 10:
+                if highestDivinitySkillLevel < 120 and highestDivinitySkillLevel - divLevelOfPurrmepLinkedCharacter >= 10:
                     doot_AdviceList.append(Advice(
                         label=f"""Relink to {pl(highestCharactersNotAssignedToPurrmep,
                                                 f'{highestCharactersNotAssignedToPurrmep[0].character_name}',
@@ -180,15 +170,12 @@ def getLinksAndDootChecksAdviceGroups(tier_Divinity: int, lowestDivinitySkillLev
     links_AdviceGroup = AdviceGroup(
         tier="",
         pre_string="Possible Divinity Link Setups",
-        advices=links_AdviceList,
-        informational=True,
-        completed=True
+        advices=links_AdviceList
     )
     doot_AdviceGroup = AdviceGroup(
         tier="",
         pre_string="Doot-Specific Checks",
-        advices=doot_AdviceList,
-        informational=True
+        advices=doot_AdviceList
     )
 
     return links_AdviceGroup, doot_AdviceGroup
@@ -252,22 +239,37 @@ def getArctisAdviceGroup(lowestDivinitySkillLevel: int, highestDivinitySkillLeve
         tier="",
         pre_string=f"Upcoming Arctis minor link bonus breakpoints"
                    f" (+# Talent LV for all talents above Lv 1)",
-        advices=arctis_AdviceDict,
-        informational=True,
-        completed=len(arctis_AdviceDict) == 1  #When Current Values is the only subgroup
+        advices=arctis_AdviceDict
     )
     arctis_AdviceGroup.remove_empty_subgroups()
 
     return arctis_AdviceGroup
 
-def getDivinityProgressionTierAdviceGroups(lowestDivinitySkillLevel, highestDivinitySkillLevel):
+def setDivinityProgressionTier():
     divinity_AdviceDict = {
         "TieredProgress": {},
     }
     divinity_AdviceGroupDict = {}
+    divinity_AdviceSection = AdviceSection(
+        name="Divinity",
+        tier="0",
+        pinchy_rating=0,
+        header="Best Divinity tier met: Not Yet Evaluated",
+        picture="Divinity.png"
+    )
+    highestDivinitySkillLevel = max(session_data.account.all_skills.get("Divinity", [0]))
+    if highestDivinitySkillLevel < 1:
+        divinity_AdviceSection.header = "Come back after unlocking the Divinity skill in W5!"
+        return divinity_AdviceSection
+
+    lowestDivinitySkillLevel = min(session_data.account.all_skills.get("Divinity", [0]))
     tier_Divinity = 0
-    info_tiers = 0
-    max_tier = max(divinity_progressionTiers.keys()) - info_tiers
+    max_tier = max(divinity_progressionTiers.keys())
+    lowOffering = session_data.account.divinity['LowOffering']
+    highOffering = session_data.account.divinity['HighOffering']
+    divinityPoints = session_data.account.divinity['DivinityPoints']
+    lowOfferingGoal = session_data.account.divinity['LowOfferingGoal']
+    highOfferingGoal = session_data.account.divinity['HighOfferingGoal']
 
     # Assess Tiers
     for tierLevel, tierRequirements in divinity_progressionTiers.items():
@@ -311,41 +313,23 @@ def getDivinityProgressionTierAdviceGroups(lowestDivinitySkillLevel, highestDivi
         pre_string="Complete objectives to reach the next Divinity tier",
         advices=divinity_AdviceDict["TieredProgress"]
     )
-    divinity_AdviceGroupDict["DivinityLinks"], divinity_AdviceGroupDict["Dooted"] = getLinksAndDootChecksAdviceGroups(
-        int(tier_Divinity), lowestDivinitySkillLevel, highestDivinitySkillLevel)
-
-    overall_SectionTier = min(max_tier + info_tiers, tier_Divinity)
-    return divinity_AdviceGroupDict, overall_SectionTier, max_tier
-
-def getDivinityAdviceSection() -> AdviceSection:
-    highestDivinitySkillLevel = max(session_data.account.all_skills.get("Divinity", [0]))
-    lowestDivinitySkillLevel = min(session_data.account.all_skills.get("Divinity", [0]))
-    if highestDivinitySkillLevel < 1:
-        divinity_AdviceSection = AdviceSection(
-            name="Divinity",
-            tier="",
-            pinchy_rating=0,
-            header="Come back after unlocking the Divinity skill in W5!",
-            picture="Divinity.png",
-            unreached=True
-        )
-        return divinity_AdviceSection
-
-    # Generate AdviceGroups
-    divinity_AdviceGroupDict, overall_SectionTier, max_tier = getDivinityProgressionTierAdviceGroups(lowestDivinitySkillLevel, highestDivinitySkillLevel)
-    divinity_AdviceGroupDict["Offerings"] = getOfferingsAdviceGroup()
+    divinity_AdviceGroupDict["Offerings"] = getOfferingsAdviceGroup(lowOffering, highOffering, divinityPoints, lowOfferingGoal, highOfferingGoal)
     divinity_AdviceGroupDict["Blessings"] = getBlessingsAdviceGroup()
     divinity_AdviceGroupDict["Styles"] = getStylesInfoAdviceGroup(highestDivinitySkillLevel)
+    divinity_AdviceGroupDict["DivinityLinks"], divinity_AdviceGroupDict["Dooted"] = getLinksAndDootChecksAdviceGroups(
+        int(tier_Divinity), lowestDivinitySkillLevel, highestDivinitySkillLevel)
     divinity_AdviceGroupDict["Arctis"] = getArctisAdviceGroup(lowestDivinitySkillLevel, highestDivinitySkillLevel)
 
     # Generate AdviceSection
-    tier_section = f"{overall_SectionTier}/{max_tier}"
-    divinity_AdviceSection = AdviceSection(
-        name="Divinity",
-        tier=tier_section,
-        pinchy_rating=overall_SectionTier,
-        header=f"Best Divinity tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
-        picture="Divinity.png",
-        groups=divinity_AdviceGroupDict.values()
-    )
+    overall_DivinityTier = min(max_tier, tier_Divinity)
+    tier_section = f"{overall_DivinityTier}/{max_tier}"
+    divinity_AdviceSection.tier = tier_section
+    divinity_AdviceSection.pinchy_rating = overall_DivinityTier
+    divinity_AdviceSection.groups = divinity_AdviceGroupDict.values()
+    if overall_DivinityTier >= max_tier:
+        divinity_AdviceSection.header = f"Best Divinity tier met: {tier_section}{break_you_best}"
+        divinity_AdviceSection.complete = True
+    else:
+        divinity_AdviceSection.header = f"Best Divinity tier met: {tier_section}"
+
     return divinity_AdviceSection

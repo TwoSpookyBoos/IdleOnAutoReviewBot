@@ -42,7 +42,7 @@ def parseCombatLevels():
     return parsedCombatLevels
 
 
-def getCombatLevelsAdviceSection() -> AdviceSection:
+def setCombatLevelsProgressionTier() -> AdviceSection:
     parsedCombatLevels = parseCombatLevels()
     equinoxDreamStatus = getEquinoxDreams()
 
@@ -114,11 +114,9 @@ def getCombatLevelsAdviceSection() -> AdviceSection:
         tier="",
         pre_string=advice_PersonalLevels,
         advices=lvlup_advices,
-        informational=True
     )
 
-    info_tiers = 0
-    max_tier = combatLevels_progressionTiers[-1][0] - info_tiers
+    max_tier = combatLevels_progressionTiers[-1][0]
     tier = f"{overall_CombatLevelTier}/{max_tier}"
     header = f"Best Family class level tier met: {tier}. "
 
@@ -133,6 +131,7 @@ def getCombatLevelsAdviceSection() -> AdviceSection:
         picture="Family.png",
         groups=[total_level_group, lvlup_group],
         pinchy_rating=overall_CombatLevelTier,
+        complete=overall_CombatLevelTier == max_tier
     )
 
     return combat_section

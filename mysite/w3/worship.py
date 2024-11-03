@@ -7,24 +7,37 @@ from utils.logging import get_logger
 
 logger = get_logger(__name__)
 
-def setPrayersProgressionTierAdviceGroup():
+def setWorshipPrayersProgressionTier() -> AdviceSection:
+    worshipPrayersDict = session_data.account.prayers
+    infoTiers = 2
+    max_tier = prayers_progressionTiers[-(1 + infoTiers)][0]  # Final tier is ignorable, second to final is optional
+    tier_WorshipPrayers = 0
+    overall_WorshipPrayersTier = 0
+
     prayers_AdviceDict = {
         "Recommended": {},
         "Optional": [],
         "Ignorable": []
     }
     prayers_AdviceGroupDict = {}
-    worshipPrayersDict = session_data.account.prayers
-    info_tiers = 2
-    max_tier = prayers_progressionTiers[-1][0] - info_tiers  # Final tier is ignorable, second to final is optional
-    tier_WorshipPrayers = 0
+    prayers_AdviceSection = AdviceSection(
+        name="Prayers",
+        tier="Not Yet Evaluated",
+        header="Best Prayers tier met: Not Yet Evaluated. Recommended prayer actions:",
+        picture="Prayer_Stone.gif"
+    )
+    highestWorshipLevel = max(session_data.account.all_skills["Worship"])
+    if highestWorshipLevel < 1:
+        prayers_AdviceSection.header = "Come back after unlocking the Worship skill in World 3!"
+        return prayers_AdviceSection
+
     adviceCountsDict = {"Recommended": 0, "Optional": 0, "Ignorable": 0}
 
-    # Check Recommended Prayers
+    #Check Recommended Prayers
     for tier in prayers_progressionTiers[:-2]:
-        # tier[0] = int Tier
-        # tier[1] = dict requiredPrayersDict
-        # tier[2] = str Notes
+        #tier[0] = int Tier
+        #tier[1] = dict requiredPrayersDict
+        #tier[2] = str Notes
         allPrayersLeveled = True
         for requiredPrayer in tier[1]:
             if worshipPrayersDict[requiredPrayer]['Level'] < tier[1][requiredPrayer]:
@@ -45,7 +58,7 @@ def setPrayersProgressionTierAdviceGroup():
         if tier_WorshipPrayers == (tier[0] - 1) and allPrayersLeveled == True:  # Only update if they already met the previous tier
             tier_WorshipPrayers = tier[0]
 
-    # Check Optional Prayers
+    #Check Optional Prayers
     optionalTierPrayers = prayers_progressionTiers[-2][1]
     for optionalPrayer in optionalTierPrayers:
         if worshipPrayersDict[optionalPrayer]['Level'] < optionalTierPrayers[optionalPrayer]:
@@ -58,7 +71,7 @@ def setPrayersProgressionTierAdviceGroup():
                     resource=worshipPrayersDict[optionalPrayer]['Material']
                 ))
 
-    # Check Ignorable Prayers
+    #Check Ignorable Prayers
     ignorableTierPrayers = prayers_progressionTiers[-1][1]
     for ignorablePrayer in ignorableTierPrayers:
         if worshipPrayersDict[ignorablePrayer]['Level'] < ignorableTierPrayers[ignorablePrayer]:
@@ -71,10 +84,10 @@ def setPrayersProgressionTierAdviceGroup():
                     resource=worshipPrayersDict[ignorablePrayer]['Material']
                 ))
 
-    # Generate Advice Groups
+#Generate Advice Groups
     prayers_AdviceGroupDict['Recommended'] = AdviceGroup(
         tier=tier_WorshipPrayers,
-        pre_string=f"Recommended Prayer{pl(adviceCountsDict['Recommended'])}",
+        pre_string=f"Recommended Prayer{pl([''] * adviceCountsDict['Recommended'])}",
         advices=prayers_AdviceDict['Recommended'],
         post_string="",
     )
@@ -83,43 +96,23 @@ def setPrayersProgressionTierAdviceGroup():
         pre_string=f"Situational Prayer{pl(prayers_AdviceDict['Optional'])} you may consider levelling",
         advices=prayers_AdviceDict['Optional'],
         post_string="These are niche use prayers. They have different benefits/purposes at low level and high levels",
-        informational=True,
-        completed=True
     )
     prayers_AdviceGroupDict['Ignorable'] = AdviceGroup(
         tier="",
         pre_string=f"Ignorable Prayer{pl(prayers_AdviceDict['Ignorable'])}",
         advices=prayers_AdviceDict['Ignorable'],
-        post_string="Prayers in this group should still be unlocked, but can stay at level 1 after that as of v2.12",
-        informational=True,
-        completed=True
+        post_string="Prayers in this group should still be unlocked, but can stay at level 1 after that as of v2.10.",
     )
-    overall_SectionTier = min(max_tier + info_tiers, tier_WorshipPrayers)
-    return prayers_AdviceGroupDict, overall_SectionTier, max_tier
 
-def getPrayersAdviceSection() -> AdviceSection:
-    highestWorshipLevel = max(session_data.account.all_skills["Worship"])
-    if highestWorshipLevel < 1:
-        prayers_AdviceSection = AdviceSection(
-            name="Prayers",
-            tier="Not Yet Evaluated",
-            header="Come back after unlocking the Worship skill in World 3!",
-            picture="Prayer_Stone.gif",
-            unreached=True
-        )
-        return prayers_AdviceSection
-
-    #Generate AdviceGroups
-    prayers_AdviceGroupDict, overall_SectionTier, max_tier = setPrayersProgressionTierAdviceGroup()
-
-    #Generate AdviceSection
-    tier_section = f"{overall_SectionTier}/{max_tier}"
-    prayers_AdviceSection = AdviceSection(
-        name="Prayers",
-        tier=tier_section,
-        pinchy_rating=overall_SectionTier,
-        header=f"Best Prayer tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
-        picture="Prayer_Stone.gif",
-        groups = prayers_AdviceGroupDict.values()
-    )
+    #Generate Advice Section
+    overall_WorshipPrayersTier = min(max_tier + infoTiers, tier_WorshipPrayers)
+    tier_section = f"{overall_WorshipPrayersTier}/{max_tier}"
+    prayers_AdviceSection.pinchy_rating = overall_WorshipPrayersTier
+    prayers_AdviceSection.tier = tier_section
+    prayers_AdviceSection.groups = prayers_AdviceGroupDict.values()
+    if overall_WorshipPrayersTier >= max_tier:
+        prayers_AdviceSection.header = f"Best Prayer tier met: {tier_section}{break_you_best}"
+        prayers_AdviceSection.complete = True
+    else:
+        prayers_AdviceSection.header = f"Best Prayer tier met: {tier_section}"
     return prayers_AdviceSection

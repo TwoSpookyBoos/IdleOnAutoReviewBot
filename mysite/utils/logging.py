@@ -81,26 +81,6 @@ def log_browser_data(player):
     user_agent = ParsedUserAgent(ua_string)
     __user_agent_logger.info("%s | %s - %s", player, user_agent.os, user_agent.browser)
 
-def unknown_item_logger() -> logging.Logger:
-    logger = logging.getLogger("unknown_items")
-    logger.setLevel(logging.DEBUG)
-
-    formatter = logging.Formatter("%(asctime)s | %(message)s")
-
-    handler = logging.FileHandler(app.config["LOGS"] / "unknown_items.log")
-    handler.setLevel(logging.DEBUG)
-    handler.setFormatter(formatter)
-
-    logger.addHandler(handler)
-
-    return logger
-
-
-__unknown_item_logger = unknown_item_logger()
-
-def log_unknown_item(itemCodeName: str):
-    __unknown_item_logger.info(f"Unknown Item: {itemCodeName}")
-
 
 class ParsedUserAgent(UserAgent):
     @cached_property

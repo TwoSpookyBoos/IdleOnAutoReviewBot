@@ -27,8 +27,6 @@ const defaults = {
     sheepie: "off",
     order_tiers: "off",
     hide_completed: "off",
-    hide_informational: "off",
-    hide_unrated: "off",
     progress_bars: "off",
     handedness: "off",
     light: "off"
@@ -240,22 +238,13 @@ function setupSwitchesActions() {
     }
 
     // toggle progress bars
-    document.querySelector('#progress_bars').onclick = () => calcProgressBars(document);
-
-    // On Click Listener for the Hide Completed switch
-    document.querySelector('label[for="hide_completed"]').addEventListener('click', hideComposite);
-
-    // On Click Listener for the Hide Info switch
-    document.querySelector('label[for="hide_informational"]').addEventListener('click', hideComposite);
-
-    // On Click Listener for the Hide Info switch
-    document.querySelector('label[for="hide_unrated"]').addEventListener('click', hideComposite);
+    document.querySelector('#progress_bars').onclick = () => calcProgressBars(document)
 }
 
 function setupHrefEventActions() {
-    addEventListener("hashchange", () => {
-        const h = location.hash.slice(1) || "pinchy-all" // Defaults on the pinchy section if you try to access an empty hash, for exemple when hiting return on your browser
-        const target = (document.getElementById(h) || document.getElementsByName(h)[0] || document.body)
+    addEventListener("hashchange", evt => {
+        var h = location.hash.slice(1) || "pinchy-all" // Defaults on the pinchy section if you try to access an empty hash, for exemple when hiting return on your browser
+        var target = (document.getElementById(h) || document.getElementsByName(h)[0] || document.body)
         unfoldElementIfFolded(target)
     });
 
@@ -272,17 +261,17 @@ function setupHrefEventActions() {
 
 /**
  * Unfolds the section it is folded
- * @param {Element} target
+ * @param {Element} target 
  */
 function unfoldElementIfFolded(target) {
-    const [sectionH1, sectionDiv] = findSectionElements(target)
-    const [articleH1, articleDiv] = findArticlesElements(target);
-    const articleElement = articleDiv?.parentElement;
+    var [sectionH1, sectionDiv] = findSectionElements(target)
+    var [articleH1, articleDiv] = findArticlesElements(target);
+    var articleElement = articleDiv?.parentElement;
 
     if (articleDiv?.classList.contains('folded')) {
         // The section is folded, we need to wait until the transition is complete to scroll to its position
-        const onTransitionEnd = evt => {
-            if (evt.target === articleDiv) { // Multiple events are triggered, we only want the article div one
+        const onTransitionEnd = evt => { 
+            if (evt.target == articleDiv) { // Multiple events are triggered, we only want the article div one
                 articleElement.removeEventListener("transitionend", onTransitionEnd);
                 target.scrollIntoView({behavior: "smooth"})
             }
@@ -300,14 +289,14 @@ function unfoldElementIfFolded(target) {
 }
 
 function findArticlesElements(target) {
-    const div = target.closest('div.collapse-wrapper:has(> div.sections)') || document.querySelector('div.collapse-wrapper:has(> div.sections)');
-    const h1 = div.parentElement.querySelector('h1.banner.toggler');
+    var div = target.closest('div.collapse-wrapper:has(> div.sections)') || document.querySelector('div.collapse-wrapper:has(> div.sections)');
+    var h1 = div.parentElement.querySelector('h1.banner.toggler');
     return [h1, div]
 }
 
 function findSectionElements(target) {
-    const div = target.closest('div.collapse-wrapper:has(> ul.advice-section)') || target.querySelector('div.collapse-wrapper:has(> ul.advice-section)');
-    const h1 = div.parentElement.querySelector('h1.subheading.toggler')
+    var div = target.closest('div.collapse-wrapper:has(> ul.advice-section)') || target.querySelector('div.collapse-wrapper:has(> ul.advice-section)');
+    var h1 = div.parentElement.querySelector('h1.subheading.toggler')
     return [h1, div]
 }
 
@@ -370,11 +359,6 @@ function setupDataClock() {
     }, 1000)
 }
 
-function hideElements() {
-    ["completed", "informational", "unrated"].forEach(cls => hideComposite({
-        currentTarget: document.querySelector(`[data-hides="${cls}"]`)
-    }));
-}
 
 function setFormValues() {
     const form = document.querySelector('form')
@@ -413,7 +397,6 @@ function initLazyLoading() {
 
 
 function loadErrorPopup(html, statusCode) {
-    console.log(`error ${statusCode}`)
     spinner.stop()
     const error = document.createElement("p")
     error.innerHTML = html;
@@ -489,7 +472,7 @@ function storeGetParamsIfProvided() {
 function hideSpinnerIfFirstAccess() {
     if (!localStorage.getItem('player'))
         return
-    const target = document.querySelector('#top');
+    var target = document.querySelector('#top');
     spinner.spin(target);
 }
 
@@ -561,95 +544,6 @@ function copyErrorDataAndRedirectToDiscord(e) {
         copied.classList.remove('show')
     }, 1000)
 }
-
-const kidsHiddenClass = "hidden-children-hidden";
-const hiddenElements = {
-    "hidden-completed": new Set(),
-    "hidden-informational": new Set(),
-    "hidden-unrated": new Set(),
-    [kidsHiddenClass]: new Set()
-}
-
-function allHidden(siblings) {
-    if (siblings.length < 1) return false
-    // make a union of all hidden elements
-    const allHiddenElements = Object.values(hiddenElements).reduce((all, set) => all.union(set), new Set()),
-        siblingSet = new Set([...siblings]);
-    return allHiddenElements.isSupersetOf(siblingSet);
-}
-
-function hideEmptySubgroupTitles(adviceGroup) {
-    const table = adviceGroup.querySelector('.table');
-    const adviceTitles = table.querySelectorAll('.advice-title');
-    const siblings = [...table.children];
-
-    // Group siblings under each '.advice-title', then hide titles if all their advices are hidden
-    [...adviceTitles]
-        .map((title, index) => {
-            const titleIndex = siblings.indexOf(title),
-                nextTitleIndexOrEnd = siblings.indexOf(adviceTitles[index + 1]),
-                advices = siblings.slice(titleIndex + 1, nextTitleIndexOrEnd !== -1 ? nextTitleIndexOrEnd : undefined);
-            return [title, advices];
-        })
-        .forEach(([title, groupedAdvice]) => {
-            // If no visible siblings are found, add `classToHide` class to the title
-            const allKidsHidden = allHidden(groupedAdvice);
-            title.classList.toggle(kidsHiddenClass, allKidsHidden);
-            if (allKidsHidden) {
-                hiddenElements[kidsHiddenClass].add(title)
-            } else {
-                hiddenElements[kidsHiddenClass].delete(title)
-            }
-        })
-}
-
-const hidableElements = [
-    "article",
-    "section",
-    ".advice-group",
-    ".advice-title",
-    ".progress-box", ".advice", ".resource", ".prog", ".arrow", ".arrow-hidden", ".goal"
-];
-
-function hideComposite(event) {
-    hideProgressBoxes()
-    const slider = event.currentTarget,
-        classToHide = slider.dataset.hides,
-        checkboxOn = document.getElementById(slider.getAttribute("for")).value === "on",
-        hiddenClass = `hidden-${classToHide}`,
-        hiddenAttr = `[data-${classToHide}="true"]`,
-        queryString = checkboxOn ? hiddenAttr : `.${hiddenClass}`,
-        allElements = document.querySelectorAll(queryString);
-
-    if (!checkboxOn) {
-        hiddenElements[hiddenClass].forEach(e => e.classList.remove(hiddenClass));
-        hiddenElements[hiddenClass].clear();
-    } else {
-        allElements.forEach(el => el.classList.add(hiddenClass));
-        hiddenElements[hiddenClass] = new Set([...allElements])
-    }
-
-    const elementsToRecurse = [
-        [hidableElements[2], hidableElements[4]], // groups, advice
-        [hidableElements[1], hidableElements[2]], // sections, groups
-        [hidableElements[0], hidableElements[1]]  // worlds, sections
-    ]
-
-    // first handle subgroup titles
-    document.querySelectorAll(elementsToRecurse[0][0])
-        .forEach(g => hideEmptySubgroupTitles(g, hiddenClass));
-
-    // recurse through groups, sections, and worlds and hide them if needed
-    elementsToRecurse.forEach(([parentStr, childStr]) => {
-        document.querySelectorAll(parentStr).forEach(parent => {
-            const shouldHide = allHidden(parent.querySelectorAll(childStr));
-            parent.classList.toggle(kidsHiddenClass, shouldHide)
-        });
-    })
-
-    calcProgressBars()
-}
-
 
 let searchTimer
 
@@ -741,7 +635,6 @@ function initResultsUI() {
     setupHrefEventActions()
     applyShowMoreButton()
     setupDataClock()
-    hideElements()
     calcProgressBars(document)
 }
 

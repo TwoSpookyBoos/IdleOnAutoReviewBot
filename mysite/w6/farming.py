@@ -5,7 +5,7 @@ from utils.logging import get_logger
 from utils.data_formatting import mark_advice_completed
 from flask import g as session_data
 from consts import (farming_progressionTiers, break_you_best, maxTiersPerGroup, maxFarmingCrops, maxCharacters, max_VialLevel, maxMealLevel, stamp_maxes,
-                    ValueToMulti, tomepct, getCropEvoChance, cropDict, landrankDict, maxFarmingValue)
+                    ValueToMulti, tomepct, getCropEvoChance, cropDict, landrankDict)
 from utils.text_formatting import pl, notateNumber
 
 logger = get_logger(__name__)
@@ -106,8 +106,7 @@ def getCropDepotAdviceGroup(farming) -> AdviceGroup:
     cd_ag = AdviceGroup(
         tier='',
         pre_string='Informational- Crop Depot bonuses',
-        advices=cd_advices,
-        informational=True
+        advices=cd_advices
     )
 
     return cd_ag
@@ -129,8 +128,7 @@ def getDayMarketAdviceGroup(farming) -> AdviceGroup:
     dm_ag = AdviceGroup(
         tier='',
         pre_string=f"Informational- Day Market upgrades",
-        advices=dm_advices,
-        informational=True
+        advices=dm_advices
     )
     return dm_ag
 
@@ -151,8 +149,7 @@ def getNightMarketAdviceGroup(farming) -> AdviceGroup:
     nm_ag = AdviceGroup(
         tier='',
         pre_string=f"Informational- Night Market upgrades",
-        advices=nm_advices,
-        informational=True
+        advices=nm_advices
     )
     return nm_ag
 
@@ -287,13 +284,13 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
         label=f"Total on Lowest ranked plot",
         picture_class='crop-scientist',
         progression=val['BeforeCapMin'],
-        goal=maxFarmingValue
+        goal=100
     ))
     value_advices[final].append(Advice(
         label=f"Total on Highest ranked plot",
         picture_class='crop-scientist',
         progression=val['BeforeCapMax'],
-        goal=maxFarmingValue
+        goal=100
     ))
     value_advices[final].append(Advice(
         label=f"Lava hasn't implemented Night Market Value GMO 😭",
@@ -305,9 +302,7 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
     value_ag = AdviceGroup(
         tier='',
         pre_string="Informational- Sources of Crop Value",
-        advices=value_advices,
-        informational=True,
-        completed=val['BeforeCapMin']>=maxFarmingValue
+        advices=value_advices
     )
     return value_ag
 
@@ -624,9 +619,7 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
     evo_ag = AdviceGroup(
         tier='',
         pre_string="Informational- Sources of Crop Evolution Chance",
-        advices=evo_advices,
-        informational=True,
-        completed=session_data.account.farming['CropsUnlocked'] >= maxFarmingCrops
+        advices=evo_advices
     )
     return evo_ag
 
@@ -721,8 +714,7 @@ def getSpeedAdviceGroup(farming) -> AdviceGroup:
     speed_ag = AdviceGroup(
         tier='',
         pre_string="Informational- Sources of Farming Speed",
-        advices=speed_advices,
-        informational=True
+        advices=speed_advices
     )
     return speed_ag
 
@@ -774,8 +766,7 @@ def getBeanMultiAdviceGroup(farming) -> AdviceGroup:
     bm_ag = AdviceGroup(
         tier='',
         pre_string='Informational- Sources of Magic Bean Bonus',
-        advices=bm_advices,
-        informational=True
+        advices=bm_advices
     )
     return bm_ag
 
@@ -869,8 +860,7 @@ def getOGAdviceGroup(farming):
     og_ag = AdviceGroup(
         tier='',
         pre_string='Informational- Sources of Overgrowth',
-        advices=og_advices,
-        informational=True
+        advices=og_advices
     )
     return og_ag
 
@@ -887,15 +877,29 @@ def getLRExclusions(farming, highestFarmingSkillLevel):
     #logger.debug(f"Land Rank Exclusions: {exclusions}")
     return exclusions
 
-def getProgressionTiersAdviceGroup(farming, highestFarmingSkillLevel):
+def setFarmingProgressionTier():
     farming_AdviceDict = {
         'Tiers': {},
     }
     farming_AdviceGroupDict = {}
+    farming_AdviceSection = AdviceSection(
+        name="Farming",
+        tier="0",
+        pinchy_rating=0,
+        header="Best Farming tier met: Not Yet Evaluated",
+        picture="wiki/FarmCropBean.png",
+        complete=False
+    )
+    highestFarmingSkillLevel = max(session_data.account.all_skills["Farming"])
+    if highestFarmingSkillLevel < 1:
+        farming_AdviceSection.header = "Come back after unlocking the Farming skill in W6!"
+        return farming_AdviceSection
+
     infoTiers = 0
     max_tier = max(farming_progressionTiers.keys(), default=0) - infoTiers
     tier_All = 0
 
+    farming = session_data.account.farming
     multis = ['Evolution Gmo', 'Og Fertilizer']
     one_point_landranks = ['Seed of Stealth', 'Seed of Loot', 'Seed of Damage', 'Seed of Stats']
     lr_exclusions = getLRExclusions(farming, highestFarmingSkillLevel)
@@ -1094,32 +1098,12 @@ def getProgressionTiersAdviceGroup(farming, highestFarmingSkillLevel):
         if subgroupName not in farming_AdviceDict['Tiers'] and tier_All == tierNumber - 1:
             tier_All = tierNumber
 
-    #Generate AdviceGroups
+    #Advice Groups
     farming_AdviceGroupDict['Tiers'] = AdviceGroup(
         tier=tier_All,
         pre_string="Continue farming",
         advices=farming_AdviceDict['Tiers']
     )
-    overall_SectionTier = min(max_tier + infoTiers, tier_All)
-    return farming_AdviceGroupDict, overall_SectionTier, max_tier
-
-def setFarmingProgressionTier():
-    highestFarmingSkillLevel = max(session_data.account.all_skills["Farming"])
-    if highestFarmingSkillLevel < 1:
-        farming_AdviceSection = AdviceSection(
-            name="Farming",
-            tier="0",
-            pinchy_rating=0,
-            header="Come back after unlocking the Farming skill in W6!",
-            picture="wiki/FarmCropBean.png",
-            unreached=True
-        )
-        return farming_AdviceSection
-
-    farming = session_data.account.farming
-
-    #Generate AdviceGroups
-    farming_AdviceGroupDict, overall_SectionTier, max_tier = getProgressionTiersAdviceGroup(farming, highestFarmingSkillLevel)
     farming_AdviceGroupDict['Evo'] = getEvoChanceAdviceGroup(farming)
     farming_AdviceGroupDict['Speed'] = getSpeedAdviceGroup(farming)
     if farming['MarketUpgrades']['Overgrowth']['Level'] >= 1:
@@ -1133,14 +1117,16 @@ def setFarmingProgressionTier():
     farming_AdviceGroupDict['Day'] = getDayMarketAdviceGroup(farming)
     farming_AdviceGroupDict['Night'] = getNightMarketAdviceGroup(farming)
 
-    #Generate AdviceSection
-    tier_section = f"{overall_SectionTier}/{max_tier}"
-    farming_AdviceSection = AdviceSection(
-        name="Farming",
-        tier=tier_section,
-        pinchy_rating=overall_SectionTier,
-        header=f"Best Farming tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}️",
-        picture="wiki/FarmCropBean.png",
-        groups=farming_AdviceGroupDict.values()
-    )
+    #Advice Section
+    overall_FarmingTier = min(max_tier + infoTiers, tier_All)
+    tier_section = f"{overall_FarmingTier}/{max_tier}"
+    farming_AdviceSection.pinchy_rating = overall_FarmingTier
+    farming_AdviceSection.tier = tier_section
+    farming_AdviceSection.groups = farming_AdviceGroupDict.values()
+    if overall_FarmingTier >= max_tier:
+        farming_AdviceSection.header = f"Best Farming tier met: {tier_section}{break_you_best}️"
+        farming_AdviceSection.complete = True
+    else:
+        farming_AdviceSection.header = f"Best Farming tier met: {tier_section}"
+
     return farming_AdviceSection
