@@ -323,7 +323,7 @@ def getProgressionTiersAdviceGroup(trappingLevelsList: list[int]):
         )
         if 2 <= tier_unlockCritters < 11:  # Show only the quests with Critter requirement
             for requiredItemCodeName, requiredQuantity in trappingQuestsRequirementList[tier_unlockCritters - 2]['RequiredItems'].items():
-                logger.debug(f"requiredItemCodeName = {requiredItemCodeName}")
+                #logger.debug(f"requiredItemCodeName = {requiredItemCodeName}")
                 item_asset = session_data.account.all_assets.get(requiredItemCodeName)
                 trapping_AdviceDict["UnlockCritters"].append(Advice(
                     label=item_asset.name,
