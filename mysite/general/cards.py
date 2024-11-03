@@ -8,7 +8,7 @@ from models.models import AdviceSection, AdviceGroup, Advice
 star_tiers = ["Unlock", "Bronze", "Silver", "Gold", "Platinum", "Ruby"]
 
 
-def getCardsAdviceSection() -> AdviceSection:
+def getCardSetReview():
     cards = session_data.account.cards
     unlockable = [card for card in cards if card.star == -1]
 
@@ -21,7 +21,7 @@ def getCardsAdviceSection() -> AdviceSection:
                 Advice(label=card.name, picture_class=card.css_class)
             )
         group_unlockable = AdviceGroup(
-            tier="", pre_string="Discover new cards", advices=advices, picture_class='locked-card', informational=True
+            tier="", pre_string="Discover new cards", advices=advices, picture_class='locked-card',
         )
         groups.append(group_unlockable)
 
@@ -55,7 +55,6 @@ def getCardsAdviceSection() -> AdviceSection:
             pre_string=f"{name}: Collect {len(cardset) - cardset_diff} more cards for {star_tiers[cardset_star]} ({cardset_stars_sum}/{cardset_star_next})",
             picture_class=name,
             advices=advices,
-            informational=True
         )
         groups.append(group)
 
@@ -80,7 +79,6 @@ def getCardsAdviceSection() -> AdviceSection:
         header=f"You have reached {tier} cardset tiers. Keep going!",
         groups=groups,
         note=note,
-        unrated=True
     )
 
     if not section:
@@ -97,5 +95,6 @@ def getCardsAdviceSection() -> AdviceSection:
                 f"for my blood, I fold. Your sleight of hand is admirable. ♥️♠️♦️♣️"
                 f"{break_you_best}"
             )
+            section.complete = True
 
     return section

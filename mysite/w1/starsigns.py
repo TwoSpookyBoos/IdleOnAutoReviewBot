@@ -5,22 +5,34 @@ from flask import g as session_data
 
 logger = get_logger(__name__)
 
-def getProgressionTiersAdviceGroup():
+def setStarsignsProgressionTier() -> AdviceSection:
     starsigns_AdviceDict = {
         "Signs": {},
     }
+    starsigns_AdviceGroupDict = {}
+    starsigns_AdviceSection = AdviceSection(
+        name="Star Signs",
+        tier="Not Yet Evaluated",
+        header="Best Star Signs tier met: Not Yet Evaluated. Recommended Star Sign actions",
+        picture='Telescope.gif'
+    )
+
     infoTiers = 0
     max_tier = max(starsigns_progressionTiers.keys()) - infoTiers
-    tier_Signs = 0
+    tier_TotalSigns = 0
+    tier_SpecificSigns = 0
+
     ss = session_data.account.star_signs
     sse = session_data.account.star_sign_extras
 
-    #Assess Tiers
+    # Generate Alert Advice
+
+    # Generate Advice
     for tierNumber, tierRequirements in starsigns_progressionTiers.items():
         subgroupName = f"To Reach {'Informational ' if tierNumber > max_tier else ''}Tier {tierNumber}"
-        # Total Unlocked Starsigns
+        #Total Unlocked Starsigns
         if sse.get('UnlockedSigns', 0) < tierRequirements['UnlockedSigns']:
-            # logger.debug(f"Requirement failure at Tier {tierNumber} - Unlocked Signs: {sse['UnlockedSigns']} < {tierRequirements['UnlockedSigns']}")
+            #logger.debug(f"Requirement failure at Tier {tierNumber} - Unlocked Signs: {sse['UnlockedSigns']} < {tierRequirements['UnlockedSigns']}")
             if subgroupName not in starsigns_AdviceDict['Signs'] and len(starsigns_AdviceDict['Signs']) < maxTiersPerGroup:
                 starsigns_AdviceDict['Signs'][subgroupName] = []
             if subgroupName in starsigns_AdviceDict['Signs']:
@@ -30,47 +42,42 @@ def getProgressionTiersAdviceGroup():
                     progression=sse.get('UnlockedSigns', 0),
                     goal=tierRequirements['UnlockedSigns']
                 ))
+        if subgroupName not in starsigns_AdviceDict['Signs'] and tier_TotalSigns == tierNumber - 1:
+            tier_TotalSigns = tierNumber
 
-        # Specific Starsigns unlocked
+        #Specific Starsigns unlocked
         if tierRequirements['SpecificSigns']:
             for ssName in tierRequirements['SpecificSigns']:
                 if not ss.get(ssName, {}).get('Unlocked', False):
-                    # logger.debug(f"Requirement failure at Tier {tierNumber} - Specific Sign: {ssName}")
+                    #logger.debug(f"Requirement failure at Tier {tierNumber} - Specific Sign: {ssName}")
                     if subgroupName not in starsigns_AdviceDict['Signs'] and len(starsigns_AdviceDict['Signs']) < maxTiersPerGroup:
                         starsigns_AdviceDict['Signs'][subgroupName] = []
                     if subgroupName in starsigns_AdviceDict['Signs']:
                         starsigns_AdviceDict['Signs'][subgroupName].append(Advice(
-                            label=f"Unlock {ssName}",
+                            label=ssName,
                             picture_class=ssName.strip("."),
                         ))
 
-        if subgroupName not in starsigns_AdviceDict['Signs'] and tier_Signs == tierNumber - 1:
-            tier_Signs = tierNumber
+        if subgroupName not in starsigns_AdviceDict['Signs'] and tier_SpecificSigns == tierNumber - 1:
+            tier_SpecificSigns = tierNumber
 
     # Generate AdviceGroups
-    tiers_ag = AdviceGroup(
-        tier=tier_Signs,
+    starsigns_AdviceGroupDict['Signs'] = AdviceGroup(
+        tier=tier_TotalSigns,
         pre_string="Unlock additional Star Signs",
         advices=starsigns_AdviceDict['Signs']
     )
-    overall_SectionTier = min(max_tier + infoTiers, tier_Signs)
-    return tiers_ag, overall_SectionTier, max_tier
-
-def getStarsignsAdviceSection() -> AdviceSection:
-    # Generate AdviceGroups
-    starsigns_AdviceGroupDict = {}
-    starsigns_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
 
     # Generate AdviceSection
-
-    tier_section = f"{overall_SectionTier}/{max_tier}"
-    starsigns_AdviceSection = AdviceSection(
-        name="Star Signs",
-        tier=tier_section,
-        pinchy_rating=overall_SectionTier,
-        header=f"Best Star Signs tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
-        picture='Telescope.gif',
-        groups=starsigns_AdviceGroupDict.values()
-    )
+    overall_StarsignsTier = min(max_tier + infoTiers, tier_TotalSigns, tier_SpecificSigns)
+    tier_section = f"{overall_StarsignsTier}/{max_tier}"
+    starsigns_AdviceSection.pinchy_rating = overall_StarsignsTier
+    starsigns_AdviceSection.tier = tier_section
+    starsigns_AdviceSection.groups = starsigns_AdviceGroupDict.values()
+    if overall_StarsignsTier >= max_tier:
+        starsigns_AdviceSection.header = f"Best Star Signs tier met: {tier_section}{break_you_best}"
+        starsigns_AdviceSection.complete = True
+    else:
+        starsigns_AdviceSection.header = f"Best Star Signs tier met: {tier_section}"
 
     return starsigns_AdviceSection

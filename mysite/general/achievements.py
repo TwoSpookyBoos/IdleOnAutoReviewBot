@@ -100,18 +100,29 @@ def getAchievementStatus(achievementName):
                 return min(58, session_data.account.summoning['Battles']['Total']), 58, ''
             case _:
                 #logger.debug(f"{achievementName} didn't match a special case")
-                return session_data.account.achievements[achievementName]['Raw'], 'IDK', ''
+                return session_data.account.achievements[achievementName]['Raw'] if session_data.account.achievements[achievementName]['Raw'] != 0 else '', '', ''
     except Exception as reason:
         logger.exception(f"Defaulting {achievementName} because {reason}")
-        return 0, 1, ''
+        return '', '', ''
 
-def getProgressionTiersAdviceGroup():
+
+def setAchievementsProgressionTier():
+    achievements_AdviceDict = {category: {} for category in achievement_categories}
+    achievements_AdviceGroupDict = {}
+    achievements_AdviceSection = AdviceSection(
+        name="Achievements",
+        tier="0",
+        pinchy_rating=0,
+        header="Best Achievements tier met: Not Yet Evaluated",
+        picture="Grasslands_Gary.gif",
+        complete=False
+    )
+
     infoTiers = 0
     max_tier = max(achievements_progressionTiers.keys(), default=0) - infoTiers
-    achievements_AdviceDict = {category: {} for category in achievement_categories}
     tiers = {category: 0 for category in achievement_categories}
 
-    #Assess Tiers
+    #Assess tiers
     for tierNumber, tierRequirements in achievements_progressionTiers.items():
         subgroupName = f"To reach Tier {tierNumber}"
         for categoryName, categoryAchievementsDict in tierRequirements.items():
@@ -125,35 +136,29 @@ def getProgressionTiersAdviceGroup():
                         picture_class=achievementName,
                         progression=prog,
                         goal=goal,
-                        resource=resource,
-                        completed=False
+                        resource=resource
                     ))
             if subgroupName not in achievements_AdviceDict[categoryName] and tiers[categoryName] == tierNumber - 1:
                 tiers[categoryName] = tierNumber
 
-    # Generate Advice Groups
-    achievements_AdviceGroupDict = {}
+    #Advice Group
     for category in achievement_categories:
         achievements_AdviceGroupDict[category] = AdviceGroup(
             tier=tiers[category],
             pre_string=f"Complete achievements for {category}",
             advices=achievements_AdviceDict[category]
         )
-    overall_SectionTier = min(max_tier + infoTiers, min(tiers.values()))
-    return achievements_AdviceGroupDict, overall_SectionTier, max_tier
 
-def getAchievementsAdviceSection() -> AdviceSection:
-    #Generate AdviceGroups
-    achievements_AdviceGroupDict, overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
+    #Advice Section
+    overall_AchievementsTier = min(max_tier + infoTiers, min(tiers.values()))
+    tier_section = f"{overall_AchievementsTier}/{max_tier}"
+    achievements_AdviceSection.pinchy_rating = overall_AchievementsTier
+    achievements_AdviceSection.tier = tier_section
+    achievements_AdviceSection.groups = achievements_AdviceGroupDict.values()
+    if overall_AchievementsTier >= max_tier:
+        achievements_AdviceSection.header = f"Best Achievements tier met: {tier_section}{break_you_best}️"
+        achievements_AdviceSection.complete = True
+    else:
+        achievements_AdviceSection.header = f"Best Achievements tier met: {tier_section}"
 
-    #Generate AdviceSection
-    tier_section = f"{overall_SectionTier}/{max_tier}"
-    achievements_AdviceSection = AdviceSection(
-        name="Achievements",
-        tier=tier_section,
-        pinchy_rating=overall_SectionTier,
-        header=f"Best Achievements tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
-        picture="Grasslands_Gary.gif",
-        groups=achievements_AdviceGroupDict.values(),
-    )
     return achievements_AdviceSection

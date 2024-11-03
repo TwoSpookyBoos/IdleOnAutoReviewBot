@@ -4,8 +4,29 @@ from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import break_you_best, killroy_only_1_level  # killroy_progressionTiers,
+from utils.text_formatting import pl
 
 logger = get_logger(__name__)
+
+def getKillroyCurrentUpgradesAdviceGroup():
+    current_advices = []
+    for upgradeName, upgradeDict in session_data.account.killroy.items():
+        #logger.debug(f"{upgradeName} available? {upgradeDict['Available']}")
+        current_advices.append(Advice(
+            label=f"{upgradeName}"
+                  f"{'<br>Complete ' if not upgradeDict['Available'] else ''}"
+                  f"{upgradeDict['Remaining'] if not upgradeDict['Available'] else ''}"
+                  f"{' more Killroy fights to unlock this upgrade' if not upgradeDict['Available'] else ''}",
+            picture_class=upgradeDict['Image'],
+            progression=upgradeDict['Upgrades']
+        ))
+    current_ag = AdviceGroup(
+        tier="",
+        pre_string="Informational- Current upgrades",
+        advices=current_advices
+    )
+
+    return current_ag
 
 def getKillroyUpgradeRecommendationsAdviceGroup():
     ratio_label = '2 Skulls to 3 Timer Ratio'
@@ -108,9 +129,7 @@ def getKillroyUpgradeRecommendationsAdviceGroup():
     future_advices[ratio_label].append(Advice(
         label=f"Still trying to find a good ratio for Respawn."
               f"<br>It is worth leveling but idk exacts yet.",
-        picture_class='killroy-respawn',
-        progression=session_data.account.killroy['Respawn']['Upgrades'],
-        goal='TBD'
+        picture_class='killroy-respawn'
     ))
 
     for upgradeName, upgradeDict in session_data.account.killroy.items():
@@ -123,52 +142,49 @@ def getKillroyUpgradeRecommendationsAdviceGroup():
                 label=label,
                 picture_class=upgradeDict['Image'],
                 progression=upgradeDict['Upgrades'],
-                goal=1,
-                completed=upgradeDict['Upgrades'] >= 1
+                goal=1
             ))
 
     future_ag = AdviceGroup(
         tier="",
         pre_string="Informational- Future upgrades",
-        advices=future_advices,
-        informational=True
+        advices=future_advices
     )
 
     return future_ag
 
-def getKillroyAdviceSection() -> AdviceSection:
-    killroy_AdviceDict = {}
+def setKillroyProgressionTier():
+    killroy_AdviceDict = {
+    }
     killroy_AdviceGroupDict = {}
-
-    if session_data.account.highestWorldReached < 2:
-        killroy_AdviceSection = AdviceSection(
-            name="Killroy",
-            tier="0",
-            pinchy_rating=0,
-            header="Come back after unlocking Killroy in W2 town!",
-            picture="wiki/Killroy.gif",
-            unrated=True,
-            unreached=True
-        )
-        return killroy_AdviceSection
-
-    info_tiers = 0
-    max_tier = 0 - info_tiers  #max(killroy_progressionTiers.keys(), default=0) - infoTiers
-    tier_Killroy = 0
-
-    #Generate AdviceGroup
-    killroy_AdviceGroupDict['Future'] = getKillroyUpgradeRecommendationsAdviceGroup()
-
-    #Generate AdviceSection
-    overall_KillroyTier = min(max_tier + info_tiers, tier_Killroy)
-    tier_section = f"{overall_KillroyTier}/{max_tier}"
     killroy_AdviceSection = AdviceSection(
         name="Killroy",
-        tier=tier_section,
-        pinchy_rating=overall_KillroyTier,
-        header="Killroy Information",
+        tier="0",
+        pinchy_rating=0,
+        header="Best Killroy tier met: Not Yet Evaluated",
         picture="wiki/Killroy.gif",
-        groups=killroy_AdviceGroupDict.values(),
-        unrated=True
+        complete=False
     )
+    if session_data.account.highestWorldReached < 2:
+        killroy_AdviceSection.header = "Come back after unlocking Killroy in W2 town!"
+        return killroy_AdviceSection
+
+    infoTiers = 0
+    max_tier = 0 #max(killroy_progressionTiers.keys(), default=0) - infoTiers
+    tier_Killroy = 0
+
+    killroy_AdviceGroupDict['Future'] = getKillroyUpgradeRecommendationsAdviceGroup()
+    killroy_AdviceGroupDict['Current'] = getKillroyCurrentUpgradesAdviceGroup()
+
+    overall_KillroyTier = min(max_tier + infoTiers, tier_Killroy)
+    tier_section = f"{overall_KillroyTier}/{max_tier}"
+    killroy_AdviceSection.pinchy_rating = overall_KillroyTier
+    killroy_AdviceSection.tier = tier_section
+    killroy_AdviceSection.groups = killroy_AdviceGroupDict.values()
+    if overall_KillroyTier >= max_tier:
+        killroy_AdviceSection.header = f"Best Killroy tier met: {tier_section}{break_you_best}️"
+        killroy_AdviceSection.complete = True
+    else:
+        killroy_AdviceSection.header = f"Best Killroy tier met: {tier_section}"
+
     return killroy_AdviceSection

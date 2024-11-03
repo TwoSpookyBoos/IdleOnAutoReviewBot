@@ -230,10 +230,7 @@ def getCandyHourSections():
         name="Regular Candy",
         tier=tier_regular,
         header=guaranteedCandyString,
-        picture="Candy_1hr.png",
-        unrated=True,
-        informational=True,
-        completed=guaranteedCandyHours == 0
+        picture="Candy_1hr.png"
     )
 
     for qty, (hrs_min, hrs_max) in zip(variable_candy, variable_candy_times):
@@ -255,10 +252,7 @@ def getCandyHourSections():
         name="Variable Candy",
         tier=tier_variable,
         header=variableCandyString,
-        picture="Candy_Cosmic.png",
-        unrated=True,
-        informational=True,
-        completed=variableCandyHoursMin == 0
+        picture="Candy_Cosmic.png"
     )
 
     return section_regular, section_variable
@@ -299,7 +293,6 @@ def parseInventoryBagSlots() -> AdviceGroup:
         tier="",
         pre_string="Collect more inventory space",
         advices=[],
-        informational=True
     )
     if session_data.account.autoloot:
         autoLootSlots = 5
@@ -357,8 +350,7 @@ def parseStorageChests():
     group = AdviceGroup(
         tier="",
         pre_string=f"Collect {len(missing_chests)} more storage chest{pl(missing_chests)} for your bank",
-        advices=advices,
-        informational=True
+        advices=advices
     )
     if len(advices) == 0:
         group.pre_string = f"You've collected all current Storage Chests!{break_you_best}"
@@ -366,7 +358,7 @@ def parseStorageChests():
     return group
 
 
-def getConsumablesAdviceSections():
+def parseConsumables():
     sections_candy = getCandyHourSections()
     group_bags = parseInventoryBagSlots()
     group_chests = parseStorageChests()
@@ -376,10 +368,12 @@ def getConsumablesAdviceSections():
     section_storage = AdviceSection(
         name="Storage",
         tier="",
-        header=f"Collect more space for your bank and inventories:" if groups else f"You've collected all current Storage Chests and Inventory Bags!{break_you_best}",
+        header="Collect more space for your bank and inventories:",
         picture="Cosmic_Storage_Chest.png",
-        groups=groups,
-        unrated=True,
+        groups=groups
     )
+    if section_storage.collapse:
+        section_storage.header = f"You've collected all current Storage Chests and Inventory Bags!{break_you_best}"
+        section_storage.complete = True
 
     return *sections_candy, section_storage

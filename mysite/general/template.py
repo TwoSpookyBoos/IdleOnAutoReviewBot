@@ -5,56 +5,36 @@ from consts import template_progressionTiers, break_you_best
 
 logger = get_logger(__name__)
 
-def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
-    template_AdviceDict = {
-        'Tiers': {},
-    }
-    info_tiers = 0
-    max_tier = max(template_progressionTiers.keys(), default=0) - info_tiers
-    tier_Template = 0
-
-    #Assess Tiers
-
-    tiers_ag = AdviceGroup(
-        tier=tier_Template,
-        pre_string="Progression Tiers",
-        advices=template_AdviceDict['Tiers']
-    )
-    overall_SectionTier = min(max_tier + info_tiers, tier_Template)
-    return tiers_ag, overall_SectionTier, max_tier
-
 def setTemplateProgressionTier():
-    #Check if player has reached this section
-    highestTemplateSkillLevel = max(session_data.account.all_skills["TemplateSkill"])
-    if highestTemplateSkillLevel < 1:
-        template_AdviceSection = AdviceSection(
-            name="Template",
-            tier="Not Yet Evaluated",
-            header="Come back after unlocking Template!",
-            picture="",
-            unrated=False,
-            unreached=True,
-            completed=False
-        )
-        return template_AdviceSection
-
-    #Generate Alert Advice
-
-    #Generate AdviceGroups
+    template_AdviceDict = {
+    }
     template_AdviceGroupDict = {}
-    template_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
-
-    #Generate AdviceSection
-    tier_section = f"{overall_SectionTier}/{max_tier}"
     template_AdviceSection = AdviceSection(
         name="Template",
-        tier=tier_section,
-        pinchy_rating=overall_SectionTier,
-        header=f"Best Template tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}️",
+        tier="0",
+        pinchy_rating=0,
+        header="Best Template tier met: Not Yet Evaluated",
         picture="",
-        groups=template_AdviceGroupDict.values(),
-        completed=None,
-        unrated=None,
+        complete=False
     )
+    highestTemplateSkillLevel = max(session_data.account.all_skills["TemplateSkill"])
+    if highestTemplateSkillLevel < 1:
+        template_AdviceSection.header = "Come back after unlocking Template!"
+        return template_AdviceSection
+
+    infoTiers = 0
+    max_tier = max(template_progressionTiers.keys(), default=0) - infoTiers
+    tier_Template = 0
+
+    overall_TemplateTier = min(max_tier + infoTiers, tier_Template)
+    tier_section = f"{overall_TemplateTier}/{max_tier}"
+    template_AdviceSection.pinchy_rating = overall_TemplateTier
+    template_AdviceSection.tier = tier_section
+    template_AdviceSection.groups = template_AdviceGroupDict.values()
+    if overall_TemplateTier >= max_tier:
+        template_AdviceSection.header = f"Best Template tier met: {tier_section}{break_you_best}️"
+        template_AdviceSection.complete = True
+    else:
+        template_AdviceSection.header = f"Best Template tier met: {tier_section}"
 
     return template_AdviceSection

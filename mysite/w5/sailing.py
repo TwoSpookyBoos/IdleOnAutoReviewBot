@@ -21,20 +21,31 @@ def getSailingDelays() -> dict:
         delaysDict[16] = ["Amberite"]
     return delaysDict
 
-def getSailingProgressionTierAdviceGroups():
+def setSailingProgressionTier():
     sailing_AdviceDict = {
         "IslandsDiscovered": {},
         "CaptainsAndBoats": {},
         "Artifacts": {}
     }
     sailing_AdviceGroupDict = {}
-    info_tiers = 0
-    max_tier = max(sailing_progressionTiers.keys()) - info_tiers
+    sailing_AdviceSection = AdviceSection(
+        name="Sailing",
+        tier="0",
+        pinchy_rating=0,
+        header="Best Sailing tier met: Not Yet Evaluated",
+        picture="Sailing.png"
+    )
+    highestSailingSkillLevel = max(session_data.account.all_skills.get("Sailing", [0]))
+    if highestSailingSkillLevel < 1:
+        sailing_AdviceSection.header = "Come back after unlocking the Sailing skill in W5!"
+        return sailing_AdviceSection
+
+    delaysDict = getSailingDelays()
     tier_Islands = 0
     tier_CaptainsAndBoats = 0
     tier_Artifacts = 0
+    max_tier = max(sailing_progressionTiers.keys())
     total_artifacts = numberOfArtifactTiers * numberOfArtifacts
-    delaysDict = getSailingDelays()
 
     # Assess Tiers
     for tierNumber, tierRequirementsDict in sailing_progressionTiers.items():
@@ -82,7 +93,7 @@ def getSailingProgressionTierAdviceGroups():
         if subgroupName not in sailing_AdviceDict['CaptainsAndBoats'] and tier_CaptainsAndBoats == tierNumber - 1:
             tier_CaptainsAndBoats = tierNumber
 
-        # Outside requirement checks should be at the top of the list
+        #Outside requirement checks should be at the top of the list
         if session_data.account.sum_artifact_tiers < total_artifacts:
             if 'Eldritch' in tierRequirementsDict:
                 if not session_data.account.rift['EldritchArtifacts']:
@@ -111,7 +122,7 @@ def getSailingProgressionTierAdviceGroups():
                             label="Purchase \"Brighter Lighthouse Bulb\" from the {{ Jade Emporium|#sneaking }} in W6",
                             picture_class="brighter-lighthouse-bulb",
                         ))
-            # Golden Hampters
+            #Golden Hampters
             if 'Beanstacked' in tierRequirementsDict:
                 if not session_data.account.sneaking.get('Beanstalk', {}).get('FoodG10', {}).get('Beanstacked', False):
                     if subgroupName not in sailing_AdviceDict['Artifacts'] and len(sailing_AdviceDict['Artifacts']) < maxTiersPerGroup:
@@ -130,7 +141,7 @@ def getSailingProgressionTierAdviceGroups():
                             label="Deposit 100k Golden Hampters to the {{ Beanstalk|#beanstalk }} in W6",
                             picture_class="golden-hampter-gummy-candy",
                         ))
-            # Artifacts
+            #Artifacts
             if 'Artifacts' in tierRequirementsDict:
                 for artifactName, artifactTier in tierRequirementsDict['Artifacts'].items():
                     if session_data.account.sailing['Artifacts'].get(artifactName, {}).get('Level', 0) < artifactTier:
@@ -144,7 +155,7 @@ def getSailingProgressionTierAdviceGroups():
                                     progression=session_data.account.sailing['Artifacts'].get(artifactName, {}).get('Level', 0),
                                     goal=artifactTier
                                 ))
-        if subgroupName not in sailing_AdviceDict['Artifacts'] and tier_Artifacts == tierNumber - 1:
+        if subgroupName not in sailing_AdviceDict['Artifacts'] and tier_Artifacts == tierNumber-1:
             tier_Artifacts = tierNumber
 
     # Generate AdviceGroups
@@ -163,34 +174,17 @@ def getSailingProgressionTierAdviceGroups():
         pre_string=f"Amass booty! Collect all artifacts",
         advices=sailing_AdviceDict['Artifacts']
     )
-    overall_SectionTier = min(max_tier + info_tiers, tier_Islands, tier_CaptainsAndBoats, tier_Artifacts)
-    return sailing_AdviceGroupDict, overall_SectionTier, max_tier
-
-def getSailingAdviceSection() -> AdviceSection:
-    highestSailingSkillLevel = max(session_data.account.all_skills.get("Sailing", [0]))
-    if highestSailingSkillLevel < 1:
-        sailing_AdviceSection = AdviceSection(
-            name="Sailing",
-            tier="0",
-            pinchy_rating=0,
-            header="Come back after unlocking the Sailing skill in W5!",
-            picture="Sailing.png",
-            unreached=True
-        )
-        return sailing_AdviceSection
-
-    #Generate AdviceGroup
-    sailing_AdviceGroupDict, overall_SectionTier, max_tier = getSailingProgressionTierAdviceGroups()
 
     # Generate AdviceSection
-    tier_section = f"{overall_SectionTier}/{max_tier}"
-    sailing_AdviceSection = AdviceSection(
-        name="Sailing",
-        tier=tier_section,
-        pinchy_rating=overall_SectionTier,
-        header=f"Best Sailing tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
-        picture="Sailing.png",
-        groups=sailing_AdviceGroupDict.values()
-    )
+    overall_SailingTier = min(max_tier, tier_Islands, tier_CaptainsAndBoats, tier_Artifacts)
+    tier_section = f"{overall_SailingTier}/{max_tier}"
+    sailing_AdviceSection.tier = tier_section
+    sailing_AdviceSection.pinchy_rating = overall_SailingTier
+    sailing_AdviceSection.groups = sailing_AdviceGroupDict.values()
+    if overall_SailingTier >= max_tier:
+        sailing_AdviceSection.header = f"Best Sailing tier met: {tier_section}{break_you_best}"
+        sailing_AdviceSection.complete = True
+    else:
+        sailing_AdviceSection.header = f"Best Sailing tier met: {tier_section}"
 
     return sailing_AdviceSection

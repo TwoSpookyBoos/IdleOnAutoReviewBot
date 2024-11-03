@@ -1,5 +1,4 @@
 from models.models import Advice, AdviceGroup, AdviceSection
-from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import maxMeals, maxMealLevel, cookingCloseEnough, break_you_best
@@ -7,22 +6,35 @@ from utils.text_formatting import pl
 
 logger = get_logger(__name__)
 
-def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
+
+def setCookingProgressionTier():
     cooking_AdviceDict = {
         "NextTier": [],
         "CurrentTier": [],
         "PlateLevels": [],
     }
     cooking_AdviceGroupDict = {}
+    cooking_AdviceSection = AdviceSection(
+        name="Cooking",
+        tier="0",
+        pinchy_rating=0,
+        header="Best Cooking tier met: Not Yet Evaluated",
+        picture="Cooking_Table.gif"
+    )
+    highestCookingSkillLevel = max(session_data.account.all_skills["Cooking"])
+    if highestCookingSkillLevel < 1:
+        cooking_AdviceSection.header = "Come back after unlocking the Cooking skill in World 4!"
+        return cooking_AdviceSection
+
     tier_Cooking = 0
-    # TODO: Really ought to be structured into proper tiers.. What were you smoking when you made this?
+    #TODO: Really ought to be structured into proper tiers.. What were you smoking when you made this?
     infoTiers = 1
     max_tier = 6
     vmans = session_data.account.vmans
     atomFluoride = session_data.account.atom_collider['Atoms']['Fluoride - Void Plate Chef']['Level'] >= 1
     dchefLevel = session_data.account.alchemy_bubbles['Diamond Chef']['Level']
 
-    # Assess Tiers
+    #Assess Tiers
     if highestCookingSkillLevel >= 1:
         tier_Cooking = 1
     if tier_Cooking == 1 and dchefLevel >= 15:
@@ -40,7 +52,7 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
     if session_data.account.cooking['MaxRemainingMeals'] == 0:
         tier_Cooking = 7
 
-    # Generate NextTier Advice
+    #Generate NextTier Advice
     # 1) if cooking is unlocked at least
     if tier_Cooking == 1:
         cooking_AdviceDict["NextTier"].append(Advice(
@@ -74,7 +86,7 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
         if session_data.account.cooking['MealsUnlocked'] < maxMeals:
             cooking_AdviceDict["NextTier"].append(Advice(
                 label=f"Unlock the remaining {maxMeals - session_data.account.cooking['MealsUnlocked']} "
-                      f"{pl(maxMeals - session_data.account.cooking['MealsUnlocked'], 'meal', 'meals')}",
+                      f"{pl(maxMeals-session_data.account.cooking['MealsUnlocked'], 'meal', 'meals')}",
                 picture_class="dharma-mesa-spice"
             ))
         if session_data.account.cooking['MealsUnder11'] > 0:
@@ -110,7 +122,7 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
             goal=maxMeals * maxMealLevel,
         ))
 
-    # Generate CurrentTier Advice
+    #Generate CurrentTier Advice
     if session_data.account.cooking['MealsUnlocked'] < maxMeals:
         cooking_AdviceDict["CurrentTier"].append(Advice(
             label="Unlock All Meals",
@@ -122,14 +134,14 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
         cooking_AdviceDict["CurrentTier"].append(Advice(
             label="All unlocked plates to 11 for Diamond Chef",
             picture_class="diamond-chef",
-            progression=session_data.account.cooking['MealsUnlocked'] - session_data.account.cooking['MealsUnder11'],
+            progression=session_data.account.cooking['MealsUnlocked']-session_data.account.cooking['MealsUnder11'],
             goal=session_data.account.cooking['MealsUnlocked'],
         ))
     if session_data.account.cooking['MealsUnder30'] > 0 and tier_Cooking >= 3:
         cooking_AdviceDict["CurrentTier"].append(Advice(
             label="All unlocked plates to 30 for Fluoride",
             picture_class="fluoride",
-            progression=session_data.account.cooking['MealsUnlocked'] - session_data.account.cooking['MealsUnder30'],
+            progression=session_data.account.cooking['MealsUnlocked']-session_data.account.cooking['MealsUnder30'],
             goal=session_data.account.cooking['MealsUnlocked'],
         ))
     if tier_Cooking <= 3:
@@ -157,20 +169,20 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
         bestBMBook = 0
         anyVWMaxLeveled = False
         bestBMPresetLevel = 0
-        # 59: {"Name": "Blood Marrow", "Tab": "Voidwalker"},
-        # If Blood Marrow is not max booked, recommend booking it
-        # If Blood Marrow is not leveled on either preset, recommend leveling it
+        #59: {"Name": "Blood Marrow", "Tab": "Voidwalker"},
+        #If Blood Marrow is not max booked, recommend booking it
+        #If Blood Marrow is not leveled on either preset, recommend leveling it
         for vman in vmans:
-            # Book level
+            #Book level
             if vman.max_talents.get("59", 0) >= session_data.account.library['MaxBookLevel']:
                 anyVWMaxBooked = True
             if vman.max_talents.get("59", 0) > bestBMBook:
                 bestBMBook = vman.max_talents.get("59", 0)
 
-            # Preset level
+            #Preset level
             if (
-                    vman.current_preset_talents.get("59", 0) >= session_data.account.library['MaxBookLevel']
-                    or vman.secondary_preset_talents.get("59", 0) >= session_data.account.library['MaxBookLevel']
+                vman.current_preset_talents.get("59", 0) >= session_data.account.library['MaxBookLevel']
+                or vman.secondary_preset_talents.get("59", 0) >= session_data.account.library['MaxBookLevel']
             ):
                 anyVWMaxLeveled = True
             if vman.current_preset_talents.get("59", 0) >= bestBMPresetLevel:
@@ -194,7 +206,7 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
                     goal=session_data.account.library['MaxBookLevel']
                 ))
 
-    # If not all meals are maxed
+    #If not all meals are maxed
     if session_data.account.cooking['PlayerTotalMealLevels'] < session_data.account.cooking['MaxTotalMealLevels']:
         current_remainingMeals = session_data.account.cooking['CurrentRemainingMeals']
         current_maxMealLevel = session_data.account.cooking['PlayerMaxPlateLvl']
@@ -217,23 +229,24 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
                 goal=maxMeals * maxMealLevel,
             ))
 
-    # If any sources of max plate levels are missing
+    #If any sources of max plate levels are missing
     if session_data.account.cooking['PlayerMissingPlateUpgrades']:
         for missingUpgrade in session_data.account.cooking['PlayerMissingPlateUpgrades']:
             cooking_AdviceDict["PlateLevels"].append(Advice(
-                label=missingUpgrade[0],
-                picture_class=missingUpgrade[1],
-            ))
+               label=missingUpgrade[0],
+               picture_class=missingUpgrade[1],
+           ))
 
-    for advice in cooking_AdviceDict["NextTier"]:
-        mark_advice_completed(advice)
     # Generate Advice Groups
+    if tier_Cooking < max_tier:
+        next_ps = "To unlock the next Tier of Meal Priorities"
+    else:
+        next_ps = f"Informational- Finish Cooking"
     cooking_AdviceGroupDict["NextTier"] = AdviceGroup(
         tier=f"{tier_Cooking if tier_Cooking < max_tier else ''}",
-        pre_string="To unlock the next Tier of Meal Priorities" if tier_Cooking < max_tier else "Informational- Finish Cooking",
+        pre_string=next_ps,
         advices=cooking_AdviceDict["NextTier"],
         post_string="",
-        informational=tier_Cooking >= max_tier
     )
 
     cooking_AdviceGroupDict["CurrentTier"] = AdviceGroup(
@@ -241,7 +254,6 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
         pre_string=f"Meal priorities for your current tier",
         advices=cooking_AdviceDict["CurrentTier"],
         post_string="",
-        informational=True
     )
 
     cooking_AdviceGroupDict["PlateLevels"] = AdviceGroup(
@@ -249,42 +261,18 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
         pre_string=f"Each remaining upgrade gives +10 max plate levels",
         advices=cooking_AdviceDict["PlateLevels"],
         post_string="",
-        informational=True
     )
-    overall_SectionTier = min(max_tier + infoTiers, tier_Cooking)
-    return cooking_AdviceGroupDict, overall_SectionTier, max_tier
 
-def getCookingAdviceSection() -> AdviceSection:
-    cooking_AdviceSection = AdviceSection(
-        name="Cooking",
-        tier="0",
-        pinchy_rating=0,
-        header="Best Cooking tier met: Not Yet Evaluated",
-        picture="Cooking_Table.gif"
-    )
-    highestCookingSkillLevel = max(session_data.account.all_skills["Cooking"])
-    if highestCookingSkillLevel < 1:
-        cooking_AdviceSection = AdviceSection(
-            name="Cooking",
-            tier="0",
-            pinchy_rating=0,
-            header="Come back after unlocking the Cooking skill in World 4!",
-            picture="Cooking_Table.gif",
-            unreached=True
-        )
-        return cooking_AdviceSection
+    # Generate Advice Section
+    overall_CookingTier = min(max_tier + infoTiers, tier_Cooking)
+    tier_section = f"{overall_CookingTier}/{max_tier}"
+    cooking_AdviceSection.tier = tier_section
+    cooking_AdviceSection.pinchy_rating = overall_CookingTier
+    cooking_AdviceSection.groups = cooking_AdviceGroupDict.values()
+    if overall_CookingTier >= max_tier:
+        cooking_AdviceSection.header = f"Best Cooking tier met: {tier_section}{break_you_best}"
+        cooking_AdviceSection.complete = True
+    else:
+        cooking_AdviceSection.header = f"Best Cooking tier met: {tier_section}"
 
-    #Generate AdviceGroup
-    cooking_AdviceGroupDict, overall_SectionTier, max_tier = getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel)
-
-    # Generate AdviceSection
-    tier_section = f"{overall_SectionTier}/{max_tier}"
-    cooking_AdviceSection = AdviceSection(
-        name="Cooking",
-        tier=tier_section,
-        pinchy_rating = overall_SectionTier,
-        header=f"Best Cooking tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
-        picture="Cooking_Table.gif",
-        groups=cooking_AdviceGroupDict.values()
-    )
     return cooking_AdviceSection

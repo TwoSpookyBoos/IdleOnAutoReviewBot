@@ -197,13 +197,16 @@ def getBonusSectionName(bonusName):
         case _:
             return "UnknownShop"
 
-def getGemShopAdviceSection() -> AdviceSection:
+def setGemShopProgressionTier():
     boughtItems = session_data.account.gemshop
     fullExclusions = getGemShopFullExclusions()  # Exclusions for SS through Practical Max. Not applied to True Max only
     partialExclusions = fullExclusions + getGemShopPartialExclusions()  #Exclusions for SS through D only. Not applied to Practical Max or True Max
 
+
     recommended_stock = {item: count for tier in gemShop_progressionTiers for item, count in tier[2].items()}
+
     recommended_total = sum(recommended_stock.values())
+
     recommended_stock_bought = {k: min(v, boughtItems.get(k, 0)) for k, v in recommended_stock.items()}
     recommended_total_bought = sum(recommended_stock_bought.values())
 
@@ -226,8 +229,7 @@ def getGemShopAdviceSection() -> AdviceSection:
                 if name in recommended_stock_bought
                 and name not in partialExclusions
                 and (prog := float(recommended_stock_bought[name])) < (goal := float(qty))
-            ],
-            informational=True
+            ]
         )
         for i, tier in enumerate(filtered_groups, start=1)
     ]
@@ -235,35 +237,33 @@ def getGemShopAdviceSection() -> AdviceSection:
     partially_filtered_groups = ["Practical Max"]
     for i, tier in enumerate(partially_filtered_groups, start=7):
         groups.append(AdviceGroup(
-            tier="",
-            pre_string=tier,
-            post_string=gemShop_progressionTiers[i][3],
-            hide=False,
-            advices=[
-                Advice(label=f"{name} ({getBonusSectionName(name)})", picture_class=name, progression=int(prog), goal=int(goal))
-                for name, qty in gemShop_progressionTiers[i][2].items()
-                if name in recommended_stock_bought
-                and name not in fullExclusions
-                and (prog := float(recommended_stock_bought[name])) < (goal := float(qty))
-            ],
-            informational=True
+                tier="",
+                pre_string=tier,
+                post_string=gemShop_progressionTiers[i][3],
+                hide=False,
+                advices=[
+                    Advice(label=f"{name} ({getBonusSectionName(name)})", picture_class=name, progression=int(prog), goal=int(goal))
+                    for name, qty in gemShop_progressionTiers[i][2].items()
+                    if name in recommended_stock_bought
+                    and name not in fullExclusions
+                    and (prog := float(recommended_stock_bought[name])) < (goal := float(qty))
+                ]
         ))
 
     unfiltered_groups = ["True Max"]
     for i, tier in enumerate(unfiltered_groups, start=8):
         groups.append(AdviceGroup(
-            tier="",
-            pre_string=tier,
-            post_string=gemShop_progressionTiers[i][3],
-            hide=False,
-            advices=[
-                Advice(label=f"{name} ({getBonusSectionName(name)})", picture_class=name, progression=int(prog), goal=int(goal))
-                for name, qty in gemShop_progressionTiers[i][2].items()
-                if name in recommended_stock_bought
-                #and name not in gemShopExclusions  #Leaving this as a comment here to show intention. DO NOT FILTER!
-                and (prog := float(recommended_stock_bought[name])) < (goal := float(qty))
-            ],
-            informational=True
+                tier="",
+                pre_string=tier,
+                post_string=gemShop_progressionTiers[i][3],
+                hide=False,
+                advices=[
+                    Advice(label=f"{name} ({getBonusSectionName(name)})", picture_class=name, progression=int(prog), goal=int(goal))
+                    for name, qty in gemShop_progressionTiers[i][2].items()
+                    if name in recommended_stock_bought
+                    #and name not in gemShopExclusions  #Leaving this as a comment here to show intention. DO NOT FILTER!
+                    and (prog := float(recommended_stock_bought[name])) < (goal := float(qty))
+                ]
         ))
 
     groups = [g for g in groups if g]
@@ -291,9 +291,8 @@ def getGemShopAdviceSection() -> AdviceSection:
         header=section_title,
         picture="gemshop.png",
         groups=groups,
-        note=disclaimer,
-        unrated=True,
-        informational=True
+        note=disclaimer
     )
+    section.complete = True if len(section.groups) <= 1 else False
 
     return section

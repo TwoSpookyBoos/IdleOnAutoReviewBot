@@ -299,11 +299,10 @@ greenstack_progressionTiers = {
             "Base Monster Materials": ["Sewers3"],
             "Crystal Enemy Drops": [
                 "EquipmentStatues7", "EquipmentStatues3", "EquipmentStatues2", "EquipmentStatues4", "EquipmentStatues14",
-                ],
+                "StoneZ1", "StoneT1",],  #W1 Tool in particular drops from both W1 and W2 crystal farms
             "Other Skilling Resources": [
                 "GoldBar", "DementiaBar", "VoidBar", "LustreBar",
-                "Peanut", "Quest68", "Bullet3", "FoodChoppin1",],  #I really hate that the Slush Bucket is listed as Quest68
-            "Misc": ["FoodPotRe1",],
+                "Peanut", "Quest68", "Bullet3",],  #I really hate that the Slush Bucket is listed as Quest68
             },
         13: {
             "Base Monster Materials": [
@@ -313,19 +312,18 @@ greenstack_progressionTiers = {
                 "EquipmentStatues10", "EquipmentStatues12", "EquipmentStatues13", "EquipmentStatues8", "EquipmentStatues11",  #W2 statues
                 "EquipmentStatues18",  #W3 EhExPee statue
                 "rtt0",
-                "StoneA1", "StoneW1", "StoneZ1", "StoneT1",
+                "StoneA1", "StoneW1",
                 "StoneZ2", "StoneT2",
                 "PureWater",
                 "FoodG9",],
             "Other Skilling Resources": [
                 "StarfireBar", "DreadloBar",
-
+                "FoodChoppin1",
                 "EquipmentSmithingTabs2",
                 "PeanutG",
             ],
             "Misc": [
-                "FoodPotMana3", "ButterBar", "EquipmentStatues9", "OilBarrel2"
-            ],
+                "FoodPotMana3", "FoodPotRe1", "ButterBar", "EquipmentStatues9", "OilBarrel2"],
         },
         14: {
             "Crystal Enemy Drops": [
@@ -337,7 +335,7 @@ greenstack_progressionTiers = {
                 "Ladle",
             ],
             "Misc": [
-                "DesertC2b", "Quest78", "EfauntDrop1"
+                "DesertC2b", "Quest78",
             ]
         },
     }
@@ -522,7 +520,7 @@ stamps_progressionTiers = {
          "Misc": ["Mason Jar Stamp", "Sigil Stamp"],
          "Specific": {'Pickaxe Stamp': 45, 'Hatchet Stamp': 45, 'Mason Jar Stamp': 12}}},
     12: {"TotalStampLevels": 1000, "Stamps": {
-        "Skill": ["Brainstew Stamps", "Bag o Heads Stamp", "Skelefish Stamp", "Holy Mackerel Stamp", "Cooked Meal Stamp"],
+        "Skill": ["Brainstew Stamp", "Bag o Heads Stamp", "Skelefish Stamp", "Holy Mackerel Stamp", "Cooked Meal Stamp"],
         "Misc": ["Card Stamp"],
         "Specific": {
             'Drippy Drop Stamp': 50,
@@ -610,13 +608,8 @@ stamps_progressionTiers = {
             'Hatchet Stamp': 295, 'Pickaxe Stamp': 255,
             'Sashe Sidestamp': 126,  'Conjocharmo Stamp': 170,
             'Captalist Stats Stamp': 140,
-            'Anvil Zoomer Stamp': 125, 'Skelefish Stamp': 32, 'Fishing Rod Stamp': 120, 'Catch Net Stamp': 120, 'Divine Stamp': 120,
-            'White Essence Stamp': 104, 'Triad Essence Stamp': 112, 'Dark Triad Essence Stamp': 96, 'Nest Eggs Stamp': 240,
         },
     }},
-    21: {"TotalStampLevels": 13000, "Stamps": {"Specific": {},}},  # Info tier for Capacity stamps, populated later from stamp_maxes
-    22: {"TotalStampLevels": 13000, "Stamps": {"Specific": {},}},  # Info tier for all other previously tiered stamps, populated later from stamp_maxes
-    23: {"TotalStampLevels": 13000, "Stamps": {"Specific": {},}},  # Info tier for all non-tiered stamps, populated later from stamp_maxes
 }
 smithing_progressionTiers = [
     # int tier, int Cash Points Purchased, int Monster Points Purchased, int Forge Totals, str Notes
@@ -1237,14 +1230,14 @@ atoms_progressionTiers = {
     },
     9: {
         'Atoms': {
-            #"Neon - Damage N' Cheapener": 2,
+            "Neon - Damage N' Cheapener": 2,
             'Fluoride - Void Plate Chef': 11,
             'Helium - Talent Power Stacker': 7,
         },
     },
     10: {
         'Atoms': {
-            #"Neon - Damage N' Cheapener": 10,
+            "Neon - Damage N' Cheapener": 10,
             'Fluoride - Void Plate Chef': 15,
         },
     },
@@ -1256,7 +1249,7 @@ atoms_progressionTiers = {
     },
     12: {
         'Atoms': {
-            #"Neon - Damage N' Cheapener": 20,
+            "Neon - Damage N' Cheapener": 20,
             'Helium - Talent Power Stacker': 9,
         },
     },
@@ -1264,7 +1257,7 @@ atoms_progressionTiers = {
         'Atoms': {
             'Boron - Particle Upgrader': 30,
             'Hydrogen - Stamp Decreaser': 30,
-            #"Neon - Damage N' Cheapener": 30,
+            "Neon - Damage N' Cheapener": 30,
             'Fluoride - Void Plate Chef': 30,
         },
     },
@@ -1654,7 +1647,7 @@ sailing_progressionTiers = {
             'Triagulon': 4,
             'Billcye Tri': 4,
             'Frost Relic': 4,
-            'Chilled Yarn': 4,
+            #'Chilled Yarn': 4,
             'Causticolumn': 4,
             'Jade Rock': 4,
             'Gummy Orb': 4,
@@ -1679,6 +1672,7 @@ sailing_progressionTiers = {
         },
     }
 }
+
 
 ###WORLD 6 PROGRESSION TIERS###
 farming_progressionTiers = {
@@ -1928,18 +1922,6 @@ switches = [
         "false": "",
     },
     {
-        "label": "Hide Informational Groups",
-        "name": "hide_informational",
-        "true": "",
-        "false": "",
-    },
-    {
-        "label": "Hide Unrated Sections",
-        "name": "hide_unrated",
-        "true": "",
-        "false": "",
-    },
-    {
         "label": "Show progress bars",
         "name": "progress_bars",
         "true": "",
@@ -1959,7 +1941,6 @@ currentWorld = 6
 maxCharacters = 10
 break_you_best = "<br>You best ❤️"
 break_keep_it_up = "<br>Keep it up! You're on the right track! ❤️"
-ignorable_labels: tuple = ('Weekly Ballot',)
 missableGStacksDict = {
     #  ItemName               Codename     Quest Codeame          Quest Name                                          Wiki link to the item                             Recommended Class/Farming notes
     "Dog Bone":              ["Quest12",   "Dog_Bone1",           "Dog Bone: Why he Die???",                          "https://idleon.wiki/wiki/Dog_Bone",              "Active ES or time candy.", 'dog-bone-npc'],
@@ -2060,7 +2041,6 @@ expectedStackables = {
         "OilBarrel2",  # Slime Barrel, 1 in 3334
         "DesertC2b",  # Ghost, 1 in 2k
         "Quest78",  # Equinox Mirror
-        "EfauntDrop1",  # Basic Efaunt material
         "Key2", "Key3"  # Efaunt and Chizoar keys
     ],
     "Cheater": [
@@ -2070,7 +2050,7 @@ expectedStackables = {
         "GalaxyA2b", "GalaxyC1b",  # W4 Rare Drops
         "LavaA1b", "LavaA5b", "LavaB3b",  # W5 Rare Drops
         "SpiA2b", "SpiB2b",  # W6 Rare Drops
-        "EfauntDrop2", "Chiz0", "Chiz1", "TrollPart", "KrukPart", "KrukPart2",  # World Boss Materials
+        "EfauntDrop1", "EfauntDrop2", "Chiz0", "Chiz1", "TrollPart", "KrukPart", "KrukPart2",  # World Boss Materials
         "CraftMat2",  # Crimson String
         "OilBarrel1", "OilBarrel3", "OilBarrel4", "OilBarrel5",  # Oil Barrels
         "PureWater2",  # Alchemy Dense water
@@ -2587,7 +2567,6 @@ familyBonusesDict = {
     #"Arcane Cultist": {'funcType': 'decay', 'x1': 0, 'x2': 0, 'Stat': '', 'PrePlus': False, 'PostDisplay': '', 'levelDiscount': familyBonusClassTierLevelReductions[0]},
 }
 esFamilyBonusBreakpointsList = [0, 88, 108, 131, 157, 186, 219, 258, 303, 356, 419, 497, 594, 719, 885, 1118, 1468, 2049, 3210, 6681, 1272447]
-arbitrary_es_family_goal = esFamilyBonusBreakpointsList[13]  #719 fairly feasible in v2.12, 885 feels too tough atm
 printerIndexesBeingPrintedByCharacterIndex = [
     [5, 6],  #Character Index 0
     [12, 13],
@@ -3260,7 +3239,7 @@ hardcap_enhancement_eclipse = 250  #Lava might add more in the future, but there
 librarySubgroupTiers = [
     '', 'Skilling - High Priority', 'Skilling - Medium Priority', 'Skilling - Low Priority', 'Skilling - Lowest Priority',
     'Combat - High Priority', 'Combat - Medium Priority', 'Combat - Low Priority',
-]  #Why is there a placeholder in [0] again?
+]
 skill_talentsDict = {
     # Optimal is an optional list for calculating library.getJeapordyGoal
     # [0] = the starting level
@@ -3366,7 +3345,7 @@ skill_talentsDict = {
             118: {"Name": "Catching Some Zzz's", "Tab": "Barbarian"},
         },
         "Low": {
-            112: {"Name": "Strongest Statues", "Tab": "Barbarian"},
+            112: {"Name": "Strongest Statues", "Tab": "Barbarian", 'Hardcap': 200},
             116: {"Name": "Bobbin' Bobbers", "Tab": "Barbarian", 'Hardcap': 200},
             111: {"Name": "Fistful of Obol", "Tab": "Warrior Subclass", 'Hardcap': 125},
         },
@@ -3394,8 +3373,8 @@ skill_talentsDict = {
         },
         "Low": {
             92: {"Name": "Health Overdrive", "Tab": "Warrior"},
-            127: {"Name": "Shieldiest Statues", "Tab": "Squire"},
-            112: {"Name": "Strongest Statues", "Tab": "Barbarian"},
+            127: {"Name": "Shieldiest Statues", "Tab": "Squire", 'Hardcap': 200},
+            112: {"Name": "Strongest Statues", "Tab": "Barbarian", 'Hardcap': 200},
             95: {"Name": "Strength in Numbers", "Tab": "Warrior"},
             0: {"Name": "Health Booster", "Tab": "Rage Basics"},
             144: {"Name": "The Family Guy", "Tab": "Elite Class"},
@@ -3456,7 +3435,7 @@ skill_talentsDict = {
             293: {"Name": "Agi Again", "Tab": "Archer Subclass"},
         },
         "Low": {
-            292: {"Name": "Shwifty Statues", "Tab": "Bowman"},
+            292: {"Name": "Shwifty Statues", "Tab": "Bowman", 'Hardcap': 200},
             144: {"Name": "The Family Guy", "Tab": "Elite Class"},
             291: {"Name": "Shoeful of Obol", "Tab": "Archer Subclass", 'Hardcap': 125},
         },
@@ -3527,7 +3506,7 @@ skill_talentsDict = {
         },
         "Low": {
             279: {"Name": "Robbinghood", "Tab": "Archer"},
-            37: {"Name": "Skilliest Statue", "Tab": "Maestro"},
+            37: {"Name": "Skilliest Statue", "Tab": "Maestro", 'Hardcap': 200},
             27: {"Name": "Reroll Pls", "Tab": "Journeyman"},
         },
         "Lowest": {
@@ -3876,7 +3855,7 @@ filter_never = [
     "Golden Jam", "Golden Kebabs", "Golden Meat Pie", "Golden Nomwich", "Golden Ham", "Golden Bread", "Golden Ribs", "Golden Cheese",
     "Golden Grilled Cheese Nomwich", "Golden Hampter Gummy Candy", "Golden Nigiri", "Golden Dumpling", "Golden Cake", "Gold Food Coupon",
     #Choppin Efficiency talent
-    "Grass Leaf",
+    "Leaf1",
     #Consumables
     "Gem", "Gem Envelope", "Small Experience Balloon", "Medium Experience Balloon", "Large Experience Balloon",
     "1 HR Time Candy", "2 HR Time Candy", "4 HR Time Candy", "12 HR Time Candy", "24 HR Time Candy", "72 HR Time Candy",
@@ -3951,128 +3930,25 @@ bribesDict = {
     "W6": ["The Art of the Grail", "Artifact Pilfering", "Forge Cap Smuggling", "Gold from Lead", "Nugget Fabrication", "Divine PTS Miscounting", "Loot Table Tampering", "The Art of the Flail"]
 }
 unpurchasableBribes = ["The Art of the Flail"]  # These bribes are in the game, but cannot be purchased as of v2.10
-stampTypes = ["Combat", "Skill", "Misc"]
-unavailableStampsList = [
-    'Shiny Crab Stamp', 'Gear Stamp', 'SpoOoky Stamp', 'Prayday Stamp',  #Skill
-    'Talent I Stamp', 'Talent V Stamp',  #Misc
-]  # Last verified as of v2.10
 stamp_maxes = {
     #Combat
-    "Sword Stamp": 200,
-    "Target Stamp": 165,
-    "Fist Stamp": 56,
-    "Book Stamp": 72,
-    "Bullseye Stamp": 110,
-    "Buckler Stamp": 182,
-    "Avast Yar Stamp": 120,
-    "Gilded Axe Stamp": 162,
-    "Maxo Slappo Stamp": 140,
-    "Dementia Sword Stamp": 200,
-    "Void Axe Stamp": 255,
-    "Heart Stamp": 150,
-    "Shield Stamp": 145,
-    "Battleaxe Stamp": 140,
-    "Manamoar Stamp": 99,
-    "Feather Stamp": 165,
-    "Hermes Stamp": 75,
-    "Steve Sword": 320,
-    "Diamond Axe Stamp": 230,
-    "Sashe Sidestamp": 133,
-    "Golden Sixes Stamp": 210,
-    "Captalist Stats Stamp": 160,
-    "Mana Stamp": 145,
-    "Longsword Stamp": 136,
-    "Agile Stamp": 36,
-    "Clover Stamp": 82,
-    "Polearm Stamp": 246,
-    "Sukka Foo": 220,
-    "Blover Stamp": 104,
-    "Tripleshot Stamp": 300,
-    "Intellectostampo": 168,
-    "Stat Wallstreet Stamp": 78,
-    "Tomahawk Stamp": 128,
-    "Kapow Stamp": 96,
-    "Vitality Stamp": 132,
-    "Scimitar Stamp": 108,
-    "Violence Stamp": 87,
-    "Arcane Stamp": 78,
-    "Stat Graph Stamp": 95,
-    "Blackheart Stamp": 450,
-    "Conjocharmo Stamp": 210,
-    "Void Sword Stamp": 180,
     #Skill
-    "Pickaxe Stamp": 275,
-    "Twin Ores Stamp": 120,
-    "Smart Dirt Stamp": 165,
-    "Alch Go Brrr Stamp": 124,
-    "Fishing Rod Stamp": 150,
-    "Bag o Heads Stamp": 224,
-    "Hidey Box Stamp": 300,
-    "Cooked Meal Stamp": 480,
-    "Egg Stamp": 480,
-    "Divine Stamp": 168,
-    "Sneaky Peeky Stamp": 144,
-    "Triad Essence Stamp": 136,
-    "Hatchet Stamp": 325,
-    "Choppin' Bag Stamp": 330,
-    "Cool Diggy Tool Stamp": 340,
-    "Brainstew Stamps": 155,
-    "Fishhead Stamp": 125,
-    "Holy Mackerel Stamp": 155,
-    "Purp Froge Stamp": 130,
-    "Stample Stamp": 124,
-    "Flowin Stamp": 82,
-    "Spice Stamp": 510,
-    "Lab Tube Stamp": 340,
-    "Multitool Stamp": 230,
-    "Jade Mint Stamp": 150,
-    "Dark Triad Essence Stamp": 128,
-    "Anvil Zoomer Stamp": 155,
-    "Duplogs Stamp": 120,
-    "High IQ Lumber Stamp": 165,
-    "Drippy Drop Stamp": 160,
-    "Catch Net Stamp": 150,
-    "Bugsack Stamp": 224,
-    "Spikemouth Stamp": 78,
-    "Saw Stamp": 90,
-    "Ladle Stamp": 320,
-    "Sailboat Stamp": 160,
-    "Skelefish Stamp": 42,
-    "Summoner Stone Stamp": 128,
-    "Lil' Mining Baggy Stamp": 310,
-    "Matty Bag Stamp": 410,
-    "Swag Swingy Tool Stamp": 410,
-    "Droplots Stamp": 84,
-    "Fly Intel Stamp": 120,
-    "Buzz Buzz Stamp": 155,
-    "Amplestample Stamp": 68,
-    "Banked Pts Stamp": 282,
-    "Nest Eggs Stamp": 320,
-    "Gamejoy Stamp": 115,
-    "Crop Evo Stamp": 85,
-    "White Essence Stamp": 136,
-    #Misc
-    "Questin Stamp": 330,
-    "Gold Ball Stamp": 280,
-    "Card Stamp": 330,
-    "DNA Stamp": 48,
     "Mason Jar Stamp": 160,
-    "Potion Stamp": 105,
-    "Forge Stamp": 240,
-    "Talent II Stamp": 50,
-    "Talent S Stamp": 72,
-    "Refinery Stamp": 90,
+    "Lil' Mining Baggy Stamp": 310,
+    "Choppin' Bag Stamp": 330,
+    "Matty Bag Stamp": 410,  #420 is possible but exploity
+    "Bag o Heads Stamp": 224,
+    "Bugsack Stamp": 224,
+    "Drippy Drop Stamp": 160,
+    "Cooked Meal Stamp": 465,
+    "Ladle Stamp": 320,
+    "Multitool": 220,
+    'Crop Evo Stamp': 90,
+    #Misc
     "Crystallin": 270,
-    "Golden Apple Stamp": 136,
-    "Vendor Stamp": 150,
-    "Talent III Stamp": 66,
-    "Multikill Stamp": 112,
-    "Atomic Stamp": 144,
-    "Arcade Ball Stamp": 310,
-    "Ball Timer Stamp": 90,
-    "Sigil Stamp": 324,
-    "Talent IV Stamp": 56,
+    "Forge Stamp": 230,
     "Biblio Stamp": 66,
+    "Sigil Stamp": 324,
 }
 stampsDict = {
     "Combat": {
@@ -4124,7 +4000,7 @@ stampsDict = {
         1: {'Name': "Hatchet Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'thread'},
         2: {'Name': "Anvil Zoomer Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'copper-ore'},
         3: {'Name': "Lil' Mining Baggy Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'jungle-logs'},
-        4: {'Name': "Twin Ores Stamp", 'funcType': 'decay', 'x1': 15, 'x2': 40, 'Material': 'thief-hood'},
+        4: {'Name': "Twin Ores Stamp", 'funcType': 'decay', 'x1': 15, 'x2': 40, 'Material': 'thief-hoof'},
         5: {'Name': "Choppin' Bag Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'carrot-cube'},
         6: {'Name': "Duplogs Stamp", 'funcType': 'decay', 'x1': 15, 'x2': 40, 'Material': 'militia-helm'},
         7: {'Name': "Matty Bag Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'cramped-material-pouch'},
@@ -4133,7 +4009,7 @@ stampsDict = {
         10: {'Name': "High IQ Lumber Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'bullfrog-horn'},
         11: {'Name': "Swag Swingy Tool Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0, 'Material': 'copper-pickaxe'},
         12: {'Name': "Alch Go Brrr Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'forest-fibres'},
-        13: {'Name': "Brainstew Stamps", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'gold-ore'},
+        13: {'Name': "Brainstew Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'gold-ore'},
         14: {'Name': "Drippy Drop Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'pocket-sand'},
         15: {'Name': "Droplots Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'bloach'},
         16: {'Name': "Fishing Rod Stamp", 'funcType': 'add', 'x1': 2, 'x2': 0, 'Material': 'fly'},
@@ -4180,7 +4056,7 @@ stampsDict = {
         1: {'Name': "Mason Jar Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'glass-shard'},
         2: {'Name': "Crystallin", 'funcType': 'decay', 'x1': 110, 'x2': 50, 'Material': 'boring-brick'},
         3: {'Name': "Arcade Ball Stamp", 'funcType': 'decay', 'x1': 50, 'x2': 100, 'Material': 'copper-ore'},
-        4: {'Name': "Gold Ball Stamp", 'funcType': 'decay', 'x1': 40, 'x2': 100, 'Material': 'goldfish'},
+        4: {'Name': "Gold Ball Stamp", 'funcType': 'decay', 'x1': 40, 'x2': 100, 'Material': 'golfish'},
         5: {'Name': "Potion Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'icing-ironbite'},
         6: {'Name': "Golden Apple Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'golden-nomwich'},
         7: {'Name': "Ball Timer Stamp", 'funcType': 'decay', 'x1': 12, 'x2': 30, 'Material': 'oak-logs'},
@@ -4201,28 +4077,11 @@ stampsDict = {
         22: {'Name': "Atomic Stamp", 'funcType': 'decay', 'x1': 20, 'x2': 80, 'Material': 'bamboo'},
     }
 }
-capacity_stamps = ["Mason Jar Stamp", "Lil' Mining Baggy Stamp", "Choppin' Bag Stamp", "Matty Bag Stamp", "Bag o Heads Stamp", "Bugsack Stamp"]
-stamps_progressionTiers[max(stamps_progressionTiers)-2]['Stamps']['Specific'] = {stampName: stamp_maxes[stampName] for stampName in capacity_stamps}
-#logger.debug(f"Stamps T{max(stamps_progressionTiers)-2} = {stamps_progressionTiers[max(stamps_progressionTiers)-2]['Stamps']['Specific']}")
-tiered_stamps = set()
-for tier in stamps_progressionTiers:
-    for requiredStamp in stamps_progressionTiers[tier].get('Stamps', {}).get('Specific', []):
-        if requiredStamp not in capacity_stamps:
-            tiered_stamps.add(requiredStamp)
-ordered_tiers_stamps = []
-remaining_stamps = []
-for stampType in stampsDict:
-    for stamp in stampsDict[stampType].values():
-        if stamp['Name'] not in unavailableStampsList and stamp['Name'] not in capacity_stamps:
-            if stamp['Name'] in tiered_stamps:
-                ordered_tiers_stamps.append(stamp['Name'])
-            else:
-                remaining_stamps.append(stamp['Name'])
-stamps_progressionTiers[max(stamps_progressionTiers)-1]['Stamps']['Specific'] = {stamp: stamp_maxes[stamp] for stamp in ordered_tiers_stamps}
-#logger.debug(f"Stamps T{max(stamps_progressionTiers)-1} = {stamps_progressionTiers[max(stamps_progressionTiers)-1]['Stamps']['Specific']}")
-stamps_progressionTiers[max(stamps_progressionTiers)]['Stamps']['Specific'] = {stamp: stamp_maxes[stamp] for stamp in remaining_stamps}
-#logger.debug(f"Stamps T{max(stamps_progressionTiers)} = {stamps_progressionTiers[max(stamps_progressionTiers)]['Stamps']['Specific']}")
-
+stampTypes = ["Combat", "Skill", "Misc"]
+unavailableStampsList = [
+    'Shiny Crab Stamp', 'Gear Stamp', 'SpoOoky Stamp', 'Prayday Stamp',  #Skill
+    'Talent I Stamp', 'Talent V Stamp',  #Misc
+]  # Last verified as of v2.10
 starsignsDict = {
     1: {'Name': "The Buff Guy", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
     2: {'Name': "Flexo Bendo", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
@@ -4351,8 +4210,6 @@ forgeUpgradesDict = {
         "MaxPurchases": 60
     }
 }
-arbitrary_forge_capacity_goal = 150001
-arbitrary_forge_capacity_note = f"Goal of {arbitrary_forge_capacity_goal:,} is the last Godshard Bar we can reach guaranteed as of v2.12"
 statuesDict = {
     0:  {"Name": "Power Statue", "ItemName": "EquipmentStatues1", "Effect": "Base Damage", "BaseValue": 3, "Farmer": "Crystals with DK at Beans", "Target": "bored-bean"},
     1:  {"Name": "Speed Statue", "ItemName": "EquipmentStatues2", "Effect": "% Move Speed", "BaseValue": 0.1, "Farmer": "W1-W3 Crystals with DK", "Target": "w1-w3-crystals"},
@@ -4710,26 +4567,6 @@ atrisk_basicBubbles = [
     "Laaarrrryyyy",
     "Ignore Overdues",
 ]
-atrisk_advancedBubbles = [
-    "Warriors Rule",
-    "Big Meaty Claws",
-    "Call Me Bob",
-    "Multorange",
-    "Bite But Not Chew",
-    "Archer Or Bust",
-    "Quick Slap",
-    "Sanic Tools",
-    "Bow Jack",
-    "Cuz I Catch Em All",
-    "Mage Is Best",
-    "Brewstachio",
-    "Smart Boi Talent",
-    "Purple Bargain",
-    "Startue Exp",
-    "Level Up Gift",
-    "Cogs For Hands",
-    "Sample It",
-]
 atrisk_lithiumBubbles = [
     "Penny Of Strength",
     "Fly In Mind",
@@ -4743,7 +4580,6 @@ atrisk_lithiumBubbles = [
     'Bit By Bit',
     'Gifts Abound',
 ]
-atrisk_lithiumAdvancedBubbles = []
 
 arcadeBonuses = {
     0:  {"Stat": "Base Damage", "x1": 1, "x2": 0, "funcType": "add", "displayType": ""},
@@ -5029,9 +4865,6 @@ def getReadableBubbleNames(inputNumber, color):
 
 
 ###WORLD 3 CONSTS###
-max_printer_sample_rate = 90
-arbitrary_shrine_goal = 26
-arbitrary_shrine_note = f"Shrines have no Max level, goal of {arbitrary_shrine_goal} is arbitrary"
 maxDreams = 36  # Last verified as of v2.10
 dreamsThatUnlockNewBonuses = [1, 3, 6, 8, 11, 14, 18, 21, 24, 29, 32]
 equinoxBonusesDict = {
@@ -6355,8 +6188,6 @@ gamingSuperbitsDict = {
 snailMaxRank = 25
 
 def getDivinityNameFromIndex(inputValue: int) -> str:
-    if inputValue == 0:
-        return "Unlinked"
     return divinity_divinitiesDict.get(inputValue, {"Name": f"UnknownDivinity{inputValue}"}).get("Name")
 def getOfferingNameFromIndex(inputValue):
     return divinity_offeringsDict.get(inputValue, {"Name": f"UnknownOffering{inputValue}"}).get("Name")
@@ -6590,8 +6421,7 @@ sneakingGemstonesFirstIndex = 233
 sneakingGemstonesCount = len(sneakingGemstonesList)
 sneakingGemstonesBaseValueDict = {"Aquamarine": 40, "Emerald": 15, "Garnet": 12, "Starite": 5, "Topaz": 10, "Moissanite": 3}
 sneakingGemstonesMaxValueDict = {"Aquamarine": 10040, "Emerald": 5015, "Garnet": 2512, "Starite": 205, "Topaz": 1010, "Moissanite": 303}
-maxFarmingCrops = 160  # Last verified as of 2.12 Land Rank update
-maxFarmingValue = 100  # Last verified as of 2.12
+maxFarmingCrops = 160  # Last verified as of 2.11 Land Rank update
 landrankDict = {
     0: {'Name': 'Evolution Boost', 'UnlockLevel': 1, 'Value': 250},
     1: {'Name': 'Production Boost', 'UnlockLevel': 5, 'Value': 5},
@@ -7465,7 +7295,7 @@ reclaimableQuestItems = {
         "QuestNameCoded": "Nebulyte4"
     }
 }
-slab_QuestRewardsAllChars = {
+slab_QuestRewards = {
     'EquipmentPants16': {
         "ItemName": "Adam's Leaf",
         "QuestGiver": "Sprout",
@@ -7670,7 +7500,24 @@ slab_QuestRewardsAllChars = {
         "QuestName": "The Witcher, but not Really Inventory Bag D",
         "QuestNameCoded": "Promotheus4"
     },
-
+    'PeanutS': {
+        "ItemName": "Stone Peanut",
+        "QuestGiver": "Bushlyte",
+        "QuestName": "A Peanut Saved is a Peanut not Eaten!",
+        "QuestNameCoded": "Bushlyte3"
+    },
+    'Trophy3': {
+        "ItemName": "Club Member",
+        "QuestGiver": "Rocklyte",
+        "QuestName": "Becoming the Best Beginner",
+        "QuestNameCoded": "Rocklyte3"
+    },
+    'Trophy13': {
+        "ItemName": "Club Maestro",
+        "QuestGiver": "Cactolyte",
+        "QuestName": "Maestro! The Stro! Mman!",
+        "QuestNameCoded": "Cactolyte4"
+    },
     'Quest6': {
         "ItemName": "Scouting Report",
         "QuestGiver": "Stiltzcho",
@@ -8151,7 +7998,12 @@ slab_QuestRewardsAllChars = {
         "QuestName": "Ad Solidarity Contract",
         "QuestNameCoded": "Yondergreen7"
     },
-
+    'CardPack4': {
+        "ItemName": "Dungeon Card Pack",
+        "QuestGiver": "Worldo",
+        "QuestName": "Odd Jobs for Cold Hard Cash",
+        "QuestNameCoded": "Worldo1"
+    },
     'Quest59': {
         "ItemName": "Shuvelle's Vote",
         "QuestGiver": "Shuvelle",
@@ -8217,6 +8069,48 @@ slab_QuestRewardsAllChars = {
         "QuestGiver": "Snouts",
         "QuestName": "Mana Plox",
         "QuestNameCoded": "Snouts4"
+    },
+    'Mayo': {
+        "ItemName": "Mayonnaise Bottle",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 1",
+        "QuestNameCoded": "Walupiggy1"
+    },
+    'Trash': {
+        "ItemName": "Broken Weapon",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 2",
+        "QuestNameCoded": "Walupiggy2"
+    },
+    'Trash2': {
+        "ItemName": "Dried Paint Blob",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 3",
+        "QuestNameCoded": "Walupiggy3"
+    },
+    'Trash3': {
+        "ItemName": "Engraved Bullet",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 4",
+        "QuestNameCoded": "Walupiggy4"
+    },
+    'Timecandy7': {
+        "ItemName": "Steamy Time Candy",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 4",
+        "QuestNameCoded": "Walupiggy4"
+    },
+    'Quest44': {
+        "ItemName": "Goldegg Capsule",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 4",
+        "QuestNameCoded": "Walupiggy4"
+    },
+    'CardPack1': {
+        "ItemName": "Newbie Card Pack",
+        "QuestGiver": "Walupiggy",
+        "QuestName": "Treasure Hunt 4",
+        "QuestNameCoded": "Walupiggy4"
     },
     'StampB42': {
         "ItemName": "Lab Tube Stamp",
@@ -8308,6 +8202,24 @@ slab_QuestRewardsAllChars = {
     #     "QuestName": "Chizoar Slayer",
     #     "QuestNameCoded": "Nebulyte2"
     # },
+    'CardPack5': {
+        "ItemName": "Galaxy Card Pack",
+        "QuestGiver": "Nebulyte",
+        "QuestName": "Chizoar Slayer",
+        "QuestNameCoded": "Nebulyte2"
+    },
+    'CardPack6': {
+        "ItemName": "Smolderin Card Pack",
+        "QuestGiver": "Nebulyte",
+        "QuestName": "Oh Geez Lets Not Think About This One...",
+        "QuestNameCoded": "Nebulyte3"
+    },
+    'EquipmentNametag4': {
+        "ItemName": "Vman Nametag",
+        "QuestGiver": "Nebulyte",
+        "QuestName": "VMAN ACHIEVED!",
+        "QuestNameCoded": "Nebulyte4"
+    },
     'Trophy17': {
         "ItemName": "One of the Divine",
         "QuestGiver": "Tired_Mole",
@@ -8367,92 +8279,6 @@ slab_QuestRewardsAllChars = {
         "QuestGiver": "Sussy_Gene",
         "QuestName": "Loiterin' Around",
         "QuestNameCoded": "Sussy_Gene3"
-    },
-}
-slab_QuestRewardsOnce = {
-    'Mayo': {
-        "ItemName": "Mayonnaise Bottle",
-        "QuestGiver": "Walupiggy",
-        "QuestName": "Treasure Hunt 1",
-        "QuestNameCoded": "Walupiggy1"
-    },
-    'Trash': {
-        "ItemName": "Broken Weapon",
-        "QuestGiver": "Walupiggy",
-        "QuestName": "Treasure Hunt 2",
-        "QuestNameCoded": "Walupiggy2"
-    },
-    'Trash2': {
-        "ItemName": "Dried Paint Blob",
-        "QuestGiver": "Walupiggy",
-        "QuestName": "Treasure Hunt 3",
-        "QuestNameCoded": "Walupiggy3"
-    },
-    'Trash3': {
-        "ItemName": "Engraved Bullet",
-        "QuestGiver": "Walupiggy",
-        "QuestName": "Treasure Hunt 4",
-        "QuestNameCoded": "Walupiggy4"
-    },
-    'Timecandy7': {
-        "ItemName": "Steamy Time Candy",
-        "QuestGiver": "Walupiggy",
-        "QuestName": "Treasure Hunt 4",
-        "QuestNameCoded": "Walupiggy4"
-    },
-    'Quest44': {
-        "ItemName": "Goldegg Capsule",
-        "QuestGiver": "Walupiggy",
-        "QuestName": "Treasure Hunt 4",
-        "QuestNameCoded": "Walupiggy4"
-    },
-    'CardPack1': {
-        "ItemName": "Newbie Card Pack",
-        "QuestGiver": "Walupiggy",
-        "QuestName": "Treasure Hunt 4",
-        "QuestNameCoded": "Walupiggy4"
-    },
-    'CardPack4': {
-        "ItemName": "Dungeon Card Pack",
-        "QuestGiver": "Worldo",
-        "QuestName": "Odd Jobs for Cold Hard Cash",
-        "QuestNameCoded": "Worldo1"
-    },
-    'CardPack5': {
-        "ItemName": "Galaxy Card Pack",
-        "QuestGiver": "Nebulyte",
-        "QuestName": "Chizoar Slayer",
-        "QuestNameCoded": "Nebulyte2"
-    },
-    'CardPack6': {
-        "ItemName": "Smolderin Card Pack",
-        "QuestGiver": "Nebulyte",
-        "QuestName": "Oh Geez Lets Not Think About This One...",
-        "QuestNameCoded": "Nebulyte3"
-    },
-    'PeanutS': {
-        "ItemName": "Stone Peanut",
-        "QuestGiver": "Bushlyte",
-        "QuestName": "A Peanut Saved is a Peanut not Eaten!",
-        "QuestNameCoded": "Bushlyte3"
-    },
-    'Trophy3': {
-        "ItemName": "Club Member",
-        "QuestGiver": "Rocklyte",
-        "QuestName": "Becoming the Best Beginner",
-        "QuestNameCoded": "Rocklyte3"
-    },
-    'Trophy13': {
-        "ItemName": "Club Maestro",
-        "QuestGiver": "Cactolyte",
-        "QuestName": "Maestro! The Stro! Mman!",
-        "QuestNameCoded": "Cactolyte4"
-    },
-    'EquipmentNametag4': {
-        "ItemName": "Vman Nametag",
-        "QuestGiver": "Nebulyte",
-        "QuestName": "VMAN ACHIEVED!",
-        "QuestNameCoded": "Nebulyte4"
     },
 }
 npc_tokens = [
