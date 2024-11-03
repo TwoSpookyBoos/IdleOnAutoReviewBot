@@ -1161,20 +1161,40 @@ class Account:
         self.sheepie_owned = g.sheepie
         self.doot_owned = g.doot
         self.riftslug_owned = g.riftslug
-        if not self.doot_owned or not self.sheepie_owned or not self.riftslug_owned:
-            rawCompanions = self.raw_data.get('companion', [])
-            if rawCompanions:
-                for companionInfo in rawCompanions.get('l', []):
-                    companionID = int(companionInfo.split(',')[0])
-                    if companionID == 0:
-                        self.doot_owned = True
-                        g.doot = True
-                    if companionID == 1:
-                        self.riftslug_owned = True
-                        g.riftslug = True
-                    if companionID == 4:
-                        self.sheepie_owned = True
-                        g.sheepie = True
+        #print(f"Switches alone: Doot={g.doot}, Slug={g.riftslug}, Sheepie={g.sheepie}")
+        if not all([self.doot_owned, self.sheepie_owned, self.riftslug_owned]):
+            # If the data comes from Toolbox, it'll be a dictionary called companion singular
+            raw_companion = self.raw_data.get('companion', None)
+            # If the data comes from Efficiency, it'll be a flat list of just companion ID: "companions": [7, 10, 4, 5, 9, 2, 3, 6]
+            raw_companions = self.raw_data.get('companions', None)
+            if raw_companion is not None:
+                if isinstance(raw_companion, dict):
+                    for companionInfo in raw_companion.get('l', []):
+                        companionID = int(companionInfo.split(',')[0])
+                        if companionID == 0:
+                            self.doot_owned = True
+                            g.doot = True
+                        if companionID == 1:
+                            self.riftslug_owned = True
+                            g.riftslug = True
+                        if companionID == 4:
+                            self.sheepie_owned = True
+                            g.sheepie = True
+            elif raw_companions is not None:
+                # print(f"Efficiency Companions data found: {raw_companions}")
+                try:
+                    self.doot_owned = g.doot or 0 in raw_companions
+                    g.doot = self.doot_owned
+                    self.riftslug_owned = g.riftslug or 1 in raw_companions
+                    g.riftslug = self.riftslug_owned
+                    self.sheepie_owned = g.sheepie or 4 in raw_companions
+                    g.sheepie = self.sheepie_owned
+                except Exception as e:
+                    print(f"Efficiency Companions parse error: {e}, raw_companions={raw_companions}")
+            # else:
+            #     print(f"No companion data present in JSON")
+        #print(f"Account model: Doot={self.doot_owned}, Slug={self.riftslug_owned}, Sheepie={self.sheepie_owned}")
+        #print(f"Switches after: Doot={g.doot}, Slug={g.riftslug}, Sheepie={g.sheepie}")
 
     def _parse_characters(self, run_type):
         playerCount, playerNames, playerClasses, characterDict, perSkillDict = getCharacterDetails(
