@@ -5227,15 +5227,15 @@ apocDifficultyNameList = [
     'Easy Extras', 'Medium Extras', 'Difficult Extras', 'Insane', 'Impossible'
 ]
 trappingQuestsRequirementList = [
-    {"QuestName": "Pelt for the Pelt God",         "normalQuantity": 100,   "normalItemName": "Critter1", "shinyQuantity": 1,  "shinyItemName": "Critter1A"},
-    {"QuestName": "Frogecoin to the MOON!",        "normalQuantity": 250,   "normalItemName": "Critter2", "shinyQuantity": 1,  "shinyItemName": "Critter2A"},
-    {"QuestName": "Yet another Cartoon Reference", "normalQuantity": 500,   "normalItemName": "Critter3", "shinyQuantity": 2,  "shinyItemName": "Critter3A"},
-    {"QuestName": "Small Stingers, Big Owie",      "normalQuantity": 1000,  "normalItemName": "Critter4", "shinyQuantity": 2,  "shinyItemName": "Critter4A"},
-    {"QuestName": "The Mouse n the Molerat",       "normalQuantity": 1500,  "normalItemName": "Critter5", "shinyQuantity": 3,  "shinyItemName": "Critter5A"},
-    {"QuestName": "Happy Tree Friend",             "normalQuantity": 2500,  "normalItemName": "Critter6", "shinyQuantity": 4,  "shinyItemName": "Critter6A"},
-    {"QuestName": "Noot Noot!",                    "normalQuantity": 4000,  "normalItemName": "Critter7", "shinyQuantity": 6,  "shinyItemName": "Critter7A"},
-    {"QuestName": "Bunny you Should Say That!",    "normalQuantity": 8000,  "normalItemName": "Critter8", "shinyQuantity": 10, "shinyItemName": "Critter8A"},
-    {"QuestName": "Rollin' Thunder",               "normalQuantity": 65000, "normalItemName": "Critter9", "shinyQuantity": 1,  "shinyItemName": "Critter9A"}
+    {"QuestName": "Frogecoin to the MOON!",         'RequiredItems': {"Critter1": 100,   "Critter1A": 1}},
+    {"QuestName": "Yet another Cartoon Reference",  'RequiredItems': {"Critter2": 250,   "Critter2A": 1}},
+    {"QuestName": "Small Stingers, Big Owie",       'RequiredItems': {"Critter3": 500,   "Critter3A": 2}},
+    {"QuestName": "The Mouse n the Molerat",        'RequiredItems': {"Critter4": 1000,  "Critter4A": 2}},
+    {"QuestName": "Happy Tree Friend",              'RequiredItems': {"Critter5": 1500,  "Critter5A": 3}},
+    {"QuestName": "Noot Noot!",                     'RequiredItems': {"Critter6": 2500,  "Critter6A": 4}},
+    {"QuestName": "Bunny you Should Say That!",     'RequiredItems': {"Critter7": 4000,  "Critter7A": 6}},
+    {"QuestName": "Rollin' Thunder",                'RequiredItems': {"Critter8": 8000,  "Critter8A": 10}},
+    {"QuestName": "Glitter Critter",                'RequiredItems': {"Critter8A": 30,   "Critter6A": 60,    "Critter3A": 200}}
 ]
 
 def getSkullNames(mkValue: int) -> str:
