@@ -1,13 +1,13 @@
 <aside id="drawer">
     <p>
         Welcome to <a href="/">IE AutoReview Tool - By Scoli290</a><br>
-        Join the <a href="{{ config["DISCORD"] }}" target="_blank">Discord</a> for the detailed patch notes!
+        Join the <a href="{{ config["DISCORD"] }}" target="_blank">Discord</a> for detailed patch notes, links, and FAQs!
     </p>
     <p>
     {% if beta %}
         <strong>Heads up! You're on the beta-testing page. If you run into problems, try heading back to the <a href="{{ live_link }}" target="_blank">Live Page</a></strong>
         <br>
-        Currently beta testing: 2024-10-16: Further Farming tiers, whatever Hole may bring
+        Currently beta testing: 2024-10-29: Enhancing Hide Content sliders
     {% else %}
         <strong>To try out the beta site, head to the <a href="{{ beta_link }}" target="_blank">Beta Page</a></strong>
     {% endif %}
@@ -17,17 +17,6 @@
         <br>
         Previous update 2024-09-24: More various improvements
     </p>
-    <p>
-        This tool will retrieve the PUBLIC profile from <a href="{{ config["IE"] }}" target="_blank">IdleOn Efficiency</a> for evaluation.<br>
-        If you haven't uploaded your profile publicly before, <a href="{{ config["IE_UPLOAD"] }}" target="_blank">do it here</a>.
-    </p>
-    <p>
-        Alternatively, you can provide Raw JSON data.<br>
-        <a href="{{ config["IE_DATA"] }}" target="_blank">IdleonEfficiency</a>: Click on the Copy Raw JSON button. Paste results below.<br>
-        <a href="{{ config["IT_DATA"] }}" target="_blank">IdleonToolbox</a>: Click on the <strong>IdleonToolbox JSON</strong> button. Paste results below.
-    </p>
-    <span>Feature backlog can be found in the <a href="{{ config["TRELLO"] }}" target="_blank">Trello board</a>!</span>
-    <span>Find this app on <a href="{{ config["GITHUB"] }}" target="_blank">GitHub</a>!</span>
     <form action="/" method="POST">
         <div id="switchbox">
             {% for text, name, on, off, initial in switches %}

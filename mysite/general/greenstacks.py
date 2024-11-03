@@ -18,7 +18,7 @@ def getEquinoxDreams() -> dict:
     return results
 
 
-def getMissableGStacks(owned_stuff: Assets):
+def getMissableGStacksAdviceSection(owned_stuff: Assets) -> AdviceSection:
     advice_ObtainedQuestGStacks = owned_stuff.quest_items_gstacked
     advice_EndangeredQuestGStacks = list(owned_stuff.quest_items_gstackable)
     advice_MissedQuestGStacks = []
@@ -95,7 +95,7 @@ def getMissableGStacks(owned_stuff: Assets):
         questGStacks_AdviceGroupDict['Endangered'] = AdviceGroup(
             tier="",
             pre_string="Still obtainable",
-            advices=questGStacks_AdviceDict['Endangered']
+            advices=questGStacks_AdviceDict['Endangered'],
         )
         # endangered_AdviceSection = AdviceSection(
         #         name="Endangered Greenstacks",
@@ -103,9 +103,10 @@ def getMissableGStacks(owned_stuff: Assets):
         #         header=header_obtainable,
         #         picture="Greenstack.png",
         #         note=note,
-        #         groups=[endangered_AdviceGroup]
+        #         groups=[endangered_AdviceGroup],
+        #         unrated=True
         #     )
-        # endangered_AdviceSection.complete = True if not endangered_AdviceSection.groups else False
+        # endangered_AdviceSection.completed = True if not endangered_AdviceSection.groups else False
         # sections.append(endangered_AdviceSection)
 
     if len(advice_MissedQuestGStacks) > 0:
@@ -125,7 +126,8 @@ def getMissableGStacks(owned_stuff: Assets):
         questGStacks_AdviceGroupDict['Missed'] = AdviceGroup(
             tier="",
             pre_string="Already missed",
-            advices=questGStacks_AdviceDict['Missed']
+            advices=questGStacks_AdviceDict['Missed'],
+            informational=True
         )
 
     questGStacks_AdviceSection = AdviceSection(
@@ -134,17 +136,17 @@ def getMissableGStacks(owned_stuff: Assets):
         header=header_obtainable,
         picture="Greenstack.png",
         note=note,
-        groups=questGStacks_AdviceGroupDict.values()
+        groups=questGStacks_AdviceGroupDict.values(),
+        unrated=True,
+        completed=still_obtainable == 0
     )
-    if still_obtainable == 0:
-        questGStacks_AdviceSection.complete = True
 
     return questGStacks_AdviceSection
 
-def setGStackProgressionTier():
+def getGStackAdviceSections():
     equinoxDreamsStatus = getEquinoxDreams()
     all_owned_stuff: Assets = session_data.account.stored_assets
-    questGStacks_AdviceSection = getMissableGStacks(all_owned_stuff)
+    questGStacks_AdviceSection = getMissableGStacksAdviceSection(all_owned_stuff)
 
     unprecedented_gstacks = all_owned_stuff.items_gstacked_unprecedented
     if unprecedented_gstacks:
@@ -164,6 +166,7 @@ def setGStackProgressionTier():
                     label=item.name,
                     picture_class=item.name,
                     progression=item.progression,
+                    goal=100,
                     unit="%"
                 )
                 for item in items
@@ -174,7 +177,8 @@ def setGStackProgressionTier():
             AdviceGroup(
                 tier=str(tier),
                 pre_string="",
-                advices=tier_subsection
+                advices=tier_subsection,
+                informational=True
             )
         )
 
@@ -188,7 +192,8 @@ def setGStackProgressionTier():
                 picture_class=name
             )
             for name, item in all_owned_stuff.items_gstacked_unprecedented.items()
-        ]
+        ],
+        informational=True
     )
     groups.append(cheat_group)
 
@@ -207,17 +212,26 @@ def setGStackProgressionTier():
     elif expectedGStacksCount < 20 and equinoxDreamsStatus.get("Dream1", False) == False:
         header += " Equinox Dream 1 requires 20. Aim for items in Tier 1.<br>Start buying items listed in the Timegated tier from shops every day!"
         show_limit = 2
+    else:
+
+        show_limit = 2
 
     for group in groups[show_limit:]:
         group.hide = True
 
+    #Dream Review
+    overall_GreenstacksTier = 0
+    for dream in [1, 12, 29]:
+        if equinoxDreamsStatus.get(f"Dream{dream}", False) == True:
+            overall_GreenstacksTier += 1
+
     section_regular_gstacks = AdviceSection(
         name="Greenstacks",
         tier=tier,
+        pinchy_rating=overall_GreenstacksTier,
         header=header,
         picture="Greenstack.png",
-        groups=groups
+        groups=groups,
     )
-    section_regular_gstacks.complete = True if not section_regular_gstacks.groups else False
 
     return questGStacks_AdviceSection, section_regular_gstacks

@@ -1,11 +1,13 @@
 import math
-
 from flask import g as session_data
-from consts import lavaFunc, sampling_progressionTiers, maxTiersPerGroup, break_you_best, skillIndexList, goldrelic_multisDict, ValueToMulti
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import notateNumber
 from utils.logging import get_logger
+from consts import (
+    lavaFunc, maxTiersPerGroup, ValueToMulti, break_you_best, skillIndexList,
+    sampling_progressionTiers, goldrelic_multisDict, max_printer_sample_rate
+)
 
 
 logger = get_logger(__name__)
@@ -180,18 +182,20 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         characterTotalPSR = account_sum + starTalentDiffToMax + toon.po_boxes_invested.get('Utilitarian Capsule', {}).get('Bonus1Value', 0)
         if toon.sub_class == 'Squire':
             characterTotalPSR += squireSuperSamplesMaxBook
-        if 90 > characterTotalPSR:
-            shortBy = 90 - characterTotalPSR
+        if max_printer_sample_rate > characterTotalPSR:
+            shortBy = max_printer_sample_rate - characterTotalPSR
             prayerGain = min(shortBy, session_data.account.prayers['The Royal Sampler']['BonusValue'])
             characterEval = f"{'Keep prayer equipped' if 'The Royal Sampler' in toon.equipped_prayers else 'Equip prayer'} for +{prayerGain:.3f}%"
+            complete_toons += 1 if 'The Royal Sampler' in toon.equipped_prayers else 0
         else:
             characterEval = f"Prayer not needed{'. You may remove if desired.' if 'The Royal Sampler' in toon.equipped_prayers else ', not worn.'}"
+            complete_toons += 1
 
         psrAdvices[prayerSubgroup].append(Advice(
             label=f"{toon.character_name}: {characterEval}",
             picture_class=f"{toon.class_name_icon}",
             progression=f"{characterTotalPSR:.2f}",
-            goal=90,
+            goal=max_printer_sample_rate,
             unit="%"
         ))
 
@@ -202,8 +206,10 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
 
     psrAdviceGroup = AdviceGroup(
         tier="",
-        pre_string=f"Info- Sources of Printer Sample Rate (90% Hardcap)",
-        advices=psrAdvices
+        pre_string=f"Info- Sources of Printer Sample Rate ({max_printer_sample_rate}% Hardcap)",
+        advices=psrAdvices,
+        informational=True,
+        completed=complete_toons >= session_data.account.playerCount
     )
     return psrAdviceGroup
 
@@ -284,14 +290,16 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
         picture_class='wired-in',
         progression=lab_multi_aw if session_data.account.doot_owned else '',
         goal=2,
-        unit="x"
+        unit="x",
+        completed=session_data.account.doot_owned
     ))
     po_AdviceDict[f"{cs_label if not session_data.account.doot_owned else aw_label}"].append(Advice(
         label=f"{{{{ Divinity|#divinity }}}}: Harriep Major Link bonus: {'3x (Thanks Doot!)' if session_data.account.doot_owned else '3x if linked'}",
         picture_class='harriep',
         progression=harriep_multi_aw if session_data.account.doot_owned else '',
         goal=3,
-        unit="x"
+        unit="x",
+        completed=session_data.account.doot_owned
     ))
 
     # Account Wide
@@ -337,7 +345,9 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
         goal=1
     ))
     po_AdviceDict[aw_label].append(Advice(
-        label=f"{{{{ Equinox|#equinox}}}}: Voter Rights: {equinoxMulti:.2f}/1.{session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']}x to Weekly Ballot (Already included above)",
+        label=f"{{{{ Equinox|#equinox}}}}: Voter Rights: {equinoxMulti:.2f}/1.{session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']}x"
+              f" to Weekly Ballot"
+              f"<br>(Already included above)",
         picture_class="voter-rights",
         progression=session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel'],
         goal=session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']
@@ -356,16 +366,21 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
         picture_class="printer-purple"
     ))
 
+    for subgroup in po_AdviceDict:
+        for advice in po_AdviceDict[subgroup]:
+            mark_advice_completed(advice)
+
     po_AdviceGroup = AdviceGroup(
         tier="",
         pre_string=f"""Info- Sources of Printer Output. """
                    f"""Grand Total: {aw_multi:.3f}{f" - {aw_multi * cs_multi:.3f}" if len(po_AdviceDict[cs_label]) > 0 else ''}x""",
-        advices=po_AdviceDict if session_data.account.doot_owned else po_AdviceDict[aw_label],
-        post_string="Please note: Printer Output multiplies resources printed each hour. It does NOT increase the size of taking a new sample."
+        advices=po_AdviceDict,
+        post_string="Please note: Printer Output multiplies resources printed each hour. It does NOT increase the size of taking a new sample.",
+        informational=True
     )
     return po_AdviceGroup
 
-def setSamplingProgressionTier() -> AdviceSection:
+def getProgressionTiersAdviceGroup():
     catchup = "Info- Catchup other samples to current tier"
     sampling_AdviceDict = {
         "MaterialSamples": {
@@ -373,28 +388,11 @@ def setSamplingProgressionTier() -> AdviceSection:
         },
     }
     sampling_AdviceGroupDict = {}
-    sampling_AdviceSection = AdviceSection(
-        name="Sampling",
-        tier="Not Yet Evaluated",
-        header="",
-        picture="3D_Printer.gif",
-    )
-
-    highestConstructionLevel = max(session_data.account.all_skills["Construction"])
-    if highestConstructionLevel < 1:
-        sampling_AdviceSection.header = "Come back after unlocking the Construction skill in World 3!"
-        return sampling_AdviceSection
-    elif session_data.account.construction_buildings['3D Printer']['Level'] < 1:
-        sampling_AdviceSection.header = "Come back after unlocking the 3D Printer within the Construction skill in World 3!"
-        return sampling_AdviceSection
-
     infoTiers = 0
     max_tier = max(sampling_progressionTiers.keys()) - infoTiers
     tier_MaterialSamples = 0
-    #highestSample = session_data.account.printer['HighestValue']
+    # highestSample = session_data.account.printer['HighestValue']
     allSamples = session_data.account.printer['AllSamplesSorted']
-
-    # Generate Alert Advice
 
     # Assess tiers
     failedMaterialsDict = {}
@@ -405,28 +403,30 @@ def setSamplingProgressionTier() -> AdviceSection:
         #    Check if player's best sample of each material is less than tierRequirement
         #        Add failed requirements to failedMaterialsDict
         for materialName, materialNumber in tierRequirements['Materials'].items():
-            finalMaterialNumber = materialNumber if session_data.account.doot_owned and tierNumber >= 3 else materialNumber * tierRequirements['NonDootDiscount']
-            #logger.debug(f"Comparing {float(max(allSamples.get(materialName, [0])))} to {finalMaterialNumber}")
+            finalMaterialNumber = materialNumber if session_data.account.doot_owned and tierNumber >= 3 else materialNumber * tierRequirements[
+                'NonDootDiscount']
+            # logger.debug(f"Comparing {float(max(allSamples.get(materialName, [0])))} to {finalMaterialNumber}")
             try:
                 if max(allSamples.get(materialName, [0])) < finalMaterialNumber:
                     failedMaterialsDict[tierNumber][materialName] = finalMaterialNumber
-                    #logger.info(f"Tier{tierNumber} failed on {materialName}: {max(allSamples.get(materialName, [0]))} < {finalMaterialNumber}")
+                    # logger.info(f"Tier{tierNumber} failed on {materialName}: {max(allSamples.get(materialName, [0]))} < {finalMaterialNumber}")
             except Exception as reason:
-                logger.exception(f"Couldn't compare {type(max(allSamples.get(materialName, [0])))} {max(allSamples.get(materialName, [0]))} to T{tierNumber} {materialName} {finalMaterialNumber}: {reason}")
+                logger.exception(
+                    f"Couldn't compare {type(max(allSamples.get(materialName, [0])))} {max(allSamples.get(materialName, [0]))} to T{tierNumber} {materialName} {finalMaterialNumber}: {reason}")
                 failedMaterialsDict[tierNumber][materialName] = finalMaterialNumber
         # If the player passed at least 1 requirement and tier_MaterialSamples already current, increase tier_MaterialSamples
         if len(failedMaterialsDict[tierNumber].keys()) < len(tierRequirements['Materials'].keys()) and tier_MaterialSamples == tierNumber - 1:
             tier_MaterialSamples = tierNumber
         if (
-            0 < len(failedMaterialsDict[tierNumber].keys())  #At least 1 requirement was failed
-            and subgroupName not in sampling_AdviceDict['MaterialSamples']  #The subgroupName name doesn't already exist
-            and len(sampling_AdviceDict['MaterialSamples']) < maxTiersPerGroup  #Less than maxTiersPerGroup already exist
-            and tier_MaterialSamples < tierNumber
+                0 < len(failedMaterialsDict[tierNumber].keys())  # At least 1 requirement was failed
+                and subgroupName not in sampling_AdviceDict['MaterialSamples']  # The subgroupName name doesn't already exist
+                and len(sampling_AdviceDict['MaterialSamples']) < maxTiersPerGroup  # Less than maxTiersPerGroup already exist
+                and tier_MaterialSamples < tierNumber
         ):
-            #Setup empty subgroup with subgroupName as empty list to be added to
+            # Setup empty subgroup with subgroupName as empty list to be added to
             sampling_AdviceDict['MaterialSamples'][subgroupName] = []
 
-        #Finally, if that subgroupName exists, populate with Advice
+        # Finally, if that subgroupName exists, populate with Advice
         if subgroupName in sampling_AdviceDict['MaterialSamples']:
             for materialName, materialNumber in failedMaterialsDict[tierNumber].items():
                 goalLetter = notateNumber("Basic", materialNumber, 1)[-1]
@@ -447,7 +447,7 @@ def setSamplingProgressionTier() -> AdviceSection:
                         resource=getSampleClass(materialName)
                     ))
 
-    #After evaluating all tiers, populate the catchup group
+    # After evaluating all tiers, populate the catchup group
     for materialName, materialNumber in failedMaterialsDict.get(tier_MaterialSamples, {}).items():
         goalLetter = notateNumber("Basic", materialNumber, 1)[-1]
         if goalLetter.isalpha():
@@ -474,23 +474,34 @@ def setSamplingProgressionTier() -> AdviceSection:
         advices=sampling_AdviceDict['MaterialSamples']
     )
     sampling_AdviceGroupDict["MaterialSamples"].remove_empty_subgroups()
+
+    overall_SectionTier = min(max_tier + infoTiers, tier_MaterialSamples)  # Looks silly, but may get more evaluations in the future
+    return sampling_AdviceGroupDict, overall_SectionTier, max_tier
+
+def getSamplingAdviceSection() -> AdviceSection:
+    if session_data.account.construction_buildings['3D Printer']['Level'] < 1:
+        sampling_AdviceSection = AdviceSection(
+            name="Sampling",
+            tier="Not Yet Evaluated",
+            header="Come back after unlocking the 3D Printer within the Construction skill in World 3!",
+            picture="3D_Printer.gif",
+            unreached=True
+        )
+        return sampling_AdviceSection
+
+    # Generate AdviceGroups
+    sampling_AdviceGroupDict, overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
     sampling_AdviceGroupDict["PrinterSampleRate"] = getPrinterSampleRateAdviceGroup()
     sampling_AdviceGroupDict["PrinterOutput"] = getPrinterOutputAdviceGroup()
-    complete_toons = 0  # Either above 90 and the prayer not worn, or below 90 and already wearing the prayer. Those are the 2 "no action needed" states
-    for entry in sampling_AdviceGroupDict["PrinterSampleRate"].advices['Which Characters need Royal Sampler?']:
-        if "Keep prayer equipped" in entry.label or "Prayer not needed, not worn." in entry.label:
-            complete_toons += 1
 
     # Generate AdviceSection
-    overall_SamplingTier = min(max_tier + infoTiers, tier_MaterialSamples)  #Looks silly, but may get more evaluations in the future
-    tier_section = f"{overall_SamplingTier}/{max_tier}"
-    sampling_AdviceSection.tier = tier_section
-    sampling_AdviceSection.pinchy_rating = overall_SamplingTier
-    sampling_AdviceSection.groups = sampling_AdviceGroupDict.values()
-    if overall_SamplingTier >= max_tier:
-        sampling_AdviceSection.header = f"Best Sampling tier met: {tier_section}{break_you_best}"
-        if complete_toons >= session_data.account.playerCount:  #Checks both the tier requirement and the Royal Sampler goodness
-            sampling_AdviceSection.complete = True
-    else:
-        sampling_AdviceSection.header = f"Best Sampling tier met: {tier_section}"
+    tier_section = f"{overall_SectionTier}/{max_tier}"
+    sampling_AdviceSection = AdviceSection(
+        name="Sampling",
+        tier=tier_section,
+        pinchy_rating=overall_SectionTier,
+        header=f"Best Sampling tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
+        picture="3D_Printer.gif",
+        groups=sampling_AdviceGroupDict.values(),
+    )
     return sampling_AdviceSection

@@ -119,28 +119,21 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
     crystal_AG = AdviceGroup(
         tier="",
         pre_string="Info- To-Do list before dedicated Onyx Statue farming",
-        advices={'Crystal Chance and Drop Rate': crystal_AdviceList, 'Statue Value': deposit_AdviceList}
+        advices={'Crystal Chance and Drop Rate': crystal_AdviceList, 'Statue Value': deposit_AdviceList},
+        informational=True
     )
     return crystal_AG
 
-def setStatuesProgressionTier() -> AdviceSection:
+def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
     statues_AdviceDict = {
         "Tiers": {}
     }
-    statues_AdviceGroupDict = {}
-    statues_AdviceSection = AdviceSection(
-        name="Statues",
-        tier="Not Yet Evaluated",
-        header="Best Statues tier met: Not Yet Evaluated. Recommended Statues actions",
-        picture='Town_Marble.gif'
-    )
-
     infoTiers = 0
     max_tier = max(statues_progressionTiers.keys()) - infoTiers
     tier_Statues = 0
     depositable_statues = 0
 
-    # Generate Advice
+    # Assess Tiers
     for tierNumber, tierRequirements in statues_progressionTiers.items():
         subgroupName = f"To reach Tier {tierNumber}"
         for statueName, statueDetails in session_data.account.statues.items():
@@ -171,13 +164,15 @@ def setStatuesProgressionTier() -> AdviceSection:
                                       f"{farmDetails if tierRequirements.get('MinStatueType', 'UnknownStatueType') != 'Gold' else ''}"
                                       f"{'<br>Reminder: You need to raise this statue to Gold first!' if tierRequirements.get('MinStatueType', 'UnknownStatueType') == 'Onyx' and statueDetails['Level'] == 0 else ''}",
                                 picture_class=statueName,
-                                progression=statueDetails['TypeNumber'] if statueDetails['TypeNumber'] < 1 else session_data.account.stored_assets.get(statueDetails['ItemName']).amount,
-                                goal=20000 if tierRequirements.get('MinStatueType', 'UnknownStatueType') == 'Onyx' else tierRequirements.get('MinStatueTypeNumber', 0),
+                                progression=statueDetails['TypeNumber'] if statueDetails['TypeNumber'] < 1 else session_data.account.stored_assets.get(
+                                    statueDetails['ItemName']).amount,
+                                goal=20000 if tierRequirements.get('MinStatueType', 'UnknownStatueType') == 'Onyx' else tierRequirements.get(
+                                    'MinStatueTypeNumber', 0),
                                 resource="coins" if tierRequirements.get('MinStatueType', 'UnknownStatueType') == 'Gold' else farmResource
                             ))
                         if session_data.account.stored_assets.get(statueDetails['ItemName']).amount >= 20000 and statueDetails['Type'] != statueTypeList[-1]:
                             depositable_statues += 1
-        if subgroupName not in statues_AdviceDict["Tiers"] and tier_Statues == tierNumber-1:
+        if subgroupName not in statues_AdviceDict["Tiers"] and tier_Statues == tierNumber - 1:
             tier_Statues = tierNumber
 
     # Generate Alerts
@@ -187,27 +182,30 @@ def setStatuesProgressionTier() -> AdviceSection:
             picture_class="town-marble"
         ))
 
-    # Generate AdviceGroups
-    if session_data.account.maxed_statues < statueCount:
-        statues_AdviceGroupDict['Crystals'] = getPreOnyxAdviceGroup()
-    statues_AdviceGroupDict['Tiers'] = AdviceGroup(
+    tiers_ag = AdviceGroup(
         tier=tier_Statues,
         pre_string="Beef up those statues",
         advices=statues_AdviceDict["Tiers"]
     )
+    overall_SectionTier = min(max_tier + infoTiers, tier_Statues)
+    return tiers_ag, overall_SectionTier, max_tier
 
-    #statues_AdviceGroupDict['Types'] = getStatueTypeAdviceGroup()
+def getStatuesAdviceSection() -> AdviceSection:
+    # Generate AdviceGroups
+    statues_AdviceGroupDict = {}
+    statues_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
+    if session_data.account.maxed_statues < statueCount:
+        statues_AdviceGroupDict['Crystals'] = getPreOnyxAdviceGroup()
 
     # Generate AdviceSection
-    overall_StatuesTier = min(max_tier + infoTiers, tier_Statues)
-    tier_section = f"{overall_StatuesTier}/{max_tier}"
-    statues_AdviceSection.pinchy_rating = overall_StatuesTier
-    statues_AdviceSection.tier = tier_section
-    statues_AdviceSection.groups = statues_AdviceGroupDict.values()
-    if overall_StatuesTier >= max_tier:
-        statues_AdviceSection.header = f"Best Statues tier met: {tier_section}{break_you_best}"
-        statues_AdviceSection.complete = True
-    else:
-        statues_AdviceSection.header = f"Best Statues tier met: {tier_section}"
+    tier_section = f"{overall_SectionTier}/{max_tier}"
+    statues_AdviceSection = AdviceSection(
+        name="Statues",
+        tier=tier_section,
+        pinchy_rating=overall_SectionTier,
+        header=f"Best Statues tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
+        picture='Town_Marble.gif',
+        groups=statues_AdviceGroupDict.values()
+    )
 
     return statues_AdviceSection

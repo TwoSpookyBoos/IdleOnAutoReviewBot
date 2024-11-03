@@ -1,6 +1,6 @@
 from models.models import Advice, AdviceGroup, AdviceSection, EnemyWorld, EnemyMap
 from consts import maxTiersPerGroup, lavaFunc, stamp_maxes, pearlable_skillsList, max_VialLevel, currentWorld, dnSkullValueList, cookingCloseEnough, \
-    dnBasicMapsCount
+    dnBasicMapsCount, arbitrary_shrine_goal, arbitrary_shrine_note
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
@@ -57,17 +57,8 @@ def getCrystalSpawnChanceAdviceGroup() -> AdviceGroup:
         progression=session_data.account.stamps['Crystallin']['Level'],
         goal=stamp_maxes['Crystallin']
     ))
-    crystal_Advice[aw].append(Advice(
-        label=f"Level {session_data.account.shrines['Crescent Shrine']['Level']} Crescent Shrine: +{session_data.account.shrines['Crescent Shrine']['Value']:.0f}%",
-        picture_class="crescent-shrine",
-    ))
-    cchizoar_multi = 1 + (5 * (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Chaotic Chizoar')) / 100)
-    crystal_Advice[aw].append(Advice(
-        label=f"Chaotic Chizoar card to increase Crescent Shrine ({cchizoar_multi}x multi already included)",
-        picture_class="chaotic-chizoar-card",
-        progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == "Chaotic Chizoar"),
-        goal=6
-    ))
+    crystal_Advice[aw].append(session_data.account.shrine_advices['Crescent Shrine'])
+    crystal_Advice[aw].append(session_data.account.shrine_advices['Chaotic Chizoar Card'])
     crystal_Advice[aw].append(Advice(
         label=f"{{{{ Sailing|#sailing }}}}: Moai Head artifact to apply Shrines everywhere",
         picture_class="moai-head",
@@ -98,7 +89,7 @@ def getCrystalSpawnChanceAdviceGroup() -> AdviceGroup:
 
     # Totals
     crystal_Advice[total].append(Advice(
-        label=f"Note: Crescent Shrine and PO Box are additive: {1 + ((session_data.account.shrines['Crescent Shrine']['Value'] + box_value) / 100)}x"
+        label=f"Note: Crescent Shrine and PO Box are additive: {1 + ((session_data.account.shrines['Crescent Shrine']['Value'] + box_value) / 100):.3f}x"
               f"<br>The cards also add together. Everything else is a unique multiplier.",
         picture_class="shrine-box2"
     ))
@@ -123,7 +114,8 @@ def getCrystalSpawnChanceAdviceGroup() -> AdviceGroup:
     crystal_AG = AdviceGroup(
         tier="",
         pre_string="Info- Sources of Crystal Spawn Chance",
-        advices=crystal_Advice
+        advices=crystal_Advice,
+        informational=True,
     )
     return crystal_AG
 
@@ -533,56 +525,58 @@ def getActiveGoalsAdviceGroup() -> AdviceGroup:
         advices={
             "Short Term": getShortTermAdviceList(), "Cards": getCardsAdviceList(), "Long Term": getLongTermAdviceList(),
             "Daily": getDailyAdviceList(), "Weekly": getWeeklyAdviceList(), "Spend Consumables": getConsumablesAdviceList()
-        }
+        },
+        informational=True  #TODO One day, these should probably be real requirements
     )
     ag.remove_empty_subgroups()
 
     return ag
 
-def setActiveProgressionTier() -> AdviceSection:
-    active_AdviceDict = {}
-    active_AdviceGroupDict = {}
-    active_AdviceSection = AdviceSection(
-        name="Active",
-        tier="Not Yet Evaluated",
-        header="Best Active tier met: Not Yet Evaluated. Recommended Star Sign actions",
-        picture='Auto.png'
-    )
-
-    infoTiers = 0
-    max_tier = 0
+def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
+    template_AdviceDict = {
+        'Tiers': {},
+    }
+    info_tiers = 0
+    max_tier = 0 - info_tiers
     tier_Active = 0
 
-    # Generate Advice
-    # for tierNumber, tierRequirements in active_progressionTiers.items():
-    #     subgroupName = f"To reach Tier {tierNumber}"
-    #             if subgroupName not in active_AdviceDict["Tiers"] and len(active_AdviceDict["Tiers"]) < maxTiersPerGroup:
-    #                 active_AdviceDict["Tiers"][subgroupName] = []
-    #             if subgroupName in active_AdviceDict["Tiers"]:
-    #                 active_AdviceDict['Tiers'][subgroupName].append(Advice(
-    #                     label=f"Level up {statueName}{farmDetails}",
-    #                     picture_class=statueName,
-    #                     progression=statueDetails['Level'],
-    #                     goal=tierRequirements.get('MinStatueLevel', 0),
-    #                     resource=farmResource
-    #                 ))
-    #     if subgroupName not in active_AdviceDict["Tiers"] and tier_Active == tierNumber-1:
-    #         tier_Active = tierNumber
+    #Assess Tiers
+
+    tiers_ag = AdviceGroup(
+        tier=tier_Active,
+        pre_string="Progression Tiers",
+        advices=template_AdviceDict['Tiers']
+    )
+    overall_SectionTier = min(max_tier + info_tiers, tier_Active)
+    return tiers_ag, overall_SectionTier, max_tier
+
+def getActiveAdviceSection() -> AdviceSection:
+    if session_data.account.highestWorldReached < 4:
+        active_AdviceSection = AdviceSection(
+            name="Active",
+            tier="Not Yet Evaluated",
+            header="Come back after reaching W4 town!",
+            picture='Auto.png',
+            unrated=True,
+            unreached=True
+        )
+        return active_AdviceSection
 
     # Generate AdviceGroups
+    active_AdviceGroupDict = {}
+    active_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
     active_AdviceGroupDict['Crystals'] = getCrystalSpawnChanceAdviceGroup()
     active_AdviceGroupDict['ActiveFarming'] = getActiveGoalsAdviceGroup()
 
     # Generate AdviceSection
-    overall_ActiveTier = min(max_tier + infoTiers, tier_Active)
-    tier_section = f"{overall_ActiveTier}/{max_tier}"
-    active_AdviceSection.pinchy_rating = overall_ActiveTier
-    active_AdviceSection.tier = tier_section
-    active_AdviceSection.groups = active_AdviceGroupDict.values()
-    if overall_ActiveTier >= max_tier:
-        active_AdviceSection.header = f"Active Farming Information"
-        active_AdviceSection.complete = True
-    else:
-        active_AdviceSection.header = f"Active Farming Information"
 
+    tier_section = f"{overall_SectionTier}/{max_tier}"
+    active_AdviceSection = AdviceSection(
+        name="Active",
+        tier=tier_section,
+        header=f"Active Farming Information",
+        picture='Auto.png',
+        groups=active_AdviceGroupDict.values(),
+        unrated=True,
+    )
     return active_AdviceSection

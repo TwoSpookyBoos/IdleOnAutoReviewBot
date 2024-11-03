@@ -270,7 +270,7 @@ def getStaticEXPTrapAdviceList(highestTrapset) -> dict[str, list[Advice]]:
                            goal="", unit=""))
     return adviceDict
 
-def setTrappingProgressionTier():
+def getProgressionTiersAdviceGroup(trappingLevelsList: list[int]):
     trapping_AdviceDict = {
         "UnlockCritters": [],
         "UnplacedTraps": [],
@@ -281,30 +281,21 @@ def setTrappingProgressionTier():
         "EXPTraps": []
     }
     trapping_AdviceGroupDict = {}
-    trapping_AdviceSection = AdviceSection(
-        name="Trapping",
-        tier="",
-        header="Recommended trapping actions",
-        picture="Trapping_Cardboard_Traps.png"
-    )
-    trappingLevelsList = session_data.account.all_skills["Trapping"]
-    highestTrappingLevel = max(trappingLevelsList)
-    if highestTrappingLevel < 1:
-        trapping_AdviceSection.header = "Come back after unlocking the Trapping skill in World 3!"
-        return trapping_AdviceSection
+    highestUnlockedCritter = getUnlockedCritterStatus()
+    info_tiers = 0
+    max_tier = highestUnlockedCritter[1] - info_tiers
 
     highestWearableTrapset = 0
     trapsetLevelRequirementList = [1, 5, 15, 25, 35, 40, 48]
     for index in range(0, len(trapsetLevelRequirementList)):
-        if highestTrappingLevel >= trapsetLevelRequirementList[index]:
+        if max(trappingLevelsList) >= trapsetLevelRequirementList[index]:
             highestWearableTrapset = index
 
-    highestUnlockedCritter = getUnlockedCritterStatus()
     placedTrapsDict = getPlacedTrapsDict()
     unplacedTrapsDict = getCharactersWithUnplacedTraps(trappingLevelsList, placedTrapsDict)
     secretCharacterNotUsingNatureTrapsDict = getSecretClassTrapStatus(placedTrapsDict)
 
-    #UnlockCritters
+    # UnlockCritters
     agd_unlockcritters_post_stringsList = [
         "",
         "Froge critters are unlocked after completing Lord of the Hunt's quest: Pelt for the Pelt God",
@@ -321,31 +312,31 @@ def setTrappingProgressionTier():
         ""
     ]
     tier_unlockCritters = highestUnlockedCritter[0]
-    if highestUnlockedCritter[0] != maxCritterTypes:  #unlocked not equal to the max possible to unlock.
+    if highestUnlockedCritter[0] != maxCritterTypes:  # unlocked not equal to the max possible to unlock.
         trapping_AdviceDict["UnlockCritters"].append(
             Advice(
                 label=agd_unlockcritters_post_stringsList[highestUnlockedCritter[0]],
                 picture_class=highestUnlockedCritter[3])
-            )
-        if tier_unlockCritters >= 2 and tier_unlockCritters < 11: # Show only the quests with Critter requirement
-            normalItem=session_data.account.stored_assets.get(trappingQuestsRequirementList[tier_unlockCritters-2]["normalItemName"])
+        )
+        if 2 <= tier_unlockCritters < 11:  # Show only the quests with Critter requirement
+            normalItem = session_data.account.stored_assets.get(trappingQuestsRequirementList[tier_unlockCritters - 2]["normalItemName"])
             trapping_AdviceDict["UnlockCritters"].append(Advice(
-                    label=normalItem.name,
-                    picture_class=normalItem.name,
-                    progression=normalItem.amount,
-                    goal=trappingQuestsRequirementList[tier_unlockCritters-2]["normalQuantity"]
+                label=normalItem.name,
+                picture_class=normalItem.name,
+                progression=normalItem.amount,
+                goal=trappingQuestsRequirementList[tier_unlockCritters - 2]["normalQuantity"]
             ))
-            shinyItem=session_data.account.stored_assets.get(trappingQuestsRequirementList[tier_unlockCritters-2]["shinyItemName"])
+            shinyItem = session_data.account.stored_assets.get(trappingQuestsRequirementList[tier_unlockCritters - 2]["shinyItemName"])
             trapping_AdviceDict["UnlockCritters"].append(Advice(
-                    label=shinyItem.name,
-                    picture_class=shinyItem.name,
-                    progression=shinyItem.amount,
-                    goal=trappingQuestsRequirementList[tier_unlockCritters-2]["shinyQuantity"]
+                label=shinyItem.name,
+                picture_class=shinyItem.name,
+                progression=shinyItem.amount,
+                goal=trappingQuestsRequirementList[tier_unlockCritters - 2]["shinyQuantity"]
             ))
     for advice in trapping_AdviceDict["UnlockCritters"]:
         mark_advice_completed(advice)
 
-    #UnusedTraps
+    # UnusedTraps
     if len(unplacedTrapsDict) > 0:
         for characterIndex in unplacedTrapsDict:
             trapping_AdviceDict["UnplacedTraps"].append(
@@ -354,9 +345,9 @@ def setTrappingProgressionTier():
                     picture_class=session_data.account.all_characters[characterIndex].class_name_icon,
                     progression=unplacedTrapsDict[characterIndex][0],
                     goal=unplacedTrapsDict[characterIndex][1])
-                )
+            )
 
-    #BeginnerNatures
+    # BeginnerNatures
     if len(secretCharacterNotUsingNatureTrapsDict) > 0:
         for characterIndex in secretCharacterNotUsingNatureTrapsDict:
             trapping_AdviceDict["BeginnerNatures"].append(
@@ -365,19 +356,19 @@ def setTrappingProgressionTier():
                     picture_class=session_data.account.all_characters[characterIndex].class_name_icon,
                     progression=secretCharacterNotUsingNatureTrapsDict[characterIndex],
                     goal=0)
-                )
+            )
 
-    #NonMetaTraps
+    # NonMetaTraps
     hasUnmaxedCritterVial = getUnmaxedCritterVialStatus()
     goodTrapDict = {
-        0: [1200, 3600, 28800, 72000],  #Cardboard Traps
-        1: [1200, 3600, 28800, 72000],  #Silkskin Traps. 14400 is excluded.
-        2: [432000],  #Wooden Traps. Only 5 days 0xp is good, and only if they still have Vials to complete
-        3: [28800, 72000],  #Natural Traps. 8hr and 20hr are good, other options are bad.
-        6: [1200, 3600, 36000, 144000, 604800]  #Royal Traps. All but the 28day are good.
+        0: [1200, 3600, 28800, 72000],  # Cardboard Traps
+        1: [1200, 3600, 28800, 72000],  # Silkskin Traps. 14400 is excluded.
+        2: [432000],  # Wooden Traps. Only 5 days 0xp is good, and only if they still have Vials to complete
+        3: [28800, 72000],  # Natural Traps. 8hr and 20hr are good, other options are bad.
+        6: [1200, 3600, 36000, 144000, 604800]  # Royal Traps. All but the 28day are good.
     }
     if max(trappingLevelsList) < 48:
-        goodTrapDict[5] = [3600, 36000, 108000]  #Before being able to wear Royals, Meaty traps give more critter efficiency than Cardboard
+        goodTrapDict[5] = [3600, 36000, 108000]  # Before being able to wear Royals, Meaty traps give more critter efficiency than Cardboard
     nonMetaTrapDict = {}
     for characterIndex in placedTrapsDict:
         badTrapCount = 0
@@ -388,7 +379,7 @@ def setTrappingProgressionTier():
                 elif trapData[6] not in goodTrapDict[trapData[5]]:  # Bad trap set + duration combos don't appear in goodTrapDict
                     badTrapCount += 1
                 elif int(trapData[5]) == 2 and int(trapData[6]) == 432000 and int(trapData[7]) != 0 and hasUnmaxedCritterVial is False:
-                    #Using a 5day Wooden Trap that isn't the 0exp variety without a Critter Vial to max. Would be better using Royal/Natures in this scenario.
+                    # Using a 5day Wooden Trap that isn't the 0exp variety without a Critter Vial to max. Would be better using Royal/Natures in this scenario.
                     badTrapCount += 1
         if badTrapCount != 0:
             nonMetaTrapDict[characterIndex] = badTrapCount
@@ -400,67 +391,94 @@ def setTrappingProgressionTier():
                 picture_class=session_data.account.all_characters[characterIndex].class_name_icon,
                 progression=str(nonMetaTrapDict[characterIndex]),
                 goal=0)
-            )
+        )
 
-    #if len(trapping_AdviceDict["NonMetaTraps"]) > 0:
+    # if len(trapping_AdviceDict["NonMetaTraps"]) > 0:  #Several requests came in to always show this information
     trapping_AdviceDict["CritterTraps"] = getStaticCritterTrapAdviceList(highestWearableTrapset)
     trapping_AdviceDict["ShinyTraps"] = getStaticShinyTrapAdviceList(highestWearableTrapset)
     trapping_AdviceDict["EXPTraps"] = getStaticEXPTrapAdviceList(highestWearableTrapset)
 
-    #Generate Advice Groups
+    # Generate Advice Groups
 
     trapping_AdviceGroupDict["UnlockCritters"] = AdviceGroup(
         tier=highestUnlockedCritter[0],
-        pre_string=f"{pl((['UnlockRemaining']*(maxCritterTypes-highestUnlockedCritter[0])), 'Unlock the final Critter type', 'Continue unlocking new Critter types')}",
+        pre_string=f"{pl((['UnlockRemaining'] * (maxCritterTypes - highestUnlockedCritter[0])), 'Unlock the final Critter type', 'Continue unlocking new Critter types')}",
         advices=trapping_AdviceDict["UnlockCritters"],
     )
     trapping_AdviceGroupDict["UnplacedTraps"] = AdviceGroup(
         tier="",
         pre_string=f"Place unused trap{pl(trapping_AdviceDict['UnplacedTraps'])} (may require better Trap Set!)",
         advices=trapping_AdviceDict["UnplacedTraps"],
-        post_string=""
+        post_string="",
+        informational=True
     )
     trapping_AdviceGroupDict["BeginnerNatures"] = AdviceGroup(
         tier="",
-        pre_string=f"Place only Nature Traps on your {pl(trapping_AdviceDict['BeginnerNatures'], 'Beginner', 'Beginners')}",
+        pre_string=f"Place only Nature Traps on your Beginner{pl(trapping_AdviceDict['BeginnerNatures'])}",
         advices=trapping_AdviceDict["BeginnerNatures"],
-        post_string="Nature EXP-only traps are recommended for Maestro's Right Hand of Action and Voidwalker's Species Epoch talents. You will get ZERO critters from Nature Traps, but the bonus critters from those 2 talents more than make up for this loss!"
+        post_string=f"Nature EXP-only traps are recommended for Maestro's Right Hand of Action and Voidwalker's Species Epoch talents."
+                    f" You will get ZERO critters from Nature Traps, but the bonus critters from those 2 talents more than make up for this loss!",
+        informational=True,
+        completed=min([vman.trapping_level for vman in session_data.account.vmans], default=0) >= 120 or len(trapping_AdviceDict["BeginnerNatures"]) == 0
     )
     trapping_AdviceGroupDict["NonMetaTraps"] = AdviceGroup(
         tier="",
         pre_string=f"Inefficient Trap Types or Durations",
         advices=trapping_AdviceDict["NonMetaTraps"],
-        post_string=""
+        post_string="",
+        informational=True
     )
     trapping_AdviceGroupDict["CritterTraps"] = AdviceGroup(
         tier="",
         pre_string=f"Best Critter-Focused traps",
         advices=trapping_AdviceDict["CritterTraps"],
-        post_string="Set critter traps with your Beast Master after maximizing Trapping Efficiency"
+        post_string="Set critter traps with your Beast Master after maximizing Trapping Efficiency",
+        informational=True,
+        completed=True
     )
     trapping_AdviceGroupDict["ShinyTraps"] = AdviceGroup(
         tier="",
         pre_string=f"Best Shiny Chance-Focused traps",
         advices=trapping_AdviceDict["ShinyTraps"],
-        post_string="Wear the Shiny Snitch prayer when Collecting. Shorter trap durations will earn more total Shiny Critters per day"
+        post_string="Wear the Shiny Snitch prayer when Collecting. Shorter trap durations will earn more total Shiny Critters per day",
+        informational=True,
+        completed=True
     )
     trapping_AdviceGroupDict["EXPTraps"] = AdviceGroup(
         tier="",
         pre_string=f"Best EXP-Focused traps",
         advices=trapping_AdviceDict["EXPTraps"],
-        post_string="Set EXP traps with your Mman/Vman after maximizing Trapping EXP"
+        post_string="Set EXP traps with your Mman/Vman after maximizing Trapping EXP",
+        informational=True,
+        completed=True
     )
+    overall_SectionTier = min(max_tier, tier_unlockCritters)
+    return trapping_AdviceGroupDict, overall_SectionTier, max_tier
+
+def getTrappingAdviceSection() -> AdviceSection:
+    trappingLevelsList = session_data.account.all_skills["Trapping"]
+    if max(trappingLevelsList) < 1:
+        trapping_AdviceSection = AdviceSection(
+            name="Trapping",
+            tier="",
+            header="Come back after unlocking the Trapping skill in World 3!",
+            picture="Trapping_Cardboard_Traps.png",
+            unreached=True
+        )
+        return trapping_AdviceSection
+
+    #Generate AdviceGroups
+    trapping_AdviceGroupDict, overall_SectionTier, max_tier = getProgressionTiersAdviceGroup(trappingLevelsList)
 
     #Generate AdviceSection
-    max_tier = highestUnlockedCritter[1]
-    overall_TrappingTier = min(max_tier, tier_unlockCritters)
-    tier_section = f"{overall_TrappingTier}/{max_tier}"
-    trapping_AdviceSection.tier = tier_section
-    trapping_AdviceSection.groups = trapping_AdviceGroupDict.values()
-    if overall_TrappingTier >= max_tier:
-        trapping_AdviceSection.header = f"Best Trapping tier met: {tier_section}{break_keep_it_up}"
-        trapping_AdviceSection.complete = True
-    else:
-        trapping_AdviceSection.header = f"Best Trapping tier met: {tier_section}"
+    tier_section = f"{overall_SectionTier}/{max_tier}"
+    trapping_AdviceSection = AdviceSection(
+        name="Trapping",
+        tier=tier_section,
+        pinchy_rating=overall_SectionTier,
+        header=f"Best Trapping tier met: {tier_section}{break_keep_it_up if overall_SectionTier >= max_tier else ''}",
+        picture="Trapping_Cardboard_Traps.png",
+        groups=trapping_AdviceGroupDict.values()
+    )
 
     return trapping_AdviceSection
