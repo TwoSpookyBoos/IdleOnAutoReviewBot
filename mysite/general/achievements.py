@@ -6,12 +6,12 @@ from utils.text_formatting import notateNumber
 
 logger = get_logger(__name__)
 
-def getAchievementExclusions() -> list[str]:
-    exclusions = {}
+def getAchievementExclusions() -> set[str]:
+    exclusionsSet = set()
     if session_data.account.highestWorldReached >= 6:
-        exclusions.add('Golden Fly')
+        exclusionsSet.add('Golden Fly')
 
-    return exclusions
+    return exclusionsSet
 
 def getAchievementStatus(achievementName):
     #logger.debug(f"Looking up data for {achievementName}")
