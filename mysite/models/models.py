@@ -1450,7 +1450,7 @@ class Account:
 
     def _parse_general_guild_bonuses(self):
         self.guildBonuses = {}
-        raw_guild = self.raw_data.get('guildData', {}).get('stats', [])
+        raw_guild = safe_loads(self.raw_data.get('Guild', [[]]))
         for bonusIndex, bonusName in enumerate(guildBonusesList):
             try:
                 self.guildBonuses[bonusName] = raw_guild[0][bonusIndex]
