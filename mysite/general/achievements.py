@@ -6,6 +6,13 @@ from utils.text_formatting import notateNumber
 
 logger = get_logger(__name__)
 
+def getAchievementExclusions() -> list[str]:
+    exclusions = {}
+    if session_data.account.highestWorldReached >= 6:
+        exclusions.add('Golden Fly')
+
+    return exclusions
+
 def getAchievementStatus(achievementName):
     #logger.debug(f"Looking up data for {achievementName}")
     try:
@@ -110,13 +117,14 @@ def getProgressionTiersAdviceGroup():
     max_tier = max(achievements_progressionTiers.keys(), default=0) - infoTiers
     achievements_AdviceDict = {category: {} for category in achievement_categories}
     tiers = {category: 0 for category in achievement_categories}
+    exclusionsSet = getAchievementExclusions()
 
     #Assess Tiers
     for tierNumber, tierRequirements in achievements_progressionTiers.items():
         subgroupName = f"To reach Tier {tierNumber}"
         for categoryName, categoryAchievementsDict in tierRequirements.items():
             for achievementName, achievementDetailsDict in categoryAchievementsDict.items():
-                if not session_data.account.achievements.get(achievementName)['Complete']:
+                if not session_data.account.achievements.get(achievementName)['Complete'] and achievementName not in exclusionsSet:
                     if subgroupName not in achievements_AdviceDict[categoryName]:
                         achievements_AdviceDict[categoryName][subgroupName] = []
                     prog, goal, resource = getAchievementStatus(achievementName)
