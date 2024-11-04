@@ -1306,7 +1306,8 @@ class Account:
     def _parse_general(self):
         # General / Multiple uses
         self.raw_optlacc_dict = {k: v for k, v in enumerate(safe_loads(self.raw_data.get("OptLacc", [])))}
-        self.raw_serverVars_dict = safe_loads(self.raw_data.get("serverVars", {}))
+        # Toolbox provides serverVars,Efficiency provides servervars, otherwise return an empty dict if neither present
+        self.raw_serverVars_dict = safe_loads(self.raw_data.get("serverVars", self.raw_data.get("servervars", {})))
 
         self.stored_assets = self._all_stored_items()
         self.worn_assets = self._all_worn_items()
