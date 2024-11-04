@@ -92,17 +92,17 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
             ))
 
     #Neon would cheapen the next Helium upgrade
-    for heliumLevel, neonLevel in {6: 0, 7: 2, 8: 10, 9: 21, 10: 30}.items():
-        if colliderData['Atoms']['Helium - Talent Power Stacker']['Level'] == heliumLevel-1:
-            if colliderData['Atoms']["Neon - Damage N' Cheapener"]['Level'] < neonLevel:
-                settings_advice['Alerts'].append(
-                    Advice(
-                        label=f"Neon can be increased to {neonLevel} to cheapen Helium {heliumLevel}",
-                        picture_class="neon",
-                        progression=colliderData['Atoms']["Neon - Damage N' Cheapener"]['Level'],
-                        goal=neonLevel
-                    )
-                )
+    # for heliumLevel, neonLevel in {6: 0, 7: 2, 8: 10, 9: 21, 10: 30}.items():
+    #     if colliderData['Atoms']['Helium - Talent Power Stacker']['Level'] == heliumLevel-1:
+    #         if colliderData['Atoms']["Neon - Damage N' Cheapener"]['Level'] < neonLevel:
+    #             settings_advice['Alerts'].append(
+    #                 Advice(
+    #                     label=f"Neon can be increased to {neonLevel} to cheapen Helium {heliumLevel}",
+    #                     picture_class="neon",
+    #                     progression=colliderData['Atoms']["Neon - Damage N' Cheapener"]['Level'],
+    #                     goal=neonLevel
+    #                 )
+    #             )
 
     currentMaxedTowers = 0
     if colliderData['Atoms']["Carbon - Wizard Maximizer"]['Level'] < colliderData['Atoms']["Carbon - Wizard Maximizer"]['MaxLevel']:

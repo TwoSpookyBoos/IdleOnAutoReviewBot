@@ -168,6 +168,8 @@ def getBubbleExclusions():
     return exclusionsList
 
 def getAtRiskBubblesAdviceGroups() -> list[AdviceGroup]:
+    low_skip = 150
+    high_skip = 300
     standard_today = "Basic - In Today's Range"
     standard = "Basic Skilling Resources"
     advanced_today = "Advanced - In Today's Range"
@@ -208,7 +210,8 @@ def getAtRiskBubblesAdviceGroups() -> list[AdviceGroup]:
         for bubbleName, bubbleValuesDict in sorted_bubbles_basic:
             if bubbleValuesDict['Level'] < max_NBLB and (
                     bubbleValuesDict['Level'] < todays_highest + 20
-                    or todays_lowest >= 200
+                    or todays_lowest >= low_skip
+                    or todays_highest >= high_skip
             ):
                 if bubbleName in atrisk_basicBubbles:
                     if bubbleValuesDict['Level'] <= todays_highest:
@@ -224,7 +227,7 @@ def getAtRiskBubblesAdviceGroups() -> list[AdviceGroup]:
                     subgroupName = ""
 
                 if subgroupName:
-                    if max(todays_highest + 20, bubbleValuesDict['Level'] + 20) < 600:
+                    if max(todays_highest + 20, bubbleValuesDict['Level'] + 20) < high_skip*2:
                         target = min(max_NBLB, max(todays_highest + 20, bubbleValuesDict['Level'] + 20))
                     else:
                         target = max_NBLB
@@ -237,7 +240,7 @@ def getAtRiskBubblesAdviceGroups() -> list[AdviceGroup]:
                         resource=bubbleValuesDict['Material']
                     ))
 
-        if todays_lowest >= 200:
+        if todays_lowest >= low_skip:
             basic_prestring = f"Informational \"Easy\" to print materials in W1-W3 bubbles"
             lithium_prestring = f"Informational- Slower to print materials in W4-W5 bubbles"
         else:
