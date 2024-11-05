@@ -122,7 +122,7 @@ def getIslandsAdviceSection() -> AdviceSection:
         name="Islands",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
-        header=f"Best Islands tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}️",
+        header=f"Best Islands tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture="wiki/Island_Expeditions_Boat.gif",
         groups=islands_AdviceGroupDict.values()
     )

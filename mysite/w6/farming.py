@@ -1139,7 +1139,7 @@ def setFarmingProgressionTier():
         name="Farming",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
-        header=f"Best Farming tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}️",
+        header=f"Best Farming tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture="wiki/FarmCropBean.png",
         groups=farming_AdviceGroupDict.values()
     )
