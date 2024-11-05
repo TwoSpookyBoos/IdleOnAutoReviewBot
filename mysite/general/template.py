@@ -50,7 +50,7 @@ def setTemplateProgressionTier():
         name="Template",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
-        header=f"Best Template tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}️",
+        header=f"Best Template tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture="",
         groups=template_AdviceGroupDict.values(),
         completed=None,
