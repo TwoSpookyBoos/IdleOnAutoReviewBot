@@ -151,15 +151,11 @@ greenstack_progressionTiers = {
         0: {  # The timegated tier
             "Vendor Shops": [
                 "CraftMat3",  # W1 Cue Tape
-                "FoodHealth4", "Quest19",  # W2 Saucy Weiner and Gold Dubloon
-                "FoodHealth9", "FoodHealth11",  #W3
+                "FoodPotRe2", "FoodHealth4", "Quest19",  # W2
+                "FoodHealth9", "FoodHealth11", "FoodPotGr3",  #W3
                 "FoodHealth12", "FoodHealth13", "FoodPotOr4", "FoodPotGr4", "FoodPotRe4", "FoodPotYe4",  #W4
                 "FoodHealth14", "FoodHealth15", "OilBarrel6",  #W5
                 "FoodHealth16", "FoodHealth17", "OilBarrel7",  #W6
-            ],
-            "Misc": [
-                "FoodPotGr3",  # Previously Tier10
-                "FoodPotRe2"   # Previously Tier11.
             ],
             "Other Skilling Resources": [
                 "Refinery1", "Refinery2", "Refinery3", "Refinery4", "Refinery5", "Refinery6"],
@@ -303,7 +299,7 @@ greenstack_progressionTiers = {
             "Other Skilling Resources": [
                 "GoldBar", "DementiaBar", "VoidBar", "LustreBar",
                 "Peanut", "Quest68", "Bullet3", "FoodChoppin1",],  #I really hate that the Slush Bucket is listed as Quest68
-            "Misc": ["FoodPotRe1",],
+            "Rare Drops": ["FoodPotRe1",],
             },
         13: {
             "Base Monster Materials": [
@@ -319,12 +315,11 @@ greenstack_progressionTiers = {
                 "FoodG9",],
             "Other Skilling Resources": [
                 "StarfireBar", "DreadloBar",
-
                 "EquipmentSmithingTabs2",
                 "PeanutG",
             ],
-            "Misc": [
-                "FoodPotMana3", "ButterBar", "EquipmentStatues9", "OilBarrel2"
+            "Rare Drops": [
+                "FoodPotMana3", "ButterBar", "EquipmentStatues9", "OilBarrel2", "FoodPotRe2", "FoodPotGr3", "FoodHealth9",
             ],
         },
         14: {
@@ -336,7 +331,7 @@ greenstack_progressionTiers = {
                 "Critter1A", "Critter2A", "Critter3A", "Critter4A", "Critter5A", "Critter6A", "Critter7A", "Critter8A", "Critter9A", "Critter10A", "Critter11A",
                 "Ladle",
             ],
-            "Misc": [
+            "Rare Drops": [
                 "DesertC2b", "Quest78", "EfauntDrop1"
             ]
         },
@@ -2044,19 +2039,17 @@ expectedStackables = {
     "Vendor Shops": [
         "FoodHealth14", "FoodHealth15", "FoodHealth16", "FoodHealth17", "FoodHealth12", "FoodHealth13", "FoodPotOr4", "FoodPotGr4", "FoodPotRe4",
         "FoodPotYe4", "OilBarrel6", "OilBarrel7", "FoodHealth4", "FoodHealth9", "FoodHealth11", "Quest19", "CraftMat3",  # Sorted by daily quantity
-        # "FoodHealth4", "Quest19", #W2
-        # "FoodHealth11", "FoodHealth9", "FoodPotGr3", #W3
-        # "FoodHealth12", "FoodHealth13", "FoodPotOr4", "FoodPotGr4", "FoodPotRe4", "FoodPotYe4", #W4
-        # "OilBarrel6", "FoodHealth14", "FoodHealth15", #W5 shop
-        # "FoodHealth16", "FoodHealth17", "OilBarrel7", #W6 Shop
+        "FoodPotGr3",  #Decent Speed from W3 Shop + Sir Stache
+        "FoodPotRe2",  #Average Life Potion from W2 Shop + Gigafrogs
     ],
-    "Misc": [
+    "Rare Drops": [
         "FoodPotGr3",  #Decent Speed from W3 Shop + Sir Stache
         "FoodPotRe2",  #Average Life Potion from W2 Shop + Gigafrogs
         "FoodPotRe1",  #Small Life Potion from W1 Sewers and Tree mobs, not crystals
         "ButterBar",  #Catching Butterflies
         "EquipmentStatues9",  #Oceanman statue can be candied from W2 bugs
         "FoodPotMana3",  #Decent Mana Potion from Bloques
+        "FoodHealth9",  #Yeti Ham from Bop Box
         "OilBarrel2",  # Slime Barrel, 1 in 3334
         "DesertC2b",  # Ghost, 1 in 2k
         "Quest78",  # Equinox Mirror
