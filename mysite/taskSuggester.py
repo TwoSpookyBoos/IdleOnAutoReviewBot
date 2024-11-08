@@ -53,76 +53,66 @@ def main(inputData, runType="web"):
 
     # Step 3: Send that data off to all the different analyzers
     # General
-    sections_general = [
-        section_combatLevels := combatLevels.getCombatLevelsAdviceSection(),
-        section_secretPath := secretPath.getSecretClassAdviceSection(),
-        section_active := active.getActiveAdviceSection(),
-        section_achievements := achievements.getAchievementsAdviceSection(),
-        *(sections_consumables := consumables.getConsumablesAdviceSections()),
-        section_gemShop := gemShop.getGemShopAdviceSection(),
-        *(sections_gstacks := greenstacks.getGStackAdviceSections()),
-        section_cards := cards.getCardsAdviceSection(),
-    ]
-    # World 1
-    sections_1 = [
-        section_stamps := stamps.getStampAdviceSection(),
-        section_bribes := bribes.getBribesAdviceSection(),
-        section_smithing := smithing.getSmithingAdviceSection(),
-        section_statues := statues.getStatuesAdviceSection(),
-        section_starsigns := starsigns.getStarsignsAdviceSection(),
-        section_owl := owl.getOwlAdviceSection()
-    ]
-    # World 2
-    sections_2 = [
-        section_alchBubbles := alchemy.getAlchemyBubblesAdviceSection(),
-        section_alchVials := alchemy.getAlchemyVialsAdviceSection(),
-        section_alchP2W := alchemy.getAlchemyP2WAdviceSection(),
-        section_alchSigils := alchemy.getAlchemySigilsAdviceSection(),
-        # section_obols := idleon_Obols.setObolsProgressionTier(),
-        section_killroy := killroy.getKillroyAdviceSection(),
-        section_islands := islands.getIslandsAdviceSection()
-    ]
-    # World 3
-    sections_3 = [
-        section_refinery := consRefinery.getConsRefineryAdviceSection(),
-        section_buildings := consBuildings.getConsBuildingsAdviceSection(),
-        section_sampling := sampling.getSamplingAdviceSection(),
-        section_library := library.getLibraryAdviceSection(),
-        section_deathnote := consDeathNote.getDeathNoteAdviceSection(),
-        section_saltlick := consSaltLick.getSaltLickAdviceSection(),
-        section_collider := collider.getColliderAdviceSection(),
-        # section_worship =
-        section_prayers := worship.getPrayersAdviceSection(),
-        section_trapping := trapping.getTrappingAdviceSection(),
-        section_equinox := equinox.getEquinoxAdviceSection(),
-    ]
-    # World 4
-    sections_4 = [
-        section_breeding := breeding.getBreedingAdviceSection(),
-        section_cooking := cooking.getCookingAdviceSection(),
-        # section_lab := ,
-        section_rift := rift.getRiftAdviceSection(),
-    ]
-    # World 5
-    sections_5 = [
-        section_slab := slab.getSlabAdviceSection(),
-        section_divinity := divinity.getDivinityAdviceSection(),
-        section_sailing := sailing.getSailingAdviceSection()
-        # section_gaming =
-    ]
-    # Caverns
-    sections_caverns = [
-        section_villagers := villagers.getVillagersAdviceSection()
-    ]
-    # World 6
-    sections_6 = [
-        section_farming := farming.setFarmingProgressionTier(),
-        section_sneaking := sneaking.getSneakingAdviceSection(),
-        section_beanstalk := beanstalk.getBeanstalkAdviceSection(),
+    all_sections = [
+        sections_general := [
+            combatLevels.getCombatLevelsAdviceSection(),
+            secretPath.getSecretClassAdviceSection(),
+            active.getActiveAdviceSection(),
+            achievements.getAchievementsAdviceSection(),
+            *(consumables.getConsumablesAdviceSections()),
+            gemShop.getGemShopAdviceSection(),
+            *(greenstacks.getGStackAdviceSections()),
+            cards.getCardsAdviceSection(),
+        ],
+        sections_1 := [
+            stamps.getStampAdviceSection(),
+            bribes.getBribesAdviceSection(),
+            smithing.getSmithingAdviceSection(),
+            statues.getStatuesAdviceSection(),
+            starsigns.getStarsignsAdviceSection(),
+            owl.getOwlAdviceSection()
+        ],
+        sections_2 := [
+            alchemy.getAlchemyBubblesAdviceSection(),
+            alchemy.getAlchemyVialsAdviceSection(),
+            alchemy.getAlchemyP2WAdviceSection(),
+            alchemy.getAlchemySigilsAdviceSection(),
+            killroy.getKillroyAdviceSection(),
+            islands.getIslandsAdviceSection()
+        ],
+        sections_3 := [
+            consRefinery.getConsRefineryAdviceSection(),
+            consBuildings.getConsBuildingsAdviceSection(),
+            sampling.getSamplingAdviceSection(),
+            library.getLibraryAdviceSection(),
+            consDeathNote.getDeathNoteAdviceSection(),
+            consSaltLick.getSaltLickAdviceSection(),
+            collider.getColliderAdviceSection(),
+            worship.getPrayersAdviceSection(),
+            trapping.getTrappingAdviceSection(),
+            equinox.getEquinoxAdviceSection(),
+        ],
+        sections_4 := [
+            breeding.getBreedingAdviceSection(),
+            cooking.getCookingAdviceSection(),
+            rift.getRiftAdviceSection(),
+        ],
+        sections_5 := [
+            slab.getSlabAdviceSection(),
+            divinity.getDivinityAdviceSection(),
+            sailing.getSailingAdviceSection(),
+        ],
+        sections_caverns := [
+            villagers.getVillagersAdviceSection()
+        ],
+        sections_6 := [
+            farming.setFarmingProgressionTier(),
+            sneaking.getSneakingAdviceSection(),
+            beanstalk.getBeanstalkAdviceSection(),
+        ],
     ]
 
     #Sort sections into rated and unrated, as well as checking for completeness
-    all_sections = [sections_general, sections_1, sections_2, sections_3, sections_4, sections_5, sections_6]
     unrated_sections = []
     pinchable_sections = []
     for section_list in all_sections:
