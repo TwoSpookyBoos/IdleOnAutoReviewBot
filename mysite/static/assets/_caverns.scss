@@ -1,8 +1,11 @@
 $villagers: (
     polonai: img('wiki/Polonai.gif'),
     kaipu: img('wiki/Kaipu.gif'),
+    kaipu-undiscovered: img('wiki/Kaipu_Undiscovered.png'),
     cosmos: img('wiki/Cosmos.gif'),
+    cosmos-undiscovered: img('wiki/Cosmos_Undiscovered.png'),
     minau: img('wiki/Minau.gif'),
+    minau-undiscovered: img('wiki/Minau_Undiscovered.png'),
 );
 
 $villager-banners: (
@@ -89,15 +92,16 @@ $cosmos-majiks: (
 );
 
 $caverns: (
-    cavern-1: img('wiki/HolePOI1.png'),
-    cavern-2: img('wiki/HolePOI2.png'),
-    cavern-3: img('wiki/HolePOI3.png'),
-    cavern-4: img('wiki/HolePOI4.png'),
-    cavern-5: img('wiki/HolePOI5.png'),
-    cavern-6: img('wiki/HolePOI6.png'),
-    cavern-7: img('wiki/HolePOI7.png'),
-    cavern-8: img('wiki/HolePOI8.png'),
-    cavern-9: img('wiki/HolePOI9.png'),
+    cavern-1: img('wiki/HolePOI0.png'),
+    cavern-2: img('wiki/HolePOI1.png'),
+    cavern-3: img('wiki/HolePOI2.png'),
+    cavern-4: img('wiki/HolePOI3.png'),
+    cavern-5: img('wiki/HolePOI4.png'),
+    cavern-6: img('wiki/HolePOI5.png'),
+    cavern-7: img('wiki/HolePOI6.png'),
+    cavern-8: img('wiki/HolePOI7.png'),
+    cavern-9: img('wiki/HolePOI8.png'),
+    cavern-10: img('wiki/HolePOI9.png'),
 );
 
 $well-sediment: (
