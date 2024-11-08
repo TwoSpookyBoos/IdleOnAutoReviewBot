@@ -88,6 +88,14 @@ def getShinySpeedSourcesAdviceGroup(fasterShinyPetTotalLevels) -> AdviceGroup:
         picture_class='green-mushroom-shiny'
     ))
     sps_adviceDict["Multi Group B- Everything Else"].append(Advice(
+        label=f"Grand Martial of Shinytown: "
+              f"+{session_data.account.breeding['Upgrades']['Grand Martial of Shinytown']['Value']}%",
+        picture_class='grand-martial-of-shinytown',
+        progression=session_data.account.breeding['Upgrades']['Grand Martial of Shinytown']['Level'],
+        goal=session_data.account.breeding['Upgrades']['Grand Martial of Shinytown']['MaxLevel'],
+    ))
+
+    sps_adviceDict["Multi Group B- Everything Else"].append(Advice(
         label=f"Star Sign: Breedabilli: "
               f"+{15 * session_data.account.star_signs.get('Breedabilli', {}).get('Unlocked', False)}/15%",
         picture_class='breedabilli',
@@ -557,7 +565,7 @@ def getBreedingAdviceSection() -> AdviceSection:
     tier_section = f"{overall_SectionTier}/{max_tier}"
     breeding_AdviceSection = AdviceSection(
         name="Breeding",
-        tier="Not Yet Evaluated",
+        tier=tier_section,
         pinchy_rating=overall_SectionTier,
         header=f"Best Breeding tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture="Breeding.png",

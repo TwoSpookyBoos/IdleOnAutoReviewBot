@@ -60,11 +60,14 @@ from consts import (
     sailingDict, numberOfArtifactTiers, captainBuffs,
     getStyleNameFromIndex, divinity_divinitiesDict, divinity_offeringsDict, getDivinityNameFromIndex, divinity_DivCostAfter3,
     gamingSuperbitsDict,
+
     # W6
     jade_emporium, pristineCharmsList, sneakingGemstonesFirstIndex, sneakingGemstonesList, sneakingGemstonesStatList,
     getMoissaniteValue, getGemstoneBaseValue, getGemstoneBoostedValue, getGemstonePercent,
     marketUpgradeDetails, landrankDict, cropDepotDict, maxFarmingCrops,
     summoningBattleCountsDict, summoningDict,
+    # Caverns
+    caverns_villagers, caverns_conjuror_majiks, caverns_engineer_schematics, caverns_engineer_schematics_unlock_order,
 )
 
 
@@ -395,6 +398,7 @@ class WorldName(Enum):
     WORLD3 = "World 3"
     WORLD4 = "World 4"
     WORLD5 = "World 5"
+    CAVERNS = "Caverns"
     WORLD6 = "World 6"
     BLUNDER_HILLS = "Blunder Hills"
     YUMYUM_DESERT = "Yum-Yum Desert"
@@ -402,6 +406,7 @@ class WorldName(Enum):
     HYPERION_NEBULA = "Hyperion Nebula"
     SMOLDERIN_PLATEAU = "Smolderin' Plateau"
     SPIRITED_VALLEY = "Spirited Valley"
+    THE_CAVERNS_BELOW = "The Caverns Below"
 
 
 class AdviceBase:
@@ -1225,6 +1230,7 @@ class Account:
         self._parse_w3()
         self._parse_w4()
         self._parse_w5()
+        self._parse_caverns()
         self._parse_w6()
 
     def _parse_switches(self):
@@ -2549,10 +2555,14 @@ class Account:
             try:
                 self.breeding['Upgrades'][upgradeValuesDict['Name']] = {
                     'Level': rawBreeding[2][upgradeIndex],
+                    'MaxLevel': upgradeValuesDict['MaxLevel'],
+                    'Value': upgradeValuesDict['BonusValue'] * rawBreeding[2][upgradeIndex]
                 }
             except:
                 self.breeding['Upgrades'][upgradeValuesDict['Name']] = {
                     'Level': 0,
+                    'MaxLevel': upgradeValuesDict['MaxLevel'],
+                    'Value': 0
                 }
 
     def _parse_w4_breeding_territories(self, rawPets, rawTerritory):
@@ -2649,7 +2659,6 @@ class Account:
         #Sort the Grouped bonus by Days to next Shiny Level
         for groupedBonus in self.breeding["Grouped Bonus"]:
             self.breeding["Grouped Bonus"][groupedBonus].sort(key=lambda x: float(x[2]))
-
 
     def _parse_w5(self):
         self.gaming = {
@@ -2855,6 +2864,104 @@ class Account:
                 character.setDivinityLink(getDivinityNameFromIndex(raw_divinity_list[character.character_index + 12] + 1))
             except:
                 continue
+
+    def _parse_caverns(self):
+        self.caverns = {
+            'Villagers': {},
+            'Caverns': {},
+            'CavernsUnlocked': 0,
+            'Schematics': {},
+            'TotalSchematics': 0,
+            'Majiks': {},
+            'Measurements': {},
+        }
+        raw_caverns_list: list[list] = safe_loads(self.raw_data.get('Holes', []))
+        while len(raw_caverns_list) < 23:
+            raw_caverns_list.append([])
+        self._parse_caverns_villagers(raw_caverns_list[1], raw_caverns_list[3])
+        self._parse_caverns_majiks(raw_caverns_list[4], raw_caverns_list[5], raw_caverns_list[6])
+        self._parse_caverns_schematics(raw_caverns_list[13])
+        #print([k for k, v in self.caverns['Schematics'].items() if v['Unlocked']])  #Unlocked schematic check
+        # for key in self.caverns:
+        #     print(f"{key}: {self.caverns[key]}")
+
+    def _parse_caverns_villagers(self, villager_levels, opals_invested):
+        for villager_index, villager_data in enumerate(caverns_villagers):
+            try:
+                self.caverns['Villagers'][villager_data['Name']] = {
+                    'Unlocked': villager_levels[villager_index] > 0,
+                    'Level':    villager_levels[villager_index],
+                    'Opals':    opals_invested[villager_index],
+                    'Title':    f"{villager_data['Name']}, {villager_data['Role']}"
+                }
+            except:
+                self.caverns['Villagers'][villager_data['Name']] = {
+                    'Unlocked': False,
+                    'Level': 0,
+                    'Opals': 0,
+                }
+
+    def _parse_caverns_majiks(self, hole_majiks, village_majiks, idleon_majiks):
+        raw_majiks: dict = {
+            'Hole': hole_majiks,
+            'Village': village_majiks,
+            'IdleOn': idleon_majiks
+        }
+        for majik_type, majiks in caverns_conjuror_majiks.items():
+            for majik_index, majik_data in enumerate(majiks):
+                try:
+                    self.caverns['Majiks'][majik_data['Name']] = {
+                        'MajikType': majik_type,
+                        'MajikIndex': majik_index,
+                        'Level': raw_majiks[majik_type][majik_index],
+                        'MaxLevel': majik_data['MaxLevel'],
+                        'Description': majik_data['Description'],
+                        'Value': 0  #Calculated later in _calculate_caverns_majiks
+                    }
+                except:
+                    self.caverns['Majiks'][majik_data['Name']] = {
+                        'MajikType': majik_type,
+                        'MajikIndex': majik_index,
+                        'Level': 0,
+                        'MaxLevel': majik_data['MaxLevel'],
+                        'Description': majik_data['Description'],
+                        'Value': 0  # Calculated later in _calculate_caverns_majiks
+                    }
+
+    def _parse_caverns_schematics(self, raw_schematics_list):
+        try:
+            self.caverns['TotalSchematics'] = sum(raw_schematics_list)
+        except Exception as e:
+            print(f"Error summing raw_schematics_list: {e}")
+        for schematic_index, schematic_details in enumerate(caverns_engineer_schematics):
+            clean_name = schematic_details[0].replace("_", " ")
+            try:
+                if int(schematic_details[2]) <= 9:
+                    resource_type = f'well-sediment-{schematic_details[2]}'
+                elif int(schematic_details[2]) <= 19:
+                    resource_type = f'harp-note-{int(schematic_details[2])-10}'
+                else:
+                    resource_type = ''
+            except Exception as e:
+                print(f"Error parsing resource type for {clean_name}: {schematic_details[2]}: {e}")
+                resource_type = ''
+            try:
+                self.caverns['Schematics'][clean_name] = {
+                    'Purchased': raw_schematics_list[schematic_index] > 0,
+                    'Image': f'engineer-schematic-{schematic_index}',
+                    'Description': schematic_details[5].replace("_", " "),
+                    'UnlockOrder': caverns_engineer_schematics_unlock_order[schematic_index],
+                    'Resource': resource_type
+                }
+            except:
+                print(f"Error processing schematic {clean_name} at index {schematic_index}")
+                self.caverns['Schematics'][clean_name] = {
+                    'Purchased': False,
+                    'Image': f'engineer-schematic-{schematic_index}',
+                    'Description': schematic_details[5].replace("_", " "),
+                    'UnlockOrder': caverns_engineer_schematics_unlock_order[schematic_index],
+                    'Resource': resource_type
+                }
 
     def _parse_w6(self):
         self._parse_w6_sneaking()
@@ -3206,6 +3313,7 @@ class Account:
         self._calculate_w3()
         self._calculate_w4()
         self._calculate_w5()
+        self._calculate_caverns()
         self._calculate_w6()
 
     def _calculate_general(self):
@@ -3634,235 +3742,7 @@ class Account:
         self.labBonuses['No Bubble Left Behind']['Value'] = min(nblbMaxBubbleCount, self.labBonuses['No Bubble Left Behind']['Value'])
 
     def _calculate_w5(self):
-        self._calculate_w5_divinity_link_advice()
         self._calculate_w5_divinity_offering_costs()
-
-    def _calculate_w5_divinity_link_advice(self):
-        self.divinity['DivinityLinks'] = {
-            0: [
-                Advice(
-                    label="No Divinities unlocked to link to",
-                    picture_class=""
-                )
-            ],
-            1: [
-                Advice(
-                    label="No harm in linking everyone, as Snehebatu is your only choice",
-                    picture_class="snehebatu"
-                )
-            ],
-            2: [
-                Advice(
-                    label="Lab bonuses fully online",
-                    picture_class="arctis"
-                ),
-                Advice(
-                    label="Extra characters can link to Snake if not Meditating",
-                    picture_class="snehebatu"
-                )
-            ],
-            3: [
-                Advice(
-                    label="Lab bonuses fully online",
-                    picture_class="arctis"
-                ),
-                Advice(
-                    label="1 Map Pusher",
-                    picture_class="nobisect"
-                ),
-                Advice(
-                    label="Extra characters can link to Snake if not Meditating",
-                    picture_class="snehebatu"
-                )
-            ],
-            4: [
-                Advice(
-                    label="Lab bonuses fully online",
-                    picture_class="arctis"
-                ),
-                Advice(
-                    label="1 Map Pusher",
-                    picture_class="nobisect"
-                ),
-                Advice(
-                    label="Extra characters can link to Snake if not Meditating",
-                    picture_class="snehebatu"
-                )
-            ],
-            5: [
-                Advice(
-                    label="Move Meditators to Lab",
-                    picture_class="goharut"
-                ),
-                Advice(
-                    label="Lab bonuses fully online",
-                    picture_class="arctis"
-                ),
-                Advice(
-                    label="1 Map Pusher",
-                    picture_class="nobisect"
-                ),
-                Advice(
-                    label="Extra characters can link to Snake if not Meditating",
-                    picture_class="snehebatu"
-                )
-            ],
-            6: [
-                Advice(
-                    label="Move Meditators to Lab",
-                    picture_class="goharut"
-                ),
-                Advice(
-                    label="Lab bonuses fully online",
-                    picture_class="arctis"
-                ),
-                Advice(
-                    label="1 Map Pusher",
-                    picture_class="nobisect"
-                ),
-                Advice(
-                    label="Extra characters can link to Snake if not Meditating",
-                    picture_class="snehebatu"
-                )
-            ],
-            7: [
-                Advice(
-                    label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
-                    picture_class="purrmep"
-                ),
-                Advice(
-                    label="Meditators in Lab",
-                    picture_class="goharut"
-                ),
-                Advice(
-                    label="Lab bonuses fully online",
-                    picture_class="arctis"
-                ),
-                Advice(
-                    label="1 Map Pusher",
-                    picture_class="nobisect"
-                ),
-                Advice(
-                    label="Extra characters can link to Snake if not Meditating",
-                    picture_class="snehebatu"
-                ),
-
-            ],
-            8: [
-                Advice(
-                    label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
-                    picture_class="purrmep"
-                ),
-                Advice(
-                    label="Meditators in Lab",
-                    picture_class="goharut"
-                ),
-                Advice(
-                    label="Lab bonuses fully online",
-                    picture_class="arctis"
-                ),
-                Advice(
-                    label="1 Map Pusher",
-                    picture_class="nobisect"
-                ),
-                Advice(
-                    label="Extra characters can link to Snake if not Meditating",
-                    picture_class="snehebatu"
-                ),
-            ],
-            9: [
-                Advice(
-                    label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
-                    picture_class="purrmep"
-                ),
-                Advice(
-                    label="Meditators in Lab",
-                    picture_class="goharut"
-                ),
-                Advice(
-                    label="Lab bonuses fully online",
-                    picture_class="arctis"
-                ),
-                Advice(
-                    label="1 Map Pusher",
-                    picture_class="nobisect"
-                ),
-                Advice(
-                    label="Extra characters can link to Snake if not Meditating",
-                    picture_class="snehebatu"
-                ),
-            ],
-            10: [
-                Advice(
-                    label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
-                    picture_class="purrmep"
-                ),
-                Advice(
-                    label="Meditators in Lab",
-                    picture_class="goharut"
-                ),
-                Advice(
-                    label="Lab bonuses fully online",
-                    picture_class="arctis"
-                ),
-                Advice(
-                    label="1 Map Pusher",
-                    picture_class="nobisect"
-                ),
-                Advice(
-                    label="Extra characters can link to Snake if not Meditating",
-                    picture_class="snehebatu"
-                ),
-            ],
-            11: [
-                Advice(
-                    label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
-                    picture_class="purrmep"
-                ),
-                Advice(
-                    label="Meditators in Lab",
-                    picture_class="goharut"
-                ),
-                Advice(
-                    label="Lab bonuses fully online",
-                    picture_class="arctis"
-                ),
-                Advice(
-                    label="1 Map Pusher",
-                    picture_class="nobisect"
-                ),
-                Advice(
-                    label="Extra characters can link to Snake if not Meditating",
-                    picture_class="snehebatu"
-                ),
-            ],
-            12: [
-                Advice(
-                    label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
-                    picture_class="purrmep"
-                ),
-                Advice(
-                    label="Meditators in Lab",
-                    picture_class="goharut"
-                ),
-                Advice(
-                    label="Lab bonuses fully online",
-                    picture_class="arctis"
-                ),
-                Advice(
-                    label="1 Map Pusher",
-                    picture_class="nobisect"
-                ),
-                Advice(
-                    label="Extra characters can link to Snake if not Meditating",
-                    picture_class="snehebatu"
-                ),
-                Advice(
-                    label="Omniphau is a gamble. Refinery and 3D Printer rewards are nice- The other 4/6 are pretty meh.",
-                    picture_class="omniphau"
-                ),
-            ],
-        }
 
     def _calculate_w5_divinity_offering_costs(self):
         self.divinity['LowOfferingGoal'] = self._divinityUpgradeCost(self.divinity['LowOffering'], self.divinity['GodsUnlocked'] + self.divinity['GodRank'])
@@ -3873,6 +3753,50 @@ class Account:
         if unlockedDivinity >= 3:
             cost = cost * pow(min(1.8, max(1, 1 + self.raw_serverVars_dict.get("DivCostAfter3", divinity_DivCostAfter3) / 100)), unlockedDivinity - 2)
         return ceil(cost)
+
+    def _calculate_caverns(self):
+        self._calculate_caverns_majiks()
+
+    def _calculate_caverns_majiks(self):
+        for majik_type, majiks in caverns_conjuror_majiks.items():
+            for majik_index, majik_data in enumerate(majiks):
+                if majik_data['Scaling'] == 'add':
+                    try:
+                        self.caverns['Majiks'][majik_data['Name']]['Value'] = (
+                            self.caverns['Majiks'][majik_data['Name']]['Level'] * majik_data['BonusPerLevel']
+                        )
+                        self.caverns['Majiks'][majik_data['Name']]['MaxValue'] = (
+                           majik_data['MaxLevel'] * majik_data['BonusPerLevel']
+                        )
+                    except Exception as e:
+                        print(f"Caverns Majik value calc error for level {self.caverns['Majiks'][majik_data['Name']]['Level']} {majik_data['Name']}: {e}")
+                elif majik_data['Scaling'] == 'value':
+                    try:
+                        self.caverns['Majiks'][majik_data['Name']]['Value'] = (ValueToMulti(
+                            self.caverns['Majiks'][majik_data['Name']]['Level'] * majik_data['BonusPerLevel']
+                        ))
+                        self.caverns['Majiks'][majik_data['Name']]['MaxValue'] = (ValueToMulti(
+                            majik_data['MaxLevel'] * majik_data['BonusPerLevel']
+                        ))
+                    except:
+                        print(f"Caverns Majik value calc error for level {self.caverns['Majiks'][majik_data['Name']]['Level']} {majik_data['Name']}: {e}")
+                elif majik_data['Scaling'] == 'multi':
+                    try:
+                        self.caverns['Majiks'][majik_data['Name']]['Value'] = (
+                            # BonusPerLevel to the power of Level
+                            majik_data['BonusPerLevel'] ** self.caverns['Majiks'][majik_data['Name']]['Level']
+                        )
+                        self.caverns['Majiks'][majik_data['Name']]['MaxValue'] = (
+                            # BonusPerLevel to the power of Level
+                            majik_data['BonusPerLevel'] ** majik_data['MaxLevel']
+                        )
+                    except Exception as e:
+                        print(f"Caverns Majik value calc error for level {self.caverns['Majiks'][majik_data['Name']]['Level']} {majik_data['Name']}: {e}")
+                self.caverns['Majiks'][majik_data['Name']]['Description'] = (
+                    f"{self.caverns['Majiks'][majik_data['Name']]['Value']}/{self.caverns['Majiks'][majik_data['Name']]['MaxValue']}"
+                    f"{self.caverns['Majiks'][majik_data['Name']]['Description']}"
+                )
+                #print(self.caverns['Majiks'][majik_data['Name']])
 
     def _calculate_w6(self):
         self._calculate_w6_summoning_winner_bonuses()

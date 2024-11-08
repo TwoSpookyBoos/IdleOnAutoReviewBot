@@ -15,6 +15,7 @@ from w2 import alchemy, killroy, islands
 from w3 import trapping, consRefinery, consDeathNote, worship, consSaltLick, consBuildings, equinox, library, sampling, collider
 from w4 import breeding, cooking, rift
 from w5 import slab, divinity, sailing
+from caverns import villagers
 from w6 import beanstalk, sneaking, farming
 
 logger = get_logger(__name__)
@@ -109,6 +110,10 @@ def main(inputData, runType="web"):
         section_sailing := sailing.getSailingAdviceSection()
         # section_gaming =
     ]
+    # Caverns
+    sections_caverns = [
+        section_villagers := villagers.getVillagersAdviceSection()
+    ]
     # World 6
     sections_6 = [
         section_farming := farming.setFarmingProgressionTier(),
@@ -157,6 +162,7 @@ def main(inputData, runType="web"):
         AdviceWorld(name=WorldName.FROSTBITE_TUNDRA, sections=sections_3, banner="w3banner.png"),
         AdviceWorld(name=WorldName.HYPERION_NEBULA, sections=sections_4, banner="w4banner.png"),
         AdviceWorld(name=WorldName.SMOLDERIN_PLATEAU, sections=sections_5, banner="w5banner.png"),
+        AdviceWorld(name=WorldName.CAVERNS, sections=sections_caverns, title="The Caverns Below"),
         AdviceWorld(name=WorldName.SPIRITED_VALLEY, sections=sections_6, banner="w6banner.png"),
     ]
 

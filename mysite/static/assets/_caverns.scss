@@ -1,0 +1,169 @@
+$villagers: (
+    polonai: img('wiki/Polonai.gif'),
+    kaipu: img('wiki/Kaipu.gif'),
+    cosmos: img('wiki/Cosmos.gif'),
+    minau: img('wiki/Minau.gif'),
+);
+
+$villager-banners: (
+    villager-explore: img('wiki/Villager_Explore.png'),
+    villager-engineer: img('wiki/Villager_Engineer.png'),
+    villager-bonuses: img('wiki/Villager_Bonuses.png'),
+    villager-measure: img('wiki/Villager_Measure.png'),
+    //villager-legacy: img('wiki/Villager_Legacy.png'),
+    //villager-studies: img('wiki/Villager_Studies.png'),
+);
+
+$schematics: (
+    empty-schematic: img('wiki/Empty_Schematic.png'),
+    engineer-schematic-0: img('wiki/HoleUIbuildUpg0.png'),
+    engineer-schematic-1: img('wiki/HoleUIbuildUpg1.png'),
+    engineer-schematic-2: img('wiki/HoleUIbuildUpg2.png'),
+    engineer-schematic-3: img('wiki/HoleUIbuildUpg3.png'),
+    engineer-schematic-4: img('wiki/HoleUIbuildUpg4.png'),
+    engineer-schematic-5: img('wiki/HoleUIbuildUpg5.png'),
+    engineer-schematic-6: img('wiki/HoleUIbuildUpg6.png'),
+    engineer-schematic-7: img('wiki/HoleUIbuildUpg7.png'),
+    engineer-schematic-8: img('wiki/HoleUIbuildUpg8.png'),
+    engineer-schematic-9: img('wiki/HoleUIbuildUpg9.png'),
+    engineer-schematic-10: img('wiki/HoleUIbuildUpg10.png'),
+    engineer-schematic-11: img('wiki/HoleUIbuildUpg11.png'),
+    engineer-schematic-12: img('wiki/HoleUIbuildUpg12.png'),
+    engineer-schematic-13: img('wiki/HoleUIbuildUpg13.png'),
+    engineer-schematic-14: img('wiki/HoleUIbuildUpg14.png'),
+    engineer-schematic-15: img('wiki/HoleUIbuildUpg15.png'),
+    engineer-schematic-16: img('wiki/HoleUIbuildUpg16.png'),
+    engineer-schematic-17: img('wiki/HoleUIbuildUpg17.png'),
+    engineer-schematic-18: img('wiki/HoleUIbuildUpg18.png'),
+    engineer-schematic-19: img('wiki/HoleUIbuildUpg19.png'),
+    engineer-schematic-20: img('wiki/HoleUIbuildUpg20.png'),
+    engineer-schematic-21: img('wiki/HoleUIbuildUpg21.png'),
+    engineer-schematic-22: img('wiki/HoleUIbuildUpg22.png'),
+    engineer-schematic-23: img('wiki/HoleUIbuildUpg23.png'),
+    engineer-schematic-24: img('wiki/HoleUIbuildUpg24.png'),
+    engineer-schematic-25: img('wiki/HoleUIbuildUpg25.png'),
+    engineer-schematic-26: img('wiki/HoleUIbuildUpg26.png'),
+    engineer-schematic-27: img('wiki/HoleUIbuildUpg27.png'),
+    engineer-schematic-28: img('wiki/HoleUIbuildUpg28.png'),
+    engineer-schematic-29: img('wiki/HoleUIbuildUpg29.png'),
+    engineer-schematic-30: img('wiki/HoleUIbuildUpg30.png'),
+    engineer-schematic-31: img('wiki/HoleUIbuildUpg31.png'),
+    engineer-schematic-32: img('wiki/HoleUIbuildUpg32.png'),
+    engineer-schematic-33: img('wiki/HoleUIbuildUpg33.png'),
+    engineer-schematic-34: img('wiki/HoleUIbuildUpg34.png'),
+    engineer-schematic-35: img('wiki/HoleUIbuildUpg35.png'),
+    engineer-schematic-36: img('wiki/HoleUIbuildUpg36.png'),
+    engineer-schematic-37: img('wiki/HoleUIbuildUpg37.png'),
+    engineer-schematic-38: img('wiki/HoleUIbuildUpg38.png'),
+    engineer-schematic-39: img('wiki/HoleUIbuildUpg39.png'),
+    engineer-schematic-40: img('wiki/HoleUIbuildUpg40.png'),
+    engineer-schematic-41: img('wiki/HoleUIbuildUpg41.png'),
+    engineer-schematic-42: img('wiki/HoleUIbuildUpg42.png'),
+    engineer-schematic-43: img('wiki/HoleUIbuildUpg43.png'),
+    engineer-schematic-44: img('wiki/HoleUIbuildUpg44.png'),
+    engineer-schematic-45: img('wiki/HoleUIbuildUpg45.png'),
+    engineer-schematic-46: img('wiki/HoleUIbuildUpg46.png'),
+    engineer-schematic-47: img('wiki/HoleUIbuildUpg47.png'),
+    engineer-schematic-48: img('wiki/HoleUIbuildUpg48.png'),
+    engineer-schematic-49: img('wiki/HoleUIbuildUpg49.png'),
+    engineer-schematic-50: img('wiki/HoleUIbuildUpg50.png'),
+    engineer-schematic-51: img('wiki/HoleUIbuildUpg51.png'),
+    engineer-schematic-52: img('wiki/HoleUIbuildUpg52.png'),
+    engineer-schematic-53: img('wiki/HoleUIbuildUpg53.png'),
+    engineer-schematic-54: img('wiki/HoleUIbuildUpg54.png'),
+    engineer-schematic-55: img('wiki/HoleUIbuildUpg55.png'),
+    engineer-schematic-56: img('wiki/HoleUIbuildUpg56.png'),
+    engineer-schematic-57: img('wiki/HoleUIbuildUpg57.png'),
+    engineer-schematic-58: img('wiki/HoleUIbuildUpg58.png'),
+    engineer-schematic-59: img('wiki/HoleUIbuildUpg59.png'),
+    engineer-schematic-60: img('wiki/HoleUIbuildUpg60.png'),
+);
+
+$cosmos-majiks: (
+    hole-majik-unpurchased: img('wiki/Cavern_Majik_Unpurchased.png'),
+    hole-majik-purchased: img('wiki/Cavern_Majik_Purchased.png'),
+    village-majik-unpurchased: img('wiki/Village_Majik_Unpurchased.png'),
+    village-majik-purchased: img('wiki/Village_Majik_Purchased.png'),
+    idleon-majik-unpurchased: img('wiki/IdleOn_Majik_Unpurchased.png'),
+    idleon-majik-purchased: img('wiki/IdleOn_Majik_Purchased.png'),
+);
+
+$caverns: (
+    cavern-1: img('wiki/HolePOI1.png'),
+    cavern-2: img('wiki/HolePOI2.png'),
+    cavern-3: img('wiki/HolePOI3.png'),
+    cavern-4: img('wiki/HolePOI4.png'),
+    cavern-5: img('wiki/HolePOI5.png'),
+    cavern-6: img('wiki/HolePOI6.png'),
+    cavern-7: img('wiki/HolePOI7.png'),
+    cavern-8: img('wiki/HolePOI8.png'),
+    cavern-9: img('wiki/HolePOI9.png'),
+);
+
+$well-sediment: (
+    well-bucket: img('wiki/HoleWellBucket0.png'),
+    well-sediment-rock-layer: img('wiki/HoleWellFill0.png'),
+    well-sediment-0: img('wiki/HoleWellFill1.png'),
+    well-sediment-1: img('wiki/HoleWellFill2.png'),
+    well-sediment-2: img('wiki/HoleWellFill3.png'),
+    well-sediment-3: img('wiki/HoleWellFill4.png'),
+    well-sediment-4: img('wiki/HoleWellFill5.png'),
+    well-sediment-5: img('wiki/HoleWellFill6.png'),
+    well-sediment-6: img('wiki/HoleWellFill7.png'),
+    well-sediment-7: img('wiki/HoleWellFill8.png'),
+    well-sediment-8: img('wiki/HoleWellFill9.png'),
+    well-sediment-9: img('wiki/HoleWellFill10.png'),
+);
+
+$monuments: (
+    monument-basic-chest: img('HoleBraveryChest.png'),
+    monument-special-chest: img('HoleBraveryChestB.png'),
+    monument-basic-sword: img('HoleBraverySword.png'),
+    monument-special-sword: img('HoleBraverySwordb.png'),
+);
+
+$bell: (
+    bell-ring:  img('HoleBellCover0.png'),
+    bell-ping:  img('HoleBellCover1.png'),
+    bell-clean: img('HoleBellCover2.png'),
+    bell-renew: img('HoleBellCover3.png'),
+);
+
+$harp-notes: (
+    harp-note-0: img('wiki/HoleHarpNote0.png'),
+    harp-note-1: img('wiki/HoleHarpNote1.png'),
+    harp-note-2: img('wiki/HoleHarpNote2.png'),
+    harp-note-3: img('wiki/HoleHarpNote3.png'),
+    harp-note-4: img('wiki/HoleHarpNote4.png'),
+    harp-note-5: img('wiki/HoleHarpNote5.png'),
+    harp-note-6: img('wiki/HoleHarpNote6.png'),
+    harp-note-7: img('wiki/HoleHarpNote7.png'),
+    harp-note-8: img('wiki/HoleHarpNote8.png'),
+    harp-note-9: img('wiki/HoleHarpNote9.png'),
+);
+
+$lamp-wishes: (
+    lamp-wish-button: img('wiki/HoleLampWish.png'),
+    lamp-wish-0: img('wiki/HoleLampUpg0.png'),
+    lamp-wish-1: img('wiki/HoleLampUpg1.png'),
+    lamp-wish-2: img('wiki/HoleLampUpg2.png'),
+    lamp-wish-3: img('wiki/HoleLampUpg3.png'),
+    lamp-wish-4: img('wiki/HoleLampUpg4.png'),
+    lamp-wish-5: img('wiki/HoleLampUpg5.png'),
+    lamp-wish-6: img('wiki/HoleLampUpg6.png'),
+    lamp-wish-7: img('wiki/HoleLampUpg7.png'),
+    lamp-wish-8: img('wiki/HoleLampUpg8.png'),
+    //lamp-wish-9: img('wiki/HoleLampUpg9.png'),
+);
+
+$etc: ();
+
+$all-caverns: map-merge($villagers, $villager-banners);
+$all-caverns: map-merge($all-caverns, $schematics);
+$all-caverns: map-merge($all-caverns, $cosmos-majiks);
+$all-caverns: map-merge($all-caverns, $caverns);
+$all-caverns: map-merge($all-caverns, $well-sediment);
+$all-caverns: map-merge($all-caverns, $monuments);
+$all-caverns: map-merge($all-caverns, $harp-notes);
+$all-caverns: map-merge($all-caverns, $lamp-wishes);
+$all-caverns: map-merge($all-caverns, $etc);

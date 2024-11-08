@@ -9,6 +9,7 @@ Starfire: Starfire Ore
 Dreadlo: Dreadlo Ore
 Marble: Marble Ore
 Godshard: Godshard Ore
+Motherlode: Motherlode Ore
 CopperBar: Copper Bar
 IronBar: Iron Bar
 GoldBar: Gold Bar
@@ -43,6 +44,7 @@ Tree10: Dandielogs
 Tree11: Willow Logs
 Tree12: Bamboo Logs
 Tree13: Effervescent Logs
+MotherlodeTREE: Everlog
 Leaf1: Grass Leaf
 Leaf2: Twisty Leaf
 Leaf3: Arctic Leaf
@@ -63,6 +65,7 @@ Fish10: Shellfish
 Fish11: Jumbo Shrimp
 Fish12: Caulifish
 Fish13: Equinox Fish
+Fish14: Trench Fish
 Bug1: Fly
 Bug2: Butterfly
 Bug3: Sentient Cereal
@@ -76,6 +79,7 @@ Bug10: Dust Mote
 Bug11: Dream Particulate
 Bug12: Ladybug
 Bug13: Firefly
+Bug14: Fractal Fly
 Critter1: Froge
 Critter1A: Poison Froge
 Critter2: Crabbo
@@ -433,6 +437,8 @@ EquipmentCape13: Eternal Flames of The Divine
 EquipmentCape14: Phoenix Wings
 EquipmentCape15: Giant Nightshade
 EquipmentCape16: Timeless Watch
+EquipmentGown0: Pyromancer Robes
+EquipmentGown1: Cobalt Robe
 StampA1: Sword Stamp
 StampA2: Heart Stamp
 StampA3: Mana Stamp
@@ -1700,6 +1706,7 @@ Quest86: Basketball
 Quest87: Secret Map
 Quest88: Golden Oyster
 Quest89: Event Point
+Quest90: Blinding Lantern
 EquipmentSmithingTabs2: Anvil Tab II
 EquipmentSmithingTabs3: Anvil Tab III
 EquipmentSmithingTabs4: Anvil Tab IV
@@ -1734,6 +1741,7 @@ EquipmentStatues25: Boat Statue
 EquipmentStatues26: Compost Statue
 EquipmentStatues27: Stealth Statue
 EquipmentStatues28: Essence Statue
+EquipmentStatues29: Dragon Warrior Statue
 PureWater: Distilled Water
 PureWater2: Dense Water
 Island0: Garbage
@@ -2100,6 +2108,7 @@ CardsH11: Biggole Mole Card
 CardsH12: Crawler Card
 CardsH13: Tremor Wurm Card
 CardsH14: Magma Geode Card
+CardsH15: Gloomie Mushroom Card
 CardsI1: Sprout Spirit Card
 CardsI2: Ricecake Card
 CardsI3: River Spirit Card

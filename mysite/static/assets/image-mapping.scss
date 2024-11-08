@@ -47,6 +47,7 @@
 @import "divinity";
 @import "sailing";
 @import "gaming";
+@import "caverns";
 
 //W6
 @import "sneaking";
@@ -103,6 +104,7 @@ dandielogs: $dandielogs,
 willow-logs: $willow-logs,
 bamboo-logs: $bamboo-logs,
 effervescent-logs: $effervescent-logs,
+everlog: $everlog,
 
 // Leaves
 
@@ -128,6 +130,7 @@ icefish: $icefish,
 shellfish: $shellfish,
 jumbo-shrimp: $jumbo-shrimp,
 caulifish: $caulifish,
+trench-fish: $trench-fish,
 
 // Bugs
 
@@ -144,6 +147,7 @@ dust-mote: $dust-mote,
 dream-particulate: $dream-particulate,
 ladybug: $ladybug,
 firefly: $firefly,
+fractal-fly: $fractal-fly,
 
 // Critters
 
@@ -1264,6 +1268,7 @@ boat-statue: $boat-statue,
 compost-statue: $compost-statue,
 stealth-statue: $stealth-statue,
 essence-statue: $essence-statue,
+dragon-warrior-statue: $dragon-warrior-statue,
 
 // Anvil Tabs
 
@@ -1807,6 +1812,7 @@ gaming-fertilizer: $gaming-fertilizer,
 cooking-ladle: $cooking-ladle,
 pet-egg: $pet-egg,
 crop-transfer-ticket: $crop-transfer-ticket,
+blinding-lantern: $blinding-lantern,
 
 // gene spirals
 
@@ -2096,6 +2102,7 @@ $id-map: map-merge($ui-map, $id-map);
 $id-map: map-merge($all-islands, $id-map);
 $id-map: map-merge($all-killroy, $id-map);
 $id-map: map-merge($all-weekly-boss-map, $id-map);
+$id-map: map-merge($all-caverns, $id-map);
 
 
 @each $class, $link in $id-map {

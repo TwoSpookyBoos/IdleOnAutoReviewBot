@@ -94,6 +94,13 @@
     --w5-bg-advice-group-odd: hsl(15deg 25% 48%);
     --w5-bg-advice-group-even: hsl(15deg 24% 34%);
 
+    --caverns-fg-subheading: hsl(15, 100%, 96%);
+    --caverns-bg-subheading: hsla(15, 78%, 28%, 0.4);
+
+    --caverns-fg-advice-group: hsl(15deg, 100%, 96%);
+    --caverns-bg-advice-group-odd: hsl(15deg 25% 48%);
+    --caverns-bg-advice-group-even: hsl(15deg 24% 34%);
+
     --w6-fg-subheading: hsl(165, 100%, 96%);
     --w6-bg-subheading: hsla(155, 78%, 28%, 0.4);
 
@@ -185,6 +192,13 @@
     --w5-fg-advice-group: black;
     --w5-bg-advice-group-odd: hsl(15deg, 51%, 77%);
     --w5-bg-advice-group-even: hsl(15deg, 40%, 60%);
+
+    --caverns-fg-subheading: hsl(15deg, 45%, 40%);
+    --caverns-bg-subheading: hsl(15deg, 49%, 87%);
+
+    --caverns-fg-advice-group: black;
+    --caverns-bg-advice-group-odd: hsl(15deg, 51%, 77%);
+    --caverns-bg-advice-group-even: hsl(15deg, 40%, 60%);
 
     --w6-fg-subheading: hsl(160, 45%, 40%);
     --w6-bg-subheading: hsl(165, 48%, 86%);
@@ -910,7 +924,7 @@ body {
                     }
 
                     .advice-group {
-                        color: var(--w4-fg-advice-group);
+                        color: var(--w5-fg-advice-group);
 
                         &:nth-child(odd) {
                             background-color: var(--w5-bg-advice-group-odd);
@@ -925,6 +939,45 @@ body {
 
                             .table::before, .table::after {
                                 --table-edge-bg-to: var(--w5-bg-advice-group-even);
+                            }
+                        }
+                    }
+                }
+
+                #the-caverns-below {
+                    .subheading {
+                        background: var(--caverns-bg-subheading);
+
+                        & > span {
+                            color: var(--caverns-fg-subheading);
+
+                            .tier-progress {
+                                color: var(--fg-subheading-progress);
+
+                                &.finished {
+                                    color: var(--fg-subheading-finished);
+                                }
+                            }
+
+                        }
+                    }
+
+                    .advice-group {
+                        color: var(--caverns-fg-advice-group);
+
+                        &:nth-child(odd) {
+                            background-color: var(--caverns-bg-advice-group-odd);
+
+                            .table::before, .table::after {
+                                --table-edge-bg-to: var(--caverns-bg-advice-group-odd);
+                            }
+                        }
+
+                        &:nth-child(even) {
+                            background-color: var(--caverns-bg-advice-group-even);
+
+                            .table::before, .table::after {
+                                --table-edge-bg-to: var(--caverns-bg-advice-group-even);
                             }
                         }
                     }

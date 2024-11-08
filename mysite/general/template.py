@@ -1,4 +1,5 @@
 from models.models import AdviceSection, AdviceGroup, Advice
+from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import template_progressionTiers, break_you_best
@@ -23,7 +24,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
     overall_SectionTier = min(max_tier + info_tiers, tier_Template)
     return tiers_ag, overall_SectionTier, max_tier
 
-def setTemplateProgressionTier():
+def getTemplateAdviceSection() -> AdviceSection:
     #Check if player has reached this section
     highestTemplateSkillLevel = max(session_data.account.all_skills["TemplateSkill"])
     if highestTemplateSkillLevel < 1:
