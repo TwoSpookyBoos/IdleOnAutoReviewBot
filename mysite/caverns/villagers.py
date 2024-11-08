@@ -60,9 +60,11 @@ def getMaxEngineerLevel() -> int:
 def getEngineerAdviceGroup() -> AdviceGroup:
     v_stats = 'Villager Stats'
     s_stats = 'Schematic Stats'
+    r_s_stats = 'Unpurchased Schematics'
     engineer_advice = {
         v_stats: [],
-        s_stats: []
+        s_stats: [],
+        r_s_stats: []
     }
     kaipu = session_data.account.caverns['Villagers']['Kaipu']
     unlocked_schematics = min(max_schematics, 1 + (kaipu['Level'] * 3) + (kaipu['Level'] // 5))
@@ -96,20 +98,18 @@ def getEngineerAdviceGroup() -> AdviceGroup:
         goal=max_schematics
     ))
     if session_data.account.caverns['TotalSchematics'] < max_schematics:
-        remaining_schematics = []
         for list_index, schematic_number in enumerate(caverns_engineer_schematics_unlock_order):
             clean_name = caverns_engineer_schematics[int(schematic_number)][0].replace("_", " ")
             schematic_details = session_data.account.caverns['Schematics'][clean_name]
             if not schematic_details['Purchased']:
-                remaining_schematics.append(Advice(
-                    label=f"Schematic {list_index+1}: {clean_name}: {schematic_details['Description']}",
+                engineer_advice[r_s_stats].append(Advice(
+                    label=f"Schematic {list_index+1}: {clean_name}",  #{schematic_details['Description']}",
                     picture_class=schematic_details['Image'],
                     progression=int(schematic_details['Purchased']),
                     goal=1,
                     resource=schematic_details['Resource']
                 ))
 
-    engineer_advice[s_stats].extend(remaining_schematics)
     for subgroup in engineer_advice:
         for advice in engineer_advice[subgroup]:
             mark_advice_completed(advice)
@@ -120,6 +120,7 @@ def getEngineerAdviceGroup() -> AdviceGroup:
         advices=engineer_advice,
         informational=True
     )
+    engineer_ag.remove_empty_subgroups()
     return engineer_ag
 
 def getConjurorAdviceGroup() -> AdviceGroup:
