@@ -2899,6 +2899,7 @@ class Account:
                     'Unlocked': False,
                     'Level': 0,
                     'Opals': 0,
+                    'Title': f"{villager_data['Name']}, {villager_data['Role']}"
                 }
 
     def _parse_caverns_majiks(self, hole_majiks, village_majiks, idleon_majiks):
