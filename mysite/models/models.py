@@ -67,7 +67,7 @@ from consts import (
     marketUpgradeDetails, landrankDict, cropDepotDict, maxFarmingCrops,
     summoningBattleCountsDict, summoningDict,
     # Caverns
-    caverns_villagers, caverns_conjuror_majiks, caverns_engineer_schematics, caverns_engineer_schematics_unlock_order,
+    caverns_villagers, caverns_conjuror_majiks, caverns_engineer_schematics, caverns_engineer_schematics_unlock_order, caverns_cavern_names,
 )
 
 
@@ -2879,6 +2879,7 @@ class Account:
         while len(raw_caverns_list) < 23:
             raw_caverns_list.append([])
         self._parse_caverns_villagers(raw_caverns_list[1], raw_caverns_list[3])
+        self._parse_caverns_actual_caverns(raw_caverns_list[7])
         self._parse_caverns_majiks(raw_caverns_list[4], raw_caverns_list[5], raw_caverns_list[6])
         self._parse_caverns_schematics(raw_caverns_list[13])
         #print([k for k, v in self.caverns['Schematics'].items() if v['Unlocked']])  #Unlocked schematic check
@@ -2890,16 +2891,37 @@ class Account:
             try:
                 self.caverns['Villagers'][villager_data['Name']] = {
                     'Unlocked': villager_levels[villager_index] > 0,
+                    'UnlockedCavern': villager_data['UnlockedAtCavern'],
                     'Level':    villager_levels[villager_index],
                     'Opals':    opals_invested[villager_index],
-                    'Title':    f"{villager_data['Name']}, {villager_data['Role']}"
+                    'Title':    f"{villager_data['Name']}, {villager_data['Role']}",
+                    'VillagerNumber': villager_data['VillagerNumber']
                 }
             except:
                 self.caverns['Villagers'][villager_data['Name']] = {
-                    'Unlocked': False,
+                    'Unlocked': villager_data['Name'] == 'Polonai',
+                    'UnlockedCavern': villager_data['UnlockedAtCavern'],
                     'Level': 0,
                     'Opals': 0,
-                    'Title': f"{villager_data['Name']}, {villager_data['Role']}"
+                    'Title': f"{villager_data['Name']}, {villager_data['Role']}",
+                    'VillagerNumber': villager_data['VillagerNumber']
+                }
+
+    def _parse_caverns_actual_caverns(self, opals_per_cavern):
+        for cavern_index, cavern_name in caverns_cavern_names.items():
+            try:
+                self.caverns['Caverns'][cavern_name] = {
+                    'Unlocked': self.caverns['Villagers']['Polonai']['Level'] >= cavern_index,
+                    'OpalsFound': 0 if cavern_name == 'Camp' else opals_per_cavern[cavern_index-1],
+                    'Image': f'cavern-{cavern_index}',
+                    'CavernNumber': cavern_index
+                }
+            except:
+                self.caverns['Caverns'][cavern_name] = {
+                    'Unlocked': False,
+                    'OpalsFound': 0,
+                    'Image': f'cavern-{cavern_index}',
+                    'CavernNumber': cavern_index
                 }
 
     def _parse_caverns_majiks(self, hole_majiks, village_majiks, idleon_majiks):
@@ -2933,7 +2955,8 @@ class Account:
         try:
             self.caverns['TotalSchematics'] = sum(raw_schematics_list)
         except Exception as e:
-            print(f"Error summing raw_schematics_list: {e}")
+            #print(f"Error summing raw_schematics_list: {e}")
+            pass
         for schematic_index, schematic_details in enumerate(caverns_engineer_schematics):
             clean_name = schematic_details[0].replace("_", " ")
             try:
@@ -2944,7 +2967,7 @@ class Account:
                 else:
                     resource_type = ''
             except Exception as e:
-                print(f"Error parsing resource type for {clean_name}: {schematic_details[2]}: {e}")
+                #print(f"Error parsing resource type for {clean_name}: {schematic_details[2]}: {e}")
                 resource_type = ''
             try:
                 self.caverns['Schematics'][clean_name] = {
@@ -2954,8 +2977,8 @@ class Account:
                     'UnlockOrder': caverns_engineer_schematics_unlock_order[schematic_index],
                     'Resource': resource_type
                 }
-            except:
-                print(f"Error processing schematic {clean_name} at index {schematic_index}")
+            except Exception as e:
+                #print(f"Error processing schematic {clean_name} at index {schematic_index}: {e}")
                 self.caverns['Schematics'][clean_name] = {
                     'Purchased': False,
                     'Image': f'engineer-schematic-{schematic_index}',

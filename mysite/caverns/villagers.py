@@ -3,7 +3,7 @@ from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import caverns_cavern_names, max_cavern, max_schematics, max_majiks, break_you_best, max_engi_last_i_checked, \
-    caverns_engineer_schematics_unlock_order, caverns_engineer_schematics
+    caverns_engineer_schematics_unlock_order, caverns_engineer_schematics, caverns_villagers
 
 #villagers_progressionTiers,
 
@@ -16,25 +16,54 @@ def getVillagersAdviceGroups():
     measurer_advice: {}
 
 def getExplorerAdviceGroup() -> AdviceGroup:
-    explorer_advice = []
+    v_stats = 'Villager Stats'
+    c_stats = 'Cavern Unlock Status'
+    v_u_stats = 'Villager Unlock Status'
+    explorer_advice = {
+        v_stats: []
+    }
     polonai = session_data.account.caverns['Villagers']['Polonai']
 
+# Villager Stats
     #Practical Max Level
-    explorer_advice.append(Advice(
+    explorer_advice[v_stats].append(Advice(
         label=polonai['Title'],
         picture_class='polonai',
         progression=polonai['Level'],
         goal=max_cavern
     ))
     #Invested Opals
-    explorer_advice.append(Advice(
+    explorer_advice[v_stats].append(Advice(
         label="Opals Invested",
         picture_class='opal',
         progression=polonai['Opals'],
     ))
+# Cavern Unlocks
+    if polonai['Level'] < max_cavern:
+        explorer_advice[c_stats] = [
+            Advice(
+                label=f"Discover Cavern {session_data.account.caverns['Caverns'][cavern_name]['CavernNumber']}",
+                picture_class=session_data.account.caverns['Caverns'][cavern_name]['Image'],
+                progression=polonai['Level'],
+                goal=session_data.account.caverns['Caverns'][cavern_name]['CavernNumber']
+            )
+            for cavern_name in session_data.account.caverns['Caverns'] if not session_data.account.caverns['Caverns'][cavern_name]['Unlocked']
+        ]
+# Villager Unlocks
+    if not session_data.account.caverns['Villagers'][caverns_villagers[-1]['Name']]['Unlocked']:
+        explorer_advice[v_u_stats] = [
+            Advice(
+                label=f"Discover Villager {villager_details['VillagerNumber']} at Cavern {villager_details['UnlockedCavern']}",
+                picture_class=f"{villager_name}-undiscovered",
+                progression=polonai['Level'],
+                goal=villager_details['UnlockedCavern']
+            )
+            for villager_name, villager_details in session_data.account.caverns['Villagers'].items() if not villager_details['Unlocked']
+        ]
 
-    for advice in explorer_advice:
-        mark_advice_completed(advice)
+    for subgroup in explorer_advice:
+        for advice in explorer_advice[subgroup]:
+            mark_advice_completed(advice)
 
     explorer_ag = AdviceGroup(
         tier="",
@@ -42,6 +71,7 @@ def getExplorerAdviceGroup() -> AdviceGroup:
         advices=explorer_advice,
         informational=True
     )
+    explorer_ag.remove_empty_subgroups()
     return explorer_ag
 
 def getMaxEngineerLevel() -> int:
