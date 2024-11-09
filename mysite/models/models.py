@@ -68,6 +68,7 @@ from consts import (
     summoningBattleCountsDict, summoningDict,
     # Caverns
     caverns_villagers, caverns_conjuror_majiks, caverns_engineer_schematics, caverns_engineer_schematics_unlock_order, caverns_cavern_names,
+    caverns_measurer_measurements, getCavernResourceImage,
 )
 
 
@@ -2883,6 +2884,7 @@ class Account:
         self._parse_caverns_actual_caverns(raw_caverns_list[7])
         self._parse_caverns_majiks(raw_caverns_list[4], raw_caverns_list[5], raw_caverns_list[6])
         self._parse_caverns_schematics(raw_caverns_list[13])
+        self._parse_caverns_measurements(raw_caverns_list[22])
         #print([k for k, v in self.caverns['Schematics'].items() if v['Unlocked']])  #Unlocked schematic check
         # for key in self.caverns:
         #     print(f"{key}: {self.caverns[key]}")
@@ -2961,16 +2963,7 @@ class Account:
             pass
         for schematic_index, schematic_details in enumerate(caverns_engineer_schematics):
             clean_name = schematic_details[0].replace("_", " ")
-            try:
-                if int(schematic_details[2]) <= 9:
-                    resource_type = f'well-sediment-{schematic_details[2]}'
-                elif int(schematic_details[2]) <= 19:
-                    resource_type = f'harp-note-{int(schematic_details[2])-10}'
-                else:
-                    resource_type = ''
-            except Exception as e:
-                #print(f"Error parsing resource type for {clean_name}: {schematic_details[2]}: {e}")
-                resource_type = ''
+            resource_type = getCavernResourceImage(schematic_details[2])
             try:
                 self.caverns['Schematics'][clean_name] = {
                     'Purchased': raw_schematics_list[schematic_index] > 0,
@@ -2987,6 +2980,29 @@ class Account:
                     'Description': schematic_details[5].replace("_", " "),
                     'UnlockOrder': caverns_engineer_schematics_unlock_order[schematic_index],
                     'Resource': resource_type
+                }
+
+    def _parse_caverns_measurements(self, raw_measurements_list):
+        for measurement_index, measurement_details in enumerate(caverns_measurer_measurements):
+            try:
+                self.caverns['Measurements'][measurement_index] = {
+                    'Level': raw_measurements_list[measurement_index],
+                    'Unit': measurement_details[0],
+                    'Description': measurement_details[1],
+                    'ScalesWith': measurement_details[2],
+                    'Image': f"measurement-{measurement_index}",
+                    'Resource': measurement_details[3],
+                    'MeasurementNumber': measurement_index+1
+                }
+            except:
+                self.caverns['Measurements'][measurement_index] = {
+                    'Level': 0,
+                    'Unit': measurement_details[0],
+                    'Description': measurement_details[1],
+                    'ScalesWith': measurement_details[2],
+                    'Image': f"measurement-{measurement_index}",
+                    'Resource': measurement_details[3],
+                    'MeasurementNumber': measurement_index+1
                 }
 
     def _parse_w6(self):

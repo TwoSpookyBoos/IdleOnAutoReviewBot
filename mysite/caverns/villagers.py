@@ -2,18 +2,27 @@ from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import caverns_cavern_names, max_cavern, max_schematics, max_majiks, break_you_best, max_engi_last_i_checked, \
-    caverns_engineer_schematics_unlock_order, caverns_engineer_schematics, caverns_villagers
+from consts import (
+    caverns_cavern_names, max_cavern,
+    caverns_villagers, getMaxEngineerLevel, caverns_engineer_schematics, caverns_engineer_schematics_unlock_order,
+    max_schematics,
+    max_majiks,
+    max_measurements,
+    break_you_best
+)
 
 #villagers_progressionTiers,
 
 logger = get_logger(__name__)
 
 def getVillagersAdviceGroups():
-    explorer_advice: []
-    engineer_advice: {}
-    conjuror_advice: {}
-    measurer_advice: {}
+    villager_ags = {
+        'Explorer': getExplorerAdviceGroup(),
+        'Engineer': getEngineerAdviceGroup(),
+        'Conjuror': getConjurorAdviceGroup(),
+        'Measurer': getMeasurerAdviceGroup()
+    }
+    return villager_ags
 
 def getExplorerAdviceGroup() -> AdviceGroup:
     v_stats = 'Villager Stats'
@@ -71,21 +80,7 @@ def getExplorerAdviceGroup() -> AdviceGroup:
         advices=explorer_advice,
         informational=True
     )
-    explorer_ag.remove_empty_subgroups()
     return explorer_ag
-
-def getMaxEngineerLevel() -> int:
-    if max_schematics > (1 + (max_engi_last_i_checked * 3) + (max_engi_last_i_checked // 5)):
-        needed_level = 0
-        unlocked_schematics = 0
-        while unlocked_schematics < max_schematics:
-            needed_level += 1
-            unlocked_schematics = 1 + (needed_level * 3) + (needed_level // 5)
-        logger.warning(f"Update consts.max_engi_last_i_checked! {needed_level} is needed to unlock {max_schematics}")
-        return needed_level
-    else:
-        return max_engi_last_i_checked
-
 
 def getEngineerAdviceGroup() -> AdviceGroup:
     v_stats = 'Villager Stats'
@@ -158,20 +153,20 @@ def getConjurorAdviceGroup() -> AdviceGroup:
     h_m_stats = 'Hole Majik Stats'
     v_m_stats = 'Village Majik Stats'
     i_m_stats = 'IdleOn Majik Stats'
-    conjuror_advice = {
+    villager_advice = {
         v_stats: [],
         h_m_stats: [],
         v_m_stats: [],
         i_m_stats: []
     }
-    cosmos = session_data.account.caverns['Villagers']['Cosmos']
-    earned_conjuror_points = session_data.account.gemshop['Conjuror Pts'] + cosmos['Level']
+    villager = session_data.account.caverns['Villagers']['Cosmos']
+    earned_conjuror_points = session_data.account.gemshop['Conjuror Pts'] + villager['Level']
     spent_conjuror_points = session_data.account.caverns['TotalMajiks']
 
 # Majiks
     for majik_name, majik_details in session_data.account.caverns['Majiks'].items():
         subgroup = f"{majik_details['MajikType']} Majik Stats"
-        conjuror_advice[subgroup].append(Advice(
+        villager_advice[subgroup].append(Advice(
             label=f"{majik_name}: {majik_details['Description']}",
             picture_class=f"{majik_details['MajikType']}-majik-{'un' if majik_details['Level'] == 0 else ''}purchased",
             progression=majik_details['Level'],
@@ -180,44 +175,96 @@ def getConjurorAdviceGroup() -> AdviceGroup:
 
 # Villager Stats
     # Practical Max Level
-    conjuror_advice[v_stats].append(Advice(
-        label=cosmos['Title'],
-        picture_class='cosmos',
-        progression=cosmos['Level'],
+    villager_advice[v_stats].append(Advice(
+        label=villager['Title'],
+        picture_class='villager',
+        progression=villager['Level'],
         goal=max_majiks - session_data.account.gemshop['Conjuror Pts']
     ))
     max_conjuror_pts = 12  # TODO Do I not have max levels stored somewhere for gemshop?
-    conjuror_advice[v_stats].append(Advice(
+    villager_advice[v_stats].append(Advice(
         label=f"Up to {max_conjuror_pts} Conjuror Pts can be purchased from the Gem Shop",
         picture_class='conjuror-pts',
         progression=session_data.account.gemshop['Conjuror Pts'],
         goal=max_conjuror_pts
     ))
     if earned_conjuror_points > spent_conjuror_points < max_majiks:
-        conjuror_advice[v_stats].append(Advice(
+        villager_advice[v_stats].append(Advice(
             label=f"You have {earned_conjuror_points-spent_conjuror_points} unspent Conjuror Pts!",
             picture_class='',
             progression=spent_conjuror_points,
             goal=earned_conjuror_points
         ))
     # Invested Opals
-    conjuror_advice[v_stats].append(Advice(
+    villager_advice[v_stats].append(Advice(
         label="Opals Invested",
         picture_class='opal',
-        progression=cosmos['Opals'],
+        progression=villager['Opals'],
     ))
 
-    for subgroup in conjuror_advice:
-        for advice in conjuror_advice[subgroup]:
+    for subgroup in villager_advice:
+        for advice in villager_advice[subgroup]:
             mark_advice_completed(advice)
 
-    conjuror_ag = AdviceGroup(
+    villager_ag = AdviceGroup(
         tier="",
-        pre_string=f"Informational- {cosmos['Title']}",
-        advices=conjuror_advice,
+        pre_string=f"Informational- {villager['Title']}",
+        advices=villager_advice,
         informational=True
     )
-    return conjuror_ag
+    return villager_ag
+
+def getMeasurerAdviceGroup() -> AdviceGroup:
+    v_stats = 'Villager Stats'
+    m_stats = 'Measurement Stats'
+    villager_advice = {
+        v_stats: [],
+        m_stats: [],
+    }
+    villager = session_data.account.caverns['Villagers']['Minau']
+    measurements = session_data.account.caverns['Measurements']
+# Villager Stats
+    # Practical Max Level
+    villager_advice[v_stats].append(Advice(
+        label=villager['Title'],
+        picture_class='polonai',
+        progression=villager['Level'],
+        goal=max_cavern
+    ))
+    # Invested Opals
+    villager_advice[v_stats].append(Advice(
+        label="Opals Invested",
+        picture_class='opal',
+        progression=villager['Opals'],
+    ))
+# Measurement Stats
+    villager_advice[m_stats] = [
+        Advice(
+            label=(
+                f"{measurement_details['Level']} {measurement_details['Unit']}: {measurement_details['Description']}"
+                f"<br>Scales with: {measurement_details['ScalesWith']}"
+                if villager['Level'] >= measurement_details['MeasurementNumber']
+                else f"Unlock Measurement {measurement_details['MeasurementNumber']} by leveling Minau"
+            ),
+            picture_class=measurement_details['Image'],
+            progression=measurement_details['Level'] if villager['Level'] >= measurement_details['MeasurementNumber'] else villager['Level'],
+            goal="∞" if villager['Level'] >= measurement_details['MeasurementNumber'] else measurement_details['MeasurementNumber'],
+            resource=measurement_details['Resource']
+        )
+        for measurement_name, measurement_details in measurements.items() if measurement_name != 'i' and max_measurements >= measurement_details['MeasurementNumber']
+    ]
+
+    for subgroup in villager_advice:
+        for advice in villager_advice[subgroup]:
+            mark_advice_completed(advice)
+
+    villager_ag = AdviceGroup(
+        tier="",
+        pre_string=f"Informational- {villager['Title']}",
+        advices=villager_advice,
+        informational=True
+    )
+    return villager_ag
 
 def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
     villagers_AdviceDict = {
@@ -257,9 +304,10 @@ def getVillagersAdviceSection() -> AdviceSection:
     #Generate AdviceGroups
     villagers_AdviceGroupDict = {}
     villagers_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
-    villagers_AdviceGroupDict['Explorer'] = getExplorerAdviceGroup()
-    villagers_AdviceGroupDict['Engineer'] = getEngineerAdviceGroup()
-    villagers_AdviceGroupDict['Conjuror'] = getConjurorAdviceGroup()
+    villagers_AdviceGroupDict.update(getVillagersAdviceGroups())
+
+    for ag in villagers_AdviceGroupDict.values():
+        ag.remove_empty_subgroups()
 
     #Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"

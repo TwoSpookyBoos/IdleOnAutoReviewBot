@@ -97,7 +97,7 @@ $caverns: (
     cavern-3: img('wiki/HolePOI2.png'),
     cavern-4: img('wiki/HolePOI3.png'),
     cavern-5: img('wiki/HolePOI4.png'),
-    cavern-6: img('wiki/HolePOI5.png'),
+    cavern-6: img('wiki/HolePOI5.png'),  //Lamp
     cavern-7: img('wiki/HolePOI6.png'),
     cavern-8: img('wiki/HolePOI7.png'),
     cavern-9: img('wiki/HolePOI8.png'),
@@ -160,6 +160,22 @@ $lamp-wishes: (
     //lamp-wish-9: img('wiki/HoleLampUpg9.png'),
 );
 
+$measurements: (
+    measurement-0: img('wiki/Opal.png'), //Opal
+    measurement-1: img('wiki/HolePOI3.png'),  //Bravery
+    measurement-2: img('wiki/HolePOI4.png'),  //Bell
+    measurement-3: img('wiki/HolePOI5.png'),  //Harp
+    measurement-4: img('wiki/HolePOI6.png'),  //Lamp
+    measurement-5: img('wiki/HoleWellBucket0.png'),  //Supposed to be 2 gold buckets, couldn't find proper image
+    measurement-6: img('wiki/HolePOI5.png'),  //Harp
+    measurement-7: img('wiki/Opal.png'), //Opal
+    measurement-8: img('wiki/HolePOI5.png'),  //Harp
+    measurement-9: img('tbd.png'),
+    measurement-10: img('tbd.png'),
+    measurement-11: img('tbd.png'),
+    measurement-12: img('tbd.png'),
+);
+
 $etc: (
     hole-campfire: img('wiki/Hole_Campfire.gif'),
 );
@@ -172,4 +188,5 @@ $all-caverns: map-merge($all-caverns, $well-sediment);
 $all-caverns: map-merge($all-caverns, $monuments);
 $all-caverns: map-merge($all-caverns, $harp-notes);
 $all-caverns: map-merge($all-caverns, $lamp-wishes);
+$all-caverns: map-merge($all-caverns, $measurements);
 $all-caverns: map-merge($all-caverns, $etc);
