@@ -160,7 +160,9 @@ $lamp-wishes: (
     //lamp-wish-9: img('wiki/HoleLampUpg9.png'),
 );
 
-$etc: ();
+$etc: (
+    hole-campfire: img('wiki/Hole_Campfire.gif'),
+);
 
 $all-caverns: map-merge($villagers, $villager-banners);
 $all-caverns: map-merge($all-caverns, $schematics);

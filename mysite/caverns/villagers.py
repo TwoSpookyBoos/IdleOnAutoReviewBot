@@ -166,7 +166,8 @@ def getConjurorAdviceGroup() -> AdviceGroup:
     }
     cosmos = session_data.account.caverns['Villagers']['Cosmos']
     earned_conjuror_points = session_data.account.gemshop['Conjuror Pts'] + cosmos['Level']
-    spent_conjuror_points = 0
+    spent_conjuror_points = session_data.account.caverns['TotalMajiks']
+
 # Majiks
     for majik_name, majik_details in session_data.account.caverns['Majiks'].items():
         subgroup = f"{majik_details['MajikType']} Majik Stats"
@@ -176,7 +177,6 @@ def getConjurorAdviceGroup() -> AdviceGroup:
             progression=majik_details['Level'],
             goal=majik_details['MaxLevel']
         ))
-        spent_conjuror_points += majik_details['Level']
 
 # Villager Stats
     # Practical Max Level
@@ -268,7 +268,7 @@ def getVillagersAdviceSection() -> AdviceSection:
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
         header="Villager Information",  #f"Best Villagers tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
-        picture="",
+        picture='wiki/Hole_Campfire.gif',
         groups=villagers_AdviceGroupDict.values(),
         completed=None,
         unrated=True,

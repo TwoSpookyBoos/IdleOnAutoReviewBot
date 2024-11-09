@@ -2890,6 +2890,7 @@ class Account:
             'Schematics': {},
             'TotalSchematics': 0,
             'Majiks': {},
+            'TotalMajiks': 0,
             'Measurements': {},
         }
         raw_caverns_list: list[list] = safe_loads(self.raw_data.get('Holes', []))
@@ -2942,6 +2943,7 @@ class Account:
                 }
 
     def _parse_caverns_majiks(self, hole_majiks, village_majiks, idleon_majiks):
+        self.caverns['TotalMajiks'] = sum([sum(hole_majiks), sum(village_majiks), sum(idleon_majiks)])
         raw_majiks: dict = {
             'Hole': hole_majiks,
             'Village': village_majiks,
