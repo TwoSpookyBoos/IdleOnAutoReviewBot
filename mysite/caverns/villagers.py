@@ -244,7 +244,7 @@ def getMeasurerAdviceGroup() -> AdviceGroup:
                 f"{measurement_details['Level']} {measurement_details['Unit']}: {measurement_details['Description']}"
                 f"<br>Scales with: {measurement_details['ScalesWith']}"
                 if villager['Level'] >= measurement_details['MeasurementNumber']
-                else f"Unlock Measurement {measurement_details['MeasurementNumber']} by leveling Minau"
+                else f"Unlock {measurement_details['Unit']} by leveling Minau"
             ),
             picture_class=measurement_details['Image'],
             progression=measurement_details['Level'] if villager['Level'] >= measurement_details['MeasurementNumber'] else villager['Level'],

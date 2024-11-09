@@ -6254,7 +6254,7 @@ caverns_measurer_scalar_matchup = HolesInfo[52]
 caverns_measurer_scalars = HolesInfo[53]
 caverns_measurer_measurements = HolesInfo[54]
 max_measurements = sum(1 for measurement in caverns_measurer_measurements if measurement != 'i')  #i is a placeholder for not-implemented
-caverns_measurer_measurement_names = ['Inches', 'Meters', 'Miles', 'Liters', 'Yards', 'Pixels', 'TBD7', 'TBD8', 'TBD9', 'TBD10', 'TBD11', 'TBD12', 'TBD13', 'TBD14']
+caverns_measurer_measurement_names = ['Inches', 'Meters', 'Miles', 'Liters', 'Yards', 'Pixels', 'Leagues', 'Nanometers', 'Sadness', 'Feet', 'Bababooey', 'Killermeters', 'Joules', 'TBD14']
 
 for entry_index, entry in enumerate(caverns_measurer_measurements):
     try:
