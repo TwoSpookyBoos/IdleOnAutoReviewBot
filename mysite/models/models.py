@@ -2917,7 +2917,7 @@ class Account:
                     'Opals': 0,
                     'Title': f"{villager_data['Name']}, {villager_data['Role']}",
                     'VillagerNumber': villager_data['VillagerNumber'],
-                    'LevelPercent': 100 * (float(villager_exp[villager_index])/getVillagerEXPRequired(villager_index, villager_levels[villager_index])),
+                    'LevelPercent': 0,
                 }
 
     def _parse_caverns_actual_caverns(self, opals_per_cavern):
