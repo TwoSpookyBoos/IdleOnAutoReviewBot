@@ -6309,7 +6309,7 @@ def getMotherlodeResourceRequired(layers_destroyed: int):
     result = math.ceil(200 * pow(2.2, 1 + layers_destroyed))
     return result
 def getMotherlodeEfficiencyRequired(layers_destroyed: int):
-    result = math.ceil(2e4 * pow(1.8, 1 + layers_destroyed))
+    result = math.ceil(9000 * pow(1.8, layers_destroyed))
     return result
 
 

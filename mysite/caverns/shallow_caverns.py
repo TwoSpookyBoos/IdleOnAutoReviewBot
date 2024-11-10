@@ -134,7 +134,7 @@ def getMotherlodeAdviceGroup():
     resource_type = 'Ore'
     resource_skill = 'Mining'
     cavern = session_data.account.caverns['Caverns'][cavern_name]
-
+# Cavern Stats
     cavern_advice[c_stats].append(Advice(
         label=f"Objective- Use your characters to mine up Ore and break Layers",
         picture_class=f"cavern-{cavern['CavernNumber']}"
@@ -143,20 +143,21 @@ def getMotherlodeAdviceGroup():
         label=f"Total Opals Found: {cavern['OpalsFound']}",
         picture_class='opal'
     ))
+
+# Layer Stats
+    cavern_advice[l_stats].append(Advice(
+        label=f"Layer {cavern['LayersDestroyed']+1} {resource_skill} Efficiency Required:"
+              f"{notateNumber('Basic', getMotherlodeEfficiencyRequired(cavern['LayersDestroyed']), 1)}",
+        picture_class=resource_skill
+    ))
     resource_required = getMotherlodeResourceRequired(cavern['LayersDestroyed'])
-    cavern_advice[c_stats].append(Advice(
+    cavern_advice[l_stats].append(Advice(
         label=f"{resource_type} remaining to break Layer {cavern['LayersDestroyed'] + 1}: {notateNumber('Basic', resource_required - cavern['ResourcesCollected'], 1)}",
         picture_class=f'motherlode-{resource_type}',
         progression=f"{min(100, 100 * (cavern['ResourcesCollected'] / resource_required)):.1f}",
         goal=100,
         unit='%'
     ))
-    # cavern_advice[l_stats].append(Advice(
-    #     label=f"Layer {cavern['LayersDestroyed']+1} {resource_skill} Efficiency Required:"
-    #           f"<br>{notateNumber('Basic', getMotherlodeEfficiencyRequired(cavern['LayersDestroyed']), 1)}",
-    #     picture_class=resource_skill
-    # ))
-
 
     cavern_ag = AdviceGroup(
         tier='',
