@@ -2893,7 +2893,8 @@ class Account:
         self._parse_caverns_majiks(raw_caverns_list[4], raw_caverns_list[5], raw_caverns_list[6])
         self._parse_caverns_schematics(raw_caverns_list[13])
         self._parse_caverns_measurements(raw_caverns_list[22])
-        self._parse_caverns_cavern_specifics(raw_caverns_list)
+        self._parse_caverns_biome1(raw_caverns_list)
+
         #print([k for k, v in self.caverns['Schematics'].items() if v['Unlocked']])  #Unlocked schematic check
         # for key in self.caverns:
         #     print(f"{key}: {self.caverns[key]}")
@@ -3016,8 +3017,11 @@ class Account:
                     'MeasurementNumber': measurement_index+1
                 }
 
-    def _parse_caverns_cavern_specifics(self, raw_caverns_list):
-        #The Well
+    def _parse_caverns_biome1(self, raw_caverns_list):
+        self._parse_caverns_the_well(raw_caverns_list)
+        self._parse_caverns_motherlode(raw_caverns_list)
+
+    def _parse_caverns_the_well(self, raw_caverns_list):
         try:
             self.caverns['Caverns']['The Well']['BucketTargets'] = [int(entry) for entry in raw_caverns_list[10][:max_buckets]]
         except:
@@ -3039,6 +3043,19 @@ class Account:
             self.caverns['Caverns']['The Well']['Holes-11-9'] = raw_caverns_list[11][9]
         except:
             self.caverns['Caverns']['The Well']['Holes-11-9'] = 0
+
+    def _parse_caverns_motherlode(self, raw_caverns_list):
+        cavern_name = 'Motherlode'
+        motherlode_offset = 0
+        try:
+            self.caverns['Caverns'][cavern_name]['ResourcesCollected'] = raw_caverns_list[11][0 + motherlode_offset]
+        except:
+            self.caverns['Caverns'][cavern_name]['ResourcesCollected'] = 0
+        try:
+            self.caverns['Caverns'][cavern_name]['LayersDestroyed'] = raw_caverns_list[11][1 + motherlode_offset]
+        except:
+            self.caverns['Caverns'][cavern_name]['LayersDestroyed'] = 0
+
 
     def _parse_w6(self):
         self._parse_w6_sneaking()

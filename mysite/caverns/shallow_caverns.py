@@ -4,7 +4,8 @@ from utils.logging import get_logger
 from flask import g as session_data
 from consts import (
     caverns_cavern_names,
-    break_you_best, schematics_unlocking_buckets, sediment_names, max_sediments, getSedimentBarRequirement, getWellOpalTrade,
+    break_you_best, schematics_unlocking_buckets, sediment_names, max_sediments, getSedimentBarRequirement, getWellOpalTrade, getMotherlodeEfficiencyRequired,
+    getMotherlodeResourceRequired,
     # shallow_caverns_progressionTiers
 )
 from utils.text_formatting import pl, notateNumber
@@ -18,7 +19,7 @@ def getTemplateCavernAdviceGroup() -> AdviceGroup:
     }
 
     cavern_name = 'The Template'
-    cavern = session_data.account.caverns[cavern_name]
+    cavern = session_data.account.caverns['Caverns'][cavern_name]
 
     cavern_advice[c_stats].append(Advice(
         label=f"Total Opals Found: {cavern['OpalsFound']}",
@@ -27,7 +28,7 @@ def getTemplateCavernAdviceGroup() -> AdviceGroup:
 
     cavern_ag = AdviceGroup(
         tier='',
-        pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name}",
+        pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name if cavern['Unlocked'] else 'To Be Discovered!'}",
         advices=cavern_advice,
         informational=True
     )
@@ -52,11 +53,15 @@ def getWellAdviceGroup() -> AdviceGroup:
 
 # Cavern Stats
     cavern_advice[c_stats].append(Advice(
+        label=f"Objective- Use buckets to collect Sediment",
+        picture_class=f"cavern-{cavern['CavernNumber']}"
+    ))
+    cavern_advice[c_stats].append(Advice(
         label=f"Total Opals Found: {cavern['OpalsFound']}",
         picture_class='opal'
     ))
     opal_trade_cost = getWellOpalTrade(cavern['Holes-11-9'])
-    opal_trades_list = [notateNumber('Basic', getWellOpalTrade(i), 1) for i in range(0, 100)]
+    #opal_trades_list = [notateNumber('Basic', getWellOpalTrade(i), 1) for i in range(0, 100)]
     opal_trade_progress = 100 * (sediments_owned[0] / opal_trade_cost)
     cavern_advice[c_stats].append(Advice(
         label=f"Next Opal trade: {notateNumber('Basic', opal_trade_cost, 2)} Gravel",
@@ -76,13 +81,13 @@ def getWellAdviceGroup() -> AdviceGroup:
             label=(
                 f"Bucket {bucket_index+1}: {'Collecting' if sediments_owned[bucket_target-1] > 0 else 'Unlocking next sediment'}"
                 f" {sediment_names[bucket_target] if sediments_owned[bucket_target-1] > 0 else ''}"
-                if bucket_target > 0 else
+                if bucket_index + 1 <= cavern['BucketsUnlocked'] else
                 f"Unlock Bucket {bucket_index+1} by purchasing <br>"
                 f"Schematic {schematics[schematics_unlocking_buckets[bucket_index-1]]['UnlockOrder']}:"
                 f" {schematics_unlocking_buckets[bucket_index-1]}"
             ),
-            picture_class=f"well-sediment-{bucket_target}" if bucket_target > 0 else schematics[schematics_unlocking_buckets[bucket_index-1]]['Image'],
-            resource='' if bucket_target > 0 else schematics[schematics_unlocking_buckets[bucket_index-1]]['Resource']
+            picture_class=f"well-sediment-{bucket_target}" if bucket_index + 1 <= cavern['BucketsUnlocked'] else schematics[schematics_unlocking_buckets[bucket_index-1]]['Image'],
+            resource='' if bucket_index + 1 <= cavern['BucketsUnlocked'] else schematics[schematics_unlocking_buckets[bucket_index-1]]['Resource']
         ))
 
     cavern_advice[s_stats] = [
@@ -110,10 +115,54 @@ def getWellAdviceGroup() -> AdviceGroup:
 
     cavern_ag = AdviceGroup(
         tier='',
-        pre_string=f"Informational- {cavern_name}",
+        pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name if cavern['Unlocked'] else 'To Be Discovered!'}",
         advices=cavern_advice,
         informational=True,
         picture_class='cavern-1'
+    )
+    return cavern_ag
+
+def getMotherlodeAdviceGroup():
+    c_stats = "Cavern Stats"
+    l_stats = 'Layer Stats'
+    cavern_advice = {
+        c_stats: [],
+        l_stats: []
+    }
+
+    cavern_name = 'Motherlode'
+    resource_type = 'Ore'
+    resource_skill = 'Mining'
+    cavern = session_data.account.caverns['Caverns'][cavern_name]
+
+    cavern_advice[c_stats].append(Advice(
+        label=f"Objective- Use your characters to collect Ore",
+        picture_class=f"cavern-{cavern['CavernNumber']}"
+    ))
+    cavern_advice[c_stats].append(Advice(
+        label=f"Total Opals Found: {cavern['OpalsFound']}",
+        picture_class='opal'
+    ))
+    # cavern_advice[l_stats].append(Advice(
+    #     label=f"Layer {cavern['LayersDestroyed']+1} {resource_skill} Efficiency Required:"
+    #           f"<br>{notateNumber('Basic', getMotherlodeEfficiencyRequired(cavern['LayersDestroyed']), 1)}",
+    #     picture_class=resource_skill
+    # ))
+    resource_required = getMotherlodeResourceRequired(cavern['LayersDestroyed'])
+    cavern_advice[l_stats].append(Advice(
+        label=f"{resource_type} remaining: {notateNumber('Basic',resource_required - cavern['ResourcesCollected'], 1)}",
+        picture_class=f'motherlode-{resource_type}',
+        progression=f"{min(100, 100 * (cavern['ResourcesCollected'] / resource_required)):.1f}",
+        goal=100,
+        unit='%'
+    ))
+
+    cavern_ag = AdviceGroup(
+        tier='',
+        pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name if cavern['Unlocked'] else 'To Be Discovered!'}",
+        advices=cavern_advice,
+        informational=True,
+        picture_class='cavern-2'
     )
     return cavern_ag
 
@@ -135,6 +184,8 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
     overall_SectionTier = min(max_tier + info_tiers, tier_Shallow_Caverns)
     return tiers_ag, overall_SectionTier, max_tier
 
+
+
 def getShallowCavernsAdviceSection() -> AdviceSection:
     #Check if player has reached this section
     if session_data.account.caverns['Villagers']['Polonai']['Level'] < 1:
@@ -155,6 +206,10 @@ def getShallowCavernsAdviceSection() -> AdviceSection:
     shallow_caverns_AdviceGroupDict = {}
     shallow_caverns_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
     shallow_caverns_AdviceGroupDict['The Well'] = getWellAdviceGroup()
+    shallow_caverns_AdviceGroupDict['Motherlode'] = getMotherlodeAdviceGroup()
+
+    for ag in shallow_caverns_AdviceGroupDict.values():
+        ag.remove_empty_subgroups()
 
     #Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"

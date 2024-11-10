@@ -6305,6 +6305,12 @@ def getWellOpalTrade(holes_11_9):
             * pow(3.5 + holes_11_9 / 10, holes_11_9)
         )
         return math.ceil(result) if 1e9 > result else math.floor(result)
+def getMotherlodeResourceRequired(layers_destroyed: int):
+    result = math.ceil(200 * pow(2.2, 1 + layers_destroyed))
+    return result
+def getMotherlodeEfficiencyRequired(layers_destroyed: int):
+    result = math.ceil(2e4 * pow(1.8, 1 + layers_destroyed))
+    return result
 
 
 ###WORLD 5 CONSTS###

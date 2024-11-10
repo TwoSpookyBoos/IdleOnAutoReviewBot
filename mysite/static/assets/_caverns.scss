@@ -119,6 +119,13 @@ $well-sediment: (
     well-sediment-9: img('wiki/HoleWellFill10.png'),
 );
 
+$motherlode-resources: (
+    motherlode-ore: img('wiki/Motherlode_Ore.png'), //Technically a duplicate in slab-items
+    motherlode-bugs: img('wiki/Fractal_Fly.png'),
+    motherlode-logs: img('wiki/Everlog.png'),
+    motherlode-fish: img('wiki/Trench_Fish.png'),
+);
+
 $monuments: (
     monument-basic-chest: img('HoleBraveryChest.png'),
     monument-special-chest: img('HoleBraveryChestB.png'),
@@ -185,6 +192,7 @@ $all-caverns: map-merge($all-caverns, $schematics);
 $all-caverns: map-merge($all-caverns, $cosmos-majiks);
 $all-caverns: map-merge($all-caverns, $caverns);
 $all-caverns: map-merge($all-caverns, $well-sediment);
+$all-caverns: map-merge($all-caverns, $motherlode-resources);
 $all-caverns: map-merge($all-caverns, $monuments);
 $all-caverns: map-merge($all-caverns, $harp-notes);
 $all-caverns: map-merge($all-caverns, $lamp-wishes);
