@@ -6146,6 +6146,7 @@ def getVillagerEXPRequired(villager_index, villager_level):
             result = 10 * pow(10, 20)
     return result
 
+
 HolesInfo = [
     "57 57 228 -29 183 0 216 -150 96 -219 255 -45 175 -28 257 -36 176 -67 216 -150 273 -35 184 -66 216 -150 24 -75 180 -54 220 -43 173 -60 232 95 216 -150 254 -49 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0".split(" "),
     "0 0 8 0 0 7 0 0 0 0 10 2 2 4 3 6 2 5 1 6 0 0 0 0 0 0 0 0 0 0".split(" "),
@@ -6168,7 +6169,7 @@ HolesInfo = [
     "3 7 21 7 12 21".split(" "),
     "12 1 1 12 23 12 12 23".split(" "),
     "Explorer_@___@_Each_LV_of_this_villager_unlocks_a_new_cavern!_@___@_Invest_opals_to_increase_their_XP/hr_using_that_blue_button! Engineer_@___@_Each_LV_unlocks_3_new_schematics_to_create!_@_Every_5_LVs_unlocks_an_additional_schematic!__@___ Conjuror_@___@_Each_LV_gives_+1_Majik_Point_to_put_into_permanent_bonuses! Measurer_@___@_Each_LV_gives_a_new_bonus_to_upgrade!_The_multi_goes_up_as_you_increase_its_IdleOn_stat,_shown_in_parenthesis!__@___ Librarian Elder ??? ???".split(" "),
-    "0 50 500 9000 125000 1500000 20000000 100000000 500000000 2000000000.0".split(" "),
+    "0 50 500 9000 125000 1500000 20000000 100000000 500000000 2000000000.0".split(" "),  #21 Well Sediment bars
     "讽 论 许 讲 议 训".split(" "),
     "316 639 291 372 409 533 264 409 400 600 240 400 390 556 217 382 393 567 180 331 400 580 190 390 334 620 198 390 443 502 286 372 340 640 116 295 390 556 217 382 0 0 0 0 439 507 251 380 390 556 217 382 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 316 639 294 425 390 556 217 382 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0".split(" "),
     "THE_MOTHERLODE THE_UNDYING_HIVE THE_EVERTREE THE_BOTTOMLESS_TRENCH MONUMENT_OF_BRAVERY MONUMENT_OF_JUSTICE MONUMENT_OF_WISDOM MONUMENT_OF_COMPASSION".split(" "),
@@ -6236,7 +6237,8 @@ max_schematics = len(caverns_engineer_schematics)
 schematics_unlocking_buckets = ['2nd Bucket!', '3rd Bucket!', '4th Bucket!', 'Five Nights at Bucket', '6th Bucket!', '7rth Barckot?!', 'Last Bucket!', '9th Bucket!', 'Bucket Finale!']
 max_buckets = 1 + len(schematics_unlocking_buckets)
 sediment_names = ['Gravel', 'Goldust', 'Redstone', 'Mythril', 'Cobaltine', 'Brunite', 'Freezium', 'Sweetium', 'Red Coral', 'Hyper Coral']
-sediment_starts = [0, -50, -500, -9000, -125000, -1500000, -20000000, -100000000, -500000000, -2000000000]
+sediment_bars = [0, 50, 500, 9000, 125000, 1500000, 20000000, 100000000, 500000000, 2000000000]
+max_sediments = len(sediment_names)
 #Majiks stored in CosmoUpgrades in source code
 caverns_conjuror_majiks = {
     "Hole": [
@@ -6287,6 +6289,23 @@ for entry_index, entry in enumerate(caverns_measurer_measurements):
             f"UnknownScalar{entry_index}",
             ''
         ]
+
+def getSedimentBarRequirement(sediment_index, sediment_level):
+    result = 100 * pow(1.5, sediment_level) * ValueToMulti(sediment_bars[sediment_index])
+    return result
+def getWellOpalTrade(holes_11_9):
+    # From looking at data, holes_11_9 is just the number of previously completed trades. Maybe it changes higher up at some point
+    if holes_11_9 == 1:
+        return 6
+    elif holes_11_9 == 2:
+        return 60
+    else:
+        result = (
+            (1 + (3 * holes_11_9) + pow(holes_11_9, 2))
+            * pow(3.5 + holes_11_9 / 10, holes_11_9)
+        )
+        return math.ceil(result) if 1e9 > result else math.floor(result)
+
 
 ###WORLD 5 CONSTS###
 artifactTiers = ["Base", "Ancient", "Eldritch", "Sovereign"]

@@ -4,9 +4,10 @@ from utils.logging import get_logger
 from flask import g as session_data
 from consts import (
     caverns_cavern_names,
-    break_you_best, schematics_unlocking_buckets, sediment_names,
+    break_you_best, schematics_unlocking_buckets, sediment_names, max_sediments, getSedimentBarRequirement, getWellOpalTrade,
     # shallow_caverns_progressionTiers
 )
+from utils.text_formatting import pl, notateNumber
 
 logger = get_logger(__name__)
 
@@ -45,27 +46,36 @@ def getWellAdviceGroup() -> AdviceGroup:
     cavern_name = 'The Well'
     cavern = session_data.account.caverns['Caverns'][cavern_name]
     buckets = session_data.account.caverns['Caverns'][cavern_name]['BucketTargets']
-    sediments = session_data.account.caverns['Caverns'][cavern_name]['SedimentsOwned']
+    sediments_owned = session_data.account.caverns['Caverns'][cavern_name]['SedimentsOwned']
+    sediment_levels = session_data.account.caverns['Caverns'][cavern_name]['SedimentLevels']
     schematics = session_data.account.caverns['Schematics']
 
+# Cavern Stats
     cavern_advice[c_stats].append(Advice(
         label=f"Total Opals Found: {cavern['OpalsFound']}",
         picture_class='opal'
     ))
+    opal_trade_cost = getWellOpalTrade(cavern['Holes-11-9'])
+    opal_trades_list = [notateNumber('Basic', getWellOpalTrade(i), 1) for i in range(0, 100)]
+    opal_trade_progress = 100 * (sediments_owned[0] / opal_trade_cost)
     cavern_advice[c_stats].append(Advice(
-        label=f"Next Opal trade TBD",
-        picture_class='',
-        resource='well-sediment-0'
+        label=f"Next Opal trade: {notateNumber('Basic', opal_trade_cost, 2)} Gravel",
+        picture_class='bucketlyte',
+        resource='well-sediment-0',
+        progression=f"{opal_trade_progress:.1f}",
+        goal=100,
+        unit='%'
     ))
 
+# Bucket Stats
     # if cavern['BucketsUnlocked'] >= max_buckets:
     #     pass
     # else:
     for bucket_index, bucket_target in enumerate(buckets):
         cavern_advice[b_stats].append(Advice(
             label=(
-                f"Bucket {bucket_index+1}: {'Collecting' if sediments[bucket_target-1] > 0 else 'Unlocking next sediment'}"
-                f" {sediment_names[bucket_target] if sediments[bucket_target-1] > 0 else ''}"
+                f"Bucket {bucket_index+1}: {'Collecting' if sediments_owned[bucket_target-1] > 0 else 'Unlocking next sediment'}"
+                f" {sediment_names[bucket_target] if sediments_owned[bucket_target-1] > 0 else ''}"
                 if bucket_target > 0 else
                 f"Unlock Bucket {bucket_index+1} by purchasing <br>"
                 f"Schematic {schematics[schematics_unlocking_buckets[bucket_index-1]]['UnlockOrder']}:"
@@ -75,9 +85,27 @@ def getWellAdviceGroup() -> AdviceGroup:
             resource='' if bucket_target > 0 else schematics[schematics_unlocking_buckets[bucket_index-1]]['Resource']
         ))
 
-    cavern_advice[s_stats].append(Advice(
-        label="Sediments WIP :D",
-        picture_class=''
+    cavern_advice[s_stats] = [
+        Advice(
+            label=(
+                f"{sediment_names[sediment_index]}'s bar has been expanded {sediment_levels[sediment_index]} times"
+                f"<br>{sediment_value:,} owned"
+                f"<br>{getSedimentBarRequirement(sediment_index, sediment_levels[sediment_index]):,.0f} required to expand the bar"
+                if sediment_value >= 0 else
+                f"Clear the rock layer to discover this Sediment!"
+            ),
+            picture_class=f"well-sediment-{sediment_index}",
+            resource='well-sediment-rock-layer' if sediment_value < 0 else '',
+            progression=0 if sediment_value < 0 else f"{100 * (sediment_value / getSedimentBarRequirement(sediment_index, sediment_levels[sediment_index])):.1f}",
+            goal=100,
+            unit='%'
+        )
+        for sediment_index, sediment_value in enumerate(sediments_owned) if sediment_index < max_sediments
+        # There are lots of placeholders in sediments_owned, so stay within bounds of max_sediments
+    ]
+    cavern_advice[s_stats].insert(0, Advice(
+        label=f"Expand Full Bars: {'On' if session_data.account.caverns['Caverns']['The Well']['BarExpansion'] else 'Off'}",
+        picture_class='engineer-schematic-13'
     ))
 
     cavern_ag = AdviceGroup(

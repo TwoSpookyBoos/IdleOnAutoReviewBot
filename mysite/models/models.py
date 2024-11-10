@@ -68,7 +68,8 @@ from consts import (
     summoningBattleCountsDict, summoningDict,
     # Caverns
     caverns_villagers, caverns_conjuror_majiks, caverns_engineer_schematics, caverns_engineer_schematics_unlock_order, caverns_cavern_names,
-    caverns_measurer_measurements, getCavernResourceImage, schematics_unlocking_buckets, max_buckets, sediment_names, sediment_starts, getVillagerEXPRequired,
+    caverns_measurer_measurements, getCavernResourceImage, schematics_unlocking_buckets, max_buckets, sediment_names, sediment_bars, getVillagerEXPRequired,
+    max_sediments,
 )
 
 
@@ -3022,10 +3023,22 @@ class Account:
         except:
             self.caverns['Caverns']['The Well']['BucketTargets'] = [0]*max_buckets
         try:
-            self.caverns['Caverns']['The Well']['SedimentsOwned'] = [int(entry) for entry in raw_caverns_list[10]]
+            self.caverns['Caverns']['The Well']['SedimentsOwned'] = [int(entry) for entry in raw_caverns_list[9]]
         except:
             #Gravel starts at 0, the rest are Negative
-            self.caverns['Caverns']['The Well']['SedimentsOwned'] = sediment_starts
+            self.caverns['Caverns']['The Well']['SedimentsOwned'] = [entry*-1 for entry in sediment_bars]
+        try:
+            self.caverns['Caverns']['The Well']['SedimentLevels'] = raw_caverns_list[8]
+        except:
+            self.caverns['Caverns']['The Well']['SedimentLevels'] = [0]*max_sediments
+        try:
+            self.caverns['Caverns']['The Well']['BarExpansion'] = raw_caverns_list[11][10]
+        except:
+            self.caverns['Caverns']['The Well']['BarExpansion'] = False
+        try:
+            self.caverns['Caverns']['The Well']['Holes-11-9'] = raw_caverns_list[11][9]
+        except:
+            self.caverns['Caverns']['The Well']['Holes-11-9'] = 0
 
     def _parse_w6(self):
         self._parse_w6_sneaking()
