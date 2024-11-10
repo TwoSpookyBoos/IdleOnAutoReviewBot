@@ -15,7 +15,7 @@ from w2 import alchemy, killroy, islands
 from w3 import trapping, consRefinery, consDeathNote, worship, consSaltLick, consBuildings, equinox, library, sampling, collider
 from w4 import breeding, cooking, rift
 from w5 import slab, divinity, sailing
-from caverns import villagers
+from caverns import villagers, shallow_caverns
 from w6 import beanstalk, sneaking, farming
 
 logger = get_logger(__name__)
@@ -52,7 +52,6 @@ def main(inputData, runType="web"):
     #roastworthyBool = getRoastableStatus(session_data.account.names)
 
     # Step 3: Send that data off to all the different analyzers
-    # General
     all_sections = [
         sections_general := [
             combatLevels.getCombatLevelsAdviceSection(),
@@ -103,7 +102,8 @@ def main(inputData, runType="web"):
             sailing.getSailingAdviceSection(),
         ],
         sections_caverns := [
-            villagers.getVillagersAdviceSection()
+            villagers.getVillagersAdviceSection(),
+            shallow_caverns.getShallowCavernsAdviceSection()
         ],
         sections_6 := [
             farming.setFarmingProgressionTier(),

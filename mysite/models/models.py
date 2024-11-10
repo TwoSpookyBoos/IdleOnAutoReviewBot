@@ -68,7 +68,7 @@ from consts import (
     summoningBattleCountsDict, summoningDict,
     # Caverns
     caverns_villagers, caverns_conjuror_majiks, caverns_engineer_schematics, caverns_engineer_schematics_unlock_order, caverns_cavern_names,
-    caverns_measurer_measurements, getCavernResourceImage,
+    caverns_measurer_measurements, getCavernResourceImage, schematics_unlocking_buckets, max_buckets, sediment_names, sediment_starts, getVillagerEXPRequired,
 )
 
 
@@ -1218,9 +1218,16 @@ class Account:
         self._calculate_wave_2()
 
     def _prep_alerts_AG(self):
-        self.alerts_AdviceDict = {"General": []}
-        for i in range(0, currentWorld):
-            self.alerts_AdviceDict[f"World {i+1}"] = []
+        self.alerts_AdviceDict = {
+            'General': [],
+            'World 1': [],
+            'World 2': [],
+            'World 3': [],
+            'World 4': [],
+            'World 5': [],
+            'The Caverns Below': [],
+            'World 6': []
+        }
 
     def _parse_wave_1(self, run_type):
         self._parse_switches()
@@ -2880,16 +2887,17 @@ class Account:
         raw_caverns_list: list[list] = safe_loads(self.raw_data.get('Holes', []))
         while len(raw_caverns_list) < 23:
             raw_caverns_list.append([])
-        self._parse_caverns_villagers(raw_caverns_list[1], raw_caverns_list[3])
+        self._parse_caverns_villagers(raw_caverns_list[1], raw_caverns_list[2], raw_caverns_list[3])
         self._parse_caverns_actual_caverns(raw_caverns_list[7])
         self._parse_caverns_majiks(raw_caverns_list[4], raw_caverns_list[5], raw_caverns_list[6])
         self._parse_caverns_schematics(raw_caverns_list[13])
         self._parse_caverns_measurements(raw_caverns_list[22])
+        self._parse_caverns_cavern_specifics(raw_caverns_list)
         #print([k for k, v in self.caverns['Schematics'].items() if v['Unlocked']])  #Unlocked schematic check
         # for key in self.caverns:
         #     print(f"{key}: {self.caverns[key]}")
 
-    def _parse_caverns_villagers(self, villager_levels, opals_invested):
+    def _parse_caverns_villagers(self, villager_levels, villager_exp, opals_invested):
         for villager_index, villager_data in enumerate(caverns_villagers):
             try:
                 self.caverns['Villagers'][villager_data['Name']] = {
@@ -2898,7 +2906,8 @@ class Account:
                     'Level':    villager_levels[villager_index],
                     'Opals':    opals_invested[villager_index],
                     'Title':    f"{villager_data['Name']}, {villager_data['Role']}",
-                    'VillagerNumber': villager_data['VillagerNumber']
+                    'VillagerNumber': villager_data['VillagerNumber'],
+                    'LevelPercent': 100 * (float(villager_exp[villager_index])/getVillagerEXPRequired(villager_index, villager_levels[villager_index])),
                 }
             except:
                 self.caverns['Villagers'][villager_data['Name']] = {
@@ -2907,7 +2916,8 @@ class Account:
                     'Level': 0,
                     'Opals': 0,
                     'Title': f"{villager_data['Name']}, {villager_data['Role']}",
-                    'VillagerNumber': villager_data['VillagerNumber']
+                    'VillagerNumber': villager_data['VillagerNumber'],
+                    'LevelPercent': 100 * (float(villager_exp[villager_index])/getVillagerEXPRequired(villager_index, villager_levels[villager_index])),
                 }
 
     def _parse_caverns_actual_caverns(self, opals_per_cavern):
@@ -2969,7 +2979,7 @@ class Account:
                     'Purchased': raw_schematics_list[schematic_index] > 0,
                     'Image': f'engineer-schematic-{schematic_index}',
                     'Description': schematic_details[5].replace("_", " "),
-                    'UnlockOrder': caverns_engineer_schematics_unlock_order[schematic_index],
+                    'UnlockOrder': caverns_engineer_schematics_unlock_order.index(schematic_index)+1,
                     'Resource': resource_type
                 }
             except Exception as e:
@@ -2978,7 +2988,7 @@ class Account:
                     'Purchased': False,
                     'Image': f'engineer-schematic-{schematic_index}',
                     'Description': schematic_details[5].replace("_", " "),
-                    'UnlockOrder': caverns_engineer_schematics_unlock_order[schematic_index],
+                    'UnlockOrder': caverns_engineer_schematics_unlock_order.index(schematic_index)+1,
                     'Resource': resource_type
                 }
 
@@ -3004,6 +3014,18 @@ class Account:
                     'Resource': measurement_details[3],
                     'MeasurementNumber': measurement_index+1
                 }
+
+    def _parse_caverns_cavern_specifics(self, raw_caverns_list):
+        #The Well
+        try:
+            self.caverns['Caverns']['The Well']['BucketTargets'] = [int(entry) for entry in raw_caverns_list[10][:max_buckets]]
+        except:
+            self.caverns['Caverns']['The Well']['BucketTargets'] = [0]*max_buckets
+        try:
+            self.caverns['Caverns']['The Well']['SedimentsOwned'] = [int(entry) for entry in raw_caverns_list[10]]
+        except:
+            #Gravel starts at 0, the rest are Negative
+            self.caverns['Caverns']['The Well']['SedimentsOwned'] = sediment_starts
 
     def _parse_w6(self):
         self._parse_w6_sneaking()
@@ -3798,6 +3820,7 @@ class Account:
 
     def _calculate_caverns(self):
         self._calculate_caverns_majiks()
+        self._calculate_caverns_the_well()
 
     def _calculate_caverns_majiks(self):
         for majik_type, majiks in caverns_conjuror_majiks.items():
@@ -3839,6 +3862,15 @@ class Account:
                     f"{self.caverns['Majiks'][majik_data['Name']]['Description']}"
                 )
                 #print(self.caverns['Majiks'][majik_data['Name']])
+
+    def _calculate_caverns_the_well(self):
+        self.caverns['Caverns']['The Well']['BucketsUnlocked'] = 1 + sum(
+            [
+                1 for schematic_name in schematics_unlocking_buckets if self.caverns['Schematics'][schematic_name]['Purchased']
+            ]
+        )
+        self.caverns['Caverns']['The Well']['Buckets'] = safe_loads(self.raw_data.get('Holes', {}))
+
 
     def _calculate_w6(self):
         self._calculate_w6_summoning_winner_bonuses()

@@ -1,4 +1,5 @@
 from models.models import AdviceSection, AdviceGroup, Advice
+from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import getItemDisplayName, pl
 from utils.logging import get_logger
 from flask import g as session_data
@@ -29,17 +30,22 @@ def getHiddenAdviceGroup() -> AdviceGroup:
             hidden_adviceList.append(Advice(
                 label=decoded_name,
                 picture_class=decoded_name,
-                progression=0,
-                goal=1
+                progression=1,
+                goal=1,
+                completed=True
             ))
 
     #logger.debug(f"Cards1 length: {len(session_data.account.registered_slab)}")
     #logger.debug(f"{len(hidden_names)} Hidden Slab Items: {hidden_names}")
+    for advice in hidden_adviceList:
+        mark_advice_completed(advice)
+
     hidden_AdviceGroup = AdviceGroup(
         tier='',
         pre_string=f"Info- These are included in your total found items, but do not appear visually on The Slab",
         advices=hidden_adviceList,
-        informational=True
+        informational=True,
+        completed=True
     )
     return hidden_AdviceGroup
 
