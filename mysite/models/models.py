@@ -3020,6 +3020,7 @@ class Account:
     def _parse_caverns_biome1(self, raw_caverns_list):
         self._parse_caverns_the_well(raw_caverns_list)
         self._parse_caverns_motherlode(raw_caverns_list)
+        self._parse_caverns_the_den(raw_caverns_list)
 
     def _parse_caverns_the_well(self, raw_caverns_list):
         try:
@@ -3056,6 +3057,11 @@ class Account:
         except:
             self.caverns['Caverns'][cavern_name]['LayersDestroyed'] = 0
 
+    def _parse_caverns_the_den(self, raw_caverns_list):
+        try:
+            self.caverns['Caverns']['The Den']['HighScore'] = round(float(raw_caverns_list[11][8]))
+        except:
+            self.caverns['Caverns']['The Den']['HighScore'] = 0
 
     def _parse_w6(self):
         self._parse_w6_sneaking()
@@ -3852,6 +3858,7 @@ class Account:
         self._calculate_caverns_majiks()
         self._calculate_caverns_the_well()
 
+
     def _calculate_caverns_majiks(self):
         for majik_type, majiks in caverns_conjuror_majiks.items():
             for majik_index, majik_data in enumerate(majiks):
@@ -3900,7 +3907,6 @@ class Account:
             ]
         )
         self.caverns['Caverns']['The Well']['Buckets'] = safe_loads(self.raw_data.get('Holes', {}))
-
 
     def _calculate_w6(self):
         self._calculate_w6_summoning_winner_bonuses()

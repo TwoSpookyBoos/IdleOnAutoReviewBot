@@ -6235,6 +6235,16 @@ caverns_engineer_schematics = ["Opal_Dividends 0 0 6 1 Each_opal_invested_in_a_v
 caverns_engineer_schematics_unlock_order = [int(entry) for entry in HolesInfo[40]]
 max_schematics = len(caverns_engineer_schematics)
 schematics_unlocking_buckets = ['2nd Bucket!', '3rd Bucket!', '4th Bucket!', 'Five Nights at Bucket', '6th Bucket!', '7rth Barckot?!', 'Last Bucket!', '9th Bucket!', 'Bucket Finale!']
+schematics_unlocking_amplifiers = {
+    'Bigger Bite': ['Hounds have higher base attack', '', 'den-amplifier-0'],
+    'Elusive Instinct': ['Hounds require additional Accuracy', 'Green Amplifier', 'den-amplifier-1'],
+    'Canine Recovery': ['Hounds regenerate HP', 'Pink Amplifier', 'den-amplifier-2'],
+    'Bigger Bow Wow': ['Chance to spawn BIG Hounds with additional HP and DMG', 'Yellow Amplifier', 'den-amplifier-3'],
+    'Doggo EMP Effect': ["Player's attacks cost higher MP", 'Cyan Amplifier', 'den-amplifier-4'],
+    'Cursed Howl': ['Hounds have a chance to cause more Fear', 'Purple Amplifier', 'den-amplifier-5'],
+    'Den Despair': ['Fear bar starts partially filled', 'White Amplifier', 'den-amplifier-6'],
+    'Fast and Deadly': ['Hounds cause Fear faster', 'Dark Amplifier', 'den-amplifier-7']
+}
 max_buckets = 1 + len(schematics_unlocking_buckets)
 sediment_names = ['Gravel', 'Goldust', 'Redstone', 'Mythril', 'Cobaltine', 'Brunite', 'Freezium', 'Sweetium', 'Red Coral', 'Hyper Coral']
 sediment_bars = [0, 50, 500, 9000, 125000, 1500000, 20000000, 100000000, 500000000, 2000000000]
@@ -6293,6 +6303,7 @@ for entry_index, entry in enumerate(caverns_measurer_measurements):
 def getSedimentBarRequirement(sediment_index, sediment_level):
     result = 100 * pow(1.5, sediment_level) * ValueToMulti(sediment_bars[sediment_index])
     return result
+
 def getWellOpalTrade(holes_11_9):
     # From looking at data, holes_11_9 is just the number of previously completed trades. Maybe it changes higher up at some point
     if holes_11_9 == 1:
@@ -6305,13 +6316,18 @@ def getWellOpalTrade(holes_11_9):
             * pow(3.5 + holes_11_9 / 10, holes_11_9)
         )
         return math.ceil(result) if 1e9 > result else math.floor(result)
+
 def getMotherlodeResourceRequired(layers_destroyed: int):
     result = math.ceil(200 * pow(2.2, 1 + layers_destroyed))
     return result
+
 def getMotherlodeEfficiencyRequired(layers_destroyed: int):
     result = math.ceil(9000 * pow(1.8, layers_destroyed))
     return result
 
+def getDenOpalRequirement(current_opals: int):
+    result = 12 * (150 + (30 + current_opals) * current_opals) * pow(1.5, current_opals)
+    return round(result)
 
 ###WORLD 5 CONSTS###
 artifactTiers = ["Base", "Ancient", "Eldritch", "Sovereign"]

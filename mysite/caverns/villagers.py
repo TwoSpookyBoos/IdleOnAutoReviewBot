@@ -166,6 +166,14 @@ def getEngineerAdviceGroup() -> AdviceGroup:
                     goal=1,
                     resource=schematic_details['Resource']
                 ))
+            # else:  #uncomment this chunk for testing, if you need to see them all
+            #     villager_advice[r_s_stats].append(Advice(
+            #         label=f"Schematic {list_index + 1}: {clean_name}: {schematic_details['Description']}",
+            #         picture_class=schematic_details['Image'],
+            #         progression=int(schematic_details['Purchased']),
+            #         goal=1,
+            #         resource=schematic_details['Resource']
+            #     ))
 
     for subgroup in villager_advice:
         for advice in villager_advice[subgroup]:

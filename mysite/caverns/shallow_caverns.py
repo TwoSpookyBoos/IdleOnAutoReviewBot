@@ -5,7 +5,7 @@ from flask import g as session_data
 from consts import (
     caverns_cavern_names,
     break_you_best, schematics_unlocking_buckets, sediment_names, max_sediments, getSedimentBarRequirement, getWellOpalTrade, getMotherlodeEfficiencyRequired,
-    getMotherlodeResourceRequired,
+    getMotherlodeResourceRequired, getDenOpalRequirement, schematics_unlocking_amplifiers,
     # shallow_caverns_progressionTiers
 )
 from utils.text_formatting import pl, notateNumber
@@ -20,7 +20,11 @@ def getTemplateCavernAdviceGroup() -> AdviceGroup:
 
     cavern_name = 'The Template'
     cavern = session_data.account.caverns['Caverns'][cavern_name]
-
+# Cavern Stats
+    cavern_advice[c_stats].append(Advice(
+        label=f"Objective- ",
+        picture_class=f"cavern-{cavern['CavernNumber']}"
+    ))
     cavern_advice[c_stats].append(Advice(
         label=f"Total Opals Found: {cavern['OpalsFound']}",
         picture_class='opal'
@@ -168,6 +172,63 @@ def getMotherlodeAdviceGroup():
     )
     return cavern_ag
 
+def getDenAdviceGroup() -> AdviceGroup:
+    c_stats = "Cavern Stats"
+    a_stats = 'Amplifier Stats'
+    cavern_advice = {
+        c_stats: [],
+        a_stats: []
+    }
+
+    cavern_name = 'The Den'
+    cavern = session_data.account.caverns['Caverns'][cavern_name]
+    schematics = session_data.account.caverns['Schematics']
+
+# Cavern Stats
+    cavern_advice[c_stats].append(Advice(
+        label=f"Objective- Fight increasingly difficult Dawgs, using Amplifiers to increase score",
+        picture_class=f"cavern-{cavern['CavernNumber']}"
+    ))
+    cavern_advice[c_stats].append(Advice(
+        label=f"Total Opals Found: {cavern['OpalsFound']}",
+        picture_class='opal'
+    ))
+    next_opal_score = getDenOpalRequirement(cavern['OpalsFound'])
+    cavern_advice[c_stats].append(Advice(
+        label=f"High Score: {cavern['HighScore']:,}"
+              f"<br>Next Opal:  {next_opal_score:,}",
+        picture_class='my-first-trophy',
+        progression=f"{100 * (cavern['HighScore']/next_opal_score):.1f}",
+        goal=100,
+        unit='%'
+    ))
+
+# Amplifier Stats
+    for amp_name, amp_details in schematics_unlocking_amplifiers.items():
+        amp_unlocked = amp_details[1] == '' or schematics.get(amp_details[1], {}).get('Purchased', False)
+        cavern_advice[a_stats].append(Advice(
+            label=(
+                f"{amp_name}: {amp_details[0]}"
+                if amp_unlocked
+                else
+                f"Unlock Amplifier {int(amp_details[2][-1])+1} by purchasing"
+                f"<br>Schematic {schematics[amp_details[1]]['UnlockOrder']}: {amp_details[1]}"
+            ),
+            picture_class=amp_details[2],
+            resource=(
+                '' if amp_unlocked
+                else schematics[amp_details[1]]['Resource']
+            )
+        ))
+
+    cavern_ag = AdviceGroup(
+        tier='',
+        pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name if cavern['Unlocked'] else 'To Be Discovered!'}",
+        advices=cavern_advice,
+        informational=True
+    )
+    return cavern_ag
+
 def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
     shallow_caverns_AdviceDict = {
         'Tiers': {},
@@ -185,8 +246,6 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
     )
     overall_SectionTier = min(max_tier + info_tiers, tier_Shallow_Caverns)
     return tiers_ag, overall_SectionTier, max_tier
-
-
 
 def getShallowCavernsAdviceSection() -> AdviceSection:
     #Check if player has reached this section
@@ -209,6 +268,7 @@ def getShallowCavernsAdviceSection() -> AdviceSection:
     shallow_caverns_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
     shallow_caverns_AdviceGroupDict['The Well'] = getWellAdviceGroup()
     shallow_caverns_AdviceGroupDict['Motherlode'] = getMotherlodeAdviceGroup()
+    shallow_caverns_AdviceGroupDict['The Den'] = getDenAdviceGroup()
 
     for ag in shallow_caverns_AdviceGroupDict.values():
         ag.remove_empty_subgroups()

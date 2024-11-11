@@ -126,6 +126,17 @@ $motherlode-resources: (
     motherlode-fish: img('wiki/Trench_Fish.png'),
 );
 
+$den-amplifiers: (
+    den-amplifier-0: img('wiki/HoleFightAmp0.png'),
+    den-amplifier-1: img('wiki/HoleFightAmp1.png'),
+    den-amplifier-2: img('wiki/HoleFightAmp2.png'),
+    den-amplifier-3: img('wiki/HoleFightAmp3.png'),
+    den-amplifier-4: img('wiki/HoleFightAmp4.png'),
+    den-amplifier-5: img('wiki/HoleFightAmp5.png'),
+    den-amplifier-6: img('wiki/HoleFightAmp6.png'),
+    den-amplifier-7: img('wiki/HoleFightAmp7.png'),
+);
+
 $monuments: (
     monument-basic-chest: img('HoleBraveryChest.png'),
     monument-special-chest: img('HoleBraveryChestB.png'),
@@ -193,6 +204,7 @@ $all-caverns: map-merge($all-caverns, $cosmos-majiks);
 $all-caverns: map-merge($all-caverns, $caverns);
 $all-caverns: map-merge($all-caverns, $well-sediment);
 $all-caverns: map-merge($all-caverns, $motherlode-resources);
+$all-caverns: map-merge($all-caverns, $den-amplifiers);
 $all-caverns: map-merge($all-caverns, $monuments);
 $all-caverns: map-merge($all-caverns, $harp-notes);
 $all-caverns: map-merge($all-caverns, $lamp-wishes);
