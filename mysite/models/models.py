@@ -518,9 +518,6 @@ class Advice(AdviceBase):
         if self.goal == "✔":
             self.status = "gilded"
 
-        self.percent = self.__calculate_progress_box_width()
-
-
     @property
     def css_class(self) -> str:
         name = kebab(self.picture_class)
@@ -529,20 +526,6 @@ class Advice(AdviceBase):
     def __str__(self) -> str:
         return self.label
 
-    def __calculate_progress_box_width(self) -> str:
-        percentage = next((num for num in [self.goal, self.progression] if num.endswith("%")), None)
-        if not all(num.endswith("%") for num in [self.goal, self.progression]) and percentage:
-            return percentage
-
-        float_re = re.compile(r'\d+(.\d+)?')
-        progression = float_re.search(self.progression)
-        goal = float_re.search(self.goal)
-        try:
-            percentage = round(100 * float(progression[0]) / float(goal[0]), 2)
-            percentage = percentage if percentage < 100 else 100
-            return str(percentage) + '%'
-        except (ZeroDivisionError, IndexError, TypeError, ValueError):
-            return "0"
 
 @functools.total_ordering
 class AdviceGroup(AdviceBase):
@@ -794,7 +777,7 @@ class AdviceWorld(AdviceBase):
         name (WorldName): world name, e.g. General, World 1
         collapse (bool): should the world be collapsed on load?
         sections (list<AdviceSection>): a list of `AdviceSection` objects
-        banner (list[str]): banner image name(s)
+        banner (str): banner image name
     """
 
     _children = "sections"
@@ -804,7 +787,7 @@ class AdviceWorld(AdviceBase):
         name: WorldName,
         collapse: bool | None = None,
         sections: list[AdviceSection] = list(),
-        banner: list[str] | None = None,
+        banner: str = "",
         title: str = "",
         completed: bool | None = None,
         informational: bool | None = None,
@@ -815,7 +798,7 @@ class AdviceWorld(AdviceBase):
 
         self.name: str = name.value
         self.sections: list[AdviceSection] = sections
-        self.banner: list[str] | None = banner
+        self.banner: str = banner
         self.title: str = title
         if completed is not None:
             self.completed = completed
@@ -3885,7 +3868,7 @@ class Account:
     def _calculate_w5_divinity_offering_costs(self):
         self.divinity['LowOfferingGoal'] = self._divinityUpgradeCost(self.divinity['LowOffering'], self.divinity['GodsUnlocked'] + self.divinity['GodRank'])
         self.divinity['HighOfferingGoal'] = self._divinityUpgradeCost(self.divinity['HighOffering'], self.divinity['GodsUnlocked'] + self.divinity['GodRank'])
-
+    
     def _divinityUpgradeCost(self, offeringIndex, unlockedDivinity):
         cost = (20 * pow(unlockedDivinity + 1.3, 2.3) * pow(2.2, unlockedDivinity) + 60) * divinity_offeringsDict.get(offeringIndex, {}).get("Chance", 1) / 100
         if unlockedDivinity >= 3:

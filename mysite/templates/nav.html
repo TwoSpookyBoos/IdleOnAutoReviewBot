@@ -3,19 +3,14 @@
     <div class="nav-wrapper">
         <ul class="nav-links{% if handedness %} lefty{% endif %}">
             <li></li>
-            <li class="wedge">
-                <img src="{{ "gear.svg"|img }}" id="settings" alt="Search">
-            </li>
             <li><a id="discord" href="{{ config["DISCORD"] }}" target="_blank"></a></li>
             <li>
                 <a id="spreadsheet" href="{{ config["SPREADSHEET"] }}"
                    target="_blank">Spreadsheet</a>
             </li>
             <li><a id="ko-fi" href="{{ config["KOFI"] }}" target='_blank'></a></li>
-            <li class="wedge">
-                <img src="{{ "magnifying-glass.svg"|img }}" id="magnifier" alt="Search">
-            </li>
             <li id="light-switch"></li>
         </ul>
     </div>
 </nav>
+{% include 'search_bar.html' %}

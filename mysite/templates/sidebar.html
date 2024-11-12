@@ -18,12 +18,10 @@
         Previous update 2024-10-16: New Farming section with first 6 tiers available
     </p>
     <form action="/" method="POST">
-        <div id="switchbox-wrapper">
-            <div id="switchbox">
-                {% for text, name, on, off, static, initial in switches %}
-                    {% include "slider_button.html" %}
-                {% endfor %}
-            </div>
+        <div id="switchbox">
+            {% for text, name, on, off, initial in switches %}
+                {% include "slider_button.html" %}
+            {% endfor %}
         </div>
         <div id="form">
             <label for="player"></label>

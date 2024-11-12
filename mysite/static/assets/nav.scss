@@ -9,7 +9,7 @@
     --nav-padding: 15px;
     --nav-height: 30px;
 
-    --bg-nav: none;
+    --bg-nav: hsl(208deg, 15%, 22%);
     --fg-nav-links: hsl(0deg, 0%, 83%);
     --fg-spreadsheet: hsl(151deg, 42%, 69%);
     --burger: hsl(60deg, 100%, 50%);
@@ -17,10 +17,10 @@
 }
 
 :root.light-mode {
-    --bg-nav: #000b;
-    --fg-nav-links: #a5c2ff;
+    --bg-nav: hsl(0deg, 3%, 84%);
+    --fg-nav-links: hsl(205deg, 16%, 27%);
     --fg-spreadsheet: hsl(151deg, 70.55%, 31.75%);
-    --burger: hsl(46deg, 100%, 60%);
+    --burger: hsl(46deg, 67%, 35%);
     --bg-kofi: var(--bg-nav);
 }
 
@@ -35,7 +35,8 @@ nav {
     width: 100%;
     padding: var(--nav-padding);
     background-color: var(--bg-nav);
-    //border-bottom: 1px solid grey;
+    border-bottom: 1px solid grey;
+    transition: all .5s ease-in-out;
 
     .nav-wrapper {
         height: var(--nav-height);
@@ -47,29 +48,19 @@ nav {
         .nav-links {
             width: 100%;
             display: flex;
-            justify-content: center;
-            column-gap: 20px;
+            justify-content: space-between;
             padding: 10px 5px;
             list-style-type: none;
             flex-grow: 2;
 
             & > li {
-                &.wedge {
-                    position: relative;
-                    flex-grow: 1;
-                    flex-direction: row;
-                    justify-content: right;
-
-                    &:has(#settings) {
-                        justify-content: left;
-                    }
+                &:first-child {
+                    width: 40px;
                 }
 
                 display: flex;
                 align-items: center;
                 justify-content: center;
-
-                min-width: 40px;
 
                 & > a {
                     display: block;
@@ -82,6 +73,51 @@ nav {
     }
 }
 
+#searchbar-wrapper {
+    background-color: hsla(255, 100%, 100%, 0.2);
+    padding: 10px;
+
+    #searchbar {
+        display: flex;
+        flex-direction: row;
+        //column-gap: 10px;
+        padding: 10px;
+
+        background-color: hsla(255, 100%, 100%, 0.1);
+        border-radius: 50vh;
+
+        label, img {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        img {
+            height: 20px;
+            width: 20px;
+            cursor: pointer;
+        }
+
+        input {
+            flex-grow: 1;
+            background-color: transparent;
+            color: #ffffff;
+            padding: 10px;
+            height: calc(var(--nav-height)*0.6);
+
+            &::placeholder {
+                color: #c5c5c5;
+            }
+            &:focus {
+                outline: none;
+            }
+        }
+    }
+}
+
+.search-hidden {
+    display: none !important;
+}
 /* HAMBURGER */
 
 #drawer-handle {
@@ -196,10 +232,6 @@ nav {
 #discord {
     background-image: url(../imgs/discord-logo-blue.png);
 }
-#magnifier, #settings {
-    height: 25px;
-    cursor: pointer;
-}
 #spreadsheet {
     display: flex;
     justify-content: end;
@@ -226,7 +258,7 @@ nav {
         flex-direction: column-reverse;
     }
     nav {
-        //border-bottom: unset;
+        border-bottom: unset;
         border-top: 1px solid gray;
         padding-left: 0;
         padding-right: 0;
