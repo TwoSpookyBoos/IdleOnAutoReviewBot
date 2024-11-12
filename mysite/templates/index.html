@@ -12,7 +12,9 @@
         <link rel="stylesheet" type="text/css" href="{{ "biscuit-policy"|style }}">
         <link rel="stylesheet" type="text/css" href="{{ "javascript-blocked"|style }}">
         <link rel="stylesheet" type="text/css" href="{{ "error"|style }}">
+        <link rel="stylesheet" type="text/css" href="{{ "search"|style }}">
         <link rel="stylesheet" type="text/css" href="{{ "spin"|style }}">
+        <link rel="stylesheet" type="text/css" href="{{ "parallax"|style }}">
         <link rel="stylesheet" type="text/css" href="{{ "jquery-eu-biscuit-law-popup"|style }}"/>
 
         <link rel="icon" href="{{ "pinchy_64x64.png"|img }}" type="image/png">
@@ -32,7 +34,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <style>
-        {% for text, name, on, off, initial in switches %}
+        {% for text, name, on, off, static, initial in switches %}
             label[for="{{ name }}"] .shaft.on .knob::before {
                 content: '{{ on }}'
             }
@@ -43,6 +45,8 @@
         </style>
     </head>
     <body class="eupopup eupopup-block eupopup-style-compact">
+        <div id="veil"></div>
+        {% include 'backgrounds.html' %}
         <div id="drawer-handle"{% if handedness %} class="lefty"{% endif %}>
             <div class="hamburger">
                 <span class="bar bar1"></span>
@@ -65,5 +69,6 @@
         {% include 'cookie_policy.html' %}
         {% include 'error.html' %}
         {% include 'javascript_blocked.html' %}
+        {% include "search_bar.html" %}
     </body>
 </html>

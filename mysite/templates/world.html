@@ -1,8 +1,9 @@
-<article id="{{ world.id }}" class="general-content">
+<article id="{{ world.id }}">
     <h1 class="banner{% if world.id != "pinchy" %} toggler{% endif %}">
-        {% if world.banner %}
-            <img src="{{ world.banner | img }}" alt="{{ world.name }}" title="{{ world.name }}">
-        {% endif %}
+    {% if world.banner %}
+        <img src="{{ world.banner[0] | img }}" alt="{{ world.name }}" title="{{ world.name }}" class="dark">
+        <img src="{{ world.banner[1] | img }}" alt="{{ world.name }}" title="{{ world.name }}" class="light">
+    {% endif %}
         {{ world.title }}
     </h1>
     <div class="collapse-wrapper">

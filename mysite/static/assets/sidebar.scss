@@ -14,6 +14,10 @@
     --bg-textbox: hsl(0, 0%, 35%);
 
     --fg-text-placeholder: lightgray;
+
+    --fg-link-sidebar: var(--fg-link);
+    --fg-link-sidebar-visited: var(--fg-link-visited);
+
 }
 
 :root.light-mode {
@@ -27,6 +31,9 @@
     --bg-textbox: hsl(0, 0%, 89%);
 
     --fg-text-placeholder: hsl(208, 15%, 22%);
+
+    --fg-link-sidebar: hsla(242deg, 100%, 60%, 100%);
+    --fg-link-sidebar-visited: hsla(280deg, 100%, 60%, 100%);
 }
 
 aside {
@@ -55,19 +62,23 @@ aside {
     line-height: 1.6rem;
     letter-spacing: 1px;
 
-    box-shadow: none;
-
     .light-mode & {
         transition: all .5s ease-out;
     }
 
     &.sidebar-open {
         left: 0;
-        box-shadow: 9px 0 51px 21px hsla(0, 0%, 8%, .75);
+    }
 
-        .light-mode & {
-            box-shadow: 9px 0 51px 21px hsla(0, 0%, 39%, .75);
-        }
+    a {
+        color: var(--fg-link-sidebar);
+        background-color: var(--bg-link);
+        text-decoration: underline;
+    }
+
+    a:visited {
+        color: var(--fg-link-sidebar-visited);
+        background-color: var(--bg-link-visited);
     }
 }
 
@@ -77,14 +88,44 @@ form {
     align-items: stretch;
     gap: 20px;
 
-    #switchbox {
+    #switchbox-wrapper {
         display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        row-gap: 10px;
+        align-items: center;
+        justify-content: center;
 
-        [type="checkbox"] {
-            display: none;
+        &.open {
+            position: fixed;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 100;
+
+            background-color: hsla(0deg, 0, 0, 0.7);
+
+            label[data-static="true"] {
+                display: none;
+            }
+
+            #switchbox {
+                flex-grow: unset;
+            }
+        }
+
+        #switchbox {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            row-gap: 10px;
+            background: var(--bg-sidebar);
+
+            padding: 20px;
+            border-radius: 20px;
+
+            [type="checkbox"] {
+                display: none;
+            }
         }
     }
 
