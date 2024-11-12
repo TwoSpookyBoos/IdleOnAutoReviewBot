@@ -393,7 +393,7 @@ def getBellAdviceGroup(schematics):
     cavern_advice[r_stats].insert(1, Advice(
         label=f"""Total Bonus levels: {total_bonus_levels}"""
               f"""<br>Avg per ring: {average_level:.4f}"""
-              f"""{'<br> Consider Renewing' if (
+              f"""{'<br>Under 1.84: Consider Renewing' if (
                   schematics['Double Dinger Ringer']['Purchased']
                   and schematics['Triple Tap Tinkle']['Purchased']
                   and average_level_too_low
