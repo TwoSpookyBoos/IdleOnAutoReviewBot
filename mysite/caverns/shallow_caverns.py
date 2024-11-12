@@ -4,8 +4,9 @@ from utils.logging import get_logger
 from flask import g as session_data
 from consts import (
     caverns_cavern_names,
-    break_you_best, schematics_unlocking_buckets, sediment_names, max_sediments, getSedimentBarRequirement, getWellOpalTrade, getMotherlodeEfficiencyRequired,
-    getMotherlodeResourceRequired, getDenOpalRequirement, schematics_unlocking_amplifiers, getBraveryOpalChance, monument_layer_rewards, monument_bonuses,
+    break_you_best,
+    schematics_unlocking_buckets, sediment_names, max_sediments, getSedimentBarRequirement, getWellOpalTrade, getMotherlodeEfficiencyRequired,
+    getMotherlodeResourceRequired, getDenOpalRequirement, schematics_unlocking_amplifiers, getBraveryOpalChance, monument_layer_rewards
     # shallow_caverns_progressionTiers
 )
 from utils.text_formatting import pl, notateNumber
@@ -71,7 +72,7 @@ def getWellAdviceGroup() -> AdviceGroup:
         label=f"Next Opal trade: {notateNumber('Basic', opal_trade_cost, 2)} Gravel",
         picture_class='bucketlyte',
         resource='well-sediment-0',
-        progression=f"{opal_trade_progress:.1f}",
+        progression=f"{min(100,opal_trade_progress):.1f}{'+' if opal_trade_progress > 100 else ''}",
         goal=100,
         unit='%'
     ))

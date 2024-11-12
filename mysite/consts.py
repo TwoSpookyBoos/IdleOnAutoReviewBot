@@ -6328,15 +6328,16 @@ def getMaxEngineerLevel() -> int:
         return max_engi_last_i_checked
 
 def getVillagerEXPRequired(villager_index, villager_level):
+
     match villager_index:
         case 0:
-            result = 10 * ((10 + 7 * pow(villager_level, 2.1)) * pow(2.1, villager_level) * (1 + .75 * max(0, villager_level - 4)) - 1.75)
+            result = 10 * ((10 + 7 * pow(villager_level, 2.1)) * pow(2.1, villager_level) * (1 + .75 * max(0, villager_level - 4)) - 1.50)
         case 1:
-            result = 30 * (10 + 6 * pow(villager_level, 1.8) * pow(1.57, villager_level))
+            result = 30 * ((10 + 6 * pow(villager_level, 1.8)) * pow(1.57, villager_level))
         case 2:
-            result = 50 * (10 + 5 * pow(villager_level, 1.7) * pow(1.4, villager_level))
+            result = 50 * ((10 + 5 * pow(villager_level, 1.7)) * pow(1.4, villager_level))
         case 3:
-            result = 120 * (30 + 10 * pow(villager_level, 2) * pow(2, villager_level))
+            result = 120 * ((30 + 10 * pow(villager_level, 2)) * pow(2, villager_level))
         case _:
             result = 10 * pow(10, 20)
     return result
