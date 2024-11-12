@@ -69,7 +69,7 @@ from consts import (
     # Caverns
     caverns_villagers, caverns_conjuror_majiks, caverns_engineer_schematics, caverns_engineer_schematics_unlock_order, caverns_cavern_names,
     caverns_measurer_measurements, getCavernResourceImage, schematics_unlocking_buckets, max_buckets, sediment_names, sediment_bars, getVillagerEXPRequired,
-    max_sediments, monument_bonuses
+    max_sediments, monument_bonuses, bell_clean_improvements, bell_ring_bonuses, getBellExpRequired, getBellImprovementBonus
 )
 
 
@@ -3022,6 +3022,7 @@ class Account:
         self._parse_caverns_motherlode(raw_caverns_list)
         self._parse_caverns_the_den(raw_caverns_list)
         self._parse_caverns_bravery_monument(raw_caverns_list)
+        self._parse_caverns_the_bell(raw_caverns_list)
 
     def _parse_caverns_the_well(self, raw_caverns_list):
         try:
@@ -3083,6 +3084,72 @@ class Account:
                 self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Level'] = raw_caverns_list[15][bonus_index]
             except:
                 self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Level'] = 0
+
+    def _parse_caverns_the_bell(self, raw_caverns_list):
+        cavern_name = 'The Bell'
+
+        #Charge
+        try:
+            self.caverns['Caverns'][cavern_name]['Charges'] = {
+                'Ring': [raw_caverns_list[18][0], raw_caverns_list[18][1], getBellExpRequired(0, raw_caverns_list[18][1])],
+                'Ping': [raw_caverns_list[18][2], raw_caverns_list[18][3], getBellExpRequired(1, raw_caverns_list[18][3])],
+                'Clean': [raw_caverns_list[18][4], raw_caverns_list[18][5], getBellExpRequired(2, raw_caverns_list[18][5])],
+                'Renew': [raw_caverns_list[18][6], raw_caverns_list[18][7], getBellExpRequired(3, raw_caverns_list[18][7])],
+            }
+        except:
+            self.caverns['Caverns'][cavern_name]['Charges'] = {
+                'Ring': [0, 0, getBellExpRequired(0, 0)],
+                'Ping': [0, 0, getBellExpRequired(1, 0)],
+                'Clean': [0, 0, getBellExpRequired(2, 0)],
+                'Renew': [0, 0, getBellExpRequired(3, 0)],
+            }
+
+        #Ring Bonuses
+        self.caverns['Caverns'][cavern_name]['Ring Bonuses'] = {}
+        ring_levels = raw_caverns_list[17]
+        for ring_index, ring_details in bell_ring_bonuses.items():
+            try:
+                self.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index] = {
+                    'Level': int(ring_levels[ring_index]),
+                    'Description': ring_details['Description'],
+                    'ScalingValue': ring_details['ScalingValue'],
+                    'Image': ring_details['Image']
+                }
+                self.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index]['Value'] = (
+                    self.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index]['Level']
+                    * self.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index]['ScalingValue']
+                )
+                self.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index]['Description'] = (
+                    self.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index]['Description'].replace(
+                        '{', f"{self.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index]['Value']:.2f}"
+                    )
+                )
+            except:
+                self.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index] = {
+                    'Level': int(ring_levels[ring_index]),
+                    'Description': ring_details['Description'].replace('{', '0.00'),
+                    'ScalingValue': ring_details['ScalingValue'],
+                    'Image': ring_details['Image']
+                }
+
+        #Improvements
+        self.caverns['Caverns'][cavern_name]['Improvements'] = {}
+        improvement_levels = raw_caverns_list[16]
+        for improvement_index, improvement_details in bell_clean_improvements.items():
+            try:
+                self.caverns['Caverns'][cavern_name]['Improvements'][improvement_index] = {
+                    'Level': improvement_levels[improvement_index],
+                    'Description': improvement_details['Description'],
+                    'Image': improvement_details['Image'],
+                    'Resource': improvement_details['Resource']
+                }
+            except:
+                self.caverns['Caverns'][cavern_name]['Improvements'][improvement_index] = {
+                    'Level': 0,
+                    'Description': improvement_details['Description'],
+                    'Image': improvement_details['Image'],
+                    'Resource': improvement_details['Resource']
+                }
 
     def _parse_w6(self):
         self._parse_w6_sneaking()
@@ -3880,6 +3947,7 @@ class Account:
         self._calculate_caverns_measurements()
         self._calculate_caverns_the_well()
         self._calculate_caverns_monuments()
+        self._calculate_caverns_the_bell()
 
     def _calculate_caverns_majiks(self):
         for majik_type, majiks in caverns_conjuror_majiks.items():
@@ -4053,6 +4121,31 @@ class Account:
         self.caverns['Caverns'][monument_name]['Max Retellings'] = (
             1
         )
+
+    def _calculate_caverns_the_bell(self):
+        cavern_name = 'The Bell'
+        self.caverns['Caverns'][cavern_name]['Total Improvements'] = sum(
+            [ci_details['Level'] for ci_details in self.caverns['Caverns'][cavern_name]['Improvements'].values()]
+        )
+        self.caverns['Caverns'][cavern_name]['Stack Size'] = 25
+        self.caverns['Caverns'][cavern_name]['Total Stacks'] = (
+                self.caverns['Caverns'][cavern_name]['Total Improvements'] // self.caverns['Caverns'][cavern_name]['Stack Size']
+        )
+        for ci_index, ci_details in self.caverns['Caverns'][cavern_name]['Improvements'].items():
+            try:
+                self.caverns['Caverns'][cavern_name]['Improvements'][ci_index]['Value'] = getBellImprovementBonus(
+                    ci_index,
+                    ci_details['Level'],
+                    self.caverns['Caverns'][cavern_name]['Total Stacks'],
+                    self.caverns['Schematics']["Improvement Stackin'"]['Purchased']
+                )
+            except:
+                self.caverns['Caverns'][cavern_name]['Improvements'][ci_index]['Value'] = 0
+            self.caverns['Caverns'][cavern_name]['Improvements'][ci_index]['Description'] = (
+                self.caverns['Caverns'][cavern_name]['Improvements'][ci_index]['Description'].replace(
+                    '{', f"{self.caverns['Caverns'][cavern_name]['Improvements'][ci_index]['Value']:,.0f}"
+                )
+            )
 
     def _calculate_w6(self):
         self._calculate_w6_summoning_winner_bonuses()

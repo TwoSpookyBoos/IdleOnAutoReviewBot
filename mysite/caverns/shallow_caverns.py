@@ -6,14 +6,15 @@ from consts import (
     caverns_cavern_names,
     break_you_best,
     schematics_unlocking_buckets, sediment_names, max_sediments, getSedimentBarRequirement, getWellOpalTrade, getMotherlodeEfficiencyRequired,
-    getMotherlodeResourceRequired, getDenOpalRequirement, schematics_unlocking_amplifiers, getBraveryOpalChance, monument_layer_rewards
+    getMotherlodeResourceRequired, getDenOpalRequirement, schematics_unlocking_amplifiers, getBraveryOpalChance, monument_layer_rewards, getBellExpRequired,
+    getBellImprovementBonus
     # shallow_caverns_progressionTiers
 )
 from utils.text_formatting import pl, notateNumber
 
 logger = get_logger(__name__)
 
-def getTemplateCavernAdviceGroup() -> AdviceGroup:
+def getTemplateCavernAdviceGroup(schematics) -> AdviceGroup:
     c_stats = "Cavern Stats"
     cavern_advice = {
         c_stats: []
@@ -39,7 +40,7 @@ def getTemplateCavernAdviceGroup() -> AdviceGroup:
     )
     return cavern_ag
 
-def getWellAdviceGroup() -> AdviceGroup:
+def getWellAdviceGroup(schematics) -> AdviceGroup:
     c_stats = "Cavern Stats"
     b_stats = "Bucket Stats"
     s_stats = "Sediment Stats"
@@ -54,7 +55,6 @@ def getWellAdviceGroup() -> AdviceGroup:
     buckets = session_data.account.caverns['Caverns'][cavern_name]['BucketTargets']
     sediments_owned = session_data.account.caverns['Caverns'][cavern_name]['SedimentsOwned']
     sediment_levels = session_data.account.caverns['Caverns'][cavern_name]['SedimentLevels']
-    schematics = session_data.account.caverns['Schematics']
 
 # Cavern Stats
     cavern_advice[c_stats].append(Advice(
@@ -78,9 +78,6 @@ def getWellAdviceGroup() -> AdviceGroup:
     ))
 
 # Bucket Stats
-    # if cavern['BucketsUnlocked'] >= max_buckets:
-    #     pass
-    # else:
     for bucket_index, bucket_target in enumerate(buckets):
         cavern_advice[b_stats].append(Advice(
             label=(
@@ -95,6 +92,7 @@ def getWellAdviceGroup() -> AdviceGroup:
             resource='' if bucket_index + 1 <= cavern['BucketsUnlocked'] else schematics[schematics_unlocking_buckets[bucket_index-1]]['Resource']
         ))
 
+# Sediment Stats
     cavern_advice[s_stats] = [
         Advice(
             label=(
@@ -117,6 +115,11 @@ def getWellAdviceGroup() -> AdviceGroup:
         label=f"Expand Full Bars: {'On' if session_data.account.caverns['Caverns']['The Well']['BarExpansion'] else 'Off'}",
         picture_class='engineer-schematic-13'
     ))
+    cavern_advice[s_stats].insert(1, Advice(
+        label=f"Total expansions: {sum(sediment_levels)}"
+              f"<br>Total bonus: {sum(sediment_levels) * 20 * schematics['Expander Extravaganza']['Purchased']:,}%",
+        picture_class='engineer-schematic-14'
+    ))
 
     cavern_ag = AdviceGroup(
         tier='',
@@ -127,7 +130,7 @@ def getWellAdviceGroup() -> AdviceGroup:
     )
     return cavern_ag
 
-def getMotherlodeAdviceGroup():
+def getMotherlodeAdviceGroup(schematics):
     c_stats = "Cavern Stats"
     l_stats = 'Layer Stats'
     cavern_advice = {
@@ -173,7 +176,7 @@ def getMotherlodeAdviceGroup():
     )
     return cavern_ag
 
-def getDenAdviceGroup() -> AdviceGroup:
+def getDenAdviceGroup(schematics) -> AdviceGroup:
     c_stats = "Cavern Stats"
     a_stats = 'Amplifier Stats'
     cavern_advice = {
@@ -183,7 +186,6 @@ def getDenAdviceGroup() -> AdviceGroup:
 
     cavern_name = 'The Den'
     cavern = session_data.account.caverns['Caverns'][cavern_name]
-    schematics = session_data.account.caverns['Schematics']
 
 # Cavern Stats
     cavern_advice[c_stats].append(Advice(
@@ -230,7 +232,7 @@ def getDenAdviceGroup() -> AdviceGroup:
     )
     return cavern_ag
 
-def getBraveryAdviceGroup() -> AdviceGroup:
+def getBraveryAdviceGroup(schematics) -> AdviceGroup:
     c_stats = "Cavern Stats"
     s_stats = 'Sword Stats'
     l_stats = 'Layer Stats'
@@ -330,6 +332,110 @@ def getBraveryAdviceGroup() -> AdviceGroup:
     )
     return cavern_ag
 
+def getBellAdviceGroup(schematics):
+    c_stats = "Cavern Stats"
+    r_stats = 'Ring Stats'
+    clean_stats = 'Clean Stats'
+    cavern_advice = {
+        c_stats: [],
+        r_stats: [],
+        clean_stats: []
+    }
+
+    cavern_name = 'The Bell'
+    cavern = session_data.account.caverns['Caverns'][cavern_name]
+
+# Cavern Stats
+    cavern_advice[c_stats].append(Advice(
+        label=f"Objective- Passively build up Charge in 1 of 4 different categories at a time for various Bonuses",
+        picture_class=f"cavern-{cavern['CavernNumber']}"
+    ))
+    cavern_advice[c_stats].append(Advice(
+        label=f"Total Opals Found: {cavern['OpalsFound']}",
+        picture_class='opal'
+    ))
+
+    target_cost = cavern['Charges']['Ping'][2]
+    target_string = notateNumber('Basic', target_cost, 2)
+    target_letter = str(target_string[-1]) if target_cost > 1000 else ''
+    current_number = cavern['Charges']['Ping'][0]
+    current_string = notateNumber('Match', current_number, 2, target_letter)
+    current_percent = 100 * (cavern['Charges']['Ping'][0] / target_cost)
+    cavern_advice[c_stats].append(Advice(
+        label=f"Current Ping charge: {current_string}"
+              f"<br>Next Opal: {target_string}",
+        picture_class='bell-ping',
+        progression=f"{current_percent:,.2f}",
+        goal=100,
+        unit='%'
+    ))
+
+# Ring Bonuses
+    cavern_advice[r_stats] = [
+        Advice(
+            label=(
+                f"{rb_details['Description']}"
+                if rb_details['Level'] > 0 else
+                f"Undiscovered Bonus"
+            ),
+            picture_class=rb_details['Image'],
+            progression=rb_details['Level']
+        ) for rb_index, rb_details in cavern['Ring Bonuses'].items()
+    ]
+    total_rings = cavern['Charges']['Ring'][1]
+    cavern_advice[r_stats].insert(0, Advice(
+        label=f"Total Rings: {total_rings}",
+        picture_class='bell-ring'
+    ))
+    total_bonus_levels = sum([rb_details['Level'] for rb_details in cavern['Ring Bonuses'].values()])
+    average_level = total_bonus_levels/max(1,total_rings)
+    average_level_too_low = average_level < 1.84  #Per Stark: if it's a flat +20, average 2, if it's 20% chance a +2 becomes +3 then it's 1.84
+    cavern_advice[r_stats].insert(1, Advice(
+        label=f"""Total Bonus levels: {total_bonus_levels}"""
+              f"""<br>Avg per ring: {average_level:.4f}"""
+              f"""{'< br > Consider Renewing' if (
+                  schematics['Double Dinger Ringer']['Purchased']
+                  and schematics['Triple Tap Tinkle']['Purchased']
+                  and average_level_too_low
+                  and total_rings >= 100
+              ) else f''
+              }""",  # and average level too low
+        picture_class='bell-ring'
+    ))
+
+# Clean Improvements
+    total_improvements = cavern['Total Improvements']
+    stack_size = cavern['Stack Size']
+    total_stacks = cavern['Total Stacks']
+    cavern_advice[clean_stats] = [
+        Advice(
+            label=(
+                ci_details['Description']
+                if ci_details['Level'] > 0 else
+                f"Undiscovered Bonus"
+            ),
+            picture_class=ci_details['Image'],
+            progression=ci_details['Level'],
+            resource=ci_details['Resource'],
+        ) for ci_index, ci_details in cavern['Improvements'].items()
+    ]
+    cavern_advice[clean_stats].insert(0, Advice(
+        label=f"Total Improvements: {total_improvements} ({total_stacks} stacks)"
+              f"<br>Total Bonus: {pow(1.1, total_stacks):.1f}x"
+              f"<br>Next stack progress",
+        picture_class='engineer-schematic-45',
+        progression=total_improvements % stack_size,
+        goal=stack_size
+    ))
+
+    cavern_ag = AdviceGroup(
+        tier='',
+        pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name if cavern['Unlocked'] else 'To Be Discovered!'}",
+        advices=cavern_advice,
+        informational=True
+    )
+    return cavern_ag
+
 def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
     shallow_caverns_AdviceDict = {
         'Tiers': {},
@@ -348,6 +454,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
     overall_SectionTier = min(max_tier + info_tiers, tier_Shallow_Caverns)
     return tiers_ag, overall_SectionTier, max_tier
 
+
 def getShallowCavernsAdviceSection() -> AdviceSection:
     #Check if player has reached this section
     if session_data.account.caverns['Villagers']['Polonai']['Level'] < 1:
@@ -365,12 +472,14 @@ def getShallowCavernsAdviceSection() -> AdviceSection:
     #Generate Alert Advice
 
     #Generate AdviceGroups
+    schematics = session_data.account.caverns['Schematics']
     shallow_caverns_AdviceGroupDict = {}
     shallow_caverns_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
-    shallow_caverns_AdviceGroupDict['The Well'] = getWellAdviceGroup()
-    shallow_caverns_AdviceGroupDict['Motherlode'] = getMotherlodeAdviceGroup()
-    shallow_caverns_AdviceGroupDict['The Den'] = getDenAdviceGroup()
-    shallow_caverns_AdviceGroupDict['Bravery Monument'] = getBraveryAdviceGroup()
+    shallow_caverns_AdviceGroupDict['The Well'] = getWellAdviceGroup(schematics)
+    shallow_caverns_AdviceGroupDict['Motherlode'] = getMotherlodeAdviceGroup(schematics)
+    shallow_caverns_AdviceGroupDict['The Den'] = getDenAdviceGroup(schematics)
+    shallow_caverns_AdviceGroupDict['Bravery Monument'] = getBraveryAdviceGroup(schematics)
+    shallow_caverns_AdviceGroupDict['The Bell'] = getBellAdviceGroup(schematics)
 
     for ag in shallow_caverns_AdviceGroupDict.values():
         ag.remove_empty_subgroups()
