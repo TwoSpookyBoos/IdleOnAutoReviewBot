@@ -92,7 +92,7 @@ def getExplorerAdviceGroup() -> AdviceGroup:
 
     villager_ag = AdviceGroup(
         tier="",
-        pre_string=f"Informational- {villager['Title']}",
+        pre_string=f"Informational- Level {villager['Level']} {villager['Title']}",
         advices=villager_advice,
         informational=True
     )
@@ -181,7 +181,7 @@ def getEngineerAdviceGroup() -> AdviceGroup:
 
     villager_ag = AdviceGroup(
         tier="",
-        pre_string=f"Informational- {villager['Title']}",
+        pre_string=f"Informational- Level {villager['Level']} {villager['Title']}",
         advices=villager_advice,
         informational=True
     )
@@ -264,7 +264,7 @@ def getConjurorAdviceGroup() -> AdviceGroup:
 
     villager_ag = AdviceGroup(
         tier="",
-        pre_string=f"Informational- {villager['Title']}",
+        pre_string=f"Informational- Level {villager['Level']} {villager['Title']}",
         advices=villager_advice,
         informational=True
     )
@@ -333,7 +333,7 @@ def getMeasurerAdviceGroup() -> AdviceGroup:
 
     villager_ag = AdviceGroup(
         tier="",
-        pre_string=f"Informational- {villager['Title']}",
+        pre_string=f"Informational- Level {villager['Level']} {villager['Title']}",
         advices=villager_advice,
         informational=True
     )

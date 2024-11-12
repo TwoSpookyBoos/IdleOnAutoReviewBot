@@ -93,33 +93,39 @@ def getWellAdviceGroup(schematics) -> AdviceGroup:
         ))
 
 # Sediment Stats
-    cavern_advice[s_stats] = [
-        Advice(
-            label=(
-                f"{sediment_names[sediment_index]}: {sediment_levels[sediment_index]} expansions"
-                f"<br>{sediment_value:,} owned"
-                f"<br>{getSedimentBarRequirement(sediment_index, sediment_levels[sediment_index]):,.0f} to expand"
-                if sediment_value >= 0 else
-                f"Clear the rock layer to discover this Sediment!"
-            ),
-            picture_class=f"well-sediment-{sediment_index}",
-            resource='well-sediment-rock-layer' if sediment_value < 0 else '',
-            progression=0 if sediment_value < 0 else f"{100 * (sediment_value / getSedimentBarRequirement(sediment_index, sediment_levels[sediment_index])):.1f}",
-            goal=100,
-            unit='%'
-        )
-        for sediment_index, sediment_value in enumerate(sediments_owned) if sediment_index < max_sediments
-        # There are lots of placeholders in sediments_owned, so stay within bounds of max_sediments
-    ]
-    cavern_advice[s_stats].insert(0, Advice(
+    cavern_advice[s_stats].append(Advice(
         label=f"Expand Full Bars: {'On' if session_data.account.caverns['Caverns']['The Well']['BarExpansion'] else 'Off'}",
         picture_class='engineer-schematic-13'
     ))
-    cavern_advice[s_stats].insert(1, Advice(
+    cavern_advice[s_stats].append(Advice(
         label=f"Total expansions: {sum(sediment_levels)}"
               f"<br>Total bonus: {sum(sediment_levels) * 20 * schematics['Expander Extravaganza']['Purchased']:,}%",
         picture_class='engineer-schematic-14'
     ))
+    for sediment_index, sediment_value in enumerate(sediments_owned):
+        if sediment_index < max_sediments:  # There are lots of placeholders in sediments_owned, so stay within bounds of max_sediments
+            target = getSedimentBarRequirement(sediment_index, sediment_levels[sediment_index])
+            if target >= 1e9:
+                target = notateNumber('Basic', target, 2)
+                sedi_owned = notateNumber('Basic', sediment_value, 2)
+            else:
+                target = f"{target:,.0f}"
+                sedi_owned = f"{sediment_value:,}"
+            cavern_advice[s_stats].append(Advice(
+                label=(
+                    f"{sediment_names[sediment_index]}: {sediment_levels[sediment_index]} expansions"
+                    f"<br>{sedi_owned} owned"
+                    f"<br>{target} to expand"
+                    if sediment_value >= 0 else
+                    f"Clear the rock layer to discover this Sediment!"
+                ),
+                picture_class=f"well-sediment-{sediment_index}",
+                resource='well-sediment-rock-layer' if sediment_value < 0 else '',
+                progression=0 if sediment_value < 0 else f"{100 * (sediment_value / getSedimentBarRequirement(sediment_index, sediment_levels[sediment_index])):.1f}",
+                goal=100,
+                unit='%'
+            ))
+
 
     cavern_ag = AdviceGroup(
         tier='',

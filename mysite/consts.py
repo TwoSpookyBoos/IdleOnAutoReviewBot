@@ -6230,12 +6230,12 @@ caverns_conjuror_majiks = {
         {'Name':"Monumental Vibes", 'BonusPerLevel': 25, 'MaxLevel': 4, 'Scaling': 'value', 'Description': 'x stronger Monument Bonuses',},
         {'Name':"String is Strung", 'BonusPerLevel': 1, 'MaxLevel': 5, 'Scaling': 'add', 'Description': ' more Harp strings',},
         {'Name':"Wishy Washy", 'BonusPerLevel': 30, 'MaxLevel': 3, 'Scaling': 'add', 'Description': '% chance for additional Lamp wishes',},
-        {'Name':"Hole Placeholder", 'BonusPerLevel': 1, 'MaxLevel': 1, 'Scaling': 'add', 'Description': " placeholder- Don't buy this",},
+        {'Name':"Hole Placeholder", 'BonusPerLevel': 1, 'MaxLevel': 2, 'Scaling': 'add', 'Description': " placeholder- Don't buy this",},
     ],
     "Village": [
         {'Name':"Opal Enthusiasm", 'BonusPerLevel': 30, 'MaxLevel': 5, 'Scaling': 'add', 'Description': '% Villager EXP per 10 Opals invested',},
         {'Name':"Contented Creator", 'BonusPerLevel': 1, 'MaxLevel': 4, 'Scaling': 'add', 'Description': '% Villager EXP per Schematic created',},
-        {'Name':"Cosmo, Enhance!", 'BonusPerLevel': 10, 'MaxLevel': 2, 'Scaling': 'add', 'Description': '% Villager EXP, and unlocks Enhancing Conjuror Bonuses',},
+        {'Name':"Cosmo, Enhance!", 'BonusPerLevel': 10, 'MaxLevel': 3, 'Scaling': 'add', 'Description': '% Villager EXP, and unlocks Enhancing Conjuror Bonuses',},
         {'Name':"Lengthmeister", 'BonusPerLevel': 25, 'MaxLevel': 4, 'Scaling': 'value', 'Description': 'x higher Measurement Bonuses',},
         {'Name':"Village Placeholder", 'BonusPerLevel': 1, 'MaxLevel': 1, 'Scaling': 'add', 'Description': " placeholder- Don't buy this",},
     ],
@@ -6243,9 +6243,9 @@ caverns_conjuror_majiks = {
         {'Name':"Pocket Divinity", 'BonusPerLevel': 1, 'MaxLevel': 2, 'Scaling': 'add', 'Description': ' account-wide Divinity links',},
         {'Name':"Beeg Beeg Forge", 'BonusPerLevel': 3, 'MaxLevel': 5, 'Scaling': 'multi', 'Description': 'x forge ore capacity',},
         {'Name':"Resource Bursting", 'BonusPerLevel': 100, 'MaxLevel': 3, 'Scaling': 'add', 'Description': '% multi-resource max',},
-        {'Name':"Voter Integrity", 'BonusPerLevel': 6, 'MaxLevel': 1, 'Scaling': 'add', 'Description': '% larger Ballot bonus',},
+        {'Name':"Voter Integrity", 'BonusPerLevel': 6, 'MaxLevel': 5, 'Scaling': 'add', 'Description': '% larger Ballot bonus',},
         {'Name':"Weapon Relevancy", 'BonusPerLevel': 75, 'MaxLevel': 1, 'Scaling': 'add', 'Description': '% stronger Weapon Power',},
-        {'Name':"IdleOn Placeholder", 'BonusPerLevel': 1, 'MaxLevel': 1, 'Scaling': 'add', 'Description': " placeholder- Don't buy this",},
+        {'Name':"IdleOn Placeholder", 'BonusPerLevel': 1, 'MaxLevel': 2, 'Scaling': 'add', 'Description': " placeholder- Don't buy this",},
     ]
 }
 max_majiks = 0

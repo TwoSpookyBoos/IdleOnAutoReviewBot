@@ -1330,9 +1330,9 @@ class Account:
 
         self.cards = self._make_cards()
 
-        self.minigame_plays_remaining = self.raw_optlacc_dict.get(33, 0)
-        self.daily_world_boss_kills = self.raw_optlacc_dict.get(195, 0)
-        self.daily_particle_clicks_remaining = self.raw_optlacc_dict.get(135, 0)
+        self.minigame_plays_remaining = self.raw_optlacc_dict.get(33, 0) or 0
+        self.daily_world_boss_kills = self.raw_optlacc_dict.get(195, 0) or 0
+        self.daily_particle_clicks_remaining = self.raw_optlacc_dict.get(135, 0) or 0
 
         self._parse_class_unique_kill_stacks()
         self._parse_general_gemshop()
@@ -1391,9 +1391,9 @@ class Account:
         #     self.all_assets.get(tokenName).add(tokenCount)
 
     def _parse_class_unique_kill_stacks(self):
-        self.dk_orb_kills = self.raw_optlacc_dict.get(138, 0)
-        self.sb_plunder_kills = self.raw_optlacc_dict.get(139, 0)
-        self.es_wormhole_kills = self.raw_optlacc_dict.get(152, 0)
+        self.dk_orb_kills = self.raw_optlacc_dict.get(138, 0) or 0
+        self.sb_plunder_kills = self.raw_optlacc_dict.get(139, 0) or 0
+        self.es_wormhole_kills = self.raw_optlacc_dict.get(152, 0) or 0
 
     def _parse_family_bonuses(self):
         self.family_bonuses = {}
@@ -1542,8 +1542,8 @@ class Account:
 
     def _parse_general_event_points_shop(self):
         self.event_points_shop = {
-            'Points Owned': self.raw_optlacc_dict.get(310, 0),
-            'Raw Purchases': self.raw_optlacc_dict.get(311, ""),
+            'Points Owned': self.raw_optlacc_dict.get(310, 0) or 0,
+            'Raw Purchases': self.raw_optlacc_dict.get(311, '') or '',
             'Bonuses': {}
         }
         if isinstance(self.event_points_shop['Raw Purchases'], str):
@@ -1678,11 +1678,11 @@ class Account:
 
     def _parse_w1_owl(self):
         self.owl = {
-            'Discovered': bool(self.raw_optlacc_dict.get(265, False)),
-            'FeatherGeneration': self.raw_optlacc_dict.get(254, 0),
-            'BonusesOfOrion': self.raw_optlacc_dict.get(255, 0),
-            'FeatherRestarts': self.raw_optlacc_dict.get(258, 0),
-            'MegaFeathersOwned': self.raw_optlacc_dict.get(262, 0)
+            'Discovered': bool(self.raw_optlacc_dict.get(265, False) or False),
+            'FeatherGeneration': self.raw_optlacc_dict.get(254, 0) or 0,
+            'BonusesOfOrion': self.raw_optlacc_dict.get(255, 0) or 0,
+            'FeatherRestarts': self.raw_optlacc_dict.get(258, 0) or 0,
+            'MegaFeathersOwned': self.raw_optlacc_dict.get(262, 0) or 0
         }
 
     def _parse_w1_statues(self):
@@ -1987,40 +1987,41 @@ class Account:
 
     def _parse_w2_islands(self):
         self.islands = {
-            'Trash': int(float(self.raw_optlacc_dict.get(161, 0))),  #[161]: 362.202271805249
-            'Bottles': int(float(self.raw_optlacc_dict.get(162, 0))),  #[162]: 106.90044163281846
+            'Trash': int(float(self.raw_optlacc_dict.get(161, 0) or 0)),  #[161]: 362.202271805249
+            'Bottles': int(float(self.raw_optlacc_dict.get(162, 0) or 0)),  #[162]: 106.90044163281846
         }
-        raw_islands_list = list(str(self.raw_optlacc_dict.get(169, '')))  #[169]: "_dcabe" or could be int 0 for whatever reason...
+
+        raw_islands_list = list(str(self.raw_optlacc_dict.get(169, '') or ''))  #[169]: "_dcabe" or could be int 0 for whatever reason...
         for islandName, islandData in islands_dict.items():
             self.islands[islandName] = {
                 'Unlocked': islandData['Code'] in raw_islands_list,
                 'Description': islandData['Description']
             }
 
-        self.nothing_hours = self.raw_optlacc_dict.get(184, 0)
+        self.nothing_hours = self.raw_optlacc_dict.get(184, 0) or 0
 
     def _parse_w2_killroy(self):
         self._parse_w2_killroy_skull_shop()
         self.killroy = {}
-        self.killroy_total_fights = self.raw_optlacc_dict.get(112, 0)
+        self.killroy_total_fights = self.raw_optlacc_dict.get(112, 0) or 0
         for upgradeName, upgradeDict in killroy_dict.items():
             self.killroy[upgradeName] = {
                 'Available': False,
                 'Remaining': max(0, upgradeDict['Required Fights'] - self.killroy_total_fights),
-                'Upgrades': self.raw_optlacc_dict.get(upgradeDict['UpgradesIndex'], 0),
+                'Upgrades': self.raw_optlacc_dict.get(upgradeDict['UpgradesIndex'], 0) or 0,
                 'Image': upgradeDict['Image']
             }
 
     def _parse_w2_killroy_skull_shop(self):
         self.killroy_skullshop = {
-            'Third Battle Unlocked': self.raw_optlacc_dict.get(227, 0) == 1,
-            'Artifact Purchases': self.raw_optlacc_dict.get(228, 0),
-            'Artifact Multi': 1 + (self.raw_optlacc_dict.get(228, 0) / (300 + self.raw_optlacc_dict.get(228, 0))),
-            'Crop Purchases': self.raw_optlacc_dict.get(229, 0),
-            'Crop Multi': 1 + ((self.raw_optlacc_dict.get(229, 0) / (300 + self.raw_optlacc_dict.get(229, 0))) * 9),
-            'Crop Multi Plus 1': 1 + (((1 + self.raw_optlacc_dict.get(229, 0)) / (1 + 300 + self.raw_optlacc_dict.get(229, 0))) * 9),
-            'Jade Purchases': self.raw_optlacc_dict.get(230, 0),
-            'Jade Multi': 1 + ((self.raw_optlacc_dict.get(230, 0) / (300 + self.raw_optlacc_dict.get(230, 0))) * 2),
+            'Third Battle Unlocked': self.raw_optlacc_dict.get(227, 0) or 0 == 1,
+            'Artifact Purchases': self.raw_optlacc_dict.get(228, 0) or 0,
+            'Artifact Multi': 1 + (self.raw_optlacc_dict.get(228, 0) or 0 / (300 + self.raw_optlacc_dict.get(228, 0) or 0)),
+            'Crop Purchases': self.raw_optlacc_dict.get(229, 0) or 0,
+            'Crop Multi': 1 + ((self.raw_optlacc_dict.get(229, 0) or 0 / (300 + self.raw_optlacc_dict.get(229, 0) or 0)) * 9),
+            'Crop Multi Plus 1': 1 + (((1 + self.raw_optlacc_dict.get(229, 0)) / (1 + 300 + self.raw_optlacc_dict.get(229, 0) or 0)) * 9),
+            'Jade Purchases': self.raw_optlacc_dict.get(230, 0) or 0,
+            'Jade Multi': 1 + ((self.raw_optlacc_dict.get(230, 0) or 0 / (300 + self.raw_optlacc_dict.get(230, 0) or 0)) * 2),
         }
 
     def _parse_w3(self):
@@ -2083,7 +2084,7 @@ class Account:
 
     def _parse_w3_library(self):
         self.library = {
-            'BooksReady': self.raw_optlacc_dict.get(55, 0)
+            'BooksReady': self.raw_optlacc_dict.get(55, 0) or 0
         }
 
     def _parse_w3_deathnote(self):
@@ -2264,9 +2265,12 @@ class Account:
 
     def _parse_w3_atom_collider(self):
         self.atom_collider = {
-            'StorageLimit': colliderStorageLimitList[self.raw_optlacc_dict.get(133, 0)],
-            'OnOffStatus': bool(self.raw_optlacc_dict.get(132, 1))
+            'OnOffStatus': bool(self.raw_optlacc_dict.get(132, 1) or True)
         }
+        try:
+            self.atom_collider['StorageLimit'] = colliderStorageLimitList[self.raw_optlacc_dict.get(133, 0) or 0]
+        except:
+            self.atom_collider['StorageLimit'] = colliderStorageLimitList[-1]
         try:
             self.atom_collider['Particles'] = self.raw_data.get("Divinity", {})[39]
         except:
@@ -3163,8 +3167,8 @@ class Account:
             "Gemstones": {},
             'Beanstalk': {},
             "JadeEmporium": {},
-            'CurrentMastery': self.raw_optlacc_dict.get(231, 0),
-            'MaxMastery': self.raw_optlacc_dict.get(232, 0),
+            'CurrentMastery': self.raw_optlacc_dict.get(231, 0) or 0,
+            'MaxMastery': self.raw_optlacc_dict.get(232, 0) or 0,
         }
         raw_ninja_list = safe_loads(self.raw_data.get("Ninja", []))
         self._parse_w6_gemstones(raw_ninja_list)
@@ -3188,7 +3192,7 @@ class Account:
                 }
         for gemstoneIndex, gemstoneName in enumerate(sneakingGemstonesList):
             self.sneaking["Gemstones"][gemstoneName] = {
-                "Level": self.raw_optlacc_dict.get(sneakingGemstonesFirstIndex + gemstoneIndex, 0),
+                "Level": self.raw_optlacc_dict.get(sneakingGemstonesFirstIndex + gemstoneIndex, 0) or 0,
                 "BaseValue": 0,
                 "BoostedValue": 0.0,
                 "Percent": 0,
@@ -3566,7 +3570,7 @@ class Account:
 
     def _calculate_general_highest_world_reached(self):
         if (
-            self.raw_optlacc_dict.get(194, 0) > 0
+            self.raw_optlacc_dict.get(194, 0) or 0 > 0
             or self.achievements['Valley Visitor']['Complete']
             or self.enemy_worlds[6].maps_dict[251].kill_count > 0
         ):
@@ -3726,14 +3730,14 @@ class Account:
         self.islands['Trash Island']['Unlock New Bribe Set']['Unlocked'] = self.bribes['Trash Island']['Random Garbage'] >= 0
 
         #Repeated purchases
-        self.islands['Trash Island']['Garbage Purchases'] = self.raw_optlacc_dict.get(163, 0)
-        self.islands['Trash Island']['Bottle Purchases'] = self.raw_optlacc_dict.get(164, 0)
+        self.islands['Trash Island']['Garbage Purchases'] = self.raw_optlacc_dict.get(163, 0) or 0
+        self.islands['Trash Island']['Bottle Purchases'] = self.raw_optlacc_dict.get(164, 0) or 0
 
     def _calculate_w2_killroy(self):
         for upgradeName, upgradeDict in killroy_dict.items():
             if not self.killroy[upgradeName]['Available']:
                 self.killroy[upgradeName]['Available'] = (
-                    self.raw_optlacc_dict.get(112, 0) >= upgradeDict['Required Fights']
+                    self.raw_optlacc_dict.get(112, 0) or 0 >= upgradeDict['Required Fights']
                     or self.killroy[upgradeName]['Upgrades'] > 0
                 ) and self.equinox_bonuses['Shades of K']['CurrentLevel'] >= upgradeDict['Required Equinox']
 
@@ -4033,7 +4037,7 @@ class Account:
                 self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Value'] = ninth_multi
                 self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'] = (
                     self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'].replace(
-                        '}', f"{self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Value']:.3f}")
+                        '}', f"{self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Value']:,.3f}")
                 )
             except:
                 self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Value'] = 1
@@ -4063,7 +4067,7 @@ class Account:
                             self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = result
                             self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'] = (
                                 self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'].replace(
-                                    '{', f"{self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value']:.2f}")
+                                    '{', f"{self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value']:,.2f}")
                             )
                         except:
                             self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = 0
@@ -4075,7 +4079,7 @@ class Account:
                             self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = ValueToMulti(result)
                             self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'] = (
                                 self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'].replace(
-                                    '}', f"{self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value']:.3f}")
+                                    '}', f"{self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value']:,.3f}")
                             )
                         except:
                             self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = 1

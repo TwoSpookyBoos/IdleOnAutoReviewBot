@@ -191,7 +191,7 @@ def getCharacterDetails(inputJSON, runType):
         playerCount = len(playerNames)
         if runType == "web":
             logger.info(
-                "From Public IE, found %s characters: %s",
+                "From Public IE or IE JSON, found %s characters: %s",
                 playerCount,
                 ", ".join(playerNames),
             )
