@@ -3962,9 +3962,9 @@ class Account:
             )
             try:
                 self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Value'] = ninth_multi
-                self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'] = (
-                    self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'].replace(
-                        '}', f"{self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value']:.3f}")
+                self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'] = (
+                    self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'].replace(
+                        '}', f"{self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Value']:.3f}")
                 )
             except:
                 self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Value'] = 1
