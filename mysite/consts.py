@@ -6244,7 +6244,7 @@ caverns_conjuror_majiks = {
         {'Name':"Beeg Beeg Forge", 'BonusPerLevel': 3, 'MaxLevel': 5, 'Scaling': 'multi', 'Description': 'x forge ore capacity',},
         {'Name':"Resource Bursting", 'BonusPerLevel': 100, 'MaxLevel': 3, 'Scaling': 'add', 'Description': '% multi-resource max',},
         {'Name':"Voter Integrity", 'BonusPerLevel': 6, 'MaxLevel': 5, 'Scaling': 'add', 'Description': '% larger Ballot bonus',},
-        {'Name':"Weapon Relevancy", 'BonusPerLevel': 75, 'MaxLevel': 1, 'Scaling': 'add', 'Description': '% stronger Weapon Power',},
+        {'Name':"Weapon Relevancy", 'BonusPerLevel': 75, 'MaxLevel': 4, 'Scaling': 'add', 'Description': '% stronger Weapon Power',},
         {'Name':"IdleOn Placeholder", 'BonusPerLevel': 1, 'MaxLevel': 2, 'Scaling': 'add', 'Description': " placeholder- Don't buy this",},
     ]
 }
