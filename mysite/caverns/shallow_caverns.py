@@ -154,7 +154,7 @@ def getMotherlodeAdviceGroup(schematics):
 
 # Layer Stats
     cavern_advice[l_stats].append(Advice(
-        label=f"Layer {cavern['LayersDestroyed']+1} {resource_skill} Efficiency Required:"
+        label=f"Layer {cavern['LayersDestroyed']+1} {resource_skill} Efficiency Required: "
               f"{notateNumber('Basic', getMotherlodeEfficiencyRequired(cavern['LayersDestroyed']), 1)}",
         picture_class=resource_skill
     ))
