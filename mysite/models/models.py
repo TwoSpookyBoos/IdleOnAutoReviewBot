@@ -3115,22 +3115,23 @@ class Account:
                     'ScalingValue': ring_details['ScalingValue'],
                     'Image': ring_details['Image']
                 }
-                self.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index]['Value'] = (
-                    self.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index]['Level']
-                    * self.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index]['ScalingValue']
-                )
-                self.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index]['Description'] = (
-                    self.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index]['Description'].replace(
-                        '{', f"{self.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index]['Value']:.2f}"
-                    )
-                )
+
             except:
                 self.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index] = {
-                    'Level': int(ring_levels[ring_index]),
+                    'Level': 0,
                     'Description': ring_details['Description'].replace('{', '0.00'),
                     'ScalingValue': ring_details['ScalingValue'],
                     'Image': ring_details['Image']
                 }
+            self.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index]['Value'] = (
+                    self.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index]['Level']
+                    * self.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index]['ScalingValue']
+            )
+            self.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index]['Description'] = (
+                self.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index]['Description'].replace(
+                    '{', f"{self.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index]['Value']:.2f}"
+                )
+            )
 
         #Improvements
         self.caverns['Caverns'][cavern_name]['Improvements'] = {}
