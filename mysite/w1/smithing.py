@@ -107,6 +107,15 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
         goal=100
     ))
 
+    #Cosmos > IdleOn Majik #2 Beeg Beeg Forge
+    beeg_forge = session_data.account.caverns['Majiks']['Beeg Beeg Forge']
+    cap_Advices["Scaling Sources"].append(Advice(
+        label=f"Beeg Beeg Forge {{{{ Cavern Majik|#villagers }}}}: {beeg_forge['Description']}",
+        picture_class=f"{beeg_forge['MajikType']}-majik-{'un' if beeg_forge['Level'] == 0 else ''}purchased",
+        progression=beeg_forge['Level'],
+        goal=beeg_forge['MaxLevel']
+    ))
+
     for group_name in cap_Advices:
         for advice in cap_Advices[group_name]:
             mark_advice_completed(advice)
@@ -115,8 +124,9 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
     groupB = ValueToMulti(session_data.account.stamps['Forge Stamp']['Value'])
     groupC = bribe_multi
     groupD = ValueToMulti((50 * achievement) + (25 * skillMasteryBonusBool))
+    groupE = beeg_forge['Value']
 
-    final_forgeCapacity = math.ceil(min(2e9, (20 + forge_upgrades) * groupA * groupB * groupC * groupD))
+    final_forgeCapacity = math.ceil(min(2e9, (20 + forge_upgrades) * groupA * groupB * groupC * groupD * groupE))
     bar_Advices["Total Capacity"].append(Advice(
         label=f"Total Capacity: {final_forgeCapacity:,}",
         picture_class="empty-forge-slot"

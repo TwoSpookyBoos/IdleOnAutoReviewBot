@@ -5,7 +5,7 @@ from flask import g as session_data
 from consts import (
     caverns_cavern_names,
     break_you_best, schematics_unlocking_buckets, sediment_names, max_sediments, getSedimentBarRequirement, getWellOpalTrade, getMotherlodeEfficiencyRequired,
-    getMotherlodeResourceRequired, getDenOpalRequirement, schematics_unlocking_amplifiers,
+    getMotherlodeResourceRequired, getDenOpalRequirement, schematics_unlocking_amplifiers, getBraveryOpalChance, monument_layer_rewards, monument_bonuses,
     # shallow_caverns_progressionTiers
 )
 from utils.text_formatting import pl, notateNumber
@@ -97,9 +97,9 @@ def getWellAdviceGroup() -> AdviceGroup:
     cavern_advice[s_stats] = [
         Advice(
             label=(
-                f"{sediment_names[sediment_index]}'s bar has been expanded {sediment_levels[sediment_index]} times"
+                f"{sediment_names[sediment_index]}: {sediment_levels[sediment_index]} expansions"
                 f"<br>{sediment_value:,} owned"
-                f"<br>{getSedimentBarRequirement(sediment_index, sediment_levels[sediment_index]):,.0f} required to expand the bar"
+                f"<br>{getSedimentBarRequirement(sediment_index, sediment_levels[sediment_index]):,.0f} to expand"
                 if sediment_value >= 0 else
                 f"Clear the rock layer to discover this Sediment!"
             ),
@@ -229,6 +229,106 @@ def getDenAdviceGroup() -> AdviceGroup:
     )
     return cavern_ag
 
+def getBraveryAdviceGroup() -> AdviceGroup:
+    c_stats = "Cavern Stats"
+    s_stats = 'Sword Stats'
+    l_stats = 'Layer Stats'
+    b_stats = 'Bonuses Stats'
+    cavern_advice = {
+        c_stats: [],
+        l_stats: [],
+        s_stats: [],
+        b_stats: []
+    }
+
+    cavern_name = 'Bravery Monument'
+    cavern = session_data.account.caverns['Caverns'][cavern_name]
+    layer_rewards = monument_layer_rewards[cavern_name]
+    bonuses = cavern['Bonuses']
+
+# Cavern Stats
+    cavern_advice[c_stats].append(Advice(
+        label=f"Objective- AFK here to gain Monument Hours that empower your Attacks within the Story minigame",
+        picture_class=f"cavern-{cavern['CavernNumber']}"
+    ))
+    cavern_advice[c_stats].append(Advice(
+        label=f"Total Opals Found: {cavern['OpalsFound']}",
+        picture_class='opal'
+    ))
+    cavern_advice[c_stats].append(Advice(
+        label=f"Chance for next Opal: {getBraveryOpalChance(cavern['OpalsFound'], bonuses[5]['Value']):.2%}",
+        picture_class='monument-basic-chest',
+    ))
+
+# Sword Stats
+    cavern_advice[s_stats].append(Advice(
+        label=f"Total Swords: {cavern['Sword Count']}/"
+              f"{cavern['Max Swords'] if cavern['Sword Count'] == cavern['Max Swords'] else '?'}",
+        picture_class='monument-basic-sword',
+        progression=cavern['Sword Count'],
+        goal=cavern['Max Swords'] if cavern['Sword Count'] >= cavern['Max Swords'] else '?'
+    ))
+    cavern_advice[s_stats].append(Advice(
+        label=f"Per Sword: {round(cavern['Sword Min']):,} to {round(cavern['Sword Max']):,}"
+              f"<br>All Swords: {round(cavern['Sword Count'] * cavern['Sword Min']):,} to {round(cavern['Sword Count'] * cavern['Sword Max']):,}"
+              f"<br>'Average' fight: {round(cavern['Sword Count'] * ((cavern['Sword Max'] - cavern['Sword Min']) / 2)):,}",
+        picture_class='monument-basic-sword'
+    ))
+
+    cavern_advice[s_stats].append(Advice(
+        label=f"{cavern['Rethrows']}/"
+              f"{cavern['Max Rethrows'] if cavern['Rethrows'] >= cavern['Max Rethrows'] else '?'} "
+              f"Sword Rethrows per Fight",
+        picture_class='engineer-schematic-40',
+        progression=cavern['Rethrows'],
+        goal=cavern['Max Rethrows'] if cavern['Rethrows'] >= cavern['Max Rethrows'] else '?'
+    ))
+    cavern_advice[s_stats].append(Advice(
+        label=f"{cavern['Retellings']}/"
+              f"{cavern['Max Retellings'] if cavern['Retellings'] >= cavern['Max Retellings'] else '?'} "
+              f"Retellings per Story attempt",
+        picture_class='engineer-schematic-40',
+        progression=cavern['Retellings'],
+        goal=cavern['Max Retellings'] if cavern['Retellings'] >= cavern['Max Retellings'] else '?'
+    ))
+
+# Layer Stats
+    cavern_advice[l_stats] = [
+        Advice(
+            label=f"{hour_requirement:,} hour bonus: "
+                  f"{layer_reward['Description'] if cavern['Hours'] >= hour_requirement else 'To be discovered'}",
+            picture_class=layer_reward['Image'],
+            progression=cavern['Hours'],
+            goal=hour_requirement
+        ) for hour_requirement, layer_reward in layer_rewards.items()
+    ]
+
+    cavern_advice[l_stats].insert(0, Advice(
+        label=f"Monument Hours: {cavern['Hours']:.0f}",
+        picture_class='measurement-1'
+    ))
+
+# Bonuses Stats
+    cavern_advice[b_stats] = [
+        Advice(
+            label=f"{bonus['Description'] if bonus['Level'] else 'Undiscovered bonus'}",
+            picture_class=bonus['Image'],
+            progression=bonus['Level']
+        ) for bonus in bonuses.values()
+    ]
+
+    for subgroup in cavern_advice:
+        for advice in cavern_advice[subgroup]:
+            mark_advice_completed(advice)
+
+    cavern_ag = AdviceGroup(
+        tier='',
+        pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name if cavern['Unlocked'] else 'To Be Discovered!'}",
+        advices=cavern_advice,
+        informational=True
+    )
+    return cavern_ag
+
 def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
     shallow_caverns_AdviceDict = {
         'Tiers': {},
@@ -269,6 +369,7 @@ def getShallowCavernsAdviceSection() -> AdviceSection:
     shallow_caverns_AdviceGroupDict['The Well'] = getWellAdviceGroup()
     shallow_caverns_AdviceGroupDict['Motherlode'] = getMotherlodeAdviceGroup()
     shallow_caverns_AdviceGroupDict['The Den'] = getDenAdviceGroup()
+    shallow_caverns_AdviceGroupDict['Bravery Monument'] = getBraveryAdviceGroup()
 
     for ag in shallow_caverns_AdviceGroupDict.values():
         ag.remove_empty_subgroups()

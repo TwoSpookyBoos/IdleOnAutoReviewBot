@@ -6108,18 +6108,6 @@ def getBreedabilityHeartFromMulti(multi: float) -> str:
 
 
 ###World 5 Caverns CONSTS###
-def getMaxEngineerLevel() -> int:
-    max_engi_last_i_checked = 19  # Last checked on Caverns release 2.20
-    if max_schematics > (1 + (max_engi_last_i_checked * 3) + (max_engi_last_i_checked // 5)):
-        needed_level = 0
-        unlocked_schematics = 0
-        while unlocked_schematics < max_schematics:
-            needed_level += 1
-            unlocked_schematics = 1 + (needed_level * 3) + (needed_level // 5)
-        logger.warning(f"Update consts.max_engi_last_i_checked! {needed_level} is needed to unlock {max_schematics}")
-        return needed_level
-    else:
-        return max_engi_last_i_checked
 def getCavernResourceImage(resource_number):
     try:
         if int(resource_number) <= 9:
@@ -6132,19 +6120,6 @@ def getCavernResourceImage(resource_number):
         # print(f"Error parsing resource type for {clean_name}: {schematic_details[2]}: {e}")
         resource_image = ''
     return resource_image
-def getVillagerEXPRequired(villager_index, villager_level):
-    match villager_index:
-        case 0:
-            result = 10 * ((10 + 7 * pow(villager_level, 2.1)) * pow(2.1, villager_level) * (1 + .75 * max(0, villager_level - 4)) - 1.75)
-        case 1:
-            result = 30 * (10 + 6 * pow(villager_level, 1.8) * pow(1.57, villager_level))
-        case 2:
-            result = 50 * (10 + 5 * pow(villager_level, 1.7) * pow(1.4, villager_level))
-        case 3:
-            result = 120 * (30 + 10 * pow(villager_level, 2) * pow(2, villager_level))
-        case _:
-            result = 10 * pow(10, 20)
-    return result
 
 
 HolesInfo = [
@@ -6178,9 +6153,9 @@ HolesInfo = [
     ["LAYER_", "HIVE_", "TRUNK_", "DEPTH_"],
     "BIGGER_BITE Hounds_now_have_a_base_attack_value_of_{ ELUSIVE_INSTINCT Hounds_now_require_{_Accuracy_for_100%_hit_chance CANINE_RECOVERY All_hounds_now_heal_{%_HP_every_3s BIGGER_BOW_WOW Hounds_have_a_10%_chance_to_spawn_BIG_with_{x_HP_and_DMG DOGGO_EMP_EFFECT Somehow_the_hounds_now_make_your_attacks_cost_{x_more_MP CURSED_HOWL Hounds_have_a_5%_chance_to_be_cursed,_causing_{x_more_Fear DEN_DESPAIR Start_with_your_fear_meter_filled_to_{% FAST_AND_DEADLY Hounds_cause_fear_{_seconds_faster_than_normal".split(" "),
     ["`@#$%^&*():;<,>.?{[}船般航舞窗皮白癖爬爆歧武歌歉款欺欧欣欢次斗文敲数敬散敢敞教敏情悚悔恼恰恭恨恤恢恒"],
-    "1 80 300 750 2000 5000 10000 24000".split(" "),
-    "Swords_deal_{~}_damage +2_additional_Sword You_can_Re-Throw_5_swords_per_story +1_additional_Sword You_get_1_Retelling_per_story +1_additional_Sword +10_Re-Throws_per_story +1_additional_Sword Monument_2 Monument_2 Monument_2 Monument_2 Monument_2 Monument_2 Monument_2 Monument_2 Monument_3 Monument_3 Monument_3 Monument_3 Monument_3 Monument_3 Monument_3 Monument_3 Monument_4 Monument_4 Monument_4 Monument_4 Monument_4 Monument_4 Monument_5 Monument_5 Monument_5 Monument_5 Monument_5 Monument_5 Monument_5 Monument_5 Monument_6 Monument_6 Monument_6 Monument_6 Monument_6 Monument_6 Monument_6 Monument_6".split(" "),
-    "+{%|Mining|Efficiency }x_Bucket|Fill_Rate }x|Cooking_Speed +{%_EXP|Gain_for|Villagers }x|Gaming_Bits|Gain +{%_Chance|for_Bravery|Opals +{%_DMG|for_all|Characters }x_Bell_Ring|&_Ping_Rate +{%|All_Monument|AFK_Gain }x_Bravery|Bonuses_Multi +{%_Catching|Efficiency }x_Harp|Note_Gain }x_Artifact|Find_Chance +{%_EXP|Gain_for|Villagers }x|All_Summoning|Essence_Gain +{%_Chance|for_Justice|Opals +{%_Class|EXP_Gain +{%_more|daily_Lamp|Wishes +{%|All_Monument|AFK_Gain }x_Justice|Bonuses_Multi Monument_3 Monument_3 Monument_3 Monument_3 Monument_3 Monument_3 Monument_3 Monument_3 Monument_3 Monument_3 Monument_4 Monument_4 Monument_4 Monument_4 Monument_4 Monument_4 Monument_4 Monument_4 Monument_5 Monument_5 Monument_5 Monument_5 Monument_5 Monument_5 Monument_5 Monument_5 Monument_5 Monument_5 Monument_6 Monument_6 Monument_6 Monument_6 Monument_6 Monument_6 Monument_6 Monument_6 Monument_6 Monument_6".split(" "),
+    "1 80 300 750 2000 5000 10000 24000".split(" "),  #30 Monument Hours required to break layers
+    "Swords_deal_{~}_damage +2_additional_Sword You_can_Re-Throw_5_swords_per_story +1_additional_Sword You_get_1_Retelling_per_story +1_additional_Sword +10_Re-Throws_per_story +1_additional_Sword Monument_2 Monument_2 Monument_2 Monument_2 Monument_2 Monument_2 Monument_2 Monument_2 Monument_3 Monument_3 Monument_3 Monument_3 Monument_3 Monument_3 Monument_3 Monument_3 Monument_4 Monument_4 Monument_4 Monument_4 Monument_4 Monument_4 Monument_5 Monument_5 Monument_5 Monument_5 Monument_5 Monument_5 Monument_5 Monument_5 Monument_6 Monument_6 Monument_6 Monument_6 Monument_6 Monument_6 Monument_6 Monument_6".split(" "),  #31 Bravery Layer rewards
+    "+{%|Mining|Efficiency }x_Bucket|Fill_Rate }x|Cooking_Speed +{%_EXP|Gain_for|Villagers }x|Gaming_Bits|Gain +{%_Chance|for_Bravery|Opals +{%_DMG|for_all|Characters }x_Bell_Ring|&_Ping_Rate +{%|All_Monument|AFK_Gain }x_Bravery|Bonuses_Multi +{%_Catching|Efficiency }x_Harp|Note_Gain }x_Artifact|Find_Chance +{%_EXP|Gain_for|Villagers }x|All_Summoning|Essence_Gain +{%_Chance|for_Justice|Opals +{%_Class|EXP_Gain +{%_more|daily_Lamp|Wishes +{%|All_Monument|AFK_Gain }x_Justice|Bonuses_Multi Monument_3 Monument_3 Monument_3 Monument_3 Monument_3 Monument_3 Monument_3 Monument_3 Monument_3 Monument_3 Monument_4 Monument_4 Monument_4 Monument_4 Monument_4 Monument_4 Monument_4 Monument_4 Monument_5 Monument_5 Monument_5 Monument_5 Monument_5 Monument_5 Monument_5 Monument_5 Monument_5 Monument_5 Monument_6 Monument_6 Monument_6 Monument_6 Monument_6 Monument_6 Monument_6 Monument_6 Monument_6 Monument_6".split(" "),  #32 Bravery win bonuses
     "DIRTY_NAPKIN LIL_BABY_SPIDER STRAW_SCARECROW DIM_NIGHTLIGHT BEDTIME_SHADOW THE_1[_OF_GERMS SLOW_ESCORT_NPC MONDAYS BROCCOLINI POP_SONG DOLL_TOY INSIDE_OUT_SOCK MILKLESS_CEREAL EXCESS_CALORIES SLIGHTLY_SHORT_LEG MUMBLE_RAPPER VENTRILAKWIST SPELLING_TEST_RESULT AIRPLANE_BABY SPECIFIC_CROW CLOWN ABSENCE_OF_CLOWNS DISCORD_CHAT_FLEX VIDEO_GAMES".split(" "),
     "Eww_gross_who_knows_where_that_thing_has_been AAAHH_KILL_IT_KILL_IT A_truly_intimidating_and_very_much_real_enemy_stood_before_me In_darkness_the_monsters_under_the_bed_thrive AAAAAAAAAHHHH_MONSTER If_the_sanitizer_couldn't_get_them_what_chance_do_I_have WHY_CANT_YOU_MOVE_FASTER_YOU_FIEND You_haven't_stopped_bothering_me_since_first_grade Terrible_taste_and_pretentious_name,_I_HATE_YOU I_don't_care_how_many_people_like_it,_it_sucks!!! The_lamest_of_all_toys,_action_figure_gang_for_life! I_nearly_lost_my_mind_fixing_you_every_day Truly_a_horrendous_sight_to_behold_on_weekend_morning Why_must_you_take_such_a_hideous_form_upon_my_body? You_FIEND,_you_ALWAYS_make_the_chair_wobble_uncontrolably What_are_you_even_SAYING??? Speaking_without_moving_your_mouth_should_be_illegal An_F?_Noooooooo! SHUT_UP_SHUT_UPPPPPP Grrr,_the_one_that_stole_my_food_Sunday_March_11th_2007... Huh?_I_wasn't_afriad_of_clowns,_I_loved_clowns! NOOOOOOOOOOOOOOOOoooooo! Terrible,_just_terrible... The_worst_media_form!_You_poison_our_youth! It's_been_a_while_since_the_last_update,_they_have_formed_an_army".split(" "),
     "So_you_as_well_have_an_undying_lust_for_battle,_I_wish_you_could've_fought_with_me_in_my_final_hour... Fighting_to_the_bitter_end,_we_really_did_make_the_best_of_this_test_known_as_life... A_weaker_gamer_would_have_run_at_some_point,_but_I'm_glad_to_know_at_least_you_would've_stayed_with_me! ..._and_when_the_dust_settled_there_were_no_bonuses_kept,_just_an_everlasting_idea_of_bravery. I_always_said_I'd_rather_live_by_what_I_live_by_than_die_when_I'm_fine So_there_you_have_it,_that's_the_story!_I_tried_so_hard,_and_got_so_far,_but,_well_you_know_how_it_ended... Ah_don't_feel_too_bad_for_me!_I'm_a_master_mental_gymnast,_I_already_see_the_loss_as_a_win! I..._lost?_I_guess_I_only_thought_about_the_good_times,_I_forgot_that's_how_it_ended... Wait_no_no,_that's_not_how_it_went..._I_must_have_been_thinking_about_a_friend,_I_would_never_have_lost_like_that! Well,_that's_my_story!_Standing_up_against_true_evil_with_honor,_bonuses_be_darned!".split(" "),
@@ -6246,7 +6221,7 @@ schematics_unlocking_amplifiers = {
     'Fast and Deadly': ['Hounds cause Fear faster', 'Dark Amplifier', 'den-amplifier-7']
 }
 max_buckets = 1 + len(schematics_unlocking_buckets)
-sediment_names = ['Gravel', 'Goldust', 'Redstone', 'Mythril', 'Cobaltine', 'Brunite', 'Freezium', 'Sweetium', 'Red Coral', 'Hyper Coral']
+sediment_names = ['Gravel', 'Goldust', 'Redstone', 'Mythril', 'Cobaltine', 'Brunite', 'Freezium', 'Sweetium', 'Rad Coral', 'Hyper Coral']
 sediment_bars = [0, 50, 500, 9000, 125000, 1500000, 20000000, 100000000, 500000000, 2000000000]
 max_sediments = len(sediment_names)
 #Majiks stored in CosmoUpgrades in source code
@@ -6261,7 +6236,7 @@ caverns_conjuror_majiks = {
         {'Name':"Opal Enthusiasm", 'BonusPerLevel': 30, 'MaxLevel': 5, 'Scaling': 'add', 'Description': '% Villager EXP per 10 Opals invested',},
         {'Name':"Contented Creator", 'BonusPerLevel': 1, 'MaxLevel': 4, 'Scaling': 'add', 'Description': '% Villager EXP per Schematic created',},
         {'Name':"Cosmo, Enhance!", 'BonusPerLevel': 10, 'MaxLevel': 2, 'Scaling': 'add', 'Description': '% Villager EXP, and unlocks Enhancing Conjuror Bonuses',},
-        {'Name':"Lengthmeister", 'BonusPerLevel': 25, 'MaxLevel': 2, 'Scaling': 'value', 'Description': 'x higher Measurement Bonuses',},
+        {'Name':"Lengthmeister", 'BonusPerLevel': 25, 'MaxLevel': 4, 'Scaling': 'value', 'Description': 'x higher Measurement Bonuses',},
         {'Name':"Village Placeholder", 'BonusPerLevel': 1, 'MaxLevel': 1, 'Scaling': 'add', 'Description': " placeholder- Don't buy this",},
     ],
     "IdleOn": [
@@ -6282,7 +6257,10 @@ caverns_measurer_scalar_matchup = HolesInfo[52]
 caverns_measurer_scalars = HolesInfo[53]
 caverns_measurer_measurements = HolesInfo[54]
 max_measurements = sum(1 for measurement in caverns_measurer_measurements if measurement != 'i')  #i is a placeholder for not-implemented
-caverns_measurer_measurement_names = ['Inches', 'Meters', 'Miles', 'Liters', 'Yards', 'Pixels', 'Leagues', 'Nanometers', 'Sadness', 'Feet', 'Bababooey', 'Killermeters', 'Joules', 'TBD14']
+caverns_measurer_measurement_names = [
+    'Inches', 'Meters', 'Miles', 'Liters', 'Yards', 'Pixels',
+    'Leagues', 'Nanometers', 'Sadness', 'Feet', 'Bababooey', 'Killermeters', 'Joules', 'TBD14'
+]
 
 for entry_index, entry in enumerate(caverns_measurer_measurements):
     try:
@@ -6299,6 +6277,69 @@ for entry_index, entry in enumerate(caverns_measurer_measurements):
             f"UnknownScalar{entry_index}",
             ''
         ]
+monument_hours = [int(h) for h in HolesInfo[30]]  #[1, 80, 300, 750, 2000, 5000, 10000, 24000] as of 2.20
+#Layer rewards are in HolesInfo[31], but I wanted to clean up the display a bit
+monument_layer_rewards = {
+    "Bravery Monument": {
+        monument_hours[0]: {'Description': 'Story Minigame unlocked with 3 Swords', 'Image': 'monument-basic-sword'},
+        monument_hours[1]: {'Description': '+2 additional Swords', 'Image': 'monument-basic-sword'},
+        monument_hours[2]: {'Description': 'You can Re-Throw 5 swords per story', 'Image': 'engineer-schematic-40'},
+        monument_hours[3]: {'Description': '+1 additional Sword', 'Image': 'monument-basic-sword'},
+        monument_hours[4]: {'Description': 'You get 1 Retelling per story', 'Image': 'measurement-1'},
+        monument_hours[5]: {'Description': '+1 additional Sword', 'Image': 'monument-basic-sword'},
+        monument_hours[6]: {'Description': '+10 Re-Throws per story', 'Image': 'engineer-schematic-40'},
+        monument_hours[7]: {'Description': '+1 additional Sword', 'Image': 'monument-basic-sword'},
+    },
+}
+monument_bonuses_clean_descriptions = [d.replace('|', ' ').replace('_', ' ') for d in HolesInfo[32]]
+monument_bonuses_scaling = [int(v) for v in HolesInfo[37]]
+monument_bonuses = {
+    'Bravery Monument': {},
+    #'Justice Monument': {},
+    #'Wisdom Monument': {},
+    #'Compassion Monument': {},
+}
+for i in range(0, 10):  #Final number is excluded in range. 10 for Bravery, 10 for Justice
+    monument_name = HolesInfo[41][i//10]
+    try:
+        monument_bonuses[f"{monument_name} Monument"][i] = {
+            'Description': monument_bonuses_clean_descriptions[i],
+            'ScalingValue': monument_bonuses_scaling[i],
+            'ValueType': 'Percent' if '{' in monument_bonuses_clean_descriptions[i] else 'Multi' if '}' in monument_bonuses_clean_descriptions[i] else 'Flat',
+            'Image': f"{monument_name.lower().replace(' ', '-')}-bonus-{i}",
+            'Value': 0,
+            'Level': 0
+        }
+    except Exception as e:
+        print(f"EXCEPTION: Couldn't parse {monument_name} Monument bonus {i}: {e}")
+        continue
+
+def getMaxEngineerLevel() -> int:
+    max_engi_last_i_checked = 19  # Last checked on Caverns release 2.20
+    if max_schematics > (1 + (max_engi_last_i_checked * 3) + (max_engi_last_i_checked // 5)):
+        needed_level = 0
+        unlocked_schematics = 0
+        while unlocked_schematics < max_schematics:
+            needed_level += 1
+            unlocked_schematics = 1 + (needed_level * 3) + (needed_level // 5)
+        logger.warning(f"Update consts.max_engi_last_i_checked! {needed_level} is needed to unlock {max_schematics}")
+        return needed_level
+    else:
+        return max_engi_last_i_checked
+
+def getVillagerEXPRequired(villager_index, villager_level):
+    match villager_index:
+        case 0:
+            result = 10 * ((10 + 7 * pow(villager_level, 2.1)) * pow(2.1, villager_level) * (1 + .75 * max(0, villager_level - 4)) - 1.75)
+        case 1:
+            result = 30 * (10 + 6 * pow(villager_level, 1.8) * pow(1.57, villager_level))
+        case 2:
+            result = 50 * (10 + 5 * pow(villager_level, 1.7) * pow(1.4, villager_level))
+        case 3:
+            result = 120 * (30 + 10 * pow(villager_level, 2) * pow(2, villager_level))
+        case _:
+            result = 10 * pow(10, 20)
+    return result
 
 def getSedimentBarRequirement(sediment_index, sediment_level):
     result = 100 * pow(1.5, sediment_level) * ValueToMulti(sediment_bars[sediment_index])
@@ -6328,6 +6369,14 @@ def getMotherlodeEfficiencyRequired(layers_destroyed: int):
 def getDenOpalRequirement(current_opals: int):
     result = 12 * (150 + (30 + current_opals) * current_opals) * pow(1.5, current_opals)
     return round(result)
+
+def getBraveryOpalChance(current_opals: int, opal_bonus_value: float = 1):
+    result = (
+        min(0.5, pow(0.5, current_opals))
+        * ValueToMulti(opal_bonus_value)
+    )
+    return result
+
 
 ###WORLD 5 CONSTS###
 artifactTiers = ["Base", "Ancient", "Eldritch", "Sovereign"]

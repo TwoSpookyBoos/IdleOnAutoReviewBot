@@ -92,16 +92,16 @@ $cosmos-majiks: (
 );
 
 $caverns: (
-    cavern-1: img('wiki/HolePOI0.png'),
-    cavern-2: img('wiki/HolePOI1.png'),
-    cavern-3: img('wiki/HolePOI2.png'),
-    cavern-4: img('wiki/HolePOI3.png'),
-    cavern-5: img('wiki/HolePOI4.png'),
-    cavern-6: img('wiki/HolePOI5.png'),  //Lamp
-    cavern-7: img('wiki/HolePOI6.png'),
-    cavern-8: img('wiki/HolePOI7.png'),
-    cavern-9: img('wiki/HolePOI8.png'),
-    cavern-10: img('wiki/HolePOI9.png'),
+    cavern-1: img('wiki/HolePOI0.png'), //Well
+    cavern-2: img('wiki/HolePOI1.png'), //Motherlode Mining
+    cavern-3: img('wiki/HolePOI2.png'), //Dawg Den
+    cavern-4: img('wiki/HolePOI3.png'), //Bravery Monument
+    cavern-5: img('wiki/HolePOI4.png'), //Bell
+    cavern-6: img('wiki/HolePOI5.png'), //Harp
+    cavern-7: img('wiki/HolePOI6.png'), //Lamp
+    cavern-8: img('wiki/HolePOI7.png'), //Motherlode Catching
+    cavern-9: img('wiki/HolePOI8.png'), //Grotto
+    cavern-10: img('wiki/HolePOI9.png'), //Justice Monument
 );
 
 $well-sediment: (
@@ -138,17 +138,28 @@ $den-amplifiers: (
 );
 
 $monuments: (
-    monument-basic-chest: img('HoleBraveryChest.png'),
-    monument-special-chest: img('HoleBraveryChestB.png'),
-    monument-basic-sword: img('HoleBraverySword.png'),
-    monument-special-sword: img('HoleBraverySwordb.png'),
+    monument-basic-chest: img('wiki/HoleBraveryChest.png'),
+    monument-special-chest: img('wiki/HoleBraveryChestB.png'),
+    monument-basic-sword: img('wiki/HoleBraverySword.png'),
+    monument-special-sword: img('wiki/HoleBraverySwordb.png'),
+    //Bravery
+    bravery-bonus-0: img('wiki/Mining_Skill_Icon.png'),
+    bravery-bonus-1: img('wiki/HoleWellBucket0.png'),
+    bravery-bonus-2: img('wiki/Cooking_Skill_Icon.png'),
+    bravery-bonus-3: img('wiki/Opal.png'),
+    bravery-bonus-4: img('wiki/Gaming_Skill_Icon.png'),
+    bravery-bonus-5: img('wiki/HoleBraveryChest.png'),
+    bravery-bonus-6: img('wiki/Attack_Icon.png'),
+    bravery-bonus-7: img('wiki/measimg2.png'),
+    bravery-bonus-8: img('wiki/Monument_AFK.png'),
+    bravery-bonus-9: img('wiki/measimg1.png'),
 );
 
 $bell: (
-    bell-ring:  img('HoleBellCover0.png'),
-    bell-ping:  img('HoleBellCover1.png'),
-    bell-clean: img('HoleBellCover2.png'),
-    bell-renew: img('HoleBellCover3.png'),
+    bell-ring:  img('wiki/HoleBellCover0.png'),
+    bell-ping:  img('wiki/HoleBellCover1.png'),
+    bell-clean: img('wiki/HoleBellCover2.png'),
+    bell-renew: img('wiki/HoleBellCover3.png'),
 );
 
 $harp-notes: (
