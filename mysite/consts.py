@@ -6309,7 +6309,7 @@ for i in range(0, 10):  #Final number is excluded in range. 10 for Bravery, 10 f
             'Description': monument_bonuses_clean_descriptions[i],
             'ScalingValue': monument_bonuses_scaling[i],
             'ValueType': 'Percent' if '{' in monument_bonuses_clean_descriptions[i] else 'Multi' if '}' in monument_bonuses_clean_descriptions[i] else 'Flat',
-            'Image': f"{monument_name.lower().replace(' ', '-').replace(' Monument', '')}-bonus-{i}",
+            'Image': f"{monument_name.lower().replace(' ', '-').replace('-monument', '')}-bonus-{i}",
         }
     except Exception as e:
         print(f"EXCEPTION: Couldn't parse {monument_name} bonus {i}: {e}")
