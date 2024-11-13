@@ -6413,8 +6413,9 @@ def getBellExpRequired(bell_index, current_uses: int):
 
 def getBellImprovementBonus(i_index, i_level, schematic_stacks=0, schematic_owned=False):
     #"BellMethodsQTY" in source code
+    # Yes, HolesInfo[61] only applies AFTER the schematic is purchased. Probably a bug in game but must be replicated here for accuracy.
     result = (
-        2 * i_level * max(1, pow(1.1, schematic_stacks) * schematic_owned) * float(HolesInfo[61][i_index])
+        2 * i_level * max(1, pow(1.1, schematic_stacks) * schematic_owned * float(HolesInfo[61][i_index]))
     )
     return result
 
