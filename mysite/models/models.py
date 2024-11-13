@@ -3094,7 +3094,7 @@ class Account:
                 }
             except:
                 self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index] = {
-                    'Level': raw_caverns_list[15][bonus_index],
+                    'Level': 0,
                     'Description': bonus_details['Description'],
                     'ScalingValue': bonus_details['ScalingValue'],
                     'ValueType': bonus_details['ValueType'],
