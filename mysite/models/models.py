@@ -68,8 +68,8 @@ from consts import (
     summoningBattleCountsDict, summoningDict,
     # Caverns
     caverns_villagers, caverns_conjuror_majiks, caverns_engineer_schematics, caverns_engineer_schematics_unlock_order, caverns_cavern_names,
-    caverns_measurer_measurements, getCavernResourceImage, schematics_unlocking_buckets, max_buckets, sediment_names, sediment_bars, getVillagerEXPRequired,
-    max_sediments, monument_bonuses, bell_clean_improvements, bell_ring_bonuses, getBellExpRequired, getBellImprovementBonus
+    caverns_measurer_measurements, getCavernResourceImage, schematics_unlocking_buckets, max_buckets, max_sediments, sediment_bars, getVillagerEXPRequired,
+    monument_bonuses, bell_clean_improvements, bell_ring_bonuses, getBellExpRequired, getBellImprovementBonus, monument_names, released_monuments
 )
 
 
@@ -3069,6 +3069,8 @@ class Account:
     def _parse_caverns_bravery_monument(self, raw_caverns_list):
         monument_name = 'Bravery Monument'
         monument_index = 0
+
+        # Layer Data
         try:
             self.caverns['Caverns'][monument_name]['Hours'] = int(raw_caverns_list[14][0 + 2 * monument_index])
         except:
@@ -3078,13 +3080,27 @@ class Account:
         except:
             self.caverns['Caverns'][monument_name]['LayersCleared'] = 0
 
-        self.caverns['Caverns'][monument_name]['Bonuses'] = monument_bonuses[monument_name]
-        for bonus_index in self.caverns['Caverns'][monument_name]['Bonuses']:
-            self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = 0
+        # Setup Bonuses
+        self.caverns['Caverns'][monument_name]['Bonuses'] = {}
+        for bonus_index, bonus_details in monument_bonuses[monument_name].items():
             try:
-                self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Level'] = raw_caverns_list[15][bonus_index]
+                self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index] = {
+                    'Level': raw_caverns_list[15][bonus_index],
+                    'Description': bonus_details['Description'],
+                    'ScalingValue': bonus_details['ScalingValue'],
+                    'ValueType': bonus_details['ValueType'],
+                    'Image': bonus_details['Image'],
+                    'Value': 0,  #Calculated later in _calculate_caverns_monuments()
+                }
             except:
-                self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Level'] = 0
+                self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index] = {
+                    'Level': raw_caverns_list[15][bonus_index],
+                    'Description': bonus_details['Description'],
+                    'ScalingValue': bonus_details['ScalingValue'],
+                    'ValueType': bonus_details['ValueType'],
+                    'Image': bonus_details['Image'],
+                    'Value': 0,  # Calculated later in _calculate_caverns_monuments()
+                }
 
     def _parse_caverns_the_bell(self, raw_caverns_list):
         cavern_name = 'The Bell'
@@ -3116,7 +3132,6 @@ class Account:
                     'ScalingValue': ring_details['ScalingValue'],
                     'Image': ring_details['Image']
                 }
-
             except:
                 self.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index] = {
                     'Level': 0,
@@ -4017,85 +4032,84 @@ class Account:
 
     def _calculate_caverns_monuments(self):
         cosmos_multi = max(1, self.caverns['Majiks']['Monumental Vibes']['Value'])
-        monument_index = 0
-        for monument_name in monument_bonuses:
-            # The 9th bonus multiplies other bonuses, but not itself. Must be calculated first.
-            ninth = monument_bonuses[monument_name][9 + (10 * monument_index)]
-            ninth_multi = (
-                max(1,
-                    0.1 * ceil(
-                        ninth['Level'] / (250 + ninth['Level'])
-                        * 10
-                        * cosmos_multi
+        for monument_index, monument_name in enumerate(monument_names):
+            if monument_index < released_monuments:
+                # The 9th bonus multiplies other bonuses, but not itself. Must be calculated first.
+                ninth = self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]
+                ninth_multi = (
+                    max(1,
+                        0.1 * ceil(
+                            ninth['Level'] / (250 + ninth['Level'])
+                            * 10
+                            * cosmos_multi
+                        )
                     )
                 )
-            )
-            try:
-                self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Value'] = ninth_multi
-                self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'] = (
-                    self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'].replace(
-                        '}', f"{self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Value']:,.3f}")
-                )
-            except:
-                self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Value'] = 1
-                self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'] = (
-                    self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'].replace('}', '1')
-                )
-            for bonus_index, bonus_details in monument_bonuses[monument_name].items():
-                if bonus_index % 10 != 9:
-                    if bonus_details['ScalingValue'] < 30:
-                        result = (
-                            self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Level']
-                            * self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['ScalingValue']
-                            * cosmos_multi
-                            * ninth_multi
-                        )
-                    else:
-                        result = (
-                            0.1 * ceil(
-                                ninth['Level'] / (250 + ninth['Level'])
-                                * 10
+                try:
+                    self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Value'] = ninth_multi
+                    self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'] = (
+                        self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'].replace(
+                            '}', f"{self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Value']:,.3f}")
+                    )
+                except:
+                    self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Value'] = 1
+                    self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'] = (
+                        self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'].replace('}', '1')
+                    )
+                for bonus_index, bonus_details in monument_bonuses[monument_name].items():
+                    if bonus_index % 10 != 9:
+                        if bonus_details['ScalingValue'] < 30:
+                            result = (
+                                self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Level']
+                                * self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['ScalingValue']
                                 * cosmos_multi
                                 * ninth_multi
                             )
-                        )
-                    if bonus_details['ValueType'] == 'Percent':
-                        try:
-                            self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = result
-                            self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'] = (
-                                self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'].replace(
-                                    '{', f"{self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value']:,.2f}")
+                        else:
+                            result = (
+                                0.1 * ceil(
+                                    ninth['Level'] / (250 + ninth['Level'])
+                                    * 10
+                                    * cosmos_multi
+                                    * ninth_multi
+                                )
                             )
-                        except:
-                            self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = 0
-                            self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'] = (
-                                self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'].replace('{', '0')
-                            )
-                    elif bonus_details['ValueType'] == 'Multi':
-                        try:
-                            self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = ValueToMulti(result)
-                            self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'] = (
-                                self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'].replace(
-                                    '}', f"{self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value']:,.3f}")
-                            )
-                        except:
-                            self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = 1
-                            self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'] = (
-                                self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'].replace('}', '1')
-                            )
-            monument_index += 1
-
+                        if bonus_details['ValueType'] == 'Percent':
+                            try:
+                                self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = result
+                                self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'] = (
+                                    self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'].replace(
+                                        '{', f"{self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value']:,.2f}")
+                                )
+                            except:
+                                self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = 0
+                                self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'] = (
+                                    self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'].replace('{', '0')
+                                )
+                        elif bonus_details['ValueType'] == 'Multi':
+                            try:
+                                self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = ValueToMulti(result)
+                                self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'] = (
+                                    self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'].replace(
+                                        '}', f"{self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value']:,.3f}")
+                                )
+                            except:
+                                self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = 1
+                                self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'] = (
+                                    self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'].replace('}', '1')
+                                )
+                    #print(f"{monument_name} Bonus {bonus_index}: Level {self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Level']} = {self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description']}")
         self._calculate_caverns_monuments_bravery()
 
     def _calculate_caverns_monuments_bravery(self):
         monument_name = 'Bravery Monument'
         self.caverns['Caverns'][monument_name]['Sword Count'] = (
-                min(9, 3  # Starting amount
-                    + (2 * (self.caverns['Caverns'][monument_name]['Hours'] >= 80))
-                    + (1 * (self.caverns['Caverns'][monument_name]['Hours'] >= 750))
-                    + (1 * (self.caverns['Caverns'][monument_name]['Hours'] >= 5000))
-                    + (1 * (self.caverns['Caverns'][monument_name]['Hours'] >= 24000))
-                )
+            min(9, 3  # Starting amount
+                + (2 * (self.caverns['Caverns'][monument_name]['Hours'] >= 80))
+                + (1 * (self.caverns['Caverns'][monument_name]['Hours'] >= 750))
+                + (1 * (self.caverns['Caverns'][monument_name]['Hours'] >= 5000))
+                + (1 * (self.caverns['Caverns'][monument_name]['Hours'] >= 24000))
+            )
         )
         self.caverns['Caverns'][monument_name]['Max Swords'] = (
                 min(9, 3 + 2 + 1 + 1 + 1)

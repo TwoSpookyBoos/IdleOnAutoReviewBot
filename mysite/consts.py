@@ -6165,7 +6165,7 @@ HolesInfo = [
     "3 2 5 0 4 1 6 7".split(" "),
     "1 4 6 11 16 21 26".split(" "),
     "0 1 58 59 2 12 3 52 15 16 14 26 24 4 57 42 17 56 49 32 27 13 5 18 55 45 43 39 33 37 41 6 28 19 60 25 23 29 53 50 34 40 7 20 46 38 47 48 54 44 35 8 21 30 9 51 36 22 10 31 11".split(" "),
-    "Bravery Justice Wisdom Compassion Type5 Type6".split(" "),
+    "Bravery Justice Wisdom Compassion Type5 Type6".split(" "),  #41 Monument Names
     "15000000000 100 1000000 300 150 1500 1 1 1 1 1 1".split(" "),
     ["lol"],
     ["렴련렛렘렐렌레렀럽럼"],
@@ -6279,9 +6279,11 @@ for entry_index, entry in enumerate(caverns_measurer_measurements):
             ''
         ]
 monument_hours = [int(h) for h in HolesInfo[30]]  #[1, 80, 300, 750, 2000, 5000, 10000, 24000] as of 2.20
+monument_names = [f"{monument_name} Monument" for monument_name in HolesInfo[41]]
+released_monuments = 1
 #Layer rewards are in HolesInfo[31], but I wanted to clean up the display a bit
 monument_layer_rewards = {
-    "Bravery Monument": {
+    monument_names[0]: {
         monument_hours[0]: {'Description': 'Story Minigame unlocked with 3 Swords', 'Image': 'monument-basic-sword'},
         monument_hours[1]: {'Description': '+2 additional Swords', 'Image': 'monument-basic-sword'},
         monument_hours[2]: {'Description': 'You can Re-Throw 5 swords per story', 'Image': 'engineer-schematic-40'},
@@ -6295,24 +6297,22 @@ monument_layer_rewards = {
 monument_bonuses_clean_descriptions = [d.replace('|', ' ').replace('_', ' ') for d in HolesInfo[32]]
 monument_bonuses_scaling = [int(v) for v in HolesInfo[37]]
 monument_bonuses = {
-    'Bravery Monument': {},
+    monument_names[0]: {},
     #'Justice Monument': {},
     #'Wisdom Monument': {},
     #'Compassion Monument': {},
 }
 for i in range(0, 10):  #Final number is excluded in range. 10 for Bravery, 10 for Justice
-    monument_name = HolesInfo[41][i//10]
+    monument_name = monument_names[i//10]
     try:
-        monument_bonuses[f"{monument_name} Monument"][i] = {
+        monument_bonuses[monument_name][i] = {
             'Description': monument_bonuses_clean_descriptions[i],
             'ScalingValue': monument_bonuses_scaling[i],
             'ValueType': 'Percent' if '{' in monument_bonuses_clean_descriptions[i] else 'Multi' if '}' in monument_bonuses_clean_descriptions[i] else 'Flat',
-            'Image': f"{monument_name.lower().replace(' ', '-')}-bonus-{i}",
-            'Value': 0,
-            'Level': 0
+            'Image': f"{monument_name.lower().replace(' ', '-').replace(' Monument', '')}-bonus-{i}",
         }
     except Exception as e:
-        print(f"EXCEPTION: Couldn't parse {monument_name} Monument bonus {i}: {e}")
+        print(f"EXCEPTION: Couldn't parse {monument_name} bonus {i}: {e}")
         continue
 bell_ring_images = ['well-bucket', 'opal', 'cavern-6', 'cavern-7']
 bell_ring_bonuses = {}
