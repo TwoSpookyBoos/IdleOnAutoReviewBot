@@ -3,7 +3,7 @@ from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import (
-    break_you_best,
+    break_you_best, infinity_string,
     #template_progressionTiers
 )
 

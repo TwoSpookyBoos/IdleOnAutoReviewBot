@@ -8,7 +8,7 @@ from consts import (
     max_schematics,
     max_majiks,
     max_measurements,
-    break_you_best
+    break_you_best, infinity_string
 )
 
 #villagers_progressionTiers,
@@ -321,7 +321,7 @@ def getMeasurerAdviceGroup() -> AdviceGroup:
             ),
             picture_class=measurement_details['Image'],
             progression=measurement_details['Level'] if villager['Level'] >= measurement_details['MeasurementNumber'] else villager['Level'],
-            goal="∞" if villager['Level'] >= measurement_details['MeasurementNumber'] else measurement_details['MeasurementNumber'],
+            goal=infinity_string if villager['Level'] >= measurement_details['MeasurementNumber'] else measurement_details['MeasurementNumber'],
             resource=measurement_details['Resource']
         )
         for measurement_name, measurement_details in measurements.items() if measurement_name != 'i' and max_measurements >= measurement_details['MeasurementNumber']

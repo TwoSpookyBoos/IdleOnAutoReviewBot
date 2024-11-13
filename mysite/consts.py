@@ -1959,6 +1959,7 @@ currentWorld = 6
 maxCharacters = 10
 break_you_best = "<br>You best ❤️"
 break_keep_it_up = "<br>Keep it up! You're on the right track! ❤️"
+infinity_string = "∞"
 ignorable_labels: tuple = ('Weekly Ballot',)
 missableGStacksDict = {
     #  ItemName               Codename     Quest Codeame          Quest Name                                          Wiki link to the item                             Recommended Class/Farming notes

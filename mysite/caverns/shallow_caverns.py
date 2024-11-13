@@ -7,7 +7,7 @@ from consts import (
     break_you_best,
     schematics_unlocking_buckets, sediment_names, max_sediments, getSedimentBarRequirement, getWellOpalTrade, getMotherlodeEfficiencyRequired,
     getMotherlodeResourceRequired, getDenOpalRequirement, schematics_unlocking_amplifiers, getBraveryOpalChance, monument_layer_rewards, getBellExpRequired,
-    getBellImprovementBonus
+    getBellImprovementBonus, infinity_string
     # shallow_caverns_progressionTiers
 )
 from utils.text_formatting import pl, notateNumber
@@ -322,9 +322,18 @@ def getBraveryAdviceGroup(schematics) -> AdviceGroup:
         Advice(
             label=f"{bonus['Description'] if bonus['Level'] else 'Undiscovered bonus'}",
             picture_class=bonus['Image'],
-            progression=bonus['Level']
+            progression=bonus['Level'],
+            goal=infinity_string
         ) for bonus in bonuses.values()
     ]
+    mv = session_data.account.caverns['Majiks']['Monumental Vibes']
+    cavern_advice[b_stats].insert(0, Advice(
+        label=f"Monumental Vibes {{{{ Majik|#villagers }}}}: {mv['Description']}"
+              f"<br>(Already applied below)",
+        picture_class=f"{mv['MajikType']}-majik-{'un' if mv['Level'] == 0 else ''}purchased",
+        progression=mv['Level'],
+        goal=mv['MaxLevel']
+    ))
 
     for subgroup in cavern_advice:
         for advice in cavern_advice[subgroup]:
@@ -385,7 +394,8 @@ def getBellAdviceGroup(schematics):
                 f"Undiscovered Bonus"
             ),
             picture_class=rb_details['Image'],
-            progression=rb_details['Level']
+            progression=rb_details['Level'],
+            goal=infinity_string
         ) for rb_index, rb_details in cavern['Ring Bonuses'].items()
     ]
     total_rings = cavern['Charges']['Ring'][1]
@@ -405,7 +415,7 @@ def getBellAdviceGroup(schematics):
                   and average_level_too_low
                   and total_rings >= 100
               ) else f''
-              }""",  # and average level too low
+              }""",
         picture_class='bell-ring'
     ))
 
@@ -422,6 +432,7 @@ def getBellAdviceGroup(schematics):
             ),
             picture_class=ci_details['Image'],
             progression=ci_details['Level'],
+            goal=infinity_string,
             resource=ci_details['Resource'],
         ) for ci_index, ci_details in cavern['Improvements'].items()
     ]

@@ -1,5 +1,5 @@
 from flask import g as session_data
-from consts import break_keep_it_up
+from consts import break_keep_it_up, infinity_string
 from models.models import AdviceSection, AdviceGroup, Advice
 from math import floor, ceil
 from utils.logging import get_logger
@@ -236,7 +236,7 @@ def getRefineryProgressionTierAdviceGroups():
 
     # Ranks Advice
     refinery_AdviceDict["Tab1Ranks"].append(
-        Advice(label="Red Salt", picture_class=saltDict['RedSalt'].image, progression=saltDict['RedSalt'].salt_rank, goal="∞")
+        Advice(label="Red Salt", picture_class=saltDict['RedSalt'].image, progression=saltDict['RedSalt'].salt_rank, goal=infinity_string)
     )
     refinery_AdviceDict["Tab1Ranks"].append(
         Advice(label="Orange Salt", picture_class=saltDict['OrangeSalt'].image, progression=saltDict['OrangeSalt'].salt_rank,
@@ -247,7 +247,7 @@ def getRefineryProgressionTierAdviceGroups():
                goal=saltDict['BlueSalt'].max_rank_with_excess)
     )
     refinery_AdviceDict["Tab2Ranks"].append(
-        Advice(label="Green Salt", picture_class=saltDict['GreenSalt'].image, progression=saltDict['GreenSalt'].salt_rank, goal="∞")
+        Advice(label="Green Salt", picture_class=saltDict['GreenSalt'].image, progression=saltDict['GreenSalt'].salt_rank, goal=infinity_string)
     )
     refinery_AdviceDict["Tab2Ranks"].append(
         Advice(label="Purple Salt", picture_class=saltDict['PurpleSalt'].image, progression=saltDict['PurpleSalt'].salt_rank,
