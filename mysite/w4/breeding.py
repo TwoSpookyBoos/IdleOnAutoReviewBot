@@ -90,7 +90,7 @@ def getShinySpeedSourcesAdviceGroup(fasterShinyPetTotalLevels) -> AdviceGroup:
     sps_adviceDict["Multi Group B- Everything Else"].append(Advice(
         label=f"Grand Martial of Shinytown: "
               f"+{session_data.account.breeding['Upgrades']['Grand Martial of Shinytown']['Value']}%",
-        picture_class='grand-martial-of-shinytown',
+        picture_class='breeding-bonus-11',
         progression=session_data.account.breeding['Upgrades']['Grand Martial of Shinytown']['Level'],
         goal=session_data.account.breeding['Upgrades']['Grand Martial of Shinytown']['MaxLevel'],
     ))
