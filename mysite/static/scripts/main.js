@@ -638,7 +638,7 @@ function searchByCriteria(criteria) {
                 el.closest(".advice-group").classList.remove("search-hidden")
                 el.classList.remove("search-hidden")
                 const row = Array.from(el.parentElement.children)
-                row.slice(row.indexOf(el) - 1, row.indexOf(el) + 5).forEach(col => {
+                row.slice(row.indexOf(el), row.indexOf(el) + 5).forEach(col => {
                     col.classList.remove("search-hidden")
                 })
                 row.toReversed().slice(row.toReversed().indexOf(el)).find(col => col.classList.contains("advice-title"))?.classList.remove("search-hidden")
