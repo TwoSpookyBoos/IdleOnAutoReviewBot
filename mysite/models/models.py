@@ -2404,17 +2404,17 @@ class Account:
         for index, mealLevel in enumerate(raw_meals_list[0]):
             # Create meal dict
             self.meals[cookingMealDict[index]["Name"]] = {
-                "Level": mealLevel,
-                "Value": mealLevel*cookingMealDict[index]["BaseValue"],  # Mealmulti applied in calculate section
+                "Level": int(mealLevel),
+                "Value": int(mealLevel) * cookingMealDict[index]["BaseValue"],  # Mealmulti applied in calculate section
                 "BaseValue": cookingMealDict[index]["BaseValue"]
             }
 
-            if mealLevel > 0:
+            if int(mealLevel) > 0:
                 self.cooking['MealsUnlocked'] += 1
-                self.cooking['PlayerTotalMealLevels'] += mealLevel
-                if mealLevel < 11:
+                self.cooking['PlayerTotalMealLevels'] += int(mealLevel)
+                if int(mealLevel) < 11:
                     self.cooking['MealsUnder11'] += 1
-                if mealLevel < 30:
+                if int(mealLevel) < 30:
                     self.cooking['MealsUnder30'] += 1
 
     def _parse_w4_lab(self):
@@ -3933,7 +3933,7 @@ class Account:
         mealMulti += self.breeding['Total Shiny Levels']['Bonuses from All Meals']/100
 
         for meal in self.meals:
-            self.meals[meal]["Value"] *= mealMulti
+            self.meals[meal]["Value"] = float(self.meals[meal]["Value"]) * mealMulti
 
     def _calculate_w4_lab_bonuses(self):
         self.labBonuses['No Bubble Left Behind']['Value'] = 3
@@ -4661,7 +4661,7 @@ class Account:
     def _make_cards(self):
         card_counts = safe_loads(self.raw_data.get(self._key_cards, {}))
         cards = [
-            Card(codename, name, cardset, int(float(card_counts.get(codename, 0))), coefficient)
+            Card(codename, name, cardset, int(float(safer_get(card_counts, codename, 0))), coefficient)
             for cardset, cards in card_data.items()
             for codename, (name, coefficient) in cards.items()
         ]
