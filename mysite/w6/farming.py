@@ -5,7 +5,7 @@ from utils.logging import get_logger
 from utils.data_formatting import mark_advice_completed
 from flask import g as session_data
 from consts import (farming_progressionTiers, break_you_best, maxTiersPerGroup, maxFarmingCrops, maxCharacters, max_VialLevel, maxMealLevel, stamp_maxes,
-                    ValueToMulti, tomepct, getCropEvoChance, cropDict, landrankDict, maxFarmingValue)
+                    ValueToMulti, tomepct, getCropEvoChance, cropDict, landrankDict, maxFarmingValue, infinity_string)
 from utils.text_formatting import pl, notateNumber
 
 logger = get_logger(__name__)
@@ -284,17 +284,19 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
 
     #Final
     value_advices[final].append(Advice(
-        label=f"Total on Lowest ranked plot",
+        label=f"Total on Lowest ranked plot"
+              f"<br>Note: 100x is a HARD cap. Going above is pointless.",
         picture_class='crop-scientist',
         progression=val['BeforeCapMin'],
         goal=maxFarmingValue
     ))
-    value_advices[final].append(Advice(
-        label=f"Total on Highest ranked plot",
-        picture_class='crop-scientist',
-        progression=val['BeforeCapMax'],
-        goal=maxFarmingValue
-    ))
+    if val['BeforeCapMin'] < maxFarmingValue:
+        value_advices[final].append(Advice(
+            label=f"Total on Highest ranked plot",
+            picture_class='crop-scientist',
+            progression=val['BeforeCapMax'],
+            goal=maxFarmingValue
+        ))
     value_advices[final].append(Advice(
         label=f"Lava hasn't implemented Night Market Value GMO 😭",
         picture_class='night-market',
@@ -341,12 +343,14 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
               f"<br>Total value: {farming['Evo']['Cropius Final Value']:.3f}%",
         picture_class='cropius-mapper',
         progression=session_data.account.alchemy_bubbles['Cropius Mapper']['Level'],
+        goal=infinity_string,
         resource=session_data.account.alchemy_bubbles['Cropius Mapper']['Material']
     ))
     evo_advices[alch].append(Advice(
         label=f"Crop Chapter: {session_data.account.alchemy_bubbles['Crop Chapter']['BaseValue']:.3}% per 2k Tome Points above 5k",
         picture_class='crop-chapter',
         progression=session_data.account.alchemy_bubbles['Crop Chapter']['Level'],
+        goal=infinity_string,
         resource=session_data.account.alchemy_bubbles['Crop Chapter']['Material']
     ))
 #Vial
