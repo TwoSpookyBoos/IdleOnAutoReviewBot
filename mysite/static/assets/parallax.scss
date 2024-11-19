@@ -1,0 +1,80 @@
+@import "vars";
+
+@function snakecase($string, $search: '-', $replace: '_') {
+    $index: str-index($string, $search);
+
+    @if $index {
+        @return str-slice($string, 1, $index - 1) + $replace + snakecase(str-slice($string, $index + str-length($search)), $search, $replace);
+    }
+
+    @return $string;
+}
+
+#backgrounds {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 125vh;
+    width: 100%;
+    z-index: -1;
+    overflow: hidden;
+    transition: transform 1s ease-out;
+
+    > div {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: inherit;
+        z-index: -100;
+        opacity: 0;
+        transition:
+            opacity 1s linear,
+            transform 1s ease-out;
+
+        .fg, .sky {
+            position: fixed;
+            top: 0;
+            height: inherit;
+            background-position: left top;
+        }
+
+        .fg {
+            z-index: -100;
+            width: 100%;
+            background-size: cover;
+        }
+
+        .sky {
+            z-index: -101;
+            width: 9600px;
+            min-width: calc(960px * 3);
+            background-size: contain;
+            animation: clouds 30s linear infinite;
+        }
+    }
+
+}
+
+@each $world in (
+    "pinchy",
+    "general",
+    "blunder-hills",
+    "yum-yum-desert",
+    "frostbite-tundra",
+    "hyperion-nebula",
+    "smolderin-plateau",
+    "spirited-valley",
+) {
+    $bg: "backgrounds/#{snakecase($world)}";
+
+    #bg-#{$world} > .fg { background-image: img('#{$bg}.png'); }
+    #bg-#{$world} > .sky { background-image: img('#{$bg}_sky.png'); }
+}
+
+@keyframes clouds {
+    from {background-position-x: 0;}
+    to   {background-position-x: -10%;}
+}
+
