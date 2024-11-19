@@ -1905,29 +1905,33 @@ class Account:
     def _parse_w2_arcade(self):
         self.arcade = {}
         raw_arcade_upgrades = safe_loads(self.raw_data.get("ArcadeUpg", []))
-        for upgradeIndex, upgradeLevel in enumerate(raw_arcade_upgrades):
+        for upgradeIndex, upgradeDetails in arcadeBonuses.items():
             try:
                 self.arcade[upgradeIndex] = {
-                    "Level": upgradeLevel,
-                    "Value": lavaFunc(
-                        arcadeBonuses.get(upgradeIndex).get("funcType"),
-                        upgradeLevel,
-                        arcadeBonuses.get(upgradeIndex).get("x1"),
-                        arcadeBonuses.get(upgradeIndex).get("x2")
+                    'Level': raw_arcade_upgrades[upgradeIndex],
+                    'Value': lavaFunc(
+                        upgradeDetails.get("funcType"),
+                        raw_arcade_upgrades[upgradeIndex],
+                        upgradeDetails.get("x1"),
+                        upgradeDetails.get("x2")
                     )
                 }
-                self.arcade[upgradeIndex][
-                    "Display"] = f"+{self.arcade[upgradeIndex]['Value']:.2f}{arcadeBonuses[upgradeIndex]['displayType']} {arcadeBonuses[upgradeIndex]['Stat']}"
+                self.arcade[upgradeIndex]["Display"] = (
+                    f"+{self.arcade[upgradeIndex]['Value']:.2f}{upgradeDetails['displayType']} {upgradeDetails['Stat']}"
+                )
             except:
                 self.arcade[upgradeIndex] = {
-                    "Level": upgradeLevel,
-                    "Value": 0
+                    'Level': 0,
+                    'Value': lavaFunc(
+                        upgradeDetails.get("funcType"),
+                        0,
+                        upgradeDetails.get("x1"),
+                        upgradeDetails.get("x2")
+                    )
                 }
-                try:
-                    self.arcade[upgradeIndex][
-                        "Display"] = f"+{self.arcade[upgradeIndex]['Value']}{arcadeBonuses[upgradeIndex]['displayType']} {arcadeBonuses[upgradeIndex]['Stat']}"
-                except:
-                    self.arcade[upgradeIndex]["Display"] = f"+% UnknownUpgrade{upgradeIndex}"
+                self.arcade[upgradeIndex]["Display"] = (
+                    f"+{self.arcade[upgradeIndex]['Value']:.2f}{arcadeBonuses[upgradeIndex]['displayType']} {arcadeBonuses[upgradeIndex]['Stat']}"
+                )
 
     def _parse_w2_ballot(self):
         self.ballot = {
