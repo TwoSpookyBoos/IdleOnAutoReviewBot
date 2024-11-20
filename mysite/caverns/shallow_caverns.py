@@ -196,7 +196,8 @@ def getDenAdviceGroup(schematics) -> AdviceGroup:
 # Cavern Stats
     cavern_advice[c_stats].append(Advice(
         label=f"Objective- Fight increasingly difficult Dawgs, using Amplifiers to increase score",
-        picture_class=f"cavern-{cavern['CavernNumber']}"
+        picture_class=f"cavern-{cavern['CavernNumber']}",
+        resource='dawg-den-dawgs'
     ))
     cavern_advice[c_stats].append(Advice(
         label=f"Total Opals Found: {cavern['OpalsFound']}",
@@ -258,7 +259,8 @@ def getBraveryAdviceGroup(schematics) -> AdviceGroup:
 # Cavern Stats
     cavern_advice[c_stats].append(Advice(
         label=f"Objective- AFK here to gain Monument Hours that empower your Attacks within the Story minigame",
-        picture_class=f"cavern-{cavern['CavernNumber']}"
+        picture_class=f"cavern-{cavern['CavernNumber']}",
+        resource='bravery-bonus-8'
     ))
     cavern_advice[c_stats].append(Advice(
         label=f"Total Opals Found: {cavern['OpalsFound']}",

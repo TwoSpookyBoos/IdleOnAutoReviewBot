@@ -748,10 +748,13 @@ statues_progressionTiers = {
         'Battleaxe Statue': 80, 'Spiral Statue': 80, 'Boat Statue': 80,
         'Compost Statue': 80, 'Stealth Statue': 80, 'Essence Statue': 80,
     },},
-    11: {'SpecificLevels': {
-        'Mining Statue': 280, 'Feasty Statue': 280, 'Lumberbob Statue': 280,
-    },},
-
+    11: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx", 'SpecificTypes': [
+        'Dragon Warrior Statue'
+    ],
+         'SpecificLevels': {
+        'Mining Statue': 280, 'Feasty Statue': 280, 'Lumberbob Statue': 280, 'Dragon Warrior Statue': 150,
+        },
+    },
 }
 
 ###WORLD 2 PROGRESSION TIERS###
@@ -4401,7 +4404,7 @@ statuesDict = {
     25: {"Name": "Compost Statue", "ItemName": "EquipmentStatues26", "Effect": "% Farming EXP", "BaseValue": 0.4, "Farmer": "Crystals with DK at Minichiefs", "Target": "minichief-spirit"},
     26: {"Name": "Stealth Statue", "ItemName": "EquipmentStatues27", "Effect": "% Stealth", "BaseValue": 0.3, "Farmer": "Crystals with DK at Minichiefs", "Target": "minichief-spirit"},
     27: {"Name": "Essence Statue", "ItemName": "EquipmentStatues28", "Effect": "% White ESS", "BaseValue": 0.6, "Farmer": "Crystals with DK at Minichiefs", "Target": "minichief-spirit"},
-    28: {"Name": "Dragon Warrior Statue", "ItemName": "EquipmentStatues29", "Effect": "% Statues Bonus", "BaseValue": 0, "Farmer": "SB I guess?", "Target": "gloomie-mushroom"}
+    28: {"Name": "Dragon Warrior Statue", "ItemName": "EquipmentStatues29", "Effect": "% Statues Bonus", "BaseValue": 0, "Farmer": "AFK {{Cavern 9|#villagers}}", "Target": "gloomie-mushroom"}
 }
 statueTypeList = ["Normal", "Gold", "Onyx"]
 statueCount = len(statuesDict.keys())
