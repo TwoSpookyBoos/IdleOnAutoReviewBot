@@ -2287,8 +2287,11 @@ class Account:
     def _parse_w3_atom_collider(self):
         self.atom_collider = {
             'OnOffStatus': bool(safer_get(self.raw_optlacc_dict, 132, 1)),
-            'StorageLimit': colliderStorageLimitList[safer_get(self.raw_optlacc_dict, 133, -1)]
         }
+        try:
+            self.atom_collider['StorageLimit'] = colliderStorageLimitList[safer_get(self.raw_optlacc_dict, 133, -1)]
+        except:
+            self.atom_collider['StorageLimit'] = colliderStorageLimitList[-1]
         try:
             self.atom_collider['Particles'] = self.raw_data.get("Divinity", {})[39]
         except:
