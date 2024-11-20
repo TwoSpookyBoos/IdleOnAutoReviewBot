@@ -184,14 +184,14 @@ def getGStackAdviceSections():
 
     cheat_group = AdviceGroup(
         tier="",
-        pre_string="Curious... you also managed to greenstack these unprecedented items:",
+        pre_string="Curious... you also managed to greenstack these unprecedented items",
         post_string="Share your unyielding persistence with us, please!",
         advices=[
             Advice(
-                label=name,
-                picture_class=name
+                label=asset.name,
+                picture_class=asset.name
             )
-            for name, item in all_owned_stuff.items_gstacked_unprecedented.items()
+            for codename, asset in all_owned_stuff.items_gstacked_unprecedented.items()
         ],
         informational=True
     )

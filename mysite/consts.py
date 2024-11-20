@@ -319,8 +319,8 @@ greenstack_progressionTiers = {
                 "FoodG9",],
             "Other Skilling Resources": [
                 "StarfireBar", "DreadloBar",
-
                 "EquipmentSmithingTabs2",
+                'EquipmentSmithingTabs3',
                 "PeanutG",
             ],
             "Misc": [
@@ -2049,7 +2049,7 @@ expectedStackables = {
         "CopperBar", "IronBar", "GoldBar", "PlatBar", "DementiaBar", "VoidBar", "LustreBar",  #SmeltedBars1
         "StarfireBar", "DreadloBar", "MarbleBar", "GodshardBar",  #SmeltedBars2
         "Bullet", "BulletB", "FoodMining1", "FoodFish1", "FoodCatch1", "Peanut",  #Crafted1
-        "Quest68", "Bullet3", "FoodChoppin1", "EquipmentSmithingTabs2",  #Crafted2
+        "Quest68", "Bullet3", "FoodChoppin1", "EquipmentSmithingTabs2", 'EquipmentSmithingTabs3',  #Crafted2
         "PeanutG",  #Gold Peanut Crafted
         "FoodTrapping1", "FoodWorship1",  # Critter Numnums and Soulble Gum Crafted
         "Refinery1", "Refinery2", "Refinery3", "Refinery4", "Refinery5", "Refinery6",
