@@ -321,7 +321,7 @@ def getSlabAdviceSection() -> AdviceSection:
 
     #Generate AdviceGroups
     slab_AdviceGroupDict, overall_SectionTier, max_tier = getSlabProgressionTierAdviceGroups()
-    slab_AdviceGroupDict["Hidden"] = getHiddenAdviceGroup()
+    #slab_AdviceGroupDict["Hidden"] = getHiddenAdviceGroup()
 
     for ag in slab_AdviceGroupDict.values():
         ag.remove_empty_subgroups()
