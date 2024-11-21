@@ -56,6 +56,7 @@
 
     --fg-show-more: white;
     --fg-note: #fde5c0;
+    --bg-note: rgba(215, 178, 84, 0.62);
 
     --fg-last-update: white;
     --bg-last-update: var(--bg-nav);
@@ -172,7 +173,7 @@
 }
 
 @function bg-advice-group-light-mode($h) {
-    @return hsla($h, 50%, 80%, 0.8);
+    @return hsla($h, 50%, 80%, 0.9);
 }
 
 @function bg-section-light-mode($h) {
@@ -291,6 +292,7 @@
 
     --fg-show-more: black;
     --fg-note: #70590c;
+    --bg-note: hsl(43, 62%, 59%);
 
     --fg-last-update: white;
     --bg-last-update: var(--bg-nav);
@@ -308,7 +310,11 @@
 
     --banner-display-light: block;
     --banner-display-dark: none;
-    --banner-padding: 1.5em 0;
+    --banner-padding: 1em 0;
+
+    .banner {
+        backdrop-filter: blur(4px);
+    }
 }
 
 $worlds: (
@@ -509,7 +515,6 @@ body {
                         display: flex;
                         justify-content: center;
                         padding: var(--banner-padding);
-                        backdrop-filter: blur(4px);
 
                         img {
                             @media (max-width: 600px) {
@@ -518,6 +523,7 @@ body {
                             }
                             &.light {
                                 display: var(--banner-display-light);
+                                height: 50px;
                             }
                             &.dark {
                                 display: var(--banner-display-dark);
