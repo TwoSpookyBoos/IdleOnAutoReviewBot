@@ -4261,8 +4261,7 @@ class Account:
 
     def _calculate_w6_farming(self):
         self._calculate_w6_farming_crop_depot()
-        self._calculate_w6_farming_day_market()
-        self._calculate_w6_farming_night_market()
+        self._calculate_w6_farming_markets()
         self._calculate_w6_farming_crop_value()
         self._calculate_w6_farming_crop_evo()
         self._calculate_w6_farming_crop_speed()
@@ -4278,8 +4277,9 @@ class Account:
             self.farming['Depot'][bonusName]['Value'] = self.farming['Depot'][bonusName]['BaseValue'] * lab_multi
             self.farming['Depot'][bonusName]['ValuePlus1'] = self.farming['Depot'][bonusName]['BaseValuePlus1'] * lab_multi
 
-    def _calculate_w6_farming_day_market(self):
-        super_multi = ValueToMulti(self.farming['MarketUpgrades']['Super Gmo']['Value'] * self.farming['CropStacks']['Super Gmo'])
+    def _calculate_w6_farming_markets(self):
+        super_multi_current_stacks = ValueToMulti(self.farming['MarketUpgrades']['Super Gmo']['Value'] * self.farming['CropStacks']['Super Gmo'])
+        super_multi_max_stacks = ValueToMulti(self.farming['MarketUpgrades']['Super Gmo']['Value'] * maxFarmingCrops)
         #print(f"models._calculate_w6_farming_day_market super_multi = {super_multi}")
         for name, details in self.farming['MarketUpgrades'].items():
             try:
@@ -4290,19 +4290,19 @@ class Account:
                     self.farming['MarketUpgrades'][name]['Description'] = details['Description'].replace("{", f"{details['Value']:g}")
                 if name in self.farming['CropStacks']:
                     if name == 'Super Gmo':
-                        self.farming['MarketUpgrades'][name]['StackedValue'] = super_multi
+                        self.farming['MarketUpgrades'][name]['StackedValue'] = super_multi_current_stacks
                         self.farming['MarketUpgrades'][name]['Description'] += (
                             f".<br>{self.farming['CropStacks'][name]} stacks = "
-                            f"{super_multi:,.4g}x"
+                            f"{super_multi_current_stacks:,.4g}x"
                         )
                     elif name == 'Evolution Gmo':
-                        self.farming['MarketUpgrades'][name]['StackedValue'] = super_multi * pow(ValueToMulti(details['Value']), self.farming['CropStacks'][name])
+                        self.farming['MarketUpgrades'][name]['StackedValue'] = super_multi_current_stacks * pow(ValueToMulti(details['Value']), self.farming['CropStacks'][name])
                         self.farming['MarketUpgrades'][name]['Description'] += (
                             f".<br>{self.farming['CropStacks'][name]} stacks = "
                             f"{self.farming['MarketUpgrades'][name]['StackedValue']:,.4g}x"
                         )
                     else:
-                        self.farming['MarketUpgrades'][name]['StackedValue'] = super_multi * (ValueToMulti(details['Value'] * self.farming['CropStacks'][name]))
+                        self.farming['MarketUpgrades'][name]['StackedValue'] = super_multi_current_stacks * (ValueToMulti(details['Value'] * self.farming['CropStacks'][name]))
                         self.farming['MarketUpgrades'][name]['Description'] += (
                             f".<br>{self.farming['CropStacks'][name]} stacks = "
                             f"{self.farming['MarketUpgrades'][name]['StackedValue']:,.5g}x"
@@ -4312,9 +4312,6 @@ class Account:
                 print(f"models._calculate_w6_farming_day_market: Exception substituting value for {name}: {reason}")
                 continue
 
-    def _calculate_w6_farming_night_market(self):
-        pass
-
     def _calculate_w6_farming_crop_value(self):
         #if ("CropsBonusValue" == e)
         #return Math.min(100, Math.round(Math.max(1, Math.floor(1 + (c.randomFloat() + q._customBlock_FarmingStuffs("BasketUpgQTY", 0, 5) / 100))) * (1 + q._customBlock_FarmingStuffs("LandRankUpgBonusTOTAL", 1, 0) / 100) * (1 + (q._customBlock_FarmingStuffs("LankRankUpgBonus", 1, 0) * c.asNumber(a.engine.getGameAttribute("FarmRank")[0][0 | t]) + q._customBlock_Summoning("VotingBonusz", 29, 0)) / 100)));
@@ -4323,6 +4320,8 @@ class Account:
         self.farming['Value']['Mboost Sboost Multi'] = ValueToMulti(
             self.farming['LandRankDatabase']['Production Megaboost']['Value'] + self.farming['LandRankDatabase']['Production Superboost']['Value']
         )
+        self.farming['Value']['Value GMO Current'] = self.farming['MarketUpgrades']['Value Gmo']['StackedValue']
+
         #Calculate with the Min Plot Rank
         self.farming['Value']['Pboost Ballot Multi Min'] = ValueToMulti(
             (self.farming['LandRankDatabase']['Production Boost']['Value']) * self.farming.get('LandRankMinPlot', 0)  #Value of PBoost * Lowest Plot Rank
@@ -4332,6 +4331,7 @@ class Account:
             max(1, self.farming['Value']['Doubler Multi'])  #end of max
             * self.farming['Value']['Mboost Sboost Multi']
             * self.farming['Value']['Pboost Ballot Multi Min']
+            * self.farming['Value']['Value GMO Current']
             )  #end of round
 
         #Now calculate with the Max Plot Rank
@@ -4343,9 +4343,10 @@ class Account:
             max(1, self.farming['Value']['Doubler Multi'])  # end of max
             * self.farming['Value']['Mboost Sboost Multi']
             * self.farming['Value']['Pboost Ballot Multi Max']
+            * self.farming['Value']['Value GMO Current']
         )  # end of round
-        self.farming['Value']['FinalMin'] = min(100, self.farming['Value']['BeforeCapMin'])
-        self.farming['Value']['FinalMax'] = min(100, self.farming['Value']['BeforeCapMax'])
+        self.farming['Value']['FinalMin'] = min(10000, self.farming['Value']['BeforeCapMin'])
+        self.farming['Value']['FinalMax'] = min(10000, self.farming['Value']['BeforeCapMax'])
         #print(f"models._calculate_w6_farming_crop_value CropValue BEFORE cap = {self.farming['Value']['BeforeCap']}")
         #print(f"models._calculate_w6_farming_crop_value CropValue AFTER cap = {self.farming['Value']['Final']}")
 
