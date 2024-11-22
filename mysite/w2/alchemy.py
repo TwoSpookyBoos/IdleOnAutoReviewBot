@@ -18,7 +18,7 @@ def getVialsProgressionTiersAdviceGroup():
             "Vials to max next": [],
         },
     }
-    info_tiers = 0
+    info_tiers = 1
     max_tier = vials_progressionTiers[-1][0] - info_tiers
     maxAdvicesPerGroup = 6
     tier_TotalVialsUnlocked = 0
@@ -119,8 +119,8 @@ def getVialsProgressionTiersAdviceGroup():
         vial_AdviceGroupDict["Total Unlocked Vials"].post_string = "For the most unlock chances per day, rapidly drop multiple stacks of items on the cauldron!"
 
     vial_AdviceGroupDict["Total Maxed Vials"] = AdviceGroup(
-        tier=str(tier_TotalVialsMaxed),
-        pre_string="Late Vial Goals",
+        tier=f"{tier_TotalVialsMaxed if tier_TotalVialsMaxed < max_tier else ''}",
+        pre_string=f"{'Informational- ' if tier_TotalVialsMaxed >= max_tier else ''}Late Vial Goals",
         post_string=advice_TrailingMaxedVials,
         advices=vial_AdviceDict["MaxVials"]
     )
