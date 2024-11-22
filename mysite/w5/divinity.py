@@ -105,11 +105,9 @@ def getStylesInfoAdviceGroup(highestDivinitySkillLevel: int) -> AdviceGroup:
     )
     return styles_AdviceGroup
 
-def getLinksAndDootChecksAdviceGroups(tier_Divinity: int, lowestDivinitySkillLevel: int, highestDivinitySkillLevel: int):
-    links_AdviceList = []
+def getDootChecksAdviceGroups(lowestDivinitySkillLevel: int, highestDivinitySkillLevel: int):
     doot_AdviceList = []
     if not session_data.account.doot_owned:
-        links_AdviceList = session_data.account.divinity['DivinityLinks'].get(int(tier_Divinity), [])
         if session_data.account.divinity['Divinities'][2].get("Unlocked", False):
             # If you don't own Doot but do have Arctis unlocked, generate Alert if any character has no divinity link
             for character in session_data.account.all_characters:
@@ -177,13 +175,6 @@ def getLinksAndDootChecksAdviceGroups(tier_Divinity: int, lowestDivinitySkillLev
             #     picture_class=""
             # ))
 
-    links_AdviceGroup = AdviceGroup(
-        tier="",
-        pre_string="Possible Divinity Link Setups",
-        advices=links_AdviceList,
-        informational=True,
-        completed=True
-    )
     doot_AdviceGroup = AdviceGroup(
         tier="",
         pre_string="Doot-Specific Checks",
@@ -191,7 +182,7 @@ def getLinksAndDootChecksAdviceGroups(tier_Divinity: int, lowestDivinitySkillLev
         informational=True
     )
 
-    return links_AdviceGroup, doot_AdviceGroup
+    return doot_AdviceGroup
 
 def getArctisAdviceGroup(lowestDivinitySkillLevel: int, highestDivinitySkillLevel: int) -> AdviceGroup:
     arctis_AdviceDict = {"Current Values": []}
@@ -311,8 +302,7 @@ def getDivinityProgressionTierAdviceGroups(lowestDivinitySkillLevel, highestDivi
         pre_string="Complete objectives to reach the next Divinity tier",
         advices=divinity_AdviceDict["TieredProgress"]
     )
-    divinity_AdviceGroupDict["DivinityLinks"], divinity_AdviceGroupDict["Dooted"] = getLinksAndDootChecksAdviceGroups(
-        int(tier_Divinity), lowestDivinitySkillLevel, highestDivinitySkillLevel)
+    divinity_AdviceGroupDict["Dooted"] = getDootChecksAdviceGroups(lowestDivinitySkillLevel, highestDivinitySkillLevel)
 
     overall_SectionTier = min(max_tier + info_tiers, tier_Divinity)
     return divinity_AdviceGroupDict, overall_SectionTier, max_tier

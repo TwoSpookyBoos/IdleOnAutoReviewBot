@@ -5,7 +5,7 @@ from utils.logging import get_logger
 from utils.data_formatting import mark_advice_completed
 from flask import g as session_data
 from consts import (farming_progressionTiers, break_you_best, maxTiersPerGroup, maxFarmingCrops, maxCharacters, max_VialLevel, maxMealLevel, stamp_maxes,
-                    ValueToMulti, tomepct, getCropEvoChance, cropDict, landrankDict, maxFarmingValue)
+                    ValueToMulti, tomepct, getCropEvoChance, cropDict, landrankDict, maxFarmingValue, infinity_string)
 from utils.text_formatting import pl, notateNumber
 
 logger = get_logger(__name__)
@@ -189,7 +189,7 @@ def getValueLRSuggies(farming):
     upgrades = [0, 0, 0]
     #logger.debug(f"Starting Value of {value}, Minimum Land Rank of {min_lr}, and max {available_points} points")
     #i = 0
-    while value < 100 and sum(upgrades) < available_points:
+    while value < maxFarmingValue and sum(upgrades) < available_points:
         #i += 1
         dValue = [
             val_boost(min_lr, upgrades[0] + 1) / val_boost(min_lr, upgrades[0]),
@@ -210,12 +210,14 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
     mga = f"Multi Group A: {val['Doubler Multi']:.2f}x"
     mgb = f"Multi Group B: {val['Mboost Sboost Multi']:.2f}x"
     mgc = f"Multi Group C: {val['Pboost Ballot Multi Min']:.2f}x to {val['Pboost Ballot Multi Max']:.2f}x"
-    final = f"Conclusion: You are {'NOT ' if val['FinalMin'] < 100 else 'over' if val['BeforeCapMin'] >= 125 else ''}capped on Lowest plots"
+    mgd = f"Multi Group D: {val['Value GMO Current']}x"
+    final = f"Conclusion: You are {'NOT ' if val['FinalMin'] < maxFarmingValue else 'over' if val['BeforeCapMin'] >= maxFarmingValue * 1.25 else ''}capped on Lowest plots"
     value_advices = {
         final: [],
         mga: [],
         mgb: [],
         mgc: [],
+        mgd: [],
     }
     #MGA
     value_advices[mga].append(Advice(
@@ -223,24 +225,25 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
               f"{(farming['MarketUpgrades']['Product Doubler']['Value'] // 100) * 100:.0f}%",
         picture_class='day-market',
         progression=f"{farming['MarketUpgrades']['Product Doubler']['Value']:.0f}",
-        goal=300
+        goal=400,
+        unit='%'
     ))
 
     #MGB
-    optimal_upgrades = getValueLRSuggies(farming) if farming['LandRankTotalRanks'] >= 5 else [-1, -1, -1]
+    #optimal_upgrades = getValueLRSuggies(farming) if farming['LandRankTotalRanks'] >= 5 else [-1, -1, -1]
     value_advices[mgb].append(Advice(
         label=f"Production Megaboost: +{farming['LandRankDatabase']['Production Megaboost']['Value']:.3f}%"
               f"{'<br>Unlocked at 250 total land ranks' if farming['LandRankTotalRanks'] < 250 else ''}",
         picture_class='production-megaboost',
         progression=farming['LandRankDatabase']['Production Megaboost']['Level'],
-        goal=optimal_upgrades[1] if optimal_upgrades[1] >= 0 else ''
+        #goal=optimal_upgrades[1] if optimal_upgrades[1] >= 0 else ''
     ))
     value_advices[mgb].append(Advice(
         label=f"Production Superboost: +{farming['LandRankDatabase']['Production Superboost']['Value']:.3f}%"
               f"{'<br>Unlocked at 1750 total land ranks' if farming['LandRankTotalRanks'] < 1750 else ''}",
         picture_class='production-superboost',
         progression=farming['LandRankDatabase']['Production Superboost']['Level'],
-        goal=optimal_upgrades[2] if optimal_upgrades[2] >= 0 else ''
+        #goal=optimal_upgrades[2] if optimal_upgrades[2] >= 0 else ''
     ))
 
     #MGC
@@ -263,7 +266,7 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
               f"<br>Total on Highest: +{farming['LandRankDatabase']['Production Boost']['Value'] * farming['LandRankMaxPlot']:.3f}%",
         picture_class='production-boost',
         progression=farming['LandRankDatabase']['Production Boost']['Level'],
-        goal=optimal_upgrades[0] if optimal_upgrades[0] >= 0 else ''
+        #goal=optimal_upgrades[0] if optimal_upgrades[0] >= 0 else ''
     ))
     ballot_active = session_data.account.ballot['CurrentBuff'] == 29
     if ballot_active:
@@ -282,25 +285,28 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
         goal=1
     ))
 
+    value_advices[mgd].append(Advice(
+        label=f"Night Market Value GMO: {farming['MarketUpgrades']['Value Gmo']['Description']}",
+        picture_class='night-market',
+        progression=farming['MarketUpgrades']['Value Gmo']['Level'],
+        goal=farming['MarketUpgrades']['Value Gmo']['MaxLevel']
+    ))
+
     #Final
     value_advices[final].append(Advice(
-        label=f"Total on Lowest ranked plot",
+        label=f"Total on Lowest ranked plot"
+              f"<br>Note: 10,000x is a HARD cap. Going above is pointless.",
         picture_class='crop-scientist',
-        progression=val['BeforeCapMin'],
-        goal=maxFarmingValue
+        progression=f"{val['BeforeCapMin']:,.0f}",
+        goal=f"{maxFarmingValue:,}"
     ))
-    value_advices[final].append(Advice(
-        label=f"Total on Highest ranked plot",
-        picture_class='crop-scientist',
-        progression=val['BeforeCapMax'],
-        goal=maxFarmingValue
-    ))
-    value_advices[final].append(Advice(
-        label=f"Lava hasn't implemented Night Market Value GMO 😭",
-        picture_class='night-market',
-        progression="Lava",
-        goal="Pls"
-    ))
+    if val['BeforeCapMin'] < maxFarmingValue:
+        value_advices[final].append(Advice(
+            label=f"Total on Highest ranked plot",
+            picture_class='crop-scientist',
+            progression=f"{val['BeforeCapMax']:,.0f}",
+            goal=f"{maxFarmingValue:,}"
+        ))
 
     value_ag = AdviceGroup(
         tier='',
@@ -341,12 +347,14 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
               f"<br>Total value: {farming['Evo']['Cropius Final Value']:.3f}%",
         picture_class='cropius-mapper',
         progression=session_data.account.alchemy_bubbles['Cropius Mapper']['Level'],
+        goal=infinity_string,
         resource=session_data.account.alchemy_bubbles['Cropius Mapper']['Material']
     ))
     evo_advices[alch].append(Advice(
         label=f"Crop Chapter: {session_data.account.alchemy_bubbles['Crop Chapter']['BaseValue']:.3}% per 2k Tome Points above 5k",
         picture_class='crop-chapter',
         progression=session_data.account.alchemy_bubbles['Crop Chapter']['Level'],
+        goal=infinity_string,
         resource=session_data.account.alchemy_bubbles['Crop Chapter']['Material']
     ))
 #Vial
@@ -745,7 +753,7 @@ def getBeanMultiAdviceGroup(farming) -> AdviceGroup:
 
     #Day Market - More Beenz
     bm_advices[mga].append(Advice(
-        label=f"More Beenz: +{farming['MarketUpgrades']['More Beenz']['Value']:.0f}%",
+        label=f"More Beenz: {farming['MarketUpgrades']['More Beenz']['Description']}",
         picture_class='day-market',
         progression=f"{farming['MarketUpgrades']['More Beenz']['Level']:.0f}",
         goal=f"{farming['MarketUpgrades']['More Beenz']['MaxLevel']:.0f}",

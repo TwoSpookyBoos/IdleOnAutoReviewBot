@@ -11,7 +11,7 @@ from enum import Enum
 from math import ceil, floor
 from typing import Any, Union
 from flask import g
-from utils.data_formatting import getCharacterDetails, safe_loads
+from utils.data_formatting import getCharacterDetails, safe_loads, safer_get
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
 from consts import (
     # General
@@ -60,11 +60,16 @@ from consts import (
     sailingDict, numberOfArtifactTiers, captainBuffs,
     getStyleNameFromIndex, divinity_divinitiesDict, divinity_offeringsDict, getDivinityNameFromIndex, divinity_DivCostAfter3,
     gamingSuperbitsDict,
+
     # W6
     jade_emporium, pristineCharmsList, sneakingGemstonesFirstIndex, sneakingGemstonesList, sneakingGemstonesStatList,
     getMoissaniteValue, getGemstoneBaseValue, getGemstoneBoostedValue, getGemstonePercent,
     marketUpgradeDetails, landrankDict, cropDepotDict, maxFarmingCrops,
     summoningBattleCountsDict, summoningDict,
+    # Caverns
+    caverns_villagers, caverns_conjuror_majiks, caverns_engineer_schematics, caverns_engineer_schematics_unlock_order, caverns_cavern_names,
+    caverns_measurer_measurements, getCavernResourceImage, schematics_unlocking_buckets, max_buckets, max_sediments, sediment_bars, getVillagerEXPRequired,
+    monument_bonuses, bell_clean_improvements, bell_ring_bonuses, getBellExpRequired, getBellImprovementBonus, monument_names, released_monuments
 )
 
 
@@ -395,6 +400,7 @@ class WorldName(Enum):
     WORLD3 = "World 3"
     WORLD4 = "World 4"
     WORLD5 = "World 5"
+    CAVERNS = "Caverns"
     WORLD6 = "World 6"
     BLUNDER_HILLS = "Blunder Hills"
     YUMYUM_DESERT = "Yum-Yum Desert"
@@ -402,6 +408,7 @@ class WorldName(Enum):
     HYPERION_NEBULA = "Hyperion Nebula"
     SMOLDERIN_PLATEAU = "Smolderin' Plateau"
     SPIRITED_VALLEY = "Spirited Valley"
+    THE_CAVERNS_BELOW = "The Caverns Below"
 
 
 class AdviceBase:
@@ -511,6 +518,9 @@ class Advice(AdviceBase):
         if self.goal == "✔":
             self.status = "gilded"
 
+        self.percent = self.__calculate_progress_box_width()
+
+
     @property
     def css_class(self) -> str:
         name = kebab(self.picture_class)
@@ -519,6 +529,20 @@ class Advice(AdviceBase):
     def __str__(self) -> str:
         return self.label
 
+    def __calculate_progress_box_width(self) -> str:
+        percentage = next((num for num in [self.goal, self.progression] if num.endswith("%")), None)
+        if not all(num.endswith("%") for num in [self.goal, self.progression]) and percentage:
+            return percentage
+
+        float_re = re.compile(r'\d+(.\d+)?')
+        progression = float_re.search(self.progression)
+        goal = float_re.search(self.goal)
+        try:
+            percentage = round(100 * float(progression[0]) / float(goal[0]), 2)
+            percentage = percentage if percentage < 100 else 100
+            return str(percentage) + '%'
+        except (ZeroDivisionError, IndexError, TypeError, ValueError):
+            return "0"
 
 @functools.total_ordering
 class AdviceGroup(AdviceBase):
@@ -770,7 +794,7 @@ class AdviceWorld(AdviceBase):
         name (WorldName): world name, e.g. General, World 1
         collapse (bool): should the world be collapsed on load?
         sections (list<AdviceSection>): a list of `AdviceSection` objects
-        banner (str): banner image name
+        banner (list[str]): banner image name(s)
     """
 
     _children = "sections"
@@ -780,7 +804,7 @@ class AdviceWorld(AdviceBase):
         name: WorldName,
         collapse: bool | None = None,
         sections: list[AdviceSection] = list(),
-        banner: str = "",
+        banner: list[str] | None = None,
         title: str = "",
         completed: bool | None = None,
         informational: bool | None = None,
@@ -791,7 +815,7 @@ class AdviceWorld(AdviceBase):
 
         self.name: str = name.value
         self.sections: list[AdviceSection] = sections
-        self.banner: str = banner
+        self.banner: list[str] | None = banner
         self.title: str = title
         if completed is not None:
             self.completed = completed
@@ -1212,9 +1236,16 @@ class Account:
         self._calculate_wave_2()
 
     def _prep_alerts_AG(self):
-        self.alerts_AdviceDict = {"General": []}
-        for i in range(0, currentWorld):
-            self.alerts_AdviceDict[f"World {i+1}"] = []
+        self.alerts_AdviceDict = {
+            'General': [],
+            'World 1': [],
+            'World 2': [],
+            'World 3': [],
+            'World 4': [],
+            'World 5': [],
+            'The Caverns Below': [],
+            'World 6': []
+        }
 
     def _parse_wave_1(self, run_type):
         self._parse_switches()
@@ -1225,6 +1256,7 @@ class Account:
         self._parse_w3()
         self._parse_w4()
         self._parse_w5()
+        self._parse_caverns()
         self._parse_w6()
 
     def _parse_switches(self):
@@ -1315,9 +1347,9 @@ class Account:
 
         self.cards = self._make_cards()
 
-        self.minigame_plays_remaining = self.raw_optlacc_dict.get(33, 0)
-        self.daily_world_boss_kills = self.raw_optlacc_dict.get(195, 0)
-        self.daily_particle_clicks_remaining = self.raw_optlacc_dict.get(135, 0)
+        self.minigame_plays_remaining = safer_get(self.raw_optlacc_dict, 33, 0)
+        self.daily_world_boss_kills = safer_get(self.raw_optlacc_dict, 195, 0)
+        self.daily_particle_clicks_remaining = safer_get(self.raw_optlacc_dict, 135, 0)
 
         self._parse_class_unique_kill_stacks()
         self._parse_general_gemshop()
@@ -1376,9 +1408,9 @@ class Account:
         #     self.all_assets.get(tokenName).add(tokenCount)
 
     def _parse_class_unique_kill_stacks(self):
-        self.dk_orb_kills = self.raw_optlacc_dict.get(138, 0)
-        self.sb_plunder_kills = self.raw_optlacc_dict.get(139, 0)
-        self.es_wormhole_kills = self.raw_optlacc_dict.get(152, 0)
+        self.dk_orb_kills = safer_get(self.raw_optlacc_dict, 138, 0)
+        self.sb_plunder_kills = safer_get(self.raw_optlacc_dict, 139, 0)
+        self.es_wormhole_kills = safer_get(self.raw_optlacc_dict, 152, 0)
 
     def _parse_family_bonuses(self):
         self.family_bonuses = {}
@@ -1527,8 +1559,8 @@ class Account:
 
     def _parse_general_event_points_shop(self):
         self.event_points_shop = {
-            'Points Owned': self.raw_optlacc_dict.get(310, 0),
-            'Raw Purchases': self.raw_optlacc_dict.get(311, ""),
+            'Points Owned': safer_get(self.raw_optlacc_dict, 310, 0),
+            'Raw Purchases': safer_get(self.raw_optlacc_dict, 311, ''),
             'Bonuses': {}
         }
         if isinstance(self.event_points_shop['Raw Purchases'], str):
@@ -1663,11 +1695,11 @@ class Account:
 
     def _parse_w1_owl(self):
         self.owl = {
-            'Discovered': bool(self.raw_optlacc_dict.get(265, False)),
-            'FeatherGeneration': self.raw_optlacc_dict.get(254, 0),
-            'BonusesOfOrion': self.raw_optlacc_dict.get(255, 0),
-            'FeatherRestarts': self.raw_optlacc_dict.get(258, 0),
-            'MegaFeathersOwned': self.raw_optlacc_dict.get(262, 0)
+            'Discovered': bool(safer_get(self.raw_optlacc_dict, 265, False)),
+            'FeatherGeneration': safer_get(self.raw_optlacc_dict, 254, 0),
+            'BonusesOfOrion': safer_get(self.raw_optlacc_dict, 255, 0),
+            'FeatherRestarts': safer_get(self.raw_optlacc_dict, 258, 0),
+            'MegaFeathersOwned': safer_get(self.raw_optlacc_dict, 262, 0)
         }
 
     def _parse_w1_statues(self):
@@ -1890,29 +1922,33 @@ class Account:
     def _parse_w2_arcade(self):
         self.arcade = {}
         raw_arcade_upgrades = safe_loads(self.raw_data.get("ArcadeUpg", []))
-        for upgradeIndex, upgradeLevel in enumerate(raw_arcade_upgrades):
+        for upgradeIndex, upgradeDetails in arcadeBonuses.items():
             try:
                 self.arcade[upgradeIndex] = {
-                    "Level": upgradeLevel,
-                    "Value": lavaFunc(
-                        arcadeBonuses.get(upgradeIndex).get("funcType"),
-                        upgradeLevel,
-                        arcadeBonuses.get(upgradeIndex).get("x1"),
-                        arcadeBonuses.get(upgradeIndex).get("x2")
+                    'Level': raw_arcade_upgrades[upgradeIndex],
+                    'Value': lavaFunc(
+                        upgradeDetails.get("funcType"),
+                        raw_arcade_upgrades[upgradeIndex],
+                        upgradeDetails.get("x1"),
+                        upgradeDetails.get("x2")
                     )
                 }
-                self.arcade[upgradeIndex][
-                    "Display"] = f"+{self.arcade[upgradeIndex]['Value']:.2f}{arcadeBonuses[upgradeIndex]['displayType']} {arcadeBonuses[upgradeIndex]['Stat']}"
+                self.arcade[upgradeIndex]["Display"] = (
+                    f"+{self.arcade[upgradeIndex]['Value']:.2f}{upgradeDetails['displayType']} {upgradeDetails['Stat']}"
+                )
             except:
                 self.arcade[upgradeIndex] = {
-                    "Level": upgradeLevel,
-                    "Value": 0
+                    'Level': 0,
+                    'Value': lavaFunc(
+                        upgradeDetails.get("funcType"),
+                        0,
+                        upgradeDetails.get("x1"),
+                        upgradeDetails.get("x2")
+                    )
                 }
-                try:
-                    self.arcade[upgradeIndex][
-                        "Display"] = f"+{self.arcade[upgradeIndex]['Value']}{arcadeBonuses[upgradeIndex]['displayType']} {arcadeBonuses[upgradeIndex]['Stat']}"
-                except:
-                    self.arcade[upgradeIndex]["Display"] = f"+% UnknownUpgrade{upgradeIndex}"
+                self.arcade[upgradeIndex]["Display"] = (
+                    f"+{self.arcade[upgradeIndex]['Value']:.2f}{arcadeBonuses[upgradeIndex]['displayType']} {arcadeBonuses[upgradeIndex]['Stat']}"
+                )
 
     def _parse_w2_ballot(self):
         self.ballot = {
@@ -1972,40 +2008,41 @@ class Account:
 
     def _parse_w2_islands(self):
         self.islands = {
-            'Trash': int(float(self.raw_optlacc_dict.get(161, 0))),  #[161]: 362.202271805249
-            'Bottles': int(float(self.raw_optlacc_dict.get(162, 0))),  #[162]: 106.90044163281846
+            'Trash': int(float(safer_get(self.raw_optlacc_dict, 161, 0))),  #[161]: 362.202271805249
+            'Bottles': int(float(safer_get(self.raw_optlacc_dict, 162, 0))),  #[162]: 106.90044163281846
         }
-        raw_islands_list = list(str(self.raw_optlacc_dict.get(169, '')))  #[169]: "_dcabe" or could be int 0 for whatever reason...
+
+        raw_islands_list = list(str(safer_get(self.raw_optlacc_dict, 169, '')))  #[169]: "_dcabe" or could be int 0 for whatever reason...
         for islandName, islandData in islands_dict.items():
             self.islands[islandName] = {
                 'Unlocked': islandData['Code'] in raw_islands_list,
                 'Description': islandData['Description']
             }
 
-        self.nothing_hours = self.raw_optlacc_dict.get(184, 0)
+        self.nothing_hours = safer_get(self.raw_optlacc_dict, 184, 0)
 
     def _parse_w2_killroy(self):
         self._parse_w2_killroy_skull_shop()
         self.killroy = {}
-        self.killroy_total_fights = self.raw_optlacc_dict.get(112, 0)
+        self.killroy_total_fights = safer_get(self.raw_optlacc_dict, 112, 0)
         for upgradeName, upgradeDict in killroy_dict.items():
             self.killroy[upgradeName] = {
                 'Available': False,
                 'Remaining': max(0, upgradeDict['Required Fights'] - self.killroy_total_fights),
-                'Upgrades': self.raw_optlacc_dict.get(upgradeDict['UpgradesIndex'], 0),
+                'Upgrades': safer_get(self.raw_optlacc_dict, upgradeDict['UpgradesIndex'], 0),
                 'Image': upgradeDict['Image']
             }
 
     def _parse_w2_killroy_skull_shop(self):
         self.killroy_skullshop = {
-            'Third Battle Unlocked': self.raw_optlacc_dict.get(227, 0) == 1,
-            'Artifact Purchases': self.raw_optlacc_dict.get(228, 0),
-            'Artifact Multi': 1 + (self.raw_optlacc_dict.get(228, 0) / (300 + self.raw_optlacc_dict.get(228, 0))),
-            'Crop Purchases': self.raw_optlacc_dict.get(229, 0),
-            'Crop Multi': 1 + ((self.raw_optlacc_dict.get(229, 0) / (300 + self.raw_optlacc_dict.get(229, 0))) * 9),
-            'Crop Multi Plus 1': 1 + (((1 + self.raw_optlacc_dict.get(229, 0)) / (1 + 300 + self.raw_optlacc_dict.get(229, 0))) * 9),
-            'Jade Purchases': self.raw_optlacc_dict.get(230, 0),
-            'Jade Multi': 1 + ((self.raw_optlacc_dict.get(230, 0) / (300 + self.raw_optlacc_dict.get(230, 0))) * 2),
+            'Third Battle Unlocked': safer_get(self.raw_optlacc_dict, 227, 0) == 1,
+            'Artifact Purchases': safer_get(self.raw_optlacc_dict, 228, 0),
+            'Artifact Multi': 1 + (safer_get(self.raw_optlacc_dict, 228, 0) / (300 + safer_get(self.raw_optlacc_dict, 228, 0))),
+            'Crop Purchases': safer_get(self.raw_optlacc_dict, 229, 0),
+            'Crop Multi': 1 + ((safer_get(self.raw_optlacc_dict, 229, 0) / (300 + safer_get(self.raw_optlacc_dict, 229, 0))) * 9),
+            'Crop Multi Plus 1': 1 + (((1 + safer_get(self.raw_optlacc_dict, 229, 0)) / (1 + 300 + safer_get(self.raw_optlacc_dict, 229, 0))) * 9),
+            'Jade Purchases': safer_get(self.raw_optlacc_dict, 230, 0),
+            'Jade Multi': 1 + ((safer_get(self.raw_optlacc_dict, 230, 0) / (300 + safer_get(self.raw_optlacc_dict, 230, 0))) * 2),
         }
 
     def _parse_w3(self):
@@ -2068,7 +2105,7 @@ class Account:
 
     def _parse_w3_library(self):
         self.library = {
-            'BooksReady': self.raw_optlacc_dict.get(55, 0)
+            'BooksReady': safer_get(self.raw_optlacc_dict, 55, 0)
         }
 
     def _parse_w3_deathnote(self):
@@ -2249,9 +2286,12 @@ class Account:
 
     def _parse_w3_atom_collider(self):
         self.atom_collider = {
-            'StorageLimit': colliderStorageLimitList[self.raw_optlacc_dict.get(133, 0)],
-            'OnOffStatus': bool(self.raw_optlacc_dict.get(132, 1))
+            'OnOffStatus': bool(safer_get(self.raw_optlacc_dict, 132, 1)),
         }
+        try:
+            self.atom_collider['StorageLimit'] = colliderStorageLimitList[safer_get(self.raw_optlacc_dict, 133, -1)]
+        except:
+            self.atom_collider['StorageLimit'] = colliderStorageLimitList[-1]
         try:
             self.atom_collider['Particles'] = self.raw_data.get("Divinity", {})[39]
         except:
@@ -2384,17 +2424,17 @@ class Account:
         for index, mealLevel in enumerate(raw_meals_list[0]):
             # Create meal dict
             self.meals[cookingMealDict[index]["Name"]] = {
-                "Level": mealLevel,
-                "Value": mealLevel*cookingMealDict[index]["BaseValue"],  # Mealmulti applied in calculate section
+                "Level": int(mealLevel),
+                "Value": int(mealLevel) * cookingMealDict[index]["BaseValue"],  # Mealmulti applied in calculate section
                 "BaseValue": cookingMealDict[index]["BaseValue"]
             }
 
-            if mealLevel > 0:
+            if int(mealLevel) > 0:
                 self.cooking['MealsUnlocked'] += 1
-                self.cooking['PlayerTotalMealLevels'] += mealLevel
-                if mealLevel < 11:
+                self.cooking['PlayerTotalMealLevels'] += int(mealLevel)
+                if int(mealLevel) < 11:
                     self.cooking['MealsUnder11'] += 1
-                if mealLevel < 30:
+                if int(mealLevel) < 30:
                     self.cooking['MealsUnder30'] += 1
 
     def _parse_w4_lab(self):
@@ -2549,10 +2589,14 @@ class Account:
             try:
                 self.breeding['Upgrades'][upgradeValuesDict['Name']] = {
                     'Level': rawBreeding[2][upgradeIndex],
+                    'MaxLevel': upgradeValuesDict['MaxLevel'],
+                    'Value': upgradeValuesDict['BonusValue'] * rawBreeding[2][upgradeIndex]
                 }
             except:
                 self.breeding['Upgrades'][upgradeValuesDict['Name']] = {
                     'Level': 0,
+                    'MaxLevel': upgradeValuesDict['MaxLevel'],
+                    'Value': 0
                 }
 
     def _parse_w4_breeding_territories(self, rawPets, rawTerritory):
@@ -2649,7 +2693,6 @@ class Account:
         #Sort the Grouped bonus by Days to next Shiny Level
         for groupedBonus in self.breeding["Grouped Bonus"]:
             self.breeding["Grouped Bonus"][groupedBonus].sort(key=lambda x: float(x[2]))
-
 
     def _parse_w5(self):
         self.gaming = {
@@ -2856,6 +2899,301 @@ class Account:
             except:
                 continue
 
+    def _parse_caverns(self):
+        self.caverns = {
+            'Villagers': {},
+            'Caverns': {},
+            'CavernsUnlocked': 0,
+            'Schematics': {},
+            'TotalSchematics': 0,
+            'Majiks': {},
+            'TotalMajiks': 0,
+            'Measurements': {},
+        }
+        raw_caverns_list: list[list] = safe_loads(self.raw_data.get('Holes', []))
+        while len(raw_caverns_list) < 24:
+            raw_caverns_list.append([])
+        self._parse_caverns_villagers(raw_caverns_list[1], raw_caverns_list[2], raw_caverns_list[3], raw_caverns_list[23])
+        self._parse_caverns_actual_caverns(raw_caverns_list[7])
+        self._parse_caverns_majiks(raw_caverns_list[4], raw_caverns_list[5], raw_caverns_list[6])
+        self._parse_caverns_schematics(raw_caverns_list[13])
+        self._parse_caverns_measurements(raw_caverns_list[22])
+        self._parse_caverns_biome1(raw_caverns_list)
+
+        #print([k for k, v in self.caverns['Schematics'].items() if v['Unlocked']])  #Unlocked schematic check
+        # for key in self.caverns:
+        #     print(f"{key}: {self.caverns[key]}")
+
+    def _parse_caverns_villagers(self, villager_levels, villager_exp, opals_invested, parallel_villagers):
+        for villager_index, villager_data in enumerate(caverns_villagers):
+            try:
+                self.caverns['Villagers'][villager_data['Name']] = {
+                    'Unlocked': villager_levels[villager_index] > 0,
+                    'UnlockedCavern': villager_data['UnlockedAtCavern'],
+                    'Level':    villager_levels[villager_index],
+                    'Opals':    opals_invested[villager_index],
+                    'Title':    f"{villager_data['Name']}, {villager_data['Role']}",
+                    'VillagerNumber': villager_data['VillagerNumber'],
+                    'LevelPercent': 100 * (float(villager_exp[villager_index])/getVillagerEXPRequired(villager_index, villager_levels[villager_index])),
+                }
+                self.gemshop[f"Parallel Villagers {villager_data['Role']}"] = parallel_villagers[villager_index]
+            except:
+                self.caverns['Villagers'][villager_data['Name']] = {
+                    'Unlocked': villager_data['Name'] == 'Polonai',
+                    'UnlockedCavern': villager_data['UnlockedAtCavern'],
+                    'Level': 0,
+                    'Opals': 0,
+                    'Title': f"{villager_data['Name']}, {villager_data['Role']}",
+                    'VillagerNumber': villager_data['VillagerNumber'],
+                    'LevelPercent': 0,
+                }
+                self.gemshop[f"Parallel Villagers {villager_data['Role']}"] = 0
+
+    def _parse_caverns_actual_caverns(self, opals_per_cavern):
+        for cavern_index, cavern_name in caverns_cavern_names.items():
+            try:
+                self.caverns['Caverns'][cavern_name] = {
+                    'Unlocked': self.caverns['Villagers']['Polonai']['Level'] >= cavern_index,
+                    'OpalsFound': 0 if cavern_name == 'Camp' else opals_per_cavern[cavern_index-1],
+                    'Image': f'cavern-{cavern_index}',
+                    'CavernNumber': cavern_index
+                }
+            except:
+                self.caverns['Caverns'][cavern_name] = {
+                    'Unlocked': False,
+                    'OpalsFound': 0,
+                    'Image': f'cavern-{cavern_index}',
+                    'CavernNumber': cavern_index
+                }
+
+    def _parse_caverns_majiks(self, hole_majiks, village_majiks, idleon_majiks):
+        self.caverns['TotalMajiks'] = sum([sum(hole_majiks), sum(village_majiks), sum(idleon_majiks)])
+        raw_majiks: dict = {
+            'Hole': hole_majiks,
+            'Village': village_majiks,
+            'IdleOn': idleon_majiks
+        }
+        for majik_type, majiks in caverns_conjuror_majiks.items():
+            for majik_index, majik_data in enumerate(majiks):
+                try:
+                    self.caverns['Majiks'][majik_data['Name']] = {
+                        'MajikType': majik_type,
+                        'MajikIndex': majik_index,
+                        'Level': raw_majiks[majik_type][majik_index],
+                        'MaxLevel': majik_data['MaxLevel'],
+                        'Description': majik_data['Description'],
+                        'Value': 0  #Calculated later in _calculate_caverns_majiks
+                    }
+                except:
+                    self.caverns['Majiks'][majik_data['Name']] = {
+                        'MajikType': majik_type,
+                        'MajikIndex': majik_index,
+                        'Level': 0,
+                        'MaxLevel': majik_data['MaxLevel'],
+                        'Description': majik_data['Description'],
+                        'Value': 0  # Calculated later in _calculate_caverns_majiks
+                    }
+
+    def _parse_caverns_schematics(self, raw_schematics_list):
+        try:
+            self.caverns['TotalSchematics'] = sum(raw_schematics_list)
+        except Exception as e:
+            #print(f"Error summing raw_schematics_list: {e}")
+            pass
+        for schematic_index, schematic_details in enumerate(caverns_engineer_schematics):
+            clean_name = schematic_details[0].replace("_", " ")
+            resource_type = getCavernResourceImage(schematic_details[2])
+            try:
+                self.caverns['Schematics'][clean_name] = {
+                    'Purchased': raw_schematics_list[schematic_index] > 0,
+                    'Image': f'engineer-schematic-{schematic_index}',
+                    'Description': schematic_details[5].replace("_", " "),
+                    'UnlockOrder': caverns_engineer_schematics_unlock_order.index(schematic_index)+1,
+                    'Resource': resource_type
+                }
+            except Exception as e:
+                #print(f"Error processing schematic {clean_name} at index {schematic_index}: {e}")
+                self.caverns['Schematics'][clean_name] = {
+                    'Purchased': False,
+                    'Image': f'engineer-schematic-{schematic_index}',
+                    'Description': schematic_details[5].replace("_", " "),
+                    'UnlockOrder': caverns_engineer_schematics_unlock_order.index(schematic_index)+1,
+                    'Resource': resource_type
+                }
+
+    def _parse_caverns_measurements(self, raw_measurements_list):
+        for measurement_index, measurement_details in enumerate(caverns_measurer_measurements):
+            try:
+                self.caverns['Measurements'][measurement_index] = {
+                    'Level': raw_measurements_list[measurement_index],
+                    'Unit': measurement_details[0],
+                    'Description': measurement_details[1],
+                    'ScalesWith': measurement_details[2],
+                    'Image': f"measurement-{measurement_index}",
+                    'Resource': measurement_details[3],
+                    'MeasurementNumber': measurement_index+1
+                }
+            except:
+                self.caverns['Measurements'][measurement_index] = {
+                    'Level': 0,
+                    'Unit': measurement_details[0],
+                    'Description': measurement_details[1],
+                    'ScalesWith': measurement_details[2],
+                    'Image': f"measurement-{measurement_index}",
+                    'Resource': measurement_details[3],
+                    'MeasurementNumber': measurement_index+1
+                }
+
+    def _parse_caverns_biome1(self, raw_caverns_list):
+        self._parse_caverns_the_well(raw_caverns_list)
+        self._parse_caverns_motherlode(raw_caverns_list)
+        self._parse_caverns_the_den(raw_caverns_list)
+        self._parse_caverns_bravery_monument(raw_caverns_list)
+        self._parse_caverns_the_bell(raw_caverns_list)
+
+    def _parse_caverns_the_well(self, raw_caverns_list):
+        try:
+            self.caverns['Caverns']['The Well']['BucketTargets'] = [int(entry) for entry in raw_caverns_list[10][:max_buckets]]
+        except:
+            self.caverns['Caverns']['The Well']['BucketTargets'] = [0]*max_buckets
+        try:
+            self.caverns['Caverns']['The Well']['SedimentsOwned'] = [int(entry) for entry in raw_caverns_list[9]]
+        except:
+            #Gravel starts at 0, the rest are Negative
+            self.caverns['Caverns']['The Well']['SedimentsOwned'] = [entry*-1 for entry in sediment_bars]
+        try:
+            self.caverns['Caverns']['The Well']['SedimentLevels'] = raw_caverns_list[8]
+        except:
+            self.caverns['Caverns']['The Well']['SedimentLevels'] = [0]*max_sediments
+        try:
+            self.caverns['Caverns']['The Well']['BarExpansion'] = raw_caverns_list[11][10]
+        except:
+            self.caverns['Caverns']['The Well']['BarExpansion'] = False
+        try:
+            self.caverns['Caverns']['The Well']['Holes-11-9'] = raw_caverns_list[11][9]
+        except:
+            self.caverns['Caverns']['The Well']['Holes-11-9'] = 0
+
+    def _parse_caverns_motherlode(self, raw_caverns_list):
+        cavern_name = 'Motherlode'
+        motherlode_offset = 0
+        try:
+            self.caverns['Caverns'][cavern_name]['ResourcesCollected'] = raw_caverns_list[11][0 + motherlode_offset]
+        except:
+            self.caverns['Caverns'][cavern_name]['ResourcesCollected'] = 0
+        try:
+            self.caverns['Caverns'][cavern_name]['LayersDestroyed'] = raw_caverns_list[11][1 + motherlode_offset]
+        except:
+            self.caverns['Caverns'][cavern_name]['LayersDestroyed'] = 0
+
+    def _parse_caverns_the_den(self, raw_caverns_list):
+        try:
+            self.caverns['Caverns']['The Den']['HighScore'] = round(float(raw_caverns_list[11][8]))
+        except:
+            self.caverns['Caverns']['The Den']['HighScore'] = 0
+
+    def _parse_caverns_bravery_monument(self, raw_caverns_list):
+        monument_name = 'Bravery Monument'
+        monument_index = 0
+
+        # Layer Data
+        try:
+            self.caverns['Caverns'][monument_name]['Hours'] = int(raw_caverns_list[14][0 + 2 * monument_index])
+        except:
+            self.caverns['Caverns'][monument_name]['Hours'] = 0
+        try:
+            self.caverns['Caverns'][monument_name]['LayersCleared'] = int(raw_caverns_list[14][1 + 2 * monument_index])
+        except:
+            self.caverns['Caverns'][monument_name]['LayersCleared'] = 0
+
+        # Setup Bonuses
+        self.caverns['Caverns'][monument_name]['Bonuses'] = {}
+        for bonus_index, bonus_details in monument_bonuses[monument_name].items():
+            try:
+                self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index] = {
+                    'Level': raw_caverns_list[15][bonus_index],
+                    'Description': bonus_details['Description'],
+                    'ScalingValue': bonus_details['ScalingValue'],
+                    'ValueType': bonus_details['ValueType'],
+                    'Image': bonus_details['Image'],
+                    'Value': 0,  #Calculated later in _calculate_caverns_monuments()
+                }
+            except:
+                self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index] = {
+                    'Level': 0,
+                    'Description': bonus_details['Description'],
+                    'ScalingValue': bonus_details['ScalingValue'],
+                    'ValueType': bonus_details['ValueType'],
+                    'Image': bonus_details['Image'],
+                    'Value': 0,  # Calculated later in _calculate_caverns_monuments()
+                }
+
+    def _parse_caverns_the_bell(self, raw_caverns_list):
+        cavern_name = 'The Bell'
+
+        #Charge
+        try:
+            self.caverns['Caverns'][cavern_name]['Charges'] = {
+                'Ring': [raw_caverns_list[18][0], raw_caverns_list[18][1], getBellExpRequired(0, raw_caverns_list[18][1])],
+                'Ping': [raw_caverns_list[18][2], raw_caverns_list[18][3], getBellExpRequired(1, raw_caverns_list[18][3])],
+                'Clean': [raw_caverns_list[18][4], raw_caverns_list[18][5], getBellExpRequired(2, raw_caverns_list[18][5])],
+                'Renew': [raw_caverns_list[18][6], raw_caverns_list[18][7], getBellExpRequired(3, raw_caverns_list[18][7])],
+            }
+        except:
+            self.caverns['Caverns'][cavern_name]['Charges'] = {
+                'Ring': [0, 0, getBellExpRequired(0, 0)],
+                'Ping': [0, 0, getBellExpRequired(1, 0)],
+                'Clean': [0, 0, getBellExpRequired(2, 0)],
+                'Renew': [0, 0, getBellExpRequired(3, 0)],
+            }
+
+        #Ring Bonuses
+        self.caverns['Caverns'][cavern_name]['Ring Bonuses'] = {}
+        ring_levels = raw_caverns_list[17]
+        for ring_index, ring_details in bell_ring_bonuses.items():
+            try:
+                self.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index] = {
+                    'Level': int(ring_levels[ring_index]),
+                    'Description': ring_details['Description'],
+                    'ScalingValue': ring_details['ScalingValue'],
+                    'Image': ring_details['Image']
+                }
+            except:
+                self.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index] = {
+                    'Level': 0,
+                    'Description': ring_details['Description'].replace('{', '0.00'),
+                    'ScalingValue': ring_details['ScalingValue'],
+                    'Image': ring_details['Image']
+                }
+            self.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index]['Value'] = (
+                    self.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index]['Level']
+                    * self.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index]['ScalingValue']
+            )
+            self.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index]['Description'] = (
+                self.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index]['Description'].replace(
+                    '{', f"{self.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index]['Value']:.2f}"
+                )
+            )
+
+        #Improvements
+        self.caverns['Caverns'][cavern_name]['Improvements'] = {}
+        improvement_levels = raw_caverns_list[16]
+        for improvement_index, improvement_details in bell_clean_improvements.items():
+            try:
+                self.caverns['Caverns'][cavern_name]['Improvements'][improvement_index] = {
+                    'Level': improvement_levels[improvement_index],
+                    'Description': improvement_details['Description'],
+                    'Image': improvement_details['Image'],
+                    'Resource': improvement_details['Resource']
+                }
+            except:
+                self.caverns['Caverns'][cavern_name]['Improvements'][improvement_index] = {
+                    'Level': 0,
+                    'Description': improvement_details['Description'],
+                    'Image': improvement_details['Image'],
+                    'Resource': improvement_details['Resource']
+                }
+
     def _parse_w6(self):
         self._parse_w6_sneaking()
         self._parse_w6_farming()
@@ -2867,8 +3205,8 @@ class Account:
             "Gemstones": {},
             'Beanstalk': {},
             "JadeEmporium": {},
-            'CurrentMastery': self.raw_optlacc_dict.get(231, 0),
-            'MaxMastery': self.raw_optlacc_dict.get(232, 0),
+            'CurrentMastery': safer_get(self.raw_optlacc_dict, 231, 0),
+            'MaxMastery': safer_get(self.raw_optlacc_dict, 232, 0),
         }
         raw_ninja_list = safe_loads(self.raw_data.get("Ninja", []))
         self._parse_w6_gemstones(raw_ninja_list)
@@ -2892,7 +3230,7 @@ class Account:
                 }
         for gemstoneIndex, gemstoneName in enumerate(sneakingGemstonesList):
             self.sneaking["Gemstones"][gemstoneName] = {
-                "Level": self.raw_optlacc_dict.get(sneakingGemstonesFirstIndex + gemstoneIndex, 0),
+                "Level": safer_get(self.raw_optlacc_dict, sneakingGemstonesFirstIndex + gemstoneIndex, 0),
                 "BaseValue": 0,
                 "BoostedValue": 0.0,
                 "Percent": 0,
@@ -3206,6 +3544,7 @@ class Account:
         self._calculate_w3()
         self._calculate_w4()
         self._calculate_w5()
+        self._calculate_caverns()
         self._calculate_w6()
 
     def _calculate_general(self):
@@ -3269,7 +3608,7 @@ class Account:
 
     def _calculate_general_highest_world_reached(self):
         if (
-            self.raw_optlacc_dict.get(194, 0) > 0
+            safer_get(self.raw_optlacc_dict, 194, 0) > 0
             or self.achievements['Valley Visitor']['Complete']
             or self.enemy_worlds[6].maps_dict[251].kill_count > 0
         ):
@@ -3429,14 +3768,14 @@ class Account:
         self.islands['Trash Island']['Unlock New Bribe Set']['Unlocked'] = self.bribes['Trash Island']['Random Garbage'] >= 0
 
         #Repeated purchases
-        self.islands['Trash Island']['Garbage Purchases'] = self.raw_optlacc_dict.get(163, 0)
-        self.islands['Trash Island']['Bottle Purchases'] = self.raw_optlacc_dict.get(164, 0)
+        self.islands['Trash Island']['Garbage Purchases'] = safer_get(self.raw_optlacc_dict, 163, 0)
+        self.islands['Trash Island']['Bottle Purchases'] = safer_get(self.raw_optlacc_dict, 164, 0)
 
     def _calculate_w2_killroy(self):
         for upgradeName, upgradeDict in killroy_dict.items():
             if not self.killroy[upgradeName]['Available']:
                 self.killroy[upgradeName]['Available'] = (
-                    self.raw_optlacc_dict.get(112, 0) >= upgradeDict['Required Fights']
+                    safer_get(self.raw_optlacc_dict, 112, 0) >= upgradeDict['Required Fights']
                     or self.killroy[upgradeName]['Upgrades'] > 0
                 ) and self.equinox_bonuses['Shades of K']['CurrentLevel'] >= upgradeDict['Required Equinox']
 
@@ -3616,7 +3955,7 @@ class Account:
         mealMulti += self.breeding['Total Shiny Levels']['Bonuses from All Meals']/100
 
         for meal in self.meals:
-            self.meals[meal]["Value"] *= mealMulti
+            self.meals[meal]["Value"] = float(self.meals[meal]["Value"]) * mealMulti
 
     def _calculate_w4_lab_bonuses(self):
         self.labBonuses['No Bubble Left Behind']['Value'] = 3
@@ -3634,245 +3973,221 @@ class Account:
         self.labBonuses['No Bubble Left Behind']['Value'] = min(nblbMaxBubbleCount, self.labBonuses['No Bubble Left Behind']['Value'])
 
     def _calculate_w5(self):
-        self._calculate_w5_divinity_link_advice()
         self._calculate_w5_divinity_offering_costs()
-
-    def _calculate_w5_divinity_link_advice(self):
-        self.divinity['DivinityLinks'] = {
-            0: [
-                Advice(
-                    label="No Divinities unlocked to link to",
-                    picture_class=""
-                )
-            ],
-            1: [
-                Advice(
-                    label="No harm in linking everyone, as Snehebatu is your only choice",
-                    picture_class="snehebatu"
-                )
-            ],
-            2: [
-                Advice(
-                    label="Lab bonuses fully online",
-                    picture_class="arctis"
-                ),
-                Advice(
-                    label="Extra characters can link to Snake if not Meditating",
-                    picture_class="snehebatu"
-                )
-            ],
-            3: [
-                Advice(
-                    label="Lab bonuses fully online",
-                    picture_class="arctis"
-                ),
-                Advice(
-                    label="1 Map Pusher",
-                    picture_class="nobisect"
-                ),
-                Advice(
-                    label="Extra characters can link to Snake if not Meditating",
-                    picture_class="snehebatu"
-                )
-            ],
-            4: [
-                Advice(
-                    label="Lab bonuses fully online",
-                    picture_class="arctis"
-                ),
-                Advice(
-                    label="1 Map Pusher",
-                    picture_class="nobisect"
-                ),
-                Advice(
-                    label="Extra characters can link to Snake if not Meditating",
-                    picture_class="snehebatu"
-                )
-            ],
-            5: [
-                Advice(
-                    label="Move Meditators to Lab",
-                    picture_class="goharut"
-                ),
-                Advice(
-                    label="Lab bonuses fully online",
-                    picture_class="arctis"
-                ),
-                Advice(
-                    label="1 Map Pusher",
-                    picture_class="nobisect"
-                ),
-                Advice(
-                    label="Extra characters can link to Snake if not Meditating",
-                    picture_class="snehebatu"
-                )
-            ],
-            6: [
-                Advice(
-                    label="Move Meditators to Lab",
-                    picture_class="goharut"
-                ),
-                Advice(
-                    label="Lab bonuses fully online",
-                    picture_class="arctis"
-                ),
-                Advice(
-                    label="1 Map Pusher",
-                    picture_class="nobisect"
-                ),
-                Advice(
-                    label="Extra characters can link to Snake if not Meditating",
-                    picture_class="snehebatu"
-                )
-            ],
-            7: [
-                Advice(
-                    label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
-                    picture_class="purrmep"
-                ),
-                Advice(
-                    label="Meditators in Lab",
-                    picture_class="goharut"
-                ),
-                Advice(
-                    label="Lab bonuses fully online",
-                    picture_class="arctis"
-                ),
-                Advice(
-                    label="1 Map Pusher",
-                    picture_class="nobisect"
-                ),
-                Advice(
-                    label="Extra characters can link to Snake if not Meditating",
-                    picture_class="snehebatu"
-                ),
-
-            ],
-            8: [
-                Advice(
-                    label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
-                    picture_class="purrmep"
-                ),
-                Advice(
-                    label="Meditators in Lab",
-                    picture_class="goharut"
-                ),
-                Advice(
-                    label="Lab bonuses fully online",
-                    picture_class="arctis"
-                ),
-                Advice(
-                    label="1 Map Pusher",
-                    picture_class="nobisect"
-                ),
-                Advice(
-                    label="Extra characters can link to Snake if not Meditating",
-                    picture_class="snehebatu"
-                ),
-            ],
-            9: [
-                Advice(
-                    label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
-                    picture_class="purrmep"
-                ),
-                Advice(
-                    label="Meditators in Lab",
-                    picture_class="goharut"
-                ),
-                Advice(
-                    label="Lab bonuses fully online",
-                    picture_class="arctis"
-                ),
-                Advice(
-                    label="1 Map Pusher",
-                    picture_class="nobisect"
-                ),
-                Advice(
-                    label="Extra characters can link to Snake if not Meditating",
-                    picture_class="snehebatu"
-                ),
-            ],
-            10: [
-                Advice(
-                    label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
-                    picture_class="purrmep"
-                ),
-                Advice(
-                    label="Meditators in Lab",
-                    picture_class="goharut"
-                ),
-                Advice(
-                    label="Lab bonuses fully online",
-                    picture_class="arctis"
-                ),
-                Advice(
-                    label="1 Map Pusher",
-                    picture_class="nobisect"
-                ),
-                Advice(
-                    label="Extra characters can link to Snake if not Meditating",
-                    picture_class="snehebatu"
-                ),
-            ],
-            11: [
-                Advice(
-                    label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
-                    picture_class="purrmep"
-                ),
-                Advice(
-                    label="Meditators in Lab",
-                    picture_class="goharut"
-                ),
-                Advice(
-                    label="Lab bonuses fully online",
-                    picture_class="arctis"
-                ),
-                Advice(
-                    label="1 Map Pusher",
-                    picture_class="nobisect"
-                ),
-                Advice(
-                    label="Extra characters can link to Snake if not Meditating",
-                    picture_class="snehebatu"
-                ),
-            ],
-            12: [
-                Advice(
-                    label="Beast Master, Voidwalker, or 3rd Archer are usual candidates",
-                    picture_class="purrmep"
-                ),
-                Advice(
-                    label="Meditators in Lab",
-                    picture_class="goharut"
-                ),
-                Advice(
-                    label="Lab bonuses fully online",
-                    picture_class="arctis"
-                ),
-                Advice(
-                    label="1 Map Pusher",
-                    picture_class="nobisect"
-                ),
-                Advice(
-                    label="Extra characters can link to Snake if not Meditating",
-                    picture_class="snehebatu"
-                ),
-                Advice(
-                    label="Omniphau is a gamble. Refinery and 3D Printer rewards are nice- The other 4/6 are pretty meh.",
-                    picture_class="omniphau"
-                ),
-            ],
-        }
 
     def _calculate_w5_divinity_offering_costs(self):
         self.divinity['LowOfferingGoal'] = self._divinityUpgradeCost(self.divinity['LowOffering'], self.divinity['GodsUnlocked'] + self.divinity['GodRank'])
         self.divinity['HighOfferingGoal'] = self._divinityUpgradeCost(self.divinity['HighOffering'], self.divinity['GodsUnlocked'] + self.divinity['GodRank'])
-    
+
     def _divinityUpgradeCost(self, offeringIndex, unlockedDivinity):
         cost = (20 * pow(unlockedDivinity + 1.3, 2.3) * pow(2.2, unlockedDivinity) + 60) * divinity_offeringsDict.get(offeringIndex, {}).get("Chance", 1) / 100
         if unlockedDivinity >= 3:
             cost = cost * pow(min(1.8, max(1, 1 + self.raw_serverVars_dict.get("DivCostAfter3", divinity_DivCostAfter3) / 100)), unlockedDivinity - 2)
         return ceil(cost)
+
+    def _calculate_caverns(self):
+        self._calculate_caverns_majiks()
+        self._calculate_caverns_measurements()
+        self._calculate_caverns_the_well()
+        self._calculate_caverns_monuments()
+        self._calculate_caverns_the_bell()
+
+    def _calculate_caverns_majiks(self):
+        for majik_type, majiks in caverns_conjuror_majiks.items():
+            for majik_index, majik_data in enumerate(majiks):
+                if majik_data['Scaling'] == 'add':
+                    try:
+                        self.caverns['Majiks'][majik_data['Name']]['Value'] = (
+                            self.caverns['Majiks'][majik_data['Name']]['Level'] * majik_data['BonusPerLevel']
+                        )
+                        self.caverns['Majiks'][majik_data['Name']]['MaxValue'] = (
+                           majik_data['MaxLevel'] * majik_data['BonusPerLevel']
+                        )
+                    except Exception as e:
+                        print(f"Caverns Majik value calc error for level {self.caverns['Majiks'][majik_data['Name']]['Level']} {majik_data['Name']}: {e}")
+                elif majik_data['Scaling'] == 'value':
+                    try:
+                        self.caverns['Majiks'][majik_data['Name']]['Value'] = (ValueToMulti(
+                            self.caverns['Majiks'][majik_data['Name']]['Level'] * majik_data['BonusPerLevel']
+                        ))
+                        self.caverns['Majiks'][majik_data['Name']]['MaxValue'] = (ValueToMulti(
+                            majik_data['MaxLevel'] * majik_data['BonusPerLevel']
+                        ))
+                    except:
+                        print(f"Caverns Majik value calc error for level {self.caverns['Majiks'][majik_data['Name']]['Level']} {majik_data['Name']}: {e}")
+                elif majik_data['Scaling'] == 'multi':
+                    try:
+                        self.caverns['Majiks'][majik_data['Name']]['Value'] = (
+                            # BonusPerLevel to the power of Level
+                            majik_data['BonusPerLevel'] ** self.caverns['Majiks'][majik_data['Name']]['Level']
+                        )
+                        self.caverns['Majiks'][majik_data['Name']]['MaxValue'] = (
+                            # BonusPerLevel to the power of Level
+                            majik_data['BonusPerLevel'] ** majik_data['MaxLevel']
+                        )
+                    except Exception as e:
+                        print(f"Caverns Majik value calc error for level {self.caverns['Majiks'][majik_data['Name']]['Level']} {majik_data['Name']}: {e}")
+                self.caverns['Majiks'][majik_data['Name']]['Description'] = (
+                    f"{self.caverns['Majiks'][majik_data['Name']]['Value']}/{self.caverns['Majiks'][majik_data['Name']]['MaxValue']}"
+                    f"{self.caverns['Majiks'][majik_data['Name']]['Description']}"
+                )
+                #print(f"{majik_data['Name']} value set to {self.caverns['Majiks'][majik_data['Name']]['Value']}")
+
+    def _calculate_caverns_measurements(self):
+        total_skill_levels = 0
+        for skill, skill_levels in self.all_skills.items():
+            total_skill_levels += sum(skill_levels) if skill != 'Combat' else 0
+        fake_multi = total_skill_levels / 5000 + max(0, (total_skill_levels - 18000) / 1500)
+        if 5 > fake_multi:
+            real_multi = 1 + (18 * fake_multi / 100)
+        else:
+            real_multi = 1 + (18 * fake_multi + 8 * (fake_multi - 5)) / 100
+        self.caverns['Measurements'][1]['Value'] = (
+            2 * self.caverns['Measurements'][1]['Level']
+            * self.caverns['Majiks']['Lengthmeister']['Value']
+            * real_multi
+        )
+
+    def _calculate_caverns_the_well(self):
+        self.caverns['Caverns']['The Well']['BucketsUnlocked'] = 1 + sum(
+            [
+                1 for schematic_name in schematics_unlocking_buckets if self.caverns['Schematics'][schematic_name]['Purchased']
+            ]
+        )
+        self.caverns['Caverns']['The Well']['Buckets'] = safe_loads(self.raw_data.get('Holes', {}))
+
+    def _calculate_caverns_monuments(self):
+        cosmos_multi = max(1, self.caverns['Majiks']['Monumental Vibes']['Value'])
+        for monument_index, monument_name in enumerate(monument_names):
+            if monument_index < released_monuments:
+                # The 9th bonus multiplies other bonuses, but not itself. Must be calculated first.
+                ninth = self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]
+                ninth_multi = (
+                    max(1,
+                        0.1 * ceil(
+                            ninth['Level'] / (250 + ninth['Level'])
+                            * 10
+                            * cosmos_multi
+                        )
+                    )
+                )
+                try:
+                    self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Value'] = ninth_multi
+                    self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'] = (
+                        self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'].replace(
+                            '}', f"{self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Value']:,.3f}")
+                    )
+                except:
+                    self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Value'] = 1
+                    self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'] = (
+                        self.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'].replace('}', '1')
+                    )
+                for bonus_index, bonus_details in monument_bonuses[monument_name].items():
+                    if bonus_index % 10 != 9:
+                        if bonus_details['ScalingValue'] < 30:
+                            result = (
+                                self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Level']
+                                * self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['ScalingValue']
+                                * cosmos_multi
+                                * ninth_multi
+                            )
+                        else:
+                            result = (
+                                0.1 * ceil(
+                                    ninth['Level'] / (250 + ninth['Level'])
+                                    * 10
+                                    * cosmos_multi
+                                    * ninth_multi
+                                )
+                            )
+                        if bonus_details['ValueType'] == 'Percent':
+                            try:
+                                self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = result
+                                self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'] = (
+                                    self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'].replace(
+                                        '{', f"{self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value']:,.2f}")
+                                )
+                            except:
+                                self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = 0
+                                self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'] = (
+                                    self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'].replace('{', '0')
+                                )
+                        elif bonus_details['ValueType'] == 'Multi':
+                            try:
+                                self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = ValueToMulti(result)
+                                self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'] = (
+                                    self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'].replace(
+                                        '}', f"{self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value']:,.3f}")
+                                )
+                            except:
+                                self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = 1
+                                self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'] = (
+                                    self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'].replace('}', '1')
+                                )
+                    #print(f"{monument_name} Bonus {bonus_index}: Level {self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Level']} = {self.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description']}")
+        self._calculate_caverns_monuments_bravery()
+
+    def _calculate_caverns_monuments_bravery(self):
+        monument_name = 'Bravery Monument'
+        self.caverns['Caverns'][monument_name]['Sword Count'] = (
+            min(9, 3  # Starting amount
+                + (2 * (self.caverns['Caverns'][monument_name]['Hours'] >= 80))
+                + (1 * (self.caverns['Caverns'][monument_name]['Hours'] >= 750))
+                + (1 * (self.caverns['Caverns'][monument_name]['Hours'] >= 5000))
+                + (1 * (self.caverns['Caverns'][monument_name]['Hours'] >= 24000))
+            )
+        )
+        self.caverns['Caverns'][monument_name]['Max Swords'] = (
+                min(9, 3 + 2 + 1 + 1 + 1)
+        )
+        self.caverns['Caverns'][monument_name]['Sword Min'] = (
+            3
+            + (1 * floor(self.caverns['Caverns'][monument_name]['Hours'] / 6) * self.caverns['Schematics']['The Story Changes Over Time...']['Purchased'])
+        )
+        self.caverns['Caverns'][monument_name]['Sword Max'] = (
+            (25 + (10 * floor(self.caverns['Caverns'][monument_name]['Hours'] / 6)
+                   * self.caverns['Schematics']['The Story Changes Over Time...']['Purchased']))
+            * ValueToMulti(self.caverns['Measurements'][1]['Value'])
+        )
+        self.caverns['Caverns'][monument_name]['Rethrows'] = (
+            0
+            + (5 * (self.caverns['Caverns'][monument_name]['Hours'] >= 300))
+            + (10 * (self.caverns['Caverns'][monument_name]['Hours'] >= 10000))
+        )
+        self.caverns['Caverns'][monument_name]['Max Rethrows'] = (
+            5 + 10
+        )
+        self.caverns['Caverns'][monument_name]['Retellings'] = (
+            1 * (self.caverns['Caverns'][monument_name]['Hours'] >= 2000)
+        )
+        self.caverns['Caverns'][monument_name]['Max Retellings'] = (
+            1
+        )
+
+    def _calculate_caverns_the_bell(self):
+        cavern_name = 'The Bell'
+        self.caverns['Caverns'][cavern_name]['Total Improvements'] = sum(
+            [ci_details['Level'] for ci_details in self.caverns['Caverns'][cavern_name]['Improvements'].values()]
+        )
+        self.caverns['Caverns'][cavern_name]['Stack Size'] = 25
+        self.caverns['Caverns'][cavern_name]['Total Stacks'] = (
+                self.caverns['Caverns'][cavern_name]['Total Improvements'] // self.caverns['Caverns'][cavern_name]['Stack Size']
+        )
+        for ci_index, ci_details in self.caverns['Caverns'][cavern_name]['Improvements'].items():
+            try:
+                self.caverns['Caverns'][cavern_name]['Improvements'][ci_index]['Value'] = getBellImprovementBonus(
+                    ci_index,
+                    ci_details['Level'],
+                    self.caverns['Caverns'][cavern_name]['Total Stacks'],
+                    self.caverns['Schematics']["Improvement Stackin'"]['Purchased']
+                )
+            except:
+                self.caverns['Caverns'][cavern_name]['Improvements'][ci_index]['Value'] = 0
+            self.caverns['Caverns'][cavern_name]['Improvements'][ci_index]['Description'] = (
+                self.caverns['Caverns'][cavern_name]['Improvements'][ci_index]['Description'].replace(
+                    '{', f"{self.caverns['Caverns'][cavern_name]['Improvements'][ci_index]['Value']:,.0f}"
+                )
+            )
 
     def _calculate_w6(self):
         self._calculate_w6_summoning_winner_bonuses()
@@ -3948,8 +4263,7 @@ class Account:
 
     def _calculate_w6_farming(self):
         self._calculate_w6_farming_crop_depot()
-        self._calculate_w6_farming_day_market()
-        self._calculate_w6_farming_night_market()
+        self._calculate_w6_farming_markets()
         self._calculate_w6_farming_crop_value()
         self._calculate_w6_farming_crop_evo()
         self._calculate_w6_farming_crop_speed()
@@ -3965,8 +4279,9 @@ class Account:
             self.farming['Depot'][bonusName]['Value'] = self.farming['Depot'][bonusName]['BaseValue'] * lab_multi
             self.farming['Depot'][bonusName]['ValuePlus1'] = self.farming['Depot'][bonusName]['BaseValuePlus1'] * lab_multi
 
-    def _calculate_w6_farming_day_market(self):
-        super_multi = ValueToMulti(self.farming['MarketUpgrades']['Super Gmo']['Value'] * self.farming['CropStacks']['Super Gmo'])
+    def _calculate_w6_farming_markets(self):
+        super_multi_current_stacks = ValueToMulti(self.farming['MarketUpgrades']['Super Gmo']['Value'] * self.farming['CropStacks']['Super Gmo'])
+        super_multi_max_stacks = ValueToMulti(self.farming['MarketUpgrades']['Super Gmo']['Value'] * maxFarmingCrops)
         #print(f"models._calculate_w6_farming_day_market super_multi = {super_multi}")
         for name, details in self.farming['MarketUpgrades'].items():
             try:
@@ -3977,19 +4292,19 @@ class Account:
                     self.farming['MarketUpgrades'][name]['Description'] = details['Description'].replace("{", f"{details['Value']:g}")
                 if name in self.farming['CropStacks']:
                     if name == 'Super Gmo':
-                        self.farming['MarketUpgrades'][name]['StackedValue'] = super_multi
+                        self.farming['MarketUpgrades'][name]['StackedValue'] = super_multi_current_stacks
                         self.farming['MarketUpgrades'][name]['Description'] += (
                             f".<br>{self.farming['CropStacks'][name]} stacks = "
-                            f"{super_multi:,.4g}x"
+                            f"{super_multi_current_stacks:,.4g}x"
                         )
                     elif name == 'Evolution Gmo':
-                        self.farming['MarketUpgrades'][name]['StackedValue'] = super_multi * pow(ValueToMulti(details['Value']), self.farming['CropStacks'][name])
+                        self.farming['MarketUpgrades'][name]['StackedValue'] = super_multi_current_stacks * pow(ValueToMulti(details['Value']), self.farming['CropStacks'][name])
                         self.farming['MarketUpgrades'][name]['Description'] += (
                             f".<br>{self.farming['CropStacks'][name]} stacks = "
                             f"{self.farming['MarketUpgrades'][name]['StackedValue']:,.4g}x"
                         )
                     else:
-                        self.farming['MarketUpgrades'][name]['StackedValue'] = super_multi * (ValueToMulti(details['Value'] * self.farming['CropStacks'][name]))
+                        self.farming['MarketUpgrades'][name]['StackedValue'] = super_multi_current_stacks * (ValueToMulti(details['Value'] * self.farming['CropStacks'][name]))
                         self.farming['MarketUpgrades'][name]['Description'] += (
                             f".<br>{self.farming['CropStacks'][name]} stacks = "
                             f"{self.farming['MarketUpgrades'][name]['StackedValue']:,.5g}x"
@@ -3999,9 +4314,6 @@ class Account:
                 print(f"models._calculate_w6_farming_day_market: Exception substituting value for {name}: {reason}")
                 continue
 
-    def _calculate_w6_farming_night_market(self):
-        pass
-
     def _calculate_w6_farming_crop_value(self):
         #if ("CropsBonusValue" == e)
         #return Math.min(100, Math.round(Math.max(1, Math.floor(1 + (c.randomFloat() + q._customBlock_FarmingStuffs("BasketUpgQTY", 0, 5) / 100))) * (1 + q._customBlock_FarmingStuffs("LandRankUpgBonusTOTAL", 1, 0) / 100) * (1 + (q._customBlock_FarmingStuffs("LankRankUpgBonus", 1, 0) * c.asNumber(a.engine.getGameAttribute("FarmRank")[0][0 | t]) + q._customBlock_Summoning("VotingBonusz", 29, 0)) / 100)));
@@ -4010,6 +4322,8 @@ class Account:
         self.farming['Value']['Mboost Sboost Multi'] = ValueToMulti(
             self.farming['LandRankDatabase']['Production Megaboost']['Value'] + self.farming['LandRankDatabase']['Production Superboost']['Value']
         )
+        self.farming['Value']['Value GMO Current'] = self.farming['MarketUpgrades']['Value Gmo']['StackedValue']
+
         #Calculate with the Min Plot Rank
         self.farming['Value']['Pboost Ballot Multi Min'] = ValueToMulti(
             (self.farming['LandRankDatabase']['Production Boost']['Value']) * self.farming.get('LandRankMinPlot', 0)  #Value of PBoost * Lowest Plot Rank
@@ -4019,6 +4333,7 @@ class Account:
             max(1, self.farming['Value']['Doubler Multi'])  #end of max
             * self.farming['Value']['Mboost Sboost Multi']
             * self.farming['Value']['Pboost Ballot Multi Min']
+            * self.farming['Value']['Value GMO Current']
             )  #end of round
 
         #Now calculate with the Max Plot Rank
@@ -4030,9 +4345,10 @@ class Account:
             max(1, self.farming['Value']['Doubler Multi'])  # end of max
             * self.farming['Value']['Mboost Sboost Multi']
             * self.farming['Value']['Pboost Ballot Multi Max']
+            * self.farming['Value']['Value GMO Current']
         )  # end of round
-        self.farming['Value']['FinalMin'] = min(100, self.farming['Value']['BeforeCapMin'])
-        self.farming['Value']['FinalMax'] = min(100, self.farming['Value']['BeforeCapMax'])
+        self.farming['Value']['FinalMin'] = min(10000, self.farming['Value']['BeforeCapMin'])
+        self.farming['Value']['FinalMax'] = min(10000, self.farming['Value']['BeforeCapMax'])
         #print(f"models._calculate_w6_farming_crop_value CropValue BEFORE cap = {self.farming['Value']['BeforeCap']}")
         #print(f"models._calculate_w6_farming_crop_value CropValue AFTER cap = {self.farming['Value']['Final']}")
 
@@ -4368,7 +4684,7 @@ class Account:
     def _make_cards(self):
         card_counts = safe_loads(self.raw_data.get(self._key_cards, {}))
         cards = [
-            Card(codename, name, cardset, int(float(card_counts.get(codename, 0))), coefficient)
+            Card(codename, name, cardset, int(float(safer_get(card_counts, codename, 0))), coefficient)
             for cardset, cards in card_data.items()
             for codename, (name, coefficient) in cards.items()
         ]

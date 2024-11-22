@@ -51,7 +51,8 @@ def getProgressionTiersAdviceGroup():
     tiers_ag = AdviceGroup(
         tier=tier_Signs,
         pre_string="Unlock additional Star Signs",
-        advices=starsigns_AdviceDict['Signs']
+        advices=starsigns_AdviceDict['Signs'],
+        post_string='Custom Star Sign artwork created by Listix'
     )
     overall_SectionTier = min(max_tier + infoTiers, tier_Signs)
     return tiers_ag, overall_SectionTier, max_tier

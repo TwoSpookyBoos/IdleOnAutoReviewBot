@@ -1,7 +1,11 @@
 from models.models import AdviceSection, AdviceGroup, Advice
+from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import template_progressionTiers, break_you_best
+from consts import (
+    break_you_best, infinity_string,
+    #template_progressionTiers
+)
 
 logger = get_logger(__name__)
 
@@ -10,7 +14,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
         'Tiers': {},
     }
     info_tiers = 0
-    max_tier = max(template_progressionTiers.keys(), default=0) - info_tiers
+    max_tier = 0  #max(template_progressionTiers.keys(), default=0) - info_tiers
     tier_Template = 0
 
     #Assess Tiers
@@ -23,7 +27,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
     overall_SectionTier = min(max_tier + info_tiers, tier_Template)
     return tiers_ag, overall_SectionTier, max_tier
 
-def setTemplateProgressionTier():
+def getTemplateAdviceSection() -> AdviceSection:
     #Check if player has reached this section
     highestTemplateSkillLevel = max(session_data.account.all_skills["TemplateSkill"])
     if highestTemplateSkillLevel < 1:
@@ -32,7 +36,7 @@ def setTemplateProgressionTier():
             tier="Not Yet Evaluated",
             header="Come back after unlocking Template!",
             picture="",
-            unrated=False,
+            unrated=None,
             unreached=True,
             completed=False
         )

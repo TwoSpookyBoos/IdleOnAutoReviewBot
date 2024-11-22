@@ -324,9 +324,9 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     ))
 
     po_AdviceDict[aw_label].append(Advice(
-        label=f"{{{{ Sailing|#sailing}}}}: Level {gr_level} Gold Relic: {gr_multi}x ({gr_days} days)",
+        label=f"{{{{ Sailing|#sailing}}}}: Level {gr_level} Gold Relic: {gr_multi:.2f}x ({gr_days} days)",
         picture_class="gold-relic",
-        progression=gr_multi,
+        progression=f"{gr_multi:.2f}",
         unit="x"
     ))
 

@@ -191,7 +191,7 @@ def getCharacterDetails(inputJSON, runType):
         playerCount = len(playerNames)
         if runType == "web":
             logger.info(
-                "From Public IE, found %s characters: %s",
+                "From Public IE or IE JSON, found %s characters: %s",
                 playerCount,
                 ", ".join(playerNames),
             )
@@ -319,6 +319,17 @@ def setCustomTiers(filename="input.csv"):
 
 def safe_loads(data):
     return json.loads(data) if isinstance(data, str) else data
+
+def safer_get(data, query, default):
+    """
+    Replace Nonetype result with default param if encountered
+    """
+    try:
+        result = data.get(query, default)
+        return result if result is not None else default
+    except:
+        logger.exception(f"Could not get() from provided {type(data)} data. Returning default.")
+        return default
 
 def mark_advice_completed(advice, force=False):
     def complete():

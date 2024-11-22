@@ -332,6 +332,7 @@ def getProgressionTiersAdviceGroup():
                                 progression=0,
                                 goal=1,
                                 resource=playerStamps.get(rStamp, {}).get('Material', ''),
+
                             ))
             if tier_FindStamps[stampType] == tier - 1 and adviceCountsDict[stampType] == 0:  # Only update if they already met previous tier
                 tier_FindStamps[stampType] = tier

@@ -212,7 +212,7 @@ def getCandyHourSections():
 
     if guaranteedCandyHours > 0:
         tier_regular = str(guaranteedCandyHours)
-        guaranteedCandyString = f"You have {guaranteedCandyHours} hours ({guaranteedCandyHours / 24:.2f} days) of guaranteed candy."
+        guaranteedCandyString = f"You have {guaranteedCandyHours:,} hours ({guaranteedCandyHours / 24:,.2f} days) of guaranteed candy."
     else:
         tier_regular = "no guaranteed candy"
         guaranteedCandyString = f"You have {tier_regular}. Wow."
@@ -244,8 +244,8 @@ def getCandyHourSections():
     variableCandyString = f"You have {tier_variable}."
 
     if variableCandyHoursMin > 0:
-        hours_range = f"{variableCandyHoursMin:.2f} - {variableCandyHoursMax:.2f}"
-        days_range = f"{variableCandyHoursMin / 24:.2f} - {variableCandyHoursMax / 24:.2f}"
+        hours_range = f"{variableCandyHoursMin:,.2f} - {variableCandyHoursMax:,.2f}"
+        days_range = f"{variableCandyHoursMin / 24:,.2f} - {variableCandyHoursMax / 24:,.2f}"
         tier_variable = hours_range
         variableCandyString = f"You have somewhere between {hours_range} hours ({days_range} days) of variable candy."
 
