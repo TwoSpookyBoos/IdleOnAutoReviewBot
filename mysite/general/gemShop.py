@@ -44,12 +44,10 @@ def try_exclude_DungeonTickets(exclusionList):
                 exclusionList.append('Weekly Dungeon Boosters')
                 return
 
-
 def try_exclude_SoupedUpTube(exclusionList):
     sum_LabLevels = sum(session_data.account.all_skills["Lab"])
     if sum_LabLevels >= 180:
         exclusionList.append("Souped Up Tube")
-
 
 def try_exclude_FluorescentFlaggies(exclusionList):
     """
@@ -67,11 +65,9 @@ def try_exclude_FluorescentFlaggies(exclusionList):
     except:
         pass
 
-
 def try_exclude_BurningBadBooks(exclusionList):
     if session_data.account.construction_buildings['Automation Arm']['Level'] >= 5:
         exclusionList.append("Burning Bad Books")
-
 
 def try_exclude_EggCapacity(exclusionList):
     if session_data.account.breeding['Total Unlocked Count'] >= breedingTotalPets - 5:
@@ -109,7 +105,6 @@ def try_exclude_ShroomFamiliar(exclusionList):
     #if Red is at least half-way finished, exclude
     if session_data.account.summoning['Battles']['Red'] >= 8:
         exclusionList.append('Shroom Familiar')
-
 
 def try_exclude_IvoryBubbleCauldrons(exclusionList):
     if session_data.account.alchemy_cauldrons['NextWorldMissingBubbles'] > currentWorld:
@@ -194,6 +189,8 @@ def getBonusSectionName(bonusName):
 
         case 'FOMO-1' | 'FOMO-2' | 'FOMO-3' | 'FOMO-4' | 'FOMO-5' | 'FOMO-6' | 'FOMO-7' | 'FOMO-8':
             return "Limited Shop"
+        case 'Blinding Lantern' | 'Parallel Villagers The Explorer' | 'Parallel Villagers The Engineer' | 'Parallel Villagers The Conjuror' | 'Parallel Villagers The Measurer' | 'Resource Boost' | 'Conjuror Pts' | 'Opal':
+            return "Oddities"
         case _:
             return "UnknownShop"
 

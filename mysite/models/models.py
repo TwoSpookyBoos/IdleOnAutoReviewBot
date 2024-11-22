@@ -2911,9 +2911,9 @@ class Account:
             'Measurements': {},
         }
         raw_caverns_list: list[list] = safe_loads(self.raw_data.get('Holes', []))
-        while len(raw_caverns_list) < 23:
+        while len(raw_caverns_list) < 24:
             raw_caverns_list.append([])
-        self._parse_caverns_villagers(raw_caverns_list[1], raw_caverns_list[2], raw_caverns_list[3])
+        self._parse_caverns_villagers(raw_caverns_list[1], raw_caverns_list[2], raw_caverns_list[3], raw_caverns_list[23])
         self._parse_caverns_actual_caverns(raw_caverns_list[7])
         self._parse_caverns_majiks(raw_caverns_list[4], raw_caverns_list[5], raw_caverns_list[6])
         self._parse_caverns_schematics(raw_caverns_list[13])
@@ -2924,7 +2924,7 @@ class Account:
         # for key in self.caverns:
         #     print(f"{key}: {self.caverns[key]}")
 
-    def _parse_caverns_villagers(self, villager_levels, villager_exp, opals_invested):
+    def _parse_caverns_villagers(self, villager_levels, villager_exp, opals_invested, parallel_villagers):
         for villager_index, villager_data in enumerate(caverns_villagers):
             try:
                 self.caverns['Villagers'][villager_data['Name']] = {
@@ -2936,6 +2936,7 @@ class Account:
                     'VillagerNumber': villager_data['VillagerNumber'],
                     'LevelPercent': 100 * (float(villager_exp[villager_index])/getVillagerEXPRequired(villager_index, villager_levels[villager_index])),
                 }
+                self.gemshop[f"Parallel Villagers {villager_data['Role']}"] = parallel_villagers[villager_index]
             except:
                 self.caverns['Villagers'][villager_data['Name']] = {
                     'Unlocked': villager_data['Name'] == 'Polonai',
@@ -2946,6 +2947,7 @@ class Account:
                     'VillagerNumber': villager_data['VillagerNumber'],
                     'LevelPercent': 0,
                 }
+                self.gemshop[f"Parallel Villagers {villager_data['Role']}"] = 0
 
     def _parse_caverns_actual_caverns(self, opals_per_cavern):
         for cavern_index, cavern_name in caverns_cavern_names.items():

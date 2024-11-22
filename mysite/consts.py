@@ -94,34 +94,40 @@ gemShop_progressionTiers = [
         'Brimstone Forge Slot': 4, 'Bleach Liquid Cauldrons': 2, 'Zen Cogs': 2, 'Tower Building Slots': 1,
         'Royal Egg Cap': 3, 'Richelin Kitchen': 3, 'Souped Up Tube': 1,
         'Chest Sluggo': 2, 'Divinity Sparkie': 2, 'Lava Sprouts': 2,
+        'Conjuror Pts': 1,
         'Instagrow Generator': 3, 'Shroom Familiar': 1, 'Plot of Land': 2},
      ""],
     [4, "B", {
         'Item Backpack Space': 2, 'Storage Chest Space': 8, 'Carry Capacity': 4, 'Weekly Dungeon Boosters': 2, 'Food Slot': 1,
         'Bleach Liquid Cauldrons': 3, 'More Sample Spaces': 2, 'Zen Cogs': 4, 'Tower Building Slots': 2,
         'Royal Egg Cap': 5, 'Fenceyard Space': 2, 'Chest Sluggo': 6, 'Lava Sprouts': 4,
+        'Parallel Villagers The Engineer': 1, 'Parallel Villagers The Conjuror': 1, 'Conjuror Pts': 3,
         'Plot of Land': 4, 'Instagrow Generator': 5},
      ""],
     [5, "C", {
         'Item Backpack Space': 3, 'Storage Chest Space': 12, 'Carry Capacity': 6, 'Weekly Dungeon Boosters': 3, 'Food Slot': 2,
         'Bleach Liquid Cauldrons': 4, 'More Sample Spaces': 4, 'Burning Bad Books': 2, 'Tower Building Slots': 4,
         'Fenceyard Space': 4, 'Chest Sluggo': 9, 'Golden Sprinkler': 2, 'Lava Sprouts': 6,
+        'Parallel Villagers The Explorer': 1, 'Parallel Villagers The Measurer': 1, 'Resource Boost': 2, 'Conjuror Pts': 6,
         'Plot of Land': 6, 'Shroom Familiar': 2, 'Instagrow Generator': 7},
      ""],
     [6, "D", {
         'Item Backpack Space': 4, 'Carry Capacity': 8, 'More Storage Space': 5, 'Brimstone Forge Slot': 8,
         'Ivory Bubble Cauldrons': 4, 'More Sample Spaces': 6, 'Burning Bad Books': 4, 'Zen Cogs': 8,
         'Souped Up Tube': 3, 'Fenceyard Space': 6, 'Chest Sluggo': 12,
-        'Plot of Land': 8, 'Instagrow Generator': 8,},
+        'Resource Boost': 4, 'Conjuror Pts': 12, 'Opal': 8,
+        'Plot of Land': 8, 'Instagrow Generator': 8,
+    },
      ""],
     [7, "Practical Max", {
         'Item Backpack Space': 6, 'Carry Capacity': 10, 'More Storage Space': 10, 'Card Presets': 1,
         'Brimstone Forge Slot': 16, 'Sigil Supercharge': 10,
         'Fluorescent Flaggies': 2,
         'Golden Sprinkler': 4, 'Divinity Sparkie': 6,
-        'Plot of Land': 12, 'Shroom Familiar': 3, 'Instagrow Generator': 8,
+        'Resource Boost': 10, 'Conjuror Pts': 12, 'Opal': 20,
+        'Plot of Land': 12, 'Shroom Familiar': 6, 'Instagrow Generator': 8,
     },
-     "I wouldn't recommend going any further as of v2.12."],
+     "I wouldn't recommend going any further as of v2.22."],
     [8, "True Max",
      {
         #Inventory and Storage
@@ -142,8 +148,10 @@ gemShop_progressionTiers = [
         'Royal Egg Cap': 5, 'Richelin Kitchen': 10, 'Souped Up Tube': 5, 'Pet Storage': 12, 'Fenceyard Space': 6,
         #World 5
         'Chest Sluggo': 12, 'Divinity Sparkie': 6, 'Golden Sprinkler': 4, 'Lava Sprouts': 6,
+        #Caverns
+        'Resource Boost': 10, 'Conjuror Pts': 12, 'Opal': 20,
         #World 6
-        'Plot of Land': 12, 'Shroom Familiar': 3, 'Instagrow Generator': 8,
+        'Plot of Land': 12, 'Shroom Familiar': 6, 'Instagrow Generator': 8,
      },
      "This final tier is for the truly depraved. Many of these bonuses are very weak or outright useless."]
 ]
