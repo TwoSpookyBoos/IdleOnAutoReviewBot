@@ -152,7 +152,7 @@ def main(inputData, runType="web"):
         AdviceWorld(name=WorldName.FROSTBITE_TUNDRA, sections=sections_3, banner=["w3banner.png", "w3bannertext.png"]),
         AdviceWorld(name=WorldName.HYPERION_NEBULA, sections=sections_4, banner=["w4banner.png", "w4bannertext.png"]),
         AdviceWorld(name=WorldName.SMOLDERIN_PLATEAU, sections=sections_5, banner=["w5banner.png", "w5bannertext.png"]),
-        AdviceWorld(name=WorldName.CAVERNS, sections=sections_caverns, title="The Caverns Below"),
+        AdviceWorld(name=WorldName.CAVERNS, sections=sections_caverns, banner=["cavernsbanner.png", "cavernsbannertext.png"]),
         AdviceWorld(name=WorldName.SPIRITED_VALLEY, sections=sections_6, banner=["w6banner.png", "w6bannertext.png"]),
     ]
 
