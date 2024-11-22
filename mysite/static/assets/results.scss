@@ -130,14 +130,10 @@
     --smolderin-plateau-bg-advice-group-even: hsl(15deg 24% 34%);
     --smolderin-plateau-progress-color: var(--progress-color);
 
-    --caverns-bg-banner: none;
-    --caverns-fg-banner: hsl(271, 74%, 49%);
-    --caverns-fg-banner-shadow: 5px 5px hsl(271, 27%, 28%);
-
-    --caverns-fg-subheading: hsl(15, 100%, 96%);
+    --caverns-fg-subheading: fg-subheading-dark-mode(165deg);
     --caverns-bg-subheading: none;
 
-    --caverns-fg-advice-group: hsl(15deg, 100%, 96%);
+    --caverns-fg-advice-group: var(--fg-advice-group);
     --caverns-bg-advice-group-odd: hsl(15deg, 25%, 48%);
     --caverns-bg-advice-group-even: hsl(15deg, 24%, 34%);
     --caverns-progress-color: var(--progress-color);
@@ -268,14 +264,10 @@
     --smolderin-plateau-bg-advice-group-even: #{bg-advice-group-light-mode(24deg)};
     --smolderin-plateau-progress-color: #{fg-progress-bar-light-mode(24deg)};
 
-    --caverns-bg-banner: #000b;
-    --caverns-fg-banner: hsl(271, 74%, 49%);
-    --caverns-fg-banner-shadow: 5px 5px black;
-
     --caverns-fg-subheading: #{fg-subheading-light-mode(15deg)};
     --caverns-bg-subheading: #{bg-advice-group-light-mode(15deg)};
 
-    --caverns-fg-advice-group: black;
+    --caverns-fg-advice-group: var(--fg-advice-group);
     --caverns-bg-advice-group-odd: #{bg-advice-group-light-mode(15deg)};
     --caverns-bg-advice-group-even: #{bg-advice-group-light-mode(15deg)};
     --caverns-progress-color: #{fg-progress-bar-light-mode(15deg)};
@@ -800,7 +792,7 @@ body {
                     }
                 }
 
-                @each $world in ("pinchy", "caverns") {
+                @each $world in ("pinchy") {
                     ##{$world} {
                         .banner {
                             text-align: center;
