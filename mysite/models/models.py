@@ -60,11 +60,10 @@ from consts import (
     sailingDict, numberOfArtifactTiers, captainBuffs,
     getStyleNameFromIndex, divinity_divinitiesDict, divinity_offeringsDict, getDivinityNameFromIndex, divinity_DivCostAfter3,
     gamingSuperbitsDict,
-
     # W6
     jade_emporium, pristineCharmsList, sneakingGemstonesFirstIndex, sneakingGemstonesList, sneakingGemstonesStatList,
     getMoissaniteValue, getGemstoneBaseValue, getGemstoneBoostedValue, getGemstonePercent,
-    marketUpgradeDetails, landrankDict, cropDepotDict, maxFarmingCrops,
+    marketUpgradeDetails, landrankDict, cropDepotDict, maxFarmingCrops, maxFarmingValue,
     summoningBattleCountsDict, summoningDict,
     # Caverns
     caverns_villagers, caverns_conjuror_majiks, caverns_engineer_schematics, caverns_engineer_schematics_unlock_order, caverns_cavern_names,
@@ -4347,8 +4346,8 @@ class Account:
             * self.farming['Value']['Pboost Ballot Multi Max']
             * self.farming['Value']['Value GMO Current']
         )  # end of round
-        self.farming['Value']['FinalMin'] = min(10000, self.farming['Value']['BeforeCapMin'])
-        self.farming['Value']['FinalMax'] = min(10000, self.farming['Value']['BeforeCapMax'])
+        self.farming['Value']['FinalMin'] = min(maxFarmingValue, self.farming['Value']['BeforeCapMin'])
+        self.farming['Value']['FinalMax'] = min(maxFarmingValue, self.farming['Value']['BeforeCapMax'])
         #print(f"models._calculate_w6_farming_crop_value CropValue BEFORE cap = {self.farming['Value']['BeforeCap']}")
         #print(f"models._calculate_w6_farming_crop_value CropValue AFTER cap = {self.farming['Value']['Final']}")
 
