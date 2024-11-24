@@ -7281,14 +7281,24 @@ def getGemstonePercent(gemstoneName: str, gemstoneValue: float):
 
 # Maps to the RewardID, 1 indexed because Lava
 summoningRewards = [
-    "",
+    "Unknown",
+    # Normal Rewards
     "x Total DMG", "x Jade Gain", "x Farming SPD", "x Artifact Find",
     " Lab Con Range", "x All Essence", "x Sneak EXP", "x Sigil SPD",
     "x Farming EXP", "% Drop Rate", "x Crop EVO", "% AFK Gains",
     "% Skill EXP", "x Construct SPD", "x Skill Effncy.", "x Cooking SPD",
-    "x Gaming Bits", "x Shiny EXP", "% All Stat", " Library Max"
+    "x Gaming Bits", "x Shiny EXP", "% All Stat", " Library Max",
+    # Endless Rewards
+    "+ Stamp LV/day", "% Villager EXP", "% Ballot Bonus", "% Class EXP",
+    "+ Equinox Max LV", "% Monument AFK", "x Meal Bonuses", "% for World 7 (Placeholder 1)", "% for World 7 (Placeholder 2)",
+    "% for World 7 (Placeholder 3)", "% for World 7 (Placeholder 4)", "x Winner Bonuses"
 ]
-
+summoning_rewards_that_dont_multiply_base_value = [
+    summoningRewards[0],   #Placeholder
+    summoningRewards[21],  #Stamp Levels
+    summoningRewards[25],  #Equinox Levels
+    summoningRewards[32],  #Winner Bonuses
+]
 # Plenty of unknown values. HP, damage, speed, reward size, etc seem to require calculation 
 summoningDict = {
     "White": {
@@ -7663,6 +7673,49 @@ summoningDict = {
         },
     },
 }
+summoning_endlessEnemies = {0: 'rift-spooker', 1: 'rift-slug', 2: 'rift-jocund', 3: 'rift-hivemind', 4: 'rift-stalker'}
+summoning_endlessDict = {
+    0: {"RewardID": summoningRewards[21], "RewardQTY": 1},
+    1: {"RewardID": summoningRewards[22], "RewardQTY": 3},
+    2: {"RewardID": summoningRewards[23], "RewardQTY": 1},
+    3: {"RewardID": summoningRewards[24], "RewardQTY": 12},
+    4: {"RewardID": summoningRewards[25], "RewardQTY": 1},
+    5: {"RewardID": summoningRewards[27], "RewardQTY": 7},
+    6: {"RewardID": summoningRewards[23], "RewardQTY": 2},
+    7: {"RewardID": summoningRewards[22], "RewardQTY": 4},
+    8: {"RewardID": summoningRewards[24], "RewardQTY": 15},
+    9: {"RewardID": summoningRewards[29], "RewardQTY": 10},
+    10: {"RewardID": summoningRewards[25], "RewardQTY": 1},
+    11: {"RewardID": summoningRewards[26], "RewardQTY": 4},
+    12: {"RewardID": summoningRewards[24], "RewardQTY": 18},
+    13: {"RewardID": summoningRewards[23], "RewardQTY": 2},
+    14: {"RewardID": summoningRewards[22], "RewardQTY": 4},
+    15: {"RewardID": summoningRewards[32], "RewardQTY": 3},
+    16: {"RewardID": summoningRewards[30], "RewardQTY": 20},
+    17: {"RewardID": summoningRewards[31], "RewardQTY": 25},
+    18: {"RewardID": summoningRewards[25], "RewardQTY": 2},
+    19: {"RewardID": summoningRewards[24], "RewardQTY": 20},
+    20: {"RewardID": summoningRewards[26], "RewardQTY": 5},
+    21: {"RewardID": summoningRewards[29], "RewardQTY": 30},
+    22: {"RewardID": summoningRewards[24], "RewardQTY": 24},
+    23: {"RewardID": summoningRewards[22], "RewardQTY": 4},
+    24: {"RewardID": summoningRewards[21], "RewardQTY": 1},
+    25: {"RewardID": summoningRewards[23], "RewardQTY": 2},
+    26: {"RewardID": summoningRewards[31], "RewardQTY": 2},
+    27: {"RewardID": summoningRewards[28], "RewardQTY": 35},
+    28: {"RewardID": summoningRewards[27], "RewardQTY": 9},
+    29: {"RewardID": summoningRewards[24], "RewardQTY": 26},
+    30: {"RewardID": summoningRewards[26], "RewardQTY": 5},
+    31: {"RewardID": summoningRewards[22], "RewardQTY": 5},
+    32: {"RewardID": summoningRewards[30], "RewardQTY": 40},
+    33: {"RewardID": summoningRewards[25], "RewardQTY": 1},
+    34: {"RewardID": summoningRewards[29], "RewardQTY": 45},
+    35: {"RewardID": summoningRewards[28], "RewardQTY": 50},
+    36: {"RewardID": summoningRewards[23], "RewardQTY": 2},
+    37: {"RewardID": summoningRewards[26], "RewardQTY": 6},
+    38: {"RewardID": summoningRewards[24], "RewardQTY": 30},
+    39: {"RewardID": summoningRewards[32], "RewardQTY": 3},
+}
 
 summoningBattleCountsDict = {
     k: len(v)
@@ -7676,6 +7729,7 @@ summoningBattleCountsDict = {
     # len(summoningDict["Cyan"]),
 }
 summoningBattleCountsDict["All"] = sum(summoningBattleCountsDict.values())
+max_summoning_upgrades = 70  #Last verified as of 2.22 The Fixening
 
 ### SLAB CONSTS ###
 #SlabItemSort last pulled from code in 2.22 The Fixening

@@ -64,7 +64,7 @@ from consts import (
     jade_emporium, pristineCharmsList, sneakingGemstonesFirstIndex, sneakingGemstonesList, sneakingGemstonesStatList,
     getMoissaniteValue, getGemstoneBaseValue, getGemstoneBoostedValue, getGemstonePercent,
     marketUpgradeDetails, landrankDict, cropDepotDict, maxFarmingCrops, maxFarmingValue,
-    summoningBattleCountsDict, summoningDict,
+    summoningBattleCountsDict, summoningDict, summoning_endlessEnemies, summoning_endlessDict, max_summoning_upgrades, summoning_rewards_that_dont_multiply_base_value,
     # Caverns
     caverns_villagers, caverns_conjuror_majiks, caverns_engineer_schematics, caverns_engineer_schematics_unlock_order, caverns_cavern_names,
     caverns_measurer_measurements, getCavernResourceImage, schematics_unlocking_buckets, max_buckets, max_sediments, sediment_bars, getVillagerEXPRequired,
@@ -3466,22 +3466,24 @@ class Account:
     def _parse_w6_summoning(self):
         self.summoning = {}
         raw_summoning_list = safe_loads(self.raw_data.get('Summon', []))
+        while len(raw_summoning_list) < 5:
+            raw_summoning_list.append([])
 
         # raw_summoning_list[0] = Upgrades
-        try:
+        if raw_summoning_list[0]:
             self.summoning["Upgrades"] = raw_summoning_list[0]
-        except:
-            self.summoning["Upgrades"] = [0] * 69  # As of 2.09 Red/Cyan, there are exactly 69 upgrades #TODO: Replace with a value in consts
+        else:
+            self.summoning["Upgrades"] = [0] * max_summoning_upgrades
 
         # raw_summoning_list[1] = List of codified names of enemies from battles won
         self.summoning["Battles"] = {}
         self.summoning["BattleDetails"] = {}
         for color in summoningDict:
             self.summoning["BattleDetails"][color] = {}
-        try:
-            self._parse_w6_summoning_battles(raw_summoning_list[1])
-        except:
-            self._parse_w6_summoning_battles([])
+        self._parse_w6_summoning_battles(raw_summoning_list[1])
+
+        #Endless Summoning
+        self._parse_w6_summoning_battles_endless()
 
         # raw_summoning_list[2] looks to be essence owned
         # raw_summoning_list[3] I have no idea what this is
@@ -3522,6 +3524,52 @@ class Account:
                     'RewardQTY': battleValuesDict['RewardQTY'],
                     'RewardBaseValue': battleValuesDict['RewardQTY'] * 3.5,
                 }
+                if self.summoning["BattleDetails"][colorName][battleIndex + 1]['RewardType'].startswith('+ '):
+                    self.summoning["BattleDetails"][colorName][battleIndex + 1]['Description'] = (
+                        self.summoning["BattleDetails"][colorName][battleIndex + 1]['RewardType'].replace(
+                            '+', f"+{self.summoning['BattleDetails'][colorName][battleIndex + 1]['RewardBaseValue']}")
+                    )
+                elif self.summoning["BattleDetails"][colorName][battleIndex + 1]['RewardType'].startswith('%'):
+                    self.summoning["BattleDetails"][colorName][battleIndex + 1]['Description'] = (
+                        f"{self.summoning['BattleDetails'][colorName][battleIndex + 1]['RewardBaseValue']}"
+                        f"{self.summoning['BattleDetails'][colorName][battleIndex + 1]['RewardType']}"
+                    )
+                elif self.summoning["BattleDetails"][colorName][battleIndex + 1]['RewardType'].startswith('x'):
+                    self.summoning["BattleDetails"][colorName][battleIndex + 1]['Description'] = (
+                        f"{ValueToMulti(self.summoning['BattleDetails'][colorName][battleIndex + 1]['RewardBaseValue'])}"
+                        f"{self.summoning['BattleDetails'][colorName][battleIndex + 1]['RewardType']}"
+                    )
+
+    def _parse_w6_summoning_battles_endless(self):
+        self.summoning['Battles']['Endless'] = safer_get(self.raw_optlacc_dict, 319, 0)
+        self.summoning["BattleDetails"]['Endless'] = {}
+        self.summoning['Endless Bonuses'] = {}
+        true_battle_index = 0
+        while true_battle_index < max(40, self.summoning['Battles']['Endless'] + 5):
+            image_index = (true_battle_index % 100) // 20
+            endless_enemy_index = true_battle_index % 40
+            this_battle = {
+                'Defeated': true_battle_index < self.summoning['Battles']['Endless'],
+                'Image': summoning_endlessEnemies.get(image_index, ''),
+                'RewardType': summoning_endlessDict.get(endless_enemy_index, {}).get('RewardID', 'Unknown'),
+                # 'RewardQTY': summoning_endlessDict.get(endless_enemy_index, {}).get('RewardQTY', 0),
+                'RewardBaseValue': (
+                    summoning_endlessDict.get(endless_enemy_index, {}).get('RewardQTY', 0)
+                )
+            }
+            if this_battle['RewardType'].startswith('+'):
+                this_battle['Description'] = this_battle['RewardType'].replace('+', f"+{this_battle['RewardBaseValue']}")
+            elif this_battle['RewardType'].startswith('%'):
+                this_battle['Description'] = f"+{this_battle['RewardBaseValue']}{this_battle['RewardType']}"
+            elif this_battle['RewardType'].startswith('x'):
+                this_battle['Description'] = f"{ValueToMulti(this_battle['RewardBaseValue'])}{this_battle['RewardType']}"
+            self.summoning['BattleDetails']['Endless'][true_battle_index + 1] = this_battle
+            if this_battle['RewardType'] not in self.summoning['Endless Bonuses']:
+                self.summoning['Endless Bonuses'][this_battle['RewardType']] = 0
+            self.summoning['Endless Bonuses'][this_battle['RewardType']] += this_battle['RewardBaseValue'] * this_battle['Defeated']
+            #print(f"Endless {true_battle_index + 1}: {self.summoning['BattleDetails']['Endless'][true_battle_index + 1]}")
+            true_battle_index += 1
+        #print(f"Base Endless Bonuses after {self.summoning['Battles']['Endless']} wins: {self.summoning['Endless Bonuses']}")
 
     def _parse_w6_summoning_sanctuary(self, rawSanctuary):
         if rawSanctuary:
