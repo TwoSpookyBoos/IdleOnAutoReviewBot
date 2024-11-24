@@ -2232,7 +2232,8 @@ class Account:
                 'Category': bonusValueDict['Category'],
                 'Unlocked': self.total_equinox_bonuses_unlocked >= bonusIndex - 2,
                 'FinalMaxLevel': bonusValueDict['FinalMaxLevel'],
-                'RemainingUpgrades': []
+                'RemainingUpgrades': [],
+                'SummoningExpands': bonusValueDict['SummoningExpands']
             }
             try:
                 self.equinox_bonuses[upgradeName]['CurrentLevel'] = int(raw_equinox_bonuses[bonusIndex])
@@ -4557,6 +4558,7 @@ class Account:
 
     def _calculate_wave_2(self):
         self._calculate_w3_library_max_book_levels()
+        self._calculate_w3_equinox_max_levels()
         self._calculate_general_character_over_books()
         self._calculate_general_crystal_spawn_chance()
 
@@ -4584,6 +4586,15 @@ class Account:
             * self.summoning['WinnerBonusesMulti']
         )
         self.library['MaxBookLevel'] = 100 + self.library['StaticSum'] + self.library['ScalingSum'] + self.library['SummoningSum']
+
+    def _calculate_w3_equinox_max_levels(self):
+        bonus_equinox_levels = self.summoning['Endless Bonuses'].get('+ Equinox Max LV', 0)
+        if bonus_equinox_levels > 0:
+            for bonus, bonus_details in self.equinox_bonuses.items():
+                if bonus_details['SummoningExpands']:
+                    self.equinox_bonuses[bonus]['PlayerMaxLevel'] += bonus_equinox_levels
+                    self.equinox_bonuses[bonus]['FinalMaxLevel'] += bonus_equinox_levels
+
 
     def _calculate_general_character_over_books(self):
         self.bonus_talents = {
