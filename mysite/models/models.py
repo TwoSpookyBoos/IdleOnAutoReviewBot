@@ -2600,29 +2600,16 @@ class Account:
                 }
 
     def _parse_w4_breeding_territories(self, rawPets, rawTerritory):
-        anyPetsAssignedPerTerritory: list[bool] = []
+        self.breeding["Highest Unlocked Territory Number"] = safer_get(self.raw_optlacc_dict, 85, 0)
         for territoryIndex in range(0, maxNumberOfTerritories):
             try:
-                if rawPets[indexFirstTerritoryAssignedPet + 0 + (territoryIndex * 4)][0] != "none":
-                    anyPetsAssignedPerTerritory.append(True)
-                elif rawPets[indexFirstTerritoryAssignedPet + 1 + (territoryIndex * 4)][0] != "none":
-                    anyPetsAssignedPerTerritory.append(True)
-                elif rawPets[indexFirstTerritoryAssignedPet + 2 + (territoryIndex * 4)][0] != "none":
-                    anyPetsAssignedPerTerritory.append(True)
-                elif rawPets[indexFirstTerritoryAssignedPet + 3 + (territoryIndex * 4)][0] != "none":
-                    anyPetsAssignedPerTerritory.append(True)
-                else:
-                    anyPetsAssignedPerTerritory.append(False)
-            except:
-                anyPetsAssignedPerTerritory.append(False)
-
-            # Spice Progress above 0 or any pet assigned to territory
-            try:
-                if rawTerritory[territoryIndex][0] > 0 or anyPetsAssignedPerTerritory[territoryIndex] == True:
+                if territoryIndex < self.breeding["Highest Unlocked Territory Number"]:
                     #Can't decide which of these 3 will end up being the most useful, so assigning them all for now
                     self.breeding['Territories'][territoryNames[territoryIndex+1]] = {'Unlocked': True}
                     self.breeding["Highest Unlocked Territory Number"] = territoryIndex+1
                     self.breeding["Highest Unlocked Territory Name"] = territoryNames[territoryIndex+1]
+                else:
+                    self.breeding['Territories'][territoryNames[territoryIndex + 1]] = {'Unlocked': False}
             except:
                 self.breeding['Territories'][territoryNames[territoryIndex + 1]] = {'Unlocked': False}
 
