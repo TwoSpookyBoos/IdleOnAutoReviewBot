@@ -2601,16 +2601,14 @@ class Account:
 
     def _parse_w4_breeding_territories(self, rawPets, rawTerritory):
         self.breeding["Highest Unlocked Territory Number"] = safer_get(self.raw_optlacc_dict, 85, 0)
+        self.breeding["Highest Unlocked Territory Name"] = territoryNames[min(maxNumberOfTerritories, self.breeding["Highest Unlocked Territory Number"])]
+
         for territoryIndex in range(0, maxNumberOfTerritories):
-            try:
-                if territoryIndex < self.breeding["Highest Unlocked Territory Number"]:
-                    #Can't decide which of these 3 will end up being the most useful, so assigning them all for now
-                    self.breeding['Territories'][territoryNames[territoryIndex+1]] = {'Unlocked': True}
-                    self.breeding["Highest Unlocked Territory Number"] = territoryIndex+1
-                    self.breeding["Highest Unlocked Territory Name"] = territoryNames[territoryIndex+1]
-                else:
-                    self.breeding['Territories'][territoryNames[territoryIndex + 1]] = {'Unlocked': False}
-            except:
+            if territoryIndex < self.breeding["Highest Unlocked Territory Number"]:
+                #Can't decide which of these 3 will end up being the most useful, so assigning them all for now
+                self.breeding['Territories'][territoryNames[territoryIndex+1]] = {'Unlocked': True}
+
+            else:
                 self.breeding['Territories'][territoryNames[territoryIndex + 1]] = {'Unlocked': False}
 
     def _parse_w4_breeding_pets(self, rawBreeding):
