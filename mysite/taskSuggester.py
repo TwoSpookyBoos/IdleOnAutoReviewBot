@@ -167,7 +167,7 @@ def main(inputData, runType="web"):
     headerData = HeaderData(inputData)
     logger.info(f"{headerData.last_update = }")
 
-    logger.debug(session_data.account.ballot['Buffs'])
+    #logger.debug(session_data.account.ballot['Buffs'])
 
     if runType == "consoleTest":
         return "Pass"
