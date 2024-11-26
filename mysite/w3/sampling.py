@@ -257,7 +257,6 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     charm_multi = 1.25
     charm_multi_active = charm_multi if session_data.account.sneaking['PristineCharms']['Lolly Flower']['Obtained'] else 1
 
-    equinoxMulti = ValueToMulti(session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel'])
     ballot_active = session_data.account.ballot['CurrentBuff'] == 11
     if ballot_active:
         ballot_status = "is Active"
@@ -345,12 +344,21 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
         goal=1
     ))
     po_AdviceDict[aw_label].append(Advice(
-        label=f"{{{{ Equinox|#equinox}}}}: Voter Rights: {equinoxMulti:.2f}/1.{session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']}x"
+        label=f"{{{{ Equinox|#equinox}}}}: Voter Rights: {ValueToMulti(session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel']):.2f}"
+              f"/1.{session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']}x"
               f" to Weekly Ballot"
               f"<br>(Already included above)",
         picture_class="voter-rights",
         progression=session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel'],
         goal=session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']
+    ))
+    # Cosmos > IdleOn Majik #4 Voter Integrity
+    voter_integrity = session_data.account.caverns['Majiks']['Voter Integrity']
+    po_AdviceDict[aw_label].append(Advice(
+        label=f"Voter Integrity {{{{ Cavern Majik|#villagers }}}}: {voter_integrity['Description']}",
+        picture_class=f"{voter_integrity['MajikType']}-majik-{'un' if voter_integrity['Level'] == 0 else ''}purchased",
+        progression=voter_integrity['Level'],
+        goal=voter_integrity['MaxLevel']
     ))
 
     po_AdviceDict[cs_label].append(Advice(

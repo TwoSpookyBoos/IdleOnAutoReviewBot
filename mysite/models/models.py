@@ -1235,6 +1235,7 @@ class Account:
         self._parse_wave_1(run_type)
         self._calculate_wave_1()
         self._calculate_wave_2()
+        self._calculate_wave_3()
 
     def _prep_alerts_AG(self):
         self.alerts_AdviceDict = {
@@ -2969,7 +2970,7 @@ class Account:
                         'Level': raw_majiks[majik_type][majik_index],
                         'MaxLevel': majik_data['MaxLevel'],
                         'Description': majik_data['Description'],
-                        'Value': 0  #Calculated later in _calculate_caverns_majiks
+                        #'Value': 0  #Calculated later in _calculate_caverns_majiks
                     }
                 except:
                     self.caverns['Majiks'][majik_data['Name']] = {
@@ -2978,7 +2979,7 @@ class Account:
                         'Level': 0,
                         'MaxLevel': majik_data['MaxLevel'],
                         'Description': majik_data['Description'],
-                        'Value': 0  # Calculated later in _calculate_caverns_majiks
+                        #'Value': 0  # Calculated later in _calculate_caverns_majiks
                     }
 
     def _parse_caverns_schematics(self, raw_schematics_list):
@@ -3573,6 +3574,68 @@ class Account:
                 pass
 
     def _calculate_wave_1(self):
+        self._calculate_caverns_majiks()
+
+    def _calculate_caverns_majiks(self):
+        for majik_type, majiks in caverns_conjuror_majiks.items():
+            for majik_index, majik_data in enumerate(majiks):
+                if majik_data['Scaling'] == 'add':
+                    try:
+                        self.caverns['Majiks'][majik_data['Name']]['Value'] = (
+                            self.caverns['Majiks'][majik_data['Name']]['Level'] * majik_data['BonusPerLevel']
+                        )
+                        self.caverns['Majiks'][majik_data['Name']]['MaxValue'] = (
+                           majik_data['MaxLevel'] * majik_data['BonusPerLevel']
+                        )
+                    except Exception as e:
+                        print(f"Caverns Majik value calc error for level {self.caverns['Majiks'][majik_data['Name']]['Level']} {majik_data['Name']}: {e}")
+                        self.caverns['Majiks'][majik_data['Name']]['Value'] = 0
+                        self.caverns['Majiks'][majik_data['Name']]['MaxValue'] = (
+                                majik_data['MaxLevel'] * majik_data['BonusPerLevel']
+                        )
+                elif majik_data['Scaling'] == 'value':
+                    try:
+                        self.caverns['Majiks'][majik_data['Name']]['Value'] = (ValueToMulti(
+                            self.caverns['Majiks'][majik_data['Name']]['Level'] * majik_data['BonusPerLevel']
+                        ))
+                        self.caverns['Majiks'][majik_data['Name']]['MaxValue'] = (ValueToMulti(
+                            majik_data['MaxLevel'] * majik_data['BonusPerLevel']
+                        ))
+                    except:
+                        print(f"Caverns Majik value calc error for level {self.caverns['Majiks'][majik_data['Name']]['Level']} {majik_data['Name']}: {e}")
+                        self.caverns['Majiks'][majik_data['Name']]['Value'] = (ValueToMulti(
+                            0 * majik_data['BonusPerLevel']
+                        ))
+                        self.caverns['Majiks'][majik_data['Name']]['MaxValue'] = (ValueToMulti(
+                            majik_data['MaxLevel'] * majik_data['BonusPerLevel']
+                        ))
+                elif majik_data['Scaling'] == 'multi':
+                    try:
+                        self.caverns['Majiks'][majik_data['Name']]['Value'] = (
+                            # BonusPerLevel to the power of Level
+                            majik_data['BonusPerLevel'] ** self.caverns['Majiks'][majik_data['Name']]['Level']
+                        )
+                        self.caverns['Majiks'][majik_data['Name']]['MaxValue'] = (
+                            # BonusPerLevel to the power of Level
+                            majik_data['BonusPerLevel'] ** majik_data['MaxLevel']
+                        )
+                    except Exception as e:
+                        print(f"Caverns Majik value calc error for level {self.caverns['Majiks'][majik_data['Name']]['Level']} {majik_data['Name']}: {e}")
+                        self.caverns['Majiks'][majik_data['Name']]['Value'] = (
+                            # BonusPerLevel to the power of Level
+                                0
+                        )
+                        self.caverns['Majiks'][majik_data['Name']]['MaxValue'] = (
+                            # BonusPerLevel to the power of Level
+                                majik_data['BonusPerLevel'] ** majik_data['MaxLevel']
+                        )
+                self.caverns['Majiks'][majik_data['Name']]['Description'] = (
+                    f"{self.caverns['Majiks'][majik_data['Name']]['Value']}/{self.caverns['Majiks'][majik_data['Name']]['MaxValue']}"
+                    f"{self.caverns['Majiks'][majik_data['Name']]['Description']}"
+                )
+                #print(f"{majik_data['Name']} value set to {self.caverns['Majiks'][majik_data['Name']]['Value']}")
+
+    def _calculate_wave_2(self):
         self._calculate_general()
         self._calculate_w1()
         self._calculate_w2()
@@ -3782,7 +3845,11 @@ class Account:
             # After the +1, 0/1/2/3
 
     def _calculate_w2_ballot(self):
-        equinoxMulti = ValueToMulti(self.equinox_bonuses['Voter Rights']['CurrentLevel'])
+        equinoxMulti = ValueToMulti(
+            self.equinox_bonuses['Voter Rights']['CurrentLevel']
+            + self.caverns['Majiks']['Voter Integrity']['Value']
+            + self.summoning['Endless Bonuses']["% Ballot Bonus"]
+        )
         for buffIndex, buffValuesDict in self.ballot['Buffs'].items():
             self.ballot['Buffs'][buffIndex]['Value'] *= equinoxMulti
             # Check for + or +x% replacements
@@ -4021,52 +4088,11 @@ class Account:
         return ceil(cost)
 
     def _calculate_caverns(self):
-        self._calculate_caverns_majiks()
+        #self._calculate_caverns_majiks()
         self._calculate_caverns_measurements()
         self._calculate_caverns_the_well()
         self._calculate_caverns_monuments()
         self._calculate_caverns_the_bell()
-
-    def _calculate_caverns_majiks(self):
-        for majik_type, majiks in caverns_conjuror_majiks.items():
-            for majik_index, majik_data in enumerate(majiks):
-                if majik_data['Scaling'] == 'add':
-                    try:
-                        self.caverns['Majiks'][majik_data['Name']]['Value'] = (
-                            self.caverns['Majiks'][majik_data['Name']]['Level'] * majik_data['BonusPerLevel']
-                        )
-                        self.caverns['Majiks'][majik_data['Name']]['MaxValue'] = (
-                           majik_data['MaxLevel'] * majik_data['BonusPerLevel']
-                        )
-                    except Exception as e:
-                        print(f"Caverns Majik value calc error for level {self.caverns['Majiks'][majik_data['Name']]['Level']} {majik_data['Name']}: {e}")
-                elif majik_data['Scaling'] == 'value':
-                    try:
-                        self.caverns['Majiks'][majik_data['Name']]['Value'] = (ValueToMulti(
-                            self.caverns['Majiks'][majik_data['Name']]['Level'] * majik_data['BonusPerLevel']
-                        ))
-                        self.caverns['Majiks'][majik_data['Name']]['MaxValue'] = (ValueToMulti(
-                            majik_data['MaxLevel'] * majik_data['BonusPerLevel']
-                        ))
-                    except:
-                        print(f"Caverns Majik value calc error for level {self.caverns['Majiks'][majik_data['Name']]['Level']} {majik_data['Name']}: {e}")
-                elif majik_data['Scaling'] == 'multi':
-                    try:
-                        self.caverns['Majiks'][majik_data['Name']]['Value'] = (
-                            # BonusPerLevel to the power of Level
-                            majik_data['BonusPerLevel'] ** self.caverns['Majiks'][majik_data['Name']]['Level']
-                        )
-                        self.caverns['Majiks'][majik_data['Name']]['MaxValue'] = (
-                            # BonusPerLevel to the power of Level
-                            majik_data['BonusPerLevel'] ** majik_data['MaxLevel']
-                        )
-                    except Exception as e:
-                        print(f"Caverns Majik value calc error for level {self.caverns['Majiks'][majik_data['Name']]['Level']} {majik_data['Name']}: {e}")
-                self.caverns['Majiks'][majik_data['Name']]['Description'] = (
-                    f"{self.caverns['Majiks'][majik_data['Name']]['Value']}/{self.caverns['Majiks'][majik_data['Name']]['MaxValue']}"
-                    f"{self.caverns['Majiks'][majik_data['Name']]['Description']}"
-                )
-                #print(f"{majik_data['Name']} value set to {self.caverns['Majiks'][majik_data['Name']]['Value']}")
 
     def _calculate_caverns_measurements(self):
         total_skill_levels = 0
@@ -4573,7 +4599,7 @@ class Account:
                 * self.farming['OG']['Pristine Multi']
         )
 
-    def _calculate_wave_2(self):
+    def _calculate_wave_3(self):
         self._calculate_w3_library_max_book_levels()
         self._calculate_w3_equinox_max_levels()
         self._calculate_general_character_over_books()
