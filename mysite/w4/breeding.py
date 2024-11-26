@@ -123,6 +123,7 @@ def getShinySpeedSourcesAdviceGroup(fasterShinyPetTotalLevels) -> AdviceGroup:
     ))
     for advice in session_data.account.summoning['WinnerBonusesAdvice']:
         sps_adviceDict["Multi Group A- Summoning Winner Bonus"].append(advice)
+    sps_adviceDict["Multi Group A- Summoning Winner Bonus"].extend(session_data.account.summoning['WinnerBonusesSummaryFull'])
 
     for group_name in sps_adviceDict:  #["Stamps", "Account Wide", "Character Specific"]:
         for advice in sps_adviceDict[group_name]:

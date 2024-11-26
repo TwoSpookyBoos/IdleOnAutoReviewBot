@@ -7296,6 +7296,7 @@ summoningRewards = [
 summoning_rewards_that_dont_multiply_base_value = [
     summoningRewards[0],   #Placeholder
     summoningRewards[21],  #Stamp Levels
+    summoningRewards[23],  #Ballot Bonus
     summoningRewards[25],  #Equinox Levels
     summoningRewards[32],  #Winner Bonuses
 ]

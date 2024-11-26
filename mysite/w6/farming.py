@@ -502,6 +502,7 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
     #Winner Bonus Increases
     for advice in session_data.account.summoning['WinnerBonusesAdvice']:
         evo_advices[summon].append(advice)
+    evo_advices[summon].extend(session_data.account.summoning['WinnerBonusesSummaryFull'])
 
 #Star Sign
     evo_advices[ss].append(session_data.account.star_sign_extras['SeraphAdvice'])
@@ -673,6 +674,7 @@ def getSpeedAdviceGroup(farming) -> AdviceGroup:
     # Winner Bonus Increases
     for advice in session_data.account.summoning['WinnerBonusesAdvice']:
         speed_advices[summon].append(advice)
+    speed_advices[summon].extend(session_data.account.summoning['WinnerBonusesSummaryFull'])
 
 #Vial and Market
     # Vial

@@ -104,6 +104,7 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
     ))
     for advice in session_data.account.summoning['WinnerBonusesAdvice']:
         bookLevelAdvices[summoningSubgroup].append(advice)
+    bookLevelAdvices[summoningSubgroup].append(session_data.account.summoning['WinnerBonusesSummaryPartial'])
 
     for group_name in bookLevelAdvices:
         for advice in bookLevelAdvices[group_name]:

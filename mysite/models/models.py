@@ -64,11 +64,13 @@ from consts import (
     jade_emporium, pristineCharmsList, sneakingGemstonesFirstIndex, sneakingGemstonesList, sneakingGemstonesStatList,
     getMoissaniteValue, getGemstoneBaseValue, getGemstoneBoostedValue, getGemstonePercent,
     marketUpgradeDetails, landrankDict, cropDepotDict, maxFarmingCrops, maxFarmingValue,
-    summoningBattleCountsDict, summoningDict, summoning_endlessEnemies, summoning_endlessDict, max_summoning_upgrades, summoning_rewards_that_dont_multiply_base_value,
+    summoningBattleCountsDict, summoningDict, summoning_endlessEnemies, summoning_endlessDict, max_summoning_upgrades,
+    summoning_rewards_that_dont_multiply_base_value,
     # Caverns
     caverns_villagers, caverns_conjuror_majiks, caverns_engineer_schematics, caverns_engineer_schematics_unlock_order, caverns_cavern_names,
     caverns_measurer_measurements, getCavernResourceImage, schematics_unlocking_buckets, max_buckets, max_sediments, sediment_bars, getVillagerEXPRequired,
-    monument_bonuses, bell_clean_improvements, bell_ring_bonuses, getBellExpRequired, getBellImprovementBonus, monument_names, released_monuments
+    monument_bonuses, bell_clean_improvements, bell_ring_bonuses, getBellExpRequired, getBellImprovementBonus, monument_names, released_monuments,
+    infinity_string
 )
 
 
@@ -4242,17 +4244,31 @@ class Account:
         else:
             winzLanternPostString = ""
 
-        mgb = ValueToMulti(
+        mgb_partial = ValueToMulti(
             (25 * numberOfArtifactTiers)
             + self.merits[5][4]['MaxLevel']
             + 1  #int(self.achievements['Spectre Stars'])
             + 1  #int(self.achievements['Regalis My Beloved'])
         )
-        player_mgb = ValueToMulti(
+        mgb_full = ValueToMulti(
+            (25 * numberOfArtifactTiers)
+            + self.merits[5][4]['MaxLevel']
+            + 1  #int(self.achievements['Spectre Stars'])
+            + 1  #int(self.achievements['Regalis My Beloved'])
+            + self.summoning['Endless Bonuses']['x Winner Bonuses']
+        )
+        player_mgb_partial = ValueToMulti(
             (25 * self.sailing['Artifacts']['The Winz Lantern']['Level'])
             + self.merits[5][4]['Level']
             + int(self.achievements['Spectre Stars']['Complete'])
             + int(self.achievements['Regalis My Beloved']['Complete'])
+        )
+        player_mgb_full = ValueToMulti(
+            (25 * self.sailing['Artifacts']['The Winz Lantern']['Level'])
+            + self.merits[5][4]['Level']
+            + int(self.achievements['Spectre Stars']['Complete'])
+            + int(self.achievements['Regalis My Beloved']['Complete'])
+            + self.summoning['Endless Bonuses']['x Winner Bonuses']
         )
 
         self.summoning['WinnerBonusesAdvice'].append(Advice(
@@ -4283,16 +4299,32 @@ class Account:
             progression=self.summoning['SanctuaryTotal'] if not self.achievements['Regalis My Beloved']['Complete'] else 360,
             goal=360
         ))
-        self.summoning['WinnerBonusesMulti'] = max(1, player_mga * player_mgb)
-        self.summoning['WinnerBonusesMultiMax'] = max(1, mga * mgb)
-        self.summoning['WinnerBonusesAdvice'].append(Advice(
-            label=f"Winner Bonuses Multi: {self.summoning['WinnerBonusesMulti']:.3f}/{self.summoning['WinnerBonusesMultiMax']:.3f}x",
+        self.summoning['WinnerBonusesMultiPartial'] = max(1, player_mga * player_mgb_partial)
+        self.summoning['WinnerBonusesMultiMaxPartial'] = max(1, mga * mgb_partial)
+        self.summoning['WinnerBonusesSummaryPartial'] = Advice(
+            label=f"Winner Bonuses Multi: {self.summoning['WinnerBonusesMultiPartial']:.3f}/{self.summoning['WinnerBonusesMultiMaxPartial']:.3f}x",
             picture_class="summoning",
-            progression=f"{self.summoning['WinnerBonusesMulti']:.3f}",
-            goal=f"{self.summoning['WinnerBonusesMultiMax']:.3f}",
+            progression=f"{self.summoning['WinnerBonusesMultiPartial']:.3f}",
+            goal=f"{self.summoning['WinnerBonusesMultiMaxPartial']:.3f}",
             #unit="x"
-        ))
-        #print(f"Summoning Winner Bonus Multis: {mga} * {mgb} = {self.summoning['WinnerBonusesMulti']}")
+        )
+        self.summoning['WinnerBonusesMultiFull'] = max(1, player_mga * player_mgb_full)
+        self.summoning['WinnerBonusesMultiMaxFull'] = max(1, mga * mgb_full)
+        self.summoning['WinnerBonusesSummaryFull'] = [
+            Advice(
+                label=f"Winner Bonuses multi from Endless Summoning: {self.summoning['Endless Bonuses']['x Winner Bonuses']}/{infinity_string}",
+                picture_class='cyan-upgrade-13',
+                progression=self.summoning['Endless Bonuses']['x Winner Bonuses'],
+                goal=infinity_string
+            ),
+            Advice(
+                label=f"Winner Bonuses Multi: {self.summoning['WinnerBonusesMultiFull']:.3f}/{self.summoning['WinnerBonusesMultiMaxFull']:.3f}x",
+                picture_class="summoning",
+                progression=f"{self.summoning['WinnerBonusesMultiFull']:.3f}",
+                goal=f"{self.summoning['WinnerBonusesMultiMaxFull']:.3f}",
+                # unit="x"
+            )
+        ]
 
     def _calculate_w6_farming(self):
         self._calculate_w6_farming_crop_depot()
@@ -4440,7 +4472,7 @@ class Account:
             for battle in battlesList:
                 if self.summoning['Battles'][color] >= battle:
                     battle_reward_total += self.summoning["BattleDetails"][color][battle]['RewardBaseValue']
-        self.farming['Evo']['Summon Multi'] = ValueToMulti(self.summoning['WinnerBonusesMulti'] * battle_reward_total)
+        self.farming['Evo']['Summon Multi'] = ValueToMulti(self.summoning['WinnerBonusesMultiFull'] * battle_reward_total)
         # Starsign
         self.farming['Evo']['Starsign Final Value'] = (
                 3 * self.star_signs['Cropiovo Minor']['Unlocked']
@@ -4495,7 +4527,7 @@ class Account:
             for battle in battlesList:
                 if self.summoning['Battles'][color] >= battle:
                     battle_reward_total += self.summoning["BattleDetails"][color][battle]['RewardBaseValue']
-        self.farming['Speed']['Summon Multi'] = ValueToMulti(self.summoning['WinnerBonusesMulti'] * battle_reward_total)
+        self.farming['Speed']['Summon Multi'] = ValueToMulti(self.summoning['WinnerBonusesMultiFull'] * battle_reward_total)
         # Vial and Day Market
         self.farming['Speed']['Vial Value'] = self.alchemy_vials['Ricecakorade (Rice Cake)']['Value'] * self.vialMasteryMulti
         self.farming['Speed']['Vial Value'] *= 2 if self.labBonuses['My 1st Chemistry Set']['Enabled'] else 1
@@ -4568,7 +4600,7 @@ class Account:
         # summGroupB = 1 + (.3 * self.sneaking.get('PristineCharms', {}).get('Crystal Comb', 0))
         self.library['SummoningSum'] = round(
             10.5 * (self.summoning['Battles']['Cyan'] >= 14)
-            * self.summoning['WinnerBonusesMulti']
+            * self.summoning['WinnerBonusesMultiPartial']
         )
         self.library['MaxBookLevel'] = 100 + self.library['StaticSum'] + self.library['ScalingSum'] + self.library['SummoningSum']
 
@@ -4579,7 +4611,6 @@ class Account:
                 if bonus_details['SummoningExpands']:
                     self.equinox_bonuses[bonus]['PlayerMaxLevel'] += bonus_equinox_levels
                     self.equinox_bonuses[bonus]['FinalMaxLevel'] += bonus_equinox_levels
-
 
     def _calculate_general_character_over_books(self):
         self.bonus_talents = {
