@@ -3533,8 +3533,6 @@ class Account:
                         f"{ValueToMulti(self.summoning['BattleDetails'][colorName][battleIndex + 1]['RewardBaseValue'])}"
                         f"{self.summoning['BattleDetails'][colorName][battleIndex + 1]['RewardType']}"
                     )
-        for k in self.summoning:
-            print(f"self.summoning[{k}]: {self.summoning[k]}")
 
     def _parse_w6_summoning_battles_endless(self):
         self.summoning['Endless Bonuses'] = {}
