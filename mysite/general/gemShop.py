@@ -1,5 +1,5 @@
 from models.models import Advice, AdviceGroup, AdviceSection
-from utils.data_formatting import safe_loads
+from utils.data_formatting import safe_loads, safer_get
 from utils.logging import get_logger
 from consts import gemShop_progressionTiers, maxFarmingCrops, currentWorld, breedingTotalPets, cookingCloseEnough, break_you_best
 from flask import g as session_data
@@ -17,32 +17,32 @@ def try_exclude_DungeonTickets(exclusionList):
             return
 
     #Scenario 2: Over Rank 40 or 100+ tickets
-    if session_data.account.raw_optlacc_dict:
-        try:
-            ##Blatantly stolen list from IE lol
-            #https://github.com/Sludging/idleon-efficiency/blob/74f83dd4c0b15f399ffb1f87bc2bc8c9bc9b924c/data/domain/dungeons.tsx#L16
-            dungeonLevelsList = [0, 4, 10, 18, 28, 40, 70, 110, 160, 230, 320, 470, 670, 940, 1310, 1760, 2400, 3250, 4000, 5000, 6160, 8000, 10000, 12500,
-                                 15000, 18400, 21000, 25500, 30500, 36500, 45400, 52000, 61000, 72500, 85000, 110000, 125000, 145000, 170000, 200000, 250000,
-                                 275000, 325000, 400000, 490000, 600000, 725000, 875000, 1000000, 1200000, 1500000, 3000000, 5000000, 10000000, 20000000,
-                                 30000000, 40000000, 50000000, 60000000, 80000000, 100000000, 999999999, 999999999, 999999999, 999999999, 999999999, 1999999999,
-                                 1999999999, 1999999999, 1999999999, 1999999999]
-            playerDungeonXP = session_data.account.raw_optlacc_dict.get(71, 0)
-            playerDungeonRank = 0
-            for xpRequirement in dungeonLevelsList:
-                if playerDungeonXP >= xpRequirement:
-                    playerDungeonRank += 1
-            playerCredits = session_data.account.raw_optlacc_dict.get(72, 0)
-            playerFlurbo = session_data.account.raw_optlacc_dict.get(73, 0)
-            playerBoosters = session_data.account.raw_optlacc_dict.get(76, 1) - 1  #The true value is always 1 less than JSON. Silly Lava
-        except:
-            playerDungeonRank = 1
-            playerCredits = 0
-            playerFurbo = 0
-            playerBoosters = 0
-        if playerDungeonRank >= 40 or playerBoosters >= 100:
-            if 'Weekly Dungeon Boosters' not in exclusionList:
-                exclusionList.append('Weekly Dungeon Boosters')
-                return
+    try:
+        ##Blatantly stolen list from IE lol
+        #https://github.com/Sludging/idleon-efficiency/blob/74f83dd4c0b15f399ffb1f87bc2bc8c9bc9b924c/data/domain/dungeons.tsx#L16
+        dungeonLevelsList = [0, 4, 10, 18, 28, 40, 70, 110, 160, 230, 320, 470, 670, 940, 1310, 1760, 2400, 3250, 4000, 5000, 6160, 8000, 10000, 12500,
+                             15000, 18400, 21000, 25500, 30500, 36500, 45400, 52000, 61000, 72500, 85000, 110000, 125000, 145000, 170000, 200000, 250000,
+                             275000, 325000, 400000, 490000, 600000, 725000, 875000, 1000000, 1200000, 1500000, 3000000, 5000000, 10000000, 20000000,
+                             30000000, 40000000, 50000000, 60000000, 80000000, 100000000, 999999999, 999999999, 999999999, 999999999, 999999999, 1999999999,
+                             1999999999, 1999999999, 1999999999, 1999999999]
+        #TODO: Move this parsing to Account
+        playerDungeonXP = safer_get(session_data.account.raw_optlacc_dict, 71, 0)
+        playerDungeonRank = 0
+        for xpRequirement in dungeonLevelsList:
+            if playerDungeonXP >= xpRequirement:
+                playerDungeonRank += 1
+        #playerCredits = safer_get(session_data.account.raw_optlacc_dict, 72, 0)
+        #playerFlurbo = safer_get(session_data.account.raw_optlacc_dict, 73, 0)
+        playerBoosters = safer_get(session_data.account.raw_optlacc_dict, 76, 1) - 1  #The true value is always 1 less than JSON. Silly Lava
+    except:
+        playerDungeonRank = 1
+        #playerCredits = 0
+        #playerFurbo = 0
+        playerBoosters = 0
+    if playerDungeonRank >= 40 or playerBoosters >= 100:
+        if 'Weekly Dungeon Boosters' not in exclusionList:
+            exclusionList.append('Weekly Dungeon Boosters')
+            return
 
 def try_exclude_SoupedUpTube(exclusionList):
     sum_LabLevels = sum(session_data.account.all_skills["Lab"])

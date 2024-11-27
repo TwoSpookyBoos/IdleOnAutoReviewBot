@@ -1,7 +1,7 @@
 import math
 from flask import g as session_data
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.data_formatting import mark_advice_completed
+from utils.data_formatting import mark_advice_completed, safer_get
 from utils.text_formatting import notateNumber
 from utils.logging import get_logger
 from consts import (
@@ -223,7 +223,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     sm_multi = ValueToMulti(sm_sum)
 
     gr_level = session_data.account.sailing['Artifacts']['Gold Relic']['Level']
-    gr_days = session_data.account.raw_optlacc_dict.get(125, 0)
+    gr_days = safer_get(session_data.account.raw_optlacc_dict, 125, 0)
     gr_multi = ValueToMulti(gr_days * goldrelic_multisDict.get(gr_level, 0))
 
     anyDKMaxBooked = False
@@ -250,7 +250,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
             bestKotRPresetLevel = dk.secondary_preset_talents.get("178", 0)
 
     talent_value = lavaFunc('decay', bestKotRPresetLevel, 5, 150)
-    orb_kills = session_data.account.raw_optlacc_dict.get(138, 0)
+    orb_kills = session_data.account.dk_orb_kills
     pow10_kills = math.log(orb_kills,10) if orb_kills > 0 else 0
     kotr_multi = max(1, ValueToMulti(talent_value * pow10_kills))
 

@@ -1697,7 +1697,7 @@ class Account:
 
     def _parse_w1_owl(self):
         self.owl = {
-            'Discovered': bool(safer_get(self.raw_optlacc_dict, 265, False)),
+            'Discovered': safer_get(self.raw_optlacc_dict, 265, False),
             'FeatherGeneration': safer_get(self.raw_optlacc_dict, 254, 0),
             'BonusesOfOrion': safer_get(self.raw_optlacc_dict, 255, 0),
             'FeatherRestarts': safer_get(self.raw_optlacc_dict, 258, 0),
@@ -1954,7 +1954,7 @@ class Account:
 
     def _parse_w2_ballot(self):
         self.ballot = {
-            "CurrentBuff": self.raw_serverVars_dict.get('voteCategories', ["Unknown"])[0],
+            "CurrentBuff": safer_get(self.raw_serverVars_dict, 'voteCategories', ["Unknown"])[0],
             "Buffs": {}
         }
         for buffIndex, buffValuesDict in ballotDict.items():
@@ -2010,11 +2010,11 @@ class Account:
 
     def _parse_w2_islands(self):
         self.islands = {
-            'Trash': int(float(safer_get(self.raw_optlacc_dict, 161, 0))),  #[161]: 362.202271805249
-            'Bottles': int(float(safer_get(self.raw_optlacc_dict, 162, 0))),  #[162]: 106.90044163281846
+            'Trash': safer_get(self.raw_optlacc_dict, 161, 0),  #[161]: 362.202271805249
+            'Bottles': safer_get(self.raw_optlacc_dict, 162, 0),  #[162]: 106.90044163281846
         }
 
-        raw_islands_list = list(str(safer_get(self.raw_optlacc_dict, 169, '')))  #[169]: "_dcabe" or could be int 0 for whatever reason...
+        raw_islands_list = list(safer_get(self.raw_optlacc_dict, 169, ''))  #[169]: "_dcabe" or could be int 0 for whatever reason...
         for islandName, islandData in islands_dict.items():
             self.islands[islandName] = {
                 'Unlocked': islandData['Code'] in raw_islands_list,
@@ -2289,7 +2289,7 @@ class Account:
 
     def _parse_w3_atom_collider(self):
         self.atom_collider = {
-            'OnOffStatus': bool(safer_get(self.raw_optlacc_dict, 132, 1)),
+            'OnOffStatus': safer_get(self.raw_optlacc_dict, 132, True),
         }
         try:
             self.atom_collider['StorageLimit'] = colliderStorageLimitList[safer_get(self.raw_optlacc_dict, 133, -1)]
@@ -4087,7 +4087,7 @@ class Account:
     def _divinityUpgradeCost(self, offeringIndex, unlockedDivinity):
         cost = (20 * pow(unlockedDivinity + 1.3, 2.3) * pow(2.2, unlockedDivinity) + 60) * divinity_offeringsDict.get(offeringIndex, {}).get("Chance", 1) / 100
         if unlockedDivinity >= 3:
-            cost = cost * pow(min(1.8, max(1, 1 + self.raw_serverVars_dict.get("DivCostAfter3", divinity_DivCostAfter3) / 100)), unlockedDivinity - 2)
+            cost = cost * pow(min(1.8, max(1, 1 + safer_get(self.raw_serverVars_dict, "DivCostAfter3", divinity_DivCostAfter3) / 100)), unlockedDivinity - 2)
         return ceil(cost)
 
     def _calculate_caverns(self):
@@ -4787,7 +4787,7 @@ class Account:
     def _make_cards(self):
         card_counts = safe_loads(self.raw_data.get(self._key_cards, {}))
         cards = [
-            Card(codename, name, cardset, int(float(safer_get(card_counts, codename, 0))), coefficient)
+            Card(codename, name, cardset, safer_get(card_counts, codename, 0), coefficient)
             for cardset, cards in card_data.items()
             for codename, (name, coefficient) in cards.items()
         ]
