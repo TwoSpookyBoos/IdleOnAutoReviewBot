@@ -3472,6 +3472,7 @@ class Account:
         self._parse_w6_summoning_battles(raw_summoning_list[1])
 
         #Endless Summoning
+        self.summoning["BattleDetails"]['Endless'] = {}
         self._parse_w6_summoning_battles_endless()
 
         # raw_summoning_list[2] looks to be essence owned
@@ -3488,12 +3489,13 @@ class Account:
         self.summoning['WinnerBonusesAdvice'] = []
 
     def _parse_w6_summoning_battles(self, rawBattles):
+        regular_battles = [battle for battle in rawBattles if not battle.startswith('rift')]
         try:
-            self.summoning['Battles']['Total'] = len(rawBattles)
+            self.summoning['Battles']['NormalTotal'] = len(regular_battles)
         except:
-            self.summoning['Battles']['Total'] = 0
+            self.summoning['Battles']['NormalTotal'] = 0
 
-        if self.summoning['Battles']['Total'] >= summoningBattleCountsDict["All"]:
+        if self.summoning['Battles']['NormalTotal'] >= summoningBattleCountsDict["Normal"]:
             self.summoning["Battles"] = summoningBattleCountsDict
             self.summoning['AllBattlesWon'] = True
         else:
@@ -3503,6 +3505,9 @@ class Account:
                 for battleIndex, battleValuesDict in colorDict.items():
                     if battleIndex + 1 >= self.summoning["Battles"][colorName] and battleValuesDict['EnemyID'] in rawBattles:
                         self.summoning["Battles"][colorName] = battleIndex + 1
+
+        #Endless doesn't follow the same structure as the once-only battles
+        self.summoning['Battles']['Endless'] = safer_get(self.raw_optlacc_dict, 319, 0)
 
         for colorName, colorDict in summoningDict.items():
             for battleIndex, battleValuesDict in colorDict.items():
@@ -3528,10 +3533,10 @@ class Account:
                         f"{ValueToMulti(self.summoning['BattleDetails'][colorName][battleIndex + 1]['RewardBaseValue'])}"
                         f"{self.summoning['BattleDetails'][colorName][battleIndex + 1]['RewardType']}"
                     )
+        for k in self.summoning:
+            print(f"self.summoning[{k}]: {self.summoning[k]}")
 
     def _parse_w6_summoning_battles_endless(self):
-        self.summoning['Battles']['Endless'] = safer_get(self.raw_optlacc_dict, 319, 0)
-        self.summoning["BattleDetails"]['Endless'] = {}
         self.summoning['Endless Bonuses'] = {}
         true_battle_index = 0
         while true_battle_index < max(40, self.summoning['Battles']['Endless'] + 5):

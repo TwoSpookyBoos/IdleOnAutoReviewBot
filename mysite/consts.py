@@ -7729,7 +7729,7 @@ summoningBattleCountsDict = {
     # len(summoningDict["Red"]),
     # len(summoningDict["Cyan"]),
 }
-summoningBattleCountsDict["All"] = sum(summoningBattleCountsDict.values())
+summoningBattleCountsDict["Normal"] = sum(summoningBattleCountsDict.values())
 max_summoning_upgrades = 70  #Last verified as of 2.22 The Fixening
 
 ### SLAB CONSTS ###
