@@ -86,9 +86,11 @@ def getEquinoxProgressionTiersAdviceGroup():
             if session_data.account.equinox_bonuses[bonusName]['CurrentLevel'] < session_data.account.equinox_bonuses[bonusName]['FinalMaxLevel'] \
                     and session_data.account.equinox_bonuses[bonusName]['Unlocked'] == True:
                 if len(session_data.account.equinox_bonuses[bonusName]['RemainingUpgrades']) > 0:
-                    expandDreamMaxLevelEval = (f" (Increase max level by completing "
-                                               f"Dream{pl(session_data.account.equinox_bonuses[bonusName]['RemainingUpgrades'])}: "
-                                               f"{', '.join(str(dreamNumber) for dreamNumber in session_data.account.equinox_bonuses[bonusName]['RemainingUpgrades'])})")
+                    expandDreamMaxLevelEval = (
+                        f" (Increase max level by completing "
+                        f"Dream{pl(session_data.account.equinox_bonuses[bonusName]['RemainingUpgrades'])}: "
+                        f"{', '.join(str(dreamNumber) for dreamNumber in session_data.account.equinox_bonuses[bonusName]['RemainingUpgrades'])})"
+                    )
                 else:
                     expandDreamMaxLevelEval = ""
                 equinox_AdviceDict["TotalUpgrades"][optionalSubgroupName].append(Advice(
@@ -109,14 +111,16 @@ def getEquinoxProgressionTiersAdviceGroup():
         tier=f"{tier_TotalDreamsCompleted if tier_TotalDreamsCompleted < max_tier else ''}",
         pre_string=f"{'Informational- Complete all Equinox Dreams' if tier_TotalDreamsCompleted >= max_tier else 'Unlock more Equinox Bonuses'}",
         advices=equinox_AdviceDict["Dreams"],
-        post_string=f"{'New Bonuses unlock in a set order.They are not tied to certain Dreams.' if tier_TotalDreamsCompleted < max_tier else ''}",
+        post_string=f"{'New Bonuses unlock in a set order. They are not tied to certain Dreams.' if tier_TotalDreamsCompleted < max_tier else ''}",
         informational=True if tier_TotalDreamsCompleted >= max_tier else False
     )
     equinox_AdviceGroupDict["Complete Dreams"].remove_empty_subgroups()
 
+    bonus_max_levels = session_data.account.summoning['Endless Bonuses'].get('+ Equinox Max LV', 0)
     equinox_AdviceGroupDict["BonusUpgrades"] = AdviceGroup(
         tier="",
         pre_string="Upgrade more Equinox Bonuses",
+        post_string=f"+{bonus_max_levels} max levels from Endless Summoning already included" if bonus_max_levels > 0 else '',
         advices=equinox_AdviceDict['TotalUpgrades'],
         informational=True,
         completed=recommendedSubgroupName not in equinox_AdviceDict["TotalUpgrades"]

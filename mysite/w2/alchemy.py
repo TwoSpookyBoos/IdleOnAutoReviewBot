@@ -18,7 +18,7 @@ def getVialsProgressionTiersAdviceGroup():
             "Vials to max next": [],
         },
     }
-    info_tiers = 0
+    info_tiers = 1
     max_tier = vials_progressionTiers[-1][0] - info_tiers
     maxAdvicesPerGroup = 6
     tier_TotalVialsUnlocked = 0
@@ -119,8 +119,8 @@ def getVialsProgressionTiersAdviceGroup():
         vial_AdviceGroupDict["Total Unlocked Vials"].post_string = "For the most unlock chances per day, rapidly drop multiple stacks of items on the cauldron!"
 
     vial_AdviceGroupDict["Total Maxed Vials"] = AdviceGroup(
-        tier=str(tier_TotalVialsMaxed),
-        pre_string="Late Vial Goals",
+        tier=f"{tier_TotalVialsMaxed if tier_TotalVialsMaxed < max_tier else ''}",
+        pre_string=f"{'Informational- ' if tier_TotalVialsMaxed >= max_tier else ''}Late Vial Goals",
         post_string=advice_TrailingMaxedVials,
         advices=vial_AdviceDict["MaxVials"]
     )
@@ -630,7 +630,7 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
         + bd['Purple'][7]['RewardBaseValue']
         + bd['Cyan'][3]['RewardBaseValue']
     )
-    mgb = ValueToMulti(matches_total * session_data.account.summoning['WinnerBonusesMulti'])
+    mgb = ValueToMulti(matches_total * session_data.account.summoning['WinnerBonusesMultiFull'])
     mgb_label = f"Multi Group B: {mgb:.3f}x"
 
     # Multi Group C = Tuttle Vial
@@ -741,6 +741,7 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
     ))
     for advice in session_data.account.summoning['WinnerBonusesAdvice']:
         speed_Advice[mgb_label].append(advice)
+    speed_Advice[mgb_label].extend(session_data.account.summoning['WinnerBonusesSummaryFull'])
 
     # Multi Group C
     speed_Advice[mgc_label].append(Advice(
@@ -771,6 +772,23 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
         picture_class="ballot-17",
         progression=int(ballot_active),
         goal=1
+    ))
+    speed_Advice[mgd_label].append(Advice(
+        label=f"{{{{ Equinox|#equinox}}}}: Voter Rights: {ValueToMulti(session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel']):.2f}"
+              f"/1.{session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']}x"
+              f" to Weekly Ballot"
+              f"<br>(Already included above)",
+        picture_class="voter-rights",
+        progression=session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel'],
+        goal=session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']
+    ))
+    # Cosmos > IdleOn Majik #4 Voter Integrity
+    voter_integrity = session_data.account.caverns['Majiks']['Voter Integrity']
+    speed_Advice[mgd_label].append(Advice(
+        label=f"Voter Integrity {{{{ Cavern Majik|#villagers }}}}: {voter_integrity['Description']}",
+        picture_class=f"{voter_integrity['MajikType']}-majik-{'un' if voter_integrity['Level'] == 0 else ''}purchased",
+        progression=voter_integrity['Level'],
+        goal=voter_integrity['MaxLevel']
     ))
 
     for group_name in speed_Advice:

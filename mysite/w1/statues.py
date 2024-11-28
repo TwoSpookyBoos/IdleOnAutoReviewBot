@@ -1,6 +1,6 @@
 from models.models import Advice, AdviceGroup, AdviceSection
 from consts import maxTiersPerGroup, statueTypeList, statues_progressionTiers, statueCount, max_VialLevel, break_you_best
-from utils.data_formatting import mark_advice_completed
+from utils.data_formatting import mark_advice_completed, safer_get
 from utils.logging import get_logger
 from flask import g as session_data
 
@@ -70,7 +70,7 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
         progression=bestOrbBook,
         goal=session_data.account.library['MaxBookLevel']
     ))
-    tome_DropChance = session_data.account.raw_optlacc_dict.get(200, 1)
+    tome_DropChance = safer_get(session_data.account.raw_optlacc_dict, 200, 1)
     crystal_AdviceList.append(Advice(
         label=f"Minimum 10x Drop Rate (per Tome): {tome_DropChance:.2f}x",
         picture_class="drop-rate",

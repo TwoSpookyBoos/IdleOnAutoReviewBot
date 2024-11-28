@@ -1,7 +1,7 @@
 import math
 from flask import g as session_data
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.data_formatting import mark_advice_completed
+from utils.data_formatting import mark_advice_completed, safer_get
 from utils.text_formatting import notateNumber
 from utils.logging import get_logger
 from consts import (
@@ -223,7 +223,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     sm_multi = ValueToMulti(sm_sum)
 
     gr_level = session_data.account.sailing['Artifacts']['Gold Relic']['Level']
-    gr_days = session_data.account.raw_optlacc_dict.get(125, 0)
+    gr_days = safer_get(session_data.account.raw_optlacc_dict, 125, 0)
     gr_multi = ValueToMulti(gr_days * goldrelic_multisDict.get(gr_level, 0))
 
     anyDKMaxBooked = False
@@ -250,14 +250,13 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
             bestKotRPresetLevel = dk.secondary_preset_talents.get("178", 0)
 
     talent_value = lavaFunc('decay', bestKotRPresetLevel, 5, 150)
-    orb_kills = session_data.account.raw_optlacc_dict.get(138, 0)
+    orb_kills = session_data.account.dk_orb_kills
     pow10_kills = math.log(orb_kills,10) if orb_kills > 0 else 0
     kotr_multi = max(1, ValueToMulti(talent_value * pow10_kills))
 
     charm_multi = 1.25
     charm_multi_active = charm_multi if session_data.account.sneaking['PristineCharms']['Lolly Flower']['Obtained'] else 1
 
-    equinoxMulti = ValueToMulti(session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel'])
     ballot_active = session_data.account.ballot['CurrentBuff'] == 11
     if ballot_active:
         ballot_status = "is Active"
@@ -345,12 +344,21 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
         goal=1
     ))
     po_AdviceDict[aw_label].append(Advice(
-        label=f"{{{{ Equinox|#equinox}}}}: Voter Rights: {equinoxMulti:.2f}/1.{session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']}x"
+        label=f"{{{{ Equinox|#equinox}}}}: Voter Rights: {ValueToMulti(session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel']):.2f}"
+              f"/1.{session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']}x"
               f" to Weekly Ballot"
               f"<br>(Already included above)",
         picture_class="voter-rights",
         progression=session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel'],
         goal=session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']
+    ))
+    # Cosmos > IdleOn Majik #4 Voter Integrity
+    voter_integrity = session_data.account.caverns['Majiks']['Voter Integrity']
+    po_AdviceDict[aw_label].append(Advice(
+        label=f"Voter Integrity {{{{ Cavern Majik|#villagers }}}}: {voter_integrity['Description']}",
+        picture_class=f"{voter_integrity['MajikType']}-majik-{'un' if voter_integrity['Level'] == 0 else ''}purchased",
+        progression=voter_integrity['Level'],
+        goal=voter_integrity['MaxLevel']
     ))
 
     po_AdviceDict[cs_label].append(Advice(

@@ -322,14 +322,35 @@ def safe_loads(data):
 
 def safer_get(data, query, default):
     """
-    Replace Nonetype result with default param if encountered
+    Replace Nonetype result with default param if encountered.
+    Also attempts to typecast the result to the same type as Default param.
     """
     try:
         result = data.get(query, default)
-        return result if result is not None else default
-    except:
-        logger.exception(f"Could not get() from provided {type(data)} data. Returning default.")
+        if result is None:
+            logger.info(f"Nonetype encounted when retrieving {query}: Returning default {default}")
+            return default
+        elif isinstance(result, type(default)):
+            return result
+        else:
+            #logger.debug(f"result type: [{type(result)} {result}] not same as expected [{type(default)}: {default}]. An exception will follow if result cannot be cast to the expected type.")
+            if isinstance(default, int):
+                #This is a special case due to scientific notation becoming a string. int("1e27") would fail, but int(float("1e27")) will succeed
+                return int(float(result))
+            else:
+                #Yuck this syntax is ugly. This tries to cast result to the same type as default.
+                #For instance if default is a Float but I find a String in the data, this will try returning float(result)
+                return type(default)(result)
+    except (TypeError, ValueError):
+        logger.exception(f"Could not convert [{type(result)} {result}] to [{type(default)}: {default}]. Returning default.")
         return default
+    except AttributeError:
+        logger.exception(f"Could not .get() from provided {type(data)} data. Returning default.")
+        return default
+    except Exception as e:
+        logger.exception(f"Something else went wrong lol: {e}")
+        return default
+
 
 def mark_advice_completed(advice, force=False):
     def complete():

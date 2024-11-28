@@ -999,8 +999,8 @@ vials_progressionTiers = [
     [25, 73, 60, ['Barley Brew (Iron Bar)', 'Oozie Ooblek (Oozie Soul)', 'Ricecakorade (Rice Cake)', 'Greenleaf Tea (Leafy Branch)'], ""],
     [26, 74, 65, ['Venison Malt (Mongo Worm Slices)', 'Gibbed Drink (Eviscerated Horn)', 'Royale Cola (Royal Headpiece)', 'Refreshment (Breezy Soul)',
                   'Turtle Tisane (Tuttle)'], ""],
-    # [27, 75, 69, ['Red Malt (Redox Salts)', 'Poison Tincture (Poison Froge)', 'Orange Malt (Explosive Salts)', 'Shaved Ice (Purple Salt)'], "Currently considered impossible"],
-    # [28, 75, 73, ['Dreadnog (Dreadlo Bar)', 'Dabar Special (Godshard Bar)', 'Pearl Seltzer (Pearler Shell)', 'Hampter Drippy (Hampter)'], "Currently considered impossible"],
+    [27, 75, 69, ['Red Malt (Redox Salts)', 'Orange Malt (Explosive Salts)', 'Dreadnog (Dreadlo Bar)', 'Dabar Special (Godshard Bar)'], ""],
+    # [28, 75, 73, ['Poison Tincture (Poison Froge)', 'Shaved Ice (Purple Salt)', 'Pearl Seltzer (Pearler Shell)', 'Hampter Drippy (Hampter)'], "Currently considered impossible"],
     # [29, 75, 76, ['Pickle Jar (BobJoePickle)', 'Ball Pickle Jar (BallJoePickle)'], "Currently considered impossible"],
 ]
 sigils_progressionTiers = {
@@ -5060,18 +5060,18 @@ arbitrary_shrine_note = f"Shrines have no Max level, goal of {arbitrary_shrine_g
 maxDreams = 36  # Last verified as of v2.10
 dreamsThatUnlockNewBonuses = [1, 3, 6, 8, 11, 14, 18, 21, 24, 29, 32]
 equinoxBonusesDict = {
-    2: {'Name': 'Equinox Dreams', 'BaseLevel': 5, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 5, 'Category': 'Recommended'},
-    3: {'Name': 'Equinox Resources', 'BaseLevel': 4, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 4, 'Category': 'Recommended'},
-    4: {'Name': 'Shades of K', 'BaseLevel': 3, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 3, 'Category': 'Optional'},
-    5: {'Name': 'Liquidvestment', 'BaseLevel': 4, 'MaxLevelIncreases': {7: 3, 16: 4}, 'FinalMaxLevel': 11, 'Category': 'Recommended'},
-    6: {'Name': 'Matching Scims', 'BaseLevel': 8, 'MaxLevelIncreases': {13: 5, 19: 10, 35: 10}, 'FinalMaxLevel': 33, 'Category': 'Recommended'},
-    7: {'Name': 'Slow Roast Wiz', 'BaseLevel': 5, 'MaxLevelIncreases': {33: 6}, 'FinalMaxLevel': 11, 'Category': 'Recommended'},
-    8: {'Name': 'Laboratory Fuse', 'BaseLevel': 10, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 10, 'Category': 'Optional'},
-    9: {'Name': 'Metal Detector', 'BaseLevel': 6, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 6, 'Category': 'Recommended'},
-    10: {'Name': 'Faux Jewels', 'BaseLevel': 6, 'MaxLevelIncreases': {22: 5, 27: 10}, 'FinalMaxLevel': 21, 'Category': 'Recommended'},
-    11: {'Name': 'Food Lust', 'BaseLevel': 10, 'MaxLevelIncreases': {26: 4}, 'FinalMaxLevel': 14, 'Category': 'Optional'},
-    12: {'Name': 'Equinox Symbols', 'BaseLevel': 5, 'MaxLevelIncreases': {31: 4}, 'FinalMaxLevel': 9, 'Category': 'Recommended'},
-    13: {'Name': 'Voter Rights', 'BaseLevel': 15, 'MaxLevelIncreases': {36: 15}, 'FinalMaxLevel': 30, 'Category': 'Recommended'},
+    2: {'Name': 'Equinox Dreams', 'BaseLevel': 5, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 5, 'Category': 'Recommended', 'SummoningExpands': False},
+    3: {'Name': 'Equinox Resources', 'BaseLevel': 4, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 4, 'Category': 'Recommended', 'SummoningExpands': False},
+    4: {'Name': 'Shades of K', 'BaseLevel': 3, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 3, 'Category': 'Optional', 'SummoningExpands': False},
+    5: {'Name': 'Liquidvestment', 'BaseLevel': 4, 'MaxLevelIncreases': {7: 3, 16: 4}, 'FinalMaxLevel': 11, 'Category': 'Recommended', 'SummoningExpands': False},
+    6: {'Name': 'Matching Scims', 'BaseLevel': 8, 'MaxLevelIncreases': {13: 5, 19: 10, 35: 10}, 'FinalMaxLevel': 33, 'Category': 'Recommended', 'SummoningExpands': True},
+    7: {'Name': 'Slow Roast Wiz', 'BaseLevel': 5, 'MaxLevelIncreases': {33: 6}, 'FinalMaxLevel': 11, 'Category': 'Recommended', 'SummoningExpands': True},
+    8: {'Name': 'Laboratory Fuse', 'BaseLevel': 10, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 10, 'Category': 'Optional', 'SummoningExpands': False},
+    9: {'Name': 'Metal Detector', 'BaseLevel': 6, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 6, 'Category': 'Recommended', 'SummoningExpands': True},
+    10: {'Name': 'Faux Jewels', 'BaseLevel': 6, 'MaxLevelIncreases': {22: 5, 27: 10}, 'FinalMaxLevel': 21, 'Category': 'Recommended', 'SummoningExpands': True},
+    11: {'Name': 'Food Lust', 'BaseLevel': 10, 'MaxLevelIncreases': {26: 4}, 'FinalMaxLevel': 14, 'Category': 'Optional', 'SummoningExpands': True},
+    12: {'Name': 'Equinox Symbols', 'BaseLevel': 5, 'MaxLevelIncreases': {31: 4}, 'FinalMaxLevel': 9, 'Category': 'Recommended', 'SummoningExpands': True},
+    13: {'Name': 'Voter Rights', 'BaseLevel': 15, 'MaxLevelIncreases': {36: 15}, 'FinalMaxLevel': 30, 'Category': 'Recommended', 'SummoningExpands': True},
 }
 refineryDict = {
     # "salt": [json index, advice image name, cycles per Synth cycle, consumption of previous salt, next salt consumption, next salt cycles per Synth cycle]
@@ -7281,14 +7281,25 @@ def getGemstonePercent(gemstoneName: str, gemstoneValue: float):
 
 # Maps to the RewardID, 1 indexed because Lava
 summoningRewards = [
-    "",
+    "Unknown",
+    # Normal Rewards
     "x Total DMG", "x Jade Gain", "x Farming SPD", "x Artifact Find",
     " Lab Con Range", "x All Essence", "x Sneak EXP", "x Sigil SPD",
     "x Farming EXP", "% Drop Rate", "x Crop EVO", "% AFK Gains",
     "% Skill EXP", "x Construct SPD", "x Skill Effncy.", "x Cooking SPD",
-    "x Gaming Bits", "x Shiny EXP", "% All Stat", " Library Max"
+    "x Gaming Bits", "x Shiny EXP", "% All Stat", " Library Max",
+    # Endless Rewards
+    "+ Stamp LV/day", "% Villager EXP", "% Ballot Bonus", "% Class EXP",
+    "+ Equinox Max LV", "% Monument AFK", "x Meal Bonuses", "% for World 7 (Placeholder 1)", "% for World 7 (Placeholder 2)",
+    "% for World 7 (Placeholder 3)", "% for World 7 (Placeholder 4)", "x Winner Bonuses"
 ]
-
+summoning_rewards_that_dont_multiply_base_value = [
+    summoningRewards[0],   #Placeholder
+    summoningRewards[21],  #Stamp Levels
+    summoningRewards[23],  #Ballot Bonus
+    summoningRewards[25],  #Equinox Levels
+    summoningRewards[32],  #Winner Bonuses
+]
 # Plenty of unknown values. HP, damage, speed, reward size, etc seem to require calculation 
 summoningDict = {
     "White": {
@@ -7663,6 +7674,49 @@ summoningDict = {
         },
     },
 }
+summoning_endlessEnemies = {0: 'rift-spooker', 1: 'rift-slug', 2: 'rift-jocund', 3: 'rift-hivemind', 4: 'rift-stalker'}
+summoning_endlessDict = {
+    0: {"RewardID": summoningRewards[21], "RewardQTY": 1},
+    1: {"RewardID": summoningRewards[22], "RewardQTY": 3},
+    2: {"RewardID": summoningRewards[23], "RewardQTY": 1},
+    3: {"RewardID": summoningRewards[24], "RewardQTY": 12},
+    4: {"RewardID": summoningRewards[25], "RewardQTY": 1},
+    5: {"RewardID": summoningRewards[27], "RewardQTY": 7},
+    6: {"RewardID": summoningRewards[23], "RewardQTY": 2},
+    7: {"RewardID": summoningRewards[22], "RewardQTY": 4},
+    8: {"RewardID": summoningRewards[24], "RewardQTY": 15},
+    9: {"RewardID": summoningRewards[29], "RewardQTY": 10},
+    10: {"RewardID": summoningRewards[25], "RewardQTY": 1},
+    11: {"RewardID": summoningRewards[26], "RewardQTY": 4},
+    12: {"RewardID": summoningRewards[24], "RewardQTY": 18},
+    13: {"RewardID": summoningRewards[23], "RewardQTY": 2},
+    14: {"RewardID": summoningRewards[22], "RewardQTY": 4},
+    15: {"RewardID": summoningRewards[32], "RewardQTY": 3},
+    16: {"RewardID": summoningRewards[30], "RewardQTY": 20},
+    17: {"RewardID": summoningRewards[31], "RewardQTY": 25},
+    18: {"RewardID": summoningRewards[25], "RewardQTY": 2},
+    19: {"RewardID": summoningRewards[24], "RewardQTY": 20},
+    20: {"RewardID": summoningRewards[26], "RewardQTY": 5},
+    21: {"RewardID": summoningRewards[29], "RewardQTY": 30},
+    22: {"RewardID": summoningRewards[24], "RewardQTY": 24},
+    23: {"RewardID": summoningRewards[22], "RewardQTY": 4},
+    24: {"RewardID": summoningRewards[21], "RewardQTY": 1},
+    25: {"RewardID": summoningRewards[23], "RewardQTY": 2},
+    26: {"RewardID": summoningRewards[31], "RewardQTY": 2},
+    27: {"RewardID": summoningRewards[28], "RewardQTY": 35},
+    28: {"RewardID": summoningRewards[27], "RewardQTY": 9},
+    29: {"RewardID": summoningRewards[24], "RewardQTY": 26},
+    30: {"RewardID": summoningRewards[26], "RewardQTY": 5},
+    31: {"RewardID": summoningRewards[22], "RewardQTY": 5},
+    32: {"RewardID": summoningRewards[30], "RewardQTY": 40},
+    33: {"RewardID": summoningRewards[25], "RewardQTY": 1},
+    34: {"RewardID": summoningRewards[29], "RewardQTY": 45},
+    35: {"RewardID": summoningRewards[28], "RewardQTY": 50},
+    36: {"RewardID": summoningRewards[23], "RewardQTY": 2},
+    37: {"RewardID": summoningRewards[26], "RewardQTY": 6},
+    38: {"RewardID": summoningRewards[24], "RewardQTY": 30},
+    39: {"RewardID": summoningRewards[32], "RewardQTY": 3},
+}
 
 summoningBattleCountsDict = {
     k: len(v)
@@ -7675,7 +7729,8 @@ summoningBattleCountsDict = {
     # len(summoningDict["Red"]),
     # len(summoningDict["Cyan"]),
 }
-summoningBattleCountsDict["All"] = sum(summoningBattleCountsDict.values())
+summoningBattleCountsDict["Normal"] = sum(summoningBattleCountsDict.values())
+max_summoning_upgrades = 70  #Last verified as of 2.22 The Fixening
 
 ### SLAB CONSTS ###
 #SlabItemSort last pulled from code in 2.22 The Fixening

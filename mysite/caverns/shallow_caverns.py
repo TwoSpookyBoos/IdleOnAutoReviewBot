@@ -418,7 +418,9 @@ def getBellAdviceGroup(schematics):
                   and total_rings >= 100
               ) else f'<br>Above 1.84: nice RNG 🙂'
               }""",
-        picture_class='bell-ring'
+        picture_class='bell-ring',
+        completed=False,
+        informational=True
     ))
 
 # Clean Improvements

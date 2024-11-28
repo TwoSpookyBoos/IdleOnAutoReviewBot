@@ -16,7 +16,7 @@ from w3 import trapping, consRefinery, consDeathNote, worship, consSaltLick, con
 from w4 import breeding, cooking, rift
 from w5 import slab, divinity, sailing
 from caverns import villagers, shallow_caverns
-from w6 import beanstalk, sneaking, farming
+from w6 import beanstalk, sneaking, farming, summoning
 
 logger = get_logger(__name__)
 
@@ -107,6 +107,7 @@ def main(inputData, runType="web"):
         ],
         sections_6 := [
             farming.setFarmingProgressionTier(),
+            summoning.getSummoningAdviceSection(),
             sneaking.getSneakingAdviceSection(),
             beanstalk.getBeanstalkAdviceSection(),
         ],
@@ -165,6 +166,8 @@ def main(inputData, runType="web"):
 
     headerData = HeaderData(inputData)
     logger.info(f"{headerData.last_update = }")
+
+    #logger.debug(session_data.account.ballot['Buffs'])
 
     if runType == "consoleTest":
         return "Pass"

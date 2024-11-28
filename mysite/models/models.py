@@ -60,16 +60,17 @@ from consts import (
     sailingDict, numberOfArtifactTiers, captainBuffs,
     getStyleNameFromIndex, divinity_divinitiesDict, divinity_offeringsDict, getDivinityNameFromIndex, divinity_DivCostAfter3,
     gamingSuperbitsDict,
-
     # W6
     jade_emporium, pristineCharmsList, sneakingGemstonesFirstIndex, sneakingGemstonesList, sneakingGemstonesStatList,
     getMoissaniteValue, getGemstoneBaseValue, getGemstoneBoostedValue, getGemstonePercent,
-    marketUpgradeDetails, landrankDict, cropDepotDict, maxFarmingCrops,
-    summoningBattleCountsDict, summoningDict,
+    marketUpgradeDetails, landrankDict, cropDepotDict, maxFarmingCrops, maxFarmingValue,
+    summoningBattleCountsDict, summoningDict, summoning_endlessEnemies, summoning_endlessDict, max_summoning_upgrades,
+    summoning_rewards_that_dont_multiply_base_value,
     # Caverns
     caverns_villagers, caverns_conjuror_majiks, caverns_engineer_schematics, caverns_engineer_schematics_unlock_order, caverns_cavern_names,
     caverns_measurer_measurements, getCavernResourceImage, schematics_unlocking_buckets, max_buckets, max_sediments, sediment_bars, getVillagerEXPRequired,
-    monument_bonuses, bell_clean_improvements, bell_ring_bonuses, getBellExpRequired, getBellImprovementBonus, monument_names, released_monuments
+    monument_bonuses, bell_clean_improvements, bell_ring_bonuses, getBellExpRequired, getBellImprovementBonus, monument_names, released_monuments,
+    infinity_string
 )
 
 
@@ -1234,6 +1235,7 @@ class Account:
         self._parse_wave_1(run_type)
         self._calculate_wave_1()
         self._calculate_wave_2()
+        self._calculate_wave_3()
 
     def _prep_alerts_AG(self):
         self.alerts_AdviceDict = {
@@ -1695,7 +1697,7 @@ class Account:
 
     def _parse_w1_owl(self):
         self.owl = {
-            'Discovered': bool(safer_get(self.raw_optlacc_dict, 265, False)),
+            'Discovered': safer_get(self.raw_optlacc_dict, 265, False),
             'FeatherGeneration': safer_get(self.raw_optlacc_dict, 254, 0),
             'BonusesOfOrion': safer_get(self.raw_optlacc_dict, 255, 0),
             'FeatherRestarts': safer_get(self.raw_optlacc_dict, 258, 0),
@@ -1952,7 +1954,7 @@ class Account:
 
     def _parse_w2_ballot(self):
         self.ballot = {
-            "CurrentBuff": self.raw_serverVars_dict.get('voteCategories', ["Unknown"])[0],
+            "CurrentBuff": safer_get(self.raw_serverVars_dict, 'voteCategories', ["Unknown"])[0],
             "Buffs": {}
         }
         for buffIndex, buffValuesDict in ballotDict.items():
@@ -2008,11 +2010,11 @@ class Account:
 
     def _parse_w2_islands(self):
         self.islands = {
-            'Trash': int(float(safer_get(self.raw_optlacc_dict, 161, 0))),  #[161]: 362.202271805249
-            'Bottles': int(float(safer_get(self.raw_optlacc_dict, 162, 0))),  #[162]: 106.90044163281846
+            'Trash': safer_get(self.raw_optlacc_dict, 161, 0),  #[161]: 362.202271805249
+            'Bottles': safer_get(self.raw_optlacc_dict, 162, 0),  #[162]: 106.90044163281846
         }
 
-        raw_islands_list = list(str(safer_get(self.raw_optlacc_dict, 169, '')))  #[169]: "_dcabe" or could be int 0 for whatever reason...
+        raw_islands_list = list(safer_get(self.raw_optlacc_dict, 169, ''))  #[169]: "_dcabe" or could be int 0 for whatever reason...
         for islandName, islandData in islands_dict.items():
             self.islands[islandName] = {
                 'Unlocked': islandData['Code'] in raw_islands_list,
@@ -2233,7 +2235,8 @@ class Account:
                 'Category': bonusValueDict['Category'],
                 'Unlocked': self.total_equinox_bonuses_unlocked >= bonusIndex - 2,
                 'FinalMaxLevel': bonusValueDict['FinalMaxLevel'],
-                'RemainingUpgrades': []
+                'RemainingUpgrades': [],
+                'SummoningExpands': bonusValueDict['SummoningExpands']
             }
             try:
                 self.equinox_bonuses[upgradeName]['CurrentLevel'] = int(raw_equinox_bonuses[bonusIndex])
@@ -2286,7 +2289,7 @@ class Account:
 
     def _parse_w3_atom_collider(self):
         self.atom_collider = {
-            'OnOffStatus': bool(safer_get(self.raw_optlacc_dict, 132, 1)),
+            'OnOffStatus': safer_get(self.raw_optlacc_dict, 132, True),
         }
         try:
             self.atom_collider['StorageLimit'] = colliderStorageLimitList[safer_get(self.raw_optlacc_dict, 133, -1)]
@@ -2600,30 +2603,15 @@ class Account:
                 }
 
     def _parse_w4_breeding_territories(self, rawPets, rawTerritory):
-        anyPetsAssignedPerTerritory: list[bool] = []
-        for territoryIndex in range(0, maxNumberOfTerritories):
-            try:
-                if rawPets[indexFirstTerritoryAssignedPet + 0 + (territoryIndex * 4)][0] != "none":
-                    anyPetsAssignedPerTerritory.append(True)
-                elif rawPets[indexFirstTerritoryAssignedPet + 1 + (territoryIndex * 4)][0] != "none":
-                    anyPetsAssignedPerTerritory.append(True)
-                elif rawPets[indexFirstTerritoryAssignedPet + 2 + (territoryIndex * 4)][0] != "none":
-                    anyPetsAssignedPerTerritory.append(True)
-                elif rawPets[indexFirstTerritoryAssignedPet + 3 + (territoryIndex * 4)][0] != "none":
-                    anyPetsAssignedPerTerritory.append(True)
-                else:
-                    anyPetsAssignedPerTerritory.append(False)
-            except:
-                anyPetsAssignedPerTerritory.append(False)
+        self.breeding["Highest Unlocked Territory Number"] = safer_get(self.raw_optlacc_dict, 85, 0)
+        self.breeding["Highest Unlocked Territory Name"] = territoryNames[min(maxNumberOfTerritories, self.breeding["Highest Unlocked Territory Number"])]
 
-            # Spice Progress above 0 or any pet assigned to territory
-            try:
-                if rawTerritory[territoryIndex][0] > 0 or anyPetsAssignedPerTerritory[territoryIndex] == True:
-                    #Can't decide which of these 3 will end up being the most useful, so assigning them all for now
-                    self.breeding['Territories'][territoryNames[territoryIndex+1]] = {'Unlocked': True}
-                    self.breeding["Highest Unlocked Territory Number"] = territoryIndex+1
-                    self.breeding["Highest Unlocked Territory Name"] = territoryNames[territoryIndex+1]
-            except:
+        for territoryIndex in range(0, maxNumberOfTerritories):
+            if territoryIndex < self.breeding["Highest Unlocked Territory Number"]:
+                #Can't decide which of these 3 will end up being the most useful, so assigning them all for now
+                self.breeding['Territories'][territoryNames[territoryIndex+1]] = {'Unlocked': True}
+
+            else:
                 self.breeding['Territories'][territoryNames[territoryIndex + 1]] = {'Unlocked': False}
 
     def _parse_w4_breeding_pets(self, rawBreeding):
@@ -2982,7 +2970,7 @@ class Account:
                         'Level': raw_majiks[majik_type][majik_index],
                         'MaxLevel': majik_data['MaxLevel'],
                         'Description': majik_data['Description'],
-                        'Value': 0  #Calculated later in _calculate_caverns_majiks
+                        #'Value': 0  #Calculated later in _calculate_caverns_majiks
                     }
                 except:
                     self.caverns['Majiks'][majik_data['Name']] = {
@@ -2991,7 +2979,7 @@ class Account:
                         'Level': 0,
                         'MaxLevel': majik_data['MaxLevel'],
                         'Description': majik_data['Description'],
-                        'Value': 0  # Calculated later in _calculate_caverns_majiks
+                        #'Value': 0  # Calculated later in _calculate_caverns_majiks
                     }
 
     def _parse_caverns_schematics(self, raw_schematics_list):
@@ -3467,22 +3455,25 @@ class Account:
     def _parse_w6_summoning(self):
         self.summoning = {}
         raw_summoning_list = safe_loads(self.raw_data.get('Summon', []))
+        while len(raw_summoning_list) < 5:
+            raw_summoning_list.append([])
 
         # raw_summoning_list[0] = Upgrades
-        try:
+        if raw_summoning_list[0]:
             self.summoning["Upgrades"] = raw_summoning_list[0]
-        except:
-            self.summoning["Upgrades"] = [0] * 69  # As of 2.09 Red/Cyan, there are exactly 69 upgrades #TODO: Replace with a value in consts
+        else:
+            self.summoning["Upgrades"] = [0] * max_summoning_upgrades
 
         # raw_summoning_list[1] = List of codified names of enemies from battles won
         self.summoning["Battles"] = {}
         self.summoning["BattleDetails"] = {}
         for color in summoningDict:
             self.summoning["BattleDetails"][color] = {}
-        try:
-            self._parse_w6_summoning_battles(raw_summoning_list[1])
-        except:
-            self._parse_w6_summoning_battles([])
+        self._parse_w6_summoning_battles(raw_summoning_list[1])
+
+        #Endless Summoning
+        self.summoning["BattleDetails"]['Endless'] = {}
+        self._parse_w6_summoning_battles_endless()
 
         # raw_summoning_list[2] looks to be essence owned
         # raw_summoning_list[3] I have no idea what this is
@@ -3498,12 +3489,13 @@ class Account:
         self.summoning['WinnerBonusesAdvice'] = []
 
     def _parse_w6_summoning_battles(self, rawBattles):
+        regular_battles = [battle for battle in rawBattles if not battle.startswith('rift')]
         try:
-            self.summoning['Battles']['Total'] = len(rawBattles)
+            self.summoning['Battles']['NormalTotal'] = len(regular_battles)
         except:
-            self.summoning['Battles']['Total'] = 0
+            self.summoning['Battles']['NormalTotal'] = 0
 
-        if self.summoning['Battles']['Total'] >= summoningBattleCountsDict["All"]:
+        if self.summoning['Battles']['NormalTotal'] >= summoningBattleCountsDict["Normal"]:
             self.summoning["Battles"] = summoningBattleCountsDict
             self.summoning['AllBattlesWon'] = True
         else:
@@ -3514,6 +3506,9 @@ class Account:
                     if battleIndex + 1 >= self.summoning["Battles"][colorName] and battleValuesDict['EnemyID'] in rawBattles:
                         self.summoning["Battles"][colorName] = battleIndex + 1
 
+        #Endless doesn't follow the same structure as the once-only battles
+        self.summoning['Battles']['Endless'] = safer_get(self.raw_optlacc_dict, 319, 0)
+
         for colorName, colorDict in summoningDict.items():
             for battleIndex, battleValuesDict in colorDict.items():
                 self.summoning["BattleDetails"][colorName][battleIndex + 1] = {
@@ -3523,6 +3518,50 @@ class Account:
                     'RewardQTY': battleValuesDict['RewardQTY'],
                     'RewardBaseValue': battleValuesDict['RewardQTY'] * 3.5,
                 }
+                if self.summoning["BattleDetails"][colorName][battleIndex + 1]['RewardType'].startswith('+ '):
+                    self.summoning["BattleDetails"][colorName][battleIndex + 1]['Description'] = (
+                        self.summoning["BattleDetails"][colorName][battleIndex + 1]['RewardType'].replace(
+                            '+', f"+{self.summoning['BattleDetails'][colorName][battleIndex + 1]['RewardBaseValue']}")
+                    )
+                elif self.summoning["BattleDetails"][colorName][battleIndex + 1]['RewardType'].startswith('%'):
+                    self.summoning["BattleDetails"][colorName][battleIndex + 1]['Description'] = (
+                        f"{self.summoning['BattleDetails'][colorName][battleIndex + 1]['RewardBaseValue']}"
+                        f"{self.summoning['BattleDetails'][colorName][battleIndex + 1]['RewardType']}"
+                    )
+                elif self.summoning["BattleDetails"][colorName][battleIndex + 1]['RewardType'].startswith('x'):
+                    self.summoning["BattleDetails"][colorName][battleIndex + 1]['Description'] = (
+                        f"{ValueToMulti(self.summoning['BattleDetails'][colorName][battleIndex + 1]['RewardBaseValue'])}"
+                        f"{self.summoning['BattleDetails'][colorName][battleIndex + 1]['RewardType']}"
+                    )
+
+    def _parse_w6_summoning_battles_endless(self):
+        self.summoning['Endless Bonuses'] = {}
+        true_battle_index = 0
+        while true_battle_index < max(40, self.summoning['Battles']['Endless'] + 5):
+            image_index = (true_battle_index % 100) // 20
+            endless_enemy_index = true_battle_index % 40
+            this_battle = {
+                'Defeated': true_battle_index < self.summoning['Battles']['Endless'],
+                'Image': summoning_endlessEnemies.get(image_index, ''),
+                'RewardType': summoning_endlessDict.get(endless_enemy_index, {}).get('RewardID', 'Unknown'),
+                # 'RewardQTY': summoning_endlessDict.get(endless_enemy_index, {}).get('RewardQTY', 0),
+                'RewardBaseValue': (
+                    summoning_endlessDict.get(endless_enemy_index, {}).get('RewardQTY', 0)
+                )
+            }
+            if this_battle['RewardType'].startswith('+'):
+                this_battle['Description'] = this_battle['RewardType'].replace('+', f"+{this_battle['RewardBaseValue']}")
+            elif this_battle['RewardType'].startswith('%'):
+                this_battle['Description'] = f"+{this_battle['RewardBaseValue']}{this_battle['RewardType']}"
+            elif this_battle['RewardType'].startswith('x'):
+                this_battle['Description'] = f"{ValueToMulti(this_battle['RewardBaseValue'])}{this_battle['RewardType']}"
+            self.summoning['BattleDetails']['Endless'][true_battle_index + 1] = this_battle
+            if this_battle['RewardType'] not in self.summoning['Endless Bonuses']:
+                self.summoning['Endless Bonuses'][this_battle['RewardType']] = 0
+            self.summoning['Endless Bonuses'][this_battle['RewardType']] += this_battle['RewardBaseValue'] * this_battle['Defeated']
+            #print(f"Endless {true_battle_index + 1}: {self.summoning['BattleDetails']['Endless'][true_battle_index + 1]}")
+            true_battle_index += 1
+        #print(f"Base Endless Bonuses after {self.summoning['Battles']['Endless']} wins: {self.summoning['Endless Bonuses']}")
 
     def _parse_w6_summoning_sanctuary(self, rawSanctuary):
         if rawSanctuary:
@@ -3538,6 +3577,68 @@ class Account:
                 pass
 
     def _calculate_wave_1(self):
+        self._calculate_caverns_majiks()
+
+    def _calculate_caverns_majiks(self):
+        for majik_type, majiks in caverns_conjuror_majiks.items():
+            for majik_index, majik_data in enumerate(majiks):
+                if majik_data['Scaling'] == 'add':
+                    try:
+                        self.caverns['Majiks'][majik_data['Name']]['Value'] = (
+                            self.caverns['Majiks'][majik_data['Name']]['Level'] * majik_data['BonusPerLevel']
+                        )
+                        self.caverns['Majiks'][majik_data['Name']]['MaxValue'] = (
+                           majik_data['MaxLevel'] * majik_data['BonusPerLevel']
+                        )
+                    except Exception as e:
+                        print(f"Caverns Majik value calc error for level {self.caverns['Majiks'][majik_data['Name']]['Level']} {majik_data['Name']}: {e}")
+                        self.caverns['Majiks'][majik_data['Name']]['Value'] = 0
+                        self.caverns['Majiks'][majik_data['Name']]['MaxValue'] = (
+                                majik_data['MaxLevel'] * majik_data['BonusPerLevel']
+                        )
+                elif majik_data['Scaling'] == 'value':
+                    try:
+                        self.caverns['Majiks'][majik_data['Name']]['Value'] = (ValueToMulti(
+                            self.caverns['Majiks'][majik_data['Name']]['Level'] * majik_data['BonusPerLevel']
+                        ))
+                        self.caverns['Majiks'][majik_data['Name']]['MaxValue'] = (ValueToMulti(
+                            majik_data['MaxLevel'] * majik_data['BonusPerLevel']
+                        ))
+                    except:
+                        print(f"Caverns Majik value calc error for level {self.caverns['Majiks'][majik_data['Name']]['Level']} {majik_data['Name']}: {e}")
+                        self.caverns['Majiks'][majik_data['Name']]['Value'] = (ValueToMulti(
+                            0 * majik_data['BonusPerLevel']
+                        ))
+                        self.caverns['Majiks'][majik_data['Name']]['MaxValue'] = (ValueToMulti(
+                            majik_data['MaxLevel'] * majik_data['BonusPerLevel']
+                        ))
+                elif majik_data['Scaling'] == 'multi':
+                    try:
+                        self.caverns['Majiks'][majik_data['Name']]['Value'] = (
+                            # BonusPerLevel to the power of Level
+                            majik_data['BonusPerLevel'] ** self.caverns['Majiks'][majik_data['Name']]['Level']
+                        )
+                        self.caverns['Majiks'][majik_data['Name']]['MaxValue'] = (
+                            # BonusPerLevel to the power of Level
+                            majik_data['BonusPerLevel'] ** majik_data['MaxLevel']
+                        )
+                    except Exception as e:
+                        print(f"Caverns Majik value calc error for level {self.caverns['Majiks'][majik_data['Name']]['Level']} {majik_data['Name']}: {e}")
+                        self.caverns['Majiks'][majik_data['Name']]['Value'] = (
+                            # BonusPerLevel to the power of Level
+                                0
+                        )
+                        self.caverns['Majiks'][majik_data['Name']]['MaxValue'] = (
+                            # BonusPerLevel to the power of Level
+                                majik_data['BonusPerLevel'] ** majik_data['MaxLevel']
+                        )
+                self.caverns['Majiks'][majik_data['Name']]['Description'] = (
+                    f"{self.caverns['Majiks'][majik_data['Name']]['Value']}/{self.caverns['Majiks'][majik_data['Name']]['MaxValue']}"
+                    f"{self.caverns['Majiks'][majik_data['Name']]['Description']}"
+                )
+                #print(f"{majik_data['Name']} value set to {self.caverns['Majiks'][majik_data['Name']]['Value']}")
+
+    def _calculate_wave_2(self):
         self._calculate_general()
         self._calculate_w1()
         self._calculate_w2()
@@ -3747,7 +3848,11 @@ class Account:
             # After the +1, 0/1/2/3
 
     def _calculate_w2_ballot(self):
-        equinoxMulti = ValueToMulti(self.equinox_bonuses['Voter Rights']['CurrentLevel'])
+        equinoxMulti = ValueToMulti(
+            self.equinox_bonuses['Voter Rights']['CurrentLevel']
+            + self.caverns['Majiks']['Voter Integrity']['Value']
+            + self.summoning['Endless Bonuses']["% Ballot Bonus"]
+        )
         for buffIndex, buffValuesDict in self.ballot['Buffs'].items():
             self.ballot['Buffs'][buffIndex]['Value'] *= equinoxMulti
             # Check for + or +x% replacements
@@ -3982,56 +4087,15 @@ class Account:
     def _divinityUpgradeCost(self, offeringIndex, unlockedDivinity):
         cost = (20 * pow(unlockedDivinity + 1.3, 2.3) * pow(2.2, unlockedDivinity) + 60) * divinity_offeringsDict.get(offeringIndex, {}).get("Chance", 1) / 100
         if unlockedDivinity >= 3:
-            cost = cost * pow(min(1.8, max(1, 1 + self.raw_serverVars_dict.get("DivCostAfter3", divinity_DivCostAfter3) / 100)), unlockedDivinity - 2)
+            cost = cost * pow(min(1.8, max(1, 1 + safer_get(self.raw_serverVars_dict, "DivCostAfter3", divinity_DivCostAfter3) / 100)), unlockedDivinity - 2)
         return ceil(cost)
 
     def _calculate_caverns(self):
-        self._calculate_caverns_majiks()
+        #self._calculate_caverns_majiks()
         self._calculate_caverns_measurements()
         self._calculate_caverns_the_well()
         self._calculate_caverns_monuments()
         self._calculate_caverns_the_bell()
-
-    def _calculate_caverns_majiks(self):
-        for majik_type, majiks in caverns_conjuror_majiks.items():
-            for majik_index, majik_data in enumerate(majiks):
-                if majik_data['Scaling'] == 'add':
-                    try:
-                        self.caverns['Majiks'][majik_data['Name']]['Value'] = (
-                            self.caverns['Majiks'][majik_data['Name']]['Level'] * majik_data['BonusPerLevel']
-                        )
-                        self.caverns['Majiks'][majik_data['Name']]['MaxValue'] = (
-                           majik_data['MaxLevel'] * majik_data['BonusPerLevel']
-                        )
-                    except Exception as e:
-                        print(f"Caverns Majik value calc error for level {self.caverns['Majiks'][majik_data['Name']]['Level']} {majik_data['Name']}: {e}")
-                elif majik_data['Scaling'] == 'value':
-                    try:
-                        self.caverns['Majiks'][majik_data['Name']]['Value'] = (ValueToMulti(
-                            self.caverns['Majiks'][majik_data['Name']]['Level'] * majik_data['BonusPerLevel']
-                        ))
-                        self.caverns['Majiks'][majik_data['Name']]['MaxValue'] = (ValueToMulti(
-                            majik_data['MaxLevel'] * majik_data['BonusPerLevel']
-                        ))
-                    except:
-                        print(f"Caverns Majik value calc error for level {self.caverns['Majiks'][majik_data['Name']]['Level']} {majik_data['Name']}: {e}")
-                elif majik_data['Scaling'] == 'multi':
-                    try:
-                        self.caverns['Majiks'][majik_data['Name']]['Value'] = (
-                            # BonusPerLevel to the power of Level
-                            majik_data['BonusPerLevel'] ** self.caverns['Majiks'][majik_data['Name']]['Level']
-                        )
-                        self.caverns['Majiks'][majik_data['Name']]['MaxValue'] = (
-                            # BonusPerLevel to the power of Level
-                            majik_data['BonusPerLevel'] ** majik_data['MaxLevel']
-                        )
-                    except Exception as e:
-                        print(f"Caverns Majik value calc error for level {self.caverns['Majiks'][majik_data['Name']]['Level']} {majik_data['Name']}: {e}")
-                self.caverns['Majiks'][majik_data['Name']]['Description'] = (
-                    f"{self.caverns['Majiks'][majik_data['Name']]['Value']}/{self.caverns['Majiks'][majik_data['Name']]['MaxValue']}"
-                    f"{self.caverns['Majiks'][majik_data['Name']]['Description']}"
-                )
-                #print(f"{majik_data['Name']} value set to {self.caverns['Majiks'][majik_data['Name']]['Value']}")
 
     def _calculate_caverns_measurements(self):
         total_skill_levels = 0
@@ -4209,17 +4273,31 @@ class Account:
         else:
             winzLanternPostString = ""
 
-        mgb = ValueToMulti(
+        mgb_partial = ValueToMulti(
             (25 * numberOfArtifactTiers)
             + self.merits[5][4]['MaxLevel']
             + 1  #int(self.achievements['Spectre Stars'])
             + 1  #int(self.achievements['Regalis My Beloved'])
         )
-        player_mgb = ValueToMulti(
+        mgb_full = ValueToMulti(
+            (25 * numberOfArtifactTiers)
+            + self.merits[5][4]['MaxLevel']
+            + 1  #int(self.achievements['Spectre Stars'])
+            + 1  #int(self.achievements['Regalis My Beloved'])
+            + self.summoning['Endless Bonuses']['x Winner Bonuses']
+        )
+        player_mgb_partial = ValueToMulti(
             (25 * self.sailing['Artifacts']['The Winz Lantern']['Level'])
             + self.merits[5][4]['Level']
             + int(self.achievements['Spectre Stars']['Complete'])
             + int(self.achievements['Regalis My Beloved']['Complete'])
+        )
+        player_mgb_full = ValueToMulti(
+            (25 * self.sailing['Artifacts']['The Winz Lantern']['Level'])
+            + self.merits[5][4]['Level']
+            + int(self.achievements['Spectre Stars']['Complete'])
+            + int(self.achievements['Regalis My Beloved']['Complete'])
+            + self.summoning['Endless Bonuses']['x Winner Bonuses']
         )
 
         self.summoning['WinnerBonusesAdvice'].append(Advice(
@@ -4250,16 +4328,32 @@ class Account:
             progression=self.summoning['SanctuaryTotal'] if not self.achievements['Regalis My Beloved']['Complete'] else 360,
             goal=360
         ))
-        self.summoning['WinnerBonusesMulti'] = max(1, player_mga * player_mgb)
-        self.summoning['WinnerBonusesMultiMax'] = max(1, mga * mgb)
-        self.summoning['WinnerBonusesAdvice'].append(Advice(
-            label=f"Winner Bonuses Multi: {self.summoning['WinnerBonusesMulti']:.3f}/{self.summoning['WinnerBonusesMultiMax']:.3f}x",
+        self.summoning['WinnerBonusesMultiPartial'] = max(1, player_mga * player_mgb_partial)
+        self.summoning['WinnerBonusesMultiMaxPartial'] = max(1, mga * mgb_partial)
+        self.summoning['WinnerBonusesSummaryPartial'] = Advice(
+            label=f"Winner Bonuses Multi: {self.summoning['WinnerBonusesMultiPartial']:.3f}/{self.summoning['WinnerBonusesMultiMaxPartial']:.3f}x",
             picture_class="summoning",
-            progression=f"{self.summoning['WinnerBonusesMulti']:.3f}",
-            goal=f"{self.summoning['WinnerBonusesMultiMax']:.3f}",
+            progression=f"{self.summoning['WinnerBonusesMultiPartial']:.3f}",
+            goal=f"{self.summoning['WinnerBonusesMultiMaxPartial']:.3f}",
             #unit="x"
-        ))
-        #print(f"Summoning Winner Bonus Multis: {mga} * {mgb} = {self.summoning['WinnerBonusesMulti']}")
+        )
+        self.summoning['WinnerBonusesMultiFull'] = max(1, player_mga * player_mgb_full)
+        self.summoning['WinnerBonusesMultiMaxFull'] = max(1, mga * mgb_full)
+        self.summoning['WinnerBonusesSummaryFull'] = [
+            Advice(
+                label=f"Winner Bonuses multi from Endless Summoning: {self.summoning['Endless Bonuses']['x Winner Bonuses']}/{infinity_string}",
+                picture_class='cyan-upgrade-13',
+                progression=self.summoning['Endless Bonuses']['x Winner Bonuses'],
+                goal=infinity_string
+            ),
+            Advice(
+                label=f"Winner Bonuses Multi: {self.summoning['WinnerBonusesMultiFull']:.3f}/{self.summoning['WinnerBonusesMultiMaxFull']:.3f}x",
+                picture_class="summoning",
+                progression=f"{self.summoning['WinnerBonusesMultiFull']:.3f}",
+                goal=f"{self.summoning['WinnerBonusesMultiMaxFull']:.3f}",
+                # unit="x"
+            )
+        ]
 
     def _calculate_w6_farming(self):
         self._calculate_w6_farming_crop_depot()
@@ -4347,8 +4441,8 @@ class Account:
             * self.farming['Value']['Pboost Ballot Multi Max']
             * self.farming['Value']['Value GMO Current']
         )  # end of round
-        self.farming['Value']['FinalMin'] = min(10000, self.farming['Value']['BeforeCapMin'])
-        self.farming['Value']['FinalMax'] = min(10000, self.farming['Value']['BeforeCapMax'])
+        self.farming['Value']['FinalMin'] = min(maxFarmingValue, self.farming['Value']['BeforeCapMin'])
+        self.farming['Value']['FinalMax'] = min(maxFarmingValue, self.farming['Value']['BeforeCapMax'])
         #print(f"models._calculate_w6_farming_crop_value CropValue BEFORE cap = {self.farming['Value']['BeforeCap']}")
         #print(f"models._calculate_w6_farming_crop_value CropValue AFTER cap = {self.farming['Value']['Final']}")
 
@@ -4407,7 +4501,7 @@ class Account:
             for battle in battlesList:
                 if self.summoning['Battles'][color] >= battle:
                     battle_reward_total += self.summoning["BattleDetails"][color][battle]['RewardBaseValue']
-        self.farming['Evo']['Summon Multi'] = ValueToMulti(self.summoning['WinnerBonusesMulti'] * battle_reward_total)
+        self.farming['Evo']['Summon Multi'] = ValueToMulti(self.summoning['WinnerBonusesMultiFull'] * battle_reward_total)
         # Starsign
         self.farming['Evo']['Starsign Final Value'] = (
                 3 * self.star_signs['Cropiovo Minor']['Unlocked']
@@ -4462,7 +4556,7 @@ class Account:
             for battle in battlesList:
                 if self.summoning['Battles'][color] >= battle:
                     battle_reward_total += self.summoning["BattleDetails"][color][battle]['RewardBaseValue']
-        self.farming['Speed']['Summon Multi'] = ValueToMulti(self.summoning['WinnerBonusesMulti'] * battle_reward_total)
+        self.farming['Speed']['Summon Multi'] = ValueToMulti(self.summoning['WinnerBonusesMultiFull'] * battle_reward_total)
         # Vial and Day Market
         self.farming['Speed']['Vial Value'] = self.alchemy_vials['Ricecakorade (Rice Cake)']['Value'] * self.vialMasteryMulti
         self.farming['Speed']['Vial Value'] *= 2 if self.labBonuses['My 1st Chemistry Set']['Enabled'] else 1
@@ -4508,8 +4602,9 @@ class Account:
                 * self.farming['OG']['Pristine Multi']
         )
 
-    def _calculate_wave_2(self):
+    def _calculate_wave_3(self):
         self._calculate_w3_library_max_book_levels()
+        self._calculate_w3_equinox_max_levels()
         self._calculate_general_character_over_books()
         self._calculate_general_crystal_spawn_chance()
 
@@ -4534,9 +4629,17 @@ class Account:
         # summGroupB = 1 + (.3 * self.sneaking.get('PristineCharms', {}).get('Crystal Comb', 0))
         self.library['SummoningSum'] = round(
             10.5 * (self.summoning['Battles']['Cyan'] >= 14)
-            * self.summoning['WinnerBonusesMulti']
+            * self.summoning['WinnerBonusesMultiPartial']
         )
         self.library['MaxBookLevel'] = 100 + self.library['StaticSum'] + self.library['ScalingSum'] + self.library['SummoningSum']
+
+    def _calculate_w3_equinox_max_levels(self):
+        bonus_equinox_levels = self.summoning['Endless Bonuses'].get('+ Equinox Max LV', 0)
+        if bonus_equinox_levels > 0:
+            for bonus, bonus_details in self.equinox_bonuses.items():
+                if bonus_details['SummoningExpands']:
+                    self.equinox_bonuses[bonus]['PlayerMaxLevel'] += bonus_equinox_levels
+                    self.equinox_bonuses[bonus]['FinalMaxLevel'] += bonus_equinox_levels
 
     def _calculate_general_character_over_books(self):
         self.bonus_talents = {
@@ -4684,7 +4787,7 @@ class Account:
     def _make_cards(self):
         card_counts = safe_loads(self.raw_data.get(self._key_cards, {}))
         cards = [
-            Card(codename, name, cardset, int(float(safer_get(card_counts, codename, 0))), coefficient)
+            Card(codename, name, cardset, safer_get(card_counts, codename, 0), coefficient)
             for cardset, cards in card_data.items()
             for codename, (name, coefficient) in cards.items()
         ]

@@ -87,6 +87,7 @@ def getMissableGStacksAdviceSection(owned_stuff: Assets) -> AdviceSection:
                 label=f"{item.name}- {item.quest}",
                 picture_class=item.name,
                 progression=item.progression,
+                goal=100,
                 unit="%",
                 resource=item.quest_giver
             )

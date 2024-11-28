@@ -270,9 +270,15 @@ $world-monsters: (
     octodar: img('wiki/Octodar_Idle.gif'),
     flombeige: img('wiki/Flombeige_Idle.gif'),
     stilted-seeker: img('wiki/Stilted_Seeker_Idle.gif'),
-    rift-monsters: img('wiki/Rift_Spooker_Idle.gif'),
     crystal-custard: img('wiki/Crystal_Custard_Idle.gif'),
     massive-troll: img('wiki/Massive_Troll_%28boss%29.png'),
+// The Rift
+    rift-monsters: img('wiki/Rift_Spooker_Idle.gif'),  //Generic usage
+    rift-spooker: img('wiki/Rift_Spooker_Idle.gif'),
+    rift-slug: img('wiki/Rift_Slug_Idle.gif'),
+    rift-jocund: img('wiki/Rift_Jocund_Idle.gif'),
+    rift-hivemind: img('wiki/Rift_Hivemind_Idle.gif'),
+    rift-stalker: img('wiki/Rift_Stalker_Idle.gif'),
 // W5
     suggma: img('wiki/Suggma_Idle.gif'),
     maccie: img('wiki/Maccie_Idle.gif'),
