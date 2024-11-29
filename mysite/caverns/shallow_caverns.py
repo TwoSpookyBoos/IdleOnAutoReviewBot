@@ -59,7 +59,8 @@ def getWellAdviceGroup(schematics) -> AdviceGroup:
 # Cavern Stats
     cavern_advice[c_stats].append(Advice(
         label=f"Objective- Use buckets to collect Sediment",
-        picture_class=f"cavern-{cavern['CavernNumber']}"
+        picture_class=f"cavern-{cavern['CavernNumber']}",
+        resource='well-bucket',
     ))
     cavern_advice[c_stats].append(Advice(
         label=f"Total Opals Found: {cavern['OpalsFound']}",
@@ -151,7 +152,8 @@ def getMotherlodeAdviceGroup(schematics):
 # Cavern Stats
     cavern_advice[c_stats].append(Advice(
         label=f"Objective- Use your characters to mine up Ore and break Layers",
-        picture_class=f"cavern-{cavern['CavernNumber']}"
+        picture_class=f"cavern-{cavern['CavernNumber']}",
+        resource='mining'
     ))
     cavern_advice[c_stats].append(Advice(
         label=f"Total Opals Found: {cavern['OpalsFound']}",

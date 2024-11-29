@@ -6364,7 +6364,7 @@ for i in range(0, 6):
 
 
 def getMaxEngineerLevel() -> int:
-    max_engi_last_i_checked = 19  # Last checked on Caverns release 2.20
+    max_engi_last_i_checked = 20  # Last checked on Justice Monument release 2.23
     if max_schematics > (1 + (max_engi_last_i_checked * 3) + (max_engi_last_i_checked // 5)):
         needed_level = 0
         unlocked_schematics = 0

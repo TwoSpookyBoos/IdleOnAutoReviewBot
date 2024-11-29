@@ -93,31 +93,31 @@ $cosmos-majiks: (
 );
 
 $caverns: (
-    cavern-1: img('wiki/HolePOI0.png'), //Well
-    cavern-2: img('wiki/HolePOI1.png'), //Motherlode Mining
-    cavern-3: img('wiki/HolePOI2.png'), //Dawg Den
-    cavern-4: img('wiki/HolePOI3.png'), //Bravery Monument
-    cavern-5: img('wiki/HolePOI4.png'), //Bell
-    cavern-6: img('wiki/HolePOI5.png'), //Harp
-    cavern-7: img('wiki/HolePOI6.png'), //Lamp
-    cavern-8: img('wiki/HolePOI7.png'), //Motherlode Catching
-    cavern-9: img('wiki/HolePOI8.png'), //Grotto
-    cavern-10: img('wiki/HolePOI9.png'), //Justice Monument
+    cavern-1: img('customized/HolePOI0.png'), //Well
+    cavern-2: img('customized/HolePOI1.png'), //Motherlode Mining
+    cavern-3: img('customized/HolePOI2.png'), //Dawg Den
+    cavern-4: img('customized/HolePOI3.png'), //Bravery Monument
+    cavern-5: img('customized/HolePOI4.png'), //Bell
+    cavern-6: img('customized/HolePOI5.png'), //Harp
+    cavern-7: img('customized/HolePOI6.png'), //Lamp
+    cavern-8: img('customized/HolePOI7.png'), //Motherlode Catching
+    cavern-9: img('customized/HolePOI8.png'), //Grotto
+    cavern-10: img('customized/HolePOI9.png'), //Justice Monument
 );
 
 $well-sediment: (
     well-bucket: img('wiki/HoleWellBucket0.png'),
-    well-sediment-rock-layer: img('wiki/HoleWellFill0.png'),
-    well-sediment-0: img('wiki/HoleWellFill1.png'),
-    well-sediment-1: img('wiki/HoleWellFill2.png'),
-    well-sediment-2: img('wiki/HoleWellFill3.png'),
-    well-sediment-3: img('wiki/HoleWellFill4.png'),
-    well-sediment-4: img('wiki/HoleWellFill5.png'),
-    well-sediment-5: img('wiki/HoleWellFill6.png'),
-    well-sediment-6: img('wiki/HoleWellFill7.png'),
-    well-sediment-7: img('wiki/HoleWellFill8.png'),
-    well-sediment-8: img('wiki/HoleWellFill9.png'),
-    well-sediment-9: img('wiki/HoleWellFill10.png'),
+    well-sediment-rock-layer: img('customized/HoleWellFill0.png'),
+    well-sediment-0: img('customized/HoleWellFill1.png'),
+    well-sediment-1: img('customized/HoleWellFill2.png'),
+    well-sediment-2: img('customized/HoleWellFill3.png'),
+    well-sediment-3: img('customized/HoleWellFill4.png'),
+    well-sediment-4: img('customized/HoleWellFill5.png'),
+    well-sediment-5: img('customized/HoleWellFill6.png'),
+    well-sediment-6: img('customized/HoleWellFill7.png'),
+    well-sediment-7: img('customized/HoleWellFill8.png'),
+    well-sediment-8: img('customized/HoleWellFill9.png'),
+    well-sediment-9: img('customized/HoleWellFill10.png'),
 );
 
 $motherlode-resources: (
@@ -141,9 +141,9 @@ $den-amplifiers: (
 $monuments: (
     monument-basic-chest: img('wiki/HoleBraveryChest.png'),
     monument-special-chest: img('wiki/HoleBraveryChestB.png'),
+    //Bravery
     monument-basic-sword: img('wiki/HoleBraverySword.png'),
     monument-special-sword: img('wiki/HoleBraverySwordb.png'),
-    //Bravery
     bravery-bonus-0: img('wiki/Mining_Skill_Icon.png'),
     bravery-bonus-1: img('wiki/HoleWellBucket0.png'),
     bravery-bonus-2: img('wiki/Cooking_Skill_Icon.png'),
@@ -153,14 +153,26 @@ $monuments: (
     bravery-bonus-6: img('wiki/Attack_Icon.png'),
     bravery-bonus-7: img('wiki/measimg2.png'),
     bravery-bonus-8: img('wiki/Monument_AFK.png'),
-    bravery-bonus-9: img('wiki/measimg1.png'),
+    bravery-bonus-9: img('caverns/Bravery_Monument_x1.png'),
+    //Justice
+    justice-coin: img('caverns/HoleJusticeObj0.png'),
+    justice-bonus-0: img('wiki/Catching_Skill_Icon.png'),
+    justice-bonus-1: img('customized/HolePOI5.png'),
+    justice-bonus-2: img('wiki/Captain_Effect_3.png'),
+    justice-bonus-3: img('wiki/Opal.png'),
+    justice-bonus-4: img('wiki/Summoning_Skill_Icon.png'),
+    justice-bonus-5: img('wiki/HoleBraveryChest.png'),
+    justice-bonus-6: img('weekly_bosses/Req_Icon_s.png'),  //Class exp
+    justice-bonus-7: img('customized/HolePOI6.png'),
+    justice-bonus-8: img('wiki/Monument_AFK.png'),
+    justice-bonus-9: img('caverns/Justice_Monument_x1.png'),
 );
 
 $bell: (
-    bell-ring:  img('HoleBellCover0.png'),
-    bell-ping:  img('HoleBellCover1.png'),
-    bell-clean: img('HoleBellCover2.png'),
-    bell-renew: img('HoleBellCover3.png'),
+    bell-ring:  img('customized/HoleBellCover0.png'),
+    bell-ping:  img('customized/HoleBellCover1.png'),
+    bell-clean: img('customized/HoleBellCover2.png'),
+    bell-renew: img('customized/HoleBellCover3.png'),
 );
 
 $harp-notes: (
