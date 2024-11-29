@@ -1890,36 +1890,35 @@ class Account:
 
     def _parse_w2_p2w(self):
         self.alchemy_p2w = {
-            "Sigils": sigilsDict
+            "Sigils": copy.deepcopy(sigilsDict)
         }
         raw_p2w_list = safe_loads(self.raw_data.get("CauldronP2W", []))
-        if raw_p2w_list:
-            for subElementIndex, subElementValue in enumerate(raw_p2w_list):
-                if not isinstance(subElementValue, list):
-                    raw_p2w_list[subElementIndex] = [subElementValue]
-            try:
-                self.alchemy_p2w["Cauldrons"] = raw_p2w_list[0]
-            except:
-                self.alchemy_p2w["Cauldrons"] = [0] * 12
-            try:
-                self.alchemy_p2w["Liquids"] = raw_p2w_list[1]
-            except:
-                self.alchemy_p2w["Liquids"] = [0] * 8
-            try:
-                self.alchemy_p2w["Vials"] = raw_p2w_list[2]
-            except:
-                self.alchemy_p2w["Vials"] = [0] * 2
-            try:
-                self.alchemy_p2w["Player"] = raw_p2w_list[3]
-            except:
-                self.alchemy_p2w["Player"] = [0] * 2
+        for subElementIndex, subElementValue in enumerate(raw_p2w_list):
+            if not isinstance(subElementValue, list):
+                raw_p2w_list[subElementIndex] = [subElementValue]
+        try:
+            self.alchemy_p2w["Cauldrons"] = raw_p2w_list[0]
+        except:
+            self.alchemy_p2w["Cauldrons"] = [0] * 12
+        try:
+            self.alchemy_p2w["Liquids"] = raw_p2w_list[1]
+        except:
+            self.alchemy_p2w["Liquids"] = [0] * 8
+        try:
+            self.alchemy_p2w["Vials"] = raw_p2w_list[2]
+        except:
+            self.alchemy_p2w["Vials"] = [0] * 2
+        try:
+            self.alchemy_p2w["Player"] = raw_p2w_list[3]
+        except:
+            self.alchemy_p2w["Player"] = [0] * 2
 
-            for sigilName in self.alchemy_p2w["Sigils"]:
-                try:
-                    self.alchemy_p2w["Sigils"][sigilName]["PlayerHours"] = float(raw_p2w_list[4][self.alchemy_p2w["Sigils"][sigilName]["Index"]])
-                    self.alchemy_p2w["Sigils"][sigilName]["Level"] = raw_p2w_list[4][self.alchemy_p2w["Sigils"][sigilName]["Index"] + 1] + 1
-                except:
-                    pass  # Already defaulted to 0s in consts.sigilsDict
+        for sigilName in self.alchemy_p2w["Sigils"]:
+            try:
+                self.alchemy_p2w["Sigils"][sigilName]["PlayerHours"] = float(raw_p2w_list[4][self.alchemy_p2w["Sigils"][sigilName]["Index"]])
+                self.alchemy_p2w["Sigils"][sigilName]["Level"] = raw_p2w_list[4][self.alchemy_p2w["Sigils"][sigilName]["Index"] + 1] + 1
+            except:
+                pass  # Already defaulted to 0s in consts.sigilsDict
 
     def _parse_w2_arcade(self):
         self.arcade = {}
