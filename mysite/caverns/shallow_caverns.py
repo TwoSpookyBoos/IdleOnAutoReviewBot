@@ -1,13 +1,13 @@
+from math import ceil
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import (
-    caverns_cavern_names,
     break_you_best,
     schematics_unlocking_buckets, sediment_names, max_sediments, getSedimentBarRequirement, getWellOpalTrade, getMotherlodeEfficiencyRequired,
-    getMotherlodeResourceRequired, getDenOpalRequirement, schematics_unlocking_amplifiers, getBraveryOpalChance, monument_layer_rewards, getBellExpRequired,
-    getBellImprovementBonus, infinity_string
+    getMotherlodeResourceRequired, getDenOpalRequirement, schematics_unlocking_amplifiers, getMonumentOpalChance, monument_layer_rewards,
+    infinity_string
     # shallow_caverns_progressionTiers
 )
 from utils.text_formatting import pl, notateNumber
@@ -15,13 +15,16 @@ from utils.text_formatting import pl, notateNumber
 logger = get_logger(__name__)
 
 def getTemplateCavernAdviceGroup(schematics) -> AdviceGroup:
-    c_stats = "Cavern Stats"
-    cavern_advice = {
-        c_stats: []
-    }
-
     cavern_name = 'The Template'
     cavern = session_data.account.caverns['Caverns'][cavern_name]
+
+    c_stats = "Cavern Stats"
+    c_faqs = "FAQs"
+    cavern_advice = {
+        c_stats: [],
+        c_faqs: [],
+    }
+
 # Cavern Stats
     cavern_advice[c_stats].append(Advice(
         label=f"Objective- ",
@@ -34,13 +37,19 @@ def getTemplateCavernAdviceGroup(schematics) -> AdviceGroup:
 
     cavern_ag = AdviceGroup(
         tier='',
-        pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name if cavern['Unlocked'] else 'To Be Discovered!'}",
+        pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name}",
         advices=cavern_advice,
         informational=True
     )
     return cavern_ag
 
 def getWellAdviceGroup(schematics) -> AdviceGroup:
+    cavern_name = 'The Well'
+    cavern = session_data.account.caverns['Caverns'][cavern_name]
+    buckets = cavern['BucketTargets']
+    sediments_owned = cavern['SedimentsOwned']
+    sediment_levels = cavern['SedimentLevels']
+
     c_stats = "Cavern Stats"
     b_stats = "Bucket Stats"
     s_stats = "Sediment Stats"
@@ -49,12 +58,6 @@ def getWellAdviceGroup(schematics) -> AdviceGroup:
         b_stats: [],
         s_stats: [],
     }
-
-    cavern_name = 'The Well'
-    cavern = session_data.account.caverns['Caverns'][cavern_name]
-    buckets = session_data.account.caverns['Caverns'][cavern_name]['BucketTargets']
-    sediments_owned = session_data.account.caverns['Caverns'][cavern_name]['SedimentsOwned']
-    sediment_levels = session_data.account.caverns['Caverns'][cavern_name]['SedimentLevels']
 
 # Cavern Stats
     cavern_advice[c_stats].append(Advice(
@@ -118,7 +121,7 @@ def getWellAdviceGroup(schematics) -> AdviceGroup:
                     f"<br>{sedi_owned} owned"
                     f"<br>{target} to expand"
                     if sediment_value >= 0 else
-                    f"Clear the rock layer to discover this Sediment!"
+                    f"Clear the rock layer to discover {sediment_names[sediment_index]}!"
                 ),
                 picture_class=f"well-sediment-{sediment_index}",
                 resource='well-sediment-rock-layer' if sediment_value < 0 else '',
@@ -130,7 +133,7 @@ def getWellAdviceGroup(schematics) -> AdviceGroup:
 
     cavern_ag = AdviceGroup(
         tier='',
-        pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name if cavern['Unlocked'] else 'To Be Discovered!'}",
+        pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name}",
         advices=cavern_advice,
         informational=True,
         picture_class='cavern-1'
@@ -151,9 +154,9 @@ def getMotherlodeAdviceGroup(schematics):
     cavern = session_data.account.caverns['Caverns'][cavern_name]
 # Cavern Stats
     cavern_advice[c_stats].append(Advice(
-        label=f"Objective- Use your characters to mine up Ore and break Layers",
+        label=f"Objective- Use your characters to collect {resource_type} while {resource_skill} and break Layers to collect Opals",
         picture_class=f"cavern-{cavern['CavernNumber']}",
-        resource='mining'
+        resource=resource_skill
     ))
     cavern_advice[c_stats].append(Advice(
         label=f"Total Opals Found: {cavern['OpalsFound']}",
@@ -177,7 +180,7 @@ def getMotherlodeAdviceGroup(schematics):
 
     cavern_ag = AdviceGroup(
         tier='',
-        pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name if cavern['Unlocked'] else 'To Be Discovered!'}",
+        pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name}",
         advices=cavern_advice,
         informational=True,
         picture_class='cavern-2'
@@ -235,7 +238,7 @@ def getDenAdviceGroup(schematics) -> AdviceGroup:
 
     cavern_ag = AdviceGroup(
         tier='',
-        pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name if cavern['Unlocked'] else 'To Be Discovered!'}",
+        pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name}",
         advices=cavern_advice,
         informational=True
     )
@@ -254,6 +257,7 @@ def getBraveryAdviceGroup(schematics) -> AdviceGroup:
     }
 
     cavern_name = 'Bravery Monument'
+    monument_index = 0
     cavern = session_data.account.caverns['Caverns'][cavern_name]
     layer_rewards = monument_layer_rewards[cavern_name]
     bonuses = cavern['Bonuses']
@@ -269,17 +273,16 @@ def getBraveryAdviceGroup(schematics) -> AdviceGroup:
         picture_class='opal'
     ))
     cavern_advice[c_stats].append(Advice(
-        label=f"Chance for next Opal: {getBraveryOpalChance(cavern['OpalsFound'], bonuses[5]['Value']):.2%}",
+        label=f"Chance for next Opal: {getMonumentOpalChance(cavern['OpalsFound'], bonuses[5 + 10 * monument_index]['Value']):.2%}",
         picture_class='monument-basic-chest',
     ))
 
 # Sword Stats
     cavern_advice[s_stats].append(Advice(
-        label=f"Total Swords: {cavern['Sword Count']}/"
-              f"{cavern['Max Swords'] if cavern['Sword Count'] == cavern['Max Swords'] else '?'}",
+        label=f"Total Swords: {cavern['Sword Count']}/{cavern['Max Swords']}",
         picture_class='monument-basic-sword',
         progression=cavern['Sword Count'],
-        goal=cavern['Max Swords'] if cavern['Sword Count'] >= cavern['Max Swords'] else '?'
+        goal=cavern['Max Swords']
     ))
     cavern_advice[s_stats].append(Advice(
         label=f"Per Sword: {round(cavern['Sword Min']):,} to {round(cavern['Sword Max']):,}"
@@ -289,27 +292,22 @@ def getBraveryAdviceGroup(schematics) -> AdviceGroup:
     ))
 
     cavern_advice[s_stats].append(Advice(
-        label=f"{cavern['Rethrows']}/"
-              f"{cavern['Max Rethrows'] if cavern['Rethrows'] >= cavern['Max Rethrows'] else '?'} "
-              f"Sword Rethrows per Fight",
+        label=f"{cavern['Rethrows']}/{cavern['Max Rethrows']} Sword Rethrows per Fight",
         picture_class='engineer-schematic-40',
         progression=cavern['Rethrows'],
-        goal=cavern['Max Rethrows'] if cavern['Rethrows'] >= cavern['Max Rethrows'] else '?'
+        goal=cavern['Max Rethrows']
     ))
     cavern_advice[s_stats].append(Advice(
-        label=f"{cavern['Retellings']}/"
-              f"{cavern['Max Retellings'] if cavern['Retellings'] >= cavern['Max Retellings'] else '?'} "
-              f"Retellings per Story attempt",
+        label=f"{cavern['Retellings']}/{cavern['Max Retellings']} Retellings per Story attempt",
         picture_class='engineer-schematic-40',
         progression=cavern['Retellings'],
-        goal=cavern['Max Retellings'] if cavern['Retellings'] >= cavern['Max Retellings'] else '?'
+        goal=cavern['Max Retellings']
     ))
 
 # Layer Stats
     cavern_advice[l_stats] = [
         Advice(
-            label=f"{hour_requirement:,} hour bonus: "
-                  f"{layer_reward['Description'] if cavern['Hours'] >= hour_requirement else 'To be discovered'}",
+            label=f"{hour_requirement:,} hour bonus: {layer_reward['Description']}",
             picture_class=layer_reward['Image'],
             progression=cavern['Hours'],
             goal=hour_requirement
@@ -318,13 +316,13 @@ def getBraveryAdviceGroup(schematics) -> AdviceGroup:
 
     cavern_advice[l_stats].insert(0, Advice(
         label=f"Monument Hours: {cavern['Hours']:.0f}",
-        picture_class='measurement-1'
+        picture_class='bravery-bonus-9'
     ))
 
 # Bonuses Stats
     cavern_advice[b_stats] = [
         Advice(
-            label=f"{bonus['Description'] if bonus['Level'] else 'Undiscovered bonus'}",
+            label=f"{bonus['Description']}",
             picture_class=bonus['Image'],
             progression=bonus['Level'],
             goal=infinity_string
@@ -345,7 +343,7 @@ def getBraveryAdviceGroup(schematics) -> AdviceGroup:
 
     cavern_ag = AdviceGroup(
         tier='',
-        pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name if cavern['Unlocked'] else 'To Be Discovered!'}",
+        pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name}",
         advices=cavern_advice,
         informational=True
     )
@@ -374,7 +372,7 @@ def getBellAdviceGroup(schematics):
         picture_class='opal'
     ))
 
-    target_cost = cavern['Charges']['Ping'][2]
+    target_cost = ceil(cavern['Charges']['Ping'][2])
     target_string = notateNumber('Basic', target_cost, 2)
     target_letter = str(target_string[-1]) if target_cost > 1000 else ''
     current_number = cavern['Charges']['Ping'][0]
@@ -392,11 +390,7 @@ def getBellAdviceGroup(schematics):
 # Ring Bonuses
     cavern_advice[r_stats] = [
         Advice(
-            label=(
-                f"{rb_details['Description']}"
-                if rb_details['Level'] > 0 else
-                f"Undiscovered Bonus"
-            ),
+            label=f"{rb_details['Description']}",
             picture_class=rb_details['Image'],
             progression=rb_details['Level'],
             goal=infinity_string
@@ -431,11 +425,7 @@ def getBellAdviceGroup(schematics):
     total_stacks = cavern['Total Stacks']
     cavern_advice[clean_stats] = [
         Advice(
-            label=(
-                ci_details['Description']
-                if ci_details['Level'] > 0 else
-                f"Undiscovered Bonus"
-            ),
+            label=ci_details['Description'],
             picture_class=ci_details['Image'],
             progression=ci_details['Level'],
             goal=infinity_string,
@@ -453,7 +443,7 @@ def getBellAdviceGroup(schematics):
 
     cavern_ag = AdviceGroup(
         tier='',
-        pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name if cavern['Unlocked'] else 'To Be Discovered!'}",
+        pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name}",
         advices=cavern_advice,
         informational=True
     )

@@ -3,6 +3,8 @@ from pathlib import Path
 import yaml
 from flask import g as session_data
 
+import models.account_calcs
+import models.account_parser
 from config import app
 from models.custom_exceptions import UsernameBanned
 from models.models import AdviceWorld, WorldName, Account
@@ -15,7 +17,7 @@ from w2 import alchemy, killroy, islands
 from w3 import trapping, consRefinery, consDeathNote, worship, consSaltLick, consBuildings, equinox, library, sampling, collider
 from w4 import breeding, cooking, rift
 from w5 import slab, divinity, sailing
-from caverns import villagers, shallow_caverns
+from caverns import villagers, shallow_caverns, glowshroom_tunnels
 from w6 import beanstalk, sneaking, farming, summoning
 
 logger = get_logger(__name__)
@@ -45,6 +47,8 @@ def main(inputData, runType="web"):
 
     # Step 2: Make account data available throughout the session
     session_data.account = Account(parsedJSON)
+    models.account_parser.parse_account(session_data.account, runType)
+    models.account_calcs.calculate_account(session_data.account)
 
     for name in session_data.account.names:
         maybe_ban(name, runType)
@@ -103,7 +107,8 @@ def main(inputData, runType="web"):
         ],
         sections_caverns := [
             villagers.getVillagersAdviceSection(),
-            shallow_caverns.getShallowCavernsAdviceSection()
+            shallow_caverns.getShallowCavernsAdviceSection(),
+            glowshroom_tunnels.getGlowshroomTunnelsAdviceSection()
         ],
         sections_6 := [
             farming.setFarmingProgressionTier(),

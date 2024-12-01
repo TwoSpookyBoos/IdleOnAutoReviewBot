@@ -2114,6 +2114,13 @@ expectedStackables = {
         "ClassSwapB", "ResetBox",
     ]
 }
+greenStackAmount = 10**7
+gstackable_codenames = [item for items in expectedStackables.values() for item in items]
+gstackable_codenames_expected = [
+    item for items in list(expectedStackables.values())[:-1] for item in items
+]
+quest_items_codenames = expectedStackables["Missable Quest Items"]
+key_cards = "Cards0"
 card_data = {
     "Blunder Hills": {
         "Crystal0": ["Crystal Carrot", 3],
@@ -6238,6 +6245,8 @@ schematics_unlocking_amplifiers = {
     'Den Despair': ['Fear bar starts partially filled', 'White Amplifier', 'den-amplifier-6'],
     'Fast and Deadly': ['Hounds cause Fear faster', 'Dark Amplifier', 'den-amplifier-7']
 }
+schematics_unlocking_harp_strings = ['Loaded Harp', 'Packed Harp', 'Hefty Harp', 'Multitudinal Harp', 'Sumptuous Harp']
+schematics_unlocking_harp_chords = ['Eee String', 'Eff String', 'Geez String', 'Aye String', 'Bee String']
 max_buckets = 1 + len(schematics_unlocking_buckets)
 sediment_names = ['Gravel', 'Goldust', 'Redstone', 'Mythril', 'Cobaltine', 'Brunite', 'Freezium', 'Sweetium', 'Rad Coral', 'Hyper Coral']
 sediment_bars = [int(float(v)) for v in HolesInfo[21]]
@@ -6297,7 +6306,7 @@ for entry_index, entry in enumerate(caverns_measurer_measurements):
         ]
 monument_hours = [int(h) for h in HolesInfo[30]]  #[1, 80, 300, 750, 2000, 5000, 10000, 24000] as of 2.20
 monument_names = [f"{monument_name} Monument" for monument_name in HolesInfo[41]]
-released_monuments = 1  #Don't increase this without implementing a _parse_ function in models first
+released_monuments = 2  #Don't increase this without implementing a _parse_ function in models first
 #Layer rewards are in HolesInfo[31], but I wanted to clean up the display a bit
 monument_layer_rewards = {
     monument_names[0]: {
@@ -6311,25 +6320,27 @@ monument_layer_rewards = {
         monument_hours[7]: {'Description': '+1 additional Sword', 'Image': 'monument-basic-sword'},
     },
     monument_names[1]: {
-        monument_hours[0]: {'Description': 'Story Minigame unlocked with Coins', 'Image': ''},
-        monument_hours[1]: {'Description': 'Start with 2 Mental Health', 'Image': ''},
-        monument_hours[2]: {'Description': 'You can dismiss 1 case per story', 'Image': ''},
-        monument_hours[3]: {'Description': 'Start with 1.5x more Coins', 'Image': ''},
-        monument_hours[4]: {'Description': '+1 Mental Health and Dismissal', 'Image': ''},
-        monument_hours[5]: {'Description': 'Start with 10 popularity', 'Image': ''},
-        monument_hours[6]: {'Description': 'Start with 3x more Coins', 'Image': ''},
-        monument_hours[7]: {'Description': '+2 Mental Health and Dismissals', 'Image': ''},
+        monument_hours[0]: {'Description': 'Story Minigame unlocked with Coins', 'Image': 'justice-coin-1'},
+        monument_hours[1]: {'Description': 'Start with +1 Mental Health', 'Image': 'justice-currency-2'},
+        monument_hours[2]: {'Description': 'You can dismiss 1 case per story', 'Image': 'justice-currency-5'},
+        monument_hours[3]: {'Description': 'Start with 1.5x more Coins', 'Image': 'justice-coin-2'},
+        monument_hours[4]: {'Description': '+1 Mental Health and Dismissal', 'Image': 'justice-currency-5'},
+        monument_hours[5]: {'Description': 'Start with +7 Popularity', 'Image': 'justice-currency-4'},
+        monument_hours[6]: {'Description': 'Start with 3x more Coins', 'Image': 'justice-coin-3'},
+        monument_hours[7]: {'Description': '+2 Mental Health and Dismissals', 'Image': 'justice-currency-5'},
     }
 }
 monument_bonuses_clean_descriptions = [d.replace('|', ' ').replace('_', ' ') for d in HolesInfo[32]]
 monument_bonuses_scaling = [int(v) for v in HolesInfo[37]]
 monument_bonuses = {
     monument_names[0]: {},
+    monument_names[1]: {},
     #'Justice Monument': {},
     #'Wisdom Monument': {},
     #'Compassion Monument': {},
 }
-for i in range(0, 10):  #Final number is excluded in range. 10 for Bravery, 10 for Justice
+justice_monument_currencies = ['Mental Health', 'Coins', 'Popularity', 'Dismissals']
+for i in range(0, 10*released_monuments):  #Final number is excluded in range. 10 for Bravery, 10 for Justice
     monument_name = monument_names[i//10]
     try:
         monument_bonuses[monument_name][i] = {
@@ -6361,7 +6372,57 @@ for i in range(0, 6):
             ''
         ),
         'Resource': bell_clean_resources[i]}
-
+harp_chord_effects = {
+    'C': ['Generate the tuned Note', 'Harp Note Gain'],
+    'D': ['Chance for an Opal', 'Harp Note Gain'],
+    'E': ['Nothing', 'Harp Power/hr'],
+    'F': ['Generate the tuned Note and both nearby Notes', 'Harp Note Gain'],
+    'G': ['Generate EXP for all unlocked Chords', 'String EXP Gain'],
+    'A': ['Generate every Note you have unlocked', 'Harp Note Gain'],
+    'B': ['TBD', 'TBD'],
+}
+harp_notes = [
+    'Crotchet Note', 'Natural Note', 'Bass Note', 'Treble Note', 'Eighth Note',
+    'Quaver Note', 'Sharp Note', '(F)Clef Note', '(G)Clef Note', 'Sixteenth Note'
+]
+max_harp_notes = len(harp_notes)
+#Taken from "LampBonuses" == e inside _customBlock_Holes function
+#(a.engine.getGameAttribute("DNSM").h.HoleozDT = "25,10,8;15,40,10;20,35,12;1,1,1;2,2,2" last verified as of v2.23
+lamp_world_wish_values = [
+    [0, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0],
+    [25, 10, 8],
+    [15, 40, 10],
+    [20, 35, 12],
+    [1, 1, 1],
+    [2, 2, 2]
+]
+#LampWishes = function () in source code, slightly cleaned up
+lamp_wishes = [
+    ["More Wishes", 1, 3, 1, "Unlock the next Wish Type"],
+    ["Another Try", 6, 0, 0, "Reset Opals or Majik investments. Cost does not increase."],
+    ["1000000 Opals", 2, 2, 1, "+1 Opal"],
+    ["Bring Them Back", 2, 0, 0, "+12 AFK Hours to any unlocked Monument Cost does not increase."],
+    ["World 4 Stuff", 1, .2, 1,
+     f"+{lamp_world_wish_values[4][0]}% Cooking Speed, "
+     f"+{lamp_world_wish_values[4][1]}% Shiny Pet LV Up & Breedability Rate, "
+     f"+{lamp_world_wish_values[4][2]}% Lab EXP gain"],
+    ["A Moderate Discount", 2, .5, 1, "15% discount on the next Engineer Schematic creation"],
+    ["World 5 Things", 1, .2, 1,
+     f"+{lamp_world_wish_values[5][0]}% Sailing Loot Value, "
+     f"+{lamp_world_wish_values[5][1]}% Bits gain, "
+     f"+{lamp_world_wish_values[5][2]}% Divinity Pts gain"],
+    ["Infinite Resources", 1, .05, 1, "Well and Harp resource gain"],
+    ["World 6 Majigers", 1, .2, 1,
+     f"+{lamp_world_wish_values[6][0]}% Next Crop chance, "
+     f"+{lamp_world_wish_values[6][1]}% Stealth for Ninja twins, "
+     f"+{lamp_world_wish_values[6][2]}% All Essence gain"],
+    ["Knowledge of Future", 999, 999, 1, "Not implemented"],
+    ["World 7 Stuff", 999, 999, 1, "Not implemented"],
+    ["World 8 Stuff", 999, 999, 1, "Not implemented"]
+]
 
 def getMaxEngineerLevel() -> int:
     max_engi_last_i_checked = 20  # Last checked on Justice Monument release 2.23
@@ -6419,7 +6480,7 @@ def getDenOpalRequirement(current_opals: int):
     result = 12 * (150 + (30 + current_opals) * current_opals) * pow(1.5, current_opals)
     return round(result)
 
-def getBraveryOpalChance(current_opals: int, opal_bonus_value: float = 1):
+def getMonumentOpalChance(current_opals: int, opal_bonus_value: float = 1):
     result = (
         min(0.5, pow(0.5, current_opals))
         * ValueToMulti(opal_bonus_value)
@@ -6444,6 +6505,27 @@ def getBellImprovementBonus(i_index, i_level, schematic_stacks=0, schematic_owne
     result = (
         2 * i_level * max(1, pow(1.1, schematic_stacks) * schematic_owned * float(HolesInfo[61][i_index]))
     )
+    return result
+
+def getGrottoKills(current_opals: int):
+    result = 5000 * pow(3.4, current_opals)
+    return result
+
+def getHarpNoteUnlockCost(note_index):
+    result = math.ceil(150 * pow(1 + note_index, 1.5) * pow(4.5, note_index))
+    return result
+
+def getWishCost(wish_index, wish_level):
+    match wish_index:
+        case 0:  #New Wish Type
+            if 11 > wish_level:
+                result = math.floor(1 + (2 * wish_level) + pow(wish_level, 2))
+            else:
+                result = 999999
+        case 2:  #Opal
+            result = math.floor(1 + (2 * wish_level) + pow(wish_level, 1.7))
+        case _:  #Everything else
+            result = math.floor(lamp_wishes[wish_index][1] + (wish_level * lamp_wishes[wish_index][2]))
     return result
 
 ###WORLD 5 CONSTS###
