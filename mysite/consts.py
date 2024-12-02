@@ -3865,7 +3865,12 @@ combat_talentsDict = {
     },
 }
 unbookable_talents_list = [
-
+    10, 11, 12,  #Tab 1 stats
+    75, 79,      #Beginner tab1 Happy Dude and Sleepin' on the Job
+    23,          #Journeyman Lucky Horseshoe
+    86, 87,      #Warrior tab1 Meat Shank and Critikill
+    266, 267,    #Archer tab1 Featherweight and I See You
+    446, 447,    #Mage tab1 Overclocked Energy and Farsight
 ]
 base_crystal_chance = 0.0005  # 1 in 2000
 filter_recipes = {

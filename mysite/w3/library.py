@@ -1,7 +1,7 @@
 from math import ceil
 from flask import g as session_data
 from consts import maxStaticBookLevels, maxScalingBookLevels, maxSummoningBookLevels, maxOverallBookLevels, skill_talentsDict, combat_talentsDict, currentWorld, \
-    stamp_maxes, maxMealLevel, cookingCloseEnough, librarySubgroupTiers, break_you_best, arbitrary_es_family_goal, max_VialLevel
+    stamp_maxes, maxMealLevel, cookingCloseEnough, librarySubgroupTiers, break_you_best, arbitrary_es_family_goal, max_VialLevel, unbookable_talents_list
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.all_talentsDict import all_talentsDict
@@ -349,7 +349,7 @@ def getLibraryProgressionTiersAdviceGroups():
     character_adviceDict = {}
     character_AdviceGroupDict = {}
     info_tiers = 1
-    max_tier = len(librarySubgroupTiers) - 1
+    max_tier = len(librarySubgroupTiers) - 1 - info_tiers
     anyBookAdvice = False
 
     talentExclusions = getTalentExclusions()
@@ -427,11 +427,13 @@ def getLibraryProgressionTiersAdviceGroups():
                                         )
                                     )
                                     talentNumbersAdded.append(talent_number)
+
+        #Everything Else
         subgroupName = f"Everything Else"
         if subgroupName not in character_adviceDict[toon.character_name]:
             character_adviceDict[toon.character_name][subgroupName] = []
         for talent_number in toon.expected_talents:
-            if talent_number not in talentNumbersAdded:
+            if talent_number not in talentNumbersAdded and talent_number not in unbookable_talents_list:
                 if toon.max_talents.get(str(talent_number), 0) < session_data.account.library['MaxBookLevel']:
                     character_adviceDict[toon.character_name][subgroupName].append(
                         Advice(
@@ -463,7 +465,7 @@ def getLibraryProgressionTiersAdviceGroups():
     #Remove any empty subgroups
     for ag in character_AdviceGroupDict.values():
         ag.remove_empty_subgroups()
-    overall_SectionTier = min(max_tier, min(char_tiers.values(), default=0))
+    overall_SectionTier = min(max_tier + info_tiers, min(char_tiers.values(), default=0))
     return character_AdviceGroupDict, overall_SectionTier, max_tier, anyBookAdvice
 
 def getLibraryAdviceSection() -> AdviceSection:
