@@ -1,7 +1,8 @@
 from math import ceil
 from flask import g as session_data
 from consts import maxStaticBookLevels, maxScalingBookLevels, maxSummoningBookLevels, maxOverallBookLevels, skill_talentsDict, combat_talentsDict, currentWorld, \
-    stamp_maxes, maxMealLevel, cookingCloseEnough, librarySubgroupTiers, break_you_best, arbitrary_es_family_goal, max_VialLevel, unbookable_talents_list
+    stamp_maxes, maxMealLevel, cookingCloseEnough, librarySubgroupTiers, break_you_best, arbitrary_es_family_goal, max_VialLevel, unbookable_talents_list, \
+    expected_talentsDict
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.all_talentsDict import all_talentsDict
@@ -355,6 +356,7 @@ def getLibraryProgressionTiersAdviceGroups():
     talentExclusions = getTalentExclusions()
     char_tiers = {}
 
+    #Character Specific
     for toon in session_data.account.safe_characters:
         character_adviceDict[toon.character_name] = {}
         talentNumbersAdded = []
@@ -429,7 +431,7 @@ def getLibraryProgressionTiersAdviceGroups():
                                     talentNumbersAdded.append(talent_number)
 
         #Everything Else
-        subgroupName = f"Everything Else"
+        subgroupName = librarySubgroupTiers[-1]
         if subgroupName not in character_adviceDict[toon.character_name]:
             character_adviceDict[toon.character_name][subgroupName] = []
         for talent_number in toon.expected_talents:
@@ -461,6 +463,40 @@ def getLibraryProgressionTiersAdviceGroups():
         )
         if talentNumbersAdded:
             anyBookAdvice = True
+
+    # Account-wide Star Talents
+    awt = "VIP Star Talents"
+    subgroupName = "VIP"
+    character_adviceDict[awt] = {subgroupName: []}
+    talentNumbersAdded = []
+    for talent_number in expected_talentsDict[subgroupName]:
+        try:
+            # logger.debug(
+            #     f"Star Talent {talent_number} "
+            #     f"({all_talentsDict.get(talent_number, {}).get('name', f'Unknown{talent_number}')}) on Character 0: "
+            #     f"{session_data.account.safe_characters[0].max_talents.get(str(talent_number), 0)}"
+            # )
+            if session_data.account.safe_characters[0].max_talents.get(str(talent_number), 0) < session_data.account.library['MaxBookLevel']:
+                character_adviceDict[awt][subgroupName].append(
+                    Advice(
+                        label=f"{all_talentsDict.get(talent_number, {}).get('subClass', 'Unknown')}: {all_talentsDict.get(talent_number, {}).get('name', f'Unknown{talent_number}')}",
+                        picture_class=all_talentsDict.get(talent_number, {}).get('name', f'Unknown{talent_number}'),
+                        progression=session_data.account.safe_characters[0].max_talents.get(str(talent_number), 0),
+                        goal=session_data.account.library['MaxBookLevel']
+                    )
+                )
+                talentNumbersAdded.append(talent_number)
+        except:
+            logger.exception(f"Unable to review Star Talent {talent_number} on Character 0")
+
+    # Create AdviceGroup before moving on to characters
+    character_AdviceGroupDict[awt] = AdviceGroup(
+        tier='',
+        pre_string=f"Account-Wide VIP Star Talents",
+        advices=character_adviceDict[awt]
+    )
+    if talentNumbersAdded:
+        anyBookAdvice = True
 
     #Remove any empty subgroups
     for ag in character_AdviceGroupDict.values():

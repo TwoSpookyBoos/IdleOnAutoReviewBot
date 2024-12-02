@@ -3284,13 +3284,15 @@ expected_talentsDict = {
         535, 536, 537, 538, 539
     ],
     #"Arcane Cultist": [],
-
+    "VIP": [
+        641, 642, 643, 644, 645
+    ],
 }
 hardcap_symbols = 280  #Last verified as of v2.23
 hardcap_enhancement_eclipse = 250  #Lava might add more in the future, but there are no bonuses above 250 in v2.10
 librarySubgroupTiers = [
     '', 'Skilling - High Priority', 'Skilling - Medium Priority', 'Skilling - Low Priority', 'Skilling - Lowest Priority',
-    'Combat - High Priority', 'Combat - Medium Priority', 'Combat - Low Priority', 'Everything Else'
+    'Combat - High Priority', 'Combat - Medium Priority', 'Combat - Low Priority', 'All Remaining Unmaxed Talents'
 ]  #Why is there a placeholder in [0] again?
 skill_talentsDict = {
     # Optimal is an optional list for calculating library.getJeapordyGoal
@@ -3865,7 +3867,7 @@ combat_talentsDict = {
     },
 }
 unbookable_talents_list = [
-    10, 11, 12,  #Tab 1 stats
+    10, 11, 12,  #Tab 1 STR, AGI, WIS
     75, 79,      #Beginner tab1 Happy Dude and Sleepin' on the Job
     23,          #Journeyman Lucky Horseshoe
     86, 87,      #Warrior tab1 Meat Shank and Critikill
