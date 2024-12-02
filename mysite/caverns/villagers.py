@@ -67,7 +67,7 @@ def getExplorerAdviceGroup() -> AdviceGroup:
     if villager['Level'] < max_cavern:
         villager_advice[c_stats] = [
             Advice(
-                label=f"Discover Cavern {session_data.account.caverns['Caverns'][cavern_name]['CavernNumber']}",
+                label=f"Discover Cavern {session_data.account.caverns['Caverns'][cavern_name]['CavernNumber']}- {cavern_name}",
                 picture_class=session_data.account.caverns['Caverns'][cavern_name]['Image'],
                 progression=villager['Level'],
                 goal=session_data.account.caverns['Caverns'][cavern_name]['CavernNumber']
@@ -78,7 +78,7 @@ def getExplorerAdviceGroup() -> AdviceGroup:
     if not session_data.account.caverns['Villagers'][caverns_villagers[-1]['Name']]['Unlocked']:
         villager_advice[v_u_stats] = [
             Advice(
-                label=f"Discover Villager {villager_details['VillagerNumber']} at Cavern {villager_details['UnlockedCavern']}",
+                label=f"Discover Villager {villager_details['VillagerNumber']}- {villager_details['Title']} at Cavern {villager_details['UnlockedCavern']}",
                 picture_class=f"{villager_name}-undiscovered",
                 progression=villager['Level'],
                 goal=villager_details['UnlockedCavern']
@@ -245,12 +245,15 @@ def getConjurorAdviceGroup() -> AdviceGroup:
         goal=max_conjuror_pts
     ))
     if earned_conjuror_points > spent_conjuror_points < max_majiks:
-        villager_advice[v_stats].append(Advice(
-            label=f"You have {earned_conjuror_points-spent_conjuror_points} unspent Conjuror Pts!",
+        unspent_pts_advice = Advice(
+            label=f"You have {earned_conjuror_points-spent_conjuror_points} unspent {{{{Conjuror Pts|#villagers}}}}!",
             picture_class='',
             progression=spent_conjuror_points,
             goal=earned_conjuror_points
-        ))
+        )
+        villager_advice[v_stats].append(unspent_pts_advice)
+        if villager['Unlocked']:
+            session_data.account.alerts_AdviceDict['The Caverns Below'].append(unspent_pts_advice)
     # Invested Opals
     villager_advice[v_stats].append(Advice(
         label="Opals Invested",
@@ -316,12 +319,10 @@ def getMeasurerAdviceGroup() -> AdviceGroup:
             label=(
                 f"{measurement_details['Level']} {measurement_details['Unit']}: {measurement_details['Description']}"
                 f"<br>Scales with: {measurement_details['ScalesWith']}"
-                if villager['Level'] >= measurement_details['MeasurementNumber']
-                else f"Unlock {measurement_details['Unit']} by leveling Minau"
             ),
             picture_class=measurement_details['Image'],
-            progression=measurement_details['Level'] if villager['Level'] >= measurement_details['MeasurementNumber'] else villager['Level'],
-            goal=infinity_string if villager['Level'] >= measurement_details['MeasurementNumber'] else measurement_details['MeasurementNumber'],
+            progression=measurement_details['Level'],
+            goal=infinity_string,
             resource=measurement_details['Resource']
         )
         for measurement_name, measurement_details in measurements.items() if measurement_name != 'i' and max_measurements >= measurement_details['MeasurementNumber']

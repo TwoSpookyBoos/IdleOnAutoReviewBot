@@ -80,6 +80,7 @@ $schematics: (
     engineer-schematic-58: img('wiki/HoleUIbuildUpg58.png'),
     engineer-schematic-59: img('wiki/HoleUIbuildUpg59.png'),
     engineer-schematic-60: img('wiki/HoleUIbuildUpg60.png'),
+    engineer-schematic-61: img('wiki/HoleUIbuildUpg61.png'),
 );
 
 $cosmos-majiks: (
@@ -92,31 +93,31 @@ $cosmos-majiks: (
 );
 
 $caverns: (
-    cavern-1: img('wiki/HolePOI0.png'), //Well
-    cavern-2: img('wiki/HolePOI1.png'), //Motherlode Mining
-    cavern-3: img('wiki/HolePOI2.png'), //Dawg Den
-    cavern-4: img('wiki/HolePOI3.png'), //Bravery Monument
-    cavern-5: img('wiki/HolePOI4.png'), //Bell
-    cavern-6: img('wiki/HolePOI5.png'), //Harp
-    cavern-7: img('wiki/HolePOI6.png'), //Lamp
-    cavern-8: img('wiki/HolePOI7.png'), //Motherlode Catching
-    cavern-9: img('wiki/HolePOI8.png'), //Grotto
-    cavern-10: img('wiki/HolePOI9.png'), //Justice Monument
+    cavern-1: img('customized/HolePOI0.png'), //Well
+    cavern-2: img('customized/HolePOI1.png'), //Motherlode Mining
+    cavern-3: img('customized/HolePOI2.png'), //Dawg Den
+    cavern-4: img('customized/HolePOI3.png'), //Bravery Monument
+    cavern-5: img('customized/HolePOI4.png'), //Bell
+    cavern-6: img('customized/HolePOI5.png'), //Harp
+    cavern-7: img('customized/HolePOI6.png'), //Lamp
+    cavern-8: img('customized/HolePOI7.png'), //Motherlode Catching
+    cavern-9: img('customized/HolePOI8.png'), //Grotto
+    cavern-10: img('customized/HolePOI9.png'), //Justice Monument
 );
 
 $well-sediment: (
     well-bucket: img('wiki/HoleWellBucket0.png'),
-    well-sediment-rock-layer: img('wiki/HoleWellFill0.png'),
-    well-sediment-0: img('wiki/HoleWellFill1.png'),
-    well-sediment-1: img('wiki/HoleWellFill2.png'),
-    well-sediment-2: img('wiki/HoleWellFill3.png'),
-    well-sediment-3: img('wiki/HoleWellFill4.png'),
-    well-sediment-4: img('wiki/HoleWellFill5.png'),
-    well-sediment-5: img('wiki/HoleWellFill6.png'),
-    well-sediment-6: img('wiki/HoleWellFill7.png'),
-    well-sediment-7: img('wiki/HoleWellFill8.png'),
-    well-sediment-8: img('wiki/HoleWellFill9.png'),
-    well-sediment-9: img('wiki/HoleWellFill10.png'),
+    well-sediment-rock-layer: img('customized/HoleWellFill0.png'),
+    well-sediment-0: img('customized/HoleWellFill1.png'),
+    well-sediment-1: img('customized/HoleWellFill2.png'),
+    well-sediment-2: img('customized/HoleWellFill3.png'),
+    well-sediment-3: img('customized/HoleWellFill4.png'),
+    well-sediment-4: img('customized/HoleWellFill5.png'),
+    well-sediment-5: img('customized/HoleWellFill6.png'),
+    well-sediment-6: img('customized/HoleWellFill7.png'),
+    well-sediment-7: img('customized/HoleWellFill8.png'),
+    well-sediment-8: img('customized/HoleWellFill9.png'),
+    well-sediment-9: img('customized/HoleWellFill10.png'),
 );
 
 $motherlode-resources: (
@@ -140,9 +141,9 @@ $den-amplifiers: (
 $monuments: (
     monument-basic-chest: img('wiki/HoleBraveryChest.png'),
     monument-special-chest: img('wiki/HoleBraveryChestB.png'),
+    //Bravery
     monument-basic-sword: img('wiki/HoleBraverySword.png'),
     monument-special-sword: img('wiki/HoleBraverySwordb.png'),
-    //Bravery
     bravery-bonus-0: img('wiki/Mining_Skill_Icon.png'),
     bravery-bonus-1: img('wiki/HoleWellBucket0.png'),
     bravery-bonus-2: img('wiki/Cooking_Skill_Icon.png'),
@@ -152,41 +153,69 @@ $monuments: (
     bravery-bonus-6: img('wiki/Attack_Icon.png'),
     bravery-bonus-7: img('wiki/measimg2.png'),
     bravery-bonus-8: img('wiki/Monument_AFK.png'),
-    bravery-bonus-9: img('wiki/measimg1.png'),
+    bravery-bonus-9: img('caverns/Bravery_Monument_x1.png'),
+    //Justice
+    justice-coin-1: img('caverns/HoleJusticeObj0.png'),
+    justice-coin-2: img('caverns/HoleJusticeObj1.png'),
+    justice-coin-3: img('caverns/HoleJusticeObj2.png'),
+    justice-currency-1: img('caverns/Justice_Currency_1.png'),  //Case Number
+    justice-currency-2: img('caverns/Justice_Currency_2.png'),  //Mental Health
+    justice-currency-3: img('caverns/Justice_Currency_3.png'),  //Coin
+    justice-currency-4: img('caverns/Justice_Currency_4.png'),  //Popularity
+    justice-currency-5: img('caverns/Justice_Currency_5.png'),  //Dismissal
+    justice-bonus-10: img('wiki/Catching_Skill_Icon.png'),
+    justice-bonus-11: img('customized/HolePOI5.png'),
+    justice-bonus-12: img('wiki/Captain_Effect_3.png'),
+    justice-bonus-13: img('wiki/Opal.png'),
+    justice-bonus-14: img('wiki/Summoning_Skill_Icon.png'),
+    justice-bonus-15: img('wiki/HoleBraveryChest.png'),
+    justice-bonus-16: img('weekly_bosses/Req_Icon_s.png'),  //Class exp
+    justice-bonus-17: img('customized/HolePOI6.png'),
+    justice-bonus-18: img('wiki/Monument_AFK.png'),
+    justice-bonus-19: img('caverns/Justice_Monument_x1.png'),
 );
 
 $bell: (
-    bell-ring:  img('HoleBellCover0.png'),
-    bell-ping:  img('HoleBellCover1.png'),
-    bell-clean: img('HoleBellCover2.png'),
-    bell-renew: img('HoleBellCover3.png'),
+    bell-ring:  img('customized/HoleBellCover0.png'),
+    bell-ping:  img('customized/HoleBellCover1.png'),
+    bell-clean: img('customized/HoleBellCover2.png'),
+    bell-renew: img('customized/HoleBellCover3.png'),
 );
 
-$harp-notes: (
-    harp-note-0: img('wiki/HoleHarpNote0.png'),
-    harp-note-1: img('wiki/HoleHarpNote1.png'),
-    harp-note-2: img('wiki/HoleHarpNote2.png'),
-    harp-note-3: img('wiki/HoleHarpNote3.png'),
-    harp-note-4: img('wiki/HoleHarpNote4.png'),
-    harp-note-5: img('wiki/HoleHarpNote5.png'),
-    harp-note-6: img('wiki/HoleHarpNote6.png'),
-    harp-note-7: img('wiki/HoleHarpNote7.png'),
-    harp-note-8: img('wiki/HoleHarpNote8.png'),
-    harp-note-9: img('wiki/HoleHarpNote9.png'),
+$harp: (
+    harp-chord-a: img('caverns/HarpChordA.png'),
+    harp-chord-b: img('caverns/HarpChordB.png'),
+    harp-chord-c: img('caverns/HarpChordC.png'),
+    harp-chord-d: img('caverns/HarpChordD.png'),
+    harp-chord-e: img('caverns/HarpChordE.png'),
+    harp-chord-f: img('caverns/HarpChordF.png'),
+    harp-chord-g: img('caverns/HarpChordG.png'),
+    harp-note-0: img('caverns/HoleHarpNote0.png'),
+    harp-note-1: img('caverns/HoleHarpNote1.png'),
+    harp-note-2: img('caverns/HoleHarpNote2.png'),
+    harp-note-3: img('caverns/HoleHarpNote3.png'),
+    harp-note-4: img('caverns/HoleHarpNote4.png'),
+    harp-note-5: img('caverns/HoleHarpNote5.png'),
+    harp-note-6: img('caverns/HoleHarpNote6.png'),
+    harp-note-7: img('caverns/HoleHarpNote7.png'),
+    harp-note-8: img('caverns/HoleHarpNote8.png'),
+    harp-note-9: img('caverns/HoleHarpNote9.png'),
 );
 
 $lamp-wishes: (
-    lamp-wish-button: img('wiki/HoleLampWish.png'),
-    lamp-wish-0: img('wiki/HoleLampUpg0.png'),
-    lamp-wish-1: img('wiki/HoleLampUpg1.png'),
-    lamp-wish-2: img('wiki/HoleLampUpg2.png'),
-    lamp-wish-3: img('wiki/HoleLampUpg3.png'),
-    lamp-wish-4: img('wiki/HoleLampUpg4.png'),
-    lamp-wish-5: img('wiki/HoleLampUpg5.png'),
-    lamp-wish-6: img('wiki/HoleLampUpg6.png'),
-    lamp-wish-7: img('wiki/HoleLampUpg7.png'),
-    lamp-wish-8: img('wiki/HoleLampUpg8.png'),
-    //lamp-wish-9: img('wiki/HoleLampUpg9.png'),
+    lamp-wish-button: img('caverns/HoleLampWish.png'),
+    lamp-wish-0: img('caverns/HoleLampUpg0.png'),
+    lamp-wish-1: img('caverns/HoleLampUpg1.png'),
+    lamp-wish-2: img('caverns/HoleLampUpg2.png'),
+    lamp-wish-3: img('caverns/HoleLampUpg3.png'),
+    lamp-wish-4: img('caverns/HoleLampUpg4.png'),
+    lamp-wish-5: img('caverns/HoleLampUpg5.png'),
+    lamp-wish-6: img('caverns/HoleLampUpg6.png'),
+    lamp-wish-7: img('caverns/HoleLampUpg7.png'),
+    lamp-wish-8: img('caverns/HoleLampUpg8.png'),
+    lamp-wish-9: img('caverns/HoleLampUpg9.png'),
+    lamp-wish-10: img('caverns/HoleLampUpg10.png'),
+    lamp-wish-11: img('caverns/HoleLampUpg11.png'),
 );
 
 $measurements: (
@@ -218,7 +247,7 @@ $all-caverns: map-merge($all-caverns, $motherlode-resources);
 $all-caverns: map-merge($all-caverns, $den-amplifiers);
 $all-caverns: map-merge($all-caverns, $monuments);
 $all-caverns: map-merge($all-caverns, $bell);
-$all-caverns: map-merge($all-caverns, $harp-notes);
+$all-caverns: map-merge($all-caverns, $harp);
 $all-caverns: map-merge($all-caverns, $lamp-wishes);
 $all-caverns: map-merge($all-caverns, $measurements);
 $all-caverns: map-merge($all-caverns, $etc);
