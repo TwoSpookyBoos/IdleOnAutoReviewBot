@@ -435,7 +435,7 @@ def getLibraryProgressionTiersAdviceGroups():
         if subgroupName not in character_adviceDict[toon.character_name]:
             character_adviceDict[toon.character_name][subgroupName] = []
         for talent_number in toon.expected_talents:
-            if talent_number not in talentNumbersAdded and talent_number not in unbookable_talents_list:
+            if talent_number not in unbookable_talents_list:
                 if toon.max_talents.get(str(talent_number), 0) < session_data.account.library['MaxBookLevel']:
                     character_adviceDict[toon.character_name][subgroupName].append(
                         Advice(
@@ -468,7 +468,6 @@ def getLibraryProgressionTiersAdviceGroups():
     awt = "VIP Star Talents"
     subgroupName = "VIP"
     character_adviceDict[awt] = {subgroupName: []}
-    talentNumbersAdded = []
     for talent_number in expected_talentsDict[subgroupName]:
         try:
             # logger.debug(
@@ -479,13 +478,13 @@ def getLibraryProgressionTiersAdviceGroups():
             if session_data.account.safe_characters[0].max_talents.get(str(talent_number), 0) < session_data.account.library['MaxBookLevel']:
                 character_adviceDict[awt][subgroupName].append(
                     Advice(
-                        label=f"{all_talentsDict.get(talent_number, {}).get('subClass', 'Unknown')}: {all_talentsDict.get(talent_number, {}).get('name', f'Unknown{talent_number}')}",
+                        label=f"{all_talentsDict.get(talent_number, {}).get('subClass', 'Unknown')}: "
+                              f"{all_talentsDict.get(talent_number, {}).get('name', f'Unknown{talent_number}')}",
                         picture_class=all_talentsDict.get(talent_number, {}).get('name', f'Unknown{talent_number}'),
                         progression=session_data.account.safe_characters[0].max_talents.get(str(talent_number), 0),
                         goal=session_data.account.library['MaxBookLevel']
                     )
                 )
-                talentNumbersAdded.append(talent_number)
         except:
             logger.exception(f"Unable to review Star Talent {talent_number} on Character 0")
 
@@ -495,8 +494,6 @@ def getLibraryProgressionTiersAdviceGroups():
         pre_string=f"Account-Wide VIP Star Talents",
         advices=character_adviceDict[awt]
     )
-    if talentNumbersAdded:
-        anyBookAdvice = True
 
     #Remove any empty subgroups
     for ag in character_AdviceGroupDict.values():
