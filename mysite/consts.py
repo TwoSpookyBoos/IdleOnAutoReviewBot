@@ -6125,8 +6125,14 @@ breedabilityDaysList = [
 breedabilityHearts = [1 + pow(x, 1.25) for x in range(0, 10)]
 
 def getBreedabilityMultiFromDays(days: float) -> float:
+    if not isinstance(days, float):
+        try:
+            days = float(days)
+        except:
+            logger.warning(f"Expected days to be float type, got {type(days)}: {days}. Using 0 days instead.")
+            days = 0
     result = 1 + math.log(max(1, pow(days+1, 0.725)))
-    #print(f"getBreedabilityMultiFromDays: Given {days} days, Breedability Multi = {result}")
+    #logger.debug(f"getBreedabilityMultiFromDays: Given {days} days, Breedability Multi = {result}")
     return result
 
 def getBreedabilityHeartFromMulti(multi: float) -> str:
@@ -6140,7 +6146,7 @@ def getBreedabilityHeartFromMulti(multi: float) -> str:
 
 
 ###World 5 Caverns CONSTS###
-def getCavernResourceImage(resource_number):
+def getCavernResourceImage(resource_number: int):
     try:
         if int(resource_number) <= 9:
             resource_image = f'well-sediment-{resource_number}'
@@ -6149,7 +6155,7 @@ def getCavernResourceImage(resource_number):
         else:
             resource_image = ''
     except Exception as e:
-        # print(f"Error parsing resource type for {clean_name}: {schematic_details[2]}: {e}")
+        logger.exception(f"Error parsing resource type for resource {resource_number}")
         resource_image = ''
     return resource_image
 
@@ -6359,7 +6365,7 @@ for i in range(0, 10*released_monuments):  #Final number is excluded in range. 1
             'Image': f"{monument_name.lower().replace(' ', '-').replace('-monument', '')}-bonus-{i}",
         }
     except Exception as e:
-        print(f"EXCEPTION: Couldn't parse {monument_name} bonus {i}: {e}")
+        logger.exception(f"Couldn't parse {monument_name} bonus {i}: {e}")
         continue
 bell_ring_images = ['well-bucket', 'opal', 'cavern-6', 'cavern-7']
 bell_ring_bonuses = {}

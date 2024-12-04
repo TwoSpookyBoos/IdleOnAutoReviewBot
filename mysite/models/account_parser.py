@@ -1482,7 +1482,7 @@ def _parse_w4_breeding_pets(account, rawBreeding):
     # Breedability Days
     for index in range(13, 21):
         try:
-            account.breeding['Breedability Days'][f"W{index - 12}"] = rawBreeding[index]
+            account.breeding['Breedability Days'][f"W{index - 12}"] = [float(v) for v in rawBreeding[index]]
         except:
             continue  # Already default to [] during initialization
 
