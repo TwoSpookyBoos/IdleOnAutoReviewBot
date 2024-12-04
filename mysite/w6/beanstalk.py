@@ -56,6 +56,7 @@ def getProgressionTiersAdviceSections():
         Advice(
             label=foodname,
             picture_class=foodname.split(":")[0],
+            completed=False
         )
         for foodname in foods_ready_to_deposit
     ]
