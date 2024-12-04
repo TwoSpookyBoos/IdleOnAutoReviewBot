@@ -3292,7 +3292,7 @@ hardcap_symbols = 280  #Last verified as of v2.23
 hardcap_enhancement_eclipse = 250  #Lava might add more in the future, but there are no bonuses above 250 in v2.10
 librarySubgroupTiers = [
     '', 'Skilling - High Priority', 'Skilling - Medium Priority', 'Skilling - Low Priority', 'Skilling - Lowest Priority',
-    'Combat - High Priority', 'Combat - Medium Priority', 'Combat - Low Priority', 'All Remaining Unmaxed Talents'
+    'Combat - High Priority', 'Combat - Medium Priority', 'Combat - Low Priority', 'ALL Unmaxed Talents'
 ]  #Why is there a placeholder in [0] again?
 skill_talentsDict = {
     # Optimal is an optional list for calculating library.getJeapordyGoal
