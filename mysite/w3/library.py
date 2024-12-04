@@ -142,7 +142,13 @@ def getBonusLevelAdviceGroup() -> AdviceGroup:
     #Character Specific
     for char in session_data.account.safe_characters:
         arctis_max = ceil(15 * session_data.account.alchemy_bubbles['Big P']['BaseValue'] * (char.divinity_level / (char.divinity_level + 60)))
-        arctis_current = arctis_max if session_data.account.doot_owned or char.divinity_link == "Arctis" or char.current_polytheism_link == "Arctis" or char.secondary_polytheism_link == "Arctis" else 0
+        arctis_current = arctis_max if (
+            session_data.account.doot_owned
+            or char.divinity_link == "Arctis"
+            or char.current_polytheism_link == "Arctis"
+            or char.secondary_polytheism_link == "Arctis"
+            or 'Arctis' in session_data.account.caverns['PocketDivinityLinks']
+        ) else 0
 
         char_bonus_levels = arctis_current + char.symbols_of_beyond
         char_bonus_levels += char.family_guy_bonus if char.class_name == "Elemental Sorcerer" else 0

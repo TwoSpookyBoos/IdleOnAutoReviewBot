@@ -1762,7 +1762,7 @@ def _parse_caverns(account):
         raw_caverns_list.append([])
     _parse_caverns_villagers(account, raw_caverns_list[1], raw_caverns_list[2], raw_caverns_list[3], raw_caverns_list[23])
     _parse_caverns_actual_caverns(account, raw_caverns_list[7])
-    _parse_caverns_majiks(account, raw_caverns_list[4], raw_caverns_list[5], raw_caverns_list[6])
+    _parse_caverns_majiks(account, raw_caverns_list[4], raw_caverns_list[5], raw_caverns_list[6], raw_caverns_list[11])
     _parse_caverns_schematics(account, raw_caverns_list[13])
     _parse_caverns_measurements(account, raw_caverns_list[22])
     _parse_caverns_biome1(account, raw_caverns_list)
@@ -1813,7 +1813,7 @@ def _parse_caverns_actual_caverns(account, opals_per_cavern):
                 'CavernNumber': cavern_index
             }
 
-def _parse_caverns_majiks(account, hole_majiks, village_majiks, idleon_majiks):
+def _parse_caverns_majiks(account, hole_majiks, village_majiks, idleon_majiks, extras):
     account.caverns['TotalMajiks'] = sum([sum(hole_majiks), sum(village_majiks), sum(idleon_majiks)])
     raw_majiks: dict = {
         'Hole': hole_majiks,
@@ -1840,6 +1840,21 @@ def _parse_caverns_majiks(account, hole_majiks, village_majiks, idleon_majiks):
                     'Description': majik_data['Description'],
                     # 'Value': 0  # Calculated later in _calculate_caverns_majiks
                 }
+    #Pocket Divinity
+    account.caverns['PocketDivinityLinks'] = []
+    try:
+        raw_pocket_div_links = [int(v) for v in extras[29:31]]
+    except ValueError:
+        raw_pocket_div_links = [-1, -1]
+        logger.exception(f"Could not cast Pocket Divinity link values to ints: {extras[29:31]}. Defaulting to no links.")
+    for entry_index, entry_value in enumerate(raw_pocket_div_links):
+        if int(entry_value) != -1 and entry_index < account.caverns['Majiks']['Pocket Divinity']['Level']:
+            if int(entry_value)+1 in divinity_divinitiesDict:
+                account.caverns['PocketDivinityLinks'].append(divinity_divinitiesDict[int(entry_value)+1]['Name'])
+            else:
+                logger.exception(f"Pocket Divinity link value of {entry_value}+1 not found in consts.divinity_divinitiesDict")
+                account.caverns['PocketDivinityLinks'].append('')
+    #logger.debug(f"Pocket Divinity Links: {account.caverns['PocketDivinityLinks']}")
 
 def _parse_caverns_schematics(account, raw_schematics_list):
     try:
