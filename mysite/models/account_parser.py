@@ -278,10 +278,11 @@ def _parse_family_bonuses(account):
         try:
             account.family_bonuses[className]['Value'] = lavaFunc(
                 familyBonusesDict[className]['funcType'],
-                account.family_bonuses[className]['Level'] - familyBonusesDict[className]['levelDiscount'],
+                account.family_bonuses[className]['Level'] - min(familyBonusesDict[className]['levelDiscount'], account.family_bonuses[className]['Level']),
                 familyBonusesDict[className]['x1'],
                 familyBonusesDict[className]['x2'])
         except:
+            logger.exception(f"Error parsing Family Bonus for {className}")
             account.family_bonuses[className]['Value'] = 0
         account.family_bonuses[className]['DisplayValue'] = (
             f"{'+' if familyBonusesDict[className]['PrePlus'] else ''}"
@@ -1744,7 +1745,6 @@ def _parse_w5_divinity(account):
             character.setDivinityLink(getDivinityNameFromIndex(raw_divinity_list[character.character_index + 12] + 1))
         except:
             continue
-
 
 def _parse_caverns(account):
     account.caverns = {

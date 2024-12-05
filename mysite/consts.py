@@ -2585,7 +2585,7 @@ guildBonusesList = [
     "Multi Tool", "Sleepy Skiller", "Coin Supercharger", "Bonus GP for small guilds", "Gold Charm", "Star Dazzle",
     "C2 Card Spotter", "Bestone", "Skilley Skillet", "Craps", "Anotha One", "Wait A Minute"
 ]
-familyBonusClassTierLevelReductions = [10, 30, 70, 999]
+familyBonusClassTierLevelReductions = [9, 29, 69, 999]  #Character must be this high of a level to get bonuses
 familyBonusesDict = {
     #"Beginner": {'funcType': 'decay', 'x1': 0, 'x2': 0, 'Stat': '', 'PrePlus': False, 'PostDisplay': '', 'levelDiscount': familyBonusClassTierLevelReductions[0]},
     "Journeyman": {'funcType': 'intervalAdd', 'x1': 1, 'x2': 5, 'Stat': 'Total Luck', 'PrePlus': True, 'PostDisplay': '', 'levelDiscount': familyBonusClassTierLevelReductions[0]},

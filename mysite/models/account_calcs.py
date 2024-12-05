@@ -548,6 +548,7 @@ def _calculate_w4_lab_bonuses(account):
     account.labBonuses['No Bubble Left Behind']['Value'] = min(nblbMaxBubbleCount, account.labBonuses['No Bubble Left Behind']['Value'])
 
 def _calculate_w5(account):
+    account.divinity['AccountWideArctis'] = account.doot_owned or 'Arctis' in account.caverns['PocketDivinityLinks']
     _calculate_w5_divinity_offering_costs(account)
 
 def _calculate_w5_divinity_offering_costs(account):
@@ -1220,8 +1221,6 @@ def _calculate_general_character_over_books(account):
             "Progression": account.sneaking['MaxMastery'],
             "Goal": 3
         },
-        # If Slug is owned: +25
-        # If Sneaking Mastery 3 unlocked: +5
     }
     account.bonus_talents_account_wide_sum = 0
     for bonusName, bonusValuesDict in account.bonus_talents.items():
@@ -1234,23 +1233,21 @@ def _calculate_general_character_over_books(account):
         character_specific_bonuses = 0
 
         # Arctis minor link
-        if account.doot_owned or char.divinity_link == "Arctis" or char.current_polytheism_link == "Arctis" or char.secondary_polytheism_link == "Arctis":
+        if account.divinity['AccountWideArctis'] or char.isArctisLinked():
             arctis_base = 15
-            #bigp_value = account.alchemy_bubbles['Big P']['BaseValue']
-            #div_minorlink_value = char.divinity_level / (char.divinity_level + 60)
-            #final_result = ceil(arctis_base * bigp_value * div_minorlink_value)
+            bigp_value = account.alchemy_bubbles['Big P']['BaseValue']
+            div_minorlink_value = char.divinity_level / (char.divinity_level + 60)
+            final_result = ceil(arctis_base * bigp_value * div_minorlink_value)
             character_specific_bonuses += ceil(arctis_base * account.alchemy_bubbles['Big P']['BaseValue'] * (char.divinity_level / (char.divinity_level + 60)))
 
-        # Symbols of Beyond = 1 per 20 levels
+        # Symbols of Beyond = 1 + 1 per 20 levels
         if char.class_name in ["Blood Berserker", "Divine Knight"]:
-            character_specific_bonuses += char.max_talents.get("149", 0) // 20  #Symbols of Beyond - Red
-            char.setSymbolsOfBeyondMax(char.max_talents.get("149", 0) // 20)
+            char.setSymbolsOfBeyondMax(char.max_talents.get("149", 0) // 20)  # Symbols of Beyond - Red
         elif char.class_name in ["Siege Breaker", "Beast Master"]:
-            character_specific_bonuses += char.max_talents.get("374", 0) // 20  # Symbols of Beyond - Green
-            char.setSymbolsOfBeyondMax(char.max_talents.get("374", 0) // 20)
+            char.setSymbolsOfBeyondMax(char.max_talents.get("374", 0) // 20)  # Symbols of Beyond - Green
         elif char.class_name in ["Elemental Sorcerer", "Bubonic Conjuror"]:
-            character_specific_bonuses += char.max_talents.get("539", 0) // 20  # Symbols of Beyond - Purple
-            char.setSymbolsOfBeyondMax(char.max_talents.get("539", 0) // 20)
+            char.setSymbolsOfBeyondMax(char.max_talents.get("539", 0) // 20)  # Symbols of Beyond - Purple
+        character_specific_bonuses += char.symbols_of_beyond
 
         char.max_talents_over_books = account.library['MaxBookLevel'] + account.bonus_talents_account_wide_sum + character_specific_bonuses
 
@@ -1264,9 +1261,11 @@ def _calculate_general_character_over_books(account):
                     40,
                     100
                 )
-                family_guy_multi = 1 + (family_guy_bonus/100)
-                char.max_talents_over_books += floor(account.family_bonuses["Elemental Sorcerer"]['Value'] * family_guy_multi)
-                char.setFamilyGuyBonus(floor(account.family_bonuses["Elemental Sorcerer"]['Value'] * family_guy_multi) - floor(account.family_bonuses["Elemental Sorcerer"]['Value']))
+                family_guy_multi = ValueToMulti(family_guy_bonus)
+                char.max_talents_over_books += floor((account.family_bonuses["Elemental Sorcerer"]['Value'] * family_guy_multi) - account.family_bonuses["Elemental Sorcerer"]['Value'])
+                char.setFamilyGuyBonus(
+                    floor(account.family_bonuses["Elemental Sorcerer"]['Value'] * family_guy_multi)
+                    - floor(account.family_bonuses["Elemental Sorcerer"]['Value']))
             except:
                 pass
 
