@@ -2502,6 +2502,7 @@ expectedStorageChestValuesDict = {
     102:4,
     103:4,
     104:3,
+    105:16,
 }
 gemShopDict = {
     # Inventory and Storage

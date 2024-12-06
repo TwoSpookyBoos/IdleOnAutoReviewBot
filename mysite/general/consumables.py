@@ -1,5 +1,5 @@
 from enum import IntEnum
-from consts import expectedInventoryBagValuesDict, break_you_best
+from consts import expectedInventoryBagValuesDict, expectedStorageChestValuesDict, break_you_best
 from models.models import AdviceGroup, Advice, AdviceSection, Assets
 from utils.data_formatting import safe_loads
 from utils.text_formatting import pl
@@ -27,6 +27,10 @@ class StorageItemMixin:
         return chest in cls.from_vendor_shop()
 
     @classmethod
+    def is_limited(cls, chest):
+        return chest in cls.limited()
+
+    @classmethod
     def is_crafted(cls, chest):
         return chest in cls.crafted()
 
@@ -39,9 +43,11 @@ class StorageItemMixin:
         if self.__class__.is_from_vendor_shop(self):
             return "Vendor"
         if self.__class__.is_from_gem_shop(self):
-            return "GemShop"
+            return "Gem Shop"
         if self.__class__.is_crafted(self):
             return "Crafted"
+        if self.__class__.is_limited(self):
+            return "Limited Availability"
 
         return f"Unknown {self.__class__.__name__} {self.value}"
 
@@ -95,6 +101,7 @@ class StorageChest(StorageItemMixin, IntEnum):
     CHEESY_CHEST = 102
     WOODLIN_CHEST = 103
     NINJA_CHEST = 104
+    HOLIDAY_CHEST = 105
 
     @classmethod
     def dropped(cls):
@@ -133,9 +140,14 @@ class StorageChest(StorageItemMixin, IntEnum):
         )
 
     @classmethod
+    def limited(cls):
+        return (
+            cls.HOLIDAY_CHEST,
+        )
+
+    @classmethod
     def crafted(cls):
         return tuple()
-
 
 class Bag(StorageItemMixin, IntEnum):
     INVENTORY_BAG_A = 0
@@ -285,7 +297,7 @@ def parseInventoryBagSlots() -> AdviceGroup:
     inventorySlots_AdviceList = []
     currentMaxInventorySlots = 83  #As of v2.02
     currentMaxUsableInventorySlots = 80  #As of v2.02
-    currentMaxWithoutAutoloot = 78
+    currentMaxWithoutAutoloot = currentMaxInventorySlots - 5
     defaultInventorySlots = 16  # Characters have 16 inventory slots by default
     playerBagDict = {}
     playerBagSlotsDict = {}
@@ -349,7 +361,7 @@ def parseStorageChests():
 
     advices = [
         Advice(
-            label=chest.pretty_name,
+            label=f"{chest.pretty_name}: {expectedStorageChestValuesDict[chest.value]} slots ({chest.type})",
             picture_class=chest.pretty_name)
         for chest in missing_chests
     ]
