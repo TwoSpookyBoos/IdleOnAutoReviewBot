@@ -10,7 +10,14 @@ def getAchievementExclusions() -> set[str]:
     exclusionsSet = set()
     if session_data.account.highestWorldReached >= 6:
         exclusionsSet.add('Golden Fly')
-
+    if (
+        session_data.account.playerDungeonRank >= 40 or
+        (
+            sum(session_data.account.dungeon_upgrades.get("CreditShop", [0])) == 100*8
+            and sum(session_data.account.dungeon_upgrades.get("FlurboShop", [0])) == 50*8
+        )
+    ):
+        exclusionsSet.add('Mutant Massacrer')
     return exclusionsSet
 
 def getAchievementStatus(achievementName):

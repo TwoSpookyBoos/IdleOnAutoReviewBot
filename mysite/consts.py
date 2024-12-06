@@ -403,7 +403,7 @@ achievements_progressionTiers = {
         },
         'Dungeon RNG Items': {
             'Souped Up Salts': {'World': 3, 'Reward': 'RNG Voucher', 'Rating': ''},
-            'Mutant Massacrer': {'World': 4, 'Reward': 'Coin Flip', 'Rating': ''},
+
         },
         'Other Nice Rewards': {
             'Golden Obolden!': {'World': 2, 'Reward': '+20% Obol Frags', 'Rating': ''},
@@ -453,7 +453,7 @@ achievements_progressionTiers = {
             'Two Desserts!': {'World': 2, 'Reward': '5% Mob Respawn in W2', 'Rating': ''},
         },
         'Recipes': {},
-        'Dungeon RNG Items': {},
+        'Dungeon RNG Items': {'Mutant Massacrer': {'World': 4, 'Reward': 'Coin Flip', 'Rating': ''}},  #Steam only
         'Other Nice Rewards': {
             'Gilded Shells': {'World': 4, 'Reward': '1.1x Egg Rarity chance', 'Rating': ''},
             'Perfect Trade Deal': {'World': 5, 'Reward': '+1 Treasure per Chest', 'Rating': ''},
