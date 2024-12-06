@@ -20,7 +20,7 @@ from consts import (
     bubblesDict,
     vialsDict, max_IndexOfVials, getReadableVialNames, max_VialLevel,
     sigilsDict,
-    arcadeBonuses,
+    arcadeBonuses, arcade_max_level,
     ballotDict,
     obolsDict, ignorable_obols_list,
     islands_dict, killroy_dict,
@@ -778,6 +778,12 @@ def _parse_w2_p2w(account):
             pass  # Already defaulted to 0s in consts.sigilsDict
 
 def _parse_w2_arcade(account):
+    account.arcade_currency = {
+        'Balls': safer_get(account.raw_optlacc_dict, 74, 0),
+        'Gold Balls': safer_get(account.raw_optlacc_dict, 75, 0),
+        'Royale Balls': safer_get(account.raw_optlacc_dict, 324, 0),
+    }
+
     account.arcade = {}
     raw_arcade_upgrades = safe_loads(account.raw_data.get("ArcadeUpg", []))
     for upgradeIndex, upgradeDetails in arcadeBonuses.items():
@@ -786,11 +792,14 @@ def _parse_w2_arcade(account):
                 'Level': raw_arcade_upgrades[upgradeIndex],
                 'Value': lavaFunc(
                     upgradeDetails.get("funcType"),
-                    raw_arcade_upgrades[upgradeIndex],
+                    min(arcade_max_level, raw_arcade_upgrades[upgradeIndex]),
                     upgradeDetails.get("x1"),
                     upgradeDetails.get("x2")
-                )
+                ),
+                'Royale': raw_arcade_upgrades[upgradeIndex] > arcade_max_level
             }
+            if account.arcade[upgradeIndex]['Royale']:
+                account.arcade[upgradeIndex]['Value'] *= 2
             account.arcade[upgradeIndex]["Display"] = (
                 f"+{account.arcade[upgradeIndex]['Value']:.2f}{upgradeDetails['displayType']} {upgradeDetails['Stat']}"
             )
@@ -802,11 +811,14 @@ def _parse_w2_arcade(account):
                     0,
                     upgradeDetails.get("x1"),
                     upgradeDetails.get("x2")
-                )
+                ),
+                'Royale': False
             }
             account.arcade[upgradeIndex]["Display"] = (
                 f"+{account.arcade[upgradeIndex]['Value']:.2f}{arcadeBonuses[upgradeIndex]['displayType']} {arcadeBonuses[upgradeIndex]['Stat']}"
             )
+    # for entry_name, entry_details in account.arcade.items():
+    #     logger.debug(f"{entry_name}: {entry_details}")
 
 def _parse_w2_ballot(account):
     account.ballot = {

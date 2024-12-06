@@ -4831,6 +4831,7 @@ arcadeBonuses = {
     36: {"Stat": "Farming EXP", "x1": 30, "x2": 100, "funcType": "decay", "displayType": "%"},
     37: {"Stat": "Divinity EXP", "x1": 40, "x2": 100, "funcType": "decay", "displayType": "%"},
 }
+arcade_max_level = 100
 #poBoxDict last taken from code in 2.09: #PostOffUpgradeInfo = function ()
 #Translate using the Post Office tab in AR spreadsheet
 poBoxDict = {
