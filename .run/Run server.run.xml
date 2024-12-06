@@ -1,0 +1,24 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run server" type="Python.FlaskServer">
+    <option name="application" value="app" />
+    <output_file path="$PROJECT_DIR$/mysite/logs/general.log" />
+    <module name="IdleOnAutoReviewBot" />
+    <option name="target" value="$Projectpath$/flask_app.py" />
+    <option name="targetType" value="PATH" />
+    <option name="ENV_FILES" value="" />
+    <option name="INTERPRETER_OPTIONS" value="" />
+    <option name="PARENT_ENVS" value="true" />
+    <envs>
+      <env name="PYTHONUNBUFFERED" value="1" />
+    </envs>
+    <option name="SDK_HOME" value="$ProjectFileDir$\venv\Scripts\python.exe" />
+    <option name="SDK_NAME" value="Python 3.10 (IdleOnAutoReviewBot)" />
+    <option name="WORKING_DIRECTORY" value="$Projectpath$" />
+    <option name="IS_MODULE_SDK" value="false" />
+    <option name="ADD_CONTENT_ROOTS" value="true" />
+    <option name="ADD_SOURCE_ROOTS" value="true" />
+    <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+    <option name="launchJavascriptDebuger" value="false" />
+    <method v="2" />
+  </configuration>
+</component>
