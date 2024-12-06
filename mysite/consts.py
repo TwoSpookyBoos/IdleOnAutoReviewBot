@@ -4428,14 +4428,14 @@ statuesDict = {
 statueTypeList = ["Normal", "Gold", "Onyx"]
 statueCount = len(statuesDict.keys())
 event_points_shop_dict = {
-    'Golden Tome': {'Cost': 25, 'Code': '_', 'Description': 'Adds a new DMG Multi bonus type to the Tome in World 4'},
-    'Stamp Stack': {'Cost': 20, 'Code': 'a', 'Description': 'Get +3 Stamp LVs every day for a random Stamp'},
-    'Bubble Broth': {'Cost': 15, 'Code': 'b', 'Description': 'Get +5 LVs for a random Alchemy Bubble every day'},
-    'Equinox Enhancement': {'Cost': 15, 'Code': 'c', 'Description': 'Get 1.5x faster Bar fill Rate in Equinox Valley in World 3'},
-    'Supreme Wiring': {'Cost': 45, 'Code': 'd', 'Description': "+2% Printer Output per day, taking new sample resets this"},
-    'Sleepy Joe Armstrong': {'Cost': 25, 'Code': 'e', 'Description': "+20% AFK Gains for all things IdleOn related"},
-    'Village Encouragement': {'Cost': 30, 'Code': 'f','Description': "All Villagers in World 5 Camp get +50% EXP Gain"},
-    'Gilded Vote Button': {'Cost': 35, 'Code': 'g', 'Description': "Get +17% higher Ballot Bonus Multi from Voting"},
+    'Golden Tome': {'Cost': 25, 'Code': '_', 'Description': 'Adds a new DMG Multi bonus type to the Tome in World 4', 'Image': 'event-shop-0'},
+    'Stamp Stack': {'Cost': 20, 'Code': 'a', 'Description': 'Get +3 Stamp LVs every day for a random Stamp', 'Image': 'event-shop-1'},
+    'Bubble Broth': {'Cost': 15, 'Code': 'b', 'Description': 'Get +5 LVs for a random Alchemy Bubble every day', 'Image': 'event-shop-2'},
+    'Equinox Enhancement': {'Cost': 15, 'Code': 'c', 'Description': 'Get 1.5x faster Bar fill Rate in Equinox Valley in World 3', 'Image': 'event-shop-3'},
+    'Supreme Wiring': {'Cost': 45, 'Code': 'd', 'Description': "+2% Printer Output per day, taking new sample resets this", 'Image': 'event-shop-4'},
+    'Sleepy Joe Armstrong': {'Cost': 25, 'Code': 'e', 'Description': "+20% AFK Gains for all things IdleOn related", 'Image': 'event-shop-5'},
+    'Village Encouragement': {'Cost': 30, 'Code': 'f','Description': "All Villagers in World 5 Camp get 1.25x EXP Gain", 'Image': 'event-shop-6'},
+    'Gilded Vote Button': {'Cost': 35, 'Code': 'g', 'Description': "Get +17% higher Ballot Bonus Multi from Voting", 'Image': 'event-shop-7'},
 }  #Found near end of NinjaInfo function in the source code
 
 ###WORLD 2 CONSTS###

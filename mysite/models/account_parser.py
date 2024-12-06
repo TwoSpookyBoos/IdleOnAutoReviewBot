@@ -430,12 +430,14 @@ def _parse_general_event_points_shop(account):
                 'Owned': bonusDetails['Code'] in account.event_points_shop['Raw Purchases'],
                 'Cost': bonusDetails['Cost'],
                 'Description': bonusDetails['Description'],
+                'Image': bonusDetails['Image']
             }
         except:
             account.event_points_shop['Bonuses'][bonusName] = {
                 'Owned': False,
                 'Cost': bonusDetails['Cost'],
                 'Description': bonusDetails['Description'],
+                'Image': bonusDetails['Image']
             }
 
 def _parse_w1(account):

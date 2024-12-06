@@ -16,6 +16,7 @@
 @import "merits";
 @import "companions";
 @import "ui";
+@import "event-shop";
 
 //W1
 @import "bribes";
@@ -2109,6 +2110,7 @@ $id-map: map-merge($all-islands, $id-map);
 $id-map: map-merge($all-killroy, $id-map);
 $id-map: map-merge($all-weekly-boss-map, $id-map);
 $id-map: map-merge($all-caverns, $id-map);
+$id-map: map-merge($event-shop, $id-map);
 
 
 @each $class, $link in $id-map {
