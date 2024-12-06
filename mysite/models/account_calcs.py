@@ -307,6 +307,7 @@ def _calculate_w2_ballot(account):
         account.equinox_bonuses['Voter Rights']['CurrentLevel']
         + account.caverns['Majiks']['Voter Integrity']['Value']
         + account.summoning['Endless Bonuses']["% Ballot Bonus"]
+        + (17 * account.event_points_shop['Bonuses']['Gilded Vote Button']['Owned'])
     )
     for buffIndex, buffValuesDict in account.ballot['Buffs'].items():
         account.ballot['Buffs'][buffIndex]['Value'] *= equinoxMulti
