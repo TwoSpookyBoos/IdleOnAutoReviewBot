@@ -11,9 +11,9 @@ from models.models import AdviceWorld, WorldName, Account
 from utils.data_formatting import getJSONfromAPI, getJSONfromText, HeaderData
 from utils.logging import get_logger
 from utils.text_formatting import is_username
-from general import combatLevels, greenstacks, pinchy, cards, secretPath, consumables, gemShop, active, achievements
+from general import combatLevels, greenstacks, pinchy, cards, secretPath, consumables, gemShop, active, achievements, eventShop
 from w1 import stamps, bribes, smithing, statues, starsigns, owl
-from w2 import alchemy, killroy, islands
+from w2 import alchemy, killroy, islands, arcade
 from w3 import trapping, consRefinery, consDeathNote, worship, consSaltLick, consBuildings, equinox, library, sampling, collider
 from w4 import breeding, cooking, rift
 from w5 import slab, divinity, sailing
@@ -66,6 +66,7 @@ def main(inputData, runType="web"):
             gemShop.getGemShopAdviceSection(),
             *(greenstacks.getGStackAdviceSections()),
             cards.getCardsAdviceSection(),
+            eventShop.getEvent_ShopAdviceSection()
         ],
         sections_1 := [
             stamps.getStampAdviceSection(),
@@ -81,7 +82,8 @@ def main(inputData, runType="web"):
             alchemy.getAlchemyP2WAdviceSection(),
             alchemy.getAlchemySigilsAdviceSection(),
             killroy.getKillroyAdviceSection(),
-            islands.getIslandsAdviceSection()
+            islands.getIslandsAdviceSection(),
+            arcade.getArcadeAdviceSection()
         ],
         sections_3 := [
             consRefinery.getConsRefineryAdviceSection(),

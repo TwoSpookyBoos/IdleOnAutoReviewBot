@@ -20,7 +20,7 @@ from consts import (
     bubblesDict,
     vialsDict, max_IndexOfVials, getReadableVialNames, max_VialLevel,
     sigilsDict,
-    arcadeBonuses,
+    arcadeBonuses, arcade_max_level,
     ballotDict,
     obolsDict, ignorable_obols_list,
     islands_dict, killroy_dict,
@@ -278,10 +278,11 @@ def _parse_family_bonuses(account):
         try:
             account.family_bonuses[className]['Value'] = lavaFunc(
                 familyBonusesDict[className]['funcType'],
-                account.family_bonuses[className]['Level'] - familyBonusesDict[className]['levelDiscount'],
+                account.family_bonuses[className]['Level'] - min(familyBonusesDict[className]['levelDiscount'], account.family_bonuses[className]['Level']),
                 familyBonusesDict[className]['x1'],
                 familyBonusesDict[className]['x2'])
         except:
+            logger.exception(f"Error parsing Family Bonus for {className}")
             account.family_bonuses[className]['Value'] = 0
         account.family_bonuses[className]['DisplayValue'] = (
             f"{'+' if familyBonusesDict[className]['PrePlus'] else ''}"
@@ -293,21 +294,33 @@ def _parse_family_bonuses(account):
 def _parse_dungeon_upgrades(account):
     account.dungeon_upgrades = {}
     raw_dungeon_upgrades = safe_loads(account.raw_data.get('DungUpg', []))
-    if raw_dungeon_upgrades:
-        try:
-            account.dungeon_upgrades["MaxWeapon"] = raw_dungeon_upgrades[3][0]
-            account.dungeon_upgrades["MaxArmor"] = [
-                raw_dungeon_upgrades[3][4], raw_dungeon_upgrades[3][5], raw_dungeon_upgrades[3][6], raw_dungeon_upgrades[3][7]
-            ]
-            account.dungeon_upgrades["MaxJewelry"] = [raw_dungeon_upgrades[3][8], raw_dungeon_upgrades[3][9]]
-            account.dungeon_upgrades["FlurboShop"] = raw_dungeon_upgrades[5]
-            account.dungeon_upgrades["CreditShop"] = raw_dungeon_upgrades[5]
-        except:
-            account.dungeon_upgrades["MaxWeapon"] = 0
-            account.dungeon_upgrades["MaxArmor"] = [0, 0, 0, 0]
-            account.dungeon_upgrades["MaxJewelry"] = [0, 0]
-            account.dungeon_upgrades["FlurboShop"] = [0, 0, 0, 0, 0, 0, 0, 0]
-            account.dungeon_upgrades["CreditShop"] = [0, 0, 0, 0, 0, 0, 0, 0]
+    try:
+        account.dungeon_upgrades["MaxWeapon"] = raw_dungeon_upgrades[3][0]
+        account.dungeon_upgrades["MaxArmor"] = [
+            raw_dungeon_upgrades[3][4], raw_dungeon_upgrades[3][5], raw_dungeon_upgrades[3][6], raw_dungeon_upgrades[3][7]
+        ]
+        account.dungeon_upgrades["MaxJewelry"] = [raw_dungeon_upgrades[3][8], raw_dungeon_upgrades[3][9]]
+        account.dungeon_upgrades["FlurboShop"] = raw_dungeon_upgrades[5]
+        account.dungeon_upgrades["CreditShop"] = raw_dungeon_upgrades[1]
+    except:
+        account.dungeon_upgrades["MaxWeapon"] = 0
+        account.dungeon_upgrades["MaxArmor"] = [0, 0, 0, 0]
+        account.dungeon_upgrades["MaxJewelry"] = [0, 0]
+        account.dungeon_upgrades["FlurboShop"] = [0, 0, 0, 0, 0, 0, 0, 0]
+        account.dungeon_upgrades["CreditShop"] = [0, 0, 0, 0, 0, 0, 0, 0]
+
+    ##Blatantly stolen list from IE lol
+    # https://github.com/Sludging/idleon-efficiency/blob/74f83dd4c0b15f399ffb1f87bc2bc8c9bc9b924c/data/domain/dungeons.tsx#L16
+    dungeonLevelsList = [0, 4, 10, 18, 28, 40, 70, 110, 160, 230, 320, 470, 670, 940, 1310, 1760, 2400, 3250, 4000, 5000, 6160, 8000, 10000, 12500,
+                         15000, 18400, 21000, 25500, 30500, 36500, 45400, 52000, 61000, 72500, 85000, 110000, 125000, 145000, 170000, 200000, 250000,
+                         275000, 325000, 400000, 490000, 600000, 725000, 875000, 1000000, 1200000, 1500000, 3000000, 5000000, 10000000, 20000000,
+                         30000000, 40000000, 50000000, 60000000, 80000000, 100000000, 999999999, 999999999, 999999999, 999999999, 999999999, 1999999999,
+                         1999999999, 1999999999, 1999999999, 1999999999]
+    playerDungeonXP = safer_get(account.raw_optlacc_dict, 71, 0)
+    account.playerDungeonRank = 0
+    for xpRequirement in dungeonLevelsList:
+        if playerDungeonXP >= xpRequirement:
+            account.playerDungeonRank += 1
 
 def _parse_general_achievements(account):
     account.achievements = {}
@@ -429,12 +442,14 @@ def _parse_general_event_points_shop(account):
                 'Owned': bonusDetails['Code'] in account.event_points_shop['Raw Purchases'],
                 'Cost': bonusDetails['Cost'],
                 'Description': bonusDetails['Description'],
+                'Image': bonusDetails['Image']
             }
         except:
             account.event_points_shop['Bonuses'][bonusName] = {
                 'Owned': False,
                 'Cost': bonusDetails['Cost'],
                 'Description': bonusDetails['Description'],
+                'Image': bonusDetails['Image']
             }
 
 def _parse_w1(account):
@@ -775,6 +790,12 @@ def _parse_w2_p2w(account):
             pass  # Already defaulted to 0s in consts.sigilsDict
 
 def _parse_w2_arcade(account):
+    account.arcade_currency = {
+        'Balls': safer_get(account.raw_optlacc_dict, 74, 0),
+        'Gold Balls': safer_get(account.raw_optlacc_dict, 75, 0),
+        'Royale Balls': safer_get(account.raw_optlacc_dict, 324, 0),
+    }
+
     account.arcade = {}
     raw_arcade_upgrades = safe_loads(account.raw_data.get("ArcadeUpg", []))
     for upgradeIndex, upgradeDetails in arcadeBonuses.items():
@@ -783,11 +804,14 @@ def _parse_w2_arcade(account):
                 'Level': raw_arcade_upgrades[upgradeIndex],
                 'Value': lavaFunc(
                     upgradeDetails.get("funcType"),
-                    raw_arcade_upgrades[upgradeIndex],
+                    min(arcade_max_level, raw_arcade_upgrades[upgradeIndex]),
                     upgradeDetails.get("x1"),
                     upgradeDetails.get("x2")
-                )
+                ),
+                'Royale': raw_arcade_upgrades[upgradeIndex] > arcade_max_level
             }
+            if account.arcade[upgradeIndex]['Royale']:
+                account.arcade[upgradeIndex]['Value'] *= 2
             account.arcade[upgradeIndex]["Display"] = (
                 f"+{account.arcade[upgradeIndex]['Value']:.2f}{upgradeDetails['displayType']} {upgradeDetails['Stat']}"
             )
@@ -799,11 +823,14 @@ def _parse_w2_arcade(account):
                     0,
                     upgradeDetails.get("x1"),
                     upgradeDetails.get("x2")
-                )
+                ),
+                'Royale': False
             }
             account.arcade[upgradeIndex]["Display"] = (
                 f"+{account.arcade[upgradeIndex]['Value']:.2f}{arcadeBonuses[upgradeIndex]['displayType']} {arcadeBonuses[upgradeIndex]['Stat']}"
             )
+    # for entry_name, entry_details in account.arcade.items():
+    #     logger.debug(f"{entry_name}: {entry_details}")
 
 def _parse_w2_ballot(account):
     account.ballot = {
@@ -1744,7 +1771,6 @@ def _parse_w5_divinity(account):
             character.setDivinityLink(getDivinityNameFromIndex(raw_divinity_list[character.character_index + 12] + 1))
         except:
             continue
-
 
 def _parse_caverns(account):
     account.caverns = {

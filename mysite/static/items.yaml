@@ -690,6 +690,7 @@ InvStorageS: Gelatinous Chest
 InvStorageC: Cheesy Chest
 InvStorageD: Woodlin Chest
 InvStorageN: Ninja Chest
+InvStorageH: Holiday Chest
 Line1: Copper Twine
 Line2: Silver Twine
 Line3: Gold Twine
@@ -1391,6 +1392,8 @@ EquipmentNametag10: 3rd Anniversary IdleOn Nametag
 EquipmentNametag11: Nightshade Nametag
 EquipmentNametag12: Megafeather Nametag
 EquipmentNametag13: Timeless Nametag
+EquipmentNametag14: Snowflake Nametag
+EquipmentNametag15: Frostyman Nametag
 EquipmentKeychain0: Simple Key Chain
 EquipmentKeychain1: Leafy Chain
 EquipmentKeychain2: Red Sneaker Chain
@@ -1707,6 +1710,8 @@ Quest87: Secret Map
 Quest88: Golden Oyster
 Quest89: Event Point
 Quest90: Blinding Lantern
+Quest91: Golden Gift
+Quest92: Giftmas Present
 EquipmentSmithingTabs2: Anvil Tab II
 EquipmentSmithingTabs3: Anvil Tab III
 EquipmentSmithingTabs4: Anvil Tab IV
@@ -1959,6 +1964,7 @@ EquipmentHats103: Dainty Brim
 EquipmentHats104: Charcoal Hat
 EquipmentHats109: Husky Hat
 EquipmentHats110: Yellow Beanie
+EquipmentHats111: Epic Santa Hat
 CardsA0: Green Mushroom Card
 CardsA1: Red Mushroom Card
 CardsA2: Frog Card

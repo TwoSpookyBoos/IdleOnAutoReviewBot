@@ -18,28 +18,12 @@ def try_exclude_DungeonTickets(exclusionList):
 
     #Scenario 2: Over Rank 40 or 100+ tickets
     try:
-        ##Blatantly stolen list from IE lol
-        #https://github.com/Sludging/idleon-efficiency/blob/74f83dd4c0b15f399ffb1f87bc2bc8c9bc9b924c/data/domain/dungeons.tsx#L16
-        dungeonLevelsList = [0, 4, 10, 18, 28, 40, 70, 110, 160, 230, 320, 470, 670, 940, 1310, 1760, 2400, 3250, 4000, 5000, 6160, 8000, 10000, 12500,
-                             15000, 18400, 21000, 25500, 30500, 36500, 45400, 52000, 61000, 72500, 85000, 110000, 125000, 145000, 170000, 200000, 250000,
-                             275000, 325000, 400000, 490000, 600000, 725000, 875000, 1000000, 1200000, 1500000, 3000000, 5000000, 10000000, 20000000,
-                             30000000, 40000000, 50000000, 60000000, 80000000, 100000000, 999999999, 999999999, 999999999, 999999999, 999999999, 1999999999,
-                             1999999999, 1999999999, 1999999999, 1999999999]
-        #TODO: Move this parsing to Account
-        playerDungeonXP = safer_get(session_data.account.raw_optlacc_dict, 71, 0)
-        playerDungeonRank = 0
-        for xpRequirement in dungeonLevelsList:
-            if playerDungeonXP >= xpRequirement:
-                playerDungeonRank += 1
         #playerCredits = safer_get(session_data.account.raw_optlacc_dict, 72, 0)
         #playerFlurbo = safer_get(session_data.account.raw_optlacc_dict, 73, 0)
         playerBoosters = safer_get(session_data.account.raw_optlacc_dict, 76, 1) - 1  #The true value is always 1 less than JSON. Silly Lava
     except:
-        playerDungeonRank = 1
-        #playerCredits = 0
-        #playerFurbo = 0
         playerBoosters = 0
-    if playerDungeonRank >= 40 or playerBoosters >= 100:
+    if session_data.account.playerDungeonRank >= 40 or playerBoosters >= 100:
         if 'Weekly Dungeon Boosters' not in exclusionList:
             exclusionList.append('Weekly Dungeon Boosters')
             return

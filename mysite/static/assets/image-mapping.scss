@@ -16,6 +16,7 @@
 @import "merits";
 @import "companions";
 @import "ui";
+@import "event-shop";
 
 //W1
 @import "bribes";
@@ -361,6 +362,7 @@ propeller-cap: $propeller-cap,
 baseball-hat: $baseball-hat,
 
 stump-prop: $stump-prop,
+epic-santa-hat: $epic-santa-hat,
 
 copper-helmet: $copper-helmet,
 iron-helmet: $iron-helmet,
@@ -750,6 +752,8 @@ balling-nametag: $balling-nametag,
 third-anniversary-idleon-nametag: $third-anniversary-idleon-nametag,
 nightshade-nametag: $nightshade-nametag,
 timeless-nametag: $timeless-nametag,
+snowflake-nametag: $snowflake-nametag,
+frostyman-nametag: $frostyman-nametag,
 
 // Mining Pickaxes
 
@@ -1134,6 +1138,8 @@ golden-oyster: $golden-oyster,
 
 giftmas-box-2021: $giftmas-box-2021,
 giftmas-box: $giftmas-box,
+golden-gift: $golden-gift,
+giftmas-present: $giftmas-present,
 
 egg-capsule: $egg-capsule,
 gummy-bunny: $gummy-bunny,
@@ -1770,6 +1776,7 @@ gelatinous-chest: $gelatinous-chest,
 cheesy-chest: $cheesy-chest,
 woodlin-chest: $woodlin-chest,
 ninja-chest: $ninja-chest,
+holiday-chest: $holiday-chest,
 
 // fishing - twines
 
@@ -2103,6 +2110,7 @@ $id-map: map-merge($all-islands, $id-map);
 $id-map: map-merge($all-killroy, $id-map);
 $id-map: map-merge($all-weekly-boss-map, $id-map);
 $id-map: map-merge($all-caverns, $id-map);
+$id-map: map-merge($event-shop, $id-map);
 
 
 @each $class, $link in $id-map {

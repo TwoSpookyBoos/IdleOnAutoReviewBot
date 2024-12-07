@@ -335,6 +335,11 @@ class Character:
     def setCrystalSpawnChance(self, value: float):
         self.crystal_spawn_chance = value
 
+    def isArctisLinked(self):
+        return 'Arctis' in [
+            self.divinity_link, self.current_polytheism_link, self.secondary_polytheism_link
+        ]
+
     def __str__(self):
         return self.character_name
 

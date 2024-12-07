@@ -224,14 +224,25 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
 
     gr_level = session_data.account.sailing['Artifacts']['Gold Relic']['Level']
     gr_days = safer_get(session_data.account.raw_optlacc_dict, 125, 0)
+    gr_max_days = (
+        160 if gr_level == 4
+        else 80 if gr_level == 3
+        else 60 if gr_level == 2
+        else 40
+    )
     gr_multi = ValueToMulti(gr_days * goldrelic_multisDict.get(gr_level, 0))
+
+    supreme_wiring_max_days = 50
+    supreme_wiring_days = min(supreme_wiring_max_days, safer_get(session_data.account.raw_optlacc_dict, 323, 0))
+    supreme_wiring_value = (supreme_wiring_days * 2 * session_data.account.event_points_shop['Bonuses']['Supreme Wiring']['Owned'])
+    supreme_wiring_multi = ValueToMulti(supreme_wiring_value)
 
     anyDKMaxBooked = False
     bestKotRBook = 0
     anyDKMaxLeveled = False
     bestKotRPresetLevel = 0
     for dk in session_data.account.dks:
-        #levels_above_max = dk.max_talents_over_books - session_data.account.library['MaxBookLevel']  #Printer seems to use Book level
+        levels_above_max = dk.max_talents_over_books - session_data.account.library['MaxBookLevel']
         # Book level
         if dk.max_talents.get("178", 0) >= session_data.account.library['MaxBookLevel']:
             anyDKMaxBooked = True
@@ -240,14 +251,14 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
 
         # Preset level
         if (
-                dk.current_preset_talents.get("178", 0) >= session_data.account.library['MaxBookLevel']
-                or dk.secondary_preset_talents.get("178", 0) >= session_data.account.library['MaxBookLevel']
+            dk.current_preset_talents.get("178", 0) >= session_data.account.library['MaxBookLevel']
+            or dk.secondary_preset_talents.get("178", 0) >= session_data.account.library['MaxBookLevel']
         ):
             anyDKMaxLeveled = True
         if dk.current_preset_talents.get("178", 0) >= bestKotRPresetLevel:
-            bestKotRPresetLevel = dk.current_preset_talents.get("178", 0)
+            bestKotRPresetLevel = dk.current_preset_talents.get("178", 0) + levels_above_max
         if dk.secondary_preset_talents.get("178", 0) >= bestKotRPresetLevel:
-            bestKotRPresetLevel = dk.secondary_preset_talents.get("178", 0)
+            bestKotRPresetLevel = dk.secondary_preset_talents.get("178", 0) + levels_above_max
 
     talent_value = lavaFunc('decay', bestKotRPresetLevel, 5, 150)
     orb_kills = session_data.account.dk_orb_kills
@@ -273,7 +284,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     harriep_multi_aw = 3 if session_data.account.doot_owned else 1
     harriep_multi_cs = 3 if session_data.account.divinity['Divinities'][4]['Unlocked'] else 1
 
-    aw_multi = 1 * sm_multi * gr_multi * kotr_multi * charm_multi_active * ballot_multi_active * lab_multi_aw * harriep_multi_aw
+    aw_multi = 1 * sm_multi * gr_multi * kotr_multi * charm_multi_active * ballot_multi_active * lab_multi_aw * harriep_multi_aw * supreme_wiring_multi
     aw_label = f"Account Wide: {aw_multi:.3f}x"
     cs_multi = lab_multi_cs * harriep_multi_cs
     cs_label = f"Character Specific: Up to {cs_multi}x"
@@ -323,9 +334,18 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     ))
 
     po_AdviceDict[aw_label].append(Advice(
-        label=f"{{{{ Sailing|#sailing}}}}: Level {gr_level} Gold Relic: {gr_multi:.2f}x ({gr_days} days)",
+        label=f"{{{{ Sailing|#sailing}}}}: Level {gr_level} Gold Relic:"
+              f"<br>{gr_multi:.2f}x ({gr_days}/{gr_max_days} days)",
         picture_class="gold-relic",
         progression=f"{gr_multi:.2f}",
+        unit="x"
+    ))
+
+    po_AdviceDict[aw_label].append(Advice(
+        label=f"{{{{ Event Shop|#event-shop}}}}: Supreme Wiring:"
+              f"<br>{supreme_wiring_multi:.2f}x ({supreme_wiring_days}/{supreme_wiring_max_days} days)",
+        picture_class='event-shop-4',
+        progression=f"{supreme_wiring_multi:.2f}",
         unit="x"
     ))
 

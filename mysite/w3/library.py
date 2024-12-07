@@ -142,23 +142,19 @@ def getBonusLevelAdviceGroup() -> AdviceGroup:
     #Character Specific
     for char in session_data.account.safe_characters:
         arctis_max = ceil(15 * session_data.account.alchemy_bubbles['Big P']['BaseValue'] * (char.divinity_level / (char.divinity_level + 60)))
-        arctis_current = arctis_max if (
-            session_data.account.doot_owned
-            or char.divinity_link == "Arctis"
-            or char.current_polytheism_link == "Arctis"
-            or char.secondary_polytheism_link == "Arctis"
-            or 'Arctis' in session_data.account.caverns['PocketDivinityLinks']
-        ) else 0
+        arctis_current = arctis_max if session_data.account.divinity['AccountWideArctis'] or char.isArctisLinked() else 0
 
-        char_bonus_levels = arctis_current + char.symbols_of_beyond
-        char_bonus_levels += char.family_guy_bonus if char.class_name == "Elemental Sorcerer" else 0
+        char_bonus_levels = char.max_talents_over_books - session_data.account.bonus_talents_account_wide_sum - session_data.account.library['MaxBookLevel']
         subgroupName = f"{char.character_name} the {char.class_name}: +{char_bonus_levels}"
         bonusLevelAdvices[subgroupName] = []
 
+        #Character Specific 1 - Arctis link
         bonusLevelAdvices[subgroupName].append(Advice(
             label=f"{{{{ Divinity|#divinity}}}}: Arctis Minor Link: +{arctis_current}/{arctis_max}",
             picture_class='arctis',
         ))
+
+        #Character Specific 2 - Symbols of Beyond talent
         if char.base_class == 'Warrior':
             symbols_image_name = 'symbols-of-beyond-r'
         elif char.base_class == 'Archer':
@@ -173,11 +169,23 @@ def getBonusLevelAdviceGroup() -> AdviceGroup:
                 picture_class=symbols_image_name
             ))
 
+        #Character Specific 3 - ES Family Guy
         if char.class_name == 'Elemental Sorcerer':
             bonusLevelAdvices[subgroupName].append(Advice(
                 label=f"ES Family Guy: +{char.family_guy_bonus}",
                 picture_class='the-family-guy'
             ))
+
+        #Character Specific 4 - Final total
+        character_final = (
+            session_data.account.library['MaxBookLevel']
+            + session_data.account.bonus_talents_account_wide_sum
+            + char_bonus_levels
+        )
+        bonusLevelAdvices[subgroupName].append(Advice(
+            label=f"Final talent level: {char.max_talents_over_books}",
+            picture_class='ui-talents',
+        ))
 
     for advice in bonusLevelAdvices[account_subgroupName]:
         mark_advice_completed(advice)
