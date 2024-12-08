@@ -142,20 +142,12 @@ def getSecretClassTrapStatus(placedTrapsDict):
 
 def getUnmaxedCritterVialStatus():
     unmaxedCritterVialsCount = 0
-    critterVialIndexList = [
-        23,  #Crabbo
-        31,  #Mousey
-        37,  #Bunny
-        40,  #Honker
-        47,  #Blobfish
-        74,  #Tuttle
+    critter_vial_names_list = [
+        'Crab Juice (Crabbo)', 'Bubonic Burp (Mousey)', 'Bunny Brew (Bunny)',
+        'Goosey Glug (Honker)', 'Bloat Draft (Blobfish)', 'Turtle Tisane (Tuttle)'
     ]
-    for critterVialIndex in critterVialIndexList:
-        try:
-            if int(session_data.account.raw_data["CauldronInfo"][4][str(critterVialIndex)]) != 13:
-                unmaxedCritterVialsCount += 1
-        except:
-            logger.warning(f"Unable to retrieve Vial level for critterVialIndex {critterVialIndex}")
+    for vial_name in critter_vial_names_list:
+        if session_data.account.alchemy_vials.get(vial_name, {}).get('Level', 0) != 13:
             unmaxedCritterVialsCount += 1
     return unmaxedCritterVialsCount != 0
 

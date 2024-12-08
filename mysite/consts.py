@@ -1977,6 +1977,21 @@ maxCharacters = 10
 break_you_best = "<br>You best ❤️"
 break_keep_it_up = "<br>Keep it up! You're on the right track! ❤️"
 infinity_string = "∞"
+versions_patches = {
+    0: "Unknown",
+    190: "v1.92 Falloween Event",  #This should have been the last version number before w6
+    211: "v2.07 Rift Expansion",
+    217: "v2.10 The Owl",
+    218: "v2.11 The Roo",
+    219: "v2.12 Land Ranks",
+    220: "v2.13 Bonus Ballot",
+    221: "v2.14 Summer Break",
+    230: "v2.20 The Caverns Below",
+    231: "v2.21 Endless Summoning",
+    232: "v2.22 The Fixening",
+    233: "v2.23 Justice Monument",
+    234: "v2.24 Giftmas Event",
+}
 ignorable_labels: tuple = ('Weekly Ballot',)
 missableGStacksDict = {
     #  ItemName               Codename     Quest Codeame          Quest Name                                          Wiki link to the item                             Recommended Class/Farming notes
@@ -7394,6 +7409,10 @@ def getGemstonePercent(gemstoneName: str, gemstoneValue: float):
     pass
 
 
+summoning_sanctuary_counts = [1]
+for multi in range(3, 16):  #(3, 16) produces length of 14
+    summoning_sanctuary_counts.append(multi * summoning_sanctuary_counts[-1])
+#summoning_sanctuary_counts = [1, 3, 12, 60, 360, 2520, 20160, 181440, 1814400, 19958400, 239500800, 3113510400, 43589145600, 653837184000]
 # Maps to the RewardID, 1 indexed because Lava
 summoningRewards = [
     "Unknown",

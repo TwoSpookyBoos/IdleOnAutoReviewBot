@@ -4,7 +4,7 @@ from math import floor
 from flask import g
 from consts import (
     # General
-    lavaFunc, ValueToMulti, items_codes_and_names,
+    lavaFunc, ValueToMulti, items_codes_and_names, currentWorld,
     maxCharacters,
     gfood_codes,
     card_data,
@@ -42,7 +42,7 @@ from consts import (
     jade_emporium, pristineCharmsList, sneakingGemstonesFirstIndex, sneakingGemstonesList, sneakingGemstonesStatList,
     getMoissaniteValue, getGemstoneBaseValue, getGemstoneBoostedValue, getGemstonePercent,
     marketUpgradeDetails, landrankDict, cropDepotDict, maxFarmingCrops, summoningBattleCountsDict, summoningDict, summoning_endlessEnemies,
-    summoning_endlessDict, max_summoning_upgrades,
+    summoning_endlessDict, max_summoning_upgrades, summoning_sanctuary_counts,
     # Caverns
     caverns_villagers, caverns_conjuror_majiks, caverns_engineer_schematics, caverns_engineer_schematics_unlock_order, caverns_cavern_names,
     caverns_measurer_measurements, getCavernResourceImage, max_buckets, max_sediments, sediment_bars, getVillagerEXPRequired,
@@ -50,7 +50,7 @@ from consts import (
     schematics_unlocking_harp_chords, harp_chord_effects, max_harp_notes
 )
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
-from utils.data_formatting import getCharacterDetails, safe_loads, safer_get
+from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert
 from utils.logging import get_logger
 from utils.text_formatting import getItemDisplayName
 
@@ -158,7 +158,7 @@ def _parse_switches(account):
             except:
                 logger.exception(f"Efficiency Companions parse error, raw_companions={raw_companions}")
         else:
-            logger.warning(f"No companion data present in JSON")
+            logger.debug(f"No companion data present in JSON. Relying only on Switches")
     # logger.debug(f"Account model: Doot={account.doot_owned}, Slug={account.riftslug_owned}, Sheepie={account.sheepie_owned}")
     # logger.debug(f"Switches after: Doot={g.doot}, Slug={g.riftslug}, Sheepie={g.sheepie}")
 
@@ -222,8 +222,9 @@ def _parse_general_gemshop(account):
     raw_gem_items_purchased = safe_loads(account.raw_data.get("GemItemsPurchased", []))
     for purchaseName, purchaseIndex in gemShopDict.items():
         try:
-            account.gemshop[purchaseName] = int(raw_gem_items_purchased[purchaseIndex])
-        except:
+            account.gemshop[purchaseName] = safer_convert(raw_gem_items_purchased[purchaseIndex], 0)
+        except Exception as e:
+            logger.warning(f"Gemshop Parse error with purchaseIndex {purchaseIndex}: {e}. Defaulting to 0")
             account.gemshop[purchaseName] = 0
 
 def _parse_general_quests(account):
@@ -253,8 +254,9 @@ def _parse_general_npc_tokens(account):
     raw_npc_tokens = account.raw_data.get('CYNPC', [])
     for tokenIndex, tokenName in enumerate(npc_tokens):
         try:
-            account.npc_tokens[tokenName] = int(raw_npc_tokens[tokenIndex])
-        except:
+            account.npc_tokens[tokenName] = safer_convert(raw_npc_tokens[tokenIndex], 0)
+        except Exception as e:
+            logger.warning(f"NPC Token Parse error at tokenIndex {tokenIndex}: {e}. Defaulting to 0")
             account.npc_tokens[tokenName] = 0
     # for tokenName, tokenCount in account.npc_tokens.items():
     #     account.all_assets.get(tokenName).add(tokenCount)
@@ -282,7 +284,7 @@ def _parse_family_bonuses(account):
                 familyBonusesDict[className]['x1'],
                 familyBonusesDict[className]['x2'])
         except:
-            logger.exception(f"Error parsing Family Bonus for {className}")
+            logger.exception(f"Error parsing Family Bonus for {className}. Defaulting to 0 value")
             account.family_bonuses[className]['Value'] = 0
         account.family_bonuses[className]['DisplayValue'] = (
             f"{'+' if familyBonusesDict[className]['PrePlus'] else ''}"
@@ -296,16 +298,29 @@ def _parse_dungeon_upgrades(account):
     raw_dungeon_upgrades = safe_loads(account.raw_data.get('DungUpg', []))
     try:
         account.dungeon_upgrades["MaxWeapon"] = raw_dungeon_upgrades[3][0]
+    except Exception as e:
+        logger.warning(f"Dungeon Upgrade Max Weapon Parse error: {e}. Defaulting to 0")
+        account.dungeon_upgrades["MaxWeapon"] = 0
+
+    try:
         account.dungeon_upgrades["MaxArmor"] = [
             raw_dungeon_upgrades[3][4], raw_dungeon_upgrades[3][5], raw_dungeon_upgrades[3][6], raw_dungeon_upgrades[3][7]
         ]
+    except Exception as e:
+        logger.warning(f"Dungeon Upgrade Max Armor Parse error: {e}. Defaulting to 0")
+        account.dungeon_upgrades["MaxArmor"] = [0, 0, 0, 0]
+
+    try:
         account.dungeon_upgrades["MaxJewelry"] = [raw_dungeon_upgrades[3][8], raw_dungeon_upgrades[3][9]]
+    except Exception as e:
+        logger.warning(f"Dungeon Upgrade Max Jewelry Parse error: {e}. Defaulting to 0")
+        account.dungeon_upgrades["MaxJewelry"] = [0, 0]
+
+    try:
         account.dungeon_upgrades["FlurboShop"] = raw_dungeon_upgrades[5]
         account.dungeon_upgrades["CreditShop"] = raw_dungeon_upgrades[1]
-    except:
-        account.dungeon_upgrades["MaxWeapon"] = 0
-        account.dungeon_upgrades["MaxArmor"] = [0, 0, 0, 0]
-        account.dungeon_upgrades["MaxJewelry"] = [0, 0]
+    except Exception as e:
+        logger.warning(f"Dungeon UFlurbo+Credit Shops Parse error: {e}. Defaulting to 0")
         account.dungeon_upgrades["FlurboShop"] = [0, 0, 0, 0, 0, 0, 0, 0]
         account.dungeon_upgrades["CreditShop"] = [0, 0, 0, 0, 0, 0, 0, 0]
 
@@ -325,15 +340,23 @@ def _parse_dungeon_upgrades(account):
 def _parse_general_achievements(account):
     account.achievements = {}
     raw_reg_achieves = safe_loads(account.raw_data.get('AchieveReg', []))
+    if len(raw_reg_achieves) < len(achievementsList):
+        logger.warning(f"Achievements list shorter than expected by {len(achievementsList) - len(raw_reg_achieves)}. "
+                       f"Likely old data. Defaulting them all to Incomplete.")
+        while len(raw_reg_achieves) < len(achievementsList):
+            raw_reg_achieves.append(0)
+
     for achieveIndex, achieveData in enumerate(achievementsList):
         try:
-            if achieveData[0].replace('_', ' ') != "FILLERZZZ ACH":
-                account.achievements[achieveData[0].replace('_', ' ')] = {
+            ach_name = achieveData[0].replace('_', ' ')
+            if ach_name != "FILLERZZZ ACH":
+                account.achievements[ach_name] = {
                     'Complete': raw_reg_achieves[achieveIndex] == -1,
                     'Raw': raw_reg_achieves[achieveIndex]
                 }
-        except:
-            account.achievements[achieveData[0].replace('_', ' ')] = {
+        except Exception as e:
+            logger.warning(f"Achievements Parse error for {ach_name} at Index {achieveIndex}: {e}. Defaulting to Incomplete")
+            account.achievements[ach_name] = {
                 'Complete': False,
                 'Raw': 0
             }
@@ -344,8 +367,9 @@ def _parse_general_merits(account):
     for worldIndex in account.merits:
         for meritIndex in account.merits[worldIndex]:
             try:
-                account.merits[worldIndex][meritIndex]["Level"] = int(raw_merits_list[worldIndex][meritIndex])
-            except:
+                account.merits[worldIndex][meritIndex]["Level"] = safer_convert(raw_merits_list[worldIndex][meritIndex], 0)
+            except Exception as e:
+                logger.warning(f"Merit Parse error: {e}. Defaulting to 0")
                 continue  # Already defaulted to 0 in Consts
 
 def _parse_general_guild_bonuses(account):
@@ -353,8 +377,9 @@ def _parse_general_guild_bonuses(account):
     raw_guild = safe_loads(account.raw_data.get('Guild', [[]]))
     for bonusIndex, bonusName in enumerate(guildBonusesList):
         try:
-            account.guildBonuses[bonusName] = raw_guild[0][bonusIndex]
-        except:
+            account.guildBonuses[bonusName] = safer_convert(raw_guild[0][bonusIndex], 0)
+        except Exception as e:
+            logger.warning(f"Guild Bonus Parse error: {e}. Defaulting to 0")
             account.guildBonuses[bonusName] = 0
 
 def _parse_general_printer(account):
@@ -373,7 +398,8 @@ def _parse_general_printer(account):
     try:
         sample_names = raw_print[0::2] + raw_printer_xtra[0:119:2]
         sample_values = raw_print[1::2] + raw_printer_xtra[1:119:2]
-    except:
+    except Exception as e:
+        logger.warning(f"3d Printer Parse error: {e}. Defaulting to []")
         sample_names = []
         sample_values = []
     for sampleIndex, sampleItem in enumerate(sample_names):
@@ -386,7 +412,7 @@ def _parse_general_printer(account):
                 try:
                     account.printer['CurrentPrintsByCharacter'][sampleIndex // 7][getItemDisplayName(sampleItem)].append(sample_values[sampleIndex])
                 except:
-                    logger.exception(f"failed on characterIndex '{sampleIndex // 7}', sampleIndex '{sampleIndex}', sampleItem '{sampleItem}'")
+                    logger.exception(f"Failed on characterIndex '{sampleIndex // 7}', sampleIndex '{sampleIndex}', sampleItem '{sampleItem}'")
             else:
                 if sampleItem != 'Blank':  # Don't want blanks in the AllSorted list, but they're desired in the Character-Specific group
                     if getItemDisplayName(sampleItem) not in account.printer['AllSamplesSorted']:
@@ -421,8 +447,9 @@ def _parse_general_colo_scores(account):
     raw_colo_scores = safe_loads(account.raw_data.get('FamValColosseumHighscores', []))
     for coloIndex, coloScore in enumerate(raw_colo_scores):
         try:
-            account.colo_scores[coloIndex] = int(coloScore)
-        except:
+            account.colo_scores[coloIndex] = safer_convert(coloScore, 0)
+        except Exception as e:
+            logger.warning(f"Colo Score Parse error at coloIndex {coloIndex}: {e}. Defaulting to 0")
             account.colo_scores[coloIndex] = 0
 
 def _parse_general_event_points_shop(account):
@@ -444,7 +471,8 @@ def _parse_general_event_points_shop(account):
                 'Description': bonusDetails['Description'],
                 'Image': bonusDetails['Image']
             }
-        except:
+        except Exception as e:
+            logger.warning(f"Event Shop Parse error: {e}. Defaulting to Unowned")
             account.event_points_shop['Bonuses'][bonusName] = {
                 'Owned': False,
                 'Cost': bonusDetails['Cost'],
@@ -466,7 +494,6 @@ def _parse_w1_starsigns(account):
     raw_star_signs = safe_loads(account.raw_data.get("StarSg", {}))
     for signIndex, signValuesDict in starsignsDict.items():
         account.star_signs[signValuesDict['Name']] = {
-            'Unlocked': False,
             'Index': signIndex,
             'Passive': signValuesDict['Passive'],
             '1_Value': signValuesDict.get('1_Value', 0),
@@ -479,11 +506,12 @@ def _parse_w1_starsigns(account):
         try:
             # Some StarSigns are saved as strings "1" to mean unlocked.
             # The names in the JSON also have underscores instead of spaces
-            account.star_signs[signValuesDict['Name']]['Unlocked'] = int(raw_star_signs[signValuesDict['Name'].replace(" ", "_")]) > 0
+            account.star_signs[signValuesDict['Name']]['Unlocked'] = safer_get(raw_star_signs, signValuesDict['Name'].replace(" ", "_"), 0) > 0
             if account.star_signs[signValuesDict['Name']]['Unlocked']:
                 account.star_sign_extras['UnlockedSigns'] += 1
-        except:
-            pass
+        except Exception as e:
+            logger.warning(f"Star Sign Parse error at signIndex {signIndex}: {e}. Defaulting to Locked")
+            account.star_signs[signValuesDict['Name']]['Unlocked'] = False
 
 def _parse_w1_forge(account):
     account.forge_upgrades = copy.deepcopy(forgeUpgradesDict)
@@ -491,21 +519,21 @@ def _parse_w1_forge(account):
     for upgradeIndex, upgrade in enumerate(raw_forge_upgrades):
         try:
             account.forge_upgrades[upgradeIndex]["Purchased"] = upgrade
-        except:
+        except Exception as e:
+            logger.warning(f"Forge Upgrade Parse error at upgradeIndex {upgradeIndex}: {e}. Defaulting to 0")
             continue  # Already defaulted to 0 in Consts
 
 def _parse_w1_bribes(account):
     account.bribes = {}
     raw_bribes_list = safe_loads(account.raw_data.get("BribeStatus", []))
-    bribeIndex = 0
     for bribeSet in bribesDict:
         account.bribes[bribeSet] = {}
-        for bribeName in bribesDict[bribeSet]:
+        for bribeIndex, bribeName in enumerate(bribesDict[bribeSet]):
             try:
-                account.bribes[bribeSet][bribeName] = int(raw_bribes_list[bribeIndex])
-            except:
+                account.bribes[bribeSet][bribeName] = safer_convert(raw_bribes_list[bribeIndex], -1)
+            except Exception as e:
+                logger.warning(f"Bribes Parse error at {bribeSet} {bribeName}: {e}. Defaulting to -1")
                 account.bribes[bribeSet][bribeName] = -1  # -1 means unavailable for purchase, 0 means available, and 1 means purchased
-            bribeIndex += 1
 
 def _parse_w1_stamps(account):
     account.stamps = {}
@@ -553,7 +581,8 @@ def _parse_w1_stamps(account):
                 }
                 account.stamp_totals["Total"] += account.stamps[stampValuesDict['Name']]["Level"]
                 account.stamp_totals[stampType] += account.stamps[stampValuesDict['Name']]["Level"]
-            except:
+            except Exception as e:
+                logger.warning(f"Stamp Parse error at {stampType} {stampIndex}: {e}. Defaulting to Undelivered")
                 account.stamps[stampValuesDict['Name']] = {
                     "Index": stampIndex,
                     "Level": 0,
@@ -564,6 +593,8 @@ def _parse_w1_stamps(account):
                 }
 
 def _parse_w1_owl(account):
+    if 265 not in account.raw_optlacc_dict:
+        logger.warning(f"Owl data not present{', as expected' if account.version < 217 else ''}.")
     account.owl = {
         'Discovered': safer_get(account.raw_optlacc_dict, 265, False),
         'FeatherGeneration': safer_get(account.raw_optlacc_dict, 254, 0),
@@ -589,7 +620,8 @@ def _parse_w1_statues(account):
             for statueIndex, statueDetails in enumerate(char_statues):
                 if statueDetails[0] > statue_levels[statueIndex]:
                     statue_levels[statueIndex] = statueDetails[0]
-        except:
+        except Exception as e:
+            logger.warning(f"Per-Character statue level Parse error for Character{char.character_index}: {e}. Skipping them.")
             continue
 
     for statueIndex, statueDetails in statuesDict.items():
@@ -605,7 +637,8 @@ def _parse_w1_statues(account):
                 'Farmer': statueDetails['Farmer'],
                 'Target': statueDetails['Target'],
             }
-        except:
+        except Exception as e:
+            logger.warning(f"Statue Parse error: {e}. Defaulting to level 0")
             account.statues[statueDetails['Name']] = {
                 'Level': 0,
                 'Type': statueTypeList[raw_statue_type_list[statueIndex]],
@@ -641,6 +674,8 @@ def _parse_w2_vials(account):
     while len(raw_alchemy_vials) < max_IndexOfVials:
         raw_alchemy_vials[int(max_IndexOfVials - manualVialsAdded)] = 0
         manualVialsAdded += 1
+    if manualVialsAdded:
+        logger.warning(f"Vials list shorter than expected by {manualVialsAdded}: Likely old data. Defaulted in level 0s for them all.")
     for vialKey, vialValue in raw_alchemy_vials.items():
         try:
             if int(vialKey) < max_IndexOfVials:
@@ -654,11 +689,14 @@ def _parse_w2_vials(account):
                     ),
                     'Material': vialsDict[int(vialKey)]['Material']
                 }
-        except:
-            try:
-                account.alchemy_vials[getReadableVialNames(vialKey)] = {"Level": 0, "Value": 0, 'Material': vialsDict[int(vialKey)]['Material']}
-            except:
-                continue
+        except Exception as e:
+            logger.warning(f"Alchemy Vial Parse error at vialKey {vialKey}: {e}. Defaulting to level 0")
+            account.alchemy_vials[getReadableVialNames(vialKey)] = {
+                "Level": 0,
+                "Value": 0,
+                'Material': vialsDict.get(int(vialKey), {}).get('Material', '')
+            }
+
     account.maxed_vials = 0
     for vial in account.alchemy_vials.values():
         if vial.get("Level", 0) >= max_VialLevel:
@@ -698,7 +736,8 @@ def _parse_w2_cauldrons(account):
             raw_cauldron_upgrades[14],
             raw_cauldron_upgrades[15],
         ]
-    except:
+    except Exception as e:
+        logger.warning(f"Alchemy bubble cauldron Boosts Parse error: {e}. Defaulting to 0s")
         account.alchemy_cauldrons["OrangeBoosts"]: [0, 0, 0, 0]
         account.alchemy_cauldrons["GreenBoosts"]: [0, 0, 0, 0]
         account.alchemy_cauldrons["PurpleBoosts"]: [0, 0, 0, 0]
@@ -708,7 +747,8 @@ def _parse_w2_cauldrons(account):
         account.alchemy_cauldrons["LiquidNitrogen"] = [raw_cauldron_upgrades[22], raw_cauldron_upgrades[23]]
         account.alchemy_cauldrons["TrenchSeawater"] = [raw_cauldron_upgrades[26], raw_cauldron_upgrades[27]]
         account.alchemy_cauldrons["ToxicMercury"] = [raw_cauldron_upgrades[30], raw_cauldron_upgrades[31]]
-    except:
+    except Exception as e:
+        logger.warning(f"Alchemy Water Cauldron decants Parse error: {e}. Defaulting to 0s")
         account.alchemy_cauldrons["WaterDroplets"] = [0, 0]
         account.alchemy_cauldrons["LiquidNitrogen"] = [0, 0]
         account.alchemy_cauldrons["TrenchSeawater"] = [0, 0]
@@ -730,12 +770,14 @@ def _parse_w2_bubbles(account):
 
     # Try to read player levels and calculate base value
     try:
-        all_raw_bubbles = [account.raw_data["CauldronInfo"][0], account.raw_data["CauldronInfo"][1], account.raw_data["CauldronInfo"][2],
-                           account.raw_data["CauldronInfo"][3]]
+        all_raw_bubbles = [
+            account.raw_data["CauldronInfo"][0], account.raw_data["CauldronInfo"][1],
+            account.raw_data["CauldronInfo"][2], account.raw_data["CauldronInfo"][3]
+        ]
         for cauldronIndex in bubblesDict:
             for bubbleIndex in bubblesDict[cauldronIndex]:
                 try:
-                    account.alchemy_bubbles[bubblesDict[cauldronIndex][bubbleIndex]['Name']]['Level'] = int(all_raw_bubbles[cauldronIndex][str(bubbleIndex)])
+                    account.alchemy_bubbles[bubblesDict[cauldronIndex][bubbleIndex]['Name']]['Level'] = safer_convert(all_raw_bubbles[cauldronIndex][str(bubbleIndex)], 0)
                     account.alchemy_bubbles[bubblesDict[cauldronIndex][bubbleIndex]['Name']]['BaseValue'] = lavaFunc(
                         bubblesDict[cauldronIndex][bubbleIndex]["funcType"],
                         int(all_raw_bubbles[cauldronIndex][str(bubbleIndex)]),
@@ -752,7 +794,9 @@ def _parse_w2_bubbles(account):
                             account.alchemy_cauldrons['PurpleUnlocked'] += 1
                         elif cauldronIndex == 3:
                             account.alchemy_cauldrons['YellowUnlocked'] += 1
-                except:
+                except Exception as e:
+                    if bubbleIndex < currentWorld * 5:
+                        logger.warning(f"Alchemy Bubble Parse error at cauldronIndex {cauldronIndex} bubbleIndex {bubbleIndex}: {e}. Defaulting to 0s")
                     continue  # Level and BaseValue already defaulted to 0 above
     except:
         pass
@@ -815,7 +859,8 @@ def _parse_w2_arcade(account):
             account.arcade[upgradeIndex]["Display"] = (
                 f"+{account.arcade[upgradeIndex]['Value']:.2f}{upgradeDetails['displayType']} {upgradeDetails['Stat']}"
             )
-        except:
+        except Exception as e:
+            logger.warning(f"Arcade Gold Ball Bonus Parse error at upgradeIndex {upgradeIndex}: {e}. Defaulting to 0")
             account.arcade[upgradeIndex] = {
                 'Level': 0,
                 'Value': lavaFunc(
@@ -1594,6 +1639,8 @@ def _parse_w5(account):
 
 def _parse_w5_gaming(account):
     raw_gaming_list = safe_loads(account.raw_data.get("Gaming", []))
+    if not raw_gaming_list:
+        logger.warning(f"Gaming data not present")
     if raw_gaming_list:
         # Bits Owned sometimes Float, sometimes String
         try:
@@ -1661,6 +1708,8 @@ def _parse_w5_slab(account):
 def _parse_w5_sailing(account):
     account.sailing = {"Artifacts": {}, "Boats": {}, "Captains": {}, "Islands": {}, 'IslandsDiscovered': 1, 'CaptainsOwned': 1, 'BoatsOwned': 1}
     raw_sailing_list = safe_loads(safe_loads(account.raw_data.get("Sailing", [])))  # Some users have needed to have data converted twice
+    if not raw_sailing_list:
+        logger.warning(f"Sailing data not present")
     try:
         account.sailing['CaptainsOwned'] += raw_sailing_list[2][0]
         account.sailing['BoatsOwned'] += raw_sailing_list[2][1]
@@ -1745,6 +1794,8 @@ def _parse_w5_divinity(account):
         'DivinityLinks': {}
     }
     raw_divinity_list = safe_loads(account.raw_data.get("Divinity", []))
+    if not raw_divinity_list:
+        logger.warning("Divinity data not present")
     while len(raw_divinity_list) < 40:
         raw_divinity_list.append(0)
     account.divinity['DivinityPoints'] = raw_divinity_list[24]
@@ -1784,8 +1835,10 @@ def _parse_caverns(account):
         'Measurements': {},
     }
     raw_caverns_list: list[list] = safe_loads(account.raw_data.get('Holes', []))
+    if not raw_caverns_list:
+        logger.warning(f"Caverns data not present{', as expected' if account.version < 230 else ''}.")
     while len(raw_caverns_list) < 24:
-        raw_caverns_list.append([])
+        raw_caverns_list.append([0]*100)
     _parse_caverns_villagers(account, raw_caverns_list[1], raw_caverns_list[2], raw_caverns_list[3], raw_caverns_list[23])
     _parse_caverns_actual_caverns(account, raw_caverns_list[7])
     _parse_caverns_majiks(account, raw_caverns_list[4], raw_caverns_list[5], raw_caverns_list[6], raw_caverns_list[11])
@@ -1827,7 +1880,7 @@ def _parse_caverns_actual_caverns(account, opals_per_cavern):
         try:
             account.caverns['Caverns'][cavern_name] = {
                 'Unlocked': account.caverns['Villagers']['Polonai']['Level'] >= cavern_index,
-                'OpalsFound': 0 if cavern_name == 'Camp' else opals_per_cavern[cavern_index - 1],
+                'OpalsFound': 0 if cavern_name == 'Camp' else opals_per_cavern[cavern_index - 1] or 0,
                 'Image': f'cavern-{cavern_index}',
                 'CavernNumber': cavern_index
             }
@@ -1852,7 +1905,7 @@ def _parse_caverns_majiks(account, hole_majiks, village_majiks, idleon_majiks, e
                 account.caverns['Majiks'][majik_data['Name']] = {
                     'MajikType': majik_type,
                     'MajikIndex': majik_index,
-                    'Level': raw_majiks[majik_type][majik_index],
+                    'Level': int(raw_majiks[majik_type][majik_index]),
                     'MaxLevel': majik_data['MaxLevel'],
                     'Description': majik_data['Description'],
                     # 'Value': 0  #Calculated later in _calculate_caverns_majiks
@@ -1869,10 +1922,11 @@ def _parse_caverns_majiks(account, hole_majiks, village_majiks, idleon_majiks, e
     #Pocket Divinity
     account.caverns['PocketDivinityLinks'] = []
     try:
-        raw_pocket_div_links = [int(v) for v in extras[29:31]]
-    except ValueError:
+        raw_pocket_div_links = [int(v) for v in extras[29:31] if v is not None]
+    except:
+        logger.exception(f"Could not cast Pocket Divinity link values to ints, or data isn't present. Defaulting to no links.")
+        #logger.debug(f"extras = {extras}")
         raw_pocket_div_links = [-1, -1]
-        logger.exception(f"Could not cast Pocket Divinity link values to ints: {extras[29:31]}. Defaulting to no links.")
     for entry_index, entry_value in enumerate(raw_pocket_div_links):
         if int(entry_value) != -1 and entry_index < account.caverns['Majiks']['Pocket Divinity']['Level']:
             if int(entry_value)+1 in divinity_divinitiesDict:
@@ -1887,6 +1941,7 @@ def _parse_caverns_schematics(account, raw_schematics_list):
         account.caverns['TotalSchematics'] = sum(raw_schematics_list)
     except:
         logger.warning(f"Error summing raw_schematics_list")
+        account.caverns['TotalSchematics'] = 0
         pass
     for schematic_index, schematic_details in enumerate(caverns_engineer_schematics):
         clean_name = schematic_details[0].replace("_", " ")
@@ -1913,7 +1968,7 @@ def _parse_caverns_measurements(account, raw_measurements_list):
     for measurement_index, measurement_details in enumerate(caverns_measurer_measurements):
         try:
             account.caverns['Measurements'][measurement_index] = {
-                'Level': raw_measurements_list[measurement_index],
+                'Level': safer_convert(raw_measurements_list[measurement_index], 0),
                 'Unit': measurement_details[0],
                 'Description': measurement_details[1],
                 'ScalesWith': measurement_details[2],
@@ -1940,37 +1995,42 @@ def _parse_caverns_biome1(account, raw_caverns_list):
     _parse_caverns_the_bell(account, raw_caverns_list)
 
 def _parse_caverns_the_well(account, raw_caverns_list):
-    try:
-        account.caverns['Caverns']['The Well']['BucketTargets'] = [int(entry) for entry in raw_caverns_list[10][:max_buckets]]
-    except:
-        account.caverns['Caverns']['The Well']['BucketTargets'] = [0] * max_buckets
-    try:
-        account.caverns['Caverns']['The Well']['SedimentsOwned'] = [int(entry) for entry in raw_caverns_list[9][:max_sediments]]
-    except:
-        # Gravel starts at 0, the rest are Negative
-        account.caverns['Caverns']['The Well']['SedimentsOwned'] = [entry * -1 for entry in sediment_bars]
-    try:
-        account.caverns['Caverns']['The Well']['SedimentLevels'] = raw_caverns_list[8]
-    except:
-        account.caverns['Caverns']['The Well']['SedimentLevels'] = [0] * max_sediments
+    account.caverns['Caverns']['The Well']['BucketTargets'] = []
+    for i in range(0, max_buckets):
+        try:
+            account.caverns['Caverns']['The Well']['BucketTargets'].append(safer_convert(raw_caverns_list[10][i], 0))
+        except IndexError:
+            account.caverns['Caverns']['The Well']['BucketTargets'].append(0)
+
+    account.caverns['Caverns']['The Well']['SedimentsOwned'] = []
+    account.caverns['Caverns']['The Well']['SedimentLevels'] = []
+    for i in range(0, max_sediments):
+        try:
+            account.caverns['Caverns']['The Well']['SedimentsOwned'].append(safer_convert(raw_caverns_list[9][i], sediment_bars[i] * -1))
+        except IndexError:
+            account.caverns['Caverns']['The Well']['SedimentsOwned'].append(sediment_bars[i] * -1)
+        try:
+            account.caverns['Caverns']['The Well']['SedimentLevels'].append(safer_convert(raw_caverns_list[8][i], 0))
+        except IndexError:
+            account.caverns['Caverns']['The Well']['SedimentLevels'].append(0)
+
     try:
         account.caverns['Caverns']['The Well']['BarExpansion'] = raw_caverns_list[11][10]
     except:
         account.caverns['Caverns']['The Well']['BarExpansion'] = False
-    try:
-        account.caverns['Caverns']['The Well']['Holes-11-9'] = raw_caverns_list[11][9]
-    except:
-        account.caverns['Caverns']['The Well']['Holes-11-9'] = 0
+
+    # From looking at data, holes_11_9 is just the number of previously completed trades. Maybe it changes higher up at some point /shrug
+    account.caverns['Caverns']['The Well']['Holes-11-9'] = safer_convert(raw_caverns_list[11][9], 0)
 
 def _parse_caverns_motherlode(account, raw_caverns_list):
     cavern_name = 'Motherlode'
     motherlode_offset = 0
     try:
-        account.caverns['Caverns'][cavern_name]['ResourcesCollected'] = raw_caverns_list[11][0 + motherlode_offset]
+        account.caverns['Caverns'][cavern_name]['ResourcesCollected'] = raw_caverns_list[11][0 + motherlode_offset] or 0
     except:
         account.caverns['Caverns'][cavern_name]['ResourcesCollected'] = 0
     try:
-        account.caverns['Caverns'][cavern_name]['LayersDestroyed'] = raw_caverns_list[11][1 + motherlode_offset]
+        account.caverns['Caverns'][cavern_name]['LayersDestroyed'] = raw_caverns_list[11][1 + motherlode_offset] or 0
     except:
         account.caverns['Caverns'][cavern_name]['LayersDestroyed'] = 0
 
@@ -2168,11 +2228,11 @@ def _parse_caverns_the_hive(account, raw_caverns_list):
     cavern_name = 'The Hive'
     motherlode_offset = 2
     try:
-        account.caverns['Caverns'][cavern_name]['ResourcesCollected'] = raw_caverns_list[11][0 + motherlode_offset]
+        account.caverns['Caverns'][cavern_name]['ResourcesCollected'] = raw_caverns_list[11][0 + motherlode_offset] or 0
     except:
         account.caverns['Caverns'][cavern_name]['ResourcesCollected'] = 0
     try:
-        account.caverns['Caverns'][cavern_name]['LayersDestroyed'] = raw_caverns_list[11][1 + motherlode_offset]
+        account.caverns['Caverns'][cavern_name]['LayersDestroyed'] = raw_caverns_list[11][1 + motherlode_offset] or 0
     except:
         account.caverns['Caverns'][cavern_name]['LayersDestroyed'] = 0
 
@@ -2246,6 +2306,8 @@ def _parse_w6_sneaking(account):
         'MaxMastery': safer_get(account.raw_optlacc_dict, 232, 0),
     }
     raw_ninja_list = safe_loads(account.raw_data.get("Ninja", []))
+    if not raw_ninja_list:
+        logger.warning(f"Sneaking data not present{', as expected' if account.version < 200 else ''}.")
     _parse_w6_gemstones(account, raw_ninja_list)
     _parse_w6_jade_emporium(account, raw_ninja_list)
     _parse_w6_beanstalk(account, raw_ninja_list)
@@ -2318,6 +2380,8 @@ def _parse_w6_jade_emporium(account, raw_ninja_list):
 
 def _parse_w6_beanstalk(account, raw_ninja_list):
     raw_beanstalk_list = raw_ninja_list[104] if raw_ninja_list else []
+    if not raw_beanstalk_list:
+        logger.warning(f"Beanstalk data not present{', as expected' if account.version < 200 else ''}.")
     for gfoodIndex, gfoodName in enumerate(gfood_codes):
         try:
             account.sneaking['Beanstalk'][gfoodName] = {
@@ -2358,52 +2422,58 @@ def _parse_w6_farming(account):
     }
 
     raw_farmcrop_dict = safe_loads(account.raw_data.get("FarmCrop", {}))
+    if not raw_farmcrop_dict:
+        logger.warning(f"Farming Crop data not present{', as expected' if account.version < 200 else ''}.")
     _parse_w6_farming_crops(account, raw_farmcrop_dict)
     _parse_w6_farming_crop_depot(account)
 
     raw_farmupg_list = safe_loads(account.raw_data.get("FarmUpg", []))
+    if not raw_farmupg_list:
+        logger.warning(f"Farming Markets data not present{', as expected' if account.version < 200 else ''}.")
     _parse_w6_farming_markets(account, raw_farmupg_list)
 
-    raw_farmrank_list = safe_loads(account.raw_data.get("FarmRank", [[0] * 36]))
+    raw_farmrank_list = safe_loads(account.raw_data.get("FarmRank"))
+    if raw_farmrank_list is None:
+        logger.warning(f"Farming Land Rank Database data not present{', as expected' if account.version < 219 else ''}.")
+        raw_farmrank_list = [0] * 36
     _parse_w6_farming_land_ranks(account, raw_farmrank_list)
 
     account.farming['Total Plots'] = (
-            1
-            + account.farming['MarketUpgrades']['Land Plots']['Level']
-            + account.gemshop['Plot of Land']
-            + min(3, account.merits[5][2]['Level'])
+        1
+        + account.farming['MarketUpgrades']['Land Plots']['Level']
+        + account.gemshop['Plot of Land']
+        + min(3, account.merits[5][2]['Level'])
     )
 
 def _parse_w6_farming_crops(account, rawCrops):
-    if isinstance(rawCrops, dict):
-        for cropIndexStr, cropAmountOwned in rawCrops.items():
-            try:
-                account.farming["CropsUnlocked"] += 1  # Once discovered, crops will always appear in this dict.
-                if int(cropIndexStr) < 21:
-                    account.farming['CropCountsPerSeed']['Basic'] += 1
-                elif int(cropIndexStr) < 46:
-                    account.farming['CropCountsPerSeed']['Earthy'] += 1
-                elif int(cropIndexStr) < 61:
-                    account.farming['CropCountsPerSeed']['Bulbo'] += 1
-                elif int(cropIndexStr) < 84:
-                    account.farming['CropCountsPerSeed']['Sushi'] += 1
-                elif int(cropIndexStr) < 107:
-                    account.farming['CropCountsPerSeed']['Mushie'] += 1
-                else:
-                    account.farming['CropCountsPerSeed']['Glassy'] += 1
-                account.farming['Crops'][int(cropIndexStr)] = float(cropAmountOwned)
-                if float(cropAmountOwned) >= 200:
-                    account.farming["CropStacks"]["Evolution Gmo"] += 1
-                if float(cropAmountOwned) >= 1000:
-                    account.farming["CropStacks"]["Speed Gmo"] += 1
-                if float(cropAmountOwned) >= 2500:
-                    account.farming["CropStacks"]["Exp Gmo"] += 1
-                if float(cropAmountOwned) >= 10000:
-                    account.farming["CropStacks"]["Value Gmo"] += 1
-                if float(cropAmountOwned) >= 100000:
-                    account.farming["CropStacks"]["Super Gmo"] += 1
-            except:
-                continue
+    for cropIndexStr, cropAmountOwned in rawCrops.items():
+        try:
+            account.farming["CropsUnlocked"] += 1  # Once discovered, crops will always appear in this dict.
+            if int(cropIndexStr) < 21:
+                account.farming['CropCountsPerSeed']['Basic'] += 1
+            elif int(cropIndexStr) < 46:
+                account.farming['CropCountsPerSeed']['Earthy'] += 1
+            elif int(cropIndexStr) < 61:
+                account.farming['CropCountsPerSeed']['Bulbo'] += 1
+            elif int(cropIndexStr) < 84:
+                account.farming['CropCountsPerSeed']['Sushi'] += 1
+            elif int(cropIndexStr) < 107:
+                account.farming['CropCountsPerSeed']['Mushie'] += 1
+            else:
+                account.farming['CropCountsPerSeed']['Glassy'] += 1
+            account.farming['Crops'][int(cropIndexStr)] = float(cropAmountOwned)
+            if float(cropAmountOwned) >= 200:
+                account.farming["CropStacks"]["Evolution Gmo"] += 1
+            if float(cropAmountOwned) >= 1000:
+                account.farming["CropStacks"]["Speed Gmo"] += 1
+            if float(cropAmountOwned) >= 2500:
+                account.farming["CropStacks"]["Exp Gmo"] += 1
+            if float(cropAmountOwned) >= 10000:
+                account.farming["CropStacks"]["Value Gmo"] += 1
+            if float(cropAmountOwned) >= 100000:
+                account.farming["CropStacks"]["Super Gmo"] += 1
+        except:
+            continue
 
 def _parse_w6_farming_crop_depot(account):
     for bonusIndex, bonusDetails in cropDepotDict.items():
@@ -2504,6 +2574,8 @@ def _parse_w6_farming_land_ranks(account, rawRanks):
 def _parse_w6_summoning(account):
     account.summoning = {}
     raw_summoning_list = safe_loads(account.raw_data.get('Summon', []))
+    if not raw_summoning_list:
+        logger.warning(f"Summoning data not present{', as expected' if account.version < 200 else ''}.")
     while len(raw_summoning_list) < 5:
         raw_summoning_list.append([])
 
@@ -2529,20 +2601,14 @@ def _parse_w6_summoning(account):
 
     # raw_summoning_list[4] = list[int] familiars in the Sanctuary, starting with Slime in [0], Vrumbi in [1], etc.
     account.summoning['SanctuaryTotal'] = 0
-    try:
-        _parse_w6_summoning_sanctuary(account, raw_summoning_list[4])
-    except:
-        _parse_w6_summoning_sanctuary(account, [])
+    _parse_w6_summoning_sanctuary(account, raw_summoning_list[4])
 
     # Used later to create a list of Advices for Winner Bonuses. Can be added directly into an AdviceGroup as the advices attribute
     account.summoning['WinnerBonusesAdvice'] = []
 
 def _parse_w6_summoning_battles(account, rawBattles):
     regular_battles = [battle for battle in rawBattles if not battle.startswith('rift')]
-    try:
-        account.summoning['Battles']['NormalTotal'] = len(regular_battles)
-    except:
-        account.summoning['Battles']['NormalTotal'] = 0
+    account.summoning['Battles']['NormalTotal'] = len(regular_battles)
 
     if account.summoning['Battles']['NormalTotal'] >= summoningBattleCountsDict["Normal"]:
         account.summoning["Battles"] = summoningBattleCountsDict
@@ -2613,14 +2679,11 @@ def _parse_w6_summoning_battles_endless(account):
     # logger.debug(f"Base Endless Bonuses after {account.summoning['Battles']['Endless']} wins: {account.summoning['Endless Bonuses']}")
 
 def _parse_w6_summoning_sanctuary(account, rawSanctuary):
-    if rawSanctuary:
+    # [2,3,2,1,1,0,0,0,0,0,0,0,0,0]
+    while len(rawSanctuary) < 14:
+        rawSanctuary.append(0)
+    for index, value in enumerate(summoning_sanctuary_counts):
         try:
-            # [2,3,2,1,1,0,0,0,0,0,0,0,0,0]
-            account.summoning['SanctuaryTotal'] = int(rawSanctuary[0])  # Gray Slimes
-            account.summoning['SanctuaryTotal'] += 3 * int(rawSanctuary[1])  # Vrumbi
-            account.summoning['SanctuaryTotal'] += 12 * int(rawSanctuary[2])  # Bloomie
-            account.summoning['SanctuaryTotal'] += 60 * int(rawSanctuary[3])  # Tonka
-            account.summoning['SanctuaryTotal'] += 360 * int(rawSanctuary[4])  # Regalis
-            # account.summoning['SanctuaryTotal'] += 2520 * int(raw_summoning_list[4][5])  #Sparkie
-        except:
-            pass
+            account.summoning['SanctuaryTotal'] += value * safer_convert(rawSanctuary[index], 0)
+        except Exception as e:
+            logger.warning(f"Summoning Sanctuary Parse error at index {index}: {e}. Not adding anything.")

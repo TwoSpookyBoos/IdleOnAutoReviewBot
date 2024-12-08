@@ -6,6 +6,7 @@ from flask import g as session_data
 import models.account_calcs
 import models.account_parser
 from config import app
+from consts import versions_patches
 from models.custom_exceptions import UsernameBanned
 from models.models import AdviceWorld, WorldName, Account
 from utils.data_formatting import getJSONfromAPI, getJSONfromText, HeaderData
@@ -47,6 +48,12 @@ def main(inputData, runType="web"):
 
     # Step 2: Make account data available throughout the session
     session_data.account = Account(parsedJSON)
+
+    patch_guess = ''
+    for version in versions_patches:
+        if session_data.account.version > version:
+            patch_guess = versions_patches[version]
+    logger.info(f"Data version {session_data.account.version}: {patch_guess} or later")
     models.account_parser.parse_account(session_data.account, runType)
     models.account_calcs.calculate_account(session_data.account)
 
@@ -172,9 +179,7 @@ def main(inputData, runType="web"):
     reviews = [world for world in reviews if len(world.sections) > 0]
 
     headerData = HeaderData(inputData)
-    logger.info(f"{headerData.last_update = }")
-
-    #logger.debug(session_data.account.ballot['Buffs'])
+    logger.info(f"{headerData.last_update = }. Data version {session_data.account.version}: {patch_guess} or later")
 
     if runType == "consoleTest":
         return "Pass"

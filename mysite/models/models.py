@@ -28,7 +28,7 @@ from consts import (
     # Caverns
 
 )
-from utils.data_formatting import safe_loads
+from utils.data_formatting import safe_loads, safer_get
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
 
 
@@ -1185,6 +1185,7 @@ class Account:
 
     def __init__(self, json_data):
         self.raw_data = safe_loads(json_data)
+        self.version = safer_get(self.raw_data, 'DoOnceREAL', 0.00)
         self._prep_alerts_AG()
 
     def _prep_alerts_AG(self):
