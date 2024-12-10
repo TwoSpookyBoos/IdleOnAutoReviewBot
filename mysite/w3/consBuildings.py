@@ -152,7 +152,9 @@ def getProgressionTiersAdviceGroup(max_tier: int):
                     if progressionTiersToUse[counter][1] == "Unlock":
                         building_AdviceDict[counter].append(Advice(
                             label=recommendedBuilding,
-                            picture_class=playerBuildings.get(recommendedBuilding, {}).get('Image', '')
+                            picture_class=playerBuildings.get(recommendedBuilding, {}).get('Image', ''),
+                            progression=0,
+                            goal=1
                         ))
                     else:
                         building_AdviceDict[counter].append(Advice(
@@ -170,7 +172,7 @@ def getProgressionTiersAdviceGroup(max_tier: int):
     for tierKey in building_AdviceDict.keys():
         if f"{str(tierNamesList[tierKey])}" == "Unlock":
             building_AdviceGroupDict[tierKey] = AdviceGroup(
-                tier=tier_UnlockAllBuildings,
+                tier=int(tier_UnlockAllBuildings),
                 pre_string=f"Unlock All Buildings",
                 advices=building_AdviceDict[tierKey],
                 informational=False

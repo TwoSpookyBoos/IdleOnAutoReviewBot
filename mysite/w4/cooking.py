@@ -136,22 +136,21 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
         cooking_AdviceDict["CurrentTier"].append(Advice(
             label="All +% Meal Cooking Speed meals (Egg, Corndog, Cabbage, etc.)",
             picture_class="egg",
-            progression="",
-            goal="",
+            completed=False
         ))
 
     if tier_Cooking < 4:
         cooking_AdviceDict["CurrentTier"].append(Advice(
             label="Any fast meal to level (5% of your Daily Ladles or less)",
             picture_class="blood-marrow",
-            progression="",
-            goal="",
+            completed=False
         ))
     # Elif they have Voidwalker and meals still to level, replace the generic "any faster meal" with the more specific Vman Blood Marrow note
     elif 4 <= tier_Cooking < max_tier:
         cooking_AdviceDict["CurrentTier"].append(Advice(
             label="Any! Voidwalker's Blood Marrow buff scales with EVERY meal level!",
             picture_class="blood-marrow",
+            completed=False
         ))
         anyVWMaxBooked = False
         bestBMBook = 0
@@ -223,6 +222,8 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
             cooking_AdviceDict["PlateLevels"].append(Advice(
                 label=missingUpgrade[0],
                 picture_class=missingUpgrade[1],
+                progression=0,
+                goal=1
             ))
 
     for advice in cooking_AdviceDict["NextTier"]:

@@ -316,7 +316,7 @@ def getActiveBMAdviceGroup() -> AdviceGroup:
 
     abm_AdviceGroup = AdviceGroup(
         tier="",
-        pre_string="Info- Active BM setup for around 4-5x shiny progress",
+        pre_string="Info- Active BM setup earns around 4-6x Breeding progress",
         advices=abm_adviceDict,
         informational=True
     )
@@ -433,14 +433,16 @@ def getBreedingProgressionTiersAdviceGroups(breedingDict):
                     breeding_AdviceDict["UnlockedTerritories"]["Unlock more Spice Territories"].append(
                         Advice(
                             label=getTerritoryName(territoryIndex),
-                            picture_class=getSpiceImage(territoryIndex)
+                            picture_class=getSpiceImage(territoryIndex),
+                            completed=False
                         )
                     )
                 for petIndex in range(0, len(recommendedTerritoryCompsList[tier][0])):
                     breeding_AdviceDict["UnlockedTerritories"]["Recommended Territory Team (Left to Right)"].append(
                         Advice(
                             label=recommendedTerritoryCompsList[tier][0][petIndex],
-                            picture_class=recommendedTerritoryCompsList[tier][1][petIndex]
+                            picture_class=recommendedTerritoryCompsList[tier][1][petIndex],
+                            completed=False
                         )
                     )
 
@@ -453,7 +455,8 @@ def getBreedingProgressionTiersAdviceGroups(breedingDict):
                     breeding_AdviceDict["MaxArenaWave"]["Recommended Arena Team (Left to Right)"].append(
                         Advice(
                             label=recommendedArenaCompsDict[tier_MaxArenaWave][0][petIndex],
-                            picture_class=recommendedArenaCompsDict[tier_MaxArenaWave][1][petIndex]
+                            picture_class=recommendedArenaCompsDict[tier_MaxArenaWave][1][petIndex],
+                            completed=False
                         )
                     )
 
@@ -496,7 +499,8 @@ def getBreedingProgressionTiersAdviceGroups(breedingDict):
                                     label=f"{possibleShinyPet[0]}: {possibleShinyPet[2]:,.2f} base days to level",
                                     picture_class=possibleShinyPet[0],
                                     progression=possibleShinyPet[1],
-                                    goal=max(failedRequirement[3], possibleShinyPet[1])
+                                    goal=max(failedRequirement[3], possibleShinyPet[1]),
+                                    completed=False
                                 )
                             )
 
