@@ -229,6 +229,9 @@ def getCharacterDetails(inputJSON, runType):
         for counter in range(0, playerCount):
             playerNames.append(f"Character{counter+1}")
 
+    if playerCount == 0:
+        logger.exception(f"This data has a playerCount of 0, wtf? Aborting.")
+        raise WtfDataException(json.dumps(inputJSON))
     characterSkillsDict = getAllSkillLevelsDict(inputJSON, playerCount)
     perSkillDict = characterSkillsDict["Skills"]
     equipped_prayers = {}
@@ -272,7 +275,9 @@ def getCharacterDetails(inputJSON, runType):
 
 
 def getAllSkillLevelsDict(inputJSON, playerCount):
-    allSkillsDict = {'Skills': {}}
+    allSkillsDict = {
+        'Skills': {skill: [] for skill in skillIndexList}
+    }
     for characterIndex in range(0, playerCount):
         if characterIndex not in allSkillsDict:
             allSkillsDict[characterIndex] = {}
@@ -280,10 +285,8 @@ def getAllSkillLevelsDict(inputJSON, playerCount):
             characterSkillList = inputJSON[f'Lv0_{characterIndex}']
         except:
             characterSkillList = emptySkillList
-            logger.exception(f"Could not retrieve LV0_{characterIndex} from JSON. Setting character to all -1s for levels")
+            logger.exception(f"Could not retrieve LV0_{characterIndex} from JSON. Setting character to all 0s for levels")
         for skillCounter in range(0, len(skillIndexList)):
-            if skillIndexList[skillCounter] not in allSkillsDict['Skills']:
-                allSkillsDict['Skills'][skillIndexList[skillCounter]] = []
             try:
                 allSkillsDict[characterIndex][skillIndexList[skillCounter]] = characterSkillList[skillCounter]
                 allSkillsDict['Skills'][skillIndexList[skillCounter]].append(characterSkillList[skillCounter])

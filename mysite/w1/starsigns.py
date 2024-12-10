@@ -42,6 +42,8 @@ def getProgressionTiersAdviceGroup():
                         starsigns_AdviceDict['Signs'][subgroupName].append(Advice(
                             label=f"Unlock {ssName}",
                             picture_class=ssName.strip("."),
+                            progression=0,
+                            goal=1
                         ))
 
         if subgroupName not in starsigns_AdviceDict['Signs'] and tier_Signs == tierNumber - 1:

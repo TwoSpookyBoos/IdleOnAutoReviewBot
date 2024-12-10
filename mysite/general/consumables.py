@@ -362,7 +362,9 @@ def parseStorageChests():
     advices = [
         Advice(
             label=f"{chest.pretty_name}: {expectedStorageChestValuesDict[chest.value]} slots ({chest.type})",
-            picture_class=chest.pretty_name)
+            picture_class=chest.pretty_name,
+            completed=False
+        )
         for chest in missing_chests
     ]
 
