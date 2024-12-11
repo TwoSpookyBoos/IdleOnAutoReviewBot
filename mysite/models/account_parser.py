@@ -2246,8 +2246,9 @@ def _parse_caverns_grotto(account, raw_caverns_list):
         account.caverns['Caverns'][cavern_name]['KillsRequired'] = getGrottoKills(account.caverns['Caverns'][cavern_name]['OpalsFound'])
     except:
         account.caverns['Caverns'][cavern_name]['KillsRequired'] = getGrottoKills(0)
-    account.caverns['Caverns'][cavern_name]['KillsRemaining'] = (
-            account.caverns['Caverns'][cavern_name]['KillsRequired'] - account.caverns['Caverns'][cavern_name]['PlayerKills']
+    account.caverns['Caverns'][cavern_name]['KillsRemaining'] = max(
+        0,
+        account.caverns['Caverns'][cavern_name]['KillsRequired'] - account.caverns['Caverns'][cavern_name]['PlayerKills']
     )
     account.caverns['Caverns'][cavern_name]['PercentRemaining'] = max(
         0,
