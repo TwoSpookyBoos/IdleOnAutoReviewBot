@@ -2,7 +2,7 @@ import os
 import sys
 import uuid
 
-from flask import request
+from flask import request, g
 from ua_parser import user_agent_parser
 from werkzeug.user_agent import UserAgent
 from werkzeug.utils import cached_property
@@ -12,8 +12,15 @@ import logging
 
 
 DEFAULT_FORMAT = (
-    "%(asctime)s | %(name)s | %(funcName)s:%(lineno)d~ [%(levelname)s] %(message)s"
+    "%(asctime)s | %(name)s | %(requestID)s | %(funcName)s:%(lineno)d~ [%(levelname)s] %(message)s"
 )
+SHORT_FORMAT = "%(asctime)s | %(requestID)s | %(message)s"
+
+
+class Filter(logging.Filter):
+    def filter(self, record):
+        record.requestID = g.request_id
+        return True
 
 
 def _try_colorise(logger):
@@ -21,7 +28,13 @@ def _try_colorise(logger):
     if is_local_instance:
         import coloredlogs
 
-        coloredlogs.DEFAULT_FIELD_STYLES["levelname"]["color"] = "white"
+        # coloredlogs.DEFAULT_FIELD_STYLES["levelname"]["color"] = "white"
+        coloredlogs.DEFAULT_FIELD_STYLES |= {
+            "requestID": {"color": "yellow"},
+            "levelname": {"color": "white"},
+            "funcName": {"color": "magenta"},
+            "lineno": {"color": "cyan"},
+        }
         coloredlogs.install(
             level="DEBUG", fmt=DEFAULT_FORMAT, stream=sys.stdout, logger=logger
         )
@@ -31,7 +44,7 @@ def _try_colorise(logger):
 def _set_regular_logger(logger: logging.Logger):
     formatter = logging.Formatter(DEFAULT_FORMAT)
     handler = logging.StreamHandler(stream=sys.stdout)
-    handler.setLevel(logging.WARNING)
+    handler.setLevel(logging.DEBUG)
     handler.setFormatter(formatter)
 
     logger.addHandler(handler)
@@ -40,6 +53,7 @@ def _set_regular_logger(logger: logging.Logger):
 def get_logger(name: str) -> logging.Logger:
     logger_ = logging.getLogger(name)
     logger_.setLevel(logging.DEBUG)
+    logger_.addFilter(Filter())
 
     if not _try_colorise(logger_):
         _set_regular_logger(logger_)
@@ -51,11 +65,12 @@ def browser_data_logger() -> logging.Logger:
     logger = logging.getLogger("browser_data")
     logger.setLevel(logging.DEBUG)
 
-    formatter = logging.Formatter("%(asctime)s | %(message)s")
+    formatter = logging.Formatter(SHORT_FORMAT)
 
     handler = logging.FileHandler(app.config["LOGS"] / "browser_data.log")
     handler.setLevel(logging.DEBUG)
     handler.setFormatter(formatter)
+    handler.addFilter(Filter())
 
     logger.addHandler(handler)
 
@@ -85,11 +100,12 @@ def unknown_item_logger() -> logging.Logger:
     logger = logging.getLogger("unknown_items")
     logger.setLevel(logging.DEBUG)
 
-    formatter = logging.Formatter("%(asctime)s | %(message)s")
+    formatter = logging.Formatter(SHORT_FORMAT)
 
     handler = logging.FileHandler(app.config["LOGS"] / "unknown_items.log")
     handler.setLevel(logging.DEBUG)
     handler.setFormatter(formatter)
+    handler.addFilter(Filter())
 
     logger.addHandler(handler)
 

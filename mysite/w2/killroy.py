@@ -51,6 +51,7 @@ def getKillroyUpgradeRecommendationsAdviceGroup():
                 skull_advice = Advice(
                     label=f"Level up Skulls once unlocked",
                     picture_class='killroy-skulls',
+                    completed=False
                 )
                 timer_advice = Advice(
                     label=f"Level Timer until you unlock Skulls upgrade",

@@ -19,7 +19,7 @@ def getCardsAdviceSection() -> AdviceSection:
         advices = defaultdict(list)
         for card in unlockable:
             advices[card.cardset].append(
-                Advice(label=card.name, picture_class=card.css_class)
+                Advice(label=card.name, picture_class=card.css_class, completed=False)
             )
         group_unlockable = AdviceGroup(
             tier="", pre_string="Discover new cards", advices=advices, picture_class='locked-card', informational=True
