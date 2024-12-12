@@ -1,7 +1,7 @@
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import break_you_best, achievements_progressionTiers, achievement_categories
+from consts import break_you_best, achievements_progressionTiers, achievement_categories, breedingTotalPets
 from utils.text_formatting import notateNumber
 
 logger = get_logger(__name__)
@@ -17,7 +17,11 @@ def getAchievementExclusions() -> set[str]:
             and sum(session_data.account.dungeon_upgrades.get("FlurboShop", [0])) == 50*8
         )
     ):
+        # This achievement is Steam only- This gives other platforms a way around the requirement
         exclusionsSet.add('Mutant Massacrer')
+    if session_data.account.gemshop['Royal Egg Cap'] < 2:
+        # I wouldn't go spend gems just for this achievement, but you should get it if you already spent the Gems
+        exclusionsSet.add('Gilded Shells')
     return exclusionsSet
 
 def getAchievementStatus(achievementName):

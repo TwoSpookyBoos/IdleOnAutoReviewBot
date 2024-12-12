@@ -100,7 +100,7 @@ class WtfDataException(BaseCustomException):
     reportable = False
     faq = True
     dirname = "wtf"
-    msg_base = "This doesn't look like an IdleOn JSON.<br>Try again!"
+    msg_base = "This doesn't look like an IdleOn JSON, or is missing required data keys to be Reviewed.<br>Please check your Data and try again!"
 
     def __init__(self, data):
         super().__init__()

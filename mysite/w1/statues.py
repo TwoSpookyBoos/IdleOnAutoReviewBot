@@ -17,7 +17,9 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
         crystal_AdviceList.append(Advice(
             label="Complete the Monolith NPC's questline to unlock Onyx Statues",
             picture_class="monolith",
-            resource="onyx-tools"
+            resource="onyx-tools",
+            progression=0,
+            goal=1
         ))
     crystal_AdviceList.append(Advice(
         label="Chocco Chip for more Crystal Mobs",

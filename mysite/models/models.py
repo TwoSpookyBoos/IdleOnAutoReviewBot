@@ -631,6 +631,8 @@ class AdviceGroup(AdviceBase):
         """
         if self.completed is not None:
             return
+        elif self.tier != '':
+            return False
         else:
             if isinstance(self.advices, list):
                 temp_advices = [advice for advice in self.advices if not advice.completed]

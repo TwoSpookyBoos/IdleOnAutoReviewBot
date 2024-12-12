@@ -1,5 +1,6 @@
 import json
 import traceback
+import uuid
 from datetime import datetime
 from pathlib import Path
 
@@ -88,6 +89,7 @@ def results() -> Response | str:
     reviews: list[AdviceWorld] | None = list()
     headerData: HeaderData | None = None
     is_beta: bool = app.config["DOMAIN_BETA"] in request.host
+    g.request_id = uuid.uuid4().hex[:8]
 
     store_user_preferences()
 

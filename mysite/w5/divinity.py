@@ -114,7 +114,8 @@ def getDootChecksAdviceGroups(lowestDivinitySkillLevel: int, highestDivinitySkil
                 if character.divinity_link == "Unlinked":
                     session_data.account.alerts_AdviceDict['World 5'].append(Advice(
                         label=f"{character.character_name} isn't linked to a {{{{ Divinity|#divinity }}}}",
-                        picture_class=character.class_name_icon
+                        picture_class=character.class_name_icon,
+                        completed=False
                     ))
     #     doot_AdviceList.append(Advice(
     #         label=f"Doot not owned, bummer 💔",
@@ -123,14 +124,16 @@ def getDootChecksAdviceGroups(lowestDivinitySkillLevel: int, highestDivinitySkil
     else:
         doot_AdviceList.append(Advice(
             label=f"Doot owned. Congrats 🙄",
-            picture_class="king-doot"
+            picture_class="king-doot",
+            completed=True
         ))
         if lowestDivinitySkillLevel < 2:
             for character in session_data.account.safe_characters:
                 if character.divinity_level < 2:
                     doot_AdviceList.append(Advice(
                         label=f"{character.character_name} needs to level their Divinity once to get Doot's bonus!",
-                        picture_class=character.class_name_icon
+                        picture_class=character.class_name_icon,
+                        completed=False
                     ))
         # else:
         #     doot_AdviceList.append(Advice(
@@ -165,7 +168,8 @@ def getDootChecksAdviceGroups(lowestDivinitySkillLevel: int, highestDivinitySkil
                         for character in highestCharactersNotAssignedToPurrmep:
                             doot_AdviceList.append(Advice(
                                 label=character.character_name,
-                                picture_class=character.class_name_icon
+                                picture_class=character.class_name_icon,
+                                completed=False
                             ))
         if len(doot_AdviceList) == 1:
             # If the only Advice in the list is the sarcastic "Grats for owning Doot", don't show this group
@@ -272,6 +276,8 @@ def getDivinityProgressionTierAdviceGroups(lowestDivinitySkillLevel, highestDivi
                 divinity_AdviceDict['TieredProgress'][subgroupName].append(Advice(
                     label=f"Unlock {getDivinityNameFromIndex(tierRequirements.get('GodsUnlocked', 0))}",
                     picture_class=getDivinityNameFromIndex(tierRequirements.get('GodsUnlocked', 0)),
+                    progression=0,
+                    goal=1
                 ))
         if highestDivinitySkillLevel < tierRequirements.get('MaxDivLevel', 0):
             anyRequirementFailed = True
@@ -281,6 +287,7 @@ def getDivinityProgressionTierAdviceGroups(lowestDivinitySkillLevel, highestDivi
                 divinity_AdviceDict['TieredProgress'][subgroupName].append(Advice(
                     label=f"Raise any character's Divinity level to {tierRequirements.get('MaxDivLevel', 0)} {getDivLevelReason(tierRequirements.get('MaxDivLevel', 0))}",
                     picture_class="divinity",
+                    completed=False
                 ))
         if lowestDivinitySkillLevel < tierRequirements.get('MinDivLevel', 0):
             anyRequirementFailed = True
@@ -292,6 +299,7 @@ def getDivinityProgressionTierAdviceGroups(lowestDivinitySkillLevel, highestDivi
                         divinity_AdviceDict['TieredProgress'][subgroupName].append(Advice(
                             label=f"Raise {character.character_name}'s Divinity level to {tierRequirements.get('MinDivLevel', 0)} {getDivLevelReason(tierRequirements.get('MinDivLevel', 0))}",
                             picture_class=f"{character.class_name_icon}",
+                            completed=False
                         ))
         if not anyRequirementFailed and tier_Divinity == tierLevel - 1:
             tier_Divinity = tierLevel

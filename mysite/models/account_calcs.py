@@ -596,25 +596,29 @@ def _calculate_caverns_the_well(account):
 
 def _calculate_caverns_monuments(account):
     cosmos_multi = max(1, account.caverns['Majiks']['Monumental Vibes']['Value'])
+    ninth_multi_broken = True  #TODO: REMOVE THIS AFTER LAVA FIXES BUG
     for monument_index, monument_name in enumerate(monument_names):
         if monument_index < released_monuments:
             # The 9th bonus multiplies other bonuses, but not itaccount. Must be calculated first.
             ninth = account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]
             ninth_multi = (
-                max(1,
+                ValueToMulti(
                     0.1 * ceil(
-                        ninth['Level'] / (250 + ninth['Level'])
+                        (ninth['Level'] / (250 + ninth['Level']))
                         * 10
-                        * cosmos_multi
-                    )
-                )
-            )
+                        * ninth['ScalingValue']
+                    )  #ceil
+                )  #ValueToMulti includes a max(1, x)
+            )  #finish calculation
             try:
                 account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Value'] = ninth_multi
                 account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'] = (
                     account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'].replace(
                         '}', f"{account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Value']:,.3f}")
                 )
+                account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'] += (
+                    f"<br>(Bugged as of 2024-12-09, gives 1x always)"
+                ) if ninth_multi_broken else ''  #TODO: REMOVE THIS AFTER LAVA FIXES BUG
             except:
                 account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Value'] = 1
                 account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'] = (
@@ -627,7 +631,7 @@ def _calculate_caverns_monuments(account):
                             account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Level']
                             * account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['ScalingValue']
                             * cosmos_multi
-                            * ninth_multi
+                            * (1 if ninth_multi_broken else ninth_multi)  #TODO: REMOVE THIS AFTER LAVA FIXES BUG
                         )
                     else:
                         result = (
