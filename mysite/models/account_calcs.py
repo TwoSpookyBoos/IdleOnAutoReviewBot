@@ -303,14 +303,14 @@ def _calculate_w2_sigils(account):
         # After the +1, 0/1/2/3
 
 def _calculate_w2_ballot(account):
-    equinoxMulti = ValueToMulti(
+    account.event_points_shop['BonusMulti'] = ValueToMulti(
         account.equinox_bonuses['Voter Rights']['CurrentLevel']
         + account.caverns['Majiks']['Voter Integrity']['Value']
         + account.summoning['Endless Bonuses']["% Ballot Bonus"]
         + (17 * account.event_points_shop['Bonuses']['Gilded Vote Button']['Owned'])
     )
     for buffIndex, buffValuesDict in account.ballot['Buffs'].items():
-        account.ballot['Buffs'][buffIndex]['Value'] *= equinoxMulti
+        account.ballot['Buffs'][buffIndex]['Value'] *= account.event_points_shop['BonusMulti']
         # Check for + or +x% replacements
         if "{" in buffValuesDict['Description']:
             account.ballot['Buffs'][buffIndex]['Description'] = buffValuesDict['Description'].replace("{", f"{account.ballot['Buffs'][buffIndex]['Value']:.3f}")

@@ -278,28 +278,11 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
     ballot_multi = ValueToMulti(session_data.account.ballot['Buffs'][29]['Value'])
     ballot_multi_active = max(1, ballot_multi * ballot_active)
     value_advices[mgc].append(Advice(
-        label=f"Plus Weekly Ballot: {ballot_multi_active:.3f}/{ballot_multi:.3f}x"
+        label=f"Plus Weekly {{{{ Ballot|#bonus-ballot }}}}: {ballot_multi_active:.3f}/{ballot_multi:.3f}x"
               f"<br>(Buff {ballot_status})",
         picture_class='ballot-29',
         progression=int(ballot_active),
         goal=1
-    ))
-    value_advices[mgc].append(Advice(
-        label=f"{{{{ Equinox|#equinox}}}}: Voter Rights: {ValueToMulti(session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel']):.2f}"
-              f"/1.{session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']}x"
-              f" to Weekly Ballot"
-              f"<br>(Already included above)",
-        picture_class="voter-rights",
-        progression=session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel'],
-        goal=session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']
-    ))
-    # Cosmos > IdleOn Majik #4 Voter Integrity
-    voter_integrity = session_data.account.caverns['Majiks']['Voter Integrity']
-    value_advices[mgc].append(Advice(
-        label=f"Voter Integrity {{{{ Cavern Majik|#villagers }}}}: {voter_integrity['Description']}",
-        picture_class=f"{voter_integrity['MajikType']}-majik-{'un' if voter_integrity['Level'] == 0 else ''}purchased",
-        progression=voter_integrity['Level'],
-        goal=voter_integrity['MaxLevel']
     ))
 
     value_advices[mgd].append(Advice(
@@ -574,23 +557,6 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
         picture_class='ballot-29',
         progression=int(farming['Evo']['Ballot Active']),
         goal=1
-    ))
-    evo_advices[misc].append(Advice(
-        label=f"{{{{ Equinox|#equinox}}}}: Voter Rights: {ValueToMulti(session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel']):.2f}"
-              f"/1.{session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']}x"
-              f" to Weekly Ballot"
-              f"<br>(Already included above)",
-        picture_class="voter-rights",
-        progression=session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel'],
-        goal=session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']
-    ))
-    # Cosmos > IdleOn Majik #4 Voter Integrity
-    voter_integrity = session_data.account.caverns['Majiks']['Voter Integrity']
-    evo_advices[misc].append(Advice(
-        label=f"Voter Integrity {{{{ Cavern Majik|#villagers }}}}: {voter_integrity['Description']}",
-        picture_class=f"{voter_integrity['MajikType']}-majik-{'un' if voter_integrity['Level'] == 0 else ''}purchased",
-        progression=voter_integrity['Level'],
-        goal=voter_integrity['MaxLevel']
     ))
 
 #Total

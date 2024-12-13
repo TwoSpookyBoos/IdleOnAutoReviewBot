@@ -1,6 +1,7 @@
 import math
 import time
 
+from consts import ValueToMulti
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
@@ -43,7 +44,44 @@ def getBonusesAdviceGroup() -> AdviceGroup:
 
 
 def getBallotMultiAdviceGroup():
-    pass
+    voter_integrity = session_data.account.caverns['Majiks']['Voter Integrity']
+    gvb = session_data.account.event_points_shop['Bonuses']['Gilded Vote Button']
+    multis_advice = {
+        f"Total Multi: {session_data.account.event_points_shop['BonusMulti']:.2f}x": [
+            Advice(
+                label=f"{{{{ Equinox|#equinox}}}}: Voter Rights: {ValueToMulti(session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel']):.2f}"
+                      f"/1.{session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']}x to Weekly Ballot",
+                picture_class="voter-rights",
+                progression=session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel'],
+                goal=session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']
+            ),
+            Advice(
+                label=f"Voter Integrity {{{{ Cavern Majik|#villagers }}}}: {voter_integrity['Description']}",
+                picture_class=f"{voter_integrity['MajikType']}-majik-{'un' if voter_integrity['Level'] == 0 else ''}purchased",
+                progression=voter_integrity['Level'],
+                goal=voter_integrity['MaxLevel']
+            ),
+            Advice(
+                label=f"{{{{Event Shop|#event-shop}}}}: Gilded Vote Button: {gvb['Description']}",
+                picture_class=gvb['Image'],
+                progression=int(gvb['Owned']),
+                goal=1
+            )
+        ]
+    }
+
+    for subgroup in multis_advice:
+        for advice in multis_advice[subgroup]:
+            mark_advice_completed(advice)
+
+    multis_ag = AdviceGroup(
+        tier='',
+        pre_string="Info- Sources of Bonus Ballot Multi",
+        advices=multis_advice,
+        informational=True
+    )
+    return multis_ag
+
 
 
 def getBonus_BallotAdviceSection() -> AdviceSection:
@@ -62,8 +100,8 @@ def getBonus_BallotAdviceSection() -> AdviceSection:
 
     #Generate AdviceGroups
     bonus_ballot_AdviceGroupDict = {
-        'Bonuses': getBonusesAdviceGroup()
-        #'Multi': getBallotMultiAdviceGroup()
+        'Bonuses': getBonusesAdviceGroup(),
+        'Multi': getBallotMultiAdviceGroup()
     }
 
     #Generate AdviceSection
