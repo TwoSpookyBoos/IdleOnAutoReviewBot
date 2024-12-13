@@ -116,10 +116,14 @@ def getDayMarketAdviceGroup(farming) -> AdviceGroup:
     dm = {name:details for name, details in farming['MarketUpgrades'].items() if details['MarketType'] == 'Day'}
     dm_advices = [
         Advice(
-            label=f"{name}: {details['Description']}",
+            label=f"{name}: {details['Description']}" + (
+                  f"<br>Next level's crop: {cropDict.get(getRequiredCropNumber(name, min(details['MaxLevel'], details['Level']+1)), {}).get('Name', '')}"
+                  if details['Level'] < details['MaxLevel'] else ''
+            ),
             picture_class='day-market',
             progression=details['Level'],
-            goal=details['MaxLevel']
+            goal=details['MaxLevel'],
+            resource=cropDict.get(getRequiredCropNumber(name, details['Level']+1), {}).get('Image', '') if details['Level'] < details['MaxLevel'] else ''
         )
         for name, details in dm.items()]
 
