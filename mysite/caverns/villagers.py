@@ -8,7 +8,7 @@ from consts import (
     max_schematics,
     max_majiks,
     max_measurements,
-    break_you_best, infinity_string
+    break_you_best, infinity_string, released_schematics
 )
 
 #villagers_progressionTiers,
@@ -160,7 +160,8 @@ def getEngineerAdviceGroup() -> AdviceGroup:
             schematic_details = session_data.account.caverns['Schematics'][clean_name]
             if not schematic_details['Purchased']:
                 villager_advice[r_s_stats].append(Advice(
-                    label=f"Schematic {list_index+1}: {clean_name}",  #{schematic_details['Description']}",
+                    label=f"{'Unreleased ' if list_index+1 > released_schematics else ''}"
+                          f"Schematic {list_index+1}: {clean_name}",  #{schematic_details['Description']}",
                     picture_class=schematic_details['Image'],
                     progression=int(schematic_details['Purchased']),
                     goal=1,

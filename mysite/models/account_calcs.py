@@ -1058,7 +1058,7 @@ def _calculate_w6_farming_crop_evo(account):
     account.farming['Evo']['Ballot Active'] = account.ballot['CurrentBuff'] == 29
     if account.farming['Evo']['Ballot Active']:
         account.farming['Evo']['Ballot Status'] = "is Active"
-    elif not account.farming['Evo']['Ballot Active'] and account.ballot['CurrentBuff'] != "Unknown":
+    elif not account.farming['Evo']['Ballot Active'] and account.ballot['CurrentBuff'] != 0:
         account.farming['Evo']['Ballot Status'] = "is Inactive"
     else:
         account.farming['Evo']['Ballot Status'] = "status is not available in provided data"

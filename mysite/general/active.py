@@ -250,13 +250,13 @@ def getLongTermAdviceList() -> list[Advice]:
     # Gmush Farming
     for killTarget in [1e6, 500e6, 1e9, 100e9, 500e9, 1e12]:
         if killTarget > session_data.account.enemy_worlds[1].maps_dict[1].kill_count:
-            goalLetter = notateNumber('Basic', killTarget, 0)[-1]
+            goalString = notateNumber('Basic', killTarget, 0)
             longterm.append(Advice(
                 label=f"Kill more Gmush for Money multi"
                       f"<br>AFK or Candy kills with highest KPH character",
                 picture_class='fungi-finger-pocketer',
-                progression=notateNumber("Match", session_data.account.enemy_worlds[1].maps_dict[1].kill_count, 2, goalLetter),
-                goal=notateNumber("Match", killTarget, 0, goalLetter),
+                progression=notateNumber("Match", session_data.account.enemy_worlds[1].maps_dict[1].kill_count, 2, '', goalString),
+                goal=notateNumber("Match", killTarget, 0, '', goalString),
                 resource=session_data.account.enemy_worlds[1].maps_dict[1].monster_image
             ))
             break  # Only show the next closest target
@@ -264,13 +264,13 @@ def getLongTermAdviceList() -> list[Advice]:
     # SB Plunder Kills
     for killTarget in [1e3, 10e3, 32e3, 100e3, 320e3, 1e6]:
         if killTarget > session_data.account.sb_plunder_kills:
-            goalLetter = notateNumber("Basic", killTarget, 0)[-1]
+            goalString = notateNumber("Basic", killTarget, 1)
             longterm.append(Advice(
                 label=f"Farm more Plunder Kills with Siege Breaker for Drop Rate"
                       f"<br>Crystal Setup at W5 Citringes for ~20k per day",
                 picture_class='archlord-of-the-pirates',
-                progression=notateNumber("Match", session_data.account.sb_plunder_kills, 2, goalLetter),
-                goal=notateNumber("Match", killTarget, 1, goalLetter),
+                progression=notateNumber("Match", session_data.account.sb_plunder_kills, 2, '', goalString),
+                goal=goalString,
                 resource='pirate-flag'
             ))
             break  # Only show the next closest target
@@ -278,13 +278,13 @@ def getLongTermAdviceList() -> list[Advice]:
     # DK Orb Kills
     for killTarget in [1e3, 10e3, 32e3, 100e3, 320e3, 1e6]:
         if killTarget > session_data.account.dk_orb_kills:
-            goalLetter = notateNumber("Basic", killTarget, 0)[-1]
+            goalString = notateNumber("Basic", killTarget, 1)
             longterm.append(Advice(
                 label=f"Farm more Orb stacks with Divine Knight for Printer Output"
                       f"<br>Crystal Setup at any world you need Crystal loot from",
                 picture_class='king-of-the-remembered',
-                progression=notateNumber("Match", session_data.account.dk_orb_kills, 2, goalLetter),
-                goal=notateNumber("Match", killTarget, 1, goalLetter),
+                progression=notateNumber("Match", session_data.account.dk_orb_kills, 2, '', goalString),
+                goal=goalString,
                 resource='orb-of-remembrance'
             ))
             break  # Only show the next closest target
@@ -292,13 +292,13 @@ def getLongTermAdviceList() -> list[Advice]:
     # ES Wormhole Kills
     for killTarget in [1e3, 10e3, 32e3, 100e3, 320e3, 1e6]:
         if killTarget > session_data.account.es_wormhole_kills:
-            goalLetter = notateNumber("Basic", killTarget, 0)[-1]
+            goalString = notateNumber("Basic", killTarget, 1)
             longterm.append(Advice(
                 label=f"Farm more Wormhole kills with Elemental Sorcerer for Damage"
                       f"<br>Generally alongside farming Rare Drops, such as Dark Lanterns",
                 picture_class='wormhole-emperor',
-                progression=notateNumber("Match", session_data.account.es_wormhole_kills, 2, goalLetter),
-                goal=notateNumber("Match", killTarget, 1, goalLetter),
+                progression=notateNumber("Match", session_data.account.es_wormhole_kills, 2, '', goalString),
+                goal=goalString,
                 resource='dimensional-wormhole'
             ))
             break  # Only show the next closest target

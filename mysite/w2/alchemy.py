@@ -646,7 +646,7 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
     ballot_active = session_data.account.ballot['CurrentBuff'] == 17
     if ballot_active:
         ballot_status = "is Active"
-    elif not ballot_active and session_data.account.ballot['CurrentBuff'] != "Unknown":
+    elif not ballot_active and session_data.account.ballot['CurrentBuff'] != 0:
         ballot_status = "is Inactive"
     else:
         ballot_status = "status is not available in provided data"

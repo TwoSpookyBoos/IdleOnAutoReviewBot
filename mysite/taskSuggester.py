@@ -14,7 +14,7 @@ from utils.logging import get_logger
 from utils.text_formatting import is_username
 from general import combatLevels, greenstacks, pinchy, cards, secretPath, consumables, gemShop, active, achievements, eventShop
 from w1 import stamps, bribes, smithing, statues, starsigns, owl
-from w2 import alchemy, killroy, islands, arcade
+from w2 import alchemy, killroy, islands, arcade, bonus_ballot
 from w3 import trapping, consRefinery, consDeathNote, worship, consSaltLick, consBuildings, equinox, library, sampling, collider
 from w4 import breeding, cooking, rift
 from w5 import slab, divinity, sailing
@@ -90,7 +90,8 @@ def main(inputData, runType="web"):
             alchemy.getAlchemySigilsAdviceSection(),
             killroy.getKillroyAdviceSection(),
             islands.getIslandsAdviceSection(),
-            arcade.getArcadeAdviceSection()
+            arcade.getArcadeAdviceSection(),
+            bonus_ballot.getBonus_BallotAdviceSection()
         ],
         sections_3 := [
             consRefinery.getConsRefineryAdviceSection(),
@@ -179,7 +180,7 @@ def main(inputData, runType="web"):
     reviews = [world for world in reviews if len(world.sections) > 0]
 
     headerData = HeaderData(inputData)
-    logger.info(f"{headerData.last_update = }. Data version {session_data.account.version}: {patch_guess} or later")
+    logger.info(f"{headerData.last_update = }")
 
     if runType == "consoleTest":
         return "Pass"

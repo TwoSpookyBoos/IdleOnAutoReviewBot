@@ -374,9 +374,8 @@ def getBellAdviceGroup(schematics):
 
     target_cost = ceil(cavern['Charges']['Ping'][2])
     target_string = notateNumber('Basic', target_cost, 2)
-    target_letter = str(target_string[-1]) if target_cost > 1000 else ''
     current_number = cavern['Charges']['Ping'][0]
-    current_string = notateNumber('Match', current_number, 2, target_letter)
+    current_string = notateNumber('Match', current_number, 2, '', target_string)
     current_percent = 100 * (cavern['Charges']['Ping'][0] / target_cost)
     cavern_advice[c_stats].append(Advice(
         label=f"Current Ping charge: {current_string}"

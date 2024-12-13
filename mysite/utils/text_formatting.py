@@ -89,8 +89,8 @@ def numeralToNumber(numeral: str):
 
 
 stringToDecimal = {
-    "QQQ": 1e21,
-    "QQ": 1e18,
+    # "QQQ": 1e21,
+    # "QQ": 1e18,
     "Q": 1e15,
     "T": 1e12,
     "B": 1e9,
@@ -98,25 +98,46 @@ stringToDecimal = {
     "K": 1e3,
     "": 1
 }
-def notateNumber(inputType: str, inputValue: float, decimals=2, matchString="B"):
+def notateNumber(inputType: str, inputValue: float, decimals=2, overrideCharacter="", matchString=None):
+    """
+    :param inputType: 'Basic' or 'Match'
+    :param inputValue: The Value needing to be notated
+    :param decimals: The number of decimals to show after
+    :param overrideCharacter: Single character string to override the default matching. Must be present in stringToDecimal dictionary.
+    :param matchString: The entire value to match to
+    :return:
+    """
     match inputType:
         case "Basic":
-            if float(inputValue) >= 1e24:
+            if float(inputValue) >= 1e18:
                 result = f"{inputValue:.{decimals}e}"
             elif float(inputValue) < 1e3:
-                result = f"{inputValue:,}"
+                result = f"{inputValue:.{decimals}f}"
             else:
                 for k, v in stringToDecimal.items():
                     if float(inputValue) >= v:
                         result = f"{inputValue / v:.{decimals}f}{k}"
                         break
         case "Match":
-            result = f"{inputValue / stringToDecimal[matchString.upper()]:.{decimals}f}{matchString.upper()}"
+            if not overrideCharacter and isinstance(matchString, str):
+                if 'e+' in matchString:
+                    overrideCharacter = matchString.split('e+')[-1]
+                elif matchString[-1].isalpha():
+                    overrideCharacter = matchString[-1]
+                else:
+                    overrideCharacter = ''
+            if overrideCharacter and overrideCharacter.isalpha():
+                result = f"{inputValue / stringToDecimal[overrideCharacter.upper()]:.{decimals}f}{overrideCharacter.upper()}"
+            elif overrideCharacter and overrideCharacter.isdigit():
+                result = f"{inputValue / float(f'1e{overrideCharacter}'):.{decimals}f}e+{overrideCharacter}"
+            else:
+                result = notateNumber('Basic', inputValue, decimals)
             # if matchString.upper() in stringToDecimal:
             #
             # else:
             #     logger.debug(f"Unexpected matchString: {matchString}")
             #     result = f"{inputValue:,}"
+
         case _:
             result = f"{inputValue:,}"
     return result

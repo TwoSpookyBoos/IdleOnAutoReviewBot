@@ -878,8 +878,12 @@ def _parse_w2_arcade(account):
     #     logger.debug(f"{entry_name}: {entry_details}")
 
 def _parse_w2_ballot(account):
+    raw_vote_categories = safer_get(account.raw_serverVars_dict, 'voteCategories', [0,0,0,0])
+    raw_vote_categories = [safer_convert(v, 0) for v in raw_vote_categories]  #Convert any None to 0 as a default
     account.ballot = {
-        "CurrentBuff": safer_get(account.raw_serverVars_dict, 'voteCategories', ["Unknown"])[0],
+        "CurrentBuff": raw_vote_categories[0],
+        "OnTheBallot": raw_vote_categories[1:],
+        "Week": safer_get(account.raw_optlacc_dict, 309, 0),
         "Buffs": {}
     }
     for buffIndex, buffValuesDict in ballotDict.items():
