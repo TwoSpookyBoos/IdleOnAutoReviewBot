@@ -4889,6 +4889,8 @@ arcadeBonuses = {
     35: {"Stat": "Jade gain", "x1": 50, "x2": 100, "funcType": "decay", "displayType": "%"},
     36: {"Stat": "Farming EXP", "x1": 30, "x2": 100, "funcType": "decay", "displayType": "%"},
     37: {"Stat": "Divinity EXP", "x1": 40, "x2": 100, "funcType": "decay", "displayType": "%"},
+    38: {"Stat": "Villager XP multi", "x1": 40, "x2": 100, "funcType": "decay", "displayType": "%"},
+    39: {"Stat": "Gold Ball gain", "x1": 1, "x2": 0, "funcType": "add", "displayType": "%"},
 }
 arcade_max_level = 100
 #poBoxDict last taken from code in 2.09: #PostOffUpgradeInfo = function ()
