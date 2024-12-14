@@ -80,8 +80,7 @@ def getHarpAdviceGroup(schematics):
         if cavern['NotesUnlocked'] < note_index:
             unlock_cost = getHarpNoteUnlockCost(note_index-1)
             target_string = notateNumber('Basic', unlock_cost, 2)
-            target_letter = target_string[-1] if target_string[-1].isalpha() else ''
-            current_string = notateNumber('Match', min(unlock_cost, cavern['NotesOwned'][note_index-1]), 2, target_letter)
+            current_string = notateNumber('Match', min(unlock_cost, cavern['NotesOwned'][note_index-1]), 2, '', target_string)
             note_advice = Advice(
                 label=f"Unlock {harp_notes[note_index]}s by trading {target_string} of the previous Note",
                 picture_class=f'harp-note-{note_index}',
@@ -251,8 +250,7 @@ def getGrottoAdviceGroup():
 
 # Layer/Colony Stats
     target_string = notateNumber('Basic', cavern['KillsRequired'], 2)
-    target_letter = target_string[-1] if target_string[-1].isalpha() else ''
-    current_string = notateNumber('Match', cavern['PlayerKills'], 2, target_letter)
+    current_string = notateNumber('Match', cavern['PlayerKills'], 2, target_string)
     cavern_advice[l_stats].append(Advice(
         label=f"Kills before Monarch: {notateNumber('Basic', cavern['KillsRemaining'], 2)}",
         picture_class='gloomie-mushroom',

@@ -5,7 +5,7 @@ from utils.logging import get_logger
 from utils.data_formatting import mark_advice_completed
 from flask import g as session_data
 from consts import (farming_progressionTiers, break_you_best, maxTiersPerGroup, maxFarmingCrops, maxCharacters, max_VialLevel, maxMealLevel, stamp_maxes,
-                    ValueToMulti, tomepct, getCropEvoChance, cropDict, landrankDict, maxFarmingValue, infinity_string)
+                    ValueToMulti, tomepct, getCropEvoChance, cropDict, landrankDict, maxFarmingValue, infinity_string, getRequiredCropNumber)
 from utils.text_formatting import pl, notateNumber
 
 logger = get_logger(__name__)
@@ -116,10 +116,14 @@ def getDayMarketAdviceGroup(farming) -> AdviceGroup:
     dm = {name:details for name, details in farming['MarketUpgrades'].items() if details['MarketType'] == 'Day'}
     dm_advices = [
         Advice(
-            label=f"{name}: {details['Description']}",
+            label=f"{name}: {details['Description']}" + (
+                  f"<br>Next level's crop: {cropDict.get(getRequiredCropNumber(name, min(details['MaxLevel'], details['Level']+1)), {}).get('Name', '')}"
+                  if details['Level'] < details['MaxLevel'] else ''
+            ),
             picture_class='day-market',
             progression=details['Level'],
-            goal=details['MaxLevel']
+            goal=details['MaxLevel'],
+            resource=cropDict.get(getRequiredCropNumber(name, details['Level']+1), {}).get('Image', '') if details['Level'] < details['MaxLevel'] else ''
         )
         for name, details in dm.items()]
 
@@ -210,7 +214,7 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
     mga = f"Multi Group A: {val['Doubler Multi']:.2f}x"
     mgb = f"Multi Group B: {val['Mboost Sboost Multi']:.2f}x"
     mgc = f"Multi Group C: {val['Pboost Ballot Multi Min']:.2f}x to {val['Pboost Ballot Multi Max']:.2f}x"
-    mgd = f"Multi Group D: {val['Value GMO Current']}x"
+    mgd = f"Multi Group D: {val['Value GMO Current']:.2f}x"
     final = f"Conclusion: You are {'NOT ' if val['FinalMin'] < maxFarmingValue else 'over' if val['BeforeCapMin'] >= maxFarmingValue * 1.25 else ''}capped on Lowest plots"
     value_advices = {
         final: [],
@@ -271,35 +275,18 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
     ballot_active = session_data.account.ballot['CurrentBuff'] == 29
     if ballot_active:
         ballot_status = "is Active"
-    elif not ballot_active and session_data.account.ballot['CurrentBuff'] != "Unknown":
+    elif not ballot_active and session_data.account.ballot['CurrentBuff'] != 0:
         ballot_status = "is Inactive"
     else:
         ballot_status = "status is not available in provided data"
     ballot_multi = ValueToMulti(session_data.account.ballot['Buffs'][29]['Value'])
     ballot_multi_active = max(1, ballot_multi * ballot_active)
     value_advices[mgc].append(Advice(
-        label=f"Plus Weekly Ballot: {ballot_multi_active:.3f}/{ballot_multi:.3f}x"
+        label=f"Plus Weekly {{{{ Ballot|#bonus-ballot }}}}: {ballot_multi_active:.3f}/{ballot_multi:.3f}x"
               f"<br>(Buff {ballot_status})",
         picture_class='ballot-29',
         progression=int(ballot_active),
         goal=1
-    ))
-    value_advices[mgc].append(Advice(
-        label=f"{{{{ Equinox|#equinox}}}}: Voter Rights: {ValueToMulti(session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel']):.2f}"
-              f"/1.{session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']}x"
-              f" to Weekly Ballot"
-              f"<br>(Already included above)",
-        picture_class="voter-rights",
-        progression=session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel'],
-        goal=session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']
-    ))
-    # Cosmos > IdleOn Majik #4 Voter Integrity
-    voter_integrity = session_data.account.caverns['Majiks']['Voter Integrity']
-    value_advices[mgc].append(Advice(
-        label=f"Voter Integrity {{{{ Cavern Majik|#villagers }}}}: {voter_integrity['Description']}",
-        picture_class=f"{voter_integrity['MajikType']}-majik-{'un' if voter_integrity['Level'] == 0 else ''}purchased",
-        progression=voter_integrity['Level'],
-        goal=voter_integrity['MaxLevel']
     ))
 
     value_advices[mgd].append(Advice(
@@ -312,7 +299,7 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
     #Final
     value_advices[final].append(Advice(
         label=f"Total on Lowest ranked plot"
-              f"<br>Note: 10,000x is a HARD cap. Going above is pointless.",
+              f"<br>Note: 10,000x is a HARD cap.",
         picture_class='crop-scientist',
         progression=f"{val['BeforeCapMin']:,.0f}",
         goal=f"{maxFarmingValue:,}"
@@ -575,23 +562,6 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
         progression=int(farming['Evo']['Ballot Active']),
         goal=1
     ))
-    evo_advices[misc].append(Advice(
-        label=f"{{{{ Equinox|#equinox}}}}: Voter Rights: {ValueToMulti(session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel']):.2f}"
-              f"/1.{session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']}x"
-              f" to Weekly Ballot"
-              f"<br>(Already included above)",
-        picture_class="voter-rights",
-        progression=session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel'],
-        goal=session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']
-    ))
-    # Cosmos > IdleOn Majik #4 Voter Integrity
-    voter_integrity = session_data.account.caverns['Majiks']['Voter Integrity']
-    evo_advices[misc].append(Advice(
-        label=f"Voter Integrity {{{{ Cavern Majik|#villagers }}}}: {voter_integrity['Description']}",
-        picture_class=f"{voter_integrity['MajikType']}-majik-{'un' if voter_integrity['Level'] == 0 else ''}purchased",
-        progression=voter_integrity['Level'],
-        goal=voter_integrity['MaxLevel']
-    ))
 
 #Total
     final_crops = {}
@@ -605,14 +575,16 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
         7: 130,
         8: 140,
         9: 150,
-        10:160
+        10:160,
+        11:170,
+        12:180
     }.items():
         final_crops[k] = [cropDict[v]['SeedName'],  ceil(1 / getCropEvoChance(v)),  cropDict[v]['Image']]
-    subtotal_purple_glassy_percent = farming['Evo']['Subtotal Multi'] / final_crops[max(final_crops.keys())][1]
-    purple_glassy_completed = subtotal_purple_glassy_percent >= 1
+    subtotal_final_glassy_percent = farming['Evo']['Subtotal Multi'] / final_crops[max(final_crops.keys())][1]
+    final_glassy_completed = subtotal_final_glassy_percent >= 1
     first_failed_goal = 0
     first_failed_key = 0
-    if purple_glassy_completed:
+    if final_glassy_completed:
         first_failed_goal = final_crops[max(final_crops.keys())][1]
         first_failed_key = max(final_crops.keys())
         prog_percent = farming['Evo']['Subtotal Multi'] / final_crops[first_failed_key][1]
@@ -645,7 +617,7 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
             crop_chapter_multi = ValueToMulti(session_data.account.alchemy_bubbles['Crop Chapter']['BaseValue'] * crop_chapter_stacks)
             total_multi = farming['Evo']['Subtotal Multi'] * crop_chapter_multi
             prog_percent = min(1, total_multi / first_failed_goal)
-            completed = prog_percent >= 1 or purple_glassy_completed
+            completed = prog_percent >= 1 or final_glassy_completed
             if not completed and (
                 (tome_added < 3 and first_failed_key <= 6)
                 or (tome_added < 5 and first_failed_key >= 7)
@@ -922,9 +894,9 @@ def getLRExclusions(farming, highestFarmingSkillLevel):
     exclusions = []
     if maxFarmingCrops-1 in farming['Crops']:
         exclusions.extend([v['Name'] for v in landrankDict.values() if v['Name'].startswith('Evolution')])
-    if farming['Value']['FinalMin'] >= 100:
+    if farming['Value']['FinalMin'] >= maxFarmingValue/100:
         exclusions.extend([v['Name'] for v in landrankDict.values() if v['Name'].startswith('Production')])
-    if farming['LandRankMinPlot'] >= 100:
+    if farming['LandRankMinPlot'] >= 120:
         exclusions.extend([v['Name'] for v in landrankDict.values() if v['Name'].startswith('Soil Exp')])
     if highestFarmingSkillLevel >= 300:
         exclusions.extend([v['Name'] for v in landrankDict.values() if v['Name'].startswith('Farmtastic')])
@@ -936,7 +908,7 @@ def getProgressionTiersAdviceGroup(farming, highestFarmingSkillLevel):
         'Tiers': {},
     }
     farming_AdviceGroupDict = {}
-    infoTiers = 0
+    infoTiers = 1
     max_tier = max(farming_progressionTiers.keys(), default=0) - infoTiers
     tier_All = 0
 
@@ -947,7 +919,7 @@ def getProgressionTiersAdviceGroup(farming, highestFarmingSkillLevel):
     #Assess Tiers
     for tierNumber, tierRequirements in farming_progressionTiers.items():
         #subgroupName = f"TESTING PURPOSES ONLY, TIERS NOT READY!"
-        subgroupName = f"To reach Tier {tierNumber}"
+        subgroupName = f"To reach {'Informational ' if tierNumber > max_tier else ''}Tier {tierNumber}"
         advice_types_added = set()
 
         #Farming Level
@@ -977,6 +949,22 @@ def getProgressionTiersAdviceGroup(farming, highestFarmingSkillLevel):
                     goal=tierRequirements.get('Crops Unlocked', 0)
                 ))
 
+        # Stats
+        if 'Stats' in tierRequirements:
+            requiredStats = tierRequirements['Stats']
+            if 'Value' in requiredStats:
+                if farming['Value']['FinalMin'] < requiredStats['Value']:
+                    if subgroupName not in farming_AdviceDict['Tiers'] and len(farming_AdviceDict['Tiers']) < maxTiersPerGroup:
+                        farming_AdviceDict['Tiers'][subgroupName] = []
+                    if subgroupName in farming_AdviceDict['Tiers']:
+                        advice_types_added.add('Value Stat')
+                        farming_AdviceDict['Tiers'][subgroupName].append(Advice(
+                            label=f"Reach {requiredStats['Value']}x total Value",
+                            picture_class='',
+                            progression=f"{farming['Value']['FinalMin']:.0f}",
+                            goal=requiredStats['Value']
+                        ))
+
         #Day Market
         for rName, rLevel in tierRequirements.get('Day Market', {}).items():
             if farming['MarketUpgrades'][rName]['Level'] < rLevel:
@@ -984,13 +972,16 @@ def getProgressionTiersAdviceGroup(farming, highestFarmingSkillLevel):
                     farming_AdviceDict['Tiers'][subgroupName] = []
                 if subgroupName in farming_AdviceDict['Tiers']:
                     advice_types_added.add('Day Market')
+                    material_crop_number = getRequiredCropNumber(rName, rLevel)
                     farming_AdviceDict['Tiers'][subgroupName].append(Advice(
                         label=f"{rName}: "
                               f"{farming['MarketUpgrades'][rName]['Value']:.4g}/{farming['MarketUpgrades'][rName]['BonusPerLevel'] * rLevel:.4g}"
-                              f"{'%' if rName != 'Land Plots' else ''}",
+                              f"{'%' if rName != 'Land Plots' else ''}"
+                              f"<br>Final level's crop: {cropDict.get(material_crop_number, {}).get('Name', '')}",
                         picture_class='day-market',
                         progression=farming['MarketUpgrades'][rName]['Level'],
-                        goal=rLevel
+                        goal=rLevel,
+                        resource=cropDict.get(material_crop_number, {}).get('Image', '')
                     ))
 
         # Land Ranks - Database Upgrades
@@ -1066,7 +1057,6 @@ def getProgressionTiersAdviceGroup(farming, highestFarmingSkillLevel):
                                 suggies['EvoChance'][1],
                                 2 if suggies['EvoChance'][1] < 10 else 0
                             )
-                            match_letter = target[-1] if target[-1].isalpha() else ''
                             farming_AdviceDict['Tiers'][subgroupName].append(Advice(
                                 label=f"Suggestion: {low_target} to {target}x Evo Chance",
                                 picture_class='crop-scientist',
@@ -1074,7 +1064,8 @@ def getProgressionTiersAdviceGroup(farming, highestFarmingSkillLevel):
                                     'Match',
                                     farming['Evo']['Subtotal Multi'],
                                     2 if farming['Evo']['Subtotal Multi'] < 10 else 0,
-                                    match_letter
+                                    '',
+                                    target
                                 ),
                                 goal=target
                             ))
@@ -1125,14 +1116,30 @@ def getProgressionTiersAdviceGroup(farming, highestFarmingSkillLevel):
                     total_nm_entries += 1
         if total_nm_entries > 1:
             target = notateNumber('Basic', total_magic_bean_cost, 2)
-            match_letter = str(target[-1]) if target[-1].isalpha() else ''
             farming_AdviceDict['Tiers'][subgroupName].append(Advice(
                 label=f"Grand Total Magic Bean Cost remaining in this Tier",
                 picture_class='magic-bean',
-                progression=f"{notateNumber('Match', farming['MagicBeans'], 2, match_letter)}",  #Does not include the value of their current trade
+                progression=f"{notateNumber('Match', farming['MagicBeans'], 2, '', target)}",  #Does not include the value of their current trade
                 goal=target,
                 resource='magic-bean'
             ))
+
+        #Alchemy Bubbles
+        if 'Alchemy Bubbles' in tierRequirements:
+            requiredBubbles = tierRequirements['Alchemy Bubbles']
+            for rName, rLevel in requiredBubbles.items():
+                if rLevel > session_data.account.alchemy_bubbles[rName]['Level']:
+                    if subgroupName not in farming_AdviceDict['Tiers'] and len(farming_AdviceDict['Tiers']) < maxTiersPerGroup:
+                        farming_AdviceDict['Tiers'][subgroupName] = []
+                    if subgroupName in farming_AdviceDict['Tiers']:
+                        advice_types_added.add('Alchemy Bubbles')
+                        farming_AdviceDict['Tiers'][subgroupName].append(Advice(
+                            label=f"Level {rName} to 99% value",
+                            picture_class=rName,
+                            progression=session_data.account.alchemy_bubbles[rName]['Level'],
+                            goal=rLevel,
+                            resource=session_data.account.alchemy_bubbles[rName]['Material']
+                        ))
 
         #Final tier check
         if subgroupName not in farming_AdviceDict['Tiers'] and tier_All == tierNumber - 1:

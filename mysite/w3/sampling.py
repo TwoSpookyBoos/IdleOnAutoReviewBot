@@ -271,7 +271,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     ballot_active = session_data.account.ballot['CurrentBuff'] == 11
     if ballot_active:
         ballot_status = "is Active"
-    elif not ballot_active and session_data.account.ballot['CurrentBuff'] != "Unknown":
+    elif not ballot_active and session_data.account.ballot['CurrentBuff'] != 0:
         ballot_status = "is Inactive"
     else:
         ballot_status = "status is not available in provided data"
@@ -357,28 +357,11 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     ))
 
     po_AdviceDict[aw_label].append(Advice(
-        label=f"Weekly Ballot: {ballot_multi_active:.3f}/{ballot_multi:.3f}x"
+        label=f"Weekly {{{{ Ballot|#bonus-ballot }}}}: {ballot_multi_active:.3f}/{ballot_multi:.3f}x"
               f"<br>(Buff {ballot_status})",
         picture_class="ballot-11",
         progression=int(ballot_active),
         goal=1
-    ))
-    po_AdviceDict[aw_label].append(Advice(
-        label=f"{{{{ Equinox|#equinox}}}}: Voter Rights: {ValueToMulti(session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel']):.2f}"
-              f"/1.{session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']}x"
-              f" to Weekly Ballot"
-              f"<br>(Already included above)",
-        picture_class="voter-rights",
-        progression=session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel'],
-        goal=session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']
-    ))
-    # Cosmos > IdleOn Majik #4 Voter Integrity
-    voter_integrity = session_data.account.caverns['Majiks']['Voter Integrity']
-    po_AdviceDict[aw_label].append(Advice(
-        label=f"Voter Integrity {{{{ Cavern Majik|#villagers }}}}: {voter_integrity['Description']}",
-        picture_class=f"{voter_integrity['MajikType']}-majik-{'un' if voter_integrity['Level'] == 0 else ''}purchased",
-        progression=voter_integrity['Level'],
-        goal=voter_integrity['MaxLevel']
     ))
 
     po_AdviceDict[cs_label].append(Advice(
@@ -457,43 +440,25 @@ def getProgressionTiersAdviceGroup():
         # Finally, if that subgroupName exists, populate with Advice
         if subgroupName in sampling_AdviceDict['MaterialSamples']:
             for materialName, materialNumber in failedMaterialsDict[tierNumber].items():
-                goalLetter = notateNumber("Basic", materialNumber, 1)[-1]
-                if goalLetter.isalpha():
-                    sampling_AdviceDict['MaterialSamples'][subgroupName].append(Advice(
-                        label=f"{materialName}",
-                        picture_class=materialName,
-                        progression=notateNumber("Match", max(allSamples.get(materialName, [0])), 2, goalLetter[-1]),
-                        goal=notateNumber("Match", materialNumber, 1, goalLetter[-1]),
-                        resource=getSampleClass(materialName)
-                    ))
-                else:
-                    sampling_AdviceDict['MaterialSamples'][subgroupName].append(Advice(
-                        label=f"{materialName}",
-                        picture_class=materialName,
-                        progression=notateNumber("Basic", max(allSamples.get(materialName, [0])), 1),
-                        goal=notateNumber("Basic", materialNumber, 1),
-                        resource=getSampleClass(materialName)
-                    ))
+                goalString = notateNumber("Basic", materialNumber, 1)
+                sampling_AdviceDict['MaterialSamples'][subgroupName].append(Advice(
+                    label=f"{materialName}",
+                    picture_class=materialName,
+                    progression=notateNumber("Match", max(allSamples.get(materialName, [0])), 2, '', goalString),
+                    goal=goalString,
+                    resource=getSampleClass(materialName)
+                ))
 
     # After evaluating all tiers, populate the catchup group
     for materialName, materialNumber in failedMaterialsDict.get(tier_MaterialSamples, {}).items():
-        goalLetter = notateNumber("Basic", materialNumber, 1)[-1]
-        if goalLetter.isalpha():
-            sampling_AdviceDict['MaterialSamples'][catchup].append(Advice(
-                label=f"{materialName}",
-                picture_class=materialName,
-                progression=notateNumber("Match", max(allSamples.get(materialName, [0])), 2, goalLetter[-1]),
-                goal=notateNumber("Match", materialNumber, 1, goalLetter[-1]),
-                resource=getSampleClass(materialName)
-            ))
-        else:
-            sampling_AdviceDict['MaterialSamples'][catchup].append(Advice(
-                label=f"{materialName}",
-                picture_class=materialName,
-                progression=notateNumber("Basic", max(allSamples.get(materialName, [0])), 1),
-                goal=notateNumber("Basic", materialNumber, 1),
-                resource=getSampleClass(materialName)
-            ))
+        goalString = notateNumber("Basic", materialNumber, 1)
+        sampling_AdviceDict['MaterialSamples'][catchup].append(Advice(
+            label=f"{materialName}",
+            picture_class=materialName,
+            progression=notateNumber("Match", max(allSamples.get(materialName, [0])), 2, '', goalString),
+            goal=goalString,
+            resource=getSampleClass(materialName)
+        ))
 
     # Generate AdviceGroups
     sampling_AdviceGroupDict["MaterialSamples"] = AdviceGroup(

@@ -24,11 +24,12 @@ def getEventShopAdviceGroup() -> AdviceGroup:
         informational=True
     ))
     for advice in es_advice:
-        mark_advice_completed(advice)
+        if advice.resource == '':
+            mark_advice_completed(advice)
 
     es_ag = AdviceGroup(
         tier='',
-        pre_string="Season Event Shop bonuses",
+        pre_string="Seasonal Event Shop bonuses",
         advices=es_advice
     )
     return es_ag

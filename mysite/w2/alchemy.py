@@ -646,7 +646,7 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
     ballot_active = session_data.account.ballot['CurrentBuff'] == 17
     if ballot_active:
         ballot_status = "is Active"
-    elif not ballot_active and session_data.account.ballot['CurrentBuff'] != "Unknown":
+    elif not ballot_active and session_data.account.ballot['CurrentBuff'] != 0:
         ballot_status = "is Inactive"
     else:
         ballot_status = "status is not available in provided data"
@@ -767,28 +767,11 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
 
     # Multi Group D
     speed_Advice[mgd_label].append(Advice(
-        label=f"Weekly Ballot: {ballot_multi_active:.3f}/{ballot_multi:.3f}x"
+        label=f"Weekly {{{{ Ballot|#bonus-ballot }}}}: {ballot_multi_active:.3f}/{ballot_multi:.3f}x"
               f"<br>(Buff {ballot_status})",
         picture_class="ballot-17",
         progression=int(ballot_active),
         goal=1
-    ))
-    speed_Advice[mgd_label].append(Advice(
-        label=f"{{{{ Equinox|#equinox}}}}: Voter Rights: {ValueToMulti(session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel']):.2f}"
-              f"/1.{session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']}x"
-              f" to Weekly Ballot"
-              f"<br>(Already included above)",
-        picture_class="voter-rights",
-        progression=session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel'],
-        goal=session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']
-    ))
-    # Cosmos > IdleOn Majik #4 Voter Integrity
-    voter_integrity = session_data.account.caverns['Majiks']['Voter Integrity']
-    speed_Advice[mgd_label].append(Advice(
-        label=f"Voter Integrity {{{{ Cavern Majik|#villagers }}}}: {voter_integrity['Description']}",
-        picture_class=f"{voter_integrity['MajikType']}-majik-{'un' if voter_integrity['Level'] == 0 else ''}purchased",
-        progression=voter_integrity['Level'],
-        goal=voter_integrity['MaxLevel']
     ))
 
     for group_name in speed_Advice:
