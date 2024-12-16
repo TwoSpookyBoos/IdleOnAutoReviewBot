@@ -205,6 +205,16 @@ def getCharacterDetails(inputJSON, runType):
                 playerCount,
                 ", ".join(playerNames),
             )
+    elif "PlayerNames" in inputJSON.keys():
+        #IdleonSaver tool, wow
+        playerNames = inputJSON['PlayerNames']
+        playerCount = len(playerNames)
+        if runType == "web":
+            logger.info(
+                "From IdleonSaver or other 3rd party tool, found %s characters: %s",
+                playerCount,
+                ", ".join(playerNames),
+            )
     else:
         try:
             # this produces an unsorted list of names
