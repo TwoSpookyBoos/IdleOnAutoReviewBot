@@ -376,32 +376,35 @@ def getLibraryProgressionTiersAdviceGroups():
     awp = "Account Wide Priorities"
     account_wide_talent_prios = {
         # 32:  0,   #Maestro- Printer Go Brr
-        43:  0,   #Maestro- Right Hand of Action
-        56:  0,   #Vman- Voodoo Statue
-        57:  0,   #Vman- Species Epoch
-        58:  0,   #Vman- Master of the System
-        59:  0,   #Vman- Blood Marrow
-        178: 0,  #DK- King of the Remembered
-        328: 0,  #SB- Archlord Of The Pirates
-        310: 0,  #Hunter- Eagle Eye
+        43:  [0, 'Maestro'],   #Maestro- Right Hand of Action
+        56:  [0, 'Voidwalker'],   #Vman- Voodoo Statue
+        57:  [0, 'Voidwalker'],   #Vman- Species Epoch
+        58:  [0, 'Voidwalker'],   #Vman- Master of the System
+        59:  [0, 'Voidwalker'],   #Vman- Blood Marrow
+        178: [0, 'Divine Knight'],  #DK- King of the Remembered
+        328: [0, 'Siege Breaker'],  #SB- Archlord Of The Pirates
+        310: [0, 'Hunter'],  #Hunter- Eagle Eye
         # 373: 0,  #BM- Curviture Of The Paw
         # 508: 0,  #ES- Wormhole Emperor
     }
     for talentNumber in account_wide_talent_prios:
         #Record max level across all characters
         if talentNumber in talentExclusions:
-            account_wide_talent_prios[talentNumber] = session_data.account.library['MaxBookLevel']
+            account_wide_talent_prios[talentNumber][0] = session_data.account.library['MaxBookLevel']
         else:
-            account_wide_talent_prios[talentNumber] = max([toon.max_talents.get(str(talentNumber), 0) for toon in session_data.account.safe_characters], default=0)
+            account_wide_talent_prios[talentNumber][0] = max([toon.max_talents.get(str(talentNumber), 0) for toon in session_data.account.safe_characters], default=0)
         #If less than max book level
-        if account_wide_talent_prios[talentNumber] < session_data.account.library['MaxBookLevel']:
+        if (
+            account_wide_talent_prios[talentNumber][1] in session_data.account.classes
+            and account_wide_talent_prios[talentNumber][0] < session_data.account.library['MaxBookLevel']
+        ):
             if awp not in character_adviceDict:
                 character_adviceDict[awp] = []
             character_adviceDict[awp].append(
                 Advice(
-                    label=f"Max {all_talentsDict.get(talentNumber, {}).get('name', f'Unknown{talentNumber}')} on 1 character",
+                    label=f"Max {all_talentsDict.get(talentNumber, {}).get('name', f'Unknown{talentNumber}')} on any {account_wide_talent_prios[talentNumber][1]}",
                     picture_class=all_talentsDict.get(talentNumber, {}).get('name', f'Unknown{talentNumber}'),
-                    progression=account_wide_talent_prios[talentNumber],
+                    progression=account_wide_talent_prios[talentNumber][0],
                     goal=session_data.account.library['MaxBookLevel']
                 )
             )

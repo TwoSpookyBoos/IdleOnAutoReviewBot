@@ -168,8 +168,12 @@ def _parse_characters(account, run_type):
     )
     account.names = playerNames
     account.playerCount = playerCount
-    account.classes = playerClasses
     account.all_characters = [Character(account.raw_data, **char) for char in characterDict.values()]
+    account.classes = set()
+    for char in account.all_characters:
+        for className in char.all_classes:
+            if className is not 'None':
+                account.classes.add(className)
     account.safe_characters = [char for char in account.all_characters if char]  # Use this if touching raw_data instead of all_characters
     account.safe_playerIndexes = [char.character_index for char in account.all_characters if char]
     account.all_skills = perSkillDict
@@ -178,6 +182,7 @@ def _parse_characters(account, run_type):
     _parse_character_class_lists(account)
 
 def _parse_character_class_lists(account):
+
     account.beginners = [toon for toon in account.all_characters if "Beginner" in toon.all_classes or "Journeyman" in toon.all_classes]
     account.jmans = [toon for toon in account.all_characters if "Journeyman" in toon.all_classes]
     account.maestros = [toon for toon in account.all_characters if "Maestro" in toon.all_classes]
