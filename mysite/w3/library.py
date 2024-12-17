@@ -408,7 +408,7 @@ def getLibraryProgressionTiersAdviceGroups():
     character_AdviceGroupDict[awp] = AdviceGroup(
         tier=0,
         pre_string=f"Account-Wide Priority Checkouts after new max Book levels",
-        advices=character_adviceDict[awp]
+        advices=character_adviceDict.get(awp, [])
     )
 
     #Character Specific
