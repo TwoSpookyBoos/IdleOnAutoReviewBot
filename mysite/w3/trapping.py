@@ -45,7 +45,7 @@ def getUnlockedCritterStatus():
         #Blobfish are unlocked after "Blobbo2" quest is completed (value of 1)
 
         questIndex = 0
-        for characterIndex in range(0, session_data.account.playerCount):
+        for characterIndex in range(0, session_data.account.character_count):
             try:
                 questDict = session_data.account.all_quests[characterIndex]
                 for questIndex in range(0, len(reversedQuestIndexList)):
@@ -73,7 +73,7 @@ def getUnlockedCritterStatus():
 
 def getPlacedTrapsDict():
     placedTrapDict = {}
-    for characterIndex in range(0, session_data.account.playerCount):
+    for characterIndex in range(0, session_data.account.character_count):
         try:
             placedTrapDict[characterIndex] = safe_loads(session_data.account.raw_data[f"PldTraps_{characterIndex}"])
         except:
@@ -106,7 +106,7 @@ def getCharactersWithUnplacedTraps(trappingLevelsList, placedTrapsDict):
         bonusTrapSlot = 1
     #print("Trapping.getCharactersWithUnplacedTraps~ OUTPUT bonusTrapSlot = ",bonusTrapSlot, "because Call Me Ash level = ",inputJSON["CauldronInfo"][1]["11"])
 
-    for characterIndex in range(0, session_data.account.playerCount):
+    for characterIndex in range(0, session_data.account.character_count):
         for trapListIndex in range(0, len(trapsetLevelRequirementList)):
             try:
                 if len(playerMaxPlacableTrapsList) <= characterIndex and trappingLevelsList[characterIndex] >= trapsetLevelRequirementList[trapListIndex]:

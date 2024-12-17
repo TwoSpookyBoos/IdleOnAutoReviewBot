@@ -71,7 +71,7 @@ def _make_cards(account):
 def _all_stored_items(account) -> Assets:
     chest_keys = (("ChestOrder", "ChestQuantity"),)
     name_quantity_key_pairs = chest_keys + tuple(
-        (f"InventoryOrder_{i}", f"ItemQTY_{i}") for i in account.safe_playerIndexes
+        (f"InventoryOrder_{i}", f"ItemQTY_{i}") for i in account.safe_character_indexes
     )
     all_stuff_stored_or_in_inv = dict.fromkeys(items_codes_and_names.keys(), 0)
 
@@ -163,11 +163,11 @@ def _parse_switches(account):
     # logger.debug(f"Switches after: Doot={g.doot}, Slug={g.riftslug}, Sheepie={g.sheepie}")
 
 def _parse_characters(account, run_type):
-    playerCount, playerNames, playerClasses, characterDict, perSkillDict = getCharacterDetails(
+    character_count, character_names, character_classes, characterDict, perSkillDict = getCharacterDetails(
         account.raw_data, run_type
     )
-    account.names = playerNames
-    account.playerCount = playerCount
+    account.names = character_names
+    account.character_count = character_count
     account.all_characters = [Character(account.raw_data, **char) for char in characterDict.values()]
     account.classes = set()
     for char in account.all_characters:
@@ -175,10 +175,10 @@ def _parse_characters(account, run_type):
             if className is not 'None':
                 account.classes.add(className)
     account.safe_characters = [char for char in account.all_characters if char]  # Use this if touching raw_data instead of all_characters
-    account.safe_playerIndexes = [char.character_index for char in account.all_characters if char]
+    account.safe_character_indexes = [char.character_index for char in account.all_characters if char]
     account.all_skills = perSkillDict
-    account.all_quests = [safe_loads(account.raw_data.get(f"QuestComplete_{i}", "{}")) for i in range(account.playerCount)]
-    account.max_toon_count = max(maxCharacters, playerCount)  # OPTIMIZE: find a way to read this from somewhere
+    account.all_quests = [safe_loads(account.raw_data.get(f"QuestComplete_{i}", {})) for i in range(account.character_count)]
+    account.max_toon_count = max(maxCharacters, character_count)  # OPTIMIZE: find a way to read this from somewhere
     _parse_character_class_lists(account)
 
 def _parse_character_class_lists(account):
@@ -429,7 +429,7 @@ def _parse_general_printer(account):
     for sampleItem in account.printer['AllSamplesSorted']:
         account.printer['AllSamplesSorted'][sampleItem].sort(reverse=True)
     for characterIndex, printDict in account.printer['CurrentPrintsByCharacter'].items():
-        if characterIndex < account.playerCount:
+        if characterIndex < account.character_count:
             account.all_characters[characterIndex].setPrintedMaterials(printDict)
         for printName, printValues in printDict.items():
             if printName not in account.printer['AllCurrentPrints']:

@@ -209,7 +209,7 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         pre_string=f"Info- Sources of Printer Sample Rate ({max_printer_sample_rate}% Hardcap)",
         advices=psrAdvices,
         informational=True,
-        completed=complete_toons >= session_data.account.playerCount
+        completed=complete_toons >= session_data.account.character_count
     )
     return psrAdviceGroup
 
