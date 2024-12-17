@@ -124,7 +124,7 @@ gemShop_progressionTiers = [
         'Brimstone Forge Slot': 16, 'Sigil Supercharge': 10,
         'Fluorescent Flaggies': 2,
         'Golden Sprinkler': 4, 'Divinity Sparkie': 6,
-        'Resource Boost': 10, 'Conjuror Pts': 12, 'Opal': 20,
+        'Resource Boost': 10, 'Opal': 20,
         'Plot of Land': 12, 'Shroom Familiar': 6, 'Instagrow Generator': 8,
     },
      "I wouldn't recommend going any further as of v2.22."],
