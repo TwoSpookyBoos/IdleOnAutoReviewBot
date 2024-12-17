@@ -1932,8 +1932,8 @@ farming_progressionTiers = {
             'Value Gmo': 80,
         },
         'Alchemy Bubbles': {
-            'Hinge Buster': 5940,
-            'Stealth Chapter': 5940,
+            'Hinge Buster': 6930,
+            'Stealth Chapter': 4950,
             'Tome Wisdom': 5940,
             'Endgame Eff II': 5940,
             'Farquad Force': 5940,
