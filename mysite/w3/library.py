@@ -312,6 +312,7 @@ def getTalentExclusions() -> list:
 
     #Elite Account-Wides don't stack, can be excluded if already maxed on one character
     for talentNumber, className in {
+        59: "Voidwalker",           #Blood Marrow
         148: "Blood Berserker",     #148: {"Name": "Overflowing Ladle", "Tab": "Blood Berserker"},
         176: "Divine Knight",       #176: {"Name": "One Thousand Hours Played", "Tab": "Divine Knight"},
         177: "Divine Knight",       #177: {"Name": "Bitty Litty", "Tab": "Divine Knight"},
@@ -340,10 +341,11 @@ def getTalentExclusions() -> list:
 
     #If cooking is basically finished thanks to NMLB, exclude Cooking talents
     if session_data.account.cooking['MaxRemainingMeals'] < cookingCloseEnough:
-        talentExclusions.extend([148, 146, 147])
+        talentExclusions.extend([148, 146, 147, 59])
         # 148: {"Name": "Overflowing Ladle", "Tab": "Blood Berserker"},
         # 146: {"Name": "Apocalypse Chow", "Tab": "Blood Berserker"},
         # 147: {"Name": "Waiting to Cool", "Tab": "Blood Berserker"},
+        #  59: Blood Marrow
 
     #If all bubbles for current max world are unlocked, exclude Shaman's Bubble Breakthrough
     if session_data.account.alchemy_cauldrons['NextWorldMissingBubbles'] > currentWorld:
@@ -369,6 +371,45 @@ def getLibraryProgressionTiersAdviceGroups():
 
     talentExclusions = getTalentExclusions()
     char_tiers = {}
+
+    #Account-Wide, highest priority talents after increasing talent book levels
+    awp = "Account Wide Priorities"
+    account_wide_talent_prios = {
+        # 32:  0,   #Maestro- Printer Go Brr
+        43:  0,   #Maestro- Right Hand of Action
+        56:  0,   #Vman- Voodoo Statue
+        57:  0,   #Vman- Species Epoch
+        58:  0,   #Vman- Master of the System
+        59:  0,   #Vman- Blood Marrow
+        178: 0,  #DK- King of the Remembered
+        328: 0,  #SB- Archlord Of The Pirates
+        310: 0,  #Hunter- Eagle Eye
+        # 373: 0,  #BM- Curviture Of The Paw
+        # 508: 0,  #ES- Wormhole Emperor
+    }
+    for talentNumber in account_wide_talent_prios:
+        #Record max level across all characters
+        if talentNumber in talentExclusions:
+            account_wide_talent_prios[talentNumber] = session_data.account.library['MaxBookLevel']
+        else:
+            account_wide_talent_prios[talentNumber] = max([toon.max_talents.get(str(talentNumber), 0) for toon in session_data.account.safe_characters], default=0)
+        #If less than max book level
+        if account_wide_talent_prios[talentNumber] < session_data.account.library['MaxBookLevel']:
+            if awp not in character_adviceDict:
+                character_adviceDict[awp] = []
+            character_adviceDict[awp].append(
+                Advice(
+                    label=f"Max {all_talentsDict.get(talentNumber, {}).get('name', f'Unknown{talentNumber}')} on 1 character",
+                    picture_class=all_talentsDict.get(talentNumber, {}).get('name', f'Unknown{talentNumber}'),
+                    progression=account_wide_talent_prios[talentNumber],
+                    goal=session_data.account.library['MaxBookLevel']
+                )
+            )
+    character_AdviceGroupDict[awp] = AdviceGroup(
+        tier=0,
+        pre_string=f"Account-Wide Priority Checkouts after new max Book levels",
+        advices=character_adviceDict[awp]
+    )
 
     #Character Specific
     for toon in session_data.account.safe_characters:
