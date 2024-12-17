@@ -1,4 +1,4 @@
-from consts import break_keep_it_up, trappingQuestsRequirementList
+from consts import break_keep_it_up, trappingQuestsRequirementList, trapset_images
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
 from utils.data_formatting import safe_loads, mark_advice_completed
@@ -267,7 +267,7 @@ def getProgressionTiersAdviceGroup(trappingLevelsList: list[int]):
         "UnlockCritters": [],
         "UnplacedTraps": [],
         "BeginnerNatures": [],
-        "NonMetaTraps": [],
+        "NonMetaTraps": {},
         "CritterTraps": [],
         "ShinyTraps": [],
         "EXPTraps": []
@@ -360,28 +360,45 @@ def getProgressionTiersAdviceGroup(trappingLevelsList: list[int]):
     if max(trappingLevelsList) < 48:
         goodTrapDict[5] = [3600, 36000, 108000]  # Before being able to wear Royals, Meaty traps give more critter efficiency than Cardboard
     nonMetaTrapDict = {}
+    nonMetaTrapDetails = {}
     for characterIndex in placedTrapsDict:
         badTrapCount = 0
-        for trapData in placedTrapsDict[characterIndex]:
+        badTrapDetails = {}
+        for trapIndex, trapData in enumerate(placedTrapsDict[characterIndex]):
             if trapData[0] != -1:  # -1 is an unplaced trap
                 if trapData[5] not in goodTrapDict.keys():  # Bad trap sets don't appear in goodTrapDict
                     badTrapCount += 1
+                    badTrapDetails[trapIndex] = trapData
                 elif trapData[6] not in goodTrapDict[trapData[5]]:  # Bad trap set + duration combos don't appear in goodTrapDict
                     badTrapCount += 1
-                elif int(trapData[5]) == 2 and int(trapData[6]) == 432000 and int(trapData[7]) != 0 and hasUnmaxedCritterVial is False:
-                    # Using a 5day Wooden Trap that isn't the 0exp variety without a Critter Vial to max. Would be better using Royal/Natures in this scenario.
+                    badTrapDetails[trapIndex] = trapData
+                elif int(trapData[5]) == 2 and int(trapData[6]) == 432000 and int(trapData[7]) != 0:  #and hasUnmaxedCritterVial is False:
+                    # Using a 5day Wooden Trap that isn't the 0exp variety. Would be better using Royal/Natures in this scenario.
                     badTrapCount += 1
+                    badTrapDetails[trapIndex] = trapData
         if badTrapCount != 0:
             nonMetaTrapDict[characterIndex] = badTrapCount
+            nonMetaTrapDetails[characterIndex] = badTrapDetails
 
     for characterIndex in nonMetaTrapDict:
-        trapping_AdviceDict["NonMetaTraps"].append(
-            Advice(
-                label=session_data.account.all_characters[characterIndex].character_name,
-                picture_class=session_data.account.all_characters[characterIndex].class_name_icon,
-                progression=str(nonMetaTrapDict[characterIndex]),
-                goal=0)
-        )
+        subgroupName = (f"{session_data.account.all_characters[characterIndex].character_name}: "
+                        f"{nonMetaTrapDict[characterIndex]} inefficient traps")
+        trapping_AdviceDict["NonMetaTraps"][subgroupName] = []
+        for trap_index, trap_details in nonMetaTrapDetails[characterIndex].items():
+            if trap_details[6] >= 259200:
+                #There are some 30, 40, 44, 60hr traps that the game displays as Hours rather than Days so only use Days if >= 3 days
+                time = f"{trap_details[6] / 86400:.0f} day"
+            elif trap_details[6] >= 3600:
+                time = f"{trap_details[6] / 3600:.0f} hour"
+            else:
+                time = f"{trap_details[6] / 60:0.f} minutes"
+            trap_name = trapset_images.get(trap_details[5], '').replace('-', ' ').title()
+            trapping_AdviceDict["NonMetaTraps"][subgroupName].append(Advice(
+                label=f"Trap {trap_index+1}: {time} {trap_name}"
+                      f"{' (Only the 200x Critter version is good)' if trap_name == 'Wooden Traps' and trap_details[6] == 432000 else ''}",
+                picture_class=trapset_images.get(trap_details[5], ''),
+                completed=False
+            ))
 
     # if len(trapping_AdviceDict["NonMetaTraps"]) > 0:  #Several requests came in to always show this information
     trapping_AdviceDict["CritterTraps"] = getStaticCritterTrapAdviceList(highestWearableTrapset)
@@ -420,7 +437,7 @@ def getProgressionTiersAdviceGroup(trappingLevelsList: list[int]):
     )
     trapping_AdviceGroupDict["CritterTraps"] = AdviceGroup(
         tier="",
-        pre_string=f"Best Critter-Focused traps",
+        pre_string=f"Best Critter-Focused traps from your available Trap Sets",
         advices=trapping_AdviceDict["CritterTraps"],
         post_string="Set critter traps with your Beast Master after maximizing Trapping Efficiency",
         informational=True,
@@ -428,7 +445,7 @@ def getProgressionTiersAdviceGroup(trappingLevelsList: list[int]):
     )
     trapping_AdviceGroupDict["ShinyTraps"] = AdviceGroup(
         tier="",
-        pre_string=f"Best Shiny Chance-Focused traps",
+        pre_string=f"Best Shiny Chance-Focused traps from your available Trap Sets",
         advices=trapping_AdviceDict["ShinyTraps"],
         post_string="Wear the Shiny Snitch prayer when Collecting. Shorter trap durations will earn more total Shiny Critters per day",
         informational=True,
@@ -436,7 +453,7 @@ def getProgressionTiersAdviceGroup(trappingLevelsList: list[int]):
     )
     trapping_AdviceGroupDict["EXPTraps"] = AdviceGroup(
         tier="",
-        pre_string=f"Best EXP-Focused traps",
+        pre_string=f"Best EXP-Focused traps from your available Trap Sets",
         advices=trapping_AdviceDict["EXPTraps"],
         post_string="Set EXP traps with your Mman/Vman after maximizing Trapping EXP",
         informational=True,

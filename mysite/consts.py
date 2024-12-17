@@ -5345,6 +5345,18 @@ trappingQuestsRequirementList = [
     {"QuestName": "Rollin' Thunder",                'RequiredItems': {"Critter8": 8000,  "Critter8A": 10}},
     {"QuestName": "Glitter Critter",                'RequiredItems': {"Critter8A": 30,   "Critter6A": 60,    "Critter3A": 200}}
 ]
+trapset_images = {
+    0: 'cardboard-traps',
+    1: 'silkskin-traps',
+    2: 'wooden-traps',
+    3: 'natural-traps',
+    4: 'steel-traps',
+    5: 'meaty-traps',
+    6: 'royal-traps',
+    7: 'egalitarian-traps',
+    8: 'forbidden-traps',
+    9: 'containment-of-the-zrgyios'
+}
 
 def getSkullNames(mkValue: int) -> str:
     try:
