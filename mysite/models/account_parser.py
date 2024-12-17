@@ -2612,7 +2612,8 @@ def _parse_w6_summoning(account):
     account.summoning['WinnerBonusesAdvice'] = []
 
 def _parse_w6_summoning_battles(account, rawBattles):
-    regular_battles = [battle for battle in rawBattles if not battle.startswith('rift')]
+    safe_battles = [safer_convert(battle, '') for battle in rawBattles]
+    regular_battles = [battle for battle in safe_battles if not battle.startswith('rift')]
     account.summoning['Battles']['NormalTotal'] = len(regular_battles)
 
     if account.summoning['Battles']['NormalTotal'] >= summoningBattleCountsDict["Normal"]:
