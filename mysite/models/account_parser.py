@@ -115,7 +115,7 @@ def _parse_switches(account):
     # AutoLoot
     if g.autoloot:
         account.autoloot = True
-    elif account.raw_data.get("AutoLoot", 0) == 1 or account.raw_data.get('BundlesReceived', {}).get('bun_i', 0) == 1:
+    elif account.raw_data.get("AutoLoot", 0) == 1 or safe_loads(account.raw_data.get('BundlesReceived', {})).get('bun_i', 0) == 1:
         account.autoloot = True
         g.autoloot = True
     else:
