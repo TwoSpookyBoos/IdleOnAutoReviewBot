@@ -531,14 +531,16 @@ def _parse_w1_forge(account):
 def _parse_w1_bribes(account):
     account.bribes = {}
     raw_bribes_list = safe_loads(account.raw_data.get("BribeStatus", []))
+    overall_bribe_index = 0
     for bribeSet in bribesDict:
         account.bribes[bribeSet] = {}
         for bribeIndex, bribeName in enumerate(bribesDict[bribeSet]):
             try:
-                account.bribes[bribeSet][bribeName] = safer_convert(raw_bribes_list[bribeIndex], -1)
+                account.bribes[bribeSet][bribeName] = safer_convert(raw_bribes_list[overall_bribe_index], -1)
             except Exception as e:
                 logger.warning(f"Bribes Parse error at {bribeSet} {bribeName}: {e}. Defaulting to -1")
                 account.bribes[bribeSet][bribeName] = -1  # -1 means unavailable for purchase, 0 means available, and 1 means purchased
+            overall_bribe_index += 1
 
 def _parse_w1_stamps(account):
     account.stamps = {}
