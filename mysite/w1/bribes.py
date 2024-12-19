@@ -43,7 +43,7 @@ def getProgressionTiersAdviceGroup():
                 goal=1
             ))
     bribe_AdviceGroupDict['W1'] = AdviceGroup(
-        tier="0",
+        tier="1",
         pre_string=f"Purchase the remaining W1 Bribe{pl(bribe_AdviceDict['W1Bribes'])}",
         advices=bribe_AdviceDict['W1Bribes'],
         post_string="You should be able to afford them by the end of W1."
@@ -62,7 +62,7 @@ def getProgressionTiersAdviceGroup():
                 goal=1
             ))
     bribe_AdviceGroupDict['W2'] = AdviceGroup(
-        tier="1",
+        tier="2",
         pre_string=f"Purchase the remaining W2 Bribe{pl(bribe_AdviceDict['W2Bribes'])}",
         advices=bribe_AdviceDict['W2Bribes'],
         post_string="You should be able to afford them by the end of W2."
@@ -81,7 +81,7 @@ def getProgressionTiersAdviceGroup():
                 goal=1
             ))
     bribe_AdviceGroupDict['W3'] = AdviceGroup(
-        tier="2",
+        tier="3",
         pre_string=f"Purchase the remaining W3 Bribe{pl(bribe_AdviceDict['W3Bribes'])}",
         advices=bribe_AdviceDict['W3Bribes'],
         post_string="You should be able to afford them by the end of W3."
@@ -100,7 +100,7 @@ def getProgressionTiersAdviceGroup():
                 goal=1
             ))
     bribe_AdviceGroupDict['W4'] = AdviceGroup(
-        tier="3",
+        tier="4",
         pre_string=f"Purchase the remaining W4 Bribe{pl(bribe_AdviceDict['W4Bribes'])}",
         advices=bribe_AdviceDict['W4Bribes'],
         post_string="You should be able to afford them by the end of W4."
@@ -119,7 +119,7 @@ def getProgressionTiersAdviceGroup():
                 goal=1
             ))
     bribe_AdviceGroupDict['Trash Island'] = AdviceGroup(
-        tier="4",
+        tier="5",
         pre_string=f"Purchase the remaining Trash Island Bribe{pl(bribe_AdviceDict['TrashIslandBribes'])}",
         advices=bribe_AdviceDict['TrashIslandBribes'],
         post_string="You should be able to afford them by the end of W5, after unlocking the Bribes from Trash Island."
@@ -138,7 +138,7 @@ def getProgressionTiersAdviceGroup():
                 goal=1
             ))
     bribe_AdviceGroupDict['W6'] = AdviceGroup(
-        tier="5",
+        tier="6",
         pre_string=f"Purchase the remaining W6 Bribe{pl(bribe_AdviceDict['W6Bribes'])}",
         advices=bribe_AdviceDict['W6Bribes'],
         post_string="You should be able to afford them by the end of W6, after unlocking them from Jade Emporium."
