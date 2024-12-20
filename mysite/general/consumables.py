@@ -232,12 +232,6 @@ def getCandyHourSections():
     if guaranteedCandyHours >= 10000:
         guaranteedCandyString += "<br>Don't forget about them!"
 
-    # Variable Time Candies: Steamy, Spooky, Cosmic
-    variable_candy = (bank.get(f"Timecandy{i}").amount for i in range(7, 10))
-    variable_candy_times = (1/6, 24), (1/3, 12), (1/12, 500)
-    variableCandyHoursMin = 0
-    variableCandyHoursMax = 0
-
     section_regular = AdviceSection(
         name="Regular Candy",
         tier=tier_regular,
@@ -247,6 +241,12 @@ def getCandyHourSections():
         informational=True,
         completed=guaranteedCandyHours == 0
     )
+
+    # Variable Time Candies: Steamy, Spooky, Cosmic
+    variable_candy = (bank.get(f"Timecandy{i}").amount for i in range(7, 10))
+    variable_candy_times = (1/6, 24), (1/3, 12), (5, 500)
+    variableCandyHoursMin = 0
+    variableCandyHoursMax = 0
 
     for qty, (hrs_min, hrs_max) in zip(variable_candy, variable_candy_times):
         variableCandyHoursMin += qty * hrs_min
