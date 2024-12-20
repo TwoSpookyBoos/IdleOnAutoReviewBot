@@ -122,7 +122,8 @@ def getVialsProgressionTiersAdviceGroup():
         tier=f"{tier_TotalVialsMaxed if tier_TotalVialsMaxed < max_tier else ''}",
         pre_string=f"{'Informational- ' if tier_TotalVialsMaxed >= max_tier else ''}Late Vial Goals",
         post_string=advice_TrailingMaxedVials,
-        advices=vial_AdviceDict["MaxVials"]
+        advices=vial_AdviceDict["MaxVials"],
+        informational=tier_TotalVialsMaxed >= max_tier
     )
     overall_SectionTier = min(tier_TotalVialsUnlocked + info_tiers, tier_TotalVialsMaxed)
     return vial_AdviceGroupDict, overall_SectionTier, max_tier
