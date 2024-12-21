@@ -1149,7 +1149,8 @@ def getProgressionTiersAdviceGroup(farming, highestFarmingSkillLevel):
     farming_AdviceGroupDict['Tiers'] = AdviceGroup(
         tier=tier_All,
         pre_string="Continue farming",
-        advices=farming_AdviceDict['Tiers']
+        advices=farming_AdviceDict['Tiers'],
+        informational=tier_All >= max_tier
     )
     overall_SectionTier = min(max_tier + infoTiers, tier_All)
     return farming_AdviceGroupDict, overall_SectionTier, max_tier

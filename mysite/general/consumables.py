@@ -174,14 +174,14 @@ class Bag(StorageItemMixin, IntEnum):
     PROSPEROUS_POUCH = 107
     SACK_OF_SUCCESS = 108
     SHIVERING_SACK = 109
-    MAMOOTH_HIDE = 110
+    MAMOOTH_HIDE_BAG = 110
     PEEPER_POUCH = 111
 
     @classmethod
     def dropped(cls):
         return (
             cls.SNAKESKINVENTORY_BAG, cls.TOTALLY_NORMAL_AND_NOT_FAKE_BAG,
-            cls.INVENTORY_BAG_G, cls.MAMOOTH_HIDE
+            cls.INVENTORY_BAG_G, cls.MAMOOTH_HIDE_BAG
         )
 
     @classmethod
@@ -232,12 +232,6 @@ def getCandyHourSections():
     if guaranteedCandyHours >= 10000:
         guaranteedCandyString += "<br>Don't forget about them!"
 
-    # Variable Time Candies: Steamy, Spooky, Cosmic
-    variable_candy = (bank.get(f"Timecandy{i}").amount for i in range(7, 10))
-    variable_candy_times = (1/6, 24), (1/3, 12), (1/12, 500)
-    variableCandyHoursMin = 0
-    variableCandyHoursMax = 0
-
     section_regular = AdviceSection(
         name="Regular Candy",
         tier=tier_regular,
@@ -247,6 +241,12 @@ def getCandyHourSections():
         informational=True,
         completed=guaranteedCandyHours == 0
     )
+
+    # Variable Time Candies: Steamy, Spooky, Cosmic
+    variable_candy = (bank.get(f"Timecandy{i}").amount for i in range(7, 10))
+    variable_candy_times = (1/6, 24), (1/3, 12), (5, 500)
+    variableCandyHoursMin = 0
+    variableCandyHoursMax = 0
 
     for qty, (hrs_min, hrs_max) in zip(variable_candy, variable_candy_times):
         variableCandyHoursMin += qty * hrs_min
@@ -294,65 +294,73 @@ def getStorageItemType(storageItemIndex, cls):
     return bag.type
 
 def parseInventoryBagSlots() -> AdviceGroup:
-    inventorySlots_AdviceList = []
-    currentMaxInventorySlots = 83  #As of v2.02
-    currentMaxUsableInventorySlots = 80  #As of v2.02
+    inventorySlots_AdviceDict = {}
+    currentMaxInventorySlots = 83  #As of v2.25
+    currentMaxUsableInventorySlots = 80  #As of v2.25
     currentMaxWithoutAutoloot = currentMaxInventorySlots - 5
     defaultInventorySlots = 16  # Characters have 16 inventory slots by default
-    playerBagDict = {}
-    playerBagSlotsDict = {}
-    playersWithMaxBagSlots = []
-    playersMissingBagSlots = []
+    autoLootSlots = 5 if session_data.account.autoloot else 0
+    character_bag_dict = {}
+    character_missing_bags_dict = {}
+    character_bag_slots_dict = {}
+    characters_with_max_bag_slots = []
+    characters_missing_usable_bag_slots = []
 
-    for characterIndex, character in enumerate(session_data.account.all_characters):
-        playerBagDict[characterIndex] = character.inventory_bags
+    for character in session_data.account.all_characters:
+        character_bag_dict[character.character_index] = character.inventory_bags
+        character_missing_bags_dict[character.character_index] = [bag for bag in Bag if str(bag.value) not in character.inventory_bags]
 
-    inventorySlots_AdviceGroup = AdviceGroup(
-        tier="",
-        pre_string="Collect more inventory space",
-        advices=[],
-        informational=True
-    )
-    if session_data.account.autoloot:
-        autoLootSlots = 5
-        inventorySlots_AdviceGroup.post_string = "+5 slots from AutoLoot included."
-    else:
-        autoLootSlots = 0
-        inventorySlots_AdviceGroup.post_string = "AutoLoot is set to Unpurchased. This bundle gives 5 inventory slots."
-
-    for chararacterIndex, bagDict in playerBagDict.items():
+    for chararacter_index, bagDict in character_bag_dict.items():
         sumSlots = defaultInventorySlots + autoLootSlots
         for bag in bagDict:
             if isinstance(bagDict[bag], int | float | str):
                 try:
                     sumSlots += int(bagDict[bag])
                 except:
-                    logger.exception(f"Could not increase character {chararacterIndex}'s bagslots by {type(bagDict[bag])} {bagDict[bag]}")
+                    logger.exception(f"Could not increase character {chararacter_index}'s bagslots by {type(bagDict[bag])} {bagDict[bag]}")
             else:
-                logger.warning(f"Funky bag value found in {chararacterIndex}'s bagsDict for bag {bag}: {type(bagDict[bag])} {bagDict[bag]}. Searching for expected value.")
+                logger.warning(f"Funky bag value found in {chararacter_index}'s bagsDict for bag {bag}: {type(bagDict[bag])} {bagDict[bag]}. Searching for expected value.")
                 if int(bag) in expectedInventoryBagValuesDict:
                     logger.debug(f"Bag {bag} has a known value: {expectedInventoryBagValuesDict.get(int(bag), 0)}. All is well :)")
                 else:
                     logger.error(f"Bag {bag} has no known value. Defaulting to 0 :(")
                 sumSlots += expectedInventoryBagValuesDict.get(int(bag), 0)
-        playerBagSlotsDict[chararacterIndex] = {"Total":sumSlots}
+        character_bag_slots_dict[chararacter_index] = sumSlots
         if sumSlots >= currentMaxUsableInventorySlots:
-            playersWithMaxBagSlots.append(chararacterIndex)
+            characters_with_max_bag_slots.append(chararacter_index)
         elif sumSlots == currentMaxWithoutAutoloot and session_data.account.autoloot == False:
-            playersWithMaxBagSlots.append(chararacterIndex)
+            characters_with_max_bag_slots.append(chararacter_index)
         else:
-            playersMissingBagSlots.append(chararacterIndex)
-    # logger.info(f"playerBagDict: {playerBagDict}")
-    # logger.info(f"playersMissingBagSlots: {playersMissingBagSlots}")
-    for playerIndex in playersMissingBagSlots:
-        inventorySlots_AdviceList.append(Advice(
-            label=session_data.account.all_characters[playerIndex].character_name,
-            picture_class=session_data.account.all_characters[playerIndex].class_name_icon,
-            progression=playerBagSlotsDict[playerIndex]["Total"],
-            goal=currentMaxUsableInventorySlots
-        ))
+            characters_missing_usable_bag_slots.append(chararacter_index)
+    # logger.info(f"character_bag_dict: {character_bag_dict}")
+    # logger.info(f"characters_missing_usable_bag_slots: {characters_missing_usable_bag_slots}")
+    for character_index in characters_missing_usable_bag_slots:
+        subgroupName = (
+            f"{session_data.account.all_characters[character_index].character_name}"
+            f" the {session_data.account.all_characters[character_index].class_name}: "
+            f"{min(currentMaxUsableInventorySlots, character_bag_slots_dict[character_index])}"
+            f"/{currentMaxUsableInventorySlots} usable Inventory slots"
+        )
+        inventorySlots_AdviceDict[subgroupName] = [
+            Advice(
+                label=f"{bag.pretty_name}: {expectedInventoryBagValuesDict[bag.value]} slots ({bag.type})",
+                picture_class=bag.pretty_name,
+                completed=False
+            ) for bag in character_missing_bags_dict[character_index]
+        ]
 
-    inventorySlots_AdviceGroup.advices = inventorySlots_AdviceList
+    inventorySlots_AdviceGroup = AdviceGroup(
+        tier="",
+        pre_string="Collect more inventory space",
+        advices=inventorySlots_AdviceDict,
+        informational=True,
+        post_string=(
+            '+5 slots from AutoLoot included.'
+            if session_data.account.autoloot else
+            'AutoLoot is set to Unpurchased. This bundle gives 5 inventory slots.'
+        )
+    )
+    inventorySlots_AdviceGroup.remove_empty_subgroups()
     return inventorySlots_AdviceGroup
 
 def parseStorageChests():
@@ -370,12 +378,15 @@ def parseStorageChests():
 
     group = AdviceGroup(
         tier="",
-        pre_string=f"Collect {len(missing_chests)} more storage chest{pl(missing_chests)} for your bank",
+        pre_string=(
+            f"Collect {len(missing_chests)} more storage chest{pl(missing_chests)} for your bank"
+            if advices else
+            f"You've collected all current Storage Chests!{break_you_best}"
+        ),
         advices=advices,
         informational=True
     )
-    if len(advices) == 0:
-        group.pre_string = f"You've collected all current Storage Chests!{break_you_best}"
+    group.remove_empty_subgroups()
 
     return group
 
@@ -385,12 +396,16 @@ def getConsumablesAdviceSections():
     group_bags = parseInventoryBagSlots()
     group_chests = parseStorageChests()
 
-    groups = [group_bags, group_chests]
+    groups = [group for group in [group_bags, group_chests] if group]
 
     section_storage = AdviceSection(
         name="Storage",
         tier="",
-        header=f"Collect more space for your bank and inventories:" if groups else f"You've collected all current Storage Chests and Inventory Bags!{break_you_best}",
+        header=(
+            f"Collect more space for your bank and inventories:"
+            if groups else
+            f"You've collected all current Storage Chests and Inventory Bags!{break_you_best}"
+        ),
         picture="Cosmic_Storage_Chest.png",
         groups=groups,
         unrated=True,

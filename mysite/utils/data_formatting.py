@@ -177,9 +177,9 @@ def getEliteClass(inputClass):
 
 
 def getCharacterDetails(inputJSON, runType):
-    playerCount = 0
-    playerNames = []
-    playerClasses = []
+    character_count = 0
+    character_names = []
+    character_classes = []
     characterMaxTalents = {}
     characterCurrentPresetTalents = {}
     characterSecondaryPresetTalents = {}
@@ -187,33 +187,33 @@ def getCharacterDetails(inputJSON, runType):
 
     if "playerNames" in inputJSON.keys():
         # Present in Public IE and JSON copied from IE
-        playerNames = inputJSON["playerNames"]
-        playerCount = len(playerNames)
+        character_names = inputJSON["playerNames"]
+        character_count = len(character_names)
         if runType == "web":
             logger.info(
                 "From Public IE or IE JSON, found %s characters: %s",
-                playerCount,
-                ", ".join(playerNames),
+                character_count,
+                ", ".join(character_names),
             )
     elif "charNames" in inputJSON.keys():
         # Present in Toolbox JSON copies
-        playerNames = inputJSON["charNames"]
-        playerCount = len(playerNames)
+        character_names = inputJSON["charNames"]
+        character_count = len(character_names)
         if runType == "web":
             logger.info(
                 f"From Toolbox JSON, found %s characters: %s",
-                playerCount,
-                ", ".join(playerNames),
+                character_count,
+                ", ".join(character_names),
             )
     elif "PlayerNames" in inputJSON.keys():
         #IdleonSaver tool, wow
-        playerNames = inputJSON['PlayerNames']
-        playerCount = len(playerNames)
+        character_names = inputJSON['PlayerNames']
+        character_count = len(character_names)
         if runType == "web":
             logger.info(
                 "From IdleonSaver or other 3rd party tool, found %s characters: %s",
-                playerCount,
-                ", ".join(playerNames),
+                character_count,
+                ", ".join(character_names),
             )
     else:
         try:
@@ -223,34 +223,34 @@ def getCharacterDetails(inputJSON, runType):
                 cogDataForNames = safe_loads(cogDataForNames)
             for item in cogDataForNames:
                 if item.startswith("Player_"):
-                    playerCount += 1
-                    playerNames.append(item[7:])
+                    character_count += 1
+                    character_names.append(item[7:])
             if runType == "web":
                 logger.info(
-                    f"From IE JSON or Toolbox Raw Game JSON, found {playerCount} unsorted characters: %s",
-                    ", ".join(playerNames),
+                    f"From IE JSON or Toolbox Raw Game JSON, found {character_count} unsorted characters: %s",
+                    ", ".join(character_names),
                 )
         except:
             if runType == "web":
                 logger.warning("Failed to load Cog data to get the unsorted list of names. Replacing with generic list.")
 
         # Produce a "sorted" list of generic Character names
-        playerNames = []
-        for counter in range(0, playerCount):
-            playerNames.append(f"Character{counter+1}")
+        character_names = []
+        for counter in range(0, character_count):
+            character_names.append(f"Character{counter+1}")
 
-    if playerCount == 0:
-        logger.exception(f"This data has a playerCount of 0, wtf? Aborting.")
+    if character_count == 0:
+        logger.exception(f"This data has a character_count of 0, wtf? Aborting.")
         raise WtfDataException(json.dumps(inputJSON))
-    characterSkillsDict = getAllSkillLevelsDict(inputJSON, playerCount)
+    characterSkillsDict = getAllSkillLevelsDict(inputJSON, character_count)
     perSkillDict = characterSkillsDict["Skills"]
     equipped_prayers = {}
     postOfficeList = []
     equipped_lab_chips = {}
     inventory_bags = {}
     kill_lists = {}
-    for character_index in range(0, playerCount):
-        playerClasses.append(getHumanReadableClasses(inputJSON.get(f"CharacterClass_{character_index}", 0)))
+    for character_index in range(0, character_count):
+        character_classes.append(getHumanReadableClasses(inputJSON.get(f"CharacterClass_{character_index}", 0)))
         postOfficeList.append(safe_loads(inputJSON.get(f"POu_{character_index}", [0]*36)))
         equipped_prayers[character_index] = safe_loads(inputJSON.get(f"Prayers_{character_index}", []))
         characterMaxTalents[character_index] = safe_loads(inputJSON.get(f"SM_{character_index}", {}))
@@ -265,11 +265,11 @@ def getCharacterDetails(inputJSON, runType):
 
         characterDict[character_index] = dict(
             character_index=character_index,
-            character_name=playerNames[character_index],
-            class_name=playerClasses[character_index],
-            base_class=getBaseClass(playerClasses[character_index]),
-            sub_class=getSubclass(playerClasses[character_index]),
-            elite_class=getEliteClass(playerClasses[character_index]),
+            character_name=character_names[character_index],
+            class_name=character_classes[character_index],
+            base_class=getBaseClass(character_classes[character_index]),
+            sub_class=getSubclass(character_classes[character_index]),
+            elite_class=getEliteClass(character_classes[character_index]),
             equipped_prayers=equipped_prayers[character_index],
             all_skill_levels=characterSkillsDict[character_index],
             max_talents=characterMaxTalents[character_index],
@@ -281,7 +281,7 @@ def getCharacterDetails(inputJSON, runType):
             kill_dict={k:v for k, v in enumerate(kill_lists[character_index])},
         )
 
-    return [playerCount, playerNames, playerClasses, characterDict, perSkillDict]
+    return [character_count, character_names, character_classes, characterDict, perSkillDict]
 
 
 def getAllSkillLevelsDict(inputJSON, playerCount):
