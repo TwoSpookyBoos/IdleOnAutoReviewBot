@@ -47,21 +47,22 @@ def getVialsProgressionTiersAdviceGroup():
         #tier[2] = int TotalVialsMaxed
         #tier[3] = list ParticularVialsMaxed
         #tier[4] = str Notes
+        subgroupName = f"To reach {'Info ' if tier[0] > max_tier else ''}Tier {tier[0]}"
 
         #Total Vials Unlocked
         if tier_TotalVialsUnlocked == (tier[0]-1):  # Only check if they already met previous tier
             if unlockedVials >= tier[1]:
                 tier_TotalVialsUnlocked = tier[0]
             else:
-                if f"To reach Tier {tier[0]}" not in vial_AdviceDict["EarlyVials"]:
-                    vial_AdviceDict["EarlyVials"][f"To reach Tier {tier[0]}"] = []
-                vial_AdviceDict["EarlyVials"][f"To reach Tier {tier[0]}"].append(
-                    Advice(
-                        label=f"Unlock {tier[1] - unlockedVials} more vial{pl(tier[1] - unlockedVials, '', 's')}",
-                        picture_class="vials",
-                        progression=str(unlockedVials),
-                        goal=str(tier[1]))
-                )
+                if subgroupName not in vial_AdviceDict["EarlyVials"]:
+                    vial_AdviceDict["EarlyVials"][subgroupName] = []
+                vial_AdviceDict["EarlyVials"][subgroupName].append(Advice(
+                    label=f"Unlock {tier[1] - unlockedVials} more vial{pl(tier[1] - unlockedVials, '', 's')}",
+                    picture_class="vials",
+                    progression=str(unlockedVials),
+                    goal=str(tier[1]),
+                    informational=tier[0] > max_tier
+                ))
 
         #Total Vials Maxed
         if tier_TotalVialsMaxed == (tier[0]-1):  # Only check if they already met previous tier
@@ -70,9 +71,12 @@ def getVialsProgressionTiersAdviceGroup():
             else:
                 if tier_TotalVialsMaxed >= 20:
                     advice_TrailingMaxedVials += tier[4]
-                vial_AdviceDict["MaxVials"]["Total Maxed Vials"].append(
-                    Advice(label="Total Maxed Vials", picture_class="vial-max", progression=str(len(maxedVialsList)), goal=str(tier[2]))
-                )
+                vial_AdviceDict["MaxVials"]["Total Maxed Vials"].append(Advice(
+                    label="Total Maxed Vials",
+                    picture_class="vial-max",
+                    progression=str(len(maxedVialsList)),
+                    goal=str(tier[2])
+                ))
 
         #Particular Vials Maxed
         for requiredVial in tier[3]:
@@ -102,7 +106,8 @@ def getVialsProgressionTiersAdviceGroup():
                 label="Total level 4+ Vials",
                 picture_class="vial-l4",
                 progression=len(virileVialsList),
-                goal=maxExpectedVV
+                goal=maxExpectedVV,
+                informational=True
             )
         ]
 
@@ -113,7 +118,7 @@ def getVialsProgressionTiersAdviceGroup():
         pre_string=f"{'Informational- ' if tier_TotalVialsUnlocked >= max_tier else ''}Early Vial Goals",
         post_string="",
         advices=vial_AdviceDict["EarlyVials"],
-        informational=len(vial_AdviceDict["EarlyVials"]) == 1 and "Info - Shaman's Virile Vials" in vial_AdviceDict["EarlyVials"]
+        informational=tier_TotalVialsUnlocked > max_tier
     )
     if len(vial_AdviceDict["EarlyVials"]) > 1:
         vial_AdviceGroupDict["Total Unlocked Vials"].post_string = "For the most unlock chances per day, rapidly drop multiple stacks of items on the cauldron!"
