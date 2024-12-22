@@ -402,16 +402,17 @@ def getBellAdviceGroup(schematics):
     ))
     total_bonus_levels = sum([rb_details['Level'] for rb_details in cavern['Ring Bonuses'].values()])
     average_level = total_bonus_levels/max(1,total_rings)
-    average_level_too_low = average_level < 1.84  #Per Stark: if it's a flat +20, average 2, if it's 20% chance a +2 becomes +3 then it's 1.84
+    bell_average = 1.88  #Per Corndag
+    average_level_too_low = average_level < bell_average
     cavern_advice[r_stats].insert(1, Advice(
         label=f"""Total Bonus levels: {total_bonus_levels}"""
               f"""<br>Avg per ring: {average_level:.4f}"""
-              f"""{'<br>Under 1.84: Consider Renewing' if (
+              f"""{f'<br>Under {bell_average}: Consider Renewing' if (
                   schematics['Double Dinger Ringer']['Purchased']
                   and schematics['Triple Tap Tinkle']['Purchased']
                   and average_level_too_low
                   and total_rings >= 100
-              ) else f'<br>Above 1.84: nice RNG 🙂'
+              ) else f'<br>Above {bell_average}: nice RNG 🙂'
               }""",
         picture_class='bell-ring',
         completed=False,
