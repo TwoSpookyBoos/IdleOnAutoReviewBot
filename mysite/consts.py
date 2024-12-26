@@ -1800,6 +1800,7 @@ farming_progressionTiers = {
             'Evolution Gmo': 40,  #1.32x
             'Og Fertilizer': 20,  #1.20x
             'Super Gmo': 10,  #5%
+            'Value Gmo': 1
         },
         #Value is around 10x
     },  #Repeat the 1k stacks. Day Market Farming to afford 100% Product Doubler, Bean Farming for 5% Super GMO
@@ -1859,6 +1860,7 @@ farming_progressionTiers = {
             'Speed Gmo': 35,  #10.5%
             'Og Fertilizer': 57,  #1.57x
             'Super Gmo': 20,  #10%
+            'Value Gmo': 5
         },
     },  #First round of 100k stacking + Day Market at the same time
     7: {
@@ -1875,7 +1877,7 @@ farming_progressionTiers = {
             'Evolution Gmo': 88,  #1.70x
             'Speed Gmo': 50,  #15%
             'Super Gmo': 30,  #15%
-            'Value Gmo': 10,
+            'Value Gmo': 10
         }
     },  #Unlock Overgrowth Superboost land rank, 100x+ total Value, 15% Speed and 15% Super GMO
     8: {

@@ -441,7 +441,7 @@ def getProgressionTiersAdviceGroup(trappingLevelsList: list[int]):
         advices=trapping_AdviceDict["CritterTraps"],
         post_string="Set critter traps with your Beast Master after maximizing Trapping Efficiency",
         informational=True,
-        completed=True
+        completed=len(trapping_AdviceDict["NonMetaTraps"]) == 0
     )
     trapping_AdviceGroupDict["ShinyTraps"] = AdviceGroup(
         tier="",
@@ -449,7 +449,7 @@ def getProgressionTiersAdviceGroup(trappingLevelsList: list[int]):
         advices=trapping_AdviceDict["ShinyTraps"],
         post_string="Wear the Shiny Snitch prayer when Collecting. Shorter trap durations will earn more total Shiny Critters per day",
         informational=True,
-        completed=True
+        completed=len(trapping_AdviceDict["NonMetaTraps"]) == 0
     )
     trapping_AdviceGroupDict["EXPTraps"] = AdviceGroup(
         tier="",
@@ -457,7 +457,7 @@ def getProgressionTiersAdviceGroup(trappingLevelsList: list[int]):
         advices=trapping_AdviceDict["EXPTraps"],
         post_string="Set EXP traps with your Mman/Vman after maximizing Trapping EXP",
         informational=True,
-        completed=True
+        completed=len(trapping_AdviceDict["NonMetaTraps"]) == 0
     )
     overall_SectionTier = min(max_tier, tier_unlockCritters)
     return trapping_AdviceGroupDict, overall_SectionTier, max_tier
