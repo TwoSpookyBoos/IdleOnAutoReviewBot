@@ -964,7 +964,9 @@ bubbles_progressionTiers = [
       'Slabe Logsoul': 5940, 'Slabe Wisdom': 5940, 'Endgame Eff III': 5940, 'Tome Wisdom': 5940},
      {'Cookin Roadkill': 6930, 'Call Me Bob': 10000, 'Carpenter': 4950, "Nickel Of Wisdom": 2970, "Penny Of Strength": 2970, "Dollar Of Agility": 2970,
       'Droppin Loads': 6930, 'Startue Exp': 5940, 'Laaarrrryyyy': 9900, 'Big Game Hunter': 2970, 'Mr Massacre': 4950, 'Shimmeron': 3960, 'Lo Cost Mo Jade': 3960,
-      'Hammer Hammer': 10000, "Grind Time": 10000, 'Buff Boi Talent': 1000, 'Fast Boi Talent': 1000, 'Smart Boi Talent': 1000,},
+      'Hammer Hammer': 10000, "Grind Time": 10000, 'Buff Boi Talent': 1000, 'Fast Boi Talent': 1000, 'Smart Boi Talent': 1000,
+      'Essence Chapter': 4950, 'Quickdraw Quiver': 5940, 'Smarter Spells': 5940, 'Ninja Looter': 5940, 'Crop Chapter': 4950
+      },
      "99% catchup",
      ""],
 ]
@@ -4503,8 +4505,8 @@ event_points_shop_dict = {
 max_IndexOfVials = 75  # Last verified as of v2.10
 max_VialLevel = 13  # Last verified as of 2.12
 vial_costs = [1, 100, 1000, 2500, 10e3, 50e3, 100e3, 500e3, 1e6, 5e6, 25e6, 100e6, 1e9]
-max_IndexOfBubbles = 29  # Last verified as of v2.10
-max_IndexOfSigils = 3  # Last verified as of v2.10
+max_IndexOfImplementedBubbles = 29  # Last verified as of v2.25
+max_IndexOfSigils = 3  # Last verified as of v2.25
 min_NBLB = 2
 max_NBLB = 1500
 nblb_max_index = 24
@@ -4774,7 +4776,7 @@ bubblesDict = {
         25: {'Name': 'Cropius Mapper', 'Material': 'SpiA5', 'x1': 5, 'x2': 70, 'funcType': 'decay'},
         26: {'Name': 'Essence Boost-Yellow', 'Material': 'Bug12', 'x1': 50, 'x2': 60, 'funcType': 'decay'},
         27: {'Name': 'Hinge Buster', 'Material': 'Earthy-Crop-9', 'x1': 100, 'x2': 70, 'funcType': 'decay'},
-        28: {'Name': 'Ninja Looter', 'Material': 'Blue-Essence', 'x1': 0.5, 'x2': 60, 'funcType': 'decayMulti'},
+        28: {'Name': 'Ninja Looter', 'Material': 'Blue-Essence', 'x1': 0.3, 'x2': 60, 'funcType': 'decayMulti'},
         29: {'Name': 'Lo Cost Mo Jade', 'Material': 'SpiD1', 'x1': 99, 'x2': 40, 'funcType': 'decay'},
         30: {'Name': 'Yellow30', 'Material': '', 'x1': 0, 'x2': 0, 'funcType': 'decay'},
         31: {'Name': 'Yellow31', 'Material': '', 'x1': 0, 'x2': 0, 'funcType': 'decay'},

@@ -155,6 +155,10 @@ $gemstones: (
     moissanite: img('wiki/Gem_Moissanite.png'),
 );
 
+$etc: (
+    jade-coin: img('wiki/Jade_Coin.png')
+);
+
 $all-sneaking: map-merge($detection, $hats);
 $all-sneaking: map-merge($all-sneaking, $knowledge);
 $all-sneaking: map-merge($all-sneaking, $emporium);
@@ -162,3 +166,4 @@ $all-sneaking: map-merge($all-sneaking, $weapons);
 $all-sneaking: map-merge($all-sneaking, $charms);
 $all-sneaking: map-merge($all-sneaking, $pristine-charms);
 $all-sneaking: map-merge($all-sneaking, $gemstones);
+$all-sneaking: map-merge($all-sneaking, $etc);
