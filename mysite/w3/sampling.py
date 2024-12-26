@@ -6,7 +6,7 @@ from utils.text_formatting import notateNumber
 from utils.logging import get_logger
 from consts import (
     lavaFunc, maxTiersPerGroup, ValueToMulti, break_you_best, skillIndexList,
-    sampling_progressionTiers, goldrelic_multisDict, max_printer_sample_rate
+    sampling_progressionTiers, goldrelic_multisDict, max_printer_sample_rate, arcade_max_level
 )
 
 
@@ -123,10 +123,13 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         goal=1
     ))
     psrAdvices[accountSubgroup].append(Advice(
-        label=f"Arcade Bonus: {session_data.account.arcade[5]['Value']:.2f}/2%",
-        picture_class="arcade-bonus-5",
+        label=f"{{{{Arcade|#arcade}}}} Bonus: "
+              f"{session_data.account.arcade[5]['Value']:.2f}/"
+              f"{session_data.account.arcade[5]['MaxValue']:.0f}%",
+        picture_class=session_data.account.arcade[5]['Image'],
         progression=session_data.account.arcade[5]['Level'],
-        goal=100
+        goal=arcade_max_level + 1,
+        resource=session_data.account.arcade[5]['Material']
     ))
     psrAdvices[accountSubgroup].append(Advice(
         label=f"W3 Achievement: Saharan Skull: {int(session_data.account.achievements['Saharan Skull']['Complete'])}/1%",

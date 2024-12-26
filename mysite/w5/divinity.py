@@ -223,11 +223,17 @@ def getArctisAdviceGroup(lowestDivinitySkillLevel: int, highestDivinitySkillLeve
         for div_level, big_p_level in requirementsDict.items():
             if arctis_breakpoint > currentLowestArctisValue:  #At least 1 above their minimum
                 if (
-                    (div_level == max(requirementsDict.keys(), default=1) and f"Arctis +{arctis_breakpoint}" not in arctis_AdviceDict) or
-                    (div_level >= lowestDivinitySkillLevel and big_p_level >= current_big_p) or
-                    (not any_completed_big_p_goal and big_p_level <= current_big_p)
+                    (div_level == max(requirementsDict.keys(), default=1) and f"Arctis +{arctis_breakpoint}" not in arctis_AdviceDict)
+                    or (div_level >= lowestDivinitySkillLevel and big_p_level >= current_big_p)
+                    or (not any_completed_big_p_goal and big_p_level <= current_big_p)
                 ):
-                    if f"Arctis +{arctis_breakpoint}" not in arctis_AdviceDict and arctis_breakpoint <= currentHighestArctisValue + 1:  #No more than 1 above their max
+                    if (
+                        f"Arctis +{arctis_breakpoint}" not in arctis_AdviceDict
+                        and (
+                            arctis_breakpoint <= currentHighestArctisValue + 1
+                            or arctis_breakpoint == min(divinity_arctisBreakpoints.keys())
+                        )
+                    ):  #No more than 1 above their max, unless they're still under the lowest breakpoint I entered
                         arctis_AdviceDict[f"Arctis +{arctis_breakpoint}"] = []
                     if f"Arctis +{arctis_breakpoint}" in arctis_AdviceDict and not any_completed_big_p_goal:
                         arctis_AdviceDict[f"Arctis +{arctis_breakpoint}"].append(Advice(

@@ -865,7 +865,19 @@ def _parse_w2_arcade(account):
                     upgradeDetails.get("x1"),
                     upgradeDetails.get("x2")
                 ),
-                'Royale': raw_arcade_upgrades[upgradeIndex] > arcade_max_level
+                'MaxValue': 2 * lavaFunc(
+                    upgradeDetails.get("funcType"),
+                    arcade_max_level,
+                    upgradeDetails.get("x1"),
+                    upgradeDetails.get("x2")
+                ),
+                'Royale': raw_arcade_upgrades[upgradeIndex] > arcade_max_level,
+                'Material': (
+                    '' if raw_arcade_upgrades[upgradeIndex] == 101
+                    else 'arcade-royale-ball' if raw_arcade_upgrades[upgradeIndex] == 100
+                    else 'arcade-gold-ball'
+                ),
+                'Image': f'arcade-bonus-{upgradeIndex}'
             }
             if account.arcade[upgradeIndex]['Royale']:
                 account.arcade[upgradeIndex]['Value'] *= 2
@@ -882,7 +894,14 @@ def _parse_w2_arcade(account):
                     upgradeDetails.get("x1"),
                     upgradeDetails.get("x2")
                 ),
-                'Royale': False
+                'MaxValue': 2 * lavaFunc(
+                    upgradeDetails.get("funcType"),
+                    arcade_max_level,
+                    upgradeDetails.get("x1"),
+                    upgradeDetails.get("x2")
+                ),
+                'Royale': False,
+                'Image': f'arcade-bonus-{upgradeIndex}'
             }
             account.arcade[upgradeIndex]["Display"] = (
                 f"+{account.arcade[upgradeIndex]['Value']:.2f}{arcadeBonuses[upgradeIndex]['displayType']} {arcadeBonuses[upgradeIndex]['Stat']}"

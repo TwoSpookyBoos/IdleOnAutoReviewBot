@@ -412,7 +412,7 @@ def getBellAdviceGroup(schematics):
                   and schematics['Triple Tap Tinkle']['Purchased']
                   and average_level_too_low
                   and total_rings >= 100
-              ) else f'<br>Above {bell_average}: nice RNG 🙂'
+              ) else f'<br>Above {bell_average}: nice RNG 🙂' if not average_level_too_low else ''
               }""",
         picture_class='bell-ring',
         completed=False,
