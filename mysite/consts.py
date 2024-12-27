@@ -921,10 +921,9 @@ bubbles_progressionTiers = [
      {'Swift Steppin': 900, 'Archer Or Bust': 2450},
      {'Stable Jenius': 900, 'Mage Is Best': 2450, 'Severapurple': 1470},
      {
-        'Buff Boi Talent': 200, 'Fast Boi Talent': 200, 'Smart Boi Talent': 200,
-        'Call Me Bob': 1000, 'Big Game Hunter': 570, 'Mr Massacre': 950, 'Lo Cost Mo Jade': 760,
-        'Cropius Mapper': 630, 'Cookin Roadkill': 1330, 'Big P': 940, 'Laaarrrryyyy': 1900,
-        'Essence Boost-Orange': 400, 'Essence Boost-Green': 400, 'Carpenter': 950, 'Diamond Chef': 890
+        'Cropius Mapper': 630, 'Buff Boi Talent': 200, 'Fast Boi Talent': 200, 'Smart Boi Talent': 200,  #Old t19
+        'Call Me Bob': 1000, 'Big Game Hunter': 570, 'Mr Massacre': 950, 'Lo Cost Mo Jade': 760, 'Cookin Roadkill': 1330, 'Big P': 940, 'Laaarrrryyyy': 1900, #Old t20
+        'Essence Boost-Orange': 400, 'Essence Boost-Green': 400, 'Carpenter': 950, 'Diamond Chef': 890  #Old t21
      },
      "98% max value",
      ""],
