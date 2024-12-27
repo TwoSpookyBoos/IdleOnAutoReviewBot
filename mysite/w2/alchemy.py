@@ -130,7 +130,7 @@ def getVialsProgressionTiersAdviceGroup():
         advices=vial_AdviceDict["MaxVials"],
         informational=tier_TotalVialsMaxed >= max_tier
     )
-    overall_SectionTier = min(tier_TotalVialsUnlocked + info_tiers, tier_TotalVialsMaxed)
+    overall_SectionTier = min(max_tier + info_tiers, tier_TotalVialsUnlocked, tier_TotalVialsMaxed)
     return vial_AdviceGroupDict, overall_SectionTier, max_tier
 
 def getAlchemyVialsAdviceSection() -> AdviceSection:
