@@ -31,15 +31,17 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
 
     #Account-Wide
     account_sum = 0.0
-    vialBonus = session_data.account.alchemy_vials.get('Snow Slurry (Snow Ball)', {}).get('Value', 0) * session_data.account.vialMasteryMulti
-    if session_data.account.labBonuses.get("My 1st Chemistry Set", {}).get("Enabled", False):
+    vialBonus = session_data.account.alchemy_vials['Snow Slurry (Snow Ball)']['Value'] * session_data.account.vialMasteryMulti
+    if session_data.account.labBonuses["My 1st Chemistry Set"]["Enabled"]:
         vialBonus *= 2
     account_sum += vialBonus
     account_sum += session_data.account.alchemy_bubbles['Sample It']['BaseValue']
     account_sum += 0.5 * session_data.account.saltlick.get('Printer Sample Size', 0)
     account_sum += 0.5 * session_data.account.merits[2][4]['Level']
     account_sum += session_data.account.family_bonuses['Maestro']['Value']
+    stample_baseValue = session_data.account.stamps['Stample Stamp']['Value']
     stampleValue = session_data.account.stamps['Stample Stamp']['Value']
+    amplestample_baseValue = session_data.account.stamps['Amplestample Stamp']['Value']
     amplestampleValue = session_data.account.stamps['Amplestample Stamp']['Value']
     if session_data.account.labBonuses['Certified Stamp Book']['Enabled']:
         stampleValue *= 2
@@ -59,11 +61,24 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     psrAdvices[accountSubgroup] = []
     
     psrAdvices[accountSubgroup].append(Advice(
-        label=f"Snow Slurry vial: "
-              f"+{vialBonus:.2f}%",
+        label=f"Snow Slurry vial: +{vialBonus:.2f}/30%",
         picture_class='snow-slurry',
-        progression=session_data.account.alchemy_vials.get('Snow Slurry (Snow Ball)', {}).get('Level', 0),
+        progression=session_data.account.alchemy_vials['Snow Slurry (Snow Ball)']['Level'],
         goal=13
+    ))
+    psrAdvices[accountSubgroup].append(Advice(
+        label=f"Lab Bonus: My First Chemistry Set: "
+              f"{'2/2x<br>(Already applied to Vial above)' if session_data.account.labBonuses['My 1st Chemistry Set']['Enabled'] else '1/2x'}",
+        picture_class='my-1st-chemistry-set',
+        progression=int(session_data.account.labBonuses['My 1st Chemistry Set']['Enabled']),
+        goal=1
+    ))
+    psrAdvices[accountSubgroup].append(Advice(
+        label=f"{{{{ Rift|#rift }}}} Bonus: Vial Mastery: {session_data.account.vialMasteryMulti:.2f}x"
+              f"<br>(Already applied to Vial above)",
+        picture_class="vial-mastery",
+        progression=f"{1 if session_data.account.rift['VialMastery'] else 0}",
+        goal=1
     ))
     psrAdvices[accountSubgroup].append(Advice(
         label=f"Sample It bubble: "
@@ -82,7 +97,7 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     ))
     psrAdvices[accountSubgroup].append(Advice(
         label=f"W3 Printer Sample Rate merit: "
-              f"+{0.5 * session_data.account.merits[2][4]['Level']}/{0.5 * session_data.account.merits[2][4]['MaxLevel']}%",
+              f"+{0.5 * session_data.account.merits[2][4]['Level']}/{0.5 * session_data.account.merits[2][4]['MaxLevel']:.0f}%",
         picture_class="merit-2-4",
         progression=session_data.account.merits[2][4]["Level"],
         goal=session_data.account.merits[2][4]["MaxLevel"]
@@ -95,14 +110,16 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         goal=328
     ))
     psrAdvices[accountSubgroup].append(Advice(
-        label=f"Amplestample Stamp: +{amplestampleValue:.3f}/6.45%",
+        label=f"Amplestample Stamp base value: +{amplestample_baseValue:.3f}%"
+              f"<br>After multipliers: {amplestampleValue:.3f}/6.45% target",
         picture_class="amplestample-stamp",
         progression=session_data.account.stamps['Amplestample Stamp']['Level'],
         goal=32,
         resource=session_data.account.stamps['Amplestample Stamp']['Material'],
     ))
     psrAdvices[accountSubgroup].append(Advice(
-        label=f"Stample Stamp: +{stampleValue:.3f}/6.667%",
+        label=f"Stample Stamp base value: +{stample_baseValue:.3f}%"
+              f"<br>After multipliers: {stampleValue:.3f}/6.667% target",
         picture_class="stample-stamp",
         progression=session_data.account.stamps['Stample Stamp']['Level'],
         goal=60,
@@ -188,10 +205,14 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         if max_printer_sample_rate > characterTotalPSR:
             shortBy = max_printer_sample_rate - characterTotalPSR
             prayerGain = min(shortBy, session_data.account.prayers['The Royal Sampler']['BonusValue'])
-            characterEval = f"{'Keep prayer equipped' if 'The Royal Sampler' in toon.equipped_prayers else 'Equip prayer'} for +{prayerGain:.3f}%"
+            characterEval = (
+                f"Keep prayer equipped for +{prayerGain:.3f}% 👍"
+                if 'The Royal Sampler' in toon.equipped_prayers
+                else f"⚠️Equip the Prayer for +{prayerGain:.3f}%"
+            )
             complete_toons += 1 if 'The Royal Sampler' in toon.equipped_prayers else 0
         else:
-            characterEval = f"Prayer not needed{'. You may remove if desired.' if 'The Royal Sampler' in toon.equipped_prayers else ', not worn.'}"
+            characterEval = f"Prayer not needed{'. You may remove if desired.' if 'The Royal Sampler' in toon.equipped_prayers else ', not worn.'} 👍"
             complete_toons += 1
 
         psrAdvices[prayerSubgroup].append(Advice(
@@ -210,6 +231,11 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     psrAdviceGroup = AdviceGroup(
         tier="",
         pre_string=f"Info- Sources of Printer Sample Rate ({max_printer_sample_rate}% Hardcap)",
+        post_string=(
+            f"All possible values would total well over the 90% hardcap. Targets on infinite sources are provided where I'd recommend stopping."
+            if complete_toons < session_data.account.character_count
+            else ''
+        ),
         advices=psrAdvices,
         informational=True,
         completed=complete_toons >= session_data.account.character_count
