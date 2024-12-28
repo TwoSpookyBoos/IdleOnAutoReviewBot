@@ -110,16 +110,16 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         goal=328
     ))
     psrAdvices[accountSubgroup].append(Advice(
-        label=f"Amplestample Stamp base value: +{amplestample_baseValue:.3f}%"
-              f"<br>After multipliers: {amplestampleValue:.3f}/6.45% target",
+        label=f"Amplestample Stamp base value: +{amplestample_baseValue:.3f}/2.581%"
+              f"<br>After multipliers: {amplestampleValue:.3f}%",
         picture_class="amplestample-stamp",
         progression=session_data.account.stamps['Amplestample Stamp']['Level'],
         goal=32,
         resource=session_data.account.stamps['Amplestample Stamp']['Material'],
     ))
     psrAdvices[accountSubgroup].append(Advice(
-        label=f"Stample Stamp base value: +{stample_baseValue:.3f}%"
-              f"<br>After multipliers: {stampleValue:.3f}/6.667% target",
+        label=f"Stample Stamp base value: +{stample_baseValue:.3f}/2.667%"
+              f"<br>After multipliers: {stampleValue:.3f}%",
         picture_class="stample-stamp",
         progression=session_data.account.stamps['Stample Stamp']['Level'],
         goal=60,
