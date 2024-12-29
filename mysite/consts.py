@@ -6516,19 +6516,19 @@ lamp_wishes = [
     ["1000000 Opals", 2, 2, 1, "+1 Opal"],
     ["Bring Them Back", 2, 0, 0, "+12 AFK Hours to any unlocked Monument Cost does not increase."],
     ["World 4 Stuff", 1, .2, 1,
-     f"+{lamp_world_wish_values[4][0]}% Cooking Speed, "
-     f"+{lamp_world_wish_values[4][1]}% Shiny Pet LV Up & Breedability Rate, "
-     f"+{lamp_world_wish_values[4][2]}% Lab EXP gain"],
+     f"+@% Cooking Speed, "
+     f"+#% Shiny Pet LV Up & Breedability Rate, "
+     f"+$% Lab EXP gain"],
     ["A Moderate Discount", 2, .5, 1, "15% discount on the next Engineer Schematic creation"],
     ["World 5 Things", 1, .2, 1,
-     f"+{lamp_world_wish_values[5][0]}% Sailing Loot Value, "
-     f"+{lamp_world_wish_values[5][1]}% Bits gain, "
-     f"+{lamp_world_wish_values[5][2]}% Divinity Pts gain"],
+     f"+@% Sailing Loot Value, "
+     f"+#% Bits gain, "
+     f"+$% Divinity Pts gain"],
     ["Infinite Resources", 1, .05, 1, "Well and Harp resource gain"],
     ["World 6 Majigers", 1, .2, 1,
-     f"+{lamp_world_wish_values[6][0]}% Next Crop chance, "
-     f"+{lamp_world_wish_values[6][1]}% Stealth for Ninja twins, "
-     f"+{lamp_world_wish_values[6][2]}% All Essence gain"],
+     f"+@% Next Crop chance, "
+     f"+#% Stealth for Ninja twins, "
+     f"+$% All Essence gain"],
     ["Knowledge of Future", 999, 999, 1, "Not implemented"],
     ["World 7 Stuff", 999, 999, 1, "Not implemented"],
     ["World 8 Stuff", 999, 999, 1, "Not implemented"]
@@ -6637,6 +6637,7 @@ def getWishCost(wish_index, wish_level):
         case _:  #Everything else
             result = math.floor(lamp_wishes[wish_index][1] + (wish_level * lamp_wishes[wish_index][2]))
     return result
+
 
 ###WORLD 5 CONSTS###
 artifactTiers = ["Base", "Ancient", "Eldritch", "Sovereign"]
@@ -7138,7 +7139,7 @@ sneakingGemstonesFirstIndex = 233
 sneakingGemstonesCount = len(sneakingGemstonesList)
 sneakingGemstonesBaseValueDict = {"Aquamarine": 40, "Emerald": 15, "Garnet": 12, "Starite": 5, "Topaz": 10, "Moissanite": 3}
 sneakingGemstonesMaxValueDict = {"Aquamarine": 10040, "Emerald": 5015, "Garnet": 2512, "Starite": 205, "Topaz": 1010, "Moissanite": 303}
-maxFarmingCrops = 160  # Last verified as of 2.12 Land Rank update
+maxFarmingCrops = 180  # Last verified as of 2.25 Saveload TD
 maxFarmingValue = 10000  # Last verified as of 2.21 The Fixening
 landrankDict = {
     0: {'Name': 'Evolution Boost', 'UnlockLevel': 1, 'Value': 250},

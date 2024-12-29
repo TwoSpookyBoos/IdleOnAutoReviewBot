@@ -5,7 +5,7 @@ from utils.text_formatting import pl, notateNumber
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import numberOfArtifacts, numberOfArtifactTiers, breeding_progressionTiers, getReadableVialNames, maxTiersPerGroup, territoryNames, break_you_best, \
-    maxFarmingCrops, breedabilityDaysList, getBreedabilityHeartFromMulti
+    maxFarmingCrops, breedabilityDaysList, getBreedabilityHeartFromMulti, infinity_string
 
 logger = get_logger(__name__)
 
@@ -61,60 +61,26 @@ def getSpiceImage(territoryIndex: int) -> str:
         return f"UnknownSpice{territoryIndex}"
 
 def getShinySpeedSourcesAdviceGroup(fasterShinyPetTotalLevels) -> AdviceGroup:
+    mga = "Multi Group A- Summoning Winner Bonus"
+    mgb = "Multi Group B- Lamp Wish"
+    mgc = "Multi Group C- Everything Else"
     sps_adviceDict = {
-        "Multi Group A- Summoning Winner Bonus": [],
-        "Multi Group B- Everything Else": []
+        mga: [],
+        mgb: [],
+        mgc: []
     }
 
-    sps_adviceDict["Multi Group B- Everything Else"].append(Advice(
-        label=f"Total Farming crops discovered: {session_data.account.farming['CropsUnlocked']}/{maxFarmingCrops}",
-        picture_class='crop-depot',
-        progression=session_data.account.farming['CropsUnlocked'],
-        goal=maxFarmingCrops
-    ))
-    sps_adviceDict["Multi Group B- Everything Else"].append(Advice(
-        label=f"{{{{Science Crayon|#farming}}}} Total: {session_data.account.farming['Depot'][5]['Value']:,.2f}",
-        picture_class=session_data.account.farming['Depot'][5]['Image'],
-    ))
-    sps_adviceDict["Multi Group B- Everything Else"].append(Advice(
-        label=f"Lab Jewel: Emerald Ulthurite",
-        picture_class='emerald-ulthurite',
-        progression=1 if session_data.account.labJewels["Emerald Ulthurite"]["Enabled"] else 0,
-        goal=1
-    ))
-    sps_adviceDict["Multi Group B- Everything Else"].append(Advice(
-        label=f"Faster Shiny Pet Lv Up Rate Shiny Pets: "
-              f"+{3 * fasterShinyPetTotalLevels}% total",
-        picture_class='green-mushroom-shiny'
-    ))
-    sps_adviceDict["Multi Group B- Everything Else"].append(Advice(
-        label=f"Grand Martial of Shinytown: "
-              f"+{session_data.account.breeding['Upgrades']['Grand Martial of Shinytown']['Value']}%",
-        picture_class='breeding-bonus-11',
-        progression=session_data.account.breeding['Upgrades']['Grand Martial of Shinytown']['Level'],
-        goal=session_data.account.breeding['Upgrades']['Grand Martial of Shinytown']['MaxLevel'],
-    ))
-
-    sps_adviceDict["Multi Group B- Everything Else"].append(Advice(
-        label=f"Star Sign: Breedabilli: "
-              f"+{15 * session_data.account.star_signs.get('Breedabilli', {}).get('Unlocked', False)}/15%",
-        picture_class='breedabilli',
-        progression=1 if session_data.account.star_signs.get('Breedabilli', {}).get('Unlocked', False) else 0,
-        goal=1
-    ))
-    sps_adviceDict["Multi Group B- Everything Else"].append(session_data.account.star_sign_extras['SeraphAdvice'])
-    sps_adviceDict["Multi Group B- Everything Else"].append(session_data.account.star_sign_extras['SilkrodeNanoAdvice'])
-
+#Multi Group A
     red8beat = session_data.account.summoning['Battles']['Red'] >= 8
     cyan13beat = session_data.account.summoning['Battles']['Cyan'] >= 13
-    sps_adviceDict["Multi Group A- Summoning Winner Bonus"].append(Advice(
+    sps_adviceDict[mga].append(Advice(
         label=f"Summoning match Red8: "
               f"+{1.88 * red8beat}/1.88{'' if red8beat else '. Not yet beaten.'}",
         picture_class="citringe",
         progression=1 if red8beat else 0,
         goal=1
     ))
-    sps_adviceDict["Multi Group A- Summoning Winner Bonus"].append(Advice(
+    sps_adviceDict[mga].append(Advice(
         label=f"Summoning match Cyan13: "
               f"+{3.45 * cyan13beat}/3.45{'' if cyan13beat else '. Not yet beaten.'}",
         picture_class="minichief-spirit",
@@ -122,10 +88,59 @@ def getShinySpeedSourcesAdviceGroup(fasterShinyPetTotalLevels) -> AdviceGroup:
         goal=1
     ))
     for advice in session_data.account.summoning['WinnerBonusesAdvice']:
-        sps_adviceDict["Multi Group A- Summoning Winner Bonus"].append(advice)
-    sps_adviceDict["Multi Group A- Summoning Winner Bonus"].extend(session_data.account.summoning['WinnerBonusesSummaryFull'])
+        sps_adviceDict[mga].append(advice)
+    sps_adviceDict[mga].extend(session_data.account.summoning['WinnerBonusesSummaryFull'])
 
-    for group_name in sps_adviceDict:  #["Stamps", "Account Wide", "Character Specific"]:
+#Multi Group B
+    lamp_cavern = session_data.account.caverns['Caverns']['The Lamp']
+    sps_adviceDict[mgb].append(Advice(
+        label=f"{{{{Lamp|#glowshroom-tunnels}}}} Wish: World 4 Stuff: +{lamp_cavern['WishTypes'][4]['BonusList'][1]}%",
+        picture_class=f"cavern-{lamp_cavern['CavernNumber']}",
+        progression=lamp_cavern['WishTypes'][4]['BonusList'][1],
+        goal=infinity_string
+    ))
+
+#Multi Group C
+    sps_adviceDict[mgc].append(Advice(
+        label=f"Total Farming crops discovered: {session_data.account.farming['CropsUnlocked']}/{maxFarmingCrops}",
+        picture_class='crop-depot',
+        progression=session_data.account.farming['CropsUnlocked'],
+        goal=maxFarmingCrops
+    ))
+    sps_adviceDict[mgc].append(Advice(
+        label=f"{{{{Science Crayon|#farming}}}} Total: {session_data.account.farming['Depot'][5]['Value']:,.2f}",
+        picture_class=session_data.account.farming['Depot'][5]['Image'],
+    ))
+    sps_adviceDict[mgc].append(Advice(
+        label=f"Lab Jewel: Emerald Ulthurite",
+        picture_class='emerald-ulthurite',
+        progression=1 if session_data.account.labJewels["Emerald Ulthurite"]["Enabled"] else 0,
+        goal=1
+    ))
+    sps_adviceDict[mgc].append(Advice(
+        label=f"Faster Shiny Pet Lv Up Rate Shiny Pets: "
+              f"+{3 * fasterShinyPetTotalLevels}% total",
+        picture_class='green-mushroom-shiny'
+    ))
+    sps_adviceDict[mgc].append(Advice(
+        label=f"Grand Martial of Shinytown: "
+              f"+{session_data.account.breeding['Upgrades']['Grand Martial of Shinytown']['Value']}%",
+        picture_class='breeding-bonus-11',
+        progression=session_data.account.breeding['Upgrades']['Grand Martial of Shinytown']['Level'],
+        goal=session_data.account.breeding['Upgrades']['Grand Martial of Shinytown']['MaxLevel'],
+    ))
+
+    sps_adviceDict[mgc].append(Advice(
+        label=f"Star Sign: Breedabilli: "
+              f"+{15 * session_data.account.star_signs.get('Breedabilli', {}).get('Unlocked', False)}/15%",
+        picture_class='breedabilli',
+        progression=1 if session_data.account.star_signs.get('Breedabilli', {}).get('Unlocked', False) else 0,
+        goal=1
+    ))
+    sps_adviceDict[mgc].append(session_data.account.star_sign_extras['SeraphAdvice'])
+    sps_adviceDict[mgc].append(session_data.account.star_sign_extras['SilkrodeNanoAdvice'])
+
+    for group_name in sps_adviceDict:
         for advice in sps_adviceDict[group_name]:
             mark_advice_completed(advice)
 

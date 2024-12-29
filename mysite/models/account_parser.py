@@ -47,7 +47,7 @@ from consts import (
     caverns_villagers, caverns_conjuror_majiks, caverns_engineer_schematics, caverns_engineer_schematics_unlock_order, caverns_cavern_names,
     caverns_measurer_measurements, getCavernResourceImage, max_buckets, max_sediments, sediment_bars, getVillagerEXPRequired,
     monument_bonuses, bell_clean_improvements, bell_ring_bonuses, getBellExpRequired, getGrottoKills, lamp_wishes, key_cards, getWishCost,
-    schematics_unlocking_harp_chords, harp_chord_effects, max_harp_notes
+    schematics_unlocking_harp_chords, harp_chord_effects, max_harp_notes, lamp_world_wish_values
 )
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
 from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert
@@ -2246,6 +2246,7 @@ def _parse_caverns_the_lamp(account, raw_caverns_list):
             'Idk3': wish_list[3],
             'Description': wish_list[4],
             'Image': f'lamp-wish-{wish_index}',
+            'BonusList': []
         }
         try:
             account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Unlocked'] = (
@@ -2259,6 +2260,23 @@ def _parse_caverns_the_lamp(account, raw_caverns_list):
         account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['NextCost'] = getWishCost(
             wish_index, account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Level']
         )
+
+        #If this is a World X stuff wish, calculate each Value into BonusList then update the Description
+        if wish_list[0].startswith('World '):
+            world_number = safer_convert(wish_list[0].split('World ')[1][0], 0)
+            account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'] = [
+                v * account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Level']
+                for v in lamp_world_wish_values[world_number]
+            ]
+            account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'] = (
+                account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'].replace(
+                    '@', str(account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'][0]), 1))
+            account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'] = (
+                account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'].replace(
+                    '#', str(account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'][1]), 1))
+            account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'] = (
+                account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'].replace(
+                    '$', str(account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'][2]), 1))
 
 def _parse_caverns_the_hive(account, raw_caverns_list):
     cavern_name = 'The Hive'

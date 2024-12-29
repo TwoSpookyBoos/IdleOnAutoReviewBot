@@ -640,7 +640,6 @@ def _calculate_w4_meal_multi(account):
         )
         * account.summoning['Endless Bonuses']['x Meal Bonuses']
     )
-    logger.debug(f"{mealMulti =}")
     for meal in account.meals:
         account.meals[meal]["Value"] = float(account.meals[meal]["Value"]) * mealMulti
 
