@@ -1081,6 +1081,7 @@ def _calculate_w6_farming_crop_evo(account):
             * ValueToMulti(15 * account.farming['Evo']['Skill Mastery Bonus Bool'] * account.rift['SkillMastery'])
             * account.farming['Evo']['Ballot Multi Current']
     )
+    account.farming['Evo']['Wish Multi'] = ValueToMulti(account.caverns['Caverns']['The Lamp']['WishTypes'][8]['BonusList'][0])
     # subtotal doesn't include Crop Chapter
     account.farming['Evo']['Subtotal Multi'] = (
         account.farming['Evo']['Alch Multi']
@@ -1091,6 +1092,7 @@ def _calculate_w6_farming_crop_evo(account):
         * account.farming['Evo']['Summon Multi']
         * account.farming['Evo']['SS Multi']
         * account.farming['Evo']['Misc Multi']
+        * account.farming['Evo']['Wish Multi']
     )
 
 def _calculate_w6_farming_crop_speed(account):

@@ -330,6 +330,7 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
     lr = f"Land Ranks: {farming['Evo']['LR Multi']:,.3f}x"
     summon = f"Summoning: {farming['Evo']['Summon Multi']:,.3f}x"
     ss = f"Star Sign: {farming['Evo']['SS Multi']:.3f}x"
+    lamp = f"Lamp Wish: {farming['Evo']['Wish Multi']:.3f}x"
     misc = f"Misc: {farming['Evo']['Misc Multi']:.3f}x"
     total = f"Subtotal before Crop Chapter Bubble: {farming['Evo']['Subtotal Multi']:.3g}x"
     evo_advices = {
@@ -341,6 +342,7 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
         lr: [],
         summon: [],
         ss: [],
+        lamp: [],
         misc: [],
     }
     #Add Advice lines
@@ -522,6 +524,14 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
         picture_class='cropiovo-minor',
         progression=int(session_data.account.star_signs['Cropiovo Minor']['Unlocked']),
         goal=1
+    ))
+# Lamp
+    lamp_cavern = session_data.account.caverns['Caverns']['The Lamp']
+    evo_advices[lamp].append(Advice(
+        label=f"{{{{Lamp|#glowshroom-tunnels}}}} Wish: World 5 Stuff: +{lamp_cavern['WishTypes'][8]['BonusList'][0]}%",
+        picture_class=f"cavern-{lamp_cavern['CavernNumber']}",
+        progression=lamp_cavern['WishTypes'][8]['BonusList'][0],
+        goal=infinity_string
     ))
 
 # MISC
