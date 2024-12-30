@@ -123,7 +123,7 @@ def getShinySpeedSourcesAdviceGroup(fasterShinyPetTotalLevels) -> AdviceGroup:
         picture_class='green-mushroom-shiny'
     ))
     sps_adviceDict[mgc].append(Advice(
-        label=f"Grand Martial of Shinytown: "
+        label=f"Breeding Upgrade: Grand Martial of Shinytown: "
               f"+{session_data.account.breeding['Upgrades']['Grand Martial of Shinytown']['Value']}%",
         picture_class='breeding-bonus-11',
         progression=session_data.account.breeding['Upgrades']['Grand Martial of Shinytown']['Level'],
