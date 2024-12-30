@@ -185,9 +185,9 @@ def main(inputData, runType="web"):
         #Remove later-rated Groups within the remaining Sections
         for section_list in [sections_general, sections_1, sections_2, sections_3, sections_4, sections_5, sections_caverns, sections_6]:
             for s in section_list:
-                logger.debug(f"{s.name} started with {len(s.groups)}")
+                #logger.debug(f"{s.name} started with {len(s.groups)}")
                 s.groups = [group for group in s.groups if safer_convert(group.tier, 0) <= s.pinchy_rating and not group.informational]
-                logger.debug(f"{s.name} ended with {len(s.groups)}")
+                #logger.debug(f"{s.name} ended with {len(s.groups)}")
 
     #Build Worlds
     reviews = [

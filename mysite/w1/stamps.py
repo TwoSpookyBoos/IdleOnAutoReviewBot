@@ -369,7 +369,7 @@ def getProgressionTiersAdviceGroup():
                     # adviceCountsDict["Optional"] += 1
                     stamp_AdviceDict["FindStamps"]["Optional"][subgroupName].append(
                         Advice(
-                            label=f"{playerStamps[stampName]['StampType']}: {rStamp}",
+                            label=f"{playerStamps[rStamp]['StampType']}: {rStamp}",
                             picture_class=rStamp,
                             resource=playerStamps[rStamp]['Material'],
                             informational=True
