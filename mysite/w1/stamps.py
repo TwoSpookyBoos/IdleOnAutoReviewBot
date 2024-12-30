@@ -283,9 +283,7 @@ def getProgressionTiersAdviceGroup():
     stamp_AdviceDict = {
         "StampLevels": [],
         "FindStamps": {
-            "Combat": {},
-            "Skill": {},
-            "Misc": {},
+            "Required": {},
             "Optional": {}
         },
         "Specific": {},
@@ -293,9 +291,9 @@ def getProgressionTiersAdviceGroup():
     info_tiers = 3
     max_tier = max(stamps_progressionTiers.keys()) - info_tiers
     tier_StampLevels = 0
-    tier_FindStamps = {"Combat": 0, "Skill": 0, "Misc": 0}
+    tier_FindRequiredStamps = 0
     tier_SpecificStamps = 0
-    adviceCountsDict = {"Combat": 0, "Skill": 0, "Misc": 0, "Specific": 0}
+    adviceCountsDict = {'Required': 0, 'Specific': 0}
     playerStamps = session_data.account.stamps
     missingStampsList = setMissingStamps()
     exclusionsDict = getStampExclusions()
@@ -321,41 +319,41 @@ def getProgressionTiersAdviceGroup():
         for stampType in stampTypes:
             for rStamp in stamps_progressionTiers[tier].get("Stamps").get(stampType, []):
                 if rStamp in missingStampsList and exclusionsDict.get(rStamp, False) == False:
-                    if subgroupName not in stamp_AdviceDict["FindStamps"][stampType] and len(stamp_AdviceDict["FindStamps"][stampType]) < session_data.account.maxSubgroupsPerGroup:
-                        stamp_AdviceDict["FindStamps"][stampType][subgroupName] = []
-                    if subgroupName in stamp_AdviceDict["FindStamps"][stampType]:
-                        adviceCountsDict[stampType] += 1
-                        stamp_AdviceDict["FindStamps"][stampType][subgroupName].append(
+                    if subgroupName not in stamp_AdviceDict["FindStamps"]['Required'] and len(stamp_AdviceDict["FindStamps"]['Required']) < session_data.account.maxSubgroupsPerGroup:
+                        stamp_AdviceDict["FindStamps"]['Required'][subgroupName] = []
+                    if subgroupName in stamp_AdviceDict["FindStamps"]['Required']:
+                        adviceCountsDict['Required'] += 1
+                        stamp_AdviceDict["FindStamps"]['Required'][subgroupName].append(
                             Advice(
-                                label=f"{rStamp}, leveled with {playerStamps.get(rStamp, {}).get('Material', '').replace('-', ' ').title()}",
+                                label=f"{stampType}: {rStamp}, leveled with {playerStamps[rStamp]['Material'].replace('-', ' ').title()}",
                                 picture_class=rStamp,
                                 progression=0,
                                 goal=1,
-                                resource=playerStamps.get(rStamp, {}).get('Material', ''),
+                                resource=playerStamps[rStamp]['Material'],
 
                             ))
-            if tier_FindStamps[stampType] == tier - 1 and adviceCountsDict[stampType] == 0:  # Only update if they already met previous tier
-                tier_FindStamps[stampType] = tier
+        if tier_FindRequiredStamps == tier - 1 and subgroupName not in stamp_AdviceDict["FindStamps"]['Required']:  # Only update if they already met previous tier
+            tier_FindRequiredStamps = tier
 
         # SpecificStampLevels
         for stampName, stampRequiredLevel in stamps_progressionTiers[tier].get("Stamps", {}).get("Specific", {}).items():
-            if playerStamps.get(stampName, {}).get("Level", 0) < stampRequiredLevel:
+            if playerStamps[stampName]['Level'] < stampRequiredLevel:
                 #logger.debug(f"T{tier} {stampName} failed: {playerStamps.get(stampName, {}).get('Level', 0)} < {stampRequiredLevel}")
                 #logger.debug(f"InfoTier={tier > max_tier}, Excluded={exclusionsDict.get(stampName, False)}, Delivered={playerStamps.get(stampName, {}).get('Delivered', False)}")
                 if (
                     (tier <= max_tier and exclusionsDict.get(stampName, False) == False)
-                    or (tier > max_tier and playerStamps.get(stampName, {}).get('Delivered', False))
+                    or (tier > max_tier and playerStamps[stampName]['Delivered'])
                 ):
                     if subgroupName not in stamp_AdviceDict["Specific"] and len(stamp_AdviceDict["Specific"]) < session_data.account.maxSubgroupsPerGroup:
                         stamp_AdviceDict["Specific"][subgroupName] = []
                     if subgroupName in stamp_AdviceDict["Specific"]:
                         adviceCountsDict["Specific"] += 1
                         stamp_AdviceDict["Specific"][subgroupName].append(Advice(
-                            label=stampName,
+                            label=f"{playerStamps[stampName]['StampType']}: {stampName}",
                             picture_class=stampName,
-                            progression=playerStamps.get(stampName, {}).get("Level", 0),
+                            progression=playerStamps[stampName]['Level'],
                             goal=stampRequiredLevel,
-                            resource=playerStamps.get(stampName, {}).get('Material', ''),
+                            resource=playerStamps[stampName]['Material'],
                         ))
 
         if tier_SpecificStamps == tier - 1 and adviceCountsDict["Specific"] == 0:
@@ -371,9 +369,10 @@ def getProgressionTiersAdviceGroup():
                     # adviceCountsDict["Optional"] += 1
                     stamp_AdviceDict["FindStamps"]["Optional"][subgroupName].append(
                         Advice(
-                            label=f"{rStamp} ({playerStamps.get(rStamp).get('StampType')})",
+                            label=f"{playerStamps[stampName]['StampType']}: {rStamp}",
                             picture_class=rStamp,
-                            resource=playerStamps.get(rStamp, {}).get('Material', ''),
+                            resource=playerStamps[rStamp]['Material'],
+                            informational=True
                         ))
 
     # Generate AdviceGroups
@@ -388,24 +387,14 @@ def getProgressionTiersAdviceGroup():
         "SpecificStamps": AdviceGroup(
             tier=tier_SpecificStamps if tier_SpecificStamps < max_tier else '',
             pre_string=f"{'Informational- ' if tier_SpecificStamps >= max_tier else ''}"
-                       f"Improve high-priority stamp{pl([''] * adviceCountsDict['Specific'])}",
+                       f"Improve high-priority stamp{pl(adviceCountsDict['Specific'])}",
             advices=stamp_AdviceDict["Specific"],
             informational=tier_SpecificStamps >= max_tier
         ),
-        "Combat": AdviceGroup(
-            tier=tier_FindStamps["Combat"],
-            pre_string=f"Collect the following Combat stamp{pl([''] * adviceCountsDict['Combat'])}",
-            advices=stamp_AdviceDict["FindStamps"]['Combat']
-        ),
-        "Skill": AdviceGroup(
-            tier=tier_FindStamps["Skill"],
-            pre_string=f"Collect the following Skill stamp{pl([''] * adviceCountsDict['Skill'])}",
-            advices=stamp_AdviceDict["FindStamps"]["Skill"]
-        ),
-        "Misc": AdviceGroup(
-            tier=tier_FindStamps["Misc"],
-            pre_string=f"Collect the following Misc stamp{pl([''] * adviceCountsDict['Misc'])}",
-            advices=stamp_AdviceDict["FindStamps"]["Misc"]
+        "FindRequired": AdviceGroup(
+            tier=tier_FindRequiredStamps,
+            pre_string=f"Collect the following Stamp{pl(adviceCountsDict['Required'])}",
+            advices=stamp_AdviceDict["FindStamps"]['Required']
         ),
         "Optional": AdviceGroup(
             tier='',
@@ -415,11 +404,7 @@ def getProgressionTiersAdviceGroup():
             informational=True
         )
     }
-    overall_SectionTier = min(
-        max_tier + info_tiers, tier_StampLevels,
-        tier_FindStamps["Combat"], tier_FindStamps["Skill"], tier_FindStamps["Misc"],
-        tier_SpecificStamps
-    )
+    overall_SectionTier = min(max_tier + info_tiers, tier_StampLevels, tier_FindRequiredStamps, tier_SpecificStamps)
     return stamp_AdviceGroupDict, overall_SectionTier, max_tier
 
 def getStampAdviceSection() -> AdviceSection:
