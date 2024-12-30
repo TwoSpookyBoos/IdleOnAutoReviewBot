@@ -357,11 +357,11 @@ def safer_convert(data, default):
         if data is None:
             return default
         elif isinstance(default, int):
-            return int(float(data))
+            return int(float(data)) if data else default
         else:
             return type(default)(data)
     except (TypeError, ValueError):
-        logger.exception(f"Could not convert [{type(data)} {data}] to [{type(default)}: {default}]. Returning default.")
+        logger.exception(f"Could not convert [{type(data)}: {data}] to [{type(default)}: {default}]. Returning default.")
         return default
     except Exception as e:
         logger.exception(f"Something else went wrong lol: {e}")

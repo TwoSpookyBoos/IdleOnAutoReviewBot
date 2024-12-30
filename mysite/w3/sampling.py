@@ -459,10 +459,10 @@ def getProgressionTiersAdviceGroup():
         if len(failedMaterialsDict[tierNumber].keys()) < len(tierRequirements['Materials'].keys()) and tier_MaterialSamples == tierNumber - 1:
             tier_MaterialSamples = tierNumber
         if (
-                0 < len(failedMaterialsDict[tierNumber].keys())  # At least 1 requirement was failed
-                and subgroupName not in sampling_AdviceDict['MaterialSamples']  # The subgroupName name doesn't already exist
-                and len(sampling_AdviceDict['MaterialSamples']) < session_data.account.maxSubgroupsPerGroup  # Less than maxTiersPerGroup already exist
-                and tier_MaterialSamples < tierNumber
+            0 < len(failedMaterialsDict[tierNumber].keys())  # At least 1 requirement was failed
+            and subgroupName not in sampling_AdviceDict['MaterialSamples']  # The subgroupName name doesn't already exist
+            and len(sampling_AdviceDict['MaterialSamples']) < session_data.account.maxSubgroupsPerGroup + 1  # +1 to account for the catchup
+            and tier_MaterialSamples < tierNumber
         ):
             # Setup empty subgroup with subgroupName as empty list to be added to
             sampling_AdviceDict['MaterialSamples'][subgroupName] = []

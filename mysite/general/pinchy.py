@@ -491,6 +491,7 @@ def generatePinchyWorld(pinchable_sections: list[AdviceSection], unrated_section
     pinchy_all = AdviceSection(
         name="Pinchy all",
         tier=sections_maxed,
+        pinchy_rating=sections_maxed_count,
         header=f"Sections maxed: {sections_maxed}"
                f"{'<br>You Bestest ❤️' if sections_maxed_count >= sections_total else ''}",
         picture="Pinchy.gif",

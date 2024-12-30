@@ -136,17 +136,18 @@ def getProgressionTiersAdviceGroup():
         for categoryName, categoryAchievementsDict in tierRequirements.items():
             for achievementName, achievementDetailsDict in categoryAchievementsDict.items():
                 if not session_data.account.achievements.get(achievementName)['Complete'] and achievementName not in exclusionsSet:
-                    if subgroupName not in achievements_AdviceDict[categoryName]:
+                    if subgroupName not in achievements_AdviceDict[categoryName] and len(achievements_AdviceDict[categoryName]) < session_data.account.maxSubgroupsPerGroup:
                         achievements_AdviceDict[categoryName][subgroupName] = []
-                    prog, goal, resource = getAchievementStatus(achievementName)
-                    achievements_AdviceDict[categoryName][subgroupName].append(Advice(
-                        label=f"W{achievementDetailsDict['World']} {achievementName}: {achievementDetailsDict['Reward']}",
-                        picture_class=achievementName,
-                        progression=prog,
-                        goal=goal,
-                        resource=resource,
-                        completed=False
-                    ))
+                    if subgroupName in achievements_AdviceDict[categoryName]:
+                        prog, goal, resource = getAchievementStatus(achievementName)
+                        achievements_AdviceDict[categoryName][subgroupName].append(Advice(
+                            label=f"W{achievementDetailsDict['World']} {achievementName}: {achievementDetailsDict['Reward']}",
+                            picture_class=achievementName,
+                            progression=prog,
+                            goal=goal,
+                            resource=resource,
+                            completed=False
+                        ))
             if subgroupName not in achievements_AdviceDict[categoryName] and tiers[categoryName] == tierNumber - 1:
                 tiers[categoryName] = tierNumber
 

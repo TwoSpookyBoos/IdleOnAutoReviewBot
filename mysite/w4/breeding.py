@@ -501,7 +501,7 @@ def getBreedingProgressionTiersAdviceGroups(breedingDict):
             if allRequirementsMet == True and tier_ShinyLevels >= tier - 1:
                 tier_ShinyLevels = tier
             else:
-                if tier not in shinyTiersDisplayed and len(shinyTiersDisplayed) < session_data.account.maxSubgroupsPerGroup - 1:
+                if tier not in shinyTiersDisplayed and len(shinyTiersDisplayed) < session_data.account.maxSubgroupsPerGroup:  # - 1:
                     shinyTiersDisplayed.append(tier)
                 if tier in shinyTiersDisplayed:
                     for failedRequirement in failedShinyRequirements:
