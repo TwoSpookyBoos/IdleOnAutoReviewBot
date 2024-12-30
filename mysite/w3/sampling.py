@@ -5,7 +5,7 @@ from utils.data_formatting import mark_advice_completed, safer_get
 from utils.text_formatting import notateNumber
 from utils.logging import get_logger
 from consts import (
-    lavaFunc, maxTiersPerGroup, ValueToMulti, break_you_best, skillIndexList,
+    lavaFunc, ValueToMulti, break_you_best, skillIndexList,
     sampling_progressionTiers, goldrelic_multisDict, max_printer_sample_rate, arcade_max_level
 )
 
@@ -461,7 +461,7 @@ def getProgressionTiersAdviceGroup():
         if (
                 0 < len(failedMaterialsDict[tierNumber].keys())  # At least 1 requirement was failed
                 and subgroupName not in sampling_AdviceDict['MaterialSamples']  # The subgroupName name doesn't already exist
-                and len(sampling_AdviceDict['MaterialSamples']) < maxTiersPerGroup  # Less than maxTiersPerGroup already exist
+                and len(sampling_AdviceDict['MaterialSamples']) < session_data.account.maxSubgroupsPerGroup  # Less than maxTiersPerGroup already exist
                 and tier_MaterialSamples < tierNumber
         ):
             # Setup empty subgroup with subgroupName as empty list to be added to

@@ -391,7 +391,9 @@ def generate_advice_groups(sectionsByThreshold: dict):
             advices=advices
         )
 
-        advice_groups.append(advice_group)
+        if not session_data.overwhelmed or (session_data.overwhelmed and len(advice_groups) < session_data.account.maxSubgroupsPerGroup):
+            advice_groups.append(advice_group)
+
     return advice_groups
 
 
@@ -462,7 +464,8 @@ def generatePinchyWorld(pinchable_sections: list[AdviceSection], unrated_section
         pinchyExpected = f"Expected Progression, based on highest enemy map: {expectedThreshold}"
 
     advice_groups = generate_advice_groups(sectionPlacements.final)
-    advice_groups.append(getUnratedLinksAdviceGroup(unrated_sections))
+    if not session_data.overwhelmed:
+        advice_groups.append(getUnratedLinksAdviceGroup(unrated_sections))
     advice_groups.insert(0, getAlertsAdviceGroup())
 
     sections_maxed_count = sectionPlacements.maxed_count

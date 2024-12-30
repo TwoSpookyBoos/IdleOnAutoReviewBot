@@ -1,5 +1,5 @@
 from flask import g as session_data
-from consts import colliderStorageLimitList, buildingsTowerMaxLevel, atoms_progressionTiers, maxTiersPerGroup, cookingCloseEnough, snailMaxRank, break_you_best
+from consts import colliderStorageLimitList, buildingsTowerMaxLevel, atoms_progressionTiers, cookingCloseEnough, snailMaxRank, break_you_best
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
@@ -231,7 +231,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
         #Atom levels
         for rAtom, rLevel in tierRequirements.get('Atoms', {}).items():
             if rAtom not in exclusionsList and pAtoms[rAtom]['Level'] < rLevel:
-                if subgroupName not in collider_AdviceDict['Atoms'] and len(collider_AdviceDict['Atoms']) < maxTiersPerGroup:
+                if subgroupName not in collider_AdviceDict['Atoms'] and len(collider_AdviceDict['Atoms']) < session_data.account.maxSubgroupsPerGroup:
                     collider_AdviceDict['Atoms'][subgroupName] = []
                 if subgroupName in collider_AdviceDict['Atoms']:
                     collider_AdviceDict['Atoms'][subgroupName].append(Advice(

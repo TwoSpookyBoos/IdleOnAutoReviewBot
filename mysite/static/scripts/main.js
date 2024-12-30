@@ -21,6 +21,7 @@ const opts = {
 
 const defaults = {
     player: "",
+    overwhelmed: "off",
     autoloot: "off",
     doot: "off",
     riftslug: "off",

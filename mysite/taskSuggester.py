@@ -159,6 +159,27 @@ def main(inputData, runType="web"):
         section.check_for_informationalness()
         #logger.debug(f"{section}: Unreached={section.unreached}, Completed={section.completed}, Info={section.informational}, Unrated={section.unrated}")
 
+    #Remove the later-rated sections if Overwhelmed mode is on
+    if session_data.overwhelmed:
+        sections_to_keep = []
+        for section in sections_pinchy:
+            if section.name == 'Pinchy all':
+                for group in section.groups:
+                    if group.pre_string == 'Alerts':
+                        continue
+                    for advice in group.advices['default']:
+                        sections_to_keep.append(advice.label)
+                    break
+        sections_general = [section for section in sections_general if section.name in sections_to_keep]
+        sections_1 = [section for section in sections_1 if section.name in sections_to_keep]
+        sections_2 = [section for section in sections_2 if section.name in sections_to_keep]
+        sections_3 = [section for section in sections_3 if section.name in sections_to_keep]
+        sections_4 = [section for section in sections_4 if section.name in sections_to_keep]
+        sections_5 = [section for section in sections_5 if section.name in sections_to_keep]
+        sections_caverns = [section for section in sections_caverns if section.name in sections_to_keep]
+        sections_6 = [section for section in sections_6 if section.name in sections_to_keep]
+
+
     #Build Worlds
     reviews = [
         AdviceWorld(name=WorldName.PINCHY, sections=sections_pinchy, title="Pinchy AutoReview", collapse=False, complete=False),

@@ -112,6 +112,7 @@ def _parse_wave_1(account, run_type):
     _parse_w6(account)
 
 def _parse_switches(account):
+
     # AutoLoot
     if g.autoloot:
         account.autoloot = True
@@ -121,7 +122,7 @@ def _parse_switches(account):
     else:
         account.autoloot = False
 
-    # consts.maxTiersPerGroup = 1 if g.one_tier else consts.maxTiersPerGroup
+    account.maxSubgroupsPerGroup = 1 if g.overwhelmed else 3
 
     # Companions
     account.sheepie_owned = g.sheepie

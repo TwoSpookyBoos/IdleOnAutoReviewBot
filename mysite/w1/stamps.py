@@ -3,7 +3,7 @@ from utils.text_formatting import pl
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from consts import (
-    break_you_best, maxTiersPerGroup,
+    break_you_best,
     stamps_progressionTiers, stamp_maxes, stampsDict, unavailableStampsList, stampTypes,
     maxOverallBookLevels, max_VialLevel, maxFarmingCrops
 )
@@ -321,7 +321,7 @@ def getProgressionTiersAdviceGroup():
         for stampType in stampTypes:
             for rStamp in stamps_progressionTiers[tier].get("Stamps").get(stampType, []):
                 if rStamp in missingStampsList and exclusionsDict.get(rStamp, False) == False:
-                    if subgroupName not in stamp_AdviceDict["FindStamps"][stampType] and len(stamp_AdviceDict["FindStamps"][stampType]) < maxTiersPerGroup:
+                    if subgroupName not in stamp_AdviceDict["FindStamps"][stampType] and len(stamp_AdviceDict["FindStamps"][stampType]) < session_data.account.maxSubgroupsPerGroup:
                         stamp_AdviceDict["FindStamps"][stampType][subgroupName] = []
                     if subgroupName in stamp_AdviceDict["FindStamps"][stampType]:
                         adviceCountsDict[stampType] += 1
@@ -346,7 +346,7 @@ def getProgressionTiersAdviceGroup():
                     (tier <= max_tier and exclusionsDict.get(stampName, False) == False)
                     or (tier > max_tier and playerStamps.get(stampName, {}).get('Delivered', False))
                 ):
-                    if subgroupName not in stamp_AdviceDict["Specific"] and len(stamp_AdviceDict["Specific"]) < maxTiersPerGroup:
+                    if subgroupName not in stamp_AdviceDict["Specific"] and len(stamp_AdviceDict["Specific"]) < session_data.account.maxSubgroupsPerGroup:
                         stamp_AdviceDict["Specific"][subgroupName] = []
                     if subgroupName in stamp_AdviceDict["Specific"]:
                         adviceCountsDict["Specific"] += 1
@@ -411,7 +411,8 @@ def getProgressionTiersAdviceGroup():
             tier='',
             pre_string=f"Owning every stamp slightly reduces your chances for the BEST stamps to be chosen by the Sacred Methods bundle on each daily reset."
                        f" These stamps are Optional",
-            advices=stamp_AdviceDict["FindStamps"]["Optional"]
+            advices=stamp_AdviceDict["FindStamps"]["Optional"],
+            informational=True
         )
     }
     overall_SectionTier = min(

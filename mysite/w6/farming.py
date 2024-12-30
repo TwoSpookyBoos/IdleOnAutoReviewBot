@@ -4,7 +4,7 @@ from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
 from utils.data_formatting import mark_advice_completed
 from flask import g as session_data
-from consts import (farming_progressionTiers, break_you_best, maxTiersPerGroup, maxFarmingCrops, maxCharacters, max_VialLevel, maxMealLevel, stamp_maxes,
+from consts import (farming_progressionTiers, break_you_best, maxFarmingCrops, maxCharacters, max_VialLevel, maxMealLevel, stamp_maxes,
                     ValueToMulti, tomepct, getCropEvoChance, cropDict, landrankDict, maxFarmingValue, infinity_string, getRequiredCropNumber)
 from utils.text_formatting import pl, notateNumber
 
@@ -934,7 +934,7 @@ def getProgressionTiersAdviceGroup(farming, highestFarmingSkillLevel):
 
         #Farming Level
         if highestFarmingSkillLevel < tierRequirements.get('Farming Level', 0):
-            if subgroupName not in farming_AdviceDict['Tiers'] and len(farming_AdviceDict['Tiers']) < maxTiersPerGroup:
+            if subgroupName not in farming_AdviceDict['Tiers'] and len(farming_AdviceDict['Tiers']) < session_data.account.maxSubgroupsPerGroup:
                 farming_AdviceDict['Tiers'][subgroupName] = []
             if subgroupName in farming_AdviceDict['Tiers']:
                 advice_types_added.add('Farming Level')
@@ -947,7 +947,7 @@ def getProgressionTiersAdviceGroup(farming, highestFarmingSkillLevel):
 
         # Unlock Crops
         if farming['CropsUnlocked'] < tierRequirements.get('Crops Unlocked', 0):
-            if subgroupName not in farming_AdviceDict['Tiers'] and len(farming_AdviceDict['Tiers']) < maxTiersPerGroup:
+            if subgroupName not in farming_AdviceDict['Tiers'] and len(farming_AdviceDict['Tiers']) < session_data.account.maxSubgroupsPerGroup:
                 farming_AdviceDict['Tiers'][subgroupName] = []
             if subgroupName in farming_AdviceDict['Tiers']:
                 advice_types_added.add('Crops Unlocked')
@@ -964,7 +964,7 @@ def getProgressionTiersAdviceGroup(farming, highestFarmingSkillLevel):
             requiredStats = tierRequirements['Stats']
             if 'Value' in requiredStats:
                 if farming['Value']['FinalMin'] < requiredStats['Value']:
-                    if subgroupName not in farming_AdviceDict['Tiers'] and len(farming_AdviceDict['Tiers']) < maxTiersPerGroup:
+                    if subgroupName not in farming_AdviceDict['Tiers'] and len(farming_AdviceDict['Tiers']) < session_data.account.maxSubgroupsPerGroup:
                         farming_AdviceDict['Tiers'][subgroupName] = []
                     if subgroupName in farming_AdviceDict['Tiers']:
                         advice_types_added.add('Value Stat')
@@ -978,7 +978,7 @@ def getProgressionTiersAdviceGroup(farming, highestFarmingSkillLevel):
         #Day Market
         for rName, rLevel in tierRequirements.get('Day Market', {}).items():
             if farming['MarketUpgrades'][rName]['Level'] < rLevel:
-                if subgroupName not in farming_AdviceDict['Tiers'] and len(farming_AdviceDict['Tiers']) < maxTiersPerGroup:
+                if subgroupName not in farming_AdviceDict['Tiers'] and len(farming_AdviceDict['Tiers']) < session_data.account.maxSubgroupsPerGroup:
                     farming_AdviceDict['Tiers'][subgroupName] = []
                 if subgroupName in farming_AdviceDict['Tiers']:
                     advice_types_added.add('Day Market')
@@ -999,7 +999,7 @@ def getProgressionTiersAdviceGroup(farming, highestFarmingSkillLevel):
         for setNumber, setRequirements in tierRequirements.get('Land Ranks', {}).items():
             for rName, rLevel in setRequirements.items():
                 if farming['LandRankDatabase'][rName]['Level'] < rLevel and rName not in lr_exclusions:
-                    if subgroupName not in farming_AdviceDict['Tiers'] and len(farming_AdviceDict['Tiers']) < maxTiersPerGroup:
+                    if subgroupName not in farming_AdviceDict['Tiers'] and len(farming_AdviceDict['Tiers']) < session_data.account.maxSubgroupsPerGroup:
                         farming_AdviceDict['Tiers'][subgroupName] = []
                     if subgroupName in farming_AdviceDict['Tiers']:
                         if rName in one_point_landranks:
@@ -1102,7 +1102,7 @@ def getProgressionTiersAdviceGroup(farming, highestFarmingSkillLevel):
         total_nm_entries = 0
         for rName, rLevel in tierRequirements.get('Night Market', {}).items():
             if farming['MarketUpgrades'][rName]['Level'] < rLevel:
-                if subgroupName not in farming_AdviceDict['Tiers'] and len(farming_AdviceDict['Tiers']) < maxTiersPerGroup:
+                if subgroupName not in farming_AdviceDict['Tiers'] and len(farming_AdviceDict['Tiers']) < session_data.account.maxSubgroupsPerGroup:
                     farming_AdviceDict['Tiers'][subgroupName] = []
                 if subgroupName in farming_AdviceDict['Tiers']:
                     if rName in multis:
@@ -1139,7 +1139,7 @@ def getProgressionTiersAdviceGroup(farming, highestFarmingSkillLevel):
             requiredBubbles = tierRequirements['Alchemy Bubbles']
             for rName, rLevel in requiredBubbles.items():
                 if rLevel > session_data.account.alchemy_bubbles[rName]['Level']:
-                    if subgroupName not in farming_AdviceDict['Tiers'] and len(farming_AdviceDict['Tiers']) < maxTiersPerGroup:
+                    if subgroupName not in farming_AdviceDict['Tiers'] and len(farming_AdviceDict['Tiers']) < session_data.account.maxSubgroupsPerGroup:
                         farming_AdviceDict['Tiers'][subgroupName] = []
                     if subgroupName in farming_AdviceDict['Tiers']:
                         advice_types_added.add('Alchemy Bubbles')

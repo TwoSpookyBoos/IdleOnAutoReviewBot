@@ -1,5 +1,5 @@
 from models.models import Advice, AdviceGroup, AdviceSection
-from consts import owl_progressionTiers, maxTiersPerGroup, break_you_best
+from consts import owl_progressionTiers, break_you_best
 from utils.logging import get_logger
 from flask import g as session_data
 
@@ -43,7 +43,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
                 for mf, resets in featherResetsDict.items():
                     if lastMFShown < mf <= tierRequirementsDict['MegaFeathersOwned']:
                         if session_data.account.owl['MegaFeathersOwned'] <= mf:
-                            if subgroupName not in owl_AdviceDict['MegaFeathers'] and len(owl_AdviceDict['MegaFeathers']) < maxTiersPerGroup:
+                            if subgroupName not in owl_AdviceDict['MegaFeathers'] and len(owl_AdviceDict['MegaFeathers']) < session_data.account.maxSubgroupsPerGroup:
                                 owl_AdviceDict['MegaFeathers'][subgroupName] = []
                             if subgroupName in owl_AdviceDict['MegaFeathers']:
                                 lastMFShown = mf
@@ -55,7 +55,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
                                 ))
         if 'BonusesOfOrion' in tierRequirementsDict:
             if session_data.account.owl['BonusesOfOrion'] < tierRequirementsDict['BonusesOfOrion']:
-                if subgroupName not in owl_AdviceDict['MegaFeathers'] and len(owl_AdviceDict['MegaFeathers']) < maxTiersPerGroup:
+                if subgroupName not in owl_AdviceDict['MegaFeathers'] and len(owl_AdviceDict['MegaFeathers']) < session_data.account.maxSubgroupsPerGroup:
                     owl_AdviceDict['MegaFeathers'][subgroupName] = []
                 if subgroupName in owl_AdviceDict['MegaFeathers']:
                     orion_advice = Advice(

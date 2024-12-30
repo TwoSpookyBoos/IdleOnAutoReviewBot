@@ -5,8 +5,10 @@ from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import (maxTiersPerGroup, divinity_progressionTiers, divinity_offeringsDict, divinity_stylesDict,
-                    getOfferingNameFromIndex, getStyleNameFromIndex, getDivinityNameFromIndex, divLevelReasonsDict, divinity_arctisBreakpoints, break_you_best)
+from consts import (
+    divinity_progressionTiers, divinity_offeringsDict, divinity_stylesDict, getOfferingNameFromIndex, getStyleNameFromIndex, getDivinityNameFromIndex,
+    divLevelReasonsDict, divinity_arctisBreakpoints, break_you_best
+)
 
 logger = get_logger(__name__)
 
@@ -276,7 +278,7 @@ def getDivinityProgressionTierAdviceGroups(lowestDivinitySkillLevel, highestDivi
         subgroupName = f"To reach Tier {tierLevel}"
         if session_data.account.divinity['GodsUnlocked'] < tierRequirements.get('GodsUnlocked', 0):
             anyRequirementFailed = True
-            if subgroupName not in divinity_AdviceDict['TieredProgress'] and len(divinity_AdviceDict['TieredProgress']) < maxTiersPerGroup:
+            if subgroupName not in divinity_AdviceDict['TieredProgress'] and len(divinity_AdviceDict['TieredProgress']) < session_data.account.maxSubgroupsPerGroup:
                 divinity_AdviceDict['TieredProgress'][subgroupName] = []
             if subgroupName in divinity_AdviceDict['TieredProgress']:
                 divinity_AdviceDict['TieredProgress'][subgroupName].append(Advice(
@@ -287,7 +289,7 @@ def getDivinityProgressionTierAdviceGroups(lowestDivinitySkillLevel, highestDivi
                 ))
         if highestDivinitySkillLevel < tierRequirements.get('MaxDivLevel', 0):
             anyRequirementFailed = True
-            if subgroupName not in divinity_AdviceDict['TieredProgress'] and len(divinity_AdviceDict['TieredProgress']) < maxTiersPerGroup:
+            if subgroupName not in divinity_AdviceDict['TieredProgress'] and len(divinity_AdviceDict['TieredProgress']) < session_data.account.maxSubgroupsPerGroup:
                 divinity_AdviceDict['TieredProgress'][subgroupName] = []
             if subgroupName in divinity_AdviceDict['TieredProgress']:
                 divinity_AdviceDict['TieredProgress'][subgroupName].append(Advice(
@@ -297,7 +299,7 @@ def getDivinityProgressionTierAdviceGroups(lowestDivinitySkillLevel, highestDivi
                 ))
         if lowestDivinitySkillLevel < tierRequirements.get('MinDivLevel', 0):
             anyRequirementFailed = True
-            if subgroupName not in divinity_AdviceDict['TieredProgress'] and len(divinity_AdviceDict['TieredProgress']) < maxTiersPerGroup:
+            if subgroupName not in divinity_AdviceDict['TieredProgress'] and len(divinity_AdviceDict['TieredProgress']) < session_data.account.maxSubgroupsPerGroup:
                 divinity_AdviceDict['TieredProgress'][subgroupName] = []
             if subgroupName in divinity_AdviceDict['TieredProgress']:
                 for character in session_data.account.safe_characters:

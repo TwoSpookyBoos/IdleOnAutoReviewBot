@@ -2,7 +2,7 @@ from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import sailing_progressionTiers, maxTiersPerGroup, numberOfArtifactTiers, numberOfArtifacts, nblbMaxBubbleCount, break_you_best
+from consts import sailing_progressionTiers, numberOfArtifactTiers, numberOfArtifacts, nblbMaxBubbleCount, break_you_best
 
 logger = get_logger(__name__)
 
@@ -43,7 +43,7 @@ def getSailingProgressionTierAdviceGroups():
         if 'IslandsDiscovered' in tierRequirementsDict:
             if session_data.account.sailing['IslandsDiscovered'] < tierRequirementsDict['IslandsDiscovered']:
                 shortBy = tierRequirementsDict['IslandsDiscovered'] - session_data.account.sailing['IslandsDiscovered']
-                if subgroupName not in sailing_AdviceDict['IslandsDiscovered'] and len(sailing_AdviceDict['IslandsDiscovered']) < maxTiersPerGroup:
+                if subgroupName not in sailing_AdviceDict['IslandsDiscovered'] and len(sailing_AdviceDict['IslandsDiscovered']) < session_data.account.maxSubgroupsPerGroup:
                     sailing_AdviceDict['IslandsDiscovered'][subgroupName] = []
                 if subgroupName in sailing_AdviceDict['IslandsDiscovered']:
                     sailing_AdviceDict['IslandsDiscovered'][subgroupName].append(Advice(
@@ -59,7 +59,7 @@ def getSailingProgressionTierAdviceGroups():
         if 'CaptainsAndBoats' in tierRequirementsDict:
             if session_data.account.sailing['CaptainsOwned'] < tierRequirementsDict['CaptainsAndBoats']:
                 shortBy = tierRequirementsDict['CaptainsAndBoats'] - session_data.account.sailing['CaptainsOwned']
-                if subgroupName not in sailing_AdviceDict['CaptainsAndBoats'] and len(sailing_AdviceDict['CaptainsAndBoats']) < maxTiersPerGroup - 1:
+                if subgroupName not in sailing_AdviceDict['CaptainsAndBoats'] and len(sailing_AdviceDict['CaptainsAndBoats']) < session_data.account.maxSubgroupsPerGroup - 1:
                     sailing_AdviceDict['CaptainsAndBoats'][subgroupName] = []
                 if subgroupName in sailing_AdviceDict['CaptainsAndBoats']:
                     sailing_AdviceDict['CaptainsAndBoats'][subgroupName].append(Advice(
@@ -70,7 +70,7 @@ def getSailingProgressionTierAdviceGroups():
                     ))
             if session_data.account.sailing['BoatsOwned'] < tierRequirementsDict['CaptainsAndBoats']:
                 shortBy = tierRequirementsDict['CaptainsAndBoats'] - session_data.account.sailing['BoatsOwned']
-                if subgroupName not in sailing_AdviceDict['CaptainsAndBoats'] and len(sailing_AdviceDict['CaptainsAndBoats']) < maxTiersPerGroup - 1:
+                if subgroupName not in sailing_AdviceDict['CaptainsAndBoats'] and len(sailing_AdviceDict['CaptainsAndBoats']) < session_data.account.maxSubgroupsPerGroup - 1:
                     sailing_AdviceDict['CaptainsAndBoats'][subgroupName] = []
                 if subgroupName in sailing_AdviceDict['CaptainsAndBoats']:
                     sailing_AdviceDict['CaptainsAndBoats'][subgroupName].append(Advice(
@@ -86,7 +86,7 @@ def getSailingProgressionTierAdviceGroups():
         if session_data.account.sum_artifact_tiers < total_artifacts:
             if 'Eldritch' in tierRequirementsDict:
                 if not session_data.account.rift['EldritchArtifacts']:
-                    if subgroupName not in sailing_AdviceDict['Artifacts'] and len(sailing_AdviceDict['Artifacts']) < maxTiersPerGroup:
+                    if subgroupName not in sailing_AdviceDict['Artifacts'] and len(sailing_AdviceDict['Artifacts']) < session_data.account.maxSubgroupsPerGroup:
                         sailing_AdviceDict['Artifacts'][subgroupName] = []
                     if subgroupName in sailing_AdviceDict['Artifacts']:
                         sailing_AdviceDict['Artifacts'][subgroupName].append(Advice(
@@ -95,7 +95,7 @@ def getSailingProgressionTierAdviceGroups():
                         ))
             if 'Sovereign' in tierRequirementsDict:
                 if not session_data.account.sneaking['JadeEmporium']["Sovereign Artifacts"]['Obtained']:
-                    if subgroupName not in sailing_AdviceDict['Artifacts'] and len(sailing_AdviceDict['Artifacts']) < maxTiersPerGroup:
+                    if subgroupName not in sailing_AdviceDict['Artifacts'] and len(sailing_AdviceDict['Artifacts']) < session_data.account.maxSubgroupsPerGroup:
                         sailing_AdviceDict['Artifacts'][subgroupName] = []
                     if subgroupName in sailing_AdviceDict['Artifacts']:
                         sailing_AdviceDict['Artifacts'][subgroupName].append(Advice(
@@ -104,7 +104,7 @@ def getSailingProgressionTierAdviceGroups():
                         ))
             if 'ExtraLanterns' in tierRequirementsDict:
                 if not session_data.account.sneaking['JadeEmporium']['Brighter Lighthouse Bulb']['Obtained']:
-                    if subgroupName not in sailing_AdviceDict['Artifacts'] and len(sailing_AdviceDict['Artifacts']) < maxTiersPerGroup:
+                    if subgroupName not in sailing_AdviceDict['Artifacts'] and len(sailing_AdviceDict['Artifacts']) < session_data.account.maxSubgroupsPerGroup:
                         sailing_AdviceDict['Artifacts'][subgroupName] = []
                     if subgroupName in sailing_AdviceDict['Artifacts']:
                         sailing_AdviceDict['Artifacts'][subgroupName].append(Advice(
@@ -114,7 +114,7 @@ def getSailingProgressionTierAdviceGroups():
             # Golden Hampters
             if 'Beanstacked' in tierRequirementsDict:
                 if not session_data.account.sneaking.get('Beanstalk', {}).get('FoodG10', {}).get('Beanstacked', False):
-                    if subgroupName not in sailing_AdviceDict['Artifacts'] and len(sailing_AdviceDict['Artifacts']) < maxTiersPerGroup:
+                    if subgroupName not in sailing_AdviceDict['Artifacts'] and len(sailing_AdviceDict['Artifacts']) < session_data.account.maxSubgroupsPerGroup:
                         sailing_AdviceDict['Artifacts'][subgroupName] = []
                     if subgroupName in sailing_AdviceDict['Artifacts']:
                         sailing_AdviceDict['Artifacts'][subgroupName].append(Advice(
@@ -123,7 +123,7 @@ def getSailingProgressionTierAdviceGroups():
                         ))
             if 'SuperBeanstacked' in tierRequirementsDict:
                 if not session_data.account.sneaking.get('Beanstalk', {}).get('FoodG10', {}).get('SuperBeanstacked', False):
-                    if subgroupName not in sailing_AdviceDict['Artifacts'] and len(sailing_AdviceDict['Artifacts']) < maxTiersPerGroup:
+                    if subgroupName not in sailing_AdviceDict['Artifacts'] and len(sailing_AdviceDict['Artifacts']) < session_data.account.maxSubgroupsPerGroup:
                         sailing_AdviceDict['Artifacts'][subgroupName] = []
                     if subgroupName in sailing_AdviceDict['Artifacts']:
                         sailing_AdviceDict['Artifacts'][subgroupName].append(Advice(
@@ -135,7 +135,7 @@ def getSailingProgressionTierAdviceGroups():
                 for artifactName, artifactTier in tierRequirementsDict['Artifacts'].items():
                     if session_data.account.sailing['Artifacts'].get(artifactName, {}).get('Level', 0) < artifactTier:
                         if artifactName not in delaysDict.get(tierNumber, []):
-                            if subgroupName not in sailing_AdviceDict['Artifacts'] and len(sailing_AdviceDict['Artifacts']) < maxTiersPerGroup:
+                            if subgroupName not in sailing_AdviceDict['Artifacts'] and len(sailing_AdviceDict['Artifacts']) < session_data.account.maxSubgroupsPerGroup:
                                 sailing_AdviceDict['Artifacts'][subgroupName] = []
                             if subgroupName in sailing_AdviceDict['Artifacts']:
                                 sailing_AdviceDict['Artifacts'][subgroupName].append(Advice(
