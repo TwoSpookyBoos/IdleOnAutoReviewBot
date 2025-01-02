@@ -1250,7 +1250,7 @@ def _parse_w3_shrines(account):
 
 def _parse_w3_atom_collider(account):
     account.atom_collider = {
-        'OnOffStatus': safer_get(account.raw_optlacc_dict, 132, True),
+        'OnOffStatus': safer_get(account.raw_optlacc_dict, 132, False),
     }
     try:
         account.atom_collider['StorageLimit'] = colliderStorageLimitList[safer_get(account.raw_optlacc_dict, 133, -1)]
