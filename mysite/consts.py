@@ -7297,7 +7297,7 @@ cropDict = {
     37: {'Name': 'Coffee Bean', 'Image': 'coffee-bean', 'SeedName': 'Earthy', 'SeedCropIndex': 16},
     38: {'Name': 'Pumpkin', 'Image': 'pumpkin', 'SeedName': 'Earthy', 'SeedCropIndex': 17},
     39: {'Name': 'Sliced Cucumber', 'Image': 'sliced-cucumber', 'SeedName': 'Earthy', 'SeedCropIndex': 18},
-    40: {'Name': 'Eggplant', 'Image': 'eggplant', 'SeedName': 'Earthy', 'SeedCropIndex': 19},
+    40: {'Name': 'Eggplant', 'Image': 'eggplant-crop', 'SeedName': 'Earthy', 'SeedCropIndex': 19},
     41: {'Name': 'Lettuce', 'Image': 'lettuce', 'SeedName': 'Earthy', 'SeedCropIndex': 20},
     42: {'Name': 'Garlic', 'Image': 'garlic', 'SeedName': 'Earthy', 'SeedCropIndex': 21},
     43: {'Name': 'Green Beans', 'Image': 'green-beans', 'SeedName': 'Earthy', 'SeedCropIndex': 22},
