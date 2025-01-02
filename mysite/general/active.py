@@ -1,6 +1,5 @@
 from models.models import Advice, AdviceGroup, AdviceSection, EnemyWorld, EnemyMap
-from consts import maxTiersPerGroup, lavaFunc, stamp_maxes, pearlable_skillsList, max_VialLevel, currentWorld, dnSkullValueList, cookingCloseEnough, \
-    dnBasicMapsCount, arbitrary_shrine_goal, arbitrary_shrine_note
+from consts import lavaFunc, stamp_maxes, pearlable_skillsList, max_VialLevel, currentWorld, dnSkullValueList, cookingCloseEnough, dnBasicMapsCount
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data

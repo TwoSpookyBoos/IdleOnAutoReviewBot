@@ -184,7 +184,7 @@ class Placements(dict):
         STATUES:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      1,  2,  3,      4,  5,  7,      11,   99],
         STAR_SIGNS:    [0,   0, 0, 0,    0,  1,  1,      1,  2,  2,      2,  3,  3,      3,  4,  4,      5,  5,  6,      6,    99],
         OWL:           [0,   0, 0, 0,    1,  1,  1,      1,  2,  2,      2,  2,  2,      2,  2,  2,      2,  2,  2,      3,    99],
-        BUBBLES:       [0,   0, 0, 0,    0,  0,  1,      1,  2,  2,      2,  3,  3,      4,  5,  6,      10, 15, 20,     22,   99],
+        BUBBLES:       [0,   0, 0, 0,    0,  0,  1,      1,  2,  2,      2,  3,  3,      4,  5,  6,      8,  9, 10,      12,   99],
         VIALS:         [0,   0, 0, 0,    1,  1,  2,      2,  3,  4,      5,  6,  7,      8,  9,  10,     12, 20, 25,     26,   99],
         P2W:           [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  1,      1,  1,  1,      1,  1,  1,      1,    99],
         SIGILS:        [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  1,      2,  3,  4,      8,    99],
@@ -391,7 +391,9 @@ def generate_advice_groups(sectionsByThreshold: dict):
             advices=advices
         )
 
-        advice_groups.append(advice_group)
+        if not session_data.overwhelmed or (session_data.overwhelmed and len(advice_groups) < session_data.account.maxSubgroupsPerGroup):
+            advice_groups.append(advice_group)
+
     return advice_groups
 
 
@@ -462,7 +464,8 @@ def generatePinchyWorld(pinchable_sections: list[AdviceSection], unrated_section
         pinchyExpected = f"Expected Progression, based on highest enemy map: {expectedThreshold}"
 
     advice_groups = generate_advice_groups(sectionPlacements.final)
-    advice_groups.append(getUnratedLinksAdviceGroup(unrated_sections))
+    if not session_data.overwhelmed:
+        advice_groups.append(getUnratedLinksAdviceGroup(unrated_sections))
     advice_groups.insert(0, getAlertsAdviceGroup())
 
     sections_maxed_count = sectionPlacements.maxed_count
@@ -488,6 +491,7 @@ def generatePinchyWorld(pinchable_sections: list[AdviceSection], unrated_section
     pinchy_all = AdviceSection(
         name="Pinchy all",
         tier=sections_maxed,
+        pinchy_rating=sections_maxed_count,
         header=f"Sections maxed: {sections_maxed}"
                f"{'<br>You Bestest ❤️' if sections_maxed_count >= sections_total else ''}",
         picture="Pinchy.gif",

@@ -15,7 +15,7 @@ from consts import (
     nblbMaxBubbleCount, maxMeals, maxMealLevel,  # W5
     numberOfArtifactTiers, divinity_offeringsDict, divinity_DivCostAfter3,
     # W6
-    maxFarmingValue,
+    maxFarmingValue, summoning_rewards_that_dont_multiply_base_value,
     # Caverns
     caverns_conjuror_majiks, schematics_unlocking_buckets, monument_bonuses, getBellImprovementBonus, monument_names, released_monuments,
     infinity_string, schematics_unlocking_harp_strings, schematics_unlocking_harp_chords
@@ -34,6 +34,7 @@ def calculate_account(account):
 
 def _calculate_wave_1(account):
     _calculate_caverns_majiks(account)
+    _calculate_w6_summoning_winner_bonuses(account)
 
 def _calculate_caverns_majiks(account):
     for majik_type, majiks in caverns_conjuror_majiks.items():
@@ -93,6 +94,114 @@ def _calculate_caverns_majiks(account):
                 f"{account.caverns['Majiks'][majik_data['Name']]['Description']}"
             )
             # logger.debug(f"{majik_data['Name']} value set to {account.caverns['Majiks'][majik_data['Name']]['Value']}")
+
+def _calculate_w6_summoning_winner_bonuses(account):
+    mga = 1.3
+    player_mga = 1.3 if account.sneaking['PristineCharms']['Crystal Comb']['Obtained'] else 1
+    account.summoning['WinnerBonusesAdvice'].append(Advice(
+        label=f"{{{{ Pristine Charm|#sneaking }}}}: Crystal Comb: "
+              f"{player_mga}/1.3x",
+        picture_class=account.sneaking['PristineCharms']['Crystal Comb']['Image'],
+        progression=int(account.sneaking['PristineCharms']['Crystal Comb']['Obtained']),
+        goal=1
+    ))
+
+    if not account.sneaking['JadeEmporium']['Brighter Lighthouse Bulb']['Obtained']:
+        winzLanternPostString = ". Unlocked from {{ Jade Emporium|#sneaking }}"
+    else:
+        winzLanternPostString = ""
+
+    mgb_partial = ValueToMulti(
+        (25 * numberOfArtifactTiers)
+        + account.merits[5][4]['MaxLevel']
+        + 1  #int(account.achievements['Spectre Stars'])
+        + 1  #int(account.achievements['Regalis My Beloved'])
+    )
+    mgb_full = ValueToMulti(
+        (25 * numberOfArtifactTiers)
+        + account.merits[5][4]['MaxLevel']
+        + 1  #int(account.achievements['Spectre Stars'])
+        + 1  #int(account.achievements['Regalis My Beloved'])
+        + account.summoning['Endless Bonuses']['x Winner Bonuses']
+    )
+    player_mgb_partial = ValueToMulti(
+        (25 * account.sailing['Artifacts']['The Winz Lantern']['Level'])
+        + account.merits[5][4]['Level']
+        + int(account.achievements['Spectre Stars']['Complete'])
+        + int(account.achievements['Regalis My Beloved']['Complete'])
+    )
+    player_mgb_full = ValueToMulti(
+        (25 * account.sailing['Artifacts']['The Winz Lantern']['Level'])
+        + account.merits[5][4]['Level']
+        + int(account.achievements['Spectre Stars']['Complete'])
+        + int(account.achievements['Regalis My Beloved']['Complete'])
+        + account.summoning['Endless Bonuses']['x Winner Bonuses']
+    )
+
+    account.summoning['WinnerBonusesAdvice'].append(Advice(
+        label=f"{{{{ Artifact|#sailing }}}}: The Winz Lantern: "
+              f"{1 + (.25 * account.sailing['Artifacts']['The Winz Lantern']['Level'])}/2x{winzLanternPostString}",
+        picture_class="the-winz-lantern",
+        progression=account.sailing['Artifacts']['The Winz Lantern']['Level'],
+        goal=4
+    ))
+    account.summoning['WinnerBonusesAdvice'].append(Advice(
+        label=f"W6 Larger Winner bonuses merit: "
+              f"+{account.merits[5][4]['Level']}/{account.merits[5][4]['MaxLevel']}%",
+        picture_class="merit-5-4",
+        progression=account.merits[5][4]["Level"],
+        goal=account.merits[5][4]["MaxLevel"]
+    ))
+    account.summoning['WinnerBonusesAdvice'].append(Advice(
+        label=f"W6 Achievement: Spectre Stars: "
+              f"+{int(account.achievements['Spectre Stars']['Complete'])}/1%",
+        picture_class="spectre-stars",
+        progression=int(account.achievements['Spectre Stars']['Complete']),
+        goal=1
+    ))
+    account.summoning['WinnerBonusesAdvice'].append(Advice(
+        label=f"W6 Achievement: Regalis My Beloved: "
+              f"+{int(account.achievements['Regalis My Beloved']['Complete'])}/1%",
+        picture_class="regalis-my-beloved",
+        progression=account.summoning['SanctuaryTotal'] if not account.achievements['Regalis My Beloved']['Complete'] else 360,
+        goal=360
+    ))
+    account.summoning['WinnerBonusesMultiPartial'] = max(1, player_mga * player_mgb_partial)
+    account.summoning['WinnerBonusesMultiMaxPartial'] = max(1, mga * mgb_partial)
+    account.summoning['WinnerBonusesSummaryPartial'] = Advice(
+        label=f"Winner Bonuses Multi: {account.summoning['WinnerBonusesMultiPartial']:.3f}/{account.summoning['WinnerBonusesMultiMaxPartial']:.3f}x",
+        picture_class="summoning",
+        progression=f"{account.summoning['WinnerBonusesMultiPartial']:.3f}",
+        goal=f"{account.summoning['WinnerBonusesMultiMaxPartial']:.3f}",
+        #unit="x"
+    )
+    account.summoning['WinnerBonusesMultiFull'] = max(1, player_mga * player_mgb_full)
+    account.summoning['WinnerBonusesMultiMaxFull'] = max(1, mga * mgb_full)
+    account.summoning['WinnerBonusesSummaryFull'] = [
+        Advice(
+            label=f"Winner Bonuses multi from Endless Summoning: {account.summoning['Endless Bonuses']['x Winner Bonuses']}/{infinity_string}",
+            picture_class='cyan-upgrade-13',
+            progression=account.summoning['Endless Bonuses']['x Winner Bonuses'],
+            goal=infinity_string
+        ),
+        Advice(
+            label=f"Winner Bonuses Multi: {account.summoning['WinnerBonusesMultiFull']:.3f}/{account.summoning['WinnerBonusesMultiMaxFull']:.3f}x",
+            picture_class="summoning",
+            progression=f"{account.summoning['WinnerBonusesMultiFull']:.3f}",
+            goal=f"{account.summoning['WinnerBonusesMultiMaxFull']:.3f}",
+            # unit="x"
+        )
+    ]
+
+    for bonus_name, bonus_value in account.summoning['Endless Bonuses'].items():
+        if bonus_name not in summoning_rewards_that_dont_multiply_base_value:
+            if bonus_name.startswith('x'):
+                account.summoning['Endless Bonuses'][bonus_name] = ValueToMulti(account.summoning['Endless Bonuses'][bonus_name] * account.summoning['WinnerBonusesMultiFull'])
+            else:
+                account.summoning['Endless Bonuses'][bonus_name] *= account.summoning['WinnerBonusesMultiFull']
+        elif bonus_name in summoning_rewards_that_dont_multiply_base_value and bonus_name.startswith('x'):
+            account.summoning['Endless Bonuses'][bonus_name] = ValueToMulti(account.summoning['Endless Bonuses'][bonus_name])
+    #logger.debug(f"Final Endless Bonuses after {account.summoning['Battles']['Endless']} wins: {account.summoning['Endless Bonuses']}")
 
 def _calculate_wave_2(account):
     _calculate_general(account)
@@ -524,12 +633,13 @@ def _calculate_w4_jewel_multi(account):
         account.labJewels[jewel]["Value"] *= jewelMulti if jewel != 'Pure Opal Navette' else 1
 
 def _calculate_w4_meal_multi(account):
-    mealMulti = 1
-    if account.labJewels["Black Diamond Rhinestone"]["Enabled"]:
-        mealMulti += account.labJewels["Black Diamond Rhinestone"]["Value"]/100
-
-    mealMulti += account.breeding['Total Shiny Levels']['Bonuses from All Meals']/100
-
+    mealMulti = (
+        ValueToMulti(
+            (account.labJewels['Black Diamond Rhinestone']['Value'] * account.labJewels['Black Diamond Rhinestone']['Enabled'])
+            + account.breeding['Total Shiny Levels']['Bonuses from All Meals']
+        )
+        * account.summoning['Endless Bonuses']['x Meal Bonuses']
+    )
     for meal in account.meals:
         account.meals[meal]["Value"] = float(account.meals[meal]["Value"]) * mealMulti
 
@@ -798,106 +908,7 @@ def _calculate_caverns_the_harp(account):
     account.caverns['Caverns'][cavern_name]['Max Chords'] = 2 + len(schematics_unlocking_harp_chords)  #C and D available by default
 
 def _calculate_w6(account):
-    _calculate_w6_summoning_winner_bonuses(account)
     _calculate_w6_farming(account)
-
-def _calculate_w6_summoning_winner_bonuses(account):
-    mga = 1.3
-    player_mga = 1.3 if account.sneaking['PristineCharms']['Crystal Comb']['Obtained'] else 1
-    account.summoning['WinnerBonusesAdvice'].append(Advice(
-        label=f"{{{{ Pristine Charm|#sneaking }}}}: Crystal Comb: "
-              f"{player_mga}/1.3x",
-        picture_class=account.sneaking['PristineCharms']['Crystal Comb']['Image'],
-        progression=int(account.sneaking['PristineCharms']['Crystal Comb']['Obtained']),
-        goal=1
-    ))
-
-    if not account.sneaking['JadeEmporium']['Brighter Lighthouse Bulb']['Obtained']:
-        winzLanternPostString = ". Unlocked from {{ Jade Emporium|#sneaking }}"
-    else:
-        winzLanternPostString = ""
-
-    mgb_partial = ValueToMulti(
-        (25 * numberOfArtifactTiers)
-        + account.merits[5][4]['MaxLevel']
-        + 1  #int(account.achievements['Spectre Stars'])
-        + 1  #int(account.achievements['Regalis My Beloved'])
-    )
-    mgb_full = ValueToMulti(
-        (25 * numberOfArtifactTiers)
-        + account.merits[5][4]['MaxLevel']
-        + 1  #int(account.achievements['Spectre Stars'])
-        + 1  #int(account.achievements['Regalis My Beloved'])
-        + account.summoning['Endless Bonuses']['x Winner Bonuses']
-    )
-    player_mgb_partial = ValueToMulti(
-        (25 * account.sailing['Artifacts']['The Winz Lantern']['Level'])
-        + account.merits[5][4]['Level']
-        + int(account.achievements['Spectre Stars']['Complete'])
-        + int(account.achievements['Regalis My Beloved']['Complete'])
-    )
-    player_mgb_full = ValueToMulti(
-        (25 * account.sailing['Artifacts']['The Winz Lantern']['Level'])
-        + account.merits[5][4]['Level']
-        + int(account.achievements['Spectre Stars']['Complete'])
-        + int(account.achievements['Regalis My Beloved']['Complete'])
-        + account.summoning['Endless Bonuses']['x Winner Bonuses']
-    )
-
-    account.summoning['WinnerBonusesAdvice'].append(Advice(
-        label=f"{{{{ Artifact|#sailing }}}}: The Winz Lantern: "
-              f"{1 + (.25 * account.sailing['Artifacts']['The Winz Lantern']['Level'])}/2x{winzLanternPostString}",
-        picture_class="the-winz-lantern",
-        progression=account.sailing['Artifacts']['The Winz Lantern']['Level'],
-        goal=4
-    ))
-    account.summoning['WinnerBonusesAdvice'].append(Advice(
-        label=f"W6 Larger Winner bonuses merit: "
-              f"+{account.merits[5][4]['Level']}/{account.merits[5][4]['MaxLevel']}%",
-        picture_class="merit-5-4",
-        progression=account.merits[5][4]["Level"],
-        goal=account.merits[5][4]["MaxLevel"]
-    ))
-    account.summoning['WinnerBonusesAdvice'].append(Advice(
-        label=f"W6 Achievement: Spectre Stars: "
-              f"+{int(account.achievements['Spectre Stars']['Complete'])}/1%",
-        picture_class="spectre-stars",
-        progression=int(account.achievements['Spectre Stars']['Complete']),
-        goal=1
-    ))
-    account.summoning['WinnerBonusesAdvice'].append(Advice(
-        label=f"W6 Achievement: Regalis My Beloved: "
-              f"+{int(account.achievements['Regalis My Beloved']['Complete'])}/1%",
-        picture_class="regalis-my-beloved",
-        progression=account.summoning['SanctuaryTotal'] if not account.achievements['Regalis My Beloved']['Complete'] else 360,
-        goal=360
-    ))
-    account.summoning['WinnerBonusesMultiPartial'] = max(1, player_mga * player_mgb_partial)
-    account.summoning['WinnerBonusesMultiMaxPartial'] = max(1, mga * mgb_partial)
-    account.summoning['WinnerBonusesSummaryPartial'] = Advice(
-        label=f"Winner Bonuses Multi: {account.summoning['WinnerBonusesMultiPartial']:.3f}/{account.summoning['WinnerBonusesMultiMaxPartial']:.3f}x",
-        picture_class="summoning",
-        progression=f"{account.summoning['WinnerBonusesMultiPartial']:.3f}",
-        goal=f"{account.summoning['WinnerBonusesMultiMaxPartial']:.3f}",
-        #unit="x"
-    )
-    account.summoning['WinnerBonusesMultiFull'] = max(1, player_mga * player_mgb_full)
-    account.summoning['WinnerBonusesMultiMaxFull'] = max(1, mga * mgb_full)
-    account.summoning['WinnerBonusesSummaryFull'] = [
-        Advice(
-            label=f"Winner Bonuses multi from Endless Summoning: {account.summoning['Endless Bonuses']['x Winner Bonuses']}/{infinity_string}",
-            picture_class='cyan-upgrade-13',
-            progression=account.summoning['Endless Bonuses']['x Winner Bonuses'],
-            goal=infinity_string
-        ),
-        Advice(
-            label=f"Winner Bonuses Multi: {account.summoning['WinnerBonusesMultiFull']:.3f}/{account.summoning['WinnerBonusesMultiMaxFull']:.3f}x",
-            picture_class="summoning",
-            progression=f"{account.summoning['WinnerBonusesMultiFull']:.3f}",
-            goal=f"{account.summoning['WinnerBonusesMultiMaxFull']:.3f}",
-            # unit="x"
-        )
-    ]
 
 def _calculate_w6_farming(account):
     _calculate_w6_farming_crop_depot(account)
@@ -1070,6 +1081,7 @@ def _calculate_w6_farming_crop_evo(account):
             * ValueToMulti(15 * account.farming['Evo']['Skill Mastery Bonus Bool'] * account.rift['SkillMastery'])
             * account.farming['Evo']['Ballot Multi Current']
     )
+    account.farming['Evo']['Wish Multi'] = ValueToMulti(account.caverns['Caverns']['The Lamp']['WishTypes'][8]['BonusList'][0])
     # subtotal doesn't include Crop Chapter
     account.farming['Evo']['Subtotal Multi'] = (
         account.farming['Evo']['Alch Multi']
@@ -1080,6 +1092,7 @@ def _calculate_w6_farming_crop_evo(account):
         * account.farming['Evo']['Summon Multi']
         * account.farming['Evo']['SS Multi']
         * account.farming['Evo']['Misc Multi']
+        * account.farming['Evo']['Wish Multi']
     )
 
 def _calculate_w6_farming_crop_speed(account):

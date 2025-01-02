@@ -4,7 +4,7 @@ from math import floor
 from flask import g
 from consts import (
     # General
-    lavaFunc, ValueToMulti, items_codes_and_names, currentWorld,
+    lavaFunc, ValueToMulti, items_codes_and_names,
     maxCharacters,
     gfood_codes,
     card_data,
@@ -17,7 +17,7 @@ from consts import (
     forgeUpgradesDict,
     statuesDict, statueTypeList, statueCount,
     # W2
-    bubblesDict,
+    bubblesDict, max_IndexOfImplementedBubbles,
     vialsDict, max_IndexOfVials, getReadableVialNames, max_VialLevel,
     sigilsDict,
     arcadeBonuses, arcade_max_level,
@@ -47,7 +47,7 @@ from consts import (
     caverns_villagers, caverns_conjuror_majiks, caverns_engineer_schematics, caverns_engineer_schematics_unlock_order, caverns_cavern_names,
     caverns_measurer_measurements, getCavernResourceImage, max_buckets, max_sediments, sediment_bars, getVillagerEXPRequired,
     monument_bonuses, bell_clean_improvements, bell_ring_bonuses, getBellExpRequired, getGrottoKills, lamp_wishes, key_cards, getWishCost,
-    schematics_unlocking_harp_chords, harp_chord_effects, max_harp_notes
+    schematics_unlocking_harp_chords, harp_chord_effects, max_harp_notes, lamp_world_wish_values
 )
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
 from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert
@@ -112,6 +112,7 @@ def _parse_wave_1(account, run_type):
     _parse_w6(account)
 
 def _parse_switches(account):
+
     # AutoLoot
     if g.autoloot:
         account.autoloot = True
@@ -121,7 +122,7 @@ def _parse_switches(account):
     else:
         account.autoloot = False
 
-    # consts.maxTiersPerGroup = 1 if g.one_tier else consts.maxTiersPerGroup
+    account.maxSubgroupsPerGroup = 1 if g.overwhelmed else 3
 
     # Companions
     account.sheepie_owned = g.sheepie
@@ -172,7 +173,7 @@ def _parse_characters(account, run_type):
     account.classes = set()
     for char in account.all_characters:
         for className in char.all_classes:
-            if className is not 'None':
+            if className != 'None':
                 account.classes.add(className)
     account.safe_characters = [char for char in account.all_characters if char]  # Use this if touching raw_data instead of all_characters
     account.safe_character_indexes = [char.character_index for char in account.all_characters if char]
@@ -352,8 +353,8 @@ def _parse_general_achievements(account):
             raw_reg_achieves.append(0)
 
     for achieveIndex, achieveData in enumerate(achievementsList):
+        ach_name = achieveData[0].replace('_', ' ')
         try:
-            ach_name = achieveData[0].replace('_', ' ')
             if ach_name != "FILLERZZZ ACH":
                 account.achievements[ach_name] = {
                     'Complete': raw_reg_achieves[achieveIndex] == -1,
@@ -764,49 +765,55 @@ def _parse_w2_cauldrons(account):
 def _parse_w2_bubbles(account):
     account.alchemy_bubbles = {}
 
-    # Set defaults to 0
-    for cauldronIndex in bubblesDict:
-        for bubbleIndex in bubblesDict[cauldronIndex]:
-            account.alchemy_bubbles[bubblesDict[cauldronIndex][bubbleIndex]['Name']] = {
-                "CauldronIndex": cauldronIndex,
-                "BubbleIndex": bubbleIndex,
-                "Level": 0,
-                "BaseValue": 0,
-                "Material": getItemDisplayName(bubblesDict[cauldronIndex][bubbleIndex]['Material'])
-            }
-
-    # Try to read player levels and calculate base value
     try:
         all_raw_bubbles = [
-            account.raw_data["CauldronInfo"][0], account.raw_data["CauldronInfo"][1],
-            account.raw_data["CauldronInfo"][2], account.raw_data["CauldronInfo"][3]
+            {int(k):safer_convert(v, 0) for k,v in account.raw_data["CauldronInfo"][0].items() if k != 'length'},
+            {int(k):safer_convert(v, 0) for k,v in account.raw_data["CauldronInfo"][1].items() if k != 'length'},
+            {int(k):safer_convert(v, 0) for k,v in account.raw_data["CauldronInfo"][2].items() if k != 'length'},
+            {int(k):safer_convert(v, 0) for k,v in account.raw_data["CauldronInfo"][3].items() if k != 'length'},
         ]
-        for cauldronIndex in bubblesDict:
-            for bubbleIndex in bubblesDict[cauldronIndex]:
-                try:
-                    account.alchemy_bubbles[bubblesDict[cauldronIndex][bubbleIndex]['Name']]['Level'] = safer_convert(all_raw_bubbles[cauldronIndex][str(bubbleIndex)], 0)
-                    account.alchemy_bubbles[bubblesDict[cauldronIndex][bubbleIndex]['Name']]['BaseValue'] = lavaFunc(
-                        bubblesDict[cauldronIndex][bubbleIndex]["funcType"],
-                        int(all_raw_bubbles[cauldronIndex][str(bubbleIndex)]),
-                        bubblesDict[cauldronIndex][bubbleIndex]["x1"],
-                        bubblesDict[cauldronIndex][bubbleIndex]["x2"])
-                    if int(all_raw_bubbles[cauldronIndex][str(bubbleIndex)]) > 0:
-                        account.alchemy_cauldrons['TotalUnlocked'] += 1
-                        # Keep track of cauldron counts
-                        if cauldronIndex == 0:
-                            account.alchemy_cauldrons['OrangeUnlocked'] += 1
-                        elif cauldronIndex == 1:
-                            account.alchemy_cauldrons['GreenUnlocked'] += 1
-                        elif cauldronIndex == 2:
-                            account.alchemy_cauldrons['PurpleUnlocked'] += 1
-                        elif cauldronIndex == 3:
-                            account.alchemy_cauldrons['YellowUnlocked'] += 1
-                except Exception as e:
-                    if bubbleIndex < currentWorld * 5:
-                        logger.warning(f"Alchemy Bubble Parse error at cauldronIndex {cauldronIndex} bubbleIndex {bubbleIndex}: {e}. Defaulting to 0s")
-                    continue  # Level and BaseValue already defaulted to 0 above
     except:
-        pass
+        all_raw_bubbles = [
+            {k:0 for k in range(0, max_IndexOfImplementedBubbles + 1)},  #+1 to compensate for range() stopping before max
+            {k:0 for k in range(0, max_IndexOfImplementedBubbles + 1)},
+            {k:0 for k in range(0, max_IndexOfImplementedBubbles + 1)},
+            {k:0 for k in range(0, max_IndexOfImplementedBubbles + 1)},
+        ]
+
+    account.alchemy_cauldrons['OrangeUnlocked'] = sum([1 for v in all_raw_bubbles[0].values() if v > 0])
+    account.alchemy_cauldrons['GreenUnlocked'] = sum([1 for v in all_raw_bubbles[1].values() if v > 0])
+    account.alchemy_cauldrons['PurpleUnlocked'] = sum([1 for v in all_raw_bubbles[2].values() if v > 0])
+    account.alchemy_cauldrons['YellowUnlocked'] = sum([1 for v in all_raw_bubbles[3].values() if v > 0])
+    account.alchemy_cauldrons['TotalUnlocked'] = (
+        account.alchemy_cauldrons['OrangeUnlocked']
+        + account.alchemy_cauldrons['GreenUnlocked']
+        + account.alchemy_cauldrons['PurpleUnlocked']
+        + account.alchemy_cauldrons['YellowUnlocked']
+    )
+
+    for cauldronIndex in bubblesDict:
+        for bubbleIndex in bubblesDict[cauldronIndex]:
+            if bubbleIndex <= max_IndexOfImplementedBubbles:  #Don't waste time calculating unimplemented bubbles
+                try:
+                    account.alchemy_bubbles[bubblesDict[cauldronIndex][bubbleIndex]['Name']] = {
+                        "CauldronIndex": cauldronIndex,
+                        "BubbleIndex": bubbleIndex,
+                        "Level": all_raw_bubbles[cauldronIndex][bubbleIndex],
+                        "BaseValue": lavaFunc(
+                            bubblesDict[cauldronIndex][bubbleIndex]["funcType"],
+                            all_raw_bubbles[cauldronIndex][bubbleIndex],
+                            bubblesDict[cauldronIndex][bubbleIndex]["x1"],
+                            bubblesDict[cauldronIndex][bubbleIndex]["x2"]),
+                        "Material": getItemDisplayName(bubblesDict[cauldronIndex][bubbleIndex]['Material'])
+                    }
+                except:
+                    account.alchemy_bubbles[bubblesDict[cauldronIndex][bubbleIndex]['Name']] = {
+                        "CauldronIndex": cauldronIndex,
+                        "BubbleIndex": bubbleIndex,
+                        "Level": 0,
+                        "BaseValue": 0.0,
+                        "Material": getItemDisplayName(bubblesDict[cauldronIndex][bubbleIndex]['Material'])
+                    }
 
 def _parse_w2_p2w(account):
     account.alchemy_p2w = {
@@ -859,7 +866,19 @@ def _parse_w2_arcade(account):
                     upgradeDetails.get("x1"),
                     upgradeDetails.get("x2")
                 ),
-                'Royale': raw_arcade_upgrades[upgradeIndex] > arcade_max_level
+                'MaxValue': 2 * lavaFunc(
+                    upgradeDetails.get("funcType"),
+                    arcade_max_level,
+                    upgradeDetails.get("x1"),
+                    upgradeDetails.get("x2")
+                ),
+                'Royale': raw_arcade_upgrades[upgradeIndex] > arcade_max_level,
+                'Material': (
+                    '' if raw_arcade_upgrades[upgradeIndex] == 101
+                    else 'arcade-royale-ball' if raw_arcade_upgrades[upgradeIndex] == 100
+                    else 'arcade-gold-ball'
+                ),
+                'Image': f'arcade-bonus-{upgradeIndex}'
             }
             if account.arcade[upgradeIndex]['Royale']:
                 account.arcade[upgradeIndex]['Value'] *= 2
@@ -876,7 +895,14 @@ def _parse_w2_arcade(account):
                     upgradeDetails.get("x1"),
                     upgradeDetails.get("x2")
                 ),
-                'Royale': False
+                'MaxValue': 2 * lavaFunc(
+                    upgradeDetails.get("funcType"),
+                    arcade_max_level,
+                    upgradeDetails.get("x1"),
+                    upgradeDetails.get("x2")
+                ),
+                'Royale': False,
+                'Image': f'arcade-bonus-{upgradeIndex}'
             }
             account.arcade[upgradeIndex]["Display"] = (
                 f"+{account.arcade[upgradeIndex]['Value']:.2f}{arcadeBonuses[upgradeIndex]['displayType']} {arcadeBonuses[upgradeIndex]['Stat']}"
@@ -1224,7 +1250,7 @@ def _parse_w3_shrines(account):
 
 def _parse_w3_atom_collider(account):
     account.atom_collider = {
-        'OnOffStatus': safer_get(account.raw_optlacc_dict, 132, True),
+        'OnOffStatus': safer_get(account.raw_optlacc_dict, 132, False),
     }
     try:
         account.atom_collider['StorageLimit'] = colliderStorageLimitList[safer_get(account.raw_optlacc_dict, 133, -1)]
@@ -2221,6 +2247,7 @@ def _parse_caverns_the_lamp(account, raw_caverns_list):
             'Idk3': wish_list[3],
             'Description': wish_list[4],
             'Image': f'lamp-wish-{wish_index}',
+            'BonusList': []
         }
         try:
             account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Unlocked'] = (
@@ -2234,6 +2261,23 @@ def _parse_caverns_the_lamp(account, raw_caverns_list):
         account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['NextCost'] = getWishCost(
             wish_index, account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Level']
         )
+
+        #If this is a World X stuff wish, calculate each Value into BonusList then update the Description
+        if wish_list[0].startswith('World '):
+            world_number = safer_convert(wish_list[0].split('World ')[1][0], 0)
+            account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'] = [
+                v * account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Level']
+                for v in lamp_world_wish_values[world_number]
+            ]
+            account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'] = (
+                account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'].replace(
+                    '@', str(account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'][0]), 1))
+            account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'] = (
+                account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'].replace(
+                    '#', str(account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'][1]), 1))
+            account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'] = (
+                account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'].replace(
+                    '$', str(account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'][2]), 1))
 
 def _parse_caverns_the_hive(account, raw_caverns_list):
     cavern_name = 'The Hive'

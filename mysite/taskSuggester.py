@@ -9,7 +9,7 @@ from config import app
 from consts import versions_patches
 from models.custom_exceptions import UsernameBanned
 from models.models import AdviceWorld, WorldName, Account
-from utils.data_formatting import getJSONfromAPI, getJSONfromText, HeaderData
+from utils.data_formatting import getJSONfromAPI, getJSONfromText, HeaderData, safer_convert
 from utils.logging import get_logger
 from utils.text_formatting import is_username
 from general import combatLevels, greenstacks, pinchy, cards, secretPath, consumables, gemShop, active, achievements, eventShop
@@ -158,6 +158,36 @@ def main(inputData, runType="web"):
         section.check_for_completeness()
         section.check_for_informationalness()
         #logger.debug(f"{section}: Unreached={section.unreached}, Completed={section.completed}, Info={section.informational}, Unrated={section.unrated}")
+
+    #Remove the later-rated sections if Overwhelmed mode is on
+    if session_data.overwhelmed:
+        sections_to_keep = []
+        for section in sections_pinchy:
+            if section.name == 'Pinchy all':
+                for group in section.groups:
+                    # Skip the Alerts group, if it exists
+                    if group.pre_string == 'Alerts':
+                        continue
+                    for advice in group.advices['default']:
+                        sections_to_keep.append(advice.label)
+                    break
+
+        #Remove all the later-rated Sections
+        sections_general = [section for section in sections_general if section.name in sections_to_keep]
+        sections_1 = [section for section in sections_1 if section.name in sections_to_keep]
+        sections_2 = [section for section in sections_2 if section.name in sections_to_keep]
+        sections_3 = [section for section in sections_3 if section.name in sections_to_keep]
+        sections_4 = [section for section in sections_4 if section.name in sections_to_keep]
+        sections_5 = [section for section in sections_5 if section.name in sections_to_keep]
+        sections_caverns = [section for section in sections_caverns if section.name in sections_to_keep]
+        sections_6 = [section for section in sections_6 if section.name in sections_to_keep]
+
+        #Remove later-rated Groups within the remaining Sections
+        for section_list in [sections_general, sections_1, sections_2, sections_3, sections_4, sections_5, sections_caverns, sections_6]:
+            for s in section_list:
+                #logger.debug(f"{s.name} started with {len(s.groups)}")
+                s.groups = [group for group in s.groups if safer_convert(group.tier, 0) <= s.pinchy_rating and not group.informational]
+                #logger.debug(f"{s.name} ended with {len(s.groups)}")
 
     #Build Worlds
     reviews = [

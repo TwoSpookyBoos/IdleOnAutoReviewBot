@@ -3,7 +3,7 @@ from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl, getItemDisplayName
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import maxTiersPerGroup, bubbles_progressionTiers, vials_progressionTiers, max_IndexOfVials, maxFarmingCrops, atrisk_basicBubbles, \
+from consts import bubbles_progressionTiers, vials_progressionTiers, max_IndexOfVials, maxFarmingCrops, atrisk_basicBubbles, \
     atrisk_lithiumBubbles, cookingCloseEnough, break_you_best, sigils_progressionTiers, max_IndexOfSigils, max_VialLevel, numberOfArtifactTiers, stamp_maxes, \
     lavaFunc, vial_costs, min_NBLB, max_NBLB, nblb_skippable, nblb_max_index, ValueToMulti, atrisk_advancedBubbles, atrisk_lithiumAdvancedBubbles
 
@@ -130,7 +130,7 @@ def getVialsProgressionTiersAdviceGroup():
         advices=vial_AdviceDict["MaxVials"],
         informational=tier_TotalVialsMaxed >= max_tier
     )
-    overall_SectionTier = min(tier_TotalVialsUnlocked + info_tiers, tier_TotalVialsMaxed)
+    overall_SectionTier = min(max_tier + info_tiers, tier_TotalVialsUnlocked, tier_TotalVialsMaxed)
     return vial_AdviceGroupDict, overall_SectionTier, max_tier
 
 def getAlchemyVialsAdviceSection() -> AdviceSection:
@@ -388,7 +388,7 @@ def getBubblesProgressionTiersAdviceGroup():
                                         f"{' (' if bubbleType != 'UtilityBubbles' else ''}"
                                         f"{tier[6] if bubbleType != 'UtilityBubbles' else ''}"
                                         f"{')' if bubbleType != 'UtilityBubbles' else ''}")
-                        if subgroupName not in bubbles_AdviceDict[bubbleType] and len(bubbles_AdviceDict[bubbleType]) < maxTiersPerGroup:
+                        if subgroupName not in bubbles_AdviceDict[bubbleType] and len(bubbles_AdviceDict[bubbleType]) < session_data.account.maxSubgroupsPerGroup:
                             bubbles_AdviceDict[bubbleType][subgroupName] = []
                         if subgroupName in bubbles_AdviceDict[bubbleType]:
                             adviceCountsDict[bubbleType] += 1
@@ -805,7 +805,7 @@ def getSigilsProgressionTiersAdviceGroup():
     for tierNumber, tierContents in sigils_progressionTiers.items():
         subgroupName = f"To reach {'Informational ' if tierNumber > max_tier else ''}Tier {tierNumber}"
         if 'Ionized Sigils' in tierContents.get('Other', {}) and not session_data.account.sneaking['JadeEmporium']['Ionized Sigils']['Obtained']:
-            if subgroupName not in sigils_AdviceDict['Sigils'] and len(sigils_AdviceDict['Sigils']) < maxTiersPerGroup:
+            if subgroupName not in sigils_AdviceDict['Sigils'] and len(sigils_AdviceDict['Sigils']) < session_data.account.maxSubgroupsPerGroup:
                 sigils_AdviceDict['Sigils'][subgroupName] = []
             if subgroupName in sigils_AdviceDict['Sigils']:
                 sigils_AdviceDict['Sigils'][subgroupName].append(Advice(
@@ -817,7 +817,7 @@ def getSigilsProgressionTiersAdviceGroup():
         # Unlock new Sigils
         for requiredSigil, requiredLevel in tierContents.get('Unlock', {}).items():
             if account_sigils[requiredSigil]['PrechargeLevel'] < requiredLevel:
-                if subgroupName not in sigils_AdviceDict['Sigils'] and len(sigils_AdviceDict['Sigils']) < maxTiersPerGroup:
+                if subgroupName not in sigils_AdviceDict['Sigils'] and len(sigils_AdviceDict['Sigils']) < session_data.account.maxSubgroupsPerGroup:
                     sigils_AdviceDict['Sigils'][subgroupName] = []
                 if subgroupName in sigils_AdviceDict['Sigils']:
                     sigils_AdviceDict['Sigils'][subgroupName].append(Advice(
@@ -829,7 +829,7 @@ def getSigilsProgressionTiersAdviceGroup():
         # Level Up unlocked Sigils
         for requiredSigil, requiredLevel in tierContents.get('LevelUp', {}).items():
             if account_sigils[requiredSigil]['PrechargeLevel'] < requiredLevel:
-                if subgroupName not in sigils_AdviceDict['Sigils'] and len(sigils_AdviceDict['Sigils']) < maxTiersPerGroup:
+                if subgroupName not in sigils_AdviceDict['Sigils'] and len(sigils_AdviceDict['Sigils']) < session_data.account.maxSubgroupsPerGroup:
                     sigils_AdviceDict['Sigils'][subgroupName] = []
                 if subgroupName in sigils_AdviceDict['Sigils']:
                     if account_sigils[requiredSigil]['PlayerHours'] < 100:

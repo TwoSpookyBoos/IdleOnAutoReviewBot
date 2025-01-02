@@ -1,5 +1,5 @@
 from models.models import Advice, AdviceGroup, AdviceSection
-from consts import starsigns_progressionTiers, maxTiersPerGroup, break_you_best
+from consts import starsigns_progressionTiers, break_you_best
 from utils.logging import get_logger
 from flask import g as session_data
 
@@ -21,7 +21,7 @@ def getProgressionTiersAdviceGroup():
         # Total Unlocked Starsigns
         if sse.get('UnlockedSigns', 0) < tierRequirements['UnlockedSigns']:
             # logger.debug(f"Requirement failure at Tier {tierNumber} - Unlocked Signs: {sse['UnlockedSigns']} < {tierRequirements['UnlockedSigns']}")
-            if subgroupName not in starsigns_AdviceDict['Signs'] and len(starsigns_AdviceDict['Signs']) < maxTiersPerGroup:
+            if subgroupName not in starsigns_AdviceDict['Signs'] and len(starsigns_AdviceDict['Signs']) < session_data.account.maxSubgroupsPerGroup:
                 starsigns_AdviceDict['Signs'][subgroupName] = []
             if subgroupName in starsigns_AdviceDict['Signs']:
                 starsigns_AdviceDict['Signs'][subgroupName].append(Advice(
@@ -36,7 +36,7 @@ def getProgressionTiersAdviceGroup():
             for ssName in tierRequirements['SpecificSigns']:
                 if not ss.get(ssName, {}).get('Unlocked', False):
                     # logger.debug(f"Requirement failure at Tier {tierNumber} - Specific Sign: {ssName}")
-                    if subgroupName not in starsigns_AdviceDict['Signs'] and len(starsigns_AdviceDict['Signs']) < maxTiersPerGroup:
+                    if subgroupName not in starsigns_AdviceDict['Signs'] and len(starsigns_AdviceDict['Signs']) < session_data.account.maxSubgroupsPerGroup:
                         starsigns_AdviceDict['Signs'][subgroupName] = []
                     if subgroupName in starsigns_AdviceDict['Signs']:
                         starsigns_AdviceDict['Signs'][subgroupName].append(Advice(

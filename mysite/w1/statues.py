@@ -1,5 +1,5 @@
 from models.models import Advice, AdviceGroup, AdviceSection
-from consts import maxTiersPerGroup, statueTypeList, statues_progressionTiers, statueCount, max_VialLevel, break_you_best
+from consts import statueTypeList, statues_progressionTiers, statueCount, max_VialLevel, break_you_best
 from utils.data_formatting import mark_advice_completed, safer_get
 from utils.logging import get_logger
 from flask import g as session_data
@@ -145,7 +145,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
             if 'SpecificLevels' in tierRequirements:
                 if statueName in tierRequirements['SpecificLevels']:
                     if statueDetails['Level'] < tierRequirements['SpecificLevels'][statueName]:
-                        if subgroupName not in statues_AdviceDict["Tiers"] and len(statues_AdviceDict["Tiers"]) < maxTiersPerGroup:
+                        if subgroupName not in statues_AdviceDict["Tiers"] and len(statues_AdviceDict["Tiers"]) < session_data.account.maxSubgroupsPerGroup:
                             statues_AdviceDict["Tiers"][subgroupName] = []
                         if subgroupName in statues_AdviceDict["Tiers"]:
                             statues_AdviceDict['Tiers'][subgroupName].append(Advice(
@@ -158,7 +158,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
             if 'SpecificTypes' in tierRequirements:
                 if statueName in tierRequirements['SpecificTypes']:
                     if statueDetails['TypeNumber'] < tierRequirements.get('MinStatueTypeNumber', 0):
-                        if subgroupName not in statues_AdviceDict["Tiers"] and len(statues_AdviceDict["Tiers"]) < maxTiersPerGroup:
+                        if subgroupName not in statues_AdviceDict["Tiers"] and len(statues_AdviceDict["Tiers"]) < session_data.account.maxSubgroupsPerGroup:
                             statues_AdviceDict["Tiers"][subgroupName] = []
                         if subgroupName in statues_AdviceDict["Tiers"]:
                             statues_AdviceDict['Tiers'][subgroupName].append(Advice(

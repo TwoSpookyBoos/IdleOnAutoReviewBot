@@ -2,7 +2,7 @@ from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
 from utils.data_formatting import mark_advice_completed
 from flask import g as session_data
-from consts import islands_progressionTiers, break_you_best, maxTiersPerGroup, islands_fractal_rewards_dict
+from consts import islands_progressionTiers, break_you_best, islands_fractal_rewards_dict
 
 logger = get_logger(__name__)
 
@@ -80,7 +80,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
         subgroupName = f"To reach Tier {tierNumber}"
         for islandName in tierRequirements.get('Islands', []):
             if not session_data.account.islands[islandName]['Unlocked']:
-                if subgroupName not in islands_AdviceDict and len(islands_AdviceDict) < maxTiersPerGroup:
+                if subgroupName not in islands_AdviceDict and len(islands_AdviceDict) < session_data.account.maxSubgroupsPerGroup:
                     islands_AdviceDict[subgroupName] = []
                 if subgroupName in islands_AdviceDict:
                     islands_AdviceDict[subgroupName].append(Advice(

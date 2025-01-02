@@ -1,6 +1,6 @@
 import math
 from models.models import Advice, AdviceGroup, AdviceSection
-from consts import smithing_progressionTiers, break_you_best, ValueToMulti
+from consts import smithing_progressionTiers, break_you_best, ValueToMulti, arcade_max_level
 from flask import g as session_data
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl
@@ -101,10 +101,13 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
 
     #Arcade Bonus 26 gives Forge Ore Capacity
     cap_Advices["Scaling Sources"].append(Advice(
-        label=f"Arcade Bonus: {session_data.account.arcade[26]['Value']:.2f}/50%",
-        picture_class="arcade-bonus-26",
+        label=f"{{{{Arcade|#arcade}}}} Bonus: "
+              f"{session_data.account.arcade[26]['Value']:.2f}/"
+              f"{session_data.account.arcade[26]['MaxValue']:.0f}%",
+        picture_class=session_data.account.arcade[26]['Image'],
         progression=session_data.account.arcade[26]['Level'],
-        goal=100
+        goal=arcade_max_level+1,
+        resource=session_data.account.arcade[26]['Material']
     ))
 
     #Cosmos > IdleOn Majik #2 Beeg Beeg Forge

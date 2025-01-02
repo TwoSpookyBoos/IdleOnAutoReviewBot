@@ -1,5 +1,5 @@
 from models.models import AdviceSection, AdviceGroup, Advice
-from consts import maxTiersPerGroup, prayers_progressionTiers, break_you_best
+from consts import prayers_progressionTiers, break_you_best
 from flask import g as session_data
 from utils.text_formatting import pl
 from utils.logging import get_logger
@@ -30,7 +30,7 @@ def setPrayersProgressionTierAdviceGroup():
             if worshipPrayersDict[requiredPrayer]['Level'] < tier[1][requiredPrayer]:
                 allPrayersLeveled = False
                 subgroupName = f"To reach Tier {tier[0]}"
-                if subgroupName not in prayers_AdviceDict["Recommended"] and len(prayers_AdviceDict["Recommended"]) < maxTiersPerGroup:
+                if subgroupName not in prayers_AdviceDict["Recommended"] and len(prayers_AdviceDict["Recommended"]) < session_data.account.maxSubgroupsPerGroup:
                     prayers_AdviceDict["Recommended"][subgroupName] = []
                 if subgroupName in prayers_AdviceDict["Recommended"]:
                     adviceCountsDict["Recommended"] += 1
