@@ -976,6 +976,7 @@ bubbles_progressionTiers = [
      {'Cookin Roadkill': 6930, 'Call Me Bob': 10000, 'Carpenter': 4950, 'Nickel Of Wisdom': 2970, "Penny Of Strength": 2970, "Dollar Of Agility": 2970,
       'Droppin Loads': 6930, 'Startue Exp': 5940, 'Laaarrrryyyy': 9900, 'Big Game Hunter': 2970, 'Mr Massacre': 4950, 'Shimmeron': 3960, 'Lo Cost Mo Jade': 3960,
       'Hammer Hammer': 10000, "Grind Time": 10000, 'Buff Boi Talent': 1000, 'Fast Boi Talent': 1000, 'Smart Boi Talent': 1000,
+      'Card Champ': 3960, 'Egg Ink': 3960,
       'Essence Chapter': 4950, 'Quickdraw Quiver': 5940, 'Smarter Spells': 5940, 'Ninja Looter': 5940, 'Crop Chapter': 4950
       },
      "99% catchup",
