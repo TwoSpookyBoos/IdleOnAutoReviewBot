@@ -40,8 +40,8 @@ def getRiftProgressionTiersAdviceGroup():
     # Generate AdviceGroups
     rift_AdviceGroupDict = {}
     meowTheRiftAdvice = ""
-    if session_data.account.rift_meowed == False and session_data.account.meowBBIndex is not None:
-        meowTheRiftAdvice = f"{session_data.account.all_characters[session_data.account.meowBBIndex].character_name} has not completed a Super CHOW on the Rift yet!"
+    if session_data.account.rift_meowed == False and session_data.account.apocalypse_character_Index is not None:
+        meowTheRiftAdvice = f"{session_data.account.all_characters[session_data.account.apocalypse_character_Index].character_name} has not completed a Super CHOW on the Rift yet!"
         rift_AdviceDict["UnlockRewards"].append(Advice(
             label=meowTheRiftAdvice,
             picture_class="blood-berserker-icon",

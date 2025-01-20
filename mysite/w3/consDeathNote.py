@@ -55,7 +55,8 @@ def getDeathNoteProgressionTiersAdviceGroup():
         "W6": [],
         "ZOW": {},
         "CHOW": {},
-        "MEOW": {}
+        "MEOW": {},
+        "WOW": {}
     }
     infoTiers = 2
     max_tier = deathNote_progressionTiers[-1][0] - infoTiers
@@ -67,24 +68,29 @@ def getDeathNoteProgressionTiersAdviceGroup():
     tier_combo['ZOW'] = 0
     tier_combo['CHOW'] = 0
     tier_combo['MEOW'] = 0
+    tier_combo['WOW'] = 0
     apocToNextTier = {
         'ZOW': 0,
         'CHOW': 0,
-        'MEOW': 0
+        'MEOW': 0,
+        'WOW': 0
     }
     zowsForNextTier = 0
     chowsForNextTier = 0
     meowsForNextTier = 0
+    wowsForNextTier = 0
 
     # Just shortening the paths
     apocCharactersIndexList = session_data.account.apocCharactersIndexList
-    meowBBIndex = session_data.account.meowBBIndex
+    apocalypse_character_Index = session_data.account.apocalypse_character_Index
     fullDeathNoteDict = session_data.account.enemy_worlds
 
     highestZOWCount = 0
     highestZOWCountIndex = None
     highestCHOWCount = 0
     highestCHOWCountIndex = None
+    highestWOWCount = 0
+    highestWOWCountIndex = None
     for barbIndex in apocCharactersIndexList:
         if highestZOWCountIndex is None:
             highestZOWCountIndex = barbIndex
@@ -96,6 +102,9 @@ def getDeathNoteProgressionTiersAdviceGroup():
         if session_data.account.all_characters[barbIndex].apoc_dict['CHOW']['Total'] > highestCHOWCount:
             highestCHOWCount = session_data.account.all_characters[barbIndex].apoc_dict['CHOW']['Total']
             highestCHOWCountIndex = barbIndex
+        if session_data.account.all_characters[barbIndex].apoc_dict['WOW']['Total'] > highestWOWCount:
+            highestWOWCount = session_data.account.all_characters[barbIndex].apoc_dict['WOW']['Total']
+            highestWOWCountIndex = barbIndex
 
     # Assess Tiers
     for tier in deathNote_progressionTiers:
@@ -111,7 +120,8 @@ def getDeathNoteProgressionTiersAdviceGroup():
         # tier[9] = int zowCount
         # tier[10] = int chowCount
         # tier[11] = int meowCount
-        # tier[12] = str Notes
+        # tier[12] = int wowCount
+        # tier[13] = str Notes
 
         # Basic Worlds
         for worldIndex in worldIndexes:
@@ -156,6 +166,7 @@ def getDeathNoteProgressionTiersAdviceGroup():
                             progression=0,
                             goal=1)
                     ]
+
         # CHOW
         if tier_combo['CHOW'] >= (tier[0] - 1):  # Only evaluate if they already met the previous tier's requirement
             if highestCHOWCount >= tier[10]:
@@ -184,22 +195,23 @@ def getDeathNoteProgressionTiersAdviceGroup():
                             progression=0,
                             goal=1)
                     ]
+
         # MEOW
         if tier_combo['MEOW'] >= (tier[0] - 1):  # Only evaluate if they already met the previous tier's requirement
             if tier[11] == 0:
                 tier_combo['MEOW'] = tier[0]
             else:
-                if meowBBIndex is not None:
-                    if session_data.account.all_characters[meowBBIndex].apoc_dict['MEOW']['Total'] >= tier[11]:
+                if apocalypse_character_Index is not None:
+                    if session_data.account.all_characters[apocalypse_character_Index].apoc_dict['MEOW']['Total'] >= tier[11]:
                         tier_combo['MEOW'] = tier[0]
                     else:
-                        meowsForNextTier = f"({session_data.account.all_characters[meowBBIndex].apoc_dict['MEOW']['Total']}/{tier[11]})"
-                        apocToNextTier['MEOW'] = tier[11] - session_data.account.all_characters[meowBBIndex].apoc_dict['MEOW']['Total']
+                        meowsForNextTier = f"({session_data.account.all_characters[apocalypse_character_Index].apoc_dict['MEOW']['Total']}/{tier[11]})"
+                        apocToNextTier['MEOW'] = tier[11] - session_data.account.all_characters[apocalypse_character_Index].apoc_dict['MEOW']['Total']
                         for difficultyName in apocDifficultyNameList:
-                            if len(session_data.account.all_characters[meowBBIndex].apoc_dict['MEOW'][difficultyName]) > 0:
+                            if len(session_data.account.all_characters[apocalypse_character_Index].apoc_dict['MEOW'][difficultyName]) > 0:
                                 if difficultyName not in deathnote_AdviceDict['MEOW']:
                                     deathnote_AdviceDict['MEOW'][difficultyName] = []
-                                for enemy in session_data.account.all_characters[meowBBIndex].apoc_dict['MEOW'][difficultyName]:
+                                for enemy in session_data.account.all_characters[apocalypse_character_Index].apoc_dict['MEOW'][difficultyName]:
                                     deathnote_AdviceDict["MEOW"][difficultyName].append(Advice(
                                         label=enemy[0],
                                         picture_class=enemy[3],
@@ -216,6 +228,35 @@ def getDeathNoteProgressionTiersAdviceGroup():
                             goal=1)
                     ]
 
+        # WOW
+        if tier_combo['WOW'] >= (tier[0] - 1):  # Only evaluate if they already met the previous tier's requirement
+            if highestWOWCount >= tier[12]:
+                tier_combo['WOW'] = tier[0]
+            else:
+                wowsForNextTier = f"({highestWOWCount}/{tier[12]})"
+                if highestWOWCountIndex is not None:
+                    apocToNextTier['WOW'] = tier[12] - highestWOWCount
+                    for difficultyName in apocDifficultyNameList:
+                        if len(session_data.account.all_characters[highestWOWCountIndex].apoc_dict['WOW'][difficultyName]) > 0:
+                            if difficultyName not in deathnote_AdviceDict['WOW']:
+                                deathnote_AdviceDict['WOW'][difficultyName] = []
+                            for enemy in session_data.account.all_characters[highestWOWCountIndex].apoc_dict['WOW'][difficultyName]:
+                                deathnote_AdviceDict["WOW"][difficultyName].append(Advice(
+                                    label=enemy[0],
+                                    picture_class=enemy[3],
+                                    progression=enemy[2],
+                                    goal=100,
+                                    unit='%'
+                                ))
+                else:
+                    deathnote_AdviceDict["WOW"] = [
+                        Advice(
+                            label="Create a Death Bringer",
+                            picture_class="death-bringer-icon",
+                            progression=0,
+                            goal=1)
+                    ]
+
     # If the player is basically finished with cooking, bypass the requirement while still showing the progress
     if session_data.account.cooking['MaxRemainingMeals'] < cookingCloseEnough:
         if tier_combo['ZOW'] < max_tier + infoTiers:
@@ -224,6 +265,8 @@ def getDeathNoteProgressionTiersAdviceGroup():
             tier_combo['CHOW'] = max_tier + infoTiers
         if tier_combo['MEOW'] < max_tier + infoTiers:
             tier_combo['MEOW'] = max_tier + infoTiers
+        if tier_combo['WOW'] < max_tier + infoTiers:
+            tier_combo['WOW'] = max_tier + infoTiers
 
     # Generate Advice Groups
     deathnote_AdviceGroupDict = {}
@@ -271,11 +314,11 @@ def getDeathNoteProgressionTiersAdviceGroup():
         )
 
     # MEOW
-    if meowBBIndex is not None:
+    if apocalypse_character_Index is not None:
         deathnote_AdviceGroupDict['MEOW'] = AdviceGroup(
             tier=str(tier_combo['MEOW'] if tier_combo['MEOW'] < max_tier else ""),
             pre_string=f"{'Informational- You could complete' if tier_combo['MEOW'] >= max_tier else 'Complete'} {apocToNextTier['MEOW']} more"
-                       f" Super CHOW{pl(apocToNextTier['MEOW'])} with {session_data.account.all_characters[meowBBIndex].character_name} {meowsForNextTier}",
+                       f" Super CHOW{pl(apocToNextTier['MEOW'])} with {session_data.account.all_characters[apocalypse_character_Index].character_name} {meowsForNextTier}",
             advices=deathnote_AdviceDict['MEOW'],
             post_string=f"Aim for 24hrs or less (4m+ KPH) per enemy",
             informational=True if tier_combo['MEOW'] >= max_tier else False
@@ -287,16 +330,32 @@ def getDeathNoteProgressionTiersAdviceGroup():
             advices=deathnote_AdviceDict['MEOW'],
         )
 
-    if meowBBIndex is not None:
+    # WOW
+    if apocalypse_character_Index is not None:
+        deathnote_AdviceGroupDict['WOW'] = AdviceGroup(
+            tier=str(tier_combo['WOW'] if tier_combo['WOW'] < max_tier else ""),
+            pre_string=f"{'Informational- You could complete' if tier_combo['WOW'] >= max_tier else 'Complete'} {apocToNextTier['WOW']} more"
+                       f" WOW{pl(apocToNextTier['WOW'])} with {session_data.account.all_characters[apocalypse_character_Index].character_name} {wowsForNextTier}",
+            advices=deathnote_AdviceDict['WOW'],
+            informational=True if tier_combo['WOW'] >= max_tier else False
+        )
+    else:
+        deathnote_AdviceGroupDict['WOW'] = AdviceGroup(
+            tier=str(tier_combo['WOW'] if tier_combo['MEOW'] < max_tier else ""),
+            pre_string=f"Super CHOW Progress unavailable until a Blood Berserker is found in your account",
+            advices=deathnote_AdviceDict['WOW'],
+        )
+
+    if apocalypse_character_Index is not None:
         all_kills_ags = getAllKillsDisplaySubgroupedByWorldAdviceGroup()
         for ag in all_kills_ags:
             deathnote_AdviceGroupDict[ag.pre_string] = ag
 
     overall_SectionTier = min(
-        max_tier + infoTiers,
-        tier_combo[1], tier_combo[2], tier_combo[3],
-        tier_combo[4], tier_combo[5], tier_combo[6],
-        tier_combo['ZOW'], tier_combo['CHOW'], tier_combo['MEOW']
+        max_tier + infoTiers, min(tier_combo.values())
+        # tier_combo[1], tier_combo[2], tier_combo[3],
+        # tier_combo[4], tier_combo[5], tier_combo[6],
+        # tier_combo['ZOW'], tier_combo['CHOW'], tier_combo['MEOW'], tier_combo['WOW']
     )
     return deathnote_AdviceGroupDict, overall_SectionTier, max_tier
 

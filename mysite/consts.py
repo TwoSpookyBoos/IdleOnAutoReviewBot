@@ -1136,35 +1136,34 @@ deathNote_progressionTiers = [
     # 0-4 int tier. int w1LowestSkull, int w2LowestSkull, int w3LowestSkull, int w4LowestSkull,
     # 5-9 int w5LowestSkull, int w6LowestSkull, int w7LowestSkull, int w8LowestSkull, int zowCount, int chowCount,
     # 10-11 int meowCount, str Notes
-    [0,  0,  0,  0,  0,  0,  0,     0, 0,   0, 0, 0, ""],
-    [1,  1,  1,  1,  0,  0,  0,     0, 0,   0, 0, 0, ""],
-    [2,  2,  2,  2,  0,  0,  0,     0, 0,   0, 0, 0, ""],
-    [3,  3,  3,  3,  1,  0,  0,     0, 0,   0, 0, 0, ""],
-    [4,  4,  4,  4,  2,  0,  0,     0, 0,   0, 0, 0, ""],  #The recommendation for ZOWs is 12hrs or less (8,333+ KPH) per enemy. If you aren't at that mark yet, don't sweat it. Come back later!
-    [5,  5,  5,  5,  3,  0,  0,     0, 0,   0, 0, 0,
-     "The Voidwalker questline requires W1-W3 at all Plat Skulls. Aim to complete this by Mid W5 as Vman's account-wide buffs are insanely strong."],
-    [6,  7,  5,  5,  4,  0,  0,     0, 0,   0, 0, 0, ""],  #"The recommendation for CHOWs is 12hrs or less (83,333+ KPH) per enemy. If you aren't at that mark yet, don't sweat it. Come back later!"
-    [7,  10, 7,  5,  5,  1,  0,     0, 0,   0, 0, 0, ""],
-    [8,  10, 10, 7,  5,  2,  0,     0, 0,   0, 0, 0, ""],
-    [9,  10, 10, 10, 5,  3,  0,     0, 0,   0, 0, 0, ""],
-    [10, 10, 10, 10, 7,  4,  0,     0, 0,   0, 0, 0, ""],
-    [11, 10, 10, 10, 10, 5,  0,     0, 0,   0, 0, 0, ""],  #"Complete Lava Skull, then BB Super CHOW, before you start working on Eclipse Skulls. "
-    [12, 10, 10, 10, 10, 7,  0,     0, 0,   0, 0, 0, ""],
-    [13, 10, 10, 10, 10, 10, 0,     0, 0,   0, 0, 0, ""],
-    [14, 10, 10, 10, 10, 10, 0,     0, 0,   0, 0, 0, ""],
-    [15, 10, 10, 10, 10, 10, 0,     0, 0,   0, 0, 0, ""],
-    [16, 20, 10, 10, 10, 10, 0,     0, 0,   0, 0, 0, ""],
-    [17, 20, 20, 10, 10, 10, 1,     0, 0,   0, 0, 0, ""],
-    [18, 20, 20, 20, 10, 10, 2,     0, 0,   0, 0, 0, ""],
-    [19, 20, 20, 20, 20, 10, 3,     0, 0,   15, 15, 15, "Aim for Super CHOWs in 24hrs each (4m+ KPH)"],
-    [20, 20, 20, 20, 20, 20, 4,     0, 0,   26, 26, 26, ""],
-    [21, 20, 20, 20, 20, 20, 5,     0, 0,   40, 40, 40, ""],
-    [22, 20, 20, 20, 20, 20, 7,     0, 0,   53, 53, 53, ""],
-    [23, 20, 20, 20, 20, 20, 10,    0, 0,   66, 66, 66, ""],
-    [24, 20, 20, 20, 20, 20, 10,    0, 0,   73, 73, 73, ""],
-    [25, 20, 20, 20, 20, 20, 20,    0, 0,   80, 80, 80, ""],
-    [26, 20, 20, 20, 20, 20, 20,    0, 0,   84, 84, 83, "As of v2.11, completing a Super CHOW on Boops is impossible."],
-    [27, 20, 20, 20, 20, 20, 20,    0, 0,   86, 86, 86, "Info only"]
+    [0,  0,  0,  0,  0,  0,  0,     0, 0,   0,  0,  0,  0, ""],
+    [1,  1,  1,  1,  0,  0,  0,     0, 0,   0,  0,  0,  0, ""],
+    [2,  2,  2,  2,  0,  0,  0,     0, 0,   0,  0,  0,  0, ""],
+    [3,  3,  3,  3,  1,  0,  0,     0, 0,   0,  0,  0,  0, ""],
+    [4,  4,  4,  4,  2,  0,  0,     0, 0,   0,  0,  0,  0, ""],  #The recommendation for ZOWs is 12hrs or less (8,333+ KPH) per enemy. If you aren't at that mark yet, don't sweat it. Come back later!
+    [5,  5,  5,  5,  3,  0,  0,     0, 0,   0,  0,  0,  0, "The Voidwalker questline requires W1-W3 at all Plat Skulls. Aim to complete this by Mid W5 as Vman's account-wide buffs are insanely strong."],
+    [6,  7,  5,  5,  4,  0,  0,     0, 0,   0,  0,  0,  0, ""],  #"The recommendation for CHOWs is 12hrs or less (83,333+ KPH) per enemy. If you aren't at that mark yet, don't sweat it. Come back later!"
+    [7,  10, 7,  5,  5,  1,  0,     0, 0,   0,  0,  0,  0, ""],
+    [8,  10, 10, 7,  5,  2,  0,     0, 0,   0,  0,  0,  0, ""],
+    [9,  10, 10, 10, 5,  3,  0,     0, 0,   0,  0,  0,  0, ""],
+    [10, 10, 10, 10, 7,  4,  0,     0, 0,   0,  0,  0,  0, ""],
+    [11, 10, 10, 10, 10, 5,  0,     0, 0,   0,  0,  0,  0, ""],  #"Complete Lava Skull, then BB Super CHOW, before you start working on Eclipse Skulls. "
+    [12, 10, 10, 10, 10, 7,  0,     0, 0,   0,  0,  0,  0, ""],
+    [13, 10, 10, 10, 10, 10, 0,     0, 0,   0,  0,  0,  0, ""],
+    [14, 10, 10, 10, 10, 10, 0,     0, 0,   0,  0,  0,  0, ""],
+    [15, 10, 10, 10, 10, 10, 0,     0, 0,   0,  0,  0,  0, ""],
+    [16, 20, 10, 10, 10, 10, 0,     0, 0,   0,  0,  0,  0, ""],
+    [17, 20, 20, 10, 10, 10, 1,     0, 0,   0,  0,  0,  0, ""],
+    [18, 20, 20, 20, 10, 10, 2,     0, 0,   0,  0,  0,  0, ""],
+    [19, 20, 20, 20, 20, 10, 3,     0, 0,   15, 15, 15, 0, "Aim for Super CHOWs in 24hrs each (4m+ KPH)"],
+    [20, 20, 20, 20, 20, 20, 4,     0, 0,   26, 26, 26, 0, ""],
+    [21, 20, 20, 20, 20, 20, 5,     0, 0,   40, 40, 40, 0, ""],
+    [22, 20, 20, 20, 20, 20, 7,     0, 0,   53, 53, 53, 0, ""],
+    [23, 20, 20, 20, 20, 20, 10,    0, 0,   66, 66, 66, 0, ""],
+    [24, 20, 20, 20, 20, 20, 10,    0, 0,   73, 73, 73, 0, ""],
+    [25, 20, 20, 20, 20, 20, 20,    0, 0,   80, 80, 80, 0, ""],
+    [26, 20, 20, 20, 20, 20, 20,    0, 0,   84, 84, 83, 0, "As of v2.11, completing a Super CHOW on Boops is impossible."],
+    [27, 20, 20, 20, 20, 20, 20,    0, 0,   86, 86, 86, 86, "Info only"]
 ]
 buildingsPostBuffs_progressionTiers = [
     [0, "Unlock", [], "", ""],
@@ -5353,7 +5352,7 @@ apocableMapIndexDict = {
 dnBasicMapsCount = sum([len(v) for k, v in apocableMapIndexDict.items() if k > 0])
 dnAllApocMapsCount = dnBasicMapsCount + len(apocableMapIndexDict[0])
 apocAmountsList = [100000, 1000000, 100000000, 1000000000, 1000000000000]
-apocNamesList = ["ZOW", "CHOW", "MEOW", "1B","64bitOverflow"]
+apocNamesList = ["ZOW", "CHOW", "MEOW", "WOW", "64bitOverflow"]
 apocDifficultyNameList = [
     'Basic W1 Enemies', 'Basic W2 Enemies', 'Basic W3 Enemies', 'Basic W4 Enemies', 'Basic W5 Enemies', 'Basic W6 Enemies',
     'Easy Extras', 'Medium Extras', 'Difficult Extras', 'Insane', 'Impossible'
