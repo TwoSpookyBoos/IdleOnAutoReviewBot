@@ -126,6 +126,7 @@ class Character:
         base_class: str,
         sub_class: str,
         elite_class: str,
+        master_class: str,
         equipped_prayers: list,
         all_skill_levels: dict,
         max_talents: dict,
@@ -145,7 +146,7 @@ class Character:
         self.base_class: str = base_class
         self.sub_class: str = sub_class
         self.elite_class: str = elite_class
-        self.all_classes: list[str] = [base_class, sub_class, elite_class]
+        self.all_classes: list[str] = [base_class, sub_class, elite_class, master_class]
         self.max_talents_over_books: int = 100
         self.symbols_of_beyond = 0
         self.family_guy_bonus = 0
