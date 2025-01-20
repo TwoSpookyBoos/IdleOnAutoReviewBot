@@ -2473,6 +2473,7 @@ humanReadableClasses = {
     11: "Death Bringer",
     12: "Divine Knight",
     13: "Royal Guardian",
+    14: "Death Bringer",
     18: "Calm Basics",
     19: "Archer",
     20: "Bowman",
