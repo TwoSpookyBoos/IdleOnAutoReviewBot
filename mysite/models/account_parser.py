@@ -191,8 +191,9 @@ def _parse_character_class_lists(account):
 
     account.barbs = [toon for toon in account.all_characters if "Barbarian" in toon.all_classes]
     account.bbs = [toon for toon in account.all_characters if "Blood Berserker" in toon.all_classes]
-    account.dks = [toon for toon in account.all_characters if "Divine Knight" in toon.all_classes]
     account.dbs = [toon for toon in account.all_characters if "Death Bringer" in toon.all_classes]
+    account.dks = [toon for toon in account.all_characters if "Divine Knight" in toon.all_classes]
+
 
 def _parse_general(account):
     # General / Multiple uses

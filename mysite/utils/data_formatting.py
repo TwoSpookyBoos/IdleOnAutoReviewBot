@@ -128,7 +128,7 @@ def from_toolbox(rawJSON):
 
 def getBaseClass(inputClass):
     match inputClass:
-        case "Warrior" | "Barbarian" | "Blood Berserker" | "Squire" | "Divine Knight":
+        case "Warrior" | "Barbarian" | "Blood Berserker" | "Death Bringer" | "Squire" | "Divine Knight":
             return "Warrior"
         case "Mage" | "Shaman" | "Bubonic Conjuror" | "Wizard" | "Elemental Sorcerer":
             return "Mage"
@@ -183,7 +183,7 @@ def getMasterClass(inputClass):
             return inputClass
         case (
             "Blood Berserker" | "Divine Knight" | "Bubonic Conjuror" | "Elemental Sorcerer" | "Siege Breaker" | "Beast Master" | "Voidwalker" | "Beginner" | "Warrior" | "Barbarian" | "Squire" | "Mage" | "Shaman" | "Wizard" | "Archer" | "Bowman" | "Hunter" | "Journeyman" | "Maestro"
-            ):
+        ):
             return "None"
         case _:
             return f"UnknownMasterClass-{inputClass}"
