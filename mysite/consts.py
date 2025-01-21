@@ -349,8 +349,6 @@ achievements_progressionTiers = {
     0: {},
     1: {
         'EZ Access': {
-            'Platinum 200G': {'World': 1, 'Reward': 'W1 Key', 'Rating': ''},
-            'Half a Mill-log': {'World': 1, 'Reward': 'W1 Colo and Shops', 'Rating': ''},
             'Super Cereal': {'World': 2, 'Reward': 'W2 Colo and Shops', 'Rating': ''},
         },
         #'Free Teleports': {},
@@ -365,6 +363,8 @@ achievements_progressionTiers = {
     },
     2: {
         'EZ Access': {
+            'Platinum 200G': {'World': 1, 'Reward': 'W1 Key', 'Rating': ''},
+            'Half a Mill-log': {'World': 1, 'Reward': 'W1 Colo and Shops', 'Rating': ''},
             'Skill Master': {'World': 2, 'Reward': 'W2 Key', 'Rating': ''},
             'Cool Score!': {'World': 3, 'Reward': 'W3 Colo and Shop', 'Rating': ''},
         },
