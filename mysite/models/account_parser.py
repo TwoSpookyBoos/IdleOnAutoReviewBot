@@ -904,6 +904,7 @@ def _parse_w2_arcade(account):
                     upgradeDetails.get("x2")
                 ),
                 'Royale': False,
+                'Material': 'arcade-gold-ball',
                 'Image': f'arcade-bonus-{upgradeIndex}'
             }
             account.arcade[upgradeIndex]["Display"] = (
