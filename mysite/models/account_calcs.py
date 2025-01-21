@@ -364,6 +364,7 @@ def _calculate_w2(account):
     account.vialMasteryMulti = 1 + (account.maxed_vials * .02) if account.rift['VialMastery'] else 1
     _calculate_w2_sigils(account)
     _calculate_w2_cauldrons(account)
+    _calculate_w2_postOffice(account)
     _calculate_w2_ballot(account)
     _calculate_w2_islands_trash(account)
     _calculate_w2_killroy(account)
@@ -411,6 +412,9 @@ def _calculate_w2_sigils(account):
         # Before the +1, -1 would mean not unlocked, 0 would mean Blue tier, 1 would be Yellow tier, and 2 would mean Red tier
         # After the +1, 0/1/2/3
 
+def _calculate_w2_postOffice(account):
+    account.postOffice["Total Boxes Earned"] = account.postOffice['Completing Orders'] + account.postOffice['Streak Bonuses'] + account.postOffice['Miscellaneous']
+    
 def _calculate_w2_ballot(account):
     account.event_points_shop['BonusMulti'] = ValueToMulti(
         account.equinox_bonuses['Voter Rights']['CurrentLevel']

@@ -669,6 +669,7 @@ def _parse_w2(account):
     _parse_w2_cauldrons(account)
     _parse_w2_bubbles(account)
     _parse_w2_p2w(account)
+    _parse_w2_postOffice(account)
     _parse_w2_arcade(account)
     _parse_w2_ballot(account)
     _parse_w2_obols(account)
@@ -848,6 +849,13 @@ def _parse_w2_p2w(account):
             account.alchemy_p2w["Sigils"][sigilName]["Level"] = raw_p2w_list[4][account.alchemy_p2w["Sigils"][sigilName]["Index"] + 1] + 1
         except:
             pass  # Already defaulted to 0s in consts.sigilsDict
+        
+def _parse_w2_postOffice(account):
+    account.postOffice = {
+        'Completing Orders': safer_convert(account.raw_data.get("CYDeliveryBoxComplete"), 0),
+        'Streak Bonuses': safer_convert(account.raw_data.get("CYDeliveryBoxStreak"), 0),
+        'Miscellaneous': safer_convert(account.raw_data.get("CYDeliveryBoxMisc"), 0),
+    }
 
 def _parse_w2_arcade(account):
     account.arcade_currency = {
