@@ -2,8 +2,7 @@ from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
-from utils.text_formatting import kebab
-from consts import poBoxDict
+from consts import post_office_tabs
 
 logger = get_logger(__name__)
 
@@ -37,12 +36,11 @@ def getPostOfficeAdviceSection() -> AdviceSection:
         )
         return postOffice_AdviceSection
 
-
     #Generate AdviceGroups
     postOffice_AdviceGroupDict = {}
     postOffice_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
     for character in session_data.account.all_characters:
-        postOffice_AdviceGroupDict['Boxes' + character.character_name] = getBoxesAdviceGroup(character)
+        postOffice_AdviceGroupDict[character.character_name] = getBoxesAdviceGroup(character)
     
     #Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
@@ -58,41 +56,29 @@ def getPostOfficeAdviceSection() -> AdviceSection:
     return postOffice_AdviceSection
 
 def getBoxesAdviceGroup(character):
-    postOffice_advices = {}
+    totalPointInvested = sum([boxDetails['Level'] for boxDetails in character.po_boxes_invested.values()])
 
-    totalPointInvested = 0
-    for box in poBoxDict.values():
-        boxName = box['Name']
-        boxLevel = character.po_boxes_invested[boxName]['Level']
-        totalPointInvested += boxLevel
+    postOffice_advices = {
+        tab_name: [
+            Advice(
+                label=boxName,
+                picture_class=boxName,
+                progression=boxDetails['Level'],
+                goal=boxDetails['Max Level'],
+                completed=boxDetails['Level'] >= boxDetails['Max Level']
+            ) for boxName, boxDetails in character.po_boxes_invested.items() if boxDetails['Tab'] == tab_name
+        ] for tab_name in post_office_tabs
+    }
 
-        advice = Advice(
-            label=boxName,
-            picture_class=getPictureClassFromName(boxName),
-            progression=boxLevel,
-            goal=box['max_level'],
-            completed=boxLevel >= box['max_level']
-        )
-        if boxLevel >= box['max_level']:
+    for subgroup in postOffice_advices:
+        for advice in postOffice_advices[subgroup]:
             mark_advice_completed(advice)
-            
-        if not box['Tab'] in postOffice_advices:
-            postOffice_advices[box['Tab']] = []    
-        postOffice_advices[box['Tab']].append(advice)
 
-    return AdviceGroup(
+    char_ag = AdviceGroup(
         tier="",
         pre_string=f"Info- Boxes for {character.character_name} the {character.class_name}",
         advices=postOffice_advices,
-        post_string=f"Available points : {session_data.account.postOffice["Total Boxes Earned"] - totalPointInvested}",
+        post_string=f"Available points : {session_data.account.postOffice['Total Boxes Earned'] - totalPointInvested:,.0f}",
         informational=True,
     )
-
-def getPictureClassFromName(name):
-    match name:
-        case "Magician Starterpack":
-            return "magician-starter-pack"
-        case "Civil War Memory Box":
-            return "civil-war-memory"
-        case _:
-            return kebab(name)
+    return char_ag
