@@ -3297,7 +3297,11 @@ expected_talentsDict = {
         140, 141, 142, 143, 144,
         145, 146, 147, 148, 149
     ],
-    #"Death Bringer": [],
+    "Death Bringer": [
+        135, 136, 137, 138, 139,
+        140, 141, 142, 143, 144,
+        145, 146, 147, 148, 149
+    ],
     "Divine Knight": [
         165, 166, 167, 168, 169,
         170, 141, 142, 143, 144,
@@ -3661,6 +3665,20 @@ skill_talentsDict = {
 combat_talentsDict = {
     # Talents here are unique from the skill_talentsDict above
     # Warriors
+    "Death Bringer": {
+        "High": {},
+        "Medium": {
+            97: {"Name": "Carry a Big Stick", "Tab": "Tab 2"},
+            6: {"Name": "Gilded Sword", "Tab": "Tab 1"},
+        },
+        "Low": {
+            88: {"Name": "Idle Brawling", "Tab": "Tab 1"},
+            5: {"Name": "Sharpened Axe", "Tab": "Tab 1"},
+            110: {"Name": "Apocalypse Zow", "Tab": "Tab 3"},
+            141: {"Name": "Charred Skulls", "Tab": "Tab 4"},
+            140: {"Name": "Tough Steaks", "Tab": "Tab 4"},
+        },
+    },
     "Blood Berserker": {
         "High": {},
         "Medium": {
