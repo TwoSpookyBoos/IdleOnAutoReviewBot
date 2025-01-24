@@ -128,7 +128,7 @@ def from_toolbox(rawJSON):
 
 def getBaseClass(inputClass):
     match inputClass:
-        case "Warrior" | "Barbarian" | "Blood Berserker" | "Squire" | "Divine Knight":
+        case "Warrior" | "Barbarian" | "Blood Berserker" | "Death Bringer" | "Squire" | "Divine Knight":
             return "Warrior"
         case "Mage" | "Shaman" | "Bubonic Conjuror" | "Wizard" | "Elemental Sorcerer":
             return "Mage"
@@ -144,7 +144,7 @@ def getBaseClass(inputClass):
 
 def getSubclass(inputClass):
     match inputClass:
-        case "Barbarian" | "Blood Berserker":
+        case "Barbarian" | "Blood Berserker" | "Death Bringer":
             return "Barbarian"
         case "Squire" | "Divine Knight":
             return "Squire"
@@ -166,7 +166,9 @@ def getSubclass(inputClass):
 
 def getEliteClass(inputClass):
     match inputClass:
-        case "Blood Berserker" | "Divine Knight" | "Bubonic Conjuror" | "Elemental Sorcerer" | "Siege Breaker" | "Beast Master" | "Voidwalker":
+        case "Blood Berserker" | "Death Bringer":
+            return "Blood Berserker"
+        case "Divine Knight" | "Bubonic Conjuror" | "Elemental Sorcerer" | "Siege Breaker" | "Beast Master" | "Voidwalker":
             return inputClass
         case (
             "Beginner" | "Warrior" | "Barbarian" | "Squire" | "Mage" | "Shaman" | "Wizard" | "Archer" | "Bowman" | "Hunter" | "Journeyman" | "Maestro"
@@ -174,6 +176,17 @@ def getEliteClass(inputClass):
             return "None"
         case _:
             return f"UnknownEliteClass-{inputClass}"
+
+def getMasterClass(inputClass):
+    match inputClass:
+        case "Death Bringer":
+            return inputClass
+        case (
+            "Blood Berserker" | "Divine Knight" | "Bubonic Conjuror" | "Elemental Sorcerer" | "Siege Breaker" | "Beast Master" | "Voidwalker" | "Beginner" | "Warrior" | "Barbarian" | "Squire" | "Mage" | "Shaman" | "Wizard" | "Archer" | "Bowman" | "Hunter" | "Journeyman" | "Maestro"
+        ):
+            return "None"
+        case _:
+            return f"UnknownMasterClass-{inputClass}"
 
 
 def getCharacterDetails(inputJSON, runType):
@@ -270,6 +283,7 @@ def getCharacterDetails(inputJSON, runType):
             base_class=getBaseClass(character_classes[character_index]),
             sub_class=getSubclass(character_classes[character_index]),
             elite_class=getEliteClass(character_classes[character_index]),
+            master_class=getMasterClass(character_classes[character_index]),
             equipped_prayers=equipped_prayers[character_index],
             all_skill_levels=characterSkillsDict[character_index],
             max_talents=characterMaxTalents[character_index],

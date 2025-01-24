@@ -70,49 +70,52 @@ class Equipment:
             self.tools = {}
             self.foods = []
 
-def getExpectedTalents(base_class, sub_class, elite_class):
+def getExpectedTalents(classes_list):
     expectedTalents = []
-    for className in [base_class, sub_class, elite_class]:
+    for className in classes_list:
         try:
             expectedTalents.extend(expected_talentsDict[className])
         except:
             continue
     return expectedTalents
 
-def getSpecializedSkills(base_class, sub_class, elite_class):
+def getSpecializedSkills(classes_list):
     specializedSkillsList = []
-    if base_class == "Warrior":
+    if "Warrior" in classes_list:
         specializedSkillsList.append("Mining")
-    elif base_class == "Archer":
+    elif "Archer" in classes_list:
         specializedSkillsList.append("Smithing")
-    elif base_class == "Mage":
+    elif "Mage" in classes_list:
         specializedSkillsList.append("Choppin")
 
-    if sub_class == "Barbarian":
+    if "Barbarian" in classes_list:
         specializedSkillsList.append("Fishing")
-    elif sub_class == "Squire":
+    elif "Squire" in classes_list:
         specializedSkillsList.append("Construction")
-    elif sub_class == "Bowman":
+    elif "Bowman" in classes_list:
         specializedSkillsList.append("Catching")
-    elif sub_class == "Hunter":
+    elif "Hunter" in classes_list:
         specializedSkillsList.append("Trapping")
-    elif sub_class == "Wizard":
+    elif "Wizard" in classes_list:
         specializedSkillsList.append("Worship")
-    elif sub_class == "Shaman":
+    elif "Shaman" in classes_list:
         specializedSkillsList.append("Alchemy")
 
-    if elite_class == "Blood Berserker":
+    if "Blood Berserker" in classes_list:
         specializedSkillsList.append("Cooking")
-    elif elite_class == "Divine Knight":
+    elif "Divine Knight" in classes_list:
         specializedSkillsList.append("Gaming")
-    elif elite_class == "Siege Breaker":
+    elif "Siege Breaker" in classes_list:
         specializedSkillsList.append("Sailing")
-    elif elite_class == "Beast Master":
+    elif "Beast Master" in classes_list:
         specializedSkillsList.append("Breeding")
-    elif elite_class == "Elemental Sorcerer":
+    elif "Elemental Sorcerer" in classes_list:
         specializedSkillsList.append("Divinity")
-    elif elite_class == "Bubonic Conjuror":
+    elif "Bubonic Conjuror" in classes_list:
         specializedSkillsList.append("Lab")
+
+    if "Death Bringer" in classes_list:
+        specializedSkillsList.append("Farming")
 
     return specializedSkillsList
 
@@ -126,6 +129,7 @@ class Character:
         base_class: str,
         sub_class: str,
         elite_class: str,
+        master_class: str,
         equipped_prayers: list,
         all_skill_levels: dict,
         max_talents: dict,
@@ -145,15 +149,15 @@ class Character:
         self.base_class: str = base_class
         self.sub_class: str = sub_class
         self.elite_class: str = elite_class
-        self.all_classes: list[str] = [base_class, sub_class, elite_class]
+        self.all_classes: list[str] = [base_class, sub_class, elite_class, master_class]
         self.max_talents_over_books: int = 100
         self.symbols_of_beyond = 0
         self.family_guy_bonus = 0
         self.max_talents: dict = max_talents
         self.current_preset_talents: dict = current_preset_talents
         self.secondary_preset_talents: dict = secondary_preset_talents
-        self.specialized_skills: list[str] = getSpecializedSkills(self.base_class, self.sub_class, self.elite_class)
-        self.expected_talents: list[int] = getExpectedTalents(self.base_class, self.sub_class, self.elite_class)
+        self.specialized_skills: list[str] = getSpecializedSkills(self.all_classes)
+        self.expected_talents: list[int] = getExpectedTalents(self.all_classes)
         self.inventory_bags: dict = inventory_bags
         self.kill_dict: dict = kill_dict
         self.fixKillDict()

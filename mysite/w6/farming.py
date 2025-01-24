@@ -587,7 +587,12 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
         9: 150,
         10:160,
         11:170,
-        12:180
+        12:180,
+        13:190,
+        14:200,
+        15:210,
+        16:220,
+        17:230
     }.items():
         final_crops[k] = [cropDict[v]['SeedName'],  ceil(1 / getCropEvoChance(v)),  cropDict[v]['Image']]
     subtotal_final_glassy_percent = farming['Evo']['Subtotal Multi'] / final_crops[max(final_crops.keys())][1]

@@ -191,7 +191,9 @@ def _parse_character_class_lists(account):
 
     account.barbs = [toon for toon in account.all_characters if "Barbarian" in toon.all_classes]
     account.bbs = [toon for toon in account.all_characters if "Blood Berserker" in toon.all_classes]
+    account.dbs = [toon for toon in account.all_characters if "Death Bringer" in toon.all_classes]
     account.dks = [toon for toon in account.all_characters if "Divine Knight" in toon.all_classes]
+
 
 def _parse_general(account):
     # General / Multiple uses
@@ -902,6 +904,7 @@ def _parse_w2_arcade(account):
                     upgradeDetails.get("x2")
                 ),
                 'Royale': False,
+                'Material': 'arcade-gold-ball',
                 'Image': f'arcade-bonus-{upgradeIndex}'
             }
             account.arcade[upgradeIndex]["Display"] = (
@@ -1075,11 +1078,11 @@ def _parse_w3_library(account):
 def _parse_w3_deathnote(account):
     account.apocCharactersIndexList = [c.character_index for c in account.barbs]
     account.bbCharactersIndexList = [c.character_index for c in account.bbs]
-    account.meowBBIndex = _parse_w3_meowBBIndex(account)
+    account.apocalypse_character_Index = _parse_w3_apocalypse_BBIndex(account)
     account.rift_meowed = _parse_w3_deathnote_rift_meowed(account)
     _parse_w3_deathnote_kills(account)
 
-def _parse_w3_meowBBIndex(account):
+def _parse_w3_apocalypse_BBIndex(account):
     if len(account.bbCharactersIndexList) == 1:
         return account.bbCharactersIndexList[0]
     elif len(account.bbCharactersIndexList) >= 2:
@@ -1088,9 +1091,9 @@ def _parse_w3_meowBBIndex(account):
         return None
 
 def _parse_w3_deathnote_rift_meowed(account):
-    if account.meowBBIndex is not None:
+    if account.apocalypse_character_Index is not None:
         riftPresent = False
-        for remainingMap in account.all_characters[account.meowBBIndex].apoc_dict['MEOW']['Medium Extras']:
+        for remainingMap in account.all_characters[account.apocalypse_character_Index].apoc_dict['MEOW']['Medium Extras']:
             if remainingMap[0] == 'The Rift':
                 riftPresent = True
                 break

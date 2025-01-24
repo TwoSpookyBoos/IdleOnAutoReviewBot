@@ -349,8 +349,6 @@ achievements_progressionTiers = {
     0: {},
     1: {
         'EZ Access': {
-            'Platinum 200G': {'World': 1, 'Reward': 'W1 Key', 'Rating': ''},
-            'Half a Mill-log': {'World': 1, 'Reward': 'W1 Colo and Shops', 'Rating': ''},
             'Super Cereal': {'World': 2, 'Reward': 'W2 Colo and Shops', 'Rating': ''},
         },
         #'Free Teleports': {},
@@ -365,6 +363,8 @@ achievements_progressionTiers = {
     },
     2: {
         'EZ Access': {
+            'Platinum 200G': {'World': 1, 'Reward': 'W1 Key', 'Rating': ''},
+            'Half a Mill-log': {'World': 1, 'Reward': 'W1 Colo and Shops', 'Rating': ''},
             'Skill Master': {'World': 2, 'Reward': 'W2 Key', 'Rating': ''},
             'Cool Score!': {'World': 3, 'Reward': 'W3 Colo and Shop', 'Rating': ''},
         },
@@ -976,6 +976,7 @@ bubbles_progressionTiers = [
      {'Cookin Roadkill': 6930, 'Call Me Bob': 10000, 'Carpenter': 4950, 'Nickel Of Wisdom': 2970, "Penny Of Strength": 2970, "Dollar Of Agility": 2970,
       'Droppin Loads': 6930, 'Startue Exp': 5940, 'Laaarrrryyyy': 9900, 'Big Game Hunter': 2970, 'Mr Massacre': 4950, 'Shimmeron': 3960, 'Lo Cost Mo Jade': 3960,
       'Hammer Hammer': 10000, "Grind Time": 10000, 'Buff Boi Talent': 1000, 'Fast Boi Talent': 1000, 'Smart Boi Talent': 1000,
+      'Card Champ': 3960, 'Egg Ink': 3960,
       'Essence Chapter': 4950, 'Quickdraw Quiver': 5940, 'Smarter Spells': 5940, 'Ninja Looter': 5940, 'Crop Chapter': 4950
       },
      "99% catchup",
@@ -1135,35 +1136,34 @@ deathNote_progressionTiers = [
     # 0-4 int tier. int w1LowestSkull, int w2LowestSkull, int w3LowestSkull, int w4LowestSkull,
     # 5-9 int w5LowestSkull, int w6LowestSkull, int w7LowestSkull, int w8LowestSkull, int zowCount, int chowCount,
     # 10-11 int meowCount, str Notes
-    [0,  0,  0,  0,  0,  0,  0,     0, 0,   0, 0, 0, ""],
-    [1,  1,  1,  1,  0,  0,  0,     0, 0,   0, 0, 0, ""],
-    [2,  2,  2,  2,  0,  0,  0,     0, 0,   0, 0, 0, ""],
-    [3,  3,  3,  3,  1,  0,  0,     0, 0,   0, 0, 0, ""],
-    [4,  4,  4,  4,  2,  0,  0,     0, 0,   0, 0, 0, ""],  #The recommendation for ZOWs is 12hrs or less (8,333+ KPH) per enemy. If you aren't at that mark yet, don't sweat it. Come back later!
-    [5,  5,  5,  5,  3,  0,  0,     0, 0,   0, 0, 0,
-     "The Voidwalker questline requires W1-W3 at all Plat Skulls. Aim to complete this by Mid W5 as Vman's account-wide buffs are insanely strong."],
-    [6,  7,  5,  5,  4,  0,  0,     0, 0,   0, 0, 0, ""],  #"The recommendation for CHOWs is 12hrs or less (83,333+ KPH) per enemy. If you aren't at that mark yet, don't sweat it. Come back later!"
-    [7,  10, 7,  5,  5,  1,  0,     0, 0,   0, 0, 0, ""],
-    [8,  10, 10, 7,  5,  2,  0,     0, 0,   0, 0, 0, ""],
-    [9,  10, 10, 10, 5,  3,  0,     0, 0,   0, 0, 0, ""],
-    [10, 10, 10, 10, 7,  4,  0,     0, 0,   0, 0, 0, ""],
-    [11, 10, 10, 10, 10, 5,  0,     0, 0,   0, 0, 0, ""],  #"Complete Lava Skull, then BB Super CHOW, before you start working on Eclipse Skulls. "
-    [12, 10, 10, 10, 10, 7,  0,     0, 0,   0, 0, 0, ""],
-    [13, 10, 10, 10, 10, 10, 0,     0, 0,   0, 0, 0, ""],
-    [14, 10, 10, 10, 10, 10, 0,     0, 0,   0, 0, 0, ""],
-    [15, 10, 10, 10, 10, 10, 0,     0, 0,   0, 0, 0, ""],
-    [16, 20, 10, 10, 10, 10, 0,     0, 0,   0, 0, 0, ""],
-    [17, 20, 20, 10, 10, 10, 1,     0, 0,   0, 0, 0, ""],
-    [18, 20, 20, 20, 10, 10, 2,     0, 0,   0, 0, 0, ""],
-    [19, 20, 20, 20, 20, 10, 3,     0, 0,   15, 15, 15, "Aim for Super CHOWs in 24hrs each (4m+ KPH)"],
-    [20, 20, 20, 20, 20, 20, 4,     0, 0,   26, 26, 26, ""],
-    [21, 20, 20, 20, 20, 20, 5,     0, 0,   40, 40, 40, ""],
-    [22, 20, 20, 20, 20, 20, 7,     0, 0,   53, 53, 53, ""],
-    [23, 20, 20, 20, 20, 20, 10,    0, 0,   66, 66, 66, ""],
-    [24, 20, 20, 20, 20, 20, 10,    0, 0,   73, 73, 73, ""],
-    [25, 20, 20, 20, 20, 20, 20,    0, 0,   80, 80, 80, ""],
-    [26, 20, 20, 20, 20, 20, 20,    0, 0,   84, 84, 83, "As of v2.11, completing a Super CHOW on Boops is impossible."],
-    [27, 20, 20, 20, 20, 20, 20,    0, 0,   86, 86, 86, "Info only"]
+    [0,  0,  0,  0,  0,  0,  0,     0, 0,   0,  0,  0,  0, ""],
+    [1,  1,  1,  1,  0,  0,  0,     0, 0,   0,  0,  0,  0, ""],
+    [2,  2,  2,  2,  0,  0,  0,     0, 0,   0,  0,  0,  0, ""],
+    [3,  3,  3,  3,  1,  0,  0,     0, 0,   0,  0,  0,  0, ""],
+    [4,  4,  4,  4,  2,  0,  0,     0, 0,   0,  0,  0,  0, ""],  #The recommendation for ZOWs is 12hrs or less (8,333+ KPH) per enemy. If you aren't at that mark yet, don't sweat it. Come back later!
+    [5,  5,  5,  5,  3,  0,  0,     0, 0,   0,  0,  0,  0, "The Voidwalker questline requires W1-W3 at all Plat Skulls. Aim to complete this by Mid W5 as Vman's account-wide buffs are insanely strong."],
+    [6,  7,  5,  5,  4,  0,  0,     0, 0,   0,  0,  0,  0, ""],  #"The recommendation for CHOWs is 12hrs or less (83,333+ KPH) per enemy. If you aren't at that mark yet, don't sweat it. Come back later!"
+    [7,  10, 7,  5,  5,  1,  0,     0, 0,   0,  0,  0,  0, ""],
+    [8,  10, 10, 7,  5,  2,  0,     0, 0,   0,  0,  0,  0, ""],
+    [9,  10, 10, 10, 5,  3,  0,     0, 0,   0,  0,  0,  0, ""],
+    [10, 10, 10, 10, 7,  4,  0,     0, 0,   0,  0,  0,  0, ""],
+    [11, 10, 10, 10, 10, 5,  0,     0, 0,   0,  0,  0,  0, ""],  #"Complete Lava Skull, then BB Super CHOW, before you start working on Eclipse Skulls. "
+    [12, 10, 10, 10, 10, 7,  0,     0, 0,   0,  0,  0,  0, ""],
+    [13, 10, 10, 10, 10, 10, 0,     0, 0,   0,  0,  0,  0, ""],
+    [14, 10, 10, 10, 10, 10, 0,     0, 0,   0,  0,  0,  0, ""],
+    [15, 10, 10, 10, 10, 10, 0,     0, 0,   0,  0,  0,  0, ""],
+    [16, 20, 10, 10, 10, 10, 0,     0, 0,   0,  0,  0,  0, ""],
+    [17, 20, 20, 10, 10, 10, 1,     0, 0,   0,  0,  0,  0, ""],
+    [18, 20, 20, 20, 10, 10, 2,     0, 0,   0,  0,  0,  0, ""],
+    [19, 20, 20, 20, 20, 10, 3,     0, 0,   15, 15, 15, 0, "Aim for Super CHOWs in 24hrs each (4m+ KPH)"],
+    [20, 20, 20, 20, 20, 20, 4,     0, 0,   26, 26, 26, 0, ""],
+    [21, 20, 20, 20, 20, 20, 5,     0, 0,   40, 40, 40, 0, ""],
+    [22, 20, 20, 20, 20, 20, 7,     0, 0,   53, 53, 53, 0, ""],
+    [23, 20, 20, 20, 20, 20, 10,    0, 0,   66, 66, 66, 0, ""],
+    [24, 20, 20, 20, 20, 20, 10,    0, 0,   73, 73, 73, 0, ""],
+    [25, 20, 20, 20, 20, 20, 20,    0, 0,   80, 80, 80, 0, ""],
+    [26, 20, 20, 20, 20, 20, 20,    0, 0,   84, 84, 83, 0, "As of v2.11, completing a Super CHOW on Boops is impossible."],
+    [27, 20, 20, 20, 20, 20, 20,    0, 0,   86, 86, 86, 86, "Info only"]
 ]
 buildingsPostBuffs_progressionTiers = [
     [0, "Unlock", [], "", ""],
@@ -2059,6 +2059,7 @@ versions_patches = {
     232: "v2.22 The Fixening",
     233: "v2.23 Justice Monument",
     234: "v2.24 Giftmas Event / v2.25 Saveload TD",
+    236: "v2.26 Death Bringer Class"
 }
 ignorable_labels: tuple = ('Weekly Ballot',)
 missableGStacksDict = {
@@ -2472,6 +2473,7 @@ humanReadableClasses = {
     11: "Death Bringer",
     12: "Divine Knight",
     13: "Royal Guardian",
+    14: "Death Bringer",
     18: "Calm Basics",
     19: "Archer",
     20: "Bowman",
@@ -3295,7 +3297,11 @@ expected_talentsDict = {
         140, 141, 142, 143, 144,
         145, 146, 147, 148, 149
     ],
-    #"Death Bringer": [],
+    "Death Bringer": [
+        135, 136, 137, 138, 139,
+        140, 141, 142, 143, 144,
+        145, 146, 147, 148, 149
+    ],
     "Divine Knight": [
         165, 166, 167, 168, 169,
         170, 141, 142, 143, 144,
@@ -3659,6 +3665,20 @@ skill_talentsDict = {
 combat_talentsDict = {
     # Talents here are unique from the skill_talentsDict above
     # Warriors
+    "Death Bringer": {
+        "High": {},
+        "Medium": {
+            97: {"Name": "Carry a Big Stick", "Tab": "Tab 2"},
+            6: {"Name": "Gilded Sword", "Tab": "Tab 1"},
+        },
+        "Low": {
+            88: {"Name": "Idle Brawling", "Tab": "Tab 1"},
+            5: {"Name": "Sharpened Axe", "Tab": "Tab 1"},
+            110: {"Name": "Apocalypse Zow", "Tab": "Tab 3"},
+            141: {"Name": "Charred Skulls", "Tab": "Tab 4"},
+            140: {"Name": "Tough Steaks", "Tab": "Tab 4"},
+        },
+    },
     "Blood Berserker": {
         "High": {},
         "Medium": {
@@ -5350,7 +5370,7 @@ apocableMapIndexDict = {
 dnBasicMapsCount = sum([len(v) for k, v in apocableMapIndexDict.items() if k > 0])
 dnAllApocMapsCount = dnBasicMapsCount + len(apocableMapIndexDict[0])
 apocAmountsList = [100000, 1000000, 100000000, 1000000000, 1000000000000]
-apocNamesList = ["ZOW", "CHOW", "MEOW", "1B","64bitOverflow"]
+apocNamesList = ["ZOW", "CHOW", "MEOW", "WOW", "64bitOverflow"]
 apocDifficultyNameList = [
     'Basic W1 Enemies', 'Basic W2 Enemies', 'Basic W3 Enemies', 'Basic W4 Enemies', 'Basic W5 Enemies', 'Basic W6 Enemies',
     'Easy Extras', 'Medium Extras', 'Difficult Extras', 'Insane', 'Impossible'
@@ -7112,6 +7132,11 @@ jade_emporium = [
         "Bonus": "All Divinity Gods give 1.05x higher Blessing bonus per God Rank. Whats a Blessing bonus? Select a god, it's the one on the bottom, go look.",
         "CodeString": "G"
     },
+    {
+        "Name": "Science Highlighter",
+        "Bonus": "Adds a new bonus type to your crop scientist! Specifically '+1% Drop Rate' per Crop after 100! So having 105 crops would only give +5%",
+        "CodeString": "L"
+    },
 
 ]
 gfood_codes = ["PeanutG", "ButterBar", *[f"FoodG{i}" for i in range(1, 14)]]
@@ -7145,7 +7170,7 @@ sneakingGemstonesFirstIndex = 233
 sneakingGemstonesCount = len(sneakingGemstonesList)
 sneakingGemstonesBaseValueDict = {"Aquamarine": 40, "Emerald": 15, "Garnet": 12, "Starite": 5, "Topaz": 10, "Moissanite": 3}
 sneakingGemstonesMaxValueDict = {"Aquamarine": 10040, "Emerald": 5015, "Garnet": 2512, "Starite": 205, "Topaz": 1010, "Moissanite": 303}
-maxFarmingCrops = 180  # Last verified as of 2.25 Saveload TD
+maxFarmingCrops = 230  # Last verified as of 2.26 Death Bringer
 maxFarmingValue = 10000  # Last verified as of 2.21 The Fixening
 landrankDict = {
     0: {'Name': 'Evolution Boost', 'UnlockLevel': 1, 'Value': 250},
@@ -7448,6 +7473,61 @@ cropDict = {
     178: {'Name': 'Blue Glassy Rose',        'Image': 'blue-glassy-rose', 'SeedName': 'Blue Glassy',       'SeedCropIndex': 71},
     179: {'Name': 'Blue Glassy Onigiri',     'Image': 'blue-glassy-corn', 'SeedName': 'Blue Glassy',       'SeedCropIndex': 72},
     180: {'Name': 'Blue Glassy Corn',        'Image': 'blue-glassy-corn', 'SeedName': 'Blue Glassy',       'SeedCropIndex': 73},
+#T08 Glassy
+    181: {'Name': 'T08 Glassy Bananas',     'Image': 't08-glassy-bananas',      'SeedName': 'T08 Glassy', 'SeedCropIndex': 74},
+    182: {'Name': 'T08 Glassy Mango',       'Image': 't08-glassy-mango',        'SeedName': 'T08 Glassy', 'SeedCropIndex': 75},
+    183: {'Name': 'T08 Glassy Broccoli',    'Image': 't08-glassy-broccoli',     'SeedName': 'T08 Glassy', 'SeedCropIndex': 76},
+    184: {'Name': 'T08 Glassy Carrot',      'Image': 't08-glassy-carrot',       'SeedName': 'T08 Glassy', 'SeedCropIndex': 77},
+    185: {'Name': 'T08 Glassy Tomato',      'Image': 't08-glassy-tomato',       'SeedName': 'T08 Glassy', 'SeedCropIndex': 78},
+    186: {'Name': 'T08 Glassy Watermelon',  'Image': 't08-glassy-watermelon',   'SeedName': 'T08 Glassy', 'SeedCropIndex': 79},
+    187: {'Name': 'T08 Glassy Shrimp',      'Image': 't08-glassy-shrimp',       'SeedName': 'T08 Glassy', 'SeedCropIndex': 80},
+    188: {'Name': 'T08 Glassy Rose',        'Image': 't08-glassy-rose',         'SeedName': 'T08 Glassy', 'SeedCropIndex': 81},
+    189: {'Name': 'T08 Glassy Onigiri',     'Image': 't08-glassy-corn',         'SeedName': 'T08 Glassy', 'SeedCropIndex': 82},
+    190: {'Name': 'T08 Glassy Corn',        'Image': 't08-glassy-corn',         'SeedName': 'T08 Glassy', 'SeedCropIndex': 83},
+#T09 Glassy
+    191: {'Name': 'T09 Glassy Bananas',     'Image': 't09-glassy-bananas',      'SeedName': 'T09 Glassy', 'SeedCropIndex': 84},
+    192: {'Name': 'T09 Glassy Mango',       'Image': 't09-glassy-mango',        'SeedName': 'T09 Glassy', 'SeedCropIndex': 85},
+    193: {'Name': 'T09 Glassy Broccoli',    'Image': 't09-glassy-broccoli',     'SeedName': 'T09 Glassy', 'SeedCropIndex': 86},
+    194: {'Name': 'T09 Glassy Carrot',      'Image': 't09-glassy-carrot',       'SeedName': 'T09 Glassy', 'SeedCropIndex': 87},
+    195: {'Name': 'T09 Glassy Tomato',      'Image': 't09-glassy-tomato',       'SeedName': 'T09 Glassy', 'SeedCropIndex': 88},
+    196: {'Name': 'T09 Glassy Watermelon',  'Image': 't09-glassy-watermelon',   'SeedName': 'T09 Glassy', 'SeedCropIndex': 89},
+    197: {'Name': 'T09 Glassy Shrimp',      'Image': 't09-glassy-shrimp',       'SeedName': 'T09 Glassy', 'SeedCropIndex': 90},
+    198: {'Name': 'T09 Glassy Rose',        'Image': 't09-glassy-rose',         'SeedName': 'T09 Glassy', 'SeedCropIndex': 91},
+    199: {'Name': 'T09 Glassy Onigiri',     'Image': 't09-glassy-corn',         'SeedName': 'T09 Glassy', 'SeedCropIndex': 92},
+    200: {'Name': 'T09 Glassy Corn',        'Image': 't09-glassy-corn',         'SeedName': 'T09 Glassy', 'SeedCropIndex': 93},
+#T10 Glassy
+    201: {'Name': 'T10 Glassy Bananas',     'Image': 't10-glassy-bananas',      'SeedName': 'T10 Glassy', 'SeedCropIndex': 94},
+    202: {'Name': 'T10 Glassy Mango',       'Image': 't10-glassy-mango',        'SeedName': 'T10 Glassy', 'SeedCropIndex': 95},
+    203: {'Name': 'T10 Glassy Broccoli',    'Image': 't10-glassy-broccoli',     'SeedName': 'T10 Glassy', 'SeedCropIndex': 96},
+    204: {'Name': 'T10 Glassy Carrot',      'Image': 't10-glassy-carrot',       'SeedName': 'T10 Glassy', 'SeedCropIndex': 97},
+    205: {'Name': 'T10 Glassy Tomato',      'Image': 't10-glassy-tomato',       'SeedName': 'T10 Glassy', 'SeedCropIndex': 98},
+    206: {'Name': 'T10 Glassy Watermelon',  'Image': 't10-glassy-watermelon',   'SeedName': 'T10 Glassy', 'SeedCropIndex': 99},
+    207: {'Name': 'T10 Glassy Shrimp',      'Image': 't10-glassy-shrimp',       'SeedName': 'T10 Glassy', 'SeedCropIndex': 100},
+    208: {'Name': 'T10 Glassy Rose',        'Image': 't10-glassy-rose',         'SeedName': 'T10 Glassy', 'SeedCropIndex': 101},
+    209: {'Name': 'T10 Glassy Onigiri',     'Image': 't10-glassy-corn',         'SeedName': 'T10 Glassy', 'SeedCropIndex': 102},
+    210: {'Name': 'T10 Glassy Corn',        'Image': 't10-glassy-corn',         'SeedName': 'T10 Glassy', 'SeedCropIndex': 103},
+#T11 Glassy
+    211: {'Name': 'T11 Glassy Bananas',     'Image': 't11-glassy-bananas',      'SeedName': 'T11 Glassy', 'SeedCropIndex': 104},
+    212: {'Name': 'T11 Glassy Mango',       'Image': 't11-glassy-mango',        'SeedName': 'T11 Glassy', 'SeedCropIndex': 105},
+    213: {'Name': 'T11 Glassy Broccoli',    'Image': 't11-glassy-broccoli',     'SeedName': 'T11 Glassy', 'SeedCropIndex': 106},
+    214: {'Name': 'T11 Glassy Carrot',      'Image': 't11-glassy-carrot',       'SeedName': 'T11 Glassy', 'SeedCropIndex': 107},
+    215: {'Name': 'T11 Glassy Tomato',      'Image': 't11-glassy-tomato',       'SeedName': 'T11 Glassy', 'SeedCropIndex': 108},
+    216: {'Name': 'T11 Glassy Watermelon',  'Image': 't11-glassy-watermelon',   'SeedName': 'T11 Glassy', 'SeedCropIndex': 109},
+    217: {'Name': 'T11 Glassy Shrimp',      'Image': 't11-glassy-shrimp',       'SeedName': 'T11 Glassy', 'SeedCropIndex': 110},
+    218: {'Name': 'T11 Glassy Rose',        'Image': 't11-glassy-rose',         'SeedName': 'T11 Glassy', 'SeedCropIndex': 111},
+    219: {'Name': 'T11 Glassy Onigiri',     'Image': 't11-glassy-corn',         'SeedName': 'T11 Glassy', 'SeedCropIndex': 112},
+    220: {'Name': 'T11 Glassy Corn',        'Image': 't11-glassy-corn',         'SeedName': 'T11 Glassy', 'SeedCropIndex': 113},
+#T12 Glassy
+    221: {'Name': 'T12 Glassy Bananas',     'Image': 't12-glassy-bananas',      'SeedName': 'T12 Glassy', 'SeedCropIndex': 114},
+    222: {'Name': 'T12 Glassy Mango',       'Image': 't12-glassy-mango',        'SeedName': 'T12 Glassy', 'SeedCropIndex': 115},
+    223: {'Name': 'T12 Glassy Broccoli',    'Image': 't12-glassy-broccoli',     'SeedName': 'T12 Glassy', 'SeedCropIndex': 116},
+    224: {'Name': 'T12 Glassy Carrot',      'Image': 't12-glassy-carrot',       'SeedName': 'T12 Glassy', 'SeedCropIndex': 117},
+    225: {'Name': 'T12 Glassy Tomato',      'Image': 't12-glassy-tomato',       'SeedName': 'T12 Glassy', 'SeedCropIndex': 118},
+    226: {'Name': 'T12 Glassy Watermelon',  'Image': 't12-glassy-watermelon',   'SeedName': 'T12 Glassy', 'SeedCropIndex': 119},
+    227: {'Name': 'T12 Glassy Shrimp',      'Image': 't12-glassy-shrimp',       'SeedName': 'T12 Glassy', 'SeedCropIndex': 120},
+    228: {'Name': 'T12 Glassy Rose',        'Image': 't12-glassy-rose',         'SeedName': 'T12 Glassy', 'SeedCropIndex': 121},
+    229: {'Name': 'T12 Glassy Onigiri',     'Image': 't12-glassy-corn',         'SeedName': 'T12 Glassy', 'SeedCropIndex': 122},
+    230: {'Name': 'T12 Glassy Corn',        'Image': 't12-glassy-corn',         'SeedName': 'T12 Glassy', 'SeedCropIndex': 123},
 }
 seed_base = {
     'Basic': 0.75,
@@ -7455,13 +7535,7 @@ seed_base = {
     'Bulbo': 0.3,
     'Sushi': 0.4,
     'Mushie': 0.2,
-    'Normal Glassy': 0.05,
-    'Red Glassy': 0.05,
-    'Green Glassy': 0.05,
-    'White Glassy': 0.05,
-    'Purple Glassy': 0.05,
-    'Yellow Glassy': 0.05,
-    'Blue Glassy': 0.05
+    'Glassy': 0.05,
 }
 crop_base = 0.3
 def getCropEvoChance(overallSeedNumber: int) -> float:
@@ -7469,7 +7543,10 @@ def getCropEvoChance(overallSeedNumber: int) -> float:
         return 1
     else:
         try:
-            return crop_base * pow(seed_base[cropDict[overallSeedNumber]['SeedName']], cropDict[overallSeedNumber]['SeedCropIndex'] - 2)
+            if 'Glassy' in cropDict[overallSeedNumber]['SeedName']:
+                return crop_base * pow(seed_base['Glassy'], cropDict[overallSeedNumber]['SeedCropIndex'] - 2)
+            else:
+                return crop_base * pow(seed_base[cropDict[overallSeedNumber]['SeedName']], cropDict[overallSeedNumber]['SeedCropIndex'] - 2)
         except:
             logger.warning(f"overallSeedNumber {overallSeedNumber} not found in cropDict, or SeedName not found in seed_base. Returning crop_base {crop_base}")
             return crop_base
