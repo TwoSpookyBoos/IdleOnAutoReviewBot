@@ -96,6 +96,8 @@ def getDeathNoteProgressionTiersAdviceGroup():
             highestZOWCountIndex = barbIndex
         if highestCHOWCountIndex is None:
             highestCHOWCountIndex = barbIndex
+        if highestWOWCountIndex is None:
+            highestWOWCountIndex = barbIndex
         if session_data.account.all_characters[barbIndex].apoc_dict['ZOW']['Total'] > highestZOWCount:
             highestZOWCount = session_data.account.all_characters[barbIndex].apoc_dict['ZOW']['Total']
             highestZOWCountIndex = barbIndex
