@@ -1259,11 +1259,11 @@ def _calculate_general_character_over_books(account):
             character_specific_bonuses += ceil(arctis_base * account.alchemy_bubbles['Big P']['BaseValue'] * (char.divinity_level / (char.divinity_level + 60)))
 
         # Symbols of Beyond = 1 + 1 per 20 levels
-        if char.class_name in ["Blood Berserker", "Divine Knight"]:
+        if any([elite in char.all_classes for elite in ["Blood Berserker", "Divine Knight"]]):
             char.setSymbolsOfBeyondMax(char.max_talents.get("149", 0) // 20)  # Symbols of Beyond - Red
-        elif char.class_name in ["Siege Breaker", "Beast Master"]:
+        elif any([elite in char.all_classes for elite in ["Siege Breaker", "Beast Master"]]):
             char.setSymbolsOfBeyondMax(char.max_talents.get("374", 0) // 20)  # Symbols of Beyond - Green
-        elif char.class_name in ["Elemental Sorcerer", "Bubonic Conjuror"]:
+        elif any([elite in char.all_classes for elite in ["Elemental Sorcerer", "Bubonic Conjuror"]]):
             char.setSymbolsOfBeyondMax(char.max_talents.get("539", 0) // 20)  # Symbols of Beyond - Purple
         character_specific_bonuses += char.symbols_of_beyond
 
