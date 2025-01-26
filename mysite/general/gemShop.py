@@ -1,7 +1,7 @@
 from models.models import Advice, AdviceGroup, AdviceSection
 from utils.data_formatting import safe_loads, safer_get
 from utils.logging import get_logger
-from consts import gemShop_progressionTiers, maxFarmingCrops, currentWorld, breedingTotalPets, cookingCloseEnough, break_you_best
+from consts import gemShop_progressionTiers, maxFarmingCrops, currentWorld, breedingTotalPets, cookingCloseEnough, break_you_best, max_cavern, max_majiks, max_measurements, getMaxEngineerLevel
 from flask import g as session_data
 
 logger = get_logger(__name__)
@@ -84,6 +84,23 @@ def try_exclude_Gaming(exclusionList):
             exclusionList.append('Lava Sprouts')
     except:
         pass
+    
+def try_exclude_ConjurorPts(exclusionList):
+    if  session_data.account.gemshop['Conjuror Pts'] >= max_majiks - session_data.account.caverns['Villagers']['Cosmos']['Level']:
+        exclusionList.append('Conjuror Pts')
+    
+def try_exclude_parallelVillagers(exclusionList):
+    if session_data.account.caverns['Villagers']['Polonai']['Level'] >= max_cavern:
+        exclusionList.append('Parallel Villagers The Explorer')
+        
+    if session_data.account.caverns['Villagers']['Kaipu']['Level'] >= getMaxEngineerLevel():
+        exclusionList.append('Parallel Villagers The Engineer')
+        
+    if session_data.account.caverns['Villagers']['Cosmos']['Level'] >= (max_majiks - session_data.account.gemshop['Conjuror Pts']):
+        exclusionList.append('Parallel Villagers The Conjuror')
+        
+    if session_data.account.caverns['Villagers']['Minau']['Level'] >= max_measurements :
+        exclusionList.append('Parallel Villagers The Measurer')
 
 def try_exclude_ShroomFamiliar(exclusionList):
     #if Red is at least half-way finished, exclude
@@ -123,7 +140,9 @@ def getGemShopFullExclusions():
     try_exclude_Kitchens(exclusionList)
     #W5
     try_exclude_ChestSluggo(exclusionList)
-    try_exclude_Gaming(exclusionList)
+    try_exclude_Gaming(exclusionList)    
+    #Caverns
+    try_exclude_ConjurorPts(exclusionList)
     #W6
 
     return exclusionList
@@ -136,6 +155,8 @@ def getGemShopPartialExclusions():
     #W3
     #W4
     #W5
+    #Caverns
+    try_exclude_parallelVillagers(exclusionList)
     #W6
     try_exclude_farming(exclusionList)
     try_exclude_ShroomFamiliar(exclusionList)
