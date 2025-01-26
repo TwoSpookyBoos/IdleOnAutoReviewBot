@@ -7,161 +7,165 @@ from flask import g as session_data
 logger = get_logger(__name__)
 
 
-def try_exclude_DungeonTickets(exclusionList):
+def try_exclude_DungeonTickets(exclusionLists):
     #Scenario 1: All Credit and Flurbo upgrades maxed
     #8 Credit Upgrades with max Rank 100 in [1]
     #8 Flurbo Upgrades with max Rank 50 in [5]
     if sum(session_data.account.dungeon_upgrades.get("CreditShop", [0])) == 100*8 and sum(session_data.account.dungeon_upgrades.get("FlurboShop", [0])) == 50*8:
-        if 'Weekly Dungeon Boosters' not in exclusionList:
-            exclusionList.append('Weekly Dungeon Boosters')
+        if 'Weekly Dungeon Boosters' not in exclusionLists:
+            for sublist in exclusionLists:
+                sublist.append('Weekly Dungeon Boosters')
             return
 
     #Scenario 2: Over Rank 40 or 100+ tickets
     try:
-        #playerCredits = safer_get(session_data.account.raw_optlacc_dict, 72, 0)
-        #playerFlurbo = safer_get(session_data.account.raw_optlacc_dict, 73, 0)
         playerBoosters = safer_get(session_data.account.raw_optlacc_dict, 76, 1) - 1  #The true value is always 1 less than JSON. Silly Lava
     except:
         playerBoosters = 0
     if session_data.account.playerDungeonRank >= 40 or playerBoosters >= 100:
-        if 'Weekly Dungeon Boosters' not in exclusionList:
-            exclusionList.append('Weekly Dungeon Boosters')
+        if 'Weekly Dungeon Boosters' not in exclusionLists:
+            for sublist in exclusionLists:
+                sublist.append('Weekly Dungeon Boosters')
             return
 
-def try_exclude_SoupedUpTube(exclusionList):
+def try_exclude_SoupedUpTube(exclusionLists):
     sum_LabLevels = sum(session_data.account.all_skills["Lab"])
     if sum_LabLevels >= 180:
-        exclusionList.append("Souped Up Tube")
+        for sublist in exclusionLists:
+            sublist.append("Souped Up Tube")
 
-def try_exclude_FluorescentFlaggies(exclusionList):
+def try_exclude_FluorescentFlaggies(exclusionLists):
     """
     0 through 95 are cogs placed on the board
     96-98 are gray cog-making characters
     99-101 are yellow cog-making
     102-104 are red cog-making
-    105-107 are purple cog-making
+    105-107 are purple cog-makingss_through_d_exclusions
     """
     try:
         cogList = safe_loads(session_data.account.raw_data.get("CogO", []))
         cogBlanks = sum(1 for cog in cogList[0:95] if cog == "Blank")
         if cogBlanks <= 60:
-            exclusionList.append("Fluorescent Flaggies")
+            for sublist in exclusionLists:
+                sublist.append("Fluorescent Flaggies")
     except:
         pass
 
-def try_exclude_BurningBadBooks(exclusionList):
+def try_exclude_BurningBadBooks(exclusionLists):
     if session_data.account.construction_buildings['Automation Arm']['Level'] >= 5:
-        exclusionList.append("Burning Bad Books")
+        for sublist in exclusionLists:
+            sublist.append("Burning Bad Books")
 
-def try_exclude_EggCapacity(exclusionList):
+def try_exclude_EggCapacity(exclusionLists):
     if session_data.account.breeding['Total Unlocked Count'] >= breedingTotalPets - 5:
-        exclusionList.append('Royal Egg Cap')
+        for sublist in exclusionLists:
+            sublist.append('Royal Egg Cap')
 
-def try_exclude_Kitchens(exclusionList):
+def try_exclude_Kitchens(exclusionLists):
     if session_data.account.cooking['MaxRemainingMeals'] < cookingCloseEnough:
-        exclusionList.append('Richelin Kitchen')
+        for sublist in exclusionLists:
+            sublist.append('Richelin Kitchen')
 
-def try_exclude_ChestSluggo(exclusionList):
-    # 33 artifacts times 4 tiers each = 132 for v2.09
+def try_exclude_ChestSluggo(exclusionLists):
+    # 33 artifacts times 4 tiers each = 132 for v2.26
     # Minus the new 3 lanterns and giants eye, 29 * 2 = 58 expected count when finishing all Ancient artifacts
     # 58/132 = 43.94% of all possibly artifacts. They know what they're getting into at that point.
     if session_data.account.sum_artifact_tiers >= 58:  #(numberOfArtifacts * numberOfArtifactTiers) * 0.43:
-        exclusionList.append("Chest Sluggo")
+        for sublist in exclusionLists:
+            sublist.append("Chest Sluggo")
 
-def try_exclude_Gaming(exclusionList):
+def try_exclude_Gaming(exclusionLists):
     if (
         session_data.account.gaming['SuperBits']['Isotope Discovery']['Unlocked']
         or session_data.account.gaming['FertilizerValue'] >= 420
         or session_data.account.gaming['FertilizerSpeed'] >= 500
         or session_data.account.farming['CropsUnlocked'] >= maxFarmingCrops * 0.75
     ):
-        exclusionList.append('Golden Sprinkler')
-        exclusionList.append('Lava Sprouts')
+        for sublist in exclusionLists:
+            sublist.append('Golden Sprinkler')
+            sublist.append('Lava Sprouts')
         return
     try:
         if session_data.account.gaming['BitsOwned'] >= 1e47:  #Red 100B
-            exclusionList.append('Golden Sprinkler')
-            exclusionList.append('Lava Sprouts')
+            for sublist in exclusionLists:
+                sublist.append('Golden Sprinkler')
+                sublist.append('Lava Sprouts')
     except:
         pass
     
-def try_exclude_ConjurorPts(exclusionList):
-    if  session_data.account.gemshop['Conjuror Pts'] >= max_majiks - session_data.account.caverns['Villagers']['Cosmos']['Level']:
-        exclusionList.append('Conjuror Pts')
+def try_exclude_ConjurorPts(exclusionLists):
+    if session_data.account.gemshop['Conjuror Pts'] >= max_majiks - session_data.account.caverns['Villagers']['Cosmos']['Level']:
+        for sublist in exclusionLists:
+            sublist.append('Conjuror Pts')
     
-def try_exclude_parallelVillagers(exclusionList):
+def try_exclude_ParallelVillagers(exclusionLists):
     if session_data.account.caverns['Villagers']['Polonai']['Level'] >= max_cavern:
-        exclusionList.append('Parallel Villagers The Explorer')
+        for sublist in exclusionLists:
+            sublist.append('Parallel Villagers The Explorer')
         
     if session_data.account.caverns['Villagers']['Kaipu']['Level'] >= getMaxEngineerLevel():
-        exclusionList.append('Parallel Villagers The Engineer')
+        for sublist in exclusionLists:
+            sublist.append('Parallel Villagers The Engineer')
         
     if session_data.account.caverns['Villagers']['Cosmos']['Level'] >= (max_majiks - session_data.account.gemshop['Conjuror Pts']):
-        exclusionList.append('Parallel Villagers The Conjuror')
+        for sublist in exclusionLists:
+            sublist.append('Parallel Villagers The Conjuror')
         
-    if session_data.account.caverns['Villagers']['Minau']['Level'] >= max_measurements :
-        exclusionList.append('Parallel Villagers The Measurer')
+    if session_data.account.caverns['Villagers']['Minau']['Level'] >= max_measurements:
+        for sublist in exclusionLists:
+            sublist.append('Parallel Villagers The Measurer')
 
-def try_exclude_ShroomFamiliar(exclusionList):
+def try_exclude_ShroomFamiliar(exclusionLists):
     #if Red is at least half-way finished, exclude
     if session_data.account.summoning['Battles']['Red'] >= 8:
-        exclusionList.append('Shroom Familiar')
+        for sublist in exclusionLists:
+            sublist.append('Shroom Familiar')
 
-def try_exclude_IvoryBubbleCauldrons(exclusionList):
+def try_exclude_IvoryBubbleCauldrons(exclusionLists):
     if session_data.account.alchemy_cauldrons['NextWorldMissingBubbles'] > currentWorld:
-        exclusionList.append('Ivory Bubble Cauldrons')
+        for sublist in exclusionLists:
+            sublist.append('Ivory Bubble Cauldrons')
 
-def try_exclude_farming(exclusionList):
+def try_exclude_Farming(exclusionLists):
     if session_data.account.farming["CropsUnlocked"] >= maxFarmingCrops:
-        exclusionList.append('Instagrow Generator')
-        exclusionList.append('Plot of Land')
+        for sublist in exclusionLists:
+            sublist.append('Instagrow Generator')
+            sublist.append('Plot of Land')
 
-def try_exclude_Sigils(exclusionList):
+def try_exclude_Sigils(exclusionLists):
     if (
         session_data.account.alchemy_p2w['Sigils']['Pea Pod']['PrechargeLevel'] >= 3
         or session_data.account.alchemy_p2w['Sigils']['Pea Pod']['Level'] >= 3
     ):
-        exclusionList.append('Sigil Supercharge')
+        for sublist in exclusionLists:
+            sublist.append('Sigil Supercharge')
 
-def getGemShopFullExclusions():
-    # Exclusions for SS through Practical Max. Not applied to True Max only
-    exclusionList = []
+def getGemShopExclusions():
+    s_through_d = []
+    practical = []
     #W1
-    try_exclude_DungeonTickets(exclusionList)
+    try_exclude_DungeonTickets([s_through_d, practical])
     #W2
-    try_exclude_IvoryBubbleCauldrons(exclusionList)
-    try_exclude_Sigils(exclusionList)
+    try_exclude_IvoryBubbleCauldrons([s_through_d, practical])
+    try_exclude_Sigils([s_through_d, practical])
     #W3
-    try_exclude_FluorescentFlaggies(exclusionList)
-    try_exclude_BurningBadBooks(exclusionList)
+    try_exclude_FluorescentFlaggies([s_through_d, practical])
+    try_exclude_BurningBadBooks([s_through_d, practical])
     #W4
-    try_exclude_SoupedUpTube(exclusionList)
-    try_exclude_EggCapacity(exclusionList)
-    try_exclude_Kitchens(exclusionList)
+    try_exclude_SoupedUpTube([s_through_d, practical])
+    try_exclude_EggCapacity([s_through_d, practical])
+    try_exclude_Kitchens([s_through_d, practical])
     #W5
-    try_exclude_ChestSluggo(exclusionList)
-    try_exclude_Gaming(exclusionList)    
+    try_exclude_ChestSluggo([s_through_d, practical])
+    try_exclude_Gaming([s_through_d, practical])
     #Caverns
-    try_exclude_ConjurorPts(exclusionList)
+    try_exclude_ConjurorPts([s_through_d])  #I specifically don't want these excluded from Practical Max as of 2025-01-26
+    try_exclude_ParallelVillagers([s_through_d])  #I specifically don't want these excluded from Practical Max as of 2025-01-26
     #W6
+    try_exclude_Farming([s_through_d])  #I specifically don't want these excluded from Practical Max as of 2025-01-26
+    try_exclude_ShroomFamiliar([s_through_d])  #I specifically don't want these excluded from Practical Max as of 2025-01-26
 
-    return exclusionList
-
-def getGemShopPartialExclusions():
-    #Exclusions for SS through D only. Not applied to Practical Max or True Max
-    exclusionList = []
-    #W1
-    #W2
-    #W3
-    #W4
-    #W5
-    #Caverns
-    try_exclude_parallelVillagers(exclusionList)
-    #W6
-    try_exclude_farming(exclusionList)
-    try_exclude_ShroomFamiliar(exclusionList)
-
-    return exclusionList
+    return s_through_d, practical
 
 def getBonusSectionName(bonusName):
     match bonusName:
@@ -201,8 +205,7 @@ def getBonusSectionName(bonusName):
 
 def getGemShopAdviceSection() -> AdviceSection:
     boughtItems = session_data.account.gemshop
-    fullExclusions = getGemShopFullExclusions()  # Exclusions for SS through Practical Max. Not applied to True Max only
-    partialExclusions = fullExclusions + getGemShopPartialExclusions()  #Exclusions for SS through D only. Not applied to Practical Max or True Max
+    ss_through_d_exclusions, practical_max_exclusions = getGemShopExclusions()
 
     recommended_stock = {item: count for tier in gemShop_progressionTiers for item, count in tier[2].items()}
     recommended_total = sum(recommended_stock.values())
@@ -215,7 +218,7 @@ def getGemShopAdviceSection() -> AdviceSection:
     #progressionTiers[tier][2] = dict recommendedPurchases
     #progressionTiers[tier][3] = str notes
 
-    filtered_groups = ["SS", *"SABCD"]
+    ss_through_d_groups = ["SS", *"SABCD"]
     groups = [
         AdviceGroup(
             tier="",
@@ -226,16 +229,16 @@ def getGemShopAdviceSection() -> AdviceSection:
                 Advice(label=f"{name} ({getBonusSectionName(name)})", picture_class=name, progression=int(prog), goal=int(goal))
                 for name, qty in gemShop_progressionTiers[i][2].items()
                 if name in recommended_stock_bought
-                and name not in partialExclusions
+                and name not in ss_through_d_exclusions
                 and (prog := float(recommended_stock_bought[name])) < (goal := float(qty))
             ],
             informational=True
         )
-        for i, tier in enumerate(filtered_groups, start=1)
+        for i, tier in enumerate(ss_through_d_groups, start=1)
     ]
 
-    partially_filtered_groups = ["Practical Max"]
-    for i, tier in enumerate(partially_filtered_groups, start=7):
+    practical_max_groups = ["Practical Max"]
+    for i, tier in enumerate(practical_max_groups, start=len(ss_through_d_groups)+1):
         groups.append(AdviceGroup(
             tier="",
             pre_string=tier,
@@ -245,14 +248,14 @@ def getGemShopAdviceSection() -> AdviceSection:
                 Advice(label=f"{name} ({getBonusSectionName(name)})", picture_class=name, progression=int(prog), goal=int(goal))
                 for name, qty in gemShop_progressionTiers[i][2].items()
                 if name in recommended_stock_bought
-                and name not in fullExclusions
+                and name not in practical_max_exclusions
                 and (prog := float(recommended_stock_bought[name])) < (goal := float(qty))
             ],
             informational=True
         ))
 
     unfiltered_groups = ["True Max"]
-    for i, tier in enumerate(unfiltered_groups, start=8):
+    for i, tier in enumerate(unfiltered_groups, start=len(ss_through_d_groups)+len(practical_max_groups)+1):
         groups.append(AdviceGroup(
             tier="",
             pre_string=tier,

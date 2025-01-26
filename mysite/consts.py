@@ -74,14 +74,14 @@ gemShop_progressionTiers = [
      ""],
     [5, "C", {
         'Item Backpack Space': 3, 'Storage Chest Space': 12, 'Carry Capacity': 6, 'Weekly Dungeon Boosters': 3, 'Food Slot': 2,
-        'Bleach Liquid Cauldrons': 4, 'More Sample Spaces': 4, 'Burning Bad Books': 2, 'Tower Building Slots': 4,
+        'Bleach Liquid Cauldrons': 4, 'More Sample Spaces': 4, 'Tower Building Slots': 4,
         'Fenceyard Space': 4, 'Chest Sluggo': 9, 'Golden Sprinkler': 2, 'Lava Sprouts': 6,
         'Parallel Villagers The Explorer': 1, 'Parallel Villagers The Measurer': 1, 'Resource Boost': 2, 'Conjuror Pts': 6,
         'Plot of Land': 6, 'Shroom Familiar': 2, 'Instagrow Generator': 7},
      ""],
     [6, "D", {
         'Item Backpack Space': 4, 'Carry Capacity': 8, 'More Storage Space': 5, 'Brimstone Forge Slot': 8,
-        'Ivory Bubble Cauldrons': 4, 'More Sample Spaces': 6, 'Burning Bad Books': 4, 'Zen Cogs': 8,
+        'Ivory Bubble Cauldrons': 4, 'More Sample Spaces': 6, 'Zen Cogs': 8,
         'Souped Up Tube': 3, 'Fenceyard Space': 6, 'Chest Sluggo': 12,
         'Resource Boost': 4, 'Conjuror Pts': 12, 'Opal': 8,
         'Plot of Land': 8, 'Instagrow Generator': 8,
@@ -90,12 +90,13 @@ gemShop_progressionTiers = [
     [7, "Practical Max", {
         'Item Backpack Space': 6, 'Carry Capacity': 10, 'More Storage Space': 10, 'Card Presets': 1,
         'Brimstone Forge Slot': 16, 'Sigil Supercharge': 10,
-        'Fluorescent Flaggies': 2,
+        'Fluorescent Flaggies': 2, 'Burning Bad Books': 4,
         'Golden Sprinkler': 4, 'Divinity Sparkie': 6,
-        'Resource Boost': 10, 'Opal': 20,
-        'Plot of Land': 12, 'Shroom Familiar': 6, 'Instagrow Generator': 8,
+        'Resource Boost': 10, 'Conjuror Pts': 12, 'Opal': 20,
+        'Parallel Villagers The Engineer': 1, 'Parallel Villagers The Conjuror': 1, 'Parallel Villagers The Explorer': 1, 'Parallel Villagers The Measurer': 1,
+        'Plot of Land': 12, 'Shroom Familiar': 6,
     },
-     "I wouldn't recommend going any further as of v2.22."],
+     "I wouldn't recommend going any further as of v2.26."],
     [8, "True Max",
      {
         #Inventory and Storage

@@ -1684,7 +1684,7 @@ def _parse_w5_gaming(account):
     if raw_gaming_list:
         # Bits Owned sometimes Float, sometimes String
         try:
-            account.gaming['BitsOwned'] = float(raw_gaming_list[0])
+            account.gaming['BitsOwned'] = safer_convert(raw_gaming_list[0], 0.00)
         except:
             pass
 
