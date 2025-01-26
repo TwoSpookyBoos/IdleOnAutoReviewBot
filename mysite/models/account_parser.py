@@ -32,7 +32,7 @@ from consts import (
     # W4
     riftRewardsDict,
     labJewelsDict, labBonusesDict, labChipsDict,
-    maxMeals, maxMealLevel, cookingMealDict, maxCookingTables,
+    maxMealCount, maxMealLevel, cookingMealDict, maxCookingTables,
     maxNumberOfTerritories, territoryNames, slotUnlockWavesList, breedingUpgradesDict, breedingGeneticsList,
     breedingShinyBonusList, breedingSpeciesDict, getShinyLevelFromDays, getDaysToNextShinyLevel, getBreedabilityMultiFromDays, getBreedabilityHeartFromMulti,
     # W5
@@ -1360,7 +1360,7 @@ def _parse_w4_cooking(account):
         'MealsUnder30': 0,
         'PlayerMaxPlateLvl': 30,  # 30 is the default starting point
         'PlayerTotalMealLevels': 0,
-        'MaxTotalMealLevels': maxMeals * maxMealLevel,
+        'MaxTotalMealLevels': maxMealCount * maxMealLevel,
         'PlayerMissingPlateUpgrades': []
     }
     _parse_w4_cooking_tables(account)
@@ -1379,16 +1379,16 @@ def _parse_w4_cooking_tables(account):
     account.cooking['Tables Owned'] = sum(1 for table in account.cooking['Tables'] if table[0] == 2)
 
 def _parse_w4_cooking_meals(account):
-    emptyMeal = [0] * maxMeals
+    emptyMeal = [0] * maxMealCount
     # Meals contains 4 lists of lists. The first 3 are as long as the number of plates. The 4th is general shorter.
     emptyMeals = [emptyMeal for meal in range(4)]
     raw_meals_list = safe_loads(account.raw_data.get("Meals", emptyMeals))
-    # Make the sublists maxMeals long
+    # Make the sublists maxMealCount long
     for sublistIndex, value in enumerate(raw_meals_list):
         if isinstance(raw_meals_list[sublistIndex], list):
-            while len(raw_meals_list[sublistIndex]) < maxMeals:
+            while len(raw_meals_list[sublistIndex]) < maxMealCount:
                 raw_meals_list[sublistIndex].append(0)
-            while len(raw_meals_list[sublistIndex]) > maxMeals:
+            while len(raw_meals_list[sublistIndex]) > maxMealCount:
                 raw_meals_list[sublistIndex].pop()
 
     account.meals = {}

@@ -2,7 +2,7 @@ from models.models import Advice, AdviceGroup, AdviceSection
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import maxMeals, maxMealLevel, cookingCloseEnough, break_you_best
+from consts import maxMealCount, maxMealLevel, cookingCloseEnough, break_you_best
 from utils.text_formatting import pl
 
 logger = get_logger(__name__)
@@ -31,7 +31,7 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
         tier_Cooking = 3
     if tier_Cooking == 3 and atomFluoride and session_data.account.cooking['PlayerTotalMealLevels'] >= 500:
         tier_Cooking = 4
-    if tier_Cooking == 4 and session_data.account.cooking['MealsUnlocked'] >= maxMeals and session_data.account.cooking['MealsUnder30'] <= 0:
+    if tier_Cooking == 4 and session_data.account.cooking['MealsUnlocked'] >= maxMealCount and session_data.account.cooking['MealsUnder30'] <= 0:
         tier_Cooking = 5
     if tier_Cooking == 5 and session_data.account.cooking['PlayerMaxPlateLvl'] >= maxMealLevel:
         tier_Cooking = 6
@@ -71,10 +71,10 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
             ))
     # 4) if Atom Collider Fluoride upgrade owned and total plates over 500:
     elif tier_Cooking == 4:
-        if session_data.account.cooking['MealsUnlocked'] < maxMeals:
+        if session_data.account.cooking['MealsUnlocked'] < maxMealCount:
             cooking_AdviceDict["NextTier"].append(Advice(
-                label=f"Unlock the remaining {maxMeals - session_data.account.cooking['MealsUnlocked']} "
-                      f"{pl(maxMeals - session_data.account.cooking['MealsUnlocked'], 'meal', 'meals')}",
+                label=f"Unlock the remaining {maxMealCount - session_data.account.cooking['MealsUnlocked']} "
+                      f"{pl(maxMealCount - session_data.account.cooking['MealsUnlocked'], 'meal', 'meals')}",
                 picture_class="dharma-mesa-spice"
             ))
         if session_data.account.cooking['MealsUnder11'] > 0:
@@ -104,19 +104,19 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
     # 6) All basics + max plate levels
     elif tier_Cooking == 6:
         cooking_AdviceDict["NextTier"].append(Advice(
-            label=f"Finish all {maxMeals} meals to level {maxMealLevel} ({session_data.account.cooking['CurrentRemainingMeals']} to go!)",
+            label=f"Finish all {maxMealCount} meals to level {maxMealLevel} ({session_data.account.cooking['CurrentRemainingMeals']} to go!)",
             picture_class="turkey-a-la-thank",
             progression=session_data.account.cooking['PlayerTotalMealLevels'],
-            goal=maxMeals * maxMealLevel,
+            goal=maxMealCount * maxMealLevel,
         ))
 
     # Generate CurrentTier Advice
-    if session_data.account.cooking['MealsUnlocked'] < maxMeals:
+    if session_data.account.cooking['MealsUnlocked'] < maxMealCount:
         cooking_AdviceDict["CurrentTier"].append(Advice(
             label="Unlock All Meals",
             picture_class="taste-test",
             progression=session_data.account.cooking['MealsUnlocked'],
-            goal=maxMeals,
+            goal=maxMealCount,
         ))
     if session_data.account.cooking['MealsUnder11'] > 0 and tier_Cooking >= 2:
         cooking_AdviceDict["CurrentTier"].append(Advice(
@@ -202,7 +202,7 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
         if tier_Cooking < max_tier:
             if current_remainingMeals != max_remainingMeals:
                 cooking_AdviceDict["CurrentTier"].append(Advice(
-                    label=f"Info- Current possible: {session_data.account.cooking['MealsUnlocked']}/{maxMeals} meals, "
+                    label=f"Info- Current possible: {session_data.account.cooking['MealsUnlocked']}/{maxMealCount} meals, "
                           f"{current_maxMealLevel}/{maxMealLevel} plate levels ({current_remainingMeals} to go!)",
                     picture_class="turkey-a-la-thank",
                     progression=session_data.account.cooking['PlayerTotalMealLevels'],
@@ -213,7 +213,7 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
                 label=f"Info- Total Meal Levels ({max_remainingMeals} to go!)",
                 picture_class="turkey-a-la-thank",
                 progression=session_data.account.cooking['PlayerTotalMealLevels'],
-                goal=maxMeals * maxMealLevel,
+                goal=maxMealCount * maxMealLevel,
             ))
 
     # If any sources of max plate levels are missing

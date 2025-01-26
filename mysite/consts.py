@@ -5488,18 +5488,18 @@ def getEnemyNameFromMap(inputMap: str) -> str:
 
 ###WORLD 4 CONSTS###
 tomepct = {
-  50: 9757,
-  25: 17764,
-  10: 22114,
-  5: 23449,
-  1: 25008,
-  0.5: 25485,
-  0.1: 26254,
+  50: 10270,
+  25: 19718,
+  10: 23709,
+  5: 24862,
+  1: 26292,
+  0.5: 26680,
+  0.1: 27227,
 }
-maxCookingTables = 10  # Last verified as of v2.10
-maxMeals = 67  # Last verified as of v2.10
-maxMealLevel = 90  # Last verified as of v2.10
-cookingCloseEnough = 450
+maxCookingTables = 10  # Last verified as of v2.26
+maxMealCount = 67  # Last verified as of v2.26
+maxMealLevel = 110  # Last verified as of v2.26
+cookingCloseEnough = 1500
 
 cookingMealDict = {
     0:{"Name": "Turkey a la Thank", "Description": "Do I smell gratitude? Oh, no, that's colonialization...", "Effect": "+{% Total Damage", "BaseValue": 2},

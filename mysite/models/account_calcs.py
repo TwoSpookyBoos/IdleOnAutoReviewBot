@@ -12,7 +12,7 @@ from consts import (
     # W3
     arbitrary_shrine_goal, arbitrary_shrine_note,
     # W4
-    nblbMaxBubbleCount, maxMeals, maxMealLevel,  # W5
+    nblbMaxBubbleCount, maxMealCount, maxMealLevel,  # W5
     numberOfArtifactTiers, divinity_offeringsDict, divinity_DivCostAfter3,
     # W6
     maxFarmingValue, summoning_rewards_that_dont_multiply_base_value,
@@ -620,7 +620,7 @@ def _calculate_w4_cooking_max_plate_levels(account):
         ))
 
     account.cooking['CurrentRemainingMeals'] = (account.cooking['MealsUnlocked'] * account.cooking['PlayerMaxPlateLvl']) - account.cooking['PlayerTotalMealLevels']
-    account.cooking['MaxRemainingMeals'] = (maxMeals * maxMealLevel) - account.cooking['PlayerTotalMealLevels']
+    account.cooking['MaxRemainingMeals'] = (maxMealCount * maxMealLevel) - account.cooking['PlayerTotalMealLevels']
 
 def _calculate_w4_jewel_multi(account):
     jewelMulti = 1
