@@ -54,7 +54,7 @@ class Threshold:
     EARLY_W7_PREP = "Early W7 Prep"
     SOLID_W7_PREP = "Solid W7 Prep"
     W7_WAITING_ROOM = "W7 Waiting Room"
-    MAX_TIER = "Maxed for v2.25"
+    MAX_TIER = "Maxed for v2.26"
     PLACEHOLDER = "Placeholder"
 
     thresholdNames = [
@@ -184,13 +184,13 @@ class Placements(dict):
         STATUES:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      1,  2,  3,      4,  5,  7,      11,   99],
         STAR_SIGNS:    [0,   0, 0, 0,    0,  1,  1,      1,  2,  2,      2,  3,  3,      3,  4,  4,      5,  5,  6,      6,    99],
         OWL:           [0,   0, 0, 0,    1,  1,  1,      1,  2,  2,      2,  2,  2,      2,  2,  2,      2,  2,  2,      3,    99],
-        BUBBLES:       [0,   0, 0, 0,    0,  0,  1,      1,  2,  2,      2,  3,  3,      4,  5,  6,      8,  9, 10,      12,   99],
+        BUBBLES:       [0,   0, 0, 0,    0,  0,  1,      1,  1,  2,      2,  2,  3,      3,  4,  5,      7,  9, 10,      12,   99],
         VIALS:         [0,   0, 0, 0,    1,  1,  2,      2,  3,  4,      5,  6,  7,      8,  9,  10,     12, 20, 25,     26,   99],
         P2W:           [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  1,      1,  1,  1,      1,  1,  1,      1,    99],
         SIGILS:        [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  1,      2,  3,  4,      8,    99],
         ISLANDS:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      4,    99],
         REFINERY:      [0,   0, 0, 0,    0,  0,  0,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,    99],
-        SAMPLING:      [0,   0, 0, 0,    0,  1,  1,      1,  2,  2,      2,  3,  3,      3,  4,  5,      6,  7,  8,      9,    99],
+        SAMPLING:      [0,   0, 0, 0,    0,  1,  1,      1,  2,  2,      2,  3,  3,      3,  4,  5,      6,  7,  8,      10,   99],
         SALT_LICK:     [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      9,    99],
         DEATH_NOTE:    [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      3,  5,  5,      5,  5,  6,      10, 17, 24,     25,   99],
         COLLIDER:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  10,     13,   99],
@@ -338,7 +338,7 @@ def tier_from_monster_kills(dictOfPRs) -> Threshold:
     #highestPrint = session_data.account.printer['HighestValue']
     mobKillThresholds = []
     try:
-        if dictOfPRs[Placements.SAMPLING][0] >= 9:
+        if dictOfPRs[Placements.SAMPLING][0] >= 10:
             expectedThreshold = Threshold.fromname(Threshold.MAX_TIER)
         elif dictOfPRs[Placements.DEATH_NOTE][0] >= 25:
             expectedThreshold = Threshold.fromname(Threshold.W7_WAITING_ROOM)

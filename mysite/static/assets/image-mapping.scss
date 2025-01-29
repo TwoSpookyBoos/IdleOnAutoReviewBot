@@ -6,6 +6,7 @@
 @import "skill-icons";
 @import "classes";
 @import "talents";
+@import "grimoire";
 @import "gem-shop";
 @import "storage-items";
 @import "world-contents";
@@ -2117,6 +2118,8 @@ $id-map: map-merge($all-killroy, $id-map);
 $id-map: map-merge($all-weekly-boss-map, $id-map);
 $id-map: map-merge($all-caverns, $id-map);
 $id-map: map-merge($event-shop, $id-map);
+$id-map: map-merge($all-grimoire, $id-map);
+
 
 
 @each $class, $link in $id-map {

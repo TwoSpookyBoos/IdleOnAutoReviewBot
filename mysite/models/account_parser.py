@@ -12,6 +12,8 @@ from consts import (
     guildBonusesList, familyBonusesDict, achievementsList, allMeritsDict, starsignsDict,
     event_points_shop_dict,
     npc_tokens,
+    # Master Classes
+    grimoire_upgrades_list, grimoire_bones_list, grimoire_stack_types,
     # W1
     stampsDict, stampTypes, bribesDict,
     forgeUpgradesDict,
@@ -32,7 +34,7 @@ from consts import (
     # W4
     riftRewardsDict,
     labJewelsDict, labBonusesDict, labChipsDict,
-    maxMeals, maxMealLevel, cookingMealDict, maxCookingTables,
+    maxMealCount, maxMealLevel, cookingMealDict, maxCookingTables,
     maxNumberOfTerritories, territoryNames, slotUnlockWavesList, breedingUpgradesDict, breedingGeneticsList,
     breedingShinyBonusList, breedingSpeciesDict, getShinyLevelFromDays, getDaysToNextShinyLevel, getBreedabilityMultiFromDays, getBreedabilityHeartFromMulti,
     # W5
@@ -47,7 +49,7 @@ from consts import (
     caverns_villagers, caverns_conjuror_majiks, caverns_engineer_schematics, caverns_engineer_schematics_unlock_order, caverns_cavern_names,
     caverns_measurer_measurements, getCavernResourceImage, max_buckets, max_sediments, sediment_bars, getVillagerEXPRequired,
     monument_bonuses, bell_clean_improvements, bell_ring_bonuses, getBellExpRequired, getGrottoKills, lamp_wishes, key_cards, getWishCost,
-    schematics_unlocking_harp_chords, harp_chord_effects, max_harp_notes, lamp_world_wish_values
+    schematics_unlocking_harp_chords, harp_chord_effects, max_harp_notes, lamp_world_wish_values, grimoire_coded_stack_monster_order, decode_enemy_name
 )
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
 from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert
@@ -194,7 +196,6 @@ def _parse_character_class_lists(account):
     account.dbs = [toon for toon in account.all_characters if "Death Bringer" in toon.all_classes]
     account.dks = [toon for toon in account.all_characters if "Divine Knight" in toon.all_classes]
 
-
 def _parse_general(account):
     # General / Multiple uses
     account.raw_optlacc_dict = {k: v for k, v in enumerate(safe_loads(account.raw_data.get("OptLacc", [])))}
@@ -224,6 +225,7 @@ def _parse_general(account):
     _parse_general_event_points_shop(account)
     _parse_general_quests(account)
     _parse_general_npc_tokens(account)
+    _parse_general_master_classes(account)
 
 def _parse_general_gemshop(account):
     account.gemshop = {}
@@ -487,6 +489,91 @@ def _parse_general_event_points_shop(account):
                 'Description': bonusDetails['Description'],
                 'Image': bonusDetails['Image']
             }
+
+def _parse_general_master_classes(account):
+    _parse_general_master_classes_grimoire(account)
+def _parse_general_master_classes_grimoire(account):
+    account.grimoire = {
+        'Upgrades': {},
+        'Total Upgrades': 0,
+        'Total Bones Collected': safer_get(account.raw_optlacc_dict, 329, 0),
+        'Bone1': safer_get(account.raw_optlacc_dict, 330, 0),
+        'Bone2': safer_get(account.raw_optlacc_dict, 331, 0),
+        'Bone3': safer_get(account.raw_optlacc_dict, 332, 0),
+        'Bone4': safer_get(account.raw_optlacc_dict, 333, 0),
+        'Knockout Stacks': safer_get(account.raw_optlacc_dict, 334, 0),
+        'Elimination Stacks': safer_get(account.raw_optlacc_dict, 335, 0),
+        'Annihilation Stacks': safer_get(account.raw_optlacc_dict, 336, 0),
+    }
+    #Parse Grimoire Upgrades
+    raw_grimoire = safe_loads(account.raw_data.get('Grimoire', []))
+    for upgrade_index, upgrade_values_list in enumerate(grimoire_upgrades_list):
+        clean_name = upgrade_values_list[0].replace('(Tap_for_more_info)', '').replace('製', '').replace('_', ' ').rstrip()
+        if '(#)' in clean_name:
+            stack_type = clean_name.split('!')[0]
+            try:
+                next_stack_target = decode_enemy_name(grimoire_coded_stack_monster_order[account.grimoire.get(f'{stack_type} Stacks', '0')])
+            except:
+                next_stack_target = decode_enemy_name(grimoire_coded_stack_monster_order[0])
+            clean_name = clean_name.replace('(#)', f"({account.grimoire.get(f'{stack_type} Stacks', '#')})")
+        if clean_name != 'Ripped Page':
+            try:
+                account.grimoire['Upgrades'][clean_name] = {
+                    'Level': int(raw_grimoire[upgrade_index]),
+                    'Image': f"grimoire-upgrade-{upgrade_index}",
+                    'Cost Base': int(upgrade_values_list[1]),
+                    'Cost Increment': float(upgrade_values_list[2]),
+                    'Bone Name': grimoire_bones_list[int(upgrade_values_list[3])],
+                    'Bone Image': f"grimoire-bone-{upgrade_values_list[3]}",
+                    'Max Level': int(upgrade_values_list[4]),
+                    'Value Per Level': int(upgrade_values_list[5]),
+                    'Unlock Requirement': int(upgrade_values_list[6]),
+                    'Placeholder7': upgrade_values_list[7],
+                    'Placeholder8': upgrade_values_list[8],
+                    'Description': upgrade_values_list[9].replace('_', ' '),
+                }
+            except Exception as e:
+                #logger.exception(f"Error parsing Grimoire Index {upgrade_index}")
+                account.grimoire['Upgrades'][clean_name] = {
+                    'Level': 0,
+                    'Image': f"grimoire-upgrade-{upgrade_index}",
+                    'Cost Base': int(upgrade_values_list[1]),
+                    'Cost Increment': float(upgrade_values_list[2]),
+                    'Bone Name': grimoire_bones_list[int(upgrade_values_list[3])],
+                    'Bone Image': f"grimoire-bone-{upgrade_values_list[3]}",
+                    'Max Level': int(upgrade_values_list[4]),
+                    'Value Per Level': int(upgrade_values_list[5]),
+                    'Unlock Requirement': int(upgrade_values_list[6]),
+                    'Placeholder7': upgrade_values_list[7],
+                    'Placeholder8': upgrade_values_list[8],
+                    'Description': upgrade_values_list[9].replace('_', ' '),
+                }
+
+            #Update description with total value, stack counts, and scaling info
+            if '{' in account.grimoire['Upgrades'][clean_name]['Description']:
+                account.grimoire['Upgrades'][clean_name]['Total Value'] = (
+                    account.grimoire['Upgrades'][clean_name]['Level'] * account.grimoire['Upgrades'][clean_name]['Value Per Level']
+                )
+                account.grimoire['Upgrades'][clean_name]['Description'] = account.grimoire['Upgrades'][clean_name]['Description'].replace(
+                    '{', f"{account.grimoire['Upgrades'][clean_name]['Total Value']}"
+                )
+            if '}' in account.grimoire['Upgrades'][clean_name]['Description']:
+                account.grimoire['Upgrades'][clean_name]['Total Value'] = ValueToMulti(
+                    account.grimoire['Upgrades'][clean_name]['Level'] * account.grimoire['Upgrades'][clean_name]['Value Per Level']
+                )
+                account.grimoire['Upgrades'][clean_name]['Description'] = account.grimoire['Upgrades'][clean_name]['Description'].replace(
+                    '}', f"{account.grimoire['Upgrades'][clean_name]['Total Value']}"
+                )
+            if 'Target:$' in account.grimoire['Upgrades'][clean_name]['Description']:
+                account.grimoire['Upgrades'][clean_name]['Description'] = account.grimoire['Upgrades'][clean_name]['Description'].replace(
+                    'Target:$', f"Target: {next_stack_target}"
+                )
+            account.grimoire['Upgrades'][clean_name]['Description'] += f" ({account.grimoire['Upgrades'][clean_name]['Value Per Level']} per level)"
+
+    #Sum total upgrades
+    account.grimoire['Total Upgrades'] = sum([v['Level'] for v in account.grimoire['Upgrades'].values()])
+    for upgrade_name in account.grimoire['Upgrades']:
+        account.grimoire['Upgrades'][upgrade_name]['Unlocked'] = account.grimoire['Total Upgrades'] >= account.grimoire['Upgrades'][upgrade_name]['Unlock Requirement']
 
 def _parse_w1(account):
     _parse_w1_starsigns(account)
@@ -1360,7 +1447,7 @@ def _parse_w4_cooking(account):
         'MealsUnder30': 0,
         'PlayerMaxPlateLvl': 30,  # 30 is the default starting point
         'PlayerTotalMealLevels': 0,
-        'MaxTotalMealLevels': maxMeals * maxMealLevel,
+        'MaxTotalMealLevels': maxMealCount * maxMealLevel,
         'PlayerMissingPlateUpgrades': []
     }
     _parse_w4_cooking_tables(account)
@@ -1379,16 +1466,16 @@ def _parse_w4_cooking_tables(account):
     account.cooking['Tables Owned'] = sum(1 for table in account.cooking['Tables'] if table[0] == 2)
 
 def _parse_w4_cooking_meals(account):
-    emptyMeal = [0] * maxMeals
+    emptyMeal = [0] * maxMealCount
     # Meals contains 4 lists of lists. The first 3 are as long as the number of plates. The 4th is general shorter.
     emptyMeals = [emptyMeal for meal in range(4)]
     raw_meals_list = safe_loads(account.raw_data.get("Meals", emptyMeals))
-    # Make the sublists maxMeals long
+    # Make the sublists maxMealCount long
     for sublistIndex, value in enumerate(raw_meals_list):
         if isinstance(raw_meals_list[sublistIndex], list):
-            while len(raw_meals_list[sublistIndex]) < maxMeals:
+            while len(raw_meals_list[sublistIndex]) < maxMealCount:
                 raw_meals_list[sublistIndex].append(0)
-            while len(raw_meals_list[sublistIndex]) > maxMeals:
+            while len(raw_meals_list[sublistIndex]) > maxMealCount:
                 raw_meals_list[sublistIndex].pop()
 
     account.meals = {}
