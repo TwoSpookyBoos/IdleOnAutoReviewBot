@@ -73,6 +73,7 @@ def getGrimoireUpgradesAdviceGroup():
         pre_string="Progression Tiers",
         advices=upgrades_AdviceDict
     )
+    upgrades_ag.remove_empty_subgroups()
     return upgrades_ag
 
 
