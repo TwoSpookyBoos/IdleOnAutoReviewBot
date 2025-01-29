@@ -347,7 +347,7 @@ def getBreedingProgressionTiersAdviceGroups(breedingDict):
     breeding_AdviceGroupDict = {}
 
     progressionTiersBreeding = copy.deepcopy(breeding_progressionTiers)
-    info_tiers = 0
+    info_tiers = 1
     max_tier = max(progressionTiersBreeding.keys()) - info_tiers
     tier_UnlockedTerritories = 0
     tier_MaxArenaWave = 0
@@ -505,7 +505,7 @@ def getBreedingProgressionTiersAdviceGroups(breedingDict):
                     shinyTiersDisplayed.append(tier)
                 if tier in shinyTiersDisplayed:
                     for failedRequirement in failedShinyRequirements:
-                        shinySubgroup = f"Tier {tier} - {failedRequirement[0]}: {failedRequirement[1]}/{failedRequirement[2]}"
+                        shinySubgroup = f"{'Info ' if tier > max_tier else ''}Tier {tier} - {failedRequirement[0]}: {failedRequirement[1]}/{failedRequirement[2]}"
                         if failedRequirement[0] not in breeding_AdviceDict["ShinyLevels"]:
                             breeding_AdviceDict["ShinyLevels"][shinySubgroup] = []
                         for possibleShinyPet in failedShinyBonus[failedRequirement[0]]:
@@ -529,7 +529,7 @@ def getBreedingProgressionTiersAdviceGroups(breedingDict):
             advices=breeding_AdviceDict["UnlockedTerritories"],
             post_string=""
         )
-    if tier_MaxArenaWave != max_tier:
+    if tier_MaxArenaWave < max_tier:
         nextArenaWaveUnlock = progressionTiersBreeding[tier_MaxArenaWave + 1]["ArenaWaves"]
     breeding_AdviceGroupDict["MaxArenaWave"] = AdviceGroup(
         tier=str(tier_MaxArenaWave),
@@ -541,8 +541,9 @@ def getBreedingProgressionTiersAdviceGroups(breedingDict):
     if max(session_data.account.all_skills["Breeding"]) >= 40:
         if tier_ShinyLevels < max_tier:
             breeding_AdviceGroupDict["ShinyLevels"] = AdviceGroup(
-                tier=str(tier_ShinyLevels),
-                pre_string=f"Level the following Shiny {pl(breeding_AdviceDict['ShinyLevels'], 'Bonus', 'Bonuses')}",
+                tier=str(tier_ShinyLevels) if tier_ShinyLevels < max_tier else '',
+                pre_string=f"{'Informational- ' if tier_ShinyLevels >= max_tier else ''}"
+                           f"Level the following Shiny {pl(breeding_AdviceDict['ShinyLevels'], 'Bonus', 'Bonuses')}",
                 advices=breeding_AdviceDict["ShinyLevels"],
                 post_string=""
             )

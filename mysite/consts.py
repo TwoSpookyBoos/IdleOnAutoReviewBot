@@ -1406,6 +1406,14 @@ breeding_progressionTiers = {
                 "Summoning EXP": [22, 11],
                 "Faster Refinery Speed": [33, 11],
                 "Multikill Per Tier": [44, 11],
+            },
+            "ShinyNotes": ""
+        },
+        12: {
+            "Tier": 12,
+            "TerritoriesUnlocked": 24,
+            "ArenaWaves": 200,
+            "Shinies": {
                 "Infinite Star Signs": [45, 8],
             },
             "ShinyNotes": ""
