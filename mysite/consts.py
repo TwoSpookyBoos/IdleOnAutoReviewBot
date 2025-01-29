@@ -1274,6 +1274,7 @@ sampling_progressionTiers = {
     7: {"Materials": {"Oak Logs": 1.5e9, "Copper Ore": 1.2e9, "Goldfish": 150e6, "Fly": 68e6,  "Spore Cap": 10e6}, "NonDootDiscount": .8},
     8: {"Materials": {"Oak Logs": 10e9,  "Copper Ore": 8e9,   "Goldfish": 1e9,   "Fly": 454e6, "Spore Cap": 20e6}, "NonDootDiscount": .85},
     9: {"Materials": {"Oak Logs": 22e9,  "Copper Ore": 15e9,  "Goldfish": 2e9,   "Fly": 1e9,   "Spore Cap": 30e6}, "NonDootDiscount": .90},
+    10:{"Materials": {"Oak Logs": 100e9, "Copper Ore": 250e9, "Goldfish": 10e9,  "Fly": 8e9,   "Spore Cap": 40e6}, "NonDootDiscount": .90},
 }
 
 ###WORLD 4 PROGRESSION TIERS###
