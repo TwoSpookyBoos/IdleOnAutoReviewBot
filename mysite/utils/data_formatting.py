@@ -1,5 +1,6 @@
 import datetime
 import json
+import math
 import re
 import traceback
 from pathlib import Path
@@ -380,6 +381,13 @@ def safer_convert(data, default):
     except Exception as e:
         logger.exception(f"Something else went wrong lol: {e}")
         return default
+
+def safer_math_pow(base, exponent, default=1e100):
+    try:
+        return math.pow(base, exponent)
+    except:
+        logger.exception(f"An error occured during math.pow() call. Replacing with default: {default}")
+        return 1e100
 
 def mark_advice_completed(advice, force=False):
     def complete():

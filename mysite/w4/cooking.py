@@ -222,8 +222,8 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
             cooking_AdviceDict["PlateLevels"].append(Advice(
                 label=missingUpgrade[0],
                 picture_class=missingUpgrade[1],
-                progression=0,
-                goal=1
+                progression=missingUpgrade[2],
+                goal=missingUpgrade[3]
             ))
 
     for advice in cooking_AdviceDict["NextTier"]:

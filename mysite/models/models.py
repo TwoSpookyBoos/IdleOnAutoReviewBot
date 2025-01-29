@@ -60,11 +60,11 @@ class Equipment:
                 q = dict(sorted(q.items(), key=lambda i: int(i[0]))).values()
                 groups.append([Asset(name, float(count)) for name, count in zip(o, q)])
 
-            equips, tools, foods = groups
+            # equips, tools, foods = groups
 
-            self.equips = equips
-            self.tools = tools
-            self.foods = foods
+            self.equips = groups[0] if groups else []
+            self.tools = groups[1] if groups else []
+            self.foods = groups[2] if groups else []
         else:
             self.equips = {}
             self.tools = {}
