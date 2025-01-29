@@ -7199,6 +7199,7 @@ marketUpgradeDetails = [
 marketUpgradeFirstIndex = 2
 marketUpgradeLastIndex = marketUpgradeFirstIndex + len(marketUpgradeList)
 cropDepotDict = {
+    # Scaling info inside _customBlock_FarmingStuffs, CropSCbonus
     0: {
         'EmporiumUnlockName': 'Reinforced Science Pencil',
         'BonusString': 'DMG',
@@ -7254,6 +7255,14 @@ cropDepotDict = {
         'x1': 0.1,
         'x2': 0,
         'Image': 'depot-paintbrush',
+    },
+    7: {
+        'EmporiumUnlockName': 'Science Highlighter',
+        'BonusString': 'Drop Rate',
+        'funcType': 'add',
+        'x1': 1,
+        'x2': 0,
+        'Image': 'depot-highlighter',
     },
 
 }

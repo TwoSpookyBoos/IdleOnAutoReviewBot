@@ -247,7 +247,7 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
 
     cooking_AdviceGroupDict["PlateLevels"] = AdviceGroup(
         tier="",
-        pre_string=f"Each remaining upgrade gives +10 max plate levels",
+        pre_string=f"Remaining sources of max plate levels",
         advices=cooking_AdviceDict["PlateLevels"],
         post_string="",
         informational=True

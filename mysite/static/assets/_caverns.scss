@@ -107,6 +107,7 @@ $caverns: (
 
 $well-sediment: (
     well-bucket: img('wiki/HoleWellBucket0.png'),
+    //Cropped from 1x/font-675.png
     well-sediment-rock-layer: img('customized/HoleWellFill0.png'),
     well-sediment-0: img('customized/HoleWellFill1.png'),
     well-sediment-1: img('customized/HoleWellFill2.png'),
@@ -155,14 +156,15 @@ $monuments: (
     bravery-bonus-8: img('wiki/Monument_AFK.png'),
     bravery-bonus-9: img('caverns/Bravery_Monument_x1.png'),
     //Justice
-    justice-coin-1: img('caverns/HoleJusticeObj0.png'),
-    justice-coin-2: img('caverns/HoleJusticeObj1.png'),
-    justice-coin-3: img('caverns/HoleJusticeObj2.png'),
-    justice-currency-1: img('caverns/Justice_Currency_1.png'),  //Case Number
-    justice-currency-2: img('caverns/Justice_Currency_2.png'),  //Mental Health
-    justice-currency-3: img('caverns/Justice_Currency_3.png'),  //Coin
-    justice-currency-4: img('caverns/Justice_Currency_4.png'),  //Popularity
-    justice-currency-5: img('caverns/Justice_Currency_5.png'),  //Dismissal
+    justice-coin-1: img('data/HoleJusticeObj0.png'),
+    justice-coin-2: img('data/HoleJusticeObj1.png'),
+    justice-coin-3: img('data/HoleJusticeObj2.png'),
+    // Justice stat currency cropped from 1x/font-675.png
+    justice-currency-1: img('customized/Justice_Currency_1.png'),  //Case Number
+    justice-currency-2: img('customized/Justice_Currency_2.png'),  //Mental Health
+    justice-currency-3: img('customized/Justice_Currency_3.png'),  //Coin
+    justice-currency-4: img('customized/Justice_Currency_4.png'),  //Popularity
+    justice-currency-5: img('customized/Justice_Currency_5.png'),  //Dismissal
     justice-currency-6: img('customized/Justice_Currency_MH_D.png'),  // Custom Mental Health + Dismissal by Trialpears
     justice-bonus-10: img('wiki/Catching_Skill_Icon.png'),
     justice-bonus-11: img('customized/HolePOI5.png'),
@@ -184,39 +186,40 @@ $bell: (
 );
 
 $harp: (
-    harp-chord-a: img('caverns/HarpChordA.png'),
-    harp-chord-b: img('caverns/HarpChordB.png'),
-    harp-chord-c: img('caverns/HarpChordC.png'),
-    harp-chord-d: img('caverns/HarpChordD.png'),
-    harp-chord-e: img('caverns/HarpChordE.png'),
-    harp-chord-f: img('caverns/HarpChordF.png'),
-    harp-chord-g: img('caverns/HarpChordG.png'),
-    harp-note-0: img('caverns/HoleHarpNote0.png'),
-    harp-note-1: img('caverns/HoleHarpNote1.png'),
-    harp-note-2: img('caverns/HoleHarpNote2.png'),
-    harp-note-3: img('caverns/HoleHarpNote3.png'),
-    harp-note-4: img('caverns/HoleHarpNote4.png'),
-    harp-note-5: img('caverns/HoleHarpNote5.png'),
-    harp-note-6: img('caverns/HoleHarpNote6.png'),
-    harp-note-7: img('caverns/HoleHarpNote7.png'),
-    harp-note-8: img('caverns/HoleHarpNote8.png'),
-    harp-note-9: img('caverns/HoleHarpNote9.png'),
+    //Cropped from 1x/font-675.png
+    harp-chord-a: img('customized/HarpChordA.png'),
+    harp-chord-b: img('customized/HarpChordB.png'),
+    harp-chord-c: img('customized/HarpChordC.png'),
+    harp-chord-d: img('customized/HarpChordD.png'),
+    harp-chord-e: img('customized/HarpChordE.png'),
+    harp-chord-f: img('customized/HarpChordF.png'),
+    harp-chord-g: img('customized/HarpChordG.png'),
+    harp-note-0: img('customized/HoleHarpNote0.png'),
+    harp-note-1: img('customized/HoleHarpNote1.png'),
+    harp-note-2: img('customized/HoleHarpNote2.png'),
+    harp-note-3: img('customized/HoleHarpNote3.png'),
+    harp-note-4: img('customized/HoleHarpNote4.png'),
+    harp-note-5: img('customized/HoleHarpNote5.png'),
+    harp-note-6: img('customized/HoleHarpNote6.png'),
+    harp-note-7: img('customized/HoleHarpNote7.png'),
+    harp-note-8: img('customized/HoleHarpNote8.png'),
+    harp-note-9: img('customized/HoleHarpNote9.png'),
 );
 
 $lamp-wishes: (
-    lamp-wish-button: img('caverns/HoleLampWish.png'),
-    lamp-wish-0: img('caverns/HoleLampUpg0.png'),
-    lamp-wish-1: img('caverns/HoleLampUpg1.png'),
-    lamp-wish-2: img('caverns/HoleLampUpg2.png'),
-    lamp-wish-3: img('caverns/HoleLampUpg3.png'),
-    lamp-wish-4: img('caverns/HoleLampUpg4.png'),
-    lamp-wish-5: img('caverns/HoleLampUpg5.png'),
-    lamp-wish-6: img('caverns/HoleLampUpg6.png'),
-    lamp-wish-7: img('caverns/HoleLampUpg7.png'),
-    lamp-wish-8: img('caverns/HoleLampUpg8.png'),
-    lamp-wish-9: img('caverns/HoleLampUpg9.png'),
-    lamp-wish-10: img('caverns/HoleLampUpg10.png'),
-    lamp-wish-11: img('caverns/HoleLampUpg11.png'),
+    lamp-wish-button: img('data/HoleLampWish.png'),
+    lamp-wish-0: img('data/HoleLampUpg0.png'),
+    lamp-wish-1: img('data/HoleLampUpg1.png'),
+    lamp-wish-2: img('data/HoleLampUpg2.png'),
+    lamp-wish-3: img('data/HoleLampUpg3.png'),
+    lamp-wish-4: img('data/HoleLampUpg4.png'),
+    lamp-wish-5: img('data/HoleLampUpg5.png'),
+    lamp-wish-6: img('data/HoleLampUpg6.png'),
+    lamp-wish-7: img('data/HoleLampUpg7.png'),
+    lamp-wish-8: img('data/HoleLampUpg8.png'),
+    lamp-wish-9: img('data/HoleLampUpg9.png'),
+    lamp-wish-10: img('data/HoleLampUpg10.png'),
+    lamp-wish-11: img('data/HoleLampUpg11.png'),
 );
 
 $measurements: (

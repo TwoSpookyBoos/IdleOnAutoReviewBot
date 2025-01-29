@@ -637,7 +637,7 @@ def _calculate_w4_cooking_max_plate_levels(account):
             account.grimoire['Upgrades']['Supreme Head Chef Status']['Max Level']  #goal
         ))
 
-    account.cooking['CurrentRemainingMeals'] = (account.cooking['MealsUnlocked'] * account.cooking['PlayerMaxPlateLvl']) - account.cooking['PlayerTotalMealLevels']
+    account.cooking['CurrentRemainingMeals'] = account.cooking['MaxTotalMealLevels'] - account.cooking['PlayerTotalMealLevels']
     account.cooking['MaxRemainingMeals'] = (maxMealCount * maxMealLevel) - account.cooking['PlayerTotalMealLevels']
 
 def _calculate_w4_jewel_multi(account):
@@ -945,9 +945,10 @@ def _calculate_w6_farming_crop_depot(account):
     lab_multi = ValueToMulti(
         (account.labBonuses['Depot Studies PhD']['Value'] + account.labJewels['Pure Opal Rhombol']['Value']) * account.labBonuses['Depot Studies PhD']['Enabled']
     )
+    grimoire_multi = account.grimoire['Upgrades']['Superior Crop Research']['Total Value']  #Grimoire 22: Superior Crop Research already a Multi
     for bonusName, bonusDetails in account.farming['Depot'].items():
-        account.farming['Depot'][bonusName]['Value'] = account.farming['Depot'][bonusName]['BaseValue'] * lab_multi
-        account.farming['Depot'][bonusName]['ValuePlus1'] = account.farming['Depot'][bonusName]['BaseValuePlus1'] * lab_multi
+        account.farming['Depot'][bonusName]['Value'] = account.farming['Depot'][bonusName]['BaseValue'] * lab_multi * grimoire_multi
+        account.farming['Depot'][bonusName]['ValuePlus1'] = account.farming['Depot'][bonusName]['BaseValuePlus1'] * lab_multi * grimoire_multi
 
 def _calculate_w6_farming_markets(account):
     super_multi_current_stacks = ValueToMulti(account.farming['MarketUpgrades']['Super Gmo']['Value'] * account.farming['CropStacks']['Super Gmo'])

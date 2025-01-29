@@ -492,6 +492,7 @@ def _parse_general_event_points_shop(account):
 
 def _parse_general_master_classes(account):
     _parse_general_master_classes_grimoire(account)
+
 def _parse_general_master_classes_grimoire(account):
     account.grimoire = {
         'Upgrades': {},
@@ -2631,13 +2632,13 @@ def _parse_w6_farming_crop_depot(account):
             'Unlocked': account.sneaking['JadeEmporium'][bonusDetails['EmporiumUnlockName']]['Obtained'],
             'BaseValue': lavaFunc(
                 bonusDetails['funcType'],
-                account.farming['CropsUnlocked'],
+                account.farming['CropsUnlocked'] if bonusIndex != 7 else max(0, account.farming['CropsUnlocked'] - 100),
                 bonusDetails['x1'],
                 bonusDetails['x2']
             ),
             'BaseValuePlus1': lavaFunc(
                 bonusDetails['funcType'],
-                min(maxFarmingCrops, account.farming['CropsUnlocked'] + 1),
+                min(maxFarmingCrops, account.farming['CropsUnlocked'] + 1) if bonusIndex != 7 else min(maxFarmingCrops - 100, account.farming['CropsUnlocked'] + 1),
                 bonusDetails['x1'],
                 bonusDetails['x2']
             ),
