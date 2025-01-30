@@ -135,7 +135,7 @@ def getMissableGStacksAdviceSection(owned_stuff: Assets) -> AdviceSection:
         name="Endangered Greenstacks",
         tier=tier_obtainable,
         header=header_obtainable,
-        picture="Greenstack.png",
+        picture="wiki/Greenstack.png",
         note=note,
         groups=questGStacks_AdviceGroupDict.values(),
         unrated=True,
@@ -231,7 +231,7 @@ def getGStackAdviceSections():
         tier=tier,
         pinchy_rating=overall_GreenstacksTier,
         header=header,
-        picture="Greenstack.png",
+        picture="wiki/Greenstack.png",
         groups=groups,
     )
 

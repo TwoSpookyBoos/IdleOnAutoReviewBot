@@ -413,7 +413,11 @@ def _calculate_w2_sigils(account):
         # After the +1, 0/1/2/3
 
 def _calculate_w2_postOffice(account):
-    account.postOffice["Total Boxes Earned"] = account.postOffice['Completing Orders'] + account.postOffice['Streak Bonuses'] + account.postOffice['Miscellaneous']
+    account.postOffice["Total Boxes Earned"] = (
+            account.postOffice['Completing Orders']
+            + account.postOffice['Streak Bonuses']
+            + account.postOffice['Miscellaneous']  #Seems to be missing a source. TODO: Investigate
+    )
     
 def _calculate_w2_ballot(account):
     account.event_points_shop['BonusMulti'] = ValueToMulti(
