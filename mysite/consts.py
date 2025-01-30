@@ -124,7 +124,7 @@ gemShop_progressionTiers = [
      },
      "This final tier is for the truly depraved. Many of these bonuses are very weak or outright useless."]
 ]
-greenstack_progressionTiers = {
+greenstack_item_difficulty_groups = {
         0: {  # The timegated tier
             "Vendor Shops": [
                 "CraftMat3",  # W1 Cue Tape
@@ -314,6 +314,11 @@ greenstack_progressionTiers = {
             ]
         },
     }
+greenstack_progressionTiers = {
+    1: {'Dream Number': 1, 'Required Stacks': 20},
+    2: {'Dream Number': 12, 'Required Stacks': 75},
+    3: {'Dream Number': 29, 'Required Stacks': 200},
+}
 achievements_progressionTiers = {
     0: {},
     1: {

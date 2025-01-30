@@ -11,7 +11,7 @@ from config import app
 from consts import (
     # General
     lavaFunc, ignorable_labels,
-    greenstack_progressionTiers, greenStackAmount, gstackable_codenames, gstackable_codenames_expected, quest_items_codenames,
+    greenstack_item_difficulty_groups, greenStackAmount, gstackable_codenames, gstackable_codenames_expected, quest_items_codenames,
     # W1
     # W2
     poBoxDict,
@@ -885,7 +885,7 @@ class Asset:
 
 class Assets(dict):
     def __init__(self, assets: Union[dict[str, int], "Assets", None] = None):
-        self.tiers = greenstack_progressionTiers
+        self.tiers = greenstack_item_difficulty_groups
 
         if assets is None:
             assets = dict()
