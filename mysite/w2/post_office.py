@@ -78,7 +78,7 @@ def getBoxesAdviceGroup(character):
         tier="",
         pre_string=f"Info- Boxes for {character.character_name} the {character.class_name}",
         advices=postOffice_advices,
-        #post_string=f"Available points : {max(0, session_data.account.postOffice['Total Boxes Earned'] - totalPointInvested):,.0f}",
+        post_string=f"Available points : {max(0, session_data.account.postOffice['Total Boxes Earned'] - totalPointInvested):,.0f}",
         informational=True,
     )
     return char_ag

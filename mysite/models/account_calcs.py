@@ -416,7 +416,7 @@ def _calculate_w2_postOffice(account):
     account.postOffice["Total Boxes Earned"] = (
             account.postOffice['Completing Orders']
             + account.postOffice['Streak Bonuses']
-            + account.postOffice['Miscellaneous']  #Seems to be missing a source. TODO: Investigate
+            + account.postOffice['Miscellaneous']
     )
     
 def _calculate_w2_ballot(account):
