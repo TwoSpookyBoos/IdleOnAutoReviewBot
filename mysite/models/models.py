@@ -200,6 +200,8 @@ class Character:
             try:
                 self.po_boxes_invested[poBoxValues['Name']] = {
                     'Level': po_boxes[poBoxIndex],
+                    'Max Level': poBoxValues['Max Level'],
+                    'Tab': poBoxValues['Tab'],
                     'Bonus1Value': lavaFunc(
                         poBoxValues['1_funcType'],
                         po_boxes[poBoxIndex],
@@ -232,6 +234,8 @@ class Character:
             except:
                 self.po_boxes_invested[poBoxValues['Name']] = {
                     'Level': 0,
+                    'Max Level': poBoxValues['Max Level'],
+                    'Tab': poBoxValues['Tab'],
                     'Bonus1Value': 0,
                     'Bonus1String': '',
                     'Bonus2Value': 0,
