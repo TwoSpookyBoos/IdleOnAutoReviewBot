@@ -230,7 +230,7 @@ def getGStackAdviceSections():
                    f" Aim for items in Difficulty Group 1.<br>Start buying Timegated items from shops every day!")
         show_limit = 2
     else:
-    show_limit = 2
+        show_limit = 2
 
     for group in groups[show_limit:]:
         group.hide = True
