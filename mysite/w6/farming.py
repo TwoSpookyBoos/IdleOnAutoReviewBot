@@ -913,14 +913,17 @@ def getOGAdviceGroup(farming):
 
 def getLRExclusions(farming, highestFarmingSkillLevel):
     exclusions = []
-    if maxFarmingCrops-1 in farming['Crops']:
-        exclusions.extend([v['Name'] for v in landrankDict.values() if v['Name'].startswith('Evolution')])
-    if farming['Value']['FinalMin'] >= maxFarmingValue/100:
-        exclusions.extend([v['Name'] for v in landrankDict.values() if v['Name'].startswith('Production')])
-    if farming['LandRankMinPlot'] >= 120:
-        exclusions.extend([v['Name'] for v in landrankDict.values() if v['Name'].startswith('Soil Exp')])
-    if highestFarmingSkillLevel >= 300:
-        exclusions.extend([v['Name'] for v in landrankDict.values() if v['Name'].startswith('Farmtastic')])
+    if farming['LandRankTotalRanks'] >= 1400:
+        exclusions.extend([v['Name'] for v in landrankDict.values() if not v['Name'].startswith('Seed')])
+    else:
+        if maxFarmingCrops-1 in farming['Crops']:
+            exclusions.extend([v['Name'] for v in landrankDict.values() if v['Name'].startswith('Evolution')])
+        if farming['Value']['FinalMin'] >= maxFarmingValue/100:
+            exclusions.extend([v['Name'] for v in landrankDict.values() if v['Name'].startswith('Production')])
+        if farming['LandRankMinPlot'] >= 120:
+            exclusions.extend([v['Name'] for v in landrankDict.values() if v['Name'].startswith('Soil Exp')])
+        if highestFarmingSkillLevel >= 300:
+            exclusions.extend([v['Name'] for v in landrankDict.values() if v['Name'].startswith('Farmtastic')])
     #logger.debug(f"Land Rank Exclusions: {exclusions}")
     return exclusions
 
