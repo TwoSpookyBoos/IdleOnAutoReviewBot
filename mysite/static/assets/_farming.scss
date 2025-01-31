@@ -244,13 +244,15 @@ $all-crops: (
 );
 
 $crop-depot: (
-    depot-pencil: img('CropDepotPen0.png'),
-    depot-pen: img('CropDepotPen1.png'),
-    depot-marker: img('CropDepotPen2.png'),
-    depot-featherpen: img('CropDepotPen3.png'),
-    depot-green-pencil: img('CropDepotPen4.png'),
-    depot-crayon: img('CropDepotPen5.png'),
-    depot-paintbrush: img('CropDepotPen6.png'),
+    // Cropped out of data/DepotBG.png
+    depot-pencil: img('customized/CropDepotPen0.png'),
+    depot-pen: img('customized/CropDepotPen1.png'),
+    depot-marker: img('customized/CropDepotPen2.png'),
+    depot-featherpen: img('customized/CropDepotPen3.png'),
+    depot-green-pencil: img('customized/CropDepotPen4.png'),
+    depot-crayon: img('customized/CropDepotPen5.png'),
+    depot-paintbrush: img('customized/CropDepotPen6.png'),
+    depot-highlighter: img('customized/CropDepotPen7.png'),
 );
 
 $landranks: (

@@ -1,5 +1,6 @@
-from consts import missableGStacksDict, break_you_best
+from consts import missableGStacksDict, break_you_best, greenstack_progressionTiers
 from models.models import AdviceSection, AdviceGroup, Advice, gstackable_codenames_expected, Assets
+from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
 
@@ -135,7 +136,7 @@ def getMissableGStacksAdviceSection(owned_stuff: Assets) -> AdviceSection:
         name="Endangered Greenstacks",
         tier=tier_obtainable,
         header=header_obtainable,
-        picture="Greenstack.png",
+        picture="wiki/Greenstack.png",
         note=note,
         groups=questGStacks_AdviceGroupDict.values(),
         unrated=True,
@@ -176,8 +177,8 @@ def getGStackAdviceSections():
         }
         groups.append(
             AdviceGroup(
-                tier=str(tier),
-                pre_string="",
+                tier=f"",
+                pre_string=f"{'Difficulty Group ' if tier!= 'Timegated' else ''}{tier} Item recommendations",
                 advices=tier_subsection,
                 informational=True
             )
@@ -201,37 +202,78 @@ def getGStackAdviceSections():
     tier = f"{expectedGStacksCount} out of max (realistic) {expectedStackablesCount}"
     header = f"You currently have {tier} GStacks."
     show_limit = len(groups)
-    if expectedGStacksCount >= 200 or equinoxDreamsStatus.get("Dream29", False) == True:
+    if (
+        expectedGStacksCount >= greenstack_progressionTiers[3]['Required Stacks']
+        or equinoxDreamsStatus.get(f"Dream{greenstack_progressionTiers[3]['Dream Number']}", False) == True
+    ):
         header += f"{break_you_best} (until Lava adds further Dream tasks)<br>Other possible targets are still listed below."
         show_limit = 4
-    elif expectedGStacksCount >= 75 or equinoxDreamsStatus.get("Dream12", False) == True:
-        header += " Equinox Dream 29 requires 200. Aim for items up through Tier 10!<br>Tiers 11-14 are optional without much extra benefit to collecting than +1 GStack."
+    elif (
+        expectedGStacksCount >= greenstack_progressionTiers[2]['Required Stacks']
+        or equinoxDreamsStatus.get(f"Dream{greenstack_progressionTiers[2]['Dream Number']}", False) == True
+    ):
+        header += (f" Equinox Dream {greenstack_progressionTiers[3]['Dream Number']} requires {greenstack_progressionTiers[3]['Required Stacks']}."
+                   f" Aim for items up through Difficulty Group 10!<br>Groups 11-14 are optional without much extra benefit to collecting than +1 GStack.")
         show_limit = 3
-    elif expectedGStacksCount >= 20 or equinoxDreamsStatus.get("Dream1", False) == True:
-        header += " Equinox Dream 12 requires 75. Aim for items up through Tier 4!<br>Continue buying those Timegated items too :)"
+    elif (
+        expectedGStacksCount >= greenstack_progressionTiers[1]['Required Stacks']
+        or equinoxDreamsStatus.get(f"Dream{greenstack_progressionTiers[1]['Dream Number']}", False) == True
+    ):
+        header += (f" Equinox Dream {greenstack_progressionTiers[2]['Dream Number']} requires {greenstack_progressionTiers[2]['Required Stacks']}."
+                   f" Aim for items up through Difficulty Group 4!<br>Continue buying those Timegated items too :)")
         show_limit = 2
-    elif expectedGStacksCount < 20 and equinoxDreamsStatus.get("Dream1", False) == False:
-        header += " Equinox Dream 1 requires 20. Aim for items in Tier 1.<br>Start buying items listed in the Timegated tier from shops every day!"
+    elif (
+        expectedGStacksCount < greenstack_progressionTiers[1]['Required Stacks']
+        and equinoxDreamsStatus.get(f"Dream{greenstack_progressionTiers[1]['Dream Number']}", False) == False
+    ):
+        header += (f" Equinox Dream {greenstack_progressionTiers[1]['Dream Number']} requires {greenstack_progressionTiers[1]['Required Stacks']}."
+                   f" Aim for items in Difficulty Group 1.<br>Start buying Timegated items from shops every day!")
         show_limit = 2
     else:
-
         show_limit = 2
 
     for group in groups[show_limit:]:
         group.hide = True
 
-    #Dream Review
-    overall_GreenstacksTier = 0
-    for dream in [1, 12, 29]:
-        if equinoxDreamsStatus.get(f"Dream{dream}", False) == True:
-            overall_GreenstacksTier += 1
+    #Equinox Dream Review
+    overall_SectionTier = 0
+    dream_advice = {}
+    for tier_number, requirements in greenstack_progressionTiers.items():
+        subgroup_name = f"To reach Tier {tier_number}"
+        if not equinoxDreamsStatus.get(f"Dream{requirements['Dream Number']}", False):
+            dream_advice[subgroup_name] = [
+                Advice(
+                    label=f"Collect {requirements['Required Stacks']} Greenstacks",
+                    picture_class='greenstacks',
+                    progression=expectedGStacksCount,
+                    goal=requirements['Required Stacks']
+                ),
+                Advice(
+                    label=f"Turn in {{{{ Equinox|#equinox }}}} Dream {requirements['Dream Number']}",
+                    picture_class='equinox-dreams',
+                    progression=int(equinoxDreamsStatus[f"Dream{requirements['Dream Number']}"]),
+                    goal=int(1)
+                )
+            ]
+        else:
+            overall_SectionTier += 1
+
+    for subgroup in dream_advice:
+        for advice in dream_advice[subgroup]:
+            mark_advice_completed(advice)
+
+    groups.insert(0, AdviceGroup(
+        tier=overall_SectionTier,
+        pre_string="Collect Greenstacks to complete Equinox Dreams",
+        advices=dream_advice
+    ))
 
     section_regular_gstacks = AdviceSection(
         name="Greenstacks",
         tier=tier,
-        pinchy_rating=overall_GreenstacksTier,
+        pinchy_rating=overall_SectionTier,
         header=header,
-        picture="Greenstack.png",
+        picture="wiki/Greenstack.png",
         groups=groups,
     )
 

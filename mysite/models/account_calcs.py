@@ -12,7 +12,7 @@ from consts import (
     # W3
     arbitrary_shrine_goal, arbitrary_shrine_note,
     # W4
-    nblbMaxBubbleCount, maxMeals, maxMealLevel,  # W5
+    nblbMaxBubbleCount, maxMealCount, maxMealLevel,  # W5
     numberOfArtifactTiers, divinity_offeringsDict, divinity_DivCostAfter3,
     # W6
     maxFarmingValue, summoning_rewards_that_dont_multiply_base_value,
@@ -21,7 +21,7 @@ from consts import (
     infinity_string, schematics_unlocking_harp_strings, schematics_unlocking_harp_chords
 )
 from models.models import Advice
-from utils.data_formatting import safe_loads, safer_get
+from utils.data_formatting import safe_loads, safer_get, safer_math_pow
 from utils.logging import get_logger
 from utils.text_formatting import getItemDisplayName, getItemCodeName
 
@@ -364,6 +364,7 @@ def _calculate_w2(account):
     account.vialMasteryMulti = 1 + (account.maxed_vials * .02) if account.rift['VialMastery'] else 1
     _calculate_w2_sigils(account)
     _calculate_w2_cauldrons(account)
+    _calculate_w2_postOffice(account)
     _calculate_w2_ballot(account)
     _calculate_w2_islands_trash(account)
     _calculate_w2_killroy(account)
@@ -411,6 +412,13 @@ def _calculate_w2_sigils(account):
         # Before the +1, -1 would mean not unlocked, 0 would mean Blue tier, 1 would be Yellow tier, and 2 would mean Red tier
         # After the +1, 0/1/2/3
 
+def _calculate_w2_postOffice(account):
+    account.postOffice["Total Boxes Earned"] = (
+            account.postOffice['Completing Orders']
+            + account.postOffice['Streak Bonuses']
+            + account.postOffice['Miscellaneous']
+    )
+    
 def _calculate_w2_ballot(account):
     account.event_points_shop['BonusMulti'] = ValueToMulti(
         account.equinox_bonuses['Voter Rights']['CurrentLevel']
@@ -502,14 +510,14 @@ def _calculate_w3_collider_base_costs(account):
             account.atom_collider['Atoms'][atomName]['BaseCostToUpgrade'] = (
                 (atomValuesDict['AtomInfo3']
                     + (atomValuesDict['AtomInfo1'] * atomValuesDict['Level']))
-                * pow(atomValuesDict['AtomInfo2'], atomValuesDict['Level'])
+                * safer_math_pow(atomValuesDict['AtomInfo2'], atomValuesDict['Level'])
             )
             # Calculate base cost to max level
             for level in range(account.atom_collider['Atoms'][atomName]['Level'], account.atom_collider['Atoms'][atomName]['MaxLevel']):
                 account.atom_collider['Atoms'][atomName]['BaseCostToMax'] += (
                     (account.atom_collider['Atoms'][atomName]['AtomInfo3']
                         + (account.atom_collider['Atoms'][atomName]['AtomInfo1'] * level))
-                    * pow(account.atom_collider['Atoms'][atomName]['AtomInfo2'], level)
+                    * safer_math_pow(account.atom_collider['Atoms'][atomName]['AtomInfo2'], level)
                 )
 
 def _calculate_w3_collider_cost_reduction(account):
@@ -581,27 +589,33 @@ def _calculate_w4_cooking_max_plate_levels(account):
     causticolumn_level = account.sailing['Artifacts'].get('Causticolumn', {}).get('Level', 0)
     account.cooking['PlayerMaxPlateLvl'] += 10 * int(causticolumn_level)
     if causticolumn_level < 1:
-        account.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Base Causticolumn", "causticolumn"))
+        account.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Base Causticolumn", "causticolumn", 0, 1))
     if causticolumn_level < 2:
-        account.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Ancient Causticolumn", "causticolumn"))
+        account.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Ancient Causticolumn", "causticolumn", 0, 1))
     if causticolumn_level < 3:
         if account.rift['EldritchArtifacts']:
-            account.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Eldritch Causticolumn", "causticolumn"))
+            account.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Eldritch Causticolumn", "causticolumn", 0, 1))
         else:
             account.cooking['PlayerMissingPlateUpgrades'].append((
                 "{{ Artifact|#sailing }}: Eldritch Causticolumn. Eldritch Artifacts are unlocked by completing {{ Rift|#rift }} 30",
-                "eldritch-artifact"
+                "eldritch-artifact",
+                0,
+                1
             ))
     if causticolumn_level < 4:
         if account.sneaking['JadeEmporium']["Sovereign Artifacts"]['Obtained']:
             account.cooking['PlayerMissingPlateUpgrades'].append((
                 "{{ Artifact|#sailing }}: Sovereign Causticolumn",
-                "causticolumn"
+                "causticolumn",
+                0,
+                1
             ))
         else:
             account.cooking['PlayerMissingPlateUpgrades'].append((
-                 "{{ Artifact|#sailing }}: Sovereign Causticolumn. Sovereign Artifacts unlock from {{ Jade Emporium|#sneaking }}",
-                 "sovereign-artifacts"
+                "{{ Artifact|#sailing }}: Sovereign Causticolumn. Sovereign Artifacts unlock from {{ Jade Emporium|#sneaking }}",
+                "sovereign-artifacts",
+                0,
+                1
             ))
     # Jade Emporium Increases
     if account.sneaking['JadeEmporium']["Papa Blob's Quality Guarantee"]['Obtained']:
@@ -609,18 +623,30 @@ def _calculate_w4_cooking_max_plate_levels(account):
     else:
         account.cooking['PlayerMissingPlateUpgrades'].append((
             "Purchase \"Papa Blob's Quality Guarantee\" from {{ Jade Emporium|#sneaking }}",
-            "papa-blobs-quality-guarantee"
+            "papa-blobs-quality-guarantee",
+            0,
+            1
         ))
     if account.sneaking['JadeEmporium']["Chef Geustloaf's Cutting Edge Philosophy"]['Obtained']:
         account.cooking['PlayerMaxPlateLvl'] += 10
     else:
         account.cooking['PlayerMissingPlateUpgrades'].append((
             "Purchase \"Chef Geustloaf's Cutting Edge Philosophy\" from {{ Jade Emporium|#sneaking }}",
-            "chef-geustloafs-cutting-edge-philosophy"
+            "chef-geustloafs-cutting-edge-philosophy",
+            0,
+            1
+        ))
+    account.cooking['PlayerMaxPlateLvl'] += account.grimoire['Upgrades']['Supreme Head Chef Status']['Level']
+    if account.grimoire['Upgrades']['Supreme Head Chef Status']['Level'] < account.grimoire['Upgrades']['Supreme Head Chef Status']['Max Level']:
+        account.cooking['PlayerMissingPlateUpgrades'].append((
+            "Upgrade \"Supreme Head Chef Status\" within {{ The Grimoire|#the-grimoire }}",
+            account.grimoire['Upgrades']['Supreme Head Chef Status']['Image'],
+            account.grimoire['Upgrades']['Supreme Head Chef Status']['Level'],  #progress
+            account.grimoire['Upgrades']['Supreme Head Chef Status']['Max Level']  #goal
         ))
 
-    account.cooking['CurrentRemainingMeals'] = (account.cooking['MealsUnlocked'] * account.cooking['PlayerMaxPlateLvl']) - account.cooking['PlayerTotalMealLevels']
-    account.cooking['MaxRemainingMeals'] = (maxMeals * maxMealLevel) - account.cooking['PlayerTotalMealLevels']
+    account.cooking['CurrentRemainingMeals'] = account.cooking['MaxTotalMealLevels'] - account.cooking['PlayerTotalMealLevels']
+    account.cooking['MaxRemainingMeals'] = (maxMealCount * maxMealLevel) - account.cooking['PlayerTotalMealLevels']
 
 def _calculate_w4_jewel_multi(account):
     jewelMulti = 1
@@ -668,10 +694,14 @@ def _calculate_w5_divinity_offering_costs(account):
     account.divinity['HighOfferingGoal'] = divinityUpgradeCost(DivCostAfter3, account.divinity['HighOffering'], account.divinity['GodsUnlocked'] + account.divinity['GodRank'])
 
 def divinityUpgradeCost(DivCostAfter3, offeringIndex, unlockedDivinity):
-    cost = (20 * pow(unlockedDivinity + 1.3, 2.3) * pow(2.2, unlockedDivinity) + 60) * divinity_offeringsDict.get(offeringIndex, {}).get("Chance", 1) / 100
-    if unlockedDivinity >= 3:
-        cost = cost * pow(min(1.8, max(1, 1 + DivCostAfter3 / 100)), unlockedDivinity - 2)
-    return ceil(cost)
+    try:
+        cost = (20 * safer_math_pow(unlockedDivinity + 1.3, 2.3) * safer_math_pow(2.2, unlockedDivinity) + 60) * divinity_offeringsDict.get(offeringIndex, {}).get("Chance", 1) / 100
+        if unlockedDivinity >= 3:
+            cost = cost * safer_math_pow(min(1.8, max(1, 1 + DivCostAfter3 / 100)), unlockedDivinity - 2)
+        return ceil(cost)
+    except OverflowError:
+        logger.exception(f"Could not calc Divinity Offering cost. Probably a cheater with a ridiculous number of Unlocked Divinity: {unlockedDivinity}")
+        return 1e100
 
 def _calculate_caverns(account):
     #_calculate_caverns_majiks(account)
@@ -923,9 +953,10 @@ def _calculate_w6_farming_crop_depot(account):
     lab_multi = ValueToMulti(
         (account.labBonuses['Depot Studies PhD']['Value'] + account.labJewels['Pure Opal Rhombol']['Value']) * account.labBonuses['Depot Studies PhD']['Enabled']
     )
+    grimoire_multi = account.grimoire['Upgrades']['Superior Crop Research']['Total Value']  #Grimoire 22: Superior Crop Research already a Multi
     for bonusName, bonusDetails in account.farming['Depot'].items():
-        account.farming['Depot'][bonusName]['Value'] = account.farming['Depot'][bonusName]['BaseValue'] * lab_multi
-        account.farming['Depot'][bonusName]['ValuePlus1'] = account.farming['Depot'][bonusName]['BaseValuePlus1'] * lab_multi
+        account.farming['Depot'][bonusName]['Value'] = account.farming['Depot'][bonusName]['BaseValue'] * lab_multi * grimoire_multi
+        account.farming['Depot'][bonusName]['ValuePlus1'] = account.farming['Depot'][bonusName]['BaseValuePlus1'] * lab_multi * grimoire_multi
 
 def _calculate_w6_farming_markets(account):
     super_multi_current_stacks = ValueToMulti(account.farming['MarketUpgrades']['Super Gmo']['Value'] * account.farming['CropStacks']['Super Gmo'])
@@ -946,7 +977,7 @@ def _calculate_w6_farming_markets(account):
                         f"{super_multi_current_stacks:,.4g}x"
                     )
                 elif name == 'Evolution Gmo':
-                    account.farming['MarketUpgrades'][name]['StackedValue'] = super_multi_current_stacks * pow(ValueToMulti(details['Value']), account.farming['CropStacks'][name])
+                    account.farming['MarketUpgrades'][name]['StackedValue'] = super_multi_current_stacks * safer_math_pow(ValueToMulti(details['Value']), account.farming['CropStacks'][name])
                     account.farming['MarketUpgrades'][name]['Description'] += (
                         f".<br>{account.farming['CropStacks'][name]} stacks = "
                         f"{account.farming['MarketUpgrades'][name]['StackedValue']:,.4g}x"
@@ -1259,11 +1290,11 @@ def _calculate_general_character_over_books(account):
             character_specific_bonuses += ceil(arctis_base * account.alchemy_bubbles['Big P']['BaseValue'] * (char.divinity_level / (char.divinity_level + 60)))
 
         # Symbols of Beyond = 1 + 1 per 20 levels
-        if char.class_name in ["Blood Berserker", "Divine Knight"]:
+        if any([elite in char.all_classes for elite in ["Blood Berserker", "Divine Knight"]]):
             char.setSymbolsOfBeyondMax(char.max_talents.get("149", 0) // 20)  # Symbols of Beyond - Red
-        elif char.class_name in ["Siege Breaker", "Beast Master"]:
+        elif any([elite in char.all_classes for elite in ["Siege Breaker", "Beast Master"]]):
             char.setSymbolsOfBeyondMax(char.max_talents.get("374", 0) // 20)  # Symbols of Beyond - Green
-        elif char.class_name in ["Elemental Sorcerer", "Bubonic Conjuror"]:
+        elif any([elite in char.all_classes for elite in ["Elemental Sorcerer", "Bubonic Conjuror"]]):
             char.setSymbolsOfBeyondMax(char.max_talents.get("539", 0) // 20)  # Symbols of Beyond - Purple
         character_specific_bonuses += char.symbols_of_beyond
 

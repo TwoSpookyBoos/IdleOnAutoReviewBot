@@ -250,7 +250,7 @@ def getGrottoAdviceGroup():
 
 # Layer/Colony Stats
     target_string = notateNumber('Basic', cavern['KillsRequired'], 2)
-    current_string = notateNumber('Match', cavern['PlayerKills'], 2, target_string)
+    current_string = notateNumber('Match', cavern['PlayerKills'], 2, matchString=target_string)
     cavern_advice[l_stats].append(Advice(
         label=f"Kills before Monarch: {notateNumber('Basic', cavern['KillsRemaining'], 2)}",
         picture_class='gloomie-mushroom',

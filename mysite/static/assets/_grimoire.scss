@@ -1,0 +1,73 @@
+$grimoire-upgrades: (
+    grimoire-upgrade--1: img('customized/GrimoireUpgBlank.png'),
+    grimoire-upgrade-0: img('data/GrimoireUpg0.png'),
+    grimoire-upgrade-1: img('data/GrimoireUpg1.png'),
+    grimoire-upgrade-2: img('data/GrimoireUpg2.png'),
+    grimoire-upgrade-3: img('data/GrimoireUpg3.png'),
+    grimoire-upgrade-4: img('data/GrimoireUpg4.png'),
+    grimoire-upgrade-5: img('data/GrimoireUpg5.png'),
+    grimoire-upgrade-6: img('data/GrimoireUpg6.png'),
+    grimoire-upgrade-7: img('data/GrimoireUpg7.png'),
+    grimoire-upgrade-8: img('data/GrimoireUpg8.png'),
+    grimoire-upgrade-9: img('data/GrimoireUpg9.png'),
+    grimoire-upgrade-10: img('data/GrimoireUpg10.png'),
+    grimoire-upgrade-11: img('data/GrimoireUpg11.png'),
+    grimoire-upgrade-12: img('data/GrimoireUpg12.png'),
+    grimoire-upgrade-13: img('data/GrimoireUpg13.png'),
+    grimoire-upgrade-14: img('data/GrimoireUpg14.png'),
+    grimoire-upgrade-15: img('data/GrimoireUpg15.png'),
+    grimoire-upgrade-16: img('data/GrimoireUpg16.png'),
+    grimoire-upgrade-17: img('data/GrimoireUpg17.png'),
+    grimoire-upgrade-18: img('data/GrimoireUpg18.png'),
+    grimoire-upgrade-19: img('data/GrimoireUpg19.png'),
+    grimoire-upgrade-20: img('data/GrimoireUpg20.png'),
+    grimoire-upgrade-21: img('data/GrimoireUpg21.png'),
+    grimoire-upgrade-22: img('data/GrimoireUpg22.png'),
+    grimoire-upgrade-23: img('data/GrimoireUpg23.png'),
+    grimoire-upgrade-24: img('data/GrimoireUpg24.png'),
+    grimoire-upgrade-25: img('data/GrimoireUpg25.png'),
+    grimoire-upgrade-26: img('data/GrimoireUpg26.png'),
+    grimoire-upgrade-27: img('data/GrimoireUpg27.png'),
+    grimoire-upgrade-28: img('data/GrimoireUpg28.png'),
+    grimoire-upgrade-29: img('data/GrimoireUpg29.png'),
+    grimoire-upgrade-30: img('data/GrimoireUpg30.png'),
+    grimoire-upgrade-31: img('data/GrimoireUpg31.png'),
+    grimoire-upgrade-32: img('data/GrimoireUpg32.png'),
+    grimoire-upgrade-33: img('data/GrimoireUpg33.png'),
+    grimoire-upgrade-34: img('data/GrimoireUpg34.png'),
+    grimoire-upgrade-35: img('data/GrimoireUpg35.png'),
+    grimoire-upgrade-36: img('data/GrimoireUpg36.png'),
+    grimoire-upgrade-37: img('data/GrimoireUpg37.png'),
+    grimoire-upgrade-38: img('data/GrimoireUpg38.png'),
+    grimoire-upgrade-39: img('data/GrimoireUpg39.png'),
+    grimoire-upgrade-40: img('data/GrimoireUpg40.png'),
+    grimoire-upgrade-41: img('data/GrimoireUpg41.png'),
+    grimoire-upgrade-42: img('data/GrimoireUpg42.png'),
+    grimoire-upgrade-43: img('data/GrimoireUpg43.png'),
+    grimoire-upgrade-44: img('data/GrimoireUpg44.png'),
+    grimoire-upgrade-45: img('data/GrimoireUpg45.png'),
+    grimoire-upgrade-46: img('data/GrimoireUpg46.png'),
+    grimoire-upgrade-47: img('data/GrimoireUpg47.png'),
+    grimoire-upgrade-48: img('data/GrimoireUpg48.png'),
+    grimoire-upgrade-49: img('data/GrimoireUpg49.png'),
+    grimoire-upgrade-50: img('data/GrimoireUpg50.png'),
+    grimoire-upgrade-51: img('data/GrimoireUpg51.png'),
+    grimoire-upgrade-52: img('data/GrimoireUpg52.png'),
+    grimoire-upgrade-53: img('data/GrimoireUpg53.png'),
+    grimoire-upgrade-54: img('data/GrimoireUpg54.png'),
+    grimoire-upgrade-55: img('data/GrimoireUpg55.png')
+);
+
+$grimoire-bones: (
+    grimoire-bone-0: img('data/Bone0_x1.png'),
+    grimoire-bone-1: img('data/Bone1_x1.png'),
+    grimoire-bone-2: img('data/Bone2_x1.png'),
+    grimoire-bone-3: img('data/Bone3_x1.png')
+);
+
+$grimoire-etc: (
+    wraith: img('customized/Wraith.gif')
+);
+
+$all-grimoire: map-merge($grimoire-upgrades, $grimoire-bones);
+$all-grimoire: map-merge($all-grimoire, $grimoire-etc);

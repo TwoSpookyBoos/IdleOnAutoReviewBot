@@ -11,7 +11,7 @@ from config import app
 from consts import (
     # General
     lavaFunc, ignorable_labels,
-    greenstack_progressionTiers, greenStackAmount, gstackable_codenames, gstackable_codenames_expected, quest_items_codenames,
+    greenstack_item_difficulty_groups, greenStackAmount, gstackable_codenames, gstackable_codenames_expected, quest_items_codenames,
     # W1
     # W2
     poBoxDict,
@@ -60,11 +60,11 @@ class Equipment:
                 q = dict(sorted(q.items(), key=lambda i: int(i[0]))).values()
                 groups.append([Asset(name, float(count)) for name, count in zip(o, q)])
 
-            equips, tools, foods = groups
+            # equips, tools, foods = groups
 
-            self.equips = equips
-            self.tools = tools
-            self.foods = foods
+            self.equips = groups[0] if groups else []
+            self.tools = groups[1] if groups else []
+            self.foods = groups[2] if groups else []
         else:
             self.equips = {}
             self.tools = {}
@@ -200,6 +200,8 @@ class Character:
             try:
                 self.po_boxes_invested[poBoxValues['Name']] = {
                     'Level': po_boxes[poBoxIndex],
+                    'Max Level': poBoxValues['Max Level'],
+                    'Tab': poBoxValues['Tab'],
                     'Bonus1Value': lavaFunc(
                         poBoxValues['1_funcType'],
                         po_boxes[poBoxIndex],
@@ -232,6 +234,8 @@ class Character:
             except:
                 self.po_boxes_invested[poBoxValues['Name']] = {
                     'Level': 0,
+                    'Max Level': poBoxValues['Max Level'],
+                    'Tab': poBoxValues['Tab'],
                     'Bonus1Value': 0,
                     'Bonus1String': '',
                     'Bonus2Value': 0,
@@ -881,7 +885,7 @@ class Asset:
 
 class Assets(dict):
     def __init__(self, assets: Union[dict[str, int], "Assets", None] = None):
-        self.tiers = greenstack_progressionTiers
+        self.tiers = greenstack_item_difficulty_groups
 
         if assets is None:
             assets = dict()

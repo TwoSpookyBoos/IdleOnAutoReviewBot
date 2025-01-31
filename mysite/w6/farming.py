@@ -79,6 +79,12 @@ def getCropDepotAdviceGroup(farming) -> AdviceGroup:
             goal=f"{lab_max:.2f}"
         ),
         Advice(
+            label=f"{{{{ Grimoire|#the-grimoire}}}}: Superior Crop Research: {session_data.account.grimoire['Upgrades']['Superior Crop Research']['Total Value']}/3x",
+            picture_class=session_data.account.grimoire['Upgrades']['Superior Crop Research']['Image'],
+            progression=session_data.account.grimoire['Upgrades']['Superior Crop Research']['Level'],
+            goal=session_data.account.grimoire['Upgrades']['Superior Crop Research']['Max Level'],
+        ),
+        Advice(
             label=f"Total Crops Discovered: {farming['CropsUnlocked']}/{maxFarmingCrops}",
             picture_class='crop-depot',
             progression=farming['CropsUnlocked'],
@@ -907,14 +913,17 @@ def getOGAdviceGroup(farming):
 
 def getLRExclusions(farming, highestFarmingSkillLevel):
     exclusions = []
-    if maxFarmingCrops-1 in farming['Crops']:
-        exclusions.extend([v['Name'] for v in landrankDict.values() if v['Name'].startswith('Evolution')])
-    if farming['Value']['FinalMin'] >= maxFarmingValue/100:
-        exclusions.extend([v['Name'] for v in landrankDict.values() if v['Name'].startswith('Production')])
-    if farming['LandRankMinPlot'] >= 120:
-        exclusions.extend([v['Name'] for v in landrankDict.values() if v['Name'].startswith('Soil Exp')])
-    if highestFarmingSkillLevel >= 300:
-        exclusions.extend([v['Name'] for v in landrankDict.values() if v['Name'].startswith('Farmtastic')])
+    if farming['LandRankTotalRanks'] >= 1400:
+        exclusions.extend([v['Name'] for v in landrankDict.values() if not v['Name'].startswith('Seed')])
+    else:
+        if maxFarmingCrops-1 in farming['Crops']:
+            exclusions.extend([v['Name'] for v in landrankDict.values() if v['Name'].startswith('Evolution')])
+        if farming['Value']['FinalMin'] >= maxFarmingValue/100:
+            exclusions.extend([v['Name'] for v in landrankDict.values() if v['Name'].startswith('Production')])
+        if farming['LandRankMinPlot'] >= 120:
+            exclusions.extend([v['Name'] for v in landrankDict.values() if v['Name'].startswith('Soil Exp')])
+        if highestFarmingSkillLevel >= 300:
+            exclusions.extend([v['Name'] for v in landrankDict.values() if v['Name'].startswith('Farmtastic')])
     #logger.debug(f"Land Rank Exclusions: {exclusions}")
     return exclusions
 
