@@ -3,6 +3,7 @@ import traceback
 import uuid
 from datetime import datetime
 from pathlib import Path
+import zipfile
 
 import requests
 from flask import g, render_template, request, redirect, Response, send_from_directory
@@ -136,28 +137,28 @@ def results() -> Response | str:
         response = error, 403
 
     except ProfileNotFound as e:
-        dirname = create_and_populate_log_files(None, headerData, e.log_msg, name_or_data, e)
-        error = e.msg_display.format(dirname)
+        zipname = create_and_populate_log_files(None, headerData, e.log_msg, name_or_data, e)
+        error = e.msg_display.format(zipname)
         response = error, 404
 
     except EmptyResponse as e:
-        dirname = create_and_populate_log_files(None, headerData, e.log_msg, name_or_data, e)
-        error = e.msg_display.format(dirname)
+        zipname = create_and_populate_log_files(None, headerData, e.log_msg, name_or_data, e)
+        error = e.msg_display.format(zipname)
         response = error, 500
 
     except IEConnectionFailed as e:
-        dirname = create_and_populate_log_files(e.stacktrace, headerData, e.log_msg, name_or_data, e)
-        error = e.msg_display.format(dirname)
+        zipname = create_and_populate_log_files(e.stacktrace, headerData, e.log_msg, name_or_data, e)
+        error = e.msg_display.format(zipname)
         response = error, 500
 
     except JSONDecodeError as e:
-        dirname = create_and_populate_log_files(e.data, headerData, str(e), name_or_data, e)
-        error = e.msg_display.format(dirname)
+        zipname = create_and_populate_log_files(e.data, headerData, str(e), name_or_data, e)
+        error = e.msg_display.format(zipname)
         response = error, 400
 
     except WtfDataException as e:
-        dirname = create_and_populate_log_files(e.data, headerData, str(e), name_or_data, e)
-        error = e.msg_display.format(dirname)
+        zipname = create_and_populate_log_files(e.data, headerData, str(e), name_or_data, e)
+        error = e.msg_display.format(zipname)
         response = error, 400
 
     except Exception as e:
@@ -166,9 +167,9 @@ def results() -> Response | str:
         data = get_user_input()
 
         setattr(e, "dirname", "other")
-        dirname = create_and_populate_log_files(data, headerData, msg, name_or_data, e)  # noqa
+        zipname = create_and_populate_log_files(data, headerData, msg, name_or_data, e)  # noqa
 
-        faq = BaseCustomException.let_us_know.format(dirname)
+        faq = BaseCustomException.let_us_know.format(zipname)
         error = (
             "Looks like something went wrong while handling your account data.<br>"
             f"The issue has been reported and will be investigated.<br>{faq}"
@@ -219,21 +220,18 @@ def create_and_populate_log_files(data, headerData, msg, name_or_data, error):
         if response.handled:
             return response.value
 
-        log_subdir = Path(error.dirname)/username/now
-        dirpath = app.config["LOGS"]/log_subdir
-        filemsg = dirpath/"message.log"
-        filedata = dirpath/"data.log"
+        zip_subpath = Path(error.dirname)/username/(now + ".zip")
+        zip_path = app.config["LOGS"]/zip_subpath
 
-        dirpath.mkdir(parents=True, exist_ok=True)
+        zip_path.parent.mkdir(parents=True, exist_ok=True)
 
-        with open(filemsg, "w") as user_log:
-            user_log.writelines(msg + os.linesep)
+        with zipfile.ZipFile(zip_path, "w",
+                             compression=zipfile.ZIP_LZMA) as z:
+            z.writestr("message.log", msg)
+            if data:
+                z.writestr("data.log", data)
 
-        if data:
-            with open(filedata, "w") as user_log:
-                user_log.writelines(data + os.linesep)
-
-        val = str(app.config["SERVER_TYPE"]/log_subdir).replace("/", " ▸ ").replace("\\", " ▸ ")
+        val = str(app.config["SERVER_TYPE"]/zip_subpath).replace("/", " ▸ ").replace("\\", " ▸ ")
         response.complete(val)
         return val
 
