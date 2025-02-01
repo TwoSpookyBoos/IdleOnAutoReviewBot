@@ -563,7 +563,7 @@ def _parse_general_master_classes_grimoire(account):
                     account.grimoire['Upgrades'][clean_name]['Level'] * account.grimoire['Upgrades'][clean_name]['Value Per Level']
                 )
                 account.grimoire['Upgrades'][clean_name]['Description'] = account.grimoire['Upgrades'][clean_name]['Description'].replace(
-                    '}', f"{account.grimoire['Upgrades'][clean_name]['Total Value']}"
+                    '}', f"{account.grimoire['Upgrades'][clean_name]['Total Value']:.2f}"
                 )
             if 'Target:$' in account.grimoire['Upgrades'][clean_name]['Description']:
                 account.grimoire['Upgrades'][clean_name]['Description'] = account.grimoire['Upgrades'][clean_name]['Description'].replace(
