@@ -1682,6 +1682,9 @@ sailing_progressionTiers = {
         },
     }
 }
+gaming_progressionTiers = {
+    0: {}
+}
 
 ###WORLD 6 PROGRESSION TIERS###
 farming_progressionTiers = {
