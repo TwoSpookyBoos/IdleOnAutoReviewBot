@@ -13,11 +13,12 @@ from consts import (
     event_points_shop_dict,
     npc_tokens,
     # Master Classes
-    grimoire_upgrades_list, grimoire_bones_list, grimoire_stack_types,
+    grimoire_upgrades_list, grimoire_bones_list, grimoire_dont_scale,
     # W1
     stampsDict, stampTypes, bribesDict,
     forgeUpgradesDict,
     statuesDict, statueTypeList, statueCount,
+    vault_upgrades_list, vault_stack_types, vault_dont_scale,
     # W2
     bubblesDict, max_IndexOfImplementedBubbles,
     vialsDict, max_IndexOfVials, getReadableVialNames, max_VialLevel,
@@ -49,7 +50,7 @@ from consts import (
     caverns_villagers, caverns_conjuror_majiks, caverns_engineer_schematics, caverns_engineer_schematics_unlock_order, caverns_cavern_names,
     caverns_measurer_measurements, getCavernResourceImage, max_buckets, max_sediments, sediment_bars, getVillagerEXPRequired,
     monument_bonuses, bell_clean_improvements, bell_ring_bonuses, getBellExpRequired, getGrottoKills, lamp_wishes, key_cards, getWishCost,
-    schematics_unlocking_harp_chords, harp_chord_effects, max_harp_notes, lamp_world_wish_values, grimoire_coded_stack_monster_order, decode_enemy_name
+    schematics_unlocking_harp_chords, harp_chord_effects, max_harp_notes, lamp_world_wish_values
 )
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
 from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert
@@ -225,6 +226,7 @@ def _parse_general(account):
     _parse_general_event_points_shop(account)
     _parse_general_quests(account)
     _parse_general_npc_tokens(account)
+    _parse_general_upgrade_vault(account)
     _parse_general_master_classes(account)
 
 def _parse_general_gemshop(account):
@@ -490,6 +492,67 @@ def _parse_general_event_points_shop(account):
                 'Image': bonusDetails['Image']
             }
 
+def _parse_general_upgrade_vault(account):
+    account.vault = {
+        'Upgrades': {},
+        'Total Upgrades': 0,
+        'Knockout Stacks': safer_get(account.raw_optlacc_dict, 338, 0),
+    }
+    #Parse Vault Upgrades
+    raw_vault = safe_loads(account.raw_data.get('UpgVault', []))
+    if not raw_vault:
+        logger.warning(f"Upgrade Vault data not present{', as expected' if account.version < 237 else ''}.")
+    for upgrade_index, upgrade_values_list in enumerate(vault_upgrades_list):
+        clean_name = upgrade_values_list[0].replace('(Tap_for_more_info)', '').replace('(Tap_for_Info)', '').replace('製', '').replace('_', ' ').rstrip()
+        if clean_name.split('!')[0] in vault_stack_types:
+            stack_type = clean_name.split('!')[0]
+            clean_name += f" ({account.vault.get(f'{stack_type} Stacks', '#')} stacks)"
+        try:
+            account.vault['Upgrades'][clean_name] = {
+                'Level': int(raw_vault[upgrade_index]),
+                'Index': upgrade_index,
+                'Image': f"vault-upgrade-{upgrade_index}",
+                'Cost Base': int(upgrade_values_list[1]),
+                'Cost Increment': float(upgrade_values_list[2]),
+                # 'Placeholder3': upgrade_values_list[3],
+                'Max Level': int(upgrade_values_list[4]),
+                'Value Per Level': int(upgrade_values_list[5]),
+                'Unlock Requirement': int(upgrade_values_list[6]),
+                # 'Placeholder7': upgrade_values_list[7],
+                # 'Placeholder8': upgrade_values_list[8],
+                'Description': (
+                    f"{upgrade_values_list[9].replace('_', ' ')}"
+                    f"<br>{upgrade_values_list[10].replace('_', ' ') if len(upgrade_values_list) >= 10 else ''}"
+                ),
+                'Scaling Value': upgrade_index not in vault_dont_scale
+            }
+        except Exception as e:
+            account.vault['Upgrades'][clean_name] = {
+                'Level': 0,
+                'Index': upgrade_index,
+                'Image': f"vault-upgrade-{upgrade_index}",
+                'Cost Base': int(upgrade_values_list[1]),
+                'Cost Increment': float(upgrade_values_list[2]),
+                # 'Placeholder3': upgrade_values_list[3],
+                'Max Level': int(upgrade_values_list[4]),
+                'Value Per Level': int(upgrade_values_list[5]),
+                'Unlock Requirement': int(upgrade_values_list[6]),
+                # 'Placeholder7': upgrade_values_list[7],
+                # 'Placeholder8': upgrade_values_list[8],
+                'Description': (
+                    f"{upgrade_values_list[9].replace('_', ' ')}"
+                    f"<br>{upgrade_values_list[10].replace('_', ' ') if len(upgrade_values_list) >= 10 else ''}"
+                ),
+                'Scaling Value': upgrade_index not in vault_dont_scale
+            }
+    #logger.debug(account.vault)
+
+    #Sum total upgrades
+    account.vault['Total Upgrades'] = sum([v['Level'] for v in account.vault['Upgrades'].values()])
+    for upgrade_name in account.vault['Upgrades']:
+        account.vault['Upgrades'][upgrade_name]['Unlocked'] = account.vault['Total Upgrades'] >= account.vault['Upgrades'][upgrade_name]['Unlock Requirement']
+
+
 def _parse_general_master_classes(account):
     _parse_general_master_classes_grimoire(account)
 
@@ -508,19 +571,18 @@ def _parse_general_master_classes_grimoire(account):
     }
     #Parse Grimoire Upgrades
     raw_grimoire = safe_loads(account.raw_data.get('Grimoire', []))
+    if not raw_grimoire:
+        logger.warning(f"Grimore data not present{', as expected' if account.version < 236 else ''}.")
     for upgrade_index, upgrade_values_list in enumerate(grimoire_upgrades_list):
         clean_name = upgrade_values_list[0].replace('(Tap_for_more_info)', '').replace('製', '').replace('_', ' ').rstrip()
         if '(#)' in clean_name:
             stack_type = clean_name.split('!')[0]
-            try:
-                next_stack_target = decode_enemy_name(grimoire_coded_stack_monster_order[account.grimoire.get(f'{stack_type} Stacks', '0')])
-            except:
-                next_stack_target = decode_enemy_name(grimoire_coded_stack_monster_order[0])
             clean_name = clean_name.replace('(#)', f"({account.grimoire.get(f'{stack_type} Stacks', '#')})")
         if clean_name != 'Ripped Page':
             try:
                 account.grimoire['Upgrades'][clean_name] = {
                     'Level': int(raw_grimoire[upgrade_index]),
+                    'Index': upgrade_index,
                     'Image': f"grimoire-upgrade-{upgrade_index}",
                     'Cost Base': int(upgrade_values_list[1]),
                     'Cost Increment': float(upgrade_values_list[2]),
@@ -529,14 +591,16 @@ def _parse_general_master_classes_grimoire(account):
                     'Max Level': int(upgrade_values_list[4]),
                     'Value Per Level': int(upgrade_values_list[5]),
                     'Unlock Requirement': int(upgrade_values_list[6]),
-                    'Placeholder7': upgrade_values_list[7],
-                    'Placeholder8': upgrade_values_list[8],
+                    # 'Placeholder7': upgrade_values_list[7],
+                    # 'Placeholder8': upgrade_values_list[8],
                     'Description': upgrade_values_list[9].replace('_', ' '),
+                    'Scaling Value': upgrade_index not in grimoire_dont_scale
                 }
             except Exception as e:
                 #logger.exception(f"Error parsing Grimoire Index {upgrade_index}")
                 account.grimoire['Upgrades'][clean_name] = {
                     'Level': 0,
+                    'Index': upgrade_index,
                     'Image': f"grimoire-upgrade-{upgrade_index}",
                     'Cost Base': int(upgrade_values_list[1]),
                     'Cost Increment': float(upgrade_values_list[2]),
@@ -545,31 +609,11 @@ def _parse_general_master_classes_grimoire(account):
                     'Max Level': int(upgrade_values_list[4]),
                     'Value Per Level': int(upgrade_values_list[5]),
                     'Unlock Requirement': int(upgrade_values_list[6]),
-                    'Placeholder7': upgrade_values_list[7],
-                    'Placeholder8': upgrade_values_list[8],
+                    # 'Placeholder7': upgrade_values_list[7],
+                    # 'Placeholder8': upgrade_values_list[8],
                     'Description': upgrade_values_list[9].replace('_', ' '),
+                    'Scaling Value': upgrade_index not in grimoire_dont_scale
                 }
-
-            #Update description with total value, stack counts, and scaling info
-            if '{' in account.grimoire['Upgrades'][clean_name]['Description']:
-                account.grimoire['Upgrades'][clean_name]['Total Value'] = (
-                    account.grimoire['Upgrades'][clean_name]['Level'] * account.grimoire['Upgrades'][clean_name]['Value Per Level']
-                )
-                account.grimoire['Upgrades'][clean_name]['Description'] = account.grimoire['Upgrades'][clean_name]['Description'].replace(
-                    '{', f"{account.grimoire['Upgrades'][clean_name]['Total Value']}"
-                )
-            if '}' in account.grimoire['Upgrades'][clean_name]['Description']:
-                account.grimoire['Upgrades'][clean_name]['Total Value'] = ValueToMulti(
-                    account.grimoire['Upgrades'][clean_name]['Level'] * account.grimoire['Upgrades'][clean_name]['Value Per Level']
-                )
-                account.grimoire['Upgrades'][clean_name]['Description'] = account.grimoire['Upgrades'][clean_name]['Description'].replace(
-                    '}', f"{account.grimoire['Upgrades'][clean_name]['Total Value']:.2f}"
-                )
-            if 'Target:$' in account.grimoire['Upgrades'][clean_name]['Description']:
-                account.grimoire['Upgrades'][clean_name]['Description'] = account.grimoire['Upgrades'][clean_name]['Description'].replace(
-                    'Target:$', f"Target: {next_stack_target}"
-                )
-            account.grimoire['Upgrades'][clean_name]['Description'] += f" ({account.grimoire['Upgrades'][clean_name]['Value Per Level']} per level)"
 
     #Sum total upgrades
     account.grimoire['Total Upgrades'] = sum([v['Level'] for v in account.grimoire['Upgrades'].values()])
