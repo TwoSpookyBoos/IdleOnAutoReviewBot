@@ -1,0 +1,41 @@
+$vault-upgrades: (
+    vault-upgrade--1: img('customized/VaultUpgBlank.png'),
+    vault-upgrade-0:  img('data/VaultUpg0.png'),
+    vault-upgrade-1:  img('data/VaultUpg1.png'),
+    vault-upgrade-2:  img('data/VaultUpg2.png'),
+    vault-upgrade-3:  img('data/VaultUpg3.png'),
+    vault-upgrade-4:  img('data/VaultUpg4.png'),
+    vault-upgrade-5:  img('data/VaultUpg5.png'),
+    vault-upgrade-6:  img('data/VaultUpg6.png'),
+    vault-upgrade-7:  img('data/VaultUpg7.png'),
+    vault-upgrade-8:  img('data/VaultUpg8.png'),
+    vault-upgrade-9:  img('data/VaultUpg9.png'),
+    vault-upgrade-10: img('data/VaultUpg10.png'),
+    vault-upgrade-11: img('data/VaultUpg11.png'),
+    vault-upgrade-12: img('data/VaultUpg12.png'),
+    vault-upgrade-13: img('data/VaultUpg13.png'),
+    vault-upgrade-14: img('data/VaultUpg14.png'),
+    vault-upgrade-15: img('data/VaultUpg15.png'),
+    vault-upgrade-16: img('data/VaultUpg16.png'),
+    vault-upgrade-17: img('data/VaultUpg17.png'),
+    vault-upgrade-18: img('data/VaultUpg18.png'),
+    vault-upgrade-19: img('data/VaultUpg19.png'),
+    vault-upgrade-20: img('data/VaultUpg20.png'),
+    vault-upgrade-21: img('data/VaultUpg21.png'),
+    vault-upgrade-22: img('data/VaultUpg22.png'),
+    vault-upgrade-23: img('data/VaultUpg23.png'),
+    vault-upgrade-24: img('data/VaultUpg24.png'),
+    vault-upgrade-25: img('data/VaultUpg25.png'),
+    vault-upgrade-26: img('data/VaultUpg26.png'),
+    vault-upgrade-27: img('data/VaultUpg27.png'),
+    vault-upgrade-28: img('data/VaultUpg28.png'),
+    vault-upgrade-29: img('data/VaultUpg29.png'),
+    vault-upgrade-30: img('data/VaultUpg30.png'),
+    vault-upgrade-31: img('data/VaultUpg31.png'),
+    vault-upgrade-32: img('data/VaultUpg32.png'),
+);
+
+$vault-etc: (
+);
+
+$all-vault: map-merge($vault-upgrades, $vault-etc);

@@ -20,6 +20,7 @@
 @import "event-shop";
 
 //W1
+@import "upgrade_vault";
 @import "bribes";
 @import "owl";
 
@@ -2119,6 +2120,7 @@ $id-map: map-merge($all-weekly-boss-map, $id-map);
 $id-map: map-merge($all-caverns, $id-map);
 $id-map: map-merge($event-shop, $id-map);
 $id-map: map-merge($all-grimoire, $id-map);
+$id-map: map-merge($all-vault, $id-map);
 
 
 
