@@ -137,6 +137,7 @@ class Character:
         secondary_preset_talents: dict,
         po_boxes: list[int],
         equipped_lab_chips: list[str],
+        lab_position: dict,
         inventory_bags: dict,
         kill_dict: dict,
     ):
@@ -239,6 +240,7 @@ class Character:
                     'Bonus3Value': 0,
                     'Bonus3String': '',
                 }
+        self.lab_position = lab_position,   
         self.equipped_lab_chips: list[str] = []
         for chipIndex in equipped_lab_chips:
             if chipIndex != -1:

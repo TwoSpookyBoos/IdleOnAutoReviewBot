@@ -262,6 +262,7 @@ def getCharacterDetails(inputJSON, runType):
     equipped_lab_chips = {}
     inventory_bags = {}
     kill_lists = {}
+    characterLabPositions = {}
     for character_index in range(0, character_count):
         character_classes.append(getHumanReadableClasses(inputJSON.get(f"CharacterClass_{character_index}", 0)))
         postOfficeList.append(safe_loads(inputJSON.get(f"POu_{character_index}", [0]*36)))
@@ -275,6 +276,11 @@ def getCharacterDetails(inputJSON, runType):
             equipped_lab_chips[character_index] = safe_loads(inputJSON["Lab"])[character_index+1]
         except:
             equipped_lab_chips[character_index] = []
+        try:
+            labPlayersPosition = safe_loads(inputJSON["Lab"])[0]
+            characterLabPositions[character_index] = [labPlayersPosition[2*character_index], labPlayersPosition[2*character_index+1]]
+        except:
+            characterLabPositions[character_index] = [0, 0]
 
         characterDict[character_index] = dict(
             character_index=character_index,
@@ -291,6 +297,7 @@ def getCharacterDetails(inputJSON, runType):
             secondary_preset_talents=characterSecondaryPresetTalents[character_index],
             po_boxes=postOfficeList[character_index],
             equipped_lab_chips=equipped_lab_chips[character_index],
+            lab_position=characterLabPositions[character_index],
             inventory_bags=inventory_bags[character_index],
             kill_dict={k:v for k, v in enumerate(kill_lists[character_index])},
         )

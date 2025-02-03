@@ -16,7 +16,7 @@ from general import combatLevels, greenstacks, pinchy, cards, secretPath, consum
 from w1 import stamps, bribes, smithing, statues, starsigns, owl
 from w2 import alchemy, killroy, islands, arcade, bonus_ballot
 from w3 import trapping, consRefinery, consDeathNote, worship, consSaltLick, consBuildings, equinox, library, sampling, collider
-from w4 import breeding, cooking, rift
+from w4 import breeding, cooking, lab, rift
 from w5 import slab, divinity, sailing
 from caverns import villagers, shallow_caverns, glowshroom_tunnels
 from w6 import beanstalk, sneaking, farming, summoning
@@ -106,6 +106,7 @@ def main(inputData, runType="web"):
             equinox.getEquinoxAdviceSection(),
         ],
         sections_4 := [
+            lab.getLabAdviceSection(),
             breeding.getBreedingAdviceSection(),
             cooking.getCookingAdviceSection(),
             rift.getRiftAdviceSection(),

@@ -113,6 +113,7 @@ def results() -> Response | str:
             live_link=live_link,
             beta_link=beta_link,
             switches=switches(),
+            consts=consts,
             **get_user_preferences(),
         )
 
@@ -190,6 +191,7 @@ def index() -> Response | str:
         beta_link=beta_link,
         player=player,
         switches=switches(),
+        jewel_data=consts.labJewelsDict
     )
     return Response(page, headers={"Cache-Control": "must-revalidate"})
 
