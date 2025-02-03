@@ -1757,7 +1757,8 @@ farming_progressionTiers = {
         'Suggestions': {
             'EvoChance': [1e12, 10e12],
             'Speed': [8, 20],
-            'CropIndex': [46, 61, 84, 104, 119]  #46 = Earthy/Gold Sliced Tomato, 61 = Bulbo/Golden Tulip, 84 = Sushi/Max, 104 = Mushie/20, 119 = Normal Glassy/Onigiri
+            'CropIndex': [46, 61, 84, 104, 119],  #46 = Earthy/Gold Sliced Tomato, 61 = Bulbo/Golden Tulip, 84 = Sushi/Max, 104 = Mushie/20, 119 = Normal Glassy/Onigiri
+            'Stacks': ['Evolution', 'Speed'],
         },
         'Night Market': {
             'Evolution Gmo': 30,  # 1.24x
@@ -1790,7 +1791,8 @@ farming_progressionTiers = {
             'EvoChance': [1e16, 1e18],
             'Speed': [30, 40],
             'OG': [2.5, 6.25],  #Guarantees 2x OG at 2.5 OG, guarantees 4x OG
-            'CropIndex': [107, 123]  #107 = Mushie/Final, 122 = Red Glassy/Mango
+            'CropIndex': [107, 123],  #107 = Mushie/Final, 122 = Red Glassy/Mango
+            'Stacks': ['Evolution', 'Speed'],
         },
         'Night Market': {
             'Evolution Gmo': 40,  #1.32x
@@ -1808,6 +1810,7 @@ farming_progressionTiers = {
             'EvoChance': [1e22, 5e22],
             'Speed': [30, 40],
             'CropIndex': [126],  #126 at end of 1k stacking, before 100k stacking
+            'Stacks': ['Evolution', 'Speed', 'Value'],
             'No Trade': "Do not complete a Bean trade! Start back at Apples and stack to 100k of each crop"
         },
         #'Night Market': {},
@@ -1849,7 +1852,8 @@ farming_progressionTiers = {
             'EvoChance': [1e23, 5e23],
             'Speed': [250, 400],
             'OG': [6.25, 15.625],
-            'CropIndex': [127]
+            'CropIndex': [127],
+            'Stacks': ['Evolution', 'Speed', 'Value', 'Super'],
         },
         'Night Market': {
             'Evolution Gmo': 65,  #1.52x
@@ -1863,12 +1867,15 @@ farming_progressionTiers = {
         'Stats': {
             'Value': 100
         },
+        'Crops Unlocked': 127,
         'Land Ranks': {
             1: {
                 'Overgrowth Superboost': 1
             },
         },
-
+        'Suggestions': {
+            'Stacks': ['Evolution', 'Speed', 'Value', 'Super'],
+        },
         'Night Market': {
             'Evolution Gmo': 88,  #1.70x
             'Speed Gmo': 50,  #15%
@@ -1879,7 +1886,8 @@ farming_progressionTiers = {
     8: {
         'Crops Unlocked': 160,
         'Suggestions': {
-            'EvoChance': [1e66, 1e68]
+            'EvoChance': [1e66, 1e68],
+            'Stacks': ['Evolution', 'Speed', 'Value', 'Super'],
         },
         'Night Market': {
             'Evolution Gmo': 125,  #2.00x
@@ -1898,7 +1906,8 @@ farming_progressionTiers = {
             'Rank Boost': 100,
         },
         'Suggestions': {
-            'EvoChance': [1e91, 1e93]
+            'EvoChance': [1e91, 1e93],
+            'Stacks': ['Evolution', 'Speed', 'Value', 'Super'],
         },
         'Night Market': {
             'Evolution Gmo': 187,  #2.50x
@@ -1918,6 +1927,7 @@ farming_progressionTiers = {
         },
     },  #Progress that is still quick-ish to futureproof for possible new crops being added in the future
     10: {
+        'Crops Unlocked': 230,
         'Day Market': {
             'Stronger Vines': 220,  #440%
             'Nutritious Soil': 219,  #Finish eggplants, stop before the Cabbage that is needed for Stronger Vines
