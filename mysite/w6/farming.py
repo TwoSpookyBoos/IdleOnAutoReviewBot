@@ -534,7 +534,7 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
 # Lamp
     lamp_cavern = session_data.account.caverns['Caverns']['The Lamp']
     evo_advices[lamp].append(Advice(
-        label=f"{{{{Lamp|#glowshroom-tunnels}}}} Wish: World 5 Stuff: +{lamp_cavern['WishTypes'][8]['BonusList'][0]}%",
+        label=f"{{{{Lamp|#glowshroom-tunnels}}}} Wish: {lamp_cavern['WishTypes'][8]['Name']}: +{lamp_cavern['WishTypes'][8]['BonusList'][0]}%",
         picture_class=f"cavern-{lamp_cavern['CavernNumber']}",
         progression=lamp_cavern['WishTypes'][8]['BonusList'][0],
         goal=infinity_string
