@@ -1928,6 +1928,9 @@ farming_progressionTiers = {
     },  #Progress that is still quick-ish to futureproof for possible new crops being added in the future
     10: {
         'Crops Unlocked': 230,
+        'Suggestions': {
+            'Stacks': ['Evolution', 'Speed', 'Value', 'Super'],
+        },
         'Day Market': {
             'Stronger Vines': 220,  #440%
             'Nutritious Soil': 219,  #Finish eggplants, stop before the Cabbage that is needed for Stronger Vines
