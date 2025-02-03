@@ -1,4 +1,4 @@
-from consts import missableGStacksDict, break_you_best, greenstack_progressionTiers
+from consts import missableGStacksDict, break_you_best, greenstack_progressionTiers, find_vendor_name
 from models.models import AdviceSection, AdviceGroup, Advice, gstackable_codenames_expected, Assets
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
@@ -165,7 +165,10 @@ def getGStackAdviceSections():
         tier_subsection = {
             category: [
                 Advice(
-                    label=item.name,
+                    label=f"{item.name}"
+                          f"{' (' if category == 'Vendor Shops' else ''}"
+                          f"{find_vendor_name(item.codename) if category == 'Vendor Shops' else ''}"
+                          f"{')' if category == 'Vendor Shops' else ''}",
                     picture_class=item.name,
                     progression=item.progression,
                     goal=100,
