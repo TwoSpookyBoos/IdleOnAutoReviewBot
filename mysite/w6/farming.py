@@ -534,7 +534,7 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
 # Lamp
     lamp_cavern = session_data.account.caverns['Caverns']['The Lamp']
     evo_advices[lamp].append(Advice(
-        label=f"{{{{Lamp|#glowshroom-tunnels}}}} Wish: World 5 Stuff: +{lamp_cavern['WishTypes'][8]['BonusList'][0]}%",
+        label=f"{{{{Lamp|#glowshroom-tunnels}}}} Wish: {lamp_cavern['WishTypes'][8]['Name']}: +{lamp_cavern['WishTypes'][8]['BonusList'][0]}%",
         picture_class=f"cavern-{lamp_cavern['CavernNumber']}",
         progression=lamp_cavern['WishTypes'][8]['BonusList'][0],
         goal=infinity_string
@@ -1052,6 +1052,34 @@ def getProgressionTiersAdviceGroup(farming, highestFarmingSkillLevel):
         if subgroupName in farming_AdviceDict['Tiers']:
             if tierRequirements.get('Suggestions', {}):
                 suggies = tierRequirements['Suggestions']
+                if 'Evolution' in suggies.get('Stacks', []):
+                    farming_AdviceDict['Tiers'][subgroupName].append(Advice(
+                        label='Evolution GMO stacks (200 crops)',
+                        picture_class='night-market',
+                        progression=session_data.account.farming["CropStacks"]["Evolution Gmo"],
+                        goal=tierRequirements['Crops Unlocked'],
+                    ))
+                if 'Speed' in suggies.get('Stacks', []):
+                    farming_AdviceDict['Tiers'][subgroupName].append(Advice(
+                        label='Speed GMO stacks (1k crops)',
+                        picture_class='night-market',
+                        progression=session_data.account.farming["CropStacks"]["Speed Gmo"],
+                        goal=tierRequirements['Crops Unlocked'],
+                    ))
+                if 'Value' in suggies.get('Stacks', []):
+                    farming_AdviceDict['Tiers'][subgroupName].append(Advice(
+                        label='Value GMO stacks (10k crops)',
+                        picture_class='night-market',
+                        progression=session_data.account.farming["CropStacks"]["Value Gmo"],
+                        goal=tierRequirements['Crops Unlocked'],
+                    ))
+                if 'Super' in suggies.get('Stacks', []):
+                    farming_AdviceDict['Tiers'][subgroupName].append(Advice(
+                        label='Super GMO stacks (100k crops)',
+                        picture_class='night-market',
+                        progression=session_data.account.farming["CropStacks"]["Super Gmo"],
+                        goal=tierRequirements['Crops Unlocked'],
+                    ))
                 if 'Speed' in suggies:
                     if farming['Speed']['Total Multi'] < suggies['Speed'][1]:
                         farming_AdviceDict['Tiers'][subgroupName].append(Advice(

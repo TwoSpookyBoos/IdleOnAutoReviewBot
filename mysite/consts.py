@@ -1757,7 +1757,8 @@ farming_progressionTiers = {
         'Suggestions': {
             'EvoChance': [1e12, 10e12],
             'Speed': [8, 20],
-            'CropIndex': [46, 61, 84, 104, 119]  #46 = Earthy/Gold Sliced Tomato, 61 = Bulbo/Golden Tulip, 84 = Sushi/Max, 104 = Mushie/20, 119 = Normal Glassy/Onigiri
+            'CropIndex': [46, 61, 84, 104, 119],  #46 = Earthy/Gold Sliced Tomato, 61 = Bulbo/Golden Tulip, 84 = Sushi/Max, 104 = Mushie/20, 119 = Normal Glassy/Onigiri
+            'Stacks': ['Evolution', 'Speed'],
         },
         'Night Market': {
             'Evolution Gmo': 30,  # 1.24x
@@ -1790,7 +1791,8 @@ farming_progressionTiers = {
             'EvoChance': [1e16, 1e18],
             'Speed': [30, 40],
             'OG': [2.5, 6.25],  #Guarantees 2x OG at 2.5 OG, guarantees 4x OG
-            'CropIndex': [107, 123]  #107 = Mushie/Final, 122 = Red Glassy/Mango
+            'CropIndex': [107, 123],  #107 = Mushie/Final, 122 = Red Glassy/Mango
+            'Stacks': ['Evolution', 'Speed'],
         },
         'Night Market': {
             'Evolution Gmo': 40,  #1.32x
@@ -1808,7 +1810,7 @@ farming_progressionTiers = {
             'EvoChance': [1e22, 5e22],
             'Speed': [30, 40],
             'CropIndex': [126],  #126 at end of 1k stacking, before 100k stacking
-            
+            'Stacks': ['Evolution', 'Speed', 'Value'],
             'No Trade': "Do not complete a Bean trade! Start back at Apples and stack to 100k of each crop"
         },
         #'Night Market': {},
@@ -1850,7 +1852,8 @@ farming_progressionTiers = {
             'EvoChance': [1e23, 5e23],
             'Speed': [250, 400],
             'OG': [6.25, 15.625],
-            'CropIndex': [127]
+            'CropIndex': [127],
+            'Stacks': ['Evolution', 'Speed', 'Value', 'Super'],
         },
         'Night Market': {
             'Evolution Gmo': 65,  #1.52x
@@ -1864,12 +1867,15 @@ farming_progressionTiers = {
         'Stats': {
             'Value': 100
         },
+        'Crops Unlocked': 127,
         'Land Ranks': {
             1: {
                 'Overgrowth Superboost': 1
             },
         },
-
+        'Suggestions': {
+            'Stacks': ['Evolution', 'Speed', 'Value', 'Super'],
+        },
         'Night Market': {
             'Evolution Gmo': 88,  #1.70x
             'Speed Gmo': 50,  #15%
@@ -1880,7 +1886,8 @@ farming_progressionTiers = {
     8: {
         'Crops Unlocked': 160,
         'Suggestions': {
-            'EvoChance': [1e66, 1e68]
+            'EvoChance': [1e66, 1e68],
+            'Stacks': ['Evolution', 'Speed', 'Value', 'Super'],
         },
         'Night Market': {
             'Evolution Gmo': 125,  #2.00x
@@ -1899,7 +1906,8 @@ farming_progressionTiers = {
             'Rank Boost': 100,
         },
         'Suggestions': {
-            'EvoChance': [1e91, 1e93]
+            'EvoChance': [1e91, 1e93],
+            'Stacks': ['Evolution', 'Speed', 'Value', 'Super'],
         },
         'Night Market': {
             'Evolution Gmo': 187,  #2.50x
@@ -1919,6 +1927,10 @@ farming_progressionTiers = {
         },
     },  #Progress that is still quick-ish to futureproof for possible new crops being added in the future
     10: {
+        'Crops Unlocked': 230,
+        'Suggestions': {
+            'Stacks': ['Evolution', 'Speed', 'Value', 'Super'],
+        },
         'Day Market': {
             'Stronger Vines': 220,  #440%
             'Nutritious Soil': 219,  #Finish eggplants, stop before the Cabbage that is needed for Stronger Vines
@@ -9299,6 +9311,11 @@ vendors = {
     "W5 Town": "Crystal4",
     "W6 Town": "Crystal5"
 }
+
+def find_vendor_name(item_codename):
+    for vendor_name, sold_items in vendorItems.items():
+        if item_codename in sold_items:
+            return vendor_name
 #anvilItems last pulled from code in 2.12. Search for: ItemToCraftNAME = function ()
 anvilItems = {
     "Anvil Tab I": "EquipmentPunching1 TestObj1 EquipmentBows1 EquipmentWands1 EquipmentHats1 EquipmentShirts1 EquipmentPants1 EquipmentShoes9 EquipmentTools2 MaxCapBag1 EquipmentToolsHatchet3 MaxCapBag7 EquipmentHats15 EquipmentPunching2 MaxCapBag8 MaxCapBagM2 EquipmentHats17 EquipmentShirts11 EquipmentPants2 EquipmentShoes1 EquipmentHats20 EquipmentHats3 EquipmentHats16 EquipmentHats21 TestObj7 EquipmentBows3 EquipmentWands2 EquipmentRings2 EquipmentTools3 MaxCapBag2 EquipmentToolsHatchet1 MaxCapBag9 EquipmentHats18 EquipmentShirts12 EquipmentPants3 EquipmentSmithingTabs2 EquipmentShirts2 EquipmentPendant10 EquipmentShoes15 EquipmentRings3 EquipmentHats8 FoodMining1 FoodChoppin1 EquipmentShoes7 EquipmentShirts10 EquipmentShirts20 OilBarrel5 EquipmentRings14 EquipmentPants15 EquipmentPants18 Peanut PeanutG InvBag102 EquipmentShirts25 EquipmentShirts24 EquipmentShirts3 BadgeG1 BadgeG2 BadgeG3 EquipmentHats67 NPCtoken1 NPCtoken2 NPCtoken3 EquipmentRings26 EquipmentHats22 EquipmentShirts18 EquipmentPants17 EquipmentShoes20 EquipmentPants22 EquipmentPants23 FillerMaterial EquipmentPendant17 FishingRod2 MaxCapBagFi1 CatchingNet2 MaxCapBagB1 FishingRod3 MaxCapBagFi2 CatchingNet3 MaxCapBagB2 TrapBoxSet2 MaxCapBagTr1 WorshipSkull2 MaxCapBagS1".split(" "),
