@@ -1,0 +1,21 @@
+<div class="div-wrapper">
+    <canvas id="labCanvas" width="2000" height="500"
+        data-characters='[
+        {% for character in section.extra %}
+            {{ character.lab_position }},
+        {% endfor %}]'
+
+        data-jewels='[
+        {% for jewel in consts.labJewelsDict.values() %}
+            {{ jewel["Coordinates"] }},
+        {% endfor %}
+        ]'
+
+        data-bonuses='[
+        {% for bonus in consts.labBonusesDict.values() %}
+            {{ bonus["Coordinates"] }},
+        {% endfor %}
+        ]'
+
+    ></canvas>
+</div>
