@@ -1,10 +1,10 @@
-from models.models import AdviceSection, AdviceGroup, Advice
+from models.models import AdviceSection, AdviceGroup, Advice, Character
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
 import math
 from consts import (
-    break_you_best, infinity_string,
+    break_you_best, infinity_string, labJewelsDict, breedingSpeciesDict
     #lab_progressionTiers
 )
 
@@ -48,6 +48,8 @@ def getLabAdviceSection() -> AdviceSection:
         return lab_AdviceSection
 
     #Generate Alert Advice
+    #TODO debug call :
+    calculate_players_line_width(session_data.account.all_characters[0], 1, 1, 1, 1)
 
     #Generate AdviceGroups
     lab_AdviceGroupDict = {}
@@ -62,7 +64,8 @@ def getLabAdviceSection() -> AdviceSection:
         header=f"Best Lab tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture="wiki/Laboratory_Mainframe.gif",
         groups=lab_AdviceGroupDict.values(),
-        unrated=True
+        unrated=True,
+        extra=session_data.account.all_characters
     )
 
     return lab_AdviceSection
@@ -70,16 +73,17 @@ def getLabAdviceSection() -> AdviceSection:
 def get_distance(x1, y1, x2, y2):
     return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
 
-def get_player_linewidth(player, px_meal_bonus, line_pct_meal_bonus, passive_card_bonus, pet_arena_bonus, in_gem_tube, bubo_boost, shiny_bonus, jewels, player_cords):
-    lab_skill_level = player.skills.get(SkillsIndex.Intellect, Skill(0)).level
-    base_width = 50 + (2 * lab_skill_level)
+def get_character_linewidth(character : Character, px_meal_bonus, line_pct_meal_bonus, passive_card_bonus, pet_arena_bonus, in_gem_tube, bubo_boost, shiny_bonus, jewels, player_cords):
+    base_width = 50 + (2 * character.lab_level)
 
     if jewels[5].available:
-        player_position = player_cords[player.playerID]
-        if get_distance(jewels[5].data.x, jewels[5].data.y, player_position.x, player_position.y) < 150:
+        if get_distance(labJewelsDict[5]['Coordinates'][0], labJewelsDict[5]['Coordinates'][1], character.lab_position[0], character.lab_position[1]) < 150:
             base_width *= 1.25
 
-    player_chip_bonus = sum(slot.chip.getBonus() for slot in player.lab_info.chips if slot.chip and slot.chip.name == "Conductive Motherboard")
+    player_chip_bonus = sum(slot.chip.getBonus() for slot in character.lab_info.chips if slot.chip and slot.chip.name == "Conductive Motherboard")
+    
+    # 12% per Conductive Motherboard chip equipped
+    player_chip_bonus = sum(12 for chip in character.equipped_lab_chips if chip == 6)
     
     bonus_width = 30 if in_gem_tube else 0
     return math.floor(
@@ -87,15 +91,29 @@ def get_player_linewidth(player, px_meal_bonus, line_pct_meal_bonus, passive_car
         (1 + ((bubo_boost + line_pct_meal_bonus + player_chip_bonus + (20 * pet_arena_bonus) + bonus_width + shiny_bonus) / 100))
     )
     
-def calculate_players_line_width(lab, cooking, breeding, cards, gem_store, bubo_boost):
+
+    
+def calculate_players_line_width(character : Character, lab, breeding, gem_store, bubo_boost):
     meal_bonus = 0  # 1.59 Change - 16th Jewel no longer impacts meal jewels
 
-    if lab.players_in_tubes:
-        px_meal_bonus = sum(meal.getBonus(False, meal_bonus) for meal in (cooking.meals if cooking else []) if meal.bonusKey == "PxLine")
-        line_pct_meal_bonus = sum(meal.getBonus(False, meal_bonus) for meal in (cooking.meals if cooking else []) if meal.bonusKey == "LinePct")
-        passive_card_bonus = sum(card.getBonus() for card in (cards or []) if "Line Width" in card.data.effect)
+    if True: #if lab.players_in_tubes:
+        px_meal_bonus = session_data.account.meals["Pancakes"]["Value"] + session_data.account.meals["Wild Boar"]["Value"]
+        line_pct_meal_bonus = session_data.account.meals["Eel"]["Value"]
+        
+        ########################################################### Stopped converting here
+        # TODO Parse per-player equipped cards
+        passive_card_bonus = sum( card for card in character.equipped_cards) #sum(card.getBonus() for card in (cards or []) if "Line Width" in card.data.effect)
         pet_arena_bonus = 1 if breeding and breeding.hasBonus(13) else 0
+        
+        for worldIndex in session_data.account.breeding['Species']:
+            for petIndex in breedingSpeciesDict.get(worldIndex, {}):
+                species_name = breedingSpeciesDict[worldIndex][petIndex]['Name']
+                if species_name in session_data.account.breeding['Species'][worldIndex]:
+                    for key, value in session_data.account.breeding['Species'][worldIndex][species_name].items():
+                        print(f"World {worldIndex}, Pet {petIndex}, {key}: {value}")
+                
         shiny_bonus = next((bonus.getBonus() for bonus in (breeding.shinyBonuses if breeding else []) if bonus.data.index == 19), 0)
+        shiny_bonus = session_data.account.breeding['Species'][worldIndex][petValuesDict['Name']]
         gem_tubes = ((next((purchase.pucrhased for purchase in (gem_store.purchases if gem_store else []) if purchase.no == 123), 0)) * 2)
 
         for index, player in enumerate(lab.players_in_tubes):
@@ -104,7 +122,7 @@ def calculate_players_line_width(lab, cooking, breeding, cards, gem_store, bubo_
                 bubo_position = lab.player_cords[lab.best_bubo_playerID]
                 right_of_bubo = player_position.x >= bubo_position.x
                 
-                player.lab_info.line_width = get_player_linewidth(
+                player.lab_info.line_width = get_character_linewidth(
                     player, px_meal_bonus, line_pct_meal_bonus, passive_card_bonus,
                     pet_arena_bonus, index < gem_tubes, bubo_boost if right_of_bubo else 0, shiny_bonus,
                     lab.jewels, lab.player_cords

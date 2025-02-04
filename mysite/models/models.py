@@ -10,7 +10,7 @@ from flask import g
 from config import app
 from consts import (
     # General
-    lavaFunc, ignorable_labels,
+    lavaFunc, ignorable_labels, card_data,
     greenstack_progressionTiers, greenStackAmount, gstackable_codenames, gstackable_codenames_expected, quest_items_codenames,
     # W1
     # W2
@@ -140,6 +140,7 @@ class Character:
         lab_position: dict,
         inventory_bags: dict,
         kill_dict: dict,
+        equipped_cards: list[str]
     ):
 
         self.character_index: int = character_index
@@ -240,7 +241,7 @@ class Character:
                     'Bonus3Value': 0,
                     'Bonus3String': '',
                 }
-        self.lab_position = lab_position,   
+        self.lab_position = lab_position
         self.equipped_lab_chips: list[str] = []
         for chipIndex in equipped_lab_chips:
             if chipIndex != -1:
@@ -262,6 +263,7 @@ class Character:
             for name in apocNamesList
         }
         self.equipment = Equipment(raw_data, character_index, self.combat_level >= 1)
+        self.equipped_cards : list[Card] = [Card.parse(card_id) for card_id in equipped_cards]
         self.printed_materials = {}
 
         self.setPolytheismLink()
@@ -1051,6 +1053,13 @@ class Card:
 
         return (self.coefficient * tier_coefficient**2) + 1
 
+    def parse(card_id : str): 
+        for region, cards in card_data.items():
+            if card_id in cards:
+                name, coefficient = cards[card_id]
+                return Card(card_id, name, region, 1, coefficient)  # `count` is set to 1 since it's a lookup
+        return None 
+        
     def __repr__(self):
         return f"[{self.__class__.__name__}: {self.name}, {self.count}, {self.star}-star]"
 
