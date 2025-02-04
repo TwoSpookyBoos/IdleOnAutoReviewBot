@@ -240,7 +240,7 @@ class Character:
                     'Bonus3Value': 0,
                     'Bonus3String': '',
                 }
-        self.lab_position = lab_position,   
+        self.lab_position = lab_position
         self.equipped_lab_chips: list[str] = []
         for chipIndex in equipped_lab_chips:
             if chipIndex != -1:
