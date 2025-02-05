@@ -264,6 +264,7 @@ def getCharacterDetails(inputJSON, runType):
     kill_lists = {}
     characterLabPositions = {}
     characterEquippedCards = {}
+    characterCurrentEnemy = {}
     for character_index in range(0, character_count):
         character_classes.append(getHumanReadableClasses(inputJSON.get(f"CharacterClass_{character_index}", 0)))
         postOfficeList.append(safe_loads(inputJSON.get(f"POu_{character_index}", [0]*36)))
@@ -274,6 +275,7 @@ def getCharacterDetails(inputJSON, runType):
         inventory_bags[character_index] = safe_loads(inputJSON.get(f'InvBagsUsed_{character_index}', {}))
         kill_lists[character_index] = safe_loads(inputJSON.get(f'KLA_{character_index}', []))
         characterEquippedCards[character_index] = safe_loads(inputJSON.get(f'CardEquip_{character_index}', []))[:8] # Keep only the first 8 cards (Why is there 12 in the JSON ?)
+        characterCurrentEnemy[character_index] = safer_get(inputJSON, f"AFKtarget_{character_index}", "Nothing")
         try:
             equipped_lab_chips[character_index] = safe_loads(inputJSON["Lab"])[character_index+1]
         except:
@@ -303,6 +305,7 @@ def getCharacterDetails(inputJSON, runType):
             inventory_bags=inventory_bags[character_index],
             kill_dict={k:v for k, v in enumerate(kill_lists[character_index])},
             equipped_cards=characterEquippedCards[character_index],
+            current_enemy=characterCurrentEnemy[character_index],
         )
 
     return [character_count, character_names, character_classes, characterDict, perSkillDict]

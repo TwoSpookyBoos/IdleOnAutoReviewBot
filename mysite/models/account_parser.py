@@ -49,7 +49,7 @@ from consts import (
     monument_bonuses, bell_clean_improvements, bell_ring_bonuses, getBellExpRequired, getGrottoKills, lamp_wishes, key_cards, getWishCost,
     schematics_unlocking_harp_chords, harp_chord_effects, max_harp_notes, lamp_world_wish_values
 )
-from models.models import Character, buildMaps, EnemyWorld, Card, Assets
+from models.models import Character, buildMaps, EnemyWorld, Card, Assets, Account
 from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert
 from utils.logging import get_logger
 from utils.text_formatting import getItemDisplayName
@@ -57,7 +57,7 @@ from utils.text_formatting import getItemDisplayName
 logger = get_logger(__name__)
 
 
-def _make_cards(account):
+def _make_cards(account) -> list[Card]:
     card_counts = safe_loads(account.raw_data.get(key_cards, {}))
     cards = [
         Card(codename, name, cardset, safer_get(card_counts, codename, 0), coefficient)
@@ -193,6 +193,8 @@ def _parse_character_class_lists(account):
     account.bbs = [toon for toon in account.all_characters if "Blood Berserker" in toon.all_classes]
     account.dbs = [toon for toon in account.all_characters if "Death Bringer" in toon.all_classes]
     account.dks = [toon for toon in account.all_characters if "Divine Knight" in toon.all_classes]
+
+    account.bubos = [toon for toon in account.all_characters if "Bubonic Conjuror" in toon.all_classes]
 
 
 def _parse_general(account):
@@ -1172,7 +1174,7 @@ def _parse_w3_deathnote_kills(account):
         # Sort them
         account.all_characters[barbCharacterIndex].sortApocByProgression()
 
-def _parse_w3_equinox_dreams(account):
+def _parse_w3_equinox_dreams(account : Account):
     account.equinox_unlocked = account.achievements['Equinox Visitor']['Complete']
     account.equinox_dreams = [True]  # d_0 in the code is Dream 1. By padding the first slot, we can get Dream 1 by that same index: equinox_dreams[1]
     raw_equinox_dreams = safe_loads(account.raw_data.get("WeeklyBoss", {}))
@@ -1189,7 +1191,7 @@ def _parse_w3_equinox_dreams(account):
         else:
             account.remaining_equinox_dreams_unlocking_new_bonuses.append(dreamNumber)
 
-def _parse_w3_equinox_bonuses(account):
+def _parse_w3_equinox_bonuses(account : Account):
     account.equinox_bonuses = {}
     raw_equinox_bonuses = safe_loads(account.raw_data.get("Dream", [0] * 30))
     for bonusIndex, bonusValueDict in equinoxBonusesDict.items():

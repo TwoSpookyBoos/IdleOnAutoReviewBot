@@ -20,7 +20,7 @@ from consts import (
     caverns_conjuror_majiks, schematics_unlocking_buckets, monument_bonuses, getBellImprovementBonus, monument_names, released_monuments,
     infinity_string, schematics_unlocking_harp_strings, schematics_unlocking_harp_chords
 )
-from models.models import Advice
+from models.models import Advice, Account
 from utils.data_formatting import safe_loads, safer_get
 from utils.logging import get_logger
 from utils.text_formatting import getItemDisplayName, getItemCodeName
@@ -35,6 +35,7 @@ def calculate_account(account):
 def _calculate_wave_1(account):
     _calculate_caverns_majiks(account)
     _calculate_w6_summoning_winner_bonuses(account)
+    _calculate_w6_jade_emporium_lab_bonus(account)
 
 def _calculate_caverns_majiks(account):
     for majik_type, majiks in caverns_conjuror_majiks.items():
@@ -202,6 +203,12 @@ def _calculate_w6_summoning_winner_bonuses(account):
         elif bonus_name in summoning_rewards_that_dont_multiply_base_value and bonus_name.startswith('x'):
             account.summoning['Endless Bonuses'][bonus_name] = ValueToMulti(account.summoning['Endless Bonuses'][bonus_name])
     #logger.debug(f"Final Endless Bonuses after {account.summoning['Battles']['Endless']} wins: {account.summoning['Endless Bonuses']}")
+
+def _calculate_w6_jade_emporium_lab_bonus(account):
+    account.labBonuses["Artifact Attraction"]["Enabled"] = account.sneaking["JadeEmporium"]["The Artifact Matrix"]["Obtained"]
+    account.labBonuses["Slab Sovereignty"]["Enabled"] = account.sneaking["JadeEmporium"]["The Slab Matrix"]["Obtained"]
+    account.labBonuses["Spiritual Growth"]["Enabled"] = account.sneaking["JadeEmporium"]["The Spirit Matrix"]["Obtained"]
+    account.labBonuses["Depot Studies PhD"]["Enabled"] = account.sneaking["JadeEmporium"]["The Crop Matrix"]["Obtained"]
 
 def _calculate_wave_2(account):
     _calculate_general(account)
@@ -1160,6 +1167,7 @@ def _calculate_w6_farming_og(account):
 def _calculate_wave_3(account):
     _calculate_w3_library_max_book_levels(account)
     _calculate_w3_equinox_max_levels(account)
+    _calculate_w4_players_in_lab(account)
     _calculate_general_character_over_books(account)
     _calculate_general_crystal_spawn_chance(account)
 
@@ -1195,6 +1203,12 @@ def _calculate_w3_equinox_max_levels(account):
             if bonus_details['SummoningExpands']:
                 account.equinox_bonuses[bonus]['PlayerMaxLevel'] += bonus_equinox_levels
                 account.equinox_bonuses[bonus]['FinalMaxLevel'] += bonus_equinox_levels
+
+def _calculate_w4_players_in_lab(account):
+    account.characters_in_lab = sorted(
+        (character for character in account.all_characters if character.current_enemy == "Laboratory" or character.divinity_link == "Arctis" or account.divinity['AccountWideArctis']),
+        key=lambda character: character.character_index
+    )
 
 def _calculate_general_character_over_books(account):
     account.bonus_talents = {

@@ -140,7 +140,8 @@ class Character:
         lab_position: dict,
         inventory_bags: dict,
         kill_dict: dict,
-        equipped_cards: list[str]
+        equipped_cards: list[str],
+        current_enemy: str
     ):
 
         self.character_index: int = character_index
@@ -242,6 +243,7 @@ class Character:
                     'Bonus3String': '',
                 }
         self.lab_position = lab_position
+        self.lab_line_width: float = 0  # Updated in the calc phase
         self.equipped_lab_chips: list[str] = []
         for chipIndex in equipped_lab_chips:
             if chipIndex != -1:
@@ -264,6 +266,7 @@ class Character:
         }
         self.equipment = Equipment(raw_data, character_index, self.combat_level >= 1)
         self.equipped_cards : list[Card] = [Card.parse(card_id) for card_id in equipped_cards]
+        self.current_enemy: str = current_enemy
         self.printed_materials = {}
 
         self.setPolytheismLink()
@@ -1204,6 +1207,25 @@ class Account:
         self.raw_data = safe_loads(json_data)
         self.version = safer_get(self.raw_data, 'DoOnceREAL', 0.00)
         self._prep_alerts_AG()
+
+        # fields
+        self.achievements: dict[str: any] = {}
+        self.breeding: dict[str: any] = {}
+        self.bubos: list[Character] = []
+        self.cards: list[Card] = []
+        self.characters_in_lab: list[Character] = []
+        self.equinox_bonuses: dict[str: any] = {}
+        self.equinox_dreams: list[bool] = []
+        self.equinox_unlocked: bool = False
+        self.gemshop: dict[str: any] = {}
+        self.labBonuses: dict[str: dict] = {}
+        self.labJewels: dict[str: dict] = {}
+        self.meals: dict[str: any] = []
+        self.merits: dict[int: dict[int: any]] = {}
+        self.remaining_equinox_dreams_unlocking_new_bonuses: list[int] = []
+        self.summoning : dict[str : dict] = {}
+        self.total_dreams_completed: int = 0
+        self.total_equinox_bonuses_unlocked: int = 0
 
     def _prep_alerts_AG(self):
         self.alerts_AdviceDict = {
