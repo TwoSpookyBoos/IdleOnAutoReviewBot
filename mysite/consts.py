@@ -3456,6 +3456,17 @@ skill_talentsDict = {
         },
     },
     #Strength Skills
+    'Farming': {
+        'High': {
+            207: {'Name': 'Dank Ranks', 'Tab': 'Tab 5'}
+        },
+        'Medium': {
+            205: {'Name': 'Mass Irrigation', 'Tab': 'Tab 5'}
+        },
+        'Low': {
+            206: {'Name': "Agricultural 'Preciation", 'Tab': 'Tab 5'}
+        },
+    },
     "Cooking": {
         "High": {
             148: {"Name": "Overflowing Ladle", "Tab": "Tab 4"},
@@ -3663,8 +3674,17 @@ combat_talentsDict = {
     # Talents here are unique from the skill_talentsDict above
     # Warriors
     "Death Bringer": {
-        "High": {},
+        "High": {
+            198: {'Name': 'Graveyard Shift', 'Tab': 'Tab 5'},
+            196: {'Name': 'Grimoire', 'Tab': 'Tab 5'},
+            199: {'Name': 'Detonation', 'Tab': 'Tab 5'},
+            200: {'Name': 'Marauder Style', 'Tab': 'Tab 5'},
+            197: {'Name': 'Sentinel Axes', 'Tab': 'Tab 5'},
+
+        },
         "Medium": {
+            195: {'Name': 'Wraith Form', 'Tab': 'Tab 5'},
+            202: {'Name': "Famine O' Fish", 'Tab': 'Tab 5'},
             97: {"Name": "Carry a Big Stick", "Tab": "Tab 2"},
             6: {"Name": "Gilded Sword", "Tab": "Tab 1"},
         },
