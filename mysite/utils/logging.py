@@ -1,5 +1,9 @@
+import collections
+import contextlib
+import hashlib
 import os
 import sys
+import threading
 import uuid
 
 from flask import request, g
@@ -15,6 +19,35 @@ DEFAULT_FORMAT = (
     "%(asctime)s | %(name)s | %(requestID)s | %(funcName)s:%(lineno)d~ [%(levelname)s] %(message)s"
 )
 SHORT_FORMAT = "%(asctime)s | %(requestID)s | %(message)s"
+
+
+class ResponseCache:
+    class ResponseObj:
+        def __init__(self):
+            self.__handled = False
+            self.__value = None
+
+        @property
+        def handled(self):
+            return self.__handled
+
+        @property
+        def value(self):
+            return self.__value
+
+        def complete(self, value=None):
+            self.__handled = True
+            self.__value = value
+
+    def __init__(self):
+        self.__responses = collections.defaultdict(ResponseCache.ResponseObj)
+        self.__lock = threading.Lock()
+
+    @contextlib.contextmanager
+    def get_response_obj(self, key):
+        with self.__lock:
+            response = self.__responses[key]
+            yield response
 
 
 class Filter(logging.Filter):
@@ -88,6 +121,18 @@ def name_for_logging(name_or_data, headerData, default=str(uuid.uuid4())[:8]) ->
     return name
 
 
+def key_for_logging_cache(username: str, dirname: str, data: str, msg: str):
+    def hash_value(val: str):
+        if val is None:
+            return None
+        return hashlib.md5(val.encode()).hexdigest()
+
+    return (hash_value(username),
+            hash_value(dirname),
+            hash_value(data),
+            hash_value(msg))
+
+
 __user_agent_logger = browser_data_logger()
 
 
@@ -113,9 +158,13 @@ def unknown_item_logger() -> logging.Logger:
 
 
 __unknown_item_logger = unknown_item_logger()
+__logged_unknown_items = ResponseCache()
 
 def log_unknown_item(itemCodeName: str):
-    __unknown_item_logger.info(f"Unknown Item: {itemCodeName}")
+    with __logged_unknown_items.get_response_obj(itemCodeName) as response:
+        if not response.handled:
+            __unknown_item_logger.info(f"Unknown Item: {itemCodeName}")
+            response.complete()
 
 
 class ParsedUserAgent(UserAgent):
