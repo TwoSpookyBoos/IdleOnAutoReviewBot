@@ -91,9 +91,10 @@ def getVialsProgressionTiersAdviceGroup():
                             picture_class="vial-13"
                         ))
                     vial_AdviceDict["MaxVials"]["Vials to max next"].append(Advice(
-                        label=f"{requiredVial} {'NEEDS TO BE UNLOCKED!' if alchemyVialsDict[requiredVial]['Level'] == 0 else ''}"
-                              f"{'<br>Ready for level ' if prog >= 100 else ''}"
-                              f"{alchemyVialsDict[requiredVial]['Level'] + 1 if prog >= 100 else ''}",
+                        label=f"{requiredVial}"
+                              f"{'<br>NEEDS TO BE UNLOCKED!' if alchemyVialsDict[requiredVial]['Level'] == 0 else ''}"
+                              f"{'<br>Ready for level ' if prog >= 100 else ' toward level '}"
+                              f"{alchemyVialsDict[requiredVial]['Level'] + 1 if prog >= 100 else alchemyVialsDict[requiredVial]['Level']+1}",
                         picture_class=getItemDisplayName(alchemyVialsDict[requiredVial]['Material']),
                         progression=f"{min(1000, prog):.1f}{'+' if min(1000, prog) == 1000 else ''}",
                         goal=100,

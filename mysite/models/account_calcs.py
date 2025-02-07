@@ -4,7 +4,10 @@ from consts import (
     lavaFunc, ceilUpToBase, ValueToMulti, getNextESFamilyBreakpoint,
     base_crystal_chance,
     filter_recipes, filter_never,
+    # Master Classes
+    grimoire_stack_types,
     # W1
+    vault_stack_types, grimoire_coded_stack_monster_order, decode_enemy_name,
     # W2
     fishingToolkitDict,
     islands_trash_shop_costs,
@@ -217,6 +220,7 @@ def _calculate_general(account):
     _calculate_general_alerts(account)
     _calculate_general_item_filter(account)
     account.highestWorldReached = _calculate_general_highest_world_reached(account)
+    _calculate_general_master_classes_grimoire(account)
 
 def _calculate_general_alerts(account):
     if account.stored_assets.get("Trophy2").amount >= 75 and account.equinox_dreams[17]:
@@ -301,9 +305,100 @@ def _calculate_general_highest_world_reached(account):
     else:
         return 1
 
+def _calculate_general_master_classes_grimoire(account):
+    grimoire_multi = ValueToMulti(
+        account.grimoire['Upgrades']['Writhing Grimoire']['Level']
+        * account.grimoire['Upgrades']['Writhing Grimoire']['Value Per Level']
+    )
+
+    for upgrade_name, upgrade_details in account.grimoire['Upgrades'].items():
+        # Update description with total value, stack counts, and scaling info
+        if '{' in account.grimoire['Upgrades'][upgrade_name]['Description']:
+            account.grimoire['Upgrades'][upgrade_name]['Total Value'] = (
+                    account.grimoire['Upgrades'][upgrade_name]['Level']
+                    * account.grimoire['Upgrades'][upgrade_name]['Value Per Level']
+                    * (grimoire_multi if upgrade_details['Scaling Value'] else 1)
+            )
+            account.grimoire['Upgrades'][upgrade_name]['Description'] = account.grimoire['Upgrades'][upgrade_name]['Description'].replace(
+                '{', f"{account.grimoire['Upgrades'][upgrade_name]['Total Value']}"
+            )
+        if '}' in account.grimoire['Upgrades'][upgrade_name]['Description']:
+            account.grimoire['Upgrades'][upgrade_name]['Total Value'] = ValueToMulti(
+                account.grimoire['Upgrades'][upgrade_name]['Level']
+                * account.grimoire['Upgrades'][upgrade_name]['Value Per Level']
+                * (grimoire_multi if upgrade_details['Scaling Value'] else 1)
+            )
+            account.grimoire['Upgrades'][upgrade_name]['Description'] = account.grimoire['Upgrades'][upgrade_name]['Description'].replace(
+                '}', f"{account.grimoire['Upgrades'][upgrade_name]['Total Value']:.2f}"
+            )
+        if 'Target:$' in account.grimoire['Upgrades'][upgrade_name]['Description']:
+            if upgrade_name.split('!')[0] in grimoire_stack_types:
+                stack_type = upgrade_name.split('!')[0]
+                if len(grimoire_coded_stack_monster_order) < account.grimoire.get(f'{stack_type} Stacks', '0'):
+                    next_stack_target = "All done!"
+                else:
+                    try:
+                        next_stack_target = decode_enemy_name(grimoire_coded_stack_monster_order[account.grimoire.get(f'{stack_type} Stacks', '0')])
+                    except:
+                        next_stack_target = decode_enemy_name(grimoire_coded_stack_monster_order[0])
+                account.grimoire['Upgrades'][upgrade_name]['Description'] = account.grimoire['Upgrades'][upgrade_name]['Description'].replace(
+                    'Target:$', f"Target: {next_stack_target}"
+                )
+        account.grimoire['Upgrades'][upgrade_name]['Description'] += (
+            f"<br>({account.grimoire['Upgrades'][upgrade_name]['Value Per Level'] * (grimoire_multi if upgrade_details['Scaling Value'] else 1):.2f} per level"
+            f"{' after Writhing Grimoire)' if upgrade_details['Scaling Value'] else ': Not scaled by Writhing Grimoire)'}"
+        )
+
+
 def _calculate_w1(account):
+    _calculate_w1_upgrade_vault(account)
     _calculate_w1_starsigns(account)
     _calculate_w1_statues(account)
+
+def _calculate_w1_upgrade_vault(account):
+    vault_multi = ValueToMulti(
+        account.vault['Upgrades']['Vault Mastery']['Level']
+        * account.vault['Upgrades']['Vault Mastery']['Value Per Level']
+    )
+
+    # logger.debug(f"{vault_multi = }")
+    for upgrade_name, upgrade_details in account.vault['Upgrades'].items():
+        # Update description with total value, stack counts, and scaling info
+        if '{' in account.vault['Upgrades'][upgrade_name]['Description']:
+            account.vault['Upgrades'][upgrade_name]['Total Value'] = (
+                account.vault['Upgrades'][upgrade_name]['Level']
+                * account.vault['Upgrades'][upgrade_name]['Value Per Level']
+                * (vault_multi if upgrade_details['Scaling Value'] else 1)
+            )
+            account.vault['Upgrades'][upgrade_name]['Description'] = account.vault['Upgrades'][upgrade_name]['Description'].replace(
+                '{', f"{account.vault['Upgrades'][upgrade_name]['Total Value']}"
+            )
+        if '}' in account.vault['Upgrades'][upgrade_name]['Description']:
+            account.vault['Upgrades'][upgrade_name]['Total Value'] = ValueToMulti(
+                account.vault['Upgrades'][upgrade_name]['Level']
+                * account.vault['Upgrades'][upgrade_name]['Value Per Level']
+                * (vault_multi if upgrade_details['Scaling Value'] else 1)
+            )
+            account.vault['Upgrades'][upgrade_name]['Description'] = account.vault['Upgrades'][upgrade_name]['Description'].replace(
+                '}', f"{account.vault['Upgrades'][upgrade_name]['Total Value']:.2f}"
+            )
+        if 'Target:&' in account.vault['Upgrades'][upgrade_name]['Description']:
+            if upgrade_name.split('!')[0] in vault_stack_types:
+                stack_type = upgrade_name.split('!')[0]
+                if len(grimoire_coded_stack_monster_order) < account.vault.get(f'{stack_type} Stacks', '0'):
+                    next_stack_target = "All done!"
+                else:
+                    try:
+                        next_stack_target = decode_enemy_name(grimoire_coded_stack_monster_order[account.vault.get(f'{stack_type} Stacks', '0')])
+                    except:
+                        next_stack_target = decode_enemy_name(grimoire_coded_stack_monster_order[0])
+                account.vault['Upgrades'][upgrade_name]['Description'] = account.vault['Upgrades'][upgrade_name]['Description'].replace(
+                    'Target:&', f"Target: {next_stack_target}"
+                )
+        account.vault['Upgrades'][upgrade_name]['Description'] += (
+            f"<br>({account.vault['Upgrades'][upgrade_name]['Value Per Level'] * (vault_multi if upgrade_details['Scaling Value'] else 1):.2f} per level"
+            f"{' after Vault Mastery)' if upgrade_details['Scaling Value'] else ': Not scaled by Vault Mastery)'}"
+        )
 
 def _calculate_w1_starsigns(account):
     account.star_sign_extras['SeraphMulti'] = min(3, 1.1 ** ceil((max(account.all_skills['Summoning'], default=0) + 1) / 20))
@@ -735,30 +830,24 @@ def _calculate_caverns_the_well(account):
     account.caverns['Caverns']['The Well']['Buckets'] = safe_loads(account.raw_data.get('Holes', {}))
 
 def _calculate_caverns_monuments(account):
-    cosmos_multi = max(1, account.caverns['Majiks']['Monumental Vibes']['Value'])
-    ninth_multi_broken = True  #TODO: REMOVE THIS AFTER LAVA FIXES BUG
+    cosmos_value = (account.caverns['Majiks']['Monumental Vibes']['Value'] - 1) * 100
     for monument_index, monument_name in enumerate(monument_names):
         if monument_index < released_monuments:
-            # The 9th bonus multiplies other bonuses, but not itaccount. Must be calculated first.
+            # The 9th bonus multiplies other bonuses, but not itself. Must be calculated first.
             ninth = account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]
-            ninth_multi = (
-                ValueToMulti(
-                    0.1 * ceil(
-                        (ninth['Level'] / (250 + ninth['Level']))
-                        * 10
-                        * ninth['ScalingValue']
-                    )  #ceil
-                )  #ValueToMulti includes a max(1, x)
-            )  #finish calculation
+            ninth_value = (
+                0.1 * ceil(
+                    (ninth['Level'] / (250 + ninth['Level']))
+                    * 10
+                    * ninth['ScalingValue']
+                )
+            )
             try:
-                account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Value'] = ninth_multi
+                account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Value'] = ValueToMulti(ninth_value)
                 account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'] = (
                     account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'].replace(
                         '}', f"{account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Value']:,.3f}")
                 )
-                account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'] += (
-                    f"<br>(Bugged as of 2024-12-09, gives 1x always)"
-                ) if ninth_multi_broken else ''  #TODO: REMOVE THIS AFTER LAVA FIXES BUG
             except:
                 account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Value'] = 1
                 account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'] = (
@@ -770,8 +859,7 @@ def _calculate_caverns_monuments(account):
                         result = (
                             account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Level']
                             * account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['ScalingValue']
-                            * cosmos_multi
-                            * (1 if ninth_multi_broken else ninth_multi)  #TODO: REMOVE THIS AFTER LAVA FIXES BUG
+                            * ValueToMulti(cosmos_value + ninth_value)
                         )
                     else:
                         result = (
@@ -780,8 +868,7 @@ def _calculate_caverns_monuments(account):
                                  / (250 + account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Level']))
                                 * 10
                                 * account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['ScalingValue']
-                                * cosmos_multi
-                                * ninth_multi
+                                * ValueToMulti(cosmos_value + ninth_value)
                             )
                         )
                     if bonus_details['ValueType'] == 'Percent':
@@ -808,7 +895,9 @@ def _calculate_caverns_monuments(account):
                             account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'] = (
                                 account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'].replace('}', '1')
                             )
-                #logger.debug(f"{monument_name} Bonus {bonus_index}: Level {account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Level']} = {account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description']}")
+                # logger.debug(f"{monument_name} Bonus {bonus_index}: "
+                #              f"Level {account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Level']} = "
+                #              f"{account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description']}")
     _calculate_caverns_monuments_bravery(account)
     _calculate_caverns_monuments_justice(account)
 

@@ -49,6 +49,7 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
 
     #Bribe value of 1 means purchased
     bribe = session_data.account.bribes["W6"].get("Forge Cap Smuggling", -1) == 1
+    bribe_value = 30 if bribe else 0
     bribe_multi = 1.3 if bribe else 1
     cap_Advices["Static Sources"].append(Advice(
         label=f"{{{{ Bribe|#bribes }}}}: Forge Cap Smuggling: {bribe_multi}/1.3x",
@@ -111,12 +112,22 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
     ))
 
     #Cosmos > IdleOn Majik #2 Beeg Beeg Forge
-    beeg_forge = session_data.account.caverns['Majiks']['Beeg Beeg Forge']
+    majik_beeg_forge = session_data.account.caverns['Majiks']['Beeg Beeg Forge']
     cap_Advices["Scaling Sources"].append(Advice(
-        label=f"Beeg Beeg Forge {{{{ Cavern Majik|#villagers }}}}: {beeg_forge['Description']}",
-        picture_class=f"{beeg_forge['MajikType']}-majik-{'un' if beeg_forge['Level'] == 0 else ''}purchased",
+        label=f"Beeg Beeg Forge {{{{ Cavern Majik|#villagers }}}}: {majik_beeg_forge['Description']}",
+        picture_class=f"{majik_beeg_forge['MajikType']}-majik-{'un' if majik_beeg_forge['Level'] == 0 else ''}purchased",
+        progression=majik_beeg_forge['Level'],
+        goal=majik_beeg_forge['MaxLevel']
+    ))
+
+    # Upgrade Vault > Beeg Forge
+    beeg_forge = session_data.account.vault['Upgrades']['Beeg Forge']
+    cap_Advices["Scaling Sources"].append(Advice(
+        label=f"{{{{ Vault|#upgrade-vault }}}}: Beeg Forge: {beeg_forge['Description'].split('<')[0]}"
+              f"<br>(Additive with Bribe)",
+        picture_class=beeg_forge['Image'],
         progression=beeg_forge['Level'],
-        goal=beeg_forge['MaxLevel']
+        goal=beeg_forge['Max Level']
     ))
 
     for group_name in cap_Advices:
@@ -125,9 +136,9 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
 
     groupA = ValueToMulti((session_data.account.arcade[26]['Value'] + (30 * (next(c.getStars() for c in session_data.account.cards if c.name == 'Godshard Ore')+1))))
     groupB = ValueToMulti(session_data.account.stamps['Forge Stamp']['Value'])
-    groupC = bribe_multi
+    groupC = ValueToMulti(bribe_value + beeg_forge['Total Value'])
     groupD = ValueToMulti((50 * achievement) + (25 * skillMasteryBonusBool))
-    groupE = beeg_forge['Value']
+    groupE = majik_beeg_forge['Value']
 
     final_forgeCapacity = math.ceil(min(2e9, (20 + forge_upgrades) * groupA * groupB * groupC * groupD * groupE))
     bar_Advices["Total Capacity"].append(Advice(

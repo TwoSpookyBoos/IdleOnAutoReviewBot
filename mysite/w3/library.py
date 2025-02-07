@@ -329,6 +329,12 @@ def getTalentExclusions() -> list:
         507: "Elemental Sorcerer",  #507: {"Name": "Gods Chosen Children", "Tab": "Elemental Sorcerer"},
         508: "Elemental Sorcerer",  #508: {"Name": "Wormhole Emperor", "Tab": "Elemental Sorcerer"},
         536: "Bubonic Conjuror",    #536: {"Name": "Green Tube", "Tab": "Bubonic Conjuror"},
+        204: "Death Bringer",       #Ribbon Winning
+        205: "Death Bringer",       #Mass Irrigation
+        206: "Death Bringer",       #Agricultural 'Preciation
+        207: "Death Bringer",       #Dank Ranks
+        208: "Death Bringer",       #Wraith Overlord
+        209: "Death Bringer",       #Apocalypse Wow
     }.items():
         if max([toon.max_talents.get(str(talentNumber), 0)
                for toon in session_data.account.safe_characters
