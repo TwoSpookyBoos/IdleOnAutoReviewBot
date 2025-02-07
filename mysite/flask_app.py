@@ -3,6 +3,7 @@ import traceback
 import uuid
 from datetime import datetime
 from pathlib import Path
+import zipfile
 
 import requests
 from flask import g, render_template, request, redirect, Response, send_from_directory
@@ -27,7 +28,13 @@ from utils.text_formatting import (
     json_schema_valid,
     format_character_name,
 )
-from utils.logging import get_logger, name_for_logging, log_browser_data
+from utils.logging import (
+    ResponseCache,
+    get_logger,
+    name_for_logging,
+    key_for_logging_cache,
+    log_browser_data
+)
 from utils.template_filters import *
 
 
@@ -130,28 +137,28 @@ def results() -> Response | str:
         response = error, 403
 
     except ProfileNotFound as e:
-        dirname = create_and_populate_log_files(None, headerData, e.log_msg, name_or_data, e)
-        error = e.msg_display.format(dirname)
+        zipname = create_and_populate_log_files(None, headerData, e.log_msg, name_or_data, e)
+        error = e.msg_display.format(zipname)
         response = error, 404
 
     except EmptyResponse as e:
-        dirname = create_and_populate_log_files(None, headerData, e.log_msg, name_or_data, e)
-        error = e.msg_display.format(dirname)
+        zipname = create_and_populate_log_files(None, headerData, e.log_msg, name_or_data, e)
+        error = e.msg_display.format(zipname)
         response = error, 500
 
     except IEConnectionFailed as e:
-        dirname = create_and_populate_log_files(e.stacktrace, headerData, e.log_msg, name_or_data, e)
-        error = e.msg_display.format(dirname)
+        zipname = create_and_populate_log_files(e.stacktrace, headerData, e.log_msg, name_or_data, e)
+        error = e.msg_display.format(zipname)
         response = error, 500
 
     except JSONDecodeError as e:
-        dirname = create_and_populate_log_files(e.data, headerData, str(e), name_or_data, e)
-        error = e.msg_display.format(dirname)
+        zipname = create_and_populate_log_files(e.data, headerData, str(e), name_or_data, e)
+        error = e.msg_display.format(zipname)
         response = error, 400
 
     except WtfDataException as e:
-        dirname = create_and_populate_log_files(e.data, headerData, str(e), name_or_data, e)
-        error = e.msg_display.format(dirname)
+        zipname = create_and_populate_log_files(e.data, headerData, str(e), name_or_data, e)
+        error = e.msg_display.format(zipname)
         response = error, 400
 
     except Exception as e:
@@ -160,9 +167,9 @@ def results() -> Response | str:
         data = get_user_input()
 
         setattr(e, "dirname", "other")
-        dirname = create_and_populate_log_files(data, headerData, msg, name_or_data, e)  # noqa
+        zipname = create_and_populate_log_files(data, headerData, msg, name_or_data, e)  # noqa
 
-        faq = BaseCustomException.let_us_know.format(dirname)
+        faq = BaseCustomException.let_us_know.format(zipname)
         error = (
             "Looks like something went wrong while handling your account data.<br>"
             f"The issue has been reported and will be investigated.<br>{faq}"
@@ -194,28 +201,39 @@ def index() -> Response | str:
     return Response(page, headers={"Cache-Control": "must-revalidate"})
 
 
+__handled_log_keys = ResponseCache()
+
 def create_and_populate_log_files(data, headerData, msg, name_or_data, error):
     # if os.environ.get("USER") == "niko":
     #     raise error
 
+    if data:
+        if isinstance(data, dict):
+            data = json.dumps(data, indent=4)
+
     username = name_for_logging(name_or_data, headerData)
     now = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-    log_subdir = Path(error.dirname)/username/now
-    dirpath = app.config["LOGS"]/log_subdir
-    filemsg = dirpath/"message.log"
-    filedata = dirpath/"data.log"
+    key = key_for_logging_cache(username, error.dirname, data, msg)
 
-    dirpath.mkdir(parents=True, exist_ok=True)
+    with __handled_log_keys.get_response_obj(key) as response:
+        if response.handled:
+            return response.value
 
-    with open(filemsg, "w") as user_log:
-        user_log.writelines(msg + os.linesep)
+        zip_subpath = Path(error.dirname)/username/(now + ".zip")
+        zip_path = app.config["LOGS"]/zip_subpath
 
-    if data:
-        with open(filedata, "w") as user_log:
-            user_log.writelines(data + os.linesep)
+        zip_path.parent.mkdir(parents=True, exist_ok=True)
 
-    return str(app.config["SERVER_TYPE"]/log_subdir).replace("/", " ▸ ").replace("\\", " ▸ ")
+        with zipfile.ZipFile(zip_path, "w",
+                             compression=zipfile.ZIP_LZMA) as z:
+            z.writestr("message.log", msg)
+            if data:
+                z.writestr("data.log", data)
+
+        val = str(app.config["SERVER_TYPE"]/zip_subpath).replace("/", " ▸ ").replace("\\", " ▸ ")
+        response.complete(val)
+        return val
 
 
 @app.route("/robots.txt")
