@@ -2,11 +2,11 @@ from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import (
-    break_you_best, infinity_string,
-    # vault_progressionTiers
-)
-from utils.text_formatting import notateNumber
+# from consts import (
+#     break_you_best, infinity_string,
+#     # vault_progressionTiers
+# )
+# from utils.text_formatting import notateNumber
 
 logger = get_logger(__name__)
 
@@ -49,9 +49,9 @@ def getVaultUpgradesAdviceGroup():
         picture_class='upgrade-vault',
     ))
 
-    # for subgroup in upgrades_AdviceDict:
-    #     for advice in upgrades_AdviceDict[subgroup]:
-    #         mark_advice_completed(advice)
+    for subgroup in upgrades_AdviceDict:
+        for advice in upgrades_AdviceDict[subgroup]:
+            mark_advice_completed(advice)
 
     upgrades_ag = AdviceGroup(
         tier='',
