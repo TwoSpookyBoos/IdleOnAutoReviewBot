@@ -4547,13 +4547,16 @@ statueTypeList = ["Normal", "Gold", "Onyx"]
 statueCount = len(statuesDict.keys())
 event_points_shop_dict = {
     'Golden Tome': {'Cost': 25, 'Code': '_', 'Description': 'Adds a new DMG Multi bonus type to the Tome in World 4', 'Image': 'event-shop-0'},
-    'Stamp Stack': {'Cost': 20, 'Code': 'a', 'Description': 'Get +3 Stamp LVs every day for a random Stamp', 'Image': 'event-shop-1'},
+    'Stamp Stack': {'Cost': 30, 'Code': 'a', 'Description': 'Get +3 Stamp LVs every day for a random Stamp', 'Image': 'event-shop-1'},
     'Bubble Broth': {'Cost': 15, 'Code': 'b', 'Description': 'Get +5 LVs for a random Alchemy Bubble every day', 'Image': 'event-shop-2'},
     'Equinox Enhancement': {'Cost': 15, 'Code': 'c', 'Description': 'Get 1.5x faster Bar fill Rate in Equinox Valley in World 3', 'Image': 'event-shop-3'},
     'Supreme Wiring': {'Cost': 45, 'Code': 'd', 'Description': "+2% Printer Output per day, taking new sample resets this", 'Image': 'event-shop-4'},
     'Sleepy Joe Armstrong': {'Cost': 25, 'Code': 'e', 'Description': "+20% AFK Gains for all things IdleOn related", 'Image': 'event-shop-5'},
     'Village Encouragement': {'Cost': 30, 'Code': 'f','Description': "All Villagers in World 5 Camp get 1.25x EXP Gain", 'Image': 'event-shop-6'},
     'Gilded Vote Button': {'Cost': 35, 'Code': 'g', 'Description': "Get +17% higher Ballot Bonus Multi from Voting", 'Image': 'event-shop-7'},
+    'Extra Page': {'Cost': 20, 'Code': 'h', 'Description': "Get +1 more Filter page", 'Image': 'event-shop-8'},
+    'Coin Stacking': {'Cost': 15, 'Code': 'i', 'Description': 'Get 1.5x multiplier to all coins', 'Image': 'event-shop-9'},
+    'More Storage': {'Cost': 10, 'Code': 'j', 'Description': 'Get +12 storage slots', 'Image': 'event-shop-10'}
 }  #Found near end of NinjaInfo function in the source code
 
 ###WORLD 2 CONSTS###
