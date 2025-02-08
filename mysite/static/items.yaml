@@ -372,6 +372,7 @@ EquipmentPendant28: Crescent Moon Pendant
 EquipmentPendant29: Strung Tooth of the Divine
 EquipmentPendant30: The Divine Scarf
 EquipmentPendant31: Deathbloom Flower Pendant
+EquipmentPendant32: Slimy Necklace
 EquipmentRings1: Gold Ring
 EquipmentRings2: Copper Band
 EquipmentRings3: Steel Band
@@ -692,6 +693,7 @@ InvStorageC: Cheesy Chest
 InvStorageD: Woodlin Chest
 InvStorageN: Ninja Chest
 InvStorageH: Holiday Chest
+InvStorageL: Valenslime Chest
 Line1: Copper Twine
 Line2: Silver Twine
 Line3: Gold Twine
@@ -1395,6 +1397,7 @@ EquipmentNametag12: Megafeather Nametag
 EquipmentNametag13: Timeless Nametag
 EquipmentNametag14: Snowflake Nametag
 EquipmentNametag15: Frostyman Nametag
+EquipmentNametag16: Lovely Day Nametag
 EquipmentKeychain0: Simple Key Chain
 EquipmentKeychain1: Leafy Chain
 EquipmentKeychain2: Red Sneaker Chain
@@ -1968,6 +1971,7 @@ EquipmentHats109: Husky Hat
 EquipmentHats110: Yellow Beanie
 EquipmentHats111: Epic Santa Hat
 EquipmentHats112: Deathbringer Hood of Death
+EquipmentHats113: Pink Beanie
 CardsA0: Green Mushroom Card
 CardsA1: Red Mushroom Card
 CardsA2: Frog Card
