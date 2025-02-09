@@ -68,6 +68,12 @@ def _make_cards(account):
         for codename, (name, coefficient) in cards.items()
     ]
 
+    unknown_cards = [
+        codename for codename in card_counts if not any(codename in items for items in card_data.values())
+    ]
+    if unknown_cards:
+        logger.warning(f"Unknown Card name(s) found: {unknown_cards}")
+
     return cards
 
 

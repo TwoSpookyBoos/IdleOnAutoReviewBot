@@ -2432,7 +2432,8 @@ card_data = {
         "wolfB": ["Chaotic Amarok", 1.5],
         "wolfC": ["Radiant Amarok", 10],
         "mini5a": ["Domeo Magmus", 4],
-        "mini6a": ["Demented Spiritlord", 5]
+        "mini6a": ["Demented Spiritlord", 5],
+        'slimeB': ['Glunko The Massive', 2]
     },
     "Events": {
         "EasterEvent1": ["Egggulyte", 1.5],
