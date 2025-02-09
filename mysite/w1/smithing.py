@@ -9,26 +9,6 @@ from utils.logging import get_logger
 
 logger = get_logger(__name__)
 
-def getUnusedForgeSlotsAlert():
-    unusedForgeSlotsCount = 0
-    oreSlotIndex = 0
-    try:
-        forgeOreSlotsPurchased = session_data.account.raw_data["ForgeLV"][0]
-        forgeAllItemOrderList = session_data.account.raw_data["ForgeItemOrder"]
-        while oreSlotIndex < len(forgeAllItemOrderList) and (oreSlotIndex/3)+1 <= forgeOreSlotsPurchased:
-            if forgeAllItemOrderList[oreSlotIndex] == "Blank":
-                unusedForgeSlotsCount += 1
-            oreSlotIndex += 3
-    except:
-        logger.exception(f"Could not retrieve forge levels or items. Defaulting to 0 unused slots / no Alert.")
-
-    if unusedForgeSlotsCount > 0:
-        session_data.account.alerts_AdviceDict['World 1'].append(Advice(
-            label=f"You have {unusedForgeSlotsCount} empty ore slot{pl(unusedForgeSlotsCount)} in your {{{{ Forge|#smithing }}}}!",
-            picture_class="empty-forge-slot"
-        ))
-    return
-
 def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
     cap_Advices = {
         "Static Sources": [],
@@ -306,9 +286,6 @@ def getProgressionTiersAdviceGroup():
     return smithing_AdviceGroupDict, overall_SectionTier, max_tier
 
 def getSmithingAdviceSection() -> AdviceSection:
-    # Generate Alert Advice
-    getUnusedForgeSlotsAlert()
-
     #Generate AdviceGroups
     smithing_AdviceGroupDict, overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
     smithing_AdviceGroupDict["OreCapacity"], smithing_AdviceGroupDict["Bars"] = getForgeCapacityAdviceGroup()
