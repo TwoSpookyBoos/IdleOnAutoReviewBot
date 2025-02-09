@@ -1264,7 +1264,7 @@ atoms_progressionTiers = {
     },
     14: {
         'Atoms': {
-            'Helium - Talent Power Stacker': 10,
+            'Helium - Talent Power Stacker': 11,
         },
     },
 }
