@@ -146,16 +146,19 @@ def _parse_switches(account):
         if raw_companion is not None:
             if isinstance(raw_companion, dict):
                 for companionInfo in raw_companion.get('l', []):
-                    companionID = int(companionInfo.split(',')[0])
-                    if companionID == 0:
-                        account.doot_owned = True
-                        g.doot = True
-                    if companionID == 1:
-                        account.riftslug_owned = True
-                        g.riftslug = True
-                    if companionID == 4:
-                        account.sheepie_owned = True
-                        g.sheepie = True
+                    try:
+                        companionID = int(companionInfo.split(',')[0])
+                        if companionID == 0:
+                            account.doot_owned = True
+                            g.doot = True
+                        if companionID == 1:
+                            account.riftslug_owned = True
+                            g.riftslug = True
+                        if companionID == 4:
+                            account.sheepie_owned = True
+                            g.sheepie = True
+                    except:
+                        continue
         elif raw_companions is not None:
             # logger.debug(f"Efficiency Companions data found: {raw_companions}")
             try:
