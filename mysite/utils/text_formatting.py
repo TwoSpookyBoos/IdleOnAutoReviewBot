@@ -109,13 +109,13 @@ def notateNumber(inputType: str, inputValue: float, decimals=2, overrideCharacte
     """
     match inputType:
         case "Basic":
-            if float(inputValue) >= 1e18:
+            if float(abs(inputValue)) >= 1e18:
                 result = f"{inputValue:.{decimals}e}"
-            elif float(inputValue) < 1e3:
+            elif float(abs(inputValue)) < 1e3:
                 result = f"{inputValue:.{decimals}f}"
             else:
                 for k, v in stringToDecimal.items():
-                    if float(inputValue) >= v:
+                    if float(abs(inputValue)) >= v:
                         result = f"{inputValue / v:.{decimals}f}{k}"
                         break
         case "Match":
