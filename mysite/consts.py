@@ -5196,7 +5196,7 @@ islands_fractal_rewards_dict = {
     2500: {'Reward': '1.20x Chance to find Sailing Artifacts', 'Image': 'artifact-find-chance'},
     10e3: {'Reward': 'Dirty Shovel digs up +25% more Gold Nuggets', 'Image': 'dirty-shovel'},
     20e3: {'Reward': '+100 Star Talent Pts', 'Image': 'star-talent-icon'},
-    40e3: {'Reward': 'World 6 Bonus... I wonder what it will be...', 'Image': 'rift-tbd'},
+    40e3: {'Reward': 'All Ninja twins get +2% Stealth per Sneaking level', 'Image': 'sneaking'},
     60e3: {'Reward': 'World 7 Bonus... I wonder what it will be...', 'Image': 'rift-tbd'},
 }
 killroy_dict = {
