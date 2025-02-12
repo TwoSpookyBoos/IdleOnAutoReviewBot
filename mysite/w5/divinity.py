@@ -2,7 +2,7 @@ from math import ceil
 
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
-from utils.text_formatting import pl
+from utils.text_formatting import pl, notateNumber
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import (
@@ -27,16 +27,24 @@ def getOfferingsAdviceGroup():
     lowOfferingGoal = session_data.account.divinity['LowOfferingGoal']
     highOfferingGoal = session_data.account.divinity['HighOfferingGoal']
 
+    try:
+        offerings_AdviceDict["Available Offerings"].append(Advice(
+            label=f"Divinity Points: {notateNumber('Basic', divinityPoints, 2)}",
+            picture_class='divinity'
+        ))
+    except:
+        pass
+
     offerings_AdviceDict["Available Offerings"].append(Advice(
         label=f"{divinity_offeringsDict.get(lowOffering, {}).get('Chance', 1)}% Offering: {getOfferingNameFromIndex(lowOffering)}",
         picture_class=divinity_offeringsDict.get(lowOffering, {}).get('Image', ''),
-        progression=f"{min(10000, divinityPoints / max(1, lowOfferingGoal)):.2%}",
+        progression=f"{max(0, min(10000, divinityPoints / max(1, lowOfferingGoal))):.2%}",
         #goal=lowOfferingGoal
     ))
     offerings_AdviceDict["Available Offerings"].append(Advice(
         label=f"{divinity_offeringsDict.get(highOffering, {}).get('Chance', 1)}% Offering: {getOfferingNameFromIndex(highOffering)}",
         picture_class=divinity_offeringsDict.get(highOffering, {}).get('Image', ''),
-        progression=f"{min(10000, divinityPoints / max(1, highOfferingGoal)):.2%}",
+        progression=f"{max(0, min(10000, divinityPoints / max(1, highOfferingGoal))):.2%}",
         #goal=highOfferingGoal
     ))
     offerings_AdviceDict["Strategy"].append(Advice(
