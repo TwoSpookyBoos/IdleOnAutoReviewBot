@@ -43,10 +43,16 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
     ))
 
     crystal_AdviceList.append(Advice(
-        label=f"Minimum 200 Crystallin Stamp: {session_data.account.stamps['Crystallin']['Level']} (+{session_data.account.stamps['Crystallin']['Value']:.3f}%)",
+        label=f"Minimum 100 Crystallin Stamp: {session_data.account.stamps['Crystallin']['Level']} (+{session_data.account.stamps['Crystallin']['Value']:.3f}%)",
         picture_class="crystallin",
         progression=session_data.account.stamps['Crystallin']['Level'],
-        goal=200  #stamp_maxes['Crystallin']
+        goal=100  #stamp_maxes['Crystallin']
+    ))
+    crystal_AdviceList.append(Advice(
+        label=f"Star Talent 'Crystals 4 Dayys' obtained by completing Picnic Stowaway's quest: \"The Last Supper, at Least for Today\"",
+        picture_class="crystals-4-dayys",
+        progression=int(any([char.max_talents.get('619', 0) > 0 for char in session_data.account.all_characters])),
+        goal=1
     ))
     crystal_AdviceList.append(Advice(
         label=f"{{{{ Sailing|#sailing }}}}: Moai Head artifact to apply Shrines everywhere",
