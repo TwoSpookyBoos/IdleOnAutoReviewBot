@@ -471,11 +471,9 @@ stamps_progressionTiers = {
         "Skill": ["Choppin' Bag Stamp"],
         "Misc": ["Vendor Stamp"]}},
     4: {"TotalStampLevels": 200, "Stamps": {
-        "Combat": ["Fist Stamp", "Manamoar Stamp"],
         "Skill": ["Lil' Mining Baggy Stamp"],
         "Optional": ["Clover Stamp"]}},
     5: {"TotalStampLevels": 250, "Stamps": {
-        "Combat": ["Longsword Stamp"],
         "Skill": ["Anvil Zoomer Stamp", "Matty Bag Stamp"],
         "Optional": ["Kapow Stamp"]}},
     6: {"TotalStampLevels": 300, "Stamps": {}},
@@ -483,21 +481,24 @@ stamps_progressionTiers = {
         "Skill": ["Fishing Rod Stamp", "Catch Net Stamp"],
         "Specific": {'Pickaxe Stamp': 35, 'Hatchet Stamp': 35}}},
     8: {"TotalStampLevels": 500, "Stamps": {
-        "Combat": ["Battleaxe Stamp", "Scimitar Stamp", "Bullseye Stamp"],
         "Skill": ["Drippy Drop Stamp"],
-        "Misc": ["Biblio Stamp"],
         "Specific": {'Drippy Drop Stamp': 30},
         "Optional": ["Hermes Stamp", "Talent III Stamp"]}},
-    9: {"TotalStampLevels": 600, "Stamps": {
-        "Misc": ["Crystallin", "Talent S Stamp"]}},
+    9: {"TotalStampLevels": 600, "Stamps": {}},
     10: {"TotalStampLevels": 700, "Stamps": {
-        "Combat": ["Polearm Stamp", "Buckler Stamp", "Stat Graph Stamp"],
+        "Combat": [
+            "Fist Stamp", "Manamoar Stamp", "Longsword Stamp",
+            "Battleaxe Stamp", "Scimitar Stamp", "Bullseye Stamp",
+            "Polearm Stamp", "Buckler Stamp", "Stat Graph Stamp"
+        ],
         "Skill": ["Twin Ores Stamp", "Duplogs Stamp", "Cool Diggy Tool Stamp", "Swag Swingy Tool Stamp", "Alch Go Brrr Stamp",
                   "Droplots Stamp", "Bugsack Stamp", "Hidey Box Stamp", "Spikemouth Stamp", "Purp Froge Stamp"],
-        "Specific": {'Drippy Drop Stamp': 40, 'Matty Bag Stamp': 30}}},
+        "Misc": ["Crystallin", "Talent S Stamp"]},
+        "Specific": {'Drippy Drop Stamp': 40, 'Matty Bag Stamp': 30}
+    },
     11: {"TotalStampLevels": 800, "Stamps": {
          "Skill": ["Stample Stamp", "Spice Stamp", "Egg Stamp"],
-         "Misc": ["Mason Jar Stamp", "Sigil Stamp"],
+         "Misc": ["Mason Jar Stamp", "Sigil Stamp", "Biblio Stamp", ],
          "Specific": {'Pickaxe Stamp': 45, 'Hatchet Stamp': 45, 'Mason Jar Stamp': 12}}},
     12: {"TotalStampLevels": 1000, "Stamps": {
         "Skill": ["Brainstew Stamps", "Bag o Heads Stamp", "Skelefish Stamp", "Holy Mackerel Stamp", "Cooked Meal Stamp"],
