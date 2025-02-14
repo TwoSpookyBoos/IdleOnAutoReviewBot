@@ -50,54 +50,51 @@ combatLevels_progressionTiers = [
 gemShop_progressionTiers = [
     # int tier, str tierName, dict recommendedPurchases, str notes
     [0, "", {}, ""],
-    [1, "SS", {
-        'Infinity Hammer': 1, 'Bleach Liquid Cauldrons': 1, 'Crystal 3d Printer': 1, 'Richelin Kitchen': 1, 'Golden Sprinkler': 1, 'Instagrow Generator': 1},
-     "These are the highest priority as 1st purchase per world."
-     ],
-    [2, "S", {
-        'Extra Card Slot': 4, 'Brimstone Forge Slot': 1},
+    [1, "S", {
+        'Infinity Hammer': 1, 'Bleach Liquid Cauldrons': 1, 'Crystal 3d Printer': 1, 'Richelin Kitchen': 1, 'Divinity Sparkie': 1, 'Instagrow Generator': 1,
+        'Extra Card Slot': 4},
      ""],
-    [3, "A", {
-        'Item Backpack Space': 1, 'Storage Chest Space': 4, 'Carry Capacity': 2, 'Weekly Dungeon Boosters': 1,
-        'Brimstone Forge Slot': 4, 'Bleach Liquid Cauldrons': 2, 'Zen Cogs': 2, 'Tower Building Slots': 1,
-        'Royal Egg Cap': 3, 'Richelin Kitchen': 3, 'Souped Up Tube': 1,
-        'Chest Sluggo': 2, 'Divinity Sparkie': 2, 'Lava Sprouts': 2,
+    [2, "A", {
+        'Item Backpack Space': 1, 'Storage Chest Space': 2, 'Carry Capacity': 2, 'Weekly Dungeon Boosters': 1,
+        'Bleach Liquid Cauldrons': 2, 'Zen Cogs': 2, 'Tower Building Slots': 1,
+        'Royal Egg Cap': 3, 'Souped Up Tube': 1,
+        'Chest Sluggo': 2, 'Divinity Sparkie': 2, 'Lava Sprouts': 1,
         'Conjuror Pts': 1,
         'Instagrow Generator': 3, 'Shroom Familiar': 1, 'Plot of Land': 2},
      ""],
-    [4, "B", {
-        'Item Backpack Space': 2, 'Storage Chest Space': 8, 'Carry Capacity': 4, 'Weekly Dungeon Boosters': 2, 'Food Slot': 1,
+    [3, "B", {
+        'Item Backpack Space': 2, 'Storage Chest Space': 4, 'Carry Capacity': 4, 'Weekly Dungeon Boosters': 2, 'Food Slot': 1,
         'Bleach Liquid Cauldrons': 3, 'More Sample Spaces': 2, 'Zen Cogs': 4, 'Tower Building Slots': 2,
-        'Royal Egg Cap': 5, 'Fenceyard Space': 2, 'Chest Sluggo': 6, 'Lava Sprouts': 4,
+        'Royal Egg Cap': 5, 'Fenceyard Space': 2, 'Chest Sluggo': 6,
         'Parallel Villagers The Engineer': 1, 'Parallel Villagers The Conjuror': 1, 'Conjuror Pts': 3,
         'Plot of Land': 4, 'Instagrow Generator': 5},
      ""],
-    [5, "C", {
-        'Item Backpack Space': 3, 'Storage Chest Space': 12, 'Carry Capacity': 6, 'Weekly Dungeon Boosters': 3, 'Food Slot': 2,
+    [4, "C", {
+        'Item Backpack Space': 3, 'Storage Chest Space': 8, 'Carry Capacity': 6, 'Weekly Dungeon Boosters': 3, 'Food Slot': 2,
         'Bleach Liquid Cauldrons': 4, 'More Sample Spaces': 4, 'Tower Building Slots': 4,
-        'Fenceyard Space': 4, 'Chest Sluggo': 9, 'Golden Sprinkler': 2, 'Lava Sprouts': 6,
+        'Fenceyard Space': 4, 'Chest Sluggo': 9,
         'Parallel Villagers The Explorer': 1, 'Parallel Villagers The Measurer': 1, 'Resource Boost': 2, 'Conjuror Pts': 6,
         'Plot of Land': 6, 'Shroom Familiar': 2, 'Instagrow Generator': 7},
      ""],
-    [6, "D", {
-        'Item Backpack Space': 4, 'Carry Capacity': 8, 'More Storage Space': 5, 'Brimstone Forge Slot': 8,
+    [5, "D", {
+        'Item Backpack Space': 4, 'Carry Capacity': 8,
         'Ivory Bubble Cauldrons': 4, 'More Sample Spaces': 6, 'Zen Cogs': 8,
         'Souped Up Tube': 3, 'Fenceyard Space': 6, 'Chest Sluggo': 12,
         'Resource Boost': 4, 'Conjuror Pts': 12, 'Opal': 8,
         'Plot of Land': 8, 'Instagrow Generator': 8,
     },
      ""],
-    [7, "Practical Max", {
-        'Item Backpack Space': 6, 'Carry Capacity': 10, 'More Storage Space': 10, 'Card Presets': 1,
-        'Brimstone Forge Slot': 16, 'Sigil Supercharge': 10,
+    [6, "Practical Max", {
+        'Item Backpack Space': 6, 'Storage Chest Space': 12, 'Carry Capacity': 10, 'More Storage Space': 10, 'Card Presets': 1,
+        'Brimstone Forge Slot': 16,
         'Fluorescent Flaggies': 2, 'Burning Bad Books': 4,
-        'Golden Sprinkler': 4, 'Divinity Sparkie': 6,
+        'Golden Sprinkler': 1, 'Divinity Sparkie': 6, 'Lava Sprouts': 6,
         'Resource Boost': 10, 'Conjuror Pts': 12, 'Opal': 20,
         'Parallel Villagers The Engineer': 1, 'Parallel Villagers The Conjuror': 1, 'Parallel Villagers The Explorer': 1, 'Parallel Villagers The Measurer': 1,
         'Plot of Land': 12, 'Shroom Familiar': 6,
     },
      "I wouldn't recommend going any further as of v2.26."],
-    [8, "True Max",
+    [7, "True Max",
      {
         #Inventory and Storage
         'Item Backpack Space': 6, 'Storage Chest Space': 12, 'Carry Capacity': 10, 'Food Slot': 2, 'More Storage Space': 10, 'Card Presets': 5,
