@@ -218,7 +218,7 @@ def getGemShopAdviceSection() -> AdviceSection:
     #progressionTiers[tier][2] = dict recommendedPurchases
     #progressionTiers[tier][3] = str notes
 
-    ss_through_d_groups = ["SS", *"SABCD"]
+    s_through_d_groups = [*"SABCD"]
     groups = [
         AdviceGroup(
             tier="",
@@ -234,11 +234,11 @@ def getGemShopAdviceSection() -> AdviceSection:
             ],
             informational=True
         )
-        for i, tier in enumerate(ss_through_d_groups, start=1)
+        for i, tier in enumerate(s_through_d_groups, start=1)
     ]
 
     practical_max_groups = ["Practical Max"]
-    for i, tier in enumerate(practical_max_groups, start=len(ss_through_d_groups)+1):
+    for i, tier in enumerate(practical_max_groups, start=len(s_through_d_groups)+1):
         groups.append(AdviceGroup(
             tier="",
             pre_string=tier,
@@ -255,7 +255,7 @@ def getGemShopAdviceSection() -> AdviceSection:
         ))
 
     unfiltered_groups = ["True Max"]
-    for i, tier in enumerate(unfiltered_groups, start=len(ss_through_d_groups)+len(practical_max_groups)+1):
+    for i, tier in enumerate(unfiltered_groups, start=len(s_through_d_groups)+len(practical_max_groups)+1):
         groups.append(AdviceGroup(
             tier="",
             pre_string=tier,

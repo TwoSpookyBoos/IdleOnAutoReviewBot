@@ -156,8 +156,11 @@ def results() -> Response | str:
         response = error, 400
 
     except WtfDataException as e:
-        dirname = create_and_populate_log_files(e.data, headerData, str(e), name_or_data, e)
-        error = e.msg_display.format(dirname)
+        #2025-02-14: Commenting out creating a log as the Steam Workaround JSONs from Toolbox land here and are upwards of 10mb in size.
+        #I'm not paying extra to store that garbage. -Scoli
+        # dirname = create_and_populate_log_files(e.data, headerData, str(e), name_or_data, e)
+        # error = e.msg_display.format(dirname)
+        error = e.msg_display
         response = error, 400
 
     except Exception as e:
