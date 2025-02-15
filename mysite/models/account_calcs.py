@@ -356,11 +356,16 @@ def _calculate_w1(account):
     _calculate_w1_statues(account)
 
 def _calculate_w1_upgrade_vault(account):
-    vault_multi = ValueToMulti(
-        account.vault['Upgrades']['Vault Mastery']['Level']
-        * account.vault['Upgrades']['Vault Mastery']['Value Per Level']
-    )
-
+    vault_multi = [
+        ValueToMulti(
+            account.vault['Upgrades']['Vault Mastery']['Level']
+            * account.vault['Upgrades']['Vault Mastery']['Value Per Level']
+        ),
+        ValueToMulti(
+            account.vault['Upgrades']['Vault Mastery II']['Level']
+            * account.vault['Upgrades']['Vault Mastery II']['Value Per Level']
+        )
+    ]
     # logger.debug(f"{vault_multi = }")
     for upgrade_name, upgrade_details in account.vault['Upgrades'].items():
         # Update description with total value, stack counts, and scaling info
@@ -368,7 +373,7 @@ def _calculate_w1_upgrade_vault(account):
             account.vault['Upgrades'][upgrade_name]['Total Value'] = (
                 account.vault['Upgrades'][upgrade_name]['Level']
                 * account.vault['Upgrades'][upgrade_name]['Value Per Level']
-                * (vault_multi if upgrade_details['Scaling Value'] else 1)
+                * (vault_multi[upgrade_details['Vault Section']-1] if upgrade_details['Scaling Value'] else 1)
             )
             account.vault['Upgrades'][upgrade_name]['Description'] = account.vault['Upgrades'][upgrade_name]['Description'].replace(
                 '{', f"{account.vault['Upgrades'][upgrade_name]['Total Value']}"
@@ -377,7 +382,7 @@ def _calculate_w1_upgrade_vault(account):
             account.vault['Upgrades'][upgrade_name]['Total Value'] = ValueToMulti(
                 account.vault['Upgrades'][upgrade_name]['Level']
                 * account.vault['Upgrades'][upgrade_name]['Value Per Level']
-                * (vault_multi if upgrade_details['Scaling Value'] else 1)
+                * (vault_multi[upgrade_details['Vault Section']-1] if upgrade_details['Scaling Value'] else 1)
             )
             account.vault['Upgrades'][upgrade_name]['Description'] = account.vault['Upgrades'][upgrade_name]['Description'].replace(
                 '}', f"{account.vault['Upgrades'][upgrade_name]['Total Value']:.2f}"
@@ -396,8 +401,10 @@ def _calculate_w1_upgrade_vault(account):
                     'Target:&', f"Target: {next_stack_target}"
                 )
         account.vault['Upgrades'][upgrade_name]['Description'] += (
-            f"<br>({account.vault['Upgrades'][upgrade_name]['Value Per Level'] * (vault_multi if upgrade_details['Scaling Value'] else 1):.2f} per level"
-            f"{' after Vault Mastery)' if upgrade_details['Scaling Value'] else ': Not scaled by Vault Mastery)'}"
+            f"<br>({account.vault['Upgrades'][upgrade_name]['Value Per Level'] * (vault_multi[upgrade_details['Vault Section']-1] if upgrade_details['Scaling Value'] else 1):.2f} per level"
+            f"{' after Vault Mastery ' if upgrade_details['Scaling Value'] else ': Not scaled by Vault Mastery '}"
+            f"{upgrade_details['Vault Section']}"
+            f")"
         )
 
 def _calculate_w1_starsigns(account):

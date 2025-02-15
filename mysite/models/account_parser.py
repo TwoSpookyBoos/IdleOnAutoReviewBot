@@ -50,7 +50,7 @@ from consts import (
     caverns_villagers, caverns_conjuror_majiks, caverns_engineer_schematics, caverns_engineer_schematics_unlock_order, caverns_cavern_names,
     caverns_measurer_measurements, getCavernResourceImage, max_buckets, max_sediments, sediment_bars, getVillagerEXPRequired,
     monument_bonuses, bell_clean_improvements, bell_ring_bonuses, getBellExpRequired, getGrottoKills, lamp_wishes, key_cards, getWishCost,
-    schematics_unlocking_harp_chords, harp_chord_effects, max_harp_notes, lamp_world_wish_values
+    schematics_unlocking_harp_chords, harp_chord_effects, max_harp_notes, lamp_world_wish_values, vault_section_indexes
 )
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
 from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert
@@ -516,6 +516,10 @@ def _parse_general_upgrade_vault(account):
         if clean_name.split('!')[0] in vault_stack_types:
             stack_type = clean_name.split('!')[0]
             clean_name += f" ({account.vault.get(f'{stack_type} Stacks', '#')} stacks)"
+        for list_index, vault_section_index in enumerate(vault_section_indexes):
+            if upgrade_index <= vault_section_index:
+                vault_section = list_index+1
+                break
         try:
             account.vault['Upgrades'][clean_name] = {
                 'Level': int(raw_vault[upgrade_index]),
@@ -533,14 +537,15 @@ def _parse_general_upgrade_vault(account):
                     f"{upgrade_values_list[9].replace('_', ' ')}"
                     f"<br>{upgrade_values_list[10].replace('_', ' ') if len(upgrade_values_list) >= 10 else ''}"
                 ),
-                'Scaling Value': upgrade_index not in vault_dont_scale
+                'Scaling Value': upgrade_index not in vault_dont_scale,
+                'Vault Section': vault_section
             }
         except Exception as e:
             account.vault['Upgrades'][clean_name] = {
                 'Level': 0,
                 'Index': upgrade_index,
                 'Image': f"vault-upgrade-{upgrade_index}",
-                'Cost Base': int(upgrade_values_list[1]),
+                'Cost Base': safer_convert(upgrade_values_list[1], 0),
                 'Cost Increment': float(upgrade_values_list[2]),
                 # 'Placeholder3': upgrade_values_list[3],
                 'Max Level': int(upgrade_values_list[4]),
@@ -552,7 +557,8 @@ def _parse_general_upgrade_vault(account):
                     f"{upgrade_values_list[9].replace('_', ' ')}"
                     f"<br>{upgrade_values_list[10].replace('_', ' ') if len(upgrade_values_list) >= 10 else ''}"
                 ),
-                'Scaling Value': upgrade_index not in vault_dont_scale
+                'Scaling Value': upgrade_index not in vault_dont_scale,
+                'Vault Section': vault_section
             }
     #logger.debug(account.vault)
 
