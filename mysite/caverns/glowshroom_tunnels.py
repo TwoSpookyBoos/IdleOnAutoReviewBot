@@ -332,10 +332,15 @@ def getJusticeAdviceGroup() -> AdviceGroup:
 # Bonuses Stats
     cavern_advice[b_stats] = [
         Advice(
-            label=f"{bonus['Description']}",
+            label=(
+                f"Level {bonus['Level']}: {bonus['Description']}"  # <br>({bonus['BaseValue']:.2f} / {bonus['ScalingValue']} of pre-multi max)"
+                if bonus['ScalingValue'] > 30 else
+                f"Level {bonus['Level']}: {bonus['Description']}"  # <br>(Linear: {bonus['ScalingValue']} per level)"
+            ),
             picture_class=bonus['Image'],
-            progression=bonus['Level'],
-            goal=infinity_string
+            progression=f"{(bonus['BaseValue'] / bonus['ScalingValue']) * 100:.2f}" if bonus['ScalingValue'] > 30 else 'Linear',
+            goal=100 if bonus['ScalingValue'] > 30 else infinity_string,
+            unit='%' if bonus['ScalingValue'] > 30 else ''
         ) for bonus in bonuses.values()
     ]
     mv = session_data.account.caverns['Majiks']['Monumental Vibes']

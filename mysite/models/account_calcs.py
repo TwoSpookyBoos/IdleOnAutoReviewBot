@@ -844,25 +844,35 @@ def _calculate_caverns_monuments(account):
             )
             try:
                 account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Value'] = ValueToMulti(ninth_value)
+                account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['BaseValue'] = ninth_value
                 account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'] = (
                     account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'].replace(
                         '}', f"{account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Value']:,.3f}")
                 )
             except:
                 account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Value'] = 1
+                account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['BaseValue'] = 0
                 account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'] = (
                     account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'].replace('}', '1')
                 )
             for bonus_index, bonus_details in monument_bonuses[monument_name].items():
                 if bonus_index % 10 != 9:
                     if bonus_details['ScalingValue'] < 30:
-                        result = (
+                        base_result = (
                             account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Level']
                             * account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['ScalingValue']
-                            * ValueToMulti(cosmos_value + ninth_value)
                         )
+                        final_result = base_result * ValueToMulti(cosmos_value + ninth_value)
                     else:
-                        result = (
+                        base_result = (
+                            0.1 * ceil(
+                                (account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Level']
+                                 / (250 + account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Level']))
+                                * 10
+                                * account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['ScalingValue']
+                            )
+                        )
+                        final_result = (
                             0.1 * ceil(
                                 (account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Level']
                                  / (250 + account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Level']))
@@ -873,25 +883,29 @@ def _calculate_caverns_monuments(account):
                         )
                     if bonus_details['ValueType'] == 'Percent':
                         try:
-                            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = result
+                            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = final_result
+                            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['BaseValue'] = base_result
                             account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'] = (
                                 account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'].replace(
                                     '{', f"{account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value']:,.2f}")
                             )
                         except:
                             account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = 0
+                            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['BaseValue'] = 0
                             account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'] = (
                                 account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'].replace('{', '0')
                             )
                     elif bonus_details['ValueType'] == 'Multi':
                         try:
-                            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = ValueToMulti(result)
+                            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = ValueToMulti(final_result)
+                            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['BaseValue'] = base_result
                             account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'] = (
                                 account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'].replace(
                                     '}', f"{account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value']:,.3f}")
                             )
                         except:
                             account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = 1
+                            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['BaseValue'] = 0
                             account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'] = (
                                 account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'].replace('}', '1')
                             )
