@@ -525,7 +525,7 @@ def _parse_general_upgrade_vault(account):
                 'Level': int(raw_vault[upgrade_index]),
                 'Index': upgrade_index,
                 'Image': f"vault-upgrade-{upgrade_index}",
-                'Cost Base': int(upgrade_values_list[1]),
+                'Cost Base': safer_convert(upgrade_values_list[1], 0),
                 'Cost Increment': float(upgrade_values_list[2]),
                 # 'Placeholder3': upgrade_values_list[3],
                 'Max Level': int(upgrade_values_list[4]),
@@ -541,6 +541,7 @@ def _parse_general_upgrade_vault(account):
                 'Vault Section': vault_section
             }
         except Exception as e:
+            # logger.exception(f"Vault parse error on index {upgrade_index}")
             account.vault['Upgrades'][clean_name] = {
                 'Level': 0,
                 'Index': upgrade_index,
