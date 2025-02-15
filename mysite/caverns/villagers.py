@@ -101,11 +101,13 @@ def getExplorerAdviceGroup() -> AdviceGroup:
 def getEngineerAdviceGroup() -> AdviceGroup:
     v_stats = 'Villager Stats'
     s_stats = 'Schematic Stats'
-    r_s_stats = 'Unpurchased Schematics'
+    unpurchased_stats = 'Unpurchased Schematics'
+    unreleased_schematics = 'Unreleased Schematics'
     villager_advice = {
         v_stats: [],
         s_stats: [],
-        r_s_stats: []
+        unpurchased_stats: [],
+        unreleased_schematics: []
     }
 
     villager_name = 'Kaipu'
@@ -159,16 +161,15 @@ def getEngineerAdviceGroup() -> AdviceGroup:
             clean_name = caverns_engineer_schematics[int(schematic_number)][0].replace("_", " ")
             schematic_details = session_data.account.caverns['Schematics'][clean_name]
             if not schematic_details['Purchased']:
-                villager_advice[r_s_stats].append(Advice(
-                    label=f"{'Unreleased ' if list_index+1 > released_schematics else ''}"
-                          f"Schematic {list_index+1}: {clean_name}",  #{schematic_details['Description']}",
+                villager_advice[unreleased_schematics if list_index+1 > released_schematics else unpurchased_stats].append(Advice(
+                    label=f"Schematic {list_index+1}: {clean_name}",  #{schematic_details['Description']}",
                     picture_class=schematic_details['Image'],
                     progression=int(schematic_details['Purchased']),
                     goal=1,
                     resource=schematic_details['Resource']
                 ))
             # else:  #uncomment this chunk for testing, if you need to see them all
-            #     villager_advice[r_s_stats].append(Advice(
+            #     villager_advice[unpurchased_stats].append(Advice(
             #         label=f"Schematic {list_index + 1}: {clean_name}: {schematic_details['Description']}",
             #         picture_class=schematic_details['Image'],
             #         progression=int(schematic_details['Purchased']),
