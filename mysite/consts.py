@@ -4570,10 +4570,10 @@ min_NBLB = 2
 max_NBLB = 1500
 nblb_max_index = 24
 nblb_skippable = [
-    'Reely Smart', 'Bappity Boopity', 'Bite But Not Chew',  #Orange
-    'Lil Big Damage', 'Anvilnomics', 'Cheap Shot',  #Green
-    'Noodubble',  #Purple
-    'Petting The Rift',  #Yellow
+    'Reely Smart', 'Bappity Boopity', 'Orange Bargain', 'Bite But Not Chew',  #Orange
+    'Lil Big Damage', 'Anvilnomics', 'Cheap Shot', 'Green Bargain',  #Green
+    'Noodubble', 'Purple Bargain', 'Matrix Evolved',  #Purple
+    'Yellow Bargain', 'Petting The Rift',  #Yellow
 ]
 vialsDict = {
     0: {"Name": "Copper Corona", "Material": "Copper", "x1": 3, "x2": 0, "funcType": "add"},
@@ -4877,44 +4877,25 @@ atrisk_basicBubbles = [
     "Undeveloped Costs",
     "Laaarrrryyyy",
     "Ignore Overdues",
-]
+]  #Standard log, ore, fish, bug prints in W1-W3 bubbles
 atrisk_advancedBubbles = [
-    "Warriors Rule",
-    "Big Meaty Claws",
-    "Call Me Bob",
-    "Orange Bargain",
-    "Multorange",
-    "Bite But Not Chew",
-    "Archer Or Bust",
-    "Quick Slap",
-    "Sanic Tools",
-    "Bow Jack",
-    "Cuz I Catch Em All",
-    "Mage Is Best",
-    "Brewstachio",
-    "Smart Boi Talent",
-    "Purple Bargain",
-    "Startue Exp",
-    "Level Up Gift",
-    "Cogs For Hands",
-    "Sample It",
-]
+    'Warriors Rule', 'Big Meaty Claws', 'Call Me Bob', 'Orange Bargain',
+    'Archer Or Bust', 'Quick Slap', 'Sanic Tools', 'Bow Jack', 'Cuz I Catch Em All',
+    'Mage Is Best', 'Hocus Choppus', 'Molto Loggo', 'Brewstachio', 'Call Me Pope', 'Smart Boi Talent', 'Purple Bargain',
+    'Lotto Skills', 'Startue Exp', 'Level Up Gift', 'Grind Time', 'Cogs For Hands', 'Sample It', 'Big Game Hunter', 'Yellow Bargain',
+]  #Advanced being anvil mats, monster mats, critters, souls in W1-W3 bubbles
 atrisk_lithiumBubbles = [
-    "Penny Of Strength",
-    'Slabi Orefish',
-    "Fly In Mind",
-    'Afk Expexp',
-    'Slabo Critterbug',
-    'Nickel Of Wisdom',
-    'Severapurple',
-    'Tree Sleeper',
-    'Hyperswift',
-    'Matrix Evolved',
-    'Slabe Logsoul',
-    'Bit By Bit',
-    'Gifts Abound',
-]
-atrisk_lithiumAdvancedBubbles = []
+    'Penny Of Strength',
+    "Fly In Mind", 'Afk Expexp', 'Slabo Critterbug',
+    'Nickel Of Wisdom', 'Severapurple', 'Hyperswift', 'Matrix Evolved', 'Slabe Logsoul',
+    'Bit By Bit', 'Gifts Abound',
+]  #Standard log, ore, fish, bug prints in W4+ bubbles
+atrisk_lithiumAdvancedBubbles = [
+    'Brittley Spears', 'Buff Boi', 'Multorange', 'Bite But Not Chew', 'Slabi Orefish', 'Gamer At Heart',
+    'Green Bargain', 'Premigreen', 'Sailor At Heart', 'Slabo Agility',
+    'Tree Sleeper', 'Pious At Heart', 'Slabe Wisdom', 'Essence Boost-Purple',
+    'Petting The Rift', 'Big P', 'Atom Split'
+]  #Advanced being anvil mats, monster mats, critters, souls, sailing treasures in W4+ bubbles
 
 arcadeBonuses = {
     0:  {"Stat": "Base Damage", "x1": 1, "x2": 0, "funcType": "add", "displayType": ""},

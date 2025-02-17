@@ -404,9 +404,9 @@ def getBubblesProgressionTiersAdviceGroup():
 
     for bubbleName, bubbleDetails in session_data.account.alchemy_bubbles.items():
         if (
-                0 < bubbleDetails['Level'] < min_NBLB
-                and bubbleName not in nblb_skippable
-                and bubbleDetails['BubbleIndex'] <= nblb_max_index
+            0 < bubbleDetails['Level'] < min_NBLB
+            and bubbleName not in nblb_skippable
+            and bubbleDetails['BubbleIndex'] <= nblb_max_index
         ):
             bubbles_AdviceDict['UnlockAndLevel']['No Bubble Left Behind'].append(
                 Advice(
