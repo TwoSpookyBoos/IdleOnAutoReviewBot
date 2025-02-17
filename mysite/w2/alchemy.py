@@ -5,7 +5,7 @@ from utils.logging import get_logger
 from flask import g as session_data
 from consts import bubbles_progressionTiers, vials_progressionTiers, max_IndexOfVials, maxFarmingCrops, atrisk_basicBubbles, \
     atrisk_lithiumBubbles, cookingCloseEnough, break_you_best, sigils_progressionTiers, max_IndexOfSigils, max_VialLevel, numberOfArtifactTiers, stamp_maxes, \
-    lavaFunc, vial_costs, min_NBLB, max_NBLB, nblb_skippable, nblb_max_index, ValueToMulti, atrisk_advancedBubbles, atrisk_lithiumAdvancedBubbles
+    lavaFunc, vial_costs, min_NBLB, max_NBLB, nblb_skippable, nblb_max_index, ValueToMulti, atrisk_advancedBubbles, atrisk_lithiumAdvancedBubbles, maxable_vials
 
 logger = get_logger(__name__)
 
@@ -134,6 +134,68 @@ def getVialsProgressionTiersAdviceGroup():
     overall_SectionTier = min(max_tier + info_tiers, tier_TotalVialsUnlocked, tier_TotalVialsMaxed)
     return vial_AdviceGroupDict, overall_SectionTier, max_tier
 
+def getVialBonusesAdviceGroup() -> AdviceGroup:
+    #Player's values
+    total = session_data.account.alchemy_vials_calcs['Total Multi']
+
+    max_mga = ValueToMulti(
+        (session_data.account.vault['Upgrades']['Vial Overtune']['Max Level'] * session_data.account.vault['Upgrades']['Vial Overtune']['Value Per Level'])
+        + (2 * maxable_vials)
+    )
+    max_mgb = session_data.account.labBonuses['My 1st Chemistry Set']['BaseValue']
+    max_total = max_mga * max_mgb
+
+    vb_advices = {
+        f"Total: {total:.2f}x": [
+            Advice(
+                label=f"Total Vial Effect bonus: {total:.2f}x",
+                picture_class='vial-1',
+                progression=f"{total:.2f}",
+                goal=f"{max_total:.2f}",
+                unit='x'
+            )
+        ],
+        f"Multi Group A: {session_data.account.alchemy_vials_calcs['mga']:.2f}x": [
+            Advice(
+                label=f"{{{{ Upgrade Vault|#upgrade-vault }}}}: Vial Overtune: +{session_data.account.vault['Upgrades']['Vial Overtune']['Level'] * session_data.account.vault['Upgrades']['Vial Overtune']['Value Per Level']}%",
+                picture_class=session_data.account.vault['Upgrades']['Vial Overtune']['Image'],
+                progression=session_data.account.vault['Upgrades']['Vial Overtune']['Level'],
+                goal=session_data.account.vault['Upgrades']['Vial Overtune']['Max Level']
+            ),
+            Advice(
+                label=f"{{{{ Rift|#rift}}}}: Vial Mastery: +{(2 * session_data.account.maxed_vials) if session_data.account.rift['VialMastery'] else 0}%",
+                picture_class='vial-mastery',
+                progression=int(session_data.account.rift['VialMastery']),
+                goal=1
+            ),
+            Advice(
+                label=f"You have {session_data.account.maxed_vials}/{maxable_vials} maxed Vials",
+                picture_class='vial-13',
+                progression=session_data.account.maxed_vials,
+                goal=maxable_vials
+            )
+        ],
+        f"Multi Group B: {session_data.account.alchemy_vials_calcs['mgb']:.2f}x": [
+            Advice(
+                label=f"Lab Bonus: My 1st Chemistry Set: {session_data.account.labBonuses['My 1st Chemistry Set']['Value']}x",
+                picture_class="my-1st-chemistry-set",
+                progression=int(session_data.account.labBonuses['My 1st Chemistry Set']['Enabled']),
+                goal=1
+            )
+        ]
+    }
+
+    for subgroup in vb_advices:
+        for advice in vb_advices[subgroup]:
+            mark_advice_completed(advice)
+
+    vb_ag = AdviceGroup(
+        tier='',
+        pre_string=f"Info- Sources of bonus Vial Effect",
+        advices=vb_advices
+    )
+    return vb_ag
+
 def getAlchemyVialsAdviceSection() -> AdviceSection:
     highestAlchemyLevel = max(session_data.account.all_skills["Alchemy"])
     if highestAlchemyLevel < 1:
@@ -148,6 +210,7 @@ def getAlchemyVialsAdviceSection() -> AdviceSection:
 
     #Generate AdviceGroups
     vial_AdviceGroupDict, overall_SectionTier, max_tier = getVialsProgressionTiersAdviceGroup()
+    vial_AdviceGroupDict['Vial Bonuses'] = getVialBonusesAdviceGroup()
 
     #Generate AdviceSection
 
@@ -598,11 +661,7 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
         peapod_values[session_data.account.alchemy_p2w['Sigils']['Pea Pod']['Level']]
         * chilled_yarn_multi[session_data.account.sailing['Artifacts']['Chilled Yarn']['Level']]
     )
-    willow_vial_value = (
-        session_data.account.alchemy_vials['Willow Sippy (Willow Logs)']['Value']
-        * session_data.account.vialMasteryMulti
-        * session_data.account.labBonuses['My 1st Chemistry Set']['Value']
-    )
+    willow_vial_value = session_data.account.alchemy_vials['Willow Sippy (Willow Logs)']['Value']
 
     player_sigil_stamp_value = session_data.account.stamps['Sigil Stamp']['Value']
     goal_sigil_stamp_value = lavaFunc('decay', stamp_maxes['Sigil Stamp'], 40, 150)
@@ -641,11 +700,7 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
     mgb_label = f"Multi Group B: {mgb:.3f}x"
 
     # Multi Group C = Tuttle Vial
-    tuttle_vial_multi = ValueToMulti(
-        session_data.account.alchemy_vials['Turtle Tisane (Tuttle)']['Value']
-        * session_data.account.vialMasteryMulti
-        * session_data.account.labBonuses['My 1st Chemistry Set']['Value']
-    )
+    tuttle_vial_multi = ValueToMulti(session_data.account.alchemy_vials['Turtle Tisane (Tuttle)']['Value'])
     mgc = tuttle_vial_multi
     mgc_label = f"Multi Group C: {mgc:.3f}x"
 
@@ -709,20 +764,6 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
         goal=max_VialLevel
     ))
     speed_Advice[mga_label].append(Advice(
-        label=f"Lab Bonus: My 1st Chemistry Set: {session_data.account.labBonuses['My 1st Chemistry Set']['Value']}x"
-              f"<br>(Already applied to Vial above)",
-        picture_class="my-1st-chemistry-set",
-        progression=int(session_data.account.labBonuses['My 1st Chemistry Set']['Enabled']),
-        goal=1
-    ))
-    speed_Advice[mga_label].append(Advice(
-        label=f"{{{{ Rift|#rift }}}} Bonus: Vial Mastery: {session_data.account.vialMasteryMulti:.2f}x"
-              f"<br>(Already applied to Vial above)",
-        picture_class="vial-mastery",
-        progression=f"{1 if session_data.account.rift['VialMastery'] else 0}",
-        goal=1
-    ))
-    speed_Advice[mga_label].append(Advice(
         label=f"Sigil Stamp: +{player_sigil_stamp_value:.3f}/{goal_sigil_stamp_value:.3f}%",
         picture_class="sigil-stamp",
         progression=session_data.account.stamps['Sigil Stamp']['Level'],
@@ -756,20 +797,6 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
         picture_class="tuttle",
         progression=session_data.account.alchemy_vials['Turtle Tisane (Tuttle)']['Level'],
         goal=max_VialLevel
-    ))
-    speed_Advice[mgc_label].append(Advice(
-        label=f"Lab Bonus: My 1st Chemistry Set: {session_data.account.labBonuses['My 1st Chemistry Set']['Value']}x"
-              f"<br>(Already applied to Vial above)",
-        picture_class="my-1st-chemistry-set",
-        progression=int(session_data.account.labBonuses['My 1st Chemistry Set']['Enabled']),
-        goal=1
-    ))
-    speed_Advice[mgc_label].append(Advice(
-        label=f"{{{{ Rift|#rift }}}} Bonus: Vial Mastery: {session_data.account.vialMasteryMulti:.2f}x"
-              f"<br>(Already applied to Vial above)",
-        picture_class="vial-mastery",
-        progression=f"{1 if session_data.account.rift['VialMastery'] else 0}",
-        goal=1
     ))
 
     # Multi Group D

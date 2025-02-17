@@ -31,9 +31,7 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
 
     #Account-Wide
     account_sum = 0.0
-    vialBonus = session_data.account.alchemy_vials['Snow Slurry (Snow Ball)']['Value'] * session_data.account.vialMasteryMulti
-    if session_data.account.labBonuses["My 1st Chemistry Set"]["Enabled"]:
-        vialBonus *= 2
+    vialBonus = session_data.account.alchemy_vials['Snow Slurry (Snow Ball)']['Value']
     account_sum += vialBonus
     account_sum += session_data.account.alchemy_bubbles['Sample It']['BaseValue']
     account_sum += 0.5 * session_data.account.saltlick.get('Printer Sample Size', 0)
@@ -61,24 +59,10 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     psrAdvices[accountSubgroup] = []
     
     psrAdvices[accountSubgroup].append(Advice(
-        label=f"Snow Slurry vial: +{vialBonus:.2f}/30%",
+        label=f"Snow Slurry {{{{ Vial|#vials }}}}: +{vialBonus:.2f}/30%",
         picture_class='snow-slurry',
         progression=session_data.account.alchemy_vials['Snow Slurry (Snow Ball)']['Level'],
         goal=13
-    ))
-    psrAdvices[accountSubgroup].append(Advice(
-        label=f"Lab Bonus: My First Chemistry Set: "
-              f"{'2/2x<br>(Already applied to Vial above)' if session_data.account.labBonuses['My 1st Chemistry Set']['Enabled'] else '1/2x'}",
-        picture_class='my-1st-chemistry-set',
-        progression=int(session_data.account.labBonuses['My 1st Chemistry Set']['Enabled']),
-        goal=1
-    ))
-    psrAdvices[accountSubgroup].append(Advice(
-        label=f"{{{{ Rift|#rift }}}} Bonus: Vial Mastery: {session_data.account.vialMasteryMulti:.2f}x"
-              f"<br>(Already applied to Vial above)",
-        picture_class="vial-mastery",
-        progression=f"{1 if session_data.account.rift['VialMastery'] else 0}",
-        goal=1
     ))
     psrAdvices[accountSubgroup].append(Advice(
         label=f"Sample It bubble: "

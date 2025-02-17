@@ -840,7 +840,7 @@ def _parse_w2_vials(account):
             if int(vialKey) < max_IndexOfVials:
                 account.alchemy_vials[getReadableVialNames(vialKey)] = {
                     'Level': int(vialValue),
-                    'Value': lavaFunc(
+                    'BaseValue': lavaFunc(
                         vialsDict[int(vialKey)]['funcType'],
                         int(vialValue),
                         vialsDict[int(vialKey)]['x1'],
@@ -852,7 +852,7 @@ def _parse_w2_vials(account):
             logger.warning(f"Alchemy Vial Parse error at vialKey {vialKey}: {e}. Defaulting to level 0")
             account.alchemy_vials[getReadableVialNames(vialKey)] = {
                 "Level": 0,
-                "Value": 0,
+                "BaseValue": 0,
                 'Material': vialsDict.get(int(vialKey), {}).get('Material', '')
             }
 

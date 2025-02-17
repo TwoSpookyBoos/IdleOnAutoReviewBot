@@ -242,11 +242,7 @@ def getCheckoutSpeedAdviceGroup(anyBookAdvice) -> AdviceGroup:
     ))
 
     # Vial
-    vialBonus = (
-        session_data.account.alchemy_vials['Chonker Chug (Dune Soul)']['Value']
-        * session_data.account.vialMasteryMulti
-        * session_data.account.labBonuses["My 1st Chemistry Set"]["Value"]
-    )
+    vialBonus = session_data.account.alchemy_vials['Chonker Chug (Dune Soul)']['Value']
     checkoutSpeedAdvices.append(Advice(
         label=f"Chonker Chug vial: +{vialBonus:.1f}%",
         picture_class='chonker-chug',

@@ -4561,11 +4561,12 @@ event_points_shop_dict = {
 }  #Found near end of NinjaInfo function in the source code
 
 ###WORLD 2 CONSTS###
-max_IndexOfVials = 75  # Last verified as of v2.10
-max_VialLevel = 13  # Last verified as of 2.12
+max_IndexOfVials = 75  # Last verified as of v2.29
+max_VialLevel = 13  # Last verified as of 2.29
+maxable_vials = vials_progressionTiers[-1][2]
 vial_costs = [1, 100, 1000, 2500, 10e3, 50e3, 100e3, 500e3, 1e6, 5e6, 25e6, 100e6, 1e9]
-max_IndexOfImplementedBubbles = 29  # Last verified as of v2.25
-max_IndexOfSigils = 3  # Last verified as of v2.25
+max_IndexOfImplementedBubbles = 29  # Last verified as of v2.29
+max_IndexOfSigils = 3  # Last verified as of v2.29
 min_NBLB = 2
 max_NBLB = 1500
 nblb_max_index = 24
