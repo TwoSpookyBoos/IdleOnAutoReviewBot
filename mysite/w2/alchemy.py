@@ -248,11 +248,11 @@ def getAtRiskBubblesAdviceGroups() -> list[AdviceGroup]:
                     ))
 
         if todays_lowest >= low_skip:
-            basic_prestring = f"Informational \"Easy\" to print materials in W1-W3 bubbles"
-            lithium_prestring = f"Informational- Slower to print materials in W4-W5 bubbles"
+            basic_prestring = f"Informational \"Easy\" to obtain materials in W1-W3 bubbles"
+            lithium_prestring = f"Informational- Slower to obtain materials in W4-W5 bubbles"
         else:
-            basic_prestring = f"Informational- \"Easy\" to print materials in your {2 * nblbCount} lowest leveled W1-W3 bubbles"
-            lithium_prestring = f"Informational- Slower to print materials in your {nblbCount} lowest leveled W4-W5 bubbles"
+            basic_prestring = f"Informational- \"Easy\" to obtain materials in your {2 * nblbCount} lowest leveled W1-W3 bubbles"
+            lithium_prestring = f"Informational- Slower to obtain materials in your {nblbCount} lowest leveled W4-W5 bubbles"
 
     atriskBasic_AG = AdviceGroup(
         tier="",

@@ -4882,6 +4882,7 @@ atrisk_advancedBubbles = [
     "Warriors Rule",
     "Big Meaty Claws",
     "Call Me Bob",
+    "Orange Bargain",
     "Multorange",
     "Bite But Not Chew",
     "Archer Or Bust",
@@ -4900,11 +4901,13 @@ atrisk_advancedBubbles = [
 ]
 atrisk_lithiumBubbles = [
     "Penny Of Strength",
+    'Slabi Orefish',
     "Fly In Mind",
     'Afk Expexp',
     'Slabo Critterbug',
     'Nickel Of Wisdom',
     'Severapurple',
+    'Tree Sleeper',
     'Hyperswift',
     'Matrix Evolved',
     'Slabe Logsoul',
