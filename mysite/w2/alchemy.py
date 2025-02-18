@@ -33,11 +33,8 @@ def getVialsProgressionTiersAdviceGroup():
     unlockedVials = sum(1 for vial in alchemyVialsDict.values() if vial['Level'] > 0)
 
     #Assess Tiers
-    if session_data.account.rift['VialMastery']:
-        if len(maxedVialsList) < 27:
-            advice_TrailingMaxedVials = " 27 is the magic number needed to get the Snake Skin vial to 100% chance to double deposited statues :D (This also requires Snake Skin itself be maxed lol)"
-        else:
-            advice_TrailingMaxedVials = " Thanks to the Vial Mastery bonus in W4's Rift, every maxed vial increases the bonus of EVERY vial you have unlocked!"
+    if session_data.account.alchemy_vials['Skinny 0 Cal (Snake Skin)']['Value'] < 100:
+        advice_TrailingMaxedVials = " Maxed Snake Skin vial and 3.08x total vial effect will guarantee you double all deposited statues :D"
     else:
         advice_TrailingMaxedVials = ""
 
