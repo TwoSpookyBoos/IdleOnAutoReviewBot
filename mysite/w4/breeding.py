@@ -9,7 +9,7 @@ from consts import numberOfArtifacts, numberOfArtifactTiers, breeding_progressio
 
 logger = get_logger(__name__)
 
-def getShinyExclusions():
+def getShinyExclusions(breedingDict, progressionTiersBreeding):
     shinyExclusionsDict = {
         "Infinite Star Signs": True,
         "Lower Minimum Travel Time for Sailing": False,
@@ -18,8 +18,13 @@ def getShinyExclusions():
         "Faster Shiny Pet Lv Up Rate": False
         }
 
-    # if Infinite Star Signs are unlocked, set False (as in False, the recommendation should NOT be excluded), otherwise default True
-    if session_data.account.rift['InfiniteStars']:
+    # If Infinite Star Signs are unlocked and the player has less than the highest number required in the tiers,
+    # Set False (as in False, the recommendation should NOT be excluded), otherwise keep the default True
+    highest_iss_in_tiers = max([requirements.get('Shinies', {}).get('Infinite Star Signs', [0])[0] for requirements in progressionTiersBreeding.values()])
+    if (
+        session_data.account.rift['InfiniteStars']
+        and sum([shiny_pet[1] for shiny_pet in breedingDict['Grouped Bonus']['Infinite Star Signs']]) < highest_iss_in_tiers
+    ):
         shinyExclusionsDict["Infinite Star Signs"] = False
 
     # if all artifacts are Eldritch tier, append True (as in True, the recommendation SHOULD be excluded), otherwise False
@@ -402,39 +407,28 @@ def getBreedingProgressionTiersAdviceGroups(breedingDict):
     }
 
     shiny_bonus_tier_list = {
-        "S": ['Bonuses from All Meals', 'Base Efficiency for All Skills', 'Drop Rate'],
-        "A": ['Base Critter Per Trap', 'Faster Refinery Speed', 'Multikill Per Tier', 'Infinite Star Signs'],
+        "S": ['Bonuses from All Meals', 'Drop Rate', 'Base Efficiency for All Skills'],
+        "A": ['Base Critter Per Trap', 'Multikill Per Tier', 'Faster Refinery Speed', 'Infinite Star Signs'],
         "B": ['Summoning EXP', 'Farming EXP', 'Faster Shiny Pet Lv Up Rate'],
-        "C": ['Lower Minimum Travel Time for Sailing', 'Higher Artifact Find Chance', 'Skill EXP', 'Base WIS', 'Base STR', 'Base AGI', 'Base LUK'],
-        "D": ['Sail Captain EXP Gain', 'Total Damage', 'Tab 4 Talent Pts', 'Tab 3 Talent Pts', 'Tab 2 Talent Pts', 'Tab 1 Talent Pts'],
-        "F": ['Class EXP', 'Line Width in Lab']
+        "C": ['Lower Minimum Travel Time for Sailing', 'Sail Captain EXP Gain', 'Higher Artifact Find Chance', 'Skill EXP'],
+        "D": ['Base WIS', 'Base STR', 'Base AGI', 'Base LUK'],
+        "F": ['Total Damage', 'Tab 4 Talent Pts', 'Tab 3 Talent Pts', 'Tab 2 Talent Pts', 'Tab 1 Talent Pts', 'Class EXP', 'Line Width in Lab']
     }
     shinyTiersDisplayed = []
-    shinyExclusionsDict = getShinyExclusions()
+    shinyExclusionsDict = getShinyExclusions(breedingDict, progressionTiersBreeding)
     if shinyExclusionsDict:
-        if shinyExclusionsDict["Lower Minimum Travel Time for Sailing"] == True:
-            for tierName, tierList in shiny_bonus_tier_list.items():
-                if "Lower Minimum Travel Time for Sailing" in tierList:
-                    shiny_bonus_tier_list[tierName].remove("Lower Minimum Travel Time for Sailing")
-            shiny_bonus_tier_list["F"].append("Lower Minimum Travel Time for Sailing")
-
-        if shinyExclusionsDict["Higher Artifact Find Chance"] == True:
-            for tierName, tierList in shiny_bonus_tier_list.items():
-                if "Higher Artifact Find Chance" in tierList:
-                    shiny_bonus_tier_list[tierName].remove("Higher Artifact Find Chance")
-            shiny_bonus_tier_list["F"].append("Higher Artifact Find Chance")
-
-        if shinyExclusionsDict["Base Critter Per Trap"] == True:
-            for tierName, tierList in shiny_bonus_tier_list.items():
-                if "Base Critter Per Trap" in tierList:
-                    shiny_bonus_tier_list[tierName].remove('Base Critter Per Trap')
-            shiny_bonus_tier_list["B"].append('Base Critter Per Trap')
-
-        if shinyExclusionsDict["Faster Shiny Pet Lv Up Rate"] == True:
-            for tierName, tierList in shiny_bonus_tier_list.items():
-                if "Faster Shiny Pet Lv Up Rate" in tierList:
-                    shiny_bonus_tier_list[tierName].remove('Faster Shiny Pet Lv Up Rate')
-            shiny_bonus_tier_list["C"].append('Faster Shiny Pet Lv Up Rate')
+        demotions = {
+            'Infinite Star Signs': 'D',
+            'Higher Artifact Find Chance': 'D',
+            'Base Critter Per Trap': 'B',
+            'Faster Shiny Pet Lv Up Rate': 'D',
+        }
+        for shiny_bonus, new_tier in demotions.items():
+            if shinyExclusionsDict.get(shiny_bonus, False) == True:
+                for tierName, tierList in shiny_bonus_tier_list.items():
+                    if shiny_bonus in tierList:
+                        shiny_bonus_tier_list[tierName].remove(shiny_bonus)
+                shiny_bonus_tier_list[new_tier].append(shiny_bonus)
 
     #Assess Tiers
     for tier in progressionTiersBreeding:
