@@ -391,7 +391,7 @@ def getProgressionTiersAdviceGroup(trappingLevelsList: list[int]):
             elif trap_details[6] >= 3600:
                 time = f"{trap_details[6] / 3600:.0f} hour"
             else:
-                time = f"{trap_details[6] / 60:0.f} minutes"
+                time = f"{trap_details[6] / 60:.0f} minutes"
             trap_name = trapset_images.get(trap_details[5], '').replace('-', ' ').title()
             trapping_AdviceDict["NonMetaTraps"][subgroupName].append(Advice(
                 label=f"Trap {trap_index+1}: {time} {trap_name}"

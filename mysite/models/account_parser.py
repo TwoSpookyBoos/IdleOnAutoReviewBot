@@ -50,7 +50,7 @@ from consts import (
     caverns_villagers, caverns_conjuror_majiks, caverns_engineer_schematics, caverns_engineer_schematics_unlock_order, caverns_cavern_names,
     caverns_measurer_measurements, getCavernResourceImage, max_buckets, max_sediments, sediment_bars, getVillagerEXPRequired,
     monument_bonuses, bell_clean_improvements, bell_ring_bonuses, getBellExpRequired, getGrottoKills, lamp_wishes, key_cards, getWishCost,
-    schematics_unlocking_harp_chords, harp_chord_effects, max_harp_notes, lamp_world_wish_values
+    schematics_unlocking_harp_chords, harp_chord_effects, max_harp_notes, lamp_world_wish_values, vault_section_indexes
 )
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
 from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert
@@ -516,12 +516,16 @@ def _parse_general_upgrade_vault(account):
         if clean_name.split('!')[0] in vault_stack_types:
             stack_type = clean_name.split('!')[0]
             clean_name += f" ({account.vault.get(f'{stack_type} Stacks', '#')} stacks)"
+        for list_index, vault_section_index in enumerate(vault_section_indexes):
+            if upgrade_index <= vault_section_index:
+                vault_section = list_index+1
+                break
         try:
             account.vault['Upgrades'][clean_name] = {
                 'Level': int(raw_vault[upgrade_index]),
                 'Index': upgrade_index,
                 'Image': f"vault-upgrade-{upgrade_index}",
-                'Cost Base': int(upgrade_values_list[1]),
+                'Cost Base': safer_convert(upgrade_values_list[1], 0),
                 'Cost Increment': float(upgrade_values_list[2]),
                 # 'Placeholder3': upgrade_values_list[3],
                 'Max Level': int(upgrade_values_list[4]),
@@ -533,14 +537,16 @@ def _parse_general_upgrade_vault(account):
                     f"{upgrade_values_list[9].replace('_', ' ')}"
                     f"<br>{upgrade_values_list[10].replace('_', ' ') if len(upgrade_values_list) >= 10 else ''}"
                 ),
-                'Scaling Value': upgrade_index not in vault_dont_scale
+                'Scaling Value': upgrade_index not in vault_dont_scale,
+                'Vault Section': vault_section
             }
         except Exception as e:
+            # logger.exception(f"Vault parse error on index {upgrade_index}")
             account.vault['Upgrades'][clean_name] = {
                 'Level': 0,
                 'Index': upgrade_index,
                 'Image': f"vault-upgrade-{upgrade_index}",
-                'Cost Base': int(upgrade_values_list[1]),
+                'Cost Base': safer_convert(upgrade_values_list[1], 0),
                 'Cost Increment': float(upgrade_values_list[2]),
                 # 'Placeholder3': upgrade_values_list[3],
                 'Max Level': int(upgrade_values_list[4]),
@@ -552,7 +558,8 @@ def _parse_general_upgrade_vault(account):
                     f"{upgrade_values_list[9].replace('_', ' ')}"
                     f"<br>{upgrade_values_list[10].replace('_', ' ') if len(upgrade_values_list) >= 10 else ''}"
                 ),
-                'Scaling Value': upgrade_index not in vault_dont_scale
+                'Scaling Value': upgrade_index not in vault_dont_scale,
+                'Vault Section': vault_section
             }
     #logger.debug(account.vault)
 
@@ -833,7 +840,7 @@ def _parse_w2_vials(account):
             if int(vialKey) < max_IndexOfVials:
                 account.alchemy_vials[getReadableVialNames(vialKey)] = {
                     'Level': int(vialValue),
-                    'Value': lavaFunc(
+                    'BaseValue': lavaFunc(
                         vialsDict[int(vialKey)]['funcType'],
                         int(vialValue),
                         vialsDict[int(vialKey)]['x1'],
@@ -845,7 +852,7 @@ def _parse_w2_vials(account):
             logger.warning(f"Alchemy Vial Parse error at vialKey {vialKey}: {e}. Defaulting to level 0")
             account.alchemy_vials[getReadableVialNames(vialKey)] = {
                 "Level": 0,
-                "Value": 0,
+                "BaseValue": 0,
                 'Material': vialsDict.get(int(vialKey), {}).get('Material', '')
             }
 
@@ -865,28 +872,28 @@ def _parse_w2_cauldrons(account):
     }
     try:
         account.alchemy_cauldrons["OrangeBoosts"] = [
-            raw_cauldron_upgrades[0],
-            raw_cauldron_upgrades[1],
-            raw_cauldron_upgrades[2],
-            raw_cauldron_upgrades[3],
+            safer_convert(raw_cauldron_upgrades[0], 0),
+            safer_convert(raw_cauldron_upgrades[1], 0),
+            safer_convert(raw_cauldron_upgrades[2], 0),
+            safer_convert(raw_cauldron_upgrades[3], 0),
         ]
         account.alchemy_cauldrons["GreenBoosts"] = [
-            raw_cauldron_upgrades[4],
-            raw_cauldron_upgrades[5],
-            raw_cauldron_upgrades[6],
-            raw_cauldron_upgrades[7],
+            safer_convert(raw_cauldron_upgrades[4], 0),
+            safer_convert(raw_cauldron_upgrades[5], 0),
+            safer_convert(raw_cauldron_upgrades[6], 0),
+            safer_convert(raw_cauldron_upgrades[7], 0),
         ]
         account.alchemy_cauldrons["PurpleBoosts"] = [
-            raw_cauldron_upgrades[8],
-            raw_cauldron_upgrades[9],
-            raw_cauldron_upgrades[10],
-            raw_cauldron_upgrades[11],
+            safer_convert(raw_cauldron_upgrades[8], 0),
+            safer_convert(raw_cauldron_upgrades[9], 0),
+            safer_convert(raw_cauldron_upgrades[10], 0),
+            safer_convert(raw_cauldron_upgrades[11], 0),
         ]
         account.alchemy_cauldrons["PurpleBoosts"] = [
-            raw_cauldron_upgrades[12],
-            raw_cauldron_upgrades[13],
-            raw_cauldron_upgrades[14],
-            raw_cauldron_upgrades[15],
+            safer_convert(raw_cauldron_upgrades[12], 0),
+            safer_convert(raw_cauldron_upgrades[13], 0),
+            safer_convert(raw_cauldron_upgrades[14], 0),
+            safer_convert(raw_cauldron_upgrades[15], 0),
         ]
     except Exception as e:
         logger.warning(f"Alchemy bubble cauldron Boosts Parse error: {e}. Defaulting to 0s")
@@ -895,10 +902,10 @@ def _parse_w2_cauldrons(account):
         account.alchemy_cauldrons["PurpleBoosts"]: [0, 0, 0, 0]
         account.alchemy_cauldrons["YellowBoosts"]: [0, 0, 0, 0]
     try:
-        account.alchemy_cauldrons["WaterDroplets"] = [raw_cauldron_upgrades[18], raw_cauldron_upgrades[19]]
-        account.alchemy_cauldrons["LiquidNitrogen"] = [raw_cauldron_upgrades[22], raw_cauldron_upgrades[23]]
-        account.alchemy_cauldrons["TrenchSeawater"] = [raw_cauldron_upgrades[26], raw_cauldron_upgrades[27]]
-        account.alchemy_cauldrons["ToxicMercury"] = [raw_cauldron_upgrades[30], raw_cauldron_upgrades[31]]
+        account.alchemy_cauldrons["WaterDroplets"] = [safer_convert(raw_cauldron_upgrades[18], 0), safer_convert(raw_cauldron_upgrades[19], 0)]
+        account.alchemy_cauldrons["LiquidNitrogen"] = [safer_convert(raw_cauldron_upgrades[22], 0), safer_convert(raw_cauldron_upgrades[23], 0)]
+        account.alchemy_cauldrons["TrenchSeawater"] = [safer_convert(raw_cauldron_upgrades[26], 0), safer_convert(raw_cauldron_upgrades[27], 0)]
+        account.alchemy_cauldrons["ToxicMercury"] = [safer_convert(raw_cauldron_upgrades[30], 0), safer_convert(raw_cauldron_upgrades[31], 0)]
     except Exception as e:
         logger.warning(f"Alchemy Water Cauldron decants Parse error: {e}. Defaulting to 0s")
         account.alchemy_cauldrons["WaterDroplets"] = [0, 0]

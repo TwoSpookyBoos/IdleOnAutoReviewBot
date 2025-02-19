@@ -356,11 +356,16 @@ def _calculate_w1(account):
     _calculate_w1_statues(account)
 
 def _calculate_w1_upgrade_vault(account):
-    vault_multi = ValueToMulti(
-        account.vault['Upgrades']['Vault Mastery']['Level']
-        * account.vault['Upgrades']['Vault Mastery']['Value Per Level']
-    )
-
+    vault_multi = [
+        ValueToMulti(
+            account.vault['Upgrades']['Vault Mastery']['Level']
+            * account.vault['Upgrades']['Vault Mastery']['Value Per Level']
+        ),
+        ValueToMulti(
+            account.vault['Upgrades']['Vault Mastery II']['Level']
+            * account.vault['Upgrades']['Vault Mastery II']['Value Per Level']
+        )
+    ]
     # logger.debug(f"{vault_multi = }")
     for upgrade_name, upgrade_details in account.vault['Upgrades'].items():
         # Update description with total value, stack counts, and scaling info
@@ -368,7 +373,7 @@ def _calculate_w1_upgrade_vault(account):
             account.vault['Upgrades'][upgrade_name]['Total Value'] = (
                 account.vault['Upgrades'][upgrade_name]['Level']
                 * account.vault['Upgrades'][upgrade_name]['Value Per Level']
-                * (vault_multi if upgrade_details['Scaling Value'] else 1)
+                * (vault_multi[upgrade_details['Vault Section']-1] if upgrade_details['Scaling Value'] else 1)
             )
             account.vault['Upgrades'][upgrade_name]['Description'] = account.vault['Upgrades'][upgrade_name]['Description'].replace(
                 '{', f"{account.vault['Upgrades'][upgrade_name]['Total Value']}"
@@ -377,7 +382,7 @@ def _calculate_w1_upgrade_vault(account):
             account.vault['Upgrades'][upgrade_name]['Total Value'] = ValueToMulti(
                 account.vault['Upgrades'][upgrade_name]['Level']
                 * account.vault['Upgrades'][upgrade_name]['Value Per Level']
-                * (vault_multi if upgrade_details['Scaling Value'] else 1)
+                * (vault_multi[upgrade_details['Vault Section']-1] if upgrade_details['Scaling Value'] else 1)
             )
             account.vault['Upgrades'][upgrade_name]['Description'] = account.vault['Upgrades'][upgrade_name]['Description'].replace(
                 '}', f"{account.vault['Upgrades'][upgrade_name]['Total Value']:.2f}"
@@ -396,8 +401,10 @@ def _calculate_w1_upgrade_vault(account):
                     'Target:&', f"Target: {next_stack_target}"
                 )
         account.vault['Upgrades'][upgrade_name]['Description'] += (
-            f"<br>({account.vault['Upgrades'][upgrade_name]['Value Per Level'] * (vault_multi if upgrade_details['Scaling Value'] else 1):.2f} per level"
-            f"{' after Vault Mastery)' if upgrade_details['Scaling Value'] else ': Not scaled by Vault Mastery)'}"
+            f"<br>({account.vault['Upgrades'][upgrade_name]['Value Per Level'] * (vault_multi[upgrade_details['Vault Section']-1] if upgrade_details['Scaling Value'] else 1):.2f} per level"
+            f"{' after Vault Mastery ' if upgrade_details['Scaling Value'] else ': Not scaled by Vault Mastery '}"
+            f"{upgrade_details['Vault Section']}"
+            f")"
         )
 
 def _calculate_w1_starsigns(account):
@@ -456,13 +463,28 @@ def _calculate_w1_statues(account):
         account.statues[statueName]["Value"] *= voodooStatuficationMulti
 
 def _calculate_w2(account):
-    account.vialMasteryMulti = 1 + (account.maxed_vials * .02) if account.rift['VialMastery'] else 1
+    _calculate_w2_vials(account)
     _calculate_w2_sigils(account)
     _calculate_w2_cauldrons(account)
     _calculate_w2_postOffice(account)
     _calculate_w2_ballot(account)
     _calculate_w2_islands_trash(account)
     _calculate_w2_killroy(account)
+
+def _calculate_w2_vials(account):
+    account.alchemy_vials_calcs = {
+        'mga': (
+            account.vault['Upgrades']['Vial Overtune']['Total Value']
+            + ((account.maxed_vials * .02) if account.rift['VialMastery'] else 0)
+        ),
+        'mgb': account.labBonuses['My 1st Chemistry Set']['Value']
+    }
+    account.alchemy_vials_calcs['Total Multi'] = account.alchemy_vials_calcs['mga'] * account.alchemy_vials_calcs['mgb']
+    for vial_name, vial_details in account.alchemy_vials.items():
+        try:
+            account.alchemy_vials[vial_name]['Value'] = account.alchemy_vials_calcs['Total Multi'] * account.alchemy_vials[vial_name]['BaseValue']
+        except:
+            logger.warning(f"Could not increase {vial_name} value")
 
 def _calculate_w2_cauldrons(account):
     perCauldronBubblesUnlocked = [
@@ -844,25 +866,35 @@ def _calculate_caverns_monuments(account):
             )
             try:
                 account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Value'] = ValueToMulti(ninth_value)
+                account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['BaseValue'] = ninth_value
                 account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'] = (
                     account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'].replace(
                         '}', f"{account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Value']:,.3f}")
                 )
             except:
                 account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Value'] = 1
+                account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['BaseValue'] = 0
                 account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'] = (
                     account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'].replace('}', '1')
                 )
             for bonus_index, bonus_details in monument_bonuses[monument_name].items():
                 if bonus_index % 10 != 9:
                     if bonus_details['ScalingValue'] < 30:
-                        result = (
+                        base_result = (
                             account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Level']
                             * account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['ScalingValue']
-                            * ValueToMulti(cosmos_value + ninth_value)
                         )
+                        final_result = base_result * ValueToMulti(cosmos_value + ninth_value)
                     else:
-                        result = (
+                        base_result = (
+                            0.1 * ceil(
+                                (account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Level']
+                                 / (250 + account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Level']))
+                                * 10
+                                * account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['ScalingValue']
+                            )
+                        )
+                        final_result = (
                             0.1 * ceil(
                                 (account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Level']
                                  / (250 + account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Level']))
@@ -873,25 +905,29 @@ def _calculate_caverns_monuments(account):
                         )
                     if bonus_details['ValueType'] == 'Percent':
                         try:
-                            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = result
+                            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = final_result
+                            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['BaseValue'] = base_result
                             account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'] = (
                                 account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'].replace(
                                     '{', f"{account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value']:,.2f}")
                             )
                         except:
                             account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = 0
+                            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['BaseValue'] = 0
                             account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'] = (
                                 account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'].replace('{', '0')
                             )
                     elif bonus_details['ValueType'] == 'Multi':
                         try:
-                            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = ValueToMulti(result)
+                            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = ValueToMulti(final_result)
+                            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['BaseValue'] = base_result
                             account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'] = (
                                 account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'].replace(
                                     '}', f"{account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value']:,.3f}")
                             )
                         except:
                             account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = 1
+                            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['BaseValue'] = 0
                             account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'] = (
                                 account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'].replace('}', '1')
                             )
@@ -1134,8 +1170,7 @@ def _calculate_w6_farming_crop_evo(account):
             except:
                 continue
     account.farming['Evo']['Cropius Final Value'] = account.farming['Evo']['Maps Opened'] * account.alchemy_bubbles['Cropius Mapper']['BaseValue']
-    account.farming['Evo']['Vial Value'] = account.alchemy_vials['Flavorgil (Caulifish)']['Value'] * account.vialMasteryMulti
-    account.farming['Evo']['Vial Value'] *= 2 if account.labBonuses['My 1st Chemistry Set']['Enabled'] else 1
+    account.farming['Evo']['Vial Value'] = account.alchemy_vials['Flavorgil (Caulifish)']['Value']
     account.farming['Evo']['Alch Multi'] = (
         ValueToMulti(account.farming['Evo']['Cropius Final Value'])
         # * ValueToMulti(session_data.account.alchemy_bubbles['Crop Chapter']['BaseValue'])
@@ -1233,8 +1268,7 @@ def _calculate_w6_farming_crop_speed(account):
                 battle_reward_total += account.summoning["BattleDetails"][color][battle]['RewardBaseValue']
     account.farming['Speed']['Summon Multi'] = ValueToMulti(account.summoning['WinnerBonusesMultiFull'] * battle_reward_total)
     # Vial and Day Market
-    account.farming['Speed']['Vial Value'] = account.alchemy_vials['Ricecakorade (Rice Cake)']['Value'] * account.vialMasteryMulti
-    account.farming['Speed']['Vial Value'] *= 2 if account.labBonuses['My 1st Chemistry Set']['Enabled'] else 1
+    account.farming['Speed']['Vial Value'] = account.alchemy_vials['Ricecakorade (Rice Cake)']['Value']
     account.farming['Speed']['VM Multi'] = ValueToMulti(account.farming['Speed']['Vial Value'] + account.farming['MarketUpgrades']['Nutritious Soil']['Value'])
     # Night Market
     account.farming['Speed']['NM Multi'] = account.farming['MarketUpgrades']['Speed Gmo']['StackedValue']

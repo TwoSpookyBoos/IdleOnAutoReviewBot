@@ -388,6 +388,7 @@ def getDeathNoteAdviceSection() -> AdviceSection:
         groups=deathnote_AdviceGroupDict.values()
     )
     if len(session_data.account.bbCharactersIndexList) > 1:
-        deathnote_AdviceSection.note = "Important! As of February 2024, Super CHOWs only give benefit if completed on your 2nd Blood Berserker regardless of the platform you play on."
+        deathnote_AdviceSection.note = ("Important! Since you already have 2+ Blood Berserkers, you must complete Super CHOWs and WOWs"
+                                        " with your 2nd regardless of the platform you play on.")
 
     return deathnote_AdviceSection

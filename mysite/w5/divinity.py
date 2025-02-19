@@ -59,7 +59,8 @@ def getOfferingsAdviceGroup():
         tier="",
         pre_string="Offerings Information",
         advices=offerings_AdviceDict,
-        informational=True
+        informational=True,
+        completed=session_data.account.divinity['GodsUnlocked'] >= 10
     )
     return offerings_AdviceGroup
 
@@ -96,6 +97,7 @@ def getStylesInfoAdviceGroup(highestDivinitySkillLevel: int) -> AdviceGroup:
             styles_AdviceDict["Highest Points per hour"].append(Advice(
                 label=f"{divinity_stylesDict[divStyle].get('Points', 0)}/hr: {getStyleNameFromIndex(divStyle)}",
                 picture_class=getStyleNameFromIndex(divStyle),
+                completed=True
             ))
 
     # EXP Styles Info
@@ -104,6 +106,7 @@ def getStylesInfoAdviceGroup(highestDivinitySkillLevel: int) -> AdviceGroup:
             styles_AdviceDict["Highest EXP per hour"].append(Advice(
                 label=f"{divinity_stylesDict[divStyle].get('Exp', 0)}/hr: {getStyleNameFromIndex(divStyle)} {divinity_stylesDict[divStyle].get('Notes', '')}",
                 picture_class=getStyleNameFromIndex(divStyle),
+                completed=True
             ))
 
     styles_AdviceGroup = AdviceGroup(
@@ -217,15 +220,18 @@ def getArctisAdviceGroup(lowestDivinitySkillLevel: int, highestDivinitySkillLeve
     # Populate the Current Values list with Arctis, Div levels, and Big P bubble so players know their starting points
     arctis_AdviceDict["Current Values"].append(Advice(
         label=f"Arctis minor link ranges: +{currentLowestArctisValue} - +{currentHighestArctisValue}",
-        picture_class="arctis"
+        picture_class="arctis",
+        completed=True
     ))
     arctis_AdviceDict["Current Values"].append(Advice(
         label=f"Divinity level ranges: {lowestDivinitySkillLevel} - {highestDivinitySkillLevel}",
-        picture_class="divinity"
+        picture_class="divinity",
+        completed=True
     ))
     arctis_AdviceDict["Current Values"].append(Advice(
         label=f"Big P bubble level: {current_big_p}",
-        picture_class="big-p"
+        picture_class="big-p",
+        completed=True
     ))
 
     for arctis_breakpoint, requirementsDict in divinity_arctisBreakpoints.items():
@@ -264,8 +270,7 @@ def getArctisAdviceGroup(lowestDivinitySkillLevel: int, highestDivinitySkillLeve
         pre_string=f"Upcoming Arctis minor link bonus breakpoints"
                    f" (+# Talent LV for all talents above Lv 1)",
         advices=arctis_AdviceDict,
-        informational=True,
-        completed=len(arctis_AdviceDict) == 1  #When Current Values is the only subgroup
+        informational=True
     )
     arctis_AdviceGroup.remove_empty_subgroups()
 

@@ -199,36 +199,19 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     costReduction_Advices = {"Vials": [], "Uncapped": []}
 
     costReduction_Advices["Vials"].append(Advice(
-        label=f"{{{{ Vial|#vials }}}}: Blue Flav (Platinum Ore)",
+        label=f"{{{{ Vial|#vials }}}}: Blue Flav (Platinum Ore): {session_data.account.alchemy_vials['Blue Flav (Platinum Ore)']['Value']:.2f}%",
         picture_class="platinum-ore",
         progression=session_data.account.alchemy_vials['Blue Flav (Platinum Ore)']['Level'],
         goal=max_VialLevel
     ))
     costReduction_Advices["Vials"].append(Advice(
-        label=f"{{{{ Vial|#vials }}}}: Venison Malt (Mongo Worm Slices)",
+        label=f"{{{{ Vial|#vials }}}}: Venison Malt (Mongo Worm Slices): {session_data.account.alchemy_vials['Venison Malt (Mongo Worm Slices)']['Value']:.2f}%",
         picture_class="mongo-worm-slices",
         progression=session_data.account.alchemy_vials['Venison Malt (Mongo Worm Slices)']['Level'],
         goal=max_VialLevel
     ))
-    costReduction_Advices["Vials"].append(Advice(
-        label="Lab: My 1st Chemistry Set",
-        picture_class="my-1st-chemistry-set",
-        progression=int(session_data.account.labBonuses['My 1st Chemistry Set']['Enabled']),
-        goal=1
-    ))
 
-    blueFavReduction = session_data.account.alchemy_vials['Blue Flav (Platinum Ore)']['Value']
-    venisonMaltReduction = session_data.account.alchemy_vials['Venison Malt (Mongo Worm Slices)']['Value']
-    totalVialReduction = blueFavReduction + venisonMaltReduction
-    totalVialReduction *= session_data.account.vialMasteryMulti
-    if session_data.account.labBonuses['My 1st Chemistry Set']['Enabled']:
-        totalVialReduction *= 2
-    costReduction_Advices["Vials"].append(Advice(
-        label=f"{{{{ Rift|#rift }}}}: Vial Mastery: {session_data.account.vialMasteryMulti:.2f}x",
-        picture_class="vial-mastery",
-        progression=f"{1 if session_data.account.rift['VialMastery'] else 0}",
-        goal=1
-    ))
+    totalVialReduction = session_data.account.alchemy_vials['Blue Flav (Platinum Ore)']['Value'] + session_data.account.alchemy_vials['Venison Malt (Mongo Worm Slices)']['Value']
     costReduction_Advices["Vials"].append(Advice(
         label="Total Vial reduction (90% hardcap)",
         picture_class="vials",

@@ -371,20 +371,7 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
     ))
 #Vial
     evo_advices[alch].append(Advice(
-        label="Lab: My 1st Chemistry Set: "
-              f"{max(1, 2 * session_data.account.labBonuses['My 1st Chemistry Set']['Enabled'])}/2x",
-        picture_class="my-1st-chemistry-set",
-        progression=int(session_data.account.labBonuses['My 1st Chemistry Set']['Enabled']),
-        goal=1
-    ))
-    evo_advices[alch].append(Advice(
-        label=f"{{{{ Rift|#rift }}}}: Vial Mastery: {session_data.account.vialMasteryMulti:.2f}x",
-        picture_class="vial-mastery",
-        progression=f"{1 if session_data.account.rift['VialMastery'] else 0}",
-        goal=1
-    ))
-    evo_advices[alch].append(Advice(
-        label=f"{{{{ Vial|#vials }}}}: Flavorgil (Caulifish): {session_data.account.alchemy_vials['Flavorgil (Caulifish)']['Value']:.2f}%"
+        label=f"{{{{ Vial|#vials }}}}: Flavorgil (Caulifish): {session_data.account.alchemy_vials['Flavorgil (Caulifish)']['BaseValue']:.2f}%"
               f"<br>Total Value after multis: {farming['Evo']['Vial Value']:.2f}%",
         picture_class="caulifish",
         progression=session_data.account.alchemy_vials['Flavorgil (Caulifish)']['Level'],
@@ -706,20 +693,7 @@ def getSpeedAdviceGroup(farming) -> AdviceGroup:
 #Vial and Market
     # Vial
     speed_advices[vm].append(Advice(
-        label="Lab: My 1st Chemistry Set: "
-              f"{max(1, 2 * session_data.account.labBonuses['My 1st Chemistry Set']['Enabled'])}/2x",
-        picture_class="my-1st-chemistry-set",
-        progression=int(session_data.account.labBonuses['My 1st Chemistry Set']['Enabled']),
-        goal=1
-    ))
-    speed_advices[vm].append(Advice(
-        label=f"{{{{ Rift|#rift }}}}: Vial Mastery: {session_data.account.vialMasteryMulti:.2f}x",
-        picture_class="vial-mastery",
-        progression=f"{1 if session_data.account.rift['VialMastery'] else 0}",
-        goal=1
-    ))
-    speed_advices[vm].append(Advice(
-        label=f"{{{{ Vial|#vials }}}}: Ricecakorade (Rice Cake): {session_data.account.alchemy_vials['Ricecakorade (Rice Cake)']['Value']:.2f}%"
+        label=f"{{{{ Vial|#vials }}}}: Ricecakorade (Rice Cake): {session_data.account.alchemy_vials['Ricecakorade (Rice Cake)']['BaseValue']:.2f}%"
               f"<br>Total Value after multis: {farming['Speed']['Vial Value']:.2f}%",
         picture_class="rice-cake",
         progression=session_data.account.alchemy_vials['Ricecakorade (Rice Cake)']['Level'],

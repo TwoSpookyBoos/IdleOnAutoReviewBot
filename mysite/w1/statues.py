@@ -97,21 +97,12 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
     ))
 
     vialValue = session_data.account.alchemy_vials['Skinny 0 Cal (Snake Skin)']['Value']
-    if session_data.account.labBonuses.get("My 1st Chemistry Set", {}).get("Enabled", False):
-        vialValue *= 2
-    vialValue *= session_data.account.vialMasteryMulti
 
     deposit_AdviceList.append(Advice(
         label=f"{{{{ Vial|#vials }}}}: Skinny 0 Cal (Snake Skin) to level {max_VialLevel}",
         picture_class="snake-skin",
         progression=session_data.account.alchemy_vials['Skinny 0 Cal (Snake Skin)']['Level'],
         goal=max_VialLevel
-    ))
-    deposit_AdviceList.append(Advice(
-        label=f"{{{{ Rift|#rift }}}} Bonus: Vial Mastery: {session_data.account.maxed_vials}/27 maxed vials",
-        picture_class="vial-mastery",
-        progression=f"{session_data.account.vialMasteryMulti:.2f}" if session_data.account.vialMasteryMulti > 1 else 0,
-        goal=1.54
     ))
     deposit_AdviceList.append(Advice(
         label="Total Vial value (100% hardcap)",
