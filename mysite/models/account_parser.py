@@ -872,28 +872,28 @@ def _parse_w2_cauldrons(account):
     }
     try:
         account.alchemy_cauldrons["OrangeBoosts"] = [
-            raw_cauldron_upgrades[0],
-            raw_cauldron_upgrades[1],
-            raw_cauldron_upgrades[2],
-            raw_cauldron_upgrades[3],
+            safer_convert(raw_cauldron_upgrades[0], 0),
+            safer_convert(raw_cauldron_upgrades[1], 0),
+            safer_convert(raw_cauldron_upgrades[2], 0),
+            safer_convert(raw_cauldron_upgrades[3], 0),
         ]
         account.alchemy_cauldrons["GreenBoosts"] = [
-            raw_cauldron_upgrades[4],
-            raw_cauldron_upgrades[5],
-            raw_cauldron_upgrades[6],
-            raw_cauldron_upgrades[7],
+            safer_convert(raw_cauldron_upgrades[4], 0),
+            safer_convert(raw_cauldron_upgrades[5], 0),
+            safer_convert(raw_cauldron_upgrades[6], 0),
+            safer_convert(raw_cauldron_upgrades[7], 0),
         ]
         account.alchemy_cauldrons["PurpleBoosts"] = [
-            raw_cauldron_upgrades[8],
-            raw_cauldron_upgrades[9],
-            raw_cauldron_upgrades[10],
-            raw_cauldron_upgrades[11],
+            safer_convert(raw_cauldron_upgrades[8], 0),
+            safer_convert(raw_cauldron_upgrades[9], 0),
+            safer_convert(raw_cauldron_upgrades[10], 0),
+            safer_convert(raw_cauldron_upgrades[11], 0),
         ]
         account.alchemy_cauldrons["PurpleBoosts"] = [
-            raw_cauldron_upgrades[12],
-            raw_cauldron_upgrades[13],
-            raw_cauldron_upgrades[14],
-            raw_cauldron_upgrades[15],
+            safer_convert(raw_cauldron_upgrades[12], 0),
+            safer_convert(raw_cauldron_upgrades[13], 0),
+            safer_convert(raw_cauldron_upgrades[14], 0),
+            safer_convert(raw_cauldron_upgrades[15], 0),
         ]
     except Exception as e:
         logger.warning(f"Alchemy bubble cauldron Boosts Parse error: {e}. Defaulting to 0s")
@@ -902,10 +902,10 @@ def _parse_w2_cauldrons(account):
         account.alchemy_cauldrons["PurpleBoosts"]: [0, 0, 0, 0]
         account.alchemy_cauldrons["YellowBoosts"]: [0, 0, 0, 0]
     try:
-        account.alchemy_cauldrons["WaterDroplets"] = [raw_cauldron_upgrades[18], raw_cauldron_upgrades[19]]
-        account.alchemy_cauldrons["LiquidNitrogen"] = [raw_cauldron_upgrades[22], raw_cauldron_upgrades[23]]
-        account.alchemy_cauldrons["TrenchSeawater"] = [raw_cauldron_upgrades[26], raw_cauldron_upgrades[27]]
-        account.alchemy_cauldrons["ToxicMercury"] = [raw_cauldron_upgrades[30], raw_cauldron_upgrades[31]]
+        account.alchemy_cauldrons["WaterDroplets"] = [safer_convert(raw_cauldron_upgrades[18], 0), safer_convert(raw_cauldron_upgrades[19], 0)]
+        account.alchemy_cauldrons["LiquidNitrogen"] = [safer_convert(raw_cauldron_upgrades[22], 0), safer_convert(raw_cauldron_upgrades[23], 0)]
+        account.alchemy_cauldrons["TrenchSeawater"] = [safer_convert(raw_cauldron_upgrades[26], 0), safer_convert(raw_cauldron_upgrades[27], 0)]
+        account.alchemy_cauldrons["ToxicMercury"] = [safer_convert(raw_cauldron_upgrades[30], 0), safer_convert(raw_cauldron_upgrades[31], 0)]
     except Exception as e:
         logger.warning(f"Alchemy Water Cauldron decants Parse error: {e}. Defaulting to 0s")
         account.alchemy_cauldrons["WaterDroplets"] = [0, 0]
