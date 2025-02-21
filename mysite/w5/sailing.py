@@ -35,6 +35,7 @@ def getSailingProgressionTierAdviceGroups():
     tier_Artifacts = 0
     total_artifacts = numberOfArtifactTiers * numberOfArtifacts
     delaysDict = getSailingDelays()
+    golden_hampter_note = ''
 
     # Assess Tiers
     for tierNumber, tierRequirementsDict in sailing_progressionTiers.items():
@@ -112,24 +113,15 @@ def getSailingProgressionTierAdviceGroups():
                             picture_class="brighter-lighthouse-bulb",
                         ))
             # Golden Hampters
-            if 'Beanstacked' in tierRequirementsDict:
-                if not session_data.account.sneaking.get('Beanstalk', {}).get('FoodG10', {}).get('Beanstacked', False):
-                    if subgroupName not in sailing_AdviceDict['Artifacts'] and len(sailing_AdviceDict['Artifacts']) < session_data.account.maxSubgroupsPerGroup:
-                        sailing_AdviceDict['Artifacts'][subgroupName] = []
-                    if subgroupName in sailing_AdviceDict['Artifacts']:
-                        sailing_AdviceDict['Artifacts'][subgroupName].append(Advice(
-                            label="Deposit 10k Golden Hampters to the {{ Beanstalk|#beanstalk }} in W6",
-                            picture_class="golden-hampter-gummy-candy",
-                        ))
-            if 'SuperBeanstacked' in tierRequirementsDict:
-                if not session_data.account.sneaking.get('Beanstalk', {}).get('FoodG10', {}).get('SuperBeanstacked', False):
-                    if subgroupName not in sailing_AdviceDict['Artifacts'] and len(sailing_AdviceDict['Artifacts']) < session_data.account.maxSubgroupsPerGroup:
-                        sailing_AdviceDict['Artifacts'][subgroupName] = []
-                    if subgroupName in sailing_AdviceDict['Artifacts']:
-                        sailing_AdviceDict['Artifacts'][subgroupName].append(Advice(
-                            label="Deposit 100k Golden Hampters to the {{ Beanstalk|#beanstalk }} in W6",
-                            picture_class="golden-hampter-gummy-candy",
-                        ))
+            if (
+                #If Golden Hampters are not 10k Beanstacked and the player has a Chocolatey Chip to active farm them
+                'Beanstacked' in tierRequirementsDict and
+                not session_data.account.sneaking.get('Beanstalk', {}).get('FoodG10', {}).get('Beanstacked', False)
+                and session_data.account.labChips.get('Chocolatey Chip', 0) > 0
+                and session_data.account.highestWorldReached >= 6
+                and tier_Artifacts >= tierNumber - 1
+            ):
+                golden_hampter_note = 'Reminder: Golden Hampters can be deposited to the Beanstalk in World 6!'
             # Artifacts
             if 'Artifacts' in tierRequirementsDict:
                 for artifactName, artifactTier in tierRequirementsDict['Artifacts'].items():
@@ -161,7 +153,8 @@ def getSailingProgressionTierAdviceGroups():
     sailing_AdviceGroupDict['Artifacts'] = AdviceGroup(
         tier=str(tier_Artifacts),
         pre_string=f"Amass booty! Collect all artifacts",
-        advices=sailing_AdviceDict['Artifacts']
+        advices=sailing_AdviceDict['Artifacts'],
+        post_string=golden_hampter_note
     )
     overall_SectionTier = min(max_tier + info_tiers, tier_Islands, tier_CaptainsAndBoats, tier_Artifacts)
     return sailing_AdviceGroupDict, overall_SectionTier, max_tier

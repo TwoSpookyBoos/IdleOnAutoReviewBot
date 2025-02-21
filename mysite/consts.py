@@ -1521,7 +1521,6 @@ sailing_progressionTiers = {
         'Artifacts': {
             'Fury Relic': 2,
         },
-        'Beanstacked': True
     },
     8: {
         'IslandsDiscovered': 12,
@@ -1560,7 +1559,8 @@ sailing_progressionTiers = {
         'Artifacts': {
             'Crystal Steak': 3,
             'Socrates': 3
-        }
+        },
+        'Beanstacked': True,
     },
     13: {
         'Artifacts': {
@@ -1593,7 +1593,6 @@ sailing_progressionTiers = {
             'Opera Mask': 2,
             'The True Lantern': 2
         },
-        #'SuperBeanstacked': True
     },
     15: {
         'Artifacts': {
@@ -1671,6 +1670,7 @@ sailing_progressionTiers = {
             'The Shim Lantern': 4,
             #'The Winz Lantern': 4
         },
+        #'SuperBeanstacked': True
     },
     19: {
         'Artifacts': {
