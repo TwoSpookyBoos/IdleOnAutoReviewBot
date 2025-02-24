@@ -49,6 +49,17 @@ class UserDataException(BaseCustomException):
         self.data = data
 
 
+
+class DataTooLong(UserDataException):
+    faq = True
+    msg_base = (
+        "Looks like the data you submitted was too long.<br>"
+        "Check what you submitted - it must be either the first toon name or the "
+        "JSON object provided by either IdleonEfficiency or IdleonToolbox."
+        "<br><b>STEAM WORKAROUND DATA NOT SUPPORTED.</b>"
+    )
+
+
 class ProfileNotFound(BaseCustomException):
     reportable = False
     faq = True
