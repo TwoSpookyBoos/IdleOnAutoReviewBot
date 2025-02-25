@@ -63,7 +63,7 @@ ITEM_CODE_DICT.update(FAKE_ITEM_CODE_DICT)
 
 
 def _get_item_name(_dict, name):
-    if name:
+    if name and name != 'null':
         try:
             return _dict[name]
         except KeyError:
