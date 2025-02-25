@@ -870,7 +870,7 @@ bubbles_progressionTiers = [
      {'Roid Ragin': 840, 'Warriors Rule': 950, 'Multorange': 570, },
      {'Swift Steppin': 840, 'Archer Or Bust': 950, 'Premigreen': 570},
      {'Stable Jenius': 840, 'Mage Is Best': 950,  'Severapurple': 570},
-     {'Laaarrrryyyy': 900, 'Big P': 540, 'Call Me Bob': 500, 'Carpenter': 450, 'Big Game Hunter': 270, 'Mr Massacre': 450, 'Shimmeron': 760, "Grind Time": 500},
+     {'Laaarrrryyyy': 900, 'Big P': 540, 'Call Me Bob': 500, 'Carpenter': 450, 'Big Game Hunter': 270, 'Mr Massacre': 450, "Grind Time": 500},
      "95% max value",
      ""],
     # [19, 120,
