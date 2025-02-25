@@ -1521,6 +1521,7 @@ def _parse_w4_cooking(account):
     }
     _parse_w4_cooking_tables(account)
     _parse_w4_cooking_meals(account)
+    _parse_w4_cooking_ribbons(account)
 
 def _parse_w4_cooking_tables(account):
     emptyTable = [0] * 11  # Some tables only have 10 fields, others have 11. Scary.
@@ -1551,10 +1552,13 @@ def _parse_w4_cooking_meals(account):
     # Count the number of unlocked meals, unlocked meals under 11, and unlocked meals under 30
     for index, mealLevel in enumerate(raw_meals_list[0]):
         # Create meal dict
-        account.meals[cookingMealDict[index]["Name"]] = {
-            "Level": int(mealLevel),
-            "Value": int(mealLevel) * cookingMealDict[index]["BaseValue"],  # Mealmulti applied in calculate section
-            "BaseValue": cookingMealDict[index]["BaseValue"]
+        account.meals[cookingMealDict[index]['Name']] = {
+            'Level': int(mealLevel),
+            'Value': int(mealLevel) * cookingMealDict[index]['BaseValue'],  # Mealmulti applied in calculate section
+            'BaseValue': cookingMealDict[index]['BaseValue'],
+            'Effect': cookingMealDict[index]['Effect'],
+            'Index': index,
+            'Image': f"{cookingMealDict[index]['Name']}-meal"
         }
 
         if int(mealLevel) > 0:
@@ -1564,6 +1568,19 @@ def _parse_w4_cooking_meals(account):
                 account.cooking['MealsUnder11'] += 1
             if int(mealLevel) < 30:
                 account.cooking['MealsUnder30'] += 1
+
+def _parse_w4_cooking_ribbons(account):
+    raw_ribbons = safe_loads(account.raw_data.get('Ribbon', []))
+    if not raw_ribbons:
+        logger.warning(f"Meal Ribbons data not present{', as expected' if account.version < 236 else ''}")
+    for meal_name, meal_values in account.meals.items():
+        try:
+            account.meals[meal_name]['RibbonTier'] = safer_convert(raw_ribbons[meal_values['Index']+28], 0)  #Ribbon shelf occupies first 28 indexes
+        except:
+            account.meals[meal_name]['RibbonTier'] = 0
+            if raw_ribbons:
+                logger.exception(f"Could not retrieve Ribbon for {meal_name}")
+
 
 def _parse_w4_lab(account):
     raw_lab = safe_loads(account.raw_data.get("Lab", []))

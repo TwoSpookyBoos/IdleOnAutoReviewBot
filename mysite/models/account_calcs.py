@@ -784,7 +784,19 @@ def _calculate_w4_meal_multi(account):
         * account.summoning['Endless Bonuses']['x Meal Bonuses']
     )
     for meal in account.meals:
-        account.meals[meal]["Value"] = float(account.meals[meal]["Value"]) * mealMulti
+        # _customBlock_Summoning > "RibbonBonus": 1 + Math.floor(5 * t + Math.floor(t / 2) * (4 + 6.5 * Math.floor(t / 5))) / 100;
+        # Last verified as of v2.30 Companion Trading
+        account.meals[meal]['RibbonMulti'] = ValueToMulti(floor(
+            5 * account.meals[meal]['RibbonTier'] + floor(account.meals[meal]['RibbonTier'] / 2) * (4 + 6.5 * floor(account.meals[meal]['RibbonTier'] / 5))
+        ))
+        account.meals[meal]['Value'] = float(account.meals[meal]['Value']) * mealMulti * account.meals[meal]['RibbonMulti']
+        if '{' in account.meals[meal]['Effect']:
+            account.meals[meal]['Description'] = account.meals[meal]['Effect'].replace('{', f"{account.meals[meal]['Value']:.3f}")
+        elif '}' in account.meals[meal]['Effect']:
+            account.meals[meal]['Description'] = account.meals[meal]['Effect'].replace('}', f"{account.meals[meal]['Value']:.3f}")
+        else:
+            account.meals[meal]['Description'] = account.meals[meal]['Effect']
+
 
 def _calculate_w4_lab_bonuses(account):
     account.labBonuses['No Bubble Left Behind']['Value'] = 3
