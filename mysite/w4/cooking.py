@@ -264,7 +264,8 @@ def getCookingMealsAdviceGroup() -> AdviceGroup:
             picture_class=meal_values['Image'],
             progression=meal_values['Level'],
             goal=maxMealLevel,
-            resource=f"meal-ribbon-{meal_values['RibbonTier']}"
+            resource=f"meal-ribbon-{meal_values['RibbonTier']}",
+            informational=True
         ) for meal_name, meal_values in session_data.account.meals.items()
     ]
     for advice in meals_advice:
@@ -273,7 +274,8 @@ def getCookingMealsAdviceGroup() -> AdviceGroup:
     meals_ag = AdviceGroup(
         tier='',
         pre_string="Info- All Meal levels and ribbons",
-        advices=meals_advice
+        advices=meals_advice,
+        informational=True
     )
     return meals_ag
 
