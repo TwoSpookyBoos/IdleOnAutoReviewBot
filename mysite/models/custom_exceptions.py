@@ -41,6 +41,7 @@ class UserDataException(BaseCustomException):
         "Looks like the data you submitted was neither a username nor valid data.<br>"
         "Check what you submitted - it must be either the first toon name or the "
         "JSON object provided by either IdleonEfficiency or IdleonToolbox."
+        "<br><b>STEAM WORKAROUND DATA NOT SUPPORTED.</b>"
     )
 
     def __init__(self, msg, data):
