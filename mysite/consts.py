@@ -245,8 +245,9 @@ greenstack_item_difficulty_groups = {
             "Printable Skilling Resources": [],
             "Other Skilling Resources": [
                 "Soul7",
-                "CopperBar", "IronBar",
-                "FoodMining1", "FoodFish1", "FoodCatch1", "Bullet", "BulletB",],
+                "CopperBar", "IronBar", "GoldBar", "PlatBar", "DementiaBar", "VoidBar",
+                "FoodMining1", "FoodFish1", "FoodCatch1", "Bullet", "BulletB"
+            ],
             "Vendor Shops": [
                 "OilBarrel6", "OilBarrel7",],
             },
@@ -260,7 +261,7 @@ greenstack_item_difficulty_groups = {
                 "FoodPotOr1",
             ],
             "Other Skilling Resources": [
-                "PlatBar",
+                "LustreBar", "StarfireBar", "DreadloBar", "MarbleBar", "GodshardBar",
                 "Critter10", "Critter11",
             ],
             },
@@ -271,7 +272,7 @@ greenstack_item_difficulty_groups = {
                 "EquipmentStatues7", "EquipmentStatues3", "EquipmentStatues2", "EquipmentStatues4", "EquipmentStatues14",
                 ],
             "Other Skilling Resources": [
-                "GoldBar", "DementiaBar", "VoidBar", "LustreBar",
+
                 "Peanut", "Quest68", "Bullet3", "FoodChoppin1",],  #I really hate that the Slush Bucket is listed as Quest68
             "Rare Drops": ["FoodPotRe1",],
             },
@@ -288,7 +289,6 @@ greenstack_item_difficulty_groups = {
                 "PureWater",
                 "FoodG9",],
             "Other Skilling Resources": [
-                "StarfireBar", "DreadloBar",
                 "EquipmentSmithingTabs2",
                 'EquipmentSmithingTabs3',
                 "PeanutG",
@@ -301,7 +301,6 @@ greenstack_item_difficulty_groups = {
             "Crystal Enemy Drops": [
                 "StoneW2", 'ResetFrag', "SilverPen"],  #"StoneA2",],
             "Other Skilling Resources": [
-                "MarbleBar", "GodshardBar",
                 "FoodTrapping1", "FoodWorship1",
                 "Critter1A", "Critter2A", "Critter3A", "Critter4A", "Critter5A", "Critter6A", "Critter7A", "Critter8A", "Critter9A", "Critter10A", "Critter11A",
                 "Ladle",
