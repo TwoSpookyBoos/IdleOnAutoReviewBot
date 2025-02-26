@@ -6392,7 +6392,7 @@ HolesInfo = [
     "3 4 6 8 1 7 2 8 3 0 4 7 3".split(" "),  #52 = Measurement scalar type matchup
     "GLOOMIE_KILLS CROPS_FOUND ACCOUNT_LV TOME_SCORE ALL_SKILL_LV IDK_YET DEATHNOTE_PTS HIGHEST_DMG SLAB_ITEMS IDK_YET 4 7 3".split(" "),  #53 = Measurement scalar types
     "+{%_VILLAGER|EXP_GAIN +{%_BRAVERY|SWORD_MAX_DMG +{%_BELL_RING|访_PING_RATE +{%_HARP|NOTE_GAIN +{%_DAILY|LAMP_WISHES +{%_BUCKET|FILL_RATE +{%_HARP|STRING_EXP +{%_VILLAGER|EXP_GAIN +{%_HARP|NOTE_GAIN +{%_MULTIKILL|PER_TIER i i i".split(" "),  #54 = Measurement bonuses
-    "45TOT 2 10 6 80TOT 11 13 60TOT 30 40TOT 1 1 1".split(" "),
+    "45TOT 2 10 6 80TOT 11 13 60TOT 30 40TOT 1 1 1".split(" "),  #55 = Measurement Bonuses
     "3 4 2 1 1 1 1 1 1".split(" "),
     "4 3 2 3 1 1 1 1 1 1 1 1".split(" "),
     "1 4 2 4 3 1 1 1 1 1 1 1".split(" "),
@@ -6476,6 +6476,7 @@ caverns_measurer_measurement_resources = HolesInfo[50]
 caverns_measurer_scalar_matchup = HolesInfo[52]
 caverns_measurer_scalars = HolesInfo[53]
 caverns_measurer_measurements = HolesInfo[54]
+caverns_measurer_HI55 = HolesInfo[55]
 max_measurements = sum(1 for measurement in caverns_measurer_measurements if measurement != 'i')  #i is a placeholder for not-implemented
 caverns_measurer_measurement_names = [
     'Inches', 'Meters', 'Miles', 'Liters', 'Yards', 'Pixels',

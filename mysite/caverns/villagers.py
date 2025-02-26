@@ -316,19 +316,34 @@ def getMeasurerAdviceGroup() -> AdviceGroup:
         progression=villager['Opals'],
     ))
 # Measurement Stats
-    villager_advice[m_stats] = [
-        Advice(
-            label=(
-                f"{measurement_details['Level']} {measurement_details['Unit']}: {measurement_details['Description']}"
-                f"<br>Scales with: {measurement_details['ScalesWith']}"
-            ),
-            picture_class=measurement_details['Image'],
-            progression=measurement_details['Level'],
-            goal=infinity_string,
-            resource=measurement_details['Resource']
-        )
-        for measurement_name, measurement_details in measurements.items() if measurement_name != 'i' and max_measurements >= measurement_details['MeasurementNumber']
-    ]
+    villager_advice[m_stats] = []
+    for measurement_name, measurement_details in measurements.items():
+        if measurement_name != 'i' and max_measurements >= measurement_details['MeasurementNumber']:
+            if measurement_details['TOT']:
+                villager_advice[m_stats].append(Advice(
+                    label=(
+                        f"{measurement_details['Level']} {measurement_details['Unit']}: "
+                        f"+{measurement_details['TotalBaseValue']:.2f}% {measurement_details['Description']}"
+                        f"<br>Scales with: {measurement_details['ScalesWith']}"
+                    ),
+                    picture_class=measurement_details['Image'],
+                    progression=f"{(measurement_details['BaseValue'] / measurement_details['HI55']) * 100:.2f}",
+                    goal='100',
+                    resource=measurement_details['Resource'],
+                    unit='%'
+                ))
+            else:
+                villager_advice[m_stats].append(Advice(
+                    label=(
+                        f"{measurement_details['Level']} {measurement_details['Unit']}: "
+                        f"+{measurement_details['TotalBaseValue']:.0f}% {measurement_details['Description']}"
+                        f"<br>Scales with: {measurement_details['ScalesWith']}"
+                    ),
+                    picture_class=measurement_details['Image'],
+                    progression='Linear',
+                    goal=infinity_string,
+                    resource=measurement_details['Resource']
+                ))
 
     for subgroup in villager_advice:
         for advice in villager_advice[subgroup]:

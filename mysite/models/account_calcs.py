@@ -834,13 +834,34 @@ def divinityUpgradeCost(DivCostAfter3, offeringIndex, unlockedDivinity):
 
 def _calculate_caverns(account):
     #_calculate_caverns_majiks(account)
-    _calculate_caverns_measurements(account)
+    _calculate_caverns_measurements_base(account)
+    _calculate_caverns_measurements_multis(account)
     _calculate_caverns_the_well(account)
     _calculate_caverns_monuments(account)
     _calculate_caverns_the_bell(account)
     _calculate_caverns_the_harp(account)
 
-def _calculate_caverns_measurements(account):
+def _calculate_caverns_measurements_base(account):
+    # _customBlock_Holes > "MeasurementBaseBonus"  #Last verified as of 2.30 Companion Trading
+    for measurement_index, measurement_values in account.caverns['Measurements'].items():
+        try:
+            if measurement_values['TOT']:
+                account.caverns['Measurements'][measurement_index]['BaseValue'] = (
+                    measurement_values['HI55']
+                    * (measurement_values['Level'] / (100 + measurement_values['Level']))
+                )
+            else:
+                account.caverns['Measurements'][measurement_index]['BaseValue'] = measurement_values['HI55'] * measurement_values['Level']
+            account.caverns['Measurements'][measurement_index]['TotalBaseValue'] = (
+                account.caverns['Measurements'][measurement_index]['BaseValue']
+                * account.caverns['Majiks']['Lengthmeister']['Value']
+            )
+        except:
+            logger.exception(f"Failed to calculate Measurement Base Value for {measurement_values['Description']}")
+            account.caverns['Measurements'][measurement_index]['BaseValue'] = 0
+
+def _calculate_caverns_measurements_multis(account):
+    # _customBlock_Holes > "MeasurementMulti"  #Last verified as of 2.30 Companion Trading
     total_skill_levels = 0
     for skill, skill_levels in account.all_skills.items():
         total_skill_levels += sum(skill_levels) if skill != 'Combat' else 0
