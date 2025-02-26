@@ -211,9 +211,9 @@ def getCheckoutSpeedAdviceGroup(anyBookAdvice) -> AdviceGroup:
 
     # Meal
     checkoutSpeedAdvices.append(Advice(
-        label=f"Meal: Fortune Cookie: {session_data.account.meals['Fortune Cookie']['Value']:.1f}%",
-        picture_class="fortune-cookie",
-        progression=session_data.account.meals["Fortune Cookie"]["Level"],
+        label=f"{{{{ Meal|#cooking }}}}: Fortune Cookie: {session_data.account.meals['Fortune Cookie']['Description']}",
+        picture_class=session_data.account.meals['Fortune Cookie']['Image'],
+        progression=session_data.account.meals['Fortune Cookie']['Level'],
         goal=maxMealLevel 
     ))
 

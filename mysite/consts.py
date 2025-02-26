@@ -245,8 +245,9 @@ greenstack_item_difficulty_groups = {
             "Printable Skilling Resources": [],
             "Other Skilling Resources": [
                 "Soul7",
-                "CopperBar", "IronBar",
-                "FoodMining1", "FoodFish1", "FoodCatch1", "Bullet", "BulletB",],
+                "CopperBar", "IronBar", "GoldBar", "PlatBar", "DementiaBar", "VoidBar",
+                "FoodMining1", "FoodFish1", "FoodCatch1", "Bullet", "BulletB"
+            ],
             "Vendor Shops": [
                 "OilBarrel6", "OilBarrel7",],
             },
@@ -260,7 +261,7 @@ greenstack_item_difficulty_groups = {
                 "FoodPotOr1",
             ],
             "Other Skilling Resources": [
-                "PlatBar",
+                "LustreBar", "StarfireBar", "DreadloBar", "MarbleBar", "GodshardBar",
                 "Critter10", "Critter11",
             ],
             },
@@ -271,7 +272,7 @@ greenstack_item_difficulty_groups = {
                 "EquipmentStatues7", "EquipmentStatues3", "EquipmentStatues2", "EquipmentStatues4", "EquipmentStatues14",
                 ],
             "Other Skilling Resources": [
-                "GoldBar", "DementiaBar", "VoidBar", "LustreBar",
+
                 "Peanut", "Quest68", "Bullet3", "FoodChoppin1",],  #I really hate that the Slush Bucket is listed as Quest68
             "Rare Drops": ["FoodPotRe1",],
             },
@@ -288,7 +289,6 @@ greenstack_item_difficulty_groups = {
                 "PureWater",
                 "FoodG9",],
             "Other Skilling Resources": [
-                "StarfireBar", "DreadloBar",
                 "EquipmentSmithingTabs2",
                 'EquipmentSmithingTabs3',
                 "PeanutG",
@@ -301,7 +301,6 @@ greenstack_item_difficulty_groups = {
             "Crystal Enemy Drops": [
                 "StoneW2", 'ResetFrag', "SilverPen"],  #"StoneA2",],
             "Other Skilling Resources": [
-                "MarbleBar", "GodshardBar",
                 "FoodTrapping1", "FoodWorship1",
                 "Critter1A", "Critter2A", "Critter3A", "Critter4A", "Critter5A", "Critter6A", "Critter7A", "Critter8A", "Critter9A", "Critter10A", "Critter11A",
                 "Ladle",
@@ -871,7 +870,7 @@ bubbles_progressionTiers = [
      {'Roid Ragin': 840, 'Warriors Rule': 950, 'Multorange': 570, },
      {'Swift Steppin': 840, 'Archer Or Bust': 950, 'Premigreen': 570},
      {'Stable Jenius': 840, 'Mage Is Best': 950,  'Severapurple': 570},
-     {'Laaarrrryyyy': 900, 'Big P': 540, 'Call Me Bob': 500, 'Carpenter': 450, 'Big Game Hunter': 270, 'Mr Massacre': 450, 'Shimmeron': 760, "Grind Time": 500},
+     {'Laaarrrryyyy': 900, 'Big P': 540, 'Call Me Bob': 500, 'Carpenter': 450, 'Big Game Hunter': 270, 'Mr Massacre': 450, "Grind Time": 500},
      "95% max value",
      ""],
     # [19, 120,
@@ -1521,7 +1520,6 @@ sailing_progressionTiers = {
         'Artifacts': {
             'Fury Relic': 2,
         },
-        'Beanstacked': True
     },
     8: {
         'IslandsDiscovered': 12,
@@ -1560,7 +1558,8 @@ sailing_progressionTiers = {
         'Artifacts': {
             'Crystal Steak': 3,
             'Socrates': 3
-        }
+        },
+        'Beanstacked': True,
     },
     13: {
         'Artifacts': {
@@ -1593,7 +1592,6 @@ sailing_progressionTiers = {
             'Opera Mask': 2,
             'The True Lantern': 2
         },
-        #'SuperBeanstacked': True
     },
     15: {
         'Artifacts': {
@@ -1671,6 +1669,7 @@ sailing_progressionTiers = {
             'The Shim Lantern': 4,
             #'The Winz Lantern': 4
         },
+        #'SuperBeanstacked': True
     },
     19: {
         'Artifacts': {
@@ -6393,7 +6392,7 @@ HolesInfo = [
     "3 4 6 8 1 7 2 8 3 0 4 7 3".split(" "),  #52 = Measurement scalar type matchup
     "GLOOMIE_KILLS CROPS_FOUND ACCOUNT_LV TOME_SCORE ALL_SKILL_LV IDK_YET DEATHNOTE_PTS HIGHEST_DMG SLAB_ITEMS IDK_YET 4 7 3".split(" "),  #53 = Measurement scalar types
     "+{%_VILLAGER|EXP_GAIN +{%_BRAVERY|SWORD_MAX_DMG +{%_BELL_RING|访_PING_RATE +{%_HARP|NOTE_GAIN +{%_DAILY|LAMP_WISHES +{%_BUCKET|FILL_RATE +{%_HARP|STRING_EXP +{%_VILLAGER|EXP_GAIN +{%_HARP|NOTE_GAIN +{%_MULTIKILL|PER_TIER i i i".split(" "),  #54 = Measurement bonuses
-    "45TOT 2 10 6 80TOT 11 13 60TOT 30 40TOT 1 1 1".split(" "),
+    "45TOT 2 10 6 80TOT 11 13 60TOT 30 40TOT 1 1 1".split(" "),  #55 = Measurement Bonuses
     "3 4 2 1 1 1 1 1 1".split(" "),
     "4 3 2 3 1 1 1 1 1 1 1 1".split(" "),
     "1 4 2 4 3 1 1 1 1 1 1 1".split(" "),
@@ -6477,6 +6476,7 @@ caverns_measurer_measurement_resources = HolesInfo[50]
 caverns_measurer_scalar_matchup = HolesInfo[52]
 caverns_measurer_scalars = HolesInfo[53]
 caverns_measurer_measurements = HolesInfo[54]
+caverns_measurer_HI55 = HolesInfo[55]
 max_measurements = sum(1 for measurement in caverns_measurer_measurements if measurement != 'i')  #i is a placeholder for not-implemented
 caverns_measurer_measurement_names = [
     'Inches', 'Meters', 'Miles', 'Liters', 'Yards', 'Pixels',

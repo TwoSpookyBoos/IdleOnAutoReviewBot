@@ -417,7 +417,6 @@ def getProgressionTiersAdviceGroup(trappingLevelsList: list[int]):
         pre_string=f"Place unused trap{pl(trapping_AdviceDict['UnplacedTraps'])} (may require better Trap Set!)",
         advices=trapping_AdviceDict["UnplacedTraps"],
         post_string="",
-        informational=True
     )
     trapping_AdviceGroupDict["BeginnerNatures"] = AdviceGroup(
         tier="",
@@ -440,7 +439,7 @@ def getProgressionTiersAdviceGroup(trappingLevelsList: list[int]):
         pre_string=f"Best Critter-Focused traps from your available Trap Sets",
         advices=trapping_AdviceDict["CritterTraps"],
         post_string="Set critter traps with your Beast Master after maximizing Trapping Efficiency",
-        informational=True,
+        informational=len(trapping_AdviceDict["NonMetaTraps"]) == 0,
         completed=len(trapping_AdviceDict["NonMetaTraps"]) == 0
     )
     trapping_AdviceGroupDict["ShinyTraps"] = AdviceGroup(
@@ -448,7 +447,7 @@ def getProgressionTiersAdviceGroup(trappingLevelsList: list[int]):
         pre_string=f"Best Shiny Chance-Focused traps from your available Trap Sets",
         advices=trapping_AdviceDict["ShinyTraps"],
         post_string="Wear the Shiny Snitch prayer when Collecting. Shorter trap durations will earn more total Shiny Critters per day",
-        informational=True,
+        informational=len(trapping_AdviceDict["NonMetaTraps"]) == 0,
         completed=len(trapping_AdviceDict["NonMetaTraps"]) == 0
     )
     trapping_AdviceGroupDict["EXPTraps"] = AdviceGroup(
@@ -456,7 +455,7 @@ def getProgressionTiersAdviceGroup(trappingLevelsList: list[int]):
         pre_string=f"Best EXP-Focused traps from your available Trap Sets",
         advices=trapping_AdviceDict["EXPTraps"],
         post_string="Set EXP traps with your Mman/Vman after maximizing Trapping EXP",
-        informational=True,
+        informational=len(trapping_AdviceDict["NonMetaTraps"]) == 0,
         completed=len(trapping_AdviceDict["NonMetaTraps"]) == 0
     )
     overall_SectionTier = min(max_tier, tier_unlockCritters)

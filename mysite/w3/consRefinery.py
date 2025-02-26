@@ -206,32 +206,32 @@ def getRefineryProgressionTierAdviceGroups():
     refinery_AdviceDict["ExcessAndDeficits"].append(Advice(
         label=f"Red Salt {saltDict['RedSalt'].excess_or_deficit}",
         picture_class=saltDict['RedSalt'].image,
-        goal=saltDict['RedSalt'].excess_amount
+        goal=f"{saltDict['RedSalt'].excess_amount:,}"
     ))
     refinery_AdviceDict["ExcessAndDeficits"].append(Advice(
         label=f"Orange Salt {saltDict['OrangeSalt'].excess_or_deficit}",
         picture_class=saltDict['OrangeSalt'].image,
-        goal=saltDict['OrangeSalt'].excess_amount
+        goal=f"{saltDict['OrangeSalt'].excess_amount:,}"
     ))
     refinery_AdviceDict["ExcessAndDeficits"].append(Advice(
         label=f"Blue Salt {saltDict['BlueSalt'].excess_or_deficit}",
         picture_class=saltDict['BlueSalt'].image,
-        goal=saltDict['BlueSalt'].excess_amount
+        goal=f"{saltDict['BlueSalt'].excess_amount:,}"
     ))
     refinery_AdviceDict["ExcessAndDeficits"].append(Advice(
         label=f"Green Salt {saltDict['GreenSalt'].excess_or_deficit}",
         picture_class=saltDict['GreenSalt'].image,
-        goal=saltDict['GreenSalt'].excess_amount
+        goal=f"{saltDict['GreenSalt'].excess_amount:,}"
     ))
     refinery_AdviceDict["ExcessAndDeficits"].append(Advice(
         label=f"Purple Salt {saltDict['PurpleSalt'].excess_or_deficit}",
         picture_class=saltDict['PurpleSalt'].image,
-        goal=saltDict['PurpleSalt'].excess_amount
+        goal=f"{saltDict['PurpleSalt'].excess_amount:,}"
     ))
     refinery_AdviceDict["ExcessAndDeficits"].append(Advice(
         label=f"Nullo Salt {saltDict['NulloSalt'].excess_or_deficit}",
         picture_class=saltDict['NulloSalt'].image,
-        goal=saltDict['NulloSalt'].excess_amount
+        goal=f"{saltDict['NulloSalt'].excess_amount:,}"
     ))
 
     # Ranks Advice
@@ -277,7 +277,7 @@ def getRefineryProgressionTierAdviceGroups():
         advices=refinery_AdviceDict['ExcessAndDeficits'],
         post_string="",
         informational=True,
-        completed=all([int(advice.goal) >= 0 for advice in refinery_AdviceDict['ExcessAndDeficits']])
+        completed=all([int(advice.goal.replace(',', '')) >= 0 for advice in refinery_AdviceDict['ExcessAndDeficits']])
     )
     refinery_AdviceGroupDict['Tab1Ranks'] = AdviceGroup(
         tier="",
