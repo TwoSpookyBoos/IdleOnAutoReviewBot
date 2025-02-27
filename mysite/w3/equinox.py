@@ -1,5 +1,5 @@
 from flask import g as session_data
-from consts import maxDreams, dreamsThatUnlockNewBonuses, equinox_progressionTiers, break_you_best
+from consts import max_implemented_dreams, dreamsThatUnlockNewBonuses, equinox_progressionTiers, break_you_best, max_possible_dreams
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
 from utils.text_formatting import pl
@@ -24,7 +24,7 @@ def getEquinoxProgressionTiersAdviceGroup():
 
     # Dreams Completed
     remainingBonusesToBeUnlocked = []
-    if session_data.account.total_dreams_completed >= maxDreams:  # If the player has completed ALL dreams, set to max tier
+    if session_data.account.total_dreams_completed >= max_possible_dreams:  # If the player has completed ALL possible dreams, set to max tier
         tier_TotalDreamsCompleted = max_tier + infoTiers
     else:
         for bonusName, bonusValuesDict in session_data.account.equinox_bonuses.items():
@@ -47,10 +47,10 @@ def getEquinoxProgressionTiersAdviceGroup():
             ))
 
         equinox_AdviceDict["Dreams"]["Complete Dreams"].append(Advice(
-            label=f"Complete all {maxDreams} Dreams",
+            label=f"Complete all {max_possible_dreams} possible Dreams",
             picture_class="equinox-mirror",
             progression=session_data.account.total_dreams_completed,
-            goal=maxDreams
+            goal=max_possible_dreams
         ))
 
     # Recommended Upgrades

@@ -29,7 +29,7 @@ from consts import (
     islands_dict, killroy_dict,
     # W3
     refineryDict, buildingsDict, saltLickList, atomsList, colliderStorageLimitList, shrinesList, prayersDict,
-    equinoxBonusesDict, maxDreams, dreamsThatUnlockNewBonuses,
+    equinoxBonusesDict, max_implemented_dreams, dreamsThatUnlockNewBonuses,
     printerAllIndexesBeingPrinted,
     apocableMapIndexDict, apocAmountsList, apocNamesList,
     # W4
@@ -1334,7 +1334,7 @@ def _parse_w3_equinox_dreams(account):
     raw_equinox_dreams = safe_loads(account.raw_data.get("WeeklyBoss", {}))
     account.equinox_dreams += [
         float(raw_equinox_dreams.get(f'd_{i}', 0)) == -1
-        for i in range(maxDreams)
+        for i in range(max_implemented_dreams)
     ]
     account.total_dreams_completed = sum(account.equinox_dreams) - 1  # Remove the placeholder in 0th index
     account.total_equinox_bonuses_unlocked = 0

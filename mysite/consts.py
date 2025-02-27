@@ -5169,7 +5169,8 @@ def getReadableBubbleNames(inputNumber, color):
 max_printer_sample_rate = 90
 arbitrary_shrine_goal = 26
 arbitrary_shrine_note = f"Shrines have no Max level. Goal of {arbitrary_shrine_goal} is arbitrary"
-maxDreams = 36  # Last verified as of v2.10
+max_implemented_dreams = 36  # Last verified as of v2.30
+max_possible_dreams = 35  # Last verified as of v2.30. The dream to complete Killroy Prime is impossible
 dreamsThatUnlockNewBonuses = [1, 3, 6, 8, 11, 14, 18, 21, 24, 29, 32]
 equinoxBonusesDict = {
     2: {'Name': 'Equinox Dreams', 'BaseLevel': 5, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 5, 'Category': 'Recommended', 'SummoningExpands': False},
