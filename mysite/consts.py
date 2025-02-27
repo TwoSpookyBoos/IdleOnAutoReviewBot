@@ -1096,8 +1096,6 @@ prayers_progressionTiers = [
     [5, {'Midas Minded':20}, ""],
     [6, {'Skilled Dimwit': 50, 'Midas Minded': 50, 'Balance of Pain': 30}, ""],
     [7, {'Shiny Snitch': 50, 'Zerg Rushogen': 20, 'Jawbreaker': 50, 'Ruck Sack': 50, 'Balance of Proficiency': 50}, ""],
-    [8, {'Unending Energy': 50, 'Big Brain Time': 50, 'Antifun Spirit': 10, 'Fibers of Absence': 50, 'Beefy For Real': 40}, ""],
-    [9, {'Tachion of the Titans': 1, 'Balance of Precision': 1, 'Circular Criticals': 1, 'Vacuous Tissue': 1, 'Glitterbug': 1}, ""],
 ]
 equinox_progressionTiers = {
     'Recommended': [
@@ -5170,7 +5168,7 @@ def getReadableBubbleNames(inputNumber, color):
 ###WORLD 3 CONSTS###
 max_printer_sample_rate = 90
 arbitrary_shrine_goal = 26
-arbitrary_shrine_note = f"Shrines have no Max level, goal of {arbitrary_shrine_goal} is arbitrary"
+arbitrary_shrine_note = f"Shrines have no Max level. Goal of {arbitrary_shrine_goal} is arbitrary"
 maxDreams = 36  # Last verified as of v2.10
 dreamsThatUnlockNewBonuses = [1, 3, 6, 8, 11, 14, 18, 21, 24, 29, 32]
 equinoxBonusesDict = {
@@ -5314,6 +5312,8 @@ prayersDict = {
          "bonus_funcType": 'bigBase', 'bonus_x1': 27, 'bonus_x2': 3, 'bonus_stat': 'chance for Giant Mobs to summon 2 Crystal Mobs', 'bonus_pre': '+', 'bonus_post': '%',
          "curse_funcType": 'bigBase', 'curse_x1': 18, 'curse_x2': 2, 'curse_stat': 'less likely to spawn', 'curse_pre': 'Giant Mobs are ', 'curse_post': '%'},
 }
+optional_prayers = {'Unending Energy': 50, 'Big Brain Time': 50, 'Antifun Spirit': 10, 'Fibers of Absence': 50, 'Beefy For Real': 40}
+ignorable_prayers = {'Tachion of the Titans': 1, 'Balance of Precision': 1, 'Circular Criticals': 1, 'Vacuous Tissue': 1, 'Glitterbug': 1}
 saltLickList: list[str] = [
     'Printer Sample Size', 'Obol Storage', 'Refinery Speed', 'EXP', 'Max Book',
     'Alchemy Liquids', 'TD Points', 'Movespeed', 'Multikill', 'Damage',
