@@ -95,7 +95,7 @@ def setPrayersProgressionTierAdviceGroup():
         completed=True
     )
     overall_SectionTier = min(max_tier + info_tiers, tier_WorshipPrayers)
-    return prayers_AdviceGroupDict, overall_SectionTier, max_tier
+    return prayers_AdviceGroupDict, overall_SectionTier, max_tier, max_tier + info_tiers
 
 def getPrayersAdviceSection() -> AdviceSection:
     highestWorshipLevel = max(session_data.account.all_skills["Worship"])
@@ -110,7 +110,7 @@ def getPrayersAdviceSection() -> AdviceSection:
         return prayers_AdviceSection
 
     #Generate AdviceGroups
-    prayers_AdviceGroupDict, overall_SectionTier, max_tier = setPrayersProgressionTierAdviceGroup()
+    prayers_AdviceGroupDict, overall_SectionTier, max_tier, true_max = setPrayersProgressionTierAdviceGroup()
 
     #Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
@@ -118,6 +118,8 @@ def getPrayersAdviceSection() -> AdviceSection:
         name="Prayers",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Best Prayer tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture="Prayer_Stone.gif",
         groups = prayers_AdviceGroupDict.values()

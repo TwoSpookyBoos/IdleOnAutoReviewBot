@@ -185,7 +185,8 @@ def _calculate_w6_summoning_winner_bonuses(account):
             label=f"Winner Bonuses multi from Endless Summoning: {account.summoning['Endless Bonuses']['x Winner Bonuses']}/{infinity_string}",
             picture_class='cyan-upgrade-13',
             progression=account.summoning['Endless Bonuses']['x Winner Bonuses'],
-            goal=infinity_string
+            goal=infinity_string,
+            completed=True
         ),
         Advice(
             label=f"Winner Bonuses Multi: {account.summoning['WinnerBonusesMultiFull']:.3f}/{account.summoning['WinnerBonusesMultiMaxFull']:.3f}x",

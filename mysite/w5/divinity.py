@@ -334,7 +334,7 @@ def getDivinityProgressionTierAdviceGroups(lowestDivinitySkillLevel, highestDivi
     divinity_AdviceGroupDict["Dooted"] = getDootChecksAdviceGroups(lowestDivinitySkillLevel, highestDivinitySkillLevel)
 
     overall_SectionTier = min(max_tier + info_tiers, tier_Divinity)
-    return divinity_AdviceGroupDict, overall_SectionTier, max_tier
+    return divinity_AdviceGroupDict, overall_SectionTier, max_tier, max_tier + info_tiers
 
 def getDivinityAdviceSection() -> AdviceSection:
     highestDivinitySkillLevel = max(session_data.account.all_skills.get("Divinity", [0]))
@@ -351,7 +351,7 @@ def getDivinityAdviceSection() -> AdviceSection:
         return divinity_AdviceSection
 
     # Generate AdviceGroups
-    divinity_AdviceGroupDict, overall_SectionTier, max_tier = getDivinityProgressionTierAdviceGroups(lowestDivinitySkillLevel, highestDivinitySkillLevel)
+    divinity_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getDivinityProgressionTierAdviceGroups(lowestDivinitySkillLevel, highestDivinitySkillLevel)
     divinity_AdviceGroupDict["Offerings"] = getOfferingsAdviceGroup()
     divinity_AdviceGroupDict["Blessings"] = getBlessingsAdviceGroup()
     divinity_AdviceGroupDict["Styles"] = getStylesInfoAdviceGroup(highestDivinitySkillLevel)
@@ -363,6 +363,8 @@ def getDivinityAdviceSection() -> AdviceSection:
         name="Divinity",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Best Divinity tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture="Divinity.png",
         groups=divinity_AdviceGroupDict.values()

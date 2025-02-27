@@ -388,11 +388,11 @@ def getProgressionTiersAdviceGroup():
         )
     }
     overall_SectionTier = min(max_tier + info_tiers, tier_StampLevels, tier_FindRequiredStamps, tier_SpecificStamps)
-    return stamp_AdviceGroupDict, overall_SectionTier, max_tier
+    return stamp_AdviceGroupDict, overall_SectionTier, max_tier, max_tier + info_tiers
 
 def getStampAdviceSection() -> AdviceSection:
     # Generate AdviceGroups
-    stamp_AdviceGroupDict, overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
+    stamp_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
     stamp_AdviceGroupDict["Capacity"] = getCapacityAdviceGroup()
     stamp_AdviceGroupDict["CostReduction"] = getCostReductionAdviceGroup()
 
@@ -402,6 +402,8 @@ def getStampAdviceSection() -> AdviceSection:
         name="Stamps",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Best Stamp tier met: {tier_section}"
                f"{break_you_best if overall_SectionTier >= max_tier else ''}"
                f"{'<br>Let me know what important stamps you re aiming for next!' if overall_SectionTier >= max_tier else ''}",

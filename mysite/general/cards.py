@@ -74,12 +74,15 @@ def getCardsAdviceSection() -> AdviceSection:
         group.hide = True
 
     max_tier = len(cardsets) * (max_card_stars + 1)
+    true_max = max_tier
     curr_tier = cardset_rank_total
     tier = f"{curr_tier}/{max_tier}"
     section = AdviceSection(
         name="Cards",
         tier=tier,
         picture="cards/Cards.png",
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"You have reached {tier} cardset tiers. Keep going!",
         groups=groups,
         note=note,

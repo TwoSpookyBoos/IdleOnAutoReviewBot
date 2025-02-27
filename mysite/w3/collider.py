@@ -215,7 +215,7 @@ def getAtomExclusionsList() -> list[str]:
 
     return exclusionsList
 
-def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
+def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     collider_AdviceDict = {
         'Atoms': {},
     }
@@ -250,7 +250,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
         informational=True if tier_atomLevels >= max_tier else False
     )
     overall_ColliderTier = min(max_tier + info_tiers, tier_atomLevels)
-    return tiers_ag, overall_ColliderTier, max_tier
+    return tiers_ag, overall_ColliderTier, max_tier, max_tier + info_tiers
 
 def getColliderAdviceSection() -> AdviceSection:
     #highestConstructionLevel = max(session_data.account.all_skills["Construction"])
@@ -266,7 +266,7 @@ def getColliderAdviceSection() -> AdviceSection:
 
     # Generate AdviceGroups
     collider_AdviceGroupDict = {}
-    collider_AdviceGroupDict['Atoms'], overall_ColliderTier, max_tier = getProgressionTiersAdviceGroup()
+    collider_AdviceGroupDict['Atoms'], overall_ColliderTier, max_tier, true_max = getProgressionTiersAdviceGroup()
     collider_AdviceGroupDict['ColliderSettings'] = getColliderSettingsAdviceGroup()
     collider_AdviceGroupDict['CostReduction'] = getCostReductionAdviceGroup()
 
@@ -277,6 +277,8 @@ def getColliderAdviceSection() -> AdviceSection:
         name="Atom Collider",
         tier=tier_section,
         pinchy_rating=overall_ColliderTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Best Collider tier met: {tier_section}{break_you_best if overall_ColliderTier >= max_tier else ''}",
         picture="Collider.gif",
         groups=collider_AdviceGroupDict.values()

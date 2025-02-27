@@ -15,7 +15,7 @@ def getNoFeathersGeneratingAlert():
         )
         session_data.account.alerts_AdviceDict['World 1'].append(alert_advice)
 
-def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
+def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     owl_AdviceDict = {
         "MegaFeathers": {}
     }
@@ -83,7 +83,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
         informational=tier_MegaFeathers >= max_tier
     )
     overall_SectionTier = min(max_tier + infoTiers, tier_MegaFeathers)
-    return tiers_ag, overall_SectionTier, max_tier
+    return tiers_ag, overall_SectionTier, max_tier, max_tier + infoTiers
 
 def getOwlAdviceSection() -> AdviceSection:
     # Generate Alert Advice
@@ -91,7 +91,7 @@ def getOwlAdviceSection() -> AdviceSection:
 
     # Generate AdviceGroups
     owl_AdviceGroupDict = {}
-    owl_AdviceGroupDict['MegaFeathers'], overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
+    owl_AdviceGroupDict['MegaFeathers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
 
     # Generate AdviceSection
 
@@ -100,6 +100,8 @@ def getOwlAdviceSection() -> AdviceSection:
         name="Owl",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Best Owl tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture='Owl.gif',
         groups=owl_AdviceGroupDict.values()

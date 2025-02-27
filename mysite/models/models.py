@@ -680,6 +680,8 @@ class AdviceSection(AdviceBase):
         collapse: bool | None = None,
         groups: list[AdviceGroup] = [],
         pinchy_rating: int = 0,
+        max_tier: int = 0,
+        true_max_tier: int = 0,
         completed: bool | None = None,
         unreached: bool = False,
         unrated: bool = False,
@@ -694,6 +696,8 @@ class AdviceSection(AdviceBase):
         self.picture: str = picture
         self.groups: list[AdviceGroup] = groups
         self.pinchy_rating: int = pinchy_rating
+        self.max_tier: int = max_tier
+        self.true_max_tier: int = true_max_tier
         self.completed: bool | None = completed
         self.unreached = unreached
         self.unrated = unrated

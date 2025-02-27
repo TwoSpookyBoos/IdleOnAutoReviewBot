@@ -1,3 +1,4 @@
+from consts import break_you_bestest, true_max_tiers
 from models.models import Advice, AdviceSection, AdviceGroup
 from utils.text_formatting import pl
 from utils.logging import get_logger
@@ -8,15 +9,15 @@ logger = get_logger(__name__)
 
 class Tier:
     def __init__(
-            self,
-            tier: int,
-            section: str = None,
-            section_complete: bool = False,
-            section_informational: bool = False,
-            section_unrated: bool = False,
-            current: 'Threshold' = None,
-            previous: 'Threshold' = None,
-            next: 'Threshold' = None
+        self,
+        tier: int,
+        section: str = None,
+        section_complete: bool = False,
+        section_informational: bool = False,
+        section_unrated: bool = False,
+        current: 'Threshold' = None,
+        previous: 'Threshold' = None,
+        next: 'Threshold' = None
     ):
         self.tier = tier
         self.section = section
@@ -54,7 +55,8 @@ class Threshold:
     EARLY_W7_PREP = "Early W7 Prep"
     SOLID_W7_PREP = "Solid W7 Prep"
     W7_WAITING_ROOM = "W7 Waiting Room"
-    MAX_TIER = "Maxed for v2.30"
+    MAX_TIER = "Practical Max"
+    TRUE_MAX = "True Max"
     PLACEHOLDER = "Placeholder"
 
     thresholdNames = [
@@ -65,7 +67,7 @@ class Threshold:
         EARLY_W5, MID_W5, LATE_W5,
         EARLY_W6, MID_W6, LATE_W6,
         EARLY_W7_PREP, SOLID_W7_PREP, W7_WAITING_ROOM,
-        MAX_TIER,
+        MAX_TIER, TRUE_MAX,
         PLACEHOLDER
     ]
 
@@ -174,37 +176,36 @@ class Placements(dict):
 
     sectionThresholds = {
         # [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,99] #template
-        #               W1   W2          W3              W4              W5              W6              W7              Max   Placeholder
-        COMBAT_LEVELS: [0,   3, 7, 8,    10, 14, 15,     16, 17, 18,     19, 21, 23,     24, 25, 27,     28, 29, 30,     32,   99],
-        SECRET_CLASS_PATH:[0,0, 0, 0,    0,  0,  0,      0,  1,  1,      2,  3,  3,      3,  3,  3,      3,  3,  3,      3,    99],
-        ACHIEVEMENTS:  [0,   0, 0, 0,    0,  1,  1,      1,  1,  1,      2,  2,  2,      2,  2,  2,      3,  4,  5,      5,    99],
-        GSTACKS:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      1,  2,  2,      2,  3,  3,      3,    99],
-        STAMPS:        [0,   1, 2, 3,    4,  5,  6,      7,  8,  9,      10, 11, 12,     13, 14, 15,     16, 17, 18,     20,   99],
-        BRIBES:        [0,   1, 1, 1,    2,  2,  2,      3,  3,  3,      4,  4,  4,      4,  5,  5,      5,  5,  5,      6,    99],
-        SMITHING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  1,  1,      1,  2,  2,      3,  4,  5,      6,    99],
-        STATUES:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      1,  2,  3,      4,  5,  7,      11,   99],
-        STAR_SIGNS:    [0,   0, 0, 0,    0,  1,  1,      1,  2,  2,      2,  3,  3,      3,  4,  4,      5,  5,  6,      6,    99],
-        OWL:           [0,   0, 0, 0,    1,  1,  1,      1,  1,  1,      1,  1,  1,      1,  2,  2,      2,  2,  2,      3,    99],
-        BUBBLES:       [0,   0, 0, 0,    0,  0,  1,      1,  1,  2,      2,  2,  3,      3,  4,  5,      7,  9, 10,      12,   99],
-        VIALS:         [0,   0, 0, 0,    1,  1,  2,      2,  3,  4,      5,  6,  7,      8,  9,  10,     12, 20, 25,     26,   99],
-        P2W:           [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  1,      1,  1,  1,      1,  1,  1,      1,    99],
-        SIGILS:        [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  1,      2,  3,  4,      8,    99],
-        #POST_OFFICE:   [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,    99],
-        ISLANDS:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      4,    99],
-        REFINERY:      [0,   0, 0, 0,    0,  0,  0,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,    99],
-        SAMPLING:      [0,   0, 0, 0,    0,  1,  1,      1,  2,  2,      2,  3,  3,      3,  4,  5,      6,  7,  8,      10,   99],
-        SALT_LICK:     [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      9,    99],
-        DEATH_NOTE:    [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      3,  5,  5,      5,  5,  6,      10, 17, 24,     25,   99],
-        COLLIDER:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  10,     13,   99],
-        PRAYERS:       [0,   0, 0, 0,    0,  0,  0,      0,  1,  1,      2,  3,  4,      4,  5,  6,      7,  7,  7,      7,    99],
-        TRAPPING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      7,  7,  7,      7,  10, 10,     12, 12, 12,     12,   99],
-        EQUINOX:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      11,   99],
-        BREEDING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  1,      1,  2,  2,      3,  4,  5,      6,  8,  9,      11,   99],
-        COOKING:       [0,   0, 0, 0,    0,  0,  0,      1,  1,  1,      1,  1,  2,      3,  4,  4,      5,  5,  5,      6,    99],
-        RIFT:          [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      4,  6,  8,      9,  10, 11,     11,   99],
-        DIVINITY:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  3,  5,      7,  8,  9,      10, 11, 12,     12,   99],
-        SAILING:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  2,  3,      5,  7,  9,      11, 14, 16,     18,   99],
-        FARMING:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  1,      2,  3,  4,      9,    99],
+        #               W1   W2          W3              W4              W5              W6              W7              Max    True    Placeholder
+        COMBAT_LEVELS: [0,   3, 7, 8,    10, 14, 15,     16, 17, 18,     19, 21, 23,     24, 25, 27,     28, 29, 30,     32,    true_max_tiers[COMBAT_LEVELS], 99],
+        SECRET_CLASS_PATH:[0,0, 0, 0,    0,  0,  0,      0,  1,  1,      2,  3,  3,      3,  3,  3,      3,  3,  3,      3,     true_max_tiers[SECRET_CLASS_PATH], 99],
+        ACHIEVEMENTS:  [0,   0, 0, 0,    0,  1,  1,      1,  1,  1,      2,  2,  2,      2,  2,  2,      3,  4,  5,      5,     true_max_tiers[ACHIEVEMENTS], 99],
+        GSTACKS:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      1,  2,  2,      2,  3,  3,      3,     true_max_tiers[GSTACKS], 99],
+        STAMPS:        [0,   1, 2, 3,    4,  5,  6,      7,  8,  9,      10, 11, 12,     13, 14, 15,     16, 17, 18,     20,    true_max_tiers[STAMPS], 99],
+        BRIBES:        [0,   1, 1, 1,    2,  2,  2,      3,  3,  3,      4,  4,  4,      4,  5,  5,      5,  5,  5,      6,     true_max_tiers[BRIBES], 99],
+        SMITHING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  1,  1,      1,  2,  2,      3,  4,  5,      6,     true_max_tiers[SMITHING], 99],
+        STATUES:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      1,  2,  3,      4,  5,  7,      11,    true_max_tiers[STATUES], 99],
+        STAR_SIGNS:    [0,   0, 0, 0,    0,  1,  1,      1,  2,  2,      2,  3,  3,      3,  4,  4,      5,  5,  6,      6,     true_max_tiers[STAR_SIGNS], 99],
+        OWL:           [0,   0, 0, 0,    1,  1,  1,      1,  1,  1,      1,  1,  1,      1,  2,  2,      2,  2,  2,      3,     true_max_tiers[OWL], 99],
+        BUBBLES:       [0,   0, 0, 0,    0,  0,  1,      1,  1,  2,      2,  2,  3,      3,  4,  5,      7,  9, 10,      12,    true_max_tiers[BUBBLES], 99],
+        VIALS:         [0,   0, 0, 0,    1,  1,  2,      2,  3,  4,      5,  6,  7,      8,  9,  10,     12, 20, 25,     26,    true_max_tiers[VIALS], 99],
+        P2W:           [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  1,      1,  1,  1,      1,  1,  1,      1,     true_max_tiers[P2W], 99],
+        SIGILS:        [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  1,      2,  3,  4,      8,     true_max_tiers[SIGILS], 99],
+        ISLANDS:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      4,     true_max_tiers[ISLANDS], 99],
+        REFINERY:      [0,   0, 0, 0,    0,  0,  0,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,     true_max_tiers[REFINERY], 99],
+        SAMPLING:      [0,   0, 0, 0,    0,  1,  1,      1,  2,  2,      2,  3,  3,      3,  4,  5,      6,  7,  8,      10,    true_max_tiers[SAMPLING], 99],
+        SALT_LICK:     [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      9,     true_max_tiers[SALT_LICK], 99],
+        DEATH_NOTE:    [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      3,  5,  5,      5,  5,  6,      10, 17, 24,     25,    true_max_tiers[DEATH_NOTE], 99],
+        COLLIDER:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  10,     13,    true_max_tiers[COLLIDER], 99],
+        PRAYERS:       [0,   0, 0, 0,    0,  0,  0,      0,  1,  1,      2,  3,  4,      4,  5,  6,      7,  7,  7,      7,     true_max_tiers[PRAYERS], 99],
+        TRAPPING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      7,  7,  7,      7,  10, 10,     12, 12, 12,     12,    true_max_tiers[TRAPPING], 99],
+        EQUINOX:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      11,    true_max_tiers[EQUINOX], 99],
+        BREEDING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  1,      1,  2,  2,      3,  4,  5,      6,  8,  9,      11,    true_max_tiers[BREEDING], 99],
+        COOKING:       [0,   0, 0, 0,    0,  0,  0,      1,  1,  1,      1,  1,  2,      3,  4,  4,      5,  5,  5,      6,     true_max_tiers[COOKING], 99],
+        RIFT:          [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      4,  6,  8,      9,  10, 11,     11,    true_max_tiers[RIFT], 99],
+        DIVINITY:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  3,  5,      7,  8,  9,      10, 11, 12,     12,    true_max_tiers[DIVINITY], 99],
+        SAILING:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  2,  3,      5,  7,  9,      11, 14, 16,     18,    true_max_tiers[SAILING], 99],
+        FARMING:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  1,      2,  3,  4,      9,     true_max_tiers[FARMING], 99],
     }
     section_count = len(sectionThresholds)
 
@@ -238,7 +239,7 @@ class Placements(dict):
 
     @property
     def maxed_count(self):
-        return len(self.final.get(Threshold.MAX_TIER, list()))
+        return len(self.final.get(Threshold.MAX_TIER, list())) + len(self.final.get(Threshold.TRUE_MAX, list()))
 
     def finalise(self):
         for name in Threshold.thresholdNames:
@@ -289,7 +290,7 @@ class Thresholds(dict):
 def sort_pinchy_reviews(dictOfPRs) -> Placements:
     placements = Placements()
 
-    for section, (pinchy_tier, section_complete, section_informational, section_unrated) in dictOfPRs.items():
+    for section, (pinchy_tier, section_complete, section_informational, section_unrated, section_max_tier, section_true_max_tier) in dictOfPRs.items():
         tier = Tier(pinchy_tier, section, section_complete, section_informational, section_unrated)
         placements.place(tier)
 
@@ -337,7 +338,6 @@ def tier_from_monster_kills(dictOfPRs) -> Threshold:
     """find highest enemy killed or world unlocked to compare to"""
     expectedThreshold = Threshold.fromname(Threshold.W1)
 
-    #highestPrint = session_data.account.printer['HighestValue']
     mobKillThresholds = []
     try:
         if dictOfPRs[Placements.SAMPLING][0] >= 10:
@@ -371,9 +371,9 @@ def generate_advice_list(sections: list[Tier], threshold: Threshold):
             completed=section.section_complete,
             informational=section.section_informational,
             unrated=section.section_unrated
-            ) for section in sections
+        ) for section in sections
     ]
-    if threshold == Threshold.fromname(Threshold.MAX_TIER):
+    if threshold == Threshold.fromname(Threshold.TRUE_MAX):
         for advice in advices:
             advice.progression = ""
             advice.goal = ""
@@ -437,7 +437,16 @@ def getAlertsAdviceGroup() -> AdviceGroup:
 
 
 def generatePinchyWorld(pinchable_sections: list[AdviceSection], unrated_sections: list[AdviceSection]):
-    dictOfPRs = {section.name: [section.pinchy_rating, section.completed, section.informational, section.unrated] for section in pinchable_sections if not section.unreached}
+    dictOfPRs = {
+        section.name: [
+            section.pinchy_rating,
+            section.completed,
+            section.informational,
+            section.unrated,
+            section.max_tier,
+            section.true_max_tier
+        ] for section in pinchable_sections if not section.unreached
+    }
 
     sectionPlacements: Placements = sort_pinchy_reviews(dictOfPRs)
     expectedThreshold: Threshold = tier_from_monster_kills(dictOfPRs)
@@ -495,7 +504,7 @@ def generatePinchyWorld(pinchable_sections: list[AdviceSection], unrated_section
         tier=sections_maxed,
         pinchy_rating=sections_maxed_count,
         header=f"Sections maxed: {sections_maxed}"
-               f"{'<br>You Bestest ❤️' if sections_maxed_count >= sections_total else ''}",
+               f"{break_you_bestest if sections_maxed_count >= sections_total else ''}",
         picture="Pinchy.gif",
         groups=advice_groups,
         complete=False

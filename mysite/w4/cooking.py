@@ -228,6 +228,7 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
 
     for advice in cooking_AdviceDict["NextTier"]:
         mark_advice_completed(advice)
+
     # Generate Advice Groups
     cooking_AdviceGroupDict["NextTier"] = AdviceGroup(
         tier=f"{tier_Cooking if tier_Cooking < max_tier else ''}",
@@ -253,7 +254,7 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
         informational=True
     )
     overall_SectionTier = min(max_tier + infoTiers, tier_Cooking)
-    return cooking_AdviceGroupDict, overall_SectionTier, max_tier
+    return cooking_AdviceGroupDict, overall_SectionTier, max_tier, max_tier + infoTiers
 
 
 def getCookingMealsAdviceGroup() -> AdviceGroup:
@@ -294,7 +295,7 @@ def getCookingAdviceSection() -> AdviceSection:
         return cooking_AdviceSection
 
     #Generate AdviceGroup
-    cooking_AdviceGroupDict, overall_SectionTier, max_tier = getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel)
+    cooking_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel)
     cooking_AdviceGroupDict['AllMeals'] = getCookingMealsAdviceGroup()
 
     # Generate AdviceSection
@@ -303,6 +304,8 @@ def getCookingAdviceSection() -> AdviceSection:
         name="Cooking",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Best Cooking tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture="Cooking_Table.gif",
         groups=cooking_AdviceGroupDict.values()

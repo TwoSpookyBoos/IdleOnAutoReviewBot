@@ -282,12 +282,12 @@ def getProgressionTiersAdviceGroup():
                     advices=smithing_AdviceDict["ForgeUpgrades"],
                     post_string="As of v2.12, Forge EXP Gain does absolutely nothing. Feel free to skip it!"
                 )
-    overall_SectionTier = min(tier_CashPoints + info_tiers, tier_MonsterPoints, tier_ForgeTotals)
-    return smithing_AdviceGroupDict, overall_SectionTier, max_tier
+    overall_SectionTier = min(max_tier + info_tiers, tier_CashPoints, tier_MonsterPoints, tier_ForgeTotals)
+    return smithing_AdviceGroupDict, overall_SectionTier, max_tier, max_tier + info_tiers
 
 def getSmithingAdviceSection() -> AdviceSection:
     #Generate AdviceGroups
-    smithing_AdviceGroupDict, overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
+    smithing_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
     smithing_AdviceGroupDict["OreCapacity"], smithing_AdviceGroupDict["Bars"] = getForgeCapacityAdviceGroup()
 
     #Generate AdviceSection
@@ -296,6 +296,8 @@ def getSmithingAdviceSection() -> AdviceSection:
         name="Smithing",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Best Smithing tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture="Smithing_Infinity_Hammer.gif",
         groups=smithing_AdviceGroupDict.values()

@@ -797,39 +797,11 @@ bubbles_progressionTiers = [
      "Larry at 150 = 72% chance for +2 levels. Somewhere around level 125-150, this bubble should pass 100m Dementia Ore cost and be available to level with Boron upgrades from the W3 Atom Collider in Construction.  It should be, in my opinion, the ONLY Utility Bubble you spend these daily clicks on until it reaches 501. If you cannot afford the Particles needed to level Larry, invest into Sampling Bubbles."],
     [8, 120,
      {'Roid Ragin': 567, 'Warriors Rule': 284, 'Hearty Diggy': 567, 'Stronk Tools': 397, 'Multorange': 170, 'Dream Of Ironfish': 170},
-     {'Swift Steppin': 567, 'Archer Or Bust': 284, 'Premigreen': 170},
+     {'Swift Steppin': 567, 'Premigreen': 170},
      {'Stable Jenius': 567, 'Mage Is Best': 284, 'Hocus Choppus': 567, 'Le Brain Tools': 397, 'Severapurple': 170, 'Tree Sleeper': 227},
      {'Hammer Hammer': 180},
      "85% max value",
      ""],
-    # [9, 120,
-    #  {'Roid Ragin': 615, 'Warriors Rule': 308, 'Hearty Diggy': 615, 'Stronk Tools': 430, 'Multorange': 185, 'Dream Of Ironfish': 185},
-    #  {'Swift Steppin': 615, 'Archer Or Bust': 308, 'Premigreen': 185},
-    #  {'Stable Jenius': 615, 'Mage Is Best': 308, 'Hocus Choppus': 615, 'Le Brain Tools': 430, 'Severapurple': 185, 'Tree Sleeper': 246},
-    #  {'Hammer Hammer': 210},
-    #  "86% max value",
-    #  ""],
-    # [10, 120,
-    #  {'Roid Ragin': 670, 'Warriors Rule': 335, 'Hearty Diggy': 670, 'Stronk Tools': 469, 'Multorange': 201, 'Dream Of Ironfish': 201},
-    #  {'Swift Steppin': 670, 'Archer Or Bust': 335, 'Premigreen': 201},
-    #  {'Stable Jenius': 670, 'Mage Is Best': 335, 'Hocus Choppus': 670, 'Le Brain Tools': 469, 'Severapurple': 201, 'Tree Sleeper': 268},
-    #  {'Laaarrrryyyy': 501},
-    #  "87% max value",
-    #  ""],
-    # [11, 120,
-    #  {'Roid Ragin': 700, 'Warriors Rule': 367, 'Hearty Diggy': 734, 'Stronk Tools': 514, 'Multorange': 220, 'Dream Of Ironfish': 220},
-    #  {'Swift Steppin': 700, 'Archer Or Bust': 367, 'Premigreen': 220},
-    #  {'Stable Jenius': 700, 'Mage Is Best': 367, 'Hocus Choppus': 734, 'Le Brain Tools': 514, 'Severapurple': 220, 'Tree Sleeper': 294},
-    #  {'Cookin Roadkill': 630, 'Hammer Hammer': 270},
-    #  "88% max value",
-    #  ""],
-    # [12, 120,
-    #  {'Roid Ragin': 720, 'Warriors Rule': 405, 'Hearty Diggy': 810, 'Stronk Tools': 567, 'Multorange': 243, 'Dream Of Ironfish': 243},
-    #  {'Swift Steppin': 720, 'Archer Or Bust': 405, 'Premigreen': 243},
-    #  {'Stable Jenius': 720, 'Mage Is Best': 405, 'Hocus Choppus': 810, 'Le Brain Tools': 567, 'Severapurple': 243, 'Tree Sleeper': 324},
-    #  {'Startue Exp': 240, 'Hammer Hammer': 300},
-    #  "89% max value",
-    #  ""],
     [9, 120,
      {'Roid Ragin': 740, 'Warriors Rule': 450, 'Hearty Diggy': 900, 'Stronk Tools': 630, 'Multorange': 270, 'Dream Of Ironfish': 270},
      {'Swift Steppin': 740, 'Archer Or Bust': 450, 'Premigreen': 270},
@@ -838,58 +810,16 @@ bubbles_progressionTiers = [
       'Droppin Loads': 280, 'Shimmeron': 360, 'Buff Boi Talent': 100, 'Fast Boi Talent': 100, 'Smart Boi Talent': 100,},
      "90% max value",
      ""],
-    # [14, 120,
-    #  {'Roid Ragin': 760, 'Warriors Rule': 506, 'Multorange': 304},
-    #  {'Swift Steppin': 760, 'Archer Or Bust': 506, 'Premigreen': 304},
-    #  {'Stable Jenius': 760, 'Mage Is Best': 506, 'Severapurple': 304},
-    #  {'Call Me Bob': 200, 'Shimmeron': 405},
-    #  "91% max value",
-    #  ""],
-    # [15, 120,
-    #  {'Roid Ragin': 780, 'Warriors Rule': 575, 'Multorange': 345},
-    #  {'Swift Steppin': 780, 'Archer Or Bust': 575, 'Premigreen': 345},
-    #  {'Stable Jenius': 780, 'Mage Is Best': 575, 'Severapurple': 345},
-    #  {'Big P': 140, 'Big Game Hunter': 70, 'Mr Massacre': 117, 'Shimmeron': 460},
-    #  "92% max value",
-    #  ""],
-    # [16, 120,
-    #  {'Roid Ragin': 800, 'Warriors Rule': 665, 'Multorange': 399},
-    #  {'Swift Steppin': 800, 'Archer Or Bust': 665, 'Premigreen': 399},
-    #  {'Stable Jenius': 800, 'Mage Is Best': 665, 'Severapurple': 399},
-    #  {'Big P': 240, 'Big Game Hunter': 120, 'Mr Massacre': 200, 'Shimmeron': 532},
-    #  "93% max value",
-    #  ""],
-    # [17, 120,
-    #  {'Roid Ragin': 820, 'Warriors Rule': 784, 'Multorange': 470},
-    #  {'Swift Steppin': 820, 'Archer Or Bust': 784, 'Premigreen': 470},
-    #  {'Stable Jenius': 820, 'Mage Is Best': 784, 'Severapurple': 470},
-    #  {'Big P': 340, 'Call Me Bob': 300, 'Big Game Hunter': 170, 'Mr Massacre': 284, 'Shimmeron': 627},
-    #  "94% max value",
-    #  ""],
     [10, 120,
      {'Roid Ragin': 840, 'Warriors Rule': 950, 'Multorange': 570, },
-     {'Swift Steppin': 840, 'Archer Or Bust': 950, 'Premigreen': 570},
+     {'Swift Steppin': 840},
      {'Stable Jenius': 840, 'Mage Is Best': 950,  'Severapurple': 570},
      {'Laaarrrryyyy': 900, 'Big P': 540, 'Call Me Bob': 500, 'Carpenter': 450, 'Big Game Hunter': 270, 'Mr Massacre': 450, "Grind Time": 500},
      "95% max value",
      ""],
-    # [19, 120,
-    #  {'Roid Ragin': 860, 'Warriors Rule': 1200, 'Multorange': 720},
-    #  {'Swift Steppin': 860, 'Archer Or Bust': 1200},
-    #  {'Stable Jenius': 860, 'Mage Is Best': 1200, 'Severapurple': 720},
-    #  {'Call Me Bob': 700, 'Cropius Mapper': 630, 'Lo Cost Mo Jade': 360, 'Buff Boi Talent': 200, 'Fast Boi Talent': 200, 'Smart Boi Talent': 200,},
-    #  "96% max value",
-    #  ""],
-    # [20, 120,
-    #  {'Roid Ragin': 880, 'Warriors Rule': 1617, 'Multorange': 970},
-    #  {'Swift Steppin': 880, 'Archer Or Bust': 1617},
-    #  {'Stable Jenius': 880, 'Mage Is Best': 1617, 'Severapurple': 970},
-    #  {'Cookin Roadkill': 1330, 'Big P': 940, 'Laaarrrryyyy': 1900, 'Call Me Bob': 1000, 'Big Game Hunter': 570, 'Mr Massacre': 950, 'Diamond Chef': 553, 'Lo Cost Mo Jade': 760},
-    #  "97% max value",
-    #  ""],
     [11, 120,
      {'Roid Ragin': 900, 'Warriors Rule': 2450, 'Multorange': 1470},
-     {'Swift Steppin': 900, 'Archer Or Bust': 2450},
+     {'Swift Steppin': 900},
      {'Stable Jenius': 900, 'Mage Is Best': 2450, 'Severapurple': 1470},
      {
         'Cropius Mapper': 630, 'Buff Boi Talent': 200, 'Fast Boi Talent': 200, 'Smart Boi Talent': 200,  #Old t19
@@ -900,7 +830,7 @@ bubbles_progressionTiers = [
      ""],
     [12, 120,
      {'Roid Ragin': 950, 'Warriors Rule': 4950, 'Multorange': 2970},
-     {'Swift Steppin': 950, 'Archer Or Bust': 4950},
+     {'Swift Steppin': 950},
      {'Stable Jenius': 950, 'Mage Is Best': 4950, 'Severapurple': 2970},
      {
         'Big P': 1440, 'Call Me Bob': 2500, 'Nickel Of Wisdom': 120, "Penny Of Strength": 120, "Dollar Of Agility": 120,
@@ -1949,6 +1879,8 @@ farming_progressionTiers = {
     }  #440% Vines, then 99% the Alchemy Bubbles
 }
 
+
+
 ###UI CONSTS###
 #If you add a new switch here, you need to also add a default in \static\scripts\main.js:defaults
 switches = [
@@ -2036,6 +1968,7 @@ switches = [
 currentWorld = 6
 maxCharacters = 10
 break_you_best = "<br>You best ❤️"
+break_you_bestest = "<br>You bestest ❤️"
 break_keep_it_up = "<br>Keep it up! You're on the right track! ❤️"
 infinity_string = "∞"
 versions_patches = {
@@ -5432,6 +5365,7 @@ apocDifficultyNameList = [
     'Basic W1 Enemies', 'Basic W2 Enemies', 'Basic W3 Enemies', 'Basic W4 Enemies', 'Basic W5 Enemies', 'Basic W6 Enemies',
     'Easy Extras', 'Medium Extras', 'Difficult Extras', 'Insane', 'Impossible'
 ]
+maxCritterTypes = 12
 trappingQuestsRequirementList = [
     {"QuestName": "Frogecoin to the MOON!",         'RequiredItems': {"Critter1": 100,   "Critter1A": 1}},
     {"QuestName": "Yet another Cartoon Reference",  'RequiredItems': {"Critter2": 250,   "Critter2A": 1}},
@@ -6469,9 +6403,12 @@ caverns_conjuror_majiks = {
     ]
 }
 max_majiks = 0
+total_placeholder_majiks = 0
 for majik_type, majiks in caverns_conjuror_majiks.items():
     for majik in majiks:
         max_majiks += majik['MaxLevel']
+        if 'placeholder' in majik['Description']:
+            total_placeholder_majiks += majik['MaxLevel']
 caverns_measurer_measurement_resources = HolesInfo[50]
 caverns_measurer_scalar_matchup = HolesInfo[52]
 caverns_measurer_scalars = HolesInfo[53]
@@ -9343,4 +9280,37 @@ anvilTabs = {
     "Anvil Tab V":"EquipmentSmithingTabs5",
     "Anvil Tab VI": "EquipmentSmithingTabs6",
     #"Anvil Tab VII": "EquipmentSmithingTabs7",
+}
+
+true_max_tiers = {
+    "Combat Levels": combatLevels_progressionTiers[-1][0],
+    "Secret Class Path": numberOfSecretClasses,
+    "Achievements": max(achievements_progressionTiers.keys()),
+    "Greenstacks": max(greenstack_progressionTiers.keys()),
+    "Stamps": max(stamps_progressionTiers.keys()),
+    "Bribes": bribes_progressionTiers[-1][0],
+    "Smithing": smithing_progressionTiers[-1][0],
+    "Statues": max(statues_progressionTiers.keys()),
+    "Star Signs": max(starsigns_progressionTiers.keys()),
+    "Owl": max(owl_progressionTiers.keys()),
+    "Bubbles": bubbles_progressionTiers[-1][0],
+    "Vials": vials_progressionTiers[-1][0],
+    "Pay2Win": 1,
+    "Sigils": max(sigils_progressionTiers.keys()),
+    # "Post Office": ,
+    "Islands": max(islands_progressionTiers.keys()),
+    "Refinery": 1,
+    "Sampling": max(sampling_progressionTiers.keys()),
+    "Salt Lick": saltLick_progressionTiers[-1][0],
+    "Death Note": deathNote_progressionTiers[-1][0],
+    "Atom Collider": max(atoms_progressionTiers.keys()),
+    "Prayers": prayers_progressionTiers[-1][0],
+    "Trapping": maxCritterTypes,
+    "Equinox": len(dreamsThatUnlockNewBonuses)+1,
+    "Breeding": max(breeding_progressionTiers.keys()),
+    "Cooking": 6+1,  #TODO
+    "Rift": max(rift_progressionTiers.keys()),
+    "Divinity": max(divinity_progressionTiers.keys()),
+    "Sailing": max(sailing_progressionTiers.keys()),
+    "Farming": max(farming_progressionTiers.keys())
 }

@@ -8,7 +8,7 @@ from consts import (
     max_schematics,
     max_majiks,
     max_measurements,
-    break_you_best, infinity_string, released_schematics
+    break_you_best, infinity_string, released_schematics, total_placeholder_majiks
 )
 
 #villagers_progressionTiers,
@@ -45,7 +45,7 @@ def getExplorerAdviceGroup() -> AdviceGroup:
 # Villager Stats
     #Practical Max Level
     villager_advice[v_stats].append(Advice(
-        label=f"{villager['Title']} level for all unlocks",
+        label=f"{villager['Title']} level for all implemented unlocks",
         picture_class=villager_name,
         progression=villager['Level'],
         goal=max_cavern
@@ -94,7 +94,8 @@ def getExplorerAdviceGroup() -> AdviceGroup:
         tier="",
         pre_string=f"Informational- Level {villager['Level']} {villager['Title']}",
         advices=villager_advice,
-        informational=True
+        informational=True,
+        completed=villager['Level'] >= max_cavern
     )
     return villager_ag
 
@@ -125,7 +126,7 @@ def getEngineerAdviceGroup() -> AdviceGroup:
 # Villager Stats
     # Practical Max Level
     villager_advice[v_stats].append(Advice(
-        label=f"{villager['Title']} level for all unlocks",
+        label=f"{villager['Title']} level for all implemented unlocks",
         picture_class=villager_name,
         progression=villager['Level'],
         goal=max_engi_level_needed
@@ -154,7 +155,7 @@ def getEngineerAdviceGroup() -> AdviceGroup:
         label=f"Total Schematics purchased",
         picture_class='empty-schematic',
         progression=session_data.account.caverns['TotalSchematics'],
-        goal=max_schematics
+        goal=released_schematics
     ))
     if session_data.account.caverns['TotalSchematics'] < max_schematics:
         for list_index, schematic_number in enumerate(caverns_engineer_schematics_unlock_order):
@@ -185,7 +186,8 @@ def getEngineerAdviceGroup() -> AdviceGroup:
         tier="",
         pre_string=f"Informational- Level {villager['Level']} {villager['Title']}",
         advices=villager_advice,
-        informational=True
+        informational=True,
+        completed=session_data.account.caverns['TotalSchematics'] >= released_schematics
     )
     villager_ag.remove_empty_subgroups()
     return villager_ag
@@ -227,10 +229,10 @@ def getConjurorAdviceGroup() -> AdviceGroup:
 # Villager Stats
     # Practical Max Level
     villager_advice[v_stats].append(Advice(
-        label=f"{villager['Title']} level for all unlocks",
+        label=f"{villager['Title']} level for all implemented unlocks",
         picture_class=villager_name,
         progression=villager['Level'],
-        goal=max_majiks - session_data.account.gemshop['Conjuror Pts']
+        goal=max_majiks - total_placeholder_majiks - session_data.account.gemshop['Conjuror Pts']
     ))
     villager_advice[v_stats].append(Advice(
         label="Next level progress",
@@ -271,7 +273,8 @@ def getConjurorAdviceGroup() -> AdviceGroup:
         tier="",
         pre_string=f"Informational- Level {villager['Level']} {villager['Title']}",
         advices=villager_advice,
-        informational=True
+        informational=True,
+        completed=villager['Level'] >= max_majiks - total_placeholder_majiks - session_data.account.gemshop['Conjuror Pts']
     )
     return villager_ag
 
@@ -297,7 +300,7 @@ def getMeasurerAdviceGroup() -> AdviceGroup:
 # Villager Stats
     # Practical Max Level
     villager_advice[v_stats].append(Advice(
-        label=f"{villager['Title']} level for all unlocks",
+        label=f"{villager['Title']} level for all implemented unlocks",
         picture_class=villager_name,
         progression=villager['Level'],
         goal=max_measurements
@@ -353,11 +356,12 @@ def getMeasurerAdviceGroup() -> AdviceGroup:
         tier="",
         pre_string=f"Informational- Level {villager['Level']} {villager['Title']}",
         advices=villager_advice,
-        informational=True
+        informational=True,
+        completed=villager['Level'] >= max_measurements
     )
     return villager_ag
 
-def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
+def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     villagers_AdviceDict = {
         'Tiers': {},
     }
@@ -373,7 +377,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
         advices=villagers_AdviceDict['Tiers']
     )
     overall_SectionTier = min(max_tier + info_tiers, tier_Villagers)
-    return tiers_ag, overall_SectionTier, max_tier
+    return tiers_ag, overall_SectionTier, max_tier, max_tier + info_tiers
 
 def getVillagersAdviceSection() -> AdviceSection:
     #Check if player has reached this section
@@ -393,7 +397,7 @@ def getVillagersAdviceSection() -> AdviceSection:
 
     #Generate AdviceGroups
     villagers_AdviceGroupDict = {}
-    villagers_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
+    villagers_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
     villagers_AdviceGroupDict.update(getVillagersAdviceGroups())
 
     for ag in villagers_AdviceGroupDict.values():
@@ -405,6 +409,8 @@ def getVillagersAdviceSection() -> AdviceSection:
         name="Villagers",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header="Villager Information",  #f"Best Villagers tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture='wiki/Hole_Campfire.gif',
         groups=villagers_AdviceGroupDict.values(),

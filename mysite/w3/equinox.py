@@ -126,7 +126,7 @@ def getEquinoxProgressionTiersAdviceGroup():
         completed=recommendedSubgroupName not in equinox_AdviceDict["TotalUpgrades"]
     )
     overall_SectionTier = min(max_tier + infoTiers, tier_TotalDreamsCompleted)
-    return equinox_AdviceGroupDict, overall_SectionTier, max_tier
+    return equinox_AdviceGroupDict, overall_SectionTier, max_tier, max_tier + infoTiers
 
 def getEquinoxAdviceSection() -> AdviceSection:
     if not session_data.account.equinox_unlocked:
@@ -140,7 +140,7 @@ def getEquinoxAdviceSection() -> AdviceSection:
         return equinox_AdviceSection
 
     #Generate AdviceGroups
-    equinox_AdviceGroupDict, overall_SectionTier, max_tier = getEquinoxProgressionTiersAdviceGroup()
+    equinox_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getEquinoxProgressionTiersAdviceGroup()
 
     # Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
@@ -148,6 +148,8 @@ def getEquinoxAdviceSection() -> AdviceSection:
         name="Equinox",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Best Equinox tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture="Equinox_Valley_Mirror.gif",
         groups=equinox_AdviceGroupDict.values()

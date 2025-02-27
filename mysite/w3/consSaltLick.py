@@ -3,7 +3,7 @@ from flask import g as session_data
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
 
-def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
+def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     saltlick_AdviceDict = {
         "UnmaxedUpgrades": []
     }
@@ -35,7 +35,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
         post_string=f"{pl(saltlick_AdviceDict['UnmaxedUpgrades'], '', 'Shown upgrades are in Tier order.')}"
     )
     overall_SectionTier = min(max_tier + info_tiers, tier_RequiredSaltLickUpgrades)
-    return tiers_ag, overall_SectionTier, max_tier
+    return tiers_ag, overall_SectionTier, max_tier, max_tier + info_tiers
 
 def getSaltLickAdviceSection() -> AdviceSection:
     #highestConstructionLevel = max(session_data.account.all_skills["Construction"])
@@ -51,7 +51,7 @@ def getSaltLickAdviceSection() -> AdviceSection:
 
     #Generate AdviceGroup
     saltlick_AdviceGroupDict = {}
-    saltlick_AdviceGroupDict["UnmaxedUpgrades"], overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
+    saltlick_AdviceGroupDict["UnmaxedUpgrades"], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
 
     # Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
@@ -59,6 +59,8 @@ def getSaltLickAdviceSection() -> AdviceSection:
         name="Salt Lick",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Best Salt Lick tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture="Construction_Salt_Lick.gif",
         groups=saltlick_AdviceGroupDict.values()

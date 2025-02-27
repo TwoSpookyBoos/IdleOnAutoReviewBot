@@ -1178,7 +1178,7 @@ def getProgressionTiersAdviceGroup(farming, highestFarmingSkillLevel):
         informational=tier_All >= max_tier
     )
     overall_SectionTier = min(max_tier + infoTiers, tier_All)
-    return farming_AdviceGroupDict, overall_SectionTier, max_tier
+    return farming_AdviceGroupDict, overall_SectionTier, max_tier, max_tier + infoTiers
 
 def setFarmingProgressionTier():
     highestFarmingSkillLevel = max(session_data.account.all_skills["Farming"])
@@ -1196,7 +1196,7 @@ def setFarmingProgressionTier():
     farming = session_data.account.farming
 
     #Generate AdviceGroups
-    farming_AdviceGroupDict, overall_SectionTier, max_tier = getProgressionTiersAdviceGroup(farming, highestFarmingSkillLevel)
+    farming_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup(farming, highestFarmingSkillLevel)
     farming_AdviceGroupDict['Evo'] = getEvoChanceAdviceGroup(farming)
     farming_AdviceGroupDict['Speed'] = getSpeedAdviceGroup(farming)
     if farming['MarketUpgrades']['Overgrowth']['Level'] >= 1:
@@ -1216,6 +1216,8 @@ def setFarmingProgressionTier():
         name="Farming",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Best Farming tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture="wiki/FarmCropBean.png",
         groups=farming_AdviceGroupDict.values()

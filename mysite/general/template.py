@@ -9,7 +9,7 @@ from consts import (
 
 logger = get_logger(__name__)
 
-def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
+def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     template_AdviceDict = {
         'Tiers': {},
     }
@@ -25,7 +25,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
         advices=template_AdviceDict['Tiers']
     )
     overall_SectionTier = min(max_tier + info_tiers, tier_Template)
-    return tiers_ag, overall_SectionTier, max_tier
+    return tiers_ag, overall_SectionTier, max_tier, max_tier + info_tiers
 
 def getTemplateAdviceSection() -> AdviceSection:
     #Check if player has reached this section
@@ -46,7 +46,7 @@ def getTemplateAdviceSection() -> AdviceSection:
 
     #Generate AdviceGroups
     template_AdviceGroupDict = {}
-    template_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
+    template_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
 
     #Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
@@ -54,6 +54,8 @@ def getTemplateAdviceSection() -> AdviceSection:
         name="Template",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Best Template tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture="",
         groups=template_AdviceGroupDict.values(),

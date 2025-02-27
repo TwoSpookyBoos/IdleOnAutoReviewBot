@@ -58,7 +58,7 @@ def getRiftProgressionTiersAdviceGroup():
         informational=group_pre_string == "" or group_pre_string == "One last thing..."
     )
     overall_SectionTier = min(max_tier + info_tiers, tier_RiftBonusesUnlocked)
-    return rift_AdviceGroupDict, overall_SectionTier, max_tier
+    return rift_AdviceGroupDict, overall_SectionTier, max_tier, max_tier + info_tiers
 
 def getRiftAdviceSection() -> AdviceSection:
     if not session_data.account.rift['Unlocked']:
@@ -72,7 +72,7 @@ def getRiftAdviceSection() -> AdviceSection:
         return rift_AdviceSection
 
     #Generate AdviceGroups
-    rift_AdviceGroupDict, overall_SectionTier, max_tier = getRiftProgressionTiersAdviceGroup()
+    rift_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getRiftProgressionTiersAdviceGroup()
 
     #Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
@@ -80,6 +80,8 @@ def getRiftAdviceSection() -> AdviceSection:
         name="Rift",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Best Rift tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture="Rift_Ripper.gif",
         groups=rift_AdviceGroupDict.values()

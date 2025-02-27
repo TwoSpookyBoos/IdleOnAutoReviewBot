@@ -1,4 +1,4 @@
-from consts import break_keep_it_up, trappingQuestsRequirementList, trapset_images
+from consts import break_keep_it_up, trappingQuestsRequirementList, trapset_images, maxCritterTypes
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
 from utils.data_formatting import safe_loads, mark_advice_completed
@@ -6,7 +6,7 @@ from utils.logging import get_logger
 from flask import g as session_data
 
 logger = get_logger(__name__)
-maxCritterTypes = 12
+
 
 def getCritterName(inputNumber):
     reversedCritterIndexList = ["Tuttle", "Blobfish", "Honker", "Dung Beat", "Bunny", "Pingy", "Owlio", "Mousey", "Scorpie", "Crabbo", "Froge", "None"]

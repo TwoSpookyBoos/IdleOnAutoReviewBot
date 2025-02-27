@@ -454,7 +454,7 @@ def getBellAdviceGroup(schematics):
     )
     return cavern_ag
 
-def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
+def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     shallow_caverns_AdviceDict = {
         'Tiers': {},
     }
@@ -470,7 +470,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
         advices=shallow_caverns_AdviceDict['Tiers']
     )
     overall_SectionTier = min(max_tier + info_tiers, tier_Shallow_Caverns)
-    return tiers_ag, overall_SectionTier, max_tier
+    return tiers_ag, overall_SectionTier, max_tier, max_tier + info_tiers
 
 
 def getShallowCavernsAdviceSection() -> AdviceSection:
@@ -492,7 +492,7 @@ def getShallowCavernsAdviceSection() -> AdviceSection:
     #Generate AdviceGroups
     schematics = session_data.account.caverns['Schematics']
     shallow_caverns_AdviceGroupDict = {}
-    shallow_caverns_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
+    shallow_caverns_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
     shallow_caverns_AdviceGroupDict['The Well'] = getWellAdviceGroup(schematics)
     shallow_caverns_AdviceGroupDict['Motherlode'] = getMotherlodeAdviceGroup(schematics)
     shallow_caverns_AdviceGroupDict['The Den'] = getDenAdviceGroup(schematics)
@@ -508,6 +508,8 @@ def getShallowCavernsAdviceSection() -> AdviceSection:
         name="Shallow Caverns",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"The Shallow Caverns biome",  #f"Best Shallow Caverns tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture='Shallow_Caverns.png',
         groups=shallow_caverns_AdviceGroupDict.values(),

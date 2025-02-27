@@ -531,7 +531,7 @@ def getActiveGoalsAdviceGroup() -> AdviceGroup:
 
     return ag
 
-def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
+def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     template_AdviceDict = {
         'Tiers': {},
     }
@@ -547,7 +547,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
         advices=template_AdviceDict['Tiers']
     )
     overall_SectionTier = min(max_tier + info_tiers, tier_Active)
-    return tiers_ag, overall_SectionTier, max_tier
+    return tiers_ag, overall_SectionTier, max_tier, max_tier + info_tiers
 
 def getActiveAdviceSection() -> AdviceSection:
     if session_data.account.highestWorldReached < 4:
@@ -563,7 +563,7 @@ def getActiveAdviceSection() -> AdviceSection:
 
     # Generate AdviceGroups
     active_AdviceGroupDict = {}
-    active_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
+    active_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
     active_AdviceGroupDict['Crystals'] = getCrystalSpawnChanceAdviceGroup()
     active_AdviceGroupDict['ActiveFarming'] = getActiveGoalsAdviceGroup()
 
@@ -573,6 +573,9 @@ def getActiveAdviceSection() -> AdviceSection:
     active_AdviceSection = AdviceSection(
         name="Active",
         tier=tier_section,
+        pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Active Farming Information",
         picture='Auto.png',
         groups=active_AdviceGroupDict.values(),

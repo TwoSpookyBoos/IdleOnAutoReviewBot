@@ -167,11 +167,11 @@ def getProgressionTiersAdviceGroup():
             advices=achievements_AdviceDict[category]
         )
     overall_SectionTier = min(max_tier + infoTiers, min(tiers.values()))
-    return achievements_AdviceGroupDict, overall_SectionTier, max_tier
+    return achievements_AdviceGroupDict, overall_SectionTier, max_tier, max_tier + infoTiers
 
 def getAchievementsAdviceSection() -> AdviceSection:
     #Generate AdviceGroups
-    achievements_AdviceGroupDict, overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
+    achievements_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
 
     #Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
@@ -179,6 +179,8 @@ def getAchievementsAdviceSection() -> AdviceSection:
         name="Achievements",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Best Achievements tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture="Grasslands_Gary.gif",
         groups=achievements_AdviceGroupDict.values(),

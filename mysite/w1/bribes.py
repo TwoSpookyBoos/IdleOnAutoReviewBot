@@ -154,11 +154,11 @@ def getProgressionTiersAdviceGroup():
                 tier_BribesPurchased = tier[0]
 
     overall_SectionTier = min(max_tier + info_tiers, tier_BribesPurchased)
-    return bribe_AdviceGroupDict, overall_SectionTier, max_tier
+    return bribe_AdviceGroupDict, overall_SectionTier, max_tier, max_tier + info_tiers
 
 def getBribesAdviceSection() -> AdviceSection:
     #Generate AdviceGroups
-    bribe_AdviceGroupDict, overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
+    bribe_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
 
     # Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
@@ -166,6 +166,8 @@ def getBribesAdviceSection() -> AdviceSection:
         name="Bribes",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Best Bribe tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture='Bribes.png',
         groups=bribe_AdviceGroupDict.values()

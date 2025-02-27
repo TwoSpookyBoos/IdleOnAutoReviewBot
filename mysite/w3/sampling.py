@@ -375,7 +375,8 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
               f"<br>(Buff {ballot_status})",
         picture_class="ballot-11",
         progression=int(ballot_active),
-        goal=1
+        goal=1,
+        completed=True
     ))
 
     po_AdviceDict[cs_label].append(Advice(
@@ -478,12 +479,14 @@ def getProgressionTiersAdviceGroup():
     sampling_AdviceGroupDict["MaterialSamples"] = AdviceGroup(
         tier=tier_MaterialSamples,
         pre_string="Improve material samples",
-        advices=sampling_AdviceDict['MaterialSamples']
+        advices=sampling_AdviceDict['MaterialSamples'],
+        informational=all(['Info' in subgroupName for subgroupName in sampling_AdviceDict['MaterialSamples']]),
+        completed=all(['Info' in subgroupName for subgroupName in sampling_AdviceDict['MaterialSamples']])
     )
     sampling_AdviceGroupDict["MaterialSamples"].remove_empty_subgroups()
 
     overall_SectionTier = min(max_tier + infoTiers, tier_MaterialSamples)  # Looks silly, but may get more evaluations in the future
-    return sampling_AdviceGroupDict, overall_SectionTier, max_tier
+    return sampling_AdviceGroupDict, overall_SectionTier, max_tier, max_tier + infoTiers
 
 def getSamplingAdviceSection() -> AdviceSection:
     if session_data.account.construction_buildings['3D Printer']['Level'] < 1:
@@ -497,7 +500,7 @@ def getSamplingAdviceSection() -> AdviceSection:
         return sampling_AdviceSection
 
     # Generate AdviceGroups
-    sampling_AdviceGroupDict, overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
+    sampling_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
     sampling_AdviceGroupDict["PrinterSampleRate"] = getPrinterSampleRateAdviceGroup()
     sampling_AdviceGroupDict["PrinterOutput"] = getPrinterOutputAdviceGroup()
 
@@ -507,6 +510,8 @@ def getSamplingAdviceSection() -> AdviceSection:
         name="Sampling",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Best Sampling tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture="3D_Printer.gif",
         groups=sampling_AdviceGroupDict.values(),

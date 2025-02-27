@@ -157,7 +157,7 @@ def getSailingProgressionTierAdviceGroups():
         post_string=golden_hampter_note
     )
     overall_SectionTier = min(max_tier + info_tiers, tier_Islands, tier_CaptainsAndBoats, tier_Artifacts)
-    return sailing_AdviceGroupDict, overall_SectionTier, max_tier
+    return sailing_AdviceGroupDict, overall_SectionTier, max_tier, max_tier + info_tiers
 
 def getSailingAdviceSection() -> AdviceSection:
     highestSailingSkillLevel = max(session_data.account.all_skills.get("Sailing", [0]))
@@ -173,7 +173,7 @@ def getSailingAdviceSection() -> AdviceSection:
         return sailing_AdviceSection
 
     #Generate AdviceGroup
-    sailing_AdviceGroupDict, overall_SectionTier, max_tier = getSailingProgressionTierAdviceGroups()
+    sailing_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getSailingProgressionTierAdviceGroups()
 
     # Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
@@ -181,6 +181,8 @@ def getSailingAdviceSection() -> AdviceSection:
         name="Sailing",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Best Sailing tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture="Sailing.png",
         groups=sailing_AdviceGroupDict.values()

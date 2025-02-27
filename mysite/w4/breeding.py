@@ -566,7 +566,7 @@ def getBreedingProgressionTiersAdviceGroups(breedingDict):
                 informational=True
             )
 
-    return breeding_AdviceGroupDict, overall_SectionTier, max_tier
+    return breeding_AdviceGroupDict, overall_SectionTier, max_tier, max_tier + info_tiers
 
 def getBreedingAdviceSection() -> AdviceSection:
     highestBreedingLevel = max(session_data.account.all_skills["Breeding"])
@@ -582,7 +582,7 @@ def getBreedingAdviceSection() -> AdviceSection:
 
     breedingDict = session_data.account.breeding
     #Generate AdviceGroups
-    breeding_AdviceGroupDict, overall_SectionTier, max_tier = getBreedingProgressionTiersAdviceGroups(breedingDict)
+    breeding_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getBreedingProgressionTiersAdviceGroups(breedingDict)
     breeding_AdviceGroupDict["ShinySpeedSources"] = getShinySpeedSourcesAdviceGroup(breedingDict['Total Shiny Levels']['Faster Shiny Pet Lv Up Rate'])
     breeding_AdviceGroupDict["ActiveBM"] = getActiveBMAdviceGroup()
     breeding_AdviceGroupDict['Breedability'] = getBreedabilityAdviceGroup()
@@ -593,6 +593,8 @@ def getBreedingAdviceSection() -> AdviceSection:
         name="Breeding",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Best Breeding tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture="Breeding.png",
         groups = breeding_AdviceGroupDict.values()

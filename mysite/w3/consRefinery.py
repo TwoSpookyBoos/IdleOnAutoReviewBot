@@ -295,8 +295,8 @@ def getRefineryProgressionTierAdviceGroups():
         informational=True,
         completed=all([advice.progression >= advice.goal for advice in refinery_AdviceDict['Tab2Ranks']])
     )
-    overall_SectionTier = min(max_tier, tier_AutoRefine, tier_W3Merits)
-    return refinery_AdviceGroupDict, overall_SectionTier, max_tier
+    overall_SectionTier = min(max_tier + info_tiers, tier_AutoRefine, tier_W3Merits)
+    return refinery_AdviceGroupDict, overall_SectionTier, max_tier, max_tier + info_tiers
 
 def getConsRefineryAdviceSection() -> AdviceSection:
     highestConstructionLevel = max(session_data.account.all_skills["Construction"])
@@ -310,7 +310,7 @@ def getConsRefineryAdviceSection() -> AdviceSection:
         )
 
     #Generate AdviceGroups
-    refinery_AdviceGroupDict, overall_SectionTier, max_tier = getRefineryProgressionTierAdviceGroups()
+    refinery_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getRefineryProgressionTierAdviceGroups()
 
     # Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
@@ -318,6 +318,8 @@ def getConsRefineryAdviceSection() -> AdviceSection:
         name="Refinery",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Best Refinery tier met: {tier_section}{break_keep_it_up if overall_SectionTier >= max_tier else ''}",
         picture="Construction_Refinery.gif",
         groups=refinery_AdviceGroupDict.values(),

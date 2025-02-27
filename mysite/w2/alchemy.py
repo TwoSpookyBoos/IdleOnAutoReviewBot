@@ -129,7 +129,7 @@ def getVialsProgressionTiersAdviceGroup():
         informational=tier_TotalVialsMaxed >= max_tier
     )
     overall_SectionTier = min(max_tier + info_tiers, tier_TotalVialsUnlocked, tier_TotalVialsMaxed)
-    return vial_AdviceGroupDict, overall_SectionTier, max_tier
+    return vial_AdviceGroupDict, overall_SectionTier, max_tier, max_tier + info_tiers
 
 def getVialBonusesAdviceGroup() -> AdviceGroup:
     #Player's values
@@ -189,7 +189,8 @@ def getVialBonusesAdviceGroup() -> AdviceGroup:
     vb_ag = AdviceGroup(
         tier='',
         pre_string=f"Info- Sources of bonus Vial Effect",
-        advices=vb_advices
+        advices=vb_advices,
+        informational=True
     )
     return vb_ag
 
@@ -206,7 +207,7 @@ def getAlchemyVialsAdviceSection() -> AdviceSection:
         return vial_AdviceSection
 
     #Generate AdviceGroups
-    vial_AdviceGroupDict, overall_SectionTier, max_tier = getVialsProgressionTiersAdviceGroup()
+    vial_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getVialsProgressionTiersAdviceGroup()
     vial_AdviceGroupDict['Vial Bonuses'] = getVialBonusesAdviceGroup()
 
     #Generate AdviceSection
@@ -216,6 +217,8 @@ def getAlchemyVialsAdviceSection() -> AdviceSection:
         name="Vials",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Best Vial tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture="Alchemy_Vial-level-1.png",
         groups=vial_AdviceGroupDict.values()
@@ -500,7 +503,7 @@ def getBubblesProgressionTiersAdviceGroup():
         max_tier + infoTiers, tier_TotalBubblesUnlocked,
         bubbleTiers[0], bubbleTiers[1], bubbleTiers[2], bubbleTiers[3]
     )
-    return bubbles_AdviceGroupDict, overall_SectionTier, max_tier
+    return bubbles_AdviceGroupDict, overall_SectionTier, max_tier, max_tier + infoTiers
 
 def getAlchemyBubblesAdviceSection() -> AdviceSection:
     highestAlchemyLevel = max(session_data.account.all_skills["Alchemy"])
@@ -515,7 +518,7 @@ def getAlchemyBubblesAdviceSection() -> AdviceSection:
         return bubbles_AdviceSection
 
     #Generate AdviceGroups
-    bubbles_AdviceGroupDict, overall_SectionTier, max_tier = getBubblesProgressionTiersAdviceGroup()
+    bubbles_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getBubblesProgressionTiersAdviceGroup()
     bubbles_AdviceGroupDict['AtRiskBasic'], bubbles_AdviceGroupDict['AtRiskLithium'] = getAtRiskBubblesAdviceGroups()
 
     #Generate AdviceSection
@@ -524,6 +527,8 @@ def getAlchemyBubblesAdviceSection() -> AdviceSection:
         name="Bubbles",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Best Bubbles tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture="Alchemy_Bubble_all.gif",
         groups=bubbles_AdviceGroupDict.values(),
@@ -608,7 +613,7 @@ def getP2WProgressionTiersAdviceGroup(highestAlchemyLevel):
         advices=p2w_AdviceDict["Pay2Win"]
     )
     overall_SectionTier = min(max_tier + info_tiers, tier_P2WUpgrades)
-    return p2w_AdviceGroupDict, overall_SectionTier, max_tier, p2wSum, p2wMax
+    return p2w_AdviceGroupDict, overall_SectionTier, max_tier, max_tier + info_tiers, p2wSum, p2wMax
 
 def getAlchemyP2WAdviceSection() -> AdviceSection:
     highestAlchemyLevel = max(session_data.account.all_skills["Alchemy"])
@@ -623,7 +628,7 @@ def getAlchemyP2WAdviceSection() -> AdviceSection:
         return p2w_AdviceSection
 
     #Generate AdviceGroups
-    p2w_AdviceGroupDict, overall_SectionTier, max_tier, p2wSum, p2wMax = getP2WProgressionTiersAdviceGroup(highestAlchemyLevel)
+    p2w_AdviceGroupDict, overall_SectionTier, max_tier, true_max, p2wSum, p2wMax = getP2WProgressionTiersAdviceGroup(highestAlchemyLevel)
 
     #Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
@@ -632,6 +637,8 @@ def getAlchemyP2WAdviceSection() -> AdviceSection:
         name="Pay2Win",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=(
             f"You've purchased all {p2wMax} upgrades in Alchemy's Pay 2 Win tab!{break_you_best}"
             if p2wSum >= p2wMax else (
@@ -802,7 +809,8 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
               f"<br>(Buff {ballot_status})",
         picture_class="ballot-17",
         progression=int(ballot_active),
-        goal=1
+        goal=1,
+        completed=True
     ))
 
     for group_name in speed_Advice:
@@ -881,7 +889,7 @@ def getSigilsProgressionTiersAdviceGroup():
         informational=tier_Sigils >= max_tier
     )
     overall_SectionTier = min(max_tier + infoTiers, tier_Sigils)
-    return sigils_AdviceGroupDict, overall_SectionTier, max_tier
+    return sigils_AdviceGroupDict, overall_SectionTier, max_tier, max_tier + infoTiers
 
 def getAlchemySigilsAdviceSection() -> AdviceSection:
     highestLabLevel = max(session_data.account.all_skills["Lab"])
@@ -894,7 +902,7 @@ def getAlchemySigilsAdviceSection() -> AdviceSection:
             unreached=True
         )
         return sigils_AdviceSection
-    sigils_AdviceGroupDict, overall_SectionTier, max_tier = getSigilsProgressionTiersAdviceGroup()
+    sigils_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getSigilsProgressionTiersAdviceGroup()
     sigils_AdviceGroupDict['Speed'] = getSigilSpeedAdviceGroup()
 
     # #Generate AdviceSection
@@ -903,6 +911,8 @@ def getAlchemySigilsAdviceSection() -> AdviceSection:
         name='Sigils',
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Best Sigils tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture="Sigils.png",
         groups=sigils_AdviceGroupDict.values()
