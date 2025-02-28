@@ -870,7 +870,7 @@ bubbles_progressionTiers = [
     [15, 160,
      {'Roid Ragin': 10000, 'Hearty Diggy': 9900, 'Stronk Tools': 6930, 'Dream Of Ironfish': 2970,
       'Slabi Orefish': 5940, 'Slabi Strength': 5940, 'Endgame Eff I': 5940, 'Tome Strength': 5940},
-     {'Swift Steppin': 10000, 'Sanic Tools': 6930, 'Premigreen': 2970, 'Fly In Mind': 3960,
+     {'Swift Steppin': 10000, 'Archer Or Bust': 4950, 'Sanic Tools': 6930, 'Premigreen': 2970, 'Fly In Mind': 3960,
       'Slabo Critterbug': 5940, 'Slabo Agility': 5940, 'Endgame Eff II': 5940, 'Tome Agility': 5940},
      {'Stable Jenius': 10000, 'Hocus Choppus': 9900, 'Le Brain Tools': 6930, 'Tree Sleeper': 3960,
       'Slabe Logsoul': 5940, 'Slabe Wisdom': 5940, 'Endgame Eff III': 5940, 'Tome Wisdom': 5940},
