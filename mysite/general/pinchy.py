@@ -505,7 +505,7 @@ def generatePinchyWorld(pinchable_sections: list[AdviceSection], unrated_section
         pinchy_rating=sections_maxed_count,
         header=f"Sections maxed: {sections_maxed}"
                f"{break_you_bestest if sections_maxed_count >= sections_total else ''}",
-        picture="Pinchy.gif",
+        picture='customized/grumblo_explode.png' if sections_maxed_count >= sections_total else "Pinchy.gif",
         groups=advice_groups,
         complete=False
     )
