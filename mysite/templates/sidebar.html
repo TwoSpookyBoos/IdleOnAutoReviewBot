@@ -7,15 +7,15 @@
     {% if beta %}
         <strong>Heads up! You're on the beta-testing page. If you run into problems, try heading back to the <a href="{{ live_link }}" target="_blank">Live Page</a></strong>
         <br>
-        Currently beta testing: 2025-02-20: TBD, maybe Gaming Snail recommendations
+        Currently beta testing: 2025-02-28: TBD, probably Gaming Snail maths + Active Bubo setup
     {% else %}
         <strong>To try out the beta site, head to the <a href="{{ beta_link }}" target="_blank">Beta Page</a></strong>
     {% endif %}
     </p>
     <p>
-        Most recent update 2025-02-19: v2.29 Upgrade Vault 2 changes
+        Most recent update 2025-02-28: Pinchy True Max placement for completing Info Tiers
         <br>
-        Previous update 2025-02-12: v2.28 Valenslimes Event changes
+        Previous update 2025-02-19: v2.29 Upgrade Vault 2 changes
     </p>
     <form action="/" method="POST">
         <div id="switchbox-wrapper">
@@ -27,7 +27,11 @@
         </div>
         <div id="form">
             <label for="player"></label>
-            <textarea id="player" name="player" placeholder="Please enter your first IdleOn character's name, or Paste in your Raw Game JSON from IE/IT"></textarea>
+            <textarea
+                id="player"
+                name="player"
+                placeholder="Paste IT/IE JSON, or 1st character name for a public IE profile. Steam accounts not supported."
+                maxlength="1000000"></textarea>
             <input type="submit" value="submit">
         </div>
     </form>

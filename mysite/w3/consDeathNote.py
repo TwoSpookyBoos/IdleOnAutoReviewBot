@@ -359,7 +359,7 @@ def getDeathNoteProgressionTiersAdviceGroup():
         # tier_combo[4], tier_combo[5], tier_combo[6],
         # tier_combo['ZOW'], tier_combo['CHOW'], tier_combo['MEOW'], tier_combo['WOW']
     )
-    return deathnote_AdviceGroupDict, overall_SectionTier, max_tier
+    return deathnote_AdviceGroupDict, overall_SectionTier, max_tier, max_tier + infoTiers
 
 
 def getDeathNoteAdviceSection() -> AdviceSection:
@@ -375,7 +375,7 @@ def getDeathNoteAdviceSection() -> AdviceSection:
         return deathnote_AdviceSection
 
     #Generate AdviceGroups
-    deathnote_AdviceGroupDict, overall_SectionTier, max_tier = getDeathNoteProgressionTiersAdviceGroup()
+    deathnote_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getDeathNoteProgressionTiersAdviceGroup()
 
     #Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
@@ -383,6 +383,8 @@ def getDeathNoteAdviceSection() -> AdviceSection:
         name="Death Note",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Best Death Note tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture="Construction_Death_Note.png",
         groups=deathnote_AdviceGroupDict.values()

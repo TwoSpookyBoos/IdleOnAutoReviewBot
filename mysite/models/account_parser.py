@@ -29,7 +29,7 @@ from consts import (
     islands_dict, killroy_dict,
     # W3
     refineryDict, buildingsDict, saltLickList, atomsList, colliderStorageLimitList, shrinesList, prayersDict,
-    equinoxBonusesDict, maxDreams, dreamsThatUnlockNewBonuses,
+    equinoxBonusesDict, max_implemented_dreams, dreamsThatUnlockNewBonuses,
     printerAllIndexesBeingPrinted,
     apocableMapIndexDict, apocAmountsList, apocNamesList,
     # W4
@@ -48,7 +48,7 @@ from consts import (
     summoning_endlessDict, max_summoning_upgrades, summoning_sanctuary_counts,
     # Caverns
     caverns_villagers, caverns_conjuror_majiks, caverns_engineer_schematics, caverns_engineer_schematics_unlock_order, caverns_cavern_names,
-    caverns_measurer_measurements, getCavernResourceImage, max_buckets, max_sediments, sediment_bars, getVillagerEXPRequired,
+    caverns_measurer_measurements, caverns_measurer_HI55, getCavernResourceImage, max_buckets, max_sediments, sediment_bars, getVillagerEXPRequired,
     monument_bonuses, bell_clean_improvements, bell_ring_bonuses, getBellExpRequired, getGrottoKills, lamp_wishes, key_cards, getWishCost,
     schematics_unlocking_harp_chords, harp_chord_effects, max_harp_notes, lamp_world_wish_values, vault_section_indexes
 )
@@ -1334,7 +1334,7 @@ def _parse_w3_equinox_dreams(account):
     raw_equinox_dreams = safe_loads(account.raw_data.get("WeeklyBoss", {}))
     account.equinox_dreams += [
         float(raw_equinox_dreams.get(f'd_{i}', 0)) == -1
-        for i in range(maxDreams)
+        for i in range(max_implemented_dreams)
     ]
     account.total_dreams_completed = sum(account.equinox_dreams) - 1  # Remove the placeholder in 0th index
     account.total_equinox_bonuses_unlocked = 0
@@ -1521,6 +1521,7 @@ def _parse_w4_cooking(account):
     }
     _parse_w4_cooking_tables(account)
     _parse_w4_cooking_meals(account)
+    _parse_w4_cooking_ribbons(account)
 
 def _parse_w4_cooking_tables(account):
     emptyTable = [0] * 11  # Some tables only have 10 fields, others have 11. Scary.
@@ -1551,10 +1552,13 @@ def _parse_w4_cooking_meals(account):
     # Count the number of unlocked meals, unlocked meals under 11, and unlocked meals under 30
     for index, mealLevel in enumerate(raw_meals_list[0]):
         # Create meal dict
-        account.meals[cookingMealDict[index]["Name"]] = {
-            "Level": int(mealLevel),
-            "Value": int(mealLevel) * cookingMealDict[index]["BaseValue"],  # Mealmulti applied in calculate section
-            "BaseValue": cookingMealDict[index]["BaseValue"]
+        account.meals[cookingMealDict[index]['Name']] = {
+            'Level': int(mealLevel),
+            'Value': int(mealLevel) * cookingMealDict[index]['BaseValue'],  # Mealmulti applied in calculate section
+            'BaseValue': cookingMealDict[index]['BaseValue'],
+            'Effect': cookingMealDict[index]['Effect'],
+            'Index': index,
+            'Image': f"{cookingMealDict[index]['Name']}-meal"
         }
 
         if int(mealLevel) > 0:
@@ -1564,6 +1568,19 @@ def _parse_w4_cooking_meals(account):
                 account.cooking['MealsUnder11'] += 1
             if int(mealLevel) < 30:
                 account.cooking['MealsUnder30'] += 1
+
+def _parse_w4_cooking_ribbons(account):
+    raw_ribbons = safe_loads(account.raw_data.get('Ribbon', []))
+    if not raw_ribbons:
+        logger.warning(f"Meal Ribbons data not present{', as expected' if account.version < 236 else ''}")
+    for meal_name, meal_values in account.meals.items():
+        try:
+            account.meals[meal_name]['RibbonTier'] = safer_convert(raw_ribbons[meal_values['Index']+28], 0)  #Ribbon shelf occupies first 28 indexes
+        except:
+            account.meals[meal_name]['RibbonTier'] = 0
+            if raw_ribbons:
+                logger.exception(f"Could not retrieve Ribbon for {meal_name}")
+
 
 def _parse_w4_lab(account):
     raw_lab = safe_loads(account.raw_data.get("Lab", []))
@@ -2163,24 +2180,36 @@ def _parse_caverns_schematics(account, raw_schematics_list):
 def _parse_caverns_measurements(account, raw_measurements_list):
     for measurement_index, measurement_details in enumerate(caverns_measurer_measurements):
         try:
+            hi55 = caverns_measurer_HI55[measurement_index]
+            tot = 'TOT' in hi55
+            hi55_after_split = safer_convert(hi55.split('TOT')[0], 1)
+        except:
+            logger.exception(f"Unable to read and split HolesInfo[55] for index {measurement_index}")
+            tot = False
+            hi55_after_split = 1
+        try:
             account.caverns['Measurements'][measurement_index] = {
                 'Level': safer_convert(raw_measurements_list[measurement_index], 0),
                 'Unit': measurement_details[0],
-                'Description': measurement_details[1],
+                'Description': measurement_details[1].strip(),
                 'ScalesWith': measurement_details[2],
                 'Image': f"measurement-{measurement_index}",
                 'Resource': measurement_details[3],
-                'MeasurementNumber': measurement_index + 1
+                'MeasurementNumber': measurement_index + 1,
+                'TOT': tot,
+                'HI55': hi55_after_split
             }
         except:
             account.caverns['Measurements'][measurement_index] = {
                 'Level': 0,
                 'Unit': measurement_details[0],
-                'Description': measurement_details[1],
+                'Description': measurement_details[1].strip(),
                 'ScalesWith': measurement_details[2],
                 'Image': f"measurement-{measurement_index}",
                 'Resource': measurement_details[3],
-                'MeasurementNumber': measurement_index + 1
+                'MeasurementNumber': measurement_index + 1,
+                'TOT': tot,
+                'HI55': hi55_after_split
             }
 
 def _parse_caverns_biome1(account, raw_caverns_list):

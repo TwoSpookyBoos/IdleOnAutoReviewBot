@@ -9,7 +9,7 @@ from consts import (
 
 logger = get_logger(__name__)
 
-def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
+def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     summoning_AdviceDict = {
         'Tiers': {},
     }
@@ -25,7 +25,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
         advices=summoning_AdviceDict['Tiers']
     )
     overall_SectionTier = min(max_tier + info_tiers, tier_Summoning)
-    return tiers_ag, overall_SectionTier, max_tier
+    return tiers_ag, overall_SectionTier, max_tier, max_tier + info_tiers
 
 
 def getEndlessAdviceGroup():
@@ -69,7 +69,7 @@ def getSummoningAdviceSection() -> AdviceSection:
 
     #Generate AdviceGroups
     summoning_AdviceGroupDict = {}
-    summoning_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
+    summoning_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
     summoning_AdviceGroupDict['Endless'] = getEndlessAdviceGroup()
 
     #Generate AdviceSection
@@ -78,6 +78,8 @@ def getSummoningAdviceSection() -> AdviceSection:
         name="Summoning",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Summoning Information",  #Best Summoning tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture="wiki/Summoner_Stone.png",
         groups=summoning_AdviceGroupDict.values(),

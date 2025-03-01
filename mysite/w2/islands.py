@@ -69,7 +69,7 @@ def getFractalAdviceGroup() -> AdviceGroup:
 
     return fractal_advicegroup
 
-def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
+def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     islands_AdviceDict = {}
     infoTiers = 0
     max_tier = max(islands_progressionTiers.keys()) - infoTiers
@@ -95,7 +95,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
         advices=islands_AdviceDict
     )
     overall_SectionTier = min(max_tier + infoTiers, tier_Islands)
-    return tiers_ag, overall_SectionTier, max_tier
+    return tiers_ag, overall_SectionTier, max_tier, max_tier + infoTiers
 
 def getIslandsAdviceSection() -> AdviceSection:
     highestFishingSkillLevel = max(session_data.account.all_skills["Fishing"])
@@ -111,7 +111,7 @@ def getIslandsAdviceSection() -> AdviceSection:
 
     #Advice Groups
     islands_AdviceGroupDict = {}
-    islands_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
+    islands_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
     islands_AdviceGroupDict['Trash'] = getTrashIslandAdviceGroup()
     islands_AdviceGroupDict['Fractal'] = getFractalAdviceGroup()
 
@@ -122,6 +122,8 @@ def getIslandsAdviceSection() -> AdviceSection:
         name="Islands",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Best Islands tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture="wiki/Island_Expeditions_Boat.gif",
         groups=islands_AdviceGroupDict.values()

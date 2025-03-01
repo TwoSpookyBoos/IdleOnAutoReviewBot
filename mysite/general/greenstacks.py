@@ -240,6 +240,9 @@ def getGStackAdviceSections():
 
     #Equinox Dream Review
     overall_SectionTier = 0
+    info_tiers = 0
+    max_tier = max(greenstack_progressionTiers.keys(), default=0) - info_tiers
+    true_max = max_tier + info_tiers
     dream_advice = {}
     for tier_number, requirements in greenstack_progressionTiers.items():
         subgroup_name = f"To reach Tier {tier_number}"
@@ -275,6 +278,8 @@ def getGStackAdviceSections():
         name="Greenstacks",
         tier=tier,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=header,
         picture="wiki/Greenstack.png",
         groups=groups,

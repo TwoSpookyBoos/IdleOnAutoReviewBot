@@ -404,9 +404,8 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
 
 #Meals
     evo_advices[meals].append(Advice(
-        label=f"Meal: Bill Jack Pepper"
-              f"<br>Total Value after multis: {session_data.account.meals['Bill Jack Pepper']['Value']:,.3f}%",
-        picture_class="bill-jack-pepper",
+        label=f"{{{{ Meal|#cooking }}}}: Bill Jack Pepper: {session_data.account.meals['Bill Jack Pepper']['Description']}",
+        picture_class=session_data.account.meals['Bill Jack Pepper']['Image'],
         progression=session_data.account.meals['Bill Jack Pepper']['Level'],
         goal=maxMealLevel
     ))
@@ -417,9 +416,9 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
         picture_class='summoning'
     ))
     evo_advices[meals].append(Advice(
-        label=f"Meal: Nyanborgir"
-              f"<br>Total Value after multis: {session_data.account.meals['Nyanborgir']['Value'] * farming['Evo']['Nyan Stacks']:,.3f}%",
-        picture_class="nyanborgir",
+        label=f"{{{{ Meal|#cooking }}}}: Nyanborgir: {session_data.account.meals['Nyanborgir']['Description']}"
+              f"<br>After {farming['Evo']['Nyan Stacks']} Farming Level stack{pl(farming['Evo']['Nyan Stacks'])}: {session_data.account.meals['Nyanborgir']['Value'] * farming['Evo']['Nyan Stacks']:,.3f}%",
+        picture_class=session_data.account.meals['Nyanborgir']['Image'],
         progression=session_data.account.meals['Nyanborgir']['Level'],
         goal=maxMealLevel
     ))
@@ -1179,7 +1178,7 @@ def getProgressionTiersAdviceGroup(farming, highestFarmingSkillLevel):
         informational=tier_All >= max_tier
     )
     overall_SectionTier = min(max_tier + infoTiers, tier_All)
-    return farming_AdviceGroupDict, overall_SectionTier, max_tier
+    return farming_AdviceGroupDict, overall_SectionTier, max_tier, max_tier + infoTiers
 
 def setFarmingProgressionTier():
     highestFarmingSkillLevel = max(session_data.account.all_skills["Farming"])
@@ -1197,7 +1196,7 @@ def setFarmingProgressionTier():
     farming = session_data.account.farming
 
     #Generate AdviceGroups
-    farming_AdviceGroupDict, overall_SectionTier, max_tier = getProgressionTiersAdviceGroup(farming, highestFarmingSkillLevel)
+    farming_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup(farming, highestFarmingSkillLevel)
     farming_AdviceGroupDict['Evo'] = getEvoChanceAdviceGroup(farming)
     farming_AdviceGroupDict['Speed'] = getSpeedAdviceGroup(farming)
     if farming['MarketUpgrades']['Overgrowth']['Level'] >= 1:
@@ -1217,6 +1216,8 @@ def setFarmingProgressionTier():
         name="Farming",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Best Farming tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture="wiki/FarmCropBean.png",
         groups=farming_AdviceGroupDict.values()

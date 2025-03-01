@@ -123,7 +123,7 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
     )
     return crystal_AG
 
-def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
+def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     statues_AdviceDict = {
         "Tiers": {}
     }
@@ -187,12 +187,12 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
         advices=statues_AdviceDict["Tiers"]
     )
     overall_SectionTier = min(max_tier + infoTiers, tier_Statues)
-    return tiers_ag, overall_SectionTier, max_tier
+    return tiers_ag, overall_SectionTier, max_tier, max_tier + infoTiers
 
 def getStatuesAdviceSection() -> AdviceSection:
     # Generate AdviceGroups
     statues_AdviceGroupDict = {}
-    statues_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
+    statues_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
     if session_data.account.maxed_statues < statueCount:
         statues_AdviceGroupDict['Crystals'] = getPreOnyxAdviceGroup()
 
@@ -202,6 +202,8 @@ def getStatuesAdviceSection() -> AdviceSection:
         name="Statues",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Best Statues tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture='Town_Marble.gif',
         groups=statues_AdviceGroupDict.values()

@@ -12,7 +12,6 @@ def getProgressionTiersAdviceSections():
     info_tiers = 0
     max_tier = len(gold_foods) * 2
 
-
     upgrade_bought = session_data.account.sneaking['JadeEmporium']["Supersized Gold Beanstacking"]['Obtained']
 
     # Assets contains totals from Storage and inventories
@@ -127,7 +126,7 @@ def getProgressionTiersAdviceSections():
         beanstalk_AdviceGroupDict['Super Beanstack'].sort_advices(True)
 
     overall_SectionTier = min(max_tier + info_tiers, foods_finished)
-    return beanstalk_AdviceGroupDict, overall_SectionTier, max_tier
+    return beanstalk_AdviceGroupDict, overall_SectionTier, max_tier, max_tier + info_tiers
 
 def getBeanstalkAdviceSection() -> AdviceSection:
     if not session_data.account.sneaking['JadeEmporium']["Gold Food Beanstalk"]['Obtained']:
@@ -140,7 +139,7 @@ def getBeanstalkAdviceSection() -> AdviceSection:
             unrated=True
         )
     #Generate AdviceGroups
-    beanstalk_AdviceGroupDict, overall_SectionTier, max_tier = getProgressionTiersAdviceSections()
+    beanstalk_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceSections()
 
     #Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
@@ -148,6 +147,8 @@ def getBeanstalkAdviceSection() -> AdviceSection:
         name="Beanstalk",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=(
             f"You have upgraded the Beanstalk {tier_section} times" if overall_SectionTier < max_tier
             else f"Well done, Jack! The Golden Goose took an enviably massive dump in your lap. Go pay the giants off! 🍯{break_you_best}"

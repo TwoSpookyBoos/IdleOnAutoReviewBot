@@ -57,12 +57,12 @@ def getProgressionTiersAdviceGroup():
         post_string='Custom Star Sign artwork created by Listix'
     )
     overall_SectionTier = min(max_tier + infoTiers, tier_Signs)
-    return tiers_ag, overall_SectionTier, max_tier
+    return tiers_ag, overall_SectionTier, max_tier, max_tier + infoTiers
 
 def getStarsignsAdviceSection() -> AdviceSection:
     # Generate AdviceGroups
     starsigns_AdviceGroupDict = {}
-    starsigns_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
+    starsigns_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
 
     # Generate AdviceSection
 
@@ -71,6 +71,8 @@ def getStarsignsAdviceSection() -> AdviceSection:
         name="Star Signs",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Best Star Signs tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture='Telescope.gif',
         groups=starsigns_AdviceGroupDict.values()

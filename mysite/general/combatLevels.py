@@ -5,17 +5,6 @@ from flask import g as session_data
 
 logger = get_logger(__name__)
 
-
-def getEquinoxDreams() -> dict:
-    results = dict(
-        Dream3=session_data.account.equinox_dreams[3],
-        Dream11=session_data.account.equinox_dreams[11],
-        Dream23=session_data.account.equinox_dreams[23],
-    )
-
-    return results
-
-
 def parseCombatLevels():
     combatLevels = session_data.account.all_skills["Combat"]
     equinox3_charactersUnder100 = {}
@@ -44,7 +33,6 @@ def parseCombatLevels():
 
 def getCombatLevelsAdviceSection() -> AdviceSection:
     parsedCombatLevels = parseCombatLevels()
-    equinoxDreamStatus = getEquinoxDreams()
 
     total_combat_level = parsedCombatLevels['sum_AccountLevel']
 
@@ -85,15 +73,15 @@ def getCombatLevelsAdviceSection() -> AdviceSection:
         advices=advices
     )
 
-    if len(parsedCombatLevels['equinoxDict']['under100']) > 0 and equinoxDreamStatus["Dream3"] is False:
+    if len(parsedCombatLevels['equinoxDict']['under100']) > 0 and not session_data.account.equinox_dreams[3]:
         advice_PersonalLevels = "Level the following characters to 100+ to complete Equinox Dream 3"
         goal = 100
 
-    elif len(parsedCombatLevels['equinoxDict']['under250']) > 0 and equinoxDreamStatus["Dream11"] is False:
+    elif len(parsedCombatLevels['equinoxDict']['under250']) > 0 and not session_data.account.equinox_dreams[11]:
         advice_PersonalLevels = "Level the following characters to 250+ to complete Equinox Dream 11 and unlock their Personal Sparkle Obol slot"
         goal = 250
 
-    elif len(parsedCombatLevels['equinoxDict']['under500']) > 0 and equinoxDreamStatus["Dream23"] is False:
+    elif len(parsedCombatLevels['equinoxDict']['under500']) > 0 and not session_data.account.equinox_dreams[23]:
         advice_PersonalLevels = "Level the following characters to 500+ to complete Equinox Dream 23"
         goal = 500
 
@@ -119,6 +107,7 @@ def getCombatLevelsAdviceSection() -> AdviceSection:
 
     info_tiers = 0
     max_tier = combatLevels_progressionTiers[-1][0] - info_tiers
+    true_max = max_tier + info_tiers
     tier = f"{overall_CombatLevelTier}/{max_tier}"
     header = f"Best Family class level tier met: {tier}. "
 
@@ -133,6 +122,8 @@ def getCombatLevelsAdviceSection() -> AdviceSection:
         picture="Family.png",
         groups=[total_level_group, lvlup_group],
         pinchy_rating=overall_CombatLevelTier,
+        max_tier=max_tier,
+        true_max_tier=true_max
     )
 
     return combat_section

@@ -79,7 +79,7 @@ def getSneakingProgressionTiersAdviceGroups():
         informational=True
     )
     overall_SectionTier = min(max_tier + info_tiers, tier_Sneaking)
-    return sneaking_AdviceGroupDict, overall_SectionTier, max_tier
+    return sneaking_AdviceGroupDict, overall_SectionTier, max_tier, max_tier + info_tiers
 
 def getSneakingAdviceSection() -> AdviceSection:
     highestSneakingSkillLevel = max(session_data.account.all_skills.get("Sneaking", [0]))
@@ -96,7 +96,7 @@ def getSneakingAdviceSection() -> AdviceSection:
         return sneaking_AdviceSection
 
     #Generate AdviceGroups
-    sneaking_AdviceGroupDict, overall_SectionTier, max_tier = getSneakingProgressionTiersAdviceGroups()
+    sneaking_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getSneakingProgressionTiersAdviceGroups()
 
     #Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
@@ -104,6 +104,8 @@ def getSneakingAdviceSection() -> AdviceSection:
         name="Sneaking",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header="Sneaking Information",  # f"Best Sneaking tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture="Dojo_Ghost.gif",
         unrated=True,  # TODO: Fix once real tiers added

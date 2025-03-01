@@ -185,7 +185,8 @@ def _calculate_w6_summoning_winner_bonuses(account):
             label=f"Winner Bonuses multi from Endless Summoning: {account.summoning['Endless Bonuses']['x Winner Bonuses']}/{infinity_string}",
             picture_class='cyan-upgrade-13',
             progression=account.summoning['Endless Bonuses']['x Winner Bonuses'],
-            goal=infinity_string
+            goal=infinity_string,
+            completed=True
         ),
         Advice(
             label=f"Winner Bonuses Multi: {account.summoning['WinnerBonusesMultiFull']:.3f}/{account.summoning['WinnerBonusesMultiMaxFull']:.3f}x",
@@ -784,7 +785,19 @@ def _calculate_w4_meal_multi(account):
         * account.summoning['Endless Bonuses']['x Meal Bonuses']
     )
     for meal in account.meals:
-        account.meals[meal]["Value"] = float(account.meals[meal]["Value"]) * mealMulti
+        # _customBlock_Summoning > "RibbonBonus": 1 + Math.floor(5 * t + Math.floor(t / 2) * (4 + 6.5 * Math.floor(t / 5))) / 100;
+        # Last verified as of v2.30 Companion Trading
+        account.meals[meal]['RibbonMulti'] = ValueToMulti(floor(
+            5 * account.meals[meal]['RibbonTier'] + floor(account.meals[meal]['RibbonTier'] / 2) * (4 + 6.5 * floor(account.meals[meal]['RibbonTier'] / 5))
+        ))
+        account.meals[meal]['Value'] = float(account.meals[meal]['Value']) * mealMulti * account.meals[meal]['RibbonMulti']
+        if '{' in account.meals[meal]['Effect']:
+            account.meals[meal]['Description'] = account.meals[meal]['Effect'].replace('{', f"{account.meals[meal]['Value']:.3f}")
+        elif '}' in account.meals[meal]['Effect']:
+            account.meals[meal]['Description'] = account.meals[meal]['Effect'].replace('}', f"{account.meals[meal]['Value']:.3f}")
+        else:
+            account.meals[meal]['Description'] = account.meals[meal]['Effect']
+
 
 def _calculate_w4_lab_bonuses(account):
     account.labBonuses['No Bubble Left Behind']['Value'] = 3
@@ -822,13 +835,34 @@ def divinityUpgradeCost(DivCostAfter3, offeringIndex, unlockedDivinity):
 
 def _calculate_caverns(account):
     #_calculate_caverns_majiks(account)
-    _calculate_caverns_measurements(account)
+    _calculate_caverns_measurements_base(account)
+    _calculate_caverns_measurements_multis(account)
     _calculate_caverns_the_well(account)
     _calculate_caverns_monuments(account)
     _calculate_caverns_the_bell(account)
     _calculate_caverns_the_harp(account)
 
-def _calculate_caverns_measurements(account):
+def _calculate_caverns_measurements_base(account):
+    # _customBlock_Holes > "MeasurementBaseBonus"  #Last verified as of 2.30 Companion Trading
+    for measurement_index, measurement_values in account.caverns['Measurements'].items():
+        try:
+            if measurement_values['TOT']:
+                account.caverns['Measurements'][measurement_index]['BaseValue'] = (
+                    measurement_values['HI55']
+                    * (measurement_values['Level'] / (100 + measurement_values['Level']))
+                )
+            else:
+                account.caverns['Measurements'][measurement_index]['BaseValue'] = measurement_values['HI55'] * measurement_values['Level']
+            account.caverns['Measurements'][measurement_index]['TotalBaseValue'] = (
+                account.caverns['Measurements'][measurement_index]['BaseValue']
+                * account.caverns['Majiks']['Lengthmeister']['Value']
+            )
+        except:
+            logger.exception(f"Failed to calculate Measurement Base Value for {measurement_values['Description']}")
+            account.caverns['Measurements'][measurement_index]['BaseValue'] = 0
+
+def _calculate_caverns_measurements_multis(account):
+    # _customBlock_Holes > "MeasurementMulti"  #Last verified as of 2.30 Companion Trading
     total_skill_levels = 0
     for skill, skill_levels in account.all_skills.items():
         total_skill_levels += sum(skill_levels) if skill != 'Combat' else 0

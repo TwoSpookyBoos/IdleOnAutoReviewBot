@@ -164,34 +164,17 @@ def getRightHandsAdviceGroups():
         ),
         advices=stayahead_advices,
         informational=True,
-        completed=perfect
+        completed=len(skills_needing_catchup) == 0
     )
     stayahead_ag.remove_empty_subgroups()
     return catchup_ag, stayahead_ag
 
-def getSecretClassAdviceSection() -> AdviceSection:
+def getQuestAdvice(tier_SecretClass, jmans, maestros):
     secretClass_AdviceDict = {
         "UnlockNextClass": [],
     }
-    secretClass_AdviceGroupDict = {}
-    max_tier = numberOfSecretClasses
-    tier_SecretClass = 0
 
-    beginners = session_data.account.beginners
-    jmans = session_data.account.jmans
-    maestros = session_data.account.maestros
-    vmans = session_data.account.vmans
-
-    if "Infinilyte" in session_data.account.classes:
-        tier_SecretClass = 4
-    elif "Voidwalker" in session_data.account.classes:
-        tier_SecretClass = 3
-    elif "Maestro" in session_data.account.classes:
-        tier_SecretClass = 2
-    elif "Journeyman" in session_data.account.classes:
-        tier_SecretClass = 1
-
-    #No Journeyman
+    # No Journeyman
     if tier_SecretClass == 0:
         bush1complete = False
         bush2complete = False
@@ -209,11 +192,11 @@ def getSecretClassAdviceSection() -> AdviceSection:
                 rock1complete = True
             if session_data.account.all_quests[characterIndex].get("Rocklyte2", 0) == 1:
                 rock2complete = True
-        totalQuestPeanuts = 1651 - (51*bush1complete) - (200*bush2complete) - (400*bush3complete) - (500*rock1complete) - (500*rock2complete)
+        totalQuestPeanuts = 1651 - (51 * bush1complete) - (200 * bush2complete) - (400 * bush3complete) - (500 * rock1complete) - (500 * rock2complete)
         goldenPeanutsOwned = session_data.account.all_assets.get("PeanutG").amount
         peanutsOwned = session_data.account.all_assets.get("Peanut").amount
         if goldenPeanutsOwned < 6:
-            peanutsRemaining = totalQuestPeanuts - peanutsOwned - (goldenPeanutsOwned*100)
+            peanutsRemaining = totalQuestPeanuts - peanutsOwned - (goldenPeanutsOwned * 100)
         else:
             peanutsRemaining = totalQuestPeanuts - peanutsOwned - 500
         secretClass_AdviceDict["UnlockNextClass"].append(Advice(
@@ -260,7 +243,7 @@ def getSecretClassAdviceSection() -> AdviceSection:
             ))
 
             if goldenPeanutsOwned < 5:
-                #Add advice for gold bars
+                # Add advice for gold bars
                 secretClass_AdviceDict["UnlockNextClass"].append(Advice(
                     label="Gold Bars",
                     picture_class="gold-bar",
@@ -268,7 +251,7 @@ def getSecretClassAdviceSection() -> AdviceSection:
                     goal=250 - (50 * goldenPeanutsOwned)
                 ))
             else:
-                #Add advice for golden peanuts
+                # Add advice for golden peanuts
                 secretClass_AdviceDict["UnlockNextClass"].append(Advice(
                     label="Gold Peanuts",
                     picture_class="golden-peanut",
@@ -282,7 +265,7 @@ def getSecretClassAdviceSection() -> AdviceSection:
                 except:
                     pass
 
-    #No Maestro
+    # No Maestro
     elif tier_SecretClass == 1:
 
         cact1Started = False
@@ -376,7 +359,7 @@ def getSecretClassAdviceSection() -> AdviceSection:
                         goal=25
                     ))
         if (len(secretClass_AdviceDict["UnlockNextClass"]) == 0 and cact2complete and not cact3complete) or (cact3Started and not cact3complete):
-            #if session_data.account.assets.get("Quest35").amount < 1:  # Quest35 = Googley Eyes to spawn Biggie Hours
+            # if session_data.account.assets.get("Quest35").amount < 1:  # Quest35 = Googley Eyes to spawn Biggie Hours
             secretClass_AdviceDict["UnlockNextClass"].append(Advice(
                 label="Find the Googley Eyes recipe from Crabcakes to spawn Biggie Hours",
                 picture_class="googley-eyes"
@@ -399,7 +382,7 @@ def getSecretClassAdviceSection() -> AdviceSection:
                 picture_class="club-maestro"
             ))
 
-    #No Voidwalker
+    # No Voidwalker
     elif tier_SecretClass == 2:
         neb1status = -1
         neb1platskulls = 0
@@ -410,48 +393,52 @@ def getSecretClassAdviceSection() -> AdviceSection:
         for maestro in maestros:
             if neb1status == -1:
                 try:
-                    neb1status = session_data.account.all_quests[maestro.character_index]["Nebulyte1"] if "Nebulyte1" in session_data.account.all_quests[maestro.character_index] else -1
+                    neb1status = session_data.account.all_quests[maestro.character_index]["Nebulyte1"] if "Nebulyte1" in session_data.account.all_quests[
+                        maestro.character_index] else -1
                 except:
                     continue
             if neb1status >= 0:
                 neb1platskulls = 0
                 try:
                     playerneb1Int = session_data.account.raw_data.get(f"QuestStatus_{maestro.character_index}", "{\"Nebulyte1\": [\"0\", \"0\"]}")
-                    #logger.debug(f"playerneb1Int = {type(playerneb1Int)}: {playerneb1Int}")
+                    # logger.debug(f"playerneb1Int = {type(playerneb1Int)}: {playerneb1Int}")
                     if isinstance(playerneb1Int, str):
                         playerneb1Int = safe_loads(playerneb1Int)
                         playerneb1Int = playerneb1Int.get("Nebulyte1", ["0", "0"])
                         playerneb1Int = int(playerneb1Int[0])
-                        #logger.debug(f"After json.loads, playerneb1Int = {type(playerneb1Int)}: {playerneb1Int}")
-                    #playerneb1Int = int(session_data.account.raw_data.get(f"QuestStatus_{maestro.character_index}", {"Nebulyte1":[0,0]})[0])
+                        # logger.debug(f"After json.loads, playerneb1Int = {type(playerneb1Int)}: {playerneb1Int}")
+                    # playerneb1Int = int(session_data.account.raw_data.get(f"QuestStatus_{maestro.character_index}", {"Nebulyte1":[0,0]})[0])
                     neb1platskulls = max(playerneb1Int, neb1platskulls)
                 except Exception as reason:
                     logger.warning(f"Could not retrieve 'Nebulyte1' in QuestStatus_{maestro.character_index} because: {reason}")
             if neb2status == -1:
                 try:
-                    neb2status = session_data.account.all_quests[maestro.character_index]["Nebulyte2"] if "Nebulyte2" in session_data.account.all_quests[maestro.character_index] else -1
+                    neb2status = session_data.account.all_quests[maestro.character_index]["Nebulyte2"] if "Nebulyte2" in session_data.account.all_quests[
+                        maestro.character_index] else -1
                 except:
                     continue
             if neb3status == -1:
                 try:
-                    neb3status = session_data.account.all_quests[maestro.character_index]["Nebulyte3"] if "Nebulyte3" in session_data.account.all_quests[maestro.character_index] else -1
+                    neb3status = session_data.account.all_quests[maestro.character_index]["Nebulyte3"] if "Nebulyte3" in session_data.account.all_quests[
+                        maestro.character_index] else -1
                 except:
                     continue
             if neb3status == 0:
                 try:
                     playerneb3Int = session_data.account.raw_data.get(f"QuestStatus_{maestro.character_index}", "{\"Nebulyte3\": [\"0\"]}")
-                    #logger.debug(f"playerneb3Int = {type(playerneb3Int)}: {playerneb3Int}")
+                    # logger.debug(f"playerneb3Int = {type(playerneb3Int)}: {playerneb3Int}")
                     if isinstance(playerneb3Int, str):
                         playerneb3Int = safe_loads(playerneb3Int)
                         playerneb3Int = playerneb3Int.get("Nebulyte1", ["0", "0"])
                         playerneb3Int = int(playerneb3Int[0])
-                        #logger.debug(f"After json.loads, playerneb3Int = {type(playerneb3Int)}: {playerneb3Int}")
+                        # logger.debug(f"After json.loads, playerneb3Int = {type(playerneb3Int)}: {playerneb3Int}")
                     neb3gmushkills = max(playerneb3Int, neb3gmushkills)
                 except Exception as reason:
                     logger.warning(f"Could not retrieve 'Nebulyte1' in QuestStatus_{maestro.character_index} because: {reason}")
             if neb4status == -1:
                 try:
-                    neb4status = session_data.account.all_quests[maestro.character_index]["Nebulyte4"] if "Nebulyte4" in session_data.account.all_quests[maestro.character_index] else -1
+                    neb4status = session_data.account.all_quests[maestro.character_index]["Nebulyte4"] if "Nebulyte4" in session_data.account.all_quests[
+                        maestro.character_index] else -1
                 except:
                     continue
         if neb1status == -1:
@@ -498,12 +485,37 @@ def getSecretClassAdviceSection() -> AdviceSection:
                 picture_class="voidwalker-icon"
             ))
 
-    #No Infinilyte
+    # No Infinilyte
     # elif tier_SecretClass == 3:
     #     secretClass_AdviceDict["UnlockNextClass"].append(Advice(
     #         label="Welcome to the Infinilyte waiting room",
     #         picture_class="infinilyte-icon"
     #     ))
+
+    return secretClass_AdviceDict
+
+def getSecretClassAdviceSection() -> AdviceSection:
+    secretClass_AdviceGroupDict = {}
+    info_tiers = 0
+    max_tier = numberOfSecretClasses - info_tiers
+    true_max = max_tier + info_tiers
+    tier_SecretClass = 0
+
+    if "Infinilyte" in session_data.account.classes:
+        tier_SecretClass = 4
+    elif "Voidwalker" in session_data.account.classes:
+        tier_SecretClass = 3
+    elif "Maestro" in session_data.account.classes:
+        tier_SecretClass = 2
+    elif "Journeyman" in session_data.account.classes:
+        tier_SecretClass = 1
+
+    # beginners = session_data.account.beginners
+    jmans = session_data.account.jmans
+    maestros = session_data.account.maestros
+    # vmans = session_data.account.vmans
+
+    secretClass_AdviceDict = getQuestAdvice(tier_SecretClass, jmans, maestros)
 
     group_pre_strings = [
         "Create a Journeyman",
@@ -524,9 +536,9 @@ def getSecretClassAdviceSection() -> AdviceSection:
 
     #Generate AdviceSection
     note = (
-            f"Important! Only one Maestro's Right and Left Hands buffs work."
-            f"<br>On Steam, this is the last created Maestro."
-            f"<br>I'm not totally sure about other platforms, sorry 🙁"
+        f"Important! Only one Maestro's Right and Left Hands buffs work."
+        f"<br>On Steam, this is the last created Maestro."
+        f"<br>I'm not totally sure about other platforms, sorry 🙁"
     ) if len(maestros) > 1 else ''
 
     overall_SecretClassTier = min(max_tier, tier_SecretClass)
@@ -535,10 +547,12 @@ def getSecretClassAdviceSection() -> AdviceSection:
         name="Secret Class Path",
         tier=tier_section,
         pinchy_rating=overall_SecretClassTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Best Secret Class tier met: {tier_section}{break_you_best if overall_SecretClassTier >= max_tier else ''}",
         picture="Stone_Peanut.png",
         groups=secretClass_AdviceGroupDict.values(),
-        note=note if note else ''
+        note=note
     )
 
     return secretClass_AdviceSection

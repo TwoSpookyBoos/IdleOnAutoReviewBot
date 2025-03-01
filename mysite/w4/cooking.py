@@ -65,7 +65,7 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
         if session_data.account.cooking['PlayerTotalMealLevels'] < 500:
             cooking_AdviceDict["NextTier"].append(Advice(
                 label="Reach 500+ total meal levels",
-                picture_class="turkey-a-la-thank",
+                picture_class=session_data.account.meals['Turkey a la Thank']['Image'],
                 progression=session_data.account.cooking['PlayerTotalMealLevels'],
                 goal=500
             ))
@@ -97,7 +97,7 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
     elif tier_Cooking == 5:
         cooking_AdviceDict["NextTier"].append(Advice(
             label=f"Unlock max level {maxMealLevel} plates",
-            picture_class="turkey-a-la-thank",
+            picture_class=session_data.account.meals['Turkey a la Thank']['Image'],
             progression=session_data.account.cooking['PlayerMaxPlateLvl'],
             goal=maxMealLevel
         ))
@@ -105,7 +105,7 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
     elif tier_Cooking == 6:
         cooking_AdviceDict["NextTier"].append(Advice(
             label=f"Finish all {maxMealCount} meals to level {maxMealLevel} ({session_data.account.cooking['CurrentRemainingMeals']} to go!)",
-            picture_class="turkey-a-la-thank",
+            picture_class=session_data.account.meals['Turkey a la Thank']['Image'],
             progression=session_data.account.cooking['PlayerTotalMealLevels'],
             goal=maxMealCount * maxMealLevel,
         ))
@@ -135,7 +135,7 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
     if tier_Cooking <= 3:
         cooking_AdviceDict["CurrentTier"].append(Advice(
             label="All +% Meal Cooking Speed meals (Egg, Corndog, Cabbage, etc.)",
-            picture_class="egg",
+            picture_class=session_data.account.meals['Egg']['Image'],
             completed=False
         ))
 
@@ -204,14 +204,14 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
                 cooking_AdviceDict["CurrentTier"].append(Advice(
                     label=f"Info- Current possible: {session_data.account.cooking['MealsUnlocked']}/{maxMealCount} meals, "
                           f"{current_maxMealLevel}/{maxMealLevel} plate levels ({current_remainingMeals} to go!)",
-                    picture_class="turkey-a-la-thank",
+                    picture_class=session_data.account.meals['Turkey a la Thank']['Image'],
                     progression=session_data.account.cooking['PlayerTotalMealLevels'],
                     goal=session_data.account.cooking['MealsUnlocked'] * current_maxMealLevel,
                 ))
 
             cooking_AdviceDict["CurrentTier"].append(Advice(
                 label=f"Info- Total Meal Levels ({max_remainingMeals} to go!)",
-                picture_class="turkey-a-la-thank",
+                picture_class=session_data.account.meals['Turkey a la Thank']['Image'],
                 progression=session_data.account.cooking['PlayerTotalMealLevels'],
                 goal=maxMealCount * maxMealLevel,
             ))
@@ -228,6 +228,7 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
 
     for advice in cooking_AdviceDict["NextTier"]:
         mark_advice_completed(advice)
+
     # Generate Advice Groups
     cooking_AdviceGroupDict["NextTier"] = AdviceGroup(
         tier=f"{tier_Cooking if tier_Cooking < max_tier else ''}",
@@ -253,16 +254,34 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
         informational=True
     )
     overall_SectionTier = min(max_tier + infoTiers, tier_Cooking)
-    return cooking_AdviceGroupDict, overall_SectionTier, max_tier
+    return cooking_AdviceGroupDict, overall_SectionTier, max_tier, max_tier + infoTiers
+
+
+def getCookingMealsAdviceGroup() -> AdviceGroup:
+    meals_advice = [
+        Advice(
+            label=f"{meal_name}: {meal_values['Description']}"
+                  f"<br>Tier {meal_values['RibbonTier']} Ribbon = {meal_values['RibbonMulti']:.3f}x multi",
+            picture_class=meal_values['Image'],
+            progression=meal_values['Level'],
+            goal=maxMealLevel,
+            resource=f"meal-ribbon-{meal_values['RibbonTier']}",
+            informational=True
+        ) for meal_name, meal_values in session_data.account.meals.items()
+    ]
+    for advice in meals_advice:
+        mark_advice_completed(advice)
+
+    meals_ag = AdviceGroup(
+        tier='',
+        pre_string="Info- All Meal levels and ribbons",
+        advices=meals_advice,
+        informational=True
+    )
+    return meals_ag
+
 
 def getCookingAdviceSection() -> AdviceSection:
-    cooking_AdviceSection = AdviceSection(
-        name="Cooking",
-        tier="0",
-        pinchy_rating=0,
-        header="Best Cooking tier met: Not Yet Evaluated",
-        picture="Cooking_Table.gif"
-    )
     highestCookingSkillLevel = max(session_data.account.all_skills["Cooking"])
     if highestCookingSkillLevel < 1:
         cooking_AdviceSection = AdviceSection(
@@ -276,14 +295,17 @@ def getCookingAdviceSection() -> AdviceSection:
         return cooking_AdviceSection
 
     #Generate AdviceGroup
-    cooking_AdviceGroupDict, overall_SectionTier, max_tier = getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel)
+    cooking_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel)
+    cooking_AdviceGroupDict['AllMeals'] = getCookingMealsAdviceGroup()
 
     # Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
     cooking_AdviceSection = AdviceSection(
         name="Cooking",
         tier=tier_section,
-        pinchy_rating = overall_SectionTier,
+        pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Best Cooking tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture="Cooking_Table.gif",
         groups=cooking_AdviceGroupDict.values()

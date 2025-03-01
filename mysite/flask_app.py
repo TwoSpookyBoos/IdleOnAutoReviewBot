@@ -21,6 +21,7 @@ from models.custom_exceptions import (
     BaseCustomException,
     JSONDecodeError,
     WtfDataException,
+    DataTooLong,
 )
 from utils.text_formatting import (
     is_username,
@@ -49,6 +50,9 @@ def parse_user_input() -> str | dict | None:
 
     if not data:
         return
+
+    if len(data) >= 1e6:
+        raise DataTooLong("Submitted data is too long.", data)
 
     if is_username(data):
         parsed = format_character_name(data)

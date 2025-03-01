@@ -364,7 +364,7 @@ def getJusticeAdviceGroup() -> AdviceGroup:
     )
     return cavern_ag
 
-def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
+def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     glowshroom_tunnels_AdviceDict = {
         'Tiers': {},
     }
@@ -380,7 +380,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
         advices=glowshroom_tunnels_AdviceDict['Tiers']
     )
     overall_SectionTier = min(max_tier + info_tiers, tier_Glowshroom_Tunnels)
-    return tiers_ag, overall_SectionTier, max_tier
+    return tiers_ag, overall_SectionTier, max_tier, max_tier + info_tiers
 
 
 def getGlowshroomTunnelsAdviceSection() -> AdviceSection:
@@ -402,7 +402,7 @@ def getGlowshroomTunnelsAdviceSection() -> AdviceSection:
     #Generate AdviceGroups
     schematics = session_data.account.caverns['Schematics']
     glowshroom_tunnels_AdviceGroupDict = {}
-    glowshroom_tunnels_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
+    glowshroom_tunnels_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
     glowshroom_tunnels_AdviceGroupDict['The Harp'] = getHarpAdviceGroup(schematics)
     glowshroom_tunnels_AdviceGroupDict['The Lamp'] = getLampAdviceGroup()
     glowshroom_tunnels_AdviceGroupDict['The Hive'] = getMotherlodeAdviceGroup()
@@ -418,6 +418,8 @@ def getGlowshroomTunnelsAdviceSection() -> AdviceSection:
         name="Glowshroom Tunnels",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"The Glowshroom Tunnels biome",  #f"Best Glowshroom Tunnels tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture='Glowshroom_Tunnels.png',
         groups=glowshroom_tunnels_AdviceGroupDict.values(),

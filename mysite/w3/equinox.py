@@ -1,5 +1,5 @@
 from flask import g as session_data
-from consts import maxDreams, dreamsThatUnlockNewBonuses, equinox_progressionTiers, break_you_best
+from consts import max_implemented_dreams, dreamsThatUnlockNewBonuses, equinox_progressionTiers, break_you_best, max_possible_dreams
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
 from utils.text_formatting import pl
@@ -24,7 +24,7 @@ def getEquinoxProgressionTiersAdviceGroup():
 
     # Dreams Completed
     remainingBonusesToBeUnlocked = []
-    if session_data.account.total_dreams_completed >= maxDreams:  # If the player has completed ALL dreams, set to max tier
+    if session_data.account.total_dreams_completed >= max_possible_dreams:  # If the player has completed ALL possible dreams, set to max tier
         tier_TotalDreamsCompleted = max_tier + infoTiers
     else:
         for bonusName, bonusValuesDict in session_data.account.equinox_bonuses.items():
@@ -47,10 +47,10 @@ def getEquinoxProgressionTiersAdviceGroup():
             ))
 
         equinox_AdviceDict["Dreams"]["Complete Dreams"].append(Advice(
-            label=f"Complete all {maxDreams} Dreams",
+            label=f"Complete all {max_possible_dreams} possible Dreams",
             picture_class="equinox-mirror",
             progression=session_data.account.total_dreams_completed,
-            goal=maxDreams
+            goal=max_possible_dreams
         ))
 
     # Recommended Upgrades
@@ -126,7 +126,7 @@ def getEquinoxProgressionTiersAdviceGroup():
         completed=recommendedSubgroupName not in equinox_AdviceDict["TotalUpgrades"]
     )
     overall_SectionTier = min(max_tier + infoTiers, tier_TotalDreamsCompleted)
-    return equinox_AdviceGroupDict, overall_SectionTier, max_tier
+    return equinox_AdviceGroupDict, overall_SectionTier, max_tier, max_tier + infoTiers
 
 def getEquinoxAdviceSection() -> AdviceSection:
     if not session_data.account.equinox_unlocked:
@@ -140,7 +140,7 @@ def getEquinoxAdviceSection() -> AdviceSection:
         return equinox_AdviceSection
 
     #Generate AdviceGroups
-    equinox_AdviceGroupDict, overall_SectionTier, max_tier = getEquinoxProgressionTiersAdviceGroup()
+    equinox_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getEquinoxProgressionTiersAdviceGroup()
 
     # Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
@@ -148,6 +148,8 @@ def getEquinoxAdviceSection() -> AdviceSection:
         name="Equinox",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Best Equinox tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture="Equinox_Valley_Mirror.gif",
         groups=equinox_AdviceGroupDict.values()

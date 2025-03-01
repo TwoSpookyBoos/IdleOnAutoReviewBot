@@ -1,5 +1,5 @@
 from models.models import AdviceSection, AdviceGroup, Advice
-from consts import prayers_progressionTiers, break_you_best
+from consts import prayers_progressionTiers, break_you_best, optional_prayers, ignorable_prayers
 from flask import g as session_data
 from utils.text_formatting import pl
 from utils.logging import get_logger
@@ -15,13 +15,13 @@ def setPrayersProgressionTierAdviceGroup():
     }
     prayers_AdviceGroupDict = {}
     worshipPrayersDict = session_data.account.prayers
-    info_tiers = 2
+    info_tiers = 0
     max_tier = prayers_progressionTiers[-1][0] - info_tiers  # Final tier is ignorable, second to final is optional
     tier_WorshipPrayers = 0
     adviceCountsDict = {"Recommended": 0, "Optional": 0, "Ignorable": 0}
 
     # Check Recommended Prayers
-    for tier in prayers_progressionTiers[:-2]:
+    for tier in prayers_progressionTiers:
         # tier[0] = int Tier
         # tier[1] = dict requiredPrayersDict
         # tier[2] = str Notes
@@ -46,28 +46,26 @@ def setPrayersProgressionTierAdviceGroup():
             tier_WorshipPrayers = tier[0]
 
     # Check Optional Prayers
-    optionalTierPrayers = prayers_progressionTiers[-2][1]
-    for optionalPrayer in optionalTierPrayers:
-        if worshipPrayersDict[optionalPrayer]['Level'] < optionalTierPrayers[optionalPrayer]:
+    for optionalPrayer in optional_prayers:
+        if worshipPrayersDict[optionalPrayer]['Level'] < optional_prayers[optionalPrayer]:
             prayers_AdviceDict["Optional"].append(
                 Advice(
                     label=optionalPrayer,
                     picture_class=optionalPrayer,
                     progression=str(worshipPrayersDict[optionalPrayer]['Level']),
-                    goal=str(optionalTierPrayers[optionalPrayer]),
+                    goal=str(optional_prayers[optionalPrayer]),
                     resource=worshipPrayersDict[optionalPrayer]['Material']
                 ))
 
     # Check Ignorable Prayers
-    ignorableTierPrayers = prayers_progressionTiers[-1][1]
-    for ignorablePrayer in ignorableTierPrayers:
-        if worshipPrayersDict[ignorablePrayer]['Level'] < ignorableTierPrayers[ignorablePrayer]:
+    for ignorablePrayer in ignorable_prayers:
+        if worshipPrayersDict[ignorablePrayer]['Level'] < ignorable_prayers[ignorablePrayer]:
             prayers_AdviceDict["Ignorable"].append(
                 Advice(
                     label=ignorablePrayer,
                     picture_class=ignorablePrayer,
                     progression=str(worshipPrayersDict[ignorablePrayer]['Level']),
-                    goal=str(ignorableTierPrayers[ignorablePrayer]),
+                    goal=str(ignorable_prayers[ignorablePrayer]),
                     resource=worshipPrayersDict[ignorablePrayer]['Material']
                 ))
 
@@ -95,7 +93,7 @@ def setPrayersProgressionTierAdviceGroup():
         completed=True
     )
     overall_SectionTier = min(max_tier + info_tiers, tier_WorshipPrayers)
-    return prayers_AdviceGroupDict, overall_SectionTier, max_tier
+    return prayers_AdviceGroupDict, overall_SectionTier, max_tier, max_tier + info_tiers
 
 def getPrayersAdviceSection() -> AdviceSection:
     highestWorshipLevel = max(session_data.account.all_skills["Worship"])
@@ -110,7 +108,7 @@ def getPrayersAdviceSection() -> AdviceSection:
         return prayers_AdviceSection
 
     #Generate AdviceGroups
-    prayers_AdviceGroupDict, overall_SectionTier, max_tier = setPrayersProgressionTierAdviceGroup()
+    prayers_AdviceGroupDict, overall_SectionTier, max_tier, true_max = setPrayersProgressionTierAdviceGroup()
 
     #Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
@@ -118,6 +116,8 @@ def getPrayersAdviceSection() -> AdviceSection:
         name="Prayers",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Best Prayer tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture="Prayer_Stone.gif",
         groups = prayers_AdviceGroupDict.values()
