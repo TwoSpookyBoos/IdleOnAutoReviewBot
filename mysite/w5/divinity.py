@@ -269,6 +269,7 @@ def getArctisAdviceGroup(lowestDivinitySkillLevel: int, highestDivinitySkillLeve
         tier="",
         pre_string=f"Upcoming Arctis minor link bonus breakpoints"
                    f" (+# Talent LV for all talents above Lv 1)",
+        post_string='Note: Bonus talent levels are rounded up to a whole number. +11.01 will truly give you +12',
         advices=arctis_AdviceDict,
         informational=True
     )
