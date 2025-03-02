@@ -651,7 +651,7 @@ def getAlchemyP2WAdviceSection() -> AdviceSection:
     )
     return p2w_AdviceSection
 
-def getSigilSpeedAdviceGroup() -> AdviceGroup:
+def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
 
     # 1 + (achievement, 0 or 20) + (Pea Pod sigil times Chilled Yarn artifact) + (20 * Gem Shop purchases) + (Willow Sippy (Equinox Log) vial * vialMastery) + (Sigil Stamp)
     # * multi(Summoning Winner Bonus: Green9 + Yellow5 + Blue5 + Purple7 + Cyan3)
@@ -744,7 +744,8 @@ def getSigilSpeedAdviceGroup() -> AdviceGroup:
               f"+{20 * session_data.account.gemshop['Sigil Supercharge']}/{20 * 10}%",
         picture_class="sigil-supercharge",
         progression=session_data.account.gemshop['Sigil Supercharge'],
-        goal=10
+        goal=10,
+        completed=not practical_maxed
     ))
     speed_Advice[mga_label].append(Advice(
         label=f"Sigil: Level {session_data.account.alchemy_p2w['Sigils']['Pea Pod']['Level']}"
@@ -903,7 +904,7 @@ def getAlchemySigilsAdviceSection() -> AdviceSection:
         )
         return sigils_AdviceSection
     sigils_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getSigilsProgressionTiersAdviceGroup()
-    sigils_AdviceGroupDict['Speed'] = getSigilSpeedAdviceGroup()
+    sigils_AdviceGroupDict['Speed'] = getSigilSpeedAdviceGroup(overall_SectionTier >= max_tier)
 
     # #Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
