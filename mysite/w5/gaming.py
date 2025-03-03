@@ -211,7 +211,7 @@ def getSnailInformationGroup() -> AdviceGroup:
             num_encourage, s_chance, r_chance = encouragement_info[level]
 
             encouragements_short_by = max(0, num_encourage - snail_data['Encouragements'])
-            logger.debug(f"Rank {level} is short on encouragements by {encouragements_short_by}")
+            #logger.debug(f"Rank {level} is short on encouragements by {encouragements_short_by}")
 
             snail_AdviceDict[subgroupName].append(Advice(
                 label=f"{num_encourage} recommended encouragements ({s_chance:0.2%} success chance, {r_chance:0.2%} reset chance)"
