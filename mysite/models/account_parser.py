@@ -1851,15 +1851,15 @@ def _parse_w5(account):
     _parse_w5_divinity(account)
 
 def _parse_w5_gaming(account):
-    raw_gaming_list = safe_loads(account.raw_data.get("Gaming", []))
+    raw_gaming_list = safe_loads(account.raw_data.get('Gaming', []))
     if not raw_gaming_list:
-        logger.warning(f"Gaming data not present")
+        logger.warning('Gaming data not present')
     if raw_gaming_list:
         # Bits Owned sometimes Float, sometimes String
         try:
             account.gaming['BitsOwned'] = safer_convert(raw_gaming_list[0], 0.00)
         except:
-            pass
+            account.gaming['BitsOwned'] = 0.00
 
         try:
             account.gaming['FertilizerValue'] = raw_gaming_list[1]
@@ -1867,15 +1867,25 @@ def _parse_w5_gaming(account):
             account.gaming['FertilizerCapacity'] = raw_gaming_list[3]
             account.gaming['MutationsUnlocked'] = raw_gaming_list[4]
             account.gaming['DNAOwned'] = raw_gaming_list[5]
-            account.gaming['EvolutionChance'] = raw_gaming_list[7]
+            account.gaming['EvolutionChance'] = raw_gaming_list[7]  #TODO: Look into this being duplicated
             account.gaming['Nugget'] = raw_gaming_list[8]
             account.gaming['Acorns'] = raw_gaming_list[9]
-            account.gaming['EvolutionChance'] = raw_gaming_list[10]
+            account.gaming['EvolutionChance'] = raw_gaming_list[10]  #TODO: Look into this being duplicated
             account.gaming['LogbookString'] = raw_gaming_list[11]
             account.gaming['SuperBitsString'] = str(raw_gaming_list[12])
             account.gaming['Envelopes'] = raw_gaming_list[13]
         except:
-            pass
+            account.gaming['FertilizerValue'] = 0
+            account.gaming['FertilizerSpeed'] = 0
+            account.gaming['FertilizerCapacity'] = 0
+            account.gaming['MutationsUnlocked'] = 0
+            account.gaming['DNAOwned'] = 0
+            account.gaming['EvolutionChance'] = 0
+            account.gaming['Nugget'] = 0
+            account.gaming['Acorns'] = 0
+            account.gaming['LogbookString'] = 0
+            account.gaming['SuperBitsString'] = ''
+            account.gaming['Envelopes'] = 0
 
     for index, valuesDict in gamingSuperbitsDict.items():
         try:
@@ -1905,13 +1915,17 @@ def _parse_w5_gaming_sprouts(account):
     try:
         account.gaming['Imports'] = {
             'Snail': {
-                'SnailRank': raw_gaming_sprout_list[32][1]
+                'Level': raw_gaming_sprout_list[32][0],
+                'SnailRank': raw_gaming_sprout_list[32][1],
+                'Encouragements': raw_gaming_sprout_list[32][2]
             }
         }
     except:
         account.gaming['Imports'] = {
             'Snail': {
-                'SnailRank': 0
+                'Level': 0,
+                'SnailRank': 0,
+                'Encouragements': 0
             }
         }
 
@@ -2408,10 +2422,12 @@ def _parse_caverns_the_harp(account, raw_caverns_list):
             account.caverns['Caverns'][cavern_name]['Chords'][chord_name]['Unlocked'] = (
                 account.caverns['Schematics'][schematics_unlocking_harp_chords[chord_index-2]]['Purchased']
             )
-
-    try:
-        account.caverns['Caverns'][cavern_name]['NotesOwned'] = [int(entry) for entry in raw_caverns_list[9][max_sediments:max_sediments+max_harp_notes]]
-    except:
+    if len(raw_caverns_list[9]) > 10:
+        try:
+            account.caverns['Caverns'][cavern_name]['NotesOwned'] = [safer_convert(entry, 0) for entry in raw_caverns_list[9][max_sediments:max_sediments+max_harp_notes]]
+        except:
+            account.caverns['Caverns'][cavern_name]['NotesOwned'] = [0] * max_harp_notes
+    else:
         account.caverns['Caverns'][cavern_name]['NotesOwned'] = [0] * max_harp_notes
 
 def _parse_caverns_the_lamp(account, raw_caverns_list):
