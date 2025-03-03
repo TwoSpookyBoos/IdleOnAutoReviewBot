@@ -216,7 +216,6 @@ def getSnailInformationGroup() -> AdviceGroup:
                 goal=num_encourage
             ))
 
-            # TODO: This doesn't explain what the "safety limit" means!
             for target_idx, target_confidence in enumerate(TARGET_CONFIDENCE_LEVELS):
                 mail_needed, overall_chance = safety_thresholds[level, target_confidence]
                 if mail_needed == 3 and target_idx+1 < len(TARGET_CONFIDENCE_LEVELS):
