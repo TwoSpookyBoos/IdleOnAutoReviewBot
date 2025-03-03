@@ -224,16 +224,16 @@ def getSnailInformationGroup() -> AdviceGroup:
                         # and no extra mail is needed for a higher confidence level as well.
                         continue
 
-                progression = 0
-                if level == snail_data['SnailRank'] and snail_data['Encouragements'] >= num_encourage:
-                    progression = floored_envelopes
+                advice_construction_dict = {
+                    'label': f"{mail_needed} mail before clicking Level Up for {target_confidence:.1%} safety",
+                    'picture_class': 'snail-envelope'
+                }
 
-                snail_AdviceDict[subgroupName].append(Advice(
-                    label=f"{mail_needed} mail needed for {target_confidence:.1%} safety",
-                    picture_class='snail-envelope',
-                    progression=progression,
-                    goal=mail_needed
-                ))
+                if level == snail_data['SnailRank'] and snail_data['Encouragements'] >= num_encourage:
+                    advice_construction_dict['progression'] = floored_envelopes
+                    advice_construction_dict['goal'] = mail_needed
+
+                snail_AdviceDict[subgroupName].append(Advice(**advice_construction_dict))
 
     snail_AdviceGroup = AdviceGroup(
         tier='',
