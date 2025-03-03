@@ -217,12 +217,22 @@ def getSnailInformationGroup() -> AdviceGroup:
             ))
 
             # TODO: This doesn't explain what the "safety limit" means!
-            for target_confidence in TARGET_CONFIDENCE_LEVELS:
+            for target_idx, target_confidence in enumerate(TARGET_CONFIDENCE_LEVELS):
                 mail_needed, overall_chance = safety_thresholds[level, target_confidence]
+                if mail_needed == 3 and target_idx+1 < len(TARGET_CONFIDENCE_LEVELS):
+                    if safety_thresholds[level, TARGET_CONFIDENCE_LEVELS[target_idx+1]][0] == 3:
+                        # Skip "duplicate" safety level info, that is cases where no extra mail is needed
+                        # and no extra mail is needed for a higher confidence level as well.
+                        continue
+
+                progression = 0
+                if level == snail_data['SnailRank'] and snail_data['Encouragements'] >= num_encourage:
+                    progression = floored_envelopes
+
                 snail_AdviceDict[subgroupName].append(Advice(
-                    label=f"{mail_needed} spare mail needed for {target_confidence:.1%} safety",
+                    label=f"{mail_needed} mail needed for {target_confidence:.1%} safety",
                     picture_class='snail-envelope',
-                    progression=floored_envelopes,
+                    progression=progression,
                     goal=mail_needed
                 ))
 
