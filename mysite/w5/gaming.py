@@ -219,7 +219,7 @@ def getSnailInformationGroup() -> AdviceGroup:
             for target_idx, target_confidence in enumerate(TARGET_CONFIDENCE_LEVELS):
                 mail_needed, overall_chance = safety_thresholds[level, target_confidence]
                 if mail_needed == 3 and target_idx+1 < len(TARGET_CONFIDENCE_LEVELS):
-                    if safety_thresholds[level, TARGET_CONFIDENCE_LEVELS[target_idx+1]][0] == 3:
+                    if overall_chance >= TARGET_CONFIDENCE_LEVELS[target_idx+1]:
                         # Skip "duplicate" safety level info, that is cases where no extra mail is needed
                         # and no extra mail is needed for a higher confidence level as well.
                         continue
