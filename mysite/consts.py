@@ -1607,6 +1607,9 @@ sailing_progressionTiers = {
         },
     }
 }
+gaming_progressionTiers = {
+    0: {}
+}
 
 ###WORLD 6 PROGRESSION TIERS###
 farming_progressionTiers = {
@@ -9314,5 +9317,6 @@ true_max_tiers = {
     "Rift": max(rift_progressionTiers.keys()),
     "Divinity": max(divinity_progressionTiers.keys()),
     "Sailing": max(sailing_progressionTiers.keys()),
+    "Gaming": max(gaming_progressionTiers.keys()),
     "Farming": max(farming_progressionTiers.keys())
 }
