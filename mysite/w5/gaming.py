@@ -3,6 +3,7 @@ import functools
 import math
 
 from models.models import AdviceSection, AdviceGroup, Advice
+from utils.data_formatting import safer_convert
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
@@ -145,7 +146,7 @@ def getSnailInformationGroup() -> AdviceGroup:
     sodium_level = session_data.account.atom_collider['Atoms']['Sodium - Snail Kryptonite']['Level']
     snail_data = session_data.account.gaming['Imports']['Snail']
     sodium_safety_level = sodium_level * 5
-    floored_envelopes = f"{session_data.account.gaming['Envelopes']:.0f}"
+    floored_envelopes = safer_convert(session_data.account.gaming['Envelopes'], 0)
 
     #General
     snail_AdviceDict["General"].append(Advice(
@@ -209,20 +210,32 @@ def getSnailInformationGroup() -> AdviceGroup:
             snail_AdviceDict[subgroupName] = []
             num_encourage, s_chance, r_chance = encouragement_info[level]
 
+            encouragements_short_by = max(0, num_encourage - snail_data['Encouragements'])
+            logger.debug(f"Rank {level} is short on encouragements by {encouragements_short_by}")
+
             snail_AdviceDict[subgroupName].append(Advice(
-                label=f"{num_encourage if level== snail_data['SnailRank'] else ''}{' r' if level== snail_data['SnailRank'] else 'R'}ecommended encouragements ({s_chance:0.2%} success chance, {r_chance:0.2%} reset chance)",
-                picture_class='snail-envelope',
+                label=f"{num_encourage} recommended encouragements ({s_chance:0.2%} success chance, {r_chance:0.2%} reset chance)"
+                      f"<br>Progress below reduced by {encouragements_short_by} due to incomplete encouragements",
+                picture_class='immortal-snail',
                 progression=snail_data['Encouragements'] if level == snail_data['SnailRank'] else 0,
-                goal=num_encourage
+                goal=num_encourage,
+                resource='snail-envelope'
             ))
 
-            # TODO: This doesn't explain what the "safety limit" means!
-            for target_confidence in TARGET_CONFIDENCE_LEVELS:
+            for target_idx, target_confidence in enumerate(TARGET_CONFIDENCE_LEVELS):
                 mail_needed, overall_chance = safety_thresholds[level, target_confidence]
+                try:
+                    if safety_thresholds[level, TARGET_CONFIDENCE_LEVELS[target_idx]][0] == safety_thresholds[level, TARGET_CONFIDENCE_LEVELS[target_idx + 1]][0]:
+                        # Skip "duplicate" safety level info, that is cases where no extra mail is needed
+                        # and no extra mail is needed for a higher confidence level as well.
+                        continue
+                except IndexError:
+                    pass
+
                 snail_AdviceDict[subgroupName].append(Advice(
-                    label=f"{mail_needed} spare mail needed for {target_confidence:.1%} safety",
+                    label=f"{mail_needed} mail before clicking Level Up for {target_confidence:.1%} safety",
                     picture_class='snail-envelope',
-                    progression=floored_envelopes,
+                    progression=max(0, floored_envelopes - encouragements_short_by),
                     goal=mail_needed
                 ))
 
