@@ -179,13 +179,13 @@ def getSnailInformationGroup() -> AdviceGroup:
         final_ballad_bonus = 1.0
 
         if session_data.account.caverns["Schematics"]["Final Ballad of the Snail"]["Purchased"]:
-            num_trebel_digits = int(math.log10(num_trebel_notes) + 1 if num_trebel_notes > 0 else 0)
-            final_ballad_bonus = 1 + 0.04 * num_trebel_digits
+            num_trebel_stacks = int(math.log10(num_trebel_notes) if num_trebel_notes > 0 else 0)
+            final_ballad_bonus = 1 + 0.04 * num_trebel_stacks
 
             snail_AdviceDict['General'].append(Advice(
-                label=f"<br>{num_trebel_digits} Trebel Note digits for a bonus of {final_ballad_bonus:0.2f}x",
+                label=f"<br>{num_trebel_stacks} Trebel Note stacks for a bonus of {final_ballad_bonus:0.2f}x",
                 picture_class=session_data.account.caverns['Schematics']['Final Ballad of the Snail']['Image'],
-                progression=num_trebel_digits,
+                progression=num_trebel_stacks,
                 goal=infinity_string,
                 resource='harp-note-3'
             ))
