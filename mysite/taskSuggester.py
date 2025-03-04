@@ -17,7 +17,7 @@ from w1 import upgrade_vault, stamps, bribes, smithing, statues, starsigns, owl
 from w2 import alchemy, post_office, killroy, islands, arcade, bonus_ballot
 from w3 import trapping, consRefinery, consDeathNote, worship, consSaltLick, consBuildings, equinox, library, sampling, collider
 from w4 import breeding, cooking, rift
-from w5 import slab, divinity, sailing
+from w5 import slab, divinity, sailing, gaming
 from caverns import villagers, shallow_caverns, glowshroom_tunnels
 from w6 import beanstalk, sneaking, farming, summoning
 
@@ -117,6 +117,7 @@ def main(inputData, runType="web"):
             slab.getSlabAdviceSection(),
             divinity.getDivinityAdviceSection(),
             sailing.getSailingAdviceSection(),
+            gaming.getGamingAdviceSection(),
         ],
         sections_caverns := [
             villagers.getVillagersAdviceSection(),
