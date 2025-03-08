@@ -781,7 +781,7 @@ def getBuboAdviceGroup() -> AdviceGroup:
 
     bubo_ag = AdviceGroup(
         tier='',
-        pre_string='Info- Active Bubo setup',
+        pre_string='Info- Active Bubo setup for big Cranium Cooking numbers',
         advices=bubo_advice,
         informational=True
     )
