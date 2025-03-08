@@ -178,7 +178,7 @@ def getSnailInformationGroup() -> AdviceGroup:
 
         final_ballad_bonus = 1.0
 
-        if session_data.account.caverns["Schematics"]["Final Ballad of the Snail"]["Purchased"]:
+        if session_data.account.caverns['Schematics']['Final Ballad of the Snail']['Purchased']:
             num_trebel_stacks = int(math.log10(num_trebel_notes) if num_trebel_notes > 0 else 0)
             final_ballad_bonus = 1 + 0.04 * num_trebel_stacks
 
@@ -192,7 +192,7 @@ def getSnailInformationGroup() -> AdviceGroup:
         else:
             snail_AdviceDict["General"].append(Advice(
                 label=f"{{{{ Schematic|#villagers }}}}: Final Ballad of the Snail is NOT acquired",
-                picture_class=session_data.account.caverns["Schematics"]["Final Ballad of the Snail"]['Image'],
+                picture_class=session_data.account.caverns['Schematics']['Final Ballad of the Snail']['Image'],
                 progression=0,
                 goal=1
             ))
@@ -218,12 +218,17 @@ def getSnailInformationGroup() -> AdviceGroup:
             num_encourage, s_chance, r_chance = encouragement_info[level]
 
             encouragements_short_by = max(0, num_encourage - snail_data['Encouragements'])
-            short_by_note = f"<br>Progress below reduced by {encouragements_short_by} due to incomplete encouragements" if encouragements_short_by > 0 else ''
+            encourage_diff_note = (
+                f"<br>Progress below reduced by {encouragements_short_by} due to incomplete encouragements"
+                if encouragements_short_by > 0 else
+                '<br>The safety levels below were calculated using the recommended number of encouragements. Yours would be slightly better.'
+                if snail_data['Encouragements'] > num_encourage and level == snail_data['SnailRank'] else
+                ''
+            )
 
             snail_AdviceDict[subgroupName].append(Advice(
-                label=f"{num_encourage} recommended encouragements."
-                      f"<br>Game will display: {s_chance:0.2%} success, {r_chance:0.2%} reset chance"
-                      f"{short_by_note}",
+                label=f"At {num_encourage} recommended encouragements: {s_chance:0.2%} success, {r_chance:0.2%} reset chance"
+                      f"{encourage_diff_note}",
                 picture_class='immortal-snail',
                 progression=snail_data['Encouragements'] if level == snail_data['SnailRank'] else 0,
                 goal=num_encourage,
