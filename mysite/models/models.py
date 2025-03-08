@@ -809,7 +809,7 @@ class AdviceSection(AdviceBase):
         elif self.unreached:
             #Unreached is set when a player hasn't progressed far enough to see the contents of a section. As far from complete as possible
             self.completed = False
-        elif not self.unrated and self.pinchy_rating >= self.true_max_tier:
+        elif not self.unrated and self.pinchy_rating >= self.true_max_tier and self.name != 'Pinchy all':
             #If the section is rated and the player has reached the true max tier, mark the Section complete even if some incomplete groups still exist
             self.completed = True
         else:
