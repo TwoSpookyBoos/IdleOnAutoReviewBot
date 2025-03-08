@@ -3316,6 +3316,9 @@ librarySubgroupTiers = [
     '', 'Skilling - High Priority', 'Skilling - Medium Priority', 'Skilling - Low Priority', 'Skilling - Lowest Priority',
     'Combat - High Priority', 'Combat - Medium Priority', 'Combat - Low Priority', 'ALL Unmaxed Talents'
 ]  #Why is there a placeholder in [0] again?
+librarySubgroupByTierTiers = [
+    'High', 'Medium', 'Low', 'Lowest', 'ALL Unmaxed Talents'
+]
 skill_talentsDict = {
     # Optimal is an optional list for calculating library.getJeapordyGoal
     # [0] = the starting level
