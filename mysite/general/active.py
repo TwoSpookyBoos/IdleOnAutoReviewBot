@@ -1,5 +1,6 @@
 from models.models import Advice, AdviceGroup, AdviceSection, EnemyWorld, EnemyMap, Character
-from consts import lavaFunc, stamp_maxes, pearlable_skillsList, max_VialLevel, currentWorld, dnSkullValueList, cookingCloseEnough, dnBasicMapsCount
+from consts import lavaFunc, stamp_maxes, pearlable_skillsList, max_VialLevel, currentWorld, dnSkullValueList, cookingCloseEnough, dnBasicMapsCount, \
+    maxCharacters
 from utils.all_talentsDict import all_talentsDict
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
@@ -573,19 +574,33 @@ def getBuboAdviceGroup() -> AdviceGroup:
     best_bubo = sorted_bubos[0] if len(sorted_bubos) > 0 else None
 
     if best_bubo is None:
-        bubo_advice['Best Bubo'] = [
-            Advice(
-                label='No Bubonic Conjuror found! Take a Shaman to the Demon Genie map in World 4 to access their Elite Class!',
-                picture_class='bubonic-conjuror-icon',
-                progression=0,
-                goal=1,
-                resource='shaman-icon'
+        possible_future_bubo = (
+            len(session_data.account.mages) > 0
+            or session_data.account.character_count < maxCharacters
+        )
+        if possible_future_bubo:
+            bubo_advice['Best Bubo'] = [
+                Advice(
+                    label=f'No Bubonic Conjuror found! Take a Shaman to the Demon Genie map in World 4 to access their Elite Class!',
+                    picture_class='bubonic-conjuror-icon',
+                    progression=0,
+                    goal=1,
+                    resource='shaman-icon',
+                )
+            ]
+        else:
+            bubo_ag = AdviceGroup(
+                tier='',
+                pre_string='Info- Active Bubo setup for big Cranium Cooking numbers',
+                informational=True,
+                completed=True,
+                advices=[],
             )
-        ]
+            return bubo_ag
     else:
         bubo_advice[bb] = [
             Advice(
-                label=f"{best_bubo} if your highest leveled Bubo at {best_bubo.combat_level}. The below information is for them.",
+                label=f"{best_bubo} is your highest leveled Bubo at {best_bubo.combat_level}. The below information is for them.",
                 picture_class='bubonic-conjuror-icon'
             ),
             Advice(
@@ -743,7 +758,7 @@ def getBuboAdviceGroup() -> AdviceGroup:
         weapon_good_enough = any([weapon_name for weapon_name in weapon_options if weapon_name in best_bubo.equipment.equips])
         bubo_advice[other].append(Advice(
             label=(
-                f"{weapon_options[2]} is <i>fine</i> but you'll get better pure CC numbers with {weapon_options[0]}"
+                f"{weapon_options[2]} is fine, but you'll get better CC numbers with {weapon_options[0]}"
                 if 'Magnifique Godcaster' in best_bubo.equipment.equips else
                 f"{weapon_options[0]} (or {weapon_options[1]} if hurting for damage) are the recommended Weapon for Bubo. "
                 f"Their short range gets you close to enemies for Aura to cast more often!"
