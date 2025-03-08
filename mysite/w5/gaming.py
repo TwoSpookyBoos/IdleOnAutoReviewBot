@@ -253,7 +253,8 @@ def getSnailInformationGroup() -> AdviceGroup:
         pre_string='Snail Information',
         post_string='Safety means your chance of not ending up worse than you started due to potential Resets',
         advices=snail_AdviceDict,
-        informational=True
+        informational=True,
+        completed=snail_data['SnailRank']>=snailMaxRank
     )
     snail_AdviceGroup.remove_empty_subgroups()
     return snail_AdviceGroup
