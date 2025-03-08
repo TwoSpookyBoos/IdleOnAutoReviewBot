@@ -206,6 +206,8 @@ def _parse_character_class_lists(account):
     account.dbs = [toon for toon in account.all_characters if "Death Bringer" in toon.all_classes]
     account.dks = [toon for toon in account.all_characters if "Divine Knight" in toon.all_classes]
 
+    account.bubos = [toon for toon in account.all_characters if "Bubonic Conjuror" in toon.all_classes]
+
 def _parse_general(account):
     # General / Multiple uses
     account.raw_optlacc_dict = {k: v for k, v in enumerate(safe_loads(account.raw_data.get("OptLacc", [])))}

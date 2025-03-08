@@ -10,7 +10,7 @@ import yaml
 from babel.dates import format_datetime
 from flask import request, g as session_data
 
-from consts import humanReadableClasses, skillIndexList, emptySkillList
+from consts import humanReadableClasses, skillIndexList, emptySkillList, maxCharacters
 from models.custom_exceptions import ProfileNotFound, EmptyResponse, IEConnectionFailed, WtfDataException
 
 from .logging import get_logger
@@ -194,10 +194,6 @@ def getCharacterDetails(inputJSON, runType):
     character_count = 0
     character_names = []
     character_classes = []
-    characterMaxTalents = {}
-    characterCurrentPresetTalents = {}
-    characterSecondaryPresetTalents = {}
-    characterDict: dict = {}
 
     if "playerNames" in inputJSON.keys():
         # Present in Public IE and JSON copied from IE
@@ -258,11 +254,21 @@ def getCharacterDetails(inputJSON, runType):
         raise WtfDataException(json.dumps(inputJSON))
     characterSkillsDict = getAllSkillLevelsDict(inputJSON, character_count)
     perSkillDict = characterSkillsDict["Skills"]
+    characterMaxTalents = {}
+    characterCurrentPresetTalents = {}
+
+    characterSecondaryPresetTalents = {}
+    current_preset_talent_bar = {}
+    secondary_preset_talent_bar = {}
+    characterDict = {}
     equipped_prayers = {}
     postOfficeList = []
     equipped_lab_chips = {}
     inventory_bags = {}
     kill_lists = {}
+    big_alch_bubbles_dict = safe_loads(inputJSON.get('CauldronBubbles', [0,0,0] * maxCharacters))
+    alchemy_jobs_list = safe_loads(inputJSON.get('CauldronJobs1', [-1] * maxCharacters))
+
     for character_index in range(0, character_count):
         character_classes.append(getHumanReadableClasses(inputJSON.get(f"CharacterClass_{character_index}", 0)))
         postOfficeList.append(safe_loads(inputJSON.get(f"POu_{character_index}", [0]*36)))
@@ -276,6 +282,8 @@ def getCharacterDetails(inputJSON, runType):
             equipped_lab_chips[character_index] = safe_loads(inputJSON["Lab"])[character_index+1]
         except:
             equipped_lab_chips[character_index] = []
+        current_preset_talent_bar[character_index] = safe_loads(inputJSON[f'AttackLoadout_{character_index}'])
+        secondary_preset_talent_bar[character_index] = safe_loads(inputJSON[f'AttackLoadoutpre_{character_index}'])
 
         characterDict[character_index] = dict(
             character_index=character_index,
@@ -290,10 +298,14 @@ def getCharacterDetails(inputJSON, runType):
             max_talents=characterMaxTalents[character_index],
             current_preset_talents=characterCurrentPresetTalents[character_index],
             secondary_preset_talents=characterSecondaryPresetTalents[character_index],
+            current_preset_talent_bar=current_preset_talent_bar[character_index],
+            secondary_preset_talent_bar=secondary_preset_talent_bar[character_index],
             po_boxes=postOfficeList[character_index],
             equipped_lab_chips=equipped_lab_chips[character_index],
             inventory_bags=inventory_bags[character_index],
             kill_dict={k:v for k, v in enumerate(kill_lists[character_index])},
+            big_alch_bubbles=big_alch_bubbles_dict[character_index],
+            alchemy_job=alchemy_jobs_list[character_index]
         )
 
     return [character_count, character_names, character_classes, characterDict, perSkillDict]
