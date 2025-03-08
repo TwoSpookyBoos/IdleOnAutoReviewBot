@@ -4613,6 +4613,8 @@ sigilsDict = {
     "Cool Coin":        {"Index": 46, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [30000, 250000, 2000000]},
 }
 bubbleCauldronColorList = ['Orange', 'Green', 'Purple', 'Yellow']
+alchemy_liquids_list = ['Water Droplets', 'Liquid Nitrogen', 'Trench Seawater', 'Toxic Mercury']
+alchemy_jobs_list = bubbleCauldronColorList + alchemy_liquids_list + [k for k in sigilsDict.keys()]
 bubblesDict = {
     0: {
         0: {'Name': 'Roid Ragin', 'Material': 'OakTree', 'x1': 1, 'x2': 0, 'funcType': 'add'},

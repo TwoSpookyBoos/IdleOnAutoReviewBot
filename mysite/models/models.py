@@ -14,7 +14,7 @@ from consts import (
     greenstack_item_difficulty_groups, greenStackAmount, gstackable_codenames, gstackable_codenames_expected, quest_items_codenames,
     # W1
     # W2
-    poBoxDict,
+    poBoxDict, alchemy_jobs_list,
     # W3
     prayersDict,
     expected_talentsDict,
@@ -135,10 +135,14 @@ class Character:
         max_talents: dict,
         current_preset_talents: dict,
         secondary_preset_talents: dict,
+        current_preset_talent_bar: dict,
+        secondary_preset_talent_bar: dict,
         po_boxes: list[int],
         equipped_lab_chips: list[str],
         inventory_bags: dict,
         kill_dict: dict,
+        big_alch_bubbles: list[str],
+        alchemy_job: int,
     ):
 
         self.character_index: int = character_index
@@ -156,11 +160,19 @@ class Character:
         self.max_talents: dict = max_talents
         self.current_preset_talents: dict = current_preset_talents
         self.secondary_preset_talents: dict = secondary_preset_talents
+        self.current_preset_talent_bar: dict = current_preset_talent_bar
+        self.secondary_preset_talent_bar: dict = secondary_preset_talent_bar
+        self.fix_talent_bars()
         self.specialized_skills: list[str] = getSpecializedSkills(self.all_classes)
         self.expected_talents: list[int] = getExpectedTalents(self.all_classes)
         self.inventory_bags: dict = inventory_bags
         self.kill_dict: dict = kill_dict
         self.fixKillDict()
+        self.big_alch_bubbles: list[str] = big_alch_bubbles
+        self.alchemy_job: int = alchemy_job
+        self.alchemy_job_string = 'Unassigned'
+        self.alchemy_job_group = 'Unassigned'
+        self.decode_alchemy_job()
         self.crystal_spawn_chance: float = 0.0
 
         self.combat_level: int = all_skill_levels["Combat"]
@@ -268,6 +280,25 @@ class Character:
 
         self.setPolytheismLink()
 
+    def fix_talent_bars(self):
+        #Current preset
+        self.current_preset_talent_bar = [
+            attack_entry
+            for list_of_attack_bars in self.current_preset_talent_bar
+            for attack_entry in list_of_attack_bars
+            if attack_entry != 'Null'
+        ]
+        # print(f"Character{self.character_index} Primary bar: {self.current_preset_talent_bar}")
+
+        #Secondary preset
+        self.secondary_preset_talent_bar = [
+            attack_entry
+            for list_of_attack_bars in self.secondary_preset_talent_bar
+            for attack_entry in list_of_attack_bars
+            if attack_entry != 'Null'
+        ]
+        # print(f"Character{self.character_index} Secondary bar: {self.secondary_preset_talent_bar}")
+
     def fixKillDict(self):
         for mapIndex in self.kill_dict:
             #If the map is already a List as expected,
@@ -362,6 +393,30 @@ class Character:
         This will make sure the character has been logged into before.
         """
         return self.combat_level >= 1
+
+    def decode_alchemy_job(self):
+        if self.alchemy_job == -1:
+            return  #Keep the default of 'Unassigned'
+
+        if 0 <= self.alchemy_job <= 3:
+            self.alchemy_job_string = alchemy_jobs_list[self.alchemy_job]
+            self.alchemy_job_group = 'Bubble Cauldron'
+        elif 4 <= self.alchemy_job <= 7:
+            self.alchemy_job_string = alchemy_jobs_list[self.alchemy_job]
+            self.alchemy_job_group = 'Liquid Cauldron'
+        elif 100 <= self.alchemy_job:
+            self.alchemy_job_group = 'Sigils'
+            try:
+                # The first character assigned to a Sigil is X.1, second is X.2, etc. up through X.4
+                # Example of 101.3 would mean 2nd sigil (Pumped Kicks), 3rd character slot.
+                # All I care about is which Sigil, not the ordering, so cast to int
+                self.alchemy_job_string = alchemy_jobs_list[int(self.alchemy_job)-92]
+            except:
+                self.alchemy_job_string = f"Sigil-{self.alchemy_job}"
+
+        else:
+            self.alchemy_job_string = f'UnknownJob{self.alchemy_job}'
+            self.alchemy_job_group = 'UnknownJobGroup'
 
 
 class WorldName(Enum):
