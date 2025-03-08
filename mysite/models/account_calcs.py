@@ -765,6 +765,9 @@ def _calculate_w4_cooking_max_plate_levels(account):
 
     account.cooking['CurrentRemainingMeals'] = account.cooking['MaxTotalMealLevels'] - account.cooking['PlayerTotalMealLevels']
     account.cooking['MaxRemainingMeals'] = (maxMealCount * maxMealLevel) - account.cooking['PlayerTotalMealLevels']
+    account.cooking['NMLBDays'] = sum([
+        ceil((maxMealLevel - meal_details['Level']) / 3) for meal_details in account.meals.values()
+    ])
 
 def _calculate_w4_jewel_multi(account):
     jewelMulti = 1

@@ -104,7 +104,9 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
     # 6) All basics + max plate levels
     elif tier_Cooking == 6:
         cooking_AdviceDict["NextTier"].append(Advice(
-            label=f"Finish all {maxMealCount} meals to level {maxMealLevel} ({session_data.account.cooking['CurrentRemainingMeals']} to go!)",
+            label=f"Finish all {maxMealCount} meals to level {maxMealLevel}"
+                  f"<br>{session_data.account.cooking['CurrentRemainingMeals']} remaining levels = "
+                  f"{session_data.account.cooking['NMLBDays']} NMLB triggers to go!",
             picture_class=session_data.account.meals['Turkey a la Thank']['Image'],
             progression=session_data.account.cooking['PlayerTotalMealLevels'],
             goal=maxMealCount * maxMealLevel,
@@ -203,7 +205,8 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
             if current_remainingMeals != max_remainingMeals:
                 cooking_AdviceDict["CurrentTier"].append(Advice(
                     label=f"Info- Current possible: {session_data.account.cooking['MealsUnlocked']}/{maxMealCount} meals, "
-                          f"{current_maxMealLevel}/{maxMealLevel} plate levels ({current_remainingMeals} to go!)",
+                          f"{current_maxMealLevel}/{maxMealLevel} plate levels"
+                          f"<br>{current_remainingMeals} meal levels = {session_data.account.cooking['NMLBDays']} NMLB triggers to go!",
                     picture_class=session_data.account.meals['Turkey a la Thank']['Image'],
                     progression=session_data.account.cooking['PlayerTotalMealLevels'],
                     goal=session_data.account.cooking['MealsUnlocked'] * current_maxMealLevel,
