@@ -4505,7 +4505,7 @@ max_NBLB = 1500
 nblb_max_index = 24
 nblb_skippable = [
     'Reely Smart', 'Bappity Boopity', 'Orange Bargain', 'Bite But Not Chew',  #Orange
-    'Lil Big Damage', 'Anvilnomics', 'Cheap Shot', 'Green Bargain',  #Green
+    'Lil Big Damage', 'Anvilnomics', 'Cheap Shot', 'Green Bargain', 'Kill Per Kill',  #Green
     'Noodubble', 'Purple Bargain', 'Matrix Evolved',  #Purple
     'Yellow Bargain', 'Petting The Rift',  #Yellow
 ]
