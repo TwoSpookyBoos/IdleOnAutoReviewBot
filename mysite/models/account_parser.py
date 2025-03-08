@@ -2424,13 +2424,13 @@ def _parse_caverns_the_harp(account, raw_caverns_list):
             account.caverns['Caverns'][cavern_name]['Chords'][chord_name]['Unlocked'] = (
                 account.caverns['Schematics'][schematics_unlocking_harp_chords[chord_index-2]]['Purchased']
             )
-    if len(raw_caverns_list[9]) > 10:
-        try:
-            account.caverns['Caverns'][cavern_name]['NotesOwned'] = [safer_convert(entry, 0) for entry in raw_caverns_list[9][max_sediments:max_sediments+max_harp_notes]]
-        except:
-            account.caverns['Caverns'][cavern_name]['NotesOwned'] = [0] * max_harp_notes
-    else:
+
+    try:
+        account.caverns['Caverns'][cavern_name]['NotesOwned'] = [safer_convert(entry, 0) for entry in raw_caverns_list[9][max_sediments:max_sediments+max_harp_notes]]
+    except:
         account.caverns['Caverns'][cavern_name]['NotesOwned'] = [0] * max_harp_notes
+    while len(account.caverns['Caverns'][cavern_name]['NotesOwned']) < max_harp_notes:
+        account.caverns['Caverns'][cavern_name]['NotesOwned'].append(0)
 
 def _parse_caverns_the_lamp(account, raw_caverns_list):
     cavern_name = 'The Lamp'
