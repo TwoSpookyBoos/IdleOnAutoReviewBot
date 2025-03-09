@@ -572,14 +572,14 @@ stamps_progressionTiers = {
             'Golden Sixes Stamp': 120,
             'Maxo Slappo Stamp': 98, 'Sashe Sidestamp': 98, 'Intellectostampo': 98,
             'Mason Jar Stamp': 92, "Matty Bag Stamp": 320, 'Crystallin': 260,
-            'Triad Essence Stamp': 80, 'Forge Stamp': 220
+            'Triad Essence Stamp': 80
         },
         "Optional": ["Sukka Foo", "Void Axe Stamp"]
     }},
     20: {"TotalStampLevels": 13000, "Stamps": {
         "Specific": {
             "Mason Jar Stamp": 96, "Matty Bag Stamp": 380, 'Crystallin': 270,
-            "Lil' Mining Baggy Stamp": 280, 'Forge Stamp': 230, 'Summoner Stone Stamp': 120, 'Drippy Drop Stamp': 155,
+            "Lil' Mining Baggy Stamp": 280, 'Summoner Stone Stamp': 120, 'Drippy Drop Stamp': 155,
             "Choppin' Bag Stamp": 300, 'Intellectostampo': 161, 'Maxo Slappo Stamp': 133,
             'Cool Diggy Tool Stamp': 280, 'Swag Swingy Tool Stamp': 360, 'Golden Apple Stamp': 112,
             'Hatchet Stamp': 295, 'Pickaxe Stamp': 255,
