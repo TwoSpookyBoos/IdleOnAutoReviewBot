@@ -754,12 +754,14 @@ def getBuboAdviceGroup() -> AdviceGroup:
             goal=1
         ))
         # Weapon Check
-        weapon_options = ['Boxing Gloves', 'The Stingers', 'Magnifique Godcaster']
-        weapon_good_enough = any([weapon_name for weapon_name in weapon_options if weapon_name in best_bubo.equipment.equips])
+        weapon_options = ['Boxing Gloves', 'The Stingers', 'Magnifique Godcaster', 'Unarmed']
+        equipped_weapon = best_bubo.equipment.equips[1].name if best_bubo.equipment.equips[1].name != 'Blank' else 'Unarmed'
+        fisticuffs_equipped = equipped_weapon == equipped_weapon[2] or equipped_weapon == equipped_weapon[3]
+        weapon_good_enough = any([weapon_name for weapon_name in weapon_options if weapon_name == equipped_weapon])
         bubo_advice[other].append(Advice(
             label=(
-                f"{weapon_options[2]} is fine, but you'll get better CC numbers with {weapon_options[0]}"
-                if 'Magnifique Godcaster' in best_bubo.equipment.equips else
+                f"{equipped_weapon} is fine, but you'll get better CC numbers with {weapon_options[0]}"
+                if weapon_good_enough and fisticuffs_equipped else
                 f"{weapon_options[0]} (or {weapon_options[1]} if hurting for damage) are the recommended Weapon for Bubo. "
                 f"Their short range gets you close to enemies for Aura to cast more often!"
             ),
