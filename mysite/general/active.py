@@ -715,7 +715,7 @@ def getBuboAdviceGroup() -> AdviceGroup:
         bubo_advice[library].append(Advice(
             label=f"Tenteyecle leveled to 200+ increases cooldown reduction from 2 to 3 seconds",
             picture_class='tenteyecle',
-            progression=ccing_preset.get('483', 0),
+            progression=ccing_preset.get('483', 0) + bubo_bonus_levels,
             goal=200
         ))
         bubo_advice[library].append(Advice(
