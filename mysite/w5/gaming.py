@@ -294,7 +294,7 @@ def getGamingAdviceSection() -> AdviceSection:
 
     # Generate AdviceGroup
     gaming_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getGamingProgressionTierAdviceGroups()
-    if session_data.account.gaming['Imports']['Snail'] < snailMaxRank:
+    if session_data.account.gaming['Imports']['Snail']['SnailRank'] < snailMaxRank:
         gaming_AdviceGroupDict['Snail'] = getSnailInformationGroup()
 
     # Generate AdviceSection
