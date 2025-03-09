@@ -572,14 +572,14 @@ stamps_progressionTiers = {
             'Golden Sixes Stamp': 120,
             'Maxo Slappo Stamp': 98, 'Sashe Sidestamp': 98, 'Intellectostampo': 98,
             'Mason Jar Stamp': 92, "Matty Bag Stamp": 320, 'Crystallin': 260,
-            'Triad Essence Stamp': 80, 'Forge Stamp': 220
+            'Triad Essence Stamp': 80
         },
         "Optional": ["Sukka Foo", "Void Axe Stamp"]
     }},
     20: {"TotalStampLevels": 13000, "Stamps": {
         "Specific": {
             "Mason Jar Stamp": 96, "Matty Bag Stamp": 380, 'Crystallin': 270,
-            "Lil' Mining Baggy Stamp": 280, 'Forge Stamp': 230, 'Summoner Stone Stamp': 120, 'Drippy Drop Stamp': 155,
+            "Lil' Mining Baggy Stamp": 280, 'Summoner Stone Stamp': 120, 'Drippy Drop Stamp': 155,
             "Choppin' Bag Stamp": 300, 'Intellectostampo': 161, 'Maxo Slappo Stamp': 133,
             'Cool Diggy Tool Stamp': 280, 'Swag Swingy Tool Stamp': 360, 'Golden Apple Stamp': 112,
             'Hatchet Stamp': 295, 'Pickaxe Stamp': 255,
@@ -1606,6 +1606,9 @@ sailing_progressionTiers = {
             'Dreamcatcher': 4,
         },
     }
+}
+gaming_progressionTiers = {
+    0: {}
 }
 
 ###WORLD 6 PROGRESSION TIERS###
@@ -4502,7 +4505,7 @@ max_NBLB = 1500
 nblb_max_index = 24
 nblb_skippable = [
     'Reely Smart', 'Bappity Boopity', 'Orange Bargain', 'Bite But Not Chew',  #Orange
-    'Lil Big Damage', 'Anvilnomics', 'Cheap Shot', 'Green Bargain',  #Green
+    'Lil Big Damage', 'Anvilnomics', 'Cheap Shot', 'Green Bargain', 'Kill Per Kill',  #Green
     'Noodubble', 'Purple Bargain', 'Matrix Evolved',  #Purple
     'Yellow Bargain', 'Petting The Rift',  #Yellow
 ]
@@ -4610,6 +4613,8 @@ sigilsDict = {
     "Cool Coin":        {"Index": 46, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [30000, 250000, 2000000]},
 }
 bubbleCauldronColorList = ['Orange', 'Green', 'Purple', 'Yellow']
+alchemy_liquids_list = ['Water Droplets', 'Liquid Nitrogen', 'Trench Seawater', 'Toxic Mercury']
+alchemy_jobs_list = bubbleCauldronColorList + alchemy_liquids_list + [k for k in sigilsDict.keys()]
 bubblesDict = {
     0: {
         0: {'Name': 'Roid Ragin', 'Material': 'OakTree', 'x1': 1, 'x2': 0, 'funcType': 'add'},
@@ -9314,5 +9319,6 @@ true_max_tiers = {
     "Rift": max(rift_progressionTiers.keys()),
     "Divinity": max(divinity_progressionTiers.keys()),
     "Sailing": max(sailing_progressionTiers.keys()),
+    "Gaming": max(gaming_progressionTiers.keys()),
     "Farming": max(farming_progressionTiers.keys())
 }

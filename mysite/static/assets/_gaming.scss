@@ -32,6 +32,10 @@ $gaming-plants: (
     chemical: img('wiki/Gaming_Plant_8.gif')
 );
 
+$gaming-etc: (
+    snail-envelope: img('customized/Gaming_Envelope.png')  //Cropped from 1x/font-585.png
+);
 
 $all-gaming: map-merge($gaming-bits, $gaming-imports);
 $all-gaming: map-merge($all-gaming, $gaming-plants);
+$all-gaming: map-merge($all-gaming, $gaming-etc);

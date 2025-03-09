@@ -1,5 +1,7 @@
-from models.models import Advice, AdviceGroup, AdviceSection, EnemyWorld, EnemyMap
-from consts import lavaFunc, stamp_maxes, pearlable_skillsList, max_VialLevel, currentWorld, dnSkullValueList, cookingCloseEnough, dnBasicMapsCount
+from models.models import Advice, AdviceGroup, AdviceSection, EnemyWorld, EnemyMap, Character
+from consts import lavaFunc, stamp_maxes, pearlable_skillsList, max_VialLevel, currentWorld, dnSkullValueList, cookingCloseEnough, dnBasicMapsCount, \
+    maxCharacters
+from utils.all_talentsDict import all_talentsDict
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
@@ -303,15 +305,16 @@ def getLongTermAdviceList() -> list[Advice]:
             break  # Only show the next closest target
 
     # Bubo Liquid Decants
-    if session_data.account.equinox_bonuses['Liquidvestment']['CurrentLevel'] < session_data.account.equinox_bonuses['Liquidvestment']['FinalMaxLevel']:
-        equinox_note = f"<br>Whoa, get maxed Liquidvestment from {{{{ Equinox|#equinox }}}} first!"
-    else:
-        equinox_note = ''
+    equinox_note = (
+        f"<br>Whoa, get maxed Liquidvestment from {{{{ Equinox|#equinox }}}} first!"
+        if session_data.account.equinox_bonuses['Liquidvestment']['CurrentLevel'] < session_data.account.equinox_bonuses['Liquidvestment']['FinalMaxLevel']
+        else ''
+    )
     for levelTarget in [100, 200, 400, 600, 800, 1000]:
         if levelTarget > session_data.account.alchemy_cauldrons["WaterDroplets"][1]:
             longterm.append(Advice(
-                label=f"Increase Water Droplet Rate via Active Bubo"
-                      f"<br>W5 Wurms or W6 Minichiefs recommended"
+                label=f"Increase Water Droplet Rate via Active Bubo."
+                      f"<br>W5 Wurms or W6 Minichiefs recommended."
                       f"{equinox_note}",
                 picture_class='cranium-cooking',
                 progression=session_data.account.alchemy_cauldrons["WaterDroplets"][1],
@@ -341,8 +344,8 @@ def getDailyAdviceList() -> list[Advice]:
         daily.append(Advice(
             label=f"Daily World Boss retries for Gems",
             picture_class='gem',
-            progression=session_data.account.daily_world_boss_kills,
-            goal=300,
+            progression=session_data.account.daily_world_boss_kills // 3,
+            goal=100,
             resource='kruks-volcano-key'
         ))
     return daily
@@ -549,23 +552,278 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     overall_SectionTier = min(max_tier + info_tiers, tier_Active)
     return tiers_ag, overall_SectionTier, max_tier, max_tier + info_tiers
 
-def getActiveAdviceSection() -> AdviceSection:
-    if session_data.account.highestWorldReached < 4:
-        active_AdviceSection = AdviceSection(
-            name="Active",
-            tier="Not Yet Evaluated",
-            header="Come back after reaching W4 town!",
-            picture='Auto.png',
-            unrated=True,
-            unreached=True
+def getBuboAdviceGroup() -> AdviceGroup:
+    bb = 'Best Bubo'
+    po = 'Post Office boxes'
+    alch_talents = 'Alchemy and Talent Bar'
+    optional_talents = 'Optional Talents for Killroy and first CC'
+    library = 'Talent Books- Checkouts and Max Level'
+    other = 'Misc Info and Notes'
+    bubo_advice = {
+        bb: [],
+        po: [],
+        alch_talents: [],
+        optional_talents: [],
+        library: [],
+        other: []
+    }
+
+    sorted_bubos: list[Character] = sorted(
+        session_data.account.bubos, key=lambda toon: toon.combat_level, reverse=True
+    )
+    best_bubo = sorted_bubos[0] if len(sorted_bubos) > 0 else None
+
+    if best_bubo is None:
+        possible_future_bubo = (
+            len(session_data.account.mages) > 0
+            or session_data.account.character_count < maxCharacters
         )
-        return active_AdviceSection
+        if possible_future_bubo:
+            bubo_advice['Best Bubo'] = [
+                Advice(
+                    label=f'No Bubonic Conjuror found! Take a Shaman to the Demon Genie map in World 4 to access their Elite Class!',
+                    picture_class='bubonic-conjuror-icon',
+                    progression=0,
+                    goal=1,
+                    resource='shaman-icon',
+                )
+            ]
+        else:
+            bubo_ag = AdviceGroup(
+                tier='',
+                pre_string='Info- Active Bubo setup for big Cranium Cooking numbers',
+                informational=True,
+                completed=True,
+                advices=[],
+            )
+            return bubo_ag
+    else:
+        bubo_advice[bb] = [
+            Advice(
+                label=f"{best_bubo} is your highest leveled Bubo at {best_bubo.combat_level}. The below information is for them.",
+                picture_class='bubonic-conjuror-icon'
+            ),
+            Advice(
+                label=f"{best_bubo}'s Alchemy level: {best_bubo.alchemy_level}",
+                picture_class='alchemy'
+            )
+        ]
+
+        #Post Office boxes
+        po_box_names = ['Potion Package', 'Magician Starterpack', 'Non Predatory Loot Box']
+        bubo_advice[po] = [
+            Advice(
+                label=f"{{{{ PO|#post-office}}}}: {box_name}",
+                picture_class=box_name,
+                progression=box_details['Level'],
+                goal=box_details['Max Level'],
+                completed=box_details['Level'] >= box_details['Max Level']
+            ) for box_name, box_details in best_bubo.po_boxes_invested.items() if box_name in po_box_names
+        ]
+        bubo_advice[po].insert(0, Advice(
+            label=f"{{{{ Vault|#upgrade-vault }}}}: Daily Mailbox",
+            picture_class=session_data.account.vault['Upgrades']['Daily Mailbox']['Image'],
+            progression=session_data.account.vault['Upgrades']['Daily Mailbox']['Level'],
+            goal=session_data.account.vault['Upgrades']['Daily Mailbox']['Max Level']
+        ))
+
+        #Alchemy and Talents
+        bad_talent_numbers = [450, 480, 527]  #Energy Bolt, Crazy Concoctions, Tampered Injection
+        good_talent_numbers = [490, 529, 481, 526]  #CC, Raise Dead, Aura, Ghost
+        optional_talent_numbers = [525, 482]  #Cannisters, Skull
+        nth = {
+            1: "first",
+            2: "second",
+            3: "third",
+            4: "fourth",
+            5: "fifth",
+            6: "sixth"
+        }
+        cookin_roadkill_equipped = session_data.account.sheepie_owned or 'b7' in best_bubo.big_alch_bubbles
+        bubo_advice[alch_talents].append(Advice(
+            label=f"Level {session_data.account.alchemy_bubbles['Cookin Roadkill']['Level']} Cookin Roadkill big bubble equipped "
+                  f"{' (Thanks Sheepie!)' if session_data.account.sheepie_owned else ''}"
+                  f"<br>See {{{{ Bubbles|#bubbles}}}} for recommended levels",
+            picture_class='cookin-roadkill',
+            progression=int(cookin_roadkill_equipped),
+            goal=1
+        ))
+
+        #Decide which preset is used for CCing, based on the total number of good talents on the bar
+        if (
+            sum([talent_number for talent_number in good_talent_numbers if talent_number in best_bubo.current_preset_talent_bar])
+            >= sum([talent_number for talent_number in good_talent_numbers if talent_number in best_bubo.secondary_preset_talent_bar])
+        ):
+            ccing_bar = best_bubo.current_preset_talent_bar
+            ccing_preset = best_bubo.current_preset_talents
+        else:
+            ccing_bar = best_bubo.secondary_preset_talent_bar
+            ccing_preset = best_bubo.secondary_preset_talents
+        # logger.debug(f"ccing_bar = {[all_talentsDict[talent_number]['name'] for talent_number in ccing_bar]}")
+
+        #Bad talent check
+        bubo_advice[alch_talents].extend([
+            Advice(
+                label=f"{all_talentsDict[bad_talent_number]['name']} removed from your Attack bar. It delays Raise Dead",
+                picture_class=all_talentsDict[bad_talent_number]['name'],
+                progression=int(bad_talent_number not in ccing_bar),
+                goal=1
+            ) for bad_talent_number in bad_talent_numbers if bad_talent_number in ccing_bar
+        ])
+
+        #Good talent ordering check
+        for talent_index, good_talent_number in enumerate(good_talent_numbers):
+            try:
+                bubo_advice[alch_talents].append(Advice(
+                    label=f"Set {all_talentsDict[good_talent_number]['name']} {nth[talent_index+1]} on your Attack Bar",
+                    picture_class=all_talentsDict[good_talent_number]['name'],
+                    progression=int(ccing_bar[talent_index] == good_talent_number),
+                    goal=1
+                ))
+            except:
+                logger.exception(f"Stuff went wrong at {talent_index = }, {good_talent_number = }")
+                continue
+
+        #Optional talent ordering check
+        for talent_index, optional_talent_number in enumerate(optional_talent_numbers):
+            try:
+                bubo_advice[optional_talents].append(Advice(
+                    label=f"Consider setting {all_talentsDict[optional_talent_number]['name']} "
+                          f"{nth[talent_index+1+len(good_talent_numbers)]} on your Attack Bar",
+                    picture_class=all_talentsDict[optional_talent_number]['name'],
+                    progression=int(ccing_bar[talent_index] == optional_talent_number),
+                    goal=1,
+                    completed=True
+                ))
+            except:
+                logger.exception(f"Stuff went wrong at {talent_index = }, {optional_talent_number = }")
+                continue
+
+        #Talent Library book levels and checkouts
+        bubo_bonus_levels = best_bubo.max_talents_over_books - session_data.account.library['MaxBookLevel']
+        bubo_advice[library].append(Advice(
+            label=(
+                f"Able to reach 200+ max talent level?"
+                f"<br>Refer to the {{{{ Library|#libray }}}} section for sources of Book levels and Bonus levels"
+                if best_bubo.max_talents_over_books < 200 else
+                f"Able to reach 200+ max talent level?"
+            ),
+            picture_class='talent-book-library',
+            progression=best_bubo.max_talents_over_books,
+            goal=200
+        ))
+        bubo_advice[library].append(Advice(
+            label=f"Tenteyecle leveled to 200+ increases cooldown reduction from 2 to 3 seconds",
+            picture_class='tenteyecle',
+            progression=ccing_preset.get('483', 0),
+            goal=200
+        ))
+        bubo_advice[library].append(Advice(
+            label=f"Max book your Cranium Cooking! Level it too, duh.",
+            picture_class='cranium-cooking',
+            progression=ccing_preset.get('490', 0),
+            goal=session_data.account.library['MaxBookLevel']
+        ))
+        aura_level = ccing_preset.get('481', 0) + bubo_bonus_levels
+        aura_width = aura_level // 35
+        next_aura_width = 35 * (aura_width + 1)
+        bubo_advice[library].append(Advice(
+            label=f"Aura increases Width every 35 levels. Yours is {aura_width} wide, with the next increase at level {next_aura_width}"
+                  f"{' (not currently possible)' if next_aura_width >= 420 else ''}",
+            picture_class='auspicious-aura',
+            progression=aura_level,
+            goal=next_aura_width,
+            completed=aura_level >= best_bubo.max_talents_over_books
+        ))
+
+        #Other / Misc stuff
+        # Equinox liquid vestment
+        bubo_advice[other].append(Advice(
+            label=f"{{{{ Equinox|#equinox}}}}: Invest {9 * session_data.account.equinox_bonuses['Liquidvestment']['CurrentLevel']}"
+                  f"/{9 * session_data.account.equinox_bonuses['Liquidvestment']['FinalMaxLevel']}% of overflow liquid to Decant levels.",
+            picture_class='liquidvestment',
+            progression=session_data.account.equinox_bonuses['Liquidvestment']['CurrentLevel'],
+            goal=session_data.account.equinox_bonuses['Liquidvestment']['FinalMaxLevel']
+        ))
+        # Crystal stuff
+        bubo_advice[other].append(Advice(
+            label=f"Chocolately Chip equipped in Lab?"
+                  f"<br>Crystal Monsters provide extra CC time!",
+            picture_class='chocolatey-chip',
+            progression=int('Chocolatey Chip' in best_bubo.equipped_lab_chips),
+            goal=1
+        ))
+        # Weapon Check
+        weapon_options = ['Boxing Gloves', 'The Stingers', 'Magnifique Godcaster', 'Unarmed']
+        equipped_weapon = best_bubo.equipment.equips[1].name if best_bubo.equipment.equips[1].name != 'Blank' else 'Unarmed'
+        fisticuffs_equipped = equipped_weapon == equipped_weapon[2] or equipped_weapon == equipped_weapon[3]
+        weapon_good_enough = any([weapon_name for weapon_name in weapon_options if weapon_name == equipped_weapon])
+        bubo_advice[other].append(Advice(
+            label=(
+                f"{equipped_weapon} is fine, but you'll get better CC numbers with {weapon_options[0]}"
+                if weapon_good_enough and fisticuffs_equipped else
+                f"{weapon_options[0]} (or {weapon_options[1]} if hurting for damage) are the recommended Weapon for Bubo. "
+                f"Their short range gets you close to enemies for Aura to cast more often!"
+            ),
+            picture_class=weapon_options[0],
+            resource='auspicious-aura',
+            progression=int(weapon_good_enough),
+            goal=1,
+            completed=weapon_good_enough
+        ))
+        # Note: consider disconnecting Aquaduct lab bonus
+        bubo_advice[other].append(Advice(
+            label=f"Lab: Consider disconnecting Viaduct of the Gods during long Active Bubo sessions for increased Liquid generation",
+            picture_class='viaduct-of-the-gods',
+            completed=True
+        ))
+        # Note: Sigils are paused during CC if any characters assigned
+        num_assigned_to_sigils = sum([True for char in session_data.account.all_characters if char.alchemy_job_group == 'Sigils'])
+        move_off_sigils_note = (
+            f" I recommend to move your {num_assigned_to_sigils} characters to Liquid Cauldrons during long Active Bubo sessions"
+            if num_assigned_to_sigils > 0
+            else " You've got 0 characters in Sigils, so you're good!"
+        )
+        bubo_advice[other].append(Advice(
+            label=f"Note: Sigil progress is entirely STOPPED while Cranium Cooking is active.{move_off_sigils_note}",
+            picture_class='sigils-of-olden-alchemy',
+            progression=num_assigned_to_sigils * -1,
+            goal=0,
+            completed=True
+        ))
+
+    for subgroup in bubo_advice:
+        for advice in bubo_advice[subgroup]:
+            mark_advice_completed(advice)
+
+    bubo_ag = AdviceGroup(
+        tier='',
+        pre_string='Info- Active Bubo setup for big Cranium Cooking numbers',
+        advices=bubo_advice,
+        informational=True
+    )
+    bubo_ag.remove_empty_subgroups()
+    return bubo_ag
+
+
+def getActiveAdviceSection() -> AdviceSection:
+    # if session_data.account.highestWorldReached < 4:
+    #     active_AdviceSection = AdviceSection(
+    #         name="Active",
+    #         tier="Not Yet Evaluated",
+    #         header="Come back after reaching W4 town!",
+    #         picture='Auto.png',
+    #         unrated=True,
+    #         unreached=True
+    #     )
+    #     return active_AdviceSection
 
     # Generate AdviceGroups
     active_AdviceGroupDict = {}
     active_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
     active_AdviceGroupDict['Crystals'] = getCrystalSpawnChanceAdviceGroup()
     active_AdviceGroupDict['ActiveFarming'] = getActiveGoalsAdviceGroup()
+    active_AdviceGroupDict['Bubo'] = getBuboAdviceGroup()
 
     # Generate AdviceSection
 
