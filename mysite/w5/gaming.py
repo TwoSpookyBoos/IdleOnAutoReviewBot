@@ -140,7 +140,7 @@ def getSnailLevelUpInfo(final_ballad_bonus, target_confidence_levels):
 
 def getSnailInformationGroup() -> AdviceGroup:
     snail_AdviceDict = {
-        "General": [],
+        'General': [],
     }
 
     sodium_level = session_data.account.atom_collider['Atoms']['Sodium - Snail Kryptonite']['Level']
@@ -159,17 +159,17 @@ def getSnailInformationGroup() -> AdviceGroup:
         progression=snail_data['SnailRank'],
         goal=snailMaxRank
     ))
-    snail_AdviceDict["General"].append(Advice(
+    snail_AdviceDict['General'].append(Advice(
         label=f"Current Encouragements: {snail_data['Encouragements']}",
         picture_class='snail-envelope',
     ))
-    snail_AdviceDict["General"].append(Advice(
+    snail_AdviceDict['General'].append(Advice(
         label=f"Envelopes owned: {floored_envelopes}",
         picture_class='snail-envelope',
     ))
 
     if sodium_safety_level + 5 <= snail_data['SnailRank']:
-        snail_AdviceDict["General"].append(Advice(
+        snail_AdviceDict['General'].append(Advice(
             label=f"{{{{ Sodium|#atom-collider }}}} too low to safely level the Snail any further!",
             picture_class='sodium',
         ))
@@ -190,7 +190,7 @@ def getSnailInformationGroup() -> AdviceGroup:
                 resource='harp-note-3'
             ))
         else:
-            snail_AdviceDict["General"].append(Advice(
+            snail_AdviceDict['General'].append(Advice(
                 label=f"{{{{ Schematic|#villagers }}}}: Final Ballad of the Snail is NOT acquired",
                 picture_class=session_data.account.caverns['Schematics']['Final Ballad of the Snail']['Image'],
                 progression=0,
@@ -226,14 +226,19 @@ def getSnailInformationGroup() -> AdviceGroup:
                 ''
             )
 
-            snail_AdviceDict[subgroupName].append(Advice(
+            recc_encourage_Advice = Advice(
                 label=f"At {num_encourage} recommended encouragements: {s_chance:0.2%} success, {r_chance:0.2%} reset chance"
                       f"{encourage_diff_note}",
                 picture_class='immortal-snail',
                 progression=snail_data['Encouragements'] if level == snail_data['SnailRank'] else 0,
                 goal=num_encourage,
                 resource='snail-envelope'
-            ))
+            )
+
+            snail_AdviceDict[subgroupName].append(recc_encourage_Advice)
+
+            if rank_type == 'Current':
+                snail_AdviceDict['General'].insert(2, recc_encourage_Advice)
 
             if level == snail_data['SnailRank']:
                 for target_idx, target_confidence in enumerate(TARGET_CONFIDENCE_LEVELS):
