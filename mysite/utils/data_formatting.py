@@ -270,20 +270,20 @@ def getCharacterDetails(inputJSON, runType):
     alchemy_jobs_list = safe_loads(inputJSON.get('CauldronJobs1', [-1] * maxCharacters))
 
     for character_index in range(0, character_count):
-        character_classes.append(getHumanReadableClasses(inputJSON.get(f"CharacterClass_{character_index}", 0)))
-        postOfficeList.append(safe_loads(inputJSON.get(f"POu_{character_index}", [0]*36)))
-        equipped_prayers[character_index] = safe_loads(inputJSON.get(f"Prayers_{character_index}", []))
-        characterMaxTalents[character_index] = safe_loads(inputJSON.get(f"SM_{character_index}", {}))
-        characterCurrentPresetTalents[character_index] = safe_loads(inputJSON.get(f"SL_{character_index}", {}))
-        characterSecondaryPresetTalents[character_index] = safe_loads(inputJSON.get(f"SLpre_{character_index}", {}))
+        character_classes.append(getHumanReadableClasses(inputJSON.get(f'CharacterClass_{character_index}', 0)))
+        postOfficeList.append(safe_loads(inputJSON.get(f'POu_{character_index}', [0]*36)))
+        equipped_prayers[character_index] = safe_loads(inputJSON.get(f'Prayers_{character_index}', []))
+        characterMaxTalents[character_index] = safe_loads(inputJSON.get(f'SM_{character_index}', {}))
+        characterCurrentPresetTalents[character_index] = safe_loads(inputJSON.get(f'SL_{character_index}', {}))
+        characterSecondaryPresetTalents[character_index] = safe_loads(inputJSON.get(f'SLpre_{character_index}', {}))
         inventory_bags[character_index] = safe_loads(inputJSON.get(f'InvBagsUsed_{character_index}', {}))
         kill_lists[character_index] = safe_loads(inputJSON.get(f'KLA_{character_index}', []))
         try:
-            equipped_lab_chips[character_index] = safe_loads(inputJSON["Lab"])[character_index+1]
+            equipped_lab_chips[character_index] = safe_loads(inputJSON['Lab'])[character_index+1]
         except:
             equipped_lab_chips[character_index] = []
-        current_preset_talent_bar[character_index] = safe_loads(inputJSON[f'AttackLoadout_{character_index}'])
-        secondary_preset_talent_bar[character_index] = safe_loads(inputJSON[f'AttackLoadoutpre_{character_index}'])
+        current_preset_talent_bar[character_index] = safe_loads(inputJSON.get(f'AttackLoadout_{character_index}', []))
+        secondary_preset_talent_bar[character_index] = safe_loads(inputJSON.get(f'AttackLoadoutpre_{character_index}', []))
 
         characterDict[character_index] = dict(
             character_index=character_index,
