@@ -357,11 +357,11 @@ def getBraveryAdviceGroup(schematics) -> AdviceGroup:
 def getBellAdviceGroup(schematics):
     c_stats = "Cavern Stats"
     r_stats = 'Ring Stats'
-    clean_stats = 'Clean Stats'
+    improvement_stats = 'Improvement Stats'
     cavern_advice = {
         c_stats: [],
         r_stats: [],
-        clean_stats: []
+        improvement_stats: []
     }
 
     cavern_name = 'The Bell'
@@ -428,7 +428,7 @@ def getBellAdviceGroup(schematics):
     total_improvements = cavern['Total Improvements']
     stack_size = cavern['Stack Size']
     total_stacks = cavern['Total Stacks']
-    cavern_advice[clean_stats] = [
+    cavern_advice[improvement_stats] = [
         Advice(
             label=ci_details['Description'],
             picture_class=ci_details['Image'],
@@ -437,7 +437,7 @@ def getBellAdviceGroup(schematics):
             resource=ci_details['Resource'],
         ) for ci_index, ci_details in cavern['Improvements'].items()
     ]
-    cavern_advice[clean_stats].insert(0, Advice(
+    cavern_advice[improvement_stats].insert(0, Advice(
         label=f"Total Improvements: {total_improvements} ({total_stacks} stacks)"
               f"<br>Total Bonus: {pow(1.1, total_stacks):.1f}x"
               f"<br>Next stack progress",
