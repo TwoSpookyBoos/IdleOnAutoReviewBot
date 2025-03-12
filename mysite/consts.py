@@ -723,11 +723,12 @@ statues_progressionTiers = {
         'Battleaxe Statue': 80, 'Spiral Statue': 80, 'Boat Statue': 80,
         'Compost Statue': 80, 'Stealth Statue': 80, 'Essence Statue': 80,
     },},
-    11: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx", 'SpecificTypes': [
-        'Dragon Warrior Statue'
-    ],
-         'SpecificLevels': {
-        'Mining Statue': 280, 'Feasty Statue': 280, 'Lumberbob Statue': 280, 'Dragon Warrior Statue': 150,
+    11: {
+        # "MinStatueTypeNumber": 2,
+        # "MinStatueType": "Onyx",
+        # 'SpecificTypes': ['Dragon Warrior Statue'],
+        'SpecificLevels': {
+            'Mining Statue': 280, 'Feasty Statue': 280, 'Lumberbob Statue': 280,  # 'Dragon Warrior Statue': 150,
         },
     },
 }
