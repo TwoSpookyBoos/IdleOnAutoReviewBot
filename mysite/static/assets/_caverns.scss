@@ -6,6 +6,8 @@ $villagers: (
     cosmos-undiscovered: img('wiki/Cosmos_Undiscovered.png'),
     minau: img('wiki/Minau.gif'),
     minau-undiscovered: img('wiki/Minau_Undiscovered.png'),
+    bolaia: img('wiki/Bolaia.gif'),
+    bolaia-undiscovered: img('wiki/Bolaia_Undiscovered.gif'),
 );
 
 $villager-banners: (
@@ -14,7 +16,7 @@ $villager-banners: (
     villager-bonuses: img('wiki/Villager_Bonuses.png'),
     villager-measure: img('wiki/Villager_Measure.png'),
     //villager-legacy: img('wiki/Villager_Legacy.png'),
-    //villager-studies: img('wiki/Villager_Studies.png'),
+    villager-studies: img('wiki/Villager_Studies.png'),
 );
 
 $schematics: (
@@ -81,6 +83,42 @@ $schematics: (
     engineer-schematic-59: img('data/HoleUIbuildUpg59.png'),
     engineer-schematic-60: img('data/HoleUIbuildUpg60.png'),
     engineer-schematic-61: img('data/HoleUIbuildUpg61.png'),
+    engineer-schematic-62: img('data/HoleUIbuildUpg62.png'),
+    engineer-schematic-63: img('data/HoleUIbuildUpg63.png'),
+    engineer-schematic-64: img('data/HoleUIbuildUpg64.png'),
+    engineer-schematic-65: img('data/HoleUIbuildUpg65.png'),
+    engineer-schematic-66: img('data/HoleUIbuildUpg66.png'),
+    engineer-schematic-67: img('data/HoleUIbuildUpg67.png'),
+    engineer-schematic-68: img('data/HoleUIbuildUpg68.png'),
+    engineer-schematic-69: img('data/HoleUIbuildUpg69.png'),
+    engineer-schematic-70: img('data/HoleUIbuildUpg70.png'),
+    engineer-schematic-71: img('data/HoleUIbuildUpg71.png'),
+    engineer-schematic-72: img('data/HoleUIbuildUpg72.png'),
+    engineer-schematic-73: img('data/HoleUIbuildUpg73.png'),
+    engineer-schematic-74: img('data/HoleUIbuildUpg74.png'),
+    engineer-schematic-75: img('data/HoleUIbuildUpg75.png'),
+    engineer-schematic-76: img('data/HoleUIbuildUpg76.png'),
+    engineer-schematic-77: img('data/HoleUIbuildUpg77.png'),
+    engineer-schematic-78: img('data/HoleUIbuildUpg78.png'),
+    engineer-schematic-79: img('data/HoleUIbuildUpg79.png'),
+    engineer-schematic-80: img('data/HoleUIbuildUpg80.png'),
+    engineer-schematic-81: img('data/HoleUIbuildUpg81.png'),
+    engineer-schematic-82: img('data/HoleUIbuildUpg82.png'),
+    engineer-schematic-83: img('data/HoleUIbuildUpg83.png'),
+    engineer-schematic-84: img('data/HoleUIbuildUpg84.png'),
+    engineer-schematic-85: img('data/HoleUIbuildUpg85.png'),
+    engineer-schematic-86: img('data/HoleUIbuildUpg86.png'),
+    engineer-schematic-87: img('data/HoleUIbuildUpg87.png'),
+    engineer-schematic-88: img('data/HoleUIbuildUpg88.png'),
+    engineer-schematic-89: img('data/HoleUIbuildUpg89.png'),
+    engineer-schematic-90: img('data/HoleUIbuildUpg90.png'),
+    engineer-schematic-91: img('data/HoleUIbuildUpg91.png'),
+    engineer-schematic-92: img('data/HoleUIbuildUpg92.png'),
+    engineer-schematic-93: img('data/HoleUIbuildUpg93.png'),
+    engineer-schematic-94: img('data/HoleUIbuildUpg94.png'),
+    engineer-schematic-95: img('data/HoleUIbuildUpg95.png'),
+    engineer-schematic-96: img('data/HoleUIbuildUpg96.png'),
+    engineer-schematic-97: img('data/HoleUIbuildUpg97.png'),
 );
 
 $cosmos-majiks: (
@@ -103,6 +141,11 @@ $caverns: (
     cavern-8: img('customized/HolePOI7.png'), //Motherlode Catching
     cavern-9: img('customized/HolePOI8.png'), //Grotto
     cavern-10: img('customized/HolePOI9.png'), //Justice Monument
+    cavern-11: img('data/HolePOI10.png'),  //Jar
+    cavern-12: img('data/HolePOI11.png'),  //Evertree
+    cavern-13: img('data/HolePOI12.png'),  //Wisdom Monument
+    cavern-14: img('data/HolePOI13.png'),  //Gambit
+    cavern-15: img('data/HolePOI14.png'),  //Temple
 );
 
 $well-sediment: (
@@ -236,6 +279,74 @@ $measurements: (
     measurement-10: img('tbd.png'),
     measurement-11: img('tbd.png'),
     measurement-12: img('tbd.png'),
+    measurement-13: img('tbd.png'),
+    measurement-14: img('tbd.png'),
+    measurement-15: img('tbd.png'),
+);
+
+$jars-rupees-collectibles: (
+    jar-type-0: img('data/HoleJar0.png'),
+    jar-type-1: img('data/HoleJar1.png'),
+    jar-type-2: img('data/HoleJar2.png'),
+    jar-type-3: img('data/HoleJar3.png'),
+    jar-type-4: img('data/HoleJar4.png'),
+    jar-type-5: img('data/HoleJar5.png'),
+    jar-type-6: img('data/HoleJar6.png'),
+    jar-type-7: img('data/HoleJar7.png'),
+    jar-type-8: img('data/HoleJar8.png'),
+    jar-type-9: img('data/HoleJar9.png'),
+    jar-rupee-0: img('data/HoleJarR0.png'),
+    jar-rupee-1: img('data/HoleJarR1.png'),
+    jar-rupee-2: img('data/HoleJarR2.png'),
+    jar-rupee-3: img('data/HoleJarR3.png'),
+    jar-rupee-4: img('data/HoleJarR4.png'),
+    jar-rupee-5: img('data/HoleJarR5.png'),
+    jar-rupee-6: img('data/HoleJarR6.png'),
+    jar-rupee-7: img('data/HoleJarR7.png'),
+    jar-rupee-8: img('data/HoleJarR8.png'),
+    jar-rupee-9: img('data/HoleJarR9.png'),
+    jar-rupee-10: img('data/HoleJarR10.png'),
+    jar-rupee-11: img('data/HoleJarR11.png'),
+    jar-collectible-0: img('data/HoleC0.png'),
+    jar-collectible-1: img('data/HoleC1.png'),
+    jar-collectible-2: img('data/HoleC2.png'),
+    jar-collectible-3: img('data/HoleC3.png'),
+    jar-collectible-4: img('data/HoleC4.png'),
+    jar-collectible-5: img('data/HoleC5.png'),
+    jar-collectible-6: img('data/HoleC6.png'),
+    jar-collectible-7: img('data/HoleC7.png'),
+    jar-collectible-8: img('data/HoleC8.png'),
+    jar-collectible-9: img('data/HoleC9.png'),
+    jar-collectible-10: img('data/HoleC10.png'),
+    jar-collectible-11: img('data/HoleC11.png'),
+    jar-collectible-12: img('data/HoleC12.png'),
+    jar-collectible-13: img('data/HoleC13.png'),
+    jar-collectible-14: img('data/HoleC14.png'),
+    jar-collectible-15: img('data/HoleC15.png'),
+    jar-collectible-16: img('data/HoleC16.png'),
+    jar-collectible-17: img('data/HoleC17.png'),
+    jar-collectible-18: img('data/HoleC18.png'),
+    jar-collectible-19: img('data/HoleC19.png'),
+    jar-collectible-20: img('data/HoleC20.png'),
+    jar-collectible-21: img('data/HoleC21.png'),
+    jar-collectible-22: img('data/HoleC22.png'),
+    jar-collectible-23: img('data/HoleC23.png'),
+    jar-collectible-24: img('data/HoleC24.png'),
+    jar-collectible-25: img('data/HoleC25.png'),
+    jar-collectible-26: img('data/HoleC26.png'),
+    jar-collectible-27: img('data/HoleC27.png'),
+    jar-collectible-28: img('data/HoleC28.png'),
+    jar-collectible-29: img('data/HoleC29.png'),
+    jar-collectible-30: img('data/HoleC30.png'),
+    jar-collectible-31: img('data/HoleC31.png'),
+    jar-collectible-32: img('data/HoleC32.png'),
+    jar-collectible-33: img('data/HoleC33.png'),
+    jar-collectible-34: img('data/HoleC34.png'),
+    jar-collectible-35: img('data/HoleC35.png'),
+    jar-collectible-36: img('data/HoleC36.png'),
+    jar-collectible-37: img('data/HoleC37.png'),
+    jar-collectible-38: img('data/HoleC38.png'),
+    jar-collectible-39: img('data/HoleC39.png'),
 );
 
 $etc: (
@@ -254,4 +365,5 @@ $all-caverns: map-merge($all-caverns, $bell);
 $all-caverns: map-merge($all-caverns, $harp);
 $all-caverns: map-merge($all-caverns, $lamp-wishes);
 $all-caverns: map-merge($all-caverns, $measurements);
+$all-caverns: map-merge($all-caverns, $jars-rupees-collectibles);
 $all-caverns: map-merge($all-caverns, $etc);

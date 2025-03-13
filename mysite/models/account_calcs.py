@@ -40,9 +40,22 @@ def _calculate_wave_1(account):
     _calculate_w6_summoning_winner_bonuses(account)
 
 def _calculate_caverns_majiks(account):
+    alt_pocket_div = {
+        'BonusPerLevel': 15,
+        'Description': '% All Stats'
+    }
     for majik_type, majiks in caverns_conjuror_majiks.items():
         for majik_index, majik_data in enumerate(majiks):
-            if majik_data['Scaling'] == 'add':
+            if majik_data['Name'] == 'Pocket Divinity' and account.doot_owned:
+                #Replace linked Divinities with 15% all stat
+                account.caverns['Majiks'][majik_data['Name']]['Description'] = alt_pocket_div['Description']
+                account.caverns['Majiks'][majik_data['Name']]['Value'] = (
+                    account.caverns['Majiks'][majik_data['Name']]['Level'] * alt_pocket_div['BonusPerLevel']
+                )
+                account.caverns['Majiks'][majik_data['Name']]['MaxValue'] = (
+                        majik_data['MaxLevel'] * alt_pocket_div['BonusPerLevel']
+                )
+            elif majik_data['Scaling'] == 'add':
                 try:
                     account.caverns['Majiks'][majik_data['Name']]['Value'] = (
                             account.caverns['Majiks'][majik_data['Name']]['Level'] * majik_data['BonusPerLevel']

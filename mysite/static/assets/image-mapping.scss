@@ -1722,6 +1722,8 @@ biblio-stamp: $biblio-stamp,
 dna-stamp: $dna-stamp,
 refinery-stamp: $refinery-stamp,
 atomic-stamp: $atomic-stamp,
+cavern-resource-stamp: $cavern-resource-stamp,
+study-hall-stamp: $study-hall-stamp,
 
 // inventory bags
 
@@ -2083,6 +2085,7 @@ mega-rare-drop: $mega-rare-drop,
 secret-map: $secret-map,
 gem-note: $gem-note,
 worship-floppy-disc: $worship-floppy-disc,
+temple-torch: $temple-torch,
 );
 
 $id-map: map-merge($sections-map, $id-map);

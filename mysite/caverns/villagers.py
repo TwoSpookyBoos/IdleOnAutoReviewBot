@@ -149,7 +149,7 @@ def getEngineerAdviceGroup() -> AdviceGroup:
         label=f"Total Schematics unlocked by leveling Kaipu",
         picture_class='empty-schematic',
         progression=unlocked_schematics,
-        goal=max_schematics
+        goal=released_schematics
     ))
     villager_advice[s_stats].append(Advice(
         label=f"Total Schematics purchased",
@@ -163,7 +163,7 @@ def getEngineerAdviceGroup() -> AdviceGroup:
             schematic_details = session_data.account.caverns['Schematics'][clean_name]
             if not schematic_details['Purchased']:
                 villager_advice[unreleased_schematics if list_index+1 > released_schematics else unpurchased_stats].append(Advice(
-                    label=f"Schematic {list_index+1}: {clean_name}",  #{schematic_details['Description']}",
+                    label=f"Schematic {list_index+1}: {clean_name}- {schematic_details['Description']}",
                     picture_class=schematic_details['Image'],
                     progression=int(schematic_details['Purchased']),
                     goal=1,

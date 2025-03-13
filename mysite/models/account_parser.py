@@ -2175,24 +2175,37 @@ def _parse_caverns_schematics(account, raw_schematics_list):
         pass
     for schematic_index, schematic_details in enumerate(caverns_engineer_schematics):
         clean_name = schematic_details[0].replace("_", " ")
-        resource_type = getCavernResourceImage(schematic_details[2])
-        try:
-            account.caverns['Schematics'][clean_name] = {
-                'Purchased': raw_schematics_list[schematic_index] > 0,
-                'Image': f'engineer-schematic-{schematic_index}',
-                'Description': schematic_details[5].replace("_", " "),
-                'UnlockOrder': caverns_engineer_schematics_unlock_order.index(schematic_index) + 1,
-                'Resource': resource_type
-            }
-        except:
-            #logger.warning(f"Error processing schematic {clean_name} at index {schematic_index}")
-            account.caverns['Schematics'][clean_name] = {
-                'Purchased': False,
-                'Image': f'engineer-schematic-{schematic_index}',
-                'Description': schematic_details[5].replace("_", " "),
-                'UnlockOrder': caverns_engineer_schematics_unlock_order.index(schematic_index) + 1,
-                'Resource': resource_type
-            }
+        if clean_name == 'NameNameName':  #Placeholders added in v2.31 all share this name
+            continue
+        else:
+            resource_type = getCavernResourceImage(schematic_details[2])
+            try:
+                account.caverns['Schematics'][clean_name] = {
+                    'Purchased': raw_schematics_list[schematic_index] > 0,
+                    'Image': f'engineer-schematic-{schematic_index}',
+                    'Description': schematic_details[5].replace("_", " "),
+                    'UnlockOrder': caverns_engineer_schematics_unlock_order.index(schematic_index) + 1,
+                    'Resource': resource_type
+                }
+            except:
+                try:
+                    #logger.warning(f"Error processing schematic {clean_name} at index {schematic_index}")
+                    account.caverns['Schematics'][clean_name] = {
+                        'Purchased': False,
+                        'Image': f'engineer-schematic-{schematic_index}',
+                        'Description': schematic_details[5].replace("_", " "),
+                        'UnlockOrder': caverns_engineer_schematics_unlock_order.index(schematic_index) + 1,
+                        'Resource': resource_type
+                    }
+                except Exception as e:
+                    logger.warning(f"Error processing schematic {clean_name} at index {schematic_index}")
+                    account.caverns['Schematics'][clean_name] = {
+                        'Purchased': False,
+                        'Image': f'engineer-schematic-{schematic_index}',
+                        'Description': schematic_details[5].replace("_", " "),
+                        'UnlockOrder': 999,
+                        'Resource': resource_type
+                    }
 
 def _parse_caverns_measurements(account, raw_measurements_list):
     for measurement_index, measurement_details in enumerate(caverns_measurer_measurements):

@@ -561,6 +561,8 @@ StampC20: Biblio Stamp
 StampC21: DNA Stamp
 StampC22: Refinery Stamp
 StampC23: Atomic Stamp
+StampC24: Cavern Resource Stamp
+StampC25: Study Hall Stamp
 StoneWe: Easter Weapon Stone
 StoneWeb: Summer Weapon Stone
 StoneW1: Weapon Upgrade Stone I
@@ -1718,6 +1720,7 @@ Quest90: Blinding Lantern
 Quest91: Golden Gift
 Quest92: Giftmas Present
 Quest93: Worship Floppy Disc
+Quest94: Temple Torch
 EquipmentSmithingTabs2: Anvil Tab II
 EquipmentSmithingTabs3: Anvil Tab III
 EquipmentSmithingTabs4: Anvil Tab IV
@@ -2123,6 +2126,7 @@ CardsH12: Crawler Card
 CardsH13: Tremor Wurm Card
 CardsH14: Magma Geode Card
 CardsH15: Gloomie Mushroom Card
+CardsH16: Ancient Golem Card
 CardsI1: Sprout Spirit Card
 CardsI2: Ricecake Card
 CardsI3: River Spirit Card
