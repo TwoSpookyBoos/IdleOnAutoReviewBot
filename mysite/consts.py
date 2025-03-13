@@ -73,7 +73,7 @@ gemShop_progressionTiers = [
         'Item Backpack Space': 3, 'Storage Chest Space': 8, 'Carry Capacity': 6, 'Weekly Dungeon Boosters': 3, 'Food Slot': 2,
         'Bleach Liquid Cauldrons': 4, 'More Sample Spaces': 4, 'Tower Building Slots': 4,
         'Fenceyard Space': 4, 'Chest Sluggo': 9,
-        'Parallel Villagers The Explorer': 1, 'Parallel Villagers The Measurer': 1, 'Resource Boost': 2, 'Conjuror Pts': 6,
+        'Parallel Villagers The Explorer': 1, 'Parallel Villagers The Measurer': 1, 'Parallel Villagers The Librarian': 1, 'Resource Boost': 2, 'Conjuror Pts': 6,
         'Plot of Land': 6, 'Shroom Familiar': 2, 'Instagrow Generator': 7},
      ""],
     [5, "D", {
@@ -1990,7 +1990,9 @@ versions_patches = {
     236: "v2.26 Death Bringer Class",
     237: "v2.27 Upgrade Vault",
     241: "v2.28 Valenslimes Event",
-    242: "v2.29 Upgrade Vault 2"
+    242: "v2.29 Upgrade Vault 2",
+    243: "v2.30 Companion Trading",
+    248: "v2.31 Caverns Biome 3"
 }
 ignorable_labels: tuple = ('Weekly Ballot',)
 missableGStacksDict = {
@@ -6457,7 +6459,6 @@ caverns_measurer_measurement_names = [
     'Bababooey', 'Killermeters', 'Joules', 'Meters', 'Pixels',
     'Yards'
 ]
-
 for entry_index, entry in enumerate(caverns_measurer_measurements):
     try:
         caverns_measurer_measurements[entry_index] = [
@@ -6473,6 +6474,13 @@ for entry_index, entry in enumerate(caverns_measurer_measurements):
             f"UnknownScalar{entry_index}",
             ''
         ]
+caverns_librarian_studies = {}
+for entry_index, entry in enumerate(HolesInfo[69]):
+    caverns_librarian_studies[entry_index] = [
+        HolesInfo[69][entry_index].replace('_', ' '),  #Description
+        int(HolesInfo[70][entry_index])  #Scaling value
+    ]
+
 monument_hours = [int(h) for h in HolesInfo[30]]  #[1, 80, 300, 750, 2000, 5000, 10000, 24000] as of 2.31
 monument_names = [f"{monument_name} Monument" for monument_name in HolesInfo[41]]
 released_monuments = 2  #Don't increase this without implementing a _parse_ function in models first
@@ -6597,6 +6605,11 @@ lamp_wishes = [
     ["World 7 Stuff", 999, 999, 1, "Not implemented"],
     ["World 8 Stuff", 999, 999, 1, "Not implemented"]
 ]
+caverns_jar_collectibles = [entry.split('|') for entry in HolesInfo[67]]
+caverns_jar_collectibles_count = len(caverns_jar_collectibles)
+caverns_jar_collectibles_max_level = 40
+caverns_jar_rupies = ['Red', 'Green', 'Blue', 'Yellow', 'Magenta', 'Turquoise', 'Orange', 'Ultramarine', 'Purple', 'Emerald', 'White', 'Dark']
+caverns_jar_max_rupies = len(caverns_jar_rupies)
 
 def getMaxEngineerLevel() -> int:
     max_engi_last_i_checked = 28  # Last checked on v2.31
@@ -6614,13 +6627,15 @@ def getMaxEngineerLevel() -> int:
 def getVillagerEXPRequired(villager_index, villager_level):
     match villager_index:
         case 0:
-            result = 10 * ((10 + 7 * pow(villager_level, 2.1)) * pow(2.1, villager_level) * (1 + .75 * max(0, villager_level - 4)) - 1.50)
+            result = 10 * ((10 + 7 * pow(villager_level, 2.1)) * pow(2.1, villager_level) * (1 + .75 * max(0, villager_level - 4)) - 1.5)
         case 1:
             result = 30 * ((10 + 6 * pow(villager_level, 1.8)) * pow(1.57, villager_level))
         case 2:
             result = 50 * ((10 + 5 * pow(villager_level, 1.7)) * pow(1.4, villager_level))
         case 3:
             result = 120 * ((30 + 10 * pow(villager_level, 2)) * pow(2, villager_level))
+        case 4:
+            result = 500 * (10 + 5 * pow(villager_level, 1.3)) * pow(1.13, villager_level)
         case _:
             result = 10 * pow(10, 20)
     return result

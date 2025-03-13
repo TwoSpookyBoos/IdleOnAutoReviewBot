@@ -18,7 +18,7 @@ from consts import (
     stampsDict, stampTypes, bribesDict,
     forgeUpgradesDict,
     statuesDict, statueTypeList, statueCount,
-    vault_upgrades_list, vault_stack_types, vault_dont_scale,
+    vault_upgrades_list, vault_stack_types, vault_dont_scale, vault_section_indexes,
     # W2
     bubblesDict, max_IndexOfImplementedBubbles,
     vialsDict, max_IndexOfVials, getReadableVialNames, max_VialLevel,
@@ -50,7 +50,8 @@ from consts import (
     caverns_villagers, caverns_conjuror_majiks, caverns_engineer_schematics, caverns_engineer_schematics_unlock_order, caverns_cavern_names,
     caverns_measurer_measurements, caverns_measurer_HI55, getCavernResourceImage, max_buckets, max_sediments, sediment_bars, getVillagerEXPRequired,
     monument_bonuses, bell_clean_improvements, bell_ring_bonuses, getBellExpRequired, getGrottoKills, lamp_wishes, key_cards, getWishCost,
-    schematics_unlocking_harp_chords, harp_chord_effects, max_harp_notes, lamp_world_wish_values, vault_section_indexes
+    schematics_unlocking_harp_chords, harp_chord_effects, max_harp_notes, lamp_world_wish_values, caverns_librarian_studies, max_cavern,
+    caverns_jar_max_rupies, caverns_jar_collectibles_count, caverns_jar_collectibles
 )
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
 from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert
@@ -2063,19 +2064,23 @@ def _parse_caverns(account):
         'Majiks': {},
         'TotalMajiks': 0,
         'Measurements': {},
+        'Studies': {},
+        'Collectibles': {}
     }
     raw_caverns_list: list[list] = safe_loads(account.raw_data.get('Holes', []))
     if not raw_caverns_list:
         logger.warning(f"Caverns data not present{', as expected' if account.version < 230 else ''}.")
-    while len(raw_caverns_list) < 24:
+    while len(raw_caverns_list) < 30:
         raw_caverns_list.append([0]*100)
     _parse_caverns_villagers(account, raw_caverns_list[1], raw_caverns_list[2], raw_caverns_list[3], raw_caverns_list[23])
     _parse_caverns_actual_caverns(account, raw_caverns_list[7])
     _parse_caverns_majiks(account, raw_caverns_list[4], raw_caverns_list[5], raw_caverns_list[6], raw_caverns_list[11])
     _parse_caverns_schematics(account, raw_caverns_list[13])
     _parse_caverns_measurements(account, raw_caverns_list[22])
+    _parse_caverns_studies(account, raw_caverns_list[26])
     _parse_caverns_biome1(account, raw_caverns_list)
     _parse_caverns_biome2(account, raw_caverns_list)
+    _parse_caverns_biome3(account, raw_caverns_list)
 
     # for key in account.caverns:
     #     logger.debug(f"{key}: {account.caverns[key]}")
@@ -2241,6 +2246,30 @@ def _parse_caverns_measurements(account, raw_measurements_list):
                 'TOT': tot,
                 'HI55': hi55_after_split
             }
+
+def _parse_caverns_studies(account, raw_studies_list):
+    for study_index, study_details in caverns_librarian_studies.items():
+        try:
+            account.caverns['Studies'][study_index] = {
+                'Level': raw_studies_list[study_index],
+                'MaxLevel': 999,  #Fixed in account_calcs._calculate_caverns_studies()
+                'CavernNumber': study_index+1,
+                'CavernName': caverns_cavern_names.get(study_index+1, f'UnknownCavern{study_index+1}'),
+                'Description': study_details[0],
+                'ScalingValue': study_details[1],
+                'Value': 0  #Fixed in account_calcs._calculate_caverns_studies()
+            }
+        except:
+            account.caverns['Studies'][study_index] = {
+                'Level': 0,
+                'MaxLevel': 999,  #Fixed in account_calcs._calculate_caverns_studies()
+                'CavernNumber': study_index + 1,
+                'CavernName': caverns_cavern_names.get(study_index + 1, f'UnknownCavern{study_index + 1}'),
+                'Description': study_details[0],
+                'ScalingValue': study_details[1],
+                'Value': 0
+            }
+
 
 def _parse_caverns_biome1(account, raw_caverns_list):
     _parse_caverns_the_well(account, raw_caverns_list)
@@ -2565,6 +2594,53 @@ def _parse_caverns_justice_monument(account, raw_caverns_list):
                 'Image': bonus_details['Image'],
                 'Value': 0,  # Calculated later in _calculate_caverns_monuments()
             }
+
+def _parse_caverns_biome3(account, raw_caverns_list):
+    _parse_caverns_the_jar(account, raw_caverns_list)
+
+def _parse_caverns_the_jar(account, raw_caverns_list):
+    cavern_name = caverns_cavern_names[11]
+
+    #Rupies
+    try:
+        account.caverns['Caverns'][cavern_name]['RupiesOwned'] = [
+            safer_convert(entry, 0.00) for entry in raw_caverns_list[9][max_sediments + max_harp_notes:max_sediments + max_harp_notes + caverns_jar_max_rupies]]
+    except:
+        account.caverns['Caverns'][cavern_name]['RupiesOwned'] = [0] * caverns_jar_max_rupies
+    while len(account.caverns['Caverns'][cavern_name]['RupiesOwned']) < caverns_jar_max_rupies:
+        account.caverns['Caverns'][cavern_name]['RupiesOwned'].append(0)
+
+    #Collectible Levels
+    try:
+        account.caverns['Caverns'][cavern_name]['CollectiblesOwned'] = raw_caverns_list[24]
+    except:
+        account.caverns['Caverns'][cavern_name]['CollectiblesOwned'] = [0] * caverns_jar_collectibles_count
+    while len(account.caverns['Caverns'][cavern_name]['CollectiblesOwned']) < caverns_jar_collectibles_count:
+        account.caverns['Caverns'][cavern_name]['CollectiblesOwned'].append(0)
+
+    #Individual Collectibles
+    for collectible_index, collectible_details in enumerate(caverns_jar_collectibles):
+        clean_name = collectible_details[0].title().replace('_', ' ')
+        try:
+            account.caverns['Collectibles'][clean_name] = {
+                'Level': account.caverns['Caverns'][cavern_name]['CollectiblesOwned'][collectible_index],
+                'ScalingValue': safer_convert(collectible_details[1], 0.00),
+                'Description': collectible_details[3].replace('_', ' '),
+                'Image': f"jar-collectible-{collectible_index}"
+            }
+        except:
+            account.caverns['Collectibles'][clean_name] = {
+                'Level': 0,
+                'ScalingValue': safer_convert(collectible_details[1], 0.00),
+                'Description': collectible_details[3].replace('_', ' '),
+                'Image': f"jar-collectible-{collectible_index}"
+            }
+        account.caverns['Collectibles'][clean_name]['Value'] = (
+            account.caverns['Collectibles'][clean_name]['Level'] * account.caverns['Collectibles'][clean_name]['ScalingValue']
+        )
+    # for collectible_name in account.caverns['Collectibles']:
+    #     if account.caverns['Collectibles'][collectible_name]['Level'] > 0:
+    #         logger.debug(f"{collectible_name}: {account.caverns['Collectibles'][collectible_name]}")
 
 
 def _parse_w6(account):

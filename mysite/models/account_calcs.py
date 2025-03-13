@@ -853,6 +853,7 @@ def _calculate_caverns(account):
     #_calculate_caverns_majiks(account)
     _calculate_caverns_measurements_base(account)
     _calculate_caverns_measurements_multis(account)
+    _calculate_caverns_studies(account)
     _calculate_caverns_the_well(account)
     _calculate_caverns_monuments(account)
     _calculate_caverns_the_bell(account)
@@ -892,6 +893,43 @@ def _calculate_caverns_measurements_multis(account):
         * account.caverns['Majiks']['Lengthmeister']['Value']
         * real_multi
     )
+
+def _calculate_caverns_studies(account):
+    for study_index, study_details in account.caverns['Studies'].items():
+        match study_index:
+            case 3:
+                value_cap = 32
+                base_value = 12
+                total_value = min(value_cap, base_value + (study_details['Level'] * study_details['ScalingValue']))
+                max_level = ceil((value_cap - base_value) / study_details['ScalingValue'])
+                base_note = f"<br>12 base +{study_details['ScalingValue']} per level, capped at {value_cap}%"
+            case 9:
+                base_value = 50
+                total_value = base_value + (study_details['Level'] * study_details['ScalingValue'])
+                max_level = infinity_string
+                base_note = f"<br>{base_value} base +{study_details['ScalingValue']} per level"
+            case _:
+                total_value = study_details['Level'] * study_details['ScalingValue']
+                max_level = infinity_string
+                if '}' in study_details['Description']:
+                    base_note = f"<br>No base, +{ValueToMulti(study_details['ScalingValue']) - 1:.2f} per level"
+                else:
+                    base_note = f"<br>No base, +{study_details['ScalingValue']} per level"
+
+        account.caverns['Studies'][study_index]['Value'] = total_value
+        account.caverns['Studies'][study_index]['MaxLevel'] = max_level
+        try:
+            if '{' in study_details['Description']:
+                account.caverns['Studies'][study_index]['Description'] = study_details['Description'].replace(
+                    '{', f"{account.caverns['Studies'][study_index]['Value']}"
+                )
+            elif '}' in study_details['Description']:
+                account.caverns['Studies'][study_index]['Description'] = study_details['Description'].replace(
+                    '}', f"{ValueToMulti(account.caverns['Studies'][study_index]['Value'])}"
+                )
+            account.caverns['Studies'][study_index]['Description'] += base_note
+        except:
+            logger.exception(f"Unable to update Cavern Study {study_index}'s description: {account.caverns['Studies'][study_index]['Description']}")
 
 def _calculate_caverns_the_well(account):
     account.caverns['Caverns']['The Well']['BucketsUnlocked'] = 1 + sum(
@@ -1111,6 +1149,8 @@ def _calculate_caverns_the_harp(account):
     ]
     account.caverns['Caverns'][cavern_name]['ChordsUnlockedCount'] = len(account.caverns['Caverns'][cavern_name]['ChordsUnlocked'])
     account.caverns['Caverns'][cavern_name]['Max Chords'] = 2 + len(schematics_unlocking_harp_chords)  #C and D available by default
+
+
 
 def _calculate_w6(account):
     _calculate_w6_farming(account)

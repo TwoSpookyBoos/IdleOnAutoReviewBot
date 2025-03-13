@@ -8,7 +8,7 @@ from consts import (
     max_schematics,
     max_majiks,
     max_measurements,
-    break_you_best, infinity_string, released_schematics, total_placeholder_majiks
+    break_you_best, infinity_string, released_schematics, total_placeholder_majiks, stamp_maxes, caverns_jar_collectibles_max_level
 )
 
 #villagers_progressionTiers,
@@ -20,7 +20,8 @@ def getVillagersAdviceGroups():
         'Explorer': getExplorerAdviceGroup(),
         'Engineer': getEngineerAdviceGroup(),
         'Conjuror': getConjurorAdviceGroup(),
-        'Measurer': getMeasurerAdviceGroup()
+        'Measurer': getMeasurerAdviceGroup(),
+        'Librarian': getLibrarianAdviceGroup()
     }
     return villager_ags
 
@@ -347,6 +348,124 @@ def getMeasurerAdviceGroup() -> AdviceGroup:
                     goal=infinity_string,
                     resource=measurement_details['Resource']
                 ))
+
+    for subgroup in villager_advice:
+        for advice in villager_advice[subgroup]:
+            mark_advice_completed(advice)
+
+    villager_ag = AdviceGroup(
+        tier="",
+        pre_string=f"Informational- Level {villager['Level']} {villager['Title']}",
+        advices=villager_advice,
+        informational=True,
+        completed=villager['Level'] >= max_measurements
+    )
+    return villager_ag
+
+def getLibrarianAdviceGroup() -> AdviceGroup:
+    v_stats = 'Villager Stats'
+    speed_stats = 'Study Speed Sources'
+    study_stats = 'Study Stats'
+    villager_advice = {
+        v_stats: [],
+        speed_stats: [],
+        study_stats: [],
+    }
+
+    villager_name = 'Bolaia'
+    villager = session_data.account.caverns['Villagers'][villager_name]
+    studies = session_data.account.caverns['Studies']
+    schematics = session_data.account.caverns['Schematics']
+    majiks = session_data.account.caverns['Majiks']
+
+    # Generate Alert
+    if villager['LevelPercent'] >= 100:
+        session_data.account.alerts_AdviceDict['The Caverns Below'].append(Advice(
+            label=f"{{{{ Bolaia|#villagers }}}} ready to level!",
+            picture_class=villager_name
+        ))
+
+# Villager Stats
+    # Practical Max Level
+    villager_advice[v_stats].append(Advice(
+        label=f"{villager['Title']} level for all implemented unlocks",
+        picture_class=villager_name,
+        progression=villager['Level'],
+        #goal=
+    ))
+    villager_advice[v_stats].append(Advice(
+        label="Next level progress",
+        picture_class=villager_name,
+        progression=f"{villager['LevelPercent']:.1f}",
+        goal=100,
+        unit='%'
+    ))
+    # Invested Opals
+    villager_advice[v_stats].append(Advice(
+        label="Opals Invested",
+        picture_class='opal',
+        progression=villager['Opals'],
+    ))
+
+# Study Speed Sources
+    total_base_speed = 5
+    max_base_speed = 5
+    villager_advice[speed_stats].append(Advice(
+        label=f"Base study speed: 100 + 5/sec per level",
+        picture_class=villager_name,
+        progression=1,
+        goal=1
+    ))
+    for schematic_name, speed_boost in {
+        'Peer Reviewed Books': 2,
+        'Cutting Edge Research': 3,
+        'Billion Dollar Grant': 5
+    }.items():
+        villager_advice[speed_stats].append(Advice(
+            label=f"Schematic {schematics[schematic_name]['UnlockOrder']}: {schematic_name}"
+                  f"<br>+{speed_boost}/sec per level",
+            picture_class=schematics[schematic_name]['Image'],
+            progression=int(schematics[schematic_name]['Purchased']),
+            goal=1,
+            resource=schematics[schematic_name]['Resource'] if not schematics[schematic_name]['Purchased'] else ''
+        ))
+        total_base_speed += speed_boost * int(schematics[schematic_name]['Purchased'])
+        max_base_speed += speed_boost
+    villager_advice[speed_stats].append(Advice(
+        label=f"Total Base: {100 + total_base_speed}/sec per level",
+        picture_class=villager_name,
+        progression=total_base_speed,
+        goal=max_base_speed
+    ))
+    rosemerald = session_data.account.caverns['Collectibles']['Rosemerald']
+    villager_advice[speed_stats].append(Advice(
+        label=f"Group B: Collectible: Rosemerald: +{rosemerald['Value']:.0f}/{caverns_jar_collectibles_max_level * rosemerald['ScalingValue']:.0f}%",
+        picture_class=rosemerald['Image'],
+        progression=rosemerald['Level'],
+        goal=caverns_jar_collectibles_max_level
+    ))
+    villager_advice[speed_stats].append(Advice(
+        label=f"Group B: Study All Nighter Majik: {majiks['Study All Nighter']['Description']}",
+        picture_class=f"{majiks['Study All Nighter']['MajikType']}-majik-{'un' if majiks['Study All Nighter']['Level'] == 0 else ''}purchased",
+        progression=majiks['Study All Nighter']['Level'],
+        goal=majiks['Study All Nighter']['MaxLevel']
+    ))
+    villager_advice[speed_stats].append(Advice(
+        label=f"Group B: Study Hall {{{{ Stamp|#stamps }}}}: +{session_data.account.stamps['Study Hall Stamp']['Value']:.2f}%",
+        picture_class='study-hall-stamp',
+        progression=session_data.account.stamps['Study Hall Stamp']['Level'],
+        goal=stamp_maxes['Study Hall Stamp']
+    ))
+
+
+# Study Stats
+    for study_index, study_details in studies.items():
+        villager_advice[study_stats].append(Advice(
+            label=f"{study_details['CavernName']}: {study_details['Description']}",
+            picture_class=f"cavern-{study_details['CavernNumber']}",
+            progression=study_details['Level'],
+            goal=study_details['MaxLevel']
+        ))
 
     for subgroup in villager_advice:
         for advice in villager_advice[subgroup]:

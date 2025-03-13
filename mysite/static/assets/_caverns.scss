@@ -1,4 +1,5 @@
 $villagers: (
+    //Cropped from 1x/sprite-673-0.png
     polonai: img('wiki/Polonai.gif'),
     kaipu: img('wiki/Kaipu.gif'),
     kaipu-undiscovered: img('wiki/Kaipu_Undiscovered.png'),
@@ -6,8 +7,8 @@ $villagers: (
     cosmos-undiscovered: img('wiki/Cosmos_Undiscovered.png'),
     minau: img('wiki/Minau.gif'),
     minau-undiscovered: img('wiki/Minau_Undiscovered.png'),
-    bolaia: img('wiki/Bolaia.gif'),
-    bolaia-undiscovered: img('wiki/Bolaia_Undiscovered.gif'),
+    bolaia: img('customized/Bolaia.gif'),
+    bolaia-undiscovered: img('customized/Bolaia_Undiscovered.png'),
 );
 
 $villager-banners: (
@@ -141,11 +142,11 @@ $caverns: (
     cavern-8: img('customized/HolePOI7.png'), //Motherlode Catching
     cavern-9: img('customized/HolePOI8.png'), //Grotto
     cavern-10: img('customized/HolePOI9.png'), //Justice Monument
-    cavern-11: img('data/HolePOI10.png'),  //Jar
-    cavern-12: img('data/HolePOI11.png'),  //Evertree
-    cavern-13: img('data/HolePOI12.png'),  //Wisdom Monument
-    cavern-14: img('data/HolePOI13.png'),  //Gambit
-    cavern-15: img('data/HolePOI14.png'),  //Temple
+    cavern-11: img('customized/HolePOI10.png'),  //Jar
+    cavern-12: img('customized/HolePOI11.png'),  //Evertree
+    cavern-13: img('customized/HolePOI12.png'),  //Wisdom Monument
+    cavern-14: img('customized/HolePOI13.png'),  //Gambit
+    cavern-15: img('customized/HolePOI14.png'),  //Temple
 );
 
 $well-sediment: (
@@ -266,22 +267,22 @@ $lamp-wishes: (
 );
 
 $measurements: (
-    measurement-0: img('wiki/measimg0.png'),
-    measurement-1: img('wiki/measimg1.png'),
-    measurement-2: img('wiki/measimg2.png'),
-    measurement-3: img('wiki/measimg3.png'),
-    measurement-4: img('wiki/measimg4.png'),
-    measurement-5: img('wiki/measimg5.png'),
-    measurement-6: img('wiki/measimg6.png'),
-    measurement-7: img('wiki/measimg7.png'),
-    measurement-8: img('wiki/measimg8.png'),
-    measurement-9: img('wiki/measimg9.png'),
-    measurement-10: img('tbd.png'),
-    measurement-11: img('tbd.png'),
-    measurement-12: img('tbd.png'),
-    measurement-13: img('tbd.png'),
-    measurement-14: img('tbd.png'),
-    measurement-15: img('tbd.png'),
+    measurement-0: img('customized/measimg0.png'),
+    measurement-1: img('customized/measimg1.png'),
+    measurement-2: img('customized/measimg2.png'),
+    measurement-3: img('customized/measimg3.png'),
+    measurement-4: img('customized/measimg4.png'),
+    measurement-5: img('customized/measimg5.png'),
+    measurement-6: img('customized/measimg6.png'),
+    measurement-7: img('customized/measimg7.png'),
+    measurement-8: img('customized/measimg8.png'),
+    measurement-9: img('customized/measimg9.png'),
+    measurement-10: img('customized/measimg10.png'),
+    measurement-11: img('customized/measimg11.png'),
+    measurement-12: img('customized/measimg12.png'),
+    measurement-13: img('customized/measimg13.png'),
+    measurement-14: img('customized/measimg14.png'),
+    measurement-15: img('customized/measimg15.png'),
 );
 
 $jars-rupees-collectibles: (
@@ -307,46 +308,46 @@ $jars-rupees-collectibles: (
     jar-rupee-9: img('data/HoleJarR9.png'),
     jar-rupee-10: img('data/HoleJarR10.png'),
     jar-rupee-11: img('data/HoleJarR11.png'),
-    jar-collectible-0: img('data/HoleC0.png'),
-    jar-collectible-1: img('data/HoleC1.png'),
-    jar-collectible-2: img('data/HoleC2.png'),
-    jar-collectible-3: img('data/HoleC3.png'),
-    jar-collectible-4: img('data/HoleC4.png'),
-    jar-collectible-5: img('data/HoleC5.png'),
-    jar-collectible-6: img('data/HoleC6.png'),
-    jar-collectible-7: img('data/HoleC7.png'),
-    jar-collectible-8: img('data/HoleC8.png'),
-    jar-collectible-9: img('data/HoleC9.png'),
-    jar-collectible-10: img('data/HoleC10.png'),
-    jar-collectible-11: img('data/HoleC11.png'),
-    jar-collectible-12: img('data/HoleC12.png'),
-    jar-collectible-13: img('data/HoleC13.png'),
-    jar-collectible-14: img('data/HoleC14.png'),
-    jar-collectible-15: img('data/HoleC15.png'),
-    jar-collectible-16: img('data/HoleC16.png'),
-    jar-collectible-17: img('data/HoleC17.png'),
-    jar-collectible-18: img('data/HoleC18.png'),
-    jar-collectible-19: img('data/HoleC19.png'),
-    jar-collectible-20: img('data/HoleC20.png'),
-    jar-collectible-21: img('data/HoleC21.png'),
-    jar-collectible-22: img('data/HoleC22.png'),
-    jar-collectible-23: img('data/HoleC23.png'),
-    jar-collectible-24: img('data/HoleC24.png'),
-    jar-collectible-25: img('data/HoleC25.png'),
-    jar-collectible-26: img('data/HoleC26.png'),
-    jar-collectible-27: img('data/HoleC27.png'),
-    jar-collectible-28: img('data/HoleC28.png'),
-    jar-collectible-29: img('data/HoleC29.png'),
-    jar-collectible-30: img('data/HoleC30.png'),
-    jar-collectible-31: img('data/HoleC31.png'),
-    jar-collectible-32: img('data/HoleC32.png'),
-    jar-collectible-33: img('data/HoleC33.png'),
-    jar-collectible-34: img('data/HoleC34.png'),
-    jar-collectible-35: img('data/HoleC35.png'),
-    jar-collectible-36: img('data/HoleC36.png'),
-    jar-collectible-37: img('data/HoleC37.png'),
-    jar-collectible-38: img('data/HoleC38.png'),
-    jar-collectible-39: img('data/HoleC39.png'),
+    jar-collectible-0: img('data/HoleJarC0.png'),
+    jar-collectible-1: img('data/HoleJarC1.png'),
+    jar-collectible-2: img('data/HoleJarC2.png'),
+    jar-collectible-3: img('data/HoleJarC3.png'),
+    jar-collectible-4: img('data/HoleJarC4.png'),
+    jar-collectible-5: img('data/HoleJarC5.png'),
+    jar-collectible-6: img('data/HoleJarC6.png'),
+    jar-collectible-7: img('data/HoleJarC7.png'),
+    jar-collectible-8: img('data/HoleJarC8.png'),
+    jar-collectible-9: img('data/HoleJarC9.png'),
+    jar-collectible-10: img('data/HoleJarC10.png'),
+    jar-collectible-11: img('data/HoleJarC11.png'),
+    jar-collectible-12: img('data/HoleJarC12.png'),
+    jar-collectible-13: img('data/HoleJarC13.png'),
+    jar-collectible-14: img('data/HoleJarC14.png'),
+    jar-collectible-15: img('data/HoleJarC15.png'),
+    jar-collectible-16: img('data/HoleJarC16.png'),
+    jar-collectible-17: img('data/HoleJarC17.png'),
+    jar-collectible-18: img('data/HoleJarC18.png'),
+    jar-collectible-19: img('data/HoleJarC19.png'),
+    jar-collectible-20: img('data/HoleJarC20.png'),
+    jar-collectible-21: img('data/HoleJarC21.png'),
+    jar-collectible-22: img('data/HoleJarC22.png'),
+    jar-collectible-23: img('data/HoleJarC23.png'),
+    jar-collectible-24: img('data/HoleJarC24.png'),
+    jar-collectible-25: img('data/HoleJarC25.png'),
+    jar-collectible-26: img('data/HoleJarC26.png'),
+    jar-collectible-27: img('data/HoleJarC27.png'),
+    jar-collectible-28: img('data/HoleJarC28.png'),
+    jar-collectible-29: img('data/HoleJarC29.png'),
+    jar-collectible-30: img('data/HoleJarC30.png'),
+    jar-collectible-31: img('data/HoleJarC31.png'),
+    jar-collectible-32: img('data/HoleJarC32.png'),
+    jar-collectible-33: img('data/HoleJarC33.png'),
+    jar-collectible-34: img('data/HoleJarC34.png'),
+    jar-collectible-35: img('data/HoleJarC35.png'),
+    jar-collectible-36: img('data/HoleJarC36.png'),
+    jar-collectible-37: img('data/HoleJarC37.png'),
+    jar-collectible-38: img('data/HoleJarC38.png'),
+    jar-collectible-39: img('data/HoleJarC39.png'),
 );
 
 $etc: (

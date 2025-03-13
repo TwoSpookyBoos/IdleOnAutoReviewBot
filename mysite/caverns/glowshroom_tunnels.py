@@ -224,8 +224,8 @@ def getGrottoAdviceGroup():
         resource='gloomie-mushroom'
     ))
     cavern_advice[c_stats].append(Advice(
-        label=f"Bonus Objective- Collect Dragon Warrior {{{{Statues|#statues}}}} from AFK kills.",
-        picture_class='dragon-warrior-statue',
+        label=f"Bonus Objective- Collect Villager {{{{Statues|#statues}}}} from AFK kills.",
+        picture_class='villager-statue',
     ))
     cavern_advice[c_stats].append(Advice(
         label=f"Total Opals Found: {cavern['OpalsFound']}",
@@ -241,7 +241,7 @@ def getGrottoAdviceGroup():
     cavern_advice[c_faq].append(Advice(
         label=f"Statues from Active kills don't have their quantity multiplied by Multikill. Farm them AFK instead."
               f"<br>Statues cannot be sampled.",
-        picture_class='dragon-warrior-statue'
+        picture_class='villager-statue'
     ))
     cavern_advice[c_faq].append(Advice(
         label=f"Standard Monster Respawn% does NOT work in this Cavern. Focus on increasing Multikill and Combat AFK%.",
