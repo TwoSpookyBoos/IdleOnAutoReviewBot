@@ -6610,6 +6610,8 @@ caverns_jar_collectibles_count = len(caverns_jar_collectibles)
 caverns_jar_collectibles_max_level = 40  #Loop counter in _customBlock_Holes2."JarEnchantChance"
 caverns_jar_rupies = ['Red', 'Green', 'Blue', 'Yellow', 'Magenta', 'Turquoise', 'Orange', 'Ultramarine', 'Purple', 'Master', 'White', 'Dark']
 caverns_jar_max_rupies = len(caverns_jar_rupies)
+caverns_jar_jar_types = ['Basic', 'Tall', 'Oranate', 'Great', 'Enchanted', 'Artisan', 'Epic', 'Gilded', 'Ceremony', 'Simple']
+cavern_jar_max_jar_types = len(caverns_jar_jar_types)
 
 def getMaxEngineerLevel() -> int:
     max_engi_last_i_checked = 28  # Last checked on v2.31

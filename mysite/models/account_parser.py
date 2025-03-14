@@ -51,7 +51,7 @@ from consts import (
     caverns_measurer_measurements, caverns_measurer_HI55, getCavernResourceImage, max_buckets, max_sediments, sediment_bars, getVillagerEXPRequired,
     monument_bonuses, bell_clean_improvements, bell_ring_bonuses, getBellExpRequired, getGrottoKills, lamp_wishes, key_cards, getWishCost,
     schematics_unlocking_harp_chords, harp_chord_effects, max_harp_notes, lamp_world_wish_values, caverns_librarian_studies, max_cavern,
-    caverns_jar_max_rupies, caverns_jar_collectibles_count, caverns_jar_collectibles
+    caverns_jar_max_rupies, caverns_jar_collectibles_count, caverns_jar_collectibles, caverns_jar_jar_types, cavern_jar_max_jar_types
 )
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
 from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert
@@ -2611,6 +2611,26 @@ def _parse_caverns_the_jar(account, raw_caverns_list):
         account.caverns['Caverns'][cavern_name]['RupiesOwned'].append(0)
 
     #Jars
+    raw_jars_destroyed = [0] * cavern_jar_max_jar_types
+    for i in range(0, cavern_jar_max_jar_types):
+        try:
+            raw_jars_destroyed[i] = raw_caverns_list[11][40+i]
+        except:
+            continue
+    account.caverns['Caverns'][cavern_name]['Jars'] = {}
+    for jar_index, jar_name in enumerate(caverns_jar_jar_types):
+        try:
+            account.caverns['Caverns'][cavern_name]['Jars'][jar_index] = {
+                'Name': f'{jar_name} Jar',
+                'Image': f'jar-type-{jar_index}',
+                'Destroyed': raw_jars_destroyed[jar_index]
+            }
+        except:
+            account.caverns['Caverns'][cavern_name]['Jars'][jar_index] = {
+                'Name': f'{jar_name} Jar',
+                'Image': f'jar-type-{jar_index}',
+                'Destroyed': 0
+            }
 
     #Collectible Levels
     try:

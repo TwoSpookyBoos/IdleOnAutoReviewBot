@@ -1,4 +1,4 @@
-from math import ceil
+from math import ceil, log10
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
@@ -6,7 +6,7 @@ from flask import g as session_data
 from consts import (
     break_you_best, infinity_string,
     caverns_jar_rupies, caverns_jar_collectibles_max_level,
-    getMotherlodeEfficiencyRequired, getMotherlodeResourceRequired,
+    getMotherlodeEfficiencyRequired, getMotherlodeResourceRequired, ValueToMulti,
     # shallow_caverns_progressionTiers
 )
 from utils.text_formatting import pl, notateNumber
@@ -49,6 +49,7 @@ def getJarAdviceGroup(schematics) -> AdviceGroup:
     collectibles = session_data.account.caverns['Collectibles']
     total_collectible_levels = sum([v['Level'] for v in collectibles.values()])
     max_total_collectibles = caverns_jar_collectibles_max_level * len(collectibles)
+    jars = cavern['Jars']
 
     c_stats = 'Cavern Stats'
     rupies_stats = 'Rupies Stats'
@@ -108,10 +109,23 @@ def getJarAdviceGroup(schematics) -> AdviceGroup:
         ))
 
 # Jar Stats
+    jpl = schematics['Jar Production Line']
     cavern_advice[jar_stats].append(Advice(
-        label=f"Coming next!",
-        picture_class=''
+        label=f"Schematic {jpl['UnlockOrder']}: Jar Production Line reduces the Create requirement for the next Jar in line based on the pow10 stacks"
+              f"of Jars destroyed. Basic Speeds up Tall which speeds up Ornate, etc.",
+        picture_class=jpl['Image'],
+        progression=int(jpl['Purchased']),
+        goal=1
     ))
+    for jar_index, jar_details in jars.items():
+        pow10_stacks = 0 if jar_details['Destroyed'] <= 0 else log10(jar_details['Destroyed'])
+        cavern_advice[jar_stats].append(Advice(
+            label=(
+                f"{jar_details['Name']}: {jar_details['Destroyed']} destroyed"
+                f"<br>{pow10_stacks:.2f} pow10 stacks = {5 * pow10_stacks:.2f}%"
+            ),
+            picture_class=jar_details['Image']
+        ))
 
 # Collectibles Stats
     cavern_advice[collectible_stats] = [
