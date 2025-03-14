@@ -182,10 +182,11 @@ def getBreedabilityAdviceGroup():
             resource=pet[1]['BreedabilityHeart']
         ))
     b_advices.insert(0, Advice(
-        label=f"Total pets at Heart VII or higher: {total_7s}/15",
-        picture_class='breedability-heart-7',
-        progression=total_7s,
-        goal=15,
+        label=f"Total Heart VII+ pets: {total_7s}/15",
+        picture_class='i-love-these-pets',
+        progression=int(session_data.account.achievements['I LOVE These Pets']['Complete']),
+        goal=1,
+        resource='breedability-heart-7'
     ))
 
     for advice in b_advices:
