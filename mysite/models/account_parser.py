@@ -2610,6 +2610,8 @@ def _parse_caverns_the_jar(account, raw_caverns_list):
     while len(account.caverns['Caverns'][cavern_name]['RupiesOwned']) < caverns_jar_max_rupies:
         account.caverns['Caverns'][cavern_name]['RupiesOwned'].append(0)
 
+    #Jars
+
     #Collectible Levels
     try:
         account.caverns['Caverns'][cavern_name]['CollectiblesOwned'] = raw_caverns_list[24]
@@ -2621,23 +2623,24 @@ def _parse_caverns_the_jar(account, raw_caverns_list):
     #Individual Collectibles
     for collectible_index, collectible_details in enumerate(caverns_jar_collectibles):
         clean_name = collectible_details[0].title().replace('_', ' ')
+        scaling_value = safer_convert(collectible_details[1], 0)
         try:
             account.caverns['Collectibles'][clean_name] = {
                 'Level': account.caverns['Caverns'][cavern_name]['CollectiblesOwned'][collectible_index],
-                'ScalingValue': safer_convert(collectible_details[1], 0.00),
+                'ScalingValue': scaling_value,
+                'Value': 0,
                 'Description': collectible_details[3].replace('_', ' '),
                 'Image': f"jar-collectible-{collectible_index}"
             }
         except:
             account.caverns['Collectibles'][clean_name] = {
                 'Level': 0,
-                'ScalingValue': safer_convert(collectible_details[1], 0.00),
+                'ScalingValue': scaling_value,
+                'Value': 0,
                 'Description': collectible_details[3].replace('_', ' '),
                 'Image': f"jar-collectible-{collectible_index}"
             }
-        account.caverns['Collectibles'][clean_name]['Value'] = (
-            account.caverns['Collectibles'][clean_name]['Level'] * account.caverns['Collectibles'][clean_name]['ScalingValue']
-        )
+
     # for collectible_name in account.caverns['Collectibles']:
     #     if account.caverns['Collectibles'][collectible_name]['Level'] > 0:
     #         logger.debug(f"{collectible_name}: {account.caverns['Collectibles'][collectible_name]}")

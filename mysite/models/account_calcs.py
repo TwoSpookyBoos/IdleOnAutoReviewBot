@@ -858,6 +858,7 @@ def _calculate_caverns(account):
     _calculate_caverns_monuments(account)
     _calculate_caverns_the_bell(account)
     _calculate_caverns_the_harp(account)
+    _calculate_caverns_jar_collectibles(account)
 
 def _calculate_caverns_measurements_base(account):
     # _customBlock_Holes > "MeasurementBaseBonus"  #Last verified as of 2.30 Companion Trading
@@ -1150,7 +1151,30 @@ def _calculate_caverns_the_harp(account):
     account.caverns['Caverns'][cavern_name]['ChordsUnlockedCount'] = len(account.caverns['Caverns'][cavern_name]['ChordsUnlocked'])
     account.caverns['Caverns'][cavern_name]['Max Chords'] = 2 + len(schematics_unlocking_harp_chords)  #C and D available by default
 
+def _calculate_caverns_jar_collectibles(account):
+    for collectible_name, collectible_details in account.caverns['Collectibles'].items():
+        try:
+            account.caverns['Collectibles'][collectible_name]['Value'] = (
+                collectible_details['Level'] * collectible_details['ScalingValue']
+            )
+            if '{' in collectible_details['Description']:
+                scaling_note = (
+                    f"<br>+{account.caverns['Collectibles'][collectible_name]['ScalingValue']}"
+                    f"{'%' if '%' in collectible_details['Description'] else ''} per level"
+                )
+                account.caverns['Collectibles'][collectible_name]['Description'] = collectible_details['Description'].replace(
+                    '{', f"{account.caverns['Collectibles'][collectible_name]['Value']}"
+                )
 
+            elif '}' in collectible_details['Description']:
+                scaling_note = f"<br>{ValueToMulti(account.caverns['Collectibles'][collectible_name]['ScalingValue']) - 1:.2f} per level"
+                account.caverns['Collectibles'][collectible_name]['Description'] = collectible_details['Description'].replace(
+                    '}', f"{ValueToMulti(account.caverns['Collectibles'][collectible_name]['Value'])}"
+                )
+            account.caverns['Collectibles'][collectible_name]['Description'] += scaling_note
+        except:
+            logger.exception(f"Unable to update description for Collectible: {collectible_name}")
+            continue  #Already defaulted to 0 during parsing
 
 def _calculate_w6(account):
     _calculate_w6_farming(account)

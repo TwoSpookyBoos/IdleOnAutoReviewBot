@@ -45,7 +45,7 @@ combatLevels_progressionTiers = [
     [29, 2500, "Family - Sparkle Obol Slot 3", 500, "Credit towards Equinox Dream 23", ""],
     [30, 3000, "Family - Hexagon Obol Slot 4", 500, "Credit towards Equinox Dream 23", ""],
     [31, 5000, "Family - Sparkle Obol Slot 4", 500, "Credit towards Equinox Dream 23", ""],
-    [32, 5300, "Unlock all Tome challenges", 500, "Credit towards Equinox Dream 23", ""]
+    [32, 5370, "Unlock all Tome challenges", 500, "Credit towards Equinox Dream 23", ""]
 ]
 gemShop_progressionTiers = [
     # int tier, str tierName, dict recommendedPurchases, str notes
@@ -6354,7 +6354,7 @@ HolesInfo = [
     "21 14 8 3 3 3 3 0".split(" "),
     "Contains_a_random_basic_rupie Has_a_{%_chance_to_contain_an_Opal Has_a_{%_chance_to_contain_a_new_collectible Contains_a_random_decent_rupie Has_a_{%_chance_to_enchant_a_collectible_doubling_its_bonus Contains_a_white_rupee Contains_a_random_elegant_rupie Doubles_the_amount_of_rupies_from_the_next_jar_opened Contains_a_dark_rupie Contains_the_one_and_only_master_rupie".split(" "),
     "7 3 20 17 22 11 14 5 17 13".split(" "),
-    "ABNORMAL_RUPIE|20|Filler|Rupies_found_are_worth_+{%_more._@_Current_Rupie_Value:$ SAPPHIRE_DROPLET|10|Filler|Jar_production_rate_is_+{%_faster. EFFERVESCENT_DIAMOND|20|Filler|}x_higher_chance_to_find_Opals_in_Tall_Jars. TORTOLE_ROCK|25|Filler|All_rupies_found_are_work_a_whopping_}x_more! NATURAL_PEARL|15|Filler|All_villagers_gain_+{%_more_EXP. AMETHYST_HEARTSTONE|10|Filler|All_skilling_caverns_require_{%_less_Resources_to_get_opals! AMBER_SQUARE|25|Filler|Rupies_found_are_worth_+{%_more. VERDANT_THORNS|25|Filler|}x_higher_chance_to_find_new_Collectibles. VIOLENT_VIOLETS|20|Filler|All_buckets_get_}x_Bucket_Fill_Rate! BLUE_FABERGE_EGG|15|Filler|}x_higher_chance_to_enchant_a_Collectible SHADOW_PRISM|20|Filler|All_villagers_gain_+{%_more_EXP. BIG_BEEF_ROCK|25|Filler|}x_faster_Bell_Ring_Rate! EMERALD_ORE|30|Filler|All_villagers_gain_+{%_more_EXP. DAWN_PRISM|30|Filler|Rupies_found_are_worth_+{%_more. SWAMPSTONE|25|Filler|}x_higher_chance_to_find_Opals_in_Tall_Jars. FROST_SPIRESTONE|12|Filler|Jar_production_rate_is_+{%_faster. ROSEMERALD|10|Filler|}x_Faster_study_rate_for_villager_Bolaia BLOOD_GLASS|40|Filler|All_rupies_found_are_work_a_whopping_}x_more! SUNRISE_DIAMOND|25|Filler|}x_higher_chance_to_enchant_a_Collectible MINCERAFT_GEM|20|Filler|+{%_Monument_AFK_Gain_rate. CRIMSON_SPADE|20|Filler|The_harp_produces_}x_more_Notes! STAINED_GLASSDROP|35|Filler|Rupies_found_are_worth_+{%_more. TABULA_RASASTONE|32|Filler|All_villagers_gain_+{%_more_EXP. DEEP_BLUE_SQUARE|12|Filler|Something_something_Gambit_Cavern. EARTHBOUND_GEODE|15|Filler|Jar_production_rate_is_+{%_faster. INFERNO_DROPLET|40|Filler|}x_higher_chance_to_find_new_Collectibles. OCTOGONAL_GEM|30|Filler|}x_higher_chance_to_enchant_a_Collectible SOLARFANG|32|Filler|}x_higher_chance_to_find_Opals_in_Tall_Jars. MYSTIC_ORE|50|Filler|All_rupies_found_are_work_a_whopping_}x_more! ARCANE_PRISM|38|Filler|All_villagers_gain_+{%_more_EXP. MURKY_FABREGE_EGG|20|Filler|Something_something_Gambit_Cavern. CORPORE_ROCK|1|Filler|Boosts_a_future_cavern..._futuuure..! TWILIGHT_PRISM|1|Filler|Boosts_a_future_cavern..._futuuure..! TEWBALL_ORBSTONE|40|Filler|Rupies_found_are_worth_+{%_more. MAD_MUSCLE_ROCK|40|Filler|}x_higher_chance_to_enchant_a_Collectible SUNROOT_SPLINTERS|40|Filler|All_villagers_gain_+{%_more_EXP. TWISTED_RUPIE|75|Filler|}x_faster_Bell_Ring_Rate! OVERLOADED_RELIC|1|Filler|Boosts_a_future_cavern..._futuuure..! SUNBURST_PEARL|1|Filler|Boosts_a_future_cavern..._futuuure..! BLOODFANG_SPIRES|1|Filler|Boosts_a_future_cavern..._futuuure..!".split(" "),
+    "ABNORMAL_RUPIE|20|Filler|Rupies_found_are_worth_+{%_more. SAPPHIRE_DROPLET|10|Filler|Jar_production_rate_is_+{%_faster. EFFERVESCENT_DIAMOND|20|Filler|}x_higher_chance_to_find_Opals_in_Tall_Jars. TORTOLE_ROCK|25|Filler|All_rupies_found_are_work_a_whopping_}x_more! NATURAL_PEARL|15|Filler|All_villagers_gain_+{%_more_EXP. AMETHYST_HEARTSTONE|10|Filler|All_skilling_caverns_require_{%_less_Resources_to_get_opals! AMBER_SQUARE|25|Filler|Rupies_found_are_worth_+{%_more. VERDANT_THORNS|25|Filler|}x_higher_chance_to_find_new_Collectibles. VIOLENT_VIOLETS|20|Filler|All_buckets_get_}x_Bucket_Fill_Rate! BLUE_FABERGE_EGG|15|Filler|}x_higher_chance_to_enchant_a_Collectible SHADOW_PRISM|20|Filler|All_villagers_gain_+{%_more_EXP. BIG_BEEF_ROCK|25|Filler|}x_faster_Bell_Ring_Rate! EMERALD_ORE|30|Filler|All_villagers_gain_+{%_more_EXP. DAWN_PRISM|30|Filler|Rupies_found_are_worth_+{%_more. SWAMPSTONE|25|Filler|}x_higher_chance_to_find_Opals_in_Tall_Jars. FROST_SPIRESTONE|12|Filler|Jar_production_rate_is_+{%_faster. ROSEMERALD|10|Filler|}x_Faster_study_rate_for_villager_Bolaia BLOOD_GLASS|40|Filler|All_rupies_found_are_work_a_whopping_}x_more! SUNRISE_DIAMOND|25|Filler|}x_higher_chance_to_enchant_a_Collectible MINCERAFT_GEM|20|Filler|+{%_Monument_AFK_Gain_rate. CRIMSON_SPADE|20|Filler|The_harp_produces_}x_more_Notes! STAINED_GLASSDROP|35|Filler|Rupies_found_are_worth_+{%_more. TABULA_RASASTONE|32|Filler|All_villagers_gain_+{%_more_EXP. DEEP_BLUE_SQUARE|12|Filler|Something_something_Gambit_Cavern. EARTHBOUND_GEODE|15|Filler|Jar_production_rate_is_+{%_faster. INFERNO_DROPLET|40|Filler|}x_higher_chance_to_find_new_Collectibles. OCTOGONAL_GEM|30|Filler|}x_higher_chance_to_enchant_a_Collectible SOLARFANG|32|Filler|}x_higher_chance_to_find_Opals_in_Tall_Jars. MYSTIC_ORE|50|Filler|All_rupies_found_are_work_a_whopping_}x_more! ARCANE_PRISM|38|Filler|All_villagers_gain_+{%_more_EXP. MURKY_FABREGE_EGG|20|Filler|Something_something_Gambit_Cavern. CORPORE_ROCK|1|Filler|Boosts_a_future_cavern..._futuuure..! TWILIGHT_PRISM|1|Filler|Boosts_a_future_cavern..._futuuure..! TEWBALL_ORBSTONE|40|Filler|Rupies_found_are_worth_+{%_more. MAD_MUSCLE_ROCK|40|Filler|}x_higher_chance_to_enchant_a_Collectible SUNROOT_SPLINTERS|40|Filler|All_villagers_gain_+{%_more_EXP. TWISTED_RUPIE|75|Filler|}x_faster_Bell_Ring_Rate! OVERLOADED_RELIC|1|Filler|Boosts_a_future_cavern..._futuuure..! SUNBURST_PEARL|1|Filler|Boosts_a_future_cavern..._futuuure..! BLOODFANG_SPIRES|1|Filler|Boosts_a_future_cavern..._futuuure..!".split(" "),
     "THE_WELL MOTHERLODE THE_DEN BRAVERY THE_BELL THE_HARP THE_LAMP THE_HIVE GROTTO JUSTICE THE_JARS EVERTREE WISDOM GAMBIT TEMPLE".split(" "),
     "You_only_lose_25%_sediment_when_bar_expanding_instead_of_50%_Also,_+{%_Bucket_Fill_Rate_per_Bar_Expansion Every_layer_destroyed_lowers_the_resources_needed_to_destroy_other_skilling_caverns_by_{% Defeating_the_Golden_Hound_gives_a_}x_score_multi_and_spawns_another_Golden_Hound! Minimum_DMG_is_at_least_{%_of_Max,_and_you_now_skip_trivial_fights! Every_20th_Bell_Ring_gives_a_random_bonus_+{_LVs._Biiig_Ring_baby! All_strings_give_2x_EXP,_and_have_a_1%_chance_of_getting_a_massive_{x_EXP_multi Get_{_more_lamp_wishes_every_day._No,_you_can't_wish_to_change_this! Every_hive_harvested_lowers_the_resources_needed_to_destroy_other_skilling_caverns_by_{% Each_Gloomie_kill_counts_for_}x_more_toward_challenging_the_Monarch Justice_Reward_Multi_goes_up_100%_every_day_for_+14_more_days!_Also,_}x_chance_for_opal_reward! Double_click_to_choose_a_collectible_to_be_most_likely_enchanted!_Also,_}x_Enchantment_Chance! Every_trunk_whittled_lowers_the_resources_needed_to_destroy_other_skilling_caverns_by_{% More_like_Wisdumb!_It_doesn't_even_do_anything_yet! You_get_1_more_daily_attempt_at_the_Gambit_Challenges._Also_+{%_Total_Gambit_Points. There_is_an_extra_+{%_chance_to_get_double_torches_when_picking_them_up!".split(" "),
     "10 2 5 3 20 100 1 5 1 50 25 5 0 0 30".split(" ")
@@ -6533,15 +6533,15 @@ for i in range(0, 10*released_monuments):  #Final number is excluded in range. 1
     except Exception as e:
         logger.exception(f"Couldn't parse {monument_name} bonus {i}: {e}")
         continue
-bell_ring_images = ['well-bucket', 'opal', 'cavern-6', 'cavern-7']
+bell_ring_images = ['well-bucket', 'opal', 'cavern-6', 'cavern-7', 'jar-rupie-0', 'temple-torch']
 bell_ring_bonuses = {}
-for i in range(0, 4):
+for i in range(0, 6):
     bell_ring_bonuses[i] = {
         'Description': HolesInfo[59][i*2].replace('|', ' ').replace('_', ' ').title(),
         'ScalingValue': float(HolesInfo[59][i*2 + 1]),
         'Image': bell_ring_images[i]
     }
-bell_clean_resources = ['coins', 'well-sediment-3', 'purple-bits', 'harp-note-4', 'particles', '']
+bell_clean_resources = ['coins', 'well-sediment-3', 'purple-bits', 'harp-note-4', 'particles', 'jar-rupie-5']
 bell_clean_improvements = {}
 for i in range(0, 6):
     bell_clean_improvements[i] = {
@@ -6607,8 +6607,8 @@ lamp_wishes = [
 ]
 caverns_jar_collectibles = [entry.split('|') for entry in HolesInfo[67]]
 caverns_jar_collectibles_count = len(caverns_jar_collectibles)
-caverns_jar_collectibles_max_level = 40
-caverns_jar_rupies = ['Red', 'Green', 'Blue', 'Yellow', 'Magenta', 'Turquoise', 'Orange', 'Ultramarine', 'Purple', 'Emerald', 'White', 'Dark']
+caverns_jar_collectibles_max_level = 40  #Loop counter in _customBlock_Holes2."JarEnchantChance"
+caverns_jar_rupies = ['Red', 'Green', 'Blue', 'Yellow', 'Magenta', 'Turquoise', 'Orange', 'Ultramarine', 'Purple', 'Master', 'White', 'Dark']
 caverns_jar_max_rupies = len(caverns_jar_rupies)
 
 def getMaxEngineerLevel() -> int:

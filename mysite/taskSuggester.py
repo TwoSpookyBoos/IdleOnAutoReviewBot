@@ -18,7 +18,7 @@ from w2 import alchemy, post_office, killroy, islands, arcade, bonus_ballot
 from w3 import trapping, consRefinery, consDeathNote, worship, consSaltLick, consBuildings, equinox, library, sampling, collider
 from w4 import breeding, cooking, rift
 from w5 import slab, divinity, sailing, gaming
-from caverns import villagers, shallow_caverns, glowshroom_tunnels
+from caverns import villagers, shallow_caverns, glowshroom_tunnels, underground_overgrowth
 from w6 import beanstalk, sneaking, farming, summoning
 
 logger = get_logger(__name__)
@@ -122,7 +122,8 @@ def main(inputData, runType="web"):
         sections_caverns := [
             villagers.getVillagersAdviceSection(),
             shallow_caverns.getShallowCavernsAdviceSection(),
-            glowshroom_tunnels.getGlowshroomTunnelsAdviceSection()
+            glowshroom_tunnels.getGlowshroomTunnelsAdviceSection(),
+            underground_overgrowth.getUndergroundOvergrowthAdviceSection()
         ],
         sections_6 := [
             farming.setFarmingProgressionTier(),

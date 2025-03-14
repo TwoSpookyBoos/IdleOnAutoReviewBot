@@ -412,13 +412,14 @@ def getBellAdviceGroup(schematics):
     cavern_advice[r_stats].insert(1, Advice(
         label=f"""Total Bonus levels: {total_bonus_levels}"""
               f"""<br>Avg per ring: {average_level:.4f}"""
-              f"""{f'<br>Under {bell_average}: Consider Renewing' if (
-                  schematics['Double Dinger Ringer']['Purchased']
-                  and schematics['Triple Tap Tinkle']['Purchased']
-                  and average_level_too_low
-                  and total_rings >= 100
-              ) else f'<br>Above {bell_average}: nice RNG 🙂' if not average_level_too_low else ''
-              }""",
+              # f"""{f'<br>Under {bell_average}: Consider Renewing' if (
+              #     schematics['Double Dinger Ringer']['Purchased']
+              #     and schematics['Triple Tap Tinkle']['Purchased']
+              #     and average_level_too_low
+              #     and total_rings >= 100
+              # ) else f'<br>Above {bell_average}: nice RNG 🙂' if not average_level_too_low else ''
+              # }"""
+        ,
         picture_class='bell-ring',
         completed=False,
         informational=True
@@ -511,7 +512,7 @@ def getShallowCavernsAdviceSection() -> AdviceSection:
         max_tier=max_tier,
         true_max_tier=true_max,
         header=f"The Shallow Caverns biome",  #f"Best Shallow Caverns tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
-        picture='Shallow_Caverns.png',
+        picture='customized/Shallow_Caverns.png',
         groups=shallow_caverns_AdviceGroupDict.values(),
         completed=None,
         unrated=True,

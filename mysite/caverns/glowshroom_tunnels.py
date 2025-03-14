@@ -421,7 +421,7 @@ def getGlowshroomTunnelsAdviceSection() -> AdviceSection:
         max_tier=max_tier,
         true_max_tier=true_max,
         header=f"The Glowshroom Tunnels biome",  #f"Best Glowshroom Tunnels tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
-        picture='Glowshroom_Tunnels.png',
+        picture='customized/Glowshroom_Tunnels.png',
         groups=glowshroom_tunnels_AdviceGroupDict.values(),
         completed=None,
         unrated=True,
