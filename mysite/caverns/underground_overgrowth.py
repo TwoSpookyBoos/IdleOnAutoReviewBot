@@ -6,7 +6,7 @@ from flask import g as session_data
 from consts import (
     break_you_best, infinity_string,
     caverns_jar_rupies, caverns_jar_collectibles_max_level,
-    getMotherlodeEfficiencyRequired, getMotherlodeResourceRequired, ValueToMulti,
+    getMotherlodeEfficiencyRequired, ValueToMulti,
     # shallow_caverns_progressionTiers
 )
 from utils.text_formatting import pl, notateNumber
@@ -154,9 +154,9 @@ def getMotherlodeAdviceGroup(schematics):
         l_stats: []
     }
 
-    cavern_name = 'Motherlode'
-    resource_type = 'Ore'
-    resource_skill = 'Mining'
+    cavern_name = 'Evertree'
+    resource_type = 'Logs'
+    resource_skill = 'Choppin'
     cavern = session_data.account.caverns['Caverns'][cavern_name]
 # Cavern Stats
     cavern_advice[c_stats].append(Advice(
@@ -175,9 +175,11 @@ def getMotherlodeAdviceGroup(schematics):
               f"{notateNumber('Basic', getMotherlodeEfficiencyRequired(cavern['LayersDestroyed']), 1)}",
         picture_class=resource_skill
     ))
-    resource_required = getMotherlodeResourceRequired(cavern['LayersDestroyed'])
+    cavern_advice[l_stats].append(session_data.account.caverns['MotherlodeResourceDiscountAdvice'])
+    resource_required = session_data.account.caverns['Caverns'][cavern_name]['ResourcesRemaining']
     cavern_advice[l_stats].append(Advice(
-        label=f"{resource_type} remaining to break Layer {cavern['LayersDestroyed'] + 1}: {notateNumber('Basic', resource_required - cavern['ResourcesCollected'], 1)}",
+        label=f"{resource_type} remaining to break Layer {cavern['LayersDestroyed'] + 1}: "
+              f"{notateNumber('Basic', resource_required - cavern['ResourcesCollected'], 1)}",
         picture_class=f'motherlode-{resource_type}',
         progression=f"{min(100, 100 * (cavern['ResourcesCollected'] / resource_required)):.1f}",
         goal=100,
@@ -233,6 +235,7 @@ def getUndergroundOvergrowthAdviceSection() -> AdviceSection:
     shallow_caverns_AdviceGroupDict = {}
     shallow_caverns_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
     shallow_caverns_AdviceGroupDict['The Well'] = getJarAdviceGroup(schematics)
+    shallow_caverns_AdviceGroupDict['Evertree'] = getMotherlodeAdviceGroup(schematics)
 
 
     for ag in shallow_caverns_AdviceGroupDict.values():

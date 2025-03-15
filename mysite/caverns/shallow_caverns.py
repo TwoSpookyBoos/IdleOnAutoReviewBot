@@ -6,7 +6,7 @@ from flask import g as session_data
 from consts import (
     break_you_best,
     schematics_unlocking_buckets, sediment_names, max_sediments, getSedimentBarRequirement, getWellOpalTrade, getMotherlodeEfficiencyRequired,
-    getMotherlodeResourceRequired, getDenOpalRequirement, schematics_unlocking_amplifiers, getMonumentOpalChance, monument_layer_rewards,
+    getDenOpalRequirement, schematics_unlocking_amplifiers, getMonumentOpalChance, monument_layer_rewards,
     infinity_string
     # shallow_caverns_progressionTiers
 )
@@ -169,7 +169,8 @@ def getMotherlodeAdviceGroup(schematics):
               f"{notateNumber('Basic', getMotherlodeEfficiencyRequired(cavern['LayersDestroyed']), 1)}",
         picture_class=resource_skill
     ))
-    resource_required = getMotherlodeResourceRequired(cavern['LayersDestroyed'])
+    cavern_advice[l_stats].append(session_data.account.caverns['MotherlodeResourceDiscountAdvice'])
+    resource_required = session_data.account.caverns['Caverns'][cavern_name]['ResourcesRemaining']
     cavern_advice[l_stats].append(Advice(
         label=f"{resource_type} remaining to break Layer {cavern['LayersDestroyed'] + 1}: {notateNumber('Basic', resource_required - cavern['ResourcesCollected'], 1)}",
         picture_class=f'motherlode-{resource_type}',

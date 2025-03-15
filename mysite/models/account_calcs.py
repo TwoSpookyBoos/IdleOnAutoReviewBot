@@ -854,11 +854,12 @@ def _calculate_caverns(account):
     _calculate_caverns_measurements_base(account)
     _calculate_caverns_measurements_multis(account)
     _calculate_caverns_studies(account)
+    _calculate_caverns_jar_collectibles(account)
     _calculate_caverns_the_well(account)
     _calculate_caverns_monuments(account)
+    _calculate_caverns_motherlode_layers(account)
     _calculate_caverns_the_bell(account)
     _calculate_caverns_the_harp(account)
-    _calculate_caverns_jar_collectibles(account)
 
 def _calculate_caverns_measurements_base(account):
     # _customBlock_Holes > "MeasurementBaseBonus"  #Last verified as of 2.30 Companion Trading
@@ -1025,6 +1026,25 @@ def _calculate_caverns_monuments(account):
                 #              f"{account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description']}")
     _calculate_caverns_monuments_bravery(account)
     _calculate_caverns_monuments_justice(account)
+
+def _calculate_caverns_motherlode_layers(account):
+    collectible_bonus = account.caverns['Collectibles']['Amethyst Heartstone']['Value']
+    account.caverns['MotherlodeResourceDiscount'] = ValueToMulti(
+        collectible_bonus
+        + (account.caverns['Studies'][1]['Value'] * account.caverns['Caverns']['Motherlode']['LayersDestroyed'])
+        + (account.caverns['Studies'][7]['Value'] * account.caverns['Caverns']['The Hive']['LayersDestroyed'])
+        + (account.caverns['Studies'][11]['Value'] * account.caverns['Caverns']['Evertree']['LayersDestroyed'])
+        # Trench not implemented as of v2.31
+        # + (account.caverns['Studies'][]['Value'] * account.caverns['Caverns']['The Trench']['LayersDestroyed'])
+    )
+    account.caverns['MotherlodeResourceDiscountAdvice'] = Advice(
+        label=f"Resource Divisor from Amethyst Heartstone Collectible + Bolaia Studies: {account.caverns['MotherlodeResourceDiscount']:.3f}",
+        picture_class='bolaia'
+    )
+
+    for cavern_name in ['Motherlode', 'The Hive', 'Evertree']:
+        base_requirement = ceil(200 * pow(2.2, 1 + account.caverns['Caverns'][cavern_name]['LayersDestroyed']))
+        account.caverns['Caverns'][cavern_name]['ResourcesRemaining'] = base_requirement / max(1, account.caverns['MotherlodeResourceDiscount'])
 
 def _calculate_caverns_monuments_bravery(account):
     monument_name = 'Bravery Monument'

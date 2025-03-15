@@ -2597,6 +2597,7 @@ def _parse_caverns_justice_monument(account, raw_caverns_list):
 
 def _parse_caverns_biome3(account, raw_caverns_list):
     _parse_caverns_the_jar(account, raw_caverns_list)
+    _parse_caverns_evertree(account, raw_caverns_list)
 
 def _parse_caverns_the_jar(account, raw_caverns_list):
     cavern_name = caverns_cavern_names[11]
@@ -2665,6 +2666,17 @@ def _parse_caverns_the_jar(account, raw_caverns_list):
     #     if account.caverns['Collectibles'][collectible_name]['Level'] > 0:
     #         logger.debug(f"{collectible_name}: {account.caverns['Collectibles'][collectible_name]}")
 
+def _parse_caverns_evertree(account, raw_caverns_list):
+    cavern_name = 'Evertree'
+    motherlode_offset = 4
+    try:
+        account.caverns['Caverns'][cavern_name]['ResourcesCollected'] = safer_convert(raw_caverns_list[11][0 + motherlode_offset], 0)
+    except:
+        account.caverns['Caverns'][cavern_name]['ResourcesCollected'] = 0
+    try:
+        account.caverns['Caverns'][cavern_name]['LayersDestroyed'] = safer_convert(raw_caverns_list[11][1 + motherlode_offset], 0)
+    except:
+        account.caverns['Caverns'][cavern_name]['LayersDestroyed'] = 0
 
 def _parse_w6(account):
     _parse_w6_sneaking(account)
