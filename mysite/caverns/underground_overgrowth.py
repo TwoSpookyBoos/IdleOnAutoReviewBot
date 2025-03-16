@@ -64,7 +64,7 @@ def getJarAdviceGroup(schematics) -> AdviceGroup:
 
 # Cavern Stats
     cavern_advice[c_stats].append(Advice(
-        label=f"Objective- Produce Jars passively to collect Rupies",
+        label=f"Objective- Create Jars passively, then break to collect Rupies, Opals, and Collectibles",
         picture_class=f"cavern-{cavern['CavernNumber']}",
         resource='jar-all-types',
     ))
@@ -124,7 +124,10 @@ def getJarAdviceGroup(schematics) -> AdviceGroup:
                 f"{jar_details['Name']}: {jar_details['Destroyed']} destroyed"
                 f"<br>{pow10_stacks:.2f} pow10 stacks = {5 * pow10_stacks:.2f}%"
             ),
-            picture_class=jar_details['Image']
+            picture_class=jar_details['Image'],
+            progression=f'{pow10_stacks:.2f}',
+            goal=infinity_string,
+            informational=True
         ))
 
 # Collectibles Stats
@@ -133,7 +136,8 @@ def getJarAdviceGroup(schematics) -> AdviceGroup:
             label=f"{collectible_name}: {collectible_values['Description']}",
             picture_class=collectible_values['Image'],
             progression=collectible_values['Level'],
-            goal=infinity_string  #caverns_jar_collectibles_max_level
+            goal=infinity_string,  #caverns_jar_collectibles_max_level
+            informational=True
         ) for collectible_name, collectible_values in collectibles.items()  # if collectible_values['Description'] != 'Boosts a future cavern... futuuure..!'
     ]
 
