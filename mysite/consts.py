@@ -6607,7 +6607,6 @@ lamp_wishes = [
 ]
 caverns_jar_collectibles = [entry.split('|') for entry in HolesInfo[67]]
 caverns_jar_collectibles_count = len(caverns_jar_collectibles)
-caverns_jar_collectibles_max_level = 40  #Loop counter in _customBlock_Holes2."JarEnchantChance"
 caverns_jar_rupies = ['Red', 'Green', 'Blue', 'Yellow', 'Magenta', 'Turquoise', 'Orange', 'Ultramarine', 'Purple', 'Master', 'White', 'Dark']
 caverns_jar_max_rupies = len(caverns_jar_rupies)
 caverns_jar_jar_types = ['Basic', 'Tall', 'Oranate', 'Great', 'Enchanted', 'Artisan', 'Epic', 'Gilded', 'Ceremony', 'Simple']

@@ -5,8 +5,8 @@ from utils.logging import get_logger
 from flask import g as session_data
 from consts import (
     break_you_best, infinity_string,
-    caverns_jar_rupies, caverns_jar_collectibles_max_level,
-    getMotherlodeEfficiencyRequired, ValueToMulti,
+    caverns_jar_rupies,
+    getMotherlodeEfficiencyRequired,
     # shallow_caverns_progressionTiers
 )
 from utils.text_formatting import pl, notateNumber
@@ -48,12 +48,11 @@ def getJarAdviceGroup(schematics) -> AdviceGroup:
     rupies_owned = cavern['RupiesOwned']
     collectibles = session_data.account.caverns['Collectibles']
     total_collectible_levels = sum([v['Level'] for v in collectibles.values()])
-    max_total_collectibles = caverns_jar_collectibles_max_level * len(collectibles)
     jars = cavern['Jars']
 
     c_stats = 'Cavern Stats'
     rupies_stats = 'Rupies Stats'
-    collectible_stats = f'Collectibles'  #: {total_collectible_levels}/{max_total_collectibles}'
+    collectible_stats = f'Collectibles: {total_collectible_levels} total levels'
     jar_stats = 'Jar Stats'
     cavern_advice = {
         c_stats: [],

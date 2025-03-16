@@ -8,7 +8,7 @@ from consts import (
     max_schematics,
     max_majiks,
     max_measurements,
-    break_you_best, infinity_string, released_schematics, total_placeholder_majiks, stamp_maxes, caverns_jar_collectibles_max_level
+    break_you_best, infinity_string, released_schematics, total_placeholder_majiks, stamp_maxes
 )
 
 #villagers_progressionTiers,
@@ -439,10 +439,10 @@ def getLibrarianAdviceGroup() -> AdviceGroup:
     ))
     rosemerald = session_data.account.caverns['Collectibles']['Rosemerald']
     villager_advice[speed_stats].append(Advice(
-        label=f"Group B: Collectible: Rosemerald: +{rosemerald['Value']:.0f}/{caverns_jar_collectibles_max_level * rosemerald['ScalingValue']:.0f}%",
+        label=f"Group B: Collectible: Rosemerald: +{rosemerald['Value']:.0f}%",
         picture_class=rosemerald['Image'],
         progression=rosemerald['Level'],
-        goal=caverns_jar_collectibles_max_level
+        goal=infinity_string
     ))
     villager_advice[speed_stats].append(Advice(
         label=f"Group B: Study All Nighter Majik: {majiks['Study All Nighter']['Description']}",
