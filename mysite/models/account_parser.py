@@ -2598,6 +2598,7 @@ def _parse_caverns_justice_monument(account, raw_caverns_list):
 def _parse_caverns_biome3(account, raw_caverns_list):
     _parse_caverns_the_jar(account, raw_caverns_list)
     _parse_caverns_evertree(account, raw_caverns_list)
+    _parse_caverns_wisdom_monument(account, raw_caverns_list)
 
 def _parse_caverns_the_jar(account, raw_caverns_list):
     cavern_name = caverns_cavern_names[11]
@@ -2677,6 +2678,43 @@ def _parse_caverns_evertree(account, raw_caverns_list):
         account.caverns['Caverns'][cavern_name]['LayersDestroyed'] = safer_convert(raw_caverns_list[11][1 + motherlode_offset], 0)
     except:
         account.caverns['Caverns'][cavern_name]['LayersDestroyed'] = 0
+
+def _parse_caverns_wisdom_monument(account, raw_caverns_list):
+    monument_name = 'Wisdom Monument'
+    monument_index = 2
+
+    # Layer Data
+    try:
+        account.caverns['Caverns'][monument_name]['Hours'] = int(raw_caverns_list[14][0 + 2 * monument_index])
+    except:
+        account.caverns['Caverns'][monument_name]['Hours'] = 0
+    try:
+        account.caverns['Caverns'][monument_name]['LayersCleared'] = int(raw_caverns_list[14][1 + 2 * monument_index])
+    except:
+        account.caverns['Caverns'][monument_name]['LayersCleared'] = 0
+
+    # Setup Bonuses
+    account.caverns['Caverns'][monument_name]['Bonuses'] = {}
+    for bonus_index, bonus_details in monument_bonuses[monument_name].items():
+        try:
+            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index] = {
+                'Level': raw_caverns_list[15][bonus_index],
+                'Description': bonus_details['Description'],
+                'ScalingValue': bonus_details['ScalingValue'],
+                'ValueType': bonus_details['ValueType'],
+                'Image': bonus_details['Image'],
+                'Value': 0,  # Calculated later in _calculate_caverns_monuments()
+            }
+        except:
+            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index] = {
+                'Level': 0,
+                'Description': bonus_details['Description'],
+                'ScalingValue': bonus_details['ScalingValue'],
+                'ValueType': bonus_details['ValueType'],
+                'Image': bonus_details['Image'],
+                'Value': 0,  # Calculated later in _calculate_caverns_monuments()
+            }
+
 
 def _parse_w6(account):
     _parse_w6_sneaking(account)

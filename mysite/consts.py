@@ -6483,7 +6483,7 @@ for entry_index, entry in enumerate(HolesInfo[69]):
 
 monument_hours = [int(h) for h in HolesInfo[30]]  #[1, 80, 300, 750, 2000, 5000, 10000, 24000] as of 2.31
 monument_names = [f"{monument_name} Monument" for monument_name in HolesInfo[41]]
-released_monuments = 2  #Don't increase this without implementing a _parse_ function in models first
+released_monuments = 3  #Don't increase this without implementing a _parse_ function in models first
 #Layer rewards are in HolesInfo[31], but I wanted to clean up the display a bit
 monument_layer_rewards = {
     monument_names[0]: {

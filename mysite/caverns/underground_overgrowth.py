@@ -6,7 +6,7 @@ from flask import g as session_data
 from consts import (
     break_you_best, infinity_string,
     caverns_jar_rupies,
-    getMotherlodeEfficiencyRequired,
+    getMotherlodeEfficiencyRequired, monument_layer_rewards, getMonumentOpalChance,
     # shallow_caverns_progressionTiers
 )
 from utils.text_formatting import pl, notateNumber
@@ -145,11 +145,10 @@ def getJarAdviceGroup(schematics) -> AdviceGroup:
         pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name}",
         advices=cavern_advice,
         informational=True,
-        picture_class='cavern-1'
     )
     return cavern_ag
 
-def getMotherlodeAdviceGroup(schematics):
+def getMotherlodeAdviceGroup():
     c_stats = "Cavern Stats"
     l_stats = 'Layer Stats'
     cavern_advice = {
@@ -198,6 +197,88 @@ def getMotherlodeAdviceGroup(schematics):
     )
     return cavern_ag
 
+def getWisdomAdviceGroup() -> AdviceGroup:
+    c_stats = "Cavern Stats"
+    l_stats = 'Layer Stats'
+    b_stats = 'Bonuses Stats'
+    cavern_advice = {
+        c_stats: [],
+        l_stats: [],
+        b_stats: []
+    }
+
+    cavern_name = 'Wisdom Monument'
+    monument_index = 2
+    cavern = session_data.account.caverns['Caverns'][cavern_name]
+    layer_rewards = monument_layer_rewards[cavern_name]
+    bonuses = cavern['Bonuses']
+
+# Cavern Stats
+    cavern_advice[c_stats].append(Advice(
+        label=f"Objective- AFK here to gain Monument Hours",
+        picture_class=f"cavern-{cavern['CavernNumber']}",
+        resource='bravery-bonus-8'
+    ))
+    cavern_advice[c_stats].append(Advice(
+        label=f"Total Opals Found: {cavern['OpalsFound']}",
+        picture_class='opal'
+    ))
+    cavern_advice[c_stats].append(Advice(
+        label=f"Chance for next Opal: {getMonumentOpalChance(cavern['OpalsFound'], bonuses[5 + 10 * monument_index]['Value']):.2%}",
+        picture_class='monument-basic-chest',
+    ))
+
+# Layer Stats
+    cavern_advice[l_stats] = [
+        Advice(
+            label=f"{hour_requirement:,} hour bonus: {layer_reward['Description']}",
+            picture_class=layer_reward['Image'],
+            progression=cavern['Hours'],
+            goal=hour_requirement
+        ) for hour_requirement, layer_reward in layer_rewards.items()
+    ]
+
+    cavern_advice[l_stats].insert(0, Advice(
+        label=f"Monument Hours: {cavern['Hours']:,.0f}",
+        picture_class='wisdom-icon'
+    ))
+
+# Bonuses Stats
+    cavern_advice[b_stats] = [
+        Advice(
+            label=(
+                f"Level {bonus['Level']}: {bonus['Description']}"  # <br>({bonus['BaseValue']:.2f} / {bonus['ScalingValue']} of pre-multi max)"
+                if bonus['ScalingValue'] > 30 else
+                f"Level {bonus['Level']}: {bonus['Description']}"  # <br>(Linear: {bonus['ScalingValue']} per level)"
+            ),
+            picture_class=bonus['Image'],
+            progression=f"{(bonus['BaseValue'] / bonus['ScalingValue']) * 100:.2f}" if bonus['ScalingValue'] > 30 else 'Linear',
+            goal=100 if bonus['ScalingValue'] > 30 else infinity_string,
+            unit='%' if bonus['ScalingValue'] > 30 else ''
+        ) for bonus in bonuses.values()
+    ]
+    mv = session_data.account.caverns['Majiks']['Monumental Vibes']
+    cavern_advice[b_stats].insert(0, Advice(
+        label=f"Monumental Vibes {{{{ Majik|#villagers }}}}: {mv['Description']}"
+              f"<br>(Already applied below)",
+        picture_class=f"{mv['MajikType']}-majik-{'un' if mv['Level'] == 0 else ''}purchased",
+        progression=mv['Level'],
+        goal=mv['MaxLevel']
+    ))
+
+    for subgroup in cavern_advice:
+        for advice in cavern_advice[subgroup]:
+            mark_advice_completed(advice)
+
+    cavern_ag = AdviceGroup(
+        tier='',
+        pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name}",
+        advices=cavern_advice,
+        informational=True
+    )
+    return cavern_ag
+
+
 def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     shallow_caverns_AdviceDict = {
         'Tiers': {},
@@ -238,7 +319,8 @@ def getUndergroundOvergrowthAdviceSection() -> AdviceSection:
     shallow_caverns_AdviceGroupDict = {}
     shallow_caverns_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
     shallow_caverns_AdviceGroupDict['The Well'] = getJarAdviceGroup(schematics)
-    shallow_caverns_AdviceGroupDict['Evertree'] = getMotherlodeAdviceGroup(schematics)
+    shallow_caverns_AdviceGroupDict['Evertree'] = getMotherlodeAdviceGroup()
+    shallow_caverns_AdviceGroupDict['Wisdom'] = getWisdomAdviceGroup()
 
 
     for ag in shallow_caverns_AdviceGroupDict.values():

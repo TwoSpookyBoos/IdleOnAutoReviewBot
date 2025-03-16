@@ -326,7 +326,7 @@ def getJusticeAdviceGroup() -> AdviceGroup:
     ]
 
     cavern_advice[l_stats].insert(0, Advice(
-        label=f"Monument Hours: {cavern['Hours']:.0f}",
+        label=f"Monument Hours: {cavern['Hours']:,.0f}",
         picture_class='justice-bonus-19'
     ))
 
