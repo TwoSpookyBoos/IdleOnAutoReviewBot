@@ -227,8 +227,9 @@ def getSnailInformationGroup() -> AdviceGroup:
             )
 
             recc_encourage_Advice = Advice(
-                label=f"At {num_encourage} recommended encouragements: {s_chance:0.2%} success, {r_chance:0.2%} reset chance"
-                      f"{encourage_diff_note}",
+                label=f"Step 1: Encourage the snail {num_encourage} times."
+                      f"<br>Game will display {s_chance:0.2%} success, {r_chance:0.2%} reset chance",
+                      #f"<br>{encourage_diff_note}",
                 picture_class='immortal-snail',
                 progression=snail_data['Encouragements'] if level == snail_data['SnailRank'] else 0,
                 goal=num_encourage,
@@ -252,7 +253,7 @@ def getSnailInformationGroup() -> AdviceGroup:
                         pass
 
                     snail_AdviceDict[subgroupName].append(Advice(
-                        label=f"{mail_needed} mail before clicking Level Up for {target_confidence:.1%} safety",
+                        label=f"Step 2: Choose a safety level. {target_confidence:.1%} safety = {mail_needed} extra mail",
                         picture_class='snail-envelope',
                         progression=max(0, floored_envelopes - encouragements_short_by),
                         goal=mail_needed

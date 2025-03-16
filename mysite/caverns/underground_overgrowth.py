@@ -82,16 +82,16 @@ def getJarAdviceGroup(schematics) -> AdviceGroup:
 
 # Rupies Stats
     rupies_requirements = {
-        0: ['Basic Jars, always', True, 'jar-type-0'],  #Red
-        1: [f"Basic Jars {'while' if rupies_owned[0] >= 100 else 'once'} you have 100+ {caverns_jar_rupies[0]} Rupies", rupies_owned[0] >= 100, 'jar-type-0'],
-        2: [f"Basic Jars {'while' if rupies_owned[1] >= 1e3 else 'once'} you have 1K+ {caverns_jar_rupies[1]} Rupies", rupies_owned[1] >= 1e3, 'jar-type-0'],
+        0: ['Simple Jars, always', True, 'jar-type-0'],  #Red
+        1: [f"Simple Jars {'while' if rupies_owned[0] >= 100 else 'once'} you have 100+ {caverns_jar_rupies[0]} Rupies", rupies_owned[0] >= 100, 'jar-type-0'],
+        2: [f"Simple Jars {'while' if rupies_owned[1] >= 1e3 else 'once'} you have 1K+ {caverns_jar_rupies[1]} Rupies", rupies_owned[1] >= 1e3, 'jar-type-0'],
         3: ['Great Jars, always', True, 'jar-type-3'],  # Yellow
         4: [f"Great Jars {'while' if rupies_owned[3] >= 1e4 else 'once'} you have 10K+ {caverns_jar_rupies[3]} Rupies", rupies_owned[3] >= 1e4, 'jar-type-3'],
         5: [f"Great Jars {'while' if rupies_owned[4] >= 5e5 else 'once'} you have 500K+ {caverns_jar_rupies[4]} Rupies", rupies_owned[4] >= 5e5, 'jar-type-3'],
         6: ['Epic Jars, always', True, 'jar-type-6'],  # Orange
         7: [f"Epic Jars {'while' if rupies_owned[6] >= 6e6 else 'once'} you have 6M+ {caverns_jar_rupies[6]} Rupies", rupies_owned[6] >= 6e6, 'jar-type-6'],
         8: [f"Epic Jars {'while' if rupies_owned[7] >= 5e7 else 'once'} you have 50M+ {caverns_jar_rupies[7]} Rupies", rupies_owned[7] >= 5e7, 'jar-type-6'],
-        9: ['Simple Jars, always', True, 'jar-type-9'],  # Master
+        9: ['Heirloom Jars, always', True, 'jar-type-9'],  # Master
         10: ['Artisan Jars, always', True, 'jar-type-5'],  # White
         11: ['Ceremony Jars, always', True, 'jar-type-8'],  # Dark
 
