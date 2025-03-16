@@ -6278,7 +6278,7 @@ def getCavernResourceImage(resource_number: int):
         elif int(resource_number) <= 19:
             resource_image = f'harp-note-{int(resource_number) - 10}'
         elif int(resource_number) <= 29:
-            resource_image = f'jar-rupee-{int(resource_number) - 20}'
+            resource_image = f'jar-rupie-{int(resource_number) - 20}'
         else:
             resource_image = ''
     except:
@@ -6613,14 +6613,14 @@ caverns_jar_jar_types = ['Simple', 'Tall', 'Ornate', 'Great', 'Enchanted', 'Arti
 cavern_jar_max_jar_types = len(caverns_jar_jar_types)
 
 def getMaxEngineerLevel() -> int:
-    max_engi_last_i_checked = 28  # Last checked on v2.31
+    max_engi_last_i_checked = 29  # Last checked on v2.32 Gambit
     if released_schematics > (1 + (max_engi_last_i_checked * 3) + (max_engi_last_i_checked // 5)):
         needed_level = 0
         unlocked_schematics = 0
         while unlocked_schematics < released_schematics:
             needed_level += 1
             unlocked_schematics = 1 + (needed_level * 3) + (needed_level // 5)
-        logger.warning(f"Update consts.max_engi_last_i_checked! {needed_level} is needed to unlock {max_schematics}")
+        logger.warning(f"Update consts.max_engi_last_i_checked! {needed_level} is needed to unlock all {released_schematics} released schematics")
         return needed_level
     else:
         return max_engi_last_i_checked
