@@ -6642,7 +6642,11 @@ def getVillagerEXPRequired(villager_index, villager_level):
     return result
 
 def getSedimentBarRequirement(sediment_index, sediment_level):
-    result = 100 * pow(1.5, sediment_level) * ValueToMulti(sediment_bars[sediment_index])
+    try:
+        result = 100 * pow(1.5, sediment_level) * ValueToMulti(sediment_bars[sediment_index])
+    except OverflowError:
+        logger.exception(f"Overflow error calculating SedimentBarRequirement given {sediment_index = } and {sediment_level = }. Returning 1e100.")
+        result = 1e100
     return result
 
 def getWellOpalTrade(holes_11_9):

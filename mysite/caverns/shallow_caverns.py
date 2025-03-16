@@ -110,22 +110,22 @@ def getWellAdviceGroup(schematics) -> AdviceGroup:
         if sediment_index < max_sediments:  # There are lots of placeholders in sediments_owned, so stay within bounds of max_sediments
             target = getSedimentBarRequirement(sediment_index, sediment_levels[sediment_index])
             if target >= 1e9:
-                target = notateNumber('Basic', target, 2)
+                target_str = notateNumber('Basic', target, 2)
                 sedi_owned = notateNumber('Basic', sediment_value, 2)
             else:
-                target = f"{target:,.0f}"
+                target_str = f"{target:,.0f}"
                 sedi_owned = f"{sediment_value:,}"
             cavern_advice[s_stats].append(Advice(
                 label=(
                     f"{sediment_names[sediment_index]}: {sediment_levels[sediment_index]} expansions"
                     f"<br>{sedi_owned} owned"
-                    f"<br>{target} to expand"
+                    f"<br>{target_str} to expand"
                     if sediment_value >= 0 else
                     f"Clear the rock layer to discover {sediment_names[sediment_index]}!"
                 ),
                 picture_class=f"well-sediment-{sediment_index}",
                 resource='well-sediment-rock-layer' if sediment_value < 0 else '',
-                progression=0 if sediment_value < 0 else f"{100 * (sediment_value / getSedimentBarRequirement(sediment_index, sediment_levels[sediment_index])):.1f}",
+                progression=0 if sediment_value < 0 else f"{100 * (sediment_value / target):.1f}",
                 goal=100,
                 unit='%'
             ))
