@@ -326,9 +326,11 @@ def getMeasurerAdviceGroup() -> AdviceGroup:
             if measurement_details['TOT']:
                 villager_advice[m_stats].append(Advice(
                     label=(
-                        f"{measurement_details['Level']} {measurement_details['Unit']}: "
+                        f"Level {measurement_details['Level']} = "
                         f"+{measurement_details['TotalBaseValue']:.2f}% {measurement_details['Description']}"
-                        f"<br>Scales with: {measurement_details['ScalesWith']}"
+                        f"<br>x{session_data.account.caverns['MeasurementMultis'][measurement_details['ScalesWith']]['Multi']:.3f} "
+                        f"({session_data.account.caverns['MeasurementMultis'][measurement_details['ScalesWith']]['Raw']:,} {measurement_details['ScalesWith']})"
+                        f"<br>Total Bonus: +{measurement_details['Value']:,.2f}%"
                     ),
                     picture_class=measurement_details['Image'],
                     progression=f"{(measurement_details['BaseValue'] / measurement_details['HI55']) * 100:.2f}",
@@ -339,9 +341,11 @@ def getMeasurerAdviceGroup() -> AdviceGroup:
             else:
                 villager_advice[m_stats].append(Advice(
                     label=(
-                        f"{measurement_details['Level']} {measurement_details['Unit']}: "
+                        f"Level {measurement_details['Level']} = "
                         f"+{measurement_details['TotalBaseValue']:.0f}% {measurement_details['Description']}"
-                        f"<br>Scales with: {measurement_details['ScalesWith']}"
+                        f"<br>x{session_data.account.caverns['MeasurementMultis'][measurement_details['ScalesWith']]['Multi']:.3f} "
+                        f"({session_data.account.caverns['MeasurementMultis'][measurement_details['ScalesWith']]['Raw']:,} {measurement_details['ScalesWith']})"
+                        f"<br>Total Bonus: +{measurement_details['Value']:,.2f}%"
                     ),
                     picture_class=measurement_details['Image'],
                     progression='Linear',

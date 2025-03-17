@@ -1,4 +1,4 @@
-from math import ceil, floor, log2
+from math import ceil, floor, log2, log10
 from consts import (
     # General
     lavaFunc, ceilUpToBase, ValueToMulti, getNextESFamilyBreakpoint,
@@ -21,10 +21,10 @@ from consts import (
     maxFarmingValue, summoning_rewards_that_dont_multiply_base_value,
     # Caverns
     caverns_conjuror_majiks, schematics_unlocking_buckets, monument_bonuses, getBellImprovementBonus, monument_names, released_monuments,
-    infinity_string, schematics_unlocking_harp_strings, schematics_unlocking_harp_chords, caverns_cavern_names
+    infinity_string, schematics_unlocking_harp_strings, schematics_unlocking_harp_chords, caverns_cavern_names, caverns_measurer_scalars
 )
 from models.models import Advice
-from utils.data_formatting import safe_loads, safer_get, safer_math_pow
+from utils.data_formatting import safe_loads, safer_get, safer_math_pow, safer_convert
 from utils.logging import get_logger
 from utils.text_formatting import getItemDisplayName, getItemCodeName
 
@@ -877,25 +877,91 @@ def _calculate_caverns_measurements_base(account):
                 account.caverns['Measurements'][measurement_index]['BaseValue']
                 * account.caverns['Majiks']['Lengthmeister']['Value']
             )
+            account.caverns['Measurements'][measurement_index]['Value'] = account.caverns['Measurements'][measurement_index]['TotalBaseValue']
         except:
             logger.exception(f"Failed to calculate Measurement Base Value for {measurement_values['Description']}")
             account.caverns['Measurements'][measurement_index]['BaseValue'] = 0
+            account.caverns['Measurements'][measurement_index]['TotalBaseValue'] = 0
+            account.caverns['Measurements'][measurement_index]['Value'] = 0
 
 def _calculate_caverns_measurements_multis(account):
-    # _customBlock_Holes > "MeasurementMulti"  #Last verified as of 2.30 Companion Trading
-    total_skill_levels = 0
-    for skill, skill_levels in account.all_skills.items():
-        total_skill_levels += sum(skill_levels) if skill != 'Combat' else 0
-    fake_multi = total_skill_levels / 5000 + max(0, (total_skill_levels - 18000) / 1500)
-    if 5 > fake_multi:
-        real_multi = 1 + (18 * fake_multi / 100)
-    else:
-        real_multi = 1 + (18 * fake_multi + 8 * (fake_multi - 5)) / 100
-    account.caverns['Measurements'][1]['Value'] = (
-        2 * account.caverns['Measurements'][1]['Level']
-        * account.caverns['Majiks']['Lengthmeister']['Value']
-        * real_multi
-    )
+    # Part 1: Retrieve the base value and prep into the version used for calculation, if any
+    # _customBlock_Holes > "MeasurementQTYfound"  #Last verified as of 2.32 Gambit
+    raw_holes = safe_loads(account.raw_data.get('Holes', []))
+    account.caverns['MeasurementMultis'] = {}
+    for entry_index, entry_string in enumerate(caverns_measurer_scalars):
+        clean_entry_name = str(entry_string).replace('_', ' ').title()
+        # I want to use a match/case here, but PyCharm doesn't let me collapse those blocks which is just annoying lmao
+        if entry_index == 0:  #Gloomie Kills
+            try:
+                raw_gloomie_kills = safer_convert(raw_holes[11][28], 0.00) if raw_holes else 0
+            except:
+                raw_gloomie_kills = 0
+            account.caverns['MeasurementMultis'][clean_entry_name] = {
+                'Raw': raw_gloomie_kills,
+                'Prepped': log10(raw_gloomie_kills),  #In the source code, this is when 99 = i
+            }
+        # TODO: Implement these other calculations
+        # elif entry_index == 1:  #Crops Found
+        #     pass
+        # elif entry_index == 2:  #Account Lv
+        #     pass
+        # elif entry_index == 3:  #Tome Score
+        #     pass
+        elif entry_index == 4:  #All Skill Lv
+            total_skill_levels = 0
+            for skill, skill_levels in account.all_skills.items():
+                total_skill_levels += sum(skill_levels) if skill != 'Combat' else 0
+            account.caverns['MeasurementMultis'][clean_entry_name] = {
+                'Raw': total_skill_levels,
+                'Prepped': total_skill_levels / 5000 + max(0, (total_skill_levels - 18000) / 1500),  # In the source code, this is when 99 = i
+            }
+        # elif entry_index == 5:  #Unimplemented as of 2.32 Gambit, just returns 0. Default case can handle it.
+        #     pass
+        elif entry_index == 6:  #Deathnote Pts
+            raw_pts = sum([account.enemy_worlds[world].total_mk for world in account.enemy_worlds]) + account.miniboss_deathnote['TotalMK']
+            account.caverns['MeasurementMultis'][clean_entry_name] = {
+                'Raw': raw_pts,
+                'Prepped': raw_pts / 125,  # In the source code, this is when 99 = i
+            }
+        # elif entry_index == 7:  #Highest Dmg
+        #     pass
+        # elif entry_index == 8:  #Slab Items
+        #     pass
+        # elif entry_index == 9:  #Studies Done
+        #     pass
+        # elif entry_index == 10:  #Golem Kills
+        #     pass
+        else:
+            logger.exception(f"Unknown MeasurementMulti type: {clean_entry_name}")
+            account.caverns['MeasurementMultis'][clean_entry_name] = {
+                'Raw': 0,
+                'Prepped': 0,  # In the source code, this is when 99 = i
+            }
+
+        # Part 2: Calculate the Multi using one of two formulas depending on the Prepped value
+        try:
+            if 5 > account.caverns['MeasurementMultis'][clean_entry_name]['Prepped']:
+                account.caverns['MeasurementMultis'][clean_entry_name]['Multi'] = ValueToMulti(
+                    18 * account.caverns['MeasurementMultis'][clean_entry_name]['Prepped']
+                )
+            else:
+                account.caverns['MeasurementMultis'][clean_entry_name]['Multi'] = ValueToMulti(
+                    18 * account.caverns['MeasurementMultis'][clean_entry_name]['Prepped']
+                    + 8 * (account.caverns['MeasurementMultis'][clean_entry_name]['Prepped'] - 5)
+                )
+        except:
+            logger.exception(f"Failed to calculate {clean_entry_name}'s MeasurementMulti. Setting to 1.")
+            account.caverns['MeasurementMultis'][clean_entry_name]['Multi'] = 1
+        # logger.debug(f"{clean_entry_name} = {account.caverns['MeasurementMultis'][clean_entry_name]}")
+
+    # Part 3: Apply the multis to the measurements
+    for measurement_index, measurement_details in account.caverns['Measurements'].items():
+        try:
+            account.caverns['Measurements'][measurement_index]['Value'] *= account.caverns['MeasurementMultis'][measurement_details['ScalesWith']]['Multi']
+        except:
+            logger.warning(f"Couldn't apply {measurement_details['ScalesWith']} multi to Index{measurement_index}")
+            pass
 
 def _calculate_caverns_studies(account):
     for study_index, study_details in account.caverns['Studies'].items():
@@ -1201,10 +1267,17 @@ def _calculate_caverns_gambit(account):
     cavern_name = caverns_cavern_names[14]
 
     #PTS Multi
-    account.caverns['Caverns'][cavern_name]['PtsMulti'] = 1
+    account.caverns['Caverns'][cavern_name]['PtsMulti'] = ValueToMulti(
+        account.caverns['Measurements'][13]['Value']  # Measurement
+        + account.caverns['Studies'][13]['Value']  # + Gambit Study bonus
+        + (10 * account.caverns['Schematics']['The Sicilian']['Purchased'])  # + The Sicilian schematic
+    )
 
     #Total PTS
-    account.caverns['Caverns'][cavern_name]['TotalPts'] = account.caverns['Caverns'][cavern_name]['BasePts'] * account.caverns['Caverns'][cavern_name]['PtsMulti']
+    account.caverns['Caverns'][cavern_name]['TotalPts'] = (
+        account.caverns['Caverns'][cavern_name]['BasePts']
+        * account.caverns['Caverns'][cavern_name]['PtsMulti']
+    )
 
 def _calculate_w6(account):
     _calculate_w6_farming(account)

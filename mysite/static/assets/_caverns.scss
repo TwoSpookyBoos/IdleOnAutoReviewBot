@@ -353,6 +353,11 @@ $jars-rupees-collectibles: (
     jar-collectible-39: img('data/HoleJarC39.png'),
 );
 
+$gambit: (
+    gambit-king-stone: img('customized/Gambit_King_Stone.png'),  //Credit to Listix
+    gambit-king-gold: img('customized/Gambit_King_Gold.png'),  //Credit to Listix
+);
+
 $etc: (
     hole-campfire: img('wiki/Hole_Campfire.gif'),
 );
@@ -370,4 +375,5 @@ $all-caverns: map-merge($all-caverns, $harp);
 $all-caverns: map-merge($all-caverns, $lamp-wishes);
 $all-caverns: map-merge($all-caverns, $measurements);
 $all-caverns: map-merge($all-caverns, $jars-rupees-collectibles);
+$all-caverns: map-merge($all-caverns, $gambit);
 $all-caverns: map-merge($all-caverns, $etc);

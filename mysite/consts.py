@@ -812,29 +812,29 @@ bubbles_progressionTiers = [
      "90% max value",
      ""],
     [10, 120,
-     {'Roid Ragin': 840, 'Warriors Rule': 950, 'Multorange': 570, },
+     {'Roid Ragin': 840, 'Warriors Rule': 950, 'Multorange': 570},
      {'Swift Steppin': 840},
      {'Stable Jenius': 840, 'Mage Is Best': 950,  'Severapurple': 570},
-     {'Laaarrrryyyy': 900, 'Big P': 540, 'Call Me Bob': 500, 'Carpenter': 450, 'Big Game Hunter': 270, 'Mr Massacre': 450, "Grind Time": 500},
+     {'Laaarrrryyyy': 900, 'Big P': 540, 'Call Me Bob': 1000, 'Carpenter': 450, 'Big Game Hunter': 270, 'Mr Massacre': 450, "Grind Time": 500},
      "95% max value",
      ""],
     [11, 120,
-     {'Roid Ragin': 900, 'Warriors Rule': 2450, 'Multorange': 1470},
+     {'Roid Ragin': 900},  #'Warriors Rule': 2450, 'Multorange': 1470},
      {'Swift Steppin': 900},
-     {'Stable Jenius': 900, 'Mage Is Best': 2450, 'Severapurple': 1470},
+     {'Stable Jenius': 900},  #'Mage Is Best': 2450,'Severapurple': 1470},
      {
         'Cropius Mapper': 630, 'Buff Boi Talent': 200, 'Fast Boi Talent': 200, 'Smart Boi Talent': 200,  #Old t19
-        'Call Me Bob': 1000, 'Big Game Hunter': 570, 'Mr Massacre': 950, 'Lo Cost Mo Jade': 760, 'Cookin Roadkill': 1330, 'Big P': 940, 'Laaarrrryyyy': 1900, #Old t20
+        'Call Me Bob': 3000, 'Big Game Hunter': 570, 'Mr Massacre': 950, 'Lo Cost Mo Jade': 760, 'Cookin Roadkill': 1330, 'Big P': 940, 'Laaarrrryyyy': 1900,  #Old t20
         'Essence Boost-Orange': 400, 'Essence Boost-Green': 400, 'Carpenter': 950, 'Diamond Chef': 890  #Old t21
      },
      "98% max value",
      ""],
     [12, 120,
-     {'Roid Ragin': 950, 'Warriors Rule': 4950, 'Multorange': 2970},
-     {'Swift Steppin': 950},
-     {'Stable Jenius': 950, 'Mage Is Best': 4950, 'Severapurple': 2970},
+     {'Roid Ragin': 1000},  # 'Warriors Rule': 4950, 'Multorange': 2970},
+     {'Swift Steppin': 1000},
+     {'Stable Jenius': 1000},  # 'Mage Is Best': 4950, 'Severapurple': 2970},
      {
-        'Big P': 1440, 'Call Me Bob': 2500, 'Nickel Of Wisdom': 120, "Penny Of Strength": 120, "Dollar Of Agility": 120,
+        'Big P': 1440, 'Call Me Bob': 5000, 'Nickel Of Wisdom': 120, "Penny Of Strength": 120, "Dollar Of Agility": 120,
         'Buff Boi Talent': 300, 'Fast Boi Talent': 300, 'Smart Boi Talent': 300,
         'Droppin Loads': 1330, 'Startue Exp': 1140, "Grind Time": 5000
      },
@@ -5338,6 +5338,11 @@ maxScalingBookLevels = 30
 maxSummoningBookLevels = 29
 maxOverallBookLevels = 100 + maxStaticBookLevels + maxScalingBookLevels + maxSummoningBookLevels
 dnSkullRequirementList = [0, 25000, 100000, 250000, 500000, 1000000, 5000000, 100000000, 1000000000]
+dn_miniboss_skull_requirement_list = [0, 100, 250, 1000, 5000, 25000, 100000, 1000000, 1000000000]
+dn_miniboss_names = [
+    'Glunko The Massive', 'Dr Defecaus', 'Baba Yaga', 'Biggie Hours', 'King Doot',
+    'Dilapidated Slush', 'Mutated Mush', 'Domeo Magmus', 'Demented Spiritlord'
+]
 dnSkullValueList = [0, 1, 2, 3, 4, 5, 7, 10, 20]
 reversed_dnSkullRequirementList = dnSkullRequirementList[::-1]
 reversed_dnSkullValueList = dnSkullValueList[::-1]

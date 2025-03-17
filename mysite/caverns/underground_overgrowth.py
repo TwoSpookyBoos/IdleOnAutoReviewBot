@@ -285,10 +285,12 @@ def getGambitAdviceGroup() -> AdviceGroup:
     c_stats = "Cavern Stats"
     c_faqs = "FAQs"
     challenge_stats = 'Challenge Stats'
+    bonus_stats = 'Bonuses'
     cavern_advice = {
         c_stats: [],
         c_faqs: [],
         challenge_stats: [],
+        bonus_stats: []
     }
 
     # Cavern Stats
@@ -317,15 +319,20 @@ def getGambitAdviceGroup() -> AdviceGroup:
     ]
     cavern_advice[challenge_stats].insert(0, Advice(
         label=f"Base Points: {session_data.account.caverns['Caverns'][cavern_name]['BasePts']:,.2f}",
-        picture_class=''
+        picture_class='gambit-king-stone'
     ))
     cavern_advice[challenge_stats].insert(1, Advice(
-        label=f"Points Multi: TBD",  #{session_data.account.caverns['Caverns'][cavern_name]['PtsMulti']:,.2f}",
-        picture_class=''
+        label=f"Points Multi: {session_data.account.caverns['Caverns'][cavern_name]['PtsMulti']:,.2f}x",
+        picture_class='measurement-13'
     ))
     cavern_advice[challenge_stats].insert(2, Advice(
         label=f"Total Points: {session_data.account.caverns['Caverns'][cavern_name]['TotalPts']:,.2f}",
-        picture_class='measurement-13'
+        picture_class='gambit-king-gold'
+    ))
+
+    cavern_advice[bonus_stats].append(Advice(
+        label=f"Bonuses coming next!",
+        picture_class='rift-guy'
     ))
 
     cavern_ag = AdviceGroup(

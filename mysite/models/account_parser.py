@@ -31,7 +31,7 @@ from consts import (
     refineryDict, buildingsDict, saltLickList, atomsList, colliderStorageLimitList, shrinesList, prayersDict,
     equinoxBonusesDict, max_implemented_dreams, dreamsThatUnlockNewBonuses,
     printerAllIndexesBeingPrinted,
-    apocableMapIndexDict, apocAmountsList, apocNamesList,
+    apocableMapIndexDict, apocAmountsList, apocNamesList, dn_miniboss_names, dn_miniboss_skull_requirement_list, dnSkullValueList, getSkullNames,
     # W4
     riftRewardsDict,
     labJewelsDict, labBonusesDict, labChipsDict,
@@ -1242,6 +1242,7 @@ def _parse_w3_deathnote(account):
     account.apocalypse_character_Index = _parse_w3_apocalypse_BBIndex(account)
     account.rift_meowed = _parse_w3_deathnote_rift_meowed(account)
     _parse_w3_deathnote_kills(account)
+    _parse_w3_deathnote_miniboss_kills(account)
 
 def _parse_w3_apocalypse_BBIndex(account):
     if len(account.bbCharactersIndexList) == 1:
@@ -1332,6 +1333,36 @@ def _parse_w3_deathnote_kills(account):
                         )
         # Sort them
         account.all_characters[barbCharacterIndex].sortApocByProgression()
+
+def _parse_w3_deathnote_miniboss_kills(account):
+    account.miniboss_deathnote = {
+        'Minis': {}
+    }
+
+    raw_ninja = safe_loads(account.raw_data.get('Ninja', []))
+    raw_mb_kills = raw_ninja[105] if len(raw_ninja) >= 106 else [0] * len(dn_miniboss_names)
+    for mb_index, mb_name in enumerate(dn_miniboss_names):
+        kill_count = raw_mb_kills[mb_index] if len(raw_mb_kills) >= mb_index else 0
+        skull_number = 0
+        kills_to_next_skull = 0
+        percent_to_next_skull = 0.0
+        for requirement_index, skull_requirement in enumerate(dn_miniboss_skull_requirement_list):
+            if kill_count >= skull_requirement:
+                skull_number = requirement_index
+            elif kill_count < skull_requirement and kills_to_next_skull == 0:
+                kills_to_next_skull = skull_requirement - kill_count
+                percent_to_next_skull = 100 * (kills_to_next_skull / skull_requirement)
+        skull_mk_value = dnSkullValueList[skull_number] if len(dnSkullValueList) >= skull_number else 0
+        skull_name = getSkullNames(skull_mk_value)
+        account.miniboss_deathnote['Minis'][mb_name] = {
+            'Kills': kill_count,
+            'Skull Name': skull_name,
+            'Skull MK': skull_mk_value,
+            'Progress Percent': percent_to_next_skull
+        }
+    # Sum up all the MK value of the individual skulls
+    account.miniboss_deathnote['TotalMK'] = sum(mb_values['Skull MK'] for mb_values in account.miniboss_deathnote['Minis'].values())
+
 
 def _parse_w3_equinox_dreams(account):
     account.equinox_unlocked = account.achievements['Equinox Visitor']['Complete']
@@ -2272,7 +2303,6 @@ def _parse_caverns_studies(account, raw_studies_list):
                 'ScalingValue': study_details[1],
                 'Value': 0
             }
-
 
 def _parse_caverns_biome1(account, raw_caverns_list):
     _parse_caverns_the_well(account, raw_caverns_list)
