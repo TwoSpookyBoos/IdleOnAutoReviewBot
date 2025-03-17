@@ -6,7 +6,7 @@ from flask import g as session_data
 from consts import (
     break_you_best, infinity_string,
     caverns_jar_rupies,
-    getMotherlodeEfficiencyRequired, monument_layer_rewards, getMonumentOpalChance,
+    getMotherlodeEfficiencyRequired, monument_layer_rewards, getMonumentOpalChance, caverns_cavern_names,
     # shallow_caverns_progressionTiers
 )
 from utils.text_formatting import pl, notateNumber
@@ -43,7 +43,7 @@ def getTemplateCavernAdviceGroup(schematics) -> AdviceGroup:
     return cavern_ag
 
 def getJarAdviceGroup(schematics) -> AdviceGroup:
-    cavern_name = 'The Jar'
+    cavern_name = caverns_cavern_names[11]
     cavern = session_data.account.caverns['Caverns'][cavern_name]
     rupies_owned = cavern['RupiesOwned']
     collectibles = session_data.account.caverns['Collectibles']
@@ -156,7 +156,7 @@ def getMotherlodeAdviceGroup():
         l_stats: []
     }
 
-    cavern_name = 'Evertree'
+    cavern_name = caverns_cavern_names[12]
     resource_type = 'Logs'
     resource_skill = 'Choppin'
     cavern = session_data.account.caverns['Caverns'][cavern_name]
@@ -198,7 +198,7 @@ def getMotherlodeAdviceGroup():
     return cavern_ag
 
 def getWisdomAdviceGroup() -> AdviceGroup:
-    c_stats = "Cavern Stats"
+    c_stats = 'Cavern Stats'
     l_stats = 'Layer Stats'
     b_stats = 'Bonuses Stats'
     cavern_advice = {
@@ -207,7 +207,7 @@ def getWisdomAdviceGroup() -> AdviceGroup:
         b_stats: []
     }
 
-    cavern_name = 'Wisdom Monument'
+    cavern_name = caverns_cavern_names[13]
     monument_index = 2
     cavern = session_data.account.caverns['Caverns'][cavern_name]
     layer_rewards = monument_layer_rewards[cavern_name]
@@ -278,6 +278,113 @@ def getWisdomAdviceGroup() -> AdviceGroup:
     )
     return cavern_ag
 
+def getGambitAdviceGroup() -> AdviceGroup:
+    cavern_name = caverns_cavern_names[14]
+    cavern = session_data.account.caverns['Caverns'][cavern_name]
+
+    c_stats = "Cavern Stats"
+    c_faqs = "FAQs"
+    challenge_stats = 'Challenge Stats'
+    cavern_advice = {
+        c_stats: [],
+        c_faqs: [],
+        challenge_stats: [],
+    }
+
+    # Cavern Stats
+    cavern_advice[c_stats].append(Advice(
+        label=f"Objective- Survive as long as possible against various Summoning challenges",
+        picture_class=f"cavern-{cavern['CavernNumber']}"
+    ))
+    cavern_advice[c_stats].append(Advice(
+        label=f"Total Opals Found: {cavern['OpalsFound']}",
+        picture_class='opal'
+    ))
+
+    #FAQs
+    cavern_advice[c_faqs].append(Advice(
+        label=f"Your opponent does not have a health bar, and there is no reward for your units reaching the right edge.",
+        picture_class='engineer-schematic-78'
+    ))
+
+    #Challenge Stats
+    cavern_advice[challenge_stats] = [
+        Advice(
+            label=f"{challenge_name}"
+                  f"<br>{challenge_details['TimeDisplay']} = {challenge_details['BasePts']:,.2f} base points",
+            picture_class=challenge_details['Image'],
+        ) for challenge_name, challenge_details in cavern['Challenges'].items()
+    ]
+    cavern_advice[challenge_stats].insert(0, Advice(
+        label=f"Base Points: {session_data.account.caverns['Caverns'][cavern_name]['BasePts']:,.2f}",
+        picture_class=''
+    ))
+    cavern_advice[challenge_stats].insert(1, Advice(
+        label=f"Points Multi: TBD",  #{session_data.account.caverns['Caverns'][cavern_name]['PtsMulti']:,.2f}",
+        picture_class=''
+    ))
+    cavern_advice[challenge_stats].insert(2, Advice(
+        label=f"Total Points: {session_data.account.caverns['Caverns'][cavern_name]['TotalPts']:,.2f}",
+        picture_class='measurement-13'
+    ))
+
+    cavern_ag = AdviceGroup(
+        tier='',
+        pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name}",
+        advices=cavern_advice,
+        informational=True
+    )
+    return cavern_ag
+
+def getTempleAdviceGroup() -> AdviceGroup:
+    cavern_name = caverns_cavern_names[15]
+    cavern = session_data.account.caverns['Caverns'][cavern_name]
+
+    c_stats = "Cavern Stats"
+    c_faqs = "FAQs"
+    torch_stats = "Torch Stats"
+    cavern_advice = {
+        c_stats: [],
+        c_faqs: [],
+        torch_stats: []
+    }
+
+    # Cavern Stats
+    cavern_advice[c_stats].append(Advice(
+        label=f"Objective- Fight Ancient Golems, collect Temple Torches, and Search for Centurions to collect Opals",
+        picture_class=f"cavern-{cavern['CavernNumber']}",
+        resource='ancient-golem'
+    ))
+    cavern_advice[c_stats].append(Advice(
+        label=f"Bonus Objective- Collect Dragon Warrior {{{{Statues|#statues}}}} from AFK kills.",
+        picture_class='dragon-warrior-statue',
+    ))
+    for stamp_name in ['Cavern Resource Stamp', 'Study Hall Stamp']:
+        if not session_data.account.stamps[stamp_name]['Delivered']:
+            cavern_advice[c_stats].append(Advice(
+                label=f"Bonus Objective- Collect {stamp_name} from AFK kills,"
+                      f" then level with {session_data.account.stamps[stamp_name]['Material'].replace('-', ' ').title()}",
+                picture_class=stamp_name,
+            ))
+
+    cavern_advice[c_stats].append(Advice(
+        label=f"Total Opals Found: {cavern['OpalsFound']}",
+        picture_class='opal'
+    ))
+
+    cavern_advice[c_faqs].append(Advice(
+        label=f"Statues from Active kills don't have their quantity multiplied by Multikill. Farm them AFK instead."
+              f"<br>Statues cannot be sampled.",
+        picture_class='dragon-warrior-statue'
+    ))
+
+    cavern_ag = AdviceGroup(
+        tier='',
+        pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name}",
+        advices=cavern_advice,
+        informational=True
+    )
+    return cavern_ag
 
 def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     shallow_caverns_AdviceDict = {
@@ -296,7 +403,6 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     )
     overall_SectionTier = min(max_tier + info_tiers, tier_Shallow_Caverns)
     return tiers_ag, overall_SectionTier, max_tier, max_tier + info_tiers
-
 
 def getUndergroundOvergrowthAdviceSection() -> AdviceSection:
     #Check if player has reached this section
@@ -321,6 +427,8 @@ def getUndergroundOvergrowthAdviceSection() -> AdviceSection:
     shallow_caverns_AdviceGroupDict['The Well'] = getJarAdviceGroup(schematics)
     shallow_caverns_AdviceGroupDict['Evertree'] = getMotherlodeAdviceGroup()
     shallow_caverns_AdviceGroupDict['Wisdom'] = getWisdomAdviceGroup()
+    shallow_caverns_AdviceGroupDict['Gambit'] = getGambitAdviceGroup()
+    shallow_caverns_AdviceGroupDict['Temple'] = getTempleAdviceGroup()
 
 
     for ag in shallow_caverns_AdviceGroupDict.values():

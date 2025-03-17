@@ -674,15 +674,24 @@ def getBuboAdviceGroup() -> AdviceGroup:
         #Good talent ordering check
         for talent_index, good_talent_number in enumerate(good_talent_numbers):
             try:
+                prog = int(ccing_bar[talent_index] == good_talent_number)
+            except:
+                prog = 0
+            try:
                 bubo_advice[alch_talents].append(Advice(
                     label=f"Set {all_talentsDict[good_talent_number]['name']} {nth[talent_index+1]} on your Attack Bar",
                     picture_class=all_talentsDict[good_talent_number]['name'],
-                    progression=int(ccing_bar[talent_index] == good_talent_number),
+                    progression=prog,
                     goal=1
                 ))
             except:
                 logger.exception(f"Stuff went wrong at {talent_index = }, {good_talent_number = }")
-                continue
+                bubo_advice[alch_talents].append(Advice(
+                    label=f"Set {all_talentsDict[good_talent_number]['name']} {nth[talent_index + 1]} on your Attack Bar",
+                    picture_class=all_talentsDict[good_talent_number]['name'],
+                    progression=prog,
+                    goal=1
+                ))
 
         #Optional talent ordering check
         for talent_index, optional_talent_number in enumerate(optional_talent_numbers):

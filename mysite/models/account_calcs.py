@@ -21,7 +21,7 @@ from consts import (
     maxFarmingValue, summoning_rewards_that_dont_multiply_base_value,
     # Caverns
     caverns_conjuror_majiks, schematics_unlocking_buckets, monument_bonuses, getBellImprovementBonus, monument_names, released_monuments,
-    infinity_string, schematics_unlocking_harp_strings, schematics_unlocking_harp_chords
+    infinity_string, schematics_unlocking_harp_strings, schematics_unlocking_harp_chords, caverns_cavern_names
 )
 from models.models import Advice
 from utils.data_formatting import safe_loads, safer_get, safer_math_pow
@@ -860,6 +860,7 @@ def _calculate_caverns(account):
     _calculate_caverns_motherlode_layers(account)
     _calculate_caverns_the_bell(account)
     _calculate_caverns_the_harp(account)
+    _calculate_caverns_gambit(account)
 
 def _calculate_caverns_measurements_base(account):
     # _customBlock_Holes > "MeasurementBaseBonus"  #Last verified as of 2.30 Companion Trading
@@ -1195,6 +1196,15 @@ def _calculate_caverns_jar_collectibles(account):
         except:
             logger.exception(f"Unable to update description for Collectible: {collectible_name}")
             continue  #Already defaulted to 0 during parsing
+
+def _calculate_caverns_gambit(account):
+    cavern_name = caverns_cavern_names[14]
+
+    #PTS Multi
+    account.caverns['Caverns'][cavern_name]['PtsMulti'] = 1
+
+    #Total PTS
+    account.caverns['Caverns'][cavern_name]['TotalPts'] = account.caverns['Caverns'][cavern_name]['BasePts'] * account.caverns['Caverns'][cavern_name]['PtsMulti']
 
 def _calculate_w6(account):
     _calculate_w6_farming(account)

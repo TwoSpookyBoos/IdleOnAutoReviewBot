@@ -51,7 +51,8 @@ from consts import (
     caverns_measurer_measurements, caverns_measurer_HI55, getCavernResourceImage, max_buckets, max_sediments, sediment_bars, getVillagerEXPRequired,
     monument_bonuses, bell_clean_improvements, bell_ring_bonuses, getBellExpRequired, getGrottoKills, lamp_wishes, key_cards, getWishCost,
     schematics_unlocking_harp_chords, harp_chord_effects, max_harp_notes, lamp_world_wish_values, caverns_librarian_studies, max_cavern,
-    caverns_jar_max_rupies, caverns_jar_collectibles_count, caverns_jar_collectibles, caverns_jar_jar_types, cavern_jar_max_jar_types
+    caverns_jar_max_rupies, caverns_jar_collectibles_count, caverns_jar_collectibles, caverns_jar_jar_types, caverns_jar_max_jar_types,
+    caverns_gambit_pts_bonuses, caverns_gambit_challenge_names, caverns_gambit_total_challenges, schematics_unlocking_gambit_challenges
 )
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
 from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert
@@ -2057,6 +2058,7 @@ def _parse_w5_divinity(account):
 def _parse_caverns(account):
     account.caverns = {
         'Villagers': {},
+        'TotalOpalsInvested': 0,
         'Caverns': {},
         'CavernsUnlocked': 0,
         'Schematics': {},
@@ -2098,6 +2100,7 @@ def _parse_caverns_villagers(account, villager_levels, villager_exp, opals_inves
                 'LevelPercent': 100 * (float(villager_exp[villager_index]) / getVillagerEXPRequired(villager_index, villager_levels[villager_index])),
             }
             account.gemshop[f"Parallel Villagers {villager_data['Role']}"] = parallel_villagers[villager_index]
+            account.caverns['TotalOpalsInvested'] += account.caverns['Villagers'][villager_data['Name']]['Opals']
         except:
             account.caverns['Villagers'][villager_data['Name']] = {
                 'Unlocked': villager_data['Name'] == 'Polonai',
@@ -2203,7 +2206,7 @@ def _parse_caverns_schematics(account, raw_schematics_list):
                         'Resource': resource_type
                     }
                 except Exception as e:
-                    logger.warning(f"Error processing schematic {clean_name} at index {schematic_index}")
+                    logger.warning(f"Error processing schematic {clean_name} at index {schematic_index}. Usually caused by HolesInfo[40] not being updated after new schematics were added!")
                     account.caverns['Schematics'][clean_name] = {
                         'Purchased': False,
                         'Image': f'engineer-schematic-{schematic_index}',
@@ -2599,6 +2602,8 @@ def _parse_caverns_biome3(account, raw_caverns_list):
     _parse_caverns_the_jar(account, raw_caverns_list)
     _parse_caverns_evertree(account, raw_caverns_list)
     _parse_caverns_wisdom_monument(account, raw_caverns_list)
+    _parse_caverns_gambit(account, raw_caverns_list)
+    _parse_caverns_the_temple(account, raw_caverns_list)
 
 def _parse_caverns_the_jar(account, raw_caverns_list):
     cavern_name = caverns_cavern_names[11]
@@ -2613,8 +2618,8 @@ def _parse_caverns_the_jar(account, raw_caverns_list):
         account.caverns['Caverns'][cavern_name]['RupiesOwned'].append(0)
 
     #Jars
-    raw_jars_destroyed = [0] * cavern_jar_max_jar_types
-    for i in range(0, cavern_jar_max_jar_types):
+    raw_jars_destroyed = [0] * caverns_jar_max_jar_types
+    for i in range(0, caverns_jar_max_jar_types):
         try:
             raw_jars_destroyed[i] = raw_caverns_list[11][40+i]
         except:
@@ -2668,7 +2673,7 @@ def _parse_caverns_the_jar(account, raw_caverns_list):
     #         logger.debug(f"{collectible_name}: {account.caverns['Collectibles'][collectible_name]}")
 
 def _parse_caverns_evertree(account, raw_caverns_list):
-    cavern_name = 'Evertree'
+    cavern_name = caverns_cavern_names[12]
     motherlode_offset = 4
     try:
         account.caverns['Caverns'][cavern_name]['ResourcesCollected'] = safer_convert(raw_caverns_list[11][0 + motherlode_offset], 0)
@@ -2680,7 +2685,7 @@ def _parse_caverns_evertree(account, raw_caverns_list):
         account.caverns['Caverns'][cavern_name]['LayersDestroyed'] = 0
 
 def _parse_caverns_wisdom_monument(account, raw_caverns_list):
-    monument_name = 'Wisdom Monument'
+    monument_name = caverns_cavern_names[13]
     monument_index = 2
 
     # Layer Data
@@ -2715,6 +2720,67 @@ def _parse_caverns_wisdom_monument(account, raw_caverns_list):
                 'Value': 0,  # Calculated later in _calculate_caverns_monuments()
             }
 
+def _parse_caverns_gambit(account, raw_caverns_list):
+    cavern_name = caverns_cavern_names[14]
+
+    # Pts
+    account.caverns['Caverns'][cavern_name]['BasePts'] = 0
+    account.caverns['Caverns'][cavern_name]['PtsMulti'] = 1
+    account.caverns['Caverns'][cavern_name]['TotalPts'] = 0
+
+    # Challenges
+    account.caverns['Caverns'][cavern_name]['Challenges'] = {}
+    challenge_index_offset = 65  # Taken from  _customBlock_Holes2."GambitPts"
+    raw_challenge_times = []
+    for i in range(caverns_gambit_total_challenges):
+        try:
+            raw_challenge_times.append(raw_caverns_list[11][i + challenge_index_offset])
+        except:
+            logger.exception(f"Could not retrieve Caverns > Gambit > {caverns_gambit_challenge_names[i]} score")
+            raw_challenge_times.append(0)
+
+    for challenge_index, challenge_name in enumerate(caverns_gambit_challenge_names):
+        base_value = 100 if challenge_index == 0 else 200
+        base_pts = (
+            base_value * (
+                raw_challenge_times[challenge_index]  #1 point per second
+                + (3 * floor(raw_challenge_times[challenge_index] / 10))  #3 points per 10 seconds
+                + (10 * floor(raw_challenge_times[challenge_index] / 60))  #10 points per 60 seconds
+            )
+        )
+        account.caverns['Caverns'][cavern_name]['BasePts'] += base_pts
+        try:
+            unlocked = (
+                True if schematics_unlocking_gambit_challenges[challenge_index] is None else
+                account.caverns['Schematics'][schematics_unlocking_gambit_challenges[challenge_index]]['Purchased']
+            )
+        except:
+            unlocked = False
+        account.caverns['Caverns'][cavern_name]['Challenges'][challenge_name] = {
+            'Seconds': raw_challenge_times[challenge_index],
+            'TimeDisplay': f"{raw_challenge_times[challenge_index] // 60:.0f}min {raw_challenge_times[challenge_index] % 60:.1f}sec",
+            'BasePts': base_pts,
+            'Unlocked': unlocked,
+            'Image': 'engineer-schematic-78' if challenge_index == 0 else f'engineer-schematic-{88 + challenge_index}'
+        }
+
+    # Bonuses
+    account.caverns['Caverns'][cavern_name]['Bonuses'] = {}
+    for bonus_index, bonus_details in enumerate(caverns_gambit_pts_bonuses):
+        details_list = bonus_details.split('|')
+        pts_required = 2e3 + 1e3 * (bonus_index + 1) * (1 + bonus_index / 5) * pow(1.26, bonus_index)
+        account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index] = {
+            'Scaling': details_list[0],
+            '1': details_list[1],
+            'Description': details_list[2],
+            'Name': details_list[3],
+            'PtsRequired': pts_required,
+            'Unlocked': False  #Fixed later in account_calcs._calculate_caverns_gambit()
+        }
+
+def _parse_caverns_the_temple(account, raw_caverns_list):
+    cavern_name = caverns_cavern_names[15]
+    pass
 
 def _parse_w6(account):
     _parse_w6_sneaking(account)
