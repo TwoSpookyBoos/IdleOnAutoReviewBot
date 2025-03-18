@@ -281,6 +281,7 @@ def getWisdomAdviceGroup() -> AdviceGroup:
 def getGambitAdviceGroup() -> AdviceGroup:
     cavern_name = caverns_cavern_names[14]
     cavern = session_data.account.caverns['Caverns'][cavern_name]
+    bonuses = cavern['Bonuses']
 
     c_stats = "Cavern Stats"
     c_faqs = "FAQs"
@@ -330,10 +331,17 @@ def getGambitAdviceGroup() -> AdviceGroup:
         picture_class='gambit-king-gold'
     ))
 
-    cavern_advice[bonus_stats].append(Advice(
-        label=f"Bonuses coming next!",
-        picture_class='rift-guy'
-    ))
+    cavern_advice[bonus_stats] = [
+        Advice(
+            label=(
+                f"{bonus_details['Name']}{': ' if bonus_details['Description'] else ''}{bonus_details['Description']}"
+                f"<br>{ceil(bonus_details['PtsRequired'] - session_data.account.caverns['Caverns'][cavern_name]['TotalPts']):,.0f} points to Unlock"
+                if not bonus_details['Unlocked'] else
+                f"{bonus_details['Name']}{': ' if bonus_details['Description'] else ''}{bonus_details['Description']}"
+            ),
+            picture_class=bonus_details['Image']
+        ) for bonus_index, bonus_details in bonuses.items()
+    ]
 
     cavern_ag = AdviceGroup(
         tier='',

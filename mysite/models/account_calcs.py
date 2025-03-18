@@ -24,7 +24,7 @@ from consts import (
     infinity_string, schematics_unlocking_harp_strings, schematics_unlocking_harp_chords, caverns_cavern_names, caverns_measurer_scalars
 )
 from models.models import Advice
-from utils.data_formatting import safe_loads, safer_get, safer_math_pow, safer_convert
+from utils.data_formatting import safe_loads, safer_get, safer_math_pow, safer_convert, safer_math_log
 from utils.logging import get_logger
 from utils.text_formatting import getItemDisplayName, getItemCodeName
 
@@ -899,7 +899,7 @@ def _calculate_caverns_measurements_multis(account):
                 raw_gloomie_kills = 0
             account.caverns['MeasurementMultis'][clean_entry_name] = {
                 'Raw': raw_gloomie_kills,
-                'Prepped': log10(raw_gloomie_kills) if raw_gloomie_kills > 0 else 0,  #In the source code, this is when 99 = i
+                'Prepped': safer_math_log(raw_gloomie_kills, 10)  #In the source code, this is when 99 = i
             }
         # TODO: Implement these other calculations
         # elif entry_index == 1:  #Crops Found
@@ -1278,6 +1278,40 @@ def _calculate_caverns_gambit(account):
         account.caverns['Caverns'][cavern_name]['BasePts']
         * account.caverns['Caverns'][cavern_name]['PtsMulti']
     )
+
+    #Bonuses
+    for bonus_index, bonus_details in account.caverns['Caverns'][cavern_name]['Bonuses'].items():
+        #Update Unlocked status
+        account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Unlocked'] = (
+            account.caverns['Caverns'][cavern_name]['TotalPts'] >= bonus_details['PtsRequired']
+        )
+
+        #Calculate Value
+        if bonus_index == 0:
+            account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Value'] = (
+                 max(1, ceil(
+                     safer_math_log(account.caverns['Caverns'][cavern_name]['TotalPts'], 2)
+                     - 8
+                     + safer_math_log(account.caverns['Caverns'][cavern_name]['TotalPts'] - 1, 10)
+                     ))
+            )
+        else:
+            if bonus_details['ScalesWithPts']:
+                account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Value'] = (
+                    bonus_details['ScalingValue'] * safer_math_log(account.caverns['Caverns'][cavern_name]['TotalPts'], 10)
+                )
+            else:
+                account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Value'] = bonus_details['ScalingValue']
+
+        #Substitute Value into Description
+        if '{' in bonus_details['Name']:
+            account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Name'] = bonus_details['Name'].replace(
+                '{', f"{account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Value']:.2f}"
+            )
+        elif '}' in bonus_details['Name']:
+            account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Name'] = bonus_details['Name'].replace(
+                '}', f"{ValueToMulti(account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Value']):.3f}x"
+            )
 
 def _calculate_w6(account):
     _calculate_w6_farming(account)

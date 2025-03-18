@@ -2798,14 +2798,19 @@ def _parse_caverns_gambit(account, raw_caverns_list):
     account.caverns['Caverns'][cavern_name]['Bonuses'] = {}
     for bonus_index, bonus_details in enumerate(caverns_gambit_pts_bonuses):
         details_list = bonus_details.split('|')
+        clean_name = details_list[3].replace('_', ' ').replace('梦', '').replace('(TAP ME)', '').replace('而', 'x').strip().strip("'")
+        clean_description = details_list[2].replace('_', ' ').strip().strip("'")
+        if clean_description == 'no':
+            clean_description = ''
         pts_required = 2e3 + 1e3 * (bonus_index + 1) * (1 + bonus_index / 5) * pow(1.26, bonus_index)
         account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index] = {
-            'Scaling': details_list[0],
-            '1': details_list[1],
-            'Description': details_list[2],
-            'Name': details_list[3],
+            'ScalingValue': safer_convert(details_list[0], 0),
+            'ScalesWithPts': safer_convert(details_list[1], False),
+            'Description': clean_description,
+            'Name': clean_name,
             'PtsRequired': pts_required,
-            'Unlocked': False  #Fixed later in account_calcs._calculate_caverns_gambit()
+            'Unlocked': False,  #Fixed later in account_calcs._calculate_caverns_gambit(),
+            'Image': f'gambit-bonus-{bonus_index}'
         }
 
 def _parse_caverns_the_temple(account, raw_caverns_list):
