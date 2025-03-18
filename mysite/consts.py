@@ -6637,10 +6637,22 @@ def getMaxEngineerLevel() -> int:
     else:
         return max_engi_last_i_checked
 
-def getVillagerEXPRequired(villager_index, villager_level):
+def getVillagerEXPRequired(villager_index, villager_level, game_version):
+    #_customBlock_Holes."VillagerExpREQ"
     match villager_index:
         case 0:
-            result = 10 * ((10 + 7 * pow(villager_level, 2.1)) * pow(2.1, villager_level) * (1 + .75 * max(0, villager_level - 4)) - 1.5)
+            if villager_level == 1:
+                result = 5
+            else:
+                result = (
+                    10 * (
+                        (10 + 7 * pow(villager_level, 2.1))
+                        * pow(2.1, villager_level)
+                        * (1 + .75 * max(0, villager_level - 4))
+                        * pow(3.4, min(1, max(0, math.floor((1e5 + game_version) / 100247.3))) * max(0, villager_level - 12))
+                    )
+                    - 1.5
+                )
         case 1:
             result = 30 * ((10 + 6 * pow(villager_level, 1.8)) * pow(1.57, villager_level))
         case 2:

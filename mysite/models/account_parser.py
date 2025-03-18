@@ -2128,7 +2128,7 @@ def _parse_caverns_villagers(account, villager_levels, villager_exp, opals_inves
                 'Opals': opals_invested[villager_index],
                 'Title': f"{villager_data['Name']}, {villager_data['Role']}",
                 'VillagerNumber': villager_data['VillagerNumber'],
-                'LevelPercent': 100 * (float(villager_exp[villager_index]) / getVillagerEXPRequired(villager_index, villager_levels[villager_index])),
+                'LevelPercent': 100 * (float(villager_exp[villager_index]) / getVillagerEXPRequired(villager_index, villager_levels[villager_index], account.version)),
             }
             account.gemshop[f"Parallel Villagers {villager_data['Role']}"] = parallel_villagers[villager_index]
             account.caverns['TotalOpalsInvested'] += account.caverns['Villagers'][villager_data['Name']]['Opals']
