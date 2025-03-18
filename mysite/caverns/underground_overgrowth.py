@@ -13,8 +13,11 @@ from utils.text_formatting import pl, notateNumber
 
 logger = get_logger(__name__)
 
-def getGambitSearchChance(current_opals, illuminate_multi, torches_owned):
-    result = 0.5 * illuminate_multi * safer_math_pow(.7, current_opals) * safer_math_log(max(5, torches_owned / 4), 2)
+def getGambitSearchChance(current_opals, illuminate_multi, torches_owned, torch_overwrite=False):
+    if torch_overwrite:
+        result = 0.05 * illuminate_multi * safer_math_pow(.7, current_opals) * safer_math_log(max(5, torches_owned), 2)
+    else:
+        result = 0.05 * illuminate_multi * safer_math_pow(.7, current_opals) * safer_math_log(max(5, torches_owned / 4), 2)
     return result
 
 def getTemplateCavernAdviceGroup(schematics) -> AdviceGroup:
@@ -432,9 +435,9 @@ def getTempleAdviceGroup() -> AdviceGroup:
     cavern_advice[torch_stats].append(Advice(
         label=(
             f"Sanctum {cavern['OpalsFound'] + 1} search odds"
-            f"<br>5 torches: {getGambitSearchChance(cavern['OpalsFound'], illuminate_multi, 5):.6f}%"
-            f"<br>500 torches: {getGambitSearchChance(cavern['OpalsFound'], illuminate_multi, 500):.6f}%"
-            f"<br>50K torches: {getGambitSearchChance(cavern['OpalsFound'], illuminate_multi, 50000):.6f}%"
+            f"<br>5 torches: {getGambitSearchChance(cavern['OpalsFound'], illuminate_multi, 5):.6%}"
+            f"<br>500 torches: {getGambitSearchChance(cavern['OpalsFound'], illuminate_multi, 500, True):.6%}"
+            f"<br>50K torches: {getGambitSearchChance(cavern['OpalsFound'], illuminate_multi, 50000, True):.6%}"
         ),
         picture_class='temple-torch'
     ))
