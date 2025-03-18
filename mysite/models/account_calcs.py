@@ -899,7 +899,7 @@ def _calculate_caverns_measurements_multis(account):
                 raw_gloomie_kills = 0
             account.caverns['MeasurementMultis'][clean_entry_name] = {
                 'Raw': raw_gloomie_kills,
-                'Prepped': log10(raw_gloomie_kills),  #In the source code, this is when 99 = i
+                'Prepped': log10(raw_gloomie_kills) if raw_gloomie_kills > 0 else 0,  #In the source code, this is when 99 = i
             }
         # TODO: Implement these other calculations
         # elif entry_index == 1:  #Crops Found
