@@ -244,10 +244,10 @@ def getGrottoAdviceGroup():
               f"<br>Statues cannot be sampled.",
         picture_class='villager-statue'
     ))
-    cavern_advice[c_faqs].append(Advice(
-        label=f"Standard Monster Respawn% does NOT work in this Cavern. Focus on increasing Multikill and Combat AFK%.",
-        picture_class='undead-shrine'
-    ))
+    # cavern_advice[c_faqs].append(Advice(
+    #     label=f"Standard Monster Respawn% does NOT work in this Cavern. Focus on increasing Multikill and Combat AFK%.",
+    #     picture_class='undead-shrine'
+    # ))
 
 # Layer/Colony Stats
     target_string = notateNumber('Basic', cavern['KillsRequired'], 2)

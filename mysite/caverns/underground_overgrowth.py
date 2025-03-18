@@ -1,17 +1,21 @@
-from math import ceil, log10
+from math import ceil
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.data_formatting import mark_advice_completed
+from utils.data_formatting import mark_advice_completed, safer_math_log, safer_math_pow
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import (
     break_you_best, infinity_string,
     caverns_jar_rupies,
-    getMotherlodeEfficiencyRequired, monument_layer_rewards, getMonumentOpalChance, caverns_cavern_names,
+    getMotherlodeEfficiencyRequired, monument_layer_rewards, getMonumentOpalChance, caverns_cavern_names, ValueToMulti,
     # shallow_caverns_progressionTiers
 )
 from utils.text_formatting import pl, notateNumber
 
 logger = get_logger(__name__)
+
+def getGambitSearchChance(current_opals, illuminate_multi, torches_owned):
+    result = 0.5 * illuminate_multi * safer_math_pow(.7, current_opals) * safer_math_log(max(5, torches_owned / 4), 2)
+    return result
 
 def getTemplateCavernAdviceGroup(schematics) -> AdviceGroup:
     cavern_name = 'The Template'
@@ -117,7 +121,7 @@ def getJarAdviceGroup(schematics) -> AdviceGroup:
         goal=1
     ))
     for jar_index, jar_details in jars.items():
-        pow10_stacks = 0 if jar_details['Destroyed'] <= 0 else log10(jar_details['Destroyed'])
+        pow10_stacks = safer_math_log(jar_details['Destroyed'], 10)
         cavern_advice[jar_stats].append(Advice(
             label=(
                 f"{jar_details['Name']}: {jar_details['Destroyed']} destroyed"
@@ -339,9 +343,22 @@ def getGambitAdviceGroup() -> AdviceGroup:
                 if not bonus_details['Unlocked'] else
                 f"{bonus_details['Name']}{': ' if bonus_details['Description'] else ''}{bonus_details['Description']}"
             ),
-            picture_class=bonus_details['Image']
+            picture_class=bonus_details['Image'],
+            progression=(
+                1 if bonus_details['Unlocked'] and not bonus_details['ScalesWithPts']
+                else 0 if not bonus_details['Unlocked'] and not bonus_details['ScalesWithPts']
+                else ''
+            ),
+            goal=(
+                1 if not bonus_details['ScalesWithPts']
+                else infinity_string
+            )
         ) for bonus_index, bonus_details in bonuses.items()
     ]
+
+    for subgroup in cavern_advice:
+        for advice in cavern_advice[subgroup]:
+            mark_advice_completed(advice)
 
     cavern_ag = AdviceGroup(
         tier='',
@@ -387,10 +404,43 @@ def getTempleAdviceGroup() -> AdviceGroup:
         picture_class='opal'
     ))
 
+    #FAQs
     cavern_advice[c_faqs].append(Advice(
         label=f"Statues from Active kills don't have their quantity multiplied by Multikill. Farm them AFK instead."
               f"<br>Statues cannot be sampled.",
         picture_class='dragon-warrior-statue'
+    ))
+    cavern_advice[c_faqs].append(Advice(
+        label=f"Respawn% from Amplify only works while Active! Your AFK kills will not be increased.",
+        picture_class='temple-torch'
+    ))
+    cavern_advice[c_faqs].append(Advice(
+        label=f"Searching costs 25% of your Torches (minimum of 5). Chance doesn't scale well, so search early and often!",
+        picture_class='temple-torch'
+    ))
+
+    #Torch Stats
+    cavern_advice[torch_stats].append(Advice(
+        label=f"Torches owned: {notateNumber('Basic', cavern['Torches Owned'], 3 if cavern['Torches Owned'] >= 1000 else 0)}",
+        picture_class='temple-torch'
+    ))
+    illuminate_multi = ValueToMulti(10 * cavern['Illuminate'])
+    cavern_advice[torch_stats].append(Advice(
+        label=f"{cavern['Illuminate']} Illuminations: {illuminate_multi}x Search chance",
+        picture_class='temple-torch'
+    ))
+    cavern_advice[torch_stats].append(Advice(
+        label=(
+            f"Sanctum {cavern['OpalsFound'] + 1} search odds"
+            f"<br>5 torches: {getGambitSearchChance(cavern['OpalsFound'], illuminate_multi, 5):.6f}%"
+            f"<br>500 torches: {getGambitSearchChance(cavern['OpalsFound'], illuminate_multi, 500):.6f}%"
+            f"<br>50K torches: {getGambitSearchChance(cavern['OpalsFound'], illuminate_multi, 50000):.6f}%"
+        ),
+        picture_class='temple-torch'
+    ))
+    cavern_advice[torch_stats].append(Advice(
+        label=f"{cavern['Amplify']} Amplifications: +{(5 * cavern['Amplify'])}% Respawn while Active",
+        picture_class='temple-torch'
     ))
 
     cavern_ag = AdviceGroup(

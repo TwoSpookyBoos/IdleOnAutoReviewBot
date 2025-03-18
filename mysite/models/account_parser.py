@@ -2815,7 +2815,18 @@ def _parse_caverns_gambit(account, raw_caverns_list):
 
 def _parse_caverns_the_temple(account, raw_caverns_list):
     cavern_name = caverns_cavern_names[15]
-    pass
+    try:
+        account.caverns['Caverns'][cavern_name]['Torches Owned'] = safer_convert(raw_caverns_list[11][56], 0.0)
+    except:
+        account.caverns['Caverns'][cavern_name]['Torches Owned'] = 0.0
+    try:
+        account.caverns['Caverns'][cavern_name]['Illuminate'] = safer_convert(raw_caverns_list[11][57], 0)
+    except:
+        account.caverns['Caverns'][cavern_name]['Illuminate'] = 0
+    try:
+        account.caverns['Caverns'][cavern_name]['Amplify'] = safer_convert(raw_caverns_list[11][59], 0)
+    except:
+        account.caverns['Caverns'][cavern_name]['Amplify'] = 0
 
 def _parse_w6(account):
     _parse_w6_sneaking(account)

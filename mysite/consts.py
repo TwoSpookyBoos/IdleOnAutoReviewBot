@@ -6743,6 +6743,7 @@ def getWishCost(wish_index, wish_level):
     return result
 
 
+
 ###WORLD 5 CONSTS###
 artifactTiers = ["Base", "Ancient", "Eldritch", "Sovereign"]
 numberOfArtifactTiers = len(artifactTiers)

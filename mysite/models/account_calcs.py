@@ -1305,9 +1305,16 @@ def _calculate_caverns_gambit(account):
 
         #Substitute Value into Description
         if '{' in bonus_details['Name']:
-            account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Name'] = bonus_details['Name'].replace(
-                '{', f"{account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Value']:.2f}"
-            )
+            if bonus_index == 0 or not bonus_details['ScalesWithPts']:
+                account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Name'] = bonus_details['Name'].replace(
+                    '{', f"{account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Value']}"
+                )
+            else:
+                #bonus_details['ScalesWithPts']
+                account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Name'] = bonus_details['Name'].replace(
+                    '{', f"{account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Value']:.2f}"
+                )
+
         elif '}' in bonus_details['Name']:
             account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Name'] = bonus_details['Name'].replace(
                 '}', f"{ValueToMulti(account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Value']):.3f}x"
