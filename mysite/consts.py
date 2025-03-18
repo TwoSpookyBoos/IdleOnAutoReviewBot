@@ -819,9 +819,9 @@ bubbles_progressionTiers = [
      "95% max value",
      ""],
     [11, 120,
-     {'Roid Ragin': 900},  #'Warriors Rule': 2450, 'Multorange': 1470},
+     {'Roid Ragin': 900},
      {'Swift Steppin': 900},
-     {'Stable Jenius': 900},  #'Mage Is Best': 2450,'Severapurple': 1470},
+     {'Stable Jenius': 900},
      {
         'Cropius Mapper': 630, 'Buff Boi Talent': 200, 'Fast Boi Talent': 200, 'Smart Boi Talent': 200,  #Old t19
         'Call Me Bob': 3000, 'Big Game Hunter': 570, 'Mr Massacre': 950, 'Lo Cost Mo Jade': 760, 'Cookin Roadkill': 1330, 'Big P': 940, 'Laaarrrryyyy': 1900,  #Old t20
@@ -830,9 +830,9 @@ bubbles_progressionTiers = [
      "98% max value",
      ""],
     [12, 120,
-     {'Roid Ragin': 1000},  # 'Warriors Rule': 4950, 'Multorange': 2970},
+     {'Roid Ragin': 1000},
      {'Swift Steppin': 1000},
-     {'Stable Jenius': 1000},  # 'Mage Is Best': 4950, 'Severapurple': 2970},
+     {'Stable Jenius': 1000},
      {
         'Big P': 1440, 'Call Me Bob': 5000, 'Nickel Of Wisdom': 120, "Penny Of Strength": 120, "Dollar Of Agility": 120,
         'Buff Boi Talent': 300, 'Fast Boi Talent': 300, 'Smart Boi Talent': 300,
@@ -869,11 +869,11 @@ bubbles_progressionTiers = [
      "95% catchup",
      ""],
     [15, 160,
-     {'Roid Ragin': 10000, 'Hearty Diggy': 9900, 'Stronk Tools': 6930, 'Dream Of Ironfish': 2970,
+     {'Roid Ragin': 10000, 'Warriors Rule': 4950, 'Hearty Diggy': 9900, 'Stronk Tools': 6930, 'Multorange': 2970, 'Dream Of Ironfish': 2970,
       'Slabi Orefish': 5940, 'Slabi Strength': 5940, 'Endgame Eff I': 5940, 'Tome Strength': 5940},
      {'Swift Steppin': 10000, 'Archer Or Bust': 4950, 'Sanic Tools': 6930, 'Premigreen': 2970, 'Fly In Mind': 3960,
       'Slabo Critterbug': 5940, 'Slabo Agility': 5940, 'Endgame Eff II': 5940, 'Tome Agility': 5940},
-     {'Stable Jenius': 10000, 'Hocus Choppus': 9900, 'Le Brain Tools': 6930, 'Tree Sleeper': 3960,
+     {'Stable Jenius': 10000, 'Mage Is Best': 4950, 'Hocus Choppus': 9900, 'Le Brain Tools': 6930, 'Severapurple': 2970, 'Tree Sleeper': 3960,
       'Slabe Logsoul': 5940, 'Slabe Wisdom': 5940, 'Endgame Eff III': 5940, 'Tome Wisdom': 5940},
      {'Cookin Roadkill': 6930, 'Call Me Bob': 10000, 'Carpenter': 4950, 'Nickel Of Wisdom': 2970, "Penny Of Strength": 2970, "Dollar Of Agility": 2970,
       'Droppin Loads': 6930, 'Startue Exp': 5940, 'Laaarrrryyyy': 9900, 'Big Game Hunter': 2970, 'Mr Massacre': 4950, 'Big P': 5940, 'Shimmeron': 3960,

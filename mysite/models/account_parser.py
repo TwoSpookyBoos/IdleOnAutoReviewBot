@@ -1342,7 +1342,7 @@ def _parse_w3_deathnote_miniboss_kills(account):
     raw_ninja = safe_loads(account.raw_data.get('Ninja', []))
     raw_mb_kills = raw_ninja[105] if len(raw_ninja) >= 106 else [0] * len(dn_miniboss_names)
     for mb_index, mb_name in enumerate(dn_miniboss_names):
-        kill_count = raw_mb_kills[mb_index] if len(raw_mb_kills) >= mb_index else 0
+        kill_count = raw_mb_kills[mb_index] if len(raw_mb_kills) >= mb_index+1 else 0
         skull_number = 0
         kills_to_next_skull = 0
         percent_to_next_skull = 0.0
