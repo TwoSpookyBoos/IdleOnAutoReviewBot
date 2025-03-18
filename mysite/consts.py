@@ -4174,8 +4174,8 @@ stamp_maxes = {
     "Sigil Stamp": 324,
     "Talent IV Stamp": 56,
     "Biblio Stamp": 66,
-    'Cavern Resource Stamp': 200,
-    'Study Hall Stamp': 200
+    'Cavern Resource Stamp': 240,
+    'Study Hall Stamp': 165
 }
 stampsDict = {
     #addNewQuest("StampA1" -> desc_line1 has the scaling, and material
