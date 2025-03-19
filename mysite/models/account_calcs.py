@@ -1330,7 +1330,7 @@ def _calculate_caverns_gambit(account):
                  max(1, ceil(
                      safer_math_log(account.caverns['Caverns'][cavern_name]['TotalPts'], 2)
                      - 8
-                     + safer_math_log(account.caverns['Caverns'][cavern_name]['TotalPts'] - 1, 'Lava')
+                     + (safer_math_log(account.caverns['Caverns'][cavern_name]['TotalPts'], 'Lava') - 1)
                      ))
             )
         else:
