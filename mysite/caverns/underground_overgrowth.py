@@ -118,7 +118,7 @@ def getJarAdviceGroup(schematics) -> AdviceGroup:
     jpl = schematics['Jar Production Line']
     cavern_advice[jar_stats].append(Advice(
         label=f"Schematic {jpl['UnlockOrder']}: Jar Production Line reduces the Create requirement for the next Jar in line"
-              f" based on the pow10 stacks of Jars destroyed. Basic Speeds up Tall which speeds up Ornate, etc.",
+              f" based on the pow10 stacks of Jars destroyed. Simple speeds up Tall, which speeds up Ornate, etc.",
         picture_class=jpl['Image'],
         progression=int(jpl['Purchased']),
         goal=1
