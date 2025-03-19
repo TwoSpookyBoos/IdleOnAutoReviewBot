@@ -474,7 +474,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
 
 def getUndergroundOvergrowthAdviceSection() -> AdviceSection:
     #Check if player has reached this section
-    if session_data.account.caverns['Villagers']['Polonai']['Level'] < 1:
+    if session_data.account.caverns['Villagers']['Polonai']['Level'] < 11:
         shallow_caverns_AdviceSection = AdviceSection(
             name="Shallow Caverns",
             tier="Not Yet Evaluated",
