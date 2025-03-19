@@ -264,7 +264,7 @@ def getAtRiskBubblesAdviceGroups() -> list[AdviceGroup]:
         reverse=False
     )
     #Basic NBLB: Remove any bubbles with index 15 or higher and level of 1 or lower
-    sorted_bubbles_basic = [(k, v) for k, v in sorted_bubbles if v['Level'] >= min_NBLB and v['BubbleIndex'] <= 14]
+    sorted_bubbles_basic = [(k, v) for k, v in sorted_bubbles if min_NBLB <= v['Level'] < max_NBLB and v['BubbleIndex'] <= 14]
     basic_prestring = ""
     lithium_prestring = ""
     basic_poststring = ""
@@ -275,13 +275,13 @@ def getAtRiskBubblesAdviceGroups() -> list[AdviceGroup]:
         except:
             todays_lowest = sorted_bubbles_basic[0][1]['Level']
             todays_highest = sorted_bubbles_basic[-1][1]['Level']
-        if len(sorted_bubbles_basic) > 2 * nblbCount:
+        if len(sorted_bubbles_basic) > 1:
             basic_poststring = f"Today's W1-W3 NBLB range: {todays_lowest} - {todays_highest}"
         for bubbleName, bubbleValuesDict in sorted_bubbles_basic:
-            if bubbleValuesDict['Level'] < max_NBLB and (
-                    bubbleValuesDict['Level'] < todays_highest + 20
-                    or todays_lowest >= low_skip
-                    or todays_highest >= high_skip
+            if (
+                bubbleValuesDict['Level'] < todays_highest + 20
+                or todays_lowest >= low_skip
+                or todays_highest >= high_skip
             ):
                 if bubbleName in atrisk_basicBubbles:
                     if bubbleValuesDict['Level'] <= todays_highest:
@@ -331,44 +331,43 @@ def getAtRiskBubblesAdviceGroups() -> list[AdviceGroup]:
     #lithium_prestring = ""
     lithium_poststring = ""
     if sorted_bubbles_lithium and max(session_data.account.all_skills['Lab'], default=0) > 1:
-        if len(sorted_bubbles_lithium) > nblbCount:
-            try:
-                todays_lowest_lithium = sorted_bubbles_lithium[0][1]['Level']
-                todays_highest_lithium = sorted_bubbles_lithium[nblbCount - 1][1]['Level']
-            except:
-                todays_lowest_lithium = sorted_bubbles_lithium[0][1]['Level']
-                todays_highest_lithium = sorted_bubbles_lithium[-1][1]['Level']
-            lithium_poststring = f"Today's W4-W5 (Lithium) range: {todays_lowest_lithium} - {todays_highest_lithium}"
-            for bubbleName, bubbleValuesDict in sorted_bubbles_lithium:
-                if bubbleValuesDict['Level'] < max_NBLB and (
-                        bubbleValuesDict['Level'] < todays_highest_lithium + 10
-                        or len(atriskBasic_AdviceList) > 0
-                ):
-                    if bubbleName in atrisk_lithiumBubbles:
-                        if bubbleValuesDict['Level'] <= todays_highest_lithium:
-                            subgroupName = standard_today
-                        else:
-                            subgroupName = standard
-                    elif bubbleName in atrisk_lithiumAdvancedBubbles:
-                        if bubbleValuesDict['Level'] <= todays_highest_lithium:
-                            subgroupName = advanced_today
-                        else:
-                            subgroupName = advanced
+        try:
+            todays_lowest_lithium = sorted_bubbles_lithium[0][1]['Level']
+            todays_highest_lithium = sorted_bubbles_lithium[nblbCount - 1][1]['Level']
+        except:
+            todays_lowest_lithium = sorted_bubbles_lithium[0][1]['Level']
+            todays_highest_lithium = sorted_bubbles_lithium[-1][1]['Level']
+        lithium_poststring = f"Today's W4-W5 (Lithium) range: {todays_lowest_lithium} - {todays_highest_lithium}"
+        for bubbleName, bubbleValuesDict in sorted_bubbles_lithium:
+            if (
+                bubbleValuesDict['Level'] < todays_highest_lithium + 10
+                or len(atriskBasic_AdviceList) > 0
+            ):
+                if bubbleName in atrisk_lithiumBubbles:
+                    if bubbleValuesDict['Level'] <= todays_highest_lithium:
+                        subgroupName = standard_today
                     else:
-                        subgroupName = ""
+                        subgroupName = standard
+                elif bubbleName in atrisk_lithiumAdvancedBubbles:
+                    if bubbleValuesDict['Level'] <= todays_highest_lithium:
+                        subgroupName = advanced_today
+                    else:
+                        subgroupName = advanced
+                else:
+                    subgroupName = ""
 
-                    if subgroupName:
-                        if max(todays_highest_lithium + 10, bubbleValuesDict['Level'] + 10) < 600:
-                            target = min(max_NBLB, max(todays_highest_lithium + 10, bubbleValuesDict['Level'] + 10))
-                        else:
-                            target = max_NBLB
-                        atriskLithium_AdviceList[subgroupName].append(Advice(
-                            label=f"{bubbleName}{' (Printing!)' if bubbleValuesDict['Material'] in session_data.account.printer['AllCurrentPrints'] else ''}",
-                            picture_class=bubbleName,
-                            progression=bubbleValuesDict['Level'],
-                            goal=target,
-                            resource=bubbleValuesDict['Material']
-                        ))
+                if subgroupName:
+                    if max(todays_highest_lithium + 10, bubbleValuesDict['Level'] + 10) < 600:
+                        target = min(max_NBLB, max(todays_highest_lithium + 10, bubbleValuesDict['Level'] + 10))
+                    else:
+                        target = max_NBLB
+                    atriskLithium_AdviceList[subgroupName].append(Advice(
+                        label=f"{bubbleName}{' (Printing!)' if bubbleValuesDict['Material'] in session_data.account.printer['AllCurrentPrints'] else ''}",
+                        picture_class=bubbleName,
+                        progression=bubbleValuesDict['Level'],
+                        goal=target,
+                        resource=bubbleValuesDict['Material']
+                    ))
 
     atriskLithium_AG = AdviceGroup(
         tier="",
