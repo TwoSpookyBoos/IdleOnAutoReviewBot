@@ -402,7 +402,10 @@ def safer_math_pow(base, exponent, default=1e100):
         return 1e100
 
 def safer_math_log(input_value, base):
-    if input_value <= 0:
+    if base == 'Lava':
+        # When you see _customBlock_getLOG called in source code, use base='Lava' here
+        return math.log(max(input_value, 1)) / 2.30259
+    elif input_value <= 0:
         return 0
     else:
         return math.log(input_value, base)

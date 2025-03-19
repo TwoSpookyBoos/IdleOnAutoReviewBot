@@ -2098,6 +2098,7 @@ def _parse_caverns(account):
         'TotalMajiks': 0,
         'Measurements': {},
         'Studies': {},
+        'TotalStudies': 0,
         'Collectibles': {}
     }
     raw_caverns_list: list[list] = safe_loads(account.raw_data.get('Holes', []))
@@ -2284,6 +2285,7 @@ def _parse_caverns_measurements(account, raw_measurements_list):
 def _parse_caverns_studies(account, raw_studies_list):
     for study_index, study_details in caverns_librarian_studies.items():
         try:
+            account.caverns['TotalStudies'] += raw_studies_list[study_index]
             account.caverns['Studies'][study_index] = {
                 'Level': raw_studies_list[study_index],
                 'MaxLevel': 999,  #Fixed in account_calcs._calculate_caverns_studies()
@@ -2827,6 +2829,10 @@ def _parse_caverns_the_temple(account, raw_caverns_list):
         account.caverns['Caverns'][cavern_name]['Amplify'] = safer_convert(raw_caverns_list[11][59], 0)
     except:
         account.caverns['Caverns'][cavern_name]['Amplify'] = 0
+    try:
+        account.caverns['Caverns'][cavern_name]['Golems Killed'] = safer_convert(raw_caverns_list[11][63], 0.0)
+    except:
+        account.caverns['Caverns'][cavern_name]['Golems Killed'] = 0.0
 
 def _parse_w6(account):
     _parse_w6_sneaking(account)

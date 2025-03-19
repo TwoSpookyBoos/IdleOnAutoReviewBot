@@ -124,7 +124,7 @@ def getJarAdviceGroup(schematics) -> AdviceGroup:
         goal=1
     ))
     for jar_index, jar_details in jars.items():
-        pow10_stacks = safer_math_log(jar_details['Destroyed'], 10)
+        pow10_stacks = safer_math_log(jar_details['Destroyed'], 'Lava')
         cavern_advice[jar_stats].append(Advice(
             label=(
                 f"{jar_details['Name']}: {jar_details['Destroyed']} destroyed"

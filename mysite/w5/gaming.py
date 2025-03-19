@@ -3,7 +3,7 @@ import functools
 import math
 
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.data_formatting import safer_convert
+from utils.data_formatting import safer_convert, safer_math_log
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
@@ -179,7 +179,7 @@ def getSnailInformationGroup() -> AdviceGroup:
         final_ballad_bonus = 1.0
 
         if session_data.account.caverns['Schematics']['Final Ballad of the Snail']['Purchased']:
-            num_trebel_stacks = int(math.log10(num_trebel_notes) if num_trebel_notes > 0 else 0)
+            num_trebel_stacks = int(safer_math_log(num_trebel_notes, 'Lava') if num_trebel_notes > 0 else 0)
             final_ballad_bonus = 1 + 0.04 * num_trebel_stacks
 
             snail_AdviceDict['General'].append(Advice(
