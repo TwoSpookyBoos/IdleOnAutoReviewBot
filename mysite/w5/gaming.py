@@ -3,7 +3,7 @@ import functools
 import math
 
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.data_formatting import safer_convert
+from utils.data_formatting import safer_convert, safer_math_log
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
@@ -149,18 +149,28 @@ def getSnailInformationGroup() -> AdviceGroup:
     floored_envelopes = safer_convert(session_data.account.gaming['Envelopes'], 0)
 
     #General
-    if snail_data['Level'] == 0:
-        snail_AdviceDict["General"].append(Advice(
-            label="Snail import not yet unlocked",
-            picture_class='immortal-snail',
-            progression=snail_data['SnailRank'],
-            goal=snailMaxRank
-        ))
-    else:
+    snail_AdviceDict["General"].append(Advice(
+        label=(
+            f"Current Snail Rank: {snail_data['SnailRank']}"
+            if snail_data['Level'] > 0 else
+            f"Snail import not yet unlocked"
+        ),
+        picture_class='immortal-snail',
+        progression=snail_data['SnailRank'],
+        goal=snailMaxRank
+    ))
+    if snail_data['SnailRank'] > 0:
         snail_AdviceDict['General'].append(Advice(
             label=f"Envelopes owned: {floored_envelopes}",
             picture_class='snail-envelope',
         ))
+        
+        num_trebel_notes = session_data.account.caverns['Caverns']['The Harp']['NotesOwned'][3]
+        final_ballad_bonus = 1.0
+
+        if session_data.account.caverns['Schematics']['Final Ballad of the Snail']['Purchased']:
+            num_trebel_stacks = int(safer_math_log(num_trebel_notes, 'Lava') if num_trebel_notes > 0 else 0)
+            final_ballad_bonus = 1 + 0.04 * num_trebel_stacks
 
         if sodium_safety_level + 5 <= snail_data['SnailRank']:
             snail_AdviceDict[f"Current Rank {snail_data['SnailRank']} Info"] = [Advice(

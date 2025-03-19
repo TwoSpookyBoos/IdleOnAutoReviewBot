@@ -398,8 +398,17 @@ def safer_math_pow(base, exponent, default=1e100):
     try:
         return math.pow(base, exponent)
     except:
-        logger.exception(f"An error occured during math.pow() call. Replacing with default: {default}")
+        logger.exception(f"An error occurred during math.pow() call. Replacing with default: {default}")
         return 1e100
+
+def safer_math_log(input_value, base):
+    if base == 'Lava':
+        # When you see _customBlock_getLOG called in source code, use base='Lava' here
+        return math.log(max(input_value, 1)) / 2.30259
+    elif input_value <= 0:
+        return 0
+    else:
+        return math.log(input_value, base)
 
 def mark_advice_completed(advice, force=False):
     def complete():

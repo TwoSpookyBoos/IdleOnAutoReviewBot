@@ -1342,7 +1342,7 @@ def _parse_w3_deathnote_miniboss_kills(account):
     raw_ninja = safe_loads(account.raw_data.get('Ninja', []))
     raw_mb_kills = raw_ninja[105] if len(raw_ninja) >= 106 else [0] * len(dn_miniboss_names)
     for mb_index, mb_name in enumerate(dn_miniboss_names):
-        kill_count = raw_mb_kills[mb_index] if len(raw_mb_kills) >= mb_index else 0
+        kill_count = raw_mb_kills[mb_index] if len(raw_mb_kills) >= mb_index+1 else 0
         skull_number = 0
         kills_to_next_skull = 0
         percent_to_next_skull = 0.0
@@ -2098,6 +2098,7 @@ def _parse_caverns(account):
         'TotalMajiks': 0,
         'Measurements': {},
         'Studies': {},
+        'TotalStudies': 0,
         'Collectibles': {}
     }
     raw_caverns_list: list[list] = safe_loads(account.raw_data.get('Holes', []))
@@ -2128,7 +2129,7 @@ def _parse_caverns_villagers(account, villager_levels, villager_exp, opals_inves
                 'Opals': opals_invested[villager_index],
                 'Title': f"{villager_data['Name']}, {villager_data['Role']}",
                 'VillagerNumber': villager_data['VillagerNumber'],
-                'LevelPercent': 100 * (float(villager_exp[villager_index]) / getVillagerEXPRequired(villager_index, villager_levels[villager_index])),
+                'LevelPercent': 100 * (float(villager_exp[villager_index]) / getVillagerEXPRequired(villager_index, villager_levels[villager_index], account.version)),
             }
             account.gemshop[f"Parallel Villagers {villager_data['Role']}"] = parallel_villagers[villager_index]
             account.caverns['TotalOpalsInvested'] += account.caverns['Villagers'][villager_data['Name']]['Opals']
@@ -2284,6 +2285,7 @@ def _parse_caverns_measurements(account, raw_measurements_list):
 def _parse_caverns_studies(account, raw_studies_list):
     for study_index, study_details in caverns_librarian_studies.items():
         try:
+            account.caverns['TotalStudies'] += raw_studies_list[study_index]
             account.caverns['Studies'][study_index] = {
                 'Level': raw_studies_list[study_index],
                 'MaxLevel': 999,  #Fixed in account_calcs._calculate_caverns_studies()
@@ -2798,19 +2800,39 @@ def _parse_caverns_gambit(account, raw_caverns_list):
     account.caverns['Caverns'][cavern_name]['Bonuses'] = {}
     for bonus_index, bonus_details in enumerate(caverns_gambit_pts_bonuses):
         details_list = bonus_details.split('|')
+        clean_name = details_list[3].replace('_', ' ').replace('梦', '').replace('(TAP ME)', '').replace('而', 'x').strip().strip("'")
+        clean_description = details_list[2].replace('_', ' ').strip().strip("'")
+        if clean_description == 'no':
+            clean_description = ''
         pts_required = 2e3 + 1e3 * (bonus_index + 1) * (1 + bonus_index / 5) * pow(1.26, bonus_index)
         account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index] = {
-            'Scaling': details_list[0],
-            '1': details_list[1],
-            'Description': details_list[2],
-            'Name': details_list[3],
+            'ScalingValue': safer_convert(details_list[0], 0),
+            'ScalesWithPts': safer_convert(details_list[1], False),
+            'Description': clean_description,
+            'Name': clean_name,
             'PtsRequired': pts_required,
-            'Unlocked': False  #Fixed later in account_calcs._calculate_caverns_gambit()
+            'Unlocked': False,  #Fixed later in account_calcs._calculate_caverns_gambit(),
+            'Image': f'gambit-bonus-{bonus_index}'
         }
 
 def _parse_caverns_the_temple(account, raw_caverns_list):
     cavern_name = caverns_cavern_names[15]
-    pass
+    try:
+        account.caverns['Caverns'][cavern_name]['Torches Owned'] = safer_convert(raw_caverns_list[11][56], 0.0)
+    except:
+        account.caverns['Caverns'][cavern_name]['Torches Owned'] = 0.0
+    try:
+        account.caverns['Caverns'][cavern_name]['Illuminate'] = safer_convert(raw_caverns_list[11][57], 0)
+    except:
+        account.caverns['Caverns'][cavern_name]['Illuminate'] = 0
+    try:
+        account.caverns['Caverns'][cavern_name]['Amplify'] = safer_convert(raw_caverns_list[11][59], 0)
+    except:
+        account.caverns['Caverns'][cavern_name]['Amplify'] = 0
+    try:
+        account.caverns['Caverns'][cavern_name]['Golems Killed'] = safer_convert(raw_caverns_list[11][63], 0.0)
+    except:
+        account.caverns['Caverns'][cavern_name]['Golems Killed'] = 0.0
 
 def _parse_w6(account):
     _parse_w6_sneaking(account)
@@ -3174,8 +3196,8 @@ def _parse_w6_summoning_battles(account, rawBattles):
 def _parse_w6_summoning_battles_endless(account):
     account.summoning['Endless Bonuses'] = {}
     true_battle_index = 0
-    while true_battle_index < max(40, account.summoning['Battles']['Endless'] + 5):
-        image_index = (true_battle_index % 100) // 20
+    while true_battle_index < max(40, account.summoning['Battles']['Endless'] + 20):
+        image_index = min(4, true_battle_index // 20)
         endless_enemy_index = true_battle_index % 40
         this_battle = {
             'Defeated': true_battle_index < account.summoning['Battles']['Endless'],

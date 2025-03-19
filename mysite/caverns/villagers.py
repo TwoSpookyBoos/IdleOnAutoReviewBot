@@ -329,7 +329,7 @@ def getMeasurerAdviceGroup() -> AdviceGroup:
                         f"Level {measurement_details['Level']} = "
                         f"+{measurement_details['TotalBaseValue']:.2f}% {measurement_details['Description']}"
                         f"<br>x{session_data.account.caverns['MeasurementMultis'][measurement_details['ScalesWith']]['Multi']:.3f} "
-                        f"({session_data.account.caverns['MeasurementMultis'][measurement_details['ScalesWith']]['Raw']:,} {measurement_details['ScalesWith']})"
+                        f"({session_data.account.caverns['MeasurementMultis'][measurement_details['ScalesWith']]['PrettyRaw']} {measurement_details['ScalesWith']})"
                         f"<br>Total Bonus: +{measurement_details['Value']:,.2f}%"
                     ),
                     picture_class=measurement_details['Image'],
@@ -344,7 +344,7 @@ def getMeasurerAdviceGroup() -> AdviceGroup:
                         f"Level {measurement_details['Level']} = "
                         f"+{measurement_details['TotalBaseValue']:.0f}% {measurement_details['Description']}"
                         f"<br>x{session_data.account.caverns['MeasurementMultis'][measurement_details['ScalesWith']]['Multi']:.3f} "
-                        f"({session_data.account.caverns['MeasurementMultis'][measurement_details['ScalesWith']]['Raw']:,} {measurement_details['ScalesWith']})"
+                        f"({session_data.account.caverns['MeasurementMultis'][measurement_details['ScalesWith']]['PrettyRaw']} {measurement_details['ScalesWith']})"
                         f"<br>Total Bonus: +{measurement_details['Value']:,.2f}%"
                     ),
                     picture_class=measurement_details['Image'],
@@ -463,6 +463,10 @@ def getLibrarianAdviceGroup() -> AdviceGroup:
 
 
 # Study Stats
+    villager_advice[study_stats].append(Advice(
+        label=f"Total Studies: {session_data.account.caverns['TotalStudies']}",
+        picture_class=villager_name
+    ))
     for study_index, study_details in studies.items():
         villager_advice[study_stats].append(Advice(
             label=f"{study_details['CavernName']}: {study_details['Description']}",
