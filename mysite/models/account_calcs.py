@@ -1705,8 +1705,8 @@ def _calculate_general_character_over_books(account):
             arctis_base = 15
             bigp_value = account.alchemy_bubbles['Big P']['BaseValue']
             div_minorlink_value = char.divinity_level / (char.divinity_level + 60)
-            final_result = ceil(arctis_base * bigp_value * div_minorlink_value)
-            character_specific_bonuses += ceil(arctis_base * account.alchemy_bubbles['Big P']['BaseValue'] * (char.divinity_level / (char.divinity_level + 60)))
+            final_arctis_result = ceil(arctis_base * bigp_value * div_minorlink_value)
+            character_specific_bonuses += final_arctis_result
 
         # Symbols of Beyond = 1 + 1 per 20 levels
         if any([elite in char.all_classes for elite in ["Blood Berserker", "Divine Knight"]]):
@@ -1720,20 +1720,22 @@ def _calculate_general_character_over_books(account):
         char.max_talents_over_books = account.library['MaxBookLevel'] + account.bonus_talents_account_wide_sum + character_specific_bonuses
 
         # If they're an ES, use max level of Family Guy to calculate floor(ES Family Value * Family Guy)
-        if char.class_name == "Elemental Sorcerer":
+        if char.class_name == 'Elemental Sorcerer':
             try:
                 #TODO: Move one-off talent value calculation
                 family_guy_bonus = lavaFunc(
                     'decay',
-                    char.max_talents_over_books + char.max_talents.get("374", 0),
+                    char.max_talents_over_books + char.max_talents.get('374', 0),
                     40,
                     100
                 )
                 family_guy_multi = ValueToMulti(family_guy_bonus)
-                char.max_talents_over_books += floor((account.family_bonuses["Elemental Sorcerer"]['Value'] * family_guy_multi) - account.family_bonuses["Elemental Sorcerer"]['Value'])
-                char.setFamilyGuyBonus(
-                    floor(account.family_bonuses["Elemental Sorcerer"]['Value'] * family_guy_multi)
-                    - floor(account.family_bonuses["Elemental Sorcerer"]['Value']))
+                final_fg_value = (
+                    floor(account.family_bonuses['Elemental Sorcerer']['Value'] * family_guy_multi)
+                    - floor(account.family_bonuses['Elemental Sorcerer']['Value'])
+                )
+                char.max_talents_over_books += final_fg_value
+                char.setFamilyGuyBonus(final_fg_value)
             except:
                 pass
 
