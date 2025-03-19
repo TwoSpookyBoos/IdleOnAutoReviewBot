@@ -463,6 +463,10 @@ def getLibrarianAdviceGroup() -> AdviceGroup:
 
 
 # Study Stats
+    villager_advice[study_stats].append(Advice(
+        label=f"Total Studies: {session_data.account.caverns['TotalStudies']}",
+        picture_class=villager_name
+    ))
     for study_index, study_details in studies.items():
         villager_advice[study_stats].append(Advice(
             label=f"{study_details['CavernName']}: {study_details['Description']}",
