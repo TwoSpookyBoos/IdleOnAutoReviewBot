@@ -3190,8 +3190,8 @@ def _parse_w6_summoning_battles(account, rawBattles):
 def _parse_w6_summoning_battles_endless(account):
     account.summoning['Endless Bonuses'] = {}
     true_battle_index = 0
-    while true_battle_index < max(40, account.summoning['Battles']['Endless'] + 5):
-        image_index = (true_battle_index % 100) // 20
+    while true_battle_index < max(40, account.summoning['Battles']['Endless'] + 20):
+        image_index = min(4, true_battle_index // 20)
         endless_enemy_index = true_battle_index % 40
         this_battle = {
             'Defeated': true_battle_index < account.summoning['Battles']['Endless'],
