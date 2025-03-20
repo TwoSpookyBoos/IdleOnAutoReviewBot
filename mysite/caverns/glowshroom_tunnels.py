@@ -4,8 +4,8 @@ from utils.logging import get_logger
 from flask import g as session_data
 from consts import (
     break_you_best,
-    getMotherlodeEfficiencyRequired, getMotherlodeResourceRequired, getMonumentOpalChance, monument_layer_rewards, infinity_string, justice_monument_currencies,
-    schematics_unlocking_harp_strings, harp_notes, getHarpNoteUnlockCost
+    getMotherlodeEfficiencyRequired, getMonumentOpalChance, monument_layer_rewards, infinity_string, justice_monument_currencies,
+    schematics_unlocking_harp_strings, harp_notes, getHarpNoteUnlockCost, caverns_cavern_names
     # glowshroom_tunnels_progressionTiers
 )
 from utils.text_formatting import pl, notateNumber
@@ -13,7 +13,7 @@ from utils.text_formatting import pl, notateNumber
 logger = get_logger(__name__)
 
 def getHarpAdviceGroup(schematics):
-    cavern_name = 'The Harp'
+    cavern_name = caverns_cavern_names[6]
     cavern = session_data.account.caverns['Caverns'][cavern_name]
 
     c_stats = "Cavern Stats"
@@ -115,7 +115,7 @@ def getLampAdviceGroup():
         w_stats: [],
     }
 
-    cavern_name = 'The Lamp'
+    cavern_name = caverns_cavern_names[7]
     cavern = session_data.account.caverns['Caverns'][cavern_name]
 # Cavern Stats
     cavern_advice[c_stats].append(Advice(
@@ -166,7 +166,7 @@ def getMotherlodeAdviceGroup():
         l_stats: []
     }
 
-    cavern_name = 'The Hive'
+    cavern_name = caverns_cavern_names[8]
     resource_type = 'Bugs'
     resource_skill = 'Catching'
     cavern = session_data.account.caverns['Caverns'][cavern_name]
@@ -187,7 +187,8 @@ def getMotherlodeAdviceGroup():
               f"{notateNumber('Basic', getMotherlodeEfficiencyRequired(cavern['LayersDestroyed']), 1)}",
         picture_class=resource_skill
     ))
-    resource_required = getMotherlodeResourceRequired(cavern['LayersDestroyed'])
+    cavern_advice[l_stats].append(session_data.account.caverns['MotherlodeResourceDiscountAdvice'])
+    resource_required = session_data.account.caverns['Caverns'][cavern_name]['ResourcesRemaining']
     cavern_advice[l_stats].append(Advice(
         label=f"{resource_type} remaining to break Layer {cavern['LayersDestroyed'] + 1}: {notateNumber('Basic', resource_required - cavern['ResourcesCollected'], 1)}",
         picture_class=f'motherlode-{resource_type}',
@@ -207,15 +208,15 @@ def getMotherlodeAdviceGroup():
 
 def getGrottoAdviceGroup():
     c_stats = "Cavern Stats"
-    c_faq = "FAQs"
+    c_faqs = "FAQs"
     l_stats = "Colony Stats"
     cavern_advice = {
         c_stats: [],
-        c_faq: [],
+        c_faqs: [],
         l_stats: []
     }
 
-    cavern_name = 'Grotto'
+    cavern_name = caverns_cavern_names[9]
     cavern = session_data.account.caverns['Caverns'][cavern_name]
 # Cavern Stats
     cavern_advice[c_stats].append(Advice(
@@ -224,8 +225,8 @@ def getGrottoAdviceGroup():
         resource='gloomie-mushroom'
     ))
     cavern_advice[c_stats].append(Advice(
-        label=f"Bonus Objective- Collect Dragon Warrior {{{{Statues|#statues}}}} from AFK kills.",
-        picture_class='dragon-warrior-statue',
+        label=f"Bonus Objective- Collect Villager {{{{Statues|#statues}}}} from AFK kills.",
+        picture_class='villager-statue',
     ))
     cavern_advice[c_stats].append(Advice(
         label=f"Total Opals Found: {cavern['OpalsFound']}",
@@ -233,20 +234,20 @@ def getGrottoAdviceGroup():
     ))
 
 # FAQs
-    cavern_advice[c_faq].append(Advice(
+    cavern_advice[c_faqs].append(Advice(
         label=f"Mushroom HP does NOT increase after defeating a Monarch."
               f"<br>The number of kills required and the Monarch's HP will increase.",
         picture_class='gloomie-mushroom'
     ))
-    cavern_advice[c_faq].append(Advice(
+    cavern_advice[c_faqs].append(Advice(
         label=f"Statues from Active kills don't have their quantity multiplied by Multikill. Farm them AFK instead."
               f"<br>Statues cannot be sampled.",
-        picture_class='dragon-warrior-statue'
+        picture_class='villager-statue'
     ))
-    cavern_advice[c_faq].append(Advice(
-        label=f"Standard Monster Respawn% does NOT work in this Cavern. Focus on increasing Multikill and Combat AFK%.",
-        picture_class='undead-shrine'
-    ))
+    # cavern_advice[c_faqs].append(Advice(
+    #     label=f"Standard Monster Respawn% does NOT work in this Cavern. Focus on increasing Multikill and Combat AFK%.",
+    #     picture_class='undead-shrine'
+    # ))
 
 # Layer/Colony Stats
     target_string = notateNumber('Basic', cavern['KillsRequired'], 2)
@@ -283,7 +284,7 @@ def getJusticeAdviceGroup() -> AdviceGroup:
         b_stats: []
     }
 
-    cavern_name = 'Justice Monument'
+    cavern_name = caverns_cavern_names[10]
     monument_index = 1
     cavern = session_data.account.caverns['Caverns'][cavern_name]
     layer_rewards = monument_layer_rewards[cavern_name]
@@ -325,7 +326,7 @@ def getJusticeAdviceGroup() -> AdviceGroup:
     ]
 
     cavern_advice[l_stats].insert(0, Advice(
-        label=f"Monument Hours: {cavern['Hours']:.0f}",
+        label=f"Monument Hours: {cavern['Hours']:,.0f}",
         picture_class='justice-bonus-19'
     ))
 
@@ -421,7 +422,7 @@ def getGlowshroomTunnelsAdviceSection() -> AdviceSection:
         max_tier=max_tier,
         true_max_tier=true_max,
         header=f"The Glowshroom Tunnels biome",  #f"Best Glowshroom Tunnels tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
-        picture='Glowshroom_Tunnels.png',
+        picture='customized/Glowshroom_Tunnels.png',
         groups=glowshroom_tunnels_AdviceGroupDict.values(),
         completed=None,
         unrated=True,

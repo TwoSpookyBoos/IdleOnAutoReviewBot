@@ -198,7 +198,7 @@ def getBonusSectionName(bonusName):
 
         case 'FOMO-1' | 'FOMO-2' | 'FOMO-3' | 'FOMO-4' | 'FOMO-5' | 'FOMO-6' | 'FOMO-7' | 'FOMO-8':
             return "Limited Shop"
-        case 'Blinding Lantern' | 'Parallel Villagers The Explorer' | 'Parallel Villagers The Engineer' | 'Parallel Villagers The Conjuror' | 'Parallel Villagers The Measurer' | 'Resource Boost' | 'Conjuror Pts' | 'Opal':
+        case 'Blinding Lantern' | 'Parallel Villagers The Explorer' | 'Parallel Villagers The Engineer' | 'Parallel Villagers The Conjuror' | 'Parallel Villagers The Measurer' | 'Parallel Villagers The Librarian' |'Resource Boost' | 'Conjuror Pts' | 'Opal':
             return "Oddities"
         case _:
             return "UnknownShop"

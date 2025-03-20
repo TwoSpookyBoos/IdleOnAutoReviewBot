@@ -1,4 +1,4 @@
-from math import ceil, floor, log2
+from math import ceil, floor, log2, log10
 from consts import (
     # General
     lavaFunc, ceilUpToBase, ValueToMulti, getNextESFamilyBreakpoint,
@@ -21,12 +21,12 @@ from consts import (
     maxFarmingValue, summoning_rewards_that_dont_multiply_base_value,
     # Caverns
     caverns_conjuror_majiks, schematics_unlocking_buckets, monument_bonuses, getBellImprovementBonus, monument_names, released_monuments,
-    infinity_string, schematics_unlocking_harp_strings, schematics_unlocking_harp_chords
+    infinity_string, schematics_unlocking_harp_strings, schematics_unlocking_harp_chords, caverns_cavern_names, caverns_measurer_scalars
 )
 from models.models import Advice
-from utils.data_formatting import safe_loads, safer_get, safer_math_pow
+from utils.data_formatting import safe_loads, safer_get, safer_math_pow, safer_convert, safer_math_log
 from utils.logging import get_logger
-from utils.text_formatting import getItemDisplayName, getItemCodeName
+from utils.text_formatting import getItemDisplayName, getItemCodeName, notateNumber
 
 logger = get_logger(__name__)
 
@@ -40,9 +40,22 @@ def _calculate_wave_1(account):
     _calculate_w6_summoning_winner_bonuses(account)
 
 def _calculate_caverns_majiks(account):
+    alt_pocket_div = {
+        'BonusPerLevel': 15,
+        'Description': '% All Stats'
+    }
     for majik_type, majiks in caverns_conjuror_majiks.items():
         for majik_index, majik_data in enumerate(majiks):
-            if majik_data['Scaling'] == 'add':
+            if majik_data['Name'] == 'Pocket Divinity' and account.doot_owned:
+                #Replace linked Divinities with 15% all stat
+                account.caverns['Majiks'][majik_data['Name']]['Description'] = alt_pocket_div['Description']
+                account.caverns['Majiks'][majik_data['Name']]['Value'] = (
+                    account.caverns['Majiks'][majik_data['Name']]['Level'] * alt_pocket_div['BonusPerLevel']
+                )
+                account.caverns['Majiks'][majik_data['Name']]['MaxValue'] = (
+                        majik_data['MaxLevel'] * alt_pocket_div['BonusPerLevel']
+                )
+            elif majik_data['Scaling'] == 'add':
                 try:
                     account.caverns['Majiks'][majik_data['Name']]['Value'] = (
                             account.caverns['Majiks'][majik_data['Name']]['Level'] * majik_data['BonusPerLevel']
@@ -840,10 +853,14 @@ def _calculate_caverns(account):
     #_calculate_caverns_majiks(account)
     _calculate_caverns_measurements_base(account)
     _calculate_caverns_measurements_multis(account)
+    _calculate_caverns_studies(account)
+    _calculate_caverns_jar_collectibles(account)
     _calculate_caverns_the_well(account)
     _calculate_caverns_monuments(account)
+    _calculate_caverns_motherlode_layers(account)
     _calculate_caverns_the_bell(account)
     _calculate_caverns_the_harp(account)
+    _calculate_caverns_gambit(account)
 
 def _calculate_caverns_measurements_base(account):
     # _customBlock_Holes > "MeasurementBaseBonus"  #Last verified as of 2.30 Companion Trading
@@ -860,25 +877,166 @@ def _calculate_caverns_measurements_base(account):
                 account.caverns['Measurements'][measurement_index]['BaseValue']
                 * account.caverns['Majiks']['Lengthmeister']['Value']
             )
+            account.caverns['Measurements'][measurement_index]['Value'] = account.caverns['Measurements'][measurement_index]['TotalBaseValue']
         except:
             logger.exception(f"Failed to calculate Measurement Base Value for {measurement_values['Description']}")
             account.caverns['Measurements'][measurement_index]['BaseValue'] = 0
+            account.caverns['Measurements'][measurement_index]['TotalBaseValue'] = 0
+            account.caverns['Measurements'][measurement_index]['Value'] = 0
 
 def _calculate_caverns_measurements_multis(account):
-    # _customBlock_Holes > "MeasurementMulti"  #Last verified as of 2.30 Companion Trading
-    total_skill_levels = 0
-    for skill, skill_levels in account.all_skills.items():
-        total_skill_levels += sum(skill_levels) if skill != 'Combat' else 0
-    fake_multi = total_skill_levels / 5000 + max(0, (total_skill_levels - 18000) / 1500)
-    if 5 > fake_multi:
-        real_multi = 1 + (18 * fake_multi / 100)
-    else:
-        real_multi = 1 + (18 * fake_multi + 8 * (fake_multi - 5)) / 100
-    account.caverns['Measurements'][1]['Value'] = (
-        2 * account.caverns['Measurements'][1]['Level']
-        * account.caverns['Majiks']['Lengthmeister']['Value']
-        * real_multi
-    )
+    # Part 1: Retrieve the base value and prep into the version used for calculation, if any
+    # _customBlock_Holes > "MeasurementQTYfound"  #Last verified as of 2.32 Gambit
+    raw_holes = safe_loads(account.raw_data.get('Holes', []))
+    account.caverns['MeasurementMultis'] = {}
+    for entry_index, entry_string in enumerate(caverns_measurer_scalars):
+        clean_entry_name = str(entry_string).replace('_', ' ').title()
+        # I want to use a match/case here, but PyCharm doesn't let me collapse those blocks which is just annoying lmao
+        if entry_index == 0:  #Gloomie Kills
+            try:
+                raw_gloomie_kills = safer_convert(raw_holes[11][28], 0.00) if raw_holes else 0
+            except:
+                raw_gloomie_kills = 0
+            account.caverns['MeasurementMultis'][clean_entry_name] = {
+                'Raw': raw_gloomie_kills,
+                'PrettyRaw': notateNumber('Match', raw_gloomie_kills, 2, 'M'),
+                'Prepped': safer_math_log(raw_gloomie_kills, 'Lava')  #In the source code, this is when 99 = i
+            }
+        elif entry_index == 1:  #Crops Found
+            account.caverns['MeasurementMultis'][clean_entry_name] = {
+                'Raw': account.farming['CropsUnlocked'],
+                'PrettyRaw': f"{account.farming['CropsUnlocked']:,}",
+                'Prepped': account.farming['CropsUnlocked'] / 14  # In the source code, this is when 99 = i
+            }
+        elif entry_index == 2:  #Account Lv
+            sum_combat_levels = sum(account.all_skills['Combat']) or 0
+            account.caverns['MeasurementMultis'][clean_entry_name] = {
+                'Raw': sum_combat_levels,
+                'PrettyRaw': f"{sum_combat_levels:,}",
+                'Prepped': sum_combat_levels / 500  # In the source code, this is when 99 = i
+            }
+        # elif entry_index == 3:  #Tome Score
+        #     pass
+        elif entry_index == 4:  #All Skill Lv
+            total_skill_levels = 0
+            for skill, skill_levels in account.all_skills.items():
+                total_skill_levels += sum(skill_levels) if skill != 'Combat' else 0
+            account.caverns['MeasurementMultis'][clean_entry_name] = {
+                'Raw': total_skill_levels,
+                'PrettyRaw': f"{total_skill_levels:,}",
+                'Prepped': total_skill_levels / 5000 + max(0, (total_skill_levels - 18000) / 1500),  # In the source code, this is when 99 = i
+            }
+        # elif entry_index == 5:  #Unimplemented as of 2.32 Gambit, just returns 0. Default case can handle it.
+        #     pass
+        elif entry_index == 6:  #Deathnote Pts
+            raw_pts = sum([account.enemy_worlds[world].total_mk for world in account.enemy_worlds]) + account.miniboss_deathnote['TotalMK']
+            account.caverns['MeasurementMultis'][clean_entry_name] = {
+                'Raw': raw_pts,
+                'PrettyRaw': f"{raw_pts:,}",
+                'Prepped': raw_pts / 125,  # In the source code, this is when 99 = i
+            }
+        elif entry_index == 7:  #Highest Dmg
+            raw_tasks = safe_loads(account.raw_data.get('TaskZZ0', []))
+            try:
+                raw_damage = raw_tasks[1][0]
+                raw_damage = float(raw_damage)
+            except ValueError:
+                logger.exception(f"Failed to cast Highest Damage of {raw_tasks[1][0]} from W2 Task. Defaulting to e20 idk")
+                raw_damage = 1e20
+            except IndexError:
+                logger.exception(f"JSON doesn't contain TaskZZ0[1][0] to retrieve Highest Damage from W2 Tasks. Defaulting to 1")
+                raw_damage = 1
+            account.caverns['MeasurementMultis'][clean_entry_name] = {
+                'Raw': raw_damage,
+                'PrettyRaw': notateNumber('Basic', raw_damage, 3),
+                'Prepped': safer_math_log(raw_damage, 'Lava') / 2,  # In the source code, this is when 99 = i
+            }
+        elif entry_index == 8:  #Slab Items
+            account.caverns['MeasurementMultis'][clean_entry_name] = {
+                'Raw': len(account.registered_slab),
+                'PrettyRaw': f"{len(account.registered_slab):,}",
+                'Prepped': len(account.registered_slab) / 150,  # In the source code, this is when 99 = i
+            }
+        elif entry_index == 9:  #Studies Done
+            account.caverns['MeasurementMultis'][clean_entry_name] = {
+                'Raw': account.caverns['TotalStudies'],
+                'PrettyRaw': f"{account.caverns['TotalStudies']:,}",
+                'Prepped': account.caverns['TotalStudies'] / 6,  # In the source code, this is when 99 = i
+            }
+        elif entry_index == 10:  #Golem Kills
+            account.caverns['MeasurementMultis'][clean_entry_name] = {
+                'Raw': account.caverns['Caverns']['The Temple']['Golems Killed'],
+                'PrettyRaw': f"{notateNumber('Match', account.caverns['Caverns']['The Temple']['Golems Killed'], 2, 'M')}",
+                'Prepped': max(0, safer_math_log(account.caverns['Caverns']['The Temple']['Golems Killed'], 'Lava') - 2),  # In the source code, this is when 99 = i
+            }
+        else:
+            #logger.exception(f"Unknown MeasurementMulti type: {clean_entry_name}")
+            account.caverns['MeasurementMultis'][clean_entry_name] = {
+                'Raw': 0,
+                'PrettyRaw': 'IDK Sorry',
+                'Prepped': 0,  # In the source code, this is when 99 = i
+            }
+
+        # Part 2: Calculate the Multi using one of two formulas depending on the Prepped value
+        try:
+            if 5 > account.caverns['MeasurementMultis'][clean_entry_name]['Prepped']:
+                account.caverns['MeasurementMultis'][clean_entry_name]['Multi'] = ValueToMulti(
+                    18 * account.caverns['MeasurementMultis'][clean_entry_name]['Prepped']
+                )
+            else:
+                account.caverns['MeasurementMultis'][clean_entry_name]['Multi'] = ValueToMulti(
+                    18 * account.caverns['MeasurementMultis'][clean_entry_name]['Prepped']
+                    + 8 * (account.caverns['MeasurementMultis'][clean_entry_name]['Prepped'] - 5)
+                )
+        except:
+            logger.exception(f"Failed to calculate {clean_entry_name}'s MeasurementMulti. Setting to 1.")
+            account.caverns['MeasurementMultis'][clean_entry_name]['Multi'] = 1
+        # logger.debug(f"{clean_entry_name} = {account.caverns['MeasurementMultis'][clean_entry_name]}")
+
+    # Part 3: Apply the multis to the measurements
+    for measurement_index, measurement_details in account.caverns['Measurements'].items():
+        try:
+            account.caverns['Measurements'][measurement_index]['Value'] *= account.caverns['MeasurementMultis'][measurement_details['ScalesWith']]['Multi']
+        except:
+            logger.warning(f"Couldn't apply {measurement_details['ScalesWith']} multi to Index{measurement_index}")
+            pass
+
+def _calculate_caverns_studies(account):
+    for study_index, study_details in account.caverns['Studies'].items():
+        match study_index:
+            case 3:
+                value_cap = 32
+                base_value = 12
+                total_value = min(value_cap, base_value + (study_details['Level'] * study_details['ScalingValue']))
+                max_level = ceil((value_cap - base_value) / study_details['ScalingValue'])
+                base_note = f"<br>12 base +{study_details['ScalingValue']} per level, capped at {value_cap}%"
+            case 9:
+                base_value = 50
+                total_value = base_value + (study_details['Level'] * study_details['ScalingValue'])
+                max_level = infinity_string
+                base_note = f"<br>{base_value} base +{study_details['ScalingValue']} per level"
+            case _:
+                total_value = study_details['Level'] * study_details['ScalingValue']
+                max_level = infinity_string
+                if '}' in study_details['Description']:
+                    base_note = f"<br>No base, +{ValueToMulti(study_details['ScalingValue']) - 1:.2f} per level"
+                else:
+                    base_note = f"<br>No base, +{study_details['ScalingValue']} per level"
+
+        account.caverns['Studies'][study_index]['Value'] = total_value
+        account.caverns['Studies'][study_index]['MaxLevel'] = max_level
+        try:
+            if '{' in study_details['Description']:
+                account.caverns['Studies'][study_index]['Description'] = study_details['Description'].replace(
+                    '{', f"{account.caverns['Studies'][study_index]['Value']}"
+                )
+            elif '}' in study_details['Description']:
+                account.caverns['Studies'][study_index]['Description'] = study_details['Description'].replace(
+                    '}', f"{ValueToMulti(account.caverns['Studies'][study_index]['Value'])}"
+                )
+            account.caverns['Studies'][study_index]['Description'] += base_note
+        except:
+            logger.exception(f"Unable to update Cavern Study {study_index}'s description: {account.caverns['Studies'][study_index]['Description']}")
 
 def _calculate_caverns_the_well(account):
     account.caverns['Caverns']['The Well']['BucketsUnlocked'] = 1 + sum(
@@ -973,6 +1131,25 @@ def _calculate_caverns_monuments(account):
                 #              f"{account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description']}")
     _calculate_caverns_monuments_bravery(account)
     _calculate_caverns_monuments_justice(account)
+
+def _calculate_caverns_motherlode_layers(account):
+    collectible_bonus = account.caverns['Collectibles']['Amethyst Heartstone']['Value']
+    account.caverns['MotherlodeResourceDiscount'] = ValueToMulti(
+        collectible_bonus
+        + (account.caverns['Studies'][1]['Value'] * account.caverns['Caverns']['Motherlode']['LayersDestroyed'])
+        + (account.caverns['Studies'][7]['Value'] * account.caverns['Caverns']['The Hive']['LayersDestroyed'])
+        + (account.caverns['Studies'][11]['Value'] * account.caverns['Caverns']['Evertree']['LayersDestroyed'])
+        # Trench not implemented as of v2.31
+        # + (account.caverns['Studies'][]['Value'] * account.caverns['Caverns']['The Trench']['LayersDestroyed'])
+    )
+    account.caverns['MotherlodeResourceDiscountAdvice'] = Advice(
+        label=f"Resource Divisor from Amethyst Heartstone Collectible + Bolaia Studies: {account.caverns['MotherlodeResourceDiscount']:.3f}",
+        picture_class='bolaia'
+    )
+
+    for cavern_name in ['Motherlode', 'The Hive', 'Evertree']:
+        base_requirement = ceil(200 * pow(2.2, 1 + account.caverns['Caverns'][cavern_name]['LayersDestroyed']))
+        account.caverns['Caverns'][cavern_name]['ResourcesRemaining'] = base_requirement / max(1, account.caverns['MotherlodeResourceDiscount'])
 
 def _calculate_caverns_monuments_bravery(account):
     monument_name = 'Bravery Monument'
@@ -1098,6 +1275,88 @@ def _calculate_caverns_the_harp(account):
     ]
     account.caverns['Caverns'][cavern_name]['ChordsUnlockedCount'] = len(account.caverns['Caverns'][cavern_name]['ChordsUnlocked'])
     account.caverns['Caverns'][cavern_name]['Max Chords'] = 2 + len(schematics_unlocking_harp_chords)  #C and D available by default
+
+def _calculate_caverns_jar_collectibles(account):
+    for collectible_name, collectible_details in account.caverns['Collectibles'].items():
+        try:
+            account.caverns['Collectibles'][collectible_name]['Value'] = (
+                collectible_details['Level'] * collectible_details['ScalingValue']
+            )
+            if '{' in collectible_details['Description']:
+                scaling_note = (
+                    f"<br>+{account.caverns['Collectibles'][collectible_name]['ScalingValue']}"
+                    f"{'%' if '%' in collectible_details['Description'] else ''} per level"
+                )
+                account.caverns['Collectibles'][collectible_name]['Description'] = collectible_details['Description'].replace(
+                    '{', f"{account.caverns['Collectibles'][collectible_name]['Value']}"
+                )
+
+            elif '}' in collectible_details['Description']:
+                scaling_note = f"<br>{ValueToMulti(account.caverns['Collectibles'][collectible_name]['ScalingValue']) - 1:.2f} per level"
+                account.caverns['Collectibles'][collectible_name]['Description'] = collectible_details['Description'].replace(
+                    '}', f"{ValueToMulti(account.caverns['Collectibles'][collectible_name]['Value'])}"
+                )
+            account.caverns['Collectibles'][collectible_name]['Description'] += scaling_note
+        except:
+            logger.exception(f"Unable to update description for Collectible: {collectible_name}")
+            continue  #Already defaulted to 0 during parsing
+
+def _calculate_caverns_gambit(account):
+    cavern_name = caverns_cavern_names[14]
+
+    #PTS Multi
+    account.caverns['Caverns'][cavern_name]['PtsMulti'] = ValueToMulti(
+        account.caverns['Measurements'][13]['Value']  # Measurement
+        + account.caverns['Studies'][13]['Value']  # + Gambit Study bonus
+        + (10 * account.caverns['Schematics']['The Sicilian']['Purchased'])  # + The Sicilian schematic
+    )
+
+    #Total PTS
+    account.caverns['Caverns'][cavern_name]['TotalPts'] = (
+        account.caverns['Caverns'][cavern_name]['BasePts']
+        * account.caverns['Caverns'][cavern_name]['PtsMulti']
+    )
+
+    #Bonuses
+    for bonus_index, bonus_details in account.caverns['Caverns'][cavern_name]['Bonuses'].items():
+        #Update Unlocked status
+        account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Unlocked'] = (
+            account.caverns['Caverns'][cavern_name]['TotalPts'] >= bonus_details['PtsRequired']
+        )
+
+        #Calculate Value
+        if bonus_index == 0:
+            account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Value'] = (
+                 max(1, ceil(
+                     safer_math_log(account.caverns['Caverns'][cavern_name]['TotalPts'], 2)
+                     - 8
+                     + (safer_math_log(account.caverns['Caverns'][cavern_name]['TotalPts'], 'Lava') - 1)
+                     ))
+            )
+        else:
+            if bonus_details['ScalesWithPts']:
+                account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Value'] = (
+                    bonus_details['ScalingValue'] * safer_math_log(account.caverns['Caverns'][cavern_name]['TotalPts'], 'Lava')
+                )
+            else:
+                account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Value'] = bonus_details['ScalingValue']
+
+        #Substitute Value into Description
+        if '{' in bonus_details['Name']:
+            if bonus_index == 0 or not bonus_details['ScalesWithPts']:
+                account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Name'] = bonus_details['Name'].replace(
+                    '{', f"{account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Value']}"
+                )
+            else:
+                #bonus_details['ScalesWithPts']
+                account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Name'] = bonus_details['Name'].replace(
+                    '{', f"{account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Value']:.2f}"
+                )
+
+        elif '}' in bonus_details['Name']:
+            account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Name'] = bonus_details['Name'].replace(
+                '}', f"{ValueToMulti(account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Value']):.3f}x"
+            )
 
 def _calculate_w6(account):
     _calculate_w6_farming(account)

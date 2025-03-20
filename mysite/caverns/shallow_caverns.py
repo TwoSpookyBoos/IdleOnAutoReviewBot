@@ -6,7 +6,7 @@ from flask import g as session_data
 from consts import (
     break_you_best,
     schematics_unlocking_buckets, sediment_names, max_sediments, getSedimentBarRequirement, getWellOpalTrade, getMotherlodeEfficiencyRequired,
-    getMotherlodeResourceRequired, getDenOpalRequirement, schematics_unlocking_amplifiers, getMonumentOpalChance, monument_layer_rewards,
+    getDenOpalRequirement, schematics_unlocking_amplifiers, getMonumentOpalChance, monument_layer_rewards,
     infinity_string
     # shallow_caverns_progressionTiers
 )
@@ -110,22 +110,22 @@ def getWellAdviceGroup(schematics) -> AdviceGroup:
         if sediment_index < max_sediments:  # There are lots of placeholders in sediments_owned, so stay within bounds of max_sediments
             target = getSedimentBarRequirement(sediment_index, sediment_levels[sediment_index])
             if target >= 1e9:
-                target = notateNumber('Basic', target, 2)
+                target_str = notateNumber('Basic', target, 2)
                 sedi_owned = notateNumber('Basic', sediment_value, 2)
             else:
-                target = f"{target:,.0f}"
+                target_str = f"{target:,.0f}"
                 sedi_owned = f"{sediment_value:,}"
             cavern_advice[s_stats].append(Advice(
                 label=(
                     f"{sediment_names[sediment_index]}: {sediment_levels[sediment_index]} expansions"
                     f"<br>{sedi_owned} owned"
-                    f"<br>{target} to expand"
+                    f"<br>{target_str} to expand"
                     if sediment_value >= 0 else
                     f"Clear the rock layer to discover {sediment_names[sediment_index]}!"
                 ),
                 picture_class=f"well-sediment-{sediment_index}",
                 resource='well-sediment-rock-layer' if sediment_value < 0 else '',
-                progression=0 if sediment_value < 0 else f"{100 * (sediment_value / getSedimentBarRequirement(sediment_index, sediment_levels[sediment_index])):.1f}",
+                progression=0 if sediment_value < 0 else f"{100 * (sediment_value / target):.1f}",
                 goal=100,
                 unit='%'
             ))
@@ -169,7 +169,8 @@ def getMotherlodeAdviceGroup(schematics):
               f"{notateNumber('Basic', getMotherlodeEfficiencyRequired(cavern['LayersDestroyed']), 1)}",
         picture_class=resource_skill
     ))
-    resource_required = getMotherlodeResourceRequired(cavern['LayersDestroyed'])
+    cavern_advice[l_stats].append(session_data.account.caverns['MotherlodeResourceDiscountAdvice'])
+    resource_required = session_data.account.caverns['Caverns'][cavern_name]['ResourcesRemaining']
     cavern_advice[l_stats].append(Advice(
         label=f"{resource_type} remaining to break Layer {cavern['LayersDestroyed'] + 1}: {notateNumber('Basic', resource_required - cavern['ResourcesCollected'], 1)}",
         picture_class=f'motherlode-{resource_type}',
@@ -315,7 +316,7 @@ def getBraveryAdviceGroup(schematics) -> AdviceGroup:
     ]
 
     cavern_advice[l_stats].insert(0, Advice(
-        label=f"Monument Hours: {cavern['Hours']:.0f}",
+        label=f"Monument Hours: {cavern['Hours']:,.0f}",
         picture_class='bravery-bonus-9'
     ))
 
@@ -412,13 +413,14 @@ def getBellAdviceGroup(schematics):
     cavern_advice[r_stats].insert(1, Advice(
         label=f"""Total Bonus levels: {total_bonus_levels}"""
               f"""<br>Avg per ring: {average_level:.4f}"""
-              f"""{f'<br>Under {bell_average}: Consider Renewing' if (
-                  schematics['Double Dinger Ringer']['Purchased']
-                  and schematics['Triple Tap Tinkle']['Purchased']
-                  and average_level_too_low
-                  and total_rings >= 100
-              ) else f'<br>Above {bell_average}: nice RNG 🙂' if not average_level_too_low else ''
-              }""",
+              # f"""{f'<br>Under {bell_average}: Consider Renewing' if (
+              #     schematics['Double Dinger Ringer']['Purchased']
+              #     and schematics['Triple Tap Tinkle']['Purchased']
+              #     and average_level_too_low
+              #     and total_rings >= 100
+              # ) else f'<br>Above {bell_average}: nice RNG 🙂' if not average_level_too_low else ''
+              # }"""
+        ,
         picture_class='bell-ring',
         completed=False,
         informational=True
@@ -511,7 +513,7 @@ def getShallowCavernsAdviceSection() -> AdviceSection:
         max_tier=max_tier,
         true_max_tier=true_max,
         header=f"The Shallow Caverns biome",  #f"Best Shallow Caverns tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
-        picture='Shallow_Caverns.png',
+        picture='customized/Shallow_Caverns.png',
         groups=shallow_caverns_AdviceGroupDict.values(),
         completed=None,
         unrated=True,

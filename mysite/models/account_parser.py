@@ -18,7 +18,7 @@ from consts import (
     stampsDict, stampTypes, bribesDict,
     forgeUpgradesDict,
     statuesDict, statueTypeList, statueCount,
-    vault_upgrades_list, vault_stack_types, vault_dont_scale,
+    vault_upgrades_list, vault_stack_types, vault_dont_scale, vault_section_indexes,
     # W2
     bubblesDict, max_IndexOfImplementedBubbles,
     vialsDict, max_IndexOfVials, getReadableVialNames, max_VialLevel,
@@ -31,7 +31,7 @@ from consts import (
     refineryDict, buildingsDict, saltLickList, atomsList, colliderStorageLimitList, shrinesList, prayersDict,
     equinoxBonusesDict, max_implemented_dreams, dreamsThatUnlockNewBonuses,
     printerAllIndexesBeingPrinted,
-    apocableMapIndexDict, apocAmountsList, apocNamesList,
+    apocableMapIndexDict, apocAmountsList, apocNamesList, dn_miniboss_names, dn_miniboss_skull_requirement_list, dnSkullValueList, getSkullNames,
     # W4
     riftRewardsDict,
     labJewelsDict, labBonusesDict, labChipsDict,
@@ -50,7 +50,9 @@ from consts import (
     caverns_villagers, caverns_conjuror_majiks, caverns_engineer_schematics, caverns_engineer_schematics_unlock_order, caverns_cavern_names,
     caverns_measurer_measurements, caverns_measurer_HI55, getCavernResourceImage, max_buckets, max_sediments, sediment_bars, getVillagerEXPRequired,
     monument_bonuses, bell_clean_improvements, bell_ring_bonuses, getBellExpRequired, getGrottoKills, lamp_wishes, key_cards, getWishCost,
-    schematics_unlocking_harp_chords, harp_chord_effects, max_harp_notes, lamp_world_wish_values, vault_section_indexes
+    schematics_unlocking_harp_chords, harp_chord_effects, max_harp_notes, lamp_world_wish_values, caverns_librarian_studies, max_cavern,
+    caverns_jar_max_rupies, caverns_jar_collectibles_count, caverns_jar_collectibles, caverns_jar_jar_types, caverns_jar_max_jar_types,
+    caverns_gambit_pts_bonuses, caverns_gambit_challenge_names, caverns_gambit_total_challenges, schematics_unlocking_gambit_challenges
 )
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
 from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert
@@ -1240,6 +1242,7 @@ def _parse_w3_deathnote(account):
     account.apocalypse_character_Index = _parse_w3_apocalypse_BBIndex(account)
     account.rift_meowed = _parse_w3_deathnote_rift_meowed(account)
     _parse_w3_deathnote_kills(account)
+    _parse_w3_deathnote_miniboss_kills(account)
 
 def _parse_w3_apocalypse_BBIndex(account):
     if len(account.bbCharactersIndexList) == 1:
@@ -1330,6 +1333,36 @@ def _parse_w3_deathnote_kills(account):
                         )
         # Sort them
         account.all_characters[barbCharacterIndex].sortApocByProgression()
+
+def _parse_w3_deathnote_miniboss_kills(account):
+    account.miniboss_deathnote = {
+        'Minis': {}
+    }
+
+    raw_ninja = safe_loads(account.raw_data.get('Ninja', []))
+    raw_mb_kills = raw_ninja[105] if len(raw_ninja) >= 106 else [0] * len(dn_miniboss_names)
+    for mb_index, mb_name in enumerate(dn_miniboss_names):
+        kill_count = raw_mb_kills[mb_index] if len(raw_mb_kills) >= mb_index+1 else 0
+        skull_number = 0
+        kills_to_next_skull = 0
+        percent_to_next_skull = 0.0
+        for requirement_index, skull_requirement in enumerate(dn_miniboss_skull_requirement_list):
+            if kill_count >= skull_requirement:
+                skull_number = requirement_index
+            elif kill_count < skull_requirement and kills_to_next_skull == 0:
+                kills_to_next_skull = skull_requirement - kill_count
+                percent_to_next_skull = 100 * (kills_to_next_skull / skull_requirement)
+        skull_mk_value = dnSkullValueList[skull_number] if len(dnSkullValueList) >= skull_number else 0
+        skull_name = getSkullNames(skull_mk_value)
+        account.miniboss_deathnote['Minis'][mb_name] = {
+            'Kills': kill_count,
+            'Skull Name': skull_name,
+            'Skull MK': skull_mk_value,
+            'Progress Percent': percent_to_next_skull
+        }
+    # Sum up all the MK value of the individual skulls
+    account.miniboss_deathnote['TotalMK'] = sum(mb_values['Skull MK'] for mb_values in account.miniboss_deathnote['Minis'].values())
+
 
 def _parse_w3_equinox_dreams(account):
     account.equinox_unlocked = account.achievements['Equinox Visitor']['Complete']
@@ -2056,6 +2089,7 @@ def _parse_w5_divinity(account):
 def _parse_caverns(account):
     account.caverns = {
         'Villagers': {},
+        'TotalOpalsInvested': 0,
         'Caverns': {},
         'CavernsUnlocked': 0,
         'Schematics': {},
@@ -2063,19 +2097,24 @@ def _parse_caverns(account):
         'Majiks': {},
         'TotalMajiks': 0,
         'Measurements': {},
+        'Studies': {},
+        'TotalStudies': 0,
+        'Collectibles': {}
     }
     raw_caverns_list: list[list] = safe_loads(account.raw_data.get('Holes', []))
     if not raw_caverns_list:
         logger.warning(f"Caverns data not present{', as expected' if account.version < 230 else ''}.")
-    while len(raw_caverns_list) < 24:
+    while len(raw_caverns_list) < 30:
         raw_caverns_list.append([0]*100)
     _parse_caverns_villagers(account, raw_caverns_list[1], raw_caverns_list[2], raw_caverns_list[3], raw_caverns_list[23])
     _parse_caverns_actual_caverns(account, raw_caverns_list[7])
     _parse_caverns_majiks(account, raw_caverns_list[4], raw_caverns_list[5], raw_caverns_list[6], raw_caverns_list[11])
     _parse_caverns_schematics(account, raw_caverns_list[13])
     _parse_caverns_measurements(account, raw_caverns_list[22])
+    _parse_caverns_studies(account, raw_caverns_list[26])
     _parse_caverns_biome1(account, raw_caverns_list)
     _parse_caverns_biome2(account, raw_caverns_list)
+    _parse_caverns_biome3(account, raw_caverns_list)
 
     # for key in account.caverns:
     #     logger.debug(f"{key}: {account.caverns[key]}")
@@ -2090,9 +2129,10 @@ def _parse_caverns_villagers(account, villager_levels, villager_exp, opals_inves
                 'Opals': opals_invested[villager_index],
                 'Title': f"{villager_data['Name']}, {villager_data['Role']}",
                 'VillagerNumber': villager_data['VillagerNumber'],
-                'LevelPercent': 100 * (float(villager_exp[villager_index]) / getVillagerEXPRequired(villager_index, villager_levels[villager_index])),
+                'LevelPercent': 100 * (float(villager_exp[villager_index]) / getVillagerEXPRequired(villager_index, villager_levels[villager_index], account.version)),
             }
             account.gemshop[f"Parallel Villagers {villager_data['Role']}"] = parallel_villagers[villager_index]
+            account.caverns['TotalOpalsInvested'] += account.caverns['Villagers'][villager_data['Name']]['Opals']
         except:
             account.caverns['Villagers'][villager_data['Name']] = {
                 'Unlocked': villager_data['Name'] == 'Polonai',
@@ -2175,24 +2215,37 @@ def _parse_caverns_schematics(account, raw_schematics_list):
         pass
     for schematic_index, schematic_details in enumerate(caverns_engineer_schematics):
         clean_name = schematic_details[0].replace("_", " ")
-        resource_type = getCavernResourceImage(schematic_details[2])
-        try:
-            account.caverns['Schematics'][clean_name] = {
-                'Purchased': raw_schematics_list[schematic_index] > 0,
-                'Image': f'engineer-schematic-{schematic_index}',
-                'Description': schematic_details[5].replace("_", " "),
-                'UnlockOrder': caverns_engineer_schematics_unlock_order.index(schematic_index) + 1,
-                'Resource': resource_type
-            }
-        except:
-            #logger.warning(f"Error processing schematic {clean_name} at index {schematic_index}")
-            account.caverns['Schematics'][clean_name] = {
-                'Purchased': False,
-                'Image': f'engineer-schematic-{schematic_index}',
-                'Description': schematic_details[5].replace("_", " "),
-                'UnlockOrder': caverns_engineer_schematics_unlock_order.index(schematic_index) + 1,
-                'Resource': resource_type
-            }
+        if clean_name == 'NameNameName':  #Placeholders added in v2.31 all share this name
+            continue
+        else:
+            resource_type = getCavernResourceImage(schematic_details[2])
+            try:
+                account.caverns['Schematics'][clean_name] = {
+                    'Purchased': raw_schematics_list[schematic_index] > 0,
+                    'Image': f'engineer-schematic-{schematic_index}',
+                    'Description': schematic_details[5].replace("_", " "),
+                    'UnlockOrder': caverns_engineer_schematics_unlock_order.index(schematic_index) + 1,
+                    'Resource': resource_type
+                }
+            except:
+                try:
+                    #logger.warning(f"Error processing schematic {clean_name} at index {schematic_index}")
+                    account.caverns['Schematics'][clean_name] = {
+                        'Purchased': False,
+                        'Image': f'engineer-schematic-{schematic_index}',
+                        'Description': schematic_details[5].replace("_", " "),
+                        'UnlockOrder': caverns_engineer_schematics_unlock_order.index(schematic_index) + 1,
+                        'Resource': resource_type
+                    }
+                except Exception as e:
+                    logger.warning(f"Error processing schematic {clean_name} at index {schematic_index}. Usually caused by HolesInfo[40] not being updated after new schematics were added!")
+                    account.caverns['Schematics'][clean_name] = {
+                        'Purchased': False,
+                        'Image': f'engineer-schematic-{schematic_index}',
+                        'Description': schematic_details[5].replace("_", " "),
+                        'UnlockOrder': 999,
+                        'Resource': resource_type
+                    }
 
 def _parse_caverns_measurements(account, raw_measurements_list):
     for measurement_index, measurement_details in enumerate(caverns_measurer_measurements):
@@ -2227,6 +2280,30 @@ def _parse_caverns_measurements(account, raw_measurements_list):
                 'MeasurementNumber': measurement_index + 1,
                 'TOT': tot,
                 'HI55': hi55_after_split
+            }
+
+def _parse_caverns_studies(account, raw_studies_list):
+    for study_index, study_details in caverns_librarian_studies.items():
+        try:
+            account.caverns['TotalStudies'] += raw_studies_list[study_index]
+            account.caverns['Studies'][study_index] = {
+                'Level': raw_studies_list[study_index],
+                'MaxLevel': 999,  #Fixed in account_calcs._calculate_caverns_studies()
+                'CavernNumber': study_index+1,
+                'CavernName': caverns_cavern_names.get(study_index+1, f'UnknownCavern{study_index+1}'),
+                'Description': study_details[0],
+                'ScalingValue': study_details[1],
+                'Value': 0  #Fixed in account_calcs._calculate_caverns_studies()
+            }
+        except:
+            account.caverns['Studies'][study_index] = {
+                'Level': 0,
+                'MaxLevel': 999,  #Fixed in account_calcs._calculate_caverns_studies()
+                'CavernNumber': study_index + 1,
+                'CavernName': caverns_cavern_names.get(study_index + 1, f'UnknownCavern{study_index + 1}'),
+                'Description': study_details[0],
+                'ScalingValue': study_details[1],
+                'Value': 0
             }
 
 def _parse_caverns_biome1(account, raw_caverns_list):
@@ -2553,6 +2630,209 @@ def _parse_caverns_justice_monument(account, raw_caverns_list):
                 'Value': 0,  # Calculated later in _calculate_caverns_monuments()
             }
 
+def _parse_caverns_biome3(account, raw_caverns_list):
+    _parse_caverns_the_jar(account, raw_caverns_list)
+    _parse_caverns_evertree(account, raw_caverns_list)
+    _parse_caverns_wisdom_monument(account, raw_caverns_list)
+    _parse_caverns_gambit(account, raw_caverns_list)
+    _parse_caverns_the_temple(account, raw_caverns_list)
+
+def _parse_caverns_the_jar(account, raw_caverns_list):
+    cavern_name = caverns_cavern_names[11]
+
+    #Rupies
+    try:
+        account.caverns['Caverns'][cavern_name]['RupiesOwned'] = [
+            safer_convert(entry, 0.00) for entry in raw_caverns_list[9][max_sediments + max_harp_notes:max_sediments + max_harp_notes + caverns_jar_max_rupies]]
+    except:
+        account.caverns['Caverns'][cavern_name]['RupiesOwned'] = [0] * caverns_jar_max_rupies
+    while len(account.caverns['Caverns'][cavern_name]['RupiesOwned']) < caverns_jar_max_rupies:
+        account.caverns['Caverns'][cavern_name]['RupiesOwned'].append(0)
+
+    #Jars
+    raw_jars_destroyed = [0] * caverns_jar_max_jar_types
+    for i in range(0, caverns_jar_max_jar_types):
+        try:
+            raw_jars_destroyed[i] = raw_caverns_list[11][40+i]
+        except:
+            continue
+    account.caverns['Caverns'][cavern_name]['Jars'] = {}
+    for jar_index, jar_name in enumerate(caverns_jar_jar_types):
+        try:
+            account.caverns['Caverns'][cavern_name]['Jars'][jar_index] = {
+                'Name': f'{jar_name} Jar',
+                'Image': f'jar-type-{jar_index}',
+                'Destroyed': raw_jars_destroyed[jar_index]
+            }
+        except:
+            account.caverns['Caverns'][cavern_name]['Jars'][jar_index] = {
+                'Name': f'{jar_name} Jar',
+                'Image': f'jar-type-{jar_index}',
+                'Destroyed': 0
+            }
+
+    #Collectible Levels
+    try:
+        account.caverns['Caverns'][cavern_name]['CollectiblesOwned'] = raw_caverns_list[24]
+    except:
+        account.caverns['Caverns'][cavern_name]['CollectiblesOwned'] = [0] * caverns_jar_collectibles_count
+    while len(account.caverns['Caverns'][cavern_name]['CollectiblesOwned']) < caverns_jar_collectibles_count:
+        account.caverns['Caverns'][cavern_name]['CollectiblesOwned'].append(0)
+
+    #Individual Collectibles
+    for collectible_index, collectible_details in enumerate(caverns_jar_collectibles):
+        clean_name = collectible_details[0].title().replace('_', ' ')
+        scaling_value = safer_convert(collectible_details[1], 0)
+        try:
+            account.caverns['Collectibles'][clean_name] = {
+                'Level': account.caverns['Caverns'][cavern_name]['CollectiblesOwned'][collectible_index],
+                'ScalingValue': scaling_value,
+                'Value': 0,
+                'Description': collectible_details[3].replace('_', ' '),
+                'Image': f"jar-collectible-{collectible_index}"
+            }
+        except:
+            account.caverns['Collectibles'][clean_name] = {
+                'Level': 0,
+                'ScalingValue': scaling_value,
+                'Value': 0,
+                'Description': collectible_details[3].replace('_', ' '),
+                'Image': f"jar-collectible-{collectible_index}"
+            }
+
+    # for collectible_name in account.caverns['Collectibles']:
+    #     if account.caverns['Collectibles'][collectible_name]['Level'] > 0:
+    #         logger.debug(f"{collectible_name}: {account.caverns['Collectibles'][collectible_name]}")
+
+def _parse_caverns_evertree(account, raw_caverns_list):
+    cavern_name = caverns_cavern_names[12]
+    motherlode_offset = 4
+    try:
+        account.caverns['Caverns'][cavern_name]['ResourcesCollected'] = safer_convert(raw_caverns_list[11][0 + motherlode_offset], 0)
+    except:
+        account.caverns['Caverns'][cavern_name]['ResourcesCollected'] = 0
+    try:
+        account.caverns['Caverns'][cavern_name]['LayersDestroyed'] = safer_convert(raw_caverns_list[11][1 + motherlode_offset], 0)
+    except:
+        account.caverns['Caverns'][cavern_name]['LayersDestroyed'] = 0
+
+def _parse_caverns_wisdom_monument(account, raw_caverns_list):
+    monument_name = caverns_cavern_names[13]
+    monument_index = 2
+
+    # Layer Data
+    try:
+        account.caverns['Caverns'][monument_name]['Hours'] = int(raw_caverns_list[14][0 + 2 * monument_index])
+    except:
+        account.caverns['Caverns'][monument_name]['Hours'] = 0
+    try:
+        account.caverns['Caverns'][monument_name]['LayersCleared'] = int(raw_caverns_list[14][1 + 2 * monument_index])
+    except:
+        account.caverns['Caverns'][monument_name]['LayersCleared'] = 0
+
+    # Setup Bonuses
+    account.caverns['Caverns'][monument_name]['Bonuses'] = {}
+    for bonus_index, bonus_details in monument_bonuses[monument_name].items():
+        try:
+            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index] = {
+                'Level': raw_caverns_list[15][bonus_index],
+                'Description': bonus_details['Description'],
+                'ScalingValue': bonus_details['ScalingValue'],
+                'ValueType': bonus_details['ValueType'],
+                'Image': bonus_details['Image'],
+                'Value': 0,  # Calculated later in _calculate_caverns_monuments()
+            }
+        except:
+            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index] = {
+                'Level': 0,
+                'Description': bonus_details['Description'],
+                'ScalingValue': bonus_details['ScalingValue'],
+                'ValueType': bonus_details['ValueType'],
+                'Image': bonus_details['Image'],
+                'Value': 0,  # Calculated later in _calculate_caverns_monuments()
+            }
+
+def _parse_caverns_gambit(account, raw_caverns_list):
+    cavern_name = caverns_cavern_names[14]
+
+    # Pts
+    account.caverns['Caverns'][cavern_name]['BasePts'] = 0
+    account.caverns['Caverns'][cavern_name]['PtsMulti'] = 1
+    account.caverns['Caverns'][cavern_name]['TotalPts'] = 0
+
+    # Challenges
+    account.caverns['Caverns'][cavern_name]['Challenges'] = {}
+    challenge_index_offset = 65  # Taken from  _customBlock_Holes2."GambitPts"
+    raw_challenge_times = []
+    for i in range(caverns_gambit_total_challenges):
+        try:
+            raw_challenge_times.append(raw_caverns_list[11][i + challenge_index_offset])
+        except:
+            logger.exception(f"Could not retrieve Caverns > Gambit > {caverns_gambit_challenge_names[i]} score")
+            raw_challenge_times.append(0)
+
+    for challenge_index, challenge_name in enumerate(caverns_gambit_challenge_names):
+        base_value = 100 if challenge_index == 0 else 200
+        base_pts = (
+            base_value * (
+                raw_challenge_times[challenge_index]  #1 point per second
+                + (3 * floor(raw_challenge_times[challenge_index] / 10))  #3 points per 10 seconds
+                + (10 * floor(raw_challenge_times[challenge_index] / 60))  #10 points per 60 seconds
+            )
+        )
+        account.caverns['Caverns'][cavern_name]['BasePts'] += base_pts
+        try:
+            unlocked = (
+                True if schematics_unlocking_gambit_challenges[challenge_index] is None else
+                account.caverns['Schematics'][schematics_unlocking_gambit_challenges[challenge_index]]['Purchased']
+            )
+        except:
+            unlocked = False
+        account.caverns['Caverns'][cavern_name]['Challenges'][challenge_name] = {
+            'Seconds': raw_challenge_times[challenge_index],
+            'TimeDisplay': f"{raw_challenge_times[challenge_index] // 60:.0f}min {raw_challenge_times[challenge_index] % 60:.1f}sec",
+            'BasePts': base_pts,
+            'Unlocked': unlocked,
+            'Image': 'engineer-schematic-78' if challenge_index == 0 else f'engineer-schematic-{88 + challenge_index}'
+        }
+
+    # Bonuses
+    account.caverns['Caverns'][cavern_name]['Bonuses'] = {}
+    for bonus_index, bonus_details in enumerate(caverns_gambit_pts_bonuses):
+        details_list = bonus_details.split('|')
+        clean_name = details_list[3].replace('_', ' ').replace('梦', '').replace('(TAP ME)', '').replace('而', 'x').strip().strip("'")
+        clean_description = details_list[2].replace('_', ' ').strip().strip("'")
+        if clean_description == 'no':
+            clean_description = ''
+        pts_required = 2e3 + 1e3 * (bonus_index + 1) * (1 + bonus_index / 5) * pow(1.26, bonus_index)
+        account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index] = {
+            'ScalingValue': safer_convert(details_list[0], 0),
+            'ScalesWithPts': safer_convert(details_list[1], False),
+            'Description': clean_description,
+            'Name': clean_name,
+            'PtsRequired': pts_required,
+            'Unlocked': False,  #Fixed later in account_calcs._calculate_caverns_gambit(),
+            'Image': f'gambit-bonus-{bonus_index}'
+        }
+
+def _parse_caverns_the_temple(account, raw_caverns_list):
+    cavern_name = caverns_cavern_names[15]
+    try:
+        account.caverns['Caverns'][cavern_name]['Torches Owned'] = safer_convert(raw_caverns_list[11][56], 0.0)
+    except:
+        account.caverns['Caverns'][cavern_name]['Torches Owned'] = 0.0
+    try:
+        account.caverns['Caverns'][cavern_name]['Illuminate'] = safer_convert(raw_caverns_list[11][57], 0)
+    except:
+        account.caverns['Caverns'][cavern_name]['Illuminate'] = 0
+    try:
+        account.caverns['Caverns'][cavern_name]['Amplify'] = safer_convert(raw_caverns_list[11][59], 0)
+    except:
+        account.caverns['Caverns'][cavern_name]['Amplify'] = 0
+    try:
+        account.caverns['Caverns'][cavern_name]['Golems Killed'] = safer_convert(raw_caverns_list[11][63], 0.0)
+    except:
+        account.caverns['Caverns'][cavern_name]['Golems Killed'] = 0.0
 
 def _parse_w6(account):
     _parse_w6_sneaking(account)
@@ -2916,8 +3196,8 @@ def _parse_w6_summoning_battles(account, rawBattles):
 def _parse_w6_summoning_battles_endless(account):
     account.summoning['Endless Bonuses'] = {}
     true_battle_index = 0
-    while true_battle_index < max(40, account.summoning['Battles']['Endless'] + 5):
-        image_index = (true_battle_index % 100) // 20
+    while true_battle_index < max(40, account.summoning['Battles']['Endless'] + 20):
+        image_index = min(4, true_battle_index // 20)
         endless_enemy_index = true_battle_index % 40
         this_battle = {
             'Defeated': true_battle_index < account.summoning['Battles']['Endless'],

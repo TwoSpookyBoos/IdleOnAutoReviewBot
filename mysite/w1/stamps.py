@@ -220,12 +220,6 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
         unit="%"
     ))
 
-    costReduction_Advices["Uncapped"].append(Advice(
-        label="{{ Jade Emporium|#sneaking }}: Ionized Sigils",
-        picture_class="ionized-sigils",
-        progression=int(session_data.account.sneaking['JadeEmporium']['Ionized Sigils']['Obtained']),
-        goal=1
-    ))
     if (session_data.account.alchemy_p2w.get('Sigils', {}).get('Envelope Pile', {}).get('PrechargeLevel', 0)
             > session_data.account.alchemy_p2w.get('Sigils', {}).get('Envelope Pile', {}).get('Level', 0)):
         envelope_pile_precharged = '(Precharged)'
@@ -236,6 +230,12 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
         picture_class="envelope-pile",
         progression=session_data.account.alchemy_p2w.get("Sigils", {}).get("Envelope Pile", {}).get("PrechargeLevel", 0),
         goal=3
+    ))
+    costReduction_Advices["Uncapped"].append(Advice(
+        label="{{ Jade Emporium|#sneaking }}: Ionized Sigils",
+        picture_class="ionized-sigils",
+        progression=int(session_data.account.sneaking['JadeEmporium']['Ionized Sigils']['Obtained']),
+        goal=1
     ))
     costReduction_Advices["Uncapped"].append(Advice(
         label=f"{{{{ Artifact|#sailing }}}}: Chilled Yarn increases sigil by {1 + session_data.account.sailing['Artifacts']['Chilled Yarn']['Level']}x",

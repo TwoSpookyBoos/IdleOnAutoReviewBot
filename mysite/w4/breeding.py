@@ -169,7 +169,9 @@ def getBreedabilityAdviceGroup():
         key=lambda pet: pet[1]['BreedabilityDays'],
         reverse=True
     )
+    total_7s = 0
     for pet in sorted_breedability:
+        total_7s += 1 if pet[1]['BreedabilityDays'] >= breedabilityDaysList[-4] else 0
         b_advices.append(Advice(
             label=f"{pet[0]}"
                   f"<br>Breedability Multi: {pet[1]['BreedabilityMulti']:.3f}x"
@@ -179,6 +181,13 @@ def getBreedabilityAdviceGroup():
             progression=f"{pet[1]['BreedabilityDays'] / breedabilityDaysList[-4]:.2%}",
             resource=pet[1]['BreedabilityHeart']
         ))
+    b_advices.insert(0, Advice(
+        label=f"Total Heart VII+ pets: {total_7s}/15",
+        picture_class='i-love-these-pets',
+        progression=int(session_data.account.achievements['I LOVE These Pets']['Complete']),
+        goal=1,
+        resource='breedability-heart-7'
+    ))
 
     for advice in b_advices:
         mark_advice_completed(advice)

@@ -367,6 +367,7 @@ stump-prop: $stump-prop,
 epic-santa-hat: $epic-santa-hat,
 deathbringer-hood-of-death: $deathbringer-hood-of-death,
 pink-beanie: $pink-beanie,
+true-crown: $true-crown,
 
 copper-helmet: $copper-helmet,
 iron-helmet: $iron-helmet,
@@ -1285,6 +1286,7 @@ boat-statue: $boat-statue,
 compost-statue: $compost-statue,
 stealth-statue: $stealth-statue,
 essence-statue: $essence-statue,
+villager-statue: $villager-statue,
 dragon-warrior-statue: $dragon-warrior-statue,
 
 // Anvil Tabs
@@ -1722,6 +1724,8 @@ biblio-stamp: $biblio-stamp,
 dna-stamp: $dna-stamp,
 refinery-stamp: $refinery-stamp,
 atomic-stamp: $atomic-stamp,
+cavern-resource-stamp: $cavern-resource-stamp,
+study-hall-stamp: $study-hall-stamp,
 
 // inventory bags
 
@@ -2083,6 +2087,7 @@ mega-rare-drop: $mega-rare-drop,
 secret-map: $secret-map,
 gem-note: $gem-note,
 worship-floppy-disc: $worship-floppy-disc,
+temple-torch: $temple-torch,
 );
 
 $id-map: map-merge($sections-map, $id-map);

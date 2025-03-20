@@ -561,6 +561,8 @@ StampC20: Biblio Stamp
 StampC21: DNA Stamp
 StampC22: Refinery Stamp
 StampC23: Atomic Stamp
+StampC24: Cavern Resource Stamp
+StampC25: Study Hall Stamp
 StoneWe: Easter Weapon Stone
 StoneWeb: Summer Weapon Stone
 StoneW1: Weapon Upgrade Stone I
@@ -1718,6 +1720,7 @@ Quest90: Blinding Lantern
 Quest91: Golden Gift
 Quest92: Giftmas Present
 Quest93: Worship Floppy Disc
+Quest94: Temple Torch
 EquipmentSmithingTabs2: Anvil Tab II
 EquipmentSmithingTabs3: Anvil Tab III
 EquipmentSmithingTabs4: Anvil Tab IV
@@ -1752,7 +1755,8 @@ EquipmentStatues25: Boat Statue
 EquipmentStatues26: Compost Statue
 EquipmentStatues27: Stealth Statue
 EquipmentStatues28: Essence Statue
-EquipmentStatues29: Dragon Warrior Statue
+EquipmentStatues29: Villager Statue
+EquipmentStatues30: Dragon Warrior Statue
 PureWater: Distilled Water
 PureWater2: Dense Water
 Island0: Garbage
@@ -1973,6 +1977,7 @@ EquipmentHats110: Yellow Beanie
 EquipmentHats111: Epic Santa Hat
 EquipmentHats112: Deathbringer Hood of Death
 EquipmentHats113: Pink Beanie
+EquipmentHats114: True Crown
 CardsA0: Green Mushroom Card
 CardsA1: Red Mushroom Card
 CardsA2: Frog Card
@@ -2123,6 +2128,7 @@ CardsH12: Crawler Card
 CardsH13: Tremor Wurm Card
 CardsH14: Magma Geode Card
 CardsH15: Gloomie Mushroom Card
+CardsH16: Ancient Golem Card
 CardsI1: Sprout Spirit Card
 CardsI2: Ricecake Card
 CardsI3: River Spirit Card
