@@ -8,7 +8,7 @@ from consts import (
     maxCharacters,
     gfood_codes,
     card_data,
-    gemShopDict,
+    gemShopDict, gem_shop_optlacc_dict,
     guildBonusesList, familyBonusesDict, achievementsList, allMeritsDict, starsignsDict,
     event_points_shop_dict,
     npc_tokens,
@@ -229,6 +229,7 @@ def _parse_general(account):
 
     _parse_class_unique_kill_stacks(account)
     _parse_general_gemshop(account)
+    _parse_general_gemshop_optlacc(account)
     _parse_family_bonuses(account)
     _parse_dungeon_upgrades(account)
     _parse_general_achievements(account)
@@ -252,6 +253,17 @@ def _parse_general_gemshop(account):
         except Exception as e:
             logger.warning(f"Gemshop Parse error with purchaseIndex {purchaseIndex}: {e}. Defaulting to 0")
             account.gemshop[purchaseName] = 0
+
+def _parse_general_gemshop_optlacc(account):
+    for purchase_name, optlacc_index in gem_shop_optlacc_dict.items():
+        try:
+            account.gemshop[purchase_name] = safer_convert(safer_get(account.raw_optlacc_dict, optlacc_index, 0), 0)
+        except Exception as e:
+            if max(account.raw_optlacc_dict.keys()) < optlacc_index:
+                logger.info(f"Error parsing {purchase_name} because optlacc_index {optlacc_index} not present in JSON. Defaulting to 0")
+            else:
+                logger.exception(f"Error parsing {purchase_name} at optlacc_index {optlacc_index}: Could not convert {account.raw_optlacc_dict.get(optlacc_index)} to int")
+                account.gemshop[purchase_name] = 0
 
 def _parse_general_quests(account):
     account.compiled_quests = {}

@@ -2602,7 +2602,11 @@ gemShopDict = {
     'Resource Boost': 2,
     'Conjuror Pts': 4,
     'Opal': 5
-    }  # Default 0s
+    }
+gem_shop_optlacc_dict = {
+    'Equinox Pingy': 320,
+    'Rupie Slug': 355
+}
 guildBonusesList = [
     "Guild Gifts", "Stat Runes", "Rucksack", "Power of Pow", "REM Fighting", "Make or Break",
     "Multi Tool", "Sleepy Skiller", "Coin Supercharger", "Bonus GP for small guilds", "Gold Charm", "Star Dazzle",
@@ -6518,14 +6522,14 @@ monument_layer_rewards = {
         monument_hours[7]: {'Description': '+2 Mental Health and Dismissals', 'Image': 'justice-currency-6'},
     },
     monument_names[2]: {
-        monument_hours[0]: {'Description': f'Star with # Attempts', 'Image': 'tbd'},
-        monument_hours[1]: {'Description': f'Get +2 Attempts per Board Clear', 'Image': 'tbd'},
+        monument_hours[0]: {'Description': f'Start with # Attempts', 'Image': 'wisdom-attempts'},
+        monument_hours[1]: {'Description': f'Get +2 Attempts per Board Clear', 'Image': 'wisdom-attempts'},
         monument_hours[2]: {'Description': f'1st attempt each Board reveals row', 'Image': 'tbd'},
-        monument_hours[3]: {'Description': f'Start with 4 Insta Matches per story', 'Image': 'tbd'},
-        monument_hours[4]: {'Description': f'+4 additional Starting Attempts', 'Image': 'tbd'},
+        monument_hours[3]: {'Description': f'Start with 4 Insta Matches per story', 'Image': 'wisdom-instamatch'},
+        monument_hours[4]: {'Description': f'+4 additional Starting Attempts', 'Image': 'wisdom-attempts'},
         monument_hours[5]: {'Description': f'4th attempt each Board reveals square', 'Image': 'tbd'},
-        monument_hours[6]: {'Description': f'Get +1 Attempts per Board Clear', 'Image': 'tbd'},
-        monument_hours[7]: {'Description': f'+5 additional Insta Matches', 'Image': 'tbd'},
+        monument_hours[6]: {'Description': f'Get +1 Attempts per Board Clear', 'Image': 'wisdom-attempts'},
+        monument_hours[7]: {'Description': f'+5 additional Insta Matches', 'Image': 'wisdom-instamatch'},
     },
 }
 monument_bonuses_clean_descriptions = [d.replace('|', ' ').replace('_', ' ') for d in HolesInfo[32]]
