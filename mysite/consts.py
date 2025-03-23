@@ -6524,10 +6524,10 @@ monument_layer_rewards = {
     monument_names[2]: {
         monument_hours[0]: {'Description': f'Start with # Attempts', 'Image': 'wisdom-attempts'},
         monument_hours[1]: {'Description': f'Get +2 Attempts per Board Clear', 'Image': 'wisdom-attempts'},
-        monument_hours[2]: {'Description': f'1st attempt each Board reveals row', 'Image': 'tbd'},
+        monument_hours[2]: {'Description': f'1st attempt each Board reveals row', 'Image': 'wisdom-row'},
         monument_hours[3]: {'Description': f'Start with 4 Insta Matches per story', 'Image': 'wisdom-instamatch'},
         monument_hours[4]: {'Description': f'+4 additional Starting Attempts', 'Image': 'wisdom-attempts'},
-        monument_hours[5]: {'Description': f'4th attempt each Board reveals square', 'Image': 'tbd'},
+        monument_hours[5]: {'Description': f'4th attempt each Board reveals square', 'Image': 'wisdom-square'},
         monument_hours[6]: {'Description': f'Get +1 Attempts per Board Clear', 'Image': 'wisdom-attempts'},
         monument_hours[7]: {'Description': f'+5 additional Insta Matches', 'Image': 'wisdom-instamatch'},
     },
