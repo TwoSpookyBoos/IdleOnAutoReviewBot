@@ -2684,10 +2684,13 @@ def _parse_caverns_the_jar(account, raw_caverns_list):
             }
 
     #Collectible Levels
-    try:
-        account.caverns['Caverns'][cavern_name]['CollectiblesOwned'] = raw_caverns_list[24]
-    except:
-        account.caverns['Caverns'][cavern_name]['CollectiblesOwned'] = [0] * caverns_jar_collectibles_count
+    account.caverns['Caverns'][cavern_name]['CollectiblesOwned'] = []
+    for entry in raw_caverns_list[24]:
+        try:
+            account.caverns['Caverns'][cavern_name]['CollectiblesOwned'].append(safer_convert(entry, 0))
+        except:
+            account.caverns['Caverns'][cavern_name]['CollectiblesOwned'] = 0
+    #Extend the levels to the expected length
     while len(account.caverns['Caverns'][cavern_name]['CollectiblesOwned']) < caverns_jar_collectibles_count:
         account.caverns['Caverns'][cavern_name]['CollectiblesOwned'].append(0)
 
