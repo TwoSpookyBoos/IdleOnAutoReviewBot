@@ -1993,7 +1993,8 @@ versions_patches = {
     242: "v2.29 Upgrade Vault 2",
     243: "v2.30 Companion Trading",
     248: "v2.31 Caverns Biome 3",
-    251: "v2.32 Gambit"
+    251: "v2.32 Gambit",
+    255: "v2.34 Wisdom Monument"
 }
 ignorable_labels: tuple = ('Weekly Ballot',)
 missableGStacksDict = {
