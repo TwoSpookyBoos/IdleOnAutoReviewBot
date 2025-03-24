@@ -46,7 +46,7 @@ def _calculate_caverns_majiks(account):
     }
     for majik_type, majiks in caverns_conjuror_majiks.items():
         for majik_index, majik_data in enumerate(majiks):
-            if majik_data['Name'] == 'Pocket Divinity' and account.doot_owned:
+            if majik_data['Name'] == 'Pocket Divinity' and account.companions['King Doot']:
                 #Replace linked Divinities with 15% all stat
                 account.caverns['Majiks'][majik_data['Name']]['Description'] = alt_pocket_div['Description']
                 account.caverns['Majiks'][majik_data['Name']]['Value'] = (
@@ -831,7 +831,7 @@ def _calculate_w4_lab_bonuses(account):
     account.labBonuses['No Bubble Left Behind']['Value'] = min(nblbMaxBubbleCount, account.labBonuses['No Bubble Left Behind']['Value'])
 
 def _calculate_w5(account):
-    account.divinity['AccountWideArctis'] = account.doot_owned or 'Arctis' in account.caverns['PocketDivinityLinks']
+    account.divinity['AccountWideArctis'] = account.companions['King Doot'] or 'Arctis' in account.caverns['PocketDivinityLinks']
     _calculate_w5_divinity_offering_costs(account)
 
 def _calculate_w5_divinity_offering_costs(account):
@@ -1649,11 +1649,11 @@ def _calculate_w3_equinox_max_levels(account):
 def _calculate_general_character_over_books(account):
     account.bonus_talents = {
         "Rift Slug": {
-            "Value": 25 * account.riftslug_owned,
+            "Value": 25 * account.companions['Rift Slug'],
             "Image": "rift-slug",
             "Label": f"Companion: Rift Slug: "
-                     f"+{25 * account.riftslug_owned}/25",
-            "Progression": 1 if account.riftslug_owned else 0,
+                     f"+{25 * account.companions['Rift Slug']}/25",
+            "Progression": 1 if account.companions['Rift Slug'] else 0,
             "Goal": 1
         },
         "ES Family": {

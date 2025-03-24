@@ -639,10 +639,10 @@ def getBuboAdviceGroup() -> AdviceGroup:
             5: "fifth",
             6: "sixth"
         }
-        cookin_roadkill_equipped = session_data.account.sheepie_owned or 'b7' in best_bubo.big_alch_bubbles
+        cookin_roadkill_equipped = session_data.account.companions['Sheepie'] or 'b7' in best_bubo.big_alch_bubbles
         bubo_advice[alch_talents].append(Advice(
             label=f"Level {session_data.account.alchemy_bubbles['Cookin Roadkill']['Level']} Cookin Roadkill big bubble equipped "
-                  f"{' (Thanks Sheepie!)' if session_data.account.sheepie_owned else ''}"
+                  f"{' (Thanks Sheepie!)' if session_data.account.companions['Sheepie'] else ''}"
                   f"<br>See {{{{ Bubbles|#bubbles}}}} for recommended levels",
             picture_class='cookin-roadkill',
             progression=int(cookin_roadkill_equipped),

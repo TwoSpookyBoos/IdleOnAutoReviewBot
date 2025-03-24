@@ -4009,6 +4009,13 @@ filter_never = [
     "Egg Capsule", "Gummy Bunny", "Goldegg Capsule",
     "Phone Box", "Spring Baggie", "Anniversary Box", "Falloween Treat", "2021 Giftmas Box",
 ]
+companions = [
+    # Batch 1
+    'King Doot', 'Rift Slug', 'Dedotated Ram', 'Crystal Custard', 'Sheepie', 'Molti', 'Bored Bean', 'Slime', 'Sandy Pot', 'Bloque', 'Frog',
+    # Batch 2
+    'Glunko Supreme', 'Ancient Golem', 'Samurai Guardian', 'Rift Jocund', 'Leek Spirit', 'Crystal Capybara', 'Biggole Mole', 'Gigafrog',
+    'Mashed Potato', 'Flying Wurm', 'Poison Froge', 'Quenchie', 'Green Mushroom'
+]
 
 def lavaFunc(funcType: str, level: int, x1: int | float, x2: int | float, roundResult=False):
     match funcType:

@@ -52,7 +52,7 @@ from consts import (
     monument_bonuses, bell_clean_improvements, bell_ring_bonuses, getBellExpRequired, getGrottoKills, lamp_wishes, key_cards, getWishCost,
     schematics_unlocking_harp_chords, harp_chord_effects, max_harp_notes, lamp_world_wish_values, caverns_librarian_studies, max_cavern,
     caverns_jar_max_rupies, caverns_jar_collectibles_count, caverns_jar_collectibles, caverns_jar_jar_types, caverns_jar_max_jar_types,
-    caverns_gambit_pts_bonuses, caverns_gambit_challenge_names, caverns_gambit_total_challenges, schematics_unlocking_gambit_challenges
+    caverns_gambit_pts_bonuses, caverns_gambit_challenge_names, caverns_gambit_total_challenges, schematics_unlocking_gambit_challenges, companions
 )
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
 from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert
@@ -112,6 +112,7 @@ def parse_account(account, run_type):
 
 def _parse_wave_1(account, run_type):
     _parse_switches(account)
+    _parse_companions(account)
     _parse_characters(account, run_type)
     _parse_general(account)
     _parse_w1(account)
@@ -135,47 +136,40 @@ def _parse_switches(account):
 
     account.maxSubgroupsPerGroup = 1 if g.overwhelmed else 3
 
-    # Companions
-    account.sheepie_owned = g.sheepie
-    account.doot_owned = g.doot
-    account.riftslug_owned = g.riftslug
-    # logger.debug(f"Switches alone: Doot={g.doot}, Slug={g.riftslug}, Sheepie={g.sheepie}")
-    if not all([account.doot_owned, account.sheepie_owned, account.riftslug_owned]):
-        # If the data comes from Toolbox, it'll be a dictionary called companion singular
-        raw_companion = account.raw_data.get('companion', None)
-        # If the data comes from Efficiency, it'll be a flat list of just companion ID: "companions": [7, 10, 4, 5, 9, 2, 3, 6]
-        raw_companions = account.raw_data.get('companions', None)
-        if raw_companion is not None:
-            if isinstance(raw_companion, dict):
-                for companionInfo in raw_companion.get('l', []):
-                    try:
-                        companionID = int(companionInfo.split(',')[0])
-                        if companionID == 0:
-                            account.doot_owned = True
-                            g.doot = True
-                        if companionID == 1:
-                            account.riftslug_owned = True
-                            g.riftslug = True
-                        if companionID == 4:
-                            account.sheepie_owned = True
-                            g.sheepie = True
-                    except:
-                        continue
-        elif raw_companions is not None:
-            # logger.debug(f"Efficiency Companions data found: {raw_companions}")
+def _parse_companions(account):
+    # Companions v2
+    account.companions = {}
+
+    # Read the player's data to capture all unique Companion IDs
+    simplified_companion_set = set()
+    # If the data comes from Toolbox, it'll be a dictionary called companion singular
+    raw_companion = account.raw_data.get('companion', None)
+    # If the data comes from Efficiency, it'll be a flat list of just companion ID: "companions": [7, 10, 4, 5, 9, 2, 3, 6]
+    raw_companions = account.raw_data.get('companions', None)
+    if raw_companion is not None:
+        for companionInfo in raw_companion.get('l', []):
             try:
-                account.doot_owned = g.doot or 0 in raw_companions
-                g.doot = account.doot_owned
-                account.riftslug_owned = g.riftslug or 1 in raw_companions
-                g.riftslug = account.riftslug_owned
-                account.sheepie_owned = g.sheepie or 4 in raw_companions
-                g.sheepie = account.sheepie_owned
+                companionID = int(companionInfo.split(',')[0])
+                simplified_companion_set.add(companionID)
             except:
-                logger.exception(f"Efficiency Companions parse error, raw_companions={raw_companions}")
-        else:
-            logger.debug(f"No companion data present in JSON. Relying only on Switches")
-    # logger.debug(f"Account model: Doot={account.doot_owned}, Slug={account.riftslug_owned}, Sheepie={account.sheepie_owned}")
-    # logger.debug(f"Switches after: Doot={g.doot}, Slug={g.riftslug}, Sheepie={g.sheepie}")
+                continue
+    elif raw_companions is not None:
+        for companionID in raw_companions:
+            simplified_companion_set.add(companionID)
+    else:
+        logger.debug(f"No companion data present in JSON. Relying only on Switches")
+
+    # Match the Companion IDs to their names
+    for c_index, c_name in enumerate(companions):
+        account.companions[c_name] = c_index in simplified_companion_set
+
+    # Account for the manual entries in the Switches
+    try:
+        account.companions['King Doot'] = account.companions['King Doot'] or g.doot
+        account.companions['Rift Slug'] = account.companions['Rift Slug'] or g.riftslug
+        account.companions['Sheepie'] = account.companions['Sheepie'] or g.sheepie
+    except:
+        pass
 
 def _parse_characters(account, run_type):
     character_count, character_names, character_classes, characterDict, perSkillDict = getCharacterDetails(
