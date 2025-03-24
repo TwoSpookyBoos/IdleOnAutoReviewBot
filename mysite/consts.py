@@ -4014,7 +4014,7 @@ companions = [
     'King Doot', 'Rift Slug', 'Dedotated Ram', 'Crystal Custard', 'Sheepie', 'Molti', 'Bored Bean', 'Slime', 'Sandy Pot', 'Bloque', 'Frog',
     # Batch 2
     'Glunko Supreme', 'Ancient Golem', 'Samurai Guardian', 'Rift Jocund', 'Leek Spirit', 'Crystal Capybara', 'Biggole Mole', 'Gigafrog',
-    'Mashed Potato', 'Flying Wurm', 'Poison Froge', 'Quenchie', 'Green Mushroom'
+    'Mashed Potato', 'Flying Worm', 'Poisonic Frog', 'Quenchie', 'Green Mushroom'
 ]
 
 def lavaFunc(funcType: str, level: int, x1: int | float, x2: int | float, roundResult=False):

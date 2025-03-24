@@ -1,7 +1,7 @@
 import math
 import time
 
-from consts import ValueToMulti
+from consts import ValueToMulti, infinity_string
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
@@ -42,21 +42,21 @@ def getBonusesAdviceGroup() -> AdviceGroup:
 
     return bb_ag
 
-
 def getBallotMultiAdviceGroup():
+    e_vr = session_data.account.equinox_bonuses['Voter Rights']
+    endless = session_data.account.summoning['Endless Bonuses']['% Ballot Bonus']
     voter_integrity = session_data.account.caverns['Majiks']['Voter Integrity']
     gvb = session_data.account.event_points_shop['Bonuses']['Gilded Vote Button']
     multis_advice = {
-        f"Total Multi: {session_data.account.event_points_shop['BonusMulti']:.2f}x": [
+        f"Total Multi: {session_data.account.ballot['BonusMulti']:.2f}x": [
             Advice(
-                label=f"{{{{ Equinox|#equinox}}}}: Voter Rights: {ValueToMulti(session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel']):.2f}"
-                      f"/1.{session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']}x to Weekly Ballot",
+                label=f"{{{{ Equinox|#equinox}}}}: Voter Rights: +{e_vr['CurrentLevel']}/{e_vr['FinalMaxLevel']}%",
                 picture_class="voter-rights",
-                progression=session_data.account.equinox_bonuses['Voter Rights']['CurrentLevel'],
-                goal=session_data.account.equinox_bonuses['Voter Rights']['FinalMaxLevel']
+                progression=e_vr['CurrentLevel'],
+                goal=e_vr['FinalMaxLevel']
             ),
             Advice(
-                label=f"Voter Integrity {{{{ Cavern Majik|#villagers }}}}: {voter_integrity['Description']}",
+                label=f"Voter Integrity {{{{ Majik|#villagers }}}}: +{voter_integrity['Description']}",
                 picture_class=f"{voter_integrity['MajikType']}-majik-{'un' if voter_integrity['Level'] == 0 else ''}purchased",
                 progression=voter_integrity['Level'],
                 goal=voter_integrity['MaxLevel']
@@ -65,6 +65,19 @@ def getBallotMultiAdviceGroup():
                 label=f"{{{{Event Shop|#event-shop}}}}: Gilded Vote Button: {gvb['Description']}",
                 picture_class=gvb['Image'],
                 progression=int(gvb['Owned']),
+                goal=1
+            ),
+            Advice(
+                label=f"Endless {{{{ Summoning|#summoning}}}}: +{endless}%",
+                picture_class='endless-summoning',
+                progression=session_data.account.summoning['Battles']['Endless'],
+                goal=infinity_string
+            ),
+            Advice(
+                label=f"Companions: Mashed Potato: +{5 * session_data.account.companions['Mashed Potato']}/5%"
+                      f"{'<br>Note: May be inaccurate. Not all data contains Companions!' if not session_data.account.companions['Mashed Potato'] else ''}",
+                picture_class='mashed-potato',
+                progression=int(session_data.account.companions['Mashed Potato']),
                 goal=1
             )
         ]
@@ -81,8 +94,6 @@ def getBallotMultiAdviceGroup():
         informational=True
     )
     return multis_ag
-
-
 
 def getBonus_BallotAdviceSection() -> AdviceSection:
     if session_data.account.highestWorldReached < 2:

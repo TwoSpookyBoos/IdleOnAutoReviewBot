@@ -196,7 +196,7 @@ def _calculate_w6_summoning_winner_bonuses(account):
     account.summoning['WinnerBonusesSummaryFull'] = [
         Advice(
             label=f"Winner Bonuses multi from Endless Summoning: {account.summoning['Endless Bonuses']['x Winner Bonuses']}/{infinity_string}",
-            picture_class='cyan-upgrade-13',
+            picture_class='endless-summoning',
             progression=account.summoning['Endless Bonuses']['x Winner Bonuses'],
             goal=infinity_string,
             completed=True
@@ -551,14 +551,18 @@ def _calculate_w2_postOffice(account):
     )
     
 def _calculate_w2_ballot(account):
-    account.event_points_shop['BonusMulti'] = ValueToMulti(
+    # + (n._customBlock_Summoning("WinBonus", 22, 0)
+    # + n._customBlock_Companions(19)))))
+    # Last verified as of v2.34
+    account.ballot['BonusMulti'] = ValueToMulti(
         account.equinox_bonuses['Voter Rights']['CurrentLevel']
         + account.caverns['Majiks']['Voter Integrity']['Value']
-        + account.summoning['Endless Bonuses']["% Ballot Bonus"]
+        + account.summoning['Endless Bonuses']['% Ballot Bonus']
         + (17 * account.event_points_shop['Bonuses']['Gilded Vote Button']['Owned'])
+        + (5 * account.companions['Mashed Potato'])
     )
     for buffIndex, buffValuesDict in account.ballot['Buffs'].items():
-        account.ballot['Buffs'][buffIndex]['Value'] *= account.event_points_shop['BonusMulti']
+        account.ballot['Buffs'][buffIndex]['Value'] *= account.ballot['BonusMulti']
         # Check for + or +x% replacements
         if "{" in buffValuesDict['Description']:
             account.ballot['Buffs'][buffIndex]['Description'] = buffValuesDict['Description'].replace("{", f"{account.ballot['Buffs'][buffIndex]['Value']:.3f}")
