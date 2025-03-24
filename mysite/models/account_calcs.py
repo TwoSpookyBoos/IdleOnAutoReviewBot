@@ -1331,7 +1331,7 @@ def _calculate_caverns_gambit(account):
         #Calculate Value
         if bonus_index == 0:
             account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Value'] = (
-                 max(1, ceil(
+                 max(1 if account.caverns['Caverns'][cavern_name]['TotalPts'] > 0 else 0, ceil(
                      safer_math_log(account.caverns['Caverns'][cavern_name]['TotalPts'], 2)
                      - 8
                      + (safer_math_log(account.caverns['Caverns'][cavern_name]['TotalPts'], 'Lava') - 1)

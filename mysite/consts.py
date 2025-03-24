@@ -1882,7 +1882,6 @@ farming_progressionTiers = {
 }
 
 
-
 ###UI CONSTS###
 #If you add a new switch here, you need to also add a default in \static\scripts\main.js:defaults
 switches = [
@@ -7739,6 +7738,13 @@ summoning_sanctuary_counts = [1]
 for multi in range(3, 16):  #(3, 16) produces length of 14
     summoning_sanctuary_counts.append(multi * summoning_sanctuary_counts[-1])
 #summoning_sanctuary_counts = [1, 3, 12, 60, 360, 2520, 20160, 181440, 1814400, 19958400, 239500800, 3113510400, 43589145600, 653837184000]
+#summoning_upgrades last pulled from SummonUPG in source code in v2.34 Wisdom
+summoning_upgrades = ["427 171 0 White_Essence_Champ 10 1.12 5 0 9999 -1 1 +{%_White_Essence_generated_per_hour_for_each_win_across_all_colours._@_Total_bonus:_+}%".split(" "), "374 158 0 Unit_Health 10 1.3 1 0 9999 0 1 Increases_the_HP_of_all_summoned_units_in_competition_by_+{".split(" "), "479 145 0 Familiar 100 10 1 0 10 0 0 Summons_a_slime_familiar_to_chill_in_your_sanctuary,_generating_10_Summoning_EXP_every_hour._@_Cost_resets_in_|".split(" "), "391 113 0 Unit_Damage 20 1.35 1 0 9999 1 1 Increases_the_DMG_of_all_summoned_units_in_competition_by_+{".split(" "), "389 59 0 Green_Summoning 4000 1.2 10 0 9999 3 1 Unlocks_the_Green_Summoning_Stone,_and_begins_generating_Green_Essence._@_Also,_+{%_Green_Essence_per_hour".split(" "), "449 80 0 Mana_Generation 40 1.35 2 0 9999 3 1 During_competition,_mana_generation_is_+{%_higher_than_normal.".split(" "), "536 126 0 Familiar_Merging 2500 1.2 1 0 1 9 0 3_Slime_Familiars_merge_into_a_Vrumbi_Familiar_which_gives_4x_Summoning_Exp._4_Vrumbies_then_merge_and_give_5x_exp._This_repeats_many_times.".split(" "), "499 58 0 Dodge_Roll 80 1.3 1 0 30 5 0 All_your_units_get_a_+{%_chance_to_dodge_damage_when_colliding_with_an_enemy".split(" "), "554 66 0 Multi-Number_Cards 7500 1.5 1 0 1 7 0 There's_a_chance_cards_can_played_multiple_times,_indicated_by_the_number_in_the_top-left_corner._These_cards_also_come_with_a_smaller_cost!".split(" "), "356 226 1 Vrumbi 10 7.5 5 0 10 4 0 7%_chance_to_draw_a_Vrumbi_during_competition._They_have_1.5x_SPD,_2.0x_DMG,_and_+{%_Dodge_Chance".split(" "), "301 209 1 Unit_Wellness 25 1.3 2 0 9999 9 1 Increases_the_HP_of_all_summoned_units_in_competition_by_+{".split(" "), "306 154 1 Green_Essence_Victor 50 1.12 1 0 9999 10 1 +{%_Green_Essence_generated_per_hour_for_each_Green_circuit_win._@_Total_bonus:_+}%".split(" "), "252 137 1 Powerful_Units 70 1.35 2 0 9999 11 1 Increases_the_DMG_of_all_summoned_units_in_competition_by_+{".split(" "), "274 86 1 Yellow_Summoning 15000 1.2 10 0 9999 12 1 Unlocks_the_Yellow_Summoning_Stone,_and_begins_generating_Yellow_Essence._@_Also,_+{%_Yellow_Essence_per_hour".split(" "), "200 152 1 Mana_Overflow 4000 1.5 1 0 1 12 0 During_competition,_when_your_mana_pool_is_full,_expand_max_mana_by_1.5x_and_boost_mana_generation_by_+15%".split(" "), "215 94 1 Spiked_Placement 250 1.4 4 0 9999 12 1 When_summoning_any_unit,_deal_{_damage_to_all_enemies_within_100_pixels_of_where_you_click..._You_don't_have_to_click_in_your_spawn!".split(" "), "169 62 1 Starting_Mana_frfr 750 1.6 1 0 9999 15 1 Start_each_competition_with_+{_more_mana".split(" "), "509 201 2 Bloomy 20 25 5 0 10 13 0 4%_chance_to_draw_a_Bloomy_during_competition._They_sit_in_the_backline_and_give_+{%_Mana_Generation_while_alive.".split(" "), "566 188 2 Yellow_Essence_Winnin' 50 1.12 5 0 9999 17 1 +{%_Yellow_Essence_generated_per_hour_for_each_Yellow_circuit_win._@_Total_bonus:_+}%".split(" "), "622 159 2 Luck_of_the_Draw 130 3 2 0 10 18 0 All_special_units_are_>x_more_likely_to_be_drawn_instead_of_slime.".split(" "), "607 106 2 Unit_Constitution 250 1.3 5 0 9999 19 1 Increases_the_HP_of_all_summoned_units_in_competition_by_+{%".split(" "), "661 70 2 Stronger_Units 525 1.35 4 0 9999 20 1 Increases_the_DMG_of_all_summoned_units_in_competition_by_+{".split(" "), "714 89 2 Slime_Cellsplit 900 1.15 1 0 30 21 0 When_spawning_any_unit_during_competition,_+{%_chance_to_also_spawn_an_exact_duplicate,_free_of_charge!".split(" "), "747 137 2 Blue_Summoning 50000 1.2 10 0 9999 22 1 Unlocks_the_Blue_Summoning_Stone,_and_begins_generating_Blue_Essence._@_Also,_+{%_Blue_Essence_per_hour".split(" "), "769 78 2 Re-Draw 2000 5 1 0 3 22 1 Unlocks_the_Re-Draw_button,_allowing_you_to_instantly_redraw_all_your_cards_for_a_cost..._but_you_get_the_first_{_for_free!".split(" "), "826 88 2 Another_Slot 10000 1.5 1 0 1 24 0 Adds_+1_Card_Slot,_letting_you_hold_more_cards_at_once!".split(" "), "367 295 3 Tonka 30 1.85 10 0 20 23 0 5%_chance_to_draw_a_Tonka_during_competition._They_have_0.75x_SPD,_0.75x_DMG,_and_8.0x_HP._Your_upgrades_here_boost_its_HP_by_a_further_+{%.".split(" "), "312 285 3 Blue_Essence_Ballin' 70 1.12 5 0 9999 26 1 +{%_Blue_Essence_generated_per_hour_for_each_Blue_circuit_win._@_Total_bonus:_+}%".split(" "), "258 300 3 Slime_Mitosis 200 1.5 1 0 30 27 0 When_spawning_any_unit_during_competition,_+{%_chance_to_also_spawn_an_exact_duplicate,_free_of_charge!".split(" "), "207 275 3 Manaranarr 450 1.5 2 0 9999 28 1 During_competition,_mana_generation_is_+{%_higher_than_normal.".split(" "), "220 224 3 Blue_Knowledge 750 1.15 1 0 9999 29 1 +{%_Blue_Essence_generation_per_Summoning_LV_you_have._@_Total_bonus:_+}%".split(" "), "168 214 3 Beefier_Units 1500 1.35 6 0 9999 30 1 Increases_the_DMG_of_all_summoned_units_in_competition_by_+{".split(" "), "117 183 3 Jeweled_Cards 6000 170 6 0 3 31 1 {%_chance_to_draw_a_Jeweled_variant_of_any_card,_which_costs_2x_Mana_but_spawns_4x_Units!".split(" "), "62 208 3 Purple_Summoning 250000 1.2 10 0 9999 32 1 Unlocks_the_Purple_Summoning_Stone,_and_begins_generating_Purple_Essence._@_Also,_+{%_Purple_Essence_per_hour".split(" "), "78 129 3 Another_Slot 15000 1.5 1 0 1 32 0 Adds_+1_Card_Slot!_Or_as_an_AI_might_say,_this_upgrade_further_substantiates_the_incremental_improvement_to_the_quantity_of_cards_you_hold_by_1".split(" "), "58 77 3 Unit_Ache_Pea 5000 1.3 9 0 9999 34 1 Increases_the_HP_of_all_summoned_units_in_competition_by_+{".split(" "), "530 263 4 Regalis 50 1.7 1 0 30 33 0 3%_chance_to_draw_a_Regalis_during_competition._They_spawn_a_Slime_Unit_every_1_sec._Upgrading_this_boosts_slime_unit_spawn_rate_by_+{%".split(" "), "588 238 4 Unit_Hitpoints 100 1.25 13 0 9999 36 1 Increases_the_HP_of_all_summoned_units_in_competition_by_+{".split(" "), "644 228 4 Purp_Essence_Pumpin' 250 1.12 5 0 9999 37 1 +{%_Purple_Essence_generated_per_hour_for_each_Purple_circuit_win._@_Total_bonus:_+}%".split(" "), "693 256 4 Familiar_Skipping 600 1.25 1 0 100 38 0 When_summoning_a_Slime_Familiar,_there's_a_1_in_8_to_get_a_Vrumbi_instead_of_Slime,_and_1_in_50_to_get_a_Bloomy._Upgrading_this_boosts_this_chance_by_+{%".split(" "), "747 262 4 Purple_Knowledge 1000 1.15 1 0 9999 39 1 +{%_Purple_Essence_generation_per_Summoning_LV_you_have._@_Total_bonus:_+}%".split(" "), "705 207 4 Final_Card 2000 2500 1 0 3 38 1 If_you_play_every_card_in_your_hand,_get_+{%_Mana_Regen_per_card_played._Playing_Multi-Number_cards_counts_multiple_times_for_this!".split(" "), "764 204 4 Mana_Dividends 4500 1.5 2 0 9999 41 1 During_competition,_mana_generation_is_+{%_higher_than_normal.".split(" "), "821 165 4 Brutal_Units 9000 1.25 5 0 9999 42 1 Increases_the_DMG_of_all_summoned_units_in_competition_by_+{%".split(" "), "875 186 4 Red_Summoning 1000000 1.2 10 0 9999 43 1 Unlocks_the_Red_Summoning_Stone,_and_begins_generating_Red_Essence._@_Also,_+{%_Red_Essence_per_hour".split(" "), "404 353 5 Sparkie 75 1.75 5 0 30 44 0 5%_chance_to_draw_a_Sparkie_during_competition._They_have_3.0X_DMG_and_explode_on_death._Your_upgrades_here_boost_it's_DMG_by_a_further_+{%.".split(" "), "349 391 5 Red_Essence_Ragin' 200 1.15 5 0 9999 45 1 +{%_Red_Essence_generated_per_hour_for_each_Red_circuit_win._@_Total_bonus:_+}%".split(" "), "293 362 5 Seeing_Red 750 1.8 1 0 10 46 1 When_an_enemy_crosses_your_line_and_damages_you,_all_units_get_{%_DMG_for_the_rest_of_the_fight._This_stacks_every_time_an_enemy_crosses_your_line.".split(" "), "230 370 5 Slime_Duplication 2000 1.5 1 0 40 47 0 When_spawning_any_unit_during_competition,_+{%_chance_to_also_spawn_an_exact_duplicate,_free_of_charge!".split(" "), "164 377 5 Cost_Crashing 4000 1.25 1 0 9999 48 1 All_Summoning_upgrades_cost_}%_less_Essence.".split(" "), "146 322 5 Unit_Blood 8000 1.4 10 0 9999 49 1 Increases_the_HP_of_all_summoned_units_in_competition_by_a_brand_new_multiplier_of_+{%".split(" "), "100 276 5 Merciless_Units 15000 1.41 8 0 9999 50 1 Increases_the_DMG_of_all_summoned_units_in_competition_by_a_brand_new_multiplier_of_+{%".split(" "), "48 302 5 Red_Knowledge 30000 1.52 1 0 9999 51 1 +{%_Red_Essence_generation_per_Summoning_LV_you_have._@_Total_bonus:_+}%".split(" "), "108 391 5 Cyan_Summoning 3000000 1.21 10 0 9999 49 1 Unlocks_the_Cyan_Summoning_Stone,_and_begins_generating_Cyan_Essence._@_Also,_+{%_Cyan_Essence_per_hour".split(" "), "477 374 6 Cyan_Essence_King 150 1.15 5 0 9999 69 1 +{%_Cyan_Essence_generated_per_hour_for_each_Cyan_circuit_win._@_Total_bonus:_+}%".split(" "), "534 384 6 I_Frames 400 1.5 1 0 30 54 0 All_your_units_get_a_+{%_chance_to_dodge_damage_when_colliding_with_an_enemy".split(" "), "598 390 6 Units_of_Destruction 2000 1.43 10 0 9999 55 1 Increases_the_DMG_of_all_summoned_units_in_competition_by_+{%".split(" "), "574 322 6 Cost_Deflation 1200 1.21 2 0 9999 69 1 All_Summoning_upgrades_cost_}%_less_Essence.".split(" "), "630 339 6 Cyan_Knowledge 5000 1.55 1 0 9999 57 1 +{%_Cyan_Essence_generation_per_Summoning_LV_you_have._@_Total_bonus:_+}%".split(" "), "683 373 6 Undying_Units 10000 1.41 14 0 9999 58 1 Increases_the_HP_of_all_summoned_units_in_competition_by_+{%".split(" "), "739 385 6 DMG_Laundering 20000 1.79 1 0 9999 59 1 Boosts_the_DMG_of_all_summoned_units_by_+{%_for_every_100_total_summoning_upgrades_purchased._@_Total_bonus:_+}%".split(" "), "795 394 6 HP_Laundering 50000 1.78 1 0 9999 60 1 Boosts_the_HP_of_all_summoned_units_by_+{%_for_every_100_total_summoning_upgrades_purchased._@_Total_bonus:_+}%".split(" "), "736 320 6 Infinite_Essence 100000 1.35 5 0 9999 70 1 The_generation_of_all_essence_colours_is_increased_by_+{%_for_every_Endless_Summoning_victory_you_have._@_Total_bonus:_+}%".split(" "), "792 312 6 Infinite_Health 300000 1.38 2 0 9999 62 1 The_HP_of_all_summoned_units_is_increased_by_+{%_for_every_Endless_Summoning_victory_you_have._@_Total_bonus:_+}%".split(" "), "834 266 6 Infinite_Damage 600000 1.41 2 0 9999 63 1 The_DMG_of_all_summoned_units_is_increased_by_+{%_for_every_Endless_Summoning_victory_you_have._@_Total_bonus:_+}%".split(" "), "340 76 0 White_Knowledge 1500 1.15 1 0 9999 4 1 +{%_White_Essence_generation_per_Summoning_LV_you_have._@_Total_bonus:_+}%".split(" "), "148 109 1 Green_Knowledge 1200 1.15 1 0 9999 16 1 +{%_Green_Essence_generation_per_Summoning_LV_you_have._@_Total_bonus:_+}%".split(" "), "678 153 2 Yellow_Knowledge 300 1.15 1 0 9999 19 1 +{%_Yellow_Essence_generation_per_Summoning_LV_you_have._@_Total_bonus:_+}%".split(" "), "874 122 2 Sharpened_Spikes 12000 1.65 1 0 20 25 1 Spike_damage_is_increased_by_{%_of_your_base_unit_damage._@_Total_Bonus_Spike_DMG:_+}".split(" "), "514 327 6 Guardio 100 3.5 8 0 30 53 0 4%_chance_to_draw_a_Guardio!_They_sit_in_midfield,_do_0_DMG,_have_12x_HP,_and_aren't_knocked_back._Your_upgrades_here_boost_its_HP_by_a_further_+{%.".split(" "), "680 315 6 Endless_Summoning 2500 1.55 1 0 1 58 0 Unlocks_the_Endless_Summoning_feature,_accessed_in_the_Top_Right_when_selecting_an_opponent!_Go_to_the_Summoner's_Table,_you_can't_miss_it!".split(" ")]
+max_summoning_upgrades = len(summoning_upgrades)
+summoning_doubler_recommendations = [
+    'Seeing Red', 'Sharpened Spikes', 'Final Card', 'Jeweled Cards', 'Brutal Units', 'DMG Laundering', 'Infinite Damage',
+    'Mana Generation', 'Manaranarr', 'Mana Dividends', 'Starting Mana frfr', 'Beefier Units', 'Stronger Units', 'Infinite Essence'
+]
 # Maps to the RewardID, 1 indexed because Lava
 summoningRewards = [
     "Unknown",
@@ -7760,9 +7766,10 @@ summoning_rewards_that_dont_multiply_base_value = [
     summoningRewards[25],  #Equinox Levels
     summoningRewards[32],  #Winner Bonuses
 ]
-# Plenty of unknown values. HP, damage, speed, reward size, etc seem to require calculation 
+# Plenty of unknown values. HP, damage, speed, reward size, etc seem to require calculation
+summoning_match_colors = ['White', 'Green', 'Yellow', 'Blue', 'Purple', 'Red', 'Cyan']
 summoningDict = {
-    "White": {
+    summoning_match_colors[0]: {
         0: {
             "EnemyID": "Pet1", "Value2": 29, "Value3": 24, "Value4": 12, "OpponentName": "Pablo and his Plump Piggies",
             "RewardID": summoningRewards[1], "Value8": 0, "Image": "piggo", "RewardQTY": 8,
@@ -7800,7 +7807,7 @@ summoningDict = {
             "RewardID": summoningRewards[3], "Value8": 40, "Image": "hedgehog", "RewardQTY": 4,
         },
     },
-    "Green": {
+    summoning_match_colors[1]: {
         0: {
             "EnemyID": "mushG", "Value2": 26, "Value3": 41, "Value4": 8, "OpponentName": "Jonesy and his Lil Mushies",
             "RewardID": summoningRewards[1], "Value8": 4, "Image": "green-mushroom", "RewardQTY": 15,
@@ -7862,7 +7869,7 @@ summoningDict = {
             "RewardID": summoningRewards[1], "Value8": 50, "Image": "wood-mushroom", "RewardQTY": 19,
         },
     },
-    "Yellow": {
+    summoning_match_colors[2]: {
         0: {
             "EnemyID": "jarSand", "Value2": 31, "Value3": 20, "Value4": 12, "OpponentName": "Karen and her Pots",
             "RewardID": summoningRewards[9], "Value8": 9, "Image": "sandy-pot", "RewardQTY": 5,
@@ -7908,7 +7915,7 @@ summoningDict = {
             "RewardID": summoningRewards[1], "Value8": 60, "Image": "snelbie", "RewardQTY": 25,
         },
     },
-    "Blue": {
+    summoning_match_colors[3]: {
         0: {
             "EnemyID": "sheep", "Value2": 32, "Value3": 31, "Value4": 14, "OpponentName": "Paulie and his Sheepie Herd",
             "RewardID": summoningRewards[12], "Value8": 20, "Image": "sheepie", "RewardQTY": 1,
@@ -7966,7 +7973,7 @@ summoningDict = {
             "RewardID": summoningRewards[11], "Value8": 74, "Image": "bloodbone", "RewardQTY": 15,
         },
     },
-    "Purple": {
+    summoning_match_colors[4]: {
         0: {
             "EnemyID": "mushP", "Value2": 33, "Value3": 32, "Value4": 16, "OpponentName": "ProXD and his Mushrooms of Mischief",
             "RewardID": summoningRewards[16], "Value8": 33, "Image": "purp-mushroom", "RewardQTY": 50,
@@ -8021,7 +8028,7 @@ summoningDict = {
         },
 
     },
-    "Red": {
+    summoning_match_colors[5]: {
         0: {
             "EnemyID": "w5a1", "Value2": 24, "Value3": 20, "Value4": 10, "OpponentName": "Jawz and his Hot Smokin Suggmas",
             "RewardID": summoningRewards[17], "Value8": 44, "Image": "suggma", "RewardQTY": 30,
@@ -8075,7 +8082,7 @@ summoningDict = {
             "RewardID": summoningRewards[10], "Value8": 84, "Image": "tremor-wurm", "RewardQTY": 10,
         },
     },
-    "Cyan": {
+    summoning_match_colors[6]: {
         0: {
             "EnemyID": "w6a1", "Value2": 22, "Value3": 25, "Value4": 16, "OpponentName": "Spiffy Jr and their Whelming Liquids",
             "RewardID": summoningRewards[19], "Value8": 58, "Image": "sprout-spirit", "RewardQTY": 3,
@@ -8178,19 +8185,8 @@ summoning_endlessDict = {
     39: {"RewardID": summoningRewards[32], "RewardQTY": 3},
 }
 
-summoningBattleCountsDict = {
-    k: len(v)
-    for k, v in summoningDict.items()
-    # len(summoningDict["White"]),
-    # len(summoningDict["Green"]),
-    # len(summoningDict["Yellow"]),
-    # len(summoningDict["Blue"]),
-    # len(summoningDict["Purple"]),
-    # len(summoningDict["Red"]),
-    # len(summoningDict["Cyan"]),
-}
-summoningBattleCountsDict["Normal"] = sum(summoningBattleCountsDict.values())
-max_summoning_upgrades = 70  #Last verified as of 2.22 The Fixening
+summoningBattleCountsDict = {k: len(v) for k, v in summoningDict.items()}
+summoningBattleCountsDict['Normal'] = sum(summoningBattleCountsDict.values())
 
 ###Master Classes###
 # Last pulled from GrimoireUpg function in v2.26
