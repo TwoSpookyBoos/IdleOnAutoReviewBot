@@ -292,10 +292,10 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     ballot_multi = ValueToMulti(session_data.account.ballot['Buffs'][11]['Value'])
     ballot_multi_active = max(1, ballot_multi * ballot_active)
 
-    lab_multi_aw = 2 if session_data.account.doot_owned else 1
+    lab_multi_aw = 2 if session_data.account.companions['King Doot'] else 1
     lab_multi_cs = 2 if session_data.account.labBonuses['Wired In']['Enabled'] else 1
 
-    harriep_multi_aw = 3 if session_data.account.doot_owned else 1
+    harriep_multi_aw = 3 if session_data.account.companions['King Doot'] else 1
     harriep_multi_cs = 3 if session_data.account.divinity['Divinities'][4]['Unlocked'] else 1
 
     aw_multi = 1 * sm_multi * gr_multi * kotr_multi * charm_multi_active * ballot_multi_active * lab_multi_aw * harriep_multi_aw * supreme_wiring_multi
@@ -309,21 +309,21 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     }
 
     # If Doot is not owned, these are Character Specific. Otherwise, they are account-wide
-    po_AdviceDict[f"{cs_label if not session_data.account.doot_owned else aw_label}"].append(Advice(
-        label=f"Lab Bonus: Wired In: {'2x (Thanks Doot!)' if session_data.account.doot_owned else '2x if connected to Lab/Arctis'}",
+    po_AdviceDict[f"{cs_label if not session_data.account.companions['King Doot'] else aw_label}"].append(Advice(
+        label=f"Lab Bonus: Wired In: {'2x (Thanks Doot!)' if session_data.account.companions['King Doot'] else '2x if connected to Lab/Arctis'}",
         picture_class='wired-in',
-        progression=lab_multi_aw if session_data.account.doot_owned else '',
+        progression=lab_multi_aw if session_data.account.companions['King Doot'] else '',
         goal=2,
         unit="x",
-        completed=session_data.account.doot_owned
+        completed=session_data.account.companions['King Doot']
     ))
-    po_AdviceDict[f"{cs_label if not session_data.account.doot_owned else aw_label}"].append(Advice(
-        label=f"{{{{ Divinity|#divinity }}}}: Harriep Major Link bonus: {'3x (Thanks Doot!)' if session_data.account.doot_owned else '3x if linked'}",
+    po_AdviceDict[f"{cs_label if not session_data.account.companions['King Doot'] else aw_label}"].append(Advice(
+        label=f"{{{{ Divinity|#divinity }}}}: Harriep Major Link bonus: {'3x (Thanks Doot!)' if session_data.account.companions['King Doot'] else '3x if linked'}",
         picture_class='harriep',
-        progression=harriep_multi_aw if session_data.account.doot_owned else '',
+        progression=harriep_multi_aw if session_data.account.companions['King Doot'] else '',
         goal=3,
         unit="x",
-        completed=session_data.account.doot_owned
+        completed=session_data.account.companions['King Doot']
     ))
 
     # Account Wide
@@ -429,7 +429,7 @@ def getProgressionTiersAdviceGroup():
         #    Check if player's best sample of each material is less than tierRequirement
         #        Add failed requirements to failedMaterialsDict
         for materialName, materialNumber in tierRequirements['Materials'].items():
-            finalMaterialNumber = materialNumber if session_data.account.doot_owned and tierNumber >= 3 else materialNumber * tierRequirements[
+            finalMaterialNumber = materialNumber if session_data.account.companions['King Doot'] and tierNumber >= 3 else materialNumber * tierRequirements[
                 'NonDootDiscount']
             # logger.debug(f"Comparing {float(max(allSamples.get(materialName, [0])))} to {finalMaterialNumber}")
             try:

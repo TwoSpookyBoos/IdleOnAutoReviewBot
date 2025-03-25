@@ -1155,7 +1155,17 @@ class EnemyWorld:
 
 
 class EnemyMap:
-    def __init__(self, mapname: str, monstername: str, mapindex: int, portalrequirement: int, zowrating: str, chowrating: str, meowrating: str, monsterimage: str = ""):
+    def __init__(
+            self, mapname: str,
+            monstername: str,
+            mapindex: int,
+            portalrequirement: int,
+            zowrating: str,
+            chowrating: str,
+            meowrating: str,
+            wowrating: str,
+            monsterimage: str = ""
+    ):
         self.map_name: str = mapname
         self.map_index: int = mapindex
         self.monster_name: str = monstername
@@ -1163,6 +1173,7 @@ class EnemyMap:
         self.zow_rating: str = zowrating
         self.chow_rating: str = chowrating
         self.meow_rating: str = meowrating
+        self.wow_rating: str = wowrating
         self.kill_count: float = 0
         self.skull_mk_value: int = 0
         self.skull_name: str = "None"
@@ -1184,6 +1195,8 @@ class EnemyMap:
             return self.chow_rating
         elif ratingType == 'MEOW':
             return self.meow_rating
+        elif ratingType == 'WOW':
+            return self.wow_rating
         else:
             return 'Insane'
 
@@ -1237,6 +1250,8 @@ def buildMaps() -> dict[int, dict]:
         #mapData[4]: str = zow rating
         #mapData[5]: str = chow rating
         #mapData[6]: str = meow rating
+        #mapData[7]: str = wow rating
+        #mapData[8]: str = image
         if mapData[1] in apocableMapIndexDict[0]:
             world = 0
         else:
@@ -1249,7 +1264,8 @@ def buildMaps() -> dict[int, dict]:
             zowrating=mapData[4],
             chowrating=mapData[5],
             meowrating=mapData[6],
-            monsterimage=mapData[7]
+            wowrating=mapData[7],
+            monsterimage=mapData[8]
         )
     return mapDict
 

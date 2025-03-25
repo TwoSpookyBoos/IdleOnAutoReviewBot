@@ -46,7 +46,7 @@ def _calculate_caverns_majiks(account):
     }
     for majik_type, majiks in caverns_conjuror_majiks.items():
         for majik_index, majik_data in enumerate(majiks):
-            if majik_data['Name'] == 'Pocket Divinity' and account.doot_owned:
+            if majik_data['Name'] == 'Pocket Divinity' and account.companions['King Doot']:
                 #Replace linked Divinities with 15% all stat
                 account.caverns['Majiks'][majik_data['Name']]['Description'] = alt_pocket_div['Description']
                 account.caverns['Majiks'][majik_data['Name']]['Value'] = (
@@ -196,7 +196,7 @@ def _calculate_w6_summoning_winner_bonuses(account):
     account.summoning['WinnerBonusesSummaryFull'] = [
         Advice(
             label=f"Winner Bonuses multi from Endless Summoning: {account.summoning['Endless Bonuses']['x Winner Bonuses']}/{infinity_string}",
-            picture_class='cyan-upgrade-13',
+            picture_class='endless-summoning',
             progression=account.summoning['Endless Bonuses']['x Winner Bonuses'],
             goal=infinity_string,
             completed=True
@@ -551,14 +551,18 @@ def _calculate_w2_postOffice(account):
     )
     
 def _calculate_w2_ballot(account):
-    account.event_points_shop['BonusMulti'] = ValueToMulti(
+    # + (n._customBlock_Summoning("WinBonus", 22, 0)
+    # + n._customBlock_Companions(19)))))
+    # Last verified as of v2.34
+    account.ballot['BonusMulti'] = ValueToMulti(
         account.equinox_bonuses['Voter Rights']['CurrentLevel']
         + account.caverns['Majiks']['Voter Integrity']['Value']
-        + account.summoning['Endless Bonuses']["% Ballot Bonus"]
+        + account.summoning['Endless Bonuses']['% Ballot Bonus']
         + (17 * account.event_points_shop['Bonuses']['Gilded Vote Button']['Owned'])
+        + (5 * account.companions['Mashed Potato'])
     )
     for buffIndex, buffValuesDict in account.ballot['Buffs'].items():
-        account.ballot['Buffs'][buffIndex]['Value'] *= account.event_points_shop['BonusMulti']
+        account.ballot['Buffs'][buffIndex]['Value'] *= account.ballot['BonusMulti']
         # Check for + or +x% replacements
         if "{" in buffValuesDict['Description']:
             account.ballot['Buffs'][buffIndex]['Description'] = buffValuesDict['Description'].replace("{", f"{account.ballot['Buffs'][buffIndex]['Value']:.3f}")
@@ -831,7 +835,7 @@ def _calculate_w4_lab_bonuses(account):
     account.labBonuses['No Bubble Left Behind']['Value'] = min(nblbMaxBubbleCount, account.labBonuses['No Bubble Left Behind']['Value'])
 
 def _calculate_w5(account):
-    account.divinity['AccountWideArctis'] = account.doot_owned or 'Arctis' in account.caverns['PocketDivinityLinks']
+    account.divinity['AccountWideArctis'] = account.companions['King Doot'] or 'Arctis' in account.caverns['PocketDivinityLinks']
     _calculate_w5_divinity_offering_costs(account)
 
 def _calculate_w5_divinity_offering_costs(account):
@@ -1327,7 +1331,7 @@ def _calculate_caverns_gambit(account):
         #Calculate Value
         if bonus_index == 0:
             account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Value'] = (
-                 max(1, ceil(
+                 max(1 if account.caverns['Caverns'][cavern_name]['TotalPts'] > 0 else 0, ceil(
                      safer_math_log(account.caverns['Caverns'][cavern_name]['TotalPts'], 2)
                      - 8
                      + (safer_math_log(account.caverns['Caverns'][cavern_name]['TotalPts'], 'Lava') - 1)
@@ -1649,11 +1653,11 @@ def _calculate_w3_equinox_max_levels(account):
 def _calculate_general_character_over_books(account):
     account.bonus_talents = {
         "Rift Slug": {
-            "Value": 25 * account.riftslug_owned,
+            "Value": 25 * account.companions['Rift Slug'],
             "Image": "rift-slug",
             "Label": f"Companion: Rift Slug: "
-                     f"+{25 * account.riftslug_owned}/25",
-            "Progression": 1 if account.riftslug_owned else 0,
+                     f"+{25 * account.companions['Rift Slug']}/25",
+            "Progression": 1 if account.companions['Rift Slug'] else 0,
             "Goal": 1
         },
         "ES Family": {

@@ -120,7 +120,7 @@ def getStylesInfoAdviceGroup(highestDivinitySkillLevel: int) -> AdviceGroup:
 
 def getDootChecksAdviceGroups(lowestDivinitySkillLevel: int, highestDivinitySkillLevel: int):
     doot_AdviceList = []
-    if not session_data.account.doot_owned:
+    if not session_data.account.companions['King Doot']:
         if session_data.account.divinity['Divinities'][2].get("Unlocked", False):
             # If you don't own Doot but do have Arctis unlocked, generate Alert if any character has no divinity link
             for character in session_data.account.all_characters:
