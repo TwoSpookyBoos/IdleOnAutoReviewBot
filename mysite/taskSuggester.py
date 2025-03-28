@@ -44,10 +44,10 @@ def main(inputData, runType="web"):
         maybe_ban(inputData, runType)
 
     # Step 1: Retrieve data from public IdleonEfficiency website or from file
-    parsedJSON = get_or_parse_json(inputData, runType)
+    parsedJSON, source_string = get_or_parse_json(inputData, runType)
 
     # Step 2: Make account data available throughout the session
-    session_data.account = Account(parsedJSON)
+    session_data.account = Account(parsedJSON, source_string)
 
     patch_guess = ''
     for version in versions_patches:
@@ -214,7 +214,7 @@ def main(inputData, runType="web"):
 
     reviews = [world for world in reviews if len(world.sections) > 0]
 
-    headerData = HeaderData(inputData)
+    headerData = HeaderData(inputData, source_string)
     logger.info(f"{headerData.last_update = }")
 
     if runType == "consoleTest":

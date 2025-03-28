@@ -42,7 +42,7 @@ def json_schema_valid(data) -> bool:
 
 
 def format_character_name(name: str) -> str:
-    name = name.strip().lower().replace(" ", "_")
+    name = name.strip().replace(" ", "_")
 
     return name
 

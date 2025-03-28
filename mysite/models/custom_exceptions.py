@@ -66,8 +66,7 @@ class ProfileNotFound(BaseCustomException):
     faq = True
     dirname = "private_profiles"
     msg_base = (
-        "Looks like you haven't made your profile public yet.<br>"
-        "Head on over to IdleonEfficiency and publish your data."
+        "Public Profile not found.<br>"
     )
 
     def __init__(self, username):
@@ -77,9 +76,8 @@ class ProfileNotFound(BaseCustomException):
 
 
 class EmptyResponse(BaseCustomException):
-    dirname = "IE"
-    msg_base = ("Hmm, something weird is going on with your data over at IdleonEfficiency, no data has been provided "
-                "to us...")
+    dirname = "API"
+    msg_base = "A Public Profile was found, but the JSON was empty. Hopefully this will self-resolve with a few minutes more time."
 
     def __init__(self, username):
         super().__init__()
@@ -87,9 +85,9 @@ class EmptyResponse(BaseCustomException):
         self.log_msg = f"Empty response: {self.username}"
 
 
-class IEConnectionFailed(BaseCustomException):
-    dirname = "IE"
-    msg_base = "We're having trouble connecting to IdleonEfficiency to collect data."
+class APIConnectionFailed(BaseCustomException):
+    dirname = "API"
+    msg_base = "No response received when asking for your Public Profile data. Please try again in another minute."
 
     def __init__(self, exc, trace):
         super().__init__()
@@ -102,7 +100,7 @@ class JSONDecodeError(BaseCustomException):
     reportable = False
     faq = True
     dirname = "faulty_data"
-    msg_base = "The data you submitted is corrupted or not a valid JSON structure."
+    msg_base = "The data you submitted is corrupted or not a valid JSON structure. Please try the copy/paste again."
 
     def __init__(self, data):
         super().__init__()
