@@ -485,7 +485,7 @@ stamps_progressionTiers = {
         "Combat": [
             "Fist Stamp", "Manamoar Stamp", "Longsword Stamp",
             "Battleaxe Stamp", "Scimitar Stamp", "Bullseye Stamp",
-            "Polearm Stamp", "Buckler Stamp", "Stat Graph Stamp"
+            "Buckler Stamp"
         ],
         "Skill": ["Twin Ores Stamp", "Duplogs Stamp", "Cool Diggy Tool Stamp", "Swag Swingy Tool Stamp", "Alch Go Brrr Stamp",
                   "Droplots Stamp", "Bugsack Stamp", "Hidey Box Stamp", "Spikemouth Stamp", "Purp Froge Stamp"],
@@ -494,47 +494,46 @@ stamps_progressionTiers = {
     },
     11: {"TotalStampLevels": 800, "Stamps": {
          "Skill": ["Stample Stamp", "Spice Stamp", "Egg Stamp"],
-         "Misc": ["Mason Jar Stamp", "Sigil Stamp", "Biblio Stamp", ],
+         "Misc": ["Mason Jar Stamp", "Sigil Stamp"],
          "Specific": {'Pickaxe Stamp': 45, 'Hatchet Stamp': 45, 'Mason Jar Stamp': 12}}},
     12: {"TotalStampLevels": 1000, "Stamps": {
-        "Skill": ["Brainstew Stamps", "Bag o Heads Stamp", "Skelefish Stamp", "Holy Mackerel Stamp", "Cooked Meal Stamp"],
+        "Skill": ["Bag o Heads Stamp", "Skelefish Stamp" "Cooked Meal Stamp"],
         "Misc": ["Card Stamp"],
         "Specific": {
             'Drippy Drop Stamp': 50,
             'Pickaxe Stamp': 55, 'Hatchet Stamp': 55, 'Card Stamp': 50
         },
-        "Optional": ["Saw Stamp", "Agile Stamp", "Book Stamp", "Smart Dirt Stamp", "High IQ Lumber Stamp", "Fishhead Stamp", "Fly Intel Stamp", "Talent II Stamp"]
+        "Optional": ["Saw Stamp", "Agile Stamp", "Book Stamp", "Smart Dirt Stamp", "High IQ Lumber Stamp", "Fishhead Stamp",
+                    "Polearm Stamp", "Biblio Stamp"]
     }},
     13: {"TotalStampLevels": 2500, "Stamps": {
-        "Combat": ["Avast Yar Stamp", "Blackheart Stamp", "Steve Sword",],
         "Skill": ["Banked Pts Stamp", "Nest Eggs Stamp", "Lab Tube Stamp", "Ladle Stamp", "Sailboat Stamp"],
-        "Misc": ["Refinery", "Golden Apple Stamp"],
+        "Misc": ["Refinery"],
         "Specific": {
             'Matty Bag Stamp': 100, 'Crystallin': 60,
             'Pickaxe Stamp': 65, 'Hatchet Stamp': 65, 'Card Stamp': 100,
-            'Golden Apple Stamp': 28
         },
-        "Optional": ["Arcane Stamp", "Gilded Axe Stamp", "DNA Stamp"]
+        "Optional": ["Stat Graph Stamp", "Brainstew Stamps", "Arcane Stamp", "Fly Intel Stamp", "Holy Mackerel Stamp", "Talent II Stamp",
+                     "Gilded Axe Stamp", "Avast Yar Stamp", "Steve Sword", "Blackheart Stamp", "DNA Stamp"]
     }},
     14: {"TotalStampLevels": 4000, "Stamps": {
-        "Combat": ["Diamond Axe Stamp", "Sashe Sidestamp"],
+        "Combat": ["Sashe Sidestamp"],
         "Skill": ["Gamejoy Stamp", "Divine Stamp"],
-        "Misc": ["Potion Stamp", "Questin Stamp"],
         "Specific": {
             'Bugsack Stamp': 80, 'Bag o Heads Stamp': 80, 'Pickaxe Stamp': 75, 'Hatchet Stamp': 75,
-            'Drippy Drop Stamp': 90, 'Crystallin': 100,
+            'Drippy Drop Stamp': 85, 'Crystallin': 100,
         },
-        "Optional": ["Feather Stamp"],
+        "Optional": ["Feather Stamp", "Diamond Axe Stamp", "Questin Stamp"],
     }},
     15: {"TotalStampLevels": 5500, "Stamps": {
         "Combat": ["Tripleshot Stamp", "Maxo Slappo Stamp"],
         "Skill": ["Crop Evo Stamp", "Buzz Buzz Stamp"],
-        "Misc": ["Multikill Stamp"],
+        "Misc": ["Potion Stamp", "Golden Apple Stamp"],
         "Specific": {
             'Matty Bag Stamp': 150, 'Card Stamp': 150, 'Ladle Stamp': 100, 'Potion Stamp': 20,
             'Pickaxe Stamp': 85, 'Hatchet Stamp': 85, 'Mason Jar Stamp': 52, 'Golden Apple Stamp': 40, 'Crop Evo Stamp': 20,
         },
-        "Optional": ["Void Sword Stamp"]
+        "Optional": ["Void Sword Stamp", "Multikill Stamp",]
     }},
     16: {"TotalStampLevels": 7500, "Stamps": {
         "Combat": ["Violence Stamp", "Intellectostampo", "Dementia Sword Stamp"],
@@ -756,28 +755,28 @@ bubbles_progressionTiers = [
      {'Roid Ragin': 25, 'Warriors Rule': 13, 'Hearty Diggy': 25, 'Wyoming Blood': 13, 'Sploosh Sploosh': 13, 'Stronk Tools': 18},
      {'Swift Steppin': 25, 'Archer Or Bust': 13, 'Sanic Tools': 18, 'Bug^2': 13},
      {'Stable Jenius': 25, 'Mage Is Best': 13, 'Hocus Choppus': 25, 'Molto Loggo': 13, 'Le Brain Tools': 18},
-     {'Fmj': 10, 'Shaquracy': 10, 'Prowesessary': 15, 'Hammer Hammer': 14, 'All For Kill': 25, "Name I Guess": 10},
+     {'Fmj': 10, 'Shaquracy': 10, 'Prowesessary': 15, 'Hammer Hammer': 14, "Name I Guess": 10},
      "20% max value",
      "MINIMUM recommended Utility bubbles for starting W3. Prowess hard-caps at 2x."],
     [3, 40,
      {'Roid Ragin': 67, 'Warriors Rule': 34, 'Hearty Diggy': 67, 'Wyoming Blood': 20, 'Sploosh Sploosh': 20, 'Stronk Tools': 47},
      {'Swift Steppin': 67, 'Archer Or Bust': 34, 'Sanic Tools': 47, 'Bug^2': 20},
      {'Stable Jenius': 67, 'Mage Is Best': 34, 'Hocus Choppus': 67, 'Molto Loggo': 20, 'Le Brain Tools': 47},
-     {'Fmj': 15, 'Shaquracy': 15, 'Prowesessary': 40, 'Hammer Hammer': 41, 'All For Kill': 67, "Name I Guess": 20},
+     {'Fmj': 15, 'Shaquracy': 15, 'Prowesessary': 40, 'Hammer Hammer': 41, 'All For Kill': 25, "Name I Guess": 20},
      "40% max value",
      "MINIMUM recommended Utility bubbles for starting W4. Prowess hard-caps at 2x."],
     [4, 60,
      {'Roid Ragin': 100, 'Warriors Rule': 50, 'Hearty Diggy': 100, 'Wyoming Blood': 30, 'Sploosh Sploosh': 30, 'Stronk Tools': 70},
      {'Swift Steppin': 100, 'Archer Or Bust': 50, 'Sanic Tools': 70, 'Bug^2': 30},
      {'Stable Jenius': 100, 'Mage Is Best': 50, 'Hocus Choppus': 100, 'Molto Loggo': 30, 'Le Brain Tools': 70},
-     {'Fmj': 20, 'Shaquracy': 20, 'Prowesessary': 60, 'Hammer Hammer': 65, 'All For Kill': 100, "Name I Guess": 30},
+     {'Fmj': 20, 'Shaquracy': 20, 'Prowesessary': 60, 'Hammer Hammer': 65, 'All For Kill': 67, "Name I Guess": 30},
      "50% max value",
      "MINIMUM recommended Utility bubbles for starting W5. Prowess hard-caps at 2x, which you should be reaching now!"],
     [5, 80,
      {'Roid Ragin': 150, 'Warriors Rule': 75, 'Hearty Diggy': 150, 'Wyoming Blood': 45, 'Sploosh Sploosh': 45, 'Stronk Tools': 105, 'Multorange': 45},
      {'Swift Steppin': 150, 'Archer Or Bust': 75, 'Bug^2': 45, 'Premigreen': 45, },
      {'Stable Jenius': 150, 'Mage Is Best': 75, 'Molto Loggo': 45, 'Le Brain Tools': 105, 'Severapurple': 45, },
-     {'Fmj': 30, 'Shaquracy': 30, 'Hammer Hammer': 100, 'All For Kill': 150, "Name I Guess": 40},
+     {'Fmj': 30, 'Shaquracy': 30, 'Hammer Hammer': 100, 'All For Kill': 100, "Name I Guess": 40},
      "60% max value",
      "MINIMUM recommended Utility bubbles for starting W6 push. Keep watch of your No Bubble Left Behind list (from W4 Lab) to keep cheap/easy bubbles off when possible!"],
     [6, 100,
@@ -785,15 +784,15 @@ bubbles_progressionTiers = [
       'Dream Of Ironfish': 70},
      {'Swift Steppin': 234, 'Archer Or Bust': 117, 'Bug^2': 70, 'Premigreen': 70, 'Fly In Mind': 94},
      {'Stable Jenius': 234, 'Mage Is Best': 117, 'Molto Loggo': 70, 'Le Brain Tools': 164, 'Severapurple': 70, 'Tree Sleeper': 94},
-     {'All For Kill': 167, "Name I Guess": 100},
+     {'All For Kill': 150, "Name I Guess": 100},
      "70% max value",
-     "All for Kill hard-caps at 167, you're finished!"],
+     ""],
     [7, 120,
      {'Roid Ragin': 400, 'Warriors Rule': 200, 'Hearty Diggy': 400, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 280, 'Multorange': 120,
       'Dream Of Ironfish': 120},
      {'Swift Steppin': 400, 'Archer Or Bust': 200, 'Bug^2': 120, 'Premigreen': 120},
      {'Stable Jenius': 400, 'Mage Is Best': 200, 'Hocus Choppus': 400, 'Molto Loggo': 120, 'Le Brain Tools': 280, 'Severapurple': 120, 'Tree Sleeper': 160},
-     {'Laaarrrryyyy': 150, 'Hammer Hammer': 150, 'Cookin Roadkill': 105, "Name I Guess": 150},
+     {'Laaarrrryyyy': 150, 'Hammer Hammer': 150, 'Cookin Roadkill': 105, 'All For Kill': 167},
      "80% max value",
      "Larry at 150 = 72% chance for +2 levels. Somewhere around level 125-150, this bubble should pass 100m Dementia Ore cost and be available to level with Boron upgrades from the W3 Atom Collider in Construction.  It should be, in my opinion, the ONLY Utility Bubble you spend these daily clicks on until it reaches 501. If you cannot afford the Particles needed to level Larry, invest into Sampling Bubbles."],
     [8, 120,
