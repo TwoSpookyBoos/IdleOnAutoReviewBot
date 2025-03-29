@@ -34,17 +34,35 @@ def kebab(string: str) -> str:
 
 
 def is_username(data) -> bool:
-    return isinstance(data, str) and len(data) < 16
+    return (
+        isinstance(data, str)
+        and (
+            len(data) < 16
+            or 'idleonefficiency.com' in data.lower()
+            or 'idleontoolbox.com' in data.lower()
+            # or 'idleonleaderboards.com in data.lower()
+        )
+    )
 
 
 def json_schema_valid(data) -> bool:
     return isinstance(data, str) and data.startswith("{") and data.endswith("}")
 
 
-def format_character_name(name: str) -> str:
-    name = name.strip().replace(" ", "_")
+def format_character_name(name: str, source_string: str) -> str:
+    # https://idleontoolbox.com/?profile={username}
+    # https://{username}.idleonefficiency.com/
+    # https://idleonleaderboards.com/profiles/{username}
+    formatted_name = name.strip().replace(" ", "_").replace('https://', '')
+    if source_string == 'IT':
+        formatted_name = formatted_name.replace('idleontoolbox.com/?profile=', '')
+    elif source_string == 'IE':
+        formatted_name = formatted_name.replace('idleonefficiency.com', '').replace('/', '').replace('.', '')
+    elif source_string == 'TB':
+        formatted_name = formatted_name.replace('idleonleaderboards.com/profiles/', '')
 
-    return name
+    # logger.debug(f"{name = }, {formatted_name = }")
+    return formatted_name
 
 
 __items_path = Path(app.static_folder) / 'items.yaml'

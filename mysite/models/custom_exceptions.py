@@ -65,9 +65,7 @@ class ProfileNotFound(BaseCustomException):
     reportable = False
     faq = True
     dirname = "private_profiles"
-    msg_base = (
-        "Public Profile not found.<br>"
-    )
+    msg_base = "Public Profile not found.<br>Please verify you have Uploaded a Public Profile, then provide the full public profile link."
 
     def __init__(self, username):
         super().__init__()

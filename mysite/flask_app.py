@@ -45,29 +45,39 @@ def get_user_input() -> str:
     return (request.args.get("player") or json.loads(request.data).get("player", "")).strip()
 
 
-def parse_user_input() -> str | dict | None:
+def parse_user_input():
     data = get_user_input()
+    source_string = ''
 
     if not data:
-        return
+        return None, None
 
-    if len(data) >= 1e6:
+    if len(data) <= 16:
+        source_string = 'all'
+    elif len(data) >= 1e6:
         raise DataTooLong("Submitted data is too long.", data)
 
     if is_username(data):
-        parsed = format_character_name(data)
+        if 'idleonefficiency.com' in data.lower():
+            source_string = 'IE'
+        elif 'idleontoolbox.com' in data.lower():
+            source_string = 'IT'
+        elif 'idleonleaderboards.com' in data.lower():
+            source_string = 'LB'
+        parsed = format_character_name(data, source_string)
 
     elif json_schema_valid(data):
-        parsed = None
         try:
             parsed = json.loads(data)
+            source_string = 'JSON'
         except json.JSONDecodeError as e:
             raise custom_exceptions.JSONDecodeError(data)
 
     else:
         raise UserDataException("Submitted data not valid.", data)
 
-    return parsed
+    # logger.debug(f"{source_string = }")
+    return parsed, source_string
 
 
 def store_user_preferences():
@@ -108,10 +118,10 @@ def results() -> Response | str:
 
     name_or_data: str | dict = ""
     try:
-        name_or_data = parse_user_input()
+        name_or_data, source_string = parse_user_input()
 
         if name_or_data:
-            reviews, headerData = autoReviewBot(name_or_data)
+            reviews, headerData = autoReviewBot(name_or_data, source_string)
 
         name = name_for_logging(name_or_data, headerData, "index.html")
         # log_browser_data(name)
@@ -285,12 +295,13 @@ def logtest():
 
 def autoReviewBot(
     capturedCharacterInput,
+    source_string
 ) -> tuple[list[AdviceWorld], HeaderData] | tuple[None, None]:
     reviewInfo: list[AdviceWorld] | None = None
     headerData: HeaderData | None = None
 
     if capturedCharacterInput:
-        reviewInfo, headerData = taskSuggester.main(capturedCharacterInput)
+        reviewInfo, headerData = taskSuggester.main(capturedCharacterInput, source_string)
 
     return reviewInfo, headerData
 

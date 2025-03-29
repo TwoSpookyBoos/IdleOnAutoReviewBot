@@ -68,7 +68,7 @@ class HeaderData:
 
 
 def getJSONfromAPI(runType, username="scoli", source_string='all'):
-    logger.debug(f"{username = }")
+    # logger.debug(f"{username = }")
     accepted_apis = [
         'IE',
         #'LB',
@@ -103,7 +103,7 @@ def getJSONfromAPI(runType, username="scoli", source_string='all'):
                         else account_data
                     )
                     api_data[api_name]['LastUpdated'] = safe_loads(safe_loads(safe_loads(api_data[api_name]['Data']).get('TimeAway', {})).get('GlobalTime', 0))
-                    logger.debug(f"Last updated time epoch = {api_data[api_name]['LastUpdated']}")
+                    # logger.debug(f"Last updated time epoch = {api_data[api_name]['LastUpdated']}")
         except requests.exceptions.RequestException as e:
             logger.warning(f"Error retrieving data from {api_name}: {e}")
             api_data[api_name]['Exception'] = e
@@ -120,7 +120,7 @@ def getJSONfromAPI(runType, username="scoli", source_string='all'):
         # TODO: Figure out combining this information into a single exception, if somehow all sources errored
         raise APIConnectionFailed(api_data["IE"]["Exception"], api_data["IE"]["Traceback"])
     else:
-        logger.debug(f'Freshest data source: {freshest[0]}')
+        # logger.debug(f'Freshest data source: {freshest[0]}')
         return api_data[freshest[0]]['Data'], freshest[0]
 
 def getJSONfromText(runType, rawJSON):
