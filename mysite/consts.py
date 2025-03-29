@@ -514,7 +514,7 @@ stamps_progressionTiers = {
             'Pickaxe Stamp': 65, 'Hatchet Stamp': 65, 'Card Stamp': 100,
         },
         "Optional": ["Stat Graph Stamp", "Brainstew Stamps", "Arcane Stamp", "Fly Intel Stamp", "Holy Mackerel Stamp", "Talent II Stamp",
-                     "Gilded Axe Stamp", "Avast Yar Stamp", "Steve Sword", "Blackheart Stamp", "DNA Stamp"]
+                     "Gilded Axe Stamp", "Avast Yar Stamp", "Blackheart Stamp", "DNA Stamp"]
     }},
     14: {"TotalStampLevels": 4000, "Stamps": {
         "Combat": ["Sashe Sidestamp"],
@@ -523,7 +523,7 @@ stamps_progressionTiers = {
             'Bugsack Stamp': 80, 'Bag o Heads Stamp': 80, 'Pickaxe Stamp': 75, 'Hatchet Stamp': 75,
             'Drippy Drop Stamp': 85, 'Crystallin': 100,
         },
-        "Optional": ["Feather Stamp", "Diamond Axe Stamp", "Questin Stamp"],
+        "Optional": ["Feather Stamp", "Steve Sword", "Diamond Axe Stamp", "Questin Stamp"],
     }},
     15: {"TotalStampLevels": 5500, "Stamps": {
         "Combat": ["Tripleshot Stamp", "Maxo Slappo Stamp"],
@@ -869,7 +869,7 @@ bubbles_progressionTiers = [
      ""],
     [15, 160,
      {'Roid Ragin': 10000, 'Warriors Rule': 4950, 'Hearty Diggy': 9900, 'Stronk Tools': 6930, 'Multorange': 2970, 'Dream Of Ironfish': 2970,
-      'Slabi Orefish': 5940, 'Slabi Strength': 5940, 'Endgame Eff I': 5940, 'Tome Strength': 5940},
+      'Slabi Orefish': 5940, 'Slabi Strength': 5940, 'Tome Strength': 5940},  #'Endgame Eff I': 5940,
      {'Swift Steppin': 10000, 'Archer Or Bust': 4950, 'Sanic Tools': 6930, 'Premigreen': 2970, 'Fly In Mind': 3960,
       'Slabo Critterbug': 5940, 'Slabo Agility': 5940, 'Endgame Eff II': 5940, 'Tome Agility': 5940},
      {'Stable Jenius': 10000, 'Mage Is Best': 4950, 'Hocus Choppus': 9900, 'Le Brain Tools': 6930, 'Severapurple': 2970, 'Tree Sleeper': 3960,
