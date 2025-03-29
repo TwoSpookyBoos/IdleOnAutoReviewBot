@@ -1272,9 +1272,10 @@ def buildMaps() -> dict[int, dict]:
 @session_singleton
 class Account:
 
-    def __init__(self, json_data):
+    def __init__(self, json_data, source_string):
         self.raw_data = safe_loads(json_data)
         self.version = safer_get(self.raw_data, 'DoOnceREAL', 0.00)
+        self.data_source = source_string
         self._prep_alerts_AG()
 
     def _prep_alerts_AG(self):

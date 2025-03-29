@@ -38,16 +38,22 @@ def getRoastableStatus(playerNames):
     roastworthyList = yaml.load(open(Path(app.static_folder) / "roastable.yaml"), yaml.Loader)
     return next((name.lower() in roastworthyList for name in playerNames), False)
 
+def get_or_parse_json(inputData, source_string, runType):
+    if is_username(inputData):
+        return getJSONfromAPI(runType, inputData, source_string)
 
-def main(inputData, runType="web"):
+    return getJSONfromText(runType, inputData)
+
+
+def main(inputData, source_string, runType="web"):
     if is_username(inputData):
         maybe_ban(inputData, runType)
 
     # Step 1: Retrieve data from public IdleonEfficiency website or from file
-    parsedJSON = get_or_parse_json(inputData, runType)
+    parsedJSON, verified_source_string = get_or_parse_json(inputData, source_string, runType)
 
     # Step 2: Make account data available throughout the session
-    session_data.account = Account(parsedJSON)
+    session_data.account = Account(parsedJSON, source_string)
 
     patch_guess = ''
     for version in versions_patches:
@@ -214,17 +220,10 @@ def main(inputData, runType="web"):
 
     reviews = [world for world in reviews if len(world.sections) > 0]
 
-    headerData = HeaderData(inputData)
+    headerData = HeaderData(inputData, verified_source_string)
     logger.info(f"{headerData.last_update = }")
 
     if runType == "consoleTest":
         return "Pass"
     else:
         return reviews, headerData
-
-
-def get_or_parse_json(inputData, runType):
-    if is_username(inputData):
-        return getJSONfromAPI(runType, inputData)
-
-    return getJSONfromText(runType, inputData)
