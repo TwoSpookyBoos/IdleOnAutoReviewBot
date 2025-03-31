@@ -319,22 +319,9 @@ achievements_progressionTiers = {
     0: {},
     1: {
         'EZ Access': {
-            'Super Cereal': {'World': 2, 'Reward': 'W2 Colo and Shops', 'Rating': ''},
-        },
-        #'Free Teleports': {},
-        'Monster Respawn': {},
-        'Recipes': {},
-        'Dungeon RNG Items': {
-            '2 Tons of Iron': {'World': 1, 'Reward': 'Golden Dice', 'Rating': ''},
-        },
-        'Other Nice Rewards': {
-            'Golden Fly': {'World': 2, 'Reward': '5% Catching Efficiency', 'Rating': ''},
-        },
-    },
-    2: {
-        'EZ Access': {
             'Platinum 200G': {'World': 1, 'Reward': 'W1 Key', 'Rating': ''},
             'Half a Mill-log': {'World': 1, 'Reward': 'W1 Colo and Shops', 'Rating': ''},
+            'Super Cereal': {'World': 2, 'Reward': 'W2 Colo and Shops', 'Rating': ''},
             'Skill Master': {'World': 2, 'Reward': 'W2 Key', 'Rating': ''},
             'Cool Score!': {'World': 3, 'Reward': 'W3 Colo and Shop', 'Rating': ''},
         },
@@ -347,14 +334,16 @@ achievements_progressionTiers = {
             'Based Roots': {'World': 1, 'Reward': 'Acorn Hat', 'Rating': ''},
         },
         'Dungeon RNG Items': {
+            '2 Tons of Iron': {'World': 1, 'Reward': 'Golden Dice', 'Rating': ''},
             'House Flipper': {'World': 1, 'Reward': 'Horn of the Foal', 'Rating': ''},
             "Croakin' Froge": {'World': 3, 'Reward': 'Plump Dice', 'Rating': ''},
         },
         'Other Nice Rewards': {
+            # 'Golden Fly': {'World': 2, 'Reward': '5% Catching Efficiency', 'Rating': ''},
             'Cog in the System': {'World': 3, 'Reward': '5% cons build speed', 'Rating': ''},
         },
     },
-    3: {
+    2: {
         'EZ Access': {
             'Top Cogs': {'World': 3, 'Reward': 'W3 Key', 'Rating': ''},
             'Good Plate': {'World': 4, 'Reward': 'W4 Shop', 'Rating': ''},
@@ -387,7 +376,7 @@ achievements_progressionTiers = {
             'Best Plate': {'World': 4, 'Reward': '10% cheaper Kitchen upgrades', 'Rating': ''},
         },
     },
-    4: {
+    3: {
         'EZ Access': {
             'Bonsai Bonanza': {'World': 5, 'Reward': 'W5 Shop', 'Rating': ''},
         },
@@ -414,7 +403,7 @@ achievements_progressionTiers = {
             'Sneaky Stealing': {'World': 5, 'Reward': '25% Shop Capacity', 'Rating': ''},
         },
     },
-    5: {
+    4: {
         'EZ Access': {
             'Doctor Repellant': {'World': 6, 'Reward': 'W6 Shop', 'Rating': ''},
         },

@@ -180,7 +180,7 @@ class Placements(dict):
         #               W1   W2          W3              W4              W5              W6              W7              Max    True    Placeholder
         COMBAT_LEVELS: [0,   3, 7, 8,    10, 14, 15,     16, 17, 18,     19, 21, 23,     24, 25, 27,     28, 29, 30,     32,    true_max_tiers[COMBAT_LEVELS], 99],
         SECRET_CLASS_PATH:[0,0, 0, 0,    0,  0,  0,      0,  1,  1,      2,  3,  3,      3,  3,  3,      3,  3,  3,      3,     true_max_tiers[SECRET_CLASS_PATH], 99],
-        ACHIEVEMENTS:  [0,   0, 0, 0,    0,  1,  1,      1,  1,  1,      2,  2,  2,      2,  2,  2,      3,  4,  5,      5,     true_max_tiers[ACHIEVEMENTS], 99],
+        ACHIEVEMENTS:  [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  1,  1,      1,  1,  1,      2,  3,  4,      4,     true_max_tiers[ACHIEVEMENTS], 99],
         GSTACKS:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      1,  2,  2,      2,  3,  3,      3,     true_max_tiers[GSTACKS], 99],
         STAMPS:        [0,   1, 2, 3,    4,  5,  6,      7,  8,  9,      10, 11, 12,     13, 14, 15,     16, 17, 18,     20,    true_max_tiers[STAMPS], 99],
         BRIBES:        [0,   1, 1, 1,    2,  2,  2,      3,  3,  3,      4,  4,  4,      4,  5,  5,      5,  5,  5,      6,     true_max_tiers[BRIBES], 99],
@@ -395,7 +395,7 @@ def generate_advice_groups(sectionsByThreshold: dict):
             advices=advices
         )
 
-        if not session_data.overwhelmed or (session_data.overwhelmed and len(advice_groups) < session_data.account.maxSubgroupsPerGroup):
+        if not session_data.overwhelmed or (session_data.overwhelmed and len(advice_groups) < session_data.account.maxSubgroupsPerGroup + 1):
             advice_groups.append(advice_group)
 
     return advice_groups
