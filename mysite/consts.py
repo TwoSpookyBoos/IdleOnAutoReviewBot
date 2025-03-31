@@ -5537,10 +5537,10 @@ tomepct = {
   0.5: 26680,
   0.1: 27227,
 }
-maxCookingTables = 10  # Last verified as of v2.26
-maxMealCount = 67  # Last verified as of v2.26
-maxMealLevel = 110  # Last verified as of v2.26
-cookingCloseEnough = 1500
+maxCookingTables = 10  # Last verified as of v2.34
+maxMealCount = 67  # Last verified as of v2.34
+maxMealLevel = 110  # Last verified as of v2.34
+cookingCloseEnough = 300  # Last adjusted v2.34
 
 cookingMealDict = {
     0:{"Name": "Turkey a la Thank", "Description": "Do I smell gratitude? Oh, no, that's colonialization...", "Effect": "+{% Total Damage", "BaseValue": 2},
