@@ -101,7 +101,7 @@ def getProgressionTiersAdviceGroup(max_tier: int):
                 progressionTiersPostBuffs[3][2].remove(towerName)  # Remove from A tier
                 progressionTiersPostBuffs[5][2].insert(3, towerName)  # Add to C tier
                 if hasBuffs:
-                    maxLevelDict[towerName] = 140
+                    maxLevelDict[towerName] = 240
                 # logger.info(f"Successfully moved 70+ basic tower from PostBuff A to C tier: {getBuildingNameFromIndex(towerIndex)})
             except Exception as reason:
                 logger.exception(f"Could not move 70+ basic tower {towerName} from PostBuff A tier to C tier: {reason}")
@@ -114,7 +114,7 @@ def getProgressionTiersAdviceGroup(max_tier: int):
                     progressionTiersPostBuffs[tierIndex][2].remove(towerName)  # Remove from any existing tier (S for Kraken and Poison, A for Stormcaller)
             progressionTiersPostBuffs[3][2].append(towerName)  # Add to A tier
             if hasBuffs:
-                maxLevelDict[towerName] = 140
+                maxLevelDict[towerName] = 240
 
     # 7) Voidinator to 40, drop priority
     if playerBuildings['Voidinator']['Level'] >= 40:  # Voidinator scaling is very bad
@@ -124,7 +124,7 @@ def getProgressionTiersAdviceGroup(max_tier: int):
             progressionTiersPostBuffs[3][2].remove("Voidinator")  # Remove from PostBuff A tier
             progressionTiersPostBuffs[5][2].insert(0, "Voidinator")  # Add to C tier
             if hasBuffs:
-                maxLevelDict["Voidinator"] = 140
+                maxLevelDict["Voidinator"] = 240
             # logger.debug("Successfully moved 30+ Voidinator from A/B to C tier in both tierlists")
         except Exception as reason:
             logger.exception(f"Could not move 30+ Voidinator from A/B to C tier in both tierlists: {reason}")

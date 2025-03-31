@@ -7,7 +7,7 @@ from consts import (
     break_you_best,
     schematics_unlocking_buckets, sediment_names, max_sediments, getSedimentBarRequirement, getWellOpalTrade, getMotherlodeEfficiencyRequired,
     getDenOpalRequirement, schematics_unlocking_amplifiers, getMonumentOpalChance, monument_layer_rewards,
-    infinity_string
+    infinity_string, ValueToMulti
     # shallow_caverns_progressionTiers
 )
 from utils.text_formatting import pl, notateNumber
@@ -324,9 +324,14 @@ def getBraveryAdviceGroup(schematics) -> AdviceGroup:
     cavern_advice[b_stats] = [
         Advice(
             label=(
-                f"Level {bonus['Level']}: {bonus['Description']}"  # <br>({bonus['BaseValue']:.2f} / {bonus['ScalingValue']} of pre-multi max)"
+                f"Level {bonus['Level']}: {bonus['Description']}"
+                f"<br>{bonus['BaseValue']:.2f}/{bonus['ScalingValue']} max from Levels"
                 if bonus['ScalingValue'] > 30 else
-                f"Level {bonus['Level']}: {bonus['Description']}"  # <br>(Linear: {bonus['ScalingValue']} per level)"
+                f"Level {bonus['Level']}: {bonus['Description']}"
+                f"<br>+{bonus['ScalingValue'] if '%' in bonus['Description'] else '0.' if bonus['ScalingValue'] >= 10 else '0.0'}"
+                f"{'' if '%' in bonus['Description'] else bonus['ScalingValue']}"
+                f"{'%' if '%' in bonus['Description'] else 'x'} "
+                f"per level before multis"
             ),
             picture_class=bonus['Image'],
             progression=f"{(bonus['BaseValue'] / bonus['ScalingValue']) * 100:.2f}" if bonus['ScalingValue'] > 30 else 'Linear',
