@@ -5,7 +5,7 @@ from flask import g as session_data
 from consts import (
     break_you_best,
     getMotherlodeEfficiencyRequired, getMonumentOpalChance, monument_layer_rewards, infinity_string, justice_monument_currencies,
-    schematics_unlocking_harp_strings, harp_notes, getHarpNoteUnlockCost, caverns_cavern_names
+    schematics_unlocking_harp_strings, harp_notes, getHarpNoteUnlockCost, caverns_cavern_names, ValueToMulti
     # glowshroom_tunnels_progressionTiers
 )
 from utils.text_formatting import pl, notateNumber
@@ -334,9 +334,14 @@ def getJusticeAdviceGroup() -> AdviceGroup:
     cavern_advice[b_stats] = [
         Advice(
             label=(
-                f"Level {bonus['Level']}: {bonus['Description']}"  # <br>({bonus['BaseValue']:.2f} / {bonus['ScalingValue']} of pre-multi max)"
+                f"Level {bonus['Level']}: {bonus['Description']}"
+                f"<br>{bonus['BaseValue']:.2f}/{bonus['ScalingValue']} max from Levels"
                 if bonus['ScalingValue'] > 30 else
-                f"Level {bonus['Level']}: {bonus['Description']}"  # <br>(Linear: {bonus['ScalingValue']} per level)"
+                f"Level {bonus['Level']}: {bonus['Description']}"
+                f"<br>+{bonus['ScalingValue'] if '%' in bonus['Description'] else '0.' if bonus['ScalingValue'] >= 10 else '0.0'}"
+                f"{'' if '%' in bonus['Description'] else bonus['ScalingValue']}"
+                f"{'%' if '%' in bonus['Description'] else 'x'} "
+                f"per level before multis"
             ),
             picture_class=bonus['Image'],
             progression=f"{(bonus['BaseValue'] / bonus['ScalingValue']) * 100:.2f}" if bonus['ScalingValue'] > 30 else 'Linear',
