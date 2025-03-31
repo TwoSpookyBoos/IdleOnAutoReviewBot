@@ -6625,6 +6625,19 @@ caverns_gambit_pts_bonuses = HolesInfo[71]
 caverns_gambit_challenge_names = ["King's Gambit", "Horsey's Gambit", "Bishop's Gambit", "Queen's Gambit", "Rook's Gambit", "Noob's Gambit"]
 schematics_unlocking_gambit_challenges = [None, 'Horsey Gambit', 'Bishop Gambit', 'Queen Gambit', 'Castle Gambit', 'Noob Gambit']
 caverns_gambit_total_challenges = len(caverns_gambit_challenge_names)
+caverns_gambit_pts_for_doublers = [
+    0, 1, 206, 351, 598, 1018,
+    1735, 2956, 5036, 8579, 14615,
+    24899, 42419, 72267, 123118, 209749,
+    357336, 608773, 1037131, 1766899, 3010163,
+    5128238, 8736680, 14884170, 25357290, 43199731,
+    73596854, 125382655, 213607095, 363909914, 619972035,
+    1056210093, 1799403358, 3065538252, 5222578214, 8897401031,
+    15157981722, 25823766860, 43994441151, 74950756128, 127689219300,
+    217536654301, 370604474083, 631377165616, 1075640347430, 1832505545065,
+    3121932512775, 5318653818304, 9061079418982, 15436831018131, 26298826096055
+]
+
 def getMaxEngineerLevel() -> int:
     max_engi_last_i_checked = 29  # Last checked on v2.32 Gambit
     if released_schematics > (1 + (max_engi_last_i_checked * 3) + (max_engi_last_i_checked // 5)):
@@ -6743,6 +6756,13 @@ def getWishCost(wish_index, wish_level):
             result = math.floor(lamp_wishes[wish_index][1] + (wish_level * lamp_wishes[wish_index][2]))
     return result
 
+def getSummoningDoublerPtsCost(current_doublers):
+    try:
+        pts_required = caverns_gambit_pts_for_doublers[current_doublers+1]
+    except IndexError:
+        #both functions using base e
+        pts_required = math.ceil(math.exp((current_doublers + 9) / (1 / math.log(2) + 1 / math.log(10))))
+    return pts_required
 
 
 ###WORLD 5 CONSTS###

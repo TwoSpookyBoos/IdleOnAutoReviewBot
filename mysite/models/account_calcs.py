@@ -1313,6 +1313,7 @@ def _calculate_caverns_gambit(account):
         account.caverns['Measurements'][13]['Value']  # Measurement
         + account.caverns['Studies'][13]['Value']  # + Gambit Study bonus
         + (10 * account.caverns['Schematics']['The Sicilian']['Purchased'])  # + The Sicilian schematic
+        + account.caverns['Caverns']['Wisdom Monument']['Bonuses'][27]['Value']  # + Wisdom Monument bonus
     )
 
     #Total PTS

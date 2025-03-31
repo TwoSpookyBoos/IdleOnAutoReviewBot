@@ -3,7 +3,7 @@ from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import (
-    break_you_best, infinity_string, summoningDict, summoning_doubler_recommendations,
+    break_you_best, infinity_string, summoningDict, summoning_doubler_recommendations, getSummoningDoublerPtsCost,
     # summoning_progressionTiers
 )
 
@@ -67,9 +67,12 @@ def getUpgradesAdviceGroup() -> AdviceGroup:
             picture_class='summoning'
         ))
 
+    next_doubler = getSummoningDoublerPtsCost(session_data.account.caverns['Caverns']['Gambit']['Bonuses'][0]['Value'])
+
     upgrades_advice[doublers].append(Advice(
         label=f"{summoning['Doubled Upgrades']}/{session_data.account.caverns['Caverns']['Gambit']['Bonuses'][0]['Name']} "
-              f"from {{{{ Gambit Cavern|#underground-overgrowth}}}} spent",
+              f"from {{{{ Gambit Cavern|#underground-overgrowth}}}} spent"
+              f"<br>Next Doubler at {next_doubler:,} Total Gambit PTS ({next_doubler - session_data.account.caverns['Caverns']['Gambit']['TotalPts']:,.0f} to go!)",
         picture_class=session_data.account.caverns['Caverns']['Gambit']['Bonuses'][0]['Image'],
         progression=summoning['Doubled Upgrades'],
         goal=session_data.account.caverns['Caverns']['Gambit']['Bonuses'][0]['Value']
@@ -144,5 +147,8 @@ def getSummoningAdviceSection() -> AdviceSection:
         completed=None,
         unrated=True,
     )
+
+    doubler_costs = [getSummoningDoublerPtsCost(i) for i in range(0, 50)]
+    logger.debug(doubler_costs)
 
     return summoning_AdviceSection
