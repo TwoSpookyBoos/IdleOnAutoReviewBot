@@ -700,7 +700,7 @@ def getBuboAdviceGroup() -> AdviceGroup:
                     label=f"Consider setting {all_talentsDict[optional_talent_number]['name']} "
                           f"{nth[talent_index+1+len(good_talent_numbers)]} on your Attack Bar",
                     picture_class=all_talentsDict[optional_talent_number]['name'],
-                    progression=int(ccing_bar[talent_index] == optional_talent_number),
+                    progression=int(ccing_bar[talent_index+len(good_talent_numbers)] == optional_talent_number),
                     goal=1,
                     completed=True
                 ))
