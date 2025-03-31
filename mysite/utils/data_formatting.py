@@ -11,7 +11,7 @@ from babel.dates import format_datetime
 from flask import request, g as session_data
 
 from consts import humanReadableClasses, skillIndexList, emptySkillList, maxCharacters
-from models.custom_exceptions import ProfileNotFound, EmptyResponse, IEConnectionFailed, WtfDataException
+from models.custom_exceptions import ProfileNotFound, EmptyResponse, APIConnectionFailed, WtfDataException
 
 from .logging import get_logger
 from config import app
@@ -24,7 +24,7 @@ class HeaderData:
     JSON = "JSON"
     PUBLIC = "Public Profile"
 
-    def __init__(self, input_data):
+    def __init__(self, input_data, source_string):
         self.ie_link = ""
         self.link_text = ""
         self.first_name = ""
@@ -34,7 +34,7 @@ class HeaderData:
             username = input_data
 
             self.data_source = self.PUBLIC
-            self.link_text = app.config["IE_PROFILE_TEMPLATE"].format(username=username)
+            self.link_text = app.config[f"{source_string}_PROFILE_TEMPLATE"].format(username=username)
             self.ie_link = f"https://{self.link_text}"
             self.first_name = session_data.account.names[0]
         else:
@@ -67,29 +67,61 @@ class HeaderData:
             self.last_update = "Unable to parse last updated time, sorry :("
 
 
-def getJSONfromAPI(runType, username="scoli"):
-    if runType == "web":
-        logger.info("~~~~~~~~~~~~~~~ Getting JSON from API ~~~~~~~~~~~~~~~")
+def getJSONfromAPI(runType, username="scoli", source_string='all'):
+    # logger.debug(f"{username = }")
+    accepted_apis = [
+        'IE',
+        #'LB',
+        'IT'  #Last to be evaluated intentionally as it currently provides the fullest data
+    ] if source_string == 'all' else [source_string]
+    api_data = {
+        entry: {'Data': {}, 'LastUpdated': 0, 'Summary': '', 'Exception': '', 'Traceback': ''} for entry in accepted_apis
+    }
 
-    try:
-        url = app.config["IE_JSON_TEMPLATE"].format(username=username)
-        headers = {"Content-Type": "text/json", "method": "GET"}
-        response = requests.get(url, headers=headers)
+    for api_name in api_data.keys():
+        try:
+            url = app.config[f'{api_name}_JSON_TEMPLATE'].format(username=username if api_name == 'IT' else username.lower())
+            if runType == "web":
+                logger.info(f"~~~ Getting JSON from {api_name} API: {url} ~~~")
+            headers = {"Content-Type": "text/json", "method": "GET"}
+            response = requests.get(url, headers=headers)
 
-        if response.status_code == 403:
-            raise ProfileNotFound(username)
+            if response.status_code in [204, 403, 404]:
+                api_data[api_name]['Summary'] = 'ProfileNotFound'
+                logger.debug(f"{api_name} responded with {response.status_code}. Skipping.")
+                continue
+                #raise ProfileNotFound(username)
+            else:
+                account_data = response.json()
+                if not account_data:
+                    api_data[api_name]['Summary'] = 'EmptyResponse'
+                    continue
+                    #raise EmptyResponse(username)
+                else:
+                    api_data[api_name]['Data'] = (
+                        load_toolbox_data(account_data) if api_name == 'IT'
+                        else account_data
+                    )
+                    api_data[api_name]['LastUpdated'] = safe_loads(safe_loads(safe_loads(api_data[api_name]['Data']).get('TimeAway', {})).get('GlobalTime', 0))
+                    # logger.debug(f"Last updated time epoch = {api_data[api_name]['LastUpdated']}")
+        except requests.exceptions.RequestException as e:
+            logger.warning(f"Error retrieving data from {api_name}: {e}")
+            api_data[api_name]['Exception'] = e
+            api_data[api_name]['Traceback'] = traceback.format_exc()
 
-        account_data = response.json()
-
-        if not account_data:
-            raise EmptyResponse(username)
-
-        return account_data
-
-    except requests.exceptions.RequestException as e:
-        logger.exception(f"Error retrieving data from IE for %s", e.request.url, exc_info=e)
-        raise IEConnectionFailed(e, traceback.format_exc())
-
+    freshest = ('', 0)
+    for api_name, api_dict in api_data.items():
+        #If IE and IT are tied (the equals scenario), take Toolbox as it contains more information
+        if api_dict['LastUpdated'] >= freshest[1]:
+            freshest = (api_name, api_dict['LastUpdated'])
+    if freshest[1] == 0:
+        raise ProfileNotFound(username)
+    if freshest[0] == '':
+        # TODO: Figure out combining this information into a single exception, if somehow all sources errored
+        raise APIConnectionFailed(api_data["IE"]["Exception"], api_data["IE"]["Traceback"])
+    else:
+        # logger.debug(f'Freshest data source: {freshest[0]}')
+        return api_data[freshest[0]]['Data'], freshest[0]
 
 def getJSONfromText(runType, rawJSON):
     if runType == "web":
@@ -99,11 +131,14 @@ def getJSONfromText(runType, rawJSON):
 
     if from_toolbox(parsed):  # Check to see if this is Toolbox JSON
         parsed = load_toolbox_data(parsed)
+        source_string = 'Toolbox JSON'
+    else:
+        source_string = 'Other JSON'
 
     if "OptLacc" not in parsed:
         raise WtfDataException(rawJSON)
 
-    return parsed
+    return parsed, source_string
 
 
 def load_toolbox_data(rawJSON):
