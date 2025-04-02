@@ -262,7 +262,8 @@ $events: (
 	golden-giftmas-box-card: img('wiki/Golden_Giftmas_Box_Card.png'),
 	bubbulyte-card: img('wiki/Bubbulyte_Card.png'),
 	spring-splendor-card: img('wiki/Spring_Splendor_Card.png'),
-	falloween-pumpkin-card: img('wiki/Falloween_Pumpkin_Card.png')
+	falloween-pumpkin-card: img('wiki/Falloween_Pumpkin_Card.png'),
+	idleon-fourth-anniversary-card: img('data/CardsY19.png'),
 );
 
 $all-cards: map-merge($blunder-hills, $easy-resources);

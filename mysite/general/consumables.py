@@ -1,7 +1,7 @@
 from enum import IntEnum
 from consts import expectedInventoryBagValuesDict, expectedStorageChestValuesDict, break_you_best
 from models.models import AdviceGroup, Advice, AdviceSection, Assets
-from utils.data_formatting import safe_loads
+from utils.data_formatting import safe_loads, mark_advice_completed
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
@@ -177,6 +177,9 @@ class Bag(StorageItemMixin, IntEnum):
     SHIVERING_SACK = 109
     MAMOOTH_HIDE_BAG = 110
     PEEPER_POUCH = 111
+    FOURTH_ANNIVERSARY_BAG = 112
+    TREASURE_TOTEBAG = 113
+    RUCKSACK_OF_RICHES = 114
 
     @classmethod
     def dropped(cls):
@@ -189,7 +192,8 @@ class Bag(StorageItemMixin, IntEnum):
     def from_vendor_shop(cls):
         return (
             cls.BUMMO_BAG, cls.CAPITALIST_CASE, cls.WEALTHY_WALLET,
-            cls.PROSPEROUS_POUCH, cls.SACK_OF_SUCCESS
+            cls.PROSPEROUS_POUCH, cls.SACK_OF_SUCCESS, cls.TREASURE_TOTEBAG,
+            cls.RUCKSACK_OF_RICHES
         )
 
     @classmethod
@@ -210,6 +214,10 @@ class Bag(StorageItemMixin, IntEnum):
     @classmethod
     def crafted(cls):
         return cls.BLUNDERBAG, cls.SANDY_SATCHEL, cls.SHIVERING_SACK, cls.PEEPER_POUCH
+
+    @classmethod
+    def limited(cls):
+        return cls.FOURTH_ANNIVERSARY_BAG,
 
 
 def getCandyHourSections():
@@ -296,23 +304,59 @@ def getStorageItemType(storageItemIndex, cls):
 
 def parseInventoryBagSlots() -> AdviceGroup:
     inventorySlots_AdviceDict = {}
-    currentMaxInventorySlots = 83  #As of v2.25
-    currentMaxUsableInventorySlots = 80  #As of v2.25
+    currentMaxInventorySlots = 96  #As of v2.35 4th Anniversary
+    currentMaxUsableInventorySlots = 96  #As of v2.35 4th Anniversary
     currentMaxWithoutAutoloot = currentMaxInventorySlots - 5
     defaultInventorySlots = 16  # Characters have 16 inventory slots by default
-    autoLootSlots = 5 if session_data.account.autoloot else 0
+    account_wide_inventory_bags = ['Fourth Anniversary Bag']
     character_bag_dict = {}
     character_missing_bags_dict = {}
     character_bag_slots_dict = {}
     characters_with_max_bag_slots = []
     characters_missing_usable_bag_slots = []
 
+    fourth_anni_bag_owned = any([char.character_name for char in session_data.account.all_characters if '112' in char.inventory_bags])
+    aw_total = (
+        defaultInventorySlots
+        + (5 * session_data.account.autoloot)
+        + (3 * session_data.account.event_points_shop['Bonuses']['Secret Pouch']['Owned'])
+        + (8 * fourth_anni_bag_owned)
+    )
+    aw_max = defaultInventorySlots + 5 + 3 + 8
+    aw_label = f"Account Wide: {aw_total}/{aw_max} Inventory Slots for all characters"
+    inventorySlots_AdviceDict[aw_label] = [
+        Advice(
+            label=f"Base: 16 slots",
+            picture_class='ui-inventory-bag-0',
+            progression=1,
+            goal=1
+        ),
+        Advice(
+            label=f"Autoloot Bundle: 5 slots",
+            picture_class='cash',
+            progression=int(session_data.account.autoloot),
+            goal=1
+        ),
+        Advice(
+            label=f"{{{{ Event Shop|#event-shop }}}}: Secret Pouch: 3 slots",
+            picture_class='event-shop-12',
+            progression=int(session_data.account.event_points_shop['Bonuses']['Secret Pouch']['Owned']),
+            goal=1
+        ),
+        Advice(
+            label=f"4th Anniversary Bag (Limited Availability)",
+            picture_class='fourth-anniversary-bag',
+            progression=int(fourth_anni_bag_owned),
+            goal=1
+        )
+    ]
+
     for character in session_data.account.all_characters:
         character_bag_dict[character.character_index] = character.inventory_bags
         character_missing_bags_dict[character.character_index] = [bag for bag in Bag if str(bag.value) not in character.inventory_bags]
 
     for chararacter_index, bagDict in character_bag_dict.items():
-        sumSlots = defaultInventorySlots + autoLootSlots
+        sumSlots = aw_total
         for bag in bagDict:
             if isinstance(bagDict[bag], int | float | str):
                 try:
@@ -346,20 +390,21 @@ def parseInventoryBagSlots() -> AdviceGroup:
             Advice(
                 label=f"{bag.pretty_name}: {expectedInventoryBagValuesDict[bag.value]} slots ({bag.type})",
                 picture_class=bag.pretty_name,
+                progression=0,
+                goal=1,
                 completed=False
-            ) for bag in character_missing_bags_dict[character_index]
+            ) for bag in character_missing_bags_dict[character_index] if bag.pretty_name not in account_wide_inventory_bags
         ]
+
+    for subgroupName in inventorySlots_AdviceDict:
+        for advice in inventorySlots_AdviceDict[subgroupName]:
+            mark_advice_completed(advice)
 
     inventorySlots_AdviceGroup = AdviceGroup(
         tier="",
         pre_string="Collect more inventory space",
         advices=inventorySlots_AdviceDict,
-        informational=True,
-        post_string=(
-            '+5 slots from AutoLoot included.'
-            if session_data.account.autoloot else
-            'AutoLoot is set to Unpurchased. This bundle gives 5 inventory slots.'
-        )
+        informational=True
     )
     inventorySlots_AdviceGroup.remove_empty_subgroups()
     return inventorySlots_AdviceGroup
@@ -367,15 +412,36 @@ def parseInventoryBagSlots() -> AdviceGroup:
 def parseStorageChests():
     usedStorageChests = safe_loads(session_data.account.raw_data.get('InvStorageUsed', []))
     missing_chests = [chest for chest in StorageChest if str(chest.value) not in usedStorageChests.keys()]
+    other_storage = {
+        'Event Shop': {
+            'Storage Chest': 12,
+            'Storage Vault': 16
+        }
+    }
 
-    advices = [
-        Advice(
-            label=f"{chest.pretty_name}: {expectedStorageChestValuesDict[chest.value]} slots ({chest.type})",
-            picture_class=chest.pretty_name,
-            completed=False
-        )
-        for chest in missing_chests
-    ]
+    advices = {
+        'Other Bonuses': [],
+        'Usable Chests': []
+    }
+
+    for source, details in other_storage.items():
+        if source == 'Event Shop':
+            for bonus_name, bonus_slots in details.items():
+                if not session_data.account.event_points_shop['Bonuses'][bonus_name]['Owned']:
+                    advices['Other Bonuses'].append(Advice(
+                        label=f"{{{{ Event Shop|#event-shop }}}}: {bonus_name}: {bonus_slots} slots",
+                        picture_class=session_data.account.event_points_shop['Bonuses'][bonus_name]['Image'],
+                        progression=0,
+                        goal=1
+                    ))
+
+    advices['Usable Chests'] = [
+            Advice(
+                label=f"{chest.pretty_name}: {expectedStorageChestValuesDict[chest.value]} slots ({chest.type})",
+                picture_class=chest.pretty_name,
+                completed=False
+            ) for chest in missing_chests
+        ]
 
     group = AdviceGroup(
         tier="",

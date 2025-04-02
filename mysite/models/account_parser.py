@@ -51,7 +51,7 @@ from consts import (
     caverns_villagers, caverns_conjuror_majiks, caverns_engineer_schematics, caverns_engineer_schematics_unlock_order, caverns_cavern_names,
     caverns_measurer_measurements, caverns_measurer_HI55, getCavernResourceImage, max_buckets, max_sediments, sediment_bars, getVillagerEXPRequired,
     monument_bonuses, bell_clean_improvements, bell_ring_bonuses, getBellExpRequired, getGrottoKills, lamp_wishes, key_cards, getWishCost,
-    schematics_unlocking_harp_chords, harp_chord_effects, max_harp_notes, lamp_world_wish_values, caverns_librarian_studies, max_cavern,
+    schematics_unlocking_harp_chords, harp_chord_effects, max_harp_notes, lamp_world_wish_values, caverns_librarian_studies,
     caverns_jar_max_rupies, caverns_jar_collectibles_count, caverns_jar_collectibles, caverns_jar_jar_types, caverns_jar_max_jar_types,
     caverns_gambit_pts_bonuses, caverns_gambit_challenge_names, caverns_gambit_total_challenges, schematics_unlocking_gambit_challenges,
 )
@@ -1624,7 +1624,6 @@ def _parse_w4_cooking_ribbons(account):
             if raw_ribbons:
                 logger.exception(f"Could not retrieve Ribbon for {meal_name}")
 
-
 def _parse_w4_lab(account):
     raw_lab = safe_loads(account.raw_data.get("Lab", []))
     _parse_w4_lab_chips(account, raw_lab)
@@ -1866,7 +1865,6 @@ def _parse_w4_breeding_pets(account, rawBreeding):
     # Sort the Grouped bonus by Days to next Shiny Level
     for groupedBonus in account.breeding["Grouped Bonus"]:
         account.breeding["Grouped Bonus"][groupedBonus].sort(key=lambda x: float(x[2]))
-
 
 def _parse_w5(account):
     account.gaming = {
