@@ -344,7 +344,7 @@ def parseInventoryBagSlots() -> AdviceGroup:
             goal=1
         ),
         Advice(
-            label=f"4th Anniversary Bag (Limited Availability)",
+            label=f"4th Anniversary Bag: 8 slots (Limited Availability)",
             picture_class='fourth-anniversary-bag',
             progression=int(fourth_anni_bag_owned),
             goal=1
