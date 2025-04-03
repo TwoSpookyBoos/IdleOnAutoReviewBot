@@ -58,7 +58,7 @@
 @import "summoning";
 
 $id-map: (
-	item-backpack-space: $inventory-bag-u,
+	//item-backpack-space: $inventory-bag-u,
 	//more-storage-space: $cosmic-storage-chest,
 
 // Ores
@@ -766,6 +766,8 @@ timeless-nametag: $timeless-nametag,
 snowflake-nametag: $snowflake-nametag,
 frostyman-nametag: $frostyman-nametag,
 lovely-day-nametag: $lovely-day-nametag,
+spectacular-4th-year-nametag: $spectacular-4th-year-nametag,
+fourth-anniversary-idleon-nametag: $fourth-anniversary-idleon-nametag,
 
 // Mining Pickaxes
 
@@ -1727,73 +1729,6 @@ atomic-stamp: $atomic-stamp,
 cavern-resource-stamp: $cavern-resource-stamp,
 study-hall-stamp: $study-hall-stamp,
 
-// inventory bags
-
-inventory-bag-a: $inventory-bag-a,
-inventory-bag-b: $inventory-bag-b,
-inventory-bag-c: $inventory-bag-c,
-inventory-bag-d: $inventory-bag-d,
-inventory-bag-e: $inventory-bag-e,
-inventory-bag-f: $inventory-bag-f,
-inventory-bag-g: $inventory-bag-g,
-inventory-bag-h: $inventory-bag-h,
-inventory-bag-u: $inventory-bag-u,
-inventory-bag-v: $inventory-bag-v,
-inventory-bag-w: $inventory-bag-w,
-inventory-bag-x: $inventory-bag-x,
-inventory-bag-y: $inventory-bag-y,
-inventory-bag-z: $inventory-bag-z,
-snakeskinventory-bag: $snakeskinventory-bag,
-totally-normal-and-not-fake-bag: $totally-normal-and-not-fake-bag,
-blunderbag: $blunderbag,
-sandy-satchel: $sandy-satchel,
-bummo-bag: $bummo-bag,
-capitalist-case: $capitalist-case,
-wealthy-wallet: $wealthy-wallet,
-prosperous-pouch: $prosperous-pouch,
-sack-of-success: $sack-of-success,
-shivering-sack: $shivering-sack,
-mamooth-hide-bag: $mamooth-hide-bag,
-peeper-pouch: $peeper-pouch,
-
-// storage chests
-
-storage-chest-1: $storage-chest-1,
-storage-chest-2: $storage-chest-2,
-storage-chest-3: $storage-chest-3,
-storage-chest-4: $storage-chest-4,
-storage-chest-5: $storage-chest-5,
-storage-chest-6: $storage-chest-6,
-storage-chest-7: $storage-chest-7,
-storage-chest-8: $storage-chest-8,
-storage-chest-9: $storage-chest-9,
-storage-chest-10: $storage-chest-10,
-storage-chest-11: $storage-chest-11,
-storage-chest-12: $storage-chest-12,
-storage-chest-13: $storage-chest-13,
-storage-chest-14: $storage-chest-14,
-storage-chest-15: $storage-chest-15,
-storage-chest-16: $storage-chest-16,
-storage-chest-17: $storage-chest-17,
-storage-chest-18: $storage-chest-18,
-storage-chest-19: $storage-chest-19,
-storage-chest-20: $storage-chest-20,
-storage-chest-21: $storage-chest-21,
-storage-chest-22: $storage-chest-22,
-storage-chest-23: $storage-chest-23,
-storage-chest-24: $storage-chest-24,
-storage-chest-25: $storage-chest-25,
-storage-chest-26: $storage-chest-26,
-storage-chest-27: $storage-chest-27,
-storage-chest-28: $storage-chest-28,
-dank-paypay-chest: $dank-paypay-chest,
-gelatinous-chest: $gelatinous-chest,
-cheesy-chest: $cheesy-chest,
-woodlin-chest: $woodlin-chest,
-ninja-chest: $ninja-chest,
-holiday-chest: $holiday-chest,
-valenslime-chest: $valenslime-chest,
-
 // fishing - twines
 
 copper-twine: $copper-twine,
@@ -2093,7 +2028,7 @@ temple-torch: $temple-torch,
 $id-map: map-merge($sections-map, $id-map);
 $id-map: map-merge($all-world-contents, $id-map);
 $id-map: map-merge($skill-icons, $id-map);
-$id-map: map-merge($storage-items, $id-map);
+$id-map: map-merge($all-storage-items, $id-map);
 $id-map: map-merge($character-classes, $id-map);
 $id-map: map-merge($breeding-map, $id-map);
 $id-map: map-merge($bribes-map, $id-map);

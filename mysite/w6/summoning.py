@@ -148,7 +148,4 @@ def getSummoningAdviceSection() -> AdviceSection:
         unrated=True,
     )
 
-    doubler_costs = [getSummoningDoublerPtsCost(i) for i in range(0, 50)]
-    logger.debug(doubler_costs)
-
     return summoning_AdviceSection

@@ -650,6 +650,9 @@ InvBag108: Sack of Success
 InvBag109: Shivering Sack
 InvBag110: Mamooth Hide Bag
 InvBag111: Peeper Pouch
+InvBag112: Fourth Anniversary Bag
+InvBag113: Treasure Totebag
+InvBag114: Rucksack Of Riches
 InvStorage1: Storage Chest 1
 InvStorage2: Storage Chest 2
 InvStorage3: Storage Chest 3
@@ -1401,6 +1404,8 @@ EquipmentNametag13: Timeless Nametag
 EquipmentNametag14: Snowflake Nametag
 EquipmentNametag15: Frostyman Nametag
 EquipmentNametag16: Lovely Day Nametag
+EquipmentNametag17: Spectacular 4th Year Nametag
+EquipmentNametag18: Fourth Anniversary Idleon Nametag
 EquipmentKeychain0: Simple Key Chain
 EquipmentKeychain1: Leafy Chain
 EquipmentKeychain2: Red Sneaker Chain
@@ -1721,6 +1726,7 @@ Quest91: Golden Gift
 Quest92: Giftmas Present
 Quest93: Worship Floppy Disc
 Quest94: Temple Torch
+Quest95: Birthday Candle
 EquipmentSmithingTabs2: Anvil Tab II
 EquipmentSmithingTabs3: Anvil Tab III
 EquipmentSmithingTabs4: Anvil Tab IV
@@ -1978,6 +1984,9 @@ EquipmentHats111: Epic Santa Hat
 EquipmentHats112: Deathbringer Hood of Death
 EquipmentHats113: Pink Beanie
 EquipmentHats114: True Crown
+EquipmentHats115: Celebration Mane
+EquipmentHats116: Goldberry
+EquipmentHats117: Orange Beanie
 CardsA0: Green Mushroom Card
 CardsA1: Red Mushroom Card
 CardsA2: Frog Card
@@ -2186,6 +2195,7 @@ CardsY15: Giant Rose Card
 CardsY16: Bubbulyte Card
 CardsY17: Spring Splendor Card
 CardsY18: Falloween Pumpkin Card
+CardsY19: IdleOn Fourth Anniversary Card
 CardsZ0: Baba Yaga Card
 CardsZ1: Dr Defecaus Card
 CardsZ2: Amarok Card
