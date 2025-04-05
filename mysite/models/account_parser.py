@@ -3259,6 +3259,7 @@ def _parse_w6_summoning_battles_endless(account):
             'Defeated': true_battle_index < account.summoning['Battles']['Endless'],
             'Image': summoning_endlessEnemies.get(image_index, ''),
             'RewardType': summoning_endlessDict.get(endless_enemy_index, {}).get('RewardID', 'Unknown'),
+            'Challenge': summoning_endlessDict.get(endless_enemy_index, {}).get('Challenge', 'Unknown'),
             # 'RewardQTY': summoning_endlessDict.get(endless_enemy_index, {}).get('RewardQTY', 0),
             'RewardBaseValue': (
                 summoning_endlessDict.get(endless_enemy_index, {}).get('RewardQTY', 0)

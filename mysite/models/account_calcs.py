@@ -1365,6 +1365,7 @@ def _calculate_caverns_gambit(account):
 
 def _calculate_w6(account):
     _calculate_w6_farming(account)
+    _calculate_w6_summoning(account)
 
 def _calculate_w6_farming(account):
     _calculate_w6_farming_crop_depot(account)
@@ -1610,6 +1611,15 @@ def _calculate_w6_farming_og(account):
             * account.farming['OG']['Merit Multi']
             * account.farming['OG']['LR Multi']
             * account.farming['OG']['Pristine Multi']
+    )
+
+def _calculate_w6_summoning(account):
+    _calculate_w6_summoning_doublers(account)
+
+def _calculate_w6_summoning_doublers(account):
+    account.summoning['Total Doublers Owned'] = (
+        account.caverns['Caverns']['Gambit']['Bonuses'][0]['Value']
+        + (10 * account.event_points_shop['Bonuses']['Summoning Star']['Owned'])
     )
 
 def _calculate_wave_3(account):
