@@ -416,7 +416,13 @@ def parseStorageChests():
         'Event Shop': {
             'Storage Chest': 12,
             'Storage Vault': 16
-        }
+        },
+        'Vault': {
+            'Storage Slots': session_data.account.vault['Upgrades']['Storage Slots']['Max Level']
+        },
+        'Construction Buildings': {
+            'Chest Space': 2 * (session_data.account.construction_buildings['Chest Space']['MaxLevel'] - 1)
+        },
     }
 
     advices = {
@@ -433,6 +439,24 @@ def parseStorageChests():
                         picture_class=session_data.account.event_points_shop['Bonuses'][bonus_name]['Image'],
                         progression=0,
                         goal=1
+                    ))
+        elif source == 'Vault':
+            for upgrade_name, upgrade_slots in details.items():
+                if session_data.account.vault['Upgrades'][upgrade_name]['Level'] < upgrade_slots:
+                    advices['Other Bonuses'].append(Advice(
+                        label=f"{{{{ Upgrade Vault|#upgrade-vault }}}}: {upgrade_name}: {upgrade_slots} total slots",
+                        picture_class=session_data.account.vault['Upgrades'][upgrade_name]['Image'],
+                        progression=session_data.account.vault['Upgrades'][upgrade_name]['Level'],
+                        goal=session_data.account.vault['Upgrades'][upgrade_name]['Max Level']
+                    ))
+        elif source == 'Construction Buildings':
+            for building_name, building_slots in details.items():
+                if session_data.account.construction_buildings[building_name]['Level'] < session_data.account.construction_buildings[building_name]['MaxLevel']:
+                    advices['Other Bonuses'].append(Advice(
+                        label=f"{{{{ Construction Building|#buildings }}}}: {building_name}: {building_slots} total slots",
+                        picture_class=session_data.account.construction_buildings[building_name]['Image'],
+                        progression=session_data.account.construction_buildings[building_name]['Level'],
+                        goal=session_data.account.construction_buildings[building_name]['MaxLevel']
                     ))
 
     advices['Usable Chests'] = [

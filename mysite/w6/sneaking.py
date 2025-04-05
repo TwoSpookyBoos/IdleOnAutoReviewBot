@@ -29,7 +29,7 @@ def getSneakingProgressionTiersAdviceGroups():
             #     gemstoneData.get('Level', 0),
             #     gemstoneData.get('Value', 0),
             #     gemstoneData.get('Stat', '')),
-            label=f"Level {gemstoneData['Level']} {gemstoneName}:"
+            label=f"Level {gemstoneData['Level']:,} {gemstoneName}:"
                   f" +{gemstoneData['BaseValue']:,.2f}/{sneakingGemstonesMaxValueDict.get(gemstoneName, 0):,}% {gemstoneData['Stat']}"
                   f"{boosted_value}",
             picture_class=gemstoneName,

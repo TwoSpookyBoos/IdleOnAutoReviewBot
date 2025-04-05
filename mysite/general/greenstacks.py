@@ -240,27 +240,30 @@ def getGStackAdviceSections():
 
     #Equinox Dream Review
     overall_SectionTier = 0
-    info_tiers = 0
+    info_tiers = 2
     max_tier = max(greenstack_progressionTiers.keys(), default=0) - info_tiers
     true_max = max_tier + info_tiers
     dream_advice = {}
     for tier_number, requirements in greenstack_progressionTiers.items():
-        subgroup_name = f"To reach Tier {tier_number}"
-        if not equinoxDreamsStatus.get(f"Dream{requirements['Dream Number']}", False):
+        subgroup_name = f"To reach {'Informational ' if tier_number > max_tier else ''}Tier {tier_number}"
+        if not equinoxDreamsStatus.get(f"Dream{requirements.get('Dream Number', 29)}", False) or (
+                tier_number > max_tier and requirements['Required Stacks'] > expectedGStacksCount
+        ):
             dream_advice[subgroup_name] = [
                 Advice(
                     label=f"Collect {requirements['Required Stacks']} Greenstacks",
                     picture_class='greenstacks',
                     progression=expectedGStacksCount,
                     goal=requirements['Required Stacks']
-                ),
-                Advice(
+                )
+            ]
+            if tier_number <= max_tier:
+                dream_advice[subgroup_name].append(Advice(
                     label=f"Turn in {{{{ Equinox|#equinox }}}} Dream {requirements['Dream Number']}",
                     picture_class='equinox-dreams',
                     progression=int(equinoxDreamsStatus[f"Dream{requirements['Dream Number']}"]),
                     goal=int(1)
-                )
-            ]
+                ))
         else:
             overall_SectionTier += 1
 
