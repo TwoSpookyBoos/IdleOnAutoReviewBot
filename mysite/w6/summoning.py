@@ -6,6 +6,7 @@ from consts import (
     break_you_best, infinity_string, summoningDict, summoning_doubler_recommendations, getSummoningDoublerPtsCost,
     # summoning_progressionTiers
 )
+from utils.text_formatting import notateNumber
 
 logger = get_logger(__name__)
 
@@ -35,7 +36,8 @@ def getEndlessAdviceGroup() -> AdviceGroup:
 
     endless_advice = [
         Advice(
-            label=f"{battle_number}: {battle_details['Description']}",
+            label=f"{battle_number}: {battle_details['Challenge']}"
+                  f"<br>Reward: {battle_details['Description']}",
             picture_class=battle_details['Image'],
             progression=session_data.account.summoning['Battles']['Endless'],
             goal=battle_number
@@ -51,33 +53,51 @@ def getEndlessAdviceGroup() -> AdviceGroup:
     return endless_ag
 
 def getUpgradesAdviceGroup() -> AdviceGroup:
+    sources = 'Available Doublers and their Sources'
     doublers = 'Recommended Upgrades to Double for Matches'
     upgrades_advice = {
+        sources: [],
         doublers: []
     }
-    upgrades_advice.update({k:[] for k in summoningDict.keys()})
+    upgrades_advice.update({f"{k} Upgrades":[] for k in summoningDict.keys()})
 
     summoning = session_data.account.summoning
+    doublers_spent = summoning['Doubled Upgrades']
+    doublers_owned = summoning['Total Doublers Owned']
 
     #Generate Alert
-    if summoning['Doubled Upgrades'] < session_data.account.caverns['Caverns']['Gambit']['Bonuses'][0]['Value']:
-        avail = session_data.account.caverns['Caverns']['Gambit']['Bonuses'][0]['Value'] - summoning['Doubled Upgrades']
+    if doublers_spent < doublers_owned:
         session_data.account.alerts_AdviceDict['World 6'].append(Advice(
-            label=f"{avail} available {{{{ Summoning|#summoning }}}} Upgrade doublers",
+            label=f"{doublers_owned - doublers_spent} available {{{{ Summoning|#summoning }}}} Upgrade doublers",
             picture_class='summoning'
         ))
 
-    next_doubler = getSummoningDoublerPtsCost(session_data.account.caverns['Caverns']['Gambit']['Bonuses'][0]['Value'])
+    #Sources
+    next_doubler_cost = getSummoningDoublerPtsCost(session_data.account.caverns['Caverns']['Gambit']['Bonuses'][0]['Value'])
+    notated_next_doubler_cost = notateNumber('Basic', next_doubler_cost, decimals=3)
+    notated_gambit_pts = notateNumber('Match', session_data.account.caverns['Caverns']['Gambit']['TotalPts'], 3,matchString=notated_next_doubler_cost)
 
-    upgrades_advice[doublers].append(Advice(
-        label=f"{summoning['Doubled Upgrades']}/{session_data.account.caverns['Caverns']['Gambit']['Bonuses'][0]['Name']} "
-              f"from {{{{ Gambit Cavern|#underground-overgrowth}}}} spent"
-              f"<br>Next Doubler at {next_doubler:,} Total Gambit PTS ({next_doubler - session_data.account.caverns['Caverns']['Gambit']['TotalPts']:,.0f} to go!)",
+    upgrades_advice[sources].append(Advice(
+        label=f"{session_data.account.caverns['Caverns']['Gambit']['Bonuses'][0]['Name']} earned from {{{{ Gambit Cavern|#underground-overgrowth}}}}"
+              f"<br>Next Doubler at {notated_next_doubler_cost} Total Gambit PTS ({next_doubler_cost - session_data.account.caverns['Caverns']['Gambit']['TotalPts']:,.0f} to go!)",
         picture_class=session_data.account.caverns['Caverns']['Gambit']['Bonuses'][0]['Image'],
-        progression=summoning['Doubled Upgrades'],
-        goal=session_data.account.caverns['Caverns']['Gambit']['Bonuses'][0]['Value']
+        progression=notated_gambit_pts,
+        goal=notated_next_doubler_cost
+    ))
+    upgrades_advice[sources].append(Advice(
+        label=f"{10 * session_data.account.event_points_shop['Bonuses']['Summoning Star']['Owned']} earned from {{{{ Event Shop|#event-shop}}}}: Summoning Star",
+        picture_class=session_data.account.event_points_shop['Bonuses']['Summoning Star']['Image'],
+        progression=10 * session_data.account.event_points_shop['Bonuses']['Summoning Star']['Owned'],
+        goal=10
+    ))
+    upgrades_advice[sources].append(Advice(
+        label=f"{doublers_spent}/{doublers_owned} total doublers spent",
+        picture_class='summoning',
+        progression=doublers_spent,
+        goal=doublers_owned
     ))
 
+    #Doubler Recommendations
     for upgrade_name in summoning_doubler_recommendations:
         upgrades_advice[doublers].append(Advice(
             label=f"{summoning['Upgrades'][upgrade_name]['Color']}: {upgrade_name}: "
@@ -86,9 +106,17 @@ def getUpgradesAdviceGroup() -> AdviceGroup:
             progression=int(summoning['Upgrades'][upgrade_name]['Doubled']),
             goal=1
         ))
+    upgrades_advice[doublers].append(Advice(
+        label=f"You're on your own now. You may consider:"
+              f"<br>Essence Generation (Cyan, White, Purple, Blue, yolo)"
+              f"<br>Cyan: Cost Deflation and Red: Cost Crashing for Cost Reduction"
+              f"<br>Yellow: Unit Constitution (HP is circumstantial at best)",
+        picture_class='rift-guy'
+    ))
 
+    #Normal Upgrades
     for upg_name, upg_details in summoning['Upgrades'].items():
-        upgrades_advice[upg_details['Color']].append(Advice(
+        upgrades_advice[f"{upg_details['Color']} Upgrades"].append(Advice(
             label=(
                 f"{upg_name}"
                 if upg_details['Unlocked'] else
