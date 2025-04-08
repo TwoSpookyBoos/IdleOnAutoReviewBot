@@ -78,10 +78,12 @@ $                                                                # line end
 """, re.VERBOSE)
 
 def format_character_name(name: str) -> tuple[str, InputType]:
+    """match group dict looks like e.g. {'all': None, 'IT': 'NikoKoni', 'IE': None, 'LB': None}"""
     groups = pattern.match(name).groupdict()
-    input_type, formatted_name = next((InputType(k), v) for k, v in groups.items() if v)
+    input_type, formatted_name = next(group for group in groups.items() if group[1])
+    formatted_name = re.sub(r'\W', "_", formatted_name.lower())
     # logger.debug(f"{name = }, {formatted_name = }")
-    return formatted_name, input_type
+    return formatted_name, InputType(input_type)
 
 
 __items_path = Path(app.static_folder) / 'items.yaml'
