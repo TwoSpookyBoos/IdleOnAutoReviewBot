@@ -29,7 +29,7 @@ from consts import (
 
 )
 from utils.data_formatting import safe_loads, safer_get
-from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName
+from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, InputType
 
 
 def session_singleton(cls):
@@ -1272,10 +1272,10 @@ def buildMaps() -> dict[int, dict]:
 @session_singleton
 class Account:
 
-    def __init__(self, json_data, source_string):
+    def __init__(self, json_data, source_string: InputType):
         self.raw_data = safe_loads(json_data)
         self.version = safer_get(self.raw_data, 'DoOnceREAL', 0.00)
-        self.data_source = source_string
+        self.data_source = source_string.value
         self._prep_alerts_AG()
 
     def _prep_alerts_AG(self):

@@ -26,7 +26,7 @@ from models.custom_exceptions import (
 from utils.text_formatting import (
     is_username,
     json_schema_valid,
-    format_character_name,
+    format_character_name, InputType,
 )
 from utils.logging import (
     ResponseCache,
@@ -47,29 +47,21 @@ def get_user_input() -> str:
 
 def parse_user_input():
     data = get_user_input()
-    source_string = ''
+    parsed = ''
 
     if not data:
         return None, None
 
-    if len(data) <= 16:
-        source_string = 'all'
-    elif len(data) >= 1e6:
+    if len(data) >= 1e6:
         raise DataTooLong("Submitted data is too long.", data)
 
     if is_username(data):
-        if 'idleonefficiency.com' in data.lower():
-            source_string = 'IE'
-        elif 'idleontoolbox.com' in data.lower():
-            source_string = 'IT'
-        elif 'idleonleaderboards.com' in data.lower():
-            source_string = 'LB'
-        parsed = format_character_name(data, source_string)
+        parsed, source_string = format_character_name(data)
 
     elif json_schema_valid(data):
         try:
             parsed = json.loads(data)
-            source_string = 'JSON'
+            source_string = InputType.JSON
         except json.JSONDecodeError as e:
             raise custom_exceptions.JSONDecodeError(data)
 
@@ -196,7 +188,7 @@ def results() -> Response | str:
 
 
 @app.route("/", methods=["GET"])
-def index() -> Response | str:
+def index() -> Response:
     is_beta: bool = app.config["DOMAIN_BETA"] in request.host
 
     live_link = "live"
@@ -296,7 +288,7 @@ def logtest():
 def autoReviewBot(
     capturedCharacterInput,
     source_string
-) -> tuple[list[AdviceWorld], HeaderData] | tuple[None, None]:
+) -> tuple[list[AdviceWorld] | None, HeaderData | None]:
     reviewInfo: list[AdviceWorld] | None = None
     headerData: HeaderData | None = None
 
