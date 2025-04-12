@@ -249,6 +249,8 @@ def _parse_general_gemshop(account):
             logger.warning(f"Gemshop Parse error with purchaseIndex {purchaseIndex}: {e}. Defaulting to 0")
             account.gemshop[purchaseName] = 0
 
+    account.minigame_plays_daily = 5 + (4 * account.gemshop['Daily Minigame Plays'])
+
 def _parse_general_gemshop_optlacc(account):
     for purchase_name, optlacc_index in gem_shop_optlacc_dict.items():
         try:
