@@ -81,7 +81,7 @@ def format_character_name(name: str) -> tuple[str, InputType]:
     """match group dict looks like e.g. {'all': None, 'IT': 'NikoKoni', 'IE': None, 'LB': None}"""
     groups = pattern.match(name).groupdict()
     input_type, formatted_name = next(group for group in groups.items() if group[1])
-    formatted_name = re.sub(r'\W', "_", formatted_name.lower())
+    formatted_name = re.sub(r'\W', "_", formatted_name)
     # logger.debug(f"{name = }, {formatted_name = }")
     return formatted_name, InputType(input_type)
 
