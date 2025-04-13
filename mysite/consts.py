@@ -298,18 +298,22 @@ greenstack_item_difficulty_groups = {
             ],
             "Rare Drops": [
                 "FoodPotMana3", "ButterBar", "EquipmentStatues9", "OilBarrel2", "FoodPotRe2", "FoodPotGr3", "FoodHealth9",
+                'EquipmentStatues29',  # Villager Statues from Caverns
             ],
         },
         14: {
             "Crystal Enemy Drops": [
-                "StoneW2", 'ResetFrag', "SilverPen"],  #"StoneA2",],
+                "StoneW2", 'ResetFrag', "SilverPen",
+                "EquipmentStatues23", "EquipmentStatues24", "EquipmentStatues25",  # W5 Statues
+            ],  #"StoneA2",],
             "Other Skilling Resources": [
                 "FoodTrapping1", "FoodWorship1",
                 "Critter1A", "Critter2A", "Critter3A", "Critter4A", "Critter5A", "Critter6A", "Critter7A", "Critter8A", "Critter9A", "Critter10A", "Critter11A",
                 "Ladle",
             ],
             "Rare Drops": [
-                "DesertC2b", "EfauntDrop1"
+                "DesertC2b", "EfauntDrop1",
+                'EquipmentStatues30',  # Dragon Warrior Statues from Caverns
             ]
         },
     }
@@ -2037,7 +2041,8 @@ expectedStackables = {
         "StoneT2", "StoneZ2",  "StoneW2",  #"StoneA2", # W2 upgrade stones and Mystery2
         "PureWater", "EquipmentStatues18",  #W3 Slow drops = Distilled Water + EhExPee Statue
         "EquipmentStatues20", "EquipmentStatues21", "EquipmentStatues22",  # W4 Statues
-        "FoodG9",  #W5 Slow drops = Golden W5 Sammy
+        "EquipmentStatues23", "EquipmentStatues24", "EquipmentStatues25", "FoodG9",  #W5 Slow drops = Golden W5 Sammy + Statues
+
         "FoodG11", "FoodG12"
     ],
     "Printable Skilling Resources": [
@@ -2090,7 +2095,8 @@ expectedStackables = {
         "DesertC2b",  # Ghost, 1 in 2k
         "Quest78",  # Equinox Mirror
         "EfauntDrop1",  # Basic Efaunt material
-        "Key2", "Key3"  # Efaunt and Chizoar keys
+        "Key2", "Key3",  # Efaunt and Chizoar keys
+        'EquipmentStatues29', 'EquipmentStatues30',  # Villager and Dragon Warrior statues from Caverns
     ],
     "Cheater": [
         "Sewers1b", "TreeInterior1b", "BabaYagaETC", "JobApplication",  # W1 Rare Drops
@@ -2120,7 +2126,6 @@ expectedStackables = {
         "FoodHealth8", "Quest69", "Quest74",  # Unobtainables
         "EquipmentStatues6", "EquipmentStatues15",  # Kachow and Bullseye
         "EquipmentStatues16", "EquipmentStatues17", "EquipmentStatues19",  # W3 Statues
-        "EquipmentStatues23", "EquipmentStatues24", "EquipmentStatues25",  # W5 Statues
         "FoodG1", "FoodG2", "FoodG3", "FoodG4", "FoodG5", "FoodG6", "FoodG7", "FoodG8", "FoodG10",  # Gold Foods
         "ResetCompleted", "ResetCompletedS", "ClassSwap",
         "ClassSwapB", "ResetBox",
