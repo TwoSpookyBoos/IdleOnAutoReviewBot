@@ -561,6 +561,7 @@ def _calculate_w2_ballot(account):
         + account.caverns['Majiks']['Voter Integrity']['Value']
         + account.summoning['Endless Bonuses']['% Ballot Bonus']
         + (17 * account.event_points_shop['Bonuses']['Gilded Vote Button']['Owned'])
+        + (13 * account.event_points_shop['Bonuses']['Royal Vote Button']['Owned'])
         + (5 * account.companions['Mashed Potato'])
     )
     for buffIndex, buffValuesDict in account.ballot['Buffs'].items():

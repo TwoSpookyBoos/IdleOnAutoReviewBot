@@ -4515,7 +4515,7 @@ event_points_shop_dict = {
     'Ribbon Connoisseur': {'Cost': 35, 'Code': 'm', 'Description': 'Get +3 daily Ribbons', 'Image': 'event-shop-13'},
     'Golden Square': {'Cost': 23, 'Code': 'n', 'Description': 'Get +1 Trimmed Constrution slot', 'Image': 'event-shop-14'},
     'Summoning Star': {'Cost': 30, 'Code': 'o', 'Description': 'Get +10 Summoning Doublers', 'Image': 'event-shop-15'},
-    'Royal Vote Button': {'Cost': 25, 'Code': 'p', 'Description': "Get +30% higher Ballot Bonus Multi from Voting", 'Image': 'event-shop-16'},
+    'Royal Vote Button': {'Cost': 25, 'Code': 'p', 'Description': "Get +13% higher Ballot Bonus Multi from Voting", 'Image': 'event-shop-16'},
 }
 
 ###WORLD 2 CONSTS###
