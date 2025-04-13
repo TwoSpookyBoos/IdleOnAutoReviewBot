@@ -1014,9 +1014,10 @@ def _parse_w2_p2w(account):
         
 def _parse_w2_postOffice(account):
     account.postOffice = {
-        'Completing Orders': safer_convert(account.raw_data.get("CYDeliveryBoxComplete"), 0),
-        'Streak Bonuses': safer_convert(account.raw_data.get("CYDeliveryBoxStreak"), 0),
-        'Miscellaneous': safer_convert(account.raw_data.get("CYDeliveryBoxMisc"), 0),
+        'Completing Orders': safer_convert(account.raw_data.get("CYDeliveryBoxComplete", 0), 0),
+        'Streak Bonuses': safer_convert(account.raw_data.get("CYDeliveryBoxStreak", 0), 0),
+        'Miscellaneous': safer_convert(account.raw_data.get("CYDeliveryBoxMisc", 0), 0),
+        'Upgrade Vault': safer_convert(account.raw_optlacc_dict.get(347, 0), 0)
     }
 
 def _parse_w2_arcade(account):

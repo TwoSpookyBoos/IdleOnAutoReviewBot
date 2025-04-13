@@ -544,10 +544,11 @@ def _calculate_w2_sigils(account):
         # After the +1, 0/1/2/3
 
 def _calculate_w2_postOffice(account):
-    account.postOffice["Total Boxes Earned"] = (
-            account.postOffice['Completing Orders']
-            + account.postOffice['Streak Bonuses']
-            + account.postOffice['Miscellaneous']
+    account.postOffice['Total Boxes Earned'] = (
+        account.postOffice['Completing Orders']
+        + account.postOffice['Streak Bonuses']
+        + account.postOffice['Miscellaneous']
+        + account.postOffice['Upgrade Vault']
     )
     
 def _calculate_w2_ballot(account):
