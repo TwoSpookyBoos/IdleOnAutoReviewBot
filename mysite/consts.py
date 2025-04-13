@@ -5266,10 +5266,15 @@ buildingsDict = {
     25: {'Name': 'Undead Shrine', 'Image': 'undead-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine', 'ValueBase': 5, 'ValueIncrement': 1},
     26: {'Name': 'Primordial Shrine', 'Image': 'primordial-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine', 'ValueBase': 1, 'ValueIncrement': 0.1},
 }
-buildingsTowerMaxLevel = 140
-shrinesList: list[str] = [
-    "Woodular Shrine", "Isaccian Shrine", "Crystal Shrine", "Pantheon Shrine", "Clover Shrine", "Summereading Shrine", "Crescent Shrine", "Undead Shrine", "Primordial Shrine"
-]
+# buildings_utilities = [buildingValuesDict['Name'] for buildingName, buildingValuesDict in buildingsDict.items() if buildingValuesDict['Type'] == 'Utility']
+buildings_towers = [buildingValuesDict['Name'] for buildingName, buildingValuesDict in buildingsDict.items() if buildingValuesDict['Type'] == 'Tower']
+buildingsTowerMaxLevel = (
+    50  #Base
+    + 30  #2.5 Cons Mastery
+    + 60  #2 per level times 30 max levels of Atom Collider - Carbon
+    + 100  #Cavern 14 - Gambit - Bonus Index 9
+)  #As of v2.35
+buildings_shrines: list[str] = [buildingValuesDict['Name'] for buildingName, buildingValuesDict in buildingsDict.items() if buildingValuesDict['Type'] == 'Shrine']
 #AtomInfo in code. Last pulled 2.11 Kanga
 atomsList: list[list] = [
     ["Hydrogen - Stamp Decreaser", 1, 1.35, 2, 1, "Every day you log in, the resource cost to upgrade a stamp's max lv decreases by {% up to a max of 90%. This reduction resets back to 0% when upgrading any stamp max lv."],
