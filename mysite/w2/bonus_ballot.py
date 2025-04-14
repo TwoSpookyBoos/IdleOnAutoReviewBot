@@ -47,6 +47,7 @@ def getBallotMultiAdviceGroup():
     endless = session_data.account.summoning['Endless Bonuses']['% Ballot Bonus']
     voter_integrity = session_data.account.caverns['Majiks']['Voter Integrity']
     gvb = session_data.account.event_points_shop['Bonuses']['Gilded Vote Button']
+    rvb = session_data.account.event_points_shop['Bonuses']['Royal Vote Button']
     multis_advice = {
         f"Total Multi: {session_data.account.ballot['BonusMulti']:.2f}x": [
             Advice(
@@ -65,6 +66,12 @@ def getBallotMultiAdviceGroup():
                 label=f"{{{{Event Shop|#event-shop}}}}: Gilded Vote Button: {gvb['Description']}",
                 picture_class=gvb['Image'],
                 progression=int(gvb['Owned']),
+                goal=1
+            ),
+            Advice(
+                label=f"{{{{Event Shop|#event-shop}}}}: Royal Vote Button: {rvb['Description']}",
+                picture_class=rvb['Image'],
+                progression=int(rvb['Owned']),
                 goal=1
             ),
             Advice(

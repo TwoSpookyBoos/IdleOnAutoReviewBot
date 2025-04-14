@@ -365,19 +365,25 @@ def getTalentExclusions() -> list:
     return talentExclusions
 
 def getLibraryProgressionTiersAdviceGroups():
-    character_adviceDict = {}
-    character_AdviceGroupDict = {}
-    info_tiers = 1
-    max_tier = len(librarySubgroupTiers) - 1 - info_tiers
+    category_advices = {
+        librarySubgroupTiers[0]: []
+    }
+    category_advices.update({
+        v:{
+            f"{char.character_name} the {char.class_name}":[] for char in session_data.account.all_characters
+        } for v in librarySubgroupTiers[1:-1]  #Account-Wide Priorities and VIP are not addressed per character
+    })
+    category_advices[librarySubgroupTiers[-1]] = []
+    category_advice_groups = {}
+    info_tiers = 2
+    max_tier = len(librarySubgroupTiers) - info_tiers
     anyBookAdvice = False
 
     talentExclusions = getTalentExclusions()
-    char_tiers = {}
 
     #Account-Wide, highest priority talents after increasing talent book levels
-    awp = "Account Wide Priorities"
+    awp = librarySubgroupTiers[0]
     account_wide_talent_prios = {
-        # 32:  0,   #Maestro- Printer Go Brr
         43:  [0, 'Maestro'],   #Maestro- Right Hand of Action
         56:  [0, 'Voidwalker'],   #Vman- Voodoo Statue
         57:  [0, 'Voidwalker'],   #Vman- Species Epoch
@@ -386,8 +392,6 @@ def getLibraryProgressionTiersAdviceGroups():
         178: [0, 'Divine Knight'],  #DK- King of the Remembered
         328: [0, 'Siege Breaker'],  #SB- Archlord Of The Pirates
         310: [0, 'Hunter'],  #Hunter- Eagle Eye
-        # 373: 0,  #BM- Curviture Of The Paw
-        # 508: 0,  #ES- Wormhole Emperor
     }
     for talentNumber in account_wide_talent_prios:
         #Record max level across all characters
@@ -400,9 +404,7 @@ def getLibraryProgressionTiersAdviceGroups():
             account_wide_talent_prios[talentNumber][1] in session_data.account.classes
             and account_wide_talent_prios[talentNumber][0] < session_data.account.library['MaxBookLevel']
         ):
-            if awp not in character_adviceDict:
-                character_adviceDict[awp] = []
-            character_adviceDict[awp].append(
+            category_advices[awp].append(
                 Advice(
                     label=f"Max {all_talentsDict.get(talentNumber, {}).get('name', f'Unknown{talentNumber}')} on any {account_wide_talent_prios[talentNumber][1]}",
                     picture_class=all_talentsDict.get(talentNumber, {}).get('name', f'Unknown{talentNumber}'),
@@ -410,28 +412,21 @@ def getLibraryProgressionTiersAdviceGroups():
                     goal=session_data.account.library['MaxBookLevel']
                 )
             )
-    character_AdviceGroupDict[awp] = AdviceGroup(
-        tier=0,
-        pre_string=f"Account-Wide Priority Checkouts after new max Book levels",
-        advices=character_adviceDict.get(awp, [])
-    )
 
     #Character Specific
-    for toon in session_data.account.safe_characters:
-        character_adviceDict[toon.character_name] = {}
+    for char in session_data.account.safe_characters:
+        char_banner = f"{char.character_name} the {char.class_name}"
         talentNumbersAdded = []
 
         #Skilling
         for skillName in skill_talentsDict.keys():
             for rating in skill_talentsDict[skillName]:
                 subgroupName = f"Skilling - {rating} Priority"
-                if subgroupName not in character_adviceDict[toon.character_name]:
-                    character_adviceDict[toon.character_name][subgroupName] = []
                 if skill_talentsDict[skillName][rating]:   # Trying to .items() on an empty dict gets angy- This should prevent that.
                     for talent_number, talentDetailsDict in skill_talentsDict[skillName][rating].items():
                         if (
-                                (skillName == "Utility" or skillName in toon.specialized_skills)
-                                and talent_number in toon.expected_talents
+                                (skillName == "Utility" or skillName in char.specialized_skills)
+                                and talent_number in char.expected_talents
                                 and talent_number not in talentExclusions
                                 and talent_number not in talentNumbersAdded
                         ):
@@ -442,15 +437,15 @@ def getLibraryProgressionTiersAdviceGroups():
                                     talentDetailsDict['Optimal'][0],
                                     talentDetailsDict['Optimal'][1],
                                     talentDetailsDict['Optimal'][2],
-                                    toon.max_talents_over_books)
-                            #logger.debug(f"{toon.character_name} {skillName} {rating} {talentDetailsDict['Name']}: min({session_data.account.library['MaxBookLevel']}, {jeopardy_goal_level}, {hardcap_level}) = {min(session_data.account.library['MaxBookLevel'], jeopardy_goal_level, hardcap_level)}")
+                                    char.max_talents_over_books)
+                            #logger.debug(f"{char.character_name} {skillName} {rating} {talentDetailsDict['Name']}: min({session_data.account.library['MaxBookLevel']}, {jeopardy_goal_level}, {hardcap_level}) = {min(session_data.account.library['MaxBookLevel'], jeopardy_goal_level, hardcap_level)}")
                             goal_level = min(session_data.account.library['MaxBookLevel'], jeopardy_goal_level, hardcap_level)
-                            if toon.max_talents.get(str(talent_number), 0) < goal_level:
-                                character_adviceDict[toon.character_name][subgroupName].append(
+                            if char.max_talents.get(str(talent_number), 0) < goal_level:
+                                category_advices[subgroupName][char_banner].append(
                                     Advice(
                                         label=f"{talentDetailsDict['Tab']}: {talentDetailsDict['Name']}",
                                         picture_class=talentDetailsDict['Name'],
-                                        progression=toon.max_talents.get(str(talent_number), 0),
+                                        progression=char.max_talents.get(str(talent_number), 0),
                                         goal=goal_level
                                     )
                                 )
@@ -460,13 +455,11 @@ def getLibraryProgressionTiersAdviceGroups():
         for className in combat_talentsDict.keys():
             for rating in combat_talentsDict[className]:
                 subgroupName = f"Combat - {rating} Priority"
-                if subgroupName not in character_adviceDict[toon.character_name]:
-                    character_adviceDict[toon.character_name][subgroupName] = []
-                if className == toon.class_name:  #Only check recommendations for their CURRENT class
+                if className == char.class_name:  #Only check recommendations for their CURRENT class
                     if combat_talentsDict[className][rating]:  # Trying to .items() on an empty dict gets angy- This should prevent that.
                         for talent_number, talentDetailsDict in combat_talentsDict[className][rating].items():
                             if (
-                                    talent_number in toon.expected_talents
+                                    talent_number in char.expected_talents
                                     and talent_number not in talentExclusions
                                     and talent_number not in talentNumbersAdded
                             ):
@@ -477,66 +470,43 @@ def getLibraryProgressionTiersAdviceGroups():
                                         talentDetailsDict['Optimal'][0],
                                         talentDetailsDict['Optimal'][1],
                                         talentDetailsDict['Optimal'][2],
-                                        toon.max_talents_over_books)
+                                        char.max_talents_over_books)
                                 goal_level = min(session_data.account.library['MaxBookLevel'], jeopardy_goal_level, hardcap_level)
-                                if toon.max_talents.get(str(talent_number), 0) < goal_level:
-                                    character_adviceDict[toon.character_name][subgroupName].append(
+                                if char.max_talents.get(str(talent_number), 0) < goal_level:
+                                    category_advices[subgroupName][char_banner].append(
                                         Advice(
                                             label=f"{talentDetailsDict['Tab']}: {talentDetailsDict['Name']}",
                                             picture_class=talentDetailsDict['Name'],
-                                            progression=toon.max_talents.get(str(talent_number), 0),
+                                            progression=char.max_talents.get(str(talent_number), 0),
                                             goal=goal_level
                                         )
                                     )
                                     talentNumbersAdded.append(talent_number)
 
-        #Everything Else
-        subgroupName = librarySubgroupTiers[-1]
-        if subgroupName not in character_adviceDict[toon.character_name]:
-            character_adviceDict[toon.character_name][subgroupName] = []
-        for talent_number in toon.expected_talents:
+        #ALL Unmaxed Talents
+        subgroupName = librarySubgroupTiers[-2]  #'ALL Unmaxed Talents'
+        for talent_number in char.expected_talents:
             if talent_number not in unbookable_talents_list:
-                if toon.max_talents.get(str(talent_number), 0) < session_data.account.library['MaxBookLevel']:
-                    character_adviceDict[toon.character_name][subgroupName].append(
+                if char.max_talents.get(str(talent_number), 0) < session_data.account.library['MaxBookLevel']:
+                    category_advices[subgroupName][char_banner].append(
                         Advice(
                             label=f"{all_talentsDict.get(talent_number, {}).get('subClass', 'Unknown')}: {all_talentsDict.get(talent_number, {}).get('name', f'Unknown{talent_number}')}",
                             picture_class=all_talentsDict.get(talent_number, {}).get('name', f'Unknown{talent_number}'),
-                            progression=toon.max_talents.get(str(talent_number), 0),
+                            progression=char.max_talents.get(str(talent_number), 0),
                             goal=session_data.account.library['MaxBookLevel']
                         )
                     )
                     talentNumbersAdded.append(talent_number)
 
-        #Create AdviceGroup before moving on to next character
-        char_tier = 0
-        for subgroupname in character_adviceDict[toon.character_name]:
-            if char_tier == librarySubgroupTiers.index(subgroupname)-1 and len(character_adviceDict[toon.character_name][subgroupname]) == 0:
-                char_tier = librarySubgroupTiers.index(subgroupname)
-            else:
-                break
-        char_tiers[toon.character_name] = char_tier
-
-        character_AdviceGroupDict[toon.character_name] = AdviceGroup(
-            tier=char_tier,
-            pre_string=f"Priority Checkouts for {toon.character_name} the {toon.class_name}",
-            advices=character_adviceDict[toon.character_name]
-        )
         if talentNumbersAdded:
             anyBookAdvice = True
 
     # Account-wide Star Talents
-    awt = "VIP Star Talents"
-    subgroupName = "VIP"
-    character_adviceDict[awt] = {subgroupName: []}
+    subgroupName = librarySubgroupTiers[-1]  #'VIP'
     for talent_number in expected_talentsDict[subgroupName]:
         try:
-            # logger.debug(
-            #     f"Star Talent {talent_number} "
-            #     f"({all_talentsDict.get(talent_number, {}).get('name', f'Unknown{talent_number}')}) on Character 0: "
-            #     f"{session_data.account.safe_characters[0].max_talents.get(str(talent_number), 0)}"
-            # )
             if session_data.account.safe_characters[0].max_talents.get(str(talent_number), 0) < session_data.account.library['MaxBookLevel']:
-                character_adviceDict[awt][subgroupName].append(
+                category_advices[subgroupName].append(
                     Advice(
                         label=f"{all_talentsDict.get(talent_number, {}).get('subClass', 'Unknown')}: "
                               f"{all_talentsDict.get(talent_number, {}).get('name', f'Unknown{talent_number}')}",
@@ -548,18 +518,30 @@ def getLibraryProgressionTiersAdviceGroups():
         except:
             logger.exception(f"Unable to review Star Talent {talent_number} on Character 0")
 
-    # Create AdviceGroup before moving on to characters
-    character_AdviceGroupDict[awt] = AdviceGroup(
-        tier='',
-        pre_string=f"Account-Wide VIP Star Talents",
-        advices=character_adviceDict[awt]
-    )
+    #Create the AdviceGroups
+    for category in category_advices:
+        category_advice_groups[category] = AdviceGroup(
+            tier=1 + librarySubgroupTiers.index(category),
+            pre_string=f"{category}",
+            advices=category_advices[category]
+        )
 
     #Remove any empty subgroups
-    for ag in character_AdviceGroupDict.values():
+    for ag in category_advice_groups.values():
         ag.remove_empty_subgroups()
-    overall_SectionTier = min(max_tier + info_tiers, min(char_tiers.values(), default=0))
-    return character_AdviceGroupDict, overall_SectionTier, max_tier, anyBookAdvice
+
+    #Remove any empty AdviceGroups
+    category_advice_groups = {k:v for k,v in category_advice_groups.items() if v.advices}
+
+    category_tier = 0
+    for category_name in librarySubgroupTiers:
+        if category_name not in category_advice_groups:
+            category_tier += 1
+        else:
+            break  #Don't give credit for completing tier X before tier X-1
+
+    overall_SectionTier = min(max_tier + info_tiers, category_tier)
+    return category_advice_groups, overall_SectionTier, max_tier, anyBookAdvice
 
 def getLibraryAdviceSection() -> AdviceSection:
     if session_data.account.construction_buildings['Talent Book Library']['Level'] < 1:
@@ -585,6 +567,8 @@ def getLibraryAdviceSection() -> AdviceSection:
         and session_data.account.construction_buildings['Automation Arm']['Level'] >= 5
         and anyBookAdvice
     ):
+        # For future reference, since this comes up from time to time. The amount of checkouts stored in the JSON is only updated when the player
+        # walks into town. AutoReview makes no effort to view the TimeAway value for Library and estimate book speed to fill the gap
         session_data.account.alerts_AdviceDict['World 3'].append(Advice(
             label=f"{session_data.account.library['BooksReady'] // 20} perfect {{{{ checkouts|#library }}}} available",
             picture_class="talent-book-library"

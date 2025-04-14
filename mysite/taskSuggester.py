@@ -172,6 +172,7 @@ def main(inputData, source_string, runType="web"):
 
     #Remove the later-rated sections if Overwhelmed mode is on
     if session_data.overwhelmed:
+        placements_count = 0
         sections_to_keep = []
         for section in sections_pinchy:
             if section.name == 'Pinchy all':
@@ -179,9 +180,12 @@ def main(inputData, source_string, runType="web"):
                     # Skip the Alerts group, if it exists
                     if group.pre_string == 'Alerts':
                         continue
+                    placements_count += 1
                     for advice in group.advices['default']:
                         sections_to_keep.append(advice.label)
-                    break
+                    if placements_count >= session_data.account.maxSubgroupsPerGroup + 1:
+                        #Currently this should break after 2
+                        break
 
         #Remove all the later-rated Sections
         sections_general = [section for section in sections_general if section.name in sections_to_keep]

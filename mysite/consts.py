@@ -285,6 +285,7 @@ greenstack_item_difficulty_groups = {
                 "EquipmentStatues1", "EquipmentStatues5",  #Power and Health statues are still more common than W2 statues
                 "EquipmentStatues10", "EquipmentStatues12", "EquipmentStatues13", "EquipmentStatues8", "EquipmentStatues11",  #W2 statues
                 "EquipmentStatues18",  #W3 EhExPee statue
+                "EquipmentStatues20", "EquipmentStatues21", "EquipmentStatues22",  # W4 Statues
                 "rtt0",
                 "StoneA1", "StoneW1", "StoneZ1", "StoneT1",
                 "StoneZ2", "StoneT2",
@@ -297,18 +298,22 @@ greenstack_item_difficulty_groups = {
             ],
             "Rare Drops": [
                 "FoodPotMana3", "ButterBar", "EquipmentStatues9", "OilBarrel2", "FoodPotRe2", "FoodPotGr3", "FoodHealth9",
+                'EquipmentStatues29',  # Villager Statues from Caverns
             ],
         },
         14: {
             "Crystal Enemy Drops": [
-                "StoneW2", 'ResetFrag', "SilverPen"],  #"StoneA2",],
+                "StoneW2", 'ResetFrag', "SilverPen",
+                "EquipmentStatues23", "EquipmentStatues24", "EquipmentStatues25",  # W5 Statues
+            ],  #"StoneA2",],
             "Other Skilling Resources": [
                 "FoodTrapping1", "FoodWorship1",
                 "Critter1A", "Critter2A", "Critter3A", "Critter4A", "Critter5A", "Critter6A", "Critter7A", "Critter8A", "Critter9A", "Critter10A", "Critter11A",
                 "Ladle",
             ],
             "Rare Drops": [
-                "DesertC2b", "EfauntDrop1"
+                "DesertC2b", "EfauntDrop1",
+                'EquipmentStatues30',  # Dragon Warrior Statues from Caverns
             ]
         },
     }
@@ -496,18 +501,20 @@ stamps_progressionTiers = {
             'Drippy Drop Stamp': 50,
             'Pickaxe Stamp': 55, 'Hatchet Stamp': 55, 'Card Stamp': 50
         },
-        "Optional": ["Saw Stamp", "Agile Stamp", "Book Stamp", "Smart Dirt Stamp", "High IQ Lumber Stamp", "Fishhead Stamp",
-                    "Polearm Stamp", "Biblio Stamp"]
+        "Optional": [
+            "Saw Stamp", "Agile Stamp", "Book Stamp", "Smart Dirt Stamp", "High IQ Lumber Stamp", "Fishhead Stamp",
+            "Polearm Stamp", "Biblio Stamp"
+        ]
     }},
     13: {"TotalStampLevels": 2500, "Stamps": {
-        "Skill": ["Banked Pts Stamp", "Nest Eggs Stamp", "Lab Tube Stamp", "Ladle Stamp", "Sailboat Stamp"],
+        "Skill": ["Banked Pts Stamp", "Nest Eggs Stamp", "Ladle Stamp", "Sailboat Stamp"],
         "Misc": ["Refinery"],
         "Specific": {
             'Matty Bag Stamp': 100, 'Crystallin': 60,
             'Pickaxe Stamp': 65, 'Hatchet Stamp': 65, 'Card Stamp': 100,
         },
         "Optional": ["Stat Graph Stamp", "Brainstew Stamps", "Arcane Stamp", "Fly Intel Stamp", "Holy Mackerel Stamp", "Talent II Stamp",
-                     "Gilded Axe Stamp", "Avast Yar Stamp", "Blackheart Stamp", "DNA Stamp"]
+                     "Gilded Axe Stamp", "Avast Yar Stamp", "Blackheart Stamp", "Lab Tube Stamp", "DNA Stamp"]
     }},
     14: {"TotalStampLevels": 4000, "Stamps": {
         "Combat": ["Sashe Sidestamp"],
@@ -1878,7 +1885,7 @@ farming_progressionTiers = {
 #If you add a new switch here, you need to also add a default in \static\scripts\main.js:defaults
 switches = [
     {
-        "label": "Overwhelmed Mode",
+        "label": "Display lowest rated sections only",
         "name": "overwhelmed",
         "true": "",
         "false": "",
@@ -2035,7 +2042,9 @@ expectedStackables = {
         "rtt0", "StoneZ1", "StoneT1", "StoneW1", "StoneA1",  #W1 Slow drops = Town TP + Stones
         "StoneT2", "StoneZ2",  "StoneW2",  #"StoneA2", # W2 upgrade stones and Mystery2
         "PureWater", "EquipmentStatues18",  #W3 Slow drops = Distilled Water + EhExPee Statue
-        "FoodG9",  #W5 Slow drops = Golden W5 Sammy
+        "EquipmentStatues20", "EquipmentStatues21", "EquipmentStatues22",  # W4 Statues
+        "EquipmentStatues23", "EquipmentStatues24", "EquipmentStatues25", "FoodG9",  #W5 Slow drops = Golden W5 Sammy + Statues
+
         "FoodG11", "FoodG12"
     ],
     "Printable Skilling Resources": [
@@ -2088,7 +2097,8 @@ expectedStackables = {
         "DesertC2b",  # Ghost, 1 in 2k
         "Quest78",  # Equinox Mirror
         "EfauntDrop1",  # Basic Efaunt material
-        "Key2", "Key3"  # Efaunt and Chizoar keys
+        "Key2", "Key3",  # Efaunt and Chizoar keys
+        'EquipmentStatues29', 'EquipmentStatues30',  # Villager and Dragon Warrior statues from Caverns
     ],
     "Cheater": [
         "Sewers1b", "TreeInterior1b", "BabaYagaETC", "JobApplication",  # W1 Rare Drops
@@ -2118,8 +2128,6 @@ expectedStackables = {
         "FoodHealth8", "Quest69", "Quest74",  # Unobtainables
         "EquipmentStatues6", "EquipmentStatues15",  # Kachow and Bullseye
         "EquipmentStatues16", "EquipmentStatues17", "EquipmentStatues19",  # W3 Statues
-        "EquipmentStatues20", "EquipmentStatues21", "EquipmentStatues22",  # W4 Statues
-        "EquipmentStatues23", "EquipmentStatues24", "EquipmentStatues25",  # W5 Statues
         "FoodG1", "FoodG2", "FoodG3", "FoodG4", "FoodG5", "FoodG6", "FoodG7", "FoodG8", "FoodG10",  # Gold Foods
         "ResetCompleted", "ResetCompletedS", "ClassSwap",
         "ClassSwapB", "ResetBox",
@@ -3319,8 +3327,8 @@ expected_talentsDict = {
 hardcap_symbols = 280  #Last verified as of v2.23
 hardcap_enhancement_eclipse = 250  #Lava might add more in the future, but there are no bonuses above 250 in v2.10
 librarySubgroupTiers = [
-    '', 'Skilling - High Priority', 'Skilling - Medium Priority', 'Skilling - Low Priority', 'Skilling - Lowest Priority',
-    'Combat - High Priority', 'Combat - Medium Priority', 'Combat - Low Priority', 'ALL Unmaxed Talents'
+    'Account Wide Priorities', 'Skilling - High Priority', 'Skilling - Medium Priority', 'Skilling - Low Priority', 'Skilling - Lowest Priority',
+    'Combat - High Priority', 'Combat - Medium Priority', 'Combat - Low Priority', 'ALL Unmaxed Talents', 'VIP'
 ]  #Why is there a placeholder in [0] again?
 skill_talentsDict = {
     # Optimal is an optional list for calculating library.getJeapordyGoal
@@ -4514,7 +4522,7 @@ event_points_shop_dict = {
     'Ribbon Connoisseur': {'Cost': 35, 'Code': 'm', 'Description': 'Get +3 daily Ribbons', 'Image': 'event-shop-13'},
     'Golden Square': {'Cost': 23, 'Code': 'n', 'Description': 'Get +1 Trimmed Constrution slot', 'Image': 'event-shop-14'},
     'Summoning Star': {'Cost': 30, 'Code': 'o', 'Description': 'Get +10 Summoning Doublers', 'Image': 'event-shop-15'},
-    'Royal Vote Button': {'Cost': 25, 'Code': 'p', 'Description': "Get +30% higher Ballot Bonus Multi from Voting", 'Image': 'event-shop-16'},
+    'Royal Vote Button': {'Cost': 25, 'Code': 'p', 'Description': "Get +13% higher Ballot Bonus Multi from Voting", 'Image': 'event-shop-16'},
 }
 
 ###WORLD 2 CONSTS###
@@ -5265,10 +5273,15 @@ buildingsDict = {
     25: {'Name': 'Undead Shrine', 'Image': 'undead-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine', 'ValueBase': 5, 'ValueIncrement': 1},
     26: {'Name': 'Primordial Shrine', 'Image': 'primordial-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine', 'ValueBase': 1, 'ValueIncrement': 0.1},
 }
-buildingsTowerMaxLevel = 140
-shrinesList: list[str] = [
-    "Woodular Shrine", "Isaccian Shrine", "Crystal Shrine", "Pantheon Shrine", "Clover Shrine", "Summereading Shrine", "Crescent Shrine", "Undead Shrine", "Primordial Shrine"
-]
+# buildings_utilities = [buildingValuesDict['Name'] for buildingName, buildingValuesDict in buildingsDict.items() if buildingValuesDict['Type'] == 'Utility']
+buildings_towers = [buildingValuesDict['Name'] for buildingName, buildingValuesDict in buildingsDict.items() if buildingValuesDict['Type'] == 'Tower']
+buildingsTowerMaxLevel = (
+    50  #Base
+    + 30  #2.5 Cons Mastery
+    + 60  #2 per level times 30 max levels of Atom Collider - Carbon
+    + 100  #Cavern 14 - Gambit - Bonus Index 9
+)  #As of v2.35
+buildings_shrines: list[str] = [buildingValuesDict['Name'] for buildingName, buildingValuesDict in buildingsDict.items() if buildingValuesDict['Type'] == 'Shrine']
 #AtomInfo in code. Last pulled 2.11 Kanga
 atomsList: list[list] = [
     ["Hydrogen - Stamp Decreaser", 1, 1.35, 2, 1, "Every day you log in, the resource cost to upgrade a stamp's max lv decreases by {% up to a max of 90%. This reduction resets back to 0% when upgrading any stamp max lv."],
