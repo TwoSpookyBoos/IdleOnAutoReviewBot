@@ -501,18 +501,20 @@ stamps_progressionTiers = {
             'Drippy Drop Stamp': 50,
             'Pickaxe Stamp': 55, 'Hatchet Stamp': 55, 'Card Stamp': 50
         },
-        "Optional": ["Saw Stamp", "Agile Stamp", "Book Stamp", "Smart Dirt Stamp", "High IQ Lumber Stamp", "Fishhead Stamp",
-                    "Polearm Stamp", "Biblio Stamp"]
+        "Optional": [
+            "Saw Stamp", "Agile Stamp", "Book Stamp", "Smart Dirt Stamp", "High IQ Lumber Stamp", "Fishhead Stamp",
+            "Polearm Stamp", "Biblio Stamp"
+        ]
     }},
     13: {"TotalStampLevels": 2500, "Stamps": {
-        "Skill": ["Banked Pts Stamp", "Nest Eggs Stamp", "Lab Tube Stamp", "Ladle Stamp", "Sailboat Stamp"],
+        "Skill": ["Banked Pts Stamp", "Nest Eggs Stamp", "Ladle Stamp", "Sailboat Stamp"],
         "Misc": ["Refinery"],
         "Specific": {
             'Matty Bag Stamp': 100, 'Crystallin': 60,
             'Pickaxe Stamp': 65, 'Hatchet Stamp': 65, 'Card Stamp': 100,
         },
         "Optional": ["Stat Graph Stamp", "Brainstew Stamps", "Arcane Stamp", "Fly Intel Stamp", "Holy Mackerel Stamp", "Talent II Stamp",
-                     "Gilded Axe Stamp", "Avast Yar Stamp", "Blackheart Stamp", "DNA Stamp"]
+                     "Gilded Axe Stamp", "Avast Yar Stamp", "Blackheart Stamp", "Lab Tube Stamp", "DNA Stamp"]
     }},
     14: {"TotalStampLevels": 4000, "Stamps": {
         "Combat": ["Sashe Sidestamp"],
@@ -1883,7 +1885,7 @@ farming_progressionTiers = {
 #If you add a new switch here, you need to also add a default in \static\scripts\main.js:defaults
 switches = [
     {
-        "label": "Overwhelmed Mode",
+        "label": "Display lowest rated sections only",
         "name": "overwhelmed",
         "true": "",
         "false": "",
