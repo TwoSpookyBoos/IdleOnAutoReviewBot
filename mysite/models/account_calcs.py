@@ -1,4 +1,4 @@
-from math import ceil, floor, log2, log10
+from math import ceil, floor, log2
 from consts import (
     # General
     lavaFunc, ceilUpToBase, ValueToMulti, getNextESFamilyBreakpoint,
@@ -13,9 +13,10 @@ from consts import (
     islands_trash_shop_costs,
     killroy_dict,
     # W3
-    arbitrary_shrine_goal, arbitrary_shrine_note,
+    arbitrary_shrine_goal, arbitrary_shrine_note, buildings_towers, buildings_shrines,
     # W4
-    nblbMaxBubbleCount, maxMealCount, maxMealLevel,  # W5
+    nblbMaxBubbleCount, maxMealCount, maxMealLevel,
+    # W5
     numberOfArtifactTiers, divinity_offeringsDict, divinity_DivCostAfter3,
     # W6
     maxFarmingValue, summoning_rewards_that_dont_multiply_base_value,
@@ -544,10 +545,11 @@ def _calculate_w2_sigils(account):
         # After the +1, 0/1/2/3
 
 def _calculate_w2_postOffice(account):
-    account.postOffice["Total Boxes Earned"] = (
-            account.postOffice['Completing Orders']
-            + account.postOffice['Streak Bonuses']
-            + account.postOffice['Miscellaneous']
+    account.postOffice['Total Boxes Earned'] = (
+        account.postOffice['Completing Orders']
+        + account.postOffice['Streak Bonuses']
+        + account.postOffice['Miscellaneous']
+        + account.postOffice['Upgrade Vault']
     )
     
 def _calculate_w2_ballot(account):
@@ -559,6 +561,7 @@ def _calculate_w2_ballot(account):
         + account.caverns['Majiks']['Voter Integrity']['Value']
         + account.summoning['Endless Bonuses']['% Ballot Bonus']
         + (17 * account.event_points_shop['Bonuses']['Gilded Vote Button']['Owned'])
+        + (13 * account.event_points_shop['Bonuses']['Royal Vote Button']['Owned'])
         + (5 * account.companions['Mashed Potato'])
     )
     for buffIndex, buffValuesDict in account.ballot['Buffs'].items():
@@ -599,38 +602,45 @@ def _calculate_w3(account):
     _calculate_w3_shrine_values(account)
     _calculate_w3_shrine_advices(account)
 
+def _update_w3_building_max_levels(account, building_name: str, levels: int, note=''):
+    if building_name == 'All Towers':
+        for tower_name in buildings_towers:
+            try:
+                account.construction_buildings[tower_name]['MaxLevel'] += levels
+            except:
+                logger.warning(f"Could not increase max level of {tower_name}: {note if note else 'No note provided'}")
+    elif building_name == 'All Shrines':
+        for shrine_name in buildings_shrines:
+            try:
+                account.construction_buildings[shrine_name]['MaxLevel'] += levels
+            except:
+                logger.warning(f"Could not increase max level of {shrine_name}: {note if note else 'No note provided'}")
+    else:
+        try:
+            account.construction_buildings[building_name]['MaxLevel'] += levels
+        except:
+            logger.warning(f"Could not increase max level of {building_name}: {note if note else 'No note provided'}")
+
+
 def _calculate_w3_building_max_levels(account):
-    # Placed towers here since it's used for both Construction mastery and atom levels
-    towers = [towerName for towerName, towerValuesDict in account.construction_buildings.items() if towerValuesDict['Type'] == 'Tower']
     if account.rift['SkillMastery']:
         totalLevel = sum(account.all_skills['Construction'])
         if totalLevel >= 500:
-            account.construction_buildings["Trapper Drone"]['MaxLevel'] += 35
+            _update_w3_building_max_levels(account, 'Trapper Drone', 35, '500 Construction Mastery')
 
         if totalLevel >= 1000:
-            account.construction_buildings["Talent Book Library"]['MaxLevel'] += 100
+            _update_w3_building_max_levels(account, 'Talent Book Library', 35, '1K Construction Mastery')
 
         if totalLevel >= 1500:
-            shrines = [shrineName for shrineName, shrineValuesDict in account.construction_buildings.items() if shrineValuesDict['Type'] == 'Shrine']
-            for shrineName in shrines:
-                try:
-                    account.construction_buildings[shrineName]['MaxLevel'] += 30
-                except:
-                    continue
+            _update_w3_building_max_levels(account, 'All Shrines', 30, '1.5K Construction Mastery')
 
         if totalLevel >= 2500:
-            for towerName in towers:
-                try:
-                    account.construction_buildings[towerName]['MaxLevel'] += 30
-                except:
-                    continue
+            _update_w3_building_max_levels(account, 'All Towers', 30, '2.5K Construction Mastery')
 
     if account.atom_collider['Atoms']['Carbon - Wizard Maximizer']['Level'] > 0:
-        for towerName in towers:
-            try:
-                account.construction_buildings[towerName]['MaxLevel'] += 2 * account.atom_collider['Atoms']['Carbon - Wizard Maximizer']['Level']
-            except:
-                continue
+        _update_w3_building_max_levels(account, 'All Towers', 2 * account.atom_collider['Atoms']['Carbon - Wizard Maximizer']['Level'], 'Atom Collider - Carbon - Wizard Maximizer')
+
+    #+100 levels from Gambit occurs in _calculate_caverns_gambit
 
 def _calculate_w3_collider_base_costs(account):
     #Formula for base cost: (AtomInfo[3] + AtomInfo[1] * AtomCurrentLevel) * POWER(AtomInfo[2], AtomCurrentLevel)
@@ -1362,6 +1372,10 @@ def _calculate_caverns_gambit(account):
             account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Name'] = bonus_details['Name'].replace(
                 '}', f"{ValueToMulti(account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Value']):.3f}x"
             )
+
+    # I hate this being here, but ordering matters. Unlocked status isn't accurate until after this calculation
+    if account.caverns['Caverns']['Gambit']['Bonuses'][9]['Unlocked']:
+        _update_w3_building_max_levels(account, 'All Towers', 100, 'Gambit Cavern upgrade Index 9')
 
 def _calculate_w6(account):
     _calculate_w6_farming(account)

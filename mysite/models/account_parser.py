@@ -29,7 +29,7 @@ from consts import (
     obolsDict, ignorable_obols_list,
     islands_dict, killroy_dict,
     # W3
-    refineryDict, buildingsDict, saltLickList, atomsList, colliderStorageLimitList, shrinesList, prayersDict,
+    refineryDict, buildingsDict, saltLickList, atomsList, colliderStorageLimitList, buildings_shrines, prayersDict,
     equinoxBonusesDict, max_implemented_dreams, dreamsThatUnlockNewBonuses,
     printerAllIndexesBeingPrinted,
     apocableMapIndexDict, apocAmountsList, apocNamesList, dn_miniboss_names, dn_miniboss_skull_requirement_list, dnSkullValueList, getSkullNames,
@@ -248,6 +248,8 @@ def _parse_general_gemshop(account):
         except Exception as e:
             logger.warning(f"Gemshop Parse error with purchaseIndex {purchaseIndex}: {e}. Defaulting to 0")
             account.gemshop[purchaseName] = 0
+
+    account.minigame_plays_daily = 5 + (4 * account.gemshop['Daily Minigame Plays'])
 
 def _parse_general_gemshop_optlacc(account):
     for purchase_name, optlacc_index in gem_shop_optlacc_dict.items():
@@ -1012,9 +1014,10 @@ def _parse_w2_p2w(account):
         
 def _parse_w2_postOffice(account):
     account.postOffice = {
-        'Completing Orders': safer_convert(account.raw_data.get("CYDeliveryBoxComplete"), 0),
-        'Streak Bonuses': safer_convert(account.raw_data.get("CYDeliveryBoxStreak"), 0),
-        'Miscellaneous': safer_convert(account.raw_data.get("CYDeliveryBoxMisc"), 0),
+        'Completing Orders': safer_convert(account.raw_data.get("CYDeliveryBoxComplete", 0), 0),
+        'Streak Bonuses': safer_convert(account.raw_data.get("CYDeliveryBoxStreak", 0), 0),
+        'Miscellaneous': safer_convert(account.raw_data.get("CYDeliveryBoxMisc", 0), 0),
+        'Upgrade Vault': safer_convert(account.raw_optlacc_dict.get(347, 0), 0)
     }
 
 def _parse_w2_arcade(account):
@@ -1416,7 +1419,7 @@ def _parse_w3_equinox_bonuses(account):
 def _parse_w3_shrines(account):
     account.shrines = {}
     raw_shrines_list = safe_loads(account.raw_data.get("Shrine", []))
-    for shrineIndex, shrineName in enumerate(shrinesList):
+    for shrineIndex, shrineName in enumerate(buildings_shrines):
         try:
             account.shrines[shrineName] = {
                 "MapIndex": int(raw_shrines_list[shrineIndex][0]),

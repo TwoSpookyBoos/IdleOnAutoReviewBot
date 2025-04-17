@@ -7,6 +7,14 @@ from utils.logging import get_logger
 
 logger = get_logger(__name__)
 
+def get_antifun_spirit_next_level_cost(current_prayer_level: int) -> int:
+    max_cost = round(9 + (optional_prayers['Antifun Spirit'] * .9))  #Max level
+    if current_prayer_level >= optional_prayers['Antifun Spirit']:
+        return max_cost
+    else:
+        result = round(9 + (current_prayer_level+1 * .9))
+        return result
+
 def setPrayersProgressionTierAdviceGroup():
     prayers_AdviceDict = {
         "Recommended": {},
@@ -46,16 +54,24 @@ def setPrayersProgressionTierAdviceGroup():
             tier_WorshipPrayers = tier[0]
 
     # Check Optional Prayers
+    next_antifun_cost = get_antifun_spirit_next_level_cost(worshipPrayersDict['Antifun Spirit']['Level'])
     for optionalPrayer in optional_prayers:
         if worshipPrayersDict[optionalPrayer]['Level'] < optional_prayers[optionalPrayer]:
-            prayers_AdviceDict["Optional"].append(
-                Advice(
-                    label=optionalPrayer,
-                    picture_class=optionalPrayer,
-                    progression=str(worshipPrayersDict[optionalPrayer]['Level']),
-                    goal=str(optional_prayers[optionalPrayer]),
-                    resource=worshipPrayersDict[optionalPrayer]['Material']
-                ))
+            if (
+                optionalPrayer == 'Antifun Spirit'
+                and session_data.account.minigame_plays_daily < next_antifun_cost
+            ):
+                #logger.debug(f"Skipping Antifun Spirit because next level costs {next_antifun_cost} while player has {session_data.account.minigame_plays_daily} daily minigame plays")
+                continue
+            else:
+                prayers_AdviceDict["Optional"].append(
+                    Advice(
+                        label=optionalPrayer,
+                        picture_class=optionalPrayer,
+                        progression=str(worshipPrayersDict[optionalPrayer]['Level']),
+                        goal=str(optional_prayers[optionalPrayer]),
+                        resource=worshipPrayersDict[optionalPrayer]['Material']
+                    ))
 
     # Check Ignorable Prayers
     for ignorablePrayer in ignorable_prayers:
