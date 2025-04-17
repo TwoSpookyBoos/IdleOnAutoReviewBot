@@ -2609,8 +2609,9 @@ gemShopDict = {
     'Opal': 5
     }
 gem_shop_optlacc_dict = {
-    'Equinox Pingy': 320,
-    'Rupie Slug': 355
+    'Dragonic Liquid Cauldron': [123, 4],
+    'Equinox Pingy': [320, infinity_string],
+    'Rupie Slug': [355, infinity_string],
 }
 guildBonusesList = [
     "Guild Gifts", "Stat Runes", "Rucksack", "Power of Pow", "REM Fighting", "Make or Break",
