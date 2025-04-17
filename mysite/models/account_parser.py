@@ -252,14 +252,14 @@ def _parse_general_gemshop(account):
     account.minigame_plays_daily = 5 + (4 * account.gemshop['Daily Minigame Plays'])
 
 def _parse_general_gemshop_optlacc(account):
-    for purchase_name, optlacc_index in gem_shop_optlacc_dict.items():
+    for purchase_name, details in gem_shop_optlacc_dict.items():
         try:
-            account.gemshop[purchase_name] = safer_convert(safer_get(account.raw_optlacc_dict, optlacc_index, 0), 0)
+            account.gemshop[purchase_name] = safer_convert(safer_get(account.raw_optlacc_dict, details[0], 0), 0)
         except Exception as e:
-            if max(account.raw_optlacc_dict.keys()) < optlacc_index:
-                logger.info(f"Error parsing {purchase_name} because optlacc_index {optlacc_index} not present in JSON. Defaulting to 0")
+            if max(account.raw_optlacc_dict.keys()) < details[0]:
+                logger.info(f"Error parsing {purchase_name} because optlacc_index {details[0]} not present in JSON. Defaulting to 0")
             else:
-                logger.exception(f"Error parsing {purchase_name} at optlacc_index {optlacc_index}: Could not convert {account.raw_optlacc_dict.get(optlacc_index)} to int")
+                logger.exception(f"Error parsing {purchase_name} at optlacc_index {details[0]}: Could not convert {account.raw_optlacc_dict.get(details[0])} to int")
                 account.gemshop[purchase_name] = 0
 
 def _parse_general_quests(account):

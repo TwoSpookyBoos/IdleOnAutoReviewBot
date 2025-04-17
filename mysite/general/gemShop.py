@@ -1,7 +1,8 @@
 from models.models import Advice, AdviceGroup, AdviceSection
 from utils.data_formatting import safe_loads, safer_get
 from utils.logging import get_logger
-from consts import gemShop_progressionTiers, maxFarmingCrops, currentWorld, breedingTotalPets, cookingCloseEnough, break_you_best, max_cavern, max_majiks, max_measurements, getMaxEngineerLevel
+from consts import gemShop_progressionTiers, maxFarmingCrops, currentWorld, breedingTotalPets, cookingCloseEnough, break_you_best, max_cavern, max_majiks, \
+    max_measurements, getMaxEngineerLevel, gem_shop_optlacc_dict
 from flask import g as session_data
 
 logger = get_logger(__name__)
@@ -270,6 +271,19 @@ def getGemShopAdviceSection() -> AdviceSection:
             ],
             informational=True
         ))
+
+    groups.append(AdviceGroup(
+        tier='',
+        pre_string=f"Info- Limited Shop display",
+        advices=[
+            Advice(
+                label=purchase_name,
+                picture_class=purchase_name,
+                progression=boughtItems[purchase_name],
+                goal=purchase_details[1]
+            ) for purchase_name, purchase_details in gem_shop_optlacc_dict.items()
+        ]
+    ))
 
     groups = [g for g in groups if g]
     # show only first 3 groups
