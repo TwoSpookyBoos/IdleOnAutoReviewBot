@@ -1,8 +1,10 @@
 from models.models import Advice, AdviceGroup, AdviceSection
 from utils.data_formatting import safe_loads, safer_get
 from utils.logging import get_logger
-from consts import gemShop_progressionTiers, maxFarmingCrops, currentWorld, breedingTotalPets, cookingCloseEnough, break_you_best, max_cavern, max_majiks, \
-    max_measurements, getMaxEngineerLevel, gem_shop_optlacc_dict
+from consts import (
+    gemShop_progressionTiers, maxFarmingCrops, currentWorld, breedingTotalPets, cookingCloseEnough, break_you_best, max_cavern, max_majiks,
+    max_measurements, getMaxEngineerLevel, gem_shop_optlacc_dict, infinity_string
+)
 from flask import g as session_data
 
 logger = get_logger(__name__)
@@ -272,17 +274,31 @@ def getGemShopAdviceSection() -> AdviceSection:
             informational=True
         ))
 
-    groups.append(AdviceGroup(
-        tier='',
-        pre_string=f"Info- Limited Shop display",
-        advices=[
-            Advice(
+    fomo_advice = []
+    for purchase_name, purchase_details in gem_shop_optlacc_dict.items():
+        if purchase_details[1] != infinity_string:
+            if boughtItems[purchase_name] < purchase_details[1]:
+                fomo_advice.append(Advice(
+                    label=purchase_name,
+                    picture_class=purchase_name,
+                    progression=boughtItems[purchase_name],
+                    goal=purchase_details[1],
+                    informational=True
+                ))
+        else:
+            fomo_advice.append(Advice(
                 label=purchase_name,
                 picture_class=purchase_name,
                 progression=boughtItems[purchase_name],
-                goal=purchase_details[1]
-            ) for purchase_name, purchase_details in gem_shop_optlacc_dict.items()
-        ]
+                goal=purchase_details[1],
+                informational=True,
+                completed=True
+            ))
+
+    groups.append(AdviceGroup(
+        tier='',
+        pre_string=f"Info- Tracked Limited Shop purchases",
+        advices=fomo_advice
     ))
 
     groups = [g for g in groups if g]
