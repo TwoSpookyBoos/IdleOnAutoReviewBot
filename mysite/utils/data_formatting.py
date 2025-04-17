@@ -15,7 +15,7 @@ from models.custom_exceptions import ProfileNotFound, EmptyResponse, APIConnecti
 
 from .logging import get_logger
 from config import app
-
+from .text_formatting import InputType
 
 logger = get_logger(__name__)
 
@@ -67,15 +67,15 @@ class HeaderData:
             self.last_update = "Unable to parse last updated time, sorry :("
 
 
-def getJSONfromAPI(runType, username="scoli", source_string='all'):
+def getJSONfromAPI(runType, username="scoli", source_string=InputType.ALL):
     # logger.debug(f"{username = }")
     accepted_apis = [
-        'IE',
-        #'LB',
-        'IT'  #Last to be evaluated intentionally as it currently provides the fullest data
-    ] if source_string == 'all' else [source_string]
+        InputType.IE,
+        #InputType.LB,
+        InputType.IT  #Last to be evaluated intentionally as it currently provides the fullest data
+    ] if source_string == InputType.ALL else [source_string]
     api_data = {
-        entry: {'Data': {}, 'LastUpdated': 0, 'Summary': '', 'Exception': '', 'Traceback': ''} for entry in accepted_apis
+        entry.value: {'Data': {}, 'LastUpdated': 0, 'Summary': '', 'Exception': '', 'Traceback': ''} for entry in accepted_apis
     }
 
     for api_name in api_data.keys():
@@ -91,19 +91,19 @@ def getJSONfromAPI(runType, username="scoli", source_string='all'):
                 logger.debug(f"{api_name} responded with {response.status_code}. Skipping.")
                 continue
                 #raise ProfileNotFound(username)
-            else:
-                account_data = response.json()
-                if not account_data:
-                    api_data[api_name]['Summary'] = 'EmptyResponse'
-                    continue
-                    #raise EmptyResponse(username)
-                else:
-                    api_data[api_name]['Data'] = (
-                        load_toolbox_data(account_data) if api_name == 'IT'
-                        else account_data
-                    )
-                    api_data[api_name]['LastUpdated'] = safe_loads(safe_loads(safe_loads(api_data[api_name]['Data']).get('TimeAway', {})).get('GlobalTime', 0))
-                    # logger.debug(f"Last updated time epoch = {api_data[api_name]['LastUpdated']}")
+
+            account_data = response.json()
+            if not account_data:
+                api_data[api_name]['Summary'] = 'EmptyResponse'
+                continue
+                #raise EmptyResponse(username)
+
+            api_data[api_name]['Data'] = (
+                load_toolbox_data(account_data) if api_name == 'IT'
+                else account_data
+            )
+            api_data[api_name]['LastUpdated'] = safe_loads(safe_loads(safe_loads(api_data[api_name]['Data']).get('TimeAway', {})).get('GlobalTime', 0))
+            # logger.debug(f"Last updated time epoch = {api_data[api_name]['LastUpdated']}")
         except requests.exceptions.RequestException as e:
             logger.warning(f"Error retrieving data from {api_name}: {e}")
             api_data[api_name]['Exception'] = e

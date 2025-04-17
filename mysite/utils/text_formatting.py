@@ -1,3 +1,4 @@
+import enum
 import re
 from pathlib import Path
 
@@ -49,20 +50,43 @@ def json_schema_valid(data) -> bool:
     return isinstance(data, str) and data.startswith("{") and data.endswith("}")
 
 
-def format_character_name(name: str, source_string: str) -> str:
-    # https://idleontoolbox.com/?profile={username}
-    # https://{username}.idleonefficiency.com/
-    # https://idleonleaderboards.com/profiles/{username}
-    formatted_name = name.strip().replace(" ", "_").replace('https://', '')
-    if source_string == 'IT':
-        formatted_name = formatted_name.replace('idleontoolbox.com/?profile=', '')
-    elif source_string == 'IE':
-        formatted_name = formatted_name.replace('idleonefficiency.com', '').replace('/', '').replace('.', '')
-    elif source_string == 'TB':
-        formatted_name = formatted_name.replace('idleonleaderboards.com/profiles/', '')
+class InputType(enum.Enum):
+    """What did the user send to us? His username, one of the links to public profiles, or a data JSON?"""
+    ALL = 'all'
+    IE = 'IE'
+    IT = 'IT'
+    LB = 'LB'
+    JSON = 'JSON'
 
+
+pattern = re.compile(rf"""
+^                                                                # line start
+(?:                                                              # non-capturing group 1 open
+    (?P<{InputType.ALL.value}>[\w ]+)                            # match plain username
+    |                                                            # or
+    .*?                                                          # skip prefix if any
+    (?:                                                          # non-capturing group 2 open
+        [?&]profile=(?P<{InputType.IT.value}>[\w.]+)             # match IT  https://idleontoolbox.com/?profile=<username>
+        |                                                        # or
+        (?P<{InputType.IE.value}>[\w.]+)\.idleonefficiency\.com  # match IE  https://<username>.idleonefficiency.com/
+        |                                                        # or
+        profiles/(?P<{InputType.LB.value}>[\w.]+)                # match LB  https://idleonleaderboards.com/profiles/<username>
+    )                                                            # non-capturing group 2 close
+    .*                                                           # skip whatever follows
+)                                                                # non-capturing group 1 close
+$                                                                # line end
+""", re.VERBOSE)
+
+def format_character_name(name: str) -> tuple[str, InputType]:
+    """match group dict looks like e.g. {'all': None, 'IT': 'NikoKoni', 'IE': None, 'LB': None}"""
+    groups = pattern.match(name).groupdict()
+    input_type, formatted_name = next(group for group in groups.items() if group[1])
+    input_type = InputType(input_type)
+    formatted_name = re.sub(r'\W', "_", formatted_name)
+    if input_type != InputType.IT:
+        formatted_name = formatted_name.lower()
     # logger.debug(f"{name = }, {formatted_name = }")
-    return formatted_name
+    return formatted_name, input_type
 
 
 __items_path = Path(app.static_folder) / 'items.yaml'
