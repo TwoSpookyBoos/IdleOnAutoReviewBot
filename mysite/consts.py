@@ -1927,6 +1927,13 @@ switches = [
         "static": "true",
     },
     {
+        "label": "Group Library by Character",
+        "name": "library_group_characters",
+        "true": "",
+        "false": "",
+        "static": "true",
+    },
+    {
         "label": "Hide Completed",
         "name": "hide_completed",
         "true": "",
