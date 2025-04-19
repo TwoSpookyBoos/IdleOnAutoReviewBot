@@ -251,6 +251,11 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     supreme_wiring_value = (supreme_wiring_days * 2 * session_data.account.event_points_shop['Bonuses']['Supreme Wiring']['Owned'])
     supreme_wiring_multi = ValueToMulti(supreme_wiring_value)
 
+    biggole_mole_max_days = 100
+    biggole_mole_days = min(biggole_mole_max_days, safer_get(session_data.account.raw_optlacc_dict, 354, 0))
+    biggole_mole_value = biggole_mole_days * 1 * session_data.account.companions['Biggole Mole']
+    biggole_mole_multi = ValueToMulti(biggole_mole_value)
+
     anyDKMaxBooked = False
     bestKotRBook = 0
     anyDKMaxLeveled = False
@@ -298,7 +303,10 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     harriep_multi_aw = 3 if session_data.account.companions['King Doot'] else 1
     harriep_multi_cs = 3 if session_data.account.divinity['Divinities'][4]['Unlocked'] else 1
 
-    aw_multi = 1 * sm_multi * gr_multi * kotr_multi * charm_multi_active * ballot_multi_active * lab_multi_aw * harriep_multi_aw * supreme_wiring_multi
+    aw_multi = (
+        1 * sm_multi * gr_multi * kotr_multi * charm_multi_active * ballot_multi_active
+        * lab_multi_aw * harriep_multi_aw * supreme_wiring_multi * biggole_mole_multi
+    )
     aw_label = f"Account Wide: {aw_multi:.3f}x"
     cs_multi = lab_multi_cs * harriep_multi_cs
     cs_label = f"Character Specific: Up to {cs_multi}x"
@@ -351,16 +359,25 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
         label=f"{{{{ Sailing|#sailing}}}}: Level {gr_level} Gold Relic:"
               f"<br>{gr_multi:.2f}x ({gr_days}/{gr_max_days} days)",
         picture_class="gold-relic",
-        progression=f"{gr_multi:.2f}",
-        unit="x"
+        progression=gr_days,
+        goal=gr_max_days
     ))
 
     po_AdviceDict[aw_label].append(Advice(
         label=f"{{{{ Event Shop|#event-shop}}}}: Supreme Wiring:"
               f"<br>{supreme_wiring_multi:.2f}x ({supreme_wiring_days}/{supreme_wiring_max_days} days)",
         picture_class='event-shop-4',
-        progression=f"{supreme_wiring_multi:.2f}",
-        unit="x"
+        progression=supreme_wiring_days,
+        goal=supreme_wiring_max_days
+    ))
+
+    po_AdviceDict[aw_label].append(Advice(
+        label=f"Companions: Biggole Mole: "
+              f"<br>{biggole_mole_multi:.2f}x ({biggole_mole_days}/{biggole_mole_max_days} days)"
+              f"{'<br>Note: May be inaccurate. Not all data contains Companions!' if not session_data.account.companions['Biggole Mole'] else ''}",
+        picture_class='biggole-mole',
+        progression=int(session_data.account.companions['Biggole Mole']),
+        goal=1
     ))
 
     po_AdviceDict[aw_label].append(Advice(

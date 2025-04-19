@@ -3,12 +3,12 @@ from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import (
-    caverns_cavern_names, max_cavern,
+    max_cavern,
     caverns_villagers, getMaxEngineerLevel, caverns_engineer_schematics, caverns_engineer_schematics_unlock_order,
     max_schematics,
     max_majiks,
-    max_measurements,
-    break_you_best, infinity_string, released_schematics, total_placeholder_majiks, stamp_maxes
+    caverns_max_measurements,
+    break_you_best, infinity_string, released_schematics, total_placeholder_majiks, stamp_maxes, caverns_measurement_percent_goals
 )
 
 #villagers_progressionTiers,
@@ -252,7 +252,7 @@ def getConjurorAdviceGroup() -> AdviceGroup:
     if earned_conjuror_points > spent_conjuror_points < max_majiks:
         unspent_pts_advice = Advice(
             label=f"You have {earned_conjuror_points-spent_conjuror_points} unspent {{{{Conjuror Pts|#villagers}}}}!",
-            picture_class='',
+            picture_class='cosmos',
             progression=spent_conjuror_points,
             goal=earned_conjuror_points
         )
@@ -279,6 +279,19 @@ def getConjurorAdviceGroup() -> AdviceGroup:
     )
     return villager_ag
 
+def get_next_measurer_goal(current_level):
+    try:
+        for level, percent in caverns_measurement_percent_goals.items():
+            if level > current_level:
+                goal_level = level
+                goal_percent = percent
+                return [goal_level, goal_percent]
+    except:
+        logger.exception(f"Failed to find next Measurer Goal given input of {type(current_level)}: {current_level}")
+        return [999999999, 'Darn near 100%']
+    # If their level is higher than the largest goal in the dictionary, return a generic placeholder
+    return [999999999, 'Darn near 100%']
+
 def getMeasurerAdviceGroup() -> AdviceGroup:
     v_stats = 'Villager Stats'
     m_stats = 'Measurement Stats'
@@ -304,7 +317,7 @@ def getMeasurerAdviceGroup() -> AdviceGroup:
         label=f"{villager['Title']} level for all implemented unlocks",
         picture_class=villager_name,
         progression=villager['Level'],
-        goal=max_measurements
+        goal=caverns_max_measurements
     ))
     villager_advice[v_stats].append(Advice(
         label="Next level progress",
@@ -322,8 +335,10 @@ def getMeasurerAdviceGroup() -> AdviceGroup:
 # Measurement Stats
     villager_advice[m_stats] = []
     for measurement_name, measurement_details in measurements.items():
-        if measurement_name != 'i' and max_measurements >= measurement_details['MeasurementNumber']:
+        if measurement_name != 'i' and caverns_max_measurements >= measurement_details['MeasurementNumber']:
             if measurement_details['TOT']:
+                goal_level, goal_percent = get_next_measurer_goal(measurement_details['Level'])
+                goal_string = f"<br>{goal_percent} of max value at Level {goal_level:,}"
                 villager_advice[m_stats].append(Advice(
                     label=(
                         f"Level {measurement_details['Level']} = "
@@ -331,6 +346,7 @@ def getMeasurerAdviceGroup() -> AdviceGroup:
                         f"<br>x{session_data.account.caverns['MeasurementMultis'][measurement_details['ScalesWith']]['Multi']:.3f} "
                         f"({session_data.account.caverns['MeasurementMultis'][measurement_details['ScalesWith']]['PrettyRaw']} {measurement_details['ScalesWith']})"
                         f"<br>Total Bonus: +{measurement_details['Value']:,.2f}%"
+                        f"{goal_string}"
                     ),
                     picture_class=measurement_details['Image'],
                     progression=f"{(measurement_details['BaseValue'] / measurement_details['HI55']) * 100:.2f}",
@@ -362,7 +378,7 @@ def getMeasurerAdviceGroup() -> AdviceGroup:
         pre_string=f"Informational- Level {villager['Level']} {villager['Title']}",
         advices=villager_advice,
         informational=True,
-        completed=villager['Level'] >= max_measurements
+        completed=villager['Level'] >= caverns_max_measurements
     )
     return villager_ag
 
@@ -484,7 +500,7 @@ def getLibrarianAdviceGroup() -> AdviceGroup:
         pre_string=f"Informational- Level {villager['Level']} {villager['Title']}",
         advices=villager_advice,
         informational=True,
-        completed=villager['Level'] >= max_measurements
+        completed=villager['Level'] >= caverns_max_measurements
     )
     return villager_ag
 

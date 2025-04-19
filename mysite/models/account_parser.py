@@ -125,7 +125,6 @@ def _parse_wave_1(account, run_type):
     _parse_w6(account)
 
 def _parse_switches(account):
-
     # AutoLoot
     if g.autoloot:
         account.autoloot = True
@@ -136,6 +135,7 @@ def _parse_switches(account):
         account.autoloot = False
 
     account.maxSubgroupsPerGroup = 1 if g.overwhelmed else 3
+    account.library_group_characters = g.library_group_characters
 
 def _parse_companions(account):
     # Companions v2

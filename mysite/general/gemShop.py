@@ -3,7 +3,7 @@ from utils.data_formatting import safe_loads, safer_get
 from utils.logging import get_logger
 from consts import (
     gemShop_progressionTiers, maxFarmingCrops, currentWorld, breedingTotalPets, cookingCloseEnough, break_you_best, max_cavern, max_majiks,
-    max_measurements, getMaxEngineerLevel, gem_shop_optlacc_dict, infinity_string
+    caverns_max_measurements, getMaxEngineerLevel, gem_shop_optlacc_dict, infinity_string
 )
 from flask import g as session_data
 
@@ -114,7 +114,7 @@ def try_exclude_ParallelVillagers(exclusionLists):
         for sublist in exclusionLists:
             sublist.append('Parallel Villagers The Conjuror')
         
-    if session_data.account.caverns['Villagers']['Minau']['Level'] >= max_measurements:
+    if session_data.account.caverns['Villagers']['Minau']['Level'] >= caverns_max_measurements:
         for sublist in exclusionLists:
             sublist.append('Parallel Villagers The Measurer')
 
