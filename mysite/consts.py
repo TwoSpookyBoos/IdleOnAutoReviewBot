@@ -6518,7 +6518,7 @@ caverns_measurer_scalar_matchup = HolesInfo[52]
 caverns_measurer_scalars = HolesInfo[53]
 caverns_measurer_measurements = HolesInfo[54]
 caverns_measurer_HI55 = HolesInfo[55]
-max_measurements = sum(1 for measurement in caverns_measurer_measurements if measurement != 'i')  #i is a placeholder for not-implemented
+caverns_max_measurements = sum(1 for measurement in caverns_measurer_measurements if measurement != 'i')  #i is a placeholder for not-implemented
 caverns_measurer_measurement_names = [
     'Inches', 'Meters', 'Miles', 'Liters', 'Yards',
     'Pixels', 'Leagues', 'Nanometers', 'Sadness', 'Feet',
@@ -6540,6 +6540,14 @@ for entry_index, entry in enumerate(caverns_measurer_measurements):
             f"UnknownScalar{entry_index}",
             ''
         ]
+caverns_measurement_percent_goals = {
+    # "MeasurementBaseBonus" in source code
+    # =CosmosMulti * ScalingValue * (Level / (100 + Level))
+    # Numbers calculated by Xythium https://docs.google.com/spreadsheets/d/1krMdc1cGhKLBVv7XFEBU4BUbatyLHggEwp7XN5a6gAc/edit?usp=sharing
+    12: '10%', 25: '20%', 43: '30%', 67: '40%', 100: '50%', 150: '60%',
+    234: '70%', 300: '75%', 400: '80%', 567: '85%', 900: '90%', 1900: '95%',
+    2400: '96%', 3234: '97%', 4900: '98%', 9900: '99%'
+}
 caverns_librarian_studies = {}
 for entry_index, entry in enumerate(HolesInfo[69]):
     caverns_librarian_studies[entry_index] = [
