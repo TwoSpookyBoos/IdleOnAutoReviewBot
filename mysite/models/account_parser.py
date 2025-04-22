@@ -125,7 +125,6 @@ def _parse_wave_1(account, run_type):
     _parse_w6(account)
 
 def _parse_switches(account):
-
     # AutoLoot
     if g.autoloot:
         account.autoloot = True
@@ -136,6 +135,7 @@ def _parse_switches(account):
         account.autoloot = False
 
     account.maxSubgroupsPerGroup = 1 if g.overwhelmed else 3
+    account.library_group_characters = g.library_group_characters
 
 def _parse_companions(account):
     # Companions v2
@@ -2407,20 +2407,39 @@ def _parse_caverns_the_bell(account, raw_caverns_list):
     cavern_name = 'The Bell'
 
     # Charge
+    account.caverns['Caverns'][cavern_name]['Charges'] = {}
     try:
-        account.caverns['Caverns'][cavern_name]['Charges'] = {
-            'Ring': [raw_caverns_list[18][0], raw_caverns_list[18][1], getBellExpRequired(0, raw_caverns_list[18][1])],
-            'Ping': [raw_caverns_list[18][2], raw_caverns_list[18][3], getBellExpRequired(1, raw_caverns_list[18][3])],
-            'Clean': [raw_caverns_list[18][4], raw_caverns_list[18][5], getBellExpRequired(2, raw_caverns_list[18][5])],
-            'Renew': [raw_caverns_list[18][6], raw_caverns_list[18][7], getBellExpRequired(3, raw_caverns_list[18][7])],
-        }
+        account.caverns['Caverns'][cavern_name]['Charges']['Ring'] = [
+            safer_convert(raw_caverns_list[18][0], 0),
+            safer_convert(raw_caverns_list[18][1], 0),
+            getBellExpRequired(0, raw_caverns_list[18][1])
+        ]
     except:
-        account.caverns['Caverns'][cavern_name]['Charges'] = {
-            'Ring': [0, 0, getBellExpRequired(0, 0)],
-            'Ping': [0, 0, getBellExpRequired(1, 0)],
-            'Clean': [0, 0, getBellExpRequired(2, 0)],
-            'Renew': [0, 0, getBellExpRequired(3, 0)],
-        }
+        account.caverns['Caverns'][cavern_name]['Charges']['Ring'] = [0, 0, getBellExpRequired(0, 0)],
+    try:
+        account.caverns['Caverns'][cavern_name]['Charges']['Ping'] = [
+            safer_convert(raw_caverns_list[18][2], 0),
+            safer_convert(raw_caverns_list[18][3], 0),
+            getBellExpRequired(1, raw_caverns_list[18][3])
+        ]
+    except:
+        account.caverns['Caverns'][cavern_name]['Charges']['Ping'] = [0, 0, getBellExpRequired(1, 0)]
+    try:
+        account.caverns['Caverns'][cavern_name]['Charges']['Clean'] = [
+            safer_convert(raw_caverns_list[18][4], 0),
+            safer_convert(raw_caverns_list[18][5], 0),
+            getBellExpRequired(2, raw_caverns_list[18][5])
+        ]
+    except:
+        account.caverns['Caverns'][cavern_name]['Charges']['Clean'] = [0, 0, getBellExpRequired(2, 0)]
+    try:
+        account.caverns['Caverns'][cavern_name]['Charges']['Renew'] = [
+            safer_convert(raw_caverns_list[18][6], 0),
+            safer_convert(raw_caverns_list[18][7], 0),
+            getBellExpRequired(3, raw_caverns_list[18][7])
+        ]
+    except:
+        account.caverns['Caverns'][cavern_name]['Charges']['Renew'] = [0, 0, getBellExpRequired(3, 0)]
 
     # Ring Bonuses
     account.caverns['Caverns'][cavern_name]['Ring Bonuses'] = {}

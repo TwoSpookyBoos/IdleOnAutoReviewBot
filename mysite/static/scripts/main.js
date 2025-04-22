@@ -27,6 +27,7 @@ const defaults = {
     riftslug: "off",
     sheepie: "off",
     order_tiers: "off",
+    library_group_characters: "off",
     hide_completed: "off",
     hide_informational: "off",
     hide_unrated: "off",
