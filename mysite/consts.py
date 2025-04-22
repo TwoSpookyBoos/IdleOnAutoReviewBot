@@ -123,206 +123,262 @@ gemShop_progressionTiers = [
      "This final tier is for the truly depraved. Many of these bonuses are very weak or outright useless."]
 ]
 greenstack_item_difficulty_groups = {
-        0: {  # The timegated tier
-            "Vendor Shops": [
-                "CraftMat3",  # W1 Cue Tape
-                "FoodPotRe2", "FoodHealth4", "Quest19",  # W2
-                "FoodHealth9", "FoodHealth11", "FoodPotGr3",  #W3
-                "FoodHealth12", "FoodHealth13", "FoodPotOr4", "FoodPotGr4", "FoodPotRe4", "FoodPotYe4",  #W4
-                "FoodHealth14", "FoodHealth15", "OilBarrel6",  #W5
-                "FoodHealth16", "FoodHealth17", "OilBarrel7",  #W6
-            ],
-            "Other Skilling Resources": [
-                "Refinery1", "Refinery2", "Refinery3", "Refinery4", "Refinery5", "Refinery6"],
-        },
-        1: {
-            "Printable Skilling Resources": [
-                "OakTree", "BirchTree", "JungleTree", "ForestTree", "ToiletTree", "PalmTree", "StumpTree", "SaharanFoal",
-                "Copper", "Iron", "Gold", "Plat", "Dementia", "Void", "Lustre",
-                "Fish1", "Fish2", "Fish3",
-                "Bug1", "Bug2"],
-            },
-        2: {
-            "Printable Skilling Resources": [
-                "Tree7", "AlienTree", "Tree8", "Tree9", "Tree11",
-                "Starfire", "Marble",
-                "Fish4", "Fish5", "Fish6", "Fish7",
-                "Bug3", "Bug4", "Bug5", "Bug6", "Bug7", "Bug8"],
-            "Other Skilling Resources": [
-                "CraftMat1",],
-            "Vendor Shops": [
-                "FoodHealth14", "FoodHealth15",]
-            },
-        3: {
-            "Base Monster Materials": [
-                "Grasslands1", "Grasslands2", "Grasslands4", "Grasslands3", "Jungle1", "Jungle2", "Jungle3", "Forest1", "Forest2", "Forest3",],
-            "Printable Skilling Resources": [
-                "Tree10",
-                "Dreadlo",
-                "Fish8", "Fish9", "Fish10",
-                "Bug9", "Bug11"],
-            "Other Skilling Resources": [
-                "CraftMat5",],
-            "Vendor Shops": [
-                "FoodHealth12", "FoodHealth13",],
-            },
-        4: {
-            "Base Monster Materials": [
-                "Sewers1", "Sewers2", "TreeInterior1", "TreeInterior2",],
-            "Printable Skilling Resources": [
-                "Tree12",
-                "Godshard",
-                "Fish11", "Fish12", "Fish13",
-                "Bug12", "Bug13",],
-            "Other Skilling Resources": [
-                "CraftMat6", "Soul1",],
-            "Vendor Shops": [
-                "FoodHealth16", "FoodHealth17",
-                "FoodPotOr4", "FoodPotGr4", "FoodPotRe4", "FoodPotYe4",]
-            },
-        5: {
-                "Base Monster Materials": [
-                    "DesertA1", "DesertA2", "DesertA3", "DesertB1", "DesertB2", "DesertB3", "DesertB4", "DesertC1", "DesertC2", "DesertC3", "DesertC4",
-                    "SnowA1", "SnowA2", "SnowA3",],
-                "Printable Skilling Resources": [
-                    "Tree13",],
-                "Other Skilling Resources": [
-                    "CraftMat7", "CraftMat9",
-                    "Critter1", "Critter2",
-                    "Soul2",],
-            },
-        6: {
-            "Base Monster Materials": [
-                "SnowB1", "SnowB2", "SnowB5", "SnowB3", "SnowB4", "SnowC1", "SnowC2", "SnowC3", "SnowC4",
-                "GalaxyA1", "GalaxyA2", "GalaxyA3", "GalaxyA4", "GalaxyB1", "GalaxyB2", ],
-            "Other Skilling Resources": [
-                "CraftMat8", "CraftMat10",
-                "Critter3", "Critter4",
-                "Soul3",]
-            },
-        7: {
-            "Base Monster Materials": [
-                "SnowA4", "SnowC5",
-                "GalaxyB3", "GalaxyB4", "GalaxyB5", "GalaxyC1", "GalaxyC2", "GalaxyC3", "GalaxyC4"],
-            "Crystal Enemy Drops": [
-                "FoodPotMana1", "FoodPotMana2", "FoodPotGr1", "FoodPotOr2", "FoodHealth1", "FoodHealth3", "FoodHealth2", "Leaf1"],
-            "Other Skilling Resources": [
-                "CraftMat11",
-                "Critter5",
-                "Soul4",],
-            },
-        8: {
-            "Base Monster Materials": [
-                "LavaA1", "LavaA2", "LavaA3", "LavaA4", "LavaA5", "LavaB1", "LavaB2", "LavaB3", "LavaB4", "LavaB5",
-                "SpiA1", "SpiA2",
-            ],
-            "Crystal Enemy Drops": [
-                "FoodHealth6", "FoodHealth7", "FoodPotGr2", "FoodPotRe3",],
-            "Other Skilling Resources": [
-                "CraftMat12",
-                "Critter6", "Critter7",
-                "Soul5",],
-            },
-        9: {
-            "Base Monster Materials": [
-                "LavaB6", "LavaC1", "LavaC2",  #Can beat Kruk and move to W6 without fighting these
-                "SpiA3", "SpiA4", "SpiA5", "SpiB1", "SpiB2", "SpiB3", "SpiB4", "SpiC1", "SpiC2",],
-            "Crystal Enemy Drops": [
-                "FoodHealth10", "FoodPotOr3", "FoodPotYe2", ],
-            "Other Skilling Resources": [
-                "CraftMat13", "CraftMat14",
-                "Critter8", "Critter9",
-                "Soul6",],
-            },
-        10: {
-            "Base Monster Materials": [
-                 "SpiD1", "SpiD2", "SpiD3",],
-            "Crystal Enemy Drops": [
-                "Leaf2",
-                "Leaf3",
-                "FoodPotMana4", "Leaf4",
-                "FoodPotYe5", "Leaf5",
-                "Leaf6",],
-            "Printable Skilling Resources": [],
-            "Other Skilling Resources": [
-                "Soul7",
-                "CopperBar", "IronBar", "GoldBar", "PlatBar", "DementiaBar", "VoidBar",
-                "FoodMining1", "FoodFish1", "FoodCatch1", "Bullet", "BulletB"
-            ],
-            "Vendor Shops": [
-                "OilBarrel6", "OilBarrel7",],
-            },
-        11: {
-            "Missable Quest Items": [
-                "Quest3", "Quest4", "Quest7", "Quest12"
-                "Quest14", "Quest22", "Quest23", "Quest24",
-                "Quest32",
-            ],
-            "Crystal Enemy Drops": [
-                "FoodPotOr1",
-            ],
-            "Other Skilling Resources": [
-                "LustreBar", "StarfireBar", "DreadloBar", "MarbleBar", "GodshardBar",
-                "Critter10", "Critter11",
-            ],
-            "Rare Drops": ['Quest78'],
-            },
-        12: {
-            "Missable Quest Items": ["GoldricP1", "GoldricP2", "GoldricP3", "Quest21"],
-            "Base Monster Materials": ["Sewers3"],
-            "Crystal Enemy Drops": [
-                "EquipmentStatues7", "EquipmentStatues3", "EquipmentStatues2", "EquipmentStatues4", "EquipmentStatues14",
-                ],
-            "Other Skilling Resources": [
-
-                "Peanut", "Quest68", "Bullet3", "FoodChoppin1",],  #I really hate that the Slush Bucket is listed as Quest68
-            "Rare Drops": ["FoodPotRe1"],
-            },
-        13: {
-            "Base Monster Materials": [
-                "Quest15", "Hgg"],
-            "Crystal Enemy Drops": [
-                "EquipmentStatues1", "EquipmentStatues5",  #Power and Health statues are still more common than W2 statues
-                "EquipmentStatues10", "EquipmentStatues12", "EquipmentStatues13", "EquipmentStatues8", "EquipmentStatues11",  #W2 statues
-                "EquipmentStatues18",  #W3 EhExPee statue
-                "EquipmentStatues20", "EquipmentStatues21", "EquipmentStatues22",  # W4 Statues
-                "rtt0",
-                "StoneA1", "StoneW1", "StoneZ1", "StoneT1",
-                "StoneZ2", "StoneT2",
-                "PureWater",
-                "FoodG9",],
-            "Other Skilling Resources": [
-                "EquipmentSmithingTabs2",
-                'EquipmentSmithingTabs3',
-                "PeanutG",
-            ],
-            "Rare Drops": [
-                "FoodPotMana3", "ButterBar", "EquipmentStatues9", "OilBarrel2", "FoodPotRe2", "FoodPotGr3", "FoodHealth9",
-                'EquipmentStatues29',  # Villager Statues from Caverns
-            ],
-        },
-        14: {
-            "Crystal Enemy Drops": [
-                "StoneW2", 'ResetFrag', "SilverPen",
-                "EquipmentStatues23", "EquipmentStatues24", "EquipmentStatues25",  # W5 Statues
-            ],  #"StoneA2",],
-            "Other Skilling Resources": [
-                "FoodTrapping1", "FoodWorship1",
-                "Critter1A", "Critter2A", "Critter3A", "Critter4A", "Critter5A", "Critter6A", "Critter7A", "Critter8A", "Critter9A", "Critter10A", "Critter11A",
-                "Ladle",
-            ],
-            "Rare Drops": [
-                "DesertC2b", "EfauntDrop1",
-                'EquipmentStatues30',  # Dragon Warrior Statues from Caverns
-            ]
-        },
+    0: {  # The timegated tier
+        "Vendor Shops": [
+            "CraftMat3",  # W1 Cue Tape
+            "FoodPotRe2", "FoodHealth4", "Quest19",  # W2
+            "FoodHealth9", "FoodHealth11", "FoodPotGr3",  #W3
+            "FoodHealth12", "FoodHealth13", "FoodPotOr4", "FoodPotGr4", "FoodPotRe4", "FoodPotYe4",  #W4
+            "FoodHealth14", "FoodHealth15", "OilBarrel6",  #W5
+            "FoodHealth16", "FoodHealth17", "OilBarrel7",  #W6
+        ],
+        "Other Skilling Resources": [
+            "Refinery1", "Refinery2", "Refinery3", "Refinery4", "Refinery5", "Refinery6"
+        ]
+    },
+    1: {
+        "Printable Skilling Resources": [
+            "OakTree", "BirchTree", "JungleTree", "ForestTree", "ToiletTree", "PalmTree", "StumpTree", "SaharanFoal",
+            "Copper", "Iron", "Gold", "Plat", "Dementia", "Void", "Lustre",
+            "Fish1", "Fish2", "Fish3",
+            "Bug1", "Bug2"
+        ]
+    },
+    2: {
+        "Printable Skilling Resources": [
+            "Tree7", "AlienTree", "Tree8", "Tree9", "Tree11",
+            "Starfire", "Marble",
+            "Fish4", "Fish5", "Fish6", "Fish7",
+            "Bug3", "Bug4", "Bug5", "Bug6", "Bug7", "Bug8"
+        ],
+        "Other Skilling Resources": [
+            "CraftMat1"
+        ],
+        "Vendor Shops": [
+            "FoodHealth14", "FoodHealth15"
+        ]
+    },
+    3: {
+        "Base Monster Materials": [
+            "Grasslands1", "Grasslands2", "Grasslands4", "Grasslands3", "Jungle1", "Jungle2", "Jungle3", "Forest1", "Forest2", "Forest3"
+        ],
+        "Printable Skilling Resources": [
+            "Tree10",
+            "Dreadlo",
+            "Fish8", "Fish9", "Fish10",
+            "Bug9", "Bug11"
+        ],
+        "Other Skilling Resources": [
+            "CraftMat5"
+        ],
+        "Vendor Shops": [
+            "FoodHealth12", "FoodHealth13"
+        ]
+    },
+    4: {
+        "Base Monster Materials": [
+            "Sewers1", "Sewers2", "TreeInterior1", "TreeInterior2"
+        ],
+        "Printable Skilling Resources": [
+            "Tree12",
+            "Godshard",
+            "Fish11", "Fish12", "Fish13",
+            'Bug10', "Bug12", "Bug13"
+        ],
+        "Other Skilling Resources": [
+            "CraftMat6", "Soul1"
+        ],
+        "Vendor Shops": [
+            "FoodHealth16", "FoodHealth17",
+            "FoodPotOr4", "FoodPotGr4", "FoodPotRe4", "FoodPotYe4"
+        ]
+    },
+    5: {
+        "Base Monster Materials": [
+            "DesertA1", "DesertA2", "DesertA3", "DesertB1", "DesertB2", "DesertB3", "DesertB4", "DesertC1", "DesertC2", "DesertC3", "DesertC4",
+            "SnowA1", "SnowA2", "SnowA3"
+        ],
+        "Printable Skilling Resources": [
+            "Tree13"
+        ],
+        "Other Skilling Resources": [
+            "CraftMat7", "CraftMat9",
+            "Critter1", "Critter2",
+            "Soul2"
+        ]
+    },
+    6: {
+        "Base Monster Materials": [
+            "SnowB1", "SnowB2", "SnowB5", "SnowB3", "SnowB4", "SnowC1", "SnowC2", "SnowC3", "SnowC4",
+            "GalaxyA1", "GalaxyA2", "GalaxyA3", "GalaxyA4", "GalaxyB1", "GalaxyB2"
+        ],
+        "Other Skilling Resources": [
+            "CraftMat8", "CraftMat10",
+            "Critter3", "Critter4",
+            "Soul3"
+        ]
+    },
+    7: {
+        "Base Monster Materials": [
+            "SnowA4", "SnowC5",
+            "GalaxyB3", "GalaxyB4", "GalaxyB5", "GalaxyC1", "GalaxyC2", "GalaxyC3", "GalaxyC4"
+        ],
+        "Crystal Enemy Drops": [
+            "FoodPotMana1", "FoodPotMana2", "FoodPotGr1", "FoodPotOr2", "FoodHealth1", "FoodHealth3", "FoodHealth2", "Leaf1"
+        ],
+        "Other Skilling Resources": [
+            "CraftMat11",
+            "Critter5",
+            "Soul4"
+        ]
+    },
+    8: {
+        "Base Monster Materials": [
+            "LavaA1", "LavaA2", "LavaA3", "LavaA4", "LavaA5", "LavaB1", "LavaB2", "LavaB3", "LavaB4", "LavaB5",
+            "SpiA1", "SpiA2",
+        ],
+        "Crystal Enemy Drops": [
+            "FoodHealth6", "FoodHealth7", "FoodPotGr2", "FoodPotRe3"
+        ],
+        "Other Skilling Resources": [
+            "CraftMat12",
+            "Critter6", "Critter7",
+            "Soul5"
+        ]
+    },
+    9: {
+        "Base Monster Materials": [
+            "LavaB6", "LavaC1", "LavaC2",  #Can beat Kruk and move to W6 without fighting these
+            "SpiA3", "SpiA4", "SpiA5", "SpiB1", "SpiB2", "SpiB3", "SpiB4", "SpiC1", "SpiC2",],
+        "Crystal Enemy Drops": [
+            "FoodHealth10", "FoodPotOr3", "FoodPotYe2", ],
+        "Other Skilling Resources": [
+            "CraftMat13", "CraftMat14",
+            "Critter8", "Critter9",
+            "Soul6"
+        ]
+    },
+    10: {
+        "Base Monster Materials": [
+             "SpiD1", "SpiD2", "SpiD3"
+        ],
+        "Crystal Enemy Drops": [
+            "Leaf2",
+            "Leaf3",
+            "FoodPotMana4", "Leaf4",
+            "FoodPotYe5", "Leaf5",
+            "Leaf6"
+        ],
+        "Other Skilling Resources": [
+            "Soul7",
+            "CopperBar", "IronBar", "GoldBar", "PlatBar", "DementiaBar", "VoidBar",
+            "FoodMining1", "FoodFish1", "FoodCatch1", "Bullet", "BulletB"
+        ],
+        "Vendor Shops": [
+            "OilBarrel6", "OilBarrel7"
+        ]
+    },
+    11: {
+        "Missable Quest Items": [
+            "Quest3", "Quest4", "Quest7", "Quest12",
+            "Quest14", "Quest22", "Quest23", "Quest24",
+            "Quest32"
+        ],
+        "Crystal Enemy Drops": [
+            "FoodPotOr1"
+        ],
+        "Other Skilling Resources": [
+            "LustreBar", "StarfireBar", "DreadloBar", "MarbleBar", "GodshardBar",
+            "Critter10", "Critter11"
+        ],
+        "Rare Drops": [
+            'Quest78'
+        ]
+    },
+    12: {
+        "Missable Quest Items": [
+            "GoldricP1", "GoldricP2", "GoldricP3", "Quest21"
+        ],
+        "Base Monster Materials": [
+            "Sewers3"
+        ],
+        "Crystal Enemy Drops": [
+            "EquipmentStatues7", "EquipmentStatues3", "EquipmentStatues2", "EquipmentStatues4", "EquipmentStatues14",
+        ],
+        "Other Skilling Resources": [
+            "Peanut", "Quest68", "Bullet3", "FoodChoppin1"  #I really hate that the Slush Bucket is listed as Quest68
+        ],
+        "Rare Drops": [
+            "FoodPotRe1"
+        ]
+    },
+    13: {
+        "Base Monster Materials": [
+            "Quest15", "Hgg"
+        ],
+        "Crystal Enemy Drops": [
+            "EquipmentStatues1", "EquipmentStatues5",  #Power and Health statues are still more common than W2 statues
+            "EquipmentStatues10", "EquipmentStatues12", "EquipmentStatues13", "EquipmentStatues8", "EquipmentStatues11",  #W2 statues
+            "EquipmentStatues18",  #W3 EhExPee statue
+            "EquipmentStatues20", "EquipmentStatues21", "EquipmentStatues22",  # W4 Statues
+            "rtt0",
+            "StoneA1", "StoneW1", "StoneZ1", "StoneT1",
+            "StoneZ2", "StoneT2",
+            "PureWater",
+            "FoodG9"
+        ],
+        "Other Skilling Resources": [
+            "EquipmentSmithingTabs2",
+            'EquipmentSmithingTabs3',
+            "PeanutG"
+        ],
+        "Rare Drops": [
+            "FoodPotMana3", "ButterBar", "EquipmentStatues9", "OilBarrel2", "FoodPotRe2", "FoodPotGr3", "FoodHealth9",
+            'EquipmentStatues29',  # Villager Statues from Caverns
+        ]
+    },
+    14: {
+        "Crystal Enemy Drops": [
+            "StoneW2", 'ResetFrag', "SilverPen",
+            "EquipmentStatues23", "EquipmentStatues24", "EquipmentStatues25",  # W5 Statues
+        ],
+        "Other Skilling Resources": [
+            "FoodTrapping1", "FoodWorship1",
+            "Ladle"
+        ],
+        "Rare Drops": [
+            'Sewers1b',  #W1 Golden Plop
+            'DesertC2b', 'DesertA3b',  #W2 Ghost and Nuget Cake
+            'SnowC4a', 'SnowB2a',  #W3 Black Lense and Ice Age 3
+            'EfauntDrop1',
+            'EquipmentStatues15',  #Bullseye
+            'EquipmentStatues16', 'EquipmentStatues17', 'EquipmentStatues19',  # W3 Statues
+            'EquipmentStatues30'  # Dragon Warrior Statues from Caverns
+        ]
+    },
+    15: {
+        'Crystal Enemy Drops': [
+            'StoneA2'
+        ],
+        "Other Skilling Resources": [
+            "Critter1A", "Critter2A", "Critter3A", "Critter4A", "Critter5A",
+            "Critter6A", "Critter7A", "Critter8A", "Critter9A", "Critter10A",
+            "Critter11A"
+        ],
+        'Rare Drops': [
+            'DesertA1b',  #W2 Glass Shard
+            'SnowA2a',  #W3 Yellow Snowflake
+            'GalaxyC1b', 'GalaxyA2b',  #W4 Pearler Shell + Lost Batteries
+            'LavaA1b', 'LavaA5b', 'LavaB3b', 'Key5'  # W5 Rare Drops
+        ]
     }
+}
 greenstack_progressionTiers = {
     1: {'Dream Number': 1, 'Required Stacks': 20},
     2: {'Dream Number': 12, 'Required Stacks': 75},
     3: {'Dream Number': 29, 'Required Stacks': 200},
-    4: {'Required Stacks': 250},  #Arbitrary based on LBs at the moment
-    5: {'Required Stacks': 299}
+    4: {'Required Stacks': 250},
+    5: {'Required Stacks': 319}
 }
 achievements_progressionTiers = {
     0: {},
@@ -1927,6 +1983,13 @@ switches = [
         "static": "true",
     },
     {
+        "label": "Group Library by Character",
+        "name": "library_group_characters",
+        "true": "",
+        "false": "",
+        "static": "true",
+    },
+    {
         "label": "Hide Completed",
         "name": "hide_completed",
         "true": "",
@@ -2040,12 +2103,11 @@ expectedStackables = {
         "EquipmentStatues1", "EquipmentStatues5",  # Plausible but time consuming
         "EquipmentStatues10", "EquipmentStatues12", "EquipmentStatues13", "EquipmentStatues8", "EquipmentStatues11",  # W2 statues are all slower than Power/Health
         "rtt0", "StoneZ1", "StoneT1", "StoneW1", "StoneA1",  #W1 Slow drops = Town TP + Stones
-        "StoneT2", "StoneZ2",  "StoneW2",  #"StoneA2", # W2 upgrade stones and Mystery2
+        "StoneT2", "StoneZ2",  "StoneW2", "StoneA2", # W2 upgrade stones and Mystery2
         "PureWater", "EquipmentStatues18",  #W3 Slow drops = Distilled Water + EhExPee Statue
         "EquipmentStatues20", "EquipmentStatues21", "EquipmentStatues22",  # W4 Statues
         "EquipmentStatues23", "EquipmentStatues24", "EquipmentStatues25", "FoodG9",  #W5 Slow drops = Golden W5 Sammy + Statues
-
-        "FoodG11", "FoodG12"
+        # "FoodG11", "FoodG12"  #W6 gold foods
     ],
     "Printable Skilling Resources": [
         "OakTree", "BirchTree", "JungleTree", "ForestTree", "ToiletTree", "PalmTree", "StumpTree", "SaharanFoal",  # Logs1
@@ -2091,21 +2153,23 @@ expectedStackables = {
         "FoodPotRe1",  #Small Life Potion from W1 Sewers and Tree mobs, not crystals
         "ButterBar",  #Catching Butterflies
         "EquipmentStatues9",  #Oceanman statue can be candied from W2 bugs
+        'EquipmentStatues15',  #Bullseye
+        'EquipmentStatues16', 'EquipmentStatues17', 'EquipmentStatues19',  # W3 Statues not from Crystals
         "FoodPotMana3",  #Decent Mana Potion from Bloques
         "FoodHealth9",  #Yeti Ham from Bop Box
         "OilBarrel2",  # Slime Barrel, 1 in 3334
-        "DesertC2b",  # Ghost, 1 in 2k
-        "Quest78",  # Equinox Mirror
+        'Sewers1b',  # W1 Golden Plop
+        "DesertC2b", 'DesertA3b', 'DesertA1b',  # W2 Ghost, Nuget Cake, Glass Shard
+        "Quest78", 'SnowC4a', 'SnowB2a', 'SnowA2a',  # W3 Equinox Mirror, Black Lense, Ice Age 3, Yellow Snowflake
+        'GalaxyC1b', 'GalaxyA2b',  #W4 Pearler Shell, Lost Batteries
+        'LavaA1b', 'LavaA5b', 'LavaB3b', 'Key5',  # W5 Rare Drops
         "EfauntDrop1",  # Basic Efaunt material
-        "Key2", "Key3",  # Efaunt and Chizoar keys
+        # "Key2", "Key3",  # Efaunt and Chizoar keys
         'EquipmentStatues29', 'EquipmentStatues30',  # Villager and Dragon Warrior statues from Caverns
     ],
     "Cheater": [
-        "Sewers1b", "TreeInterior1b", "BabaYagaETC", "JobApplication",  # W1 Rare Drops
-        "DesertA1b", "DesertA3b", "MidnightCookie",  # W2 Rare Drops
-        "SnowA2a", "SnowB2a", "SnowC4a",  # W3 Rare Drops
-        "GalaxyA2b", "GalaxyC1b",  # W4 Rare Drops
-        "LavaA1b", "LavaA5b", "LavaB3b",  # W5 Rare Drops
+        "TreeInterior1b", "BabaYagaETC", "JobApplication",  # W1 Rare Drops
+        "MidnightCookie",  # W2 Rare Drops
         "SpiA2b", "SpiB2b",  # W6 Rare Drops
         "EfauntDrop2", "Chiz0", "Chiz1", "TrollPart", "KrukPart", "KrukPart2",  # World Boss Materials
         "CraftMat2",  # Crimson String
@@ -2126,8 +2190,7 @@ expectedStackables = {
         "PetEgg", "Whetstone", "Quest72", "Quest73", "Quest76", "Quest77",  # Other Time Skips
         "Quest70", "Quest71", "Quest75", "Gfoodcoupon", "ItemsCoupon1", "ItemsCoupon2",  # Loot Bags
         "FoodHealth8", "Quest69", "Quest74",  # Unobtainables
-        "EquipmentStatues6", "EquipmentStatues15",  # Kachow and Bullseye
-        "EquipmentStatues16", "EquipmentStatues17", "EquipmentStatues19",  # W3 Statues
+        "EquipmentStatues6",  # Kachow
         "FoodG1", "FoodG2", "FoodG3", "FoodG4", "FoodG5", "FoodG6", "FoodG7", "FoodG8", "FoodG10",  # Gold Foods
         "ResetCompleted", "ResetCompletedS", "ClassSwap",
         "ClassSwapB", "ResetBox",
@@ -2138,6 +2201,28 @@ gstackable_codenames = [item for items in expectedStackables.values() for item i
 gstackable_codenames_expected = [
     item for items in list(expectedStackables.values())[:-1] for item in items
 ]
+gstacks_rated_items = []
+for dg in greenstack_item_difficulty_groups:
+    for category in greenstack_item_difficulty_groups[dg]:
+        for item_name in greenstack_item_difficulty_groups[dg][category]:
+            gstacks_rated_items.append(item_name)
+gstack_rated_not_expected = [item for item in gstacks_rated_items if item not in gstackable_codenames_expected]
+if len(gstack_rated_not_expected) > 0:
+    print(f"Rated but not Expected Greenstacks found: {gstack_rated_not_expected}")
+gstack_expected_not_rated = [item for item in gstackable_codenames_expected if item not in gstacks_rated_items]
+if len(gstack_expected_not_rated) > 0:
+    print(f"Expected but not Rated Greenstacks found: {gstack_expected_not_rated}")
+gstack_unique_expected = set()
+gstack_duplicate_expected = set()
+for item_name in gstackable_codenames_expected:
+    if item_name in gstack_unique_expected:
+        gstack_duplicate_expected.add(item_name)
+    else:
+        gstack_unique_expected.add(item_name)
+# if len(gstack_duplicate_expected) > 0:
+# These 3 are expected as they're sold in Vendor Shops category + Rare Drops from enemies {'FoodPotGr3', 'FoodPotRe2', 'FoodHealth9'}
+#     print(f"Reminder: Duplicate entries in GStack Expected list: {gstack_duplicate_expected}")
+greenstack_progressionTiers[5]['Required Stacks'] = len(gstack_unique_expected)
 quest_items_codenames = expectedStackables["Missable Quest Items"]
 key_cards = "Cards0"
 card_data = {
@@ -3330,7 +3415,7 @@ hardcap_enhancement_eclipse = 250  #Lava might add more in the future, but there
 librarySubgroupTiers = [
     'Account Wide Priorities', 'Skilling - High Priority', 'Skilling - Medium Priority', 'Skilling - Low Priority', 'Skilling - Lowest Priority',
     'Combat - High Priority', 'Combat - Medium Priority', 'Combat - Low Priority', 'ALL Unmaxed Talents', 'VIP'
-]  #Why is there a placeholder in [0] again?
+]
 skill_talentsDict = {
     # Optimal is an optional list for calculating library.getJeapordyGoal
     # [0] = the starting level
@@ -6511,7 +6596,7 @@ caverns_measurer_scalar_matchup = HolesInfo[52]
 caverns_measurer_scalars = HolesInfo[53]
 caverns_measurer_measurements = HolesInfo[54]
 caverns_measurer_HI55 = HolesInfo[55]
-max_measurements = sum(1 for measurement in caverns_measurer_measurements if measurement != 'i')  #i is a placeholder for not-implemented
+caverns_max_measurements = sum(1 for measurement in caverns_measurer_measurements if measurement != 'i')  #i is a placeholder for not-implemented
 caverns_measurer_measurement_names = [
     'Inches', 'Meters', 'Miles', 'Liters', 'Yards',
     'Pixels', 'Leagues', 'Nanometers', 'Sadness', 'Feet',
@@ -6533,6 +6618,14 @@ for entry_index, entry in enumerate(caverns_measurer_measurements):
             f"UnknownScalar{entry_index}",
             ''
         ]
+caverns_measurement_percent_goals = {
+    # "MeasurementBaseBonus" in source code
+    # =CosmosMulti * ScalingValue * (Level / (100 + Level))
+    # Numbers calculated by Xythium https://docs.google.com/spreadsheets/d/1krMdc1cGhKLBVv7XFEBU4BUbatyLHggEwp7XN5a6gAc/edit?usp=sharing
+    12: '10%', 25: '20%', 43: '30%', 67: '40%', 100: '50%', 150: '60%',
+    234: '70%', 300: '75%', 400: '80%', 567: '85%', 900: '90%', 1900: '95%',
+    2400: '96%', 3234: '97%', 4900: '98%', 9900: '99%'
+}
 caverns_librarian_studies = {}
 for entry_index, entry in enumerate(HolesInfo[69]):
     caverns_librarian_studies[entry_index] = [

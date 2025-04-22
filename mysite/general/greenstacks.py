@@ -1,4 +1,4 @@
-from consts import missableGStacksDict, break_you_best, greenstack_progressionTiers, find_vendor_name
+from consts import missableGStacksDict, break_you_best, greenstack_progressionTiers, find_vendor_name, gstack_unique_expected
 from models.models import AdviceSection, AdviceGroup, Advice, gstackable_codenames_expected, Assets
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
@@ -156,7 +156,7 @@ def getGStackAdviceSections():
         logger.warning('Unexpected GStack(s): %s', gstacks)
 
     #Get count of max expected gstacks
-    expectedStackablesCount = len(set(gstackable_codenames_expected))
+    expectedStackablesCount = len(gstack_unique_expected)
     expectedGStacksCount = len(all_owned_stuff.items_gstacked_expected)
     remainingToDoGStacksByTier = all_owned_stuff.items_gstackable_tiered
 
