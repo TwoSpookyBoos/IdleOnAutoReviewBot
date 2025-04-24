@@ -795,7 +795,7 @@ def _parse_master_classes_compass_upgrades(account, raw_compass_upgrades):
 def _parse_master_classes_medallions(account, raw_medallions):
     known_extras = {
         'reindeer': ['Spirit Reindeer', 'spirit-reindeer'],
-        # 'caveA': ['Cavern 3: Dawg Den', 'dawg-den-dawgs'],  #Idk if these actually drop or not, pending confirmation
+        'caveA': ['Cavern 3: Dawg Den', 'dawg-den-dawgs'],
         'BugNest1': ['Fly Nest', 'fly-nest'],
         'BugNest2': ['Butterfly Nest', 'butterfly-bar'],
         'BugNest3': ['Sentient Cereal Nest', 'sentient-bowl'],
