@@ -64,19 +64,22 @@ def getCompassAbominationsAdviceGroup(compass):
     abom_advices = []
 
     for abom_name, abom_details in compass['Abominations'].items():
-        if abom_details['Defeated'] or abom_details['World'] < 3:
-            # Lava put a wiki embargo on w3+ abom pictures
-            image = abom_details['Image']
+        if abom_details['Defeated']:
+            abom_advices.append(Advice(
+                label=f"{abom_name} defeated in W{abom_details['World']}"
+                      f"<br>Weakness: {abom_details['Weakness']}",
+                picture_class=abom_details['Image'] if abom_details['Defeated'] else '',
+                progression=1,
+                goal=1
+            ))
         else:
-            image = ''
-        abom_advices.append(Advice(
-            label=f"{abom_name if abom_details['Defeated'] else '???'}"
-                  f" {'un' if not abom_details['Defeated'] else ''}defeated in W{abom_details['World']}"
-                  f"<br>Weakness: {abom_details['Weakness']}",
-            picture_class=image,
-            progression=int(abom_details['Defeated']),
-            goal=1
-        ))
+            abom_advices.append(Advice(
+                label=f"{abom_name[:3]}... undefeated in W{abom_details['World']}"
+                      f"<br>Weakness: {abom_details['Weakness']}",
+                picture_class='',
+                progression=0,
+                goal=1
+            ))
 
     for advice in abom_advices:
         mark_advice_completed(advice)
@@ -123,7 +126,6 @@ def getCompassMedallionsAdviceGroup(compass):
     medallion_ag.remove_empty_subgroups()
     return medallion_ag
 
-
 def getCompassUpgradesAdviceGroups(compass):
     upgrades_AdviceDict = {}
     upgrades_AdviceGroups = []
@@ -160,9 +162,8 @@ def getCompassUpgradesAdviceGroups(compass):
             else:
                 upgrades_AdviceDict[f'{path_name} Path Upgrades'].append(Advice(
                     label=(
-                        #f"CompassUpg-{upgrade_details['Index']}: "
-                        f"{upgrade_details['Path Name']}-{upgrade_details['Path Ordering']}: {upgrade_details['Shape']}"
-                        f"<br>{clean_name}: {upgrade_details['Description']}"
+                        f"{upgrade_details['Path Name']}-{upgrade_details['Path Ordering']}: "
+                        f"{clean_name}: <br>{upgrade_details['Description']}"
                         f"<br>{'This upgrade is Locked!' if not upgrade_details['Unlocked'] else ''}"
                     ),
                     picture_class=upgrade_details['Image'],
