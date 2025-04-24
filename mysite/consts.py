@@ -4433,6 +4433,12 @@ for stampType in stampsDict:
                 remaining_stamps.append(stamp['Name'])
 stamps_progressionTiers[max(stamps_progressionTiers)-1]['Stamps']['Specific'] = {stamp: stamp_maxes[stamp] for stamp in ordered_tiers_stamps}
 stamps_progressionTiers[max(stamps_progressionTiers)]['Stamps']['Specific'] = {stamp: stamp_maxes[stamp] for stamp in remaining_stamps}
+stamps_exalt_recommendations = [
+    'Crystallin', 'Mason Jar Stamp', 'Summoner Stone Stamp', 'Multitool Stamp',
+    'Matty Bag Stamp', 'Golden Sixes Stamp', 'Drippy Drop Stamp', 'Gold Ball Stamp',
+    'Refinery Stamp', 'Bugsack Stamp', 'Bag o Heads Stamp', "Lil' Mining Baggy Stamp", "Choppin' Bag Stamp",
+    'Card Stamp', 'Divine Stamp', 'Golden Apple Stamp', 'Vendor Stamp', 'Study Hall Stamp', 'Cavern Resource Stamp',
+]
 
 starsignsDict = {
     1: {'Name': "The Buff Guy", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},

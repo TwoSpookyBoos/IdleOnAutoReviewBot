@@ -5,7 +5,7 @@ from utils.logging import get_logger
 from consts import (
     break_you_best,
     stamps_progressionTiers, stamp_maxes, stampsDict, unavailableStampsList, stampTypes,
-    maxOverallBookLevels, max_VialLevel, maxFarmingCrops
+    maxOverallBookLevels, max_VialLevel, maxFarmingCrops, infinity_string, stamps_exalt_recommendations
 )
 from flask import g as session_data
 
@@ -258,6 +258,71 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     )
     return costReduction_AdviceGroup
 
+def getExaltedAdviceGroup() -> AdviceGroup:
+    rec = 'Remaining Recommended Exalts'
+    cur = 'Current Exalts'
+    tot = 'Totals'
+    exalted_advice = {
+        tot: [],
+        rec: [],
+        cur: []
+    }
+
+    stamps = session_data.account.stamps
+    compass = session_data.account.compass
+    gemshop = session_data.account.gemshop
+
+    tot_available = compass['Upgrades']['Exalted Stamps']['Level'] + gemshop['Exalted Stamps']
+
+    exalted_advice[tot].append(Advice(
+        label=f"Total Exalted Stamps spent: {compass['Total Exalted']}/{tot_available}",
+        picture_class='exalted-stamps',
+        progression=compass['Total Exalted'],
+        goal=tot_available
+    ))
+    exalted_advice[tot].append(Advice(
+        label=f"Exalted Stamps from Wind Walker {{{{Compass|#the-compass}}}}: {compass['Upgrades']['Exalted Stamps']['Level']}",
+        picture_class=compass['Upgrades']['Exalted Stamps']['Image'],
+        progression=compass['Upgrades']['Exalted Stamps']['Level'],
+        goal=compass['Upgrades']['Exalted Stamps']['Max Level']
+    ))
+    exalted_advice[tot].append(Advice(
+        label=f"Exalted Stamps from Gem Shop (Limited Availability): {gemshop['Exalted Stamps']}",
+        picture_class='exalted-stamps',
+        progression=gemshop['Exalted Stamps'],
+        goal=infinity_string
+    ))
+
+    exalted_advice[rec] = [
+        Advice(
+            label=f"{stamps[stamp_name]['StampType']}: {stamp_name}",
+            picture_class=stamp_name,
+            progression=0,
+            goal=1
+        ) for stamp_name in stamps_exalt_recommendations if not stamps[stamp_name]['Exalted'] and stamps[stamp_name]['Delivered']
+    ]
+
+    exalted_advice[cur] = [
+        Advice(
+            label=f"{stamp_details['StampType']}: {stamp_name}",
+            picture_class=stamp_name,
+            progression=1,
+            goal=1
+        ) for stamp_name, stamp_details in stamps.items() if stamp_details['Exalted']
+    ]
+
+    for subgroup in exalted_advice:
+        for advice in exalted_advice[subgroup]:
+            mark_advice_completed(advice)
+
+    exalted_ag = AdviceGroup(
+        tier='',
+        pre_string='Informational- Exalted Stamps',
+        advices=exalted_advice
+    )
+    exalted_ag.remove_empty_subgroups()
+    return exalted_ag
+
 def getReadableStampName(stampNumber, stampType):
     # logger.debug(f"Fetching name for {stampType} + {stampNumber}")
     return stampsDict.get(stampType, {}).get(stampNumber, f"Unknown{stampType}{stampNumber}")
@@ -395,6 +460,7 @@ def getStampAdviceSection() -> AdviceSection:
     stamp_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
     stamp_AdviceGroupDict["Capacity"] = getCapacityAdviceGroup()
     stamp_AdviceGroupDict["CostReduction"] = getCostReductionAdviceGroup()
+    stamp_AdviceGroupDict['Exalted'] = getExaltedAdviceGroup()
 
     # Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"

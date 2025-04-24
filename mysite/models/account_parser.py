@@ -58,7 +58,7 @@ from consts import (
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
 from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert
 from utils.logging import get_logger
-from utils.text_formatting import getItemDisplayName
+from utils.text_formatting import getItemDisplayName, numberToLetter
 
 logger = get_logger(__name__)
 
@@ -686,7 +686,10 @@ def _parse_master_classes_compass(account):
     raw_medallions = raw_compass[3]
     account.compass['Total Medallions'] = len(raw_medallions)
     _parse_master_classes_medallions(account, raw_medallions)
+
     raw_stamps_exalted = raw_compass[4]
+    account.compass['Total Exalted'] = len(raw_stamps_exalted)
+    # see _parse_master_classes_exalted_stamps for more info. Has to come after w1 stamps are parsed
 
 def _parse_master_classes_abominations(account, raw_abom_status):
     for abom_index, abom_data in enumerate(compass_titans):
@@ -833,6 +836,27 @@ def _parse_master_classes_medallions(account, raw_medallions):
         if raw_enemy_name not in account.compass['Medallions']:
             logger.info(f"Medallion for {raw_enemy_name} found, no matching entry created")
 
+def _parse_master_classes_exalted_stamps(account):
+    raw_compass = safe_loads(account.raw_data.get('Compass', []))
+    if not raw_compass:
+        logger.warning(f"Exalted Stamp data not present{', as expected' if account.version < 264 else ''}.")
+    while len(raw_compass) < 5:
+        raw_compass.append([])
+    raw_stamps_exalted = raw_compass[4]
+
+    for stampType in stampsDict:
+        exalted_stamp_type = numberToLetter(stampTypes.index(stampType))
+        for stampIndex, stampValuesDict in stampsDict[stampType].items():
+            try:
+                exalted_stamp_key = f"{exalted_stamp_type}{stampIndex}"
+                # if exalted_stamp_key in raw_stamps_exalted:
+                #     logger.debug(f"{stampType}{stampIndex} ({exalted_stamp_key}): {stampValuesDict['Name']} is Exalted")
+                account.stamps[stampValuesDict['Name']]['Exalted'] = exalted_stamp_key in raw_stamps_exalted
+            except:
+                if raw_compass:
+                    logger.exception(f"Error parsing Exalted status for stamp {stampType}{stampIndex}: {stampValuesDict['Name']}")
+                account.stamps[stampValuesDict['Name']]['Exalted'] = False
+
 def _parse_w1(account):
     _parse_w1_starsigns(account)
     _parse_w1_forge(account)
@@ -932,7 +956,7 @@ def _parse_w1_stamps(account):
                         int(floor(raw_stamps_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0))),
                         stampValuesDict['x1'],
                         stampValuesDict['x2'],
-                    )
+                    ),
                 }
                 account.stamp_totals["Total"] += account.stamps[stampValuesDict['Name']]["Level"]
                 account.stamp_totals[stampType] += account.stamps[stampValuesDict['Name']]["Level"]
@@ -944,8 +968,10 @@ def _parse_w1_stamps(account):
                     "Max": 0,
                     "Delivered": False,
                     "StampType": stampType,
-                    "Value": 0
+                    "Value": 0,
+                    'Exalted': False
                 }
+    _parse_master_classes_exalted_stamps(account)
 
 def _parse_w1_owl(account):
     if 265 not in account.raw_optlacc_dict:
