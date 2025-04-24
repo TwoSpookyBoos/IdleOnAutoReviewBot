@@ -265,7 +265,8 @@ $compass-equipment: (
 $compass-etc: (
     aethermoon: img('data/Quest96.png'),
     wind-walker-medallion: img('data/WWcoin.png'),
-    the-compass: img('customized/Compass_NoBG.png') //Provided by Trialpears
+    the-compass: img('customized/Compass_NoBG.png'), //Provided by Trialpears
+    spirit-reindeer: img('customized/spirit-reindeer.png') //Scoli did it for once
 );
 
 $all-compass: map-merge($compass-upgrades, $compass-dusts);

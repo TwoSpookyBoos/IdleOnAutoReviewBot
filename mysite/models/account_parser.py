@@ -663,7 +663,9 @@ def _parse_master_classes_compass(account):
         'Dust5': safer_get(account.raw_optlacc_dict, 361, 0),
         "Top of the Mornin'": max(0, safer_convert(safer_get(account.raw_optlacc_dict, 361, 0),0)),
         'Abominations': {},
-        'Elements': {0: 'Fire', 1: 'Wind', 2: 'Grass', 3: 'Ice'}
+        'Elements': {0: 'Fire', 1: 'Wind', 2: 'Grass', 3: 'Ice'},
+        'Medallions': {},
+        'Total Medallions': 0
     }
     #Parse Compass Upgrades
     raw_compass = safe_loads(account.raw_data.get('Compass', []))
@@ -678,11 +680,12 @@ def _parse_master_classes_compass(account):
 
     raw_compass_upgrades = [safer_convert(v, 0) for v in raw_compass[0]]
     account.compass['Total Upgrades'] = sum([safer_convert(v, 0) for v in raw_compass_upgrades])
-    _parse_master_classes_compass_upgrades(account, raw_compass_upgrades, raw_abom_status)
+    _parse_master_classes_compass_upgrades(account, raw_compass_upgrades)
 
     # raw_portals_opened = raw_compass[2]
     raw_medallions = raw_compass[3]
     account.compass['Total Medallions'] = len(raw_medallions)
+    _parse_master_classes_medallions(account, raw_medallions)
     raw_stamps_exalted = raw_compass[4]
 
 def _parse_master_classes_abominations(account, raw_abom_status):
@@ -715,7 +718,7 @@ def _parse_master_classes_abominations(account, raw_abom_status):
                 'Weakness': account.compass['Elements'].get(weakness, 'Unknown')
             }
 
-def _parse_master_classes_compass_upgrades(account, raw_compass_upgrades, raw_abom_status):
+def _parse_master_classes_compass_upgrades(account, raw_compass_upgrades):
     for path_name, upgrade_indexes_list in compass_path_ordering.items():
         for path_ordering, upgrade_index in enumerate(upgrade_indexes_list):
             upgrade_values_list = compass_upgrades_list[upgrade_index]
@@ -785,7 +788,50 @@ def _parse_master_classes_compass_upgrades(account, raw_compass_upgrades, raw_ab
         else:
             account.compass['Upgrades'][upgrade_name]['Unlocked'] = account.compass['Upgrades'][path_name]['Level'] >= upgrade_details['Path Ordering']
 
+def _parse_master_classes_medallions(account, raw_medallions):
+    known_extras = {
+        'reindeer': 'Spirit Reindeer'
+    }
+    for extra_name in known_extras:
+        try:
+            account.compass['Medallions'][extra_name] = {
+                'Obtained': extra_name in raw_medallions,
+                'Card Name': extra_name,
+                'Card Set': 'Extras',
+                'Enemy Name': known_extras[extra_name],
+            }
+        except:
+            account.compass['Medallions'][extra_name] = {
+                'Obtained': False,
+                'Card Name': extra_name,
+                'Card Set': 'Extras',
+                'Enemy Name': known_extras[extra_name],
+            }
 
+    ignore_sets = []  #['Easy Resources', 'Medium Resources', 'Hard Resources', 'Dungeons']
+    ignore_cards = []  #['Bandit Bob', 'IdleOn Fourth Anniversary']
+    for set_name, set_cards in card_data.items():
+        if set_name not in ignore_sets:
+            for card_name, card_values in set_cards.items():
+                if card_values[0] not in ignore_cards:
+                    try:
+                        account.compass['Medallions'][card_name] = {
+                            'Obtained': card_name in raw_medallions,
+                            'Card Name': card_name,
+                            'Card Set': set_name,
+                            'Enemy Name': card_values[0],
+                        }
+                    except:
+                        account.compass['Medallions'][card_name] = {
+                            'Obtained': False,
+                            'Card Name': card_name,
+                            'Card Set': set_name,
+                            'Enemy Name': card_values[0],
+                        }
+
+    for raw_enemy_name in raw_medallions:
+        if raw_enemy_name not in account.compass['Medallions']:
+            logger.info(f"Medallion for {raw_enemy_name} found, no matching entry created")
 
 def _parse_w1(account):
     _parse_w1_starsigns(account)

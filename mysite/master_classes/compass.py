@@ -89,6 +89,40 @@ def getCompassAbominationsAdviceGroup(compass):
     abom_ag.remove_empty_subgroups()
     return abom_ag
 
+def getCompassMedallionsAdviceGroup(compass):
+    medallion_advice = {}
+
+    medallion_advice['Total'] = [
+        Advice(
+            label=f"Total Medallions Collected: {compass['Total Medallions']}/???",
+            picture_class='wind-walker-medallion',
+            progression=compass['Total Medallions'],
+            goal=infinity_string
+        )
+    ]
+
+    for code_name, enemy_details in compass['Medallions'].items():
+        if enemy_details['Card Set'] not in medallion_advice:
+            medallion_advice[enemy_details['Card Set']] = []
+        medallion_advice[enemy_details['Card Set']].append(Advice(
+            label=f"{enemy_details['Enemy Name']}",
+            picture_class=f"{enemy_details['Enemy Name']}{'-card' if enemy_details['Card Set'] != 'Extras' else ''}",
+            progression=int(enemy_details['Obtained']),
+            goal=1
+        ))
+
+    for subgroup in medallion_advice:
+        for advice in medallion_advice[subgroup]:
+            mark_advice_completed(advice)
+
+    medallion_ag = AdviceGroup(
+        tier='',
+        pre_string="Medallions (All cards. Will filter as we learn more!)",
+        advices=medallion_advice
+    )
+    medallion_ag.remove_empty_subgroups()
+    return medallion_ag
+
 
 def getCompassUpgradesAdviceGroups(compass):
     upgrades_AdviceDict = {}
@@ -186,6 +220,7 @@ def getCompassAdviceSection() -> AdviceSection:
     compass_AdviceGroupDict['General'] = getCompassGeneralInfoAdviceGroup(compass)
     compass_AdviceGroupDict['Currencies'] = getCompassCurrenciesAdviceGroup(compass)
     compass_AdviceGroupDict['Abominations'] = getCompassAbominationsAdviceGroup(compass)
+    compass_AdviceGroupDict['Medallions'] = getCompassMedallionsAdviceGroup(compass)
     upgrades_ags = getCompassUpgradesAdviceGroups(compass)
     for ag in upgrades_ags:
         compass_AdviceGroupDict[ag.pre_string] = ag
