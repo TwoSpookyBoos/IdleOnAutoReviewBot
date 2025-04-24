@@ -713,7 +713,9 @@ def _parse_master_classes_compass_upgrades(account, raw_compass_upgrades):
                     'Description': clean_description,
                 }
             except Exception as e:
-                logger.exception(f"Error parsing Compass Upgrade Index {upgrade_index} ({clean_name})")
+                if raw_compass_upgrades:
+                    # No need for 200 exceptions if they don't have any Compass data
+                    logger.exception(f"Error parsing Compass Upgrade Index {upgrade_index} ({clean_name})")
                 account.compass['Upgrades'][clean_name] = {
                     'Level': 0,
                     'Index': upgrade_index,
