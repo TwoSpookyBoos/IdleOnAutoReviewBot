@@ -403,6 +403,7 @@ def _calculate_w1(account):
     _calculate_w1_upgrade_vault(account)
     _calculate_w1_starsigns(account)
     _calculate_w1_statues(account)
+    _calculate_w1_stamps(account)
 
 def _calculate_w1_upgrade_vault(account):
     vault_multi = [
@@ -510,6 +511,28 @@ def _calculate_w1_statues(account):
         if statueDetails['Type'] == "Onyx":
             account.statues[statueName]["Value"] *= onyxMulti
         account.statues[statueName]["Value"] *= voodooStatuficationMulti
+
+def _calculate_w1_stamps(account):
+    # if ("StampDoubler" == e) return
+    # 100
+    # + (n._customBlock_AtomCollider("AtomBonuses", 12, 0)
+    # + (n._customBlock_Ninja("PristineBon", 20, 0)
+    # + n._customBlock_Windwalker("CompassBonus", 76, 0)));
+
+    account.exalted_stamp_multi = ValueToMulti(
+        100  #base
+        + (account.atom_collider['Atoms']['Aluminium - Stamp Supercharger']['Level'] * account.atom_collider['Atoms']['Aluminium - Stamp Supercharger']['AtomInfo4'])
+        + (20 * account.sneaking['PristineCharms']['Jellypick']['Obtained'])
+        + account.compass['Upgrades']['Abomination Slayer XVII']['Total Value']
+    )
+
+    for stamp_name in account.stamps:
+        if account.stamps[stamp_name]['Exalted']:
+            try:
+                account.stamps[stamp_name]['Value'] *= account.exalted_stamp_multi
+            except:
+                logger.exception(f"Failed to upgrade the Value of {stamp_name}")
+                continue
 
 def _calculate_w2(account):
     _calculate_w2_vials(account)

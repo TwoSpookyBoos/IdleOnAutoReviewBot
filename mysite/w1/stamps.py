@@ -261,8 +261,10 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
 def getExaltedAdviceGroup() -> AdviceGroup:
     rec = 'Remaining Recommended Exalts'
     cur = 'Current Exalts'
-    tot = 'Totals'
+    tot = 'Available Exalts'
+    boni = 'Sources of Exalt Bonus'
     exalted_advice = {
+        boni: [],
         tot: [],
         rec: [],
         cur: []
@@ -271,6 +273,43 @@ def getExaltedAdviceGroup() -> AdviceGroup:
     stamps = session_data.account.stamps
     compass = session_data.account.compass
     gemshop = session_data.account.gemshop
+    atom_collider = session_data.account.atom_collider
+    pc = session_data.account.sneaking['PristineCharms']
+
+    exalted_advice[boni].append(Advice(
+        label=f"Total Exalted Bonus: {session_data.account.exalted_stamp_multi:.2f}x",
+        picture_class='exalted-stamps'
+    ))
+    exalted_advice[boni].append(Advice(
+        label=f"Base Value: +100%",
+        picture_class='exalted-stamps'
+    ))
+    exalted_advice[boni].append(Advice(
+        label=(
+            f"{{{{Atom Collider|#atom-collider}}}}: Aluminium: "
+            f"+{atom_collider['Atoms']['Aluminium - Stamp Supercharger']['Level'] * atom_collider['Atoms']['Aluminium - Stamp Supercharger']['AtomInfo4']}"
+            f"/{atom_collider['Atoms']['Aluminium - Stamp Supercharger']['MaxLevel'] * atom_collider['Atoms']['Aluminium - Stamp Supercharger']['AtomInfo4']}%"
+        ),
+        picture_class='aluminium',
+        progression=session_data.account.atom_collider['Atoms']['Aluminium - Stamp Supercharger']['Level'],
+        goal=session_data.account.atom_collider['Atoms']['Aluminium - Stamp Supercharger']['MaxLevel'],
+        resource='particles'
+    ))
+    exalted_advice[boni].append(Advice(
+        label=f"{{{{Pristine Charm|#sneaking}}}}: Jellypick: +{20 * pc['Jellypick']['Obtained']}/20%",
+        picture_class='jellypick',
+        progression=int(pc['Jellypick']['Obtained']),
+        goal=1
+    ))
+    compass_abs = compass['Upgrades']['Abomination Slayer XVII']
+    exalted_advice[boni].append(Advice(
+        label=f"{{{{Compass|#the-compass}}}}: {compass_abs['Path Name']}-{compass_abs['Path Ordering']}: "
+              f"<br>Abomination Slayer XVII: +{compass_abs['Total Value']}/{compass_abs['Max Level']}%",
+        picture_class=compass_abs['Image'] if compass_abs['Unlocked'] else 'placeholder',
+        progression=compass_abs['Level'],
+        goal=compass_abs['Max Level'],
+        resource=compass_abs['Dust Image']
+    ))
 
     tot_available = compass['Upgrades']['Exalted Stamps']['Level'] + gemshop['Exalted Stamps']
 

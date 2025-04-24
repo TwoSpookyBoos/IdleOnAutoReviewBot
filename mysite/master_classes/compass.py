@@ -68,7 +68,7 @@ def getCompassAbominationsAdviceGroup(compass):
             abom_advices.append(Advice(
                 label=f"{abom_name} defeated in W{abom_details['World']}"
                       f"<br>Weakness: {abom_details['Weakness']}",
-                picture_class=abom_details['Image'] if abom_details['Defeated'] else '',
+                picture_class=abom_details['Image'] if abom_details['Defeated'] else 'placeholder',
                 progression=1,
                 goal=1
             ))
@@ -76,7 +76,7 @@ def getCompassAbominationsAdviceGroup(compass):
             abom_advices.append(Advice(
                 label=f"{abom_name[:3]}... undefeated in W{abom_details['World']}"
                       f"<br>Weakness: {abom_details['Weakness']}",
-                picture_class='',
+                picture_class='placeholder',
                 progression=0,
                 goal=1
             ))
@@ -140,8 +140,8 @@ def getCompassUpgradesAdviceGroups(compass):
                     if upgrade_details['Unlocked']:
                         upgrades_AdviceDict[f'{path_name} Path Upgrades'].append(Advice(
                             label=(
-                                f"{upgrade_details['Path Name']}-{upgrade_details['Path Ordering']}: {upgrade_details['Shape']}"
-                                f"<br>{clean_name}: {upgrade_details['Description']}"
+                                f"{upgrade_details['Path Name']}-{upgrade_details['Path Ordering']}: {clean_name}:"
+                                f"<br>{upgrade_details['Description']}"
                             ),
                             picture_class=upgrade_details['Image'],
                             progression=upgrade_details['Level'],
@@ -151,10 +151,10 @@ def getCompassUpgradesAdviceGroups(compass):
                     else:
                         upgrades_AdviceDict[f'{path_name} Path Upgrades'].append(Advice(
                             label=(
-                                f"{upgrade_details['Path Name']}-{upgrade_details['Path Ordering']}: {upgrade_details['Shape']}"
-                                f"<br>{clean_name}: Defeat the ??? Abomination to reveal!"
+                                f"{upgrade_details['Path Name']}-{upgrade_details['Path Ordering']}: {clean_name}:"
+                                f"<br>Defeat Abomination-{upgrade_details['Path Ordering']} to reveal!"
                             ),
-                            picture_class='',
+                            picture_class='placeholder',
                             progression=upgrade_details['Level'],
                             goal=upgrade_details['Max Level'],
                             resource=upgrade_details['Dust Image']
