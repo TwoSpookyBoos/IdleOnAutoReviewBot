@@ -19,7 +19,7 @@ from consts import (
     # W5
     numberOfArtifactTiers, divinity_offeringsDict, divinity_DivCostAfter3,
     # W6
-    maxFarmingValue, summoning_rewards_that_dont_multiply_base_value,
+    maxFarmingValue, summoning_rewards_that_dont_multiply_base_value, getGemstoneBoostedValue, getGemstonePercent,
     # Caverns
     caverns_conjuror_majiks, schematics_unlocking_buckets, monument_bonuses, getBellImprovementBonus, monument_names, released_monuments,
     infinity_string, schematics_unlocking_harp_strings, schematics_unlocking_harp_chords, caverns_cavern_names, caverns_measurer_scalars
@@ -223,6 +223,7 @@ def _calculate_w6_summoning_winner_bonuses(account):
 
 def _calculate_wave_2(account):
     _calculate_general(account)
+    _calculate_master_classes(account)
     _calculate_w1(account)
     _calculate_w2(account)
     _calculate_w3(account)
@@ -235,7 +236,6 @@ def _calculate_general(account):
     _calculate_general_alerts(account)
     _calculate_general_item_filter(account)
     account.highestWorldReached = _calculate_general_highest_world_reached(account)
-    _calculate_general_master_classes_grimoire(account)
 
 def _calculate_general_alerts(account):
     if account.stored_assets.get("Trophy2").amount >= 75 and account.equinox_dreams[17]:
@@ -320,7 +320,11 @@ def _calculate_general_highest_world_reached(account):
     else:
         return 1
 
-def _calculate_general_master_classes_grimoire(account):
+def _calculate_master_classes(account):
+    _calculate_master_classes_grimoire(account)
+    _calculate_master_classes_compass_upgrades(account)
+
+def _calculate_master_classes_grimoire(account):
     grimoire_multi = ValueToMulti(
         account.grimoire['Upgrades']['Writhing Grimoire']['Level']
         * account.grimoire['Upgrades']['Writhing Grimoire']['Value Per Level']
@@ -330,9 +334,9 @@ def _calculate_general_master_classes_grimoire(account):
         # Update description with total value, stack counts, and scaling info
         if '{' in account.grimoire['Upgrades'][upgrade_name]['Description']:
             account.grimoire['Upgrades'][upgrade_name]['Total Value'] = (
-                    account.grimoire['Upgrades'][upgrade_name]['Level']
-                    * account.grimoire['Upgrades'][upgrade_name]['Value Per Level']
-                    * (grimoire_multi if upgrade_details['Scaling Value'] else 1)
+                account.grimoire['Upgrades'][upgrade_name]['Level']
+                * account.grimoire['Upgrades'][upgrade_name]['Value Per Level']
+                * (grimoire_multi if upgrade_details['Scaling Value'] else 1)
             )
             account.grimoire['Upgrades'][upgrade_name]['Description'] = account.grimoire['Upgrades'][upgrade_name]['Description'].replace(
                 '{', f"{account.grimoire['Upgrades'][upgrade_name]['Total Value']}"
@@ -361,9 +365,39 @@ def _calculate_general_master_classes_grimoire(account):
                 )
         account.grimoire['Upgrades'][upgrade_name]['Description'] += (
             f"<br>({account.grimoire['Upgrades'][upgrade_name]['Value Per Level'] * (grimoire_multi if upgrade_details['Scaling Value'] else 1):.2f} per level"
-            f"{' after Writhing Grimoire)' if upgrade_details['Scaling Value'] else ': Not scaled by Writhing Grimoire)'}"
+            f"{' after Writhing Grimoire' if upgrade_details['Scaling Value'] else ': Not scaled by Writhing Grimoire'})"
         )
 
+def _calculate_master_classes_compass_upgrades(account):
+    compass_circle_multi = ValueToMulti(
+        account.compass['Upgrades']['Circle Supremacy']['Level']
+        * account.compass['Upgrades']['Circle Supremacy']['Value Per Level']
+    )
+
+    for upgrade_name, upgrade_details in account.compass['Upgrades'].items():
+        # Update description with total value, stack counts, and scaling info
+        if '{' in account.compass['Upgrades'][upgrade_name]['Description']:
+            account.compass['Upgrades'][upgrade_name]['Total Value'] = (
+                account.compass['Upgrades'][upgrade_name]['Level']
+                * account.compass['Upgrades'][upgrade_name]['Value Per Level']
+                * (compass_circle_multi if upgrade_details['Shape'] == 'Circle' else 1)
+            )
+            account.compass['Upgrades'][upgrade_name]['Description'] = account.compass['Upgrades'][upgrade_name]['Description'].replace(
+                '{', f"{account.compass['Upgrades'][upgrade_name]['Total Value']}"
+            )
+        if '}' in account.compass['Upgrades'][upgrade_name]['Description']:
+            account.compass['Upgrades'][upgrade_name]['Total Value'] = ValueToMulti(
+                account.compass['Upgrades'][upgrade_name]['Level']
+                * account.compass['Upgrades'][upgrade_name]['Value Per Level']
+                * (compass_circle_multi if upgrade_details['Shape'] == 'Circle' else 1)
+            )
+            account.compass['Upgrades'][upgrade_name]['Description'] = account.compass['Upgrades'][upgrade_name]['Description'].replace(
+                '}', f"{account.compass['Upgrades'][upgrade_name]['Total Value']:.2f}"
+            )
+        account.compass['Upgrades'][upgrade_name]['Description'] += (
+            f"<br>({account.compass['Upgrades'][upgrade_name]['Value Per Level'] * (compass_circle_multi if upgrade_details['Shape'] == 'Circle' else 1):.2f} per level"
+            f"{' after Circle Supremacy' if upgrade_details['Shape'] == 'Circle' else ''})"
+        )
 
 def _calculate_w1(account):
     _calculate_w1_upgrade_vault(account)
@@ -645,9 +679,13 @@ def _calculate_w3_building_max_levels(account):
 def _calculate_w3_collider_base_costs(account):
     #Formula for base cost: (AtomInfo[3] + AtomInfo[1] * AtomCurrentLevel) * POWER(AtomInfo[2], AtomCurrentLevel)
     for atomName, atomValuesDict in account.atom_collider['Atoms'].items():
-        #Update max level from 20 to 30, if Isotope Discovery unlocked
+        #Update max level +10 if Isotope Discovery unlocked
         if account.gaming['SuperBits']['Isotope Discovery']['Unlocked']:
             account.atom_collider['Atoms'][atomName]['MaxLevel'] += 10
+
+        #Update max level if Wind Walker Compass > Atomic Potential is leveled
+        if account.compass['Upgrades']['Atomic Potential']['Level'] > 0:
+            account.atom_collider['Atoms'][atomName]['MaxLevel'] += account.compass['Upgrades']['Atomic Potential']['Total Value']
 
         #If atom isn't already at max level:
         if atomValuesDict['Level'] < atomValuesDict['MaxLevel']:
@@ -1381,6 +1419,24 @@ def _calculate_w6(account):
     _calculate_w6_farming(account)
     _calculate_w6_summoning(account)
 
+def _calculate_w6_sneaking_gemstones(account):
+    #Runs under wave3 since it relies on talent levels
+    account.sneaking['Highest Current Generational Gemstones'] = max([
+        (char.total_bonus_talent_levels if char.current_preset_talents.get("432", 0) > 0 else 0) + char.current_preset_talents.get("432", 0)
+        for char in account.all_characters if 'Wind Walker' in char.all_classes],
+        default=0
+    )
+    for gemstone_name in account.sneaking['Gemstones']:
+        if gemstone_name != 'Moissanite':
+            try:
+                account.sneaking['Gemstones'][gemstone_name]['BoostedValue'] = getGemstoneBoostedValue(
+                    account.sneaking['Gemstones'][gemstone_name]['BaseValue'],
+                    account.sneaking['Gemstones']['Moissanite']['BaseValue'],
+                    account.sneaking['Highest Current Generational Gemstones']
+                )
+            except:
+                account.sneaking['Gemstones'][gemstone_name]['BoostedValue'] = account.sneaking['Gemstones'][gemstone_name]['BaseValue']
+
 def _calculate_w6_farming(account):
     _calculate_w6_farming_crop_depot(account)
     _calculate_w6_farming_markets(account)
@@ -1641,6 +1697,7 @@ def _calculate_wave_3(account):
     _calculate_w3_equinox_max_levels(account)
     _calculate_general_character_over_books(account)
     _calculate_general_crystal_spawn_chance(account)
+    _calculate_w6_sneaking_gemstones(account)
 
 def _calculate_w3_library_max_book_levels(account):
     account.library['StaticSum'] = (
@@ -1746,7 +1803,8 @@ def _calculate_general_character_over_books(account):
             char.setSymbolsOfBeyondMax(char.max_talents.get("539", 0) // 20)  # Symbols of Beyond - Purple
         character_specific_bonuses += char.symbols_of_beyond
 
-        char.max_talents_over_books = account.library['MaxBookLevel'] + account.bonus_talents_account_wide_sum + character_specific_bonuses
+        char.total_bonus_talent_levels = account.bonus_talents_account_wide_sum + character_specific_bonuses
+        char.max_talents_over_books = account.library['MaxBookLevel'] + char.total_bonus_talent_levels
 
         # If they're an ES, use max level of Family Guy to calculate floor(ES Family Value * Family Guy)
         if char.class_name == 'Elemental Sorcerer':

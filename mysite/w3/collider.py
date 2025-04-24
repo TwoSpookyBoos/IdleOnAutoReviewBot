@@ -30,8 +30,21 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
     if not session_data.account.gaming['SuperBits']['Isotope Discovery']['Unlocked']:
         settings_advice['Information'].append(
             Advice(
-                label=f"Purchasing the final SuperBit in Gaming will increase the max level of all Atoms from 20 to 30",
+                label=f"Purchasing the final SuperBit in Gaming will increase the max level of all Atoms by 10",
                 picture_class='red-bits',
+            )
+        )
+    if session_data.account.compass['Upgrades']['Atomic Potential']['Level'] < session_data.account.compass['Upgrades']['Atomic Potential']['Max Level']:
+        ap = session_data.account.compass['Upgrades']['Atomic Potential']
+        settings_advice['Information'].append(
+            Advice(
+                label=f"{{{{Compass|#the-compass}}}}: {ap['Path Name']}-{ap['Path Ordering']}: Atomic Potential: "
+                      f"+{session_data.account.compass['Upgrades']['Atomic Potential']['Level']}"
+                      f"/{session_data.account.compass['Upgrades']['Atomic Potential']['Max Level']}"
+                      f" max Atom levels",
+                picture_class=ap['Image'],
+                progression=session_data.account.compass['Upgrades']['Atomic Potential']['Level'],
+                goal=session_data.account.compass['Upgrades']['Atomic Potential']['Max Level']
             )
         )
 
@@ -150,10 +163,11 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     ))
 
     cr_advice.append(Advice(
-        label=f"""Neon - Damage N' Cheapener: {session_data.account.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['Level']}/30%""",
+        label=f"""Neon - Damage N' Cheapener: {session_data.account.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['Level']}"""
+        f"""/{session_data.account.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['MaxLevel']}%""",
         picture_class="neon",
         progression=session_data.account.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['Level'],
-        goal=20 + (10 * session_data.account.gaming['SuperBits']['Isotope Discovery']['Unlocked'])
+        goal=session_data.account.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['MaxLevel']
     ))
 
     cr_advice.append(Advice(
@@ -164,7 +178,8 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     ))
 
     cr_advice.append(Advice(
-        label=f"Atom Collider building: {session_data.account.construction_buildings['Atom Collider']['Level'] / 10:.1f}/20%",
+        label=f"Atom Collider building: {session_data.account.construction_buildings['Atom Collider']['Level'] / 10:.1f}"
+              f"/{session_data.account.construction_buildings['Atom Collider']['MaxLevel'] / 10:.1f}%",
         picture_class="atom-collider",
         progression=session_data.account.construction_buildings['Atom Collider']['Level'],
         goal=session_data.account.construction_buildings['Atom Collider']['MaxLevel']
@@ -182,6 +197,22 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
         picture_class="atomic-stamp",
         progression=session_data.account.stamps['Atomic Stamp']['Level'],
         resource=session_data.account.stamps['Atomic Stamp']['Material'],
+    ))
+
+    cr_advice.append(Advice(
+        label=f"{{{{Grimoire|#the-grimoire}}}}: Death of the Atom Price: {session_data.account.grimoire['Upgrades']['Death of the Atom Price']['Total Value']}"
+              f"TODO",
+        picture_class=session_data.account.grimoire['Upgrades']['Death of the Atom Price']['Image'],
+        progression=session_data.account.grimoire['Upgrades']['Death of the Atom Price']['Level'],
+        goal=session_data.account.grimoire['Upgrades']['Death of the Atom Price']['Max Level']
+    ))
+
+    cr_advice.append(Advice(
+        label=f"{{{{Compass|#the-compass}}}}: Atomic Cost Crash: {session_data.account.compass['Upgrades']['Atomic Cost Crash']['Total Value']}"
+              f"TODO",
+        picture_class=session_data.account.compass['Upgrades']['Atomic Cost Crash']['Image'],
+        progression=session_data.account.compass['Upgrades']['Atomic Cost Crash']['Level'],
+        goal=session_data.account.compass['Upgrades']['Atomic Cost Crash']['Max Level']
     ))
 
     cr_advice.append(Advice(

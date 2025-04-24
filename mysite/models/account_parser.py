@@ -15,6 +15,7 @@ from consts import (
     companions,
     # Master Classes
     grimoire_upgrades_list, grimoire_bones_list, grimoire_dont_scale,
+    compass_upgrades_list, compass_dusts_list, compass_path_ordering, compass_titans,
     # W1
     stampsDict, stampTypes, bribesDict,
     forgeUpgradesDict,
@@ -43,8 +44,7 @@ from consts import (
     sailingDict, captainBuffs,
     getStyleNameFromIndex, divinity_divinitiesDict, getDivinityNameFromIndex, gamingSuperbitsDict,
     # W6
-    jade_emporium, pristineCharmsList, sneakingGemstonesFirstIndex, sneakingGemstonesList, sneakingGemstonesStatList,
-    getMoissaniteValue, getGemstoneBaseValue, getGemstoneBoostedValue, getGemstonePercent,
+    jade_emporium, pristineCharmsList, sneaking_gemstones_all_values, getGemstoneBaseValue, getGemstonePercent,
     marketUpgradeDetails, landrankDict, cropDepotDict, maxFarmingCrops, summoningBattleCountsDict, summoningDict, summoning_endlessEnemies,
     summoning_endlessDict, max_summoning_upgrades, summoning_sanctuary_counts, summoning_upgrades, summoning_match_colors,
     # Caverns
@@ -116,6 +116,7 @@ def _parse_wave_1(account, run_type):
     _parse_companions(account)
     _parse_characters(account, run_type)
     _parse_general(account)
+    _parse_master_classes(account)
     _parse_w1(account)
     _parse_w2(account)
     _parse_w3(account)
@@ -237,7 +238,6 @@ def _parse_general(account):
     _parse_general_quests(account)
     _parse_general_npc_tokens(account)
     _parse_general_upgrade_vault(account)
-    _parse_general_master_classes(account)
 
 def _parse_general_gemshop(account):
     account.gemshop = {}
@@ -583,10 +583,11 @@ def _parse_general_upgrade_vault(account):
         account.vault['Upgrades'][upgrade_name]['Unlocked'] = account.vault['Total Upgrades'] >= account.vault['Upgrades'][upgrade_name]['Unlock Requirement']
 
 
-def _parse_general_master_classes(account):
-    _parse_general_master_classes_grimoire(account)
+def _parse_master_classes(account):
+    _parse_master_classes_grimoire(account)
+    _parse_master_classes_compass(account)
 
-def _parse_general_master_classes_grimoire(account):
+def _parse_master_classes_grimoire(account):
     account.grimoire = {
         'Upgrades': {},
         'Total Upgrades': 0,
@@ -649,6 +650,133 @@ def _parse_general_master_classes_grimoire(account):
     account.grimoire['Total Upgrades'] = sum([v['Level'] for v in account.grimoire['Upgrades'].values()])
     for upgrade_name in account.grimoire['Upgrades']:
         account.grimoire['Upgrades'][upgrade_name]['Unlocked'] = account.grimoire['Total Upgrades'] >= account.grimoire['Upgrades'][upgrade_name]['Unlock Requirement']
+
+def _parse_master_classes_compass(account):
+    account.compass = {
+        'Upgrades': {},
+        'Total Upgrades': 0,
+        'Total Dust Collected': safer_get(account.raw_optlacc_dict, 362, 0),
+        'Dust1': safer_get(account.raw_optlacc_dict, 357, 0),
+        'Dust2': safer_get(account.raw_optlacc_dict, 358, 0),
+        'Dust3': safer_get(account.raw_optlacc_dict, 359, 0),
+        'Dust4': safer_get(account.raw_optlacc_dict, 360, 0),
+        'Dust5': safer_get(account.raw_optlacc_dict, 361, 0),
+        "Top of the Mornin'": max(0, safer_convert(safer_get(account.raw_optlacc_dict, 361, 0),0)),
+        'Abominations': {},
+        'Elements': {0: 'Fire', 1: 'Wind', 2: 'Grass', 3: 'Ice'}
+    }
+    #Parse Compass Upgrades
+    raw_compass = safe_loads(account.raw_data.get('Compass', []))
+    if not raw_compass:
+        logger.warning(f"Compass data not present{', as expected' if account.version < 264 else ''}.")
+    while len(raw_compass) < 5:
+        raw_compass.append([])
+
+    raw_compass_upgrades = [safer_convert(v, 0) for v in raw_compass[0]]
+    account.compass['Total Upgrades'] = sum([safer_convert(v, 0) for v in raw_compass_upgrades])
+    _parse_master_classes_compass_upgrades(account, raw_compass_upgrades)
+
+    raw_abom_status = [safer_convert(v, 0) for v in raw_compass[1]]
+    account.compass['Total Abominations Slain'] = sum(raw_abom_status)
+    _parse_master_classes_abominations(account, raw_abom_status)
+
+    # raw_portals_opened = raw_compass[2]
+    raw_medallions = raw_compass[3]
+    account.compass['Total Medallions'] = len(raw_medallions)
+    raw_stamps_exalted = raw_compass[4]
+
+def _parse_master_classes_compass_upgrades(account, raw_compass_upgrades):
+    for path_name, upgrade_indexes_list in compass_path_ordering.items():
+        for path_ordering, upgrade_index in enumerate(upgrade_indexes_list, start=1):
+            upgrade_values_list = compass_upgrades_list[upgrade_index]
+            clean_name = upgrade_values_list[0].replace('(Tap_for_more_info)', '').replace('製', '').replace('_', ' ').rstrip()
+            clean_description = upgrade_values_list[11].replace('_', ' ')
+            # if 'Titan doesnt exist' not in clean_description:  #Placeholders as of v2.35 release patch
+            try:
+                account.compass['Upgrades'][clean_name] = {
+                    'Level': int(raw_compass_upgrades[upgrade_index]),
+                    'Index': upgrade_index,
+                    'Image': f"compass-upgrade-{upgrade_index}",
+                    'Cost Base': int(upgrade_values_list[1]),
+                    'Cost Increment': float(upgrade_values_list[2]),
+                    'Dust Name': compass_dusts_list[int(upgrade_values_list[3])],
+                    'Dust Image': f"compass-dust-{upgrade_values_list[3]}",
+                    'Max Level': int(upgrade_values_list[4]),
+                    'Value Per Level': safer_convert(upgrade_values_list[5], 0.00 if '.' in upgrade_values_list[5] else 0),
+                    # 'Unlock Requirement': int(upgrade_values_list[6]),
+                    # 'Placeholder7': upgrade_values_list[7],
+                    # 'Placeholder8': upgrade_values_list[8],
+                    'Shape': 'Square' if int(upgrade_values_list[9]) == 0 else 'Circle' if int(upgrade_values_list[9]) == 1 else 'UnknownShape',
+                    # 'Path Index': int(upgrade_values_list[10]),
+                    'Path Name': path_name,
+                    'Path Ordering': path_ordering,
+                    'Description': clean_description,
+                }
+            except Exception as e:
+                logger.exception(f"Error parsing Compass Upgrade Index {upgrade_index} ({clean_name})")
+                account.compass['Upgrades'][clean_name] = {
+                    'Level': 0,
+                    'Index': upgrade_index,
+                    'Image': f"compass-upgrade-{upgrade_index}",
+                    'Cost Base': int(upgrade_values_list[1]),
+                    'Cost Increment': float(upgrade_values_list[2]),
+                    'Dust Name': compass_dusts_list[int(upgrade_values_list[3])],
+                    'Dust Image': f"compass-dust-{upgrade_values_list[3]}",
+                    'Max Level': int(upgrade_values_list[4]),
+                    'Value Per Level': safer_convert(upgrade_values_list[5], 0.00 if '.' in upgrade_values_list[5] else 0),
+                    # 'Unlock Requirement': int(upgrade_values_list[6]),
+                    # 'Placeholder7': upgrade_values_list[7],
+                    # 'Placeholder8': upgrade_values_list[8],
+                    'Shape': 'Square' if int(upgrade_values_list[9]) == 0 else 'Circle' if int(upgrade_values_list[9]) == 1 else 'UnknownShape',
+                    # 'Path Index': int(upgrade_values_list[10]),
+                    'Path Name': path_name,
+                    'Path Ordering': path_ordering,
+                    'Description': clean_description,
+                }
+
+    # Determine Unlock Status
+    for upgrade_name, upgrade_details in account.compass['Upgrades'].items():
+        path_name = f"{upgrade_details['Path Name']} Path"
+        if path_name == 'Default Path':
+            if upgrade_name == 'Pathfinder':
+                account.compass['Upgrades'][upgrade_name]['Unlocked'] = True
+            else:
+                account.compass['Upgrades'][upgrade_name]['Unlocked'] = account.compass['Upgrades']['Pathfinder']['Level'] >= 1
+        elif path_name == 'Abomination Path':
+            # TODO
+            account.compass['Upgrades'][upgrade_name]['Unlocked'] = False
+        else:
+            account.compass['Upgrades'][upgrade_name]['Unlocked'] = account.compass['Upgrades'][path_name]['Level'] >= upgrade_details['Path Ordering']
+
+def _parse_master_classes_abominations(account, raw_abom_status):
+    for abom_index, abom_data in enumerate(compass_titans):
+        clean_name = abom_data[0].replace('_', ' ')
+        if 50 > int(abom_data[2]):
+            weakness = 0
+        elif 100 > int(abom_data[2]):
+            weakness = 3
+        elif 150 > int(abom_data[2]):
+            weakness = 2
+        elif 200 > int(abom_data[2]):
+            weakness = 1
+        else:
+            weakness = int(abom_data[11]) % 4
+        try:
+            account.compass['Abominations'][clean_name] = {
+                'Defeated': raw_abom_status[abom_index] > 0,
+                'Map Index': int(abom_data[2]),
+                'World': 1 + (int(abom_data[2])//50),
+                'Image': f'titan-{abom_index}',
+                'Weakness': account.compass['Elements'].get(weakness, 'Unknown')
+            }
+        except:
+            account.compass['Abominations'][clean_name] = {
+                'Defeated': False,
+                'Map Index': int(abom_data[2]),
+                'World': 1 + (int(abom_data[2]) // 50),
+                'Image': f'titan-{abom_index}',
+                'Weakness': account.compass['Elements'].get(weakness, 'Unknown')
+            }
 
 def _parse_w1(account):
     _parse_w1_starsigns(account)
@@ -2881,11 +3009,12 @@ def _parse_w6_sneaking(account):
     raw_ninja_list = safe_loads(account.raw_data.get("Ninja", []))
     if not raw_ninja_list:
         logger.warning(f"Sneaking data not present{', as expected' if account.version < 200 else ''}.")
+    _parse_w6_pristine_charms(account, raw_ninja_list)
     _parse_w6_gemstones(account, raw_ninja_list)
     _parse_w6_jade_emporium(account, raw_ninja_list)
     _parse_w6_beanstalk(account, raw_ninja_list)
 
-def _parse_w6_gemstones(account, raw_ninja_list):
+def _parse_w6_pristine_charms(account, raw_ninja_list):
     raw_pristine_charms_list = raw_ninja_list[107] if raw_ninja_list else []
     for pristineCharmIndex, pristineCharmDict in enumerate(pristineCharmsList):
         try:
@@ -2900,42 +3029,22 @@ def _parse_w6_gemstones(account, raw_ninja_list):
                 'Image': pristineCharmDict['Image'],
                 'Bonus': pristineCharmDict['Bonus'],
             }
-    for gemstoneIndex, gemstoneName in enumerate(sneakingGemstonesList):
-        account.sneaking["Gemstones"][gemstoneName] = {
-            "Level": safer_get(account.raw_optlacc_dict, sneakingGemstonesFirstIndex + gemstoneIndex, 0),
-            "BaseValue": 0,
-            "BoostedValue": 0.0,
-            "Percent": 0,
-            "Stat": ''
+
+def _parse_w6_gemstones(account, raw_ninja_list):
+    for gemstone_name, gemstone_values in sneaking_gemstones_all_values.items():
+        level = safer_get(account.raw_optlacc_dict, gemstone_values['OptlAcc Index'], 0)
+        account.sneaking['Gemstones'][gemstone_name] = {
+            'Level': level,
+            'Stat': gemstone_values['Stat'],
+            'MaxValue': gemstone_values['Max Value'],
+            'BaseValue': getGemstoneBaseValue(gemstone_name, level),
+            'BoostedValue': 0.0,
+            'Percent': 0
         }
-        try:
-            account.sneaking["Gemstones"][gemstoneName]["Stat"] = sneakingGemstonesStatList[gemstoneIndex]
-        except:
-            continue
-    try:
-        account.sneaking["Gemstones"]["Moissanite"]["BaseValue"] = getMoissaniteValue(account.sneaking["Gemstones"]["Moissanite"]["Level"])
-    except:
-        pass  # Already defaulted to 0
-    for gemstoneName in sneakingGemstonesList[0:-1]:
-        try:
-            account.sneaking["Gemstones"][gemstoneName]["BaseValue"] = getGemstoneBaseValue(
-                gemstoneName,
-                account.sneaking["Gemstones"][gemstoneName]["Level"],
-            )
-            account.sneaking["Gemstones"][gemstoneName]["BoostedValue"] = getGemstoneBoostedValue(
-                account.sneaking["Gemstones"][gemstoneName]["BaseValue"],
-                account.sneaking["Gemstones"]["Moissanite"]["BaseValue"]
-            )
-        except:
-            continue  # Already defaulted to 0
-    for gemstoneName in sneakingGemstonesList:
-        try:
-            account.sneaking["Gemstones"][gemstoneName]["Percent"] = getGemstonePercent(
-                gemstoneName,
-                account.sneaking["Gemstones"][gemstoneName]["BaseValue"]
-            )
-        except:
-            continue
+        account.sneaking['Gemstones'][gemstone_name]['Percent'] = getGemstonePercent(
+            gemstone_name,
+            account.sneaking['Gemstones'][gemstone_name]['BaseValue']
+        )
 
 def _parse_w6_jade_emporium(account, raw_ninja_list):
     try:

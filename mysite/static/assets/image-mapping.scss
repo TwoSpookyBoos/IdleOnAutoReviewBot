@@ -7,6 +7,7 @@
 @import "classes";
 @import "talents";
 @import "grimoire";
+@import "compass";
 @import "gem-shop";
 @import "storage-items";
 @import "world-contents";
@@ -2066,6 +2067,7 @@ $id-map: map-merge($all-caverns, $id-map);
 $id-map: map-merge($event-shop, $id-map);
 $id-map: map-merge($all-grimoire, $id-map);
 $id-map: map-merge($all-vault, $id-map);
+$id-map: map-merge($all-compass, $id-map);
 
 
 

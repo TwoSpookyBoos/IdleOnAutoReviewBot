@@ -101,21 +101,23 @@ def getSpecializedSkills(classes_list):
     elif "Shaman" in classes_list:
         specializedSkillsList.append("Alchemy")
 
-    if "Blood Berserker" in classes_list:
-        specializedSkillsList.append("Cooking")
-    elif "Divine Knight" in classes_list:
-        specializedSkillsList.append("Gaming")
-    elif "Siege Breaker" in classes_list:
-        specializedSkillsList.append("Sailing")
-    elif "Beast Master" in classes_list:
-        specializedSkillsList.append("Breeding")
-    elif "Elemental Sorcerer" in classes_list:
-        specializedSkillsList.append("Divinity")
-    elif "Bubonic Conjuror" in classes_list:
-        specializedSkillsList.append("Lab")
+    if 'Blood Berserker' in classes_list:
+        specializedSkillsList.append('Cooking')
+    elif 'Divine Knight' in classes_list:
+        specializedSkillsList.append('Gaming')
+    elif 'Siege Breaker' in classes_list:
+        specializedSkillsList.append('Sailing')
+    elif 'Beast Master' in classes_list:
+        specializedSkillsList.append('Breeding')
+    elif 'Elemental Sorcerer' in classes_list:
+        specializedSkillsList.append('Divinity')
+    elif 'Bubonic Conjuror' in classes_list:
+        specializedSkillsList.append('Lab')
 
-    if "Death Bringer" in classes_list:
-        specializedSkillsList.append("Farming")
+    if 'Death Bringer' in classes_list:
+        specializedSkillsList.append('Farming')
+    elif 'Wind Walker' in classes_list:
+        specializedSkillsList.append('Sneaking')
 
     return specializedSkillsList
 
@@ -153,6 +155,7 @@ class Character:
         self.base_class: str = base_class
         self.sub_class: str = sub_class
         self.elite_class: str = elite_class
+        self.master_class: str = master_class
         self.all_classes: list[str] = [base_class, sub_class, elite_class, master_class]
         self.max_talents_over_books: int = 100
         self.symbols_of_beyond = 0
