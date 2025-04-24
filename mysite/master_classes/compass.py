@@ -93,7 +93,11 @@ def getCompassAbominationsAdviceGroup(compass):
     return abom_ag
 
 def getCompassMedallionsAdviceGroup(compass):
-    medallion_advice = {}
+    medallion_advice = {
+        'Total': [],
+        'Unexpected (Tell Scoli if this was legit!)': [],
+        'Extras': [],
+    }
 
     medallion_advice['Total'] = [
         Advice(

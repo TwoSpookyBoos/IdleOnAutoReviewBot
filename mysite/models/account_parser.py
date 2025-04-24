@@ -793,6 +793,7 @@ def _parse_master_classes_compass_upgrades(account, raw_compass_upgrades):
             account.compass['Upgrades'][upgrade_name]['Unlocked'] = account.compass['Upgrades'][path_name]['Level'] >= upgrade_details['Path Ordering']
 
 def _parse_master_classes_medallions(account, raw_medallions):
+    raw_medallions.append('test1')
     known_extras = {
         'reindeer': 'Spirit Reindeer'
     }
@@ -835,7 +836,13 @@ def _parse_master_classes_medallions(account, raw_medallions):
 
     for raw_enemy_name in raw_medallions:
         if raw_enemy_name not in account.compass['Medallions']:
-            logger.info(f"Medallion for {raw_enemy_name} found, no matching entry created")
+            logger.warning(f"Unexpected Medallion for {raw_enemy_name} found")
+            account.compass['Medallions'][raw_enemy_name] = {
+                'Obtained': True,
+                'Card Name': raw_enemy_name,
+                'Card Set': 'Unexpected (Tell Scoli if this was legit!)',
+                'Enemy Name': raw_enemy_name
+            }
 
 def _parse_master_classes_exalted_stamps(account):
     raw_compass = safe_loads(account.raw_data.get('Compass', []))
