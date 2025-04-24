@@ -99,17 +99,37 @@ def getCompassUpgradesAdviceGroups(compass):
         for compass_upgrade_index in compass_path_ordering[path_name]:
             clean_name = compass_upgrades_list[compass_upgrade_index][0].replace('(Tap_for_more_info)', '').replace('製', '').replace('_', ' ').rstrip()
             upgrade_details = compass['Upgrades'][clean_name]
-            if 'Titan doesnt exist' not in upgrade_details['Description']:  #Filter out placeholders for future Titans
+            if path_name == 'Abomination':
+                if 'Titan doesnt exist' not in upgrade_details['Description']:  #Filter out placeholders for future Titans/Abominations
+                    if upgrade_details['Unlocked']:
+                        upgrades_AdviceDict[f'{path_name} Path Upgrades'].append(Advice(
+                            label=(
+                                f"{upgrade_details['Path Name']}-{upgrade_details['Path Ordering']}: {upgrade_details['Shape']}"
+                                f"<br>{clean_name}: {upgrade_details['Description']}"
+                            ),
+                            picture_class=upgrade_details['Image'],
+                            progression=upgrade_details['Level'],
+                            goal=upgrade_details['Max Level'],
+                            resource=upgrade_details['Dust Image']
+                        ))
+                    else:
+                        upgrades_AdviceDict[f'{path_name} Path Upgrades'].append(Advice(
+                            label=(
+                                f"{upgrade_details['Path Name']}-{upgrade_details['Path Ordering']}: {upgrade_details['Shape']}"
+                                f"<br>{clean_name}: Defeat the ??? Abomination to reveal!"
+                            ),
+                            picture_class='',
+                            progression=upgrade_details['Level'],
+                            goal=upgrade_details['Max Level'],
+                            resource=upgrade_details['Dust Image']
+                        ))
+            else:
                 upgrades_AdviceDict[f'{path_name} Path Upgrades'].append(Advice(
                     label=(
                         #f"CompassUpg-{upgrade_details['Index']}: "
                         f"{upgrade_details['Path Name']}-{upgrade_details['Path Ordering']}: {upgrade_details['Shape']}"
                         f"<br>{clean_name}: {upgrade_details['Description']}"
-                        #f"<br>Base Value per Level: {upgrade_details['Value Per Level']}"
                         f"<br>{'This upgrade is Locked!' if not upgrade_details['Unlocked'] else ''}"
-                        # f"<br>Requires {upgrade_details['Unlock Requirement'] - compass['Total Upgrades']} more Upgrades to unlock"
-                        # if not upgrade_details['Unlocked'] else
-                        # f"{upgrade_name}: {upgrade_details['Description']}"
                     ),
                     picture_class=upgrade_details['Image'],
                     progression=upgrade_details['Level'],

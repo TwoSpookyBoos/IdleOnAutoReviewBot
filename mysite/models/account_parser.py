@@ -672,22 +672,52 @@ def _parse_master_classes_compass(account):
     while len(raw_compass) < 5:
         raw_compass.append([])
 
-    raw_compass_upgrades = [safer_convert(v, 0) for v in raw_compass[0]]
-    account.compass['Total Upgrades'] = sum([safer_convert(v, 0) for v in raw_compass_upgrades])
-    _parse_master_classes_compass_upgrades(account, raw_compass_upgrades)
-
     raw_abom_status = [safer_convert(v, 0) for v in raw_compass[1]]
     account.compass['Total Abominations Slain'] = sum(raw_abom_status)
-    _parse_master_classes_abominations(account, raw_abom_status)
+    _parse_master_classes_abominations(account, raw_abom_status)  #Need their status for Upgrades
+
+    raw_compass_upgrades = [safer_convert(v, 0) for v in raw_compass[0]]
+    account.compass['Total Upgrades'] = sum([safer_convert(v, 0) for v in raw_compass_upgrades])
+    _parse_master_classes_compass_upgrades(account, raw_compass_upgrades, raw_abom_status)
 
     # raw_portals_opened = raw_compass[2]
     raw_medallions = raw_compass[3]
     account.compass['Total Medallions'] = len(raw_medallions)
     raw_stamps_exalted = raw_compass[4]
 
-def _parse_master_classes_compass_upgrades(account, raw_compass_upgrades):
+def _parse_master_classes_abominations(account, raw_abom_status):
+    for abom_index, abom_data in enumerate(compass_titans):
+        clean_name = abom_data[0].replace('_', ' ')
+        if 50 > int(abom_data[2]):
+            weakness = 0
+        elif 100 > int(abom_data[2]):
+            weakness = 3
+        elif 150 > int(abom_data[2]):
+            weakness = 2
+        elif 200 > int(abom_data[2]):
+            weakness = 1
+        else:
+            weakness = int(abom_data[11]) % 4
+        try:
+            account.compass['Abominations'][clean_name] = {
+                'Defeated': raw_abom_status[abom_index] > 0,
+                'Map Index': int(abom_data[2]),
+                'World': 1 + (int(abom_data[2])//50),
+                'Image': f'titan-{abom_index}',
+                'Weakness': account.compass['Elements'].get(weakness, 'Unknown')
+            }
+        except:
+            account.compass['Abominations'][clean_name] = {
+                'Defeated': False,
+                'Map Index': int(abom_data[2]),
+                'World': 1 + (int(abom_data[2]) // 50),
+                'Image': f'titan-{abom_index}',
+                'Weakness': account.compass['Elements'].get(weakness, 'Unknown')
+            }
+
+def _parse_master_classes_compass_upgrades(account, raw_compass_upgrades, raw_abom_status):
     for path_name, upgrade_indexes_list in compass_path_ordering.items():
-        for path_ordering, upgrade_index in enumerate(upgrade_indexes_list, start=1):
+        for path_ordering, upgrade_index in enumerate(upgrade_indexes_list):
             upgrade_values_list = compass_upgrades_list[upgrade_index]
             clean_name = upgrade_values_list[0].replace('(Tap_for_more_info)', '').replace('製', '').replace('_', ' ').rstrip()
             clean_description = upgrade_values_list[11].replace('_', ' ')
@@ -709,7 +739,7 @@ def _parse_master_classes_compass_upgrades(account, raw_compass_upgrades):
                     'Shape': 'Square' if int(upgrade_values_list[9]) == 0 else 'Circle' if int(upgrade_values_list[9]) == 1 else 'UnknownShape',
                     # 'Path Index': int(upgrade_values_list[10]),
                     'Path Name': path_name,
-                    'Path Ordering': path_ordering,
+                    'Path Ordering': path_ordering if path_name != 'Abomination' else path_ordering + 1,
                     'Description': clean_description,
                 }
             except Exception as e:
@@ -745,40 +775,17 @@ def _parse_master_classes_compass_upgrades(account, raw_compass_upgrades):
             else:
                 account.compass['Upgrades'][upgrade_name]['Unlocked'] = account.compass['Upgrades']['Pathfinder']['Level'] >= 1
         elif path_name == 'Abomination Path':
-            # TODO
-            account.compass['Upgrades'][upgrade_name]['Unlocked'] = False
+             if 'Titan doesnt exist' not in upgrade_details['Description']:
+                try:
+                    abom_name = compass_titans[upgrade_details['Path Ordering']-1][0].replace('_', ' ')
+                    account.compass['Upgrades'][upgrade_name]['Unlocked'] = account.compass['Abominations'][abom_name]['Defeated']
+                except:
+                    logger.exception(f"Could not look up Abomination defeated status for {upgrade_name}")
+                    account.compass['Upgrades'][upgrade_name]['Unlocked'] = False
         else:
             account.compass['Upgrades'][upgrade_name]['Unlocked'] = account.compass['Upgrades'][path_name]['Level'] >= upgrade_details['Path Ordering']
 
-def _parse_master_classes_abominations(account, raw_abom_status):
-    for abom_index, abom_data in enumerate(compass_titans):
-        clean_name = abom_data[0].replace('_', ' ')
-        if 50 > int(abom_data[2]):
-            weakness = 0
-        elif 100 > int(abom_data[2]):
-            weakness = 3
-        elif 150 > int(abom_data[2]):
-            weakness = 2
-        elif 200 > int(abom_data[2]):
-            weakness = 1
-        else:
-            weakness = int(abom_data[11]) % 4
-        try:
-            account.compass['Abominations'][clean_name] = {
-                'Defeated': raw_abom_status[abom_index] > 0,
-                'Map Index': int(abom_data[2]),
-                'World': 1 + (int(abom_data[2])//50),
-                'Image': f'titan-{abom_index}',
-                'Weakness': account.compass['Elements'].get(weakness, 'Unknown')
-            }
-        except:
-            account.compass['Abominations'][clean_name] = {
-                'Defeated': False,
-                'Map Index': int(abom_data[2]),
-                'World': 1 + (int(abom_data[2]) // 50),
-                'Image': f'titan-{abom_index}',
-                'Weakness': account.compass['Elements'].get(weakness, 'Unknown')
-            }
+
 
 def _parse_w1(account):
     _parse_w1_starsigns(account)
