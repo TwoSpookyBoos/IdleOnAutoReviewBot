@@ -793,7 +793,6 @@ def _parse_master_classes_compass_upgrades(account, raw_compass_upgrades):
             account.compass['Upgrades'][upgrade_name]['Unlocked'] = account.compass['Upgrades'][path_name]['Level'] >= upgrade_details['Path Ordering']
 
 def _parse_master_classes_medallions(account, raw_medallions):
-    raw_medallions.append('test1')
     known_extras = {
         'reindeer': 'Spirit Reindeer'
     }
