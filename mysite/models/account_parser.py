@@ -794,25 +794,66 @@ def _parse_master_classes_compass_upgrades(account, raw_compass_upgrades):
 
 def _parse_master_classes_medallions(account, raw_medallions):
     known_extras = {
-        'reindeer': 'Spirit Reindeer'
+        'reindeer': ['Spirit Reindeer', 'spirit-reindeer'],
+        # 'caveA': ['Cavern 3: Dawg Den', 'dawg-den-dawgs'],  #Idk if these actually drop or not, pending confirmation
+        'BugNest1': ['Fly Nest', 'fly-nest'],
+        'BugNest2': ['Butterfly Nest', 'butterfly-bar'],
+        'BugNest3': ['Sentient Cereal Nest', 'sentient-bowl'],
+        'BugNest4': ['Fruitfly Nest', 'grocery-bag'],
+        'BugNest5': ['Mosquisnow Nest', 'snowden'],
+        'BugNest6': ['Flycicle Nest', 'icicle-nest'],
+        'BugNest7': ['Bee Nest', 'bee-hive'],
+        'BugNest8': ['Fairy Nest', 'fairy-hovel'],
+        'BugNest9': ['Scarab Nest', 'scarab-nest'],
+        'BugNest10': ['Dust Mote Nest', 'mote-hovel'],
+        # 'BugNest11': ['Equinox Nest', 'dream-particulate'],  #Doesn't spawn a nest to destroy
+        'BugNest12': ['Ladybug Nest', 'ladybug-nest'],
+        'BugNest13': ['Firefly Nest', 'firefly-nest'],
+        # 'BugNest14': ['Fractal (Cavern) Nest', 'fractal-fly'],  #Doesn't spawn a nest to destroy
+        # 'rift1': ['Rift Spooker', 'rift-spooker'],  #WW cannot enter the Rift
+        # 'rift2': ['Rift Slug', 'rift-slug'],
+        # 'rift3': ['Rift Jocund', 'rift-jocund'],
+        # 'rift4': ['Rift Hivemind', 'rift-hivemind'],
+        # 'rift5': ['Rift Stalker', 'rift-stalker'],
+        'ChestA1': ['W1 Colo: Bronze Chest', 'colo-bronze-chest'],
+        'ChestB1': ['W1 Colo: Silver Chest', 'colo-silver-chest'],
+        'ChestC1': ['W1 Colo: Gold Chest', 'colo-gold-chest'],
+        'ChestA2': ['W2 Colo: Bronze Chest', 'colo-bronze-chest'],
+        'ChestB2': ['W2 Colo: Silver Chest', 'colo-silver-chest'],
+        'ChestC2': ['W2 Colo: Gold Chest', 'colo-gold-chest'],
+        'ChestA3': ['W3 Colo: Bronze Chest', 'colo-bronze-chest'],
+        'ChestB3': ['W3 Colo: Silver Chest', 'colo-silver-chest'],
+        'ChestC3': ['W3 Colo: Gold Chest', 'colo-gold-chest'],
+        'ChestA4': ['W4 Colo: Bronze Chest', 'colo-bronze-chest'],
+        'ChestB4': ['W4 Colo: Silver Chest', 'colo-silver-chest'],
+        'ChestC4': ['W4 Colo: Gold Chest', 'colo-gold-chest'],
+        'ChestA5': ['W5 Colo: Bronze Chest', 'colo-bronze-chest'],
+        'ChestB5': ['W5 Colo: Silver Chest', 'colo-silver-chest'],
+        'ChestC5': ['W5 Colo: Gold Chest', 'colo-gold-chest'],
+        'ChestA6': ['W6 Colo: Bronze Chest', 'colo-bronze-chest'],
+        'ChestB6': ['W6 Colo: Silver Chest', 'colo-silver-chest'],
+        'ChestC6': ['W6 Colo: Gold Chest', 'colo-gold-chest'],
     }
+
     for extra_name in known_extras:
         try:
             account.compass['Medallions'][extra_name] = {
                 'Obtained': extra_name in raw_medallions,
                 'Card Name': extra_name,
                 'Card Set': 'Extras',
-                'Enemy Name': known_extras[extra_name],
+                'Enemy Name': known_extras[extra_name][0],
+                'Image': known_extras[extra_name][1],
             }
         except:
             account.compass['Medallions'][extra_name] = {
                 'Obtained': False,
                 'Card Name': extra_name,
                 'Card Set': 'Extras',
-                'Enemy Name': known_extras[extra_name],
+                'Enemy Name': known_extras[extra_name][0],
+                'Image': known_extras[extra_name][1],
             }
 
-    ignore_sets = []  #['Easy Resources', 'Medium Resources', 'Hard Resources', 'Dungeons']
+    ignore_sets = ['Easy Resources', 'Medium Resources', 'Hard Resources', 'Dungeons']
     ignore_cards = []  #['Bandit Bob', 'IdleOn Fourth Anniversary']
     for set_name, set_cards in card_data.items():
         if set_name not in ignore_sets:
@@ -824,6 +865,7 @@ def _parse_master_classes_medallions(account, raw_medallions):
                             'Card Name': card_name,
                             'Card Set': set_name,
                             'Enemy Name': card_values[0],
+                            'Image': f"{card_values[0]}-card"
                         }
                     except:
                         account.compass['Medallions'][card_name] = {
@@ -831,6 +873,7 @@ def _parse_master_classes_medallions(account, raw_medallions):
                             'Card Name': card_name,
                             'Card Set': set_name,
                             'Enemy Name': card_values[0],
+                            'Image': f"{card_values[0]}-card"
                         }
 
     for raw_enemy_name in raw_medallions:
@@ -840,7 +883,8 @@ def _parse_master_classes_medallions(account, raw_medallions):
                 'Obtained': True,
                 'Card Name': raw_enemy_name,
                 'Card Set': 'Unexpected (Tell Scoli if this was legit!)',
-                'Enemy Name': raw_enemy_name
+                'Enemy Name': raw_enemy_name,
+                'Image': raw_enemy_name
             }
 
 def _parse_master_classes_exalted_stamps(account):

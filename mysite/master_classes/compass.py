@@ -113,7 +113,7 @@ def getCompassMedallionsAdviceGroup(compass):
             medallion_advice[enemy_details['Card Set']] = []
         medallion_advice[enemy_details['Card Set']].append(Advice(
             label=f"{enemy_details['Enemy Name']}",
-            picture_class=f"{enemy_details['Enemy Name']}{'-card' if enemy_details['Card Set'] != 'Extras' else ''}",
+            picture_class=f"{enemy_details['Image']}",
             progression=int(enemy_details['Obtained']),
             goal=1
         ))
