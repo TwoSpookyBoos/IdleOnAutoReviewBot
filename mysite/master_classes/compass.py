@@ -137,6 +137,7 @@ def getCompassUpgradesAdviceGroups(compass):
             upgrade_details = compass['Upgrades'][clean_name]
             if path_name == 'Abomination':
                 if 'Titan doesnt exist' not in upgrade_details['Description']:  #Filter out placeholders for future Titans/Abominations
+                    abom = compass['Abominations'].get(upgrade_details['Abomination Name'], {'World': '?'})
                     if upgrade_details['Unlocked']:
                         upgrades_AdviceDict[f'{path_name} Path Upgrades'].append(Advice(
                             label=(
@@ -152,7 +153,7 @@ def getCompassUpgradesAdviceGroups(compass):
                         upgrades_AdviceDict[f'{path_name} Path Upgrades'].append(Advice(
                             label=(
                                 f"{upgrade_details['Path Name']}-{upgrade_details['Path Ordering']}: {clean_name}:"
-                                f"<br>Defeat Abomination-{upgrade_details['Path Ordering']} to reveal!"
+                                f"<br>Defeat {upgrade_details['Abomination Name'][:3]}... in W{abom['World']} to reveal!"
                             ),
                             picture_class='placeholder',
                             progression=upgrade_details['Level'],

@@ -781,11 +781,12 @@ def _parse_master_classes_compass_upgrades(account, raw_compass_upgrades):
             else:
                 account.compass['Upgrades'][upgrade_name]['Unlocked'] = account.compass['Upgrades']['Pathfinder']['Level'] >= 1
         elif path_name == 'Abomination Path':
-             if 'Titan doesnt exist' not in upgrade_details['Description']:
+            if 'Titan doesnt exist' not in upgrade_details['Description']:
                 try:
-                    abom_name = compass_titans[upgrade_details['Path Ordering']-1][0].replace('_', ' ')
-                    account.compass['Upgrades'][upgrade_name]['Unlocked'] = account.compass['Abominations'][abom_name]['Defeated']
+                    account.compass['Upgrades'][upgrade_name]['Abomination Name'] = compass_titans[upgrade_details['Path Ordering']-1][0].replace('_', ' ')
+                    account.compass['Upgrades'][upgrade_name]['Unlocked'] = account.compass['Abominations'][account.compass['Upgrades'][upgrade_name]['Abomination Name']]['Defeated']
                 except:
+                    account.compass['Upgrades'][upgrade_name]['Abomination Name'] = '??????'
                     logger.exception(f"Could not look up Abomination defeated status for {upgrade_name}")
                     account.compass['Upgrades'][upgrade_name]['Unlocked'] = False
         else:
