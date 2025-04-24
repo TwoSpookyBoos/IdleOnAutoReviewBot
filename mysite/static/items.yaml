@@ -442,6 +442,7 @@ EquipmentCape16: Timeless Watch
 EquipmentGown0: Pyromancer Robes
 EquipmentGown1: Cobalt Robe
 EquipmentGown2: Abyssal Robe
+EquipmentGown3: Evergreen Robe
 StampA1: Sword Stamp
 StampA2: Heart Stamp
 StampA3: Mana Stamp
@@ -1406,6 +1407,7 @@ EquipmentNametag15: Frostyman Nametag
 EquipmentNametag16: Lovely Day Nametag
 EquipmentNametag17: Spectacular 4th Year Nametag
 EquipmentNametag18: Fourth Anniversary Idleon Nametag
+EquipmentNametag19: Aethermoon Nametag
 EquipmentKeychain0: Simple Key Chain
 EquipmentKeychain1: Leafy Chain
 EquipmentKeychain2: Red Sneaker Chain
@@ -1727,6 +1729,7 @@ Quest92: Giftmas Present
 Quest93: Worship Floppy Disc
 Quest94: Temple Torch
 Quest95: Birthday Candle
+Quest96: Aethermoon
 EquipmentSmithingTabs2: Anvil Tab II
 EquipmentSmithingTabs3: Anvil Tab III
 EquipmentSmithingTabs4: Anvil Tab IV
@@ -1989,6 +1992,7 @@ EquipmentHats114: True Crown
 EquipmentHats115: Celebration Mane
 EquipmentHats116: Goldberry
 EquipmentHats117: Orange Beanie
+EquipmentHats118: Windwalker Hood
 CardsA0: Green Mushroom Card
 CardsA1: Red Mushroom Card
 CardsA2: Frog Card
@@ -2229,3 +2233,29 @@ Bone0: Femur
 Bone1: Ribcage
 Bone2: Cranium
 Bone3: Bovinae
+Dust0: Stardust
+Dust1: Moondust
+Dust2: Solardust
+Dust3: Cooldust
+Dust4: Novadust
+EquipmentBowsTempest0: Tempest Bow of Dust
+EquipmentBowsTempest1: Tempest Bow of Ice
+EquipmentBowsTempest2: Tempest Bow of Fire
+EquipmentBowsTempest3: Tempest Bow of Wind
+EquipmentBowsTempest4: Tempest Bow of Grass
+EquipmentRingsTempest0: Tempest Ring of Leef
+EquipmentRingsTempest1: Tempest Ring of Ice
+EquipmentRingsTempest2: Tempest Ring of Lava
+EquipmentRingsTempest3: Tempest Ring of Carbon
+EquipmentRingsTempest4: Tempest Ring of Power
+EquipmentRingsTempest5: Tempest Ring of Defense
+EquipmentRingsTempest6: Tempest Ring of Gold
+EquipmentRingsTempest7: Tempest Ring of Death
+EquipmentRingsTempest8: Tempest Ring of Punchies
+StoneTempestB0: Tempest Bow Stone 60 PCT
+StoneTempestB1: Tempest Bow Stone 30 PCT
+StoneTempestB2: Tempest Bow Stone 10 PCT
+StoneTempestR0: Tempest Ring Stone 60 PCT
+StoneTempestR1: Tempest Ring Stone 30 PCT
+StoneTempestR2: Tempest Ring Stone 10 PCT
+WWcoin: Wind Walker Medallion
