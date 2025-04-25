@@ -796,6 +796,7 @@ def _parse_master_classes_medallions(account, raw_medallions):
     known_extras = {
         'reindeer': ['Spirit Reindeer', 'spirit-reindeer'],
         'caveA': ['Cavern 3: Dawg Den', 'dawg-den-dawgs'],
+        'rockS': ['W3 Colo: Skull Rock', 'skull-rock'],
         'Meteor': ['Random Event Boss: Fallen Meteor', 'fallen-meteor'],
         'rocky': ['Random Event Boss: Mega Grumblo', 'mega-grumblo'],
         'iceknight': ['Random Event Boss: Glacial Guild', 'ice-guard'],
