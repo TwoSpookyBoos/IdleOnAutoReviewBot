@@ -203,6 +203,13 @@ $world-contents: (
 );
 
 $world-monsters: (
+//Random Event Bosses
+    fallen-meteor:      img('wiki/Fallen_Meteor_Idle.gif'),
+    mega-grumblo:       img('wiki/Grumblo_Idle.gif'),
+    ice-guard:          img('wiki/Ice_Guard_Idle.gif'),
+    snake-swarm:        img('wiki/Snakenhotep_Idle.gif'),
+    angry-frogs:        img('wiki/Grandfrogger_Idle.gif'),
+
 // W1
     green-mushroom: img('wiki/Green_Mushroom_Idle.gif'),
     frog: img('wiki/Frog_Idle.gif'),
