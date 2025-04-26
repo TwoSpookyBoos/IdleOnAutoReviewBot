@@ -860,7 +860,34 @@ def _parse_master_classes_medallions(account, raw_medallions):
             }
 
     ignore_sets = ['Easy Resources', 'Medium Resources', 'Hard Resources', 'Dungeons']
-    ignore_cards = []  #['Bandit Bob', 'IdleOn Fourth Anniversary']
+    ignore_cards = [
+        #W1
+        'Crystal Carrot',
+        #W2
+        'Bandit Bob', 'Crystal Crabal',
+        #W3
+        'Crystal Cattle',
+        #W4
+        'Crystal Custard',
+        #W5
+        'Crystal Capybara',
+        #W6
+        'Crystal Candalight',
+        #World Bosses
+        'Amarok', 'Chaotic Amarok', 'Radiant Amarok',
+        'Efaunt', 'Chaotic Efaunt', 'Gilded Efaunt',
+        'Chizoar', 'Chaotic Chizoar', 'Blighted Chizoar',
+        'Massive Troll', 'Chaotic Troll', 'Blitzkrieg Troll',
+        'Kattlekruk', 'Chaotic Kattlekruk', 'Sacrilegious Kattlekruk',
+        'Emperor', 'Chaotic Emperor', 'Sovereign Emperor',
+        #Events
+        'Giftmas Blobulyte', 'Meaning of Giftmas', 'Golden Giftmas Box',
+        'Loveulyte', 'Chocco Box', 'Giant Rose',
+        'Egggulyte', 'Egg Capsule',
+        'Coastiolyte', 'Summer Spirit',
+        'Bubbulyte', 'Spring Spirit', 'Spring Splendor', 'Falloween Pumpkin',
+        'IdleOn Fourth Anniversary'
+    ]
     for set_name, set_cards in card_data.items():
         if set_name not in ignore_sets:
             for card_name, card_values in set_cards.items():
