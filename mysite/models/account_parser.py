@@ -795,6 +795,12 @@ def _parse_master_classes_compass_upgrades(account, raw_compass_upgrades):
 def _parse_master_classes_medallions(account, raw_medallions):
     known_extras = {
         'reindeer': ['Spirit Reindeer', 'spirit-reindeer'],
+        'Crystal0': ['Crystal Carrot (Glitterbug prayer)', 'crystal-carrot'],
+        'Crystal1': ['Crystal Crabal (Glitterbug prayer)', 'crystal-crabal'],
+        'Crystal2': ['Crystal Cattle (Glitterbug prayer)', 'crystal-cattle'],
+        'Crystal3': ['Crystal Custard (Glitterbug prayer)', 'crystal-custard'],
+        'Crystal4': ['Crystal Capybara (Glitterbug prayer)', 'crystal-capybara'],
+        'Crystal5': ['Crystal Candalight (Glitterbug prayer)', 'crystal-candalight'],
         'caveA': ['Cavern 3: Dawg Den', 'dawg-den-dawgs'],
         'rockS': ['W3 Colo: Skull Rock', 'skull-rock'],
         'Meteor': ['Random Event Boss: Fallen Meteor', 'fallen-meteor'],
