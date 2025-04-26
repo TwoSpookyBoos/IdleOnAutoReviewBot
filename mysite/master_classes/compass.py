@@ -51,6 +51,16 @@ def getCompassCurrenciesAdviceGroup(compass):
         informational=True,
         completed=True
     ))
+    currencies_advices.insert(0, Advice(
+        label=(
+            f"""Daily Top of the Mornin' kills: """
+            f"""{compass['Upgrades']["Top of the Mornin'"]['Total Value'] + compass['Upgrades']['Abomination Slayer XII']['Total Value']}"""
+            f"""<br>Remaining: {compass["Top of the Mornin'"]}"""
+        ),
+        picture_class=compass['Upgrades']["Top of the Mornin'"]['Image'],
+        informational=True,
+        completed=True
+    ))
 
     currencies_ag = AdviceGroup(
         tier='',

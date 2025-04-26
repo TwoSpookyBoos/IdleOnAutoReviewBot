@@ -51,7 +51,12 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
     for atomName, atomValues in colliderData['Atoms'].items():
         settings_advice['Information'].append(
             Advice(
-                label=atomName,
+                label=(
+                    f"{atomName}"
+                    if atomName != 'Magnesium - Trap Compounder' else
+                    f"{atomName}"
+                    f"<br>{colliderData['Magnesium Days']}/100 days since last retrap"
+                ),
                 picture_class=atomName.split(' - ')[0],
                 progression=atomValues['Level'],
                 goal=atomValues['MaxLevel']
@@ -103,19 +108,6 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
                     progression=colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'],
                     goal=session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5
             ))
-
-    #Neon would cheapen the next Helium upgrade
-    # for heliumLevel, neonLevel in {6: 0, 7: 2, 8: 10, 9: 21, 10: 30}.items():
-    #     if colliderData['Atoms']['Helium - Talent Power Stacker']['Level'] == heliumLevel-1:
-    #         if colliderData['Atoms']["Neon - Damage N' Cheapener"]['Level'] < neonLevel:
-    #             settings_advice['Alerts'].append(
-    #                 Advice(
-    #                     label=f"Neon can be increased to {neonLevel} to cheapen Helium {heliumLevel}",
-    #                     picture_class="neon",
-    #                     progression=colliderData['Atoms']["Neon - Damage N' Cheapener"]['Level'],
-    #                     goal=neonLevel
-    #                 )
-    #             )
 
     currentMaxedTowers = 0
     if colliderData['Atoms']["Carbon - Wizard Maximizer"]['Level'] < colliderData['Atoms']["Carbon - Wizard Maximizer"]['MaxLevel']:
