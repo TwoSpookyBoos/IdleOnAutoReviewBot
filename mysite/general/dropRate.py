@@ -1,4 +1,5 @@
 from models.models import Advice, AdviceGroup, AdviceSection
+from consts import max_card_stars
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
@@ -20,93 +21,108 @@ def getDropRateAccountAdviceGroup() -> AdviceGroup:
         if card.cardset == "Events":
             events_cardset.append(card)
 
-    max_card_stars = 5
-
     cards = "Cards"
     misc = "Miscellaneous"
     dropRate_Advice = {
         cards: [],
         misc: [],
     }
+
+    print(session_data.account.cards)
+    dropRate_cards = [
+        {
+            "Name": "Emperor",
+            "Stars": (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Emperor')),
+            "Base": 12,
+            "Max": 12 * (1 + max_card_stars),
+            "Bonus": "Total Drop Rate",
+            "Picture": "emperor-card"
+        },
+        {
+            "Name": "W6 Minichief Spirit",
+            "Stars": (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Minichief Spirit')),
+            "Base": 8,
+            "Bonus": "Total Drop Rate",
+            "Picture": "minichief-spirit-card"
+        },
+        {
+            "Name": "King Doot",
+            "Stars": (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'King Doot')),
+            "Base": 6,
+            "Bonus": "Total Drop Rate",
+            "Picture": "king-doot-card"
+        },
+        {
+            "Name": "W5 Mister Brightside",
+            "Stars": (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Mister Brightside')),
+            "Base": 6,
+            "Bonus": "Total Drop Rate",
+            "Picture": "mister-brightside-card"
+        },
+        {
+            "Name": "W1 Crystal Carrot",
+            "Stars": (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Crystal Carrot')),
+            "Base": 5,
+            "Bonus": "Total Drop Rate",
+            "Picture": "crystal-carrot-card"
+        },
+        {
+            "Name": "W3 Bop Box",
+            "Stars": (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Bop Box')),
+            "Base": 3.5,
+            "Bonus": "Total Drop Rate",
+            "Picture": "bop-box-card"
+        },
+        {
+            "Name": "Events Mr Blueberry",
+            "Stars": (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Mr Blueberry')),
+            "Base": 3,
+            "Bonus": "Total Drop Rate",
+            "Picture": "mr-blueberry-card"
+        },
+        {
+            "Name": "Events Giftmas Blobulyte",
+            "Stars": (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Giftmas Blobulyte')),
+            "Base": 3,
+            "Bonus": "Total Drop Rate",
+            "Picture": "giftmas-blobulyte-card"
+        },
+        {
+            "Name": "W2 Mimic",
+            "Stars": (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Mimic')),
+            "Base": 3,
+            "Bonus": "Total Drop Rate",
+            "Picture": "mimic-card"
+        },
+        {
+            "Name": "Domeo Magmus",
+            "Stars": (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Domeo Magmus')),
+            "Base": 1.5,
+            "Bonus": "PASSIVE Total Drop Rate",
+            "Picture": "domeo-magmus-card"
+        }
+    ]
+    #########################################
     # Account Wide
-    dropRate_Advice[cards].append(Advice(
-        label=f"Emperor card: +{12 * (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Emperor'))}"
-              f"/72% Total Drop Rate",
-        picture_class="emperor-card",
-        progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Emperor'),
-        goal=6
-    ))
-    dropRate_Advice[cards].append(Advice(
-        label=f"W6 Minichief Spirit card: +{8 * (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Minichief Spirit'))}"
-              f"/48% Total Drop Rate",
-        picture_class="minichief-spirit-card",
-        progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Minichief Spirit'),
-        goal=6
-    ))
-    dropRate_Advice[cards].append(Advice(
-        label=f"King Doot card: +{6 * (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'King Doot'))}"
-              f"/36% Total Drop Rate",
-        picture_class="king-doot-card",
-        progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == 'King Doot'),
-        goal=6
-    ))
-    dropRate_Advice[cards].append(Advice(
-        label=f"W5 Mister Brightside card: +{6 * (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Mister Brightside'))}"
-              f"/36% Total Drop Rate",
-        picture_class="mister-brightside-card",
-        progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Mister Brightside'),
-        goal=6
-    ))
-    dropRate_Advice[cards].append(Advice(
-        label=f"W1 Crystal Carrot card: +{5 * (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Crystal Carrot'))}"
-              f"/30% Total Drop Rate",
-        picture_class="crystal-carrot-card",
-        progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Crystal Carrot'),
-        goal=6
-    ))
-    dropRate_Advice[cards].append(Advice(
-        label=f"W3 Bop Box card: +{3.5 * (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Bop Box')):g}"
-              f"/21% Total Drop Rate",
-        picture_class="minichief-spirit-card",
-        progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Bop Box'),
-        goal=6
-    ))
-    dropRate_Advice[cards].append(Advice(
-        label=f"Events Mr Blueberry card: +{3 * (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Mr Blueberry'))}"
-              f"/18% Total Drop Rate",
-        picture_class="mr-blueberry-card",
-        progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Mr Blueberry'),
-        goal=6
-    ))
-    dropRate_Advice[cards].append(Advice(
-        label=f"Events Giftmas Blobulyte card: +{3 * (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Giftmas Blobulyte'))}"
-              f"/18% Total Drop Rate",
-        picture_class="giftmas-blobulyte-card",
-        progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Giftmas Blobulyte'),
-        goal=6
-    ))
-    dropRate_Advice[cards].append(Advice(
-        label=f"W2 Mimic card: +{3 * (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Mimic'))}"
-              f"/12% Total Drop Rate",
-        picture_class="mimic-card",
-        progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Mimic'),
-        goal=6
-    ))
-    dropRate_Advice[cards].append(Advice(
-        label=f"Domeo Magmus card: +{1.5 * (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Domeo Magmus')):g}"
-              f"/9% PASSIVE Total Drop Rate",
-        picture_class="domeo-magmus-card",
-        progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Domeo Magmus'),
-        goal=6
-    ))
-    
+    #########################################
+
+    # Cards
+    #########################################
+    for card in dropRate_cards:
+        dropRate_Advice[cards].append(Advice(
+            label=f"{card['Name']} card: +{card['Base'] * card['Stars']:g}/{card['Base'] * (1 + max_card_stars):g} {card['Bonus']}",
+            picture_class=card['Picture'],
+            progression=card['Stars'],
+            goal=(1 + max_card_stars)
+        ))
+
     bnn_stars_sum = sum(min(card.star, max_card_stars) + 1 for card in bnn_cardset)
     bnn_star, _ = divmod(bnn_stars_sum, len(bnn_cardset))
     bnn_star = min(bnn_star, max_card_stars)
     bnn_star_next = (bnn_star + 1) * len(bnn_cardset)
     dropRate_Advice[cards].append(Advice(
         label=f"Bosses n Nightmares card set: +{6 * bnn_star}"
-              f"/36% Drop Rate | Cards until next set level {bnn_stars_sum}/{bnn_star_next}",
+              f"/{6 * (1 + max_card_stars)} Drop Rate | Cards until next set level {bnn_stars_sum}/{bnn_star_next}",
         picture_class="bosses-n-nightmares",
         progression=bnn_star,
         goal=6
@@ -118,13 +134,14 @@ def getDropRateAccountAdviceGroup() -> AdviceGroup:
     events_star_next = (events_star + 1) * len(events_cardset)
     dropRate_Advice[cards].append(Advice(
         label=f"Events card set: +{7 * events_star}"
-              f"/42% Drop Rate | Cards until next set level {events_stars_sum}/{events_star_next}",
+              f"/{7 * (1 + max_card_stars)} Drop Rate | Cards until next set level {events_stars_sum}/{events_star_next}",
         picture_class="events",
         progression=events_star,
         goal=6
     ))
 
     # Misc
+    #########################################
     dropRate_Advice[misc].append(Advice(
         label=f"W6 Big Big Hampter achievement +4% Drop Rate",
         picture_class="big-big-hampter",

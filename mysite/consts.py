@@ -2227,6 +2227,7 @@ for item_name in gstackable_codenames_expected:
 #     print(f"Reminder: Duplicate entries in GStack Expected list: {gstack_duplicate_expected}")
 greenstack_progressionTiers[5]['Required Stacks'] = len(gstack_unique_expected)
 quest_items_codenames = expectedStackables["Missable Quest Items"]
+max_card_stars = 5
 key_cards = "Cards0"
 cards_max_level = 6
 cardset_names = [
