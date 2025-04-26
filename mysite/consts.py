@@ -3557,6 +3557,7 @@ skill_talentsDict = {
         },
         "Medium": {
             99: {"Name": "Haungry for Gold", "Tab": "Tab 2"},
+            203: {'Name': 'Built Different', 'Tab': 'Tab 5'},
             143: {"Name": "Overblown Testosterone", "Tab": "Tab 4"},
             96: {"Name": "'STR'ess Tested Garb", "Tab": "Tab 2"},
             94: {"Name": "Firmly Grasp It", "Tab": "Tab 2"},
@@ -3624,6 +3625,7 @@ skill_talentsDict = {
             298: {"Name": "Sunset on the Hives", "Tab": "Tab 3"},
             368: {"Name": "Adaptation Revelation", "Tab": "Tab 4"},
             276: {"Name": "Garb of Un'AGI'ng Quality", "Tab": "Tab 2"},
+            428: {'Name': 'Unreal Agility', 'Tab': 'Tab 5'},
             278: {"Name": "Sanic Speed", "Tab": "Tab 2"},
             293: {"Name": "Agi Again", "Tab": "Tab 3"},
         },
@@ -3655,6 +3657,7 @@ skill_talentsDict = {
         "Medium": {
             368: {"Name": "Adaptation Revelation", "Tab": "Tab 4"},
             276: {"Name": "Garb of Un'AGI'ng Quality", "Tab": "Tab 2"},
+            428: {'Name': 'Unreal Agility', 'Tab': 'Tab 5'},
             278: {"Name": "Sanic Speed", "Tab": "Tab 2"},
             293: {"Name": "Agi Again", "Tab": "Tab 3"},
         },
@@ -3674,6 +3677,15 @@ skill_talentsDict = {
         "Low": {
             372: {"Name": "Shining Beacon of Egg", "Tab": "Tab 4"},  # Account-wide EXP bumped to Low
         },
+    },
+    'Sneaking': {
+        'High': {
+            432: {'Name': 'Generational Gemstones', 'Tab': 'Tab 5'},
+            430: {'Name': 'Price Recession', 'Tab': 'Tab 5'},
+        },
+        'Medium': {
+            431: {'Name': 'Sneaky Skilling', 'Tab': 'Tab 5'},  #Account-wide EXP bumped to Medium
+        }
     },
     # Utility is talents that apply to multiple skills at a bottom-of-the-group priority (Mostly Jman stuff + Drop Rate)
     "Utility": {
@@ -3937,6 +3949,40 @@ combat_talentsDict = {
         "Low": {
             268: {"Name": "Idle Shooting", "Tab": "Tab 1"},
             5: {"Name": "Sharpened Axe", "Tab": "Tab 1"},
+        },
+    },
+    'Wind Walker': {
+        "High": {
+            424: {'Name': 'Some Commandments', 'Tab': 'Tab 5'},
+            422: {'Name': 'Spirit Ballista', 'Tab': 'Tab 5'},
+            423: {'Name': 'Eternal Hunt', 'Tab': 'Tab 5'},
+            421: {'Name': 'Compass', 'Tab': 'Tab 5'},
+            425: {'Name': 'Windborne', 'Tab': 'Tab 5'},
+            426: {'Name': 'Elemental Mayhem', 'Tab': 'Tab 5'},
+            362: {"Name": "Whale Wallop", "Tab": "Tab 4", 'Optimal': [0, 17, True]},
+            301: {"Name": "Bear Trap", "Tab": "Tab 3", 'Optimal': [0, 30, True]},
+            300: {"Name": "Three-Sixty Noscope", "Tab": "Tab 3",},
+            270: {"Name": "Piercing Arrow", "Tab": "Tab 2", 'Optimal': [0, 40, True]},
+            361: {"Name": "Boar Rush", "Tab": "Tab 4", 'Optimal': [0, 20, True]},
+        },
+        "Medium": {
+            363: {"Name": "Nacho Party", "Tab": "Tab 4", 'Optimal': [0, 13, True]},
+            305: {"Name": "Looty Mc Shooty", "Tab": "Tab 3"},
+            273: {"Name": "Strafe", "Tab": "Tab 2"},
+            284: {"Name": "Veins of the Infernal", "Tab": "Tab 2"},
+            277: {"Name": "High Polymer Limbs", "Tab": "Tab 2"},
+            6: {"Name": "Gilded Sword", "Tab": "Tab 1"},
+        },
+        "Low": {
+            433: {'Name': 'Dustwalker', 'Tab': 'Tab 5'},
+            434: {'Name': 'Slayer Abominator', 'Tab': 'Tab 5'},
+            427: {'Name': "Pumpin' Power", 'Tab': 'Tab 5'},
+            420: {'Name': 'Tempest Form', 'Tab': 'Tab 5'},
+            428: {'Name': 'Shiny Medallions', 'Tab': 'Tab 5'},
+            268: {"Name": "Idle Shooting", "Tab": "Tab 1"},
+            5: {"Name": "Sharpened Axe", "Tab": "Tab 1"},
+            366: {"Name": "Stacked Skulls", "Tab": "Tab 4"},
+            365: {"Name": "Animalistic Ferocity", "Tab": "Tab 4"},
         },
     },
     "Beast Master": {
