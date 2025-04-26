@@ -1,5 +1,5 @@
 from models.models import Advice, AdviceGroup, AdviceSection
-from consts import max_card_stars
+from consts import max_card_stars, caverns_cavern_names
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
@@ -28,7 +28,6 @@ def getDropRateAccountAdviceGroup() -> AdviceGroup:
         misc: [],
     }
 
-    print(session_data.account.cards)
     dropRate_cards = [
         {
             "Name": "Emperor",
@@ -165,6 +164,7 @@ def getDropRateAccountAdviceGroup() -> AdviceGroup:
         goal=101
     ))
 
+    # TODO: get current bonus
     dropRate_Advice[misc].append(Advice(
         label=f"Alchemy Bubble Droppin Loads +38% Drop Rate",
         picture_class='droppin-loads',
@@ -172,8 +172,16 @@ def getDropRateAccountAdviceGroup() -> AdviceGroup:
         goal=1330
     ))
 
+    grotto_cavern = session_data.account.caverns['Caverns'][caverns_cavern_names[9]]
+    gloomieLootie_schematic = session_data.account.caverns['Schematics']['Gloomie Lootie']
+    dropRate_Advice[misc].append(Advice(
+        label=f"Engineer Schematic Gloomie Lootie +{5 * grotto_cavern['OpalsFound']}%",
+        picture_class=gloomieLootie_schematic['Image'],
+        progression=grotto_cavern['OpalsFound'] if gloomieLootie_schematic['Purchased'] else 0,
+        goal="∞"
+    ))
+
     # TODO: Account wide Drop Rate buffs
-    # Caverns: Gloomie Lootie
     # Crop Depot: Science Highlighter
     # Companion: Crystal Custard
     # Equinox: Faux Jewels
