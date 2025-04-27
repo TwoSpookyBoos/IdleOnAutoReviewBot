@@ -1,5 +1,5 @@
 from models.models import Advice, AdviceGroup, AdviceSection
-from consts import max_card_stars, caverns_cavern_names
+from consts import max_card_stars, maxFarmingCrops, lavaFunc, guildBonusesList
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
@@ -16,13 +16,13 @@ def getDropRateAccountAdviceGroup() -> AdviceGroup:
     bnn_cardset = []
     events_cardset = []
     for card in cards:
-        if card.cardset == "Bosses n Nightmares":
+        if card.cardset == 'Bosses n Nightmares':
             bnn_cardset.append(card)
-        if card.cardset == "Events":
+        if card.cardset == 'Events':
             events_cardset.append(card)
 
-    cards = "Cards"
-    misc = "Miscellaneous"
+    cards = 'Cards'
+    misc = 'Miscellaneous'
     dropRate_Advice = {
         cards: [],
         misc: [],
@@ -30,75 +30,75 @@ def getDropRateAccountAdviceGroup() -> AdviceGroup:
 
     dropRate_cards = [
         {
-            "Name": "Emperor",
-            "Stars": (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Emperor')),
-            "Base": 12,
+            'Name': 'Emperor',
+            'Stars': (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Emperor')),
+            'Base': 12,
             "Max": 12 * (1 + max_card_stars),
-            "Bonus": "Total Drop Rate",
-            "Picture": "emperor-card"
+            'Bonus': 'Total Drop Rate',
+            'Picture': 'emperor-card'
         },
         {
-            "Name": "W6 Minichief Spirit",
-            "Stars": (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Minichief Spirit')),
-            "Base": 8,
-            "Bonus": "Total Drop Rate",
-            "Picture": "minichief-spirit-card"
+            'Name': 'W6 Minichief Spirit',
+            'Stars': (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Minichief Spirit')),
+            'Base': 8,
+            'Bonus': 'Total Drop Rate',
+            'Picture': 'minichief-spirit-card'
         },
         {
-            "Name": "King Doot",
-            "Stars": (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'King Doot')),
-            "Base": 6,
-            "Bonus": "Total Drop Rate",
-            "Picture": "king-doot-card"
+            'Name': 'King Doot',
+            'Stars': (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'King Doot')),
+            'Base': 6,
+            'Bonus': 'Total Drop Rate',
+            'Picture': 'king-doot-card'
         },
         {
-            "Name": "W5 Mister Brightside",
-            "Stars": (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Mister Brightside')),
-            "Base": 6,
-            "Bonus": "Total Drop Rate",
-            "Picture": "mister-brightside-card"
+            'Name': 'W5 Mister Brightside',
+            'Stars': (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Mister Brightside')),
+            'Base': 6,
+            'Bonus': 'Total Drop Rate',
+            'Picture': 'mister-brightside-card'
         },
         {
-            "Name": "W1 Crystal Carrot",
-            "Stars": (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Crystal Carrot')),
-            "Base": 5,
-            "Bonus": "Total Drop Rate",
-            "Picture": "crystal-carrot-card"
+            'Name': 'W1 Crystal Carrot',
+            'Stars': (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Crystal Carrot')),
+            'Base': 5,
+            'Bonus': 'Total Drop Rate',
+            'Picture': 'crystal-carrot-card'
         },
         {
-            "Name": "W3 Bop Box",
-            "Stars": (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Bop Box')),
-            "Base": 3.5,
-            "Bonus": "Total Drop Rate",
-            "Picture": "bop-box-card"
+            'Name': 'W3 Bop Box',
+            'Stars': (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Bop Box')),
+            'Base': 3.5,
+            'Bonus': 'Total Drop Rate',
+            'Picture': 'bop-box-card'
         },
         {
-            "Name": "Events Mr Blueberry",
-            "Stars": (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Mr Blueberry')),
-            "Base": 3,
-            "Bonus": "Total Drop Rate",
-            "Picture": "mr-blueberry-card"
+            'Name': 'Events Mr Blueberry',
+            'Stars': (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Mr Blueberry')),
+            'Base': 3,
+            'Bonus': 'Total Drop Rate',
+            'Picture': 'mr-blueberry-card'
         },
         {
-            "Name": "Events Giftmas Blobulyte",
-            "Stars": (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Giftmas Blobulyte')),
-            "Base": 3,
-            "Bonus": "Total Drop Rate",
-            "Picture": "giftmas-blobulyte-card"
+            'Name': 'Events Giftmas Blobulyte',
+            'Stars': (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Giftmas Blobulyte')),
+            'Base': 3,
+            'Bonus': 'Total Drop Rate',
+            'Picture': 'giftmas-blobulyte-card'
         },
         {
-            "Name": "W2 Mimic",
-            "Stars": (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Mimic')),
-            "Base": 3,
-            "Bonus": "Total Drop Rate",
-            "Picture": "mimic-card"
+            'Name': 'W2 Mimic',
+            'Stars': (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Mimic')),
+            'Base': 3,
+            'Bonus': 'Total Drop Rate',
+            'Picture': 'mimic-card'
         },
         {
-            "Name": "Domeo Magmus",
-            "Stars": (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Domeo Magmus')),
-            "Base": 1.5,
-            "Bonus": "PASSIVE Total Drop Rate",
-            "Picture": "domeo-magmus-card"
+            'Name': 'Domeo Magmus',
+            'Stars': (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Domeo Magmus')),
+            'Base': 1.5,
+            'Bonus': 'PASSIVE Total Drop Rate',
+            'Picture': 'domeo-magmus-card'
         }
     ]
     #########################################
@@ -109,7 +109,7 @@ def getDropRateAccountAdviceGroup() -> AdviceGroup:
     #########################################
     for card in dropRate_cards:
         dropRate_Advice[cards].append(Advice(
-            label=f"{card['Name']} card: +{card['Base'] * card['Stars']:g}/{card['Base'] * (1 + max_card_stars):g} {card['Bonus']}",
+            label=f"{card['Name']}'card: +{card['Base'] * card['Stars']:g}/{card['Base'] * (1 + max_card_stars):g} {card['Bonus']}",
             picture_class=card['Picture'],
             progression=card['Stars'],
             goal=(1 + max_card_stars)
@@ -122,7 +122,7 @@ def getDropRateAccountAdviceGroup() -> AdviceGroup:
     dropRate_Advice[cards].append(Advice(
         label=f"Bosses n Nightmares card set: +{6 * bnn_star}"
               f"/{6 * (1 + max_card_stars)} Drop Rate | Cards until next set level {bnn_stars_sum}/{bnn_star_next}",
-        picture_class="bosses-n-nightmares",
+        picture_class='bosses-n-nightmares',
         progression=bnn_star,
         goal=6
     ))
@@ -134,7 +134,7 @@ def getDropRateAccountAdviceGroup() -> AdviceGroup:
     dropRate_Advice[cards].append(Advice(
         label=f"Events card set: +{7 * events_star}"
               f"/{7 * (1 + max_card_stars)} Drop Rate | Cards until next set level {events_stars_sum}/{events_star_next}",
-        picture_class="events",
+        picture_class='events',
         progression=events_star,
         goal=6
     ))
@@ -142,15 +142,15 @@ def getDropRateAccountAdviceGroup() -> AdviceGroup:
     # Misc
     #########################################
     dropRate_Advice[misc].append(Advice(
-        label=f"W6 Big Big Hampter achievement +4% Drop Rate",
-        picture_class="big-big-hampter",
-        progression=1 if session_data.account.achievements["Big Big Hampter"]['Complete'] else 0,
+        label='W6 Big Big Hampter achievement +4% Drop Rate',
+        picture_class='big-big-hampter',
+        progression=1 if session_data.account.achievements['Big Big Hampter']['Complete'] else 0,
         goal=1
     ))
     dropRate_Advice[misc].append(Advice(
-        label=f"W6 Summoning GM achievement +6% Drop Rate",
-        picture_class="summoning-gm",
-        progression=int(session_data.account.achievements["Summoning GM"]['Complete']),
+        label='W6 Summoning GM achievement +6% Drop Rate',
+        picture_class='summoning-gm',
+        progression=int(session_data.account.achievements['Summoning GM']['Complete']),
         goal=1
     ))
 
@@ -164,28 +164,73 @@ def getDropRateAccountAdviceGroup() -> AdviceGroup:
         goal=101
     ))
 
-    # TODO: get current bonus
+    dropinLoads_bubble = session_data.account.alchemy_bubbles['Droppin Loads']
     dropRate_Advice[misc].append(Advice(
-        label=f"Alchemy Bubble Droppin Loads +38% Drop Rate",
+        label=f"Alchemy Bubble Droppin Loads +{round(dropinLoads_bubble['BaseValue'], 2):g}% Drop Rate",
         picture_class='droppin-loads',
-        progression=session_data.account.alchemy_bubbles['Droppin Loads']['Level'],
+        progression=dropinLoads_bubble['Level'],
         goal=1330
     ))
 
-    grotto_cavern = session_data.account.caverns['Caverns'][caverns_cavern_names[9]]
+    grotto_cavern = session_data.account.caverns['Caverns']['Grotto']
     gloomieLootie_schematic = session_data.account.caverns['Schematics']['Gloomie Lootie']
     dropRate_Advice[misc].append(Advice(
-        label=f"Engineer Schematic Gloomie Lootie +{5 * grotto_cavern['OpalsFound']}%",
+        label=f"Engineer Schematic Gloomie Lootie +{5 * grotto_cavern['OpalsFound']}% Drop Rate",
         picture_class=gloomieLootie_schematic['Image'],
         progression=grotto_cavern['OpalsFound'] if gloomieLootie_schematic['Purchased'] else 0,
-        goal="∞"
+        goal='∞'
     ))
 
-    # TODO: Account wide Drop Rate buffs
-    # Crop Depot: Science Highlighter
-    # Companion: Crystal Custard
-    # Equinox: Faux Jewels
-    # Beanstalk: Golden Cakes
+    cropsUnlocked = session_data.account.farming['CropsUnlocked']
+    dropRate_Advice[misc].append(Advice(
+        label=f"Crop Depot Highlighter +{(cropsUnlocked - 100) if (cropsUnlocked > 100) else 0}/{maxFarmingCrops-100}%"
+              f" Drop Rate {' (value only increases after 100 crops found)' if (cropsUnlocked <= 100) else ''}",
+        picture_class='depot-highlighter',
+        progression=cropsUnlocked,
+        goal=maxFarmingCrops
+    ))
+
+    hasCrystalCustard= session_data.account.companions['Crystal Custard']
+    dropRate_Advice[misc].append(Advice(
+        label=f"Crystal Custard companion +{100 if hasCrystalCustard else 0}% Drop Rate",
+        picture_class='crystal-custard',
+        progression=int(hasCrystalCustard),
+        goal=1
+    ))
+
+    fauxJewels_level = session_data.account.equinox_bonuses['Faux Jewels']['CurrentLevel']
+    dropRate_Advice[misc].append(Advice(
+        label=f"Equinox Faux Jewels +{5 * fauxJewels_level}% Drop Rate",
+        picture_class='faux-jewels',
+        progression=fauxJewels_level,
+        goal='∞' # This is technically infinite, since Infinite Summoning increases the max level
+    ))
+
+    cake_beanstalkName ='FoodG13'
+    cake_beanstalk = session_data.account.sneaking['Beanstalk'][cake_beanstalkName]
+    cake_beanstalkLevel = int(cake_beanstalk['Beanstacked']) + int(cake_beanstalk['SuperBeanstacked'])
+    if cake_beanstalkLevel == 2:
+        cake_beanstalkBonus = '+6.67'
+    elif cake_beanstalkLevel == 1:
+        cake_beanstalkBonus = '+4.59'
+    else:
+        cake_beanstalkBonus = '0%'
+    dropRate_Advice[misc].append(Advice(
+        label=f"Beanstalk Golden Cake {cake_beanstalkBonus}/6.67% Drop Rate (further increased by Golden Food multi)",
+        picture_class='golden-cake',
+        progression=cake_beanstalkLevel,
+        goal=2
+    ))
+
+    goldCharm_bonus = guildBonusesList['Gold Charm']
+    goldCharm_level = session_data.account.guildBonuses['Gold Charm']
+    dropRate_Advice[misc].append(Advice(
+        label=f"Guild Bonus Gold Charm +{goldCharm_bonus['GetValue'](goldCharm_level):g}"
+              f"/{goldCharm_bonus['MaxValue']:g}%",
+        picture_class=goldCharm_bonus['Picture'],
+        progression=goldCharm_level,
+        goal=goldCharm_bonus['MaxLevel']
+    ))
 
     for subgroup in dropRate_Advice:
         for advice in dropRate_Advice[subgroup]:
