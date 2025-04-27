@@ -1,5 +1,5 @@
 from models.models import Advice, AdviceGroup, AdviceSection
-from consts import max_card_stars, maxFarmingCrops, maxLandRankLevel, guildBonusesList
+from consts import max_card_stars, maxFarmingCrops, maxLandRankLevel, max_IndexOfSigils
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
@@ -12,6 +12,9 @@ def getCardSetProgress():
     return
 
 def getDropRateAccountAdviceGroup() -> AdviceGroup:
+    dropRate_shiny_base = 1
+    sigils_trove_base = 10
+
     cards = session_data.account.cards
     bnn_cardset = []
     events_cardset = []
@@ -23,9 +26,11 @@ def getDropRateAccountAdviceGroup() -> AdviceGroup:
 
     cards = 'Cards'
     misc = 'Miscellaneous'
+    multi = 'Multipliers'
     dropRate_Advice = {
         cards: [],
         misc: [],
+        multi: []
     }
 
     dropRate_cards = [
@@ -207,10 +212,10 @@ def getDropRateAccountAdviceGroup() -> AdviceGroup:
     fauxJewels_level = fauxJewels_bonus['CurrentLevel']
     dropRate_Advice[misc].append(Advice(
         label=f"Equinox Faux Jewels +{5 * fauxJewels_level}% Drop Rate"
-              f"{' (increase Faux Jewels max with Infinite Summoning)' if fauxJewels_level == fauxJewels_bonus['PlayerMaxLevel'] else ''}",
+              f"{' (increase Faux Jewels max with Endless Summoning)' if fauxJewels_level == fauxJewels_bonus['PlayerMaxLevel'] else ''}",
         picture_class='faux-jewels',
         progression=fauxJewels_level,
-        goal='∞' # This is technically infinite, since Infinite Summoning increases the max level
+        goal='∞' # This is technically Endless, since Endless Summoning increases the max level
     ))
 
     # Beanstalk - Golden Cake
@@ -244,7 +249,6 @@ def getDropRateAccountAdviceGroup() -> AdviceGroup:
     # Land Rank - Seed of Loot
     # Will show additional info if the player does not have the current max number of available land rank levels
     seedOfLoot_landRank = session_data.account.farming['LandRankDatabase']['Seed of Loot']
-    print(seedOfLoot_landRank)
     dropRate_Advice[misc].append(Advice(
         label=f"Land Rank Seed of Loot +{seedOfLoot_landRank['BaseValue'] * seedOfLoot_landRank['Level']}"
               f"/{seedOfLoot_landRank['BaseValue'] * maxLandRankLevel}% Drop Rate"
@@ -272,17 +276,84 @@ def getDropRateAccountAdviceGroup() -> AdviceGroup:
         goal='∞'
     ))
 
+    # Gem Shop - DB Pack
+    dropRate_Advice[misc].append(Advice(
+        label="Gemshop Deathbringer Pack +200% Drop Rate (can't tell if you have this)",
+        picture_class='gem',
+        progression='IDK',
+        goal='IDK'
+    ))
+
+    # Breeding - Shiny Pets
+    dropRate_shinyLevel = 0
+    dropRate_shinyValue = 0
+    for name, shiny in session_data.account.breeding['Species'][1].items():
+        if shiny['ShinyBonus'] == 'Drop Rate':
+            dropRate_shinyLevel += shiny['ShinyLevel']
+            dropRate_shinyValue += dropRate_shiny_base * shiny['ShinyLevel']
+    dropRate_Advice[misc].append(Advice(
+        label=f"Total Shiny Critter +{dropRate_shinyValue}% Drop Rate",
+        picture_class='breeding',
+        progression=dropRate_shinyLevel,
+        goal='∞'
+    ))
+
+    # Shrine - Clover Shrine
+    dropRate_Advice[misc].append(Advice(
+        label=f"Shrine +{session_data.account.shrines['Clover Shrine']['Value']:g}% Drop Rate",
+        picture_class='clover-shrine',
+        progression=session_data.account.shrines['Clover Shrine']['Level'],
+        goal='∞'
+    ))
+
+    # Sigil
+    troveSigil_level = session_data.account.alchemy_p2w['Sigils']['Trove']['Level']
+    dropRate_Advice[misc].append(Advice(
+        label=f"Clover Sigil +{sigils_trove_base * troveSigil_level}"
+              f"/{sigils_trove_base * max_IndexOfSigils}% Drop Rate",
+        picture_class='trove',
+        progression=troveSigil_level,
+        goal=max_IndexOfSigils
+    ))
+
+    # Stamps - Golden Sixes + Pristine Charm - Liqorice Rolle (only show if missing charm)
+    if session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained']:
+        dropRate_Advice[misc].append(Advice(
+            label=f"Liqorice Rolle pristine charm (buffs the stamp below)",
+            picture_class='liqorice-rolle',
+            progression=0, # we're only showing if it's missing, so just assume 0
+            goal=1
+        ))
+    goldenSixes_stamp = session_data.account.stamps['Golden Sixes Stamp']
+    dropRate_Advice[misc].append(Advice(
+        label=f"Golden Sixes stamp +{round(goldenSixes_stamp['Value'], 2)}/72.78% (can be increased by Liqorice Rolle Pristine Charm and Exalted Stamps)",
+        picture_class='golden-sixes-stamp',
+        progression=goldenSixes_stamp['Level'],
+        goal=210
+    ))
+
+    # Summoning 
+    dropRate_Advice[multi].append(Advice(
+        label=f"Cotton Candy pristine charm {'1.15x' if cottonCandy_obtained else '0%'} Drop Rate MULTI",
+        picture_class='cotton-candy-charm',
+        progression=int(session_data.account.sneaking['PristineCharms']['Cotton Candy']['Obtained']),
+        goal=1
+    ))
+
+    # Sneaking Pristine Charm - Cotton Candy
+    cottonCandy_obtained = session_data.account.sneaking['PristineCharms']['Cotton Candy']['Obtained']
+    dropRate_Advice[multi].append(Advice(
+        label=f"Cotton Candy pristine charm {'1.15x' if cottonCandy_obtained else '0%'} Drop Rate MULTI",
+        picture_class='cotton-candy-charm',
+        progression=int(session_data.account.sneaking['PristineCharms']['Cotton Candy']['Obtained']),
+        goal=1
+    ))
+
     # TODO: Account wide bonuses
     # Family Obols
-    # $$ DB Pack
-    # Shiny Pets
-    # Shrine
-    # Sigil
-    # Stamps
     # Summoning
     # Tome
     # $$ Island Explorer Pack
-    # Sneaking Pristine Charm
     # Archlord of the Pirates
 
     for subgroup in dropRate_Advice:
