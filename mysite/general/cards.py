@@ -18,11 +18,17 @@ def getCardsAdviceSection() -> AdviceSection:
     if unlockable:
         advices = defaultdict(list)
         for card in unlockable:
-            advices[card.cardset].append(
-                Advice(label=card.name, picture_class=card.css_class, completed=False)
-            )
+            advices[card.cardset].append(Advice(
+                label=f"{card.name}:<br>{card.getFormattedXY()}",
+                picture_class=card.css_class,
+                completed=False
+            ))
         group_unlockable = AdviceGroup(
-            tier="", pre_string="Discover new cards", advices=advices, picture_class='locked-card', informational=True
+            tier="",
+            pre_string="Discover new cards",
+            advices=advices,
+            picture_class='locked-card',
+            informational=True
         )
         groups.append(group_unlockable)
 
@@ -49,9 +55,12 @@ def getCardsAdviceSection() -> AdviceSection:
         #logger.debug(f"{name} at {cardset_stars_sum}/{cardset_star_next} toward {star_tiers[cardset_star]} is worth {cardset_star + cardset_maxed} total cardset tiers")
 
         advices = [
-            Advice(label=card.name, picture_class=card.css_class, progression=f"{card.diff_to_next:,}", goal=star_tiers[card.star + 1])
-            for card in cardset
-            if -1 < card.star < max_card_stars
+            Advice(
+                label=f"{card.name}:<br>{card.getFormattedXY()}",
+                picture_class=card.css_class,
+                progression=f"{card.diff_to_next:,}",
+                goal=star_tiers[card.star + 1]
+            ) for card in cardset if -1 < card.star < max_card_stars
         ]
         group = AdviceGroup(
             tier="",

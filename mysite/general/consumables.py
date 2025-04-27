@@ -1,5 +1,5 @@
 from enum import IntEnum
-from consts import expectedInventoryBagValuesDict, expectedStorageChestValuesDict, break_you_best
+from consts import expectedInventoryBagValuesDict, expectedStorageChestValuesDict, break_you_best, currentMaxUsableInventorySlots
 from models.models import AdviceGroup, Advice, AdviceSection, Assets
 from utils.data_formatting import safe_loads, mark_advice_completed
 from utils.text_formatting import pl
@@ -305,7 +305,6 @@ def getStorageItemType(storageItemIndex, cls):
 def parseInventoryBagSlots() -> AdviceGroup:
     inventorySlots_AdviceDict = {}
     currentMaxInventorySlots = 96  #As of v2.35 4th Anniversary
-    currentMaxUsableInventorySlots = 96  #As of v2.35 4th Anniversary
     currentMaxWithoutAutoloot = currentMaxInventorySlots - 5
     defaultInventorySlots = 16  # Characters have 16 inventory slots by default
     account_wide_inventory_bags = ['Fourth Anniversary Bag']

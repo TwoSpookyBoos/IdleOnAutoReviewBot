@@ -256,6 +256,16 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     biggole_mole_value = biggole_mole_days * 1 * session_data.account.companions['Biggole Mole']
     biggole_mole_multi = ValueToMulti(biggole_mole_value)
 
+    mop = session_data.account.compass['Upgrades']['Moon of Print']
+    compass_moon_of_print_max_days = 100
+    compass_moon_of_print_days = min(compass_moon_of_print_max_days, safer_get(session_data.account.raw_optlacc_dict, 364, 0))
+    compass_moon_of_print_value = (
+        compass_moon_of_print_max_days
+        * mop['Unlocked']
+        * mop['Total Value']
+    )
+    compass_moon_of_print_multi = ValueToMulti(compass_moon_of_print_value)
+
     anyDKMaxBooked = False
     bestKotRBook = 0
     anyDKMaxLeveled = False
@@ -305,7 +315,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
 
     aw_multi = (
         1 * sm_multi * gr_multi * kotr_multi * charm_multi_active * ballot_multi_active
-        * lab_multi_aw * harriep_multi_aw * supreme_wiring_multi * biggole_mole_multi
+        * lab_multi_aw * harriep_multi_aw * supreme_wiring_multi * biggole_mole_multi * compass_moon_of_print_multi
     )
     aw_label = f"Account Wide: {aw_multi:.3f}x"
     cs_multi = lab_multi_cs * harriep_multi_cs
@@ -376,8 +386,16 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
               f"<br>{biggole_mole_multi:.2f}x ({biggole_mole_days}/{biggole_mole_max_days} days)"
               f"{'<br>Note: May be inaccurate. Not all data contains Companions!' if not session_data.account.companions['Biggole Mole'] else ''}",
         picture_class='biggole-mole',
-        progression=int(session_data.account.companions['Biggole Mole']),
-        goal=1
+        progression=biggole_mole_days,
+        goal=biggole_mole_max_days
+    ))
+
+    po_AdviceDict[aw_label].append(Advice(
+        label=f"{{{{Compass|#the-compass}}}}: {mop['Path Name']}-{mop['Path Ordering']}: Moon of Print: "
+              f"<br>{compass_moon_of_print_multi:.2f}x ({compass_moon_of_print_days}/{compass_moon_of_print_max_days} days)",
+        picture_class=mop['Image'],
+        progression=compass_moon_of_print_days,
+        goal=compass_moon_of_print_max_days
     ))
 
     po_AdviceDict[aw_label].append(Advice(

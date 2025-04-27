@@ -5,7 +5,7 @@ from utils.logging import get_logger
 from consts import (
     break_you_best,
     stamps_progressionTiers, stamp_maxes, stampsDict, unavailableStampsList, stampTypes,
-    maxOverallBookLevels, max_VialLevel, maxFarmingCrops
+    maxOverallBookLevels, max_VialLevel, maxFarmingCrops, infinity_string, stamps_exalt_recommendations, currentMaxUsableInventorySlots
 )
 from flask import g as session_data
 
@@ -156,7 +156,7 @@ def getCapacityAdviceGroup() -> AdviceGroup:
         goal=maxOverallBookLevels
     ))
     capacity_Advices["Character Specific"].append(Advice(
-        label="80 available {{ Inventory Slots|#storage }}",
+        label=f"{currentMaxUsableInventorySlots} available {{{{ Inventory Slots|#storage }}}}",
         picture_class="storage"
     ))
     capacity_Advices["Character Specific"].append(Advice(
@@ -257,6 +257,110 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
         informational=True
     )
     return costReduction_AdviceGroup
+
+def getExaltedAdviceGroup() -> AdviceGroup:
+    rec = 'Remaining Recommended Exalts'
+    cur = 'Current Exalts'
+    tot = 'Available Exalts'
+    boni = 'Sources of Exalt Bonus'
+    exalted_advice = {
+        boni: [],
+        tot: [],
+        rec: [],
+        cur: []
+    }
+
+    stamps = session_data.account.stamps
+    compass = session_data.account.compass
+    gemshop = session_data.account.gemshop
+    atom_collider = session_data.account.atom_collider
+    pc = session_data.account.sneaking['PristineCharms']
+
+    exalted_advice[boni].append(Advice(
+        label=f"Total Exalted Bonus: {session_data.account.exalted_stamp_multi:.2f}x",
+        picture_class='exalted-stamps'
+    ))
+    exalted_advice[boni].append(Advice(
+        label=f"Base Value: +100%",
+        picture_class='exalted-stamps'
+    ))
+    exalted_advice[boni].append(Advice(
+        label=(
+            f"{{{{Atom Collider|#atom-collider}}}}: Aluminium: "
+            f"+{atom_collider['Atoms']['Aluminium - Stamp Supercharger']['Level'] * atom_collider['Atoms']['Aluminium - Stamp Supercharger']['Value per Level']}"
+            f"/{atom_collider['Atoms']['Aluminium - Stamp Supercharger']['MaxLevel'] * atom_collider['Atoms']['Aluminium - Stamp Supercharger']['Value per Level']}%"
+        ),
+        picture_class='aluminium',
+        progression=session_data.account.atom_collider['Atoms']['Aluminium - Stamp Supercharger']['Level'],
+        goal=session_data.account.atom_collider['Atoms']['Aluminium - Stamp Supercharger']['MaxLevel'],
+        resource='particles'
+    ))
+    exalted_advice[boni].append(Advice(
+        label=f"{{{{Pristine Charm|#sneaking}}}}: Jellypick: +{20 * pc['Jellypick']['Obtained']}/20%",
+        picture_class='jellypick',
+        progression=int(pc['Jellypick']['Obtained']),
+        goal=1
+    ))
+    compass_abs = compass['Upgrades']['Abomination Slayer XVII']
+    exalted_advice[boni].append(Advice(
+        label=f"{{{{Compass|#the-compass}}}}: {compass_abs['Path Name']}-{compass_abs['Path Ordering']}: "
+              f"<br>Abomination Slayer XVII: +{compass_abs['Total Value']}/{compass_abs['Max Level']}%",
+        picture_class=compass_abs['Image'] if compass_abs['Unlocked'] else 'placeholder',
+        progression=compass_abs['Level'],
+        goal=compass_abs['Max Level'],
+        resource=compass_abs['Dust Image']
+    ))
+
+    tot_available = compass['Upgrades']['Exalted Stamps']['Level'] + gemshop['Exalted Stamps']
+
+    exalted_advice[tot].append(Advice(
+        label=f"Total Exalted Stamps spent: {compass['Total Exalted']}/{tot_available}",
+        picture_class='exalted-stamps',
+        progression=compass['Total Exalted'],
+        goal=tot_available
+    ))
+    exalted_advice[tot].append(Advice(
+        label=f"Exalted Stamps from Wind Walker {{{{Compass|#the-compass}}}}: {compass['Upgrades']['Exalted Stamps']['Level']}",
+        picture_class=compass['Upgrades']['Exalted Stamps']['Image'],
+        progression=compass['Upgrades']['Exalted Stamps']['Level'],
+        goal=compass['Upgrades']['Exalted Stamps']['Max Level']
+    ))
+    exalted_advice[tot].append(Advice(
+        label=f"Exalted Stamps from Gem Shop (Limited Availability): {gemshop['Exalted Stamps']}",
+        picture_class='exalted-stamps',
+        progression=gemshop['Exalted Stamps'],
+        goal=infinity_string
+    ))
+
+    exalted_advice[rec] = [
+        Advice(
+            label=f"{stamps[stamp_name]['StampType']}: {stamp_name}",
+            picture_class=stamp_name,
+            progression=0,
+            goal=1
+        ) for stamp_name in stamps_exalt_recommendations if not stamps[stamp_name]['Exalted'] and stamps[stamp_name]['Delivered']
+    ]
+
+    exalted_advice[cur] = [
+        Advice(
+            label=f"{stamp_details['StampType']}: {stamp_name}",
+            picture_class=stamp_name,
+            progression=1,
+            goal=1
+        ) for stamp_name, stamp_details in stamps.items() if stamp_details['Exalted']
+    ]
+
+    for subgroup in exalted_advice:
+        for advice in exalted_advice[subgroup]:
+            mark_advice_completed(advice)
+
+    exalted_ag = AdviceGroup(
+        tier='',
+        pre_string='Informational- Exalted Stamps',
+        advices=exalted_advice
+    )
+    exalted_ag.remove_empty_subgroups()
+    return exalted_ag
 
 def getReadableStampName(stampNumber, stampType):
     # logger.debug(f"Fetching name for {stampType} + {stampNumber}")
@@ -395,6 +499,7 @@ def getStampAdviceSection() -> AdviceSection:
     stamp_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
     stamp_AdviceGroupDict["Capacity"] = getCapacityAdviceGroup()
     stamp_AdviceGroupDict["CostReduction"] = getCostReductionAdviceGroup()
+    stamp_AdviceGroupDict['Exalted'] = getExaltedAdviceGroup()
 
     # Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"

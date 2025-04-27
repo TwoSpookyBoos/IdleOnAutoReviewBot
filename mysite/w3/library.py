@@ -544,10 +544,15 @@ def getLibraryProgressionTiersAdviceGroups_priorities():
     return category_advice_groups, overall_SectionTier, max_tier, anyBookAdvice
 
 def getLibraryProgressionTiersAdviceGroups_characters():
+    # This was a very lazy fix to get back to the previous state
+    old_librarySubgroupTiers = [
+        '', 'Skilling - High Priority', 'Skilling - Medium Priority', 'Skilling - Low Priority', 'Skilling - Lowest Priority',
+        'Combat - High Priority', 'Combat - Medium Priority', 'Combat - Low Priority', 'ALL Unmaxed Talents'
+    ]
     character_adviceDict = {}
     character_AdviceGroupDict = {}
     info_tiers = 1
-    max_tier = len(librarySubgroupTiers) - 1 - info_tiers
+    max_tier = len(old_librarySubgroupTiers) - 1 - info_tiers
     anyBookAdvice = False
 
     talentExclusions = getTalentExclusions()
@@ -565,6 +570,7 @@ def getLibraryProgressionTiersAdviceGroups_characters():
         178: [0, 'Divine Knight'],  #DK- King of the Remembered
         328: [0, 'Siege Breaker'],  #SB- Archlord Of The Pirates
         310: [0, 'Hunter'],  #Hunter- Eagle Eye
+        432: [0, 'Wind Walker'],  #WW- Generational Gemstones
         # 373: 0,  #BM- Curviture Of The Paw
         # 508: 0,  #ES- Wormhole Emperor
     }
@@ -670,7 +676,7 @@ def getLibraryProgressionTiersAdviceGroups_characters():
                                     talentNumbersAdded.append(talent_number)
 
         #Everything Else
-        subgroupName = librarySubgroupTiers[-1]
+        subgroupName = old_librarySubgroupTiers[-1]
         if subgroupName not in character_adviceDict[toon.character_name]:
             character_adviceDict[toon.character_name][subgroupName] = []
         for talent_number in toon.expected_talents:
@@ -689,8 +695,8 @@ def getLibraryProgressionTiersAdviceGroups_characters():
         #Create AdviceGroup before moving on to next character
         char_tier = 0
         for subgroupname in character_adviceDict[toon.character_name]:
-            if char_tier == librarySubgroupTiers.index(subgroupname)-1 and len(character_adviceDict[toon.character_name][subgroupname]) == 0:
-                char_tier = librarySubgroupTiers.index(subgroupname)
+            if char_tier == old_librarySubgroupTiers.index(subgroupname)-1 and len(character_adviceDict[toon.character_name][subgroupname]) == 0:
+                char_tier = old_librarySubgroupTiers.index(subgroupname)
             else:
                 break
         char_tiers[toon.character_name] = char_tier

@@ -212,7 +212,7 @@ def getActiveBMAdviceGroup() -> AdviceGroup:
     abm_adviceDict["Prerequisites"].append(Advice(
         label="Have a Voidwalker in your family",
         picture_class="voidwalker-icon",
-        progression=f"{1 if 'Voidwalker' in session_data.account.classes else 0}",
+        progression=int('Voidwalker' in session_data.account.classes),
         goal=1
     ))
     abm_adviceDict["Prerequisites"].append(Advice(
@@ -222,14 +222,24 @@ def getActiveBMAdviceGroup() -> AdviceGroup:
         goal=150
     ))
     abm_adviceDict["Prerequisites"].append(Advice(
-        label="Have a Beast Master in your family",
+        label="Have a Wind Walker in your family for 12-18x Breeding speed"
+              "<br>Beast Master will only be about 1/3rd that value: 4-6x",
         picture_class="beast-master-icon",
-        progression=f"{1 if 'Beast Master' in session_data.account.classes else 0}",
+        progression=int('Beast Master' in session_data.account.classes),
         goal=1
     ))
+    all_prereqs = [
+        'Voidwalker' in session_data.account.classes,
+        max([vman.max_talents.get("49", 0) for vman in session_data.account.vmans], default=0) >= 150,
+        'Beast Master' in session_data.account.classes
+    ]
     abm_adviceDict["Prerequisites"].append(Advice(
-        label="All ACTIVE-ONLY kills with your Beast Master now have a 50% chance to speed up progress for the Fenceyard, Spice collection, and Egg production! Crystal Mobs count 😄",
-        picture_class="whale-wallop"))
+        label=("All ACTIVE-ONLY kills with your BM/WW now have a 50% chance to speed up progress for the "
+               "Fenceyard, Spice collection, and Egg production! Crystal Mobs count 😄"),
+        picture_class="whale-wallop",
+        progression=int(False not in all_prereqs),
+        goal=1
+    ))
 
     # Equipment
     abm_adviceDict["Equipment"].append(Advice(
@@ -266,20 +276,12 @@ def getActiveBMAdviceGroup() -> AdviceGroup:
     ))
 
     # Cards
+    cards = ['Demon Genie', 'Poop']
+    for card_name in cards:
+        abm_adviceDict["Cards"].append(next(c for c in session_data.account.cards if c.name == card_name).getAdvice())
+
     abm_adviceDict["Cards"].append(Advice(
-        label=f"W4 Demon Genie card: +15% Crystal Mob Spawn Chance per rank",
-        picture_class="demon-genie-card",
-        progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == "Demon Genie"),
-        goal=6
-    ))
-    abm_adviceDict["Cards"].append(Advice(
-        label=f"W1 Poop card: +10% Crystal Mob Spawn Chance per rank",
-        picture_class="poop-card",
-        progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == "Poop"),
-        goal=6
-    ))
-    abm_adviceDict["Cards"].append(Advice(
-        label=f"Fill the rest with: Drop Rate, Active EXP, or Damage if needed.",
+        label=f"Fill the rest with: Drop Rate, Active EXP, or Damage Cards if needed.",
         picture_class="locked-card"))
 
     # Lab Chips
@@ -345,7 +347,7 @@ def getActiveBMAdviceGroup() -> AdviceGroup:
 
     abm_AdviceGroup = AdviceGroup(
         tier="",
-        pre_string="Info- Active BM setup earns around 4-6x Breeding progress",
+        pre_string="Info- Active Wind Walker setup earns around 12-18x Breeding progress (BM 4-6)",
         advices=abm_adviceDict,
         informational=True
     )
@@ -384,11 +386,9 @@ def getBreedingProgressionTiersAdviceGroups(breedingDict):
             ['Rattler', 'Monolithic', 'Refiller', 'Defender', 'Refiller'],
             ['rattler', 'monolithic', 'refiller', 'defender', 'refiller']],
         5: [
-            ['Rattler', 'Looter', 'Monolithic', 'Refiller', 'Defender', 'Refiller'],
-            ['rattler', 'looter', 'monolithic', 'refiller', 'defender', 'refiller']],
+            ['Peapeapod or Rattler', 'Looter', 'Peapeapod or Monolithic', 'Refiller', 'Defender', 'Refiller'],
+            ['peapeapod', 'looter', 'peapeapod', 'refiller', 'defender', 'refiller']],
         6: [
-            # ['Peapeapod or Rattler', 'Looter', 'Trasher (Manually click to delete enemy attacks!)', 'Refiller', 'Refiller', 'Lazarus or Filler'],
-            # ['peapeapod', 'looter', 'trasher', 'refiller', 'refiller', 'lazarus']]
             ['Peapeapod or Rattler', 'Peapeapod or Rattler', 'Looter', 'Defender', 'Refiller', 'Refiller'],
             ['peapeapod', 'peapeapod', 'looter', 'defender', 'refiller', 'refiller']]
     }

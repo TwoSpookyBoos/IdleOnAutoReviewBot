@@ -1245,7 +1245,8 @@ atoms_progressionTiers = {
     },
     14: {
         'Atoms': {
-            'Helium - Talent Power Stacker': 11,
+            'Aluminium - Stamp Supercharger': 30,
+            'Helium - Talent Power Stacker': 12,
         },
     },
 }
@@ -2057,6 +2058,7 @@ versions_patches = {
     251: "v2.32 Gambit",
     255: "v2.34 Wisdom Monument",
     262: "v2.35 4th Anniversary Event",
+    264: "v2.35 Windwalker Class"
 }
 ignorable_labels: tuple = ('Weekly Ballot',)
 missableGStacksDict = {
@@ -2225,6 +2227,519 @@ for item_name in gstackable_codenames_expected:
 greenstack_progressionTiers[5]['Required Stacks'] = len(gstack_unique_expected)
 quest_items_codenames = expectedStackables["Missable Quest Items"]
 key_cards = "Cards0"
+cards_max_level = 6
+cardset_names = [
+    "Blunder Hills", "Yum-Yum Desert", "Easy Resources",
+    "Medium Resources", "Frostbite Tundra", "Hard Resources",
+    "Hyperion Nebula", "Smolderin' Plateau", "Spirited Valley",
+    "Dungeons", "Bosses n Nightmares", "Events"
+]
+card_raw_data = [
+    [
+        ["mushG", "A0", "5", "+{_Base_HP", "12"],
+        ["mushR", "A1", "10", "+{_Base_LUK", "3"],
+        ["frogG", "A2", "6", "+{_Base_MP", "10"],
+        ["beanG", "A3", "7", "+{_Base_Damage", "7"],
+        ["slimeG", "A4", "8", "+{_Base_WIS", "2"],
+        ["snakeG", "A5", "9", "+{_Move_Spd", "1"],
+        ["carrotO", "A6", "10", "+{_Base_AGI", "2"],
+        ["goblinG", "A7", "10", "+{%_Total_HP", "2"],
+        ["plank", "A8", "10", "+{_Base_STR", "2"],
+        ["frogBIG", "A9", "10", "+{%_Card_Drop_Chance", "5"],
+        ["poopSmall", "A10", "10", "+{%_Crystal_Mob_Spawn_Chance", "10"],
+        ["ratB", "A11", "10", "+{%_Critical_Chance", "1"],
+        ["branch", "A12", "10", "+{_Base_WIS", "5"],
+        ["acorn", "A13", "10", "+{%_Money_from_Monsters", "5"],
+        ["Crystal0", "A14", "3", "+{%_Total_Drop_Rate", "5"],
+        ["mushW", "A16", "10", "+{%_Total_Accuracy", "5"]
+    ],
+    [
+        ["jarSand", "B1", "10", "+{%_EXP_Conversion_from_Talent", "12"],
+        ["mimicA", "B2", "10", "+{%_Total_Drop_Rate", "2"],
+        ["crabcake", "B3", "10", "+{%_To_not_consume_Food", "5"],
+        ["coconut", "B4", "10", "+{_Base_AGI", "5"],
+        ["sandcastle", "B5", "10", "+{%_Total_Accuracy", "4"],
+        ["pincermin", "B6", "10", "+{_Weapon_Power", "1"],
+        ["potato", "B7", "10", "+{%_Critical_Damage", "3"],
+        ["steak", "B8", "10", "+{_Base_STR", "5"],
+        ["moonman", "B9", "10", "+{%_Monster_EXP_While_Active", "8"],
+        ["sandgiant", "B10", "10", "+{%_Minimum_Damage", "2"],
+        ["snailZ", "B11", "10", "+{%_Card_Drop_Chance", "8"],
+        ["shovelR", "B12", "10", "+{_Base_LUK", "6"],
+        ["Crystal1", "B13", "3", "+{%_EXP_from_monsters", "2"],
+        ["Bandit_Bob", "B14", "1", "+{%_Money_from_Monsters", "1"],
+        ["Blank", "A0", "10", "+{%", "3"],
+        ["Blank", "A0", "10", "+{%", "3"]
+    ],
+    [
+        ["Copper", "C1", "10", "+{_Base_accuracy", "4"],
+        ["Iron", "C2", "10", "+{%_Total_Mining_Efficiency", "5"],
+        ["Gold", "C3", "10", "+{%_Mining_EXP", "5"],
+        ["ForgeA", "C16", "10", "+{%_Smithing_EXP_(Passive)", "4"],
+        ["OakTree", "C4", "10", "+{_Base_Defence", "3"],
+        ["BirchTree", "C5", "10", "+{%_Total_Choppin_Efficiency", "5"],
+        ["JungleTree", "C6", "10", "+{%_Choppin_EXP", "5"],
+        ["ForestTree", "C7", "10", "+{%_EXP_Conversion_from_Talent", "8"],
+        ["Fish1", "C8", "10", "+{%_Total_MP", "3"],
+        ["Fish2", "C9", "10", "+{%_Total_Fishing_Efficiency", "5"],
+        ["Fish3", "C10", "10", "+{%_Fishing_EXP", "5"],
+        ["Bug1", "C11", "10", "+{%_Monster_EXP_While_Active", "4"],
+        ["Bug2", "C12", "10", "+{%_Total_Catching_Efficiency", "5"],
+        ["Blank", "A0", "10", "+{%", "3"],
+        ["Blank", "A0", "10", "+{%", "3"],
+        ["Blank", "A0", "10", "+{%", "3"]
+    ],
+    [
+        ["Plat", "D2", "10", "+{%_Mining_Away_Gains", "2"],
+        ["Dementia", "D1", "10", "+{%_Mining_Speed", "4"],
+        ["Void", "D3", "10", "+{%_Total_Mining_Efficiency", "6"],
+        ["ForgeB", "D16", "10", "+{%_Smithing_EXP_(Passive)", "7"],
+        ["PalmTree", "D7", "10", "+{%_Choppin_Away_Gains", "2"],
+        ["ToiletTree", "D5", "10", "+{%_Choppin_Speed", "4"],
+        ["StumpTree", "D6", "10", "+{%_Total_Accuracy", "3"],
+        ["Fish4", "D11", "10", "+{%_Fishing_Away_Gains", "2"],
+        ["Bug3", "D10", "10", "+{%_Catching_EXP", "5"],
+        ["Bug4", "D9", "10", "+{%_Catching_Away_Gains", "2"],
+        ["SoulCard1", "D17", "3", "+{%_Defence_from_Equipment", "3"],
+        ["SoulCard2", "D18", "3", "+{_Starting_Pts_in_Worship", "4"],
+        ["CritterCard1", "D19", "4", "+{%_Shiny_Critter_Chance", "3"],
+        ["CritterCard2", "D20", "4", "+{%_Trapping_Efficiency", "5"],
+        ["CritterCard3", "D21", "4", "+{%_Trapping_EXP", "5"],
+        ["Blank", "A0", "10", "+{%", "3"]
+    ],
+    [
+        ["sheep", "E0", "11", "+{%_Defence_from_Equipment", "3"],
+        ["flake", "E1", "12", "+{_Base_STR", "7"],
+        ["stache", "E2", "13", "+{%_Card_Drop_Chance", "9"],
+        ["bloque", "E3", "14", "+{_Base_AGI", "7"],
+        ["mamoth", "E4", "15", "+{%_Total_HP", "3.5"],
+        ["snowball", "E5", "15", "+{%_Total_Damage", "3"],
+        ["penguin", "E6", "15", "+{_Base_WIS", "7"],
+        ["thermostat", "E7", "15", "+{%_Critical_Damage", "4"],
+        ["glass", "E8", "17", "+{_Base_LUK", "7"],
+        ["snakeB", "E9", "17", "+{%_MP_regen_rate", "5"],
+        ["speaker", "E10", "17", "+{%_Total_Drop_Rate", "3.5"],
+        ["eye", "E11", "17", "+{%_Total_Accuracy", "5"],
+        ["ram", "E14", "20", "+{_Weapon_Power", "2"],
+        ["skele", "E12", "15", "+{%_Critical_Chance", "1"],
+        ["skele2", "E13", "15", "+{%_Total_Damage", "3"],
+        ["Crystal2", "E15", "10", "+{%_EXP_from_monsters", "3"]
+        ],
+    [
+        ["Lustre", "D4", "10", "+{%_Mining_Speed", "5"],
+        ["Starfire", "F16", "12", "+{%_Mining_EXP", "8"],
+        ["Dreadlo", "F29", "15", "+{%_Mining_Away_Gains", "3"],
+        ["Godshard", "F39", "400", "+{%_Forge_Cap_and_SPD_(Passive)", "30"],
+        ["SaharanFoal", "D8", "10", "+{%_Choppin_Away_Gains", "2.5"],
+        ["Tree7", "F2", "10", "+{%_Choppin_Speed", "6"],
+        ["AlienTree", "F13", "10", "+{%_Total_Choppin_Efficiency", "8"],
+        ["Tree8", "F12", "10", "+{%_Choppin_Speed", "7"],
+        ["Tree9", "F24", "12", "+{%_Choppin_Away_Gains", "3"],
+        ["Tree10", "F25", "15", "+{%_Choppin_Speed", "8"],
+        ["Tree12", "F34", "15", "+{%_Total_Choppin_Efficiency", "10"],
+        ["Tree13", "F35", "15", "+{%_Choppin_Away_Gains", "4"],
+        ["Fish5", "F20", "8", "+{%_Total_Fishing_Efficiency", "8"],
+        ["Fish6", "F21", "10", "+{%_Fishing_Speed", "4"],
+        ["Fish7", "F22", "10", "+{%_Fishing_EXP", "10"],
+        ["Fish8", "F23", "10", "+{%_Fishing_Away_Gains", "3"],
+        ["Bug5", "F8", "10", "+{%_Total_Catching_Efficiency", "7"],
+        ["Bug6", "F9", "10", "+{%_Catching_Away_Gains", "2.5"],
+        ["Bug7", "F14", "10", "+{%_Total_Catching_Efficiency", "8"],
+        ["Bug8", "F15", "10", "+{%_Catching_Speed", "4"],
+        ["Bug9", "F26", "12", "+{%_Total_Catching_Efficiency", "10"],
+        ["Bug10", "F27", "15", "+{%_Catching_Away_Gains", "3"],
+        ["Bug12", "F37", "15", "+{%_Total_Catching_Efficiency", "5"],
+        ["Bug13", "F38", "15", "+{%_Catching_Speed", "5"],
+        ["CritterCard4", "F4", "4", "+{%_Shiny_Critter_Chance", "5"],
+        ["CritterCard5", "F5", "4", "+{%_EXP_from_monsters", "1.25"],
+        ["CritterCard6", "F6", "5", "+{%_Shiny_Critter_Chance", "6"],
+        ["CritterCard7", "F7", "6", "+{%_Skill_AFK_gain_rate", "1"],
+        ["CritterCard8", "F17", "7", "+{%_Trapping_Efficiency", "7"],
+        ["CritterCard9", "F18", "9", "+{%_Trapping_EXP", "8"],
+        ["CritterCard10", "F19", "12", "+{%_Shiny_Critter_Chance", "8"],
+        ["SoulCard3", "F3", "3", "+{_Starting_Pts_in_Worship", "6"],
+        ["SoulCard4", "F10", "4", "+{%_Max_Charge", "7"],
+        ["SoulCard5", "F11", "5", "+{%_Charge_Rate", "5"],
+        ["SoulCard6", "F28", "7", "+{%_Max_Charge", "10"],
+        ["SoulCard7", "F36", "7", "+{%_Charge_Rate", "7"],
+        ["Fish9", "F30", "15", "+{%_Fishing_EXP", "15"],
+        ["Fish10", "F31", "18", "+{%_Total_Fishing_Efficiency", "12"],
+        ["Fish11", "F32", "24", "+{%_Fishing_Away_Gains", "3.5"],
+        ["Fish12", "F33", "30", "+{%_Fishing_Speed", "7"]
+    ],
+    [
+        ["mushP", "G1", "15", "+{%_Money_from_Monsters", "8"],
+        ["w4a2", "G2", "17", "+{%_Breeding_EXP_(Passive)", "5"],
+        ["w4a3", "G3", "18", "+{%_Defence_from_Equipment", "4"],
+        ["demonP", "G4", "19", "+{%_Crystal_Mob_Spawn_Chance", "15"],
+        ["w4b2", "G6", "20", "+{_Star_Talent_Pts_(Passive)", "5"],
+        ["w4b1", "G5", "21", "+{_Base_WIS", "12"],
+        ["w4b3", "G7", "22", "+{%_Lab_EXP_gain", "4"],
+        ["w4b4", "G8", "23", "+{_Weapon_Power", "2.5"],
+        ["w4b5", "G9", "24", "+{_Base_AGI", "12"],
+        ["w4c1", "G10", "26", "+{%_Multikill_per_tier", "1.5"],
+        ["w4c2", "G11", "27", "+{_Base_STR", "12"],
+        ["w4c3", "G12", "28", "+{%_Critical_Chance_(Passive)", "1.5"],
+        ["w4c4", "G13", "30", "+{%_All_Stat", "0.5"],
+        ["Crystal3", "G14", "10", "+{px_Line_Width_(Passive)", "2"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"]
+        ],
+    [
+        ["w5a1", "H1", "25", "+{%_Multikill_per_tier", "2"],
+        ["w5a2", "H2", "28", "+{%_Defence_from_Equipment", "5"],
+        ["w5a3", "H3", "32", "+{%_Total_Drop_Rate", "6"],
+        ["w5a4", "H4", "35", "+{%_Skill_EXP_(Passive)", "5"],
+        ["w5a5", "H5", "45", "+{%_Divinity_EXP_(Passive)", "6"],
+        ["w5b1", "H6", "48", "+{%_Money_from_mobs_(Passive)", "7"],
+        ["w5b2", "H7", "52", "+{_Weapon_Power_(Passive)", "1"],
+        ["w5b3", "H8", "60", "+{%_Total_Damage", "4.5"],
+        ["w5b4", "H9", "65", "+{%_EXP_from_monsters", "4"],
+        ["w5b5", "H10", "70", "+{_Base_LUK", "15"],
+        ["w5b6", "H11", "75", "+{%_Mining_Speed", "6"],
+        ["w5c1", "H12", "80", "+{%_Sailing_Speed_(Passive)", "4"],
+        ["w5c2", "H13", "100", "+{%_All_Stat", "1"],
+        ["caveB", "H15", "5000", "+{%_Villager_EXP_(Passive)", "4"],
+        ["caveC", "H16", "10000", "+{%_Total_Drop_Rate_(Passive)", "4"],
+        ["Crystal4", "H14", "15", "+{%_Skill_Efficncy_(Passive)", "3"]
+    ],
+    [
+        ["w6a1", "I1", "50", "+{%_Total_Damage", "5"],
+        ["w6a2", "I2", "60", "+{%_DEF_from_Equips_(Passive)", "3"],
+        ["w6a3", "I3", "75", "+{%_All_Stat", "1.5"],
+        ["w6a4", "I4", "85", "+{%_Sneaking_EXP_(Passive)", "3"],
+        ["w6a5", "I5", "100", "+{%_Multikill_per_tier", "3"],
+        ["w6b1", "I6", "150", "+{%_Summoning_EXP_(Passive)", "3"],
+        ["w6b2", "I7", "170", "+{%_Farming_EXP_(Passive)", "2"],
+        ["w6b3", "I8", "200", "+{%_Skill_AFK_gain_rate", "2"],
+        ["w6b4", "I9", "250", "+{%_Jade_Coin_gain_(Passive)", "4"],
+        ["w6c1", "I10", "400", "+{%_Cooking_Spd_Multi_(Passive)", "5"],
+        ["w6c2", "I11", "500", "+{_Base_LUK", "20"],
+        ["w6d1", "I12", "900", "+{%_Fighting_AFK_(Passive)", "1"],
+        ["w6d2", "I13", "1300", "+{%_Total_Drop_Rate", "8"],
+        ["w6d3", "I14", "2500", "+{%_All_AFK_Gains(Passive)", "1.5"],
+        ["Crystal5", "I15", "5000", "+{%_Sneaking_Stealth_(Passive)", "4"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"]
+    ],
+    [
+        ["frogP", "X0", "1.5", "+{_Base_Dungeon_MP", "2"],
+        ["frogD", "X1", "2", "+{%_Block_Chance", "2"],
+        ["frogY", "X2", "2", "+{_Base_Dungeon_Damage", "1.5"],
+        ["frogR", "X14", "2", "+{%_Dungeon_Card_Chance", "6"],
+        ["frogW", "X15", "3", "+{%_Dungeon_Credits", "2.5"],
+        ["frogGG", "X22", "5", "{%_to_start_with_RNG_orb_(Passive)", "20"],
+        ["frogGR", "X3", "1.5", "{%_to_start_with_RNG_orb_(Passive)", "15"],
+        ["frogGR2", "X4", "1.5", "+{%_Dungeon_Flurbos", "4"],
+        ["frogGR3", "X5", "1.5", "+{%_Dungeon_Credits", "5"],
+        ["frogGR4", "X21", "1", "+{%_Dungeon_Move_Speed", "7"],
+        ["target", "X6", "2", "+{_Base_Dungeon_HP", "2"],
+        ["rocky", "X7", "2", "+{%_Dungeon_Card_Chance", "8"],
+        ["steakR", "X9", "2", "+{%_Dungeon_Money", "6"],
+        ["totem", "X16", "2", "+{%_RNG_item_rarity", "10"],
+        ["cactus", "X8", "2", "+{%_Dungeon_Boss_Dmg", "3"],
+        ["potatoB", "X10", "5", "+{%_Dungeon_MP_regen", "5"],
+        ["snakeZ", "X11", "1.5", "+{%_Dungeon_Drop_Rate", "4"],
+        ["snakeZ2", "X12", "1.5", "+{%_Total_Dungeon_Dmg", "5"],
+        ["snakeZ3", "X13", "1.5", "+{%_Dungeon_Flurbos", "5"],
+        ["iceknight", "X17", "8", "+{%_Dungeon_MP_regen", "8"],
+        ["iceBossZ", "X18", "2", "+{%_Dungeon_Card_Chance", "15"],
+        ["iceBossZ2", "X19", "1.5", "+{%_Dungeon_Credits", "8"],
+        ["iceBossZ3", "X20", "1.5", "+{%_Total_Dungeon_Dmg", "8"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"]
+    ],
+    [
+        ["slimeB", "Z26", "2", "+{_Weapon_Power", "2"],
+        ["babayaga", "Z0", "1.5", "+{%_Money_from_Monsters", "10"],
+        ["poopBig", "Z1", "1.5", "+{%_Total_Damage", "5"],
+        ["poopD", "A15", "1", "+{%_Fighting_AFK_gain_rate", "1"],
+        ["wolfA", "Z2", "1.5", "+{%_Skill_AFK_gain_rate", "2.5"],
+        ["wolfB", "Z4", "1.5", "+{%_Fighting_AFK_gain_rate", "2.5"],
+        ["wolfC", "Z14", "10", "+{_Weapon_Power", "3"],
+        ["babaHour", "Z5", "1.5", "+{%_Double_AFK_claim_chance", "3"],
+        ["babaMummy", "Z6", "1.5", "+{%_Total_Drop_Rate", "6"],
+        ["Boss2A", "Z3", "1.5", "+{%_EXP_from_monsters", "5"],
+        ["Boss2B", "Z7", "1.5", "+{%_Skill_EXP", "3.75"],
+        ["Boss2C", "Z15", "11", "+{_Star_Talent_Pts_(Passive)", "15"],
+        ["mini3a", "Z12", "5", "+{%_Money_from_Monsters", "12"],
+        ["Boss3A", "Z8", "1.5", "+{%_Cog_Build_Spd_(Passive)", "8"],
+        ["Boss3B", "Z9", "1.5", "+{%_Shrine_Effects_(Passive)", "5"],
+        ["Boss3C", "Z16", "12", "+{%_All_Stat", "1.5"],
+        ["mini4a", "Z13", "5", "+{%_Cooking_EXP_gain", "6"],
+        ["Boss4A", "Z10", "2", "+{%_Kitchen_Speed_(Passive)", "6"],
+        ["Boss4B", "Z11", "2", "+{%_All_Skill_Efficiency", "10"],
+        ["Boss4C", "Z17", "4", "+{%_Total_Damage", "7"],
+        ["mini5a", "Z24", "4", "+{%_Total_Drop_Rate_(Passive)", "1.5"],
+        ["Boss5A", "Z18", "3", "+{%_Sailing_Speed_(Passive)", "6"],
+        ["Boss5B", "Z19", "4", "+{%_EXP_from_monsters", "8"],
+        ["Boss5C", "Z20", "5", "+{%_Money_from_Monsters", "18"],
+        ["mini6a", "Z25", "5", "+{%_Fighting_AFK_gain_rate", "2.5"],
+        ["Boss6A", "Z21", "6", "+{%_Total_Drop_Rate", "12"],
+        ["Boss6B", "Z22", "9", "+{%_Total_Damage_Multi", "8"],
+        ["Boss6C", "Z23", "13", "+{%_Multikill_per_tier", "20"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"]
+        ],
+    [
+        ["ghost", "Y0", "2", "+{%_Monster_EXP_While_Active", "3"],
+        ["xmasEvent", "Y1", "1.5", "+{%_Total_Drop_Rate", "3"],
+        ["xmasEvent2", "Y2", "1.5", "+{%_Money_from_Monsters", "3"],
+        ["slimeR", "Y3", "2", "+{%_Defence_from_Equipment", "3"],
+        ["loveEvent", "Y4", "1.5", "+{%_Total_HP", "5"],
+        ["loveEvent2", "Y5", "1.5", "+{%_Boost_Food_Effect", "4"],
+        ["loveEvent3", "Y15", "1.5", "+{%_EXP_from_monsters", "3"],
+        ["sheepB", "Y6", "3", "+{%_MP_regen_rate", "3"],
+        ["snakeY", "Y7", "3", "+{_Base_LUK", "3"],
+        ["EasterEvent1", "Y8", "1.5", "+{%_Card_Drop_Chance", "1"],
+        ["EasterEvent2", "Y9", "1.5", "+{%_Critical_Damage", "1"],
+        ["shovelY", "Y13", "4", "+{_Base_Defence", "2"],
+        ["crabcakeB", "Y10", "4", "+{%_Total_Drop_Rate", "3"],
+        ["SummerEvent1", "Y11", "8", "+{%_Fishing_Away_Gains", "1"],
+        ["SummerEvent2", "Y12", "8", "+{%_Catching_EXP", "4"],
+        ["xmasEvent3", "Y14", "1", "+{%_Defence_from_Equipment", "3"],
+        ["springEvent1", "Y16", "1", "+{%_Class_EXP_(Passive)", "2"],
+        ["springEvent2", "Y17", "1", "+{%_All_Skill_EXP_(Passive)", "2"],
+        ["fallEvent1", "Y18", "3", "+{_Star_Talent_Pts_(Passive)", "4"],
+        ["anni4Event1", "Y19", "4", "+{%_Drop_Rate_(Passive)", "2"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"]
+    ]
+]
+enemy_coded_names = {
+    "Crystal0": "Crystal Carrot",
+    "acorn": "Nutto",
+    "beanG": "Bored Bean",
+    "branch": "Walking Stick",
+    "carrotO": "Carrotman",
+    "frogBIG": "Gigafrog",
+    "frogG": "Frog",
+    "goblinG": "Glublin",
+    "mushG": "Green Mushroom",
+    "mushR": "Red Mushroom",
+    "mushW": "Wood Mushroom",
+    "plank": "Wode Board",
+    "poopSmall": "Poop",
+    "ratB": "Rat",
+    "slimeG": "Slime",
+    "snakeG": "Baby Boa",
+    "Bandit_Bob": "Bandit Bob",
+    "Crystal1": "Crystal Crabal",
+    "coconut": "Mafioso",
+    "crabcake": "Crabcake",
+    "jarSand": "Sandy Pot",
+    "mimicA": "Mimic",
+    "moonman": "Moonmoon",
+    "pincermin": "Pincermin",
+    "potato": "Mashed Potato",
+    "sandcastle": "Sand Castle",
+    "sandgiant": "Sand Giant",
+    "shovelR": "Dig Doug",
+    "snailZ": "Snelbie",
+    "steak": "Tyson",
+    "BirchTree": "Bleach Logs",
+    "Bug1": "Fly",
+    "Bug2": "Butterfly",
+    "Copper": "Copper Ore",
+    "Fish1": "Goldfish",
+    "Fish2": "Hermit Can",
+    "Fish3": "Jellyfish",
+    "ForestTree": "Forest Fibres",
+    "ForgeA": "Fire Forge",
+    "Gold": "Gold Ore",
+    "Iron": "Iron Ore",
+    "JungleTree": "Jungle Logs",
+    "OakTree": "Oak Logs",
+    "Bug3": "Sentient Cereal",
+    "Bug4": "Fruitfly",
+    "CritterCard1": "Froge",
+    "CritterCard2": "Crabbo",
+    "CritterCard3": "Scorpie",
+    "Dementia": "Dementia Ore",
+    "Fish4": "Bloach",
+    "ForgeB": "Cinder Forge",
+    "PalmTree": "Tropilogs",
+    "Plat": "Platinum Ore",
+    "SoulCard1": "Forest Soul",
+    "SoulCard2": "Dune Soul",
+    "StumpTree": "Veiny Logs",
+    "ToiletTree": "Potty Rolls",
+    "Void": "Void Ore",
+    "Crystal2": "Crystal Cattle",
+    "bloque": "Bloque",
+    "eye": "Neyeptune",
+    "flake": "Frost Flake",
+    "glass": "Quenchie",
+    "mamoth": "Mamooth",
+    "penguin": "Penguin",
+    "ram": "Dedotated Ram",
+    "sheep": "Sheepie",
+    "skele": "Xylobone",
+    "skele2": "Bloodbone",
+    "snakeB": "Cryosnake",
+    "snowball": "Snowman",
+    "speaker": "Bop Box",
+    "stache": "Sir Stache",
+    "thermostat": "Thermister",
+    "AlienTree": "Alien Hive Chunk",
+    "Bug10": "Dust Mote",
+    "Bug12": "Ladybug",
+    "Bug13": "Firefly",
+    "Bug5": "Mosquisnow",
+    "Bug6": "Flycicle",
+    "Bug7": "Worker Bee",
+    "Bug8": "Fairy",
+    "Bug9": "Scarab",
+    "CritterCard10": "Blobfish",
+    "CritterCard4": "Mousey",
+    "CritterCard5": "Owlio",
+    "CritterCard6": "Pingy",
+    "CritterCard7": "Bunny",
+    "CritterCard8": "Dung Beat",
+    "CritterCard9": "Honker",
+    "Dreadlo": "Dreadlo Ore",
+    "Fish10": "Shellfish",
+    "Fish11": "Jumbo Shrimp",
+    "Fish12": "Caulifish",
+    "Fish5": "Skelefish",
+    "Fish6": "Sand Shark",
+    "Fish7": "Manta Ray",
+    "Fish8": "Kraken",
+    "Fish9": "Icefish",
+    "Godshard": "Godshard Ore",
+    "Lustre": "Lustre Ore",
+    "SaharanFoal": "Tundra Logs",
+    "SoulCard3": "Rooted Soul",
+    "SoulCard4": "Frigid Soul",
+    "SoulCard5": "Squishy Soul",
+    "SoulCard6": "Oozie Soul",
+    "SoulCard7": "Breezy Soul",
+    "Starfire": "Starfire Ore",
+    "Tree10": "Dandielogs",
+    "Tree12": "Bamboo Logs",
+    "Tree13": "Effervescent Logs",
+    "Tree7": "Wispy Lumber",
+    "Tree8": "Cubed Logs",
+    "Tree9": "Maple Logs",
+    "Crystal3": "Crystal Custard",
+    "demonP": "Demon Genie",
+    "mushP": "Purp Mushroom",
+    "w4a2": "TV",
+    "w4a3": "Donut",
+    "w4b1": "Flying Worm",
+    "w4b2": "Soda Can",
+    "w4b3": "Gelatinous Cuboid",
+    "w4b4": "Choccie",
+    "w4b5": "Biggole Wurm",
+    "w4c1": "Clammie",
+    "w4c2": "Octodar",
+    "w4c3": "Flombeige",
+    "w4c4": "Stilted Seeker",
+    "Crystal4": "Crystal Capybara",
+    "w5a1": "Suggma",
+    "w5a2": "Maccie",
+    "w5a3": "Mister Brightside",
+    "w5a4": "Cheese Nub",
+    "w5a5": "Stiltmole",
+    "w5b1": "Molti",
+    "w5b2": "Purgatory Stalker",
+    "w5b3": "Citringe",
+    "w5b4": "Lampar",
+    "w5b5": "Fire Spirit",
+    "w5b6": "Biggole Mole",
+    "w5c1": "Crawler",
+    "w5c2": "Tremor Wurm",
+    "caveB": "Gloomie Mushroom",
+    "caveC": "Ancient Golem",
+    "Crystal5": "Crystal Candalight",
+    "w6a1": "Sprout Spirit",
+    "w6a2": "Ricecake",
+    "w6a3": "River Spirit",
+    "w6a4": "Baby Troll",
+    "w6a5": "Woodlin Spirit",
+    "w6b1": "Bamboo Spirit",
+    "w6b2": "Lantern Spirit",
+    "w6b3": "Mama Troll",
+    "w6b4": "Leek Spirit",
+    "w6c1": "Ceramic Spirit",
+    "w6c2": "Skydoggie Spirit",
+    "w6d1": "Royal Egg",
+    "w6d2": "Minichief Spirit",
+    "w6d3": "Samurai Guardian",
+    "cactus": "Cactopunk",
+    "frogD": "Globohopper",
+    "frogGG": "Eldritch Croaker",
+    "frogGR": "Grandfrogger",
+    "frogGR2": "Rotting Grandfrogger",
+    "frogGR3": "Forlorn Grandfrogger",
+    "frogGR4": "Vengeful Grandfrogger",
+    "frogP": "Poisonic Frog",
+    "frogR": "Lava Slimer",
+    "frogW": "Chromatium Frog",
+    "frogY": "King Frog",
+    "iceBossZ": "Glaciaxus",
+    "iceBossZ2": "Golden Glaciaxus",
+    "iceBossZ3": "Caustic Glaciaxus",
+    "iceknight": "Ice Guard",
+    "potatoB": "Crescent Spud",
+    "rocky": "Grumblo",
+    "snakeZ": "Snakenhotep",
+    "snakeZ2": "Enraged Snakenhotep",
+    "snakeZ3": "Inevitable Snakenhotep",
+    "steakR": "Beefie",
+    "target": "Target",
+    "totem": "Lazlo",
+    "Boss2A": "Efaunt",
+    "Boss2B": "Chaotic Efaunt",
+    "Boss2C": "Gilded Efaunt",
+    "Boss3A": "Chizoar",
+    "Boss3B": "Chaotic Chizoar",
+    "Boss3C": "Blighted Chizoar",
+    "Boss4A": "Massive Troll",
+    "Boss4B": "Chaotic Troll",
+    "Boss4C": "Blitzkrieg Troll",
+    "Boss5A": "Kattlekruk",
+    "Boss5B": "Chaotic Kattlekruk",
+    "Boss5C": "Sacrilegious Kattlekruk",
+    "Boss6A": "Emperor",
+    "Boss6B": "Chaotic Emperor",
+    "Boss6C": "Sovereign Emperor",
+    "babaHour": "Biggie Hours",
+    "babaMummy": "King Doot",
+    "babayaga": "Baba Yaga",
+    "mini3a": "Dilapidated Slush",
+    "mini4a": "Mutated Mush",
+    "poopBig": "Dr Defecaus",
+    "poopD": "Boop",
+    "wolfA": "Amarok",
+    "wolfB": "Chaotic Amarok",
+    "wolfC": "Radiant Amarok",
+    "mini5a": "Domeo Magmus",
+    "mini6a": "Demented Spiritlord",
+    "slimeB": "Glunko The Massive",
+    "EasterEvent1": "Egggulyte",
+    "EasterEvent2": "Egg Capsule",
+    "SummerEvent1": "Coastiolyte",
+    "SummerEvent2": "Summer Spirit",
+    "crabcakeB": "Mr Blueberry",
+    "fallEvent1": "Falloween Pumpkin",
+    "ghost": "Ghost (Event)",
+    "loveEvent": "Loveulyte",
+    "loveEvent2": "Chocco Box",
+    "loveEvent3": "Giant Rose",
+    "sheepB": "Floofie",
+    "shovelY": "Plasti Doug",
+    "slimeR": "Valentslime",
+    "snakeY": "Shell Snake",
+    "springEvent1": "Bubbulyte",
+    "springEvent2": "Spring Splendor",
+    "xmasEvent": "Giftmas Blobulyte",
+    "xmasEvent2": "Meaning of Giftmas",
+    "xmasEvent3": "Golden Giftmas Box",
+    "anni4Event1": "IdleOn Fourth Anniversary",
+}
 card_data = {
     "Blunder Hills": {
         "Crystal0": ["Crystal Carrot", 3],
@@ -2503,8 +3018,8 @@ humanReadableClasses = {
     21: "Hunter",
     22: "Siege Breaker",
     23: "Mayheim",
-    24: "Wind Walker",
     25: "Beast Master",
+    29: 'Wind Walker',
     30: "Savvy Basics",
     31: "Mage",
     32: "Wizard",
@@ -2616,6 +3131,7 @@ expectedStorageChestValuesDict = {
     105:16,
     106:16
 }
+currentMaxUsableInventorySlots = 96  #As of v2.35 4th Anniversary
 gemShopDict = {
     # Inventory and Storage
     'Item Backpack Space': 55,
@@ -2697,6 +3213,7 @@ gem_shop_optlacc_dict = {
     'Dragonic Liquid Cauldron': [123, 4],
     'Equinox Pingy': [320, infinity_string],
     'Rupie Slug': [355, infinity_string],
+    'Exalted Stamps': [366, infinity_string]
 }
 guildBonusesList = [
     "Guild Gifts", "Stat Runes", "Rucksack", "Power of Pow", "REM Fighting", "Make or Break",
@@ -3367,11 +3884,15 @@ expected_talentsDict = {
         325, 326, 327, 328, 374
     ],
     #"Mayheim": [],
-    #"Wind Walker": [],
     "Beast Master": [
         315, 361, 362, 363, 364,
         365, 366, 367, 368, 144,
         370, 371, 372, 373, 374
+    ],
+    "Wind Walker": [
+        420, 421, 422, 423, 424,
+        425, 426, 427, 428, 429,
+        430, 431, 432, 433, 434
     ],
 
     "Mage": [
@@ -3551,6 +4072,7 @@ skill_talentsDict = {
         },
         "Medium": {
             99: {"Name": "Haungry for Gold", "Tab": "Tab 2"},
+            203: {'Name': 'Built Different', 'Tab': 'Tab 5'},
             143: {"Name": "Overblown Testosterone", "Tab": "Tab 4"},
             96: {"Name": "'STR'ess Tested Garb", "Tab": "Tab 2"},
             94: {"Name": "Firmly Grasp It", "Tab": "Tab 2"},
@@ -3618,6 +4140,7 @@ skill_talentsDict = {
             298: {"Name": "Sunset on the Hives", "Tab": "Tab 3"},
             368: {"Name": "Adaptation Revelation", "Tab": "Tab 4"},
             276: {"Name": "Garb of Un'AGI'ng Quality", "Tab": "Tab 2"},
+            428: {'Name': 'Unreal Agility', 'Tab': 'Tab 5'},
             278: {"Name": "Sanic Speed", "Tab": "Tab 2"},
             293: {"Name": "Agi Again", "Tab": "Tab 3"},
         },
@@ -3649,6 +4172,7 @@ skill_talentsDict = {
         "Medium": {
             368: {"Name": "Adaptation Revelation", "Tab": "Tab 4"},
             276: {"Name": "Garb of Un'AGI'ng Quality", "Tab": "Tab 2"},
+            428: {'Name': 'Unreal Agility', 'Tab': 'Tab 5'},
             278: {"Name": "Sanic Speed", "Tab": "Tab 2"},
             293: {"Name": "Agi Again", "Tab": "Tab 3"},
         },
@@ -3668,6 +4192,15 @@ skill_talentsDict = {
         "Low": {
             372: {"Name": "Shining Beacon of Egg", "Tab": "Tab 4"},  # Account-wide EXP bumped to Low
         },
+    },
+    'Sneaking': {
+        'High': {
+            432: {'Name': 'Generational Gemstones', 'Tab': 'Tab 5'},
+            430: {'Name': 'Price Recession', 'Tab': 'Tab 5'},
+        },
+        'Medium': {
+            431: {'Name': 'Sneaky Skilling', 'Tab': 'Tab 5'},  #Account-wide EXP bumped to Medium
+        }
     },
     # Utility is talents that apply to multiple skills at a bottom-of-the-group priority (Mostly Jman stuff + Drop Rate)
     "Utility": {
@@ -3931,6 +4464,40 @@ combat_talentsDict = {
         "Low": {
             268: {"Name": "Idle Shooting", "Tab": "Tab 1"},
             5: {"Name": "Sharpened Axe", "Tab": "Tab 1"},
+        },
+    },
+    'Wind Walker': {
+        "High": {
+            424: {'Name': 'Some Commandments', 'Tab': 'Tab 5'},
+            422: {'Name': 'Spirit Ballista', 'Tab': 'Tab 5'},
+            423: {'Name': 'Eternal Hunt', 'Tab': 'Tab 5'},
+            421: {'Name': 'Compass', 'Tab': 'Tab 5'},
+            425: {'Name': 'Windborne', 'Tab': 'Tab 5'},
+            426: {'Name': 'Elemental Mayhem', 'Tab': 'Tab 5'},
+            362: {"Name": "Whale Wallop", "Tab": "Tab 4", 'Optimal': [0, 17, True]},
+            301: {"Name": "Bear Trap", "Tab": "Tab 3", 'Optimal': [0, 30, True]},
+            300: {"Name": "Three-Sixty Noscope", "Tab": "Tab 3",},
+            270: {"Name": "Piercing Arrow", "Tab": "Tab 2", 'Optimal': [0, 40, True]},
+            361: {"Name": "Boar Rush", "Tab": "Tab 4", 'Optimal': [0, 20, True]},
+        },
+        "Medium": {
+            363: {"Name": "Nacho Party", "Tab": "Tab 4", 'Optimal': [0, 13, True]},
+            305: {"Name": "Looty Mc Shooty", "Tab": "Tab 3"},
+            273: {"Name": "Strafe", "Tab": "Tab 2"},
+            284: {"Name": "Veins of the Infernal", "Tab": "Tab 2"},
+            277: {"Name": "High Polymer Limbs", "Tab": "Tab 2"},
+            6: {"Name": "Gilded Sword", "Tab": "Tab 1"},
+        },
+        "Low": {
+            433: {'Name': 'Dustwalker', 'Tab': 'Tab 5'},
+            434: {'Name': 'Slayer Abominator', 'Tab': 'Tab 5'},
+            427: {'Name': "Pumpin' Power", 'Tab': 'Tab 5'},
+            420: {'Name': 'Tempest Form', 'Tab': 'Tab 5'},
+            428: {'Name': 'Shiny Medallions', 'Tab': 'Tab 5'},
+            268: {"Name": "Idle Shooting", "Tab": "Tab 1"},
+            5: {"Name": "Sharpened Axe", "Tab": "Tab 1"},
+            366: {"Name": "Stacked Skulls", "Tab": "Tab 4"},
+            365: {"Name": "Animalistic Ferocity", "Tab": "Tab 4"},
         },
     },
     "Beast Master": {
@@ -4427,6 +4994,12 @@ for stampType in stampsDict:
                 remaining_stamps.append(stamp['Name'])
 stamps_progressionTiers[max(stamps_progressionTiers)-1]['Stamps']['Specific'] = {stamp: stamp_maxes[stamp] for stamp in ordered_tiers_stamps}
 stamps_progressionTiers[max(stamps_progressionTiers)]['Stamps']['Specific'] = {stamp: stamp_maxes[stamp] for stamp in remaining_stamps}
+stamps_exalt_recommendations = [
+    'Crystallin', 'Mason Jar Stamp', 'Summoner Stone Stamp', 'Multitool Stamp',
+    'Matty Bag Stamp', 'Golden Sixes Stamp', 'Drippy Drop Stamp', 'Gold Ball Stamp',
+    'Refinery Stamp', 'Bugsack Stamp', 'Bag o Heads Stamp', "Lil' Mining Baggy Stamp", "Choppin' Bag Stamp",
+    'Card Stamp', 'Divine Stamp', 'Golden Apple Stamp', 'Vendor Stamp', 'Study Hall Stamp', 'Cavern Resource Stamp',
+]
 
 starsignsDict = {
     1: {'Name': "The Buff Guy", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
@@ -5349,13 +5922,14 @@ buildingsDict = {
     16: {'Name': 'Poisonic Elder', 'Image': 'poisonic-elder', 'BaseMaxLevel': 50, 'Type': 'Tower'},
     17: {'Name': 'Voidinator', 'Image': 'voidinator', 'BaseMaxLevel': 50, 'Type': 'Tower'},
     #Shrines
+    # ShrineInfo = function ()
     18: {'Name': 'Woodular Shrine', 'Image': 'woodular-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine', 'ValueBase': 12, 'ValueIncrement': 3},
     19: {'Name': 'Isaccian Shrine', 'Image': 'isaccian-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine', 'ValueBase': 12, 'ValueIncrement': 3},
     20: {'Name': 'Crystal Shrine', 'Image': 'crystal-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine', 'ValueBase': 20, 'ValueIncrement': 4},
     21: {'Name': 'Pantheon Shrine', 'Image': 'pantheon-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine', 'ValueBase': 10, 'ValueIncrement': 2},
     22: {'Name': 'Clover Shrine', 'Image': 'clover-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine', 'ValueBase': 15, 'ValueIncrement': 3},
     23: {'Name': 'Summereading Shrine', 'Image': 'summereading-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine', 'ValueBase': 6, 'ValueIncrement': 1},
-    24: {'Name': 'Crescent Shrine', 'Image': 'crescent-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine', 'ValueBase': 50, 'ValueIncrement': 10},
+    24: {'Name': 'Crescent Shrine', 'Image': 'crescent-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine', 'ValueBase': 50, 'ValueIncrement': 7.5},  #Nerfed in v2.35 WW from 10 to 7.5
     25: {'Name': 'Undead Shrine', 'Image': 'undead-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine', 'ValueBase': 5, 'ValueIncrement': 1},
     26: {'Name': 'Primordial Shrine', 'Image': 'primordial-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine', 'ValueBase': 1, 'ValueIncrement': 0.1},
 }
@@ -5375,12 +5949,14 @@ atomsList: list[list] = [
     ["Lithium - Bubble Insta Expander", 10, 1.25, 25, 1, "No Bubble Left Behind bonus now has a 15% chance to level up the lowest bubble out of ALL bubbles, not just the first 15 of each colour. Also, +{% chance to give +1 additional Lv."],
     ["Beryllium - Post Office Penner", 20, 1.26, 75, 7, "Every day, 1 silver pen from your Post Office will instantly convert into 1 PO Box for all characters. This conversion happens { times per day."],
     ["Boron - Particle Upgrader", 70, 1.37, 175, 2, "When a bubble has a cost of 100M or more to upgrade, you can instead spend particles. However, you can only do this { times a day, after which the cost will return to resources."],
-    ["Carbon - Wizard Maximizer", 250, 1.27, 500, 2, "All wizard towers in construction get +{ max levels. Also, all wizards get a +2% damage bonus for each wizard tower level above 50 in construction. Total bonus: }% wizard dmg."],
+    ["Carbon - Wizard Maximizer", 250, 1.27, 500, 2, "All wizard towers in construction get +{ max levels. Also, all wizards get a +2% damage bonus for each wizard tower level above 50 in construction."],
     ["Nitrogen - Construction Trimmer", 500, 1.25, 1000, 15, "Gold trimmed construction slots give +{% more build rate than before. Also, you now have 1 additional trimmed slot."],
-    ["Oxygen - Library Booker", 2000, 1.24, 3250, 2, "Increases the Checkout Refresh Speed of the Talent Library by +{%. Also, the Minimum Talent LV is increased by +<, and the Maximum Talent LV is increased by +10."],
-    ["Fluoride - Void Plate Chef", 12000, 1.23, 10000, 1, "Multiplies your cooking speed by +{% for every meal at Lv 30+. In other words, every plate with a studded black void plate. Total bonus: >% cooking speed"],
+    ["Oxygen - Library Booker", 2000, 1.24, 3250, 2, "Increases the Checkout Refresh Speed of the Talent Library by +{%. Also, the Maximum Talent LV is increased by +10."],
+    ["Fluoride - Void Plate Chef", 12000, 1.23, 10000, 1, "Multiplies your cooking speed by +{% for every meal at Lv 30+. In other words, every meal with a studded black void plate."],
     ["Neon - Damage N' Cheapener", 40000, 1.22, 40000, 1, "Increases your total damage by +{%. Also, reduces the cost of all atom upgrades by {% too."],
     ["Sodium - Snail Kryptonite", 50000, 2, 50000, 5, "When you fail a snail upgrade, it's LV gets reset to the nearest 5 (Up to Lv {) instead of back to 0, like failing at Lv 7 will reset to Lv 5."],
+    ['Magnesium - Trap Compounder', 30000, 1.6, 30000, 1, 'Every day, critters gained from traps increases by +{%. This bonus is capped at 60 days, and resets back to +0% when a new trap is placed.'],
+    ['Aluminium - Stamp Supercharger', 200000, 1.3, 200000, 2, 'Stamp Doublers give an extra +{% MORE bonus than the normal +100% they give!']
 ]
 colliderStorageLimitList = [15, 25, 100, 250, 1050]
 prayersList: list[str] = [
@@ -7402,17 +7978,85 @@ pristineCharmsList: list = [
     {'Name': 'Lolly Flower', 'Image': 'lolly-flower', 'Bonus': '+25% Printer Output'},
     {'Name': 'Gumball Necklace', 'Image': 'gumball-necklace', 'Bonus': '1.40x Money from Monsters'},
     {'Name': 'Liqorice Rolle', 'Image': 'liqorice-rolle', 'Bonus': '1.25x Bigger Bonuses of Non Misc Stamps'},
+    {'Name': 'Glimmerchain', 'Image': 'glimmerchain', 'Bonus': '1.30x Extra Death Bringer Bones'},
+    {'Name': 'Twinkle Taffy', 'Image': 'twinkle-taffy', 'Bonus': '1.30x Extra Wind Walker Dust'},
+    {'Name': 'Jellypick', 'Image': 'jellypick', 'Bonus': '+20% Exalted Stamp bonus'},
+    {'Name': 'Candy Cache', 'Image': 'candy-cache', 'Bonus': '1.40x Villager EXP'},
+    {'Name': 'Mystery Fizz', 'Image': 'mystery-fizz', 'Bonus': '1.30x Extra 3rd Master Class resource'}
 ]
-sneakingGemstonesList: list[str] = [
-    "Aquamarine", "Emerald", "Garnet", "Starite", "Topaz", "Moissanite"
-]
-sneakingGemstonesStatList: list[str] = [
-    "Stealth", "Jade", "Door Damage", "Gold Charm Bonus", "Sneak EXP", "Gemstone Bonuses"
-]
-sneakingGemstonesFirstIndex = 233
-sneakingGemstonesCount = len(sneakingGemstonesList)
-sneakingGemstonesBaseValueDict = {"Aquamarine": 40, "Emerald": 15, "Garnet": 12, "Starite": 5, "Topaz": 10, "Moissanite": 3}
-sneakingGemstonesMaxValueDict = {"Aquamarine": 10040, "Emerald": 5015, "Garnet": 2512, "Starite": 205, "Topaz": 1010, "Moissanite": 303}
+sneaking_gemstones_all_values = {
+    #NjGem0 = "4 130 Aquamarine 40 Hold_down_to_add_this_Gemstone_to_your_collection._View_collection_and_bonuses_in_Ninja_Knowledge. 10000".split(" ")
+    #Gem Index = digit at NjGem, 0 in this example
+    #[2] = name
+    #[3] = Base Value
+    #[5] = Max Value
+    #Add [3] and [5] for Max Value
+    'Aquamarine': {
+        'Stat': 'Stealth',
+        'Base Value': 40,
+        'Scaling Value': 10000,
+        'Max Value': 10040,
+        'Gem Index': 0,
+        'OptlAcc Index': 233+0
+    },
+    'Malachite': {
+        'Stat': 'Jade',
+        'Base Value': 15,
+        'Scaling Value': 5000,
+        'Max Value': 5015,
+        'Gem Index': 1,
+        'OptlAcc Index': 233+1
+    },
+    'Garnet': {
+        'Stat': 'Door Damage',
+        'Base Value': 12,
+        'Scaling Value': 2500,
+        'Max Value': 2512,
+        'Gem Index': 2,
+        'OptlAcc Index': 233+2
+    },
+    'Starite': {
+        'Stat': 'Gold Charm Bonus',
+        'Base Value': 5,
+        'Scaling Value': 200,
+        'Max Value': 205,
+        'Gem Index': 3,
+        'OptlAcc Index': 233+3
+    },
+    'Topaz': {
+        'Stat': 'Sneak EXP',
+        'Base Value': 10,
+        'Scaling Value': 1000,
+        'Max Value': 1010,
+        'Gem Index': 4,
+        'OptlAcc Index': 233+4
+    },
+    'Moissanite': {
+        'Stat': 'Gemstone Bonuses',
+        'Base Value': 3,
+        'Scaling Value': 300,
+        'Max Value': 303,
+        'Gem Index': 5,
+        'OptlAcc Index': 233+5
+    },
+    'Emerald': {
+        'Stat': 'Cheaper Upgrades',
+        'Base Value': 1,
+        'Scaling Value': 2500,
+        'Max Value': 2501,
+        'Gem Index': 6,
+        'OptlAcc Index': 233+6
+    },
+    'Firefrost': {
+        'Stat': 'Max Charm levels',
+        'Base Value': 1,
+        'Scaling Value': 30,
+        'Max Value': 31,
+        'Gem Index': 7,
+        'OptlAcc Index': 233+7
+    },
+}
+
 maxFarmingCrops = 230  # Last verified as of 2.26 Death Bringer
 maxFarmingValue = 10000  # Last verified as of 2.21 The Fixening
 landrankDict = {
@@ -7844,43 +8488,43 @@ def getRequiredCropNumber(upgrade, target_level):
     return result_number
 
 def getMoissaniteValue(moissaniteLevel: int):
+    value = 0
     try:
         if moissaniteLevel > 0:
-            return 3 + (300 * (moissaniteLevel / (moissaniteLevel+1000)))
-        else:
-            return 0
+            value = (
+                sneaking_gemstones_all_values['Moissanite']['Base Value']
+                + (sneaking_gemstones_all_values['Moissanite']['Scaling Value'] * (moissaniteLevel / (moissaniteLevel+1000)))
+            )
+        return value
     except:
-        return 0
+        return value
 
-def getGemstoneBoostedValue(gemstoneValue: float, moissaniteValue: float):
-    if moissaniteValue > 0:
-        moissaniteMulti = 1 + (moissaniteValue / 100)
-        boostedValue = gemstoneValue * moissaniteMulti
+def getGemstoneBoostedValue(gemstone_value: float, moissanite_value: float, talent_level: int):
+    if moissanite_value > 0:
+        moissanite_multi = ValueToMulti(moissanite_value)
+        talent_level_multi = lavaFunc('decayMulti', max(0, talent_level), 3, 300)
+        boostedValue = gemstone_value * moissanite_multi * talent_level_multi
         return boostedValue
     else:
-        return gemstoneValue
+        return gemstone_value
 
 def getGemstoneBaseValue(gemstoneName: str, gemstoneLevel: int):
     value = 0
     if gemstoneLevel > 0:
-        if gemstoneName in sneakingGemstonesBaseValueDict:
+        if gemstoneName in sneaking_gemstones_all_values:
             value = (
-                sneakingGemstonesBaseValueDict[gemstoneName]
-                + (
-                    (sneakingGemstonesMaxValueDict[gemstoneName] - sneakingGemstonesBaseValueDict[gemstoneName])
-                    * (gemstoneLevel / (gemstoneLevel + 1000))
-                )
+                sneaking_gemstones_all_values[gemstoneName]['Base Value']
+                + (sneaking_gemstones_all_values[gemstoneName]['Scaling Value'] * (gemstoneLevel / (gemstoneLevel + 1000)))
             )
         else:
             logger.warning(f"Unrecognized gemstoneName: '{gemstoneName}'. Returning default 0 value")
-            value = 0
     return value
 
-def getGemstonePercent(gemstoneName: str, gemstoneValue: float):
+def getGemstonePercent(gemstone_name: str, gemstone_value: float):
     try:
-        return 100 * (gemstoneValue / sneakingGemstonesMaxValueDict[gemstoneName])
+        return 100 * (gemstone_value / sneaking_gemstones_all_values[gemstone_name]['Max Value'])
     except Exception as reason:
-        logger.exception(f"Could not find max value for Gemstone: {gemstoneName} because: {reason}")
+        logger.exception(f"Could not find max value for Gemstone {gemstone_name} given value {gemstone_value} because: {reason}")
     pass
 
 
@@ -8350,6 +8994,7 @@ summoningBattleCountsDict = {k: len(v) for k, v in summoningDict.items()}
 summoningBattleCountsDict['Normal'] = sum(summoningBattleCountsDict.values())
 
 ###Master Classes###
+
 # Last pulled from GrimoireUpg function in v2.26
 grimoire_upgrades_list = ["Wraith_Damage_製_(Tap_for_more_info) 8 1.10 0 999999 1 0 0 0 +{_Base_Damage_in_Wraith_Form".split(" "), "Wraith_Accuracy 8 1.04 0 999999 1 1 0 0 +{_Base_Accuracy_in_Wraith_Form".split(" "), "Wraith_Defence 9 1.10 0 999999 1 5 0 0 +{_Base_Defence_in_Wraith_Form".split(" "), "Wraith_Health 10 1.07 0 999999 1 10 0 0 +{_Base_HP_in_Wraith_Form".split(" "), "Ribbon_Shelf 1000 1.30 0 1 1 25 0 0 Unlocks_Ribbons_for_Meals,_found_at_Le_Menu_in_W4".split(" "), "Ribbon_Winning_製 50 1.60 0 50 1 26 0 0 Get_+1_Daily_Ribbon,_+{%_chance_for_rare_quality".split(" "), "Wraith_Damage_II 25 1.11 0 999999 3 80 0 0 +{_Base_Damage_in_Wraith_Form".split(" "), "Wraith_of_all_Trades 50 1.18 0 999999 1 125 0 0 +{%_Accuracy,_Defence,_and_HP_in_Wraith_Form".split(" "), "Wraith_Destruction 70 1.15 0 999999 1 155 0 0 +{%_Total_Damage_in_Wraith_Form".split(" "), "Land_Rank_Database_Maxim 100 10 0 10 1 190 0 0 +{_Max_LV_for_5th_column_Land_Rank_upgrades".split(" "), "Wraith_Crits 150 1.25 0 40 1 220 0 0 +{%_Crit_Chance_in_Wraith_Form".split(" "), "Pure_Opals 1500 1.8 1 25 1 255 0 0 +{_Opals_to_give_to_your_Villagers_in_World_5".split(" "), "Wraith_Accuracy_II 200 1.06 0 999999 3 290 0 0 +{_Base_Accuracy_in_Wraith_Form".split(" "), "Knockout!_(#)_製 450 1.45 1 999999 1 330 0 0 +{%_Wraith_DMG_per_KO!_Target:$".split(" "), "Sacrifice_of_Harvest 300 1.04 0 999999 5 380 0 0 }x_higher_Crop_Evo_chance".split(" "), "Wraith_Defence_II 500 1.12 1 999999 1 425 0 0 +{_Base_Defence_in_Wraith_Form".split(" "), "Wraith_Damage_III 750 1.12 1 999999 15 470 0 0 +{_Base_Damage_in_Wraith_Form".split(" "), "Grey_Tome_Book 2000 1.25 1 150 1 500 0 0 }x_higher_bonuses_from_the_Tome".split(" "), "Femur_Hoarding 3500 1.15 1 999999 2 550 0 0 +{%_Wraith_DMG_per_POW_10_Femurs_owned".split(" "), "Wraith_Health_II 4000 1.07 1 999999 2 650 0 0 +{_Base_HP_in_Wraith_Form".split(" "), "Wraith_Strikeforce 5800 1.15 1 999999 2 770 0 0 +{%_Crit_DMG_in_Wraith_Form".split(" "), "Elimination!_(#)_製 6250 1.45 1 999999 1 900 0 0 +{%_Wraith_DMG_per_elim!_Target:$".split(" "), "Superior_Crop_Research 7500 1.25 0 200 1 1050 0 0 }x_higher_bonuses_from_the_Crop_Scientist".split(" "), "Bones_o'_Plenty 8000 1.20 1 999999 2 1250 0 0 +{%_Extra_Bones".split(" "), "Skull_of_Major_Experience_製 8500 1.03 1 999999 8 1475 0 0 +{%_Class_EXP_bonus_for_all_characters,_always!".split(" "), "Wraith_Accuracy_III 10500 1.07 2 999999 5 1700 0 0 +{_Base_Accuracy_in_Wraith_Form".split(" "), "Supreme_Head_Chef_Status 11000 1.40 1 20 1 1900 0 0 +{_Max_LV_for_all_Meals._Go_max_them!".split(" "), "Ribcage_Hoarding 12000 1.20 0 999999 1 2150 0 0 +{%_Wraith_DEF_per_POW_10_Ribcages_owned".split(" "), "Wraith_Destruction_II 13900 1.17 1 999999 3 2300 0 0 +{%_Total_Damage_in_Wraith_Form".split(" "), "Villager_Extraciricular 15000 1.15 2 999999 1 2500 0 0 }x_Villager_EXP_gain_in_World_5".split(" "), "Wraith_Defence_III 14500 1.11 2 999999 2 2800 0 0 +{_Base_Defence_in_Wraith_Form".split(" "), "Annihilation!_(#)_製 16500 1.55 2 999999 1 2900 0 0 +{%_Wraith_DMG_per_stack!_Target:$".split(" "), "Talents_for_Me,_not_for_Thee 18000 1.10 2 200 1 3150 0 0 +{_Talent_PTS_for_the_Death_Bringer_class_only".split(" "), "Wraith_Damage_IV 19750 1.13 2 999999 50 3300 0 0 +{_Base_Damage_in_Wraith_Form".split(" "), "Wraith_Health_III 21500 1.07 2 999999 3 3500 0 0 +{_Base_HP_in_Wraith_Form".split(" "), "Skull_of_Major_Damage_製 23000 1.04 2 999999 3 3750 0 0 +{%_Total_DMG_bonus_for_all_characters,_always!".split(" "), "Writhing_Grimoire 27000 1.20 1 50 1 4100 0 0 }x_higher_bonuses_from_most_Grimoire_upgrades".split(" "), "Wraith_Accuracy_IV 34000 1.08 2 999999 5 4200 0 0 +{_Base_Accuracy_in_Wraith_Form".split(" "), "Wraith_of_all_Trades_II 42000 1.06 3 999999 1 4500 0 0 +{%_Accuracy,_Defence,_and_HP_in_Wraith_Form".split(" "), "Skull_of_Major_Talent_製 50000 1.65 3 30 1 4600 0 0 +{_Talent_LVs_for_all_characters,_always!".split(" "), "Wraith_Defence_IV 57000 1.13 3 999999 3 4800 0 0 +{_Base_Defence_in_Wraith_Form".split(" "), "Cranium_Hoarding 63000 1.07 3 999999 1 5000 0 0 +{%_Wraith_Accuracy_per_POW_10_Craniums_owned".split(" "), "Wraith_Health_IV 75000 1.09 3 999999 5 5200 0 0 +{_Base_HP_in_Wraith_Form".split(" "), "Wraith_Destruction_III 85000 1.17 3 999999 5 5400 0 0 +{%_Total_Damage_in_Wraith_form".split(" "), "Skull_of_Major_Droprate_製 100000 1.08 3 999999 1 5600 0 0 +{%_Drop_Rate_bonus_for_all_characters,_always!".split(" "), "Ok_fine,_Talents_for_Thee_too 120000 1.15 3 999999 1 5850 0 0 +{_Talent_PTS_for_all_other_Master_Classes".split(" "), "Wraith_Damage_V 150000 1.15 2 999999 1 6200 0 0 +{_Base_Damage_in_Wraith_Form".split(" "), "Wraith_Accuracy_V 200000 1.10 2 999999 1 6500 0 0 +{_Base_Accuracy_in_Wraith_Form".split(" "), "Bovinae_Hoarding 300000 1.35 2 999999 1 6800 0 0 +{%_Extra_Bones_per_POW_10_Bovinae_owned".split(" "), "Wraith_Defence_V 500000 1.15 3 999999 1 7100 0 0 +{_Base_Defence_in_Wraith_Form".split(" "), "Wraith_Destruction_IV 600000 1.18 3 999999 8 7200 0 0 +{%_Total_Damage_in_Wraith_Form".split(" "), "Death_of_the_Atom_Price 750000 1.15 3 999999 1 7500 0 0 All_Atoms_are_+{%_cheaper_to_upgrade".split(" "), "Ripped_Page 1999999999 99999 1 1 1 7600 0 0 These_pages_are_missing...".split(" "), "Ripped_Page 1999999999 99999 1 1 1 7700 0 0 These_pages_are_missing...".split(" "), "Ripped_Page 1999999999 99999 1 1 1 7800 0 0 These_pages_are_missing...".split(" ")]
 grimoire_dont_scale = [9, 11, 26, 36, 39, 17, 32, 45]  # Pulled from the start of GrimoireUpgBonus under _customBlock_Summoning in v2.27
@@ -8359,6 +9004,24 @@ grimoire_stack_types = ['Knockout', 'Elimination', 'Annihiliation']
 # Last pulled from RANDOlist[140] function in v2.26
 grimoire_coded_stack_monster_order = "mushG frogG beanG slimeG snakeG carrotO goblinG plank frogBIG branch acorn jarSand mimicA crabcake coconut sandcastle pincermin poopSmall ratB potato steak moonman sandgiant snailZ sheep flake stache bloque mamoth snowball penguin thermostat glass snakeB speaker eye ram mushP w4a2 w4a3 demonP w4b2 w4b1 w4b3 w4b4 w4b5 w4c1 w4c2 w4c3 w4c4 w5a1 w5a2 w5a3 w5a4 w5a5 w5b1 w5b2 w5b3 w5b4 w5b5 w5b6 w5c1 w5c2 w5b6 w6a1 w6a2 w6a3 w6a4 w6a5 w6b1 w6b2 w6b3 w6b4 w6c1 w6c2 w6d1 w6d2 w6d3".split(" ")
 
+# Last pulled from CompassUpg function in v2.35
+compass_upgrades_list = ["Pathfinder 2 1.10 0 1 1 0 693 540 0 0 You_can_open_portals_using_dust_dropped_by_mobs,_simply_hold_down_on_a_portal_for_2_seconds!".split(" "), "Elemental_Path 30 3.10 0 24 1 0 581 470 0 0 Unlocks_a_new_Elemental_upgrade,_right_here_in_The_Compass!".split(" "), "Elemental_Vision 8 1.10 0 1 1 0 525 377 0 0 You_can_now_see_the_elemental_weakness_of_abominations,_as_well_as_mobs_in_AFK_Info._Your_current_element_is_$".split(" "), "Weapon_Drop 14 1.10 0 1 1 0 443 444 0 0 Certain_mobs_can_now_drop_Tempest_Weapons_at_a_1_in_$_chance._Check_AFK_Info_to_see_what_Tempest_Items_can_be_found!".split(" "), "Stone_Drop 20 1.10 0 1 1 0 406 347 0 0 All_mobs_can_now_drop_Tempest_Upgrade_Stones,_at_a_1_in_$_chance".split(" "), "Medallion_Collection 50 1.10 0 1 1 0 297 385 0 0 All_mobs_can_now_drop_their_very_own_commemorative_Medallion!_They_have_a_1_in_$_chance_of_dropping,_and_only_while_in_Tempest_Form!".split(" "), "Medallion_Magnate 8 28.0 1 999999 2 0 205 438 0 0 Medallions_now_show_up_visually_next_to_the_monster's_name_in_its_Card_Info._@_Also,_+{%_Tempest_Damage_AND_Accuracy_per_Medallion_collected.".split(" "), "The_Luck_Factor 8 9.60 1 25 1 0 127 349 0 0 Boosts_the_drop_chance_of_ALL_Tempest_items,_including_medallions,_by_{%_of_your_normal_Drop_Rarity._@_Total_Bonus:_+$%_Tempest_Drop_Rate".split(" "), "Elemental_Destruction 8 1.60 0 50 2 0 268 265 0 0 All_elemental_damage_is_+{%_higher._In_other_words,_this_is_a_damage_multi,_but_it_only_works_when_using_the_right_element!".split(" "), "Top_of_the_Mornin' 8 1.10 2 999999 10 0 163 205 0 0 The_first_{_kills_at_the_start_of_each_day_have_a_200x_chance_to_drop_Tempest_items!".split(" "), "Weapon_Improvement 8 1.08 1 999999 2 0 377 205 0 0 Tempest_Weapons_dropped_by_mobs_now_have_higher_weapon_power_the_more_HP_the_mob_has!_@_Also,_+{%_Tempest_DMG!".split(" "), "Stone_Failsafe 8 1.90 2 25 2 0 495 275 0 1 All_Tempest_stones_now_have_a_{%_chance_to_not_use_up_a_slot_when_they_fail!".split(" "), "Ring_Drop 40 1.10 1 1 1 0 481 147 0 0 Certain_mobs_can_now_drop_Tempest_Rings_at_a_1_in_$_chance._Check_AFK_Info_to_see_what_Tempest_Items_can_be_found!".split(" "), "Fighter_Path 2 2.90 0 31 1 0 761 443 0 1 Unlocks_a_new_Fighter_upgrade,_right_here_in_The_Compass!".split(" "), "Tempest_Damage 4 1.12 0 999999 1 0 843 379 0 1 Boosts_your_Base_Damage_in_Tempest_Form_by_+{".split(" "), "Tempest_Mega_Damage 8 1.15 1 999999 4 0 753 239 0 1 Boosts_your_Base_Damage_in_Tempest_Form_by_+{".split(" "), "Tempest_Crits 8 1.70 0 25 3 0 845 265 0 1 +{%_Critical_Hit_chance_in_Tempest_Form".split(" "), "Tempest_Accuracy 5 1.07 0 999999 1 0 941 324 0 1 +{_Base_Accuracy_in_Tempest_Form".split(" "), "Multishot 8 1.25 0 999999 5 0 1046 369 0 1 +{%_chance_to_shoot_multiple_arrows_while_in_Tempest_Form".split(" "), "Tempest_Bullseye 8 1.085 1 999999 4 0 1189 351 0 1 +{_Base_Accuracy_in_Tempest_Form".split(" "), "Tempest_Maxhit 8 1.35 1 999999 1 0 1108 262 0 1 +{%_Crit_DMG_in_Tempest_Form".split(" "), "Tempest_Rapidshot 8 1.75 1 999999 2 0 986 205 0 1 +{%_Basic_Attack_speed_in_Tempest_Form".split(" "), "Stardust_Hoarding 8 1.10 2 999999 1 0 888 135 0 1 +{%_Tempest_Accuracy_per_POW_10_Stardust_owned_@_Total_Bonus:_$%".split(" "), "Cooldust_Hoarding 8 1.10 3 999999 1 0 1038 56 0 1 +{%_Tempest_DMG_per_POW_10_Cooldust_owned".split(" "), "Tempest_Ultra_Damage 8 1.15 3 999999 10 0 1123 135 0 1 Boosts_your_damage_in_Tempest_Mode_by_+{".split(" "), "Tempest_One_Huuuundred_and_Eighty 8 1.13 3 999999 10 0 1281 182 0 1 +{_Base_Accuracy_in_Tempest_Form".split(" "), "Mastery_Destruction 8 1.35 4 999999 2 0 1239 70 0 1 }x_Tempest_DMG_per_Mastery_completed_in_Sneaking_@_Total_Bonus:_$".split(" "), "Survival_Path 4 3.00 0 26 1 0 610 603 0 2 Unlocks_a_new_Survival_upgrade,_right_here_in_The_Compass!".split(" "), "Tempest_Heartbeat 8 1.08 0 999999 3 0 508 636 0 2 +{_Base_HP_in_Tempest_Form".split(" "), "Tempest_Defence 8 1.10 0 999999 3 0 528 723 0 2 +{_Base_Defence_in_Tempest_Form".split(" "), "Moondust_Hoarding 8 1.10 0 999999 1 0 304 669 0 2 +{%_Tempest_Defence_per_POW_10_Moondust_owned_@_Total_Bonus:_$%".split(" "), "Mountains_of_Dust 8 1.25 0 999999 1 0 510 937 0 2 +{%_Extra_Dust".split(" "), "Tempest_Reach 8 1.30 1 100 3 0 106 665 0 2 +{_Pixels_of_Reach_in_Tempest_Mode".split(" "), "Novadust_Discovery 8 1.20 2 999999 10 0 254 779 0 2 You_can_now_find_Novadust_from_any_monster,_at_a_1_in_10,000_chance._This_upgrade_boosts_this_chance_by_+{%".split(" "), "Solardust_Hoarding 8 1.42 1 999999 1 0 382 852 0 2 +{%_Extra_Dust_per_POW_10_Solardust_owned_@_Total_Bonus:_$%".split(" "), "5_Minute_Mile 8 1.15 0 999999 1 0 562 822 0 2 +{%_Movement_Speed_in_Tempest_Mode._@_Have_you_ever_run_a_5_minute_mile?_I_haven't,_but_I'll_edit_this_if_I_ever_do!".split(" "), "Knockoff_Compass 8 1.75 3 999999 1 0 44 795 0 2 All_compass_upgrades_are_+$%_Cheaper!".split(" "), "Can't_Touch_This 8 1.60 2 30 .1 0 152 883 0 2 Increases_invulnerability_time_in_Tempest_Form_by_+{_sec".split(" "), "Spire_of_Dust 8 1.40 1 999999 1 0 304 935 0 2 }x_Extra_Dust._@_Yea,_this_bonus_is_a_whole_new_Multiplier,_kinda_baller...".split(" "), "Circle_Supremacy 8 1.90 4 999999 1 0 84 1005 0 2 All_Circle_shaped_Compass_bonuses_give_}x_higher_bonuses!".split(" "), "Nomadic_Path 8 2.80 0 38 1 0 757 641 0 3 Unlocks_a_new_Nomadic_upgrade,_right_here_in_The_Compass!".split(" "), "Jade_Coinage 8 1.07 0 999999 3 0 905 688 0 3 }x_Jade_Coin_gain_in_Sneaking".split(" "), "Critter_Culture 8 1.40 0 999999 1 0 825 746 0 3 +{_base_Critter_per_Trap,_and_+{%_higher_Trap-O-Vision_collection_rate!".split(" "), "Moon_of_Print 8 1.10 0 200 .02 0 1021 634 0 3 3d_Printer_Samples_grow_by_+{%_every_day_for_100_days".split(" "), "Exalted_Stamps 95 20.0 0 999999 1 0 917 810 0 3 +{_Exalted_Stamp_uses._Apply_them_to_a_stamp_to_PERMANENTLY_double_its_bonus!_Other_sources_can_push_Exalted_Stamps_beyond_2x!".split(" "), "Moon_of_Sneak 8 1.10 1 999999 1 0 785 858 0 3 }x_higher_Stealth_for_all_ninja_twins._You_know_what,_I'll_DOUBLE_this_bonus_every_50_levels,_trust_me_bro!".split(" "), "Talented_Masters 8 1.22 1 999999 1 0 1181 676 0 3 +{_Talent_PTS_for_all_other_Master_Classes".split(" "), "Magnesium_Atom 80 1.10 1 1 1 0 1085 756 0 3 Unlocks_a_new_atom_in_the_Atom_Collider_in_World_3".split(" "), "Moon_of_Damage 8 1.06 2 999999 1 0 1063 882 0 3 +{%_higher_damage_for_all_characters._Not_tempest_damage,_just_good_ol'_classic_IdleOn_damage.".split(" "), "All_Knowing_Eye 8 1.05 1 999999 1 0 903 966 0 3 }x_higher_Sneaking_EXP_Gain_for_all_ninja_twins".split(" "), "Atomic_Cost_Crash 8 1.18 1 999999 1 0 1309 632 0 3 All_Atoms_are_+{%_cheaper_to_upgrade".split(" "), "Moon_of_Experience 8 1.04 3 999999 15 0 1261 790 0 3 +{%_Class_EXP_for_all_characters".split(" "), "Opa_Opa_Opa! 8 2.1 2 25 1 0 1187 930 0 3 +{_Opals_to_give_to_Villagers".split(" "), "Atomic_Potential 8 1.95 2 20 1 0 1051 1028 0 3 +{_Max_LV_for_all_atoms_in_the_Atom_Collider".split(" "), "Pristine_Collector 8 1.65 3 999999 2 0 1425 726 0 3 +{%_higher_chance_to_find_Pristine_Charms_in_Sneaking".split(" "), "Monument_Homage 8 1.30 2 999999 1 0 1367 862 0 3 +{%_Monument_AFK_rate_for_all_monuments_in_the_Hole".split(" "), "My_Talent_is_Best_Talent 8 1.16 2 200 1 0 1319 968 0 3 +{_Talent_PTS_for_the_Wind_Walker_class_only".split(" "), "Moon_of_Sleep 8 1.40 4 999999 0.2 0 1209 1078 0 3 +{%_AFK_Gains_for_all_characters".split(" "), "Aluminium_Atom 2800 1.10 3 1 1 0 1493 890 0 3 Unlocks_a_new_atom_in_the_Atom_Collider_in_World_3".split(" "), "Villagerz_Learnz 8 1.32 4 999999 1 0 1437 1000 0 3 }x_Villager_EXP_Gain,_not_that_you_need_it_though...".split(" "), "Abomination_Slayer_I 8 1.10 0 999999 1 0 846 537 0 4 You_have_slain_the_green_mushroom_abomination!_@_+{_Base_Tempest_Damage".split(" "), "Abomination_Slayer_II 8 1.10 0 999999 1 0 945 508 0 4 You_have_slain_the_bored_bean_abomination!_@_+{_Base_Tempest_Accuracy".split(" "), "Abomination_Slayer_III 8 1.21 0 999999 1 0 1022 472 0 4 You_have_slain_the_carrot_abomination!_@_+{%_Tempest_Move_Speed".split(" "), "Abomination_Slayer_IV 8 1.10 0 999999 1 0 1093 523 0 4 You_have_slain_the_gigafrog_abomination!_@_+{_Base_Tempest_Defence".split(" "), "Abomination_Slayer_V 8 1.10 0 999999 1 0 1156 453 0 4 You_have_slain_the_acorn_abomination!_@_+{%_Tempest_Damage".split(" "), "Abomination_Slayer_VI 8 1.10 0 999999 1 0 1235 476 0 4 You_have_slain_the_rat_abomination!_@_+{_Pixels_of_Reach_in_Tempest_Mode".split(" "), "Abomination_Slayer_VII 8 3.50 1 999999 1 0 1314 510 0 4 You_have_slain_the_sandypot_abomination!_@_+{%_Tempest_Crit_Chance".split(" "), "Abomination_Slayer_VIII 8 2.10 1 999999 1 0 1355 441 0 4 You_have_slain_the_crabcake_abomination!_@_+{_Windwalker_Talent_PTS".split(" "), "Abomination_Slayer_IX 8 1.10 1 999999 1 0 1372 362 0 4 You_have_slain_the_sandcastle_abomination!_@_+{%_Extra_Dust".split(" "), "Abomination_Slayer_X 8 1.50 0 999999 1 0 1446 327 0 4 You_have_slain_the_mashed_potato_abomination!_@_+{%_Tempest_Attack_Speed".split(" "), "Abomination_Slayer_XI 8 5.10 1 999999 1 0 1516 347 0 4 You_have_slain_the_moonmoon_abomination!_@_+{%_Tempest_Minimum_DMG".split(" "), "Abomination_Slayer_XII 8 1.10 0 999999 1 0 1533 419 0 4 You_have_slain_the_fishcrate_abomination!_@_+{_extra_kills_for_Top_of_the_Mornin'".split(" "), "Abomination_Slayer_XIII 8 1.10 1 999999 1 0 1551 494 0 4 You_have_slain_the_snelbie_abomination!_@_+{%_Medallion_Drop_Chance".split(" "), "Abomination_Slayer_XIV 8 1.30 1 999999 1 0 1578 565 0 4 You_have_slain_the_flake_abomination!_@_+{%_Multishot_Chance_in_Tempest_Mode".split(" "), "Abomination_Slayer_XV 8 1.20 0 999999 1 0 1653 582 0 4 You_have_slain_the_bloque_abomination!_@_+{%_Elemental_Damage".split(" "), "Abomination_Slayer_XVI 8 1.25 1 999999 1 0 1726 546 0 4 You_have_slain_the_snowman_abomination!_@_+{%_Tempest_Critical_Damage".split(" "), "Abomination_Slayer_XVII 8 37.0 1 999999 1 0 1749 474 0 4 You_have_slain_the_quenchie_abomination!_@_+{%_higher_Exalted_Stamp_bonuses".split(" "), "Abomination_Slayer_XVIII 8 1.45 0 999999 1 0 1748 398 0 4 You_have_slain_the_neyeptune_abomination!_@_+{%_cheaper_Compass_upgrade_costs".split(" "), "Abomination_Slayer_XIX 8 1.25 0 999999 1 0 1707 318 0 4 You_have_slain_the_bloodbone_abomination!_@_+{%_Tempest_DMG_per_POW_10_HP".split(" "), "Abomination_Slayer_XX 8 1.10 2 999999 1 0 1669 242 0 4 You_have_slain_the_purple_mushroom_abomination!_@_+{%_Tempest_Accuracy".split(" "), "Abomination_Slayer_XXI 8 4.65 1 999999 1 0 1631 173 0 4 You_have_slain_the_donut_abomination!_@_+{%_bonus_from_ALL_circle_shaped_compass_upgrades".split(" "), "Abomination_Slayer_XXII 8 1.10 2 999999 1 0 1680 105 0 4 You_have_slain_the_soda_abomination!_@_+{_Base_Tempest_Damage".split(" "), "Abomination_Slayer_XXIII 8 1.12 2 999999 3 0 1760 115 0 4 You_have_slain_the_gelatinous_cuboid_abomination!_@_+{%_Tempest_Stone_drop_chance".split(" "), "Abomination_Slayer_XXIV 8 1.10 1 999999 1 0 1832 155 0 4 You_have_slain_the_worm_abomination!_@_+{%_Tempest_Defence".split(" "), "Abomination_Slayer_XXV 8 1.25 2 999999 1 0 1876 225 0 4 You_have_slain_the_squid_abomination!_@_+{%_Tempest_Accuracy_per_POW_10_HP".split(" "), "Abomination_Slayer_XXVI 8 1.10 2 999999 1 0 1896 300 0 4 You_have_slain_the_grilled_cheese_abomination!_@_+{%_Tepest_Damage".split(" "), "Abomination_Slayer_XXVII 8 1.10 2 999999 1 0 1914 378 0 4 You_have_slain_the_stiltmole_abomination!_@_+{%_Novadust_drop_chance".split(" "), "Abomination_Slayer_XXVIII 8 1.10 0 999999 1 0 1926 454 0 4 You_have_slain_the_purgatory_twins_abomination!_@_+{_Base_Tempest_HP".split(" "), "Abomination_Slayer_XXIX 8 1.50 1 999999 .1 0 1918 529 0 4 You_have_slain_the_lampar_abomination!_@_+{_sec_invulnerability_time_in_Tempest_Form".split(" "), "Abomination_Slayer_XXX 8 1.10 3 999999 1 0 1885 601 0 4 You_have_slain_the_tremor_wurm_abomination!_@_+{%_Extra_Dust".split(" "), "Abomination_Slayer_XXXI 8 1.10 1 999999 1 0 1847 674 0 4 You_have_slain_the_sprout_abomination!_@_+{%_Tempest_Accuracy".split(" "), "Abomination_Slayer_XXXII 8 1.10 3 999999 1 0 1808 743 0 4 You_have_slain_the_woodlin_abomination!_@_+{%_Tempest_Defence".split(" "), "Abomination_Slayer_XXXIII 8 1.10 0 999999 1 0 1777 815 0 4 You_have_slain_the_lantern_abomination!_@_+{%_Tempest_HP".split(" "), "Abomination_Slayer_XXXIV 8 1.10 2 999999 1 0 1760 887 0 4 You_have_slain_the_ceramic_abomination!_@_+{%_Extra_Dust".split(" "), "Abomination_Slayer_XXXV 8 1.10 3 999999 1 0 1751 959 0 4 You_have_slain_the_egg_abomination!_@_+{%_Tempest_Damage".split(" "), "Abomination_Slayer_XXXVI 8 1.10 3 999999 1 0 1784 1029 0 4 Titan_doesnt_exist".split(" "), "Abomination_Slayer_XXXVII 8 1.10 1 999999 1 0 1855 1059 0 4 Titan_doesnt_exist".split(" "), "Abomination_Slayer_XXXVIII 8 1.10 0 999999 1 0 1931 1037 0 4 Titan_doesnt_exist".split(" "), "Abomination_Slayer_XXXIX 8 1.10 2 999999 1 0 1973 971 0 4 Titan_doesnt_exist".split(" "), "Abomination_Slayer_XL 8 1.10 3 999999 1 0 2002 904 0 4 Titan_doesnt_exist".split(" "), "Abomination_Slayer_XLI 8 1.10 4 999999 1 0 2017 834 0 4 Titan_doesnt_exist".split(" "), "Abomination_Slayer_XLII 8 1.10 4 999999 1 0 2004 763 0 4 Titan_doesnt_exist".split(" "), "Abomination_Slayer_XLIII 8 1.10 4 999999 1 0 2019 691 0 4 Titan_doesnt_exist".split(" "), "Abomination_Slayer_XLIV 8 1.10 4 999999 1 0 2045 622 0 4 Titan_doesnt_exist".split(" "), "Abomination_Slayer_XLV 8 1.10 4 999999 1 0 2081 553 0 4 Titan_doesnt_exist".split(" "), "Abomination_Slayer_XLVI 8 1.10 4 999999 1 0 2122 486 0 4 Titan_doesnt_exist".split(" "), "Weapon_Drops 8 1.10 0 999999 1 0 336 458 1 0 +{%_drop_chance_for_all_Tempest_Weapons".split(" "), "Medallion_Drops 8 1.10 1 999999 1 0 110 440 1 0 +{%_drop_chance_for_all_monster_Medallions".split(" "), "Grass_Weapon_Drops 8 1.10 3 999999 1 0 216 360 1 0 +{%_chance_for_Grass_Tempest_Weapon_that_drop_to_be_more_powerful".split(" "), "Fire_Weapon_Drops 8 1.10 3 999999 1 0 186 286 1 0 +{%_chance_for_Fire_Tempest_Weapons_that_drop_to_be_more_powerful".split(" "), "Stone_Drops_I 8 1.10 2 999999 2 0 80 256 1 0 +{%_drop_chance_for_all_Tempest_Stones".split(" "), "Lucky_Drops_I 8 1.10 4 999999 1 0 102 120 1 0 +{%_drop_chance_for_ALL_Tempest_items._Weapons,_stones,_rings,_all_of_them!".split(" "), "Ring_Drops_I 8 1.10 4 999999 1 0 218 108 1 0 +{%_drop_chance_for_Tempest_Rings_that_give_weird_stats_unrelated_to_element_damage".split(" "), "Stone_Drops_II 8 1.10 2 999999 3 0 292 166 1 0 +{%_drop_chance_for_Tempest_Rings_that_give_element_damage".split(" "), "Wind_Weapon_Drops 8 1.10 2 999999 1 0 378 106 1 0 +{%_chance_for_Wind_Tempest_Weapons_that_drop_to_be_more_powerful".split(" "), "Lucky_Drops_II 8 1.10 3 999999 1 0 542 70 1 0 +{%_drop_chance_for_ALL_Tempest_items!".split(" "), "Lucky_Drops_III 8 1.10 2 999999 1 0 552 192 1 0 +{%_drop_chance_for_ALL_Tempest_items!".split(" "), "Ice_Weapon_Drops 8 1.10 3 999999 1 0 408 270 1 0 +{%_chance_for_Ice_Tempest_Weapons_that_drop_to_be_more_powerful".split(" "), "Ring_Drops_II 8 1.10 1 999999 1 0 566 305 1 1 +{%_drop_chance_for_all_Tempest_Rings".split(" "), "Tempest_Damage_I 8 1.04 0 999999 1 0 771 325 1 1 +{%_damage_in_Tempest_Form".split(" "), "Tempest_Accuracy_I 8 1.03 0 999999 1 0 953 393 1 1 +{%_accuracy_in_Tempest_Form".split(" "), "Tempest_Damage_IV 8 1.06 1 999999 2 0 786 151 1 1 +{%_damage_in_Tempest_Form_@_Also,_Weapon_Power_from_your_Tempest_Equipment_is_giving_you_$_DMG!".split(" "), "Tempest_Damage_II 8 1.04 0 999999 1 0 918 243 1 1 +{%_damage_in_Tempest_Form".split(" "), "Tempest_Damage_III 8 1.05 0 999999 2 0 1018 298 1 1 +{%_damage_in_Tempest_Form_@_+{%_Critical_DMG_in_Tempest_Form".split(" "), "Tempest_Accuracy_II 8 1.04 0 999999 2 0 1120 339 1 1 +{%_accuracy_in_Tempest_Form".split(" "), "Tempest_Accuracy_III 8 1.05 1 999999 1 0 827 70 1 1 +{%_accuracy_in_Tempest_Form_@_+{%_Multishot_chance_in_Tempest_Form".split(" "), "Tempest_Damage_X 1 1.04 4 999999 6 0 895 25 1 1 +{%_damage_in_Tempest_Form".split(" "), "Tempest_Damage_VII 8 1.09 2 999999 4 0 959 67 1 1 +{%_damage_in_Tempest_Form".split(" "), "Tempest_Accuracy_V 8 1.07 2 999999 4 0 1024 133 1 1 +{%_accuracy_in_Tempest_Form".split(" "), "Tempest_Damage_V 8 1.07 1 999999 3 0 1075 199 1 1 +{%_damage_in_Tempest_Form".split(" "), "Tempest_Damage_VI 8 1.08 2 999999 3 0 1194 287 1 1 +{%_damage_in_Tempest_Form".split(" "), "Tempest_Accuracy_VII 8 1.09 3 999999 6 0 1107 66 1 1 +{%_accuracy_in_Tempest_Form".split(" "), "Tempest_Damage_VIII 8 1.10 3 999999 4 0 1213 136 1 1 +{%_damage_in_Tempest_Form".split(" "), "Tempest_Accuracy_VI 8 1.08 2 999999 5 0 1187 202 1 1 +{%_accuracy_in_Tempest_Form".split(" "), "Tempest_Accuracy_IV 8 1.06 1 999999 3 0 1276 255 1 1 +{%_accuracy_in_Tempest_Form".split(" "), "Tempest_Damage_IX 8 1.10 3 999999 5 0 1171 9 1 1 +{%_damage_in_Tempest_Form".split(" "), "Tempest_Accuracy_VIII 8 1.10 4 999999 7 0 1333 104 1 1 +{%_accuracy_in_Tempest_Form".split(" "), "Tempest_Defence_I 8 1.05 0 999999 1 0 456 697 1 2 +{%_defence_in_Tempest_Form".split(" "), "Tempest_Defence_III 8 1.08 1 999999 3 0 302 592 1 2 +{%_defence_in_Tempest_Form".split(" "), "De_Dust_I 8 1.10 0 999999 1 0 414 759 1 2 +{%_Extra_Dust".split(" "), "Tempest_Health_I 8 1.10 1 999999 1 0 192 696 1 2 +{%_total_health_in_Tempest_Form".split(" "), "Tempest_Defence_II 8 1.06 0 999999 2 0 332 770 1 2 +{%_defence_in_Tempest_Form_@_+{%_Movement_Speed_in_Tempest_Form".split(" "), "De_Dust_II 8 1.10 1 999999 1 0 480 806 1 2 +{%_Extra_Dust".split(" "), "Tempest_Defence_VI 8 1.10 4 999999 6 0 590 952 1 2 +{%_defence_in_Tempest_Form".split(" "), "Tempest_Defence_IV 8 1.09 2 999999 4 0 6 722 1 2 +{%_defence_in_Tempest_Form".split(" "), "De_Dust_III 8 1.10 1 999999 2 0 134 792 1 2 +{%_Extra_Dust".split(" "), "Tempest_Health_II 8 1.10 2 999999 2 0 236 856 1 2 +{%_total_health_in_Tempest_Form".split(" "), "Tempest_Accuracy..? 8 1.10 3 999999 3 0 416 946 1 2 +{%_accur.._wait,_accuracy?_What_are_you_doing_in_this_section?".split(" "), "De_Dust_IV 8 1.10 3 999999 2 0 68 870 1 2 +{%_Extra_Dust".split(" "), "Tempest_Defence_V 8 1.10 3 999999 5 0 198 966 1 2 +{%_defence_in_Tempest_Form".split(" "), "De_Dust_V 8 1.10 3 999999 3 0 354 1008 1 2 +{%_Extra_Dust".split(" "), "Sneaky_Sale_I 8 1.10 1 999999 5 0 745 792 1 2 +{%_reduction_in_cost_for_the_Moon_of_Sneak_upgrade".split(" "), "Sneaky_Sale_II 8 1.10 1 999999 10 0 879 881 1 3 +{%_reduction_in_cost_for_the_Moon_of_Sneak_upgrade".split(" "), "Sneaky_Sale_III 8 1.10 2 999999 20 0 798 927 1 3 +{%_reduction_in_cost_for_the_Moon_of_Sneak_upgrade".split(" "), "Printer_Sale_I 8 1.10 1 999999 5 0 993 711 1 3 +{%_reduction_in_cost_for_the_Moon_of_Print_upgrade".split(" "), "Damage_Sale_I 8 1.10 1 999999 5 0 1007 805 1 3 +{%_reduction_in_cost_for_the_Moon_of_Damage_upgrade".split(" "), "Printer_Sale_II 8 1.10 2 999999 10 0 1101 637 1 3 +{%_reduction_in_cost_for_the_Moon_of_Print_upgrade".split(" "), "Damage_Sale_II 8 1.10 2 999999 10 0 988 946 1 3 +{%_reduction_in_cost_for_the_Moon_of_Damage_upgrade".split(" "), "Damage_Sale_III 8 1.10 2 999999 15 0 1091 949 1 3 +{%_reduction_in_cost_for_the_Moon_of_Damage_upgrade".split(" "), "Snoozer_Sale_I 8 1.10 3 999999 5 0 1142 1015 1 3 +{%_reduction_in_cost_for_the_Moon_of_Sleep_upgrade".split(" "), "Snoozer_Sale_II 8 1.10 3 999999 10 0 1124 1110 1 3 +{%_reduction_in_cost_for_the_Moon_of_Sleep_upgrade".split(" "), "Snoozer_Sale_III 8 1.10 3 999999 15 0 1232 998 1 3 +{%_reduction_in_cost_for_the_Moon_of_Sleep_upgrade".split(" "), "Experience_Sale_I 8 1.10 3 999999 5 0 1157 827 1 3 +{%_reduction_in_cost_for_the_Moon_of_Experience_upgrade".split(" "), "Experience_Sale_II 8 1.10 2 999999 10 0 1187 749 1 3 +{%_reduction_in_cost_for_the_Moon_of_Experience_upgrade".split(" "), "Experience_Sale_III 8 1.10 2 999999 15 0 1269 707 1 3 +{%_reduction_in_cost_for_the_Moon_of_Experience_upgrade".split(" "), "Pristine_Sale_I 8 1.10 3 999999 5 0 1415 648 1 3 +{%_reduction_in_cost_for_the_Pristine_Collector_upgrade".split(" "), "Experience_Sale_IV 8 1.10 3 999999 20 0 1377 783 1 3 +{%_reduction_in_cost_for_the_Moon_of_Experience_upgrade".split(" "), "Experience_Sale_V 8 1.10 3 999999 25 0 1267 875 1 3 +{%_reduction_in_cost_for_the_Moon_of_Experience_upgrade".split(" "), "Snoozer_Sale_IV 8 1.10 4 999999 20 0 1335 1068 1 3 +{%_reduction_in_cost_for_the_Moon_of_Sleep_upgrade".split(" "), "Pristine_Sale_II 8 1.10 4 999999 10 0 1504 726 1 3 +{%_reduction_in_cost_for_the_Pristine_Collector_upgrade".split(" "), "Worldfinder 2 1.10 0 1 1 0 670 450 0 0 You_can_open_portals_to_the_next_world_by_defeating_enough_Abominations._The_amount_is_shown_above_each_town_portal!".split(" ")]
+compass_dusts_list = ['Stardust', 'Moondust', 'Solardust', 'Cooldust', 'Novadust']
+compass_path_names = {0: 'Elemental', 1: 'Fighter', 2: 'Survival', 3: 'Nomadic', 4: 'Abomination'}
+
+# Last pulled from Titans function in v2.35
+compass_titans = ["Mushgloom 100 1 3 600 1 1 1 1 0 10 9 17".split(" "), "Bean_of_Eternal_Boredom 100 14 3 520 1 1 1 1 0 15 13 0".split(" "), "Caroot_the_Sorrowful 100 24 1 600 1 1 1 1 0 20 25 11".split(" "), "Croakmaw 100 28 2 420 1 1 1 1 0 25 31 1".split(" "), "Oakguard_the_Large 100 30 3 480 1 1 1 1 0 10 82 54".split(" "), "Coilfur_the_Malformed 100 15 7 520 1 1 1 1 0 500 10 7".split(" "), "Puttputt_the_Ashen 100 51 0 200 1 1 1 1 0 75 22 0".split(" "), "The_Baker 100 53 6 925 1 1 1 1 0 100 35 47".split(" "), "Dunecastle_Duo 100 58 3 500 1 1 1 1 0 130 161 72".split(" "), "Dreadlord_Pringle 100 60 3 1050 1 1 1 1 0 160 25 50".split(" "), "Astralis_the_Forsaken 100 63 5 450 1 1 1 1 0 200 47 10".split(" "), "The_Trapped_Dozen 100 61 0 770 1 1 1 1 0 2500 38 2".split(" "), "Grand_Old_Snelbie 100 65 4 690 1 1 1 1 0 350 68 26".split(" "), "Frostmire_the_Jagged 100 103 2 175 1 1 1 1 0 400 31 40".split(" "), "Baloqui_the_Melted 100 105 7 200 1 1 1 1 0 600 28 61".split(" "), "The_Snowmatron 100 107 3 1135 1 1 1 1 0 800 84 29".split(" "), "Bobo_the_Fractured 100 110 4 676 1 1 1 1 0 900 42 66".split(" "), "Overlord_Oculon 100 113 4 480 1 1 1 1 0 1050 47 34".split(" "), "Bloodbane_the_Conglomerate 100 117 0 630 1 1 1 1 0 1200 64 24".split(" "), "Blightcap 100 151 3 320 1 1 1 1 0 1500 30 33".split(" "), "Doughdough_the_Tired 100 153 1 380 1 1 1 1 0 2000 19 0".split(" "), "Purple_Flurp 100.0 155 10 400 1 1 1 1 0 3000 38 24".split(" "), "Goregloop 100.0 157 5 560 1 1 1 1 0 4500 29 21".split(" "), "The_Watchful_Spire 100.0 159 11 1346 1 1 1 1 0 7000 20 11".split(" "), "The_Unblinking_Eye 100.0 163 7 427 1 1 1 1 0 10000 89 7".split(" "), "Cheezer_Deluxe 100 202 2 322 1 1 1 1 0 12000 122 5".split(" "), "Bignose_the_Fallen 100 205 9 720 1 1 1 1 0 14000 76 4".split(" "), "Moltix_and_Cragg 100 207 7 210 1 1 1 1 0 17000 31 15".split(" "), "Lyvii_the_Broken 100 209 4 400 1 1 1 1 0 20000 39 1".split(" "), "Ouroboros_the_Consumer 100 213 7 222 1 1 1 1 0 25000 84 5".split(" "), "Gigadew_of_the_Valley 100 251 2 554 1 1 1 1 0 35000 41 35".split(" "), "Splinteroot 100 255 4 1018 1 1 1 1 0 50000 48 19".split(" "), "Glanceron_the_Illuminator 100 257 4 1115 1 1 1 1 0 100000 9 26".split(" "), "Wisperius_the_Forgotten 100 260 4 300 1 1 1 1 0 200000 70 0".split(" "), "Pyol_the_Estranged 100 262 15 740 1 1 1 1 0 500000 57 7".split(" ")]
+
+RANDOlist = ["mushG frogG beanG poopSmall ratB slimeG snakeG carrotO branch acorn goblinG plank frogBIG mushR mushW".split(" "), "jarSand mimicA crabcake shovelR coconut sandcastle pincermin potato steak moonman sandgiant snailZ".split(" "), "20 24 21 25 22 26 41 42 72 73 74 75 76 77 78 79 52 45 49 37 39 46 53 54 55".split(" "), "5 6 7 42 43 8 9 10 11 12 13 14 15 4 25 26 27 59 45 49 46 50 47 51 52 53 54 55 28 29 30 31 32 33 34 35 56 57 36 37".split(" "), "STR AGI WIS LUK UQ1val UQ2val Defence Weapon_Power".split(" "), "bloque flake speaker penguin eye mamoth snakeB glass stache snowball thermostat sheep sheep".split(" "), "0 7 14 22 30 37 44 51".split(" "), "Cardboard_Boxes Silkskin_Boxes Wooden_Crates Natural_Crates Steel_Trapper Meaty_Trapper Royal_Trapper".split(" "), "310 17 394 17 478 17 562 17 268 86 352 86 436 86 520 86 604 86 226 157 310 157 394 157 478 157 562 157 268 228 352 228 436 228 520 228 604 228 226 299 310 299 394 299 478 299 562 299 646 299".split(" "), "1 60 85 110 150 170 200 250 9999 9999 9999 9999 9999 9999 999 999 999 999 999 999 999".split(" "), "Goblin_Gorefest Wakawaka_War Acorn_Assault Frosty_Firefight Clash_of_Cans Tower_Defence_6 Tower_Defence_7".split(" "), ["0", "14", "39", "69"], ["30", "200", "1500", "10000"], "15 200 2250 12000 25000 60000 100000 150000 50000000 25 700 4500 20000 40000 125000 400000 1000000 3500000 60 1250 6000 27500 70000 200000 2000000 7000000 60000000".split(" "), "Build_this_space_to_unlock_the_3D_Printer._@_First,_you_need_to_'build'_to_raise_its_'Max_Lv',_then_you_can_upgrade_it._So_there's_2_steps_here._Build,_then_Upgrade. Build_this_space_to_unlock_the_Library._Wow!_What_a_game_changer! Build_this_space_to_get_your_very_own_Death_Note_thingy._Anime_doesn't_actually_exist_around_here,_so_wipe_that_smirk_off_your_face! Build_this_space_to_unlock_a_way_to_unlock_other_bonuses_using_Salt!_Its_almost_like_you're_Summoning_more_bonuses_with_Salt,_so_you_can_speedrun_the_game_faster! Build_this_space_to_get_more_Storage_Chest_slots!_I_KNOW_RIGHT?_It's_about_time!! Build_this_space_to_make_upgrading_other_Buildings_way_easier._Ok,_maybe_just_easier,_not_'way_easier'. Build_this_space_to_remotely_place,_collect_and_remove_Critter_Traps_to_and_from_any_location!_This_done_changin'_the_Trap_Game_fo'_real_yo! Build_this_space_to_harness_the_power_of_Automation!_Good_thing_you're_a_gamer,_thats_a_job_that_robots_will_never_replace. Build_this_space_because_it's_the_last_one..._I_mean_what_else_are_you_gonna_do? Build_this_space_to_get_your_first_Wizard_Defender._This_one_will_zap_nearby_monsters_as_they_run_by! Build_this_space_to_get_your_second_Wizard_Defender._This_one_will_throw_exploding_fireballs_toward_monsters,_which_explode!_Did_I_mention_the_fireballs_EXPLODE! Build_this_space_to_get_your_third_Wizard_Defender._This_one_will_roll_a_boulder_at_the_monsters,_squashing_them_into_inedible_pancakes! Build_this_space_to_get_your_fourth_Wizard_Defender._This_one_will_freeze_monsters..._pretty_cool,_right? Build_this_space_to_get_your_fifth_Wizard_Defender._This_one_will_smite_the_monsters_for_their_sins!_I_mean,_sure,_you're_the_one_murdering_them,_but_they're_monsters! Build_this_space_to_get_your_sixth_Wizard_Defender._This_one_will_rock_and_roll_all_night,_and_party_every_day!_I_don't_know_how_he_got_his_wizarding_license,_but_he_did_and_now_that's_your_problem! Build_this_space_to_get_your_seventh_Wizard_Defender._This_one_will_summon_giant_eyeballs,_which_boop_into_enemies!_Eye_think_you're_gonna_love_this_one! Build_this_space_to_get_your_eigth_Wizard_Defender._This_one_is_real_smelly._That's_his_thing,_he_stinks. Build_this_space_to_get_your_last_Wizard_Defender._This_one_is_crazy_good..._kinda_makes_all_the_other_tower_wizards_pointless. Build_this_space_to_get_your_first_Shrine._You_can_place_it_anywhere_in_the_game,_and_it_will_boost_all_characters_in_that_map!_This_one_boosts_damage! Build_this_space_to_get_your_second_Shrine._This_one_is_full_of_life,_as_well_as_pulmonary_veins_and_arteries. Build_this_space_to_get_your_third_Shrine!_This_one_is_a_bit_of_a_brain_bender,_it's_kinda_like_a_shrine_for_shrines. Build_this_space_to_get_your_fourth_Shrine._This_one's_for_all_you_institutional_bankers_out_there!_I'm_sure_I_speak_for_everyone_born_after_2008_when_I_say,_you're_the_best! Build_this_space_to_get_your_fifth_Shrine._This_one_is_green. Build_this_space_to_get_your_sixth_Shrine._This_one_is_a_pile_of_books,_which_will_somehow_give_you_a_boost_even_though_we_both_know_you_don't_read. Build_this_space_to_get_your_seventh_Shrine._This_one_is_practically_worthless,_and_will_be_forgotten_about_within_a_week_of_being_unlocked. Build_this_space_to_get_your_eigth_Shrine!_Dang,_we're_close_to_the_end,_I'm_gonna_miss_vaguely_describing_upcoming_shrines_to_you!_Anyway,_this_one's_spooky_and_scary. Build_this_space_to_get_your_last_Shrine._Yep,_definitely_the_last_one._No_need_to_look_for_a_10th_shrine_anywhere..._yet...".split(" "), "sheep flake stache ram bloque mamoth snowball penguin thermostat glass snakeB speaker eye skele2".split(" "), "10 11 12 23 75 86 87 266 267 446 447 79".split(" "), "InvStorage31 InvStorage32 InvStorage33 InvStorage34 InvStorage35 InvStorage36 InvStorage37 InvStorage38 InvStorage39 InvStorage40 InvStorage41 InvStorage42 InvBag21 InvBag22 InvBag23 InvBag24 InvBag25 InvBag26 EquipmentHats31 EquipmentHats32 EquipmentHats33 EquipmentHats34 EquipmentHats35 EquipmentHats36 EquipmentHats37 EquipmentHats38 EquipmentHats40 EquipmentHats43 EquipmentHats46 EquipmentHats47 EquipmentHats48 EquipmentHats49 EquipmentHats50 EquipmentHats45 EquipmentHats57 EquipmentHats62 Quest28 EquipmentRingsChat1 EquipmentRingsChat2 EquipmentRingsChat3 EquipmentRingsChat4 EquipmentRingsChat5 EquipmentRingsChat6 EquipmentRingsChat8 EquipmentRingsChat9 LockedInvSpace null Blank TestObj4 TestObj5 TestObj8 TestObj9 TestObj10 EquipmentWeapons1 TestObj2 EquipmentWands4 ExpSmith1 Starlight AlienTreetutorial EquipmentWeapons2 Secretstone InvStorage99 COIN EXP FillerMaterial DungWeaponBow1 DungWeaponWand1 DungWeaponSword1 TestObj15 TestObj16 TestObj14 EquipmentCape1 EquipmentHats72 Spice0 Spice6 Spice9 SailTr10 SailTr12 SailTr14 SailTr21 SailTr25 SailTr29 Bits EquipmentHatsBeg1 EquipmentShirts8 EquipmentShirts9 EquipmentPants11 EquipmentPants14 EquipmentShoes6 EquipmentShoes8 EquipmentShoes13 EquipmentPendant1 EquipmentPendant2 EquipmentPendant3 EquipmentPendant4 EquipmentPendant5 EquipmentPendant6 EquipmentPendant7 EquipmentPendant8 Trophy4 DoubleAFKtix ObolFrag DeliveryBox EquipmentHats23 EquipmentHats24 Quest8 CraftMat15 CraftMat16 CraftMat17 NPCtoken8 EquipmentShirts4 EquipmentPants12 EquipmentShoes10 EquipmentShoes11 EquipmentShoes12 EquipmentShoes14 EquipmentPendant13 EquipmentPendant15 EquipmentRings1 FoodHealth8 FishingRod1 CatchingNet1 MaxCapBagFi0 MaxCapBagB0 MaxCapBagTr0 MaxCapBagTr2 MaxCapBagS0 MaxCapBagS2 ObolPlatinumSpeed StampC10 StampC11 StampC12 EquipmentShirts7 EquipmentPants7 EquipmentPants13 EquipmentRings4 EquipmentRings5 EquipmentRings8 EquipmentRings9 EquipmentRings10 IceMountains2 InvBag9 Quest31 GemP25".split(" "), "50 50 200 800 3000 8000 14000 20000 30000 40000 50000 65000 80000 100000 200000 300000 400000 500000 600000 700000 800000 900000 1000000 1000000 1000000 1000000".split(" "), "Stiltzcho Builder_Bird Bushlyte Dazey Dog_Bone Egggulyte Funguy Giftmas_Blobulyte Glumlee Grasslands_Gary Hamish Krunk Loveulyte Meel Mutton Mr_Pigibank Papua_Piggea Picnic_Stowaway Promotheus Rocklyte Scripticus Sprout Stiltzcho Telescope Tiki_Chief Town_Marble TP_Pete Typhoon Woodsman Toadstall Falloween_Pumpkin Bubbulyte Coastiolyte".split(" "), "Bandit_Bob Walupiggy Cactolyte Carpetiem Centurion Clown Constructor_Crow Cowbo_Jones Desert_Davey Djonnut Fishpaste97 Goldric Loominadi Obol_Altar Omar_Da_Ogar Postboy_Pablob Scubidew Snake_Jar Speccius Wellington Whattso XxX_Cattleprod_XxX Gangster_Gus".split(" "), "Bellows Bill_Brr Carpenter_Cardinal Crystalswine Hoggindaz Iceland_Irwin Lonely_Hunter Lord_of_the_Hunt Shuvelle Snouts Worldo Yondergreen Worldo".split(" "), "ObolSilver0 7 ObolSilver1 14 ObolSilver2 21 ObolSilver3 28 ObolSilverCard 32 ObolSilverCatching 37 ObolSilverChoppin 42 ObolSilverFishing 47 ObolSilverMining 52 ObolSilverCons 53 ObolSilverWorship 54 ObolSilverTrapping 55 ObolSilverDamage 60 ObolSilverDef 64 ObolSilverEXP 65 ObolSilverLuck 66 ObolSilverMoney 67 ObolGold0 70 ObolGold1 73 ObolGold2 76 ObolGold3 78 ObolGoldMoney 79 ObolGoldCard 80 ObolGoldKill 82 ObolGoldChoppin 84 ObolGoldMining 86 ObolGoldLuck 88 ObolGoldCatching 90 ObolGoldFishing 92 ObolGoldEXP 93 ObolGoldDef 95 ObolGoldPop 96 ObolGoldDamage 200".split(" "), "ObolGold0 7 ObolGold1 14 ObolGold2 21 ObolGold3 28 ObolGoldMoney 32 ObolGoldCard 34 ObolGoldKill 36 ObolGoldChoppin 41 ObolGoldMining 46 ObolGoldLuck 47 ObolGoldCatching 52 ObolGoldFishing 57 ObolGoldCons 58 ObolGoldWorship 59 ObolGoldTrapping 60 ObolGoldDamage 63 ObolGoldEXP 64 ObolGoldDef 65 ObolPlatinum0 67 ObolPlatinum1 69 ObolPlatinum2 71 ObolPlatinum3 73 ObolPlatinumCard 74 ObolPlatinumCatching 76 ObolPlatinumChoppin 78 ObolPlatinumDamage 81 ObolPlatinumDef 82 ObolPlatinumEXP 83 ObolPlatinumFishing 85 ObolPlatinumKill 86 ObolPlatinumMining 88 ObolPlatinumPop 89 ObolPlatinumLuck 90 ObolPink0 91 ObolPink1 92 ObolPink2 93 ObolPink3 94 ObolPinkCard 94.5 ObolPinkCatching 95 ObolPinkDamage 96 ObolPinkDef 95.5 ObolPinkEXP 97 ObolPinkFishing 98 ObolPinkKill 98.4 ObolPinkLuck 99.2 ObolPinkMining 99.8 ObolPinkPop 200".split(" "), "0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60".split(" "), "Key1_x1.png Key2_x1.png Key3_x1.png Key4_x1.png TixCol_x1.png MGp.png rtt0_x1.png ObolFrag_x1.png PremiumGem_x1.png PachAcc.png Libz.png Quest89_x1.png Key5_x1.png".split(" "), "NPCtoken5 NPCtoken6 NPCtoken4 NPCtoken9 NPCtoken10 NPCtoken11 NPCtoken13 NPCtoken7 Quest9 NPCtoken15 NPCtoken12 NPCtoken14 NPCtoken16 NPCtoken17 NPCtoken18 NPCtoken19 NPCtoken20 NPCtoken21 NPCtoken27 NPCtoken22 NPCtoken24 NPCtoken25 NPCtoken26 NPCtoken23 NPCtoken32 NPCtoken31 NPCtoken34 NPCtoken35 NPCtoken36 NPCtoken38 NPCtoken33 NPCtoken37".split(" "), "365 232 113 8 0 263 252 237".split(" "), ["DungCredits1", "DungCredits2"], "0 4 10 18 28 40 70 110 160 230 320 470 670 940 1310 1760 2400 3250 4000 5000 6160 8000 10000 12500 15000 18400 21000 25500 30500 36500 45400 52000 61000 72500 85000 110000 125000 145000 170000 200000 250000 275000 325000 400000 490000 600000 725000 875000 1000000 1200000 1500000 3000000 5000000 10000000 20000000 30000000 40000000 50000000 60000000 80000000 100000000 999999999 999999999 999999999 999999999 999999999 1999999999 1999999999 1999999999 1999999999 1999999999".split(" "), "51 189 5 0 112 189 5 0 173 189 5 0 51 292 10 1 112 292 10 1 173 292 10 1 33 395 15 2 86 395 15 2 139 395 15 2 192 395 15 2 305 189 20 3 374 189 20 3 260 292 25 4 313 292 25 4 366 292 25 4 419 292 25 4 278 395 30 5 339 395 30 5 400 395 30 5 505 189 35 6 566 189 35 6 627 189 35 6 532 292 40 7 601 292 40 7 487 395 50 8 540 395 50 8 593 395 50 8 646 395 50 8".split(" "), "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".split(" "), "013245011130204151".split(" "), "01324567".split(" "), "897 9 918 37 912 95 557 942 933 102 932 184 914 204 903 266 929 271 613 515 591 478 536 516 318 515 291 485 250 479 230 515 185 512 171 484 131 479".split(" "), "915 59 915 59 916 227 627 483 574 499 261 500 200 479 139 497".split(" "), "12345678".split(" "), "DungWeaponPunch DungWeaponSword DungWeaponBow DungWeaponWand DungEquipmentHats DungEquipmentShirt DungEquipmentPants DungEquipmentShoes DungEquipmentPendant DungEquipmentRings".split(" "), "10 11 12 13 14 19 20 21 22 23 24 26 27 29 30 31 8 7 100 101 102".split(" "), ["DungCredits1", "DungCredits2"], "Iron 75 CopperBar 50 JungleTree 50 BirchTree 60 Fish1 50 Fish2 50 Gold 75 Bug1 125 Bug2 150".split(" "), "Dementia 80 PalmTree 120 StumpTree 100 Fish3 100 Fish4 100 Gold 75 PlatBar 20 Bug3 150 Bug5 100".split(" "), "16 50 90 85 75 60".split(" "), "15 30 46 90 91 105 106 115 120 121 270 271 285 286 300 301 450 451 453 460 465 466 467 480 481 482 495 496 497 135 136 137 165 360 316 317 315 361 362 363 525 526 527".split(" "), ["636", "638", "633", "637", "640"], "0 1 2 3 4 5 6 7 25 26".split(" "), "8 9 10 11 12 13 14 15 16".split(" "), "17 18 19 20 21 22 23 24 27 28".split(" "), "2 7 9 11 17 16 4 5 3 7 12 20 19 16 4 5 7 18 13 21 23 16 4 5 7 14 16 5 24 22 25 26 28".split(" "), "0 3 5 8 10 13 15 19 20 23 27 31 33 37 41 45 48 50 53 56 58 60 63 66".split(" "), "1 .20 .10 .05 .02 .01 .004 .001 .0005 .0003".split(" "), "_ _ _ _ _ _ _ _ _ _ BarCook.png BarBreed.png BarLab.png BarB2.png BarDiv.png BarR2.png BarB5.png BarB2.png BarB4.png".split(" "), "1 16 28 51 55 57 63 70 101 108 110 116".split(" "), "2 5 8 12 15 20 25 35 50 65 80 100 125 150 175 200".split(" "), "2 3 4 7 11 15 20 35 60 100 170 300 500 800 1250 1700 2550 3000 4000 5000 7000 9000 12500 17500 25000 35000 45000 60000 100000 150000 200000 350000 600000 1200000 1500000 1900000 2500000 3500000 5000000 7000000 10000000 15000000 25000000 50000000 65000000 80000000 125000000 150000000 160000000 200000000 250000000 350000000 400000000 500000000 600000000 800000000 1000000000 1250000000 1500000000 1800000000 2000000000 3000000000 5000000000 8000000000 12000000000 18000000000 25000000000 40000000000 60000000000 75000000000 90000000000".split(" "), "0 2 7 3 0 12 21 9 20 1 6 3 22 2 15 26 19 0 9 13 8 28 30 18 23 6 15 22 14 11 17 21 33 19 16 13 8 10 7 23 11 14 25 16 31 24 33 32 29 14 27 31 25 24 10 33 6 9 12 16 20 23 25 27 33 32 26 2 2 2 2".split(" "), "0 2 7 0 3 12 21 2 7 9 1 3 20 6 12 22 21 15 0 9 23 1 19 20 2 13 6 8 22 15 18 23 14 21 19 11 13 8 17 7 18 16 14 1 10 20 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11".split(" "), "1 10 30 75 125 9999 9999".split(" "), "Gobo Oinkin Capital_P Blobbo Nebula_Neddy Eliteus Rift_Ripper Nebulyte Monolith Royal_Worm".split(" "), "5 5 15 5 1 15 5 1 1".split(" "), "105 110 111 113 130 131 134 137 138 142 143 144 146 149 152 153 154 155 156 157 159 161 164 165 166 167 168 171 174".split(" "), "WINDWALKER_CLASS_v2.35;NEW_UPDATE_PATCH_NOTES_@_*The_Windwalker_class_is_OUT_NOW!_It_comes_from_the_Beastmaster_archer_class,_so_go_talk_to_Masterius_in_World_6_on_your_Beastmaster!_@_*Embark_on_a_new_journey_with_Windwalker's_Tempest_Mode,_unlocking_maps_one_by_one_and_slaying_abominations_as_you_gain_more_and_more_power_with_your_Compass!_You_can_leave_Tempest_Mode_at_any_time,_since_this_is_a_separate_mode_and_NOT_a_rebirth_of_the_main_game!_Rebirths_suck!_@_*Spend_dust_in_the_Compass_to_upgrade_your_Windwalker's_stats_and_unlock_bonuses_for_the_rest_of_the_game!_@_*5_new_Pristine_Charms_added_to_Sneaking!_@_*New_Bundle_available_to_buy_in_the_Gemshop!_It_gives_the_new_Evergreen_Robe_clothing,_as_well_as_the_new_Nametag!_@_*Adjusted_how_Ninja_Charms_scale._Simply_put,_they_give_bigger_bonuses,_and_its_harder_to_cap_them!_@_*New_Limited_Specials_section_in_the_Gemshop!;*Le Monde 6 est arrivé, avec tout ce que vous pourriez souhaiter ! De nouveaux monstres, de nouvelles compétences, de nouvelles cartes, de nouveaux tampons, de nouvelles bulles, de nouvelles fioles, de nouvelles statues, de nouveaux équipements, tellement de nouveautés ! @ *Vous pouvez découvrir le Monde 6 vous-même, à la place, ces notes de mise à jour concernent tous les changements de cette mise à jour non liés au Monde 6. @ *Nouvel affichage des pièces ajouté ! Collectez 100 pièces Godshard pour voir ce que je veux dire ! @ *Le succès Trial by Time peut désormais être complété à n'importe quelle vitesse de déplacement. @ *Mise à l'échelle du bonus ajustée sur la 6ème bulle de chaque couleur. C'est un buff pour toute personne en dessous du niveau de bulle 300, sinon c'est un nerf. @ * Correction du problème où les archers glissaient lorsqu'ils essayaient de combattre des foules protégées. @ *Les attaques au canon de Siege Breaker apparaissent désormais derrière lui.;*Welt 6 ist da, mit allem, was Sie sich nur wünschen können! Neue Monster, neue Fähigkeiten, neue Karten, neue Stempel, neue Blasen, neue Fläschchen, neue Statuen, neue Ausrüstung, so viel neues Zeug! @ *Sie können Welt 6 selbst entdecken. Stattdessen gelten diese Patchnotizen für alle Änderungen in diesem Update, die nicht mit Welt 6 zusammenhängen. @ *Neue Münzanzeige hinzugefügt! Sammle 100 Godshard-Münzen, um zu sehen, was ich meine! @ *Die Errungenschaft „Prüfung durch Zeit“ kann jetzt bei jeder Bewegungsgeschwindigkeit abgeschlossen werden. @ *Bonusskalierung für die 6. Blase jeder Farbe angepasst. Es ist ein Buff für alle unter Bubble Lv 300, andernfalls ist es ein Nerf. @ *Das Problem wurde behoben, bei dem Bogenschützen herumrutschten, wenn sie versuchten, gegen abgeschirmte Mobs zu kämpfen. @ *Die Kanonenangriffe von Belagerungsbrecher erscheinen jetzt hinter ihm.;*원하는 모든 것을 갖춘 월드 6이 도착했습니다! 새로운 몬스터, 새로운 기술, 새로운 지도, 새로운 우표, 새로운 거품, 새로운 약병, 새로운 조각상, 새로운 장비, 너무나 많은 새로운 것들! @ *월드 6를 직접 발견하실 수 있습니다. 대신 이 패치 노트는 월드 6과 관련되지 않은 이번 업데이트의 모든 변경 사항에 대한 것입니다. @ *새로운 코인 표시가 추가되었습니다! 100개의 갓샤드 동전을 모아 무슨 뜻인지 알아보세요! @ *이제 모든 이동 속도에서 시간별 시험 업적을 완료할 수 있습니다. @ *각 색상의 6번째 버블에 대한 보너스 스케일링을 조정했습니다. 버블 Lv 300 미만인 사람에게는 버프이고, 그렇지 않으면 너프입니다. @ *방어막이 있는 몹과 싸울 때 궁수가 미끄러지는 문제를 수정했습니다. @ *Siege Breaker의 대포 공격이 이제 그의 뒤에서 생성됩니다.;*あなたが望むすべてが揃ったワールド 6 が到着しました!新しいモンスター、新しいスキル、新しいマップ、新しいスタンプ、新しいバブル、新しい小瓶、新しい彫像、新しい装備など、新しいものがたくさんあります。 @ *ワールド 6 はご自身で発見することができます。代わりに、これらのパッチノートは、ワールド 6 に関係しないこのアップデートのすべての変更を対象としています。 @ *新しいコインの表示が追加されました。 Godshard コインを 100 枚集めて、私の言っている意味を確認してください。 @ *Trial by Time アチーブメントは任意の移動速度で完了できるようになりました。 @ *各色の 6 番目のバブルのボーナス スケーリングを調整しました。バブルLv 300以下の人にとってはバフですが、そうでない場合はナーフです。 @ *射手がシールドされたMobと戦おうとすると滑り回る問題を修正しました。 @ *Siege Breaker の大砲攻撃が彼の背後に出現するようになりました。;*世界 6 已经到来，拥有您想要的一切！新怪物、新技能、新地图、新印章、新泡泡、新瓶子、新雕像、新装备，这么多新东西！ @ *您可以自己发现世界 6，相反，这些补丁说明适用于本次更新中与世界 6 无关的所有更改。@ *添加了新硬币显示！收集 100 个神碎片硬币就明白我的意思了！ @ *时间审判成就现在可以以任何移动速度完成。 @ *调整了每种颜色的第六个气泡的奖金比例。对于 300 级以下的泡泡来说是一个 buff，否则就是 nerf。 @ *修复了弓箭手在试图对抗屏蔽小怪时会滑动的问题。 @ *攻城者的大炮攻击现在在他身后产生。".split(";"), "Pet0 Pet1 Pet3 Pet2 Pet7 w4b4 Pet10 Pet5 Pet8 Pet11 PetNA".split(" "), "0 2 7 13 22 31 38 48 54 62 62".split(" "), "TestObj16 TestObj5 TestObj8 TestObj14 TestObj15 EquipmentWeapons1 Trophy4 EquipmentCape1 EquipmentWeapons2 EquipmentRingsChat8 EquipmentHats72 EquipmentNametag2 EquipmentGown0".split(" "), "babayaga babaHour poopBig babaMummy mini3a mini4a iceBossZ iceBossZ2 iceBossZ3 snakeZ snakeZ2 snakeZ3 frogGR frogGR2 frogGR3 Meteor".split(" "), "BLOOD_BERSERKER DEATH_BRINGER DIVINE_KNIGHT ROYAL_GUARDIAN SIEGE_BREAKER MAYHEIM WIND_WALKER BEAST_MASTER ELEMENTAL_SORCERER SPIRITUAL_MONK ARCANE_CULTIST BUBONIC_CONJUROR FILLER MINING SMITHING CHOPPING FISHING ALCHEMY BUG_CATCHING TRAPPING CONSTRUCTION WORSHIP COOKING BREEDING LABORATORY SAILING DIVINITY GAMING FARMING SNEAKING SUMMONING".split(" "), "_ DEATH_BRINGER _ ROYAL_GUARDIAN _ MAYHEIM WIND_WALKER _ _ SPIRITUAL_MONK ARCANE_CULTIST _ FILLER MINING SMITHING CHOPPING FISHING ALCHEMY BUG_CATCHING TRAPPING CONSTRUCTION WORSHIP COOKING BREEDING LABORATORY SAILING DIVINITY GAMING FARMING SNEAKING SUMMONING".split(" "), "GrasslandsA GrasslandsB SewerA TreeInteriorA GrasslandsC SewerB JungleA GrasslandsD TreeInteriorB JungleB JungleC ForestA ForestB ForestC TreeInteriorC".split(" "), "zDesertCalmA zDesertCalmB zDesertCalmC zDesertMildA zDesertMildB zDesertMildC zDesertMildD zDesertNightA zDesertNightB zDesertNightC zDesertNightD".split(" "), "ySnowA1 ySnowA2 ySnowA3 ySnowB1 ySnowB2 ySnowB3 ySnowB4 ySnowB5 ySnowC1 ySnowC2 ySnowC3 ySnowC4 ySnowD1".split(" "), "xSpaceA1 xSpaceA2 xSpaceA3 xSpaceA4 xSpaceB1 xSpaceB2 xSpaceB3 xSpaceB4 xSpaceB5 xSpaceC1 xSpaceC2 xSpaceC3 xSpaceC4".split(" "), "wLavaA1 wLavaA2 wLavaA3 wLavaA4 wLavaA5 wLavaB1 wLavaB2 wLavaB3 wLavaB4 wLavaB5 wLavaB6 wLavaC1 wLavaC2".split(" "), "Oh_hi_again_cutie..._how_you_doing? Heyyyyy..._so_uhm,_yea..._about_that... Oh,_it's_you..._huh.... Well_well_well_look_who_came_back!_I_knew_you_couldn't_resist_me! Great_timing!_I_just_finished_work,_I_dropped_351_new_players_off_at_world_1_# My_my..._you_look_just_as_handsome_as_the_day_we_first_met! Ew,_the_noob_is_back_|_@_Haha_just_kidding_you're_still_a_cutie. Oh_how_long_I've_been_waiting_for_you_to_return... Aha!_I_knew_you_wouldn't_forget_about_me! I_knew_what_we_had_between_us_was_special,_I'm_glad_you_felt_the_same_way...".split(" "), "Kill_all_monsters_in_under_25_seconds!_Tick_tock,_times_running_out!! Defeat_10_monsters_without_hurting_a_green_mushroom! Yahtzee!!!!_You_need_a_6,_or_it's_gonna_be_all_over_baby! Oh_no,_the_energy_orbs_are_coming!_Hehehe_don't_get_zapped! I'm_gonna_close_my_eyes_and_count_to_10._You_better_be_climbing_when_I_open_them! Defeat_5_monsters_within_20_seconds!_Yeah_yeah_move_them_feet!! Ok_uhhmm..._how_about_a_classic_coin_flip?_Look_right_for_heads,_look_left_for_tails! Hmmm..._now_kill_the_monster_closest_to_the_middle_of_the_screen! 'Yawn'..._Uh,_do_100_lines_of_damage_before_I_get_bored_and_self_heal! WHAT?_Who_let_all_these_shrooms_in??!?_Haha_jk_jk_it_was_obviously_me._Ya_got_35_seconds... I_sure_love_my_soda,_it'd_be_a_real_shame_if_any_were_to_get_spilled..._anyway,_go_kill_that_crab_hehe!    ".split(" "), "Aaaaarrrggghhh...._aauuguauauauauauau..._I'm_ded...._hehehehe OOF_OUCHIE!_I'm_gonna_need_an_ice_pack_for_this_one..._pfft_hahahaha!! Awww_ya_got_me_^_hahaha_\\ Oh_jeez,_Lava_ain't_gonna_be_happy_when_I_tell_him_that_you_made_it_this_Far..._erm,_I_mean_dying_noises!!!_Gahh_I'm_dead!! Golly!_You_done_killed_me!_Shucks,_guess_you_get_all_this_loot_now_since_I'm_dead_and_all_that_lol ..._@_I'd_congratulate_you_for_killing_me,_but_I_think_Lava_told_me_that_playing_dead_means_not_talking,_so_I_won't_say_anything... Oh_no_I'm_dead_etc_etc_yada_yada..._ugh_when_is_my_shift_over... Oof_there_goes_my_HP_bar,_guess_you_finally_vanquished_IdleOn's_'FINAL'_Boss...._tehehehe Wow_what_a_fight!_Here,_you_deserve_these_great_items,_after_all_I_am_the_final_boss_and_you_did_kill_me_once_and_for_all_#".split(" "), "0 1 6 7 8 9 11 12 19 28 29 30 31 32 filler filler".split(" "), ["ObolAmarokA", "ObolEfauntA", "ObolChizoarA", "ObolSlush", "ObolTroll"], "96 137 168 159 57 258 247 160 113 308 197 315 325 205 280 330".split(" "), "Slargon Pirate_Porkchop Muhmuguh Poigu Lava_Larry Tired_Mole".split(" "), "Lafu_Shi Hoov Woodlin_Elder Tribal_Shaman Legumulyte Potti Sussy_Gene Spirit_Sungmin Masterius".split(" "), ["Meteor", "rocky", "iceknight", "snakeZ", "frogGR"], ["EquipmentHats78", "EquipmentRingsChat10"], ["EquipmentToolsHatchet11"], ["EquipmentHats79", "ObolKnight"], ["EquipmentTools13"], ["ObolFrog"], "w5a1 w5a2 w5a3 w5a4 w5a5 w5b1 w5b2 w5b3 w5b4 w5b5 w5b6 w5c1 w5c2 Copper Iron Gold Plat Dementia Void Lustre Starfire Dreadlo Godshard FishSmall FishMed Bug2 FishBig w6a1 w6a2 w6a3 w6a4 w6a5 w6b1 w6b2 w6b3 w6b4 w6c1 w6c2 w6d1 w6d2 w6d3 rift1 rift2 rift3 rift4 rift5".split(" "), "6 7 5 6 6 3 10 15 8 5 7 6 6 0 9 0 3 0 7 11 8 4 3 1 5 5 0 7 8 3 -1 10 2 5 5 10 4 4 2 2 0 1 3 10 0 5 5 3 2 4 4 0 5 4 6 0 -2 5 2 5 6 6 12 3 10 0 0 4 8 2 1 3 9 0".split(" "), "7 6 4 -1 9 4 3 5 6 9 5 1 7 0 2 0 6 0 7 4 1 0 -4 3 5 2 6 6 2 -1 -3 7 1 2 2 10 -3 0 3 4 0 1 -1 4 0 2 -1 0 0 -1 3 0 1 1 8 -6 -2 -3 -5 6 0 0 9 3 9 0 0 9 8 -4 4 2 11 0".split(" "), "0 16 3 5 15 20 0 1 3 4 10 22 2 3 11 19 16 6 5 22 21 20 7 12 15 3 8 0 23 9 22 4 21 5 1 13 3 2 24 16 14 17 25 6 4 15 24 7 18 21 5 3 0 9 24 1 6 2 4 23 16 24 25 7 5 8 9 20 16 1".split(" "), "+{%_Drop_Rate +{%_Class_EXP +{%_Skill_EXP +{_Infinite_Star_Signs +{%_Multikill_Per_Tier +{%_Total_Damage +{_Base_STR +{_Base_AGI +{_Base_WIS +{_Base_LUK +{_Tab_1_Talent_Pts +{_Tab_2_Talent_Pts +{_Tab_3_Talent_Pts +{_Tab_4_Talent_Pts +{_Star_Talent_Pts +{%_Faster_Refinery_Speed +{%_Faster_Shiny_Pet_Lv_Up_Rate +{%_Sail_Captain_EXP_Gain +{%_Lower_Minimum_Travel_Time_for_Sailing +{%_Line_Width_in_Lab +{%_Bonuses_from_All_Meals +{%_Higher_Artifact_Find_Chance +{_Base_Efficiency_for_All_Skills +{_Base_Critters_per_Trap +{%_Farming_EXP_gain +{%_Summoning_EXP_gain".split(" "), "1 1 2 2 1 1 2 2 2 2 2 2 2 2 2 2 3 3 1 1 1 2 20 1 1 1".split(" "), "test2;test2 Copy;dez;Beach;testi;testorama;des;Beach2".split(";"), "42 318 497 79 146 362 43 536 165 35".split(" "), "30 185 237 346 238 414 398 412 178 660 879 889 731 867 724 500 501 568 68 382 255 31 554 666 724 514".split(" "), "113 208 113 89 23 191 229 212 172 64 119 88 185 22 155 145 210 111 18 20 40 80 23 43 204 228".split(" "), "9999999 172800 86400 57600 43200 28800 14400 7200 3600".split(" "), "w6a1 w6a1 w6a3 w6a4 w6a4 w6a5 w6b1 w6b2 w6b3 w6b4 w6c1 w6d3 w6d1 w6d2 w6a2".split(" "), "vSpiritA1 vSpiritA2 vSpiritA3 vSpiritA4 vSpiritA5 vSpiritB1 vSpiritB2 vSpiritB3 vSpiritB4 vSpiritC1 vSpiritC2 vSpiritD1 vSpiritD2 vSpiritD3".split(" "), "Â â œ Ÿ Ô Ö ô É È Ç Œ Œâ Œœ ŒŸ".split(" "), "Gemstone_Ninja_Knowledge_{_+30%_DROP_RARITY New_Gold_Charms_added_{_+10%_ALL_STAT Bargain_Ninja_Knowledge_{_+5_All_Talent_LV +30_Max_LV_for_Sneaking_Items_{_1.10#_DMG_MULTI Haha_yea_there's_no_bonus_here_yet Haha_yea_there's_no_bonus_here_yet. Haha_yea_there's_no_bonus_here_yet. Haha_yea_there's_no_bonus_here_yet.".split(" "), "{}%_Stealth_@_for_all_Ninjas {}%_Jade_@_Gain {}%_Damage_@_to_Doors +}%_Gold_@_Charm_Bonus {}%_Sneak_@_EXP_Gain {}%_Bonuses_@_from_Gemstones $%_Cheaper_@_Upgrades {}_Higher_@_Charm_LVs".split(" "), "Mega-Rare_Drop Rare_Drop LockedInvSpace Blank InvStorage99 GemP16 GemP25 GemP19 GemP9 GemP10 InvBag21 InvBag22 InvBag23 InvBag24 InvBag25 InvBag26 InvStorage31 InvStorage32 InvStorage33 InvStorage34 InvStorage35 InvStorage36 InvStorage37 InvStorage38 InvStorage39 InvStorage40 InvStorage41 InvStorage42 GemP35 EquipmentHats43 Quest31 EquipmentHats36".split(" "), "mushG frogG beanG slimeG snakeG carrotO goblinG plank frogBIG branch acorn jarSand mimicA crabcake coconut sandcastle pincermin poopSmall ratB potato steak moonman sandgiant snailZ sheep flake stache bloque mamoth snowball penguin thermostat glass snakeB speaker eye ram mushP w4a2 w4a3 demonP w4b2 w4b1 w4b3 w4b4 w4b5 w4c1 w4c2 w4c3 w4c4 w5a1 w5a2 w5a3 w5a4 w5a5 w5b1 w5b2 w5b3 w5b4 w5b5 w5b6 w5c1 w5c2 w5b6 w6a1 w6a2 w6a3 w6a4 w6a5 w6b1 w6b2 w6b3 w6b4 w6c1 w6c2 w6d1 w6d2 w6d3".split(" "), "3 2 4 5 106 8 12 6 7 107 118 10 110 116 9 113 11 114 109 108 117 115 112 111".split(" "), "14 17 119 18 120 16 15 21 122 124 19 123 20 121 22 129 125 130 134 128 127 133 24 25 132 131 23 135 26 136 126".split(" "), "28 29 139 35 137 30 142 34 140 141 32 145 31 37 138 38 146 33 144 36 148 147 150 149 39 143".split(" "), "42 41 43 44 45 154 151 47 152 49 48 155 46 52 50 157 53 158 153 56 51 156 164 55 163 57 162 159 167 54 161 58 166 160 165 168 169 59".split(" "), "60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105".split(" "), ["拳", "拖", "拒", "拇", "担"], "抢 抠 扯 扭 扫 托 打 才 手".split(" ")]
+compass_path_ordering = {
+    'Default': [0, 170],
+    'Elemental': [1] + [int(v) for v in RANDOlist[105]],
+    'Fighter': [13] + [int(v) for v in RANDOlist[106]],
+    'Survival': [27] + [int(v) for v in RANDOlist[107]],
+    'Nomadic': [40] + [int(v) for v in RANDOlist[108]],
+    'Abomination': [int(v) for v in RANDOlist[109]],
+}
+
 # Last pulled from UpgradeVault function in v2.29 Upgrade Vault 2
 vault_upgrades_list = ["Bigger_Damage 8 1.025 0 500 1 0 0 0 +{_Damage._Monsters_hate_this_upgrade! _".split(" "), "Natural_Talent_製_(Tap_for_Info) 14 1.15 0 200 1 7 0 0 +{_Talent_Points._Go_spend_them! _".split(" "), "Monster_Tax 10 1.05 0 500 2 13 0 0 +{%_Coins_dropped_by_Monsters. Total_Coin_Bonus_from@all@sources;~x".split(" "), "Wicked_Smart 15 1.20 0 500 2 36 0 0 +{%_Class_EXP_Gain. Leveling_up_gives_you_Talent_Pts!".split(" "), "Bullseye_製 25 1.15 0 200 1 54 0 0 +{_Accuracy._Useful_when_you_start_missing! _".split(" "), "Steel_Guard 40 1.30 0 100 1 65 0 0 +{_Defence._Useful_when_monsters_start_hurting! _".split(" "), "Evolving_Talent_製 60 1.18 0 200 1 75 0 0 +{_Talent_Points_for_Warrior,_Archer,_and_Mage! _".split(" "), "Massive_Whirl 777 1.10 0 1 2 83 0 0 Whirl_is_2x_as_big_and_can_hit_+{_more_monsters! _".split(" "), "Rapid_Arrows 777 1.10 0 1 1 85 0 0 Piercing_Arrow_fires_double_arrows! _".split(" "), "Dual_Fireballs 777 1.10 0 1 1 87 0 0 Fireball_casts_in_both_directions_at_the_same_time! _".split(" "), "Weapon_Craft_製 150 7.5 0 5 10 100 0 0 All_crafted_weapons_give_+{%_more_damage. Go_craft_a_new_weapon_at_the_Anvil_in_town!".split(" "), "Mining_Payday$_製 200 1.28 0 40 2 115 0 0 +{%_Coins_(Total:+^%)_per_POW_10_ores_mined. Go_make_a_2nd_player_to_go_mining_for_you!".split(" "), "Baby_on_Board_製 250 1.08 0 50 2 130 0 0 +{%_Class_EXP_Gain_for_your_Lowest_LV_Player _".split(" "), "Major_Discount 300 1.30 0 80 1 175 0 0 All_upgrades_in_the_Vault_are_{%_cheaper _".split(" "), "Bored_to_Death_製 300 4.50 0 10 5 190 0 0 +{%_Coins_from_Monsters_per_POW_10_Bean_Kills. $%_Coins".split(" "), "Knockout!_製 1000 6 0 5 1 220 0 0 +{%_Total_Damage_per_Knockout! Current_Target:&____Total:+$%_DMG".split(" "), "Stamp_Bonanza 500 1.20 0 100 2 275 0 0 }x_higher_bonuses_from_Sword,_Heart, Target,_and_Shield_Stamps".split(" "), "Carry_Capacity_製 650 1.35 0 100 5 300 0 0 Can_carry_+{_more_resources_per_slot! Craft_Bags_at_the_anvil_to_boost_this_way_more!".split(" "), "Drops_for_Days 700 1.17 0 50 1 345 0 0 +{%_Drop_Rarity,_also_known_by_the IdleOn_community_as_Drop_Rate,_or_DR".split(" "), "Happy_Doggy_製 800 1.25 0 100 2 350 0 0 +{%_Dog_Happiness _".split(" "), "Slice_N_Dice_製 900 1.10 0 100 2 370 0 0 +{_Base_Damage_per_POW_10_Carrot_Kills. $_Dmg".split(" "), "Go_Go_Secret_Owl_製 400 1.10 0 100 5 410 0 0 +{%_Feathers/sec_for_Orion_the_Horned_Owl _".split(" "), "Boss_Decimation 1150 1.12 0 25 1 460 0 0 +{%_Boss_Damage _".split(" "), "Sleepy_Time 1200 1.55 0 20 1 520 0 0 +{%_AFK_Gains_for_Fighting_and_Skilling _".split(" "), "Production_Revolution_製 1300 1.15 0 100 5 580 0 0 +{%_faster_Anvil_Production _".split(" "), "Statue_Bonanza 1500 1.28 0 50 2 630 0 0 }x_higher_bonuses_from_Power,_Speed, Mining,_and_Lumberbob_Statues".split(" "), "Beeg_Forge 1600 1.15 0 100 5 690 0 0 +{%_higher_Forge_Capacity _".split(" "), "Stick_Snapping_製 1800 1.13 0 50 1 750 0 0 +{%_Total_Damage_per_POW_10_Branch_Kills. $%_DMG".split(" "), "Liquid_Knowledge 2000 1.06 0 100 1 830 0 0 +{%_Alchemy_EXP_Gain _".split(" "), "Bug_Knowledge 2100 1.06 0 100 1 910 0 0 +{%_Catching_EXP_Gain _".split(" "), "Fish_Knowledge 2200 1.06 0 100 1 960 0 0 +{%_Fishing_EXP_Gain _".split(" "), "Dirty_Money_製 3000 1.10 0 25 2 1000 0 0 +{%_Coins_from_Monsters_per_POW_10_Poop_Kills $%_Coins".split(" "), "Vault_Mastery 10000 1.65 0 50 1 1050 0 0 }x_higher_bonuses_from_all_the_Vault_Upgrades above_with_the_Blue_Highlight!!!".split(" "), "Storage Slots;5000;4.00;0;24;1;1100;0;0;+{_more_slots_in_your_Storage_Chest!;Great_for_moving_items_between_players!".split(";"), "Recipe_for_Profit_製 8000 1.35 0 50 1 1140 0 0 +{%_Coins_per_recipe_unlocked_from_Taskboard! Total_bonus:+$%_Coins".split(" "), "Schoolin'_the_Fish$_製 15000 1.50 0 20 1 1210 0 0 +{%_Class_EXP_per_POW_10_fish_caught. Total_Bonus:+$%_Class_EXP".split(" "), "Straight_to_Storage 3000000 1.85 0 1 1 1260 0 0 You_can_now_deposit_resources_from_AFK_straight_to storage._Other_items_will_still_drop_on_the_ground.".split(" "), "Bubble_Money_製 36000 1.70 0 10 1 1320 0 0 +{%_Coins_from_Mobs_for_each_time_you_upgrade an_Alchemy_Bubble._Total_Bonus:+$%_Coins".split(" "), "Drip_Drip_Drip 55000 1.35 0 20 5 1400 0 0 +{%_faster_Liquid_Generation_for_Alchemy. This_is_one_of_the_costs_to_upgrade_bubbles!".split(" "), "Active_Learning 85000 1.10 0 100 2 1470 0 0 }x_more_Class_EXP_gained_from_defeating_monsters while_the_game_is_open.".split(" "), "Stunning_Talent 120000 1.14 0 100 1 1540 0 0 +{_Talent_Points_for_your_Subclass._Talk_to Specius_in_World_2_Map_3_to_get_your_subclass!!!".split(" "), "Bug_Power_En_Masse$ 170000 1.50 0 20 1 1620 0 0 +{%_Total_Damage_per_POW_10_bugs_caught. Total_Bonus:+$%_DMG".split(" "), "Vial_Overtune_製 245000 25 0 3 10 1700 0 0 All_vials_give_}x_higher_bonuses. _".split(" "), "Active_Murdering 400000 1.35 0 100 1 1780 0 0 Killing_monsters_open_portals_}x_faster_while the_game_is_open.".split(" "), "Card_Retirement_製 50000000 1.00 0 1 1 1850 0 0 Cards_that_give_Card_Drop_Rate_bonuses_become PASSIVE,_so_you_never_need_to_equip_them_again!".split(" "), "Go_Go_Secret_Kangaroo_Mouse_製 580000 1.10 0 250 10 1920 0 0 +{%_Bluefish_for_Poppy_the_Kangaroo_Mouse! _".split(" "), "All_Armoured_Up 700000 1.15 0 100 1 2000 0 0 All_equipment_gives_}x_more_DEF_stat. You'll_need_this_to_not_die_from_monsters!".split(" "), "Daily_Mailbox 1100000 2.5 0 10 1 2080 0 0 Get_{_Post_Office_boxes_every_day_you_open up_IdleOn_and_play_it!".split(" "), "Buildie_Sheepie_製 1500000 1.65 0 20 2 2160 0 0 +{%_Construction_SPD_per_POW_10_Sheepie_Kills. $%_Build_SPD".split(" "), "Quest_KAPOW!_製 2200000 1.08 0 200 1 2240 0 0 Raises_the_max_LV_of_the_star_talent_to_{ You'll_see_this_star_talent_on_Page_1.".split(" "), "Critters_'n_Souls_製 3500000 1.06 0 300 1 2320 0 0 +{%_more_Critters_and_Souls_from_all_sources! _".split(" "), "Slight_Do-Over 5500000 2.10 0 20 1 2400 0 0 Hold_down_on_a_Talent_to_refund,_doable_{_times every_day._This_will_refund_the_points!".split(" "), "Duplicate_Entries 100000000 1.00 0 1 1 2470 0 0 Whenever_you_get_new_colosseum_tickets,_you_get DOUBLE_the_amount!".split(" "), "Special_Talent 15000000 1.08 0 150 1 2530 0 0 +{_Star_Talent_Points _".split(" "), "Kitchen_Dream-mare 25000000 1.20 0 500 6 2600 0 0 }x_meal_cooking_speed Go_on_lad,_turn_that_kitchen_around!".split(" "), "Lab_Knowledge 40000000 1.10 0 100 1 2700 0 0 +{%_Lab_EXP_Gain_for_all_players _".split(" "), "Foraging_Forever 70000000 1.15 0 250 1 2850 0 0 +{%_Foraging_Speed_for_all_pets,_so_you_can_gather spices_so_much_faster!".split(" "), "Teh_TOM 112000000 1.25 0 500 2 3000 0 0 +{_Tome_Score._Maybe_this_will_get_you_into_the Top_1%_Score_of_all_IdleOn_players?".split(" "), "Pet_Punchies 175000000 1.13 0 250 2 3100 0 0 +{%_Pet_Damage_for_all_pets,_so_you_can_win_pet battles_easier_and_collect_new_spices!".split(" "), "Breeding_Knowledge 300000000 1.10 0 100 2 3200 0 0 +{%_Breeding_EXP_Gain. Also,_rare_eggs_now_have_a_HUGE_exp_multi!".split(" "), "Cooking_Knowledge 600000000 1.14 0 500 2 3300 0 0 +{%_Cooking_EXP_Gain._This_bonus_is_weird,_it actually_goes_up_faster_the_more_you_level_it!".split(" "), "Vault_Mastery_II 1500000000.0 2.00 0 50 1 3500 0 0 }x_higher_bonuses_from_all_the_Vault_Upgrades above_with_the_Green_Highlight!!!".split(" ")]
 vault_dont_scale = [1, 6, 7, 8, 9, 13, 32, 999, 33, 36, 40, 42, 43, 44, 49, 51, 52, 53, 57, 61]  # Pulled from the start of VaultUpgBonus under _customBlock_Summoning in v2.27
@@ -8366,19 +9029,15 @@ vault_stack_types = ['Knockout']
 vault_section_indexes = [32, 61]  #Vault Mastery and Vault Mastery II's indexes
 
 def decode_enemy_name(coded_name: str) -> str:
-    decoded_name = coded_name  #In the event it isn't found, return the coded name
-    for card_set in card_data:
-        if coded_name in card_data[card_set]:
-            #logger.debug(f"Target found! {coded_name} = {card_data[card_set][coded_name][0]}")
-            decoded_name = f"{card_data[card_set][coded_name][0]}"
-    if decoded_name == coded_name:
-        logger.warning(f"Could not find decoded name for {coded_name}")
+    decoded_name = enemy_coded_names.get(coded_name, f"Unknown-{coded_name}")
+    if decoded_name.startswith('Unknown'):
+        logger.warning(f"Unknown enemy code name: {coded_name}")
     return decoded_name
 
 #logger.debug(f"{grimoire_decoded_stack_monster_order}")
 ###SLAB CONSTS###
-#SlabItemSort last pulled from code in v2.29 Upgrade Vault 2
-slabList = "Copper Iron Gold Plat Dementia Void Lustre Starfire Marble Dreadlo Godshard Motherlode CopperBar IronBar GoldBar PlatBar DementiaBar VoidBar LustreBar StarfireBar MarbleBar DreadloBar GodshardBar OakTree BirchTree JungleTree ForestTree ToiletTree PalmTree StumpTree SaharanFoal Tree7 AlienTree Tree8 Tree9 Tree11 Tree10 Tree12 Tree13 MotherlodeTREE Leaf1 Leaf2 Leaf3 Leaf4 Leaf5 Leaf6 Fish1 Fish2 Fish3 Fish4 Fish5 Fish6 Fish7 Fish8 Fish9 Fish10 Fish11 Fish12 Fish13 Fish14 Bug1 Bug2 Bug3 Bug4 Bug5 Bug6 Bug7 Bug8 Bug9 Bug11 Bug10 Bug12 Bug13 Bug14 Critter1 Critter1A Critter2 Critter2A Critter3 Critter3A Critter4 Critter4A Critter5 Critter5A Critter6 Critter6A Critter7 Critter7A Critter8 Critter8A Critter9 Critter9A Critter10 Critter10A Critter11 Critter11A Soul1 Soul2 Soul3 Soul4 Soul5 Soul6 Soul7 Refinery1 Refinery2 Refinery3 Refinery4 Refinery5 Refinery6 CraftMat1 CraftMat2 CraftMat3 CraftMat5 CraftMat6 CraftMat7 CraftMat9 CraftMat8 CraftMat10 CraftMat11 CraftMat12 CraftMat13 CraftMat14 OilBarrel1 OilBarrel2 OilBarrel3 OilBarrel4 OilBarrel5 OilBarrel6 OilBarrel7 PureWater PureWater2 Grasslands1 Grasslands2 Grasslands3 Grasslands4 Jungle1 Jungle2 Jungle3 Forest1 Forest2 Forest3 Sewers1 Sewers1b Sewers2 Sewers3 TreeInterior1 TreeInterior1b TreeInterior2 DesertA1 DesertA1b DesertA2 DesertA3 DesertA3b DesertB1 DesertB2 DesertB3 DesertB4 DesertC1 DesertC2 DesertC2b DesertC3 DesertC4 SnowA1 SnowA2 SnowA2a SnowA3 SnowA4 SnowB1 SnowB2 SnowB2a SnowB5 SnowB3 SnowB4 SnowC1 SnowC2 SnowC3 SnowC4 SnowC4a SnowC5 GalaxyA1 GalaxyA2 GalaxyA2b GalaxyA3 GalaxyA4 GalaxyB1 GalaxyB2 GalaxyB3 GalaxyB4 GalaxyB5 GalaxyC1 GalaxyC1b GalaxyC2 GalaxyC3 GalaxyC4 LavaA1 LavaA1b LavaA2 LavaA3 LavaA4 LavaA5 LavaA5b LavaB1 LavaB2 LavaB3 LavaB3b LavaB4 LavaB5 LavaB6 LavaC1 LavaC2 SpiA1 SpiA2 SpiA2b SpiA3 SpiA4 SpiA5 SpiB1 SpiB2 SpiB2b SpiB3 SpiB4 SpiC1 SpiC2 SpiD1 SpiD2 SpiD3 BabaYagaETC Hgg Quest17 Quest29 EfauntDrop1 EfauntDrop2 Chiz0 Chiz1 TrollPart KrukPart KrukPart2 EquipmentHats11 EquipmentHats12 EquipmentHats13 EquipmentHats14 EquipmentHats1 EquipmentHats15 EquipmentHats17 EquipmentHats20 EquipmentHats3 EquipmentHats16 EquipmentHats21 EquipmentHats18 EquipmentHats22 EquipmentHats28 EquipmentHats19 TestObj13 EquipmentHats41 EquipmentHats26 EquipmentHats52 EquipmentHats53 EquipmentHats54 EquipmentHats61 EquipmentHats58 EquipmentHats59 EquipmentHats60 EquipmentHats68 EquipmentHats70 EquipmentHats71 EquipmentHats74 EquipmentHats77 EquipmentHats83 EquipmentHats105 EquipmentHats106 EquipmentHats5 EquipmentHats6 EquipmentHats7 EquipmentHats8 EquipmentHats9 EquipmentHats10 EquipmentHats4Choppin EquipmentHats25 EquipmentHats107 EquipmentHats29 EquipmentHats39 EquipmentHats27 EquipmentHats30 EquipmentHats44 EquipmentHats2 EquipmentHats67 EquipmentHats64 EquipmentHats66 EquipmentHats79 EquipmentHats73 EquipmentHats51 EquipmentHatsBeg1 EquipmentHats56 EquipmentHats63 EquipmentHats85 EquipmentHats86 EquipmentHats87 EquipmentHats88 EquipmentHats42 EquipmentHats69 EquipmentHats108 EquipmentHats55 EquipmentHats75 EquipmentHats76 EquipmentHats65 EquipmentHats80 EquipmentHats81 EquipmentHats82 EquipmentHats78 EquipmentHats35 EquipmentHats38 EquipmentHats47 EquipmentHats48 EquipmentHats46 EquipmentHats116 EquipmentHats33 EquipmentHats49 EquipmentHats50 EquipmentHats110 EquipmentHats113 EquipmentHats117 EquipmentHats24 EquipmentHats114 EquipmentHats115 EquipmentHats57 EquipmentHats45 EquipmentHats62 EquipmentHats32 EquipmentHats37 EquipmentHats89 EquipmentHats34 EquipmentHats109 EquipmentHats84 EquipmentHats31 EquipmentHats111 EquipmentHats112 EquipmentHats90 EquipmentHats91 EquipmentHats92 EquipmentHats93 EquipmentHats94 EquipmentHats95 EquipmentHats96 EquipmentHats97 EquipmentHats98 EquipmentHats99 EquipmentHats100 EquipmentHats101 EquipmentHats102 EquipmentHats103 EquipmentHats104 EquipmentPunching1 EquipmentPunching2 EquipmentPunching3 EquipmentPunching4 EquipmentPunching5 EquipmentPunching6 EquipmentPunching7 EquipmentPunching8 EquipmentPunching9 EquipmentPunching10 EquipmentPunching11 TestObj1 TestObj7 TestObj3 EquipmentSword1 EquipmentSword2 EquipmentSword3 EquipmentSword4 EquipmentSword5 EquipmentSword6 EquipmentSword7 EquipmentSword8 EquipmentSword9 EquipmentBows1 EquipmentBows3 EquipmentBows4 EquipmentBows5 EquipmentBows6 EquipmentBows7 EquipmentBows8 EquipmentBows9 EquipmentBows10 EquipmentBows11 EquipmentBows12 EquipmentBows13 EquipmentBows14 EquipmentWands1 EquipmentWands2 EquipmentWands5 EquipmentWands6 EquipmentWands3 EquipmentWands7 EquipmentWands8 EquipmentWands9 EquipmentWands10 EquipmentWands11 EquipmentWands12 EquipmentWands13 EquipmentShirts1 EquipmentShirts17 EquipmentShirts19 EquipmentShirts20 EquipmentShirts24 EquipmentShirts25 EquipmentShirts2 EquipmentShirts16 EquipmentShirts3 EquipmentShirts21 EquipmentShirts10 EquipmentShirts11 EquipmentShirts12 EquipmentShirts13 EquipmentShirts18 EquipmentShirts14 EquipmentShirts5 EquipmentShirts23 EquipmentShirts22 EquipmentShirts15 EquipmentShirts26 EquipmentShirts27 EquipmentShirts31 EquipmentShirts28 EquipmentShirts29 EquipmentShirts30 EquipmentShirts6 EquipmentShirts32 EquipmentShirts33 EquipmentShirts34 EquipmentShirts35 EquipmentShirts36 EquipmentShirts37 EquipmentShirts38 EquipmentPants1 EquipmentPants2 EquipmentPants3 EquipmentPants4 EquipmentPants17 EquipmentPants5 EquipmentPants6 EquipmentPants20 EquipmentPants21 EquipmentPants10 EquipmentPants15 EquipmentPants16 EquipmentPants18 EquipmentPants19 EquipmentPants22 EquipmentPants23 EquipmentPants9 EquipmentPants24 EquipmentPants25 EquipmentPants8 EquipmentPants26 EquipmentPants27 EquipmentPants29 EquipmentPants30 EquipmentShoes1 EquipmentShoes9 EquipmentShoes15 EquipmentShoes3 EquipmentShoes20 EquipmentShoes4 EquipmentShoes5 EquipmentShoes21 EquipmentShoes22 EquipmentShoes7 EquipmentShoes16 EquipmentShoes17 EquipmentShoes18 EquipmentShoes19 EquipmentShoes2 EquipmentShoes23 EquipmentShoes26 EquipmentShoes27 EquipmentShoes28 EquipmentShoes29 EquipmentShoes30 EquipmentShoes31 EquipmentShoes32 EquipmentShoes33 EquipmentShoes39 EquipmentShoes24 EquipmentShoes25 EquipmentShoes34 EquipmentShoes35 EquipmentShoes36 EquipmentShoes37 EquipmentShoes38 EquipmentPendant9 EquipmentPendant32 EquipmentPendant10 EquipmentPendant11 EquipmentPendant12 EquipmentPendant14 EquipmentPendant16 EquipmentPendant17 EquipmentPendant18 EquipmentPendant19 EquipmentPendant20 EquipmentPendant21 EquipmentPendant22 EquipmentPendant23 EquipmentPendant24 EquipmentPendant25 EquipmentPendant26 EquipmentPendant27 EquipmentPendant28 EquipmentPendant31 EquipmentPendant29 EquipmentPendant30 EquipmentPendant33 EquipmentRings2 EquipmentRings3 EquipmentRings6 EquipmentRings7 EquipmentRings11 EquipmentRings12 EquipmentRings13 EquipmentRings14 EquipmentRings15 EquipmentRings16 EquipmentRings21 EquipmentRings20 EquipmentRings19 EquipmentRingsFishing1 EquipmentRingsFishing2 EquipmentRingsFishing3 EquipmentRings22 EquipmentRings18 EquipmentRings36 EquipmentRings23 EquipmentRings24 EquipmentRings25 EquipmentRings26 EquipmentRings27 EquipmentRings28 EquipmentRings29 EquipmentRings35 EquipmentRings30 EquipmentRings33 EquipmentRings31 EquipmentRings32 EquipmentRings34 EquipmentRingsChat10 EquipmentRingsChat1 EquipmentRingsChat2 EquipmentRingsChat3 EquipmentRingsChat4 EquipmentRingsChat5 EquipmentRingsChat11 EquipmentRingsChat9 EquipmentRingsChat6 EquipmentCape0 EquipmentCape2 EquipmentCape3 EquipmentCape4 EquipmentCape5 EquipmentCape6 EquipmentCape7 EquipmentCape8 EquipmentCape9 EquipmentCape10 EquipmentCape11 EquipmentCape12 EquipmentCape13 EquipmentCape14 EquipmentCape15 EquipmentCape16 EquipmentKeychain0 EquipmentKeychain1 EquipmentKeychain2 EquipmentKeychain3 EquipmentKeychain4 EquipmentKeychain5 EquipmentKeychain6 EquipmentKeychain7 EquipmentKeychain8 EquipmentKeychain9 EquipmentKeychain10 EquipmentKeychain11 EquipmentKeychain12 EquipmentKeychain13 EquipmentKeychain14 EquipmentKeychain15 EquipmentKeychain16 EquipmentKeychain17 EquipmentKeychain18 EquipmentKeychain19 EquipmentKeychain20 EquipmentKeychain21 EquipmentKeychain22 EquipmentKeychain23 EquipmentKeychain24 EquipmentKeychain25 EquipmentKeychain26 EquipmentKeychain27 EquipmentKeychain28 EquipmentKeychain29 Trophy1 Trophy2 Trophy3 Trophy5 Trophy6 Trophy7 Trophy8 Trophy9 Trophy10 Trophy11 Trophy12 Trophy13 Trophy14 Trophy15 Trophy16 Trophy17 Trophy18 Trophy19 Trophy20 Trophy21 Trophy22 EquipmentNametag1 EquipmentNametag3 EquipmentNametag4 EquipmentNametag5 EquipmentNametag6b EquipmentNametag7 EquipmentNametag8 EquipmentNametag9 EquipmentNametag10 EquipmentNametag11 EquipmentNametag12 EquipmentNametag13 EquipmentNametag14 EquipmentNametag15 EquipmentNametag16 EquipmentNametag17 EquipmentNametag18 EquipmentGown1 EquipmentGown2 EquipmentTools1 EquipmentTools2 EquipmentTools3 EquipmentTools5 EquipmentTools6 EquipmentTools7 EquipmentTools11 EquipmentTools8 EquipmentTools12 EquipmentTools9 EquipmentTools14 EquipmentTools15 EquipmentTools10 EquipmentTools13 EquipmentToolsHatchet0 EquipmentToolsHatchet3 EquipmentToolsHatchet1 EquipmentToolsHatchet2b EquipmentToolsHatchet2 EquipmentToolsHatchet4 EquipmentToolsHatchet5 EquipmentToolsHatchet7 EquipmentToolsHatchet6 EquipmentToolsHatchet8 EquipmentToolsHatchet9 EquipmentToolsHatchet12 EquipmentToolsHatchet10 EquipmentToolsHatchet11 FishingRod2 FishingRod3 FishingRod4 FishingRod5 FishingRod6 FishingRod7 FishingRod8 FishingRod9 FishingRod10 FishingRod11 FishingRod12 CatchingNet2 CatchingNet3 CatchingNet4 CatchingNet5 CatchingNet6 CatchingNet7 CatchingNet8 CatchingNet9 CatchingNet10 CatchingNet11 CatchingNet12 TrapBoxSet1 TrapBoxSet2 TrapBoxSet3 TrapBoxSet4 TrapBoxSet5 TrapBoxSet6 TrapBoxSet7 TrapBoxSet8 TrapBoxSet9 TrapBoxSet10 WorshipSkull1 WorshipSkull2 WorshipSkull3 WorshipSkull4 WorshipSkull5 WorshipSkull6 WorshipSkull7 WorshipSkull8 WorshipSkull9 WorshipSkull10 WorshipSkull11 DNAgun0 DNAgun1 DNAgun2 DNAgun3 FoodHealth1 FoodHealth3 FoodHealth2 Peanut FoodHealth4 FoodHealth6 FoodHealth7 FoodHealth10 FoodHealth9 FoodHealth11 FoodHealth13 FoodHealth12 FoodHealth14 FoodHealth15 FoodHealth16 FoodHealth17 FoodHealth5 FoodEvent8 Meatloaf FoodPotOr1 FoodPotOr2 FoodPotOr3 FoodPotOr4 FoodPotRe1 FoodPotRe2 FoodPotRe3 FoodPotRe4 FoodPotGr1 FoodPotGr2 FoodPotGr3 FoodPotGr4 FoodEvent7 FoodPotMana1 FoodPotMana2 FoodPotMana3 FoodPotMana4 FoodPotYe1 FoodPotYe2 FoodPotYe3 FoodPotYe4 FoodPotYe5 FoodEvent6 Pearl3 FoodMining1 FoodEvent1 Pearl2 FoodChoppin1 FoodEvent2 FoodFish1 FoodEvent3 Pearl1 FoodCatch1 FoodEvent4 FoodTrapping1 FoodWorship1 Bullet BulletB Bullet3 MidnightCookie FoodEvent5 PeanutG FoodG1 FoodG2 FoodG3 FoodG4 FoodG5 FoodG6 FoodG7 FoodG8 FoodG9 FoodG10 FoodG11 FoodG12 FoodG13 ButterBar rtt0 ResetFrag ResetCompleted ResetCompletedS ClassSwap ClassSwapB ResetBox Ht StonePremRestore StonePremStatswap Key1 Key2 Key3 Key4 Key5 TixCol SilverPen PremiumGem TalentPoint1 TalentPoint2 TalentPoint3 TalentPoint4 TalentPoint5 TalentPoint6 Gfoodcoupon ItemsCoupon1 ItemsCoupon2 ExpBalloon1 ExpBalloon2 ExpBalloon3 Pearl4 Pearl6 Pearl5 Quest30 Quest35 Quest36 Quest38 Quest39 Quest40 Quest42 Quest43 Quest44 Quest49 Quest50 Quest70 Quest71 Quest72 Quest73 Quest90 Quest94 Quest75 Quest85 Quest88 Quest89 Quest91 Quest92 Quest76 Quest77 Quest79 Quest80 GemP30 Quest81 Quest82 Quest95 Timecandy1 Timecandy2 Timecandy3 Timecandy4 Timecandy5 Timecandy6 Timecandy7 Timecandy8 Timecandy9 StoneWe StoneWeb StoneW1 StoneW2 StoneW3 StoneW3b StoneW6 StoneW4 StoneW5 StoneW7 StoneW8 StoneAe StoneAeB StoneA1 StoneA1b StoneA2 StoneA2b StoneA3 StoneA3b StoneA4 StoneA5 StoneA6 StoneA7 StoneTe StoneT1 StoneT1e StoneT1eb StoneT2 StoneT3 StoneT4 StoneT5 StoneT6 StoneT7 StoneHelm1 StoneHelm6 StoneHelm1b StoneHelm7 StoneZ1 StoneZ2 StoneZ3 StoneZ4 StonePremSTR StonePremAGI StonePremWIS StonePremLUK JobApplication SmithingHammerChisel SmithingHammerChisel2 SmithingHammerChisel3 BobJoePickle BallJoePickle BoneJoePickle Quest1 Crystal1 Crystal2 Crystal3 Crystal4 Crystal5 PeanutS Quest3 Quest4 Mayo Trash Trash2 Trash3 Quest5 Quest6 Quest7 Quest10 Quest11 Quest12 Quest13 Quest14 Quest15 Quest16 Quest18 Quest19 Quest20 Quest21 Quest22 Quest23 Quest24 Quest25 Quest26 Quest27 GoldricP1 GoldricP2 GoldricP3 Cutter Quest32 Quest33 Quest34 Quest37 Quest41 Quest45 Quest46 Quest47 Quest48 Quest28 Island1 Island0 Quest86 Quest87 Quest93 Quest51 Quest52 PalmTreeD Quest53 Quest54 Quest55 Quest56 Quest57 Quest58 Quest59 Quest60 Quest61 Quest62 Quest63 Quest64 Quest65 Quest66 Quest67 Whetstone Quest68 Quest69 Quest74 Quest78 Quest83 Quest84 Bone0 Bone1 Bone2 Bone3 BadgeG1 BadgeG2 BadgeG3 BadgeD1 BadgeD2 BadgeD3 NPCtoken1 NPCtoken2 NPCtoken3 NPCtoken5 NPCtoken6 NPCtoken4 NPCtoken9 NPCtoken10 NPCtoken11 NPCtoken13 NPCtoken7 Quest9 NPCtoken15 NPCtoken12 NPCtoken14 NPCtoken16 NPCtoken17 NPCtoken18 NPCtoken19 NPCtoken20 NPCtoken21 NPCtoken27 NPCtoken22 NPCtoken24 NPCtoken25 NPCtoken26 NPCtoken23 NPCtoken28 NPCtoken29 NPCtoken30 NPCtoken31 NPCtoken32 NPCtoken33 NPCtoken34 NPCtoken35 NPCtoken36 NPCtoken37 NPCtoken38 NPCtoken39 NPCtoken40 NPCtoken41 BadgeI1 BadgeI2 BadgeI3 EquipmentStatues1 EquipmentStatues2 EquipmentStatues3 EquipmentStatues4 EquipmentStatues5 EquipmentStatues6 EquipmentStatues7 EquipmentStatues8 EquipmentStatues9 EquipmentStatues10 EquipmentStatues11 EquipmentStatues12 EquipmentStatues13 EquipmentStatues14 EquipmentStatues15 EquipmentStatues16 EquipmentStatues17 EquipmentStatues18 EquipmentStatues19 EquipmentStatues20 EquipmentStatues21 EquipmentStatues22 EquipmentStatues23 EquipmentStatues24 EquipmentStatues25 EquipmentStatues26 EquipmentStatues27 EquipmentStatues28 EquipmentStatues29 EquipmentStatues30 EquipmentSmithingTabs2 EquipmentSmithingTabs3 EquipmentSmithingTabs4 EquipmentSmithingTabs5 EquipmentSmithingTabs6 SmithingRecipes1 SmithingRecipes2 SmithingRecipes3 SmithingRecipes4 SmithingRecipes5 SmithingRecipes6 TalentBook1 TalentBook2 TalentBook3 TalentBook4 TalentBook5 MaxCapBagT2 MaxCapBag1 MaxCapBag2 MaxCapBag3 MaxCapBag4 MaxCapBag5 MaxCapBagMi6 MaxCapBagMi7 MaxCapBagMi8 MaxCapBagMi9 MaxCapBagMi10 MaxCapBagMi11 MaxCapBagT1 MaxCapBag7 MaxCapBag9 MaxCapBagT3 MaxCapBagT4 MaxCapBagT5 MaxCapBagT6 MaxCapBagT7 MaxCapBagT8 MaxCapBagT9 MaxCapBagT10 MaxCapBagT11 MaxCapBag6 MaxCapBag8 MaxCapBag10 MaxCapBagF3 MaxCapBagF4 MaxCapBagF5 MaxCapBagF6 MaxCapBagF7 MaxCapBagF8 MaxCapBagF9 MaxCapBagF10 MaxCapBagF11 MaxCapBagM1 MaxCapBagM2 MaxCapBagM3 MaxCapBagM4 MaxCapBagM5 MaxCapBagM6 MaxCapBagM7 MaxCapBagM8 MaxCapBagM9 MaxCapBagM10 MaxCapBagM11 MaxCapBagM12 MaxCapBagFi1 MaxCapBagFi2 MaxCapBagFi3 MaxCapBagFi4 MaxCapBagFi5 MaxCapBagFi6 MaxCapBagFi7 MaxCapBagFi8 MaxCapBagFi9 MaxCapBagFi10 MaxCapBagFi11 MaxCapBagB1 MaxCapBagB2 MaxCapBagB3 MaxCapBagB4 MaxCapBagB5 MaxCapBagB6 MaxCapBagB7 MaxCapBagB8 MaxCapBagB9 MaxCapBagB10 MaxCapBagB11 MaxCapBagTr1 MaxCapBagTr3 MaxCapBagTr4 MaxCapBagTr5 MaxCapBagTr6 MaxCapBagTr7 MaxCapBagTr8 MaxCapBagTr9 MaxCapBagTr10 MaxCapBagS1 MaxCapBagS3 MaxCapBagS4 MaxCapBagS5 MaxCapBagS6 MaxCapBagS7 MaxCapBagS8 MaxCapBagS9 MaxCapBagS10 ObolBronze0 ObolSilver0 ObolGold0 ObolPlatinum0 ObolPink0 ObolBronze1 ObolSilver1 ObolGold1 ObolPlatinum1 ObolPink1 ObolBronze2 ObolSilver2 ObolGold2 ObolPlatinum2 ObolPink2 ObolBronze3 ObolSilver3 ObolGold3 ObolPlatinum3 ObolPink3 ObolBronzeDamage ObolSilverDamage ObolGoldDamage ObolPlatinumDamage ObolPinkDamage ObolSilverMoney ObolGoldMoney ObolBronzeMining ObolSilverMining ObolGoldMining ObolPlatinumMining ObolPinkMining ObolBronzeChoppin ObolSilverChoppin ObolGoldChoppin ObolPlatinumChoppin ObolPinkChoppin ObolBronzeFishing ObolSilverFishing ObolGoldFishing ObolPlatinumFishing ObolPinkFishing ObolBronzeCatching ObolSilverCatching ObolGoldCatching ObolPlatinumCatching ObolPinkCatching ObolSilverLuck ObolGoldLuck ObolPlatinumLuck ObolPinkLuck ObolBronzePop ObolSilverPop ObolGoldPop ObolPlatinumPop ObolPinkPop ObolBronzeKill ObolSilverKill ObolGoldKill ObolPlatinumKill ObolPinkKill ObolBronzeEXP ObolSilverEXP ObolGoldEXP ObolPlatinumEXP ObolPinkEXP ObolBronzeCard ObolSilverCard ObolGoldCard ObolPlatinumCard ObolPinkCard ObolBronzeDef ObolSilverDef ObolGoldDef ObolPlatinumDef ObolPinkDef ObolBronzeTrapping ObolSilverTrapping ObolGoldTrapping ObolPlatinumTrapping ObolPinkTrapping ObolBronzeCons ObolSilverCons ObolGoldCons ObolPlatinumCons ObolPinkCons ObolBronzeWorship ObolSilverWorship ObolGoldWorship ObolPlatinumWorship ObolPinkWorship ObolFrog ObolAmarokA ObolEfauntA ObolKnight ObolSlush ObolChizoarA ObolTroll ObolLava ObolKruk ObolHyper0 ObolHyper1 ObolHyper2 ObolHyper3 ObolHyperB0 ObolHyperB1 ObolHyperB2 ObolHyperB3 StampA1 StampA2 StampA3 StampA4 StampA5 StampA6 StampA7 StampA8 StampA9 StampA10 StampA11 StampA12 StampA13 StampA14 StampA15 StampA16 StampA17 StampA18 StampA19 StampA20 StampA21 StampA22 StampA23 StampA24 StampA25 StampA26 StampA27 StampA28 StampA29 StampA30 StampA31 StampA32 StampA33 StampA34 StampA35 StampA36 StampA37 StampA38 StampA39 StampA40 StampA41 StampA42 StampB1 StampB2 StampB3 StampB4 StampB5 StampB6 StampB7 StampB8 StampB9 StampB10 StampB11 StampB12 StampB13 StampB14 StampB15 StampB16 StampB17 StampB18 StampB19 StampB20 StampB21 StampB22 StampB23 StampB24 StampB25 StampB26 StampB27 StampB28 StampB29 StampB30 StampB31 StampB32 StampB33 StampB34 StampB35 StampB36 StampB37 StampB38 StampB39 StampB40 StampB41 StampB42 StampB43 StampB44 StampB45 StampB46 StampB47 StampB48 StampB49 StampB50 StampB51 StampB52 StampB53 StampB54 StampC1 StampC2 StampC3 StampC4 StampC5 StampC6 StampC7 StampC8 StampC9 StampC10 StampC11 StampC12 StampC13 StampC14 StampC15 StampC16 StampC17 StampC18 StampC19 StampC20 StampC21 StampC22 StampC23 InvBag1 InvBag2 InvBag3 InvBag4 InvBag5 InvBag6 InvBag7 InvBag8 InvBag100 InvBag101 InvBag102 InvBag103 InvBag104 InvBag105 InvBag106 InvBag107 InvBag108 InvBag113 InvBag114 InvBag109 InvBag110 InvBag111 InvBag112 InvStorage1 InvStorage2 InvStorage3 InvStorage4 InvStorage5 InvStorage6 InvStorage7 InvStorage8 InvStorage9 InvStorage10 InvStorage11 InvStorage12 InvStorage13 InvStorage14 InvStorage15 InvStorage16 InvStorage17 InvStorage18 InvStorage19 InvStorage20 InvStorage21 InvStorage22 InvStorage23 InvStorage24 InvStorage25 InvStorage26 InvStorage27 InvStorage28 InvStorageF InvStorageS InvStorageC InvStorageD InvStorageN InvStorageH InvStorageL Weight1 Weight2 Weight3 Weight4 Weight5 Weight6 Weight7 Weight8 Weight9 Weight10 Weight11 Weight12 Weight13 Weight14 Line1 Line2 Line3 Line4 Line5 Line6 Line7 Line8 Line9 Line10 Line11 Line12 Line13 Line14 Ladle PetEgg Genetic0 Genetic1 Genetic2 Genetic3 CardPack1 CardPack2 CardPack3 CardPack4 CardPack5 CardPack6 CardPack7 DungCredits2 Cash XP XPskill DungEnhancer0 DungEnhancer1 DungEnhancer2 DungRNG0 DungRNG1 DungRNG2 DungRNG3 DungRNG4 DungeonA1 DungeonA2 DungeonA3 DungeonA4 DungeonA5 DungeonA6 DungeonA7 DungeonA8 KeyFrag DungCredits1 LootDice Tree7D PlatD Fish1D Fish3D Cashb Dung3Ice FoodHealth1d FoodHealth2d FoodHealth3d DungWeaponPunchA1 DungWeaponPunchA2 DungWeaponPunchA3 DungWeaponPunchA4 DungWeaponPunchA5 DungWeaponPunchB1 DungWeaponPunchB2 DungWeaponPunchB3 DungWeaponPunchB4 DungWeaponPunchB5 DungWeaponPunchC1 DungWeaponPunchC2 DungWeaponPunchC3 DungWeaponPunchC4 DungWeaponPunchC5 DungWeaponPunchD1 DungWeaponPunchD2 DungWeaponPunchD3 DungWeaponPunchD4 DungWeaponPunchD5 DungWeaponPunchE1 DungWeaponPunchE2 DungWeaponPunchE3 DungWeaponPunchE4 DungWeaponPunchE5 DungWeaponPunchF1 DungWeaponPunchF2 DungWeaponPunchF3 DungWeaponPunchF4 DungWeaponPunchF5 DungWeaponSwordA1 DungWeaponSwordA2 DungWeaponSwordA3 DungWeaponSwordA4 DungWeaponSwordA5 DungWeaponSwordB1 DungWeaponSwordB2 DungWeaponSwordB3 DungWeaponSwordB4 DungWeaponSwordB5 DungWeaponSwordC1 DungWeaponSwordC2 DungWeaponSwordC3 DungWeaponSwordC4 DungWeaponSwordC5 DungWeaponSwordD1 DungWeaponSwordD2 DungWeaponSwordD3 DungWeaponSwordD4 DungWeaponSwordD5 DungWeaponSwordE1 DungWeaponSwordE2 DungWeaponSwordE3 DungWeaponSwordE4 DungWeaponSwordE5 DungWeaponSwordF1 DungWeaponSwordF2 DungWeaponSwordF3 DungWeaponSwordF4 DungWeaponSwordF5 DungWeaponBowA1 DungWeaponBowA2 DungWeaponBowA3 DungWeaponBowA4 DungWeaponBowA5 DungWeaponBowB1 DungWeaponBowB2 DungWeaponBowB3 DungWeaponBowB4 DungWeaponBowB5 DungWeaponBowC1 DungWeaponBowC2 DungWeaponBowC3 DungWeaponBowC4 DungWeaponBowC5 DungWeaponBowD1 DungWeaponBowD2 DungWeaponBowD3 DungWeaponBowD4 DungWeaponBowD5 DungWeaponBowE1 DungWeaponBowE2 DungWeaponBowE3 DungWeaponBowE4 DungWeaponBowE5 DungWeaponBowF1 DungWeaponBowF2 DungWeaponBowF3 DungWeaponBowF4 DungWeaponBowF5 DungWeaponWandA1 DungWeaponWandA2 DungWeaponWandA3 DungWeaponWandA4 DungWeaponWandA5 DungWeaponWandB1 DungWeaponWandB2 DungWeaponWandB3 DungWeaponWandB4 DungWeaponWandB5 DungWeaponWandC1 DungWeaponWandC2 DungWeaponWandC3 DungWeaponWandC4 DungWeaponWandC5 DungWeaponWandD1 DungWeaponWandD2 DungWeaponWandD3 DungWeaponWandD4 DungWeaponWandD5 DungWeaponWandE1 DungWeaponWandE2 DungWeaponWandE3 DungWeaponWandE4 DungWeaponWandE5 DungWeaponWandF1 DungWeaponWandF2 DungWeaponWandF3 DungWeaponWandF4 DungWeaponWandF5 DungEquipmentHats0 DungEquipmentHats1 DungEquipmentHats2 DungEquipmentHats3 DungEquipmentHats4 DungEquipmentShirt0 DungEquipmentShirt1 DungEquipmentShirt2 DungEquipmentShirt3 DungEquipmentShirt4 DungEquipmentPants0 DungEquipmentPants1 DungEquipmentPants2 DungEquipmentPants3 DungEquipmentPants4 DungEquipmentShoes0 DungEquipmentShoes1 DungEquipmentShoes2 DungEquipmentShoes3 DungEquipmentShoes4 DungEquipmentPendant0 DungEquipmentPendant1 DungEquipmentPendant2 DungEquipmentPendant3 DungEquipmentPendant4 DungEquipmentRings0 DungEquipmentRings1 DungEquipmentRings2 DungEquipmentRings3 DungEquipmentRings4".split(" ")
+#SlabItemSort last pulled from code in v2.35 Wind Walker class
+slabList = "Copper Iron Gold Plat Dementia Void Lustre Starfire Marble Dreadlo Godshard Motherlode CopperBar IronBar GoldBar PlatBar DementiaBar VoidBar LustreBar StarfireBar MarbleBar DreadloBar GodshardBar OakTree BirchTree JungleTree ForestTree ToiletTree PalmTree StumpTree SaharanFoal Tree7 AlienTree Tree8 Tree9 Tree11 Tree10 Tree12 Tree13 MotherlodeTREE Leaf1 Leaf2 Leaf3 Leaf4 Leaf5 Leaf6 Fish1 Fish2 Fish3 Fish4 Fish5 Fish6 Fish7 Fish8 Fish9 Fish10 Fish11 Fish12 Fish13 Fish14 Bug1 Bug2 Bug3 Bug4 Bug5 Bug6 Bug7 Bug8 Bug9 Bug11 Bug10 Bug12 Bug13 Bug14 Critter1 Critter1A Critter2 Critter2A Critter3 Critter3A Critter4 Critter4A Critter5 Critter5A Critter6 Critter6A Critter7 Critter7A Critter8 Critter8A Critter9 Critter9A Critter10 Critter10A Critter11 Critter11A Soul1 Soul2 Soul3 Soul4 Soul5 Soul6 Soul7 Refinery1 Refinery2 Refinery3 Refinery4 Refinery5 Refinery6 CraftMat1 CraftMat2 CraftMat3 CraftMat5 CraftMat6 CraftMat7 CraftMat9 CraftMat8 CraftMat10 CraftMat11 CraftMat12 CraftMat13 CraftMat14 OilBarrel1 OilBarrel2 OilBarrel3 OilBarrel4 OilBarrel5 OilBarrel6 OilBarrel7 PureWater PureWater2 Grasslands1 Grasslands2 Grasslands3 Grasslands4 Jungle1 Jungle2 Jungle3 Forest1 Forest2 Forest3 Sewers1 Sewers1b Sewers2 Sewers3 TreeInterior1 TreeInterior1b TreeInterior2 DesertA1 DesertA1b DesertA2 DesertA3 DesertA3b DesertB1 DesertB2 DesertB3 DesertB4 DesertC1 DesertC2 DesertC2b DesertC3 DesertC4 SnowA1 SnowA2 SnowA2a SnowA3 SnowA4 SnowB1 SnowB2 SnowB2a SnowB5 SnowB3 SnowB4 SnowC1 SnowC2 SnowC3 SnowC4 SnowC4a SnowC5 GalaxyA1 GalaxyA2 GalaxyA2b GalaxyA3 GalaxyA4 GalaxyB1 GalaxyB2 GalaxyB3 GalaxyB4 GalaxyB5 GalaxyC1 GalaxyC1b GalaxyC2 GalaxyC3 GalaxyC4 LavaA1 LavaA1b LavaA2 LavaA3 LavaA4 LavaA5 LavaA5b LavaB1 LavaB2 LavaB3 LavaB3b LavaB4 LavaB5 LavaB6 LavaC1 LavaC2 SpiA1 SpiA2 SpiA2b SpiA3 SpiA4 SpiA5 SpiB1 SpiB2 SpiB2b SpiB3 SpiB4 SpiC1 SpiC2 SpiD1 SpiD2 SpiD3 BabaYagaETC Hgg Quest17 Quest29 EfauntDrop1 EfauntDrop2 Chiz0 Chiz1 TrollPart KrukPart KrukPart2 EquipmentHats11 EquipmentHats12 EquipmentHats13 EquipmentHats14 EquipmentHats1 EquipmentHats15 EquipmentHats17 EquipmentHats20 EquipmentHats3 EquipmentHats16 EquipmentHats21 EquipmentHats18 EquipmentHats22 EquipmentHats28 EquipmentHats19 TestObj13 EquipmentHats41 EquipmentHats26 EquipmentHats52 EquipmentHats53 EquipmentHats54 EquipmentHats61 EquipmentHats58 EquipmentHats59 EquipmentHats60 EquipmentHats68 EquipmentHats70 EquipmentHats71 EquipmentHats74 EquipmentHats77 EquipmentHats83 EquipmentHats105 EquipmentHats106 EquipmentHats5 EquipmentHats6 EquipmentHats7 EquipmentHats8 EquipmentHats9 EquipmentHats10 EquipmentHats4Choppin EquipmentHats25 EquipmentHats107 EquipmentHats29 EquipmentHats39 EquipmentHats27 EquipmentHats30 EquipmentHats44 EquipmentHats2 EquipmentHats67 EquipmentHats64 EquipmentHats66 EquipmentHats79 EquipmentHats73 EquipmentHats51 EquipmentHatsBeg1 EquipmentHats56 EquipmentHats63 EquipmentHats85 EquipmentHats86 EquipmentHats87 EquipmentHats88 EquipmentHats42 EquipmentHats69 EquipmentHats108 EquipmentHats55 EquipmentHats75 EquipmentHats76 EquipmentHats65 EquipmentHats80 EquipmentHats81 EquipmentHats82 EquipmentHats78 EquipmentHats35 EquipmentHats38 EquipmentHats47 EquipmentHats48 EquipmentHats46 EquipmentHats116 EquipmentHats33 EquipmentHats49 EquipmentHats50 EquipmentHats110 EquipmentHats113 EquipmentHats117 EquipmentHats24 EquipmentHats114 EquipmentHats115 EquipmentHats57 EquipmentHats45 EquipmentHats62 EquipmentHats32 EquipmentHats37 EquipmentHats89 EquipmentHats34 EquipmentHats109 EquipmentHats84 EquipmentHats31 EquipmentHats111 EquipmentHats112 EquipmentHats118 EquipmentHats90 EquipmentHats91 EquipmentHats92 EquipmentHats93 EquipmentHats94 EquipmentHats95 EquipmentHats96 EquipmentHats97 EquipmentHats98 EquipmentHats99 EquipmentHats100 EquipmentHats101 EquipmentHats102 EquipmentHats103 EquipmentHats104 EquipmentPunching1 EquipmentPunching2 EquipmentPunching3 EquipmentPunching4 EquipmentPunching5 EquipmentPunching6 EquipmentPunching7 EquipmentPunching8 EquipmentPunching9 EquipmentPunching10 EquipmentPunching11 TestObj1 TestObj7 TestObj3 EquipmentSword1 EquipmentSword2 EquipmentSword3 EquipmentSword4 EquipmentSword5 EquipmentSword6 EquipmentSword7 EquipmentSword8 EquipmentSword9 EquipmentBows1 EquipmentBows3 EquipmentBows4 EquipmentBows5 EquipmentBows6 EquipmentBows7 EquipmentBows8 EquipmentBows9 EquipmentBows10 EquipmentBows11 EquipmentBows12 EquipmentBows13 EquipmentBows14 EquipmentWands1 EquipmentWands2 EquipmentWands5 EquipmentWands6 EquipmentWands3 EquipmentWands7 EquipmentWands8 EquipmentWands9 EquipmentWands10 EquipmentWands11 EquipmentWands12 EquipmentWands13 EquipmentShirts1 EquipmentShirts17 EquipmentShirts19 EquipmentShirts20 EquipmentShirts24 EquipmentShirts25 EquipmentShirts2 EquipmentShirts16 EquipmentShirts3 EquipmentShirts21 EquipmentShirts10 EquipmentShirts11 EquipmentShirts12 EquipmentShirts13 EquipmentShirts18 EquipmentShirts14 EquipmentShirts5 EquipmentShirts23 EquipmentShirts22 EquipmentShirts15 EquipmentShirts26 EquipmentShirts27 EquipmentShirts31 EquipmentShirts28 EquipmentShirts29 EquipmentShirts30 EquipmentShirts6 EquipmentShirts32 EquipmentShirts33 EquipmentShirts34 EquipmentShirts35 EquipmentShirts36 EquipmentShirts37 EquipmentShirts38 EquipmentPants1 EquipmentPants2 EquipmentPants3 EquipmentPants4 EquipmentPants17 EquipmentPants5 EquipmentPants6 EquipmentPants20 EquipmentPants21 EquipmentPants10 EquipmentPants15 EquipmentPants16 EquipmentPants18 EquipmentPants19 EquipmentPants22 EquipmentPants23 EquipmentPants9 EquipmentPants24 EquipmentPants25 EquipmentPants8 EquipmentPants26 EquipmentPants27 EquipmentPants29 EquipmentPants30 EquipmentShoes1 EquipmentShoes9 EquipmentShoes15 EquipmentShoes3 EquipmentShoes20 EquipmentShoes4 EquipmentShoes5 EquipmentShoes21 EquipmentShoes22 EquipmentShoes7 EquipmentShoes16 EquipmentShoes17 EquipmentShoes18 EquipmentShoes19 EquipmentShoes2 EquipmentShoes23 EquipmentShoes26 EquipmentShoes27 EquipmentShoes28 EquipmentShoes29 EquipmentShoes30 EquipmentShoes31 EquipmentShoes32 EquipmentShoes33 EquipmentShoes39 EquipmentShoes24 EquipmentShoes25 EquipmentShoes34 EquipmentShoes35 EquipmentShoes36 EquipmentShoes37 EquipmentShoes38 EquipmentPendant9 EquipmentPendant32 EquipmentPendant10 EquipmentPendant11 EquipmentPendant12 EquipmentPendant14 EquipmentPendant16 EquipmentPendant17 EquipmentPendant18 EquipmentPendant19 EquipmentPendant20 EquipmentPendant21 EquipmentPendant22 EquipmentPendant23 EquipmentPendant24 EquipmentPendant25 EquipmentPendant26 EquipmentPendant27 EquipmentPendant28 EquipmentPendant31 EquipmentPendant29 EquipmentPendant30 EquipmentPendant33 EquipmentRings2 EquipmentRings3 EquipmentRings6 EquipmentRings7 EquipmentRings11 EquipmentRings12 EquipmentRings13 EquipmentRings14 EquipmentRings15 EquipmentRings16 EquipmentRings21 EquipmentRings20 EquipmentRings19 EquipmentRingsFishing1 EquipmentRingsFishing2 EquipmentRingsFishing3 EquipmentRings22 EquipmentRings18 EquipmentRings36 EquipmentRings23 EquipmentRings24 EquipmentRings25 EquipmentRings26 EquipmentRings27 EquipmentRings28 EquipmentRings29 EquipmentRings35 EquipmentRings30 EquipmentRings33 EquipmentRings31 EquipmentRings32 EquipmentRings34 EquipmentRingsChat10 EquipmentRingsChat1 EquipmentRingsChat2 EquipmentRingsChat3 EquipmentRingsChat4 EquipmentRingsChat5 EquipmentRingsChat11 EquipmentRingsChat9 EquipmentRingsChat6 EquipmentCape0 EquipmentCape2 EquipmentCape3 EquipmentCape4 EquipmentCape5 EquipmentCape6 EquipmentCape7 EquipmentCape8 EquipmentCape9 EquipmentCape10 EquipmentCape11 EquipmentCape12 EquipmentCape13 EquipmentCape14 EquipmentCape15 EquipmentCape16 EquipmentKeychain0 EquipmentKeychain1 EquipmentKeychain2 EquipmentKeychain3 EquipmentKeychain4 EquipmentKeychain5 EquipmentKeychain6 EquipmentKeychain7 EquipmentKeychain8 EquipmentKeychain9 EquipmentKeychain10 EquipmentKeychain11 EquipmentKeychain12 EquipmentKeychain13 EquipmentKeychain14 EquipmentKeychain15 EquipmentKeychain16 EquipmentKeychain17 EquipmentKeychain18 EquipmentKeychain19 EquipmentKeychain20 EquipmentKeychain21 EquipmentKeychain22 EquipmentKeychain23 EquipmentKeychain24 EquipmentKeychain25 EquipmentKeychain26 EquipmentKeychain27 EquipmentKeychain28 EquipmentKeychain29 Trophy1 Trophy2 Trophy3 Trophy5 Trophy6 Trophy7 Trophy8 Trophy9 Trophy10 Trophy11 Trophy12 Trophy13 Trophy14 Trophy15 Trophy16 Trophy17 Trophy18 Trophy19 Trophy20 Trophy21 Trophy22 EquipmentNametag1 EquipmentNametag3 EquipmentNametag4 EquipmentNametag5 EquipmentNametag6b EquipmentNametag7 EquipmentNametag8 EquipmentNametag9 EquipmentNametag10 EquipmentNametag11 EquipmentNametag12 EquipmentNametag13 EquipmentNametag14 EquipmentNametag15 EquipmentNametag16 EquipmentNametag17 EquipmentNametag18 EquipmentNametag19 EquipmentGown1 EquipmentGown2 EquipmentGown3 EquipmentTools1 EquipmentTools2 EquipmentTools3 EquipmentTools5 EquipmentTools6 EquipmentTools7 EquipmentTools11 EquipmentTools8 EquipmentTools12 EquipmentTools9 EquipmentTools14 EquipmentTools15 EquipmentTools10 EquipmentTools13 EquipmentToolsHatchet0 EquipmentToolsHatchet3 EquipmentToolsHatchet1 EquipmentToolsHatchet2b EquipmentToolsHatchet2 EquipmentToolsHatchet4 EquipmentToolsHatchet5 EquipmentToolsHatchet7 EquipmentToolsHatchet6 EquipmentToolsHatchet8 EquipmentToolsHatchet9 EquipmentToolsHatchet12 EquipmentToolsHatchet10 EquipmentToolsHatchet11 FishingRod2 FishingRod3 FishingRod4 FishingRod5 FishingRod6 FishingRod7 FishingRod8 FishingRod9 FishingRod10 FishingRod11 FishingRod12 CatchingNet2 CatchingNet3 CatchingNet4 CatchingNet5 CatchingNet6 CatchingNet7 CatchingNet8 CatchingNet9 CatchingNet10 CatchingNet11 CatchingNet12 TrapBoxSet1 TrapBoxSet2 TrapBoxSet3 TrapBoxSet4 TrapBoxSet5 TrapBoxSet6 TrapBoxSet7 TrapBoxSet8 TrapBoxSet9 TrapBoxSet10 WorshipSkull1 WorshipSkull2 WorshipSkull3 WorshipSkull4 WorshipSkull5 WorshipSkull6 WorshipSkull7 WorshipSkull8 WorshipSkull9 WorshipSkull10 WorshipSkull11 DNAgun0 DNAgun1 DNAgun2 DNAgun3 FoodHealth1 FoodHealth3 FoodHealth2 Peanut FoodHealth4 FoodHealth6 FoodHealth7 FoodHealth10 FoodHealth9 FoodHealth11 FoodHealth13 FoodHealth12 FoodHealth14 FoodHealth15 FoodHealth16 FoodHealth17 FoodHealth5 FoodEvent8 Meatloaf FoodPotOr1 FoodPotOr2 FoodPotOr3 FoodPotOr4 FoodPotRe1 FoodPotRe2 FoodPotRe3 FoodPotRe4 FoodPotGr1 FoodPotGr2 FoodPotGr3 FoodPotGr4 FoodEvent7 FoodPotMana1 FoodPotMana2 FoodPotMana3 FoodPotMana4 FoodPotYe1 FoodPotYe2 FoodPotYe3 FoodPotYe4 FoodPotYe5 FoodEvent6 Pearl3 FoodMining1 FoodEvent1 Pearl2 FoodChoppin1 FoodEvent2 FoodFish1 FoodEvent3 Pearl1 FoodCatch1 FoodEvent4 FoodTrapping1 FoodWorship1 Bullet BulletB Bullet3 MidnightCookie FoodEvent5 PeanutG FoodG1 FoodG2 FoodG3 FoodG4 FoodG5 FoodG6 FoodG7 FoodG8 FoodG9 FoodG10 FoodG11 FoodG12 FoodG13 ButterBar rtt0 ResetFrag ResetCompleted ResetCompletedS ClassSwap ClassSwapB ResetBox Ht StonePremRestore StonePremStatswap Key1 Key2 Key3 Key4 Key5 TixCol SilverPen PremiumGem TalentPoint1 TalentPoint2 TalentPoint3 TalentPoint4 TalentPoint5 TalentPoint6 Gfoodcoupon ItemsCoupon1 ItemsCoupon2 ExpBalloon1 ExpBalloon2 ExpBalloon3 Pearl4 Pearl6 Pearl5 Quest30 Quest35 Quest36 Quest38 Quest39 Quest40 Quest42 Quest43 Quest44 Quest49 Quest50 Quest70 Quest71 Quest72 Quest73 Quest90 Quest94 Quest75 Quest85 Quest88 Quest89 Quest91 Quest92 Quest76 Quest77 Quest79 Quest80 GemP30 Quest81 Quest82 Quest95 Timecandy1 Timecandy2 Timecandy3 Timecandy4 Timecandy5 Timecandy6 Timecandy7 Timecandy8 Timecandy9 StoneWe StoneWeb StoneW1 StoneW2 StoneW3 StoneW3b StoneW6 StoneW4 StoneW5 StoneW7 StoneW8 StoneAe StoneAeB StoneA1 StoneA1b StoneA2 StoneA2b StoneA3 StoneA3b StoneA4 StoneA5 StoneA6 StoneA7 StoneTe StoneT1 StoneT1e StoneT1eb StoneT2 StoneT3 StoneT4 StoneT5 StoneT6 StoneT7 StoneHelm1 StoneHelm6 StoneHelm1b StoneHelm7 StoneZ1 StoneZ2 StoneZ3 StoneZ4 StonePremSTR StonePremAGI StonePremWIS StonePremLUK JobApplication SmithingHammerChisel SmithingHammerChisel2 SmithingHammerChisel3 BobJoePickle BallJoePickle BoneJoePickle Quest1 Crystal1 Crystal2 Crystal3 Crystal4 Crystal5 PeanutS Quest3 Quest4 Mayo Trash Trash2 Trash3 Quest5 Quest6 Quest7 Quest10 Quest11 Quest12 Quest13 Quest14 Quest15 Quest16 Quest18 Quest19 Quest20 Quest21 Quest22 Quest23 Quest24 Quest25 Quest26 Quest27 GoldricP1 GoldricP2 GoldricP3 Cutter Quest32 Quest33 Quest34 Quest37 Quest41 Quest45 Quest46 Quest47 Quest48 Quest28 Island1 Island0 Quest86 Quest87 Quest93 Quest51 Quest52 PalmTreeD Quest53 Quest54 Quest55 Quest56 Quest57 Quest58 Quest59 Quest60 Quest61 Quest62 Quest63 Quest64 Quest65 Quest66 Quest67 Whetstone Quest68 Quest69 Quest74 Quest78 Quest83 Quest84 Bone0 Bone1 Bone2 Bone3 Dust0 Dust1 Dust2 Dust3 Dust4 BadgeG1 BadgeG2 BadgeG3 BadgeD1 BadgeD2 BadgeD3 NPCtoken1 NPCtoken2 NPCtoken3 NPCtoken5 NPCtoken6 NPCtoken4 NPCtoken9 NPCtoken10 NPCtoken11 NPCtoken13 NPCtoken7 Quest9 NPCtoken15 NPCtoken12 NPCtoken14 NPCtoken16 NPCtoken17 NPCtoken18 NPCtoken19 NPCtoken20 NPCtoken21 NPCtoken27 NPCtoken22 NPCtoken24 NPCtoken25 NPCtoken26 NPCtoken23 NPCtoken28 NPCtoken29 NPCtoken30 NPCtoken31 NPCtoken32 NPCtoken33 NPCtoken34 NPCtoken35 NPCtoken36 NPCtoken37 NPCtoken38 NPCtoken39 NPCtoken40 NPCtoken41 BadgeI1 BadgeI2 BadgeI3 EquipmentStatues1 EquipmentStatues2 EquipmentStatues3 EquipmentStatues4 EquipmentStatues5 EquipmentStatues6 EquipmentStatues7 EquipmentStatues8 EquipmentStatues9 EquipmentStatues10 EquipmentStatues11 EquipmentStatues12 EquipmentStatues13 EquipmentStatues14 EquipmentStatues15 EquipmentStatues16 EquipmentStatues17 EquipmentStatues18 EquipmentStatues19 EquipmentStatues20 EquipmentStatues21 EquipmentStatues22 EquipmentStatues23 EquipmentStatues24 EquipmentStatues25 EquipmentStatues26 EquipmentStatues27 EquipmentStatues28 EquipmentStatues29 EquipmentStatues30 EquipmentSmithingTabs2 EquipmentSmithingTabs3 EquipmentSmithingTabs4 EquipmentSmithingTabs5 EquipmentSmithingTabs6 SmithingRecipes1 SmithingRecipes2 SmithingRecipes3 SmithingRecipes4 SmithingRecipes5 SmithingRecipes6 TalentBook1 TalentBook2 TalentBook3 TalentBook4 TalentBook5 MaxCapBagT2 MaxCapBag1 MaxCapBag2 MaxCapBag3 MaxCapBag4 MaxCapBag5 MaxCapBagMi6 MaxCapBagMi7 MaxCapBagMi8 MaxCapBagMi9 MaxCapBagMi10 MaxCapBagMi11 MaxCapBagT1 MaxCapBag7 MaxCapBag9 MaxCapBagT3 MaxCapBagT4 MaxCapBagT5 MaxCapBagT6 MaxCapBagT7 MaxCapBagT8 MaxCapBagT9 MaxCapBagT10 MaxCapBagT11 MaxCapBag6 MaxCapBag8 MaxCapBag10 MaxCapBagF3 MaxCapBagF4 MaxCapBagF5 MaxCapBagF6 MaxCapBagF7 MaxCapBagF8 MaxCapBagF9 MaxCapBagF10 MaxCapBagF11 MaxCapBagM1 MaxCapBagM2 MaxCapBagM3 MaxCapBagM4 MaxCapBagM5 MaxCapBagM6 MaxCapBagM7 MaxCapBagM8 MaxCapBagM9 MaxCapBagM10 MaxCapBagM11 MaxCapBagM12 MaxCapBagFi1 MaxCapBagFi2 MaxCapBagFi3 MaxCapBagFi4 MaxCapBagFi5 MaxCapBagFi6 MaxCapBagFi7 MaxCapBagFi8 MaxCapBagFi9 MaxCapBagFi10 MaxCapBagFi11 MaxCapBagB1 MaxCapBagB2 MaxCapBagB3 MaxCapBagB4 MaxCapBagB5 MaxCapBagB6 MaxCapBagB7 MaxCapBagB8 MaxCapBagB9 MaxCapBagB10 MaxCapBagB11 MaxCapBagTr1 MaxCapBagTr3 MaxCapBagTr4 MaxCapBagTr5 MaxCapBagTr6 MaxCapBagTr7 MaxCapBagTr8 MaxCapBagTr9 MaxCapBagTr10 MaxCapBagS1 MaxCapBagS3 MaxCapBagS4 MaxCapBagS5 MaxCapBagS6 MaxCapBagS7 MaxCapBagS8 MaxCapBagS9 MaxCapBagS10 ObolBronze0 ObolSilver0 ObolGold0 ObolPlatinum0 ObolPink0 ObolBronze1 ObolSilver1 ObolGold1 ObolPlatinum1 ObolPink1 ObolBronze2 ObolSilver2 ObolGold2 ObolPlatinum2 ObolPink2 ObolBronze3 ObolSilver3 ObolGold3 ObolPlatinum3 ObolPink3 ObolBronzeDamage ObolSilverDamage ObolGoldDamage ObolPlatinumDamage ObolPinkDamage ObolSilverMoney ObolGoldMoney ObolBronzeMining ObolSilverMining ObolGoldMining ObolPlatinumMining ObolPinkMining ObolBronzeChoppin ObolSilverChoppin ObolGoldChoppin ObolPlatinumChoppin ObolPinkChoppin ObolBronzeFishing ObolSilverFishing ObolGoldFishing ObolPlatinumFishing ObolPinkFishing ObolBronzeCatching ObolSilverCatching ObolGoldCatching ObolPlatinumCatching ObolPinkCatching ObolSilverLuck ObolGoldLuck ObolPlatinumLuck ObolPinkLuck ObolBronzePop ObolSilverPop ObolGoldPop ObolPlatinumPop ObolPinkPop ObolBronzeKill ObolSilverKill ObolGoldKill ObolPlatinumKill ObolPinkKill ObolBronzeEXP ObolSilverEXP ObolGoldEXP ObolPlatinumEXP ObolPinkEXP ObolBronzeCard ObolSilverCard ObolGoldCard ObolPlatinumCard ObolPinkCard ObolBronzeDef ObolSilverDef ObolGoldDef ObolPlatinumDef ObolPinkDef ObolBronzeTrapping ObolSilverTrapping ObolGoldTrapping ObolPlatinumTrapping ObolPinkTrapping ObolBronzeCons ObolSilverCons ObolGoldCons ObolPlatinumCons ObolPinkCons ObolBronzeWorship ObolSilverWorship ObolGoldWorship ObolPlatinumWorship ObolPinkWorship ObolFrog ObolAmarokA ObolEfauntA ObolKnight ObolSlush ObolChizoarA ObolTroll ObolLava ObolKruk ObolHyper0 ObolHyper1 ObolHyper2 ObolHyper3 ObolHyperB0 ObolHyperB1 ObolHyperB2 ObolHyperB3 StampA1 StampA2 StampA3 StampA4 StampA5 StampA6 StampA7 StampA8 StampA9 StampA10 StampA11 StampA12 StampA13 StampA14 StampA15 StampA16 StampA17 StampA18 StampA19 StampA20 StampA21 StampA22 StampA23 StampA24 StampA25 StampA26 StampA27 StampA28 StampA29 StampA30 StampA31 StampA32 StampA33 StampA34 StampA35 StampA36 StampA37 StampA38 StampA39 StampA40 StampA41 StampA42 StampB1 StampB2 StampB3 StampB4 StampB5 StampB6 StampB7 StampB8 StampB9 StampB10 StampB11 StampB12 StampB13 StampB14 StampB15 StampB16 StampB17 StampB18 StampB19 StampB20 StampB21 StampB22 StampB23 StampB24 StampB25 StampB26 StampB27 StampB28 StampB29 StampB30 StampB31 StampB32 StampB33 StampB34 StampB35 StampB36 StampB37 StampB38 StampB39 StampB40 StampB41 StampB42 StampB43 StampB44 StampB45 StampB46 StampB47 StampB48 StampB49 StampB50 StampB51 StampB52 StampB53 StampB54 StampC1 StampC2 StampC3 StampC4 StampC5 StampC6 StampC7 StampC8 StampC9 StampC10 StampC11 StampC12 StampC13 StampC14 StampC15 StampC16 StampC17 StampC18 StampC19 StampC20 StampC21 StampC22 StampC23 InvBag1 InvBag2 InvBag3 InvBag4 InvBag5 InvBag6 InvBag7 InvBag8 InvBag100 InvBag101 InvBag102 InvBag103 InvBag104 InvBag105 InvBag106 InvBag107 InvBag108 InvBag113 InvBag114 InvBag109 InvBag110 InvBag111 InvBag112 InvStorage1 InvStorage2 InvStorage3 InvStorage4 InvStorage5 InvStorage6 InvStorage7 InvStorage8 InvStorage9 InvStorage10 InvStorage11 InvStorage12 InvStorage13 InvStorage14 InvStorage15 InvStorage16 InvStorage17 InvStorage18 InvStorage19 InvStorage20 InvStorage21 InvStorage22 InvStorage23 InvStorage24 InvStorage25 InvStorage26 InvStorage27 InvStorage28 InvStorageF InvStorageS InvStorageC InvStorageD InvStorageN InvStorageH InvStorageL Weight1 Weight2 Weight3 Weight4 Weight5 Weight6 Weight7 Weight8 Weight9 Weight10 Weight11 Weight12 Weight13 Weight14 Line1 Line2 Line3 Line4 Line5 Line6 Line7 Line8 Line9 Line10 Line11 Line12 Line13 Line14 Ladle PetEgg Genetic0 Genetic1 Genetic2 Genetic3 CardPack1 CardPack2 CardPack3 CardPack4 CardPack5 CardPack6 CardPack7 EquipmentBowsTempest0 EquipmentBowsTempest1 EquipmentBowsTempest2 EquipmentBowsTempest3 EquipmentBowsTempest4 EquipmentRingsTempest0 EquipmentRingsTempest1 EquipmentRingsTempest2 EquipmentRingsTempest3 EquipmentRingsTempest4 EquipmentRingsTempest5 EquipmentRingsTempest6 EquipmentRingsTempest7 EquipmentRingsTempest8 StoneTempestB0 StoneTempestB1 StoneTempestB2 StoneTempestR0 StoneTempestR1 StoneTempestR2 WWcoin DungCredits2 Cash XP XPskill DungEnhancer0 DungEnhancer1 DungEnhancer2 DungRNG0 DungRNG1 DungRNG2 DungRNG3 DungRNG4 DungeonA1 DungeonA2 DungeonA3 DungeonA4 DungeonA5 DungeonA6 DungeonA7 DungeonA8 KeyFrag DungCredits1 LootDice Tree7D PlatD Fish1D Fish3D Cashb Dung3Ice FoodHealth1d FoodHealth2d FoodHealth3d DungWeaponPunchA1 DungWeaponPunchA2 DungWeaponPunchA3 DungWeaponPunchA4 DungWeaponPunchA5 DungWeaponPunchB1 DungWeaponPunchB2 DungWeaponPunchB3 DungWeaponPunchB4 DungWeaponPunchB5 DungWeaponPunchC1 DungWeaponPunchC2 DungWeaponPunchC3 DungWeaponPunchC4 DungWeaponPunchC5 DungWeaponPunchD1 DungWeaponPunchD2 DungWeaponPunchD3 DungWeaponPunchD4 DungWeaponPunchD5 DungWeaponPunchE1 DungWeaponPunchE2 DungWeaponPunchE3 DungWeaponPunchE4 DungWeaponPunchE5 DungWeaponPunchF1 DungWeaponPunchF2 DungWeaponPunchF3 DungWeaponPunchF4 DungWeaponPunchF5 DungWeaponSwordA1 DungWeaponSwordA2 DungWeaponSwordA3 DungWeaponSwordA4 DungWeaponSwordA5 DungWeaponSwordB1 DungWeaponSwordB2 DungWeaponSwordB3 DungWeaponSwordB4 DungWeaponSwordB5 DungWeaponSwordC1 DungWeaponSwordC2 DungWeaponSwordC3 DungWeaponSwordC4 DungWeaponSwordC5 DungWeaponSwordD1 DungWeaponSwordD2 DungWeaponSwordD3 DungWeaponSwordD4 DungWeaponSwordD5 DungWeaponSwordE1 DungWeaponSwordE2 DungWeaponSwordE3 DungWeaponSwordE4 DungWeaponSwordE5 DungWeaponSwordF1 DungWeaponSwordF2 DungWeaponSwordF3 DungWeaponSwordF4 DungWeaponSwordF5 DungWeaponBowA1 DungWeaponBowA2 DungWeaponBowA3 DungWeaponBowA4 DungWeaponBowA5 DungWeaponBowB1 DungWeaponBowB2 DungWeaponBowB3 DungWeaponBowB4 DungWeaponBowB5 DungWeaponBowC1 DungWeaponBowC2 DungWeaponBowC3 DungWeaponBowC4 DungWeaponBowC5 DungWeaponBowD1 DungWeaponBowD2 DungWeaponBowD3 DungWeaponBowD4 DungWeaponBowD5 DungWeaponBowE1 DungWeaponBowE2 DungWeaponBowE3 DungWeaponBowE4 DungWeaponBowE5 DungWeaponBowF1 DungWeaponBowF2 DungWeaponBowF3 DungWeaponBowF4 DungWeaponBowF5 DungWeaponWandA1 DungWeaponWandA2 DungWeaponWandA3 DungWeaponWandA4 DungWeaponWandA5 DungWeaponWandB1 DungWeaponWandB2 DungWeaponWandB3 DungWeaponWandB4 DungWeaponWandB5 DungWeaponWandC1 DungWeaponWandC2 DungWeaponWandC3 DungWeaponWandC4 DungWeaponWandC5 DungWeaponWandD1 DungWeaponWandD2 DungWeaponWandD3 DungWeaponWandD4 DungWeaponWandD5 DungWeaponWandE1 DungWeaponWandE2 DungWeaponWandE3 DungWeaponWandE4 DungWeaponWandE5 DungWeaponWandF1 DungWeaponWandF2 DungWeaponWandF3 DungWeaponWandF4 DungWeaponWandF5 DungEquipmentHats0 DungEquipmentHats1 DungEquipmentHats2 DungEquipmentHats3 DungEquipmentHats4 DungEquipmentShirt0 DungEquipmentShirt1 DungEquipmentShirt2 DungEquipmentShirt3 DungEquipmentShirt4 DungEquipmentPants0 DungEquipmentPants1 DungEquipmentPants2 DungEquipmentPants3 DungEquipmentPants4 DungEquipmentShoes0 DungEquipmentShoes1 DungEquipmentShoes2 DungEquipmentShoes3 DungEquipmentShoes4 DungEquipmentPendant0 DungEquipmentPendant1 DungEquipmentPendant2 DungEquipmentPendant3 DungEquipmentPendant4 DungEquipmentRings0 DungEquipmentRings1 DungEquipmentRings2 DungEquipmentRings3 DungEquipmentRings4".split(" ")
 
 #This replacement dict is needed due to a restriction for the image mapping variable names not being able to start with a Number
 slab_itemNameReplacementDict = {

@@ -168,7 +168,7 @@ def getBaseClass(inputClass):
             return "Warrior"
         case "Mage" | "Shaman" | "Bubonic Conjuror" | "Wizard" | "Elemental Sorcerer":
             return "Mage"
-        case "Archer" | "Bowman" | "Siege Breaker" | "Hunter" | "Beast Master":
+        case "Archer" | "Bowman" | "Siege Breaker" | "Hunter" | "Beast Master" | 'Wind Walker':
             return "Archer"
         case "Journeyman" | "Maestro" | "Voidwalker":
             return "Journeyman"
@@ -190,7 +190,7 @@ def getSubclass(inputClass):
             return "Wizard"
         case "Bowman" | "Siege Breaker":
             return "Bowman"
-        case "Hunter" | "Beast Master":
+        case "Hunter" | "Beast Master" | 'Wind Walker':
             return "Hunter"
         case "Maestro" | "Voidwalker":
             return "Maestro"
@@ -204,6 +204,8 @@ def getEliteClass(inputClass):
     match inputClass:
         case "Blood Berserker" | "Death Bringer":
             return "Blood Berserker"
+        case 'Beast Master' | 'Wind Walker':
+            return 'Beast Master'
         case "Divine Knight" | "Bubonic Conjuror" | "Elemental Sorcerer" | "Siege Breaker" | "Beast Master" | "Voidwalker":
             return inputClass
         case (
@@ -215,7 +217,7 @@ def getEliteClass(inputClass):
 
 def getMasterClass(inputClass):
     match inputClass:
-        case "Death Bringer":
+        case 'Death Bringer' | 'Wind Walker':
             return inputClass
         case (
             "Blood Berserker" | "Divine Knight" | "Bubonic Conjuror" | "Elemental Sorcerer" | "Siege Breaker" | "Beast Master" | "Voidwalker" | "Beginner" | "Warrior" | "Barbarian" | "Squire" | "Mage" | "Shaman" | "Wizard" | "Archer" | "Bowman" | "Hunter" | "Journeyman" | "Maestro"

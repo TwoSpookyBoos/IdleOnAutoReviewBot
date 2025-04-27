@@ -41,18 +41,21 @@ $utilities: (
 );
 
 $atoms: (
-    particles: img('wiki/Atoms.png'),
-    hydrogen: img('wiki/Hydrogen_-_Stamp_Decreaser.png'),
-    helium: img('wiki/Helium_-_Talent_Power_Stacker.png'),
-    lithium: img('wiki/Lithium_-_Bubble_Insta_Expander.png'),
-    beryllium: img('wiki/Beryllium_-_Post_Office_Penner.png'),
-    boron: img('wiki/Boron_-_Particle_Upgrader.png'),
-    carbon: img('wiki/Carbon_-_Wizard_Maximizer.png'),
-    nitrogen: img('wiki/Nitrogen_-_Construction_Trimmer.png'),
-    oxygen: img('wiki/Oxygen_-_Library_Booker.png'),
-    fluoride: img('wiki/Fluoride_-_Void_Plate_Chef.png'),
-    neon: img('wiki/Neon_-_Damage_N%27_Cheapener.png'),
-    sodium: img('wiki/Sodium_-_Snail_Kryptonite.png')
+    particles:  img('wiki/Atoms.png'),
+    hydrogen:   img('data/Atom0.png'),
+    helium:     img('data/Atom1.png'),
+    lithium:    img('data/Atom2.png'),
+    beryllium:  img('data/Atom3.png'),
+    boron:      img('data/Atom4.png'),
+    carbon:     img('data/Atom5.png'),
+    nitrogen:   img('data/Atom6.png'),
+    oxygen:     img('data/Atom7.png'),
+    fluoride:   img('data/Atom8.png'),
+    neon:       img('data/Atom9.png'),
+    sodium:     img('data/Atom10.png'),
+    magnesium:  img('data/Atom11.png'),
+    aluminium:  img('data/Atom12.png'),
+    silicon:    img('data/Atom13.png')
 );
 
 $all-construction: map-merge($shrines, $towers);
