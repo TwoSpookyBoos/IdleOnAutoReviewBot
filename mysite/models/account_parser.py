@@ -1200,10 +1200,10 @@ def _parse_w2_cauldrons(account):
         ]
     except Exception as e:
         logger.warning(f"Alchemy bubble cauldron Boosts Parse error: {e}. Defaulting to 0s")
-        account.alchemy_cauldrons["OrangeBoosts"]: [0, 0, 0, 0]
-        account.alchemy_cauldrons["GreenBoosts"]: [0, 0, 0, 0]
-        account.alchemy_cauldrons["PurpleBoosts"]: [0, 0, 0, 0]
-        account.alchemy_cauldrons["YellowBoosts"]: [0, 0, 0, 0]
+        account.alchemy_cauldrons["OrangeBoosts"] = [0, 0, 0, 0]
+        account.alchemy_cauldrons["GreenBoosts"] = [0, 0, 0, 0]
+        account.alchemy_cauldrons["PurpleBoosts"] = [0, 0, 0, 0]
+        account.alchemy_cauldrons["YellowBoosts"] = [0, 0, 0, 0]
     try:
         account.alchemy_cauldrons["WaterDroplets"] = [safer_convert(raw_cauldron_upgrades[18], 0), safer_convert(raw_cauldron_upgrades[19], 0)]
         account.alchemy_cauldrons["LiquidNitrogen"] = [safer_convert(raw_cauldron_upgrades[22], 0), safer_convert(raw_cauldron_upgrades[23], 0)]
