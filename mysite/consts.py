@@ -3252,11 +3252,26 @@ gem_shop_bundles_dict = {
     'bon_e': 'Lush Emerald Anniversary Pack',
     'bon_f': 'Eternal Hunter Pack'
 }
-guildBonusesList = [
-    "Guild Gifts", "Stat Runes", "Rucksack", "Power of Pow", "REM Fighting", "Make or Break",
-    "Multi Tool", "Sleepy Skiller", "Coin Supercharger", "Bonus GP for small guilds", "Gold Charm", "Star Dazzle",
-    "C2 Card Spotter", "Bestone", "Skilley Skillet", "Craps", "Anotha One", "Wait A Minute"
-]
+guildBonusesList = {
+    'Guild Gifts': {'Picture': 'guild-gifts', 'MaxLevel': 100, 'MaxValue': 350, 'GetValue': lambda l : lavaFunc('decay', l, 700, 100)},
+    'Stat Runes': {'Picture': 'stat-runes', 'MaxLevel': 50, 'MaxValue': 20, 'GetValue': lambda l : lavaFunc('decay', l, 40, 50)},
+    'Rucksack': {'Picture': 'rucksack', 'MaxLevel': 50, 'MaxValue': 35, 'GetValue': lambda l : lavaFunc('decay', l, 70, 50)},
+    'Power of Pow': {'Picture': 'power-of-pow', 'MaxLevel': 50, 'MaxValue': 5, 'GetValue': lambda l : lavaFunc('decay', l, 10, 50)},
+    'REM Fighting': {'Picture': 'rem-fighting', 'MaxLevel': 50, 'MaxValue': 5, 'GetValue': lambda l : lavaFunc('decay', l, 10, 50)},
+    'Make or Break': {'Picture': 'make-or-break', 'MaxLevel': 50, 'MaxValue': 15, 'GetValue': lambda l : lavaFunc('decay', l, 30, 50)},
+    'Multi Tool': {'Picture': 'multi-tool', 'MaxLevel': 50, 'MaxValue': 15, 'GetValue': lambda l : lavaFunc('decay', l, 30, 50)},
+    'Skilley Skiller': {'Picture': 'skilley-skiller', 'MaxLevel': 50, 'MaxValue': 5, 'GetValue': lambda l : lavaFunc('decay', l, 10, 50)},
+    'Coin Supercharger': {'Picture': 'coin-supercharger', 'MaxLevel': 100, 'MaxValue': 16.667, 'GetValue': lambda l : lavaFunc('decay', l, 20, 20)},
+    'Bonus GP for small guilds': {'Picture': 'bonus-gp-for-small-guilds', 'MaxLevel': 50, 'MaxValue': 0, 'GetValue': lambda l : lavaFunc('special1', l, 200, 50)}, # This value decreases and the min value is 0
+    'Gold Charm': {'Picture': 'gold-charm', 'MaxLevel': 50, 'MaxValue': 20, 'GetValue': lambda l : lavaFunc('decay', l, 40, 50)},
+    'Star Dazzle': {'Picture': 'star-dazzle', 'MaxLevel': 50, 'MaxValue': 60, 'GetValue': lambda l : lavaFunc('decay', l, 120, 50)},
+    'C2 Card Spotter': {'Picture': 'c2-card-spotter', 'MaxLevel': 50, 'MaxValue': 30, 'GetValue': lambda l : lavaFunc('decay', l, 60, 50)},
+    'Bestone': {'Picture': 'bestone', 'MaxLevel': 50, 'MaxValue': 8, 'GetValue': lambda l : lavaFunc('decay', l, 16, 50)},
+    'Sleepy Skillet': {'Picture': 'sleepy-skillet', 'MaxLevel': 200, 'MaxValue': 18.75, 'GetValue': lambda l : lavaFunc('decay', l, 30, 120)},
+    'Craps': {'Picture': 'craps', 'MaxLevel': 50, 'MaxValue': 14, 'GetValue': lambda l : lavaFunc('decay', l, 28, 50)},
+    'Anotha One': {'Picture': 'anotha-one', 'MaxLevel': 50, 'MaxValue': 13, 'GetValue': lambda l : lavaFunc('decay', l, 26, 50)},
+    'Wait A Minute': {'Picture': 'wait-a-minute', 'MaxLevel': 0, 'MaxValue': 0, 'GetValue': lambda l : lavaFunc('add', l, 1, 0)}
+}
 familyBonusClassTierLevelReductions = [9, 29, 69, 999]  #Character must be this high of a level to get bonuses
 familyBonusesDict = {
     #"Beginner": {'funcType': 'decay', 'x1': 0, 'x2': 0, 'Stat': '', 'PrePlus': False, 'PostDisplay': '', 'levelDiscount': familyBonusClassTierLevelReductions[0]},

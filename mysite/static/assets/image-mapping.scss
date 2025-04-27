@@ -20,6 +20,7 @@
 @import "companions";
 @import "ui";
 @import "event-shop";
+@import "guild";
 
 //W1
 @import "upgrade_vault";
@@ -59,50 +60,49 @@
 @import "farming";
 @import "summoning";
 
-$id-map: map-merge($all-world-contents, $all-slab);
-$id-map: map-merge($sections-map, $id-map);
-$id-map: map-merge($skill-icons, $id-map);
-$id-map: map-merge($all-storage-items, $id-map);
-$id-map: map-merge($character-classes, $id-map);
-$id-map: map-merge($breeding-map, $id-map);
-$id-map: map-merge($bribes-map, $id-map);
-$id-map: map-merge($boss-keys, $id-map);
-$id-map: map-merge($all-cards, $id-map);
-$id-map: map-merge($rift, $id-map);
-$id-map: map-merge($equinox, $id-map);
-$id-map: map-merge($all-cooking, $id-map);
-$id-map: map-merge($talents, $id-map);
-$id-map: map-merge($divinity-map, $id-map);
-$id-map: map-merge($all-sailing, $id-map);
-$id-map: map-merge($all-laboratory, $id-map);
-$id-map: map-merge($all-sneaking, $id-map);
-$id-map: map-merge($starsigns, $id-map);
-$id-map: map-merge($all-alchemy, $id-map);
 $id-map: map-merge($achievements, $id-map);
-$id-map: map-merge($arcade, $id-map);
+$id-map: map-merge($all-alchemy, $id-map);
+$id-map: map-merge($all-cards, $id-map);
+$id-map: map-merge($all-caverns, $id-map);
+$id-map: map-merge($all-compass, $id-map);
 $id-map: map-merge($all-construction, $id-map);
-$id-map: map-merge($all-worship, $id-map);
-$id-map: map-merge($gem-shop, $id-map);
-$id-map: map-merge($merits, $id-map);
-$id-map: map-merge($postoffice, $id-map);
-$id-map: map-merge($owl-map, $id-map);
-$id-map: map-merge($companions-map, $id-map);
-$id-map: map-merge($all-gaming, $id-map);
-$id-map: map-merge($kangaroo-map, $id-map);
+$id-map: map-merge($all-cooking, $id-map);
 $id-map: map-merge($all-farming, $id-map);
-$id-map: map-merge($all-summoning, $id-map);
-$id-map: map-merge($ballot, $id-map);
-$id-map: map-merge($ui-map, $id-map);
+$id-map: map-merge($all-gaming, $id-map);
+$id-map: map-merge($all-grimoire, $id-map);
 $id-map: map-merge($all-islands, $id-map);
 $id-map: map-merge($all-killroy, $id-map);
-$id-map: map-merge($all-weekly-boss-map, $id-map);
-$id-map: map-merge($all-caverns, $id-map);
-$id-map: map-merge($event-shop, $id-map);
-$id-map: map-merge($all-grimoire, $id-map);
+$id-map: map-merge($all-laboratory, $id-map);
+$id-map: map-merge($all-sailing, $id-map);
+$id-map: map-merge($all-sneaking, $id-map);
+$id-map: map-merge($all-storage-items, $id-map);
+$id-map: map-merge($all-summoning, $id-map);
 $id-map: map-merge($all-vault, $id-map);
-$id-map: map-merge($all-compass, $id-map);
-
-
+$id-map: map-merge($all-weekly-boss-map, $id-map);
+$id-map: map-merge($all-world-contents, $id-map);
+$id-map: map-merge($all-worship, $id-map);
+$id-map: map-merge($arcade, $id-map);
+$id-map: map-merge($ballot, $id-map);
+$id-map: map-merge($boss-keys, $id-map);
+$id-map: map-merge($breeding-map, $id-map);
+$id-map: map-merge($bribes-map, $id-map);
+$id-map: map-merge($character-classes, $id-map);
+$id-map: map-merge($companions-map, $id-map);
+$id-map: map-merge($divinity-map, $id-map);
+$id-map: map-merge($equinox, $id-map);
+$id-map: map-merge($event-shop, $id-map);
+$id-map: map-merge($gem-shop, $id-map);
+$id-map: map-merge($guild-bonus-map, $id-map);
+$id-map: map-merge($kangaroo-map, $id-map);
+$id-map: map-merge($merits, $id-map);
+$id-map: map-merge($owl-map, $id-map);
+$id-map: map-merge($postoffice, $id-map);
+$id-map: map-merge($rift, $id-map);
+$id-map: map-merge($sections-map, $id-map);
+$id-map: map-merge($skill-icons, $id-map);
+$id-map: map-merge($starsigns, $id-map);
+$id-map: map-merge($talents, $id-map);
+$id-map: map-merge($ui-map, $id-map);
 
 @each $class, $link in $id-map {
 	.#{$class}:not(.lazy)::before, .resource-#{$class}:not(.lazy) {
