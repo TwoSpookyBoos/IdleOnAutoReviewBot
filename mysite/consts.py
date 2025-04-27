@@ -8118,6 +8118,7 @@ sneaking_gemstones_all_values = {
 
 maxFarmingCrops = 230  # Last verified as of 2.26 Death Bringer
 maxFarmingValue = 10000  # Last verified as of 2.21 The Fixening
+maxLandRankLevel = 11
 landrankDict = {
     0: {'Name': 'Evolution Boost', 'UnlockLevel': 1, 'Value': 250},
     1: {'Name': 'Production Boost', 'UnlockLevel': 5, 'Value': 5},
