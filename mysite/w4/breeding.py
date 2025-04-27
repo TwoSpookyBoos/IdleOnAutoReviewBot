@@ -384,11 +384,9 @@ def getBreedingProgressionTiersAdviceGroups(breedingDict):
             ['Rattler', 'Monolithic', 'Refiller', 'Defender', 'Refiller'],
             ['rattler', 'monolithic', 'refiller', 'defender', 'refiller']],
         5: [
-            ['Rattler', 'Looter', 'Monolithic', 'Refiller', 'Defender', 'Refiller'],
-            ['rattler', 'looter', 'monolithic', 'refiller', 'defender', 'refiller']],
+            ['Peapeapod or Rattler', 'Looter', 'Peapeapod or Monolithic', 'Refiller', 'Defender', 'Refiller'],
+            ['peapeapod', 'looter', 'peapeapod', 'refiller', 'defender', 'refiller']],
         6: [
-            # ['Peapeapod or Rattler', 'Looter', 'Trasher (Manually click to delete enemy attacks!)', 'Refiller', 'Refiller', 'Lazarus or Filler'],
-            # ['peapeapod', 'looter', 'trasher', 'refiller', 'refiller', 'lazarus']]
             ['Peapeapod or Rattler', 'Peapeapod or Rattler', 'Looter', 'Defender', 'Refiller', 'Refiller'],
             ['peapeapod', 'peapeapod', 'looter', 'defender', 'refiller', 'refiller']]
     }

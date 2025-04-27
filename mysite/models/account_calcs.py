@@ -521,7 +521,7 @@ def _calculate_w1_stamps(account):
 
     account.exalted_stamp_multi = ValueToMulti(
         100  #base
-        + (account.atom_collider['Atoms']['Aluminium - Stamp Supercharger']['Level'] * account.atom_collider['Atoms']['Aluminium - Stamp Supercharger']['AtomInfo4'])
+        + (account.atom_collider['Atoms']['Aluminium - Stamp Supercharger']['Level'] * account.atom_collider['Atoms']['Aluminium - Stamp Supercharger']['Value per Level'])
         + (20 * account.sneaking['PristineCharms']['Jellypick']['Obtained'])
         + account.compass['Upgrades']['Abomination Slayer XVII']['Total Value']
     )
@@ -654,6 +654,7 @@ def _calculate_w2_killroy(account):
 
 def _calculate_w3(account):
     _calculate_w3_building_max_levels(account)
+    _calculate_w3_collider_atoms(account)
     _calculate_w3_collider_base_costs(account)
     _calculate_w3_collider_cost_reduction(account)
     _calculate_w3_shrine_values(account)
@@ -678,7 +679,6 @@ def _update_w3_building_max_levels(account, building_name: str, levels: int, not
         except:
             logger.warning(f"Could not increase max level of {building_name}: {note if note else 'No note provided'}")
 
-
 def _calculate_w3_building_max_levels(account):
     if account.rift['SkillMastery']:
         totalLevel = sum(account.all_skills['Construction'])
@@ -698,6 +698,24 @@ def _calculate_w3_building_max_levels(account):
         _update_w3_building_max_levels(account, 'All Towers', 2 * account.atom_collider['Atoms']['Carbon - Wizard Maximizer']['Level'], 'Atom Collider - Carbon - Wizard Maximizer')
 
     #+100 levels from Gambit occurs in _calculate_caverns_gambit
+
+def _calculate_w3_collider_atoms(account):
+    for atom_name, atom_values in account.atom_collider['Atoms'].items():
+        try:
+            account.atom_collider['Atoms'][atom_name]['Value'] = (
+                atom_values['Level'] * atom_values['Value per Level']
+            )
+            if '{' in atom_values['Description']:
+                account.atom_collider['Atoms'][atom_name]['Description'] = atom_values['Description'].replace(
+                    '{', f"{account.atom_collider['Atoms'][atom_name]['Value']}"
+                )
+            if '}' in atom_values['Description']:
+                account.atom_collider['Atoms'][atom_name]['Description'] = atom_values['Description'].replace(
+                    '}', f"{ValueToMulti(account.atom_collider['Atoms'][atom_name]['Value']):.3f}"
+                )
+        except:
+            logger.exception(f"Failed to calcuate Value and Description for {atom_name}")
+            account.atom_collider['Atoms'][atom_name]['Value'] = 0
 
 def _calculate_w3_collider_base_costs(account):
     #Formula for base cost: (AtomInfo[3] + AtomInfo[1] * AtomCurrentLevel) * POWER(AtomInfo[2], AtomCurrentLevel)
@@ -727,14 +745,7 @@ def _calculate_w3_collider_base_costs(account):
                 )
 
 def _calculate_w3_collider_cost_reduction(account):
-    account.atom_collider['CostReductionMax'] = ValueToMulti(
-        7 * 4  #Max merit
-        + 1 * 20  #Max Atom Collider building
-        + 1 * 30  #Max Neon
-        + 10  #Superbit
-        + 14  #Atom Split bubble
-        + 20  #Stamp
-    )
+    # Max was removed after DB and WW both introduced near-infinite scaling sources
     account.atom_collider['CostReductionRaw'] = ValueToMulti(
         7 * account.merits[4][6]['Level']
         + (account.construction_buildings['Atom Collider']['Level'] / 10)
@@ -742,11 +753,11 @@ def _calculate_w3_collider_cost_reduction(account):
         + 10 * account.gaming['SuperBits']['Atom Redux']['Unlocked']
         + account.alchemy_bubbles['Atom Split']['BaseValue']
         + account.stamps['Atomic Stamp']['Value']
+        + account.grimoire['Upgrades']['Death of the Atom Price']['Total Value']
+        + account.compass['Upgrades']['Atomic Cost Crash']['Total Value']
     )
     account.atom_collider['CostReductionMulti'] = 1 / account.atom_collider['CostReductionRaw']
-    account.atom_collider['CostReductionMulti1Higher'] = 1 / (account.atom_collider['CostReductionRaw'] + 0.01)
     account.atom_collider['CostDiscount'] = (1 - (1 / account.atom_collider['CostReductionRaw'])) * 100
-    account.atom_collider['CostDiscountMax'] = (1 - (1 / account.atom_collider['CostReductionMax'])) * 100
 
     for atomName, atomValuesDict in account.atom_collider['Atoms'].items():
         # Calculate base cost to upgrade to next level, if not max level

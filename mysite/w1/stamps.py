@@ -5,7 +5,7 @@ from utils.logging import get_logger
 from consts import (
     break_you_best,
     stamps_progressionTiers, stamp_maxes, stampsDict, unavailableStampsList, stampTypes,
-    maxOverallBookLevels, max_VialLevel, maxFarmingCrops, infinity_string, stamps_exalt_recommendations
+    maxOverallBookLevels, max_VialLevel, maxFarmingCrops, infinity_string, stamps_exalt_recommendations, currentMaxUsableInventorySlots
 )
 from flask import g as session_data
 
@@ -156,7 +156,7 @@ def getCapacityAdviceGroup() -> AdviceGroup:
         goal=maxOverallBookLevels
     ))
     capacity_Advices["Character Specific"].append(Advice(
-        label="80 available {{ Inventory Slots|#storage }}",
+        label=f"{currentMaxUsableInventorySlots} available {{{{ Inventory Slots|#storage }}}}",
         picture_class="storage"
     ))
     capacity_Advices["Character Specific"].append(Advice(
@@ -287,8 +287,8 @@ def getExaltedAdviceGroup() -> AdviceGroup:
     exalted_advice[boni].append(Advice(
         label=(
             f"{{{{Atom Collider|#atom-collider}}}}: Aluminium: "
-            f"+{atom_collider['Atoms']['Aluminium - Stamp Supercharger']['Level'] * atom_collider['Atoms']['Aluminium - Stamp Supercharger']['AtomInfo4']}"
-            f"/{atom_collider['Atoms']['Aluminium - Stamp Supercharger']['MaxLevel'] * atom_collider['Atoms']['Aluminium - Stamp Supercharger']['AtomInfo4']}%"
+            f"+{atom_collider['Atoms']['Aluminium - Stamp Supercharger']['Level'] * atom_collider['Atoms']['Aluminium - Stamp Supercharger']['Value per Level']}"
+            f"/{atom_collider['Atoms']['Aluminium - Stamp Supercharger']['MaxLevel'] * atom_collider['Atoms']['Aluminium - Stamp Supercharger']['Value per Level']}%"
         ),
         picture_class='aluminium',
         progression=session_data.account.atom_collider['Atoms']['Aluminium - Stamp Supercharger']['Level'],

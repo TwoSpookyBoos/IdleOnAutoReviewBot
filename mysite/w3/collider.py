@@ -52,10 +52,12 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
         settings_advice['Information'].append(
             Advice(
                 label=(
-                    f"{atomName}"
+                    f"{atomName}: {atomValues['Description']}"
+                    f"<br>({atomValues['Value per Level']} per level)"
                     if atomName != 'Magnesium - Trap Compounder' else
-                    f"{atomName}"
+                    f"{atomName}: {atomValues['Description']}"
                     f"<br>{colliderData['Magnesium Days']}/100 days since last retrap"
+                    f"<br>({atomValues['Value per Level']} per level)"
                 ),
                 picture_class=atomName.split(' - ')[0],
                 progression=atomValues['Level'],
@@ -185,23 +187,22 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     ))
 
     cr_advice.append(Advice(
-        label=f"Atomic Stamp: {session_data.account.stamps['Atomic Stamp']['Value']:.3f}/20%",
+        label=f"Atomic Stamp: {session_data.account.stamps['Atomic Stamp']['Value']:.3f}%",
         picture_class="atomic-stamp",
         progression=session_data.account.stamps['Atomic Stamp']['Level'],
         resource=session_data.account.stamps['Atomic Stamp']['Material'],
     ))
 
     cr_advice.append(Advice(
-        label=f"{{{{Grimoire|#the-grimoire}}}}: Death of the Atom Price: {session_data.account.grimoire['Upgrades']['Death of the Atom Price']['Total Value']}"
-              f"TODO",
+        label=f"{{{{Grimoire|#the-grimoire}}}}: Death of the Atom Price: {session_data.account.grimoire['Upgrades']['Death of the Atom Price']['Total Value']}%",
         picture_class=session_data.account.grimoire['Upgrades']['Death of the Atom Price']['Image'],
         progression=session_data.account.grimoire['Upgrades']['Death of the Atom Price']['Level'],
         goal=session_data.account.grimoire['Upgrades']['Death of the Atom Price']['Max Level']
     ))
 
+    acc = session_data.account.compass['Upgrades']['Atomic Cost Crash']
     cr_advice.append(Advice(
-        label=f"{{{{Compass|#the-compass}}}}: Atomic Cost Crash: {session_data.account.compass['Upgrades']['Atomic Cost Crash']['Total Value']}"
-              f"TODO",
+        label=f"{{{{Compass|#the-compass}}}}: {acc['Path Name']}-{acc['Path Ordering']}: Atomic Cost Crash: {acc['Total Value']}%",
         picture_class=session_data.account.compass['Upgrades']['Atomic Cost Crash']['Image'],
         progression=session_data.account.compass['Upgrades']['Atomic Cost Crash']['Level'],
         goal=session_data.account.compass['Upgrades']['Atomic Cost Crash']['Max Level']
@@ -209,13 +210,11 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
 
     cr_advice.append(Advice(
         label=f"Remaining cost: {session_data.account.atom_collider['CostReductionMulti']*100:.2f}%",
-              #f" / {(1 / session_data.account.atom_collider['CostReductionMax'])*100:.2f}%",
         picture_class='particles',
     ))
 
     cr_advice.append(Advice(
-        label=f"Total discount: {session_data.account.atom_collider['CostDiscount']:.2f}% / "
-              f"{session_data.account.atom_collider['CostDiscountMax']:.2f}% off",
+        label=f"Total discount: {session_data.account.atom_collider['CostDiscount']:.2f}% off",
         picture_class='particles',
     ))
 
@@ -258,7 +257,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
                     collider_AdviceDict['Atoms'][subgroupName] = []
                 if subgroupName in collider_AdviceDict['Atoms']:
                     collider_AdviceDict['Atoms'][subgroupName].append(Advice(
-                        label=rAtom,
+                        label=f"{rAtom}: {pAtoms[rAtom]['Description']}",
                         picture_class=rAtom.split(' - ')[0],
                         progression=pAtoms[rAtom]['Level'],
                         goal=rLevel
