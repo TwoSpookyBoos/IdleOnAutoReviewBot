@@ -66,12 +66,7 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
     ))
 
     #Godshard Ore card
-    cap_Advices["Scaling Sources"].append(Advice(
-        label=f"Godshard Ore card: {30 * (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Godshard Ore'))}/180%",
-        picture_class="godshard-ore-card",
-        progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == "Godshard Ore"),
-        goal=6
-    ))
+    cap_Advices["Scaling Sources"].append(next(c for c in session_data.account.cards if c.name == 'Godshard Ore').getAdvice())
 
     cap_Advices["Scaling Sources"].append(Advice(
         label=f"{{{{ Forge Stamp|#stamps }}}}: +{session_data.account.stamps['Forge Stamp']['Value']:.2f}/57.50%",

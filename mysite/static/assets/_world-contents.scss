@@ -1,4 +1,8 @@
 $world-contents: (
+// Colosseum Chests
+    colo-bronze-chest: img('wiki/Bronze_Chest.png'),
+    colo-silver-chest: img('wiki/Silver_Chest.png'),
+    colo-gold-chest:   img('wiki/Gold_Chest.png'),
 // World 1
     forge: img('wiki/Forge.gif'),
     anvil: img('wiki/Anvil.gif'),
@@ -199,6 +203,13 @@ $world-contents: (
 );
 
 $world-monsters: (
+//Random Event Bosses
+    fallen-meteor:      img('wiki/Fallen_Meteor_Idle.gif'),
+    mega-grumblo:       img('wiki/Grumblo_Idle.gif'),
+    ice-guard:          img('wiki/Ice_Guard_Idle.gif'),
+    snake-swarm:        img('wiki/Snakenhotep_Idle.gif'),
+    angry-frogs:        img('wiki/Grandfrogger_Idle.gif'),
+
 // W1
     green-mushroom: img('wiki/Green_Mushroom_Idle.gif'),
     frog: img('wiki/Frog_Idle.gif'),
@@ -254,6 +265,8 @@ $world-monsters: (
     dedotated-ram: img('wiki/Dedotated_Ram_Idle.gif'),
     bloodbone: img('wiki/Bloodbone_Idle.gif'),
     crystal-cattle: img('wiki/Crystal_Cattle_Idle.gif'),
+    xylobone: img('wiki/Xylobone_Idle.gif'),
+    skull-rock: img('customized/skull-rock.png'),  //Frame0 of 1x\sprite-2-82.png
     chizoar: img('wiki/Chizoar_%28boss%29.png'),
 // W4
     purp-mushroom: img('wiki/Purp_Mushroom_Idle.gif'),

@@ -27,20 +27,9 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
         progression=session_data.account.labChips.get('Chocolatey Chip', 0),
         goal=1
     ))
-    crystal_AdviceList.append(Advice(
-        label=f"Minimum 3 star W4 Demon Genie card: +{15 * (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Demon Genie'))}"
-              f"/90% Crystal Mob Spawn Chance",
-        picture_class="demon-genie-card",
-        progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == "Demon Genie"),
-        goal=3
-    ))
-    crystal_AdviceList.append(Advice(
-        label=f"Minimum 3 star W1 Poop card: +{10 * (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Poop'))}"
-              f"/60% Crystal Mob Spawn Chance",
-        picture_class="poop-card",
-        progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == "Poop"),
-        goal=3
-    ))
+    cards = ['Demon Genie', 'Poop']
+    for card_name in cards:
+        crystal_AdviceList.append(next(c for c in session_data.account.cards if c.name == card_name).getAdvice('Minimum 3 star'))
 
     crystal_AdviceList.append(Advice(
         label=f"Minimum 100 Crystallin Stamp: {session_data.account.stamps['Crystallin']['Level']} (+{session_data.account.stamps['Crystallin']['Value']:.3f}%)",

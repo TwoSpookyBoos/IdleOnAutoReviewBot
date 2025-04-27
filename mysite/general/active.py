@@ -1,6 +1,6 @@
 from models.models import Advice, AdviceGroup, AdviceSection, EnemyWorld, EnemyMap, Character
 from consts import lavaFunc, stamp_maxes, pearlable_skillsList, max_VialLevel, currentWorld, dnSkullValueList, cookingCloseEnough, dnBasicMapsCount, \
-    maxCharacters
+    maxCharacters, cards_max_level
 from utils.all_talentsDict import all_talentsDict
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
@@ -26,20 +26,10 @@ def getCrystalSpawnChanceAdviceGroup() -> AdviceGroup:
         progression=session_data.account.labChips.get('Chocolatey Chip', 0),
         goal=1
     ))
-    crystal_Advice[aw].append(Advice(
-        label=f"W4 Demon Genie card: +{15 * (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Demon Genie'))}"
-              f"/90% Crystal Mob Spawn Chance",
-        picture_class="demon-genie-card",
-        progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == "Demon Genie"),
-        goal=6
-    ))
-    crystal_Advice[aw].append(Advice(
-        label=f"W1 Poop card: +{10 * (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Poop'))}"
-              f"/60% Crystal Mob Spawn Chance",
-        picture_class="poop-card",
-        progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == "Poop"),
-        goal=6
-    ))
+    cards = ['Demon Genie', 'Poop']
+    for card_name in cards:
+        crystal_Advice[aw].append(next(c for c in session_data.account.cards if c.name == card_name).getAdvice())
+
     crystal_Advice[aw].append(Advice(
         label="Omega Nanochip: Top Left card doubler",
         picture_class="omega-nanochip",
@@ -209,7 +199,7 @@ def getShortTermAdviceList() -> list[Advice]:
 
 def getCardsAdviceList() -> list[Advice]:
     cards = []
-    card_level_goal = 6 if session_data.account.rift['RubyCards'] else 5
+    card_level_goal = cards_max_level if session_data.account.rift['RubyCards'] else cards_max_level-1
     all_cards = {
         "Card Drop Chance": ["Sir Stache", "Snelbie", "Gigafrog"],
         "Shrine Value": ["Chaotic Chizoar"],
@@ -226,12 +216,7 @@ def getCardsAdviceList() -> list[Advice]:
         for card in cardnameList:
             #logger.debug(f"Looking up card: {card}")
             if (1 + next(c.getStars() for c in session_data.account.cards if c.name == card)) < card_level_goal and len(cards) < card_advice_limit:
-                cards.append(Advice(
-                    label=f"Farm {card} cards for {reason}",
-                    picture_class=f"{card}-card",
-                    progression=1 + next(c.getStars() for c in session_data.account.cards if c.name == card),
-                    goal=card_level_goal
-                ))
+                cards.append(next(c for c in session_data.account.cards if c.name == card).getAdvice())
 
     return cards
 

@@ -10,7 +10,7 @@ from flask import g
 from config import app
 from consts import (
     # General
-    lavaFunc, ignorable_labels,
+    lavaFunc, ignorable_labels, cards_max_level,
     greenstack_item_difficulty_groups, greenStackAmount, gstackable_codenames, gstackable_codenames_expected, quest_items_codenames,
     # W1
     # W2
@@ -101,21 +101,23 @@ def getSpecializedSkills(classes_list):
     elif "Shaman" in classes_list:
         specializedSkillsList.append("Alchemy")
 
-    if "Blood Berserker" in classes_list:
-        specializedSkillsList.append("Cooking")
-    elif "Divine Knight" in classes_list:
-        specializedSkillsList.append("Gaming")
-    elif "Siege Breaker" in classes_list:
-        specializedSkillsList.append("Sailing")
-    elif "Beast Master" in classes_list:
-        specializedSkillsList.append("Breeding")
-    elif "Elemental Sorcerer" in classes_list:
-        specializedSkillsList.append("Divinity")
-    elif "Bubonic Conjuror" in classes_list:
-        specializedSkillsList.append("Lab")
+    if 'Blood Berserker' in classes_list:
+        specializedSkillsList.append('Cooking')
+    elif 'Divine Knight' in classes_list:
+        specializedSkillsList.append('Gaming')
+    elif 'Siege Breaker' in classes_list:
+        specializedSkillsList.append('Sailing')
+    elif 'Beast Master' in classes_list:
+        specializedSkillsList.append('Breeding')
+    elif 'Elemental Sorcerer' in classes_list:
+        specializedSkillsList.append('Divinity')
+    elif 'Bubonic Conjuror' in classes_list:
+        specializedSkillsList.append('Lab')
 
-    if "Death Bringer" in classes_list:
-        specializedSkillsList.append("Farming")
+    if 'Death Bringer' in classes_list:
+        specializedSkillsList.append('Farming')
+    elif 'Wind Walker' in classes_list:
+        specializedSkillsList.append('Sneaking')
 
     return specializedSkillsList
 
@@ -153,6 +155,7 @@ class Character:
         self.base_class: str = base_class
         self.sub_class: str = sub_class
         self.elite_class: str = elite_class
+        self.master_class: str = master_class
         self.all_classes: list[str] = [base_class, sub_class, elite_class, master_class]
         self.max_talents_over_books: int = 100
         self.symbols_of_beyond = 0
@@ -1073,23 +1076,27 @@ class Assets(dict):
 
 
 class Card:
-    def __init__(self, codename, name, cardset, count, coefficient):
+    def __init__(self, codename, name, cardset, count, coefficient, value_per_level, description):
         self.codename = codename
         self.count = ceil(float(count))
         self.cardset = cardset
         self.name = name
         self.coefficient = coefficient
         self.star = self.getStars()
+        self.level = self.star + 1 if self.count > 0 else 0
         self.css_class = name + " Card"
         self.diff_to_next = (
             ceil(self.getCardsForStar(self.star + 1)) or sys.maxsize
         ) - self.count
+        self.value_per_level = value_per_level
+        self.description = description
+        self.max_level = cards_max_level
 
     def getStars(self):
         return next(
             (
                 i
-                for i in range(5, -1, -1)
+                for i in range(cards_max_level-1, -1, -1)
                 if self.count >= round(self.getCardsForStar(i))
             ),
             -1,
@@ -1115,6 +1122,30 @@ class Card:
         }.get(star, 0)
 
         return (self.coefficient * tier_coefficient**2) + 1
+
+    def getCurrentValue(self):
+        return self.level * self.value_per_level
+
+    def getMaxValue(self):
+        return cards_max_level * self.value_per_level
+
+    def getFormattedXY(self):
+        result = (
+            f"{'+' if '+' in self.description else ''}"
+            + f"{self.getCurrentValue():.3g}/{self.getMaxValue():.3g}"
+            + f"{'%' if '%' in self.description else ''}"
+            + f"{self.description.replace('+{', '').replace('%', '')}"
+        )
+        return result
+
+    def getAdvice(self, optional_starting_note=''):
+        a = Advice(
+            label=f"{optional_starting_note}{' ' if optional_starting_note else ''}{self.cardset}- {self.name} card:<br>{self.getFormattedXY()}",
+            picture_class=self.css_class,
+            progression=self.level,
+            goal=self.max_level
+        )
+        return a
 
     def __repr__(self):
         return f"[{self.__class__.__name__}: {self.name}, {self.count}, {self.star}-star]"

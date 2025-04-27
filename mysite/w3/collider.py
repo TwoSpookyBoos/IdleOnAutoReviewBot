@@ -30,15 +30,35 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
     if not session_data.account.gaming['SuperBits']['Isotope Discovery']['Unlocked']:
         settings_advice['Information'].append(
             Advice(
-                label=f"Purchasing the final SuperBit in Gaming will increase the max level of all Atoms from 20 to 30",
+                label=f"Purchasing the final SuperBit in Gaming will increase the max level of all Atoms by 10",
                 picture_class='red-bits',
+            )
+        )
+    if session_data.account.compass['Upgrades']['Atomic Potential']['Level'] < session_data.account.compass['Upgrades']['Atomic Potential']['Max Level']:
+        ap = session_data.account.compass['Upgrades']['Atomic Potential']
+        settings_advice['Information'].append(
+            Advice(
+                label=f"{{{{Compass|#the-compass}}}}: {ap['Path Name']}-{ap['Path Ordering']}: Atomic Potential: "
+                      f"+{session_data.account.compass['Upgrades']['Atomic Potential']['Level']}"
+                      f"/{session_data.account.compass['Upgrades']['Atomic Potential']['Max Level']}"
+                      f" max Atom levels",
+                picture_class=ap['Image'],
+                progression=session_data.account.compass['Upgrades']['Atomic Potential']['Level'],
+                goal=session_data.account.compass['Upgrades']['Atomic Potential']['Max Level']
             )
         )
 
     for atomName, atomValues in colliderData['Atoms'].items():
         settings_advice['Information'].append(
             Advice(
-                label=atomName,
+                label=(
+                    f"{atomName}: {atomValues['Description']}"
+                    f"<br>({atomValues['Value per Level']} per level)"
+                    if atomName != 'Magnesium - Trap Compounder' else
+                    f"{atomName}: {atomValues['Description']}"
+                    f"<br>{colliderData['Magnesium Days']}/100 days since last retrap"
+                    f"<br>({atomValues['Value per Level']} per level)"
+                ),
                 picture_class=atomName.split(' - ')[0],
                 progression=atomValues['Level'],
                 goal=atomValues['MaxLevel']
@@ -91,19 +111,6 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
                     goal=session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5
             ))
 
-    #Neon would cheapen the next Helium upgrade
-    # for heliumLevel, neonLevel in {6: 0, 7: 2, 8: 10, 9: 21, 10: 30}.items():
-    #     if colliderData['Atoms']['Helium - Talent Power Stacker']['Level'] == heliumLevel-1:
-    #         if colliderData['Atoms']["Neon - Damage N' Cheapener"]['Level'] < neonLevel:
-    #             settings_advice['Alerts'].append(
-    #                 Advice(
-    #                     label=f"Neon can be increased to {neonLevel} to cheapen Helium {heliumLevel}",
-    #                     picture_class="neon",
-    #                     progression=colliderData['Atoms']["Neon - Damage N' Cheapener"]['Level'],
-    #                     goal=neonLevel
-    #                 )
-    #             )
-
     currentMaxedTowers = 0
     if colliderData['Atoms']["Carbon - Wizard Maximizer"]['Level'] < colliderData['Atoms']["Carbon - Wizard Maximizer"]['MaxLevel']:
         for buildingName, buildingValuesDict in session_data.account.construction_buildings.items():
@@ -150,10 +157,11 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     ))
 
     cr_advice.append(Advice(
-        label=f"""Neon - Damage N' Cheapener: {session_data.account.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['Level']}/30%""",
+        label=f"""Neon - Damage N' Cheapener: {session_data.account.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['Level']}"""
+        f"""/{session_data.account.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['MaxLevel']}%""",
         picture_class="neon",
         progression=session_data.account.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['Level'],
-        goal=20 + (10 * session_data.account.gaming['SuperBits']['Isotope Discovery']['Unlocked'])
+        goal=session_data.account.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['MaxLevel']
     ))
 
     cr_advice.append(Advice(
@@ -164,7 +172,8 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     ))
 
     cr_advice.append(Advice(
-        label=f"Atom Collider building: {session_data.account.construction_buildings['Atom Collider']['Level'] / 10:.1f}/20%",
+        label=f"Atom Collider building: {session_data.account.construction_buildings['Atom Collider']['Level'] / 10:.1f}"
+              f"/{session_data.account.construction_buildings['Atom Collider']['MaxLevel'] / 10:.1f}%",
         picture_class="atom-collider",
         progression=session_data.account.construction_buildings['Atom Collider']['Level'],
         goal=session_data.account.construction_buildings['Atom Collider']['MaxLevel']
@@ -178,21 +187,34 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     ))
 
     cr_advice.append(Advice(
-        label=f"Atomic Stamp: {session_data.account.stamps['Atomic Stamp']['Value']:.3f}/20%",
+        label=f"Atomic Stamp: {session_data.account.stamps['Atomic Stamp']['Value']:.3f}%",
         picture_class="atomic-stamp",
         progression=session_data.account.stamps['Atomic Stamp']['Level'],
         resource=session_data.account.stamps['Atomic Stamp']['Material'],
     ))
 
     cr_advice.append(Advice(
+        label=f"{{{{Grimoire|#the-grimoire}}}}: Death of the Atom Price: {session_data.account.grimoire['Upgrades']['Death of the Atom Price']['Total Value']}%",
+        picture_class=session_data.account.grimoire['Upgrades']['Death of the Atom Price']['Image'],
+        progression=session_data.account.grimoire['Upgrades']['Death of the Atom Price']['Level'],
+        goal=session_data.account.grimoire['Upgrades']['Death of the Atom Price']['Max Level']
+    ))
+
+    acc = session_data.account.compass['Upgrades']['Atomic Cost Crash']
+    cr_advice.append(Advice(
+        label=f"{{{{Compass|#the-compass}}}}: {acc['Path Name']}-{acc['Path Ordering']}: Atomic Cost Crash: {acc['Total Value']}%",
+        picture_class=session_data.account.compass['Upgrades']['Atomic Cost Crash']['Image'],
+        progression=session_data.account.compass['Upgrades']['Atomic Cost Crash']['Level'],
+        goal=session_data.account.compass['Upgrades']['Atomic Cost Crash']['Max Level']
+    ))
+
+    cr_advice.append(Advice(
         label=f"Remaining cost: {session_data.account.atom_collider['CostReductionMulti']*100:.2f}%",
-              #f" / {(1 / session_data.account.atom_collider['CostReductionMax'])*100:.2f}%",
         picture_class='particles',
     ))
 
     cr_advice.append(Advice(
-        label=f"Total discount: {session_data.account.atom_collider['CostDiscount']:.2f}% / "
-              f"{session_data.account.atom_collider['CostDiscountMax']:.2f}% off",
+        label=f"Total discount: {session_data.account.atom_collider['CostDiscount']:.2f}% off",
         picture_class='particles',
     ))
 
@@ -235,7 +257,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
                     collider_AdviceDict['Atoms'][subgroupName] = []
                 if subgroupName in collider_AdviceDict['Atoms']:
                     collider_AdviceDict['Atoms'][subgroupName].append(Advice(
-                        label=rAtom,
+                        label=f"{rAtom}: {pAtoms[rAtom]['Description']}",
                         picture_class=rAtom.split(' - ')[0],
                         progression=pAtoms[rAtom]['Level'],
                         goal=rLevel

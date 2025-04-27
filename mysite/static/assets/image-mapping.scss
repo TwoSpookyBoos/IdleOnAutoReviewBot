@@ -7,6 +7,7 @@
 @import "classes";
 @import "talents";
 @import "grimoire";
+@import "compass";
 @import "gem-shop";
 @import "storage-items";
 @import "world-contents";
@@ -368,6 +369,10 @@ epic-santa-hat: $epic-santa-hat,
 deathbringer-hood-of-death: $deathbringer-hood-of-death,
 pink-beanie: $pink-beanie,
 true-crown: $true-crown,
+celebration-mane: $celebration-mane,
+goldberry: $goldberry,
+orange-beanie: $orange-beanie,
+windwalker-hood: $windwalker-hood,
 
 copper-helmet: $copper-helmet,
 iron-helmet: $iron-helmet,
@@ -693,6 +698,7 @@ timeless-watch: $timeless-watch,
 // Robes / Gowns
 cobalt-robe: $cobalt-robe,
 abyssal-robe: $abyssal-robe,
+evergreen-robe: $evergreen-robe,
 
 // Dungeon Chains
 
@@ -768,6 +774,7 @@ frostyman-nametag: $frostyman-nametag,
 lovely-day-nametag: $lovely-day-nametag,
 spectacular-4th-year-nametag: $spectacular-4th-year-nametag,
 fourth-anniversary-idleon-nametag: $fourth-anniversary-idleon-nametag,
+aethermoon-nametag: $aethermoon-nametag,
 
 // Mining Pickaxes
 
@@ -1163,6 +1170,7 @@ lovey-dovey-letter: $lovey-dovey-letter,
 choco-box: $choco-box,
 
 anniversary-box: $anniversary-box,
+birthday-candle: $birthday-candle,
 
 // Utility Items
 
@@ -2066,6 +2074,7 @@ $id-map: map-merge($all-caverns, $id-map);
 $id-map: map-merge($event-shop, $id-map);
 $id-map: map-merge($all-grimoire, $id-map);
 $id-map: map-merge($all-vault, $id-map);
+$id-map: map-merge($all-compass, $id-map);
 
 
 

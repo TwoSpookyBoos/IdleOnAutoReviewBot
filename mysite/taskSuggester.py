@@ -12,7 +12,8 @@ from models.models import AdviceWorld, WorldName, Account
 from utils.data_formatting import getJSONfromAPI, getJSONfromText, HeaderData, safer_convert
 from utils.logging import get_logger
 from utils.text_formatting import is_username
-from general import combatLevels, greenstacks, pinchy, cards, secretPath, consumables, gemShop, active, achievements, eventShop, grimoire
+from general import combatLevels, greenstacks, pinchy, cards, secretPath, consumables, gemShop, active, achievements, eventShop
+from master_classes import grimoire, compass
 from w1 import upgrade_vault, stamps, bribes, smithing, statues, starsigns, owl
 from w2 import alchemy, post_office, killroy, islands, arcade, bonus_ballot
 from w3 import trapping, consRefinery, consDeathNote, worship, consSaltLick, consBuildings, equinox, library, sampling, collider
@@ -80,7 +81,8 @@ def main(inputData, source_string, runType="web"):
             *(greenstacks.getGStackAdviceSections()),
             cards.getCardsAdviceSection(),
             eventShop.getEvent_ShopAdviceSection(),
-            grimoire.getGrimoireAdviceSection()
+            grimoire.getGrimoireAdviceSection(),
+            compass.getCompassAdviceSection()
         ],
         sections_1 := [
             upgrade_vault.getVaultAdviceSection(),
