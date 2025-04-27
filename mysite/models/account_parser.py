@@ -7,7 +7,7 @@ from consts import (
     lavaFunc, ValueToMulti, items_codes_and_names,
     maxCharacters,
     gfood_codes,
-    card_data,
+    card_data, card_raw_data, cardset_names, decode_enemy_name,
     gemShopDict, gem_shop_optlacc_dict,
     guildBonusesList, familyBonusesDict, achievementsList, allMeritsDict, starsignsDict,
     event_points_shop_dict,
@@ -65,15 +65,52 @@ logger = get_logger(__name__)
 
 def _make_cards(account):
     card_counts = safe_loads(account.raw_data.get(key_cards, {}))
-    cards = [
-        Card(codename, name, cardset, safer_get(card_counts, codename, 0), coefficient)
-        for cardset, cards in card_data.items()
-        for codename, (name, coefficient) in cards.items()
-    ]
 
-    unknown_cards = [
-        codename for codename in card_counts if not any(codename in items for items in card_data.values())
+    #Parse card data from source code
+    parsed_card_data = {}
+    unknown_cards = []
+    for cardset_index, cardset_details in enumerate(card_raw_data):
+        try:
+            cardset_name = cardset_names[cardset_index]
+        except:
+            logger.warning(f"No name found for Card Set Index {cardset_index}!")
+            cardset_name = f"UnknownSet-{cardset_index}"
+        for card_info in cardset_details:
+            if card_info[0] == 'Blank':
+                continue  #Skip the blank placeholders
+            # ["mushG", "A0", "5", "+{_Base_HP", "12"],
+            enemy_decoded_name = decode_enemy_name(card_info[0])
+            if enemy_decoded_name.startswith('Unknown'):
+                unknown_cards.append(card_info[0])
+            parsed_card_data[enemy_decoded_name] = {
+                'Card Name': card_info[0],
+                'Enemy Name': enemy_decoded_name,
+                'Cards For 1star': safer_convert(card_info[2], 1.0),
+                'Description': card_info[3].replace('_', ' '),
+                'Value per Level': safer_convert(card_info[4], 0.0),
+                'Set Name': cardset_name
+            }
+
+    cards = [
+        Card(
+            codename=card_values['Card Name'],
+            name=decoded_enemy_name,
+            cardset=card_values['Set Name'],
+            count=safer_get(card_counts, card_values['Card Name'], 0),
+            coefficient=card_values['Cards For 1star'],
+            value_per_level=card_values['Value per Level'],
+            description=card_values['Description']
+        ) for decoded_enemy_name, card_values in parsed_card_data.items()
     ]
+    # cards = [
+    #     Card(codename, name, cardset, safer_get(card_counts, codename, 0), coefficient)
+    #     for cardset, cards in card_data.items()
+    #     for codename, (name, coefficient) in cards.items()
+    # ]
+
+    # unknown_cards = [
+    #     codename for codename in card_counts if not any(codename in items for items in card_data.values())
+    # ]
     if unknown_cards:
         logger.warning(f"Unknown Card name(s) found: {unknown_cards}")
 
