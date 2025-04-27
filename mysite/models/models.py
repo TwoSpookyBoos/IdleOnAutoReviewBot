@@ -683,7 +683,7 @@ class AdviceGroup(AdviceBase):
         if 'default' in self.advices:
             if isinstance(self.advices['default'], list):
                 try:
-                    self.advices['default']: list[Advice] = sorted(
+                    self.advices['default'] = list[Advice] = sorted(
                         self.advices['default'],
                         key=lambda a: float(str(a.progression).strip('%')),
                         reverse=reverseBool

@@ -254,8 +254,7 @@ def getDropRateAccountAdviceGroup() -> AdviceGroup:
         goal=maxLandRankLevel
     ))
 
-    sneakMastery_riftLevel = 55
-    rift_level = session_data.account.rift_level
+    # Rift - Sneak Mastery 1
     sneakMastery_level = session_data.account.sneaking['MaxMastery']
     dropRate_Advice[misc].append(Advice(
         label=f"Rift Sneaking Mastery +{30 if (sneakMastery_level > 0) else 0}/30% Drop Rate",
@@ -264,7 +263,7 @@ def getDropRateAccountAdviceGroup() -> AdviceGroup:
         goal=1
     ))
 
-    # Owl
+    # Owl Bonuses
     dropRate_owlBonus = session_data.account.owlBonuses['Drop Rate']
     dropRate_Advice[misc].append(Advice(
         label=f"Bonuses of Orion +{dropRate_owlBonus['Value']}% Drop Rate",
