@@ -7,7 +7,7 @@ from consts import (
     # Master Classes
     grimoire_stack_types,
     # W1
-    vault_stack_types, grimoire_coded_stack_monster_order, decode_enemy_name,
+    vault_stack_types, grimoire_coded_stack_monster_order, decode_enemy_name, owl_bonusesOfOrion,
     # W2
     fishingToolkitDict,
     islands_trash_shop_costs,
@@ -489,6 +489,7 @@ def _calculate_w1(account):
     _calculate_w1_starsigns(account)
     _calculate_w1_statues(account)
     _calculate_w1_stamps(account)
+    _calculate_w1_owlBonuses(account)
 
 def _calculate_w1_upgrade_vault(account):
     vault_multi = [
@@ -618,6 +619,36 @@ def _calculate_w1_stamps(account):
             except:
                 logger.exception(f"Failed to upgrade the Value of {stamp_name}")
                 continue
+
+def _calculate_w1_owlBonuses(account):
+    bonusesOfOrion_num = len(owl_bonusesOfOrion)
+    bonusesOfOrion_owned = account.owl['BonusesOfOrion']
+    megafeathers_owned = account.owl['MegaFeathersOwned']
+    megafeather_mod = 0
+    if megafeathers_owned >= 10:
+        megafeather_mod = 6 + ((megafeathers_owned - 10) * 0.5)
+    elif megafeathers_owned > 7:
+        megafeather_mod = 5
+    elif megafeathers_owned > 5:
+        megafeather_mod = 4
+    elif megafeathers_owned > 3:
+        megafeather_mod = 3
+    elif megafeathers_owned > 1:
+        megafeather_mod = 2
+
+    account.owlBonuses = {}
+    for bonus_index, (bonus_name, bonus) in enumerate(owl_bonusesOfOrion.items()):
+        bonus_base = bonus['BaseValue']
+        if account.owl['Discovered']:
+            bonus_numUnlocked = (floor(bonusesOfOrion_owned/bonusesOfOrion_num) + (1 if (bonusesOfOrion_owned % bonusesOfOrion_num) > bonus_index else 0))
+        else:
+            bonus_numUnlocked = 0
+        bonus_value = bonus_base * bonus_numUnlocked * megafeather_mod
+        account.owlBonuses[bonus_name] = {
+            'BaseValue': bonus_base,
+            'NumUnlocked': bonus_numUnlocked,
+            'Value': (int(bonus_value) if bonus_value.is_integer() else bonus_value)
+    }
 
 def _calculate_w2(account):
     _calculate_w2_vials(account)

@@ -109,7 +109,7 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     capacity_Advices["Account Wide"].append(Advice(
         label="Guild Bonus: Rucksack",
         picture_class="rucksack",
-        progression=f"{session_data.account.guildBonuses.get('Rucksack', 0) if session_data.account.guildBonuses.get('Rucksack', 0) > 0 else 'IDK'}",
+        progression=f"{session_data.account.guildBonuses['Rucksack']['Level'] if session_data.account.guildBonuses['Rucksack']['Level'] > 0 else 'IDK'}",
         goal=50
     ))
     capacity_Advices["Account Wide"].append(session_data.account.shrine_advices['Pantheon Shrine'])

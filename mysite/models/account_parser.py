@@ -468,12 +468,20 @@ def _parse_general_merits(account):
 def _parse_general_guild_bonuses(account):
     account.guildBonuses = {}
     raw_guild = safe_loads(account.raw_data.get('Guild', [[]]))
-    for bonusIndex, bonusName in enumerate(guildBonusesList):
+    for bonusIndex, (bonusName, bonus) in enumerate(guildBonusesList.items()):
         try:
-            account.guildBonuses[bonusName] = safer_convert(raw_guild[0][bonusIndex], 0)
+            guildBonus_level = safer_convert(raw_guild[0][bonusIndex], 0)
         except Exception as e:
             logger.warning(f"Guild Bonus Parse error: {e}. Defaulting to 0")
-            account.guildBonuses[bonusName] = 0
+            guildBonus_level = 0
+        
+        account.guildBonuses[bonusName] = {
+            'Level': guildBonus_level,
+            'Value': lavaFunc(bonus['FuncType'], guildBonus_level, bonus['X1'], bonus['X2']),
+            'MaxLevel': bonus['MaxLevel'],
+            'MaxValue': bonus['MaxValue'],
+            'Picture': bonus['Picture']
+        }
 
 def _parse_general_printer(account):
     account.printer = {

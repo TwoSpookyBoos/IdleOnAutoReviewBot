@@ -231,13 +231,12 @@ def getDropRateAccountAdviceGroup() -> AdviceGroup:
     ))
 
     # Guild Bonus - Gold Charm
-    goldCharm_bonus = guildBonusesList['Gold Charm']
-    goldCharm_level = session_data.account.guildBonuses['Gold Charm']
+    goldCharm_bonus = session_data.account.guildBonuses['Gold Charm']
     dropRate_Advice[misc].append(Advice(
-        label=f"Guild Bonus Gold Charm +{goldCharm_bonus['GetValue'](goldCharm_level):g}"
+        label=f"Guild Bonus Gold Charm +{goldCharm_bonus['Value']:g}"
               f"/{goldCharm_bonus['MaxValue']:g}% Drop Rate",
         picture_class=goldCharm_bonus['Picture'],
-        progression=goldCharm_level,
+        progression=goldCharm_bonus['Level'],
         goal=goldCharm_bonus['MaxLevel']
     ))
 
@@ -265,10 +264,17 @@ def getDropRateAccountAdviceGroup() -> AdviceGroup:
         goal=1
     ))
 
-    # TODO: Account wide bonuses
-    # Sneaking Mastery
-    # Family Obols
     # Owl
+    dropRate_owlBonus = session_data.account.owlBonuses['Drop Rate']
+    dropRate_Advice[misc].append(Advice(
+        label=f"Bonuses of Orion +{dropRate_owlBonus['Value']}% Drop Rate",
+        picture_class='drop-rate',
+        progression=dropRate_owlBonus['NumUnlocked'],
+        goal='∞'
+    ))
+
+    # TODO: Account wide bonuses
+    # Family Obols
     # $$ DB Pack
     # Shiny Pets
     # Shrine
@@ -325,7 +331,7 @@ def getDropRateAdviceSection() -> AdviceSection:
         max_tier=max_tier,
         true_max_tier=true_max,
         header=f"Drop Rate Information",
-        picture='Auto.png',
+        picture='wiki/Orion_DR.png',
         groups=droprate_AdviceGroupDict.values(),
         unrated=True,
     )
