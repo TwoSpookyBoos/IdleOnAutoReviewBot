@@ -7,7 +7,7 @@ from consts import (
     # Master Classes
     grimoire_stack_types,
     # W1
-    vault_stack_types, grimoire_coded_stack_monster_order, decode_enemy_name, owl_bonusesOfOrion,
+    vault_stack_types, grimoire_coded_stack_monster_order, decode_enemy_name, owl_bonuses_of_orion,
     # W2
     fishingToolkitDict,
     islands_trash_shop_costs,
@@ -489,7 +489,7 @@ def _calculate_w1(account):
     _calculate_w1_starsigns(account)
     _calculate_w1_statues(account)
     _calculate_w1_stamps(account)
-    _calculate_w1_owlBonuses(account)
+    _calculate_w1_owl_bonuses(account)
 
 def _calculate_w1_upgrade_vault(account):
     vault_multi = [
@@ -619,10 +619,10 @@ def _calculate_w1_stamps(account):
             except:
                 logger.exception(f"Failed to upgrade the Value of {stamp_name}")
                 continue
-
-def _calculate_w1_owlBonuses(account):
-    bonusesOfOrion_num = len(owl_bonusesOfOrion)
-    bonusesOfOrion_owned = account.owl['BonusesOfOrion']
+            
+def _calculate_w1_owl_bonuses(account):
+    bonuses_of_orion_num = len(owl_bonuses_of_orion)
+    bonuses_of_orion_owned = account.owl['BonusesOfOrion']
     megafeathers_owned = account.owl['MegaFeathersOwned']
     megafeather_mod = 0
     if megafeathers_owned >= 10:
@@ -636,17 +636,17 @@ def _calculate_w1_owlBonuses(account):
     elif megafeathers_owned > 1:
         megafeather_mod = 2
 
-    account.owlBonuses = {}
-    for bonus_index, (bonus_name, bonus) in enumerate(owl_bonusesOfOrion.items()):
+    account.owl_bonuses = {}
+    for bonus_index, (bonus_name, bonus) in enumerate(owl_bonuses_of_orion.items()):
         bonus_base = bonus['BaseValue']
         if account.owl['Discovered']:
-            bonus_numUnlocked = (floor(bonusesOfOrion_owned/bonusesOfOrion_num) + (1 if (bonusesOfOrion_owned % bonusesOfOrion_num) > bonus_index else 0))
+            bonus_num_unlocked = (floor(bonuses_of_orion_owned/bonuses_of_orion_num) + (1 if (bonuses_of_orion_owned % bonuses_of_orion_num) > bonus_index else 0))
         else:
-            bonus_numUnlocked = 0
-        bonus_value = bonus_base * bonus_numUnlocked * megafeather_mod
-        account.owlBonuses[bonus_name] = {
+            bonus_num_unlocked = 0
+        bonus_value = bonus_base * bonus_num_unlocked * megafeather_mod
+        account.owl_bonuses[bonus_name] = {
             'BaseValue': bonus_base,
-            'NumUnlocked': bonus_numUnlocked,
+            'NumUnlocked': bonus_num_unlocked,
             'Value': (int(bonus_value) if bonus_value.is_integer() else bonus_value)
     }
 
