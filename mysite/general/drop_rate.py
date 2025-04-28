@@ -1,18 +1,13 @@
 from models.models import Advice, AdviceGroup, AdviceSection
-from consts import max_card_stars, maxFarmingCrops, maxLandRankLevel, max_IndexOfSigils
+from consts import max_card_stars, maxFarmingCrops, max_land_rank_level, max_IndexOfSigils
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
 
-from utils.text_formatting import notateNumber
-
 logger = get_logger(__name__)
 
-def getCardSetProgress():
-    return
-
-def getDropRateAccountAdviceGroup() -> AdviceGroup:
-    dropRate_shiny_base = 1
+def get_drop_rate_account_advice_group() -> AdviceGroup:
+    drop_rate_shiny_base = 1
     sigils_trove_base = 10
 
     cards = session_data.account.cards
@@ -27,13 +22,13 @@ def getDropRateAccountAdviceGroup() -> AdviceGroup:
     cards = 'Cards'
     misc = 'Miscellaneous'
     multi = 'Multipliers'
-    dropRate_Advice = {
+    drop_rate_advice = {
         cards: [],
         misc: [],
         multi: []
     }
 
-    dropRate_cards = [
+    drop_rate_cards = [
         {
             'Name': 'Emperor',
             'Stars': (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Emperor')),
@@ -113,8 +108,8 @@ def getDropRateAccountAdviceGroup() -> AdviceGroup:
     # Cards
     #########################################
     # TODO: Add temp line for +ruby level cards
-    for card in dropRate_cards:
-        dropRate_Advice[cards].append(Advice(
+    for card in drop_rate_cards:
+        drop_rate_advice[cards].append(Advice(
             label=f"{card['Name']}'card: +{card['Base'] * card['Stars']:g}/{card['Base'] * (1 + max_card_stars):g} {card['Bonus']}",
             picture_class=card['Picture'],
             progression=card['Stars'],
@@ -125,7 +120,7 @@ def getDropRateAccountAdviceGroup() -> AdviceGroup:
     bnn_star, _ = divmod(bnn_stars_sum, len(bnn_cardset))
     bnn_star = min(bnn_star, max_card_stars)
     bnn_star_next = (bnn_star + 1) * len(bnn_cardset)
-    dropRate_Advice[cards].append(Advice(
+    drop_rate_advice[cards].append(Advice(
         label=f"Bosses n Nightmares card set: +{6 * bnn_star}"
               f"/{6 * (1 + max_card_stars)} Drop Rate | Cards until next set level {bnn_stars_sum}/{bnn_star_next}",
         picture_class='bosses-n-nightmares',
@@ -137,7 +132,7 @@ def getDropRateAccountAdviceGroup() -> AdviceGroup:
     events_star, _ = divmod(events_stars_sum, len(events_cardset))
     events_star = min(events_star, max_card_stars)
     events_star_next = (events_star + 1) * len(events_cardset)
-    dropRate_Advice[cards].append(Advice(
+    drop_rate_advice[cards].append(Advice(
         label=f"Events card set: +{7 * events_star}"
               f"/{7 * (1 + max_card_stars)} Drop Rate | Cards until next set level {events_stars_sum}/{events_star_next}",
         picture_class='events',
@@ -147,137 +142,137 @@ def getDropRateAccountAdviceGroup() -> AdviceGroup:
 
     # Misc
     #########################################
-    dropRate_Advice[misc].append(Advice(
+    drop_rate_advice[misc].append(Advice(
         label='W6 Big Big Hampter achievement +4% Drop Rate',
         picture_class='big-big-hampter',
         progression=1 if session_data.account.achievements['Big Big Hampter']['Complete'] else 0,
         goal=1
     ))
-    dropRate_Advice[misc].append(Advice(
+    drop_rate_advice[misc].append(Advice(
         label='W6 Summoning GM achievement +6% Drop Rate',
         picture_class='summoning-gm',
         progression=int(session_data.account.achievements['Summoning GM']['Complete']),
         goal=1
     ))
 
-    dropRate_arcadebonus_id = 27
-    _, dropRate_arcade  = list(session_data.account.arcade.items())[dropRate_arcadebonus_id]
-    dropRate_Advice[misc].append(Advice(
-        label=f"Arcade Bonus {dropRate_arcadebonus_id}: {dropRate_arcade['Display']}",
-        picture_class=dropRate_arcade['Image'],
-        progression=dropRate_arcade['Level'],
-        resource=dropRate_arcade['Material'],
+    drop_rate_arcade_bonus_id = 27
+    _, drop_rate_arcade  = list(session_data.account.arcade.items())[drop_rate_arcade_bonus_id]
+    drop_rate_advice[misc].append(Advice(
+        label=f"Arcade Bonus {drop_rate_arcade_bonus_id}: {drop_rate_arcade['Display']}",
+        picture_class=drop_rate_arcade['Image'],
+        progression=drop_rate_arcade['Level'],
+        resource=drop_rate_arcade['Material'],
         goal=101
     ))
 
     # Maybe up the goal to 6930 for +39.6% at 99% or 2730 for a nice round +39%?
-    dropinLoads_bubble = session_data.account.alchemy_bubbles['Droppin Loads']
-    dropRate_Advice[misc].append(Advice(
-        label=f"Alchemy Bubble Droppin Loads +{round(dropinLoads_bubble['BaseValue'], 2):g}% Drop Rate",
+    dropin_loads_bubble = session_data.account.alchemy_bubbles['Droppin Loads']
+    drop_rate_advice[misc].append(Advice(
+        label=f"Alchemy Bubble Droppin Loads +{round(dropin_loads_bubble['BaseValue'], 2):g}% Drop Rate",
         picture_class='droppin-loads',
-        progression=dropinLoads_bubble['Level'],
+        progression=dropin_loads_bubble['Level'],
         goal=1330
     ))
 
     grotto_cavern = session_data.account.caverns['Caverns']['Grotto']
-    gloomieLootie_schematic = session_data.account.caverns['Schematics']['Gloomie Lootie']
-    dropRate_Advice[misc].append(Advice(
+    gloomie_lootie_schematic = session_data.account.caverns['Schematics']['Gloomie Lootie']
+    drop_rate_advice[misc].append(Advice(
         label=f"Engineer Schematic Gloomie Lootie +{5 * grotto_cavern['OpalsFound']}% Drop Rate",
-        picture_class=gloomieLootie_schematic['Image'],
-        progression=grotto_cavern['OpalsFound'] if gloomieLootie_schematic['Purchased'] else 0,
+        picture_class=gloomie_lootie_schematic['Image'],
+        progression=grotto_cavern['OpalsFound'] if gloomie_lootie_schematic['Purchased'] else 0,
         goal='∞'
     ))
 
-    cropsUnlocked = session_data.account.farming['CropsUnlocked']
-    dropRate_Advice[misc].append(Advice(
-        label=f"Crop Depot Highlighter +{(cropsUnlocked - 100) if (cropsUnlocked > 100) else 0}/{maxFarmingCrops-100}%"
-              f" Drop Rate {' (value only increases after 100 crops found)' if (cropsUnlocked <= 100) else ''}",
+    crops_unlocked = session_data.account.farming['CropsUnlocked']
+    drop_rate_advice[misc].append(Advice(
+        label=f"Crop Depot Highlighter +{(crops_unlocked - 100) if (crops_unlocked > 100) else 0}/{maxFarmingCrops-100}%"
+              f" Drop Rate {' (value only increases after 100 crops found)' if (crops_unlocked <= 100) else ''}",
         picture_class='depot-highlighter',
-        progression=cropsUnlocked,
+        progression=crops_unlocked,
         goal=maxFarmingCrops
     ))
 
     # Companions - Crystal Custard
-    hasCrystalCustard= session_data.account.companions['Crystal Custard']
-    dropRate_Advice[misc].append(Advice(
-        label=f"Crystal Custard companion +{100 if hasCrystalCustard else 0}/100% Drop Rate",
+    has_crystal_custard= session_data.account.companions['Crystal Custard']
+    drop_rate_advice[misc].append(Advice(
+        label=f"Crystal Custard companion +{100 if has_crystal_custard else 0}/100% Drop Rate",
         picture_class='crystal-custard',
-        progression=int(hasCrystalCustard),
+        progression=int(has_crystal_custard),
         goal=1
     ))
 
     # Equinox - Faux Jewels
     # Will show additional info if player is maxed out for their currently available levels
-    fauxJewels_bonus = session_data.account.equinox_bonuses['Faux Jewels']
-    fauxJewels_level = fauxJewels_bonus['CurrentLevel']
-    dropRate_Advice[misc].append(Advice(
-        label=f"Equinox Faux Jewels +{5 * fauxJewels_level}% Drop Rate"
-              f"{' (increase Faux Jewels max with Endless Summoning)' if fauxJewels_level == fauxJewels_bonus['PlayerMaxLevel'] else ''}",
+    faux_jewels_bonus = session_data.account.equinox_bonuses['Faux Jewels']
+    faux_jewels_level = faux_jewels_bonus['CurrentLevel']
+    drop_rate_advice[misc].append(Advice(
+        label=f"Equinox Faux Jewels +{5 * faux_jewels_level}% Drop Rate"
+              f"{' (increase Faux Jewels max with Endless Summoning)' if faux_jewels_level == faux_jewels_bonus['PlayerMaxLevel'] else ''}",
         picture_class='faux-jewels',
-        progression=fauxJewels_level,
+        progression=faux_jewels_level,
         goal='∞' # This is technically Endless, since Endless Summoning increases the max level
     ))
 
     # Beanstalk - Golden Cake
-    cake_beanstalkName ='FoodG13'
-    cake_beanstalk = session_data.account.sneaking['Beanstalk'][cake_beanstalkName]
-    cake_beanstalkLevel = int(cake_beanstalk['Beanstacked']) + int(cake_beanstalk['SuperBeanstacked'])
-    if cake_beanstalkLevel == 2:
-        cake_beanstalkBonus = '+6.67'
-    elif cake_beanstalkLevel == 1:
-        cake_beanstalkBonus = '+4.59'
+    cake_beanstalk_name ='FoodG13'
+    cake_beanstalk = session_data.account.sneaking['Beanstalk'][cake_beanstalk_name]
+    cake_beanstalk_level = int(cake_beanstalk['Beanstacked']) + int(cake_beanstalk['SuperBeanstacked'])
+    if cake_beanstalk_level == 2:
+        cake_beanstalk_bonus = '+6.67'
+    elif cake_beanstalk_level == 1:
+        cake_beanstalk_bonus = '+4.59'
     else:
-        cake_beanstalkBonus = '0%'
-    dropRate_Advice[misc].append(Advice(
-        label=f"Beanstalk Golden Cake {cake_beanstalkBonus}/6.67% Drop Rate (further increased by Golden Food multi)",
+        cake_beanstalk_bonus = '0%'
+    drop_rate_advice[misc].append(Advice(
+        label=f"Beanstalk Golden Cake {cake_beanstalk_bonus}/6.67% Drop Rate (further increased by Golden Food multi)",
         picture_class='golden-cake',
-        progression=cake_beanstalkLevel,
+        progression=cake_beanstalk_level,
         goal=2
     ))
 
     # Guild Bonus - Gold Charm
-    goldCharm_bonus = session_data.account.guildBonuses['Gold Charm']
-    dropRate_Advice[misc].append(Advice(
-        label=f"Guild Bonus Gold Charm +{goldCharm_bonus['Value']:g}"
-              f"/{goldCharm_bonus['MaxValue']:g}% Drop Rate",
-        picture_class=goldCharm_bonus['Picture'],
-        progression=goldCharm_bonus['Level'],
-        goal=goldCharm_bonus['MaxLevel']
+    gold_charm_bonus = session_data.account.guild_bonuses['Gold Charm']
+    drop_rate_advice[misc].append(Advice(
+        label=f"Guild Bonus Gold Charm +{gold_charm_bonus['Value']:g}"
+              f"/{gold_charm_bonus['MaxValue']:g}% Drop Rate",
+        picture_class=gold_charm_bonus['Picture'],
+        progression=gold_charm_bonus['Level'],
+        goal=gold_charm_bonus['MaxLevel']
     ))
 
     # TODO: Add temporary line for + Land Rank Level
     # Land Rank - Seed of Loot
     # Will show additional info if the player does not have the current max number of available land rank levels
-    seedOfLoot_landRank = session_data.account.farming['LandRankDatabase']['Seed of Loot']
-    dropRate_Advice[misc].append(Advice(
-        label=f"Land Rank Seed of Loot +{seedOfLoot_landRank['BaseValue'] * seedOfLoot_landRank['Level']}"
-              f"/{seedOfLoot_landRank['BaseValue'] * maxLandRankLevel}% Drop Rate"
-              f"{' (increase Land Rank max with Grimoire)' if seedOfLoot_landRank['Level'] < maxLandRankLevel else ''}",
+    seed_of_loot_land_rank = session_data.account.farming['LandRankDatabase']['Seed of Loot']
+    drop_rate_advice[misc].append(Advice(
+        label=f"Land Rank Seed of Loot +{seed_of_loot_land_rank['BaseValue'] * seed_of_loot_land_rank['Level']}"
+              f"/{seed_of_loot_land_rank['BaseValue'] * max_land_rank_level}% Drop Rate"
+              f"{' (increase Land Rank max with Grimoire)' if seed_of_loot_land_rank['Level'] < max_land_rank_level else ''}",
         picture_class='seed-of-loot',
-        progression=seedOfLoot_landRank['Level'],
-        goal=maxLandRankLevel
+        progression=seed_of_loot_land_rank['Level'],
+        goal=max_land_rank_level
     ))
 
     # Rift - Sneak Mastery 1
-    sneakMastery_level = session_data.account.sneaking['MaxMastery']
-    dropRate_Advice[misc].append(Advice(
-        label=f"Rift Sneaking Mastery +{30 if (sneakMastery_level > 0) else 0}/30% Drop Rate",
+    sneak_mastery_level = session_data.account.sneaking['MaxMastery']
+    drop_rate_advice[misc].append(Advice(
+        label=f"Rift Sneaking Mastery +{30 if (sneak_mastery_level > 0) else 0}/30% Drop Rate",
         picture_class='sneaking-mastery',
-        progression=sneakMastery_level,
+        progression=sneak_mastery_level,
         goal=1
     ))
 
     # Owl Bonuses
-    dropRate_owlBonus = session_data.account.owlBonuses['Drop Rate']
-    dropRate_Advice[misc].append(Advice(
-        label=f"Bonuses of Orion +{dropRate_owlBonus['Value']}% Drop Rate",
+    drop_rate_owlBonus = session_data.account.owl_bonuses['Drop Rate']
+    drop_rate_advice[misc].append(Advice(
+        label=f"Bonuses of Orion +{drop_rate_owlBonus['Value']}% Drop Rate",
         picture_class='drop-rate',
-        progression=dropRate_owlBonus['NumUnlocked'],
+        progression=drop_rate_owlBonus['NumUnlocked'],
         goal='∞'
     ))
 
     # Gem Shop - DB Pack
-    dropRate_Advice[misc].append(Advice(
+    drop_rate_advice[misc].append(Advice(
         label="Gemshop Deathbringer Pack +200% Drop Rate (can't tell if you have this)",
         picture_class='gem',
         progression='IDK',
@@ -285,21 +280,21 @@ def getDropRateAccountAdviceGroup() -> AdviceGroup:
     ))
 
     # Breeding - Shiny Pets
-    dropRate_shinyLevel = 0
-    dropRate_shinyValue = 0
+    drop_rate_shiny_level = 0
+    drop_rate_shinyValue = 0
     for name, shiny in session_data.account.breeding['Species'][1].items():
         if shiny['ShinyBonus'] == 'Drop Rate':
-            dropRate_shinyLevel += shiny['ShinyLevel']
-            dropRate_shinyValue += dropRate_shiny_base * shiny['ShinyLevel']
-    dropRate_Advice[misc].append(Advice(
-        label=f"Total Shiny Critter +{dropRate_shinyValue}% Drop Rate",
+            drop_rate_shiny_level += shiny['ShinyLevel']
+            drop_rate_shinyValue += drop_rate_shiny_base * shiny['ShinyLevel']
+    drop_rate_advice[misc].append(Advice(
+        label=f"Total Shiny Critter +{drop_rate_shinyValue}% Drop Rate",
         picture_class='breeding',
-        progression=dropRate_shinyLevel,
+        progression=drop_rate_shiny_level,
         goal='∞'
     ))
 
     # Shrine - Clover Shrine
-    dropRate_Advice[misc].append(Advice(
+    drop_rate_advice[misc].append(Advice(
         label=f"Shrine +{session_data.account.shrines['Clover Shrine']['Value']:g}% Drop Rate",
         picture_class='clover-shrine',
         progression=session_data.account.shrines['Clover Shrine']['Level'],
@@ -307,43 +302,43 @@ def getDropRateAccountAdviceGroup() -> AdviceGroup:
     ))
 
     # Sigil
-    troveSigil_level = session_data.account.alchemy_p2w['Sigils']['Trove']['Level']
-    dropRate_Advice[misc].append(Advice(
-        label=f"Clover Sigil +{sigils_trove_base * troveSigil_level}"
+    trove_sigil_level = session_data.account.alchemy_p2w['Sigils']['Trove']['Level']
+    drop_rate_advice[misc].append(Advice(
+        label=f"Clover Sigil +{sigils_trove_base * trove_sigil_level}"
               f"/{sigils_trove_base * max_IndexOfSigils}% Drop Rate",
         picture_class='trove',
-        progression=troveSigil_level,
+        progression=trove_sigil_level,
         goal=max_IndexOfSigils
     ))
 
     # Stamps - Golden Sixes + Pristine Charm - Liqorice Rolle (only show if missing charm)
     if session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained']:
-        dropRate_Advice[misc].append(Advice(
+        drop_rate_advice[misc].append(Advice(
             label=f"Liqorice Rolle pristine charm (buffs the stamp below)",
             picture_class='liqorice-rolle',
             progression=0, # we're only showing if it's missing, so just assume 0
             goal=1
         ))
-    goldenSixes_stamp = session_data.account.stamps['Golden Sixes Stamp']
-    dropRate_Advice[misc].append(Advice(
-        label=f"Golden Sixes stamp +{round(goldenSixes_stamp['Value'], 2)}/72.78% (can be increased by Liqorice Rolle Pristine Charm and Exalted Stamps)",
+    golden_sixes_stamp = session_data.account.stamps['Golden Sixes Stamp']
+    drop_rate_advice[misc].append(Advice(
+        label=f"Golden Sixes stamp +{round(golden_sixes_stamp['Value'], 2)}/72.78% (can be increased by Liqorice Rolle Pristine Charm and Exalted Stamps)",
         picture_class='golden-sixes-stamp',
-        progression=goldenSixes_stamp['Level'],
+        progression=golden_sixes_stamp['Level'],
         goal=210
     ))
 
     # Summoning 
-    dropRate_Advice[multi].append(Advice(
-        label=f"Cotton Candy pristine charm {'1.15x' if cottonCandy_obtained else '0%'} Drop Rate MULTI",
-        picture_class='cotton-candy-charm',
-        progression=int(session_data.account.sneaking['PristineCharms']['Cotton Candy']['Obtained']),
-        goal=1
-    ))
+    # drop_rate_advice[multi].append(Advice(
+    #     label=f"Cotton Candy pristine charm {'1.15x' if cotton_candy_obtained else '0%'} Drop Rate MULTI",
+    #     picture_class='cotton-candy-charm',
+    #     progression=int(session_data.account.sneaking['PristineCharms']['Cotton Candy']['Obtained']),
+    #     goal=1
+    # ))
 
     # Sneaking Pristine Charm - Cotton Candy
-    cottonCandy_obtained = session_data.account.sneaking['PristineCharms']['Cotton Candy']['Obtained']
-    dropRate_Advice[multi].append(Advice(
-        label=f"Cotton Candy pristine charm {'1.15x' if cottonCandy_obtained else '0%'} Drop Rate MULTI",
+    cotton_candy_obtained = session_data.account.sneaking['PristineCharms']['Cotton Candy']['Obtained']
+    drop_rate_advice[multi].append(Advice(
+        label=f"Cotton Candy pristine charm {'1.15x' if cotton_candy_obtained else '0%'} Drop Rate MULTI",
         picture_class='cotton-candy-charm',
         progression=int(session_data.account.sneaking['PristineCharms']['Cotton Candy']['Obtained']),
         goal=1
@@ -356,20 +351,20 @@ def getDropRateAccountAdviceGroup() -> AdviceGroup:
     # $$ Island Explorer Pack
     # Archlord of the Pirates
 
-    for subgroup in dropRate_Advice:
-        for advice in dropRate_Advice[subgroup]:
+    for subgroup in drop_rate_advice:
+        for advice in drop_rate_advice[subgroup]:
             mark_advice_completed(advice)
 
-    droprate_AG = AdviceGroup(
+    drop_rate_ag = AdviceGroup(
         tier="",
         pre_string="Info- Account wide sources of Drop Rate",
-        advices=dropRate_Advice,
+        advices=drop_rate_advice,
         informational=True,
     )
-    return droprate_AG
+    return drop_rate_ag
 
-def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
-    template_AdviceDict = {
+def get_progression_tiers_advice_group() -> tuple[AdviceGroup, int, int, int]:
+    template_advice_dict = {
         'Tiers': {},
     }
     info_tiers = 0
@@ -380,29 +375,29 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     tiers_ag = AdviceGroup(
         tier=tier_Active,
         pre_string="Progression Tiers",
-        advices=template_AdviceDict['Tiers']
+        advices=template_advice_dict['Tiers']
     )
-    overall_SectionTier = min(max_tier + info_tiers, tier_Active)
-    return tiers_ag, overall_SectionTier, max_tier, max_tier + info_tiers
+    overall_section_tier = min(max_tier + info_tiers, tier_Active)
+    return tiers_ag, overall_section_tier, max_tier, max_tier + info_tiers
 
-def getDropRateAdviceSection() -> AdviceSection:
+def get_drop_rate_advice_section() -> AdviceSection:
     # Generate AdviceGroups
-    droprate_AdviceGroupDict = {}
-    droprate_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
-    droprate_AdviceGroupDict['Account'] = getDropRateAccountAdviceGroup()
+    drop_rate_advice_group_dict = {}
+    drop_rate_advice_group_dict['Tiers'], overall_section_tier, max_tier, true_max = get_progression_tiers_advice_group()
+    drop_rate_advice_group_dict['Account'] = get_drop_rate_account_advice_group()
 
     # Generate AdviceSection
 
-    tier_section = f"{overall_SectionTier}/{max_tier}"
-    droprate_AdviceSection = AdviceSection(
+    tier_section = f"{overall_section_tier}/{max_tier}"
+    drop_rate_advice_section = AdviceSection(
         name="Drop Rate",
         tier=tier_section,
-        pinchy_rating=overall_SectionTier,
+        pinchy_rating=overall_section_tier,
         max_tier=max_tier,
         true_max_tier=true_max,
         header=f"Drop Rate Information",
         picture='wiki/Orion_DR.png',
-        groups=droprate_AdviceGroupDict.values(),
+        groups=drop_rate_advice_group_dict.values(),
         unrated=True,
     )
-    return droprate_AdviceSection
+    return drop_rate_advice_section

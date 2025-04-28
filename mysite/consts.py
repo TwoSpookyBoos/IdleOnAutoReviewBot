@@ -658,7 +658,7 @@ smithing_progressionTiers = [
     [5, 200, 500, 291, "bottle-cap"],
     [6, 600, 700, 291, "condensed-zap"]
 ]
-owl_bonusesOfOrion = {
+owl_bonuses_of_orion = {
     'Class XP': {'BaseValue': 5},
     'Base Damage': {'BaseValue': 10},
     'Total Damage': {'BaseValue': 2},
@@ -3224,7 +3224,7 @@ gem_shop_optlacc_dict = {
     'Rupie Slug': [355, infinity_string],
     'Exalted Stamps': [366, infinity_string]
 }
-guildBonusesList = {
+guild_bonuses_list = {
     'Guild Gifts': {'Picture': 'guild-gifts', 'MaxLevel': 100, 'MaxValue': 350, 'FuncType': 'decay', 'X1': 700, 'X2': 100},
     'Stat Runes': {'Picture': 'stat-runes', 'MaxLevel': 50, 'MaxValue': 20, 'FuncType': 'decay', 'X1': 40, 'X2': 50},
     'Rucksack': {'Picture': 'rucksack', 'MaxLevel': 50, 'MaxValue': 35, 'FuncType': 'decay', 'X1': 70, 'X2': 50},
@@ -8083,7 +8083,7 @@ sneaking_gemstones_all_values = {
 
 maxFarmingCrops = 230  # Last verified as of 2.26 Death Bringer
 maxFarmingValue = 10000  # Last verified as of 2.21 The Fixening
-maxLandRankLevel = 11
+max_land_rank_level = 11
 landrankDict = {
     0: {'Name': 'Evolution Boost', 'UnlockLevel': 1, 'Value': 250},
     1: {'Name': 'Production Boost', 'UnlockLevel': 5, 'Value': 5},
