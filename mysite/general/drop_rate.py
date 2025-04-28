@@ -1,5 +1,5 @@
 from models.models import Advice, AdviceGroup, AdviceSection
-from consts import max_card_stars, maxFarmingCrops, max_land_rank_level, max_IndexOfSigils
+from consts import lavaFunc, max_card_stars, maxFarmingCrops, max_land_rank_level, max_IndexOfSigils, stampsDict
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
@@ -263,31 +263,32 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     ))
 
     # Owl Bonuses
-    drop_rate_owlBonus = session_data.account.owl_bonuses['Drop Rate']
+    drop_rate_owl_bonuses = session_data.account.owl['Bonuses']['Drop Rate']
     drop_rate_advice[misc].append(Advice(
-        label=f"Bonuses of Orion +{drop_rate_owlBonus['Value']}% Drop Rate",
+        label=f"Bonuses of Orion +{drop_rate_owl_bonuses['Value']}% Drop Rate",
         picture_class='drop-rate',
-        progression=drop_rate_owlBonus['NumUnlocked'],
+        progression=drop_rate_owl_bonuses['NumUnlocked'],
         goal='∞'
     ))
 
-    # Gem Shop - DB Pack
+    # Gem Shop - Deathbringer Pack
+    has_db_pack = 'Deathbringer Pack' in session_data.account.gemshop['Bundles']
     drop_rate_advice[misc].append(Advice(
-        label="Gemshop Deathbringer Pack +200% Drop Rate (can't tell if you have this)",
+        label=f"Gemshop Deathbringer Pack +{200 if has_db_pack else 0}/200% Drop Rate",
         picture_class='gem',
-        progression='IDK',
-        goal='IDK'
+        progression=int(has_db_pack),
+        goal=1
     ))
 
     # Breeding - Shiny Pets
     drop_rate_shiny_level = 0
-    drop_rate_shinyValue = 0
+    drop_rate_shiny_value = 0
     for name, shiny in session_data.account.breeding['Species'][1].items():
         if shiny['ShinyBonus'] == 'Drop Rate':
             drop_rate_shiny_level += shiny['ShinyLevel']
-            drop_rate_shinyValue += drop_rate_shiny_base * shiny['ShinyLevel']
+            drop_rate_shiny_value += drop_rate_shiny_base * shiny['ShinyLevel']
     drop_rate_advice[misc].append(Advice(
-        label=f"Total Shiny Critter +{drop_rate_shinyValue}% Drop Rate",
+        label=f"Total Shiny Critter +{drop_rate_shiny_value}% Drop Rate",
         picture_class='breeding',
         progression=drop_rate_shiny_level,
         goal='∞'
@@ -311,20 +312,57 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
         goal=max_IndexOfSigils
     ))
 
-    # Stamps - Golden Sixes + Pristine Charm - Liqorice Rolle (only show if missing charm)
-    if session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained']:
+    # Stamps - Golden Sixes + (Lab + Pristine Charm + Exalted Stamp)
+    # We show an extra line for Lab and Pristine Charm if they aren't unlocked already
+    golden_sixes_buffs = []
+    has_certified_stamp_book = session_data.account.labBonuses['Certified Stamp Book']['Enabled']
+    if not has_certified_stamp_book:
+        golden_sixes_buffs.append('Lab')
         drop_rate_advice[misc].append(Advice(
-            label=f"Liqorice Rolle pristine charm (buffs the stamp below)",
+            label=f"Certified Stamp Book lab node (x2 the Drop Rate stamp below)",
+            picture_class='certified-stamp-book',
+            progression=0, # we're only showing if it's missing, so just assume 0
+            goal=1
+        ))
+    has_liqorice_rolle = session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained']
+    if not has_liqorice_rolle:
+        golden_sixes_buffs.append('Pristine Charm')
+        drop_rate_advice[misc].append(Advice(
+            label=f"Liqorice Rolle pristine charm (x1.35 the Drop Rate stamp below)",
             picture_class='liqorice-rolle',
             progression=0, # we're only showing if it's missing, so just assume 0
             goal=1
         ))
     golden_sixes_stamp = session_data.account.stamps['Golden Sixes Stamp']
+    has_exalted_golden_sixes = golden_sixes_stamp['Exalted']
+    if not has_exalted_golden_sixes:
+        golden_sixes_buffs.append('Exalted Stamps')
+    match len(golden_sixes_buffs):
+        case 0:
+            golden_sixes_addl_text = f" (can be further increased by the Abomination Slayer XVII compass bonus)"
+        case 1:
+            golden_sixes_addl_text = f" (can be increased by {golden_sixes_buffs[0]})"
+        case 2:
+            golden_sixes_addl_text = f" (can be increased by {golden_sixes_buffs[0]} and {golden_sixes_buffs[1]})"
+        case 3:
+            golden_sixes_addl_text = f" (can be increased by {golden_sixes_buffs[0]}, {golden_sixes_buffs[1]}, and {golden_sixes_buffs[2]})"
+    abomination_slayer_17 = session_data.account.compass['Upgrades']['Abomination Slayer XVII']
+    exalted_stamp_bonus_value = ((abomination_slayer_17['Level'] * abomination_slayer_17['Value Per Level'])/100)
+    exalted_stamp_multi = 2 + exalted_stamp_bonus_value
+    # The exalted multiplier is the only multiplier that actually changes the base value on the stamp, we have to add the other 2 manually
+    golden_sixes_value = round(golden_sixes_stamp['Value'] * \
+            (2 if has_certified_stamp_book else 1) * \
+            (1.35 if has_liqorice_rolle else 1) \
+        , 2)
+    golden_sixes_stamp_data = stampsDict['Combat'][37]
+    golden_sixes_base_max = lavaFunc(golden_sixes_stamp_data['funcType'], golden_sixes_stamp['Max'], golden_sixes_stamp_data['x1'], golden_sixes_stamp_data['x2'])
+    golden_sixes_value_max = round((golden_sixes_base_max * 2 * 1.35 * exalted_stamp_multi), 2)
     drop_rate_advice[misc].append(Advice(
-        label=f"Golden Sixes stamp +{round(golden_sixes_stamp['Value'], 2)}/72.78% (can be increased by Liqorice Rolle Pristine Charm and Exalted Stamps)",
+        label=f"Golden Sixes stamp +{golden_sixes_value:g}/{golden_sixes_value_max}%{golden_sixes_addl_text}",
         picture_class='golden-sixes-stamp',
         progression=golden_sixes_stamp['Level'],
-        goal=210
+        resource=golden_sixes_stamp['Material'],
+        goal=golden_sixes_stamp['Max']
     ))
 
     # Summoning 

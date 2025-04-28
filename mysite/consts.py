@@ -3260,6 +3260,7 @@ gem_shop_bundles_dict = {
     'bon_e': 'Lush Emerald Anniversary Pack',
     'bon_f': 'Eternal Hunter Pack'
 }
+
 guild_bonuses_list = {
     'Guild Gifts': {'Picture': 'guild-gifts', 'MaxLevel': 100, 'MaxValue': 350, 'FuncType': 'decay', 'X1': 700, 'X2': 100},
     'Stat Runes': {'Picture': 'stat-runes', 'MaxLevel': 50, 'MaxValue': 20, 'FuncType': 'decay', 'X1': 40, 'X2': 50},

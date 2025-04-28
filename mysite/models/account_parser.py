@@ -319,7 +319,6 @@ def _parse_general_gem_shop_bundles(account):
     if unknown_bundles:
         logger.warning(f"Unknown Gem Shop Bundles found: {unknown_bundles}")
 
-
 def _parse_general_quests(account):
     account.compiled_quests = {}
     for charIndex, questsDict in enumerate(account.all_quests):
