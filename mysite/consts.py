@@ -3217,13 +3217,47 @@ gemShopDict = {
     'Resource Boost': 2,
     'Conjuror Pts': 4,
     'Opal': 5
-    }
+}
 gem_shop_optlacc_dict = {
     'Dragonic Liquid Cauldron': [123, 4],
     'Equinox Pingy': [320, infinity_string],
     'Rupie Slug': [355, infinity_string],
     'Exalted Stamps': [366, infinity_string]
 }
+# As of 2.36.0
+gem_shop_bundles_list = {
+    'bun_a': 'Lava Supporter Pack',
+    'bun_b': 'New Year Pack',
+    'bun_c': 'Starter Pack',
+    'bun_d': 'Easter Bundle',
+    'bun_e': 'Totally Chill Pack',
+    'bun_f': 'Summer Bundle',
+    'bun_g': 'Dungeon Bundle',
+    'bun_h': 'Giftmas Bundle',
+    'bun_i': 'Auto-Loot Pack',
+    'bun_j': 'Outta This World Pack',
+    'bun_k': 'Eggscellent Pack',
+    'bun_l': 'Super Hot Fire Pack',
+    'bun_m': 'Gem Motherlode Pack',
+    'bun_n': 'Riftwalker Pack',
+    'bun_o': "Bloomin' Pet Pack",
+    'bun_p': 'Island Explorer Pack',
+    'bun_q': 'Equinox Pack',
+    'bun_r': 'Calm Serenity Pack',
+    'bun_s': 'Sacred Methods Pack',
+    'bun_t': 'Timeless Pack',
+    'bun_u': 'Ancient Echos Pack',
+    'bun_v': 'Deathbringer Pack',
+    'bun_w': 'Windwalker Pack',
+    'bun_y': 'Valenslime Day Pack',
+    'bun_z': 'Fallen Spirits Pet Pack',
+    'bon_a': 'Storage Ram Pack',
+    # No bon_b, yet as of 2.36.0
+    'bon_c': 'Blazing Star Anniversary Pack',
+    'bon_d': 'Midnight Tide Anniversary Pack',
+    'bon_e': 'Lush Emerald Anniversary Pack',
+}
+
 guild_bonuses_list = {
     'Guild Gifts': {'Picture': 'guild-gifts', 'MaxLevel': 100, 'MaxValue': 350, 'FuncType': 'decay', 'X1': 700, 'X2': 100},
     'Stat Runes': {'Picture': 'stat-runes', 'MaxLevel': 50, 'MaxValue': 20, 'FuncType': 'decay', 'X1': 40, 'X2': 50},

@@ -551,7 +551,7 @@ def _calculate_w1_owl_bonuses(account):
     elif megafeathers_owned > 1:
         megafeather_mod = 2
 
-    account.owl_bonuses = {}
+    account.owl['Bonuses'] = {}
     for bonus_index, (bonus_name, bonus) in enumerate(owl_bonuses_of_orion.items()):
         bonus_base = bonus['BaseValue']
         if account.owl['Discovered']:
@@ -559,7 +559,7 @@ def _calculate_w1_owl_bonuses(account):
         else:
             bonus_num_unlocked = 0
         bonus_value = bonus_base * bonus_num_unlocked * megafeather_mod
-        account.owl_bonuses[bonus_name] = {
+        account.owl['Bonuses'][bonus_name] = {
             'BaseValue': bonus_base,
             'NumUnlocked': bonus_num_unlocked,
             'Value': (int(bonus_value) if bonus_value.is_integer() else bonus_value)

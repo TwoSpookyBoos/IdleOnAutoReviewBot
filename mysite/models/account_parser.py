@@ -8,7 +8,7 @@ from consts import (
     maxCharacters,
     gfood_codes,
     card_data, card_raw_data, cardset_names, decode_enemy_name,
-    gemShopDict, gem_shop_optlacc_dict,
+    gemShopDict, gem_shop_optlacc_dict, gem_shop_bundles_list,
     guild_bonuses_list, familyBonusesDict, achievementsList, allMeritsDict, starsignsDict,
     event_points_shop_dict,
     npc_tokens,
@@ -261,8 +261,9 @@ def _parse_general(account):
     account.daily_particle_clicks_remaining = safer_get(account.raw_optlacc_dict, 135, 0)
 
     _parse_class_unique_kill_stacks(account)
-    _parse_general_gemshop(account)
-    _parse_general_gemshop_optlacc(account)
+    _parse_general_gem_shop(account)
+    _parse_general_gem_shop_optlacc(account)
+    _parse_general_gem_shop_bundles(account)
     _parse_family_bonuses(account)
     _parse_dungeon_upgrades(account)
     _parse_general_achievements(account)
@@ -276,7 +277,7 @@ def _parse_general(account):
     _parse_general_npc_tokens(account)
     _parse_general_upgrade_vault(account)
 
-def _parse_general_gemshop(account):
+def _parse_general_gem_shop(account):
     account.gemshop = {}
     raw_gem_items_purchased = safe_loads(account.raw_data.get("GemItemsPurchased", []))
     for purchaseName, purchaseIndex in gemShopDict.items():
@@ -288,7 +289,7 @@ def _parse_general_gemshop(account):
 
     account.minigame_plays_daily = 5 + (4 * account.gemshop['Daily Minigame Plays'])
 
-def _parse_general_gemshop_optlacc(account):
+def _parse_general_gem_shop_optlacc(account):
     for purchase_name, details in gem_shop_optlacc_dict.items():
         try:
             account.gemshop[purchase_name] = safer_convert(safer_get(account.raw_optlacc_dict, details[0], 0), 0)
@@ -298,6 +299,16 @@ def _parse_general_gemshop_optlacc(account):
             else:
                 logger.exception(f"Error parsing {purchase_name} at optlacc_index {details[0]}: Could not convert {account.raw_optlacc_dict.get(details[0])} to int")
                 account.gemshop[purchase_name] = 0
+
+def _parse_general_gem_shop_bundles(account):
+    raw_gem_bundles_purchased = safe_loads(account.raw_data.get("BundlesReceived", []))
+    print(raw_gem_bundles_purchased)
+    account.gemshop['Bundles'] = []
+    for purchase_id, _ in raw_gem_bundles_purchased:
+        if purchase_id in gem_shop_bundles_list.values():
+            account.gemshop['Bundles'].append(gem_shop_bundles_list[purchase_id])
+        else:
+            logger.exception(f"Error finding '{purchase_id}': Could not find in gem_shop_bundles_list")
 
 def _parse_general_quests(account):
     account.compiled_quests = {}
