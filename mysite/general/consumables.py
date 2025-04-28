@@ -357,6 +357,11 @@ def parseInventoryBagSlots() -> AdviceGroup:
     for chararacter_index, bagDict in character_bag_dict.items():
         sumSlots = aw_total
         for bag in bagDict:
+            if bag in ['112', 112]:
+                # The 4th anniversary bag is funky. If you claim it on Character1 but don't log into EVERY other character once, they wouldn't be
+                # marked as owning it in the JSON. The alternative here is moving it to Account Wide and checking if it is present on ANY character,
+                # instead of each individual character.
+                continue
             if isinstance(bagDict[bag], int | float | str):
                 try:
                     sumSlots += int(bagDict[bag])
