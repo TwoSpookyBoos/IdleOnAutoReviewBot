@@ -3,7 +3,7 @@ from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import (
-    break_you_best, infinity_string, compass_dusts_list, compass_path_ordering, compass_upgrades_list,
+    break_you_best, infinity_string, compass_dusts_list, compass_path_ordering, compass_upgrades_list, compass_medallions,
     # compass_progressionTiers
 )
 from utils.text_formatting import notateNumber
@@ -103,34 +103,25 @@ def getCompassAbominationsAdviceGroup(compass):
     return abom_ag
 
 def getCompassMedallionsAdviceGroup(compass):
-    medallion_advice = {
-        'Total': [],
-        'Unexpected (Tell Scoli if this was legit!)': [],
-        'Extras': [],
-    }
+    medallion_advice = []
 
-    medallion_advice['Total'] = [
-        Advice(
-            label=f"Total Medallions Collected: {compass['Total Medallions']}/???",
-            picture_class='wind-walker-medallion',
-            progression=compass['Total Medallions'],
-            goal=infinity_string
-        )
-    ]
+    medallion_advice.append(Advice(
+        label=f"Total Medallions Collected: {compass['Total Medallions']}/{len(compass_medallions)}",
+        picture_class='wind-walker-medallion',
+        progression=compass['Total Medallions'],
+        goal=len(compass_medallions)
+    ))
 
     for code_name, enemy_details in compass['Medallions'].items():
-        if enemy_details['Card Set'] not in medallion_advice:
-            medallion_advice[enemy_details['Card Set']] = []
-        medallion_advice[enemy_details['Card Set']].append(Advice(
+        medallion_advice.append(Advice(
             label=f"{enemy_details['Enemy Name']}",
             picture_class=f"{enemy_details['Image']}",
             progression=int(enemy_details['Obtained']),
             goal=1
         ))
 
-    for subgroup in medallion_advice:
-        for advice in medallion_advice[subgroup]:
-            mark_advice_completed(advice)
+    for advice in medallion_advice:
+        mark_advice_completed(advice)
 
     medallion_ag = AdviceGroup(
         tier='',

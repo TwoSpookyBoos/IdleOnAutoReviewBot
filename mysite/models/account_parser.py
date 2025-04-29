@@ -8,14 +8,14 @@ from consts import (
     maxCharacters,
     gfood_codes,
     card_data, card_raw_data, cardset_names, decode_enemy_name,
-    gemShopDict, gem_shop_optlacc_dict,
+    gemShopDict, gem_shop_optlacc_dict, gem_shop_bundles_dict,
     guildBonusesList, familyBonusesDict, achievementsList, allMeritsDict, starsignsDict,
     event_points_shop_dict,
     npc_tokens,
     companions,
     # Master Classes
     grimoire_upgrades_list, grimoire_bones_list, grimoire_dont_scale,
-    compass_upgrades_list, compass_dusts_list, compass_path_ordering, compass_titans,
+    compass_upgrades_list, compass_dusts_list, compass_path_ordering, compass_titans, compass_medallions,
     # W1
     stampsDict, stampTypes, bribesDict,
     forgeUpgradesDict,
@@ -261,8 +261,9 @@ def _parse_general(account):
     account.daily_particle_clicks_remaining = safer_get(account.raw_optlacc_dict, 135, 0)
 
     _parse_class_unique_kill_stacks(account)
-    _parse_general_gemshop(account)
-    _parse_general_gemshop_optlacc(account)
+    _parse_general_gem_shop(account)
+    _parse_general_gem_shop_optlacc(account)
+    _parse_general_gem_shop_bundles(account)
     _parse_family_bonuses(account)
     _parse_dungeon_upgrades(account)
     _parse_general_achievements(account)
@@ -276,7 +277,7 @@ def _parse_general(account):
     _parse_general_npc_tokens(account)
     _parse_general_upgrade_vault(account)
 
-def _parse_general_gemshop(account):
+def _parse_general_gem_shop(account):
     account.gemshop = {}
     raw_gem_items_purchased = safe_loads(account.raw_data.get("GemItemsPurchased", []))
     for purchaseName, purchaseIndex in gemShopDict.items():
@@ -288,7 +289,7 @@ def _parse_general_gemshop(account):
 
     account.minigame_plays_daily = 5 + (4 * account.gemshop['Daily Minigame Plays'])
 
-def _parse_general_gemshop_optlacc(account):
+def _parse_general_gem_shop_optlacc(account):
     for purchase_name, details in gem_shop_optlacc_dict.items():
         try:
             account.gemshop[purchase_name] = safer_convert(safer_get(account.raw_optlacc_dict, details[0], 0), 0)
@@ -298,6 +299,22 @@ def _parse_general_gemshop_optlacc(account):
             else:
                 logger.exception(f"Error parsing {purchase_name} at optlacc_index {details[0]}: Could not convert {account.raw_optlacc_dict.get(details[0])} to int")
                 account.gemshop[purchase_name] = 0
+
+def _parse_general_gem_shop_bundles(account):
+    raw_gem_shop_bundles = safe_loads(account.raw_data.get('BundlesReceived', []))
+    account.gemshop['Bundle Data Present'] = 'BundlesReceived' in account.raw_data
+    account.gemshop['Bundles'] = {}
+    for code_name, display_name in gem_shop_bundles_dict.items():
+        account.gemshop['Bundles'][code_name] = {
+            'Display': display_name,
+            'Owned': code_name in raw_gem_shop_bundles
+        }
+    #logger.debug(f"{account.gemshop['Bundles'] = }")
+    unknown_bundles = [v for v in account.gemshop['Bundles'] if v not in gem_shop_bundles_dict]
+    if unknown_bundles:
+        logger.warning(f"Unknown Gem Shop Bundles found: {unknown_bundles}")
+
+
 
 def _parse_general_quests(account):
     account.compiled_quests = {}
@@ -845,25 +862,6 @@ def _parse_master_classes_medallions(account, raw_medallions):
         'iceknight': ['Random Event Boss: Glacial Guild', 'ice-guard'],
         'snakeZ': ['Random Event Boss: Snake Swarm', 'snake-swarm'],
         'frogGR': ['Random Event Boss: Angry Frogs', 'angry-frogs'],
-        'BugNest1': ['Fly Nest', 'fly-nest'],
-        'BugNest2': ['Butterfly Nest', 'butterfly-bar'],
-        'BugNest3': ['Sentient Cereal Nest', 'sentient-bowl'],
-        'BugNest4': ['Fruitfly Nest', 'grocery-bag'],
-        'BugNest5': ['Mosquisnow Nest', 'snowden'],
-        'BugNest6': ['Flycicle Nest', 'icicle-nest'],
-        'BugNest7': ['Bee Nest', 'bee-hive'],
-        'BugNest8': ['Fairy Nest', 'fairy-hovel'],
-        'BugNest9': ['Scarab Nest', 'scarab-nest'],
-        'BugNest10': ['Dust Mote Nest', 'mote-hovel'],
-        # 'BugNest11': ['Equinox Nest', 'dream-particulate'],  #Doesn't spawn a nest to destroy
-        'BugNest12': ['Ladybug Nest', 'ladybug-nest'],
-        'BugNest13': ['Firefly Nest', 'firefly-nest'],
-        # 'BugNest14': ['Fractal (Cavern) Nest', 'fractal-fly'],  #Doesn't spawn a nest to destroy
-        # 'rift1': ['Rift Spooker', 'rift-spooker'],  #WW cannot enter the Rift
-        # 'rift2': ['Rift Slug', 'rift-slug'],
-        # 'rift3': ['Rift Jocund', 'rift-jocund'],
-        # 'rift4': ['Rift Hivemind', 'rift-hivemind'],
-        # 'rift5': ['Rift Stalker', 'rift-stalker'],
         'ChestA1': ['W1 Colo: Bronze Chest', 'colo-bronze-chest'],
         'ChestB1': ['W1 Colo: Silver Chest', 'colo-silver-chest'],
         'ChestC1': ['W1 Colo: Gold Chest', 'colo-gold-chest'],
@@ -884,83 +882,19 @@ def _parse_master_classes_medallions(account, raw_medallions):
         'ChestC6': ['W6 Colo: Gold Chest', 'colo-gold-chest'],
     }
 
-    for extra_name in known_extras:
-        try:
-            account.compass['Medallions'][extra_name] = {
-                'Obtained': extra_name in raw_medallions,
-                'Card Name': extra_name,
-                'Card Set': 'Extras',
-                'Enemy Name': known_extras[extra_name][0],
-                'Image': known_extras[extra_name][1],
-            }
-        except:
-            account.compass['Medallions'][extra_name] = {
-                'Obtained': False,
-                'Card Name': extra_name,
-                'Card Set': 'Extras',
-                'Enemy Name': known_extras[extra_name][0],
-                'Image': known_extras[extra_name][1],
-            }
-
-    ignore_sets = ['Easy Resources', 'Medium Resources', 'Hard Resources', 'Dungeons']
-    ignore_cards = [
-        #W1
-        'Crystal Carrot',
-        #W2
-        'Bandit Bob', 'Crystal Crabal',
-        #W3
-        'Crystal Cattle',
-        #W4
-        'Crystal Custard',
-        #W5
-        'Crystal Capybara',
-        #W6
-        'Crystal Candalight',
-        #World Bosses
-        'Amarok', 'Chaotic Amarok', 'Radiant Amarok',
-        'Efaunt', 'Chaotic Efaunt', 'Gilded Efaunt',
-        'Chizoar', 'Chaotic Chizoar', 'Blighted Chizoar',
-        'Massive Troll', 'Chaotic Troll', 'Blitzkrieg Troll',
-        'Kattlekruk', 'Chaotic Kattlekruk', 'Sacrilegious Kattlekruk',
-        'Emperor', 'Chaotic Emperor', 'Sovereign Emperor',
-        #Events
-        'Giftmas Blobulyte', 'Meaning of Giftmas', 'Golden Giftmas Box',
-        'Loveulyte', 'Chocco Box', 'Giant Rose',
-        'Egggulyte', 'Egg Capsule',
-        'Coastiolyte', 'Summer Spirit',
-        'Bubbulyte', 'Spring Spirit', 'Spring Splendor', 'Falloween Pumpkin',
-        'IdleOn Fourth Anniversary'
-    ]
-    for set_name, set_cards in card_data.items():
-        if set_name not in ignore_sets:
-            for card_name, card_values in set_cards.items():
-                if card_values[0] not in ignore_cards:
-                    try:
-                        account.compass['Medallions'][card_name] = {
-                            'Obtained': card_name in raw_medallions,
-                            'Card Name': card_name,
-                            'Card Set': set_name,
-                            'Enemy Name': card_values[0],
-                            'Image': f"{card_values[0]}-card"
-                        }
-                    except:
-                        account.compass['Medallions'][card_name] = {
-                            'Obtained': False,
-                            'Card Name': card_name,
-                            'Card Set': set_name,
-                            'Enemy Name': card_values[0],
-                            'Image': f"{card_values[0]}-card"
-                        }
-
-    for raw_enemy_name in raw_medallions:
-        if raw_enemy_name not in account.compass['Medallions']:
-            logger.warning(f"Unexpected Medallion for {raw_enemy_name} found")
+    for raw_enemy_name in compass_medallions:
+        if raw_enemy_name in known_extras:  #Anything that isn't a standard Card
             account.compass['Medallions'][raw_enemy_name] = {
-                'Obtained': True,
-                'Card Name': raw_enemy_name,
-                'Card Set': 'Unexpected (Tell Scoli if this was legit!)',
-                'Enemy Name': raw_enemy_name,
-                'Image': raw_enemy_name
+                'Obtained': raw_enemy_name in raw_medallions,
+                'Enemy Name': known_extras[raw_enemy_name][0],
+                'Image': known_extras[raw_enemy_name][1],
+            }
+        else:
+            decoded_name = decode_enemy_name(raw_enemy_name)
+            account.compass['Medallions'][raw_enemy_name] = {
+                'Obtained': raw_enemy_name in raw_medallions,
+                'Enemy Name': decoded_name,
+                'Image': f"{decoded_name}-card"
             }
 
 def _parse_master_classes_exalted_stamps(account):
@@ -1364,61 +1298,63 @@ def _parse_w2_arcade(account):
     }
 
     account.arcade = {}
-    raw_arcade_upgrades = safe_loads(account.raw_data.get("ArcadeUpg", []))
-    for upgradeIndex, upgradeDetails in arcadeBonuses.items():
+    raw_arcade_upgrades = safe_loads(account.raw_data.get('ArcadeUpg', []))
+    for upgrade_index, upgrade_details in arcadeBonuses.items():
         try:
-            account.arcade[upgradeIndex] = {
-                'Level': raw_arcade_upgrades[upgradeIndex],
+            account.arcade[upgrade_index] = {
+                'Level': raw_arcade_upgrades[upgrade_index],
                 'Value': lavaFunc(
-                    upgradeDetails.get("funcType"),
-                    min(arcade_max_level, raw_arcade_upgrades[upgradeIndex]),
-                    upgradeDetails.get("x1"),
-                    upgradeDetails.get("x2")
+                    upgrade_details['funcType'],
+                    min(arcade_max_level, raw_arcade_upgrades[upgrade_index]),
+                    upgrade_details['x1'],
+                    upgrade_details['x2']
                 ),
-                'MaxValue': 2 * lavaFunc(
-                    upgradeDetails.get("funcType"),
-                    arcade_max_level,
-                    upgradeDetails.get("x1"),
-                    upgradeDetails.get("x2")
+                'MaxValue':(
+                    2  #Royale
+                    * 2  #Reindeer Companion
+                    * lavaFunc(
+                        upgrade_details['funcType'],
+                        arcade_max_level,
+                        upgrade_details['x1'],
+                        upgrade_details['x2']
+                    )
                 ),
-                'Royale': raw_arcade_upgrades[upgradeIndex] > arcade_max_level,
+                'Royale': raw_arcade_upgrades[upgrade_index] > arcade_max_level,
                 'Material': (
-                    '' if raw_arcade_upgrades[upgradeIndex] == 101
-                    else 'arcade-royale-ball' if raw_arcade_upgrades[upgradeIndex] == 100
+                    '' if raw_arcade_upgrades[upgrade_index] == 101
+                    else 'arcade-royale-ball' if raw_arcade_upgrades[upgrade_index] == 100
                     else 'arcade-gold-ball'
                 ),
-                'Image': f'arcade-bonus-{upgradeIndex}'
+                'Image': f'arcade-bonus-{upgrade_index}',
+                'Display Type': upgrade_details['displayType'],
+                'Stat': upgrade_details['Stat']
             }
-            if account.arcade[upgradeIndex]['Royale']:
-                account.arcade[upgradeIndex]['Value'] *= 2
-            account.arcade[upgradeIndex]["Display"] = (
-                f"+{account.arcade[upgradeIndex]['Value']:.2f}{upgradeDetails['displayType']} {upgradeDetails['Stat']}"
-            )
         except Exception as e:
-            logger.warning(f"Arcade Gold Ball Bonus Parse error at upgradeIndex {upgradeIndex}: {e}. Defaulting to 0")
-            account.arcade[upgradeIndex] = {
+            logger.warning(f"Arcade Gold Ball Bonus Parse error at upgrade_index {upgrade_index}: {e}. Defaulting to 0")
+            account.arcade[upgrade_index] = {
                 'Level': 0,
                 'Value': lavaFunc(
-                    upgradeDetails.get("funcType"),
+                    upgrade_details['funcType'],
                     0,
-                    upgradeDetails.get("x1"),
-                    upgradeDetails.get("x2")
+                    upgrade_details['x1'],
+                    upgrade_details['x2']
                 ),
-                'MaxValue': 2 * lavaFunc(
-                    upgradeDetails.get("funcType"),
-                    arcade_max_level,
-                    upgradeDetails.get("x1"),
-                    upgradeDetails.get("x2")
+                'MaxValue':(
+                    2  #Royale
+                    * 2  #Reindeer Companion
+                    * lavaFunc(
+                        upgrade_details['funcType'],
+                        arcade_max_level,
+                        upgrade_details['x1'],
+                        upgrade_details['x2']
+                    )
                 ),
                 'Royale': False,
                 'Material': 'arcade-gold-ball',
-                'Image': f'arcade-bonus-{upgradeIndex}'
+                'Image': f'arcade-bonus-{upgrade_index}',
+                'Display Type': upgrade_details['displayType'],
+                'Stat': upgrade_details['Stat']
             }
-            account.arcade[upgradeIndex]["Display"] = (
-                f"+{account.arcade[upgradeIndex]['Value']:.2f}{arcadeBonuses[upgradeIndex]['displayType']} {arcadeBonuses[upgradeIndex]['Stat']}"
-            )
-    # for entry_name, entry_details in account.arcade.items():
-    #     logger.debug(f"{entry_name}: {entry_details}")
 
 def _parse_w2_ballot(account):
     raw_vote_categories = safer_get(account.raw_serverVars_dict, 'voteCategories', [0,0,0,0])

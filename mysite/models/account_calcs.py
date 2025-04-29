@@ -39,6 +39,7 @@ def calculate_account(account):
 def _calculate_wave_1(account):
     _calculate_caverns_majiks(account)
     _calculate_w6_summoning_winner_bonuses(account)
+    _calculate_w2_arcade(account)
 
 def _calculate_caverns_majiks(account):
     alt_pocket_div = {
@@ -220,6 +221,16 @@ def _calculate_w6_summoning_winner_bonuses(account):
         elif bonus_name in summoning_rewards_that_dont_multiply_base_value and bonus_name.startswith('x'):
             account.summoning['Endless Bonuses'][bonus_name] = ValueToMulti(account.summoning['Endless Bonuses'][bonus_name])
     #logger.debug(f"Final Endless Bonuses after {account.summoning['Battles']['Endless']} wins: {account.summoning['Endless Bonuses']}")
+
+def _calculate_w2_arcade(account):
+    for upgrade_index, upgrade_details in account.arcade.items():
+        account.arcade[upgrade_index]['Value'] *= (
+            max(1, 2 * account.arcade[upgrade_index]['Royale'])
+            * max(1, 2 * account.companions['Reindeer'])
+        )
+        account.arcade[upgrade_index]['Display'] = (
+            f"+{account.arcade[upgrade_index]['Value']:.2f}{upgrade_details['Display Type']} {upgrade_details['Stat']}"
+        )
 
 def _calculate_wave_2(account):
     _calculate_general(account)
