@@ -2150,17 +2150,15 @@ def _parse_w4_breeding_pets(account, rawBreeding):
 
     # Breedability Days
     for index in range(13, 21):
-        try:
-            account.breeding['Breedability Days'][f"W{index - 12}"] = [float(v) for v in rawBreeding[index]]
-        except:
-            continue  # Already default to [] during initialization
+        account.breeding['Breedability Days'][f"W{index - 12}"] = []
+        for entry in rawBreeding[index]:
+            account.breeding['Breedability Days'][f"W{index - 12}"].append(safer_convert(entry, 0.0))
 
     # Shiny Days
     for index in range(22, 30):
-        try:
-            account.breeding['Shiny Days'][f"W{index - 21}"] = rawBreeding[index]
-        except:
-            continue  # Already defaulted to [] during initialization
+        account.breeding['Shiny Days'][f"W{index - 21}"] = []
+        for entry in rawBreeding[index]:
+            account.breeding['Shiny Days'][f"W{index - 21}"].append(safer_convert(entry, 0.0))
 
     # Parse data for each individual pet, increase their shiny bonus level, and mark their Genetic as obtained
     for worldIndex, worldPetsDict in breedingSpeciesDict.items():
