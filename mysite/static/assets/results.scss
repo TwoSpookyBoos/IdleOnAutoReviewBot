@@ -660,7 +660,7 @@ body {
                                         column-gap: var(--col-gap);
                                         row-gap: 5px;
                                         overflow-y: auto;
-                                        scrollbar-width: thin;
+                                        scrollbar-width: auto;
                                         scrollbar-color: var(--scrollbar-thumb-color) transparent;
 
                                         & > *:not(.progress-bar) {
