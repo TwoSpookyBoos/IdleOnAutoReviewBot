@@ -2,6 +2,7 @@ from models.models import Advice, AdviceGroup, AdviceSection
 from consts import lavaFunc, max_card_stars, maxFarmingCrops, max_land_rank_level, max_IndexOfSigils, stampsDict
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
+from math import floor
 from flask import g as session_data
 
 logger = get_logger(__name__)
@@ -280,6 +281,15 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
         goal=1
     ))
 
+    # Gem Shop - Island Explorer Pack
+    has_istland_explorer_pack = 'Island Explorer Pack' in session_data.account.gemshop['Bundles']
+    drop_rate_advice[misc].append(Advice(
+        label=f"Gemshop Island Explorer Pack x{1.2 if has_istland_explorer_pack else 0}/x1.2 Drop Rate MULTI",
+        picture_class='gem',
+        progression=int(has_istland_explorer_pack),
+        goal=1
+    ))
+
     # Breeding - Shiny Pets
     drop_rate_shiny_level = 0
     drop_rate_shiny_value = 0
@@ -365,18 +375,36 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
         goal=golden_sixes_stamp['Max']
     ))
 
-    # Summoning 
-    # drop_rate_advice[multi].append(Advice(
-    #     label=f"Cotton Candy pristine charm {'1.15x' if cotton_candy_obtained else '0%'} Drop Rate MULTI",
-    #     picture_class='cotton-candy-charm',
-    #     progression=int(session_data.account.sneaking['PristineCharms']['Cotton Candy']['Obtained']),
-    #     goal=1
-    # ))
+    # Summoning - Bonuses
+    summoning_battles = session_data.account.summoning['Battles']
+    yellow_3_drop_rate = 7 if summoning_battles['Yellow'] >= 3 else 0
+    blue_9_drop_rate = 10.5 if summoning_battles['Blue'] >= 9 else 0
+    purple_12_drop_rate = 17.5 if summoning_battles['Purple'] >= 12 else 0
+    red_13_drop_rate = 35 if summoning_battles['Red'] >= 13 else 0
+    summoning_drop_rate_base = yellow_3_drop_rate + blue_9_drop_rate + purple_12_drop_rate + red_13_drop_rate
+    endless_summon_bonus_multi = .03 * ((floor(summoning_battles['Endless']/40) * 2) + (1 if summoning_battles['Endless'] % 40 > 16 else 0))
+    misc_summon_bonus_multi = (.01 if session_data.account.achievements['Regalis My Beloved']['Complete'] else 0) \
+        + (.01 if session_data.account.achievements['Spectre Stars']['Complete'] else 0) \
+        + (.25 * session_data.account.sailing['Artifacts']['The Winz Lantern']['Level']) \
+        + (.01 * session_data.account.merits[5][4]['Level'])
+    prisine_charm_summon_bonus_multi = 1.3 if session_data.account.sneaking['PristineCharms']['Crystal Comb']['Obtained'] else 1
+
+    # The bonuses from endless summoning and everything else, except the pristine charm are addative. The charm is a multi
+    total_summon_bonus_multi = (1 + endless_summon_bonus_multi + misc_summon_bonus_multi) * prisine_charm_summon_bonus_multi
+    summoning_drop_rate_value = round(summoning_drop_rate_base * total_summon_bonus_multi, 1)
+    summoning_drop_rate_max = (7 + 10.5 + 17.5 + 35) * total_summon_bonus_multi
+    drop_rate_advice[misc].append(Advice(
+        label=f"Summoning Bonuses +{summoning_drop_rate_value:g}"
+              f"/{summoning_drop_rate_max:g} Drop Rate",
+        picture_class='summoning',
+        progression=int(session_data.account.sneaking['PristineCharms']['Cotton Candy']['Obtained']),
+        goal='∞'
+    ))
 
     # Sneaking Pristine Charm - Cotton Candy
     cotton_candy_obtained = session_data.account.sneaking['PristineCharms']['Cotton Candy']['Obtained']
     drop_rate_advice[multi].append(Advice(
-        label=f"Cotton Candy pristine charm {'1.15x' if cotton_candy_obtained else '0%'} Drop Rate MULTI",
+        label=f"Cotton Candy pristine charm {'x1.15' if cotton_candy_obtained else '0%'} Drop Rate MULTI",
         picture_class='cotton-candy-charm',
         progression=int(session_data.account.sneaking['PristineCharms']['Cotton Candy']['Obtained']),
         goal=1
@@ -384,7 +412,6 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
 
     # TODO: Account wide bonuses
     # Family Obols
-    # Summoning
     # Tome
     # $$ Island Explorer Pack
     # Archlord of the Pirates
