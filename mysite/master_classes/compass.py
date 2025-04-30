@@ -125,7 +125,7 @@ def getCompassMedallionsAdviceGroup(compass):
 
     medallion_ag = AdviceGroup(
         tier='',
-        pre_string="Medallions (All cards. Will filter as we learn more!)",
+        pre_string="Medallions",
         advices=medallion_advice
     )
     medallion_ag.remove_empty_subgroups()
