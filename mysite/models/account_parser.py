@@ -1009,21 +1009,21 @@ def _parse_w1_stamps(account):
         for stampIndex, stampValuesDict in stampsDict[stampType].items():
             try:
                 account.stamps[stampValuesDict['Name']] = {
-                    "Index": int(stampIndex),
-                    "Material": stampValuesDict['Material'],
-                    "Level": int(floor(raw_stamps_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0))),
-                    "Max": int(floor(raw_stamp_max_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0))),
-                    "Delivered": int(floor(raw_stamp_max_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0))) > 0,
-                    "StampType": stampType,
-                    "Value": lavaFunc(
+                    'Index': stampIndex,
+                    'Material': stampValuesDict['Material'],
+                    'Level': safer_convert(raw_stamps_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0), 0),
+                    'Max': safer_convert(raw_stamp_max_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0), 0),
+                    'Delivered': safer_convert(raw_stamp_max_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0), 0) > 0,
+                    'StampType': stampType,
+                    'Value': lavaFunc(
                         stampValuesDict['funcType'],
-                        int(floor(raw_stamps_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0))),
+                        safer_convert(raw_stamps_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0)),
                         stampValuesDict['x1'],
                         stampValuesDict['x2'],
                     ),
                 }
-                account.stamp_totals["Total"] += account.stamps[stampValuesDict['Name']]["Level"]
-                account.stamp_totals[stampType] += account.stamps[stampValuesDict['Name']]["Level"]
+                account.stamp_totals['Total'] += account.stamps[stampValuesDict['Name']]['Level']
+                account.stamp_totals[stampType] += account.stamps[stampValuesDict['Name']]['Level']
             except Exception as e:
                 logger.warning(f"Stamp Parse error at {stampType} {stampIndex}: {e}. Defaulting to Undelivered")
                 account.stamps[stampValuesDict['Name']] = {
@@ -1133,14 +1133,16 @@ def _parse_w2_vials(account):
                         vialsDict[int(vialKey)]['x1'],
                         vialsDict[int(vialKey)]['x2'],
                     ),
-                    'Material': vialsDict[int(vialKey)]['Material']
+                    'Material': vialsDict[int(vialKey)]['Material'],
+                    'Image': getItemDisplayName(vialsDict[int(vialKey)]['Material'])
                 }
         except Exception as e:
             logger.warning(f"Alchemy Vial Parse error at vialKey {vialKey}: {e}. Defaulting to level 0")
             account.alchemy_vials[getReadableVialNames(vialKey)] = {
-                "Level": 0,
-                "BaseValue": 0,
-                'Material': vialsDict.get(int(vialKey), {}).get('Material', '')
+                'Level': 0,
+                'BaseValue': 0,
+                'Material': vialsDict[int(vialKey)]['Material'],
+                'Image': getItemDisplayName(vialsDict[int(vialKey)]['Material'])
             }
 
     account.maxed_vials = 0

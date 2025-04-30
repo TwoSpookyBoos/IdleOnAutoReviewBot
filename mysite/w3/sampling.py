@@ -6,7 +6,7 @@ from utils.text_formatting import notateNumber
 from utils.logging import get_logger
 from consts import (
     lavaFunc, ValueToMulti, break_you_best, skillIndexList,
-    sampling_progressionTiers, goldrelic_multisDict, max_printer_sample_rate, arcade_max_level
+    sampling_progressionTiers, goldrelic_multisDict, max_printer_sample_rate, arcade_max_level, max_VialLevel
 )
 
 
@@ -60,9 +60,9 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     
     psrAdvices[accountSubgroup].append(Advice(
         label=f"Snow Slurry {{{{ Vial|#vials }}}}: +{vialBonus:.2f}/30%",
-        picture_class='snow-slurry',
+        picture_class=session_data.account.alchemy_vials['Snow Slurry (Snow Ball)']['Image'],
         progression=session_data.account.alchemy_vials['Snow Slurry (Snow Ball)']['Level'],
-        goal=13
+        goal=max_VialLevel
     ))
     psrAdvices[accountSubgroup].append(Advice(
         label=f"Sample It bubble: "
