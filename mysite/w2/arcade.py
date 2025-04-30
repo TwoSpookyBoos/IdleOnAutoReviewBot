@@ -29,6 +29,15 @@ def getArcadeBonusesAdviceGroup() -> AdviceGroup:
             resource=bonus_details['Material'],
         ) for bonus_name, bonus_details in session_data.account.arcade.items()
     ]
+    arcade_advice['Bonuses'].insert(0, Advice(
+        label=f"Reindeer Companion: {max(1, 2 * session_data.account.companions['Reindeer'])}/2x bonuses"
+              f"{'<br>Note: Could be inaccurate: Companion data not found!' if not session_data.account.companions['Companion Data Present'] else ''}",
+        picture_class='spirit-reindeer',
+        progression=int(session_data.account.companions['Reindeer']),
+        goal=1
+
+    ))
+
 
     for subgroup in arcade_advice:
         for advice in arcade_advice[subgroup]:

@@ -186,6 +186,7 @@ def _parse_companions(account):
     # If the data comes from Efficiency, it'll be a flat list of just companion ID: "companions": [7, 10, 4, 5, 9, 2, 3, 6]
     raw_companions = account.raw_data.get('companions', None)
     if raw_companion is not None:
+        account.companions['Companion Data Present'] = True
         for companionInfo in raw_companion.get('l', []):
             try:
                 companionID = int(companionInfo.split(',')[0])
@@ -193,9 +194,11 @@ def _parse_companions(account):
             except:
                 continue
     elif raw_companions is not None:
+        account.companions['Companion Data Present'] = True
         for companionID in raw_companions:
             simplified_companion_set.add(companionID)
     else:
+        account.companions['Companion Data Present'] = False
         logger.debug(f"No companion data present in JSON. Relying only on Switches")
 
     # Match the Companion IDs to their names
