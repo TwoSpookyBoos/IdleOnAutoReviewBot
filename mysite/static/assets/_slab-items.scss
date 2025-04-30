@@ -1899,3 +1899,4 @@ $all-slab: map-merge($all-slab, $capacity-bags);
 $all-slab: map-merge($all-slab, $obols);
 $all-slab: map-merge($all-slab, $stamps);
 $all-slab: map-merge($all-slab, $misc);
+$all-slab: map-merge($all-slab, $stamps);

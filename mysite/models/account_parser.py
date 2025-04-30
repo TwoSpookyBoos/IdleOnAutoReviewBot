@@ -9,7 +9,7 @@ from consts import (
     gfood_codes,
     card_data, card_raw_data, cardset_names, decode_enemy_name,
     gemShopDict, gem_shop_optlacc_dict, gem_shop_bundles_dict,
-    guild_bonuses_list, familyBonusesDict, achievementsList, allMeritsDict, starsignsDict,
+    guild_bonuses_dict, familyBonusesDict, achievementsList, allMeritsDict, starsignsDict,
     event_points_shop_dict,
     npc_tokens,
     companions,
@@ -467,13 +467,13 @@ def _parse_general_merits(account):
 def _parse_general_guild_bonuses(account):
     account.guild_bonuses = {}
     raw_guild = safe_loads(account.raw_data.get('Guild', [[]]))
-    for bonus_index, (bonus_name, bonus) in enumerate(guild_bonuses_list.items()):
+    for bonus_index, (bonus_name, bonus) in enumerate(guild_bonuses_dict.items()):
         try:
             guild_bonus_level = safer_convert(raw_guild[0][bonus_index], 0)
         except Exception as e:
             logger.warning(f"Guild Bonus Parse error: {e}. Defaulting to 0")
             guild_bonus_level = 0
-        
+
         account.guild_bonuses[bonus_name] = {
             'Level': guild_bonus_level,
             'Value': lavaFunc(bonus['FuncType'], guild_bonus_level, bonus['X1'], bonus['X2']),

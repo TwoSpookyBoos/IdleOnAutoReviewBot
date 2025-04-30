@@ -264,29 +264,34 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     ))
 
     # Owl Bonuses
-    drop_rate_owl_bonuses = session_data.account.owl['Bonuses']['Drop Rate']
     drop_rate_advice[misc].append(Advice(
-        label=f"Bonuses of Orion +{drop_rate_owl_bonuses['Value']}% Drop Rate",
+        label=f"Bonuses of Orion +{session_data.account.owl['Bonuses']['Drop Rate']['Value']}% Drop Rate",
         picture_class='drop-rate',
-        progression=drop_rate_owl_bonuses['NumUnlocked'],
+        progression=max(0, session_data.account.owl['MegaFeathersOwned']-10),
+        resource='megafeather-9',
         goal='∞'
     ))
 
     # Gem Shop - Deathbringer Pack
-    has_db_pack = 'Deathbringer Pack' in session_data.account.gemshop['Bundles']
+    has_bundle_data = session_data.account.gemshop['Bundle Data Present']
+    has_db_pack = next((b['Owned'] for b in session_data.account.gemshop['Bundles'].values() if b['Display'] == 'Deathbringer Pack'), False)
+    db_pack_drop_rate_text = f"+{200 if has_db_pack else 0}/200% Drop Rate" if has_bundle_data \
+                          else "+200% Drop Rate MULTI (no bundle data in JSON)"
     drop_rate_advice[misc].append(Advice(
-        label=f"Gemshop Deathbringer Pack +{200 if has_db_pack else 0}/200% Drop Rate",
+        label=f"Gemshop Deathbringer Pack {db_pack_drop_rate_text}",
         picture_class='gem',
-        progression=int(has_db_pack),
+        progression=int(has_db_pack) if has_bundle_data else 'IDK',
         goal=1
     ))
 
     # Gem Shop - Island Explorer Pack
-    has_istland_explorer_pack = 'Island Explorer Pack' in session_data.account.gemshop['Bundles']
+    has_island_explorer_pack = next((b['Owned'] for b in session_data.account.gemshop['Bundles'].values() if b['Display'] == 'Island Explorer Pack'), False)
+    island_explorer_drop_rate_text = f"x{1.2 if has_island_explorer_pack else 0}/x1.2 Drop Rate MULTI" if has_bundle_data \
+                                 else "x1.2 Drop Rate MULTI (no bundle data in JSON)"
     drop_rate_advice[misc].append(Advice(
-        label=f"Gemshop Island Explorer Pack x{1.2 if has_istland_explorer_pack else 0}/x1.2 Drop Rate MULTI",
+        label=f"Gemshop Island Explorer Pack {island_explorer_drop_rate_text}",
         picture_class='gem',
-        progression=int(has_istland_explorer_pack),
+        progression=int(has_island_explorer_pack) if session_data.account.gemshop['Bundle Data Present'] else 'IDK',
         goal=1
     ))
 

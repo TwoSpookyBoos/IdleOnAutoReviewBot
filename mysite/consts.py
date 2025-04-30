@@ -3261,7 +3261,7 @@ gem_shop_bundles_dict = {
     'bon_f': 'Eternal Hunter Pack'
 }
 
-guild_bonuses_list = {
+guild_bonuses_dict = {
     'Guild Gifts': {'Picture': 'guild-gifts', 'MaxLevel': 100, 'MaxValue': 350, 'FuncType': 'decay', 'X1': 700, 'X2': 100},
     'Stat Runes': {'Picture': 'stat-runes', 'MaxLevel': 50, 'MaxValue': 20, 'FuncType': 'decay', 'X1': 40, 'X2': 50},
     'Rucksack': {'Picture': 'rucksack', 'MaxLevel': 50, 'MaxValue': 35, 'FuncType': 'decay', 'X1': 70, 'X2': 50},
@@ -3271,7 +3271,7 @@ guild_bonuses_list = {
     'Multi Tool': {'Picture': 'multi-tool', 'MaxLevel': 50, 'MaxValue': 15, 'FuncType': 'decay', 'X1': 30, 'X2': 50},
     'Skilley Skiller': {'Picture': 'skilley-skiller', 'MaxLevel': 50, 'MaxValue': 5, 'FuncType': 'decay', 'X1': 10, 'X2': 50},
     'Coin Supercharger': {'Picture': 'coin-supercharger', 'MaxLevel': 100, 'MaxValue': 16.667, 'FuncType': 'decay', 'X1': 20, 'X2': 20},
-    'Bonus GP for small guilds': {'Picture': 'bonus-gp-for-small-guilds', 'MaxLevel': 50, 'MaxValue': 0, 'FuncType': 'special1', 'X1': 200, 'X2': 50}, # This value decreases and the min value of 0
+    'Bonus GP for small guilds': {'Picture': 'bonus-gp-for-small-guilds', 'MaxLevel': 50, 'MaxValue': 0, 'FuncType': 'special1', 'X1': 200, 'X2': 50}, # This value decreases to a min value of 0
     'Gold Charm': {'Picture': 'gold-charm', 'MaxLevel': 50, 'MaxValue': 20, 'FuncType': 'decay', 'X1': 40, 'X2': 50},
     'Star Dazzle': {'Picture': 'star-dazzle', 'MaxLevel': 50, 'MaxValue': 60, 'FuncType': 'decay', 'X1': 120, 'X2': 50},
     'C2 Card Spotter': {'Picture': 'c2-card-spotter', 'MaxLevel': 50, 'MaxValue': 30, 'FuncType': 'decay', 'X1': 60, 'X2': 50},

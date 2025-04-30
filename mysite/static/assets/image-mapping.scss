@@ -60,8 +60,7 @@
 @import "farming";
 @import "summoning";
 
-$id-map: map-merge($achievements, $id-map);
-$id-map: map-merge($all-alchemy, $id-map);
+$id-map: map-merge($all-alchemy, $achievements);
 $id-map: map-merge($all-cards, $id-map);
 $id-map: map-merge($all-caverns, $id-map);
 $id-map: map-merge($all-compass, $id-map);
@@ -74,6 +73,7 @@ $id-map: map-merge($all-islands, $id-map);
 $id-map: map-merge($all-killroy, $id-map);
 $id-map: map-merge($all-laboratory, $id-map);
 $id-map: map-merge($all-sailing, $id-map);
+$id-map: map-merge($all-slab, $id-map);
 $id-map: map-merge($all-sneaking, $id-map);
 $id-map: map-merge($all-storage-items, $id-map);
 $id-map: map-merge($all-summoning, $id-map);
