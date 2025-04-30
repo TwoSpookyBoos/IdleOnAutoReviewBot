@@ -718,7 +718,7 @@ def _parse_master_classes_compass(account):
         'Dust3': safer_get(account.raw_optlacc_dict, 359, 0),
         'Dust4': safer_get(account.raw_optlacc_dict, 360, 0),
         'Dust5': safer_get(account.raw_optlacc_dict, 361, 0),
-        "Top of the Mornin'": max(0, safer_convert(safer_get(account.raw_optlacc_dict, 361, 0),0)),
+        "Top of the Mornin'": max(0, safer_convert(safer_get(account.raw_optlacc_dict, 365, 0),0)),
         'Abominations': {},
         'Elements': {0: 'Fire', 1: 'Wind', 2: 'Grass', 3: 'Ice'},
         'Medallions': {},
