@@ -82,7 +82,7 @@ def getBallotMultiAdviceGroup():
             ),
             Advice(
                 label=f"Companions: Mashed Potato: +{5 * session_data.account.companions['Mashed Potato']}/5%"
-                      f"{'<br>Note: May be inaccurate. Not all data contains Companions!' if not session_data.account.companions['Mashed Potato'] else ''}",
+                      f"{'<br>Note: Could be inaccurate: Companion data not found!' if not session_data.account.companions['Companion Data Present'] else ''}",
                 picture_class='mashed-potato',
                 progression=int(session_data.account.companions['Mashed Potato']),
                 goal=1

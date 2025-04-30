@@ -384,7 +384,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     po_AdviceDict[aw_label].append(Advice(
         label=f"Companions: Biggole Mole: "
               f"<br>{biggole_mole_multi:.2f}x ({biggole_mole_days}/{biggole_mole_max_days} days)"
-              f"{'<br>Note: May be inaccurate. Not all data contains Companions!' if not session_data.account.companions['Biggole Mole'] else ''}",
+              f"{'<br>Note: Could be inaccurate: Companion data not found!' if not session_data.account.companions['Companion Data Present'] else ''}",
         picture_class='biggole-mole',
         progression=biggole_mole_days,
         goal=biggole_mole_max_days
