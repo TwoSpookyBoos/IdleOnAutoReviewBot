@@ -828,6 +828,10 @@ def _parse_master_classes_compass_upgrades(account, raw_compass_upgrades):
                     'Path Ordering': path_ordering,
                     'Description': clean_description,
                 }
+            account.compass['Upgrades'][clean_name]['Base Value'] = (
+                account.compass['Upgrades'][clean_name]['Level']
+                * account.compass['Upgrades'][clean_name]['Value Per Level']
+            )
 
     # Determine Unlock Status
     for upgrade_name, upgrade_details in account.compass['Upgrades'].items():

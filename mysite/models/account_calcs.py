@@ -381,33 +381,30 @@ def _calculate_master_classes_grimoire(account):
 
 def _calculate_master_classes_compass_upgrades(account):
     compass_circle_multi = ValueToMulti(
-        account.compass['Upgrades']['Circle Supremacy']['Level']
-        * account.compass['Upgrades']['Circle Supremacy']['Value Per Level']
+        account.compass['Upgrades']['Circle Supremacy']['Base Value']
+        + account.compass['Upgrades']['Abomination Slayer XXI']['Base Value']
     )
 
     for upgrade_name, upgrade_details in account.compass['Upgrades'].items():
+        value = (
+            account.compass['Upgrades'][upgrade_name]['Base Value']
+            * (compass_circle_multi if upgrade_details['Shape'] == 'Circle' else 1)
+            * (pow(2, account.compass['Upgrades'][upgrade_name]['Level']//50) if upgrade_name == 'Moon of Sneak' else 1)
+        )
         # Update description with total value, stack counts, and scaling info
         if '{' in account.compass['Upgrades'][upgrade_name]['Description']:
-            account.compass['Upgrades'][upgrade_name]['Total Value'] = (
-                account.compass['Upgrades'][upgrade_name]['Level']
-                * account.compass['Upgrades'][upgrade_name]['Value Per Level']
-                * (compass_circle_multi if upgrade_details['Shape'] == 'Circle' else 1)
-            )
+            account.compass['Upgrades'][upgrade_name]['Total Value'] = value
             account.compass['Upgrades'][upgrade_name]['Description'] = account.compass['Upgrades'][upgrade_name]['Description'].replace(
                 '{', f"{account.compass['Upgrades'][upgrade_name]['Total Value']}"
             )
         if '}' in account.compass['Upgrades'][upgrade_name]['Description']:
-            account.compass['Upgrades'][upgrade_name]['Total Value'] = ValueToMulti(
-                account.compass['Upgrades'][upgrade_name]['Level']
-                * account.compass['Upgrades'][upgrade_name]['Value Per Level']
-                * (compass_circle_multi if upgrade_details['Shape'] == 'Circle' else 1)
-            )
+            account.compass['Upgrades'][upgrade_name]['Total Value'] = ValueToMulti(value)
             account.compass['Upgrades'][upgrade_name]['Description'] = account.compass['Upgrades'][upgrade_name]['Description'].replace(
                 '}', f"{account.compass['Upgrades'][upgrade_name]['Total Value']:.2f}"
             )
         account.compass['Upgrades'][upgrade_name]['Description'] += (
             f"<br>({account.compass['Upgrades'][upgrade_name]['Value Per Level'] * (compass_circle_multi if upgrade_details['Shape'] == 'Circle' else 1):.2f} per level"
-            f"{' after Circle Supremacy' if upgrade_details['Shape'] == 'Circle' else ''})"
+            f"{' after Circle Multis' if upgrade_details['Shape'] == 'Circle' else ''})"
         )
 
 def _calculate_w1(account):
