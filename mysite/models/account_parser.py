@@ -1017,7 +1017,7 @@ def _parse_w1_stamps(account):
                     'StampType': stampType,
                     'Value': lavaFunc(
                         stampValuesDict['funcType'],
-                        safer_convert(raw_stamps_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0)),
+                        safer_convert(raw_stamps_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0), 0),
                         stampValuesDict['x1'],
                         stampValuesDict['x2'],
                     ),
