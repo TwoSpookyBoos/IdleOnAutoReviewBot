@@ -1,7 +1,7 @@
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import break_you_best, achievements_progressionTiers, achievement_categories, breedingTotalPets, max_poBox_before_myriad
+from consts import break_you_best, achievements_progressionTiers, achievement_categories, breedingTotalPets, max_poBox_before_myriad, maxFarmingCrops
 from utils.text_formatting import notateNumber
 
 logger = get_logger(__name__)
@@ -28,6 +28,19 @@ def getAchievementExclusions() -> set[str]:
     if session_data.account.postOffice["Total Boxes Earned"] >= max_poBox_before_myriad * 0.8:
         # Saving Silver Pens doesn't really matter if you've got enough boxes
         exclusionsSet.add('Ink Blot')
+
+    if (
+        session_data.account.gaming['SuperBits']['Isotope Discovery']['Unlocked']
+        or session_data.account.gaming['FertilizerValue'] >= 420
+        or session_data.account.gaming['FertilizerSpeed'] >= 500
+        or session_data.account.farming['CropsUnlocked'] >= maxFarmingCrops * 0.75
+    ):
+        exclusionsSet.add('Lucky Harvest')
+    try:
+        if session_data.account.gaming['BitsOwned'] >= 1e47:  #Red 100B
+            exclusionsSet.add('Lucky Harvest')
+    except:
+        pass
 
     return exclusionsSet
 

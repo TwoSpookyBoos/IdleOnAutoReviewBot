@@ -333,7 +333,9 @@ def _calculate_general_highest_world_reached(account):
 
 def _calculate_master_classes(account):
     _calculate_master_classes_grimoire(account)
+    _calculate_master_classes_grimoire_bone_sources(account)
     _calculate_master_classes_compass_upgrades(account)
+    _calculate_master_classes_compass_dust_sources(account)
 
 def _calculate_master_classes_grimoire(account):
     grimoire_multi = ValueToMulti(
@@ -379,12 +381,14 @@ def _calculate_master_classes_grimoire(account):
             f"{' after Writhing Grimoire' if upgrade_details['Scaling Value'] else ': Not scaled by Writhing Grimoire'})"
         )
 
+def _calculate_master_classes_grimoire_bone_sources(account):
+    pass
 def _calculate_master_classes_compass_upgrades(account):
     compass_circle_multi = ValueToMulti(
         account.compass['Upgrades']['Circle Supremacy']['Base Value']
         + account.compass['Upgrades']['Abomination Slayer XXI']['Base Value']
     )
-    # Basic Upgrades
+
     for upgrade_name, upgrade_details in account.compass['Upgrades'].items():
         value = (
             account.compass['Upgrades'][upgrade_name]['Base Value']
@@ -407,6 +411,7 @@ def _calculate_master_classes_compass_upgrades(account):
             f"{' after Circle Multis' if upgrade_details['Shape'] == 'Circle' else ''})"
         )
 
+def _calculate_master_classes_compass_dust_sources(account):
     # Dust
     # _customBlock_Windwalker if ("ExtraDust" == e)
     ww_preset_level = 100
@@ -446,7 +451,6 @@ def _calculate_master_classes_compass_upgrades(account):
         )
     }
     account.compass['Dust Calc']['Total'] = prod(account.compass['Dust Calc'].values())
-
 
 def _calculate_w1(account):
     _calculate_w1_upgrade_vault(account)
