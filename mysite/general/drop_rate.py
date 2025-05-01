@@ -1,6 +1,7 @@
 from models.models import Advice, AdviceGroup, AdviceSection
-from consts import lavaFunc, max_card_stars, maxFarmingCrops, max_land_rank_level, max_IndexOfSigils, stampsDict
+from consts import lavaFunc, max_card_stars, maxFarmingCrops, max_land_rank_level, max_IndexOfSigils, stampsDict, class_kill_talents_dict
 from utils.data_formatting import mark_advice_completed
+from utils.text_formatting import notateNumber
 from utils.logging import get_logger
 from math import floor
 from flask import g as session_data
@@ -30,77 +31,16 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     }
 
     drop_rate_cards = [
-        {
-            'Name': 'Emperor',
-            'Stars': (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Emperor')),
-            'Base': 12,
-            "Max": 12 * (1 + max_card_stars),
-            'Bonus': 'Total Drop Rate',
-            'Picture': 'emperor-card'
-        },
-        {
-            'Name': 'W6 Minichief Spirit',
-            'Stars': (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Minichief Spirit')),
-            'Base': 8,
-            'Bonus': 'Total Drop Rate',
-            'Picture': 'minichief-spirit-card'
-        },
-        {
-            'Name': 'King Doot',
-            'Stars': (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'King Doot')),
-            'Base': 6,
-            'Bonus': 'Total Drop Rate',
-            'Picture': 'king-doot-card'
-        },
-        {
-            'Name': 'W5 Mister Brightside',
-            'Stars': (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Mister Brightside')),
-            'Base': 6,
-            'Bonus': 'Total Drop Rate',
-            'Picture': 'mister-brightside-card'
-        },
-        {
-            'Name': 'W1 Crystal Carrot',
-            'Stars': (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Crystal Carrot')),
-            'Base': 5,
-            'Bonus': 'Total Drop Rate',
-            'Picture': 'crystal-carrot-card'
-        },
-        {
-            'Name': 'W3 Bop Box',
-            'Stars': (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Bop Box')),
-            'Base': 3.5,
-            'Bonus': 'Total Drop Rate',
-            'Picture': 'bop-box-card'
-        },
-        {
-            'Name': 'Events Mr Blueberry',
-            'Stars': (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Mr Blueberry')),
-            'Base': 3,
-            'Bonus': 'Total Drop Rate',
-            'Picture': 'mr-blueberry-card'
-        },
-        {
-            'Name': 'Events Giftmas Blobulyte',
-            'Stars': (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Giftmas Blobulyte')),
-            'Base': 3,
-            'Bonus': 'Total Drop Rate',
-            'Picture': 'giftmas-blobulyte-card'
-        },
-        {
-            'Name': 'W2 Mimic',
-            'Stars': (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Mimic')),
-            'Base': 3,
-            'Bonus': 'Total Drop Rate',
-            'Picture': 'mimic-card'
-        },
-        {
-            'Name': 'Domeo Magmus',
-            'Stars': (1 + next(c.getStars() for c in session_data.account.cards if c.name == 'Domeo Magmus')),
-            'Base': 1.5,
-            'Bonus': 'PASSIVE Total Drop Rate',
-            'Picture': 'domeo-magmus-card'
-        }
+        'Emperor',
+        'Minichief Spirit',
+        'King Doot',
+        'Mister Brightside',
+        'Crystal Carrot',
+        'Bop Box',
+        'Mr Blueberry',
+        'Giftmas Blobulyte',
+        'Mimic',
+        'Domeo Magmus'
     ]
     #########################################
     # Account Wide
@@ -109,21 +49,17 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     # Cards
     #########################################
     # TODO: Add temp line for +ruby level cards
-    for card in drop_rate_cards:
-        drop_rate_advice[cards].append(Advice(
-            label=f"{card['Name']}'card: +{card['Base'] * card['Stars']:g}/{card['Base'] * (1 + max_card_stars):g} {card['Bonus']}",
-            picture_class=card['Picture'],
-            progression=card['Stars'],
-            goal=(1 + max_card_stars)
-        ))
+    for card_name in drop_rate_cards:
+        drop_rate_advice[cards].append(next(c for c in session_data.account.cards if c.name == card_name).getAdvice())
 
     bnn_stars_sum = sum(min(card.star, max_card_stars) + 1 for card in bnn_cardset)
     bnn_star, _ = divmod(bnn_stars_sum, len(bnn_cardset))
     bnn_star = min(bnn_star, max_card_stars)
     bnn_star_next = (bnn_star + 1) * len(bnn_cardset)
     drop_rate_advice[cards].append(Advice(
-        label=f"Bosses n Nightmares card set: +{6 * bnn_star}"
-              f"/{6 * (1 + max_card_stars)} Drop Rate | Cards until next set level {bnn_stars_sum}/{bnn_star_next}",
+        label=f"Bosses n Nightmares- card set:"
+              f"<br>+{6 * bnn_star}/{6 * (1 + max_card_stars)}% Drop Rate"
+              f"<br>Cards until next set level {bnn_stars_sum}/{bnn_star_next}",
         picture_class='bosses-n-nightmares',
         progression=bnn_star,
         goal=6
@@ -134,8 +70,9 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     events_star = min(events_star, max_card_stars)
     events_star_next = (events_star + 1) * len(events_cardset)
     drop_rate_advice[cards].append(Advice(
-        label=f"Events card set: +{7 * events_star}"
-              f"/{7 * (1 + max_card_stars)} Drop Rate | Cards until next set level {events_stars_sum}/{events_star_next}",
+        label=f"Events- card set:"
+              f"<br>+{7 * events_star}/{7 * (1 + max_card_stars)}% Drop Rate"
+              f"<br>Cards until next set level {events_stars_sum}/{events_star_next}",
         picture_class='events',
         progression=events_star,
         goal=6
@@ -396,8 +333,8 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
 
     # The bonuses from endless summoning and everything else, except the pristine charm are addative. The charm is a multi
     total_summon_bonus_multi = (1 + endless_summon_bonus_multi + misc_summon_bonus_multi) * prisine_charm_summon_bonus_multi
-    summoning_drop_rate_value = round(summoning_drop_rate_base * total_summon_bonus_multi, 1)
-    summoning_drop_rate_max = (7 + 10.5 + 17.5 + 35) * total_summon_bonus_multi
+    summoning_drop_rate_value = round(summoning_drop_rate_base * total_summon_bonus_multi, 2)
+    summoning_drop_rate_max = round((7 + 10.5 + 17.5 + 35) * total_summon_bonus_multi, 2)
     drop_rate_advice[misc].append(Advice(
         label=f"Summoning Bonuses +{summoning_drop_rate_value:g}"
               f"/{summoning_drop_rate_max:g} Drop Rate",
@@ -411,15 +348,36 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     drop_rate_advice[multi].append(Advice(
         label=f"Cotton Candy pristine charm {'x1.15' if cotton_candy_obtained else '0%'} Drop Rate MULTI",
         picture_class='cotton-candy-charm',
-        progression=int(session_data.account.sneaking['PristineCharms']['Cotton Candy']['Obtained']),
+        progression=int(cotton_candy_obtained),
         goal=1
     ))
 
-    # TODO: Account wide bonuses
-    # Family Obols
-    # Tome
-    # $$ Island Explorer Pack
+    # Tome ?
+
     # Archlord of the Pirates
+    sb_talent = session_data.account.class_kill_talents['Archlord of the Pirates']
+    goalString = notateNumber("Basic", 1e6, 1)
+    sb_dict = class_kill_talents_dict['Archlord of the Pirates']
+    sb_talent_bonus_max = lavaFunc(sb_dict['FuncType'], max(1000000, sb_talent['Kills']), sb_dict['X1'], sb_dict['X2'])
+    drop_rate_advice[multi].append(Advice(
+        label=f"Archlord of the Pirates <br>+{round(sb_talent['Value'], 3):g}"
+              f"/{round(sb_talent_bonus_max, 3):g}% Drop Rate MULTI",
+        picture_class='archlord-of-the-pirates',
+        progression=notateNumber("Match", sb_talent['Kills'], 2, '', goalString),
+        goal=goalString,
+        resource='pirate-flag'
+    ))
+
+    # Family Obols Drop Rate
+    obol_family_drop_rate = session_data.account.obols['BonusTotals']['%_DROP_CHANCE']
+    obol_family_drop_rate_max = max(124, obol_family_drop_rate)
+    drop_rate_advice[misc].append(Advice(
+        label=f"Family Obols"
+              f"<br>+{obol_family_drop_rate}/{obol_family_drop_rate_max}% Drop Rate",
+        picture_class='hyper-six-obol',
+        progression=obol_family_drop_rate,
+        goal=124
+    ))
 
     for subgroup in drop_rate_advice:
         for advice in drop_rate_advice[subgroup]:

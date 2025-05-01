@@ -13,6 +13,7 @@ from consts import (
     event_points_shop_dict,
     npc_tokens,
     companions,
+    class_kill_talents_dict,
     # Master Classes
     grimoire_upgrades_list, grimoire_bones_list, grimoire_dont_scale,
     compass_upgrades_list, compass_dusts_list, compass_path_ordering, compass_titans, compass_medallions,
@@ -27,7 +28,7 @@ from consts import (
     sigilsDict,
     arcadeBonuses, arcade_max_level,
     ballotDict,
-    obolsDict, ignorable_obols_list,
+    obols_dict, ignorable_obols_list,
     islands_dict, killroy_dict,
     # W3
     refineryDict, buildingsDict, saltLickList, atomsList, colliderStorageLimitList, buildings_shrines, prayersDict,
@@ -354,9 +355,29 @@ def _parse_general_npc_tokens(account):
     #     account.all_assets.get(tokenName).add(tokenCount)
 
 def _parse_class_unique_kill_stacks(account):
-    account.dk_orb_kills = safer_get(account.raw_optlacc_dict, 138, 0)
-    account.sb_plunder_kills = safer_get(account.raw_optlacc_dict, 139, 0)
-    account.es_wormhole_kills = safer_get(account.raw_optlacc_dict, 152, 0)
+    dk_orb_kills = safer_get(account.raw_optlacc_dict, 138, 0)
+    dk_dict = class_kill_talents_dict['King of the Remembered']
+    es_wormhole_kills = safer_get(account.raw_optlacc_dict, 152, 0)
+    es_dict = class_kill_talents_dict['Wormhole Emperor']
+    sb_plunder_kills = safer_get(account.raw_optlacc_dict, 139, 0)
+    sb_dict = class_kill_talents_dict['Archlord of the Pirates']
+    account.class_kill_talents = {
+        'Archlord of the Pirates': {
+            'BonusType': sb_dict['BonusType'],
+            'Kills': sb_plunder_kills,
+            'Value': lavaFunc(sb_dict['FuncType'], sb_plunder_kills, sb_dict['X1'], sb_dict['X2'])
+        },
+        'King of the Remembered': {
+            'BonusType': dk_dict['BonusType'],
+            'Kills': dk_orb_kills,
+            'Value': lavaFunc(dk_dict['FuncType'], dk_orb_kills, dk_dict['X1'], dk_dict['X2'])
+        },
+        'Wormhole Emperor': {
+            'BonusType': es_dict['BonusType'],
+            'Kills': es_wormhole_kills,
+            'Value': lavaFunc(es_dict['FuncType'], es_wormhole_kills, es_dict['X1'], es_dict['X2'])
+        }
+    }
 
 def _parse_family_bonuses(account):
     account.family_bonuses = {}
@@ -1416,8 +1437,8 @@ def _parse_w2_obols(account):
     }
     raw_owned_obols = []
     for jsonkey in [
-        "ObolEqO1", "ObolEqO2", "ObolEqO0_0", "ObolEqO0_1", "ObolEqO0_2", "ObolEqO0_3", "ObolEqO0_4",
-        "ObolEqO0_5", "ObolEqO0_6", "ObolEqO0_7", "ObolEqO0_8", "ObolEqO0_9"
+        'ObolEqO1', 'ObolEqO2', 'ObolEqO0_0', 'ObolEqO0_1', 'ObolEqO0_2', 'ObolEqO0_3', 'ObolEqO0_4',
+        'ObolEqO0_5', 'ObolEqO0_6', 'ObolEqO0_7', 'ObolEqO0_8', 'ObolEqO0_9'
     ]:
         raw_owned_obols += safe_loads(account.raw_data.get(jsonkey, []))
     raw_obol_inventory_list = safe_loads(account.raw_data.get("ObolInvOr"))
@@ -1425,13 +1446,32 @@ def _parse_w2_obols(account):
         raw_owned_obols += subdict.values()
     for obol in raw_owned_obols:
         if obol not in ignorable_obols_list:
-            obolBonusType = obolsDict.get(obol, {}).get('Bonus', 'Unknown')
-            obolShape = obolsDict.get(obol, {}).get('Shape', 'Unknown')
+            obolBonusType = obols_dict.get(obol, {}).get('Bonus', 'Unknown')
+            obolShape = obols_dict.get(obol, {}).get('Shape', 'Unknown')
             account.obols[obolBonusType][obolShape]['Total'] += 1
             if obol not in account.obols[obolBonusType][obolShape]:
                 account.obols[obolBonusType][obolShape][obol] = {'Count': 1}
             else:
                 account.obols[obolBonusType][obolShape][obol]['Count'] += 1
+    
+    raw_family_obols_list = safe_loads(account.raw_data.get('ObolEqO1'))
+    raw_family_obols_upgrades = safe_loads(account.raw_data.get('ObolEqMAPz1'))
+    # Only adding Drop Chance for now, there is way too much to add it all for it only to go unused
+    family_obols_totals = {
+        '%_DROP_CHANCE': 0
+    }
+    for i, obol_name in enumerate(raw_family_obols_list):
+        upg_index = str(i)
+        # We only care about Drop Rate obols
+        if obol_name in obols_dict:
+            obol_base = obols_dict[obol_name]['Base']
+            family_obols_totals['%_DROP_CHANCE'] += obol_base['%_DROP_CHANCE']
+            if  upg_index in raw_family_obols_upgrades.keys() \
+                and 'UQ1txt' in raw_family_obols_upgrades[upg_index].keys() \
+                and raw_family_obols_upgrades[upg_index]['UQ1txt'] == '%_DROP_CHANCE':
+                family_obols_totals['%_DROP_CHANCE'] += raw_family_obols_upgrades[upg_index]['UQ1val']
+    account.obols['BonusTotals'] = family_obols_totals
+
 
 def _parse_w2_islands(account):
     account.islands = {

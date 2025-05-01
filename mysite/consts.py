@@ -4652,6 +4652,11 @@ combat_talentsDict = {
         }
     },
 }
+class_kill_talents_dict = {
+    'Archlord of the Pirates': {'BonusType': 'Drop Rate', 'FuncType': 'decay', 'X1': 6, 'X2': 150},
+    'King of the Remembered': {'BonusType': 'Printer Output', 'FuncType': 'decay', 'X1': 5, 'X2': 150 },
+    'Wormhole Emperor': {'BonusType': 'Damage', 'FuncType': 'decay', 'X1': 1.5, 'X2': 150}
+}
 unbookable_talents_list = [
     10, 11, 12,  #Tab 1 STR, AGI, WIS
     75, 79,      #Beginner tab1 Happy Dude and Sleepin' on the Job
@@ -5843,18 +5848,18 @@ fishingToolkitDict = {
         'Wiener Links', 'Zeus Gon Fishin', 'Needledrop', 'Scripticus Spoons', 'Its a Boy Celebration', 'Its a Girl Celebration', 'Its Alright Celebration'
     ],
 }
-obolsDict = {
+obols_dict = {
     #Drop Rate
-    "ObolBronzePop":    {"Shape": "Circle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolBronzePop")},
-    "ObolSilverPop":    {"Shape": "Circle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolSilverPop")},
-    "ObolHyper0":       {"Shape": "Circle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolHyper0")},
-    "ObolSilverLuck":   {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolSilverLuck")},
-    "ObolGoldLuck":     {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolGoldLuck")},
-    "ObolKnight":       {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolKnight")},
-    "ObolHyperB0":       {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolHyper0")},
-    "ObolPlatinumLuck": {"Shape": "Hexagon", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolPlatinumLuck")},
-    "ObolLava":         {"Shape": "Hexagon", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolLava")},
-    "ObolPinkLuck":     {"Shape": "Sparkle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolPinkLuck")},
+    "ObolBronzePop":    {"Shape": "Circle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolBronzePop"), 'Base': {'LUK': 1, 'DEF': 1, '%_DROP_CHANCE': 2}},
+    "ObolSilverPop":    {"Shape": "Circle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolSilverPop"), 'Base': {'LUK': 3, 'DEF': 2, '%_DROP_CHANCE': 3}},
+    "ObolHyper0":       {"Shape": "Circle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolHyper0"), 'Base': {'WP': 1, '%_DROP_CHANCE': 4}},
+    "ObolSilverLuck":   {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolSilverLuck"), 'Base': {'LUK': 2, '%_DROP_CHANCE': 5}},
+    "ObolGoldLuck":     {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolGoldLuck"), 'Base': {'LUK': 3, '%_DROP_CHANCE': 7}},
+    "ObolKnight":       {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolKnight"), 'Base': {'WP': 2, 'STR': 3, 'AGI': 3, 'WIS': 3, 'LUK': 3, 'DEF': 5, '%_DROP_CHANCE': 8}},
+    "ObolHyperB0":      {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolHyper0"), 'Base': {'WP': 5, '%_DROP_CHANCE': 10}},
+    "ObolPlatinumLuck": {"Shape": "Hexagon", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolPlatinumLuck"), 'Base': {'LUK': 5, '%_DROP_CHANCE': 10}},
+    "ObolLava":         {"Shape": "Hexagon", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolLava"), 'Base': {'LUK': 10, '%_DROP_CHANCE': 14}},
+    "ObolPinkLuck":     {"Shape": "Sparkle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolPinkLuck"), 'Base': {'LUK': 7, '%_DROP_CHANCE': 15}},
 }
 ignorable_obols_list = [
     'Blank', 'LockedInvSpace', 'ObolLocked1', 'ObolLocked2', 'ObolLocked3', 'ObolLocked4',
