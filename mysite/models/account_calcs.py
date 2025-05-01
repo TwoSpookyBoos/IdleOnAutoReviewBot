@@ -1,4 +1,4 @@
-from math import ceil, floor, log2
+from math import ceil, floor, log2, prod
 from consts import (
     # General
     lavaFunc, ceilUpToBase, ValueToMulti, getNextESFamilyBreakpoint,
@@ -384,7 +384,7 @@ def _calculate_master_classes_compass_upgrades(account):
         account.compass['Upgrades']['Circle Supremacy']['Base Value']
         + account.compass['Upgrades']['Abomination Slayer XXI']['Base Value']
     )
-
+    # Basic Upgrades
     for upgrade_name, upgrade_details in account.compass['Upgrades'].items():
         value = (
             account.compass['Upgrades'][upgrade_name]['Base Value']
@@ -406,6 +406,47 @@ def _calculate_master_classes_compass_upgrades(account):
             f"<br>({account.compass['Upgrades'][upgrade_name]['Value Per Level'] * (compass_circle_multi if upgrade_details['Shape'] == 'Circle' else 1):.2f} per level"
             f"{' after Circle Multis' if upgrade_details['Shape'] == 'Circle' else ''})"
         )
+
+    # Dust
+    # _customBlock_Windwalker if ("ExtraDust" == e)
+    ww_preset_level = 100
+    for ww in account.wws:
+        if ww.current_preset_talents.get('421', 0) >= ww_preset_level:
+            ww_preset_level = ww.current_preset_talents.get('421', 0)
+        if ww.secondary_preset_talents.get('421', 0) >= ww_preset_level:
+            ww_preset_level = ww.secondary_preset_talents.get('421', 0)
+    compass_percent = lavaFunc(
+        funcType='decay',
+        level=ww_preset_level,
+        x1=150,
+        x2=300
+    )
+    account.compass['Dust Calc'] = {
+        'mga': ValueToMulti(
+            account.compass['Upgrades']['Mountains of Dust']['Total Value']
+            + (account.compass['Upgrades']['Solardust Hoarding']['Total Value'] * safer_math_log(account.compass['Dust3'], 'Lava'))
+        ),
+        'mgb': account.compass['Upgrades']['Spire of Dust']['Total Value'],
+        'mgc': ValueToMulti(30 if account.sneaking['PristineCharms']['Twinkle Taffy']['Obtained'] else 0),
+        'mgd': ValueToMulti(
+            (25 * min(1, account.all_assets.get('EquipmentHats118').amount))
+        ),
+        'mge': 1,
+        'mgf': ValueToMulti(
+            + compass_percent
+            + account.arcade[47]['Value']
+            + account.compass['Upgrades']['De Dust I']['Total Value']
+            + account.compass['Upgrades']['De Dust II']['Total Value']
+            + account.compass['Upgrades']['De Dust III']['Total Value']
+            + account.compass['Upgrades']['De Dust IV']['Total Value']
+            + account.compass['Upgrades']['De Dust V']['Total Value']
+            + account.compass['Upgrades']['Abomination Slayer IX']['Total Value']
+            + account.compass['Upgrades']['Abomination Slayer XXX']['Total Value']
+            + account.compass['Upgrades']['Abomination Slayer XXXIV']['Total Value']
+        )
+    }
+    account.compass['Dust Calc']['Total'] = prod(account.compass['Dust Calc'].values())
+
 
 def _calculate_w1(account):
     _calculate_w1_upgrade_vault(account)

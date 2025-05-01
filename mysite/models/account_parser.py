@@ -234,18 +234,20 @@ def _parse_characters(account, run_type):
 
 def _parse_character_class_lists(account):
 
-    account.beginners = [toon for toon in account.all_characters if "Beginner" in toon.all_classes or "Journeyman" in toon.all_classes]
-    account.jmans = [toon for toon in account.all_characters if "Journeyman" in toon.all_classes]
-    account.maestros = [toon for toon in account.all_characters if "Maestro" in toon.all_classes]
-    account.vmans = [toon for toon in account.all_characters if "Voidwalker" in toon.all_classes]
+    account.beginners = [toon for toon in account.all_characters if 'Beginner' in toon.all_classes or 'Journeyman' in toon.all_classes]
+    account.jmans = [toon for toon in account.all_characters if 'Journeyman' in toon.all_classes]
+    account.maestros = [toon for toon in account.all_characters if 'Maestro' in toon.all_classes]
+    account.vmans = [toon for toon in account.all_characters if 'Voidwalker' in toon.all_classes]
 
-    account.barbs = [toon for toon in account.all_characters if "Barbarian" in toon.all_classes]
-    account.bbs = [toon for toon in account.all_characters if "Blood Berserker" in toon.all_classes]
-    account.dbs = [toon for toon in account.all_characters if "Death Bringer" in toon.all_classes]
-    account.dks = [toon for toon in account.all_characters if "Divine Knight" in toon.all_classes]
+    account.barbs = [toon for toon in account.all_characters if 'Barbarian' in toon.all_classes]
+    account.bbs = [toon for toon in account.all_characters if 'Blood Berserker' in toon.all_classes]
+    account.dbs = [toon for toon in account.all_characters if 'Death Bringer' in toon.all_classes]
+    account.dks = [toon for toon in account.all_characters if 'Divine Knight' in toon.all_classes]
 
-    account.mages = [toon for toon in account.all_characters if "Mage" in toon.all_classes]
-    account.bubos = [toon for toon in account.all_characters if "Bubonic Conjuror" in toon.all_classes]
+    account.mages = [toon for toon in account.all_characters if 'Mage' in toon.all_classes]
+    account.bubos = [toon for toon in account.all_characters if 'Bubonic Conjuror' in toon.all_classes]
+
+    account.wws = [toon for toon in account.all_characters if 'Wind Walker' in toon.all_classes]
 
 def _parse_general(account):
     # General / Multiple uses
@@ -316,7 +318,6 @@ def _parse_general_gem_shop_bundles(account):
     unknown_bundles = [v for v in account.gemshop['Bundles'] if v not in gem_shop_bundles_dict]
     if unknown_bundles:
         logger.warning(f"Unknown Gem Shop Bundles found: {unknown_bundles}")
-
 
 
 def _parse_general_quests(account):
@@ -783,7 +784,7 @@ def _parse_master_classes_compass_upgrades(account, raw_compass_upgrades):
         for path_ordering, upgrade_index in enumerate(upgrade_indexes_list):
             upgrade_values_list = compass_upgrades_list[upgrade_index]
             clean_name = upgrade_values_list[0].replace('(Tap_for_more_info)', '').replace('製', '').replace('_', ' ').rstrip()
-            clean_description = upgrade_values_list[11].replace('_', ' ')
+            clean_description = upgrade_values_list[11].replace('_', ' ')  #.replace('@', '<br>')
             # if 'Titan doesnt exist' not in clean_description:  #Placeholders as of v2.35 release patch
             try:
                 account.compass['Upgrades'][clean_name] = {

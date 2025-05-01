@@ -170,8 +170,8 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
 
             # Preset level
             if (
-                    vman.current_preset_talents.get("59", 0) >= session_data.account.library['MaxBookLevel']
-                    or vman.secondary_preset_talents.get("59", 0) >= session_data.account.library['MaxBookLevel']
+                vman.current_preset_talents.get("59", 0) >= session_data.account.library['MaxBookLevel']
+                or vman.secondary_preset_talents.get("59", 0) >= session_data.account.library['MaxBookLevel']
             ):
                 anyVWMaxLeveled = True
             if vman.current_preset_talents.get("59", 0) >= bestBMPresetLevel:
