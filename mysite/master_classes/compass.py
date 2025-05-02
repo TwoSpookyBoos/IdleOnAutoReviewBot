@@ -147,15 +147,18 @@ def getCompassCurrenciesAdviceGroup(compass):
     ww_index = None
     eternal_hunt_preset_level = 100
     for ww in session_data.account.wws:
+        if ww_index is None:
+            ww_index = ww.character_index
         if ww.current_preset_talents.get('423', 0) >= eternal_hunt_preset_level:
             ww_index = ww.character_index
             eternal_hunt_preset_level = ww.current_preset_talents.get('423', 0)
         if ww.secondary_preset_talents.get('423', 0) >= eternal_hunt_preset_level:
             ww_index = ww.character_index
             eternal_hunt_preset_level = ww.secondary_preset_talents.get('423', 0)
+    bonus_talent_levels = session_data.account.all_characters[ww_index].total_bonus_talent_levels if ww_index is not None else 0
     ww_per_stack = lavaFunc(
         funcType='decay',
-        level=eternal_hunt_preset_level + session_data.account.all_characters[ww_index].total_bonus_talent_levels,
+        level=eternal_hunt_preset_level + bonus_talent_levels,
         x1=3,
         x2=200
     )
