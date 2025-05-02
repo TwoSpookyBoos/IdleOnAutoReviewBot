@@ -185,21 +185,24 @@ def getCompassCurrenciesAdviceGroup(compass):
     ww_index = None
     compass_preset_level = 100
     for ww in session_data.account.wws:
+        if ww_index is None:
+            ww_index = ww.character_index
         if ww.current_preset_talents.get('421', 0) >= compass_preset_level:
             ww_index = ww.character_index
             compass_preset_level = ww.current_preset_talents.get('421', 0)
         if ww.secondary_preset_talents.get('421', 0) >= compass_preset_level:
             ww_index = ww.character_index
             compass_preset_level = ww.secondary_preset_talents.get('421', 0)
+    bonus_talent_levels = session_data.account.all_characters[ww_index].total_bonus_talent_levels if ww_index is not None else 0
     compass_percent = lavaFunc(
         funcType='decay',
-        level=compass_preset_level + session_data.account.all_characters[ww_index].total_bonus_talent_levels,
+        level=compass_preset_level + bonus_talent_levels,
         x1=150,
         x2=300
     )
     currencies_advices[mgf_label].append(Advice(
         label=f"{compass_preset_level}/{session_data.account.library['MaxBookLevel']} booked Compass:"
-              f"<br>Max Preset Level {compass_preset_level + session_data.account.all_characters[ww_index].total_bonus_talent_levels} on "
+              f"<br>Max Preset Level {compass_preset_level + bonus_talent_levels} on "
               f"{session_data.account.all_characters[ww_index].character_name} including bonus talent levels"
               f"<br>+{compass_percent:.3f}% boost to Dust found",
         picture_class='compass',

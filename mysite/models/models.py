@@ -425,6 +425,7 @@ class Character:
 class WorldName(Enum):
     PINCHY = "Pinchy"
     GENERAL = "General"
+    MASTER_CLASSES = 'Master Classes'
     WORLD1 = "World 1"
     WORLD2 = "World 2"
     WORLD3 = "World 3"
