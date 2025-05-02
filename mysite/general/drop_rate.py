@@ -13,6 +13,9 @@ logger = get_logger(__name__)
 
 def get_drop_rate_account_advice_group() -> AdviceGroup:
     drop_rate_shiny_base = 1
+    missing_companion_data_txt = ''
+    if not session_data.account.companions['Companion Data Present']:
+        missing_companion_data_txt = '<br>Note: Could be inaccurate: Companion data not found!'
 
     bnn_cardset = []
     events_cardset = []
@@ -150,7 +153,8 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     has_crystal_custard_companion = session_data.account.companions['Crystal Custard']
     drop_rate_advice[general].append(Advice(
         label=f"Companions- Crystal Custard:"
-              f"<br>+{100 if has_crystal_custard_companion else 0}/100% Drop Rate",
+              f"<br>+{100 if has_crystal_custard_companion else 0}/100% Drop Rate"
+              f"{missing_companion_data_txt}",
         picture_class='crystal-custard',
         progression=int(has_crystal_custard_companion),
         goal=1
@@ -160,7 +164,8 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     has_quenchie_companion = session_data.account.companions['Quenchie']
     drop_rate_advice[general].append(Advice(
         label=f"Companions- Quenchie:"
-              f"<br>+{15 if has_quenchie_companion else 0}/15% Drop Rate",
+              f"<br>+{15 if has_quenchie_companion else 0}/15% Drop Rate"
+              f"{missing_companion_data_txt}",
         picture_class='quenchie',
         progression=int(has_quenchie_companion),
         goal=1
@@ -170,7 +175,8 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     has_mallay_companion = session_data.account.companions['Mallay']
     drop_rate_advice[general].append(Advice(
         label=f"Companions- Mallay:"
-              f"<br>x{1.30 if has_mallay_companion else 0}/x1.3 Drop Rate MULTI",
+              f"<br>x{1.30 if has_mallay_companion else 0}/x1.3 Drop Rate MULTI"
+              f"{missing_companion_data_txt}",
         picture_class='mallay',
         progression=int(has_mallay_companion),
         goal=1
@@ -285,7 +291,8 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
         drop_rate_advice[w2].append(Advice(
             label=f"Companions- Reindeer:"
                 f"<br>x{2 if has_reindeer_companion else 0}/x2 Arcade Bonus MULTI"
-                f"<br>(increases the Arcade Bonus value below)",
+                f"<br>(increases the Arcade Bonus value below)"
+                f"{missing_companion_data_txt}",
             picture_class='spirit-reindeer',
             progression=int(has_reindeer_companion),
             goal=1
