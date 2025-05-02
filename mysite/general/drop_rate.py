@@ -378,7 +378,6 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     # Equinox - Faux Jewels
     # Will show additional info if player is maxed out for their currently available levels
     faux_jewels_bonus = session_data.account.equinox_bonuses['Faux Jewels']
-    print(faux_jewels_bonus)
     faux_jewels_level = faux_jewels_bonus['CurrentLevel']
     drop_rate_advice[w3].append(Advice(
         label=f"Equinox- Faux Jewels:"
@@ -397,7 +396,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
         shrine_exta_bonus_text = '<br>Note: can be increased by getting more Chaotic Chizoar card stars'
     drop_rate_advice[w3].append(Advice(
         label=f"Shrines- Clover Shrine:"
-              f"<br>+{session_data.account.shrines['Clover Shrine']['Value']:g}% Drop Rate (15% + 3% per level)"
+              f"<br>+{session_data.account.shrines['Clover Shrine']['Value']:g}% Drop Rate (15% base + 3% per level)"
               f"{shrine_exta_bonus_text}",
         picture_class='clover-shrine',
         progression=session_data.account.shrines['Clover Shrine']['Level'],
