@@ -68,7 +68,8 @@ $grimoire-bones: (
 $grimoire-etc: (
     wraith: img('customized/Wraith.gif'),
     charred-bone: img('data/Quest97.png'),
-    charred-fragment: img('data/Quest98.png')
+    charred-fragment: img('data/Quest98.png'),
+    graveyard-shift-tombstone: img('1x/sprite-576-24.png'),
 );
 
 $all-grimoire: map-merge($grimoire-upgrades, $grimoire-bones);

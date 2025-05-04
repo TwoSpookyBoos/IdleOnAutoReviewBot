@@ -649,14 +649,15 @@ def _parse_master_classes_grimoire(account):
     account.grimoire = {
         'Upgrades': {},
         'Total Upgrades': 0,
-        'Total Bones Collected': safer_get(account.raw_optlacc_dict, 329, 0),
-        'Bone1': safer_get(account.raw_optlacc_dict, 330, 0),
-        'Bone2': safer_get(account.raw_optlacc_dict, 331, 0),
-        'Bone3': safer_get(account.raw_optlacc_dict, 332, 0),
-        'Bone4': safer_get(account.raw_optlacc_dict, 333, 0),
-        'Knockout Stacks': safer_get(account.raw_optlacc_dict, 334, 0),
-        'Elimination Stacks': safer_get(account.raw_optlacc_dict, 335, 0),
-        'Annihilation Stacks': safer_get(account.raw_optlacc_dict, 336, 0),
+        'Total Bones Collected': safer_convert(safer_get(account.raw_optlacc_dict, 329, 0), 0.0),
+        'Bone1': safer_convert(safer_get(account.raw_optlacc_dict, 330, 0), 0.0),
+        'Bone2': safer_convert(safer_get(account.raw_optlacc_dict, 331, 0), 0.0),
+        'Bone3': safer_convert(safer_get(account.raw_optlacc_dict, 332, 0), 0.0),
+        'Bone4': safer_convert(safer_get(account.raw_optlacc_dict, 333, 0), 0.0),
+        'Knockout Stacks': safer_convert(safer_get(account.raw_optlacc_dict, 334, 0), 0),
+        'Elimination Stacks': safer_convert(safer_get(account.raw_optlacc_dict, 335, 0), 0),
+        'Annihilation Stacks': safer_convert(safer_get(account.raw_optlacc_dict, 336, 0), 0),
+        'Charred Bones Enabled': safer_convert(safer_get(account.raw_optlacc_dict, 367, False), False)
     }
     #Parse Grimoire Upgrades
     raw_grimoire = safe_loads(account.raw_data.get('Grimoire', []))
@@ -713,12 +714,12 @@ def _parse_master_classes_compass(account):
     account.compass = {
         'Upgrades': {},
         'Total Upgrades': 0,
-        'Total Dust Collected': safer_get(account.raw_optlacc_dict, 362, 0),
-        'Dust1': safer_get(account.raw_optlacc_dict, 357, 0),
-        'Dust2': safer_get(account.raw_optlacc_dict, 358, 0),
-        'Dust3': safer_get(account.raw_optlacc_dict, 359, 0),
-        'Dust4': safer_get(account.raw_optlacc_dict, 360, 0),
-        'Dust5': safer_get(account.raw_optlacc_dict, 361, 0),
+        'Total Dust Collected': safer_convert(safer_get(account.raw_optlacc_dict, 362, 0), 0.0),
+        'Dust1': safer_convert(safer_get(account.raw_optlacc_dict, 357, 0), 0.0),
+        'Dust2': safer_convert(safer_get(account.raw_optlacc_dict, 358, 0), 0.0),
+        'Dust3': safer_convert(safer_get(account.raw_optlacc_dict, 359, 0), 0.0),
+        'Dust4': safer_convert(safer_get(account.raw_optlacc_dict, 360, 0), 0.0),
+        'Dust5': safer_convert(safer_get(account.raw_optlacc_dict, 361, 0), 0.0),
         "Top of the Mornin'": max(0, safer_convert(safer_get(account.raw_optlacc_dict, 365, 0),0)),
         'Abominations': {},
         'Elements': {0: 'Fire', 1: 'Wind', 2: 'Grass', 3: 'Ice'},

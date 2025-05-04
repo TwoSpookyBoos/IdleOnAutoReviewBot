@@ -28,6 +28,7 @@ from models.models import Advice
 from utils.data_formatting import safe_loads, safer_get, safer_math_pow, safer_convert, safer_math_log
 from utils.logging import get_logger
 from utils.text_formatting import getItemDisplayName, getItemCodeName, notateNumber
+from utils.all_talentsDict import all_talentsDict
 
 logger = get_logger(__name__)
 
@@ -333,7 +334,7 @@ def _calculate_general_highest_world_reached(account):
 
 def _calculate_master_classes(account):
     _calculate_master_classes_grimoire(account)
-    _calculate_master_classes_grimoire_bone_sources(account)
+    # _calculate_master_classes_grimoire_bone_sources(account)  #Moved to wave3 as it relies on Caverns/Gambit
     _calculate_master_classes_compass_upgrades(account)
     _calculate_master_classes_compass_dust_sources(account)
 
@@ -382,7 +383,39 @@ def _calculate_master_classes_grimoire(account):
         )
 
 def _calculate_master_classes_grimoire_bone_sources(account):
-    pass
+    grimoire_preset_level = 100
+    tombstone_preset_level = 100
+
+    for db in account.dbs:
+        grimoire_preset_level = max(grimoire_preset_level, db.current_preset_talents.get('196', 0), db.secondary_preset_talents.get('196', 0))
+        tombstone_preset_level = max(tombstone_preset_level, db.current_preset_talents.get('198', 0), db.secondary_preset_talents.get('198', 0))
+
+    grimoire_percent = lavaFunc(
+        funcType=all_talentsDict[196]['funcX'],
+        level=grimoire_preset_level,
+        x1=all_talentsDict[196]['x1'],
+        x2=all_talentsDict[196]['x2'],
+    )
+    tombstone_percent = lavaFunc(
+        funcType=all_talentsDict[198]['funcX'],
+        level=tombstone_preset_level,
+        x1=all_talentsDict[198]['x1'],
+        x2=all_talentsDict[198]['x2'],
+    )
+    account.grimoire['Bone Calc'] = {
+        'mga': ValueToMulti(30 if account.sneaking['PristineCharms']['Glimmerchain']['Obtained'] else 0),
+        'mgb': ValueToMulti(grimoire_percent),
+        'mgc': ValueToMulti(100 * account.caverns['Caverns']['Gambit']['Bonuses'][12]['Unlocked']),
+        'mgd': ValueToMulti((25 * min(1, account.all_assets.get('EquipmentHats112').amount))),
+        'mge': ValueToMulti(
+            account.grimoire['Upgrades']["Bones o' Plenty"]['Total Value']
+            + (account.grimoire['Upgrades']['Bovinae Hoarding']['Total Value'] * safer_math_log(account.grimoire['Bone4'], 'Lava'))
+            + account.arcade[40]['Value']
+        ),
+        'mgf': 1
+    }
+    account.grimoire['Bone Calc']['Total'] = prod(account.grimoire['Bone Calc'].values())
+
 def _calculate_master_classes_compass_upgrades(account):
     compass_circle_multi = ValueToMulti(
         account.compass['Upgrades']['Circle Supremacy']['Base Value']
@@ -412,7 +445,6 @@ def _calculate_master_classes_compass_upgrades(account):
         )
 
 def _calculate_master_classes_compass_dust_sources(account):
-    # Dust
     # _customBlock_Windwalker if ("ExtraDust" == e)
     ww_preset_level = 100
     for ww in account.wws:
@@ -421,10 +453,10 @@ def _calculate_master_classes_compass_dust_sources(account):
         if ww.secondary_preset_talents.get('421', 0) >= ww_preset_level:
             ww_preset_level = ww.secondary_preset_talents.get('421', 0)
     compass_percent = lavaFunc(
-        funcType='decay',
+        funcType=all_talentsDict[421]['funcX'],
         level=ww_preset_level,
-        x1=150,
-        x2=300
+        x1=all_talentsDict[421]['x1'],
+        x2=all_talentsDict[421]['x2'],
     )
     account.compass['Dust Calc'] = {
         'mga': ValueToMulti(
@@ -1785,6 +1817,7 @@ def _calculate_wave_3(account):
     _calculate_general_character_over_books(account)
     _calculate_general_crystal_spawn_chance(account)
     _calculate_w6_sneaking_gemstones(account)
+    _calculate_master_classes_grimoire_bone_sources(account)
 
 def _calculate_w3_library_max_book_levels(account):
     account.library['StaticSum'] = (
