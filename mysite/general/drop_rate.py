@@ -1,7 +1,7 @@
 from models.models import Advice, AdviceGroup, AdviceSection
 from consts import (
 	lavaFunc, max_card_stars, maxFarmingCrops, max_land_rank_level, max_IndexOfSigils, stampsDict,
-    class_kill_talents_dict, cards_max_level, numberOfArtifactTiers, sigilsDict
+    class_kill_talents_dict, cards_max_level, numberOfArtifactTiers, sigilsDict, riftRewardsDict
 )
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import notateNumber
@@ -42,6 +42,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
         w6: []
     }
 
+    # All of the cards that affect Drop Rate
     drop_rate_cards = [
         'Emperor',
         'Minichief Spirit',
@@ -63,7 +64,19 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     # Global
     #########################################
 
-    # TODO: Add temp line for +ruby level cards
+    if not session_data.account.rift['RubyCards']:
+        ruby_cards_rift_level = next(i for i, r in riftRewardsDict.items() if r['Shorthand'] == 'RubyCards')
+        rift_level = session_data.account.rift['Level']
+        drop_rate_advice[general].append(Advice(
+            label=f"Rift- Ruby Cards:"
+                f"<br>+1 Max Card Level"
+                f"<br>Note: increases the max card level for the cards below",
+            picture_class='ruby-cards',
+            progression=rift_level,
+            goal=ruby_cards_rift_level
+        ))
+
+    # Cards - Drop Rate
     for card_name in drop_rate_cards:
         drop_rate_advice[general].append(next(c for c in session_data.account.cards if c.name == card_name).getAdvice())
 
@@ -73,7 +86,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     bnn_star = min(bnn_star, max_card_stars)
     bnn_star_next = (bnn_star + 1) * len(bnn_cardset)
     drop_rate_advice[general].append(Advice(
-        label=f"Bosses n Nightmares- card set:"
+        label=f"Bosses n Nightmares- Card Set:"
               f"<br>+{6 * bnn_star}/{6 * (1 + max_card_stars)}% Drop Rate"
               f"<br>Cards until next set level {bnn_stars_sum}/{bnn_star_next}",
         picture_class='bosses-n-nightmares',
@@ -87,7 +100,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     events_star = min(events_star, max_card_stars)
     events_star_next = (events_star + 1) * len(events_cardset)
     drop_rate_advice[general].append(Advice(
-        label=f"Events- card set:"
+        label=f"Events- Card Set:"
               f"<br>+{7 * events_star}/{7 * (1 + max_card_stars)}% Drop Rate"
               f"<br>Cards until next set level {events_stars_sum}/{events_star_next}",
         picture_class='events',
@@ -139,7 +152,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     sb_dict = class_kill_talents_dict['Archlord of the Pirates']
     sb_talent_bonus_max = lavaFunc(sb_dict['FuncType'], max(1000000, sb_talent['Kills']), sb_dict['X1'], sb_dict['X2'])
     drop_rate_advice[general].append(Advice(
-        label=f"Siege Breaker Talent- Archlord of the Pirates:"
+        label=f"Siege Breaker Talents- Archlord of the Pirates:"
               f"<br>+{round(sb_talent['Value'], 3):g}/{round(sb_talent_bonus_max, 3):g}% Drop Rate MULTI",
         picture_class='archlord-of-the-pirates',
         progression=notateNumber("Match", sb_talent['Kills'], 2, '', goalString),
@@ -291,7 +304,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
         drop_rate_advice[w2].append(Advice(
             label=f"Companions- Reindeer:"
                 f"<br>x{2 if has_reindeer_companion else 0}/x2 Arcade Bonus MULTI"
-                f"<br>(increases the Arcade Bonus value below)"
+                f"<br>Note: increases the Arcade Bonus value below"
                 f"{missing_companion_data_txt}",
             picture_class='spirit-reindeer',
             progression=int(has_reindeer_companion),
@@ -382,10 +395,12 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     drop_rate_advice[w3].append(Advice(
         label=f"Equinox- Faux Jewels:"
               f"<br>+{5 * faux_jewels_level}% Drop Rate (+5% per level)"
-              f"{'<br>Note: increase Faux Jewels max level with Endless Summoning' if faux_jewels_level == faux_jewels_bonus['PlayerMaxLevel'] else ''}",
+              f"{'<br>Note: increase Faux Jewels max level with Endless Summoning'
+                 if faux_jewels_level == faux_jewels_bonus['PlayerMaxLevel'] else ''}",
         picture_class='faux-jewels',
         progression=faux_jewels_level,
-        goal=faux_jewels_bonus['FinalMaxLevel'] # This is technically infinite with Endless Summoning wins, but we'll just show what's currently unlocked with a note about ES
+         # This is technically infinite with Endless Summoning wins, but we'll just show what's currently unlocked with a note about ES
+        goal=faux_jewels_bonus['FinalMaxLevel']
     ))
 
     # Construction - Shrine - Clover Shrine
@@ -437,7 +452,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     grotto_cavern = session_data.account.caverns['Caverns']['Grotto']
     gloomie_lootie_schematic = session_data.account.caverns['Schematics']['Gloomie Lootie']
     drop_rate_advice[w5].append(Advice(
-        label=f"Engineer Schematic- Gloomie Lootie:"
+        label=f"Engineer Schematics- Gloomie Lootie:"
               f"<br>+{5 * grotto_cavern['OpalsFound']}% Drop Rate (+5% per Cavern cleared)",
         picture_class=gloomie_lootie_schematic['Image'],
         progression=grotto_cavern['OpalsFound'] if gloomie_lootie_schematic['Purchased'] else 0,
@@ -448,13 +463,14 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     temple_cavern = session_data.account.caverns['Caverns']['The Temple']
     sanctum_of_loot_schematic = session_data.account.caverns['Schematics']['Sanctum of LOOT']
     drop_rate_advice[w5].append(Advice(
-        label=f"Engineer Schematic- Sanctum of LOOT:"
+        label=f"Engineer Schematics- Sanctum of LOOT:"
               f"<br>+{20 * temple_cavern['OpalsFound']}% Drop Rate (+20% per Sanctum cleared)",
         picture_class=sanctum_of_loot_schematic['Image'],
         progression=temple_cavern['OpalsFound'] if sanctum_of_loot_schematic['Purchased'] else 0,
         goal='∞'
     ))
 
+    # Caverns - Schematics - Wisdom Monument
     wisdom_drop_rate_index = 26
     wisdom_monument_drop_rate = session_data.account.caverns['Caverns']['Wisdom Monument']['Bonuses'][wisdom_drop_rate_index]
     drop_rate_advice[w5].append(Advice(
@@ -467,22 +483,26 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
 
     # World 6
     #########################################
+
+    # Achievements - Big Big Hampter
     drop_rate_advice[w6].append(Advice(
-        label='Achievement- Big Big Hampter'
+        label='Achievements- Big Big Hampter:'
               '<br>+4% Drop Rate',
         picture_class='big-big-hampter',
         progression=1 if session_data.account.achievements['Big Big Hampter']['Complete'] else 0,
         goal=1
     ))
+
+    # Achievements - Summoning GM
     drop_rate_advice[w6].append(Advice(
-        label='Achievement- Summoning GM'
+        label='Achievements- Summoning GM:'
               '<br>+6% Drop Rate',
         picture_class='summoning-gm',
         progression=int(session_data.account.achievements['Summoning GM']['Complete']),
         goal=1
     ))
 
-    # Farming - Crop Depot Highlighter
+    # Farming - Crop Depot - Highlighter
     crops_unlocked = session_data.account.farming['CropsUnlocked']
     crops_highlighter_value = (crops_unlocked - 100) if (crops_unlocked > 100) else 0
     crops_highlighter_value_max = (maxFarmingCrops - 100)
@@ -501,7 +521,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     seed_of_loot_value = seed_of_loot_land_rank['BaseValue'] * seed_of_loot_land_rank['Level']
     seed_of_loot_value_max = seed_of_loot_land_rank['BaseValue'] * max_land_rank_level
     drop_rate_advice[w6].append(Advice(
-        label=f"Land Rank- Seed of Loot:"
+        label=f"Land Ranks- Seed of Loot:"
               f"<br>+{seed_of_loot_value}/{seed_of_loot_value_max}% Drop Rate"
               f"{'<br>Note: increase Land Rank max with Death Bringer Grimoire' if seed_of_loot_land_rank['Level'] < max_land_rank_level else ''}",
         picture_class='seed-of-loot',
@@ -509,7 +529,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
         goal=max_land_rank_level
     ))
 
-    # Sneaking Pristine Charm - Cotton Candy
+    # Sneaking - Pristine Charm - Cotton Candy
     cotton_candy_obtained = session_data.account.sneaking['PristineCharms']['Cotton Candy']['Obtained']
     drop_rate_advice[w6].append(Advice(
         label=f"Pristine Charms- Cotton Candy:"
