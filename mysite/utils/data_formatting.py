@@ -439,7 +439,11 @@ def safer_math_pow(base, exponent, default=1e100):
         return 1e100
 
 def safer_math_log(input_value, base):
-    if base == 'Lava':
+    """
+    :param input_value:
+    :param base: Lava, lava, or 10 will all use Lava's pow10 estimate
+    """
+    if base == 'Lava' or base == 'lava' or base == 10:
         # When you see _customBlock_getLOG called in source code, use base='Lava' here
         return math.log(max(input_value, 1)) / 2.30259
     elif input_value <= 0:

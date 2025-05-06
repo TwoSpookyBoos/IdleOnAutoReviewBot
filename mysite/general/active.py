@@ -669,8 +669,9 @@ def getBuboAdviceGroup() -> AdviceGroup:
                     progression=prog,
                     goal=1
                 ))
-            except:
-                logger.exception(f"Stuff went wrong at {talent_index = }, {good_talent_number = }")
+            except Exception as e:
+                if e != IndexError:
+                    logger.exception(f"Stuff went wrong at {talent_index = }, {good_talent_number = }")
                 bubo_advice[alch_talents].append(Advice(
                     label=f"Set {all_talentsDict[good_talent_number]['name']} {nth[talent_index + 1]} on your Attack Bar",
                     picture_class=all_talentsDict[good_talent_number]['name'],
@@ -681,16 +682,21 @@ def getBuboAdviceGroup() -> AdviceGroup:
         #Optional talent ordering check
         for talent_index, optional_talent_number in enumerate(optional_talent_numbers):
             try:
+                prog = int(ccing_bar[talent_index+len(good_talent_numbers)] == optional_talent_number)
+            except:
+                prog = 0
+            try:
                 bubo_advice[optional_talents].append(Advice(
                     label=f"Consider setting {all_talentsDict[optional_talent_number]['name']} "
                           f"{nth[talent_index+1+len(good_talent_numbers)]} on your Attack Bar",
                     picture_class=all_talentsDict[optional_talent_number]['name'],
-                    progression=int(ccing_bar[talent_index+len(good_talent_numbers)] == optional_talent_number),
+                    progression=prog,
                     goal=1,
                     completed=True
                 ))
-            except:
-                logger.exception(f"Stuff went wrong at {talent_index = }, {optional_talent_number = }")
+            except Exception as e:
+                if e != IndexError:
+                    logger.exception(f"Stuff went wrong at {talent_index = }, {optional_talent_number = }")
                 continue
 
         #Talent Library book levels and checkouts

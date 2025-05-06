@@ -153,7 +153,7 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
             tier='',
             pre_string="Info- Total Capacity and Bar thresholds",
             advices=bar_Advices,
-            post_string="Note: Partial stacks round up to whole bars when claiming AFK",
+            post_string="Note: Bar calculation does not include Multi-Bar chance. Also, partial stacks round up to whole bars when claiming AFK",
             informational=True,
             completed=sources_ag.completed
         )
