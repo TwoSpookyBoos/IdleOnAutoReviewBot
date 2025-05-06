@@ -234,18 +234,20 @@ def _parse_characters(account, run_type):
 
 def _parse_character_class_lists(account):
 
-    account.beginners = [toon for toon in account.all_characters if "Beginner" in toon.all_classes or "Journeyman" in toon.all_classes]
-    account.jmans = [toon for toon in account.all_characters if "Journeyman" in toon.all_classes]
-    account.maestros = [toon for toon in account.all_characters if "Maestro" in toon.all_classes]
-    account.vmans = [toon for toon in account.all_characters if "Voidwalker" in toon.all_classes]
+    account.beginners = [toon for toon in account.all_characters if 'Beginner' in toon.all_classes or 'Journeyman' in toon.all_classes]
+    account.jmans = [toon for toon in account.all_characters if 'Journeyman' in toon.all_classes]
+    account.maestros = [toon for toon in account.all_characters if 'Maestro' in toon.all_classes]
+    account.vmans = [toon for toon in account.all_characters if 'Voidwalker' in toon.all_classes]
 
-    account.barbs = [toon for toon in account.all_characters if "Barbarian" in toon.all_classes]
-    account.bbs = [toon for toon in account.all_characters if "Blood Berserker" in toon.all_classes]
-    account.dbs = [toon for toon in account.all_characters if "Death Bringer" in toon.all_classes]
-    account.dks = [toon for toon in account.all_characters if "Divine Knight" in toon.all_classes]
+    account.barbs = [toon for toon in account.all_characters if 'Barbarian' in toon.all_classes]
+    account.bbs = [toon for toon in account.all_characters if 'Blood Berserker' in toon.all_classes]
+    account.dbs = [toon for toon in account.all_characters if 'Death Bringer' in toon.all_classes]
+    account.dks = [toon for toon in account.all_characters if 'Divine Knight' in toon.all_classes]
 
-    account.mages = [toon for toon in account.all_characters if "Mage" in toon.all_classes]
-    account.bubos = [toon for toon in account.all_characters if "Bubonic Conjuror" in toon.all_classes]
+    account.mages = [toon for toon in account.all_characters if 'Mage' in toon.all_classes]
+    account.bubos = [toon for toon in account.all_characters if 'Bubonic Conjuror' in toon.all_classes]
+
+    account.wws = [toon for toon in account.all_characters if 'Wind Walker' in toon.all_classes]
 
 def _parse_general(account):
     # General / Multiple uses
@@ -316,7 +318,6 @@ def _parse_general_gem_shop_bundles(account):
     unknown_bundles = [v for v in account.gemshop['Bundles'] if v not in gem_shop_bundles_dict]
     if unknown_bundles:
         logger.warning(f"Unknown Gem Shop Bundles found: {unknown_bundles}")
-
 
 
 def _parse_general_quests(account):
@@ -648,14 +649,15 @@ def _parse_master_classes_grimoire(account):
     account.grimoire = {
         'Upgrades': {},
         'Total Upgrades': 0,
-        'Total Bones Collected': safer_get(account.raw_optlacc_dict, 329, 0),
-        'Bone1': safer_get(account.raw_optlacc_dict, 330, 0),
-        'Bone2': safer_get(account.raw_optlacc_dict, 331, 0),
-        'Bone3': safer_get(account.raw_optlacc_dict, 332, 0),
-        'Bone4': safer_get(account.raw_optlacc_dict, 333, 0),
-        'Knockout Stacks': safer_get(account.raw_optlacc_dict, 334, 0),
-        'Elimination Stacks': safer_get(account.raw_optlacc_dict, 335, 0),
-        'Annihilation Stacks': safer_get(account.raw_optlacc_dict, 336, 0),
+        'Total Bones Collected': safer_convert(safer_get(account.raw_optlacc_dict, 329, 0), 0.0),
+        'Bone1': safer_convert(safer_get(account.raw_optlacc_dict, 330, 0), 0.0),
+        'Bone2': safer_convert(safer_get(account.raw_optlacc_dict, 331, 0), 0.0),
+        'Bone3': safer_convert(safer_get(account.raw_optlacc_dict, 332, 0), 0.0),
+        'Bone4': safer_convert(safer_get(account.raw_optlacc_dict, 333, 0), 0.0),
+        'Knockout Stacks': safer_convert(safer_get(account.raw_optlacc_dict, 334, 0), 0),
+        'Elimination Stacks': safer_convert(safer_get(account.raw_optlacc_dict, 335, 0), 0),
+        'Annihilation Stacks': safer_convert(safer_get(account.raw_optlacc_dict, 336, 0), 0),
+        'Charred Bones Enabled': safer_convert(safer_get(account.raw_optlacc_dict, 367, False), False)
     }
     #Parse Grimoire Upgrades
     raw_grimoire = safe_loads(account.raw_data.get('Grimoire', []))
@@ -712,12 +714,12 @@ def _parse_master_classes_compass(account):
     account.compass = {
         'Upgrades': {},
         'Total Upgrades': 0,
-        'Total Dust Collected': safer_get(account.raw_optlacc_dict, 362, 0),
-        'Dust1': safer_get(account.raw_optlacc_dict, 357, 0),
-        'Dust2': safer_get(account.raw_optlacc_dict, 358, 0),
-        'Dust3': safer_get(account.raw_optlacc_dict, 359, 0),
-        'Dust4': safer_get(account.raw_optlacc_dict, 360, 0),
-        'Dust5': safer_get(account.raw_optlacc_dict, 361, 0),
+        'Total Dust Collected': safer_convert(safer_get(account.raw_optlacc_dict, 362, 0), 0.0),
+        'Dust1': safer_convert(safer_get(account.raw_optlacc_dict, 357, 0), 0.0),
+        'Dust2': safer_convert(safer_get(account.raw_optlacc_dict, 358, 0), 0.0),
+        'Dust3': safer_convert(safer_get(account.raw_optlacc_dict, 359, 0), 0.0),
+        'Dust4': safer_convert(safer_get(account.raw_optlacc_dict, 360, 0), 0.0),
+        'Dust5': safer_convert(safer_get(account.raw_optlacc_dict, 361, 0), 0.0),
         "Top of the Mornin'": max(0, safer_convert(safer_get(account.raw_optlacc_dict, 365, 0),0)),
         'Abominations': {},
         'Elements': {0: 'Fire', 1: 'Wind', 2: 'Grass', 3: 'Ice'},
@@ -783,7 +785,7 @@ def _parse_master_classes_compass_upgrades(account, raw_compass_upgrades):
         for path_ordering, upgrade_index in enumerate(upgrade_indexes_list):
             upgrade_values_list = compass_upgrades_list[upgrade_index]
             clean_name = upgrade_values_list[0].replace('(Tap_for_more_info)', '').replace('製', '').replace('_', ' ').rstrip()
-            clean_description = upgrade_values_list[11].replace('_', ' ')
+            clean_description = upgrade_values_list[11].replace('_', ' ')  #.replace('@', '<br>')
             # if 'Titan doesnt exist' not in clean_description:  #Placeholders as of v2.35 release patch
             try:
                 account.compass['Upgrades'][clean_name] = {
@@ -828,6 +830,10 @@ def _parse_master_classes_compass_upgrades(account, raw_compass_upgrades):
                     'Path Ordering': path_ordering,
                     'Description': clean_description,
                 }
+            account.compass['Upgrades'][clean_name]['Base Value'] = (
+                account.compass['Upgrades'][clean_name]['Level']
+                * account.compass['Upgrades'][clean_name]['Value Per Level']
+            )
 
     # Determine Unlock Status
     for upgrade_name, upgrade_details in account.compass['Upgrades'].items():
@@ -1009,21 +1015,21 @@ def _parse_w1_stamps(account):
         for stampIndex, stampValuesDict in stampsDict[stampType].items():
             try:
                 account.stamps[stampValuesDict['Name']] = {
-                    "Index": int(stampIndex),
-                    "Material": stampValuesDict['Material'],
-                    "Level": int(floor(raw_stamps_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0))),
-                    "Max": int(floor(raw_stamp_max_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0))),
-                    "Delivered": int(floor(raw_stamp_max_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0))) > 0,
-                    "StampType": stampType,
-                    "Value": lavaFunc(
+                    'Index': stampIndex,
+                    'Material': stampValuesDict['Material'],
+                    'Level': safer_convert(raw_stamps_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0), 0),
+                    'Max': safer_convert(raw_stamp_max_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0), 0),
+                    'Delivered': safer_convert(raw_stamp_max_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0), 0) > 0,
+                    'StampType': stampType,
+                    'Value': lavaFunc(
                         stampValuesDict['funcType'],
-                        int(floor(raw_stamps_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0))),
+                        safer_convert(raw_stamps_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0), 0),
                         stampValuesDict['x1'],
                         stampValuesDict['x2'],
                     ),
                 }
-                account.stamp_totals["Total"] += account.stamps[stampValuesDict['Name']]["Level"]
-                account.stamp_totals[stampType] += account.stamps[stampValuesDict['Name']]["Level"]
+                account.stamp_totals['Total'] += account.stamps[stampValuesDict['Name']]['Level']
+                account.stamp_totals[stampType] += account.stamps[stampValuesDict['Name']]['Level']
             except Exception as e:
                 logger.warning(f"Stamp Parse error at {stampType} {stampIndex}: {e}. Defaulting to Undelivered")
                 account.stamps[stampValuesDict['Name']] = {
@@ -1133,14 +1139,16 @@ def _parse_w2_vials(account):
                         vialsDict[int(vialKey)]['x1'],
                         vialsDict[int(vialKey)]['x2'],
                     ),
-                    'Material': vialsDict[int(vialKey)]['Material']
+                    'Material': vialsDict[int(vialKey)]['Material'],
+                    'Image': getItemDisplayName(vialsDict[int(vialKey)]['Material'])
                 }
         except Exception as e:
             logger.warning(f"Alchemy Vial Parse error at vialKey {vialKey}: {e}. Defaulting to level 0")
             account.alchemy_vials[getReadableVialNames(vialKey)] = {
-                "Level": 0,
-                "BaseValue": 0,
-                'Material': vialsDict.get(int(vialKey), {}).get('Material', '')
+                'Level': 0,
+                'BaseValue': 0,
+                'Material': vialsDict[int(vialKey)]['Material'],
+                'Image': getItemDisplayName(vialsDict[int(vialKey)]['Material'])
             }
 
     account.maxed_vials = 0

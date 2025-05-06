@@ -81,6 +81,8 @@ def main(inputData, source_string, runType="web"):
             *(greenstacks.getGStackAdviceSections()),
             cards.getCardsAdviceSection(),
             eventShop.getEvent_ShopAdviceSection(),
+        ],
+        sections_master_classes := [
             grimoire.getGrimoireAdviceSection(),
             compass.getCompassAdviceSection()
         ],
@@ -191,6 +193,7 @@ def main(inputData, source_string, runType="web"):
 
         #Remove all the later-rated Sections
         sections_general = [section for section in sections_general if section.name in sections_to_keep]
+        sections_master_classes = [section for section in sections_master_classes if section.name in sections_to_keep]
         sections_1 = [section for section in sections_1 if section.name in sections_to_keep]
         sections_2 = [section for section in sections_2 if section.name in sections_to_keep]
         sections_3 = [section for section in sections_3 if section.name in sections_to_keep]
@@ -200,7 +203,7 @@ def main(inputData, source_string, runType="web"):
         sections_6 = [section for section in sections_6 if section.name in sections_to_keep]
 
         #Remove later-rated Groups within the remaining Sections
-        for section_list in [sections_general, sections_1, sections_2, sections_3, sections_4, sections_5, sections_caverns, sections_6]:
+        for section_list in [sections_general, sections_master_classes, sections_1, sections_2, sections_3, sections_4, sections_5, sections_caverns, sections_6]:
             for s in section_list:
                 #logger.debug(f"{s.name} started with {len(s.groups)}")
                 s.groups = [group for group in s.groups if safer_convert(group.tier, 0) <= s.pinchy_rating and not group.informational]
@@ -210,6 +213,7 @@ def main(inputData, source_string, runType="web"):
     reviews = [
         AdviceWorld(name=WorldName.PINCHY, sections=sections_pinchy, title="Pinchy AutoReview", collapse=False, complete=False),
         AdviceWorld(name=WorldName.GENERAL, sections=sections_general, banner=["generalbanner.jpg", "generalbannertext.png"]),
+        AdviceWorld(name=WorldName.MASTER_CLASSES, sections=sections_master_classes, banner=["master_classes_banner.png", "master_classes_banner_text.png"]),
         AdviceWorld(name=WorldName.BLUNDER_HILLS, sections=sections_1, banner=["w1banner.png", "w1bannertext.png"]),
         AdviceWorld(name=WorldName.YUMYUM_DESERT, sections=sections_2, banner=["w2banner.png", "w2bannertext.png"]),
         AdviceWorld(name=WorldName.FROSTBITE_TUNDRA, sections=sections_3, banner=["w3banner.png", "w3bannertext.png"]),
