@@ -1139,9 +1139,10 @@ class Card:
         )
         return result
 
-    def getAdvice(self, optional_starting_note=''):
+    def getAdvice(self, optional_starting_note='', optional_ending_note=''):
         a = Advice(
-            label=f"{optional_starting_note}{' ' if optional_starting_note else ''}{self.cardset}- {self.name} card:<br>{self.getFormattedXY()}",
+            label=f"{optional_starting_note}{' ' if optional_starting_note else ''}{self.cardset}- {self.name} card:<br>{self.getFormattedXY()}"
+                  f"{'<br>' if optional_ending_note else ''}{optional_ending_note}",
             picture_class=self.css_class,
             progression=self.level,
             goal=self.max_level
