@@ -561,7 +561,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
         label=f"Summoning Bonuses- Drop Rate:"
               f"<br>+{summoning_drop_rate_value:g}/{summoning_drop_rate_max:g} Drop Rate",
         picture_class='summoning',
-        progression=int(session_data.account.sneaking['PristineCharms']['Cotton Candy']['Obtained']),
+        progression=summoning_battles['Endless'],
         goal='∞'
     ))
 
@@ -586,14 +586,11 @@ def get_drop_rate_player_advice_group():
         if card.cardset == 'Events':
             events_cardset.append(card)
 
+    cards = 'Cards'
+    eqp = 'Equipment'
     drop_rate_pp_advice = {
-        general: [],
-        w1: [],
-        w2: [],
-        w3: [],
-        w4: [],
-        w5: [],
-        w6: []
+        cards: [],
+        eqp: []
     }
 
     # Cards - Drop Rate
@@ -609,14 +606,14 @@ def get_drop_rate_player_advice_group():
         if best_2_cards < 2:
             end_note = f"Note: place in the {'TOP LEFT' if best_2_cards == 0 else 'BOTTOM RIGHT'} card slot"
             best_2_cards += 1
-        drop_rate_pp_advice[general].append(card.getAdvice(optional_ending_note=end_note))
+        drop_rate_pp_advice[cards].append(card.getAdvice(optional_ending_note=end_note))
 
     # Card Sets - Bosses n Nightmares
     bnn_stars_sum = sum(min(card.star, max_card_stars) + 1 for card in bnn_cardset)
     bnn_star, _ = divmod(bnn_stars_sum, len(bnn_cardset))
     bnn_star = min(bnn_star, max_card_stars)
     bnn_star_next = (bnn_star + 1) * len(bnn_cardset)
-    drop_rate_pp_advice[general].append(Advice(
+    drop_rate_pp_advice[cards].append(Advice(
         label=f"Bosses n Nightmares- Card Set:"
               f"<br>+{6 * bnn_star}/{6 * (1 + max_card_stars)}% Drop Rate"
               f"<br>Cards until next set level {bnn_stars_sum}/{bnn_star_next}",
@@ -630,7 +627,7 @@ def get_drop_rate_player_advice_group():
     events_star, _ = divmod(events_stars_sum, len(events_cardset))
     events_star = min(events_star, max_card_stars)
     events_star_next = (events_star + 1) * len(events_cardset)
-    drop_rate_pp_advice[general].append(Advice(
+    drop_rate_pp_advice[cards].append(Advice(
         label=f"Events- Card Set:"
               f"<br>+{7 * events_star}/{7 * (1 + max_card_stars)}% Drop Rate"
               f"<br>Cards until next set level {events_stars_sum}/{events_star_next}",
@@ -640,36 +637,38 @@ def get_drop_rate_player_advice_group():
     ))
 
     drop_rate_equipment = {}
-    for equipment_name, equipment in equipment_by_bonus_dict['DropRate'].items():
+    for equipment_name, equipment_data in equipment_by_bonus_dict['DropRate'].items():
         equipment_drop_rate = 0
-        if equipment.get('Misc1', False) and equipment['Misc1']['Bonus'] == 'DropRate':
-            equipment_drop_rate = equipment['Misc1']['Value']
-        elif equipment.get('Misc2', False) and equipment['Misc2']['Bonus'] == 'DropRate':
-            equipment_drop_rate = equipment['Misc2']['Value']
-        if not drop_rate_equipment.get(equipment['Type'], False):
-            drop_rate_equipment[equipment['Type']] = []
-        if equipment_name == 'Relic Chain':
-            print(equipment)
-            print(equipment.get('Note', ''))
-        drop_rate_equipment[equipment['Type']].append({
+        if equipment_data.get('Misc1', False) and equipment_data['Misc1']['Bonus'] == 'DropRate':
+            equipment_drop_rate = equipment_data['Misc1']['Value']
+        elif equipment_data.get('Misc2', False) and equipment_data['Misc2']['Bonus'] == 'DropRate':
+            equipment_drop_rate = equipment_data['Misc2']['Value']
+        if not drop_rate_equipment.get(equipment_data['Type'], False):
+            drop_rate_equipment[equipment_data['Type']] = []
+        drop_rate_equipment[equipment_data['Type']].append({
             'Name': equipment_name,
-            'World': equipment['World'],
-            'Owned': equipment_name in session_data.account.all_assets.values(),
+            'Type': equipment_data['Type'],
+            'Owned': next((a.amount > 0 for a in session_data.account.all_assets.values() if a.name == equipment_name), False),
             'Value': equipment_drop_rate,
-            'Image': equipment_name.lower().replace(' ', '-'),
-            'Note': equipment.get('Note', '')
+            'Image': equipment_data['Image'],
+            'Note': equipment_data.get('Note', '')
         })
 
     for slot_list in drop_rate_equipment.values():
         for equipment in sorted(slot_list, key=lambda e: e['Value'], reverse=True):
-            drop_rate_pp_advice[equipment['World']].append(Advice(
-                label=f"Equipment- {equipment['Name']}:"
+            drop_rate_pp_advice[eqp].append(Advice(
+                label=f"{equipment['Type']}- {equipment['Name']}:"
                       f"<br>+{equipment['Value']}% Drop Rate"
                       f"{'<br>' + equipment['Note'] if equipment['Note'] else ''}",
                 picture_class=equipment['Image'],
                 progression=int(equipment['Owned']),
                 goal=1
             ))
+
+    # TODO
+    # Star Signs
+    # Post Office
+    # Prayers
 
     for subgroup in drop_rate_pp_advice:
         for advice in drop_rate_pp_advice[subgroup]:

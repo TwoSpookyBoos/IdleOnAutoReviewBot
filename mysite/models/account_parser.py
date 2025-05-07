@@ -139,7 +139,7 @@ def _all_stored_items(account) -> Assets:
 def _all_worn_items(account) -> Assets:
     stuff_worn = defaultdict(int)
     for toon in account.safe_characters:
-        for item in [*toon.equipment.foods, *toon.equipment.equips]:
+        for item in [*toon.equipment.foods, *toon.equipment.equips, *toon.equipment.tools]:
             if item.codename == 'Blank':
                 continue
             stuff_worn[item.codename] += item.amount

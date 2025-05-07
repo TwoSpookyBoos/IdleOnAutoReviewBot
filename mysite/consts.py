@@ -4747,60 +4747,48 @@ companions = [
 equipment_by_bonus_dict = {
     'DropRate': {
         # Weapons
-        'Mittens of the Gods': {'World': 'World 6', 'Type': 'Fisticuffs', 'Misc1': {'Bonus': 'Damage', 'Value': 120}, 'Misc2': {'Bonus': 'DropRate', 'Value': 40}},
-        'Massive Godbreaker': {'World': 'World 6', 'Type': 'Spear', 'Misc1': {'Bonus': 'Damage', 'Value': 60}, 'Misc2': {'Bonus': 'DropRate', 'Value': 20}},
-        'Doublestring Godshooter': {'World': 'World 6', 'Type': 'Bow', 'Misc1': {'Bonus': 'Damage', 'Value': 60}, 'Misc2': {'Bonus': 'DropRate', 'Value': 20}},
-        'Magnifique Godcaster': {'World': 'World 6', 'Type': 'Wand', 'Misc1': {'Bonus': 'Damage', 'Value': 60}, 'Misc2': {'Bonus': 'DropRate', 'Value': 20}},
-
+        'Mittens of the Gods': {'Type': 'Fisticuffs', 'Misc1': {'Bonus': 'Damage', 'Value': 120}, 'Misc2': {'Bonus': 'DropRate', 'Value': 40}, 'Image': 'mittens-of-the-gods'},
+        'Massive Godbreaker': {'Type': 'Spear', 'Misc1': {'Bonus': 'Damage', 'Value': 60}, 'Misc2': {'Bonus': 'DropRate', 'Value': 20}, 'Image': 'massive-godbreaker'},
+        'Doublestring Godshooter': {'Type': 'Bow', 'Misc1': {'Bonus': 'Damage', 'Value': 60}, 'Misc2': {'Bonus': 'DropRate', 'Value': 20}, 'Image': 'doublestring-godshooter'},
+        'Magnifique Godcaster': {'Type': 'Wand', 'Misc1': {'Bonus': 'Damage', 'Value': 60}, 'Misc2': {'Bonus': 'DropRate', 'Value': 20}, 'Image': 'magnifique-godcaster'},
         # Tools
-        'Destroyer of the Mollo Gomme': {'World': 'World 6', 'Type': 'Pickaxe', 'Misc1': {'Bonus': 'MiningEff', 'Value': 35}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}},
-        'Annihilator of the Yggdrasil': {'World': 'World 6', 'Type': 'Hatchet', 'Misc1': {'Bonus': 'ChoppingEff', 'Value': 12}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}},
-        'Angler of the Iliunne': {'World': 'World 6', 'Type': 'Rod', 'Misc1': {'Bonus': 'FishingEff', 'Value': 12}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}},
-        'Wrangler of the Qoxzul': {'World': 'World 6', 'Type': 'Net', 'Misc1': {'Bonus': 'CatchingEff', 'Value': 12}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}},
-        'Containment of the Zrgyios': {'World': 'World 6', 'Type': 'Trap', 'Misc1': {'Bonus': 'AfkGain', 'Value': 4}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}},
-
+        'Destroyer of the Mollo Gomme': {'Type': 'Pickaxe', 'Misc1': {'Bonus': 'MiningEff', 'Value': 35}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'destroyer-of-the-mollo-gomme'},
+        'Annihilator of the Yggdrasil': {'Type': 'Hatchet', 'Misc1': {'Bonus': 'ChoppingEff', 'Value': 12}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'annihilator-of-the-yggdrasil'},
+        'Angler of the Iliunne': {'Type': 'Rod', 'Misc1': {'Bonus': 'FishingEff', 'Value': 12}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'angler-of-the-iliunne'},
+        'Wrangler of the Qoxzul': {'Type': 'Net', 'Misc1': {'Bonus': 'CatchingEff', 'Value': 12}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'wrangler-of-the-qoxzul'},
+        'Containment of the Zrgyios': {'Type': 'Trap', 'Misc1': {'Bonus': 'AfkGain', 'Value': 4}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'containment-of-the-zrgyios'},
         # Helmets
-        'Third Anniversary Ice Cream Topper': {'World': 'General', 'Type': 'Helmet', 'Misc1': {'Bonus': 'MonsterXp', 'Value': 4}, 'Misc2': {'Bonus': 'DropRate', 'Value': 3}},
-        'Efaunt Helmet': {'World': 'World 2', 'Type': 'Helmet', 'Misc1': {'Bonus': 'DropRate', 'Value': 5}},
-        'Skulled Helmet of the Divine': {'World': 'World 5', 'Type': 'Helmet', 'Misc1': {'Bonus': 'Damage', 'Value': 30}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}},
-        'Crown of the Gods': {'World': 'World 6', 'Type': 'Helmet', 'Misc1': {'Bonus': 'DropRate', 'Value': 15}, 'Misc2': {'Bonus': 'MultikillPerTier', 'Value': 22}},
-
+        '3rd Anniversary Ice Cream Topper': {'Type': 'Helmet', 'Misc1': {'Bonus': 'MonsterXp', 'Value': 4}, 'Misc2': {'Bonus': 'DropRate', 'Value': 3}, 'Image': 'third-anniversary-ice-cream-topper'},
+        'Efaunt Helmet': {'Type': 'Helmet', 'Misc1': {'Bonus': 'DropRate', 'Value': 5}, 'Image': 'efaunt-helmet'},
+        'Skulled Helmet of the Divine': {'Type': 'Helmet', 'Misc1': {'Bonus': 'Damage', 'Value': 30}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'skulled-helmet-of-the-divine'},
+        'Crown of the Gods': {'Type': 'Helmet', 'Misc1': {'Bonus': 'DropRate', 'Value': 15}, 'Misc2': {'Bonus': 'MultikillPerTier', 'Value': 22}, 'Image': 'crown-of-the-gods'},
         # Pendants
-        'Chaotic Amarok Pendant': {'World': 'World 1', 'Type': 'Pendant', 'Misc1': {'Bonus': 'Damage', 'Value': 20}, 'Misc2': {'Bonus': 'DropRate', 'Value': 5}},
-
+        'Chaotic Amarok Pendant': {'Type': 'Pendant', 'Misc1': {'Bonus': 'Damage', 'Value': 20}, 'Misc2': {'Bonus': 'DropRate', 'Value': 5}, 'Image': 'chaotic-amarok-pendant'},
         # Chests
-        'Robe of the Gods': {'World': 'World 6', 'Type': 'Chest', 'Misc1': {'Bonus': 'DropRate', 'Value': 30}, 'Misc2': {'Bonus': 'MultikillPerTier', 'Value': 16}},
-
+        'Robe of the Gods': {'Type': 'Chest', 'Misc1': {'Bonus': 'DropRate', 'Value': 30}, 'Misc2': {'Bonus': 'MultikillPerTier', 'Value': 16}, 'Image': 'robe-of-the-gods'},
         # Legs
-        'Tatters of the Gods': {'World': 'World 6', 'Type': 'Legs', 'Misc1': {'Bonus': 'DropRate', 'Value': 25}, 'Misc2': {'Bonus': 'MultikillPerTier', 'Value': 14}},
-
+        'Tatters of the Gods': {'Type': 'Legs', 'Misc1': {'Bonus': 'DropRate', 'Value': 25}, 'Misc2': {'Bonus': 'MultikillPerTier', 'Value': 14}, 'Image': 'tatters-of-the-gods'},
         # Feet
-        'Devious Slippers of the Divine': {'World': 'World 5', 'Type': 'Feet', 'Misc1': {'Bonus': 'DropRate', 'Value': 15}, 'Misc2': {'Bonus': 'Damage', 'Value': 8}},
-        'Drip of the Gods': {'World': 'World 6', 'Type': 'Feet', 'Misc1': {'Bonus': 'DropRate', 'Value': 30}, 'Misc2': {'Bonus': 'MultikillPerTier', 'Value': 12}},
-
-        # Trophies
-        'Lucky Lad': {'World': 'World 1', 'Type': 'Trophy', 'Misc1': {'Bonus': 'DropRate', 'Value': 7}},
-        'Luckier Lad': {'World': 'World 3', 'Type': 'Trophy', 'Misc1': {'Bonus': 'DropRate', 'Value': 50}, 'Misc2': {'Bonus': 'PercentLuck', 'Value': 5}},
-        'One of the Divine': {'World': 'World 5', 'Type': 'Trophy', 'Misc1': {'Bonus': 'DropRate', 'Value': 42}, 'Misc2': {'Bonus': 'Damage', 'Value': 35}},
-
-        # Capes
-        'Molten Cloak': {'World': 'General', 'Type': 'Cape', 'Misc1': {'Bonus': 'DropRate', 'Value': 30}},
-
-        # Nametags
-        'Third Anniversary Idleon Nametag': {'World': 'General', 'Type': 'Nametag', 'Misc1': {'Bonus': 'AfkGain', 'Value': 3}, 'Misc2': {'Bonus': 'DropRate', 'Value': 3}},
-        'Balling Nametag': {'World': 'General', 'Type': 'Nametag', 'Misc1': {'Bonus': 'DropRate', 'Value': 40}},
-        'Aethermoon Nametag': {'World': 'General', 'Type': 'Nametag', 'Misc1': {'Bonus': 'AfkGain', 'Value': 80}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}},
-
-        # Attire
-        'Cobalt Robe': {'World': 'General', 'Type': 'Attire', 'Misc1': {'Bonus': 'Damage', 'Value': 100}, 'Misc2': {'Bonus': 'DropRate', 'Value': 60}},
-        'Evergreen Robe': {'World': 'General', 'Type': 'Attire', 'Misc1': {'Bonus': 'ClassXp', 'Value': 100}, 'Misc2': {'Bonus': 'DropRate', 'Value': 75}},
-
+        'Devious Slippers of the Divine': {'Type': 'Feet', 'Misc1': {'Bonus': 'DropRate', 'Value': 15}, 'Misc2': {'Bonus': 'Damage', 'Value': 8}, 'Image': 'devious-slippers-of-the-divine'},
+        'Drip of the Gods': {'Type': 'Feet', 'Misc1': {'Bonus': 'DropRate', 'Value': 30}, 'Misc2': {'Bonus': 'MultikillPerTier', 'Value': 12}, 'Image': 'drip-of-the-gods'},
         # Premium Hats
-        'Siege Captain Cap': {'World': 'General', 'Type': 'PremiumHat', 'Misc1': {'Bonus': 'DropRate', 'Value': 10}},
-        'Goldberry': {'World': 'General', 'Type': 'PremiumHat', 'Misc1': {'Bonus': 'DropRate', 'Value': 10}},
-
+        'Siege Captain Cap': {'Type': 'Premium Hat', 'Misc1': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'siege-captain-cap'},
+        'Goldberry': {'Type': 'Premium Hat', 'Misc1': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'goldberry'},
+        # Trophies
+        'Lucky Lad': {'Type': 'Trophy', 'Misc1': {'Bonus': 'DropRate', 'Value': 7}, 'Image': 'lucky-lad'},
+        'Luckier Lad': {'Type': 'Trophy', 'Misc1': {'Bonus': 'DropRate', 'Value': 50}, 'Misc2': {'Bonus': 'PercentLuck', 'Value': 5}, 'Image': 'luckier-lad'},
+        'One of the Divine': {'Type': 'Trophy', 'Misc1': {'Bonus': 'DropRate', 'Value': 42}, 'Misc2': {'Bonus': 'Damage', 'Value': 35}, 'Image': 'one-of-the-divine'},
+        # Capes
+        'Molten Cloak': {'Type': 'Cape', 'Misc1': {'Bonus': 'DropRate', 'Value': 30}, 'Image': 'molten-cloak'},
+        # Nametags
+        '3rd Anniversary IdleOn Nametag': {'Type': 'Nametag', 'Misc1': {'Bonus': 'AfkGain', 'Value': 3}, 'Misc2': {'Bonus': 'DropRate', 'Value': 3}, 'Image': 'third-anniversary-idleon-nametag'},
+        'Balling Nametag': {'Type': 'Nametag', 'Misc1': {'Bonus': 'DropRate', 'Value': 40}, 'Image': 'balling-nametag'},
+        'Aethermoon Nametag': {'Type': 'Nametag', 'Misc1': {'Bonus': 'AfkGain', 'Value': 80}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'aethermoon-nametag'},
+        # Attire
+        'Cobalt Robe':    {'Type': 'Attire', 'Misc1': {'Bonus': 'Damage', 'Value': 100}, 'Misc2': {'Bonus': 'DropRate', 'Value': 60}, 'Image': 'cobalt-robe'},
+        'Evergreen Robe': {'Type': 'Attire', 'Misc1': {'Bonus': 'ClassXp', 'Value': 100}, 'Misc2': {'Bonus': 'DropRate', 'Value': 75}, 'Image': 'evergreen-robe'},
         # Keychains
-        'Relic Chain': {'World': 'General', 'Type': 'Keychain', 'Note': 'Relic can roll up to a POSSIBLE +16% Drop Rate<br>All other key chains can roll up to +8%', 'Misc1': {'Bonus': 'DropRate', 'Value': 16}}
+        'Relic Chain': {'Type': 'Keychain', 'Note': 'Relic can roll up to a POSSIBLE +16% Drop Rate<br>All other key chains can roll up to +8%', 'Misc1': {'Bonus': 'DropRate', 'Value': 16}, 'Image': 'relic-chain'}
     }
 }
 
