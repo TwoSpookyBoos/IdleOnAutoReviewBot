@@ -432,7 +432,7 @@ def _calculate_master_classes_compass_upgrades(account):
         if '{' in account.compass['Upgrades'][upgrade_name]['Description']:
             account.compass['Upgrades'][upgrade_name]['Total Value'] = value
             account.compass['Upgrades'][upgrade_name]['Description'] = account.compass['Upgrades'][upgrade_name]['Description'].replace(
-                '{', f"{account.compass['Upgrades'][upgrade_name]['Total Value']}"
+                '{', f"{account.compass['Upgrades'][upgrade_name]['Total Value']:.2f}"
             )
         if '}' in account.compass['Upgrades'][upgrade_name]['Description']:
             account.compass['Upgrades'][upgrade_name]['Total Value'] = ValueToMulti(value)
