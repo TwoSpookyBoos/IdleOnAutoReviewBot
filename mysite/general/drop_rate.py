@@ -1,7 +1,8 @@
 from models.models import Advice, AdviceGroup, AdviceSection
 from consts import (
 	lavaFunc, max_card_stars, maxFarmingCrops, max_land_rank_level, max_IndexOfSigils, stampsDict,
-    class_kill_talents_dict, cards_max_level, numberOfArtifactTiers, sigilsDict, riftRewardsDict
+    class_kill_talents_dict, cards_max_level, numberOfArtifactTiers, sigilsDict, riftRewardsDict,
+    equipment_by_bonus_dict
 )
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import notateNumber
@@ -417,11 +418,23 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
 
     # World 5
     #########################################
+
+    # Caverns - Measurments - Yards
+    caverns_measurements_yards_id = 15
+    caverns_measurements_yards = session_data.account.caverns['Measurements'][caverns_measurements_yards_id]
+    drop_rate_aw_advice[w5].append(Advice(
+        label=f"Caverns Measurements- Yards:"
+              f"<br>+{round(caverns_measurements_yards['Value'], 1)}% Drop Rate (scales with {caverns_measurements_yards['ScalesWith']})",
+        picture_class=caverns_measurements_yards['Image'],
+        progression=caverns_measurements_yards['Level'],
+        goal='∞'
+    ))
+
     # Caverns - Schematics - Gloomie Lootie
     grotto_cavern = session_data.account.caverns['Caverns']['Grotto']
     gloomie_lootie_schematic = session_data.account.caverns['Schematics']['Gloomie Lootie']
     drop_rate_aw_advice[w5].append(Advice(
-        label=f"Engineer Schematics- Gloomie Lootie:"
+        label=f"Caverns Schematics- Gloomie Lootie:"
               f"<br>+{5 * grotto_cavern['OpalsFound']}% Drop Rate (+5% per Cavern cleared)",
         picture_class=gloomie_lootie_schematic['Image'],
         progression=grotto_cavern['OpalsFound'] if gloomie_lootie_schematic['Purchased'] else 0,
@@ -432,14 +445,14 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     temple_cavern = session_data.account.caverns['Caverns']['The Temple']
     sanctum_of_loot_schematic = session_data.account.caverns['Schematics']['Sanctum of LOOT']
     drop_rate_aw_advice[w5].append(Advice(
-        label=f"Engineer Schematics- Sanctum of LOOT:"
+        label=f"Caverns Schematics- Sanctum of LOOT:"
               f"<br>+{20 * temple_cavern['OpalsFound']}% Drop Rate (+20% per Sanctum cleared)",
         picture_class=sanctum_of_loot_schematic['Image'],
         progression=temple_cavern['OpalsFound'] if sanctum_of_loot_schematic['Purchased'] else 0,
         goal='∞'
     ))
 
-    # Caverns - Schematics - Wisdom Monument
+    # Caverns - Wisdom Monument
     wisdom_drop_rate_index = 26
     wisdom_monument_drop_rate = session_data.account.caverns['Caverns']['Wisdom Monument']['Bonuses'][wisdom_drop_rate_index]
     drop_rate_aw_advice[w5].append(Advice(
@@ -583,18 +596,19 @@ def get_drop_rate_player_advice_group():
         w6: []
     }
 
+    # Cards - Drop Rate
+    # Considered just showing the best 8, either total or currently unlocked
+    # But decided to just show all of them so new accounts can see what they don't have yet
     card_drop_rate = []
     for card in session_data.account.cards:
         if card.name in drop_rate_cards:
             card_drop_rate.append(card)
-    card_drop_rate.sort(key=lambda c: c.getCurrentValue(), reverse=True)
     best_2_cards = 0
-    for card in card_drop_rate:
+    for card in sorted(card_drop_rate, key=lambda c: c.getCurrentValue(), reverse=True):
         end_note = ''
         if best_2_cards < 2:
             end_note = f"Note: place in the {'TOP LEFT' if best_2_cards == 0 else 'BOTTOM RIGHT'} card slot"
             best_2_cards += 1
-        print("END NOTE: " + end_note)
         drop_rate_pp_advice[general].append(card.getAdvice(optional_ending_note=end_note))
 
     # Card Sets - Bosses n Nightmares
@@ -624,6 +638,42 @@ def get_drop_rate_player_advice_group():
         progression=events_star,
         goal=6
     ))
+
+    drop_rate_equipment = {}
+    for equipment_name, equipment in equipment_by_bonus_dict['DropRate'].items():
+        equipment_drop_rate = 0
+        if equipment.get('Misc1', False) and equipment['Misc1']['Bonus'] == 'DropRate':
+            equipment_drop_rate = equipment['Misc1']['Value']
+        elif equipment.get('Misc2', False) and equipment['Misc2']['Bonus'] == 'DropRate':
+            equipment_drop_rate = equipment['Misc2']['Value']
+        if not drop_rate_equipment.get(equipment['Type'], False):
+            drop_rate_equipment[equipment['Type']] = []
+        if equipment_name == 'Relic Chain':
+            print(equipment)
+            print(equipment.get('Note', ''))
+        drop_rate_equipment[equipment['Type']].append({
+            'Name': equipment_name,
+            'World': equipment['World'],
+            'Owned': equipment_name in session_data.account.all_assets.values(),
+            'Value': equipment_drop_rate,
+            'Image': equipment_name.lower().replace(' ', '-'),
+            'Note': equipment.get('Note', '')
+        })
+
+    for slot_list in drop_rate_equipment.values():
+        for equipment in sorted(slot_list, key=lambda e: e['Value'], reverse=True):
+            drop_rate_pp_advice[equipment['World']].append(Advice(
+                label=f"Equipment- {equipment['Name']}:"
+                      f"<br>+{equipment['Value']}% Drop Rate"
+                      f"{'<br>' + equipment['Note'] if equipment['Note'] else ''}",
+                picture_class=equipment['Image'],
+                progression=int(equipment['Owned']),
+                goal=1
+            ))
+
+    for subgroup in drop_rate_pp_advice:
+        for advice in drop_rate_pp_advice[subgroup]:
+            mark_advice_completed(advice)
 
     drop_rate_ag = AdviceGroup(
         tier="",
