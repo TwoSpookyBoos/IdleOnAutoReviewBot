@@ -1481,6 +1481,8 @@ def _calculate_caverns_gambit(account):
         + account.caverns['Studies'][13]['Value']  # + Gambit Study bonus
         + (10 * account.caverns['Schematics']['The Sicilian']['Purchased'])  # + The Sicilian schematic
         + account.caverns['Caverns']['Wisdom Monument']['Bonuses'][27]['Value']  # + Wisdom Monument bonus
+        + account.caverns['Collectibles']['Deep Blue Square']['Value']
+        + account.caverns['Collectibles']['Murky Fabrege Egg']['Value']
     )
 
     #Total PTS
