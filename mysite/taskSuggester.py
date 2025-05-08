@@ -175,39 +175,42 @@ def main(inputData, source_string, runType="web"):
         #logger.debug(f"{section}: Unreached={section.unreached}, Completed={section.completed}, Info={section.informational}, Unrated={section.unrated}")
 
     #Remove the later-rated sections if Overwhelmed mode is on
-    if session_data.overwhelmed:
-        placements_count = 0
-        sections_to_keep = []
-        for section in sections_pinchy:
-            if section.name == 'Pinchy all':
-                for group in section.groups:
-                    # Skip the Alerts group, if it exists
-                    if group.pre_string == 'Alerts':
-                        continue
-                    placements_count += 1
-                    for advice in group.advices['default']:
-                        sections_to_keep.append(advice.label)
+    # if session_data.overwhelmed:
+    placements_count = 0
+    sections_to_keep = []
+    for section in sections_pinchy:
+        if section.name == 'Pinchy all':
+            for group in section.groups:
+                # Skip the Alerts group, if it exists
+                if group.pre_string == 'Alerts':
+                    continue
+                placements_count += 1
+                for advice in group.advices['default']:
                     if placements_count >= session_data.account.maxSubgroupsPerGroup + 1:
-                        #Currently this should break after 2
-                        break
+                        # Currently this should break after 2
+                        advice.overwhelming = True
+                    else:
+                        advice.overwhelming = False
+                        sections_to_keep.append(advice.label)
 
         #Remove all the later-rated Sections
-        sections_general = [section for section in sections_general if section.name in sections_to_keep]
-        sections_master_classes = [section for section in sections_master_classes if section.name in sections_to_keep]
-        sections_1 = [section for section in sections_1 if section.name in sections_to_keep]
-        sections_2 = [section for section in sections_2 if section.name in sections_to_keep]
-        sections_3 = [section for section in sections_3 if section.name in sections_to_keep]
-        sections_4 = [section for section in sections_4 if section.name in sections_to_keep]
-        sections_5 = [section for section in sections_5 if section.name in sections_to_keep]
-        sections_caverns = [section for section in sections_caverns if section.name in sections_to_keep]
-        sections_6 = [section for section in sections_6 if section.name in sections_to_keep]
+        # sections_general = [section for section in sections_general if section.name in sections_to_keep]
+        # sections_master_classes = [section for section in sections_master_classes if section.name in sections_to_keep]
+        # sections_1 = [section for section in sections_1 if section.name in sections_to_keep]
+        # sections_2 = [section for section in sections_2 if section.name in sections_to_keep]
+        # sections_3 = [section for section in sections_3 if section.name in sections_to_keep]
+        # sections_4 = [section for section in sections_4 if section.name in sections_to_keep]
+        # sections_5 = [section for section in sections_5 if section.name in sections_to_keep]
+        # sections_caverns = [section for section in sections_caverns if section.name in sections_to_keep]
+        # sections_6 = [section for section in sections_6 if section.name in sections_to_keep]
 
         #Remove later-rated Groups within the remaining Sections
         for section_list in [sections_general, sections_master_classes, sections_1, sections_2, sections_3, sections_4, sections_5, sections_caverns, sections_6]:
             for s in section_list:
-                #logger.debug(f"{s.name} started with {len(s.groups)}")
-                s.groups = [group for group in s.groups if safer_convert(group.tier, 0) <= s.pinchy_rating and not group.informational]
-                #logger.debug(f"{s.name} ended with {len(s.groups)}")
+                s.set_overwhelming(s.name not in sections_to_keep)
+                # logger.debug(f"{s.name} started with {len(s.groups)}")
+                # s.groups = [group for group in s.groups if safer_convert(group.tier, 0) <= s.pinchy_rating and not group.informational]
+                # logger.debug(f"{s.name} ended with {len(s.groups)}")
 
     #Build Worlds
     reviews = [
@@ -225,7 +228,8 @@ def main(inputData, source_string, runType="web"):
 
     for world in reviews:
         world.hide_unreached_sections()  # Feel free to comment this out while testing
-        #logger.debug(f"{world}: Unrated={world.unrated}, Complete={world.complete}, Info={world.informational}")
+        world.check_for_overwhelming()
+        logger.debug(f"{world}: Unrated={world.unrated}, Complete={world.completed}, Info={world.informational}, Overwhelming={world.overwhelming}")
         continue
 
     reviews = [world for world in reviews if len(world.sections) > 0]

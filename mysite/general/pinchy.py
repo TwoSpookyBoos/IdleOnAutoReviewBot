@@ -15,6 +15,7 @@ class Tier:
         section_complete: bool = False,
         section_informational: bool = False,
         section_unrated: bool = False,
+        section_overwhelming: bool = False,
         current: 'Threshold' = None,
         previous: 'Threshold' = None,
         next: 'Threshold' = None
@@ -24,6 +25,7 @@ class Tier:
         self.section_complete = section_complete
         self.section_informational = section_informational
         self.section_unrated = section_unrated
+        self.section_overwhelming = section_overwhelming
         self.current = current
         self.previous = previous
         self.next = next
@@ -292,8 +294,8 @@ class Thresholds(dict):
 def sort_pinchy_reviews(dictOfPRs) -> Placements:
     placements = Placements()
 
-    for section, (pinchy_tier, section_complete, section_informational, section_unrated, section_max_tier, section_true_max_tier) in dictOfPRs.items():
-        tier = Tier(pinchy_tier, section, section_complete, section_informational, section_unrated)
+    for section, (pinchy_tier, section_complete, section_informational, section_unrated, section_overwhelming, section_max_tier, section_true_max_tier) in dictOfPRs.items():
+        tier = Tier(pinchy_tier, section, section_complete, section_informational, section_unrated, section_overwhelming)
         placements.place(tier)
 
     placements.finalise()
@@ -372,7 +374,8 @@ def generate_advice_list(sections: list[Tier], threshold: Threshold):
             as_link=True,
             completed=section.section_complete,
             informational=section.section_informational,
-            unrated=section.section_unrated
+            unrated=section.section_unrated,
+            overwhelming=section.section_overwhelming
         ) for section in sections
     ]
     if threshold == Threshold.fromname(Threshold.TRUE_MAX):
@@ -395,7 +398,7 @@ def generate_advice_groups(sectionsByThreshold: dict):
             advices=advices
         )
 
-        if not session_data.overwhelmed or (session_data.overwhelmed and len(advice_groups) < session_data.account.maxSubgroupsPerGroup + 1):
+        if not session_data.hide_overwhelming or (session_data.hide_overwhelming and len(advice_groups) < session_data.account.maxSubgroupsPerGroup + 1):
             advice_groups.append(advice_group)
 
     return advice_groups
@@ -445,6 +448,7 @@ def generatePinchyWorld(pinchable_sections: list[AdviceSection], unrated_section
             section.completed,
             section.informational,
             section.unrated,
+            section.overwhelming,
             section.max_tier,
             section.true_max_tier
         ] for section in pinchable_sections if not section.unreached
@@ -477,7 +481,7 @@ def generatePinchyWorld(pinchable_sections: list[AdviceSection], unrated_section
         pinchyExpected = f"Expected Progression, based on highest enemy map: {expectedThreshold}"
 
     advice_groups = generate_advice_groups(sectionPlacements.final)
-    if not session_data.overwhelmed:
+    if not session_data.hide_overwhelming:
         advice_groups.append(getUnratedLinksAdviceGroup(unrated_sections))
     advice_groups.insert(0, getAlertsAdviceGroup())
 

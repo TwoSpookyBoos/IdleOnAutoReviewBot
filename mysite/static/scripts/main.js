@@ -21,13 +21,13 @@ const opts = {
 
 const defaults = {
     player: "",
-    overwhelmed: "off",
     autoloot: "off",
     doot: "off",
     riftslug: "off",
     sheepie: "off",
     order_tiers: "off",
     library_group_characters: "off",
+    hide_overwhelming: "off",
     hide_completed: "off",
     hide_informational: "off",
     hide_unrated: "off",
@@ -201,6 +201,9 @@ function setupSwitchesActions() {
         }
     })
 
+    // On Click Listener for the Hide Overwhelming switch
+    document.querySelector('label[for="hide_overwhelming"]').addEventListener('click', hideComposite);
+
     // On Click Listener for the Hide Completed switch
     document.querySelector('label[for="hide_completed"]').addEventListener('click', hideComposite);
 
@@ -329,7 +332,7 @@ function setupDataClock() {
 }
 
 function hideElements() {
-    ["completed", "informational", "unrated"].forEach(cls => hideComposite({
+    ["completed", "informational", "unrated", "overwhelming"].forEach(cls => hideComposite({
         currentTarget: document.querySelector(`[data-hides="${cls}"]`)
     }));
 }

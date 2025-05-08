@@ -172,7 +172,7 @@ def _parse_switches(account):
     else:
         account.autoloot = False
 
-    account.maxSubgroupsPerGroup = 1 if g.overwhelmed else 3
+    account.maxSubgroupsPerGroup = 3  #1 if g.single_tier else 3
     account.library_group_characters = g.library_group_characters
 
 def _parse_companions(account):
