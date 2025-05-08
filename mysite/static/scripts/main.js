@@ -102,14 +102,14 @@ function setupSidebarToggling() {
     document.addEventListener("keydown", (e) => {
         const escPressed = e.code === "Escape",
             searchOpen = document.querySelector("#searchbar-wrapper").classList.contains("search-open"),
-            settingsOpen = document.querySelector("#switchbox-wrapper").classList.contains("open");
+            settingsOpen = document.querySelector("#dynamic-switchbox-wrapper").classList.contains("open");
 
         if (!escPressed) return;
 
         if (searchOpen) {
             document.querySelector("#searchbar-wrapper").classList.remove("search-open");
         } else if (settingsOpen) {
-            document.querySelector("#switchbox-wrapper").classList.remove("open");
+            document.querySelector("#dynamic-switchbox-wrapper").classList.remove("open");
             // fucker won't go under the backdrop...
             document.querySelector("#drawer-handle").style.zIndex = "98"
         } else {
@@ -675,9 +675,8 @@ function setupSearchBar() {
 }
 
 function setupSwitchBox() {
-    const switchBox = document.querySelector("#switchbox-wrapper");
+    const switchBox = document.querySelector("#dynamic-switchbox-wrapper");
     switchBox.addEventListener('click', e => {
-        document.querySelector("#drawer-handle").style.zIndex = "98"
         e.target.classList.remove("open")
     })
     document.querySelector("#settings").onclick = () => {

@@ -19,7 +19,18 @@
         <div id="switchbox-wrapper">
             <div id="switchbox">
                 {% for text, name, on, off, static, initial in switches %}
-                    {% include "slider_button.html" %}
+                    {% if static == "true" %}
+                        {% include "slider_button.html" %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        <div id="dynamic-switchbox-wrapper">
+            <div id="dynamic-switchbox">
+                {% for text, name, on, off, static, initial in switches %}
+                    {% if static == "false" %}
+                        {% include "slider_button.html" %}
+                    {% endif %}
                 {% endfor %}
             </div>
         </div>
