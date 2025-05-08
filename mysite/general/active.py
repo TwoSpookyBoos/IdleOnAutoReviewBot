@@ -729,7 +729,7 @@ def getBuboAdviceGroup() -> AdviceGroup:
         next_aura_width = 35 * (aura_width + 1)
         bubo_advice[library].append(Advice(
             label=f"Aura increases Width every 35 levels. Yours is {aura_width} wide, with the next increase at level {next_aura_width}"
-                  f"{' (not currently possible)' if next_aura_width >= 420 else ''}",
+                  f"{' (not currently possible)' if next_aura_width >= 470 else ''}",
             picture_class='auspicious-aura',
             progression=aura_level,
             goal=next_aura_width,

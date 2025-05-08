@@ -5922,7 +5922,7 @@ def getReadableBubbleNames(inputNumber, color):
 
 ###WORLD 3 CONSTS###
 max_printer_sample_rate = 90
-arbitrary_shrine_goal = 26
+arbitrary_shrine_goal = 30
 arbitrary_shrine_note = f"Shrines have no Max level. Goal of {arbitrary_shrine_goal} is arbitrary"
 max_implemented_dreams = 36  # Last verified as of v2.30
 max_possible_dreams = 35  # Last verified as of v2.30. The dream to complete Killroy Prime is impossible
