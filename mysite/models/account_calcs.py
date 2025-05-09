@@ -647,7 +647,7 @@ def _calculate_w1_owl_bonuses(account):
         account.owl['Bonuses'][bonus_name] = {
             'BaseValue': bonus_base,
             'NumUnlocked': bonus_num_unlocked,
-            'Value': (int(bonus_value) if bonus_value.is_integer() else bonus_value)
+            'Value': (int(bonus_value) if int(bonus_value) == bonus_value else bonus_value)
     }
 
 def _calculate_w2(account):

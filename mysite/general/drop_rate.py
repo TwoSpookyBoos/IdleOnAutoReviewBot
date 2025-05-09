@@ -2,7 +2,7 @@ from models.models import Advice, AdviceGroup, AdviceSection
 from consts import (
 	lavaFunc, max_card_stars, maxFarmingCrops, max_land_rank_level, max_IndexOfSigils, stampsDict,
     class_kill_talents_dict, cards_max_level, numberOfArtifactTiers, sigilsDict, riftRewardsDict,
-    equipment_by_bonus_dict, poBoxDict, prayersDict, starsignsDict, obols_max_bonuses_dict
+    equipment_by_bonus_dict, poBoxDict, prayersDict, starsignsDict, obols_max_bonuses_dict, stamp_maxes
 )
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import notateNumber
@@ -215,7 +215,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
         golden_sixes_buffs.append('Pristine Charm')
         drop_rate_aw_advice[w1].append(Advice(
             label="Pristine Charms- Liqorice Rolle:"
-                  "<br>x1.25 Non Misc Stamp Bonuses"
+                  f"<br>x{1.25 if has_liqorice_rolle else 0}/1.25 Non Misc Stamp Bonuses"
                   "<br>Note: improves the stamp below",
             picture_class='liqorice-rolle',
             progression=0, # we're only showing if it's missing, so just assume 0
@@ -228,7 +228,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
         golden_sixes_buffs.append('Exalted Stamps')
     match len(golden_sixes_buffs):
         case 0:
-            golden_sixes_addl_text = "Note: can be further increased by the Abomination Slayer XVII compass bonus"
+            golden_sixes_addl_text = "Note: can be further increased by Exalted Stamp bonuses"
         case 1:
             golden_sixes_addl_text = f"Note: can be increased by {golden_sixes_buffs[0]}"
         case 2:
@@ -244,16 +244,16 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
             (1.25 if has_liqorice_rolle else 1) \
         , 2)
     golden_sixes_stamp_data = stampsDict['Combat'][37]
-    golden_sixes_base_max = lavaFunc(golden_sixes_stamp_data['funcType'], golden_sixes_stamp['Max'], golden_sixes_stamp_data['x1'], golden_sixes_stamp_data['x2'])
-    golden_sixes_value_max = round((golden_sixes_base_max * 2 * 1.35 * exalted_stamp_multi), 2)
+    golden_sixes_max_base = lavaFunc(golden_sixes_stamp_data['funcType'], stamp_maxes['Golden Sixes Stamp'], golden_sixes_stamp_data['x1'], golden_sixes_stamp_data['x2'])
+    golden_sixes_max_value = round((golden_sixes_max_base * 2 * 1.35 * exalted_stamp_multi), 2)
     drop_rate_aw_advice[w1].append(Advice(
         label=f"{{{{ Stamps|#stamps }}}}- Golden Sixes:"
-              f"<br>+{golden_sixes_value:g}/{golden_sixes_value_max}%"
+              f"<br>+{golden_sixes_value:g}/{golden_sixes_max_value}% Drop Rate"
               f"<br>{golden_sixes_addl_text}",
         picture_class='golden-sixes-stamp',
         progression=golden_sixes_stamp['Level'],
         resource=golden_sixes_stamp['Material'],
-        goal=golden_sixes_stamp['Max']
+        goal=stamp_maxes['Golden Sixes Stamp'] if golden_sixes_stamp['Delivered'] else 1
     ))
 
     # World 2
@@ -275,7 +275,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     _, drop_rate_arcade  = list(session_data.account.arcade.items())[drop_rate_arcade_bonus_id]
     drop_rate_aw_advice[w2].append(Advice(
         label=f"{{{{ Arcade|#arcade }}}}- % Drop Rate:"
-              f"<br>+{drop_rate_arcade['Value']}/{drop_rate_arcade['MaxValue']}%"
+              f"<br>+{drop_rate_arcade['Value']:g}/{drop_rate_arcade['MaxValue']:g}% Drop Rate"
               f"{missing_companion_data_txt}",
         picture_class=drop_rate_arcade['Image'],
         progression=drop_rate_arcade['Level'],
@@ -358,14 +358,16 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     # Will show additional info if player is maxed out for their currently available levels
     faux_jewels_bonus = session_data.account.equinox_bonuses['Faux Jewels']
     faux_jewels_level = faux_jewels_bonus['CurrentLevel']
+    faux_jewels_max_current = max(faux_jewels_bonus['FinalMaxLevel'], faux_jewels_bonus['PlayerMaxLevel'])
+    faux_jewels_at_current_max = faux_jewels_level == faux_jewels_bonus['PlayerMaxLevel'] and faux_jewels_bonus['PlayerMaxLevel'] != 0
     drop_rate_aw_advice[w3].append(Advice(
         label=f"{{{{ Equinox|#equinox }}}}- Faux Jewels:"
-              f"<br>+{5 * faux_jewels_level}% Drop Rate (+5% per level)"
-              f"{'<br>Note: increase Faux Jewels max level with Endless Summoning' if faux_jewels_level == faux_jewels_bonus['PlayerMaxLevel'] else ''}",
+              f"<br>+{5 * faux_jewels_level}/{5 * faux_jewels_max_current}% Drop Rate (+5% per level)"
+              f"{'<br>Note: increase Faux Jewels max level with Endless Summoning' if faux_jewels_at_current_max else ''}",
         picture_class='faux-jewels',
         progression=faux_jewels_level,
          # This is technically infinite with Endless Summoning wins, but we'll just show what's currently unlocked with a note about ES
-        goal=faux_jewels_bonus['FinalMaxLevel']
+        goal=faux_jewels_max_current
     ))
 
     # Construction - Shrine - Clover Shrine
@@ -452,7 +454,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     wisdom_monument_drop_rate = session_data.account.caverns['Caverns']['Wisdom Monument']['Bonuses'][wisdom_drop_rate_index]
     drop_rate_aw_advice[w5].append(Advice(
         label=f"{{{{ Caverns|#underground-overgrowth }}}}- Wisdom Monument:"
-              f"<br>+{wisdom_monument_drop_rate['Value']}% Drop Rate",
+              f"<br>+{wisdom_monument_drop_rate['Value']:g}% Drop Rate",
         picture_class='cavern-13',
         progression=wisdom_monument_drop_rate['Level'],
         goal='∞'
@@ -462,20 +464,22 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     #########################################
 
     # Achievements - Big Big Hampter
+    big_hampter_completed = session_data.account.achievements['Big Big Hampter']['Complete']
     drop_rate_aw_advice[w6].append(Advice(
         label=f"{{{{ Achievements|#achievements }}}}- Big Big Hampter:"
-              '<br>+4% Drop Rate',
+              f"<br>+{4 if big_hampter_completed else 0}/4% Drop Rate",
         picture_class='big-big-hampter',
-        progression=1 if session_data.account.achievements['Big Big Hampter']['Complete'] else 0,
+        progression=int(big_hampter_completed),
         goal=1
     ))
 
     # Achievements - Summoning GM
+    summoning_gm_completed = session_data.account.achievements['Summoning GM']['Complete']
     drop_rate_aw_advice[w6].append(Advice(
         label=f"{{{{ Achievements|#achievements }}}}- Summoning GM:"
-              '<br>+6% Drop Rate',
+              f"<br>+{6 if summoning_gm_completed else 0}/6% Drop Rate",
         picture_class='summoning-gm',
-        progression=int(session_data.account.achievements['Summoning GM']['Complete']),
+        progression=int(summoning_gm_completed),
         goal=1
     ))
 
@@ -510,7 +514,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     cotton_candy_obtained = session_data.account.sneaking['PristineCharms']['Cotton Candy']['Obtained']
     drop_rate_aw_advice[w6].append(Advice(
         label=f"{{{{ Pristine Charms|#sneaking }}}}- Cotton Candy:"
-              f"<br>{'x1.15' if cotton_candy_obtained else '0%'} Drop Rate MULTI",
+              f"<br>x{1.15 if cotton_candy_obtained else 0}/1.15 Drop Rate MULTI",
         picture_class='cotton-candy-charm',
         progression=int(cotton_candy_obtained),
         goal=1
@@ -551,10 +555,12 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     # The bonuses from endless summoning and everything else, except the pristine charm are addative. The charm is a multi
     total_summon_bonus_multi = (1 + endless_summon_bonus_multi + other_summon_bonus_multi) * prisine_charm_summon_bonus_multi
     summoning_drop_rate_value = round(summoning_drop_rate_base * total_summon_bonus_multi, 2)
-    summoning_drop_rate_max = round((7 + 10.5 + 17.5 + 35) * total_summon_bonus_multi, 2)
+    summoning_drop_rate_max_base = 7 + 10.5 + 17.5 + 35
+    summoning_drop_rate_max_modded = round(summoning_drop_rate_max_base * total_summon_bonus_multi, 2)
     drop_rate_aw_advice[w6].append(Advice(
         label=f"{{{{ Summoning Bonuses|#summoning }}}}- Drop Rate:"
-              f"<br>+{summoning_drop_rate_value:g}/{summoning_drop_rate_max:g}% Drop Rate",
+              f"<br>+{summoning_drop_rate_value:g}/{summoning_drop_rate_max_modded:g}% Drop Rate"
+              f"{f'<br>Note: max value can be further increased with Endless Summoning wins' if summoning_drop_rate_value >= summoning_drop_rate_max_base else ''}",
         picture_class='summoning',
         progression=summoning_battles['Endless'],
         goal='∞'
@@ -615,7 +621,10 @@ def get_drop_rate_player_advice_group():
     for card in sorted(card_drop_rate, key=lambda c: c.getCurrentValue(), reverse=True):
         end_note = ''
         if best_2_cards < 2:
-            end_note = f"Note: place in the {'TOP LEFT' if best_2_cards == 0 else 'BOTTOM RIGHT'} card slot"
+            if best_2_cards == 0 and session_data.account.labChips['Omega Nanochip'] > 0:
+                end_note = 'Note: place in the TOP LEFT card slot with Omega Nanochip Lab Chip'
+            elif best_2_cards != 0 and session_data.account.labChips['Omega Motherboard'] > 0:
+                end_note = 'Note: place in the BOTTOM RIGHT card slot with Omega Motherboard Lab Chip'
             best_2_cards += 1
         drop_rate_pp_advice[cards].append(card.getAdvice(optional_ending_note=end_note))
 
@@ -691,7 +700,7 @@ def get_drop_rate_player_advice_group():
     silkroad_chip_starsign_mod = 2 if silkroad_chip_owned else 1
     drop_rate_pp_advice[misc].append(Advice(
         label=f"Lab Chips- Silkrode Nanochip:"
-              f"<br>x{silkroad_chip_starsign_mod} Star Sign Bonuses while equipped"
+              f"<br>x2 Star Sign Bonuses while equipped"
               f"<br>Note: improves the Star Signs below, only if Star Sign is equipped",
         picture_class='silkrode-nanochip',
         progression=int(silkroad_chip_owned),
@@ -733,8 +742,8 @@ def get_drop_rate_player_advice_group():
     pirate_booty_starsign_value_chip = 5 * saraph_cosmod_starsign_mod * silkroad_chip_starsign_mod
     drop_rate_pp_advice[misc].append(Advice(
         label=f"{{{{ Star Signs|#star-signs }}}}- Pirate Booty:"
-              f"<br>+{round(pirate_booty_starsign_value_nochip, 1)}% Drop Rate {'PASSIVE' if pirate_booty_infinite_unlocked else 'if equipped'}"
-              f"<br>+{round(pirate_booty_starsign_value_chip, 1)}% Drop Rate if equiped WITH Silkrode Lab Chip" if silkroad_chip_owned and pirate_booty_infinite_unlocked else '',
+              f"<br>+{round(pirate_booty_starsign_value_nochip, 1):g}% Drop Rate {'PASSIVE' if pirate_booty_infinite_unlocked else 'if equipped'}"
+              f"{f'<br>+{round(pirate_booty_starsign_value_chip, 1):g}% Drop Rate if equiped WITH Silkrode Lab Chip' if silkroad_chip_owned and pirate_booty_infinite_unlocked else ''}",
         picture_class='blue-hedgehog',
         progression=int(pirate_booty_starsign_unlocked),
         goal=1
@@ -748,14 +757,15 @@ def get_drop_rate_player_advice_group():
     druipi_major_starsign_value_chip = 12 * saraph_cosmod_starsign_mod * silkroad_chip_starsign_mod
     drop_rate_pp_advice[misc].append(Advice(
         label=f"{{{{ Star Signs|#star-signs }}}}- Druipi Major:"
-              f"<br>+{round(druipi_major_starsign_value_nochip, 1)}% Drop Rate {'PASSIVE' if druipi_major_infinite_unlocked else 'if equipped'}"
-              f"<br>+{round(druipi_major_starsign_value_chip, 1)}% Drop Rate if equiped WITH Silkrode Lab Chip" if silkroad_chip_owned and druipi_major_infinite_unlocked else '',
+              f"<br>+{round(druipi_major_starsign_value_nochip, 1):g}% Drop Rate {'PASSIVE' if druipi_major_infinite_unlocked else 'if equipped'}"
+              f"{f'<br>+{round(druipi_major_starsign_value_chip, 1):g}% Drop Rate if equiped WITH Silkrode Lab Chip' if silkroad_chip_owned and druipi_major_infinite_unlocked else ''}",
         picture_class='og-signalais',
         progression=int(druipi_major_starsign_unlocked),
         goal=1
     ))
 
     # Post Office - Non Predatory Loot Box
+    nplb_po_box_max = 33.3
     nplb_po_box_index = 11
     nplb_po_box_level_max = poBoxDict[nplb_po_box_index]['Max Level']
     nplb_po_box_level_total = 0
@@ -768,18 +778,21 @@ def get_drop_rate_player_advice_group():
     nplb_po_box_value_avg = round(nplb_po_box_value_total/num_chars, 2)
     drop_rate_pp_advice[misc].append(Advice(
         label=f"{{{{ PO Boxs|#post-office }}}}- Non Predatory Loot Box:"
-              f"<br>+{nplb_po_box_value_avg}% Drop Rate (average across all characters)",
+              f"<br>+{nplb_po_box_value_avg:g}/{nplb_po_box_max}% Drop Rate (average across all characters)",
         picture_class='non-predatory-loot-box',
         progression=nplb_po_box_level_avg,
         goal=nplb_po_box_level_max
     ))
 
     # Prayers - Midas Minded
+    midas_minded_bonus_max = 118
+    midas_minded_curse_max = 350
     midas_minded_data = next(p for p in prayersDict.values() if p['Name'] == 'Midas Minded')
     midas_minded_prayer = session_data.account.prayers['Midas Minded']
     drop_rate_pp_advice[misc].append(Advice(
         label=f"{{{{ Prayers|#prayers }}}}- Midas Minded:"
-              f"<br>+{midas_minded_prayer['BonusValue']}% Drop Rate | +{midas_minded_prayer['CurseValue']}% Max HP for Monsters"
+              f"<br>+{midas_minded_prayer['BonusValue']}/{midas_minded_bonus_max}% Drop Rate Bonus | "
+              f"+{midas_minded_prayer['CurseValue']:g}/{midas_minded_curse_max}% Max HP for Monsters CURSE"
               f"<br>Note: do NOT use with Master Class modes, they only gain curse",
         picture_class='midas-minded',
         progression=midas_minded_prayer['Level'],
