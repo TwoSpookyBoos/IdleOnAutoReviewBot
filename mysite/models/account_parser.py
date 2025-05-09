@@ -1458,7 +1458,6 @@ def _parse_w2_obols(account):
     raw_family_obols_upgrades = safe_loads(account.raw_data.get('ObolEqMAPz1'))
     account.obols['BonusTotals'] = get_obol_totals(raw_family_obols_list, raw_family_obols_upgrades)
 
-
 def _parse_w2_islands(account):
     account.islands = {
         'Trash': safer_get(account.raw_optlacc_dict, 161, 0),  # [161]: 362.202271805249
