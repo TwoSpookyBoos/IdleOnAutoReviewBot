@@ -346,7 +346,7 @@ def tier_from_monster_kills(dictOfPRs) -> Threshold:
     try:
         if dictOfPRs[Placements.SAMPLING][0] >= 10:
             expectedThreshold = Threshold.fromname(Threshold.MAX_TIER)
-        elif dictOfPRs[Placements.DEATH_NOTE][0] >= 25:
+        elif dictOfPRs[Placements.DEATH_NOTE][0] >= 24:
             expectedThreshold = Threshold.fromname(Threshold.W7_WAITING_ROOM)
         elif dictOfPRs[Placements.DEATH_NOTE][0] >= 17:
             expectedThreshold = Threshold.fromname(Threshold.SOLID_W7_PREP)

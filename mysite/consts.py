@@ -48,6 +48,21 @@ combatLevels_progressionTiers = [
     [32, 5000, "Family - Sparkle Obol Slot 4", 500, "Credit towards Equinox Dream 23", ""],
 
 ]
+secret_class_progressionTiers = {
+    0: {},
+    1: {
+        'Required Class': 'Journeyman'
+    },
+    2: {
+        'Required Class': 'Maestro'
+    },
+    3: {
+        'Required Class': 'Voidwalker'
+    },
+    4: {
+        'No Catchup Needed': True
+    }
+}
 gemShop_progressionTiers = [
     # int tier, str tierName, dict recommendedPurchases, str notes
     [0, "", {}, ""],
@@ -3003,8 +3018,8 @@ card_data = {
         "xmasEvent3": ["Golden Giftmas Box", 1],
         'anni4Event1': ['IdleOn Fourth Anniversary', 4]
     },
-}
-numberOfSecretClasses = 3  # Last verified as of v2.10
+}  #DO NOT USE ANY LONGER
+
 humanReadableClasses = {
     1: "Beginner",
     2: "Journeyman",
@@ -10249,7 +10264,7 @@ anvilTabs = {
 
 true_max_tiers = {
     "Combat Levels": combatLevels_progressionTiers[-1][0],
-    "Secret Class Path": numberOfSecretClasses,
+    "Secret Class Path": max(secret_class_progressionTiers.keys()),
     "Achievements": max(achievements_progressionTiers.keys()),
     "Greenstacks": max(greenstack_progressionTiers.keys()),
     "Stamps": max(stamps_progressionTiers.keys()),

@@ -229,7 +229,7 @@ def main(inputData, source_string, runType="web"):
     for world in reviews:
         world.hide_unreached_sections()  # Feel free to comment this out while testing
         world.check_for_overwhelming()
-        logger.debug(f"{world}: Unrated={world.unrated}, Complete={world.completed}, Info={world.informational}, Overwhelming={world.overwhelming}")
+        #logger.debug(f"{world}: Unrated={world.unrated}, Complete={world.completed}, Info={world.informational}, Overwhelming={world.overwhelming}")
         continue
 
     reviews = [world for world in reviews if len(world.sections) > 0]

@@ -2,14 +2,14 @@ from models.models import AdviceSection, AdviceGroup, Advice, Character
 from utils.data_formatting import safe_loads, mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import numberOfSecretClasses, break_you_best
+from consts import break_you_best, secret_class_progressionTiers
 from utils.text_formatting import pl
 
 logger = get_logger(__name__)
 
 skillsToReview_RightHand = ["Mining", "Choppin", "Fishing", "Catching", "Trapping", "Worship"]
 
-def getRightHandsAdviceGroups():
+def getRightHandsAdviceGroups(true_max):
     catchup_advices = []
     skills_needing_catchup = []
     stayahead_advices = {}
@@ -131,7 +131,7 @@ def getRightHandsAdviceGroups():
 
     #Catch Up
     catchup_ag = AdviceGroup(
-        tier='',
+        tier=f"{true_max if len(catchup_advices) == 0 else true_max-1}",
         pre_string=(
             f"{pl(session_data.account.maestros, f'{session_data.account.maestros[0]} is not', 'Your Maestros are not')}"
             f" best in {len(skills_needing_catchup)} Right Hand Skill{pl(skills_needing_catchup)}"
@@ -167,7 +167,7 @@ def getRightHandsAdviceGroups():
         completed=len(skills_needing_catchup) == 0
     )
     stayahead_ag.remove_empty_subgroups()
-    return catchup_ag, stayahead_ag
+    return catchup_ag, len(skills_needing_catchup) == 0, stayahead_ag
 
 def getQuestAdvice(tier_SecretClass, jmans, maestros):
     secretClass_AdviceDict = {
@@ -494,65 +494,66 @@ def getQuestAdvice(tier_SecretClass, jmans, maestros):
 
     return secretClass_AdviceDict
 
-def getSecretClassAdviceSection() -> AdviceSection:
-    secretClass_AdviceGroupDict = {}
-    info_tiers = 0
-    max_tier = numberOfSecretClasses - info_tiers
+def getProgressionTiersAdviceGroup(jmans, maestros):
+    info_tiers = 1
+    max_tier = max(secret_class_progressionTiers.keys()) - info_tiers
     true_max = max_tier + info_tiers
     tier_SecretClass = 0
 
-    if "Infinilyte" in session_data.account.classes:
-        tier_SecretClass = 4
-    elif "Voidwalker" in session_data.account.classes:
-        tier_SecretClass = 3
-    elif "Maestro" in session_data.account.classes:
-        tier_SecretClass = 2
-    elif "Journeyman" in session_data.account.classes:
-        tier_SecretClass = 1
+    #Required Tiers
+    for tier, requirements in secret_class_progressionTiers.items():
+        if 'Required Class' in requirements:
+            if requirements['Required Class'] in session_data.account.classes and tier_SecretClass == tier-1:
+                tier_SecretClass = tier
 
-    # beginners = session_data.account.beginners
-    jmans = session_data.account.jmans
-    maestros = session_data.account.maestros
-    # vmans = session_data.account.vmans
-
-    secretClass_AdviceDict = getQuestAdvice(tier_SecretClass, jmans, maestros)
-
+    secret_class_advices = getQuestAdvice(tier_SecretClass, jmans, maestros)
     group_pre_strings = [
         "Create a Journeyman",
         "Create a Maestro",
         "Create a Voidwalker",
         "Wait for Lava to release the next Secret Class"
     ]
-    #Generate AdviceGroups
-    secretClass_AdviceGroupDict["UnlockNextClass"] = AdviceGroup(
-        tier=str(tier_SecretClass),
-        pre_string=group_pre_strings[tier_SecretClass],
-        advices=secretClass_AdviceDict["UnlockNextClass"]
-    )
-    #secretClass_AdviceGroupDict["MaestroHands"] = getHandsAdviceGroupCatchUp(vmans, maestros, beginners)
-    #secretClass_AdviceGroupDict["MaestroHandsInTheLead"] = getHandsAdviceGroupStayAhead(maestros)
-    if len(session_data.account.maestros) > 0:
-        secretClass_AdviceGroupDict['RightHandsCatchup'], secretClass_AdviceGroupDict['RightHandsStayAhead'] = getRightHandsAdviceGroups()
+    secret_class_advice_groups = {
+        "UnlockNextClass": AdviceGroup(
+            tier=str(tier_SecretClass),
+            pre_string=group_pre_strings[tier_SecretClass],
+            advices=secret_class_advices["UnlockNextClass"]
+        )
+    }
+
+    if len(maestros) > 0:
+        secret_class_advice_groups['RightHandsCatchup'], no_catchup_needed, secret_class_advice_groups['RightHandsStayAhead'] = getRightHandsAdviceGroups(true_max)
+
+    #Info Tier
+    for tier, requirements in secret_class_progressionTiers.items():
+        if 'No Catchup Needed' in requirements:
+            if no_catchup_needed and tier_SecretClass == max_tier:
+                tier_SecretClass = true_max
+
+    overall_SectionTier = min(true_max, tier_SecretClass)
+    return secret_class_advice_groups, overall_SectionTier, max_tier, true_max
+
+def getSecretClassAdviceSection() -> AdviceSection:
+    jmans = session_data.account.jmans
+    maestros = session_data.account.maestros
+    secret_class_advice_groups, overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup(jmans, maestros)
 
     #Generate AdviceSection
-    note = (
-        f"Important! Only one Maestro's Right and Left Hands buffs work."
-        f"<br>On Steam, this is the last created Maestro."
-        f"<br>I'm not totally sure about other platforms, sorry 🙁"
-    ) if len(maestros) > 1 else ''
-
-    overall_SecretClassTier = min(max_tier, tier_SecretClass)
-    tier_section = f"{overall_SecretClassTier}/{max_tier}"
+    tier_section = f"{overall_SectionTier}/{max_tier}"
     secretClass_AdviceSection = AdviceSection(
         name="Secret Class Path",
         tier=tier_section,
-        pinchy_rating=overall_SecretClassTier,
+        pinchy_rating=overall_SectionTier,
         max_tier=max_tier,
         true_max_tier=true_max,
-        header=f"Best Secret Class tier met: {tier_section}{break_you_best if overall_SecretClassTier >= max_tier else ''}",
+        header=f"Best Secret Class tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture="Stone_Peanut.png",
-        groups=secretClass_AdviceGroupDict.values(),
-        note=note
+        groups=secret_class_advice_groups.values(),
+        note=(
+            f"Important! Only one Maestro's Right and Left Hands buffs work."
+            f"<br>On Steam, this is the last created Maestro."
+            f"<br>I'm not totally sure about other platforms, sorry 🙁"
+        ) if len(maestros) > 1 else ''
     )
 
     return secretClass_AdviceSection
