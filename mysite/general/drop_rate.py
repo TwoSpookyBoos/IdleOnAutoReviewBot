@@ -289,7 +289,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     obols_family_note = '<br>Note: practical max is farmable obols, each with +1 DR upgrade'
     if obols_family_drop_rate >= obols_family_drop_rate_max:
         obols_family_drop_rate_max = obols_max_bonuses_dict['FamilyDropRateTrue']
-        obols_family_note = '<br>Note: true max is rare and hyper, obols each with +1 DR upgrade'
+        obols_family_note = '<br>Note: true max is rare and hyper obols, each with +1 DR upgrade'
     drop_rate_aw_advice[w2].append(Advice(
         label=f"Obols- Family Obols:"
               f"<br>+{obols_family_drop_rate}/{obols_family_drop_rate_max}% Drop Rate"
@@ -794,7 +794,7 @@ def get_drop_rate_player_advice_group():
     player_obol_note = '<br>Note: practical max is farmable obols, each with +1 DR upgrade'
     if obols_player_drop_rate_avg >= player_obol_drop_rate_max:
         player_obol_drop_rate_max = obols_max_bonuses_dict['PlayerDropRateTrue']
-        player_obol_note = '<br>Note: true max is rare and hyper, obols each with +1 DR upgrade'
+        player_obol_note = '<br>Note: true max is rare and hyper obols, each with +1 DR upgrade'
     drop_rate_pp_advice[misc].append(Advice(
         label=f"Obols- Personal Obols:"
               f"<br>+{obols_player_drop_rate_avg}/{player_obol_drop_rate_max}% Drop Rate (average across all characters)"
